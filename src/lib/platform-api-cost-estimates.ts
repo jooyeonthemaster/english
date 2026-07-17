@@ -20,7 +20,8 @@ export interface EstimatedUnitPricing {
 
 // 조사 근거(2026-07 기준 공개 리스트 가격, 코드 내 실측 주석과 교차검증):
 // - Anthropic Claude: Opus $5/$25, Sonnet $3/$15, Haiku $1/$5 (per 1M in/out)
-// - Google Gemini 3.5 Flash: $1.50/$9.00, 3.1 Flash-Lite: $0.25/$1.50 (per 1M in/out)
+// - Google Gemini 3.5 Flash: $1.50/$9.00, 3.1 Pro Preview: $2/$12
+//   (<200k input; >=200k input은 $4/$18), 3.1 Flash-Lite: $0.25/$1.50 (per 1M in/out)
 //   (model-config.ts 실측: flash 건당 $0.0103, flash-lite $0.0017 ↔ 위 단가와 일치)
 // - Google Document AI Enterprise OCR: $1.50 / 1,000 페이지 = $0.0015/page
 // - AtlasCloud gpt-image-2(웹툰): $0.008 / 이미지 (20% 할인 적용가; 크기·품질 무관 플랫)
@@ -28,8 +29,25 @@ export function resolveEstimatedPricing(
   provider: PlatformCostProvider,
   unitType: PlatformCostUnitType,
   model: string | null | undefined,
+  inputTokens?: number,
 ): EstimatedUnitPricing | null {
   const lowerModel = (model ?? "").toLowerCase();
+  const isLargePrompt =
+    typeof inputTokens === "number" && Number.isFinite(inputTokens) && inputTokens >= 200_000;
+
+  const geminiPricing = (): EstimatedUnitPricing => {
+    if (lowerModel.includes("pro")) {
+      // Gemini 3.1 Pro Preview 공개 tier: <200k $2/$12, >=200k $4/$18.
+      // OpenRouter 실측 cost 가 없을 때도 Pro를 Flash($1.5/$9)로 과소평가하지 않는다.
+      return isLargePrompt
+        ? { inputUsdPer1M: 4, outputUsdPer1M: 18, unitUsd: null }
+        : { inputUsdPer1M: 2, outputUsdPer1M: 12, unitUsd: null };
+    }
+    if (lowerModel.includes("flash-lite") || lowerModel.includes("lite")) {
+      return { inputUsdPer1M: 0.25, outputUsdPer1M: 1.5, unitUsd: null };
+    }
+    return { inputUsdPer1M: 1.5, outputUsdPer1M: 9, unitUsd: null };
+  };
 
   if (unitType === "TOKENS" && provider === "ANTHROPIC") {
     if (lowerModel.includes("opus")) {
@@ -43,11 +61,7 @@ export function resolveEstimatedPricing(
   }
 
   if (unitType === "TOKENS" && provider === "GOOGLE_GEMINI") {
-    if (lowerModel.includes("flash-lite") || lowerModel.includes("lite")) {
-      return { inputUsdPer1M: 0.25, outputUsdPer1M: 1.5, unitUsd: null };
-    }
-    // flash 및 미상 Gemini 모델 → Flash 표준 티어(3.5 Flash 기준)
-    return { inputUsdPer1M: 1.5, outputUsdPer1M: 9, unitUsd: null };
+    return geminiPricing();
   }
 
   // 게이트웨이(OpenRouter/AtlasCloud)는 여러 모델(anthropic/*, google/*)을 토큰
@@ -61,11 +75,8 @@ export function resolveEstimatedPricing(
     if (lowerModel.includes("haiku")) {
       return { inputUsdPer1M: 1, outputUsdPer1M: 5, unitUsd: null };
     }
-    if (lowerModel.includes("flash-lite")) {
-      return { inputUsdPer1M: 0.25, outputUsdPer1M: 1.5, unitUsd: null };
-    }
     if (lowerModel.includes("gemini") || lowerModel.includes("flash")) {
-      return { inputUsdPer1M: 1.5, outputUsdPer1M: 9, unitUsd: null };
+      return geminiPricing();
     }
     // sonnet·claude 및 미상 → Sonnet 티어로 보수적 추정
     return { inputUsdPer1M: 3, outputUsdPer1M: 15, unitUsd: null };

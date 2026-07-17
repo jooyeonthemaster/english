@@ -771,7 +771,7 @@ test("PARAPHRASE mode rejects target spans ending with a dangling auxiliary", ()
 test("PARAPHRASE mode rejects options that duplicate a left-context frame", () => {
   assert.equal(result.duplicatedFrameProcessed.success, true, result.duplicatedFrameProcessed.error);
   const codes = new Set(result.duplicatedFrameQuality.map((issue) => issue.code));
-  assert.equal(codes.has("blank-awkward-option"), true);
+  assert.equal(codes.has("blank-option-slot-syntax"), true);
 });
 
 test("PARAPHRASE mode rejects gerund phrases in finite-clause slots", () => {
@@ -783,7 +783,7 @@ test("PARAPHRASE mode rejects gerund phrases in finite-clause slots", () => {
 test("PARAPHRASE mode rejects options that stack prepositions with the left context", () => {
   assert.equal(result.stackedPrepositionProcessed.success, true, result.stackedPrepositionProcessed.error);
   const codes = new Set(result.stackedPrepositionQuality.map((issue) => issue.code));
-  assert.equal(codes.has("blank-awkward-option"), true);
+  assert.equal(codes.has("blank-option-slot-syntax"), true);
 });
 
 test("KILLER PARAPHRASE rejects screenshot-level short local synonym answers", () => {

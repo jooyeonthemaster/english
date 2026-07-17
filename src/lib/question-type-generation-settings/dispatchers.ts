@@ -474,7 +474,13 @@ export function getQuestionTypeGenerationTokenFloor(
     return 8_192;
   }
 
-  return 4_096;
+  // 26-07-16 실측(campaign-20260716 phaseA, 연구노트 O150): OpenRouter Gemini 는
+  // reasoning 토큰이 completion 예산(max_tokens)을 공유하는데, 현행 provider 정책상
+  // reasoning 비활성화가 불가능해(O147) 4,096 바닥이면 KILLER 빈칸에서 reasoning
+  // 3~4k + 본문 JSON 이 상한에 잘려 parse 실패로 전멸한다(finish=length, 4,033~4,034
+  // 토큰 실측). max_tokens 는 상한일 뿐 평시 비용을 늘리지 않으므로 기존 확장 유형과
+  // 같은 8,192 로 올린다.
+  return 8_192;
 }
 
 export function getDefaultQuestionTypeGenerationSettings(): QuestionTypeGenerationSettings {

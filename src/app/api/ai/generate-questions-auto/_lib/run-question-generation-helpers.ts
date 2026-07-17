@@ -304,7 +304,8 @@ function correctiveActionForCode(code: string): string | null {
     case "grammar-appear-adverb-mislabel":
     case "grammar-appear-pointcode-voice-mismatch":
       return "Do not call 'appear' an adverb or tag it as passive voice; in 'as it might appear' it is a linking/intransitive verb.";
-    case "grammar-nonstandard-terminology":
+    case "grammar-terminology-error":
+    case "grammar-terminology-register":
       return "Use only standard school grammar terms; do not invent or mistype terms such as '전사구'.";
     case "grammar-obvious-living-finite":
     case "grammar-obvious-living-lived":
@@ -408,6 +409,12 @@ function correctiveActionForCode(code: string): string | null {
       return "빈칸으로 만든 표현이 지문 다른 곳에 그대로 남아 정답이 노출됩니다. 지문 전체에서 정확히 1회만 등장하는 표현을 각 빈칸 타깃(blanks[].originalExpression)으로 다시 고르세요.";
     case "blank-answer-residual-visible":
       return "정답(또는 정답과 동일한 표면 표현)이 빈칸 처리 후에도 지문에 그대로 남아 있어 베껴 풀립니다. 지문에 정확히 1회만 등장하는 스팬을 타깃으로 고르거나, 남은 출현이 정답을 누설하지 않는 다른 자리로 빈칸을 옮기세요.";
+    case "sentence-insert-neutral-given":
+      return "주어진 문장에 앞뒤 문맥을 한 위치로 묶는 명시적 응집 단서(지시어·대명사·연결어·구체적 역참조)를 넣으세요. 여러 위치에 자연스럽게 들어갈 수 있는 중립 요약문은 쓰지 마세요.";
+    case "passage-boundary-spacing-corruption":
+    case "passage-duplicate-sentence":
+    case "passage-joined-sentence-token":
+      return "문항을 다시 생성하지 말고 원본 지문부터 교정하세요. 붙은 문장 경계·중복 문장·붙은 단어가 남아 있는 지문은 어떤 유형에도 사용하지 마세요.";
     default:
       return null;
   }

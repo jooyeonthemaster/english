@@ -9,6 +9,18 @@ export const GENERIC_OPTION_COUNT_MIN = 4;
 
 export const GENERIC_OPTION_COUNT_MAX = 8;
 
+const TRIPLE_LETTER_TOKEN = /\b[A-Za-z]*([A-Za-z])\1{2,}[A-Za-z]*\b/g;
+const ALLOWED_TRIPLE_LETTER_TOKENS = new Set(["iii", "www"]);
+
+export function findTripleLetterOptionToken(text: string): string | null {
+  for (const match of text.matchAll(TRIPLE_LETTER_TOKEN)) {
+    const token = match[0];
+    if (ALLOWED_TRIPLE_LETTER_TOKENS.has(token.toLowerCase())) continue;
+    return token;
+  }
+  return null;
+}
+
 
 
 export const MC_TYPE_IDS = new Set([
@@ -143,6 +155,27 @@ export function validateOptions(
 
   if (options.some((opt) => !normalizeText(opt?.text))) {
     add("error", "empty-option-text", "One or more options are empty.");
+  }
+
+  if (MC_TYPE_IDS.has(typeId)) {
+    const typoOptions = options
+      .map((option) => ({
+        label: normalizeLabel(option.label),
+        token: findTripleLetterOptionToken(normalizeText(option.text)),
+      }))
+      .filter(
+        (item): item is { label: string; token: string } =>
+          typeof item.token === "string",
+      );
+    if (typoOptions.length > 0) {
+      add(
+        "error",
+        "option-spelling-triple-letter",
+        `Option text contains an impossible-looking three-letter repetition: ${typoOptions
+          .map(({ label, token }) => `${label || "(unlabeled)"} "${token}"`)
+          .join(", ")}.`,
+      );
+    }
   }
 
   if (typeId === "SENTENCE_INSERT") {

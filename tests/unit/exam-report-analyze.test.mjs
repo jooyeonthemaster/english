@@ -15,7 +15,7 @@ const harnessSource = `
 import schemasMod from "@/lib/exam-report/schemas";
 import routeHelpersMod from "@/app/api/exam-report/analyses/[id]/analyze/_lib/route-helpers";
 const { parseExamAnalysisResult, questionAnalysisSchema, parseExamAiMeta } = schemasMod;
-const { computeRunPlan } = routeHelpersMod;
+const { computeRunPlan, readAttemptCounts, computeTerminalKeys } = routeHelpersMod;
 
 const failures = [];
 let passed = 0;
@@ -154,6 +154,43 @@ check("D2③: refundedCredits aiMeta 통과", meta.refundedCredits === 15);
 const metaNone = parseExamAiMeta({ model: "m" });
 check("D2③: refundedCredits 미기록 → undefined", metaNone.refundedCredits === undefined);
 
+// ── A9: 라이브락 종료(계속 실패하는 문항의 재선택 제외로 완료 수렴) ──
+// readAttemptCounts: 양의 정수만 채택, 손상/부재는 빈 객체.
+const ac = readAttemptCounts({ attemptCounts: { "7": 2, "8": 1, "9": 0, "x": "nan" } });
+check("A9: readAttemptCounts 양의 정수만", ac["7"] === 2 && ac["8"] === 1 && ac["9"] === undefined && ac["x"] === undefined);
+check("A9: readAttemptCounts null → 빈 객체", Object.keys(readAttemptCounts(null)).length === 0);
+check("A9: readAttemptCounts attemptCounts 부재 → 빈 객체", Object.keys(readAttemptCounts({ model: "m" })).length === 0);
+
+// computeTerminalKeys: 시도 상한(2) 도달 키만 종결.
+const term = computeTerminalKeys({ "7": 2, "8": 2, "9": 1 });
+check("A9: 상한 도달(2) 종결 키 포함", term.has("7") && term.has("8"));
+check("A9: 상한 미달(1) 비종결", !term.has("9"));
+
+// 핵심: 혼합 prior(OK+FAILED)에서 실패 문항이 종결이면 전체 실행 시도 대상에서 제외 →
+// attemptedKeys=0 → cost 0. (남은 비-OK 가 전부 종결이면 완료로 수렴하는 근거.)
+const termExcluded = computeRunPlan({
+  questions, prior: mixedPrior, excludeKeys: new Set(["2"]),
+});
+check("A9: 종결 실패 문항 전체 실행 제외(attempted=0)", termExcluded.attemptedKeys.length === 0);
+check("A9: 종결 실패 문항 제외 시 cost 0", termExcluded.cost === 0);
+// excludeKeys 없으면(기존 동작) 실패 문항 재시도(attempted=1) — 제외는 순수 추가 동작.
+const noExclude = computeRunPlan({ questions, prior: mixedPrior });
+check("A9: excludeKeys 미지정 시 기존대로 실패 문항 재시도(attempted=1)", noExclude.attemptedKeys.length === 1);
+// 명시 재분석(requestedNumbers)은 종결과 무관하게 재시도(강사 강제) — excludeKeys 무시.
+const termButRequested = computeRunPlan({
+  questions, prior: mixedPrior, requestedNumbers: ["2"], excludeKeys: new Set(["2"]),
+});
+check("A9: 명시 재분석은 종결 무시하고 시도(attempted=1)", termButRequested.attemptedKeys.length === 1);
+// 일부만 종결 + 일부 비-OK 미종결 → 미종결만 시도(부분 수렴).
+const twoFailedPrior = parseExamAnalysisResult({
+  perQuestion: [ok("1"), failed("2"), failed("3")], examLevel: null,
+});
+const partialTerminal = computeRunPlan({
+  questions, prior: twoFailedPrior, excludeKeys: new Set(["2"]),
+});
+check("A9: 종결(2)만 제외·미종결(3)은 시도(attempted=1)", partialTerminal.attemptedKeys.length === 1);
+check("A9: 시도 대상은 미종결 문항(3)", partialTerminal.attemptedKeys[0] === "3");
+
 process.stdout.write(JSON.stringify({ passed, failed: failures.length, failures }));
 `;
 
@@ -182,5 +219,5 @@ const summary = runHarness();
 
 test("exam-report analyze(v3): D1-a poison-parse 방어 + D2 재과금/환불/paidFullRun 계약", () => {
   assert.equal(summary.failed, 0, `analyze failures: ${JSON.stringify(summary.failures)}`);
-  assert.ok(summary.passed >= 32, `expected ≥32 checks, got ${summary.passed}`);
+  assert.ok(summary.passed >= 44, `expected ≥44 checks, got ${summary.passed}`);
 });

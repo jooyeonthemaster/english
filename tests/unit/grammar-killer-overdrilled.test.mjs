@@ -19,6 +19,8 @@ import grammarShared from "../src/lib/question-quality/validators/grammar/shared
 
 const {
   findGrammarKillerOverdrilledAnswer,
+  findGrammarTerminologyError,
+  findGrammarTerminologyRegister,
   findNonstandardGrammarTerminology,
   isAdjectiveAdverbLySwap,
   isNumberAgreementFlip,
@@ -142,7 +144,27 @@ const terminology = {
   multiple: findNonstandardGrammarTerminology("계사와 전사구가 함께 쓰였다."),
   // 오탐 방어: '관계사' 안의 '계사'는 걸리면 안 됨.
   relativePronoun: findNonstandardGrammarTerminology("관계사 that이 선행사 the report를 받는다."),
+  accountant: findNonstandardGrammarTerminology("회계사는 재무제표의 일관성을 검토한다."),
+  worldHistory: findNonstandardGrammarTerminology("세계사는 여러 지역의 교류를 함께 다룬다."),
+  sexagenaryYear: findNonstandardGrammarTerminology("계사년은 2013년에 해당한다."),
+  sexagenaryDay: findNonstandardGrammarTerminology("기록에는 계사일이라고 적혀 있다."),
+  sexagenaryMonth: findNonstandardGrammarTerminology("문서에는 계사월로 기록됐다."),
+  sexagenaryHour: findNonstandardGrammarTerminology("그 시각은 계사시로 적었다."),
+  specialistNoncopular: findNonstandardGrammarTerminology("비계사 구문이라는 전문 용어를 피한다."),
+  specialistSemicopula: findNonstandardGrammarTerminology("유사계사라는 전문 용어를 피한다."),
+  specialistZeroCopula: findNonstandardGrammarTerminology("무계사절이라는 전문 용어를 피한다."),
+  specialistQuasiCopula: findNonstandardGrammarTerminology("준계사라는 전문 용어를 피한다."),
+  specialistYoungCopula: findNonstandardGrammarTerminology("영계사 같은 전문 용어는 학생용 해설에서 피한다."),
+  specialistPseudoCopula: findNonstandardGrammarTerminology("의사계사 같은 전문 용어는 학생용 해설에서 피한다."),
+  designer: findNonstandardGrammarTerminology("보험 설계사는 고객의 요구를 확인한다."),
+  machineryHistory: findNonstandardGrammarTerminology("기계사는 산업 기술의 변화를 다룬다."),
+  sexagenaryBorn: findNonstandardGrammarTerminology("그는 계사년생으로 기록되어 있다."),
+  sexagenaryPillar: findNonstandardGrammarTerminology("명리학에서는 계사일주라고 부른다."),
   clean: findNonstandardGrammarTerminology("주격 관계대명사 that이 뒤 절의 주어 역할을 한다."),
+  errorTerm: findGrammarTerminologyError("이 표현은 전사구로 기능한다."),
+  errorIgnoresRegister: findGrammarTerminologyError("통사적으로 계사 뒤에 보어가 온다."),
+  registerTerm: findGrammarTerminologyRegister("통사적으로 계사 뒤에 보어가 온다."),
+  registerIgnoresError: findGrammarTerminologyRegister("이 표현은 전사구로 기능한다."),
 };
 
 console.log(JSON.stringify({ overdrilled, passes, difficultyGate, helpers, terminology }));
@@ -242,7 +264,30 @@ test("임무2 nonstandard terminology (계사/전사구/보문명사/술어부�
   assert.match(result.terminology.multiple, /전사구/);
 });
 
-test("임무2 false-positive defense: '관계사'/'관계대명사' does not match '계사'", () => {
+test("임무2 false-positive defense: ordinary Korean words containing '계사' do not match the term", () => {
   assert.equal(result.terminology.relativePronoun, null);
+  assert.equal(result.terminology.accountant, null);
+  assert.equal(result.terminology.worldHistory, null);
+  assert.equal(result.terminology.sexagenaryYear, null);
+  assert.equal(result.terminology.sexagenaryDay, null);
+  assert.equal(result.terminology.sexagenaryMonth, null);
+  assert.equal(result.terminology.sexagenaryHour, null);
+  assert.ok(result.terminology.specialistNoncopular);
+  assert.ok(result.terminology.specialistSemicopula);
+  assert.ok(result.terminology.specialistZeroCopula);
+  assert.ok(result.terminology.specialistQuasiCopula);
+  assert.ok(result.terminology.specialistYoungCopula);
+  assert.ok(result.terminology.specialistPseudoCopula);
+  assert.equal(result.terminology.designer, null);
+  assert.equal(result.terminology.machineryHistory, null);
+  assert.equal(result.terminology.sexagenaryBorn, null);
+  assert.equal(result.terminology.sexagenaryPillar, null);
   assert.equal(result.terminology.clean, null);
+});
+
+test("임무2 actual terminology errors are split from accurate-but-specialist register", () => {
+  assert.ok(result.terminology.errorTerm);
+  assert.equal(result.terminology.errorIgnoresRegister, null);
+  assert.ok(result.terminology.registerTerm);
+  assert.equal(result.terminology.registerIgnoresError, null);
 });

@@ -4,6 +4,7 @@ import { GEMINI_QUESTION_MAX_RETRIES } from "@/lib/concurrency-config";
 import { generateQuestionObject } from "@/lib/question-generation-llm";
 import type { GenerateQuestionObjectResult } from "@/lib/question-generation-llm";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
+import type { QuestionGenerationResearchStage } from "@/lib/question-generation-research-runtime";
 
 export async function generateWithRetry(
   schema: z.ZodType,
@@ -21,6 +22,7 @@ export async function generateWithRetry(
     deadlineAt?: number;
     /** strict 구조화 출력을 생략하고 프롬프트 인라인 JSON 모드로 생성 (Wave-3 SW/TSW PREMIUM) */
     forceJsonFallback?: boolean;
+    researchStage?: QuestionGenerationResearchStage;
   },
 ) {
   const result = await generateQuestionObject({
@@ -34,6 +36,7 @@ export async function generateWithRetry(
     timeoutMs: opts?.timeoutMs,
     deadlineAt: opts?.deadlineAt,
     forceJsonFallback: opts?.forceJsonFallback,
+    researchStage: opts?.researchStage,
   });
   onUsage?.(result);
   return result.object;

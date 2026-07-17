@@ -16,6 +16,7 @@
 import { z } from "zod";
 import { generateQuestionObject } from "@/lib/question-generation-llm";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
+import { QUESTION_GENERATION_RESEARCH_STAGES } from "@/lib/question-generation-research-runtime";
 import type { KoQualityIssue, KoTypeModule } from "../registry/type-module";
 
 const KO_SOLVER_SCHEMA = z.object({
@@ -35,6 +36,8 @@ export interface KoSolverUsageResult {
 
 export interface RunKoSolverGateInput {
   question: Record<string, unknown>;
+  /** Exact provider-returned candidate that the rendered solver item derives from. */
+  researchParentCandidate?: Record<string, unknown>;
   passage: string;
   mod: KoTypeModule;
   generationPlan: QuestionGenerationPlan;
@@ -103,6 +106,11 @@ export async function runKoSolverGate(
       logPrefix: "KO-SOLVER",
       maxTokens: 2_048,
       deadlineAt: input.deadlineAt,
+      researchStage: {
+        key: QUESTION_GENERATION_RESEARCH_STAGES.QUESTION_SOLVER,
+        purpose: "evaluation",
+        derivationParentValue: input.researchParentCandidate,
+      },
     });
     input.onModelUsage?.({
       usage: result.usage,

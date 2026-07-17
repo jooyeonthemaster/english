@@ -1,7 +1,10 @@
 // Split from question-quality.ts — shared helpers in core.ts, public API via index.ts barrel.
 import { QuestionQualitySeverity, REPEATED_PHRASE_STOPWORDS, containsLoose, containsStandaloneToken, countContentTokens, isListLikeBlankTarget, isRecord, isSingleAbstractNounTarget, isSingleEnglishToken, normalizeComparableText, normalizeLabel, normalizeText, toLowerTokens } from "../../core";
 import { countAttractiveBlankWrongOptions, crossesStrongContrastBoundary, extractBlankCarrierText, findAdjacentBlankConclusionIssue, findAwkwardBlankOptionPhrase, findContextualAwkwardBlankOptionPhrase, findNegativeParaphraseSlotIssue, findNoSubjectDoubleNegationIssue, findOddCapitalizedOptionToken, findStandardBlankKillerIssue, findTangledNegativeParaphraseIssue, hasNegationCue, hasOnlyWeakNegationCue, requiresCompleteClauseAfterConnector, startsWithoutClauseSubject } from "./inference-distractor";
+import { findInfinitivePastOnlyForms } from "./option-grammar";
 import { validateBlankAnswerParaphraseMode } from "./paraphrase";
+import { analyzeBlankSeam } from "./seam";
+import { findBlankSourceReconstructionMismatch } from "./source-reconstruction";
 
 
 
@@ -44,11 +47,51 @@ export function validateBlankInferenceQuestion(
     return;
   }
 
+  const reconstructionMismatch = findBlankSourceReconstructionMismatch(
+    passageWithBlank,
+    originalExpression,
+    passage,
+  );
+  if (reconstructionMismatch) {
+    add(
+      "error",
+      "blank-source-reconstruction-mismatch",
+      "Replacing the single blank with originalExpression does not reconstruct the source passage exactly. Preserve every source character outside the blank, including quotation marks and punctuation.",
+    );
+  }
+
+  // Every option must enter the same syntactic slot. A fixed relative/finite
+  // tail, article, connector, preposition, or punctuation mark that fits only
+  // some options turns a meaning-inference item into a grammar-elimination
+  // shortcut (jul15 Q008). Run this before semantic/craft checks and keep high
+  // confidence findings blocking in every quality mode.
+  for (const finding of analyzeBlankSeam({
+    passageWithBlank,
+    correctAnswer: correctLabel,
+    options: options.map((option) => ({
+      label: normalizeLabel(option.label),
+      text: normalizeText(option.text),
+    })),
+  })) {
+    if (finding.severity !== "high") continue;
+    const affected = Array.isArray(finding.evidence.incompatibleLabels)
+      ? finding.evidence.incompatibleLabels
+      : Array.isArray(finding.evidence.affectedLabels)
+        ? finding.evidence.affectedLabels
+        : [];
+    add(
+      "error",
+      finding.code,
+      `${finding.message}${affected.length > 0 ? ` Affected option(s): ${affected.join(", ")}.` : ""}`,
+    );
+  }
+
   // 해설 서술 단계 번호 오용 게이트 (26-07-07 실측 5/60, 유저 검수 3회+ 재발) —
-  // 해설 본문의 문장 첫머리 원형숫자(①~⑤)가 해당 선지 텍스트 인용 없이 담화
-  // 서술("① 빈칸 문장은…, ② 근거는…")을 이끌면 설명 '단계 번호'다. 선지
-  // 번호와 같은 기호계라 학생이 정답을 오독한다. 정당한 선지 분석("③ 'option
-  // text'는 … 오답")은 그 선지 텍스트 인용으로 구분되어 통과한다.
+  // 예전 규칙은 선지 원문을 직접 인용하지 않은 모든 문장 첫 원형숫자를 단계 번호로
+  // 보아, "①은 범위를 과장해 오답이다" 같은 정상적인 축약 선지 해설도 막았다.
+  // 이제는 (a) 선지 참조/판정 문맥을 먼저 제외하고, (b) 빈칸·근거·종합·순서 같은
+  // 담화 단서가 붙은 원형숫자가 2회 이상일 때만 별도 불변식 코드로 차단한다.
+  // 인용이 없지만 분류가 모호한 구형 신호는 craft warning 으로만 남긴다.
   {
     const explanationText = normalizeText(question.explanation);
     const CIRCLED_OPTION_MARKS = "①②③④⑤";
@@ -56,24 +99,117 @@ export function validateBlankInferenceQuestion(
       const optionHeads = options.map((option) =>
         normalizeText(option.text).toLowerCase().slice(0, 12),
       );
-      let stepMarkerCount = 0;
-      for (const match of explanationText.matchAll(
-        /(?:^|[.!?다:]\s+)([①②③④⑤])/g,
-      )) {
+      // Tokenize every marker independently. Requiring punctuation before a
+      // marker missed compact fragments such as "① 빈칸 확인 ② 근거 확인".
+      const markerMatches = Array.from(explanationText.matchAll(/([①②③④⑤])/g));
+      const coordinatedOptionListRanges = Array.from(
+        explanationText.matchAll(/[①②③④⑤](?:\s*,\s*[①②③④⑤])+(?:\s*(?:번)?\s*)(?:은|는|이|가|의)/g),
+        (listMatch) => ({
+          start: listMatch.index ?? 0,
+          end: (listMatch.index ?? 0) + listMatch[0].length,
+        }),
+      );
+      let broadUnquotedMarkerCount = 0;
+      let narrativeMarkerCount = 0;
+
+      for (const [markerIndex, match] of markerMatches.entries()) {
         const optionIndex = CIRCLED_OPTION_MARKS.indexOf(match[1]);
         const start = (match.index ?? 0) + match[0].length;
-        const following = explanationText
-          .slice(start, start + 90)
-          .toLowerCase();
+        const nextMarkerStart = markerMatches[markerIndex + 1]?.index;
+        const rawFollowing = explanationText.slice(
+          start,
+          typeof nextMarkerStart === "number"
+            ? nextMarkerStart
+            : Math.min(explanationText.length, start + 180),
+        );
+        const following = rawFollowing.trimStart().toLowerCase();
+        const followingContent = following.replace(/^[\s:：.)\-–—]+/, "");
         const head = optionHeads[optionIndex] ?? "";
-        const quotesOwnOption = head.length >= 6 && following.includes(head.slice(0, 8));
-        if (!quotesOwnOption) stepMarkerCount += 1;
+        const quotesOwnOption =
+          head.length >= 6 && followingContent.includes(head.slice(0, 8));
+        const markerHasAttachedSuffix = rawFollowing.length > 0 && !/^\s/.test(rawFollowing);
+        const hasAttachedOptionParticle =
+          markerHasAttachedSuffix && /^(?:번\s*)?[은는이가의]/.test(following);
+        const namesOptionExplicitly = /^(?:해당\s*)?(?:선지|보기|선택지)\s*(?:은|는|이|가|의)?/.test(
+          followingContent,
+        );
+        const verdictClause = followingContent.split(/[.!?。]/u, 1)[0]?.trim() ?? "";
+        const hasOutcomeWord = /(?:정답|오답|적절|부적절)/.test(verdictClause);
+        // "오답이라고 판단할 수 있다" is a finite option verdict; "오답으로
+        // 판단할 수 있는 기준을 세운다" is a meta-level solution step. Anchor
+        // the judgment predicate at clause end and reject an intervening meta
+        // noun instead of enumerating every surface conjugation near the marker.
+        const hasMetaJudgmentNoun =
+          /(?:정답|오답|적절|부적절)[^.!?。]{0,90}(?:기준|조건|규칙|항목|순서|방법)/.test(
+            verdictClause,
+          );
+        const endsInJudgmentPredicate =
+          /(?:이다|입니다|이므로|이어서|(?:볼|할|판단할|인정할)\s*수\s*있(?:다|습니다)|(?:봐야|보아야|분류해야|처리해야)\s*한다|판단된다|(?:정답|오답)(?:이라|이라고)\s*판단한다|인정된다|분류된다|간주된다|해당한다|해당한다고\s*판단한다|소거된다|제외된다|제외한다)\s*$/u.test(
+            verdictClause,
+          );
+        // A marker followed by an explicit terminal outcome assertion is an
+        // option analysis even when a discourse adverb ("먼저/다음으로") is
+        // present. Match the outcome phrase and its tightly-bound predicate as
+        // one anchored unit; merely mentioning a "정답 근거/오답 기준" before
+        // a narrative verb must not receive this exemption.
+        const hasTerminalOutcomeAssertion =
+          /(?:정답|오답)\s*(?:(?:이다|입니다|이므로|이어서)|(?:이?라(?:고)?|이라고|으로|임이)\s*(?:본다|보인다|분명하다|확실하다|확정된다|결론짓는다|귀결된다|판정한다|판단한다|인정된다|분류된다|간주된다|해당한다)|(?:으로\s*)?(?:봐야|보아야|분류해야|처리해야)\s*한다|(?:이?라(?:고)?|이라고|으로)\s*(?:볼|할|판단할|인정할)\s*수\s*있(?:다|습니다))\s*$/u.test(verdictClause) ||
+          /(?:적절|부적절)\s*(?:하다|합니다|하다고\s*(?:본다|보인다|판단한다|판정한다|결론짓는다|볼\s*수\s*있(?:다|습니다)))\s*$/u.test(
+            verdictClause,
+          );
+        const hasDirectOptionVerdict =
+          (hasOutcomeWord && !hasMetaJudgmentNoun &&
+            (endsInJudgmentPredicate || hasTerminalOutcomeAssertion)) ||
+          (!hasMetaJudgmentNoun && /(?:소거된다|제외된다|제외한다)\s*$/u.test(verdictClause));
+        const hasNarrativeDiscourseCue =
+          /^(?:먼저|우선|첫째|첫\s*번째|처음|이어서|다음으로|그다음|그\s*다음|둘째|마지막으로|끝으로|따라서|그러므로|결국)(?:\s|,|는|은)/.test(
+            followingContent,
+          ) ||
+          /^(?:빈칸(?:\s*문장|은|의|에서)?|근거(?:\s*문장|는|가)?|앞서|앞선|이\s*두|두\s*문장|이를\s*종합|문맥(?:은|상|에서)?|논지(?:는|의|상)?|지문(?:은|의|에서)?|전체\s*글|글의\s*흐름|핵심\s*근거|결론(?:은|에서)?)(?:\s|,|을|를|이|가|은|는|의)/.test(
+            followingContent,
+          ) ||
+          // A numbered clause can be an unmistakable solver operation even
+          // without an overt discourse adverb. Keep this bounded to terminal
+          // analysis/selection actions; the option-reference checks below run
+          // first, so "①은 … 오답이다" remains a legitimate option verdict.
+          (/(?:확인|찾|해석|연결|확정|추적|읽|묶|표시|제거|대입|비교|파악|추출|만들|대응시키|반영|검토|계산|정리|대비|선택|분리|배치|적용|완성|고르|택하|넣|모으|삼)(?:하|한|해|되)?(?:ㄴ다|는다|다)\s*$/u.test(
+            verdictClause,
+          ) || /(?:정한다|고른다|모은다|만든다|넣는다|읽는다|찾는다|삼는다)\s*$/u.test(verdictClause));
+        const markerPosition = match.index ?? 0;
+        const isCoordinatedOptionListMember = coordinatedOptionListRanges.some(
+          (range) => markerPosition >= range.start && markerPosition < range.end,
+        );
+        const isOptionReference =
+          isCoordinatedOptionListMember ||
+          quotesOwnOption ||
+          namesOptionExplicitly ||
+          (hasAttachedOptionParticle &&
+            /(?:정답|오답|선지|보기|과장|과도|축소|확대|왜곡|반전|뒤집|일치|무관|소거)/.test(
+              followingContent,
+            )) ||
+          hasDirectOptionVerdict;
+
+        if (!isOptionReference) {
+          broadUnquotedMarkerCount += 1;
+        }
+
+        if (!isOptionReference && hasNarrativeDiscourseCue) {
+          narrativeMarkerCount += 1;
+        }
       }
-      if (stepMarkerCount >= 2) {
+
+      if (broadUnquotedMarkerCount >= 2) {
+        add(
+          "warning",
+          "blank-explanation-step-numbering",
+          "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options.",
+        );
+      }
+      if (narrativeMarkerCount >= 2) {
         add(
           "error",
-          "blank-explanation-step-numbering",
-          "Explanation prose uses circled digits (①②③…) as narrative step numbers instead of option references — students misread them as option numbers. Remove step numbering (use 먼저/이어서/따라서) and reserve ①~⑤ strictly for citing options.",
+          "blank-explanation-narrative-circled-numbering",
+          "Explanation uses two or more circled option digits as narrative/discourse step numbers. Replace those step labels with 먼저/이어서/따라서 and reserve ①~⑤ strictly for option references.",
         );
       }
     }
@@ -93,6 +229,25 @@ export function validateBlankInferenceQuestion(
         "error",
         "blank-answer-residual-visible",
         `The blanked answer span "${originalExpression.slice(0, 60)}" still appears verbatim elsewhere in passageWithBlank (answer leak). Blank a span that occurs only once, or choose a different target.`,
+      );
+    }
+  }
+
+  // A transformed correct option can still be leaked if that *new wording*
+  // remains verbatim elsewhere in the student-visible carrier. Keep this
+  // separate from answer-not-transformed: the option may be a legitimate
+  // paraphrase of originalExpression while still being directly copyable from
+  // another sentence. This is an exposure failure, never a craft-only issue.
+  if (isAnswerParaphraseMode && correctText && passageWithBlank) {
+    const transformedAnswerVisible = containsNormalizedEnglishPhrase(
+      passageWithBlank,
+      correctText,
+    );
+    if (transformedAnswerVisible) {
+      add(
+        "error",
+        "blank-paraphrase-correct-residual-visible",
+        `The paraphrased correct option "${correctText.slice(0, 60)}" remains verbatim in passageWithBlank (answer leak). Rewrite the correct option or choose a carrier where the answer wording is not visible.`,
       );
     }
   }
@@ -177,15 +332,20 @@ export function validateBlankInferenceQuestion(
 
   for (const option of options) {
     const optionText = normalizeText(option.text);
-    const awkwardOptionPhrase = findAwkwardBlankOptionPhrase(optionText);
-    if (awkwardOptionPhrase) {
+    const invalidInfinitiveForms = findInfinitivePastOnlyForms(optionText);
+    if (invalidInfinitiveForms.length > 0) {
       add(
         "error",
-        "blank-awkward-option",
-        `BLANK_INFERENCE option contains an awkward or non-CSAT-like phrase: ${awkwardOptionPhrase}.`,
+        "blank-option-infinitive-past-form",
+        `BLANK_INFERENCE option ${normalizeLabel(option.label) || "(unlabeled)"} uses an irregular past form after infinitive "to": ${invalidInfinitiveForms
+          .map(({ form }) => `to ${form}`)
+          .join(", ")}. Use the base verb form.`,
       );
       break;
     }
+    // Duplicating a left-context frame or stacking a preposition makes the
+    // substituted sentence malformed. Keep this validity failure separate
+    // from lexical awkwardness so ship-first/salvage cannot demote it.
     const contextualAwkwardOptionPhrase = findContextualAwkwardBlankOptionPhrase(
       blankCarrierText,
       optionText,
@@ -193,8 +353,17 @@ export function validateBlankInferenceQuestion(
     if (contextualAwkwardOptionPhrase) {
       add(
         "error",
+        "blank-option-slot-syntax",
+        `BLANK_INFERENCE option is syntactically malformed in the blank sentence: ${contextualAwkwardOptionPhrase}.`,
+      );
+      break;
+    }
+    const awkwardOptionPhrase = findAwkwardBlankOptionPhrase(optionText);
+    if (awkwardOptionPhrase) {
+      add(
+        "error",
         "blank-awkward-option",
-        `BLANK_INFERENCE option is awkward in the blank sentence: ${contextualAwkwardOptionPhrase}.`,
+        `BLANK_INFERENCE option contains an awkward or non-CSAT-like phrase: ${awkwardOptionPhrase}.`,
       );
       break;
     }
@@ -542,4 +711,32 @@ export function validateBlankInferenceQuestion(
       "DOUBLE_NEGATIVE blank should include answerLogic explaining the negation trap.",
     );
   }
+}
+
+
+
+function containsNormalizedEnglishPhrase(text: string, phrase: string): boolean {
+  const normalizeApostrophes = (value: string) =>
+    value.normalize("NFKC").toLowerCase().replace(/[‘’‛]/g, "'").trim();
+  const normalizedPhrase = normalizeApostrophes(phrase);
+  if (!/[a-z0-9]/.test(normalizedPhrase)) return false;
+
+  // Preserve meaningful punctuation literally (comma, slash, ampersand,
+  // parentheses, colon, abbreviation periods, semicolon, plus). Only spacing
+  // and dash variants are intentionally equivalent, matching the existing
+  // evidence-based/evidence based contract. Tokenizing to words first erased
+  // those punctuation distinctions and missed exact visible answers.
+  const parts = normalizedPhrase.split(/([\s\-\u2010-\u2015]+)/u).filter(Boolean);
+  const patternBody = parts.map((part) =>
+    /^[\s\-\u2010-\u2015]+$/u.test(part)
+      ? "(?:[\\s\\-\\u2010-\\u2015]+)"
+      : part.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+  ).join("");
+  const startsWithWord = /^[a-z0-9]/i.test(normalizedPhrase);
+  const endsWithWord = /[a-z0-9]$/i.test(normalizedPhrase);
+  const pattern = new RegExp(
+    `${startsWithWord ? "(?<![A-Za-z0-9])" : ""}${patternBody}${endsWithWord ? "(?![A-Za-z0-9])" : ""}`,
+    "i",
+  );
+  return pattern.test(normalizeApostrophes(text));
 }

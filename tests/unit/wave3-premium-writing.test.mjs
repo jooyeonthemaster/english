@@ -142,7 +142,7 @@ test("W3-TIMEOUT-2: SW/TSW PREMIUM 은 강제 JSON 모드로 라우팅(원 생�
   // 라우팅 술어: PREMIUM 이면서 SW 또는 TSW.
   assert.match(
     run,
-    /premiumForceJsonFallback\s*=\s*\n?\s*effectiveGenerationPlan === "PREMIUM" &&\s*\n?\s*\(subType === "SUMMARY_WRITING" \|\|\s*\n?\s*subType === "TOPIC_SENTENCE_WRITING"\)/,
+    /premiumForceJsonFallback\s*=\s*\n?\s*effectiveGenerationPlan === "PREMIUM" &&\s*\n?\s*(?:isAtlasClaudeModel\(ATLAS_PREMIUM_QGEN_MODEL_ID\) &&\s*\n?\s*)?\(subType === "SUMMARY_WRITING" \|\|\s*\n?\s*subType === "TOPIC_SENTENCE_WRITING"\)/,
   );
   // 원 생성 호출과 SHIP-FIRST repair 호출 양쪽에 플래그가 배선된다.
   const wired = run.match(/forceJsonFallback: premiumForceJsonFallback/g) ?? [];
@@ -163,7 +163,10 @@ test("W3-TIMEOUT-3: generateWithRetry/repair 가 forceJsonFallback 을 관통 �
     "src/app/api/ai/generate-questions-auto/_lib/question-repair.ts",
   );
   assert.match(repair, /forceJsonFallback\?: boolean/);
-  assert.match(repair, /\{ system, deadlineAt, forceJsonFallback \}/);
+  assert.match(
+    repair,
+    /\{\s*system,\s*deadlineAt,\s*forceJsonFallback,\s*researchStage:/,
+  );
 });
 
 test("W3-TIMEOUT-4: LLM 레이어 — 강제 JSON 경로가 strict 호출을 생략하고, masked 400 이 폴백을 발동", () => {

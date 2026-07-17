@@ -9,3 +9,9 @@
 *.hwpx binary
 *.docx binary
 *.xlsx binary
+
+# v6 sealed author/deployment inputs use exact LF bytes on every checkout.
+/.gitattributes text eol=lf
+/package.json text eol=lf
+/package-lock.json text eol=lf
+/experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/** text eol=lf

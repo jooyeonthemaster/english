@@ -65,6 +65,13 @@ const NEVER_SALVAGE_CODES = [
   "blank-paraphrase-verb-form-slot-mismatch",
   "blank-paraphrase-clause-slot-mismatch",
   "negative-paraphrase-stacked-prepositions",
+  "blank-awkward-correct-option",
+  "blank-awkward-option",
+  "blank-option-slot-syntax",
+  "blank-paraphrase-subject-slot-mismatch",
+  "topic-option-language",
+  "implied-meaning-option-language",
+  "irrelevant-inserted-ungrammatical",
   "writing-answer-verbatim-copy",
   "cond-writing-verbatim-answer",
 ];

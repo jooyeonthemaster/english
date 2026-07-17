@@ -5,6 +5,7 @@
 // ============================================================================
 
 import { z } from "zod";
+import { buildResearchAwareQuestionResponseSchema } from "./question-generation-research-schema";
 import {
   aiWrongOptionExplanationsSchema,
   buildAiWrongOptionExplanationsSchema,
@@ -234,7 +235,7 @@ const blankDesignField = z
 const blankExplanationField = z
   .string()
   .describe(
-    "정답 해설 (한국어, 200~450자, 4단 구조): ① 빈칸 문장의 담화 역할 제시 → ② 근거 문장 연결(지문에서 최소 2문장을 인용하거나 지시) → ③ 정답 도출 → ④ 각 오답의 함정 기제 명명. 출제 과정·내부 필드명 언급 금지.",
+    "정답 해설 (한국어, 200~450자): 먼저 빈칸 문장의 담화 역할을 밝히고, 이어서 지문의 근거 문장 최소 2개를 연결한 뒤, 따라서 정답이 도출되는 이유와 각 오답의 함정 기제를 간결하게 설명. ①~⑤ 원형 숫자는 실제 선지를 인용할 때만 쓰고 설명 단계 번호로 사용하지 말 것. 출제 과정·내부 필드명 언급 금지.",
   );
 
 // 필드 순서 = 생성 순서: 발문 → 설계 → 빈칸 정의 → 선지 → 정답 → 오답해설 → 해설.
@@ -849,6 +850,8 @@ export function getAiResponseSchema(
     genericOptionCount?: number;
     /** Correct-answer count for free-text option types. */
     genericAnswerCount?: number;
+    /** Exact number of questions already fixed by a server-owned plan. */
+    expectedQuestionCount?: number;
     /** Legacy option name; interpreted as grammarMarkerCount. */
     grammarErrorCount?: number;
   },
@@ -953,5 +956,7 @@ export function getAiResponseSchema(
       options?.genericAnswerCount ?? 1,
     );
   }
-  return z.object({ questions: z.array(schema) });
+  return buildResearchAwareQuestionResponseSchema(schema, {
+    expectedQuestionCount: options?.expectedQuestionCount,
+  });
 }

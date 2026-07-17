@@ -20,23 +20,21 @@ export interface QuestionQualityIssue {
  * SHIP-FIRST 정책: 강사가 고른 지문+유형+난이도는 확정된 의도다. 아래 코드들은
  * "정답 무효/노출/형식 깨짐" 같은 명백한 결함이 아니라 **난이도·취향**(KILLER치고
  * 쉬움·이상적 타깃 아님·미관·학생 비노출 메타 완성도)만 가리킨다. 151개 차단코드
- * 전수 감사(적대검증 0 flip)에서 B로 분류된 36개 — `validateQuestionQuality` 반환
+ * 과거 전수 감사에서 B로 분류된 목록을 현재 validity 근거로 재감사한 결과 — `validateQuestionQuality` 반환
  * 직전에 severity:'error'→'warning' 으로 강등해 strict/relaxed 양쪽에서 비차단으로
  * 만든다(삭제 아님 — 검수 UI 가시성은 _qualityWarnings 로 보존). 정답 유효성/명료성을
  * 해치는 인접 코드(implied-meaning-direct-answer-leak, irrelevant-too-many-new-terms,
  * grammar-debatable-infinitive 등)는 의도적으로 제외 — 정확한 문자열 집합으로만 강등한다.
- * 근거: docs/GENERATION-ENGINE-REDESIGN-ROADMAP.md §4 WS1.
+ * 근거: docs/GENERATION-ENGINE-REDESIGN-ROADMAP.md §4 WS1. 이름과 달리 실제
+ * 치환 문장을 비문으로 만드는 코드는 이 목록에서 제외하고 blocking으로 유지한다.
  */
 export const SHIP_FIRST_WARNING_CODES = new Set<string>([
-  "wrong-option-explanation-count",
   "grammar-decoy-point-diversity",
   "grammar-correction-underline-too-narrow",
   "grammar-correction-underlined-segment-short",
   "blank-killer-target-too-easy",
   "blank-target-too-small",
   "blank-target-list-like",
-  "blank-awkward-correct-option",
-  "blank-awkward-option",
   "blank-paraphrase-correct-too-thin",
   "blank-paraphrase-difficulty-mismatch",
   "blank-paraphrase-killer-giveaway-distractors",
@@ -44,7 +42,6 @@ export const SHIP_FIRST_WARNING_CODES = new Set<string>([
   "blank-paraphrase-missing-answer-logic",
   "blank-paraphrase-option-imbalance",
   "blank-paraphrase-option-source-copy",
-  "blank-paraphrase-subject-slot-mismatch",
   "blank-paraphrase-target-too-wide",
   "blank-paraphrase-target-trailing-function",
   "irrelevant-too-unrelated",

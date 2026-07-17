@@ -34,6 +34,10 @@ import {
 } from "@/app/api/ai/generate-questions-auto/_lib/build-analysis-context";
 import { DIFF_DESCRIPTION } from "@/app/api/ai/generate-questions-auto/_lib/constants";
 import { runQuestionGenerationWithEmptyRetry } from "@/app/api/ai/generate-questions-auto/_lib/run-question-generation";
+import {
+  closeQuestionGenerationAssignmentBudget,
+  runWithQuestionGenerationAssignmentBudget,
+} from "@/lib/question-generation-assignment-budget";
 import { type PlanResult } from "@/app/api/ai/generate-questions-auto/_lib/schemas";
 import { toUserFacingQuestionGenerationError } from "@/lib/question-generation-llm";
 import { countPassageSentences } from "@/lib/passage-sentence-utils";
@@ -506,8 +510,15 @@ export async function POST(req: NextRequest) {
     }
 
     const generationStartedAt = Date.now();
-    const generationResult = await runQuestionGenerationWithEmptyRetry(
+    const generationResult = await runWithQuestionGenerationAssignmentBudget(
       {
+        jobId: job.id,
+        route: "FAST",
+        generationPlan: effectiveGenerationPlan,
+        questionType: config.questionType ?? "UNSPECIFIED",
+        difficulty: effectiveDifficulty,
+      },
+      () => runQuestionGenerationWithEmptyRetry({
         plan,
         schoolType,
         gradeInfo,
@@ -531,14 +542,13 @@ export async function POST(req: NextRequest) {
         koPassageKind: isKoreanSubject(passage.subject)
           ? (readKoKindFromTags(passage.tags) ?? undefined)
           : undefined,
-      },
-      {
+      }, {
         logPrefix: "WORKBENCH-FAST-Q-GEN",
         // Vercel maxDuration 300s. 270s 후엔 새 시도를 멈춰 함수 강제종료(잡 고아
         // → 환불 누락)를 막고, catch 에서 정상 실패+환불로 흐르게 한다. 30s 여유로
         // 후처리·저장·환불을 마친다. 느린 PREMIUM(Claude) 다수 재시도의 핵심 안전판.
         deadlineAt: requestStartedAt + 270_000,
-      },
+      }),
     );
     const questions = generationResult.questions;
     for (const [idx, event] of generationResult.usageEvents.entries()) {
@@ -639,6 +649,7 @@ export async function POST(req: NextRequest) {
         completedAt,
       },
     });
+    await closeQuestionGenerationAssignmentBudget(job.id).catch(() => undefined);
 
     return NextResponse.json({
       jobId: job.id,
@@ -712,6 +723,7 @@ export async function POST(req: NextRequest) {
         completedAt: new Date(),
       },
     });
+    await closeQuestionGenerationAssignmentBudget(job.id).catch(() => undefined);
 
     return NextResponse.json(
       { error: "Question generation failed", details: message },

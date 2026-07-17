@@ -16,7 +16,9 @@
 
 import { z } from "zod";
 import { generateQuestionObject } from "@/lib/question-generation-llm";
+import { isQuestionGenerationAssignmentBudgetError } from "@/lib/atlas-production-assignment-fetch-boundary";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
+import { QUESTION_GENERATION_RESEARCH_STAGES } from "@/lib/question-generation-research-runtime";
 
 const GRAMMAR_SOLVER_SCHEMA = z.object({
   answer: z
@@ -42,6 +44,8 @@ export interface GrammarSolverUsageResult {
 
 export interface RunGrammarSolverGateInput {
   question: Record<string, unknown>;
+  /** Exact provider-returned candidate that the rendered solver item derives from. */
+  researchParentCandidate?: Record<string, unknown>;
   generationPlan: QuestionGenerationPlan;
   deadlineAt?: number;
   onModelUsage?: (result: GrammarSolverUsageResult) => void;
@@ -92,6 +96,11 @@ export async function runGrammarSolverGate(
       logPrefix: "GRAMMAR-SOLVER",
       maxTokens: 2_048,
       deadlineAt: input.deadlineAt,
+      researchStage: {
+        key: QUESTION_GENERATION_RESEARCH_STAGES.GRAMMAR_SOLVER,
+        purpose: "evaluation",
+        derivationParentValue: input.researchParentCandidate,
+      },
     });
     input.onModelUsage?.({
       usage: result.usage,
@@ -114,6 +123,7 @@ export async function runGrammarSolverGate(
       message: `${detail}. 솔버 근거: ${result.object.reasoning.slice(0, 160)}`,
     };
   } catch (error) {
+    if (isQuestionGenerationAssignmentBudgetError(error)) throw error;
     console.warn(
       `[GRAMMAR-SOLVER] solver call failed; passing without verdict: ${
         error instanceof Error ? error.message : String(error)

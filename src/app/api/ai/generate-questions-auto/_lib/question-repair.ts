@@ -3,9 +3,15 @@ import { z } from "zod";
 import { GRAMMAR_POINT_CATALOG } from "@/lib/grammar-point-catalog";
 import type { GenerateQuestionObjectResult } from "@/lib/question-generation-llm";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
+import {
+  QUESTION_GENERATION_RESEARCH_STAGES,
+  hasQuestionGenerationResearchRuntime,
+  observeQuestionGenerationResearchCandidates,
+} from "@/lib/question-generation-research-runtime";
 import type { QuestionQualityIssue } from "@/lib/question-quality";
 
 import { generateWithRetry } from "./generate-with-retry";
+import { isQuestionGenerationAssignmentBudgetError } from "@/lib/atlas-production-assignment-fetch-boundary";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
@@ -116,7 +122,12 @@ function summarizeExplanationLintTargets(
   const entries: string[] = [];
   const seen = new Set<string>();
   for (const issue of issues) {
-    if (!isExplanationLintGrammarIssue(issue)) continue;
+    if (
+      issue.code !== "grammar-explanation-lint" &&
+      !issue.code.startsWith("grammar-explanation-lint-")
+    ) {
+      continue;
+    }
     const match = /^([A-Za-z][\w()[\]]*):\s*([^—]+?)\s*—/.exec(issue.message);
     if (!match) continue;
     const entry = `${match[1]}(${match[2].trim()})`;
@@ -130,13 +141,45 @@ function summarizeExplanationLintTargets(
 // 재태깅 수리 대상 — 밑줄 스팬의 실제 문법 판단과 pointCode/keyPoints 명명이
 // 어긋난 것뿐이라 라벨 정정만으로 해소된다 (26-07-14 round-2 경고→차단 승격분).
 function isRetagOnlyGrammarIssue(issue: { code: string }): boolean {
-  return issue.code === "grammar-pointcode-span-mismatch";
+  return (
+    issue.code === "grammar-pointcode-span-mismatch" ||
+    issue.code === "grammar-appear-pointcode-voice-mismatch"
+  );
 }
 
-// 해설 전용 결함(grammar-explanation-lint 계열, 26-07-14 round-2 신설) — 문항
-// 본체는 무결하고 해설 텍스트만 재작성하면 해소된다.
-function isExplanationLintGrammarIssue(issue: { code: string }): boolean {
+// 해설/메타데이터 전용 결함 — 문항 본체와 정답 설계는 보존한 채 학생에게
+// 보이는 해설 텍스트만 다시 쓰면 해소된다. 사실 오분석은 salvage 에서 경고로
+// 강등하지 않되, 이 좁은 수리 경로로 한 번 고칠 기회만 준다.
+const EXPLANATION_ONLY_GRAMMAR_ISSUE_CODES = new Set([
+  "grammar-agreement-explanation-too-thin",
+  "grammar-afford-modal-mislabel",
+  "grammar-answer-in-wrong-explanations",
+  "grammar-appear-adverb-mislabel",
+  "grammar-category-mislabel",
+  "grammar-error-explanation-surface-order",
+  "grammar-explanation-answer-range-leak",
+  "grammar-explanation-meta-leak",
+  "grammar-explanation-range-shorthand",
+  "grammar-explanation-self-contradictory",
+  "grammar-explanation-typo",
+  "grammar-human-made-postmodifier-mislabel",
+  "grammar-keypoint-token-not-source-backed",
+  "grammar-keypoint-untested-token",
+  "grammar-look-like-complement-mislabel",
+  "grammar-terminology-error",
+  "grammar-terminology-register",
+  "grammar-noun-clause-pronoun-mislabel",
+  "grammar-phrasal-verb-mislabel",
+  "grammar-seem-to-complement-mislabel",
+  "grammar-seem-to-object-mislabel",
+  "grammar-that-way-adverb-mislabel",
+  "grammar-vague-metadata-tag",
+  "wrong-option-explanation-count",
+]);
+
+function isExplanationOnlyGrammarIssue(issue: { code: string }): boolean {
   return (
+    EXPLANATION_ONLY_GRAMMAR_ISSUE_CODES.has(issue.code) ||
     issue.code === "grammar-explanation-lint" ||
     issue.code.startsWith("grammar-explanation-lint-")
   );
@@ -146,6 +189,8 @@ export interface RepairCandidateInput {
   subType: string;
   /** 후처리 직전(AI 출력 레벨)의 탈락 초안 — 교정 출력도 동일 후처리를 다시 탄다. */
   draft: Record<string, unknown>;
+  /** Exact provider-returned candidate that this repair prompt derives from. */
+  researchParentCandidate?: Record<string, unknown>;
   /** 이 후보를 탈락시킨 A(차단) 품질 결함들 */
   blockingIssues: QuestionQualityIssue[];
   passageContent: string;
@@ -184,6 +229,7 @@ export async function repairQuestionCandidate(
   const {
     subType,
     draft,
+    researchParentCandidate,
     blockingIssues,
     passageContent,
     targetCandidateBlock,
@@ -223,7 +269,7 @@ export async function repairQuestionCandidate(
     !decoyOnlyGrammarRepair &&
     !retagOnlyGrammarRepair &&
     subType === "GRAMMAR_ERROR" &&
-    blockingIssues.every((issue) => isExplanationLintGrammarIssue(issue));
+    blockingIssues.every((issue) => isExplanationOnlyGrammarIssue(issue));
 
   // decoy 교체 재료(round-3 ①) — 원 생성 후보 블록에서 미끼로 쓸 수 있는 후보만
   // 절단 추출. 후보가 없으면 빈 블록 → 종전 프롬프트와 동일(무회귀).
@@ -283,14 +329,29 @@ export async function repairQuestionCandidate(
       ),
       undefined,
       onModelUsage,
-      { system, deadlineAt, forceJsonFallback },
+      {
+        system,
+        deadlineAt,
+        forceJsonFallback,
+        researchStage: {
+          key: forceJsonFallback
+            ? QUESTION_GENERATION_RESEARCH_STAGES.QUESTION_CANDIDATE_REPAIR_JSON
+            : QUESTION_GENERATION_RESEARCH_STAGES.QUESTION_CANDIDATE_REPAIR,
+          purpose: "candidate",
+          derivationParentValue: researchParentCandidate,
+        },
+      },
     );
     if (isRecord(object) && Array.isArray(object.questions)) {
       const first = object.questions.find(isRecord);
+      if (first && hasQuestionGenerationResearchRuntime()) {
+        await observeQuestionGenerationResearchCandidates([first]);
+      }
       return (first as Record<string, unknown> | undefined) ?? null;
     }
     return null;
-  } catch {
+  } catch (error) {
+    if (isQuestionGenerationAssignmentBudgetError(error)) throw error;
     // 교정 호출 실패는 치명적이지 않다 — 호출자가 기존 재생성 경로로 폴백한다.
     return null;
   }

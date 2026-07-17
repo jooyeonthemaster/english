@@ -10,8 +10,20 @@ import {
   atlasUsageWithCost,
   isAtlasClaudeModel,
 } from "@/lib/atlas-ai";
-import { GEMINI_QUESTION_MAX_RETRIES } from "@/lib/concurrency-config";
+import { isQuestionGenerationAssignmentBudgetError } from "@/lib/atlas-production-assignment-fetch-boundary";
+import {
+  GEMINI_QUESTION_MAX_RETRIES,
+  QUESTION_GENERATION_SDK_MAX_RETRIES,
+  normalizeQuestionGenerationApplicationRetries,
+} from "@/lib/concurrency-config";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
+import {
+  QUESTION_GENERATION_RESEARCH_STAGES,
+  getQuestionGenerationResearchTransportPolicy,
+  hasQuestionGenerationResearchRuntime,
+  runQuestionGenerationResearchStage,
+  type QuestionGenerationResearchStage,
+} from "@/lib/question-generation-research-runtime";
 
 type QuestionGenerationProvider = typeof ATLAS_CLOUD_PROVIDER;
 
@@ -127,6 +139,8 @@ interface GenerateQuestionObjectArgs<T> {
    * 품질게이트가 결정론 재검증하므로 provider 강제 없이도 안전하다.
    */
   forceJsonFallback?: boolean;
+  /** Opt-in research stage semantic; ignored byte-for-byte when no runtime is active. */
+  researchStage?: QuestionGenerationResearchStage;
 }
 
 interface GenerateQuestionTextArgs {
@@ -167,6 +181,7 @@ export interface GenerateQuestionTextResult {
 }
 
 export function isNonRetryableQuestionGenerationProviderError(error: unknown): boolean {
+  if (isQuestionGenerationAssignmentBudgetError(error)) return true;
   const message = [
     error instanceof Error ? error.message : String(error),
     readErrorString(error, "text"),
@@ -231,7 +246,22 @@ export function toUserFacingQuestionGenerationError(rawMessage: string): string 
   return rawMessage;
 }
 
-export async function generateQuestionObject<T>({
+export function generateQuestionObject<T>(
+  args: GenerateQuestionObjectArgs<T>,
+): Promise<GenerateQuestionObjectResult<T>> {
+  const stage = args.researchStage ?? {
+    key: args.forceJsonFallback
+      ? QUESTION_GENERATION_RESEARCH_STAGES.QUESTION_PROMPT_JSON_FALLBACK
+      : QUESTION_GENERATION_RESEARCH_STAGES.QUESTION_STRUCTURED,
+    purpose: "candidate" as const,
+  };
+  return Promise.resolve(
+    runQuestionGenerationResearchStage(stage, () =>
+      generateQuestionObjectImpl({ ...args, researchStage: stage })),
+  );
+}
+
+async function generateQuestionObjectImpl<T>({
   schema,
   prompt,
   generationPlan,
@@ -243,6 +273,7 @@ export async function generateQuestionObject<T>({
   timeoutMs,
   deadlineAt,
   forceJsonFallback = false,
+  researchStage,
 }: GenerateQuestionObjectArgs<T>): Promise<GenerateQuestionObjectResult<T>> {
   const planConfig = getQuestionGenerationModelConfig(generationPlan);
   // 오버라이드는 modelId 만 치환 — provider/timeout 등 나머지는 플랜 매핑 유지.
@@ -252,6 +283,16 @@ export async function generateQuestionObject<T>({
     : planConfig;
   let lastError: unknown;
   const operationStartedAt = Date.now();
+  const researchTransportPolicy =
+    getQuestionGenerationResearchTransportPolicy();
+  const effectiveApplicationMaxRetries = researchTransportPolicy
+    ? researchTransportPolicy.applicationMaxRetries
+    : normalizeQuestionGenerationApplicationRetries(maxRetries);
+  const effectiveSdkMaxRetries = researchTransportPolicy
+    ? researchTransportPolicy.sdkMaxRetries
+    : QUESTION_GENERATION_SDK_MAX_RETRIES;
+  const allowStructuredRepair =
+    researchTransportPolicy?.allowStructuredRepair ?? true;
 
   const computeAbortMs = (hardCapMs: number) => {
     if (!deadlineAt) return hardCapMs;
@@ -259,7 +300,11 @@ export async function generateQuestionObject<T>({
     return Math.min(hardCapMs, Math.max(1_000, remaining));
   };
 
-  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+  for (
+    let attempt = 0;
+    attempt <= effectiveApplicationMaxRetries;
+    attempt++
+  ) {
     const attemptStartedAt = Date.now();
 
     // 강제 JSON 모드 — strict 구조화 출력이 스키마 기인으로 전멸하는 유형
@@ -277,7 +322,14 @@ export async function generateQuestionObject<T>({
           `[${logPrefix}] Forced-JSON retry attempt ${attempt} via ${generationPlan} plan...`,
         );
       }
-      const fallback = await generateObjectViaJsonFallback({
+      const fallback = await (
+        researchStage?.key ===
+          QUESTION_GENERATION_RESEARCH_STAGES.QUESTION_PROMPT_JSON_FALLBACK ||
+        researchStage?.key ===
+          QUESTION_GENERATION_RESEARCH_STAGES.QUESTION_CANDIDATE_REPAIR_JSON
+          ? generateObjectViaJsonFallbackImpl
+          : generateObjectViaJsonFallback
+      )({
         schema,
         prompt,
         system,
@@ -290,6 +342,8 @@ export async function generateQuestionObject<T>({
         logPrefix,
         operationStartedAt,
         attempt,
+        sdkMaxRetries: effectiveSdkMaxRetries,
+        allowStructuredRepair,
       });
       if (fallback) {
         console.log(
@@ -322,12 +376,13 @@ export async function generateQuestionObject<T>({
       const result = await generateObject({
         model: atlasChatModel(config.modelId),
         schema,
+        maxRetries: effectiveSdkMaxRetries,
         maxOutputTokens: maxTokens,
         ...claudeQgenReasoningOptions(config.modelId),
         abortSignal: AbortSignal.timeout(
           computeAbortMs(timeoutMs ?? config.timeoutMs),
         ),
-        ...(generationPlan === "PREMIUM"
+        ...(generationPlan === "PREMIUM" && allowStructuredRepair
           ? {
               experimental_repairText: async ({ text, error }) =>
                 repairPremiumJsonOutput({
@@ -337,6 +392,7 @@ export async function generateQuestionObject<T>({
                   maxTokens,
                   abortMs: computeAbortMs(60_000),
                   logPrefix,
+                  sdkMaxRetries: effectiveSdkMaxRetries,
                 }),
             }
           : {}),
@@ -377,6 +433,13 @@ export async function generateQuestionObject<T>({
         isCompiledGrammarTooLargeError(error) ||
         isMaskedProviderBadRequestError(error)
       ) {
+        if (hasQuestionGenerationResearchRuntime()) {
+          console.warn(
+            `[${logPrefix}] Research strict structured-output failure is an ITT no-candidate; prompt-JSON downgrade is disabled.`,
+          );
+          if (attempt >= effectiveApplicationMaxRetries) throw error;
+          continue;
+        }
         console.warn(
           `[${logPrefix}] Structured-output rejected by provider (grammar too large or masked 400) — falling back to prompt-inlined JSON mode (schema enforced client-side).`,
         );
@@ -395,13 +458,15 @@ export async function generateQuestionObject<T>({
           logPrefix,
           operationStartedAt,
           attempt,
+          sdkMaxRetries: effectiveSdkMaxRetries,
+          allowStructuredRepair,
         });
         if (fallback) return fallback;
         // 폴백 실패는 잘림·타임아웃 등 비결정 요인 — 남은 attempt 가 있으면
         // 재시도한다(구조화 호출이 곧장 400 으로 재실패한 뒤 폴백이 다시 돈다).
-        if (attempt >= maxRetries) throw error;
+        if (attempt >= effectiveApplicationMaxRetries) throw error;
         console.warn(
-          `[${logPrefix}] JSON fallback failed; retrying (${attempt + 1}/${maxRetries}).`,
+          `[${logPrefix}] JSON fallback failed; retrying (${attempt + 1}/${effectiveApplicationMaxRetries}).`,
         );
         continue;
       }
@@ -585,7 +650,21 @@ export function safeParsePromotingNullOptionals<T>(
  * 하류 품질게이트가 전 필드를 결정론 재검증하므로 provider 강제 없이도 안전하다.
  * 실패 시 null — 호출측이 원 에러를 던진다.
  */
-async function generateObjectViaJsonFallback<T>({
+function generateObjectViaJsonFallback<T>(
+  args: Parameters<typeof generateObjectViaJsonFallbackImpl<T>>[0],
+): Promise<GenerateQuestionObjectResult<T> | null> {
+  return Promise.resolve(
+    runQuestionGenerationResearchStage(
+      {
+        key: QUESTION_GENERATION_RESEARCH_STAGES.QUESTION_PROMPT_JSON_FALLBACK,
+        purpose: "candidate",
+      },
+      () => generateObjectViaJsonFallbackImpl(args),
+    ),
+  );
+}
+
+async function generateObjectViaJsonFallbackImpl<T>({
   schema,
   prompt,
   system,
@@ -597,6 +676,8 @@ async function generateObjectViaJsonFallback<T>({
   logPrefix,
   operationStartedAt,
   attempt,
+  sdkMaxRetries,
+  allowStructuredRepair,
 }: {
   schema: z.ZodType<T>;
   prompt: string;
@@ -609,6 +690,8 @@ async function generateObjectViaJsonFallback<T>({
   logPrefix: string;
   operationStartedAt: number;
   attempt: number;
+  sdkMaxRetries: number;
+  allowStructuredRepair: boolean;
 }): Promise<GenerateQuestionObjectResult<T> | null> {
   if (abortMs <= 1_000) return null;
   // zod v4 → JSON Schema 인라인. 변환 불가 스키마(z.custom 류)면 텍스트 없이
@@ -634,6 +717,7 @@ async function generateObjectViaJsonFallback<T>({
     // 거부되기도 한다. 순수 텍스트로 받아 직접 파싱·복구한다.
     const result = await generateText({
       model: atlasChatModel(modelId),
+      maxRetries: sdkMaxRetries,
       // 사고(reasoning) 토큰이 출력 예산을 공유해 20k 에서도 JSON 이 잘렸다
       // (26-07-03 실측 KO_GR_HIST) — 32k 로 넉넉히. (reasoning 은 이제
       // claudeQgenReasoningOptions 로 기본 비활성 — 잘림·지연의 근본 차단.)
@@ -659,7 +743,7 @@ async function generateObjectViaJsonFallback<T>({
       candidate === undefined
         ? undefined
         : safeParsePromotingNullOptionals(schema, candidate);
-    if (!parsed?.success && rawText) {
+    if (!parsed?.success && rawText && allowStructuredRepair) {
       // 잘림·따옴표 깨짐 등 — 기존 PREMIUM 복구 호출로 1회 재구성 후 재검증.
       const repairReason = parsed
         ? new Error(
@@ -681,6 +765,7 @@ async function generateObjectViaJsonFallback<T>({
           abortMs: repairAbortMs,
           logPrefix,
           minOutputTokens: 24_000,
+          sdkMaxRetries,
         });
         if (repaired) {
           candidate = parseJsonLoose(repaired);
@@ -715,6 +800,9 @@ async function generateObjectViaJsonFallback<T>({
       durationMs: Date.now() - operationStartedAt,
     };
   } catch (fallbackError) {
+    if (isQuestionGenerationAssignmentBudgetError(fallbackError)) {
+      throw fallbackError;
+    }
     console.warn(
       `[${logPrefix}] JSON fallback call failed: ${fallbackError instanceof Error ? fallbackError.message : String(fallbackError)}`,
     );
@@ -722,7 +810,21 @@ async function generateObjectViaJsonFallback<T>({
   }
 }
 
-async function repairPremiumJsonOutput({
+function repairPremiumJsonOutput(
+  args: Parameters<typeof repairPremiumJsonOutputImpl>[0],
+): Promise<string | null> {
+  return Promise.resolve(
+    runQuestionGenerationResearchStage(
+      {
+        key: QUESTION_GENERATION_RESEARCH_STAGES.QUESTION_JSON_REPAIR,
+        purpose: "candidate",
+      },
+      () => repairPremiumJsonOutputImpl(args),
+    ),
+  );
+}
+
+async function repairPremiumJsonOutputImpl({
   text,
   error,
   modelId,
@@ -730,6 +832,7 @@ async function repairPremiumJsonOutput({
   abortMs,
   logPrefix,
   minOutputTokens = 12_288,
+  sdkMaxRetries,
 }: {
   text: string;
   error: unknown;
@@ -739,6 +842,7 @@ async function repairPremiumJsonOutput({
   logPrefix: string;
   /** 복구 응답은 전체 JSON 재방출 — 긴 국어 봉투는 폴백에서 24k 로 올린다. */
   minOutputTokens?: number;
+  sdkMaxRetries: number;
 }): Promise<string | null> {
   const raw = text.trim();
   if (raw.length === 0 || abortMs <= 1_000) return null;
@@ -763,6 +867,7 @@ async function repairPremiumJsonOutput({
   try {
     const result = await generateText({
       model: atlasChatModel(modelId),
+      maxRetries: sdkMaxRetries,
       prompt: repairPrompt,
       output: Output.json(),
       temperature: 0,
@@ -788,6 +893,9 @@ async function repairPremiumJsonOutput({
     console.warn(`[${logPrefix}] Repaired malformed PREMIUM JSON output via continuation call.`);
     return repaired;
   } catch (repairError) {
+    if (isQuestionGenerationAssignmentBudgetError(repairError)) {
+      throw repairError;
+    }
     console.warn(
       `[${logPrefix}] PREMIUM JSON repair failed: ${
         repairError instanceof Error ? repairError.message : String(repairError)
@@ -818,8 +926,20 @@ export async function generateQuestionText({
   let lastError: unknown;
   const operationStartedAt = Date.now();
   void thinkingBudget;
+  const researchTransportPolicy =
+    getQuestionGenerationResearchTransportPolicy();
+  const effectiveApplicationMaxRetries = researchTransportPolicy
+    ? researchTransportPolicy.applicationMaxRetries
+    : normalizeQuestionGenerationApplicationRetries(maxRetries);
+  const effectiveSdkMaxRetries = researchTransportPolicy
+    ? researchTransportPolicy.sdkMaxRetries
+    : QUESTION_GENERATION_SDK_MAX_RETRIES;
 
-  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+  for (
+    let attempt = 0;
+    attempt <= effectiveApplicationMaxRetries;
+    attempt++
+  ) {
     const attemptStartedAt = Date.now();
     try {
       if (attempt > 0) {
@@ -828,6 +948,7 @@ export async function generateQuestionText({
 
       const result = await generateText({
         model: atlasChatModel(config.modelId),
+        maxRetries: effectiveSdkMaxRetries,
         prompt,
         maxOutputTokens: omitMaxTokens ? undefined : maxTokens,
         temperature,
@@ -878,7 +999,7 @@ export async function generateQuestionText({
           return fallbackTextResult(rawText, error, config, attempt, operationStartedAt);
         }
 
-        if (attempt < maxRetries) {
+        if (attempt < effectiveApplicationMaxRetries) {
           console.warn(
             `[${logPrefix}] SDK object parsing failed with unrecoverable raw text; retrying before raw JSON fallback.`,
           );

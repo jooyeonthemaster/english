@@ -106,8 +106,8 @@ model Academy {
   examReportStudents        ExamReportStudent[]
   // ── Growth: referral / credit missions / notifications ──
   referralCode              ReferralCode?
-  referralsMade             Referral[]                @relation("ReferralsMade")
-  referralReceived          Referral?                 @relation("ReferralReceived")
+  referralsMade             Referral[]                 @relation("ReferralsMade")
+  referralReceived          Referral?                  @relation("ReferralReceived")
   missionClaims             AcademyMissionClaim[]
   notifications             Notification[]
 
@@ -117,24 +117,24 @@ model Academy {
 /// Staff — Directors and Teachers
 /// role: "DIRECTOR" | "TEACHER"
 model Staff {
-  id             String    @id @default(cuid())
-  academyId      String
-  email          String    @unique
-  password       String
-  name           String
-  phone          String?
-  role           String    @default("TEACHER") // "DIRECTOR" | "TEACHER"
-  avatarUrl      String?
-  isActive       Boolean   @default(true)
-  supabaseUserId String?   @unique @map("supabase_user_id") @db.Uuid
-  kakaoId        String?   @unique @map("kakao_id")
-  authProvider   String?   @map("auth_provider") // credentials | google | kakao
-  lastLoginAt    DateTime? @map("last_login_at") @db.Timestamptz(6)
+  id                     String    @id @default(cuid())
+  academyId              String
+  email                  String    @unique
+  password               String
+  name                   String
+  phone                  String?
+  role                   String    @default("TEACHER") // "DIRECTOR" | "TEACHER"
+  avatarUrl              String?
+  isActive               Boolean   @default(true)
+  supabaseUserId         String?   @unique @map("supabase_user_id") @db.Uuid
+  kakaoId                String?   @unique @map("kakao_id")
+  authProvider           String?   @map("auth_provider") // credentials | google | kakao
+  lastLoginAt            DateTime? @map("last_login_at") @db.Timestamptz(6)
   // 스모트 소식(플랫폼 공지) 마지막 확인 시각 — 이 시각 이후 발행된 글이 있으면
   // "새 소식" 배지를 띄운다. 공지별 읽음 레코드 대신 프로필당 타임스탬프 1개로 추적.
   lastAnnouncementReadAt DateTime? @map("last_announcement_read_at")
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
 
   // 마케팅 정보 수신 동의 (정보통신망법 제50조 opt-in 근거).
   // 선택 항목 — 동의해야만 SMS·카카오톡(브랜드메시지)·이메일 등 광고성 발송 대상이 된다.
@@ -276,19 +276,19 @@ model Student {
 
 /// Parent — Student guardians
 model Parent {
-  id               String   @id @default(cuid())
-  academyId        String
-  name             String
-  phone            String
-  email            String?
-  relation         String? // "MOTHER" | "FATHER" | "GUARDIAN" | "OTHER"
-  emergencyContact String?
-  memo             String?  @db.Text
-  loginToken       String?  @unique // For passwordless parent login via link
+  id                     String    @id @default(cuid())
+  academyId              String
+  name                   String
+  phone                  String
+  email                  String?
+  relation               String? // "MOTHER" | "FATHER" | "GUARDIAN" | "OTHER"
+  emergencyContact       String?
+  memo                   String?   @db.Text
+  loginToken             String?   @unique // For passwordless parent login via link
   // 스모트 소식(플랫폼 공지) 마지막 확인 시각 — 프로필당 타임스탬프 1개로 신규 여부 판단.
   lastAnnouncementReadAt DateTime? @map("last_announcement_read_at")
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
 
   // Relations
   academy       Academy         @relation(fields: [academyId], references: [id])
@@ -669,7 +669,7 @@ model Passage {
   /// Source page(s) the passage was extracted from. Carried through from
   /// ExtractionItem/M1Draft on promote so "where did this come from?" survives.
   /// Empty for manually authored passages. (adaptive-intake P1)
-  sourcePageIndex Int[] @default([])
+  sourcePageIndex  Int[]   @default([])
   /// "verbatim" | "restored" — whether the stored content is the raw OCR text
   /// or an AI-restored original. Null for manual passages. (adaptive-intake D2)
   extractionOutput String?
@@ -869,31 +869,31 @@ model PassageReportExport {
 /// analysis: ExamAnalysisResult — {perQuestion: QuestionAnalysis[], examLevel} (문항별 analysisStatus 포함)
 /// version: 낙관적 락 (PATCH 시 WHERE id AND version=$expected)
 model ExamAnalysis {
-  id          String    @id @default(cuid())
+  id          String  @id @default(cuid())
   academyId   String
   createdById String? // Staff soft-ref (FK 아님 — 감사용)
   title       String
   schoolName  String?
   grade       String?
-  subject     String    @default("ENGLISH")
-  examType    String    @default("MIDTERM") // "MIDTERM" | "FINAL" | "MOCK" | "OTHER"
+  subject     String  @default("ENGLISH")
+  examType    String  @default("MIDTERM") // "MIDTERM" | "FINAL" | "MOCK" | "OTHER"
   examYear    Int?
   semester    String?
-  status      String    @default("DRAFT")
-  sourceType  String    @default("MANUAL") // "MANUAL" | "INTERNAL"(자체 생성 시험지 합성 분석 — vision 미경유)
+  status      String  @default("DRAFT")
+  sourceType  String  @default("MANUAL") // "MANUAL" | "INTERNAL"(자체 생성 시험지 합성 분석 — vision 미경유)
   sourceFiles Json? // [{path, page}] — Supabase Storage(extraction-sources) 키
 
   /// 자체 생성 시험지(Exam) 내부 분석 링크 — sourceType="INTERNAL" 전용 soft-ref(FK 미설정).
   /// structure/analysis 는 Question 뱅크에서 합성(src/lib/exam-scoring/internal-analysis.ts).
   sourceExamId String?
-  structure   Json? // ExamPaperStructure
-  analysis    Json? // ExamAnalysisResult (배치 체크포인트 증분 저장 대상)
-  reviewState Json? // {structureConfirmed, confirmedNumbers[], staleNumbers[]}
-  aiMeta      Json? // {model, calls, promptTokens, completionTokens, durationMs, structureRuns, failedNumbers[]}
-  version     Int       @default(1)
-  deletedAt   DateTime? // soft delete
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  structure    Json? // ExamPaperStructure
+  analysis     Json? // ExamAnalysisResult (배치 체크포인트 증분 저장 대상)
+  reviewState  Json? // {structureConfirmed, confirmedNumbers[], staleNumbers[]}
+  aiMeta       Json? // {model, calls, promptTokens, completionTokens, durationMs, structureRuns, failedNumbers[]}
+  version      Int       @default(1)
+  deletedAt    DateTime? // soft delete
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 
   academy  Academy             @relation(fields: [academyId], references: [id], onDelete: Cascade)
   students ExamReportStudent[]
@@ -910,21 +910,21 @@ model ExamAnalysis {
 /// reportStatus: "NONE" | "GENERATING" | "GENERATED" | "FAILED"
 /// shareToken: 공개 리포트 /r/[token] — revoke 시 null, 재발급 시 신규(자동 rotate)
 model ExamReportStudent {
-  id               String    @id @default(cuid())
-  examAnalysisId   String
-  academyId        String
-  studentName      String
-  studentMeta      Json? // {school?, grade?, classroom?, note?}
-  sourceFiles      Json? // 학생 본인 시험지 페이지 [{path, page}] (v3 직접분석)
-  readState        Json? // {status, readRuns, readAt, model, uncertainties[], aiMeta} (v3 AI 답안 판독)
-  responses        Json? // StudentResponse[]
-  scoreSummary     Json? // ScoreSummary (서버 결정론 계산 캐시)
-  gradingConfirmed Boolean   @default(false)
-  report           Json? // {current, previous?}
-  reportStatus     String    @default("NONE")
-  shareToken       String?   @unique
-  shareEnabled     Boolean   @default(false)
-  sharedAt         DateTime?
+  id                String    @id @default(cuid())
+  examAnalysisId    String
+  academyId         String
+  studentName       String
+  studentMeta       Json? // {school?, grade?, classroom?, note?}
+  sourceFiles       Json? // 학생 본인 시험지 페이지 [{path, page}] (v3 직접분석)
+  readState         Json? // {status, readRuns, readAt, model, uncertainties[], aiMeta} (v3 AI 답안 판독)
+  responses         Json? // StudentResponse[]
+  scoreSummary      Json? // ScoreSummary (서버 결정론 계산 캐시)
+  gradingConfirmed  Boolean   @default(false)
+  report            Json? // {current, previous?}
+  reportStatus      String    @default("NONE")
+  shareToken        String?   @unique
+  shareEnabled      Boolean   @default(false)
+  sharedAt          DateTime?
   answerToken       String?   @unique // 학생 답안입력 링크 /a/[token] — 리포트 공유 shareToken 과 별개
   answerEnabled     Boolean   @default(false)
   answerSubmittedAt DateTime? // 학생이 마지막으로 답안을 제출한 시각
@@ -1095,6 +1095,73 @@ model WorkbenchAiJob {
   @@map("workbench_ai_jobs")
 }
 
+/// Durable, per-Workbench-assignment provider-call and worst-case-cost budget.
+/// OFF mode never touches this table. Active policies are immutable once the
+/// first row is created for a job.
+model QuestionGenerationCallBudget {
+  jobId String @id @map("job_id")
+
+  policyVersion  String @map("policy_version")
+  policyHash     String @map("policy_hash")
+  descriptorHash String @map("descriptor_hash")
+  mode           String
+  state          String @default("ACTIVE")
+  policySnapshot Json   @map("policy_snapshot")
+
+  maxPhysicalCalls      Int?    @map("max_physical_calls")
+  leasedCalls           Int     @default(0) @map("leased_calls")
+  maxReservedCostMicros BigInt? @map("max_reserved_cost_micros")
+  reservedCostMicros    BigInt  @default(0) @map("reserved_cost_micros")
+  observedCostMicros    BigInt  @default(0) @map("observed_cost_micros")
+
+  priceSnapshotId   String? @map("price_snapshot_id")
+  priceSnapshotHash String? @map("price_snapshot_hash")
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
+  closedAt  DateTime? @map("closed_at") @db.Timestamptz(3)
+
+  leases QuestionGenerationCallLease[]
+
+  @@index([mode, createdAt])
+  @@map("question_generation_call_budgets")
+}
+
+/// One committed row per physical fetch admission. A lease is never reclaimed;
+/// a crash between commit and send intentionally leaves an ambiguous consumed
+/// ordinal and its full reservation.
+model QuestionGenerationCallLease {
+  id      String @id
+  jobId   String @map("job_id")
+  ordinal Int
+
+  requestedModel     String  @map("requested_model")
+  endpointHash       String  @map("endpoint_hash")
+  wireBodyHash       String  @map("wire_body_hash")
+  reservedCostMicros BigInt  @map("reserved_cost_micros")
+  observedCostMicros BigInt? @map("observed_cost_micros")
+
+  state            String
+  httpStatus       Int?    @map("http_status")
+  shadowExceeded   Boolean @default(false) @map("shadow_exceeded")
+  generationIdHash String? @map("generation_id_hash")
+  servedModel      String? @map("served_model")
+  networkErrorKind String? @map("network_error_kind")
+  networkErrorName String? @map("network_error_name")
+  networkErrorCode String? @map("network_error_code")
+  admissionWarning String? @map("admission_warning")
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  settledAt DateTime? @map("settled_at") @db.Timestamptz(3)
+
+  budget QuestionGenerationCallBudget @relation(fields: [jobId], references: [jobId], onDelete: Restrict)
+
+  @@unique([jobId, ordinal])
+  @@index([jobId, state])
+  @@index([createdAt])
+  @@map("question_generation_call_leases")
+}
+
 /// SimilarExamGenerationJob — background jobs that analyze an uploaded
 /// finished exam pattern and generate a new exam from selected passages.
 /// status: "PENDING" | "PROCESSING" | "COMPLETED" | "FAILED" | "CANCELLED"
@@ -1142,19 +1209,19 @@ model SimilarQuestionGenerationJob {
   status String @default("PENDING") // PENDING | PROCESSING | COMPLETED | FAILED
 
   // 참조 문항(한 페이지 이미지) — base64. 워커가 분석에 사용. (검증용으로 분석 후에도 보존)
-  referenceImage     String @db.Text
-  referenceMediaType String @default("image/jpeg")
+  referenceImage     String  @db.Text
+  referenceMediaType String  @default("image/jpeg")
   // docai 모드에서 Document AI 가 추출해 분석(Gemini)에 넘긴 OCR 텍스트 — 검증용(분석이 본 입력).
-  referenceOcrText String? @db.Text
+  referenceOcrText   String? @db.Text
   // 선택 지문 풀(passageId[]) + 학년.
-  passageIds Json
-  gradeInfo  String?
+  passageIds         Json
+  gradeInfo          String?
 
-  referenceCount Int @default(0) // M (분석 후 채움)
-  passageCount   Int @default(0) // N
-  totalCount     Int @default(0) // 시도 대상(M×N)
-  savedCount     Int @default(0)
-  skippedCount   Int @default(0)
+  referenceCount Int   @default(0) // M (분석 후 채움)
+  passageCount   Int   @default(0) // N
+  totalCount     Int   @default(0) // 시도 대상(M×N)
+  savedCount     Int   @default(0)
+  skippedCount   Int   @default(0)
   skipSummary    Json?
 
   errorMessage String? @db.Text
@@ -1401,8 +1468,8 @@ model ExamSubmission {
   gradedBy    String? // staffId who graded (for manual grading)
 
   // ── 배포·응시 링크(/t/[token]) ──
-  accessToken   String?  @unique // 학생 응시 링크 토큰 — share-token.ts 발급 규격
-  accessEnabled Boolean  @default(false)
+  accessToken   String? @unique // 학생 응시 링크 토큰 — share-token.ts 발급 규격
+  accessEnabled Boolean @default(false)
   mode          String? // "TABLET"(웹 응시) | "OMR"(답안만 입력)
 
   // ── 결정론 채점(AI 0콜) ──
@@ -2176,20 +2243,20 @@ model PassageCollectionItem {
 // ============================================================================
 
 model ExamCollection {
-  id          String   @id @default(cuid())
+  id          String  @id @default(cuid())
   academyId   String
   parentId    String? // Self-reference for nested folders (null = root)
   name        String
-  description String?  @db.Text
+  description String? @db.Text
   color       String? // Hex color for visual distinction
 
   /// 시험지 폴더 과목 — null=ENGLISH(기존 폴더 전부·영어 무회귀), "KOREAN"=국어 라우트 생성.
   /// passages.subject / *_collections.subject 규약. surgical ALTER (migrate deploy / db push 금지):
   ///   ALTER TABLE exam_collections ADD COLUMN IF NOT EXISTS subject text;  (ko-exam-set-subject.sql)
-  subject     String?
+  subject String?
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   academy  Academy              @relation(fields: [academyId], references: [id])
   parent   ExamCollection?      @relation("ExamFolderTree", fields: [parentId], references: [id], onDelete: SetNull)
@@ -2308,28 +2375,28 @@ model AdminAuditLog {
 /// dismissMode: "DAILY"(오늘 하루 보지 않기) | "SESSION" | "ONCE"(다시 안 봄) | "ALWAYS"(매번)
 /// audiences: "DIRECTOR,TEACHER,STUDENT" 중 콤마 조인(앱에서 뷰어 역할로 필터).
 model SiteBanner {
-  id          String  @id @default(cuid())
-  title       String // 운영자용 내부 라벨
-  type        String  @default("TEMPLATE") // "TEMPLATE" | "IMAGE"
-  templateKey String? @map("template_key") // type=TEMPLATE 일 때 템플릿 종류
-  content     Json    @default("{}") // 템플릿 필드 값(JSON)
-  imageUrl    String? @map("image_url") @db.Text // type=IMAGE 공개 URL
-  imageAlt    String? @map("image_alt")
-  linkUrl     String? @map("link_url") @db.Text // 클릭 시 이동 대상(이미지/선택)
-  audiences   String  @default("DIRECTOR") // 콤마 조인 역할 목록
-  priority    Int     @default(0) // 낮을수록 먼저 노출
-  isActive    Boolean @default(false) @map("is_active")
-  dismissMode String  @default("DAILY") @map("dismiss_mode")
-  showDismissButton Boolean @default(true) @map("show_dismiss_button")
+  id                  String    @id @default(cuid())
+  title               String // 운영자용 내부 라벨
+  type                String    @default("TEMPLATE") // "TEMPLATE" | "IMAGE"
+  templateKey         String?   @map("template_key") // type=TEMPLATE 일 때 템플릿 종류
+  content             Json      @default("{}") // 템플릿 필드 값(JSON)
+  imageUrl            String?   @map("image_url") @db.Text // type=IMAGE 공개 URL
+  imageAlt            String?   @map("image_alt")
+  linkUrl             String?   @map("link_url") @db.Text // 클릭 시 이동 대상(이미지/선택)
+  audiences           String    @default("DIRECTOR") // 콤마 조인 역할 목록
+  priority            Int       @default(0) // 낮을수록 먼저 노출
+  isActive            Boolean   @default(false) @map("is_active")
+  dismissMode         String    @default("DAILY") @map("dismiss_mode")
+  showDismissButton   Boolean   @default(true) @map("show_dismiss_button")
   // 노출 범위: "ALL"(대상 역할 전체) | "SPECIFIC"(target_academy_ids 학원만)
-  targetMode       String @default("ALL") @map("target_mode")
-  targetAcademyIds Json   @default("[]") @map("target_academy_ids") // string[] academyId
-  startsAt    DateTime? @map("starts_at")
-  endsAt      DateTime? @map("ends_at")
-  autoOpenOnLowCredit Boolean @default(false) @map("auto_open_on_low_credit")
-  createdByAdminId    String? @map("created_by_admin_id")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  targetMode          String    @default("ALL") @map("target_mode")
+  targetAcademyIds    Json      @default("[]") @map("target_academy_ids") // string[] academyId
+  startsAt            DateTime? @map("starts_at")
+  endsAt              DateTime? @map("ends_at")
+  autoOpenOnLowCredit Boolean   @default(false) @map("auto_open_on_low_credit")
+  createdByAdminId    String?   @map("created_by_admin_id")
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
 
   @@index([isActive, priority])
   @@map("site_banners")
@@ -2363,7 +2430,7 @@ model OfflineMarketingAsset {
   campaign         OfflineMarketingCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
   title            String // 파일 표시 이름
   description      String?                  @db.Text // 파일 메모(선택)
-  fileUrl          String                   @db.Text @map("file_url") // 공개 PDF URL
+  fileUrl          String                   @map("file_url") @db.Text // 공개 PDF URL
   storagePath      String                   @map("storage_path") // 버킷 내 경로(삭제용)
   fileName         String                   @map("file_name") // 원본 파일명
   fileSize         Int                      @default(0) @map("file_size") // 바이트
@@ -2616,24 +2683,24 @@ model CreditTransaction {
 /// CreditTopUp — Additional credit purchase records
 /// status: "PENDING" | "WAITING_FOR_DEPOSIT" | "COMPLETED" | "FAILED" | "CANCELLED" | "REFUNDED"
 model CreditTopUpProduct {
-  id                String    @id @default(cuid())
-  code              String    @unique
-  name              String
-  creditAmount      Int       @unique
-  basePrice         Int
-  description       String?   @db.Text
+  id           String   @id @default(cuid())
+  code         String   @unique
+  name         String
+  creditAmount Int      @unique
+  basePrice    Int
+  description  String?  @db.Text
   // Credit validity in days from grant. On purchase the buyer's balance expiry
   // is extended by (remaining days + expiryDays). null/0 = no expiry (무기한).
-  expiryDays        Int?
-  isActive          Boolean   @default(true)
-  sortOrder         Int       @default(0)
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
+  expiryDays   Int?
+  isActive     Boolean  @default(true)
+  sortOrder    Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   // A product can run MANY promotions at once (different audience/link/window).
   // The old single-promotion columns (discountRate/bonusRate/promotion*) were
   // migrated into CreditPromotion rows and are no longer mapped here.
-  promotions        CreditPromotion[]
+  promotions CreditPromotion[]
 
   @@index([isActive, sortOrder])
   @@map("credit_top_up_products")
@@ -2643,26 +2710,26 @@ model CreditTopUpProduct {
 /// with different audience/link/window. Effective one is resolved per viewer by
 /// precedence (link match → priority → best buyer value → soonest end).
 model CreditPromotion {
-  id           String   @id @default(cuid())
-  productId    String
-  name         String?
+  id            String   @id @default(cuid())
+  productId     String
+  name          String?
   // 할인: PERCENT면 value=할인율%(0-99), AMOUNT면 value=할인 금액(원).
-  discountType String   @default("PERCENT")
-  discountValue Int     @default(0)
+  discountType  String   @default("PERCENT")
+  discountValue Int      @default(0)
   // 크레딧 추가지급: PERCENT면 value=추가 지급률%(예 50=총150%), AMOUNT면 value=추가 크레딧 수.
-  bonusType    String   @default("PERCENT")
-  bonusValue   Int      @default(0)
-  startsAt     DateTime
-  endsAt       DateTime
+  bonusType     String   @default("PERCENT")
+  bonusValue    Int      @default(0)
+  startsAt      DateTime
+  endsAt        DateTime
   // "ALL" = everyone, "TARGETED" = only targets OR anyone with the link.
-  audience     String   @default("ALL")
+  audience      String   @default("ALL")
   // Shareable link token (/credits/promo/{token}) — one per promotion.
-  linkToken    String?  @unique
+  linkToken     String?  @unique
   // Higher wins when several eligible promotions overlap for the same viewer.
-  priority     Int      @default(0)
-  isActive     Boolean  @default(true)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  priority      Int      @default(0)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   product     CreditTopUpProduct          @relation(fields: [productId], references: [id], onDelete: Cascade)
   targets     CreditPromotionTarget[]
@@ -2782,8 +2849,8 @@ model CreditTopUp {
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @default(now()) @updatedAt
 
-  academy           Academy               @relation(fields: [academyId], references: [id])
-  creditTransaction CreditTransaction?    @relation(fields: [creditTransactionId], references: [id])
+  academy           Academy                   @relation(fields: [academyId], references: [id])
+  creditTransaction CreditTransaction?        @relation(fields: [creditTransactionId], references: [id])
   webhookEvents     PortOneWebhookEvent[]
   bankDeposits      BankDepositNotification[]
 
@@ -2995,27 +3062,27 @@ model NotificationState {
 /// PrintableCouponBatch — 실물(인쇄형) 쿠폰 발급 건. 한 배치 = 한 발급, 발급 후 조건 불변(freeze).
 /// effectType: "CREDIT_GRANT"(등록 즉시 크레딧 지급) | "DISCOUNT_AMOUNT"(N원 할인) | "DISCOUNT_PERCENT"(N% 할인)
 model PrintableCouponBatch {
-  id                  String   @id @default(cuid())
-  batchName           String // 관리자용 라벨 "신규가입 쿠폰 2026.07.07"
-  title               String // 인쇄 카드 쿠폰명
-  description         String?  @db.Text
+  id          String  @id @default(cuid())
+  batchName   String // 관리자용 라벨 "신규가입 쿠폰 2026.07.07"
+  title       String // 인쇄 카드 쿠폰명
+  description String? @db.Text
 
-  effectType          String   @default("CREDIT_GRANT") // "CREDIT_GRANT" | "DISCOUNT_AMOUNT" | "DISCOUNT_PERCENT"
+  effectType      String    @default("CREDIT_GRANT") // "CREDIT_GRANT" | "DISCOUNT_AMOUNT" | "DISCOUNT_PERCENT"
   // CREDIT_GRANT 전용
-  grantCredits        Int? // 지급 크레딧 수
-  grantExpiryDays     Int? // (레거시) 지급 크레딧 유효기간(일). null/0=RIDE, >0=EXTEND
-  grantExpiryAt       DateTime? // 지급 크레딧 절대 만료일(캘린더 선택). null=무기한(RIDE)
+  grantCredits    Int? // 지급 크레딧 수
+  grantExpiryDays Int? // (레거시) 지급 크레딧 유효기간(일). null/0=RIDE, >0=EXTEND
+  grantExpiryAt   DateTime? // 지급 크레딧 절대 만료일(캘린더 선택). null=무기한(RIDE)
   // DISCOUNT 전용 (효과에 맞는 하나만 채움)
-  discountAmount      Int? // 원 (DISCOUNT_AMOUNT)
-  discountPercent     Int? // 1~100 (DISCOUNT_PERCENT)
+  discountAmount  Int? // 원 (DISCOUNT_AMOUNT)
+  discountPercent Int? // 1~100 (DISCOUNT_PERCENT)
 
   validUntil          DateTime? // 쿠폰 "등록" 마감일 (nullable)
   quantity            Int // 발급 장수 (1~500)
-  perAcademyLimit     Int      @default(1) // 한 학원이 이 배치에서 등록 가능한 최대 장수
-  isActive            Boolean  @default(true) // 킬스위치
+  perAcademyLimit     Int       @default(1) // 한 학원이 이 배치에서 등록 가능한 최대 장수
+  isActive            Boolean   @default(true) // 킬스위치
   createdByAdminId    String?
   createdByAdminEmail String?
-  createdAt           DateTime @default(now())
+  createdAt           DateTime  @default(now())
 
   codes PrintableCouponCode[]
 
@@ -3140,22 +3207,22 @@ model ExtractionJob {
 
   // ── Adaptive intake (additive, read only when EXTRACTION_ADAPTIVE_INTAKE on) ──
   /// Routing/audit hint. "IMAGE_SINGLE" | "IMAGES" | "PDF" | "TEXT".
-  inputType String?
+  inputType             String?
   /// Frozen IntakePlan snapshot (passage count, boundaries, layout, segments)
   /// confirmed by the user before extraction — for re-commit/audit/replay.
-  intakePlan Json?
+  intakePlan            Json?
   /// AI triage confidence (0~1) used to pick the surface / fallback.
-  triageConfidence Float?
+  triageConfidence      Float?
   /// Triage-estimated passage count — progress denominator before real count.
   estimatedPassageCount Int?
   /// (P7-D2) 추출 산출물 모드(잡 단위 "기본 의도"). "verbatim"(원문 그대로) | "restored"(AI 복원).
   /// 진실의 소스는 지문별(Passage.extractionOutput / Draft.restorationStatus).
   /// null = 미전달(비적응 흐름) → finalize는 기존 자동복원 휴리스틱 유지.
-  outputMode String?
+  outputMode            String?
   /// 문제생성 페이지 발(發) 잡: finalize가 drafts를 서버에서 곧바로 Passage로 승격한다.
   /// 클라이언트 폴링 승격(useGenerateExtraction)은 표시/폴백용 — 페이지 이탈로 폴링이
   /// 죽어도 결과가 고아가 되지 않게 하는 게 목적. 자료추출(import) 잡은 false(수동 검수).
-  autoPromote Boolean @default(false)
+  autoPromote           Boolean @default(false)
 
   status       String @default("PENDING")
   totalPages   Int
@@ -3225,7 +3292,7 @@ model ExtractionPage {
   leaseExpiresAt DateTime? // stuck lease 복구용
 
   // ─── 결과 ─────────────────────────────────────
-  extractedText String? @db.Text
+  extractedText String?  @db.Text
   confidence    Float?
   modelUsed     String?
   inputTokens   Int?
@@ -3243,10 +3310,10 @@ model ExtractionPage {
   // ── Adaptive intake — D4 多페이지 묶음(bundle) 입력 표식 (additive) ──
   /// Non-null marks this page row as a bundle member dispatched in one OCR call.
   /// Members of one bundle share the same key. Null = legacy single-page path.
-  bundleKey String?
+  bundleKey       String?
   /// Real source pageIndexes a bundle row sends together (e.g. [4,5]). Empty for
   /// single-page rows. The bundle row itself may use a reserved virtual pageIndex.
-  spanPageIndices Int[] @default([])
+  spanPageIndices Int[]   @default([])
 
   /// Raw OCR text returned by Document AI BEFORE Gemini classification.
   /// Stored for debugging: lets us tell whether a missing marker / word
@@ -3347,10 +3414,10 @@ model ExtractionItem {
   /// Normalized crop rectangle {x,y,w,h} in 0~1 (EXIF-corrected). The region a
   /// user marqueed on a page; the OCR input for crop segments. Distinct from
   /// boundingBox (viewer highlight only) to avoid overloading. (D-G2)
-  cropBox Json?
+  cropBox          Json?
   /// "page" | "span" | "crop" | "text-block" | "manual" — how this segment was
   /// produced, so the review UI and bench can reason about provenance.
-  segmentKind String?
+  segmentKind      String?
   /// Why a block was flagged incomplete: "LENGTH" | "CROP_SIGNAL" | "LOW_OCR"
   /// | "SKEW" | "NON_TERMINAL". Replaces the old silent length-only discard. (G4)
   incompleteReason String?
@@ -3477,25 +3544,25 @@ model PassageBundle {
 /// displayedPassageLayout (JSON LayoutDescriptor) is the visible base every member anchors into.
 /// status: "OK" | "DEGRADED" (anchor resolution failed → manual review required).
 model QuestionSet {
-  id                     String   @id @default(cuid())
+  id                     String  @id @default(cuid())
   jobId                  String? // generation lineage → WorkbenchAiJob (nullable: hand-assembled sets)
   academyId              String
-  structuralMode         String   @default("NONE") // "NONE" | "SENTENCE_ORDER" | "SENTENCE_INSERT"
-  canonicalPassage       String   @db.Text // ordered; never rendered to students
-  displayedPassageLayout String   @db.Text // JSON LayoutDescriptor; the visible base
+  structuralMode         String  @default("NONE") // "NONE" | "SENTENCE_ORDER" | "SENTENCE_INSERT"
+  canonicalPassage       String  @db.Text // ordered; never rendered to students
+  displayedPassageLayout String  @db.Text // JSON LayoutDescriptor; the visible base
   layoutFingerprint      String // sha256(displayedPassageLayout) — anchor-resolution gate
-  itemCount              Int      @default(0)
+  itemCount              Int     @default(0)
   setLabel               String? // "[43~45]" — printed group header
   basePassageId          String? // optional: structural member promoted to a stored Passage (Phase 7+)
-  status                 String   @default("OK")
+  status                 String  @default("OK")
 
   /// 문제 세트 과목 — null=ENGLISH(기존 세트 전부·영어 무회귀), "KOREAN"=국어 세트.
   /// passages.subject 규약. surgical ALTER (migrate deploy / db push 금지):
   ///   ALTER TABLE question_sets ADD COLUMN IF NOT EXISTS subject text;  (ko-exam-set-subject.sql)
-  subject                String?
+  subject String?
 
-  createdAt              DateTime @default(now())
-  updatedAt              DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   job         WorkbenchAiJob?   @relation(fields: [jobId], references: [id], onDelete: SetNull)
   academy     Academy           @relation(fields: [academyId], references: [id])
@@ -3552,15 +3619,15 @@ model ExtractionM1PassageDraft {
   warnings          Json?
   metadata          Json?
 
-  confirmedAt    DateTime?
-  savedPassageId String?
+  confirmedAt           DateTime?
+  savedPassageId        String?
   /// (P7-D2) AI 복원 차감 CreditTransaction.id. null=미과금. 환불 후 null 복원.
   /// Pure OCR/Document AI does not set a credit transaction.
   restorationCreditTxId String?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  deletedAt      DateTime?
-  deletedById    String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  deletedAt             DateTime?
+  deletedById           String?
 
   job             ExtractionJob                    @relation(fields: [jobId], references: [id], onDelete: Cascade)
   sourceMaterial  SourceMaterial?                  @relation(fields: [sourceMaterialId], references: [id], onDelete: SetNull)
@@ -3868,8 +3935,8 @@ model Webtoon {
   // Editable text layer ("자막 편집"). Layered doc: detected text regions (geometry +
   // text + style) over the baked image, so users can fix typos/mistranslations in-browser.
   // Shape = WebtoonTextDoc (src/lib/webtoon-text/types.ts). Added via surgical ALTER.
-  textDoc      Json?   @map("text_doc")
-  editedImageUrl String? @db.Text @map("edited_image_url") // Supabase URL of the re-typeset export
+  textDoc           Json?   @map("text_doc")
+  editedImageUrl    String? @map("edited_image_url") @db.Text // Supabase URL of the re-typeset export
   editedStoragePath String? @map("edited_storage_path")
 
   createdAt   DateTime  @default(now())
@@ -3918,9 +3985,9 @@ model ExamPassageWebtoonAsset {
   sourceHash String?
   sourceMeta Json?
   qaReport   Json?
-  attempts   Int   @default(0)
+  attempts   Int     @default(0)
 
-  errorMessage String? @db.Text
+  errorMessage String?   @db.Text
   generatedAt  DateTime?
   reviewedAt   DateTime?
   createdAt    DateTime  @default(now())
@@ -3944,7 +4011,7 @@ model ExamPassageWebtoonPurchase {
   language      String
   style         String @default("KOREAN_WEBTOON")
 
-  creditTransactionId String @unique
+  creditTransactionId String   @unique
   createdAt           DateTime @default(now())
 
   @@unique([academyId, examPassageId, language, style])
@@ -4978,6 +5045,62 @@ model GrammarDrillMastery {
   @@map("grammar_drill_mastery")
 }
 
+/// 인터랙티브 레슨 진행 — 개념 1개 = 행 1개. (학습 OS, docs/study-os-spec.md §6.1)
+/// note 는 학생이 자기 말로 쓴 필기이며 교사가 열람한다.
+/// 적용 SQL: scripts/sql/grammar-drill-lesson-progress.sql (surgical, migrate 금지)
+model GrammarDrillLessonProgress {
+  id             String    @id @default(cuid())
+  academyId      String
+  studentId      String
+  unitId         String
+  conceptId      String
+  blocksSeen     Int       @default(0)
+  blocksTotal    Int       @default(0)
+  lastBlockIndex Int       @default(0)
+  checkTotal     Int       @default(0)
+  checkCorrect   Int       @default(0)
+  confidence     Int? // 1 자신 없음 ~ 3 설명할 수 있음
+  note           String?   @db.Text
+  secondsSpent   Int       @default(0)
+  startedAt      DateTime  @default(now())
+  completedAt    DateTime?
+  updatedAt      DateTime  @updatedAt
+
+  @@unique([studentId, conceptId])
+  @@index([studentId, unitId])
+  @@index([academyId, updatedAt])
+  @@map("grammar_drill_lesson_progress")
+}
+
+/// 어법 스텟 — 학생당 1행. XP·게임 전적·칭호 이력·게임 XP 중복지급 방지 원장.
+/// 칭호의 정본은 titles.ts(순수 함수) — titles JSONB 는 획득 시각 이력일 뿐이다.
+/// 적용 SQL: scripts/sql/grammar-drill-stats.sql (surgical, migrate 금지)
+model GrammarDrillStat {
+  id               String    @id @default(cuid())
+  academyId        String
+  studentId        String    @unique
+  xp               Int       @default(0)
+  lessonsCompleted Int       @default(0)
+  replays          Int       @default(0)
+  gamesPlayed      Int       @default(0)
+  gamePerfects     Int       @default(0)
+  bossWins         Int       @default(0)
+  bossLosses       Int       @default(0)
+  memoryGatePasses Int       @default(0)
+  bestCombo        Int       @default(0)
+  lensXp           Json      @default("{}") // {"L1":0,...,"L5":0}
+  partXp           Json      @default("{}") // {"p0":0,...,"p3":0}
+  titles           Json      @default("[]") // [{"key","earnedAt"}]
+  gameLog          Json      @default("{}") // {"conceptId:blockId":{"plays","best"}}
+  lastStudyDate    DateTime?
+  streakDays       Int       @default(0)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([academyId, updatedAt])
+  @@map("grammar_drill_stats")
+}
+
 /// 유닛 단계 진행 — CONCEPT → DRILL → READING → WRITTEN → TEST → MASTERED.
 model GrammarDrillUnitProgress {
   id            String    @id @default(cuid())
@@ -5101,28 +5224,28 @@ model StudyAssignmentTask {
 // 개설=SuperAdmin, 신청=Staff(원장). 정원(capacity)까지 REGISTERED 인원으로 마감.
 
 model GroupSeminar {
-  id               String    @id @default(cuid())
-  title            String
-  summary          String? // 목록 카드용 한 줄 소개
-  description      String?   @db.Text // 상세 안내(커리큘럼 등)
-  benefit          String?   @db.Text // 혜택 배너 문구(선물 아이콘 옆). 비면 배너 숨김
-  host             String? // 강사/진행자
-  target           String? // 대상(예: 신규 원장)
-  location         String? // 오프라인 장소 또는 "온라인(줌)"
-  mapUrl           String? // 지도 링크(네이버/카카오 등) — "지도에서 위치 확인하기" 버튼
-  meetingUrl       String? // 온라인 접속 링크 — 신청 확정자에게 노출
-  scheduledAt      DateTime? // 대표 일시(세션 목록의 가장 이른 날짜로 자동 설정)
-  sessionDates     Json? // string[] ISO — 여러 날짜 중 사용자가 하루를 선택. 비면 단일 일정.
-  durationMin      Int? // 진행 시간(분)
-  capacity         Int? // 정원(null=제한 없음)
+  id                String    @id @default(cuid())
+  title             String
+  summary           String? // 목록 카드용 한 줄 소개
+  description       String?   @db.Text // 상세 안내(커리큘럼 등)
+  benefit           String?   @db.Text // 혜택 배너 문구(선물 아이콘 옆). 비면 배너 숨김
+  host              String? // 강사/진행자
+  target            String? // 대상(예: 신규 원장)
+  location          String? // 오프라인 장소 또는 "온라인(줌)"
+  mapUrl            String? // 지도 링크(네이버/카카오 등) — "지도에서 위치 확인하기" 버튼
+  meetingUrl        String? // 온라인 접속 링크 — 신청 확정자에게 노출
+  scheduledAt       DateTime? // 대표 일시(세션 목록의 가장 이른 날짜로 자동 설정)
+  sessionDates      Json? // string[] ISO — 여러 날짜 중 사용자가 하루를 선택. 비면 단일 일정.
+  durationMin       Int? // 진행 시간(분)
+  capacity          Int? // 정원(null=제한 없음)
   registerCloseDays Int? // 신청 마감: 각 세션 실행 N일 전까지 접수(null/0=당일까지)
-  depositAmount    Int? // 참가 보증금(원). null/0=없음. 계좌이체로 받고 세미나 당일 환급.
-  coverImageUrl    String?
-  publicEnabled    Boolean   @default(false) // 비회원(랜딩) 공개 신청 허용 여부
-  status           String    @default("DRAFT") // DRAFT→OPEN→CLOSED→ENDED / CANCELED
-  createdByAdminId String?
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  depositAmount     Int? // 참가 보증금(원). null/0=없음. 계좌이체로 받고 세미나 당일 환급.
+  coverImageUrl     String?
+  publicEnabled     Boolean   @default(false) // 비회원(랜딩) 공개 신청 허용 여부
+  status            String    @default("DRAFT") // DRAFT→OPEN→CLOSED→ENDED / CANCELED
+  createdByAdminId  String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 
   registrations GroupSeminarRegistration[]
 
@@ -5131,7 +5254,7 @@ model GroupSeminar {
 }
 
 model GroupSeminarRegistration {
-  id            String   @id @default(cuid())
+  id            String    @id @default(cuid())
   seminarId     String
   academyId     String?
   staffId       String?
@@ -5139,25 +5262,25 @@ model GroupSeminarRegistration {
   phone         String
   email         String?
   academyName   String?
-  headCount     Int      @default(1) // 참석 인원수
-  isGuest       Boolean  @default(false) // 비회원(랜딩) 신청 여부. staffId 없음.
+  headCount     Int       @default(1) // 참석 인원수
+  isGuest       Boolean   @default(false) // 비회원(랜딩) 신청 여부. staffId 없음.
   selectedDate  DateTime? // 여러 날짜 중 신청자가 선택한 세션 일시(단일 일정이면 null)
-  message       String?  @db.Text
-  status        String   @default("REGISTERED") // REGISTERED→ATTENDED / CANCELED
+  message       String?   @db.Text
+  status        String    @default("REGISTERED") // REGISTERED→ATTENDED / CANCELED
 
   // ── 참가 보증금(계좌이체) ──────────────────────────────────────────────
-  depositAmount     Int? // 신청 시점 보증금 스냅샷(원). null=보증금 없는 세미나
-  depositStatus     String   @default("NONE") // NONE | WAITING(입금대기) | PAID(입금확인) | REFUNDED(환급완료) | FORFEITED(몰수)
-  depositorName     String? // 입금자명 — 자동 매칭 키(금액+입금자명+시간창)
-  refundBankName    String? // 환급받을 은행
+  depositAmount       Int? // 신청 시점 보증금 스냅샷(원). null=보증금 없는 세미나
+  depositStatus       String    @default("NONE") // NONE | WAITING(입금대기) | PAID(입금확인) | REFUNDED(환급완료) | FORFEITED(몰수)
+  depositorName       String? // 입금자명 — 자동 매칭 키(금액+입금자명+시간창)
+  refundBankName      String? // 환급받을 은행
   refundAccountNumber String? // 환급받을 계좌번호
   refundAccountHolder String? // 환급받을 예금주
-  depositPaidAt     DateTime?
-  depositRefundedAt DateTime?
-  depositRef        String? // 매칭된 입금 알림 externalId(감사용)
+  depositPaidAt       DateTime?
+  depositRefundedAt   DateTime?
+  depositRef          String? // 매칭된 입금 알림 externalId(감사용)
 
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   seminar GroupSeminar @relation(fields: [seminarId], references: [id], onDelete: Cascade)
 

@@ -1,5 +1,5 @@
 // Split from question-quality.ts — shared helpers in core.ts, public API via index.ts barrel.
-import { QuestionQualitySeverity, containsLoose, containsStandaloneToken, findDuplicate, isRecord, isSingleEnglishToken, isTinyFunctionWord, normalizeComparableText, normalizeLabel, normalizeText } from "../../core";
+import { QuestionQualitySeverity, collectWrongOptionExplanations, containsLoose, containsStandaloneToken, findDuplicate, isRecord, isSingleEnglishToken, isTinyFunctionWord, normalizeComparableText, normalizeLabel, normalizeText } from "../../core";
 import { collectQuantityAnswerIssues, findGrammarPerceptionComplementToggle } from "./shared";
 
 
@@ -81,7 +81,37 @@ export const COMBO_HARD_POINT_CODES = new Set(["b", "c", "i"]);
 // that/what 슬롯의 패턴 누설 검출용 — 명사절 that 보문을 취하는 인지·단언 동사.
 // 관계절·지시사 that 위양성을 막기 위해 동사를 화이트리스트로 한정한다.
 export const COGNITION_VERB_THAT_REGEX =
-  /\b(?:know|knows|knew|known|think|thinks|thought|believe|believes|believed|assume|assumes|assumed|realize|realizes|realized|suggest|suggests|suggested|show|shows|showed|shown|find|finds|found|argue|argues|argued|claim|claims|claimed|say|says|said|hope|hopes|hoped|feel|feels|felt|notice|notices|noticed|understand|understands|understood|mean|means|meant|prove|proves|proved|conclude|concludes|concluded|recognize|recognizes|recognized)\s+that\b/i;
+  /\b(?:acknowledge|acknowledges|acknowledged|acknowledging|know|knows|knew|known|think|thinks|thought|believe|believes|believed|assume|assumes|assumed|realize|realizes|realized|suggest|suggests|suggested|show|shows|showed|shown|find|finds|found|argue|argues|argued|claim|claims|claimed|say|says|said|hope|hopes|hoped|feel|feels|felt|notice|notices|noticed|understand|understands|understood|mean|means|meant|prove|proves|proved|conclude|concludes|concluded|recognize|recognizes|recognized)\s+that\b/i;
+
+const COMPLEMENT_TAKING_VERB_END_REGEX =
+  /\b(?:acknowledge|acknowledges|acknowledged|acknowledging|know|knows|knew|known|think|thinks|thought|believe|believes|believed|assume|assumes|assumed|realize|realizes|realized|suggest|suggests|suggested|show|shows|showed|shown|find|finds|found|argue|argues|argued|claim|claims|claimed|say|says|said|hope|hopes|hoped|feel|feels|felt|notice|notices|noticed|understand|understands|understood|mean|means|meant|prove|proves|proved|conclude|concludes|concluded|recognize|recognizes|recognized)\s*$/i;
+
+function mislabelsComplementizerThat(
+  candidate: { correct: string; wrong: string; label: string },
+  passageWithMarkers: string,
+  explanation: string,
+): boolean {
+  const pair = new Set([
+    candidate.correct.toLowerCase(),
+    candidate.wrong.toLowerCase(),
+  ]);
+  if (!pair.has("that") || !pair.has("what") || candidate.correct.toLowerCase() !== "that") {
+    return false;
+  }
+  const markerIndex = passageWithMarkers.indexOf(candidate.label);
+  if (markerIndex < 0) return false;
+  const before = passageWithMarkers.slice(Math.max(0, markerIndex - 80), markerIndex);
+  if (!COMPLEMENT_TAKING_VERB_END_REGEX.test(before)) return false;
+
+  // This frame is V + complementizer that + a complete clause. Calling that a
+  // relative pronoun, inventing an antecedent, or claiming the embedded verb is
+  // missing its object is a factual explanation error (jul15 Q012).
+  return (
+    /(?:목적격\s*)?관계대명사\s*(?:인\s*)?['"]?that\b/i.test(explanation) ||
+    /\bthat\b(?:은|는|이|가)\s*(?:목적격\s*)?관계대명사/i.test(explanation) ||
+    /(?:목적어가|목적어는|목적어\s*)(?:빠져|빠진|생략|결여)/i.test(explanation)
+  );
+}
 
 
 
@@ -134,6 +164,15 @@ export function validateGrammarChoiceComboQuestion(
   // 전혀 없으면 생성이 잘린 것. 중간 라벨의 짧은 연결("(A)와 (B)는 …")은
   // 오탐이라 마지막 라벨의 빈 꼬리만 잡는다(보수 원칙).
   const explanationText = normalizeText(question.explanation);
+  const explanationCorpus = [
+    explanationText,
+    ...(Array.isArray(question.keyPoints)
+      ? question.keyPoints.map((value) => normalizeText(value))
+      : []),
+    ...collectWrongOptionExplanations(question.wrongOptionExplanations).values(),
+  ]
+    .filter(Boolean)
+    .join("\n");
   if (explanationText) {
     const labelMatches = [...explanationText.matchAll(/\(([A-C])\)/g)];
     const lastLabel = labelMatches[labelMatches.length - 1];
@@ -200,6 +239,16 @@ export function validateGrammarChoiceComboQuestion(
     );
     if (perceptionToggle) {
       add("error", "combo-perception-toggle", perceptionToggle);
+    }
+  }
+
+  for (const candidate of slotCandidates) {
+    if (mislabelsComplementizerThat(candidate, passageWithMarkers, explanationCorpus)) {
+      add(
+        "error",
+        "combo-complementizer-that-mislabel",
+        `Combo slot ${candidate.label} uses complementizer that after a clause-taking verb, but the explanation calls it a relative pronoun/antecedent gap. Explain that the following clause is complete and that what would create an extra nominal object.`,
+      );
     }
   }
 

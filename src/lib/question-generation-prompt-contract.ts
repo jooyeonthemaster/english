@@ -148,6 +148,10 @@ const CONTRACT_TYPE_FULL_TAIL = CONTRACT_TYPE_SEGMENTS.map(
   (segment) => segment.text,
 ).join("\n");
 
+const CONTRACT_KNOWN_TYPE_IDS = new Set(
+  CONTRACT_TYPE_SEGMENTS.flatMap((segment) => segment.types),
+);
+
 function buildContractTypeSectionBody(typeId: string): string {
   return CONTRACT_TYPE_SEGMENTS.filter(
     (segment) => segment.types.length === 0 || segment.types.includes(typeId),
@@ -162,11 +166,24 @@ const CONTRACT_TYPE_SECTIONS: Record<string, string> = {
   GRAMMAR_ERROR: buildContractTypeSectionBody("GRAMMAR_ERROR"),
 };
 
+export type StandardQuestionContractScope =
+  | "production_legacy"
+  | "force_type_scoped";
+
 export function buildQuestionGenerationPromptContract(
   generationPlan: QuestionGenerationPlan,
   typeId?: string,
+  options: { standardScope?: StandardQuestionContractScope } = {},
 ): string {
   if (generationPlan !== "STANDARD") return "";
+  if (options.standardScope === "force_type_scoped") {
+    if (!typeId || !CONTRACT_KNOWN_TYPE_IDS.has(typeId)) {
+      throw new Error(
+        `force_type_scoped requires a known contract typeId (received ${typeId ?? "none"})`,
+      );
+    }
+    return `${CONTRACT_COMMON}\n${buildContractTypeSectionBody(typeId)}`;
+  }
   const tail =
     typeId && CONTRACT_TYPE_SECTIONS[typeId] !== undefined
       ? CONTRACT_TYPE_SECTIONS[typeId]
@@ -188,6 +205,11 @@ interface GeminiCompactGenerationPromptInput {
   difficulty: string;
   difficultyInstruction?: string;
   typeId?: string;
+  /**
+   * Research-only prompt surface switch. The default preserves production bytes.
+   * A caller must explicitly opt in to type scoping and record the resulting prompt hash.
+   */
+  standardContractScope?: StandardQuestionContractScope;
   finalChecklist?: string;
   customPrompt?: string;
   /** 교사 지정 출제 포인트(포인트 짚어주기) — 지문 바로 다음 별도 블록으로 주입. */
@@ -226,7 +248,7 @@ const GEMINI_COMPACT_MARKING_RUBRIC = [
   "- Any underlinedPronoun, underlinedWord, underlinedExpression, originalExpression, markedExpressions, every VOCAB_CHOICE markedWords[].originalWord, and every GRAMMAR_CHOICE_COMBO slots[].correctExpression must exist verbatim in the original passage. For VOCAB_CHOICE, the single substituteWord is the intentionally displayed wrong word and does not need to exist in the source passage; likewise GRAMMAR_CHOICE_COMBO slots[].wrongExpression is the intentionally wrong candidate.",
   "- For GRAMMAR_CORRECTION, underlinedSegments must identify 1-5 wider original passage segments; every item must be isError=true, and each displayedText must hide errorPart inside a sentence/clause-level underline rather than underlining only errorPart.",
   "- Very short words such as it, is, in, as, or to may only be selected as standalone tokens, never as substrings.",
-  "- surroundingText must be an exact 40-80 character slice around the selected expression.",
+  "- surroundingText must be an exact source slice containing the selected expression and must follow the current type schema's stated length range. For GRAMMAR_ERROR, normally use 40-120 characters and preserve the full long-distance dependency (true subject to verb, antecedent to relative clause, semantic subject to participle, or first parallel item to target), even when that requires more than 80 characters. Do not apply this grammar exception to other types.",
   "- Do not generate full-passage display fields such as passageWithBlank, passageWithMarkers, passageWithUnderline, or passageWithNumbers. The server reconstructs them.",
 ].join("\n");
 
@@ -285,6 +307,7 @@ export function buildGeminiCompactGenerationPrompt({
   difficulty,
   difficultyInstruction,
   typeId,
+  standardContractScope = "production_legacy",
   finalChecklist,
   customPrompt,
   teacherPoints = [],
@@ -326,7 +349,7 @@ ${typeQualityRubric?.trim() ? `\n${typeQualityRubric}` : ""}
 - Difficulty: ${difficulty}${difficultyInstruction ? ` (${difficultyInstruction})` : ""}
 ${GEMINI_COMPACT_DIFFICULTY_RUBRIC[difficulty] ?? GEMINI_COMPACT_DIFFICULTY_RUBRIC.INTERMEDIATE}
 ${GEMINI_COMPACT_MARKING_RUBRIC}
-${buildQuestionGenerationPromptContract("STANDARD", typeId)}
+${buildQuestionGenerationPromptContract("STANDARD", typeId, { standardScope: standardContractScope })}
 ${customPrompt?.trim() ? `\n## Teacher instructions\n${customPrompt}` : ""}
 - difficulty field must be exactly "${difficulty}".
 - Multiple-choice items must have exactly the requested number of options in {label, text} form. Most types use 5 options; IRRELEVANT may use the passage-length-based slot count, and multi-answer GRAMMAR_ERROR settings may use 5~10 options.

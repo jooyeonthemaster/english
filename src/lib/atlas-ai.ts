@@ -3,6 +3,9 @@ import {
   type MetadataExtractor,
 } from "@ai-sdk/openai-compatible";
 
+import { atlasProductionAssignmentFetch } from "@/lib/atlas-production-assignment-fetch-boundary";
+import { getQuestionGenerationResearchExpectedQuestionCount } from "@/lib/question-generation-research-runtime";
+
 export const ATLAS_CLOUD_PROVIDER = "atlascloud" as const;
 
 const ATLAS_DEFAULT_BASE_URL = "https://openrouter.ai/api/v1";
@@ -89,6 +92,48 @@ export const ATLAS_GATEWAY_PROVIDER: "OPENROUTER" | "ATLASCLOUD" =
   ATLASCLOUD_BASE_URL.toLowerCase().includes("openrouter")
     ? "OPENROUTER"
     : "ATLASCLOUD";
+
+/**
+ * Fail-closed routing for opt-in structured research calls. The full endpoint
+ * slug is intentionally used instead of the broad `google-vertex` base slug:
+ * service-tier variants require separate opt-in and may have different price
+ * or availability behavior. Ordinary production calls remain byte-for-byte
+ * unchanged when no research runtime is active.
+ */
+export const ATLAS_RESEARCH_OPENROUTER_PROVIDER_ROUTING = Object.freeze({
+  order: Object.freeze(["google-vertex/global"]),
+  only: Object.freeze(["google-vertex/global"]),
+  allow_fallbacks: false,
+  require_parameters: true,
+  data_collection: "deny" as const,
+  zdr: true,
+});
+
+/**
+ * 연구 캠페인 전용 라우팅 오버라이드 (26-07-16 실측 근거: gemini-3.1-pro-preview 의
+ * google-vertex/global 대형 structured 응답이 간헐 mid-stream error 로 전멸해 품질이
+ * 아닌 transport 를 측정하게 됨 — campaign-20260716 phaseA O149). 연구 런타임이
+ * 활성일 때만 소비되며, env 미설정 시 기존 고정 라우팅과 바이트 동일. 값 "none" 은
+ * provider 블록 자체를 생략해 프로덕션과 동일한 자유 라우팅이 된다.
+ * 프로덕션(비연구) 호출은 이 상수를 아예 읽지 않는다.
+ */
+function resolveResearchProviderRouting():
+  | Record<string, unknown>
+  | "none"
+  | undefined {
+  const raw = readEnv("RESEARCH_OPENROUTER_PROVIDER_ROUTING_JSON");
+  if (!raw) return undefined;
+  if (raw.trim().toLowerCase() === "none") return "none";
+  try {
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+      return parsed as Record<string, unknown>;
+    }
+  } catch {
+    /* malformed → 기본 고정 라우팅 유지 (fail-closed) */
+  }
+  return undefined;
+}
 
 export const ATLAS_FREE_MODEL_ID = resolveAtlasModel(
   [
@@ -433,6 +478,9 @@ export const atlasCloud = createOpenAICompatible({
   name: ATLAS_CLOUD_PROVIDER,
   apiKey: ATLASCLOUD_API_KEY || undefined,
   headers: getAtlasCloudHeaders(),
+  // Exact no-scope passthrough. Workbench assignment scopes durably lease each
+  // physical fetch; research scopes retain their separate campaign controller.
+  fetch: atlasProductionAssignmentFetch,
   includeUsage: true,
   supportsStructuredOutputs: true,
   metadataExtractor: atlasCostMetadataExtractor,
@@ -443,12 +491,34 @@ export const atlasCloud = createOpenAICompatible({
       args.reasoning,
       args.reasoning_effort,
     );
-    return compactRequestBody({
+    const responseFormat = normalizeClaudeResponseFormat(
+      model,
+      args.response_format,
+    );
+    const transformed = compactRequestBody({
       ...args,
       model,
-      response_format: normalizeClaudeResponseFormat(model, args.response_format),
+      response_format: responseFormat,
       reasoning: reasoningRequest.reasoning,
       reasoning_effort: reasoningRequest.reasoning_effort,
+    });
+    const researchQuestionCount =
+      getQuestionGenerationResearchExpectedQuestionCount();
+    const isStructuredResearchRequest =
+      researchQuestionCount !== undefined &&
+      isRecord(responseFormat) &&
+      responseFormat.type === "json_schema";
+    if (!isStructuredResearchRequest) return transformed;
+    if (ATLAS_GATEWAY_PROVIDER !== "OPENROUTER") {
+      throw new Error(
+        "structured question-generation research requires the pinned OpenRouter route",
+      );
+    }
+    const routingOverride = resolveResearchProviderRouting();
+    if (routingOverride === "none") return transformed;
+    return compactRequestBody({
+      ...transformed,
+      provider: routingOverride ?? ATLAS_RESEARCH_OPENROUTER_PROVIDER_ROUTING,
     });
   },
 });

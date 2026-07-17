@@ -8,6 +8,15 @@ export const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "empty-option-text",
   "correct-answer-mismatch",
   "wrong-option-explanation-count",
+  // v12 blind holdout + independent production-path adjudication (2026-07-15):
+  // these five schema-conforming fatal errors reached the relaxed publisher in
+  // all three lexical variants. They affect answerability/key integrity, not
+  // craft preference, and therefore remain blocking under every quality mode.
+  "generic-answer-count",
+  "generic-multi-answer-direction",
+  "sentence-insert-missing-given",
+  "sentence-order-dependent-fragment",
+  "sentence-order-paragraph-body-label",
   "mid-word-marker",
   "target-not-standalone",
   "punctuation-only-chunk",
@@ -29,6 +38,7 @@ export const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   // wave2: 네모 어법 해설이 슬롯 라벨만 남기고 잘리면((C) 뒤 내용 0) 해설 누락
   // (베이스라인 실측 runIndex 5).
   "combo-explanation-truncated",
+  "combo-complementizer-that-mislabel",
   "grammar-marker-count",
   "grammar-render-marker-count",
   "grammar-error-count",
@@ -36,6 +46,8 @@ export const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "grammar-missing-error-expression",
   "grammar-error-not-mutated",
   "grammar-error-pos-change",
+  "grammar-answer-nonword-forced",
+  "grammar-correction-form-exposed",
   "grammar-error-explanation-surface-order",
   "grammar-explanation-answer-range-leak",
   "grammar-explanation-range-shorthand",
@@ -53,6 +65,7 @@ export const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "grammar-debatable-more-most-like",
   "grammar-lexical-look-like-answer",
   "grammar-debatable-sink-passive",
+  "grammar-debatable-retained-object-passive",
   "grammar-shallow-because-despite-clause",
   "grammar-obvious-modal-gerund",
   "grammar-obvious-modal-to-infinitive",
@@ -84,6 +97,8 @@ export const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "grammar-weak-filler-decoys",
   "grammar-debatable-it-being-decoy",
   "grammar-explanation-self-contradictory",
+  "grammar-explanation-meta-leak",
+  "grammar-explanation-lint",
   "grammar-explanation-typo",
   "grammar-noun-clause-pronoun-mislabel",
   "grammar-phrasal-verb-mislabel",
@@ -104,7 +119,10 @@ export const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "grammar-afford-modal-mislabel",
   "grammar-appear-adverb-mislabel",
   "grammar-appear-pointcode-voice-mismatch",
-  "grammar-nonstandard-terminology",
+  "grammar-category-mislabel",
+  "grammar-pointcode-span-mismatch",
+  "grammar-terminology-error",
+  "grammar-terminology-register",
   "grammar-marker-too-dense",
   "grammar-keypoint-token-not-source-backed",
   "grammar-keypoint-untested-token",
@@ -118,12 +136,14 @@ export const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "grammar-killer-overdrilled-answer",
   // 26-07-06 유저 지시 — keyPoints 라벨 연동(일반론 필러 차단) + 정답 CORE-10 표적.
   "grammar-keypoint-choice-mismatch",
+  "grammar-keypoint-nonexistent-label",
   "grammar-answer-point-not-core",
   "grammar-killer-generic-answer-point",
   // 26-07-07 유저 검수 3회+ 재발 — 해설 본문이 원형숫자를 서술 단계 번호로 오용
   // ("① 빈칸 문장은…") → 선지 번호와 뒤섞여 정답 오독. craft: 재시도 압박,
   // 최후 구제에서만 경고 출하.
   "blank-explanation-step-numbering",
+  "blank-explanation-narrative-circled-numbering",
   // 절/문장 통째 밑줄(예: 프리미엄 실측 "these digital platforms create a trusting
   // environment" 7단어)은 정답성·가독성을 해치는 명백한 결함 — relaxed 폴백에서도
   // 출하 금지. ('wide'는 strict 전용이라 의도적으로 제외 — 완전 실패 방지.)
@@ -210,6 +230,8 @@ export const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "gist-polarity-direction-mismatch",
   "gist-polarity-field-mismatch",
   "summary-mc-direction-frame",
+  "summary-mc-missing-direction",
+  "summary-mc-direction-task-mismatch",
   "summary-mc-missing-summary",
   "summary-mc-blank-marker-count",
   // wave5: 종결 부호 없이 잘린 요약문 stem (실측 26-07-05 "...the words for ") —
@@ -218,9 +240,13 @@ export const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "summary-mc-summary-language",
   "summary-mc-missing-blank-answer",
   "summary-mc-answer-language",
+  "summary-mc-correct-completion-ungrammatical",
   "summary-mc-awkward-collocation",
   "summary-mc-correct-answer-mismatch",
   "summary-mc-correct-pair-mismatch",
+  // 정답 번호가 맞더라도 direction/explanation이 실제 오답 선지 표면을 선택하면
+  // 학생에게 상충된 정답을 주는 무결성 결함이므로 relaxed·salvage 모두 출하 금지.
+  "summary-mc-answer-object-mismatch",
   "summary-mc-option-pair-shape",
   "summary-mc-option-language",
   "summary-mc-missing-half-correct-traps",
@@ -304,10 +330,19 @@ export const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   // wave2: correctAnswer(재구성 위치)와 해설/오답해설의 갭 주장이 어긋나면 정답
   // 무효급(베이스라인 실측 runIndex 12, llm 심사 38점).
   "sentence-insert-answer-desync",
+  "sentence-insert-neutral-given",
+  "passage-boundary-spacing-corruption",
+  "passage-duplicate-sentence",
+  "passage-joined-sentence-token",
   "sentence-insert-omitted-source-not-backed",
   "sentence-insert-omitted-source-visible",
   "sentence-insert-given-leaks-in-passage",
   "sentence-order-missing-given",
+  // A paragraph that normalizes to empty makes the permutation unanswerable;
+  // a paragraph label inside the GIVEN block corrupts the rendered structure.
+  // These are validity failures, not the adjacent length/balance craft signals.
+  "sentence-order-empty-paragraph",
+  "sentence-order-given-contains-paragraph-label",
   "sentence-order-given-too-long",
   "sentence-order-given-too-long-relative",
   "sentence-order-paragraph-count",
@@ -333,7 +368,14 @@ export const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "blank-slot-subject-swallowed",
   "blank-slot-aux-agreement-broken",
   "blank-slot-double-verb-option",
+  "blank-relative-tail-contract",
+  "blank-finite-tail-agreement-contract",
+  "blank-double-connector-boundary",
+  "blank-double-preposition-boundary",
+  "blank-double-punctuation-boundary",
+  "blank-article-boundary",
   "blank-paraphrase-answer-not-transformed",
+  "blank-paraphrase-correct-residual-visible",
   "blank-paraphrase-answer-too-verbatim",
   "blank-paraphrase-missing-answer-logic",
   "blank-paraphrase-option-source-copy",
@@ -353,6 +395,7 @@ export const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "blank-target-list-like",
   "blank-awkward-correct-option",
   "blank-awkward-option",
+  "blank-option-slot-syntax",
   "multi-blank-paraphrase-correct-source-exact",
   "negative-paraphrase-copula-slot-mismatch",
   "negative-paraphrase-stacked-prepositions",
@@ -442,21 +485,10 @@ export const GRAMMAR_SCARCE_RELAXABLE_CODES = new Set([
   "grammar-shallow-because-despite-clause",
   "grammar-basic-overloaded-design",
   "grammar-marker-too-dense",
-  // 해설 취향 — 길이/용어 오칭(검수로 교정 가능, 문항 성립엔 무영향).
+  // 해설 취향 — 길이·비표준 표현만 최후 구제에서 완화한다. 사실 오분석,
+  // source 비근거 keyPoint, 오탈자, 누락은 문항 해설의 정확성 결함이라 제외한다.
   "grammar-explanation-too-long-hard",
-  "grammar-noun-clause-pronoun-mislabel",
-  "grammar-phrasal-verb-mislabel",
-  "grammar-look-like-complement-mislabel",
-  "grammar-seem-to-complement-mislabel",
-  "grammar-seem-to-object-mislabel",
-  "grammar-that-way-adverb-mislabel",
-  "grammar-human-made-postmodifier-mislabel",
-  "grammar-appear-adverb-mislabel",
-  "grammar-category-mislabel",
-  "grammar-afford-modal-mislabel",
   "grammar-vague-metadata-tag",
-  "grammar-keypoint-untested-token",
-  "grammar-keypoint-token-not-source-backed",
 ]);
 
 // ============================================================================
@@ -479,53 +511,22 @@ export const SALVAGE_RELAXABLE_CODES = new Set<string>([
   ...GRAMMAR_SCARCE_RELAXABLE_CODES,
   // 어법 — scarce 분류엔 없지만 같은 craft 급인 해설/표기/밑줄 취향.
   "grammar-error-explanation-surface-order",
-  "grammar-explanation-range-shorthand",
-  "grammar-nonstandard-terminology",
+  "grammar-terminology-register",
   "grammar-agreement-explanation-too-thin",
   "grammar-underline-too-long",
   "grammar-underline-punctuated-fragment",
   "grammar-decoy-point-diversity",
-  // 26-07-14 round-1 ① 신설(교정형 원형 노출) — RELAXED_BLOCKING 미등록이라
-  // relaxed 폴백은 이미 통과하지만, 사다리 최후의 salvage 풀 재승인(admitSalvage-
-  // CandidatesFromPool 은 이 셋 기준)까지 열어 둬야 "노출 1건 = 생성 실패"가
-  // 절대 되지 않는다. strict 에서만 차단해 재시도(정답 자리 이동)를 압박한다.
-  "grammar-correction-form-exposed",
-  // 26-07-14 round-2 신설 검출 등급 배선(연구노트 round-1 감독관 판정 — 하드 실패
-  // 유발 금지 헌법). 넷 다 RELAXED_BLOCKING 미등록이라 relaxed 폴백은 경고 강등
-  // 출하되고, 여기 등재해 strict 탈락 후보의 풀 재승인(admitSalvageCandidates-
-  // FromPool 은 이 셋 기준)까지 열어 둔다 — 어떤 경로로도 "신설 검출 = 생성 실패"
-  // 가 되지 않는다. strict 에서만 차단해 재시도·부분수리를 압박한다.
-  // ① 정답 오형이 실존 영어 어형이 아님(비단어·조동사+be 연쇄·명사 뒤 what 강제)
-  //    — 정답 재선정이 필요해 repair 무의미(NOT_WORTH_REPAIR 등재), 재생성+재시도
-  //    지시 경로로 흐른다.
-  "grammar-answer-nonword-forced",
+  // 정답형·메타데이터 무결성 코드는 RELAXED_BLOCKING 에 남겨 어떤 최후 구제
+  // 경로에서도 출하하지 않는다. 여기에는 실제 공예 완화·표적수리 후보만 둔다.
   // ② 장식 필러 미끼 스팬 — 미끼 1개만 교체하는 decoy-only repair 대상.
   "grammar-decoy-filler-span",
-  // ③ pointCode-스팬 불일치(round-2 경고→차단 승격분) — 재태깅 repair 대상
-  //    (pointCode·keyPoints 명명만 정정, 문항 본체 무변경).
-  "grammar-pointcode-span-mismatch",
-  // ④ 해설 전용 린트(어투 혼용·수 모순 등) — 해설만 재작성하는 repair 대상.
-  //    ⚠️ 서브코드(grammar-explanation-lint-*)를 신설하면 여기에도 등재할 것 —
-  //    admitSalvage 는 정확 일치 Set 검사라 미등재 서브코드는 풀 재승인이 막힌다.
-  "grammar-explanation-lint",
-  // 26-07-06 과엄격 적대검증 이동 7종 — 전부 형제 코드가 이미 craft 인 비일관
-  // 잔류였다: gibberish/pos-change=obvious·쉬운변형 계열, fixed-that-is/mixed-as-it
-  // =디코이(정문) 스팬 취향, explanation-typo=하드코딩 오탈자 미관, appear-pointcode
-  // -voice-mismatch=mislabel 계열, correction-killer-thin-segment=killer-thin 미러.
-  "grammar-gibberish-inversion-fragment",
+  // idiom/스팬 취향과 KILLER 깊이 미러만 craft 구제로 유지한다.
   "grammar-fixed-that-is-idiom",
   "grammar-mixed-as-it-span",
-  "grammar-error-pos-change",
-  "grammar-explanation-typo",
-  "grammar-appear-pointcode-voice-mismatch",
   "grammar-correction-killer-thin-segment",
-  // 공통 — 오답 해설 개수 부족(해설 불완전, 문항 성립엔 무영향).
-  "wrong-option-explanation-count",
   // (제거됨 26-07-06 적대검증) cond-writing-verbatim-answer / writing-answer-
   // verbatim-copy — 발화 유형은 지문이 문항 안에 인라인 렌더되므로(passage-policy
   // INLINE) verbatim 모범답안 = 학생 눈앞에 정답 노출. F급 잔류.
-  // 네모 어법 — 해설 잘림(검수에서 보완 가능).
-  "combo-explanation-truncated",
   // 빈칸 추론 — 변형 깊이/함정 완성도/난이도 취향. 정답 유일성은 별도 게이트가 지킨다.
   "blank-paraphrase-answer-not-transformed",
   "blank-paraphrase-answer-too-verbatim",
@@ -538,14 +539,12 @@ export const SALVAGE_RELAXABLE_CODES = new Set<string>([
   "blank-paraphrase-killer-giveaway-distractors",
   // (제거됨 26-07-06 적대검증) verb-form/clause-slot-mismatch — "정답 선지"를
   // 빈칸에 넣으면 비문("to developing")이 되는 무정답급이라 F급 잔류.
-  // subject-slot-mismatch 만 취향(과거 SHIP_FIRST 전수감사와 동일 판정)으로 유지.
-  "blank-paraphrase-subject-slot-mismatch",
+  // subject-slot mismatch also breaks the visible completed sentence and is
+  // intentionally absent from salvage.
   "blank-paraphrase-target-trailing-function",
   "blank-paraphrase-target-too-wide",
   "blank-killer-target-too-easy",
   "blank-target-too-small",
-  "blank-awkward-correct-option",
-  "blank-awkward-option",
   "multi-blank-paraphrase-correct-source-exact",
   // (제거됨 26-07-06 적대검증) negative-paraphrase-stacked-prepositions —
   // 정답 삽입 시 전치사 중첩 비문("by by")이 되는 무정답급이라 F급 잔류.
@@ -559,12 +558,10 @@ export const SALVAGE_RELAXABLE_CODES = new Set<string>([
   "implied-meaning-absolute-giveaway-option",
   "implied-meaning-missing-surface-meaning",
   // 26-07-06 과엄격 적대검증 — topic-option-language 와 동일한 형식 취향 클래스.
-  "implied-meaning-option-language",
   // 무관한 문장 — 삽입문 완성도 취향(위치/정합 desync 계열은 F급 잔류).
   "irrelevant-source-first-sentence",
   "irrelevant-too-unrelated",
   "irrelevant-too-many-new-terms",
-  "irrelevant-inserted-ungrammatical",
   "irrelevant-obvious-counterclaim-cue",
   "irrelevant-prescriptive-giveaway",
   // 순서 배열 — 단락 균형/길이 취향(정답키 재구성·순열 무결성은 F급 잔류).
@@ -579,5 +576,4 @@ export const SALVAGE_RELAXABLE_CODES = new Set<string>([
   "summary-mc-awkward-collocation",
   "summary-mc-missing-half-correct-traps",
   // 주제 — 선지 언어 스펙(문항 성립, 형식 취향).
-  "topic-option-language",
 ]);

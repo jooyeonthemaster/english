@@ -16,7 +16,7 @@ import { validateGrammarCorrectionQuestion } from "./validators/grammar/correcti
 import { collectGrammarExplanationLintFindings } from "./validators/grammar/explanation-lint";
 import { validateMarkedText } from "./validators/grammar/marked";
 import { findGrammarAnswerForcedNonword, findGrammarDecoyFillerSpan } from "./validators/grammar/nonword-filler";
-import { GRAMMAR_UNDERLINE_HARD_MAX_CHARS, GRAMMAR_UNDERLINE_HARD_MAX_WORDS, GRAMMAR_UNDERLINE_SOFT_MAX_CHARS, GRAMMAR_UNDERLINE_SOFT_MAX_WORDS, collectQuantityAnswerIssues, extractGrammarPointCode, findGrammarAnswerPointNotCore, findGrammarCorrectionFormExposed, findGrammarKeypointChoiceMismatch, findGrammarKillerOverdrilledAnswer, findGrammarMarkerAdjacentDuplicate, findGrammarMarkerErrorFormMismatch, findGrammarMisplacedMarker, findGrammarPerceptionComplementToggle, findGrammarSurroundingMissingMarker, findNonstandardGrammarTerminology, grammarExplanationLeaksMeta, grammarPointCodeSurfaceMismatch, isGrammarPosChangeMutation, isThinKillerGrammarErrorTarget } from "./validators/grammar/shared";
+import { GRAMMAR_UNDERLINE_HARD_MAX_CHARS, GRAMMAR_UNDERLINE_HARD_MAX_WORDS, GRAMMAR_UNDERLINE_SOFT_MAX_CHARS, GRAMMAR_UNDERLINE_SOFT_MAX_WORDS, collectQuantityAnswerIssues, extractGrammarPointCode, findGrammarAnswerPointNotCore, findGrammarCorrectionFormExposed, findGrammarKeypointChoiceMismatch, findGrammarKeypointNonexistentLabel, findGrammarKillerOverdrilledAnswer, findGrammarMarkerAdjacentDuplicate, findGrammarMarkerErrorFormMismatch, findGrammarMisplacedMarker, findGrammarPerceptionComplementToggle, findGrammarSurroundingMissingMarker, findGrammarTerminologyError, findGrammarTerminologyRegister, grammarExplanationLeaksMeta, grammarPointCodeSurfaceMismatch, isGrammarPosChangeMutation, isThinKillerGrammarErrorTarget } from "./validators/grammar/shared";
 import { validateImpliedMeaningQuestion } from "./validators/implied";
 import { validateIrrelevantQuestion } from "./validators/irrelevant";
 import { validateKillerBar, validateTypeSignature } from "./validators/misc";
@@ -32,6 +32,7 @@ import { validateGistNegativePolarity, validateTopicMainIdeaQuestion } from "./v
 import { validateVocabChoiceQuestion } from "./validators/vocab";
 import { validateWordOrderReconstruction } from "./validators/word-order";
 import { chipsAreInAnswerOrder } from "@/lib/topic-sentence-writing";
+import { analyzeEnglishPassageIntegrity } from "./passage-integrity";
 
 
 
@@ -615,6 +616,44 @@ function isObviousEndurePassiveWithObject(
   );
 }
 
+const RETAINED_OBJECT_PASSIVE_VERBS: Array<{
+  lemma: string;
+  active: RegExp;
+  participle: string;
+}> = [
+  { lemma: "allow", active: /\b(?:allow|allows|allowed|allowing)\b/i, participle: "allowed" },
+  { lemma: "ask", active: /\b(?:ask|asks|asked|asking)\b/i, participle: "asked" },
+  { lemma: "award", active: /\b(?:award|awards|awarded|awarding)\b/i, participle: "awarded" },
+  { lemma: "deny", active: /\b(?:deny|denies|denied|denying)\b/i, participle: "denied" },
+  { lemma: "give", active: /\b(?:give|gives|gave|given|giving)\b/i, participle: "given" },
+  { lemma: "grant", active: /\b(?:grant|grants|granted|granting)\b/i, participle: "granted" },
+  { lemma: "offer", active: /\b(?:offer|offers|offered|offering)\b/i, participle: "offered" },
+  { lemma: "pay", active: /\b(?:pay|pays|paid|paying)\b/i, participle: "paid" },
+  { lemma: "permit", active: /\b(?:permit|permits|permitted|permitting)\b/i, participle: "permitted" },
+  { lemma: "promise", active: /\b(?:promise|promises|promised|promising)\b/i, participle: "promised" },
+  { lemma: "show", active: /\b(?:show|shows|showed|shown|showing)\b/i, participle: "shown" },
+  { lemma: "teach", active: /\b(?:teach|teaches|taught|teaching)\b/i, participle: "taught" },
+  { lemma: "tell", active: /\b(?:tell|tells|told|telling)\b/i, participle: "told" },
+];
+
+function findDebatableRetainedObjectPassiveMutation(
+  sourceForm: string,
+  displayedForm: string,
+): string | null {
+  const passiveAuxiliary =
+    "(?:am|is|are|was|were|be|been|being|has\\s+been|have\\s+been|had\\s+been)";
+  for (const verb of RETAINED_OBJECT_PASSIVE_VERBS) {
+    if (!verb.active.test(sourceForm)) continue;
+    const passive = new RegExp(
+      `\\b${passiveAuxiliary}\\s+(?:not\\s+)?${verb.participle}\\b`,
+      "i",
+    );
+    if (passive.test(sourceForm)) continue;
+    if (passive.test(displayedForm)) return verb.lemma;
+  }
+  return null;
+}
+
 function isObviousFiniteToIngBeforeColon(
   sourceForm: string,
   displayedForm: string,
@@ -745,6 +784,12 @@ export function validateQuestionQuality({
   const add = (severity: QuestionQualitySeverity, code: string, message: string) => {
     issues.push({ severity, code, message });
   };
+
+  if (passage && !isKoQuestionType(typeId)) {
+    for (const finding of analyzeEnglishPassageIntegrity(passage)) {
+      add("error", finding.code, finding.message);
+    }
+  }
 
   if (requestedDifficulty && question.difficulty && question.difficulty !== requestedDifficulty) {
     add("warning", "difficulty-mismatch", `Expected ${requestedDifficulty}, got ${question.difficulty}.`);
@@ -1279,8 +1324,8 @@ export function validateTypeSpecific(
     // 보는 지문의 다른 위치에 그대로 남아 있으면(대소문자 무시·단어 경계) 두 자리
     // 대조만으로 정답이 노출된다 — round-0 q30 실측("get __(A) that__ they want"
     // vs 뒷문장 "to get what they want"). 짧은 교정형은 이웃 단어 프레임까지
-    // 일치할 때만 발화(기능어 오탐 방지). strict 전용(RELAXED 미포함)이라 완전
-    // 실패는 유발하지 않고 재시도 압박만 한다 — salvage 풀 재승인도 허용.
+    // 일치할 때만 발화(기능어 오탐 방지). 정답을 직접 대조할 수 있는 누출이라
+    // RELAXED/salvage 에서도 출하하지 않고 정답 자리를 다시 고르게 한다.
     if (passageWithMarkers) {
       const exposed = findGrammarCorrectionFormExposed(
         passageWithMarkers,
@@ -1380,8 +1425,8 @@ export function validateTypeSpecific(
       }
       // 확정 비문 오형 게이트 (round-2 감독관 판정 ①): do/does/did+be 연쇄·
       // 불규칙PP+ly 비단어·명사 뒤 what 삽입 — 학생이 보자마자 비문임을 아는
-      // 즉답 오형이라 '오형 재선정' 재시도를 지시한다. 등급 상수 미등재라
-      // relaxed 폴백에선 경고로 강등되어 하드 실패를 만들지 않는다.
+      // 즉답 오형이라 '오형 재선정' 재시도를 지시한다. 모든 품질 모드에서
+      // 차단해 최후 구제 경로가 비단어 정답을 되살리지 못하게 한다.
       if (errorExpression) {
         const forcedNonword = findGrammarAnswerForcedNonword(
           expression,
@@ -1443,6 +1488,19 @@ export function validateTypeSpecific(
           "grammar-obvious-intransitive-passive",
           `GRAMMAR_ERROR should not passivize an intransitive verb as "${errorExpression}". Use a less obvious voice or complement trap.`,
         );
+      }
+      if (expression && errorExpression) {
+        const retainedObjectVerb = findDebatableRetainedObjectPassiveMutation(
+          expression,
+          errorExpression,
+        );
+        if (retainedObjectVerb) {
+          add(
+            "error",
+            "grammar-debatable-retained-object-passive",
+            `Do not use active→passive voice as the answer with "${retainedObjectVerb}": English can license a retained-object passive (for example, "be permitted something" or "be given something"), so the displayed form may remain grammatical under another parse. Choose an invariant structural error instead.`,
+          );
+        }
       }
       if (
         requestedDifficulty !== "BASIC" &&
@@ -2160,8 +2218,8 @@ export function validateTypeSpecific(
         );
       }
       if (surfacePointCode && grammarPointCodeSurfaceMismatch(surfacePointCode, surface)) {
-        // 26-07-14 round-2: warning→error 승격 — 재태깅 전용 repair(문항 본체 무변경) 라우팅.
-        // SALVAGE_RELAXABLE 등재·RELAXED_BLOCKING 미등재 = strict에서만 차단, 하드 실패 불가.
+        // 26-07-14 round-2: warning→error 승격 — 재태깅 전용 repair(문항 본체 무변경)
+        // 라우팅. 수리가 실패하면 모든 품질 모드에서 차단한다.
         add(
           "error",
           "grammar-pointcode-span-mismatch",
@@ -2190,6 +2248,17 @@ export function validateTypeSpecific(
     // 필러(3번째 항목이 규칙적으로 이 문항에 없는 문법 주제) 차단 ② 정답 포인트
     // CORE-10 표적 강제(희귀 코드 j/l/m 은 디코이로만).
     {
+      const nonexistentKeypointLabel = findGrammarKeypointNonexistentLabel(
+        question.keyPoints,
+        markedExpressions,
+      );
+      if (nonexistentKeypointLabel) {
+        add(
+          "error",
+          "grammar-keypoint-nonexistent-label",
+          nonexistentKeypointLabel,
+        );
+      }
       const keypointMismatch = findGrammarKeypointChoiceMismatch(
         question.keyPoints,
         markedExpressions,
@@ -2246,13 +2315,17 @@ export function validateTypeSpecific(
         "Grammar metadata/explanation mislabels human-made as a post-nominal past participle; it is a pre-nominal compound adjective in this context.",
       );
     }
-    // 26-07-06 렉시콘 확장 — 실측 용어("계사" 14건·"보문 명사"·"술어부 골격" 등)를
-    // 학생용 대체 표현과 함께 지적한다(shared.ts findNonstandardGrammarTerminology
-    // 가 기존 '전사구' 포함 상위집합).
+    // 실제 오용("전사구")과 정확하지만 지나치게 전문적인 register("계사",
+    // "보문 명사" 등)를 분리한다. 전자는 설명 사실성 결함이라 어느 salvage에서도
+    // 통과시키지 않고, 후자는 학생 친화성 craft로 좁게 수리/구제할 수 있다.
     {
-      const nonstandardTerm = findNonstandardGrammarTerminology(grammarExplanationText);
-      if (nonstandardTerm) {
-        add("error", "grammar-nonstandard-terminology", nonstandardTerm);
+      const terminologyError = findGrammarTerminologyError(grammarExplanationText);
+      if (terminologyError) {
+        add("error", "grammar-terminology-error", terminologyError);
+      }
+      const terminologyRegister = findGrammarTerminologyRegister(grammarExplanationText);
+      if (terminologyRegister) {
+        add("error", "grammar-terminology-register", terminologyRegister);
       }
     }
     const grammarExplanationTypo = findGrammarExplanationTypo(grammarExplanationText);
@@ -2341,7 +2414,7 @@ export function validateTypeSpecific(
       // error 로 승격(2026-06-15): warning 은 strict 재시도를 안 시켜 그대로 출하됨.
       // focus/최소대립쌍이 준 내부 framing(1순위·출제 포인트·변형 방향)을 모델이
       // 해설에 베끼는 누출이 잦아(R2 3/10), strict 재시도로 강제 회피한다.
-      // RELAXED 미등록 — 끈질기면 relaxed 폴백이 출하(0수율 방지).
+      // 학생용 해설에 생성 지침이 남는 오류라 RELAXED/salvage 에서도 차단한다.
       add(
         "error",
         "grammar-explanation-meta-leak",
@@ -2432,7 +2505,7 @@ export function validateTypeSpecific(
     // ("복수 명사인 a child"류)·keyPoints 라벨 중복·한글-영단어 붙임 오타
     // ("동사encouraged가"류). 26-07-14 승격: error 로 발행해야 해설 전용 repair
     // 분기(explanationOnlyGrammarRepair — 문항 본체 무변경, 해설만 재작성)가 발동한다.
-    // SALVAGE_RELAXABLE 등재·RELAXED_BLOCKING 미등재 = strict에서만 차단, 하드 실패 불가.
+    // 26-07-15: 사실·표현 오류가 남은 해설은 salvage 에서도 차단한다.
     for (const lintFinding of collectGrammarExplanationLintFindings(question)) {
       add("error", "grammar-explanation-lint", lintFinding);
     }

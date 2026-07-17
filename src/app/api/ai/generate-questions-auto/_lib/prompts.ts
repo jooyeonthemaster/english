@@ -4,6 +4,7 @@ import {
   buildGeminiCompactPlanningPrompt,
   buildQuestionGenerationPromptContract,
   buildTeacherPointsPromptBlock,
+  type StandardQuestionContractScope,
 } from "@/lib/question-generation-prompt-contract";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import type { TeacherPointPayload } from "@/app/(director)/director/workbench/generate/generation-config-panel-parts/point-picker-config";
@@ -94,6 +95,8 @@ interface GenerationPromptInput {
   diffInstruction: string;
   generationPlan: QuestionGenerationPlan;
   subType?: string;
+  /** Default keeps current production bytes; research profiles may opt into type scoping. */
+  standardContractScope?: StandardQuestionContractScope;
   finalChecklist?: string;
   customPrompt?: string;
   /**
@@ -119,6 +122,7 @@ export function buildGenerationPrompt({
   diffInstruction,
   generationPlan,
   subType,
+  standardContractScope = "production_legacy",
   finalChecklist,
   customPrompt,
   teacherPoints = [],
@@ -139,6 +143,7 @@ export function buildGenerationPrompt({
         difficulty: diffLabel,
         difficultyInstruction: diffInstruction,
         typeId: subType,
+        standardContractScope,
         finalChecklist,
         customPrompt,
         teacherPoints,

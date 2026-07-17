@@ -143,7 +143,7 @@ export function validateSentenceInsertQuestion(
     add("error", "sentence-insert-missing-given", "SENTENCE_INSERT is missing givenSentence.");
   } else if (!sentenceInsertHasCohesiveCue(given)) {
     add(
-      "warning",
+      "error",
       "sentence-insert-neutral-given",
       "The given sentence has no explicit cohesive cue (demonstrative/pronoun/connective); it may fit multiple gaps (복수정답 위험).",
     );

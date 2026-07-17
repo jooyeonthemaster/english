@@ -54,6 +54,9 @@ const thinGrammarError = {
 const richPassage =
   "The reports that the committee reviewed, which were based on interviews with residents, show how policies designed to reduce waste can change habits.";
 
+const richGrammarErrorPassage =
+  "The reports that the committee reviewed, which were based on interviews with residents, show how policies designed to reduce waste can gradually change habits, depending on whether local leaders explain them clearly.";
+
 const advancedPassage =
   "The platform made it difficult for families to compare plans before the deadline. " +
   "Never have researchers seen such rapid changes in local habits, and only after several trials did the committee accept the result.";
@@ -70,27 +73,27 @@ const noisyGlassPassage =
 const richGrammarError = {
   ...thinGrammarError,
   passageWithMarkers:
-    "The reports __(A) that__ the committee reviewed, __(B) which was__ based on interviews with residents, __(C) show__ how policies __(D) designed__ to reduce waste can __(E) change__ habits.",
+    "The reports __(A) that__ the committee reviewed, __(B) which was__ based on interviews with residents, __(C) show__ how policies __(D) designed__ to reduce waste can gradually change habits, depending on __(E) whether__ local leaders explain them clearly.",
   markedExpressions: [
     { label: "A", expression: "that", isError: false, pointCode: "b", surroundingText: "reports that the committee reviewed" },
     { label: "B", expression: "which were", errorExpression: "which was", correction: "which were", isError: true, pointCode: "d", surroundingText: "reports that the committee reviewed, which were based on interviews" },
     { label: "C", expression: "show", isError: false, pointCode: "a", surroundingText: "The reports ... show how policies" },
     { label: "D", expression: "designed", isError: false, pointCode: "c", surroundingText: "policies designed to reduce waste" },
-    { label: "E", expression: "change", isError: false, pointCode: "a", surroundingText: "can change habits" },
+    { label: "E", expression: "whether", isError: false, pointCode: "j", surroundingText: "depending on whether local leaders explain them" },
   ],
   options: [
     { label: "A", text: "that" },
     { label: "B", text: "which was" },
     { label: "C", text: "show" },
     { label: "D", text: "designed" },
-    { label: "E", text: "change" },
+    { label: "E", text: "whether" },
   ],
   correctAnswer: "B",
   wrongOptionExplanations: {
     A: "that은 목적격 관계대명사로 가능하다.",
     C: "주어 reports가 복수이므로 show가 맞다.",
     D: "policies를 수식하는 과거분사 designed가 맞다.",
-    E: "조동사 can 뒤에는 동사원형 change가 온다.",
+    E: "depending on 뒤의 명사절을 이끄는 whether가 문맥과 구조에 맞다.",
   },
   explanation: "which의 선행사는 reports이므로 which were가 맞고 which was는 수일치 오류다.",
 };
@@ -150,7 +153,7 @@ const richGrammarErrorQuality = validateQuestionQuality({
     ...richGrammarError,
     explanation: "In (B), the displayed 'which was' is wrong because the antecedent is the plural noun reports; it should be 'which were'.",
   },
-  passage: richPassage,
+  passage: richGrammarErrorPassage,
   requestedDifficulty: "KILLER",
   grammarMarkerCount: 5,
   grammarAnswerCount: 1,
@@ -2868,10 +2871,10 @@ test("GRAMMAR_ERROR rejects appear tagged as passive voice pointCode", () => {
   );
 });
 
-test("GRAMMAR_ERROR rejects nonstandard grammar terminology", () => {
+test("GRAMMAR_ERROR rejects objectively incorrect grammar terminology", () => {
   assert.ok(
     result.nonstandardTerminologyQuality.some(
-      (issue) => issue.severity === "error" && issue.code === "grammar-nonstandard-terminology",
+      (issue) => issue.severity === "error" && issue.code === "grammar-terminology-error",
     ),
     JSON.stringify(result.nonstandardTerminologyQuality),
   );

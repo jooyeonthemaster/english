@@ -1,11 +1,17 @@
-import { z } from "zod";
 import { AI_QUESTION_SCHEMAS, getAiResponseSchema } from "@/lib/question-ai-schemas-mc";
-import { GEMINI_QUESTION_EMPTY_RESULT_MAX_ATTEMPTS } from "@/lib/concurrency-config";
+import {
+  GEMINI_QUESTION_EMPTY_RESULT_MAX_ATTEMPTS,
+  normalizeQuestionGenerationOuterAttempts,
+} from "@/lib/concurrency-config";
 import { KO_PASSAGE_KIND_LABELS, type KoPassageKind } from "@/lib/korean/core/passage-meta";
 import { shuffleKoMc5Options } from "@/lib/korean/core/shuffle";
 import { buildKoGenerationPrompt } from "@/lib/korean/prompts/generation";
 import { runKoSolverGate } from "@/lib/korean/quality/solver-gate";
 import { runGrammarSolverGate } from "./grammar-solver-gate";
+import {
+  getExplanationVerifyGateMode,
+  runExplanationVerifyGate,
+} from "./explanation-verify-gate";
 import { getKoTypeModule, isKoQuestionType } from "@/lib/korean/registry";
 import { readKoResolvedSettings } from "@/lib/korean/settings";
 import { postProcessQuestion } from "@/lib/question-postprocess";
@@ -14,6 +20,7 @@ import { normalizePassageWhitespace } from "@/lib/question-postprocess/text-util
 import { QUESTION_SCHEMAS, STRUCTURED_TYPE_PROMPTS } from "@/lib/question-schemas";
 import { buildQuestionTypeSettingsPrompt, getQuestionTypeGenerationTokenFloor, readQuestionTypeDifficultySetting, readQuestionTypeGenerationPlanSetting, readSummaryWritingBlankCountSetting, readTopicSentenceWritingBlankCountSetting, resolveQuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
 import { buildQuestionTargetCandidateBlock, getTypeQualityRubric, type QuestionQualityIssue, validateQuestionQuality } from "@/lib/question-quality";
+import { analyzeEnglishPassageIntegrity } from "@/lib/question-quality/passage-integrity";
 import { selectUsableGrammarCandidates } from "@/lib/question-quality/candidate-blocks/grammar";
 import { buildDiversityPromptBlock, shuffleQuestionOptionsForDiversity } from "@/lib/question-diversity";
 import { DIFF_DESCRIPTION, TYPE_LABELS } from "./constants";
@@ -24,6 +31,23 @@ import { fallbackResponseSchema } from "./schemas";
 import { buildGenerationPrompt, STRUCTURED_OUTPUT_INSTRUCTIONS, UNSTRUCTURED_OUTPUT_INSTRUCTIONS } from "./prompts";
 import { isNonRetryableQuestionGenerationProviderError } from "@/lib/question-generation-llm";
 import { ATLAS_PREMIUM_QGEN_MODEL_ID, isAtlasClaudeModel } from "@/lib/atlas-ai";
+import { buildResearchAwareQuestionResponseSchema } from "@/lib/question-generation-research-schema";
+import {
+  adaptQuestionGenerationResearchProfileCandidate,
+  applyQuestionGenerationResearchPromptProfile,
+  buildQuestionGenerationResearchProfileResponseSchema,
+  getQuestionGenerationResearchPromptProfileMaxOutputTokens,
+  isQuestionGenerationResearchSingleShotProfileActive,
+} from "@/lib/question-generation-research-profiles";
+import {
+  QUESTION_GENERATION_RESEARCH_STAGES,
+  decideQuestionGenerationResearchCandidate,
+  getQuestionGenerationResearchExpectedQuestionCount,
+  getQuestionGenerationResearchTransportPolicy,
+  hasQuestionGenerationResearchRuntime,
+  observeQuestionGenerationResearchCandidates,
+  runQuestionGenerationResearchOperation,
+} from "@/lib/question-generation-research-runtime";
 import { anchorVerbatimText, tokenizePassage } from "@/lib/passage-point-tokenizer";
 import {
   checkTeacherPointCompliance,
@@ -80,13 +104,18 @@ const GRAMMAR_DESIGN_ISSUES_NOT_WORTH_REPAIR = new Set([
   "grammar-obvious-what-noun-prefix",
   "grammar-semantic-who-what-answer",
   "grammar-semantic-how-why-answer",
+  // permit/give/deny 류의 retained-object passive 는 표시형 자체가 정문일 수
+  // 있어 정답 자리 선정부터 폐기해야 한다. 부분 수리 호출을 낭비하지 않는다.
+  "grammar-debatable-retained-object-passive",
+  "grammar-error-pos-change",
+  "grammar-gibberish-inversion-fragment",
   // 교정형 원형 노출(round-1 ①)은 정답 자리 자체를 옮겨야 해소된다 — 초안 보존
   // 교정(repair)으로는 못 고치므로 린 교정 호출을 건너뛰고 재생성으로 보낸다.
   "grammar-correction-form-exposed",
   // 정답 오형이 비실존 어형(round-2 신설: 비단어·조동사+be 연쇄·명사 뒤 what
   // 강제)도 정답 자리 재선정이 필요해 초안 보존 교정으로 못 고친다 — 재생성
-  // (+GRAMMAR_RETRY_DIRECTIVES 지시) 경로로 보낸다. strict 전용 차단이며
-  // SALVAGE_RELAXABLE 등재로 하드 실패는 불가(constants 참조).
+  // (+GRAMMAR_RETRY_DIRECTIVES 지시) 경로로 보낸다. 모든 품질 모드에서 차단하며
+  // 정답 자리 재선정이 필요하므로 부분 수리 대신 재생성한다.
   "grammar-answer-nonword-forced",
 ]);
 
@@ -406,6 +435,27 @@ export async function runQuestionGeneration(
     deadlineAt?: number;
   } = {},
 ): Promise<Record<string, unknown>[]> {
+  const researchSingleShotProfileActive =
+    isQuestionGenerationResearchSingleShotProfileActive();
+  if (researchSingleShotProfileActive) {
+    const [profileItem] = plan;
+    if (
+      plan.length !== 1 ||
+      !profileItem ||
+      profileItem.count !== 1 ||
+      profileItem.targetPoints.length > 0 ||
+      teacherIntentBlock.trim().length > 0 ||
+      customPrompt?.trim() ||
+      diversity !== undefined ||
+      qualityMode !== "strict" ||
+      attemptIndex !== 0 ||
+      previousAttemptFeedback?.trim()
+    ) {
+      throw new Error(
+        "research prompt profile requires one strict count-1 assignment with no prompt or retry drift",
+      );
+    }
+  }
   // NBSP·빈줄 잔재가 모델 출력(원문 복사 스팬)과 게이트 문자열 비교, 저장본
   // 렌더링까지 전파되므로 엔진 입구에서 한 번 정규화한다.
   // 추가: 지문에 이미 들어있는 밑줄 런(`____` 빈칸·이중언어 워크시트 잔재)은 마커
@@ -418,6 +468,20 @@ export async function runQuestionGeneration(
   const generatedGroups = await Promise.all(
     plan.map(async (item) => {
       const { subType, count: typeCount, targetPoints } = item;
+      const researchQuestionCount =
+        getQuestionGenerationResearchExpectedQuestionCount();
+      if (researchQuestionCount !== undefined) {
+        if (!Number.isSafeInteger(typeCount) || typeCount <= 0) {
+          throw new Error(
+            `research ${subType} count must be a positive safe integer`,
+          );
+        }
+        if (typeCount !== researchQuestionCount) {
+          throw new Error(
+            `research ${subType} count ${typeCount} differs from sealed count ${researchQuestionCount}`,
+          );
+        }
+      }
       if (typeCount <= 0) return [];
       const expectedTypeCount = Math.max(1, Math.floor(Number(typeCount) || 1));
       const rawTypeSettings = typeSettings?.[subType];
@@ -615,7 +679,7 @@ export async function runQuestionGeneration(
         subType === "TOPIC_SENTENCE_WRITING"
           ? readTopicSentenceWritingBlankCountSetting(rawTypeSettings)
           : undefined;
-      const responseSchema = hasAiSchema
+      const baseResponseSchema = hasAiSchema
         ? getAiResponseSchema(subType, {
             irrelevantSlotCount,
             grammarMarkerCount: generatedGrammarMarkerCount,
@@ -634,10 +698,24 @@ export async function runQuestionGeneration(
             blankInferenceBlankCount,
             genericOptionCount,
             genericAnswerCount,
+            expectedQuestionCount: expectedTypeCount,
           })
         : isStructured
-          ? z.object({ questions: z.array(QUESTION_SCHEMAS[subType]) })
+          ? buildResearchAwareQuestionResponseSchema(
+              QUESTION_SCHEMAS[subType],
+              { expectedQuestionCount: expectedTypeCount },
+            )
           : fallbackResponseSchema;
+      const responseSchema = buildQuestionGenerationResearchProfileResponseSchema(
+        baseResponseSchema,
+        {
+          subType,
+          plan: effectiveGenerationPlan,
+          grammarMarkerCount: generatedGrammarMarkerCount,
+          grammarAnswerCount,
+          blankInferenceBlankCount,
+        },
+      );
 
       const structuredInstructions = isStructured
         ? STRUCTURED_OUTPUT_INSTRUCTIONS
@@ -650,6 +728,24 @@ export async function runQuestionGeneration(
       try {
         // KO_ 게이트: 국어 유형은 buildKoGenerationPrompt(동일 {system?, prompt}
         // 반환형 — PREMIUM anthropic 캐시 경로 재사용)로 위임. 영어 빌더는 무접촉.
+        const researchPromptSurface =
+          applyQuestionGenerationResearchPromptProfile(
+            {
+              typePrompt,
+              typeQualityRubric,
+              targetCandidateBlock,
+              finalChecklist:
+                subType === "GRAMMAR_ERROR"
+                  ? GRAMMAR_ERROR_FINAL_CHECKLIST
+                  : undefined,
+              customPrompt: previousAttemptFeedback
+                ? [mergedCustomPrompt, previousAttemptFeedback]
+                    .filter(Boolean)
+                    .join("\n\n")
+                : mergedCustomPrompt,
+            },
+            { subType, plan: effectiveGenerationPlan },
+          );
         const generationPromptInput = {
           schoolType,
           gradeInfo,
@@ -657,25 +753,21 @@ export async function runQuestionGeneration(
           teacherIntentBlock,
           analysisContext,
           targetPoints,
-          typePrompt,
+          typePrompt: researchPromptSurface.typePrompt,
           structuredInstructions,
-          targetCandidateBlock,
-          typeQualityRubric,
+          targetCandidateBlock: researchPromptSurface.targetCandidateBlock,
+          typeQualityRubric: researchPromptSurface.typeQualityRubric,
           typeCount,
           diffLabel: effectiveDiffLabel,
           diffInstruction: effectiveDiffInstruction,
           generationPlan: effectiveGenerationPlan,
           subType,
-          finalChecklist:
-            subType === "GRAMMAR_ERROR" ? GRAMMAR_ERROR_FINAL_CHECKLIST : undefined,
+          finalChecklist: researchPromptSurface.finalChecklist,
+          standardContractScope: researchPromptSurface.standardContractScope,
           // 교사 지정 출제 포인트 — targetPoints(AI 플랜)와 별개 파라미터.
           // prompts.ts 가 "## 교사 지정 출제 포인트 (필수 반영)" 블록으로 소비.
           teacherPoints,
-          customPrompt: previousAttemptFeedback
-            ? [mergedCustomPrompt, previousAttemptFeedback]
-                .filter(Boolean)
-                .join("\n\n")
-            : mergedCustomPrompt,
+          customPrompt: researchPromptSurface.customPrompt,
         };
         const { system: generationSystem, prompt: generationPrompt } = koMod
           ? buildKoGenerationPrompt({
@@ -722,10 +814,13 @@ export async function runQuestionGeneration(
                 Math.max(12_000, (Number(typeCount) || 1) * 12_000),
               )
             : generationMaxTokens;
+        const researchProfileMaxOutputTokens =
+          getQuestionGenerationResearchPromptProfileMaxOutputTokens();
         const effectiveGenerationMaxTokens = Math.min(
           generationMaxTokens,
           standardGrammarTokenCap,
           premiumGrammarTokenCap,
+          researchProfileMaxOutputTokens ?? Number.POSITIVE_INFINITY,
         );
         // Wave-3 TIMEOUT-RCA(26-07-05 실측): sonnet-5(OpenRouter) strict 구조화
         // 출력이 SUMMARY_WRITING/TOPIC_SENTENCE_WRITING 봉투(옵션·enum 필드 20여
@@ -998,6 +1093,7 @@ export async function runQuestionGeneration(
         const useGrammarPremiumLadder =
           subType === "GRAMMAR_ERROR" &&
           effectiveGenerationPlan === "PREMIUM" &&
+          !researchSingleShotProfileActive &&
           qualityMode === "strict" &&
           !koMod &&
           expectedTypeCount === 1 &&
@@ -1006,7 +1102,32 @@ export async function runQuestionGeneration(
           teacherPoints.length === 0 &&
           !customPrompt?.trim() &&
           !teacherIntentBlock.trim();
+        const rootResearchStage = useGrammarPremiumLadder
+          ? {
+              key: QUESTION_GENERATION_RESEARCH_STAGES.GRAMMAR_LADDER_ANSWER_ONLY,
+              purpose: "design" as const,
+            }
+          : premiumForceJsonFallback
+            ? {
+                key: QUESTION_GENERATION_RESEARCH_STAGES.QUESTION_PROMPT_JSON_FALLBACK,
+                purpose: "candidate" as const,
+              }
+            : {
+                key: QUESTION_GENERATION_RESEARCH_STAGES.QUESTION_STRUCTURED,
+                purpose: "candidate" as const,
+              };
+        return await runQuestionGenerationResearchOperation(
+          {
+            rootStage: rootResearchStage,
+            subType,
+            difficulty: effectiveDiffLabel,
+            generationPlan: effectiveGenerationPlan,
+            qualityMode,
+          },
+          async () => {
+        const researchEnabled = hasQuestionGenerationResearchRuntime();
         let ladderAcceptedQuestion: Record<string, unknown> | null = null;
+        let ladderResearchCandidate: Record<string, unknown> | null = null;
         // 사다리 finalize 콜백의 마지막 판정 전문 — 사다리 제어흐름상 마지막
         // finalize 호출이 곧 최종 후보(수용본/give-up 보존본) 판정이므로, 수용
         // 머신 합류·반려 풀 보존 시 재검증 없이 그대로 재사용한다. ref 컨테이너를
@@ -1082,6 +1203,7 @@ export async function runQuestionGeneration(
           ];
           if (ladderResult.status === "accepted" && ladderResult.aiQuestion) {
             ladderAcceptedQuestion = ladderResult.aiQuestion;
+            ladderResearchCandidate = ladderResult.researchRawCandidate ?? null;
             // 수용 전 내부 반려(재생성/수리 트리거) 이력도 rejectionRecorder 원장에
             // 남긴다 — 기존 경로가 후보 반려마다 기록하던 관측성과 등가.
             if (ladderResult.regenerations > 0 || ladderResult.repairs > 0) {
@@ -1094,6 +1216,12 @@ export async function runQuestionGeneration(
               });
             }
           } else {
+            if (researchEnabled && ladderResult.researchRawCandidate) {
+              await decideQuestionGenerationResearchCandidate(
+                ladderResult.researchRawCandidate,
+                "parsed_rejected",
+              );
+            }
             const giveUpReason = ladderResult.giveUpReason ?? "unknown";
             console.warn(
               `[AUTO-GEN] grammar-premium-ladder gave up (${giveUpReason}); falling back to the legacy PREMIUM generation path (never-fail §2-1).`,
@@ -1183,15 +1311,46 @@ export async function runQuestionGeneration(
           );
         }
         const generatedQuestions = generatedQuestionsAll.slice(0, expectedTypeCount);
+        if (
+          researchEnabled &&
+          !ladderAcceptedQuestion &&
+          generatedQuestions.length > 0
+        ) {
+          await observeQuestionGenerationResearchCandidates(generatedQuestions);
+        }
         const qs: Record<string, unknown>[] = [];
 
         for (const q of generatedQuestions) {
+          let researchDecisionCandidate =
+            q === ladderAcceptedQuestion
+              ? ladderResearchCandidate ?? q
+              : q;
+          const adaptedProfileCandidate = researchSingleShotProfileActive
+            ? adaptQuestionGenerationResearchProfileCandidate(q, passageContent)
+            : { ok: true as const, question: q };
+          if (!adaptedProfileCandidate.ok) {
+            recordRejection(rejectionRecorder, {
+              phase: "postprocess",
+              qualityMode,
+              subType,
+              message: adaptedProfileCandidate.error,
+              sample: buildRejectionSample(subType, q),
+            });
+            if (researchEnabled) {
+              await decideQuestionGenerationResearchCandidate(
+                researchDecisionCandidate,
+                "parsed_rejected",
+              );
+            }
+            continue;
+          }
+          const candidateForFinalize = adaptedProfileCandidate.question;
           // 사다리 수용 후보는 사다리의 마지막 finalize 판정을 그대로 재사용한다
           // (finalizeCandidate 는 어법에서 결정론 — 재실행과 동치, 중복 계산만 절약).
           let fin =
             q === ladderAcceptedQuestion && ladderFinRef.current
               ? ladderFinRef.current
-              : finalizeCandidate(q);
+              : finalizeCandidate(candidateForFinalize);
           if (!fin.ok) {
             console.warn(
               `[AUTO-GEN] Post-process failed for ${subType}: ${fin.error}`,
@@ -1203,6 +1362,12 @@ export async function runQuestionGeneration(
               message: fin.error,
               sample: buildRejectionSample(subType, fin.normalizedDraft),
             });
+            if (researchEnabled) {
+              await decideQuestionGenerationResearchCandidate(
+                researchDecisionCandidate,
+                "parsed_rejected",
+              );
+            }
             continue;
           }
 
@@ -1248,6 +1413,7 @@ export async function runQuestionGeneration(
           // 1회 교정 재생성이 데드라인(270s) 안에 충분히 들어온다(26-07-06,
           // 프리미엄 생성 실패율 완화의 일부).
           if (
+            !researchSingleShotProfileActive &&
             !koMod &&
             fin.blockingErrors.length > 0 &&
             fin.blockingErrors.length <= 3 &&
@@ -1266,6 +1432,9 @@ export async function runQuestionGeneration(
             const repaired = await repairQuestionCandidate({
               subType,
               draft: fin.normalizedDraft,
+              researchParentCandidate: researchEnabled
+                ? researchDecisionCandidate
+                : undefined,
               blockingIssues: fin.blockingErrors,
               passageContent,
               // 어법 decoy-only 수리의 교체 재료(26-07-14 round-3 ①) — 원 생성과
@@ -1295,6 +1464,7 @@ export async function runQuestionGeneration(
             });
             if (repaired) {
               const repairedFin = finalizeCandidate(repaired);
+              let adoptedRepair = false;
               if (repairedFin.ok && repairedFin.blockingErrors.length === 0) {
                 console.log(
                   `[AUTO-GEN] ${subType} candidate repaired (was: ${originalBlockingErrors
@@ -1302,6 +1472,7 @@ export async function runQuestionGeneration(
                     .join(",")})`,
                 );
                 fin = repairedFin;
+                adoptedRepair = true;
               } else if (
                 repairedFin.ok &&
                 decoyOnlyRepairScope &&
@@ -1325,6 +1496,21 @@ export async function runQuestionGeneration(
                     .join(",")})`,
                 );
                 fin = repairedFin;
+                adoptedRepair = true;
+              }
+              if (researchEnabled) {
+                if (adoptedRepair) {
+                  await decideQuestionGenerationResearchCandidate(
+                    researchDecisionCandidate,
+                    "parsed_rejected",
+                  );
+                  researchDecisionCandidate = repaired;
+                } else {
+                  await decideQuestionGenerationResearchCandidate(
+                    repaired,
+                    "parsed_rejected",
+                  );
+                }
               }
             }
           }
@@ -1355,6 +1541,12 @@ export async function runQuestionGeneration(
               blockingIssues: fin.blockingErrors,
               warnings: fin.allWarnings,
             });
+            if (researchEnabled) {
+              await decideQuestionGenerationResearchCandidate(
+                researchDecisionCandidate,
+                "parsed_rejected",
+              );
+            }
             continue;
           }
 
@@ -1366,6 +1558,9 @@ export async function runQuestionGeneration(
             if (qualityMode === "strict") {
               const solverIssue = await runKoSolverGate({
                 question: fin.finalQuestion,
+                researchParentCandidate: researchEnabled
+                  ? researchDecisionCandidate
+                  : undefined,
                 passage: passageContent,
                 mod: koMod,
                 generationPlan: effectiveGenerationPlan,
@@ -1397,6 +1592,12 @@ export async function runQuestionGeneration(
                   codes: [solverIssue.code],
                   sample: buildRejectionSample(subType, fin.finalQuestion),
                 });
+                if (researchEnabled) {
+                  await decideQuestionGenerationResearchCandidate(
+                    researchDecisionCandidate,
+                    "parsed_rejected",
+                  );
+                }
                 continue;
               }
             }
@@ -1408,9 +1609,16 @@ export async function runQuestionGeneration(
           // (형식가정법·수동+양태부사·동일문장 이중답 등)를 학생 시점 블라인드 풀이로
           // 차단. strict+relaxed 두 레인 실행(F의 relaxed 출하 금지), scarce/salvage
           // 최후 사다리는 생략 — never-fail 보존. 솔버 장애는 무판정 통과.
-          if (subType === "GRAMMAR_ERROR" && (qualityMode === "strict" || qualityMode === "relaxed")) {
+          if (
+            !researchSingleShotProfileActive &&
+            subType === "GRAMMAR_ERROR" &&
+            (qualityMode === "strict" || qualityMode === "relaxed")
+          ) {
             const grammarSolverIssue = await runGrammarSolverGate({
               question: fin.finalQuestion,
+              researchParentCandidate: researchEnabled
+                ? researchDecisionCandidate
+                : undefined,
               // 솔버는 항상 STANDARD(flash) — 6라운드+42구성 실측이 flash 솔버 기준이고,
               // PREMIUM 플랜을 그대로 넘기면 Claude 콜(고가+strict 파싱실패 실측,
               // 26-07-15 E2E)로 풀이하게 된다. 플랜과 무관한 독립 검증 콜.
@@ -1443,7 +1651,80 @@ export async function runQuestionGeneration(
                 codes: [grammarSolverIssue.code],
                 sample: buildRejectionSample(subType, fin.finalQuestion),
               });
+              if (researchEnabled) {
+                await decideQuestionGenerationResearchCandidate(
+                  researchDecisionCandidate,
+                  "parsed_rejected",
+                );
+              }
               continue;
+            }
+          }
+
+          // 해설 사실검증 게이트 (E-gate, 캠페인 20260716 O153/O156) — V4(해설 사실성)
+          // 는 수락 문항의 지배적 치명 결함이며 결정론 린트가 못 잡는다. pro 검증 →
+          // flash 표적수리 → pro 재검증. env EXPLANATION_VERIFY_GATE_MODE 로 활성화
+          // (기본 off = 기존 바이트 동일). strict/relaxed 레인 전용 — scarce/salvage
+          // 최후 사다리는 생략해 never-fail 보존. 게이트 장애는 무판정 통과.
+          if (
+            !researchSingleShotProfileActive &&
+            (subType === "GRAMMAR_ERROR" || subType === "BLANK_INFERENCE") &&
+            (qualityMode === "strict" || qualityMode === "relaxed") &&
+            getExplanationVerifyGateMode(effectiveGenerationPlan) !== "off"
+          ) {
+            const explanationGate = await runExplanationVerifyGate({
+              subType,
+              generationPlan: effectiveGenerationPlan,
+              question: fin.finalQuestion,
+              passage: passageContent,
+              researchParentCandidate: researchEnabled
+                ? researchDecisionCandidate
+                : undefined,
+              deadlineAt,
+              onModelUsage: (result) => {
+                onModelUsage?.({
+                  phase: "question_generation",
+                  subType,
+                  qualityMode,
+                  difficulty: effectiveDiffLabel,
+                  generationPlan: effectiveGenerationPlan,
+                  usage: result.usage,
+                  provider: result.provider,
+                  modelId: result.modelId,
+                  attempts: result.attempts,
+                  durationMs: result.durationMs,
+                });
+              },
+            });
+            if (explanationGate.issue) {
+              console.warn(
+                `[AUTO-GEN] explanation verify gate rejected ${subType}: ${explanationGate.issue.message}`,
+              );
+              recordRejection(rejectionRecorder, {
+                phase: "quality",
+                qualityMode,
+                subType,
+                message: explanationGate.issue.message,
+                codes: [explanationGate.issue.code],
+                sample: buildRejectionSample(subType, fin.finalQuestion),
+              });
+              if (researchEnabled) {
+                await decideQuestionGenerationResearchCandidate(
+                  researchDecisionCandidate,
+                  "parsed_rejected",
+                );
+              }
+              continue;
+            }
+            if (explanationGate.updatedQuestion) {
+              fin.finalQuestion = explanationGate.updatedQuestion;
+            }
+            if (explanationGate.warning) {
+              fin.allWarnings.push({
+                severity: "warning",
+                code: "explanation-verify-warning",
+                message: explanationGate.warning,
+              });
             }
           }
 
@@ -1462,11 +1743,19 @@ export async function runQuestionGeneration(
             fin.finalQuestion._qualityMode = "relaxed";
           }
 
+          if (researchEnabled) {
+            await decideQuestionGenerationResearchCandidate(
+              researchDecisionCandidate,
+              "parsed_accepted",
+            );
+          }
           qs.push(fin.finalQuestion);
         }
 
         console.log(`[AUTO-GEN] ${subType} done: ${qs.length} questions`);
         return qs;
+          },
+        );
       } catch (err) {
         console.error(
           `[AUTO-GEN] Failed ${subType}:`,
@@ -1521,6 +1810,33 @@ export async function runQuestionGenerationWithEmptyRetry(
     },
   };
   const rejectionRecorder: RejectionRecorder = { issues: [] };
+  const hasEnglishGeneration = inputWithUsage.plan.some(
+    (item) => item.count > 0 && !isKoQuestionType(item.subType),
+  );
+  const passageIntegrityFindings = hasEnglishGeneration
+    ? analyzeEnglishPassageIntegrity(inputWithUsage.passageContent)
+    : [];
+  if (passageIntegrityFindings.length > 0) {
+    for (const item of inputWithUsage.plan) {
+      if (item.count <= 0 || isKoQuestionType(item.subType)) continue;
+      recordRejection(rejectionRecorder, {
+        phase: "quality",
+        qualityMode: "strict",
+        subType: item.subType,
+        message: passageIntegrityFindings
+          .map((finding) => `${finding.code}: ${finding.message}`)
+          .join(" | "),
+        codes: passageIntegrityFindings.map((finding) => finding.code),
+      });
+    }
+    return {
+      questions: [],
+      attempts: 0,
+      relaxedFallback: false,
+      rejectionSummary: buildRejectionSummary(rejectionRecorder),
+      usageEvents,
+    };
+  }
   const hasNegativeParaphraseBlank = hasDoubleNegativeBlankSetting(inputWithUsage);
   const hasBlankParaphraseAnswer = hasBlankParaphraseAnswerSetting(inputWithUsage);
   const hasSingleBlankInference = hasSingleBlankInferenceSetting(inputWithUsage);
@@ -1559,7 +1875,9 @@ export async function runQuestionGenerationWithEmptyRetry(
   const hasGrammarChoiceCombo = inputWithUsage.plan.some(
     (item) => item.subType === "GRAMMAR_CHOICE_COMBO" && item.count > 0,
   );
-  const requestedMaxAttempts = Math.floor(maxAttempts);
+  const requestedMaxAttempts =
+    getQuestionGenerationResearchTransportPolicy()?.outerMaxAttempts ??
+    normalizeQuestionGenerationOuterAttempts(maxAttempts);
   const hasExtendedRetryType =
     hasSummaryCompleteMc ||
     hasGrammarChoiceCombo ||

@@ -68,5 +68,5 @@ export const DIFFICULTY_RUBRIC: Record<string, string> = {
 export const MARKING_RUBRIC = `## 표시/위치 정확도 필수 규칙
 - underlinedPronoun/underlinedWord/underlinedExpression/originalExpression/markedExpressions, VOCAB_CHOICE의 markedWords[].originalWord, GRAMMAR_CHOICE_COMBO의 slots[].correctExpression은 원문에 실제로 존재하는 표현만 쓰세요. VOCAB_CHOICE의 substituteWord와 GRAMMAR_CHOICE_COMBO의 slots[].wrongExpression은 지문에 표시할 오답 후보이므로 원문에 존재하지 않아도 됩니다.
 - 특히 "it", "is", "in", "as" 같은 짧은 단어는 반드시 독립 단어로 존재하는 위치만 선택하세요. digital, commitments, within 같은 단어 내부의 일부를 선택하면 실패입니다.
-- surroundingText는 선택한 표현을 포함하는 원문 그대로의 40~80자여야 하며, 철자/공백/문장부호를 바꾸지 마세요.
+- surroundingText는 선택한 표현을 포함하는 원문 그대로의 구간이며, 유형별 응답 스키마에 적힌 길이 범위를 따르고 철자/공백/문장부호를 바꾸지 마세요. 특히 GRAMMAR_ERROR는 보통 40~120자로 쓰되 장거리 판단에 필요한 진짜 주어 핵~동사, 선행사~관계절, 의미상 주어~분사, 병렬 시작점~대상 표현 전체를 담고, 필요하면 80자를 넘기세요. 다른 유형에 이 예외를 임의로 확장하지 마세요.
 - passageWithBlank, passageWithMarkers, passageWithUnderline, passageWithNumbers 같은 지문 전체 복사 필드는 생성하지 마세요.`;

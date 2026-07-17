@@ -9,6 +9,74 @@ function readPositiveIntegerEnv(name: string, fallback: number): number {
   return integer > 0 ? integer : fallback;
 }
 
+export const QUESTION_GENERATION_APPLICATION_RETRY_HARD_CAP = 2;
+export const QUESTION_GENERATION_SDK_MAX_RETRIES = 2;
+export const QUESTION_GENERATION_OUTER_ATTEMPT_HARD_CAP = 2;
+export const WORKBENCH_QUESTION_TRIGGER_ATTEMPT_HARD_CAP = 2;
+
+function normalizeSafeIntegerWithinBounds(
+  value: unknown,
+  fallback: number,
+  min: number,
+  max: number,
+): number {
+  if (typeof value !== "number" || !Number.isSafeInteger(value) || value < min) {
+    return fallback;
+  }
+  return Math.min(value, max);
+}
+
+/**
+ * Public question-wrapper retries are deliberately bounded independently of
+ * environment parsing. Explicit zero remains meaningful; malformed,
+ * fractional, negative, non-finite and unsafe values fall back to the current
+ * production default instead of changing the retry topology.
+ */
+export function normalizeQuestionGenerationApplicationRetries(
+  value: unknown,
+): number {
+  return normalizeSafeIntegerWithinBounds(
+    value,
+    QUESTION_GENERATION_APPLICATION_RETRY_HARD_CAP,
+    0,
+    QUESTION_GENERATION_APPLICATION_RETRY_HARD_CAP,
+  );
+}
+
+/**
+ * Normalizes the caller-controlled outer-attempt request only. The existing
+ * subtype-specific strict floors/caps (4/5/6/10) are applied later and are not
+ * weakened by this boundary.
+ */
+export function normalizeQuestionGenerationOuterAttempts(value: unknown): number {
+  return normalizeSafeIntegerWithinBounds(
+    value,
+    QUESTION_GENERATION_OUTER_ATTEMPT_HARD_CAP,
+    1,
+    QUESTION_GENERATION_OUTER_ATTEMPT_HARD_CAP,
+  );
+}
+
+function readBoundedPositiveIntegerEnv(
+  name: string,
+  fallback: number,
+  hardCap: number,
+): number {
+  const raw = process.env[name];
+  if (raw === undefined || raw.trim() === "") return fallback;
+  const value = Number(raw);
+  return normalizeSafeIntegerWithinBounds(value, fallback, 1, hardCap);
+}
+
+function readQuestionGenerationApplicationRetryEnv(
+  name: string,
+  fallback: number,
+): number {
+  const raw = process.env[name];
+  if (raw === undefined || raw.trim() === "") return fallback;
+  return normalizeQuestionGenerationApplicationRetries(Number(raw));
+}
+
 function capConcurrency(perAcademy: number, queueBudget: number): number {
   return Math.max(1, Math.min(perAcademy, queueBudget));
 }
@@ -113,7 +181,11 @@ export const SIMILAR_EXAM_GENERATION_QUEUE_CONCURRENCY = capConcurrency(
 );
 
 export const WORKBENCH_QUESTION_TRIGGER_MAX_ATTEMPTS =
-  readPositiveIntegerEnv("TRIGGER_WORKBENCH_QUESTION_MAX_ATTEMPTS", 2);
+  readBoundedPositiveIntegerEnv(
+    "TRIGGER_WORKBENCH_QUESTION_MAX_ATTEMPTS",
+    2,
+    WORKBENCH_QUESTION_TRIGGER_ATTEMPT_HARD_CAP,
+  );
 export const WORKBENCH_PASSAGE_ANALYSIS_TRIGGER_MAX_ATTEMPTS =
   readPositiveIntegerEnv("TRIGGER_WORKBENCH_ANALYSIS_MAX_ATTEMPTS", 2);
 export const TUTOR_PROGRAM_GENERATION_TRIGGER_MAX_ATTEMPTS =
@@ -130,12 +202,16 @@ export const SIMILAR_EXAM_GENERATION_MAX_ATTEMPTS = readPositiveIntegerEnv(
   "TRIGGER_SIMILAR_EXAM_MAX_ATTEMPTS",
   1,
 );
-export const GEMINI_QUESTION_MAX_RETRIES = readPositiveIntegerEnv(
+export const GEMINI_QUESTION_MAX_RETRIES = readQuestionGenerationApplicationRetryEnv(
   "GEMINI_QUESTION_MAX_RETRIES",
   2,
 );
 export const GEMINI_QUESTION_EMPTY_RESULT_MAX_ATTEMPTS =
-  readPositiveIntegerEnv("GEMINI_QUESTION_EMPTY_RESULT_MAX_ATTEMPTS", 2);
+  readBoundedPositiveIntegerEnv(
+    "GEMINI_QUESTION_EMPTY_RESULT_MAX_ATTEMPTS",
+    2,
+    QUESTION_GENERATION_OUTER_ATTEMPT_HARD_CAP,
+  );
 export const QUESTION_PERSISTENCE_TRANSACTION_TIMEOUT_MS =
   readPositiveIntegerEnv("QUESTION_PERSISTENCE_TRANSACTION_TIMEOUT_MS", 30_000);
 

@@ -583,6 +583,7 @@ async function resolveCost(
     input.provider,
     input.unitType,
     input.model,
+    input.inputTokens,
   );
   if (estimatedPricing) {
     const cost = calculateCostUsd({

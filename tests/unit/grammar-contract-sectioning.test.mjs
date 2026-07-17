@@ -22,7 +22,7 @@ const BASELINE_B64 =
 
 const CHECKLIST_SENTINEL = "## FINAL_CHECKLIST_SENTINEL_MARKER";
 
-const harnessSource = "import contractMod from \"@/lib/question-generation-prompt-contract\";\n\nconst c = contractMod as any;\nconst b64 = (s: string) => Buffer.from(s, \"utf8\").toString(\"base64\");\nconst CHK = \"## FINAL_CHECKLIST_SENTINEL_MARKER\\n1. sentinel one\\n2. sentinel two\";\n\nconst full = c.buildQuestionGenerationPromptContract(\"STANDARD\");\nconst grammar = c.buildQuestionGenerationPromptContract(\"STANDARD\", \"GRAMMAR_ERROR\");\nconst compactNo = c.buildGeminiCompactGenerationPrompt({\n  passageContent: \"P\",\n  typePrompt: \"T\",\n  count: 1,\n  difficulty: \"INTERMEDIATE\",\n});\nconst compactYes = c.buildGeminiCompactGenerationPrompt({\n  passageContent: \"P\",\n  typePrompt: \"T\",\n  count: 1,\n  difficulty: \"INTERMEDIATE\",\n  typeId: \"GRAMMAR_ERROR\",\n  finalChecklist: CHK,\n});\n\nconsole.log(\n  JSON.stringify({\n    full: b64(full),\n    grammar: b64(grammar),\n    compactNo: b64(compactNo),\n    compactYes: b64(compactYes),\n  }),\n);\n";
+const harnessSource = "import contractMod from \"@/lib/question-generation-prompt-contract\";\nimport constantsMod from \"@/app/api/ai/generate-questions-auto/_lib/constants\";\n\nconst c = contractMod as any;\nconst constants = constantsMod as any;\nconst b64 = (s: string) => Buffer.from(s, \"utf8\").toString(\"base64\");\nconst CHK = \"## FINAL_CHECKLIST_SENTINEL_MARKER\\n1. sentinel one\\n2. sentinel two\";\n\nconst full = c.buildQuestionGenerationPromptContract(\"STANDARD\");\nconst grammar = c.buildQuestionGenerationPromptContract(\"STANDARD\", \"GRAMMAR_ERROR\");\nconst blankLegacy = c.buildQuestionGenerationPromptContract(\"STANDARD\", \"BLANK_INFERENCE\");\nconst blankScoped = c.buildQuestionGenerationPromptContract(\"STANDARD\", \"BLANK_INFERENCE\", { standardScope: \"force_type_scoped\" });\nlet unknownScopedError = \"\";\ntry {\n  c.buildQuestionGenerationPromptContract(\"STANDARD\", \"UNKNOWN_TYPE\", { standardScope: \"force_type_scoped\" });\n} catch (error) {\n  unknownScopedError = error instanceof Error ? error.message : String(error);\n}\nconst compactNo = c.buildGeminiCompactGenerationPrompt({\n  passageContent: \"P\",\n  typePrompt: \"T\",\n  count: 1,\n  difficulty: \"INTERMEDIATE\",\n});\nconst compactYes = c.buildGeminiCompactGenerationPrompt({\n  passageContent: \"P\",\n  typePrompt: \"T\",\n  count: 1,\n  difficulty: \"INTERMEDIATE\",\n  typeId: \"GRAMMAR_ERROR\",\n  finalChecklist: CHK,\n});\n\nconsole.log(\n  JSON.stringify({\n    full: b64(full),\n    grammar: b64(grammar),\n    blankLegacy: b64(blankLegacy),\n    blankScoped: b64(blankScoped),\n    unknownScopedError,\n    markingRubric: b64(constants.MARKING_RUBRIC),\n    compactNo: b64(compactNo),\n    compactYes: b64(compactYes),\n  }),\n);\n";
 
 function runHarness() {
   const harnessPath = path.join(
@@ -100,4 +100,37 @@ test("(c) finalChecklist 는 tags 줄 뒤·종결 명령 앞에 삽입되고 종
   );
   // 체크리스트 미지정 시 센티넬 없음(무회귀)
   assert.ok(!no.includes(CHECKLIST_SENTINEL), "미지정 시 체크리스트 미주입");
+});
+
+test("(d) research type-scope는 명시 opt-in이고 default bytes를 바꾸지 않는다", () => {
+  const full = dec("full");
+  const legacy = dec("blankLegacy");
+  const scoped = dec("blankScoped");
+
+  assert.equal(legacy, full, "BLANK_INFERENCE default는 기존 full-tail과 바이트 동일");
+  assert.ok(scoped.includes("Core evidence:"), "공통 계약 유지");
+  assert.ok(scoped.includes("- BLANK_INFERENCE:"), "빈칸 전용 계약 포함");
+  assert.ok(scoped.includes("PARAPHRASE KILLER distractors"), "빈칸 상세 계약 포함");
+  assert.ok(!scoped.includes("SENTENCE_ORDER display contract"), "순서 계약 제외");
+  assert.ok(!scoped.includes("- IRRELEVANT:"), "무관문장 계약 제외");
+  assert.ok(!scoped.includes("- GRAMMAR_ERROR schema rule"), "어법 계약 제외");
+  assert.ok(scoped.length < legacy.length, "type-scoped 계약은 legacy보다 짧음");
+  assert.match(
+    R.unknownScopedError,
+    /requires a known contract typeId/,
+    "알 수 없는 유형은 type-scope를 추측하지 않고 fail-closed",
+  );
+});
+
+test("(e) surroundingText 길이 계약은 스키마 우선이며 어법 장거리 의존과 충돌하지 않는다", () => {
+  const compact = dec("compactYes");
+  const premium = dec("markingRubric");
+  for (const contract of [compact, premium]) {
+    assert.match(contract, /40[-~]120/, "어법 40~120자 예외를 명시");
+    assert.ok(contract.includes("80"), "80자 초과 장거리 의존을 명시");
+    assert.ok(
+      !contract.includes("surroundingText must be an exact 40-80 character slice"),
+      "구 40~80자 절대 계약 제거",
+    );
+  }
 });

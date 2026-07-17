@@ -1,4 +1,4 @@
-import { generateObject, type JSONValue } from "ai";
+import { generateObject } from "ai";
 import { z } from "zod";
 
 import {
@@ -7,7 +7,18 @@ import {
   atlasUsageWithCost,
   normalizeAtlasModelId,
 } from "@/lib/atlas-ai";
+import { isQuestionGenerationAssignmentBudgetError } from "@/lib/atlas-production-assignment-fetch-boundary";
+import { QUESTION_GENERATION_SDK_MAX_RETRIES } from "@/lib/concurrency-config";
 import { buildAiGrammarErrorSchema } from "@/lib/question-ai-schemas-mc";
+import {
+  QUESTION_GENERATION_RESEARCH_STAGES,
+  decideQuestionGenerationResearchCandidate,
+  getQuestionGenerationResearchTransportPolicy,
+  hasQuestionGenerationResearchRuntime,
+  observeQuestionGenerationResearchCandidates,
+  runQuestionGenerationResearchStage,
+  type QuestionGenerationResearchStage,
+} from "@/lib/question-generation-research-runtime";
 
 import type {
   QualityMode,
@@ -19,7 +30,8 @@ import type {
  *
  * 계약서: docs/grammar-premium-ladder-spec.md §1·§3.
  * 원본(프롬프트 문구·사다리 정책): experiments/grammar-quality-20260714/x-strategies.ts
- * 의 w3GenerateSplit / w3Repair / w3ProObject (w3-triple-ladder, 결승 60지문 C·F 0).
+ * 의 w3GenerateSplit / w3Repair / w3ProObject. 당시 60/60 성공 주장은 2026-07-15
+ * 독립 재감사에서 같은 30지문의 2회 생성, F22/C38/A0/B0로 정정됐다.
  *
  * 구성:
  *  - 콜1 정답 생성(few-shot A등급 2개 + 미니멀 규칙 → answer-only 소형 스키마)
@@ -27,7 +39,7 @@ import type {
  *  - 게이트 사다리: 하드블록 → 전체 재생성 ≤2회(반려 사유 주입) /
  *    소프트 error·배치위반 → 표적수리 1콜 후 수용(잔존 재생성 회송 금지 — 결승 롤백 실측)
  *  - 최종 수용 직전 question.difficulty = 요청 난이도 결정론 덮어쓰기
- *  - 파싱 실패는 동형 재시도 1회 흡수, reasoning-disable 형상 400 은 effort 폴백 1회
+ *  - 파싱 실패는 thinking-off 형상을 유지한 동형 재시도 1회만 허용
  *  - deadlineAt(fast 라우트 270s 벽)을 각 콜 직전 확인 — 부족하면 조기 give-up
  *
  * 결합 규칙(순환 의존 회피): 게이트 판정(후처리+validateQuestionQuality)은 호출자
@@ -241,8 +253,10 @@ const REPAIR_DEFECT_GLOSS: Record<string, string> = {
   "grammar-explanation-lint": "해설 린트 위반 — 해설 문구를 규정 형식에 맞게 수정합니다.",
   "grammar-category-mislabel": "pointCode 오태깅 — 실제 문법 포인트에 맞는 코드로 바로잡습니다.",
   "grammar-keypoint-choice-mismatch": "keyPoints 와 밑줄 설계가 불일치합니다 — keyPoints 를 바로잡습니다.",
+  "grammar-keypoint-nonexistent-label": "keyPoints 가 존재하지 않는 밑줄 라벨을 참조합니다 — 실제 라벨로 바로잡습니다.",
   "grammar-answer-point-not-core": "정답 포인트가 핵심 어법 포인트가 아닙니다.",
-  "grammar-nonstandard-terminology": "비표준 문법 용어 사용 — 표준 용어로 수정합니다.",
+  "grammar-terminology-error": "잘못된 문법 용어 사용 — 정확한 학교 문법 용어로 수정합니다.",
+  "grammar-terminology-register": "지나치게 전문적인 문법 용어 — 학생용 학교 문법 표현으로 수정합니다.",
   "placement-answer-first-sentence":
     "정답 밑줄이 첫 문장에 있습니다 — 정답 자리를 더 뒤 문장으로 옮깁니다.",
   "placement-answer-relpos-lt-0.2":
@@ -416,6 +430,12 @@ export interface GrammarPremiumLadderResult {
    */
   aiQuestion?: Record<string, unknown>;
   /**
+   * Opt-in research only: exact provider-returned object used for candidate
+   * correlation. aiQuestion/bestCandidate may be a deterministic difficulty
+   * copy and therefore must not be used as a wire-response identity.
+   */
+  researchRawCandidate?: Record<string, unknown>;
+  /**
    * status=gave-up: 마지막 후보 보존본(있다면, difficulty 동기화 완료) —
    * never-fail 계약: 호출자가 기존 반려 풀/salvage 사다리로 합류시킨다.
    */
@@ -480,6 +500,8 @@ interface LadderCallContext {
   deadlineAt?: number;
   onModelUsage?: (event: QuestionGenerationUsageEvent) => void;
   calls: GrammarPremiumLadderCall[];
+  sdkMaxRetries: number;
+  parseMaxRetries: number;
 }
 
 function computeAbortMs(deadlineAt?: number): number {
@@ -494,7 +516,6 @@ async function fireOnce<T>(
     prompt: string;
     purpose: string;
     attempt: number;
-    providerOptions?: Record<string, Record<string, JSONValue>>;
   },
 ): Promise<T> {
   if (ctx.deadlineAt && ctx.deadlineAt - Date.now() < LADDER_MIN_CALL_BUDGET_MS) {
@@ -521,8 +542,8 @@ async function fireOnce<T>(
       model: atlasChatModel(ctx.modelId),
       schema: args.schema,
       prompt: args.prompt,
+      maxRetries: ctx.sdkMaxRetries,
       maxOutputTokens: LADDER_MAX_TOKENS,
-      ...(args.providerOptions ? { providerOptions: args.providerOptions } : {}),
       abortSignal: AbortSignal.timeout(computeAbortMs(ctx.deadlineAt)),
     });
     ctx.calls.push({
@@ -548,49 +569,63 @@ async function fireOnce<T>(
 }
 
 /**
- * 논리 콜 1회 = 물리 콜 최대 2회.
- * 1) strict 스키마 호출 → 산발 파싱 실패("No object generated"/스키마 불일치)는
- *    동형 재시도 1회로 흡수 (pro preview 실측 — strict json_schema 금지 리스크).
- * 2) reasoning-disable 형상 400 거부(OR gemini 잠복 함정)는 reasoning_effort=low
- *    폴백 1회.
+ * 논리 콜 1회 = fireOnce 최대 2회.
+ * strict 스키마 호출의 산발 파싱 실패("No object generated"/스키마 불일치)만
+ * 동일한 thinking-off 요청으로 1회 재시도한다. Gemini reasoning을 켜는 폴백은
+ * 사용자 계약과 비용 상한을 깨므로 허용하지 않는다.
  */
 async function callLadderModel<T>(
   ctx: LadderCallContext,
-  args: { schema: z.ZodType<T>; prompt: string; purpose: string },
+  args: {
+    schema: z.ZodType<T>;
+    prompt: string;
+    purpose: string;
+    answerRegeneration?: boolean;
+    derivationParentValue?: unknown;
+  },
 ): Promise<{ object: T; reasoningFallback: boolean }> {
-  for (let attempt = 1; attempt <= 2; attempt++) {
-    try {
-      const object = await fireOnce(ctx, {
-        schema: args.schema,
-        prompt: args.prompt,
-        purpose: attempt === 1 ? args.purpose : `${args.purpose}-parse-retry`,
-        attempt,
-      });
-      return { object, reasoningFallback: false };
-    } catch (e) {
-      if (e instanceof GrammarPremiumDeadlineError) throw e;
-      const msg = errorMessage(e);
-      const parseFail =
-        /no object generated|could not parse|did not match schema|type validation failed/i.test(
-          msg,
-        );
-      if (parseFail && attempt === 1) continue;
-      if (!parseFail && /reasoning|400/i.test(msg)) {
+  const stage: QuestionGenerationResearchStage = args.purpose === "answer-only"
+    ? {
+        key: args.answerRegeneration
+          ? QUESTION_GENERATION_RESEARCH_STAGES.GRAMMAR_LADDER_ANSWER_REGEN
+          : QUESTION_GENERATION_RESEARCH_STAGES.GRAMMAR_LADDER_ANSWER_ONLY,
+        purpose: "design",
+        derivationParentValue: args.derivationParentValue,
+      }
+    : args.purpose === "add-decoys"
+      ? {
+          key: QUESTION_GENERATION_RESEARCH_STAGES.GRAMMAR_LADDER_ADD_DECOYS,
+          purpose: "candidate",
+        }
+      : {
+          key: QUESTION_GENERATION_RESEARCH_STAGES.GRAMMAR_LADDER_REPAIR,
+          purpose: "candidate",
+          derivationParentValue: args.derivationParentValue,
+        };
+  return await runQuestionGenerationResearchStage(stage, async () => {
+    for (let attempt = 1; attempt <= 1 + ctx.parseMaxRetries; attempt++) {
+      try {
         const object = await fireOnce(ctx, {
           schema: args.schema,
           prompt: args.prompt,
-          purpose: `${args.purpose}-reasoning-fallback`,
-          attempt: attempt + 1,
-          providerOptions: {
-            [ATLAS_CLOUD_PROVIDER]: { reasoning_effort: "low" },
-          },
+          purpose: attempt === 1 ? args.purpose : `${args.purpose}-parse-retry`,
+          attempt,
         });
-        return { object, reasoningFallback: true };
+        return { object, reasoningFallback: false };
+      } catch (e) {
+        if (isQuestionGenerationAssignmentBudgetError(e)) throw e;
+        if (e instanceof GrammarPremiumDeadlineError) throw e;
+        const msg = errorMessage(e);
+        const parseFail =
+          /no object generated|could not parse|did not match schema|type validation failed/i.test(
+            msg,
+          );
+        if (parseFail && attempt <= ctx.parseMaxRetries) continue;
+        throw e;
       }
-      throw e;
     }
-  }
-  throw new Error(`grammar-premium-ladder unreachable (${args.purpose})`);
+    throw new Error(`grammar-premium-ladder unreachable (${args.purpose})`);
+  });
 }
 
 // ── 사다리 오케스트레이션 (w3-triple-ladder 이식) ────────────────────────────
@@ -601,6 +636,8 @@ export async function runGrammarPremiumLadder(
   const modelId = input.modelId ?? GRAMMAR_PREMIUM_MODEL_ID;
   const calls: GrammarPremiumLadderCall[] = [];
   const ladder: GrammarPremiumLadderEvent[] = [];
+  const researchTransportPolicy =
+    getQuestionGenerationResearchTransportPolicy();
   const ctx: LadderCallContext = {
     modelId,
     difficulty: input.difficulty,
@@ -608,6 +645,11 @@ export async function runGrammarPremiumLadder(
     deadlineAt: input.deadlineAt,
     onModelUsage: input.onModelUsage,
     calls,
+    sdkMaxRetries:
+      researchTransportPolicy?.sdkMaxRetries ??
+      QUESTION_GENERATION_SDK_MAX_RETRIES,
+    parseMaxRetries:
+      researchTransportPolicy?.ladderParseMaxRetries ?? 1,
   };
 
   let regenerations = 0;
@@ -639,6 +681,7 @@ export async function runGrammarPremiumLadder(
       status,
       aiQuestion: status === "accepted" ? question : undefined,
       bestCandidate: status === "gave-up" ? question : undefined,
+      researchRawCandidate: aiQuestion,
       finalize: fin,
       answerStage,
       giveUpReason,
@@ -670,10 +713,13 @@ export async function runGrammarPremiumLadder(
 
   /** 미끼분리 2단 생성 (콜1 정답만 → 콜2 미끼 4개) + finalize. */
   const generateSplit = async (): Promise<void> => {
+    const previousQuestion = aiQuestion;
     const s1 = await callLadderModel(ctx, {
       schema: grammarPremiumAnswerOnlySchema,
       prompt: buildGrammarPremiumAnswerPrompt(input, rejectNote),
       purpose: "answer-only",
+      answerRegeneration: previousQuestion !== undefined,
+      derivationParentValue: previousQuestion,
     });
     reasoningFallback = reasoningFallback || s1.reasoningFallback;
     const s2 = await callLadderModel(ctx, {
@@ -682,15 +728,34 @@ export async function runGrammarPremiumLadder(
       purpose: "add-decoys",
     });
     reasoningFallback = reasoningFallback || s2.reasoningFallback;
+    if (hasQuestionGenerationResearchRuntime()) {
+      await observeQuestionGenerationResearchCandidates([s2.object]);
+    }
+    let nextFin: GrammarPremiumFinalizeResult;
+    try {
+      nextFin = await input.finalize(s2.object);
+    } catch (error) {
+      if (hasQuestionGenerationResearchRuntime()) {
+        await decideQuestionGenerationResearchCandidate(
+          s2.object,
+          "parsed_rejected",
+        );
+      }
+      throw error;
+    }
+    if (previousQuestion && hasQuestionGenerationResearchRuntime()) {
+      await decideQuestionGenerationResearchCandidate(previousQuestion, "parsed_rejected");
+    }
     answerStage = s1.object;
     aiQuestion = s2.object;
-    fin = await input.finalize(aiQuestion);
+    fin = nextFin;
   };
 
   // 초기 생성 — 실패(딜레드라인/LLM)는 조기 give-up: 호출자가 기존 경로로 폴백.
   try {
     await generateSplit();
   } catch (e) {
+    if (isQuestionGenerationAssignmentBudgetError(e)) throw e;
     return giveUp(giveUpReasonOf(e));
   }
 
@@ -706,6 +771,7 @@ export async function runGrammarPremiumLadder(
       try {
         await generateSplit();
       } catch (e) {
+        if (isQuestionGenerationAssignmentBudgetError(e)) throw e;
         // 재생성 실패 — 남은 후보는 하드블록 상태이므로 give-up(보존본 동반).
         return giveUp(giveUpReasonOf(e), hard);
       }
@@ -725,6 +791,7 @@ export async function runGrammarPremiumLadder(
       repairedThisCycle = true;
       repairs++;
       try {
+        const previousQuestion = aiQuestion!;
         const rep = await callLadderModel(ctx, {
           schema: grammarPremiumFullSchema,
           prompt: buildGrammarPremiumRepairPrompt(
@@ -734,10 +801,32 @@ export async function runGrammarPremiumLadder(
             input.repairCandidateLines,
           ),
           purpose: "repair",
+          derivationParentValue: previousQuestion,
         });
         reasoningFallback = reasoningFallback || rep.reasoningFallback;
+        if (hasQuestionGenerationResearchRuntime()) {
+          await observeQuestionGenerationResearchCandidates([rep.object]);
+        }
+        let repairedFin: GrammarPremiumFinalizeResult;
+        try {
+          repairedFin = await input.finalize(rep.object);
+        } catch (error) {
+          if (hasQuestionGenerationResearchRuntime()) {
+            await decideQuestionGenerationResearchCandidate(
+              rep.object,
+              "parsed_rejected",
+            );
+          }
+          throw error;
+        }
+        if (hasQuestionGenerationResearchRuntime()) {
+          await decideQuestionGenerationResearchCandidate(
+            previousQuestion,
+            "parsed_rejected",
+          );
+        }
         aiQuestion = rep.object;
-        fin = await input.finalize(aiQuestion);
+        fin = repairedFin;
         const after = [...hardBlocksOf(fin), ...softDefectsOf(fin)];
         ladder.push({
           action: "repair",
@@ -746,6 +835,7 @@ export async function runGrammarPremiumLadder(
           remaining: after,
         });
       } catch (e) {
+        if (isQuestionGenerationAssignmentBudgetError(e)) throw e;
         // 표적수리는 기회 조치 — 실패해도 수리 전 문항(하드블록 없음)을 버리지 않는다.
         if (e instanceof GrammarPremiumDeadlineError) {
           ladder.push({

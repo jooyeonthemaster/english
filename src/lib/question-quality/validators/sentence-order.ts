@@ -23,7 +23,7 @@ export function validateSentenceOrderQuestion(
   passage: string | undefined,
   add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
 ) {
-  const givenSentence = normalizeText(question.givenSentence);
+  const givenSentence = normalizeSentenceOrderVisibleText(question.givenSentence);
   if (!givenSentence) {
     add("error", "sentence-order-missing-given", "SENTENCE_ORDER is missing givenSentence.");
   }
@@ -47,10 +47,13 @@ export function validateSentenceOrderQuestion(
       `SENTENCE_ORDER givenSentence is too long (${givenWordCount} words). Use only the first 1-2 sentences.`,
     );
   }
-  if (/[（(]\s*[ABC]\s*[）)]/.test(givenSentence)) {
+  // Structural paragraph labels belong only in question.paragraphs. Keep this
+  // separate from the length craft signal: a short givenSentence contaminated
+  // with an exact (A)/(B)/(C) marker is still structurally invalid.
+  if (/[（(]\s*[ABC]\s*[）)]/i.test(givenSentence)) {
     add(
       "error",
-      "sentence-order-given-too-long",
+      "sentence-order-given-contains-paragraph-label",
       "SENTENCE_ORDER givenSentence appears to contain paragraph labels; split given and (A)/(B)/(C) separately.",
     );
   }
@@ -73,10 +76,50 @@ export function validateSentenceOrderQuestion(
     const expectedLabel = SENTENCE_ORDER_PARAGRAPH_LABELS[index] ?? `(${index + 1})`;
     const label = normalizeSentenceOrderParagraphLabel(paragraph.label);
     normalizedLabels.push(label);
-    const text = normalizeText(paragraph.text);
+    const text = normalizeSentenceOrderVisibleText(paragraph.text);
     const sentenceCount = countDisplaySentences(text);
     const wordCount = countWords(text);
     paragraphWordCounts.push(wordCount);
+
+    // An absent paragraph is a structural validity failure, not merely a thin
+    // or one-sentence craft issue. Emit the dedicated code first while keeping
+    // the existing minimum-sentence/word diagnostics below for observability.
+    if (!text) {
+      add(
+        "error",
+        "sentence-order-empty-paragraph",
+        `SENTENCE_ORDER paragraph ${expectedLabel} is empty. Provide the complete paragraph text.`,
+      );
+    }
+
+    // paragraph.label already supplies the visible (A)/(B)/(C) marker. A
+    // second standalone marker copied anywhere into paragraph.text
+    // duplicates/contaminates the reconstruction surface. Keep this bounded
+    // to exact label tokens: quoted source notation, formulae such as f(A),
+    // and ordinary parentheticals such as (advanced) are not structural
+    // labels.
+    const duplicatedBodyLabel = findSentenceOrderDuplicatedBodyLabel(text);
+    if (duplicatedBodyLabel) {
+      add(
+        "error",
+        "sentence-order-paragraph-body-label",
+        `SENTENCE_ORDER paragraph ${expectedLabel} repeats a structural label inside its text (${duplicatedBodyLabel.trim()}). Keep the label only in paragraph.label.`,
+      );
+    }
+
+    // Bounded fragment certificate: each short standalone sentence beginning
+    // with an overt dependency marker must contain its own independent clause.
+    // Terminal punctuation and later padding sentences cannot repair a
+    // truncated subordinate clause. This deliberately does not claim to parse
+    // arbitrary English; an explicit comma/main-clause boundary remains a
+    // normal control.
+    if (isHighConfidenceSentenceOrderDependentFragment(text)) {
+      add(
+        "error",
+        "sentence-order-dependent-fragment",
+        `SENTENCE_ORDER paragraph ${expectedLabel} contains a standalone dependent fragment. Restore the independent clause from the source passage.`,
+      );
+    }
 
     // C4-c (1) 라벨 오염: 단락 라벨에 순서 숫자(1/②)가 섞이면 정답 순서가 노출.
     const rawLabel = normalizeText(paragraph.label);
@@ -101,7 +144,11 @@ export function validateSentenceOrderQuestion(
       );
     }
 
-    if (label !== expectedLabel) {
+    // The student-facing structural contract is the literal trimmed label,
+    // not the convenience-normalized value used by downstream answer
+    // reconstruction. Alternate brackets, case, suffix punctuation, and bare
+    // letters must not silently collapse to (A)/(B)/(C).
+    if (rawLabel !== expectedLabel) {
       add(
         "error",
         "sentence-order-paragraph-labels",
@@ -155,6 +202,452 @@ export function validateSentenceOrderQuestion(
 
   validateSentenceOrderOptions(question, add);
   validateSentenceOrderAnswerReconstruction(question, passage, add);
+}
+
+
+
+function normalizeSentenceOrderVisibleText(value: unknown): string {
+  if (typeof value !== "string") return "";
+  // Unicode format controls (Cf) have no visible glyph. Treat a paragraph
+  // made only from bidi marks, zero-width controls, soft hyphens, or BOMs as
+  // structurally empty instead of allowing it to masquerade as content.
+  return normalizeText(value.replace(/\p{Cf}/gu, ""));
+}
+
+
+
+function findSentenceOrderDuplicatedBodyLabel(text: string): string | undefined {
+  const labelPattern = /(?:[（(]\s*[ABC]\s*[）)]|[［[]\s*[ABC]\s*[］\]]|[ⒶⒷⒸⓐⓑⓒ])/giu;
+  for (const match of text.matchAll(labelPattern)) {
+    const start = match.index;
+    const end = start + match[0].length;
+    const before = text[start - 1] ?? "";
+    const after = text[end] ?? "";
+
+    // Embedded mathematical/lexical notation (f(A), (A)level) is not a
+    // standalone structural label.
+    if (/\p{L}|\p{N}/u.test(before) || /\p{L}|\p{N}/u.test(after)) continue;
+    if (isDirectlyQuotedSentenceOrderToken(text, start, end)) continue;
+    return match[0];
+  }
+  return undefined;
+}
+
+
+
+function isDirectlyQuotedSentenceOrderToken(text: string, start: number, end: number): boolean {
+  let left = start - 1;
+  while (left >= 0 && /\s/u.test(text[left] ?? "")) left -= 1;
+  let right = end;
+  while (right < text.length && /\s/u.test(text[right] ?? "")) right += 1;
+
+  const quotePairs: Record<string, string> = {
+    '"': '"',
+    "'": "'",
+    "“": "”",
+    "‘": "’",
+    "「": "」",
+    "『": "』",
+  };
+  const opening = text[left] ?? "";
+  return quotePairs[opening] === (text[right] ?? "");
+}
+
+
+
+function isHighConfidenceSentenceOrderDependentFragment(text: string): boolean {
+  // Independently adjudicated v9 additions. These certificates are kept
+  // structural and paired-control bounded; they do not broaden the product's
+  // required (A)/(B)/(C) label system and they intentionally exclude the
+  // separately redundant quoted-whether wrapper case.
+  const sentences = splitSentenceOrderSentences(text);
+  const lexicalSentenceCount = sentences.filter((sentence) =>
+    /[A-Za-z]/u.test(sentence),
+  ).length;
+  if (lexicalSentenceCount <= 1 && isConfirmedDependentFragmentSurface(text)) {
+    return true;
+  }
+
+  return sentences.some((sentence) => {
+    const certificateSentence = sentence
+      .replace(/^\s*[“‘"']\s*/u, "")
+      .replace(/\s*[”’"']\s*$/u, "");
+    if (isConfirmedDependentFragmentSurface(certificateSentence)) return true;
+    const terminal = sentence.match(/[.!?]+\s*$/u)?.[0].trim() ?? "";
+    // A wh-question such as "When did the reading change?" is an independent
+    // interrogative, not a truncated adverbial clause. Exclamations are also
+    // left outside this bounded prose certificate.
+    if (terminal.includes("?") || terminal.includes("!")) return false;
+    const surface = sentence.replace(/[.!?]+\s*$/u, "").trim();
+    if (!surface || /[,;:—]\s*\S/u.test(surface)) return false;
+    const words = surface.match(/[A-Za-z]+(?:['’-][A-Za-z]+)*/g) ?? [];
+    if (words.length === 0 || words.length > 12) return false;
+    return (
+      /^(?:(?:even\s+)?though|although|because|while|whereas|unless|if|since|when|whenever|after|before|once|as\s+soon\s+as|provided(?:\s+that)?|providing\s+that|so\s+that)\b/i.test(
+        surface,
+      ) ||
+      // Preserve complete infinitival-subject sentences such as "To err is
+      // human." The no-punctuation form remains a high-confidence truncation
+      // certificate used by the existing structural gate.
+      (!terminal && /^to\s+[a-z]+\b/i.test(surface)) ||
+      // Exclude "that": sentence-initial demonstrative subjects such as
+      // "That was the result." are complete independent clauses.
+      /^(?:which|who|whom|whose)\s+(?:had|has|have|was|were|is|are|did|does|do|would|could|should|might|may|must|will)\b/i.test(
+        surface,
+      )
+    );
+  });
+}
+
+function isConfirmedDependentFragmentSurface(value: string): boolean {
+  const sentence = value.trim();
+  if (!sentence) return false;
+  const unquoted = stripSentenceOrderOuterQuotes(sentence);
+  const surface = unquoted.replace(/[.!?]+\s*$/u, "").trim();
+  const words = surface.match(/[A-Za-z]+(?:['’-][A-Za-z]+)*/g) ?? [];
+  if (words.length === 0 || words.length > 18) return false;
+
+  // Independently adjudicated v10 certificates. Each rule is paired with a
+  // structurally complete control and remains language-bounded to English.
+  // Punctuation alone cannot supply the missing matrix predicate.
+  if (
+    /^having\s+(?:been\s+)?[a-z][a-z'-]*(?:ed|en)\b/iu.test(surface) &&
+    !surface.includes(",")
+  ) {
+    return true;
+  }
+  if (
+    /^(?:asked|told|required|invited|forced|allowed|expected|encouraged|advised|instructed|reminded|warned)\s+to\b/iu.test(
+      surface,
+    ) &&
+    !surface.includes(",")
+  ) {
+    return true;
+  }
+  if (
+    /^(?:without|by|upon|on)\s+[a-z][a-z'-]*ing\b/iu.test(surface) &&
+    !surface.includes(",")
+  ) {
+    return true;
+  }
+  if (
+    /^(?:although|because|though|unless|if|since|when|whenever|after|before|once|while|whereas)\b/iu.test(
+      surface,
+    ) &&
+    !surface.includes(",") &&
+    !/\?\s*[”’"']?$/u.test(unquoted)
+  ) {
+    return true;
+  }
+  if (isHighConfidenceSentenceOrderNominalFragment(surface)) return true;
+
+  // Participial opener with no finite matrix clause: "Including ..., e.g., ..."
+  if (/^including\b/iu.test(surface) && !hasFiniteClauseAfterSentenceOrderComma(surface)) {
+    return true;
+  }
+
+  // A quoted command cannot serve as the matrix clause of an outer because
+  // clause. A genuine reporting clause ("..., the curator whispered") is not
+  // shaped like this certificate.
+  if (/^because\b[^,]{1,100},\s*[“‘"']/iu.test(surface)) return true;
+
+  // Embedded wh-order with terminal question punctuation, paired against
+  // auxiliary inversion ("Why did ...?").
+  if (
+    /\?\s*[”’"']?$/u.test(unquoted) &&
+    /^(?:why|when|where|how)\s+(?:the|a|an|this|that|these|those|my|your|his|her|our|their)\s+[a-z][a-z'-]*\s+(?!do\b|does\b|did\b|is\b|are\b|was\b|were\b|has\b|have\b|had\b|can\b|could\b|will\b|would\b|should\b|may\b|might\b|must\b)[a-z][a-z'-]*\b/iu.test(
+      surface,
+    )
+  ) {
+    return true;
+  }
+
+  // Standalone purpose infinitive. Preserve infinitival-subject sentences
+  // with an overt finite predicate ("To apologize now would help") and
+  // introductory infinitives followed by a finite main clause.
+  if (/^to\s+[a-z]+\b/iu.test(surface) && !hasSentenceOrderInfinitiveMatrix(surface)) {
+    return true;
+  }
+
+  // Head NP + relative clause, but no finite predicate outside that clause.
+  if (isSentenceOrderRelativeClauseOnlyNounPhrase(surface)) return true;
+
+  // Two explicitly nonfinite/verbless semicolon halves. This is deliberately
+  // narrower than a general semicolon grammar checker.
+  if (
+    /^(?:the|a|an)\s+[a-z][a-z'-]*\s+[a-z][a-z'-]*ing\s*;\s*(?:the|a|an)\s+[a-z][a-z'-]*\s+[a-z][a-z'-]*$/iu.test(
+      surface,
+    )
+  ) {
+    return true;
+  }
+
+  // An initial subordinator still governs the sole finite clause across a
+  // colon when the supplement is only a gerund/infinitive phrase.
+  if (
+    /^(?:because|although|though|if|unless|while|when|after|before|since)\b[^:]{1,120}:\s*(?:[a-z][a-z'-]*ing|to\s+[a-z]+)\b/iu.test(
+      surface,
+    )
+  ) {
+    return true;
+  }
+
+  // Parenthetical dashes do not supply the missing predicate of an outer NP.
+  if (
+    /^(?:the|a|an)\s+[a-z][a-z'-]*(?:\s+[a-z][a-z'-]*)?\s*—[^—]{1,80}—\s*(?:at|in|on|before|after|during|near|by|with|without|under|over)\b/iu.test(
+      surface,
+    )
+  ) {
+    return true;
+  }
+
+  // Participial noun phrase followed by quoted content, paired against a
+  // finite reporting verb ("The sign read, ...").
+  if (
+    /^(?:the|a|an)\s+[a-z][a-z'-]*\s+(?:reading|saying|stating)\s*,\s*[“‘"']/iu.test(
+      surface,
+    )
+  ) {
+    return true;
+  }
+
+  // Embedded whether question without a matrix clause. The comma+quotation
+  // shape from v9 p12 is intentionally excluded because its wrapper already
+  // provides the expected rejection and was not authorized for remediation.
+  if (/^whether\b[^,“”"']+\?$/iu.test(unquoted)) return true;
+
+  // Standalone fused-relative nominal ("What the witness remembered ...")
+  // versus the paired subject+matrix-predicate control.
+  if (isSentenceOrderFusedRelativeOnly(surface)) return true;
+
+  return false;
+}
+
+function isHighConfidenceSentenceOrderNominalFragment(surface: string): boolean {
+  // Nominal head plus an infinitival complement: "The plan: to ...". A
+  // copular control ("The plan was to ...") does not have this shape.
+  if (
+    /^(?:the|a|an)\s+(?:[a-z][a-z'-]*\s+){0,3}[a-z][a-z'-]*\s*:\s*to\s+[a-z][a-z'-]*\b/iu.test(
+      surface,
+    )
+  ) {
+    return true;
+  }
+
+  // A single dash joining two noun phrases is not a finite predication.
+  const dashParts = surface.split(/\s*[–—]\s*/u);
+  if (
+    dashParts.length === 2 &&
+    isBoundedSentenceOrderNounPhrase(dashParts[0] ?? "", true) &&
+    isBoundedSentenceOrderNounPhrase(dashParts[1] ?? "", true)
+  ) {
+    return true;
+  }
+
+  // A prepositional/dependent phrase and a noun phrase do not become a
+  // sentence merely because a semicolon is placed between them.
+  const semicolonParts = surface.split(/\s*;\s*/u);
+  if (
+    semicolonParts.length === 2 &&
+    /^(?:after|before|during|without|with|in|on|at|near|under|over|beside)\b/iu.test(
+      semicolonParts[0] ?? "",
+    ) &&
+    !containsLikelySentenceOrderFiniteVerb(semicolonParts[0] ?? "") &&
+    isBoundedSentenceOrderNounPhrase(semicolonParts[1] ?? "", true)
+  ) {
+    return true;
+  }
+
+  return isBoundedSentenceOrderNounPhrase(surface);
+}
+
+function isBoundedSentenceOrderNounPhrase(
+  value: string,
+  allowBarePostmodifier = false,
+): boolean {
+  const text = value.trim();
+  if (!/^(?:the|a|an|one|two|three|four|five)\b/iu.test(text)) return false;
+  if (/[,;:–—]/u.test(text)) return false;
+
+  const tokens = text.match(/[A-Za-z]+(?:-[A-Za-z]+)*/gu) ?? [];
+  if (tokens.length < 2 || tokens.length > 10) return false;
+  const prepositions = new Set([
+    "of", "with", "near", "by", "under", "over", "beside", "inside",
+    "outside", "at", "in", "on", "along", "around", "before", "after",
+    "during",
+  ]);
+  const firstPreposition = tokens.findIndex((token, index) =>
+    index > 0 && prepositions.has(token.toLowerCase()),
+  );
+  if (firstPreposition < 2 && !allowBarePostmodifier) return false;
+  if (firstPreposition < 0 && !allowBarePostmodifier) return false;
+
+  const headEnd = firstPreposition < 0 ? tokens.length : firstPreposition;
+  const head = tokens.slice(1, headEnd);
+  if (head.length === 0 || head.length > 4) return false;
+  const finiteLookingHead = head.filter((token) =>
+    isLikelySentenceOrderFiniteVerbToken(token),
+  );
+  const quantifiedPluralHead =
+    /^(?:one|two|three|four|five)\b/iu.test(text) &&
+    finiteLookingHead.length >= 1 &&
+    finiteLookingHead.at(-1) === head.at(-1) &&
+    /s$/iu.test(finiteLookingHead.at(-1) ?? "") &&
+    finiteLookingHead.slice(0, -1).every((token) => /(?:ed|en)$/iu.test(token));
+  if (finiteLookingHead.length > 0 && !quantifiedPluralHead) return false;
+  return !containsLikelySentenceOrderFiniteVerbAfterNominalBoundary(
+    tokens,
+    Math.max(firstPreposition, 1),
+  );
+}
+
+function containsLikelySentenceOrderFiniteVerb(value: string): boolean {
+  const tokens = value.match(/[A-Za-z]+(?:-[A-Za-z]+)*/gu) ?? [];
+  return tokens.some((token) => isLikelySentenceOrderFiniteVerbToken(token));
+}
+
+function containsLikelySentenceOrderFiniteVerbAfterNominalBoundary(
+  tokens: string[],
+  start: number,
+): boolean {
+  const prepositions = new Set([
+    "of", "with", "near", "by", "under", "over", "beside", "inside",
+    "outside", "at", "in", "on", "along", "around", "before", "after",
+    "during",
+  ]);
+  let lastPreposition = start;
+  for (let index = start; index < tokens.length; index += 1) {
+    const token = tokens[index] ?? "";
+    if (prepositions.has(token.toLowerCase())) {
+      lastPreposition = index;
+      continue;
+    }
+    if (!isLikelySentenceOrderFiniteVerbToken(token)) continue;
+    const segmentLength = index - lastPreposition;
+    // A final plural noun in a short prepositional object ("the stairs",
+    // "rain-spotted pages") is not a finite -s verb. Elsewhere, a finite
+    // looking token is enough to preserve the complete-sentence control.
+    const finalShortNominal = index === tokens.length - 1 && segmentLength <= 2;
+    if (!finalShortNominal) return true;
+  }
+  return false;
+}
+
+function isLikelySentenceOrderFiniteVerbToken(value: string): boolean {
+  const token = value.toLowerCase();
+  if (token.includes("-")) return false;
+  if (
+    /^(?:am|is|are|was|were|has|have|had|does|do|did|will|would|shall|should|can|could|may|might|must|became|began|bent|broke|brought|built|came|fell|felt|found|gave|grew|heard|held|kept|knew|lay|led|left|lost|made|met|read|rang|ran|rose|said|sat|saw|sent|slept|spoke|stood|took|told|went|woke|wore|wrote)$/u.test(
+      token,
+    )
+  ) {
+    return true;
+  }
+  return /(?:ed|en)$/u.test(token) || (token.length > 3 && /s$/u.test(token));
+}
+
+function stripSentenceOrderOuterQuotes(value: string): string {
+  const quotePairs: Array<[string, string]> = [
+    ["“", "”"],
+    ["‘", "’"],
+    ['"', '"'],
+    ["'", "'"],
+  ];
+  let result = value.trim();
+  for (const [open, close] of quotePairs) {
+    if (result.startsWith(open) && result.endsWith(close)) {
+      result = result.slice(open.length, -close.length).trim();
+      break;
+    }
+  }
+  return result;
+}
+
+function hasFiniteClauseAfterSentenceOrderComma(surface: string): boolean {
+  const tail = surface.split(",").slice(1).join(",").trim();
+  return /^(?:the|a|an|this|that|these|those|he|she|it|they|we|i|you|[A-Z][a-z'-]+)\s+[a-z][a-z'-]*(?:ed|s)\b/iu.test(
+    tail,
+  );
+}
+
+function hasSentenceOrderInfinitiveMatrix(surface: string): boolean {
+  if (/\b(?:am|is|are|was|were|has|have|had|does|do|did|will|would|shall|should|can|could|may|might|must)\b/iu.test(surface)) {
+    return true;
+  }
+  return /,\s*(?:the|a|an|this|that|these|those|he|she|it|they|we|i|you|[A-Z][a-z'-]+)(?:\s+[a-z][a-z'-]*){0,3}\s+[a-z][a-z'-]*(?:ed|s)\b/iu.test(
+    surface,
+  );
+}
+
+function isSentenceOrderRelativeClauseOnlyNounPhrase(surface: string): boolean {
+  const match = /^(?:the|a|an)\s+[a-z][a-z'-]*(?:\s+[a-z][a-z'-]*){0,2}\s+(?:who|which|that)\s+(.+)$/iu.exec(
+    surface,
+  );
+  if (!match) return false;
+  const clause = match[1];
+  const finiteTokens = clause.match(
+    /\b(?:am|is|are|was|were|has|have|had|does|do|did|will|would|shall|should|can|could|may|might|must|found|fell|read|left|made|took|came|went|saw|wrote|[a-z][a-z'-]*(?:ed|s))\b/giu,
+  ) ?? [];
+  return finiteTokens.length === 1;
+}
+
+function isSentenceOrderFusedRelativeOnly(surface: string): boolean {
+  const match = /^what\s+(?:the|a|an|this|that|these|those|he|she|it|they|we|i|you)\s+[a-z][a-z'-]*\s+(.+)$/iu.exec(
+    surface,
+  );
+  if (!match) return false;
+  const finiteTokens = match[1].match(
+    /\b(?:am|is|are|was|were|has|have|had|does|do|did|will|would|shall|should|can|could|may|might|must|found|fell|read|left|made|took|came|went|saw|wrote|[a-z][a-z'-]*(?:ed|s))\b/giu,
+  ) ?? [];
+  return finiteTokens.length === 1;
+}
+
+
+
+function splitSentenceOrderSentences(text: string): string[] {
+  const sentences: string[] = [];
+  let start = 0;
+  for (let index = 0; index < text.length; index += 1) {
+    const punctuation = text[index];
+    if (punctuation !== "." && punctuation !== "!" && punctuation !== "?") continue;
+    if (punctuation === "." && isNonTerminalSentenceOrderPeriod(text, index)) continue;
+
+    sentences.push(text.slice(start, index + 1).trim());
+    start = index + 1;
+  }
+  const remainder = text.slice(start).trim();
+  if (remainder) sentences.push(remainder);
+  return sentences.filter(Boolean);
+}
+
+
+
+function isNonTerminalSentenceOrderPeriod(text: string, index: number): boolean {
+  const previous = text[index - 1] ?? "";
+  const next = text[index + 1] ?? "";
+  if (/\d/u.test(previous) && /\d/u.test(next)) return true;
+
+  const prefix = text.slice(0, index + 1);
+  // Initials and compact Latin abbreviations (e.g., U.S.) contain periods
+  // that are not sentence boundaries.
+  if (/(?:^|\s)(?:[A-Za-z]\.){2,}$/u.test(prefix)) return true;
+  if (/[A-Za-z]\.$/u.test(prefix) && /[A-Za-z]/u.test(next)) return true;
+  const token = prefix.match(/(?:^|\s)([A-Za-z]+)\.$/u)?.[1]?.toLowerCase();
+  if (!token) return false;
+  return new Set([
+    "mr",
+    "mrs",
+    "ms",
+    "dr",
+    "prof",
+    "sr",
+    "jr",
+    "st",
+    "vs",
+    "etc",
+    "fig",
+    "no",
+  ]).has(token);
 }
 
 

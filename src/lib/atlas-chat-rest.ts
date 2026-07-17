@@ -44,6 +44,15 @@ export interface AtlasChatCompletionParams {
    * 사고가 켜지면 출력 토큰 예산·응답시간을 사고가 잠식할 수 있다(시험 판독 실측).
    */
   reasoning?: Record<string, unknown>;
+  /**
+   * 요청 단위 reasoning effort 고정(예: "low" | "none") — 가산 확장(기존 호출 무영향).
+   * Gemini 계열은 atlasReasoningRequestFor 가 요청 `reasoning` 객체를 무시하고 env
+   * (OPENROUTER_GEMINI_REASONING_EFFORT)로만 effort 를 정하므로, env 형상에 따라
+   * 동작이 조용히 바뀐다(26-07-17 exam-report 실측: env "low" 유무로 사고 on/off 갈림).
+   * 이 필드는 그 env 보다 우선해 호출자가 검증된 형상을 코드로 못박게 한다.
+   * Claude 계열은 `reasoning` 객체가 지정돼 있으면 그쪽이 우선(기존 규칙 불변).
+   */
+  reasoningEffort?: string;
   fetcher?: (input: string, init: RequestInit & { timeoutInMs?: number }) => Promise<Response>;
 }
 
@@ -134,7 +143,11 @@ export async function postAtlasChatCompletionAsGeminiLike(
   assertAtlasCloudConfigured();
   const fetcher = params.fetcher ?? fetch;
   const model = normalizeAtlasModelId(params.model);
-  const reasoningRequest = atlasReasoningRequestFor(model, params.reasoning);
+  const reasoningRequest = atlasReasoningRequestFor(
+    model,
+    params.reasoning,
+    params.reasoningEffort,
+  );
   const response = await fetcher(`${ATLASCLOUD_BASE_URL.replace(/\/+$/, "")}/chat/completions`, {
     method: "POST",
     headers: {

@@ -39,6 +39,11 @@ import {
 } from "@/app/api/ai/generate-questions-auto/_lib/build-analysis-context";
 import { DIFF_DESCRIPTION } from "@/app/api/ai/generate-questions-auto/_lib/constants";
 import { runQuestionGenerationWithEmptyRetry } from "@/app/api/ai/generate-questions-auto/_lib/run-question-generation";
+import {
+  closeQuestionGenerationAssignmentBudget,
+  runWithQuestionGenerationAssignmentBudget,
+} from "@/lib/question-generation-assignment-budget";
+import { isQuestionGenerationAssignmentBudgetError } from "@/lib/atlas-production-assignment-fetch-boundary";
 import { type PlanResult } from "@/app/api/ai/generate-questions-auto/_lib/schemas";
 import {
   readQuestionTypeDifficultySetting,
@@ -177,6 +182,7 @@ export const workbenchQuestionGenerationTask = task({
       });
       return { error: "PASSAGE_NOT_FOUND" as const };
     }
+    const passage = job.passage;
     const config = parseConfig(job.config, job.generationPlan);
     const effectiveGenerationPlan =
       config.mode === "MANUAL" && config.questionType
@@ -219,14 +225,37 @@ export const workbenchQuestionGenerationTask = task({
       effectiveGenerationPlan,
     );
 
-    await prisma.workbenchAiJob.update({
-      where: { id: jobId },
+    // Claim with a compare-and-set fence. A stale worker must never resurrect a
+    // job that cleanup/cancellation/completion moved to a terminal state after
+    // the snapshot above was read. The run id also excludes duplicate workers.
+    const claimed = await prisma.workbenchAiJob.updateMany({
+      where: {
+        id: jobId,
+        domain: "QUESTION_GENERATION",
+        deletedAt: null,
+        OR: [
+          { status: "PENDING", triggerRunId: null },
+          { status: "PENDING", triggerRunId: ctx.run.id },
+          { status: "PROCESSING", triggerRunId: ctx.run.id },
+        ],
+      },
       data: {
         status: "PROCESSING",
         startedAt: job.startedAt ?? now,
         triggerRunId: ctx.run.id,
       },
     });
+    if (claimed.count !== 1) {
+      const current = await prisma.workbenchAiJob.findUnique({
+        where: { id: jobId },
+        select: { status: true },
+      });
+      return {
+        skipped: true as const,
+        reason: "JOB_NOT_CLAIMABLE",
+        status: current?.status ?? "MISSING",
+      };
+    }
 
     let creditTxId: string | null = null;
     try {
@@ -265,12 +294,19 @@ export const workbenchQuestionGenerationTask = task({
       const rationale = "";
 
       const generationStartedAt = Date.now();
-      const generationResult = await runQuestionGenerationWithEmptyRetry(
+      const generationResult = await runWithQuestionGenerationAssignmentBudget(
         {
+          jobId,
+          route: "TRIGGER",
+          generationPlan: effectiveGenerationPlan,
+          questionType: config.questionType ?? "UNSPECIFIED",
+          difficulty: effectiveDifficulty,
+        },
+        () => runQuestionGenerationWithEmptyRetry({
           plan,
           schoolType,
           gradeInfo,
-          passageContent: job.passage.content,
+          passageContent: passage.content,
           teacherIntentBlock,
           analysisContext,
           diffLabel,
@@ -283,17 +319,16 @@ export const workbenchQuestionGenerationTask = task({
               : undefined,
           // KO(국어) 지문이면 갈래 태그를 전달 — KO_ 유형 생성 프롬프트·koContext
           // 에서만 소비되고, 영어 지문(null/ENGLISH)은 undefined 로 기존과 동일.
-          koPassageKind: isKoreanSubject(job.passage.subject)
-            ? (readKoKindFromTags(job.passage.tags) ?? undefined)
+          koPassageKind: isKoreanSubject(passage.subject)
+            ? (readKoKindFromTags(passage.tags) ?? undefined)
             : undefined,
-        },
-        {
+        }, {
           logPrefix: "WORKBENCH-Q-GEN",
           maxAttempts: GEMINI_QUESTION_EMPTY_RESULT_MAX_ATTEMPTS,
           // trigger maxDuration 600s. 540s 후엔 새 시도를 멈춰 강제종료(잡 고아
           // → 환불 누락)를 막고 catch 에서 정상 실패+환불로 흐르게 한다.
           deadlineAt: generationStartedAt + 540_000,
-        },
+        }),
       );
       const questions = generationResult.questions;
       for (const [idx, event] of generationResult.usageEvents.entries()) {
@@ -393,6 +428,7 @@ export const workbenchQuestionGenerationTask = task({
           completedAt,
         },
       });
+      await closeQuestionGenerationAssignmentBudget(jobId).catch(() => undefined);
 
       logger.info("question generation job completed", {
         jobId,
@@ -458,8 +494,15 @@ export const workbenchQuestionGenerationTask = task({
           completedAt: new Date(),
         },
       });
+      await closeQuestionGenerationAssignmentBudget(jobId).catch(() => undefined);
 
       logger.error("question generation job failed", { jobId, error: message });
+      if (isQuestionGenerationAssignmentBudgetError(err)) {
+        // The Workbench job is already terminal and refunded. Reporting a
+        // handled task result avoids a pointless Trigger retry whose next
+        // attempt would only observe FAILED and skip.
+        return { error: "ASSIGNMENT_BUDGET_REJECTED" as const };
+      }
       throw err;
     }
   },

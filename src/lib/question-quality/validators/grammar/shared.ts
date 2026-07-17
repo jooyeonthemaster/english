@@ -570,7 +570,11 @@ function ingVariantsOfBase(base: string): Set<string> {
 function classifyVerbFormToggle(
   sourceExpression: string,
   mutatedExpression: string,
-): { base: string; mutatedKind: "to" | "bare" | "ing" } | null {
+): {
+  base: string;
+  sourceKind: "to" | "bare" | "ing";
+  mutatedKind: "to" | "bare" | "ing";
+} | null {
   const parse = (value: string) => {
     const tokens = normalizeText(value)
       .toLowerCase()
@@ -610,7 +614,79 @@ function classifyVerbFormToggle(
   const formA = a.hasTo ? "to" : kindA;
   const formB = b.hasTo ? "to" : kindB;
   if (formA === formB) return null;
-  return { base, mutatedKind: formB };
+  return { base, sourceKind: formA, mutatedKind: formB };
+}
+
+// Object-control verbs can also stand with an ordinary NP object. If a model
+// changes "asked a friend to take ..." to "asked a friend taking ...", the
+// V-ing string can therefore reparse as a reduced relative modifying the NP:
+// "a friend [who was] taking ...". The mutation changes the intended reading,
+// but it does not create a uniquely ungrammatical sentence.
+const OBJECT_CONTROL_MATRIX_VERB =
+  /\b(?:ask(?:s|ed|ing)?|tell(?:s|ing)?|told|invite(?:s|d|ing)?|encourage(?:s|d|ing)?|persuade(?:s|d|ing)?|expect(?:s|ed|ing)?|want(?:s|ed|ing)?|require(?:s|d|ing)?|order(?:s|ed|ing)?|advise(?:s|d|ing)?|allow(?:s|ed|ing)?|force(?:s|d|ing)?|remind(?:s|ed|ing)?|urge(?:s|d|ing)?|enable(?:s|d|ing)?|cause(?:s|d|ing)?)\b/gi;
+
+const OBJECT_CONTROL_NP_FORBIDDEN_TOKEN =
+  /^(?:about|after|as|at|because|before|by|for|from|if|in|into|of|on|or|since|than|that|through|to|until|when|where|whether|which|while|who|whom|whose|with|without|and|but|not|never|is|are|was|were|be|been|being|has|have|had|do|does|did|can|could|may|might|must|shall|should|will|would)$/i;
+
+function looksLikeSimpleObjectNp(value: string): boolean {
+  const words = normalizeText(value)
+    .split(/\s+/)
+    .map((word) => word.replace(/^[^A-Za-z]+|[^A-Za-z'-]+$/g, ""))
+    .filter(Boolean);
+  if (words.length === 0 || words.length > 6) return false;
+  if (words.some((word) => OBJECT_CONTROL_NP_FORBIDDEN_TOKEN.test(word))) {
+    return false;
+  }
+  // A finite/participial predicate between the matrix verb and the target is
+  // evidence that this is not the compact "verb + object NP + target" frame.
+  if (
+    words.slice(0, -1).some((word) =>
+      /(?:ing|ed|en|ize|ise|ates?|ifies?)$/i.test(word),
+    )
+  ) {
+    return false;
+  }
+  return true;
+}
+
+function findObjectControlParticipleReparse(
+  contexts: Array<{ text: string; targetStart: number }>,
+  source: string,
+  mutated: string,
+  toggle: {
+    sourceKind: "to" | "bare" | "ing";
+    mutatedKind: "to" | "bare" | "ing";
+  },
+): string | null {
+  if (toggle.sourceKind !== "to" || toggle.mutatedKind !== "ing") return null;
+
+  for (const context of contexts) {
+    const preTarget = context.text.slice(
+      Math.max(0, context.targetStart - 180),
+      context.targetStart,
+    );
+    PERCEPTION_CLAUSE_BOUNDARY.lastIndex = 0;
+    let clauseStart = 0;
+    let boundaryMatch: RegExpExecArray | null;
+    while ((boundaryMatch = PERCEPTION_CLAUSE_BOUNDARY.exec(preTarget))) {
+      clauseStart = boundaryMatch.index + boundaryMatch[0].length;
+    }
+    const clauseLocal = preTarget.slice(clauseStart);
+    OBJECT_CONTROL_MATRIX_VERB.lastIndex = 0;
+    let matrixVerb: RegExpExecArray | null = null;
+    let candidate: RegExpExecArray | null;
+    while ((candidate = OBJECT_CONTROL_MATRIX_VERB.exec(clauseLocal))) {
+      matrixVerb = candidate;
+    }
+    if (!matrixVerb) continue;
+    const objectSegment = clauseLocal.slice(
+      matrixVerb.index + matrixVerb[0].length,
+    );
+    if (!looksLikeSimpleObjectNp(objectSegment)) continue;
+
+    return `The mutation "${source}" → "${mutated}" follows the object-control verb "${matrixVerb[0]}" plus the object NP "${normalizeText(objectSegment)}". The V-ing form can reparse as a reduced relative modifying that object (for example, "a friend [who was] taking ..."), so the displayed sentence is not uniquely ungrammatical.`;
+  }
+  return null;
 }
 
 /**
@@ -681,7 +757,12 @@ export function findGrammarPerceptionComplementToggle(
         : `the mutated ${toggle.mutatedKind === "ing" ? "V-ing" : "bare"} form re-parses as a valid perception-verb complement, so it is still grammatical`;
     return `The error mutation "${source}" → "${mutated}" sits after the perception/help verb "${verbMatch[0]}" with an object in between — ${parseNote}; the item has no single wrong answer.`;
   }
-  return null;
+  return findObjectControlParticipleReparse(
+    contexts,
+    source,
+    mutated,
+    toggle,
+  );
 }
 
 
@@ -954,11 +1035,21 @@ export function findGrammarKillerOverdrilledAnswer(
 // 용어에 학생용 대체 표현을 메시지에 담아 교정 재생성을 유도한다("계사→be동사/
 // 연결동사"). 정규식은 표준어 오탐을 피하도록 앵커링한다(예: '관계사' 안의 '계사').
 
-const NONSTANDARD_GRAMMAR_TERMS: Array<{ term: RegExp; label: string; replacement: string }> = [
+const GRAMMAR_TERMINOLOGY_ERRORS: Array<{ term: RegExp; label: string; replacement: string }> = [
   { term: /전사구/, label: "전사구", replacement: "전치사구(전치사+명사)" },
+];
+
+const GRAMMAR_TERMINOLOGY_REGISTER_TERMS: Array<{ term: RegExp; label: string; replacement: string }> = [
   { term: /보문\s*명사/, label: "보문 명사", replacement: "명사(동격 that절이 뒤따르는 명사)" },
-  // '관계사' 안의 '계사'(관+계사) 오탐 방지 — 앞이 '관'이 아닐 때만.
-  { term: /(?<!관)계사/, label: "계사", replacement: "be동사/연결동사" },
+  // 관계사·회계사·세계사·통계사·설계사·기계사처럼 '계사'가 우연히 겹치는
+  // 일반 어휘와 육십갑자 날짜어(계사년/월/일/시)는 제외한다. 그 밖의 모든
+  // 합성 전문어(비/유사/무/준/영/의사계사 등)와 조사가 붙는 문법 용어는
+  // 접두어를 열거하지 않고 구조적으로 검출한다.
+  {
+    term: /(?<![관회세통설기])계사(?!년|월|일|시)/,
+    label: "계사",
+    replacement: "be동사/연결동사",
+  },
   { term: /술어부\s*골격/, label: "술어부 골격", replacement: "문장의 서술어(동사) 구조" },
   { term: /통사적으로/, label: "통사적으로", replacement: "문장 구조상" },
 ];
@@ -1011,7 +1102,7 @@ export function findGrammarKeypointChoiceMismatch(
   );
   const issues: string[] = [];
   points.forEach((point, index) => {
-    const labelMatch = point.match(/^\s*\(([A-J])\)/i);
+    const labelMatch = matchLeadingGrammarKeypointLabel(point);
     if (!labelMatch) {
       issues.push(
         `keyPoint ${index + 1} does not start with an underline label — every key point must be anchored to an actual choice like "(D) ..."`,
@@ -1020,7 +1111,8 @@ export function findGrammarKeypointChoiceMismatch(
     }
     const label = normalizeLabel(`(${labelMatch[1].toUpperCase()})`);
     if (!labelSet.has(label)) {
-      issues.push(`keyPoint ${index + 1} references ${label}, which is not an underlined choice in this item`);
+      // A reference to a nonexistent choice is emitted separately as a fatal
+      // student-surface defect. Do not conflate it with ordering/topic craft.
       return;
     }
     if (index === 0 && answerLabels.size > 0 && !answerLabels.has(label)) {
@@ -1036,6 +1128,205 @@ export function findGrammarKeypointChoiceMismatch(
   });
   if (issues.length === 0) return null;
   return `Grammar keyPoints are not grounded in this item's actual choices: ${issues.join(" | ")}. Rewrite exactly 3 key points, each starting with a real underline label, the first covering the answer.`;
+}
+
+/**
+ * Detects only explicit keyPoint references to labels that do not exist among
+ * the rendered underlines. Unlike pointCode/topic disagreement, this is
+ * independent of potentially stale metadata and is a deterministic V4/V5
+ * failure: the explanation points students to a choice they cannot see.
+ */
+export function findGrammarKeypointNonexistentLabel(
+  keyPoints: unknown,
+  markedExpressions: Array<Record<string, unknown>>,
+): string | null {
+  if (!Array.isArray(keyPoints) || keyPoints.length === 0) return null;
+  const renderedLabels = new Set(
+    markedExpressions
+      // This gate validates the literal student-visible reference. Do not
+      // NFKC-fold, case-fold, decode entities, or interchange bracket styles:
+      // those transformations can make a keyPoint name a label that was never
+      // rendered to the student.
+      .map((marked) => normalizeText(marked.label))
+      .filter(Boolean),
+  );
+
+  for (const [index, rawPoint] of keyPoints.entries()) {
+    if (typeof rawPoint !== "string") continue;
+    const referencedLabel = matchLeadingGrammarKeypointReference(rawPoint);
+    if (!referencedLabel) continue;
+    if (!renderedLabels.has(referencedLabel)) {
+      return `Grammar keyPoint ${index + 1} references ${referencedLabel}, but that label is not an underlined choice in the rendered item. Remove the ghost reference or anchor it to a real choice.`;
+    }
+  }
+  return null;
+}
+
+
+
+function matchLeadingGrammarKeypointLabel(text: string): RegExpMatchArray | null {
+  const normalizedText = normalizeGrammarRenderedLabelSyntax(text);
+  const labelMatch = /\(([A-J])\)/i.exec(normalizedText);
+  if (!labelMatch) return null;
+  const prefix = normalizedText.slice(0, labelMatch.index);
+  // A real leading label may be preceded by arbitrary list/Markdown Unicode
+  // decoration. Accept a prefix only when it contains no prose: punctuation,
+  // symbols and numbers are decoration, and a single Latin/Hangul list marker
+  // followed by punctuation is decoration too. This avoids a permanent
+  // whitelist race (1．, ㉠, (가), Ⅰ, >, - [ ] ...) while keeping a later
+  // parenthetical "... (F)" inside prose from becoming a ghost-label fatal.
+  const withoutSingleLetterListMarkers = prefix.replace(
+    /(?:^|[\s\p{P}\p{S}\p{N}\p{M}\p{Cf}])(?:[A-Za-z가-하\u1100-\u1112])(?=\s*[\p{P}\p{S}])/gu,
+    " ",
+  ).replace(
+    /(?:^|[\s\p{P}\p{S}\p{N}\p{M}\p{Cf}])[\u1100-\u1112](?=\s*$)/gu,
+    " ",
+  );
+  const proseResidue = withoutSingleLetterListMarkers.replace(
+    /[\s\p{P}\p{S}\p{N}\p{M}\p{Cf}]/gu,
+    "",
+  );
+  return proseResidue ? null : labelMatch;
+}
+
+/**
+ * Returns an explicit leading student-visible underline reference without
+ * guessing from prose. Production has historically rendered several label
+ * grammars (circled digits/letters, bracketed numbers, lower-case Roman
+ * numerals, and Korean ordinal "밑줄" labels), while the older keyPoint check
+ * understood only parenthesized Latin labels. A reference is accepted only at
+ * the start of the key point (apart from list/Markdown decoration), and Roman
+ * numerals require a Korean case particle to avoid reading ordinary English
+ * sentence-initial "I" as a label.
+ */
+function matchLeadingGrammarKeypointReference(text: string): string | null {
+  let rawValue = normalizeText(text).replace(/^\p{Cf}+/u, "");
+  rawValue = rawValue.replace(
+    /^(?:(?:[-*+>#•▪●◦]\s*)|(?:☑️?|✅\s*)|(?:\[\s*[xX ]?\s*\]\s*))+/u,
+    "",
+  );
+
+  const bracketedLabel = matchExactLeadingDecoratedGrammarLabel(rawValue);
+  if (bracketedLabel) return bracketedLabel;
+
+  const ordinalMatch = /^(?:(?:첫|둘|셋|넷|다섯|여섯|일곱|여덟|아홉|열)째\s*밑줄)(?=\s*(?:의|에서|은|는|이|가|을|를|와|과|도|만|[:：.,)\-–—]|$))/u.exec(
+    rawValue,
+  );
+  if (ordinalMatch) return ordinalMatch[0];
+
+  // A dotted/list label is explicit only when keyPoint prose calls it an
+  // "항목". This keeps ordinary sentence-initial English ("I think ...")
+  // outside the ghost-label gate.
+  const itemMatch = /^(\S{1,16}?)(?=\s+항목(?:의|에서|은|는|이|가|을|를|와|과|도|만|\s))/u.exec(
+    rawValue,
+  );
+  if (itemMatch && isExactStudentVisibleGrammarLabelToken(itemMatch[1])) {
+    return itemMatch[1];
+  }
+
+  const particleMatch = /^(\S{1,16}?)(?=\s*(?:의|에서|은|는|이|가|을|를|와|과|도|만)(?:\s|\p{L}|\p{N}|$))/u.exec(
+    rawValue,
+  );
+  if (particleMatch && isExactStudentVisibleGrammarLabelToken(particleMatch[1])) {
+    return particleMatch[1];
+  }
+  return null;
+}
+
+function isExactStudentVisibleGrammarLabelToken(token: string): boolean {
+  if (!token || /\s/u.test(token)) return false;
+  if (/^(?:\[[^\]\s]{1,12}\]|\([^()\s]{1,12}\)|（[^（）\s]{1,12}）|【[^【】\s]{1,12}】|〈[^〈〉\s]{1,12}〉|［[^［］\s]{1,12}］|❨[^❨❩\s]{1,12}❩)$/u.test(token)) {
+    return true;
+  }
+  if (/^(?:[①-⑳㉑-㊿ⓐ-ⓩⒶ-Ⓩ㉠-㉻⑴-⒇]|[①-⑳㉑-㊿]\s*번)$/u.test(token)) {
+    return true;
+  }
+  if (/^(?:[A-Za-z0-9Ａ-Ｚａ-ｚⅠ-ⅿΑ-Ωα-ω가-하][.)])$/u.test(token)) {
+    return true;
+  }
+  if (/^(?:viii|vii|vi|iv|iii|ii|ix|x|v|i)$/iu.test(token)) return true;
+  if (/^<u>[^<>\s]{1,4}<\/u>$/iu.test(token)) return true;
+  const entity = /^&#(?:x([0-9a-f]{1,6})|(\d{1,7}));$/iu.exec(token);
+  if (entity) {
+    const codePoint = Number.parseInt(entity[1] || entity[2], entity[1] ? 16 : 10);
+    return (
+      (codePoint >= 48 && codePoint <= 57) ||
+      (codePoint >= 65 && codePoint <= 74) ||
+      (codePoint >= 97 && codePoint <= 106)
+    );
+  }
+  const codePoints = Array.from(token);
+  if (/^\p{L}{2,}$/u.test(token)) return false;
+  return (
+    codePoints.length <= 3 &&
+    /[\p{L}\p{N}\p{S}]/u.test(token) &&
+    !/^[A-Za-z]{2,}$/u.test(token)
+  );
+}
+
+function matchExactLeadingDecoratedGrammarLabel(value: string): string | null {
+  const bracketPatterns = [
+    /\([^()\s]{1,12}\)/u,
+    /\[[^\]\s]{1,12}\]/u,
+    /（[^（）\s]{1,12}）/u,
+    /【[^【】\s]{1,12}】/u,
+    /〈[^〈〉\s]{1,12}〉/u,
+    /［[^［］\s]{1,12}］/u,
+    /❨[^❨❩\s]{1,12}❩/u,
+  ];
+  for (const pattern of bracketPatterns) {
+    const match = pattern.exec(value);
+    if (!match) continue;
+    const prefix = value.slice(0, match.index);
+    const withoutSingleLetterListMarkers = prefix.replace(
+      /(?:^|[\s\p{P}\p{S}\p{N}\p{M}\p{Cf}])(?:[A-Za-z가-하\u1100-\u1112])(?=\s*[\p{P}\p{S}])/gu,
+      " ",
+    ).replace(
+      /(?:^|[\s\p{P}\p{S}\p{N}\p{M}\p{Cf}])[\u1100-\u1112](?=\s*$)/gu,
+      " ",
+    );
+    const proseResidue = withoutSingleLetterListMarkers.replace(
+      /[\s\p{P}\p{S}\p{N}\p{M}\p{Cf}]/gu,
+      "",
+    );
+    if (!proseResidue) return match[0];
+  }
+  return null;
+}
+
+/**
+ * Normalize only student-visible label syntax, not arbitrary prose. Unicode
+ * compatibility forms (full-width/mathematical/superscript letters), combining
+ * underline marks, common bracket glyphs, a literal underline tag, and a
+ * numeric HTML entity all collapse to the same small rendered-label grammar.
+ */
+function normalizeGrammarRenderedLabelSyntax(value: unknown): string {
+  let text = normalizeText(value)
+    .replace(/&#(?:x([0-9a-f]{1,6})|(\d{1,7}));/giu, (entity, hex: string, decimal: string) => {
+      const codePoint = Number.parseInt(hex || decimal, hex ? 16 : 10);
+      if (
+        !Number.isSafeInteger(codePoint) ||
+        !((codePoint >= 48 && codePoint <= 57) ||
+          (codePoint >= 65 && codePoint <= 74) ||
+          (codePoint >= 97 && codePoint <= 106))
+      ) {
+        return entity;
+      }
+      return String.fromCodePoint(codePoint);
+    })
+    .normalize("NFKC")
+    .replace(/([A-Za-z0-9])\p{M}+/gu, "$1");
+
+  text = text.replace(
+    /<\s*u\s*>\s*([A-Ja-j]|\d{1,3})\s*<\s*\/\s*u\s*>/giu,
+    "($1)",
+  );
+  text = text.replace(
+    /[〈《「『【〔［❨❪❬❮❲]\s*([A-Ja-j]|\d{1,3})\s*[〉》」』】〕］❩❫❭❯❳]/gu,
+    "($1)",
+  );
+  text = text.replace(/\[\s*([A-Ja-j])\s*\]/gu, "($1)");
+  return text;
 }
 
 // ── CORE-10 표적 강제 (26-07-06 유저 결정: "어법은 대략 10개 핵심 포인트를
@@ -1063,14 +1354,77 @@ export function findGrammarAnswerPointNotCore(
  * 어법 해설/keyPoints 문자열에서 비표준 문법 용어를 검출한다. 하나라도 있으면
  * 발견 용어와 학생용 대체 표현을 담은 교정 지시형 메시지를, 없으면 null 을 반환.
  */
-export function findNonstandardGrammarTerminology(text: unknown): string | null {
+function formatGrammarTerminologyFinding(
+  text: unknown,
+  entries: Array<{ term: RegExp; label: string; replacement: string }>,
+  category: "error" | "register",
+): string | null {
   const value = normalizeText(text);
   if (!value) return null;
-  const hits = NONSTANDARD_GRAMMAR_TERMS.filter((entry) => entry.term.test(value));
+  const hits = entries.filter((entry) => entry.term.test(value));
   if (hits.length === 0) return null;
   const names = hits.map((hit) => `'${hit.label}'`).join(", ");
   const swaps = hits.map((hit) => `'${hit.label}'→'${hit.replacement}'`).join(", ");
-  return `Grammar explanation/keyPoints uses nonstandard/linguistics terminology (${names}); rewrite with standard school-grammar terms: ${swaps}.`;
+  return category === "error"
+    ? `Grammar explanation/keyPoints uses an incorrect grammar term (${names}); replace it with the correct school-grammar term: ${swaps}.`
+    : `Grammar explanation/keyPoints uses specialist register (${names}); prefer student-facing school-grammar wording: ${swaps}.`;
+}
+
+/**
+ * `ask + O + to-V` is an object-control/complement pattern, not a Korean
+ * school-grammar "준사역" construction, and `ask` must not be bundled into the
+ * internally contradictory category "요구·허용 동사". Keep the detector
+ * contextual: the classification term and an inflected form of ask must occur
+ * in the same short explanation span, and explicit corrections are exempt.
+ */
+export function findGrammarAskCategoryMislabel(text: unknown): string | null {
+  const value = normalizeText(text);
+  if (!value) return null;
+  const ask = String.raw`\bask(?:s|ed|ing)?\b`;
+  const badCategory = String.raw`(?:준\s*사역(?:의\s*의미를\s*가지는|\s*동사)?|요구\s*[·ㆍ/와과및-]\s*허용\s*동사)`;
+  const pattern = new RegExp(
+    `(?:${ask}[\\s\\S]{0,80}${badCategory}|${badCategory}[\\s\\S]{0,80}${ask})`,
+    "i",
+  );
+  const match = pattern.exec(value);
+  if (!match) return null;
+  const nearby = value.slice(
+    Math.max(0, match.index - 24),
+    Math.min(value.length, match.index + match[0].length + 24),
+  );
+  if (
+    /(?:아니(?:다|며|고|므로|라|라는|ㄴ)|해당하지|분류하지|볼\s*수\s*없|잘못(?:된|이다)|not\s+(?:a|an|the)?\s*)/i.test(
+      nearby,
+    )
+  ) {
+    return null;
+  }
+  return `Grammar explanation misclassifies ask as ${/준\s*사역/.test(match[0]) ? "'준사역'" : "a '요구·허용 동사'"}. Explain ask + object + to-infinitive as a request/object-complement pattern; ask is neither a causative-like verb nor a permission verb.`;
+}
+
+export function findGrammarTerminologyError(text: unknown): string | null {
+  const findings = [
+    formatGrammarTerminologyFinding(text, GRAMMAR_TERMINOLOGY_ERRORS, "error"),
+    findGrammarAskCategoryMislabel(text),
+  ].filter((finding): finding is string => Boolean(finding));
+  return findings.length > 0 ? findings.join(" ") : null;
+}
+
+export function findGrammarTerminologyRegister(text: unknown): string | null {
+  return formatGrammarTerminologyFinding(
+    text,
+    GRAMMAR_TERMINOLOGY_REGISTER_TERMS,
+    "register",
+  );
+}
+
+/** Backward-compatible helper for callers/tests that only need any finding. */
+export function findNonstandardGrammarTerminology(text: unknown): string | null {
+  const findings = [
+    findGrammarTerminologyError(text),
+    findGrammarTerminologyRegister(text),
+  ].filter((finding): finding is string => Boolean(finding));
+  return findings.length > 0 ? findings.join(" ") : null;
 }
 
 
