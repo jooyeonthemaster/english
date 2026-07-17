@@ -3,6 +3,24 @@ import { formatExamTitle, qLabel } from "@/lib/exam-passages/format";
 import type { WebtoonLanguageId } from "@/app/(director)/director/workbench/webtoon/webtoon-page-types";
 
 export const EXAM_PASSAGE_WEBTOON_STYLE = "KOREAN_WEBTOON" as const;
+export const EXAM_PASSAGE_WEBTOON_STYLES = [
+  EXAM_PASSAGE_WEBTOON_STYLE,
+  "CUTE_PASTEL",
+  "MACHO_BLACK_RED",
+] as const;
+
+export type ExamPassageWebtoonStyle =
+  (typeof EXAM_PASSAGE_WEBTOON_STYLES)[number];
+
+export const EXAM_PASSAGE_WEBTOON_STYLE_LABELS: Record<
+  ExamPassageWebtoonStyle,
+  string
+> = {
+  KOREAN_WEBTOON: "기존 교육 웹툰",
+  CUTE_PASTEL: "화이트톤 학습 웹툰",
+  MACHO_BLACK_RED: "블랙·레드 액션 웹툰",
+};
+
 export const EXAM_PASSAGE_WEBTOON_DOWNLOAD_CREDITS = 3;
 
 export const EXAM_PASSAGE_WEBTOON_LANGUAGES: WebtoonLanguageId[] = [
@@ -25,6 +43,7 @@ export type ExamPassageWebtoonStatus =
 export interface ExamPassageWebtoonAssetSummary {
   id: string;
   examPassageId: string;
+  style: ExamPassageWebtoonStyle;
   language: WebtoonLanguageId;
   status: ExamPassageWebtoonStatus;
   imageUrl: string | null;
@@ -37,6 +56,15 @@ export interface ExamPassageWebtoonAssetSummary {
 export interface ExamPassageWebtoonAvailabilityResponse {
   ok: true;
   byPassageId: Record<string, ExamPassageWebtoonAssetSummary[]>;
+}
+
+export function isExamPassageWebtoonStyle(
+  value: unknown,
+): value is ExamPassageWebtoonStyle {
+  return (
+    typeof value === "string" &&
+    EXAM_PASSAGE_WEBTOON_STYLES.some((style) => style === value)
+  );
 }
 
 const LANGUAGE_PROMPTS: Record<WebtoonLanguageId, string> = {

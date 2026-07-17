@@ -5,7 +5,9 @@ import { getExamPassagesByIds } from "@/lib/exam-passages/corpus";
 import { formatExamTitle } from "@/lib/exam-passages/format";
 import {
   EXAM_PASSAGE_WEBTOON_APPROVED_STATUS,
-  EXAM_PASSAGE_WEBTOON_STYLE,
+  EXAM_PASSAGE_WEBTOON_STYLES,
+  EXAM_PASSAGE_WEBTOON_STYLE_LABELS,
+  isExamPassageWebtoonStyle,
 } from "@/lib/exam-passages/webtoon-assets";
 import {
   isWebtoonLanguageId,
@@ -28,7 +30,7 @@ export async function GET(_req: NextRequest, ctx: RouteContext) {
   const asset = await prisma.examPassageWebtoonAsset.findFirst({
     where: {
       id: assetId,
-      style: EXAM_PASSAGE_WEBTOON_STYLE,
+      style: { in: [...EXAM_PASSAGE_WEBTOON_STYLES] },
       status: EXAM_PASSAGE_WEBTOON_APPROVED_STATUS,
       imageUrl: { not: null },
     },
@@ -36,12 +38,13 @@ export async function GET(_req: NextRequest, ctx: RouteContext) {
       id: true,
       examPassageId: true,
       language: true,
+      style: true,
       imageUrl: true,
       storagePath: true,
     },
   });
 
-  if (!asset?.imageUrl) {
+  if (!asset?.imageUrl || !isExamPassageWebtoonStyle(asset.style)) {
     return NextResponse.json({ error: "다운로드할 기출 웹툰을 찾을 수 없습니다." }, { status: 404 });
   }
 
@@ -67,7 +70,7 @@ export async function GET(_req: NextRequest, ctx: RouteContext) {
     ? languageLabel(asset.language)
     : asset.language;
   const filename = buildFilename(
-    `${title} ${languageText}`,
+    `${title} ${languageText} ${EXAM_PASSAGE_WEBTOON_STYLE_LABELS[asset.style]}`,
     asset.storagePath,
     upstream.headers.get("Content-Type") ?? "image/jpeg",
   );

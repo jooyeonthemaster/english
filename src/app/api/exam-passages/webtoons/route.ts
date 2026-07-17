@@ -4,7 +4,8 @@ import { prisma } from "@/lib/prisma";
 import {
   EXAM_PASSAGE_WEBTOON_APPROVED_STATUS,
   EXAM_PASSAGE_WEBTOON_DOWNLOAD_CREDITS,
-  EXAM_PASSAGE_WEBTOON_STYLE,
+  EXAM_PASSAGE_WEBTOON_STYLES,
+  isExamPassageWebtoonStyle,
   type ExamPassageWebtoonAvailabilityResponse,
   type ExamPassageWebtoonStatus,
 } from "@/lib/exam-passages/webtoon-assets";
@@ -27,14 +28,19 @@ export async function GET(request: NextRequest) {
   const assets = await prisma.examPassageWebtoonAsset.findMany({
     where: {
       examPassageId: { in: ids },
-      style: EXAM_PASSAGE_WEBTOON_STYLE,
+      style: { in: [...EXAM_PASSAGE_WEBTOON_STYLES] },
       status: EXAM_PASSAGE_WEBTOON_APPROVED_STATUS,
       imageUrl: { not: null },
     },
-    orderBy: [{ examPassageId: "asc" }, { language: "asc" }],
+    orderBy: [
+      { examPassageId: "asc" },
+      { style: "asc" },
+      { language: "asc" },
+    ],
     select: {
       id: true,
       examPassageId: true,
+      style: true,
       language: true,
       status: true,
       imageUrl: true,
@@ -53,12 +59,18 @@ export async function GET(request: NextRequest) {
 
   const byPassageId: ExamPassageWebtoonAvailabilityResponse["byPassageId"] = {};
   for (const asset of assets) {
-    if (!isWebtoonLanguageId(asset.language)) continue;
+    if (
+      !isExamPassageWebtoonStyle(asset.style) ||
+      !isWebtoonLanguageId(asset.language)
+    ) {
+      continue;
+    }
     const purchased = purchasedAssetIds.has(asset.id);
     const list = byPassageId[asset.examPassageId] ?? [];
     list.push({
       id: asset.id,
       examPassageId: asset.examPassageId,
+      style: asset.style,
       language: asset.language,
       status: asset.status as ExamPassageWebtoonStatus,
       imageUrl: purchased

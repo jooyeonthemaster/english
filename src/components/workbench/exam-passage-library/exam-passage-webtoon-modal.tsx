@@ -14,6 +14,8 @@ import type { ExamPassage } from "@/lib/exam-passages/types";
 import { formatExamTitle } from "@/lib/exam-passages/format";
 import {
   EXAM_PASSAGE_WEBTOON_LANGUAGES,
+  EXAM_PASSAGE_WEBTOON_STYLE_LABELS,
+  type ExamPassageWebtoonStyle,
   type ExamPassageWebtoonAssetSummary,
 } from "@/lib/exam-passages/webtoon-assets";
 import {
@@ -29,27 +31,59 @@ interface ExamPassageWebtoonModalProps {
   onAssetUpdated: (asset: ExamPassageWebtoonAssetSummary) => void;
 }
 
+const STYLE_DISPLAY_ORDER: ExamPassageWebtoonStyle[] = [
+  "CUTE_PASTEL",
+  "MACHO_BLACK_RED",
+  "KOREAN_WEBTOON",
+];
+
+function assetKey(style: ExamPassageWebtoonStyle, language: WebtoonLanguageId) {
+  return `${style}:${language}`;
+}
+
 export function ExamPassageWebtoonModal({
   passage,
   assets,
   onClose,
   onAssetUpdated,
 }: ExamPassageWebtoonModalProps) {
+  const availableStyles = STYLE_DISPLAY_ORDER.filter((style) =>
+    assets.some((asset) => asset.style === style),
+  );
+  const firstStyle = availableStyles[0] ?? "CUTE_PASTEL";
+  const [style, setStyle] = useState<ExamPassageWebtoonStyle>(firstStyle);
+  const effectiveStyle = availableStyles.includes(style) ? style : firstStyle;
   const firstLanguage =
     EXAM_PASSAGE_WEBTOON_LANGUAGES.find((lang) =>
-      assets.some((asset) => asset.language === lang),
-    ) ?? "KO";
+      assets.some(
+        (asset) => asset.style === effectiveStyle && asset.language === lang,
+      ),
+    ) ?? "KO_EN";
   const [language, setLanguage] = useState<WebtoonLanguageId>(firstLanguage);
   const [busyAssetId, setBusyAssetId] = useState<string | null>(null);
-  const byLanguage = useMemo(
-    () => new Map(assets.map((asset) => [asset.language, asset])),
+  const byStyleAndLanguage = useMemo(
+    () =>
+      new Map(
+        assets.map((asset) => [assetKey(asset.style, asset.language), asset]),
+      ),
     [assets],
   );
   useEffect(() => {
+    setStyle(firstStyle);
+  }, [firstStyle, passage?.id]);
+  useEffect(() => {
     setLanguage(firstLanguage);
-  }, [firstLanguage, passage?.id]);
+  }, [effectiveStyle, firstLanguage, passage?.id]);
 
-  const selected = byLanguage.get(language) ?? byLanguage.get(firstLanguage) ?? assets[0] ?? null;
+  const effectiveLanguage = byStyleAndLanguage.has(
+    assetKey(effectiveStyle, language),
+  )
+    ? language
+    : firstLanguage;
+  const selected =
+    byStyleAndLanguage.get(assetKey(effectiveStyle, effectiveLanguage)) ??
+    assets[0] ??
+    null;
 
   const handlePurchase = async () => {
     if (!selected || busyAssetId) return;
@@ -100,11 +134,45 @@ export function ExamPassageWebtoonModal({
               <DialogDescription className="sr-only">
                 검수 완료된 기출 지문 웹툰 미리보기와 다운로드
               </DialogDescription>
+              {availableStyles.length > 1 ? (
+                <div className="flex flex-wrap gap-2" aria-label="웹툰 콘셉트 선택">
+                  {availableStyles.map((itemStyle) => {
+                    const active = effectiveStyle === itemStyle;
+                    return (
+                      <button
+                        key={itemStyle}
+                        type="button"
+                        aria-pressed={active}
+                        onClick={() => {
+                          setStyle(itemStyle);
+                          const nextLanguage = EXAM_PASSAGE_WEBTOON_LANGUAGES.find(
+                            (lang) =>
+                              byStyleAndLanguage.has(assetKey(itemStyle, lang)),
+                          );
+                          if (nextLanguage) setLanguage(nextLanguage);
+                        }}
+                        className={
+                          "rounded-full border px-3 py-1.5 text-[12px] font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/30 " +
+                          (active
+                            ? "border-blue-500 bg-blue-600 text-white"
+                            : "border-slate-200 bg-white text-slate-700 hover:border-slate-300")
+                        }
+                      >
+                        {EXAM_PASSAGE_WEBTOON_STYLE_LABELS[itemStyle]}
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : null}
               <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
                 {EXAM_PASSAGE_WEBTOON_LANGUAGES.map((lang) => {
-                  const asset = byLanguage.get(lang);
+                  const asset = byStyleAndLanguage.get(
+                    assetKey(effectiveStyle, lang),
+                  );
                   const meta = WEBTOON_LANGUAGES.find((item) => item.id === lang);
-                  const active = selected?.language === lang;
+                  const active =
+                    selected?.style === effectiveStyle &&
+                    selected?.language === lang;
                   return (
                     <button
                       key={lang}
@@ -150,7 +218,7 @@ export function ExamPassageWebtoonModal({
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={selected.imageUrl}
-                    alt={`${formatExamTitle(passage)} ${languageLabel(selected.language)} 웹툰`}
+                    alt={`${formatExamTitle(passage)} ${EXAM_PASSAGE_WEBTOON_STYLE_LABELS[selected.style]} ${languageLabel(selected.language)} 웹툰`}
                     className={
                       "max-h-[70vh] w-auto max-w-full object-contain transition " +
                       (selected.previewBlurred ? "blur-[2px] saturate-75" : "")

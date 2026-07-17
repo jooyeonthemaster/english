@@ -4,7 +4,7 @@ import { getStaffSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import {
   EXAM_PASSAGE_WEBTOON_APPROVED_STATUS,
-  EXAM_PASSAGE_WEBTOON_STYLE,
+  EXAM_PASSAGE_WEBTOON_STYLES,
 } from "@/lib/exam-passages/webtoon-assets";
 
 export const runtime = "nodejs";
@@ -23,7 +23,7 @@ export async function GET(_req: NextRequest, ctx: RouteContext) {
   const asset = await prisma.examPassageWebtoonAsset.findFirst({
     where: {
       id: assetId,
-      style: EXAM_PASSAGE_WEBTOON_STYLE,
+      style: { in: [...EXAM_PASSAGE_WEBTOON_STYLES] },
       status: EXAM_PASSAGE_WEBTOON_APPROVED_STATUS,
       imageUrl: { not: null },
     },
