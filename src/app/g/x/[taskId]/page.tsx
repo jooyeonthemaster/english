@@ -180,6 +180,7 @@ export default async function ExamResultPage({
       options: question.options,
       correctAnswer: question.correctAnswer,
       structuredData: question.structuredData,
+      sourcePassageContent: question.passage?.content,
       points: entry.points,
     });
     items.push({

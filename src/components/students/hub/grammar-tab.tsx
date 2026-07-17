@@ -1,7 +1,7 @@
 "use client";
 
 // 학생 상세 허브 — 어법 훈련 탭 (구 grammar-lab 상세의 후계).
-// 분석(히트맵·활동)/시도 기록/질문 로그 서브뷰 + 취약 개념 과제 CTA.
+// 분석(히트맵·활동)/개념 학습/시도 기록/질문 로그 서브뷰 + 취약 개념 과제 CTA.
 // 학습 배정 기능은 과제 탭(통합 과제 시스템)으로 이관됐다.
 // 분석 서브뷰 본체는 grammar-analysis.tsx (500줄 계약 분리).
 
@@ -18,8 +18,9 @@ import {
 } from "./grammar-analysis";
 import { GrammarAttempts } from "./grammar-attempts";
 import { GrammarChatLog } from "./grammar-chat-log";
+import { GrammarLessons } from "./grammar-lessons";
 
-type SubView = "analysis" | "attempts" | "chat";
+type SubView = "analysis" | "lessons" | "attempts" | "chat";
 
 export function collectWeakConcepts(detail: GrammarLabStudentDetail): WeakConceptPreset[] {
   return detail.grid
@@ -37,7 +38,10 @@ export function StudentGrammarTab({
   detail: GrammarLabStudentDetail;
   onOpenWeakComposer: (weak: WeakConceptPreset[]) => void;
 }) {
-  const [view, setView] = useState<SubView>("analysis");
+  // 풀이 기록이 없고 개념 학습만 한 학생은 개념 학습 뷰로 연다(분석이 텅 비므로).
+  const [view, setView] = useState<SubView>(
+    detail.totals.solved === 0 && detail.lessons.length > 0 ? "lessons" : "analysis",
+  );
   // 히트 셀 드릴다운 프리셋 — seq 로 같은 개념 재클릭 시에도 리마운트를 보장한다.
   const [conceptPreset, setConceptPreset] = useState<
     (ConceptDrillTarget & { seq: number }) | null
@@ -45,6 +49,8 @@ export function StudentGrammarTab({
   const weak = useMemo(() => collectWeakConcepts(detail), [detail]);
   const stale = useMemo(() => collectStaleConcepts(detail), [detail]);
   const questionCount = detail.chatMessages.filter((m) => m.role === "user").length;
+  // "자신 없음(confidence=1)" 개념 수 — 교사가 가장 먼저 봐야 할 신호이므로 탭에 배지로 노출
+  const unsureCount = detail.lessons.filter((l) => l.confidence === 1).length;
   const t = detail.totals;
 
   // KPI 추세 델타 — 최근 7일 vs 직전 7일. 표본이 작으면(10문항 미만) 숨긴다.
@@ -60,7 +66,8 @@ export function StudentGrammarTab({
     setView("attempts");
   };
 
-  if (t.solved === 0) {
+  // 풀이 기록도 개념 학습 기록도 없을 때만 빈 상태를 보여 준다.
+  if (t.solved === 0 && detail.lessons.length === 0) {
     return (
       <div className="flex flex-col items-center gap-2 rounded-lg border border-dashed border-slate-200 bg-slate-50/50 py-14">
         <p className="text-[13.5px] font-medium text-slate-500">
@@ -116,6 +123,7 @@ export function StudentGrammarTab({
           {(
             [
               ["analysis", "분석"],
+              ["lessons", "개념 학습"],
               ["attempts", "시도 기록"],
               ["chat", "질문 로그"],
             ] as const
@@ -134,6 +142,14 @@ export function StudentGrammarTab({
               {label}
               {key === "chat" && questionCount > 0 ? (
                 <span className="ml-1 text-[11px] tabular-nums opacity-70">{questionCount}</span>
+              ) : null}
+              {key === "lessons" && unsureCount > 0 ? (
+                <span
+                  title={`학생이 "자신 없음"으로 표시한 개념 ${unsureCount}개`}
+                  className="ml-1 text-[11px] font-bold tabular-nums text-rose-500"
+                >
+                  {unsureCount}
+                </span>
               ) : null}
             </button>
           ))}
@@ -166,6 +182,9 @@ export function StudentGrammarTab({
 
       {view === "analysis" ? (
         <GrammarAnalysis detail={detail} onConceptDrill={openConceptDrill} />
+      ) : null}
+      {view === "lessons" ? (
+        <GrammarLessons detail={detail} onOpenWeakComposer={onOpenWeakComposer} />
       ) : null}
       {view === "attempts" ? (
         <GrammarAttempts

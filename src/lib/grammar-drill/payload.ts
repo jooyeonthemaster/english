@@ -94,11 +94,61 @@ export interface HomeUnitCard {
   unitId: string;
   title: string;
   subtitle: string;
-  part: 1 | 2 | 3;
-  frequency: number;
+  /** 0 기초 골격(PART 0) / 1~3 판별 */
+  part: 0 | 1 | 2 | 3;
+  /** 수능 출제율 ★ — 기초 유닛은 판별 대상이 아니므로 null */
+  frequency: number | null;
   stage: string; // LOCKED | CONCEPT | DRILL | READING | WRITTEN | TEST | MASTERED
   masteryAvg: number; // 유닛 내 개념 평균 숙달도 0~100
   attempted: number;
+  /** 이 유닛에서 레슨이 저작된 개념 수(0 이면 레슨 준비 전) */
+  lessonsTotal: number;
+  /** 완료(completedAt) 처리된 개념 레슨 수 */
+  lessonsDone: number;
+}
+
+// ── 오늘의 한 수 (홈 최상단 원포인트 CTA) ────────────────────────────────────
+// 규범: docs/study-os-spec.md §4.1. 우선순위 ① 마감 임박 과제(클라이언트가
+// 통합 과제 카드로 덮어쓴다) → ② 진행 중 유닛의 다음 단계 → ③ 취약 개념 복습
+// → ④ 다음 유닛 개념 학습 → ⑤ 복합 세트·오늘의 드릴.
+// 서버(home.ts)는 ②~⑤ 의 학습 후보를 계산하고, ① 은 홈 클라이언트가 통합 과제
+// 유니온(StudentTaskCard)에서 판정한다 — 과제는 홈 페이로드 밖의 자산이다.
+
+export type HomeNextStepKind =
+  | "LESSON"
+  | "DRILL"
+  | "READING"
+  | "WRITTEN"
+  | "TEST"
+  | "REVIEW"
+  | "MIXED"
+  | "ASSIGNMENT";
+
+export interface HomeNextStep {
+  /** 무엇을 하는가 — "개념 학습 이어서 하기" */
+  label: string;
+  /** 대상 — "U2 · 진짜 주어 찾기" */
+  target: string;
+  /** 왜 이것인가 — "3번째 블록까지 봤습니다" */
+  reason: string;
+  href: string;
+  kind: HomeNextStepKind;
+  /** 버튼 문구 */
+  cta: string;
+}
+
+/** 어법 트랙 카드에 표시할 요약(LIVE 트랙만 값이 있다) */
+export interface HomeGrammarSummary {
+  unitsTotal: number; // 19 (기초 7 + 판별 12)
+  unitsUnlocked: number;
+  unitsMastered: number;
+  lessonsTotal: number; // 레슨이 저작된 개념 수
+  lessonsDone: number;
+  /** 레슨 완료 기준 진행률 0~100 */
+  progressPct: number;
+  /** 지금 이어서 할 유닛(없으면 전 유닛 마스터) */
+  currentUnitId: string | null;
+  currentUnitTitle: string | null;
 }
 
 export interface HomePayload {
@@ -124,4 +174,8 @@ export interface HomePayload {
   }[];
   mixedSets: { setId: string; title: string; unlocked: boolean; solved: number }[];
   chatRemainingToday: number;
+  /** 오늘의 한 수 — 학습 후보(과제 우선순위는 클라이언트가 얹는다) */
+  nextStep: HomeNextStep;
+  /** 어법 트랙 요약 */
+  grammar: HomeGrammarSummary;
 }

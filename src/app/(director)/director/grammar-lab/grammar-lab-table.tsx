@@ -5,20 +5,30 @@
 //
 // 정렬·선택 상태는 부모(grammar-lab-list-client)가 소유하고, 여기는 표시와
 // 이벤트 위임만 담당한다. 행 클릭/Enter·Space 는 학생 상세 허브 어법 탭으로.
+//
+// "개념 학습" 열은 드릴(정답률)이 아니라 레슨 진행(getAcademyLessonInsights)을
+// 본다. 부모가 lessonInsights 를 내려주면 그것을 쓰고, 없으면 훅이 마운트 시
+// 한 번 직접 부른다 — 목록 서버 액션의 반환 타입과 결합하지 않기 위해서다
+// (신규 액션 = 독립 계약). 로더·셀은 grammar-lab-lesson-insights.
 // ============================================================================
 
 import Link from "next/link";
 import { ChevronDown, ChevronRight, ChevronUp } from "lucide-react";
 
 import type { GrammarLabStudentRow } from "@/actions/grammar-drill-admin";
+import type { AcademyLessonInsights } from "@/actions/grammar-drill-insights";
 import { StatusPill } from "@/components/layout/page-frame";
 import {
   CONCEPT_SKELETON_BY_ID,
   GRAMMAR_UNITS,
 } from "@/lib/grammar-drill/curriculum";
 import { cn, formatRelativeTime } from "@/lib/utils";
+import {
+  LessonCell,
+  useAcademyLessonInsights,
+} from "./grammar-lab-lesson-insights";
 
-const TOTAL_UNITS = GRAMMAR_UNITS.length; // 12
+const TOTAL_UNITS = GRAMMAR_UNITS.length; // 19 (기초 7 + 판별 12)
 
 export type SortKey =
   | "recent"
@@ -153,6 +163,7 @@ export function GrammarLabTable({
   onRowClick,
   onOpenWeakestPopover,
   emptyMessage,
+  lessonInsights,
 }: {
   /** 필터·정렬이 이미 적용된 표시 행 */
   rows: GrammarLabStudentRow[];
@@ -169,13 +180,19 @@ export function GrammarLabTable({
     row: GrammarLabStudentRow,
   ) => void;
   emptyMessage: string;
+  /** 부모가 서버에서 미리 받아 내려줄 수 있다. 생략하면 이 컴포넌트가 직접 조회한다. */
+  lessonInsights?: AcademyLessonInsights | null;
 }) {
   const allSelected =
     rows.length > 0 && rows.every((s) => selected.has(s.studentId));
 
+  const insights = useAcademyLessonInsights(lessonInsights);
+  const lessonLoading = insights === undefined;
+  const totalConcepts = insights?.totalConcepts ?? 0;
+
   return (
     <div className="overflow-x-auto">
-      <table className="w-full min-w-[1024px] text-left text-[13px]">
+      <table className="w-full min-w-[1180px] text-left text-[13px]">
         <thead>
           <tr className="border-b border-slate-100 bg-slate-50 text-[12px] text-slate-500">
             <th className="w-10 px-3 py-2.5">
@@ -191,6 +208,12 @@ export function GrammarLabTable({
             <SortableTh label="누적 풀이" k="attempts" sortKey={sortKey} sortDir={sortDir} onSortChange={onSortChange} />
             <SortableTh label="정답률" k="accuracy" sortKey={sortKey} sortDir={sortDir} onSortChange={onSortChange} />
             <SortableTh label="유닛 진행" k="units" sortKey={sortKey} sortDir={sortDir} onSortChange={onSortChange} />
+            <th
+              className="px-4 py-2.5 font-medium"
+              title="개념 레슨 완료 수입니다. 드릴 정답률과 별개로, 학생이 개념 설명을 끝까지 읽고 마무리했는지를 봅니다."
+            >
+              개념 학습
+            </th>
             <th className="px-4 py-2.5 font-medium">취약 개념</th>
             <SortableTh label="미완료 배정" k="assignments" sortKey={sortKey} sortDir={sortDir} onSortChange={onSortChange} />
             <SortableTh label="최근 학습" k="recent" sortKey={sortKey} sortDir={sortDir} onSortChange={onSortChange} />
@@ -201,7 +224,7 @@ export function GrammarLabTable({
           {rows.length === 0 ? (
             <tr>
               <td
-                colSpan={9}
+                colSpan={10}
                 className="px-4 py-14 text-center text-[13px] text-slate-400"
               >
                 {emptyMessage}
@@ -307,6 +330,14 @@ export function GrammarLabTable({
                       </span>
                     </div>
                   )}
+                </td>
+                <td className="px-4 py-3">
+                  <LessonCell
+                    summary={insights?.byStudent[s.studentId]}
+                    totalConcepts={totalConcepts}
+                    loading={lessonLoading}
+                    studentName={s.name}
+                  />
                 </td>
                 <td className="px-4 py-3">
                   {s.weakest ? (

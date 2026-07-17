@@ -27,6 +27,7 @@ import type {
   GrammarItemType,
 } from "./types";
 import { GRAMMAR_UNITS } from "./curriculum";
+import { getLessonBundle } from "@/lib/study-os/lesson-bundle";
 
 export interface MixedSet {
   setId: "set1" | "set2" | "final";
@@ -106,6 +107,10 @@ function buildBundle(): GrammarBundle {
       for (const item of file?.items ?? []) registerItem(item);
     }
   }
+
+  // 인터랙티브 레슨의 CHECK·RECAP 문항을 드릴 뱅크에 합류시킨다.
+  // (별도 items JSON 을 만들지 않는다 — 레슨이 단일 정본, docs/study-os-spec.md §3.3)
+  for (const item of getLessonBundle().items) registerItem(item);
 
   for (const setId of ["set1", "set2", "final"] as const) {
     const file = readJsonIfExists<{

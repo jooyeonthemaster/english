@@ -150,7 +150,7 @@ export async function getGrammarLabStudentDetail(studentId: string) {
   });
   if (!student) return null;
 
-  const [masteries, progresses, attempts, assignments, chatMessages] =
+  const [masteries, progresses, attempts, assignments, chatMessages, lessons] =
     await Promise.all([
       prisma.grammarDrillMastery.findMany({ where: { studentId } }),
       prisma.grammarDrillUnitProgress.findMany({ where: { studentId } }),
@@ -168,6 +168,12 @@ export async function getGrammarLabStudentDetail(studentId: string) {
         where: { studentId },
         orderBy: { createdAt: "desc" },
         take: 60,
+      }),
+      // 개념 학습(레슨) 진행 — 개념당 1행(@@unique studentId+conceptId).
+      // 학생이 남긴 필기(note)·이해도(confidence)가 교사의 오개념 창구다.
+      prisma.grammarDrillLessonProgress.findMany({
+        where: { studentId },
+        orderBy: { updatedAt: "desc" },
       }),
     ]);
 
@@ -307,6 +313,21 @@ export async function getGrammarLabStudentDetail(studentId: string) {
       prev7,
     },
     recentAttempts,
+    lessons: lessons.map((l) => ({
+      conceptId: l.conceptId,
+      unitId: l.unitId,
+      conceptTitle:
+        CONCEPT_SKELETON_BY_ID.get(l.conceptId)?.title ?? l.conceptId,
+      blocksSeen: l.blocksSeen,
+      blocksTotal: l.blocksTotal,
+      checkCorrect: l.checkCorrect,
+      checkTotal: l.checkTotal,
+      confidence: l.confidence,
+      note: l.note,
+      secondsSpent: l.secondsSpent,
+      completedAt: l.completedAt?.toISOString() ?? null,
+      updatedAt: l.updatedAt.toISOString(),
+    })),
     assignments: assignments.map((a) => ({
       id: a.id,
       title: a.title,

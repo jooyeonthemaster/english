@@ -1,20 +1,19 @@
-// ============================================================================
-// /g/unit/[unitId] — 유닛 허브 (단계 스테퍼 · 개념별 숙달도 · 모드 진입)
-// ============================================================================
+// 유닛 허브 — 개념 레슨(인터랙티브 교과서) + 단계 스테퍼 + 다음 한 수.
 
 import { redirect } from "next/navigation";
+import { prisma } from "@/lib/prisma";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { getGrammarSession } from "@/lib/grammar-drill/auth";
-import { prisma } from "@/lib/prisma";
-import { UNIT_BY_ID, PART_BY_UNIT_ID } from "@/lib/grammar-drill/curriculum";
-import { getGrammarBundle } from "@/lib/grammar-drill/bundle";
+import { PART_BY_UNIT_ID, UNIT_BY_ID } from "@/lib/grammar-drill/curriculum";
 import { computeUnlockedUnits } from "@/lib/grammar-drill/engine";
+import { getGrammarBundle } from "@/lib/grammar-drill/bundle";
+import { getLessonBundle } from "@/lib/study-os/lesson-bundle";
+import { getUnitLessonProgress } from "@/lib/study-os/lesson-progress";
 import { UnitHubClient } from "./unit-hub-client";
 
 export const dynamic = "force-dynamic";
-export const runtime = "nodejs";
 
-export default async function UnitHubPage({
+export default async function UnitPage({
   params,
 }: {
   params: Promise<{ unitId: string }>;
@@ -27,28 +26,41 @@ export default async function UnitHubPage({
   const unit = UNIT_BY_ID.get(unitId);
   if (!unit) redirect("/g/home");
 
-  const [progresses, masteries] = await Promise.all([
+  const [progresses, masteries, lessonProgress] = await Promise.all([
     prisma.grammarDrillUnitProgress.findMany({
       where: { studentId: session.studentId },
+      select: { unitId: true, drillDoneAt: true, stage: true, bestTestScore: true },
     }),
     prisma.grammarDrillMastery.findMany({
       where: { studentId: session.studentId, unitId },
     }),
+    getUnitLessonProgress(session.studentId, unitId),
   ]);
 
-  const unlocked = computeUnlockedUnits(progresses);
-  if (!unlocked.has(unitId)) redirect("/g/home");
+  if (!computeUnlockedUnits(progresses).has(unitId)) redirect("/g/home");
 
   const progress = progresses.find((p) => p.unitId === unitId);
   const bundle = getGrammarBundle();
+  const lessons = getLessonBundle().lessonsById;
 
   const concepts = unit.conceptIds.map((cid) => {
     const card = bundle.conceptsById.get(cid);
+    const lesson = lessons.get(cid);
+    const lp = lessonProgress.get(cid);
     const m = masteries.find((x) => x.conceptId === cid);
     return {
       id: cid,
-      title: card?.title ?? cid,
-      oneLiner: card?.oneLiner ?? "",
+      title: lesson?.title ?? card?.title ?? cid,
+      oneLiner: lesson?.oneLiner ?? card?.oneLiner ?? "",
+      lesson: lesson
+        ? {
+            blocks: lesson.blocks.length,
+            minutes: lesson.estimatedMinutes,
+            seen: lp?.lastBlockIndex ?? 0,
+            completed: Boolean(lp?.completedAt),
+            confidence: lp?.confidence ?? null,
+          }
+        : null,
       mastery: {
         attempts: m?.attempts ?? 0,
         score: Math.round(m?.masteryScore ?? 0),
@@ -67,6 +79,7 @@ export default async function UnitHubPage({
         partName: PART_BY_UNIT_ID.get(unit.id)?.name ?? "",
         frequency: unit.frequency,
         frequencyNote: unit.frequencyNote,
+        stageSet: unit.stageSet,
         stage: progress?.stage ?? "CONCEPT",
         bestTestScore: progress?.bestTestScore ?? null,
       }}

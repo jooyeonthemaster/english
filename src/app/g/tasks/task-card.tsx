@@ -403,8 +403,8 @@ export function EmptyState({
         {message}
       </p>
       {showTrainLink ? (
-        <Link href="/g/train" className="gd-btn gd-btn-ghost">
-          훈련 탭으로 가기
+        <Link href="/g/track/grammar" className="gd-btn gd-btn-ghost">
+          학습 탭으로 가기
         </Link>
       ) : null}
     </div>

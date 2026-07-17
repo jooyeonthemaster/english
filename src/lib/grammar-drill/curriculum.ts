@@ -23,6 +23,12 @@ export interface ConceptSkeleton {
 
 export const GRAMMAR_PARTS: GrammarPart[] = [
   {
+    part: 0,
+    name: "기초 골격",
+    tagline: "문장이 어떻게 생겼는가 — 초·중등 도입 문법의 전 과정입니다",
+    unitIds: ["b01", "b02", "b03", "b04", "b05", "b06", "b07"],
+  },
+  {
     part: 1,
     name: "골격기",
     tagline: "문장의 뼈대 판별 — 이 5개로 선지의 60%가 커버됩니다",
@@ -42,7 +48,87 @@ export const GRAMMAR_PARTS: GrammarPart[] = [
   },
 ];
 
-export const GRAMMAR_UNITS: GrammarUnit[] = [
+/**
+ * PART 0 — 기초 골격 (신설, 2026-07-15).
+ * 근거: 2015 개정 교육과정 [별책14] [별표4] '의사소통에 필요한 언어 형식'의 학교급 ● 표기
+ * (예문 350개 = 초 75 / 중 192 / 고 83) + 천일문 중등 GRAMMAR Level 1~3 목차.
+ * frequency 는 null — 수능 어법 판별 대상이 아니며, 출처 없는 빈도 숫자를 지어내지 않는다.
+ * 해금은 JUDGE(u01~u12) 트랙과 완전히 독립이다(무회귀).
+ */
+const BASIC_UNITS: Omit<GrammarUnit, "unlockGroup" | "stageSet">[] = [
+  {
+    id: "b01",
+    order: 1,
+    part: 0,
+    title: "품사와 문장성분",
+    subtitle: "단어의 신분증과 문장 속 배역",
+    frequency: null,
+    frequencyNote: "도입 초4~중1 — 모든 어법 판별의 전제입니다",
+    conceptIds: ["b01-c1", "b01-c2", "b01-c3", "b01-c4"],
+  },
+  {
+    id: "b02",
+    order: 2,
+    part: 0,
+    title: "문장의 다섯 형식",
+    subtitle: "동사가 문장의 모양을 결정한다",
+    frequency: null,
+    frequencyNote: "도입 초6~중2 — 목적격보어 형태는 수능 판별로 이어집니다",
+    conceptIds: ["b02-c1", "b02-c2", "b02-c3", "b02-c4"],
+  },
+  {
+    id: "b03",
+    order: 3,
+    part: 0,
+    title: "동사와 시제의 기본",
+    subtitle: "언제 일어난 일인가",
+    frequency: null,
+    frequencyNote: "도입 초3~중3 — 현재완료·시간조건절은 중2~고1",
+    conceptIds: ["b03-c1", "b03-c2", "b03-c3", "b03-c4", "b03-c5"],
+  },
+  {
+    id: "b04",
+    order: 4,
+    part: 0,
+    title: "조동사",
+    subtitle: "동사에 태도를 얹는다",
+    frequency: null,
+    frequencyNote: "도입 초4~고1 — 조동사+have p.p.와 제안·요구 that절은 고1",
+    conceptIds: ["b04-c1", "b04-c2", "b04-c3"],
+  },
+  {
+    id: "b05",
+    order: 5,
+    part: 0,
+    title: "명사·관사·대명사",
+    subtitle: "무엇을 가리키는가",
+    frequency: null,
+    frequencyNote: "도입 초5~고1 — 대명사 수일치는 수능 판별 대상입니다",
+    conceptIds: ["b05-c1", "b05-c2", "b05-c3", "b05-c4"],
+  },
+  {
+    id: "b06",
+    order: 6,
+    part: 0,
+    title: "형용사·부사·비교",
+    subtitle: "무엇을 꾸미고, 무엇과 견주는가",
+    frequency: null,
+    frequencyNote: "도입 초6~고1 — 비교급은 초등에서 이미 시작됩니다(별표4 초 ●)",
+    conceptIds: ["b06-c1", "b06-c2", "b06-c3", "b06-c4"],
+  },
+  {
+    id: "b07",
+    order: 7,
+    part: 0,
+    title: "전치사·접속사·절",
+    subtitle: "문장을 잇는 부품",
+    frequency: null,
+    frequencyNote: "도입 중1~중3 — 접속사 vs 전치사 판별(U8)의 전제입니다",
+    conceptIds: ["b07-c1", "b07-c2", "b07-c3", "b07-c4"],
+  },
+];
+
+const JUDGE_UNITS: Omit<GrammarUnit, "unlockGroup" | "stageSet">[] = [
   {
     id: "u01",
     order: 1,
@@ -165,7 +251,230 @@ export const GRAMMAR_UNITS: GrammarUnit[] = [
   },
 ];
 
+/**
+ * 전체 유닛 = 기초(BASIC) 7 + 판별(JUDGE) 12 = 19유닛.
+ * 두 그룹은 해금이 독립이다 — computeUnlockedUnits(engine.ts)가 그룹별로 순차 계산한다.
+ */
+export const GRAMMAR_UNITS: GrammarUnit[] = [
+  ...BASIC_UNITS.map((u) => ({
+    ...u,
+    unlockGroup: "BASIC" as const,
+    stageSet: "BASIC" as const,
+  })),
+  ...JUDGE_UNITS.map((u) => ({
+    ...u,
+    unlockGroup: "JUDGE" as const,
+    stageSet: "FULL" as const,
+  })),
+];
+
 export const GRAMMAR_CONCEPT_SKELETONS: ConceptSkeleton[] = [
+  // ══ PART 0 · 기초 골격 ══════════════════════════════════════════════════
+  // ── B1 품사와 문장성분 ──
+  {
+    id: "b01-c1",
+    unitId: "b01",
+    order: 1,
+    title: "8품사 — 단어의 신분증",
+    oneLiner: "단어는 형태가 아니라 문장에서 맡는 일로 품사가 정해집니다.",
+  },
+  {
+    id: "b01-c2",
+    unitId: "b01",
+    order: 2,
+    title: "문장성분 — 주어·동사·목적어·보어",
+    oneLiner: "문장의 뼈대는 주어와 동사이고, 나머지는 동사가 부릅니다.",
+  },
+  {
+    id: "b01-c3",
+    unitId: "b01",
+    order: 3,
+    title: "구와 절 — 동사가 있으면 절",
+    oneLiner: "주어와 동사를 갖춘 덩어리가 절, 그렇지 않은 덩어리가 구입니다.",
+  },
+  {
+    id: "b01-c4",
+    unitId: "b01",
+    order: 4,
+    title: "수식어 걷어내기",
+    oneLiner: "전치사구·관계절·분사구를 괄호로 묶으면 문장의 뼈대만 남습니다.",
+  },
+  // ── B2 문장의 다섯 형식 ──
+  {
+    id: "b02-c1",
+    unitId: "b02",
+    order: 1,
+    title: "1형식 SV · 2형식 SVC",
+    oneLiner: "보어가 필요한 동사(be·become·look)와 필요 없는 동사를 가릅니다.",
+  },
+  {
+    id: "b02-c2",
+    unitId: "b02",
+    order: 2,
+    title: "3형식 SVO — 목적어를 받는 동사",
+    oneLiner: "목적어를 바로 받는 타동사와 전치사가 필요한 자동사를 구별합니다.",
+  },
+  {
+    id: "b02-c3",
+    unitId: "b02",
+    order: 3,
+    title: "4형식 SVOO — 목적어가 둘",
+    oneLiner: "간접목적어와 직접목적어의 순서, 3형식 전환 시 전치사를 익힙니다.",
+  },
+  {
+    id: "b02-c4",
+    unitId: "b02",
+    order: 4,
+    title: "5형식 SVOC — 목적격보어의 형태",
+    oneLiner: "동사가 목적격보어의 형태(원형·to부정사·-ing·p.p.)를 결정합니다.",
+  },
+  // ── B3 동사와 시제의 기본 ──
+  {
+    id: "b03-c1",
+    unitId: "b03",
+    order: 1,
+    title: "be동사와 일반동사",
+    oneLiner: "한 문장에 be동사와 일반동사를 함께 세울 수 없습니다.",
+  },
+  {
+    id: "b03-c2",
+    unitId: "b03",
+    order: 2,
+    title: "현재·과거·미래",
+    oneLiner: "시제는 동사의 형태로 드러나며, 시간 부사와 호응해야 합니다.",
+  },
+  {
+    id: "b03-c3",
+    unitId: "b03",
+    order: 3,
+    title: "진행형 — be + -ing",
+    oneLiner: "진행형은 be동사 없이 -ing 혼자 설 수 없습니다.",
+  },
+  {
+    id: "b03-c4",
+    unitId: "b03",
+    order: 4,
+    title: "현재완료 — have + p.p.",
+    oneLiner: "과거의 일이 지금과 이어져 있으면 현재완료입니다.",
+  },
+  {
+    id: "b03-c5",
+    unitId: "b03",
+    order: 5,
+    title: "시간·조건 부사절의 현재시제",
+    oneLiner: "when·if 절에서는 미래의 일도 현재시제로 씁니다.",
+  },
+  // ── B4 조동사 ──
+  {
+    id: "b04-c1",
+    unitId: "b04",
+    order: 1,
+    title: "조동사 + 동사원형",
+    oneLiner: "can·will·must·should 뒤에는 반드시 동사원형이 옵니다.",
+  },
+  {
+    id: "b04-c2",
+    unitId: "b04",
+    order: 2,
+    title: "조동사 + have p.p. — 과거에 대한 추측·후회",
+    oneLiner: "must have p.p.(했음이 틀림없다), should have p.p.(했어야 했다)입니다.",
+  },
+  {
+    id: "b04-c3",
+    unitId: "b04",
+    order: 3,
+    title: "제안·요구·주장 that절의 동사원형",
+    oneLiner: "suggest·insist·demand 뒤 that절은 (should) + 동사원형입니다.",
+  },
+  // ── B5 명사·관사·대명사 ──
+  {
+    id: "b05-c1",
+    unitId: "b05",
+    order: 1,
+    title: "가산명사·불가산명사와 관사",
+    oneLiner: "셀 수 있는지가 관사(a/an)와 복수형의 가능 여부를 결정합니다.",
+  },
+  {
+    id: "b05-c2",
+    unitId: "b05",
+    order: 2,
+    title: "인칭대명사와 지시대명사",
+    oneLiner: "격(주격·목적격·소유격)과 가리키는 명사의 수를 맞춥니다.",
+  },
+  {
+    id: "b05-c3",
+    unitId: "b05",
+    order: 3,
+    title: "재귀대명사",
+    oneLiner: "주어와 목적어가 같은 대상이면 목적격이 아니라 -self를 씁니다.",
+  },
+  {
+    id: "b05-c4",
+    unitId: "b05",
+    order: 4,
+    title: "부정대명사 — one·another·the other",
+    oneLiner: "남은 것이 정해져 있으면 the other, 그렇지 않으면 another입니다.",
+  },
+  // ── B6 형용사·부사·비교 ──
+  {
+    id: "b06-c1",
+    unitId: "b06",
+    order: 1,
+    title: "형용사의 자리와 부사의 자리",
+    oneLiner: "명사를 꾸미거나 보어가 되면 형용사, 그 밖은 부사입니다.",
+  },
+  {
+    id: "b06-c2",
+    unitId: "b06",
+    order: 2,
+    title: "원급·비교급·최상급",
+    oneLiner: "as ~ as, -er than, the -est의 형태와 비교 대상을 맞춥니다.",
+  },
+  {
+    id: "b06-c3",
+    unitId: "b06",
+    order: 3,
+    title: "비교 관용표현",
+    oneLiner: "the 비교급 ~ the 비교급, 배수 표현, one of the 최상급 + 복수명사입니다.",
+  },
+  {
+    id: "b06-c4",
+    unitId: "b06",
+    order: 4,
+    title: "수량형용사 — many·much·few·little",
+    oneLiner: "셀 수 있는 명사와 셀 수 없는 명사에 붙는 수량 표현이 다릅니다.",
+  },
+  // ── B7 전치사·접속사·절 ──
+  {
+    id: "b07-c1",
+    unitId: "b07",
+    order: 1,
+    title: "전치사의 목적어는 명사(구)",
+    oneLiner: "전치사 뒤에는 명사·대명사·동명사가 오고, 절은 올 수 없습니다.",
+  },
+  {
+    id: "b07-c2",
+    unitId: "b07",
+    order: 2,
+    title: "등위접속사와 상관접속사",
+    oneLiner: "and·but·or는 같은 형태끼리, both A and B는 A와 B의 형태를 맞춥니다.",
+  },
+  {
+    id: "b07-c3",
+    unitId: "b07",
+    order: 3,
+    title: "명사절 — that·whether·의문사",
+    oneLiner: "명사절은 주어·목적어·보어 자리를 통째로 채웁니다.",
+  },
+  {
+    id: "b07-c4",
+    unitId: "b07",
+    order: 4,
+    title: "부사절 — 시간·이유·양보·조건",
+    oneLiner: "부사절은 주절에 얹혀 언제·왜·그럼에도를 덧붙입니다.",
+  },
+
+  // ══ PART 1~3 · 판별 (기존 — ID·순서 불변) ═══════════════════════════════
   // ── U1 동사 vs 준동사 ──
   {
     id: "u01-c1",
@@ -524,6 +833,20 @@ export const PART_BY_UNIT_ID = new Map(
   GRAMMAR_PARTS.flatMap((p) => p.unitIds.map((u) => [u, p] as const)),
 );
 
+/** "u03" → 3, "b02" → 2 (그룹 내 번호) */
 export function unitNumber(unitId: string): number {
-  return Number(unitId.replace("u", ""));
+  return Number(unitId.slice(1)) || 0;
 }
+
+/** 화면 표기용 짧은 라벨 — "U3"(판별) / "B2"(기초) */
+export function unitLabel(unitId: string): string {
+  const prefix = unitId.startsWith("b") ? "B" : "U";
+  return `${prefix}${unitNumber(unitId)}`;
+}
+
+export const BASIC_UNIT_IDS = GRAMMAR_UNITS.filter(
+  (u) => u.unlockGroup === "BASIC",
+).map((u) => u.id);
+export const JUDGE_UNIT_IDS = GRAMMAR_UNITS.filter(
+  (u) => u.unlockGroup === "JUDGE",
+).map((u) => u.id);

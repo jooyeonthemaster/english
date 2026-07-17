@@ -12,11 +12,13 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
+// 확대를 막지 않는다 — 본문에 10~13px 소형 텍스트가 있는 학습 화면에서
+// userScalable:false 는 저시력 학생에게 치명적이다(접근성).
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+  maximumScale: 5,
+  userScalable: true,
   viewportFit: "cover",
   themeColor: "#f6f5f1",
 };

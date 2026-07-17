@@ -29,8 +29,9 @@ export function singleUnderlines(text: string): string[] {
   return [...text.matchAll(SINGLE_UNDERLINE_RE)].map((m) => m[1]);
 }
 
-const unitIdSchema = z.string().regex(/^u(0[1-9]|1[0-2])$/);
-const conceptIdSchema = z.string().regex(/^u(0[1-9]|1[0-2])-c[1-4]$/);
+// PART 0 기초 유닛(b01~b07, 개념 최대 c5)까지 포용한다 — docs/study-os-spec.md §2.
+const unitIdSchema = z.string().regex(/^[ub](0[1-9]|1[0-2])$/);
+const conceptIdSchema = z.string().regex(/^[ub](0[1-9]|1[0-2])-c[1-5]$/);
 const difficultySchema = z.union([
   z.literal(1),
   z.literal(2),
@@ -54,7 +55,10 @@ const koreanProse = z
   });
 
 const itemBaseShape = {
-  id: z.string().regex(/^(u(0[1-9]|1[0-2])|mx[1-3])-(c[1-4]-)?(ch|ox|mu|ps|wf|wc)-\d{3}$/),
+  // ls = 레슨에서 추출된 문항(scripts/build-lesson-items.ts)
+  id: z
+    .string()
+    .regex(/^([ub](0[1-9]|1[0-2])|mx[1-3])-(c[1-5]-)?(ch|ox|mu|ps|wf|wc|ls)-\d{3}$/),
   unitId: unitIdSchema,
   conceptId: conceptIdSchema,
   difficulty: difficultySchema,

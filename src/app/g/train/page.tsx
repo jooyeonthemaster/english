@@ -1,39 +1,19 @@
 // ============================================================================
-// /g/train — 훈련 탭 (서버 조립 → GShell + 클라이언트 렌더)
-// 데이터는 홈과 동일한 buildHomePayload 재사용(유닛맵·복합세트가 포함됨).
-// 과제 탭 배지는 통합 태스크 유니온의 미완료 수 — 실패해도 페이지는 살린다.
+// /g/train — 구 "훈련" 탭. 학습 OS 재편으로 트랙 허브(/g/track/grammar)에 흡수됐다.
+// (docs/study-os-spec.md §4.3 라우팅 지도)
+//
+// 기존 링크·북마크(홈 카드·과제 카드의 "훈련 이어서 하기" 등)를 살리기 위해
+// 라우트는 남기고 서버 리다이렉트만 한다. 세션 검사는 목적지(/g/track/grammar)가
+// 다시 수행하므로 여기서 중복하지 않는다 — 리다이렉트 한 홉으로 끝낸다.
+//
+// 308(permanentRedirect)이 아니라 307(redirect)을 쓴다: 영구 리다이렉트는
+// 브라우저가 캐시해 되돌릴 수 없으므로, 트랙 IA가 다시 바뀔 여지를 남긴다.
 // ============================================================================
 
 import { redirect } from "next/navigation";
-import { FEATURE_FLAGS } from "@/lib/feature-flags";
-import { getGrammarSession } from "@/lib/grammar-drill/auth";
-import { buildHomePayload } from "@/lib/grammar-drill/home";
-import { loadStudentUnifiedTasks } from "@/lib/study-assignments/task-union";
-import { GShell } from "@/components/grammar-drill/g-shell";
-import { TrainClient } from "./train-client";
 
 export const dynamic = "force-dynamic";
-export const runtime = "nodejs";
 
-export default async function TrainPage() {
-  if (!FEATURE_FLAGS.ENABLE_GRAMMAR_DRILL) redirect("/");
-  const session = await getGrammarSession();
-  if (!session) redirect("/g");
-
-  const [home, taskRecords] = await Promise.all([
-    buildHomePayload(session),
-    loadStudentUnifiedTasks(session.studentId, session.academyId).catch(() => []),
-  ]);
-  const pendingTasks = taskRecords.filter((t) => t.status !== "DONE").length;
-
-  return (
-    <GShell
-      studentName={home.studentName}
-      academyName={home.academyName}
-      tasksBadgeCount={pendingTasks}
-      chatRemainingToday={home.chatRemainingToday}
-    >
-      <TrainClient home={home} />
-    </GShell>
-  );
+export default async function TrainPage(): Promise<never> {
+  redirect("/g/track/grammar");
 }

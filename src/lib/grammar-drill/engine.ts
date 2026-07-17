@@ -206,6 +206,16 @@ async function evaluateStage(
         );
       });
     if (passed) {
+      // 기초 유닛(PART 0)은 실전 독해·서술형·유닛 테스트 뱅크가 없다.
+      // 단계 집합이 CONCEPT → DRILL → MASTERED 이므로 드릴 게이트가 곧 마스터다.
+      if (unit.stageSet === "BASIC") {
+        const now = new Date();
+        await prisma.grammarDrillUnitProgress.update({
+          where: { id: progress.id },
+          data: { stage: "MASTERED", drillDoneAt: now, masteredAt: now },
+        });
+        return { unitId, stage: "MASTERED" };
+      }
       await prisma.grammarDrillUnitProgress.update({
         where: { id: progress.id },
         data: { stage: "READING", drillDoneAt: new Date() },
@@ -255,19 +265,24 @@ async function evaluateStage(
   return null;
 }
 
-/** 개념 학습 완료(learn 플로우 종료) — CONCEPT → DRILL. */
+/**
+ * 개념 학습 완료 — CONCEPT → DRILL. 승급이 실제로 일어났으면 true.
+ * 호출자: 레슨 진행 엔진(유닛의 모든 개념 레슨 완료 시) · 구 concept_check 종료 훅.
+ */
 export async function markConceptDone(
   studentId: string,
   academyId: string,
   unitId: string,
-) {
+): Promise<boolean> {
   const progress = await ensureProgressRow(studentId, academyId, unitId);
   if (progress.stage === "CONCEPT") {
     await prisma.grammarDrillUnitProgress.update({
       where: { id: progress.id },
       data: { stage: "DRILL", conceptDoneAt: new Date() },
     });
+    return true;
   }
+  return false;
 }
 
 /** 유닛 테스트 종료 — 최근 UNIT_TEST 시도 10개로 점수 산출(서버 신뢰 경로). */
@@ -773,18 +788,25 @@ export async function buildQueue(
 // ── 유닛 잠금 정책 ───────────────────────────────────────────────────────────
 
 /**
- * u01은 항상 열림. uN은 u(N-1)의 드릴 게이트 통과(drillDoneAt) 시 열림.
+ * 해금 그룹(BASIC 기초 b01~b07 / JUDGE 판별 u01~u12)별 순차 해금.
+ * 각 그룹의 첫 유닛(b01·u01)은 항상 열리고, 다음 유닛은 직전 유닛의 드릴 게이트
+ * 통과(drillDoneAt) 시 열린다. 두 그룹은 서로 간섭하지 않는다 — 기초를 하지 않아도
+ * 기존 학생의 u01~u12 해금 곡선은 그대로다(무회귀, docs/study-os-spec.md §2.1).
  * 선생님 배정은 잠금을 우회한다(assignment 모드는 이 정책을 보지 않음).
  */
 export function computeUnlockedUnits(
   progresses: { unitId: string; drillDoneAt: Date | null }[],
 ): Set<string> {
-  const unlocked = new Set<string>(["u01"]);
-  for (let i = 1; i < GRAMMAR_UNITS.length; i++) {
-    const prev = GRAMMAR_UNITS[i - 1];
-    const prevProgress = progresses.find((p) => p.unitId === prev.id);
-    if (prevProgress?.drillDoneAt) unlocked.add(GRAMMAR_UNITS[i].id);
-    else break;
+  const unlocked = new Set<string>();
+  for (const group of ["BASIC", "JUDGE"] as const) {
+    const units = GRAMMAR_UNITS.filter((u) => u.unlockGroup === group);
+    if (units.length === 0) continue;
+    unlocked.add(units[0].id);
+    for (let i = 1; i < units.length; i++) {
+      const prevProgress = progresses.find((p) => p.unitId === units[i - 1].id);
+      if (prevProgress?.drillDoneAt) unlocked.add(units[i].id);
+      else break;
+    }
   }
   return unlocked;
 }

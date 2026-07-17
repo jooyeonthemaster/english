@@ -74,6 +74,7 @@ export async function buildQuestionsPlayerItems(
       options: q.options,
       correctAnswer: q.correctAnswer,
       structuredData,
+      sourcePassageContent: q.passage?.content,
       points: q.points > 0 ? q.points : 1,
     });
     return {
@@ -151,6 +152,7 @@ export async function gradeQuestionsSubmission(
       options: q.options,
       correctAnswer: q.correctAnswer,
       structuredData: parseStructured(q.structuredData),
+      sourcePassageContent: q.passage?.content,
       points,
     });
     const result = gradeAnswer(spec, input);

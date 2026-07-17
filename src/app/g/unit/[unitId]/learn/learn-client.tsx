@@ -1,6 +1,12 @@
 "use client";
 
-// 개념 학습 — 개념 카드 페이저(1카드=1개념) → 마지막에 개념 체크 진입.
+// [DEPRECATED · 미사용] 구 개념 학습 — 개념 카드 페이저(1카드=1개념).
+//
+// 학습 OS 재편으로 인터랙티브 레슨 플레이어(components/study-os/lesson-player)가
+// 정본이 됐다. /g/unit/[unitId]/learn 은 첫 개념 레슨으로 리다이렉트하므로 이
+// 컴포넌트는 더 이상 렌더되지 않는다(파일은 이력 보존 목적으로 남긴다).
+// 새 화면을 만들 때 이 파일을 재사용하지 말 것 — docs/study-os-spec.md §3 참조.
+//
 // 카드 본문은 드릴의 개념 시트와 동일 컴포넌트(ConceptCardBody) 재사용.
 
 import { useRef, useState } from "react";

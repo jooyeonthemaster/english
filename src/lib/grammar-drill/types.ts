@@ -165,22 +165,40 @@ export interface GrammarConcept {
 
 // ── 유닛 ────────────────────────────────────────────────────────────────────
 
+/**
+ * 해금 그룹 — PART 0(기초)와 PART 1~3(판별)은 서로 독립된 순차 해금 트랙이다.
+ * 기존 학생의 해금 곡선을 건드리지 않기 위한 무회귀 장치(docs/study-os-spec.md §2.1).
+ */
+export type UnlockGroup = "BASIC" | "JUDGE";
+
+/**
+ * 단계 집합 —
+ *  FULL  : CONCEPT → DRILL → READING → WRITTEN → TEST → MASTERED (기존 판별 유닛)
+ *  BASIC : CONCEPT → DRILL → MASTERED (기초 유닛 — 실전 독해·서술형 뱅크 없음)
+ */
+export type StageSet = "FULL" | "BASIC";
+
 export interface GrammarUnit {
-  id: string; // "u01"
-  order: number;
-  part: 1 | 2 | 3; // 1 골격기 / 2 연결기 / 3 정밀기
+  id: string; // "u01" | "b01"
+  order: number; // 그룹 내 순서 (1부터)
+  part: 0 | 1 | 2 | 3; // 0 기초 골격 / 1 골격기 / 2 연결기 / 3 정밀기
+  unlockGroup: UnlockGroup;
+  stageSet: StageSet;
   title: string; // "동사 vs 준동사"
   subtitle: string; // 판단 본질 1구 (예: "문장의 본동사가 있는가")
-  /** 출제율 1~5 (★ 개수) */
-  frequency: 1 | 2 | 3 | 4 | 5;
-  /** 30회분 선지 등장 추정 (표기용, 예: "약 28~30회") */
+  /**
+   * 수능 출제율 1~5 (★ 개수). PART 0(기초)는 수능 판별 대상이 아니므로 null.
+   * ⚠️ 출처 없는 빈도 숫자를 지어내지 않는다(docs/study-os-spec.md §2.3).
+   */
+  frequency: 1 | 2 | 3 | 4 | 5 | null;
+  /** 30회분 선지 등장 추정 (표기용, 예: "약 28~30회"). PART 0는 도입 학년 표기. */
   frequencyNote: string;
   conceptIds: string[];
 }
 
 export interface GrammarPart {
-  part: 1 | 2 | 3;
-  name: string; // "골격기" | "연결기" | "정밀기"
+  part: 0 | 1 | 2 | 3;
+  name: string; // "기초 골격" | "골격기" | "연결기" | "정밀기"
   tagline: string; // "문장의 뼈대 판별" 등
   unitIds: string[];
 }

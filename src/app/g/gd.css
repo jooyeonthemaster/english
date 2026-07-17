@@ -418,20 +418,650 @@ button.gd-u {
   z-index: 25;
 }
 
+/* ════════════════════════════════════════════════════════════════════════════
+   학습 OS 확장 (2026-07-15) — docs/study-os-spec.md §5
+   기존 토큰·유틸을 갈아엎지 않고 얹는다.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+/* ── 컨테이너: 모바일 우선, 태블릿에서 확장 ──
+   Tailwind 의 sm:/md: 변형은 .gd-* 커스텀 클래스에 붙지 않는다(생성되지 않음).
+   그래서 반응형은 여기 CSS 미디어쿼리로만 만든다. */
+.gd-page {
+  width: 100%;
+  max-width: 28rem; /* 448px */
+  margin: 0 auto;
+}
+.gd-page-wide {
+  width: 100%;
+  max-width: 42rem;
+  margin: 0 auto;
+}
+
+/* ── 레슨 블록 ── */
+.gd-block {
+  background: var(--gd-card);
+  border: 1px solid var(--gd-line);
+  border-radius: 1rem;
+  padding: 1rem;
+}
+.gd-block[data-tone="accent"] {
+  background: var(--gd-blue-soft);
+  border-color: var(--gd-blue-line);
+}
+.gd-block[data-tone="warn"] {
+  background: var(--gd-bad-soft);
+  border-color: #fecdd3;
+}
+.gd-block-head {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  height: 1.375rem;
+  padding: 0 0.5rem;
+  border-radius: 9999px;
+  background: var(--gd-paper);
+  border: 1px solid var(--gd-line);
+  font-size: var(--gd-fs-2xs);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--gd-ink-2);
+}
+.gd-block-head[data-tone="accent"] {
+  background: #fff;
+  border-color: var(--gd-blue-line);
+  color: var(--gd-blue);
+}
+.gd-block-head[data-tone="warn"] {
+  background: #fff;
+  border-color: #fecdd3;
+  color: var(--gd-bad);
+}
+
+/* 레슨 본문 — 10~13px 저밀도 탈출. 본문은 15px 이상. */
+.gd-prose {
+  font-size: var(--gd-fs-md);
+  line-height: 1.65;
+  color: var(--gd-ink);
+  word-break: keep-all;
+}
+.gd-prose-2 {
+  font-size: var(--gd-fs-base);
+  line-height: 1.6;
+  color: var(--gd-ink-2);
+  word-break: keep-all;
+}
+
+/* ── 구문 필기(DIAGRAM) — 역할별 색. 라벨은 요소 바로 위에 붙인다(공간 근접성). ── */
+.gd-syn {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  vertical-align: baseline;
+  border-radius: 0.25rem;
+  padding: 0 0.125rem;
+  transition: background 160ms ease, color 160ms ease, opacity 160ms ease;
+}
+.gd-syn-label {
+  font-size: var(--gd-fs-3xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+}
+/* 활성 레이어에 속한 토큰만 색과 라벨을 얻는다(동시 표시 금지 — 한 번에 한 레이어) */
+.gd-syn[data-on="true"] .gd-syn-label {
+  opacity: 1;
+  height: auto;
+}
+.gd-syn[data-on="false"] {
+  opacity: 0.42;
+}
+.gd-syn[data-role="S"][data-on="true"] { background: #e8efff; color: #1d4ed8; }
+.gd-syn[data-role="V"][data-on="true"] { background: #ffe9ee; color: #be123c; }
+.gd-syn[data-role="O"][data-on="true"],
+.gd-syn[data-role="C"][data-on="true"] { background: #e6f6ef; color: #047857; }
+.gd-syn[data-role="M"][data-on="true"] {
+  background: #f1f0eb;
+  color: var(--gd-ink-2);
+  border-bottom: 1.5px dashed var(--gd-line-strong);
+}
+.gd-syn[data-role="CONJ"][data-on="true"],
+.gd-syn[data-role="REL"][data-on="true"] { background: #efe9fb; color: #6d28d9; }
+.gd-syn[data-role="VERBAL"][data-on="true"] { background: #fff4e6; color: #92400e; }
+
+/* ── 단계 리빌(WORKED / ALGORITHM) ── */
+.gd-step {
+  display: flex;
+  gap: 0.625rem;
+  padding: 0.625rem 0;
+  border-top: 1px solid var(--gd-line);
+}
+.gd-step:first-child { border-top: none; }
+.gd-step-n {
+  flex: 0 0 auto;
+  width: 1.375rem;
+  height: 1.375rem;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--gd-fs-2xs);
+  font-weight: 700;
+  background: var(--gd-blue-soft);
+  color: var(--gd-blue);
+}
+.gd-step[data-locked="true"] { opacity: 0.35; }
+
+/* ── 칩 버튼 (ToolButton·타일·바구니 공통 어휘) ── */
+.gd-btn-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  min-height: 2.25rem;
+  padding: 0 0.75rem;
+  border-radius: 0.625rem;
+  border: 1px solid var(--gd-line-strong);
+  background: var(--gd-card);
+  color: var(--gd-ink-2);
+  font-size: var(--gd-fs-xs);
+  font-weight: 600;
+  transition: border-color 120ms ease, background 120ms ease;
+}
+.gd-btn-chip[data-active="true"] {
+  border-color: var(--gd-blue);
+  background: var(--gd-blue-soft);
+  color: var(--gd-blue);
+}
+.gd-btn-chip[data-state="correct"] {
+  border-color: var(--gd-good);
+  background: var(--gd-good-soft);
+  color: var(--gd-good);
+}
+.gd-btn-chip[data-state="wrong"] {
+  border-color: var(--gd-bad);
+  background: var(--gd-bad-soft);
+  color: var(--gd-bad);
+}
+
+/* 어절 타일(GENERATE) — 최소 44px 터치 타깃 */
+.gd-tile {
+  min-height: 2.75rem;
+  padding: 0 0.75rem;
+  border-radius: 0.625rem;
+  border: 1.5px solid var(--gd-line-strong);
+  background: var(--gd-card);
+  font-family: var(--gd-serif);
+  font-size: var(--gd-fs-md);
+  color: var(--gd-ink);
+}
+.gd-tile[data-used="true"] { opacity: 0.3; }
+
+/* 레슨 진행 세그먼트 바 */
+.gd-seg {
+  display: flex;
+  gap: 0.1875rem;
+  height: 0.25rem;
+}
+.gd-seg > i {
+  flex: 1;
+  border-radius: 9999px;
+  background: var(--gd-line);
+}
+.gd-seg > i[data-on="true"] { background: var(--gd-blue); }
+.gd-seg > i[data-on="done"] { background: var(--gd-good); }
+
+/* ── 포커스 링 — 시스템 전체에 0건이었다(키보드·스위치 접근성) ── */
+.gd-btn:focus-visible,
+.gd-btn-chip:focus-visible,
+.gd-option:focus-visible,
+.gd-tile:focus-visible,
+.gd-tab:focus-visible,
+.gd-menu-item:focus-visible,
+.gd-u:focus-visible {
+  outline: 2px solid var(--gd-blue);
+  outline-offset: 2px;
+}
+
+/* 모바일에서는 사이드레일을 숨긴다(정보는 헤더 진행바가 대신한다).
+   ⚠️ 이 선언은 반드시 아래 태블릿 미디어쿼리 **앞**에 있어야 한다 —
+   뒤에 두면 같은 특이도로 미디어쿼리를 이겨서 태블릿에서도 레일이 사라지고,
+   grid 의 두 번째 컬럼(15rem)만 빈 채 남아 본문이 좌측으로 쏠린다(실측 확인). */
+.gd-rail { display: none; }
+/* 목차 접기/펼치기 토글 — 모바일엔 레일이 없으므로 숨긴다(태블릿+에서만 노출). */
+.gd-rail-toggle { display: none; }
+
+/* ── 태블릿 (768px+) ── */
+@media (min-width: 768px) {
+  .gd-app { font-size: var(--gd-fs-md); }
+
+  .gd-page { max-width: 44rem; }
+  .gd-page-wide { max-width: 60rem; }
+
+  .gd-block { padding: 1.25rem 1.5rem; }
+  .gd-prose { font-size: var(--gd-fs-lg); line-height: 1.7; }
+  .gd-prose-2 { font-size: var(--gd-fs-md); }
+
+  /* 레슨 2컬럼 — 좌: 블록 본문 / 우: 진행·목차 사이드레일 */
+  .gd-lesson-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 15rem;
+    gap: 1.5rem;
+    align-items: start;
+  }
+  .gd-rail { position: sticky; top: 1rem; display: block; }
+
+  /* 목차 토글 노출(헤더 버튼) */
+  .gd-rail-toggle { display: inline-flex; }
+
+  /* 레일 접힘 — 본문이 단일 컬럼으로 전폭을 쓰고, 레일은 숨는다.
+     (특이도상 위 .gd-lesson-grid / .gd-rail 규칙을 이긴다.) */
+  .gd-lesson-grid[data-rail="closed"] { grid-template-columns: minmax(0, 1fr); }
+  .gd-lesson-grid[data-rail="closed"] .gd-rail { display: none; }
+
+  /* 유닛맵·트랙 카드는 태블릿에서 2열 */
+  .gd-grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.625rem; }
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   v2 — 필기노트 · 게임 · 상태창 (docs/study-os-spec.md §11~§14)
+   렌더러 계약: 아래 클래스명은 lesson-blocks-notebook / -game-core /
+   -game-arena / status-window 가 참조하는 정본이다. 이름 변경 금지.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+/* ── 필기노트(NOTEBOOK) — 문제집 여백 필기의 이식 ── */
+.gd-note {
+  position: relative;
+  padding-left: 0.875rem;
+  border-left: 3px solid var(--gd-blue-line);
+}
+.gd-note-entry {
+  position: relative;
+  padding: 0.625rem 0;
+  border-top: 1px dashed var(--gd-line);
+}
+.gd-note-entry:first-child { border-top: none; padding-top: 0; }
+.gd-note-num {
+  flex: 0 0 auto;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 0.375rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--gd-fs-2xs);
+  font-weight: 800;
+  background: var(--gd-blue-soft);
+  color: var(--gd-blue);
+}
+.gd-note-pin {
+  display: inline-flex;
+  align-items: center;
+  height: 1.125rem;
+  padding: 0 0.375rem;
+  border-radius: 0.25rem;
+  font-size: var(--gd-fs-3xs);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+.gd-note-pin[data-pin="암기"] { background: var(--gd-blue-soft); color: var(--gd-blue); }
+.gd-note-pin[data-pin="주의"] { background: var(--gd-bad-soft); color: var(--gd-bad); }
+.gd-note-pin[data-pin="팁"] { background: var(--gd-good-soft); color: var(--gd-good); }
+
+/* ── 용어 첫 대면(CONCEPT_INTRO) ── */
+.gd-term {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: var(--gd-fs-2xl);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--gd-ink);
+}
+.gd-term-q {
+  border-left: 3px solid var(--gd-line-strong);
+  padding-left: 0.75rem;
+  color: var(--gd-ink-2);
+  font-style: normal;
+}
+
+/* ── 정리표(TABLE) ── */
+.gd-ctable { width: 100%; border-collapse: collapse; }
+.gd-ctable th {
+  font-size: var(--gd-fs-2xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--gd-ink-2);
+  background: var(--gd-paper);
+  padding: 0.5rem 0.625rem;
+  text-align: left;
+  border: 1px solid var(--gd-line);
+}
+.gd-ctable td {
+  font-size: var(--gd-fs-sm);
+  line-height: 1.55;
+  padding: 0.5rem 0.625rem;
+  border: 1px solid var(--gd-line);
+  vertical-align: top;
+  word-break: keep-all;
+}
+.gd-ctable tr[data-open="true"] td {
+  background: var(--gd-blue-soft);
+}
+.gd-ctable td:first-child { font-weight: 700; }
+
+/* ── 암기 카드(MNEMONIC) — 탭 리허설 카드 ── */
+.gd-mnemo-device {
+  border: 1.5px dashed var(--gd-blue-line);
+  background: var(--gd-blue-soft);
+  border-radius: 0.75rem;
+  padding: 0.75rem 0.875rem;
+  font-weight: 700;
+  color: var(--gd-blue);
+}
+.gd-recall {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--gd-line);
+  border-radius: 0.625rem;
+  background: var(--gd-card);
+  text-align: left;
+}
+.gd-recall[data-open="true"] { border-color: var(--gd-good); background: var(--gd-good-soft); }
+
+/* ── 게임 공통 셸 ── */
+.gd-game {
+  position: relative;
+  border: 1.5px solid var(--gd-blue-line);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(29, 78, 216, 0.05), transparent 42%),
+    var(--gd-card);
+  border-radius: 1rem;
+  padding: 1rem;
+}
+.gd-game-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3125rem;
+  height: 1.375rem;
+  padding: 0 0.5625rem;
+  border-radius: 9999px;
+  background: var(--gd-blue);
+  color: #fff;
+  font-size: var(--gd-fs-2xs);
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+/* 점수·콤보 HUD */
+.gd-hud {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--gd-fs-xs);
+  font-weight: 700;
+  color: var(--gd-ink-2);
+}
+.gd-combo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  background: var(--gd-blue-soft);
+  color: var(--gd-blue);
+  font-weight: 800;
+  animation: gd-pop 160ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* 타이머 바(SPEED_OX) — width 는 인라인 스타일, 여기선 전이만 */
+.gd-timer {
+  height: 0.375rem;
+  border-radius: 9999px;
+  background: var(--gd-line);
+  overflow: hidden;
+}
+.gd-timer > span {
+  display: block;
+  height: 100%;
+  border-radius: 9999px;
+  background: var(--gd-blue);
+  transition: width 120ms linear;
+}
+.gd-timer[data-urgent="true"] > span { background: var(--gd-bad); }
+
+/* 사냥 토큰(WORD_HUNT) */
+.gd-hunt-token {
+  display: inline-block;
+  border-radius: 0.375rem;
+  padding: 0.0625rem 0.1875rem;
+  margin: -0.0625rem 0;
+  font-weight: 500;
+  -webkit-tap-highlight-color: transparent;
+}
+.gd-hunt-token[data-state="hit"] {
+  background: var(--gd-good-soft);
+  color: var(--gd-good);
+  font-weight: 700;
+}
+.gd-hunt-token[data-state="miss"] {
+  background: var(--gd-bad-soft);
+  color: var(--gd-bad);
+  animation: gd-shake 240ms ease;
+}
+.gd-hunt-token[data-state="reveal"] {
+  outline: 1.5px dashed var(--gd-good);
+  outline-offset: 1px;
+}
+
+/* 짝 카드(PAIR_MATCH) */
+.gd-match-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0.5rem 0.625rem;
+  border: 1.5px solid var(--gd-line);
+  border-radius: 0.75rem;
+  background: var(--gd-card);
+  font-size: var(--gd-fs-sm);
+  font-weight: 600;
+  text-align: center;
+  word-break: keep-all;
+  transition: border-color 100ms ease, background 100ms ease, opacity 160ms ease;
+}
+.gd-match-card[data-state="selected"] { border-color: var(--gd-blue); background: var(--gd-blue-soft); }
+.gd-match-card[data-state="matched"] {
+  border-color: var(--gd-good);
+  background: var(--gd-good-soft);
+  color: var(--gd-good);
+  opacity: 0.75;
+}
+.gd-match-card[data-state="wrong"] {
+  border-color: var(--gd-bad);
+  background: var(--gd-bad-soft);
+  animation: gd-shake 240ms ease;
+}
+
+/* 하트(BOSS 목숨) */
+.gd-hearts { display: inline-flex; gap: 0.25rem; }
+.gd-heart[data-lost="true"] { opacity: 0.22; transform: scale(0.9); }
+.gd-heart { transition: opacity 200ms ease, transform 200ms ease; }
+
+/* 보스 HP 바 */
+.gd-hp {
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: var(--gd-line);
+  overflow: hidden;
+}
+.gd-hp > span {
+  display: block;
+  height: 100%;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, var(--gd-bad), #f43f5e);
+  transition: width 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.gd-boss-head {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.625rem 0.75rem;
+  border-radius: 0.75rem;
+  background: #16202e;
+  color: #f2f5fa;
+}
+
+@keyframes gd-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
+}
+.gd-shake { animation: gd-shake 240ms ease; }
+
+/* ── 상태창(STATUS WINDOW) — 시스템 패널 ── */
+.gd-sys-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(8, 14, 24, 0.62);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  animation: gd-fade-in 160ms ease;
+}
+.gd-sys {
+  position: fixed;
+  inset: 0;
+  z-index: 61;
+  margin: auto;
+  width: min(26rem, calc(100vw - 1.5rem));
+  height: min(85dvh, 46rem);
+  display: flex;
+  flex-direction: column;
+  border-radius: 1rem;
+  background: linear-gradient(168deg, #101d31 0%, #0b1523 100%);
+  border: 1px solid #2c4a77;
+  box-shadow:
+    0 0 0 3px rgba(16, 29, 49, 0.55),
+    inset 0 0 0 1px rgba(127, 178, 255, 0.14),
+    0 24px 80px rgba(4, 8, 16, 0.6);
+  color: #dbe7f7;
+  overflow: hidden;
+  animation: gd-sys-in 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes gd-sys-in {
+  from { transform: translateY(14px) scale(0.985); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+.gd-sys-label {
+  font-size: var(--gd-fs-3xs);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #6f87ab;
+}
+.gd-sys-hairline { border-top: 1px solid rgba(127, 178, 255, 0.13); }
+.gd-sys-panel {
+  border: 1px solid rgba(127, 178, 255, 0.16);
+  background: rgba(16, 29, 49, 0.55);
+  border-radius: 0.75rem;
+}
+/* 스탯 바(렌즈·파트) */
+.gd-sys-bar {
+  height: 0.4375rem;
+  border-radius: 9999px;
+  background: rgba(127, 178, 255, 0.12);
+  overflow: hidden;
+}
+.gd-sys-bar > span {
+  display: block;
+  height: 100%;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, #3b82f6, #7fb2ff);
+  transition: width 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* 칭호 배지 — 미획득은 실루엣 */
+.gd-sys-title-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  min-height: 2rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 0.625rem;
+  border: 1px solid rgba(127, 178, 255, 0.22);
+  background: rgba(127, 178, 255, 0.07);
+  font-size: var(--gd-fs-xs);
+  font-weight: 700;
+  color: #cfe0f6;
+  word-break: keep-all;
+}
+.gd-sys-title-badge[data-locked="true"] {
+  border-style: dashed;
+  color: #5d7290;
+  background: transparent;
+}
+.gd-sys-title-badge[data-active="true"] {
+  border-color: #7fb2ff;
+  background: rgba(59, 130, 246, 0.18);
+  color: #fff;
+}
+/* XP 게이지 */
+.gd-sys-xp {
+  height: 0.625rem;
+  border-radius: 9999px;
+  background: rgba(127, 178, 255, 0.12);
+  border: 1px solid rgba(127, 178, 255, 0.18);
+  overflow: hidden;
+}
+.gd-sys-xp > span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #2563eb, #60a5fa 60%, #93c5fd);
+  transition: width 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* 스탯 상승 연출(레슨 완료 화면) */
+@keyframes gd-statup {
+  0% { transform: translateY(6px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+.gd-statup { animation: gd-statup 360ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+.gd-statup[data-d="1"] { animation-delay: 120ms; }
+.gd-statup[data-d="2"] { animation-delay: 240ms; }
+.gd-statup[data-d="3"] { animation-delay: 360ms; }
+
 /* ── 모션 최소화 — OS 설정 존중(진입 애니메이션·전환·펄스 전부 무효) ── */
 @media (prefers-reduced-motion: reduce) {
   .gd-pop,
   .gd-verdict,
   .gd-sheet,
   .gd-sheet-backdrop,
-  .gd-side-sheet {
+  .gd-side-sheet,
+  .gd-sys,
+  .gd-sys-backdrop,
+  .gd-combo,
+  .gd-shake,
+  .gd-statup,
+  .gd-hunt-token[data-state="miss"],
+  .gd-match-card[data-state="wrong"] {
     animation: none;
   }
   .gd-meter > span,
   .gd-btn,
+  .gd-btn-chip,
   .gd-option,
   .gd-u,
-  .gd-chev {
+  .gd-chev,
+  .gd-syn,
+  .gd-timer > span,
+  .gd-hp > span,
+  .gd-heart,
+  .gd-match-card,
+  .gd-sys-bar > span,
+  .gd-sys-xp > span {
     transition: none;
   }
   .gd-btn:active {

@@ -3,10 +3,13 @@
 // ============================================================================
 // /g 학생 앱 셸 — 상단 헤더(학원명+학생 이름, 햄버거) + 하단 탭바 4개.
 //
-// 탭 루트(/g/home · /g/train · /g/tasks · /g/me)만 이 셸로 감싼다 —
-// 드릴 플레이어·유닛 허브·learn·q·w 등 몰입 화면은 풀스크린 유지(셸 미적용).
+// 탭 루트(/g/home · /g/track/* · /g/tasks · /g/me)만 이 셸로 감싼다 —
+// 드릴 플레이어·유닛 허브·레슨·q·w 등 몰입 화면은 풀스크린 유지(셸 미적용).
 // 활성 탭은 usePathname 판정. 햄버거는 우측 슬라이드 시트(gd 언어 자체 구현).
 // 스타일은 gd.css 의 gd-shell-* / gd-tabbar / gd-tab / gd-side-sheet 참조.
+//
+// "학습" 탭은 트랙 허브(/g/track/grammar)로 간다 — 구 "훈련"(/g/train)은
+// 트랙 허브로 서버 리다이렉트되므로, 활성 판정에는 레거시 경로도 함께 매칭한다.
 // ============================================================================
 
 import { useCallback, useEffect, useState } from "react";
@@ -14,20 +17,40 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   BarChart3,
+  BookOpen,
   ClipboardList,
-  Dumbbell,
   House,
   LogOut,
   Menu,
   MessageCircleQuestion,
+  Shield,
   X,
 } from "lucide-react";
+import { StatusWindow } from "@/components/study-os/status-window";
 
+/**
+ * 셸 헤더 높이 — gd.css 의 `.gd-pin-banner { top: calc(3.8125rem + ...) }` 와
+ * 짝을 이룬다(고정 배너가 헤더 바로 아래에 붙는 기준값).
+ * ⚠ 이 값을 바꾸면 gd.css 의 3.8125rem 도 함께 바꿔야 배너가 헤더와 겹치지 않는다.
+ * 2행(gd-label 16.5 + mt-0.5 2 + gd-t-md 22.5 + py-2.5 20 = 61px) 기준 —
+ * 탭 전환 시 헤더 높이 점프를 막기 위한 고정값이다.
+ */
+const SHELL_HEADER_H = "3.8125rem";
+
+/**
+ * `match`: 활성 판정용 추가 경로 프리픽스.
+ * 학습 탭은 트랙 4종(/g/track/*) 전체와 레거시 /g/train 에서 활성으로 본다.
+ */
 const TABS = [
-  { href: "/g/home", label: "홈", icon: House },
-  { href: "/g/train", label: "훈련", icon: Dumbbell },
-  { href: "/g/tasks", label: "과제", icon: ClipboardList },
-  { href: "/g/me", label: "내 기록", icon: BarChart3 },
+  { href: "/g/home", label: "홈", icon: House, match: [] },
+  {
+    href: "/g/track/grammar",
+    label: "학습",
+    icon: BookOpen,
+    match: ["/g/track", "/g/train"],
+  },
+  { href: "/g/tasks", label: "과제", icon: ClipboardList, match: [] },
+  { href: "/g/me", label: "내 기록", icon: BarChart3, match: [] },
 ] as const;
 
 export function GShell({
@@ -48,6 +71,7 @@ export function GShell({
   const router = useRouter();
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [statusOpen, setStatusOpen] = useState(false);
 
   const closeMenu = useCallback(() => setMenuOpen(false), []);
 
@@ -72,8 +96,10 @@ export function GShell({
     router.replace("/g");
   }
 
-  const isActive = (href: string) =>
-    pathname === href || pathname.startsWith(`${href}/`);
+  const isActive = (tab: (typeof TABS)[number]) => {
+    if (pathname === tab.href || pathname.startsWith(`${tab.href}/`)) return true;
+    return tab.match.some((p) => pathname === p || pathname.startsWith(`${p}/`));
+  };
 
   // 홈 히어로에 학생 이름이 이미 크게 있으므로 /g/home 에서만 이름 행을 숨기고
   // 'SMOAT · {학원명}' 한 줄로 축약한다. 타 탭은 현행 2행 유지.
@@ -81,12 +107,11 @@ export function GShell({
 
   return (
     <div className="flex min-h-dvh flex-col">
-      {/* ── 상단 헤더 — minHeight 는 2행(gd-label 16.5 + mt-0.5 2 + gd-t-md 22.5 +
-          py-2.5 20 = 61px) 기준 고정: 탭 전환 시 높이 점프 방지 ── */}
+      {/* ── 상단 헤더 — 높이는 SHELL_HEADER_H 고정(gd.css .gd-pin-banner 와 짝) ── */}
       <header className="gd-shell-header">
         <div
           className="mx-auto flex max-w-md items-center justify-between px-5 py-2.5"
-          style={{ minHeight: "3.8125rem" }}
+          style={{ minHeight: SHELL_HEADER_H }}
         >
           <div className="min-w-0">
             <p className="gd-label truncate">SMOAT · {academyName}</p>
@@ -96,17 +121,30 @@ export function GShell({
               </p>
             )}
           </div>
-          <button
-            type="button"
-            onClick={() => setMenuOpen(true)}
-            className="-mr-2 flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
-            style={{ color: "var(--gd-ink-2)" }}
-            aria-label="메뉴 열기"
-            aria-haspopup="dialog"
-            aria-expanded={menuOpen}
-          >
-            <Menu className="h-5 w-5" strokeWidth={1.75} />
-          </button>
+          <div className="flex shrink-0 items-center">
+            <button
+              type="button"
+              onClick={() => setStatusOpen(true)}
+              className="flex h-10 w-10 items-center justify-center rounded-full"
+              style={{ color: "var(--gd-ink-2)" }}
+              aria-label="상태창 열기"
+              aria-haspopup="dialog"
+              aria-expanded={statusOpen}
+            >
+              <Shield className="h-5 w-5" strokeWidth={1.75} />
+            </button>
+            <button
+              type="button"
+              onClick={() => setMenuOpen(true)}
+              className="-mr-2 flex h-10 w-10 items-center justify-center rounded-full"
+              style={{ color: "var(--gd-ink-2)" }}
+              aria-label="메뉴 열기"
+              aria-haspopup="dialog"
+              aria-expanded={menuOpen}
+            >
+              <Menu className="h-5 w-5" strokeWidth={1.75} />
+            </button>
+          </div>
         </div>
       </header>
 
@@ -116,8 +154,9 @@ export function GShell({
       {/* ── 하단 탭바 ── */}
       <nav className="gd-tabbar gd-safe-b" aria-label="주 메뉴">
         <div className="mx-auto grid max-w-md grid-cols-4">
-          {TABS.map(({ href, label, icon: Icon }) => {
-            const active = isActive(href);
+          {TABS.map((tab) => {
+            const { href, label, icon: Icon } = tab;
+            const active = isActive(tab);
             return (
               <Link
                 key={href}
@@ -190,8 +229,20 @@ export function GShell({
             )}
 
             <nav className="gd-scroll flex min-h-0 flex-1 flex-col py-2" aria-label="메뉴 링크">
-              {TABS.map(({ href, label, icon: Icon }) => {
-                const active = isActive(href);
+              <button
+                type="button"
+                className="gd-menu-item w-full text-left"
+                onClick={() => {
+                  closeMenu();
+                  setStatusOpen(true);
+                }}
+              >
+                <Shield className="h-4.5 w-4.5 shrink-0" strokeWidth={1.75} />
+                상태창
+              </button>
+              {TABS.map((tab) => {
+                const { href, label, icon: Icon } = tab;
+                const active = isActive(tab);
                 return (
                   <Link
                     key={href}
@@ -222,6 +273,9 @@ export function GShell({
           </aside>
         </>
       )}
+
+      {/* ── 상태창 — 어디서든 소환(§14) ── */}
+      <StatusWindow open={statusOpen} onClose={() => setStatusOpen(false)} />
     </div>
   );
 }

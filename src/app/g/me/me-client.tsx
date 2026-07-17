@@ -1,28 +1,16 @@
 "use client";
 
-// 내 기록 — 개념 숙달 지도(3파트×12유닛×47개념) · 유형/난이도 정답률 · 14일 활동.
+// 내 기록 — 개념 숙달 지도(4파트×19유닛: 기초 7 + 판별 12) · 유형/난이도 정답률 · 14일 활동.
+// 개념 행에는 레슨(개념 학습) 진행과 드릴 숙달도가 함께 실린다.
 // GShell(내 기록 탭 활성) 안에서 렌더 — 뒤로가기 대신 하단 탭바로 이동한다.
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { MasteryMap } from "./mastery-map";
+import { MasteryMap, type MasteryGridUnit } from "./mastery-map";
 
 interface MePayload {
   studentName: string;
-  grid: {
-    unitId: string;
-    title: string;
-    part: number;
-    locked: boolean;
-    concepts: {
-      conceptId: string;
-      title: string;
-      score: number;
-      attempts: number;
-      correct: number;
-      box: number;
-    }[];
-  }[];
+  grid: MasteryGridUnit[];
   byType: Record<string, { total: number; correct: number }>;
   byDifficulty: Record<string, { total: number; correct: number }>;
   days: { day: string; solved: number; correct: number }[];
@@ -42,6 +30,7 @@ export function MeClient() {
   const router = useRouter();
   const [me, setMe] = useState<MePayload | null>(null);
   const [failed, setFailed] = useState(false);
+  const [reload, setReload] = useState(0);
 
   useEffect(() => {
     fetch("/api/grammar-drill/me")
@@ -58,14 +47,22 @@ export function MeClient() {
         else setFailed(true);
       })
       .catch(() => setFailed(true));
-  }, [router]);
+  }, [router, reload]);
 
   if (failed) {
     return (
-      <div className="flex min-h-[60dvh] items-center justify-center">
-        <p className="gd-t-sm" style={{ color: "var(--gd-ink-2)" }}>
-          기록을 불러오지 못했습니다.
-        </p>
+      <div className="gd-page flex min-h-[60dvh] flex-col items-center justify-center px-5">
+        <p className="gd-prose-2 text-center">기록을 불러오지 못했습니다.</p>
+        <button
+          type="button"
+          onClick={() => {
+            setFailed(false);
+            setReload((n) => n + 1);
+          }}
+          className="gd-btn gd-btn-primary mt-4 w-full"
+        >
+          다시 불러오기
+        </button>
       </div>
     );
   }
@@ -85,7 +82,7 @@ export function MeClient() {
   const maxDay = Math.max(1, ...me.days.map((d) => d.solved));
 
   return (
-    <div className="mx-auto max-w-md px-5 pb-6 pt-5">
+    <div className="gd-page px-5 pb-6 pt-5">
       <header>
         <h1 className="gd-t-xl font-bold tracking-tight">내 기록</h1>
         <p className="gd-t-2xs mt-1" style={{ color: "var(--gd-ink-3)" }}>
