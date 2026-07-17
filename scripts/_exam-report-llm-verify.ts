@@ -39,10 +39,17 @@ const E1A_DEADLINE_MS = 300_000;
 const ANALYZE_DEADLINE_MS = 900_000;
 const READ_DEADLINE_MS = 300_000;
 
+// env 오버라이드: 값 "none" 은 undefined(미지정)로 — MP 재현처럼 school/grade 없는 실행.
+function metaEnv(name: string, fallback: string): string | undefined {
+  const v = process.env[name]?.trim();
+  if (!v) return fallback;
+  return v.toLowerCase() === "none" ? undefined : v;
+}
+
 const EXAM_META = {
-  title: "영어I",
-  schoolName: "한영고등학교",
-  grade: "고2",
+  title: metaEnv("VERIFY_META_TITLE", "영어I") ?? "영어I",
+  schoolName: metaEnv("VERIFY_META_SCHOOL", "한영고등학교"),
+  grade: metaEnv("VERIFY_META_GRADE", "고2"),
   examType: "MIDTERM" as const,
 };
 
@@ -55,6 +62,8 @@ interface CliArgs {
   model?: string;
   /** 이전 결과 JSON(examMapMerged 포함) 경로 — 지정 시 E1a 스킵하고 재사용 */
   map?: string;
+  /** 결과 JSON 저장 경로 오버라이드 — 병렬 A/B 실행 시 기본 경로 충돌 방지 */
+  out?: string;
 }
 
 function parseArgs(argv: string[]): CliArgs {
@@ -63,6 +72,7 @@ function parseArgs(argv: string[]): CliArgs {
   const onlyArg = argv.find((a) => a.startsWith("--only="));
   const modelArg = argv.find((a) => a.startsWith("--model="));
   const mapArg = argv.find((a) => a.startsWith("--map="));
+  const outArg = argv.find((a) => a.startsWith("--out="));
 
   const dir = dirArg ? dirArg.slice("--dir=".length) : DEFAULT_DIR;
   const onlyRaw = onlyArg ? onlyArg.slice("--only=".length) : "";
@@ -74,8 +84,9 @@ function parseArgs(argv: string[]): CliArgs {
     : ["e1a", "e1", "e2"];
   const model = modelArg ? modelArg.slice("--model=".length).trim() : undefined;
   const map = mapArg ? mapArg.slice("--map=".length).trim() : undefined;
+  const out = outArg ? outArg.slice("--out=".length).trim() : undefined;
 
-  return { help, dir, only, model, map };
+  return { help, dir, only, model, map, out };
 }
 
 function printHelp(args: CliArgs): void {
@@ -85,6 +96,7 @@ function printHelp(args: CliArgs): void {
   --only=<단계>    e1a | e1 | e2 콤마구분 (기본: 전체). e1/e2 는 examMap 위해 E1a 를 항상 선행.
   --model=<id>     EXAM_REPORT_{ANALYSIS,READ}_MODEL 오버라이드 (기본: ATLAS_PREMIUM_MODEL_ID=sonnet-5)
   --map=<json>     이전 결과 JSON 경로 — examMapMerged(없으면 examMap)를 재사용하고 E1a 스킵
+  --out=<json>     결과 JSON 저장 경로 오버라이드 (기본: ${RESULT_PATH}) — 병렬 A/B 시 필수
   --help, -h       이 도움말(LLM 콜 없음)
 
 [현재 파싱된 인자]
@@ -300,9 +312,10 @@ async function main(args: CliArgs): Promise<void> {
   result.finishedAt = new Date().toISOString();
 
   // ── ⑤ 결과 JSON 저장 ───────────────────────────────────────────────────────
-  mkdirSync(SCRATCH, { recursive: true });
-  writeFileSync(RESULT_PATH, JSON.stringify(result, null, 2), "utf8");
-  console.log(`\n결과 JSON 저장: ${RESULT_PATH}`);
+  const resultPath = args.out ?? RESULT_PATH;
+  mkdirSync(resolve(resultPath, ".."), { recursive: true });
+  writeFileSync(resultPath, JSON.stringify(result, null, 2), "utf8");
+  console.log(`\n결과 JSON 저장: ${resultPath}`);
 }
 
 // ── 출력 헬퍼 ────────────────────────────────────────────────────────────────

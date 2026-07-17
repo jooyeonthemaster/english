@@ -176,6 +176,7 @@ export async function callExamReportJson<T>(opts: CallExamReportJsonOptions<T>):
           systemCacheControl: cacheSystem,
           imageCacheControl: cacheImages,
           reasoning: config.reasoning,
+          reasoningEffort: config.reasoningEffort,
           fetcher: abortableFetcher,
         });
         break;

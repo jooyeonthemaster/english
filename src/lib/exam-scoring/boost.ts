@@ -263,6 +263,7 @@ function prepareQuestion(input: BoostQuestionInput): PreparedQuestion {
     options: q.options,
     correctAnswer: q.correctAnswer,
     structuredData: q.structuredData,
+    sourcePassageContent: q.passage?.content,
     points: input.points,
   });
   const number = String(input.orderNum);

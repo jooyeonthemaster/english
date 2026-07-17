@@ -3,7 +3,10 @@
 // ============================================================================
 
 import type { Prisma } from "@prisma/client";
-import { selectAnalysisTargetKeys } from "@/lib/exam-report/exam-analyze-direct";
+import {
+  MAX_QUESTION_ATTEMPTS,
+  selectAnalysisTargetKeys,
+} from "@/lib/exam-report/exam-analyze-direct";
 import { examAnalysisCreditCost } from "@/lib/exam-report/types";
 import type {
   ExamAnalysisResult,
@@ -68,6 +71,32 @@ function numOr0(value: unknown): number {
 /** raw Json 객체에서 숫자 필드 읽기(없거나 손상 시 0). */
 export function readNumberField(value: unknown, key: string): number {
   return numOr0(rawObject(value)[key]);
+}
+
+/**
+ * aiMeta.attemptCounts(문항키→자동 재분석 시도 횟수) 읽기 — 라이브락 종료용.
+ * 양의 정수만 채택(numberKey 정규화). 손상/부재면 빈 객체.
+ */
+export function readAttemptCounts(value: unknown): Record<string, number> {
+  const raw = rawObject(rawObject(value).attemptCounts);
+  const out: Record<string, number> = {};
+  for (const [k, v] of Object.entries(raw)) {
+    if (typeof v === "number" && Number.isFinite(v) && v > 0) {
+      out[numberKey(k)] = Math.floor(v);
+    }
+  }
+  return out;
+}
+
+/** attemptCounts 에서 시도 상한(MAX_QUESTION_ATTEMPTS) 도달 = 종결 실패 키 집합. */
+export function computeTerminalKeys(
+  attemptCounts: Record<string, number>,
+): Set<string> {
+  const terminal = new Set<string>();
+  for (const [k, n] of Object.entries(attemptCounts)) {
+    if (n >= MAX_QUESTION_ATTEMPTS) terminal.add(k);
+  }
+  return terminal;
 }
 
 /** raw Json 객체에서 string[] 필드 읽기 — 배열이 아니면 null. */
@@ -149,6 +178,13 @@ export function computeRunPlan(opts: {
    * paidFullRun 미지정 첫 실행 max(15,N))은 불변.
    */
   paidFullRun?: boolean;
+  /**
+   * 종결 실패 확정 키(시도 상한 도달) — 전체(자동) 실행의 시도 대상에서 제외해
+   * 라이브락을 끝낸다. 문항단위(requestedNumbers) 지정 실행에는 적용하지 않는다
+   * (강사 명시 재분석은 상한 무관). 이로써 남은 비-OK 가 전부 종결이면 attemptedKeys
+   * 가 0 이 되어 alreadyAnalyzed(종합 존재 시) 로 완료 처리된다.
+   */
+  excludeKeys?: ReadonlySet<string>;
 }): RunPlan {
   const structureKeys = new Set(opts.questions.map((q) => numberKey(q.number)));
   const priorPerQuestion = opts.prior?.perQuestion ?? [];
@@ -201,6 +237,7 @@ export function computeRunPlan(opts: {
     questionNumbers: opts.questions.map((q) => q.number),
     priorPerQuestion,
     forceNumbers,
+    excludeKeys: opts.excludeKeys,
   });
   const attemptedKeys = opts.questions
     .map((q) => numberKey(q.number))

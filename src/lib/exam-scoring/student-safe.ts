@@ -26,6 +26,10 @@
 // ============================================================================
 
 import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
+import {
+  isMarkedQuestionSurfaceType,
+  normalizeMarkedQuestionSurface,
+} from "@/lib/marked-question-surface-normalization";
 import { asRecord, asTrimmed, buildSafeData, buildSafeOptions } from "./student-safe-data";
 import type { AnswerInputKind, AnswerSpec } from "./types";
 
@@ -195,7 +199,11 @@ export function buildStudentSafeQuestion(
   );
   try {
     const subType = q.subType ?? "";
-    const data = asRecord(q.structuredData);
+    const data = normalizeMarkedQuestionSurface(
+      subType,
+      asRecord(q.structuredData),
+      q.passage?.content,
+    );
 
     const safe: StudentSafeQuestion = {
       id: q.id,
@@ -218,7 +226,12 @@ export function buildStudentSafeQuestion(
     const passageContent = asTrimmed(q.passage?.content);
     if (passageContent) safe.passageContent = passageContent;
 
-    const options = buildSafeOptions(subType, q.options ?? data?.options);
+    const options = buildSafeOptions(
+      subType,
+      isMarkedQuestionSurfaceType(subType)
+        ? (data?.options ?? q.options)
+        : (q.options ?? data?.options),
+    );
     if (options.length > 0) safe.options = options;
 
     const safeData = buildSafeData(subType, data, q);

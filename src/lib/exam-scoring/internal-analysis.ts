@@ -47,6 +47,7 @@ export interface InternalQuestionProjection {
   options?: unknown;
   correctAnswer?: string | null;
   structuredData?: unknown;
+  sourcePassageContent?: string | null;
   /** "BASIC" | "INTERMEDIATE" | "KILLER" */
   difficulty?: string | null;
   /** JSON 문자열 배열("[\"관계대명사\",...]") 또는 배열 원본 */
@@ -255,6 +256,7 @@ export function buildInternalStructure(input: InternalStructureInput): ExamMap {
       options: it.question.options,
       correctAnswer: it.question.correctAnswer,
       structuredData: it.question.structuredData,
+      sourcePassageContent: it.question.sourcePassageContent,
       points: it.points,
     });
     const correctAnswer = structureCorrectAnswer(spec);

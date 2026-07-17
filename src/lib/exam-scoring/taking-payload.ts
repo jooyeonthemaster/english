@@ -372,6 +372,7 @@ export async function loadTakingSession(token: string): Promise<TakingSession | 
       options: question.options,
       correctAnswer: question.correctAnswer,
       structuredData: question.structuredData,
+      sourcePassageContent: question.passage?.content,
       points: entry.points,
     });
     questions.push({
@@ -457,6 +458,7 @@ export interface ScorableQuestionRecord {
   options: string | null;
   correctAnswer: string;
   structuredData: unknown;
+  passage?: { content: string } | null;
 }
 
 export interface SubmissionGradingResult {
@@ -511,6 +513,7 @@ export function gradeMergedSubmission(args: {
       options: question.options,
       correctAnswer: question.correctAnswer,
       structuredData: question.structuredData,
+      sourcePassageContent: question.passage?.content,
       points: entry.points,
     });
     const input = inputById.get(entry.questionId) ?? null;

@@ -131,6 +131,7 @@ export async function POST(
       options: true,
       correctAnswer: true,
       structuredData: true,
+      passage: { select: { content: true } },
     },
   });
   const questions = new Map<string, ScorableQuestionRecord>(

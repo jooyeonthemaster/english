@@ -22,6 +22,7 @@ import { prisma } from "@/lib/prisma";
 import { refundCredits } from "@/lib/credits";
 import {
   analyzeExamDirect,
+  MAX_QUESTION_ATTEMPTS,
   selectAnalysisTargetKeys,
 } from "@/lib/exam-report/exam-analyze-direct";
 import { getExamReportAiConfig } from "@/lib/exam-report/model-config";
@@ -55,12 +56,15 @@ import {
 import {
   computeRunPlan,
   computeRunSets,
+  computeTerminalKeys,
   mergeCheckpointIntoDb,
   numberKey,
   parseSourceFilePages,
   rawObject,
+  readAttemptCounts,
   readNumberField,
   readNumbers,
+  readStringArrayField,
   toJson,
   type RunPlan,
 } from "./_lib/route-helpers";
@@ -131,6 +135,12 @@ export async function POST(
   const priorAnalysis = parseExamAnalysisResult(analysis.analysis);
   // paidFullRun: 첫 실행 전액과금 완료 흔적 — 전체 재개의 미시도 문항 무료 근거.
   const priorPaidFullRun = parseExamAiMeta(analysis.aiMeta).paidFullRun === true;
+  // 라이브락 종료(A9): 문항별 자동 재분석 시도 횟수를 aiMeta.attemptCounts 로 유지하고,
+  // 상한(MAX_QUESTION_ATTEMPTS) 도달 문항은 "종결 실패"로 확정해 전체(자동) 실행의
+  // 재선택에서 제외한다. 남은 비-OK 가 전부 종결이면 시도 대상이 0 이 되어 완료 처리로
+  // 수렴한다(도돌이표 실패 문항이 데드라인을 소진해 15/15 에서 멈추던 결함 차단).
+  const priorAttemptCounts = readAttemptCounts(analysis.aiMeta);
+  const terminalKeys = computeTerminalKeys(priorAttemptCounts);
   const examMeta: ExamReportMeta = {
     title: analysis.title,
     schoolName: analysis.schoolName ?? undefined,
@@ -150,6 +160,7 @@ export async function POST(
       prior: priorAnalysis,
       requestedNumbers,
       paidFullRun: priorPaidFullRun,
+      excludeKeys: terminalKeys,
     });
     if (plan.invalidNumbers) {
       return NextResponse.json(
@@ -245,6 +256,7 @@ export async function POST(
         questions: examMap.questions,
         prior: null,
         paidFullRun: priorPaidFullRun,
+        excludeKeys: terminalKeys,
       });
     }
     const created = await createRunJobAndCharge({
@@ -287,6 +299,7 @@ export async function POST(
     priorPerQuestion: priorAnalysis?.perQuestion ?? [],
     targetNumbers: runTargetNumbers,
     forceNumbers: runForceNumbers,
+    excludeKeys: terminalKeys,
   });
   const attemptedKeys = runExamMap.questions
     .map((q) => numberKey(q.number))
@@ -309,6 +322,9 @@ export async function POST(
               synthFailed: false,
               refundedCredits: 0,
               autoResumeRounds: 0,
+              // terminal 전이 환불 원장(문항키) — 논리 실행(=청구 tx) 단위라 신규
+              // 실행 진입 시 리셋. 유지하면 새 청구분의 정당한 환불이 억제된다.
+              refundedFailedKeys: [],
               // 첫 실행 전액과금(max(15,N)) 성공 → 이후 전체 재개에서 중단 미시도
               // 문항을 무료 처리하는 근거(이중과금 차단).
               ...(plan?.isFirstRun && plan.cost > 0 ? { paidFullRun: true } : {}),
@@ -341,6 +357,20 @@ export async function POST(
     (q) => q.analysisStatus === "OK",
   );
 
+  // A9 보강(적대 리뷰 CRITICAL): 이번 논리 실행에서 이미 비례 환불된 문항키 원장.
+  // terminal 전이 환불(yield 경로)과 종결 환불(runFailedBillable)이 같은 키를 두 번
+  // 세지 않도록 모든 환불 계산에서 제외한다. 신규 실행 진입 시 [] 로 리셋되므로
+  // 항상 현재 청구(creditTxId) 범위의 키만 담긴다. refundCredits 자체의 tx 누적 캡
+  // (원청구 초과 환불 불가)이 최후 방어선.
+  const priorRefundedKeys = new Set(
+    isResume
+      ? (readStringArrayField(analysis.aiMeta, "refundedFailedKeys") ?? []).map(numberKey)
+      : [],
+  );
+  const priorRefundedCredits = isResume
+    ? readNumberField(analysis.aiMeta, "refundedCredits")
+    : 0;
+
   try {
     const outcome = await analyzeExamDirect({
       examMap: runExamMap,
@@ -348,6 +378,7 @@ export async function POST(
       examMeta,
       targetNumbers: runTargetNumbers,
       forceNumbers: runForceNumbers,
+      excludeKeys: terminalKeys,
       prior: priorAnalysis,
       deadlineAt,
       onBatchComplete: async (cp) => {
@@ -364,6 +395,11 @@ export async function POST(
         freeKeys: runFreeKeys,
         finalPerQuestion: outcome.checkpoint.perQuestion,
       });
+    // 이미 terminal 전이 시점에 환불된 키는 종결 환불·재청구 계산에서 제외
+    // (문항단위 재분석이 terminal 키를 재시도하는 경로에서 이중 환불 차단).
+    const refundableFailed = runFailedBillable.filter(
+      (key) => !priorRefundedKeys.has(key),
+    );
     const usagePatch = {
       model,
       calls: outcome.usage.calls,
@@ -372,6 +408,23 @@ export async function POST(
       durationMs: Date.now() - startedAt,
       failedNumbers: outcome.failedNumbers,
     };
+
+    // A9 라이브락 종료: 이번 라운드 시도(attemptedKeys) 문항의 최종 판정으로
+    // attemptCounts 를 갱신한다 — 여전히 FAILED 면 +1(상한 도달 시 다음 라운드부터
+    // 종결 실패로 재선택 제외), OK 로 복구되면 제거(재분석 시 조기 락아웃 방지).
+    // 모든 persistCheckpoint 에 실어 라운드 간 유지한다.
+    const finalStatusByKey = new Map(
+      outcome.checkpoint.perQuestion.map((q) => [numberKey(q.number), q.analysisStatus]),
+    );
+    const nextAttemptCounts: Record<string, number> = { ...priorAttemptCounts };
+    for (const key of attemptedKeys) {
+      const finalStatus = finalStatusByKey.get(key);
+      if (finalStatus === "FAILED") {
+        nextAttemptCounts[key] = (nextAttemptCounts[key] ?? 0) + 1;
+      } else if (finalStatus === "OK") {
+        delete nextAttemptCounts[key];
+      }
+    }
 
     // A6: S3 연속 실패 카운트(재개 간 aiMeta 로 유지) — 2회면 synthFailed 종결.
     const synthFailures =
@@ -385,10 +438,53 @@ export async function POST(
       // 라운드 카운터: 이번 논리 실행 누적(신규 진입 시 0 리셋) +1 — 폭주 가드 기준.
       const autoResumeRounds =
         (isResume ? readNumberField(analysis.aiMeta, "autoResumeRounds") : 0) + 1;
+
+      // terminal 전이 환불(적대 리뷰 CRITICAL): 이번 라운드에 시도 상한에 도달한
+      // billable 실패 문항은 다음 라운드부터 자동 실행에서 제외되므로, 종결 라운드의
+      // runFailedBillable(그 라운드 시도분 한정)에 영영 잡히지 않는다 — 여기 전이
+      // 시점에 비례 환불해야 "과금됐지만 분석물도 환불도 없는" 누수가 막힌다.
+      // (terminal 전이가 종결 라운드에서 일어나면 그 키는 그 라운드 attempted 라
+      // 기존 종결 환불이 처리 — 이 경로는 yield 라운드 전이 전용.)
+      // reason 에 라운드를 실어 라운드별 환불이 reason 멱등에 서로 막히지 않게 한다.
+      const newlyTerminalBillable = attemptedKeys.filter(
+        (key) =>
+          finalStatusByKey.get(key) === "FAILED" &&
+          (nextAttemptCounts[key] ?? 0) >= MAX_QUESTION_ATTEMPTS &&
+          !runFreeKeys.has(key) &&
+          !priorRefundedKeys.has(key),
+      );
+      // throw(진짜 실패)는 null 로 받아 원장 기록을 생략한다 — 기록해 버리면 그 키의
+      // 환불이 영구 소실된다(적대 리뷰 h). 멱등 0(이미 같은 reason 으로 환불됨)은
+      // 정상 반환이므로 원장에 기록해 중복 시도를 막는다.
+      let terminalRefunded: number | null = 0;
+      if (creditTxId && newlyTerminalBillable.length > 0) {
+        terminalRefunded = await refundCredits(
+          auth.academyId,
+          "EXAM_ANALYSIS",
+          creditTxId,
+          `exam-analysis-terminal-${jobId}-r${autoResumeRounds}`,
+          newlyTerminalBillable.length,
+        ).catch((e) => {
+          console.error("[exam-analyze] terminal refund failed", e);
+          return null;
+        });
+      }
+      const refundedFailedKeys =
+        creditTxId && newlyTerminalBillable.length > 0 && terminalRefunded !== null
+          ? [...priorRefundedKeys, ...newlyTerminalBillable]
+          : [...priorRefundedKeys];
+
       await renewJobFence(fence);
       await persistCheckpoint(outcome.checkpoint, {
         usagePatch,
-        aiMetaExtra: { runStartedAt: Date.now(), synthFailures, autoResumeRounds },
+        aiMetaExtra: {
+          runStartedAt: Date.now(),
+          synthFailures,
+          autoResumeRounds,
+          attemptCounts: nextAttemptCounts,
+          refundedFailedKeys,
+          refundedCredits: priorRefundedCredits + (terminalRefunded ?? 0),
+        },
       });
       await yieldJobFence(fence);
 
@@ -447,12 +543,21 @@ export async function POST(
         status: "FAILED",
         usagePatch,
         // 전액환불 종결 → 전액과금 흔적(paidFullRun) 회수(다음 실행은 다시 정상 과금).
-        aiMetaExtra: { synthFailures, refundedCredits, paidFullRun: false },
+        // 전량 실패 종결이라 attemptCounts·환불 원장은 리셋(다음 실행은 새 청구/카운트).
+        // refundCredits 의 tx 누적 캡 덕에 전이 환불이 선행됐어도 잔여분만 환불된다 —
+        // refundedCredits 는 누적(전이+전액)으로 기록해 배너가 총액을 보이게 한다.
+        aiMetaExtra: {
+          synthFailures,
+          refundedCredits: priorRefundedCredits + refundedCredits,
+          paidFullRun: false,
+          attemptCounts: {},
+          refundedFailedKeys: [],
+        },
       });
       return NextResponse.json({
         status: "FAILED",
         failedNumbers: outcome.failedNumbers,
-        refundedCredits,
+        refundedCredits: priorRefundedCredits + refundedCredits,
       });
     }
 
@@ -480,6 +585,12 @@ export async function POST(
 
     const completionAiExtra: Record<string, unknown> = {
       synthFailures,
+      attemptCounts: nextAttemptCounts,
+      // 종결 시 원장 확정(관측용) — 이번 종결 환불분(refundableFailed)까지 포함.
+      refundedFailedKeys:
+        creditTxId && refundableFailed.length > 0
+          ? [...priorRefundedKeys, ...refundableFailed]
+          : [...priorRefundedKeys],
       ...(synthTerminal ? { synthFailed: true } : {}),
     };
 
@@ -488,13 +599,15 @@ export async function POST(
         return inProgressResponse();
       }
       // 리퍼가 FAILED+전액환불 처리함 → 잡은 FAILED 유지, 결과는 저장하고 순액 재청구.
+      // 재청구 = 원청구 - failedBillableCount 이므로, terminal 전이로 이미 환불된
+      // 키(priorRefundedKeys)도 실패분에 합산해야 그 문항이 재청구로 되살아나지 않는다.
       const { rechargeFailed } = await rechargeAfterStaleReap({
         academyId: auth.academyId,
         staffId: auth.id,
         analysisId: id,
         jobId,
         creditTxId,
-        failedBillableCount: runFailedBillable.length,
+        failedBillableCount: refundableFailed.length + priorRefundedKeys.size,
       });
       await persistCheckpoint(outcome.checkpoint, {
         status: "ANALYZED",
@@ -512,16 +625,17 @@ export async function POST(
       });
     }
 
-    // 일부라도 성공 → ANALYZED. 실패 문항 비례 환불(billable 만) — D2: 즉시 실행 +
-    // 실제 환불액 캡처. billable 실패가 없으면 환불 0(정상, 재분석 무료분은 제외).
+    // 일부라도 성공 → ANALYZED. 실패 문항 비례 환불(billable 만, terminal 전이 환불분
+    // 제외) — D2: 즉시 실행 + 실제 환불액 캡처. refundedCredits 는 이번 논리 실행
+    // 누적(전이 환불 + 종결 환불)으로 기록해 배너가 총액을 보이게 한다.
     let refundedCredits = 0;
-    if (creditTxId && runFailedBillable.length > 0) {
+    if (creditTxId && refundableFailed.length > 0) {
       refundedCredits = await refundCredits(
         auth.academyId,
         "EXAM_ANALYSIS",
         creditTxId,
         `exam-analysis-partial-${jobId}`,
-        runFailedBillable.length,
+        refundableFailed.length,
       ).catch((e) => {
         console.error("[exam-analyze] partial refund failed", e);
         return 0;
@@ -531,14 +645,17 @@ export async function POST(
     await persistCheckpoint(outcome.checkpoint, {
       status: "ANALYZED",
       usagePatch,
-      aiMetaExtra: { ...completionAiExtra, refundedCredits },
+      aiMetaExtra: {
+        ...completionAiExtra,
+        refundedCredits: priorRefundedCredits + refundedCredits,
+      },
     });
 
     return NextResponse.json({
       status: "ANALYZED",
       failedNumbers: outcome.failedNumbers,
       resume: false,
-      refundedCredits,
+      refundedCredits: priorRefundedCredits + refundedCredits,
     });
   } catch (err) {
     if (err instanceof FenceLostError) {
@@ -563,13 +680,25 @@ export async function POST(
       );
       const succeededCount = attemptedKeys.filter((k) => okKeys.has(k)).length;
       if (succeededCount > 0) {
+        // terminal 전이로 이미 환불된 키도 실패분에 합산해 재청구가 그 문항을
+        // 되살리지 않게 한다(완료 경로와 동일 규칙). 단 attempted 와 원장이 겹치는
+        // 경우(문항단위 재시도)는 원장 쪽에서만 세어 이중 차감을 막는다(적대 리뷰 f).
+        const nonRefundedAttempted = attemptedKeys.filter(
+          (k) => !priorRefundedKeys.has(k),
+        );
+        const succeededNonRefunded = nonRefundedAttempted.filter((k) =>
+          okKeys.has(k),
+        ).length;
         await rechargeAfterStaleReap({
           academyId: auth.academyId,
           staffId: auth.id,
           analysisId: id,
           jobId,
           creditTxId,
-          failedBillableCount: attemptedKeys.length - succeededCount,
+          failedBillableCount:
+            nonRefundedAttempted.length -
+            succeededNonRefunded +
+            priorRefundedKeys.size,
         });
         await prisma.examAnalysis
           .updateMany({
@@ -647,8 +776,12 @@ export async function POST(
         fullRefunded = refundedCredits > 0;
       } else {
         // (ii) 커밋 존재 → billable 실패분만 부분 환불(성공 커밋분 매출 보존).
+        // terminal 전이 환불분(priorRefundedKeys)은 제외 — 이중 환불 차단.
         const committedFailedBillable = committedAttempted.filter(
-          (k) => committedStatusByKey.get(k) === "FAILED" && !runFreeKeys.has(k),
+          (k) =>
+            committedStatusByKey.get(k) === "FAILED" &&
+            !runFreeKeys.has(k) &&
+            !priorRefundedKeys.has(k),
         ).length;
         if (committedFailedBillable > 0) {
           refundedCredits = await refundCredits(
@@ -680,7 +813,9 @@ export async function POST(
           status: "FAILED",
           aiMeta: toJson({
             ...rawObject(currentRow?.aiMeta ?? analysis.aiMeta),
-            refundedCredits,
+            // 누적 기록(전이 환불 + 이번 에러 환불) — 이 경로 단독값으로 덮으면
+            // yield 라운드의 전이 환불 총액이 배너에서 사라진다.
+            refundedCredits: priorRefundedCredits + refundedCredits,
             // 전액환불이 실제 실행됐을 때만 전액과금 흔적 회수 — 부분환불(커밋 존재)은
             // 미시도분 무료 재개(paidFullRun)로 상환되므로 유지(검수 HIGH 정책).
             ...(fullRefunded ? { paidFullRun: false } : {}),

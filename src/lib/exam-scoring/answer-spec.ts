@@ -12,6 +12,10 @@
 // ============================================================================
 
 import { normalizeSentenceInsertAnswer } from "@/lib/sentence-insert-options";
+import {
+  isMarkedQuestionSurfaceType,
+  normalizeMarkedQuestionSurface,
+} from "@/lib/marked-question-surface-normalization";
 import type {
   AnswerFieldSpec,
   AnswerSpec,
@@ -227,8 +231,16 @@ const FREE_WRITING = new Set(["CONDITIONAL_WRITING", "SENTENCE_TRANSFORM"]);
  */
 export function buildAnswerSpec(q: ScorableQuestion): AnswerSpec {
   try {
-    const data = asRecord(q.structuredData);
-    const options = parseOptions(q.options ?? data?.options);
+    const data = normalizeMarkedQuestionSurface(
+      q.subType,
+      asRecord(q.structuredData),
+      q.sourcePassageContent,
+    );
+    const options = parseOptions(
+      isMarkedQuestionSurfaceType(q.subType)
+        ? (data?.options ?? q.options)
+        : (q.options ?? data?.options),
+    );
     const subType = q.subType ?? "";
 
     if (FREE_WRITING.has(subType)) {

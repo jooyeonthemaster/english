@@ -42,6 +42,7 @@ import {
   createExamReportUsage,
   type ExamReportLlmUsage,
 } from "./llm";
+import { reconcileBatchAnswers } from "./answer-consistency";
 
 // v3.1: E1b 가 문항 분석에 더해 "정답 도출(풀이)"까지 맡으므로(E1a 에서 이관), 배치당
 // 작업량이 늘었다. 콜당 지연·출력(12000 토큰 캡)에 여유를 두려고 8 → 6 으로 낮춘다.
@@ -134,11 +135,25 @@ function numberKey(value: string): string {
  * - targetNumbers 지정(문항단위): 그 문항 전부(OK 여도 재분석).
  * - 미지정(전체): prior OK 제외 + forceNumbers(강제 재분석)는 OK 라도 포함.
  */
+/**
+ * 문항별 자동 재분석 시도 상한(라이브락 방지). 전체(자동) 실행에서 계속 실패하는
+ * 문항을 이 횟수만큼 시도한 뒤에는 "종결 실패"로 확정하고 재선택에서 제외한다 —
+ * 그러지 않으면 매 재개 라운드가 도돌이표 실패 문항을 재실행해 데드라인을 소진하고
+ * allBatchesRun 이 영영 true 가 되지 못해 분석이 15/15 에서 완료로 넘어가지 못한다.
+ * 강사가 특정 문항을 명시 재분석(targetNumbers)하면 이 상한과 무관하게 재시도한다.
+ */
+export const MAX_QUESTION_ATTEMPTS = 2;
+
 export function selectAnalysisTargetKeys(opts: {
   questionNumbers: string[];
   priorPerQuestion: { number: string; analysisStatus: QuestionAnalysis["analysisStatus"] }[];
   targetNumbers?: string[];
   forceNumbers?: string[];
+  /**
+   * 종결 실패로 확정된 키(자동 실행에서만 제외) — 명시 재분석(targetNumbers)·강제
+   * (forceNumbers)에는 영향 없다. 라이브락 종료용.
+   */
+  excludeKeys?: ReadonlySet<string>;
 }): Set<string> {
   const okKeys = new Set(
     opts.priorPerQuestion
@@ -149,10 +164,13 @@ export function selectAnalysisTargetKeys(opts: {
     ? new Set(opts.targetNumbers.map(numberKey))
     : null;
   const forceKeys = new Set((opts.forceNumbers ?? []).map(numberKey));
+  const excludeKeys = opts.excludeKeys;
   const selected = new Set<string>();
   for (const number of opts.questionNumbers) {
     const key = numberKey(number);
-    if (targetKeys ? targetKeys.has(key) : !okKeys.has(key) || forceKeys.has(key)) {
+    const autoSelect =
+      (!okKeys.has(key) && !(excludeKeys?.has(key) ?? false)) || forceKeys.has(key);
+    if (targetKeys ? targetKeys.has(key) : autoSelect) {
       selected.add(key);
     }
   }
@@ -252,6 +270,7 @@ function collectFailed(list: QuestionAnalysis[]): string[] {
  * 한 배치 분석(vision). 이미지 전체를 재전송하되 소넷이 배치 문항만 찾아 분석한다.
  * system(digest)+마지막 이미지 캐시로 배치 간 이미지 토큰 비용을 절감한다.
  * 실패 시 1회 재시도, 최종 실패면 배치 전 문항 FAILED.
+ * 성공 시 정답-해설 정합 게이트로 correctAnswer 전사 결함을 교정한다(무판정 통과 계약).
  */
 async function analyzeBatch(
   batchEntries: ExamMapEntry[],
@@ -273,7 +292,26 @@ async function analyzeBatch(
         cacheImages: true,
         usage,
       });
-      return mapBatchToAnalyses(result.analyses, batchEntries);
+      const mapped = mapBatchToAnalyses(result.analyses, batchEntries);
+      // 정답-해설 정합 게이트(26-07-17 심판단 실측: 해설은 정답을 옳게 도출하고
+      // correctAnswer 필드만 틀리는 전사 결함이 두 모델 공통 최다 오답 원인).
+      // 게이트의 어떤 실패도 배치 재시도(고가 vision 콜)를 유발하면 안 된다 — 원본 통과.
+      const reconciled = await reconcileBatchAnswers({
+        batchEntries,
+        answers: mapped.answers,
+        explanationByKey: new Map(
+          mapped.analyses.map((a) => [numberKey(a.number), a.explanation]),
+        ),
+        deadlineAt,
+        usage,
+      }).catch(() => ({ answers: mapped.answers, corrected: [] as string[] }));
+      if (reconciled.corrected.length > 0) {
+        console.info(
+          "[exam-report] 정합 게이트 교정:",
+          reconciled.corrected.join(", "),
+        );
+      }
+      return { analyses: mapped.analyses, answers: reconciled.answers };
     } catch {
       if (attempt === 1) break;
     }
@@ -289,6 +327,8 @@ export async function analyzeExamDirect(opts: {
   targetNumbers?: string[];
   /** 전체 실행에서 OK 라도 강제 재분석할 번호 — targetNumbers 지정 시 무시 */
   forceNumbers?: string[];
+  /** 종결 실패 확정 키 — 자동 실행에서 재선택 제외(라이브락 종료). MAX_QUESTION_ATTEMPTS 참고. */
+  excludeKeys?: ReadonlySet<string>;
   /** 직전 분석(분석 컬럼) — perQuestion/examLevel 만 승계. 정답은 structure 소유라 불요. */
   prior?: ExamAnalysisResult | null;
   deadlineAt: number;
@@ -303,6 +343,7 @@ export async function analyzeExamDirect(opts: {
     priorPerQuestion: basePrior,
     targetNumbers: opts.targetNumbers,
     forceNumbers: opts.forceNumbers,
+    excludeKeys: opts.excludeKeys,
   });
   // 이번 실행 대상(강제 재분석 포함)의 기존 항목은 작업본에서 제거 — 체크포인트에는
   // 이번 실행의 신선한 결과만 실리게 해, 라우트의 attempted-병합이 병렬 편집분이나

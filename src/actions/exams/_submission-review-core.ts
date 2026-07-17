@@ -400,6 +400,7 @@ export interface LiveQuestionRow {
   options: string | null;
   correctAnswer: string;
   structuredData: unknown;
+  passage: { content: string } | null;
   deletedAt: Date | null;
 }
 
@@ -419,6 +420,7 @@ export async function loadQuestions(
       options: true,
       correctAnswer: true,
       structuredData: true,
+      passage: { select: { content: true } },
       deletedAt: true,
     },
   });
@@ -446,6 +448,7 @@ export function specFor(question: LiveQuestionRow, points: number): AnswerSpec {
     options: question.options ?? undefined,
     correctAnswer: question.correctAnswer,
     structuredData: question.structuredData ?? undefined,
+    sourcePassageContent: question.passage?.content,
     points,
   });
 }

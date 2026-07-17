@@ -116,6 +116,8 @@ export interface ScorableQuestion {
   options?: unknown;
   correctAnswer?: string | null;
   structuredData?: unknown;
+  /** Marker-order canonicalization input (never exposed to the student). */
+  sourcePassageContent?: string | null;
   /** ExamQuestion.points */
   points: number;
 }
