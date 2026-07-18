@@ -9,7 +9,17 @@
 //
 //   - 검증·수리 대상은 해설 필드(explanation/wrongOptionExplanations/keyPoints)뿐
 //     — 문항 본체(선지·정답·밑줄)는 절대 바꾸지 않는다.
-//   - 비용: 검증 콜(기본 pro-preview) 회당 ~$0.01-0.02, 결함 시 수리+재검증 추가.
+//   - 대상 유형(W2-F 확장): 어법·빈칸 + 선택형(TITLE·TOPIC·MAIN_IDEA·
+//     TOPIC_MAIN_IDEA·IMPLIED_MEANING·CONTENT_MATCH). W2-E 통합 라우팅의 PREMIUM
+//     표와 동일 집합이라 PREMIUM=enforce 로 자연 정합. 구조형·서술형은 기본 제외
+//     (무결성 게이트가 담당). env EXPLANATION_VERIFY_GATE_TYPES 로 오버라이드
+//     (콤마 구분, "ALL"=전 유형).
+//   - 검증기/수리기 모델(W2-F): 기본 x-ai/grok-4.5(실측 O184: gemini-3.1-pro 적발
+//     0/12 vs grok@high 10/12·오경보 0). grok 콜에는 reasoning=high 를 콜 단위로
+//     명시 전달한다(범용 env 미의존). env EXPLANATION_VERIFY_MODEL_ID /
+//     EXPLANATION_VERIFY_REPAIR_MODEL_ID / EXPLANATION_VERIFY_REASONING_EFFORT.
+//   - 비용: 검증 콜 회당 ~44원(선택형 확장 포함), 결함 시 수리+재검증 추가.
+//     콜당 maxTokens 는 상한 관리를 위해 고정(verify 6k·repair 4k), 추가 콜 없음.
 //   - never-fail 보존: 게이트 자체 장애(타임아웃 등)는 무판정 통과. scarce/salvage
 //     사다리에서는 호출자 측에서 생략.
 //   - 모드(env EXPLANATION_VERIFY_GATE_MODE): "off"(기본, 기존 바이트 동일) |
@@ -20,7 +30,6 @@
 import { z } from "zod";
 import { generateQuestionObject } from "@/lib/question-generation-llm";
 import { isQuestionGenerationAssignmentBudgetError } from "@/lib/atlas-production-assignment-fetch-boundary";
-import { ATLAS_PREMIUM_QGEN_MODEL_ID } from "@/lib/atlas-ai";
 import { QUESTION_GENERATION_RESEARCH_STAGES } from "@/lib/question-generation-research-runtime";
 
 const EXPLANATION_VERIFY_SCHEMA = z.object({
@@ -87,9 +96,86 @@ export function getExplanationVerifyGateMode(
   return "off";
 }
 
+// 검증기·수리기 기본 모델 (W2-F, 실측 O184): gemini-3.1-pro 는 해설 결함을 거의
+// 못 잡았고(적발 0/12), x-ai/grok-4.5 를 reasoning=high 로 돌리면 10/12 적발·오경보
+// 0. env 로 개별 오버라이드(EXPLANATION_VERIFY_MODEL_ID / _REPAIR_MODEL_ID).
+const DEFAULT_EXPLANATION_VERIFY_MODEL_ID = "x-ai/grok-4.5";
+
 function resolveVerifierModelId(): string {
   const raw = process.env.EXPLANATION_VERIFY_MODEL_ID?.trim();
-  return raw || ATLAS_PREMIUM_QGEN_MODEL_ID;
+  return raw || DEFAULT_EXPLANATION_VERIFY_MODEL_ID;
+}
+
+function resolveRepairModelId(): string {
+  const raw = process.env.EXPLANATION_VERIFY_REPAIR_MODEL_ID?.trim();
+  return raw || DEFAULT_EXPLANATION_VERIFY_MODEL_ID;
+}
+
+// grok 검증·수리 콜에 실을 reasoning 강도 — O184 는 high 에서만 결함을 적발했다.
+// 범용 env(OPENROUTER_REASONING_EFFORT)에 의존하지 않고 콜 단위로 명시 전달한다.
+// env EXPLANATION_VERIFY_REASONING_EFFORT 로 조정(기본 high).
+function resolveVerifierReasoningEffort(): string {
+  return process.env.EXPLANATION_VERIFY_REASONING_EFFORT?.trim() || "high";
+}
+
+// 인라인 예산 가드 최소치 — verify→repair→재검증(X3, grok@high)은 회당 수십 초라,
+// 남은 시간예산이 얇으면 검증/수리 콜이 abort→catch(fail-open) 되어 무판정 통과·
+// 침묵 출하된다(O153 근인). 남은 예산이 이 값 미만이면 판정을 건너뛰고 호출자가
+// SKIPPED_BUDGET 로 표시하게 한다. env EXPLANATION_VERIFY_MIN_BUDGET_MS 로 조정.
+const DEFAULT_EXPLANATION_VERIFY_MIN_BUDGET_MS = 190_000;
+
+function resolveMinBudgetMs(): number {
+  const raw = process.env.EXPLANATION_VERIFY_MIN_BUDGET_MS?.trim();
+  const parsed = raw ? Number.parseInt(raw, 10) : Number.NaN;
+  return Number.isFinite(parsed) && parsed > 0
+    ? parsed
+    : DEFAULT_EXPLANATION_VERIFY_MIN_BUDGET_MS;
+}
+
+// E-gate 대상 유형 기본 집합 (W2-F): 어법·빈칸 + 선택형(대의파악 계열·함축·
+// 내용일치). W2-E resolveUnifiedGenerationPlan 의 PREMIUM 표와 동일 집합이라 통합
+// 라우팅(유형→플랜)과 자연 정합한다(전부 PREMIUM=enforce 레인). 구조형·서술형은
+// 무결성 게이트가 담당하므로 기본 제외.
+const DEFAULT_EXPLANATION_VERIFY_GATE_TYPES: ReadonlySet<string> = new Set([
+  "GRAMMAR_ERROR",
+  "BLANK_INFERENCE",
+  "TITLE",
+  "TOPIC",
+  "MAIN_IDEA",
+  "TOPIC_MAIN_IDEA",
+  "IMPLIED_MEANING",
+  "CONTENT_MATCH",
+]);
+
+/**
+ * env EXPLANATION_VERIFY_GATE_TYPES 오버라이드 파싱. "ALL"(대소문자 무관)은 전
+ * 유형 대상을 뜻하는 sentinel null 로 반환하고, 콤마 구분 목록은 대문자 정규화
+ * Set 으로, 미설정/빈값/유효 항목 0개는 기본 집합으로 폴백한다.
+ */
+function resolveExplanationVerifyGateTypes(): ReadonlySet<string> | null {
+  const raw = process.env.EXPLANATION_VERIFY_GATE_TYPES?.trim();
+  if (!raw) return DEFAULT_EXPLANATION_VERIFY_GATE_TYPES;
+  if (raw.toUpperCase() === "ALL") return null;
+  const parsed = raw
+    .split(",")
+    .map((t) => t.trim().toUpperCase())
+    .filter((t) => t.length > 0);
+  return parsed.length > 0
+    ? new Set(parsed)
+    : DEFAULT_EXPLANATION_VERIFY_GATE_TYPES;
+}
+
+/**
+ * 이 subType 이 E-gate(해설 사실검증) 대상인지 판정하는 단일 소스. run-question-
+ * generation.ts 의 훅 조건과 게이트 내부 가드가 모두 이 함수에 위임한다(대상 판정
+ * 중복 금지). null/undefined/"" 는 비대상(false).
+ */
+export function isExplanationVerifyGateTargetType(
+  subType: string | null | undefined,
+): boolean {
+  if (!subType) return false;
+  const types = resolveExplanationVerifyGateTypes();
+  return types === null || types.has(subType);
 }
 
 export interface ExplanationVerifyUsageResult {
@@ -101,7 +187,8 @@ export interface ExplanationVerifyUsageResult {
 }
 
 export interface RunExplanationVerifyGateInput {
-  subType: "GRAMMAR_ERROR" | "BLANK_INFERENCE" | string;
+  /** 대상 판정은 isExplanationVerifyGateTargetType 이 수행(어법·빈칸 + 선택형, env 오버라이드). */
+  subType: string;
   /** 플랜별 기본 모드 결정에 사용 (PREMIUM=enforce, STANDARD=warn). */
   generationPlan?: string;
   question: Record<string, unknown>;
@@ -124,6 +211,8 @@ export interface ExplanationVerifyGateResult {
   updatedQuestion?: Record<string, unknown>;
   /** warn 모드에서 부착할 경고 메시지(재검증 실패 시). */
   warning?: string;
+  /** 남은 시간예산이 최소치 미만이라 판정을 건너뛴 경우 true(호출자가 SKIPPED_BUDGET 표시). */
+  skippedInsufficientBudget?: boolean;
 }
 
 function renderForVerifier(question: Record<string, unknown>): string {
@@ -166,6 +255,8 @@ async function verifyOnce(
     ].join("\n\n"),
     generationPlan: "PREMIUM",
     modelId: resolveVerifierModelId(),
+    // grok 은 high 추론에서만 결함을 적발(O184) — 콜 단위로 명시 전달(범용 env 미의존).
+    reasoningEffort: resolveVerifierReasoningEffort(),
     logPrefix: `EXPL-VERIFY-R${round}`,
     maxTokens: 6_000,
     deadlineAt: input.deadlineAt,
@@ -186,19 +277,31 @@ async function verifyOnce(
 }
 
 /**
- * 해설 사실검증 게이트: pro 검증 → (FAIL 시) flash 표적수리 → pro 재검증.
- * 게이트 자체 장애는 무판정 통과(never-fail). 문항 본체는 절대 수정하지 않는다.
+ * 해설 사실검증 게이트: grok 검증 → (FAIL 시) grok 표적수리 → grok 재검증(모두
+ * reasoning=high, env 로 모델·강도 오버라이드 가능). 게이트 자체 장애는 무판정
+ * 통과(never-fail). 문항 본체는 절대 수정하지 않고 해설 필드만 교체한다.
  */
 export async function runExplanationVerifyGate(
   input: RunExplanationVerifyGateInput,
 ): Promise<ExplanationVerifyGateResult> {
   const mode = getExplanationVerifyGateMode(input.generationPlan);
   if (mode === "off") return { issue: null };
-  if (input.subType !== "GRAMMAR_ERROR" && input.subType !== "BLANK_INFERENCE") {
+  // 대상 유형 판정은 단일 소스(isExplanationVerifyGateTargetType)에 위임한다 —
+  // 호출측 훅 조건과 여기 가드가 반드시 같은 집합을 봐야 한다(env 오버라이드 포함).
+  if (!isExplanationVerifyGateTargetType(input.subType)) {
     return { issue: null };
   }
   if (typeof input.question.explanation !== "string" || !input.question.explanation) {
     return { issue: null };
+  }
+  // 인라인 예산 가드: 남은 시간예산이 최소치 미만이면 검증을 건너뛴다. 얇은 예산에서
+  // verify/repair grok 콜이 abort→catch(fail-open) 되어 무판정 통과·침묵 출하되는 것을
+  // 막고, 호출자가 SKIPPED_BUDGET 로 표시해 async 경로가 이어받게 한다(반려는 아님).
+  if (
+    input.deadlineAt !== undefined &&
+    input.deadlineAt - Date.now() < resolveMinBudgetMs()
+  ) {
+    return { issue: null, skippedInsufficientBudget: true };
   }
 
   try {
@@ -206,6 +309,13 @@ export async function runExplanationVerifyGate(
     if (first.overallVerdict === "PASS") return { issue: null };
 
     const bad = first.claims.filter((c) => c.verdict !== "OK");
+    // 수리 모델(W2-F): 기본 grok(DEFAULT_EXPLANATION_VERIFY_MODEL_ID). 과거 잔존
+    // V4 의 근인이 "flash 가 자신이 오분석한 구조를 수리에서도 똑같이 오분석"이었고,
+    // O184 에서 grok@high 가 그 결함을 적발했으므로 수리도 grok 로 올린다. env
+    // EXPLANATION_VERIFY_REPAIR_MODEL_ID 로 오버라이드. modelId 오버라이드가 플랜
+    // 모델 매핑을 대체하므로 generationPlan 은 timeout/배관용 PREMIUM 고정이며,
+    // reasoning=high 는 grok 에만 실린다(gemini/claude 오버라이드 시 자동 무시).
+    const repairModelId = resolveRepairModelId();
     const repair = await generateQuestionObject({
       schema: EXPLANATION_REPAIR_SCHEMA,
       prompt: [
@@ -217,7 +327,9 @@ export async function runExplanationVerifyGate(
         `## 선언 정답\n${String(input.question.correctAnswer ?? "")}`,
         `## 현재 해설(결함 있음)\n${JSON.stringify(explanationBundle(input.question), null, 1)}`,
       ].join("\n\n"),
-      generationPlan: "STANDARD",
+      generationPlan: "PREMIUM",
+      modelId: repairModelId,
+      reasoningEffort: resolveVerifierReasoningEffort(),
       logPrefix: "EXPL-VERIFY-FIX",
       maxTokens: 4_000,
       deadlineAt: input.deadlineAt,

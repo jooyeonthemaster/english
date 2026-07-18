@@ -108,11 +108,50 @@ export function getQuestionGenerationPlanConfig(
   return QUESTION_GENERATION_PLANS[plan];
 }
 
+// ── 상품 단일화 서버 코어 (W2-E) ──────────────────────────────────────────────
+// 상품에서 일반/프리미엄 구분이 폐지된다. 서버가 최종 권위다: 클라이언트가 보낸
+// generationPlan / questionTypeSettings.generationPlan(과거 저장된 PREMIUM config
+// 포함)은 더 이상 요금·품질 파이프라인을 결정하지 않으며, 품질 라우팅은 오직 문항
+// 유형이 결정한다. 아래 유형 표가 단일 진실이다.
+//
+// PREMIUM 파이프라인 대상 = 어법(GRAMMAR_ERROR) · 빈칸추론(BLANK_INFERENCE) ·
+// 대의파악 계열(TITLE·TOPIC·MAIN_IDEA·TOPIC_MAIN_IDEA) · 함축(IMPLIED_MEANING) ·
+// 내용일치(CONTENT_MATCH). 그 외 전부 STANDARD.
+// E-gate(getExplanationVerifyGateMode)가 PREMIUM=enforce 로 자연 정합된다
+// (어법·빈칸이 이 표에서 PREMIUM 이므로 그대로 enforce 레인에 실린다).
+const UNIFIED_PREMIUM_SUBTYPES: ReadonlySet<string> = new Set([
+  "GRAMMAR_ERROR",
+  "BLANK_INFERENCE",
+  "TITLE",
+  "TOPIC",
+  "MAIN_IDEA",
+  "TOPIC_MAIN_IDEA",
+  "IMPLIED_MEANING",
+  "CONTENT_MATCH",
+]);
+
+/**
+ * 상품 단일화 클램프의 단일 진실 함수 — 문항 유형(subType)만으로 생성 플랜을
+ * 결정한다. 클라이언트가 보낸 플랜 지정은 절대 참조하지 않는다. 서버 진입점의
+ * effectiveGenerationPlan 계산을 이 함수로 대체한다.
+ */
+export function resolveUnifiedGenerationPlan(
+  subType: string | null | undefined,
+): QuestionGenerationPlan {
+  return subType && UNIFIED_PREMIUM_SUBTYPES.has(subType) ? "PREMIUM" : "STANDARD";
+}
+
+/**
+ * 상품 단일화(W2-E): 플랜별 2x 멀티플라이어를 폐지했다. 플랜과 무관하게 단일가
+ * (기존 STANDARD 가격 = baseCost)를 청구한다. `plan` 파라미터는 호출부 시그니처
+ * 호환·로깅을 위해 남겨두되 요금 계산에는 절대 쓰지 않는다.
+ */
 export function getQuestionGenerationCreditCost(
   baseCost: number,
-  plan: QuestionGenerationPlan,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- 시그니처 호환용: 다수 호출부가 plan 을 위치 인자로 넘긴다. 요금은 플랜 무관 단일가라 값은 쓰지 않는다.
+  plan?: QuestionGenerationPlan,
 ): number {
-  return baseCost * getQuestionGenerationPlanConfig(plan).creditMultiplier;
+  return baseCost;
 }
 
 export function getQuestionGenerationPlanTag(plan: QuestionGenerationPlan): string {

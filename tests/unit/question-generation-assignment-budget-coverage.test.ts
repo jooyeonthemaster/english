@@ -39,7 +39,13 @@ test("both Workbench paths install the same job-scoped production budget", () =>
 
 test("the shared Atlas provider composes through the physical-call boundary", () => {
   const atlas = read("src/lib/atlas-ai.ts");
-  assert.match(atlas, /fetch: atlasProductionAssignmentFetch/);
+  // W2-A 가드 fetch 가 물리 콜 경계를 래핑한다 — 경계 합성(assignment fetch 경유)은
+  // createAtlasModelCallGuardFetch(atlasProductionAssignmentFetch) 로 보존된다.
+  assert.match(atlas, /fetch: atlasModelCallGuardFetch/);
+  assert.match(
+    atlas,
+    /createAtlasModelCallGuardFetch\(\s*atlasProductionAssignmentFetch\s*,?\s*\)/,
+  );
   assert.doesNotMatch(atlas, /fetch: atlasResearchFetch/);
 });
 

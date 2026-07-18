@@ -79,7 +79,7 @@ console.log(JSON.stringify({
 }));
 `;
 
-test("question generation plan metadata preserves premium pricing and tags", () => {
+test("question generation plan metadata unifies pricing and preserves tags", () => {
   const tmpDir = path.join(repoRoot, "tests", ".tmp");
   mkdirSync(tmpDir, { recursive: true });
   const harnessPath = path.join(tmpDir, ".question-generation-plan-metadata-harness.mts");
@@ -93,7 +93,8 @@ test("question generation plan metadata preserves premium pricing and tags", () 
     const result = JSON.parse(raw);
 
     assert.equal(result.standardCost, 7);
-    assert.equal(result.premiumCost, 14);
+    // 상품 단일화(W2-E): 2x 프리미엄 멀티플라이어 폐지 — 플랜 무관 단일가.
+    assert.equal(result.premiumCost, 7);
     assert.deepEqual(result.premiumTags, ["프리미엄 생성", "빈칸 추론"]);
     assert.equal(result.premiumPlanFromTags, "PREMIUM");
     assert.equal(result.enrichedPlan, "PREMIUM");
@@ -111,7 +112,8 @@ test("question generation plan metadata preserves premium pricing and tags", () 
     assert.equal(result.inheritedTypePlan, "STANDARD");
     assert.equal(result.mappedTypePlan, "PREMIUM");
     assert.equal(result.mappedTypeDifficulty, "KILLER");
-    assert.equal(result.mappedTypeCreditCost, 14);
+    // 상품 단일화(W2-E): 유형 설정이 PREMIUM 이어도 단가는 baseCost 단일가.
+    assert.equal(result.mappedTypeCreditCost, 7);
   } finally {
     rmSync(harnessPath, { force: true });
   }
@@ -126,7 +128,9 @@ test("premium generation plan is wired through generation and review surfaces", 
     [
       "src/app/api/ai/generate-question/route.ts",
       [
-        "readQuestionTypeGenerationPlanSetting(",
+        // 상품 단일화(W2-E): 플랜은 유형이 결정 — 클라 questionTypeSettings.
+        // generationPlan 을 읽던 readQuestionTypeGenerationPlanSetting 호출 폐지.
+        "resolveUnifiedGenerationPlan(questionType)",
         "readQuestionTypeDifficultySetting(",
         "getQuestionGenerationCreditCost(CREDIT_COSTS[operationType], generationPlan)",
         "withQuestionGenerationPlanMetadata(question, generationPlan)",
@@ -144,7 +148,8 @@ test("premium generation plan is wired through generation and review surfaces", 
       "src/app/api/workbench/ai-jobs/question-generation/fast/route.ts",
       [
         "const effectiveGenerationPlan =",
-        "readQuestionTypeGenerationPlanSetting(",
+        // 상품 단일화(W2-E): 유형 기반 라우팅 — 클라 플랜 지정 무력화.
+        "resolveUnifiedGenerationPlan(config.questionType)",
         "readQuestionTypeDifficultySetting(",
         "getQuestionGenerationCreditCost(",
         "mergeQuestionGenerationPlanTag(",
@@ -156,7 +161,8 @@ test("premium generation plan is wired through generation and review surfaces", 
       "src/trigger/workbench-question-generation.ts",
       [
         "const effectiveGenerationPlan =",
-        "readQuestionTypeGenerationPlanSetting(",
+        // 상품 단일화(W2-E): 유형 기반 라우팅 — 저장된 config 플랜 지정 무력화.
+        "resolveUnifiedGenerationPlan(config.questionType)",
         "readQuestionTypeDifficultySetting(",
         "getQuestionGenerationCreditCost(",
         "mergeQuestionGenerationPlanTag(",
@@ -165,7 +171,8 @@ test("premium generation plan is wired through generation and review surfaces", 
       ],
     ],
     [
-      // 패널은 유형별 난이도/생성플랜 UI를 추출 파트(type-numeric-detail)로 위임한다.
+      // 패널은 유형별 난이도 UI를 추출 파트(type-numeric-detail)로 위임한다.
+      // (상품 단일화 T1: 유형별 생성플랜 선택 UI 는 더 이상 노출하지 않는다.)
       "src/app/(director)/director/workbench/generate/generation-config-panel.tsx",
       [
         "TypeNumericDetail.renderPerTypeDifficultyImpl(",
@@ -173,18 +180,29 @@ test("premium generation plan is wired through generation and review surfaces", 
       ],
     ],
     [
-      // 추출 파트가 유형별 난이도 읽기/쓰기 + 유형별 생성플랜 읽기를 실제로 구현한다.
+      // 추출 파트가 유형별 난이도 읽기/쓰기를 실제로 구현한다. 생성플랜 선택 UI 는
+      // T1 에서 제거됐으므로 여기서 readQuestionTypeGenerationPlanSetting 호출을
+      // 가드하지 않는다(서버측 읽기 로직은 아래 shared.ts 엔트리로 별도 가드).
       "src/app/(director)/director/workbench/generate/generation-config-panel-parts/type-numeric-detail.tsx",
       [
         "questionTypeSettings[typeId]?.difficulty",
         "patchTypeSettings(typeId, { difficulty:",
-        "readQuestionTypeGenerationPlanSetting(",
       ],
     ],
     [
+      // 상품 단일화로 유형별 생성플랜 선택 UI 는 사라졌지만, 서버측 우선순위
+      // 읽기 로직(questionTypeSettings[typeId].generationPlan → 전역 fallback)은
+      // 그대로 보존되어야 한다(생성 경로 서버 호환). 이 가드가 그 의도를 지킨다.
+      "src/lib/question-type-generation-settings/shared.ts",
+      [
+        "export function readQuestionTypeGenerationPlanSetting(",
+      ],
+    ],
+    [
+      // 상품 단일화 T1: 포인트 짚어주기 출제 UI 도 생성플랜 선택기(GenerationPlanSelector)
+      // 를 노출하지 않는다. 플랜은 STANDARD 고정으로 서버 액션·결과 표시에 계속 전달된다.
       "src/components/workbench/passage-detail/exam-points-editor.tsx",
       [
-        "GenerationPlanSelector",
         "generationPlan,",
         "generationPlan={generationPlan}",
       ],

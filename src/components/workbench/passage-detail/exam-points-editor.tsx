@@ -8,7 +8,6 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { GenerationPlanSelector } from "@/components/workbench/generation-plan-selector";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import { KeyPointsList } from "./exam-points/key-points-list";
 import { TypeSelector } from "./exam-points/type-selector";
@@ -37,8 +36,8 @@ export function ExamPointsEditor({
   const [editValue, setEditValue] = useState("");
   const [newPoint, setNewPoint] = useState("");
   const [generationPrompt, setGenerationPrompt] = useState("");
-  const [generationPlan, setGenerationPlan] =
-    useState<QuestionGenerationPlan>("STANDARD");
+  // 상품 단일화 1단계: 생성 플랜 선택 UI 를 제거하고 항상 기본 플랜(STANDARD)으로 고정.
+  const generationPlan: QuestionGenerationPlan = "STANDARD";
   const [typeCounts, setTypeCounts] = useState<Record<string, number>>({});
   const [generating, setGenerating] = useState(false);
   const [generatedQuestions, setGeneratedQuestions] = useState<any[] | null>(null);
@@ -142,22 +141,6 @@ export function ExamPointsEditor({
           setTypeCount={setTypeCount}
           setTypeCounts={setTypeCounts}
         />
-
-        <div className="space-y-2">
-          <div className="flex items-center justify-between gap-2">
-            <span className="text-[11px] font-semibold tracking-wider text-slate-400">
-              생성 품질
-            </span>
-            <span className="text-[10px] font-bold text-violet-500">
-              프리미엄 2x
-            </span>
-          </div>
-          <GenerationPlanSelector
-            value={generationPlan}
-            onChange={setGenerationPlan}
-            compact
-          />
-        </div>
 
         {/* Prompt */}
         <textarea

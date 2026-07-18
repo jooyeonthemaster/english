@@ -10,6 +10,7 @@ import { runKoSolverGate } from "@/lib/korean/quality/solver-gate";
 import { runGrammarSolverGate } from "./grammar-solver-gate";
 import {
   getExplanationVerifyGateMode,
+  isExplanationVerifyGateTargetType,
   runExplanationVerifyGate,
 } from "./explanation-verify-gate";
 import { getKoTypeModule, isKoQuestionType } from "@/lib/korean/registry";
@@ -18,7 +19,8 @@ import { postProcessQuestion } from "@/lib/question-postprocess";
 import { reorderChipsAwayFromAnswer, reshuffleTopicSentenceWritingChips } from "@/lib/topic-sentence-writing";
 import { normalizePassageWhitespace } from "@/lib/question-postprocess/text-utils";
 import { QUESTION_SCHEMAS, STRUCTURED_TYPE_PROMPTS } from "@/lib/question-schemas";
-import { buildQuestionTypeSettingsPrompt, getQuestionTypeGenerationTokenFloor, readQuestionTypeDifficultySetting, readQuestionTypeGenerationPlanSetting, readSummaryWritingBlankCountSetting, readTopicSentenceWritingBlankCountSetting, resolveQuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
+import { buildQuestionTypeSettingsPrompt, getQuestionTypeGenerationTokenFloor, readQuestionTypeDifficultySetting, readSummaryWritingBlankCountSetting, readTopicSentenceWritingBlankCountSetting, resolveQuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
+import { resolveUnifiedGenerationPlan } from "@/lib/question-generation-plans";
 import { buildQuestionTargetCandidateBlock, getTypeQualityRubric, type QuestionQualityIssue, validateQuestionQuality } from "@/lib/question-quality";
 import { analyzeEnglishPassageIntegrity } from "@/lib/question-quality/passage-integrity";
 import { selectUsableGrammarCandidates } from "@/lib/question-quality/candidate-blocks/grammar";
@@ -36,8 +38,10 @@ import {
   adaptQuestionGenerationResearchProfileCandidate,
   applyQuestionGenerationResearchPromptProfile,
   buildQuestionGenerationResearchProfileResponseSchema,
+  getQuestionGenerationResearchPromptProfileId,
   getQuestionGenerationResearchPromptProfileMaxOutputTokens,
   isQuestionGenerationResearchSingleShotProfileActive,
+  QUESTION_GENERATION_RESEARCH_PROMPT_PROFILES,
 } from "@/lib/question-generation-research-profiles";
 import {
   QUESTION_GENERATION_RESEARCH_STAGES,
@@ -411,6 +415,9 @@ export async function runQuestionGeneration(
     analysisContext,
     diffLabel,
     diffInstruction,
+    // 상품 단일화(W2-E): top-level generationPlan(클라 값)은 프로덕션 라우팅에
+    // 더 이상 소비되지 않는다 — 유형 기반 effectiveGenerationPlan(아래)이 대체.
+    // 단 연구 런타임 활성 시에만 파이프라인 비교 실험을 위해 존중된다(게이트 정정).
     generationPlan,
     customPrompt,
     typeSettings,
@@ -424,6 +431,7 @@ export async function runQuestionGeneration(
     attemptIndex = 0,
     previousAttemptFeedback,
     deadlineAt,
+    deferExplanationVerify = false,
   }: {
     qualityMode?: QualityMode;
     rejectionRecorder?: RejectionRecorder;
@@ -433,6 +441,13 @@ export async function runQuestionGeneration(
     previousAttemptFeedback?: string;
     /** 시간예산 데드라인(epoch ms) — provider 호출 abort 를 남은예산으로 좁힌다. */
     deadlineAt?: number;
+    /**
+     * true 면 인라인 해설 사실검증 E-gate 를 호출하지 않고 문항을 PENDING 으로만
+     * 표시한다 — async 워커(workbench-explanation-verify)가 임계경로 밖에서 이어받아
+     * 검증/수리한다. fast 라우트가 켠다(느린 grok 검증이 인라인 데드라인을 넘겨
+     * fail-open 되던 O153 회귀 차단).
+     */
+    deferExplanationVerify?: boolean;
   } = {},
 ): Promise<Record<string, unknown>[]> {
   const researchSingleShotProfileActive =
@@ -507,10 +522,19 @@ export async function runQuestionGeneration(
         : effectiveDiffLabel;
       const effectiveDiffInstruction =
         DIFF_DESCRIPTION[effectiveDiffLabel] || diffInstruction;
-      const effectiveGenerationPlan = readQuestionTypeGenerationPlanSetting(
-        rawTypeSettings,
-        generationPlan,
-      );
+      // ── 상품 단일화(W2-E) 라우팅 값 소비부 ──────────────────────────────────
+      // 품질 파이프라인은 오직 문항 유형이 결정한다. 호출자가 넘긴 top-level
+      // generationPlan(클라 값)과 rawTypeSettings.generationPlan(과거 저장 PREMIUM
+      // config 포함)은 여기서 무력화 — subType 만으로 플랜을 유도한다. 하류 전부
+      // (프롬프트·토큰 상한·어법 프리미엄 사다리·E-gate 모드·_generationPlan 스탬프)가
+      // 이 값을 소비하므로 이 한 줄이 모든 runQuestionGeneration 호출자의 라우팅을
+      // 유형 기반으로 통일한다.
+      // 예외(게이트 정정): 연구 런타임 활성 시에만 호출자 지정 플랜을 존중한다 —
+      // 파이프라인 비교 실험(러너 spec 의 plan 필드)이 클램프에 침묵 무력화되는 것을
+      // 막기 위함. 프로덕션 경로에서는 연구 런타임이 절대 활성화되지 않는다.
+      const effectiveGenerationPlan = hasQuestionGenerationResearchRuntime()
+        ? generationPlan
+        : resolveUnifiedGenerationPlan(subType);
 
       console.log(
         `[AUTO-GEN] Step 2: Generating ${subType} x${typeCount} via ${effectiveGenerationPlan} plan (${effectiveDiffLabel})...`,
@@ -616,6 +640,12 @@ export async function runQuestionGeneration(
           grammarMarkerCount: generatedGrammarMarkerCount,
           grammarScarcityBaseCount: grammarMarkerCount,
           grammarAnswerCount,
+          // 연구 프로필 G4: 후보 블록을 diet 변형으로 빌드 (프로덕션 기본 무영향).
+          grammarCandidateBlockVariant:
+            getQuestionGenerationResearchPromptProfileId() ===
+            QUESTION_GENERATION_RESEARCH_PROMPT_PROFILES.G4_DIET_GUARDED
+              ? "diet"
+              : undefined,
           grammarCorrectionErrorCount,
           antonymPairCount,
           blankInferenceBlankCount,
@@ -1661,14 +1691,19 @@ export async function runQuestionGeneration(
             }
           }
 
-          // 해설 사실검증 게이트 (E-gate, 캠페인 20260716 O153/O156) — V4(해설 사실성)
-          // 는 수락 문항의 지배적 치명 결함이며 결정론 린트가 못 잡는다. pro 검증 →
-          // flash 표적수리 → pro 재검증. env EXPLANATION_VERIFY_GATE_MODE 로 활성화
-          // (기본 off = 기존 바이트 동일). strict/relaxed 레인 전용 — scarce/salvage
-          // 최후 사다리는 생략해 never-fail 보존. 게이트 장애는 무판정 통과.
+          // 해설 사실검증 게이트 (E-gate, 캠페인 20260716 O153/O156/O160, W2-F 확장) —
+          // V4(해설 사실성)는 수락 문항의 지배적 치명 결함이며 결정론 린트가 못 잡는다.
+          // grok 검증 → grok 표적수리 → grok 재검증. 모드는 플랜 기반(PREMIUM=enforce/
+          // STANDARD=warn), env EXPLANATION_VERIFY_GATE_MODE 로 강제 가능. 대상 유형은
+          // 게이트 모듈의 단일 소스 isExplanationVerifyGateTargetType 에 위임(어법·빈칸 +
+          // 선택형, env EXPLANATION_VERIFY_GATE_TYPES 오버라이드). effectiveGenerationPlan
+          // 은 항상 PREMIUM/STANDARD 라 off 는 env 강제로만 — 즉 어법·빈칸·선택형은 기본
+          // 활성이다. strict/relaxed 레인 전용 — scarce/salvage 최후 사다리는 생략해
+          // never-fail 보존. 게이트 장애는 무판정 통과.
           if (
             !researchSingleShotProfileActive &&
-            (subType === "GRAMMAR_ERROR" || subType === "BLANK_INFERENCE") &&
+            !deferExplanationVerify &&
+            isExplanationVerifyGateTargetType(subType) &&
             (qualityMode === "strict" || qualityMode === "relaxed") &&
             getExplanationVerifyGateMode(effectiveGenerationPlan) !== "off"
           ) {
@@ -1716,8 +1751,23 @@ export async function runQuestionGeneration(
               }
               continue;
             }
-            if (explanationGate.updatedQuestion) {
-              fin.finalQuestion = explanationGate.updatedQuestion;
+            // 검증 결과를 문항에 표시(structuredData 자동 반영, _ prefix). SKIPPED_BUDGET
+            // 은 인라인 예산 가드가 판정을 건너뛴 경우로, 반려하지 않고 표시만 남겨 출하한다
+            // (async E-gate·교사 검수가 백스톱). 그 외 통과 경로는 VERIFIED(수리본 채택 시
+            // VERIFIED_REPAIRED)로, warn 모드 재검증 실패는 반려 아닌 FAILED 표시로 남긴다.
+            if (explanationGate.skippedInsufficientBudget) {
+              fin.finalQuestion._explanationVerified = false;
+              fin.finalQuestion._explanationVerifyStatus = "SKIPPED_BUDGET";
+            } else if (explanationGate.warning) {
+              fin.finalQuestion._explanationVerified = false;
+              fin.finalQuestion._explanationVerifyStatus = "FAILED";
+            } else {
+              if (explanationGate.updatedQuestion) {
+                fin.finalQuestion = explanationGate.updatedQuestion;
+              }
+              fin.finalQuestion._explanationVerified = true;
+              fin.finalQuestion._explanationVerifyStatus =
+                explanationGate.updatedQuestion ? "VERIFIED_REPAIRED" : "VERIFIED";
             }
             if (explanationGate.warning) {
               fin.allWarnings.push({
@@ -1726,6 +1776,23 @@ export async function runQuestionGeneration(
                 message: explanationGate.warning,
               });
             }
+          }
+
+          // deferExplanationVerify: 인라인 게이트를 건너뛴 경우(위 조건에서 제외),
+          // async E-gate(workbench-explanation-verify)가 이어받도록 PENDING 표시만
+          // 남긴다. 대상 판정·모드·해설 존재 조건은 인라인 게이트와 동일 집합이라,
+          // 인라인이 실제 검증할 문항만 async 로 넘어간다(비대상·모드 off·빈 해설은
+          // 표시 없음 → 워커가 건너뜀).
+          if (
+            deferExplanationVerify &&
+            !researchSingleShotProfileActive &&
+            isExplanationVerifyGateTargetType(subType) &&
+            getExplanationVerifyGateMode(effectiveGenerationPlan) !== "off" &&
+            typeof fin.finalQuestion.explanation === "string" &&
+            fin.finalQuestion.explanation.length > 0
+          ) {
+            fin.finalQuestion._explanationVerified = false;
+            fin.finalQuestion._explanationVerifyStatus = "PENDING";
           }
 
           // SHIP-FIRST: 취향/난이도 경고(강등된 B 코드 포함)도 검수 UI 가시성을 위해
@@ -1784,6 +1851,7 @@ export async function runQuestionGenerationWithEmptyRetry(
     maxAttempts = GEMINI_QUESTION_EMPTY_RESULT_MAX_ATTEMPTS,
     logPrefix = "AUTO-GEN",
     deadlineAt,
+    deferExplanationVerify = false,
   }: {
     maxAttempts?: number;
     logPrefix?: string;
@@ -1793,6 +1861,12 @@ export async function runQuestionGenerationWithEmptyRetry(
      * 함수가 강제종료→잡 고아→환불 누락되는 것을 막는다. 미전달 시 기존 동작과 동일.
      */
     deadlineAt?: number;
+    /**
+     * true 면 인라인 해설 사실검증 E-gate 를 생략하고 문항을 PENDING 으로만 표시한다
+     * (async 워커가 임계경로 밖에서 검증). 내부의 모든 runQuestionGeneration 호출
+     * (strict/relaxed/rescue/scarce/salvage)에 그대로 전파된다. 미전달 시 기존 동작 동일.
+     */
+    deferExplanationVerify?: boolean;
   } = {},
 ): Promise<{
   questions: Record<string, unknown>[];
@@ -1992,6 +2066,7 @@ export async function runQuestionGenerationWithEmptyRetry(
       attemptIndex: attempts + 1,
       previousAttemptFeedback: scarceFeedback,
       deadlineAt,
+      deferExplanationVerify,
     });
     if (bestEffort.length === 0) return null;
     const notice = `이 지문에는 어법 문제로 낼 만한 깨끗한 문법 구조가 부족해(정제 후 사용 가능 자리 ${info.usableCount}개) 일부 품질 기준을 완화하고 생성했습니다. 밑줄 구성이 단순하거나 함정 매력도가 낮을 수 있으니 검수 후 사용을 권장합니다.`;
@@ -2042,6 +2117,7 @@ export async function runQuestionGenerationWithEmptyRetry(
       attemptIndex: attempts + 2,
       previousAttemptFeedback: salvageFeedback,
       deadlineAt,
+      deferExplanationVerify,
     });
     if (salvage.length === 0) {
       // salvage 시도의 탈락 후보도 풀에 쌓였을 수 있다 — 한 번 더 재승인 시도.
@@ -2077,6 +2153,7 @@ export async function runQuestionGenerationWithEmptyRetry(
       attemptIndex: attempt - 1,
       previousAttemptFeedback: pendingFeedback,
       deadlineAt,
+      deferExplanationVerify,
     });
     const shouldRequireFullRequestedCount =
       hasNegativeParaphraseBlank || hasBlankParaphraseAnswer || hasGrammarError;
@@ -2158,6 +2235,7 @@ export async function runQuestionGenerationWithEmptyRetry(
       attemptIndex: attempts,
       previousAttemptFeedback: rescueFeedback,
       deadlineAt,
+      deferExplanationVerify,
     });
     if (rescueQuestions.length > 0) {
       for (const question of rescueQuestions) {
@@ -2238,6 +2316,7 @@ export async function runQuestionGenerationWithEmptyRetry(
     attemptIndex: attempts,
     previousAttemptFeedback: pendingFeedback,
     deadlineAt,
+    deferExplanationVerify,
   });
   if (relaxedQuestions.length === 0) {
     const relaxedBestEffort =

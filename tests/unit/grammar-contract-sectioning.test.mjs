@@ -102,19 +102,24 @@ test("(c) finalChecklist 는 tags 줄 뒤·종결 명령 앞에 삽입되고 종
   assert.ok(!no.includes(CHECKLIST_SENTINEL), "미지정 시 체크리스트 미주입");
 });
 
-test("(d) research type-scope는 명시 opt-in이고 default bytes를 바꾸지 않는다", () => {
+test("(d) BLANK_INFERENCE는 유형 등록(26-07-17 다이어트)으로 기본이 type-scoped다", () => {
   const full = dec("full");
   const legacy = dec("blankLegacy");
   const scoped = dec("blankScoped");
 
-  assert.equal(legacy, full, "BLANK_INFERENCE default는 기존 full-tail과 바이트 동일");
+  // 26-07-17 stdfix: CONTRACT_TYPE_SECTIONS 에 BLANK_INFERENCE 등록 — 미등록 시절의
+  // full-tail(~28KB, 무관 유형 지시 포함) 수신을 의도적으로 폐지했다(O166/O167).
+  // 이제 default 가 곧 type-scoped 와 동일해야 하며, typeId 미지정 full-tail 의
+  // 바이트 보존은 (a) 테스트가 계속 보증한다.
+  assert.equal(legacy, scoped, "BLANK_INFERENCE default는 type-scoped와 바이트 동일");
+  assert.notEqual(legacy, full, "BLANK_INFERENCE default는 더 이상 full-tail이 아님");
   assert.ok(scoped.includes("Core evidence:"), "공통 계약 유지");
   assert.ok(scoped.includes("- BLANK_INFERENCE:"), "빈칸 전용 계약 포함");
   assert.ok(scoped.includes("PARAPHRASE KILLER distractors"), "빈칸 상세 계약 포함");
   assert.ok(!scoped.includes("SENTENCE_ORDER display contract"), "순서 계약 제외");
   assert.ok(!scoped.includes("- IRRELEVANT:"), "무관문장 계약 제외");
   assert.ok(!scoped.includes("- GRAMMAR_ERROR schema rule"), "어법 계약 제외");
-  assert.ok(scoped.length < legacy.length, "type-scoped 계약은 legacy보다 짧음");
+  assert.ok(scoped.length < full.length, "type-scoped 계약은 full-tail보다 짧음");
   assert.match(
     R.unknownScopedError,
     /requires a known contract typeId/,

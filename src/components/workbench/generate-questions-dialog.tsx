@@ -323,8 +323,6 @@ export function GenerateQuestionsDialog({
               totalQuestions={totalQuestions}
               prompt={prompt}
               setPrompt={setPrompt}
-              generationPlan={generationPlan}
-              setGenerationPlan={setGenerationPlan}
               savedPrompts={savedPrompts}
               showSavedPrompts={showSavedPrompts}
               setShowSavedPrompts={setShowSavedPrompts}

@@ -9,15 +9,13 @@ import { DIFFICULTY_TONES, VOCAB_GENERATION_TYPE_IDS } from "./constants";
 import { resolvePointPickerMeta } from "./point-picker-config";
 import { renderLanguageSetting, renderNumberSetting, renderSegSetting, renderToggleSetting } from "./setting-fields";
 import { CreditCostChip } from "@/components/credits/credit-cost-chip";
-import { PearlIcon } from "@/components/icons/pearl-icon";
 import { Button } from "@/components/ui/button";
 import { SetBuilderPanel } from "@/components/workbench/set-builder-panel";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
-import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { dispatchGenerateTourMilestone } from "@/lib/generate-tour-demo";
-import { QUESTION_GENERATION_PLANS, getQuestionGenerationCreditCost } from "@/lib/question-generation-plans";
-import { ANTONYM_PAIR_COUNT_MAX, ANTONYM_PAIR_COUNT_MIN, BLANK_INFERENCE_BLANK_COUNT_MAX, BLANK_INFERENCE_BLANK_COUNT_MIN, CONTENT_MATCH_ANSWER_COUNT_MIN, CONTENT_MATCH_OPTION_COUNT_MAX, CONTENT_MATCH_OPTION_COUNT_MIN, GENERIC_OPTION_COUNT_MAX, GENERIC_OPTION_COUNT_MIN, GRAMMAR_ANSWER_COUNT_MIN, GRAMMAR_CORRECTION_ERROR_COUNT_MAX, GRAMMAR_CORRECTION_ERROR_COUNT_MIN, GRAMMAR_MARKER_COUNT_MAX, GRAMMAR_MARKER_COUNT_MIN, IRRELEVANT_SLOT_COUNT_MAX, IRRELEVANT_SLOT_COUNT_MIN, SENTENCE_INSERT_SLOT_COUNT_MAX, SENTENCE_INSERT_SLOT_COUNT_MIN, SUMMARY_COMPLETE_BLANK_COUNT_MAX, SUMMARY_COMPLETE_BLANK_COUNT_MIN, SUMMARY_COMPLETE_MC_BLANK_COUNT_MAX, SUMMARY_COMPLETE_MC_BLANK_COUNT_MIN, SUMMARY_WRITING_BLANK_COUNT_DEFAULT, SUMMARY_WRITING_BLANK_COUNT_MAX, SUMMARY_WRITING_BLANK_COUNT_MIN, SUMMARY_WRITING_DISTRACTOR_COUNT_DEFAULT, SUMMARY_WRITING_DISTRACTOR_COUNT_MAX, SUMMARY_WRITING_DISTRACTOR_COUNT_MIN, SUMMARY_WRITING_TARGET_WORDS_DEFAULT, SUMMARY_WRITING_TARGET_WORDS_MAX, SUMMARY_WRITING_TARGET_WORDS_MIN, TOPIC_SENTENCE_WRITING_BLANK_COUNT_MAX, TOPIC_SENTENCE_WRITING_BLANK_COUNT_MIN, TOPIC_SENTENCE_WRITING_DISTRACTOR_COUNT_MAX, TOPIC_SENTENCE_WRITING_DISTRACTOR_COUNT_MIN, VOCAB_CHOICE_ANSWER_COUNT_MIN, VOCAB_CHOICE_MARKER_COUNT_MAX, VOCAB_CHOICE_MARKER_COUNT_MIN, getQuestionLanguageToggleScope, readQuestionTypeGenerationPlanSetting, resolveTopicSentenceWritingSettings, supportsGistAnswerPolarity } from "@/lib/question-type-generation-settings";
-import { Cpu, Crosshair, FileText, Gem, Minus, Plus, Target } from "lucide-react";
+import { getQuestionGenerationCreditCost } from "@/lib/question-generation-plans";
+import { ANTONYM_PAIR_COUNT_MAX, ANTONYM_PAIR_COUNT_MIN, BLANK_INFERENCE_BLANK_COUNT_MAX, BLANK_INFERENCE_BLANK_COUNT_MIN, CONTENT_MATCH_ANSWER_COUNT_MIN, CONTENT_MATCH_OPTION_COUNT_MAX, CONTENT_MATCH_OPTION_COUNT_MIN, GENERIC_OPTION_COUNT_MAX, GENERIC_OPTION_COUNT_MIN, GRAMMAR_ANSWER_COUNT_MIN, GRAMMAR_CORRECTION_ERROR_COUNT_MAX, GRAMMAR_CORRECTION_ERROR_COUNT_MIN, GRAMMAR_MARKER_COUNT_MAX, GRAMMAR_MARKER_COUNT_MIN, IRRELEVANT_SLOT_COUNT_MAX, IRRELEVANT_SLOT_COUNT_MIN, SENTENCE_INSERT_SLOT_COUNT_MAX, SENTENCE_INSERT_SLOT_COUNT_MIN, SUMMARY_COMPLETE_BLANK_COUNT_MAX, SUMMARY_COMPLETE_BLANK_COUNT_MIN, SUMMARY_COMPLETE_MC_BLANK_COUNT_MAX, SUMMARY_COMPLETE_MC_BLANK_COUNT_MIN, SUMMARY_WRITING_BLANK_COUNT_DEFAULT, SUMMARY_WRITING_BLANK_COUNT_MAX, SUMMARY_WRITING_BLANK_COUNT_MIN, SUMMARY_WRITING_DISTRACTOR_COUNT_DEFAULT, SUMMARY_WRITING_DISTRACTOR_COUNT_MAX, SUMMARY_WRITING_DISTRACTOR_COUNT_MIN, SUMMARY_WRITING_TARGET_WORDS_DEFAULT, SUMMARY_WRITING_TARGET_WORDS_MAX, SUMMARY_WRITING_TARGET_WORDS_MIN, TOPIC_SENTENCE_WRITING_BLANK_COUNT_MAX, TOPIC_SENTENCE_WRITING_BLANK_COUNT_MIN, TOPIC_SENTENCE_WRITING_DISTRACTOR_COUNT_MAX, TOPIC_SENTENCE_WRITING_DISTRACTOR_COUNT_MIN, VOCAB_CHOICE_ANSWER_COUNT_MIN, VOCAB_CHOICE_MARKER_COUNT_MAX, VOCAB_CHOICE_MARKER_COUNT_MIN, getQuestionLanguageToggleScope, resolveTopicSentenceWritingSettings, supportsGistAnswerPolarity } from "@/lib/question-type-generation-settings";
+import { Cpu, Crosshair, FileText, Minus, Plus, Target } from "lucide-react";
 
 export function renderAntonymDetail({ antonymPairCount, setAntonymPairCount }) {
       return renderNumberSetting({
@@ -1490,64 +1488,14 @@ export function renderTypePointBadge({ typeId, pointCount, onOpenPointPicker, qu
       );
     }
 
-export function renderTypeDetailContentImpl({ typeId, generationPlan, getTypeOptionLanguage, getTypeStemLanguage, patchTypeSettings, questionTypeSettings, renderTypeNumericDetailContent, setTypeLanguage }) {
+export function renderTypeDetailContentImpl({ typeId, getTypeOptionLanguage, getTypeStemLanguage, renderTypeNumericDetailContent, setTypeLanguage }) {
     const numericContent = renderTypeNumericDetailContent(typeId);
     const languageScope = getQuestionLanguageToggleScope(typeId);
-    // 유형별 생성 플랜 개별지정(예: 어법만 PREMIUM). per-type generationPlan 을
-    // questionTypeSettings[typeId] 에 써넣으면 서버(fast route·워커)가
-    // readQuestionTypeGenerationPlanSetting 으로 전역값 대신 우선 적용한다.
-    const typePlan = readQuestionTypeGenerationPlanSetting(
-      questionTypeSettings[typeId],
-      generationPlan,
-    );
+    // 상품 단일화 1단계: 유형별 생성 플랜(일반/프리미엄) 선택 UI 를 노출하지 않는다.
+    // questionTypeSettings[typeId].generationPlan 데이터 구조와 서버측
+    // readQuestionTypeGenerationPlanSetting 우선순위 로직은 그대로 보존(서버 호환).
     return (
       <div className="space-y-1.5 lg:space-y-3">
-        {FEATURE_FLAGS.SHOW_MODEL_SELECTOR ? (
-          <div
-            className={
-              numericContent
-                ? "border-b border-slate-100 pb-1.5 lg:pb-3"
-                : undefined
-            }
-          >
-            <div className="mb-1 lg:mb-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-500">
-              생성 플랜 · 이 유형만
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              {(["STANDARD", "PREMIUM"] as const).map((planId) => {
-                const plan = QUESTION_GENERATION_PLANS[planId];
-                const active = typePlan === planId;
-                const Icon = planId === "PREMIUM" ? Gem : PearlIcon;
-                return (
-                  <button
-                    key={planId}
-                    type="button"
-                    onClick={() =>
-                      patchTypeSettings(typeId, { generationPlan: planId })
-                    }
-                    className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 transition-colors ${
-                      active
-                        ? "border-blue-300 bg-blue-50 text-blue-800"
-                        : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50"
-                    }`}
-                  >
-                    <Icon
-                      className={`h-3.5 w-3.5 shrink-0 ${active ? "text-blue-600" : "text-slate-400"}`}
-                    />
-                    <span className="truncate text-[12px] font-bold">
-                      {plan.shortLabel}
-                    </span>
-                    <span
-                      className={`ml-auto text-[10px] font-bold tabular-nums ${active ? "text-blue-600" : "text-slate-400"}`}
-                    >
-                      {plan.creditMultiplier}x
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        ) : null}
         {numericContent}
         <div
           className={

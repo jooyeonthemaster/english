@@ -13,7 +13,6 @@ import { countPassageSentences } from "@/lib/passage-sentence-utils";
 import {
   getQuestionTypeSettingsForType,
   readQuestionTypeDifficultySetting,
-  readQuestionTypeGenerationPlanSetting,
   readIrrelevantSlotCountSetting,
   validateIrrelevantAgainstPassage,
 } from "@/lib/question-type-generation-settings";
@@ -23,6 +22,7 @@ import { generateQuestionObject } from "@/lib/question-generation-llm";
 import {
   getQuestionGenerationCreditCost,
   normalizeQuestionGenerationPlan,
+  resolveUnifiedGenerationPlan,
   withQuestionGenerationPlanMetadata,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
@@ -166,10 +166,12 @@ export async function POST(request: NextRequest) {
       rawTypeSettings,
       questionType,
     );
-    const generationPlan = readQuestionTypeGenerationPlanSetting(
-      typeSettingsForType,
-      normalizeQuestionGenerationPlan(rawGenerationPlan),
-    );
+    // 클라 요청 플랜 — 상품 단일화(W2-E) 이후 요금·라우팅에 미영향, 로깅 전용.
+    const requestedGenerationPlan = normalizeQuestionGenerationPlan(rawGenerationPlan);
+    // 상품 단일화(W2-E): 품질 파이프라인·요금·문항 _generationPlan 스탬프는 유형이
+    // 결정한다. 클라 generationPlan / questionTypeSettings.generationPlan(과거 저장
+    // PREMIUM config 포함)은 무력화된다.
+    const generationPlan = resolveUnifiedGenerationPlan(questionType);
     const effectiveDifficulty = readQuestionTypeDifficultySetting(
       typeSettingsForType,
       difficulty || "INTERMEDIATE",
@@ -187,6 +189,8 @@ export async function POST(request: NextRequest) {
         count,
         passageId,
         generationPlan,
+        // 클라 요청 플랜(무력화됨) — 감사/로깅 전용, 요금·라우팅에 미영향.
+        requestedGenerationPlan,
         difficulty: effectiveDifficulty,
         creditCost,
       }, creditCost);

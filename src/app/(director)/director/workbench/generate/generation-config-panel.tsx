@@ -793,7 +793,7 @@ export function GenerationConfigPanel({
   const renderTypeDetailContent = (typeId) =>
     typeId.startsWith("KO_")
       ? renderTypeNumericDetailContent(typeId)
-      : TypeNumericDetail.renderTypeDetailContentImpl({ typeId, generationPlan, getTypeOptionLanguage, getTypeStemLanguage, patchTypeSettings, questionTypeSettings, renderTypeNumericDetailContent, setTypeLanguage });
+      : TypeNumericDetail.renderTypeDetailContentImpl({ typeId, getTypeOptionLanguage, getTypeStemLanguage, renderTypeNumericDetailContent, setTypeLanguage });
 
   return (
     <div className="flex flex-1 min-h-0 w-full min-w-0 flex-col overflow-hidden bg-white">

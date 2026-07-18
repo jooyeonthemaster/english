@@ -1,9 +1,11 @@
+import { tasks } from "@trigger.dev/sdk/v3";
 import { NextRequest, NextResponse } from "next/server";
 import type { Prisma } from "@prisma/client";
 import { z } from "zod";
 
 import { buildQuestionAnnotationBlock } from "@/lib/annotation-prompt";
 import { getStaffSession } from "@/lib/auth";
+import { academyConcurrencyKey } from "@/lib/concurrency-config";
 import {
   isKoreanSubject,
   readKoKindFromTags,
@@ -23,6 +25,7 @@ import {
   getQuestionGenerationCreditCost,
   mergeQuestionGenerationPlanTag,
   normalizeQuestionGenerationPlan,
+  resolveUnifiedGenerationPlan,
 } from "@/lib/question-generation-plans";
 import { saveGeneratedQuestionsForJob } from "@/lib/question-generation-persistence";
 import { prisma } from "@/lib/prisma";
@@ -53,7 +56,6 @@ import {
 } from "@/app/(director)/director/workbench/generate/generation-config-panel-parts/point-picker-config";
 import {
   readQuestionTypeDifficultySetting,
-  readQuestionTypeGenerationPlanSetting,
   readIrrelevantSlotCountSetting,
   validateIrrelevantAgainstPassage,
 } from "@/lib/question-type-generation-settings";
@@ -262,14 +264,15 @@ export async function POST(req: NextRequest) {
 
   const config = {
     ...parsed.data,
+    // 클라이언트가 보낸 플랜 — 상품 단일화(W2-E) 이후 요금·라우팅에는 쓰지 않고
+    // 로깅/감사(job.config.requestedGenerationPlan)용으로만 보존한다(정규화만 유지).
     generationPlan: normalizeQuestionGenerationPlan(parsed.data.generationPlan),
   };
+  // 상품 단일화(W2-E): 품질 파이프라인·요금은 유형이 결정한다. 클라 generationPlan /
+  // questionTypeSettings.generationPlan(과거 저장 PREMIUM config 포함)은 무력화된다.
   const effectiveGenerationPlan =
     config.mode === "MANUAL" && config.questionType
-      ? readQuestionTypeGenerationPlanSetting(
-          config.questionTypeSettings,
-          config.generationPlan,
-        )
+      ? resolveUnifiedGenerationPlan(config.questionType)
       : config.generationPlan;
   const effectiveDifficulty =
     config.mode === "MANUAL" && config.questionType
@@ -391,6 +394,8 @@ export async function POST(req: NextRequest) {
         difficulty: effectiveDifficulty,
         customPrompt: config.customPrompt ?? "",
         generationPlan: effectiveGenerationPlan,
+        // 클라 요청 플랜(무력화됨) — 감사/로깅 전용, 요금·라우팅에 미영향.
+        requestedGenerationPlan: config.generationPlan,
         fastPath: true,
         clientTempId: config.clientTempId ?? null,
       },
@@ -548,6 +553,11 @@ export async function POST(req: NextRequest) {
         // → 환불 누락)를 막고, catch 에서 정상 실패+환불로 흐르게 한다. 30s 여유로
         // 후처리·저장·환불을 마친다. 느린 PREMIUM(Claude) 다수 재시도의 핵심 안전판.
         deadlineAt: requestStartedAt + 270_000,
+        // 해설 사실검증 E-gate 를 인라인 임계경로에서 분리한다 — grok 검증/수리
+        // (69~152s×수콜)가 인라인 데드라인을 잠식해 fail-open 되던 O153 회귀를 막고,
+        // 생성은 빠르게 저장한 뒤 아래 async 워커(workbench-explanation-verify)가
+        // 검증/수리를 이어받는다. 문항은 PENDING 으로 저장된다.
+        deferExplanationVerify: true,
       }),
     );
     const questions = generationResult.questions;
@@ -650,6 +660,24 @@ export async function POST(req: NextRequest) {
       },
     });
     await closeQuestionGenerationAssignmentBudget(job.id).catch(() => undefined);
+
+    // 해설 사실검증 async 분리(O153): 생성·저장은 이미 끝났고, 인라인에서 defer 한
+    // E-gate 를 워커가 임계경로 밖에서 이어받는다. Trigger 장애가 이미 저장된 생성
+    // 응답을 실패시키지 않도록 .catch 로 삼킨다(문항은 PENDING 으로 남아 재실행 가능).
+    await tasks
+      .trigger(
+        "workbench-explanation-verify",
+        {
+          questionIds: createdQuestionIds,
+          passageId: passage.id,
+          academyId: job.academyId,
+        },
+        {
+          idempotencyKey: `explanation-verify:${job.id}`,
+          concurrencyKey: academyConcurrencyKey(staff.academyId),
+        },
+      )
+      .catch((e) => console.warn("[fast-question] verify enqueue failed", e));
 
     return NextResponse.json({
       jobId: job.id,

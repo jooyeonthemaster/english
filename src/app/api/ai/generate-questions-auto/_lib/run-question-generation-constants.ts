@@ -24,6 +24,10 @@ export const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   // 배열 영작 재구성 실패 — 칩(선언 미끼 제외)으로 modelAnswer 를 조립할 수
   // 없으면 학생이 정답을 만들 수 없는 정답 무효급 결함 (wave1).
   "word-order-unreconstructable",
+  // 배열 영작 허용답(acceptedAnswers) 조립 실패 — 허용답 원소가 정답과 동일 칩의
+  // 재배열이 아니면(축약형·치환·단어 누락/추가) 제시 칩으로 만들 수 없는 문장이라
+  // 자동채점이 오정답을 정답으로 흡수할 위험 → 차단 (T8 허용답안).
+  "word-order-accepted-unreconstructable",
   // 조건부 영작 — 발문이 명시한 기계 검증 가능 조건(정확 단어 수·필수/금지 토큰)을
   // 모범답안이 어기면 채점 불능/정답 무효급 결함 (wave1).
   "cond-writing-condition-violated",
@@ -404,6 +408,27 @@ export const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "negative-paraphrase-no-subject-double-negation",
   "double-negative-clause-missing-subject",
   "double-negative-because-phrase-slot",
+  // ── W2-D 정정 (26-07-18, 지휘관 판정: 리뷰어 옳음) ─────────────────────────
+  // T9/T10 구조형 무결성 게이트 + 빈칸 span-carve + 어휘 치환 이음매 게이트는
+  // 최초 도입 시 "never-fail 기본"이라며 RELAXED_BLOCKING 에 미등재했으나(각 검출
+  // 함수 헤더 주석 참조), 이들은 "품질 낮은 문항"이 아니라 "틀린 문항"이다 —
+  // 문법 파손만으로 정답이 노출되거나(vocab seam), 정답 순열을 재구성할 수 없거나
+  // (order 유실/중복), 삽입 자리·번호 마킹이 렌더 파손되거나(insert/irrelevant),
+  // 빈칸이 고아 문장/콤마 비문을 남긴다(span-carve). 미등재 error 는 relaxed 폴백에서
+  // warning 으로 강등돼 그대로 출하되므로(KO 코드 선례 주석 §409~414 와 동일 근거),
+  // F급 무결성 결함으로서 전 레인(strict/relaxed/scarce/salvage) 차단으로 정렬한다.
+  // SALVAGE/SCARCE relaxable 에는 의도적으로 넣지 않는다(= notice 로도 출하 금지).
+  "vocab-substitution-seam-particle",
+  "vocab-substitution-unauthorized-mutation",
+  "sentence-order-source-sentence-omitted",
+  "sentence-order-source-sentence-duplicated",
+  "sentence-insert-marker-mid-sentence",
+  "sentence-insert-marker-empty-gap",
+  "irrelevant-marking-count-mismatch",
+  "irrelevant-nonconsecutive-marking",
+  "irrelevant-marking-sentence-desync",
+  "blank-span-full-sentence",
+  "blank-span-clause-carve",
 ]);
 
 // KO(국어) blocking 코드 전부 등록 — 미등록 error 는 relaxed 폴백에서 warning 으로

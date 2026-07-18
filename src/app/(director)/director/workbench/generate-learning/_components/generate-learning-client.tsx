@@ -125,8 +125,9 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
 
   // ── Generation config ──
   const [genMode, setGenMode] = useState<"auto" | "manual">("auto");
-  const [generationPlan, setGenerationPlan] =
-    useState<QuestionGenerationPlan>("STANDARD");
+  // 상품 단일화: 학습문제 생성 플랜 토글 미노출. 플랜은 STANDARD 고정으로
+  // 생성 페이로드에 계속 전달된다(서버 계약 유지). 세터는 UI 제거로 불필요.
+  const [generationPlan] = useState<QuestionGenerationPlan>("STANDARD");
   const [autoCount, setAutoCount] = useState(10);
   const [typeCounts, setTypeCounts] = useState<Record<string, number>>({});
 
@@ -635,8 +636,6 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
           typeCounts={typeCounts}
           setTypeCount={setTypeCount}
           setTypeCounts={setTypeCounts}
-          generationPlan={generationPlan}
-          setGenerationPlan={setGenerationPlan}
           totalQuestions={totalQuestions}
           canGenerate={canGenerate}
           selectedIds={selectedIds}

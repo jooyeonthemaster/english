@@ -4,6 +4,7 @@ import {
   buildGeminiCompactPlanningPrompt,
   buildQuestionGenerationPromptContract,
   buildTeacherPointsPromptBlock,
+  buildTypeContractSectionBody,
   type StandardQuestionContractScope,
 } from "@/lib/question-generation-prompt-contract";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
@@ -164,8 +165,40 @@ export function buildGenerationPrompt({
           .map((p) => `- ${p}`)
           .join("\n")}`
       : "";
+  // PREMIUM 경로는 역사적으로 유형 표시 계약을 받지 않았다(항상 "") — O178 에서
+  // 구조 변형형 유형(요약/순서/삽입/무관)의 V1 필수필드 누락 전멸의 원인으로 확정.
+  // env PREMIUM_TYPE_CONTRACT_INJECTION=on 일 때만 유형 계약 본문을 주입한다
+  // (기본 off = 기존 프롬프트 바이트 동일).
+  const premiumTypeContract =
+    process.env.PREMIUM_TYPE_CONTRACT_INJECTION?.trim() === "on"
+      ? buildTypeContractSectionBody(subType)
+      : "";
+  // 선택형 공예 계약 주입(연구, O181): 빈칸 A급(craft 23/24)의 함정 설계 레시피를
+  // 선택형(제목/주제/함축/내용일치)에 이식하는 실험. env 미설정 시 바이트 동일.
+  const SELECTION_CRAFT_TYPES = new Set([
+    "TITLE",
+    "TOPIC",
+    "MAIN_IDEA",
+    "TOPIC_MAIN_IDEA",
+    "IMPLIED_MEANING",
+    "CONTENT_MATCH",
+  ]);
+  const selectionCraftDelta =
+    process.env.QGEN_SELECTION_CRAFT_DELTA?.trim() === "on" &&
+    subType &&
+    SELECTION_CRAFT_TYPES.has(subType)
+      ? `\n## 아름다운 선택형 설계 계약 (필수)
+- 오답 4개는 서로 다른 함정 기제를 하나씩 담당합니다: ① 소재만 일치(중심 논지 아님) ② 세부 예시의 과일반화 ③ 범위 과확대 또는 과축소 ④ 논지 반전 혹은 지문이 지지하지 않는 매력적 함의. 같은 기제를 두 오답에 중복 사용하지 마세요.
+- 각 오답은 지문의 실제 표현·개념을 앵커로 빌려야 하며(무관 소재 금지), 단 하나의 결정적 결함으로만 탈락해야 합니다. 그 결함을 해당 wrongOptionExplanations 에 명시하세요.
+- 오답 중 정확히 하나는 지문 표면 어휘를 가장 강하게 재사용해 표면 매칭 풀이를 유혹하되, 전체 논지 대조로만 배제되게 설계하세요.
+- 정답은 지문 전체 논지의 압축 재진술이어야 하며 특정 한 문장의 복사여서는 안 됩니다. 5개 선지의 길이·추상도·어조를 맞춰 표면 단서(길이·극성·절대어)로 정답이 노출되지 않게 하세요.
+- 제출 전 자가 점검: 선지마다 "왜 매력적인가 / 무엇이 결정적으로 배제하는가"를 확인하고, 두 개 이상이 같은 이유로 탈락하면 재설계하세요.`
+      : "";
   const providerQualityContract =
-    buildQuestionGenerationPromptContract(generationPlan, subType);
+    (buildQuestionGenerationPromptContract(generationPlan, subType) ||
+      (premiumTypeContract
+        ? `## 유형 표시 계약 (필수 준수)\n${premiumTypeContract}`
+        : "")) + selectionCraftDelta;
   // 교사 지정 포인트 블록: targetContext(AI 플랜 분석 포인트)와 분리된 별도 블록.
   // 지문 바로 다음에 배치하고, 빈 배열이면 "" 로 기존 프롬프트와 바이트 동일 유지.
   const teacherPointsBlock = buildTeacherPointsPromptBlock(teacherPoints);
