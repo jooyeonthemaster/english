@@ -6,6 +6,7 @@
 //  - **화이트리스트 조립만** 허용. 스프레드/omit(블랙리스트 삭제) 금지 — 이후
 //    스키마에 새 정답성 필드가 생겨도 여기 화이트리스트에 없으면 기본 차단된다.
 //  - 정답성 필드는 어떤 경로로도 미포함: correctAnswer(s) / answer / blanks[].answer /
+//    acceptedAnswers(최상위·blanks[]·underlinedSegments[] 각 원소 — T8b 허용 답안 집합) /
 //    acceptableVariants / requiredLemmas / modelAnswer / scoringCriteria / scoringMode /
 //    isError / correction / errorExpression / errorPart(s) / correctedPart(s) /
 //    correctedSentence / isInappropriate / betterWord / originalWord / substituteWord /

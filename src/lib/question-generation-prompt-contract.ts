@@ -160,15 +160,30 @@ function buildContractTypeSectionBody(typeId: string): string {
     .join("\n");
 }
 
-// 유형별 지시 묶음. 지금은 GRAMMAR_ERROR 만 등록한다 — 이 유형만 STANDARD 1차 프롬프트에서
-// 무관한 유형 지시를 떨어내 토큰을 절감한다. 키가 없는 유형은 전체 tail 로 폴백한다.
+// 유형별 지시 묶음. 등록된 유형만 STANDARD 1차 프롬프트에서 무관한 유형 지시를
+// 떨어내 토큰을 절감한다. 키가 없는 유형은 전체 tail 로 폴백한다.
+// BLANK_INFERENCE 는 26-07-17 등록 — 미등록 상태에서 full tail(~28KB)을 통째로 받아
+// 빈칸 생성 콜 입력의 절반 가까이가 무관 유형 지시였다(O166). 자기 세그먼트는 전부 보존.
 const CONTRACT_TYPE_SECTIONS: Record<string, string> = {
   GRAMMAR_ERROR: buildContractTypeSectionBody("GRAMMAR_ERROR"),
+  BLANK_INFERENCE: buildContractTypeSectionBody("BLANK_INFERENCE"),
 };
 
 export type StandardQuestionContractScope =
   | "production_legacy"
   | "force_type_scoped";
+
+/**
+ * 유형별 표시 계약 본문(요약문 (A)(B) 프레임, 문장삽입 givenSentence 규칙,
+ * 순서 분할 계약 등)을 플랜과 무관하게 돌려준다. PREMIUM 경로는 역사적으로
+ * 이 계약을 받지 않았고(O178: 구조 변형형 유형의 V1 필수필드 누락 전멸 원인),
+ * env `PREMIUM_TYPE_CONTRACT_INJECTION=on` 실험 주입용으로 노출한다.
+ * 미등록 유형은 빈 문자열.
+ */
+export function buildTypeContractSectionBody(typeId: string | undefined): string {
+  if (!typeId || !CONTRACT_KNOWN_TYPE_IDS.has(typeId)) return "";
+  return buildContractTypeSectionBody(typeId);
+}
 
 export function buildQuestionGenerationPromptContract(
   generationPlan: QuestionGenerationPlan,

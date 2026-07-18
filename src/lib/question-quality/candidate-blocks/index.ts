@@ -31,6 +31,8 @@ export function buildQuestionTargetCandidateBlock(
     grammarErrorCount?: number;
     /** 결핍(제한 지문) 판정 기준 — 스페어 과잉생성(G=K+1) 시 검증 기준 K. */
     grammarScarcityBaseCount?: number;
+    /** 어법 후보 블록 diet 변형(연구 프로필 G4) — 미지정 시 기존 full 그대로. */
+    grammarCandidateBlockVariant?: "full" | "diet";
     requestedDifficulty?: string;
     /** 다양성: 같은 지문에서 이미 사용된 타깃(유형별 원문 표현) — 후보 필터링용 */
     usedTargets?: string[];
@@ -63,6 +65,7 @@ export function buildQuestionTargetCandidateBlock(
         options.requestedDifficulty,
         diversity,
         options.grammarScarcityBaseCount,
+        options.grammarCandidateBlockVariant,
       );
     case "GRAMMAR_CHOICE_COMBO":
       return buildGrammarChoiceComboCandidateBlock(

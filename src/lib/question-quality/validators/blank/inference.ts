@@ -5,6 +5,7 @@ import { findInfinitivePastOnlyForms } from "./option-grammar";
 import { validateBlankAnswerParaphraseMode } from "./paraphrase";
 import { analyzeBlankSeam } from "./seam";
 import { findBlankSourceReconstructionMismatch } from "./source-reconstruction";
+import { findBlankSpanCarveIssues } from "./span-carve";
 
 
 
@@ -58,6 +59,11 @@ export function validateBlankInferenceQuestion(
       "blank-source-reconstruction-mismatch",
       "Replacing the single blank with originalExpression does not reconstruct the source passage exactly. Preserve every source character outside the blank, including quotation marks and punctuation.",
     );
+  }
+
+  // span 경계 선택 결함(전문장 통삭제·삽입구 절단) — O164 실전 붕괴 클래스의 결정형 차단.
+  for (const carve of findBlankSpanCarveIssues(passageWithBlank, originalExpression, correctText)) {
+    add("error", carve.code, carve.message);
   }
 
   // Every option must enter the same syntactic slot. A fixed relative/finite

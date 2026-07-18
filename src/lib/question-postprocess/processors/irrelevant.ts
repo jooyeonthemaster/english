@@ -277,6 +277,14 @@ export function processIrrelevant(
     data: {
       ...ai,
       sentences: repairedSentences,
+      // W2-D 정정(26-07-18): 엣지 재배치(irrelevantIndex 0/마지막 → 가운데)·인트로
+      // 제거로 로컬 irrelevantIndex 가 바뀌었는데 반환 데이터가 ...ai 의 원래 값을 그대로
+      // 실으면, correctAnswer 는 새 위치로 재정렬되지만 저장된 irrelevantIndex 는 옛 값이라
+      // 서로 어긋난다. 검증기(validators/irrelevant.ts)가 문서화한 불변식("후처리가
+      // irrelevantIndex 로 재정렬하므로 index-mismatch 는 후처리 뒤 절대 발화하지 않는다")이
+      // 이 엣지에서 깨져 index-edge/answer-index-mismatch/answer-desync/source-not-verbatim
+      // 이 한꺼번에 오발화했다. 재정렬된 로컬 값을 되써 데이터를 자기정합하게 만든다.
+      irrelevantIndex,
       correctAnswer: expectedAnswer,
       options: normalizedOptions,
       wrongOptionExplanations,

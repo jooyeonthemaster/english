@@ -36,7 +36,7 @@ const C = (t: string, f: string) => "CANARY_" + t + "_" + f;
 
 // 금지 키 전집 — 과업 명세 + AnswerSpec 정답축 + 스키마 🔒비밀 컨테이너.
 const FORBIDDEN_KEYS = [
-  "correctAnswer", "correctAnswers", "answer", "answers",
+  "correctAnswer", "correctAnswers", "answer", "answers", "acceptedAnswers",
   "acceptableVariants", "requiredLemmas", "lemmas", "modelAnswer",
   "scoringCriteria", "scoringMode", "textMode", "correctChoices",
   "isError", "correction", "errorExpression", "errorPart", "errorParts",
@@ -530,6 +530,8 @@ const fixtures: Fixture[] = [
       structuredData: {
         sentenceWithBlank: "He succeeded _____ sheer persistence.",
         answer: C("FBK", "answer"),
+        // T8b 허용 답안 집합(최상위) — 학생 노출 금지(누출 게이트 카나리).
+        acceptedAnswers: [C("FBK", "accept1"), C("FBK", "accept2")],
         correctAnswer: C("FBK", "ca2"), explanation: C("FBK", "exp"),
       },
     },
@@ -554,8 +556,9 @@ const fixtures: Fixture[] = [
       structuredData: {
         summaryWithBlanks: "The study links (A) to (B) across regions.",
         blanks: [
-          { label: "(A)", answer: C("SC", "ansA") },
-          { label: "(B)", answer: C("SC", "ansB") },
+          // T8b 허용 답안 집합(blanks[] 각 원소) — 학생 노출 금지(누출 카나리).
+          { label: "(A)", answer: C("SC", "ansA"), acceptedAnswers: [C("SC", "accA")] },
+          { label: "(B)", answer: C("SC", "ansB"), acceptedAnswers: [C("SC", "accB")] },
         ],
         correctAnswer: C("SC", "ca"), explanation: C("SC", "exp"),
       },
@@ -612,6 +615,8 @@ const fixtures: Fixture[] = [
         scrambledWords: ["did", "truth", "she", "realize", "the", "zebra"],
         wordBankDistractors: ["zebra"],
         contextHint: "도치 구문에 유의하십시오.",
+        // T8b 허용 답안 집합(최상위) — 학생 노출 금지(누출 카나리).
+        acceptedAnswers: [C("WO", "accept1"), C("WO", "accept2")],
         modelAnswer: C("WO", "model"), correctAnswer: C("WO", "ca2"), explanation: C("WO", "exp"),
       },
     },
@@ -681,9 +686,10 @@ const fixtures: Fixture[] = [
         direction: "다음 글의 밑줄 친 부분에서 어법상 틀린 곳을 찾아 바르게 고치시오.",
         passageWithUnderline: "__They has been working__ since dawn, and the __buildings which was built__ remain.",
         underlinedSegments: [
-          { label: "(A)", sourceText: "They have been working", displayedText: "They has been working", isError: true, errorPart: "has", correctedPart: C("GC", "corrA") },
+          // T8b 허용 답안 집합(underlinedSegments[] 각 원소) — 학생 노출 금지(누출 카나리).
+          { label: "(A)", sourceText: "They have been working", displayedText: "They has been working", isError: true, errorPart: "has", correctedPart: C("GC", "corrA"), acceptedAnswers: [C("GC", "accA")] },
           // displayedText 부재 — correctedPart→errorPart 치환 파생 경로 검증
-          { label: "(B)", sourceText: "buildings which were built", isError: true, errorPart: "was", correctedPart: "were" },
+          { label: "(B)", sourceText: "buildings which were built", isError: true, errorPart: "was", correctedPart: "were", acceptedAnswers: [C("GC", "accB")] },
         ],
         errorParts: ["has", "was"], correctedParts: [C("GC", "cpA"), "were"],
         correctedSentence: C("GC", "cs"), correctAnswer: C("GC", "ca2"), explanation: C("GC", "exp"), keyPoints: [C("GC", "kp")],

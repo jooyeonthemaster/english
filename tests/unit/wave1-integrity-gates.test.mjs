@@ -131,6 +131,50 @@ const woBlock = errorCodes(validateQuestionQuality({
   requestedDifficulty: "INTERMEDIATE",
 }));
 
+// ── WORD_ORDER acceptedAnswers 결정형 조립 검증 (T8 허용답안) ────────────────
+// 각 허용답은 정답과 **동일 칩의 재배열**이어야 한다(= 제시 칩으로 과부족 0 조립).
+// 유효 허용답(같은 칩 다른 어순) → accepted 게이트 무발화.
+const woAcceptedValid = errorCodes(validateQuestionQuality({
+  typeId: "WORD_ORDER",
+  question: {
+    ...wordOrderBase,
+    acceptedAnswers: [
+      woModelAnswer,
+      "Over time sharing resources with neighbors can reduce household waste",
+    ],
+  },
+  requestedDifficulty: "INTERMEDIATE",
+}));
+
+// 칩으로 만들 수 없는 허용답(단어 치환 waste→trash) → accepted 게이트 차단.
+const woAcceptedBlock = errorCodes(validateQuestionQuality({
+  typeId: "WORD_ORDER",
+  question: {
+    ...wordOrderBase,
+    acceptedAnswers: [
+      woModelAnswer,
+      "Sharing resources with neighbors can reduce household trash over time",
+    ],
+  },
+  requestedDifficulty: "INTERMEDIATE",
+}));
+
+// 선언 미끼(reduces)를 쓴 허용답 → 정답 칩 외 사용이라 차단. modelAnswer 는 여전히
+// 조립 가능(reduces 는 미끼로 선언) → word-order-unreconstructable 는 무발화.
+const woAcceptedUsesDistractor = errorCodes(validateQuestionQuality({
+  typeId: "WORD_ORDER",
+  question: {
+    ...wordOrderBase,
+    scrambledWords: ["over time", "reduces", "reduce household waste", "with neighbors", "can", "Sharing resources"],
+    wordBankDistractors: ["reduces"],
+    acceptedAnswers: [
+      woModelAnswer,
+      "Sharing resources with neighbors reduces household waste over time",
+    ],
+  },
+  requestedDifficulty: "INTERMEDIATE",
+}));
+
 // ── BLANK_INFERENCE: SOURCE_EXACT 단일 빈칸 잔존 누수 ───────────────────────
 const blankPassage =
   "People who delay the reward tend to achieve more in the long run. Studies show that children who delay the reward perform better later in school. This pattern repeats across cultures and age groups in many long-term studies.";
@@ -357,6 +401,7 @@ const relaxedMembership = Object.fromEntries(
     "sentence-order-answer-key-mismatch",
     "sentence-order-paragraph-not-source-backed",
     "word-order-unreconstructable",
+    "word-order-accepted-unreconstructable",
     "blank-answer-residual-visible",
     "grammar-correction-tense-only-error",
     "grammar-correction-perception-toggle",
@@ -370,6 +415,7 @@ const relaxedMembership = Object.fromEntries(
 console.log(JSON.stringify({
   soPass, soMismatch, soNotBacked, soNoPassage,
   woPass, woPassWithDistractor, woBlock,
+  woAcceptedValid, woAcceptedBlock, woAcceptedUsesDistractor,
   blankBlock, blankPass, blankParaphraseNoFire,
   gcTenseBlock, gcPass, gcPerceptionBlock, gcPerceptionPass,
   comboBlock, comboPass,
@@ -428,6 +474,31 @@ test("WORD_ORDER reconstruction: complete chips pass (with and without declared 
 
 test("WORD_ORDER reconstruction: missing answer token blocks", () => {
   assert.ok(result.woBlock.includes("word-order-unreconstructable"), JSON.stringify(result.woBlock));
+});
+
+test("WORD_ORDER acceptedAnswers reconstruction: same-chip rearrangements pass", () => {
+  assert.ok(
+    !result.woAcceptedValid.includes("word-order-accepted-unreconstructable"),
+    JSON.stringify(result.woAcceptedValid),
+  );
+});
+
+test("WORD_ORDER acceptedAnswers reconstruction: non-chip entry (substituted word) blocks", () => {
+  assert.ok(
+    result.woAcceptedBlock.includes("word-order-accepted-unreconstructable"),
+    JSON.stringify(result.woAcceptedBlock),
+  );
+});
+
+test("WORD_ORDER acceptedAnswers reconstruction: entry using a declared distractor chip blocks (model still buildable)", () => {
+  assert.ok(
+    result.woAcceptedUsesDistractor.includes("word-order-accepted-unreconstructable"),
+    JSON.stringify(result.woAcceptedUsesDistractor),
+  );
+  assert.ok(
+    !result.woAcceptedUsesDistractor.includes("word-order-unreconstructable"),
+    JSON.stringify(result.woAcceptedUsesDistractor),
+  );
 });
 
 test("BLANK_INFERENCE residual leak: SOURCE_EXACT answer span visible elsewhere blocks", () => {

@@ -56,13 +56,15 @@ export const ESSAY_PROMPTS: Record<string, string> = {
 ## 출력 필드
 - sentenceWithBlank: 빈칸(_____) 이 포함된 문장 또는 지문 일부
 - answer: 빈칸에 들어갈 핵심 표현 (원문 verbatim — 한 글자도 바꾸지 않음)
+- acceptedAnswers: ⭐자동채점 허용답 집합(학생 비노출). 이 유형의 정답은 **지문에 그대로 있는 표현을 찾아 쓰는(verbatim) 답**이므로(발문 "본문에서 찾아 쓰시오"), 허용답에는 그 verbatim 답의 **표기(orthographic) 변형만** 담습니다 — answer 문자열 자체를 반드시 1개 포함하고, 그 밖에는 **축약형("it is"↔"it's", "do not"↔"don't")과 대소문자 관용** 정도의 표기 차이만 추가하세요. ⚠️**의미가 같은 다른 표현(동의어·패러프레이즈, 관계사 치환 "in which"↔"where", 동치 구문·어순 바꿔쓰기)은 절대 넣지 마세요** — 지문에 없는 표현은 이 유형에서 오답이라, 허용답에 넣으면 오답을 정답으로 흡수합니다(확신 없는 변형 금지). 표기 변형이 없으면 [answer]만 담습니다.
 - correctAnswer: answer와 동일
 - explanation(해설, 한국어 100~250자): ① 빈칸 문장이 글에서 하는 역할 한 줄 → ② 정답의 근거가 되는 지문 단서(문장/표현) 지시 → ③ 왜 그 표현이어야 하는지 1문장. 출제 과정("~를 빈칸으로 만들었다")은 서술 금지, 학생 관점으로만.
 - direction 예시: "다음 빈칸에 들어갈 알맞은 말을 본문에서 찾아 쓰시오."`,
 
   SUMMARY_COMPLETE: `요약문 완성 서술형 문제를 만드세요.
 - summaryWithBlanks: 빈칸이 포함된 요약문 (빈칸은 (A), (B) 등으로 표시)
-- blanks: 각 빈칸의 label과 answer
+- blanks: 각 빈칸의 label과 answer, 그리고 acceptedAnswers
+- blanks[].acceptedAnswers: ⭐자동채점 허용답 집합(학생 비노출, 빈칸별로 작성). 이 빈칸의 answer와 **문법·의미가 동등한 허용 답을 빠짐없이** 나열하세요 — answer 문자열 자체를 반드시 1개 포함하고, 그 외에 관계사 등가("in which"↔"where"), 축약형("it is"↔"it's"), 어순 허용 변형, 동의 구문을 추가합니다. 자동채점이 이 집합과 정확일치하면 정답 처리하므로 **확신 없는 변형은 넣지 마세요**. 동치가 answer 하나뿐이면 [answer]만 담습니다.
 - correctAnswer: 빈칸 답을 "(A) answer, (B) answer" 형태로
 - direction 예시: "다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸에 들어갈 말을 쓰시오."`,
 
@@ -77,6 +79,7 @@ export const ESSAY_PROMPTS: Record<string, string> = {
 - scrambledWords: 단어/구 목록 (배열). **반드시 정답 순서와 완전히 다르게 무작위로 뒤섞으세요.** 절대로 정답 순서대로 나열하지 마세요. 예를 들어 정답이 "A B C D E"라면 scrambledWords는 ["D", "B", "E", "A", "C"] 처럼 섞어야 합니다. 정답을 의미 단위로 **4~7개 청크로 고르게** 쪼개고, 한 청크가 정답의 절반 이상을 담지 않게 하세요(청크가 너무 크면 배열이 무의미). 칩을 **지문 원문 어순대로** 나열하는 것도 금지입니다(섞은 척 원문 순서 유지 — 실측 결함).
 - contextHint: 문맥 힌트 (선택적, 한국어). ⚠️**정답 문장(modelAnswer)을 한국어로 1:1 그대로 직역한 문장을 힌트로 주지 마세요.** 그러면 학생이 힌트를 영어로 되옮기기만 하면 배열이 풀려 변별력이 사라집니다. 힌트는 문장의 '역할/논지/문맥상 위치'를 가리키는 정도로만(예: "앞 문장과 대조를 이루는 결론"), 정답 어휘·구조를 그대로 노출하지 마세요.
 - modelAnswer: 올바르게 배열된 완성 문장 — 위 "원문 변형 필수" 규칙을 통과한, 원문과 구문이 다른 문장. 문장 중간을 뚝 자른 절단형도 금지 — 완성 문장으로 자연스럽게 끝나야 합니다.
+- acceptedAnswers: ⭐자동채점 허용답 집합(학생 비노출). modelAnswer와 **문법·의미가 동등한 완성 문장을 빠짐없이** 나열하세요 — modelAnswer 문자열 자체를 반드시 1개 포함하고, 그 외에 **제시된 칩(scrambledWords)만으로 조립 가능한 등가 어순**, 축약형("it is"↔"it's"), 의미 보존 재배열을 추가합니다. 자동채점이 이 집합과 정확일치하면 정답 처리하므로 **확신 없는 변형·칩으로 못 만드는 문장은 넣지 마세요**. 유일 정답이면 [modelAnswer]만 담습니다.
 - wordBankDistractors: ⭐ 미끼 칩을 **최소 1개(KILLER는 2개 이상) 반드시 scrambledWords에 포함**하고, 그 미끼 전부를 이 배열에 문자열 그대로 선언하세요(학생 비노출, 검수·정답조립 검증용). **선언하지 않은 미끼가 남아 있으면 정답 조립 검증에서 문항이 거부됩니다.** 미끼는 무관 단어가 아니라 정답 단어의 동의어/활용형(예: 정답 reduce에 대해 reduces/reducing)이어야 정답 칩과 실제로 경쟁합니다. 미끼가 0개면 "칩을 순서대로 전부 쓰기"가 되어 함정 설계가 사라집니다.
 - correctAnswer: modelAnswer와 동일
 - ⭐ 재구성 자체 검증(제출 전): scrambledWords에서 wordBankDistractors의 칩을 빼면, 남은 칩들의 단어 전체가 modelAnswer의 단어 전체와 **정확히 일치(과부족 0)** 해야 합니다. 부족하면 학생이 정답을 만들 수 없고, 선언 안 된 잉여가 있으면 미끼 미선언입니다.
@@ -258,7 +261,8 @@ ESSAY_PROMPTS.GRAMMAR_CORRECTION = `어법 고치기 서술형 문제를 만드�
 - errorPart는 실제 영어에 있는 형태여야 합니다. ❌"unfriendlily"(-ly 형용사에 -ly), ❌"more better"(이중 비교급), ❌"informations"(불가산 복수), ❌"childs" 같은 가짜 형태 금지. -ly 형용사(friendly/costly)는 부사로 못 바꾸므로 형/부 오류로 쓰지 마세요.
 
 ## 출력 필드
-- underlinedSegments: 문장/절 단위 밑줄 구간 1~5개. 각 항목은 label, sourceText, displayedText, isError=true, surroundingText, errorPart, correctedPart를 포함합니다.
+- underlinedSegments: 문장/절 단위 밑줄 구간 1~5개. 각 항목은 label, sourceText, displayedText, isError=true, surroundingText, errorPart, correctedPart, acceptedAnswers를 포함합니다.
+- underlinedSegments[].acceptedAnswers: ⭐자동채점 허용답 집합(학생 비노출, 밑줄 구간별로 작성). 이 밑줄의 correctedPart와 **문법·의미가 동등한 교정형을 빠짐없이** 나열하세요 — correctedPart 문자열 자체를 반드시 1개 포함하고, 그 외에 관계사 등가("in which"↔"where", 계속적 용법이면 which/전치사+which), 축약형("it is"↔"it's"), 동치 어형(수 일치가 유지되는 등가 활용형)을 추가합니다. 자동채점이 이 집합과 정확일치하면 정답 처리하므로 **확신 없는 변형은 넣지 마세요**(예: 의미가 달라지는 시제 변경 금지). 동치가 correctedPart 하나뿐이면 [correctedPart]만 담습니다.
 - errorPart: 첫 밑줄 구간 안에 숨어 있는 틀린 표현
 - errorParts: 각 밑줄 구간 안에 숨어 있는 틀린 표현 목록
 - correctedPart: 첫 밑줄 구간의 원문에 있던 올바른 표현

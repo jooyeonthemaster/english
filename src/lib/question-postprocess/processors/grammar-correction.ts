@@ -13,6 +13,10 @@ type GrammarCorrectionSegment = {
   isError?: unknown;
   errorPart?: unknown;
   correctedPart?: unknown;
+  // 🔒비밀(T8a): 이 밑줄의 correctedPart 와 동등한 허용 교정형 집합. 채점(exam-scoring)이
+  // segment 단위로 소비한다. 후처리가 segment 를 재조립할 때 명시 보존해 저장 데이터까지
+  // 유실되지 않게 한다(아래 normalizeAcceptedAnswers).
+  acceptedAnswers?: unknown;
   surroundingText?: unknown;
 };
 
@@ -113,6 +117,8 @@ export function processGrammarCorrection(
       displayedText,
       errorPart,
       correctedPart,
+      // 채점 허용답 집합(T8a) 명시 보존 — 스프레드 의존이 아니라 정규화 후 재부착.
+      acceptedAnswers: normalizeAcceptedAnswers(segment.acceptedAnswers),
     });
   }
 
@@ -268,4 +274,25 @@ function normalizeComparable(value: unknown): string {
 
 function normalizeString(value: unknown): string {
   return typeof value === "string" ? value.replace(/\s+/g, " ").trim() : "";
+}
+
+/**
+ * acceptedAnswers(채점 허용답 집합, T8a) 정규화 — 문자열 항목만 남기고 trim·빈문자·
+ * 중복을 제거한다. 후처리가 밑줄 구간을 재조립할 때 이 필드를 명시적으로 보존해,
+ * 저장 데이터(structuredData)까지 동등 정답 집합이 유실되지 않게 한다. 배열이 아니거나
+ * 유효 항목이 없으면 undefined 를 돌려 JSON 직렬화에서 키가 떨어지게 하고(하위호환),
+ * 채점은 correctedPart 로 폴백한다.
+ */
+function normalizeAcceptedAnswers(value: unknown): string[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  const seen = new Set<string>();
+  const cleaned: string[] = [];
+  for (const raw of value) {
+    if (typeof raw !== "string") continue;
+    const trimmed = raw.trim();
+    if (!trimmed || seen.has(trimmed)) continue;
+    seen.add(trimmed);
+    cleaned.push(trimmed);
+  }
+  return cleaned.length > 0 ? cleaned : undefined;
 }

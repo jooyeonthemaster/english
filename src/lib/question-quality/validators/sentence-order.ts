@@ -202,6 +202,11 @@ export function validateSentenceOrderQuestion(
 
   validateSentenceOrderOptions(question, add);
   validateSentenceOrderAnswerReconstruction(question, passage, add);
+
+  // T10 무손실 분할 게이트 — 조각화 때 원문 seam 문장이 유실/중복됐는지 결정형 검출.
+  for (const finding of findSentenceOrderSourceCoverageIssues(question.paragraphs, passage)) {
+    add("error", finding.code, finding.message);
+  }
 }
 
 
@@ -728,6 +733,184 @@ export function validateSentenceOrderAnswerReconstruction(
 }
 
 
+
+/**
+ * T10 무손실 분할 게이트 — givenSentence + (A)/(B)/(C) 가 원문을 무손실로 분할하는지
+ * 결정형 검증(실측 결함 V1-SENTENCE-OMISSION / V1-SENTENCE-DROPPED-SEAM, campaign-20260716
+ * P006·P007). (A)/(B)/(C) 단락은 원문의 verbatim 분할이므로, 세 단락이 원문에서 차지하는
+ * 구간을 "원문 위치순"으로 정렬하면 (정답 순열과 무관하게) 서로 인접해야 한다. 두 단락
+ * 구간 사이에 상당한 토큰 갭이 있으면 그 자리의 원문 문장이 조각화 때 통째로 유실된 것이고
+ * (seam 누락), 구간이 겹치면 같은 원문 텍스트를 두 단락이 중복 사용한 것이다.
+ *
+ * 보수 원칙(오탐 배제):
+ *  - givenSentence 는 리드 문장으로 패러프레이즈가 허용되므로 대조 대상에서 제외한다.
+ *    따라서 given 이 덮는 원문 prefix 나 마지막 단락 뒤 trailing 절삭은 검출하지 않는다
+ *    (수락 문항에서 흔한 정상 변형 — DB 실측 trailing 절삭 12%). 잡는 것은 오직 "두 단락
+ *    사이"의 결손/중복뿐이다.
+ *  - 세 단락이 원문 verbatim 으로 위치하지 않으면(패러프레이즈된 단락 등) 조용히 침묵한다.
+ *    그 축은 sentence-order-paragraph-not-source-backed 가 담당하며, 그 전제가 성립할 때만
+ *    (= 기존 재구성 게이트와 동일 전제) 이 게이트가 동작하므로 패러프레이즈 오탐이 없다.
+ *  - fold 는 재구성 게이트(foldForSourceMatch)와 동일 — 구두점/곡선따옴표 무관 대조.
+ *
+ * DB 실측(수락 SENTENCE_ORDER 중 verbatim-backed 78건) 갭 토큰 히스토그램 {0:77, 15:1} 로
+ * 이분 → 임계 4토큰에서 발동 1건(진탐: 실측 seam 유실), 오탐 0. error(strict 차단).
+ * W2-D 정정(26-07-18, 지휘관 판정): 조각화 유실/중복은 정답 순열 재구성 불가(정답
+ * 무효급 F결함)이므로 RELAXED_BLOCKING_QUALITY_CODES 에 등재해 전 레인 차단한다.
+ */
+export interface SentenceOrderCoverageFinding {
+  code:
+    | "sentence-order-source-sentence-omitted"
+    | "sentence-order-source-sentence-duplicated";
+  message: string;
+  evidence: Record<string, unknown>;
+}
+
+export const SENTENCE_ORDER_SEAM_GAP_MIN_TOKENS = 4;
+
+export function findSentenceOrderSourceCoverageIssues(
+  paragraphs: unknown,
+  passage: string | undefined,
+): SentenceOrderCoverageFinding[] {
+  if (!passage) return [];
+  const paras = Array.isArray(paragraphs) ? paragraphs.filter(isRecord) : [];
+  if (paras.length !== 3) return []; // 개수 결함은 sentence-order-paragraph-count 담당.
+
+  // 재구성 게이트와 동일한 구두점 무관 fold — alnum+공백만 남긴다.
+  const fold = (value: string) =>
+    normalizeComparableText(value)
+      .replace(/[^a-z0-9 ]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  const foldedPassage = fold(passage);
+  if (!foldedPassage) return [];
+
+  // indexOf 첫 등장 고정은 반복 구/부분 일치에서 한 단락의 span 을 다른 단락 구간과
+  // 겹치게 잡아 가짜 중복/누락 오탐을 낸다(W2-D 정정, 26-07-18). 각 단락의 모든 출현
+  // 위치를 모은 뒤, 서로 겹치지 않는 배치를 찾아(3단락 소규모 완전탐색) span 을 정한다.
+  const occurrencesByParagraph: Array<{ label: string; length: number; starts: number[] }> = [];
+  for (const paragraph of paras) {
+    const label = normalizeSentenceOrderParagraphLabel(paragraph.label);
+    const foldedText = fold(normalizeText(paragraph.text));
+    if (!foldedText) return []; // 빈 단락은 sentence-order-empty-paragraph 담당.
+    const starts = collectAllOccurrences(foldedPassage, foldedText);
+    if (starts.length === 0) return []; // 비-verbatim 단락 → not-source-backed 가 담당(패러프레이즈 침묵).
+    occurrencesByParagraph.push({ label, length: foldedText.length, starts });
+  }
+  const spans = chooseNonOverlappingSpans(occurrencesByParagraph);
+  spans.sort((a, b) => a.start - b.start);
+
+  const countTokens = (value: string) => (value.match(/[a-z0-9]+/g) ?? []).length;
+  const findings: SentenceOrderCoverageFinding[] = [];
+  for (let i = 1; i < spans.length; i += 1) {
+    const previous = spans[i - 1];
+    const current = spans[i];
+    if (current.start < previous.end) {
+      // 구간 중첩 → 같은 원문 텍스트를 두 단락이 중복 사용(정답 순열 재구성 불가).
+      const overlapTokens = countTokens(
+        foldedPassage.slice(current.start, Math.min(previous.end, current.end)),
+      );
+      if (overlapTokens >= SENTENCE_ORDER_SEAM_GAP_MIN_TOKENS) {
+        findings.push({
+          code: "sentence-order-source-sentence-duplicated",
+          message: `SENTENCE_ORDER paragraphs ${previous.label} and ${current.label} cover overlapping source text (${overlapTokens} shared tokens); the same passage span cannot belong to two chunks.`,
+          evidence: {
+            previousLabel: previous.label,
+            currentLabel: current.label,
+            overlapTokens,
+          },
+        });
+      }
+      continue;
+    }
+    const gap = foldedPassage.slice(previous.end, current.start);
+    const gapTokens = countTokens(gap);
+    if (gapTokens >= SENTENCE_ORDER_SEAM_GAP_MIN_TOKENS) {
+      findings.push({
+        code: "sentence-order-source-sentence-omitted",
+        message: `SENTENCE_ORDER dropped source text at the seam between chunks ${previous.label} and ${current.label}: "${gap.slice(0, 120)}". givenSentence + (A)/(B)/(C) must partition the source without losing a sentence.`,
+        evidence: {
+          betweenLabels: `${previous.label}->${current.label}`,
+          gapTokens,
+          gap: gap.slice(0, 160),
+        },
+      });
+    }
+  }
+  return findings;
+}
+
+/** haystack 안 needle 의 모든 시작 인덱스(겹치는 출현 포함). */
+function collectAllOccurrences(haystack: string, needle: string): number[] {
+  const starts: number[] = [];
+  if (!needle) return starts;
+  let from = 0;
+  for (;;) {
+    const index = haystack.indexOf(needle, from);
+    if (index < 0) break;
+    starts.push(index);
+    from = index + 1;
+  }
+  return starts;
+}
+
+/**
+ * 각 단락의 출현 후보 중 서로 겹치지 않는 배치를 완전탐색으로 고른다(3단락 소규모).
+ * indexOf 첫 등장 고정은 반복 구/부분 일치에서 다른 단락과 겹치는 위치를 잡아 가짜
+ * 중복/누락을 냈다. 겹치지 않는 조합이 여럿이면 전체 폭(첫 시작~끝)이 최소인, 가장
+ * 촘촘한 타일링을 고른다 — 실제 연속 분할을 재현하되 진짜 누락 갭은 그대로 보존한다.
+ * 겹치지 않는 조합이 아예 없으면(진짜 중복: 동일 텍스트가 원문에 1회뿐이라 두 단락이
+ * 같은 구간을 쓸 수밖에 없음) 첫 등장 배치로 폴백해 중복 검출을 유지한다.
+ */
+interface SentenceOrderSpan {
+  label: string;
+  start: number;
+  end: number;
+}
+
+function chooseNonOverlappingSpans(
+  paragraphs: Array<{ label: string; length: number; starts: number[] }>,
+): SentenceOrderSpan[] {
+  const fallback: SentenceOrderSpan[] = paragraphs.map((paragraph) => ({
+    label: paragraph.label,
+    start: paragraph.starts[0],
+    end: paragraph.starts[0] + paragraph.length,
+  }));
+
+  const overlaps = (a: SentenceOrderSpan, b: SentenceOrderSpan) =>
+    a.start < b.end && b.start < a.end;
+
+  const validCombinations: SentenceOrderSpan[][] = [];
+  const current: SentenceOrderSpan[] = [];
+  const recurse = (index: number) => {
+    if (index === paragraphs.length) {
+      validCombinations.push(current.map((span) => ({ ...span })));
+      return;
+    }
+    const paragraph = paragraphs[index];
+    for (const start of paragraph.starts) {
+      const candidate: SentenceOrderSpan = {
+        label: paragraph.label,
+        start,
+        end: start + paragraph.length,
+      };
+      if (current.some((placed) => overlaps(placed, candidate))) continue;
+      current.push(candidate);
+      recurse(index + 1);
+      current.pop();
+    }
+  };
+  recurse(0);
+
+  // 겹치지 않는 배치가 없으면(진짜 중복: 동일 텍스트가 원문에 1회뿐) 첫 등장 폴백.
+  if (validCombinations.length === 0) return fallback;
+  const spanWidth = (combo: SentenceOrderSpan[]) =>
+    Math.max(...combo.map((span) => span.end)) -
+    Math.min(...combo.map((span) => span.start));
+  // 겹치지 않는 조합이 여럿이면 전체 폭이 최소인, 가장 촘촘한 타일링을 고른다.
+  return validCombinations.reduce((best, combo) =>
+    spanWidth(combo) < spanWidth(best) ? combo : best,
+  );
+}
 
 export function validateSentenceOrderOptions(
   question: Record<string, unknown>,

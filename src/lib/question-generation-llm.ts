@@ -6,9 +6,11 @@ import {
   ATLAS_PREMIUM_MODEL_ID,
   ATLAS_PREMIUM_QGEN_MODEL_ID,
   ATLAS_STANDARD_MODEL_ID,
+  AtlasTransientResponseError,
   atlasChatModel,
   atlasUsageWithCost,
   isAtlasClaudeModel,
+  isAtlasGeminiModel,
 } from "@/lib/atlas-ai";
 import { isQuestionGenerationAssignmentBudgetError } from "@/lib/atlas-production-assignment-fetch-boundary";
 import {
@@ -112,6 +114,32 @@ function claudeQgenReasoningOptions(modelId: string): {
   return { providerOptions: { [ATLAS_CLOUD_PROVIDER]: { reasoning } } };
 }
 
+// 명시적 reasoning effort → providerOptions 배선 (E-gate 해설 사실검증 검증·수리
+// 콜 전용). openai-compatible provider 의 1급 옵션 `reasoningEffort`(camelCase)로
+// 실으면 getArgs 가 이를 파싱해 요청 args.reasoning_effort 로 세팅하고, atlas-ai
+// 의 transformRequestBody(atlasReasoningRequestFor)가 비-gemini 경로에서 그대로
+// { reasoning_effort } 로 와이어에 흘린다 — 범용 env(OPENROUTER_REASONING_EFFORT)에
+// 의존하지 않고 콜 단위로 grok 에 high 추론을 전달하는 최소 침습 경로다.
+// (snake_case reasoning_effort 를 providerOptions 로 넣으면 getArgs 가 스키마 밖
+// 키를 스프레드한 뒤 `reasoning_effort: compatibleOptions.reasoningEffort` 로
+// 덮어써 undefined 가 되므로 반드시 camelCase 를 쓴다.)
+//   - gemini: atlasReasoningRequestFor 가 reasoning 을 자체 제어(기본 none)하므로
+//     제외 — 여기서 실으면 요청 바이트가 바뀐다(계약: gemini 경로 불변).
+//   - claude: claudeQgenReasoningOptions 가 이미 reasoning 을 싣는다 — 이중 지정
+//     방지로 제외.
+//   - 미지정(undefined/빈값): {} 반환 → 기존 호출과 바이트 동일.
+function explicitReasoningEffortOptions(
+  modelId: string,
+  reasoningEffort: string | undefined,
+): { providerOptions?: Record<string, Record<string, JSONValue>> } {
+  const effort = reasoningEffort?.trim();
+  if (!effort) return {};
+  if (isAtlasGeminiModel(modelId) || isAtlasClaudeModel(modelId)) return {};
+  return {
+    providerOptions: { [ATLAS_CLOUD_PROVIDER]: { reasoningEffort: effort } },
+  };
+}
+
 interface GenerateQuestionObjectArgs<T> {
   schema: z.ZodType<T>;
   prompt: string;
@@ -139,6 +167,14 @@ interface GenerateQuestionObjectArgs<T> {
    * 품질게이트가 결정론 재검증하므로 provider 강제 없이도 안전하다.
    */
   forceJsonFallback?: boolean;
+  /**
+   * 명시적 reasoning effort(예: "high"). 지정 시 providerOptions 로 실려 atlas-ai
+   * 의 transformRequestBody 가 소비한다 — E-gate(해설 사실검증) 검증·수리 콜이
+   * grok 에 high 추론을 명시 전달하는 전용 경로(범용 env
+   * OPENROUTER_REASONING_EFFORT 에 의존하지 않는다). gemini·claude 는 각자 자체
+   * reasoning 제어가 있어 대상에서 제외 — 미지정 시 기존과 바이트 동일하다.
+   */
+  reasoningEffort?: string;
   /** Opt-in research stage semantic; ignored byte-for-byte when no runtime is active. */
   researchStage?: QuestionGenerationResearchStage;
 }
@@ -223,6 +259,54 @@ export function isNonRetryableQuestionGenerationProviderError(error: unknown): b
   ].some((pattern) => message.includes(pattern));
 }
 
+/**
+ * T5: 비스트리밍(generateObject/generateText) 호출에서 status 200 인데 응답이
+ * SSE/빈 본문으로 와, 파서가 즉시 실패하거나(콜 단위 하드 타임아웃으로) 끊긴
+ * 유형을 즉시 재시도 가능한 transient 결함으로 판정한다. 같은 요청 재시도로 대개
+ * 회복되므로, grammar-too-large·masked-400 같은 결정론 오류(느린 JSON 폴백 필요)와
+ * 달리 구조화 호출을 그대로 빠르게 재시도해야 한다. 결정론 오류 시그니처가 담긴
+ * 본문(폴백 경로 대상)은 명시적으로 제외해 오분류를 막는다.
+ */
+export function isTransientEmptyOrStreamedResponseError(error: unknown): boolean {
+  const seen = new Set<unknown>();
+  let current: unknown = error;
+  for (let depth = 0; depth < 6 && current && !seen.has(current); depth += 1) {
+    seen.add(current);
+    if (current instanceof AtlasTransientResponseError) return true;
+    if (isRecord(current)) {
+      if (current.name === "AtlasTransientResponseError") return true;
+      const status = current.statusCode ?? current.status;
+      if (status === 200 || status === "200") {
+        const responseBody = (
+          readErrorString(current, "responseBody") ??
+          readErrorString(current, "body") ??
+          ""
+        );
+        const lowerBody = responseBody.toLowerCase();
+        // 결정론 오류(폴백 경로)는 transient 아님 — 여기서 먼저 배제한다.
+        if (
+          lowerBody.includes("provider returned error") ||
+          lowerBody.includes("compiled grammar is too large")
+        ) {
+          return false;
+        }
+        // 빈 본문 200, 또는 SSE 프레임(data:/event:/[DONE])이 실린 200.
+        if (
+          responseBody.trim() === "" ||
+          /^\s*(data:|event:|:\s)/m.test(responseBody) ||
+          responseBody.includes("[DONE]")
+        ) {
+          return true;
+        }
+      }
+      current = current.cause;
+      continue;
+    }
+    break;
+  }
+  return false;
+}
+
 export function toUserFacingQuestionGenerationError(rawMessage: string): string {
   const m = rawMessage.toLowerCase();
   const isBilling =
@@ -273,8 +357,15 @@ async function generateQuestionObjectImpl<T>({
   timeoutMs,
   deadlineAt,
   forceJsonFallback = false,
+  reasoningEffort,
   researchStage,
 }: GenerateQuestionObjectArgs<T>): Promise<GenerateQuestionObjectResult<T>> {
+  // 연구 전용 출력 한도 하한 오버라이드 (O175 후속: 추론 high 스윕에서 reasoning
+  // 토큰이 completion 예산을 잠식해 절단되는 것을 막는다). env 미설정 시 무영향.
+  const researchFloor = Number(process.env.QGEN_RESEARCH_MAX_TOKENS_FLOOR ?? "");
+  if (Number.isFinite(researchFloor) && researchFloor > 0) {
+    maxTokens = Math.max(maxTokens, Math.min(32_000, researchFloor));
+  }
   const planConfig = getQuestionGenerationModelConfig(generationPlan);
   // 오버라이드는 modelId 만 치환 — provider/timeout 등 나머지는 플랜 매핑 유지.
   // 미지정이면 플랜 config 객체를 그대로 사용해 기존 동작과 완전 동일하다.
@@ -299,6 +390,11 @@ async function generateQuestionObjectImpl<T>({
     const remaining = deadlineAt - Date.now();
     return Math.min(hardCapMs, Math.max(1_000, remaining));
   };
+
+  // T5 리뷰 §2: status 200 빈/SSE(또는 콜 단위 하드 타임아웃) 계열의 "빠른 재시도"는
+  // 각 시도가 실제 청구될 수 있어(빈 본문 200 도 과금) 이중 과금 상한으로 최대 1회만
+  // 허용한다. 1회 재시도 후에도 같은 분류면 기존 오류 경로(throw → 상위 환불)로 간다.
+  let transientFastRetries = 0;
 
   for (
     let attempt = 0;
@@ -344,6 +440,7 @@ async function generateQuestionObjectImpl<T>({
         attempt,
         sdkMaxRetries: effectiveSdkMaxRetries,
         allowStructuredRepair,
+        reasoningEffort,
       });
       if (fallback) {
         console.log(
@@ -379,6 +476,7 @@ async function generateQuestionObjectImpl<T>({
         maxRetries: effectiveSdkMaxRetries,
         maxOutputTokens: maxTokens,
         ...claudeQgenReasoningOptions(config.modelId),
+        ...explicitReasoningEffortOptions(config.modelId, reasoningEffort),
         abortSignal: AbortSignal.timeout(
           computeAbortMs(timeoutMs ?? config.timeoutMs),
         ),
@@ -423,6 +521,24 @@ async function generateQuestionObjectImpl<T>({
     } catch (error) {
       lastError = error;
       logProviderError(logPrefix, attempt, generationPlan, error);
+      // T5: status 200 + SSE/빈 본문(또는 콜 단위 하드 타임아웃)은 즉시 재시도
+      // 가능한 transport 결함 — 느린 240s JSON 폴백으로 새지 않고 구조화 호출을
+      // 그대로 빠르게 재시도한다. 단, 빠른 재시도는 이중 과금 상한(§2)으로 최대
+      // 1회. 상한을 넘었거나 남은 attempt 가 없으면 던져 상위가 환불한다.
+      if (isTransientEmptyOrStreamedResponseError(error)) {
+        if (transientFastRetries >= 1) {
+          console.warn(
+            `[${logPrefix}] Transient empty/streamed 200 persisted after 1 fast retry (${config.modelId}); stopping (caller refunds).`,
+          );
+          throw error;
+        }
+        transientFastRetries += 1;
+        console.warn(
+          `[${logPrefix}] Transient empty/streamed 200 response (${config.modelId}); retrying fast (1/1).`,
+        );
+        if (attempt >= effectiveApplicationMaxRetries) throw error;
+        continue;
+      }
       // Anthropic(오픈라우터 경유) strict 구조화 출력의 "compiled grammar is too
       // large" — 스키마가 복잡한 유형(국어 확장 봉투)에서 PREMIUM 이 400 으로
       // 전멸한다(26-07-03 실측: KO 7유형 중 6유형). 재시도로는 절대 안 풀리는
@@ -460,6 +576,7 @@ async function generateQuestionObjectImpl<T>({
           attempt,
           sdkMaxRetries: effectiveSdkMaxRetries,
           allowStructuredRepair,
+          reasoningEffort,
         });
         if (fallback) return fallback;
         // 폴백 실패는 잘림·타임아웃 등 비결정 요인 — 남은 attempt 가 있으면
@@ -678,6 +795,7 @@ async function generateObjectViaJsonFallbackImpl<T>({
   attempt,
   sdkMaxRetries,
   allowStructuredRepair,
+  reasoningEffort,
 }: {
   schema: z.ZodType<T>;
   prompt: string;
@@ -692,6 +810,7 @@ async function generateObjectViaJsonFallbackImpl<T>({
   attempt: number;
   sdkMaxRetries: number;
   allowStructuredRepair: boolean;
+  reasoningEffort?: string;
 }): Promise<GenerateQuestionObjectResult<T> | null> {
   if (abortMs <= 1_000) return null;
   // zod v4 → JSON Schema 인라인. 변환 불가 스키마(z.custom 류)면 텍스트 없이
@@ -723,6 +842,7 @@ async function generateObjectViaJsonFallbackImpl<T>({
       // claudeQgenReasoningOptions 로 기본 비활성 — 잘림·지연의 근본 차단.)
       maxOutputTokens: 32_000,
       ...claudeQgenReasoningOptions(modelId),
+      ...explicitReasoningEffortOptions(modelId, reasoningEffort),
       abortSignal: AbortSignal.timeout(abortMs),
       ...(system
         ? {
@@ -926,6 +1046,9 @@ export async function generateQuestionText({
   let lastError: unknown;
   const operationStartedAt = Date.now();
   void thinkingBudget;
+  // T5 리뷰 §2: 빈/SSE 200(또는 콜 단위 하드 타임아웃) 빠른 재시도는 이중 과금
+  // 상한으로 최대 1회. 1회 후에도 같은 분류면 기존 오류 경로(throw)로 간다.
+  let transientFastRetries = 0;
   const researchTransportPolicy =
     getQuestionGenerationResearchTransportPolicy();
   const effectiveApplicationMaxRetries = researchTransportPolicy
@@ -988,6 +1111,24 @@ export async function generateQuestionText({
           `[${logPrefix}] Non-retryable provider error (${config.provider}); stopping retries.`,
         );
         throw error;
+      }
+      // T5: status 200 + SSE/빈 본문(또는 콜 단위 하드 타임아웃)은 즉시 재시도
+      // 가능한 transport 결함 — 같은 요청을 그대로 빠르게 재시도한다. 단, 이중
+      // 과금 상한(§2)으로 빠른 재시도는 최대 1회. 상한을 넘었거나 남은 attempt 가
+      // 없으면 던져 상위가 환불한다.
+      if (isTransientEmptyOrStreamedResponseError(error)) {
+        if (transientFastRetries >= 1) {
+          console.warn(
+            `[${logPrefix}] Transient empty/streamed 200 persisted after 1 fast retry (${config.modelId}); stopping (caller refunds).`,
+          );
+          throw error;
+        }
+        transientFastRetries += 1;
+        console.warn(
+          `[${logPrefix}] Transient empty/streamed 200 response (${config.modelId}); retrying fast (1/1).`,
+        );
+        if (attempt >= effectiveApplicationMaxRetries) throw error;
+        continue;
       }
 
       const rawText = readErrorString(error, "text");

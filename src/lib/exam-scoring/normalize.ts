@@ -69,14 +69,25 @@ export function normalizeChoiceList(value: unknown): string[] {
 }
 
 /**
- * 서답형 텍스트 비교 정규화 — 트림·다중공백 축약·소문자·스마트따옴표 통일·
- * 말단 구두점(.,!?;:) 제거. 철자 자체는 보존(관대 비교는 LEMMA/variants 로).
+ * 서답형 텍스트 비교 정규화 — 표면차(대소문자·다중공백·문말 구두점·스마트따옴표·
+ * 유니코드 합성형·폭 0 문자)만 흡수하고 의미는 절대 변형하지 않는 보수적 정규화.
+ * 철자·어순·내부 구두점 등 의미 신호는 보존한다(관대 비교는 LEMMA/variants 로).
+ * 이 함수가 EXACT 비교의 유일한 관용 폭이다 — 흡수 범위는 단위테스트로 못박는다
+ * (tests/unit/exam-scoring-accepted-answers.test.mjs 정규화 경계 케이스):
+ *  - NFC 합성 통일: "é"(단일코드 U+00E9) ↔ "e"+결합악센트(U+0301) → 동일 취급.
+ *  - 폭 0 문자(U+200B~U+200D, U+FEFF): 복붙으로 유입되는 비가시·무의미 문자 제거.
+ *  - 스마트 작은/큰따옴표 → ASCII ' / " (활자체 vs 직선따옴표 표면차 흡수). 프라임(′)·이중프라임(″)은 따옴표로 매핑하지 않는다(피트·인치·분/초 의미 표기 보존 — 보수 원칙).
+ *  - 다중·유니코드 공백 → 단일 공백 + 양끝 트림.
+ *  - 문말 구두점(.,!?;:) 제거 — 내부 구두점은 의미로 보존.
+ *  - 소문자화.
  */
 export function normalizeText(value: unknown): string {
   if (value == null) return "";
   return String(value)
-    .replace(/[‘’ʼ]/g, "'")
-    .replace(/[“”]/g, '"')
+    .normalize("NFC")
+    .replace(/[\u200B-\u200D\uFEFF]/g, "") // 폭 0 문자(ZWSP/ZWNJ/ZWJ/BOM) 제거
+    .replace(/[‘’ʼ‛]/g, "'") // 스마트 작은따옴표 → '
+    .replace(/[“”„‟]/g, '"') // 스마트 큰따옴표 → "
     .replace(/\s+/g, " ")
     .trim()
     .replace(/[.,!?;:]+$/g, "")

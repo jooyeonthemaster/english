@@ -875,7 +875,12 @@ export function buildGrammarErrorCandidateBlock(
   /** 결핍(제한 지문) 판정 기준 개수 — 스페어 과잉생성(G=K+1) 시 검증 기준 K 를
    * 전달해, 요청 개수(G)가 커졌다는 이유로 결핍 모드가 조기 발동하지 않게 한다. */
   scarcityBaseCount?: number,
+  /** diet(연구 프로필 G4): 지문 특이 정보(지뢰지도·사전판정·결핍 모드)와 게이트-짝
+   * 차단 규칙만 남기고, 범용 지식(9프레임·포인트 카탈로그)·해설 공예 지시·지문
+   * 재열거를 제거한다. 해설 품질은 E-gate 가 담당한다는 전제의 프롬프트 다이어트. */
+  variant: "full" | "diet" = "full",
 ): string {
+  const diet = variant === "diet";
   const sentences = splitPassageSentences(passage);
   const markedCount = normalizeGrammarMarkedCount(requestedMarkerCount);
   const answerCount = normalizeGrammarAnswerCount(requestedAnswerCount, markedCount);
@@ -949,8 +954,12 @@ export function buildGrammarErrorCandidateBlock(
     "- Wrong-form principle 3 (structure over vocabulary): the answer must break a structural frame, not a lexical preference — do not use shallow participle-adjective swaps before a noun, semantic who/what readings, or single connector swaps unless tied to a deeper cross-clause dependency.",
     "- Shallow 'depends on' ban (always applies): a plain 'X depends on Y' subject-verb agreement (depends <-> depend) offers little trap value and is rejected. Never use such a bare agreement flip as the answer OR as a decoy unless a long intervening modifier genuinely separates the true subject head from the verb.",
     "- Decoy quality: each non-answer label must carry its own plausible grammar question (agreement, voice, relative/nominal clause, participle, complement form, dummy it, inversion, adjective/adverb, connector, comparison) and must be clearly, defensibly correct in that context. If a decoy can be dismissed without reading its clause — or could be argued wrong by a careful reader — replace it. Avoid decorative surfaces (standalone comparatives, tiny pronoun/article/do-support tokens, discourse markers, tokens inside frozen idioms such as 'that is,') and side-by-side subject+passive pairs.",
-    "- Answer-site giveaway check: reject an answer site when an unmarked token adjacent to the underline resolves the judgment by pattern-matching alone (e.g. an unmarked parallel '-ing' such as 'or delaying' right after a to-V/-ing answer). The student must need the grammar frame, not the neighbor.",
-    "- Decoy pre-exposure check: if the exact grammatical form a decoy tests (same participle/adjective/pronoun pattern) already appears unmarked elsewhere in the passage, the decoy is answerable by copying — relocate it.",
+    diet
+      ? ""
+      : "- Answer-site giveaway check: reject an answer site when an unmarked token adjacent to the underline resolves the judgment by pattern-matching alone (e.g. an unmarked parallel '-ing' such as 'or delaying' right after a to-V/-ing answer). The student must need the grammar frame, not the neighbor.",
+    diet
+      ? ""
+      : "- Decoy pre-exposure check: if the exact grammatical form a decoy tests (same participle/adjective/pronoun pattern) already appears unmarked elsewhere in the passage, the decoy is answerable by copying — relocate it.",
     "- Option uniqueness: every markedExpressions.expression must be a different visible option. Do not reuse the same word/phrase under two labels, even if the pointCode differs.",
     requestedDifficulty === "KILLER"
       ? "- KILLER point-code discipline: the answer's grammar point must not be repeated as a same-point decoy; each non-answer underline should test a different frame so the option set feels curated, not padded."
@@ -964,14 +973,30 @@ export function buildGrammarErrorCandidateBlock(
     requestedDifficulty === "KILLER"
       ? "- KILLER answer ban: do not make a one-token connector/preposition swap such as because -> because of, although -> despite, or while -> during the answer. Connector/preposition errors are allowed only when tied to a deeper cross-clause dependency."
       : "",
-    "- Terminology precision: name only the actual school-grammar structure the underline tests, with standard terms (주어/목적어/정동사/조동사/접속사/전치사/동명사/분사/관계대명사/명사절/보어). Never mislabel: a pronoun-reference check is not a noun-clause issue; parallel participles are not phrasal verbs; seem + to-V is a complement, not an object; appear is a linking verb, never an adverb or passive; 'that' in 'that way' is a determiner. If unsure of a category name, describe the structure instead — never invent terms such as '전사구'.",
-    "- Polish discipline: spellcheck all Korean and English explanation text. Never return typos such as 'dsepite'.",
-    "- Explanation quality: for every incorrect label, cite the student-visible wrong surface first, then the correction. Write '(C) been associating is wrong; it should be been associated', never '(C) been associated is ...'.",
-    "- Explanation quality: for long-distance subject-verb agreement, the main explanation must name the intervening modifier/relative/appositive phrase and the true subject head; do not stop at 'the subject is plural'.",
-    "- Explanation length cap: main explanation must be a polished student-facing paragraph of 200-450 Korean characters following the 4-step structure (sentence skeleton -> verdict with the syntactic reason -> correction -> optional one-line trap note); each wrongOptionExplanations value should be one concise sentence. Do not quote full source sentences, narrate failed hypotheses, expose scratchpad/self-correction, or write meta-review phrases such as 'let me check again', 'I will re-check the question', or Korean equivalents.",
-    "- Explanation label discipline: never use a shorthand range such as 'remaining (B)~(F)' or '나머지 (B)~(F)'. Label reordering can make ranges wrong or ugly; enumerate only the actual non-answer labels individually.",
-    "- KeyPoints discipline: mention only grammar tokens actually tested by marked options. Do not add unrelated source tokens such as unless/although if no underline tests them.",
-    "- Tag discipline: tags must name real tested grammar frames only. Do not invent vague/padded tags such as noun flow analysis, vocabulary flow analysis, or general content-flow labels.",
+    diet
+      ? "- Terminology precision: name only the actual school-grammar structure with standard terms (주어/정동사/관계대명사/명사절/분사 등). If unsure of a category name, describe the structure — never invent terms."
+      : "- Terminology precision: name only the actual school-grammar structure the underline tests, with standard terms (주어/목적어/정동사/조동사/접속사/전치사/동명사/분사/관계대명사/명사절/보어). Never mislabel: a pronoun-reference check is not a noun-clause issue; parallel participles are not phrasal verbs; seem + to-V is a complement, not an object; appear is a linking verb, never an adverb or passive; 'that' in 'that way' is a determiner. If unsure of a category name, describe the structure instead — never invent terms such as '전사구'.",
+    diet
+      ? ""
+      : "- Polish discipline: spellcheck all Korean and English explanation text. Never return typos such as 'dsepite'.",
+    diet
+      ? ""
+      : "- Explanation quality: for every incorrect label, cite the student-visible wrong surface first, then the correction. Write '(C) been associating is wrong; it should be been associated', never '(C) been associated is ...'.",
+    diet
+      ? ""
+      : "- Explanation quality: for long-distance subject-verb agreement, the main explanation must name the intervening modifier/relative/appositive phrase and the true subject head; do not stop at 'the subject is plural'.",
+    diet
+      ? "- Explanation: 200-450 Korean characters, 4-step structure (skeleton -> verdict+reason -> correction -> one-line trap note); one concise sentence per wrongOptionExplanations label; enumerate labels individually, never ranges such as '(B)~(F)'."
+      : "- Explanation length cap: main explanation must be a polished student-facing paragraph of 200-450 Korean characters following the 4-step structure (sentence skeleton -> verdict with the syntactic reason -> correction -> optional one-line trap note); each wrongOptionExplanations value should be one concise sentence. Do not quote full source sentences, narrate failed hypotheses, expose scratchpad/self-correction, or write meta-review phrases such as 'let me check again', 'I will re-check the question', or Korean equivalents.",
+    diet
+      ? ""
+      : "- Explanation label discipline: never use a shorthand range such as 'remaining (B)~(F)' or '나머지 (B)~(F)'. Label reordering can make ranges wrong or ugly; enumerate only the actual non-answer labels individually.",
+    diet
+      ? ""
+      : "- KeyPoints discipline: mention only grammar tokens actually tested by marked options. Do not add unrelated source tokens such as unless/although if no underline tests them.",
+    diet
+      ? ""
+      : "- Tag discipline: tags must name real tested grammar frames only. Do not invent vague/padded tags such as noun flow analysis, vocabulary flow analysis, or general content-flow labels.",
     "- If the passage has fewer source sentences than requested marked expressions, you may mark more than one expression in a sentence only when they test clearly different clauses or grammar relations.",
     requestedDifficulty === "KILLER"
       ? "- KILLER calibration: make the wrong forms look locally natural until the full sentence structure is checked. Do not use a lone main-verb/subject-verb/local -s error as the answer; it must require checking a relation, reduced clause, semantic subject, long modifier, complement pattern, or parallel range. Also never use a visibly broken local form — including a noun directly followed by 'what' ('N what ...', a post-nominal relative 'that' mutated into 'what') — as the answer; that one-glance error is rejected, so keep an 'N what' form only for decoy disproof, never as the KILLER answer."
@@ -1014,19 +1039,21 @@ export function buildGrammarErrorCandidateBlock(
             .join("\n");
         })()
       : "",
-    buildGrammarNineFrameGuide("judgment", requestedDifficulty),
+    diet ? "" : buildGrammarNineFrameGuide("judgment", requestedDifficulty),
     // 어법끝 28년 빈도 증류 가이드 — 정답 포인트 코어 풀 + 함정 디코이 카드 +
     // (다양성 모드) variantIndex 로테이션 정답 포인트 지정.
     // 핵심 집중 모드면 정답 포인트를 고빈출/9프레임 톱셋으로 좁힌다.
-    buildGrammarPointGuidance({
-      variantIndex: diversity?.variantIndex,
-      usedPointCodes: diversity?.usedPointCodes,
-      diversityEnabled: diversity?.diversityEnabled,
-      pointFocus: diversity?.pointFocus,
-      answerCount,
-      requestedDifficulty,
-      mode: "judgment",
-    }),
+    diet
+      ? ""
+      : buildGrammarPointGuidance({
+          variantIndex: diversity?.variantIndex,
+          usedPointCodes: diversity?.usedPointCodes,
+          diversityEnabled: diversity?.diversityEnabled,
+          pointFocus: diversity?.pointFocus,
+          answerCount,
+          requestedDifficulty,
+          mode: "judgment",
+        }),
     buildGrammarSourceCandidateBlock(
       passage,
       requestedDifficulty,
@@ -1060,13 +1087,21 @@ export function buildGrammarErrorCandidateBlock(
           const target = eligible.length
             ? eligible[vi % eligible.length]
             : (vi % sentencePool) + 1;
-          return `⭐ 다양성 보조 지시: 정답(오류) 밑줄은 되도록 아래 문장 목록의 문장 ${target}에 배치하세요. 지정 포인트의 문법 구조가 그 문장에 없으면 이 문장 힌트는 무시하고 포인트 지시를 따르되, 매번 같은 표현을 오류로 만들지 마세요.`;
+          return diet
+            ? `⭐ 다양성 보조 지시: 정답(오류) 밑줄은 되도록 지문의 ${target}번째 문장에 배치하세요. 지정 포인트의 문법 구조가 그 문장에 없으면 이 문장 힌트는 무시하고 포인트 지시를 따르되, 매번 같은 표현을 오류로 만들지 마세요.`
+            : `⭐ 다양성 보조 지시: 정답(오류) 밑줄은 되도록 아래 문장 목록의 문장 ${target}에 배치하세요. 지정 포인트의 문법 구조가 그 문장에 없으면 이 문장 힌트는 무시하고 포인트 지시를 따르되, 매번 같은 표현을 오류로 만들지 마세요.`;
         })()
       : "",
-    sentences.length
-      ? "Detected passage sentences for target distribution:"
-      : "No reliable sentence split was detected; still choose exact source expressions from the passage.",
-    ...sentences.slice(0, 14).map((sentence, index) => `${index + 1}. ${sentence}`),
+    // diet: 지문 재열거 삭제 — 지문은 프롬프트 상단에 이미 1회 전문 포함되며,
+    // 이 목록은 지문을 사실상 2회 인쇄해 어법 콜 입력 비대의 한 축이었다(O166).
+    diet
+      ? ""
+      : sentences.length
+        ? "Detected passage sentences for target distribution:"
+        : "No reliable sentence split was detected; still choose exact source expressions from the passage.",
+    ...(diet
+      ? []
+      : sentences.slice(0, 14).map((sentence, index) => `${index + 1}. ${sentence}`)),
   ].filter(Boolean).join("\n");
 }
 

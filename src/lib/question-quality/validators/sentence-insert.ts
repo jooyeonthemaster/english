@@ -40,6 +40,116 @@ export function countSentenceInsertGapMarkers(text: string): number {
 
 
 
+/**
+ * T10 렌더-계약 정합 게이트 — passageWithMarkers 의 각 원형숫자 마커가 "문장 경계"에만
+ * 놓였는지 결정형 검증(실측 결함 V1-MARKER-DESYNC / V1-MARKER-PLACEMENT-MISMATCH,
+ * campaign-20260716 P008). 잡는 두 파손:
+ *  (1) 인접 빈 갭 — 두 마커 사이에 문장이 없다(공백뿐). 삽입할 자리가 성립하지 않는다.
+ *  (2) 문장 중간 마커 — 마커 바로 앞(공백 제외)이 문장 종결부호가 아니다(소문자/콤마 등
+ *      문장 내부). 마커는 완전한 두 문장 사이에만 와야 한다.
+ *
+ * 계약상 정상이라 검사에서 제외하는 것(DB 실측 기반 오탐 배제):
+ *  - 마커 spread(마커 사이 문장 2개+): markerAfterSentenceIndices 는 임의 오름차순 위치를
+ *    허용하므로 비연속 갭은 정상(DB 수락 69.6%). 이 축은 결정형으로 정상과 구분 불가라
+ *    E-gate(해설-렌더 desync) 담당.
+ *  - 지문 끝 마커(마지막 비공백이 마커): 정답 갭 "마지막 문장 뒤" 관례로 정상(DB 80%).
+ *  - 지문 첫 내용이 마커(시작 갭): 앞 문장이 없어 종결부호 검사 대상에서 제외.
+ * DB 실측(수락 SENTENCE_INSERT 260건) 두 파손 발동 0건(끝 마커/무종결 letter 서명 오탐은
+ * 끝 마커 제외로 배제). error(strict 차단). W2-D 정정(26-07-18, 지휘관 판정): 마커가
+ * 문장 경계 밖이면 삽입 자리가 렌더 파손(문항 불성립)이라 F급 무결성 결함 —
+ * RELAXED_BLOCKING_QUALITY_CODES 에 등재해 전 레인 차단한다.
+ */
+export interface SentenceInsertMarkerFinding {
+  code: "sentence-insert-marker-mid-sentence" | "sentence-insert-marker-empty-gap";
+  message: string;
+  evidence: Record<string, unknown>;
+}
+
+// 원형숫자(①~⑳) — 갭 마커 스캔용 (SENTENCE_INSERT_SLOT_MAX 여유 포함).
+const SI_MARKER_CLASS = /[①-⑳]/;
+const SI_MARKER_GLOBAL = /[①-⑳]/g;
+// 문장 경계 판정용(W2-D 렌더 정합 검증, 26-07-18). 실측: processSentenceInsert 렌더는
+// splitIntoSentences 경계(=.!?)에만 마커를 놓고, 마침표 뒤 닫는 인용부호는 다음 문장
+// 선두로 넘어가므로(stranding) 마커 직전 문자는 항상 .!? 이다. 그래서 문장 경계 =
+// 종결부호(.!?), 그리고 그 뒤에 붙을 수 있는 닫는 인용/괄호 래퍼(."/.)/.] 형태)뿐이다.
+// 닫는 래퍼가 종결부호 없이 단독으로 마커 앞에 오면("(aside) ①") 문장 내부 마커다 —
+// 기존 화이트리스트는 그 단독 래퍼도 허용해 렌더에 없는 형태를 통과시켰다(정합 보정).
+const SI_SENTENCE_TERMINAL = /[.!?]/;
+const SI_CLOSING_WRAPPER = /[”’"')\]]/;
+
+/**
+ * 마커 직전(인덱스 j = 첫 비공백 문자)이 문장 경계인지 판정. 종결부호(.!?)면 즉시 경계.
+ * 닫는 인용/괄호 래퍼면 그 run(및 사이 공백)을 건너뛴 뒤 종결부호가 있어야 경계로
+ * 인정한다(문장이 ."/.)/.] 로 끝난 형태). 래퍼만 있고 종결부호가 없으면 문장 내부다.
+ */
+function isSentenceInsertBoundaryBefore(text: string, j: number): boolean {
+  let k = j;
+  while (k >= 0) {
+    const ch = text[k] ?? "";
+    if (/\s/.test(ch) || SI_CLOSING_WRAPPER.test(ch)) {
+      k -= 1;
+      continue;
+    }
+    break;
+  }
+  return SI_SENTENCE_TERMINAL.test(text[k] ?? "");
+}
+
+export function findSentenceInsertMarkerContractIssues(
+  passageWithMarkers: string | undefined,
+): SentenceInsertMarkerFinding[] {
+  if (!passageWithMarkers) return [];
+  const text = passageWithMarkers;
+  const marks = [...text.matchAll(SI_MARKER_GLOBAL)];
+  if (marks.length < 2) return [];
+
+  // 지문 끝 마커(마지막 비공백 문자가 마커)의 위치 — 관례상 정상이라 경계 검사 제외.
+  let lastNonSpace = text.length - 1;
+  while (lastNonSpace >= 0 && /\s/.test(text[lastNonSpace] ?? "")) lastNonSpace -= 1;
+  const endMarkerIndex =
+    lastNonSpace >= 0 && SI_MARKER_CLASS.test(text[lastNonSpace] ?? "") ? lastNonSpace : -1;
+
+  const findings: SentenceInsertMarkerFinding[] = [];
+  for (let i = 0; i < marks.length; i += 1) {
+    const match = marks[i];
+    const start = match.index ?? 0;
+
+    // (1) 인접 빈 갭 — 이전 마커와의 사이가 공백뿐.
+    if (i > 0) {
+      const previous = marks[i - 1];
+      const between = text.slice((previous.index ?? 0) + previous[0].length, start);
+      if (between.replace(/\s+/g, "").length === 0) {
+        findings.push({
+          code: "sentence-insert-marker-empty-gap",
+          message: `SENTENCE_INSERT markers ${previous[0]} and ${match[0]} are adjacent with no sentence between them; every gap marker must sit between two sentences.`,
+          evidence: { markers: `${previous[0]}${match[0]}` },
+        });
+        continue; // 이 마커의 경계 검사는 위 진단으로 충분.
+      }
+    }
+
+    // (2) 문장 중간 마커 — 시작 갭(앞 내용 없음)·끝 마커는 제외.
+    if (start === endMarkerIndex) continue;
+    let j = start - 1;
+    while (j >= 0 && /\s/.test(text[j] ?? "")) j -= 1;
+    if (j < 0) continue; // 지문 첫 내용이 마커(시작 갭) → 정상.
+    const before = text[j] ?? "";
+    if (SI_MARKER_CLASS.test(before)) continue; // 인접 마커는 (1)에서 처리.
+    if (!isSentenceInsertBoundaryBefore(text, j)) {
+      findings.push({
+        code: "sentence-insert-marker-mid-sentence",
+        message: `SENTENCE_INSERT marker ${match[0]} is not at a sentence boundary; the preceding character "${before}" is not sentence-final punctuation (.!? optionally followed by a closing quote/bracket). Gap markers must sit between complete sentences.`,
+        evidence: {
+          marker: match[0],
+          precedingChar: before,
+          context: text.slice(Math.max(0, start - 40), start + 1),
+        },
+      });
+    }
+  }
+  return findings;
+}
+
 export function findSentenceInsertVisibleSourceLeak(
   sourceSentence: string,
   passageWithMarkers: string,
@@ -161,6 +271,12 @@ export function validateSentenceInsertQuestion(
         "sentence-insert-gap-marker-count",
         `SENTENCE_INSERT passageWithMarkers must contain exactly ${expectedSlotCount} gap markers, got ${markerCount}.`,
       );
+    }
+    // T10 렌더-계약 정합 게이트 — 마커가 문장 경계 사이에만 놓였는지(문장 중간 마커·인접
+    // 빈 갭 금지) 결정형 검증. 마커 spread(비연속 갭)·지문 끝 마커는 계약상 정상이므로
+    // 검사하지 않는다.
+    for (const finding of findSentenceInsertMarkerContractIssues(passageWithMarkers)) {
+      add("error", finding.code, finding.message);
     }
   }
 

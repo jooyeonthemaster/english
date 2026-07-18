@@ -66,6 +66,25 @@ function stringArray(value: unknown): string[] {
     .filter((v) => v.length > 0);
 }
 
+/**
+ * 허용 정답 집합 병합(T8b) — 단일 모범답안 + structuredData.acceptedAnswers[](T8a
+ * 합의 계약: WORD_ORDER/FILL_BLANK_KEY 최상위, SUMMARY_COMPLETE blanks[] 각 원소,
+ * GRAMMAR_CORRECTION underlinedSegments[] 각 원소) + 기타 변형(acceptableVariants)을
+ * 하나의 허용 정답 배열로 만든다. acceptedAnswers 가 있으면 전부 허용 답안으로
+ * 주입하고, 없으면 기존 단일 모범답안만 남긴다 — 기존 문항 완전 무회귀.
+ * 공백·빈 문자열은 제거하고 표면 완전중복(같은 원문)만 dedupe 한다(대소문자·구두점 등
+ * 표면차 흡수는 채점 시 normalizeText 소관 — 여기서 정규화 dedupe 하면 원문 소실).
+ */
+function mergeAnswerSet(
+  primary: string,
+  acceptedRaw: unknown,
+  variants: string[] = [],
+): string[] {
+  const base = primary.trim();
+  const merged = [...(base ? [base] : []), ...stringArray(acceptedRaw), ...variants];
+  return [...new Set(merged)];
+}
+
 interface ParsedOption {
   label: string;
   text: string;
@@ -173,21 +192,27 @@ function textSpec(
   };
 }
 
-/** blanks[]({label, answer, acceptableVariants?, requiredLemmas?}) → 필드 배열 */
+/** blanks[]({label, answer, acceptedAnswers?, acceptableVariants?, requiredLemmas?}) → 필드 배열 */
 function fieldsFromBlanks(data: Record<string, unknown> | null): AnswerFieldSpec[] {
   return asArray(data?.blanks)
     .map((raw, index) => {
       const rec = asRecord(raw);
       if (!rec) return null;
       const answer = asString(rec.answer).trim();
-      if (!answer) return null;
-      const label = asString(rec.label).trim() || `(${index + 1})`;
+      const accepted = stringArray(rec.acceptedAnswers);
+      // 무회귀: 기존엔 answer 가 비면 블랭크를 드롭했다. acceptedAnswers[](T8a 계약)가
+      // 있으면 그것만으로 채점 가능하므로 유지하고, 없으면 기존 드롭 규칙 그대로.
+      if (!answer && accepted.length === 0) return null;
       const variants = stringArray(rec.acceptableVariants);
+      // acceptedAnswers 있으면 전부 주입, 없으면 단일 answer(+variants) 만(무회귀).
+      const answers = mergeAnswerSet(answer, accepted, variants);
+      if (answers.length === 0) return null;
+      const label = asString(rec.label).trim() || `(${index + 1})`;
       const lemmas = stringArray(rec.requiredLemmas).map((l) => l.toLowerCase());
       return {
         key: label,
         label,
-        answers: [answer, ...variants],
+        answers,
         ...(lemmas.length > 0 ? { lemmas } : {}),
       } satisfies AnswerFieldSpec;
     })
@@ -266,9 +291,11 @@ export function buildAnswerSpec(q: ScorableQuestion): AnswerSpec {
 
     if (subType === "FILL_BLANK_KEY") {
       const answer = asString(data?.answer).trim() || (q.correctAnswer ?? "").trim();
+      // acceptedAnswers[](T8a 계약, 최상위) 있으면 전부 허용 답안으로 주입(무회귀 폴백).
+      const answers = mergeAnswerSet(answer, data?.acceptedAnswers);
       return textSpec(
         q,
-        answer ? [{ key: "answer", label: "답", answers: [answer] }] : [],
+        answers.length > 0 ? [{ key: "answer", label: "답", answers }] : [],
         "EXACT",
       );
     }
@@ -304,9 +331,11 @@ export function buildAnswerSpec(q: ScorableQuestion): AnswerSpec {
     if (subType === "WORD_ORDER") {
       const model =
         asString(data?.modelAnswer).trim() || (q.correctAnswer ?? "").trim();
+      // acceptedAnswers[](T8a 계약, 최상위) 있으면 전부 허용 답안으로 주입(무회귀 폴백).
+      const answers = mergeAnswerSet(model, data?.acceptedAnswers);
       return textSpec(
         q,
-        model ? [{ key: "answer", label: "답", answers: [model] }] : [],
+        answers.length > 0 ? [{ key: "answer", label: "답", answers }] : [],
         "EXACT",
       );
     }
@@ -325,9 +354,11 @@ export function buildAnswerSpec(q: ScorableQuestion): AnswerSpec {
           asString(rec.correctedPart).trim() ||
           fallbackParts[index] ||
           (index === 0 ? firstFallback : "");
-        if (!answer) return;
+        // acceptedAnswers[](T8a 계약, 세그먼트 각 원소) 있으면 전부 주입(무회귀 폴백).
+        const answers = mergeAnswerSet(answer, rec.acceptedAnswers);
+        if (answers.length === 0) return;
         const label = asString(rec.label).trim() || `밑줄 ${index + 1}`;
-        fields.push({ key: `seg-${index + 1}`, label, answers: [answer] });
+        fields.push({ key: `seg-${index + 1}`, label, answers });
       });
       if (fields.length === 0 && fallbackParts.length > 0) {
         fallbackParts.forEach((part, index) => {

@@ -1,6 +1,7 @@
 // Split from question-quality.ts — shared helpers in core.ts, public API via index.ts barrel.
 import { getCircledNumbers } from "@/lib/question-postprocess/types";
 import { QuestionQualitySeverity, REPEATED_PHRASE_STOPWORDS, VOCAB_CHOICE_MARKER_COUNT_MAX, VOCAB_CHOICE_MARKER_COUNT_MIN, containsLoose, countUnderlineMarkers, findDuplicate, findMarkers, isRecord, isSingleEnglishToken, normalizeComparableText, normalizeText, toLowerTokens } from "../core";
+import { findVocabSubstitutionSeamIssues } from "./vocab/substitution-seam";
 
 
 export const VOCAB_CHOICE_MARKER_COUNT_DEFAULT = 5;
@@ -396,6 +397,19 @@ export function validateVocabChoiceQuestion(
         "VOCAB_CHOICE 동의어 변형 모드인데 정답 외 단어가 모두 원문 그대로입니다. 암기 무력화 효과가 없습니다.",
       );
     }
+  }
+
+  // (h) 치환 이음매 무결성(결정형): 정답 오답어가 원문 구동사의 head 만 바꾸고
+  // particle 을 잔류시켜 "치환어+particle" 비존재 결합("including out")을 만들거나,
+  // 치환 자리 좌/우 문장부호를 원문과 다르게 훼손한 경우 차단한다. 문맥이 아니라
+  // 문법 파손만으로 정답이 노출되는 정답 무효급 결함이다.
+  for (const finding of findVocabSubstitutionSeamIssues(
+    question.markedWords,
+    passageWithMarkers,
+    passage,
+    normalizeText(question.vocabDisplayMode),
+  )) {
+    add("error", finding.code, finding.message);
   }
 
   // (f) 해설 메타 누출: 출제 변형 과정을 학생용 해설에 노출하지 않는다.

@@ -17,6 +17,12 @@ export const QUESTION_GENERATION_RESEARCH_PROMPT_PROFILES = {
   G1_FINAL_CHECKLIST_ABLATION: "G1_FINAL_CHECKLIST_ABLATION",
   G2_POSITIVE_COMPACT: "G2_POSITIVE_COMPACT",
   G3_SITE_CERTIFICATE: "G3_SITE_CERTIFICATE",
+  // G4 (26-07-17, O166): G2 의 craft 신호(19.5)를 보존하되 수락률 붕괴(2/10)의
+  // 근인을 수술한 중간 다이어트 — positive-core typePrompt + 지문 특이 가드
+  // (지뢰지도·KILLER 사전판정·결핍 모드)와 게이트-짝 차단 규칙은 diet 후보 블록
+  // 으로 보존, 범용 지식(9프레임·카탈로그)·해설 공예 지시·지문 재열거 제거,
+  // 재시도 피드백 채널(customPrompt)은 유지(G2 는 이것까지 지워 교정 루프가 끊겼다).
+  G4_DIET_GUARDED: "G4_DIET_GUARDED",
   B0_CURRENT_CONTROL: "B0_CURRENT_CONTROL",
   B1_TYPE_SCOPED_TAIL: "B1_TYPE_SCOPED_TAIL",
   B2_POSITIVE_COMPACT: "B2_POSITIVE_COMPACT",
@@ -240,6 +246,19 @@ export function applyQuestionGenerationResearchPromptProfile(
       targetCandidateBlock: "",
       finalChecklist: "",
       customPrompt: "",
+    };
+  }
+  if (
+    profileId === QUESTION_GENERATION_RESEARCH_PROMPT_PROFILES.G4_DIET_GUARDED
+  ) {
+    // targetCandidateBlock 은 손대지 않는다 — 호출부(run-question-generation)가
+    // 이 프로필 활성 시 diet 변형으로 이미 빌드한다. customPrompt(재시도 교정
+    // 피드백 채널)도 유지한다.
+    return {
+      ...surface,
+      typePrompt: GRAMMAR_POSITIVE_CORE_PROMPT,
+      typeQualityRubric: "",
+      finalChecklist: "",
     };
   }
   if (

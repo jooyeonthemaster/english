@@ -34,6 +34,32 @@ const commonFields = {
   ...commonTailFields,
 };
 
+// ── 허용 답안 집합 (acceptedAnswers) — T8a 서술형 자동채점 동치정답 계약 ──────────
+// WORD_ORDER·FILL_BLANK_KEY·SUMMARY_COMPLETE(blank 단위)·GRAMMAR_CORRECTION(segment
+// 단위)는 자동채점이 모범답안 1개와 EXACT 정확일치라, 문법·의미가 동등한 답(관계사
+// 등가 in which↔where, 축약형 it is↔it's, 등가 어순 등)을 쓴 학생이 오답 처리된다.
+// 이 필드에 모범답안을 포함한 동치 정답 전부를 담으면 채점(exam-scoring)이 집합 일치로
+// 흡수한다. 🔒비밀(학생 비노출)·optional(생성 안정성/하위호환 — 부재 시 채점은 모범답안
+// 으로 폴백). 필드명 'acceptedAnswers'·타입 string[] 은 채점 담당(exam-scoring)과 합의된
+// 고정 계약이다. 정답 어순/필드 순서 무접촉을 위해 항상 modelAnswer/answer 직후·
+// correctAnswer 직전(top-level), 또는 blank/segment 정답 필드 직후(nested)에 배치한다.
+function acceptedAnswersField(typeHint: string) {
+  // .nullable() + null→undefined 정규화: 일부 LLM 은 "없음"을 빈 배열/미필드 대신
+  // JSON null 로 출력한다. .optional() 만이면 null 이 파싱 실패를 일으키므로 null 을
+  // 허용하고 undefined 로 정규화한다(부재와 동일 취급 → 채점은 모범답안 폴백).
+  // transform 은 AI SDK 구조화 출력 경로(io:"input" toJSONSchema + safeParseAsync)에서
+  // 안전하게 표현·실행되며, 프롬프트-인라인 JSON 폴백의 output-mode toJSONSchema 는
+  // try/catch 로 감싸져 있어(스키마텍스트 생략) 크래시하지 않는다.
+  return z
+    .array(z.string())
+    .nullable()
+    .transform((value) => value ?? undefined)
+    .optional()
+    .describe(
+      `🔒비밀(채점 허용답 집합, 학생 비노출): 모범답안을 포함해 문법·의미가 동등한 허용 정답을 빠짐없이 나열한다(모범답안도 반드시 1개 포함, 최소 1개). 관계사 등가·축약형·어순 허용 변형 등 확신 있는 동치만 넣고, 확신 없는 변형은 넣지 말 것(오정답 흡수 방지). ${typeHint}`,
+    );
+}
+
 // ── 조건부 영작 ──
 
 export const conditionalWritingSchema = z.object({
@@ -67,6 +93,9 @@ export const fillBlankKeySchema = z.object({
   passageWithBlank: z.string().optional().describe("Full passage with the target expression replaced by _____. Server-generated when possible."),
   sentenceWithBlank: z.string().describe("빈칸이 포함된 문장 또는 지문"),
   answer: z.string().describe("빈칸에 들어갈 핵심 표현"),
+  acceptedAnswers: acceptedAnswersField(
+    "⚠️단, 이 빈칸 유형은 예외: answer 가 지문에 그대로 있는 표현을 찾아 쓰는 verbatim 답이므로 위 '의미 동등' 안내를 적용하지 말 것. 허용답에는 verbatim 답의 표기 변형만 담는다 — 축약형('it is'↔'it's', 'do not'↔'don't')·대소문자 관용만 허용하고, 의미가 같은 대체 표현(동의어·패러프레이즈, 관계사 치환 'in which'↔'where', 동치 구문·어순 변형)은 넣지 말 것(지문에 없는 표현은 오답 → 흡수 금지). answer 문자열은 반드시 그대로 1개 포함.",
+  ),
   ...commonAnswerField,
   ...commonTailFields,
 });
@@ -80,6 +109,9 @@ export const summaryCompleteSchema = z.object({
   blanks: z.array(z.object({
     label: z.string().describe("(A), (B) 등"),
     answer: z.string(),
+    acceptedAnswers: acceptedAnswersField(
+      "이 빈칸: answer와 문법·의미가 동등한 정답 전부(동의 구문·축약형·어순 허용 변형). answer 문자열도 이 배열에 그대로 포함할 것.",
+    ),
   })),
   ...commonAnswerField,
   ...commonTailFields,
@@ -101,6 +133,9 @@ export function buildSummaryCompleteSchema(blankCount: number) {
         z.object({
           label: labelSchema,
           answer: z.string(),
+          acceptedAnswers: acceptedAnswersField(
+            "이 빈칸: answer와 문법·의미가 동등한 정답 전부(동의 구문·축약형·어순 허용 변형). answer 문자열도 이 배열에 그대로 포함할 것.",
+          ),
         }),
       )
       .length(n)
@@ -242,6 +277,9 @@ export const wordOrderSchema = z.object({
     .describe("🔒비밀: scrambledWords 중 정답 문장(modelAnswer)에 쓰이지 않는 미끼 칩 전부. 미끼를 하나라도 넣었으면 반드시 전부 여기에 선언 (검수/교사면 전용, 학생 비노출)"),
   contextHint: z.string().optional().describe("문맥 힌트 (한국어)"),
   modelAnswer: z.string().describe("올바른 완성 문장"),
+  acceptedAnswers: acceptedAnswersField(
+    "배열 영작: modelAnswer와 문법·의미가 동등한 완성 문장 전부(제시 칩으로 조립 가능한 등가 어순, 축약형 'it is'↔'it's', 의미 보존 재배열). modelAnswer 문자열도 이 배열에 그대로 포함할 것.",
+  ),
   ...commonAnswerField,
   ...commonTailFields,
 });
@@ -358,6 +396,9 @@ const grammarCorrectionUnderlinedSegmentSchema = z.object({
   isError: z.boolean().describe("이 밑줄 구간 안에 학생이 찾아야 할 어법 오류가 있는지 여부"),
   errorPart: z.string().optional().describe("isError=true일 때 displayedText 안에 숨어 있는 틀린 표현"),
   correctedPart: z.string().optional().describe("isError=true일 때 학생이 써야 하는 올바른 표현"),
+  acceptedAnswers: acceptedAnswersField(
+    "이 밑줄: correctedPart와 문법·의미가 동등한 교정형 전부(예: 관계사 등가 'in which'↔'where', 축약형, 동치 어형). correctedPart 문자열도 이 배열에 그대로 포함할 것.",
+  ),
   surroundingText: z.string().optional().describe("sourceText 위치 식별용 주변 원문"),
 });
 
