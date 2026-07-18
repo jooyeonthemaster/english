@@ -43,6 +43,12 @@ export interface ExamReportSummaryRow {
    */
   hasSourceFiles?: boolean;
   /**
+   * 카드 좌측 썸네일용 1쪽 스토리지 경로(page 오름차순 첫 장). 서명 URL 이
+   * 아니라 경로이며, 카드가 source-urls 라우트로 지연 서명해 표시한다.
+   * INTERNAL(사진 없음)·고아 DRAFT·구버전 API 에서는 null/undefined.
+   */
+  thumbnailPath?: string | null;
+  /**
    * 분석 진행률(aiMeta.progress). 서버(W1)가 배치 커밋마다 기록한다.
    * 구버전 API/진행 기록 전에는 미포함이므로 optional 로 안전 소비한다.
    */

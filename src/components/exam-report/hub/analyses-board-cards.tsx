@@ -14,18 +14,24 @@
 import Link from "next/link";
 import {
   ArrowUpRight,
+  CircleCheck,
+  FileClock,
   FileText,
   Play,
   RotateCw,
   Trash2,
+  TriangleAlert,
   Upload,
   UserRoundPlus,
   Users,
+  type LucideIcon,
 } from "lucide-react";
 import type { ExamReportSummaryRow } from "@/hooks/use-exam-report-activity";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
-import { cn, formatRelativeTime } from "@/lib/utils";
+import { cn, formatDateTime } from "@/lib/utils";
+import { CardDetailIconButton } from "@/components/ui/card-detail-icon-button";
 import { WorkbenchLoadingCard } from "@/components/workbench/workbench-loading-card";
+import { AnalysisSourceThumbnail } from "./analysis-source-thumbnail";
 import {
   EXAM_TYPE_LABEL,
   STATUS_BADGE,
@@ -83,8 +89,13 @@ function MetaChipsRow({
           </span>
         )}
       </span>
-      <span className="whitespace-nowrap">
-        {formatRelativeTime(row.updatedAt)}
+      {/* 상대시간("N시간 전") 대신 절대 타임스탬프(KST 연월일 시:분) — 시험지
+          관리 카드와 동일 규격(tabular-nums 로 자릿수 흔들림 방지). */}
+      <span
+        title="마지막 수정일"
+        className="whitespace-nowrap tabular-nums"
+      >
+        {formatDateTime(row.updatedAt)}
       </span>
     </div>
   );
@@ -146,43 +157,18 @@ function AnalyzingBoardCard({
   );
 }
 
-// ── 상태 뱃지 ────────────────────────────────────────────────────────────────
-function CardBadge({ row }: { row: ExamReportSummaryRow }) {
-  // INTERNAL(자체 시험지 합성)은 사진 업로드 자체가 없으므로 "고아 DRAFT
-  // (사진 없음=등록 미완료)" 판별에서 제외 — 일반 상태 뱃지로 폴백한다.
-  if (row.sourceType !== "INTERNAL" && isOrphanDraft(row)) {
-    return (
-      <span className="shrink-0 whitespace-nowrap rounded-full border border-slate-300 bg-white px-2 py-0.5 text-[11px] font-medium text-slate-600">
-        등록 미완료
-      </span>
-    );
-  }
-  const badge = STATUS_BADGE[row.status] ?? STATUS_BADGE.DRAFT;
-  return (
-    <span
-      className={cn(
-        "inline-flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full px-2 py-0.5 text-[11px] font-medium",
-        badge.className,
-      )}
-    >
-      {badge.pulse && (
-        <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-current" />
-      )}
-      {badge.label}
-    </span>
-  );
-}
-
 // ── 액션 버튼(카드 내부 — 클릭 버블 차단) ────────────────────────────────────
 function ActionButton({
   tone,
   disabled,
   onClick,
+  className,
   children,
 }: {
   tone: "primary" | "outline" | "rose" | "ghost";
   disabled?: boolean;
   onClick: () => void;
+  className?: string;
   children: React.ReactNode;
 }) {
   return (
@@ -202,10 +188,115 @@ function ActionButton({
           "border border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100",
         tone === "ghost" &&
           "border border-slate-200 bg-white text-slate-500 hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600",
+        className,
       )}
     >
       {children}
     </button>
+  );
+}
+
+// ── 좌측 열(시험지 관리 카드의 썸네일 열 자리) ────────────────────────────────
+// 업로드한 시험지 사진이 있으면 그 1쪽 썸네일을 채우고, 없으면(자체 시험지·고아
+// DRAFT) 상태 아이콘 패널이 그대로 드러난다. 썸네일이 덮은 경우 상태는 하단
+// 오버레이 칩으로 유지한다.
+
+/** 상태별 아이콘/색/라벨 — 패널과 오버레이 칩이 공유하는 단일 소스. */
+function statusVisual(status: ExamReportSummaryRow["status"], orphan: boolean) {
+  if (orphan) {
+    return {
+      Icon: Upload as LucideIcon,
+      tint: "text-slate-400",
+      bg: "bg-slate-100/70",
+      label: "등록 미완료",
+    };
+  }
+  if (status === "FAILED") {
+    return {
+      Icon: TriangleAlert as LucideIcon,
+      tint: "text-rose-400",
+      bg: "bg-rose-50",
+      label: STATUS_BADGE.FAILED.label,
+    };
+  }
+  if (status === "ANALYZED") {
+    return {
+      Icon: CircleCheck as LucideIcon,
+      tint: "text-emerald-500",
+      bg: "bg-emerald-50",
+      label: STATUS_BADGE.ANALYZED.label,
+    };
+  }
+  return {
+    Icon: FileClock as LucideIcon,
+    tint: "text-blue-400",
+    bg: "bg-blue-50/60",
+    label: STATUS_BADGE.DRAFT.label,
+  };
+}
+
+function SourceColumn({
+  row,
+  orphan,
+}: {
+  row: ExamReportSummaryRow;
+  orphan: boolean;
+}) {
+  const { Icon, tint, bg, label } = statusVisual(row.status, orphan);
+  // 사진이 있는 분석만 썸네일 시도(자체 시험지 합성/고아 DRAFT 는 사진 자체가 없음).
+  const thumbPath = row.thumbnailPath ?? null;
+  return (
+    // 바깥 열: 카드 높이만큼 늘어나며 상태 색을 깐다(A4 박스가 카드보다 짧을 때
+    // 남는 아래 여백이 상태 색으로 자연스럽게 이어지도록).
+    <div
+      className={cn(
+        "relative flex w-[24%] min-w-[74px] max-w-[96px] shrink-0 items-start justify-center self-stretch overflow-hidden border-r border-slate-100 md:w-[164px] md:min-w-[118px] md:max-w-[164px]",
+        bg,
+      )}
+    >
+      {/* A4(210:297) 비율 박스 — 시험지가 대개 A4 라 썸네일/상태를 같은 규격에
+          맞춘다. 폭이 정해지면 높이가 비율로 따라오므로 반응형에서도 유지된다.
+          카드 min-h 는 이 박스가 잘리지 않도록 맞춰 둔다(열 최대폭×297/210). */}
+      <div className="relative aspect-[210/297] w-full">
+        {/* 베이스: 상태 패널 — 썸네일이 없거나 실패하면 이게 그대로 보인다 */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-2">
+          <Icon
+            className={cn("h-7 w-7 md:h-9 md:w-9", tint)}
+            aria-hidden="true"
+          />
+          <span
+            className={cn(
+              "text-center text-[10px] font-semibold md:text-[11px]",
+              tint,
+            )}
+          >
+            {label}
+          </span>
+        </div>
+
+        {/* 업로드 사진 썸네일(지연 로드) — 성공 시 위 패널을 덮는다 */}
+        {thumbPath && (
+          <AnalysisSourceThumbnail
+            analysisId={row.id}
+            path={thumbPath}
+            alt={`${row.title} 시험지 사진`}
+          />
+        )}
+
+        {/* 썸네일이 덮은 경우에도 상태는 하단 칩으로 유지 */}
+        {thumbPath && (
+          <span
+            className={cn(
+              "absolute inset-x-1 bottom-1 inline-flex items-center justify-center gap-1 rounded-md bg-white/90 px-1.5 py-0.5 text-[10px] font-semibold shadow-sm backdrop-blur-sm",
+              tint,
+            )}
+          >
+            <Icon className="h-3 w-3 shrink-0" aria-hidden="true" />
+            <span className="truncate">{label}</span>
+          </span>
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -261,108 +352,153 @@ export function BoardCard({
         }
       }}
       className={cn(
-        // 로딩 카드와 나란히 놓이므로 hover 그림자까지 동일 감각으로 정돈.
-        "flex cursor-pointer flex-col gap-2 rounded-xl border bg-white p-4 text-left transition duration-200 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500",
+        // 시험지 관리 카드와 동일한 가로 분할 레이아웃 + 동일 치수(표준 규약).
+        // 좌측 열 md 164px × A4(297/210) = 232px 라 md:min-h-[232px] 에서 A4 박스가
+        // 열을 정확히 채운다(시험지 카드가 232 를 쓰는 이유와 동일).
+        "group relative flex min-h-[128px] w-full min-w-0 max-w-full cursor-pointer flex-row overflow-hidden rounded-xl border bg-white text-left transition-all duration-200 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 md:min-h-[232px]",
         failed
           ? "border-rose-200 hover:border-rose-300"
-          : orphan
-            ? "border-slate-200 bg-slate-50/60 hover:border-blue-300"
-            : "border-slate-200 hover:border-blue-300 hover:bg-blue-50/30",
+          : "border-slate-200 hover:border-slate-300",
       )}
     >
-      {/* 제목 + (자체 시험지) + 상태 뱃지 */}
-      <div className="flex items-start justify-between gap-2">
-        <span
-          className="line-clamp-1 min-w-0 text-sm font-medium text-slate-900"
-          title={row.title}
-        >
-          {row.title}
-        </span>
-        <span className="flex shrink-0 items-center gap-1">
-          {internalExam && (
-            <span className="whitespace-nowrap rounded-full bg-blue-50 px-2 py-0.5 text-[11px] font-medium text-blue-600">
-              자체 시험지
-            </span>
-          )}
-          <CardBadge row={row} />
-        </span>
-      </div>
+      {/* 좌측: 업로드 사진 썸네일(없으면 상태 패널) */}
+      <SourceColumn row={row} orphan={orphan} />
 
-      {/* 메타 라인 */}
-      {meta && (
-        <span className="line-clamp-1 text-xs text-slate-500" title={meta}>
-          {meta}
-        </span>
-      )}
-
-      {/* 고아 DRAFT 안내 */}
-      {orphan && (
-        <p className="text-xs text-slate-400">
-          시험지 사진이 업로드되지 않았습니다. 이어서 등록하거나 삭제해 주세요.
-        </p>
-      )}
-
-      {/* 집계 + 상대시간 (분석 중 카드와 공용 칩 줄) */}
-      <MetaChipsRow row={row} className="mt-1" />
-
-      {/* 액션 바 — 상태별 CTA + 삭제(라이브러리 파리티: 전 상태 삭제 가능) */}
-      <div className="mt-1 flex items-center gap-2">
-        {/* 분석 완료 — 최우선 CTA "학생 추가"(딥링크로 다이얼로그 즉시 오픈).
-            학생 0명이면 프라이머리로 다음 행동을 못박고, 이미 있으면 아웃라인. */}
-        {row.status === "ANALYZED" && (
-          <ActionButton
-            tone={row.studentCount === 0 ? "primary" : "outline"}
-            onClick={() => onAddStudent(row)}
+      {/* 우측: 본문 */}
+      <div className="flex min-w-0 flex-1 flex-col p-4">
+        {/* 제목 + 삭제(우측 상단 아이콘 — 시험지 관리 카드와 동일 규격) */}
+        <div className="flex items-start gap-1.5 min-w-0">
+          <h4
+            className="min-w-0 flex-1 text-[13px] font-semibold leading-snug text-slate-800 line-clamp-2 break-words transition-colors group-hover:text-blue-600"
+            title={row.title}
           >
-            <UserRoundPlus className="h-3.5 w-3.5" />
-            학생 추가
-          </ActionButton>
-        )}
-        {failed && (
-          <ActionButton
-            tone="rose"
-            disabled={restarting}
-            onClick={() => onRestart(row)}
+            {row.title}
+          </h4>
+          <button
+            type="button"
+            aria-label="삭제"
+            title="삭제"
+            onClick={(e) => {
+              e.stopPropagation();
+              onRequestDelete(row);
+            }}
+            className="flex h-6 w-6 shrink-0 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white text-slate-300 transition-colors hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600"
           >
-            <RotateCw
-              className={cn("h-3.5 w-3.5", restarting && "animate-spin")}
-            />
-            {restarting ? "재시작 중" : "다시 분석"}
-          </ActionButton>
+            <Trash2 className="h-3.5 w-3.5" />
+          </button>
+        </div>
+
+        {/* 시험 종류 + 자체 시험지 태그 */}
+        {(meta || internalExam) && (
+          <div className="mt-1 flex min-w-0 flex-wrap items-center gap-1.5">
+            {meta && (
+              <span
+                className="min-w-0 truncate text-[11px] text-slate-500"
+                title={meta}
+              >
+                {meta}
+              </span>
+            )}
+            {internalExam && (
+              <span className="shrink-0 whitespace-nowrap rounded bg-blue-50 px-1.5 py-0.5 text-[10px] font-medium text-blue-600">
+                자체 시험지
+              </span>
+            )}
+          </div>
         )}
-        {resumableDraft && (
-          <ActionButton
-            tone="primary"
-            disabled={restarting}
-            onClick={() => onRestart(row)}
-          >
-            <Play className="h-3.5 w-3.5" />
-            {restarting ? "시작 중" : "이어서 분석"}
-          </ActionButton>
-        )}
+
+        {/* 고아 DRAFT 안내 */}
         {orphan && (
-          <ActionButton tone="primary" onClick={() => onResumeDraft(row)}>
-            <Upload className="h-3.5 w-3.5" />
-            이어서 등록
-          </ActionButton>
+          <p className="mt-1 text-[11px] text-slate-400">
+            시험지 사진이 업로드되지 않았습니다. 이어서 등록하거나 삭제해 주세요.
+          </p>
         )}
-        {/* INTERNAL — 원본 시험지 배포 탭 보조 링크. 카드 자체가 role=button
-            이므로 click/keydown 버블을 끊어 카드 열기와 충돌하지 않게 한다. */}
-        {sourceExamHref && (
-          <Link
-            href={sourceExamHref}
-            onClick={(e) => e.stopPropagation()}
-            onKeyDown={(e) => e.stopPropagation()}
-            className="inline-flex h-7 items-center gap-1 whitespace-nowrap rounded-md px-2 text-[12px] font-semibold text-blue-600 transition-colors hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-          >
-            <ArrowUpRight className="h-3.5 w-3.5" />
-            시험지 열기
-          </Link>
-        )}
-        <ActionButton tone="ghost" onClick={() => onRequestDelete(row)}>
-          <Trash2 className="h-3.5 w-3.5" />
-          삭제
-        </ActionButton>
+
+        {/* 집계 + 상대시간 (분석 중 카드와 공용 칩 줄) */}
+        <MetaChipsRow row={row} className="mt-2" />
+
+        {/* 하단 액션 — 상태별 CTA + 상세보기(시험지 관리 카드 파리티) */}
+        <div className="mt-auto flex items-center gap-1.5 pt-3">
+          <div className="flex min-w-0 flex-1 items-center gap-1.5">
+            {/* 분석 완료 — 최우선 CTA "학생 추가"(딥링크로 다이얼로그 즉시 오픈).
+                학생 0명이면 프라이머리로 다음 행동을 못박고, 이미 있으면 아웃라인. */}
+            {row.status === "ANALYZED" && (
+              <ActionButton
+                tone={row.studentCount === 0 ? "primary" : "outline"}
+                className="min-w-0 flex-1 justify-center"
+                onClick={() => onAddStudent(row)}
+              >
+                <UserRoundPlus className="h-3.5 w-3.5 shrink-0" />
+                <span className="truncate">학생 추가</span>
+              </ActionButton>
+            )}
+            {failed && (
+              <ActionButton
+                tone="rose"
+                className="min-w-0 flex-1 justify-center"
+                disabled={restarting}
+                onClick={() => onRestart(row)}
+              >
+                <RotateCw
+                  className={cn(
+                    "h-3.5 w-3.5 shrink-0",
+                    restarting && "animate-spin",
+                  )}
+                />
+                <span className="truncate">
+                  {restarting ? "재시작 중" : "다시 분석"}
+                </span>
+              </ActionButton>
+            )}
+            {resumableDraft && (
+              <ActionButton
+                tone="primary"
+                className="min-w-0 flex-1 justify-center"
+                disabled={restarting}
+                onClick={() => onRestart(row)}
+              >
+                <Play className="h-3.5 w-3.5 shrink-0" />
+                <span className="truncate">
+                  {restarting ? "시작 중" : "이어서 분석"}
+                </span>
+              </ActionButton>
+            )}
+            {orphan && (
+              <ActionButton
+                tone="primary"
+                className="min-w-0 flex-1 justify-center"
+                onClick={() => onResumeDraft(row)}
+              >
+                <Upload className="h-3.5 w-3.5 shrink-0" />
+                <span className="truncate">이어서 등록</span>
+              </ActionButton>
+            )}
+            {/* INTERNAL — 원본 시험지 배포 탭 보조 링크. 카드 자체가 role=button
+                이므로 click/keydown 버블을 끊어 카드 열기와 충돌하지 않게 한다. */}
+            {sourceExamHref && (
+              <Link
+                href={sourceExamHref}
+                onClick={(e) => e.stopPropagation()}
+                onKeyDown={(e) => e.stopPropagation()}
+                className="inline-flex h-7 shrink-0 items-center gap-1 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2 text-[12px] font-semibold text-blue-600 transition-colors hover:border-blue-300 hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              >
+                <ArrowUpRight className="h-3.5 w-3.5" />
+                시험지 열기
+              </Link>
+            )}
+          </div>
+
+          {/* 상세보기 — 카드 열기(orphan 은 이어서 등록으로 진입) */}
+          <CardDetailIconButton
+            className="size-7 shrink-0 rounded-md shadow-none"
+            iconClassName="size-3.5"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (orphan) onResumeDraft(row);
+              else onOpen(row);
+            }}
+          />
+        </div>
       </div>
     </div>
   );

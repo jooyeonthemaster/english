@@ -13,18 +13,25 @@ export {
   updateExamMeta,
   updateExamMap,
   confirmExamMap,
+  setMapQuestionConfirmed,
   updateAnalysisEdits,
   deleteExamAnalysis,
 } from "./crud";
 
 export {
   addExamStudents,
+  searchRosterStudents,
+  addExamStudentFromRoster,
+  createRosterStudentForExam,
+  syncExamStudentsToRoster,
+  listAcademySchools,
   setStudentSources,
   updateStudentGrading,
   deleteExamStudent,
   updateStudentReportDoc,
   rollbackStudentReport,
 } from "./students";
+export type { RosterStudentPick } from "./students";
 
 export { enableExamReportShare, disableExamReportShare } from "./share";
 

@@ -1,0 +1,54 @@
+<!-- @dsCard group="Components" -->
+<title>버튼</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Pretendard",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;background:#fff;color:#111827;padding:28px;-webkit-font-smoothing:antialiased}
+h1{font-size:15px;font-weight:800;margin-bottom:4px}
+p.note{font-size:12px;color:#6B7280;margin-bottom:20px}
+h2{font-size:12px;font-weight:700;color:#374151;margin:18px 0 10px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:36px;padding:0 16px;border-radius:8px;font-size:14px;font-weight:500;font-family:inherit;border:none;cursor:pointer;white-space:nowrap;transition:all .15s}
+.btn:disabled{opacity:.5;pointer-events:none}
+.btn-default{background:#3B82F6;color:#fff}.btn-default:hover{background:rgba(59,130,246,.9)}
+.btn-destructive{background:#EF4444;color:#fff}.btn-destructive:hover{background:rgba(239,68,68,.9)}
+.btn-outline{background:#fff;color:#111827;border:1px solid #E5E7EB;box-shadow:0 1px 2px rgba(0,0,0,.05)}.btn-outline:hover{background:#EFF6FF}
+.btn-secondary{background:#F3F4F6;color:#111827}.btn-secondary:hover{background:rgba(243,244,246,.8)}
+.btn-ghost{background:transparent;color:#111827}.btn-ghost:hover{background:#EFF6FF}
+.btn-link{background:transparent;color:#3B82F6;text-decoration:none}.btn-link:hover{text-decoration:underline}
+.sz-lg{height:40px;padding:0 24px}
+.sz-sm{height:32px;padding:0 12px;gap:6px}
+.sz-xs{height:24px;padding:0 8px;font-size:12px;gap:4px}
+.sz-icon{width:36px;padding:0}
+</style>
+<h1>버튼 (shadcn Button)</h1>
+<p class="note">기본 rounded-md(8px), h-9(36px), text-sm 500. focus ring: 파랑 3px/50%. 컨텍스트 색 규약은 Patterns &gt; 색 규약 카드 참조.</p>
+
+<h2>Variants</h2>
+<div class="row">
+  <button class="btn btn-default">기본(primary)</button>
+  <button class="btn btn-secondary">Secondary</button>
+  <button class="btn btn-outline">Outline</button>
+  <button class="btn btn-ghost">Ghost</button>
+  <button class="btn btn-destructive">Destructive</button>
+  <button class="btn btn-link">Link</button>
+  <button class="btn btn-default" disabled>비활성</button>
+</div>
+
+<h2>Sizes — lg(40) / default(36) / sm(32) / xs(24) / icon</h2>
+<div class="row">
+  <button class="btn btn-default sz-lg">Large</button>
+  <button class="btn btn-default">Default</button>
+  <button class="btn btn-default sz-sm">Small</button>
+  <button class="btn btn-default sz-xs">XS</button>
+  <button class="btn btn-outline sz-icon" aria-label="icon">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+  </button>
+</div>
+
+<h2>랜딩 CTA (rounded-full · slate-950 → hover blue)</h2>
+<div class="row">
+  <button class="btn" style="border-radius:9999px;background:#020617;color:#fff;font-size:13px;font-weight:900;box-shadow:0 16px 40px -24px rgba(15,23,42,.8)"
+    onmouseover="this.style.background='#2563EB';this.style.transform='translateY(-2px)'"
+    onmouseout="this.style.background='#020617';this.style.transform='none'">무료로 시작하기</button>
+</div>

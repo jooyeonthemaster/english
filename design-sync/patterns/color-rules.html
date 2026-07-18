@@ -1,0 +1,54 @@
+<!-- @dsCard group="Patterns" -->
+<title>버튼 색 규약</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Pretendard",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;background:#fff;color:#111827;padding:28px;-webkit-font-smoothing:antialiased}
+h1{font-size:15px;font-weight:800;margin-bottom:4px}
+p.note{font-size:12px;color:#6B7280;margin-bottom:20px}
+h2{font-size:12px;font-weight:700;color:#374151;margin:18px 0 10px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:8px;font-size:12px;font-weight:600;font-family:inherit;border:1px solid transparent;cursor:pointer;white-space:nowrap;transition:all .15s}
+.rule{font-size:12px;color:#6B7280;line-height:1.7;margin-top:16px;padding:12px 14px;background:#F9FAFB;border-radius:8px}
+.rule b{color:#111827}
+</style>
+<h1>버튼 색 규약 (컨텍스트 시맨틱)</h1>
+<p class="note">색은 기능을 말한다 — 파랑=학습자료·생성·주요 액션, 초록=검수(취소 포함), 빨강=미검수 상태, 슬레이트=선택/활성. 검수취소에 rose 사용 금지.</p>
+
+<h2>파랑 — 학습자료 · 생성 · 주요 액션</h2>
+<div class="row">
+  <button class="btn" style="background:#2563EB;color:#fff" onmouseover="this.style.background='#1D4ED8'" onmouseout="this.style.background='#2563EB'">학습자료 생성</button>
+  <button class="btn" style="background:#2563EB;color:#fff">문제 생성</button>
+  <button class="btn" style="background:#E2E8F0;color:#94A3B8;cursor:not-allowed">비활성 (bg-slate-200)</button>
+</div>
+
+<h2>초록(emerald) — 검수 계열 (취소도 초록)</h2>
+<div class="row">
+  <button class="btn" style="background:#fff;border-color:#10B981;color:#059669;box-shadow:0 1px 2px rgba(0,0,0,.05)"
+    onmouseover="this.style.background='#ECFDF5'" onmouseout="this.style.background='#fff'">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+    검수완료
+  </button>
+  <button class="btn" style="background:#fff;border-color:rgba(254,202,202,.8);color:#FCA5A5;box-shadow:0 1px 2px rgba(0,0,0,.05)"
+    onmouseover="this.style.borderColor='#10B981';this.style.background='#ECFDF5';this.style.color='#059669'"
+    onmouseout="this.style.borderColor='rgba(254,202,202,.8)';this.style.background='#fff';this.style.color='#FCA5A5'">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+    미검수 남음 (hover 시 초록)
+  </button>
+  <button class="btn" style="background:#059669;color:#fff" onmouseover="this.style.background='#047857'" onmouseout="this.style.background='#059669'">추출 저장</button>
+</div>
+
+<h2>슬레이트 — 선택 · 활성</h2>
+<div class="row">
+  <button class="btn" style="background:#0F172A;color:#fff">활성 필터</button>
+  <button class="btn" style="background:#1E293B;color:#fff">현재 페이지</button>
+  <button class="btn" style="border-color:#2563EB;background:#2563EB;color:#fff">선택된 카드</button>
+</div>
+
+<div class="rule">
+  <b>규칙 요약</b><br>
+  · 학습자료 버튼 = 파랑(blue-600 → hover 700), 비활성은 slate-200<br>
+  · 검수 버튼(검수취소 포함) = 초록(emerald) — rose/빨강 배경 금지, 빨강은 "미검수" 상태 표시 전용(red-200/300 테두리·글자)<br>
+  · 선택/활성 상태 = slate-800/900 solid<br>
+  · 크레딧 소모 버튼에는 CreditCostChip을 함께 표기
+</div>

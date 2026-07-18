@@ -1,0 +1,42 @@
+<!-- @dsCard group="Components" -->
+<title>필터 필 · 세그먼트 탭</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Pretendard",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;background:#fff;color:#111827;padding:28px;-webkit-font-smoothing:antialiased}
+h1{font-size:15px;font-weight:800;margin-bottom:4px}
+p.note{font-size:12px;color:#6B7280;margin-bottom:20px}
+h2{font-size:12px;font-weight:700;color:#374151;margin:18px 0 10px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pill{display:inline-flex;align-items:center;gap:6px;height:32px;border-radius:9999px;padding:0 12px;font-size:12px;font-weight:500;font-family:inherit;border:none;cursor:pointer;transition:background .15s,color .15s}
+.pill .cnt{font-size:11px;font-variant-numeric:tabular-nums}
+.pill.on{background:#0F172A;color:#fff}.pill.on .cnt{color:rgba(255,255,255,.7)}
+.pill.off{background:#F1F5F9;color:#475569}.pill.off:hover{background:#E2E8F0;color:#1E293B}.pill.off .cnt{color:#94A3B8}
+.seg{display:inline-flex;background:#F3F4F6;border-radius:10px;padding:2px;gap:2px}
+.seg button{border:none;background:transparent;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;font-family:inherit;color:#6B7280;cursor:pointer}
+.seg button.on{background:#fff;color:#111827;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+</style>
+<h1>필터 필 · 세그먼트 탭 (어드민 공용 규약)</h1>
+<p class="note">Toss형 rounded-full FilterPill: 활성=slate-900/흰글자, 비활성=slate-100. 카운트는 11px tabular. 검색은 라이브 필터(250ms 디바운스)와 조합.</p>
+
+<h2>FilterPill</h2>
+<div class="row">
+  <button class="pill on">전체 <span class="cnt">1,248</span></button>
+  <button class="pill off">활성 <span class="cnt">982</span></button>
+  <button class="pill off">휴면 <span class="cnt">214</span></button>
+  <button class="pill off">탈퇴 <span class="cnt">52</span></button>
+  <button class="pill off">크레딧 부족</button>
+</div>
+
+<h2>SegmentedTabs (학원별 ↔ 회원별 등 뷰 전환)</h2>
+<div class="row">
+  <div class="seg">
+    <button class="on">학원별</button>
+    <button>회원별</button>
+  </div>
+  <div class="seg">
+    <button class="on">템플릿</button>
+    <button>이미지</button>
+    <button>전체</button>
+  </div>
+</div>

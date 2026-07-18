@@ -8,11 +8,16 @@
 //      다이얼로그 안에서 링크 + 복사 버튼 + 전달 안내를 즉시 보여준다.
 //   ㉡ 선생님이 직접 입력 — 추가 후 정오표(학생 워크스페이스)로 안내한다.
 // "한 명 더 추가"로 다건 등록 흐름을 잇는다(입력 주체 선택은 유지).
+//
+// 로스터 기준 통합(26-07-18): 이름 자유입력을 폐기하고 학원 로스터(Student)
+// 에서 고른다. 고른 학생은 studentId 로 귀속돼 학생 관리 화면과 같은 학생을
+// 가리키고 응시 이력이 축적된다. 로스터에 없는 이름은 이 자리에서 로스터에
+// 등록(학생코드 발급)한 뒤 담는다 — 두 화면이 갈라지지 않는 단일 경로.
 // ============================================================================
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Check, ClipboardList, Copy } from "lucide-react";
+import { Check, ClipboardList, Copy, Loader2, Search, UserPlus } from "lucide-react";
 import { toast } from "sonner";
 
 import {
@@ -25,8 +30,23 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
+import { cn } from "@/lib/utils";
 import { OptionRadioCard } from "@/components/workbench/shared/option-radio-card";
-import { addExamStudents, enableAnswerLink } from "@/actions/exam-report";
+import {
+  StudentFields,
+  toStudentPayload,
+  useStudentForm,
+  type StudentFormValues,
+} from "@/components/students/student-fields";
+import {
+  addExamStudentFromRoster,
+  createRosterStudentForExam,
+  enableAnswerLink,
+  listAcademySchools,
+  searchRosterStudents,
+  type RosterStudentPick,
+} from "@/actions/exam-report";
 import type { ExamAnalysisStudentRow } from "../ui-contracts";
 import { examReportBasePrefix } from "../grading/grading-shared";
 
@@ -34,6 +54,8 @@ interface AddStudentDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   analysisId: string;
+  /** 로스터 신규 등록 시 학년 기본값 — 분석의 학년에서 파싱해 넘긴다(없으면 1). */
+  defaultGrade?: number;
   onAdded: (row: ExamAnalysisStudentRow) => void;
 }
 
@@ -53,20 +75,66 @@ export function AddStudentDialog({
   open,
   onOpenChange,
   analysisId,
+  defaultGrade = 1,
   onAdded,
 }: AddStudentDialogProps) {
   const router = useRouter();
   const pathname = usePathname();
   const base = examReportBasePrefix(pathname ?? "");
 
-  const [name, setName] = useState("");
+  const [query, setQuery] = useState("");
+  const [roster, setRoster] = useState<RosterStudentPick[]>([]);
+  const [searching, setSearching] = useState(false);
+  // 신규 등록 폼 — 학생 관리와 동일한 필드 세트를 공용 블록으로 렌더한다.
+  const [creating, setCreating] = useState(false);
+  const [schools, setSchools] = useState<{ id: string; name: string; type: string }[]>([]);
+  const newForm = useStudentForm();
   const [mode, setMode] = useState<EntryMode>("student");
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<AddedResult | null>(null);
   const [copied, setCopied] = useState(false);
 
+  // 로스터 검색 — 열릴 때 1회 + 입력 디바운스(250ms). 최신 요청만 반영한다.
+  useEffect(() => {
+    if (!open || result != null) return;
+    let cancelled = false;
+    setSearching(true);
+    const timer = setTimeout(() => {
+      void searchRosterStudents(analysisId, query)
+        .then((rows) => {
+          if (!cancelled) setRoster(rows);
+        })
+        .catch(() => {
+          if (!cancelled) setRoster([]);
+        })
+        .finally(() => {
+          if (!cancelled) setSearching(false);
+        });
+    }, 250);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [open, analysisId, query, result]);
+
+  // 학교 선택지는 신규 등록 패널을 처음 열 때만 가져온다(피커만 쓸 땐 불필요).
+  useEffect(() => {
+    if (!creating || schools.length > 0) return;
+    void listAcademySchools()
+      .then(setSchools)
+      .catch(() => setSchools([]));
+  }, [creating, schools.length]);
+
+  const trimmed = query.trim();
+  // 검색어와 정확히 같은 이름이 로스터에 없을 때만 "새 학생으로 등록"을 제안한다.
+  const exactExists = roster.some((r) => r.name === trimmed);
+  const canCreateNew = trimmed.length > 0 && !exactExists && !searching;
+
   function resetAll() {
-    setName("");
+    setQuery("");
+    setRoster([]);
+    setCreating(false);
+    newForm.reset({ ...newForm.getValues(), name: "", grade: defaultGrade });
     setMode("student");
     setResult(null);
     setCopied(false);
@@ -78,28 +146,21 @@ export function AddStudentDialog({
     onOpenChange(next);
   }
 
-  /** "한 명 더 추가" — 입력 주체 선택은 유지한 채 폼으로 되돌린다. */
+  /** "한 명 더 추가" — 입력 주체 선택은 유지한 채 피커로 되돌린다. */
   function handleAddAnother() {
-    setName("");
+    setQuery("");
+    setCreating(false);
     setResult(null);
     setCopied(false);
   }
 
-  async function handleSubmit() {
-    const studentName = name.trim();
-    if (!studentName) {
-      toast.error("학생 이름을 입력해 주세요.");
-      return;
-    }
-    setBusy(true);
-    try {
-      const { students: created } = await addExamStudents(analysisId, [studentName]);
-      const student = created[0];
-      if (!student) {
-        toast.error("학생 추가에 실패했습니다.");
-        return;
-      }
-
+  /** 추가된 학생을 목록에 반영하고 결과 화면으로 — 로스터/신규 경로 공용 후처리. */
+  const finishAdd = useCallback(
+    async (
+      student: { id: string; studentName: string },
+      rosterStudentId: string,
+      extraToast?: string,
+    ) => {
       // ㉠ 학생 직접 입력 — 추가와 동시에 답안 링크 발급(실패해도 추가는 성공 처리).
       let answerToken: string | null = null;
       let answerUrl: string | null = null;
@@ -117,6 +178,7 @@ export function AddStudentDialog({
       onAdded({
         id: student.id,
         studentName: student.studentName,
+        studentId: rosterStudentId,
         scoreSummary: null,
         gradingConfirmed: false,
         reportStatus: "NONE",
@@ -130,17 +192,51 @@ export function AddStudentDialog({
         createdAt: now,
         updatedAt: now,
       });
-      toast.success(`${student.studentName} 학생을 추가했습니다.`);
+      toast.success(extraToast ?? `${student.studentName} 학생을 추가했습니다.`);
       setResult({
         studentId: student.id,
         studentName: student.studentName,
         mode,
         answerUrl,
       });
-      setName("");
+      setQuery("");
       setCopied(false);
+      // 로스터가 바뀌었을 수 있다(신규 등록) — 학생 관리 화면 재검증.
+      router.refresh();
+    },
+    [mode, onAdded, router],
+  );
+
+  /** 로스터 학생 선택 → studentId 로 귀속시켜 담는다. */
+  async function handlePick(pick: RosterStudentPick) {
+    if (pick.alreadyAdded || busy) return;
+    setBusy(true);
+    try {
+      const { student } = await addExamStudentFromRoster(analysisId, pick.id);
+      await finishAdd(student, pick.id);
     } catch {
       toast.error("학생 추가에 실패했습니다.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  /** 로스터에 없는 이름 → 학생 관리에 먼저 등록(코드 발급)하고 담는다. */
+  async function handleCreateNew(values: StudentFormValues) {
+    if (busy) return;
+    setBusy(true);
+    try {
+      const { student, rosterStudentId, studentCode } =
+        await createRosterStudentForExam(analysisId, toStudentPayload(values));
+      await finishAdd(
+        student,
+        rosterStudentId,
+        `${student.studentName} 학생을 학생 관리에도 등록했어요 (코드 ${studentCode})`,
+      );
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "학생 등록에 실패했습니다.",
+      );
     } finally {
       setBusy(false);
     }
@@ -174,30 +270,12 @@ export function AddStudentDialog({
             <DialogHeader>
               <DialogTitle>학생 추가</DialogTitle>
               <DialogDescription>
-                학생 이름을 입력하고, 답안을 누가 입력할지 선택하세요.
+                학생 관리에 등록된 학생 중에서 고르세요. 목록에 없으면 이름을 입력해
+                바로 등록할 수 있어요.
               </DialogDescription>
             </DialogHeader>
 
             <div className="space-y-4">
-              <div>
-                <label className="mb-1.5 block text-xs font-medium text-slate-500">
-                  학생 이름
-                </label>
-                <Input
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && !e.nativeEvent.isComposing) {
-                      e.preventDefault();
-                      void handleSubmit();
-                    }
-                  }}
-                  placeholder="김민준"
-                  disabled={busy}
-                  autoFocus
-                />
-              </div>
-
               <div>
                 <label className="mb-1.5 block text-xs font-medium text-slate-500">
                   답안 입력 방식
@@ -224,6 +302,152 @@ export function AddStudentDialog({
                   />
                 </div>
               </div>
+
+              <div>
+                <label className="mb-1.5 block text-xs font-medium text-slate-500">
+                  학생 선택
+                </label>
+                <div className="relative">
+                  <Search
+                    className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-slate-400"
+                    aria-hidden
+                  />
+                  <Input
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="이름으로 검색"
+                    disabled={busy}
+                    autoFocus
+                    className="pl-8!"
+                  />
+                </div>
+
+                <div className="mt-2 max-h-[240px] overflow-y-auto rounded-lg border border-slate-200">
+                  {searching && roster.length === 0 ? (
+                    <div className="flex items-center justify-center gap-2 px-3 py-8 text-[12.5px] text-slate-400">
+                      <Loader2 className="size-3.5 animate-spin" aria-hidden />
+                      불러오는 중…
+                    </div>
+                  ) : roster.length === 0 ? (
+                    <div className="px-3 py-8 text-center text-[12.5px] text-slate-400">
+                      {trimmed
+                        ? "검색 결과가 없습니다."
+                        : "학생 관리에 등록된 학생이 없습니다."}
+                    </div>
+                  ) : (
+                    <ul className="divide-y divide-slate-100">
+                      {roster.map((s) => (
+                        <li key={s.id}>
+                          <button
+                            type="button"
+                            onClick={() => void handlePick(s)}
+                            disabled={busy || s.alreadyAdded}
+                            className={cn(
+                              "flex w-full items-center gap-3 px-3 py-2.5 text-left transition-colors",
+                              s.alreadyAdded
+                                ? "cursor-not-allowed bg-slate-50/60"
+                                : "hover:bg-blue-50/60 disabled:cursor-not-allowed",
+                            )}
+                          >
+                            <div className="min-w-0 flex-1">
+                              <p
+                                className={cn(
+                                  "truncate text-[13.5px] font-bold",
+                                  s.alreadyAdded ? "text-slate-400" : "text-slate-800",
+                                )}
+                              >
+                                {s.name}
+                              </p>
+                              <p className="mt-px truncate text-[11.5px] text-slate-400">
+                                {s.grade}학년
+                                {s.schoolName ? ` · ${s.schoolName}` : ""} ·{" "}
+                                <span className="font-mono">{s.studentCode}</span>
+                              </p>
+                            </div>
+                            {s.alreadyAdded ? (
+                              <span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-bold text-slate-400">
+                                담김
+                              </span>
+                            ) : (
+                              <span className="shrink-0 text-[11.5px] font-bold text-blue-600">
+                                추가
+                              </span>
+                            )}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </div>
+
+              {/* 로스터에 없는 이름 — 학생 관리와 동일한 폼으로 여기서 등록한다 */}
+              {!creating && canCreateNew && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    newForm.reset({
+                      ...newForm.getValues(),
+                      name: trimmed,
+                      grade: defaultGrade,
+                    });
+                    setCreating(true);
+                  }}
+                  className="flex w-full items-center gap-2.5 rounded-lg border border-blue-200 bg-blue-50/50 px-3 py-2.5 text-left transition-colors hover:bg-blue-50"
+                >
+                  <UserPlus className="size-4 shrink-0 text-blue-600" aria-hidden />
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-[12.5px] font-bold text-slate-700">
+                      &lsquo;{trimmed}&rsquo; 학생을 새로 등록
+                    </span>
+                    <span className="mt-0.5 block text-[11.5px] text-slate-500">
+                      학생 관리에 등록하고 이 시험에 담습니다. 학생 코드는 자동 발급돼요.
+                    </span>
+                  </span>
+                </button>
+              )}
+
+              {creating && (
+                <div className="rounded-lg border border-blue-200 bg-blue-50/40 p-3.5">
+                  <div className="mb-3 flex items-center justify-between gap-2">
+                    <p className="text-[12.5px] font-bold text-slate-700">
+                      새 학생 등록
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setCreating(false)}
+                      disabled={busy}
+                      className="text-[11.5px] font-semibold text-slate-400 transition-colors hover:text-slate-600"
+                    >
+                      취소
+                    </button>
+                  </div>
+                  <Form {...newForm}>
+                    <form
+                      onSubmit={newForm.handleSubmit(handleCreateNew)}
+                      className="space-y-4"
+                    >
+                      <StudentFields
+                        form={newForm}
+                        schools={schools}
+                        autoFocusName={false}
+                      />
+                      <Button
+                        type="submit"
+                        disabled={busy}
+                        className="h-10 w-full bg-blue-600 text-[13px] font-bold hover:bg-blue-700"
+                      >
+                        {busy ? (
+                          <Loader2 className="size-4 animate-spin" aria-hidden />
+                        ) : (
+                          <UserPlus className="size-4" aria-hidden />
+                        )}
+                        학생 관리에 등록하고 추가
+                      </Button>
+                    </form>
+                  </Form>
+                </div>
+              )}
             </div>
 
             <DialogFooter>
@@ -233,19 +457,7 @@ export function AddStudentDialog({
                 onClick={() => handleClose(false)}
                 disabled={busy}
               >
-                취소
-              </Button>
-              <Button
-                type="button"
-                onClick={() => void handleSubmit()}
-                disabled={busy}
-                className="bg-blue-600 hover:bg-blue-700"
-              >
-                {busy
-                  ? "추가 중…"
-                  : mode === "student"
-                    ? "추가하고 링크 발급"
-                    : "추가"}
+                닫기
               </Button>
             </DialogFooter>
           </>

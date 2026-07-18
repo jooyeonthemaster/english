@@ -1,5 +1,5 @@
 // ============================================================================
-// 오프라인 홍보물 PDF 저장 — 공개 Supabase Storage 버킷.
+// 오프라인 홍보물(PDF·이미지) 저장 — 공개 Supabase Storage 버킷.
 //
 // 전단지/세미나 자료/학습지 샘플 등 홍보용 PDF를 보관한다. 관리자만 업로드하지만
 // 파일 자체는 비만료 공개 URL로 다뤄야 미리보기·인쇄가 단순해지므로 공개 버킷을 쓴다.
@@ -15,16 +15,37 @@ import { getServiceSupabase } from "@/lib/supabase-storage";
 export const OFFLINE_MARKETING_BUCKET = "offline-marketing";
 
 const MAX_BYTES = 30 * 1024 * 1024; // 30MB
+export const OFFLINE_MARKETING_MIME_TYPES = [
+  "application/pdf",
+  "image/png",
+  "image/jpeg",
+  "image/webp",
+] as const;
+
+export function offlineMarketingContentType(fileName: string): string {
+  const lower = fileName.toLowerCase();
+  if (lower.endsWith(".png")) return "image/png";
+  if (lower.endsWith(".jpg") || lower.endsWith(".jpeg")) return "image/jpeg";
+  if (lower.endsWith(".webp")) return "image/webp";
+  return "application/pdf";
+}
 
 /** 없으면 공개 버킷 생성. 멱등 — 업로드/서명 발급 시 호출해도 안전. */
 export async function ensureOfflineMarketingBucket(): Promise<void> {
   const supabase = getServiceSupabase();
   const { data: existing } = await supabase.storage.getBucket(OFFLINE_MARKETING_BUCKET);
-  if (existing) return;
+  if (existing) {
+    await supabase.storage.updateBucket(OFFLINE_MARKETING_BUCKET, {
+      public: true,
+      fileSizeLimit: MAX_BYTES,
+      allowedMimeTypes: [...OFFLINE_MARKETING_MIME_TYPES],
+    });
+    return;
+  }
   await supabase.storage.createBucket(OFFLINE_MARKETING_BUCKET, {
     public: true,
     fileSizeLimit: MAX_BYTES,
-    allowedMimeTypes: ["application/pdf"],
+    allowedMimeTypes: [...OFFLINE_MARKETING_MIME_TYPES],
   });
 }
 
@@ -58,13 +79,14 @@ export async function createOfflineMarketingUploadTarget(
 export async function uploadOfflineMarketingPdf(
   path: string,
   body: Buffer | ArrayBuffer | Uint8Array,
+  contentType = offlineMarketingContentType(path),
 ): Promise<{ storagePath: string; publicUrl: string }> {
   await ensureOfflineMarketingBucket();
   const supabase = getServiceSupabase();
   const { error } = await supabase.storage
     .from(OFFLINE_MARKETING_BUCKET)
     .upload(path, body as ArrayBuffer, {
-      contentType: "application/pdf",
+      contentType,
       upsert: true,
     });
   if (error) {

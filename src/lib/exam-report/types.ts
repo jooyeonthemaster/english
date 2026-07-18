@@ -128,10 +128,20 @@ export interface ExamAnalysisResult {
 
 /** exam_analyses.reviewState — 구조검수 개념 폐기, examMap 인라인 정답/배점 확인만. */
 export interface ExamReviewState {
-  /** examMap(정답/배점/유형) 강사 확인 완료 */
+  /**
+   * (레거시) examMap 일괄 확인 플래그. 문항별 확인(mapConfirmedNumbers) 도입 전
+   * 「정답·배점 확인 완료」 버튼의 뱃지 소스였다. 신규 경로는 쓰지 않고,
+   * 게이트 승계(legacy grandfather) 판정에만 남는다.
+   */
   mapConfirmed?: boolean;
-  /** 확인 완료된 문항 번호 */
+  /** 분석 검수(해설·출제의도 등) 완료 문항 번호 — 게이트 조건이 **아니다**. */
   confirmedNumbers?: string[];
+  /**
+   * 정답·배점 확인이 끝난 문항 번호. 학생 관리(2단계) 게이트의 유일한 근거로,
+   * 전 문항이 여기 들어와야 게이트가 열린다. 배점/정답을 고치면 해당 번호를
+   * 빼서 재확인을 강제한다(analysis 검수용 confirmedNumbers 와 별개 축).
+   */
+  mapConfirmedNumbers?: string[];
 }
 
 /**

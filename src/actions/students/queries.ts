@@ -57,7 +57,7 @@ export async function getStudents(academyId: string, filters?: StudentFilters) {
           },
         },
       },
-      orderBy: buildStudentsOrderBy(filters?.sort),
+      orderBy: buildStudentsOrderBy(filters?.sort, filters?.dir),
       skip,
       take: pageSize,
     }),

@@ -1,0 +1,37 @@
+<!-- @dsCard group="Components" -->
+<title>입력 필드</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Pretendard",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;background:#fff;color:#111827;padding:28px;-webkit-font-smoothing:antialiased}
+h1{font-size:15px;font-weight:800;margin-bottom:4px}
+p.note{font-size:12px;color:#6B7280;margin-bottom:20px}
+h2{font-size:12px;font-weight:700;color:#374151;margin:18px 0 10px}
+.col{display:flex;flex-direction:column;gap:12px;max-width:340px}
+.inp{height:36px;width:100%;border-radius:8px;border:1px solid #E5E7EB;background:transparent;padding:4px 12px;font-size:14px;font-family:inherit;box-shadow:0 1px 2px rgba(0,0,0,.05);outline:none;transition:color .15s,box-shadow .15s}
+.inp::placeholder{color:#6B7280}
+.inp:focus-visible{border-color:#3B82F6;box-shadow:0 0 0 3px rgba(59,130,246,.5)}
+.inp.invalid{border-color:#EF4444;box-shadow:0 0 0 3px rgba(239,68,68,.2)}
+.inp:disabled{opacity:.5;cursor:not-allowed}
+.search{position:relative}
+.search svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#9CA3AF}
+.search .inp{padding-left:36px}
+</style>
+<h1>입력 필드 (shadcn Input)</h1>
+<p class="note">h-9(36px) rounded-md, focus ring 파랑 3px/50%. 아이콘 검색 입력은 pl-9!(36px) — 공용 px-3와 충돌하므로 important 필수.</p>
+
+<h2>기본 / 포커스 / 오류 / 비활성</h2>
+<div class="col">
+  <input class="inp" placeholder="기본 입력">
+  <input class="inp" style="border-color:#3B82F6;box-shadow:0 0 0 3px rgba(59,130,246,.5)" value="포커스 상태">
+  <input class="inp invalid" value="유효하지 않은 값">
+  <input class="inp" disabled value="비활성">
+</div>
+
+<h2>아이콘 검색 (pl-9 + useSearchDebounce 250ms 라이브 필터)</h2>
+<div class="col">
+  <div class="search">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    <input class="inp" placeholder="이름·연락처 검색 — 타이핑 즉시 필터링">
+  </div>
+</div>

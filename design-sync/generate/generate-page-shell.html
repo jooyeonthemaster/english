@@ -1,0 +1,64 @@
+<!-- @dsCard group="Generate Pages" -->
+<title>생성 페이지 셸 · 레이아웃 기조</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Pretendard",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;background:#fff;color:#111827;padding:28px;-webkit-font-smoothing:antialiased}
+h1{font-size:15px;font-weight:800;margin-bottom:4px}
+p.note{font-size:12px;color:#6B7280;margin-bottom:20px}
+h2{font-size:12px;font-weight:700;color:#374151;margin:18px 0 10px}
+.canvas{background:#F4F6F9;border:1px solid #E2E8F0;border-radius:12px;padding:16px}
+.pagehead{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.iconbadge{display:flex;width:36px;height:36px;flex-shrink:0;align-items:center;justify-content:center;border-radius:8px;background:#EFF6FF;color:#2563EB;box-shadow:inset 0 0 0 1px #DBEAFE}
+.pagehead h3{font-size:14px;font-weight:700;color:#0F172A}
+.pagehead p{font-size:12px;font-weight:500;color:#94A3B8;line-height:1.35}
+.shell{display:grid;grid-template-columns:1fr 240px;border:1px solid #E2E8F0;border-radius:8px;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.05);overflow:hidden}
+.shell .head{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #F1F5F9;padding:10px 16px}
+.shell .head .t{font-size:13px;font-weight:700;color:#0F172A}
+.savebtn{display:inline-flex;height:32px;min-width:64px;align-items:center;justify-content:center;gap:4px;border-radius:6px;border:none;background:#0F172A;color:#fff;font-size:11px;font-weight:700;font-family:inherit;padding:0 8px;cursor:pointer}
+.content{min-height:170px;display:flex;align-items:center;justify-content:center;color:#94A3B8;font-size:12px;border-right:1px solid #F1F5F9}
+.settings{display:flex;flex-direction:column;background:rgba(248,250,252,.8)}
+.settings .body{flex:1;padding:14px;font-size:11px;color:#64748B}
+.settings .body .box{border:1px solid #E2E8F0;border-radius:12px;background:#F8FAFC;padding:10px;margin-top:8px;color:#94A3B8}
+.settings .foot{border-top:1px solid #E2E8F0;padding:12px 14px}
+.cta{display:flex;width:100%;height:48px;align-items:center;justify-content:center;gap:8px;border-radius:12px;border:none;background:#2563EB;color:#fff;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;box-shadow:0 4px 6px -1px rgba(191,219,254,.5),0 2px 4px -2px rgba(191,219,254,.5)}
+.cta:hover{background:#1D4ED8}
+table{border-collapse:collapse;width:100%;font-size:11.5px}
+td,th{border:1px solid #E5E7EB;padding:6px 10px;text-align:left;color:#374151}
+th{background:#F9FAFB;font-weight:700}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;background:#F3F4F6;border-radius:4px;padding:1px 5px;color:#334155}
+</style>
+<h1>생성 페이지 셸 (문제 · 시험지 · 학습지 공통)</h1>
+<p class="note">세 생성 페이지의 공통 골격. 연회색 페이지 배경 위에 흰 패널 카드, 좌측 콘텐츠(지문함/문항 라이브러리) + 우측 설정 패널, 설정 패널 하단에 파란 생성 CTA 고정. 모바일은 mobile-step-flow(Patterns 카드 참조)로 스텝 분해 — 데스크톱 레이아웃은 불변.</p>
+
+<div class="canvas">
+  <div class="pagehead">
+    <div class="iconbadge"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M3 12h18"/></svg></div>
+    <div>
+      <h3>문제 생성</h3>
+      <p>지문을 고르고 유형별 문항 수를 설정해 생성합니다</p>
+    </div>
+  </div>
+  <div class="shell">
+    <div class="head"><span class="t">내 지문함</span><button class="savebtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"/><path d="M7 3v4a1 1 0 0 0 1 1h7"/></svg>저장</button></div>
+    <div class="content">콘텐츠 영역 (지문 카드 그리드 / 문항 라이브러리 / 미리보기)</div>
+    <div class="settings">
+      <div class="body">설정 패널 (420px, bg-slate-50/80)
+        <div class="box">옵션 세그먼트 · 유형 타일 · 스테퍼</div>
+      </div>
+      <div class="foot"><button class="cta"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>12개 지문 · 총 36문제 생성</button></div>
+    </div>
+  </div>
+</div>
+
+<h2>레이아웃 토큰</h2>
+<table>
+  <tr><th>요소</th><th>값</th></tr>
+  <tr><td>페이지 배경</td><td><code>#F4F6F9</code> (신규) · 수정 모드는 <code>slate-200</code>으로 살짝 어둡게 · 구역 분리 밴드 <code>#E8EAEE</code></td></tr>
+  <tr><td>패널 카드</td><td><code>rounded-lg border border-slate-200 bg-white shadow-sm</code>, 헤더행 <code>border-b border-slate-100 px-4 py-3</code></td></tr>
+  <tr><td>페이지 타이틀</td><td>아이콘 배지 <code>size-9 rounded-lg bg-blue-50 text-blue-600 ring-1 ring-blue-100</code> + 제목 <code>text-[14px] font-bold slate-900</code> + 설명 <code>text-[12px] slate-400</code></td></tr>
+  <tr><td>설정 패널</td><td>우측 고정폭(420px) <code>bg-slate-50/80 border-l border-slate-100</code>, CTA는 <code>mt-auto border-t</code> 하단 고정</td></tr>
+  <tr><td>라운드 위계</td><td>컨트롤 <code>rounded-md/lg</code> · 카드 <code>rounded-lg/xl</code> · 모달 <code>rounded-2xl</code> · 배지 <code>rounded-full</code></td></tr>
+  <tr><td>타이포 스케일</td><td>제목 18/14px bold · 본문 13px · 라벨 12px semibold · 보조 11/10px · CTA 14px bold, 숫자는 <code>tabular-nums</code></td></tr>
+  <tr><td>모바일</td><td>스텝 분해(mobile-step-flow) + 하단 고정바 <code>bg-white/95 backdrop-blur + safe-area</code>, 본문 <code>pb-[96~150px]</code> 예약. 전부 <code>max-lg</code> — 데스크톱 무변경</td></tr>
+</table>

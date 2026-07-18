@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>시안 A — 게이트 위저드</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Pretendard",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;background:#E8EAEE;color:#0F172A;-webkit-font-smoothing:antialiased;padding:36px;min-width:1980px}
+a{color:#2563EB;text-decoration:none}a:hover{color:#1D4ED8;text-decoration:underline}
+button,input,select,textarea{font-family:inherit}
+svg{flex-shrink:0}
+.intro{max-width:960px;margin:0 0 26px}
+.intro .kicker{font-size:12px;font-weight:700;color:#2563EB;letter-spacing:.04em;margin-bottom:4px}
+.intro h1{font-size:20px;font-weight:900;color:#020617;margin-bottom:8px}
+.intro p{font-size:13px;line-height:1.7;color:#475569;max-width:860px}
+.intro p b{color:#0F172A}
+.intro nav{margin-top:10px;font-size:12px;font-weight:600;display:flex;gap:14px}
+.frames{display:flex;gap:44px;align-items:flex-start}
+.flabel{font-size:11px;font-weight:700;color:#64748B;letter-spacing:.05em;margin-bottom:10px}
+.screen{background:#F4F6F9;border:1px solid #CBD5E1;border-radius:16px;box-shadow:0 16px 40px rgba(15,23,42,.14);overflow:hidden}
+.screen.d{width:1440px;padding:20px 28px 0}
+.screen.m{width:390px;height:844px;position:relative;display:flex;flex-direction:column}
+/* ---------- 공통 프리미티브 ---------- */
+.badge{display:inline-flex;align-items:center;gap:4px;border-radius:9999px;border:1px solid transparent;padding:2px 9px;font-size:12px;font-weight:500;white-space:nowrap}
+.b-blue{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.b-red{background:#FEF2F2;color:#DC2626;border-color:#FECACA}
+.b-green{background:#ECFDF5;color:#047857;border-color:#A7F3D0}
+.outl{display:inline-flex;height:32px;align-items:center;justify-content:center;gap:5px;border-radius:6px;border:1px solid #E2E8F0;background:#fff;padding:0 10px;font-size:11px;font-weight:600;color:#475569;cursor:pointer;transition:background .15s}
+.outl:hover{background:#F8FAFC}
+.iconbtn{display:inline-flex;width:32px;height:32px;align-items:center;justify-content:center;border-radius:6px;border:1px solid #E2E8F0;background:#fff;color:#475569;cursor:pointer}
+.iconbtn:hover{background:#F8FAFC}
+.chipblue{display:inline-flex;align-items:center;gap:4px;border-radius:9999px;background:#EFF6FF;border:1px solid #BFDBFE;color:#1D4ED8;padding:2px 9px;font-size:11px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+/* ---------- 데스크톱 ---------- */
+.topbar{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.topbar .ttl h2{font-size:18px;font-weight:900;color:#020617}
+.topbar .ttl p{font-size:12px;color:#94A3B8;font-weight:500;margin-top:1px}
+.topbar .sp{flex:1}
+.wizard{display:flex;align-items:center;gap:0;border:1px solid #E2E8F0;background:#fff;border-radius:12px;padding:14px 22px;box-shadow:0 1px 2px rgba(0,0,0,.05);margin-bottom:16px}
+.wstep{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.wdot{display:flex;width:30px;height:30px;align-items:center;justify-content:center;border-radius:9999px;border:1px solid #E2E8F0;background:#fff;color:#94A3B8;font-size:13px;font-weight:700}
+.wdot.on{border-color:#2563EB;background:#2563EB;color:#fff;box-shadow:0 1px 2px rgba(0,0,0,.1)}
+.wdot.lk{color:#94A3B8;background:#F1F5F9;border-color:#E2E8F0}
+.wstep b{display:block;font-size:13px;font-weight:700;color:#0F172A}
+.wstep.dim b{color:#94A3B8}
+.wstep i{display:block;font-style:normal;font-size:11px;color:#94A3B8;margin-top:1px;font-variant-numeric:tabular-nums}
+.wstep i.req{color:#1D4ED8;font-weight:600}
+.wline{height:2px;flex:1;background:#E2E8F0;border-radius:9999px;margin:0 18px}
+.wgatehint{margin-left:18px;display:inline-flex;align-items:center;gap:6px;border-radius:8px;border:1px dashed #BFDBFE;background:rgba(239,246,255,.6);padding:6px 10px;font-size:11px;font-weight:600;color:#1D4ED8;white-space:nowrap}
+.panel{border:1px solid #E2E8F0;border-radius:8px;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.05);margin-bottom:16px;overflow:hidden}
+.phead{display:flex;align-items:center;gap:10px;border-bottom:1px solid #F1F5F9;padding:12px 16px}
+.phead .t{font-size:14px;font-weight:800;color:#0F172A}
+.phead .cap{font-size:12px;color:#94A3B8;font-weight:500}
+.phead .sp{flex:1}
+.sumbox{display:flex;align-items:baseline;gap:8px}
+.sumbox b{font-size:16px;font-weight:800;font-variant-numeric:tabular-nums;color:#0F172A}
+.autosave{font-size:11px;color:#94A3B8;display:inline-flex;align-items:center;gap:4px}
+.ptool{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid #F1F5F9;background:rgba(248,250,252,.8)}
+.ptool .lbl{font-size:12px;font-weight:700;color:#334155}
+.bulkrow{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#475569;border:1px solid #E2E8F0;background:#fff;border-radius:8px;padding:4px 10px}
+.bulkrow input{width:40px;height:24px;border:1px solid #E5E7EB;border-radius:6px;text-align:center;font-size:12px;font-weight:700;color:#1D4ED8;background:rgba(239,246,255,.5);outline:none}
+.bulkrow input:focus{border-color:#3B82F6;box-shadow:0 0 0 3px rgba(59,130,246,.25)}
+.applybtn{display:inline-flex;height:28px;align-items:center;gap:4px;border-radius:6px;border:none;background:#0F172A;color:#fff;padding:0 12px;font-size:11px;font-weight:700;cursor:pointer}
+.applybtn:hover{background:#1E293B}
+.legend{display:flex;align-items:center;gap:14px;margin-left:auto;font-size:11px;color:#64748B}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.ldot{width:8px;height:8px;border-radius:9999px;display:inline-block}
+.notice{display:flex;align-items:flex-start;gap:8px;margin:12px 16px 0;border-radius:8px;border:1px solid #BFDBFE;background:rgba(239,246,255,.55);padding:9px 12px;font-size:12px;color:#1E40AF;line-height:1.55}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+thead th{position:sticky;top:0;background:#F8FAFC;border-bottom:1px solid #E2E8F0;padding:8px 10px;text-align:left;font-size:11px;font-weight:700;color:#64748B;white-space:nowrap}
+tbody td{border-bottom:1px solid #F1F5F9;padding:7px 10px;vertical-align:middle}
+tbody tr:hover{background:rgba(248,250,252,.8)}
+.nochip{display:inline-flex;align-items:center;justify-content:center;border-radius:9999px;border:1px solid #E2E8F0;background:#F8FAFC;padding:2px 10px;font-size:11.5px;font-weight:700;color:#334155;white-space:nowrap;font-variant-numeric:tabular-nums}
+.sel{height:30px;border:1px solid #E5E7EB;border-radius:6px;background:#fff;font-size:12px;font-weight:600;color:#334155;padding:0 6px;outline:none;cursor:pointer}
+.sel:focus{border-color:#3B82F6;box-shadow:0 0 0 3px rgba(59,130,246,.25)}
+.tp{font-size:12px;font-weight:700;color:#1E293B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:330px}
+.pr{font-size:11px;color:#94A3B8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:330px;margin-top:1px}
+.cellin{height:30px;border:1px solid #E5E7EB;border-radius:6px;background:#fff;font-size:12.5px;padding:0 8px;outline:none;width:100%}
+.cellin:focus{border-color:#3B82F6;box-shadow:0 0 0 3px rgba(59,130,246,.25)}
+.cellin.need{border-color:#93C5FD;background:rgba(239,246,255,.5)}
+.cellin.need::placeholder{color:#60A5FA;font-weight:600}
+.pt{width:64px;text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
+.ans{width:200px}
+.dot{width:8px;height:8px;border-radius:9999px;display:inline-block}
+.d-blue{background:#3B82F6}.d-green{background:#10B981}.d-red{background:#EF4444}
+.anlink{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:600;color:#64748B;border:1px solid #E2E8F0;background:#fff;border-radius:6px;height:26px;padding:0 8px;cursor:pointer}
+.anlink:hover{border-color:#BFDBFE;background:#EFF6FF;color:#1D4ED8}
+.okbtn{display:inline-flex;height:28px;align-items:center;gap:4px;border-radius:6px;border:1px solid #10B981;background:#fff;color:#059669;padding:0 10px;font-size:11.5px;font-weight:700;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.05);transition:background .15s}
+.okbtn:hover{background:#ECFDF5}
+.okbtn.done{background:#059669;border-color:#059669;color:#fff}
+.failbdg{display:inline-flex;align-items:center;gap:4px;border-radius:9999px;border:1px solid #FECACA;background:#FEF2F2;color:#DC2626;padding:2px 8px;font-size:11px;font-weight:600;white-space:nowrap}
+.retry{display:inline-flex;height:26px;align-items:center;gap:4px;border-radius:6px;border:1px solid rgba(49,130,246,.45);background:#fff;color:#3182F6;padding:0 8px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap}
+.retry:hover{background:#EFF6FF}
+.pfoot{display:flex;align-items:center;gap:10px;border-top:1px solid #F1F5F9;background:rgba(248,250,252,.6);padding:9px 16px;font-size:11px;color:#94A3B8}
+kbd{display:inline-block;border:1px solid #E2E8F0;border-bottom-width:2px;border-radius:4px;background:#fff;padding:0 5px;font-size:10px;font-weight:700;color:#475569;font-family:inherit}
+/* 2단계 카드 · 총평 · 재분석 스트립 */
+.sub2{display:flex;align-items:center;gap:12px;padding:14px 16px}
+.sub2 .num{display:flex;width:30px;height:30px;align-items:center;justify-content:center;border-radius:9999px;background:#F1F5F9;color:#94A3B8;font-size:13px;font-weight:700}
+.sub2 b{font-size:13.5px;font-weight:800;color:#334155}
+.sub2 i{font-style:normal;font-size:12px;color:#94A3B8;display:block;margin-top:1px}
+.sub2 .sp{flex:1}
+.chev{color:#94A3B8}
+.twocol{display:grid;grid-template-columns:1fr 380px;gap:16px;align-items:start}
+.review-ta{width:100%;min-height:110px;border:1px solid #E5E7EB;border-radius:8px;padding:10px 12px;font-size:12.5px;line-height:1.7;color:#334155;resize:vertical;outline:none;background:#fff}
+.review-ta:focus{border-color:#3B82F6;box-shadow:0 0 0 3px rgba(59,130,246,.25)}
+.diffbar{display:flex;height:14px;border-radius:9999px;overflow:hidden;margin:10px 0 6px}
+.difflegend{display:flex;gap:12px;font-size:11px;color:#64748B;font-variant-numeric:tabular-nums}
+.difflegend span{display:inline-flex;align-items:center;gap:4px}
+.strip{display:flex;align-items:center;gap:12px;border:1px solid #BFDBFE;border-radius:10px;background:rgba(239,246,255,.6);padding:12px 14px;margin:0 16px 14px}
+.spin{width:16px;height:16px;border-radius:9999px;border:2px solid #BFDBFE;border-top-color:#2563EB;animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.strip b{font-size:12.5px;font-weight:700;color:#1D4ED8}
+.strip i{font-style:normal;font-size:11.5px;color:#3B82F6;display:block;margin-top:1px}
+.strip .el{margin-left:auto;font-size:12px;font-weight:700;color:#1D4ED8;font-variant-numeric:tabular-nums;white-space:nowrap}
+.gatebar{display:flex;align-items:center;gap:16px;border:1px solid #E2E8F0;border-bottom:none;border-radius:12px 12px 0 0;background:rgba(255,255,255,.95);backdrop-filter:blur(8px);padding:14px 20px;margin:0 -28px 0;box-shadow:0 -4px 12px rgba(15,23,42,.06)}
+.gprog{flex:1;max-width:420px}
+.gprog .glbl{display:flex;justify-content:space-between;font-size:11.5px;font-weight:700;color:#334155;margin-bottom:5px;font-variant-numeric:tabular-nums}
+.gtrack{height:6px;border-radius:9999px;background:#E2E8F0;overflow:hidden}
+.gtrack span{display:block;height:100%;width:0%;background:#3B82F6;border-radius:9999px}
+.gcta{display:inline-flex;height:44px;min-width:250px;align-items:center;justify-content:center;gap:8px;border-radius:10px;border:none;background:#E2E8F0;color:#94A3B8;font-size:13.5px;font-weight:700;cursor:pointer;margin-left:auto}
+.gcap{font-size:11px;color:#94A3B8}
+/* ---------- 모바일 ---------- */
+.m .mtop{display:flex;align-items:center;gap:8px;background:#fff;border-bottom:1px solid #E2E8F0;padding:12px 14px}
+.m .mtop h3{font-size:14.5px;font-weight:800}
+.m .mtop p{font-size:10.5px;color:#94A3B8;font-weight:500}
+.m .stepper{margin:10px 12px;border-radius:10px;border:1px solid #E2E8F0;background:#fff;padding:10px 10px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.m .steps{display:flex;align-items:center}
+.m .step{display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0}
+.m .sdot{display:flex;width:26px;height:26px;align-items:center;justify-content:center;border-radius:9999px;border:1px solid #E2E8F0;background:#fff;color:#94A3B8;font-size:12px;font-weight:700}
+.m .sdot.on{border-color:#2563EB;background:#2563EB;color:#fff}
+.m .step span{font-size:10px;font-weight:600;color:#64748B;white-space:nowrap}
+.m .step span.on{color:#2563EB}
+.m .sline{height:2px;flex:1;border-radius:9999px;margin:0 6px 14px;background:#E2E8F0}
+.m .msums{display:flex;align-items:center;gap:8px;margin:0 12px 10px;border:1px solid #E2E8F0;border-radius:10px;background:#fff;padding:10px 12px}
+.m .msums b{font-size:14px;font-weight:800;font-variant-numeric:tabular-nums}
+.m .mbody{flex:1;overflow:hidden;padding:0 12px;display:flex;flex-direction:column;gap:10px}
+.qcard{border:1px solid #E2E8F0;border-radius:12px;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.04);overflow:hidden}
+.qcard.now{border-color:#60A5FA;box-shadow:0 0 0 2px rgba(147,197,253,.3)}
+.qhead{display:flex;align-items:center;gap:8px;padding:11px 12px}
+.qhead .ti{flex:1;min-width:0}
+.qhead .ti b{display:block;font-size:12.5px;font-weight:700;color:#1E293B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qhead .ti i{display:block;font-style:normal;font-size:10.5px;color:#94A3B8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.qbody{border-top:1px solid #F1F5F9;padding:12px}
+.frow{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.frow label{width:34px;font-size:11px;font-weight:700;color:#64748B;flex-shrink:0}
+.segm{display:flex;flex:1;height:34px;border-radius:8px;background:#F1F5F9;padding:2px;gap:2px}
+.segm button{flex:1;border:none;background:transparent;border-radius:6px;font-size:12px;font-weight:600;color:#64748B;cursor:pointer;white-space:nowrap}
+.segm button.on{background:#fff;font-weight:700;color:#1D4ED8;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.min{height:36px;border:1px solid #E5E7EB;border-radius:8px;font-size:13px;padding:0 10px;outline:none;width:100%}
+.min.need{border-color:#93C5FD;background:rgba(239,246,255,.5)}
+.min.need::placeholder{color:#60A5FA;font-weight:600}
+.presets{display:flex;gap:6px}
+.presets button{height:28px;border-radius:9999px;border:1px solid #E2E8F0;background:#fff;color:#475569;font-size:11.5px;font-weight:700;padding:0 11px;cursor:pointer}
+.presets button:hover{border-color:#93C5FD;background:#EFF6FF;color:#1D4ED8}
+.qacts{display:flex;gap:8px;margin-top:2px}
+.mok{display:inline-flex;flex:1;height:40px;align-items:center;justify-content:center;gap:6px;border-radius:8px;border:none;background:#059669;color:#fff;font-size:13px;font-weight:700;cursor:pointer}
+.mok:hover{background:#047857}
+.morig{display:inline-flex;height:40px;align-items:center;gap:5px;border-radius:8px;border:1px solid #E2E8F0;background:#fff;color:#475569;font-size:12px;font-weight:600;padding:0 12px;cursor:pointer}
+.mfade{position:relative;height:34px;margin-top:-34px;background:linear-gradient(to bottom,rgba(244,246,249,0),#F4F6F9)}
+.mbar{position:absolute;left:0;right:0;bottom:0;border-top:1px solid #E2E8F0;background:rgba(255,255,255,.95);backdrop-filter:blur(8px);padding:10px 12px 22px;display:flex;gap:8px}
+.mprev{display:inline-flex;height:44px;align-items:center;gap:4px;border-radius:10px;border:1px solid #E2E8F0;background:#fff;padding:0 14px;font-size:13px;font-weight:600;color:#475569;cursor:pointer}
+.mnext{display:inline-flex;height:44px;flex:1;align-items:center;justify-content:center;gap:4px;border-radius:10px;border:1px solid #BFDBFE;background:#93C5FD;color:#fff;font-size:13.5px;font-weight:700;cursor:pointer}
+</style></head><body>
+<header class="intro">
+<div class="kicker">시안 A / 3 · 내신 시험 분석 — 문항 분석 리디자인</div>
+<h1>게이트 위저드 — 검증을 "통과해야 하는 관문"으로</h1>
+<p><b>우선한 것:</b> 채점 정확성의 강제. 1단계를 "정답·배점 검증(필수)"과 "분석 검수(선택)"로 쪼개고, 학생 관리는 22문항 전부 확인 전까지 물리적으로 잠급니다. 검수 버튼이 상태만 바꾸던 의식(ritual)을 없애고 문항별 확인이 곧 진행률·게이트가 되게 했습니다. 배점 미추출 최악 케이스를 위해 종류별 일괄 입력과 부분 합산(입력한 문항만 먼저 합산)을 제공합니다. <b>포기한 것:</b> 자유로운 왕복 탐색과 한 번에 끝내는 속도 — 「전체 검수 완료」류의 지름길을 의도적으로 제거했으므로 확인 클릭 22번은 피할 수 없습니다. 분석 검수는 접힌 선택 단계로 강등되어 눈에 덜 띕니다.</p>
+<nav><a href="시안B - 채점지도 중심.html">시안 B — 채점 지도 중심 →</a><a href="시안C - 문항 큐.html">시안 C — 문항 큐 →</a></nav>
+</header>
+<div class="frames">
+<section><div class="flabel">데스크톱 · 1440</div>
+<div class="screen d">
+<div class="topbar">
+<button class="iconbtn" aria-label="뒤로"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+<div class="ttl"><h2>시험분석 테스트1</h2><p>중간고사 · 2026년 · 22문항</p></div>
+<div class="sp"></div>
+<span class="badge b-blue">AI 분석 완료</span>
+<span class="badge b-red">검수 전 0/22</span>
+<button class="outl"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></svg>시험지 원본</button>
+</div>
+<div class="wizard">
+<div class="wstep"><span class="wdot on">1</span><div><b>정답·배점 검증</b><i class="req">필수 · 확인 0/22</i></div></div>
+<div class="wline"></div>
+<div class="wstep dim"><span class="wdot">2</span><div><b>분석 검수</b><i>선택 · 리포트 문구 품질</i></div></div>
+<div class="wline"></div>
+<div class="wstep dim"><span class="wdot lk"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span><div><b>학생 관리</b><i>정답·배점 22개 확인 후 열림</i></div></div>
+<span class="wgatehint"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>여기서 틀리면 학생 전원의 점수가 틀려요</span>
+</div>
+<div class="panel">
+<div class="phead">
+<span class="t">채점 지도 검증</span>
+<span class="cap">AI가 이 시험지의 배점을 읽지 못했어요 — 배점을 채우며 정답을 확인해 주세요</span>
+<div class="sp"></div>
+<div class="sumbox"><b>합계 0점</b><span class="chipblue">배점 22개 미입력</span></div>
+<span class="autosave"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>자동 저장됨 · 입력한 문항부터 바로 합산돼요</span>
+</div>
+<div class="ptool">
+<span class="lbl">배점 일괄 입력</span>
+<span class="bulkrow">객관식 11문항 × <input value="3">점</span>
+<span class="bulkrow">단답·서술 11문항 × <input placeholder="—">점</span>
+<button class="applybtn">적용</button>
+<span style="font-size:11px;color:#94A3B8">적용 후 문항별로 고칠 수 있어요</span>
+<div class="legend"><span><span class="ldot d-blue"></span>확인 필요</span><span><span class="ldot d-green"></span>확인됨</span><span><span class="ldot d-red"></span>분석 실패</span></div>
+</div>
+<div class="notice"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-top:1px"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>채점이 시작된 뒤 배점·정답을 고치면 이미 채점된 학생의 점수가 자동으로 재집계돼요. 변경 내역과 영향 받은 학생 수를 알림으로 알려드립니다.</div>
+<table>
+<thead><tr><th style="width:34px"></th><th>번호</th><th style="width:104px">종류</th><th>유형 · 발문</th><th style="width:80px">배점</th><th style="width:216px">정답</th><th style="width:150px">문항 분석</th><th style="width:86px">확인</th></tr></thead>
+<tbody id="rows"></tbody>
+</table>
+<div class="pfoot"><kbd>Enter</kbd> 확인 후 다음 행 &nbsp;·&nbsp; <kbd>Tab</kbd> 다음 칸 &nbsp;·&nbsp; 저장을 기다릴 필요 없이 계속 입력하세요 — 셀 잠금 없음, 백그라운드 저장</div>
+</div>
+<div class="panel">
+<div class="sub2">
+<span class="num">2</span>
+<div><b>분석 검수 <span class="badge b-blue" style="margin-left:6px">선택</span></b><i>상세해설·출제의도 등 6개 항목 — 학생 리포트 문구에만 쓰이고 채점에는 영향이 없어요</i></div>
+<div class="sp"></div>
+<span style="font-size:12px;color:#94A3B8;font-variant-numeric:tabular-nums">검수 0/22</span>
+<svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+</div>
+<div class="strip"><span class="spin"></span><div><b>서답형 3 재분석 중</b><i>보통 5~6분 걸려요 — 화면이 조용해도 서버가 계속 작업 중이에요. 이 페이지를 떠나도 진행됩니다.</i></div><span class="el">02:13 경과 · 무료</span></div>
+</div>
+<div class="twocol">
+<div class="panel" style="margin-bottom:0">
+<div class="phead"><span class="t">시험지 총평</span><span class="badge b-blue">수정 가능</span><div class="sp"></div><span class="autosave">AI 초안 — 리포트에 그대로 실려요</span></div>
+<div style="padding:14px 16px">
+<textarea class="review-ta">이번 시험은 문법 단원 중 '수동태'를 단일 주제로 집중 출제한 내신형 평가로, 총 22문항이 객관식과 서답형으로 구성되어 있습니다. 단순 형태 변환을 넘어 4형식·5형식 문장의 수동태 전환, 조동사 수동태, by 이외의 전치사를 쓰는 관용 표현까지 폭넓게 다루고 있어 개념의 정확한 이해와 문장 단위의 적용 능력이 함께 요구됩니다.</textarea>
+</div>
+</div>
+<div class="panel" style="margin-bottom:0">
+<div class="phead"><span class="t">난이도 프로필</span><div class="sp"></div><span class="autosave">22문항 기준</span></div>
+<div style="padding:14px 16px">
+<div class="diffbar"><span style="flex:4;background:#93C5FD"></span><span style="flex:11;background:#3B82F6"></span><span style="flex:5;background:#1D4ED8"></span><span style="flex:2;background:#0F172A"></span></div>
+<div class="difflegend"><span><span class="ldot" style="background:#93C5FD"></span>쉬움 4</span><span><span class="ldot" style="background:#3B82F6"></span>보통 11</span><span><span class="ldot" style="background:#1D4ED8"></span>어려움 5</span><span><span class="ldot" style="background:#0F172A"></span>킬러 2</span></div>
+</div>
+</div>
+</div>
+<div style="height:18px"></div>
+<div class="gatebar">
+<div class="gprog"><div class="glbl"><span>정답·배점 확인</span><span>0 / 22</span></div><div class="gtrack"><span></span></div></div>
+<span class="gcap">22개를 모두 확인하면 버튼이 파랗게 열려요 · 누르면 확인이 필요한 문항으로 안내(힌트 글로우)</span>
+<button class="gcta" aria-disabled="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>학생 관리로 이동 — 22개 확인 필요</button>
+</div>
+</div>
+</section>
+<section><div class="flabel">모바일 · 390</div>
+<div class="screen m">
+<div class="mtop">
+<button class="iconbtn" style="border:none;background:transparent" aria-label="뒤로"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+<div style="flex:1"><h3>시험분석 테스트1</h3><p>중간고사 · 2026년 · 22문항</p></div>
+<span class="badge b-red">0/22</span>
+</div>
+<div class="stepper"><div class="steps">
+<div class="step"><div class="sdot on">1</div><span class="on">정답·배점</span></div>
+<div class="sline"></div>
+<div class="step"><div class="sdot">2</div><span>분석 검수</span></div>
+<div class="sline"></div>
+<div class="step"><div class="sdot"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><span>학생 관리</span></div>
+</div></div>
+<div class="msums"><b>합계 0점</b><span class="chipblue">미입력 22</span><span style="margin-left:auto;font-size:11px;color:#94A3B8">한 문항씩 확인하며 진행</span></div>
+<div class="mbody">
+<div class="qcard now">
+<div class="qhead"><span class="dot d-blue"></span><span class="nochip">1</span><div class="ti"><b>수동태 어형변화(단어배열)</b><i>빈칸에 괄호 단어를 어법에 맞게 수동태로 완성하기</i></div></div>
+<div class="qbody">
+<div class="frow"><label>종류</label><div class="segm"><button>객관식</button><button class="on">단답형</button><button>서술형</button></div></div>
+<div class="frow"><label>배점</label><input class="min need" style="width:76px;text-align:right;font-weight:700" placeholder="0" inputmode="decimal"><div class="presets"><button>2점</button><button>3점</button><button>4점</button><button>5점</button></div></div>
+<div class="frow"><label>정답</label><input class="min" value="was built by Gu…"></div>
+<div class="qacts"><button class="morig"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></svg>원본</button><button class="mok"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>확인하고 다음</button></div>
+</div>
+</div>
+<div class="qcard"><div class="qhead"><span class="dot d-blue"></span><span class="nochip">2</span><div class="ti"><b>빈칸 어구 완성(수동태)</b><i>배점 — · 정답 is called</i></div><svg class="chev" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div></div>
+<div class="qcard"><div class="qhead"><span class="dot d-blue"></span><span class="nochip">3</span><div class="ti"><b>네모 어법 선택</b><i>배점 — · 정답 3</i></div><svg class="chev" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div></div>
+<div class="qcard"><div class="qhead"><span class="dot d-red"></span><span class="nochip">서답형 3</span><div class="ti"><b>그림 묘사 수동태 영작</b><i>분석 실패 — 재분석(무료) 가능</i></div><span class="failbdg">실패</span></div></div>
+</div>
+<div class="mfade"></div>
+<div class="mbar"><button class="mprev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>이전</button><button class="mnext">다음 단계로 — 0/22 확인</button></div>
+</div>
+</section>
+</div>
+<script>
+const Q=[[1,'단답형','수동태 어형변화(단어배열)','빈칸에 괄호 단어를 어법에 맞게 수동태로 완성하기','was built by Gu…'],
+[2,'단답형','빈칸 어구 완성(수동태)','우리말 뜻에 맞게 빈칸에 알맞은 수동태 표현 쓰기','is called'],
+[3,'객관식','네모 어법 선택','(A),(B),(C) 네모 중 어법상 적절한 표현 고르기','3'],
+[4,'객관식','밑줄 어법 오류 찾기','대괄호 표시 중 어법상 틀린 것 고르기','3'],
+[5,'객관식','밑줄 어법 오류 찾기','대괄호 표시 중 어법상 틀린 것 고르기','5'],
+[6,'단답형','조건 영작(단어변형)','조건에 맞게 satisfy를 활용해 빈칸 완성하기','were satisfied'],
+[7,'서술형','조건 영작(수동태 문장)','제시어 활용해 조동사 수동태 포함 문장 영작','The data must…'],
+[8,'객관식','밑줄 어법 오류 찾기','대괄호 표시 중 어법상 틀린 것 고르기','2'],
+[9,'객관식','수동태 시제 일치','빈칸에 들어갈 알맞은 수동태 시제 고르기','4'],
+[10,'객관식','어법상 옳은 문장 개수','어법상 옳은 문장의 개수 고르기','3'],
+[11,'객관식','by 이외 전치사 수동태','빈칸에 들어갈 알맞은 전치사 고르기','1'],
+[12,'단답형','능동→수동 전환','주어진 능동태 문장을 수동태로 바꿔 쓰기','is spoken'],
+[13,'단답형','4형식 수동태 전환','4형식 문장을 수동태로 전환해 빈칸 완성하기','was given to'],
+[14,'객관식','지각동사 수동태','빈칸에 들어갈 알맞은 형태 고르기','2'],
+[15,'객관식','어법상 틀린 문장 찾기','어법상 틀린 문장 고르기','5'],
+[16,'단답형','조동사 수동태 완성','우리말에 맞게 조동사 수동태로 빈칸 완성하기','can be seen'],
+[17,'객관식','대화 빈칸 수동태','대화의 빈칸에 알맞은 표현 고르기','4'],
+[18,'객관식','흐름상 어색한 문장','글의 흐름상 어색한 문장 고르기','3'],
+[19,'단답형','수동태 부정문 완성','빈칸에 알맞은 수동태 부정문 완성하기','was not invented'],
+['서답형 1','서술형','어법 오류 수정 서술','틀린 부분을 찾아 바르게 고쳐 쓰기','being → been'],
+['서답형 2','서술형','우리말 영작(행위자 by)','우리말을 조건에 맞게 수동태로 영작하기','was painted by…'],
+['서답형 3','서술형','그림 묘사 수동태 영작','그림을 보고 수동태 문장으로 묘사하기','',true]];
+window.SMOAT_Q=Q;
+const kinds=['객관식','단답형','서술형'];
+document.getElementById('rows').innerHTML=Q.map(([no,kind,type,prompt,ans,fail])=>{
+const sel='<select class="sel">'+kinds.map(k=>`<option${k===kind?' selected':''}>${k}</option>`).join('')+'</select>';
+const an=fail
+ ?'<span style="display:inline-flex;gap:6px;align-items:center"><span class="failbdg"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>분석 실패</span><button class="retry"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>재분석 · 무료</button></span>'
+ :'<button class="anlink"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>해설 보기</button>';
+const ansIn=ans?`<input class="cellin ans" value="${ans}">`:`<input class="cellin ans need" placeholder="정답 입력 필요">`;
+return `<tr><td style="text-align:center"><span class="dot ${fail?'d-red':'d-blue'}"></span></td><td><span class="nochip">${no}</span></td><td>${sel}</td><td><div class="tp">${type}</div><div class="pr">${prompt}</div></td><td><input class="cellin pt need" placeholder="0" inputmode="decimal"></td><td>${ansIn}</td><td>${an}</td><td><button class="okbtn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>확인</button></td></tr>`;
+}).join('');
+</script>
+</body></html>

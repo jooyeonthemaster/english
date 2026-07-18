@@ -1,0 +1,35 @@
+<!-- @dsCard group="Components" -->
+<title>모달 · 닫기 버튼 표준</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Pretendard",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;background:#F8FAFC;color:#111827;padding:28px;-webkit-font-smoothing:antialiased}
+h1{font-size:15px;font-weight:800;margin-bottom:4px}
+p.note{font-size:12px;color:#6B7280;margin-bottom:20px}
+.stage{background:rgba(0,0,0,.5);border-radius:12px;padding:36px;display:flex;justify-content:center}
+.modal{position:relative;background:#fff;border:1px solid #E5E7EB;border-radius:10px;box-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);padding:24px;width:100%;max-width:448px;display:grid;gap:16px}
+.modal h3{font-size:18px;font-weight:600;line-height:1}
+.modal p{font-size:14px;color:#6B7280;line-height:1.6}
+.close{position:absolute;top:12px;right:12px;width:28px;height:28px;border-radius:8px;border:none;background:transparent;color:#94A3B8;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background .15s,color .15s}
+.close:hover{background:#F1F5F9;color:#334155}
+.foot{display:flex;justify-content:flex-end;gap:8px}
+.btn{display:inline-flex;align-items:center;justify-content:center;height:36px;padding:0 16px;border-radius:8px;font-size:14px;font-weight:500;font-family:inherit;border:none;cursor:pointer}
+.btn.primary{background:#3B82F6;color:#fff}.btn.primary:hover{background:rgba(59,130,246,.9)}
+.btn.outline{background:#fff;color:#111827;border:1px solid #E5E7EB}.btn.outline:hover{background:#EFF6FF}
+</style>
+<h1>모달 (Dialog) · 닫기 X 버튼 표준</h1>
+<p class="note">DialogContent: rounded-lg border shadow-lg p-6, sm:max-w-lg, 오버레이 bg-black/50. 닫기 X 표준 = h-7 w-7 rounded-md text-slate-400 hover:bg-slate-100 hover:text-slate-700 (아이콘 size-4).</p>
+
+<div class="stage">
+  <div class="modal">
+    <button class="close" aria-label="닫기">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+    </button>
+    <h3>학습자료를 생성할까요?</h3>
+    <p>선택한 지문 3개로 학습자료를 생성합니다. 생성에는 크레딧이 소모되며, 완료까지 약 1분이 걸립니다.</p>
+    <div class="foot">
+      <button class="btn outline">취소</button>
+      <button class="btn primary">생성하기</button>
+    </div>
+  </div>
+</div>

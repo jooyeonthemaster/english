@@ -111,6 +111,26 @@ export function formatScore(score: number, total: number) {
   return `${score}/${total}`;
 }
 
+/**
+ * 전화번호 입력 자동 하이픈 — 휴대폰은 3-4-4(010-1234-5678), 02 시내번호만
+ * 2-3/4-4 로 예외 처리한다. 입력 중 자릿수에 맞춰 점진적으로 붙이므로 onChange
+ * 에 그대로 물려 쓸 수 있다. (onboarding·settings 에 같은 함수가 복붙돼 있던 것을
+ * 공용화한 것 — 새로 쓰는 곳은 이걸 import 할 것.)
+ */
+export function formatPhone(value: string): string {
+  const digits = value.replace(/\D/g, "");
+  if (digits.startsWith("02")) {
+    if (digits.length <= 2) return digits;
+    if (digits.length <= 5) return `${digits.slice(0, 2)}-${digits.slice(2)}`;
+    if (digits.length <= 9)
+      return `${digits.slice(0, 2)}-${digits.slice(2, 5)}-${digits.slice(5)}`;
+    return `${digits.slice(0, 2)}-${digits.slice(2, 6)}-${digits.slice(6, 10)}`;
+  }
+  if (digits.length <= 3) return digits;
+  if (digits.length <= 7) return `${digits.slice(0, 3)}-${digits.slice(3)}`;
+  return `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7, 11)}`;
+}
+
 export function formatCurrency(amount: number) {
   return new Intl.NumberFormat("ko-KR", {
     style: "currency",

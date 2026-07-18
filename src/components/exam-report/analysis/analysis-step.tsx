@@ -9,7 +9,7 @@
 //                      클라이언트는 시작 1회 + 폴링 감시견(정체 시 1회 재점화)만.
 //  DRAFT/FAILED 부분 : "이어서 분석" 배너(추가 과금 없음) — 중단 건 막다른 화면 제거.
 //  ANALYZED          : 채점 지도(내부 스크롤) + 문항 분석 카드(유형 필터)
-//                      + 우측 시험지 종합 패널 + 하단 "학생 관리로 이동".
+//                      + 우측 시험지 종합 패널 + 하단 고정 "다음으로 (학생 관리)".
 //
 // 저장 파이프라인(version CAS + 낙관갱신 + 충돌 재페치)은 use-analysis-persistence
 // 훅으로 로직 불변 분리. 배너/필터/칩 스트립은 analysis-banners /
@@ -19,9 +19,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { toast } from "sonner";
-import { ArrowRight, CheckCheck, Play } from "lucide-react";
+import { ArrowRight, Play } from "lucide-react";
 import type { AnalysisStepProps, ExamAnalysisDetail } from "../ui-contracts";
 import { EXAM_ANALYSIS_MIN_CREDITS } from "@/lib/exam-report/types";
+import { getMapGateStatus } from "@/lib/exam-report/map-gate";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
 import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import { startAdaptivePoll } from "@/lib/adaptive-poll";
@@ -30,22 +31,33 @@ import {
   PanelHandle,
   useResizablePanels,
 } from "@/components/layout/resizable-panels";
+import { cn } from "@/lib/utils";
+import { QuestionSidePanel } from "./question-side-panel";
+import { ExamOverviewPanel } from "./exam-overview-panel";
+import { ResizableSheetContent } from "../resizable-sheet-content";
 import { QuestionAnalysisCard } from "./question-analysis-card";
 import { SourcePanel } from "./source-panel";
-import { ExamSynthesisPanel } from "./exam-synthesis-panel";
+import { MobileMapFlow } from "./analysis-step-mobile";
 import { AnalysisProgress } from "./analysis-progress";
 import { ExamMapTable } from "./exam-map-table";
+import {
+  MobileStepHeader,
+  MobileStepNav,
+  type MobileFlowStep,
+} from "@/components/workbench/mobile-step-flow";
+import { triggerHintGlow } from "@/lib/hint-glow";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import { SourceImageViewer } from "../source-image-viewer";
 import {
   AnalysisProgressStrip,
   type QuestionChipInfo,
 } from "./analysis-progress-strip";
-import {
-  AnalysisFailedBanner,
-  AnalysisTypeFilter,
-  PendingCard,
-  ResumeAnalysisBanner,
-  type AnalysisTypeOption,
-} from "./analysis-banners";
+import { AnalysisFailedBanner, ResumeAnalysisBanner } from "./analysis-banners";
 import {
   useAnalysisPersistence,
   type WorkingState,
@@ -66,7 +78,22 @@ const WATCHDOG_PROGRESS_STALL_MS = 300_000;
 // 있어 runStartedAt 기준은 추가로 완화한다(360s > 라운드 270s).
 const WATCHDOG_RUN_START_STALL_MS = 360_000;
 
-export function AnalysisStep({ detail, onDetailChange, onAdvance }: AnalysisStepProps) {
+// 모바일 스텝(시안 A) — PC 의 2탭(문항 분석|학생 관리)과 달리, 모바일은 "한 화면 한
+// 기능" 방침대로 문항 분석을 ①정답·배점 / ②분석 검수로 쪼갠다. ③학생 관리는 게이트.
+type MobileStep = "map" | "review";
+const MOBILE_STEPS: readonly MobileFlowStep[] = [
+  { key: "map", label: "정답·배점" },
+  { key: "review", label: "분석 검수" },
+  { key: "students", label: "학생 관리" },
+];
+
+export function AnalysisStep({
+  detail,
+  onDetailChange,
+  onAdvance,
+  overviewOpen = false,
+  onOverviewOpenChange,
+}: AnalysisStepProps) {
   const pathname = usePathname();
   const creditsHref = pathname?.startsWith("/teacher")
     ? "/teacher/credits"
@@ -78,7 +105,6 @@ export function AnalysisStep({ detail, onDetailChange, onAdvance }: AnalysisStep
   // 진행뷰를 idle 로 되돌리는 회귀를 막는다. finally 의 재페치 후 해제한다.
   const [driving, setDriving] = useState(false);
   // 카드 리스트 유형 필터(null=전체) — 문항 수가 많을 때 세로 나열 완화.
-  const [typeFilter, setTypeFilter] = useState<string | null>(null);
 
   // ── 시험지 원본 분할 패널(우측 밀어내기) — Sheet 오버레이 대체(유저 요청).
   // 폭은 공용 리사이저 훅이 관리(드래그 조절 + localStorage 영속), 열림 여부는
@@ -153,15 +179,27 @@ export function AnalysisStep({ detail, onDetailChange, onAdvance }: AnalysisStep
     }
   }, [id]);
 
-  // ── 저장 파이프라인(로직 불변 — use-analysis-persistence) ─────────────────
+  // ── 저장 파이프라인(디바운스 배치 + 직렬 저장 — use-analysis-persistence) ───
   const {
-    saving,
+    saveState,
     handleEditMapEntry,
-    handleConfirmMap,
+    handleToggleMapConfirm,
     handleEditField,
+    handleEditExamLevel,
     handleToggleConfirm,
-    handleConfirmAll,
-  } = useAnalysisPersistence({ id, detailRef, onChangeRef, workingRef, refreshDetail });
+  } = useAnalysisPersistence({
+    id,
+    detailRef,
+    onChangeRef,
+    workingRef,
+    refreshDetail,
+  });
+
+  // 표에서 선택된 문항 — 우측 분석 패널(PC) / 펼친 카드(모바일) 공용.
+  const [selectedNumber, setSelectedNumber] = useState<string | null>(null);
+  // 모바일 스텝 플로우 상태(PC 무영향 — lg:hidden 트리에서만 쓴다).
+  const [mobileStep, setMobileStep] = useState<MobileStep>("map");
+  const [mobileSourceOpen, setMobileSourceOpen] = useState(false);
 
   // ── 분석 드라이버(시작/재점화 1회 POST) ───────────────────────────────────
   // {resume:true} 를 받아도 재 POST 하지 않는다 — 다음 라운드는 서버 자가연쇄가
@@ -304,15 +342,20 @@ export function AnalysisStep({ detail, onDetailChange, onAdvance }: AnalysisStep
   const examMap = detail.examMap;
   const questions = examMap?.questions ?? [];
   const perQuestion = detail.analysis?.perQuestion ?? [];
-  const analysisByNumber = new Map(perQuestion.map((a) => [numberKey(a.number), a]));
-  const questionByNumber = new Map(questions.map((q) => [numberKey(q.number), q]));
+  const analysisByNumber = new Map(
+    perQuestion.map((a) => [numberKey(a.number), a]),
+  );
   // 검수 확정 집합은 numberKey(공백정규화) 기준 비교 — 저장값은 원문 유지.
   const confirmedSet = new Set(
     (detail.reviewState.confirmedNumbers ?? []).map(numberKey),
   );
   const okList = perQuestion.filter((a) => a.analysisStatus === "OK");
-  const confirmedCount = okList.filter((a) => confirmedSet.has(numberKey(a.number))).length;
-  const completed = questions.filter((q) => analysisByNumber.has(numberKey(q.number))).length;
+  const confirmedCount = okList.filter((a) =>
+    confirmedSet.has(numberKey(a.number)),
+  ).length;
+  const completed = questions.filter((q) =>
+    analysisByNumber.has(numberKey(q.number)),
+  ).length;
   const unjudgedCount = questions.length - completed;
 
   const hasMap = questions.length > 0;
@@ -320,9 +363,29 @@ export function AnalysisStep({ detail, onDetailChange, onAdvance }: AnalysisStep
   // 서버 status 가 ANALYZING 이거나, 전체 드라이버가 도는 중이면 언제나 진행뷰가
   // 이긴다(D4: 시작 직후 폴링이 되받은 DRAFT 상세가 idle 로 되돌리는 것 차단).
   const analyzing = detail.status === "ANALYZING" || driving;
-  const locked = analyzing || saving;
+  // 저장은 더 이상 입력을 막지 않는다 — 낙관 반영 + 디바운스 배치 + 직렬 저장이라
+  // 타이핑 중 잠글 이유가 없다(과거엔 saving 이 표 전체를 비활성화해 22행 연타 입력과
+  // 싸웠다). 분석 진행 중(analyzing)만 편집을 잠근다.
+  const locked = analyzing;
+
+  // 학생 관리 게이트 상태 — 확인 진행률/승계 여부의 단일 판정(map-gate).
+  const mapGate = getMapGateStatus({
+    questionNumbers: questions.map((q) => q.number),
+    reviewState: detail.reviewState,
+    studentCount: detail.students.length,
+  });
 
   const sortedQuestions = [...questions].sort((a, b) => a.order - b.order);
+
+  // 우측 패널이 띄울 문항 — 표 선택값에서 파생(선택 없으면 총평만 보이는 빈 상태).
+  const selectedIndex = selectedNumber
+    ? sortedQuestions.findIndex((q) => q.number === selectedNumber)
+    : -1;
+  const selectedEntry =
+    selectedIndex >= 0 ? sortedQuestions[selectedIndex] : null;
+  const selectedAnalysis = selectedEntry
+    ? (analysisByNumber.get(numberKey(selectedEntry.number)) ?? null)
+    : null;
 
   // 문항 칩 스트립 소스 — OK/FAILED/미판정 상태와 카드 스크롤 타깃.
   const chips: QuestionChipInfo[] = sortedQuestions.map((q) => {
@@ -340,18 +403,9 @@ export function AnalysisStep({ detail, onDetailChange, onAdvance }: AnalysisStep
       ?.scrollIntoView({ behavior: "smooth", block: "center" });
   }, []);
 
-  // 유형 필터 옵션(등장 순서 유지) + 필터 적용 목록.
-  const typeCountMap = new Map<string, number>();
-  for (const q of sortedQuestions) {
-    const label = q.typeLabel || "유형 미상";
-    typeCountMap.set(label, (typeCountMap.get(label) ?? 0) + 1);
-  }
-  const typeOptions: AnalysisTypeOption[] = [...typeCountMap.entries()].map(
-    ([label, count]) => ({ label, count }),
-  );
-  const visibleQuestions = typeFilter
-    ? sortedQuestions.filter((q) => (q.typeLabel || "유형 미상") === typeFilter)
-    : sortedQuestions;
+  // (유형 칩 벽 제거) AI 가 만든 유형 라벨은 문항마다 거의 고유해 22문항이면 count 1
+  // 짜리 칩이 15~20개 생겨 필터가 아니라 사실상 네비게이션이었다. 유형 필터는
+  // 채점 지도 툴바의 드롭다운으로 대체했다(ExamMapTable).
 
   // 중단된 부분 분석 재개 CTA — reconcile 이 DRAFT 로 강등한 건/부분 FAILED 건도
   // 막다른 화면 없이 이어서 분석 가능(RCA #3 수리).
@@ -375,8 +429,8 @@ export function AnalysisStep({ detail, onDetailChange, onAdvance }: AnalysisStep
         <section className="rounded-lg border border-slate-200 bg-white shadow-sm">
           <div className="flex min-h-[360px] flex-col items-center justify-center gap-4 px-6 text-center">
             <p className="text-sm text-slate-500">
-              업로드한 시험지를 AI 가 직접 분석합니다. 정답·배점·문항 해설을 한 번에
-              생성해요.
+              업로드한 시험지를 AI 가 직접 분석합니다. 정답·배점·문항 해설을 한
+              번에 생성해요.
             </p>
             <Button
               type="button"
@@ -422,6 +476,28 @@ export function AnalysisStep({ detail, onDetailChange, onAdvance }: AnalysisStep
       className="flex min-w-0 flex-col gap-4 xl:flex-row xl:items-start"
     >
       <div className="flex min-w-0 flex-1 flex-col gap-4">
+      {/* 시험지 총평 시트 — 트리거는 워크스페이스 헤더(「시험지 원본」 옆), 열림
+          상태만 상위가 제어한다. 편집 저장은 여기 파이프라인(handleEditExamLevel)을
+          그대로 타므로 버전 충돌이 없다. 콘텐츠는 body 로 포털돼 위치는 무관. */}
+      <Sheet open={overviewOpen} onOpenChange={onOverviewOpenChange}>
+        <ResizableSheetContent
+          storageKey="smoat.examReport.overviewSheet.width"
+          defaultWidth={560}
+          minWidth={420}
+        >
+          <SheetHeader>
+            <SheetTitle>시험지 총평</SheetTitle>
+          </SheetHeader>
+          <div className="px-4 pb-6">
+            <ExamOverviewPanel
+              examLevel={detail.analysis?.examLevel ?? null}
+              disabled={locked}
+              onEdit={handleEditExamLevel}
+            />
+          </div>
+        </ResizableSheetContent>
+      </Sheet>
+
       {analyzing && (
         <AnalysisProgressStrip
           progress={detail.aiMeta.progress ?? null}
@@ -458,142 +534,238 @@ export function AnalysisStep({ detail, onDetailChange, onAdvance }: AnalysisStep
           />
         </div>
       )}
-
-      {/* 채점 지도(좌) + 시험지 총평(우 380px 독립 섹션) — xl+ 에서 행 높이를
-          뷰포트 기준으로 고정해 두 카드가 같은 높이로 스트레치(좌우 아래 끝선 정렬,
-          유저 요청). 각 카드는 내부 스크롤로 초과분을 흡수한다. */}
+      {/* ── 모바일(시안 A) — 스텝 플로우. PC 트리와 완전 분리(lg:hidden) ────── */}
       {hasMap && examMap && (
-        <div className="flex flex-col gap-4 xl:h-[calc(100vh-232px)] xl:min-h-[560px] xl:flex-row">
-          <div className="min-w-0 flex-1 xl:h-full">
+        <div className="flex flex-col gap-3 lg:hidden">
+          <MobileStepHeader
+            steps={MOBILE_STEPS}
+            currentKey={mobileStep}
+            onSelect={(key) => {
+              // ③ 학생 관리는 게이트 통과 전엔 못 간다 — 상위가 막고 유도한다.
+              if (key === "students") {
+                onAdvance();
+                return;
+              }
+              setMobileStep(key as MobileStep);
+            }}
+          />
+
+          {mobileStep === "map" && (
+            <MobileMapFlow
+              entries={examMap.questions}
+              confirmedNumbers={detail.reviewState.mapConfirmedNumbers ?? []}
+              grandfathered={mapGate.grandfathered}
+              failedNumbers={detail.aiMeta.failedNumbers ?? []}
+              analysisByNumber={analysisByNumber}
+              disabled={locked}
+              openNumber={selectedNumber}
+              onOpenNumber={setSelectedNumber}
+              onEdit={handleEditMapEntry}
+              onToggleConfirm={(numbers, confirmed) =>
+                void handleToggleMapConfirm(numbers, confirmed)
+              }
+              onOpenSource={() => setMobileSourceOpen(true)}
+              onReanalyze={(number) => void runAnalyze([number])}
+            />
+          )}
+
+          {mobileStep === "review" && (
+            <div className="flex flex-col gap-2.5">
+              <p className="rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-[11.5px] text-slate-400">
+                리포트 문구용 · 채점에는 영향 없어요 · 검수{" "}
+                <span className="font-bold tabular-nums text-slate-600">
+                  {confirmedCount}/{okList.length}
+                </span>
+              </p>
+              {sortedQuestions.map((q) => {
+                const key = numberKey(q.number);
+                const a = analysisByNumber.get(key);
+                if (!a) return null;
+                return (
+                  <QuestionAnalysisCard
+                    key={q.number}
+                    question={q}
+                    analysis={a}
+                    isConfirmed={confirmedSet.has(key)}
+                    busy={reanalyzing.has(q.number)}
+                    saving={locked}
+                    onToggleConfirm={() => handleToggleConfirm(q.number)}
+                    onReanalyze={() => void runAnalyze([q.number])}
+                    onEditField={(patch) => handleEditField(q.number, patch)}
+                  />
+                );
+              })}
+            </div>
+          )}
+
+          {/* 하단 고정 바 — 미확인이 남으면 연파랑(곧 갈 수 있는 길) + 힌트 글로우 */}
+          <MobileStepNav
+            prev={
+              mobileStep === "review"
+                ? { label: "이전", onClick: () => setMobileStep("map") }
+                : null
+            }
+            next={
+              mobileStep === "map"
+                ? {
+                    label: mapGate.open
+                      ? "다음 단계로"
+                      : `다음 단계로 — ${mapGate.confirmedCount}/${mapGate.totalCount} 검수`,
+                    onClick: mapGate.open
+                      ? () => setMobileStep("review")
+                      : undefined,
+                    onDisabledHint: () => {
+                      const first = mapGate.pendingNumbers[0];
+                      if (!first) return;
+                      setSelectedNumber(first);
+                      requestAnimationFrame(() =>
+                        triggerHintGlow(
+                          document.querySelector(
+                            `[data-map-card="${CSS.escape(first)}"]`,
+                          ),
+                          { scrollBlock: "center" },
+                        ),
+                      );
+                    },
+                  }
+                : { label: "학생 관리로", onClick: onAdvance }
+            }
+            hint={
+              mobileStep === "map" && !mapGate.open
+                ? "정답·배점을 모두 검수하면 넘어갈 수 있어요"
+                : undefined
+            }
+          />
+          {/* 고정 바에 본문이 가리지 않도록 여백 예약 */}
+          <div aria-hidden="true" className="h-24" />
+
+          {/* 원본 사진 — 모바일에선 표(안의 시트)가 없으므로 여기서 연다 */}
+          <Sheet open={mobileSourceOpen} onOpenChange={setMobileSourceOpen}>
+            <SheetContent side="right" className="w-[92vw] overflow-y-auto">
+              <SheetHeader>
+                <SheetTitle>시험지 원본</SheetTitle>
+              </SheetHeader>
+              <div className="px-4 pb-6">
+                <SourceImageViewer
+                  analysisId={detail.id}
+                  sourceFiles={detail.sourceFiles ?? []}
+                />
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
+      )}
+
+      {/* 시안 B — 채점 지도(주인공) + 우측 424px 분석 패널.
+          문항 분석은 22장 아코디언이 아니라 표에서 고른 하나만 우측에 띄운다.
+          (PC 전용 — 모바일은 위 스텝 플로우가 담당)
+
+          2열 분기는 뷰포트(xl)가 아니라 **실제 가용 폭**(@container) 기준이다:
+          표 min-w 760 + gap 16 + 패널 424 = 1200px 이 맨몸 최소치인데, 뷰포트
+          1280 이어도 사이드바·패딩·팝업 여백을 빼면 실폭이 1000px 대라 2열이
+          켜지는 순간 표가 min-width 로 짓눌려 가로 스크롤이 났다. 1360px 부터
+          켜서 2열 진입 시 표가 최소 900px 는 확보하도록 여유를 준다. */}
+      {hasMap && examMap && (
+        <div className="@container hidden lg:block">
+          <div className="grid grid-cols-1 items-start gap-4 @min-[1360px]:grid-cols-[1fr_424px]">
             <ExamMapTable
               entries={examMap.questions}
-              mapConfirmed={detail.reviewState.mapConfirmed ?? false}
+              confirmedNumbers={detail.reviewState.mapConfirmedNumbers ?? []}
+              grandfathered={mapGate.grandfathered}
               disabled={locked}
+              saveState={saveState}
               analyzing={analyzing}
+              failedNumbers={detail.aiMeta.failedNumbers ?? []}
+              selectedNumber={selectedNumber}
               sourceFiles={detail.sourceFiles ?? []}
               sourcesOpen={sourcesOpen}
               onToggleSources={() => setSourcesOpen((v) => !v)}
               onEdit={handleEditMapEntry}
-              onConfirmAll={() => void handleConfirmMap()}
+              onToggleConfirm={(numbers, confirmed) =>
+                void handleToggleMapConfirm(numbers, confirmed)
+              }
+              onSelectNumber={setSelectedNumber}
             />
-          </div>
 
-          {/* 우: 시험지 총평 — 독립 카드, 지도와 동일 높이 + 내부 스크롤.
-              시험지 원본 패널이 열리면 숨겨 지도 폭을 확보(안 그러면 1280~1536px
-              에서 지도가 ~68px 조각으로 압착) — 총평은 아래 접이식으로 대체. */}
-          {!sourcesVisible && (
-            <aside className="hidden xl:block xl:h-full xl:w-[380px] xl:shrink-0">
-              <div className="flex h-full flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
-                <div className="min-h-0 flex-1 overflow-y-auto p-5">
-                  <ExamSynthesisPanel examLevel={detail.analysis?.examLevel ?? null} />
-                </div>
-              </div>
+            <aside className="@min-[1360px]:sticky @min-[1360px]:top-4 @min-[1360px]:self-start">
+              <QuestionSidePanel
+                entry={selectedEntry}
+                analysis={selectedAnalysis}
+                isConfirmed={
+                  !!selectedEntry &&
+                  confirmedSet.has(numberKey(selectedEntry.number))
+                }
+                reviewedCount={confirmedCount}
+                reviewableCount={okList.length}
+                disabled={locked}
+                busy={!!selectedEntry && reanalyzing.has(selectedEntry.number)}
+                hasPrev={selectedIndex > 0}
+                hasNext={
+                  selectedIndex >= 0 &&
+                  selectedIndex < sortedQuestions.length - 1
+                }
+                onPrev={() =>
+                  setSelectedNumber(
+                    sortedQuestions[selectedIndex - 1]?.number ?? null,
+                  )
+                }
+                onNext={() =>
+                  setSelectedNumber(
+                    sortedQuestions[selectedIndex + 1]?.number ?? null,
+                  )
+                }
+                onClose={() => setSelectedNumber(null)}
+                onToggleConfirm={() =>
+                  selectedEntry && handleToggleConfirm(selectedEntry.number)
+                }
+                onReanalyze={() =>
+                  selectedEntry && void runAnalyze([selectedEntry.number])
+                }
+                onEditField={(patch) =>
+                  selectedEntry && handleEditField(selectedEntry.number, patch)
+                }
+              />
             </aside>
-          )}
+          </div>
         </div>
       )}
 
-      {/* 접이식 총평 폴백 — xl 미만 상시, xl+ 는 원본 패널이 aside 를 밀어냈을 때만 */}
-      {hasMap && examMap && (
-        <details
-          className={`rounded-lg border border-slate-200 bg-white shadow-sm${sourcesVisible ? "" : " xl:hidden"}`}
-        >
-          <summary className="cursor-pointer px-5 py-3 text-sm font-medium text-slate-700">
-            시험지 총평 보기
-          </summary>
-          <div className="border-t border-slate-100 p-5">
-            <ExamSynthesisPanel examLevel={detail.analysis?.examLevel ?? null} />
-          </div>
-        </details>
-      )}
-
-      <div className="flex flex-col gap-4">
-        {/* 문항 분석 카드 리스트 — 전폭(총평은 위 채점 지도 우측으로 이동) */}
-        <section className="flex min-w-0 flex-1 flex-col rounded-lg border border-slate-200 bg-white shadow-sm">
-          <div className="flex items-center justify-between gap-3 border-b border-slate-100 px-4 py-3">
-            {/* 섹션 헤더 — 워크벤치 표준(볼드 타이틀 + slate-400 보조) 톤 */}
-            <div className="flex items-center gap-2">
-              <h3 className="text-[14px] font-bold text-slate-900">문항 분석 검수</h3>
-              <span className="text-xs text-slate-400">
-                <span className="font-semibold tabular-nums text-slate-600">
-                  {confirmedCount}/{okList.length}
-                </span>
+      {/* 다음으로 (학생 관리) — 팝업 하단에 고정되는 바.
+          PageShell 좌우·하단 패딩을 음수 마진으로 상쇄해 팝업 폭을 가로지르고,
+          스크롤 컨테이너(팝업 본문) 기준 sticky bottom-0 으로 붙는다.
+          게이트가 닫혀 있으면 상위(workspace-client)가 막고 미확인 문항으로 유도하므로
+          버튼은 항상 눌리게 두되(aria-disabled), 남은 개수는 옆 문구로 알린다.
+          모바일은 MobileStepNav 가 같은 역할의 고정 바를 이미 깔아서 여기선 숨긴다
+          (lg:flex) — 안 그러면 하단에 바가 두 개 겹친다. */}
+      {detail.status === "ANALYZED" && (
+        <div className="sticky bottom-0 z-20 -mx-4 -mb-4 mt-auto hidden items-center justify-end gap-3 border-t border-slate-200 bg-white/95 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6 lg:flex">
+          {!mapGate.open && (
+            <span className="text-[11.5px] text-slate-400">
+              정답·배점을 모두 검수하면 열려요 ·{" "}
+              <span className="font-semibold tabular-nums text-slate-500">
+                {mapGate.confirmedCount}/{mapGate.totalCount}
               </span>
-              {detail.aiMeta.failedNumbers && detail.aiMeta.failedNumbers.length > 0 && (
-                <span className="inline-flex items-center whitespace-nowrap rounded-full border border-rose-200 bg-rose-50 px-2 py-0.5 text-[10.5px] font-bold text-rose-700">
-                  실패 {detail.aiMeta.failedNumbers.length}
-                </span>
-              )}
-            </div>
-            {/* 검수 버튼 = 초록(워크벤치 버튼 색 규칙) */}
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={handleConfirmAll}
-              disabled={locked || okList.length === 0}
-              className="border-emerald-200 text-emerald-700 hover:bg-emerald-50 hover:text-emerald-800"
-            >
-              <CheckCheck className="h-3.5 w-3.5" />
-              전체 검수 완료
-            </Button>
-          </div>
-
-          <AnalysisTypeFilter
-            options={typeOptions}
-            active={typeFilter}
-            onSelect={setTypeFilter}
-          />
-
-          <div className="p-4">
-            <div className="space-y-3">
-              {visibleQuestions.length === 0 && typeFilter && (
-                <p className="py-6 text-center text-xs text-slate-400">
-                  선택한 유형의 문항이 없습니다.
-                </p>
-              )}
-              {visibleQuestions.map((q) => {
-                const key = numberKey(q.number);
-                const analysis = analysisByNumber.get(key);
-                return (
-                  // 칩 스트립 클릭 스크롤 타깃 — scroll-mt 로 상단 스트립에 가리지 않게.
-                  <div key={q.number} id={`exam-qa-${key}`} className="scroll-mt-24">
-                    {!analysis ? (
-                      <PendingCard number={q.number} />
-                    ) : (
-                      <QuestionAnalysisCard
-                        question={questionByNumber.get(key)}
-                        analysis={analysis}
-                        isConfirmed={confirmedSet.has(key)}
-                        busy={reanalyzing.has(q.number)}
-                        saving={locked}
-                        onToggleConfirm={() => handleToggleConfirm(q.number)}
-                        onReanalyze={() => void runAnalyze([q.number])}
-                        onEditField={(patch) => handleEditField(q.number, patch)}
-                      />
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-
-            {detail.status === "ANALYZED" && (
-              // 긴 검수 리스트를 스크롤하는 동안에도 다음 단계 CTA 가 항상 보이게
-              // 뷰포트 하단 고정(유저 요청). -mx/-mb 로 p-4 를 상쇄해 카드 전폭 바.
-              <div className="sticky bottom-0 z-10 -mx-4 -mb-4 mt-6 flex justify-end rounded-b-lg border-t border-slate-200 bg-white/95 px-4 py-3 backdrop-blur">
-                <Button
-                  type="button"
-                  onClick={onAdvance}
-                  className="bg-blue-600 hover:bg-blue-700"
-                >
-                  학생 관리로 이동
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </div>
+            </span>
+          )}
+          <Button
+            type="button"
+            onClick={onAdvance}
+            aria-disabled={!mapGate.open || undefined}
+            // 기본 폭(~150px)의 약 2배로 존재감을 준다. 새 arbitrary/스케일 유틸은
+            // turbopack JIT 가 늦게 굽는 함정이 있어(min-w-[280px]/min-w-72 모두 미생성
+            // 확인), 폭만은 인라인 style 로 못박아 확실히 적용한다. 문구가 길면 자람.
+            style={{ minWidth: 288 }}
+            className={cn(
+              mapGate.open
+                ? "bg-blue-600 hover:bg-blue-700"
+                : "cursor-not-allowed bg-blue-300 shadow-none hover:bg-blue-300",
             )}
-          </div>
-        </section>
-      </div>
+          >
+            다음으로 (학생 관리)
+            <ArrowRight className="h-4 w-4" />
+          </Button>
+        </div>
+      )}
       </div>
 
       {/* 우: 시험지 원본 분할 패널(xl+) — 핸들 드래그로 폭 조절, 클릭으로 닫기.

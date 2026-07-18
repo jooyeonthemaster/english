@@ -8,10 +8,24 @@
 // ============================================================================
 
 import { type ReactNode } from "react";
-import { Download, Search } from "lucide-react";
+import { Download, ListFilter, Search } from "lucide-react";
 
 import type { GrammarLabStudentRow } from "@/actions/grammar-drill-admin";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+
+/** 어드민 공용 아이콘 팝오버 트리거 (analyses-board 등과 동일 규약) */
+const ICON_TRIGGER_CLASS =
+  "relative flex size-7 shrink-0 items-center justify-center rounded-md border border-input bg-transparent shadow-xs transition-[color,box-shadow] outline-none hover:bg-slate-50 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50";
+
+function ActiveDot() {
+  return (
+    <span
+      aria-hidden="true"
+      className="absolute top-1 right-1 inline-block size-1.5 rounded-full bg-blue-500"
+    />
+  );
+}
 
 /** 반 필터 값 — null=전체, "UNASSIGNED"=미배정, 그 외 class id */
 export type ClassFilter = string | null;
@@ -142,140 +156,172 @@ export function GrammarLabToolbar({
   onAssignSelected: () => void;
   onClearSelection: () => void;
 }) {
+  const filterActive =
+    onlyActive || stalledOnly || classFilter !== null || gradeFilter !== null;
+
   return (
-    <div className="flex flex-col gap-2 border-b border-slate-100 px-4 py-2.5">
-      {/* 검색 · 토글 · 우측 카운트/선택 액션/CSV */}
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-        <div className="flex h-8 w-60 items-center gap-2 rounded-md border border-slate-200 bg-white px-2.5 focus-within:border-blue-400">
-          <Search className="size-3.5 shrink-0 text-slate-400" aria-hidden />
-          <input
-            value={query}
-            onChange={(e) => onQueryChange(e.target.value)}
-            placeholder="이름 · 학생코드 검색"
-            className="w-full bg-transparent text-[13px] text-slate-700 outline-none placeholder:text-slate-300"
-          />
-        </div>
-        <label className="flex cursor-pointer items-center gap-1.5 text-[12.5px] font-medium text-slate-500">
-          <input
-            type="checkbox"
-            checked={onlyActive}
-            onChange={(e) => onOnlyActiveChange(e.target.checked)}
-            className="size-3.5 accent-blue-600"
-          />
-          학습 이력 있는 학생만
-        </label>
-        <button
-          type="button"
-          onClick={() => onStalledOnlyChange(!stalledOnly)}
-          aria-pressed={stalledOnly}
-          className={cn(
-            "h-7 whitespace-nowrap rounded-full border px-3 text-[12px] font-semibold transition-colors",
-            stalledOnly
-              ? "border-rose-300 bg-rose-50 text-rose-700 shadow-sm"
-              : "border-transparent text-slate-400 hover:bg-slate-50 hover:text-slate-600",
-          )}
-        >
-          정체 학생만
-        </button>
-        <div className="ml-auto flex flex-wrap items-center gap-2">
-          {selectedCount > 0 ? (
-            <>
-              <span className="text-[12px] font-semibold tabular-nums text-blue-700">
-                {selectedCount}명 선택
-              </span>
-              <button
-                type="button"
-                onClick={onAssignSelected}
-                className="inline-flex h-7 items-center rounded-md bg-blue-600 px-2.5 text-[12px] font-semibold text-white transition-colors hover:bg-blue-700"
-              >
-                어법 과제 만들기
-              </button>
-              <button
-                type="button"
-                onClick={onClearSelection}
-                className="text-[12px] font-medium text-slate-400 transition-colors hover:text-slate-600"
-              >
-                선택 해제
-              </button>
-              <div className="h-4 w-px bg-slate-200" aria-hidden />
-            </>
-          ) : null}
-          <span className="text-[12px] tabular-nums text-slate-400">
-            {resultRows.length}명
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-slate-100 px-4 py-2.5">
+      {selectedCount > 0 ? (
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-[12px] font-semibold tabular-nums text-blue-700">
+            {selectedCount}명 선택
           </span>
           <button
             type="button"
-            onClick={() => exportCsv(resultRows)}
-            disabled={resultRows.length === 0}
-            className="inline-flex h-7 items-center gap-1.5 rounded-md border border-slate-200 bg-white px-2.5 text-[12px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+            onClick={onAssignSelected}
+            className="inline-flex h-7 items-center rounded-md bg-blue-600 px-2.5 text-[12px] font-semibold text-white transition-colors hover:bg-blue-700"
           >
-            <Download className="size-3.5" aria-hidden />
-            CSV
+            어법 과제 만들기
+          </button>
+          <button
+            type="button"
+            onClick={onClearSelection}
+            className="text-[12px] font-medium text-slate-400 transition-colors hover:text-slate-600"
+          >
+            선택 해제
           </button>
         </div>
+      ) : null}
+
+      {/* 우측 끝 고정: 카운트 · CSV · 필터 · 검색 */}
+      <div className="ml-auto flex items-center gap-1.5">
+        <span className="mr-1 text-[12px] tabular-nums text-slate-400">
+          {resultRows.length}명
+        </span>
+        <button
+          type="button"
+          onClick={() => exportCsv(resultRows)}
+          disabled={resultRows.length === 0}
+          className="inline-flex h-7 items-center gap-1.5 rounded-md border border-slate-200 bg-white px-2.5 text-[12px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          <Download className="size-3.5" aria-hidden />
+          CSV
+        </button>
+
+        <Popover>
+          <PopoverTrigger title="필터" aria-label="필터" className={ICON_TRIGGER_CLASS}>
+            <ListFilter className="size-3.5 shrink-0" />
+            {filterActive ? <ActiveDot /> : null}
+          </PopoverTrigger>
+          <PopoverContent align="end" className="w-64 p-3">
+            <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-1.5">
+                <span className="text-[11px] font-medium text-slate-600">학습 상태</span>
+                <div className="flex flex-wrap gap-1.5">
+                  <FilterChip
+                    active={onlyActive}
+                    onClick={() => onOnlyActiveChange(!onlyActive)}
+                  >
+                    학습 이력 있는 학생만
+                  </FilterChip>
+                  <button
+                    type="button"
+                    onClick={() => onStalledOnlyChange(!stalledOnly)}
+                    aria-pressed={stalledOnly}
+                    className={cn(
+                      "h-7 whitespace-nowrap rounded-full border px-3 text-[12px] font-semibold transition-colors",
+                      stalledOnly
+                        ? "border-rose-300 bg-rose-50 text-rose-700 shadow-sm"
+                        : "border-transparent text-slate-400 hover:bg-slate-50 hover:text-slate-600",
+                    )}
+                  >
+                    정체 학생만
+                  </button>
+                </div>
+              </div>
+
+              {classOptions.length > 0 ? (
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-[11px] font-medium text-slate-600">반</span>
+                  <div className="flex flex-wrap gap-1">
+                    <FilterChip
+                      active={classFilter === null}
+                      onClick={() => onClassFilterChange(null)}
+                    >
+                      전체 반
+                    </FilterChip>
+                    <FilterChip
+                      active={classFilter === UNASSIGNED_CLASS}
+                      onClick={() =>
+                        onClassFilterChange(
+                          classFilter === UNASSIGNED_CLASS ? null : UNASSIGNED_CLASS,
+                        )
+                      }
+                    >
+                      미배정
+                      <span className="ml-1 text-[11px] tabular-nums opacity-70">
+                        {unassignedCount}
+                      </span>
+                    </FilterChip>
+                    {classOptions.map((c) => (
+                      <FilterChip
+                        key={c.id}
+                        active={classFilter === c.id}
+                        onClick={() =>
+                          onClassFilterChange(classFilter === c.id ? null : c.id)
+                        }
+                      >
+                        {c.name}
+                        <span className="ml-1 text-[11px] tabular-nums opacity-70">
+                          {c.count}
+                        </span>
+                      </FilterChip>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+
+              {grades.length >= 2 ? (
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-[11px] font-medium text-slate-600">학년</span>
+                  <div className="flex flex-wrap gap-1">
+                    <FilterChip
+                      active={gradeFilter === null}
+                      onClick={() => onGradeFilterChange(null)}
+                    >
+                      전체 학년
+                    </FilterChip>
+                    {grades.map((g) => (
+                      <FilterChip
+                        key={g}
+                        active={gradeFilter === g}
+                        onClick={() => onGradeFilterChange(gradeFilter === g ? null : g)}
+                      >
+                        {g}학년
+                      </FilterChip>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+            </div>
+          </PopoverContent>
+        </Popover>
+
+        <Popover>
+          <PopoverTrigger title="검색" aria-label="검색" className={ICON_TRIGGER_CLASS}>
+            <Search className="size-3.5 shrink-0" />
+            {query ? <ActiveDot /> : null}
+          </PopoverTrigger>
+          <PopoverContent align="end" className="w-60 p-3">
+            <div className="flex flex-col gap-1.5">
+              <span className="text-[11px] font-medium text-slate-600">검색</span>
+              <div className="relative">
+                <Search
+                  className="pointer-events-none absolute top-1/2 left-2 size-3.5 -translate-y-1/2 text-slate-400"
+                  aria-hidden="true"
+                />
+                <input
+                  autoFocus
+                  value={query}
+                  onChange={(e) => onQueryChange(e.target.value)}
+                  placeholder="이름 · 학생코드 검색"
+                  className="h-8 w-full rounded-md border border-slate-200 bg-white pl-7 pr-2.5 text-[13px] text-slate-700 outline-none placeholder:text-slate-300 focus:border-blue-400"
+                />
+              </div>
+            </div>
+          </PopoverContent>
+        </Popover>
       </div>
-
-      {/* 반 칩 필터 — 반이 하나도 없으면 행 자체를 숨긴다 */}
-      {classOptions.length > 0 ? (
-        <div className="flex flex-wrap items-center gap-1">
-          <span className="mr-1 text-[11px] font-semibold text-slate-400">반</span>
-          <FilterChip
-            active={classFilter === null}
-            onClick={() => onClassFilterChange(null)}
-          >
-            전체 반
-          </FilterChip>
-          <FilterChip
-            active={classFilter === UNASSIGNED_CLASS}
-            onClick={() =>
-              onClassFilterChange(
-                classFilter === UNASSIGNED_CLASS ? null : UNASSIGNED_CLASS,
-              )
-            }
-          >
-            미배정
-            <span className="ml-1 text-[11px] tabular-nums opacity-70">
-              {unassignedCount}
-            </span>
-          </FilterChip>
-          {classOptions.map((c) => (
-            <FilterChip
-              key={c.id}
-              active={classFilter === c.id}
-              onClick={() =>
-                onClassFilterChange(classFilter === c.id ? null : c.id)
-              }
-            >
-              {c.name}
-              <span className="ml-1 text-[11px] tabular-nums opacity-70">
-                {c.count}
-              </span>
-            </FilterChip>
-          ))}
-        </div>
-      ) : null}
-
-      {/* 학년 칩 필터 — 실존 학년 1종이면 미표시 */}
-      {grades.length >= 2 ? (
-        <div className="flex flex-wrap items-center gap-1">
-          <span className="mr-1 text-[11px] font-semibold text-slate-400">학년</span>
-          <FilterChip
-            active={gradeFilter === null}
-            onClick={() => onGradeFilterChange(null)}
-          >
-            전체 학년
-          </FilterChip>
-          {grades.map((g) => (
-            <FilterChip
-              key={g}
-              active={gradeFilter === g}
-              onClick={() => onGradeFilterChange(gradeFilter === g ? null : g)}
-            >
-              {g}학년
-            </FilterChip>
-          ))}
-        </div>
-      ) : null}
     </div>
   );
 }

@@ -10,47 +10,46 @@
 
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
-import { ArrowLeft, Check, ChevronRight, FileBarChart, Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import {
+  BarChart3,
+  Check,
+  ChevronRight,
+  FileBarChart,
+  ImageIcon,
+  Loader2,
+  Lock,
+  X,
+} from "lucide-react";
 import type {
   ExamAnalysisDetail,
   ExamWorkspaceStep,
 } from "./ui-contracts";
-import type { ExamAnalysisStatus, ExamType } from "@/lib/exam-report/types";
+import type { ExamType } from "@/lib/exam-report/types";
+import { getMapGateStatus } from "@/lib/exam-report/map-gate";
+import { triggerHintGlow } from "@/lib/hint-glow";
 import { WorkflowPageTitle } from "@/components/workbench/workflow-page-title";
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { SourceImageViewer } from "./source-image-viewer";
+import { ResizableSheetContent } from "./resizable-sheet-content";
 import { startAdaptivePoll } from "@/lib/adaptive-poll";
 import { AnalysisStep } from "./analysis/analysis-step";
 import { StudentsTab } from "./students/students-tab";
+import { useWorkspaceModalClose } from "./workspace-modal";
 
 const HUB_HREF = "/director/workbench/exam-report";
 
 interface WorkspaceClientProps {
   analysisId: string;
+  /** 팝업(WorkspaceModal) 안에서 렌더 — 페이지 문맥 전제(-m-6·100vh·배경)를 벗는다. */
+  embedded?: boolean;
 }
-
-// ── 상태 뱃지 ───────────────────────────────────────────────────────────────
-
-const STATUS_BADGE: Record<
-  ExamAnalysisStatus,
-  { label: string; className: string; pulse?: boolean }
-> = {
-  DRAFT: {
-    label: "분석 대기",
-    className: "border border-slate-200 bg-slate-50 text-slate-600",
-  },
-  ANALYZING: {
-    label: "분석 중",
-    className: "border border-blue-200 bg-blue-50 text-blue-700",
-    pulse: true,
-  },
-  ANALYZED: {
-    label: "분석 완료",
-    className: "border border-emerald-200 bg-emerald-50 text-emerald-700",
-  },
-  FAILED: {
-    label: "실패",
-    className: "border border-rose-200 bg-rose-50 text-rose-700",
-  },
-};
 
 const EXAM_TYPE_LABEL: Record<ExamType, string> = {
   MIDTERM: "중간고사",
@@ -66,10 +65,24 @@ const STEPS: { key: ExamWorkspaceStep; label: string }[] = [
   { key: "students", label: "학생 관리" },
 ];
 
+/** 학생 관리 게이트 — 정답·배점 문항별 확인이 끝나야 열린다(map-gate 단일 판정). */
+function gateStatusOf(detail: ExamAnalysisDetail) {
+  return getMapGateStatus({
+    questionNumbers: (detail.examMap?.questions ?? []).map((q) => q.number),
+    reviewState: detail.reviewState,
+    studentCount: detail.students.length,
+  });
+}
+
 /** 로드 시점의 status 로 기본 탭을 정한다(이후는 수동 전환). */
 function deriveInitialStep(detail: ExamAnalysisDetail): ExamWorkspaceStep {
   // 이미 분석 완료 + 학생이 있으면 학생 관리로, 그 외엔 문항 분석부터.
-  if (detail.status === "ANALYZED" && detail.students.length > 0) {
+  // 단 게이트가 닫혀 있으면(정답·배점 미확인) 건너뛰기 금지 — 검증이 먼저다.
+  if (
+    detail.status === "ANALYZED" &&
+    detail.students.length > 0 &&
+    gateStatusOf(detail).open
+  ) {
     return "students";
   }
   return "analysis";
@@ -79,7 +92,9 @@ function isStepComplete(
   detail: ExamAnalysisDetail,
   step: ExamWorkspaceStep,
 ): boolean {
-  if (step === "analysis") return detail.status === "ANALYZED";
+  // "AI 분석 완료"가 아니라 "사람이 정답·배점을 확인 완료"를 뜻해야 한다.
+  // (기존엔 status==="ANALYZED" 라 0/22 인데도 체크마크가 켜졌다.)
+  if (step === "analysis") return gateStatusOf(detail).open;
   return false;
 }
 
@@ -98,7 +113,14 @@ function isLiveStudent(s: ExamAnalysisDetail["students"][number]): boolean {
 
 // ── 셸 ──────────────────────────────────────────────────────────────────────
 
-export function ExamReportWorkspaceClient({ analysisId }: WorkspaceClientProps) {
+export function ExamReportWorkspaceClient({
+  analysisId,
+  embedded = false,
+}: WorkspaceClientProps) {
+  // 팝업 안이면 닫기 핸들, 전체 페이지면 null (헤더가 X 렌더 여부를 이걸로 판단)
+  const closeModal = useWorkspaceModalClose();
+  // 시험지 총평 시트 — 트리거는 이 헤더(「시험지 원본」 옆), 콘텐츠·저장은 AnalysisStep.
+  const [overviewOpen, setOverviewOpen] = useState(false);
   const [detail, setDetail] = useState<ExamAnalysisDetail | null>(null);
   const [phase, setPhase] = useState<"loading" | "ready" | "notFound" | "error">(
     "loading",
@@ -154,7 +176,26 @@ export function ExamReportWorkspaceClient({ analysisId }: WorkspaceClientProps) 
     setDetail(next);
   }, []);
 
-  const advanceFromAnalysis = useCallback(() => setStep("students"), []);
+  // 게이트에 막힌 클릭 — 문항 분석으로 돌려보내고 해야 할 일(채점 지도)로 시선을
+  // 끈다. 막기만 하고 방치하면 "왜 안 눌리지"가 되므로 반드시 유도까지 한다.
+  const handleGateBlocked = useCallback(() => {
+    setStep("analysis");
+    // 탭 전환 렌더 후에 대상이 DOM 에 붙으므로 다음 프레임에 글로우.
+    requestAnimationFrame(() => {
+      triggerHintGlow(document.querySelector("[data-exam-map-panel]"), {
+        scrollBlock: "center",
+      });
+    });
+    toast.info("정답·배점을 모두 검수하면 학생 관리로 넘어갈 수 있어요.");
+  }, []);
+
+  const advanceFromAnalysis = useCallback(() => {
+    if (detail && !gateStatusOf(detail).open) {
+      handleGateBlocked();
+      return;
+    }
+    setStep("students");
+  }, [detail, handleGateBlocked]);
 
   // B4: 학생 관리 탭 라이브 갱신 — 판독(READING)/리포트 생성(GENERATING) 중인 학생이
   // 있으면 상세를 주기 재페치해 pulse 뱃지·상태를 갱신한다(문항 분석 ANALYZING 폴링과
@@ -191,7 +232,7 @@ export function ExamReportWorkspaceClient({ analysisId }: WorkspaceClientProps) 
 
   if (phase === "loading") {
     return (
-      <PageShell>
+      <PageShell embedded={embedded}>
         <div className="flex min-h-[60vh] items-center justify-center">
           <Loader2 className="h-6 w-6 animate-spin text-slate-400" />
         </div>
@@ -201,7 +242,7 @@ export function ExamReportWorkspaceClient({ analysisId }: WorkspaceClientProps) 
 
   if (phase === "notFound" || phase === "error") {
     return (
-      <PageShell>
+      <PageShell embedded={embedded}>
         <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 px-6 text-center">
           <p className="text-sm text-slate-500">
             {phase === "notFound"
@@ -235,15 +276,6 @@ export function ExamReportWorkspaceClient({ analysisId }: WorkspaceClientProps) 
 
   if (!detail) return null;
 
-  const badge = STATUS_BADGE[detail.status];
-  // ANALYZING 뱃지에는 실제 진행(aiMeta.progress, optional 소비)을 {completed}/{total}
-  // 로 병기 — 진행 스냅샷이 아직 없으면(첫 체크포인트 전) 라벨만 보인다.
-  const progress =
-    detail.status === "ANALYZING" ? detail.aiMeta.progress : undefined;
-  const badgeLabel =
-    progress && progress.total > 0
-      ? `${badge.label} ${Math.min(progress.completed, progress.total)}/${progress.total}`
-      : badge.label;
   const metaParts = [
     detail.schoolName,
     detail.grade,
@@ -253,39 +285,103 @@ export function ExamReportWorkspaceClient({ analysisId }: WorkspaceClientProps) 
   ].filter((v): v is string => Boolean(v));
 
   return (
-    <PageShell>
-      <main className="flex w-full min-w-0 flex-col gap-4">
-        {/* 헤더 카드 — 뒤로가기 + 제목 + 상태 뱃지 + 탭 인디케이터 */}
-        <section className="flex min-w-0 flex-col rounded-lg border border-slate-200 bg-white shadow-sm">
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 px-4 py-3">
-            <div className="flex min-w-0 items-center gap-3">
-              <Link
-                href={HUB_HREF}
-                title="리포트 목록"
-                className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-slate-200 text-slate-400 transition-colors hover:bg-slate-50 hover:text-slate-600"
-              >
-                <ArrowLeft className="h-4 w-4" />
-              </Link>
-              <WorkflowPageTitle
-                icon={FileBarChart}
-                title={detail.title}
-                description={
-                  metaParts.length > 0 ? metaParts.join(" · ") : undefined
-                }
-              />
-            </div>
-            <span
-              className={`inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium tabular-nums ${badge.className}`}
-            >
-              {badge.pulse && (
-                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-current" />
+    <PageShell embedded={embedded}>
+      <main className="flex w-full min-w-0 flex-1 flex-col gap-4">
+        {/* 헤더 — 제목 + 탭 인디케이터 (+ 팝업이면 닫기 X).
+            팝업에선 **풀블리드 고정 헤더**: PageShell 의 좌우/상단 패딩을 음수 마진으로
+            상쇄해 팝업 카드의 좌·우·상 끝에 딱 붙이고(둥근 모서리는 팝업 카드의
+            overflow-hidden 이 잘라준다), 스크롤 컨테이너(팝업 본문) 기준 sticky top-0 로
+            고정한다. 떠 있는 카드가 아니라 창의 헤더 바처럼 보이게 하는 게 목적이라
+            rounded/side-border/shadow 를 뺀다. 전체 페이지 폴백에서는 평범한 카드로 흐른다.
+            상태·검수 진행은 탭/본문이 이미 보여줘 헤더 뱃지는 중복이라 제거. */}
+        <div
+          className={
+            embedded
+              ? "sticky top-0 z-20 -mx-4 -mt-4 sm:-mx-6"
+              : undefined
+          }
+        >
+          <section
+            className={
+              embedded
+                ? "flex min-w-0 flex-col border-b border-slate-200 bg-white"
+                : "flex min-w-0 flex-col rounded-lg border border-slate-200 bg-white shadow-sm"
+            }
+          >
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 px-4 py-3">
+              <div className="flex min-w-0 items-center gap-3">
+                <WorkflowPageTitle
+                  icon={FileBarChart}
+                  title={detail.title}
+                  description={
+                    metaParts.length > 0 ? metaParts.join(" · ") : undefined
+                  }
+                />
+                {/* 시험지 원본 — 정답·배점 검수 내내 대조하는 자료라 특정 패널이
+                    아닌 헤더(제목 옆)에 상주시킨다. 시트는 대조 가능해야 하므로
+                    최소 화면 절반 폭(기본 sm:max-w-sm 캡 해제). */}
+                {(detail.sourceFiles?.length ?? 0) > 0 && (
+                  <Sheet>
+                    <SheetTrigger asChild>
+                      <Button type="button" variant="outline" size="sm">
+                        <ImageIcon className="h-3.5 w-3.5" />
+                        시험지 원본
+                      </Button>
+                    </SheetTrigger>
+                    <ResizableSheetContent
+                      storageKey="smoat.examReport.sourceSheet.width"
+                      defaultWidth={640}
+                      minWidth={420}
+                    >
+                      <SheetHeader>
+                        <SheetTitle>시험지 원본</SheetTitle>
+                      </SheetHeader>
+                      <div className="px-4 pb-6">
+                        <SourceImageViewer
+                          analysisId={detail.id}
+                          sourceFiles={detail.sourceFiles ?? []}
+                        />
+                      </div>
+                    </ResizableSheetContent>
+                  </Sheet>
+                )}
+                {/* 시험지 총평 — 「시험지 원본」 바로 오른쪽. 시트 콘텐츠·저장은
+                    AnalysisStep(문항 분석 스텝) 에 있으므로, 그 스텝일 때만 노출한다.
+                    (다른 탭에선 스텝이 언마운트돼 시트가 안 열림) */}
+                {step === "analysis" && detail.status === "ANALYZED" && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setOverviewOpen(true)}
+                  >
+                    <BarChart3 className="h-3.5 w-3.5" />
+                    시험지 총평
+                  </Button>
+                )}
+              </div>
+              {/* 닫기 — 팝업일 때만(전체 페이지에선 컨텍스트가 없어 렌더 안 함) */}
+              {closeModal && (
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  aria-label="닫기"
+                  title="닫기 (Esc)"
+                  className="inline-flex size-8 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-400 transition-colors hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700"
+                >
+                  <X className="size-4" />
+                </button>
               )}
-              {badgeLabel}
-            </span>
-          </div>
+            </div>
 
-          <TabIndicator detail={detail} current={step} onSelect={setStep} />
-        </section>
+            <TabIndicator
+              detail={detail}
+              current={step}
+              onSelect={setStep}
+              onGateBlocked={handleGateBlocked}
+            />
+          </section>
+        </div>
 
         {/* 탭 본문 */}
         {step === "analysis" && (
@@ -293,10 +389,16 @@ export function ExamReportWorkspaceClient({ analysisId }: WorkspaceClientProps) 
             detail={detail}
             onDetailChange={handleDetailChange}
             onAdvance={advanceFromAnalysis}
+            overviewOpen={overviewOpen}
+            onOverviewOpenChange={setOverviewOpen}
           />
         )}
         {step === "students" && (
-          <StudentsTab detail={detail} onDetailChange={handleDetailChange} />
+          <StudentsTab
+            detail={detail}
+            onDetailChange={handleDetailChange}
+            onBack={() => setStep("analysis")}
+          />
         )}
       </main>
     </PageShell>
@@ -305,10 +407,32 @@ export function ExamReportWorkspaceClient({ analysisId }: WorkspaceClientProps) 
 
 // ── 페이지 셸 ────────────────────────────────────────────────────────────────
 // 로딩/에러/본문이 동일한 배경·여백 셸을 공유하도록 고정(A8) — 분기 간 레이아웃 점프 방지.
-function PageShell({ children }: { children: ReactNode }) {
+/**
+ * 로딩/에러/본문이 동일한 배경·여백 셸을 공유하도록 고정(A8) — 분기 간 레이아웃 점프 방지.
+ *
+ * embedded = 팝업(WorkspaceModal) 안에서 렌더될 때. 페이지 문맥 전제를 벗는다:
+ *  - `-m-6`(페이지 패딩 상쇄)는 팝업 안에선 카드 밖으로 삐져나가므로 제거
+ *  - `min-h-[calc(100vh-56px)]`(헤더 뺀 전체 높이)도 팝업이 높이를 쥐므로 제거
+ *  - 배경은 팝업 카드가 이미 깔아서 중복 불필요
+ * 좌우 여백은 팝업 카드의 인셋(mx-8~20)이 만들어 주므로 셸은 최소만 준다.
+ */
+function PageShell({
+  children,
+  embedded = false,
+}: {
+  children: ReactNode;
+  embedded?: boolean;
+}) {
   return (
-    // pb-20: 본문 하단 숨통 — 마지막 카드가 뷰포트 바닥에 붙어 답답하던 문제(유저 피드백).
-    <div className="-m-6 min-h-[calc(100vh-56px)] min-w-0 bg-[#F4F6F9] px-4 pb-20 pt-4 sm:px-6 xl:px-8">
+    // pb-20(페이지 모드): 본문 하단 숨통 — 마지막 카드가 뷰포트 바닥에 붙어 답답하던
+    // 문제(유저 피드백). 모달 임베드는 자체 스크롤 컨테이너라 py-4 유지.
+    <div
+      className={
+        embedded
+          ? "flex min-h-full min-w-0 flex-col px-4 py-4 sm:px-6"
+          : "-m-6 flex min-h-[calc(100vh-56px)] min-w-0 flex-col bg-[#F4F6F9] px-4 pb-20 pt-4 sm:px-6 xl:px-8"
+      }
+    >
       {children}
     </div>
   );
@@ -320,11 +444,15 @@ function TabIndicator({
   detail,
   current,
   onSelect,
+  onGateBlocked,
 }: {
   detail: ExamAnalysisDetail;
   current: ExamWorkspaceStep;
   onSelect: (step: ExamWorkspaceStep) => void;
+  /** 게이트에 막힌 클릭 — 해야 할 일(미확인 문항)로 유도 */
+  onGateBlocked: () => void;
 }) {
+  const gate = gateStatusOf(detail);
   return (
     // py-3: 스텝 칩이 헤더 카드 하단 보더에 붙어 답답하던 문제(유저 피드백) —
     // 고정 h-11(칩 상하 6px)을 풀고 상하 12px 숨통을 준다.
@@ -334,16 +462,27 @@ function TabIndicator({
         const complete = isStepComplete(detail, s.key);
         const count =
           s.key === "students" ? detail.students.length : undefined;
+        // 게이트: 정답·배점 확인 전에는 학생 관리 진입 차단. native disabled 대신
+        // aria-disabled 로 두어 클릭을 받고, 해야 할 일(미확인 문항)로 유도한다.
+        const gated = s.key === "students" && !gate.open;
         return (
           <div key={s.key} className="flex items-center gap-1.5">
             <button
               type="button"
-              onClick={() => onSelect(s.key)}
+              aria-disabled={gated || undefined}
+              title={
+                gated
+                  ? `정답·배점을 모두 검수하면 열려요 (${gate.confirmedCount}/${gate.totalCount})`
+                  : undefined
+              }
+              onClick={() => (gated ? onGateBlocked() : onSelect(s.key))}
               className={
                 "inline-flex h-8 max-w-full shrink-0 items-center gap-1.5 rounded-md border px-3 text-[12.5px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
                 (active
                   ? "border-blue-600 bg-blue-50/40 text-blue-700 shadow-sm"
-                  : "cursor-pointer border-transparent text-slate-400 hover:bg-slate-50 hover:text-slate-600")
+                  : gated
+                    ? "cursor-not-allowed border-transparent text-slate-300"
+                    : "cursor-pointer border-transparent text-slate-400 hover:bg-slate-50 hover:text-slate-600")
               }
             >
               <span
@@ -356,11 +495,24 @@ function TabIndicator({
                       : "bg-slate-200 text-slate-500")
                 }
               >
-                {complete && !active ? <Check className="h-3 w-3" /> : i + 1}
+                {gated ? (
+                  <Lock className="h-3 w-3" />
+                ) : complete && !active ? (
+                  <Check className="h-3 w-3" />
+                ) : (
+                  i + 1
+                )}
               </span>
               {s.label}
-              {count != null && count > 0 && (
-                <span className="tabular-nums text-slate-400">{count}</span>
+              {gated ? (
+                <span className="tabular-nums text-slate-300">
+                  {gate.confirmedCount}/{gate.totalCount}
+                </span>
+              ) : (
+                count != null &&
+                count > 0 && (
+                  <span className="tabular-nums text-slate-400">{count}</span>
+                )
               )}
             </button>
             {i < STEPS.length - 1 && (

@@ -1,0 +1,110 @@
+<!-- @dsCard group="Generate Pages" -->
+<title>생성 버튼 셋 (3페이지 통일 규칙)</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Pretendard",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;background:#fff;color:#111827;padding:28px;-webkit-font-smoothing:antialiased}
+h1{font-size:15px;font-weight:800;margin-bottom:4px}
+p.note{font-size:12px;color:#6B7280;margin-bottom:20px}
+h2{font-size:12px;font-weight:700;color:#374151;margin:20px 0 10px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+button{font-family:inherit;cursor:pointer}
+svg{flex-shrink:0}
+/* 주 생성 CTA */
+.cta{display:inline-flex;height:48px;min-width:260px;align-items:center;justify-content:center;gap:8px;border-radius:12px;border:none;padding:0 12px;font-size:14px;font-weight:700;color:#fff;background:#2563EB;box-shadow:0 4px 6px -1px rgba(191,219,254,.5),0 2px 4px -2px rgba(191,219,254,.5);transition:all .2s}
+.cta:hover{background:#1D4ED8;box-shadow:0 10px 15px -3px rgba(191,219,254,.6),0 4px 6px -4px rgba(191,219,254,.6)}
+.cta.off{background:#E2E8F0;color:#94A3B8;box-shadow:none;cursor:not-allowed}
+.chip{display:inline-flex;align-items:center;gap:4px;margin-left:4px;flex-shrink:0;border-radius:8px;background:rgba(255,255,255,.2);padding:4px 8px;font-size:11px;font-weight:600;font-variant-numeric:tabular-nums}
+/* 저장 */
+.save{display:inline-flex;height:32px;min-width:64px;align-items:center;justify-content:center;gap:4px;border-radius:6px;border:none;background:#0F172A;color:#fff;padding:0 8px;font-size:11px;font-weight:700;transition:background .15s}
+.save:hover{background:#1E293B}
+.save.off{background:#CBD5E1;cursor:not-allowed}
+.save.splitL{border-radius:6px 0 0 6px;border-right:1px solid rgba(255,255,255,.2)}
+.save.splitR{border-radius:0 6px 6px 0;min-width:0;padding:0 6px}
+/* 보조 아웃라인 */
+.outl{display:inline-flex;height:32px;min-width:64px;align-items:center;justify-content:center;gap:4px;border-radius:6px;border:1px solid #E2E8F0;background:#fff;padding:0 8px;font-size:11px;font-weight:600;color:#475569;transition:background .15s}
+.outl:hover{background:#F8FAFC}
+.toss{border-color:rgba(49,130,246,.45);color:#3182F6;font-weight:700}
+.toss:hover{background:#EFF6FF}
+/* 아이콘 버튼 */
+.icon8{display:inline-flex;width:32px;height:32px;align-items:center;justify-content:center;border-radius:6px;border:1px solid #E2E8F0;background:#fff;color:#475569;transition:background .15s}
+.icon8:hover{background:#F8FAFC}
+.icon7{display:inline-flex;width:28px;height:28px;align-items:center;justify-content:center;border-radius:6px;border:1px solid #E2E8F0;background:#fff;color:#475569;transition:all .15s}
+.icon7:hover{border-color:#BFDBFE;background:#EFF6FF;color:#1D4ED8}
+.close7{display:inline-flex;width:28px;height:28px;align-items:center;justify-content:center;border-radius:6px;border:none;background:transparent;color:#94A3B8;transition:all .15s}
+.close7:hover{background:#F1F5F9;color:#334155}
+.danger{display:inline-flex;width:28px;height:28px;align-items:center;justify-content:center;border-radius:8px;border:1px solid #FCA5A5;background:#fff;color:#EF4444;transition:all .15s}
+.danger:hover{background:#FEF2F2;color:#DC2626}
+/* 모바일 바 */
+.mbar{max-width:390px;border-top:1px solid #E2E8F0;background:rgba(255,255,255,.95);padding:10px 12px;display:flex;gap:8px;border:1px solid #E2E8F0;border-radius:10px}
+.prev{display:inline-flex;height:44px;flex-shrink:0;align-items:center;gap:4px;border-radius:8px;border:1px solid #E2E8F0;background:#fff;padding:0 14px;font-size:13px;font-weight:600;color:#475569}
+.prev:hover{background:#F8FAFC}
+.next{display:inline-flex;height:44px;min-width:0;flex:1;align-items:center;justify-content:center;gap:4px;border-radius:8px;border:none;padding:0 16px;font-size:13.5px;font-weight:700;background:#2563EB;color:#fff}
+.next:hover{background:#1D4ED8}
+.next.off{background:#E2E8F0;color:#94A3B8;cursor:not-allowed}
+.mcta{display:inline-flex;height:48px;width:100%;max-width:390px;align-items:center;justify-content:center;gap:8px;border-radius:8px;border:1px solid #2563EB;background:#2563EB;color:#fff;font-size:14px;font-weight:800;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+.mcta:hover{background:#1D4ED8}
+.mcta.off{border-color:#BFDBFE;background:#93C5FD;cursor:not-allowed}
+table{border-collapse:collapse;width:100%;font-size:11.5px;margin-top:6px}
+td,th{border:1px solid #E5E7EB;padding:6px 10px;text-align:left;color:#374151}
+th{background:#F9FAFB;font-weight:700}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;background:#F3F4F6;border-radius:4px;padding:1px 5px;color:#334155}
+</style>
+<h1>생성 버튼 셋 — 문제 · 시험지 · 학습지 공통</h1>
+<p class="note">세 생성 페이지에서 통일되어 나타나는 버튼 체계. 핵심 규약: <b>생성(비용 발생 액션) = 파랑 blue-600</b>, <b>저장 = 검정 slate-900("저장" 한 단어 + Save 아이콘 고정)</b>, 보조/도구 = slate 아웃라인. 학생관리 하위 페이지 설계 시 이 위계를 그대로 적용.</p>
+
+<h2>1. 주 생성 CTA — h-12 · rounded-xl · bg-blue-600 · 파랑 그림자 · 라벨에 수량 명시</h2>
+<div class="row">
+  <button class="cta"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>36문제 생성<span class="chip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/></svg>360</span></button>
+  <button class="cta off"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>유형을 선택하세요</button>
+</div>
+<p class="note" style="margin-top:8px">크레딧 소모는 CTA 내부 우측 반투명 칩 <code>rounded-lg bg-white/20 px-2 py-1 text-[11px]</code>(Coins 아이콘 + 숫자, 0이면 "무료"). 비활성 상태는 회색 전환(<code>bg-slate-200 text-slate-400</code>)이 표준이며, 라벨이 다음 행동을 안내("지문을 선택하세요"). 비활성은 native disabled 대신 <code>aria-disabled</code>로 클릭을 살려 힌트 글로우(Patterns 카드) 유도. 시험지 빌더처럼 크레딧을 쓰지 않는 페이지는 칩 없이 동일 형태.</p>
+
+<h2>2. 저장 = 검정 (전역 SaveButton) — h-8 · slate-900 · text-[11px] · split 지원</h2>
+<div class="row">
+  <button class="save"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"/><path d="M7 3v4a1 1 0 0 0 1 1h7"/></svg>저장</button>
+  <span style="display:inline-flex">
+    <button class="save splitL"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"/><path d="M7 3v4a1 1 0 0 0 1 1h7"/></svg>저장</button>
+    <button class="save splitR"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+  </span>
+  <button class="save off">저장</button>
+</div>
+
+<h2>3. 보조 · 도구 버튼 — h-8 · rounded-md · slate 아웃라인 (인쇄/다운로드/실행취소)</h2>
+<div class="row">
+  <button class="outl"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg>다운로드<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+  <button class="outl">인쇄</button>
+  <button class="icon8" aria-label="실행취소"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5v0a5.5 5.5 0 0 1-5.5 5.5H11"/></svg></button>
+  <button class="outl toss"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="10" height="14" x="3" y="8" rx="2"/><path d="M5 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2h-2.4"/><path d="M8 18h.01"/></svg>태블릿 배포</button>
+</div>
+<p class="note" style="margin-top:8px">강조 보조 액션(배포 등)은 Toss 블루 아웃라인: <code>border-[#3182F6]/45 text-[#3182F6] hover:bg-blue-50</code>.</p>
+
+<h2>4. 아이콘 액션 — size-7 파랑틴트 hover / 닫기 고스트 / 파괴적 red 아웃라인</h2>
+<div class="row">
+  <button class="icon7" aria-label="수정"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.17 6.83 17.17 2.83a2 2 0 0 0-2.83 0L3 14.17V21h6.83L21.17 9.66a2 2 0 0 0 0-2.83z"/></svg></button>
+  <button class="close7" aria-label="닫기"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+  <button class="danger" aria-label="전체 비우기"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+</div>
+<p class="note" style="margin-top:8px">일반 아이콘 액션은 <code>size-7 rounded-md border-slate-200 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700</code>. 모달 닫기 X는 테두리 없는 고스트(<code>text-slate-400 hover:bg-slate-100</code>). 파괴적 액션만 red 아웃라인.</p>
+
+<h2>5. 모바일 하단 고정 바 — 이전(아웃라인 h-11) + 다음(파랑 flex-1) / 최종 CTA h-12 extrabold</h2>
+<div class="row" style="flex-direction:column;align-items:flex-start">
+  <div class="mbar">
+    <button class="prev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>이전</button>
+    <button class="next">다음 단계로<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+  </div>
+  <button class="mcta">다음으로 (미리보기 · 저장)</button>
+  <button class="mcta off">지문을 선택하세요</button>
+</div>
+<p class="note" style="margin-top:8px">최종 CTA의 모바일 비활성은 연파랑(<code>border-blue-200 bg-blue-300</code>) — "곧 갈 수 있는 길"을 시각화. 스텝 네비 비활성은 회색(<code>bg-slate-200 text-slate-400</code>).</p>
+
+<h2>규칙 요약</h2>
+<table>
+  <tr><th>역할</th><th>형태</th></tr>
+  <tr><td>생성(크레딧 소모)</td><td><code>bg-blue-600 hover:blue-700</code> + 파랑 그림자 <code>shadow-blue-200/50</code>, h-12 rounded-xl, 라벨에 수량, 내부 크레딧 칩 <code>bg-white/20</code></td></tr>
+  <tr><td>저장</td><td>항상 검정 <code>slate-900</code>, h-8, 라벨 "저장" 한 단어, Save 아이콘, 비활성 <code>bg-slate-300</code></td></tr>
+  <tr><td>보조/도구</td><td>h-8 <code>rounded-md border-slate-200 bg-white text-slate-600 hover:bg-slate-50</code>, 강조 보조는 Toss 블루 아웃라인</td></tr>
+  <tr><td>아이콘 액션</td><td>size-7~8, hover는 파랑 틴트, 파괴적만 red 아웃라인</td></tr>
+  <tr><td>크레딧 칩</td><td>파란 CTA 위 <code>bg-white/20 text-white</code> · 흰 버튼 위 <code>bg-slate-100 text-slate-600</code> (칩 자체는 무색, 호출부가 색 주입)</td></tr>
+  <tr><td>비활성</td><td>표준 <code>bg-slate-200 text-slate-400</code> + 안내 라벨 + aria-disabled(힌트 글로우); 모바일 최종 CTA만 연파랑</td></tr>
+</table>

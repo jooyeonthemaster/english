@@ -2,7 +2,7 @@
 
 // ============================================================================
 // 홍보물 파일 등록/수정 모달.
-//   - 신규(upload): 특정 홍보(campaignId)에 PDF 업로드(서명 URL로 브라우저 직접 업로드).
+//   - 신규(upload): 특정 홍보(campaignId)에 PDF·이미지 업로드(서명 URL로 브라우저 직접 업로드).
 //   - 수정(edit):   파일 이름·설명만 변경(파일 교체 없음).
 // 전단지 등 큰 PDF(>4.5MB)를 Vercel serverless 본문 상한 없이 올리기 위해
 // 서명 업로드 URL로 Supabase에 직접 PUT 한다.
@@ -10,7 +10,7 @@
 
 import { useEffect, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
-import { FileText, FileUp, Loader2, X } from "lucide-react";
+import { FileText, FileUp, ImageIcon, Loader2, X } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -79,16 +79,19 @@ export function FileEditorModal({
 
   function pickFile(f: File) {
     const isPdf = f.type === "application/pdf" || f.name.toLowerCase().endsWith(".pdf");
-    if (!isPdf) {
-      toast.error("PDF 파일만 업로드할 수 있어요.");
+    const isImage =
+      ["image/png", "image/jpeg", "image/webp"].includes(f.type) ||
+      /\.(png|jpe?g|webp)$/i.test(f.name);
+    if (!isPdf && !isImage) {
+      toast.error("PDF, PNG, JPG, WebP 파일만 업로드할 수 있어요.");
       return;
     }
     if (f.size > 30 * 1024 * 1024) {
-      toast.error("PDF는 30MB 이하만 가능해요.");
+      toast.error("파일은 30MB 이하만 가능해요.");
       return;
     }
     setFile(f);
-    if (!title.trim()) setTitle(f.name.replace(/\.pdf$/i, ""));
+    if (!title.trim()) setTitle(f.name.replace(/\.(pdf|png|jpe?g|webp)$/i, ""));
   }
 
   async function handleCreate() {
@@ -97,7 +100,7 @@ export function FileEditorModal({
       return;
     }
     if (!file) {
-      toast.error("PDF 파일을 선택하세요.");
+      toast.error("PDF 또는 이미지 파일을 선택하세요.");
       return;
     }
     if (!title.trim()) {
@@ -117,7 +120,7 @@ export function FileEditorModal({
       const buffer = await file.arrayBuffer();
       const put = await fetch(target.uploadUrl, {
         method: "PUT",
-        headers: { "content-type": "application/pdf", "x-upsert": "true" },
+        headers: { "content-type": file.type || "application/octet-stream", "x-upsert": "true" },
         body: buffer,
       });
       if (!put.ok) {
@@ -126,7 +129,7 @@ export function FileEditorModal({
       }
 
       setProgress("저장 중...");
-      const pageCount = await readPdfPageCount(buffer);
+      const pageCount = file.type === "application/pdf" ? await readPdfPageCount(buffer) : null;
       const res = await createOfflineMarketingAsset({
         campaignId,
         title: title.trim(),
@@ -187,12 +190,12 @@ export function FileEditorModal({
           {!isEdit && (
             <div>
               <label className="mb-1.5 block text-[12px] font-semibold text-gray-600">
-                PDF 파일 <span className="text-rose-500">*</span>
+                PDF 또는 이미지 <span className="text-rose-500">*</span>
               </label>
               <input
                 ref={fileRef}
                 type="file"
-                accept="application/pdf,.pdf"
+                accept="application/pdf,image/png,image/jpeg,image/webp,.pdf,.png,.jpg,.jpeg,.webp"
                 className="hidden"
                 onChange={(e) => {
                   const f = e.target.files?.[0];
@@ -202,7 +205,11 @@ export function FileEditorModal({
               />
               {file ? (
                 <div className="flex items-center gap-3 rounded-xl border border-blue-100 bg-blue-50/60 px-3 py-2.5">
-                  <FileText className="size-5 shrink-0 text-blue-500" />
+                  {/\.(png|jpe?g|webp)$/i.test(file.name) ? (
+                    <ImageIcon className="size-5 shrink-0 text-blue-500" />
+                  ) : (
+                    <FileText className="size-5 shrink-0 text-blue-500" />
+                  )}
                   <div className="min-w-0 flex-1">
                     <div className="truncate text-[13px] font-medium text-gray-800">
                       {file.name}
@@ -226,7 +233,7 @@ export function FileEditorModal({
                   className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-gray-300 bg-gray-50/50 py-6 text-[13px] font-medium text-gray-500 hover:border-blue-300 hover:bg-blue-50/40 hover:text-blue-600 disabled:opacity-50"
                 >
                   <FileUp className="size-4" />
-                  PDF 파일 선택 (30MB 이하)
+                  PDF·이미지 파일 선택 (30MB 이하)
                 </button>
               )}
             </div>

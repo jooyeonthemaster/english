@@ -1,0 +1,56 @@
+<!-- @dsCard group="Components" -->
+<title>배지 · 크레딧 칩</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Pretendard",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;background:#fff;color:#111827;padding:28px;-webkit-font-smoothing:antialiased}
+h1{font-size:15px;font-weight:800;margin-bottom:4px}
+p.note{font-size:12px;color:#6B7280;margin-bottom:20px}
+h2{font-size:12px;font-weight:700;color:#374151;margin:18px 0 10px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.badge{display:inline-flex;align-items:center;justify-content:center;gap:4px;border-radius:9999px;border:1px solid transparent;padding:2px 8px;font-size:12px;font-weight:500;white-space:nowrap}
+.chip{display:inline-flex;align-items:center;gap:2px;font-weight:600;font-variant-numeric:tabular-nums}
+.chip svg{flex-shrink:0}
+</style>
+<h1>배지 · 크레딧 칩</h1>
+<p class="note">크레딧 소모량 표기는 반드시 CreditCostChip(Coins 아이콘+숫자). "N 크레딧" 텍스트·◈ 기호 금지. 금액은 CREDIT_COSTS 상수 참조, 0 이하면 "무료".</p>
+
+<h2>Badge variants (rounded-full · 12px 500)</h2>
+<div class="row">
+  <span class="badge" style="background:#3B82F6;color:#fff">Default</span>
+  <span class="badge" style="background:#F3F4F6;color:#111827">Secondary</span>
+  <span class="badge" style="background:#EF4444;color:#fff">Destructive</span>
+  <span class="badge" style="border-color:#E5E7EB;color:#111827">Outline</span>
+</div>
+
+<h2>CreditCostChip — 컨텍스트별 래핑</h2>
+<div class="row">
+  <span class="chip" style="color:#111827;font-size:13px">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/></svg>
+    1,200
+  </span>
+  <span class="chip" style="font-size:13px">무료</span>
+  <span class="chip" style="border-radius:4px;background:#F3F4F6;padding:1px 4px;font-size:10px;color:#4B5563">
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/></svg>
+    350 <span style="font-weight:500;color:#9CA3AF">— slate 칩</span>
+  </span>
+  <span class="chip" style="border-radius:8px;background:#2563EB;padding:2px 8px;font-size:11px;color:#fff">
+    <span style="display:inline-flex;align-items:center;gap:2px;border-radius:8px;background:rgba(255,255,255,.2);padding:2px 8px">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/></svg>
+      500
+    </span>
+    <span style="margin-left:6px;font-weight:700">컬러 버튼 위 (bg-white/20)</span>
+  </span>
+  <span class="chip" style="border-radius:2px;background:#fff;padding:1px 4px;font-size:10px;color:#8B5CF6;box-shadow:inset 0 0 0 1px #DDD6FE">
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/></svg>
+    80 <span style="font-weight:500;color:#A78BFA">— violet ring 칩</span>
+  </span>
+</div>
+
+<h2>상태 배지 관용구</h2>
+<div class="row">
+  <span class="badge" style="background:#ECFDF5;color:#047857;border-color:#A7F3D0">검수완료</span>
+  <span class="badge" style="background:#FEF2F2;color:#DC2626;border-color:#FECACA">미검수</span>
+  <span class="badge" style="background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE">생성중</span>
+  <span class="badge" style="background:#FFFBEB;color:#B45309;border-color:#FDE68A">대기</span>
+</div>

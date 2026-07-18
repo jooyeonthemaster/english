@@ -26,7 +26,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { cn, formatRelativeTime } from "@/lib/utils";
+import { cn, formatDateTime } from "@/lib/utils";
 import type { ExamStudentDetail } from "../ui-contracts";
 
 interface AnswerLinkPanelProps {
@@ -137,7 +137,7 @@ export function AnswerLinkPanel({
         {submittedAt ? (
           <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">
             <Check className="h-3 w-3" />
-            제출됨 · {formatRelativeTime(submittedAt)}
+            제출됨 · <span className="tabular-nums">{formatDateTime(submittedAt)}</span>
           </span>
         ) : (
           <span className="inline-flex items-center whitespace-nowrap rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[11px] font-medium text-slate-500">

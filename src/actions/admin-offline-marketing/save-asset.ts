@@ -19,7 +19,7 @@ import {
 const PATH = "/admin/offline-marketing";
 
 function slugifyFileName(name: string): string {
-  const base = name.replace(/\.pdf$/i, "").slice(0, 40);
+  const base = name.replace(/\.(pdf|png|jpe?g|webp)$/i, "").slice(0, 40);
   const safe = base
     .replace(/[^a-zA-Z0-9._-]+/g, "-")
     .replace(/^-+|-+$/g, "")
@@ -36,7 +36,8 @@ export async function createOfflineMarketingUpload(
 
   const stamp = Date.now().toString(36);
   const rand = Math.random().toString(36).slice(2, 8);
-  const path = `${stamp}-${rand}-${slugifyFileName(fileName)}.pdf`;
+  const extension = fileName.toLowerCase().match(/\.(pdf|png|jpe?g|webp)$/)?.[0] ?? ".pdf";
+  const path = `${stamp}-${rand}-${slugifyFileName(fileName)}${extension}`;
 
   try {
     const target = await createOfflineMarketingUploadTarget(path);
