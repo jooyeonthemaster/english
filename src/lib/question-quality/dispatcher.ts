@@ -19,6 +19,7 @@ import { findGrammarAnswerForcedNonword, findGrammarDecoyFillerSpan } from "./va
 import { GRAMMAR_UNDERLINE_HARD_MAX_CHARS, GRAMMAR_UNDERLINE_HARD_MAX_WORDS, GRAMMAR_UNDERLINE_SOFT_MAX_CHARS, GRAMMAR_UNDERLINE_SOFT_MAX_WORDS, collectQuantityAnswerIssues, extractGrammarPointCode, findGrammarAnswerPointNotCore, findGrammarCorrectionFormExposed, findGrammarKeypointChoiceMismatch, findGrammarKeypointNonexistentLabel, findGrammarKillerOverdrilledAnswer, findGrammarMarkerAdjacentDuplicate, findGrammarMarkerErrorFormMismatch, findGrammarMisplacedMarker, findGrammarPerceptionComplementToggle, findGrammarSurroundingMissingMarker, findGrammarTerminologyError, findGrammarTerminologyRegister, grammarExplanationLeaksMeta, grammarPointCodeSurfaceMismatch, isGrammarPosChangeMutation, isThinKillerGrammarErrorTarget } from "./validators/grammar/shared";
 import { validateImpliedMeaningQuestion } from "./validators/implied";
 import { validateIrrelevantQuestion } from "./validators/irrelevant";
+import { validateExplanationForeignText } from "./validators/explanation-foreign-text";
 import { validateKillerBar, validateTypeSignature } from "./validators/misc";
 import { validateOptions } from "./validators/options";
 import { validateReferenceQuestion } from "./validators/reference";
@@ -829,6 +830,11 @@ export function validateQuestionQuality({
     }
   }
   validateMarkedText(question, add);
+  // 해설 외국문자 오염 결정형 게이트(O188/O189) — KO(국어)는 한자 병기가 정당할 수
+  // 있어 제외, 영어 유형의 한국어 해설 필드만 검사.
+  if (!isKoQuestionType(typeId)) {
+    validateExplanationForeignText(question, add);
+  }
   validateTypeSpecific(
     question,
     typeId,

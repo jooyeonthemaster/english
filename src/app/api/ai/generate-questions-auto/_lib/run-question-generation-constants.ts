@@ -148,6 +148,11 @@ export const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   // 최후 구제에서만 경고 출하.
   "blank-explanation-step-numbering",
   "blank-explanation-narrative-circled-numbering",
+  // 26-07-18 O188/O189 실측 — grok 해설의 한자 혼입("连接한다")·영단어 짜깁기
+  // ("들어 steals다")가 학생 표면 출하. 한국어 해설 텍스트 손상은 V4급이라 어떤
+  // 레인에서도 출하 금지(결정형 정규식 게이트, validators/explanation-foreign-text).
+  "explanation-foreign-script",
+  "explanation-latin-jam",
   // 절/문장 통째 밑줄(예: 프리미엄 실측 "these digital platforms create a trusting
   // environment" 7단어)은 정답성·가독성을 해치는 명백한 결함 — relaxed 폴백에서도
   // 출하 금지. ('wide'는 strict 전용이라 의도적으로 제외 — 완전 실패 방지.)
