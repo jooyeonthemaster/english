@@ -26,7 +26,12 @@ import { CREDIT_COSTS } from "@/lib/credit-costs";
 import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import { startAdaptivePoll } from "@/lib/adaptive-poll";
 import { Button } from "@/components/ui/button";
+import {
+  PanelHandle,
+  useResizablePanels,
+} from "@/components/layout/resizable-panels";
 import { QuestionAnalysisCard } from "./question-analysis-card";
+import { SourcePanel } from "./source-panel";
 import { ExamSynthesisPanel } from "./exam-synthesis-panel";
 import { AnalysisProgress } from "./analysis-progress";
 import { ExamMapTable } from "./exam-map-table";
@@ -74,6 +79,42 @@ export function AnalysisStep({ detail, onDetailChange, onAdvance }: AnalysisStep
   const [driving, setDriving] = useState(false);
   // 카드 리스트 유형 필터(null=전체) — 문항 수가 많을 때 세로 나열 완화.
   const [typeFilter, setTypeFilter] = useState<string | null>(null);
+
+  // ── 시험지 원본 분할 패널(우측 밀어내기) — Sheet 오버레이 대체(유저 요청).
+  // 폭은 공용 리사이저 훅이 관리(드래그 조절 + localStorage 영속), 열림 여부는
+  // 세션 로컬(기본 닫힘). 핸들 클릭(접기)은 아래 effect 가 "패널 닫기"로 매핑.
+  const [sourcesOpen, setSourcesOpen] = useState(false);
+  const {
+    containerRef: splitContainerRef,
+    widths: panelWidths,
+    collapsed: panelCollapsed,
+    startResize: startPanelResize,
+    toggleCollapsed: togglePanelCollapsed,
+    expand: expandPanel,
+  } = useResizablePanels({
+    panels: [{ key: "sources", min: 320, max: 920, defaultWidth: 480, sign: -1 }],
+    // 패널이 열리면 총평 aside(380px)는 숨기므로 이 값이 곧 채점 지도 보장폭.
+    // 1280px 뷰포트(콘텐츠 ~996px)에서도 지도 ~540px + 패널 ~416px 이 성립한다.
+    minCenter: 560,
+    storageKey: "exam-report:analysis-sources",
+  });
+  useEffect(() => {
+    if (panelCollapsed.sources) {
+      setSourcesOpen(false);
+      // 접힘을 즉시 되돌려 다음 "시험지 원본" 클릭 때 바로 펼쳐지게 한다.
+      expandPanel("sources");
+    }
+  }, [panelCollapsed.sources, expandPanel]);
+  // xl 브레이크포인트 판정 — 분할 패널/모바일 폴백을 CSS 숨김이 아니라 '한쪽만
+  // 마운트'로 갈라 SourceImageViewer 의 서명 URL POST·줌 상태가 이원화되지 않게.
+  const [isXl, setIsXl] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1280px)");
+    const sync = () => setIsXl(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
 
   // ── 최신 상태 참조(비동기 핸들러 stale 방지) ──────────────────────────────
   const detailRef = useRef<ExamAnalysisDetail>(detail);
@@ -371,8 +412,16 @@ export function AnalysisStep({ detail, onDetailChange, onAdvance }: AnalysisStep
   }
 
   // ── 분석 결과 뷰(진행 스트립 + 지도 + 카드 + 종합) ────────────────────────
+  const sourcesVisible = sourcesOpen && (detail.sourceFiles?.length ?? 0) > 0;
+
   return (
-    <div className="flex flex-col gap-4">
+    // xl+: 시험지 원본 패널이 열리면 기존 콘텐츠(좌 컬럼)를 왼쪽으로 밀어내는
+    // 분할 행. items-start 로 우측 패널 컬럼이 자기 높이만 갖게 해 sticky 성립.
+    <div
+      ref={splitContainerRef}
+      className="flex min-w-0 flex-col gap-4 xl:flex-row xl:items-start"
+    >
+      <div className="flex min-w-0 flex-1 flex-col gap-4">
       {analyzing && (
         <AnalysisProgressStrip
           progress={detail.aiMeta.progress ?? null}
@@ -397,22 +446,69 @@ export function AnalysisStep({ detail, onDetailChange, onAdvance }: AnalysisStep
         />
       )}
 
-      {/* 채점 지도 테이블 — 정답/배점/유형 인라인 수정 */}
-      {hasMap && examMap && (
-        <ExamMapTable
-          entries={examMap.questions}
-          mapConfirmed={detail.reviewState.mapConfirmed ?? false}
-          disabled={locked}
-          analyzing={analyzing}
-          analysisId={detail.id}
-          sourceFiles={detail.sourceFiles ?? []}
-          onEdit={handleEditMapEntry}
-          onConfirmAll={() => void handleConfirmMap()}
-        />
+      {/* xl 미만: 분할 컬럼 대신 지도 위 블록 카드로 원본 표시(줌 동일).
+          !isXl 조건 마운트 — xl 패널과 동시에 살아 서명 URL POST 가 2배로
+          나가고 줌 상태가 갈라지던 이중 마운트 차단. */}
+      {sourcesVisible && !isXl && (
+        <div className="h-[70vh] xl:hidden">
+          <SourcePanel
+            analysisId={detail.id}
+            sourceFiles={detail.sourceFiles ?? []}
+            onClose={() => setSourcesOpen(false)}
+          />
+        </div>
       )}
 
-      <div className="flex flex-col gap-4 xl:flex-row xl:items-start">
-        {/* 좌: 문항 분석 카드 리스트 */}
+      {/* 채점 지도(좌) + 시험지 총평(우 380px 독립 섹션) — xl+ 에서 행 높이를
+          뷰포트 기준으로 고정해 두 카드가 같은 높이로 스트레치(좌우 아래 끝선 정렬,
+          유저 요청). 각 카드는 내부 스크롤로 초과분을 흡수한다. */}
+      {hasMap && examMap && (
+        <div className="flex flex-col gap-4 xl:h-[calc(100vh-232px)] xl:min-h-[560px] xl:flex-row">
+          <div className="min-w-0 flex-1 xl:h-full">
+            <ExamMapTable
+              entries={examMap.questions}
+              mapConfirmed={detail.reviewState.mapConfirmed ?? false}
+              disabled={locked}
+              analyzing={analyzing}
+              sourceFiles={detail.sourceFiles ?? []}
+              sourcesOpen={sourcesOpen}
+              onToggleSources={() => setSourcesOpen((v) => !v)}
+              onEdit={handleEditMapEntry}
+              onConfirmAll={() => void handleConfirmMap()}
+            />
+          </div>
+
+          {/* 우: 시험지 총평 — 독립 카드, 지도와 동일 높이 + 내부 스크롤.
+              시험지 원본 패널이 열리면 숨겨 지도 폭을 확보(안 그러면 1280~1536px
+              에서 지도가 ~68px 조각으로 압착) — 총평은 아래 접이식으로 대체. */}
+          {!sourcesVisible && (
+            <aside className="hidden xl:block xl:h-full xl:w-[380px] xl:shrink-0">
+              <div className="flex h-full flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+                <div className="min-h-0 flex-1 overflow-y-auto p-5">
+                  <ExamSynthesisPanel examLevel={detail.analysis?.examLevel ?? null} />
+                </div>
+              </div>
+            </aside>
+          )}
+        </div>
+      )}
+
+      {/* 접이식 총평 폴백 — xl 미만 상시, xl+ 는 원본 패널이 aside 를 밀어냈을 때만 */}
+      {hasMap && examMap && (
+        <details
+          className={`rounded-lg border border-slate-200 bg-white shadow-sm${sourcesVisible ? "" : " xl:hidden"}`}
+        >
+          <summary className="cursor-pointer px-5 py-3 text-sm font-medium text-slate-700">
+            시험지 총평 보기
+          </summary>
+          <div className="border-t border-slate-100 p-5">
+            <ExamSynthesisPanel examLevel={detail.analysis?.examLevel ?? null} />
+          </div>
+        </details>
+      )}
+
+      <div className="flex flex-col gap-4">
+        {/* 문항 분석 카드 리스트 — 전폭(총평은 위 채점 지도 우측으로 이동) */}
         <section className="flex min-w-0 flex-1 flex-col rounded-lg border border-slate-200 bg-white shadow-sm">
           <div className="flex items-center justify-between gap-3 border-b border-slate-100 px-4 py-3">
             {/* 섹션 헤더 — 워크벤치 표준(볼드 타이틀 + slate-400 보조) 톤 */}
@@ -482,7 +578,9 @@ export function AnalysisStep({ detail, onDetailChange, onAdvance }: AnalysisStep
             </div>
 
             {detail.status === "ANALYZED" && (
-              <div className="mt-6 flex justify-end border-t border-slate-200 pt-4">
+              // 긴 검수 리스트를 스크롤하는 동안에도 다음 단계 CTA 가 항상 보이게
+              // 뷰포트 하단 고정(유저 요청). -mx/-mb 로 p-4 를 상쇄해 카드 전폭 바.
+              <div className="sticky bottom-0 z-10 -mx-4 -mb-4 mt-6 flex justify-end rounded-b-lg border-t border-slate-200 bg-white/95 px-4 py-3 backdrop-blur">
                 <Button
                   type="button"
                   onClick={onAdvance}
@@ -495,22 +593,32 @@ export function AnalysisStep({ detail, onDetailChange, onAdvance }: AnalysisStep
             )}
           </div>
         </section>
-
-        {/* 우: 시험지 종합 (xl+ 사이드, 미만 접이식) — 스크롤 추적 sticky */}
-        <aside className="hidden xl:sticky xl:top-4 xl:block xl:w-[380px] xl:shrink-0 xl:self-start">
-          <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
-            <ExamSynthesisPanel examLevel={detail.analysis?.examLevel ?? null} />
-          </div>
-        </aside>
-        <details className="rounded-lg border border-slate-200 bg-white shadow-sm xl:hidden">
-          <summary className="cursor-pointer px-5 py-3 text-sm font-medium text-slate-700">
-            시험지 종합 보기
-          </summary>
-          <div className="border-t border-slate-100 p-5">
-            <ExamSynthesisPanel examLevel={detail.analysis?.examLevel ?? null} />
-          </div>
-        </details>
       </div>
+      </div>
+
+      {/* 우: 시험지 원본 분할 패널(xl+) — 핸들 드래그로 폭 조절, 클릭으로 닫기.
+          sticky + 뷰포트 높이로 좌측을 스크롤해도 원본이 계속 보인다(대조 용도).
+          isXl 조건 마운트 — 모바일 폴백과의 이중 마운트 차단(위 주석 참조). */}
+      {sourcesVisible && isXl && (
+        <div className="hidden shrink-0 xl:sticky xl:top-4 xl:flex xl:h-[calc(100vh-32px)]">
+          <PanelHandle
+            label="시험지 원본"
+            panelKey="sources"
+            collapsed={false}
+            side="right"
+            startResize={startPanelResize}
+            toggleCollapsed={togglePanelCollapsed}
+            expand={expandPanel}
+          />
+          <div style={{ width: panelWidths.sources }} className="h-full">
+            <SourcePanel
+              analysisId={detail.id}
+              sourceFiles={detail.sourceFiles ?? []}
+              onClose={() => setSourcesOpen(false)}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

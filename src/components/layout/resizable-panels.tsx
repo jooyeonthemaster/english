@@ -105,9 +105,14 @@ export function useResizablePanels({
   minCenter: number;
   storageKey?: string;
 }) {
-  const containerRef = useRef<HTMLDivElement | null>(null);
+  const elementRef = useRef<HTMLDivElement | null>(null);
+  const observerRef = useRef<ResizeObserver | null>(null);
   const suppressClickRef = useRef(false);
   const [state, setState] = useState<StoredState>(() => readStored(storageKey, panels));
+  // 관찰된 컨테이너 폭 — 클램프는 이 값 기준의 '표시 시점' 변환으로만 적용한다.
+  // (과거: 옵저버가 state.widths 를 직접 깎아 localStorage 까지 영속 → 좁은 창을
+  //  한 번 지나가면 사용자가 맞춘 폭이 편도 하향되는 결함. 저장값은 드래그로만 변경.)
+  const [containerWidth, setContainerWidth] = useState(0);
   const panelsRef = useRef(panels);
   panelsRef.current = panels;
 
@@ -120,21 +125,26 @@ export function useResizablePanels({
     }
   }, [state, storageKey]);
 
-  // 컨테이너 폭 변화 시 재클램프
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el || typeof ResizeObserver === "undefined") return;
+  useEffect(() => () => observerRef.current?.disconnect(), []);
+
+  // 컨테이너는 콜백 ref 로 받는다 — 소비자가 조기 return 뷰(컨테이너 미렌더)로
+  // 먼저 마운트됐다가 나중에 본 뷰를 그려도 부착 시점에 관찰이 시작된다.
+  // (마운트 1회 effect 방식은 그 경로에서 옵저버가 영영 붙지 않았다.)
+  const containerRef = useCallback((el: HTMLDivElement | null) => {
+    elementRef.current = el;
+    observerRef.current?.disconnect();
+    observerRef.current = null;
+    if (!el) {
+      setContainerWidth(0);
+      return;
+    }
+    if (typeof ResizeObserver === "undefined") return;
     const observer = new ResizeObserver((entries) => {
-      const width = entries[0]?.contentRect.width ?? el.clientWidth;
-      setState((cur) => {
-        const widths = clampAll(cur.widths, panelsRef.current, width, minCenter);
-        const same = panelsRef.current.every((p) => widths[p.key] === cur.widths[p.key]);
-        return same ? cur : { ...cur, widths };
-      });
+      setContainerWidth(entries[0]?.contentRect.width ?? el.clientWidth);
     });
     observer.observe(el);
-    return () => observer.disconnect();
-  }, [minCenter]);
+    observerRef.current = observer;
+  }, []);
 
   const toggleCollapsed = useCallback((key: string) => {
     if (suppressClickRef.current) {
@@ -160,7 +170,7 @@ export function useResizablePanels({
       const startX = event.clientX;
       const startWidths = { ...state.widths };
       const containerWidth =
-        containerRef.current?.getBoundingClientRect().width ?? 0;
+        elementRef.current?.getBoundingClientRect().width ?? 0;
       const prevCursor = document.body.style.cursor;
       const prevSelect = document.body.style.userSelect;
       let didDrag = false;
@@ -200,13 +210,14 @@ export function useResizablePanels({
     [state.widths, minCenter],
   );
 
-  const widths = useMemo(
-    () =>
-      Object.fromEntries(
-        panels.map((p) => [p.key, state.collapsed[p.key] ? 0 : state.widths[p.key]]),
-      ) as Record<string, number>,
-    [panels, state],
-  );
+  // 표시용 폭 = 저장 선호폭을 현재 컨테이너 기준으로 클램프(비영속) — 창이
+  // 다시 넓어지면 선호폭이 그대로 복원된다. 미관측(0)이면 저장값 그대로.
+  const widths = useMemo(() => {
+    const clamped = clampAll(state.widths, panels, containerWidth, minCenter);
+    return Object.fromEntries(
+      panels.map((p) => [p.key, state.collapsed[p.key] ? 0 : clamped[p.key]]),
+    ) as Record<string, number>;
+  }, [panels, state, containerWidth, minCenter]);
 
   return {
     containerRef,

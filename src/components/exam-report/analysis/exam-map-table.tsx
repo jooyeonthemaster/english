@@ -12,15 +12,7 @@ import { useState } from "react";
 import { CheckCheck, ImageIcon } from "lucide-react";
 import type { ExamMapEntry, ExamQuestionKind } from "@/lib/exam-report/types";
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 import type { ExamSourceFile } from "../ui-contracts";
-import { SourceImageViewer } from "../source-image-viewer";
 
 const EXAM_FONT = '"Malgun Gothic Exam", "Malgun Gothic", sans-serif';
 
@@ -44,8 +36,10 @@ interface ExamMapTableProps {
   /** E1 분석 진행 중 — 정답이 아직 없는 행에 '분석 중' 표시(정답은 E1b 도출). */
   analyzing?: boolean;
   /** 시험지 원본 대조용(정답 확인 필요 행 검토) — 분석 sourceFiles. */
-  analysisId: string;
   sourceFiles: ExamSourceFile[];
+  /** 시험지 원본 분할 패널 토글 — 패널 자체는 상위(analysis-step)가 렌더. */
+  sourcesOpen: boolean;
+  onToggleSources: () => void;
   onEdit: (number: string, patch: Partial<ExamMapEntry>) => void;
   onConfirmAll: () => void;
 }
@@ -55,8 +49,9 @@ export function ExamMapTable({
   mapConfirmed,
   disabled,
   analyzing = false,
-  analysisId,
   sourceFiles,
+  sourcesOpen,
+  onToggleSources,
   onEdit,
   onConfirmAll,
 }: ExamMapTableProps) {
@@ -65,7 +60,9 @@ export function ExamMapTable({
   const lowCount = sorted.filter((e) => e.answerConfidence === "LOW").length;
 
   return (
-    <section className="flex min-w-0 flex-col rounded-lg border border-slate-200 bg-white shadow-sm">
+    // h-full: 부모(분석 스텝의 지도+총평 행)가 준 높이를 꽉 채운다 — 좌우 카드
+    // 아래 끝선 정렬의 기반. 높이 미지정 부모(모바일)에서는 자연 높이.
+    <section className="flex h-full min-w-0 flex-col rounded-lg border border-slate-200 bg-white shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-4 py-3">
         {/* 섹션 헤더 — 워크벤치 표준(볼드 타이틀 + slate-400 보조) 톤 */}
         <div className="flex items-center gap-2">
@@ -83,22 +80,21 @@ export function ExamMapTable({
         </div>
         <div className="flex items-center gap-2">
           {sourceFiles.length > 0 && (
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button type="button" variant="outline" size="sm">
-                  <ImageIcon className="h-3.5 w-3.5" />
-                  시험지 원본
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-[min(92vw,32rem)] overflow-y-auto">
-                <SheetHeader>
-                  <SheetTitle>시험지 원본</SheetTitle>
-                </SheetHeader>
-                <div className="px-4 pb-6">
-                  <SourceImageViewer analysisId={analysisId} sourceFiles={sourceFiles} />
-                </div>
-              </SheetContent>
-            </Sheet>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={onToggleSources}
+              aria-pressed={sourcesOpen}
+              className={
+                sourcesOpen
+                  ? "border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800"
+                  : undefined
+              }
+            >
+              <ImageIcon className="h-3.5 w-3.5" />
+              시험지 원본
+            </Button>
           )}
           {mapConfirmed ? (
             <span className="inline-flex items-center gap-1.5 rounded-md border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-600">
@@ -122,9 +118,11 @@ export function ExamMapTable({
         </div>
       </div>
 
-      {/* 긴 시험(30문항+)이 화면을 통째로 먹지 않게 내부 스크롤 + sticky 헤더.
+      {/* 내부 스크롤 + sticky 헤더. xl+ 에서는 행 높이(뷰포트 기준)를 flex-1 로 꽉
+          채워 7~8행만 보이던 답답함 제거(유저 피드백) — 60vh 고정 캡은 xl 미만
+          (행 높이 미지정)에서만 유지한다.
           sticky 는 th 단위 적용(thead 적용 시 브라우저별 배경/보더 유실 방지). */}
-      <div className="max-h-[60vh] overflow-x-auto overflow-y-auto">
+      <div className="max-h-[70vh] min-h-0 flex-1 overflow-x-auto overflow-y-auto xl:max-h-none">
         <table className="w-full min-w-[640px] border-collapse text-sm">
           <thead>
             <tr className="bg-slate-50 text-left text-xs text-slate-500">

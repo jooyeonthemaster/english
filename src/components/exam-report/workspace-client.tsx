@@ -307,7 +307,8 @@ export function ExamReportWorkspaceClient({ analysisId }: WorkspaceClientProps) 
 // 로딩/에러/본문이 동일한 배경·여백 셸을 공유하도록 고정(A8) — 분기 간 레이아웃 점프 방지.
 function PageShell({ children }: { children: ReactNode }) {
   return (
-    <div className="-m-6 min-h-[calc(100vh-56px)] min-w-0 bg-[#F4F6F9] px-4 py-4 sm:px-6 xl:px-8">
+    // pb-20: 본문 하단 숨통 — 마지막 카드가 뷰포트 바닥에 붙어 답답하던 문제(유저 피드백).
+    <div className="-m-6 min-h-[calc(100vh-56px)] min-w-0 bg-[#F4F6F9] px-4 pb-20 pt-4 sm:px-6 xl:px-8">
       {children}
     </div>
   );
@@ -325,7 +326,9 @@ function TabIndicator({
   onSelect: (step: ExamWorkspaceStep) => void;
 }) {
   return (
-    <nav className="flex min-h-11 shrink-0 flex-wrap items-center gap-1.5 overflow-visible px-3 py-1.5 sm:h-11 sm:flex-nowrap sm:py-0">
+    // py-3: 스텝 칩이 헤더 카드 하단 보더에 붙어 답답하던 문제(유저 피드백) —
+    // 고정 h-11(칩 상하 6px)을 풀고 상하 12px 숨통을 준다.
+    <nav className="flex shrink-0 flex-wrap items-center gap-1.5 overflow-visible px-3 py-3 sm:flex-nowrap">
       {STEPS.map((s, i) => {
         const active = s.key === current;
         const complete = isStepComplete(detail, s.key);
