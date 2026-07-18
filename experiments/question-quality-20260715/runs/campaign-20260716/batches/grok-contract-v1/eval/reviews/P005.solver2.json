@@ -1,0 +1,35 @@
+{
+  "pid": "P005",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "(A) 'prescribed ethical rules' is a near-verbatim paraphrase of the passage's explicitly rejected alternative ('rather than follow a prescribed set of ethical codes or rules'). (B) 'codes of behavior' is a direct lift of the conclusion's shaped object ('the personal factors that influence your own code of behaviour ... the factors that drive other people's codes'). Both seams are grammatical: 'relying on prescribed ethical rules' and 'their own and others' codes of behavior' (correct coordinated possessive + plural noun). Both slots satisfy the summary's logical roles exactly."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "(A) is correct, but (B) commits a causal-direction inversion: religious beliefs are listed in the passage as one of the personal factors that DO the shaping ('What a person values relates to their social, religious, or civic beliefs'). The summary frame 'personal factors that shape their own and others' (B)' requires the shaped object, so placing a shaping factor in (B) is a category error."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "(B) is correct, but (A) fails: the passage says this form of ethics 'is distinct from higher levels of conceptual ethics or theory' — a taxonomic distinction, not a warning against relying on conceptual ethics. The rejected reliance object in the passage is prescribed codes/rules, not conceptual ethics. 'Instead of relying on conceptual ethics' asserts a contrast the passage never makes."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "(A) 'clear right answers' is logically degenerate in the seam: the summary's subordinate clause already states such answers do not exist, so 'instead of relying on clear right answers' restates the premise rather than supplying the passage's stated contrast (prescribed codes/rules). (B) 'situational responses' distorts the conclusion: personal factors shape codes of behaviour/decision making; context-dependence is a separate modifier in the passage, not the object shaped by personal factors. Grammatically well-formed but logically unsupported in both slots."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "(B) 'ethical codes' is an acceptable paraphrase of 'code of behaviour', but (A) fails the same way as option 2: formal learning experiences are described as an influence on a person's values (a shaping factor), never as the thing students are told not to rely on. The passage's rejected reliance object is prescribed ethical codes/rules."
+    }
+  ],
+  "note": "Lens: grammarian/logician. Slot (A) is pinned by the passage's explicit contrast 'think through ethical issues rather than follow a prescribed set of ethical codes or rules'; slot (B) is pinned by the shaped-object role in 'personal factors that influence your own code of behaviour ... other people's codes'. Options 2 and 5 place shaping factors into the shaped-object slot (causal inversion); option 3 misreads a taxonomic distinction as a reliance warning; option 4's (A) is circular with the summary's own premise and its (B) misidentifies the shaped object. Alternative readings were actively searched (e.g., treating option 4 as 'no right answer, so do not rely on right answers') and rejected because (B) independently fails. Only option 1 has both slots defensible; no multiple-answer defect detected."
+}

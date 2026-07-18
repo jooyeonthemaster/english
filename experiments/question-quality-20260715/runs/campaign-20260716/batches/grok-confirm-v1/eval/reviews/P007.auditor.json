@@ -1,0 +1,82 @@
+{
+  "pid": "P007",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-SEAM-REDUNDANCY",
+      "severity": "minor",
+      "evidence": "정답 ③을 넣은 완성문 '...used together with other social and cultural indicators to abstract provisional shared notions with ancillary evidence'에서 'with ancillary evidence'가 stem에 이미 남아 있는 'together with other social and cultural indicators'와 의미가 중복되어 with-구가 이중화된다. 문법적 비문은 아니어서 V3 통과로 판정했으나 완성문이 잉여적이다."
+    },
+    {
+      "code": "V4-GLOSS-ADDITION",
+      "severity": "minor",
+      "evidence": "해설이 지문의 'the German attitude towards getting up early'(일찍 일어나기에 대한 태도)를 '성실에 대한 태도'로 옮겼다. 속담의 통상적 함의이긴 하나 지문에 명시되지 않은 해석 첨가다. 정답 논증 자체에는 영향 없음."
+    },
+    {
+      "code": "V4-LOOSE-LABEL",
+      "severity": "minor",
+      "evidence": "해설이 ①을 '기원 추적으로 과협소'라고 규정했으나 ①의 실제 결함은 협소함이 아니라 논점 이동(scope shift: 한 문화 내 빈번 사용+보조 지표 결합 → 문화 간 기원 추적)이다. 오답 해설 본문(항목 1)은 이를 정확히 기술하고 있어 모순은 아니다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "scope shift — 한 문화 내 '빈번 사용+보조 지표로 개념 도출'이라는 논점을 '문화 간 기원 추적'으로 이동",
+      "temptingBecause": "3번째 문장의 '고전·성서·중세 속담이 여러 문화에 통용된다'는 소재를 직접 재활용하고 'across cultures'가 지문 어휘와 표면 일치한다.",
+      "decisiveFlaw": "지문 어디에도 기원 추적 의제가 없고, 'fixed ethnic origins'는 국민성 단정 경계('no fixed conclusions')와 충돌한다. Thus 예시(빈도→태도 반영)와도 연결되지 않는다."
+    },
+    {
+      "label": "2",
+      "intent": "polar overextension — 경계된 결론(고정 국민성)을 그대로 확립하게 만드는 정면 모순",
+      "temptingBecause": "'national character'라는 지문 핵심 어휘를 반복하고, 속담으로 뭔가를 세운다는 큰 틀이 빈칸 문장과 닮았다.",
+      "decisiveFlaw": "2번째 문장 'no fixed conclusions about a so-called national character should be drawn'과 정면 충돌하며, 'from proverbs alone'은 stem에 남은 'together with other social and cultural indicators'와 같은 문장 안에서 즉시 모순되어 국소 단서만으로 탈락한다."
+    },
+    {
+      "label": "3",
+      "intent": "정답 — source span 'form some common concepts'의 잠정성('some', 'at least to some degree')을 보존한 추상 재진술",
+      "temptingBecause": "정답이므로 해당 없음. 'provisional'이 고정 결론 금지를, 'shared notions'가 common concepts를, 'ancillary evidence'가 다른 지표 병용을 각각 보존한다.",
+      "decisiveFlaw": "없음(유일 정답). 다만 'with ancillary evidence'가 stem의 'together with other social and cultural indicators'와 의미 중복이라 완성문이 잉여적이고, 유일하게 hedge 어휘(provisional/ancillary)를 쓴 선지라는 어휘 결이 정답을 시사한다."
+    },
+    {
+      "label": "4",
+      "intent": "actor/causal reversal — 지표(사회 요인)를 관찰 근거가 아니라 속담의 생성 주체로 전도",
+      "temptingBecause": "'social factors'가 stem의 'social and cultural indicators'를 반향하고, 유일하게 절대어가 없는 오답이라 소거 후 잔류 후보가 될 수 있다.",
+      "decisiveFlaw": "본문은 이미 통용되는 속담의 사용 빈도를 지표와 '함께 관찰'하는 관계이지 지표가 속담을 만들어 낸다는 주장이 없다. 'the proverbs later told'는 문법적으로는 가능하나 부자연스러운 표현이다."
+    },
+    {
+      "label": "5",
+      "intent": "half-truth + absolutism — 마지막 Thus 예시(빈도가 태도를 비춤)를 '단독·전체 증명'으로 과대 해석",
+      "temptingBecause": "'빈번한 속담 사용이 태도를 반영한다'는 마지막 문장과 표면적으로 가장 잘 호응한다.",
+      "decisiveFlaw": "'solely'가 stem의 'together with other indicators'와 같은 문장 안에서 즉시 모순되고, 'prove...total mentality'는 'mirror at least to some degree'와 정면 충돌한다. ②와 마찬가지로 국소 단서만으로 탈락한다."
+    }
+  ],
+  "explanationIssues": [
+    "지문의 'attitude towards getting up early'를 '성실에 대한 태도'로 옮긴 것은 지문에 없는 해석 첨가(minor).",
+    "①의 결함을 '과협소'로 규정한 것은 실제 결함(논점 이동)에 대한 느슨한 라벨(minor). 오답 해설 항목 1의 서술 자체는 정확.",
+    "정답 해설·오답 해설·keyPoints 간 구조 분석(Nevertheless 양보 전환, Thus 예시, '함께+잠정' 이중 조건)은 실제 지문과 정확히 일치."
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAudit": {
+    "D1_sameSyntacticSlot": "충족 — 다섯 선지 모두 'to' 뒤 동사원형구로 동일 슬롯에 들어가며 문법 꼬리로 탈락하는 오답 없음.",
+    "D2_meaningPreservingAbstraction": "대체로 충족 — 'form some common concepts' → 'abstract provisional shared notions'는 적절한 추상화. 단 'with ancillary evidence'는 stem과 중복.",
+    "D3_anchorOverlapFlaw": "충족 — 네 오답 모두 source anchor·tempting overlap·decisive flaw가 성립.",
+    "D4_multiCueNoSingleTell": "실패 — 절대어 패턴(①fixed ②unchanging/alone ⑤total/solely) 대 hedge 패턴(③provisional/ancillary)만으로 정답 후보가 압축되고, ②·⑤는 stem의 'together with'와의 문장 내 모순 하나로 두 문장 연결 없이 즉시 탈락한다. test-wise 풀이가 다중 단서 통합을 우회한다.",
+    "D5_distinctTraps": "대체로 충족 — scope shift/과확장/주체 전도/절반-진실로 분화. 단 ②와 ⑤가 '절대어+속담 단독' 결함을 공유해 부분 중복."
+  },
+  "grade": "C",
+  "notes": "V1~V5 전부 통과(유일 정답 ③ 확인, 렌더 무결, 필드 동기화 완전). 그러나 요청 난이도 KILLER 대비 실전 변별력이 크게 부족하다: (1) ②·⑤가 stem에 남은 'together with other social and cultural indicators'와의 문장 내 모순만으로 소거되고, (2) 절대어(fixed/unchanging/alone/total/solely) 대 hedge(provisional/ancillary)의 어휘 결 하나로 ③이 찍히며, (3) 정답의 'with ancillary evidence'가 stem 조건을 이중 인코딩해 유일하게 stem과 조화되는 선지라는 메타 단서를 만든다. C5=1로 B 하한(C 최저 2) 미달 → 등급 C. 재설계 방향: stem에서 'together with other...indicators'까지 빈칸에 포함시켜 문장 내 모순 소거 경로를 제거하고, 오답에도 hedge 어휘를 섞어 절대어 tell을 없애야 KILLER 라벨에 부합한다."
+}

@@ -1,0 +1,73 @@
+{
+  "pid": "P011",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-minor-pronoun",
+      "severity": "minor",
+      "evidence": "Option ③ 'by dividing them into segmented sub-stages': 'them' has no local antecedent inside the completed sentence except distant 'deadlines'; referentially loose but resolvable, so not a V3 failure and it does not eliminate the option by grammar alone."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 4,
+    "C3": 3,
+    "C4": 3,
+    "C5": 2,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "correct — abstraction of source span 'within a period that's imminent' into perceived-nearness framing",
+      "temptingBecause": "n/a (correct answer); preserves the passage's core prescription that deadlines be cognitively framed as near so action starts sooner",
+      "decisiveFlaw": "none — uniquely satisfies the causal chain (remote perception → inaction; near perception → manageable stress, timely start/finish)"
+    },
+    {
+      "label": "②",
+      "intent": "polarity/causal reversal",
+      "temptingBecause": "'ease our minds' superficially resonates with 'the stress is more manageable' in the following sentence; students who read stress-reduction as the goal in itself may pick it",
+      "decisiveFlaw": "passage states that perceiving a deadline as remote makes us LESS ready to act; placing it far in the future is exactly the failure mode the passage warns against"
+    },
+    {
+      "label": "③",
+      "intent": "plausible-alternative strategy / scope shift anchored to 'break up time into units'",
+      "temptingBecause": "sounds like standard productivity advice and echoes the passage's opening about dividing time into units",
+      "decisiveFlaw": "the passage never advises decomposing the task or timeline into sub-stages; its advice is category REFRAMING ('this winter' vs 'next year'), and unit-splitting is presented as the source of the problem, not the cure; also 'them' is referentially loose"
+    },
+    {
+      "label": "④",
+      "intent": "literalism / over-narrow fixation on the example",
+      "temptingBecause": "'this winter' in the example makes season-based framing look like the point",
+      "decisiveFlaw": "'this winter' is a cognitive reframing device to make the deadline feel near, not an instruction to track literal seasonal change; 'literal changes of the seasons' misses the perception-management logic entirely"
+    },
+    {
+      "label": "⑤",
+      "intent": "over-extension / condition loss",
+      "temptingBecause": "the passage does blame artificial calendar breaks (e.g., the New Year boundary) for making deadlines feel remote, inviting the inference that time constraints themselves should be abandoned",
+      "decisiveFlaw": "contradicts the source span itself — the advice is to meet the challenge WITHIN a (near-feeling) period; the passage recommends choosing a better time frame, not discarding time framing"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": [
+    "V1: rendered passage is verbatim identical to the source except the intended single-span blank replacing 'within a period that's imminent'; labels/markers align with the five options.",
+    "V2: independent per-option solve confirms ① as the unique answer; ②-⑤ each fail on content, none on seam grammar, satisfying §D slot-uniformity.",
+    "V3: completed sentence with ① ('...a challenge that you have to meet in a timeframe that feels close at hand') is grammatical and natural; all options occupy the same adverbial slot.",
+    "V4: explanation correctly identifies the topic-sentence role, the remote-perception-to-inaction causal chain, the source span, and the paraphrase; distractor rationales match actual option contents. Minor overstatement in ⑤'s rationale ('시간 단위를 무조건 나누는 것이...') slightly strengthens what the passage claims (conditional: only when the deadline lies beyond a break), but it is framed as the student's misreading path, not a structural claim, so not a V4 failure.",
+    "C5=2 / killerConditionsMet=false: requested difficulty is KILLER, but §D killer conditions fail. (a) The near/far polarity axis alone isolates ①: it is the ONLY option expressing closeness, ② is the lone 'far' opposite, and ③④⑤ sit off-axis, so a student who extracts 'near = good' from a single sentence (the November/January example) picks ① without multi-cue integration. (b) The correct option lexically echoes the passage word 'timeframe' ('another way to think about the timeframe'), a surface-matching shortcut. Actual difficulty lands at standard/upper-mid, not KILLER.",
+    "C4=3: option lengths balanced, no absolute words, no tail-grammar elimination; docked one point for the 'timeframe' lexical echo between the correct option and the passage.",
+    "C3=3: ② and ⑤ carry genuine anchors and attract misreaders, but the final decision does not force whole-structure integration because the adjacent example sentence nearly gives the answer away.",
+    "C1=4: the blank targets the passage's core prescriptive claim and the canonical paraphrase point (imminent -> close at hand).",
+    "C2=4: four distractors use four distinct trap mechanisms (causal/polarity reversal, scope-shifted alternative strategy, literalist over-narrowing, over-extension/condition loss), each with a source anchor.",
+    "C6=3: explanation is accurate and separates answer rationale from traps, but is somewhat wordy ('대입될 원문' phrasing dense); distractor rationales are specific and correct.",
+    "Grade B per rubric: all V pass, craft minimum 2 (C5), total 19 >= 17; shippable after difficulty relabel (to standard/high) or a redesign that removes the single-axis polarity shortcut if KILLER is required."
+  ]
+}

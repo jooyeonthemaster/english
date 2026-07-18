@@ -1,0 +1,81 @@
+{
+  "pid": "P003",
+  "validity": {
+    "V1": false,
+    "V2": false,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1",
+      "severity": "critical",
+      "evidence": "SENTENCE_INSERT 변형은 주어진 문장 1개만 추출해야 하는데, 렌더 지문에서 추가로 두 문장이 무단 삭제됨: \"(You are correct.)\"와 \"Sooner or later, since you cannot do what you are trying to do, you quit.\" 그 결과 마지막 요약 \"a perfect death spiral: you misdirect your work; you stall; you quit\"의 'you quit'가 본문 어디에도 서술되지 않은 고아 요소로 남아 지문 논증이 손상됨. 원지문 대비 의도된 변형(주어진 문장 추출 + 'As a result,' 부가)을 넘는 누락."
+    },
+    {
+      "code": "V2",
+      "severity": "critical",
+      "evidence": "삭제된 두 문장이 원문에서 ④를 강제하던 후행 앵커였음((You are correct.)가 '확신'을 즉시 받아주고, Sooner or later…가 cannot do를 재사용). 렌더 지문만으로 blind solve하면 ③ 삽입도 성립함: 'You cling … away from risk and exploration' → 'As a result, … convinced that you cannot do it' → 'You find reasons to delay, since to not work is to not make mistakes'가 인과·흐름 모두 자연스럽고, delay 문장은 자체 근거(since절)를 갖고 있어 결과 문장 뒤에 와도 어색하지 않음. ④가 여전히 상대적으로 더 낫다고 볼 수는 있으나 유일성을 보장하는 결정 단서가 렌더본에서 소실되어 보수적으로 실패 판정. blindAnswer=④(confidence: medium), alternative=③."
+    },
+    {
+      "code": "V4",
+      "severity": "critical",
+      "evidence": "해설이 렌더 지문에 존재하지 않는 문장을 정답 근거로 인용: \"직후 괄호 (You are correct.)는 그 확신을 받아 주며 Sooner or later … you quit로 이어진다\" — 두 문장 모두 학생에게 보이는 지문에서 삭제됨. keyPoints[1](\"주어진 문장의 'cannot do it'은 바로 뒤 (You are correct.)의 내용을 공급해야 한다\")도 동일 결함. 해설이 렌더본이 아닌 원지문을 설명하고 있음."
+    },
+    {
+      "code": "V4",
+      "severity": "major",
+      "evidence": "오답 해설 '1'에 손상 토큰 존재: \"produce 'cannot do it'도 도입되지 않아\" — 'produce'는 한국어 문장 맥락에서 무의미한 잔여 영어 토큰(생성 아티팩트). 오답 해설 '5'는 \"직후 아이러니·death spiral 전개는 … 뒤 고리가 끊긴다\"라고 하나 ⑤는 지문 말미 위치라 '직후' 전개가 존재하지 않으며, death spiral 문장은 ⑤ 직전에 옴 — 위치 관계 오기술."
+    }
+  ],
+  "craft": {
+    "C1": 2,
+    "C2": 1,
+    "C3": 1,
+    "C4": 1,
+    "C5": 1,
+    "C6": 0
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "주제문 직후 조기 삽입 디코이 — 결과 문장을 도입부에 붙이려는 오독 유도",
+      "temptingBecause": "주제문(완벽 요구→마비)이 이미 부정적 귀결을 말하므로 그 '결과'가 바로 이어진다고 착각할 수 있음",
+      "decisiveFlaw": "As a result의 원인(회피·지연의 축적)이 아직 서술되지 않았고, 직후 'The pattern is predictable'은 패턴 도입부라 결과 문장 뒤에 올 수 없음"
+    },
+    {
+      "label": "②",
+      "intent": "부분 원인(오류 인지→조타) 뒤 성급한 인과 연결 디코이",
+      "temptingBecause": "직전에 오류를 보고 완벽 가능한 쪽으로 방향을 트는 서술이 있어 인과 고리처럼 읽힘",
+      "decisiveFlaw": "회피 패턴이 완성되기 전이며, 직후 문장들(cling·delay)이 여전히 원인 단계를 서술하므로 결과 문장이 흐름을 끊음"
+    },
+    {
+      "label": "③",
+      "intent": "회피 서술 직후 조기 결과 디코이(설계 의도)",
+      "temptingBecause": "cling/위험 회피 → '할 수 없다는 확신'의 인과가 자연스럽고, 확신 → 지연 순서도 그럴듯하게 읽힘. delay 문장이 자체 근거(since절)를 가져 결과 문장 뒤에 와도 성립",
+      "decisiveFlaw": "원문 기준으로는 지연이 확신에 선행하지만, 렌더 지문에서는 이 자리를 배제할 결정적 후행 앵커((You are correct.), Sooner or later…)가 삭제되어 사실상 준정답화됨 — 유일성 결함의 원인"
+    },
+    {
+      "label": "④",
+      "intent": "정답 — 지연(원인) 서술 완료 직후 결과 문장 삽입",
+      "temptingBecause": "n/a(정답). 지연·회피의 축적이 원인으로 충족된 뒤 확신이 결과로 오는 자리",
+      "decisiveFlaw": "n/a. 단, 설계된 후행 앵커 두 문장이 렌더에서 삭제되어 정답 필연성이 약화됨"
+    },
+    {
+      "label": "⑤",
+      "intent": "말미 삽입 디코이 — 결론 뒤 부연으로 붙이려는 유도",
+      "temptingBecause": "확신 문장을 총평 뒤 마무리 부연으로 볼 여지",
+      "decisiveFlaw": "death spiral 요약(you quit 포함)이 이미 종결한 뒤라 '확신' 단계가 시간상 뒤늦고, 글이 미완의 결과 문장으로 끝나 담화 구조가 어색함"
+    }
+  ],
+  "explanationIssues": [
+    "정답 해설이 렌더 지문에서 삭제된 두 문장 (You are correct.) / Sooner or later … you quit 를 정답 근거로 인용 — 학생이 보는 지문과 불일치 (critical)",
+    "keyPoints[1]이 존재하지 않는 (You are correct.) 문장을 근거로 제시 (critical)",
+    "오답 해설 '1'의 \"produce 'cannot do it'도 도입되지 않아\" — 맥락상 무의미한 손상 토큰 'produce' 포함 (major)",
+    "오답 해설 '5'가 ⑤ '직후' 전개를 근거로 드나 ⑤는 지문 말미라 직후 내용이 없음; death spiral 문장은 ⑤ 직전임 (major)"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "요청 난이도 INTERMEDIATE(KILLER 아님 → killerConditionsMet=false). 핵심 결함: 렌더링이 주어진 문장 외에 후행 앵커 2문장을 추가 삭제(V1)하여, (a) 정답 ④의 유일성을 담보하던 결정 단서가 소실되어 ③이 준정답화(V2), (b) 해설·keyPoints가 삭제된 문장을 근거로 인용해 렌더본과 괴리(V4). 'As a result' 연결사를 이용한 삽입 설계 자체와 정전급 지문 선택(C1=2)은 유효하나, 렌더 손상으로 변별 구조가 붕괴됨. 수리 방향: (You are correct.)와 Sooner or later… 문장을 지문에 복원하면 원 설계대로 ④가 필연이 되고 해설도 사실과 일치하게 됨 — 복원만으로 B 이상 재평가 가능성."
+}

@@ -1,0 +1,86 @@
+{
+  "pid": "P010",
+  "validity": {
+    "V1": false,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-STRAY-MARKER",
+      "severity": "critical",
+      "evidence": "선택지 ③ 라벨이 '<b>③</b>' 형태로 고아 HTML 볼드 마크업에 싸여 있다. 같은 배치 P001~P012 전수 grep 결과 이 마크업은 P010에만 존재하며(형식 관례 아님 — 예: P009는 선언 정답 ③도 무마크업), 선언 정답(①)과도 불일치하는 스트레이 마커다. 학생 뷰에서 리터럴 태그가 노출되거나 오답 ③이 시각적으로 강조되어 렌더/라벨/마커 일치 요건을 위반한다."
+    },
+    {
+      "code": "V4-BLANK-SPAN-ATTRIBUTION",
+      "severity": "major",
+      "evidence": "해설이 \"장기적으로 미루는 일(this)이 예외(exception)가 되도록 해야 한다는 빈칸 앞의 내용과 일치하도록\"이라고 서술하나, 'this is the exception rather than the norm'은 빈칸으로 제거된 원문 스팬 그 자체다. 렌더 지문의 빈칸 앞에는 'this'도 'exception'도 존재하지 않으므로, 제거된 정답 스팬을 학생이 볼 수 있는 지문 단서('빈칸 앞의 내용')로 귀속한 사실성 오류다."
+    },
+    {
+      "code": "V4-KEYPOINT-REMOVED-SPAN",
+      "severity": "major",
+      "evidence": "keyPoints[1]이 'exception rather than the norm'을 지문의 핵심 단서 표현으로 제시하나 해당 구는 빈칸 처리되어 렌더 지문에 없다. 또한 이 관용 표현을 '핵심 구어적 표현'으로 분류한 용어도 부정확하다(구어체가 아닌 관용구)."
+    },
+    {
+      "code": "V3-SEAM-PERSON-SHIFT",
+      "severity": "minor",
+      "evidence": "지문 전체가 we/us/our 1인칭 복수 시점인데 정답 ①은 'your habitual pattern'으로 2인칭 전환된다. 완성문이 비문은 아니고 일반적 조언문의 generic you로 수용 가능하므로 V3 실패는 아니지만, seam에서 미세한 어색함이 남는다."
+    },
+    {
+      "code": "LEAK-ABSOLUTE-TELL",
+      "severity": "major",
+      "evidence": "오답 4개가 전부 절대어를 포함한다(② absolute, ③ without a single, ④ any, ⑤ completely). 유일하게 완곡한 부정 구성인 ①을 절대어 소거 휴리스틱만으로 즉시 고를 수 있어 KILLER 요건(RUBRIC §D: 절대어 하나로 정답을 찍을 수 없어야 함)을 정면 위반한다. C3/C4/C5 및 killerConditionsMet 판정 근거."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 1,
+    "C4": 1,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "정답 — 원문 스팬 'this is the exception rather than the norm'을 'such concessions do not become your habitual pattern'으로 추상화한 환언. concessions가 자기관리 포기 행위 전체를 대명사적으로 수렴한다.",
+      "temptingBecause": "지문에 없는 어휘(concessions, habitual pattern)로 재부호화되어 표면 매칭이 불가능하고, 'this'의 지시 대상을 문단 전체에서 재구성해야 한다.",
+      "decisiveFlaw": "없음(정답). 단, 오답들의 절대어 패턴 때문에 소거법으로도 즉시 도달 가능하다는 것이 문항 설계상의 결함."
+    },
+    {
+      "label": "②",
+      "intent": "극성 반전 — 'But' 전환 이전의 단기 논리(grant deadline의 영향이 더 클 수 있다)를 장기 처방으로 승격시키는 함정.",
+      "temptingBecause": "'the impact of missing that grant deadline may be greater'라는 실제 지문 앵커를 재사용하고, deadline 어휘가 지문과 겹친다.",
+      "decisiveFlaw": "'But' 이후의 최종 논지(자기관리 미루기의 누적 영향을 인식하고 장기적으로 예외로 만들어야 함)와 정반대. 'absolute priority'라는 절대어로도 탈락."
+    },
+    {
+      "label": "③",
+      "intent": "절대적 과잉 주장 — 계획의 완벽 실행이라는 무이탈 요구로 지문의 현실 인정과 모순시키는 함정.",
+      "temptingBecause": "plan, schedules 등 일정 관리 어휘가 지문 표면과 겹치고, '계획을 지켜야 한다'는 방향성이 직관적으로 그럴듯하다.",
+      "decisiveFlaw": "'No matter how much we plan, we all occasionally have days when that happens'가 이탈의 불가피성을 명시하므로 직접 모순. 'without a single deviation' 절대어로 즉시 탈락. 참고: 이 선지에만 스트레이 볼드 마크업이 있다."
+    },
+    {
+      "label": "④",
+      "intent": "과잉 확장(조건 소실) — 지문이 허용하는 단기적 양보의 여지를 제거하고 자기관리 절대 우선으로 극단화하는 함정.",
+      "temptingBecause": "자기관리를 지켜야 한다는 글의 큰 방향과 극성이 일치해, 주제만 잡은 학생이 고르기 쉽다.",
+      "decisiveFlaw": "지문은 단기적으로 업무가 우선될 수 있음을 명시적으로 인정하므로('may be greater'), 'refuse any tasks'는 조건을 소실한 극단 주장. 'any' 절대어."
+    },
+    {
+      "label": "⑤",
+      "intent": "배경의 처방화 — 예기치 못한 회의·이메일 홍수라는 배경 서술을 제거 대상 처방으로 오독시키는 함정.",
+      "temptingBecause": "'unexpected meeting', 'flood of email messages'라는 지문 앵커를 직접 재사용한다.",
+      "decisiveFlaw": "지문은 외부 변수를 통제 불가능한 현실로 전제하며, 처방은 변수 제거가 아니라 자기관리 포기의 습관화 방지다. 'completely eliminated' 절대어."
+    }
+  ],
+  "explanationIssues": [
+    "제거된 정답 스팬('this is the exception rather than the norm')을 '빈칸 앞의 내용'으로 귀속 — 렌더 지문 기준으로 존재하지 않는 텍스트를 지문 단서로 지목하는 사실성 오류(V4 실패의 주 근거).",
+    "keyPoints[1]이 빈칸 처리로 지문에서 사라진 'exception rather than the norm'을 핵심 단서로 인용하고 '구어적 표현'으로 오분류.",
+    "해설 말미 '단기적 마감을 우선시하라는 ②번은 ... 오답으로 이어집니다'는 어색한 표현(내용 자체는 ②의 실제 선지 내용과 대응).",
+    "오답 해설 ②~⑤는 각각 실제 선지 내용과 정확히 대응함(귀속 오류 없음)."
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V2(정답 유일성)는 견고하다: ①만이 원문 스팬의 의미를 보존하고 ②~⑤는 각각 극성 반전·무이탈 절대 주장·조건 소실 극단화·배경의 처방화라는 독립 결함으로 탈락하며, 다섯 선지 모두 동일 통사 슬롯(make sure that 뒤 정형절)에 문법적으로 들어간다. 그러나 (1) 선택지 ③의 고아 <b> 마크업이라는 학생 노출 필드 손상(배치 내 유일, 정답 라벨과도 무관한 스트레이 마커)으로 V1 실패, (2) 해설과 keyPoints가 빈칸으로 제거된 원문 스팬을 '빈칸 앞의 내용'/지문 단서로 귀속하는 사실성 오류로 V4 실패다. 공예 면에서도 KILLER 요청 대비 치명적 결함: 오답 4개 전원이 절대어(absolute/single/any/completely)를 달고 있어 절대어 소거 휴리스틱만으로 ①이 즉시 드러난다(RUBRIC §D 위반, killerConditionsMet=false). 빈칸 위치 자체는 결론 명제로 출제 가치가 있으나(C1=3), 실제 난이도는 KILLER에 크게 못 미친다(C5=1). 재설계 시 오답의 절대어 패턴 해소와 해설의 렌더 지문 기준 재서술이 필수."
+}

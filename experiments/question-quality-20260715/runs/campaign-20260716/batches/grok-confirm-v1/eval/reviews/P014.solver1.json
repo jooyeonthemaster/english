@@ -1,0 +1,35 @@
+{
+  "pid": "P014",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "주격 관계대명사 that의 선행사는 'subtle, stunning, often automatic, and nonverbal exchanges'(복수)이고 관계절 동사 are와 수일치가 성립한다. 'exchanges that are put-downs' — 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'have the potential to-V'는 표준 결합(potential은 to부정사의 수식을 취하는 명사). impact는 타동사로 any oppressed group을 목적어로 취하고 psychologically가 부사 수식. 정문. 'potential of -ing'과의 대비를 떠올려도 to-V가 더 표준적이라 오답 유혹이 약하다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "문장의 본동사는 highlights이며 involving은 명사 instance를 수식하는 현재분사(= that involves a man...). 능동 관계 성립. 수식어가 길어 highlights를 놓치면 involving을 본동사 자리로 착각하게 만드는 매력 오답 포지션이지만 구조 확인 시 명백히 옳다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "문장 전체가 'People raising their voices while speaking to him implying a hidden message that ... functioning.'으로, People을 주어로 보면 raising...him은 분사 수식어이고 정동사 자리에 분사 implying이 와서 문장에 finite verb가 전혀 없는 fragment가 된다. 대안 해석 검토: (i) People('s) raising...을 동명사 주어로 보아도 뒤에 implies 같은 정동사가 필요하고, (ii) implying을 앞 명사구 수식 분사로 보아도 주절 본동사 부재는 해소되지 않으며, that절 내부의 is defined는 동격절 내부 동사일 뿐이다. 어떤 파스로도 정문이 되지 않으므로 imply(동명사 주어 해석 시 implies)로 고쳐야 한다. 어법상 틀림."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'Countless examples of microaggression are delivered daily' — examples는 전달되는 대상이므로 be + p.p. 수동태가 의미상·구조상 성립. 정문. (C)와의 능동/수동 분사 대비 미끼이나 의미 관계가 명확해 유혹이 약하다."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 밑줄 다섯 개 중 (C)는 긴 주어 수식으로 본동사(highlights)를 가리는 전형적 미끼였으나 구조 파악으로 즉시 해소. 결정적 단서는 (D) 문장의 정동사 부재 — 'People raising ... implying ...'은 어떤 대안 파스(동명사 주어, 분사 수식, 축약 관계절)로도 finite verb를 확보하지 못하는 fragment다. 정답 후보는 (D) 단일로 수렴하며 복수 정답 소지 없음."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P005",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'A bridge is normally constructed to last one hundred years' — 주어 A bridge는 타동사 construct의 논리적 목적어이므로 수동태 be + p.p.(is constructed)가 요구되며 정확히 실현되었다. 뒤의 to last는 목적/결과의 to부정사로 수동태 뒤에 표준적으로 결합한다(be constructed to-V). 형식적으로 흠결 없음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect",
+      "reason": "'Its presence making a lasting mark that shows the evolution of society.'는 마침표로 완결된 독립 문장인데 정형동사(finite verb)가 없다. making은 비정형 분사/동명사이므로 이 문자열은 술어 없는 단편(fragment)이다. 구제 해석 전수 검토: (i) 무동사 절대구문(absolute construction)으로 보려면 같은 문장 안의 주절에 콤마로 부가되어야 하는데 앞 문장은 마침표로 종결되어 이 문장 경계 안에 주절이 없어 성립 불가. (ii) 축약 관계절 'Its presence [which is] making...'으로 읽어도 결과물은 명사구일 뿐 문장이 되지 못한다. (iii) 동명사 주어구로 보아도 그 뒤에 술어가 전혀 없다. (iv) that shows...는 mark를 선행사로 하는 관계절일 뿐 주절 술어가 될 수 없다. 유일한 수리는 정형동사 makes(3인칭 단수, 주어 Its presence와 일치)로의 교체다. 어법상 틀림 — 정답."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'one of the first qualities [that] a bridge must exhibit concerns how...' — 주어의 핵은 단수 one이고, of the first qualities는 전치사구, a bridge must exhibit는 qualities를 선행사로 하는 목적격 관계대명사 생략 접촉 관계절이다. 장거리 수일치를 추적하면 단수 동사 concerns가 정확히 옳다(근접 명사 qualities에 이끌린 복수 concern이 함정). concern은 타동사로 how 명사절을 목적어로 취할 수 있어 결합도 정상. 어법상 옳다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'it must either adapt to or indeed reinforce this balance' — 병렬 시작점은 조동사 must 뒤의 원형 VP이며, either {adapt to} or {(indeed) reinforce}가 동일 층위로 병렬되어 공유 목적어 this balance를 취하는 우측 노드 인상(right-node raising) 구조다. adapt는 자동사라 전치사 to를 동반하고(adapt to this balance), reinforce는 타동사라 직접 결합한다(reinforce this balance). 두 갈래 모두 목적어와 정합하고 must 지배 하의 원형 reinforce가 정확히 요구되는 형태다. 어법상 옳다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'Depending on the type of bridge and the site, it is subordinate...' — depending on은 according to처럼 어휘화된 복합 전치사(화석화된 유리 분사)로 기능하여 현수분사 제약에서 면제되는 표준 용법이며, 분사 해석을 취하더라도 문장 전체를 수식하는 관용적 분사구문으로 성립한다. 수동형(Depended on)이 요구될 이유도 없다. 어법상 옳다."
+    }
+  ],
+  "note": "블라인드 독립 풀이. 정형동사 부재로 인한 문장 단편(B)이 유일한 형식적 위반이며, making → makes가 유일한 수리다. (C) 단수 수일치와 (D) 병렬 원형이 설계된 미끼로 보이나 둘 다 형식 검증을 통과한다. 대안 해석(절대구문·축약 관계절·동명사 주어)을 적극 탐색했으나 (B)를 정문으로 만드는 해석은 존재하지 않는다. 정답 후보는 (B) 하나로 유일하게 좁혀지며 복수 정답 가능성 없음."
+}

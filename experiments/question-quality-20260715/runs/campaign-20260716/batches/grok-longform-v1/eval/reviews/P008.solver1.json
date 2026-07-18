@@ -1,0 +1,35 @@
+{
+  "pid": "P008",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "Under a tax levied directly on measured emissions, the only way to reduce tax liability is to reduce emissions, so every tax-reducing action automatically advances the abatement objective the levy exists to serve. This restates sentence 1 ('precisely targeted to the policy's environmental objectives') and sentence 3 (abatement incentive wherever cost per unit < tax per unit). Seam is clean: 'actions ... are steps that advance ...' — predicate nominal correctly characterizes the polluter's own actions."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "Monitoring/continuous measurement appears later in the passage only as a COST and 'major disincentive' of this tax design, borne by the regulator/system, not as the polluter's tax-reducing action. Reverse-role trap built from later vocabulary. Inserting it makes the 'great attraction' sentence contradict the very next sentence."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "Category error and logical incoherence: 'actions the polluter can take to REDUCE tax liability' cannot be 'payments that RISE in proportion when residual emissions increase.' It recycles the exact proportionality wording of sentence 2 ('in proportion', 'residual emissions'), which gives it strong surface pull for a skimming reader, but the sentence collapses on actual insertion. Felt the lexical-overlap temptation; rejected on semantics."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "Measurement at 'many separate sources' is lifted verbatim from the drawback discussion (cost of continuous measurement), not the attraction. Polluters reduce tax liability by abating emissions, not by reforming measurement systems. Role mismatch plus wrong discourse segment."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Most tempting distractor because it does mention cutting residual pollution. Fails twice: (a) 'actions ... are duties that force firms' is a category mismatch — a duty/levy is imposed on the firm, not an action the firm takes; (b) 'every possible cut' contradicts the passage's marginal-cost logic — firms abate only where abatement is cheaper per unit than the tax, not exhaustively. Overstatement ('every possible') is the giveaway."
+    }
+  ],
+  "note": "Solved blind as a top-tier examinee. The blank asks what characterizes the polluter's tax-reducing actions under a measured-emissions tax; the classic answer is that they coincide exactly with the policy's abatement goals (incentive alignment). Options 2/3/4 are surface-vocabulary traps drawn from the wrong discourse roles (monitoring cost, proportional payment, measurement reform); option 5 is the strongest lure but fails on the 'duties' category error and the 'every possible cut' overstatement versus the marginal-abatement logic. No alternative grammatical reading rescues any distractor. Single defensible answer: 1."
+}

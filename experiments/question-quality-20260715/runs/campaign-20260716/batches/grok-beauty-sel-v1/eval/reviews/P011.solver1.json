@@ -1,0 +1,35 @@
+{
+  "pid": "P011",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "지문 구조(통념: 성장 중심 접근 → 반박: no matter how fast they grow ... cannot hope to prevent famines without specialized entitlement protection mechanisms involving direct public intervention → 사례: 보츠와나·케냐·짐바브웨의 성공은 성장이 아니라 direct public support 덕분)를 정확히 포착. 'limits of growth-centered strategies'가 반박부를, 'without public crisis safeguards'가 처방부를 커버하는 유일한 선지."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "케냐의 agricultural sector 성장은 예시로만 등장하며, 지문은 그것이 기근 방지 성공의 '작은 부분'만 설명한다고 명시. 농업 근대화의 '효과성'을 주제로 삼는 것은 지문 논지와 방향이 반대이고 범위도 지엽적."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "매력적 오답. 'a large part of the population derive their livelihood from uncertain sources'라는 표현이 지문에 그대로 있어 어휘 매칭으로 끌린다. 그러나 지문의 처방은 불확실한 생계 의존을 '줄이는 것'이 아니라, 그런 인구가 존재하는 한 직접 공공 개입(entitlement protection)이 필요하다는 것. 의존도 축소 필요성은 지문 어디에서도 주장되지 않음."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "지문은 direct public support/intervention의 결정적 역할을 옹호하므로, 시장 다변화가 국가 분배보다 우월하다는 진술은 결론과 정반대. diversification은 첫 문장에서 통념의 일부로만 언급됨."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "매력적 오답. 성장이 지문 전반에 반복 언급되어 표면적으로 그럴듯하나, 지문은 성장의 역할을 'at best only a small part'로 한정하며 그 한계를 지적하는 글. 성장의 (긍정적) 역할을 주제로 세우면 필자의 논지 방향을 뒤집게 됨."
+    }
+  ],
+  "note": "최상위권 실전 풀이 관점: 첫 독해에서 At the same time 이후가 핵심 주장임을 잡으면 ①이 즉시 보인다. 유혹 지점은 ③(uncertain sources 어휘 그대로 재활용)과 ⑤(growth 반복 노출로 인한 빈도 착시)이지만, 둘 다 지문의 처방(직접 공공 개입)과 논지 방향(성장 회의)을 검증하면 탈락. 대안 해석으로 정답이 갈리는 여지는 없으며 단일 정답 문항으로 판단."
+}

@@ -1,0 +1,92 @@
+{
+  "pid": "P001",
+  "type": "BLANK_INFERENCE",
+  "requestedDifficulty": "INTERMEDIATE",
+  "blindAnswer": "③",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-attribution",
+      "severity": "minor",
+      "evidence": "해설의 '평온한 사람이 되기 위해서는 경직성보다 유연성을 우선시해 왔으며'는 원문 'you must prioritize flexibility over rigidity'(독자에 대한 조언)를 글쓴이 자신의 이력('~해 왔으며')처럼 서술한 경미한 귀속 흐림. 논지 자체는 원문과 일치하므로 치명 아님."
+    },
+    {
+      "code": "V4-minor-inconsistency",
+      "severity": "minor",
+      "evidence": "본해설은 ②를 '지엽적 예시와 무관한 어휘 연상'으로 묶었으나 오답해설은 ②를 '경직성(rigidity)에 가까움'으로 설명. 서로 배치되진 않지만 함정 성격 규정이 느슨함."
+    },
+    {
+      "code": "V4-minor-wording",
+      "severity": "minor",
+      "evidence": "오답해설 ①의 '일정을 단호하게 고수하라는 영단어 표현은'에서 '영단어 표현'은 어색한 비관용 표현(내용 오류는 아님)."
+    }
+  ],
+  "v1Evidence": "렌더 지문은 원지문과 완전 일치하며, 단일 span 'make allowances in your mind for this inevitability'만 빈칸으로 치환됨. 문장 접합 파손·중복·누락·고아 문장부호 없음. 선지 라벨 ①~⑤와 선언 정답 ③ 모두 존재·일치.",
+  "v2Evidence": "각 선지 독립 검증: ①②④⑤ 모두 삽입 시 논지 모순 또는 후행절 'when it happens'의 지시 대상 상실로 탈락, ③만 원문 span 'make allowances in your mind for this inevitability'의 의미를 보존하며 'it'=disruption 으로 담화가 정합. 단일 정답 확인.",
+  "v3Evidence": "완성문 'If you mentally prepare yourself for the certainty of disruption, then when it happens you can say, ...'는 문법적·자연스러움. 다섯 선지 모두 'If you' 뒤 동일한 원형 VP 슬롯에 통사적으로 들어가며, 일부 오답만 문법으로 탈락하는 seam 결함 없음. 비단어·오탈자 없음.",
+  "v5Evidence": "정답 라벨(③)·선지 5개·본해설 결론(③)·오답해설 4건(①②④⑤)·keyPoints(make allowances/불가피성 환언) 상호 모순 없음.",
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 3,
+    "C6": 2
+  },
+  "craftRationale": {
+    "C1": "빈칸이 글의 결론적 실천 조언(불가피성을 미리 감안하기)을 겨냥 — 핵심 논지이나 지문 자체 논리가 단순해 4는 아님.",
+    "C2": "오답이 극성 역전(①), scope shift/어휘 연상(②), half-truth 지엽 예시(④), 통제 환상/condition loss(⑤)로 서로 다른 오독을 겨냥. 다만 ①과 ⑤가 모두 '반유연성' 계열로 부분 중복.",
+    "C3": "①⑤는 논지 극성만으로 즉시 소거되고, 빈칸 직후 tail의 'inevitabilities'와 ③의 'certainty' 국소 대응만으로 정답 도달 가능 — 전체 구조 판단 없이 풀림.",
+    "C4": "잔존 tail 'Here is one of those inevitabilities'가 정답의 'certainty of disruption'으로 어휘적 누출을 일으키고, 'when it happens'의 지시어 검사만으로도 ③이 유일하게 정합 — 약한 누출 2건.",
+    "C5": "INTERMEDIATE 요청 대비 1단계 환언(make allowances for this inevitability → mentally prepare for the certainty of disruption) + 논지 확인으로 적정.",
+    "C6": "해설은 정확하고 정답 근거·함정 분리는 있으나, 귀속 흐림('우선시해 왔으며')·② 함정 성격 규정 불일치·'영단어 표현' 등 어색한 표현으로 둔함."
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "논지 극성 역전(경직성 옹호) 함정",
+      "temptingBecause": "지문 초반의 'stick to some rigid work schedule' 어구를 그대로 재활용해 표면 어휘가 지문과 겹침",
+      "decisiveFlaw": "'prioritize flexibility over rigidity'라는 글의 주장과 정면 배치되며, 삽입 시 후행절 'Here is one of those inevitabilities'와 담화가 성립하지 않음"
+    },
+    {
+      "label": "②",
+      "intent": "scope shift + 어휘 연상(priorities/work/family) 함정",
+      "temptingBecause": "'priorities', 'work schedule', 'four-year-old' 등 지문 어휘와 연상 고리가 있음",
+      "decisiveFlaw": "엄격한 구획화는 지문이 배격하는 경직성에 해당하고, 빈칸 문장의 주제(계획 변경의 불가피성 수용)와 무관하며 'when it happens'의 it 지시 대상이 없음"
+    },
+    {
+      "label": "③",
+      "intent": "정답 — source span 'make allowances in your mind for this inevitability'의 추상화 환언",
+      "temptingBecause": "(정답) 'mentally' = in your mind, 'certainty' = inevitability, 'disruption' = plans changing 으로 의미 보존",
+      "decisiveFlaw": "없음 — 삽입 시 'it'=disruption 으로 후행절과 정합, 앞 문장 'expect that a certain percentage of plans will change'와 논리 연속"
+    },
+    {
+      "label": "④",
+      "intent": "half-truth / 지엽 예시 과잉일반화 함정",
+      "temptingBecause": "'four-year-old' 예시가 지문에 실재하고 유연성의 예로 쓰여 정서적 호소력이 있음",
+      "decisiveFlaw": "아이 요구 충족은 유연성의 한 사례일 뿐 빈칸 문장의 일반화된 조언 자리에 맞지 않으며, 'when it happens'·'those inevitabilities'와 연결 불가"
+    },
+    {
+      "label": "⑤",
+      "intent": "통제 환상 / condition loss(불가피성 전제 삭제) 함정",
+      "temptingBecause": "'plans'를 언급하고 계획 실패에 대비한다는 점에서 준비·대비 프레임을 공유",
+      "decisiveFlaw": "계획 변경은 예방 대상이 아니라 불가피한 것으로 수용하라는 전제('plans will change', 'inevitability')와 정면 모순 — 예방했다면 'when it happens'가 성립하지 않음"
+    }
+  ],
+  "explanationIssues": [
+    "귀속 흐림: '유연성을 우선시해 왔으며'는 원문의 조언문('you must prioritize')을 글쓴이의 이력처럼 서술 (minor)",
+    "함정 규정 불일치: 본해설(②=어휘 연상) vs 오답해설(②=경직성에 가까움) (minor)",
+    "어색한 표현: 오답해설 ①의 '영단어 표현은' (minor)"
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1~V5 전부 통과, 정답 유일성 확실(blind solve = ③, high confidence). 그러나 공예 합계 15/24로 B 기준(17)에 미달. 핵심 결함: (1) 빈칸 직후 잔존 tail 'Here is one of those inevitabilities'가 정답 ③의 'certainty'와 어휘적으로 직결돼 국소 매칭만으로 정답 도달 가능(C3·C4 동반 하락), (2) 'when it happens'의 지시어 검사가 ③만 정합하게 만들어 소거 지름길 제공, (3) ①⑤가 극성만으로 즉시 소거. 재설계 방향: 빈칸 위치를 tail 단서에서 분리하거나 tail의 'inevitabilities'를 함께 가리는 방식, ①⑤ 중 하나를 '유연성 방향이되 초점이 어긋난' 매력 오답으로 교체. 요청 난이도 KILLER 아님 → killerConditionsMet=false."
+}

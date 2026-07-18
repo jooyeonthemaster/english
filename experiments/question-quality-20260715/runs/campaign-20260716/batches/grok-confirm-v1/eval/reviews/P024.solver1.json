@@ -1,0 +1,35 @@
+{
+  "pid": "P024",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "Inserted: 'meet within a timeframe freed from break-induced remoteness' — clean grammatical seam and exact restatement of the passage's fix: reframe the deadline ('this winter' not 'next year') so the intervening break no longer makes it feel remote. Matches the causal chain (no perceived break -> deadline feels near -> stress manageable -> start in good time)."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "Attractive distractor via the 'eliminate the break' intuition, but over-absolute: 'every calendar boundary has been removed' contradicts the passage, which keeps time units and even uses one ('this winter' is itself a bounded seasonal unit). The advice is reframing within a unit, not abolishing all boundaries. I felt the pull of this option before rejecting it on the word 'every'."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "Category error and cause/effect reversal: manageable stress is the RESULT of the reframing ('That way the stress is more manageable'), not a property of the frame itself; 'workload... already been fully reduced' is unsupported and absolute."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "Example-anchored distractor. Factually fails: the recommended frame 'this winter' DOES stretch past the New Year (November to January crosses it); the point is that the frame contains no psychological break, not that the interval ends before Jan 1. Also over-narrow — the principle applies to any break, not the New Year specifically."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Polarity reversal: the passage says breaks induce remoteness and inaction; nothing suggests deliberately exploiting a break as a motivator."
+    }
+  ],
+  "note": "Lens: top-tier examinee, real-time solve. Genuine temptation ranking: 2 > 4 (both exploit the 'remove/avoid the break' idea; 2 fails on the absolutist 'every calendar boundary', 4 fails on the winter-crosses-New-Year fact). Single defensible answer: 1. No alternative grammatical parse rescues any distractor."
+}

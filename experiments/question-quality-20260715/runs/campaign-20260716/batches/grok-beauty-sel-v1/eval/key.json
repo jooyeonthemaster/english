@@ -1,0 +1,169 @@
+{
+ "P001": {
+  "itemId": "bs-topic-s",
+  "armId": "BSEL-TOPI",
+  "frameId": "blank-supply-v2-137",
+  "subType": "TOPIC",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "2",
+  "gateIssues": []
+ },
+ "P002": {
+  "itemId": "bs-title-s",
+  "armId": "BSEL-TITL",
+  "frameId": "blank-supply-v2-135",
+  "subType": "TITLE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "2",
+  "gateIssues": []
+ },
+ "P003": {
+  "itemId": "bs-title-2",
+  "armId": "BSEL-TITL",
+  "frameId": "blank-supply-v2-119",
+  "subType": "TITLE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "2",
+  "gateIssues": []
+ },
+ "P004": {
+  "itemId": "bs-topic-2",
+  "armId": "BSEL-TOPI",
+  "frameId": "blank-supply-v2-120",
+  "subType": "TOPIC",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "2",
+  "gateIssues": []
+ },
+ "P005": {
+  "itemId": "bs-cont-l",
+  "armId": "BSEL-CONT",
+  "frameId": "adhoc-prod-03",
+  "subType": "CONTENT_MATCH",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "3",
+  "gateIssues": []
+ },
+ "P006": {
+  "itemId": "bs-cont-s",
+  "armId": "BSEL-CONT",
+  "frameId": "blank-supply-v2-122",
+  "subType": "CONTENT_MATCH",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "3",
+  "gateIssues": []
+ },
+ "P007": {
+  "itemId": "bs-cont-2",
+  "armId": "BSEL-CONT",
+  "frameId": "grammar-frame-v2-096",
+  "subType": "CONTENT_MATCH",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "3",
+  "gateIssues": []
+ },
+ "P008": {
+  "itemId": "bs-impl-s",
+  "armId": "BSEL-IMPL",
+  "frameId": "blank-supply-v2-146",
+  "subType": "IMPLIED_MEANING",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": [
+   {
+    "severity": "error",
+    "code": "implied-meaning-target-too-short",
+    "message": "IMPLIED_MEANING target is too small to support real implied-meaning inference."
+   },
+   {
+    "severity": "error",
+    "code": "implied-meaning-noncentral-target",
+    "message": "IMPLIED_MEANING underline should be a central-claim paraphrase, metaphor, compressed conclusion, or topic/gist-level expression, not a peripheral detail."
+   }
+  ]
+ },
+ "P009": {
+  "itemId": "bs-impl-2",
+  "armId": "BSEL-IMPL",
+  "frameId": "blank-supply-v2-134",
+  "subType": "IMPLIED_MEANING",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "2",
+  "gateIssues": [
+   {
+    "severity": "error",
+    "code": "implied-meaning-noncentral-target",
+    "message": "IMPLIED_MEANING underline should be a central-claim paraphrase, metaphor, compressed conclusion, or topic/gist-level expression, not a peripheral detail."
+   }
+  ]
+ },
+ "P010": {
+  "itemId": "bs-title-l",
+  "armId": "BSEL-TITL",
+  "frameId": "adhoc-prod-05",
+  "subType": "TITLE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": []
+ },
+ "P011": {
+  "itemId": "bs-topic-l",
+  "armId": "BSEL-TOPI",
+  "frameId": "adhoc-prod-06",
+  "subType": "TOPIC",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": []
+ },
+ "P012": {
+  "itemId": "bs-impl-l",
+  "armId": "BSEL-IMPL",
+  "frameId": "adhoc-prod-04",
+  "subType": "IMPLIED_MEANING",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "2",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "implied-meaning-noncentral-target",
+    "message": "IMPLIED_MEANING underline should be a central-claim paraphrase, metaphor, compressed conclusion, or topic/gist-level expression, not a peripheral detail."
+   }
+  ]
+ }
+}

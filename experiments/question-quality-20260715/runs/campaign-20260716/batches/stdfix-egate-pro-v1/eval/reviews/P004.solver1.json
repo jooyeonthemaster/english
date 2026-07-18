@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'our attention tends to be directed outward' — direct는 타동사이고 attention이 그 대상이므로 수동 부정사가 옳다. 첫 문장 'direct the spotlight of attention inward'(능동, 목적어 있음)와 평행 구조. 능동 'tends to direct'로 바꾸면 목적어가 없어 오히려 비문. 수동/능동 전환을 노린 미끼지만 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'While this pattern of attention is necessary ..., it actually prevents ...' — 완전한 절(주어 this pattern + 동사 is)을 이끄는 양보 접속사 While. 콤마 뒤 주절 it prevents와 정상 연결. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "'necessary when solved problems analytically' — 축약 부사절에서 과거분사 solved는 수동 의미인데 뒤에 목적어 problems가 남아 비문. ① 'when (it/they are) solved problems'는 solve가 잔류 목적어를 허용하는 수여동사가 아니므로 불성립, ② 'solved problems'(풀린 문제들)를 명사구로 읽어도 'when + NP + 부사'로 동사가 없어 불성립. 일반 주어 we의 능동 축약 'when solving problems analytically'여야 한다. 어법상 틀림 — 정답."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'the connections that lead to creative insights' — 복수 선행사 connections를 받는 주격 관계대명사 that, 관계절 동사 lead가 복수 일치. which로도 가능하나 that도 완전히 정상. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'hear the quiet voices in the backs of our heads telling us about the insight' — 지각동사 hear + 목적어(voices) + 현재분사 telling. voices가 telling의 의미상 주어로 능동 관계 성립(목소리가 우리에게 말해줌). hear ... tell(원형)도 가능하므로 telling을 오류로 볼 근거 없음. 정문."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 가장 강한 미끼는 (A)의 수동 부정사(능동 tends to direct로 읽고 싶은 유혹)와 (E)의 telling(tell 원형과의 선택 문제로 착각 유도)이지만, 둘 다 목적어 유무·의미상 주어 확인으로 즉시 해소된다. (C)는 'when solving'의 -ing을 -ed로 바꾼 전형적 축약 부사절 태 오류로, solved 뒤에 목적어 problems가 남는 순간 어떤 대안 해석(수동 축약, 명사구 독법)으로도 구제 불가. 정답이 (C)로 유일하게 좁혀지는 깨끗한 문항. 참고: 지문은 Jonah Lehrer 'Imagine'의 샤워 통찰 대목 변형으로 보이며(원문 인용자는 Joydeep Bhattacharya), 사실성은 어법 판정과 무관."
+}

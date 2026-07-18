@@ -1,0 +1,35 @@
+{
+  "pid": "P010",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "Passive of 'choose X to-infinitive': 'band had been chosen to perform' correctly retains the to-infinitive complement of 'choose' under passivization. Well-formed."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'Jeff objected' is an intransitive reporting verb used as a dialogue tag; 'object' licenses zero-complement use, and semantically he is voicing disagreement with the colorful clothes. Well-formed."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct (stylistically marked but grammatical)",
+      "reason": "'His confidence was quickly changed to nervousness' is a formally valid passive of transitive 'change X to Y'; the when-clause ('when he thought of how many people would be there') supplies a recoverable causer. The intransitive 'changed to' would be more idiomatic, but the passive violates no grammatical rule, so it is not the error."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "Participial adjunct 'making several mistakes' takes the matrix subject 'he' as its implicit subject — he is the one making mistakes. No dangling participle; well-formed."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect — this is the error",
+      "reason": "'everyone fell silent, fascinating by the music' predicates the participle of 'everyone', the experiencer. With stimulus-subject verb 'fascinate', an experiencer subject requires the passive participle: 'fascinated by the music'. Active 'fascinating' cannot co-occur with an agentive by-phrase and would wrongly make 'everyone' the stimulus. No rescue parse (gerund or noun-modifying reading) is available. Must be 'fascinated'."
+    }
+  ],
+  "note": "Clear single answer. (E) is a canonical fascinated/fascinating participle-voice error, provable from the by-phrase and the experiencer subject. The only other candidate a strict reader might probe is (C), but the passive 'was changed to' is formally well-formed with a recoverable causer, so it does not compete. Lens: grammarian/logician, blind solve."
+}

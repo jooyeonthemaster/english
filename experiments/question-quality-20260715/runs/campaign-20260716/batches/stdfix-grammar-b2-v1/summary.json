@@ -1,0 +1,40 @@
+{
+  "batchId": "stdfix-grammar-b2-v1",
+  "phase": "stdfix",
+  "atKst": "2026-07-17T18:14:20.638+09:00",
+  "assignments": 12,
+  "slotsConsumed": 40,
+  "accepted": 12,
+  "modelCalls": 81,
+  "inputTokens": 407052,
+  "outputTokens": 55439,
+  "costUsd": 1.190299,
+  "ledgerAfter": {
+    "used": 752,
+    "cap": 1000,
+    "costUsd": 27.712521
+  },
+  "byArm": {
+    "B2-STD": {
+      "n": 6,
+      "accepted": 6,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 20,
+      "costUsd": 0.946547
+    },
+    "B2-PREM": {
+      "n": 6,
+      "accepted": 6,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 20,
+      "costUsd": 0.243752
+    }
+  },
+  "models": {
+    "standard": "google/gemini-3.5-flash",
+    "premiumQgen": "google/gemini-3.1-pro-preview"
+  },
+  "durationMs": 272830
+}

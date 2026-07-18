@@ -1,0 +1,90 @@
+{
+  "pid": "P006",
+  "blindAnswer": "1",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": false,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-CORRUPTED-TERM",
+      "severity": "critical",
+      "evidence": "오답 해설 ②: \"의상 선택이 연성이나 연주 능력을 지속해서 높여 주었다는\" — '연성'(ductility)은 이 문맥에서 비단어/손상 용어다. 선지의 'performance grit'(근성)을 옮기다 깨진 것으로 보이며, 학생에게 그대로 노출되는 해설에 의미 불명 단어가 남아 있다."
+    },
+    {
+      "code": "V4-EXPLANATION-OPTION-MISMATCH",
+      "severity": "major",
+      "evidence": "오답 해설 ④는 \"의상 선택에 불만을 품고 자아 성찰이나 의심을 했다는 진술\"이라고 설명하지만, 선지 ④의 실제 내용은 'loyalty to Jeff's black jeans choice bred lingering self-doubt' — 옷 선택에 대한 '불만'이 아니라 '충실함(loyalty)'이 자기 의심을 낳았다는 진술이다. 해설이 선지 문면과 대응하지 않는다. keyPoints도 같은 오독('의상 불신 오답')을 반복한다."
+    },
+    {
+      "code": "V3-UNNATURAL-COMPLETED-SENTENCE",
+      "severity": "major",
+      "evidence": "정답 ①을 넣은 완성문 \"Outward apparel-boosted calm soon yielded to stage fright...\"에서 'apparel-boosted'는 원어민이 쓰지 않는 즉석 조어이고, 특정 인물 서사에서 한정사/소유격 없는 bare 'calm' 주어는 부자연스럽다('His outward calm'이어야 자연스러움). 단순 서사체 지문에 헤드라인식 압축 명사구가 접합되어 register가 심하게 충돌한다. 5개 선지 모두 동일한 압축 명사구 문체라 지문 장르와 이질적이다."
+    },
+    {
+      "code": "V3-SENTENCE-INITIAL-BLANK-CASE",
+      "severity": "minor",
+      "evidence": "빈칸이 문장 첫머리(\"clothes. _____ when...\")에 있는데 선지가 모두 소문자로 시작한다. 삽입 시 완성문이 소문자로 시작하는 표기 결함. 수능 빈칸 문항은 이 문제 때문에 문두 빈칸을 피한다."
+    },
+    {
+      "code": "V3-ANSWER-NUANCE-SHIFT",
+      "severity": "minor",
+      "evidence": "정답의 'outward'는 겉으로만 침착했다는 façade 뉘앙스를 더하지만 원문 'His confidence was...changed'와 'Garcia felt good'은 실제 내면의 감정이다. 원 span 의미의 미세 왜곡."
+    }
+  ],
+  "craft": {
+    "C1": 2,
+    "C2": 2,
+    "C3": 1,
+    "C4": 1,
+    "C5": 0,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — '새 옷 만족감 → 관객 인식으로 무대 공포 전환'이라는 심경 급변 포착",
+      "temptingBecause": "정답이므로 해당 없음. 직전 'felt good'과 직후 'struggled...mistakes'를 정확히 잇는다.",
+      "decisiveFlaw": "정답. 단, 'outward'가 원문에 없는 겉치레 뉘앙스를 추가하고 'apparel-boosted'가 조어라는 표현 결함이 있다."
+    },
+    {
+      "label": "2",
+      "intent": "극성 반전(옷이 연주 능력을 계속 향상시켰다는 긍정 지속 서사)",
+      "temptingBecause": "새 옷 구매와 'felt good'의 긍정 정서를 표면적으로 이어받는다.",
+      "decisiveFlaw": "직후 문장의 리듬 실수·불안과 정면 모순. 또한 실제 구매한 옷은 화려한 옷이 아니라 Jeff가 고른 무난한 흰 셔츠·검은 청바지이므로 'bold clothing choices' 자체가 사실 오류."
+    },
+    {
+      "label": "3",
+      "intent": "시점 이동(결말의 관객 침묵·완벽 연주를 리허설 시점으로 당겨옴)",
+      "temptingBecause": "'everyone fell silent'·'flawless'라는 지문 후반 anchor를 재활용한다.",
+      "decisiveFlaw": "본 공연 결말 내용을 리허설 시작 시점에 배치한 시간 왜곡. 삽입 시 'when he thought of how many people...'과 의미가 연결되지 않는 비문 수준의 부정합."
+    },
+    {
+      "label": "4",
+      "intent": "태도 왜곡/half-truth(옷 선택 관련 심리를 자기 의심으로 비틈)",
+      "temptingBecause": "'black jeans'라는 지문 어휘 재활용 + self-doubt가 nervousness와 표면적으로 유사하다.",
+      "decisiveFlaw": "불안의 원인은 관객 수이지 옷 선택이 아니며, Garcia는 그 옷에 'felt good'했다. 'lingering'도 Tom의 격려 후 회복·완벽 연주와 모순. 과도하게 구체적인 명사 재활용이 오답임을 노출한다."
+    },
+    {
+      "label": "5",
+      "intent": "인과 날조 + actor swap(Jeff의 교통 체증 스트레스를 Garcia의 실수 원인으로 전가)",
+      "temptingBecause": "'traffic'·'mistakes'라는 지문 표면 어휘를 조합해 인과처럼 보이게 한다.",
+      "decisiveFlaw": "교통 체증은 Jeff의 지각 사유였고 Garcia는 'I haven't waited long'이라 했다. 삽입 시 '관객 수를 생각할 때 교통 스트레스가 재발했다'는 무의미한 문장이 된다."
+    }
+  ],
+  "explanationIssues": [
+    "오답 해설 ②의 '연성'은 비단어/손상 용어(선지 'grit'의 깨진 번역으로 추정) — 치명.",
+    "오답 해설 ④가 선지의 'loyalty'(충실함)를 '불만'으로 오독해 설명 — 선지-해설 대응 실패. keyPoints ②,④ 항목('의상 불신 오답')도 같은 오독을 공유.",
+    "오답 해설 ②가 결정적 결함인 'bold ≠ 실제 구매한 무난한 옷' 사실 모순을 짚지 않음(불완전).",
+    "본 해설 마지막 문장은 일반론적 경고로 정보량이 없다(장황)."
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": "KILLER 미충족: (1) 정답이 인접 두 문장('felt good' / 'struggled...mistakes')만으로 즉시 도출되는 얕은 추론이며 다문장·다단서 통합이 필요 없다. (2) ③·⑤는 삽입 즉시 의미 불성립으로 자기 소거되고, ④·⑤는 'black jeans'·'late traffic' 같은 과잉 구체 명사 재활용이라는 표면 휴리스틱만으로 소거된다 — 유일하게 추상적인 선지가 정답이라는 메타 단서가 성립한다. (3) 정답의 'outward'가 source span 의미를 정확히 보존하지 못한다(§D 위반).",
+  "grade": "F",
+  "notes": "V2는 통과(정답 집합 {①} 유일, blind solve 일치). 그러나 V3(완성문 부자연: 'apparel-boosted' 조어, bare 'calm', 문두 빈칸 소문자 접합, register 충돌)와 V4(해설 비단어 '연성', ④ 선지-해설 불일치)가 실패하여 등급 F. 공예 측면에서도 요청 난이도 KILLER 대비 실제 난이도가 하~중 수준(C5=0)이고, 서사 지문에 압축 명사구 빈칸을 접합한 설계 자체가 장르 부정합이라 재설계가 필요하다. V 실패는 공예 점수로 상쇄되지 않는다."
+}

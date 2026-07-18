@@ -1,0 +1,35 @@
+{
+  "pid": "P010",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "정답 성립",
+      "reason": "문법: 'make sure that + 유한절' 결합 정상. 대용어 'such concessions'의 선행 내용이 지문에 명시적으로 존재('our self-care activities are the first thing to be given up' = 자기관리를 양보하는 일). 논리: 지문의 논증 구조가 (i) 가끔의 양보는 불가피('we all occasionally have days when that happens'), (ii) 단기적으로는 마감이 더 중요할 수 있음, (iii) 그러나 자기관리 미루기의 '누적적(cumulative)' 영향을 인식하고 '장기적으로(in the long term)' 무언가를 보장해야 함 — 이므로 빈칸은 '그런 양보가 습관적 패턴이 되지 않도록 하라'로 귀결된다. 단기 허용/장기 금지의 대비를 정확히 완성. 'we→your' 인칭 전환은 조언체 산문에서 통용되는 수준으로 결함 아님."
+    },
+    {
+      "label": "②",
+      "verdict": "오답",
+      "reason": "문법상 성립하나 논리 역방향. 직업적 마감을 절대 우선으로 지키는 것은 지문이 경고하는 문제(자기관리 후순위화)의 원인 그 자체다. 'cumulative impact of not prioritizing self-care'를 인식하라는 주절과 정면 모순."
+    },
+    {
+      "label": "③",
+      "verdict": "오답",
+      "reason": "문법상 성립하나 지문 전제와 모순. 'No matter how much we plan, we all occasionally have days when that happens'가 일탈의 불가피성을 명시하므로 '단 하나의 이탈도 없이 일정을 실행'은 성립 불가. 또한 'daily schedules'와 'in the long term'의 시간 범주 불일치."
+    },
+    {
+      "label": "④",
+      "verdict": "오답",
+      "reason": "문법상 성립하나 전칭 한정사 'any'가 과잉 일반화. 지문은 단기적으로는 마감(grant deadline)이 자기관리보다 중요할 수 있음을 명시적으로 인정하므로, 웰빙을 침해하는 '모든' 과업 거부는 지문 논리와 모순."
+    },
+    {
+      "label": "⑤",
+      "verdict": "오답",
+      "reason": "문법상 성립하나 화용적으로 불가능에 가까운 주장('unexpected'한 요구를 'completely eliminated'한다는 것은 준-모순). 지문 전제(계획해도 예기치 못한 일이 생김)와도 정면 충돌."
+    }
+  ],
+  "note": "단일 정답으로 깔끔히 수렴하는 빈칸 문항. 정답 ①은 '단기 허용 vs 장기 습관화 금지' 대비와 'such concessions' 대용 관계가 지문에 정확히 근거함. 오답 ②~⑤는 각각 지문의 명시적 전제(일탈 불가피성, 단기 마감 우선 인정, 예측 불가능성)와 형식적으로 모순되거나 논지 역방향이라 옹호 불가. 모든 선지가 유한절로 빈칸 seam에 문법적으로는 결합하므로 문법 단서 누출 없음. 극단 표현(absolute/single/any/completely)이 오답 4개에 몰려 있어 소거 전략에 다소 취약하나 정답 자체의 성립성에는 문제 없음."
+}

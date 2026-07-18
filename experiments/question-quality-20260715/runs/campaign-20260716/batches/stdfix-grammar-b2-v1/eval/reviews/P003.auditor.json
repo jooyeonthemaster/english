@@ -1,0 +1,70 @@
+{
+  "pid": "P003",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-STRUCTURE-MISDESCRIPTION",
+      "severity": "major",
+      "evidence": "해설 첫 문장 '주어 play를 수식하는 명사구 a way 뒤의 관계절 구조를 파악하는 문제입니다.' — 실제 문장 'play is a way in which...'에서 a way는 be동사의 주격보어이지 주어 play를 '수식'하는 수식어가 아니다. 어떤 괄호 해석(명사구 a way가 play를 수식 / 관계절이 play를 수식)으로 읽어도 통사 관계 오기술이며, 관계절의 실제 피수식어는 a way다. 학생 노출 해설의 구조 분석 오류(용어 오류)로 V4 위반."
+    },
+    {
+      "code": "V4-KEYPOINT-TERM-MISUSE",
+      "severity": "minor",
+      "evidence": "keyPoints (C) '완결된 절을 수식하기 위한 전치사+관계대명사(in which) 전환' — 전치사+관계대명사가 절을 '수식'하는 것이 아니라, (내부적으로 완전한) 관계절이 선행사 a way를 수식한다. 수식 방향이 뒤집힌 오기술."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 0,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "태 판정 — 현재완료 수동태(has long been seen as)에서 play와 see의 의미 관계 파악",
+      "temptingBecause": "has long been seen처럼 부사가 낀 완료·수동 결합형은 표면이 복잡해 능동 has long seen과 혼동을 유도한다",
+      "decisiveFlaw": "play는 see의 행위 대상이므로 수동태가 필수이며 어법상 옳다 — 오답 성립 불가"
+    },
+    {
+      "label": "(B)",
+      "intent": "관계절 내 주어-동사 수일치 — 선행사 식별",
+      "temptingBecause": "선행사를 앞쪽 단수 명사구 a way (of learning...)로 착각하면 is를 기대하게 된다",
+      "decisiveFlaw": "실제 선행사는 바로 인접한 복수 skills and behaviors이므로 are가 옳다. 인접성 때문에 판단이 쉬워 변별 기여는 낮다"
+    },
+    {
+      "label": "(C)",
+      "intent": "정답 — 완전한 절 앞의 관계대명사 which vs 전치사+관계대명사 in which",
+      "temptingBecause": "선행사 a way가 사물이라 which가 표면상 자연스러워 보이고, 선행사만 보고 성급히 수용하기 쉽다",
+      "decisiveFlaw": "뒤따르는 절(children learn about the world and their place in it)이 주어+자동사+전치사구로 완전하여 which가 채울 gap이 없다. in which로 고치면 정확히 원문이 복원되는 최소대립쌍"
+    },
+    {
+      "label": "(D)",
+      "intent": "5형식 allow의 목적격보어 형태 — to부정사 vs 원형부정사",
+      "temptingBecause": "let/make/have 등 사역동사 계열과 혼동하면 원형부정사 try out을 기대할 수 있다",
+      "decisiveFlaw": "allow는 목적격보어로 to부정사를 취하므로 to try out이 옳다. 매우 표준적인 포인트라 즉시 소거된다"
+    },
+    {
+      "label": "(E)",
+      "intent": "보어 자리 품사 판단 — 형용사 vs 부사",
+      "temptingBecause": "동사(will be) 뒤 위치라는 표면 단서로 부사 importantly를 떠올릴 수 있다",
+      "decisiveFlaw": "will be의 주격보어 자리이므로 형용사 important가 옳다. 사실상 즉시 소거되는 최약체 디코이"
+    }
+  ],
+  "explanationIssues": [
+    "해설 첫 문장이 주격보어 a way를 '주어 play를 수식하는 명사구'로 오기술 — 보어와 수식어의 관계 혼동(major)",
+    "keyPoints (C)의 '완결된 절을 수식하기 위한 전치사+관계대명사 전환'은 수식 방향 오기술 — 관계절이 선행사 a way를 수식하는 것이지 관계사가 절을 수식하지 않음(minor)",
+    "핵심 판정 논리 자체(절의 완전성 → in which 필요, 교정 시 원문 복원)와 오답 해설 4건(A/B/D/E)은 모두 실제 구조와 일치하며 정확함"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1/V2/V3/V5는 깨끗하다: 렌더 지문은 의도된 in which→which 단일 변형 외 원지문과 완전 일치하고, 독립 검증 결과 (C)만 유일 오류이며(뒤 절 완전 → gap 없는 which 불가), 필드 동기화도 모순 없다. 치명 결함은 V4: 학생 노출 해설의 도입부가 주격보어 a way를 주어의 수식어로 오기술하며 keyPoints에도 같은 '수식' 오용이 반복된다 — 핵심 판정 논리는 정확하나 루브릭 V4의 '용어 오류 없음' 요건 위반(보수 판정). KILLER 조건 미충족: (1) 밑줄별 why-tempting 근거가 문서화돼 있지 않고(§C 3항), (2) 정답 포인트 'way which'는 극도로 드릴된 정전 포인트라 숙련 학생이 즉시 패턴매칭하며, (3) 디코이 (B)(D)(E)가 얕아 정답 은폐력이 없다. 지문 자체도 널리 알려진 교과서/기출계 지문이라 노출 위험이 있다. C5=0(KILLER 요청 대비 B1~B2 수준의 표준 문항). 최소대립쌍·명확한 문법 판단·디코이 상호 간섭 없음 등 §C 1·2·5항은 충족하므로, 해설 도입부 1문장 교정 + 난이도 재설계(또는 라벨 하향) 시 B등급 표준 문항으로는 재활용 가능하다."
+}

@@ -1,0 +1,74 @@
+{
+  "pid": "P007",
+  "validity": {
+    "V1": true,
+    "V2": false,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V2-DUAL-ANSWER",
+      "severity": "critical",
+      "evidence": "빈칸 프레임이 'this need not be interpreted as _____'로 stem 자체에 부정(need not)이 들어 있다. ② 'proof that animals never react to any pronounced rhythm'를 삽입하면 '발장단이 인간 특유의 기술이라는 사실이, 동물이 뚜렷한 리듬에 전혀 반응하지 않는다는 증거로 해석될 필요는 없다'가 되어 2문장('it is wrong to claim that animals are incapable of responding to pronounced rhythms')의 논지와 정확히 정합하는 참인 문장이 완성된다. 설계 의도였던 극성 반전 미끼가 stem의 부정에 의해 재반전(이중부정)되어 방어 가능한 복수 정답이 된다. ①이 원문 span('the decisive capacity involved in musical response')의 환언이자 후속 문장('My dogs in fact responded to other musical features' — 비리듬 자극)과의 응집성에서 우세하므로 '가장 적절한' 판정은 가능하나, ②가 지문상 참인 정합문을 만들어 유일성이 결정적으로 확보되지 않는다. 이의신청 방어 불가 수준."
+    },
+    {
+      "code": "V4-EXPLANATION-MISANALYSIS",
+      "severity": "critical",
+      "evidence": "해설과 오답해설이 ②를 '동물 반응을 전면 부정하는 극성 반전', '전면 부정은 정반대이다'로 설명하지만, 이는 선지 텍스트를 고립 평가한 것이다. 'need not be interpreted as' 부정 프레임 안에 넣으면 ②는 본문과 정반대가 아니라 오히려 본문 논지와 일치하는 문장이 된다. 오답 사유로 제시된 논리 자체가 실제 완성문의 논리와 불일치하는 인과 오설명."
+    },
+    {
+      "code": "V4-OPTION3-MISCHARACTERIZATION",
+      "severity": "minor",
+      "evidence": "③의 오답해설은 '개 일화로 한정하는 과협소'로 설명하나, 실제 결함은 지시 모순이다. this가 가리키는 것은 '발장단이 인간 특유의 기술이라는 사실'이므로 이를 '비인간 동물 중 개에게만 고유한 특성'으로 해석한다는 것은 본문의 'a particularly human skill'과 직접 충돌하는 참조 부조리이지 단순한 범위 축소가 아니다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 1,
+    "C4": 2,
+    "C5": 2,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — 원문 span 'the decisive capacity involved in musical response'의 의미 보존 환언('the defining skill that alone proves musical response')",
+      "temptingBecause": "해당 없음(선언된 정답). 'musical response'가 이후 담화의 상위 개념(사이렌·색소폰·콘서티나 등 비리듬 자극에 대한 반응)과 정확히 연결된다.",
+      "decisiveFlaw": "없음. 'My dogs in fact responded to other musical features'가 직접 근거로 기능하며 원문과 동일한 논리적 역할을 수행한다."
+    },
+    {
+      "label": "2",
+      "intent": "극성 반전 미끼(2문장의 반박 대상 명제를 재활용)로 설계됨",
+      "temptingBecause": "'pronounced rhythm'이 본문 2문장과 축자 일치하고, 회의론자가 '발장단 부재 → 리듬 지각 불가'로 추론할 법한 명제를 담아 담화 기능상 자연스러운 양보-반박 교량이 된다.",
+      "decisiveFlaw": "결함 있음(설계 실패): 'need not be interpreted as X' 프레임에서 X가 본문이 이미 기각한 명제이므로 완성문 전체는 본문과 정합하는 참 문장이 된다. 결정적 결함이 존재하지 않아 복수 정답 위험을 만든다. ① 대비 열세 근거는 후속 'in fact' 문장이 비리듬 자극(사이렌·색소폰)을 들어 '음악 반응'의 넓은 개념을 지지한다는 응집성 차이뿐이다."
+    },
+    {
+      "label": "3",
+      "intent": "행위자 전환(actor swap) — 인간 특유 기술을 개 고유 특성으로 치환",
+      "temptingBecause": "본문의 실증 사례가 전부 개(장신구·사이렌·색소폰·콘서티나)여서 '개'라는 표면 소재와 겹친다.",
+      "decisiveFlaw": "삽입 시 '인간 특유의 기술(a particularly human skill)'을 '개에게만 고유한 특성'으로 해석할 필요가 없다는 무의미한 문장이 된다. 참조 부조리로 즉시 소거되어 변별 기여가 거의 없다."
+    },
+    {
+      "label": "4",
+      "intent": "지엽 소재 연상(detail lure) — 다윈의 concertina 일화에서 'out of tune' 차용",
+      "temptingBecause": "'out of tune'이 마지막 문장과 축자 일치하여 표면 스캔 독자를 노린다.",
+      "decisiveFlaw": "발장단의 인간 특유성과 악기 조율 상태 사이에 어떤 해석 관계도 성립하지 않아 삽입 즉시 부조리. 즉시 소거되는 필러에 가깝다."
+    },
+    {
+      "label": "5",
+      "intent": "표면 반복/순환(surface repetition) — stem 어휘를 그대로 재기술",
+      "temptingBecause": "'marking external rhythm', 'tapping'이 빈칸 문장 전반부와 축자 일치하여 어휘 매칭 전략을 유인한다.",
+      "decisiveFlaw": "'발 두드리기가 발 두드리기에 의한 리듬 표시의 유일한 형태로 해석될 필요는 없다'는 자기지시적 공문(空文)이 되어 음악 반응 능력에 대한 판단을 전혀 담지 못한다. 순환성으로 소거."
+    }
+  ],
+  "explanationIssues": [
+    "②에 대한 오답 사유('전면 부정은 정반대')가 'need not' 부정 프레임을 무시한 고립 평가로, 실제 완성문은 본문과 정합한다 — 해설의 핵심 논리 오류이자 본 문항 V2 결함의 근원",
+    "③을 '과협소'로 설명하나 실제 결함은 '인간 특유 기술 vs 개 고유 특성'의 참조 모순이다 — 결함 유형 오분류(경미)"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1/V3/V5 통과: 렌더 지문은 의도된 span 제거 외에 원지문과 축자 일치하고, 다섯 선지 모두 'interpreted as ___'의 NP 슬롯에 문법적으로 삽입되며, 라벨·해설·keyPoints 동기화에 모순이 없다. 치명 결함은 설계 층위에 있다: stem에 부정('need not')이 포함된 빈칸에서 '본문이 기각한 명제'를 극성 반전 미끼(②)로 쓰면 이중부정에 의해 완성문이 본문 정합문이 된다. 그 결과 실질 경쟁은 ①/② 둘뿐인데 그 경쟁이 설계된 변별이 아니라 결함이고, ③④⑤는 삽입 즉시 부조리로 소거되는 저변별 선지다(C3=1). 해설은 문체·구조는 우아하나 ②의 오답 사유가 논리적으로 틀려 C6=1. 요청 난이도 INTERMEDIATE 대비 실난이도는 '3개 즉시 소거 + 1개 유사정답'으로 왜곡(C5=2). 수리 방향: ②를 'need not' 프레임 안에서도 거짓이 되는 명제(예: scope shift·half-truth 계열, '동물의 모든 음악 반응이 리듬 지각에 기인한다는 증거' 류)로 교체하고 ③④⑤ 중 최소 2개를 삽입 가능하되 담화 응집에서 갈리는 선지로 재설계해야 한다. KILLER 아님(killerConditionsMet=false)."
+}

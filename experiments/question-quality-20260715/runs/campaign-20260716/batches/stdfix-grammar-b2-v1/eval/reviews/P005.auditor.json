@@ -1,0 +1,81 @@
+{
+  "pid": "P005",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-EXPLANATION-POSITION-MISMATCH",
+      "severity": "major",
+      "evidence": "정답 해설의 '표면에서 바로 앞의 전치사 of upholding과 헷갈려 동명사의 나열로 착각하기 쉬운 자리'는 실제 문장 구조와 불일치한다. 렌더 문장에서 'of upholding them'은 밑줄 (D) exploring의 '바로 앞'이 아니라 뒤(exploring의 목적어 NP 'the significant personal and professional costs of upholding them' 내부)에 온다. exploring 바로 앞에 오는 것은 'name the masks,'이다. 학생이 해설대로 밑줄 바로 앞을 보면 전치사구가 없어 해설의 구조 기술이 사실과 어긋난다. 또한 'of upholding'을 통째로 '전치사'라 부른 것도 부정확하다(전치사 of + 동명사 upholding)."
+    },
+    {
+      "code": "V4-EXPLANATION-GARBLED-TERM",
+      "severity": "major",
+      "evidence": "정답 해설의 '밑줄 부분은 동사 동명사/현재분사인 exploring이 될 수 없는 자리' — '동사 동명사'는 손상된 용어다. '동사의 동명사/현재분사형' 정도가 의도로 추정되나 학생 노출 텍스트에 파손 문구가 그대로 남았다."
+    },
+    {
+      "code": "STYLE-REGISTER-MIX",
+      "severity": "minor",
+      "evidence": "정답 해설 첫 문장은 해라체('고쳐야 한다'), 이후는 합쇼체('이루고 있습니다')로 문체가 섞여 있다."
+    },
+    {
+      "code": "FIELD-SURROUNDINGTEXT-SOURCE-FORM",
+      "severity": "minor",
+      "evidence": "markedExpressions의 (D)·(E) surroundingText가 렌더형 'exploring'이 아닌 교정형 'explore'를 인용한다('were to actually name the masks, explore the significant...'). 렌더 지문과의 문자열 매칭이 깨지는 내부 필드 불일치이나 학생 노출 필드는 아니어서 V5 실패로는 판정하지 않음."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 2,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "no matter how + 부사/형용사 선택 — 양보 부사절 내 전치(fronting)된 수식어의 품사 판단",
+      "temptingBecause": "how 뒤 위치가 형용사 자리로 보일 수 있고, well이 believe에 걸리는지 disguising에 걸리는지 구조 파악이 필요하다",
+      "decisiveFlaw": "정답이 될 수 없음: well은 내포절 'you are disguising yourself (well)'에서 동사구를 수식하는 부사로 no matter how와 함께 전치된 올바른 형태. 문법적으로 흠이 없다."
+    },
+    {
+      "label": "(B)",
+      "intent": "be concerned that + 완전절 — 접속사 that vs 관계대명사/what 판별",
+      "temptingBecause": "that 뒤 절이 길고 동명사 주어(dropping their masks)로 시작해 완전/불완전 판정에 실제 독해가 필요하다",
+      "decisiveFlaw": "정답이 될 수 없음: that 뒤는 주어(dropping their masks)+동사(would make)+목적어+목적보어를 갖춘 완전한 절로, 형용사 concerned의 보문을 이끄는 접속사 that이 정확하다."
+    },
+    {
+      "label": "(C)",
+      "intent": "결과를 나타내는 분사구문 — 현재분사(능동) vs 과거분사(수동) 판단",
+      "temptingBecause": "콤마 뒤 -ing이라는 표면 형태가 정답 (D)의 -ing과 같은 모양이어서 -ing 계열 판단을 한 번 더 요구한다",
+      "decisiveFlaw": "정답이 될 수 없음: 주절 내용(문화 조성)이 의미상 주어가 되어 능동적으로 snowball effect를 만들어내는 연속 결과 분사구문이므로 creating이 올바르다."
+    },
+    {
+      "label": "(D)",
+      "intent": "주격 보어 to부정사구 내부의 3항 병렬(to name, explore, and ask) — 공유된 to 아래 동사원형 병렬 판단 (선언된 정답)",
+      "temptingBecause": "첫 항 to name과 멀리 떨어져 있고, 목적어 NP 안의 동명사 upholding 등 주변에 -ing형이 밀집해 있어 동명사 나열로 착각하기 쉽다",
+      "decisiveFlaw": "어법 오류로 정답: 셋째 항이 동사원형 ask(and ask the CEOs)이므로 세 항은 공유된 to 아래 원형 병렬(name / explore / ask)일 수밖에 없고, 둘째 항만 exploring이면 병렬이 파손된다. explore로 교정하면 정확히 원지문이 된다. 'exploring...'을 삽입 분사구로 보는 대안 해석은 'Some of the ways(방식들)'가 세 가지 조치를 열거하는 문맥과 의미상 양립하지 않아 배제된다."
+    },
+    {
+      "label": "(E)",
+      "intent": "대명사 수일치 — them vs it, 선행사 확정",
+      "temptingBecause": "upholding의 목적어로서 선행사 후보(the masks / the costs / the CEOs)가 여럿이라 지시 대상 확인이 필요하다",
+      "decisiveFlaw": "정답이 될 수 없음: 문맥상 '유지하는' 대상은 복수 명사 the masks이므로 복수 대명사 them이 정확하다."
+    }
+  ],
+  "explanationIssues": [
+    "정답 해설의 오도 위치 기술: 'of upholding'이 밑줄 바로 앞에 있다고 서술하나 실제로는 밑줄 뒤 목적어 NP 내부에 있다(구조 분석-실문장 불일치, V4 실패 근거 1).",
+    "손상 용어 '동사 동명사/현재분사인'이 학생 노출 해설에 잔존(V4 실패 근거 2).",
+    "해라체/합쇼체 혼용(minor).",
+    "오답 해설 4건((A)(B)(C)(E))은 '왜 옳은가'만 있고 '왜 매력적인가(why tempting)'가 없다 — KILLER 조건 §C-3 미충족."
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1: 기계 diff로 원지문 대비 유일한 변경이 explore→exploring(의도된 변형)임을 확인, 마커 5개가 선지 라벨·표기와 정확히 일치. V2: 5개 밑줄을 독립 검증한 결과 (D)만 비문이고 나머지는 모두 정문 — 단일 정답 성립(blind solve = (D), confidence high). V3: 교정문(=원지문)·발문 모두 문법적. V4 실패: 정답 해설의 함정 설명이 실제 문장 위치와 어긋나고('바로 앞의 전치사 of upholding'), 파손 용어('동사 동명사')가 남아 있음 — 핵심 병렬 분석 자체는 정확하나 학생 노출 구조 기술의 사실성 결함으로 보수적으로 false 판정. V5: 정답 라벨·선지·해설 키·keyPoints 상호 모순 없음(내부 필드 surroundingText의 교정형 인용은 minor로 기록). KILLER 판정: §C 조건 중 (1)최소대립쌍·원문 복원 충족, (4)구조 독해 필요 충족, (5)동일 포인트 쉬운 디코이 없음 충족이나, (3)각 밑줄의 why-tempting 부재로 미충족, (2)도 삽입 분사구 대안 해석이 의미론으로만 배제되는 점에서 경계선. 난이도 실감도 병렬 파손이라는 고빈도 훈련 포인트라 KILLER보다는 중상 수준(C5=2). 해설 결함 2건만 수정하면 B~A 수준으로 회복 가능한 문항."
+}

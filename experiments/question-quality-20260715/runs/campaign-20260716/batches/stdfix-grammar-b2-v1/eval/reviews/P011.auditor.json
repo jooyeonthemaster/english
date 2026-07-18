@@ -1,0 +1,77 @@
+{
+  "pid": "P011",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V2-minor-attachment-ambiguity",
+      "severity": "minor",
+      "evidence": "(C) 'skills like walking, running, and jumping that is necessary' — 관계사절이 최근접 동명사 jumping에만 붙는 저부착(low attachment) 해석이 통사적으로는 가능하나, 'walking/running도 일상생활에 필요하다'는 의미 맥락과 'physical abilities — skills like ...' 동격 구조가 고부착(skills)을 강제하므로 정답 유일성은 유지됨. 수능 관행상 확립된 판정이라 V2 실패로 보지 않음."
+    },
+    {
+      "code": "V4-minor-terminology",
+      "severity": "minor",
+      "evidence": "해설의 '바로 앞의 단수 명사 jumping' — jumping은 동명사(단수 취급 명사 상당어구)이므로 '단수 명사'는 다소 느슨한 용어이나 오분석은 아님(단수 취급 자체는 사실)."
+    },
+    {
+      "code": "V5-note-keypoints-subset",
+      "severity": "minor",
+      "evidence": "keyPoints가 (C)(D)(A) 3개 밑줄만 다룸((B)(E) 누락). 필수 필드 결손은 아니며 정답·해설과 모순 없음."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "전치사 of의 목적어로 쓰인 동명사 병렬(learning and practicing) 판단",
+      "temptingBecause": "and 뒤 형태를 동사원형 practice나 to practice로 바꿔야 한다고 착각할 수 있고, 뒤따르는 목적어(skills and behaviors)가 길어 병렬 축이 흐려짐",
+      "decisiveFlaw": "오답이 될 수 없음 — of의 목적어 learning과 등위 병렬인 동명사로 원문 그대로이며 완전히 문법적"
+    },
+    {
+      "label": "(B)",
+      "intent": "전치사+관계대명사(in which) 뒤 완전한 절 판단",
+      "temptingBecause": "which 단독·where와의 구별, learn about의 about 때문에 전치사가 중복된다고 착각할 수 있음",
+      "decisiveFlaw": "오답이 될 수 없음 — 선행사 a way를 받는 in which 뒤에 완전한 절(children learn about the world and their place in it)이 이어지므로 적법"
+    },
+    {
+      "label": "(C)",
+      "intent": "정답 — 관계사절 동사와 선행사의 수일치(고부착 복수 선행사 skills vs 근접 단수 동명사 jumping)",
+      "temptingBecause": "밑줄 직전의 jumping이 단수 취급 동명사라 is가 맞아 보이는 근접 유인(proximity bait)",
+      "decisiveFlaw": "선행사는 등위 나열 전체를 아우르는 복수 핵명사 skills이므로 is는 수일치 위반 — are로 교정하면 정확히 원문이 됨(source-correct → displayed-wrong 최소대립쌍 성립)"
+    },
+    {
+      "label": "(D)",
+      "intent": "allow의 목적격보어 형태(allow + O + to부정사) 판단",
+      "temptingBecause": "let/make 등 사역동사 계열과 혼동하여 원형부정사 try를 기대할 수 있고, try out and learn의 병렬이 시야를 흐림",
+      "decisiveFlaw": "오답이 될 수 없음 — allow는 to부정사 목적격보어를 취하므로 to try가 정확함"
+    },
+    {
+      "label": "(E)",
+      "intent": "주격 관계대명사 that 뒤 주어 결여 절 판단",
+      "temptingBecause": "선행사(values and personality traits)가 병렬 명사구라 멀게 느껴지고, 접속사 that(완전절)과의 구별을 요구함",
+      "decisiveFlaw": "오답이 될 수 없음 — 뒤에 동사구 will be가 바로 이어지는 주어 결여 절이므로 주격 관계대명사 that이 적법"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "loose-terminology",
+      "severity": "minor",
+      "evidence": "정답 해설에서 동명사 jumping을 '단수 명사'로 지칭 — 오분석은 아니나 '단수 취급되는 동명사'가 정확한 표현"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 렌더 지문은 의도된 변형(are→is) 외 원지문과 완전 일치하고, 5개 밑줄 독립 검증 결과 정답은 (C) 유일하며, 해설·오답해설·markedExpressions·keyPoints 간 모순이 없다. 그러나 요청 난이도가 KILLER인데 실제 문항은 '동명사 나열 + that is/are' 근접 수일치라는 가장 정형화된 중하난도 포인트다. RUBRIC §C의 KILLER 조건 중 '정답이 단순 수일치로 즉시 드러나지 않아야 한다'를 정면으로 위반하며(훈련된 학생은 즉시 소거), 디코이들도 교과서 표준 판정이라 상위권 변별이 약하다(C3=2). 최소대립쌍·교정 시 원문 복원·5개 밑줄 각각의 point/tempting/why 존재·동일 포인트 디코이 부재 등 나머지 §C 조건은 충족하나, 핵심 조건 미충족으로 killerConditionsMet=false. C5=1(난이도 라벨 불일치)로 B 기준(C 최저 2)을 만족하지 못해 등급 C — 문항 자체는 표준(B1~B2) 난이도용으로는 출하 가능한 품질이므로, KILLER 슬롯이 아닌 표준 슬롯 재배정 또는 정답 포인트 재설계가 필요하다. 부수 지적: (B)와 (E)가 pointCode 'b'를 공유(관계대명사 계열 중복이나 전치사+관계대명사 vs 주격 that으로 하위 포인트는 구별됨), keyPoints가 3개 밑줄만 커버."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "J013",
+  "answer": "5",
+  "multipleDefensible": false,
+  "defensibleLabels": ["5"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "순간적 유혹: 모니터링 기술 발전 → 비용 절감 → '부담 감소'로 이어 읽고 싶어진다. 그러나 지문이 말한 비용 부담은 오염자의 세금 부담이 아니라 '연속 배출 측정'의 행정 비용이며, 후반부 'unknowingly encourage more emissions'는 2~4문장의 인센티브 논리(세금 회피 행동 = 배출 감축 행동)와 정면 충돌한다. 논리 역행."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "'overly complex monitoring mechanisms' 때문에 세금을 완전히 없앤다는 것은 'Nevertheless, the technologies ... have been developing rapidly'라는 역접 전환과 정반대. 지문은 모니터링이 점점 쉬워지고 있다고 말하므로 미래 전망으로 성립 불가."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "가장 강한 매력 오답. 'Continuous emissions measurement can be costly ... major disincentive'만 기억하고 Nevertheless 전환을 놓친 수험생은 '측정이 비싸니 정액제로 가자'로 끌린다. 그러나 마지막 두 문장의 흐름은 측정 기술 발전이 직접 과세의 장애물을 제거한다는 것이고, 'flat-rate regardless of pollution levels'는 저자가 'great attraction'이라 칭한 배출 비례 인센티브 구조를 파괴하므로 방향이 정반대."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "지문에서 세금은 잔여 배출(residual emissions)에 부과되며 감축(abatement)은 세금을 피하는 수단이다. 'taxes on abatement'는 지문 어디에도 근거 없는 개념 왜곡이고, 기술 투자를 저해한다는 결론도 기술 발전을 긍정적으로 서술한 지문 톤과 불일치."
+    },
+    {
+      "label": "5",
+      "verdict": "correct",
+      "reason": "수사 구조: 장점 제시 → 유일한 장애물(측정 비용, 'major disincentive to direct taxation') → Nevertheless + 모니터링 기술 급속 발전 → 미래 전망. 장애물이 사라지면 직접 배출 기반 과세를 '더 넓은 영역'(many separate sources, many pollution problems로 언급된 종전의 부적용 영역)으로 확대할 수 있다는 결론이 유일하게 자연스럽다. 'it may be possible to expand ...' 문법 결합도 매끄러움."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 마지막 문장만 보고 풀면 안 되고 Nevertheless 전환 파악이 관건. ③이 설계된 매력 오답으로 '측정 비용' 문장에 앵커된 수험생을 노리지만, 역접 이후 흐름을 읽으면 즉시 배제된다. ①은 전반부만 그럴듯하고 후반부가 자멸적. 정답 ⑤ 단독 옹호 가능, 복수 정답 소지 없음."
+}

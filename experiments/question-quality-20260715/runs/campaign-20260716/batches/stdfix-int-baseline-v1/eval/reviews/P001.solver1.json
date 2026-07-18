@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "'stick firmly to the set schedule regardless of changes'는 글의 주제(rigidity보다 flexibility 우선)와 정면 모순. 삽입 시 계획 변경을 'one of those inevitabilities'로 담담히 받아들이는 후행절과 논리가 끊긴다. 'schedule/changes' 어휘 반복으로 표면적 유혹만 있는 반주제 미끼."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "'priorities', 'work', 아이 언급 등 지문 키워드를 재활용해 실제로 끌리는 미끼였으나, 지문은 일과 가정 과업의 '엄격한 분리'를 주장한 적이 없고 'strictly divide' 자체가 rigidity의 일종이라 주제와 어긋난다. 결정적으로 후행절 'when it happens'의 it이 가리킬 선행 사건(계획 변경/차질)이 이 선지에는 없어 지시 결속이 붕괴한다."
+    },
+    {
+      "label": "③",
+      "verdict": "correct",
+      "reason": "삽입 시 'If you mentally prepare yourself for the certainty of disruption, then when it happens...'로 it = disruption의 지시가 깨끗하게 성립하고, 'certainty' ↔ 'those inevitabilities'가 정확히 호응한다. 직전 문장 'expect that a certain percentage of plans will change'의 충실한 패러프레이즈이자 flexibility 주제와 완전 일치. 문법 결합(seam)도 자연스럽다."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "'four-year-old'는 우선순위를 예시하는 국지적 사례일 뿐 글의 결론이 아니다. 예시를 과대평가한 독자를 노린 미끼. 삽입 시 'when it happens'의 it이 아이의 필요 충족을 가리키게 되어 'inevitabilities'와 의미 연결이 성립하지 않는다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "계획 실패를 원천 차단하는 'flawless system'은 '일정 비율의 계획은 반드시 변한다'는 지문의 전제와 정면 모순. 계획이 절대 실패하지 않는다면 'when it happens'가 성립할 수 없어 후행절과 논리적으로 양립 불가. 반주제 미끼."
+    }
+  ],
+  "note": "빈칸은 직전 문장 'expect that a certain percentage of plans will change'의 재진술 자리이며, 후행절의 anaphora(it happens / those inevitabilities)가 강한 장거리 단서로 작동해 ③만 유일하게 성립한다. 매력적 오답은 ②(키워드 재활용)와 ④(생생한 예시 과대평가)이나 둘 다 지시 결속 붕괴로 옹호 불가. ①⑤는 주제 반전형. 복수정답 여지 없음. 원전은 Richard Carlson 계열 자기계발서로 추정되나 블라인드 판정에는 영향 없음."
+  }

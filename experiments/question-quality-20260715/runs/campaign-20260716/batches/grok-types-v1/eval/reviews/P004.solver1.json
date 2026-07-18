@@ -1,0 +1,36 @@
+{
+  "pid": "P004",
+  "answer": "1",
+  "multipleDefensible": true,
+  "defensibleLabels": ["1", "2", "3", "4", "5"],
+  "confidence": "low",
+  "unsolvable": true,
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "판정불가",
+      "reason": "(A)-(C)-(B): 지문에 (A)/(B)/(C) 분절 표기가 전혀 없어 어떤 텍스트 구간이 어느 라벨에 대응하는지 알 수 없다. 선지를 검증할 근거 자체가 부재."
+    },
+    {
+      "label": "2",
+      "verdict": "판정불가",
+      "reason": "(B)-(A)-(C): 동일. 라벨-분절 매핑 결여로 검증 불가."
+    },
+    {
+      "label": "3",
+      "verdict": "판정불가",
+      "reason": "(B)-(C)-(A): 동일. 라벨-분절 매핑 결여로 검증 불가."
+    },
+    {
+      "label": "4",
+      "verdict": "판정불가",
+      "reason": "(C)-(A)-(B): 동일. 라벨-분절 매핑 결여로 검증 불가."
+    },
+    {
+      "label": "5",
+      "verdict": "판정불가",
+      "reason": "(C)-(B)-(A): 동일. 라벨-분절 매핑 결여로 검증 불가."
+    }
+  ],
+  "note": "구조적 결함으로 풀이 불가 문항. 발문은 수능 43번형 순서배열((A)(B)(C))을 묻지만 지문은 분절 표기 없는 단일 연속 단락으로만 제시되었다. 서사는 이미 완전한 시간순(쇼핑몰 대기·동기 제시 → 쇼핑/옷 구매 → 리허설(긴장·실수·Tom의 격려) → 본 공연(완벽한 연주·환호) → Jeff의 칭찬)으로 이어져 있다. 사건 순서 자체는 시간 단서('Maybe I'll wear these for tonight's rehearsal, too', 'As the rehearsal began', 'The band performance was the first event', 'After the show')로 명확히 재구성되지만, 어느 구간이 (A)/(B)/(C)인지 알 수 없어 다섯 선지 중 어느 것도 검증할 수 없다. 게다가 지문이 이미 올바른 순서라면 순차 라벨링 시 정답은 (A)-(B)-(C)가 되어야 하는데 그 선지가 존재하지 않는다 — 생성 과정에서 단락 스크램블·라벨링 단계가 누락된 것으로 보인다. answer='1'은 스키마상 필수 필드를 채우기 위한 임의 기입일 뿐 지문 근거가 전혀 없으며, 실질 판정은 unsolvable=true다. 매력적 오답 유혹 기록: 분절이 없으므로 오답 매력도 자체를 평가할 수 없음."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "전칭 명제 'Always Fails'가 지문과 모순. 지문은 이유를 덧붙인 논리적 조언을 'more helpful but not necessarily more believable'로 평가했다 — 즉 도움이 됨을 인정하고 믿음직함이 보장되지 않는다고 했을 뿐, 실패를 단언하지 않았다. 과잉 일반화 오답."
+    },
+    {
+      "label": "2",
+      "verdict": "accept",
+      "reason": "지문의 대조 구조(단순 진술/이유 제시 vs 이야기)와 결론을 완전 포섭. 'a story about a similar situation that he was in or that he heard about' = Real-Life Stories, 'take the advice offered by the story more to heart' = Buy-In, 'before we can begin to believe them ourselves' = Foster Belief. 제목의 모든 성분이 지문 명제에 대응하며 과장·축소 없음."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "고양이/개는 논지를 예증하는 소재일 뿐이며, 지문은 반려동물 간 실용적 차이를 평가하는 논증을 전혀 수행하지 않는다. 예시 소재를 주제로 격상시킨 전형적 함정."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "지문 명제의 정반대. 즉답 'A cat'은 지문에서 명시적으로 'useless advice'로 규정되며, 즉각적 답변이 신뢰를 구축한다는 주장을 지지하는 문장이 지문에 존재하지 않는다."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "초점 이탈. 지문은 이야기가 왜 설득력을 갖는가에 대한 기술적(descriptive) 논지이지, 창의적 스토리텔링 '기법을 개발'하라는 방법론적(how-to) 논지가 아니다. 또한 지문이 강조하는 것은 'creative'함이 아니라 실제 겪었거나 들은(real/heard-about) 유사 사례의 구체성이다. 매력적이지만 옹호 불가."
+    }
+  ],
+  "note": "제목 문항으로서 단일 정답이 명확하다. 논지 구조(진술→이유→이야기의 3단 대조)가 2번의 성분들과 일대일 대응한다. 5번이 최근접 오답이나 규범적 프레임('Developing ... Techniques')이 지문의 기술적 성격과 불일치. 1번은 'Always'라는 전칭 한정사가, 4번은 명시적 반대 진술이 각각 형식적 반증 근거가 된다. 대안 해석(예: 5번을 넓게 읽어 '이야기 활용 일반'으로 보는 독법)을 탐색했으나 '기법 개발'이라는 술어가 지문에 근거를 전혀 갖지 않아 기각."
+}

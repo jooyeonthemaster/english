@@ -1,0 +1,187 @@
+{
+  "batchId": "type-sweep-v1",
+  "phase": "grok-confirm",
+  "note": "미검증 상위 9유형 스윕(O183): flash(STANDARD) vs grok@high(PREMIUM) 동일 프레임 짝. 어휘(생산량 3위)·서술형 계열 첫 블라인드. 평가 전 패킷 렌더 커버리지 검증 필수(O179 교훈).",
+  "atKst": "2026-07-17T23:48:47.641+09:00",
+  "gitSha": "8d365701e339d7ad64bb1f808c76ec768e9855ee",
+  "gitDirty": true,
+  "worstCaseReserved": 63,
+  "spec": {
+    "batchId": "type-sweep-v1",
+    "phase": "grok-confirm",
+    "note": "미검증 상위 9유형 스윕(O183): flash(STANDARD) vs grok@high(PREMIUM) 동일 프레임 짝. 어휘(생산량 3위)·서술형 계열 첫 블라인드. 평가 전 패킷 렌더 커버리지 검증 필수(O179 교훈).",
+    "concurrency": 4,
+    "providerRouting": "none",
+    "env": {
+      "PREMIUM_QGEN_MODEL_ID": "x-ai/grok-4.5",
+      "GRAMMAR_PREMIUM_MODEL_ID": "x-ai/grok-4.5",
+      "EXPLANATION_VERIFY_MODEL_ID": "google/gemini-3.1-pro-preview",
+      "OPENROUTER_REASONING_EFFORT": "high",
+      "QGEN_RESEARCH_MAX_TOKENS_FLOOR": "20000"
+    },
+    "assignments": [
+      {
+        "itemId": "sw-f-vocab",
+        "frameId": "blank-supply-v2-119",
+        "subType": "VOCAB_CHOICE",
+        "difficulty": "INTERMEDIATE",
+        "plan": "STANDARD",
+        "armId": "SW-F-VOCAB",
+        "funnel": true
+      },
+      {
+        "itemId": "sw-g-vocab",
+        "frameId": "blank-supply-v2-119",
+        "subType": "VOCAB_CHOICE",
+        "difficulty": "INTERMEDIATE",
+        "plan": "PREMIUM",
+        "armId": "SW-G-VOCAB",
+        "funnel": true
+      },
+      {
+        "itemId": "sw-f-summa",
+        "frameId": "blank-supply-v2-120",
+        "subType": "SUMMARY_COMPLETE",
+        "difficulty": "INTERMEDIATE",
+        "plan": "STANDARD",
+        "armId": "SW-F-SUMMA",
+        "funnel": true
+      },
+      {
+        "itemId": "sw-g-summa",
+        "frameId": "blank-supply-v2-120",
+        "subType": "SUMMARY_COMPLETE",
+        "difficulty": "INTERMEDIATE",
+        "plan": "PREMIUM",
+        "armId": "SW-G-SUMMA",
+        "funnel": true
+      },
+      {
+        "itemId": "sw-f-main_",
+        "frameId": "blank-supply-v2-134",
+        "subType": "MAIN_IDEA",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "armId": "SW-F-MAIN_",
+        "funnel": true
+      },
+      {
+        "itemId": "sw-g-main_",
+        "frameId": "blank-supply-v2-134",
+        "subType": "MAIN_IDEA",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "SW-G-MAIN_",
+        "funnel": true
+      },
+      {
+        "itemId": "sw-f-fill_",
+        "frameId": "grammar-frame-v2-096",
+        "subType": "FILL_BLANK_KEY",
+        "difficulty": "INTERMEDIATE",
+        "plan": "STANDARD",
+        "armId": "SW-F-FILL_",
+        "funnel": true
+      },
+      {
+        "itemId": "sw-g-fill_",
+        "frameId": "grammar-frame-v2-096",
+        "subType": "FILL_BLANK_KEY",
+        "difficulty": "INTERMEDIATE",
+        "plan": "PREMIUM",
+        "armId": "SW-G-FILL_",
+        "funnel": true
+      },
+      {
+        "itemId": "sw-f-word_",
+        "frameId": "grammar-frame-v2-115",
+        "subType": "WORD_ORDER",
+        "difficulty": "INTERMEDIATE",
+        "plan": "STANDARD",
+        "armId": "SW-F-WORD_",
+        "funnel": true
+      },
+      {
+        "itemId": "sw-g-word_",
+        "frameId": "grammar-frame-v2-115",
+        "subType": "WORD_ORDER",
+        "difficulty": "INTERMEDIATE",
+        "plan": "PREMIUM",
+        "armId": "SW-G-WORD_",
+        "funnel": true
+      },
+      {
+        "itemId": "sw-f-condi",
+        "frameId": "grammar-frame-v2-133",
+        "subType": "CONDITIONAL_WRITING",
+        "difficulty": "INTERMEDIATE",
+        "plan": "STANDARD",
+        "armId": "SW-F-CONDI",
+        "funnel": true
+      },
+      {
+        "itemId": "sw-g-condi",
+        "frameId": "grammar-frame-v2-133",
+        "subType": "CONDITIONAL_WRITING",
+        "difficulty": "INTERMEDIATE",
+        "plan": "PREMIUM",
+        "armId": "SW-G-CONDI",
+        "funnel": true
+      },
+      {
+        "itemId": "sw-f-gramm",
+        "frameId": "grammar-frame-v2-134",
+        "subType": "GRAMMAR_CORRECTION",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "armId": "SW-F-GRAMM",
+        "funnel": true
+      },
+      {
+        "itemId": "sw-g-gramm",
+        "frameId": "grammar-frame-v2-134",
+        "subType": "GRAMMAR_CORRECTION",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "SW-G-GRAMM",
+        "funnel": true
+      },
+      {
+        "itemId": "sw-f-refer",
+        "frameId": "adhoc-prod-04",
+        "subType": "REFERENCE",
+        "difficulty": "INTERMEDIATE",
+        "plan": "STANDARD",
+        "armId": "SW-F-REFER",
+        "funnel": true
+      },
+      {
+        "itemId": "sw-g-refer",
+        "frameId": "adhoc-prod-04",
+        "subType": "REFERENCE",
+        "difficulty": "INTERMEDIATE",
+        "plan": "PREMIUM",
+        "armId": "SW-G-REFER",
+        "funnel": true
+      },
+      {
+        "itemId": "sw-f-conte",
+        "frameId": "blank-supply-v2-135",
+        "subType": "CONTEXT_MEANING",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "armId": "SW-F-CONTE",
+        "funnel": true
+      },
+      {
+        "itemId": "sw-g-conte",
+        "frameId": "blank-supply-v2-135",
+        "subType": "CONTEXT_MEANING",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "SW-G-CONTE",
+        "funnel": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "J008",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "분사구문. 의미상 주어 Garcia가 능동적으로 기다리는 주체이므로 현재분사 waiting이 옳다. 'stood ..., waiting for ...'는 동시동작 분사구문의 전형."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "help + 목적어 + (to) 원형부정사 구문. 'help him pick out'에서 원형 pick은 표준 용법이라 옳다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "look은 연결동사(linking verb)이므로 형용사 보어 great가 옳다. 부사 greatly로 바꾸려는 유혹이 있으나 보어 자리에는 형용사가 맞다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "'The clerk stopped her work and looked at the clothes, quickly agreed ...' — 병렬 시작점 확인: and가 이미 stopped와 looked 두 동사를 묶어 등위 접속을 종결했으므로, 콤마 뒤에 세 번째 정형동사 agreed가 접속사 없이 이어지면 comma splice/병렬 파괴다. 3항 나열('stopped, looked, and agreed')로 구제하려 해도 and의 위치(1·2항 사이)가 그 해석을 차단한다. the clothes를 선행사로 한 축약 관계절(과거분사 수식)로 보려는 대안도 agree가 자동사라 수동 분사 수식이 불가능하고 의미상 주어도 점원이므로 성립하지 않는다. 유일한 정문 형태는 동시동작 분사 agreeing. 따라서 어법상 틀림."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "everyone fell silent, fascinated by the music — 분사의 의미상 주어 everyone이 음악에 의해 매혹당하는 대상이므로 과거분사 fascinated + by 행위자구가 옳다. fascinating(능동, 매혹을 일으킴)으로 바꾸면 오히려 틀린다."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 매력적 오답 후보는 (E) fascinated(-ing/-ed 감정분사 판별)와 (C) great(형용사/부사 판별)였으나 둘 다 명백히 정문. (D)는 'and가 어디까지 묶는가'라는 장거리 병렬 단서를 확인하는 순간 결정되며, 대안 해석(3항 나열, 축약 관계절)을 적극 탐색해도 전부 무너져 유일 정답. 복수 정답 소지 없음."
+}

@@ -1,0 +1,32 @@
+{
+  "batchId": "stdfix-blank-funnel-v1",
+  "phase": "stdfix",
+  "atKst": "2026-07-17T18:05:55.311+09:00",
+  "assignments": 12,
+  "slotsConsumed": 25,
+  "accepted": 12,
+  "modelCalls": 43,
+  "inputTokens": 208343,
+  "outputTokens": 51208,
+  "costUsd": 0.808359,
+  "ledgerAfter": {
+    "used": 688,
+    "cap": 1000,
+    "costUsd": 25.531294
+  },
+  "byArm": {
+    "A-NEW": {
+      "n": 12,
+      "accepted": 12,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 25,
+      "costUsd": 0.808359
+    }
+  },
+  "models": {
+    "standard": "google/gemini-3.5-flash",
+    "premiumQgen": "google/gemini-3.1-pro-preview"
+  },
+  "durationMs": 176099
+}

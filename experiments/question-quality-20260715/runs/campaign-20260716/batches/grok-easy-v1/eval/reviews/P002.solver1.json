@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "4",
+  "multipleDefensible": false,
+  "defensibleLabels": ["4"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "'a laboratory observation'은 지문 마지막 문장 'What happens in somebody's laboratory is only one stage in its construction'과 정면 충돌한다. 실험실에서 일어나는 일은 진리 구성의 한 단계일 뿐이며, 과학적 진리는 이미 실험실 관찰에서 출발하므로 '실험실 관찰이 되어야 standing을 얻는다'는 논리는 역방향이다."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "'an individual inspiration'은 지문 서두에서 제시된 뒤 반박되는 개인주의적 수사('inspired patience', 'skilled hands and an inquiring but unbiased mind')의 핵심 어휘를 재활용한 안티테제 선지다. 지문은 개인 차원의 발견만으로는 지식이 성립하지 않는다고 주장한다."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "가장 매력적인 오답. 기자회견(press conference) 문장 때문에 'publicity'가 표면적으로 끌리고, 'standing'을 대중적 가시성으로 오독하면 유혹된다. 그러나 지문은 전문가 검토 없이 발표하는 자를 'publicity seeker'로 비난(castigated)한다고 명시하므로, 홍보 캠페인은 standing의 원천이 아니라 오히려 규범 위반이다. 표면 어휘 재사용형 함정."
+    },
+    {
+      "label": "4",
+      "verdict": "correct",
+      "reason": "'a collective product'를 빈칸에 넣으면 'knowledge isn't knowledge unless it has been authorized by disciplinary specialists'(집단적 승인)와 'only one stage in its construction'(단계적으로 구성되는 산물)이 모두 정합적으로 연결된다. 개인주의 수사를 반박하고 과학적 진리의 집단적 구성이라는 지문 전체 논지를 정확히 요약한다. 문법 결합도 자연스럽다."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "'an unbiased impression'의 'unbiased'는 반박 대상인 개인주의 수사('inquiring but unbiased mind')에서 가져온 표면 어휘다. 또한 지문은 'nature does not speak unambiguously'라 하여 어떤 인상도 자기검증적이지 않다고 보므로, 편견 없는 인상이 standing의 조건이라는 해석은 지문 논지와 배치된다."
+    }
+  ],
+  "note": "최상위권 실전 풀이 렌즈: 역접·규범 문장('The norms... presuppose', 'authorized by disciplinary specialists')과 마지막 문장의 'construction'이 결정적 장거리 단서. 오답 ③이 press conference 문장의 'publicity'를 재활용한 유일하게 실질적인 미끼이며, 나머지는 반박된 개인주의 프레임의 어휘 재활용이라 상위권에게는 소거가 빠르다. 대안 해석으로 다른 선지를 정문화할 여지는 없음. 단독 정답 ④, 난이도는 빈칸 유형 중 평이~중."
+}

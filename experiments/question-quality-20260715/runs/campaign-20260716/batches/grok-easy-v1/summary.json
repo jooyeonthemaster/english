@@ -1,0 +1,56 @@
+{
+  "batchId": "grok-easy-v1",
+  "phase": "grok2",
+  "atKst": "2026-07-17T20:08:19.259+09:00",
+  "assignments": 8,
+  "slotsConsumed": 11,
+  "accepted": 8,
+  "modelCalls": 33,
+  "inputTokens": 51331,
+  "outputTokens": 13161,
+  "costUsd": 0.220445,
+  "ledgerAfter": {
+    "used": 903,
+    "cap": 1000,
+    "costUsd": 31.448273
+  },
+  "byArm": {
+    "EZ-G-BAS": {
+      "n": 2,
+      "accepted": 2,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 3,
+      "costUsd": 0.048722
+    },
+    "EZ-B-INT": {
+      "n": 2,
+      "accepted": 2,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 2,
+      "costUsd": 0.068478
+    },
+    "EZ-G-INT": {
+      "n": 2,
+      "accepted": 2,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 4,
+      "costUsd": 0.051509
+    },
+    "EZ-B-BAS": {
+      "n": 2,
+      "accepted": 2,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 2,
+      "costUsd": 0.051736
+    }
+  },
+  "models": {
+    "standard": "google/gemini-3.5-flash",
+    "premiumQgen": "x-ai/grok-4.5"
+  },
+  "durationMs": 150985
+}

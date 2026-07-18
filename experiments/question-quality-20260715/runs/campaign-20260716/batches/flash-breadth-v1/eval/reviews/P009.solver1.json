@@ -1,0 +1,35 @@
+{
+  "pid": "P009",
+  "answer": "4",
+  "multipleDefensible": false,
+  "defensibleLabels": ["4"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "consistent",
+      "reason": "지문의 'make a conscious effort to stay in touch'와 'let the relationship get stuck due to a lack of follow-up'를 그대로 재진술. 방치(neglect)로 관계가 시들게 두지 말고 의식적 노력으로 연락을 유지하라는 지문 핵심과 정확히 일치한다."
+    },
+    {
+      "label": "2",
+      "verdict": "consistent",
+      "reason": "지문의 'This doesn't mean constantly reaching out with requests or updates but rather maintaining a friendly and consistent line of communication'를 '더 중요하다(more important)'는 비교로 바꾼 재진술. 지문이 명시적 우열 비교문을 쓰지는 않았으나 not A but rather B 구조는 B에 대한 명백한 선호를 담고 있어, 요청/업데이트 남발보다 친근하고 일관된 소통이 관계 유지에 중요하다는 진술은 지문 취지와 부합한다. 최상위권 관점에서 '지문은 중요도 비교를 안 했다'는 트집이 가능해 잠깐 끌리는 선지이지만, 4번의 직접 모순에 비하면 유혹 강도가 약해 정답으로 옹호하기 어렵다."
+    },
+    {
+      "label": "3",
+      "verdict": "consistent",
+      "reason": "지문은 'A simple message to check in or share something of value can go a long way'라고 하여 (a) 단순 안부 확인 메시지와 (b) 가치 있는 것 공유, 두 가지 모두를 관계 강화 수단으로 제시한다. (a) 안부 메시지는 '즉각적 관심 정보'를 담지 않아도 효과적이므로 'even if it does not contain information of immediate interest'는 지문과 일치한다. 예시 문장이 '관심 가질 만한 자료 공유'를 강조해서 잠깐 헷갈릴 수 있으나, 그것은 or로 병렬된 다른 갈래일 뿐이다."
+    },
+    {
+      "label": "4",
+      "verdict": "inconsistent",
+      "reason": "지문은 'share it with them, even if you haven't spoken in a while'이라고 하여 한동안 연락하지 않았더라도 공유하라고 명시한다. '아주 최근에 대화한 경우에만(only if you have spoken to them very recently) 공유해야 한다'는 이 선지는 지문의 even if 절과 정면으로 모순된다. 명백한 정답."
+    },
+    {
+      "label": "5",
+      "verdict": "consistent",
+      "reason": "지문 마지막 문장 'This shows that you're thinking of them and are invested in maintaining the relationship'의 직접 재진술. 흥미로운 기사 공유가 관계 유지에 대한 투자(invested)를 보여준다는 내용 그대로다."
+    }
+  ],
+  "note": "실전 풀이: even if you haven't spoken in a while 이라는 장거리 단서가 4번의 'only if ... very recently'와 극성 반전으로 정확히 충돌하여 정답이 즉시 확정된다. 매력적 오답 후보는 2번(지문의 not A but rather B 구조를 '중요도 비교'로 격상한 재진술 — '지문에 비교급 진술이 없다'는 트집이 가능)이지만, not-but-rather 구문의 함의로 충분히 옹호되므로 일치로 판정. 3번도 예시(관심 자료 공유)에만 눈이 가면 흔들릴 수 있으나 'check in or share' 병렬이 안부 메시지 단독의 효과를 보증한다. 복수 정답 여지 없음."
+}

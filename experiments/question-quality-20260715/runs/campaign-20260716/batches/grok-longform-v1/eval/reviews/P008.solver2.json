@@ -1,0 +1,35 @@
+{
+  "pid": "P008",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "Seam is clean: 'the actions ... are steps that ...' equates like categories (actions = steps), and 'the same abatement goals [that] the levy is designed to serve' is a well-formed zero relative (serve + goals). Logically it states the core attraction: any action that reduces tax liability under an emissions-measured tax is necessarily an emission-reducing action, so private tax minimization coincides with the policy's environmental objective — exactly what sentence 1 ('precisely targeted to the policy's environmental objectives') and sentence 3 (incentive to abate wherever unit abatement cost < unit tax) set up."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "Logical failure: expanding continuous monitoring of waste discharges is an administrative/measurement cost borne by the scheme (discussed in the following sentence as a DISincentive), not an action a polluter takes to reduce its own tax liability. A firm investing in monitoring does not lower its emissions or its tax bill. Pure lexical-echo distractor recycling 'continuous' and 'waste discharges' from later sentences."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "Internally contradictory predication: 'actions the polluter can take to REDUCE tax liability are payments that RISE in proportion when residual emissions increase.' Payments that rise are the consequence of polluting more, not an action that reduces liability; equating liability-reducing actions with rising payments is a category clash and a logical inversion of the intended mechanism."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "Logical failure: making emissions easier to measure at many separate sources addresses the regulator's measurement-cost problem, not the polluter's tax bill. Measurability reforms do not reduce a firm's liability under a per-unit emissions tax, so they cannot be the 'actions the polluter can take to reduce tax liability.' Echo distractor recycling 'many separate sources.'"
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Two failures. (a) Category clash: 'the actions the polluter can take ... are duties that force firms' — actions available to a polluter cannot be duties imposed on firms. (b) Content contradiction: 'every possible cut in residual pollution' contradicts sentence 3, which says the incentive applies only to abatement that is LESS COSTLY per unit than the tax; an emissions tax deliberately does not force every possible cut, it induces only cost-effective cuts."
+    }
+  ],
+  "note": "Blind solve, grammarian/logician lens. The blank asks for the 'great attraction' of taxing measured emissions: the set of tax-liability-reducing actions coincides exactly with emission-reducing actions, aligning private incentives with the policy objective. Only option 1 expresses this; options 2 and 4 are measurement-side echo distractors, 3 is self-contradictory, 5 both clashes categorically and overstates the tax's force against the explicit cost-per-unit condition. No alternative parsing (reduced relative, inversion, etc.) rescues any wrong option. Single defensible answer: 1."
+}

@@ -1,0 +1,81 @@
+{
+  "pid": "P002",
+  "type": "SENTENCE_INSERT",
+  "requestedDifficulty": "KILLER",
+  "blindAnswer": "④",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4",
+      "severity": "critical",
+      "evidence": "해설이 주어진 문장의 this가 '직전 basing the tax directly on measured emissions의 매력 논증을 전제로 하는 직접 측정·과세 전체'를 받는다고 주장하나, 실제 this의 선행사는 같은 문장 첫 절의 문장 내 지시 대상(Continuous emissions measurement can be costly = 연속 측정의 비용 부담)이다. this가 '직접 측정·과세'를 받는다면 'direct taxation may be a major disincentive to direct taxation'이라는 순환 비문이 되어 불가능하다. this는 disincentive의 대상(to direct taxation)과 별개이며, 앞 문장에 선행사를 요구하지 않는 자기완결적 anaphora다. 존재하지 않는 선행사 지목에 해당."
+    },
+    {
+      "code": "V4",
+      "severity": "major",
+      "evidence": "keyPoints[0] 'this·disincentive 같은 지시·평가어의 선행사는 정답 직전 문장의 긍정 논증 전체에서만 안정적으로 구해진다'가 동일한 선행사 오분석을 반복하고, 명사 disincentive는 지시어가 아니어서 '선행사'를 갖지 않으므로 용어 오용이다. 실제 전방 단서는 this의 지시가 아니라 소재 연결(measured emissions 과세 ↔ Continuous emissions measurement)과 후행 Nevertheless의 역접 요구다."
+    },
+    {
+      "code": "V4",
+      "severity": "major",
+      "evidence": "오답 해설 1의 'this의 선행(직접 측정에 기반한 과세)도 아직 충분히 수립되지 않았다'가 같은 허위 전제(문장 외부 선행사) 위에 서 있다. ① 탈락의 실제 결정적 근거는 S2→S3 'thus' 인과 사슬 단절과 Nevertheless 고립이지 this의 선행사 미수립이 아니다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "도입(정밀 과세 원리) 직후에 성급하게 단점을 삽입하게 유도",
+      "temptingBecause": "emissions·tax 키워드가 앞뒤로 연속되고, 원리 제시 직후 한계 제시가 일반적 전개처럼 보인다",
+      "decisiveFlaw": "S2(비례 과세)→S3(thus 유인) 인과 사슬이 시작되기 전에 단점이 끼어 전개가 역전되고, 무엇보다 S6 Nevertheless가 긍정 문장 S4 직후에 남아 역접이 성립하지 않는다"
+    },
+    {
+      "label": "②",
+      "intent": "인과 사슬 중간 절단 오독 유도",
+      "temptingBecause": "비용 이야기가 오염자 유인·비용 논의와 소재상 연속으로 보인다",
+      "decisiveFlaw": "S3의 thus는 S2의 비례 과세 논거를 직접 받아야 하므로 삽입 시 thus의 근거가 단절되며, Nevertheless 고립 문제도 그대로 남는다"
+    },
+    {
+      "label": "③",
+      "intent": "가장 매력적 오답 — 논증 일단락처럼 보이는 지점에 단점 전환 삽입 유도",
+      "temptingBecause": "S3까지 유인 논증이 일단락된 듯 보여 여기서 단점으로 전환해도 될 것처럼 읽힌다",
+      "decisiveFlaw": "직후 S4 'The great attraction...'이 아무 역접 표지 없이 단점 뒤에 이어져 긍정 결론이 단절되고, S6 Nevertheless가 여전히 긍정 S4 뒤에 고립된다"
+    },
+    {
+      "label": "④",
+      "intent": "정답 — 장점 논증(S4)이 매듭된 뒤·역접(S6 Nevertheless) 앞",
+      "temptingBecause": "정답",
+      "decisiveFlaw": "없음. Nevertheless는 직전에 부정적 장애(비용 disincentive)가 있어야만 성립하며, 주어진 문장이 지문의 유일한 부정 내용이므로 이 자리에서만 앞뒤 고리가 동시에 닫힌다"
+    },
+    {
+      "label": "⑤",
+      "intent": "역접 이후 긍정 전망 구간을 절단하는 잔여 자리 선택 유도",
+      "temptingBecause": "끝까지 정독하지 않은 학생이 남은 자리로 고르거나, S6의 기술 발전 뒤 '그래도 비용은 든다'는 재반박으로 오독할 수 있다",
+      "decisiveFlaw": "S6 Nevertheless가 긍정 S4 직후에 와 역접이 불성립하고, S7의 미래 확대 전망이 단점 직후에 이어져 S6→S7 낙관 결론 흐름이 끊긴다"
+    }
+  ],
+  "explanationIssues": [
+    "this 선행사 오분석(critical): 해설·keyPoints·오답해설 1이 일관되게 this가 앞 문장의 '직접 측정·과세 전체'를 받는다고 서술하나 실제 선행사는 같은 문장 내 '연속 측정의 비용 부담'이다",
+    "disincentive를 선행사를 갖는 지시·평가어로 분류한 용어 오용(keyPoints[0])",
+    "정답 자리의 실제 결정 단서(소재 연결 + Nevertheless 역접 요구)를 허위의 지시어 단서로 대체해 학생에게 잘못된 풀이 전략을 가르침",
+    "Nevertheless 관련 서술 자체(단점 뒤 반전)는 정확하며, 오답해설 2·3·5의 흐름 단절 설명은 실제 구조와 대응한다"
+  ],
+  "killerConditionsMet": false,
+  "killerConditionsNote": "RUBRIC §C(어법)·§D(빈칸)는 SENTENCE_INSERT에 문자 그대로 적용되지 않는다. §D의 KILLER 정신('단일 단서 하나로 정답을 찍을 수 없어야 함')을 유추 적용하면, 본 문항은 명시적 접속사 Nevertheless 하나로 즉시 풀리는 단일 단서 문항이므로 불충족.",
+  "grade": "F",
+  "notes": "구조 자체는 건전하다: V1(렌더 무결)·V2(④ 유일해 — Nevertheless가 지문의 유일한 부정 내용을 직전에 요구하므로 다른 4자리 모두 결정적으로 탈락)·V3·V5 통과. 그러나 해설의 핵심 앵커 논증이 this의 선행사를 허위로 지목하는 사실 오류(V4)이고 keyPoints·오답해설에까지 전파되어 있어 F. 공예 면에서도 요청 난이도 KILLER 대비 실제 난이도는 중위(단일 접속사 단서 즉해)로 C5=1의 라벨 불일치. 수정 방향: (1) 해설의 this 분석을 '문장 내 지시(연속 측정의 비용)'로 교정하고 전방 단서를 소재 연결로 재기술, (2) KILLER를 유지하려면 Nevertheless 같은 명시적 역접 표지가 없는 지문·자리를 선택해 다중 단서 결합형으로 재설계."
+}

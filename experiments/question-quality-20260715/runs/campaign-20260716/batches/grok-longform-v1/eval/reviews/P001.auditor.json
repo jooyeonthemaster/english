@@ -1,0 +1,96 @@
+{
+  "pid": "P001",
+  "requestedDifficulty": "KILLER",
+  "type": "GRAMMAR_ERROR",
+  "blindAnswer": "(E)",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor",
+      "severity": "minor",
+      "evidence": "해설 마지막 문장 '분사 연쇄로 오인하면 looked가 이미 정동사인 점과 충돌해 성립하지 않습니다'는 인과가 압축·모호하다. 분사구문 오독이 배제되는 결정적 근거는 starting 앞의 등위접속사 and(등위항은 looked·took와 같은 유한동사여야 함)이며, '정동사가 이미 있다'는 사실 자체는 분사 부가어와 충돌하지 않는다(같은 지문의 making several mistakes가 반례). 등위 병렬 관점으로 선해하면 성립하므로 V4 실패까지는 아님."
+    },
+    {
+      "code": "V4-minor",
+      "severity": "minor",
+      "evidence": "오답 해설 (A)의 '정동사·준동사 자리에서 어법상 올바릅니다'는 의미가 불명확한 상투구이며, keyPoints의 '분사능수동'은 '분사의 능·수동'의 과압축 표기다. 사실 오류는 아니나 용어 정제 필요."
+    },
+    {
+      "code": "V5-note",
+      "severity": "minor",
+      "evidence": "markedExpressions에서 (E)만 expression 필드가 원문형(started)이고 나머지 4개는 표시형과 동일해 필드 의미가 항목 간 비대칭이다. errorExpression(starting)이 렌더와 일치하고 correction(started)이 원문과 일치하므로 동기화 자체는 유지됨."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 4,
+    "C5": 1,
+    "C6": 3
+  },
+  "craftRationale": {
+    "C1": "3항 등위 연쇄의 유한동사 병렬은 정전급 어법 포인트이나, 쉬운 서사 지문 속 국소 포인트라 '핵심 논리를 정교하게'까지는 아님.",
+    "C2": "다섯 밑줄이 분사구문(c)/완료수동(e)/목적격보어 to부정사(k)/정동사(a)/병렬(i)로 서로 다른 포인트를 배정받아 의도는 분산되어 있음. 다만 (B)(C)는 오인 유도 장치가 얕음.",
+    "C3": "(B) had been chosen, (C) to help는 훈련된 학생이 즉시 소거 가능. 실제 판단이 걸리는 것은 (A)(D)(E) 정도로, 다수 선지가 매력적이어야 하는 상급 변별에는 미달.",
+    "C4": "메타 누출 없음. and 등위라는 충분·필연적 근거로 정답이 유일하게 결정됨.",
+    "C5": "요청 난이도 KILLER 대비 실제 난이도는 중위권. 쉬운 서사(심경/일화) 지문 + 한 문장 내 근거리 병렬 오류 + 즉시 소거형 디코이 → 라벨과 명백히 불일치.",
+    "C6": "핵심 근거(3항 병렬, started 교정)는 짧고 정확하나, 함정 분리 문장(분사 연쇄 오인)의 인과 서술이 뭉툭함."
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "주절 정동사(stood) 뒤 콤마 분사구문의 능동 -ing 형태 판정",
+      "temptingBecause": "콤마 뒤 -ing이 정동사 자리로 보이거나, wait의 태(waiting vs waited) 혼동을 노림",
+      "decisiveFlaw": "정동사 stood가 이미 있고 Garcia가 기다리는 능동 주체이므로 동시동작 분사 waiting이 정확 — 오답 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "과거완료 수동태(had been chosen)의 태·시제 복합 형태 판정",
+      "temptingBecause": "조동사+been+p.p.의 긴 복합형이 형태 오류처럼 보일 수 있음",
+      "decisiveFlaw": "band는 선정의 대상(수동)이고 선정 시점이 서사 과거보다 앞서므로 형태·기능 모두 정확 — 오답 아님. 다만 표면이 너무 정연해 유혹도가 낮음"
+    },
+    {
+      "label": "(C)",
+      "intent": "ask + O + to부정사 목적격보어 구문 vs 원형부정사 혼동 판정",
+      "temptingBecause": "바로 뒤 help him pick out의 원형(pick out) 패턴과 인접해 '원형을 써야 하나' 혼동 유도",
+      "decisiveFlaw": "ask는 목적격보어로 to부정사만 허용하므로 to help가 정확 — 오답 아님. 소거가 빠른 얕은 디코이"
+    },
+    {
+      "label": "(D)",
+      "intent": "부사절(As the rehearsal began) 뒤 주절 유한동사 필수 여부 판정",
+      "temptingBecause": "뒤따르는 making several mistakes와 나란히 -ing 연쇄(struggling)로 오인하도록 유도",
+      "decisiveFlaw": "주절 주어 he의 유일한 정동사 자리이므로 과거형 struggled가 정확 — 오답 아님"
+    },
+    {
+      "label": "(E)",
+      "intent": "looked·took·(and)started 3항 등위 병렬에서 유한동사 요구 판정 — 선언된 정답",
+      "temptingBecause": "지문 내 분사구문 패턴(making, saying, pointing)이 반복돼 starting도 분사 부가어로 오독하기 쉬움",
+      "decisiveFlaw": "starting 앞의 and가 looked·took와의 등위를 강제하므로 유한동사 started여야 함. 분사 부가어 독해는 and 때문에 불가 — 유일 정답 확인"
+    }
+  ],
+  "explanationIssues": [
+    "해설 말미 '분사 연쇄로 오인하면 looked가 이미 정동사인 점과 충돌' — 실제 배제 근거는 and 등위접속이며, 정동사 존재 자체는 분사 부가어와 양립 가능(making several mistakes가 지문 내 반례). 서술 정밀도 보완 필요(사실 오류 수준은 아님).",
+    "오답 해설 (A) '정동사·준동사 자리에서 어법상 올바릅니다' — 의미 불명확한 문구.",
+    "keyPoints '(A) 분사능수동' — 과압축 용어. '분사의 능·수동'으로 풀어 쓰는 것이 적절.",
+    "keyPoints가 (E)(A)(D)만 다루고 (B)(C)는 누락 — 동기화 위반은 아니나 완결성 낮음."
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAudit": {
+    "minimalPairRestoresSource": true,
+    "clearGrammarJudgmentNotContextPreference": true,
+    "allFiveUnderlinesHavePointTemptingWhy": "partial — pointCode와 why-correct는 5개 전부 존재하나 why-tempting이 명시 필드로 없고 (B)(C)는 유혹 설계 자체가 얕음",
+    "answerRequiresStructureNotInstantlyVisible": false,
+    "easySamePointDecoyDoesNotMaskAnswer": true,
+    "verdict": "정답 오류가 한 문장 내 근거리 'and + -ing' 병렬 파손으로, 통독 시 즉시 포착되는 중위권 정전 포인트. 쉬운 서사 지문·즉시 소거형 디코이와 결합해 KILLER 은닉·변별 기준(§C 4항) 미충족."
+  },
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 원지문 대비 렌더 지문의 유일한 변경이 started→starting임을 단어 단위 diff로 확인했고, 5개 선지 독립 검증에서 (E)만 비문(and 등위 병렬 위반), 교정 시 원문과 정확히 일치, 라벨·선지·해설·markedExpressions 동기화 정상. 그러나 요청 난이도 KILLER 대비 실제 난이도가 중위권(C5=1)이고 디코이 유혹도가 낮아(C3=2) 공예 합계 16으로 B 기준(최저 2, 합계 17) 미달 → C. 출하하려면 KILLER 재설계(밀도 높은 학술 지문, 장거리 병렬/도치·관계사 결합 등 은닉형 포인트, 유혹형 디코이) 필요."
+}

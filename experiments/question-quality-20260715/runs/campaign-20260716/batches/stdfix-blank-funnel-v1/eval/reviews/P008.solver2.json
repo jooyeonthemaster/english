@@ -1,0 +1,35 @@
+{
+  "pid": "P008",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'overlooking the physical pain they experience'는 복지(welfare) 진영의 관심사(고통·suffering)를 그대로 재진술한 것이다. 빈칸 문장은 'not one about treating animals inhumanely, but instead one about ___' 구조로, 비인도적 처우(=고통 야기)를 명시적으로 배제한 뒤 그와 대조되는 더 근본적인 문제를 요구한다. ①을 넣으면 '비인도적 처우의 문제가 아니라 고통을 간과하는 문제'라는 자기모순이 발생한다. 문법 결합(one about + 동명사구, they=animals)은 정상이나 논리적으로 성립 불가."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "'failing to regulate the scale of animal slaughter'는 규제 수준의 문제로, 지문이 복지 입법의 역할('curb the worst excesses')로 규정한 층위다. 권리(rights) 진영은 규제 강도·규모가 아니라 이용 자체('should not use in this way at all')를 문제 삼는다고 명시되어 있으므로 'more fundamental than this'와 정면 충돌한다. 문법 결합은 정상, 논리 부적합."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "직전 문장 'animals are not the kinds of thing that humans should use in this way at all'의 직접 환언이다. 인간의 목적(food, experimental subjects)을 위한 수단으로 동물을 사용하는 것 자체가 문제라는 권리 진영 논지를 'viewing them merely as instruments for our own ends'가 정확히 포착한다. 'merely as instruments'가 칸트적 수단화 논리와 일치하고, not A but B 대조(비인도적 처우 vs 수단화)도 성립한다. 문법: one about + 동명사, them의 선행사(animals) 명확, 결합부 이상 없음. 유일한 옹호 가능 정답."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "'denying the potential utility of scientific experimentation'은 권리 진영이 실험의 유용성을 부정한다는 주장이 아니라 유용성과 무관하게 이용의 허용 가능성 자체를 부정한다는 지문 논지와 어긋난다. 또한 빈칸은 '(현행 관행/복지 관점의) 문제가 무엇인가'를 채우는 자리인데, 실험의 유용성 부정은 그 자리의 논항 구조에 맞지 않는다. 논리 부적합."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "'ignoring the historical evolution of protective legislation'에서 입법의 역사(decades, centuries)는 1문장의 배경 정보일 뿐, 복지 대 권리 논쟁의 쟁점과 아무 논리적 연결이 없다. 권리 진영의 근본 문제 제기와 무관한 소재 재활용 오답. 문법 결합은 정상, 논리 부적합."
+    }
+  ],
+  "note": "빈칸 문장은 not A but B 병렬(one about ~ / one about ~)로 두 동명사구가 대조되는 구조이며 다섯 선지 모두 문법적 결합(seam)은 깨끗하다. 판별은 순수 논리로 이루어진다: 직전 문장이 빈칸의 내용을 사실상 명시('should not use in this way at all')하므로 ③만 성립하고, ①·②는 배제된 복지 층위의 재진술이라 자기모순, ④·⑤는 무관 소재다. 단일 정답 문항으로 결함 없음."
+}

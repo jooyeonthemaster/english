@@ -1,0 +1,83 @@
+{
+  "pid": "P013",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-TERMINOLOGY",
+      "severity": "major",
+      "evidence": "(E) 오답 해설: \"복수 주어인 'The real achievements'에 수일치하는 현재시제 정동사 'lie'는 수와 격이 올바르게 일치합니다.\" — 동사 일치는 수(number)·인칭(person)의 문제이며 '격(case)'은 명사·대명사에 적용되는 범주다. 정동사가 '격이 일치'한다는 것은 학생 노출 해설의 문법 용어 오적용(오개념)으로, V4 게이트('오개념·환각·용어 오류가 없다')에 저촉된다."
+    },
+    {
+      "code": "V4-ATTRIBUTION-MINOR",
+      "severity": "minor",
+      "evidence": "본해설 첫 문장 \"이 글의 주어는 'Rapid growth ...'\" — 글 전체가 아니라 해당 문장의 주어이므로 '이 문장의 주어'가 정확하다. 귀속이 느슨하지만 구조 분석 자체는 정확하여 단독으로는 실격 사유가 아니다."
+    },
+    {
+      "code": "PASSAGE-UNMARKED-AGREEMENT",
+      "severity": "minor",
+      "evidence": "비밑줄부 'a large part of the population derive their livelihood'는 원문(영국식 집합명사 통보 일치) 그대로이나, 한국 학교문법의 엄격한 수일치 기준으로는 (D)에서 처벌하는 것과 동종의 패턴이 비밑줄로 방치된 형태다. 밑줄이 아니므로 V2에는 영향이 없으나 엄격 일치를 적용하는 상위권 학생에게 혼선 소지가 있다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "명사 tendency를 후치수식하는 to부정사의 형용사적 용법 판단 (a tendency to-V)",
+      "temptingBecause": "tendency와 to seek 사이에 삽입절(once the dust ... settled down)이 길게 끼어 있어 수식 관계 복원이 필요하고, of seeking 같은 동명사 대안을 고민하게 만든다",
+      "decisiveFlaw": "'a tendency to-V'는 표준 결합이며 삽입절을 걷어내면 즉시 정상임이 드러난다 — 오류가 아니므로 소거"
+    },
+    {
+      "label": "(B)",
+      "intent": "명사구 전치수식 분사의 태 판단 (enhanced vs enhancing)",
+      "temptingBecause": "분사의 능동/수동 구분을 묻는 흔한 포인트로 보이게 한다",
+      "decisiveFlaw": "growth는 강화'되는' 대상이므로 과거분사 enhanced가 자명하게 적절 — 즉시 소거 가능한 약한 디코이(필러에 가까움)"
+    },
+    {
+      "label": "(C)",
+      "intent": "조동사 수동태의 과거분사 판단 (cannot be denied)",
+      "temptingBecause": "deny의 태(denying/denied) 선택을 점검하게 한다",
+      "decisiveFlaw": "contribution은 부인되는 대상이므로 수동 denied가 자명 — 즉시 소거 가능한 약한 디코이"
+    },
+    {
+      "label": "(D)",
+      "intent": "정답. or로 병렬된 세 개의 of-전치사구(of the economy in Botswana / of the agricultural sector in Kenya / of food production in Zimbabwe)를 건너뛰어 단수 핵 명사 growth와 수일치를 판단",
+      "temptingBecause": "Botswana·Kenya·Zimbabwe 세 나라의 나열과 or 병렬이 복수 주어처럼 보여 explain(복수형)이 자연스럽게 읽힌다",
+      "decisiveFlaw": "주어 핵은 단수 growth이며 or-병렬 of-구는 수식 성분이므로 explains가 필수 — explain→explains 교정 시 정확히 원문 복원(최소대립쌍 성립)"
+    },
+    {
+      "label": "(E)",
+      "intent": "복수 주어 achievements와 정동사 lie의 수일치(+lie/lay 혼동 유도)",
+      "temptingBecause": "(D)와 같은 수일치 포인트라 비교 검증을 유도하고, of these countries 개입과 lie의 자동사/타동사 혼동 여지가 있다",
+      "decisiveFlaw": "achievements는 복수이므로 lie가 정당 — 다만 정답과 동일 포인트(수일치)의 쉬운 디코이라 §C 5항과 긴장 관계"
+    }
+  ],
+  "explanationIssues": [
+    "(E) 해설의 '수와 격이 올바르게 일치' — 동사 일치에 '격' 개념을 오적용한 용어 오류 (V4 실격 사유)",
+    "본해설 '이 글의 주어는' — 문장 단위 귀속이 느슨함 (minor)",
+    "각 밑줄에 대한 'why tempting' 서술이 어디에도 없음 — §C 3항(5개 밑줄 각각 point·why tempting·why correct/incorrect) 미충족",
+    "본해설이 정답 근거는 선명하나 핵심 함정(국가명 나열로 인한 복수 착시)의 분리 서술이 마지막 한 문장에 압축되어 있고, 오답 해설 (B)(C)는 매력 근거 없이 정당성만 서술"
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": {
+    "minimalPair": "충족 — explains→explain 최소대립쌍, 교정 시 원문 정확 복원",
+    "clearGrammarJudgment": "충족 — or-병렬 of-구를 건너뛴 수일치는 대안 분석 여지 없는 명확한 문법 판단",
+    "perUnderlineDocumentation": "미충족 — pointCode와 정당성 해설은 있으나 why tempting이 5개 밑줄 어디에도 없음",
+    "structuralDepth": "미충족 — 원거리 수일치는 수능 어법의 가장 정형화된 포인트로, 훈련된 학생은 ', explain'을 보는 즉시 포인트를 식별하고 핵 명사(Rapid growth)도 문두에서 쉽게 발견된다. KILLER가 요구하는 구조 독해 깊이에 못 미침",
+    "easySamePointDecoy": "미충족(경계) — (E)가 정답과 동일 포인트(수일치)의 쉬운 디코이로 인접 문장에 존재"
+  },
+  "grade": "F",
+  "notes": "지문 무결성·정답 유일성·필드 동기화는 모두 통과했고 (D)의 오류 설계 자체(3중 or-병렬 of-구 + 국가명 복수 착시)는 견실하다. 그러나 (E) 오답 해설의 '수와 격이 올바르게 일치'는 정동사 일치에 격 개념을 오적용한 학생 노출 용어 오류로 V4 게이트 실패이며, 규칙상 공예 점수로 상쇄되지 않아 F다. 해당 문구를 '수와 인칭이 올바르게 일치' 류로 교정하면 V는 전부 통과하나, 그 경우에도 실제 난이도는 KILLER가 아닌 중(中) 수준(C5=1): (B)(C)가 즉시 소거되는 필러성 디코이이고 정답 포인트가 정형 수일치라 상위권 변별이 약하다. KILLER 출하를 원하면 디코이 2개를 실질 판단이 필요한 포인트(예: 관계사/분사구문 경계, 도치 수일치)로 교체하고 why-tempting을 채워야 한다. 비밑줄부 'population derive'(원문 영국식 통보 일치)는 엄격 일치 기준과의 혼선 소지가 있어 지문 선택 단계에서 감점 요인."
+}

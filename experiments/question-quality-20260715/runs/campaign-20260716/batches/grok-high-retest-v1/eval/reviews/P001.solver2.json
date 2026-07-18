@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "Seam: 'That means [that] + finite clause' is grammatical. Logic: 'we cannot park cars there, but we can stop to pick up passengers' is exactly the US/NYC legal meaning of a 'No Standing' sign (a vehicle regulation permitting brief passenger pickup/drop-off but no waiting or parking). It is consistent with every narrative fact: the friend stopped her car at that corner to pick Carol up, and her 'Of course you can stand there' shows the sign does not govern pedestrians. This resolves the misunderstanding the anecdote is built on."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "Grammatically well-formed after 'That means', but logically it restates Carol's mistaken pedestrian reading of the sign, which the friend explicitly refutes ('What are you talking about? Of course you can stand there.'). The friend's laughing explanation cannot assert the very interpretation she just denied. Direct contradiction; indefensible."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "Grammatical, but introduces conditions with zero textual license: nothing in the passage mentions avoiding an entire avenue or a lunch-hour restriction. A 'No Standing' sign posted at one corner cannot entail avenue-wide avoidance. Fabricated content; indefensible."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "Grammatical, and superficially attractive because it correctly makes the sign a vehicle regulation. But 'must never stop or wait' describes a 'No Stopping' sign, not 'No Standing', and it is internally contradicted by the narrative: the friend herself has just stopped her car at that exact corner to pick up Carol and treats doing so as unproblematic. Her explanation cannot condemn her own just-completed action. Indefensible."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Grammatical but incoherent with the text: 'the picnic meeting corner' has no antecedent (no picnic is mentioned), and the friend's reaction is to dismiss Carol's worry as groundless, not to concede the corner is a poor meeting place. Contradicts the pragmatic force of her laughter and reassurance. Indefensible."
+    }
+  ],
+  "note": "Blind solve, grammarian/logician lens. The item hinges on real-world knowledge of US 'No Standing' vehicle signage plus internal consistency: the friend's own pickup at the corner rules out option 4 (the strongest distractor) formally, since her utterance would otherwise self-refute. Options 2 and 5 contradict her explicit denial; option 3 is unsupported invention. Exactly one defensible answer: 1."
+}

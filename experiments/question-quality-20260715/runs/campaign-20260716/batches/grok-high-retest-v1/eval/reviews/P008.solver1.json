@@ -1,0 +1,35 @@
+{
+  "pid": "P008",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "① 위치는 'The pattern is predictable:' 바로 앞이다. 주어진 문장은 패턴의 중간 단계(지연)를 서술하는데, 패턴 소개 도입부(콜론으로 패턴 전개를 예고) 앞에 끼우면 아직 설명되지 않은 패턴의 결과('As a result')를 선행 근거 없이 제시하게 되어 콜론 구조와 인과 사슬이 모두 붕괴한다."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "매력적 오답. 'steer your work toward what you imagine you can do perfectly' 뒤에 'As a result... delay'를 붙이면 언뜻 인과가 성립하는 듯해 실제로 끌렸다. 그러나 다음 문장 'You cling ever more tightly to what you already know you can do'는 steer 문장을 강화·연장하는 동일 단계(misdirect) 서술이므로, 그 사이에 지연(stall)을 끼우면 misdirect→stall→misdirect로 역행하며 연속성이 끊긴다. 마지막 문장의 death spiral 요약 순서(misdirect; stall; quit)와도 모순된다."
+    },
+    {
+      "label": "3",
+      "verdict": "accept",
+      "reason": "아는 것에만 매달려 위험·탐색을 회피한 '결과로'(As a result) 일을 미루게 된다는 인과가 정확히 결합한다(일을 안 하면 실수도 없으므로). 이어지는 'Believing that your work should be perfect, you gradually become convinced that you cannot do it'의 'gradually'가 지연의 시간 경과와 호응하고, 이후 'you quit'으로 이어진다. 결말 요약 'you misdirect your work; you stall; you quit'의 stall 단계가 본문에서 유일하게 이 문장으로만 충족되며, 위치도 misdirect(①~② 구간) 이후·quit 이전인 ③이어야 요약 순서와 일치한다."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "④는 'Sooner or later... you quit' 뒤다. 이미 그만둔 뒤에 '일을 미룰 이유를 찾는다'는 서술이 오는 것은 시간 순서상 역행이며, 바로 뒤의 'And in one of those little ironies...'는 전체 패턴을 총괄하는 결론부라 그 앞에 중간 단계를 삽입하면 흐름이 어긋난다."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "⑤는 'a perfect death spiral: you misdirect your work; you stall; you quit'라는 최종 요약 뒤의 지문 말미다. 요약·결론이 끝난 뒤에 패턴의 중간 단계(지연)를 덧붙이는 것은 논리적으로 성립하지 않는다."
+    }
+  ],
+  "note": "결정적 장거리 단서는 결말의 3단계 요약(misdirect; stall; quit): 본문에서 stall(지연)에 해당하는 문장이 주어진 문장뿐이므로 misdirect 서술 종료 지점이자 quit 이전인 ③이 유일 정답. ②가 유일하게 표면 인과('steer toward perfection → delay')로 유혹하는 매력적 오답이나, 'cling ever more tightly'의 강화 연속성과 요약 순서 위배로 기각된다. 대안 배치·중의성 적극 탐색 결과 복수 정답 여지 없음. 원전(Bayles & Orland, Art & Fear)의 문장 배열과도 일치하나 판정은 지문 내부 논리만으로 독립 도출했다."
+}

@@ -1,0 +1,70 @@
+{
+  "pid": "P001",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4",
+      "severity": "minor",
+      "evidence": "해설이 hear를 지각동사, 'the quiet voices...'를 그 목적어라고 규정한 직후 'told가 속한 구는 이 명사구(voices)를 후치 수식하는 분사구'라고 서술 — 지각동사 목적격 보어 분석과 명사 후치수식 분석이 혼재된 프레이밍. 두 분석 모두 telling 교정으로 귀결되므로 사실 오류(오정답 유도)는 아니나 구조 설명의 일관성이 깨져 있음."
+    },
+    {
+      "code": "V4",
+      "severity": "minor",
+      "evidence": "해설 말미 '뒤에 us라는 목적어가 이어지는 구조에 속아 수동태 분사로 보지 않도록 주의' — 함정 방향 서술이 부정확. 목적어 us의 존재는 오히려 능동(telling)의 결정적 단서이며, 실제 함정은 'voices ... told us about the insight'가 그 자체로 자연스러운 독립 정형절처럼 읽혀 told를 정형동사로 수용하게 되는 것임."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "주어-동사 수일치 (복수 주어 our minds와의 호응)",
+      "temptingBecause": "사실상 유혹 요인이 없음 — 주어 our minds가 바로 인접해 있어 즉시 판정 가능. 필러에 가까움",
+      "decisiveFlaw": "정답 아님: our minds 복수 → are 정확. 대안 해석 여지 없음"
+    },
+    {
+      "label": "(B)",
+      "intent": "형용사 likely vs 부사 혼동 (be동사 보어 자리)",
+      "temptingBecause": "more 뒤에 오는 -ly 형태라 부사로 오인할 여지가 이론상 있으나, 'be likely to-V'는 극히 친숙한 정형 구문이라 실제 유혹도는 낮음",
+      "decisiveFlaw": "정답 아님: be동사의 주격 보어 자리이므로 형용사 likely가 정확. likely는 형용사·부사 양용이지만 이 자리에서는 형용사"
+    },
+    {
+      "label": "(C)",
+      "intent": "to부정사의 태 판정 (attention과 direct의 수동 관계)",
+      "temptingBecause": "첫 문장의 능동 'direct the spotlight of attention'이 선행해 능동형 to direct를 기대하게 만들고, tends to 뒤 태 판단을 요구함",
+      "decisiveFlaw": "정답 아님: our attention은 direct의 대상(피동작주)이므로 to be directed 수동이 정확. 5개 중 가장 실질적인 경쟁 디코이"
+    },
+    {
+      "label": "(D)",
+      "intent": "접속사 While vs 전치사(During 류) 판별 — 뒤 절 구조 수반 여부",
+      "temptingBecause": "While 직후 명사구 'this pattern of attention'이 먼저 보여 전치사 자리로 순간 오인할 수 있음",
+      "decisiveFlaw": "정답 아님: 뒤에 완전한 절(this pattern of attention is necessary...)이 이어지므로 접속사 While이 정확"
+    },
+    {
+      "label": "(E)",
+      "intent": "지각동사 hear + 목적어 + 분사의 태 — 수식/보어 분사와 피수식 명사의 능동·수동 관계 (정답)",
+      "temptingBecause": "'voices ... told us about the insight'가 독립된 능동 정형절처럼 자연스럽게 읽히고, voices와 분사 사이에 전치사구 'in the backs of our heads'가 개입해 hear의 목적어-보어 구조 파악을 방해함",
+      "decisiveFlaw": "voices가 tell의 능동 주체이므로 telling이어야 함. told(수동분사)가 성립하려면 voices가 tell의 피동작주여야 하나 tell의 수동은 수여 대상이 주어가 되는 구조(we were told)이므로 'voices told us'는 어떤 분석으로도 비문. 교정 시 원문(telling) 정확 복원 — 유일 정답 확인"
+    }
+  ],
+  "explanationIssues": [
+    "지각동사 목적격 보어 분석과 명사구 후치수식 분석이 한 문단에 혼재 (결론에는 영향 없는 프레이밍 결함)",
+    "함정 서술 방향 오류: 목적어 us는 수동으로 오인하게 하는 요인이 아니라 능동의 단서 — 실제 함정(독립 정형절처럼 읽히는 told us)을 짚지 못함",
+    "오답 해설 (A)~(D)는 각각 사실 정확하나 why-tempting(왜 매력적인가) 서술이 전무 — 특히 (A)(B)는 유혹 논리를 설명할 수 없는 필러 수준"
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "유효성 5개 게이트 전부 통과 — 출하 가능한 무결한 표준 문항. 렌더는 telling→told 단일 최소대립쌍 변형만 있고 교정 시 원문을 정확히 복원하며, (E)는 대안 분석이 배제되는 명확한 문법 판단으로 유일 정답이 성립한다. 그러나 요청 난이도 KILLER 대비 공예 미달: (A) 수일치·(B) likely는 인접 단서로 즉시 소거되는 필러 수준이라 실질 변별은 (C)/(E) 2파전으로 좁혀지고(C3=2), 밑줄별 why-tempting이 부재하며(§C 3항 미달), 전체 요구 사고 단계가 중상(B2급) 수준에 그쳐 KILLER 라벨과 불일치(C5=1). §C 조건 중 최소대립쌍·명확한 문법 판단·구조 독해 요구는 충족하나 '모든 밑줄의 point/tempting/correct 설명 존재'와 '다수 선지 매력' 요건이 미달되어 killerConditionsMet=false. 해설은 결론은 정확하나 구조 프레이밍 혼재와 함정 방향 오서술로 우아함이 떨어짐(C6=2). 판정: KILLER로는 재설계 필요(디코이 (A)(B)를 구조 독해형 포인트로 교체, 함정 서술 교정) — 등급 C. 표준(B2) 난이도 문항으로 재라벨하면 B 이상 가능."
+}

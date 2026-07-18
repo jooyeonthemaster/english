@@ -1,0 +1,35 @@
+{
+  "pid": "J011",
+  "answer": "D",
+  "multipleDefensible": false,
+  "defensibleLabels": ["D"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "Reduced relative clause: 'Environmental taxes [which are] based directly on measured emissions'. The sentence's finite verb is 'can be targeted', so 'based' must be non-finite; 'base X on Y' is transitive, so the passive participle correctly modifies 'taxes'. Grammatical."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "'incentive to reduce' — the noun 'incentive' canonically licenses an infinitival complement; implicit subject 'the polluter' is coherent. Grammatical."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "Subject-verb agreement across an intervening PP: head noun 'The great attraction' (singular); 'of basing the tax directly on measured emissions' is a prepositional modifier ('emissions' is a proximity distractor). Singular 'is' + that-clause complement is correct."
+    },
+    {
+      "label": "D",
+      "verdict": "wrong",
+      "reason": "'particularly which there are many separate sources of emissions' — 'which' as relative pronoun requires an antecedent and a gap inside its clause, but 'there are many separate sources of emissions' is a complete existential clause with no gap and no plausible antecedent in the adverbial slot after 'particularly'. Interrogative reading is unavailable. The slot demands a subordinating adverbial conjunction: 'when' or 'where'. Rescue attempts (free relative, elided 'in which' without overt head like 'cases in which') all fail. Ungrammatical."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "Plural head noun 'technologies' (intervening singulars 'monitoring/discharges' are distractors) agrees with 'have'; 'develop' intransitive with 'rapidly' is standard; present perfect progressive fits the discourse (ongoing progress leading to a future possibility). Grammatical."
+    }
+  ],
+  "note": "Clean item under the grammarian/logician lens. Exactly one formally ungrammatical underline: (D) 'which' heads a gapless complete clause with no antecedent, requiring 'when/where'. All other underlines survive adversarial alternative-parse search (reduced relative for A, noun-complement infinitive for B, long-distance agreement for C and E). Single defensible answer."
+}

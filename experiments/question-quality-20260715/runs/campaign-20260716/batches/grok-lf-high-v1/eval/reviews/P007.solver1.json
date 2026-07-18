@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "'His clothing-fed composure soon collapsed into stage anxiety when he thought of how many people would be there.' — 새 옷에서 온 자신감(직전 문장 'felt good ... wearing his new clothes'와 정합)이 청중 규모를 떠올리는 순간 무대 불안으로 무너진다는 긍정→부정 전환. 곧바로 이어지는 'As the rehearsal began, he struggled with the rhythm, making several mistakes'의 원인을 정확히 설명하며, when-절 트리거(관중 생각)와 인과가 일치. 문장 결합(주어+동사 완전절)도 깨끗함."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "역방향 함정. 키워드(stage anxiety, clothing-fed composure)는 동일하나 방향이 반대 — '관중이 많을 것을 생각했을 때' 불안이 안정으로 가라앉는다는 것은 트리거와 인과가 뒤집혔고, 바로 다음 문장에서 리듬 실수를 연발하므로 서사와 정면 충돌. 결말이 해피엔딩이라는 인상만으로 고르면 걸리는 매력 오답이나, 다음 문장 하나만 확인해도 배제됨."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "시간 순서 위반. 리듬 실수는 빈칸 이후 문장('As the rehearsal began...')에서 비로소 발생하므로 빈칸 시점에 실수가 자신감을 지웠다는 서술은 불가능. 또한 when-절이 원인을 '관중 수 생각'으로 명시하는데 'mistakes alone'이 원인이라 주장해 트리거와도 모순."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "본문 명시 진술과 모순. Garcia는 Jeff가 골라준 옷을 입고 'felt good' — 옷은 자신감의 원천이지 두려움의 원천이 아님. when-절은 두려움의 원인을 관중 수로 지정하는데 'clothing choice ... itself fueled dread'는 원인을 옷 자체로 돌려 이중으로 충돌."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "쇼핑몰 앞에서의 기다림은 훨씬 이전 장면이고 본문에서 'I haven't waited long'으로 이미 사소하게 처리됨. 기다림이 '군중에 대한 공포로 굳어진다'는 인과 자체가 비논리적이며 빈칸 위치의 서사와 무관."
+    }
+  ],
+  "note": "정답이 1로 유일하게 옹호 가능. 매력 오답은 2(키워드 재활용 + 방향 반전)이나 직후 문장의 실수 장면으로 즉시 배제 가능해 변별 부담은 낮음. 다만 선지 문체가 'clothing-fed composure' 같은 요약적/비자연적 명사구로 통일되어 있어 실제 수능 심경변화-빈칸 문체보다 설명문 느낌이 강하고, 5개 선지가 모두 빈칸 자리에 문법적으로는 결합 가능(완전절)하여 문법 seam 단서는 없음 — 순수 논리 변별 문항."
+}

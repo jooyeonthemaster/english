@@ -1,0 +1,69 @@
+{
+  "pid": "P004",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V5-minor-keypoints-coverage",
+      "severity": "minor",
+      "evidence": "keyPoints는 (A)/(D)/(E) 세 밑줄만 다루고 (B)/(C)는 누락. 모순은 아니므로 V5 통과이나 커버리지가 불완전하다."
+    }
+  ],
+  "craft": {
+    "C1": 2,
+    "C2": 3,
+    "C3": 1,
+    "C4": 3,
+    "C5": 0,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "정답 — 분사구문의 능동(현재분사) vs 수동(과거분사) 판단. source-correct 'born' → displayed-wrong 'bearing' 최소대립쌍이며 교정 시 정확히 원문 복원.",
+      "temptingBecause": "'Originally + V-ing' 형태가 'Originally coming from France' 류의 관용적 능동 분사 패턴과 표면상 유사해, 분사구문이면 -ing이라는 기계적 사고를 노린다.",
+      "decisiveFlaw": "의미상 주어 Brunel은 bear(낳다)의 행위자가 아닌 피동작주이므로 과거분사 born이 필수. 그러나 'born in France'가 극도로 고빈도 연어(collocation)라 'bearing in France'는 구조 분석 없이도 즉시 눈에 띈다 — 문항 자체는 유효하나 KILLER 변별력을 스스로 무너뜨리는 지점."
+    },
+    {
+      "label": "(B)",
+      "intent": "분사구문 뒤 주절의 정동사(finite verb) 자리 및 과거시제 판단.",
+      "temptingBecause": "바로 앞이 분사구(Originally born~)라서 병렬로 또 분사(escaping)가 와야 한다고 오해할 여지를 노린다.",
+      "decisiveFlaw": "주절에 정동사가 필요하고 과거 역사적 사실이므로 과거형 escaped가 명백히 옳다. 대안 통사 해석 없음 — 유혹 강도 낮은 디코이."
+    },
+    {
+      "label": "(C)",
+      "intent": "완전한 절을 이끄는 시간 접속사 When vs 관계사/전치사 혼동.",
+      "temptingBecause": "When/which/during 류 연결사 선택 혼동을 노린다.",
+      "decisiveFlaw": "뒤에 주어(the Napoleonic Wars)+be+보어(at their height)의 완전한 절이 오므로 접속사 When이 옳음이 한눈에 검증된다 — 실제 판단 부담 미미."
+    },
+    {
+      "label": "(D)",
+      "intent": "타동사 imprison의 수동태 판단(목적어 부재 + 주어의 피동작주 지위).",
+      "temptingBecause": "수동태 형태 점검을 유도하며, be+p.p. 구조를 능동으로 되돌리고 싶은 충동을 노린다.",
+      "decisiveFlaw": "imprison 뒤 목적어가 없고 Brunel이 투옥의 대상이므로 was imprisoned가 명백히 옳다. 단, 정답 (A)와 동일 계열(능수동) 포인트의 쉬운 디코이라 KILLER 가드라인(§C 마지막 조항)과 긴장 관계."
+    },
+    {
+      "label": "(E)",
+      "intent": "대명사 수 일치 — 선행 명사(the River Thames, 단수) 확인.",
+      "temptingBecause": "직전의 복수 명사구 'people and goods'를 선행사로 오인해 them을 기대하게 만드는 근접성 함정.",
+      "decisiveFlaw": "across의 목적어는 건너는 대상인 강(단수)이므로 it이 옳다. 어느 해석으로도 비문이 되지 않는다."
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "killerConditionsDetail": {
+    "minimalPair": true,
+    "clearGrammarJudgment": true,
+    "allFiveUnderlinesDocumented": true,
+    "answerRequiresStructuralReading": false,
+    "noEasySamePointDecoyMasking": false,
+    "verdict": "§C 위반 2건: (1) 'born in France'는 고빈도 고정 연어라 'bearing'이 구조 독해 없이 즉시 드러난다 — 'KILLER 정답은 구조를 읽어야 하며 즉시 드러나지 않는다' 조항 결정적 실패. (2) (D)가 정답과 같은 능수동 계열의 쉬운 디코이로 존재한다."
+  },
+  "grade": "C",
+  "notes": "유효성 5개 게이트는 모두 통과 — 정답 (A) 유일, 지문 무결, 해설 사실적, 필드 동기화 양호. 그러나 요청 난이도 KILLER 대비 실제 난이도가 극단적으로 낮다: 지문 자체가 내용일치용 수준의 단문 전기문이고, 정답 오류 'bearing'은 최고빈도 연어 'born in France'를 깨뜨려 첫 독해에서 즉시 식별된다(C5=0). 네 개의 디코이는 모두 원문 그대로의 평이한 단어로 경쟁력이 없어 실질 소거 판단이 발생하지 않는다(C3=1). C4는 메타 누출·꼬리 소거는 없어 3점이나, C3/C5 결함이 문항의 변별 기능을 무력화한다. 출하하려면 정답 포인트를 구조 의존적 자리(예: 삽입구를 낀 병렬 동사, 관계절 내부 태 판단)로 재설계하고 KILLER급 지문으로 교체해야 한다. RUBRIC 등급 규칙상 V 전부 통과 + 재설계 필요 공예 결함 = C."
+}

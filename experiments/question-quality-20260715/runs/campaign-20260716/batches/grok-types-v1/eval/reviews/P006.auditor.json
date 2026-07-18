@@ -1,0 +1,76 @@
+{
+  "pid": "P006",
+  "validity": {
+    "V1": false,
+    "V2": false,
+    "V3": true,
+    "V4": true,
+    "V5": false
+  },
+  "validityIssues": [
+    {
+      "code": "V1",
+      "severity": "critical",
+      "evidence": "렌더 지문이 '(렌더 지문 없음)'으로 완전 결락. SENTENCE_ORDER 문항인데 주어진 글(given)과 (A)/(B)/(C) 분절 텍스트가 학생에게 전혀 제공되지 않아 문항 본체가 성립하지 않는다. 선지(1~5)와 해설이 참조하는 (A)/(B)/(C) 라벨에 대응하는 마커가 어떤 렌더 필드에도 존재하지 않는다."
+    },
+    {
+      "code": "V2",
+      "severity": "critical",
+      "evidence": "분절 경계가 어디에도 선언되어 있지 않아 blind solve가 불가능하고, 전달된 형태 그대로는 실제 정답 집합이 정의되지 않는다(정답 유일성 검증 불가 → 보수적 false). 해설 기반으로 given=문장1, (B)='But being mindful...easier to stomach', (C)='Say you spent $148...this month?', (A)='That's $14.80 less...reduced habits'로 재구성하면 (B)-(C)-(A)가 유일 정답으로 수렴하나, 이는 전달물 밖의 감사자 재구성이다."
+    },
+    {
+      "code": "V5",
+      "severity": "critical",
+      "evidence": "학생 노출 필드 중 핵심인 지문(분절 포함)이 누락. markedExpressions/구조 필드도 '(없음)'이어서 세그먼트 경계가 학생용·내부용 어느 필드에도 동기화되어 있지 않다. 정답 라벨·선지·해설·keyPoints 간 상호 참조는 일관되지만, 참조 대상인 분절 자체가 없다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 2,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1 (B)-(C)-(A)",
+      "intent": "정답 — 일반 원칙(10% 감축)→구체 예시(coffee $148)→계산·결과($14.80/$133.20/$119.88)와 결론의 정전 전개.",
+      "temptingBecause": "정답이므로 해당 없음. (B)의 'But'이 given의 nervous를 반전시키고, 'that category'가 given의 'a budget category'를 직접 대용하며, (A)의 'That's $14.80 less'가 (C)의 10%-of-$148 질문에 즉시 조응한다.",
+      "decisiveFlaw": "없음(정답)."
+    },
+    {
+      "label": "2 (B)-(A)-(C)",
+      "intent": "국소 화제 연속성 함정 — (B)와 (A) 모두 10% 감축을 다루므로 인접 가능해 보이게 함.",
+      "temptingBecause": "(B)의 '10 percent each month' 직후 (A)의 감축 계산이 화제상 이어지는 듯 보인다.",
+      "decisiveFlaw": "(A)의 'That's $14.80 less'는 (C)의 $148 기준 금액 없이는 지시 대상이 없어 대용어가 미해소된다. 오답 해설과 정확히 대응."
+    },
+    {
+      "label": "3 (C)-(B)-(A)",
+      "intent": "예시 선행 오독 — 어휘 반향(lexical echo)에 의한 유인.",
+      "temptingBecause": "(C)의 'The idea of never buying coffee'가 given의 'The idea of cutting out a budget category'를 표면적으로 반향하여 given 직후처럼 보인다.",
+      "decisiveFlaw": "(B)의 'But being mindful...all-or-nothing'은 given의 nervous에 대한 직접 반박이고 'that category'의 선행사가 given에 있으므로 (B)가 선행해야 하며, (A)가 (B) 뒤에 오면 'That's $14.80 less'의 즉시 조응이 끊긴다."
+    },
+    {
+      "label": "4 (C)-(A)-(B)",
+      "intent": "국소쌍 정합·전역 역전 함정 — (C)→(A) 유효한 인접쌍으로 유인.",
+      "temptingBecause": "(C)→(A)는 실제 정답 순서에서도 인접하는 올바른 국소쌍이라 부분 검증으로는 통과한다.",
+      "decisiveFlaw": "(A)가 'By introducing incremental shifts...' 결론으로 끝난 뒤 일반 원칙 (B)가 다시 나오면 일반→구체 전개가 역전되고 (B)의 'But'·'that category'가 조응할 대상을 잃는다. 오답 해설과 대응."
+    },
+    {
+      "label": "5 (A)-(B)-(C)",
+      "intent": "대용어 미해소 즉시 소거 선지.",
+      "temptingBecause": "유인력 낮음 — 계산·결론 단락을 맨 앞에 두는 배열이라 표면적 매력이 거의 없다.",
+      "decisiveFlaw": "(A)의 'That's $14.80 less'가 given 직후에 오면 선행 총액($148)·감축률(10%)이 전무해 즉시 탈락한다. 오답 해설과 대응."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "해설·오답해설·keyPoints가 (A)/(B)/(C) 세그먼트를 전제로 서술하지만 문항 어디에도 세그먼트 경계 정의가 없다(근본 원인은 V1/V5의 렌더 결락). 해설 내용 자체는 원지문과 일치: $148×10%=$14.80, $148−$14.80=$133.20, $133.20×0.9=$119.88 계산 모두 정확하고, 일반 원칙→구체 예시→결과 계산이라는 구조 분석도 원지문 전개와 부합한다."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "치명 결함: SENTENCE_ORDER 문항인데 렌더 지문(주어진 글 + (A)/(B)/(C) 분절)이 통째로 결락되어 전달된 형태로는 풀이 자체가 불가능하다 — V1·V2·V5 동시 실패로 자동 F. 다만 콘텐츠 설계 자체는 건전하다: 해설에서 역산한 유일 타당 분절(given=문장1, B=문장2-4, C=문장5-6, A=문장7-9) 기준으로 (B)-(C)-(A)는 'But' 반전, 'that category' 대용, 'That's $14.80 less' 즉시 조응, 일반→구체→계산 전개라는 다중 단서로 유일 정답이 강제되며, 오답 4개가 서로 다른 함정(화제 연속성, 어휘 반향, 국소쌍 정합, 즉시 소거)을 겨냥한다. 공예 감점 요인: $148→$14.80→$133.20→$119.88 숫자 사슬이 지나치게 명시적이라 담화 논리 없이 숫자 추적만으로 풀리는 경로가 존재(C3=2), INTERMEDIATE 라벨 대비 실효 난이도가 다소 낮음(C5=2). 렌더 파이프라인에서 분절 생성·저장 단계를 수리한 뒤 재출하면 B등급 이상 가능. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

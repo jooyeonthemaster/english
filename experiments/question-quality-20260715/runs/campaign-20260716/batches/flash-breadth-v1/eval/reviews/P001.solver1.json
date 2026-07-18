@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "'The Limits of Logic'까지는 지문이 justification의 한계('more helpful but not necessarily more believable')를 언급하므로 순간 끌리는 매력이 있다. 그러나 'Always Fails'는 과잉 일반화 — 지문은 논리적 조언이 '더 도움이 된다(more helpful)'고 인정하며 항상 실패한다고 말하지 않는다. 또한 초점은 논리의 실패가 아니라 이야기의 힘이다."
+    },
+    {
+      "label": "2",
+      "verdict": "correct",
+      "reason": "지문의 3단 대비(단순 진술→이유 제시→이야기)의 결론과 정확히 일치. 'Real-Life Stories'는 'a similar situation that he was in or that he heard about'에, 'Foster Belief'는 believable/believe 논의에, 'Buy-In'은 'take the advice offered by the story more to heart'에 각각 대응한다. 제목으로서 포괄 범위와 초점이 모두 적절."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "고양이/개는 논지를 위한 예시 소재일 뿐이며, 지문은 반려동물 비교 자체를 다루지 않는다. 예시를 제목으로 격상시킨 전형적 소재 함정."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "지문과 정반대. 즉답('A cat')은 'useless advice'로 평가되며, 즉각적 답변이 신뢰를 만든다는 내용은 어디에도 없다."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "최대 매력 오답 — 'storytelling' 키워드가 겹쳐 실제로 끌렸음을 기록한다. 그러나 지문은 스토리텔링 '기법을 개발(Developing... Techniques)'하는 방법론이 아니라 이야기가 신념 형성에 미치는 효과(왜 더 믿게 되는가)를 다룬다. 'Creative'도 근거 없음 — 지문의 이야기는 창작이 아닌 실제 겪었거나 들은 경험담이다. 효과 논의를 how-to로 바꿔치기한 관점 전환 오답."
+    }
+  ],
+  "note": "제목 추론 문항. 지문 논리 구조(단순 진술 < 이유 제시 < 이야기)가 명확하고 정답 ②가 유일하게 옹호 가능. 오답 ①은 절대어(Always) 과잉 일반화, ⑤는 키워드 중복 기반 관점 전환 미끼로 매력도가 상대적으로 높았으나 둘 다 지문 근거로 배제 가능. 복수 정답 소지 없음."
+}

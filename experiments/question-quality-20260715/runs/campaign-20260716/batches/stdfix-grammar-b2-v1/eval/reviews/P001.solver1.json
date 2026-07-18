@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "주어-동사 수일치: 'When our minds ___ at ease'의 진짜 주어는 복수 'minds'이므로 are가 옳다. 사이에 끼어드는 단수 명사(수일치 함정)도 없어 장거리 단서상 문제 없음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'be likely to V' 관용 구조. we're more likely to direct...에서 be동사의 보어로 형용사 likely가 정확하다. 부사 대체형이 존재하지 않으며 어떤 대안 해석으로도 오류가 되지 않는다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "가장 매력적인 오답. 앞 문장의 능동 'we direct the spotlight of attention inward'와의 표면적 병렬 때문에 'attention tends to direct outward'(능동)를 기대하게 유혹하지만, 여기서 주어는 'our attention'으로 스스로 향하는 것이 아니라 (우리에 의해) 향해지는 대상이므로 수동 'be directed'가 문맥상·태(voice)상 옳다. 실제로 끌렸으나 주어가 바뀐 것을 확인하고 배제."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "While 뒤에 완전한 정형절(this pattern of attention is necessary...)이 오므로 접속사 While이 옳다. During/While 함정은 뒤가 명사구일 때만 성립하는데 여기는 절이다. 종속절 내 'when solving'도 일반 주어 생략 분사구문으로 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "지각동사 hear + 목적어(the quiet voices) 뒤 보어 자리. voices는 telling의 행위자이므로 현재분사 telling(또는 원형 tell)이어야 한다. 구제 파스 적극 탐색: 축약 관계절 'voices [that were] told us about the insight'로 읽으려면 수여동사 tell의 잔류 목적어 수동태가 성립해야 하는데, 수신자 수동은 'the voices were told about the insight'꼴만 가능하고 'told us'처럼 us가 잔류할 수 없으며, 의미상으로도 voices가 우리에게 말하는 것이지 듣는 쪽이 아니다. 어떤 대안 해석으로도 정문이 되지 않음 → told는 어법상 틀림, telling으로 고쳐야 한다."
+    }
+  ],
+  "note": "정답이 (E) 하나로 명확히 좁혀지는 깨끗한 문항. 매력적 오답 설계는 (C)의 능동/수동 유혹(앞 문장 능동 병렬 착시)과 (D)의 While/During 착시로 구성되어 있으나 둘 다 규칙 확인 시 무너진다. (E)는 지각동사 5형식의 전형 포인트로, 축약 관계절·잔류 목적어 수동태 등 구제 해석을 전부 시도해도 성립하지 않아 이의신청 여지 없음."
+}

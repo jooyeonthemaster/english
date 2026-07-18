@@ -1,0 +1,35 @@
+{
+  "pid": "J002",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'the fundamental assurance, providing not just for security and peace, but for liberty as well' — 현재분사가 assurance를 후치 수식(계속적 분사구). assurance가 'provide for(대비하다/보장하다)'의 능동 주체이므로 providing이 옳다. 'provided'로 바꾸고 싶은 유혹이 있으나 assurance는 제공되는 대상이 아니라 제공하는 주체이며, 'not just for A but for B as well' 병렬(for security / for liberty)도 온전하다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'more rational forms regulated by ... legal frameworks' — 축약 수동 관계절(forms [which are] regulated by ...). by 행위자가 명시된 수동 의미이므로 과거분사 regulated가 옳다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect (정답)",
+      "reason": "'because only such frameworks enabling people to live ...' — because절의 주어 'only such frameworks'에 정동사가 없다. enabling이면 절 전체가 무동사 상태. 구제 해석 적극 탐색: (i) because는 because of와 달리 정형절을 요구하므로 동명사/절대구문 불가, (ii) only가 주어 NP를 수식할 뿐 부사어 전치가 아니므로 도치 구조도 성립 불가, (iii) 'frameworks enabling people...'을 축약 관계절로 읽어도 술어가 여전히 부재. enable(현재 일반진리) 또는 believed 시제 일치의 enabled 등 정동사여야 한다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'man's violent and conflict-prone nature makes it necessary to establish ...' — 핵심 주어는 단수 nature(중간 수식어는 수 일치에 무관)이므로 3인칭 단수 makes가 옳고, 가목적어 it + 목적보어 necessary + 진목적어 to부정사 구조도 정확하다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'laws forbid them to do something' — forbid는 'forbid + 목적어 + to부정사'가 표준 구문(고전적 패턴)이며 'forbid A from -ing'도 병존한다. prohibit/prevent A from -ing 규칙을 과잉 일반화한 수험생을 노린 매력적 오답으로, 실제로 끌림을 느꼈으나 확인 결과 정문."
+    }
+  ],
+  "note": "정답 (C) 단독 옹호 가능. 지배 규칙은 '접속사 because는 정형절(주어+정동사)을 요구한다'는 장거리 단서 — 주어 only such frameworks 뒤에 정동사가 반드시 와야 하는데 준동사 enabling이 놓여 절이 무동사가 된다. 주요 미끼는 (E) forbid them to do(prohibit-from 유추 오답)와 (A) providing(provided 유혹). 지문 (A) 뒤 'as well..'의 마침표 중복은 오탈자이나 어법 판정에 영향 없음."
+}

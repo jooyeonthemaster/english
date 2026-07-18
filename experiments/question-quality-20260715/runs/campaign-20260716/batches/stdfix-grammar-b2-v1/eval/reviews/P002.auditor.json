@@ -1,0 +1,74 @@
+{
+  "pid": "P002",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V5-minor-surroundingText-convention",
+      "severity": "minor",
+      "evidence": "markedExpressions (C)의 surroundingText가 교정형 문장('...a culture where those subordinates did the same...')을 담고 있어, 렌더 지문('...a culture which...')과 다르다. 다른 4개 엔트리는 렌더 지문과 동일한 문맥을 담는다. expression='where'/errorExpression='which'/correction='where' 자체는 내부적으로 정합하며(비오류 엔트리는 세 값이 동일), 학생 노출 필드(지문·선지·해설·keyPoints)는 전부 동기화되어 있어 V5 실패로 보지 않는다. 다만 UI가 surroundingText로 밑줄 위치를 매칭한다면 (C)만 매칭이 깨질 수 있으므로 렌더 기준으로 통일 권고."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "감정 분사(experiencer 주어 + -ed형) 판별: concerned vs concerning",
+      "temptingBecause": "주어가 복수 명사구 'all of the CEOs'라 수일치·태를 동시에 의심하게 만들고, -ed/-ing 선택을 재검토하게 함",
+      "decisiveFlaw": "정답 불가 — 걱정을 '느끼는' 주체가 주어이므로 were concerned가 정확히 옳다. 복수 주어 all of the CEOs와 were의 수일치도 옳다."
+    },
+    {
+      "label": "(B)",
+      "intent": "사역동사 make + 목적어 + 원형부정사 규칙",
+      "temptingBecause": "'to appear'를 기대하는 학생이 원형 appear를 오류로 착각할 수 있음",
+      "decisiveFlaw": "정답 불가 — make them appear weak는 사역동사의 목적격보어로 원형부정사를 취하는 정형 구조로 옳다."
+    },
+    {
+      "label": "(C)",
+      "intent": "관계대명사 vs 관계부사: 뒤따르는 절의 완전성 판단 (정답)",
+      "temptingBecause": "선행사 'a culture'가 사물이라 which가 표면적으로 자연스러워 보이고, 뒤의 분사구 'creating a snowball effect'가 절 구조 파악을 흐림",
+      "decisiveFlaw": "관계사절 'those subordinates did the same'이 주어·동사·목적어를 모두 갖춘 완전한 절이므로 공백을 요구하는 관계대명사 which는 비문. where 또는 in which로 교정해야 하며 교정 시 원지문과 정확히 일치한다."
+    },
+    {
+      "label": "(D)",
+      "intent": "ask + 목적어 + to부정사 목적격보어 구조",
+      "temptingBecause": "앞의 'to actually name..., explore..., and ask...' 병렬(공유된 to 이후 원형 나열) 속에 있어, 원형 'reflect'가 병렬로 와야 한다고 오독할 수 있음",
+      "decisiveFlaw": "정답 불가 — 병렬되는 것은 name/explore/ask이고, to reflect는 ask의 목적격보어이므로 to부정사가 정확히 옳다."
+    },
+    {
+      "label": "(E)",
+      "intent": "부정대명사 each + of 복수명사구의 단수 수일치",
+      "temptingBecause": "동사 바로 앞의 복수 명사 'the CEOs'에 이끌려 were를 기대하게 만드는 근접 수일치 함정",
+      "decisiveFlaw": "정답 불가 — 주어의 핵은 단수 each이므로 was가 정확히 옳다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "정답 해설의 함정 서술('관계사절 뒤의 분사구문 creating...을 절의 구성 요소로 착각하지 않도록')은 사실 오류는 아니나 판정력이 약하다 — 분사구를 관계사절 내부 요소로 오인하더라도 절의 완전성 판단(주어+동사+목적어 존재)은 달라지지 않으므로 함정의 실효가 낮다.",
+      "recommendation": "함정 설명을 삭제하거나, 'do the same'이 자동사구로 보여 목적어 공백이 있다고 오인하는 경로 등 실제 오답 경로로 교체"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": {
+    "minimalPair": "충족 — where→which 최소대립쌍이며 교정 시 정확히 원문 복원",
+    "clearGrammarJudgment": "충족 — which/where는 대안 분석 여지가 없는 명확한 문법 판단",
+    "allFivePointsDocumented": "미충족 — 각 밑줄에 point(pointCode)와 why correct는 있으나 명시적 'why tempting'이 문항 데이터에 없음",
+    "structuralDepth": "미충족 — 정답이 '사물 선행사 + which + 완전한 절 → where'라는 정형 드릴 패턴이고, 검사 대상 절이 5단어('those subordinates did the same')로 짧아 훈련된 학생에게 즉시 드러남. 구조를 여러 단계 읽어야 하는 KILLER 깊이가 아님",
+    "noMaskingDecoy": "충족 — 정답과 같은 관계사 포인트의 디코이 없음"
+  },
+  "grade": "C",
+  "notes": "유효성 5개 게이트는 모두 통과한 건전한 문항이다. 렌더 지문은 의도된 where→which 치환 외 원지문과 완전 일치하고(V1), 5개 밑줄 독립 검증 결과 (C)만이 유일한 비문이며(V2), 교정 시 원문이 그대로 복원되고(V3), 해설의 구조 분석·용어가 실제 문장과 일치하며(V4), 학생 노출 필드가 전부 동기화되어 있다(V5). 결함은 난이도 정합이다: 요청 난이도가 KILLER인데 정답 포인트가 수능 어법에서 가장 많이 드릴되는 'which+완전한 절' 패턴이고 판정 대상 절이 극히 짧아 실제 체감 난이도는 표준(B2급)이다. C5=1, C3=2로 KILLER 재설계가 필요하다(예: 장거리 병렬 'were to name..., explore..., and ask...'의 explore/exploring, 또는 도치·생략이 얽힌 자리로 정답 포인트 이동). 총점 15/24, 등급 C — 출하하려면 난이도 라벨을 표준으로 재선언하거나 정답 포인트를 심화 재설계해야 한다."
+}

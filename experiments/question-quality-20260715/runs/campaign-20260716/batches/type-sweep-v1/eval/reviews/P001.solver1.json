@@ -1,0 +1,33 @@
+{
+  "pid": "P001",
+  "answer": "Not until we are being massaged by warm water, unable to check our e-mail, can we finally hear the quiet voices in the backs of our heads telling us about the insight.",
+  "multipleDefensible": true,
+  "defensibleLabels": [
+    "A: Not until we are being massaged by warm water, unable to check our e-mail, can we finally hear the quiet voices in the backs of our heads telling us about the insight. (정형절 — 원문 'we're being massaged' 보존)",
+    "B: Not until being massaged by warm water, unable to check our e-mail, can we finally hear the quiet voices in the backs of our heads telling us about the insight. (조건3의 '분사구문' 문언을 직역한 무주어 분사구 형태)"
+  ],
+  "confidence": "medium",
+  "perOption": [
+    {
+      "label": "조건1(핵심 의미·요소 포함)",
+      "verdict": "충족 판정 기준 명확",
+      "reason": "warm water 마사지 / 이메일 확인 불가 / the quiet voices in the backs of our heads / telling us about the insight — 원문 마지막 문장이 지문에 그대로 있어 요소 목록이 유일하게 결정된다. finally 누락이 실수 포인트."
+    },
+    {
+      "label": "조건2(Not until 문두 + 도치)",
+      "verdict": "충족 가능하나 함정 존재",
+      "reason": "도치는 주절('can we finally hear')에 걸어야 한다. until절 내부('Not until are we being massaged...')를 도치하는 오류가 전형적 매력 오답. 또한 원문의 It ~ that 강조구문을 그대로 남기면 조건 위반."
+    },
+    {
+      "label": "조건3('being massaged by warm water' 수동태 분사구문 + 'unable to check our e-mail' 형용사구)",
+      "verdict": "문언-원문 충돌 (표층형 이원화)",
+      "reason": "원문에서 'being massaged'는 정형 진행수동('we are being massaged')의 일부이지 분사구문이 아니다. 조건 문언('분사구문')을 그대로 따르면 'Not until being massaged ...'(B안, 무주어 분사구)가 되어야 하나 이는 어색한 저빈도 구문이고, 원문 보존형 A안('we are being massaged')은 문자열 포함은 충족하지만 '분사구문'이라는 문법 명명과 어긋난다. 채점 기준 없이는 A/B 중 어느 표층형이 정답인지 유일하게 결정되지 않는다. 'unable to check our e-mail'은 양쪽 모두 주어 we를 서술하는 유리(free) 형용사구로 무리 없이 결합."
+    },
+    {
+      "label": "조건4(도치절에 현재형 can)",
+      "verdict": "충족 판정 기준 명확 + 최강 유혹 오답 차단",
+      "reason": "'Not until ~ did/could ~' 암기 패턴 때문에 'could we finally hear'로 쓰는 유혹이 실제로 강하게 작동한다(본 검수자도 1차 초안에서 could가 먼저 떠올랐음을 기록). 원문 시제가 현재('we're finally able to')이므로 can이 옳고, 조건4가 이를 명시적으로 봉쇄한다. 'are we finally able to hear'도 의미상 옳지만 조동사 can 미사용으로 조건4 위반."
+    }
+  ],
+  "note": "서술형(조건 영작)이라 선지는 없음. 의미·시제·도치·요소 포함까지는 조건이 답을 잘 좁히지만, 조건3이 원문의 정형 진행수동('we are being massaged')을 '수동태 분사구문'으로 잘못 명명하여 A(정형절 보존)와 B(분사구문 직역) 두 표층형이 모두 조건 문언상 옹호 가능해진다. 모범답안은 A로 추정되나(원문 최소 변형 + 문자열 포함 충족), 문법 용어를 엄격히 적용하는 수험생은 B를 쓸 수 있고 이를 오답 처리할 근거가 조건 안에 없다. 채점 루브릭에 두 형태 허용 여부를 명시하거나 조건3의 '분사구문' 명명을 수정할 것을 권고. 유혹 기록: (1) could 도치 — 조건4로 차단되지만 끌림 강함, (2) until절 내 도치, (3) It ~ that 구문 잔존, (4) finally 탈락, (5) back of our heads 단수화(원문은 backs)."
+}

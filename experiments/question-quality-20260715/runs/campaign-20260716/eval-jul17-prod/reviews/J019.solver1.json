@@ -1,0 +1,35 @@
+{
+  "pid": "J019",
+  "answer": "5",
+  "multipleDefensible": false,
+  "defensibleLabels": ["5"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "'remains remarkably consistent' is the direct antonym of the sentence's own frame ('context dependent... under different circumstances, at a different time, when they are feeling a different way'). Plugging it in yields a self-contradiction. Polar-opposite decoy with no real pull."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "Contradicts the passage's explicit claim that students should 'think through ethical issues rather than follow a prescribed set of ethical codes or rules.' Lexical-echo trap ('prescribed ethical codes' reuses passage wording) but logically reversed."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong (most attractive distractor)",
+      "reason": "Tempting because the final sentence discusses 'recognizing and accepting that the factors that drive other people's codes... may be different.' I deliberately tried it: the blank sentence's subject frame is 'Individual perspectives may also be context dependent, meaning that...', so the blank must describe the same individual's own variability, not a comparative judgment about others. 'More fairly' is additionally unsupported anywhere in the passage. Fails on the local frame despite thematic echo."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "Distorts 'influenced by their formal and informal learning experiences' into permanence ('permanently fixes'), contradicting the passage's central variability thesis. Lexical-echo trap; logically dead on arrival."
+    },
+    {
+      "label": "5",
+      "verdict": "correct",
+      "reason": "Plugged in: 'under different circumstances, at a different time, when they are feeling a different way, one might alter their decisions depending on the situation.' Grammatical seam is clean (fronted adverbials + main clause; 'one... their' is standard singular-they; the they->one pronoun shift is slightly loose but idiomatic). Logically it is the exact unpacking of 'context dependent' and matches the following 'Therefore' sentence about understanding personal factors behind one's own code of behaviour. Minor redundancy ('depending on the situation' restates the fronted adverbials) does not weaken it."
+    }
+  ],
+  "note": "Single defensible answer (5). Distractor quality: 3 is the only option with genuine pull (borrows the 'recognize others' theme from the final sentence) but fails the blank sentence's local frame about the individual's own context dependence. 1, 2, 4 are contradiction/lexical-echo decoys with low pull for a top-tier solver. One stylistic quibble: option 5's 'depending on the situation' partially restates the stem's fronted adverbials, making the correct answer somewhat easy to spot by paraphrase-matching; item is valid but on the easier side."
+}

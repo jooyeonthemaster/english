@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법 결합(become + NP)은 정문이나 논리 모순. 지문은 'prejudiced humans'조차 발견을 침묵시킬 수 없다는 개인주의 수사를 소개한 뒤, 진리의 지위 조건으로 '전문가 승인'을 제시한다. '주관적 견해의 편향된 표상'이 되는 것은 standing 획득 조건이 될 수 없고, 지문 어디에도 편향성이 진리의 지위를 부여한다는 전제가 없다."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "정문이나 논리 정면 모순. 지문 전체가 '발견은 실험실에서 개인의 노력으로 완성된다'는 개인주의적 수사를 기각하는 구조이며, 빈칸 직후 문장 'What happens in somebody's laboratory is only one stage in its construction'이 개별적 발견만으로는 불충분함을 명시한다. '고립된 개인적 발견'은 until 절이 요구하는 지위 획득 조건과 상반된다."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "정문이며 유일하게 논리 성립. 'knowledge isn't knowledge unless it has been authorized by disciplinary specialists'와 'expert reviewers를 거치지 않은 발표는 비난받는다'는 두 전제로부터, 과학적 진리가 지위(standing)를 얻는 조건은 학문 공동체의 승인임이 직접 도출된다. 'approved by the scholarly community'는 'authorized by disciplinary specialists'의 어휘적 패러프레이즈이고, 후행 문장(실험실은 construction의 한 단계일 뿐 → 승인 과정이 나머지 단계)과도 정합적이다."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "정문이나 전제와 직접 모순. 지문은 'The norms of scientific communication presuppose that nature does not speak unambiguously'라고 명시하여, 자연이 직접 제공하는 물리적 증명이 진리의 지위를 부여한다는 발상(스스로 말하는 발견 = 개인주의 수사의 일부)을 명시적으로 부정한다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "정문이나 지문이 명시적으로 배제하는 경로. 전문가 검토 없이 기자회견에서 발견을 발표하는 과학자는 'automatically castigated as a publicity seeker'라고 서술되므로, '일반의 주목을 끌기 위한 공개 발표'는 진리의 standing을 부여하기는커녕 비난의 대상이 되는 행위다."
+    }
+  ],
+  "note": "빈칸 문장 'has little standing until it becomes ___'의 until 절은 지위 획득의 필요조건을 서술하므로, 빈칸에는 지문이 긍정하는 조건이 와야 한다. 다섯 선지 모두 become + NP seam에서 문법적으로는 정문이므로 판별은 순수 논리 적합성으로 이루어지며, ③만이 'authorized by disciplinary specialists / expert reviewers' 전제로부터 연역적으로 도출된다. ①②④⑤는 각각 지문이 기각하는 명제(편향 수용, 개인주의적 고립 발견, 자연의 명료한 자기증명, 대중적 발표)와 모순되어 복수 정답 여지가 없다. 미끼 ②·④·⑤는 지문 표면 어휘(individual, nature, press conference)를 재활용한 반대 방향 함정으로 설계가 정상적이다."
+}

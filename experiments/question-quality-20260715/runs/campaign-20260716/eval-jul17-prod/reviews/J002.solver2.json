@@ -1,0 +1,35 @@
+{
+  "pid": "J002",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "현재분사구 'providing not just for security and peace, but for liberty as well'은 선행 명사구(the rule of law / the fundamental assurance)를 수식하는 축약 관계절(which provides for...)로 성립. 'provide for X'(보장하다) 결합 및 'not just for A, but for B as well' 병렬(for+NP)도 정합. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'forms regulated by effective and binding legal frameworks'는 과거분사 후치수식(forms which are regulated by...). 수동 의미가 by 행위자구로 뒷받침됨. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "because 종속절은 정형동사를 요구하는데 'because only such frameworks enabling people to live...'에는 본동사가 없다. 'enabling'을 분사 수식으로 읽어도 절을 술어화할 동사가 여전히 부재하고, 'only+주어'는 도치를 유발하지 않으며 생략을 허가할 병렬 선행 구조도 없어 어떤 대안 해석으로도 구제 불가. enable(일반 진리 현재) 또는 enabled(주절 과거 정합)여야 함. 어법상 틀림 — 정답."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "주어 핵 'nature'(단수) + makes 수일치 정합('man's violent and conflict-prone'은 수식어). make + 가목적어 it + necessary + 진목적어 to부정사 구문 표준. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "forbid는 [forbid + O + to-V] 보문 패턴을 표준적으로 허가한다(forbid someone to do something — 사전 등재 용법; prohibit과 달리 to부정사 가능). 'forbid them to do something' 정문. from doing만 옳다는 판단은 과잉교정."
+    }
+  ],
+  "note": "정답 후보는 (C) 단독. because절 내 정형동사 부재는 장거리 단서(절 전체 스캔)로 형식적으로 증명되는 비문이며, 나머지 4개 밑줄은 각각 분사 수식, 수동 분사+by구, 수일치+가목적어, forbid 보문 패턴이 명확히 성립. 지문에 'as well..' 이중 마침표 오타가 있으나 어법 판정과 무관. 복수 정답 소지 없음."
+}

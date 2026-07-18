@@ -1,0 +1,168 @@
+{
+  "batchId": "grok-longform-v1",
+  "phase": "grok",
+  "note": "GK-A: 장문·비정형 실전지문 × 어법/빈칸 × KILLER/INT — jul17 pro 실전(동일 지문, 기평가)과 짝비교. reasoning=low.",
+  "atKst": "2026-07-17T19:22:21.900+09:00",
+  "gitSha": "8d365701e339d7ad64bb1f808c76ec768e9855ee",
+  "gitDirty": true,
+  "worstCaseReserved": 64,
+  "spec": {
+    "batchId": "grok-longform-v1",
+    "phase": "grok",
+    "note": "GK-A: 장문·비정형 실전지문 × 어법/빈칸 × KILLER/INT — jul17 pro 실전(동일 지문, 기평가)과 짝비교. reasoning=low.",
+    "concurrency": 5,
+    "providerRouting": "none",
+    "env": {
+      "OPENROUTER_REASONING_EFFORT": "low",
+      "PREMIUM_QGEN_MODEL_ID": "x-ai/grok-4.5",
+      "GRAMMAR_PREMIUM_MODEL_ID": "x-ai/grok-4.5",
+      "EXPLANATION_VERIFY_MODEL_ID": "google/gemini-3.1-pro-preview"
+    },
+    "assignments": [
+      {
+        "itemId": "lf-g-02",
+        "frameId": "adhoc-prod-02",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "GKA-G-KILLER",
+        "funnel": true
+      },
+      {
+        "itemId": "lf-g-04",
+        "frameId": "adhoc-prod-04",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "GKA-G-KILLER",
+        "funnel": true
+      },
+      {
+        "itemId": "lf-g-05",
+        "frameId": "adhoc-prod-05",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "GKA-G-KILLER",
+        "funnel": true
+      },
+      {
+        "itemId": "lf-g-06",
+        "frameId": "adhoc-prod-06",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "GKA-G-KILLER",
+        "funnel": true
+      },
+      {
+        "itemId": "lf-g-07",
+        "frameId": "adhoc-prod-07",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "GKA-G-KILLER",
+        "funnel": true
+      },
+      {
+        "itemId": "lf-g-08",
+        "frameId": "adhoc-prod-08",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "GKA-G-KILLER",
+        "funnel": true
+      },
+      {
+        "itemId": "lf-b-01",
+        "frameId": "adhoc-prod-01",
+        "subType": "BLANK_INFERENCE",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "GKA-B-KILLER",
+        "funnel": true
+      },
+      {
+        "itemId": "lf-b-04",
+        "frameId": "adhoc-prod-04",
+        "subType": "BLANK_INFERENCE",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "GKA-B-KILLER",
+        "funnel": true
+      },
+      {
+        "itemId": "lf-b-05",
+        "frameId": "adhoc-prod-05",
+        "subType": "BLANK_INFERENCE",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "GKA-B-KILLER",
+        "funnel": true
+      },
+      {
+        "itemId": "lf-b-06",
+        "frameId": "adhoc-prod-06",
+        "subType": "BLANK_INFERENCE",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "GKA-B-KILLER",
+        "funnel": true
+      },
+      {
+        "itemId": "lf-b-07",
+        "frameId": "adhoc-prod-07",
+        "subType": "BLANK_INFERENCE",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "GKA-B-KILLER",
+        "funnel": true
+      },
+      {
+        "itemId": "lf-b-08",
+        "frameId": "adhoc-prod-08",
+        "subType": "BLANK_INFERENCE",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "GKA-B-KILLER",
+        "funnel": true
+      },
+      {
+        "itemId": "lf-g-04i",
+        "frameId": "adhoc-prod-04",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "INTERMEDIATE",
+        "plan": "PREMIUM",
+        "armId": "GKA-G-INT",
+        "funnel": true
+      },
+      {
+        "itemId": "lf-g-06i",
+        "frameId": "adhoc-prod-06",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "INTERMEDIATE",
+        "plan": "PREMIUM",
+        "armId": "GKA-G-INT",
+        "funnel": true
+      },
+      {
+        "itemId": "lf-b-04i",
+        "frameId": "adhoc-prod-04",
+        "subType": "BLANK_INFERENCE",
+        "difficulty": "INTERMEDIATE",
+        "plan": "PREMIUM",
+        "armId": "GKA-B-INT",
+        "funnel": true
+      },
+      {
+        "itemId": "lf-b-06i",
+        "frameId": "adhoc-prod-06",
+        "subType": "BLANK_INFERENCE",
+        "difficulty": "INTERMEDIATE",
+        "plan": "PREMIUM",
+        "armId": "GKA-B-INT",
+        "funnel": true
+      }
+    ]
+  }
+}

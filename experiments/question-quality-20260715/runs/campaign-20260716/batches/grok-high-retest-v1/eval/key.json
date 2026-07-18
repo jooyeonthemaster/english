@@ -1,0 +1,122 @@
+{
+ "P001": {
+  "itemId": "rt-b-046",
+  "armId": "RT-B-EZ",
+  "frameId": "blank-supply-v2-046",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "BASIC",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   }
+  ]
+ },
+ "P002": {
+  "itemId": "rt-b-037",
+  "armId": "RT-B-EZ",
+  "frameId": "blank-supply-v2-037",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "3",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   }
+  ]
+ },
+ "P003": {
+  "itemId": "rt-irre-s",
+  "armId": "RT-IRRE",
+  "frameId": "grammar-frame-v2-088",
+  "subType": "IRRELEVANT",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "③",
+  "gateIssues": []
+ },
+ "P004": {
+  "itemId": "rt-summ-s",
+  "armId": "RT-SUMM",
+  "frameId": "blank-supply-v2-090",
+  "subType": "SUMMARY_COMPLETE_MC",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": []
+ },
+ "P005": {
+  "itemId": "rt-sord-l",
+  "armId": "RT-SORD",
+  "frameId": "adhoc-prod-04",
+  "subType": "SENTENCE_ORDER",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "5",
+  "gateIssues": []
+ },
+ "P006": {
+  "itemId": "rt-sins-l",
+  "armId": "RT-SINS",
+  "frameId": "adhoc-prod-08",
+  "subType": "SENTENCE_INSERT",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "④",
+  "gateIssues": []
+ },
+ "P007": {
+  "itemId": "rt-summ-l",
+  "armId": "RT-SUMM",
+  "frameId": "adhoc-prod-05",
+  "subType": "SUMMARY_COMPLETE_MC",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": []
+ },
+ "P008": {
+  "itemId": "rt-sins-s",
+  "armId": "RT-SINS",
+  "frameId": "grammar-frame-v2-128",
+  "subType": "SENTENCE_INSERT",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "③",
+  "gateIssues": []
+ },
+ "P009": {
+  "itemId": "rt-irre-l",
+  "armId": "RT-IRRE",
+  "frameId": "adhoc-prod-07",
+  "subType": "IRRELEVANT",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "②",
+  "gateIssues": []
+ }
+}

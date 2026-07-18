@@ -1,0 +1,40 @@
+{
+  "pid": "P016",
+  "answer": "present-ing",
+  "multipleDefensible": true,
+  "defensibleLabels": ["present-ing", "performance"],
+  "confidence": "medium",
+  "perOption": [
+    {
+      "label": "present-ing",
+      "verdict": "정답(주후보)",
+      "reason": "본문 'the necessity of present-ing music - making it present here and now, without which it will not be music at all'에 동명사형 그대로 출현. seam 검증: 'the act of present-ing'은 문법 성립(타동사 동명사의 목적어는 문맥상 music으로 복원). 논리 검증: 빈칸 문장(음악적 의미는 이 행위와 불가분) 직후 'However, the necessity of present-ing music ... does not sit easily with a concept of education...'이 전제-귀결로 정확히 이어지며, 지문 대주제(음악은 발생하는 순간에만 존재, Stravinsky의 'realize the present')와 정합. 발문의 '동사를 포함할 경우 본문 제시 원형/굴절형 그대로' 단서와도 부합하는 유일한 본문 출현 어형."
+    },
+    {
+      "label": "performance",
+      "verdict": "조건부 옹호 가능(부후보)",
+      "reason": "의미상 강한 후보('no two performances are identical', 음악은 연주되는 순간에만 존재 → 의미는 연주 행위와 불가분)이고 'the act of performance'는 관용적 정문. 그러나 본문에는 복수형 'performances'만 출현하며 'the act of performances'는 비문(act of + 복수 가산명사 불가). 단수로 바꿔 쓰면 '본문에서 찾아 그대로'라는 발문 제약과 충돌 — 발문이 명사의 수 변경 허용 여부를 명시하지 않아 채점 기준에 따라 정답 처리될 수 있는 결함성 중복 후보."
+    },
+    {
+      "label": "performances",
+      "verdict": "오답",
+      "reason": "본문 출현 어형 그대로이나 'the act of performances'는 문법 비성립(act of는 동명사·단수/불가산 명사만 취함)."
+    },
+    {
+      "label": "making",
+      "verdict": "오답",
+      "reason": "타동사 동명사로 목적어 필수('making it present'). 'the act of making' 단독은 비완결 구성."
+    },
+    {
+      "label": "working",
+      "verdict": "오답",
+      "reason": "'the act of working'은 문법적이나 본문에서는 'working directly with music'의 일부로, 단독으로는 빈칸 문장의 명제(음악적 의미의 존재 조건)를 담지 못함."
+    },
+    {
+      "label": "absorbing",
+      "verdict": "오답",
+      "reason": "타동사(목적어 필수)이며 의미상 지문이 비판하는 수동적 지식 흡수 쪽 항목으로, 음악적 의미의 성립 조건과 정반대."
+    }
+  ],
+  "note": "서술형 단어 채우기 문항. 본문 출현 어형 그대로라는 제약 하에 문법(the act of + 동명사)과 논리(직후 'However, the necessity of present-ing music...'과의 전제-귀결 연결) 모두 성립하는 유일해는 'present-ing'. 다만 원전 문장이 'the act of performance'였을 개연성이 있는데 본문에는 단수 'performance'가 없어(복수 'performances'만 존재), 출제 의도가 performance라면 '본문에서 찾아 쓰라'는 발문과 모순되는 문항 결함이 된다. 발문의 괄호 단서(동사 포함 시 본문 제시 형태 그대로)는 present-ing을 가리키는 것으로 해석되나, 채점 기준이 명사 수 변경을 허용하면 performance도 옹호 가능하므로 multipleDefensible=true로 보고."
+}

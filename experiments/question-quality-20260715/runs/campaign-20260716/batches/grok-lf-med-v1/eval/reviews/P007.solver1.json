@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "매력적 오답. 지문의 양보절 'if it involves vulnerable groups, cannot be denied'를 그대로 되울려 첫인상에서 끌린다. 그러나 (a) seam 붕괴: 'channeling X toward vulnerable groups alone to their populations'는 방향 보어(toward/to)가 이중으로 걸려 비문이 된다. (b) 논리 붕괴: 지문은 성장(경제적 성공)이 기근 예방 성공의 'at best only a small part'만 설명한다고 못박았으므로 real achievements가 경제성공의 전달일 수 없고, 'alone'은 이를 더 악화시킨다."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "seam 붕괴: 'diverting public funds into continuous rural revival primarily to their populations'에서 to-구가 걸릴 자리가 없다. 'mainly ... primarily' 중복도 비문 신호. 논리적으로도 rural economy 부흥은 첫 문장에서 '흔한 경향'으로 제시된 뒤 격하되는 대상이지 real achievement가 아니다."
+    },
+    {
+      "label": "3",
+      "verdict": "correct",
+      "reason": "'extend safeguards to their populations' 결합으로 stem의 'to their populations in times of crisis'와 자연스럽게 이어지고, 'state-backed entitlement safeguards'는 지문의 'specialized entitlement protection mechanisms involving direct public intervention'을 정확히 재진술한다. Botswana/Kenya/Zimbabwe의 성공을 성장이 아닌 공적 개입으로 설명하는 지문 결론과 완전 일치. 다만 선지 내 'amid crisis'가 stem의 'in times of crisis'와 의미 중복되고 목적어와 to-구 사이에 끼어 어색한 품질 결함이 있다(정답성은 훼손하지 않음)."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "seam 붕괴: 'letting households diversify livelihoods until market recovery to their populations'에서 to-구를 받을 동사·명사가 없다. 논리적으로도 diversification은 첫 문장에서 불충분한 통상적 처방으로 열거된 항목이며, 지문 핵심(직접적 공적 개입 필요)과 정반대."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "지문이 명시적으로 부정한 내용('Rapid growth ... explains at best only a small part')을 real achievement로 승격시키는 정면 모순 선지. seam도 어색: 'crediting X as the chief preventive force to their populations'는 to-구가 논리적으로 걸리지 않는다."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 빈칸 뒤 잔류 성분 'to their populations in times of crisis'가 강력한 장거리 단서로, extend A to B 결합을 요구해 3번만 문법적으로 성립한다. ①이 지문 어구 재활용으로 가장 유혹적이었으나 'only a small part' 문장과 이중 방향보어에서 탈락. 문항 자체 결함: 정답 선지의 'amid crisis'가 stem의 'in times of crisis'와 중복되어 완성문이 'amid crisis ... in times of crisis'로 어색해지는 품질 문제가 있고, seam 단서(extend...to)만으로 소거가 가능해 논리 독해 없이도 풀릴 여지가 있다. 정답 유일성은 확고."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P010",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "History is mentioned in the first sentence as something drafters ARE attentive to ('attentive to questions of economics and history'); the deficiency the passage identifies is moral/ethical, not historical. 'In a vacuum' does not refer to ignoring legislative history."
+    },
+    {
+      "label": "2",
+      "verdict": "correct",
+      "reason": "The clause 'economics cannot, in a vacuum, identify the goal' is immediately glossed by the final sentence: 'Creating tax policy requires identifying a moral goal, which is a task that must involve ethics and moral analysis.' Thus the vacuum = economics operating without ethical input; 'identify the goal' = deciding which ends taxation should serve. Exact paraphrase."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "Most attractive distractor — it recycles the goal/aim vocabulary of the very sentence containing the underline. But measuring whether a rule advances a given aim is exactly what the passage says economics CAN do ('determine whether or not a particular tax law will help achieve a particular goal'). The vacuum concerns identifying/choosing the aim, not evaluating progress toward an already-fixed aim. Role-reversal trap; I felt the pull but the can/cannot contrast in the sentence kills it."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "Incoherent in context: the subject of the clause is economics itself, so reading 'in a vacuum' as 'without consulting economic models' yields 'economics, without economics, cannot identify the goal.' Also revenue-prediction models are never mentioned."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Inverts the author's thesis. The passage argues moral debates should be central to tax lawmaking, not removed; 'too controversial' is quoted from the position the author rejects. 'In a vacuum' describes the absence of moral analysis as a defect, not the desirable removal of moral controversy."
+    }
+  ],
+  "note": "Implied-meaning item on 'in a vacuum'. The metaphor is resolved explicitly by the following sentence, making 2 uniquely defensible. Distractor 3 is well-built (lexical overlap with the target sentence, plausible-sounding policy language) but is defeated by the can/cannot contrast: economics CAN evaluate means-to-goal effectiveness, it CANNOT (alone) identify the goal. No alternative reading makes any other option defensible. Clean single-answer item."
+}

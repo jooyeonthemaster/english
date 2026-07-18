@@ -1,0 +1,38 @@
+{
+  "pid": "P008",
+  "finalV2": true,
+  "winningAnswer": "(C)",
+  "reason": "독립 재검증 결과 정답 집합은 정확히 {(C)}. (C) 'thoroughly reporting in the media'는 콤마 삽입 후치 수식 분사구로서 의미상 주어가 핵명사 'the broad outlines (of such catastrophes)'인데, outlines는 report 행위의 대상(the media report the outlines)이므로 수동 과거분사 reported가 필수다. 구제 가능한 대안 해석을 전수 탐색했으나 — (i) 자동사 report는 유정 행위주를 요구해 무정물 outlines와 불성립하고 타동사 독해면 목적어 공백이 남음, (ii) 해당 위치에 동명사 슬롯 없음, (iii) 자체 주어 없는 독립분사구문·judging from류 관용 분사 아님, (iv) 암시적 행위주를 향한 현수분사 독해는 주어-동사 사이 삽입 위치상 차단되며 그 자체로도 어법 오류 — 어느 해석으로도 정문이 되지 않는다. reported 교정 시 원지문이 정확히 복원되는 최소대립쌍. 나머지 4개 밑줄은 모두 정문: (A) 자유관계사 what(call의 목적어 공백 + create의 목적어 명사절), (B) 상승 수동 'are thought to be', (D) be 주격보어 형용사 precise, (E) 본동사 수동태 were surveyed(memories가 조사 대상, 직전 문장 'surveys of ... memories'가 연어를 지문 내부에서 보증). 솔버 1·2 모두 과잉 판정(불성립 대안을 성립한다고 주장) 없이 정확히 판정했고, (E)의 연어 위화감은 문법성 문제가 아님을 양측 모두 올바르게 소거했다. 놓친 대안 해석 없음. 비밑줄 구간에도 간섭 오류 없음. 선언된 정답 (C)는 유일 정답으로 최종 확정한다.",
+  "perDispute": [
+    {
+      "label": "(C)",
+      "claim": "선언된 정답 — reporting은 태 오류이며 reported여야 한다",
+      "verdict": "CONFIRMED_ERROR_UNIQUE_ANSWER",
+      "evidence": "분사구 부착 대상은 NP 'the broad outlines of such catastrophes'의 핵어 outlines. outlines는 보도의 대상이므로 축약 관계절 'which are thoroughly reported in the media'에서 온 과거분사 reported가 필수. 구제 해석 4경로(자동사 report / 동명사 / 독립분사구문·관용 무주어 분사 / 현수분사) 전부 불성립 확인. reported 교정 시 full 파일의 원지문과 완전 일치하는 최소대립쌍."
+    },
+    {
+      "label": "(A)",
+      "claim": "what이 that/which여야 한다는 대안 판정 가능성",
+      "verdict": "REJECTED_OPTION_IS_GRAMMATICAL",
+      "evidence": "'psychologists call ___ \"flashbulb\" memories'는 call+O+OC 5형식에서 목적어가 공백인 불완전절이고 명사절 전체가 create의 목적어. 선행사가 없으므로 which 불가, 접속사 that은 공백 불허로 불가 — 자유관계사 what이 유일한 정형. 'call 뒤 NP 존재'는 목적보어에 의한 완전절 착시일 뿐."
+    },
+    {
+      "label": "(B)",
+      "claim": "to be가 being/원형/to have been이어야 할 가능성",
+      "verdict": "REJECTED_OPTION_IS_GRAMMATICAL",
+      "evidence": "'think O to be C'의 수동 상승 구문 'S are thought to be C'는 교과서적 정문. to be 생략형이 병존 가능하다는 사실이 to be의 존재를 오류로 만들지 않으며, 일반적 진리 서술이므로 완료형 to have been 강제 근거도 없음."
+    },
+    {
+      "label": "(D)",
+      "claim": "precise가 부사 precisely여야 할 가능성",
+      "verdict": "REJECTED_OPTION_IS_GRAMMATICAL",
+      "evidence": "'may not necessarily be ___'는 be동사 주격보어 자리이므로 형용사 precise가 옳다. precisely로 바꾸면 보어가 사라져 비문. 선행 부사 necessarily는 조동사구 수식으로 보어 자리와 무관."
+    },
+    {
+      "label": "(E)",
+      "claim": "memories were surveyed의 태 또는 연어가 오류일 가능성 (최대 매력 오답)",
+      "verdict": "REJECTED_OPTION_IS_GRAMMATICAL",
+      "evidence": "주어 the respondents' memories는 survey의 대상이므로 수동태가 유일하게 호응하고 능동 독해는 의미 불성립. '기억을 조사한다'는 연어의 위화감은 문법성 위반이 아니며, 직전 문장 'surveys of fifteen hundred Americans' memories'가 survey가 memories를 목적어로 취하는 용례임을 지문 내부에서 명시적으로 보증. 시간 부사구 병렬(again a year later, ...)도 정문."
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'play has long been seen as a way of ...' — 'see A as B'의 수동태 'A be seen as B'가 현재완료 수동(has been seen)으로 실현된 형태. 주어 play(단수·무생물)가 '~로 여겨져 왔다'는 의미이므로 수동·완료 모두 성립. 부사 long의 위치(has long been)도 정상. 어법상 옳음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "관계절 'that are necessary for future survival'의 선행사는 'skills and behaviors'(복수). 관계대명사 that이 주어이므로 동사는 선행사에 수일치해야 하고, 복수 동사 are가 맞다. 선행사를 'a way of learning'(단수)으로 보는 대안 해석은 의미상(생존에 필요한 것은 기술과 행동) 및 인접성 원리상 성립하지 않으며, 설령 그 해석을 강행해도 출제 표기는 are이므로 문제 삼을 대안이 아니라 오히려 are를 지지하는 해석만 남는다. 어법상 옳음."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "'play is a way which children learn about the world and their place in it.' 관계대명사 which가 성립하려면 관계절 내부에 명사구 공백(gap)이 있어야 한다. 그러나 'children learn about the world and their place in it'은 주어(children)·동사(learn)·전치사구(about ...)가 모두 채워진 완전한 절로, which가 들어갈 논항 자리가 없다. learn을 타동사로 보아 which를 목적어로 회수하려 해도 'learn [which] about the world'는 비문이다. 선행사 way를 수식하려면 관계부사적 기능이 필요하므로 'in which' 또는 관계부사 대용 that('a way that children learn'), 혹은 무표지('a way children learn')여야 한다. which 단독으로는 어떤 대안 해석(축약 관계절·삽입 등)으로도 정문이 되지 않는다. 어법상 틀림 — 정답."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'allows children to try out and learn social behaviors' — allow는 5형식 'allow + O + to-V' 구문을 취하므로 to try out은 정상. and는 to try out과 (to) learn 두 부정사를 병렬하며, 공유 목적어 social behaviors를 취하는 구조(try out and learn social behaviors)도 성립. 뒤의 'and to acquire ...'와의 상위 병렬(to try out and learn ~ / to acquire ~)도 문제없다. 어법상 옳음."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'values and personality traits that will be important in adulthood' — 관계절 내 be동사의 보어 자리이므로 형용사 important가 맞다. 부사 importantly로 쓸 자리가 아니며, 서법·시제(will be)와의 결합도 정상. 어법상 옳음."
+    }
+  ],
+  "note": "정답은 (C) 하나로 유일하게 좁혀진다. (C)는 관계절 내부에 공백이 없는 완전절 앞에 관계대명사 which를 둔 전형적 오류로, 'in which/that/무표지'만이 정문이며 which를 정문으로 만드는 대안 해석은 존재하지 않는다. 나머지 네 밑줄은 각각 수동완료, 수일치, 5형식 to부정사 병렬, 보어 형용사로 모두 형식적으로 정당화된다. 미끼 품질도 무난: (B)는 선행사 판별, (D)는 병렬 시작점, (E)는 형용사/부사 구별을 시험한다."
+}

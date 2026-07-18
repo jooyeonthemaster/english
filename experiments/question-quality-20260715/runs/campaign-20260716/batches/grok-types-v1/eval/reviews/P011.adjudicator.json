@@ -1,0 +1,46 @@
+{
+  "pid": "P011",
+  "finalV2": true,
+  "winningAnswer": "4",
+  "reason": "조정 판정: 선언 정답 ④는 유일 정답으로 성립한다(finalV2=true). 단, 이 판정은 '주어진 문장'을 원지문 S6('Sooner or later, since you cannot do what you are trying to do, you quit.')로 확정하는 조건부 판정이다. 재검증 결과 결말 요약 'a perfect death spiral: you misdirect your work; you stall; you quit'의 3항 중 misdirect(①-② 구간 steer)와 stall(③ 구간 delay)은 선행 서사에 대응 단계가 있으나 quit은 렌더 지문 어디에도 선행 도입되지 않으므로, 요약 직전인 ④만이 quit 사건을 공급할 수 있는 유일한 결속 공백이다. ①은 패턴 도입 전 종결 선행, ②·③은 quit 이후 cling/delay가 이어지는 서사 역행, ⑤는 수사적 종결 후 동일 어구(you quit) 반복·시간 역행으로 각각 성립하지 않는다. 솔버 1·2의 선지별 판정에 과잉 판정(비성립 대안을 성립 주장)이나 누락된 대안 해석은 발견되지 않았다. 다만 렌더에서 S5('Believing... cannot do it. (You are correct.)')가 추가 삭제되어 주어진 문장의 since 절 전제가 약화된 점, 그리고 주어진 문장 제시 필드 자체가 누락되어 문항이 자립적으로 풀이 불가능한 점(V1/V4/V5 결함, 감사자 grade F)은 본 V2 판정과 별개로 유효한 치명 결함이며 문항 수리가 필요하다.",
+  "perDispute": [
+    {
+      "label": "given-sentence-missing",
+      "claim": "솔버 1·2 공통: 문장삽입 유형인데 삽입 대상 '주어진 문장'이 문항 파일에 없어 형식상 풀이 불가(unsolvable).",
+      "verdict": "인정(단, V2 축과는 분리)",
+      "evidence": "blind/P011.md에는 지문·발문·위치 선지만 있고 주어진 문장 박스가 없다. full/P011.md 해설 역추적으로만 S6이 삽입 대상임을 알 수 있다. 이는 V1(지문 무결성)·V4(해설 정합) 결함이며 감사자가 이미 critical로 기록했다. V2(정답 유일성)는 주어진 문장을 S6으로 확정한 조건 하에서 독립적으로 판정 가능하고, 그 조건에서 ④ 유일성이 성립한다."
+    },
+    {
+      "label": "1",
+      "claim": "솔버 1·2: ①은 'The pattern is predictable'의 조응 결속이 완전하여 삽입 불가.",
+      "verdict": "성립하지 않음(솔버 판정 유지)",
+      "evidence": "①에 S6을 넣으면 quit(종결 사건)이 패턴 서술 시작 전에 놓여 이후 steer→cling→delay 축적 단계가 모두 포기 이후에 일어나는 모순이 생기고, since 절 전제('cannot do what you are trying to do')의 근거도 전무하다. 두 솔버의 부적합 판정은 과잉이 아니라 정확하다."
+    },
+    {
+      "label": "2",
+      "claim": "솔버 1·2: ②는 steer→cling의 점층 병렬로 공백 없음.",
+      "verdict": "성립하지 않음(솔버 판정 유지)",
+      "evidence": "②에 S6을 넣으면 'you quit' 직후에 'You cling ever more tightly...'가 이어져 포기 후 집착·지연이 계속되는 서사 역행이 된다. 어휘 결속(what you ... can do 반복)도 삽입으로 단절된다. 부적합 판정 정당."
+    },
+    {
+      "label": "3",
+      "claim": "솔버 1이 '매력적 오답'으로 지목한 자리. 공식 오답 해설은 'cannot은 앞에서 나와 표면상 맞지만'이라고 주장.",
+      "verdict": "성립하지 않음(단, 공식 오답 해설은 허위 근거)",
+      "evidence": "③에 S6을 넣으면 quit 직후 'You find reasons to delay...'가 와서 포기 후 미루기라는 시간 역행이 되고, 요약의 misdirect→stall→quit 순서와도 충돌한다. 부적합 확실. 반면 공식 오답 해설의 'cannot은 앞에서 나와'는 렌더 지문에 cannot이 전무하므로 허위 진술(감사자 V4 지적과 일치)이나, 이는 해설 결함이지 정답 유일성을 흔들지 않는다."
+    },
+    {
+      "label": "4",
+      "claim": "선언 정답. 솔버 1·2 모두 유일 정답으로 판정. 공식 해설은 'cannot do it.(You are correct.)' 확신 고리를 근거로 제시.",
+      "verdict": "유일 정답 성립(단, 공식 해설의 근거는 렌더에 부재)",
+      "evidence": "④ 삽입 시: delay 문장 뒤에 'Sooner or later, ... you quit.'이 오고, 직후 요약이 quit을 3단 열거의 마지막 항으로 회수한다. quit은 지문 내 유일한 미도입 요약 항목이므로 ④가 유일한 결속 공백이다. 'Sooner or later'가 축적 단계의 종착을 신호하여 S5 삭제로 약화된 since 절 전제('cannot do')도 서사 흐름상 수용 가능하다. 단 공식 해설이 지목한 '직전 cannot do it.(You are correct.) 확신 고리'는 렌더 지문에 존재하지 않아 해설 근거로는 무효이며, 유일성은 quit 공백 논리로만 성립한다."
+    },
+    {
+      "label": "5",
+      "claim": "잠재 대안: 지문 마지막 어구가 'you quit'이라 표면 어휘가 겹치는 말미 자리.",
+      "verdict": "성립하지 않음",
+      "evidence": "⑤에 S6을 넣으면 'you misdirect; you stall; you quit' 요약으로 담화가 수사적으로 종결된 직후 동일 사건(quit)을 재서술하는 순수 반복이 되고, 'Sooner or later'가 요약 이후에 놓여 시간 논리도 역행한다. 정보 추가가 전혀 없어 대안 해석으로 성립하지 않는다. 솔버 1·2 판정과 일치."
+    }
+  ],
+  "adjudicatedAt": "2026-07-17",
+  "conditionality": "finalV2=true는 주어진 문장=S6 확정 조건부. 문항 수리(주어진 문장 필드 복원, S5 복원 여부 결정, 해설 전면 재작성) 시 정답 라벨 재확인 필요 — S5까지 복원한 표준 배치에서는 마커 재배치에 따라 정답 위치가 달라질 수 있다는 감사자 노트에 동의함."
+}

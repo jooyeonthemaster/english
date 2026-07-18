@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong-too-narrow",
+      "reason": "매력 오답. 'Once the danger passed... 10 to 15 seconds... not much you could do to cut that short' 두 문장이 생생해서 실제로 끌린다. 그러나 이는 감정의 비자발성(involuntariness)을 보여주는 하위 사례일 뿐이며, 지문의 다른 축인 '행동 준비(prepare us to deal / preparing us for actions)'와 표현 신호(signals) 내용을 전혀 포괄하지 못한다. 부분 정보의 과확대."
+    },
+    {
+      "label": "2",
+      "verdict": "correct",
+      "reason": "첫 문장 'Emotions prepare us to deal with important events without us having to think'과 마지막 문장 'We don't choose these changes; they simply happen'이 각각 '행동 준비'와 '자동성'을 명시하고, 중간의 모든 세부(무의식적 위험 감시, 뇌·자율신경계 변화로 preparing us for different actions, 선택하지 않은 표정·음성 변화)가 이 두 축 아래 포섭된다. automatic systems that prepare us for action은 지문 전체를 정확히 요약한다."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong-contradicted",
+      "reason": "지문이 정면으로 부정하는 내용. 'Nor would you have survived if you had to think consciously about what you should do' — 의식적 전략이 아니라 무의식적·자동적 처리가 핵심이므로 반대 진술."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong-not-mentioned",
+      "reason": "진화적 기원(evolutionary origins)은 지문 어디에도 언급되지 않는다. 자율신경계는 감정이 일으키는 신체 변화의 메커니즘으로 한 절에서만 등장하며 주제가 아니다."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong-too-narrow",
+      "reason": "표정·음성·자세 신호는 지문 말미의 한 문장('Emotions also send out signals...')에만 등장하고, 그 '사회적 역할(social role)'은 아예 논의되지 않는다. 마지막 세부 내용이라 잔상 효과로 약간 끌리지만 명백히 지엽적."
+    }
+  ],
+  "note": "정답이 2로 깨끗하게 수렴하는 문항. 최상위권 렌즈에서 실질적 유혹은 1(공포 잔류의 두 문장 분량 서술)이며, 5는 최신성 효과로 약한 유혹. 3은 역방향 진술, 4는 무언급이라 상위권에게는 즉시 소거된다. 주제문(첫 문장)과 재진술(끝 문장)의 수미상관 구조가 뚜렷해 defensible 후보는 2 단독."
+}

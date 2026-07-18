@@ -1,0 +1,35 @@
+{
+  "pid": "P015",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "Inserted into the seam it instructs us to ensure that unplanned meetings REGULARLY dominate self-care in the long term — the exact opposite of the author's advice to protect self-care against cumulative erosion."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "Recycles the woodworking example as if it were the topic. Woodworking is only an illustration of self-care; confining the sacrifice 'merely to canceled woodworking classes' misses the exception-vs-habit contrast the passage builds ('occasionally have days' vs 'cumulative impact'), and the referent of 'this' (giving up self-care generally) does not reduce to one class type."
+    },
+    {
+      "label": "3",
+      "verdict": "correct",
+      "reason": "'This' = the giving-up of self-care / not prioritizing it. 'Make sure that in the long term, this is a rare surrender of wellness under pressure rather than settled practice' coheres referentially and logically: occasional sacrifice is tolerated ('we all occasionally have days when that happens') but must not accumulate into habit ('cumulative impact of not prioritizing self-care'). The rare-vs-settled contrast is exactly the passage's exception-not-rule message."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "The attractive distractor — thematically it states the author's positive moral (health routines should win long-term), and I genuinely felt its pull on first read. But the seam breaks on anaphora: 'this' refers back to 'not prioritizing self-care' (the giving-up event), and 'make sure that [not prioritizing self-care] is the enduring precedence of health routines' is a contradiction — the sacrificed thing cannot itself BE the precedence of health routines. No cataphoric or loose-referent reading rescues it."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Internally contradictory when inserted ('in the long term, this is the short-term superiority...') and endorses grant work permanently outranking hobbies, which the passage explicitly limits to the short term only."
+    }
+  ],
+  "note": "Blind solve, top-tier examinee lens. Key discriminator is the anaphoric referent of 'this' (= not prioritizing self-care): option 3 keeps the referent coherent while delivering the exception-not-habit message; option 4 delivers the right theme but with an incoherent referent, making it the designed trap. Answer narrows cleanly to 3; no second defensible label."
+}

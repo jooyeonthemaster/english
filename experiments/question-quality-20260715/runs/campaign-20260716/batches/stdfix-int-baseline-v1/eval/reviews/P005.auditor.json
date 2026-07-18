@@ -1,0 +1,79 @@
+{
+  "pid": "P005",
+  "blindAnswer": "②",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-TERM-NONSTANDARD",
+      "severity": "minor",
+      "evidence": "keyPoints의 'immobile mover(부동의 동하자)' — '동하자'는 표준 철학 용어가 아님(표준 역어: '부동의 원동자' 또는 '부동의 동자'). 의미 전달은 되므로 오분석/환각 수준은 아니나 손상 용어에 준하는 비표준 조어."
+    },
+    {
+      "code": "V4-EXPL-GARBLED-PHRASE",
+      "severity": "minor",
+      "evidence": "오답 ④ 해설의 '전체 논지에 너무 치우친 지엽적 오답' — '지엽적'과 '전체 논지에 치우친'이 상호 모순되는 비문형 표현(의도는 '지엽적 단서에 치우쳐 전체 논지를 놓친 오답'으로 추정). 또한 'the virtual controller'(행위 주체)를 '기술 제어 장치'(기기)로 다소 부정확하게 지칭. 단, ④가 오답인 논리 자체(부동성 역설 누락)는 정확하므로 치명 아님."
+    },
+    {
+      "code": "C4-STRUCT-CUE",
+      "severity": "minor",
+      "evidence": "정답 ②만이 선지 내부에 motion/motionless 역설(모순어법) 구조를 가짐 — '역설형 선지가 정답'이라는 시험 요령만으로 지문 독해 없이 찍힐 여지가 약간 있음."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 4,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "어휘 연상 미끼 — 'participate in sports / balance their daily disproportion' 등 신체·운동 담화에서 'physical limits'를 연상시켜 만든 표면 어휘 함정",
+      "temptingBecause": "지문 중반의 신체 불균형·운동 내용과 'physical'이 어휘적으로 겹침",
+      "decisiveFlaw": "신의 이미지가 지칭하는 바는 '움직이지 않으면서 타자를 움직임'이지 신체 한계의 치유가 아님. 'sacred healer'를 지지하는 근거가 지문 어디에도 없음"
+    },
+    {
+      "label": "②",
+      "intent": "정답 — 원문 span 'the immobile mover'(아리스토텔레스의 부동의 원동자)의 의미 보존 추상화 패러프레이즈",
+      "temptingBecause": "정답",
+      "decisiveFlaw": "없음. 'remains motionless'가 immobile을, 'the source of motion'이 mover를 정확히 재진술하며, 뒤따르는 when절(스스로는 전혀 움직이지 않으면서 돈·사물·사람을 움직이는 엘리트)과 유일하게 정합"
+    },
+    {
+      "label": "③",
+      "intent": "극성 반전(polarity reversal) — 엘리트의 이동성에 대한 정반대 진술",
+      "temptingBecause": "지문 도입부의 'travelling through geographical or virtual space' 등 이동·경계 어휘와 표면적으로 겹침",
+      "decisiveFlaw": "같은 문장의 'while they themselves do not need to move at all'과 직접 모순 — 지치지 않는 여행자가 아니라 움직일 필요가 없는 존재"
+    },
+    {
+      "label": "④",
+      "intent": "범위 이동(scope shift) — 초점을 권력의 부동성 역설에서 기술·가상 영역 제어로 이탈시키는 함정",
+      "temptingBecause": "'virtual', 'acceleration'이 지문에 원문 그대로 등장하고(virtual space, increasing acceleration) 정보 사회·기술 담론과 표면 정합",
+      "decisiveFlaw": "빈칸의 핵심인 부동성 역설(움직이지 않으면서 움직이게 함)이 없고, 엘리트/신이 '기술적 가속을 제어한다'는 진술은 지문에 근거 없음 — 엘리트가 움직이는 대상은 money, things and people"
+    },
+    {
+      "label": "⑤",
+      "intent": "내용 모순(half-truth) — 지문의 이동권 어휘를 차용하되 논지를 정반대로 뒤집은 함정",
+      "temptingBecause": "'the right to move or the right to stay' 등 이동권·이동성 어휘가 지문 결말부에 실제로 등장",
+      "decisiveFlaw": "지문은 하층부 사람들이 mobility-structured social exclusion의 victims라고 명시 — 엘리트(신의 이미지)는 만인의 동등한 이동성을 보장하기는커녕 배제를 낳는 권력이므로 정반대"
+    }
+  ],
+  "explanationIssues": [
+    "오답 ④ 해설의 '전체 논지에 너무 치우친 지엽적 오답'은 자기모순적 비문형 표현(지엽적 ↔ 전체 논지에 치우침)으로 재작성 필요",
+    "오답 ④ 해설이 'controller'(행위 주체)를 '기술 제어 장치'(기기)로 지칭하여 선지 내용과의 대응이 다소 부정확",
+    "keyPoints의 '부동의 동하자'는 비표준 용어 — '부동의 원동자'로 교체 권장",
+    "정답 해설은 사실관계는 정확하나 다소 장황하며 근거 문장 재인용이 반복됨"
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 렌더 지문은 원지문에서 'the immobile mover'만 빈칸 처리한 것으로 기계 대조 결과 바이트 단위 완전 일치(블랭크 1개, 라벨 ①~⑤와 선지 5개 일치). V2: 각 선지 독립 검증 결과 ② 유일 정답 — ③⑤는 지문 명시 내용과 직접 모순, ①은 근거 부재, 최근접 경쟁지 ④도 부동성 역설 부재+무근거 진술로 탈락. 5개 선지 모두 'image of God as ___' NP 슬롯에 통사적으로 들어가 문법으로만 탈락하는 선지 없음(§D 조건 충족). V3: 정답 삽입 완성문 'Aristotle's image of God as the source of motion that remains motionless, when elites...' 문법·자연스러움 이상 없음. V4: 구조·논리 분석 자체는 정확(terminal creatures, do not need to move at all 귀속 모두 실제 지문과 일치)하나 keyPoints 비표준 용어 '동하자'와 ④ 해설의 비문형 구절이 minor 감점 — 오분석·환각 수준이 아니므로 통과. V5: 정답 라벨 ②·해설·오답해설(①③④⑤ 전부 존재)·keyPoints 상호 모순 없음. 공예: 지문의 핵심 은유를 정확히 빈칸화(C1=4), 함정 4종이 각기 다른 기제(어휘연상/극성반전/범위이동/내용모순)를 겨냥하나 ①의 유인력이 약함(C2=3), 실질 경쟁은 ②-④ 구도로 중간 수준(C3=3), 단서는 충분·필연적이나 정답만 역설 구조라는 미세 누출(C4=3), 요청 난이도 INTERMEDIATE에 사고 단계가 정확히 부합(C5=4), 해설은 정확하지만 장황+비문형 구절+비표준 용어(C6=2). 합계 19, 최저 C6=2 → B(작은 수정으로 출하 가능: ④ 해설 문장 재작성, '부동의 원동자'로 용어 교체). 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

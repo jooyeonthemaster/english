@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'the stream of remote associations coming from the right hemisphere' — 현재분사 coming이 associations를 후치 수식하는 축약 관계절(= associations that come ...)로 정문. 선행사를 stream으로 보더라도 분사는 수 일치가 없어 문제되지 않음. 매력도: 낮음 — stream(단수) vs associations(복수) 수 일치 착시를 노린 자리지만 분사라 무력화됨."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'our attention tends to be directed outward' — attention은 방향이 '지정되는' 대상이므로 수동(be directed)이 필수. directing으로 바꾸면 attention이 스스로 지향하는 능동이 되어 오히려 비문. 실전에서 directing/directed 대조로 잠깐 끌리지만 의미상 수동이 명백. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "'While this pattern of attention is necessary ..., it actually preventing us from ...' — While절은 종속절이므로 주절 'it actually ___ us'에는 정형동사가 필요한데 preventing은 비정형. prevents여야 함. 대안 해석 탐색: 분사구문·절대구문으로 읽으면 문장 전체에 주절 동사가 사라져 어떤 파스로도 정문이 되지 않음. 명백한 오답 밑줄(정답)."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'the most relaxing part of the day' — 감정 유발 -ing 형용사. 샤워가 사람을 이완시키는 주체이므로 relaxing이 맞고 relaxed는 비문. relaxed/relaxing 고전 함정 자리지만 표기 자체는 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'hear the quiet voices in the backs of our heads telling us' — 지각동사 hear + 목적어(voices) + 현재분사(telling) 구문으로 정문. 중간의 전치사구 'in the backs of our heads'가 hear와 telling 사이 거리를 벌려 장거리 함정을 만들지만 telling의 의미상 주어는 voices로 자연스러움. 실전에서 가장 오래 검토한 선지였으나 흠 없음."
+    }
+  ],
+  "note": "최상위권 실전 풀이 렌즈. C가 유일하게 옹호 불가능한 비문(주절 정형동사 부재)이라 정답이 하나로 깨끗하게 좁혀짐. 매력적 오답으로는 (E)의 장거리 수식(전치사구 개입)과 (B)의 능동/수동 대조가 잠깐 끌렸으나 둘 다 정문으로 확정. (D)의 relaxed/relaxing 함정, (A)의 수 일치 착시도 무력. 다만 C의 오류 유형(정형동사 결핍)은 밑줄 자체만 봐도 티가 나는 편이라 변별력은 중간 수준. 지문은 Jonah Lehrer 'Imagine'의 Joydeep Bhattacharya 인용 대목과 유사한 소재이나 인명이 'Subhra Bhattacharya'로 표기됨(어법 판정에는 무관, 사실성 메모)."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1 (A)-(C)-(B)",
+      "verdict": "reject",
+      "reason": "(A) opens with the definite NP 'the recommended clothes', which presupposes a prior recommendation event. The given text contains no recommendation (Garcia is still outside the mall waiting for Jeff), so Given→(A) fails a presupposition check. Additionally (A) has Garcia already at the rehearsal, while (C)/(B) would then regress to shopping — temporal ordering also fails."
+    },
+    {
+      "label": "2 (B)-(A)-(C)",
+      "verdict": "reject",
+      "reason": "Given→(B) is valid, but (B)→(A) fails: after (B) they have only just entered the shopping center; no clothes have been picked or recommended, so 'the recommended clothes' in (A) still lacks an antecedent. Also (C) after (A) would return to the store after the rehearsal has already begun — temporal contradiction."
+    },
+    {
+      "label": "3 (B)-(C)-(A)",
+      "verdict": "accept",
+      "reason": "Every seam is formally licensed. Given→(B): 'the performance' is anaphoric to 'perform at the welcoming ceremony'; Jeff's late arrival resolves 'waiting for his brother'; 'entered the lively shopping center' resolves 'outside Frontcountry Mall'. (B)→(C): 'in the store' is licensed by 'entered the shopping center', and the clothes-picking dialogue proceeds. (C)→(A): 'the recommended clothes' is licensed by Jeff's pick plus the clerk 'agreeing with Jeff's choice'; purchase then rehearsal follows temporally. Unique consistent chain."
+    },
+    {
+      "label": "4 (C)-(A)-(B)",
+      "verdict": "reject",
+      "reason": "Given→(C) fails: 'he had found in the store' uses definite 'the store' with no antecedent, and Garcia is still outside the mall with Jeff not yet arrived, yet (C) has Jeff present and speaking. Placing (B) last also puts Jeff's arrival and entering the mall after the shopping and rehearsal — temporally incoherent."
+    },
+    {
+      "label": "5 (C)-(B)-(A)",
+      "verdict": "reject",
+      "reason": "Given→(C) fails for the same reasons as option 4: 'the store' is unlicensed, Jeff is present before his arrival scene, and the shopping dialogue precedes entering the shopping center described in (B)."
+    }
+  ],
+  "note": "Solved blind under a grammarian/logician lens using definite-NP presupposition licensing and temporal precedence. The chain (B)-(C)-(A) is the unique ordering in which all anaphoric definites ('the performance', 'the store', 'the recommended clothes') have antecedents and event order is monotonic; answer is single and clean. Minor quality observation (not a solvability issue): the full 지문 continues past (A) (Tom's encouragement, the performance, Jeff's praise), so the ordering paragraphs cover only the first part of the passage and (A) ends mid-narrative on 'making several mistakes' — an authentic KSAT item usually partitions the entire passage. Also note this passage closely mirrors a well-known KSAT-style narrative template, but that does not affect blind solvability."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P011",
+  "answer": "4",
+  "multipleDefensible": false,
+  "defensibleLabels": ["4"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "문법 결합: 세미콜론 뒤 독립절로 정문이며 'she isn't thinking more; she is amplifying...'의 병렬 구조도 성립한다. 그러나 논리적으로 모순이다. (i) 'formulated rules'는 첫 문장에서 technical/book knowledge의 정의 요소로 명시되었고, 지문 전체가 practical knowledge는 그런 규칙 체계와 대립됨을 논증한다. (ii) 직전 절 'she isn't thinking more'는 세미콜론 뒤에서 그 반대 방향(의식적 사고의 감소)을 요구하는데, 'amplifying conscious scrutiny'는 의식적 사고의 증가로 직전 절과 정면 충돌한다. (iii) 후행 문장 'perform without conscious awareness'와도 모순. 형식적으로: 전제 P(전문가는 더 생각하지 않는다) ∧ 선지 Q(의식적 검토를 증폭한다)는 양립 불가."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "문법 결합: 'restrict A to B' 구문으로 정문. 그러나 논리 오류. 피아노 건반의 'touch'는 practical knowledge의 신체 은유를 예시하는 하나의 사례일 뿐이며, 지문은 오히려 touch/feel이 다양한 활동('some activity', 'the game', 'a problem')에 걸쳐 일반화됨을 보인다. 전문가가 자신의 감각을 피아노 기술 '하나로만 제한한다'는 명제는 지문 어디에서도 지지되지 않고, 후행 문장 'extended the number of tasks'(수행 과제 수의 확장)와 정반대 방향이다. 확장(extend) vs 제한(restrict)의 직접 모순."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "문법 결합: 정문. 그러나 바로 다음 문장이 'She has built up a repertoire of skills through habit and has thereby extended...'로, 전문가가 습관으로 쌓은 레퍼토리를 현재 보유·활용하고 있음을 현재완료로 진술한다. 빈칸에 '습관으로 쌓은 레퍼토리를 버리고 있다'를 넣으면 직후 문장과 형식적 모순(레퍼토리를 버리는 자가 그 레퍼토리 덕에 무의식적 수행을 확장했다는 인과가 붕괴). 옹호 불가."
+    },
+    {
+      "label": "4",
+      "verdict": "accept",
+      "reason": "문법 결합: 세미콜론 뒤 독립절, 진행형 'is operating'이 선행절 'isn't thinking'과 시제·상 병렬을 이룬다. 논리: 세미콜론은 'she isn't thinking more'의 부연·대조 보정을 요구하며, 'not more → less'의 스칼라 함의를 'reduced conscious deliberation'(의식적 숙고의 감소)이 정확히 실현한다. 후행 문장 'perform without conscious awareness'가 이를 직접 뒷받침하고, 지문 전체 주제(practical knowledge는 명시적 규칙·의식적 사고가 아닌 습관·경험의 산물)와 정합. 원전(David Brooks 계열의 practical knowledge 논의)의 'she is thinking less'와도 일치하는 유일한 후보."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "문법 결합: 'convert A into B' 구문으로 정문. 그러나 논리 모순. 둘째 문장이 'Practical knowledge ... cannot be taught or learned but only transmitted and acquired'로, 실천지가 명시적 규칙('formulated rules which ... may be deliberately learned')으로 환원될 수 없음을 정의상 배제한다. 전수된 실천을 'deliberate rules'로 변환한다는 것은 practical knowledge를 technical knowledge로 바꾼다는 뜻이며, 이는 지문의 범주 구분 자체를 부정한다. 또한 규칙화는 의식적 작업이므로 'isn't thinking more'와도 충돌."
+    }
+  ],
+  "note": "빈칸 문항. 선행절 'she isn't thinking more'와 세미콜론의 대조·보정 관계, 후행 문장의 'without conscious awareness'라는 장거리 단서가 정답을 4로 일의적으로 결정한다. 1·5는 technical knowledge 방향으로의 역전(주제 모순), 2는 예시의 부당한 일반화 제한(extend와 모순), 3은 직후 문장과의 직접 모순. 복수 정답 소지 없음. 원전은 'she is thinking less'로 추정되며 4가 이를 패러프레이즈한다."
+}

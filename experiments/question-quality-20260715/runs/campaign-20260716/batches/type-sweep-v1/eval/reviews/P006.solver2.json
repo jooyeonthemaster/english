@@ -1,0 +1,38 @@
+{
+  "pid": "P006",
+  "answer": "Not until we are massaged by warm water, without being able to check our e-mail, can we finally hear the quiet voices in the backs of our heads telling us about the insight.",
+  "multipleDefensible": true,
+  "defensibleLabels": [
+    "Not until we are massaged by warm water, without being able to check our e-mail, can we finally hear the quiet voices in the backs of our heads telling us about the insight.",
+    "Not until we're being massaged by warm water, without being able to check our e-mail, can we finally hear the quiet voices in the backs of our heads telling us about the insight."
+  ],
+  "confidence": "medium",
+  "perOption": [
+    {
+      "label": "조건1: 'Not until'으로 시작",
+      "verdict": "충족",
+      "reason": "답안이 fronted negative adverbial 'Not until + 정형절(we are massaged by warm water)'로 시작한다. 원문 cleft 'It's not until X that Y'의 규범적 변환형이다."
+    },
+    {
+      "label": "조건2: 주어-조동사 도치",
+      "verdict": "충족",
+      "reason": "부정 부사구 전치 시 주절에 의무적 도치가 발생한다: 'can we finally hear' — 조동사 can이 주어 we에 선행. 대안형 'are we finally able to hear'(be-도치)도 문법적으로 성립하나 6단어라 33단어 제약과 충돌한다(아래 조건4 참조)."
+    },
+    {
+      "label": "조건3: 'without being able to' 사용",
+      "verdict": "충족",
+      "reason": "'without being able to check our e-mail'이 전치사 without + 동명사 수동형 아닌 능력 표현 be able to의 동명사형으로, PRO가 주절 주어 we에 통제되는 정문 부가어. 원문의 'unable to check our e-mail'(형용사구 부가어)과 의미 등가."
+    },
+    {
+      "label": "조건4: 총 33단어",
+      "verdict": "충족(단, 설계 결함 있음)",
+      "reason": "제시 답안은 정확히 33단어. 그러나 원문에 최대로 충실한 형태 'Not until we are being massaged by warm water, without being able to check our e-mail, can we finally hear ...'는 34단어, 'are we finally able to hear' 형은 36단어여서 33단어를 맞추려면 (a) 진행상 being 삭제('마사지를 받고 있어'의 진행 의미 일부 손실) 또는 (b) we're 축약(축약형을 1단어로 세는 규약 필요) 중 하나를 강제당한다. 조건이 답안 표면형을 유일하게 결정하지 못한다."
+    },
+    {
+      "label": "의미 정합(참조 문장 대조)",
+      "verdict": "충족",
+      "reason": "'~서야 비로소 마침내 들을 수 있게 된다' = Not until ... can we finally hear; '머릿속 뒷부분에서' = in the backs of our heads(지문 원문과 일치); '통찰에 대해 알려 주는' = telling us about the insight(축약 관계절). 어휘·명제 내용 모두 참조 문장과 일치."
+    }
+  ],
+  "note": "서술형 영작 문항. 4개 조건을 모두 만족하는 정문 답안이 존재함은 증명했으나, 33단어 제약이 유일 해를 만들지 못한다: (1) 무축약+단순수동형(제시 답안)과 (2) we're 축약+진행형 유지형이 모두 33단어로 옹호 가능하며, 어느 쪽이 모범답안인지는 축약형 단어 수 계산 규약에 달려 있다. 또한 참조 문장의 진행상('받고 있어')을 온전히 보존하면서 무축약으로 쓰면 최소 34단어가 되어 조건 간 미세한 긴장이 있다. 채점 시 두 변이형을 모두 정답 처리해야 하며, 단어 수 조건을 34단어로 하거나 '축약형은 1단어로 센다'는 규약을 명시하는 것이 바람직하다."
+}

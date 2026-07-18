@@ -1,0 +1,69 @@
+{
+  "pid": "P003",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-MINOR-ADDED-CONTENT",
+      "severity": "minor",
+      "evidence": "오답 ③ 해설이 '관습으로부터의 일시적 이탈'이라고 서술하나, 지문은 departure from conventional forms 를 일시적이라고 명시하지 않는다. 다만 ③의 결정적 결함(절대어 wholly 과장·행위자 오류) 자체는 올바르게 지적하고 있어 치명 오류로 보지 않음."
+    },
+    {
+      "code": "V1-NOTE-RETAINED-TERM",
+      "severity": "minor",
+      "evidence": "빈칸 처리된 핵심어 'aesthetic attitude'가 마지막 문장에 원형 그대로 잔존한다. 지문 손상은 아니며(원문 그대로), V1 통과. 다만 단서 경제성(C4)과 KILLER 난이도(C5) 감점 요인으로 반영함."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 2,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "극성 반전(polarity reversal) — 해석적 노력 강화 요구를 일상 지각으로의 회귀로 뒤집음",
+      "temptingBecause": "지문 전반부의 'everyday life' 어휘와 표면적으로 겹치고, '덜 readable한 작품 → 쉽게 보라'는 직관적 오독을 유도",
+      "decisiveFlaw": "지문은 덜 읽히는 작품일수록 더 깊은 해석적 개입(aesthetic processing)이 필요하다고 주장하므로 정확히 정반대"
+    },
+    {
+      "label": "2",
+      "intent": "정답 — source span 'an aesthetic attitude is needed'의 추상화 재진술",
+      "temptingBecause": "정답. 'detached'가 다음 문장의 'active involvement'와 표면 긴장을 일으켜 상위권 학생에게도 한 번 더 검증을 요구",
+      "decisiveFlaw": "결함 없음 — 마지막 문장의 pragmatic attitude(일상)/aesthetic attitude 대비가 '일상에서 거리를 둔 사색적 태도'라는 재진술을 확정함"
+    },
+    {
+      "label": "3",
+      "intent": "절대어 과장 + 행위자 전도(actor swap) — 작품의 관습 이탈을 감상자의 관습 전면 거부로 치환",
+      "temptingBecause": "빈칸 문장 자체의 'departure from conventional forms'와 어휘가 국소적으로 직접 겹침",
+      "decisiveFlaw": "관습에서 이탈하는 주체는 작품이며, 빈칸은 감상자가 취할 태도를 요구함. 'wholly rejected'는 지문이 지지하지 않는 절대 진술"
+    },
+    {
+      "label": "4",
+      "intent": "범위 축소(half-truth/scope narrowing) — 내용(figure)만 남기고 스타일(background) 음미를 배제",
+      "temptingBecause": "구상 예술 서술부의 subject matter 중심 독법과 겹치고 'carefully'가 성실한 태도처럼 보임",
+      "decisiveFlaw": "'alone'이 스타일·형식에 대한 미적 처리를 배제하여, 형식 이탈을 음미하라는 빈칸 문장의 요지와 충돌"
+    },
+    {
+      "label": "5",
+      "intent": "모드 착종(condition loss/anchor swap) — 구상 예술의 기제를 표현주의 감상 맥락에 이식",
+      "temptingBecause": "2번째 문장의 'construction of mental models'와 어휘가 강하게 겹쳐 지문 근거가 있는 듯 보임",
+      "decisiveFlaw": "mental models 촉진은 representational 작품의 기제이며, 빈칸 문맥(덜 readable한 표현주의 작품)에서는 성립하지 않음"
+    }
+  ],
+  "explanationIssues": [
+    "오답 ③ 해설의 '일시적 이탈'은 지문에 명시되지 않은 첨가(minor) — 핵심 결함 지적 자체는 유효",
+    "정답 해설이 'detached'와 다음 문장 'active involvement' 사이의 표면 긴장(가장 좋은 함정 해소 포인트)을 언급하지 않아 우아함이 다소 아쉬움"
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "모든 V 통과. 빈칸은 지문의 핵심 논지 문장(Thus...)을 겨냥하고(C1=4), 네 오답이 각기 다른 함정(반전/절대어·행위자 전도/범위 축소/모드 착종)을 지님(C2=3). 그러나 KILLER 요건은 미충족: (1) 핵심어 'aesthetic attitude'가 마지막 문장에 원형 잔존하고 pragmatic/aesthetic 이분이 명시돼 단일 단서로도 방향이 잡히며, (2) ②만이 유일하게 '특별한 태도 채택' 방향이고 ①④⑤는 '일상/내용 모드' 방향으로 군집, ③은 절대어로 즉시 소거 가능 — 방향 휴리스틱만으로 정답 도달이 가능해 §D의 '극성·절대어 하나로 찍을 수 없다' 조항 위반. 실제 난이도는 상위권 변별 수준이나 요청된 KILLER에는 미달(C5=2). 슬롯 정합(5선지 동일 통사 슬롯, tail 소거 불가)·의미 보존 추상화·오답별 anchor/overlap/flaw는 모두 충족. 출하하려면 난이도 라벨을 하향하거나, 잔존 'aesthetic attitude'를 우회 표현으로 바꾸고 오답 방향 군집을 해소하는 재설계 필요."
+}

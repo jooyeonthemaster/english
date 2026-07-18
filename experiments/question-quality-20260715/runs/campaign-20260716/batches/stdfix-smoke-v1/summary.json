@@ -1,0 +1,48 @@
+{
+  "batchId": "stdfix-smoke-v1",
+  "phase": "stdfix",
+  "atKst": "2026-07-17T18:00:06.604+09:00",
+  "assignments": 5,
+  "slotsConsumed": 7,
+  "accepted": 3,
+  "modelCalls": 11,
+  "inputTokens": 99411,
+  "outputTokens": 13830,
+  "costUsd": 0.281436,
+  "ledgerAfter": {
+    "used": 663,
+    "cap": 1000,
+    "costUsd": 24.722935
+  },
+  "byArm": {
+    "B1-G4": {
+      "n": 2,
+      "accepted": 0,
+      "gateRejected": 2,
+      "noCandidate": 0,
+      "slots": 2,
+      "costUsd": 0.059937
+    },
+    "A-NEW": {
+      "n": 2,
+      "accepted": 2,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 2,
+      "costUsd": 0.072668
+    },
+    "B2-STD": {
+      "n": 1,
+      "accepted": 1,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 3,
+      "costUsd": 0.148831
+    }
+  },
+  "models": {
+    "standard": "google/gemini-3.5-flash",
+    "premiumQgen": "google/gemini-3.1-pro-preview"
+  },
+  "durationMs": 68027
+}

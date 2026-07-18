@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "4",
+  "multipleDefensible": false,
+  "defensibleLabels": ["4"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "The given sentence ('you gradually become convinced that you cannot do it') is the culminating stage of the spiral; placing it immediately after the topic sentence puts the endpoint before the pattern has been introduced. It also severs the tight cohesion 'To require perfection is to invite paralysis. -> The pattern is predictable: ...', where the colon-sentence directly unpacks the paralysis claim as its announced elaboration."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "Position 2 interrupts an elaboration pair: 'you steer your work toward what you imagine you can do perfectly' is directly expanded by 'You cling ever more tightly to what you already know you can do'. Inserting the conviction-of-inability sentence between them breaks that local coherence, and the terminal conviction is logically premature at this early (misdirect) stage of the escalation."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "Superficially tempting (conviction could motivate delay), but the causal clause 'since to not work is to not make mistakes' explicitly grounds the delay in mistake-avoidance, not in perceived inability; if inability were already established, the stated rationale for delaying would be futility, not error-avoidance. The aspectual marker 'gradually' also marks the conviction as the accumulated endpoint of the preceding avoidance behaviors, so it must follow, not precede, the delay stage."
+    },
+    {
+      "label": "4",
+      "verdict": "accept",
+      "reason": "Formal gap proof: the closing recap enumerates exactly three stages — 'you misdirect your work; you stall; you quit'. Misdirect is supported by the steer/cling sentences, stall by 'You find reasons to delay', but 'quit' has no antecedent anywhere in the base passage; the given sentence ('become convinced that you cannot do it') is precisely the necessary precursor of quitting. The gap therefore sits uniquely between the delay sentence and the ironies sentence. At position 4 the chain reads: delay (stall) -> gradually convinced you cannot do it -> 'And in one of those ironies... a perfect death spiral: you misdirect; you stall; you quit', giving every recap stage prior support. Seam is clean: the participial clause 'Believing that your work should be perfect' attaches to 'you', and 'it' resolves to 'your work'; the connective 'And' then properly introduces the summary."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "Position 5 follows the conclusive spiral recap ending in 'you quit'. The conviction of inability is the cause of quitting, so placing it after the stated outcome is temporally and logically inverted; it also leaves 'you quit' unsupported at the point it occurs and appends an anticlimactic dangling stage after the passage's closing cadence."
+    }
+  ],
+  "note": "Sentence-insertion item. Decisive evidence is the long-range constraint from the final recap triad (misdirect/stall/quit): only position 4 supplies the missing antecedent for 'quit'. Position 3 is the strongest distractor but is formally excluded by the 'since to not work is to not make mistakes' causal clause and by 'gradually' marking culmination. Monotonic escalation ('cling ever more tightly' -> 'delay' -> 'cannot do it') independently confirms position 4. Single defensible answer; no ambiguity found."
+}

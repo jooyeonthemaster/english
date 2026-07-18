@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "(A)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(A)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "incorrect (정답)",
+      "reason": "문두 To부정사구(To demonstrate how our minds have adapted) 뒤에 주절 정동사가 와야 하는데 considering이면 문장 전체에 finite verb가 없어 fragment가 된다. 명령문 consider가 필요. 대안 해석 검토: considering을 전치사('~을 고려하면')로 보아도, 분사구문으로 보아도 주절 부재는 해소되지 않아 어느 해석으로도 정문이 될 수 없다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "because 뒤에 완전한 절(reference materials weren't readily available and the process ... was time consuming)이 오므로 접속사 because가 옳다. because of(전치사구)가 요구되는 자리가 아니다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "대시 뒤 절의 주어 자리 동명사 correcting + 단수 취급 동사 took. 동명사 주어 구문으로 완전한 정문. (to correct도 가능하지만 correcting이 틀린 것은 아님.)"
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "Memorization and precision은 등위접속된 복수 주어이므로 are가 옳다. 단일 개념으로 묶어 is를 기대하게 만드는 유혹이 있으나 표준 문법상 복수 일치가 정답."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "매력적 오답. 병렬 시작점이 관건: makes와 병렬(→becomes)이나 tuned/bored 병렬(→becoming)로 오독할 유혹이 있으나, 실제 병렬은 'tuned to require more stimulation and (to) become more easily bored'로 to 공유 부정사 병렬이며 원형 become이 옳다."
+    }
+  ],
+  "note": "최상위권 수험생 렌즈. 실전 풀이 순서: 첫 문장에서 즉시 (A)의 정동사 부재(fragment)를 포착. 매력적 오답으로 실제 끌린 지점은 (E)의 병렬 시작점 판단(makes-병렬/becoming 유혹)과 (D)의 단일개념 단수화 유혹이었으나 둘 다 정문으로 확정. 대안 해석(전치사 considering, 분사구문)을 적극 탐색했으나 (A)를 구제하는 해석은 존재하지 않음. 단일 정답 (A), 복수정답 여지 없음."
+}

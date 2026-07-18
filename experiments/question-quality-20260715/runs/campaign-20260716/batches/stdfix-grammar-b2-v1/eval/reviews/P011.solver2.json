@@ -1,0 +1,35 @@
+{
+  "pid": "P011",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'a way of learning and practicing skills...' — the preposition 'of' governs a coordinated pair of gerunds; 'learning and practicing' share the object 'skills and behaviors'. Parallel gerund coordination under 'of' is fully well-formed."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'a way in which children learn about the world...' — reconstruction test: 'children learn about the world in that way'. The PP 'in which' pied-pipes correctly and the relative clause is complete with no illicit gap. 'a way in which S' is standard."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "'skills like walking, running, and jumping that is necessary for everyday living' — the relative pronoun's antecedent is the plural head 'skills' (the 'like...' phrase merely exemplifies them), so agreement must be plural: 'are'. Alternative parse with nearest-noun antecedent 'jumping' (which would license 'is') fails semantically: it would assert only jumping, not walking or running, is necessary for everyday living, contradicting the sentence's purpose of listing everyday physical skills. No rescue reading exists; 'is' is ungrammatical."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'allows children to try out and learn social behaviors and to acquire...' — allow + object + to-infinitive frame; 'to try out and (to) learn' is licit coordination under a single 'to', further coordinated with 'to acquire'. Parallelism holds."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'values and personality traits that will be important in adulthood' — 'that' is a subject relative pronoun with plural antecedent; 'will be' is number-neutral, so no agreement conflict. Well-formed."
+    }
+  ],
+  "note": "Clean item. The error at (C) is a long-distance subject-verb agreement trap: the singular-looking nearest noun 'jumping' tempts 'is', but the true antecedent is plural 'skills'. All distractors are robustly grammatical under formal scrutiny, including active search for alternative parses (nearest-antecedent attachment for C was tested and rejected on semantic grounds). Uniquely determined answer: (C)."
+}

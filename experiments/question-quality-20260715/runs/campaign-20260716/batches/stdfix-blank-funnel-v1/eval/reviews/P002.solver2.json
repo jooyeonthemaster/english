@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "Grammatical in the seam ('is to perform ...'), but logically the direct negation of the passage: 'pay attention to how your energy level ebbs and flows' entails a variable, rhythm-sensitive pace, contradicting 'constant pace regardless of our feelings'."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "Grammatical bare-infinitive VP after 'is to'. Logically it is the unique generalization entailing every support sentence: know body rhythm / respect internal clock / track energy ebb-and-flow (alignment premise), schedule hard tasks at energy peaks (individual application), same principle for teams, and it accommodates the final concession that peak times differ across people."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "Grammatical, but defeated twice by the text: the morning recommendation is conditional ('If you have lots of energy early in the morning') and explicitly qualified ('there are those who differ and hit their stride later in the day'); 'all collaborative projects' has no textual basis. Universal-quantifier overreach."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "Grammatical, but the causal direction is inverted: the passage instructs adjusting tasks to fit the internal clock ('respect your internal clock'), not adjusting the internal clock to external organizational goals. Polarity-reversal distractor."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "Grammatical and the strongest distractor via the lexical echo 'Schedule intervals of productive time and breaks', but 'equally' is unsupported and contradicts the core ebb-and-flow principle: intervals are to be placed according to individual rhythm to 'get the most from people', not distributed uniformly. Cannot subsume sentences 1-3 or the final sentence."
+    }
+  ],
+  "note": "Blank is in the topic-sentence frame 'A way to ... is to _____', requiring a base-form VP; all five options satisfy the grammar seam, so discrimination is purely logical. The options' 'our' vs. the body's 'your' is a uniform, non-discriminating register wobble. Unique defensible answer is ②; ⑤ is a partial-overlap trap defeated by 'equally'. Alternative-parse sweep (reduced relatives, inversion, etc.) yields no rescue for any rejected option."
+}

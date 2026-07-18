@@ -1,0 +1,35 @@
+{
+  "pid": "P008",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'create what psychologists call \"flashbulb\" memories'에서 what은 자유관계대명사(free relative)로, 상위절 동사 create의 목적어인 명사절을 이끄는 동시에 내포절 'psychologists call ___ \"flashbulb\" memories'(call + O + OC 구조)의 목적어 공백을 채운다. call의 목적어 자리가 공백이므로 that(접속사, 공백 불허)이나 which(선행사 필요)는 불가하고 what이 형식적으로 유일하게 성립한다. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'These memories are thought to be unforgettable'은 능동문 'People think these memories to be unforgettable'(think + O + to-inf)의 수동, 즉 주어 상승 수동 구문 'S + be thought + to-V'가 정확히 성립한다. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "'the broad outlines of such catastrophes, thoroughly reporting in the media, are well remembered'에서 분사구의 의미상 주어는 핵명사 the broad outlines다. 태 검증: outlines는 report 행위의 주체가 아니라 대상(the media report the outlines)이므로 수동 관계, 즉 축약 관계절 'which are thoroughly reported in the media'에서 온 과거분사 reported가 필요하다. 현재분사로 두면 타동사 report의 목적어도 공백으로 남는다. 정문이 되는 대안 해석을 적극 탐색해도 — (i) report의 자동사 용법('출두하다/보고하다')은 유정 행위주를 요구해 outlines와 의미상 불성립, (ii) 자체 주어가 없어 독립분사구문 불성립, (iii) judging from류 무주어 관용 분사 아님, (iv) 동명사가 놓일 명사 슬롯도 없다. 어떤 해석으로도 구제 불가. 어법상 틀림 — 정답."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'your memory ... may not necessarily be precise'에서 precise는 be동사의 주격보어 자리이므로 형용사가 옳다. 부사 precisely로 바꾸면 보어가 사라져 비문. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'the respondents' memories were surveyed a week after the attacks'에서 memories는 조사(survey)의 대상이지 행위주가 아니므로 수동태 were surveyed가 옳다. 직전 문장의 'surveys of fifteen hundred Americans' memories'가 survey가 memories를 목적어로 취하는 용례임을 지문 내부에서 보증한다. 이어지는 'again a year later, and then again three years and ten years later'의 부사구 병렬도 문제 없음. 정문."
+    }
+  ],
+  "note": "문법가/논리학자 렌즈 블라인드 풀이. 오류 유형은 분사의 태(현재분사 vs 과거분사) — 축약 관계절의 의미상 주어(the broad outlines)와 report의 타동성 검증으로 (C)가 유일한 비문임을 확인. (A) 자유관계사, (B) 상승 수동 to부정사, (D) 보어 형용사, (E) 수동태는 모두 장거리 단서로 정문임이 확정되어 복수 정답 소지 없음."
+}

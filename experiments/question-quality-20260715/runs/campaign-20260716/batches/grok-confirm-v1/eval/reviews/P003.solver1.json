@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "Seam: 'is to align demanding tasks with peaks in personal energy'는 문법적으로 완전한 to부정사 보어. 논리: 지문 전체가 'Know your own body rhythm... pay attention to how your energy level ebbs and flows' → '에너지가 높은 시간대에 difficult activities를 schedule하라' → 팀에도 같은 원리 적용의 구조로, 빈칸(주제문)의 상위 요약과 정확히 일치. 특히 'personal'이 마지막 문장의 개인차 언급(morning형 vs later in the day형)까지 포섭하여 유일하게 전문(全文)을 커버한다."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "매력적 오답. 지문에 morning이 두 번 등장해 표면 어휘 매칭으로 끌린다('If you have lots of energy early in the morning...', 'most people are far more productive in the morning'). 그러나 마지막 문장 'but there are those who differ and hit their stride later in the day'가 '모든 어려운 일을 아침에'를 명시적으로 반박한다. 'every'와 'jointly'(공동으로 배정)도 지문 근거가 전혀 없다. 조건문(If you have energy in the morning)을 무조건 규칙으로 왜곡한 전형적 과잉일반화 미끼."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "조직 목표(organizational goals)나 팀 계획을 그에 종속시키라는 내용이 지문에 전혀 없다. 'team' 어휘만 표면 매칭될 뿐 지문의 원리는 조직 목표가 아니라 개인의 body rhythm에 맞추라는 것이므로 방향 자체가 어긋난다."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "지문은 오히려 'you should schedule difficult activities', 'Schedule intervals of productive time and breaks', 'when scheduling appointments'로 일정을 적극적으로 잡으라고 권한다. 고정 일정표를 버리고 완전 개방형 스케줄로 가라는 것은 지문 처방과 정반대. 유혹 강도 낮음."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "부분 근거형 미끼. 'Schedule intervals of productive time and breaks so that you get the most from people'가 실제로 존재해 잠깐 끌린다. 그러나 (a) breaks는 원리 적용의 보조 수단으로 한 문장 언급될 뿐 주제가 아니고, (b) 'longer'(더 긴)와 'all'(모든 세션 사이)은 지문에 전혀 없는 과장이며, (c) 빈칸은 지문 전체(body rhythm, 내부 시계, 에너지 피크에 어려운 과업 배치, 개인차)를 포괄해야 하는 주제문 자리라 세부사항 하나로는 커버 불가. 최상위권이라면 범위 검증에서 기각."
+    }
+  ],
+  "note": "빈칸이 첫 문장 주제문 자리이고 이후 전체가 그 부연이라 정답 결정이 명확한 문항. 정답 1은 지문 전개(에너지 리듬 파악 → 피크에 난이도 높은 과업 배치 → 팀 적용 → 개인차 존중)를 유일하게 전부 포섭한다. 오답 설계는 양호: 2번은 morning 표면 매칭 + 과잉일반화, 5번은 breaks 부분 근거형으로 각각 다른 유형의 유혹을 제공하나, 둘 다 마지막 문장(개인차)과 범위 검증으로 확실히 배제된다. 대안 정답 성립 여지 없음."
+}

@@ -1,0 +1,103 @@
+{
+  "pid": "P005",
+  "requestedDifficulty": "KILLER",
+  "type": "BLANK_INFERENCE",
+  "blindAnswer": "②",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-NONWORD",
+      "severity": "major",
+      "evidence": "해설 본문에 '지문에서는 신제적 건강(physical shape)이...' — '신제적'은 비단어(‘신체적’의 손상 오탈자)이며 학생 노출 해설 텍스트에 그대로 남아 있다. RUBRIC V4의 '용어 오류 없음' 및 감사 기준의 '비단어·손상 용어' 항목 위반."
+    },
+    {
+      "code": "V4-STRUCTURE-MISLABEL",
+      "severity": "minor",
+      "evidence": "오답 해설 ⑤: \"'not just A but B'의 종합적 인과 관계를 거스르는\" — (1) 학생이 보는 지문에서 physical/mental을 잇는 'not just the physical game but the mental game' 구문은 빈칸으로 제거되어 존재하지 않는다(남은 것은 'not just on the practice range but in the weight room'뿐). (2) 'not just A but B'는 등위 첨가 구조이지 '인과 관계'가 아니다."
+    },
+    {
+      "code": "V4-QUOTE-DRIFT",
+      "severity": "minor",
+      "evidence": "keyPoints[2]: \"'not just physical but mental'을 ... 패러프레이징\" — 원문 정확 인용이 아님(원문은 'win not just the physical game but the mental game'). 교사용 필드라 치명은 아니나 인용 부정확."
+    },
+    {
+      "code": "V4-EMBELLISH",
+      "severity": "minor",
+      "evidence": "해설: '지구력과 극적인 장악력으로 이어진다고 논증합니다' — '극적인 장악력'은 지문의 'head and shoulders above'를 과장 환언한 표현으로, 지문에 직접 근거가 없는 수사적 첨가."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 1,
+    "C4": 2,
+    "C5": 1,
+    "C6": 2
+  },
+  "craftRationale": {
+    "C1": "삭제 span은 지문 전체 논증(sin 은유 → 신체 관리 → 신체적 우위가 비즈니스·골프의 정신적 승리까지 지탱)의 결론 종합부로, 핵심 지점을 묻는다. 다만 지문 자체가 단선적 동기부여 산문이라 정교함의 상한이 있다.",
+    "C2": "네 오답이 각기 다른 함정 유형(①영역 전이, ③조건 상실/관계 역전, ④인과 전도, ⑤이분법 분리)을 노려 의도 밀도는 있으나, ③④는 carrier 절과의 국소 모순 때문에 설계 의도가 발동하기 전에 소거된다.",
+    "C3": "실전 변별력 낮음. ③은 'they have the strength and stamina to ... their lack of stamina'라는 즉각적 자기모순, ④는 목적절과의 국소 비정합, ①은 'purely business-oriented'의 영역 불일치로 전역 독해 없이 소거되고, 유일한 긍정 극성 선지 ②가 남는다.",
+    "C4": "'in order to close out their opponents' 꼬리가 필요 근거이자 과잉 단서로 작동하여 ③④를 국소적으로 죽인다. 정답이 유일한 긍정·정합 선지라는 메타 단서 누출이 있다.",
+    "C5": "요청 난이도 KILLER인데 극성 소거만으로 정답 도달 가능한 중하 난이도 문항. 라벨과 실제 난이도가 불일치.",
+    "C6": "정답 근거와 함정 분리는 시도했으나 비단어 오탈자('신제적'), 과장 수사('극적인 장악력'), 제거된 span 구조를 학생 지문에 있는 것처럼 지칭하는 서술로 정확성이 훼손됨."
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "actor/domain swap — 전반부 비즈니스 협상 예시를 골프 맥락에 이식",
+      "temptingBecause": "지문 전반부의 'wins in negotiations', 'physical stamina' 어휘와 직접 겹쳐 표면 회상 학생을 유인",
+      "decisiveFlaw": "'purely business-oriented'는 major tournaments에서 상대를 제압한다는 목적절과 영역 불일치이며 절대어 'purely'가 즉시 소거 단서가 됨"
+    },
+    {
+      "label": "②",
+      "intent": "정답 — 원문 span 'win not just the physical game but the mental game'의 추상화 환언",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음. 다만 'win'→'sustain superiority'는 '승리'가 아니라 '이미 가진 우위 유지'로 미세한 의미 이동이 있으나 허용 범위"
+    },
+    {
+      "label": "③",
+      "intent": "condition loss / 보완재 역전 — 연습이 체력 부족을 대체한다는 관계 왜곡",
+      "temptingBecause": "'practice range'라는 지문 앵커를 재사용",
+      "decisiveFlaw": "carrier 절 'they have the strength and stamina to ...' 뒤에 'their lack of stamina'가 와서 문장 내부에서 즉각 자기모순 — 지문 독해 없이 소거됨(seam 결함)"
+    },
+    {
+      "label": "④",
+      "intent": "causal reversal — 웨이트 훈련이 정신적 게임을 해친다는 인과 전도",
+      "temptingBecause": "'weight room', 'mental game' 등 원문 앵커 어휘를 그대로 재사용",
+      "decisiveFlaw": "'undermine their mental game ... in order to close out their opponents'는 목적절과 국소적으로 비정합한 부정 극성 진술 — 전역 독해 없이 소거됨"
+    },
+    {
+      "label": "⑤",
+      "intent": "false dichotomy / scope shift — 신체·인지의 통합 논지를 분리 논지로 왜곡",
+      "temptingBecause": "지문의 physical/mental 이원 구도를 차용해 그럴듯함; 다섯 선지 중 가장 판별에 독해가 필요한 오답",
+      "decisiveFlaw": "지문 논증은 신체 단련이 두 영역 모두의 승리를 지탱한다는 통합이며, 분리는 'close out their opponents'라는 목적과 연결되지 않음"
+    }
+  ],
+  "explanationIssues": [
+    "비단어 오탈자: '신제적 건강' → '신체적 건강' (학생 노출 해설, V4 실패 원인)",
+    "오답 해설 ⑤가 빈칸으로 제거된 span 내부 구조('not just the physical game but the mental game')를 학생 지문에 존재하는 근거처럼 지칭하고, 등위 구조를 '인과 관계'로 오명명",
+    "keyPoints[2]의 원문 인용 부정확('not just physical but mental' ≠ 실제 원문 표현)",
+    "'극적인 장악력' 등 지문에 직접 근거 없는 과장 수사"
+  ],
+  "killerConditionsMet": false,
+  "killerAudit": {
+    "sameSyntacticSlot": true,
+    "meaningPreservingAbstraction": true,
+    "distinctTrapTypes": true,
+    "anchorsPresent": true,
+    "noSeamOnlyElimination": false,
+    "requiresMultiSentenceSynthesis": false,
+    "notSolvableBySinglePolarityCue": false,
+    "evidence": "③④는 남은 tail/carrier 절과의 국소 모순만으로 탈락하고(§D '일부 오답만 문법·seam으로 탈락 금지' 위반), 부정·자기모순 극성 소거 후 유일한 긍정 정합 선지 ②를 두 문장 이상 연결 없이 선택 가능(§D '극성 하나로 정답을 찍을 수 없다' 위반)."
+  },
+  "grade": "F",
+  "notes": "V1/V2/V3/V5 통과, 정답 유일성 자체는 견고. 그러나 학생 노출 해설의 비단어 오탈자('신제적')와 제거 span 구조 오지칭으로 V4 실패 → 규정상 F(공예 점수로 상쇄 불가). 공예 측면에서도 요청 난이도 KILLER 대비 극성·seam 소거로 무너지는 저변별 문항(C3=1, C5=1). 수리 방향: (1) 해설 오탈자 교정 및 ⑤ 해설의 근거 문장 재서술, (2) ③④를 carrier 절과 국소 정합하도록 재작성(예: 긍정 극성이지만 scope/half-truth 함정), (3) ①의 'purely' 절대어 제거."
+}

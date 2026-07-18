@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "(A)-(C)-(B): (A)를 주어진 글 바로 뒤에 붙이면 첫 문장 'His confidence was, however, quickly changed to nervousness'의 역접 however가 요구하는 선행 긍정 상태(자신감)의 진술이 주어진 글에 전혀 없어 담화상 성립 불가. 또한 'the rehearsal'의 한정 지시가 선행 언급('tonight's rehearsal', (C) 말미) 없이 등장하고, 새 옷 구매((C)) 이전에 리허설 장면이 오는 시간 역행이 발생한다. 형식적으로 기각."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "(B)-(C)-(A): (B)는 환영식 본공연 장면인데, 그 뒤에 오는 (C)가 'Garcia was hoping to find the perfect clothing for the performance'로 공연 준비(쇼핑)를 서술하므로 시간 순서가 정면으로 모순된다. 공연이 끝난 뒤 '오늘 밤 리허설에도 입어야지'라는 (C) 말미 발화도 성립 불가. 기각."
+    },
+    {
+      "label": "3",
+      "verdict": "accept",
+      "reason": "(C)-(A)-(B): (C) 첫머리 'hoping to find the perfect clothing for the performance'와 Jeff의 지각 사과('I'm late because traffic was terrible')가 주어진 글의 '공연 선발' 및 'waiting for his brother, Jeff'와 정확히 접속한다. (C) 말미 'Maybe I'll wear these for tonight's rehearsal' → (A) 리허설 장면('As the rehearsal began'), (A)의 Tom의 격려 → (B) 본공연('The band performance was the first event of the ceremony')의 무결점 연주와 환호로 해소. 시간 순서(쇼핑→리허설→공연), 한정 지시('the rehearsal'의 선행사), 정서 곡선(기대→긴장→회복→성취)이 모두 정합. 유일하게 성립하는 배열."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "(B)-(A)-(C): 본공연 → 리허설 → 쇼핑의 완전 역순. (B)에서 flawless였던 연주가 (A)에서 'struggled with the rhythm, making several mistakes'로 퇴행하고, (C)의 공연 준비 쇼핑이 마지막에 오는 것은 서사 시간축과 전면 모순. 기각."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "(C)-(B)-(A): (C) 말미의 'tonight's rehearsal' 언급 직후 리허설을 건너뛰고 본공연 (B)가 오고, 그 뒤에 리허설 (A)가 오는 것은 시간 역행. 또한 (B)의 flawless 연주 후 (A)의 실수 연발 리허설이 이어져 서사적으로도 모순. (A)의 Tom의 격려가 (B)의 성공적 무대를 예비하는 인과 고리도 끊긴다. 기각."
+    }
+  ],
+  "note": "정답은 3번 (C)-(A)-(B)로 유일하게 옹호 가능. 다만 품질 결함 하나를 지적한다: 원문 지문에는 (C)와 (A) 사이에 'Garcia felt good as he arrived at the concert hall for the rehearsal wearing his new clothes.'라는 교량 문장이 있는데 단락 분할 시 이 문장이 (A) 첫머리에서 누락되었다. 그 결과 (A) 첫 문장의 'His confidence was, however, ...'의 however가 직접 가리킬 선행 긍정 진술이 단락 내에 없어 (C)→(A) seam이 원문보다 약해졌다(추론으로는 복원 가능하나 형식적으로는 결손). 같은 방식으로 (A) 말미의 'He looked at his friend...' 문장과 (B) 이후의 'After the show...' 결말부도 단락에서 잘려 있다. 정답 유일성에는 영향 없음."
+}

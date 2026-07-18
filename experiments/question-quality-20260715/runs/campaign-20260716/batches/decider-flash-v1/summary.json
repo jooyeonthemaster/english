@@ -1,0 +1,80 @@
+{
+  "batchId": "decider-flash-v1",
+  "phase": "decider",
+  "atKst": "2026-07-18T03:19:48.296+09:00",
+  "assignments": 9,
+  "slotsConsumed": 13,
+  "accepted": 9,
+  "modelCalls": 13,
+  "inputTokens": 111291,
+  "outputTokens": 14044,
+  "costUsd": 0.293332,
+  "ledgerAfter": {
+    "used": 1052,
+    "cap": 1200,
+    "costUsd": 35.148072
+  },
+  "byArm": {
+    "DF-IRREL": {
+      "n": 1,
+      "accepted": 1,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 1,
+      "costUsd": 0.028173
+    },
+    "DF-SUMMA": {
+      "n": 2,
+      "accepted": 2,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 2,
+      "costUsd": 0.043918
+    },
+    "DF-SENTE": {
+      "n": 2,
+      "accepted": 2,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 2,
+      "costUsd": 0.059758
+    },
+    "DF-GRAMM": {
+      "n": 1,
+      "accepted": 1,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 1,
+      "costUsd": 0.034674
+    },
+    "DF-WORD_": {
+      "n": 1,
+      "accepted": 1,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 2,
+      "costUsd": 0.02774
+    },
+    "DF-VOCAB": {
+      "n": 1,
+      "accepted": 1,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 2,
+      "costUsd": 0.047847
+    },
+    "DF-FILL_": {
+      "n": 1,
+      "accepted": 1,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 3,
+      "costUsd": 0.051222
+    }
+  },
+  "models": {
+    "standard": "google/gemini-3.5-flash",
+    "premiumQgen": "google/gemini-3.1-pro-preview"
+  },
+  "durationMs": 35495
+}

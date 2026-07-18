@@ -1,0 +1,35 @@
+{
+  "pid": "P011",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'a way of learning and practicing skills...' — 전치사 of 뒤에서 동명사 learning과 practicing이 병렬. 병렬 시작점이 of 바로 뒤이므로 동명사형이 정확하고, 두 동명사가 공통 목적어 'skills and behaviors'를 취한다. 유혹 요소 없음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'a way in which children learn about the world' — 'children learn about the world in that way'로 완전 재구성됨. 'the way that/the way S V'만 익숙한 수험생이 'way in which'를 의심하도록 설계된 매력적 오답이지만 완전히 표준적인 정문. 실제로 잠깐 끌렸으나 관계사절 내부가 완전한 절이고 전치사 in이 way와 정합하므로 옳다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "'skills like walking, running, and jumping that is necessary for everyday living' — 관계대명사 that의 진짜 선행사는 복수 명사 skills이며, 'like walking, running, and jumping'은 삽입된 예시구(장거리 미끼). 직전의 단수 동명사 jumping에 이끌려 is를 용인하기 쉬우나, 'that is'가 jumping만 수식한다는 대안 해석은 의미상 성립하지 않음(일상생활에 필요한 것은 '기술들' 전체이지 '뛰기' 하나가 아님). 따라서 are여야 한다. 어법상 틀린 것 = 정답."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'allows children to try out and learn social behaviors' — allow + 목적어 + to부정사 구조. to try out과 (to) learn이 병렬이고 뒤의 'and to acquire'와도 병렬 정합. 옳다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'values and personality traits that will be important in adulthood' — 주격 관계대명사 that, 복수 선행사와 will be의 결합에 수일치 문제 없음. 옳다."
+    }
+  ],
+  "note": "정답 (C) 단독. 출제 구조는 전형적 '삽입 예시구에 의한 선행사-동사 수일치 교란' 유형. 최상위권 렌즈에서 실제 끌림이 있었던 선지는 (B) 'in which'(way that에 대한 과잉 의심 유발)였으나 표준 정문으로 즉시 기각. (C)의 구제 해석(that=jumping 단독 수식)을 적극 탐색했으나 의미상 붕괴하여 기각 — 단일 정답으로 수렴. 문항 성립에 하자 없음."
+}

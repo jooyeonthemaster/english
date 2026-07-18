@@ -1,0 +1,61 @@
+{
+  "pid": "P010",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1 (A)-(C)-(B)",
+      "intent": "예시 선행 후 일반 진술 후치 — 국소적으로 자연스러운 A→C 연결을 살려둔 채 (B)의 위치 판단을 시험",
+      "temptingBecause": "(A)→(C)는 원문 그대로의 연쇄($148 → $14.80 → $133.20)라 국소 결속이 완벽하고, 'Say...'가 일반 주장 뒤 예시 도입부로 읽힐 수 있음",
+      "decisiveFlaw": "(C) 말미의 'By introducing incremental shifts...you're more likely to stick'이 명백한 결론문인데 그 뒤에 명령문 조언 (B)가 오면 담화가 역행함. 또한 (B)의 'Instead of forcing yourself to go entirely without'와 'that category'는 주어진 글의 'all-or-nothing game'과 'a budget category'에 직접 호응하므로 (B)는 주어진 글 직후여야 함"
+    },
+    {
+      "label": "2 (B)-(A)-(C)",
+      "intent": "정답 — 원문 순서. 문제 제기(주어진 글) → 해결책 제안(B) → 구체 예시(A) → 수치 전개와 결론(C)",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음. 교정하면 정확히 원지문이 됨"
+    },
+    {
+      "label": "3 (B)-(C)-(A)",
+      "intent": "지시어 선행사 공백 함정 — (C)의 'That's $14.80 less'의 선행사 필요성을 인지하는지 시험",
+      "temptingBecause": "(B)의 '10 percent each month' 뒤에 수치 계산 (C)가 이어지는 것이 표면적으로는 주제 연속으로 보임",
+      "decisiveFlaw": "(B)에는 $148이라는 기준 액수가 없어 'That's $14.80 less, for a total of $133.20'의 'That'이 가리킬 대상이 부재. $14.80은 (A)의 $148에 대한 10% 계산이므로 (A)가 반드시 (C)에 선행해야 함"
+    },
+    {
+      "label": "4 (C)-(A)-(B)",
+      "intent": "글 첫머리 지시어 불가 판정 — 담화 개시 위치에 후방조응 지시어가 올 수 없음을 아는지 시험",
+      "temptingBecause": "숫자 정보가 앞에 나오면 구체적으로 보인다는 표면 인상 외에는 유인력이 약함",
+      "decisiveFlaw": "주어진 글에는 어떤 액수도 없으므로 (C) 서두의 'That's $14.80 less'가 지시할 대상이 전무. (C)로 시작 불가"
+    },
+    {
+      "label": "5 (C)-(B)-(A)",
+      "intent": "동일 함정의 변형 — (C) 선행 배치의 불가능성 재확인",
+      "temptingBecause": "4와 마찬가지로 유인력이 약함. (C)→(B) 사이 표면 어휘 반복(incremental/reduce)이 미약한 결속 착시를 줄 수 있음",
+      "decisiveFlaw": "4와 동일하게 (C) 서두 'That'의 선행사($148의 10% 계산)가 (A)에만 존재하므로 (C)가 (A)보다 앞설 수 없음"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "REDUNDANT_WRONG_EXPLANATIONS",
+      "severity": "minor",
+      "evidence": "오답 해설 4('(C)의 That이 지칭하는 금액 계산법이 앞에 나오지 않은 상태에서 (C)로 시작할 수 없음')와 5('That's $14.80 less에 대응되는 수치가 (A)에 있으므로 (A)보다 (C)가 먼저일 수 없음')가 사실상 동일한 논거를 반복. 사실 오류는 아니나 해설의 정보 밀도가 낮음"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1: 주어진 글=원문 1-2문장, (B)=3-4문장, (A)=5-6문장, (C)=7-9문장으로 전량 축자 일치. 접합 파손·중복·누락·오탈자 없음. 선지는 수능 표준 5개 순열 세트로 라벨 정합. V2: 정답 ②를 재조립하면 정확히 원지문. ③④⑤는 (C) 서두 'That's $14.80 less'의 선행사($148, (A)에만 존재) 부재로 결정적으로 탈락. ①은 (C)의 명시적 결론문 뒤에 명령문 일반 조언 (B)가 후치되는 담화 역행과, (B)의 'all-or-nothing'/'that category' 호응이 주어진 글에 결속된다는 점에서 탈락. 유일정답 확인(blind solve: ②, confidence high). V3: 전 문장 원문 축자 + 표준 발문, 문법성 문제 없음. V4: 'That'의 지시 대상 분석, $119.88 전개, 일반화 기술 모두 실제 문장과 일치. 오답 해설이 각 순열의 실제 내용과 정확히 대응. V5: 정답 라벨·선지·해설 키(1,3,4,5)·keyPoints 상호 모순 없음. 공예: 숫자 연쇄($148→$14.80→$133.20→$119.88)가 매우 강한 단서라 ③④⑤가 단일 단서로 일괄 소거되어 C2=2, C3=2. 실질 변별 지점은 ①vs② 하나뿐이라 INTERMEDIATE 하한 수준. 오답 해설 4·5 중복으로 C6=3. 합계 16으로 B 기준(17) 미달 → C. 출하 자체는 가능한 무결 문항이나 변별 구조가 단선적이어서 재설계 여지 있음. KILLER 아님 → killerConditionsMet=false."
+}

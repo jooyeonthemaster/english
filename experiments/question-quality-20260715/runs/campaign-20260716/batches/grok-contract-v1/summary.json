@@ -1,0 +1,56 @@
+{
+  "batchId": "grok-contract-v1",
+  "phase": "grok2",
+  "atKst": "2026-07-17T20:44:10.628+09:00",
+  "assignments": 8,
+  "slotsConsumed": 8,
+  "accepted": 8,
+  "modelCalls": 8,
+  "inputTokens": 48420,
+  "outputTokens": 18769,
+  "costUsd": 0.207918,
+  "ledgerAfter": {
+    "used": 933,
+    "cap": 1000,
+    "costUsd": 32.171031
+  },
+  "byArm": {
+    "CT-SORD": {
+      "n": 2,
+      "accepted": 2,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 2,
+      "costUsd": 0.031902
+    },
+    "CT-SUMM": {
+      "n": 2,
+      "accepted": 2,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 2,
+      "costUsd": 0.033996
+    },
+    "CT-IRRE": {
+      "n": 2,
+      "accepted": 2,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 2,
+      "costUsd": 0.099818
+    },
+    "CT-SINS": {
+      "n": 2,
+      "accepted": 2,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 2,
+      "costUsd": 0.042202
+    }
+  },
+  "models": {
+    "standard": "google/gemini-3.5-flash",
+    "premiumQgen": "x-ai/grok-4.5"
+  },
+  "durationMs": 189330
+}

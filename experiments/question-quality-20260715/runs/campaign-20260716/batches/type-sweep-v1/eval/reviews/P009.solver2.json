@@ -1,0 +1,25 @@
+{
+  "pid": "P009",
+  "answer": "essential",
+  "multipleDefensible": false,
+  "defensibleLabels": ["essential"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "essential",
+      "verdict": "correct",
+      "reason": "문법: 'it would seem essential to acknowledge ... and (to) give ...'는 가주어 it + seem + 형용사 보어 + 진주어 to부정사(병렬) 외치 구문으로 완전한 정문. 논리: 지문의 논증(음악은 현재에만 존재 → 과거 지식 전수 중심 교육과 충돌 → 그 차이를 인정하고 직접 활동을 앞세워야 함)에서 저자가 지지하는 당위 주장이며, 뒤따르는 'Yet' 역접(현실은 여전히 사실 암기 중심)이 성립하려면 빈칸은 필수성·당위 형용사여야 한다. 본문 'the essential now'에 verbatim으로 존재하므로 '본문에서 찾아 쓰시오' 조건도 충족. 유일하게 문법·논리·발문 조건을 모두 만족하는 답."
+    },
+    {
+      "label": "necessary (necessity에서 파생)",
+      "verdict": "rejected",
+      "reason": "의미·문법적으로는 'it would seem necessary to-V'가 성립하나, 본문에는 명사형 'necessity'만 존재하고 형용사 'necessary'는 verbatim으로 등장하지 않는다. 발문이 '본문에서 찾아 쓰시오'(원문 그대로 추출)이므로 어형 변형이 필요한 이 후보는 배제된다. 어형 변화를 허용하는 관대한 해석 하에서만 부분적으로 옹호 가능."
+    },
+    {
+      "label": "identical / factual / numerous / musical / greatest 등 본문 내 기타 형용사",
+      "verdict": "rejected",
+      "reason": "문법적으로 'it would seem ADJ to-V' 틀에 끼워 넣을 수는 있으나 논리 전면 붕괴. identical(두 연주가 동일하지 않다는 국소 진술), factual(저자가 비판하는 교육의 속성), numerous(시도의 수량 수식), musical(curriculum 수식), greatest(asset 수식)는 모두 '차이를 인정하고 직접 활동을 앞세우는 것'에 대한 저자의 당위 평가를 표현하지 못하며, 'Yet' 역접과의 담화 결속도 성립하지 않는다."
+    }
+  ],
+  "note": "선지 없는 서술형(빈칸 어휘 본문 추출형). 빈칸 문장은 가주어-진주어 외치 구문으로 형용사 보어를 요구하고, 담화 논리(당위 주장 → Yet 역접)는 필수성 형용사를 요구한다. 두 제약을 동시에 만족하며 본문에 verbatim으로 존재하는 어휘는 'essential'이 유일하므로 답이 하나로 좁혀진다. 원문 출처로 추정되는 음악교육 문헌의 원문 표현도 'it would seem essential'로 알려져 있어 정합적이다."
+}

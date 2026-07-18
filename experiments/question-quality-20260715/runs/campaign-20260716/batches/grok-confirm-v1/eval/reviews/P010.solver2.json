@@ -1,0 +1,35 @@
+{
+  "pid": "P010",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'where we are headed': 'be headed (+direction)' is the standard predicative past-participle idiom meaning 'be moving toward'; the fronted locative wh-word 'where' supplies the directional complement. NP + be + headed is fully grammatical ('heading' is an alternative, not a requirement)."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "Parallel coordination after 'have to': 'have to [adjust to a postponement] or [create a whole new set of circumstances]' — two bare-infinitive VPs sharing the modal. 'create' properly takes the NP object. The verbal parse is available and semantically coherent (accommodate a delay or build new plans), so no parallelism violation."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'This is what happens when...': fused (free) relative 'what' with no antecedent, functioning as complement of 'is' and subject of 'happens'. 'that' would be impossible here for lack of an antecedent noun; 'what' is exactly what the structure requires."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'end up' obligatorily selects a gerund complement: 'end up spending' is the required form (*'end up to spend' is ungrammatical). 'spending' takes 'a few relaxing hours' as its object correctly."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect (the error)",
+      "reason": "Clause-initial negative adverbial 'not only' inside the that-clause triggers obligatory subject-auxiliary inversion with a finite verb: 'not only ARE curveballs the universe's way..., but they are also...'. The correlative 'but they are also' proves a finite parallel clause is required. Gerund 'being' leaves the first conjunct with no finite verb and no legal word order; no rescue parse (absolute construction, gerund subject) is available since 'Remember that' demands a finite clause. Must be 'are'."
+    }
+  ],
+  "note": "Uniquely determined error at (E): fronted 'not only' requires finite subject-auxiliary inversion ('not only are curveballs...'), which 'being' cannot satisfy. All other underlines verified correct under their governing rules (be headed idiom; modal-sharing VP coordination; free relative 'what'; end up + gerund). Alternative parses that might legitimize 'being' were actively searched and formally excluded."
+}

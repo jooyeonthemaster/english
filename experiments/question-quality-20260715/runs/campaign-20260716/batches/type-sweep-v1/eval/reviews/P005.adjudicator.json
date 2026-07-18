@@ -1,0 +1,80 @@
+{
+  "pid": "P005",
+  "finalV2": false,
+  "winningAnswer": "유일 정답 없음 — 출제 의도상 답은 'had been led by his cousin'이나, 빈칸 프레임 문장이 학생 노출 필드에 존재하지 않아 유일성이 성립하지 않는 채점 불능 결함 문항",
+  "reason": "발문은 '빈칸에 들어갈 글을 완성하시오'라고 지시하지만 블라인드 지문·렌더 필드 어디에도 빈칸 표기나 프레임 문장이 없다(전체 파일에도 '렌더 지문 없음'으로 명기). 배열 결과가 접합될 통사 슬롯(선행사 유무, 주어 공급 여부, 과거완료를 강제하는 기준 시점)이 미정의이므로, 문법적으로 적격한 복수의 배열 — 'had been led by his cousin'(선언 정답), 'which had been led by his cousin', 'who had been led by his cousin', 'had been led by the cousin'(the×2 은행 존재), 'led by his cousin'(부분 사용 허용 발문) — 중 어느 것도 배제할 수 없다. 원지문 해당 문장은 단순과거 'he was replaced by his cousin'이어서 과거완료의 필연성도 학생에게 보이는 어떤 필드에서도 성립하지 않는다. 추가로 미끼 5종(who/authority/of/which/the)이 각 2회 중복 접합된 보기 손상이 있고 해설은 각 1개로 서술해 보기-해설이 비동기화되어 있다. 따라서 선언 정답의 유일성(V2)은 불성립. 한편 솔버2의 '부정어 표현 불가'·'명사 논항 부재' 결함 주장과 defensibleLabels 중 2건('...who had the authority of the ...', 'the authority of which')은 과잉 판정으로 기각한다 — 부정('영국의 동의 없이')과 주어는 통상 프레임 문장이 공급하는 요소이며 선언 모범답안 자체가 이를 전제한다. 결함의 본질은 단어은행 부적합이 아니라 프레임 부재다.",
+  "perDispute": [
+    {
+      "label": "공통 쟁점: 빈칸 프레임 부재",
+      "claim": "발문이 지시하는 빈칸이 학생 노출 필드 어디에도 없어 완성 대상이 미정의 (솔버1·솔버2·감사자 공통 주장)",
+      "verdict": "인정 — 치명 결함",
+      "evidence": "blind/P005.md 지문에 빈칸 표기(____·밑줄·괄호) 전무, full/P005.md '렌더된 지문' 필드가 '(렌더 지문 없음)'. 배열 결과의 좌/우 접합 문맥이 없어 어떤 배열의 어법 적합성·유일성도 원리적으로 검증 불가. 세 평가자 모두 독립적으로 동일 결함을 적발했고 재검증 결과 사실로 확인됨."
+    },
+    {
+      "label": "선언 정답: had been led by his cousin",
+      "claim": "과거완료 수동태 VP로서 유일 정답이라는 출제자 주장",
+      "verdict": "문법 적격하나 유일성 불성립",
+      "evidence": "VP 자체는 정문(had been + p.p. + by 행위자). 그러나 (1) 주어와 기준 시점을 공급할 프레임이 없고, (2) 원지문 해당 문장은 단순과거 'he was replaced by his cousin'이어서 과거완료를 강제하는 시점 단서가 학생에게 제공되지 않으며, (3) 아래의 복수 대안 배열을 배제할 채점 경계가 어디에도 정의되어 있지 않다. 유일 정답 판정 불가."
+    },
+    {
+      "label": "솔버1 후보 A: which had been led by his cousin",
+      "claim": "비인간 선행사(country/nation)를 가정하면 주격 관계절로 성립",
+      "verdict": "성립(프레임 가정하) — 배제 불가한 대안, 유일성 붕괴의 직접 증거",
+      "evidence": "문법적으로 완결된 주격 관계절이며 은행 단어만으로 조립 가능(which+had+been+led+by+his+cousin). 'a nation which had been led by his cousin' 류 프레임이면 정답이 된다. 프레임 부재로 이 가정을 반증할 수 없으므로 배제 불가. 솔버1은 low confidence·multipleDefensible=true로 적절히 한정 — 과잉 판정 아님."
+    },
+    {
+      "label": "솔버1 후보 B: who had been led by his cousin",
+      "claim": "인간(집합) 선행사(the people/the Zanzibaris)를 가정하면 who 관계절로 성립",
+      "verdict": "성립(프레임 가정하) — 배제 불가",
+      "evidence": "who×2가 은행에 존재하고 인간 선행사 프레임이면 문법·의미 모두 성립('the people, who had been led by his cousin'). which/who 동시 제시는 선행사 판별 미끼 설계로 보이나 판별 근거인 선행사가 부재하므로 어느 쪽도 확정 불가."
+    },
+    {
+      "label": "감사자 대안: had been led by the cousin / led by his cousin",
+      "claim": "'the'가 은행에 2회 있어 the cousin 배열 배제 근거가 없고, 부분 사용 허용 발문상 축약분사형도 배제 불가",
+      "verdict": "성립 — 배제 불가",
+      "evidence": "'had been led by the cousin'은 그 자체로 정문이며 the×2가 실제 은행에 존재. 담화상 his가 더 자연스러우나 '더 자연스러움'은 채점 경계 정의 없이는 배제 기준이 못 된다. 'led by his cousin'은 발문의 '필요한 것만을 골라 사용할 것' 조건상 had/been 미사용이 허용되므로 명사 수식 프레임에서 성립. 두 대안 모두 허용 답안 집합·채점 경계 부재(V2 결함)의 직접 증거."
+    },
+    {
+      "label": "솔버2 결함 주장 1: 부정어(not/without) 부재로 힌트 명제 표현 불가",
+      "claim": "힌트의 ¬APPROVE(UK, cousin)를 은행 단어로 표현할 수 없어 문항이 성립 불가",
+      "verdict": "과잉 판정 — 부분 기각",
+      "evidence": "힌트는 빈칸에 들어갈 문자열이 아니라 상황 전체를 요약하는 장치이며, 부정 의미('영국의 동의 없이')는 통상 프레임 문장 측('without the approval of ...')이 공급한다. 선언 모범답안 'had been led by his cousin'에 부정어가 없다는 사실 자체가 출제 의도상 부정이 빈칸 밖에 있었음을 증명한다. 결함의 본질은 프레임 부재이지 단어은행의 부정어 결핍이 아니다. 단, 프레임이 실재하지 않으므로 이 가정을 확인할 수 없다는 한도 내에서만 솔버2의 불확실성 지적은 유효."
+    },
+    {
+      "label": "솔버2 결함 주장 2: 명사 논항(주어/목적어) 부재로 절 구성 불가",
+      "claim": "은행에 country/nation류 명사가 없어 LEAD(cousin, country)를 실현하는 완결절을 만들 수 없다",
+      "verdict": "과잉 판정 — 기각",
+      "evidence": "WORD_ORDER 유형의 빈칸은 술부(VP)만을 목표 문자열로 삼는 것이 정상 관행이며 주어는 프레임 문장이 공급한다. 선언 모범답안도 주어 없는 VP다. '완결절이어야 한다'는 전제 자체가 근거 없는 추가 요구."
+    },
+    {
+      "label": "솔버2 defensible 후보 B: led by his cousin, who had the authority of the ...",
+      "claim": "어법상 성립하는 대안 배열로 defensibleLabels에 등재",
+      "verdict": "기각 — defensible 아님 (과잉 등재)",
+      "evidence": "(1) 'of the'가 후속 명사 없이 매달린 미완성 문자열이고 은행 잔여 명사로 완성 불가('the authority of the cousin'은 의미 붕괴). (2) 솔버2 자신이 perOption에서 '힌트와 정면 모순, 채택 불가'로 판정한 배열을 defensibleLabels에 포함한 자기모순. 옹호 가능 답안 목록에서 제외한다."
+    },
+    {
+      "label": "솔버2 defensible 후보 C: the authority of which",
+      "claim": "소유 관계절 표지로서 어법상 적격한 대안",
+      "verdict": "기각 — 단편에 불과, 답 성립 불가 (과잉 등재)",
+      "evidence": "술어가 없는 명사구 단편으로 '빈칸에 들어갈 글' 요건을 충족하는 완성 배열이 아니다. 솔버2 스스로 '그 자체로는 답이 될 수 없다'고 명시하면서 defensibleLabels에 등재한 것은 비일관. 또한 'the authority of which had been led...'류 확장은 솔버1이 지적한 대로 의미 비문."
+    },
+    {
+      "label": "솔버2 시제 반론: 과거완료가 잘못된 시간 함의를 만든다",
+      "claim": "had been led는 '사망 이전부터 사촌이 이끌었다'는 오함의를 생성하므로 선언 정답이 결함",
+      "verdict": "조건부 타당 — 범주적 주장으로는 과잉",
+      "evidence": "기준 시점이 전임자 사망이면 오함의가 맞지만, 기준 시점이 개전 시점(1896년 전쟁 발발)인 프레임('By the time the war broke out, the country ___')이면 '사망 후~개전 전' 기간의 통치를 과거완료로 표현하는 것이 정확하다. 프레임 부재로 어느 쪽도 확정 불가하므로 '잘못된 함의'라는 단정은 성립하지 않는다. 다만 과거완료의 필연성 역시 성립하지 않으므로 선언 정답 옹호에도 쓰일 수 없다."
+    },
+    {
+      "label": "단어은행 중복 손상: who/authority/of/which/the 각 2회",
+      "claim": "미끼 5종이 2회씩 중복 접합된 데이터 손상이며 해설(각 1개 서술)과 비동기화 (솔버1 부분 지적, 감사자 주장)",
+      "verdict": "인정 — 결함",
+      "evidence": "blind/full 파일의 보기 16토큰 재검증 결과 who×2, authority×2, of×2, which×2, the×2 확인. full 파일 해설은 미끼를 'authority, who, of, which, the'(각 1개)로 서술해 실제 보기와 불일치. 정상 11토큰 뒤에 미끼 5종이 재접합된 생성 손상 패턴이라는 감사자 분석과 부합."
+    },
+    {
+      "label": "최종 유일성 판정",
+      "claim": "선언 정답 'had been led by his cousin'이 유일한 정답인가",
+      "verdict": "불성립 — finalV2=false",
+      "evidence": "프레임 부재로 배제 불가능한 문법 적격 대안이 최소 4개(which/who 관계절형, the cousin형, 축약분사형) 존재하고, 허용 답안 집합·채점 경계가 미정의이며, 과거완료 강제 근거도 없다. 감사자 V2=false·grade F 판정을 유지한다. 재생성 필수 조치: 빈칸 프레임 문장 렌더(과거완료를 필연화하는 기준 시점 명시), 보기 중복 제거, 허용 동치·배제 경계 정의."
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "J006",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "문법 결합은 성립한다(주어 'The potential contribution ... success' 3인칭 단수 + aggravates, 삽입절 'if it involves vulnerable groups'에서 it=greater economic success로 해소 가능). 그러나 논리적으로 모순: 조건절이 '경제적 성공이 취약계층을 포괄한다면'인데, 취약계층을 포괄하는 성장의 '잠재적 기여(potential contribution)'가 농촌 생계 불안정을 '필연적으로 악화시킨다'는 명제는 지문 어디에서도 지지되지 않으며, 'contribution(기여)'이라는 어휘 자체와 충돌한다. 지문은 성장의 기여를 부정하는 것이 아니라 그것만으로는 불충분하다고 말한다. 기각."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "문법 결합 성립(단수 주어 + is hampered, 수동태 정문). 논리적으로 정면 모순: 지문의 결론은 'direct public intervention/direct public support'가 기근 방지의 실질적 성취였다는 것이다. 공적 개입이 경제적 성공의 기여를 '근본적으로 저해한다'는 진술은 지문 주장(공적 개입 필수)과 반대 방향. 기각."
+    },
+    {
+      "label": "3",
+      "verdict": "accept",
+      "reason": "문법 결합 성립: 'The potential contribution of greater economic success, [조건 삽입절], should be acknowledged to a certain extent.' 조동사+수동 정문, 삽입절 it=economic success 해소 자연스러움. 논리 증명: (i) 뒤 문장이 'At the same time'(양보 후 대조 표지)으로 시작하여 '아무리 빨리 성장해도 직접적 공적 개입 없이는 기근을 막을 수 없다'고 제한을 가한다 — 이는 빈칸이 성장의 기여를 '부분적으로 인정'하는 양보 명제일 때에만 담화 구조가 성립한다. (ii) 'explains at best only a small part of their success'가 '어느 정도까지만(to a certain extent)' 인정이라는 한정과 정확히 정합한다. (iii) 조건절 'if it involves vulnerable groups'는 인정에 붙는 단서로 자연스럽다. 유일한 정답."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "문법 결합 성립(단수 주어 + guarantees). 논리 모순: 'cannot hope to prevent famines without specialized entitlement protection'과 'explains at best only a small part'가 성장의 효과를 명시적으로 제한하므로, '식량 부족의 완전한 근절을 보장한다'는 전칭·과잉 주장은 직접 반박된다. 기각."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "문법 결합 성립(proves + 형용사 보어, 정문). 가장 그럴듯한 미끼: '불충분하다(insufficient)'는 방향은 지문의 대조 구조와 일견 공명한다. 그러나 두 가지 결함으로 기각. (i) 'without agricultural diversification'이 오류 — 지문에서 불충분성을 메우는 결정적 요소는 'specialized entitlement protection mechanisms involving direct public intervention'이지 농업 다각화가 아니다. 오히려 'diversification of economic activities'는 첫 문장에서 사람들이 잘못 우선시하는 경향의 목록에 포함되어 비판 대상 쪽에 놓인다. (ii) 담화 구조상 빈칸 문장은 양보(긍정적 인정)이고 'At the same time' 이후가 제한인데, 빈칸에서 이미 '불충분하다'고 단정하면 후속 대조 표지가 공전(空轉)하며, 조건절 'if it involves vulnerable groups'(취약계층을 포괄한다면 — 긍정적 기여의 조건)와도 논리 극성이 어긋난다. 기각."
+    }
+  ],
+  "note": "담화 구조 증명: [통념 제시(성장 우선 경향)] → [빈칸: 성장 기여의 부분 인정(양보)] → ['At the same time' 제한: 직접 공적 개입 없이는 기근 방지 불가] → [사례: 성장은 성공의 작은 부분만 설명, 실질 성취는 직접 공적 지원]. 빈칸은 양보 슬롯이므로 '어느 정도 인정' 극성만 성립한다. 원전은 Drèze & Sen 계열의 기근·공적 행동 논의로 보이며 원문 표현은 'should not be underestimated'에 해당 — 3번이 이를 패러프레이즈. 다섯 선지 모두 문법적으로는 빈칸에 결합 가능하나 논리적으로 옹호 가능한 것은 3번 단독."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "주어 'The term \"microaggression\"'(단수)에 자동사 originate의 과거형이 결합. 'originate from ~'은 정상적인 결합이며 시제·수 일치 모두 문제 없음. (관용상 originate with가 더 흔하다는 유혹이 있으나 이는 어휘 선호 문제이지 어법 오류가 아님.)"
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "선행사는 복수 명사 'exchanges'(subtle, stunning, often automatic, and nonverbal은 모두 exchanges를 수식하는 형용사 나열). 복수 선행사 + that are로 수 일치 성립. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'impact any oppressed group psychologically'에서 동사 impact를 수식하는 부사 자리. 명사를 수식하는 자리가 아니므로 형용사 psychological이 아닌 부사 psychologically가 맞음. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect (정답)",
+      "reason": "진짜 주어는 복수 'Racial microaggressions'. 'such as assumptions ... based on their race or ethnicity'는 삽입 예시구로 주어-동사 거리를 벌린 전형적 함정이며, 삽입구 끝의 단수 명사(ethnicity)에 끌려 is를 수용하게 유도함. 복수 주어이므로 are가 되어야 하고, 보어 'indignities'도 복수여서 복수 일치가 의미상으로도 확정됨. is는 어법상 틀림. (D)를 정문으로 만드는 대안 해석—도치, 존재구문, 집합명사 단수 취급—은 모두 불성립."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "사역동사 구문 'make + 목적어(target groups) + 원형부정사(feel)'. 원형 feel이 정확하며 to feel이었다면 틀렸을 자리. 정문."
+    }
+  ],
+  "note": "전형적 수일치(주어-동사 원거리 일치) 문항. 삽입구(such as ...)로 거리를 벌린 (D)가 유일한 오류이며, 나머지 네 밑줄은 대안 해석을 적극 탐색해도 모두 정문. 정답 후보가 (D) 하나로 명확히 좁혀지는 깔끔한 문항."
+}

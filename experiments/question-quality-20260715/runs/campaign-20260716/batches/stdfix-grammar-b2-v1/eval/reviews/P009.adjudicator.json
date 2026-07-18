@@ -1,0 +1,38 @@
+{
+  "pid": "P009",
+  "finalV2": true,
+  "winningAnswer": "E",
+  "reason": "독립 재검증 결과 (E) Protects 가 유일한 어법 오류이며 선언된 정답과 일치한다. 문장 'Protects fig trees ... is an important conservation goal'에서 주어 슬롯은 명사구를 요구하는데 정동사 Protects가 놓여 있고, 실제 본동사는 뒤의 is 이므로 접속사 없이 한 절에 정동사가 둘(Protects, is) 충돌한다 → 비문. 동명사 Protecting(또는 To protect)으로 교정해야 한다. 'is an important conservation goal'이 뒤따르므로 명령문·의문 도치 등 대안 파싱으로 구제될 여지가 전혀 없다. 나머지 (A) 콤마 삽입 과거분사 동격구(수동 called), (B) 추상명사 The fact 뒤 완전절을 이끄는 동격 접속사 that, (C) 단수 핵어 The fact 와의 수·태 일치 is revealed, (D) be동사 보어 형용사 plentiful 은 모두 지배 규칙상 정문이며 성립하는 대안 오류 해석이 없다. 솔버1·솔버2·감사자 모두 (E)로 일치, 과잉 판정이나 누락된 대안 해석 없음. 단일 정답 확정.",
+  "perDispute": [
+    {
+      "label": "(A)",
+      "claim": "called 가 능동/정동사여야 한다는 오류 주장 가능성",
+      "verdict": "정문(오류 아님)",
+      "evidence": "'Such species, called keystone species, are vital...' — 주어는 Such species, 본동사는 are vital. called 는 콤마로 삽입된 과거분사 동격구(which are called 의 축약)로 종이 '~라 불리는' 수동 대상이므로 과거분사 called 가 옳다. calling 등 능동형은 오히려 비문."
+    },
+    {
+      "label": "(B)",
+      "claim": "that 이 관계대명사로서 불완전절을 요구하거나 불필요하다는 주장 가능성",
+      "verdict": "정문(오류 아님)",
+      "evidence": "뒤 절 'other species depend on or are greatly affected by the keystone species' 는 완전절(주어+등위 술어가 목적어 the keystone species 공유). 따라서 추상명사 The fact 의 동격절을 이끄는 접속사(complementizer) that 이 정확하며, 갭을 요구하는 관계대명사가 아니다."
+    },
+    {
+      "label": "(C)",
+      "claim": "인접 복수명사 species 로 인해 are 여야 한다거나 능동태여야 한다는 주장 가능성",
+      "verdict": "정문(오류 아님)",
+      "evidence": "장거리 주어의 핵어는 단수 The fact 이고 that 동격절은 수 일치에 영향을 주지 않는다. 사실이 '드러나는' 것이므로 단수 수동태 is revealed 가 수·태 모두 정확. 앞의 복수 species 는 미끼일 뿐."
+    },
+    {
+      "label": "(D)",
+      "claim": "less 뒤에서 부사 plentifully 여야 한다는 주장 가능성",
+      "verdict": "정문(오류 아님)",
+      "evidence": "'other fruits are less plentiful' 에서 be동사 are 의 주격 보어 자리이므로 형용사 plentiful 이 필요하다. 부사 plentifully 는 보어 자리에 올 수 없어 오히려 비문."
+    },
+    {
+      "label": "(E)",
+      "claim": "주어 자리 정동사 Protects — 선언된 정답",
+      "verdict": "오류(유일한 정답)",
+      "evidence": "주어 슬롯은 명사구를 요구하는데 정동사 Protects 가 위치. 진짜 본동사는 뒤의 is 이므로 접속사 없이 정동사 2개 충돌(Protects, is)로 비문. 주어 역할을 하려면 동명사 Protecting 또는 to부정사 To protect 필요. 뒤에 'is an important conservation goal'이 이어져 명령문·도치 등 대안 해석으로 정문이 될 여지가 없다. 원문 복원형(Protecting)과 최소대립쌍이며 유일하게 성립 불가능한 오류."
+    }
+  ]
+}

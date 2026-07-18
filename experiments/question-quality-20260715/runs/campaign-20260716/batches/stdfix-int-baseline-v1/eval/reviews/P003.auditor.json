@@ -1,0 +1,75 @@
+{
+  "pid": "P003",
+  "blindAnswer": "(E)",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "MARKED_EXPR_SURROUNDING_MISMATCH",
+      "severity": "major",
+      "evidence": "markedExpressions (D)의 surroundingText가 'to walk down the hall after they were exposed to the words.'로, 지문 내 첫 번째 'exposed'(Bargh was interested... 문장)를 가리킨다. 그러나 렌더 지문·(D) 오답해설('주격 관계대명사 who의 선행사인 Those students... had been exposed')·keyPoints는 모두 두 번째 'exposed'(Those students who had been exposed)에 밑줄을 둔다. 학생 노출 렌더·해설·keyPoints 상호 간에는 모순이 없어 V1/V5는 통과로 판정하지만, surroundingText 앵커로 재렌더하는 파이프라인에서는 (D) 밑줄이 오위치(were exposed)로 찍힐 위험이 있는 스테일 메타데이터 결함이다."
+    },
+    {
+      "code": "MARKED_EXPR_FIELD_CONVENTION",
+      "severity": "minor",
+      "evidence": "(E)의 expression 필드가 표시형 'taking'이 아닌 원문형 'took'으로 기재되어 (A)~(D)(expression=표시형)와 필드 규약이 불일치한다. errorExpression='taking', correction='took'으로 의미 복원은 가능하나 소비 측 코드가 expression을 표시형으로 가정하면 어긋난다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 4,
+    "C5": 4,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "명사 수식 현재분사 + that 생략 명사절 목적어 구조의 적법성 판단(준동사 자리)",
+      "temptingBecause": "showing 뒤에 완전한 절(human perception and behavior can be influenced...)이 바로 이어져 'that shows'나 수동 'shown'으로 고쳐야 할 것 같은 착시를 준다",
+      "decisiveFlaw": "본동사 did가 이미 존재하므로 showing은 an experiment를 수식하는 능동 분사로 적법하며, that 생략 명사절을 목적어로 취할 수 있다 — 오답(옳은 표현)"
+    },
+    {
+      "label": "(B)",
+      "intent": "등위접속사 and 병렬 구조에서 동사 형태 일치 판단",
+      "temptingBecause": "and 뒤 동사가 asking(분사)이어야 하는지 asked(정동사)여야 하는지 병렬 기준점을 찾게 만든다",
+      "decisiveFlaw": "주어 He의 과거 정동사 presented와 병렬이므로 과거 정동사 asked가 정확히 적법 — 오답(옳은 표현). 다만 판단이 빠르게 끝나는 쉬운 디코이"
+    },
+    {
+      "label": "(C)",
+      "intent": "'One of + 복수명사' 주어부의 수일치(핵 명사 식별)",
+      "temptingBecause": "동사 직전의 복수명사 lists에 견인되어 were로 착각하도록 유도한다",
+      "decisiveFlaw": "주어의 핵은 단수 One이므로 단수 was가 적법 — 오답(옳은 표현). 정형화된 포인트라 상위권에게는 즉시 소거된다"
+    },
+    {
+      "label": "(D)",
+      "intent": "관계절 내 태(수동) 판단 — 선행사와 동사의 의미 관계",
+      "temptingBecause": "정답 (E)와 같은 문장에 위치하고 had been exposed의 완료수동 구조가 복잡해 보여, 문장 전체의 이상함을 (D) 탓으로 돌리기 쉽다",
+      "decisiveFlaw": "선행사 Those students는 단어에 '노출되는' 대상이므로 수동 exposed가 적법 — 오답(옳은 표현). 정답과 같은 문장에 배치되어 주의 분산 역할을 잘 수행한다"
+    },
+    {
+      "label": "(E)",
+      "intent": "긴 주격 관계절 수식 뒤 정동사 자리 판단 — 정동사 vs 준동사(정답)",
+      "temptingBecause": "직전의 who had been exposed... 관계절이 길어 taking을 분사구문 내지 연속 수식으로 읽고 지나치기 쉽고, -ing 형태 자체는 국소적으로 비문 신호를 내지 않는다",
+      "decisiveFlaw": "taking으로 두면 주절(Those students ... than those...)에 정동사가 하나도 없어 비문이 되며, 유일한 교정 took은 원지문을 정확히 복원한다 — 최소대립쌍 정답으로 유일성 확보"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "(A) 해설의 '문장 형태의 목적어 절'은 that이 생략된 명사절 목적어를 가리키는 다소 성긴 표현이나, 실제 구조(showing + [that] human perception and behavior can be influenced...)와 일치하므로 오개념은 아니다.",
+      "recommendation": "'접속사 that이 생략된 명사절을 목적어로 취하는'으로 다듬으면 더 정확하다."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 원지문 대비 유일한 변형이 (E) took→taking이며 나머지 텍스트는 전량 동일, 마커 5개가 선지와 정확히 대응. V2: 다섯 밑줄 독립 검증 결과 (A)~(D)는 모두 적법하고 (E)만 주절 정동사 부재를 야기하는 유일 오류 — 단일정답 확정. V3: 교정형(took) 완성문은 원문 그대로라 문법적, 표시형의 비문성은 GRAMMAR_ERROR 유형 의도와 정확히 일치. V4: 주해설의 구조 분석(주어+주격 관계절 수식+정동사 자리)과 오답 해설 4건 모두 실제 밑줄 문장과 대응하며 용어 오류·환각 없음. V5: 정답라벨·선지·해설·keyPoints 상호 무모순(keyPoints의 (E)(D)(C) 모두 해설과 정합). 다만 markedExpressions (D) surroundingText가 다른 occurrence를 가리키는 스테일 앵커(major)와 (E) expression 필드 규약 불일치(minor)를 메타데이터 결함으로 기록 — 학생 노출 산출물에는 미반영이므로 V 실패로는 판정하지 않음. 공예: 정동사 vs 준동사라는 정전 포인트를 최소대립쌍으로 정확히 구현(C4=4), INTERMEDIATE 난이도에 함정 깊이가 정확히 부합(C5=4)하나, (B)(C)가 빠르게 소거되는 쉬운 디코이라 경쟁력은 중상 수준(C1=C2=C3=3), 해설은 정확하되 다소 장황(C6=3). 합계 20 — 모든 C가 3 이상이고 17 이상이므로 B. KILLER 아님(요청 난이도 INTERMEDIATE)이므로 killerConditionsMet=false."
+}

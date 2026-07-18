@@ -1,0 +1,20 @@
+{
+  "pid": "P004",
+  "answer": "(A) disconnected / (B) material",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(A) disconnected / (B) material"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) disconnected",
+      "verdict": "correct",
+      "reason": "Summary seam requires a past participle after 'has ___ the traditional connection between work and physical location.' The passage's governing sentence is 'ties between service work and particular places can be disconnected' — the only passage-sourced verb meaning severing the work–place tie. 'has disconnected the traditional connection' is mildly redundant (disconnect a connection) but grammatically and logically sound. Tested lures: 'loosened' (echoes 'less sticky' but the word is absent from the passage; 발문 demands 본문에서 찾아 변형), 'standardised/commoditised' (wrong object — those verbs take 'work', not 'connection'). Neither survives."
+    },
+    {
+      "label": "(B) material",
+      "verdict": "correct",
+      "reason": "Seam requires an adjective before 'presence': 'without leaving any ___ presence in those regions.' The passage's final sentence supplies it verbatim: 'the employer leaves behind no material traces in the places where it was once an employer' — direct traces→presence mapping. Tested lures: 'local' (passage repeats 'local regulations/local taxes', but 'local presence in those regions' is pleonastic and misses the final-sentence anchor), 'physical' (paraphrase-plausible but not the passage's word, and 'physical' already appears in the summary as 'physical location'). Only 'material' is both passage-sourced and seam-clean."
+    }
+  ],
+  "note": "Constructed-response summary item (no options provided, as flagged in the file). Solved blind as a top-tier examinee: read passage, filled each blank against grammar seam + passage wording. Answer pair uniquely determined: (A) disconnect → disconnected (perfect-tense transformation of the passive base in 'can be disconnected'), (B) material (verbatim from 'no material traces'). Minor quality remarks: (A) slot yields the slightly tautological 'disconnected the traditional connection'; also the summary itself contains 'physical location', which could bait weaker students into writing 'physical' for (B). Neither issue creates a second defensible answer."
+}

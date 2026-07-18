@@ -1,0 +1,206 @@
+{
+ "P001": {
+  "itemId": "fb-title-s",
+  "armId": "FB-TITLE",
+  "frameId": "blank-supply-v2-135",
+  "subType": "TITLE",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "2",
+  "gateIssues": []
+ },
+ "P002": {
+  "itemId": "fb-topic-s",
+  "armId": "FB-TOPIC",
+  "frameId": "blank-supply-v2-137",
+  "subType": "TOPIC",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "2",
+  "gateIssues": []
+ },
+ "P003": {
+  "itemId": "fb-irre-s",
+  "armId": "FB-IRRE",
+  "frameId": "grammar-frame-v2-088",
+  "subType": "IRRELEVANT",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "③",
+  "gateIssues": []
+ },
+ "P004": {
+  "itemId": "fb-sord-l",
+  "armId": "FB-SORD",
+  "frameId": "adhoc-prod-04",
+  "subType": "SENTENCE_ORDER",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "3",
+  "gateIssues": []
+ },
+ "P005": {
+  "itemId": "fb-sins-l",
+  "armId": "FB-SINS",
+  "frameId": "adhoc-prod-08",
+  "subType": "SENTENCE_INSERT",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "④",
+  "gateIssues": []
+ },
+ "P006": {
+  "itemId": "fb-sins-s",
+  "armId": "FB-SINS",
+  "frameId": "grammar-frame-v2-128",
+  "subType": "SENTENCE_INSERT",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "④",
+  "gateIssues": []
+ },
+ "P007": {
+  "itemId": "fb-impl-s",
+  "armId": "FB-IMPL",
+  "frameId": "blank-supply-v2-146",
+  "subType": "IMPLIED_MEANING",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "①",
+  "gateIssues": [
+   {
+    "severity": "error",
+    "code": "implied-meaning-noncentral-target",
+    "message": "IMPLIED_MEANING underline should be a central-claim paraphrase, metaphor, compressed conclusion, or topic/gist-level expression, not a peripheral detail."
+   }
+  ]
+ },
+ "P008": {
+  "itemId": "fb-summ-l",
+  "armId": "FB-SUMM",
+  "frameId": "adhoc-prod-05",
+  "subType": "SUMMARY_COMPLETE_MC",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": []
+ },
+ "P009": {
+  "itemId": "fb-cont-s",
+  "armId": "FB-CONT",
+  "frameId": "blank-supply-v2-122",
+  "subType": "CONTENT_MATCH",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "4",
+  "gateIssues": []
+ },
+ "P010": {
+  "itemId": "fb-sord-s",
+  "armId": "FB-SORD",
+  "frameId": "grammar-frame-v2-176",
+  "subType": "SENTENCE_ORDER",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "2",
+  "gateIssues": []
+ },
+ "P011": {
+  "itemId": "fb-irre-l",
+  "armId": "FB-IRRE",
+  "frameId": "adhoc-prod-07",
+  "subType": "IRRELEVANT",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "④",
+  "gateIssues": []
+ },
+ "P012": {
+  "itemId": "fb-cont-l",
+  "armId": "FB-CONT",
+  "frameId": "adhoc-prod-03",
+  "subType": "CONTENT_MATCH",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "4",
+  "gateIssues": []
+ },
+ "P013": {
+  "itemId": "fb-impl-l",
+  "armId": "FB-IMPL",
+  "frameId": "adhoc-prod-04",
+  "subType": "IMPLIED_MEANING",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "②",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "implied-meaning-noncentral-target",
+    "message": "IMPLIED_MEANING underline should be a central-claim paraphrase, metaphor, compressed conclusion, or topic/gist-level expression, not a peripheral detail."
+   }
+  ]
+ },
+ "P014": {
+  "itemId": "fb-topic-l",
+  "armId": "FB-TOPIC",
+  "frameId": "adhoc-prod-06",
+  "subType": "TOPIC",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": []
+ },
+ "P015": {
+  "itemId": "fb-title-l",
+  "armId": "FB-TITLE",
+  "frameId": "adhoc-prod-05",
+  "subType": "TITLE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": []
+ },
+ "P016": {
+  "itemId": "fb-summ-s",
+  "armId": "FB-SUMM",
+  "frameId": "blank-supply-v2-090",
+  "subType": "SUMMARY_COMPLETE_MC",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": []
+ }
+}

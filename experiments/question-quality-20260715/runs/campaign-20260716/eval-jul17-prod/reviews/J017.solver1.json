@@ -1,0 +1,35 @@
+{
+  "pid": "J017",
+  "answer": "⑤",
+  "multipleDefensible": false,
+  "defensibleLabels": ["⑤"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "'distractions'는 Prospects 설문에서 재택 환경(작업공간 부족·방해 요소)의 문제로 언급된 것이지 대면 근무에서 수년간 해온 일이 아니다. 대면 사무실 환경은 회사가 제공하므로 '개인 업무 환경을 최적화'했다는 서술은 빈칸 자리(in an in-person job)와 논리적으로 충돌한다. 지문 어휘(distractions)만 재활용한 lexical-echo 미끼."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong (attractive distractor)",
+      "reason": "실전에서 실제로 끌렸던 선지. 현실 담론(젊은 재택 근무자의 사회화·멘토링·조직 통합 결핍)과 완벽히 부합하고 문장 결합도 자연스럽다. 그러나 지문에는 네트워크·공동체·고립·멘토링에 관한 근거가 전혀 없다. 지문이 제시한 어려움은 오직 '업무량 관리(managing their workload)'와 '작업공간/방해 요소'뿐이므로 외부 지식 기반 미끼로 판정, 기각."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "내적 모순: '대면 근무에서(in an in-person job)' 원격 협업용 디지털 도구를 숙달한다는 것은 성립하지 않으며, 기성세대가 디지털 도구에 능하다는 서술도 지문에 없다."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "전통적 비즈니스 모델 구조의 '파괴'는 지문 논지(젊은 세대의 원격근무 적응 어려움과 하이브리드 해법)와 무관한 완전 오프토픽."
+    },
+    {
+      "label": "⑤",
+      "verdict": "correct",
+      "reason": "첫 문장의 핵심 근거 'more difficulties in managing their workload'와 직결된다. Moreover 문장은 그 어려움의 배경 — 기성세대는 대면 근무 수년간 업무량을 스스로 관리하는 역량(자율적 일정 관리)을 축적했으나 젊은 세대는 원격으로 커리어를 시작해 그 기회가 없었음 — 을 제시한다. 'had many years to acquire ... in an in-person job' 문법 결합도 정상. 하이브리드(부분 대면의 구조 제공) 결론과도 정합. 유일한 사소한 긴장은 'autonomous scheduling'이 대면 근무보다 원격 근무의 기술처럼 들린다는 점이나, 대면 수년의 훈련이 자기관리 역량을 길러준다는 지문 논리로 해소된다."
+    }
+  ],
+  "note": "정답 ⑤ 단일 옹호 가능. ②가 설계된 매력적 오답으로 실제 유혹 강함(현실 지식 부합 + 문장 자연스러움) — 그러나 지문 내 증거 부재로 기각. 지문 자체 결함 발견: 마지막 문장 'allows them, if possible, depending on the job role, chooses their day-to-day work location'은 비문(to choose여야 함). 'perhaps more of a hybrid model ..., would work well'의 쉼표도 어색. 빈칸 판정에는 영향 없으나 지문 품질 감점 요인."
+}

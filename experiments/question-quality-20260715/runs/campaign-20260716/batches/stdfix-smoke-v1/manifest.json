@@ -1,0 +1,63 @@
+{
+  "batchId": "stdfix-smoke-v1",
+  "phase": "stdfix",
+  "note": "STANDARD 근본수술 라운드 스모크: funnel 경로 신설 + G4 프로필 + 빈칸 span게이트/contract다이어트 동작 검증 (dev 프레임)",
+  "atKst": "2026-07-17T17:58:57.186+09:00",
+  "gitSha": "8d365701e339d7ad64bb1f808c76ec768e9855ee",
+  "gitDirty": true,
+  "worstCaseReserved": 19,
+  "spec": {
+    "batchId": "stdfix-smoke-v1",
+    "phase": "stdfix",
+    "note": "STANDARD 근본수술 라운드 스모크: funnel 경로 신설 + G4 프로필 + 빈칸 span게이트/contract다이어트 동작 검증 (dev 프레임)",
+    "concurrency": 3,
+    "providerRouting": "none",
+    "assignments": [
+      {
+        "itemId": "smoke-bf-1",
+        "frameId": "blank-supply-v2-049",
+        "subType": "BLANK_INFERENCE",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "armId": "A-NEW",
+        "funnel": true
+      },
+      {
+        "itemId": "smoke-bf-2",
+        "frameId": "blank-supply-v2-052",
+        "subType": "BLANK_INFERENCE",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "armId": "A-NEW",
+        "funnel": true
+      },
+      {
+        "itemId": "smoke-g4-1",
+        "frameId": "grammar-frame-v2-006",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "profile": "G4_DIET_GUARDED",
+        "armId": "B1-G4"
+      },
+      {
+        "itemId": "smoke-g4-2",
+        "frameId": "grammar-frame-v2-017",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "profile": "G4_DIET_GUARDED",
+        "armId": "B1-G4"
+      },
+      {
+        "itemId": "smoke-gf-1",
+        "frameId": "grammar-frame-v2-050",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "armId": "B2-STD",
+        "funnel": true
+      }
+    ]
+  }
+}

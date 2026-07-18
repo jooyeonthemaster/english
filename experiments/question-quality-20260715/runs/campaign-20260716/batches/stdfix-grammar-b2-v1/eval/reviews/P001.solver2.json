@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'When our minds are at ease' — 주어 'our minds'는 복수 명사이므로 복수 동사 are가 수일치상 정확하다. 'be at ease'는 표준 관용 표현. 지배 규칙(주어-동사 수일치) 완전 충족."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'we're more likely to direct...' — 'be likely to-V' 구문에서 형용사 likely가 be동사의 보어로 쓰였고 비교급 more의 수식도 자연스럽다(more likely). 부사 자리로 오인하도록 유도한 함정이지만 형용사가 정확한 자리다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'our attention tends to be directed outward' — attention은 direct(향하게 하다)의 대상이므로 수동태 be directed가 필수. 앞 문장의 능동 'direct the spotlight of attention inward'(우리가 주의를 향하게 함)와 대비하면 태 선택이 정확함이 형식적으로 확인된다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'While this pattern... is necessary..., it actually prevents...' — While이 완전한 정형절(주어 this pattern + 동사 is)을 이끌고 주절과 양보/대조 관계를 형성한다. 접속사 While + 절 구조로 어법·논리 모두 성립. (인접한 'when solving'의 의미상 주어 불일치는 밑줄 범위 밖이며 관용적으로 허용되는 축약이다.)"
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "'hear the quiet voices in the backs of our heads told us about the insight' — 지각동사 hear의 5형식 구조에서 목적어 the quiet voices와 목적보어의 관계는 능동(목소리가 우리에게 말해 주는 것)이므로 telling(또는 원형 tell)이어야 한다. 대안 해석 탐색: (i) told를 과거분사 축약 관계절('voices that were told...')로 보려면 voices가 tell의 수동 대상(전달받는 자 또는 전달 내용)이어야 하는데, 수여동사 tell의 잔류 목적어 수동('the story told (to) us' 유형)을 적용해도 voices는 전달 내용이 아니라 발화 주체이므로 'the voices (that were) told us about the insight'는 의미역이 성립하지 않는다. 게다가 간접목적어 us와 전치사구 about the insight가 동시에 잔류하는 '*be told us about X' 틀 자체가 영어에 존재하지 않는다. (ii) 'hear + that절'로 볼 여지도 없다(that 부재, voices가 종속절 주어라면 hear의 목적어 자리가 비게 됨). 따라서 어떤 정문 파스도 불가능 — 명백한 오류."
+    }
+  ],
+  "note": "출전은 Jonah Lehrer 계열의 '따뜻한 샤워 중 통찰' 지문 개작으로 보이며, 원문 대응 표현은 'hear those quiet voices ... telling us about the insight'다. (A)~(D)는 각각 수일치·형용사 보어·수동태·접속사 규칙을 형식적으로 완전 충족하고, (E)만이 어떤 대안 파스(축약 관계절, 잔류 목적어 수동, that절 생략)로도 구제되지 않는다. 정답 후보는 (E) 하나로 유일하게 좁혀진다. 부차적 품질 메모: 'when solving problems analytically'의 의미상 주어가 주절 주어(this pattern)와 불일치하는 현수 분사 기미가 있으나 밑줄 항목이 아니고 관용상 허용 수준이라 정답 유일성을 해치지 않는다."
+}

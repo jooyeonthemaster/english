@@ -1,0 +1,78 @@
+{
+  "pid": "P002",
+  "itemId": "P002",
+  "blindAnswer": "4",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-wording",
+      "severity": "minor",
+      "evidence": "해설 마지막 문장 '⑤는 특정 관찰 신화를 그대로 따른 함정'에서 '특정 관찰 신화'는 의미가 흐릿하다(의도는 '편견 없는 관찰이라는 신화'로 추정). 오답 해설 5번('편견 없는 관찰은 수사적으로 내세워지지만...')은 정확하므로 사실성 실패는 아니고 표현 결함에 그친다."
+    }
+  ],
+  "v1Evidence": "렌더 지문에 선언 정답 'a collective product'를 대입하면 원지문과 문자 단위로 완전 일치함을 프로그램 diff로 확인했다(blank 마커 1개, 접합 파손·중복·누락·오탈자 없음). 선지 라벨 1~5와 마커가 일치한다.",
+  "v2Evidence": "블라인드 풀이 결과 정답 집합 = {4} 단일. 결정 근거는 'knowledge isn't knowledge unless it has been authorized by disciplinary specialists'와 후행 문장 'only one stage in its construction'. ①②③⑤는 각각 지문이 명시적으로 기각하거나(개인주의 수사·홍보 우선) 부분-전체 오류(실험실 단계)로 탈락하며 어떤 대안 독해로도 성립하지 않는다.",
+  "v3Evidence": "다섯 선지 모두 관사 포함 명사구로 동일 통사 슬롯('until it becomes ___.')에 들어가며 문법으로 탈락하는 오답이 없다. 정답 완성문은 원문 그대로이므로 seam 비문 없음. 발문은 표준 빈칸 발문.",
+  "v4Evidence": "해설의 인용 4건(기자회견 발표 시 비난, 전문가 승인 조건, 자연의 비명료성, 실험실=구성의 한 단계)이 모두 실제 지문 내용과 일치한다. 문법 용어 오분석·존재하지 않는 내용 첨가·문장 귀속 오류 없음. 오답 해설 1·2·3·5가 각 선지의 실제 내용과 정확히 대응한다.",
+  "v5Evidence": "선언 정답 4 = 선지 4 'a collective product' = 해설의 '정답은 ④ a collective product'. 오답 해설 키 {1,2,3,5}가 비정답 선지 집합과 정확히 일치하고 keyPoints 3개가 해설·지문과 모순 없다.",
+  "craft": {
+    "C1": 4,
+    "C2": 4,
+    "C3": 3,
+    "C4": 4,
+    "C5": 4,
+    "C6": 3
+  },
+  "craftRationale": {
+    "C1": "지문의 핵심 테제(과학적 진리의 권위는 개인이 아닌 집단 승인에서 나온다)를 결론 문장에서 직접 묻는다. 장식적 지엽이 아닌 정전 포인트.",
+    "C2": "네 오답이 서로 다른 오독을 겨냥한다: ① 부분-전체 치환(half-truth), ② 기각된 개인주의 수사 채택(position swap), ③ 금지 행위를 성립 조건으로 오독(condition violation), ⑤ 기각된 '편견 없는 관찰' 신화 채택. 필러 없음.",
+    "C3": "①②⑤가 지문 어휘(laboratories, inspired, unbiased)와 국소적으로 겹쳐 표면 매칭 풀이를 유인하고, 전체 논증 구조(개인주의 수사 기각 → 집단 승인)에서 갈린다. 다만 ②③⑤는 대비 구조만 파악하면 빠르게 소거되어 경쟁 강도는 중간 — BASIC에는 적절하나 절대 기준으로는 3.",
+    "C4": "메타 누출·꼬리 소거 없음. 선행 문장(전문가 승인)과 후행 문장(construction)이 정답을 필연적으로 만들되 정답 어휘 'collective'는 지문 다른 곳에 등장하지 않아 베껴쓰기 누출이 없다.",
+    "C5": "요청 난이도 BASIC. 인접 문장 단서로 해결되는 1단계 추론 + 얕은 함정 깊이 — 라벨과 정확히 일치한다.",
+    "C6": "짧고 정확하며 정답 근거와 각 함정을 분리해 제시한다. 감점 요인: '⑤는 특정 관찰 신화' 표현의 모호함, 본 해설과 오답 해설의 경미한 중복."
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "부분-전체 치환: 마지막 문장의 'laboratory... one stage'를 결론 자체로 승격시키는 half-truth 함정",
+      "temptingBecause": "지문 첫 문장('discoveries are made in laboratories')과 마지막 문장에 laboratory가 반복 등장해 표면 매칭이 강하다",
+      "decisiveFlaw": "바로 다음 문장이 실험실에서 일어나는 일은 '구성의 한 단계일 뿐'이라고 명시해 진리의 최종 성립 형태가 될 수 없다"
+    },
+    {
+      "label": "2",
+      "intent": "기각된 관점 채택: 지문이 소개 후 기각하는 개인주의 수사(inspired patience)를 정답으로 오인하게 하는 actor/position 함정",
+      "temptingBecause": "'inspired patience', 'skilled hands' 등 개인 역량 서술이 지문 전반부에 길게 나온다",
+      "decisiveFlaw": "그 믿음은 '공적 맥락의 행동 근거가 될 수 없다'고 명시적으로 기각되며, 성립 조건은 전문가 집단의 승인이다"
+    },
+    {
+      "label": "3",
+      "intent": "조건 위반: 지문이 비난 대상으로 든 언론 발표를 지식 성립 경로로 오독하게 하는 함정",
+      "temptingBecause": "'press conference', 'publicity seeker'가 지문에 실제로 등장한다",
+      "decisiveFlaw": "기자회견 우선 발표는 'automatically castigated'되는 행위로, 권위 획득의 반례이지 조건이 아니다"
+    },
+    {
+      "label": "5",
+      "intent": "기각된 전제 채택: 개인주의 수사의 'unbiased mind' 신화를 그대로 따르게 하는 함정",
+      "temptingBecause": "'unbiased'가 지문 어휘와 정확히 겹치고 과학의 이상처럼 들린다",
+      "decisiveFlaw": "지문은 자연이 명료하게 말하지 않으며 지식은 전문가 인가 없이는 지식이 아니라고 하여 '편견 없는 인상'만으로는 성립하지 않는다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "'⑤는 특정 관찰 신화를 그대로 따른 함정' — '특정 관찰 신화'가 무엇을 지칭하는지 불명확한 축약 표현",
+      "recommendation": "'편견 없는 관찰이라는 신화'로 풀어 쓰면 명확해진다"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "A",
+  "notes": "요청 난이도 BASIC의 빈칸 추론 문항. 렌더+정답 대입 시 원문과 완전 일치(V1 프로그램 검증), 단일 정답 유일성 성립, 다섯 선지 모두 동일 통사 슬롯의 관사+명사구로 문법 소거 불가(§D 조건 충족). 오답 4개가 모두 지문 내 anchor와 서로 다른 함정 유형을 갖는다. 정답 span이 원문 verbatim이지만 BASIC 난이도에서는 §D의 '난이도에 맞는 추상화' 요건에 부합한다. C 합계 22, 전 축 3 이상, 전 V 통과 → A. KILLER 요청이 아니므로 killerConditionsMet=false."
+}

@@ -1,0 +1,78 @@
+{
+  "pid": "P007",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-NOTE",
+      "severity": "minor",
+      "evidence": "렌더 지문 필드가 '(렌더 지문 없음)'. CONTENT_MATCH는 지문 무변형 유형이므로 원지문 그대로 노출로 해석해 통과 처리. 원지문 자체는 손상 없음('present-ing'의 하이픈은 원저자의 의도적 강조 표기). 다만 데이터 파이프라인상 렌더 필드에 원지문을 명시적으로 복사해 두는 편이 안전하다."
+    },
+    {
+      "code": "V4-NOTE",
+      "severity": "minor",
+      "evidence": "메인 해설의 '원인–결과와 실현 여부를 모두 틀리게 연결'은 과잉 주장 소지. ③의 인과 전제(의미와 제시 행위의 분리 불가 → 직접 참여 우선)는 지문 자신의 논리이며, 결정적 오류는 '실현 여부'(have largely replaced가 마지막 문장 'emphasis is still on'과 정면 모순) 하나다. 권고를 기정사실로 바꾼 왜곡이라는 취지 자체는 성립하므로 V4 실패로는 보지 않음."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 1,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "2번째 문장(greatest asset = 과거·미래 함의 없는 본질적 now) 패러프레이즈 검증",
+      "temptingBecause": "지문에 없는 'listeners', 'load of' 등 어휘 추가로 신중한 학생이 재대조하게 만들 수는 있음",
+      "decisiveFlaw": "없음 — 'brings out the essential now without implications of a past and a potential future'와 일치하는 참 진술(정답 아님이 정당)"
+    },
+    {
+      "label": "2",
+      "intent": "스트라빈스키 인용 귀속 확인",
+      "temptingBecause": "거의 없음 — 'only through music are we able to realize the present'의 사실상 축자 재진술이라 오답 후보로서의 유혹이 발생하지 않음",
+      "decisiveFlaw": "없음 — 일치 진술. 베껴쓰기 수준이라 변별 기여가 0에 가까움"
+    },
+    {
+      "label": "3",
+      "intent": "half-truth: 참인 인과 전제(의미≠제시 분리 불가) 뒤에 권고(would seem logical to give prominence)를 기정사실(have largely replaced)로 바꿔 실현 여부를 왜곡",
+      "temptingBecause": "앞절이 지문 4번째 문장과 축자 일치하고, 'direct musical work for most pupils'가 지문의 권고 표현(all pupils working directly with music)을 그대로 반향",
+      "decisiveFlaw": "'have largely replaced factual study'가 마지막 문장 'the emphasis is still on pupils absorbing factual information'과 정면 모순 — 유일한 불일치, 선언 정답과 일치"
+    },
+    {
+      "label": "4",
+      "intent": "5번째 문장의 긴장 관계(does not sit easily) 압축 패러프레이즈 검증",
+      "temptingBecause": "'drawn from the past'가 지문의 두 관계절(rests mainly upon received factual knowledge / uses the past to make sense of the present)을 한 구로 압축해 대응 확인이 필요",
+      "decisiveFlaw": "없음 — 압축이지만 왜곡 없는 일치 진술"
+    },
+    {
+      "label": "5",
+      "intent": "마지막 문장의 양보–결론(in spite of / still) 확인",
+      "temptingBecause": "거의 없음 — 마지막 문장의 축자 재진술",
+      "decisiveFlaw": "없음 — 일치 진술. 그러나 ③과 상호 모순 관계여서 ③을 노출시키는 단서 누출원으로 작동(아래 C4 이슈)"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "메인 해설 '원인–결과와 실현 여부를 모두 틀리게 연결한' — ③의 인과 전제는 지문 자신의 논리 사슬이므로 '틀리게 연결'된 것은 실현 여부 하나다. 인과까지 오류로 묶은 것은 과잉 서술.",
+      "recommendation": "'참인 전제(의미와 제시의 분리 불가) 뒤에 지문의 권고를 이미 실현된 사실처럼 서술한 것이 결정적 불일치'로 좁혀 기술"
+    },
+    {
+      "severity": "minor",
+      "evidence": "오답 해설 4개가 각 선지 전문을 그대로 재인용해 다소 장황하나 내용 대응은 전부 정확함.",
+      "recommendation": "인용은 핵심 구만 남기고 축약"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerAudit": "요청 난이도 KILLER. 어법/빈칸 전용 §C·§D를 준용하면(다중 문장·다중 단서 연결 필수, 단일 극성/단일 단서로 정답 확정 불가) 명백히 미충족: (1) ③은 마지막 문장 하나와의 대조만으로 확정되고, (2) ③–⑤가 상호 모순이라 지문 정독 없이도 후보가 2개로 좁혀지며 ⑤가 축자 안전 선지라 ③이 즉시 노출된다. (3) 참 선지 4개 중 3개(②④⑤)가 축자~경압축 수준이라 다단계 추론이 발생하지 않는다.",
+  "grade": "C",
+  "notes": "유효성 5개 게이트는 모두 통과 — 정답 유일성 확실(①②④⑤ 전부 독립 검증상 일치, ③만 불일치), 해설 사실성도 사소한 과잉 주장 하나뿐. 그러나 공예 결함이 구조적이다. 핵심 결함 2개: (a) C4=1 — ③(replaced)과 ⑤(still emphasize)가 논리적 상호 모순 쌍이어서 시험 요령만으로 정답 후보가 ③/⑤ 이분화되고, ⑤가 마지막 문장 축자 재진술이므로 ③이 소거법으로 즉시 드러난다. (b) C5=1 — KILLER 요청인데 ②⑤가 축자, ①④가 경패러프레이즈라 실제 판단은 ③ 한 곳에서만 발생하며 그마저 단일 문장 대조로 끝난다(중상 난이도 일반 내용일치 수준). C1=3(권고 vs 현실이라는 지문 핵심 피벗을 겨냥한 half-truth 설계 자체는 좋음), C2=2(참 선지들이 서로 다른 문장을 커버하는 배치 의도는 있으나 오독 유혹이 없음), C3=2, C6=3. 합계 12 → C. 재설계 방향: ⑤를 마지막 문장 축자가 아닌 추상 종합형으로 바꿔 ③과의 표면 모순을 제거하고, 참 선지들에 scope shift 경계선급 패러프레이즈를 넣어 다수 선지에서 실제 판단이 일어나게 해야 KILLER 라벨에 부합한다."
+}

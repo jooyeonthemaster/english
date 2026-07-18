@@ -1,0 +1,35 @@
+{
+  "pid": "P008",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "Restates Carol's misinterpretation that the friend has just explicitly denied ('Of course you can stand there'). Inserting it yields a self-contradiction within the friend's own utterance, and the 'but' contrast fails: pedestrian standing vs. stopping a car to pick up passengers is not the opposition the friend is drawing. Grammatically fine as a clause after 'That means', but logically inadmissible."
+    },
+    {
+      "label": "2",
+      "verdict": "accept",
+      "reason": "Grammatical seam is perfect: 'That means [that] we cannot park cars there, but we can stop to pick up passengers.' Logically exact: a US 'No Standing' sign is a traffic regulation prohibiting parking/waiting in a vehicle while permitting momentary stops to pick up or drop off passengers. The adversative 'but' forms a valid contrast (prohibited: parking; permitted: brief stop). This is the friend's correction of Carol's misreading and resolves the humor of the anecdote."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "'That means friends should not arrive early' bears no semantic relation to the sign 'No Standing', and the contrast with 'but we can stop to pick up passengers' is incoherent. Carol's arriving early is incidental narrative detail, not the sign's meaning. Logically inadmissible."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "Internally contradictory when inserted: 'meeting at that corner is never allowed, but we can stop to pick up passengers' — if one can stop there to pick up a passenger, meeting there is evidently possible, so 'never allowed' is falsified by the very continuation. It also endorses Carol's mistaken worry that the friend is refuting with laughter. Reject on formal contradiction."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "'That means no one can invite guests to lunch' is categorically unrelated to a traffic sign's meaning; the lunch invitation is frame narrative only. The 'but' contrast with stopping for passengers does not connect. Logically inadmissible."
+    }
+  ],
+  "note": "Clean single-answer item. The blank must express the actual regulatory meaning of a 'No Standing' traffic sign while contrasting with the permitted brief stop for passengers. Only option 2 (no parking) satisfies both the grammatical seam and the but-contrast; options 1 and 4 are refuted by the friend's own correction, and 3 and 5 are topically unrelated. No alternative reading makes any distractor defensible."
+}

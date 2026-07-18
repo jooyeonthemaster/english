@@ -1,0 +1,91 @@
+{
+  "pid": "P003",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-MINOR-SPELLING",
+      "severity": "minor",
+      "evidence": "삽입문의 'eco-systems'는 비표준 철자(표준: ecosystems). 하이픈 표기는 구식/희귀형이라 원문 문장들과 문체 격차를 만든다."
+    },
+    {
+      "code": "V3-MINOR-AGREEMENT",
+      "severity": "minor",
+      "evidence": "삽입문 'native groups often complain ... for their community' — 복수 주어(groups)에 단수 'community'. 'their communities'가 자연스럽다. 비문은 아니나 어색."
+    },
+    {
+      "code": "V4-MINOR-OVERTRANSLATION",
+      "severity": "minor",
+      "evidence": "해설이 'heavily funded'를 '자금이 과도하게 지원되는'으로 옮김. 원문은 '많은 자금이 지원된다'는 사실 서술이지 '과도함(excessive)'이라는 평가어가 아니다. 구조 분석 자체는 정확하므로 치명 아님."
+    },
+    {
+      "code": "V4-MINOR-META-REFERENCE",
+      "severity": "minor",
+      "evidence": "② 오답 해설의 '흐름상 매우 자연스러운 원문 문장입니다' — '원문 문장'이라는 표현이 문항 제작 방식(원문+삽입)을 노출하는 메타 서술. 사실 오류는 아니나 해설 문면으로 부적절."
+    },
+    {
+      "code": "V4-MINOR-LOOSE-REFERENCE",
+      "severity": "minor",
+      "evidence": "④ 오답 해설 '앞 문장과의 논리적 기여도가 확실합니다' — 렌더 지문에서 ④의 직전 문장은 무관문 ③이다. 실제 논리 연결('recognize this'의 선행 내용)은 ②이므로 지시가 느슨하다."
+    },
+    {
+      "code": "C4-SURFACE-CUE",
+      "severity": "major",
+      "evidence": "삽입문 ③과 원문 ④가 모두 'Indeed,'로 시작해 연속 두 문장이 동일 담화표지로 개시된다. 의미 처리 없이도 접합부가 드러나는 표면 단서(메타 누출)로, C4 감점 사유. V1 손상은 아님(원문 무변형, 삽입은 의도된 변형)."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 2,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "원문 문장 — S1(과학자는 도덕적/타분야 판단에 특권 없음)의 이유를 일반화하여 설명하는 논지 전개부.",
+      "temptingBecause": "추상적 일반 명제라서 앞의 구체 사례(기후과학자/물리학자)와 층위가 달라 보일 수 있음.",
+      "decisiveFlaw": "무관하지 않음 — 'The very features that create expertise'가 S1의 사례를 직접 일반화하며, 이후 lay people 논의의 전제를 제공한다."
+    },
+    {
+      "label": "②",
+      "intent": "원문 문장 — 전문가 한계의 보완재로 비전문가(lay people)의 경험적 지식을 도입하는 피벗 문장.",
+      "temptingBecause": "farmers, fishermen, patients 등 새로운 행위자들이 갑자기 등장해 화제 전환처럼 보일 수 있음.",
+      "decisiveFlaw": "무관하지 않음 — ④의 'scientists have begun to recognize this'의 'this'가 정확히 이 문장의 명제를 지시하며, ACIA 사례가 이를 실증한다."
+    },
+    {
+      "label": "③",
+      "intent": "삽입된 무관문(정답) — native groups·scientific research 등 이웃 문장의 소재를 재사용하되 담화 기능을 '연구비는 많이 받으면서 실질 해결책은 못 내놓는다는 토착민의 불만'으로 비틀어 sub-topic drift를 만든 설계.",
+      "temptingBecause": "소재 중첩이 최대인 ②–④ 사이에 배치되어 있고, 'Indeed'라는 담화표지 모방으로 순접처럼 위장됨. '문제 제기→④의 대응'이라는 관대한 브리지 독해도 표면상 가능해 보임.",
+      "decisiveFlaw": "글 전체 논지(전문가 한계 → 비전문가 경험 지식의 인식적 가치 수용 → 제한적·집중적 신뢰)에 연구비/실효성 불만이라는 새 비판 축은 어떤 기여도 없고, ②→④의 대용어 연결('recognize this' = ②의 명제)을 끊는다. 또한 부정적 불평 어조가 주변의 통합적 어조와 상충한다."
+    },
+    {
+      "label": "④",
+      "intent": "원문 문장 — ②의 주장을 ACIA(북극 기후 영향 평가)라는 구체 사례로 실증하는 예시 문장.",
+      "temptingBecause": "③ 삽입 후 'Indeed'가 연속 중복되어 ④ 쪽이 삽입문처럼 보일 수 있음(역설적으로 이 중복이 감별 단서가 되기도 함).",
+      "decisiveFlaw": "무관하지 않음 — 'recognize this'와 native groups 관찰 수용 사례가 ②를 직접 지지하며, ⑤의 결론('제한적·집중적 신뢰')으로 자연스럽게 이어진다."
+    },
+    {
+      "label": "⑤",
+      "intent": "원문 문장 — 앞선 논의(전문가 한계+비전문가 지식)에서 도출되는 결론적 명제('신뢰는 제한적·집중적이어야 한다').",
+      "temptingBecause": "'trust'라는 새 키워드가 갑자기 등장하는 것처럼 보여 화제 이탈로 오독될 수 있음.",
+      "decisiveFlaw": "무관하지 않음 — 'So'가 전체 논증의 귀결임을 표시하고, 직후 미마킹 문장들(It needs to be very particular / Blind trust...)이 이 명제를 이어받아 전개한다."
+    }
+  ],
+  "explanationIssues": [
+    "'heavily funded'를 '과도하게 지원'으로 옮긴 평가어 과잉(원문에 excessive 함의 없음) — minor.",
+    "② 해설의 '원문 문장입니다'는 문항 제작 메커니즘(원문+삽입)을 노출하는 메타 서술 — minor.",
+    "④ 해설의 '앞 문장과의 논리적 기여도' — 렌더 기준 직전 문장은 ③이므로 지시 대상이 느슨함(실제 연결은 ②) — minor.",
+    "정답 해설이 '하위 주제 드리프트(sub-topic drift)' 등 원어 병기 전문용어와 다소 장황한 문장을 사용 — 정확하나 우아함이 덜함."
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "요청 난이도 INTERMEDIATE의 IRRELEVANT 유형. V1~V5 전부 통과: 원문 8문장 무손상 보존 + 의도된 삽입 1문장, 마커·라벨·해설·keyPoints 동기화 일치, 정답 ③ 유일(각 마킹 문장 독립 검증 완료). 삽입문의 소재 위장(native groups, scientific research 재사용)과 배치(소재 중첩 최대 지점 ②–④ 사이)는 수준급 설계다. 주된 결함은 C4: ③·④ 연속 'Indeed' 중복이라는 표면 단서가 의미 처리 없이 접합부를 노출하고, 삽입문의 불평 어조가 주변의 통합적 어조와 대비되어 어조만으로도 감별이 가능하다. 삽입문 첫 담화표지 교체('Indeed' 중복 해소 — 예: 'Yet' 또는 무표지 개시), 'eco-systems'→'ecosystems', 'their community'→'their communities' 교정, ②·④ 해설 문면 수정이면 출하 가능한 소수정 사항 — B 등급 판정과 부합. C 합계 17, 최저 C4=2."
+}

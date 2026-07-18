@@ -1,0 +1,35 @@
+{
+  "pid": "P009",
+  "answer": "(A)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(A)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) is",
+      "verdict": "ungrammatical",
+      "reason": "진짜 주어는 복수 핵명사 'Racial microaggressions'. 'such as assumptions ... ethnicity'는 콤마로 분리된 삽입 예시구이며 'ethnicity'는 전치사구 내부 명사라 수일치를 지배할 수 없다. 보어도 복수 'commonplace ... indignities'. 따라서 copula는 'are'여야 한다. 도치·허사·집합명사 단수 취급 등 'is'를 정문으로 만드는 대안 해석이 존재하지 않는다."
+    },
+    {
+      "label": "(B) that",
+      "verdict": "grammatical",
+      "reason": "선행사는 복수 'indignities'이고 관계절 동사 'communicate'(복수)와 일치. 사이 콤마는 삽입구 'whether intentional or unintentional'를 묶는 괄호적 콤마일 뿐이므로 관계절은 여전히 제한적 용법이고 'that' 사용이 허용된다."
+    },
+    {
+      "label": "(C) be seen",
+      "verdict": "grammatical",
+      "reason": "조동사 'can' 뒤 수동 원형부정사. 타동사 'see'의 피동작주가 주어 'experiential microaggressions'(보여지는 대상)이므로 수동태가 요구되며 형태도 올바르다."
+    },
+    {
+      "label": "(D) when giving",
+      "verdict": "grammatical",
+      "reason": "'when [she was] giving him directions'의 축약 부사절. 분사의 의미상 주어는 주절 주어 'A well-meaning nurse'로 giving의 행위자와 일치하므로 현수분사가 아니며, 간호사가 지시를 '주는' 능동 관계이므로 -ing형이 옳다."
+    },
+    {
+      "label": "(E) is defined",
+      "verdict": "grammatical",
+      "reason": "'define X as Y' 구문의 수동태 'X is defined as lesser'. 단수 주어 'a person with a disability'와 'is' 수일치, as-보어 잔류도 정상. 일반적 진술로서 현재시제도 적합하다."
+    }
+  ],
+  "note": "정답 후보는 (A) 하나로 유일하게 좁혀진다. 장거리 수일치(삽입구 건너뛰기)라는 전형적 어법 포인트이며, 나머지 네 밑줄은 각각 관계대명사 수일치, 조동사+수동, 분사구문 의미상 주어, define as 수동태로 모두 형식적으로 성립한다. 복수 정답 논란 없음."
+}

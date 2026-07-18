@@ -1,0 +1,168 @@
+{
+  "batchId": "grok-types-v1",
+  "phase": "grok",
+  "note": "GK-B: 전 유형 브레드스 — 8유형 × (표준 지문 1 + 장문 지문 1), KILLER/INT 혼합. reasoning=low.",
+  "atKst": "2026-07-17T19:30:08.596+09:00",
+  "gitSha": "8d365701e339d7ad64bb1f808c76ec768e9855ee",
+  "gitDirty": true,
+  "worstCaseReserved": 48,
+  "spec": {
+    "batchId": "grok-types-v1",
+    "phase": "grok",
+    "note": "GK-B: 전 유형 브레드스 — 8유형 × (표준 지문 1 + 장문 지문 1), KILLER/INT 혼합. reasoning=low.",
+    "concurrency": 5,
+    "providerRouting": "none",
+    "env": {
+      "OPENROUTER_REASONING_EFFORT": "low",
+      "PREMIUM_QGEN_MODEL_ID": "x-ai/grok-4.5",
+      "GRAMMAR_PREMIUM_MODEL_ID": "x-ai/grok-4.5",
+      "EXPLANATION_VERIFY_MODEL_ID": "google/gemini-3.1-pro-preview"
+    },
+    "assignments": [
+      {
+        "itemId": "ty-title-s",
+        "frameId": "blank-supply-v2-135",
+        "subType": "TITLE",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "GKB-TITLE",
+        "funnel": true
+      },
+      {
+        "itemId": "ty-title-l",
+        "frameId": "adhoc-prod-05",
+        "subType": "TITLE",
+        "difficulty": "INTERMEDIATE",
+        "plan": "PREMIUM",
+        "armId": "GKB-TITLE",
+        "funnel": true
+      },
+      {
+        "itemId": "ty-topic-s",
+        "frameId": "blank-supply-v2-137",
+        "subType": "TOPIC",
+        "difficulty": "INTERMEDIATE",
+        "plan": "PREMIUM",
+        "armId": "GKB-TOPIC",
+        "funnel": true
+      },
+      {
+        "itemId": "ty-topic-l",
+        "frameId": "adhoc-prod-06",
+        "subType": "TOPIC",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "GKB-TOPIC",
+        "funnel": true
+      },
+      {
+        "itemId": "ty-impl-s",
+        "frameId": "blank-supply-v2-146",
+        "subType": "IMPLIED_MEANING",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "GKB-IMPL",
+        "funnel": true
+      },
+      {
+        "itemId": "ty-impl-l",
+        "frameId": "adhoc-prod-04",
+        "subType": "IMPLIED_MEANING",
+        "difficulty": "INTERMEDIATE",
+        "plan": "PREMIUM",
+        "armId": "GKB-IMPL",
+        "funnel": true
+      },
+      {
+        "itemId": "ty-sins-s",
+        "frameId": "grammar-frame-v2-128",
+        "subType": "SENTENCE_INSERT",
+        "difficulty": "INTERMEDIATE",
+        "plan": "PREMIUM",
+        "armId": "GKB-SINS",
+        "funnel": true
+      },
+      {
+        "itemId": "ty-sins-l",
+        "frameId": "adhoc-prod-08",
+        "subType": "SENTENCE_INSERT",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "GKB-SINS",
+        "funnel": true
+      },
+      {
+        "itemId": "ty-sord-s",
+        "frameId": "grammar-frame-v2-176",
+        "subType": "SENTENCE_ORDER",
+        "difficulty": "INTERMEDIATE",
+        "plan": "PREMIUM",
+        "armId": "GKB-SORD",
+        "funnel": true
+      },
+      {
+        "itemId": "ty-sord-l",
+        "frameId": "adhoc-prod-04",
+        "subType": "SENTENCE_ORDER",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "GKB-SORD",
+        "funnel": true
+      },
+      {
+        "itemId": "ty-summ-s",
+        "frameId": "blank-supply-v2-090",
+        "subType": "SUMMARY_COMPLETE_MC",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "GKB-SUMM",
+        "funnel": true
+      },
+      {
+        "itemId": "ty-summ-l",
+        "frameId": "adhoc-prod-05",
+        "subType": "SUMMARY_COMPLETE_MC",
+        "difficulty": "INTERMEDIATE",
+        "plan": "PREMIUM",
+        "armId": "GKB-SUMM",
+        "funnel": true
+      },
+      {
+        "itemId": "ty-cont-s",
+        "frameId": "blank-supply-v2-122",
+        "subType": "CONTENT_MATCH",
+        "difficulty": "INTERMEDIATE",
+        "plan": "PREMIUM",
+        "armId": "GKB-CONT",
+        "funnel": true
+      },
+      {
+        "itemId": "ty-cont-l",
+        "frameId": "adhoc-prod-03",
+        "subType": "CONTENT_MATCH",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "GKB-CONT",
+        "funnel": true
+      },
+      {
+        "itemId": "ty-irre-s",
+        "frameId": "grammar-frame-v2-088",
+        "subType": "IRRELEVANT",
+        "difficulty": "INTERMEDIATE",
+        "plan": "PREMIUM",
+        "armId": "GKB-IRRE",
+        "funnel": true
+      },
+      {
+        "itemId": "ty-irre-l",
+        "frameId": "adhoc-prod-07",
+        "subType": "IRRELEVANT",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "GKB-IRRE",
+        "funnel": true
+      }
+    ]
+  }
+}

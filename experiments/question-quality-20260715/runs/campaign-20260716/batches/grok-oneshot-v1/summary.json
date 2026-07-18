@@ -1,0 +1,32 @@
+{
+  "batchId": "grok-oneshot-v1",
+  "phase": "grok-confirm",
+  "atKst": "2026-07-17T23:45:09.592+09:00",
+  "assignments": 8,
+  "slotsConsumed": 8,
+  "accepted": 2,
+  "modelCalls": 13,
+  "inputTokens": 20288,
+  "outputTokens": 59981,
+  "costUsd": 0.409753,
+  "ledgerAfter": {
+    "used": 1016,
+    "cap": 1200,
+    "costUsd": 34.32768
+  },
+  "byArm": {
+    "G-ONE": {
+      "n": 8,
+      "accepted": 2,
+      "gateRejected": 3,
+      "noCandidate": 3,
+      "slots": 8,
+      "costUsd": 0.409753
+    }
+  },
+  "models": {
+    "standard": "google/gemini-3.5-flash",
+    "premiumQgen": "x-ai/grok-4.5"
+  },
+  "durationMs": 361889
+}

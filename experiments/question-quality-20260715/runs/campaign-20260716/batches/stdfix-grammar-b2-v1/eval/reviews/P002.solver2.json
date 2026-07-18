@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "주어가 'all of the CEOs'로 'all of + 복수명사'는 복수 일치를 요구하므로 were가 옳다. 'be concerned that + 절'도 표준 구문. 뒤의 (E) 'each of the CEOs was'와 대비시키는 수 일치 함정이지만 규칙상 정확하다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "사역동사 make + 목적어(them) + 원형부정사(appear) 구조. appear는 연결동사로 형용사 보어 weak를 취하므로 'make them appear weak'는 완전히 성립하는 정문이다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "'a culture which those subordinates did the same'에서 관계절 'those subordinates did the same'은 주어(those subordinates)·동사(did)·목적어(the same)가 모두 채워진 완전한 절로, which가 채울 명사구 공백(gap)이 없다. which가 did의 목적어라는 해석은 the same이 이미 그 자리를 차지하므로 불가능하고, 축약 관계절·전치사 잔류 등 어떤 대안 해석으로도 공백을 만들 수 없다. 선행사 a culture는 관계절에 대해 장소·상황의 부사적 관계이므로 'in which' 또는 'where'가 필요하다. 유일한 비문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "병렬 시작점은 보어 자리 to부정사 열거 'were to actually name ..., explore ..., and ask ...'로, ask는 (to) ask의 병렬 항이다. 밑줄 친 to reflect는 'ask + 목적어(the CEOs) + to부정사' 구문의 목적격 보어로서 to부정사가 요구되는 자리이므로 옳다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'each of + 복수명사'는 단수 일치를 요구하므로 'each of the CEOs was ready'의 was가 옳다. (A)의 all of(복수 일치)와 대조되는 포인트지만 규칙상 정확하다."
+    }
+  ],
+  "note": "형식 문법 판정상 (C)만이 비문이며, 관계절 내부에 공백이 전혀 없어 which가 어떤 해석으로도 구제되지 않는다. 나머지 네 밑줄은 수 일치(복수/단수), 사역 원형부정사, ask+O+to-V 병렬 모두 지배 규칙을 충족한다. 정답이 (C) 하나로 깨끗하게 좁혀지는 문항."
+}

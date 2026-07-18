@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "medium",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "correct",
+      "reason": "'this(발 구르기가 인간 고유의 기술이라는 사실) need not be interpreted as the sole metric for defining how organisms experience music' — 발 구르기가 음악 경험을 재는 유일한 척도가 아니라는 뜻. 바로 뒤 문장 'My dogs in fact responded to OTHER MUSICAL FEATURES beside the regular jingling'가 이 논지를 직접 뒷받침한다(다른 방식으로 음악을 경험함). 글 서두 '동물이 리듬에 반응하지 못한다는 주장은 틀렸다'는 주제와도 정확히 맞물린다. 어휘(experience music ↔ musical features)·논리 결합이 가장 긴밀."
+    },
+    {
+      "label": "②",
+      "verdict": "incorrect",
+      "reason": "'인간이 다른 종을 능가하는 궁극적 이유' — 우열/능가(surpass)는 지문의 주제가 아니다. 글은 동물의 음악 반응 능력을 옹호할 뿐 인간 우월성을 논하지 않는다. 문맥 이탈."
+    },
+    {
+      "label": "③",
+      "verdict": "incorrect",
+      "reason": "'자극에 반응하는 유일한 진화적 메커니즘' — 'evolutionary mechanism'이라는 개념은 지문에 전혀 등장하지 않고, 발 구르기를 진화 메커니즘으로 볼 논거도 없다. 무관한 프레임."
+    },
+    {
+      "label": "④",
+      "verdict": "incorrect",
+      "reason": "매력적 오답. '종 간 인지적 유사성을 반증하는 도구' — '발 구르기가 인간 고유'라는 차이를 종 간 인지 차이의 증거로 삼지 말라는 해석은 논리적으로 성립하고, 동물 옹호 주제와도 부분적으로 맞는다. 실제로 여기 유혹을 느꼈다. 그러나 (a) 뒤 문장의 핵심어 'other musical features'는 '음악 경험'(①)과 직결되지 '인지적 유사성'과는 간접 연결에 그치고, (b) '거의 발 구르기'는 차이일 뿐인데 이를 유사성을 '반증(disproves)'하는 도구라고 보는 강한 프레임은 지문이 발전시키지 않은 별도 개념(cognitive similarities)을 끌어온다. ①이 초점(음악 경험)을 유지하는 만큼 최선이 아님."
+    },
+    {
+      "label": "⑤",
+      "verdict": "incorrect",
+      "reason": "'음악 리듬을 움직임으로 옮기는 시각적 방식' — 발 구르기는 실제로 리듬을 움직임으로 옮기는 방식 그 자체이므로 이는 참인 서술이다. 'need not be interpreted as(그렇게 해석될 필요는 없다)'로 부정·반박할 대상이 아니라 오히려 정의에 해당해 부정 논리와 충돌. 부적합."
+    }
+  ],
+  "note": "빈칸 논리: '발 구르기=인간 고유 기술'이라는 사실을 [X]로 해석할 필요는 없다 + 뒤 문장 'in fact 개들은 다른 음악적 특징에 반응했다'가 근거. ①과 ④가 실전 경합. ①은 '음악을 경험하는 방식의 유일한 척도가 아니다'로 바로 뒤의 'other musical features'와 어휘·논리가 직결되어 최선. ④는 '인지적 유사성 반증'으로 방향은 맞으나 지문이 전개하지 않은 개념을 도입하고 후속 문장과의 결합이 간접적이라 차선. ②③⑤는 주제 이탈/부정논리 충돌로 배제. 단일 최적은 ①. ④의 유혹이 실재해 confidence medium."
+}

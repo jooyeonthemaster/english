@@ -1,0 +1,84 @@
+{
+  "pid": "J011",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-SUBJECT-HEAD-MISANALYSIS",
+      "severity": "critical",
+      "evidence": "오답 해설 (C): \"동명사구인 'basing the tax directly on measured emissions'를 진짜 주어 핵으로 삼고 있으므로 단수 동사 'is'가 수일치상 옳다\"고 설명하나, 실제 주어는 'The great attraction of basing...'이며 주어 핵은 명사 'attraction'이다. 'of basing...'은 전치사구 보충어로 주어 핵이 아니다. 결론(단수 is)은 우연히 맞지만 구조 분석 자체가 오분석이며, keyPoints의 \"(C) 주어-동사 수일치 — 삽입 전치사구를 걷어낸 주어 핵 식별\"(= 핵이 attraction임을 전제)과 정면 모순된다."
+    },
+    {
+      "code": "V4-GARBLED-PHRASING",
+      "severity": "minor",
+      "evidence": "정답 해설: \"주어와 동사 목적어 등을 필요로 하지 않는 완전한 일형식 문장\"은 문구가 비문에 가깝게 손상되어 있다(의도: '추가 명사 성분을 필요로 하지 않는 완전한 절'). 학생 혼동 유발 소지."
+    },
+    {
+      "code": "V4-TERMINOLOGY-BORDERLINE",
+      "severity": "minor",
+      "evidence": "정답 해설이 'particularly where there are...'의 where를 '관계부사'로 부르나 이 자리의 where는 선행사가 없는 접속사적 용법이다. 학교문법에서 '선행사 생략 관계부사'로 관용 처리되므로 치명은 아니나, '공간 및 상황적 조건을 나타내면서 완전한 절을 이끄는 관계부사'라는 규정은 정밀하지 않다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "분사 후치수식의 태 판단 — 'Environmental taxes (which are) based on...'의 과거분사",
+      "temptingBecause": "능동 basing 또는 정동사로 바꿔야 할 것 같은 착각; 문두 명사구 안이라 구조 파악 부담이 있음",
+      "decisiveFlaw": "없음(정답 아님). taxes는 base의 대상(수동 관계)이고 정동사 'can be targeted'가 따로 있으므로 과거분사 based가 정확히 옳다."
+    },
+    {
+      "label": "(B)",
+      "intent": "명사 incentive를 수식하는 형용사적 용법 to부정사",
+      "temptingBecause": "약함 — 'incentive to V'는 고빈도 고정 패턴이라 실질적 유혹 요인이 거의 없다. 필러에 가까운 디코이.",
+      "decisiveFlaw": "없음(정답 아님). incentive to reduce는 표준 어법."
+    },
+    {
+      "label": "(C)",
+      "intent": "삽입 전치사구('of basing ... emissions')를 사이에 둔 주어-동사 수일치",
+      "temptingBecause": "동사 직전 명사 emissions(복수)가 인접해 있어 are로 끌릴 수 있음",
+      "decisiveFlaw": "없음(정답 아님). 주어 핵은 단수 attraction이므로 is가 옳다. 단, 해설이 주어 핵을 동명사구로 오분석함(V4 실패 원인)."
+    },
+    {
+      "label": "(D)",
+      "intent": "선언된 정답 — 관계대명사 which vs 관계부사/접속사 where, 후행절 완전성 판정",
+      "temptingBecause": "콤마 뒤 부사어 particularly에 이어져 관계사 자리처럼 보이고, 선행 명사구(emissions measurement 등)를 받는 which로 착각 가능",
+      "decisiveFlaw": "which 뒤에 완전한 존재구문 'there are many separate sources of emissions'가 이어져 관계대명사가 채울 공백이 없다. where로 교정하면 정확히 원문이 된다. 다만 'which there are' 3어절 인접 패턴만으로 즉시 노출되어 KILLER 깊이에는 미달."
+    },
+    {
+      "label": "(E)",
+      "intent": "원거리 복수 주어 핵(technologies)과의 수일치 + 자동사 develop의 능동 진행상",
+      "temptingBecause": "주어 핵과 동사 사이가 길고('available for monitoring ... waste discharges'), 수동 have been developed가 필요해 보일 수 있음",
+      "decisiveFlaw": "없음(정답 아님). technologies 복수 일치, develop 자동사 용법으로 능동 현재완료진행이 옳다."
+    }
+  ],
+  "explanationIssues": [
+    "(C) 오답 해설이 동명사구를 '진짜 주어 핵'으로 오분석 — 실제 핵은 attraction. keyPoints의 (C) 기술('삽입 전치사구를 걷어낸 주어 핵 식별')과 내용 모순.",
+    "정답 해설의 '주어와 동사 목적어 등을 필요로 하지 않는 완전한 일형식 문장' — 문구 손상/비문에 가까운 표현.",
+    "(E) 해설 '주체의 발전적 진행 상황을 타동 목적어 없이 자발적 변화로 표현하는' — 장황하고 부자연스러운 조어 수준의 표현으로 우아함(C6) 저해.",
+    "keyPoints '(A) 분사의 태 — 수식 명사와의 능수동 역학 분석' — '역학'은 비표준 용어 사용(경미)."
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAudit": {
+    "minimalPair": true,
+    "clearGrammarJudgment": true,
+    "allUnderlinesHavePointTemptingWhy": false,
+    "notImmediatelyDetectable": false,
+    "noEasySamePointDecoyMasking": true,
+    "evidence": "where→which 최소대립쌍이고 교정 시 원문 복원은 충족. 그러나 (1) 'which + there are'(완전한 존재구문) 인접 3어절만으로 오류가 즉시 드러나는 표면 패턴이라 '구조를 읽어야 드러난다' 조건 위반, (2) (B) to reduce는 why-tempting이 성립하지 않는 필러 디코이."
+  },
+  "grade": "F",
+  "notes": "지문 무결성·정답 유일성·문법성·필드 동기화는 모두 통과했으나, (C) 오답 해설의 주어 핵 오분석(동명사구를 주어 핵으로 지목, keyPoints와도 모순)으로 V4 실패 → 등급 F. 공예 측면에서도 요청 난이도 KILLER 대비 정답 포인트가 'which+완전절' 표면 패턴으로 즉시 탐지 가능해 C5=1, 해설 손상·장황으로 C6=1. 수정 방향: (C) 해설을 '주어 핵 attraction(단수), of basing...은 전치사구'로 교정하고, KILLER 유지 시 오류 포인트를 구조 독해가 필요한 자리로 재설계 필요."
+}

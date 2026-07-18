@@ -1,0 +1,35 @@
+{
+  "pid": "P013",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "Long-range governor is the noun 'tendency', which takes a to-infinitive complement: 'a tendency ... to seek'. The intervening clause 'once the dust of an emergency has settled down' is only a distance distractor. 'seek X in Y' is an idiomatic collocation. Grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "Past participle used attributively: 'enhanced economic growth' = growth that has been enhanced (passive/resultative meaning). Standard adjective use. Grammatical."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'The potential contribution ... cannot be denied' — the subject 'contribution' is the patient of 'deny', so modal + passive is required. The inserted conditional 'if it involves vulnerable groups' does not change the analysis. Grammatical."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect (the answer)",
+      "reason": "Subject head is the singular 'Rapid growth'; the 'or' chain coordinates only the 'of + NP' prepositional complements ('of the economy ... or of the agricultural sector ... or of food production'), all attached to that one head. Singular subject requires 'explains'. Even under the alternative parse with ellipted 'growth' before each of-phrase (three coordinated singular NPs joined by 'or'), agreement goes to the nearest conjunct — still singular. No reading makes plural 'explain' grammatical. Ungrammatical."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "Plural subject 'The real achievements' takes plural 'lie'; 'lie in + gerund (having provided)' is the correct intransitive verb (not 'lay', as there is no object). Grammatical. This is the most attractive decoy: agreement-primed students may second-guess lie/lay or misassign the head noun, but 'achievements' and even the misread 'countries' are both plural, so 'lie' survives every parse."
+    }
+  ],
+  "note": "Passage is in the style of Dreze & Sen's Hunger and Public Action. Solved blind in exam order. Main temptation log: (A) caused a pause over the 'seek ... in' collocation before recognizing it as idiomatic; (D)'s three country/sector conjuncts create a false plural impression that makes the wrong form 'explain' feel natural — a well-built trap that still leaves (D) uniquely wrong; (E) is the strongest post-hoc doubt (lie/lay, subject head) but resolves cleanly. Single defensible answer: (D)."
+}

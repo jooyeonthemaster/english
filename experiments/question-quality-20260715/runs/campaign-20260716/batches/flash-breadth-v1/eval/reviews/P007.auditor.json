@@ -1,0 +1,78 @@
+{
+  "pid": "P007",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-minor-underline-span",
+      "severity": "minor",
+      "evidence": "밑줄 구간이 'economics cannot, in a vacuum, identify'로 타동사 identify의 목적어 'the goal'을 배제한 채 VP 중간에서 끊긴다. 텍스트 자체는 원지문과 완전 일치하므로 손상은 아니나, 함축의미 유형의 관례(완결된 비유적 표현 밑줄)에 어긋나는 어색한 스팬이다."
+    },
+    {
+      "code": "V3-minor-stem-wording",
+      "severity": "minor",
+      "evidence": "발문 '밑줄 친 부분이 함축 의미하는 바로'에서 '함축 의미하다'는 비표준 결합이다. 표준 표현은 '의미하는 바로' 또는 '함축하는 바로'. 의미 전달에는 지장이 없어 V3 실패로는 판정하지 않음."
+    },
+    {
+      "code": "V4-minor-paraphrase-drift",
+      "severity": "minor",
+      "evidence": "해설이 원문의 'determine whether or not a particular tax law will help achieve a particular goal'(법이 목표 달성에 도움이 되는지 판정)을 '목표를 달성하는 데 효율적인 수단을 결정'으로 살짝 확장 번역했다. 논지 왜곡은 아니어서 V4 실패는 아님."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "정답 — 'in a vacuum'(윤리적 준거 틀의 부재)과 'identify the goal'(도덕적 목표 식별)을 동시에 포착한 패러프레이즈",
+      "temptingBecause": "지문의 핵심 어휘(moral, ethical, goal)와 직결되어 주제 일치가 즉시 보인다",
+      "decisiveFlaw": "없음(정답). 단, 'ethical targets' = 'moral goal', 'without moral and ethical frameworks' = 'in a vacuum' + 'must involve ethics and moral analysis'로 다음 문장의 거의 축자적 재진술이라 함축 추론 깊이가 얕다"
+    },
+    {
+      "label": "②",
+      "intent": "half-truth 역전 — 경제학의 능력 부정 방향을 '재정적 결과 계산 실패'로 과잉 확장",
+      "temptingBecause": "'cannot'의 부정 극성과 '경제학의 한계'라는 표면 프레임을 공유한다",
+      "decisiveFlaw": "지문이 명시적으로 'Economics can go a long way towards helping...'이라 인정한 수단적 계산 능력을 정면 부정하므로 본문과 모순된다"
+    },
+    {
+      "label": "③",
+      "intent": "표면 어휘 미끼 — 1문장의 'history'를 앵커로 한 지엽적 유추",
+      "temptingBecause": "'history/historically'가 지문 서두에 실재하고 세율(tax rates)이 소재상 그럴듯하다",
+      "decisiveFlaw": "세율 조정이나 역사적 상황 대응은 지문 어디에도 없으며, 밑줄의 논점(목표 식별의 도덕적 전제)과 무관하다"
+    },
+    {
+      "label": "④",
+      "intent": "표면 어휘 미끼 — 'too controversial'을 앵커로 한 정치 갈등 프레임 전환",
+      "temptingBecause": "'controversial'이 지문에 실재하고 조세가 계급 갈등 소재와 연상적으로 연결된다",
+      "decisiveFlaw": "밑줄은 경제학이 '목표를 식별'하지 못한다는 것이지 '정치적 논란을 해결'하지 못한다는 것이 아니다. 계급(classes) 언급도 지문에 없다"
+    },
+    {
+      "label": "⑤",
+      "intent": "주제 차용 + 규범 명제 전환 — 'distributive justice'를 빌려 당위 주장으로 변조",
+      "temptingBecause": "'distributive justice'가 지문의 실제 핵심 개념이라 주제 관련성이 높아 보인다",
+      "decisiveFlaw": "지문은 '경제학이 불평등 정당화에 쓰여선 안 된다'는 당위를 주장한 적이 없다. 서술(cannot identify)을 당위(should not be used)로 바꾼 명제 유형 불일치"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "정답 해설이 한 문장 안에 '가치론적 목표를 설계하거나 식별할 수 없습니다' 등 장황한 수식이 누적되어 다소 둔중하다. 사실 오류는 없음.",
+      "recommendation": "정답 근거(in a vacuum = 윤리 틀 부재, goal = moral goal)와 다음 문장 근거를 2문장 이내로 압축"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionsNote": "유형이 IMPLIED_MEANING이므로 §D(빈칸) 조건을 유추 적용. (1) 통사 슬롯 동일성 실패 — 밑줄이 주어 'economics'를 포함하고 목적어 'the goal'을 배제하는데 선지는 모두 무주어 VP라 치환 시 'the goal'이 고아로 남는다. (2) '두 문장/두 논리 단서 연결' 및 '단일 단서로 찍기 불가' 실패 — 지문이 moral/ethics 계열 어휘를 반복하고 ①만 이 어휘군을 담고 있어 주제어 매칭 단일 단서로 정답 선택이 가능하며, 밑줄 직후 문장이 정답을 축자적으로 제공한다.",
+  "grade": "C",
+  "notes": "V1~V5 전부 통과로 출하 차단 사유는 없으나 KILLER 요청 대비 실제 난이도가 낮다(C5=1). 결정적 결함: (a) 밑줄 직후 문장 'Creating tax policy requires identifying a moral goal, which... must involve ethics and moral analysis'가 정답 ①의 거의 축자적 원천이라 단서 경제성 붕괴(C4=2), (b) ①만 도덕/윤리 어휘를 포함해 주제어 매칭으로 즉시 변별(C3=2), (c) ①이 최장·최다 한정 선지라 test-wise 단서 중첩, (d) 밑줄 스팬이 목적어를 배제한 채 VP 중간에서 끊겨 유형 관례에 어긋남, (e) 밑줄 표현 자체가 'in a vacuum' 하나를 제외하면 축자적이라 함축의미 유형의 출제 가치가 반감. 재설계 방향: 밑줄을 'the application of a society's theories of distributive justice' 같은 더 비유적·완결된 스팬으로 옮기고, 오답에도 도덕/윤리 어휘를 심어 주제어 매칭 소거를 차단해야 KILLER에 부합한다. C합계 14, 최저 C5=1이므로 등급 C."
+}

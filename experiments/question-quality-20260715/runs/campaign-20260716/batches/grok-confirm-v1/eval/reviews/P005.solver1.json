@@ -1,0 +1,35 @@
+{
+  "pid": "P005",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'A bridge is normally constructed to last one hundred years' — 다리는 건설되는 대상이므로 수동태 is constructed가 옳고, to last는 목적/결과의 to부정사로 자연스럽다. 유혹 요소가 약한 안전 선지. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect",
+      "reason": "'Its presence making a lasting mark that shows the evolution of society.'는 마침표로 시작·종결되는 독립 문장인데 정동사(finite verb)가 없는 단편(fragment). 대안 해석을 적극 탐색해도 구제 불가: (i) 앞 문장에 붙는 절대구문/분사구문이라면 콤마로 연결되어야 하는데 앞 문장이 마침표로 닫혀 있어 성립 불가. (ii) 'Its presence making a lasting mark'를 동명사 주어구로 보더라도 뒤에 술어가 없어 여전히 fragment. (iii) 'that shows...'는 mark를 선행사로 하는 관계절일 뿐 주절 동사가 될 수 없다. making → makes(주어 Its presence, 단수)로 고쳐야 한다. 틀림."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "가장 매력적인 오답 — 실전에서 'a bridge must exhibit concerns' 연쇄를 보고 동사 중복/수일치 오류처럼 보여 실제로 끌렸다. 그러나 진짜 주어는 단수 one (of the first qualities)이고, 'a bridge must exhibit'은 목적격 관계대명사가 생략된 접촉절로 qualities를 수식하며 exhibit의 목적어 공백(gap)이 정확히 존재한다. one of the + 복수명사 + 단수동사 패턴으로 concerns(단수)가 옳다. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "두 번째 유혹 지점 — 주어 it 때문에 reinforces를 기대하게 하지만, 병렬 시작점은 조동사 must다: 'must either adapt to or (indeed) reinforce this balance'. either A or B가 원형 adapt (to)와 원형 reinforce를 병렬하고, 공유 목적어 this balance를 adapt to(전치사 필수)와 reinforce(타동사)가 각각 올바르게 취한다. 삽입 부사 indeed가 병렬을 흐리는 장치일 뿐 어법상 문제없다. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'Depending on the type of bridge and the site, it is subordinate...' — depending on은 전치사구화된 관용 표현으로 현수분사(의미상 주어 불일치) 시비가 성립하지 않는 표준 용법. 수동 Depended on으로 바꾸면 오히려 비문. 정문."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 1회독에서 (B) 문장에 정동사가 없음을 즉시 감지. 실제로 끌린 미끼는 (C)의 'exhibit concerns' 연쇄였으나 진짜 주어 one과 축약 관계절을 확인하는 순간 해소되고, (D)도 must 병렬 시작점 확인으로 해소된다. (B)는 분사구문·동명사 주어 등 어떤 대안 해석으로도 정문이 되지 않는 명백한 fragment 오류라 정답이 (B) 하나로 깨끗하게 좁혀진다. 복수 정답 시비 없음."
+}

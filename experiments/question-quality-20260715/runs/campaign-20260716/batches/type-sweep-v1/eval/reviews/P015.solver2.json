@@ -1,0 +1,32 @@
+{
+  "pid": "P015",
+  "answer": "which → in which (밑줄 친 문장의 'a way which children learn'에서 which가 틀림; 'a way in which children learn'으로 고쳐야 함)",
+  "multipleDefensible": false,
+  "defensibleLabels": [
+    "which → in which"
+  ],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "From its earliest beginnings in infancy",
+      "verdict": "정문",
+      "reason": "its는 play를 지칭하는 올바른 대용어이고, 'earliest beginnings'의 복수형도 관용적으로 성립한다. 오류 없음."
+    },
+    {
+      "label": "play is a way",
+      "verdict": "정문",
+      "reason": "주어 play(불가산 단수)와 is의 수 일치 정상. 오류 없음."
+    },
+    {
+      "label": "which children learn about the world and their place in it",
+      "verdict": "오류 (유일한 틀린 부분)",
+      "reason": "관계대명사 which는 관계절 내부에 공백(gap)을 요구하나, 'children learn about the world and their place in it'은 주어(children)+동사(learn)+전치사구 보충어(about...)로 완전한 절이다. 따라서 which가 묶일 자리가 없어 비문. 선행사 way와의 의미 관계는 '그 방식으로(in that way) 배운다'이므로 전치사+관계대명사 'in which'가 필요하다. 대안 해석 검토: (1) learn을 타동사로 보고 which(=way)를 목적어로 읽는 해석('children learn a way about the world')은 논항 구조상 허용되지 않고 의미론적으로도 불성립; (2) which는 관계부사가 아니므로 공백 없는 절을 이끌 수 없음; (3) 'the way how'는 현대영어에서 비문이므로 how 교체는 불가. 수정: which → in which (that 또는 관계사 생략도 문법적으로는 가능한 변이형)."
+    },
+    {
+      "label": "their place in it",
+      "verdict": "정문",
+      "reason": "their는 children, it은 the world를 지칭하는 정상적 대용. 오류 없음."
+    }
+  ],
+  "note": "서술형 문항. 오류 위치는 'a way which'의 which로 유일하게 확정되며 표준 정답은 which → in which. 문법적으로는 which → that(관계부사적 that) 또는 관계사 생략도 정문을 만들지만, 학교문법/수능 기준 모범답안은 in which이다. 이는 답안 표기의 변이일 뿐 오류 위치가 복수라는 뜻이 아니므로 multipleDefensible=false. 문항 자체는 정답이 유일하게 성립하는 건전한 서술형 어법 문항."
+}

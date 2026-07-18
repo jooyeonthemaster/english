@@ -1,0 +1,69 @@
+{
+  "pid": "P020",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-wording-B",
+      "severity": "minor",
+      "evidence": "(B) 해설 '목적격보어로 기능하는 to부정사이며 원형의 올바른 형태이다' — to부정사를 '원형'과 연결한 서술이 어색하다. ask+O+to-V 라는 구조 분석 자체는 정확하므로 오개념 수준은 아니다."
+    },
+    {
+      "code": "V4-minor-wording-E",
+      "severity": "minor",
+      "evidence": "(E) 해설 'years와 짝을 이루는 비교급 형용사' — 비교급 older가 짝을 이루는 것은 than 절이고 '50 years'는 정도 측정 어구다. 결론(어법상 문제없음)은 옳으나 짝 지목이 부정확하다."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 2,
+    "C4": 4,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "명사 뒤 현재분사 수식(reduced relative) vs 정동사/that절 요구 혼동",
+      "temptingBecause": "showing 뒤에 'human perception and behavior can be influenced'라는 완전한 절이 that 없이 이어져, that shows나 정동사가 필요하다고 느낄 수 있다",
+      "decisiveFlaw": "문장의 정동사 did가 이미 존재하고, showing은 experiment를 후치 수식하는 능동 분사로 적법하다. show 뒤 that 생략도 표준적이다"
+    },
+    {
+      "label": "(B)",
+      "intent": "ask+O+to부정사 목적격보어 패턴 판정",
+      "temptingBecause": "사역·지각동사류의 원형부정사 패턴과 혼동할 여지가 있으나 그 유인이 약하다",
+      "decisiveFlaw": "ask는 to부정사 목적격보어를 취하는 대표 동사로 to create가 정확하다. 즉시 소거되는 필러 수준의 디코이"
+    },
+    {
+      "label": "(C)",
+      "intent": "사람 선행사 뒤 주격 관계사 선택",
+      "temptingBecause": "선행사 students와 관계절 had been exposed 사이 구조에서 which/whom 혼동을 노린다",
+      "decisiveFlaw": "사람 선행사 + 관계절 내 주어 공백이므로 주격 who가 정확하다"
+    },
+    {
+      "label": "(D)",
+      "intent": "정답. 관계절이 낀 긴 주어 뒤 주절 정동사 자리의 정동사 vs 준동사 판별",
+      "temptingBecause": "관계절 내부의 had been exposed를 주절 동사로 착각하면 taking이 분사 수식처럼 보여 자연스럽게 넘어간다",
+      "decisiveFlaw": "who 관계절이 닫힌 뒤 주절에 정동사가 없어 문장이 성립하지 않는다. took로 고치면 정확히 원문이 복원되는 최소대립쌍이다"
+    },
+    {
+      "label": "(E)",
+      "intent": "측정 어구(50 years)+비교급+than 구문 판정",
+      "temptingBecause": "비교급 앞의 '50 years' 측정 어구가 낯설어 보일 수 있으나 유인이 약하다",
+      "decisiveFlaw": "'X years older than'은 표준적 정도 비교 구문으로 즉시 소거된다. 필러 수준의 디코이"
+    }
+  ],
+  "explanationIssues": [
+    "(B) '원형의 올바른 형태이다' — to부정사와 원형(bare form)을 뒤섞은 어색한 표현 (경미, 구조 분석 자체는 정확)",
+    "(E) 'years와 짝을 이루는' — older의 실제 짝은 than 절이며 50 years는 정도 측정 어구 (경미, 결론은 옳음)"
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 원지문 대비 유일한 변형이 took→taking(의도된 오류)이며 접합 파손·누락·오탈자 없음. 마커 (A)~(E)가 선지와 정확히 일치. V2: 5개 밑줄 독립 검증 결과 (D)만 오류 — (A) 분사 수식 적법(정동사 did 존재), (B) ask+O+to-V 적법, (C) 주격 who 적법, (E) 측정 비교 구문 적법. 정답 유일. V3: 오류 지점 외 전부 문법적·자연스럽고 교정문도 원문과 동일하게 성립. V4: 주 해설의 구조 분석(긴 주어+관계절 후 정동사 부재, had been 함정) 정확. (B)·(E) 오답 해설에 경미한 용어 부정확 2건 — 오개념·환각 수준 아님. V5: 정답 라벨·isError·correction·keyPoints·해설 전부 동기화. 공예: 정전 포인트를 최소대립쌍으로 깨끗이 심었고(C1=4, C4=4) 해설도 함정 분리가 선명하나(C6=3), (B)·(E)가 즉시 소거되는 필러 수준이라 실질 경쟁 선지는 (A)·(C)뿐이어서 변별 경쟁력이 낮다(C3=2). INTERMEDIATE 라벨에는 대체로 부합(C5=3). 합계 19 → 등급 B: (B)·(E)를 실제 오개념을 겨냥한 매력 디코이로 교체하면 A 후보. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

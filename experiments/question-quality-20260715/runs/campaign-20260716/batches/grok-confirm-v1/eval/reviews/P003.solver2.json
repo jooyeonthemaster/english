@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "Seam: 'is to align demanding tasks with peaks in personal energy' is a well-formed infinitival predicate ('align X with Y'). Logic: 'demanding tasks' paraphrases 'difficult activities'; 'peaks in personal energy' paraphrases 'how your energy level ebbs and flows' / 'lots of energy early in the morning ... schedule difficult activities [then]'. Crucially it generalizes over individual variation, consistent with the final sentence ('most people ... morning, but there are those who ... hit their stride later in the day') and with the team extension ('Use the same principle')."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "Grammar strained: 'assign every hard project jointly in the morning hours' omits the recipient normally required by 'assign' and 'jointly' has no antecedent group action. Logic: directly falsified by the passage's closing concession that some people 'hit their stride later in the day' — a universal morning rule contradicts the individual-rhythm principle. Classic over-specified decoy recycling 'morning'."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "Grammatical ('subordinate X to Y'), though adverb 'first' is awkwardly placed. Logic: no premise in the passage mentions organizational goals or any hierarchy between team plans and organizational aims; the team sentence applies the same body-rhythm principle, not goal subordination. Unsupported by the text."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "Grammatical, but antithetical to the passage: the text repeatedly commands scheduling ('schedule difficult activities', 'Schedule intervals of productive time and breaks', 'scheduling appointments'). Discarding fixed calendars for fully open schedules negates the very mechanism the passage advocates."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Grammatical, but only a subsidiary detail: breaks appear once as part of interval scheduling, and 'longer' is asserted nowhere. As the topic-sentence completion it fails — the elaborating sentences are about body rhythm and energy alignment, not about lengthening breaks. Partial-detail decoy."
+    }
+  ],
+  "note": "Blind solve, grammarian/logician lens. Topic-sentence cloze; only option 1 is both grammatically seamless and logically entailed by all supporting sentences, including the individual-variation closer that rules out option 2. No alternative construal (ellipsis, idiom, scope reading) rescues options 2-5. Single defensible answer."
+}

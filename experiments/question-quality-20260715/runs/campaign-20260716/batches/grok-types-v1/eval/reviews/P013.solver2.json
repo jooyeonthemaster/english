@@ -1,0 +1,35 @@
+{
+  "pid": "P013",
+  "answer": "4",
+  "multipleDefensible": true,
+  "defensibleLabels": ["3", "4"],
+  "confidence": "low",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "unlikely",
+      "reason": "S2('pollutes more -> pays additional tax in proportion')와 S3('The polluter thus has an incentive...')는 'thus'로 인과가 완결적으로 연결된다. 이 사이에 문장을 삽입하면 'thus'의 지시 대상(비례 과세 사실)과 결론(감축 유인) 사이가 오히려 단절된다. 간극 없음."
+    },
+    {
+      "label": "2",
+      "verdict": "unlikely",
+      "reason": "S3(감축 유인의 메커니즘)과 S4('The great attraction ... is that the actions that reduce tax liability are actions that also reduce emissions')는 유인 논리를 장점으로 일반화하는 자연스러운 전개다. 지시어 단절이나 논리 비약이 없어 삽입 필요성이 성립하지 않는다."
+    },
+    {
+      "label": "3",
+      "verdict": "plausible",
+      "reason": "S4(장점 예찬)에서 S5('Continuous emissions measurement can be costly...')로 넘어갈 때 역접 연결사(However 등)가 없이 장점->단점으로 전환된다. 주어진 문장이 '그러나 이 접근에는 실무적 한계가 있다'류의 전환 문장이라면 이 위치가 정답이 될 수 있다. 다만 S5 자체가 단점 서술의 시작으로 읽혀도 치명적 단절은 아니므로 약한 간극."
+    },
+    {
+      "label": "4",
+      "verdict": "most-likely",
+      "reason": "S5는 '측정 비용이 커서 직접 과세의 주요 저해 요인(major disincentive)'이라고 부정적으로 결론짓는데, S6은 매개 없이 'In the future, it may be possible ... in a wider range of applications'라는 낙관적 전망으로 도약한다. '측정 기술 발전/비용 하락'류의 교량 문장이 반드시 필요한 최대 논리 간극. 원전(환경경제학 개론류 텍스트)의 전형적 전개상 주어진 문장은 이 교량일 개연성이 가장 높다."
+    },
+    {
+      "label": "5",
+      "verdict": "unlikely",
+      "reason": "S6은 미래 전망으로 문단을 자연스럽게 종결한다. 말미 삽입은 주어진 문장이 총괄 결론일 때만 성립하는데, 문단 내 최대 간극이 ④에 존재하는 이상 말미 삽입은 그 간극을 방치하므로 열등한 후보다."
+    }
+  ],
+  "note": "치명적 형식 결함: 문장삽입 유형인데 삽입할 '주어진 문장'이 문항 파일에 누락되어 있다. 지문·발문·선택지만으로는 정답 위치를 형식적으로 확정할 수 없어 문항이 성립하지 않는다(unsolvable). 간극 분석상 ④가 최유력(부정적 결론->낙관적 전망 사이의 무매개 도약), ③이 차선(역접 연결사 부재)이며, 주어진 문장이 무엇이냐에 따라 둘 다 옹호 가능하므로 multipleDefensible=true. answer='4'는 간극 강도 기반 최선 추정일 뿐 확정 판정이 아니다."
+}

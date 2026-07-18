@@ -1,0 +1,66 @@
+{
+  "pid": "P004",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-note",
+      "severity": "minor",
+      "evidence": "렌더 지문 필드가 '(렌더 지문 없음)'으로 비어 있으나 SUMMARY_COMPLETE_MC는 원지문을 무변형 노출하는 유형이므로 손상으로 보지 않음. 원지문 자체는 문장 접합·구두점·철자 모두 무결."
+    },
+    {
+      "code": "V3-note",
+      "severity": "minor",
+      "evidence": "요약문의 'making (B) equally decisive'는 원문 'can be equally as relevant as designers' creativity'(가능성 양태 + 명시적 비교 대상)를 'equally decisive'로 다소 강화·생략 처리했다. 요약 수준 paraphrase로 허용 범위이나 비교 대상(개인 창의성)이 생략되어 있음."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — (A) 소형 제품의 필수 요소, (B) 그룹 실무의 대등 요소를 각각 원문 anchor에서 취함",
+      "temptingBecause": "'Personal flair is without doubt an absolute necessity in ... relatively small objects'와 'management organization and processes can be equally as relevant as designers' creativity'에 정확히 대응",
+      "decisiveFlaw": "없음(정답). 단, 두 정답어 모두 원문 표현의 거의 그대로의 재사용이라 어휘 대조만으로 도달 가능하다는 점이 문항 결함"
+    },
+    {
+      "label": "2",
+      "intent": "half-truth + 속성 전치(attribute misplacement): (A) 정답 유지, (B)에 소형 제품의 속성을 그룹 실무 요인으로 전치",
+      "temptingBecause": "'technological complexity'가 원문에 실재하고, 대규모 프로젝트라면 기술 복잡도가 관건일 것이라는 상식적 추론을 자극",
+      "decisiveFlaw": "원문에서 complexity는 소형 제품의 '낮은' 기술 복잡도로만 언급되며, 그룹 실무에서 창의성과 대등하다고 명시된 것은 management organization and processes다"
+    },
+    {
+      "label": "3",
+      "intent": "half-truth + 개념 치환(concept swap): (B) 정답 유지, (A)에 '개인 재능'을 '개인 저작자 지위'로 치환",
+      "temptingBecause": "'the designer'에 대한 무수한 언급, 개인으로 교육받는 디자이너 등 개별성·저자성 담론이 지문 전반에 깔려 있어 authorship이 울림이 있음",
+      "decisiveFlaw": "소형 제품에서 '절대 필요'라고 명시된 것은 flair(창의적 재능)이지 authorship(저작자 지위)이 아니며, 개별성 강조 자체는 오히려 'problematic'으로 비판된다"
+    },
+    {
+      "label": "4",
+      "intent": "이중 차용 유인(double salient-term lure): 2번과 3번의 오류를 결합",
+      "temptingBecause": "authorship 계열 담론과 'technological complexity' 표현이 모두 지문에 (준)verbatim으로 존재",
+      "decisiveFlaw": "두 슬롯 모두 요구 역할과 불일치 — (A)는 flair가 아닌 지위 개념, (B)는 그룹 실무의 대등 요인이 아닌 소형 제품 속성"
+    },
+    {
+      "label": "5",
+      "intent": "배경 세부 함정(background-detail trap): 도입부 소재 두 개를 짝지음",
+      "temptingBecause": "'Most designers are educated to work as individuals'(training), 'some product categories'가 지문 앞부분에 그대로 등장",
+      "decisiveFlaw": "둘 다 논지의 배경 설명에 불과하고, 특히 'product categories가 그룹 실무에서 equally decisive'는 의미 자체가 성립하지 않아 즉시 소거됨"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "유효성 5개 게이트는 모두 통과: 정답 1이 유일 정답이며(각 선지 독립 검증 완료), 요약문 완성문이 문법적이고, 해설의 구조 분석·오답 귀속이 모두 실제 지문·선지와 일치하고, 필드 동기화에 모순이 없다. 그러나 KILLER 요청 대비 공예가 크게 미달한다. 핵심 결함: (A) 'flair'는 원문 verbatim, (B) 'organizational processes'는 'management organization and processes'의 준-verbatim이라 두 빈칸 모두 단일 문장 어휘 대조만으로 해결된다. RUBRIC §D의 KILLER 조건 중 '정답의 난이도 맞춤 추상화'(조건 2)와 '최소 두 문장/두 논리 단서 연결 필수'(조건 4)를 충족하지 못한다 → killerConditionsMet=false. 이에 따라 C5(난이도 정합)=1, C3(경쟁력)=2, C4(단서 경제성, verbatim 매칭 누출)=2. C1은 지문의 핵심 대조(소형 제품 개인 flair vs 그룹 실무 조직 과정)를 정확히 겨냥해 4. 선지 설계는 표준 2x2+1 구조로 A축(flair/authorship)·B축(processes/complexity) 함정이 구분되나 5번이 필러에 가까워 C2=3. 해설은 간결·정확하나 특출나지 않아 C6=3. 합계 15, 모든 V 통과이나 재설계 필요 → C 등급. 개선 방향: 정답어를 추상화(예: (A) creative individuality → 비-verbatim 동의 표현, (B) coordination of collective work 류)하고 마지막 두 문장을 통합해야만 (B)에 도달하도록 요약문을 재설계할 것."
+}

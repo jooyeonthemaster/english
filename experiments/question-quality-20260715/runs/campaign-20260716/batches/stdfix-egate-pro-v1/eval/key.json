@@ -1,0 +1,74 @@
+{
+ "P001": {
+  "itemId": "gep-136",
+  "armId": "B3-EPRO",
+  "frameId": "grammar-frame-v2-136",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(C)",
+  "gateIssues": []
+ },
+ "P002": {
+  "itemId": "gep-148",
+  "armId": "B3-EPRO",
+  "frameId": "grammar-frame-v2-148",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(D)",
+  "gateIssues": []
+ },
+ "P003": {
+  "itemId": "gep-146",
+  "armId": "B3-EPRO",
+  "frameId": "grammar-frame-v2-146",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(B)",
+  "gateIssues": []
+ },
+ "P004": {
+  "itemId": "gep-133",
+  "armId": "B3-EPRO",
+  "frameId": "grammar-frame-v2-133",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(C)",
+  "gateIssues": []
+ },
+ "P005": {
+  "itemId": "gep-134",
+  "armId": "B3-EPRO",
+  "frameId": "grammar-frame-v2-134",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(B)",
+  "gateIssues": []
+ },
+ "P006": {
+  "itemId": "gep-120",
+  "armId": "B3-EPRO",
+  "frameId": "grammar-frame-v2-120",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(B)",
+  "gateIssues": []
+ }
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P005",
+  "answer": "B",
+  "multipleDefensible": false,
+  "defensibleLabels": ["B"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "play has long been seen as ~ : 현재완료 수동태. see A as B 구문의 수동형 be seen as로 주어 play가 '~로 여겨져 왔다'는 의미. 시제 부사 long과 has been seen의 결합도 자연스럽고, 수동 표기(been seen) 어법상 문제 없음."
+    },
+    {
+      "label": "B",
+      "verdict": "incorrect",
+      "reason": "play is a way which children learn about the world and their place in it : 관계절 내부(children learn about the world and their place in it)가 주어·동사·전치사구를 모두 갖춘 완전한 절이어서 which가 채울 공백(gap)이 없다. way를 선행사로 받으려면 in which 또는 관계부사적 that(the way (that) children learn ...)이어야 한다. 대안 해석 탐색: which를 learn의 목적어로 보려 해도 learn은 이미 about 전치사구를 취하고 있어 목적어 공백이 성립하지 않고, learn which(간접의문)로 읽을 통사적 경로도 없다. 축약관계절·도치 등 어떤 재분석으로도 정문이 되지 않으므로 명백한 오류."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "learn about the world and their place in it : their는 관계절 주어 children을 받는 소유격으로 수 일치가 맞고, the world와 their place in it이 전치사 about의 목적어로 병렬. it은 the world를 받아 정합. 순간 its(= play의? world의?)로 끌릴 수 있으나 '세상 속 아이들 자신의 자리'라는 문맥상 their가 정확하다."
+    },
+    {
+      "label": "D",
+      "verdict": "correct",
+      "reason": "allows children to try out : allow + 목적어 + to부정사 구조 그대로. to try (out) and learn은 하나의 to를 공유하는 동사 병렬(try out and learn)로도 정문."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "and to acquire : allows children [to try out and learn social behaviors] and [to acquire values ...]의 to부정사 병렬 두 번째 항. 매력적 오답 포인트 — 바로 앞 learn이 to 없이 병렬된 것을 보고 acquire도 bare form이어야 한다고 착각하기 쉬우나, learn은 to try의 to를 공유하는 하위 병렬이고 to acquire는 to try (out)와 대등한 상위 병렬이므로 to를 다시 쓴 것이 오히려 구조를 명확히 한다. 둘 다 허용되는 표기라 틀린 것이 아니다."
+    }
+  ],
+  "note": "실전 풀이 순서: (B)에서 즉시 완전절 + which(공백 없음)를 확인해 정답 확정. 가장 유혹적인 오답은 (E)로, learn(무to)과 to acquire(유to)의 표면적 비대칭이 병렬 오류처럼 보이지만 병렬 층위가 달라 둘 다 정문. (C)의 their도 its와 헷갈리게 설계된 듯하나 지시 대상(children)이 명확. 정답 후보는 B 하나로 수렴, 복수 정답 여지 없음."
+}

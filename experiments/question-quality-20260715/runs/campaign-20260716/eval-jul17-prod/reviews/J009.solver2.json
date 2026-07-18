@@ -1,0 +1,35 @@
+{
+  "pid": "J009",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'a large group of students from their sister university' — 소유격 'their'는 Garcia의 밴드가 속한 학교(집합체) 를 선행사로 받는 표준적 복수 소유격. 집합 명사/기관을 they/their로 받는 것은 규범상 허용되며 지시·수 일치 위반 없음. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'these would look great on my brother' — 조동사 would 뒤 원형 look 적법, 연결동사 look의 보어로 형용사 great(부사 greatly 아님) 적법, 의류가 사람에게 어울린다는 'look great on + 사람' 관용 결합도 적법. 모든 노드가 성립하는 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'...changed to nervousness when he thought of...' — when이 정형 시간 부사절(주어 he + 과거 thought)을 이끌며 주절 과거 서사 시제와 일치. 접속사 선택·시제 모두 적법한 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "'he struggled with the rhythm, made several mistakes' — 하나의 주어를 공유하는 두 정형 VP를 등위접속사 없이 쉼표만으로 연결한 형태. 2항 등위는 and가 필수이며(무접속 나열은 'I came, I saw, I conquered'류의 완전절 계열에만 허용), 대안 해석도 모두 실패: (i) 'the rhythm'을 수식하는 축약 관계절(수동 분사)로는 *'the rhythm (that was) made several mistakes'가 의미·통사상 불가, (ii) 독립분사구문/절대구문은 자체 주어가 필요한데 부재. 정문이 되려면 'and made' 또는 분사 'making several mistakes'(주어 he에 서술되는 부가어)여야 함. 따라서 made가 어법상 틀림."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'each member took their place on stage' — 밑줄은 took. 단수 주어 each member에 과거형 took은 수 일치 문제가 발생하지 않고(과거형은 수 중립, 단수여도 동일형) 서사 과거 시제와 일치. 정문. (their는 밑줄 밖이며 singular they로 어차피 표준.)"
+    }
+  ],
+  "note": "전형적 '병렬 vs 분사구문' 포인트. (D)만이 유일하게 통사적으로 파탄나며, 축약관계절·절대구문 등 구제 가능한 대안 해석을 전수 탐색했으나 모두 성립 불가. 나머지 네 밑줄은 형식 문법상 결함 없음. 단일 정답으로 수렴."
+}

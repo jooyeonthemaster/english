@@ -1,0 +1,69 @@
+{
+  "pid": "P013",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-terminology",
+      "severity": "minor",
+      "evidence": "(A) 오답 해설이 'better'를 \"jobs를 수식하는 비교급 형용사\"라고 기술했으나, 'some jobs are better than others'에서 better는 be동사의 주격보어(서술적 용법)이지 jobs를 한정 수식하는 형태가 아니다. 다만 판정 결론(비교구문으로 정상)은 옳아 정답 판단을 오도하지 않으므로 치명으로 보지 않음."
+    },
+    {
+      "code": "V5-minor-layer-mismatch",
+      "severity": "minor",
+      "evidence": "markedExpressions (C)의 expression 필드와 surroundingText가 교정형('having') 기준으로 기재되어 렌더 표시형('have')과 표기 층위가 다르다. errorExpression='have', correction='having'으로 정합은 유지되고 렌더도 정상이므로 실패로 보지 않으나, 다른 선지(expression==errorExpression==렌더형)와 규약이 어긋난다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 4,
+    "C5": 2,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "비교급 형용사 + than 상관 구성의 형태 검증",
+      "temptingBecause": "비교구문 형태를 점검하게 하지만 'better than others'가 즉시 정상으로 확인되어 유인력이 사실상 없음(준-필러)",
+      "decisiveFlaw": "주격보어 자리의 비교급 better가 than others와 완전한 비교구문을 이루므로 정상 — 즉시 소거됨"
+    },
+    {
+      "label": "(B)",
+      "intent": "명사 전위수식 분사의 태(현재분사 vs 과거분사) 판별",
+      "temptingBecause": "towns가 수식받는 명사라 수동(blossomed)을 떠올릴 수 있음",
+      "decisiveFlaw": "blossom은 자동사적 의미(번성하다)로 towns가 스스로 번성하는 능동 관계 — 현재분사 blossoming이 옳음"
+    },
+    {
+      "label": "(C)",
+      "intent": "[정답] with 부대상황(절대) 구문 내 정동사/준동사 판별",
+      "temptingBecause": "'some have more plentiful access'가 국소적으로 완전한 절처럼 자연스럽게 읽히고, 지문 후반에 합법적인 'some have more evidence...'가 실제로 존재해 착시를 강화함",
+      "decisiveFlaw": "with + 명사구 + 서술요소 구조에서 정동사 have는 불가 — 'with some roles more dangerous and some ___'의 병렬 구조를 추적해야 having(현재분사)임이 드러남. 교정 시 정확히 원문 복원"
+    },
+    {
+      "label": "(D)",
+      "intent": "start의 보충어 형태(to부정사/동명사) 선택 판별",
+      "temptingBecause": "start 뒤 to-V와 V-ing 중 어느 쪽이 허용되는지 의심하게 함",
+      "decisiveFlaw": "start는 to부정사·동명사를 모두 취하는 동사이므로 start to look은 정상"
+    },
+    {
+      "label": "(E)",
+      "intent": "of-전치사구 개입 상황의 주어-동사 수일치 판별",
+      "temptingBecause": "긴 of-수식어(of teeth and long bones)가 개입해 주어 핵 식별을 요구함 — 다만 주어 핵 analyses와 인접 명사 bones가 모두 복수라 견인(attraction) 충돌이 없어 실제 함정 강도는 낮음",
+      "decisiveFlaw": "주어 핵 analyses(복수)와 reveal이 정확히 일치하므로 정상"
+    }
+  ],
+  "explanationIssues": [
+    "(A) 해설의 '수식하는'은 서술적 용법(주격보어)을 한정 수식으로 오기술한 용어 부정확 — 결론은 옳으나 구조 기술이 실제 문장과 어긋남",
+    "keyPoints가 5개 밑줄 중 (C)(E)(D) 3개만 기재하고 (A)(B)의 point가 누락됨 — 모순은 아니나 KILLER 요건(각 밑줄의 point/why tempting 문서화) 관점의 결손"
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 렌더는 having→have 단일 최소대립쌍 외 무손상, 정답 (C) 유일성 독립 검증 완료(대안 파스 — 모문과의 등위 해석 — 은 시제·의미·병렬 구조상 성립 불가), 해설의 핵심 구조 분석(with 부대상황 + 준동사 요구)은 정확. 그러나 요청 난이도 KILLER 대비: §C 조건 중 최소대립쌍·명확한 문법 판단·구조 독해 요구·동일 포인트 디코이 부재는 충족하나, 5개 밑줄 각각의 point/why-tempting 문서화 요건이 미충족이고 (A)가 유인력 없는 준-필러, (E)는 주어 핵과 인접 명사가 모두 복수라 수일치 함정에 견인 충돌이 없어 함정 깊이가 KILLER에 미달(C5=2). 실전 변별은 (B)(D)와 정답 은닉에 의존하는 중상 난이도 수준(C3=2). 해설은 간결·정확하나 (A) 용어 오기술로 C6=2. 단서 누출 없고 교정의 필연성은 완전(C4=4). 합계 16 → 등급 C: 출하하려면 (A) 디코이를 실제 오개념 표적으로 교체, (E)를 견인 충돌이 있는 수일치 자리로 이동 또는 다른 포인트로 교체, (A) 해설 용어 교정이 필요."
+}

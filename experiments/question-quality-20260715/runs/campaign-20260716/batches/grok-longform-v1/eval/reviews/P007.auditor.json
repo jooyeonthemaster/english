@@ -1,0 +1,82 @@
+{
+  "pid": "P007",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-CLAUSE-MISATTRIBUTION",
+      "severity": "major",
+      "evidence": "오답 해설 (D): '주절의 진짜 주어 the actions가 복수이므로 동사 are가 수일치에 맞고'. 실제로 are는 'The great attraction ... is that [the actions ... are actions ...]'의 that 명사절(보어절) 내부 동사다. 주절의 주어는 'The great attraction of basing the tax directly on measured emissions'이고 주절 동사는 is다. the actions를 '주절의 진짜 주어'로 부른 것은 절 귀속 오류(종속 명사절을 주절로 오분석)다. 수일치 판단 자체(the actions 복수 → are)는 맞다."
+    },
+    {
+      "code": "V4-TERMINOLOGY-CONTRADICTION",
+      "severity": "major",
+      "evidence": "오답 해설 (E): '장소를 나타내는 부사절을 이끄는 관계부사 where'. 관계부사는 선행사를 갖는 관계절(형용사절)을 이끄는 범주이고, 선행사 없이 부사절을 이끄는 where는 부사절 접속사다. '부사절을 이끄는 관계부사'는 내적으로 모순된 용어 오류다. 또한 'particularly where there are many separate sources'의 where는 물리적 장소가 아니라 '~한 경우에'라는 상황·조건적 의미이므로 '장소를 나타내는'도 부정확하다."
+    },
+    {
+      "code": "V4-FABRICATED-TRAP",
+      "severity": "minor",
+      "evidence": "정답 해설: '학생이 보어·목적어 자리로 오독하기 쉬운 함정'. 'be very precise targeted' 구조에서 보어 자리 오독(be + 형용사 보어로 착각)은 성립하지만 목적어 자리 오독은 이 구조에서 성립하지 않는 가공의 함정 기술이다."
+    },
+    {
+      "code": "V4-LOOSE-LABEL",
+      "severity": "minor",
+      "evidence": "오답 해설 (B) 및 keyPoints: 'incentive 뒤 목적을 나타내는 to부정사'. incentive to reduce의 to부정사는 명사 incentive를 수식/보충하는 명사 결합(형용사적 용법)이지 부사적 '목적' 용법이 아니다. 핵심 판단(incentive + to-V가 표준 결합)은 맞으나 용법 명칭이 부정확하다."
+    }
+  ],
+  "craft": {
+    "C1": 2,
+    "C2": 2,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "형용사 vs 부사 — 수동태 'be targeted'의 과거분사를 수식하는 부사 자리 판정 (정답)",
+      "temptingBecause": "'can, in principle, be very precise'까지 읽으면 be동사의 형용사 보어처럼 보여 옳다고 넘기기 쉽다",
+      "decisiveFlaw": "바로 뒤에 targeted가 이어져 술부는 수동 'be targeted'이고, 형용사 precise는 분사를 수식할 수 없다. 부사 precisely로 고치면 정확히 원문이 복원된다. 다만 'precise targeted'라는 비문 인접쌍이 국소적으로 즉시 드러나 KILLER 깊이의 구조 독해를 요구하지 않는다"
+    },
+    {
+      "label": "(B)",
+      "intent": "명사 incentive 뒤 to부정사 vs 동명사(v-ing) 선택",
+      "temptingBecause": "incentive 뒤 형태를 for reducing/reducing 등과 혼동하도록 유도한다",
+      "decisiveFlaw": "incentive to-V는 표준적 명사+to부정사 결합으로 어법상 옳다 (오답 성립 불가)"
+    },
+    {
+      "label": "(C)",
+      "intent": "관계절 내 수일치 — 선행사 식별 (manner vs emissions)",
+      "temptingBecause": "밑줄 직전의 복수 명사 emissions에 이끌려 are가 맞다고 오판할 수 있다",
+      "decisiveFlaw": "관계절의 선행사는 단수 'any manner'이므로 is가 옳다 (오답 성립 불가). 단 (D)와 pointCode 'd'로 동일 포인트가 중복된다"
+    },
+    {
+      "label": "(D)",
+      "intent": "축약 관계절('the polluter can take ...')이 개재된 주어-동사 수일치",
+      "temptingBecause": "동사 직전의 단수 명사구 tax liability에 이끌려 is를 기대하기 쉽다",
+      "decisiveFlaw": "주어는 복수 'the actions'이므로 are가 옳다 (오답 성립 불가). 다섯 밑줄 중 가장 실질적 판단을 요구하지만 (C)와 포인트가 중복된다"
+    },
+    {
+      "label": "(E)",
+      "intent": "선행사 없는 where 부사절(접속사 용법)의 적법성 판단",
+      "temptingBecause": "선행사가 보이지 않아 관계부사 where의 오용처럼 보일 수 있다",
+      "decisiveFlaw": "'~한 경우에'를 뜻하는 부사절 접속사 where의 표준 용법으로 옳다 (오답 성립 불가)"
+    }
+  ],
+  "explanationIssues": [
+    "(D) 해설이 that 명사절(보어절) 내부의 are를 '주절의 진짜 주어'의 동사로 기술 — 절 귀속 오분석",
+    "(E) 해설의 '부사절을 이끄는 관계부사'는 범주 모순 용어이며, '장소를 나타내는'도 이 문맥(상황·조건)과 불일치",
+    "정답 해설의 '목적어 자리로 오독' 함정 기술은 이 구조에서 성립하지 않음",
+    "(B) 해설·keyPoints의 '목적을 나타내는 to부정사'는 명사 수식 to부정사를 부사적 목적 용법으로 오기술",
+    "오답 해설이 각 선지의 '왜 매력적인가(why tempting)'를 제시하지 않고 '왜 옳은가'만 서술 — KILLER §C 요건 미충족"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1/V2/V3/V5 통과: 렌더 지문은 (A) precisely→precise 단일 최소대립 변형 외 원지문과 완전 일치하고, 독립 검증 결과 정답 집합은 정확히 {(A)} 하나다. 교정 시 원문이 정확히 복원된다. 그러나 V4에서 실패: (D) 해설의 절 귀속 오류(that 명사절을 주절로 기술)와 (E) 해설의 범주 모순 용어('부사절을 이끄는 관계부사')는 루브릭이 명시한 오분석·용어 오류 유형에 해당한다. KILLER 조건도 미충족: 정답 'very precise targeted'는 인접 2어절 수준에서 즉시 드러나는 국소 오류로 구조 독해를 요구하지 않으며('즉시 드러나지 않는다' 위반), 디코이별 why-tempting 기술도 부재하다. 공예 측면에서도 (C)/(D)의 수일치 포인트 중복(C2), 요청 난이도 KILLER 대비 실제 중하 난이도(C5=1), 해설 용어 오류(C6=1)로 재설계가 필요하다. 문항 골격(지문 무결성·정답 유일성)은 건전하므로 해설 전면 재작성 + 정답 포인트를 구조 의존적 자리로 교체하면 회생 가능하다."
+}

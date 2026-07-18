@@ -1,0 +1,35 @@
+{
+  "pid": "J013",
+  "answer": "5",
+  "multipleDefensible": false,
+  "defensibleLabels": ["5"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "Grammatical in the 'it may be possible to + VP' frame, but logically incoherent: 'unknowingly encourage more emissions' contradicts the passage's premise that emission-based taxes align tax reduction with emission reduction, and nothing in the discourse links improved monitoring technology to a reduced financial burden as the predicted future outcome."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "Polarity inversion. The 'Nevertheless' clause states monitoring technologies 'have been developing rapidly' (i.e., the cost obstacle is shrinking); 'eliminate pollution taxes completely due to overly complex monitoring mechanisms' presupposes monitoring is becoming more prohibitive — the exact opposite of the concessive pivot's direction."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "Flat-rate taxation 'regardless of pollution levels' severs the proportionality the passage calls 'the great attraction' of emission-based taxes. Improving monitoring technology strengthens the case FOR direct emission taxation; shifting away from it is the inverse of the argument's trajectory."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "Internally incoherent with the passage's incentive structure: the tax falls on residual emissions, making abatement financially attractive. 'Imposing heavy taxes on abatement' inverts that mechanism, and 'discourage further technological investment' contradicts the passage's optimistic note on rapidly developing monitoring technology."
+    },
+    {
+      "label": "5",
+      "verdict": "accept",
+      "reason": "Uniquely resolves the concessive structure: costly continuous measurement was named as 'a major disincentive to direct taxation of emissions'; rapidly improving monitoring technology removes that cost obstacle; therefore broader implementation of emission-based levies becomes feasible. Grammatically clean bare-infinitive VP in the 'possible to' frame and the only logically valid completion."
+    }
+  ],
+  "note": "Seam check: all five options are well-formed bare-infinitive VPs after 'it may be possible to', so grammar does not discriminate; the discriminator is discourse logic. The Nevertheless-pivot (cost obstacle -> improving tech) admits exactly one coherent consequent (5). Options 1-4 each invert a premise (policy objective, monitoring trend, proportionality principle, incentive direction). Single defensible answer; no alternative parses rescue the distractors."
+}

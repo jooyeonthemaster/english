@@ -1,0 +1,35 @@
+{
+  "pid": "P009",
+  "answer": "1",
+  "multipleDefensible": true,
+  "defensibleLabels": ["1", "3"],
+  "confidence": "low",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "정답(최유력)",
+      "reason": "(A) 'prescribed ethical codes'는 지문의 'rather than follow a prescribed set of ethical codes or rules'와, (B) 'clear right answer'는 'there is no clear right or wrong response'와 거의 축자적으로 대응한다. 표준 요약문 프레임('윤리 문제에는 (B)가 없으므로 (A)를 따르기보다 스스로 사고해야 한다')에 넣으면 지문 논지와 완전히 정합. 두 빈칸 모두 지문이 '부정하는 대상' 슬롯에 자연스럽게 들어간다."
+    },
+    {
+      "label": "2",
+      "verdict": "오답",
+      "reason": "(A)는 성립하지만 (B) 'shared civic belief'는 지문에서 개인 가치관에 영향을 주는 요인 중 하나('civic beliefs')로만 언급될 뿐, 윤리 문제에 결여된 것이 아니다. 'civic beliefs'라는 축자 어휘 재활용으로 끌어당기는 어휘형 미끼이며 논리적으로는 요약의 축이 될 수 없다. 실제로 잠깐 끌렸으나 지문에서 civic belief가 '공유'된다는 진술 자체가 없음을 확인하고 기각."
+    },
+    {
+      "label": "3",
+      "verdict": "조건부 옹호 가능(강력 미끼)",
+      "reason": "(B) 'clear right answer'는 정확하다. (A) 'personal value systems'는 지문이 '이해해야 할 대상'으로 긍정하는 개념이므로, 요약문에서 (A)가 'rather than follow (A)'처럼 부정 슬롯이면 지문과 모순되어 오답이다. 그러나 (A)가 'understanding (A)'처럼 긍정 슬롯인 요약문이라면 성립한다. 요약문 자체가 파일에 누락되어 슬롯 극성을 확정할 수 없으므로 논리적으로 배제 불가 — 이 문항 최대의 매력적 오답이자, 누락 결함 때문에 옹호 가능 후보로 남는다."
+    },
+    {
+      "label": "4",
+      "verdict": "오답",
+      "reason": "(A) 'formal learning experiences'는 개인 가치관 형성에 영향을 주는 주변적 세부사항일 뿐 학생이 따르지 말아야 할 대상이 아니다. (B) 'objective moral theory'는 지문이 'higher levels of conceptual ethics or theory'와의 구별만 언급했을 뿐 윤리 문제에 객관적 이론이 없다고 주장하지 않으므로 과잉 일반화."
+    },
+    {
+      "label": "5",
+      "verdict": "오답",
+      "reason": "(A) 'higher conceptual ethics'는 이 글의 윤리적 사고가 '무엇과 구별되는가'의 배경 언급일 뿐 요약의 축이 아니다. (B) 'context-free decision'은 'context dependent'의 반전 조어로 지문 어휘를 뒤집어 만든 미끼이며, 요약문의 핵심 결핍 대상('명확한 정답 없음')을 대체하지 못한다."
+    }
+  ],
+  "note": "형식 결함: 발문은 '한 문장 요약'의 빈칸 (A),(B)를 묻지만, 정작 (A),(B)가 포함된 요약문이 파일에 존재하지 않는다. 요약문 없이 선지 쌍만으로 판정해야 하므로 문항은 엄밀히는 미완성/판정불가 상태다. 표준 요약 프레임과 미끼 설계(①·②가 (A) 공유, ①·③이 (B) 공유)를 근거로 ①을 최유력 정답으로 추정하지만, 요약문 슬롯 극성에 따라 ③도 성립할 수 있어 multipleDefensible=true. 요약문을 복원해 재검수해야 한다."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "관계절 'that resembles everyday life'의 선행사는 불가산 단수 'subject matter'이므로 단수 동사 resembles가 수 일치상 옳다. resemble은 타동사로 목적어 everyday life를 직접 취하는 정상 결합. 선행사를 'paintings, plays, or stories'로 재해석할 통사적·의미적 근거 없음(전치사구 'on subject matter' 직후 접속, 의미상으로도 소재가 일상을 닮는다는 뜻)."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'The role of background style is to facilitate...'는 'role/aim/function + be + to-부정사(주격 보어)'의 표준 구문. 주어 핵 role에 대해 be동사 is가 정형동사로 존재하고 to facilitate는 보어로 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'work ... against the subject matter thereby creating a disquieting atmosphere'에서 thereby + V-ing는 앞 절 전체(장치들이 소재와 부조화하게 작동함)를 의미상 주어로 하는 결과 분사구문의 표준형. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "'This active involvement providing a basis for depth of aesthetic processing and reflection on the meaning of the work.'는 마침표로 종결된 독립 문장인데 providing을 분사로 두면 정형동사가 전무한 단편(fragment)이 된다. 대안 구제 시도: (i) 축약 관계절로 보면 명사구만 남아 술어 부재, (ii) 독립분사구문(absolute)으로 보려면 같은 문장 내 주절이 필요하나 없음, (iii) 도치·생략으로 정문화할 근거 없음. 정형동사 provides로 교체해야 정문. 어법상 틀린 유일한 밑줄."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'An ability to switch between A and B is fundamental'에서 ability + to-부정사는 표준 결합이며, 문장의 정형동사 is가 별도로 존재. between the 'pragmatic attitude' ... and an 'aesthetic attitude' 병렬도 성립. 정문."
+    }
+  ],
+  "note": "문법가/논리학자 렌즈 블라인드 풀이. (D)만이 문장 단편을 만드는 유일한 오류로, 나머지 네 밑줄은 각각 수 일치(A), be+to부정사 보어(B), thereby 분사구문(C), 명사+to부정사(E)로 형식적 정문임이 증명된다. 복수 정답 여지 없음."
+}

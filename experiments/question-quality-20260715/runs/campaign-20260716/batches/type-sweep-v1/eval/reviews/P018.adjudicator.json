@@ -1,0 +1,50 @@
+{
+  "pid": "P018",
+  "finalV2": false,
+  "winningAnswer": "what → in which / that (동치 교정 복수 허용 — 오류 지점은 what 하나로 유일하나, 허용 교정 집합은 {in which, that}이며 by which·관계사 생략(zero relative)도 방어 가능. 선언된 정답 키 '(A) in which' 단독은 이 집합을 커버하지 못함)",
+  "reason": "오류 지점 자체는 유일하게 성립한다. what은 융합관계사로 외부 선행사 a way를 취할 수 없고, 후속절 'children learn about the world and their place in it'은 about이 전치사로 목적어를 이미 취한 완전절이라 관계대명사 공백이 없으며, 'a way + 명사절' 무표지 동격이라는 구제 파스도 통사·의미 양면에서 실패한다. 그러나 교정형은 유일하지 않다. way류 선행사는 공백 없는 절을 이끄는 관계사 that(및 zero relative)을 표준적으로 허가하므로 'a way that children learn...'은 완전한 정문이고, by which도 성립한다. full 파일의 해설 스스로 \"'that' 역시 올바른 답이 될 수 있습니다\"라고 인정하면서 정답 필드는 '(A) in which' 단독으로 선언되어 있어, 'what → that'을 쓴 정답 학생이 키 기준 오답 처리되는 채점 경계 결함이 있다. 서술형 문항의 정답 유일성(V2)은 허용 동치 답안 집합이 정답 키에 선언되어야 충족되므로, 감사자의 V2=false를 유지한다. 솔버1·솔버2 모두 오류 지점 판정과 대안 파스 기각에서 과잉·누락 없이 정확했고, 양 솔버의 'multipleDefensible=false'는 오류 지점 유일성에 대한 진술로서 감사자 판정과 모순되지 않는다.",
+  "perDispute": [
+    {
+      "label": "(A) what — 오류 성립 여부",
+      "claim": "밑줄 내 what이 어법 오류인가 (솔버1·2·감사자 전원 일치)",
+      "verdict": "오류 확정 (유일 오류 지점)",
+      "evidence": "① 관계사 파스: what은 선행사를 내포하는 융합관계사이므로 외부 선행사 a way 뒤에 올 수 없다. ② 공백 부재: 'children learn about the world and their place in it'에서 learn은 about 전치사구를 취하는 완전절로, 관계대명사가 결속할 공백이 없다('learn의 목적어 공백' 오독은 about이 이미 목적어 the world and their place를 취하므로 성립 불가). ③ 동격 명사절 구제 파스: [what children learn about the world...]는 내부적으로 정문이나('learn X about Y' 프레임), a way와의 무표지 동격 결합은 비문이고 의미상으로도 '방법 = 배우는 내용'이 성립하지 않아 기각. 정문화 경로 없음."
+    },
+    {
+      "label": "교정형 'in which'",
+      "claim": "선언된 정답 '(A) in which'가 올바른 교정인가",
+      "verdict": "성립 (올바른 교정)",
+      "evidence": "'a way in which children learn about the world and their place in it'은 원지문과 정확히 일치하는 표준 교정. 전치사+관계대명사가 완전절을 이끌며 방식 선행사 a way를 수식한다."
+    },
+    {
+      "label": "교정형 'that'",
+      "claim": "'what → that'도 동등하게 올바른 교정인가 (솔버1·2 공통 주장, 해설도 인정)",
+      "verdict": "성립 (동치 교정 — 정답 키 미선언이 결함)",
+      "evidence": "way류 명사는 공백 없는 관계절에 관계사 that을 표준적으로 허가한다('the way (that) we do things'). 'a way that children learn about the world...'는 완전한 정문. full 파일 해설 스스로 \"'that' 역시 올바른 답이 될 수 있습니다\"라고 명시하나 정답 필드에는 in which만 선언되어 키와 해설이 상호 모순. 'what → that'을 답한 학생은 정답이나 키 기준 오답 처리될 수 있다."
+    },
+    {
+      "label": "교정형 'by which' / 관계사 생략",
+      "claim": "by which 및 zero relative(what 삭제)도 방어 가능한 교정인가 (해설·감사자 언급)",
+      "verdict": "성립 (부차적 동치 교정 — 역시 미선언)",
+      "evidence": "'a way by which children learn...'은 문법적으로 성립(in which보다 덜 관용적일 뿐). what을 삭제한 'a way children learn about...'도 zero relative로 정문이며, '고쳐 쓰시오' 지시의 해석에 따라 답안으로 제출될 수 있다. 어느 쪽도 키에 선언되어 있지 않다."
+    },
+    {
+      "label": "교정형 'how'",
+      "claim": "what → how 교체 가능성 (양 솔버가 기각)",
+      "verdict": "불성립 (솔버 기각 타당)",
+      "evidence": "'a way how'는 현대 표준 영어에서 배제되는 비공기(way와 how는 한쪽만 사용). how로 고치려면 a way 삭제가 필요해 밑줄 내 최소 교정 범위를 벗어난다. 양 솔버의 기각은 정확하며 과잉 판정 아님."
+    },
+    {
+      "label": "기타 오류 후보 지점 (its / beginnings / their·it)",
+      "claim": "밑줄 내 제2의 오류 지점 존재 여부",
+      "verdict": "불성립 (추가 오류 없음 — 오류 지점 유일성 확인)",
+      "evidence": "its는 후행 주어 play를 선행 지시하는 표준 cataphora, beginnings 복수형은 관용적('from its earliest beginnings'), their=children's·it=the world로 대명사 지시 모두 해소. 어느 솔버도 유령 오류를 주장하지 않았고(과잉 판정 없음) 누락된 오류도 없다."
+    },
+    {
+      "label": "V2 최종 판정",
+      "claim": "선언된 정답이 유일한 정답인가",
+      "verdict": "불성립 → finalV2=false (감사자 판정 유지)",
+      "evidence": "오류 지점은 유일하나 서술형 채점 키로서의 정답 집합이 불완전하다. 허용 동치 교정 {that, (by which), (zero relative)}가 키에 선언되지 않았고 해설과 정답 필드가 상호 모순되어 채점 경계가 흐리다. 수정 방향: 정답 필드를 '(A) what → in which (동치 허용: that; 부차 허용: by which, 관계사 생략)'으로 동치 집합 명시 선언하면 V2 치유 가능. 솔버들의 multipleDefensible=false는 '오류 지점이 복수'라는 의미가 아니므로 감사자 V2=false와 실질 모순 없음."
+    }
+  ]
+}

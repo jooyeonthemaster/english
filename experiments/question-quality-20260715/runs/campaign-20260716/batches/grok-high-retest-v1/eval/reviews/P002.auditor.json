@@ -1,0 +1,66 @@
+{
+  "pid": "P002",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-korean-particle",
+      "severity": "minor",
+      "evidence": "오답 해설 5: 'Aristotle와 Darwin은' — 발음상 받침(ㄹ) 뒤이므로 'Aristotle과'가 규범 표기. 사실성에는 영향 없음."
+    },
+    {
+      "code": "V4-minor-awkward-phrase",
+      "severity": "minor",
+      "evidence": "해설: '발을 구르지 않은 채도' — 표준형은 '않은 채로도'. 의미 전달에는 지장 없음."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 4,
+    "C6": 4
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "직전 절 극성 혼동(반전) — 양보절 'does seem to be a particularly human skill'의 표면을 뒤집어 넣게 유도",
+      "temptingBecause": "빈칸 바로 앞 절의 'particularly human skill'과 어휘가 직접 겹쳐, 대조 구조를 놓친 학생이 앞 절 소재를 그대로 잇는다",
+      "decisiveFlaw": "저자는 발 구르기가 인간 특유임을 방금 양보로 인정했고, 이어지는 증거(개들은 발을 구르지 않은 채 반응)는 '인간 국한이 아님'이 아니라 '핵심 능력이 아님'을 지지한다 — 넣으면 양보-대조가 자기모순이 된다"
+    },
+    {
+      "label": "2",
+      "intent": "지엽 사례로의 과협소(half-truth) — 뒤따르는 구체 사례(사이렌·색소폰·장신구)를 개념 정의로 축소",
+      "temptingBecause": "선지의 세 명사가 지문의 실제 사례와 전부 표면 일치한다",
+      "decisiveFlaw": "빈칸의 지시어 this는 '발 구르기 반응'인데, 그것을 개가 들은 자극 목록에 국한된 반사로 부르는 것은 지시 대상 자체가 어긋나며, 사례는 반응 능력의 근거이지 정의가 아니다"
+    },
+    {
+      "label": "3",
+      "intent": "정답 — 원문 span 'the decisive capacity involved in musical response'를 'the core faculty required for responding to music'로 난이도에 맞게 추상화한 paraphrase",
+      "temptingBecause": "해당 없음(정답). 뒤 문장들의 증거(발 구르기 없이도 장신구 리듬·사이렌·색소폰에 반응)가 '발 구르기 ≠ 음악 반응의 핵심 능력'을 필연적으로 지지한다",
+      "decisiveFlaw": "없음"
+    },
+    {
+      "label": "4",
+      "intent": "범위 과확장(scope shift) — '음악에 반응하는 능력'을 '작곡·연주 창작 능력'으로 격상",
+      "temptingBecause": "'음악 능력'이라는 상위 주제어의 연상으로 그럴듯해 보인다",
+      "decisiveFlaw": "지문은 리듬·악기 소리에 대한 반응만 다루며 작곡·연주는 전혀 등장하지 않는다. 'total'이라는 절대어도 지문 근거가 없다"
+    },
+    {
+      "label": "5",
+      "intent": "행위자 주장 오귀속(actor swap) — 학자들의 관찰을 부인으로 뒤집음",
+      "temptingBecause": "Aristotle·Darwin이라는 고유명이 지문 후반과 표면 일치해 근거가 있는 것처럼 보인다",
+      "decisiveFlaw": "두 학자는 개가 악기·음에 반응하는 것을 관찰한(또는 관찰했을) 인물로 제시되며, 동물의 능력을 부인했다는 서술은 지문에 없다 — 오히려 반대 방향"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "A",
+  "notes": "V1: 렌더 지문은 원지문에서 'the decisive capacity involved in musical response' 한 span만 '_____'로 치환했고 그 외 손상·중복·누락·오탈자 없음(원지문의 'beside'도 그대로 보존). V2: 다섯 선지를 각각 독립 대입 검증한 결과 ③만이 양보-대조 구조와 후속 증거 두 축(장신구 리듬 반응, 사이렌·색소폰 반응)에 의해 지지되며, ①은 자기모순, ②는 지시어 불일치, ④는 무근거 확장, ⑤는 관찰-부인 반전으로 각각 단독 결정적 결함을 가짐. V3: 다섯 선지 모두 'interpreted as' 뒤 동일 NP 슬롯에 문법적으로 들어가고 빈칸이 문장 말미라 tail 문제 없음 — 문법만으로 탈락하는 오답 없음. V4: 해설의 구조 분석(대조적 귀결, 발 구르지 않은 채의 반응, 학자들의 관찰자 역할)이 실제 지문과 전부 일치하고 각 오답 해설이 해당 선지 내용과 정확히 대응. V5: 정답 라벨 3=해설 ③=오답해설 키 {1,2,4,5}=keyPoints 모두 동기화. 공예: 지문의 중심 논리 pivot을 정확히 빈칸화(C1=4), 4개 오답이 각기 다른 함정 유형(극성 반전·과협소·과확장·오귀속)을 겨냥하나 ②는 지시어 어긋남 탓에 매력도가 낮은 약한 디코이(C2=3), ①·⑤는 국소 단서로 실제 매력적이고 전역 구조에서 갈리지만 ②·④는 비교적 즉시 소거 가능(C3=3), ②'limited to'·④'total'·⑤'denied'의 절대어·극단 표현이 시험 요령 소거를 일부 허용하는 약한 누출(C4=3), 요구 난이도 INTERMEDIATE에 paraphrase 추상화 거리와 함정 깊이가 정확히 부합(C5=4), 해설은 짧고 정확하며 정답 근거와 함정 유형을 선명히 분리(C6=4). 합계 21, 전 축 3 이상, 전 V 통과 → A. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false. 잔여 이슈는 한국어 표기 2건(minor)뿐."
+}

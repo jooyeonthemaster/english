@@ -1,0 +1,35 @@
+{
+  "pid": "P012",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "passively accept their fate without looking for remedies — 지문의 인물들은 'gather their resources, overcome their problem, see opportunities'로 묘사되는 능동적 행위자이므로 수동적 운명 수용은 논지와 정반대. 문법 결합은 정상이나 논리적으로 즉시 배제."
+    },
+    {
+      "label": "②",
+      "verdict": "correct",
+      "reason": "deliberately pursue constructive opportunities within their setbacks — 'go one step further', 'see opportunities where most of us fail to see them', 'focus on what they can gain from their circumstance rather than on what they have lost'의 정확한 재진술. and 병렬로 silver lining 격언(좋은 면이 있다고 믿음)에서 한 발 나아가 그 좋은 면을 능동적으로 추구한다는 흐름이 자연스럽고, deliberately가 지문의 능동성 강조와 일치. 유일하게 옹호 가능."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "prioritize external recognition of their achievements over inner growth — 외적 인정 대 내적 성장의 대비는 지문에 전혀 등장하지 않는 무관 개념. remarkable feats라는 단어만 표면적으로 스치는 수준."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "completely erase the memory of their hardships to start anew — 매력적 오답으로 잠시 끌림('start anew'가 재기 서사와 닿아 보임). 그러나 지문의 인물들은 역경을 지우는 것이 아니라 역경 속에서(in spite of their hardships, gain from their circumstance) 얻을 것에 집중한다. '기억을 완전히 지운다'는 근거가 전무하며 오히려 역경을 자원으로 활용하는 논지와 충돌."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "focus on alleviating the misfortunes of other people around them — 타인의 불운 경감이라는 이타적 전환은 지문에 없음. 지문 전체가 자기 자신의 불운을 기회로 전환하는 이야기."
+    }
+  ],
+  "note": "빈칸은 'They believe in the old cliché that every cloud has a silver lining, and they _____' 구조로, 격언에 대한 믿음을 실제 행동으로 잇는 절이 필요하다. 모든 선지가 'they + 동사원형' 결합으로 문법 seam은 전부 정상이므로 순수 논리 변별 문항. ②만이 지문의 핵심 재진술이고 나머지는 정반대(①), 무관(③⑤), 근거 없는 과장(④)으로 깔끔하게 배제된다. 최상위권 기준 실전 소요 시간 짧고 복수 정답 소지 없음. 굳이 흠을 잡자면 ②가 지문 어휘(opportunities, setbacks↔misfortunes)를 다소 직접적으로 재사용해 변별력이 낮은 편."
+}

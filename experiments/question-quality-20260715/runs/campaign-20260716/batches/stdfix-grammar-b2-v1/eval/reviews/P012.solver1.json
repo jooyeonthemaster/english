@@ -1,0 +1,35 @@
+{
+  "pid": "P012",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'our attention tends to be directed outward' — 주어가 attention(방향이 정해지는 대상)이므로 수동태가 필수. 앞 문장의 능동 'direct the spotlight of attention inward'(주어 we)와의 표면적 평행 때문에 능동 'to direct'로 끌리는 매력적 함정이지만, 여기서는 attention이 direct의 대상이므로 수동이 정확하다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'While this pattern ... is necessary ..., it actually prevents ...' — 양보 접속사 While이 완전한 정형절을 이끌고 뒤에 주절이 따라오는 표준 구조. During 등 전치사와의 혼동 여지도 없다(뒤가 절이므로 접속사가 맞음)."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'necessary when solving problems analytically' — when (we are) solving의 축약. 초정밀 독해로는 주절 주어가 'this pattern of attention'(문제를 푸는 주체가 아님)이라 현수 축약처럼 보여 2순위 유혹 지점이지만, 'when + V-ing'는 일반 주어(사람 일반/we)를 함의하는 관용적 축약으로 수능·표준 문어에서 정문 처리된다. when solved로 바꿀 이유도 없음(problems를 목적어로 취하는 능동 진행이 자연스러움)."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'the connections that lead to creative insights' — 선행사 connections(복수)를 받는 주격 관계대명사 that, 동사 lead와 수 일치. 선행사가 명시돼 있어 what으로 바꿀 수 없고, that가 정확하다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "'hear the quiet voices ... to tell us about the insight' — 지각동사 hear는 목적어 + 원형부정사/현재분사를 취하며 to부정사는 불가. 대안 해석 전수 점검: (i) 목적 부정사('~하기 위해')로 읽으면 tell의 의미상 주어가 we가 되어 '우리가 통찰을 말해주기 위해 목소리를 듣는다'는 비문 논리, (ii) voices를 수식하는 형용사적 부정사('말할 목소리')로 읽어도 미래·용도 함의가 문맥(그 순간 들려오는 목소리)과 불일치. 목소리가 그 순간 통찰을 '말해주고 있는' 것이므로 telling(현재분사)이어야 한다. 어법상 틀린 부분."
+    }
+  ],
+  "note": "정답은 (E) 단독으로 수렴. 실전 풀이 시 끌림 순위: (A) 능동/수동 평행 착시 > (C) when V-ing 현수 축약 냄새. 그러나 (A)는 주어-동사 관계 확인으로, (C)는 일반주어 관용 축약으로 각각 정문 판정. (E)는 지각동사 보어 규칙 위반으로 범주적 오류이며 대안 해석(목적 부정사, 형용사적 부정사)이 모두 의미적으로 성립하지 않아 이의신청 여지 없음. 원전(Lehrer, Imagine — Bhattacharya 인용)에서도 'voices ... telling us' 형태."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P013",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "전제 부재. 지문 어디에도 밴드메이트의 '새로운 음악 스타일'이나 스타일 적응 문제가 등장하지 않는다. 실수의 원인은 명시적으로 긴장(nervousness)이며, 스타일 갈등이라는 명제는 텍스트상 선행 근거가 전무하다."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "밑줄 직전 문장이 인과의 전건을 명시한다: 'His confidence was, however, quickly changed to nervousness when he thought of how many people would be there.' 이어지는 'As the rehearsal began, he struggled with the rhythm, making several mistakes'는 그 긴장이 연주 수행을 저해했다는 후건이다. however 역접 + as 시간 연결로 긴장→실수의 인과가 담화적으로 성립하며, 이후 Tom의 격려로 안정을 되찾는 서사도 이 독해를 강화한다. 'overwhelming'은 다소 강화된 표현이지만 'quickly changed'와 복수의 실수(several mistakes)로 정당화 가능. 유일하게 함축 의미로 성립한다."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "직접 모순. Garcia 본인이 'I haven't waited long'이라고 진술하므로 '긴 기다림'이라는 전제 자체가 거짓이며, 신체적 피로(physical exhaustion)에 대한 언급도 전혀 없다."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "직접 모순. Garcia는 추천받은 옷을 스스로 구매하고 '리허설에도 입겠다'고 자원했으며, 새 옷을 입고 도착했을 때 'felt good'이라고 서술된다. 옷에 대한 불만이라는 명제는 텍스트와 정면 충돌한다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "시간적 정합성 붕괴. 밑줄은 본 공연 이전의 리허설 장면에 위치하므로 '청중의 반응 부재'가 원인일 수 없다(청중 미존재). 실제 공연에서는 청중이 'loudly cheered'로 열렬히 반응했으므로 이중으로 모순이다."
+    }
+  ],
+  "note": "함축 의미 유형. 밑줄 'struggled with the rhythm'의 함축은 직전 문장의 긴장(무대 공포) 인과로 유일하게 결정된다. ①③④⑤는 각각 전제 부재·직접 모순·시간 모순으로 형식적으로 기각 가능하며 복수 정답 여지 없음. 난점: 서사문 함축 문항으로는 정답 단서가 밑줄 바로 앞 문장에 노출되어 있어 난이도가 낮은 편(거의 축자적 재진술 수준)이라는 품질상 지적은 가능하나, 정답 유일성·논리 성립에는 결함 없음."
+}

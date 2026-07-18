@@ -1,0 +1,67 @@
+{
+  "pid": "P001",
+  "validity": {
+    "V1": false,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-STEM-MOJIBAKE",
+      "severity": "critical",
+      "evidence": "발문이 '다음 글의 빈칸에 들어�� 말로 가장 적절한 것은?'으로 저장되어 있다. 바이트 레벨 확인 결과 '갈'(EA B0 88)이 있어야 할 자리에 U+FFFD 대체문자 2개(EF BF BD EF BF BD)가 파일에 물리적으로 인코딩되어 있다. 읽기 단계의 표시 문제가 아니라 생성/직렬화 단계에서 이미 손상된 상태로, 학생 노출 필드(발문)의 본체 손상에 해당한다. 지문 본문 자체는 원지문과 비교해 빈칸 치환('prioritize flexibility over rigidity' → '_____') 외 접합 파손·중복·누락·고아 문장부호가 없다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 2,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — 원문 스팬 'prioritize flexibility over rigidity'의 의미 보존 재진술",
+      "temptingBecause": "해당 없음(정답). 'value A rather than B'가 원문 'prioritize A over B' 구조를 그대로 대응시킨다.",
+      "decisiveFlaw": "없음. 삽입 완성문 'you must value adaptability rather than inflexibility most of the time'은 문법적·자연스럽고 주제문 위치의 논지와 정확히 일치한다. 유일 정답."
+    },
+    {
+      "label": "2",
+      "intent": "과잉 확장(overextension) — 유연성 권고를 '모든 일정 포기'라는 극단으로 부풀림",
+      "temptingBecause": "경직된 일정에서 벗어나라는 방향성 자체는 지문과 일치한다.",
+      "decisiveFlaw": "지문은 'most of the time' 유연성을 우선하라는 정도 조절 주장이며, 계획 유지 자체는 전제한다('a certain percentage of plans will change'). 'abandon all ... complete freedom'은 절대어로 지문 범위를 초과한다. 또한 'all'이라는 절대어가 시험 요령만으로도 소거 단서가 된다."
+    },
+    {
+      "label": "3",
+      "intent": "극성 반전(causal/polarity reversal) — 필자가 지양하는 경직 태도를 정답 자리에 배치",
+      "temptingBecause": "'careful plans', 'unwanted changes' 등 지문 어휘와 표면 중첩이 있다.",
+      "decisiveFlaw": "지문 논지의 정반대다. 계획을 변화로부터 지키는 것은 필자가 비판하는 rigidity에 해당하며, 즉시 소거 가능해 변별 기여가 낮다."
+    },
+    {
+      "label": "4",
+      "intent": "축소·문자적 오독(scope narrowing / half-truth) — 태도 문제를 '시간표 수정 행위'로 좁힘",
+      "temptingBecause": "'more often than not'이 원문 'most of the time'과 표면적으로 겹치고, 일정 변경이라는 소재도 지문과 겹친다.",
+      "decisiveFlaw": "평온함은 수정 빈도가 아니라 변화를 수용하는 태도에서 온다는 논지와 어긋난다. 부수적 결함: 삽입 시 'revise work timelines more often than not most of the time'으로 빈도 부사구가 중복 충돌하는 seam 어색함이 생겨 논리 이전에 문법감으로 탈락 가능하다(§D '동일 통사 슬롯' 조건 위반 소지)."
+    },
+    {
+      "label": "5",
+      "intent": "예시의 성급한 일반화(scope shift, example→rule) — 네 살 아이 사례를 보편 공식으로 격상",
+      "temptingBecause": "'available to my four-year-old' 예시가 지문에 실제로 존재해 앵커가 있다.",
+      "decisiveFlaw": "지문에서 그 문장은 우선순위를 묻는 수사적 질문일 뿐 '가족이 항상 업무보다 우선'이라는 규칙이 아니다. 'always' 절대어가 소거 단서를 추가로 누출한다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "오답 ② 해설에서 'all rigid schedules'를 '모든 규칙적인 일정'으로 옮겼다. 'rigid'는 '경직된/융통성 없는'이지 '규칙적인(regular)'이 아니어서 번역이 부정확하다. 논지 설명 자체는 유지되므로 minor.",
+      "recommendation": "'모든 경직된 일정'으로 수정."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V2/V3/V4/V5는 통과: 각 선지 독립 검증 결과 정답 집합은 {①} 하나로 유일하고, 완성문(정답 삽입)은 문법적이며, 해설의 구조 분석·오답 대응·keyPoints 인용('value adaptability rather than inflexibility')이 실제 필드와 모두 동기화되어 있다. 그러나 발문의 mojibake('들어��')는 학생 노출 본체의 물리적 손상으로 V1 실패이며, 공예 점수로 상쇄되지 않아 F(출하 금지). 공예 측면: 주제문 스팬을 정확히 겨냥했고(C1=3) 오답 4개가 서로 다른 오독을 나눠 맡았으나(C2=3), ③ 즉시 소거·②⑤ 절대어('all','always') 누출·④ seam 중복으로 실경쟁력과 단서 경제성이 약하고(C3=2, C4=2), 정답이 원문 스팬의 거의 축자적 동의어 치환이라 요청 난이도 INTERMEDIATE 대비 쉬운 편(C5=2). 해설은 정확하고 함정 경고를 분리해 제시하나 minor 번역 오류 1건(C6=3). 수리 방향: 발문 인코딩 복구('들어갈')만으로 V 게이트는 전부 통과 가능하며, 그 경우 합계 15로 C등급(재설계 없이 출하하려면 ②⑤ 절대어 완화와 ④ 빈도 부사구 충돌 해소로 C3·C4 보강 권장). 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

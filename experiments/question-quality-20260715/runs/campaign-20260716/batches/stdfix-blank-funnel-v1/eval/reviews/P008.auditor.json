@@ -1,0 +1,84 @@
+{
+  "pid": "P008",
+  "blindAnswer": "③",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-passage-mischaracterization",
+      "severity": "minor",
+      "evidence": "오답 해설 ⑤의 '글의 핵심 쟁점(동물 복지 vs 동물 권리)의 이분법적 한계를 짚어내는 본문의 인과적 결론'은 부정확한 특성화다. 본문 결론은 권리론의 입장(동물을 자원으로 이해하는 것 자체가 문제)을 진술할 뿐, 복지-권리 이분법의 '한계'를 짚어내지 않는다. 다만 ⑤가 무관하다는 판정 자체는 정확하므로 치명은 아니다."
+    },
+    {
+      "code": "V4-minor-gloss-artifact",
+      "severity": "minor",
+      "evidence": "본해설의 ③ 한국어 대역 '그리하여 동물을 한낱 우리 자신의 목적을 위한 도구로 바라보는 것'에서 '그리하여'는 영문 선지에 대응물이 없는 잉여 삽입어다(번역 아티팩트). 사실 오류는 아니다."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "복지 프레임 잔류(half-truth/scope): 고통 완화라는 복지론의 관심사를 문제의 본질로 격상시키는 함정",
+      "temptingBecause": "지문 4번째 문장의 'human-inflicted pain and other kinds of suffering'과 직접 어휘 중첩; 동물 학대 논의 전체와 표면적으로 부합",
+      "decisiveFlaw": "빈칸 문장 자체가 'not one about treating animals inhumanely'로 고통/비인도적 처우 프레임을 명시적으로 부정하므로, 고통 간과를 넣으면 문장이 자기모순이 된다"
+    },
+    {
+      "label": "②",
+      "intent": "메커니즘 혼동(condition/mechanism): 권리론의 근본 비판을 복지론의 규제 수단 차원으로 끌어내리는 함정",
+      "temptingBecause": "2번째 문장의 'regulate practices such as slaughter'와 어휘 중첩; 'merely tries to curb the worst excesses'의 규제 서사와 연결되어 보임",
+      "decisiveFlaw": "권리론은 규제의 정도·규모가 아니라 사용(use) 자체를 문제 삼는다고 지문이 명시('more fundamental than this'); 규제 실패는 부정된 복지 프레임 내부의 진술이다"
+    },
+    {
+      "label": "③",
+      "intent": "정답: 원문 span 'understanding them as human resources'의 의미 보존 추상화",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음. 직전 문장 'animals are not the kinds of thing that humans should use in this way at all'과 결합해 유일하게 논리가 완성된다"
+    },
+    {
+      "label": "④",
+      "intent": "방향 역전(causal/actor reversal): 실험 관련 키워드를 재활용하되 비판의 방향을 뒤집는 함정",
+      "temptingBecause": "'experimentation/experimental subjects'라는 지문 키워드와 중첩; 권리론이 실험을 반대한다는 인상과 피상적으로 연결됨",
+      "decisiveFlaw": "'유용성을 부인하는 것이 문제'라는 진술은 권리론의 논지(유용성과 무관하게 사용 자체를 반대)와 방향이 반대이며, 빈칸에 넣으면 결론이 지문 전체와 단절된다"
+    },
+    {
+      "label": "⑤",
+      "intent": "표면 앵커 무관 진술(irrelevance): 도입부 키워드를 재활용한 주변부 함정",
+      "temptingBecause": "1번째 문장 'legislation ... for decades, even for centuries'와 어휘 중첩",
+      "decisiveFlaw": "입법의 역사적 발전은 복지-권리 논쟁의 결론과 아무 논리적 연결이 없어 즉시 소거된다; 함정 설계 밀도가 가장 낮다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "오답 해설 ②의 '도축 규모를 규제하지 못했다는 지표는'에서 '지표'는 부적절한 어휘 선택('진술'이 옳음). 어색하지만 사실 오류는 아니다.",
+      "recommendation": "'지표' → '진술'로 교체"
+    },
+    {
+      "severity": "minor",
+      "evidence": "오답 해설 ⑤의 '이분법적 한계를 짚어내는 본문의 인과적 결론'은 본문 결론의 수사적 기능을 잘못 기술한다(결론은 권리론 입장의 진술이지 이분법 비판이 아님).",
+      "recommendation": "'권리론의 근본 주장을 매듭짓는 본문의 결론'류로 교체"
+    },
+    {
+      "severity": "minor",
+      "evidence": "본해설의 ③ 대역에 잉여어 '그리하여'가 삽입되어 있고, 전반적으로 해설이 장식적 표현('인과의 귀결 단계', '학문적으로 재진술')으로 다소 장황하다.",
+      "recommendation": "대역에서 '그리하여' 삭제, 정답 근거(직전 문장의 use 전면 부정 + human resources 재진술)와 함정 구분을 더 간결하게 분리"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 렌더 지문은 마지막 절의 빈칸화 외에 원지문과 완전 일치하고, ③이 유일 정답이며(각 선지 독립 검증 완료), 다섯 선지 모두 동명사구로 동일 통사 슬롯에 들어가 문법 소거가 불가능하고, 필드 동기화도 정상이다. 그러나 요청 난이도 KILLER 대비 실제 난이도가 크게 미달한다: 빈칸 직전 문장('animals are not the kinds of thing that humans should use in this way at all')이 정답을 거의 직접 제공하는 1-스텝 인접 패러프레이즈여서, §D의 KILLER 조건(최소 두 문장/두 논리 단서 연결 필수)을 충족하지 못한다(killerConditionsMet=false). ④·⑤는 즉시 소거되는 약한 선지여서 실질 경쟁은 ①·② 뿐이다(C3=2). 난이도 정합 C5=1, 해설은 정확하나 장황하고 소소한 어휘 결함이 있어 C6=2. 합계 15로 B 기준(최저 2, 합 17) 미달 → C 등급. 재설계 방향: 빈칸을 결론 문장이 아닌 중반 논증부('it merely tries to curb ...' 또는 'more fundamental than this' 위치)로 옮기거나, 정답 추상화 수준을 높여 두 단서 통합을 강제해야 KILLER 라벨에 부합한다."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "J008",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'Garcia stood outside..., waiting for his brother' — present-participle adjunct whose understood subject is Garcia, the subject of 'stood'. Active 'waiting' is the required form; no controller mismatch. Grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'asked Jeff to help him pick out new clothes' — 'help + NP + bare infinitive' is a licensed pattern (alongside 'help him to pick'). 'pick' is well-formed. Grammatical."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'these would look great on my brother' — 'look' is a copular (linking) verb taking an adjectival predicate complement; the adjective 'great' is required, and the adverb 'greatly' would be the error. Grammatical."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect (the answer)",
+      "reason": "'The clerk stopped her work and looked at the clothes, quickly agreed with Jeff's choice.' The VP coordination is already closed by 'and' (stopped ... and looked ...). ', quickly agreed' is a bare finite verb with no subject and no conjunction: it cannot be a third conjunct (*'V1 and V2, V3' after an and-closed pair is ill-formed), cannot be a passive participle of the clerk (agree with is intransitive; *'the clerk (was) agreed with' fails), and cannot be a reduced relative on 'the clothes' (*'clothes agreed with Jeff's choice' is semantically incoherent). The only grammatical form is the present participle 'agreeing', an adjunct predicated of the clerk. Ungrammatical as written."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'everyone fell silent, fascinated by the music' — past-participle adjunct predicated of 'everyone', the experiencer (everyone was fascinated); the by-phrase confirms the passive-participial reading. 'fascinating' would be the error here. Grammatical."
+    }
+  ],
+  "note": "Classic V-ing vs V-ed participle-adjunct item. Exactly one indefensible underline: (D) 'agreed' must be 'agreeing'. All alternative rescues for (D) (asyndetic third conjunct, passive participle, reduced relative on 'the clothes') were tested and fail formally, so the item is clean with a single answer. Sentence-level distractors elsewhere ('His confidence was ... changed', 'each member took their place') are not underlined and do not affect the judgment."
+}

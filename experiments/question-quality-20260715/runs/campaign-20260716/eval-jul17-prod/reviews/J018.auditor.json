@@ -1,0 +1,90 @@
+{
+  "pid": "J018",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V2-minor-presupposition",
+      "severity": "minor",
+      "evidence": "정답 ① 'managed to regain his composure despite the overwhelming crowd'의 'despite the overwhelming crowd'는 관중이 그 자리에 실재함을 전제하지만, 빈칸 시점은 리허설이며 지문은 'he thought of how many people would be there'로 관중을 '예상' 대상으로만 제시한다. 원문 span 'started to feel much better'에는 없는 전제가 추가된 의미 부정확이다. 다만 ①이 유일 최적 선지라는 판단(2·4·5는 극성/인물 오류, 3은 과협소)은 흔들리지 않아 V2 자체는 통과로 유지한다."
+    },
+    {
+      "code": "V4-minor-particle-typo",
+      "severity": "minor",
+      "evidence": "해설의 조사 오류: '②은'은 '②는'(이+는), '③는'은 '③은'(삼+은)이어야 한다. 사실 오류·오개념은 아니고 표기 오류이므로 V4는 통과로 유지한다."
+    },
+    {
+      "code": "V3-note-source-passive",
+      "severity": "minor",
+      "evidence": "'His confidence was, however, quickly changed to nervousness'의 수동태 'was changed'는 다소 부자연스러우나 원지문 자체에 동일하게 존재하므로 렌더 손상이 아니며, 문법적으로 성립한다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 4,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — 원문 span 'started to feel much better'를 '평정심 회복'으로 추상화한 인과 귀결",
+      "temptingBecause": "긴장(nervousness) 설정과 직후의 flawless 연주를 잇는 유일한 긍정 극성 해소이므로 근거가 충분하다",
+      "decisiveFlaw": "정답이므로 없음. 단 'despite the overwhelming crowd'는 리허설 시점에 관중이 부재하다는 점에서 지문이 지지하지 않는 전제를 덧붙인 표현상 흠결"
+    },
+    {
+      "label": "2",
+      "intent": "전반부 의상 에피소드를 차용한 half-truth/소재 전이 함정",
+      "temptingBecause": "새 옷이 자신감의 원천('felt good')으로 제시된 전반부 모티프를 재활용한다",
+      "decisiveFlaw": "빈칸의 국면은 톰의 격려에 따른 심리 전환이며 의상과 무관하고, 'regretted'는 긍정 해소 흐름과 극성이 어긋난다. 'comfortable clothes'라는 표현도 지문에 근거가 없다"
+    },
+    {
+      "label": "3",
+      "intent": "직전 문장의 축자적 단서('struggled with the rhythm')에 낚이게 하는 과협소(scope narrowing) 함정",
+      "temptingBecause": "리듬 실수 직후이므로 기술적 해결책으로 읽으면 서사와 표면상 충돌하지 않는다",
+      "decisiveFlaw": "빈칸의 원인절은 톰의 정서적 지지('I'll be right behind you')와 심호흡이며, 요구되는 귀결은 감정 회복이지 연주 기법 결단이 아니다. 'entirely'의 배타적 초점도 흐름과 부정합"
+    },
+    {
+      "label": "4",
+      "intent": "극성 반전(polarity reversal) 함정",
+      "temptingBecause": "'tension', 'mistakes' 등 리허설 장면의 어휘를 그대로 재사용한다",
+      "decisiveFlaw": "위로→심호흡→(다음 장면) 완벽한 연주로 이어지는 상승 흐름에 정면으로 역행한다"
+    },
+    {
+      "label": "5",
+      "intent": "인물 전도(actor swap) 함정",
+      "temptingBecause": "제프가 서사 전체의 주요 인물이고 말미에 칭찬 모티프가 있다",
+      "decisiveFlaw": "리허설 현장에 제프는 없다(공연 후에야 등장). 'pretended'도 진정한 회복이라는 귀결과 모순"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "조사 오류 '②은'/'③는' (올바른 형태: '②는'/'③은')",
+      "recommendation": "조사 교정"
+    },
+    {
+      "severity": "minor",
+      "evidence": "해설이 정답 선지의 'despite the overwhelming crowd'를 '거대한 관중이 주는 중압감'으로 그대로 승계하여, 리허설 시점 관중 부재라는 시제상 부정확을 교정하지 않고 반복한다",
+      "recommendation": "정답 선지 자체를 'despite the pressure of the anticipated audience' 류로 수정하거나 해설에서 '예상 관중의 중압감'으로 명시"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAudit": {
+    "sameSyntacticSlot": true,
+    "answerPreservesSourceMeaning": "부분 충족 — 'regain his composure'는 'feel much better'의 타당한 추상화이나 'despite the overwhelming crowd'가 원문에 없는 전제를 추가",
+    "distractorAnchorsAndFlaws": true,
+    "requiresMultiCueIntegration": false,
+    "notSolvableBySingleSurfaceCue": false,
+    "evidence": "극성 스캔 하나로 ②·④·⑤가 즉시 소거되어 사실상 ①대③의 2지선다로 붕괴하며, 빈칸 뒤 'Garcia's trumpet playing was flawless'라는 단일 후행 단서만으로 긍정 회복 귀결이 확정된다. §D의 'KILLER는 극성 하나로 정답을 찍을 수 없다' 조건 위반"
+  },
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 렌더 지문은 원지문에서 'started to feel much better'만 빈칸으로 치환한 것 외에 word-level diff상 무손상(338→334어, 블랭크 1개)이고, 정답 라벨·해설·오답 해설(2~5)·keyPoints가 상호 정합한다. 오답 설계는 half-truth/과협소/극성 반전/인물 전도로 함정 유형이 각기 달라 C2는 우수하다. 그러나 치명적 공예 결함은 난이도 정합(C5=1): 요청 난이도 KILLER인데 서사문 감정 회복 빈칸은 극성 판단+직후 성공 장면이라는 표면 단서만으로 풀리는 하~중 난이도다. 애초에 43-45형 장문 서사에 BLANK_INFERENCE를 거는 선택 자체가 킬러 빈칸의 전형(추상 논지 재구성)과 어긋난다. C4=2(극성 누출, 후행 문장의 꼬리 확정), C3=2(실질 경합은 ③ 하나). 등급: 모든 V 통과이나 C5=1로 B 기준(최저 2) 미달 → C. killerConditionsMet=false."
+}

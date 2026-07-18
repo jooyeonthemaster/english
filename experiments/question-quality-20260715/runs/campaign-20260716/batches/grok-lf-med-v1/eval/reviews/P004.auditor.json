@@ -1,0 +1,81 @@
+{
+  "pid": "P004",
+  "validity": {
+    "V1": true,
+    "V2": false,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V2-DUAL-ANSWER",
+      "severity": "critical",
+      "evidence": "렌더 문장 'In highly expressionist works, novel stylistic devices working in an inharmonious manner against the subject matter thereby creating a disquieting atmosphere.'에는 정동사가 없다. (C) working→work 로 고치면 원문이 복원되지만, (D) creating→create 로 고쳐도 'novel stylistic devices working ... against the subject matter thereby create a disquieting atmosphere'라는 완전한 문법 문장(분사 후치수식 주어 + 정동사 create)이 되며 의미도 원문과 동일하게 성립한다. 밑줄별 독립 판정 규약(나머지를 고정하고 해당 밑줄만 평가)에서 (C)와 (D) 모두 '어법상 틀린 것'으로 성립하므로 단일정답형인데 실제 정답 집합이 {C, D} — 복수정답 결함."
+    },
+    {
+      "code": "V4-TERM-MISANALYSIS",
+      "severity": "major",
+      "evidence": "(B) 오답 해설이 'the role of background style is to facilitate ...'의 to부정사를 'be + to-V 용법의 부정사로 역할·목적을 나타냅니다'라고 설명한다. 이 to facilitate 는 be동사의 보어로 쓰인 명사적 용법(주격 보어)이며, 한국 학교문법에서 'be to 용법'은 예정·의무·가능·운명·의도를 나타내는 별개 구문이고 '목적'은 부사적 용법의 범주다. 실제 문장 구조와 일치하지 않는 용어 오분석."
+    },
+    {
+      "code": "V4-UNIQUENESS-DEFENSE-GAP",
+      "severity": "major",
+      "evidence": "정답 해설이 '뒤에 이어진 thereby creating을 분사구문으로 달리 해석하더라도 주절 정동사 부재 문제는 해소되지 않습니다'라고 하여 약한 대안만 반박하고, 결정적 대안 교정인 (D) creating→create(이 경우 working은 후치수식 분사로 적법)를 전혀 다루지 않는다. (C) 유일성 논증이 해설 안에서 성립하지 않으며, '(C)만 틀렸다'는 서술은 실제 문장 사실과 어긋난다."
+    },
+    {
+      "code": "KILLER-POINT-COVERAGE",
+      "severity": "minor",
+      "evidence": "keyPoints 가 (C), (A), (D) 세 밑줄만 다루고 (B), (E)는 누락. RUBRIC §C 'KILLER는 5개 밑줄 각각에 point·why tempting·why correct/incorrect 존재' 요건 미충족(오답 해설도 why-correct만 있고 why-tempting 층위는 없음)."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 1,
+    "C5": 2,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "주격 관계대명사 that — 선행사(subject matter)와 관계절 동사(resembles)의 연결·수일치 판단",
+      "temptingBecause": "that 뒤 resembles 의 단수형이 everyday life 와의 거리 때문에 수일치 착시를 일으킬 수 있음",
+      "decisiveFlaw": "선행사 subject matter(단수 취급 불가산)를 받는 주격 관계대명사로 resembles 와 정확히 호응 — 관계절이 온전하여 소거가 빠른 약한 디코이"
+    },
+    {
+      "label": "(B)",
+      "intent": "be동사 보어 자리의 to부정사 형태 판단(to-V vs V-ing vs 원형)",
+      "temptingBecause": "'the role is to-V' 구조에서 facilitating 등 동명사 대체 가능성을 저울질하게 함",
+      "decisiveFlaw": "보어 자리 to부정사는 표준 어법('the role is to facilitate')이므로 오류 아님 — 다만 해설이 이를 'be + to-V 용법·목적'으로 오분석함"
+    },
+    {
+      "label": "(C)",
+      "intent": "정동사 vs 준동사 — 주절 술어 자리에 정동사 필요(선언된 정답)",
+      "temptingBecause": "working 이 devices 를 수식하는 분사처럼 읽혀 문장 골격 붕괴를 놓치기 쉬움",
+      "decisiveFlaw": "문장에 정동사가 없어 working→work 교정 시 원문 복원 — 단, 동일 문장의 (D) creating→create 교정으로도 문법 문장이 성립하여 유일 정답이 아님(복수정답 결함)"
+    },
+    {
+      "label": "(D)",
+      "intent": "thereby + 현재분사(결과 분사구문)의 적법성 판단 디코이",
+      "temptingBecause": "문장에 정동사가 없다는 것을 감지한 학생이 이 자리를 정동사로 고쳐야 한다고 판단할 수 있음 — 그리고 그 판단이 실제로 문법적으로 성립함",
+      "decisiveFlaw": "디코이로서 결함: creating→create 로 고치면 'devices working ... thereby create ...'가 완전한 문법 문장이 되어 (C)와 대등한 정답 후보가 됨. '(C) 교정 후에는 thereby creating 분사구문이 적법'이라는 출제 의도는 밑줄별 독립 판정 규약에서 유일성을 보장하지 못함"
+    },
+    {
+      "label": "(E)",
+      "intent": "능동/수동 판별 — is needed 의 과거분사",
+      "temptingBecause": "an aesthetic attitude is needed to appreciate 에서 needing/need to 능동 구조와의 혼동 유도",
+      "decisiveFlaw": "attitude 는 '필요로 되는' 대상이므로 수동 is needed 가 정확 — 소거가 빠른 약한 디코이"
+    }
+  ],
+  "explanationIssues": [
+    "(B) 해설: 보어로 쓰인 명사적 용법 to부정사를 'be + to-V 용법'·'역할·목적을 나타내는' 부정사로 오분류 — be to 용법(예정·의무·가능)도 부사적 목적 용법도 아님",
+    "정답 해설: 'thereby creating 분사구문 재해석' 대안만 반박하고 creating→create 교정 대안을 누락 — (C) 유일성 논증 실패",
+    "오답 해설이 why-correct 층위만 제공하고 why-tempting(왜 매력적인지) 층위가 없음 — KILLER 요건상 5개 밑줄 각각의 함정 설계 설명이 필요",
+    "keyPoints 가 (B), (E)를 누락하여 밑줄 5개 중 3개만 커버"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1 통과: 렌더 지문은 원지문 대비 (C) work→working 단일 의도 변형 외 손상 없음, 라벨·마커·선지 일치, markedExpressions 내부 규약(expression=원문형, errorExpression=표시형)도 일관. V3 통과: 의도된 (C) 비문 외 지문·발문·교정 완성문 모두 문법적. V5 통과: 정답 라벨 (C)가 선언·해설·isError 플래그에서 일치, 오답 해설 키 {A,B,D,E} 정확. 치명 결함은 V2: 한 문장 안에 준동사 밑줄 (C)·(D)가 공존하고 문장에 정동사가 없어 어느 쪽을 정동사로 복원해도 문법 문장이 되는 전형적 복수정답 구조. KILLER 조건 판정: 정답 포인트가 '명확한 문법 판단'이 아니라 교정 위치 선택의 문제가 되었고(§C 위반), 정답과 같은 정동사/준동사 계열의 디코이 (D)가 정답을 가리는 정도를 넘어 대등한 정답이 되며(§C '쉬운 디코이가 정답을 가리지 않는다' 위반), 5개 밑줄 point 완비 요건도 미충족 — killerConditionsMet=false. 공예: 정동사 부재 감지 자체는 정전급 포인트(C1=3)이나, (A)(B)(E)가 즉시 소거되는 약한 디코이라 실질 경쟁은 (C)/(D) 두 개뿐이고 그 경쟁이 결함에서 나옴(C3=2), 정답의 필연성 상실(C4=1), KILLER 라벨 대비 함정 깊이 부족(C5=2), 해설은 간결하나 오분석·논증 공백 포함(C6=2). 수리 방향: (D) 밑줄을 같은 문장 밖의 다른 포인트로 이동하거나, (C)/(D) 중 하나만 밑줄로 남겨 정동사 부재의 유일 교정 지점을 보장해야 함."
+}

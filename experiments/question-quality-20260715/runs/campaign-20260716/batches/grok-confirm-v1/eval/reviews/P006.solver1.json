@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "'until it becomes an outcome refined by expert communities' — 문법 결합(becomes + NP) 자연스럽고, 직전 문장 'knowledge isn't knowledge unless it has been authorized by disciplinary specialists'의 직접 패러프레이즈. 빈칸 뒤 'What happens in somebody's laboratory is only one stage in its construction'(실험실은 한 단계일 뿐)과 정확히 호응 — 전문가 공동체의 정제라는 후속 단계를 요구하는 논리와 일치."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "지문 2문장의 'inspired patience, of skilled hands'를 그대로 재활용한 표면 어휘 미끼. 그러나 이는 지문이 반박하는 개인주의적 수사이고, 'alone'은 'only one stage in its construction'과 정면 모순. 어휘 견인력은 실제로 느껴지나(지문 단어가 그대로 등장) 논리적으로는 주장의 반대. 가장 매력적인 오답."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "'speaks for itself'는 지문이 명시적으로 해체하는 주장('nature does not speak unambiguously'로 반박됨)의 재활용. 'private'도 전문가 공동체 인증 논리와 정반대. 에코 미끼일 뿐 논리 역방향."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "기자회견 우선 발표는 지문에서 'automatically castigated as a publicity seeker'라며 명시적으로 비난되는 행위. 직접 모순으로 즉시 배제."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "'unbiased mind'와 'nature'를 재활용한 미끼. 'straight from nature'는 'nature does not speak unambiguously'와 정면 충돌. 문법 결합(becomes + 자유관계절)은 성립하나 개인주의적 관점의 재진술이라 논리 부적합."
+    }
+  ],
+  "note": "빈칸의 지배 논리는 (a) 직전 문장 'authorized by disciplinary specialists'와 (b) 직후 문장 'only one stage in its construction'의 협공으로 유일하게 결정된다. 오답 4개(2,3,5는 개인주의 수사 재활용, 4는 명시적 비난 대상)가 모두 지문 어휘를 표면 재활용하는 에코 미끼로 설계되어 있으나 논리 방향이 전부 반대라 최상위권 기준 변별 난도는 중간. 대안 해석으로 구제되는 선지 없음. 유일 정답 1."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "(A)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(A)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "WRONG (this is the error)",
+      "reason": "Frame: 'can, in principle, be very precise targeted to the policy's environmental objectives.' The modified head is the passive participle 'targeted' (be + targeted to X, passive of 'target A to B'), so the degree modifier must be the adverb 'precisely' (very precisely targeted). Rescue parses fail formally: (i) reading 'be very precise' as a copular predicate with 'targeted to...' as an appended reduced participle would require a comma and still leaves the participle phrase without a licensing structure; (ii) an adjective cannot premodify an adjectival participle ('precise targeted' is not a licit AdjP). Hence 'precise' is ungrammatical here; 'precisely' is required."
+    },
+    {
+      "label": "(B)",
+      "verdict": "CORRECT",
+      "reason": "'has an incentive to reduce emissions': the noun 'incentive' canonically licenses an infinitival complement (incentive to V). Well-formed."
+    },
+    {
+      "label": "(C)",
+      "verdict": "CORRECT",
+      "reason": "'in any manner that is less costly per unit of abatement than the tax on each unit of residual emissions': relative 'that' has the singular antecedent 'any manner', so singular 'is' agrees. No intervening plural distractor changes the antecedent."
+    },
+    {
+      "label": "(D)",
+      "verdict": "CORRECT",
+      "reason": "'the actions [the polluter can take to reduce tax liability] are actions that also reduce emissions': the true subject of the embedded that-clause is plural 'the actions', with a reduced object relative intervening; plural 'are' is correct. The singular matrix 'The great attraction ... is that ...' belongs to a different clause and does not govern this verb."
+    },
+    {
+      "label": "(E)",
+      "verdict": "CORRECT",
+      "reason": "'particularly where there are many separate sources of emissions': 'where' as a subordinating conjunction meaning 'in cases/situations in which' is standard academic usage; existential 'there are' agrees with plural 'sources'."
+    }
+  ],
+  "note": "Clean single-error item. (A) is formally provable as ungrammatical (adjective in an adverb slot modifying a passive participle); all other underlines survive adversarial alternative-parse checks (reduced relatives, participial appositives, long-distance agreement). No second defensible answer found."
+}

@@ -1,0 +1,105 @@
+{
+  "pid": "J013",
+  "blindAnswer": "5",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-OK",
+      "severity": "info",
+      "evidence": "렌더 지문은 원지문과 완전 일치하며, 유일한 변형은 마지막 문장의 'think of taxing measured emissions in a wider range of applications'를 '_____'로 치환한 의도된 빈칸뿐이다. 문장 접합 파손·중복·누락·고아 문장부호 없음. 선지 라벨 1~5와 정답 라벨 5, 오답 해설 키 1~4 모두 일치."
+    },
+    {
+      "code": "V2-OK",
+      "severity": "info",
+      "evidence": "각 선지 독립 검증: ①은 '재정 부담 완화가 배출을 늘린다'로 지문의 '세금 회피 행동 = 배출 저감 행동' 논리와 정면 모순. ②는 'Nevertheless' 이후 낙관적 전환(기술 급속 발전)과 모순되는 세금 폐지 결론. ③은 측정 기반 직접 과세로의 확장이라는 지문 방향과 정반대인 일괄 과세 전환. ④는 저감(abatement)에 중과세해 기술 투자를 위축시킨다는 내용으로 지문에 근거 없음·논지 모순. ⑤만이 원 span('taxing measured emissions in a wider range of applications')의 의미를 보존하며 유일 정답."
+    },
+    {
+      "code": "V3-OK",
+      "severity": "info",
+      "evidence": "다섯 선지 모두 'it may be possible to + 동사원형' 슬롯에 문법적으로 들어간다. 정답 완성문 'In the future, it may be possible to expand the implementation of emission-based environmental levies across broader areas.'는 문법적이다. 'expand ... across broader areas'는 의미상 약간 중복이나 비문은 아님(minor)."
+    },
+    {
+      "code": "V4-MINOR",
+      "severity": "minor",
+      "evidence": "해설 본문의 논리 전개(비례 과세 유인 → 측정 비용이 도입 저해 → 기술 급속 발전 → 광범위 적용 귀결)는 지문과 일치. 다만 오답 해설 1이 '기술 발전이 배출량을 늘린다는 인과 역전'으로 기술했는데, 선지 ①의 실제 내용은 '재정 부담 완화가 배출 증가를 부지불식간에 조장한다'이므로 인과 주체 서술이 다소 부정확하다(환각 수준은 아니며 완성문 맥락에서는 방어 가능). 또 '극심한 비용 문제'는 지문의 'can be costly / major disincentive'보다 강한 표현이나 오설명은 아님."
+    },
+    {
+      "code": "V5-OK",
+      "severity": "info",
+      "evidence": "선언 정답 5 = 해설의 ⑤ = 선지 5 존재. 오답 해설 키 {1,2,3,4}가 실제 오답 집합과 일치. keyPoints 3개 모두 지문 내용과 정합(유인 구조·측정 비용 장벽·기술 발전에 따른 확대 적용)."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 1,
+    "C4": 1,
+    "C5": 0,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "인과 역전 + half-truth (tax liability/financial burden 소재 재활용)",
+      "temptingBecause": "'financial burden on polluters'가 지문의 'pays additional tax', 'reduce tax liability'와 어휘적으로 겹쳐 소재 친숙성이 있다.",
+      "decisiveFlaw": "지문의 핵심 논리는 '세금 부담을 줄이는 행동이 곧 배출을 줄이는 행동'인데, 이 선지는 부담 완화가 배출 증가를 조장한다고 하여 논리를 정면으로 뒤집는다. 결론 자리의 낙관적 극성과도 불일치."
+    },
+    {
+      "label": "2",
+      "intent": "극성 반전 + 과확장 (측정 비용 concession을 앵커로 사용)",
+      "temptingBecause": "'overly complex monitoring mechanisms'가 5번째 문장의 '측정 비용이 직접 과세의 major disincentive'라는 concession과 겹친다. 앞부분만 읽은 학생을 노린다.",
+      "decisiveFlaw": "'Nevertheless' 이후 기술이 급속 발전한다는 반전이 있으므로 세금 완전 폐지는 결론과 정반대. 극성만으로도 즉시 소거된다."
+    },
+    {
+      "label": "3",
+      "intent": "기제 전환(mechanism swap) — 측정 기반 과세 포기",
+      "temptingBecause": "'direct emission monitoring', 'taxation' 등 지문 핵심 어휘를 그대로 차용하여 표면 겹침이 크다.",
+      "decisiveFlaw": "지문은 측정 기술 발전이 '측정 배출량 과세'의 적용 확대를 가능케 한다는 방향인데, 이 선지는 측정을 버리고 일괄 과세로 간다는 정반대 방향. 역시 부정적 극성으로 즉시 소거 가능."
+    },
+    {
+      "label": "4",
+      "intent": "인과 역전 + 키워드 재조합 (abatement/tax/technological)",
+      "temptingBecause": "'abatement', 'taxes', 'technological' 등 지문 빈출 키워드를 재조합해 훑어 읽는 학생에게 그럴듯해 보인다.",
+      "decisiveFlaw": "지문 어디에도 저감 행위에 중과세한다는 내용이 없고, 기술 발전을 긍정하는 결론 자리와 극성이 반대. 즉시 소거."
+    },
+    {
+      "label": "5",
+      "intent": "정답 — 원 span의 paraphrase",
+      "temptingBecause": "(정답) 'taxing measured emissions' → 'emission-based environmental levies', 'a wider range of applications' → 'across broader areas'로 치환.",
+      "decisiveFlaw": "없음. 다만 감사 관점에서: 원 span과 구조·의미가 거의 1:1 대응하는 저추상화 paraphrase이며, 5개 중 유일한 긍정 극성 선지라 극성 단서 하나로 선택 가능하다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "EXP-1-MISATTRIBUTION",
+      "severity": "minor",
+      "evidence": "오답 해설 1: '기술 발전이 배출량을 늘린다는 인과 역전' — 선지 ①의 실제 명제는 '오염자 재정 부담 완화 → 배출 증가 조장'이므로 인과의 주어를 잘못 짚었다. 완성문 맥락(미래=기술 발전한 미래)으로 간신히 방어 가능한 수준의 부정확성."
+    },
+    {
+      "code": "EXP-REDUNDANCY",
+      "severity": "minor",
+      "evidence": "②·③에 대한 오답 설명이 본 해설과 오답 해설에 중복 수록되어 있어 간결성이 떨어진다. '논리 붕괴', '과확장/극성 반전' 등 용어가 다소 장식적."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAudit": {
+    "sameSyntacticSlot": true,
+    "answerPreservesSourceMeaning": true,
+    "answerAbstractionAdequate": false,
+    "distractorsHaveAnchorOverlapFlaw": "partial — 각 오답에 source anchor와 표면 겹침은 있으나 decisive flaw가 2·3·4에서 사실상 동일(결론 극성 반전)",
+    "requiresTwoCueIntegration": false,
+    "notSolvableBySinglePolarityCue": false,
+    "distractorTrapDiversity": false,
+    "evidence": "정답 ⑤만이 유일한 긍정 극성 선지이고 ①~④는 전부 지문 논지에 부정적/파괴적이어서, 'Nevertheless' 문장 하나 또는 극성 감각만으로 정답 선택이 가능하다. §D의 'KILLER는 최소 두 문장/두 논리 단서를 연결해야 하며 극성 하나로 찍을 수 없다' 조건 위반. 또한 정답이 제거된 원 span의 저추상화 근사 복원이라 '난이도에 맞는 추상화' 조건도 미충족. 오답 함정 유형도 scope shift/half-truth/actor swap 등으로 분화되지 못하고 극성 반전에 편중."
+  },
+  "grade": "C",
+  "notes": "유효성(V1~V5)은 전부 통과하는 건전한 문항이나, 요청 난이도 KILLER와의 정합이 완전히 무너졌다. (1) 정답이 유일한 긍정 극성 선지라 극성 단서 하나로 풀리고(C3=1, C4=1), (2) 정답 선지가 원문 마지막 span의 거의 직역 수준 paraphrase라 추상화 부족(C4), (3) 오답 2·3·4의 결정적 결함이 모두 '결론 극성 반전'으로 수렴해 함정 다양성이 낮으며(C2=2), (4) 결과적으로 실제 체감 난이도는 중하 수준으로 KILLER 라벨과 불일치(C5=0). 재설계 방향: 오답 중 최소 2개를 긍정 극성이되 scope shift(예: '모든 오염원에 즉시 의무화'), half-truth(예: '측정 비용 자체를 제거'), condition loss 유형으로 교체하고, 정답을 한 단계 더 추상화(예: 기술-제도 관계를 일반화한 표현)해야 한다. C 합계 9/24, V 전 통과이므로 F는 아니나 KILLER 슬롯 출하 불가."
+}

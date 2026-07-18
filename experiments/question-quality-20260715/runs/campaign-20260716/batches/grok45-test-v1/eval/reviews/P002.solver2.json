@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "문법 seam: 'most of what we call parenting hinges more on A than on B'는 주어(most of what...) 단수 + hinges 일치, more...than 병렬(guiding.../mastering...) 모두 성립하는 정문. 그러나 논리적으로 명제가 지문과 정확히 역방향이다. 지문의 핵심 명제는 'managing OUR OWN emotions and actions is what allows us to feel peaceful' / 'Parenting isn't about what our child does, but about how we respond'로, 자기 반응의 통제(mastering our own responses)가 우선항이다. 이 선지는 '아이의 감정을 진정시키는 것 > 자기 반응 통제'라고 비교 우열을 뒤집었으므로 지문 논리와 모순. 반증: 지문 'we can't control our children... but we can always control our own actions'가 아이 쪽 통제 불가능성을 명시한다."
+    },
+    {
+      "label": "2",
+      "verdict": "accept",
+      "reason": "문법 seam: 'most of what we call parenting consists less in correcting the child's conduct than in regulating the self' — consist in + 추상명사(동명사) 구문은 정문이고, less in X than in Y의 병렬 시작점(in + 동명사구)이 정확히 대응한다. 단수 주어(most of what...)와 consists 수일치 성립. 논리: 지문의 이항 대립 'not about what our child does, but about how we respond'(아이의 행위 교정 < 자기 조절)와 형식적으로 동형(isomorphic)이다. 빈칸 뒤 'requires that we grow, too', 'This inner growth is the hardest work'가 regulating the self를 재진술하며, 'we can notice when we lose equilibrium and steer ourselves back on track'이 자기 조절의 구체 사례로 후행 지지한다. 유일하게 비교 방향·행위 주체·시점이 모두 지문과 일치."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "문법 seam: 'is less about A than about B' 병렬은 정문. 그러나 두 항 모두 지문과 충돌한다. (i) 지문은 'Staying calm enough to respond constructively... requires that we grow'로 압박 상황에서의 건설적 응답(constructive replies under pressure)을 핵심 과업으로 격상시키는데, 이 선지는 그것을 열등항으로 놓았다. (ii) 우월항으로 놓은 'shielding kids from hard obstacles'는 지문 'we can't control... the obstacles they will face'와 직접 모순 — 장애물 차단은 통제 불가 영역으로 명시되어 있다. 이중 반전으로 논리 성립 불가."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "문법 seam: 'unfolds within the parent chiefly once childish storms have already passed' — unfold 자동사 + once 시간절, 정문. 전반부 'unfolds within the parent'는 지문 취지(내적 성장)와 부합하나, 'chiefly once storms have already passed'라는 시점 한정이 오류다. 지문은 'When a storm brews, a parent's response will either calm it or trigger a tsunami'와 'use those times when our buttons get pushed to reflect'로, 부모의 작업이 폭풍 도중(실시간 반응·성찰)에 일어난다고 명시한다. 사후(post hoc) 시점 왜곡으로 반증됨. 매력적 오답이지만 시간 한정사가 논리를 파괴한다."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "문법 seam: 'matters mainly as parents model peace while the growth remains the child's task' — as절+while절 결합이 다소 어색하나(as의 이유/양태 중의성) 비문은 아니다. 논리: 후반부 'the growth remains the child's task'가 지문 'requires that we grow, too'와 'This inner growth is the hardest work there is, but it's what enables YOU to become a more peaceful parent'에 정면 모순 — 성장의 주체는 명시적으로 부모다. 행위 주체 전도(agent swap)로 반증됨."
+    }
+  ],
+  "note": "렌즈: 문법가/논리학자. 지문의 지배 명제는 대조 구문 'Parenting isn't about what our child does, but about how we respond'이며, 빈칸 문장은 'In fact'로 이를 강화 재진술하는 위치다. 따라서 빈칸은 [아이 행위 교정 < 부모 자기 조절] 방향의 비교 구문이어야 한다. ②만이 비교 방향(less A than B), 행위 주체(부모 자신), 시점(폭풍 도중 실시간)을 모두 보존한다. ①③은 비교 방향 반전, ④는 시점 왜곡(사후로 한정), ⑤는 성장 주체 전도. 모든 선지가 문법적으로는 빈칸에 결합 가능하므로(seam 무결) 변별은 순수하게 논리 층위에서 이루어지며, 단일 정답 ②로 수렴한다. 복수 정답 여지 없음."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "정답 성립",
+      "reason": "삽입 시 'reminds the viewer that viewers must adopt a contemplative aesthetic orientation (in order) to appreciate the whole episode'로 목적 부정사가 adopt를 통제어로 자연 결합해 문법 seam이 완전하다. 논리적으로도 다음 문장의 대용어 'This active involvement'가 지시할 수 있는 유일한 능동적 행위(관조적 미적 태도의 채택)이며, 마지막 문장의 'aesthetic attitude'와 정합. 표현주의 작품의 낮은 가독성 → 관습 이탈 → 능동적 미적 태도 요구라는 지문 논증 구조에 정확히 부합한다."
+    },
+    {
+      "label": "2",
+      "verdict": "오답",
+      "reason": "문법 seam은 성립하나 논리 모순. '소재가 일상 경험에 가까워야 한다'는 재현적(representational) 작품 쪽 규범으로, 관습 형식에서 이탈한 표현주의 작품이 관람자에게 상기시키는 내용일 수 없다. 또한 관람자의 행위가 아니므로 'This active involvement'의 지시 대상이 되지 못한다."
+    },
+    {
+      "label": "3",
+      "verdict": "오답",
+      "reason": "지문은 즐거움과 불확실성이 관람자를 이끄는 것을 '가독성 높은' 재현적 작품의 특징으로 한정하므로 'pleasure alone can carry readers to the end'는 표현주의 맥락에서 정면 모순이다. 수동적 과정이라 'active involvement'와도 불일치. 결합 면에서도 'to the end to appreciate...'처럼 목적 부정사의 통제 구조가 겹쳐 어색한 퇴화 seam이 된다."
+    },
+    {
+      "label": "4",
+      "verdict": "오답",
+      "reason": "마지막 문장(switch/balanced life) 어휘를 재조합한 미끼. 'switching attitudes becomes a lifelong balanced agenda to appreciate the whole episode'는 목적 부정사의 통제어가 없어(agenda가 appreciate의 의미상 주어가 될 수 없음) seam이 붕괴한다. 논리적으로도 개별 작품의 관습 이탈이 '평생의 의제'를 상기시킨다는 것은 국소 논증(이 작품을 감상하기 위해 무엇이 필요한가)과 층위가 어긋난 범주 오류다."
+    },
+    {
+      "label": "5",
+      "verdict": "오답",
+      "reason": "'스타일이 조용히 심성모형 구축을 지원해야 한다'는 재현적 작품의 정의를 그대로 옮긴 것으로, 표현주의 작품에서 스타일은 소재와 부조화하게 작동한다고 명시된 지문 내용과 정반대. 관습 이탈이 상기시키는 내용으로 논리적으로 성립 불가하며 'active involvement' 대용 관계도 실패한다."
+    }
+  ],
+  "note": "빈칸 문장의 결정적 장거리 단서는 직후 문장의 대용어 'This active involvement' — 빈칸 내용은 관람자의 능동적 행위여야 한다. 이 제약과 목적 부정사 'to appreciate the whole episode'의 통제어 결합을 동시에 만족하는 선지는 1번뿐. 2·5는 재현적 작품 쪽 명제를 표현주의 맥락에 놓은 극성 반전 오답, 3은 지문이 명시적으로 한정한 조건을 위반, 4는 결론 문장 어휘 재조합 미끼로 seam 자체가 붕괴. 복수 정답 여지 없음. 지문은 Cupchik 계열 미학 텍스트(pragmatic/aesthetic attitude) 기반으로 보이며 원문 취지와도 1번이 일치한다."
+}

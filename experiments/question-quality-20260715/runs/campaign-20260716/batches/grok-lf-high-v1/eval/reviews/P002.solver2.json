@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) to seek",
+      "verdict": "correct",
+      "reason": "지배 규칙: 'a tendency + to-부정사'. 'There is a tendency ... to seek X in Y'에서 to seek은 명사 tendency를 후치 수식하는 to부정사로 표준 결합이다. 'seek A in B'(A를 B에서 찾다) 연어도 성립하며, 삽입구 'once the dust ... settled down'이 tendency와 to seek 사이에 끼어 있을 뿐 구조는 온전하다. 정문."
+    },
+    {
+      "label": "(B) derive",
+      "verdict": "correct",
+      "reason": "지배 규칙: 부분 표현 'a large part of + N'의 수일치는 of 뒤 명사의 의미 구성에 따른다. population은 집합명사로, 구성원 개개인을 지시할 때 복수 호응이 가능하다(특히 영국식 용법). 같은 절의 대명사 'their livelihood'가 복수 해석을 명시적으로 확정하므로 derive(복수)는 내적으로 일관된 정문이다. 미국식 엄격 일치로는 derives도 가능하나, 복수 호응이 비문이 되는 것은 아니므로 오답(틀린 것)으로 판정할 수 없다. 경계 사례이긴 하나 옹호 가능한 정문."
+    },
+    {
+      "label": "(C) involving",
+      "verdict": "correct",
+      "reason": "지배 규칙: 현재분사의 명사 후치 수식. 'mechanisms involving direct public intervention' = 'mechanisms that involve ...'의 축약 관계절. mechanisms(주체)가 involve(포함하다)의 능동 주체이므로 능동 현재분사가 옳다. 정문."
+    },
+    {
+      "label": "(D) explains",
+      "verdict": "correct",
+      "reason": "지배 규칙: 주어 핵 명사와의 수일치. 주어는 'Rapid growth [of the economy in Botswana], or [of the agricultural sector in Kenya], or [of food production in Zimbabwe]'로, or로 병렬된 것은 of-전치사구들일 뿐 핵 명사는 단수 growth 하나다. 설령 'growth or growth or growth'의 or-병렬로 보더라도 or 병렬은 최근접(단수) 일치이므로 어느 분석에서도 단수 explains가 옳다. 정문."
+    },
+    {
+      "label": "(E) lying",
+      "verdict": "incorrect",
+      "reason": "지배 규칙: 문장은 정형(finite) 동사를 요구한다. 'The real achievements of these countries lying in having provided ...'에서 lying을 취하면 문장 전체에 정형 동사가 없어 단편(fragment)이 된다. 대안 해석 전수 점검: (i) 축약 관계절('achievements [that are] lying in ...')로 보면 전체가 술어 없는 명사구로 남아 여전히 단편, (ii) 분사구문으로 보면 주절이 부재, (iii) 도치나 생략 구문으로 구제할 요소도 없다. lie in(~에 있다)은 상태동사로 진행형 자체도 부자연스럽다. 정형 동사 lie(복수 주어 achievements 일치)로 바꿔야 한다. 어법상 틀림."
+    }
+  ],
+  "note": "정답은 (E)가 유일하게 옹호 가능. (E)는 문장에 정형 동사를 남기지 않는 범주적 비문(단편)이어서 논쟁의 여지가 없다. 유일한 회색지대는 (B)로, 미국식 엄격 수일치를 기계적으로 적용하면 'a large part of the population derives'를 요구한다고 주장할 수 있으나, population의 집합명사 복수 호응(영국식 표준)과 동일 절의 'their livelihood'가 복수 해석을 확정하므로 (B)를 비문으로 모는 것은 성립하지 않는다. 원전(Dreze & Sen 계열 텍스트)에서도 derive가 원문 표기로 알려져 있다. 따라서 이중정답 위험은 낮으나, 엄격 일치만 배운 수험생이 (B)를 고를 매력적 오답 소지는 있다."
+}

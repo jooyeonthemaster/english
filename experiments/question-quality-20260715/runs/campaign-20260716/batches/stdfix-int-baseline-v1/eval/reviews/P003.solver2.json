@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) showing",
+      "verdict": "correct",
+      "reason": "'did an experiment showing (that) human perception and behavior can be influenced...' — 현재분사 showing이 an experiment를 후치 수식하는 축약 관계절(= an experiment that showed/shows ...)로 성립한다. show 뒤의 접속사 that 생략도 정문. 지배 규칙: 명사(experiment)와 능동 관계(실험이 '보여주는' 주체)이므로 현재분사가 옳다. 문장의 정형동사 did가 이미 존재하므로 분사 형태에 문제 없음."
+    },
+    {
+      "label": "(B) asked",
+      "verdict": "correct",
+      "reason": "'He presented them with a list of words and asked them to create ...' — 병렬 시작점은 정형 과거동사 presented이며, and 뒤의 asked가 같은 주어 He에 걸리는 과거 정형동사로 병렬을 이룬다. ask + 목적어 + to부정사 보문 구조도 정문. 시제·병렬 모두 성립."
+    },
+    {
+      "label": "(C) was",
+      "verdict": "correct",
+      "reason": "'One of the lists was \"DOWN SAT ...\"' — 진짜 주어는 One(단수)이고 of the lists는 전치사구 수식어이므로 단수 동사 was가 옳다. 인접 복수명사 lists에 의한 견인(attraction)을 노린 함정이나, 주어-동사 수일치는 One 기준으로 성립."
+    },
+    {
+      "label": "(D) exposed",
+      "verdict": "correct",
+      "reason": "'Those students who had been exposed to an \"elderly\" mix of words' — expose A to B의 수동태 be exposed to로, 학생들이 단어에 '노출되는' 피동 관계이므로 과거분사 exposed가 옳다. 관계절 선행사 students와 수동 의미 관계 성립. 같은 문장 뒤쪽의 'those who had been exposed to \"random\" words'와도 정합."
+    },
+    {
+      "label": "(E) taking",
+      "verdict": "incorrect",
+      "reason": "문장 'Those students who had been exposed to an \"elderly\" mix of words taking almost 40 percent longer to walk down the hall than those ...'에서 주어 Those students (+관계절 who had been exposed ...)에 대응하는 정형동사(finite verb)가 없다. taking을 분사로 읽으면 문장 전체가 주어부만 있는 비문(fragment)이 된다. 대안 해석 검토: (1) taking을 students 수식 분사로 보아도 본동사 부재는 해소되지 않음, (2) 분사구문/독립분사구문으로 보아도 주절 정형동사가 여전히 없음, (3) 도치·생략 구문으로 구제할 근거 없음. 유일한 정문화 방법은 taking → took (과거 정형동사)이며, 앞 문장 'What he found was extraordinary'의 서사 과거 시제와도 일치한다. 따라서 어법상 틀린 것은 (E)."
+    }
+  ],
+  "note": "정답이 (E)로 유일하게 좁혀진다. 핵심 함정 구조: 주어와 본동사 사이에 긴 관계절(who had been exposed to an 'elderly' mix of words)을 삽입해 정형동사 부재를 가리는 전형적 수능 어법 포인트. (A)~(D)는 각각 축약 관계절, 병렬, one of + 복수명사 수일치, 수동 분사로 모두 형식적으로 정문임을 확인했다. 복수 정답 여지 없음."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P008",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) to think",
+      "verdict": "correct",
+      "reason": "learn licenses a to-infinitive complement (learn to think through ethical issues). The following 'rather than follow' pairs the to-infinitive with a bare-infinitive conjunct, a standard licensed pattern after 'rather than'. No agreement, form, or parallelism violation."
+    },
+    {
+      "label": "(B) are considered",
+      "verdict": "correct",
+      "reason": "Relative 'that' takes plural head 'principles' (the 'of conduct' PP does not shift the head noun), so plural 'are' agrees. 'consider O correct' passivizes regularly to 'are considered correct' with the object complement retained. Grammatical."
+    },
+    {
+      "label": "(C) What",
+      "verdict": "correct",
+      "reason": "'values' lacks an object, so a fused (free) relative 'What a person values' is required; plain 'That' introducing a complete complement clause would leave 'values' objectless and fail. The free relative serves as subject and correctly takes singular 'relates'."
+    },
+    {
+      "label": "(D) influenced",
+      "verdict": "correct",
+      "reason": "Reduced relative: 'beliefs (which are) influenced by their ... learning experiences'. 'beliefs' is the passive patient of 'influence', so the past participle is the right form. The clause already has its finite verb 'relates', so a finite form here would be wrong, not the participle."
+    },
+    {
+      "label": "(E) accept",
+      "verdict": "incorrect",
+      "reason": "'alongside' is a preposition requiring a gerund complement; 'and' coordinates 'recognizing' and 'accept' at the same level inside that PP, and both share the single 'that'-clause object ('recognizing and accepting that the factors ... may be different'). The second conjunct must be the gerund 'accepting'. Rescue parses fail: bare 'accept' cannot coordinate with 'to understand' across the intervening 'alongside recognizing and' because the shared that-clause forces same-level coordination with 'recognizing'. Clear parallelism violation."
+    }
+  ],
+  "note": "Single uniquely defensible answer. (A)-(D) each survive formal checks including long-distance cues (head-noun agreement for B, free-relative gap for C, reduced relative for D, rather-than coordination for A). (E) is a textbook gerund-parallelism error under the preposition 'alongside'; no alternative parse (ellipsis, coordination with 'understand', absolute construction) renders it grammatical."
+}

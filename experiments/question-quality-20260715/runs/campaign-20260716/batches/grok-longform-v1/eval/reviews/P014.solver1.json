@@ -1,0 +1,35 @@
+{
+  "pid": "P014",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "Relative pronoun 'that' with antecedent 'subject matter' (singular); the relative-clause verb 'resembles' agrees. 'focus is on subject matter that resembles everyday life' is fully grammatical. Momentary temptation ('preposition + that'?) dissolves: the preposition 'on' governs the noun 'subject matter', not the relative clause, so no *'preposition + that-clause' violation exists."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'the role of background style is to facilitate...' — to-infinitive as subject complement after 'role ... is', a standard pattern (the role is to do X). 'facilitate' takes the object 'the construction of mental models' naturally."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "Designed attractor via proximity: the nearest noun 'uncertainty' (singular) tempts 'carries'. But the true subject is the plural head noun 'Feelings' ('Feelings of pleasure and uncertainty'), so plural 'carry' is right. I felt the pull and rejected it on the long-distance subject-verb agreement cue."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "'... devices work ... against the subject matter thereby created a disquieting atmosphere.' After 'thereby' an adverbial present participle is required, with implied subject 'novel stylistic devices' actively creating the atmosphere: 'thereby creating a disquieting atmosphere.' Rescue parses all fail: (i) past-participle reduced relative on 'subject matter' would be passive and cannot take the direct object 'a disquieting atmosphere'; (ii) finite past 'created' parallel to present-tense 'work' fails for tense and lacks a conjunction; (iii) no overt subject, so no absolute construction. Ungrammatical — this is the answer."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'This active involvement provides a basis...' — singular demonstrative subject 'involvement' with singular verb 'provides'. Straightforward agreement; no distance trap."
+    }
+  ],
+  "note": "Clean single-answer item. (D) 'thereby created' is decisively wrong (needs 'thereby creating'); no alternative parse (reduced relative, absolute, finite parallel) rescues it because a passive past participle cannot govern the direct object 'a disquieting atmosphere'. Main distractor is (C) via proximity-agreement bait ('uncertainty carries'), but the plural head 'Feelings' settles it. (A)/(B)/(E) are stable. Top-tier test-taker solve path: scan for participle after 'thereby' -> immediate flag on (D), confirm others in one pass."
+}

@@ -1,0 +1,89 @@
+{
+  "batchId": "grok-oneshot-v1",
+  "phase": "grok-confirm",
+  "note": "G-ONE(O182, 사용자 가설): 어법을 빈칸처럼 한 콜 생성+솔버+E-gate — 사다리(CONF-G, 153원) 동일 프레임 짝비교.",
+  "atKst": "2026-07-17T23:39:06.157+09:00",
+  "gitSha": "8d365701e339d7ad64bb1f808c76ec768e9855ee",
+  "gitDirty": true,
+  "worstCaseReserved": 16,
+  "spec": {
+    "batchId": "grok-oneshot-v1",
+    "phase": "grok-confirm",
+    "note": "G-ONE(O182, 사용자 가설): 어법을 빈칸처럼 한 콜 생성+솔버+E-gate — 사다리(CONF-G, 153원) 동일 프레임 짝비교.",
+    "concurrency": 4,
+    "providerRouting": "none",
+    "env": {
+      "PREMIUM_QGEN_MODEL_ID": "x-ai/grok-4.5",
+      "GRAMMAR_PREMIUM_MODEL_ID": "x-ai/grok-4.5",
+      "EXPLANATION_VERIFY_MODEL_ID": "google/gemini-3.1-pro-preview",
+      "OPENROUTER_REASONING_EFFORT": "high",
+      "QGEN_RESEARCH_MAX_TOKENS_FLOOR": "20000"
+    },
+    "assignments": [
+      {
+        "itemId": "go-002",
+        "frameId": "grammar-frame-v2-002",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "G-ONE"
+      },
+      {
+        "itemId": "go-003",
+        "frameId": "grammar-frame-v2-003",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "G-ONE"
+      },
+      {
+        "itemId": "go-021",
+        "frameId": "grammar-frame-v2-021",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "G-ONE"
+      },
+      {
+        "itemId": "go-035",
+        "frameId": "grammar-frame-v2-035",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "G-ONE"
+      },
+      {
+        "itemId": "go-049",
+        "frameId": "grammar-frame-v2-049",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "G-ONE"
+      },
+      {
+        "itemId": "go-058",
+        "frameId": "grammar-frame-v2-058",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "G-ONE"
+      },
+      {
+        "itemId": "go-069",
+        "frameId": "grammar-frame-v2-069",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "G-ONE"
+      },
+      {
+        "itemId": "go-074",
+        "frameId": "grammar-frame-v2-074",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "G-ONE"
+      }
+    ]
+  }
+}

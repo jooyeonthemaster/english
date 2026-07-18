@@ -1,0 +1,35 @@
+{
+  "pid": "P016",
+  "answer": "present-ing",
+  "multipleDefensible": true,
+  "defensibleLabels": ["present-ing", "performance"],
+  "confidence": "medium",
+  "perOption": [
+    {
+      "label": "present-ing",
+      "verdict": "정답(최적)",
+      "reason": "빈칸 직후 문장 'However, the necessity of present-ing music - making it present here and now, without which it will not be music at all -'이 빈칸 문장이 세운 필연성(meaning은 그 행위와 분리 불가 → 그 행위가 필수)을 그대로 받아 전개한다. 'the act of present-ing'은 동명사 결합으로 문법 성립하고, 발문의 괄호 지시 '(동사를 포함할 경우 본문에 제시된 원형 또는 굴절형 그대로)'는 하이픈 포함 형태 present-ing을 본문 표기 그대로 쓰라는 출제 장치로 읽힌다. Stravinsky의 'realize the present'와의 어휘 유희(present/present-ing)도 논지 결속을 강화한다."
+    },
+    {
+      "label": "performance",
+      "verdict": "경계(옹호 가능한 매력적 대안)",
+      "reason": "'no two performances are identical'에서 추출 가능하며 'the act of performance'는 영어에서 가장 자연스러운 연어로, 실전에서 강하게 끌리는 후보다(원전 표현일 가능성도 있음). 그러나 본문 표기는 복수 'performances'뿐이어서 'the act of performances'는 비문이고, 단수로 바꾸면 '본문에서 찾아 그대로'와 긴장이 생긴다. 괄호 지시가 어형 고정을 '동사 포함 시'로 한정한다고 읽으면 명사의 단수 전환이 허용된다는 해석도 성립하므로 완전 배제는 불가 — 채점 기준 명시가 없으면 이의 제기 여지가 있다."
+    },
+    {
+      "label": "realize / realizing",
+      "verdict": "오답",
+      "reason": "의미상 'the act of realizing the present'는 통하나 본문 굴절형은 원형 'realize'뿐이며 'the act of realize'는 비문. 발문 지시(본문 굴절형 그대로)와 충돌하여 탈락."
+    },
+    {
+      "label": "happens / happening",
+      "verdict": "오답",
+      "reason": "본문에는 'happens'만 존재하고 'the act of happens'는 비문. 'happening' 형태는 본문에 없어 지시 위반."
+    },
+    {
+      "label": "기타 명사(music, education, activities, knowledge 등)",
+      "verdict": "오답",
+      "reason": "'the act of music'은 비관용적 결합, 'the act of education/knowledge'는 지문 논지(직접 행위 중심 vs 사실 지식 중심 교육의 대립)에서 빈칸이 가리키는 '음악을 지금-여기서 실연하는 행위'와 무관하거나 역행."
+    }
+  ],
+  "note": "서술형 빈칸. 담화 결속(직후 'the necessity of present-ing music'의 재진술)과 발문의 어형 고정 지시를 근거로 present-ing을 정답으로 판정. 다만 'the act of performance'가 의미·연어 면에서 완벽히 부합하는 매력적 대안이어서, 채점 기준이 명사 수 전환을 허용하면 performance도 옹호 가능 — 채점 기준에 두 후보 처리 방침을 명시할 필요가 있다."
+}

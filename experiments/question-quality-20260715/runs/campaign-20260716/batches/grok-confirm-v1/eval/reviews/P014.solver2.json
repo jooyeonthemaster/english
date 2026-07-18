@@ -1,0 +1,35 @@
+{
+  "pid": "P014",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "Relative pronoun 'that' heads a restrictive relative clause whose antecedent is plural 'exchanges'; the clause verb 'are' agrees. 'exchanges that are put-downs' is a fully well-formed NP + relative clause. No alternative parse renders it defective."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "The noun 'potential' canonically licenses a to-infinitive complement ('the potential to V'). 'to impact' is transitive with object 'any oppressed group', adverb 'psychologically' modifies it. 'have the potential to impact X' is standard and grammatical."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'involving' is a present participle post-modifying 'A specific instance' (= 'that involves a man with visual impairment'); the finite matrix verb 'highlights' follows and agrees with the singular head noun 'instance'. Structure is complete and grammatical."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect (the answer)",
+      "reason": "The sentence 'People raising their voices while speaking to him implying a hidden message that...' contains no finite verb under any parse. (i) If 'raising...' is a participial modifier of 'People', the predicate slot holds only non-finite 'implying'. (ii) If 'People raising their voices...' is a gerund phrase acting as subject, the predicate is again only 'implying'. (iii) Reading 'him implying...' as a reduced relative on 'him' is semantically incoherent (the voice-raising, not the man, implies the message) and still leaves the sentence verbless. (iv) An absolute-construction reading is impossible because the string is a free-standing sentence with no host clause. Required form: finite 'implies' (gerund-subject, singular) or 'imply' (if 'People' is the head subject). Hence 'implying' is ungrammatical."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'are delivered' is a well-formed passive: plural subject 'Countless examples of microaggression' + 'are' + past participle of transitive 'deliver'. Agreement and voice are both correct; 'daily' and 'without perpetrators' awareness' are licit adjuncts."
+    }
+  ],
+  "note": "Clean single-answer item. (D) fails a formal finiteness test: every available parse of its sentence leaves the clause without a finite verb, so the defect is provable, not merely stylistic. All four distractors survive adversarial alternative-parse attacks (reduced relatives, gerund subjects, passives all check out). No second defensible answer exists."
+}

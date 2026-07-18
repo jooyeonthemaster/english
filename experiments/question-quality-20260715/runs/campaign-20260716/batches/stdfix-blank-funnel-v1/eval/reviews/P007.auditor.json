@@ -1,0 +1,98 @@
+{
+  "pid": "P007",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-content-addition",
+      "severity": "minor",
+      "evidence": "본해설의 '가치 평가 대상이 아니라'라는 대조 프레임은 지문 어디에도 없는 해설자의 수사적 첨가다. 지문은 가치 평가 여부를 논하지 않는다. 논리 왜곡 수준은 아니어서 minor."
+    },
+    {
+      "code": "V4-minor-garbled-terminology",
+      "severity": "minor",
+      "evidence": "keyPoints의 \"명사 및 서술부 구조 'mirror at least to some degree'\"는 용어가 손상됨 — 해당 span은 동사구(VP+정도 부사구)이지 명사 구조가 아니다. 의도는 '서술부를 명사 구조(reflection)로 추상화'였을 것으로 보이나 문면 그대로는 오지칭."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 2
+  },
+  "craftRationale": {
+    "C1": "빈칸이 결론 문장의 핵심 술부(mirror at least to some degree)를 겨냥해 양보(경고)→Nevertheless(인정)→Thus(적용) 전체 논증 구조의 정점을 묻는다. 출제 가치는 최상.",
+    "C2": "①극성 위반(명시 경고를 단언으로 뒤집음), ②관계 역전(together with→conflict with), ③주체-객체 역전+극단화, ⑤기원 계보로의 scope shift — 함정 유형이 서로 다르고 각각 source anchor가 있다. 다만 ⑤는 유혹력이 얇은 키워드 콜라주에 가까워 4점은 아님.",
+    "C3": "②는 'together with' 재확인이 필요한 실제 판단이지만, ①③은 절대어 휴리스틱으로, ⑤는 무관성으로 즉시 소거되고 ④가 유일한 hedge 선지라 전체 구조를 읽지 않아도 갈린다.",
+    "C4": "치명적 단서 누출 — 정답 ④만 'partial'로 완화된 표현이고 오답 셋이 directly/fixed, solely/entire, prove 절대·극단어를 포함해 절대어 소거만으로 정답이 필연적으로 드러난다.",
+    "C5": "요청 난이도 KILLER 대비 실제는 중위(표준) 난이도 빈칸. 논리 구조가 짧고 명료하며 재진술도 투명한 명사화 수준. 라벨과 상당한 불일치.",
+    "C6": "오답 해설 4건은 각 선지의 결함을 텍스트 근거와 함께 짚어 양호하나, 본해설이 장황하고 '가치 평가 대상이 아니라' 같은 불필요한 첨가가 있으며 keyPoints 문구가 손상됨. 정확하지만 둔함."
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "half-truth / polarity flip — 지문이 명시적으로 경고한 명제(고정된 국민성 도출)를 결론인 양 단언",
+      "temptingBecause": "'national character'가 지문 1~3문장의 핵심 키워드이고, 결론 문장에서 뭔가를 '확립'한다는 서술이 결론답게 들림",
+      "decisiveFlaw": "2문장 'no fixed conclusions about a so-called national character should be drawn' 및 3문장 'foolish'와 정면 모순. 'directly establish a fixed'는 지문의 hedge('at least to some degree')와도 극성 반대."
+    },
+    {
+      "label": "②",
+      "intent": "relation reversal — 보완 관계를 상충 관계로 역전",
+      "temptingBecause": "'other social and cultural indicators'를 4문장에서 그대로 재사용해 표면 일치가 높음",
+      "decisiveFlaw": "4문장은 속담 사용이 다른 지표들과 'together with' 결합되어 공동 개념을 형성한다고 했으므로 conflict는 관계의 정반대."
+    },
+    {
+      "label": "③",
+      "intent": "actor swap + absolute overreach — 투영 수단인 속담을 세계관의 단독 형성 주체로 역전",
+      "temptingBecause": "'worldview and mentality'가 1문장 키워드와 정확히 겹침",
+      "decisiveFlaw": "지문 전체에서 속담은 태도를 반영(mirror)하는 지표일 뿐이며, 'solely construct the entire'는 hedge된 주장('to some degree', 'together with other indicators')과 양립 불가한 극단 단언."
+    },
+    {
+      "label": "④",
+      "intent": "정답 — 'mirror at least to some degree'의 명사화·추상화 재진술",
+      "temptingBecause": "(정답) 'partial'이 'at least to some degree'를, 'reflection'이 'mirror'를 정확히 보존",
+      "decisiveFlaw": "없음. 유일하게 지문의 양보-인정 구조와 hedge 강도를 모두 보존하는 선지."
+    },
+    {
+      "label": "⑤",
+      "intent": "scope shift — 태도 반영 논지를 역사적 기원 계보 증명으로 이탈",
+      "temptingBecause": "'classical and medieval times'가 3문장 키워드와 겹침",
+      "decisiveFlaw": "고빈도 사용은 계보 증명과 무관하고, 3문장의 논지는 오히려 공통 기원이 국민성 독해를 반박하는 근거였으므로 방향 자체가 반대인 지엽 결합."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "본해설 '가치 평가 대상이 아니라, ... 대변해 주는 것으로 추론할 수 있습니다' — 지문에 없는 '가치 평가' 대조 프레임 첨가",
+      "recommendation": "'가치 평가 대상이 아니라' 구를 삭제하고 지문의 양보-인정 구조만으로 서술"
+    },
+    {
+      "severity": "minor",
+      "evidence": "keyPoints[1] \"명사 및 서술부 구조 'mirror at least to some degree'\" — 동사구를 명사 구조로 오지칭한 손상 문구",
+      "recommendation": "\"동사 술부 'mirror at least to some degree'를 명사화 표현 'serve as a partial reflection of'로 치환\"으로 교정"
+    },
+    {
+      "severity": "minor",
+      "evidence": "본해설 말미 '①, ②, ③, ⑤는 ... 인과 관계를 거꾸로 파악하고 단어를 임의로 연상 결합한 오답들입니다' — 네 오답을 뭉뚱그린 총평이며 ①·②에는 '인과 역전'이 해당하지 않음(각 오답 해설 자체는 정확)",
+      "recommendation": "총평 문장을 삭제하거나 오답별 결함 유형을 정확히 병기"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerAudit": {
+    "syntacticSlotUniform": true,
+    "meaningPreservingAbstraction": true,
+    "eachDistractorAnchoredWithSingleFlaw": true,
+    "multiClueRequired": "부분 충족 — 원리상 2문장(경고+Nevertheless) 연결이 필요하나 실전에서는 우회 가능",
+    "noSingleCueShortcut": "위반 — ④만 유일한 hedge('partial') 선지이고 ①(directly/fixed)·③(solely/entire)·⑤(prove)가 절대·극단어를 포함해, '극단어 소거 + 완화어 선택' 단일 휴리스틱으로 지문 정독 없이 정답 도달 가능. §D의 '극성·절대어 하나로 정답을 찍을 수 없다' 조건 위반",
+    "distractorTrapDiversity": true
+  },
+  "grade": "C",
+  "notes": "V1~V5 전부 통과로 출하 차단 사유는 없으나 KILLER 문항으로는 실격. 결정적 결함은 선지 극성 비대칭: 정답 ④만 완화(hedged)되어 있고 오답 3개가 절대어를 품어 절대어 휴리스틱만으로 풀린다(C4=2). 이로 인해 실제 난이도가 중위에 머물러 요청 난이도 KILLER와 불일치(C5=1), killerConditionsMet=false. 함정 설계 자체(4개 오답의 서로 다른 왜곡 유형, source anchor)는 우수하므로, 오답 ①③⑤의 절대어를 완화된 표현으로 바꾸고 ④와 경쟁하는 hedge 선지를 하나 이상 두면 KILLER로 재설계 가능. 해설은 사실성 통과이나 minor 3건(내용 첨가 1, 손상 용어 1, 총평 부정확 1) 수정 권장. 합계 14/24, C 등급(재설계 필요 공예 결함)."
+}

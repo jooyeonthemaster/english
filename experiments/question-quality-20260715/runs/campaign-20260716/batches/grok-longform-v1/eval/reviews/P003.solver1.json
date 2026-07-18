@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "'interpretive effort'가 지문의 'less readable (or easily interpreted)'와 표면 공명해 순간 끌리지만 방향이 정반대. 덜 읽히는 작품일수록 해석적 노력이 더 요구되는데, 이 선지는 일상 지각이 그것을 대체해야 한다고 말한다. 뒤 문장의 'This active involvement'와도 정면 충돌."
+    },
+    {
+      "label": "2",
+      "verdict": "correct",
+      "reason": "마지막 문장의 'aesthetic attitude'(pragmatic attitude와 대비되는 관조적·거리두기 태도, 미학의 psychical distance/disinterested contemplation 개념)와 정확히 대응. 관습 이탈 작품은 일상의 실용적 관점에서 벗어난 관조적 태도의 채택을 요구하며, 그 태도 전환 자체가 'active involvement'로서 심층적 미적 처리와 성찰의 기반이 된다. 유일한 유혹 지점은 'detached'와 'active involvement'의 표면적 긴장이나, detachment는 실용적 관심으로부터의 거리이지 수동성이 아니므로 모순이 아니다. 문법 결합(that + 수동절 + to부정사)도 자연스럽다."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "지문의 'departure from conventional forms'를 그대로 재활용한 어휘 미끼. 작품이 관습에서 이탈한다는 서술이지 감상자가 관습 형식을 '전면(wholly) 거부'해야 한다는 것이 아니다. 극단 표현이 재현적 작품의 가치도 인정하는 trade-off·균형 논조와 모순."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "'carefully'가 능동적 노력처럼 읽혀 'active involvement'와 이어붙이고 싶은 유혹이 있으나, 'plot details alone'은 소재(figure)에만 집중하는 재현적·실용적 독법이다. 표현주의 작품에서는 스타일이 소재와 부조화를 이루므로 플롯만 좇아서는 전체 감상이 불가능. 방향 반대."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "'mental models'는 지문 어휘 재활용 미끼. mental model 구축·강화는 재현적 작품에서 배경 스타일이 수행하는 기능이며, 덜 readable한 표현주의 작품이 상기시키는 바와 정반대 방향."
+    }
+  ],
+  "note": "빈칸은 '작품이 덜 readable할 때 관습 이탈이 감상자에게 상기시키는 것'으로, 뒤 문장 'This active involvement'와 마지막 문장 'pragmatic vs aesthetic attitude' 전환이 장거리 단서. 다섯 선지 모두 문법적으로는 정문이라 순수 논리 판정 문항. 1·4·5는 재현적/실용적 모드를 지시해 방향이 반대, 3은 극단·주체 전도. 최상위권이 멈칫할 지점은 2의 'detached'와 'active involvement'의 표면적 충돌인데, 미적 태도의 detachment는 실용적 관심으로부터의 거리이지 관여의 부재가 아니므로 해소된다. 옹호 가능한 정답은 2 하나."
+}

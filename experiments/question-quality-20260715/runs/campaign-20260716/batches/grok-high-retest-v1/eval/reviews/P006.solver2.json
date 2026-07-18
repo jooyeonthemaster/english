@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "4",
+  "multipleDefensible": false,
+  "defensibleLabels": ["4"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "S0(정밀 targeting 가능)과 S1(오염 증가분에 비례 과세)은 '원리 진술 → 구체 메커니즘'의 직접 부연 관계다. 그 사이에 '측정 비용이 크다'는 부정 명제를 삽입하면 S1의 부연이 갈 곳을 잃고, 뒤따르는 S2의 'thus'까지 연쇄가 붕괴한다. 또한 S4의 'Nevertheless'가 여전히 부정 선행 명제 없이 방치된다."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "S2는 'The polluter thus has an incentive...'로 시작하며, 'thus'는 S1의 비례 과세 메커니즘을 직접 전제로 요구한다. 사이에 비용 문장을 넣으면 'thus'의 논리적 전제가 '측정이 비싸다'가 되어 결론(감축 유인)이 도출 불가능해진다. 형식적으로 성립 불가."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "S3 'The great attraction of basing the tax directly on measured emissions...'은 긍정 평가의 연속이다. 부정 명제(비용 단점) 직후에 대조 표지 없이 'The great attraction...'이 이어지면 담화 극성이 무표지 반전되어 비문맥적이다. 게다가 S4의 'Nevertheless'는 직전의 긍정문 S3와 충돌하는 상태로 남는다."
+    },
+    {
+      "label": "4",
+      "verdict": "answer",
+      "reason": "S4는 'Nevertheless, the technologies available for monitoring ... have been developing rapidly'로, 양보 접속사 'Nevertheless'가 측정/모니터링에 관한 부정적 선행 명제를 형식적으로 요구한다. 주어진 문장(연속 측정은 비용이 크고 직접 과세의 주요 저해 요인)이 정확히 그 부정 명제다. 삽입 시 [장점(S3)] → [그러나 측정 비용 문제(주어진 문장)] → [그럼에도 기술 발전 중(S4)] → [따라서 미래에는 더 넓은 적용 가능(S5)]의 완전한 양보-전망 구조가 성립하며, 모든 접속 표지의 전제가 충족된다. 유일하게 정합적인 위치."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "글 말미(⑤)에 넣으면 S5의 낙관적 결론('미래에 더 넓은 적용 가능') 뒤에 단점 명제가 무표지로 덧붙어 결론을 훼손하고, 본문 내 S3→S4의 'Nevertheless' 단절(긍정→양보→긍정)이 해소되지 않은 채 남는다. 이중으로 비정합적."
+    }
+  ],
+  "note": "삽입 유형. 결정 단서는 S4 문두의 'Nevertheless'가 요구하는 부정 선행 명제(측정 비용 단점)와, 주어진 문장의 'Continuous emissions measurement can be costly'가 이를 유일하게 충족한다는 점. 대안 배치를 전부 형식 검증했으나 'thus'(S2)와 'Nevertheless'(S4)의 전제 요구 때문에 ④ 외에는 어느 위치도 담화 정합이 성립하지 않는다. 복수 정답 여지 없음."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "'a biased representation of subjective views'는 지문 논리와 정반대. 전문가 검토(expert reviewers)와 학계 승인은 편향(prejudiced humans)을 걸러내는 장치로 제시되며, 과학적 진리가 '편향된 표현'이 되어야 지위를 얻는다는 주장은 지문 어디에도 없다. 문법 결합은 문제없으나 논리적으로 성립 불가."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "'an isolated discovery made by individual effort'는 지문이 명시적으로 기각하는 개인주의적 수사(individualist rhetoric) 그 자체. 'yet almost nobody thinks they can provide a basis for action'의 양보-반전과 빈칸 뒤 'What happens in somebody's laboratory is only one stage in its construction'(실험실은 한 단계일 뿐)이 정면으로 반박한다. 도입부의 긍정적 서술만 읽고 반전을 놓친 수험생을 노리는 매력적 오답 — 실제로 첫 두 문장만 보면 끌리지만 'It would be wrong to suppose... yet' 이후 논지가 뒤집힌다."
+    },
+    {
+      "label": "③",
+      "verdict": "correct",
+      "reason": "'an outcome approved by the scholarly community'는 직전 문장 'knowledge isn't knowledge unless it has been authorized by disciplinary specialists'의 직접적 패러프레이즈(authorized→approved, disciplinary specialists→scholarly community). 'expert reviewers' 검토 규범, 빈칸 뒤 'only one stage in its construction'(집단적 구성의 한 단계)과도 정합. 'until it becomes + 명사구' 문법 결합도 자연스러움. 유일한 정답 후보."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "'a physical proof directly provided by nature'는 'The norms... presuppose that nature does not speak unambiguously'(자연은 명료하게 말하지 않는다)에 의해 직접 반박됨. 'they speak for themselves'라는 기각된 수사의 표면 어구에 끌린 수험생을 노리는 오답. 논리적으로 성립 불가."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "'a public announcement to attract general attention'은 지문 속 'press conference' 장면과 어휘가 겹쳐 표면적 매력이 있으나, 그 장면의 극성은 부정적('automatically castigated as a publicity seeker'). 전문가 검토 없는 대중 발표는 비난받는 행위이므로 진리가 지위를 얻는 조건이 될 수 없다. 극성 반전형 오답."
+    }
+  ],
+  "note": "논지 구조가 명확한 양질의 빈칸 문항. 빈칸 직전 문장('authorized by disciplinary specialists')이 정답의 직접 단서이고, 빈칸 직후 문장('only one stage in its construction')이 이를 재확인한다. ②(개인주의 수사 재진술)와 ⑤(press conference 어휘 겹침)가 매력적 오답으로 기능하지만 둘 다 지문에서 명시적으로 기각/비난되는 입장이라 옹호 불가. 정답은 ③ 단독으로 수렴하며 복수정답 소지 없음."
+}

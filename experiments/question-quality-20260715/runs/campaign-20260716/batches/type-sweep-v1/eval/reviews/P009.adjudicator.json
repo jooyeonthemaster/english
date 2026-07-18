@@ -1,0 +1,44 @@
+{
+  "pid": "P009",
+  "finalV2": false,
+  "winningAnswer": "essential",
+  "reason": "발문('다음 빈칸에 들어갈 알맞은 말을 본문에서 찾아 쓰시오')이 정답 후보를 '렌더 지문에 실재하는 단어'로 제한하는데, 선언 정답 logical은 빈칸 처리로 지문에서 제거되어 본문 어디에도 존재하지 않는다. 발문을 준수하는 학생이 도달 가능한 유일한 답은 'the essential now'의 essential이며, 'it would seem essential to acknowledge this difference and give prominence...'는 가주어-진주어 외치 구문으로 완전한 정문이고 뒤따르는 'Yet' 역접(현실은 여전히 사실 암기 중심)과의 담화 결속도 성립한다. 지문 내 다른 모든 형용사(identical/greatest/potential/present/factual/musical/numerous)는 문법 또는 담화 논리에서 배제됨을 전수 확인했다. 발문을 무시한 자유 cloze 독해를 택하더라도 logical/reasonable/sensible/natural/essential/necessary가 모두 성립하여 유일성이 확보되지 않는다. 어느 독해에서도 선언 정답 logical은 유일 정답이 아니므로 V2=false. 솔버 1·2의 essential 판정과 배제 논증(necessity 품사 불일치, necessary 본문 부재, 기타 형용사 논리 붕괴)은 모두 타당하며 과잉 판정은 발견되지 않았다. 감사자 V2=false 판정 유지.",
+  "perDispute": [
+    {
+      "label": "logical (선언 정답)",
+      "claim": "괴리 인정 후 직접 활동 강화가 '논리적' 귀결이므로 빈칸의 정답이다",
+      "verdict": "rejected-as-unique",
+      "evidence": "원지문 복원 시 'it would seem logical to acknowledge...'는 자연스럽고 해설의 담화 분석과도 일치한다. 그러나 렌더 지문에서 logical은 빈칸으로 제거되어 본문에 존재하지 않으므로 '본문에서 찾아 쓰시오' 발문 하에서는 도달 불가능한 답이다. 발문을 무시한 자유 cloze로 읽어도 reasonable/sensible/natural/essential/necessary 등 동치·근접 형용사를 배제할 문법·의미 근거가 없어 유일성이 성립하지 않는다. 어느 독해에서도 유일 정답 요건을 충족하지 못한다."
+    },
+    {
+      "label": "essential (솔버 1·2 공통 답)",
+      "claim": "본문 'the essential now'에서 verbatim 추출 가능하고 슬롯에 문법·논리적으로 결합하는 유일한 본문 내 형용사",
+      "verdict": "upheld",
+      "evidence": "문법: 'it would seem essential to acknowledge ... and (to) give ...'는 가주어 it + seem + 형용사 보어 + to부정사 병렬 진주어 구문으로 완전한 정문. 논리: '음악의 현재성 vs 과거·사실 지식 중심 교육'의 괴리를 인정하고 직접 활동에 비중을 두는 것이 '필수적으로 보인다'는 당위 주장은 앞 문장의 대조 및 뒤 문장의 'Yet' 역접과 정확히 결속한다. 발문 조건(본문 실재)도 충족. 렌더 지문 내 형용사 전수 검사(identical, greatest, essential, potential, present, factual, musical, numerous) 결과 문법·담화를 동시에 만족하는 것은 essential뿐이므로, 발문 준수 독해 하에서 유일 정답이다."
+    },
+    {
+      "label": "necessity / necessary",
+      "claim": "'the necessity of present-ing music'에서 끌리는 근접 후보로, 의미상 빈칸에 적합할 수 있다",
+      "verdict": "correctly-excluded",
+      "evidence": "necessity는 명사이므로 'it would seem necessity to-V'는 비문(seem의 이 구문은 형용사 보어를 요구). necessary는 'it would seem necessary to-V'로 문법·의미 모두 성립하지만 본문에 verbatim으로 등장하지 않아 발문 조건을 위반한다. 두 솔버의 배제 논증이 모두 타당하며 과잉 판정이 아니다. 단, 어형 변형을 허용하는 채점 기준이 있었다면 necessary가 살아남아 유일성이 추가로 붕괴했을 것이라는 점은 채점 기준 미정의(V5 계열) 결함을 방증한다."
+    },
+    {
+      "label": "musical / identical / factual / numerous / greatest / potential / present (본문 내 기타 형용사)",
+      "claim": "본문에 실재하므로 발문 준수 독해에서 essential의 경쟁 후보가 될 수 있다",
+      "verdict": "correctly-excluded",
+      "evidence": "musical은 문법적으로 삽입 가능하나 '차이를 인정하는 것이 음악적으로 보인다'는 지문 논지와 무관해 의미 붕괴. identical은 '두 연주가 동일하지 않다'는 국소 진술의 어휘로 담화상 무의미. factual은 저자가 비판하는 교육의 속성이라 논리가 역전됨. numerous는 수량 수식어로 to부정사 보어 구문에서 비문. greatest는 최상급 한정 용법이라 관사 없이 서술 보어로 부적합. potential은 한정 용법 중심이라 'seem potential to-V'가 비자연스럽고 의미도 불성립. present는 서술 가능하나 '차이를 인정하는 것이 현재로 보인다'는 무의미. 전수 배제 확인 — 솔버들의 판정에 누락·과잉 없음."
+    },
+    {
+      "label": "reasonable / sensible / natural (자유 cloze 동치답)",
+      "claim": "발문을 무시하고 자유 빈칸으로 풀 경우 logical과 동치로 성립하는 답들",
+      "verdict": "confirmed-as-defeaters",
+      "evidence": "'it would seem reasonable/sensible/natural to acknowledge...'는 모두 문법적으로 완전하고 담화 논리도 logical과 사실상 동일하게 만족한다. 이들을 배제할 근거(첫 글자 힌트, 철자 수 조건, 허용 답안 집합 등)가 문항에 전혀 없으므로, 자유 cloze 독해를 택하더라도 logical의 유일성은 성립하지 않는다. 감사자의 지적이 타당하다."
+    }
+  ],
+  "solverAssessment": {
+    "solver1": "essential 판정 및 necessity/necessary/asset/musical 배제 논증 모두 타당. 과잉 판정 없음.",
+    "solver2": "essential 판정 및 기타 형용사 전면 배제 논증 모두 타당. necessary에 대한 '어형 변형 허용 시에만 부분 옹호 가능' 단서도 정확. 과잉 판정 없음.",
+    "auditor": "V2=false·V5=false 판정과 두 갈래(발문 준수 시 essential, 발문 무시 시 동치답 미정의) 분석 모두 유지."
+  },
+  "repairSuggestion": "(1) 발문을 '문맥상 알맞은 한 단어를 쓰시오'로 바꾸고 첫 글자 힌트 l______ 또는 허용 답안 집합(logical만 인정 여부, reasonable/sensible 등 동치 처리)을 명시해 유일화하거나, (2) 본문 실재 어휘를 정답으로 하는 설계(예: essential을 빈칸 처리하고 'the ___ now'와의 호응을 묻는 형태)로 재구성한다."
+}

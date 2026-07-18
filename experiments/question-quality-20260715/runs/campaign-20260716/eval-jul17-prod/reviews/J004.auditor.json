@@ -1,0 +1,83 @@
+{
+  "pid": "J004",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-style-nonword-borderline",
+      "severity": "minor",
+      "evidence": "정답 ②의 'non-fixed'는 사전 표제어가 아닌 생산적 합성어로 다소 어색하나 문법적으로 성립하고 의미가 투명하다. 'flexible/unfixed'가 더 자연스러움. 비타협 위반은 아님."
+    },
+    {
+      "code": "V3-seam-awkward-distractors",
+      "severity": "minor",
+      "evidence": "③ '...to reach compromises to guide how to respond', ④ '...to secure rational decision-making to guide how to respond'처럼 목적 부정사가 이중으로 겹쳐 어색하지만 비문은 아니며, 문법만으로 오답이 탈락하지는 않는다."
+    },
+    {
+      "code": "V4-typo-korean",
+      "severity": "minor",
+      "evidence": "해설의 '⑤과'는 조사 오류(⑤와), 오답해설 ③의 '차이자체를'은 띄어쓰기 누락. 사실 오류는 아님."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 2,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "half-truth + surface word-matching: 지문의 'ethical codes', 'formal learning'을 조합해 규칙 준수형 윤리로 오도",
+      "temptingBecause": "'formal and informal learning experiences', 'prescribed set of ethical codes'가 지문에 실제로 등장해 표면 매칭 학습자를 유혹",
+      "decisiveFlaw": "지문은 'think through ethical issues rather than follow a prescribed set of ethical codes or rules'라며 코드 준수를 명시적으로 거부하고, 'no clear right or wrong response'로 objective codes의 존재 자체를 부정"
+    },
+    {
+      "label": "②",
+      "intent": "정답: source span 'evaluating these issues from different perspectives'의 의미 보존 추상화",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음. 'principles vary both between and within individuals', 'Individual perspectives may also be context dependent', 'no clear right or wrong response'가 모두 수렴 지지"
+    },
+    {
+      "label": "③",
+      "intent": "goal distortion / actor-action swap: 차이의 '인정·수용'을 차이의 '최소화·타협'으로 왜곡",
+      "temptingBecause": "'social, religious, or civic beliefs'가 지문 어휘 그대로이고, 갈등 조정이라는 상식적 프레임에 부합",
+      "decisiveFlaw": "지문의 결론은 'recognizing and accepting that the factors... may be different' — 차이를 수용하라는 것이지 줄이라는 것이 아님"
+    },
+    {
+      "label": "④",
+      "intent": "scope shift / condition loss: 감정을 '이해할 맥락 요인'에서 '배제할 교란 요인'으로 전도",
+      "temptingBecause": "첫 문장의 critical thinking 정의('evidence to guide decision-making')가 이성적 판단을 연상시키고 'feeling a different way'가 지문에 등장",
+      "decisiveFlaw": "지문은 감정을 포함한 맥락 의존성을 윤리적 사고가 '이해하고 인정해야 할' 요소로 제시하며, 감정 배제를 주장한 적이 없음"
+    },
+    {
+      "label": "⑤",
+      "intent": "polarity reversal: 가변적·개인적 원칙 논지를 보편·일관 지침 수립으로 정반대 전도",
+      "temptingBecause": "'principles of conduct that are considered correct', 'code of behaviour' 등 규범 어휘가 지문에 존재",
+      "decisiveFlaw": "'these principles vary both between and within individuals'와 정면 모순 — 보편·일관 지침은 성립 불가"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "해설 '⑤과' — 조사 오류(⑤와가 맞음)",
+      "recommendation": "조사 교정"
+    },
+    {
+      "severity": "minor",
+      "evidence": "오답해설 ③ '차이자체를' — 띄어쓰기 누락('차이 자체를')",
+      "recommendation": "띄어쓰기 교정"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionsRationale": "§D KILLER 조건 실패: (1) ②만 유일하게 '복수성·유연성' 극성을 갖고 ①③④⑤는 모두 절대·고정·배제 계열('objective', 'universally applicable', 'consistent', 'minimizing', 'detachment') — 극성 단서 하나로 정답을 찍을 수 있음. (2) 'these principles vary both between and within individuals' 한 문장만으로 정답 도달 가능해 '최소 두 논리 단서 연결' 요건 미충족. 나머지 §D 조건(동일 통사 슬롯, anchor/overlap/decisive flaw, 의미 보존 추상화, 함정 다양성)은 충족.",
+  "grade": "B",
+  "notes": "모든 V 통과. 무결성 깨끗(빈칸 seam 정확), 정답 유일성 견고, 해설 사실성 정확(경미한 한글 오탈자 2건). 공예 합계 18(4+3+3+3+2+3). C1=4: 주제문의 핵심 정의부를 묻고 지문 전체가 근거로 수렴. C2=3: 네 오답이 각기 다른 함정 유형이나 ①⑤가 '고정 규범' 축을 일부 공유. C3=3: ④가 실질적 유혹 축이지만 요지 파악 시 나머지가 일괄 소거됨. C4=3: 근거는 충분·필연적이나 오답들의 절대어 표지가 약한 극성 누출. C5=2: 요청 난이도 KILLER 대비 실제 난도는 중상 — 논지가 지문 내에서 4회 이상 반복 지지되고 paraphrase 거리가 짧아('multifaceted viewpoints' ≈ 'different perspectives', 지문에 'Individual perspectives' 잔존) 킬러 깊이에 미달. C6=3: 담화 구조 기반으로 정확하고 함정 분리가 명료하나 다소 장황+오탈자. 등급 B: V 전부 통과, C 최저 2, 합계 17 이상 — 극성 편중 완화(오답 1개를 부분 참 방향으로 교체)와 정답 추상화 심화 시 A/킬러 승격 가능."
+}

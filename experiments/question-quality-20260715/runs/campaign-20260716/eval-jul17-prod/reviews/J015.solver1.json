@@ -1,0 +1,35 @@
+{
+  "pid": "J015",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'no matter how fast they grow'에서 fast는 동사 grow를 수식하는 평서부사(flat adverb)로 어법상 옳다. 'fastly'는 존재하지 않으며 'no matter how + 부사 + S + V' 양보 구문이 온전하다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "선행사 countries 뒤의 관계절 'a large part of the population derive their livelihood from uncertain sources'는 주어·동사·목적어가 모두 갖춰진 완전한 절이므로 관계부사 where(= in which)가 옳다. which/that를 요구하면 절 안에 주어가 이중으로 생겨 비문. 매력적 오답 포인트: 관계절 내 derive의 집합명사 복수 호응(영국식 용법)이 어색하게 느껴져 (B)를 의심하게 만들지만, 밑줄은 where이고 where 선택 자체는 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'mechanisms involving direct public intervention'에서 involving은 mechanisms를 후치 수식하는 능동 현재분사. mechanisms가 intervention을 '포함/수반'하는 능동 관계이므로 involving이 옳다(involved로 바꾸면 의미 역전)."
+    },
+    {
+      "label": "(D)",
+      "verdict": "wrong (answer)",
+      "reason": "'Rapid growth of the economy in Botswana, or of the agricultural sector in Kenya, or of food production in Zimbabwe, explaining at best only a small part...'는 독립된 문장인데 정동사가 없어 fragment가 된다. 앞 문장이 마침표로 끝나 분사구문으로 붙을 수도 없고, 절대구문·축약 관계절 등 어떤 대안 해석으로도 정문이 되지 않는다. 핵심 명사 growth(단수)에 일치하는 정동사 explains가 필요. 긴 'of A, or of B, or of C' 수식 사슬로 주어-동사 거리를 벌려 놓은 전형적 '정동사 실종' 설계."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'direct public support to their populations'의 their는 앞의 these countries(복수)를 받는 소유격으로 수 일치·지시 모두 자연스럽다."
+    }
+  ],
+  "note": "최상위권 실전 풀이 관점: (B)가 가장 강한 유인력을 가짐 — 긴 관계절과 관계절 내부의 derive(복수 호응) 때문에 seam이 어색하게 느껴지지만 밑줄 자체(where)는 정문. (D)는 문장 전체에 정동사가 없다는 장거리 단서로 유일하게 확정적으로 틀림. 복수 정답 소지 없음. 출처 문체는 Drèze & Sen 계열 기근/공적개입 논의로 지문 논리도 일관됨."
+}

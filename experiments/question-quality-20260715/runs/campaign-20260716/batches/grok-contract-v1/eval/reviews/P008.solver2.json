@@ -1,0 +1,35 @@
+{
+  "pid": "P008",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "flow-coherent",
+      "reason": "Generalizes the opening claim (climate scientist ↛ health care; physicist ↛ bee collapse) into a principle: domain expertise entails ignorance elsewhere. Direct logical consequence of the preceding sentence; also sets up the lay-people sentence that follows. Removing it would not improve cohesion."
+    },
+    {
+      "label": "②",
+      "verdict": "flow-coherent",
+      "reason": "Discourse marker 'Indeed' plus colon of exemplification: the Arctic Climate Impact Assessment incorporating native observations is a concrete instantiation of the immediately preceding claim that lay people have experiences scientists can learn from. Standard claim→example elaboration; fully licensed."
+    },
+    {
+      "label": "③",
+      "verdict": "flow-coherent",
+      "reason": "'So' validly draws the conclusion from ①-② (expertise is bounded, lay knowledge matters → trust must be limited and focused). Critically, the later sentence 'It needs to be very particular' takes 'our trust' in ③ as its only felicitous antecedent ('limited, and focused' → 'very particular'); deleting ③ strands that pronoun. ③ is load-bearing, not intrusive."
+    },
+    {
+      "label": "④",
+      "verdict": "irrelevant (correct answer)",
+      "reason": "Polarity reversal: the passage assigns commute-paralysis to the ABSENCE of trust (⑤: 'without some degree of trust... we are paralyzed... make ready for the morning commute'), but ④ attaches that same predicate to the author's RECOMMENDED stance of limited trust, entailing the negation of the thesis (limited/particular trust is the right stance). It also severs the tight anaphoric pair ③ 'our trust needs to be limited, and focused' → 'It needs to be very particular,' and recycles surface lexemes from ⑤ ('morning commute,' 'trust in... natural world') without argumentative licensing — the classic fabricated-distractor signature. No alternative construal (concessive, hypothetical, ironic) rescues it: under any reading it contradicts the explicit conditional structure of the conclusion."
+    },
+    {
+      "label": "⑤",
+      "verdict": "flow-coherent",
+      "reason": "'But' contrasts correctly with 'Blind trust will get us into at least as much trouble as no trust at all,' completing the balanced conclusion: not blind trust, not zero trust, but particular trust. The morning-commute image is the author's own closing illustration of paralysis under zero trust; fully integrated."
+    }
+  ],
+  "note": "Passage is a coherent argument (bounded scientific expertise → lay knowledge has value → trust in experts must be limited/focused/particular, yet some trust is indispensable). Only ④ both contradicts the argument's polarity and breaks the ③→'It needs to be very particular' anaphoric chain. ①②③⑤ each pass formal cohesion and entailment checks. Single defensible answer; well-formed item from the blind solver's perspective."
+}

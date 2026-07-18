@@ -1,0 +1,71 @@
+{
+  "pid": "P003",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": false,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-SEAM-PARALLELISM",
+      "severity": "major",
+      "evidence": "정답 ①을 넣은 완성문 'audiences perceive the performance as a genuine slice of actual life, not just fictional characters in a movie'에서 잔존 tail 'not just fictional characters'는 원문의 'watching real people doing real things'(사람 vs. 캐릭터의 병렬)와 대비되도록 설계된 것인데, 치환 후에는 'the performance ... a genuine slice of actual life'(단수 사건 NP)와 'fictional characters'(복수 인물 NP)가 대비되어 병렬 범주 불일치(faulty parallelism)가 생긴다. 구어적으로는 관용 가능하다는 관대한 독해도 있으나, KILLER 문항의 seam으로는 부자연스러움이 뚜렷하여 보수적 기준으로 V3 실패 판정."
+    },
+    {
+      "code": "V3-DISTRACTOR-SEAM",
+      "severity": "major",
+      "evidence": "②를 넣은 완성문 'audiences demand that actors strictly follow the original script, not just fictional characters in a movie'는 tail이 'follow ..., not just [follow] fictional characters'로만 붙어 의미적으로 성립하지 않는 문장이 된다. RUBRIC V3의 '오답의 비문 여부가 유형 의도와 정확히 일치한다' 기준 위반 — 빈칸 유형 오답은 논리로 탈락해야 하는데 ②는 seam 이상으로 탈락한다."
+    },
+    {
+      "code": "D-KILLER-TAIL-LEAK",
+      "severity": "major",
+      "evidence": "잔존 tail 'not just fictional characters in a movie'가 정답 극성을 그대로 누설한다. '허구가 아닌 진짜'와 대비되는 긍정적 실재 극성을 가진 선지는 ①(genuine/actual life)뿐이며, ④는 인접 tail과 정면 모순으로 즉시 소거, ③은 부정 극성으로 즉시 소거된다. 두 문장 이상의 논리 단서 연결 없이 국소 단서 하나로 정답이 결정되므로 §D KILLER 조건('극성 하나로 정답을 찍을 수 없다', 'tail 때문에 일부 오답만 탈락하지 않는다') 위반. V 게이트는 아니나 killerConditionsMet=false 및 C3/C4/C5 감점의 근거."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 1,
+    "C4": 1,
+    "C5": 0,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "정답 — source span 'feel like they are watching real people doing real things'의 패러프레이즈(추상화)",
+      "temptingBecause": "본문 결론의 인과 귀결을 정확히 보존하며 'real people doing real things'를 'genuine slice of actual life'로 환언",
+      "decisiveFlaw": "없음(정답). 단, 'the performance'(단수 사건)와 tail의 'fictional characters'(복수 인물) 병렬 불일치로 완성문 seam이 부자연스러움"
+    },
+    {
+      "label": "②",
+      "intent": "word-anchor lure — 본문의 'script'를 표면 재사용",
+      "temptingBecause": "'emotions that are written in the script'로 script가 본문에 실재하여 표면 일치 유혹",
+      "decisiveFlaw": "관객이 대본 준수를 요구한다는 내용은 인과 귀결과 무관하며, tail과 결합 시 'follow the original script, not just fictional characters'라는 의미 불성립 문장이 되어 논리 이전에 seam으로 탈락"
+    },
+    {
+      "label": "③",
+      "intent": "word-anchor lure + causal reversal — 'camera' 재사용 및 실재감 전달의 반대 방향",
+      "temptingBecause": "'after the cameras have been turned off'로 camera가 본문에 실재",
+      "decisiveFlaw": "본문은 카메라 기법의 감정 왜곡을 주장한 적이 없고 오히려 실재감이 전달된다는 논지 — 부정 극성이 tail의 대비 구조와도 충돌하여 즉시 소거"
+    },
+    {
+      "label": "④",
+      "intent": "polarity/thesis reversal — 주제의 정반대 진술",
+      "temptingBecause": "reality/fiction이라는 주제 어휘를 그대로 사용하여 표면상 on-topic",
+      "decisiveFlaw": "빈칸 바로 뒤 tail 'not just fictional characters in a movie'와 정면 모순되어 문장 내부 단서만으로 즉시 소거 — KILLER 오답으로서 변별력 없음"
+    },
+    {
+      "label": "⑤",
+      "intent": "actor swap — 배우의 정체성 탐색·심리 변화를 관객에게 전가",
+      "temptingBecause": "'explore a whole new identity', 'psychological and behavioral changes'가 본문에 실재하는 소재",
+      "decisiveFlaw": "정체성 여정과 심리 변화의 주체는 배우이지 관객이 아니며, 관객 반응이라는 인과 귀결 슬롯의 의미 범위를 벗어난 과확장"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V2/V4/V5는 견고하다: 정답은 유일하고(각 선지 독립 검증 완료), 해설의 인용·귀속·인과 설명이 모두 실제 지문과 일치하며 필드 동기화도 완전하다. 치명 결함은 설계 층위다. (1) 원문 결론문의 대조 tail 'not just fictional characters in a movie'를 남긴 채 앞부분만 blank 처리하여, tail이 정답 극성(허구 아님=진짜)을 누설하고 ④를 즉시 소거시키며 ②를 seam 비정합으로 탈락시킨다 — §D KILLER 조건 다중 위반. (2) 정답 치환 완성문의 병렬 범주 불일치(performance/slice of life vs. characters)로 seam 자연성이 훼손된다(보수적 V3 실패). (3) 지문 자체가 평이한 설명문이고 요구 사고가 국소 단서 매칭 수준이라 요청 난이도 KILLER와 크게 불일치(C5=0). 재설계 방향: tail까지 포함해 blank 범위를 'feel like they are watching real people doing real things, not just fictional characters in a movie' 전체로 확장하거나 tail을 중립 표현으로 재작성하고, 두 문장 이상을 연결해야 정답에 도달하는 추상화 수준으로 선지를 재구성해야 한다. craft 합계 11/24."
+}

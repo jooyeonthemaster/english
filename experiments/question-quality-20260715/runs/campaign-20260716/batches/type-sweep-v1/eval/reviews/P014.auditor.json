@@ -1,0 +1,91 @@
+{
+  "pid": "P014",
+  "validity": {
+    "V1": false,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-OPTION-NONWORD",
+      "severity": "critical",
+      "evidence": "선택지 1 '알레무니 무늬의 빨간 셔츠와 노란 바지' — '알레무니'는 한국어에 존재하지 않는 비단어다. 원지문의 'patterned red shirt'를 옮기다 손상된 것으로 보이며(정상형: '무늬가 있는/알록달록한'), 학생 노출 선지 본문이 깨져 있다. 이 비단어는 오답 해설 1에도 그대로 전파된다."
+    },
+    {
+      "code": "V1-OPTION-GARBLED",
+      "severity": "critical",
+      "evidence": "선택지 4 '전문 상에 도착한 학생들' — '전문 상'은 의미가 성립하지 않는 손상 문자열이다(추정 정상형: '행사장/환영식에 도착한 학생들'). 선택지 5 '짝 대학 자매교 학생 무리'도 '짝 대학'과 '자매교'가 중복 접합된 비문 표현이다(정상형: '자매 대학 학생 무리'). 문항 본체(선지)가 의도된 변형 없이 손상된 상태다."
+    },
+    {
+      "code": "V4-EXPLANATION-INCOHERENT",
+      "severity": "critical",
+      "evidence": "오답 해설 1: \"앞 문장에서 Garcia가 골랐던 알록달록한 옷이나, Jeff가 거절한 뒤 고른 흰 셔츠·검은 청바지가 아님\" — 문면 그대로 읽으면 선택지 1이 'Garcia가 골랐던 알록달록한 옷'도 아니라고 말하는 자기모순이다. 선택지 1은 바로 그 옷(빨간 셔츠·노란 바지)이다. 또한 'Jeff가 거절한 뒤 고른'이라는 수식이 흰 셔츠·검은 청바지에 걸리는지 옷 전체에 걸리는지 파손된 채 접합되어 해설이 사실을 설명하지 못한다."
+    },
+    {
+      "code": "V4-TRAP-MISLABEL",
+      "severity": "major",
+      "evidence": "오답 해설 1이 선택지 1을 '최근접 함정'이라 부르지만, these 직전의 최근접 복수 명사구는 정답인 'a white shirt and black jeans'다(같은 화자의 직전 문장). 빨간 셔츠·노란 바지는 두 문장 이전에 나온 선행 후보로, 최근접이 아니라 '먼저 언급된 현저성(salience) 함정'이다. keyPoints 1번('직전 복수 명사구를 먼저 검토')과도 논리가 충돌한다."
+    },
+    {
+      "code": "V4-CONTENT-ADDITION",
+      "severity": "minor",
+      "evidence": "해설이 'my brother'를 '내 동생'으로 옮겼으나 지문은 Garcia와 Jeff의 형제 서열을 명시하지 않는다(지문 근거 없는 첨가). 정답 판정에는 영향 없음."
+    },
+    {
+      "code": "C2-DUPLICATE-REFERENT",
+      "severity": "major",
+      "evidence": "선택지 4('...도착한 학생들')와 5('...학생 무리')는 지문상 유일한 학생 집단인 'a large group of students from their sister university in Singapore'라는 동일 지시체를 중복 지목한다. 오답 해설 4와 5도 사실상 같은 설명을 반복하여 두 선지가 같은 오개념을 겨냥함을 자인한다."
+    }
+  ],
+  "craft": {
+    "C1": 2,
+    "C2": 1,
+    "C3": 1,
+    "C4": 3,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "먼저 언급된 현저한 후보(Garcia가 가리킨 빨간 셔츠·노란 바지)로 유인하는 선행 후보 함정",
+      "temptingBecause": "지문에서 처음 등장하는 옷이고 'Aren't these cool?'로 these와 직접 연결된 적이 있어, 담화 전체를 추적하지 않은 학생이 고르기 쉽다",
+      "decisiveFlaw": "Jeff가 'too colorful'이라며 거절했고 'Instead, Jeff picked out...' 이후 같은 화자(He=Jeff)가 자신이 방금 고른 옷을 점원에게 보이며 말하는 장면이므로 밑줄 these의 지시체가 될 수 없다. 단, 선지 문면의 '알레무니'는 비단어로 손상됨"
+    },
+    {
+      "label": "2",
+      "intent": "정답 — Jeff가 골라 낸 흰 셔츠와 검은 청바지",
+      "temptingBecause": "정답",
+      "decisiveFlaw": "없음. 직전 절 'Jeff picked out a white shirt and black jeans'의 복수 명사구가 유일하게 'would look great on my brother'라는 술어와 정합하는 지시체다"
+    },
+    {
+      "label": "3",
+      "intent": "장소명 필러",
+      "temptingBecause": "지문 첫 문장의 고유명사라 눈에 띄지만 실질적 유인력이 없다",
+      "decisiveFlaw": "단수 장소로 복수 지시어 these와 수가 맞지 않고, '동생에게 잘 어울린다'는 술어와 의미상 결합 불가 — 즉시 소거된다"
+    },
+    {
+      "label": "4",
+      "intent": "사람 집단 필러(학생들)",
+      "temptingBecause": "유인력이 사실상 없다. 손상된 문면('전문 상')이 오히려 혼란만 준다",
+      "decisiveFlaw": "사람은 'look great on my brother(옷이 몸에 어울리다)'의 주어가 될 수 없어 즉시 소거되며, 선지 5와 동일 지시체의 중복이다"
+    },
+    {
+      "label": "5",
+      "intent": "사람 집단 필러(자매 대학 학생들) — 선지 4와 중복",
+      "temptingBecause": "유인력이 사실상 없다",
+      "decisiveFlaw": "선지 4와 같은 이유로 즉시 소거. 지문상 학생 집단은 하나뿐이므로 4와 5는 같은 오답을 두 번 배치한 것이다"
+    }
+  ],
+  "explanationIssues": [
+    "오답 해설 1이 자기모순 문장으로 파손되어 있고(선택지 1이 '알록달록한 옷'이 아니라고 진술), 비단어 '알레무니'를 그대로 전파한다",
+    "오답 해설 1의 '최근접 함정' 명명이 사실과 반대다 — 최근접 복수 명사구는 정답(흰 셔츠·검은 청바지)이며, 선택지 1은 선행(먼저 언급된) 후보 함정이다",
+    "오답 해설 4와 5가 동일 지시체를 각각 설명해 사실상 중복이다",
+    "해설의 '내 동생' 번역은 지문에 없는 형제 서열을 첨가한다(경미)"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "지시 추론(REFERENCE) 문항. 렌더 지문은 원지문과 문자 단위로 동일하며 밑줄 마커(__these__) 1곳만 의도대로 추가되어 지문 자체의 무결성은 확인했다(these 3회 출현 중 2번째만 마킹, 발문과 정합). 정답 유일성도 성립한다: 밑줄 these는 같은 화자의 직전 절 'a white shirt and black jeans'만이 'would look great on my brother'와 정합하며, 나머지 선지는 수(단수 장소)·의미(사람 집단)·담화(거절된 옷) 차원에서 각각 배제된다. 그러나 (1) 학생 노출 선지 3개(1·4·5)의 한국어 문면이 비단어·손상 문자열('알레무니', '전문 상', '짝 대학 자매교')로 깨져 V1 실패, (2) 오답 해설 1이 자기모순으로 파손되고 함정 유형('최근접')을 사실과 반대로 명명해 V4 실패다. 공예 면에서도 선지 4·5가 동일 지시체 중복이라 실질 변별은 1 대 2의 양자택일로 축소되고, 정답이 직전 절 인접성만으로 풀려 INTERMEDIATE 요청 난이도에 크게 미달한다(C5=1). V1·V4 치명 실패로 등급 F, 출하 불가. 수리 방향: 선지 문면 정상화(예: '무늬가 있는 빨간 셔츠와 노란 바지', '환영식에 도착한 자매 대학 학생들'), 선지 4·5 중 하나를 다른 지시체(예: rehearsal 관련 대상)로 교체, 오답 해설 1 재작성."
+}

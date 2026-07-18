@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "flow-consistent",
+      "reason": "'The very features that create expertise in a specialized domain lead to ignorance in many others'는 첫 문장(기후과학자가 의료개혁에, 물리학자가 벌 군집 붕괴에 자격이 없다)의 사례를 일반 명제로 정식화한 문장이다. 전문성의 영역 한정성이라는 논제를 직접 부연하므로 흐름에 완전히 부합한다."
+    },
+    {
+      "label": "②",
+      "verdict": "flow-consistent",
+      "reason": "전문가가 자기 영역 밖에서는 무지하다는 ①로부터, 일반인(농부·어부·환자·원주민)이 과학자가 배울 수 있는 유관 경험을 가질 '수 있다'(may have / can learn from)는 양상적·절제된 주장이 자연스럽게 도출된다. 뒤의 ④가 'this'로 이 문장을 지시하며 실례를 제공하므로 담화 결속도 성립한다."
+    },
+    {
+      "label": "③",
+      "verdict": "irrelevant (정답)",
+      "reason": "논리적 비약과 논지 모순이 동시에 성립한다. (a) ②의 가능성 명제('may have relevant experiences')로부터 ③의 증거 명제('show that everyday observation is often MORE RELIABLE than the specialized domain of experts')는 형식적으로 도출 불가 — 존재/가능 주장이 비교 우위의 입증 주장을 뒷받침할 수 없다. (b) 지문 결론부(⑤: 지정된 전문가에 대한 어느 정도의 신뢰 없이는 마비된다, 그리고 '신뢰는 제한적·집중적이어야 한다')와 정면 충돌 — 일반인 관찰이 전문가보다 '더 신뢰할 만하다'면 전문가 신뢰 옹호가 무너진다. (c) ④의 대용어 'this'와 그 예시(북극 기후영향평가가 원주민 관찰을 '포함'하는 것)는 ②의 '배울 수 있다'를 예증할 뿐 ③의 우위 명제를 예증하지 않는다. (d) ③·④가 모두 'Indeed'로 시작하는 담화표지 중복은 삽입 이음매(seam)의 전형적 흔적이다."
+    },
+    {
+      "label": "④",
+      "verdict": "flow-consistent",
+      "reason": "'scientists have begun to recognize this'의 'this'는 ②(일반인의 유관 경험에서 배울 수 있음)를 지시하고, 북극 기후영향평가가 지역 원주민 관찰을 포함한다는 실례가 이를 예증한다. 대안 해석으로 ④를 무관 문장으로 보려면 'this'가 ③을 지시해야 하는데, ④의 예시는 '포함/협력'이지 '일반인 관찰의 우위'가 아니므로 ③의 예증이 되지 못한다. ③ 제거 시 ②→④ 연쇄가 완전하게 결속되므로 ④는 정문 흐름이다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "flow-consistent",
+      "reason": "'Blind trust... no trust at all'의 양극단 배제 뒤에 'But without some degree of trust... we are paralyzed'로 반대 방향 한계를 제시하여 '제한적이되 필수적인 신뢰'라는 결론 논증을 완성한다. 역접 표지 But의 논리적 기능도 정확하다."
+    }
+  ],
+  "note": "삭제 유형으로서 유일 정답 ③이 성립한다. ③은 (i) ②로부터의 논리적 도출 실패(may→show that의 양상 비약), (ii) 글 전체 논지(전문가 신뢰의 필요성)와의 모순, (iii) ④의 대용어 'this'의 지시 대상 파괴, (iv) 'Indeed' 중복이라는 4중의 독립 근거로 확정된다. ③을 제거하면 ①→②→④→결론의 연쇄가 결속·정합적으로 복원된다. 나머지 선지를 정답으로 옹호할 수 있는 해석 경로는 발견되지 않았다."
+}

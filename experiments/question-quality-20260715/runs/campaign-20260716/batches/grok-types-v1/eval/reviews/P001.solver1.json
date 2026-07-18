@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "첫 문장 주제문 'Emotions prepare us to deal with important events without us having to think about what to do'의 직접 패러프레이즈. 'automatically'가 without thinking/We don't choose these changes; they simply happen 의 자동성 흐름을 정확히 포괄하고, near-miss 사례·뇌/자율신경계 변화·표정 신호까지 모든 세부를 상위에서 덮는다."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "역방향 함정. 지문은 위협 대처를 의식적으로 생각해야 했다면 생존하지 못했을 것이라고 명시(Nor would you have survived if you had to think consciously...) — 의식적 계획을 정면 부정하므로 주제가 될 수 없다."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "세부+역전 함정. 10~15초간 공포가 지속된다는 문장이 있으나 'there would not be much you could do to cut that short'로 단축 방법의 부재를 말한다. 방법(methods)을 논한 바 없고 오히려 부정. 순간적 표면 유혹은 있으나 재독 시 즉시 소거."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "범위 이탈. 자율신경계는 감정이 일으키는 신체 변화의 기제로 1회 언급될 뿐, 진화사(evolutionary history)는 지문 어디에도 없다."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "가장 매력적인 세부 함정. 마지막 부분(changes in our expressions, face, voice, and bodily posture)을 거의 그대로 인용해 급하게 읽은 수험생을 끈다. 그러나 표정 신호는 뇌 활성·자율신경계 변화와 병렬된 하위 세부 중 하나로, near-miss 사례와 주제문을 포괄하지 못해 주제로는 지나치게 협소하다."
+    }
+  ],
+  "note": "주제 추론 문항. 정답 ①로 깔끔하게 수렴. 매력적 오답은 ⑤(마지막 세부 인용, 협소)와 ③(구체 수치 문장 인용이나 지문이 방법 부재를 명시하는 역전형). 대안 해석으로 다른 선지가 옹호 가능해지는 경로는 없음. 문항 성립에 문제 없음."
+}

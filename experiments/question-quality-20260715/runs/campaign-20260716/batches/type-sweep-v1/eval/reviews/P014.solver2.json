@@ -1,0 +1,35 @@
+{
+  "pid": "P014",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "형식적 검증: 'a patterned red shirt and yellow pants'는 Garcia가 골랐다가 Jeff가 'a bit too colorful'이라며 명시적으로 기각(objected)한 대상이다. 'these'의 발화자는 Jeff이고 발화 목적은 자신의 선택을 점원에게 추천받는 것이므로, Jeff가 방금 기각한 옷을 'would look great on my brother'의 주어로 삼는 해석은 담화 논리상 모순이다. 또한 선지 표기 '알레무니 무늬'는 원문 'patterned'의 번역 오류로 보이는 결함이나, 지시 대상 식별에는 영향 없음."
+    },
+    {
+      "label": "2",
+      "verdict": "accept",
+      "reason": "지배 규칙 확인: 'these'는 복수 지시대명사로, 직전 문장 'Jeff picked out a white shirt and black jeans'의 병렬 명사구(a white shirt and black jeans)가 최근접 복수 선행사다. (i) 수 일치: shirt+jeans의 등위 접속으로 복수 성립. (ii) 술부 적합성: 'would look great on my brother'는 착용 가능한 의류를 요구하며 충족. (iii) 담화 논리: Jeff가 자기 선택을 점원에게 확인받는 발화이므로 Jeff가 고른 옷을 가리키는 것이 유일하게 정합적. (iv) 후속 검증: 점원이 'agreeing with Jeff's choice'로 응답하고 Garcia가 'the recommended clothes'를 구매 — 지시 연쇄가 일관됨. 증명 완료."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "Frontcountry Mall은 단수 고유명사로 복수 대명사 'these'와 수 불일치. 또한 'look great on my brother(형이 입으면 잘 어울리다)'라는 술부와 의미론적으로 결합 불가(쇼핑몰은 착용 대상이 아님). 형식적으로 즉시 배제."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "선지 표기 '전문 상에 도착한 학생들' 자체가 문법적으로 성립하지 않는 훼손된 한국어(원문 대응 어구 불명)로 선지 품질 결함. 내용상 싱가포르 학생들을 뜻한다 해도, 'these'는 사람에 대해 쓰지 않는 것이 표준이며(사람이면 they/these people), 'look great on my brother'라는 술부와도 결합 불가. 배제."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "'짝 대학 자매교 학생 무리'(sister university 학생들) 역시 사람 집단으로, 의류를 요구하는 술부 'would look great on my brother'와 의미 결합이 불가능하고, 발화 장면(옷가게에서 점원에게 옷을 보여주며 묻는 상황)의 화용적 맥락과도 무관. 표기도 '짝 대학 자매교'라는 어색한 중복 번역 결함. 배제."
+    }
+  ],
+  "note": "지시어 파악 문항으로 정답은 2가 유일하게 옹호 가능. 형식 검증: 수 일치(복수), 최근접 선행사, 술부 선택제약(착용물), 담화 논리(화자의 추천 의도), 후속 지시 연쇄(the recommended clothes) 모두 2를 지지. 다만 선지 한국어 품질 결함이 심각함 — 1번 '알레무니 무늬'(patterned의 오역/깨진 표기), 4번 '전문 상에 도착한 학생들'(비문), 5번 '짝 대학 자매교'(중복 어색 번역). 문항 성립 자체는 훼손하지 않으나 실전 출제 불가 수준의 표기 결함으로 수리 필요."
+}

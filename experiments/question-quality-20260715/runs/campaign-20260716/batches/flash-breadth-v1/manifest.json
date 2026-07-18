@@ -1,0 +1,162 @@
+{
+  "batchId": "flash-breadth-v1",
+  "phase": "grok-confirm",
+  "note": "flash 브레드스 블라인드 기준선: GK-B/E5와 동일 프레임·유형·난이도, plan=STANDARD(flash 경로). 'flash 기타 유형 품질 양호'가 결정형 게이트 통과에만 기대던 공백을 블라인드로 메움.",
+  "atKst": "2026-07-17T23:07:50.830+09:00",
+  "gitSha": "8d365701e339d7ad64bb1f808c76ec768e9855ee",
+  "gitDirty": true,
+  "worstCaseReserved": 64,
+  "spec": {
+    "batchId": "flash-breadth-v1",
+    "phase": "grok-confirm",
+    "note": "flash 브레드스 블라인드 기준선: GK-B/E5와 동일 프레임·유형·난이도, plan=STANDARD(flash 경로). 'flash 기타 유형 품질 양호'가 결정형 게이트 통과에만 기대던 공백을 블라인드로 메움.",
+    "concurrency": 4,
+    "providerRouting": "none",
+    "assignments": [
+      {
+        "itemId": "fb-title-s",
+        "frameId": "blank-supply-v2-135",
+        "subType": "TITLE",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "armId": "FB-TITLE",
+        "funnel": true
+      },
+      {
+        "itemId": "fb-title-l",
+        "frameId": "adhoc-prod-05",
+        "subType": "TITLE",
+        "difficulty": "INTERMEDIATE",
+        "plan": "STANDARD",
+        "armId": "FB-TITLE",
+        "funnel": true
+      },
+      {
+        "itemId": "fb-topic-s",
+        "frameId": "blank-supply-v2-137",
+        "subType": "TOPIC",
+        "difficulty": "INTERMEDIATE",
+        "plan": "STANDARD",
+        "armId": "FB-TOPIC",
+        "funnel": true
+      },
+      {
+        "itemId": "fb-topic-l",
+        "frameId": "adhoc-prod-06",
+        "subType": "TOPIC",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "armId": "FB-TOPIC",
+        "funnel": true
+      },
+      {
+        "itemId": "fb-impl-s",
+        "frameId": "blank-supply-v2-146",
+        "subType": "IMPLIED_MEANING",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "armId": "FB-IMPL",
+        "funnel": true
+      },
+      {
+        "itemId": "fb-impl-l",
+        "frameId": "adhoc-prod-04",
+        "subType": "IMPLIED_MEANING",
+        "difficulty": "INTERMEDIATE",
+        "plan": "STANDARD",
+        "armId": "FB-IMPL",
+        "funnel": true
+      },
+      {
+        "itemId": "fb-sins-s",
+        "frameId": "grammar-frame-v2-128",
+        "subType": "SENTENCE_INSERT",
+        "difficulty": "INTERMEDIATE",
+        "plan": "STANDARD",
+        "armId": "FB-SINS",
+        "funnel": true
+      },
+      {
+        "itemId": "fb-sins-l",
+        "frameId": "adhoc-prod-08",
+        "subType": "SENTENCE_INSERT",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "armId": "FB-SINS",
+        "funnel": true
+      },
+      {
+        "itemId": "fb-sord-s",
+        "frameId": "grammar-frame-v2-176",
+        "subType": "SENTENCE_ORDER",
+        "difficulty": "INTERMEDIATE",
+        "plan": "STANDARD",
+        "armId": "FB-SORD",
+        "funnel": true
+      },
+      {
+        "itemId": "fb-sord-l",
+        "frameId": "adhoc-prod-04",
+        "subType": "SENTENCE_ORDER",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "armId": "FB-SORD",
+        "funnel": true
+      },
+      {
+        "itemId": "fb-summ-s",
+        "frameId": "blank-supply-v2-090",
+        "subType": "SUMMARY_COMPLETE_MC",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "armId": "FB-SUMM",
+        "funnel": true
+      },
+      {
+        "itemId": "fb-summ-l",
+        "frameId": "adhoc-prod-05",
+        "subType": "SUMMARY_COMPLETE_MC",
+        "difficulty": "INTERMEDIATE",
+        "plan": "STANDARD",
+        "armId": "FB-SUMM",
+        "funnel": true
+      },
+      {
+        "itemId": "fb-cont-s",
+        "frameId": "blank-supply-v2-122",
+        "subType": "CONTENT_MATCH",
+        "difficulty": "INTERMEDIATE",
+        "plan": "STANDARD",
+        "armId": "FB-CONT",
+        "funnel": true
+      },
+      {
+        "itemId": "fb-cont-l",
+        "frameId": "adhoc-prod-03",
+        "subType": "CONTENT_MATCH",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "armId": "FB-CONT",
+        "funnel": true
+      },
+      {
+        "itemId": "fb-irre-s",
+        "frameId": "grammar-frame-v2-088",
+        "subType": "IRRELEVANT",
+        "difficulty": "INTERMEDIATE",
+        "plan": "STANDARD",
+        "armId": "FB-IRRE",
+        "funnel": true
+      },
+      {
+        "itemId": "fb-irre-l",
+        "frameId": "adhoc-prod-07",
+        "subType": "IRRELEVANT",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "armId": "FB-IRRE",
+        "funnel": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P017",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "정답",
+      "reason": "지문의 핵심 문장 'The approach most consistent with culturally responsive teaching is to first accept the dialect and then build on it'과 정확히 대응. 교사가 'I ain't got no pencil'을 'Oh, you don't have a pencil'로 자연스럽게 표준형으로 되받아주는(recast) 예시가 '수용 후 표준어로 확장'을 구체화하며, 마지막 문장의 장기적 언어 발달 효익도 이 요지를 지지한다."
+    },
+    {
+      "label": "2",
+      "verdict": "오답",
+      "reason": "첫 문장(표준 영어가 교육적·경제적 기회 접근을 가능하게 함)만 확대 해석한 왜곡. 지문 어디에도 '교육과정 내 표준어 교육 비중 확대' 주장이 없으며, 글의 무게중심은 'So, what should teachers do...' 이후의 교사 대응 전략에 있다. 첫 문장을 요지로 착각하면 끌릴 수 있으나 지문 전개 구조상 도입부일 뿐이다."
+    },
+    {
+      "label": "3",
+      "verdict": "오답(최다 매력 오답)",
+      "reason": "'방언 수용'이라는 어휘 중복으로 가장 유혹적. 그러나 지문은 'complete acceptance'를 의견 스펙트럼의 한 극단으로 소개했을 뿐 지지하지 않으며, 수용(accept)은 표준어로 build on 하기 위한 첫 단계다. '문화적 가치 보존'이나 '자유로운 사용 정착'은 지문에 없는 목적을 덧씌운 절반 왜곡 — 지문의 목적은 오히려 표준 영어 습득(기회 접근)이다."
+    },
+    {
+      "label": "4",
+      "verdict": "오답",
+      "reason": "'rejection and correction'은 지문이 배격하는 반대 극단이다. 문화감응교수와 가장 부합하는 것은 수용 후 확장이라고 명시했고, 즉각적·엄격한 교정은 이에 정면으로 반한다."
+    },
+    {
+      "label": "5",
+      "verdict": "오답",
+      "reason": "가정에서의 표준어 사용이나 규칙적 읽기 지도는 지문에 전혀 언급되지 않은 무관 소재. '문화적 역량'이라는 표현이 culturally responsive teaching과 표면적으로만 유사할 뿐이다."
+    }
+  ],
+  "note": "요지 문항으로서 구조가 깨끗하다. 정답 1번은 핵심 문장의 직역적 대응이고, 3번이 '수용' 어휘를 공유하는 설계된 매력 오답(극단적 완전 수용으로 왜곡), 4번이 반대 극단, 2번이 도입부 성급 일반화, 5번이 무관 소재로 오답 역할이 분화되어 있다. 대안 해석으로 3번을 옹호하려 해도 첫 문장이 표준 영어 교수의 정당성을 명시하고 'build on it'이 명백한 후속 단계이므로 성립하지 않는다. 정답 후보는 1번 단일."
+}

@@ -1,0 +1,79 @@
+{
+  "pid": "P009",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-MINOR-COVERAGE",
+      "severity": "minor",
+      "evidence": "메인 해설은 ①, ②, ④의 오답 사유만 언급하고 ⑤를 다루지 않는다. 다만 별도 '오답 해설' 필드가 ⑤를 정확히 커버하므로 사실성 오류나 필드 모순은 아님(V4/V5 통과 유지)."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 2,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "필자가 명시적으로 경고한 '합리화된 회피(커피 핑계)'를 긍정적 자기관리 언어로 포장한 극성 역전(half-truth framing)",
+      "temptingBecause": "'task-related anxiety 완화'가 상식적 자기관리 조언처럼 들리고, 지문의 커피 장면(getting a cup of coffee to keep yourself alert)과 표면적으로 앵커됨",
+      "decisiveFlaw": "지문은 그 행위를 'you're just trying to avoid having to work'라며 명시적으로 기각한다. 필자 주장과 정반대이며, 강한 어조의 지문이라 소거가 비교적 빠름(약한 디코이)"
+    },
+    {
+      "label": "②",
+      "intent": "condition loss / half-truth — '유연한 일정 수정'이라는 온건한 표현으로 unscheduled breaks 허용을 밀수입",
+      "temptingBecause": "'feeling drained' 상황 대응이 첫 문장의 'revive your energy levels'와 호응하는 듯 보이고, 계획(schedule) 어휘를 공유함",
+      "decisiveFlaw": "지문의 처방은 사전 계획의 고수이지 사후 유연화가 아니다. 'any other breaks in the midst of ongoing work hours are unwarranted'와 직접 충돌"
+    },
+    {
+      "label": "③",
+      "intent": "정답 — 'commit to having no random breaks' + 'you should already have scheduled breaks'를 종합한 추상 재진술",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음. 다만 'pre-established rest intervals'가 'scheduled breaks at appropriate times'와 어휘적으로 강하게 겹쳐 키워드 매칭만으로도 도달 가능 — KILLER 난이도 관점의 결함(C5)"
+    },
+    {
+      "label": "④",
+      "intent": "overextension / scope shift — 'no random breaks'를 'no breaks at all'로 과확장한 절대화 함정",
+      "temptingBecause": "지문 후반의 강경한 금지 어조('sure-fire way', 'commit to having no...')와 극성이 일치해 보임",
+      "decisiveFlaw": "첫 문장 'Breaks are necessary to revive your energy levels'와 scheduled breaks 옹호에 정면 위배. 첫 문장만 기억해도 소거됨"
+    },
+    {
+      "label": "⑤",
+      "intent": "dimension/scope shift — 논점을 '통제성(scheduled vs unscheduled)'에서 '지속시간(duration)'으로 치환",
+      "temptingBecause": "'during working hours'가 'in the midst of ongoing work hours'와 어휘 앵커를 이루고, 휴식을 제한하라는 방향성이 정답과 유사해 가장 경쟁력 있는 디코이",
+      "decisiveFlaw": "지문은 휴식의 길이를 문제 삼은 적이 없다. 계획된 휴식은 온전히 보장하고 임의 휴식만 제거하라는 주장이므로 '회복 시간 제한'은 인접하지만 다른 처방"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "EXPL-COVERAGE",
+      "severity": "minor",
+      "evidence": "메인 해설이 ⑤ 오답 사유를 생략(오답 해설 필드에서 보완됨)"
+    },
+    {
+      "code": "EXPL-LOOSE-PHRASE",
+      "severity": "minor",
+      "evidence": "⑤ 오답 해설의 '에너지 충전의 필요성 자체를 위축시킬 뿐만 아니라'는 다소 느슨한 표현이나(지속시간 제한이 필요성 부인과 등치는 아님), 뒤이은 '통제성 초점 불일치' 설명이 실제 결정적 결함을 정확히 짚으므로 사실성 오류로 보지 않음"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionsDetail": {
+    "sameSyntacticSlot": true,
+    "sourceMeaningPreservedWithAbstraction": "부분 충족 — 의미 보존은 정확하나 추상화 수준이 낮음(near-synonym paraphrase)",
+    "eachDistractorAnchorOverlapFlaw": true,
+    "requiresTwoLogicCues_noSingleSurfaceCue": "미충족 — ④⑤ 소거에는 복수 단서가 필요하지만, ③ 자체는 'pre-established rest intervals' ↔ 'scheduled breaks'의 강한 어휘 반향으로 단일 표면 단서(키워드 매칭)만으로 선택 가능. 지문이 대조를 3회 명시 반복해 함정 깊이가 KILLER에 못 미침",
+    "diverseTrapTypes": true
+  },
+  "grade": "B",
+  "notes": "V1~V5 전부 통과: 렌더 지문은 원지문에서 'commit to having no random breaks' 스팬만 빈칸화했고 tail 'instead'가 모든 선지와 문법적으로 결합한다. 정답 ③은 유일하며 각 오답은 독립 검증에서 결정적 결함을 가진다. 해설·오답해설·keyPoints 동기화 양호. 결함은 유효성이 아니라 난이도 정합(C5=2): 요청 난이도 KILLER 대비 실제 체감 난이도는 중상 수준 — 지문이 scheduled/unscheduled 대조를 명시적으로 반복하고, 정답 선지가 원문과 어휘적으로 근접해('rest intervals'~'breaks', 'pre-established'~'scheduled') 키워드 매칭 공략이 가능하다. ①은 필자의 강한 어조 탓에 즉시 소거되는 약한 디코이. KILLER로 출하하려면 정답 선지의 추상화 수준을 높이고(예: 통제성/사전결정성 개념으로 재표현) ①을 더 정교한 half-truth로 교체하는 재설계 필요. 현 상태로는 상위 3점 문항(B등급)으로는 출하 가능."
+}

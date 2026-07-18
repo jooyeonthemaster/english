@@ -1,0 +1,35 @@
+{
+  "pid": "P011",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "'take (something) to heart'는 '진지하게·깊이 새겨듣다'라는 고정 관용구로, heart는 'deep and sincere consideration'(깊고 진심 어린 숙고)을 뜻한다. 이야기를 통해 전달된 조언을 John이 더 진지하게 받아들인다는 지문 결론과 정확히 부합한다."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "'the heart of the matter'류의 '핵심부' 다의어 오답. 이 문장에서 heart가 어떤 대상의 중심부를 지칭할 구조적 자리가 없다."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "심장의 신체적 의미(체력·지구력)로, 조언 수용 맥락과 전혀 무관하다."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "가장 매력적인 오답. 'take heart'(용기를 내다)와의 혼동을 노렸다. 실전에서 순간 끌리지만 본문은 전치사 to가 있는 'take ~ to heart' 구조이며, John에게 필요한 것은 용기가 아니라 조언의 진지한 수용이므로 탈락."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "이야기가 공감을 유발한다는 지문 분위기에 편승한 정서적 다의어 오답('have a heart'류). 그러나 밑줄 heart는 관용구 'take ~ to heart' 내부의 의미로 '공감·연민'이 아니라 '진지한 숙고'이며, 발문이 묻는 것은 밑줄 단어의 문맥상 의미이므로 방어 불가."
+    }
+  ],
+  "note": "관용구 'take ~ to heart'의 의미가 유일하게 ①과 일치. ④(take heart 혼동)와 ⑤(이야기=공감 편승)가 매력적 오답으로 잘 설계되어 있으나 둘 다 관용구 구조·의미 검증에서 배제된다. 정답 후보는 ① 단일."
+}

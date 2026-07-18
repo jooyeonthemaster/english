@@ -1,0 +1,104 @@
+{
+ "P001": {
+  "itemId": "ct-summ-s",
+  "armId": "CT-SUMM",
+  "frameId": "blank-supply-v2-090",
+  "subType": "SUMMARY_COMPLETE_MC",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": []
+ },
+ "P002": {
+  "itemId": "ct-sins-l",
+  "armId": "CT-SINS",
+  "frameId": "adhoc-prod-08",
+  "subType": "SENTENCE_INSERT",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "④",
+  "gateIssues": []
+ },
+ "P003": {
+  "itemId": "ct-sins-s",
+  "armId": "CT-SINS",
+  "frameId": "grammar-frame-v2-128",
+  "subType": "SENTENCE_INSERT",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "④",
+  "gateIssues": []
+ },
+ "P004": {
+  "itemId": "ct-irre-l",
+  "armId": "CT-IRRE",
+  "frameId": "adhoc-prod-07",
+  "subType": "IRRELEVANT",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "④",
+  "gateIssues": []
+ },
+ "P005": {
+  "itemId": "ct-summ-l",
+  "armId": "CT-SUMM",
+  "frameId": "adhoc-prod-05",
+  "subType": "SUMMARY_COMPLETE_MC",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": []
+ },
+ "P006": {
+  "itemId": "ct-sord-s",
+  "armId": "CT-SORD",
+  "frameId": "grammar-frame-v2-176",
+  "subType": "SENTENCE_ORDER",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "2",
+  "gateIssues": []
+ },
+ "P007": {
+  "itemId": "ct-sord-l",
+  "armId": "CT-SORD",
+  "frameId": "adhoc-prod-04",
+  "subType": "SENTENCE_ORDER",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "3",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "sentence-order-paragraph-imbalance",
+    "message": "SENTENCE_ORDER (A)/(B)/(C) chunks are imbalanced (51/56/137 words)."
+   }
+  ]
+ },
+ "P008": {
+  "itemId": "ct-irre-s",
+  "armId": "CT-IRRE",
+  "frameId": "grammar-frame-v2-088",
+  "subType": "IRRELEVANT",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "④",
+  "gateIssues": []
+ }
+}

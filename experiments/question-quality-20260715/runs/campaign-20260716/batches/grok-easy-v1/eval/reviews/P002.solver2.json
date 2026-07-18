@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "4",
+  "multipleDefensible": false,
+  "defensibleLabels": ["4"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "'becomes a laboratory observation' is grammatical but semantically inverted: an observation precedes a truth-claim, so a truth cannot 'become' one. Logically it contradicts the immediately following sentence, which demotes the laboratory to 'only one stage in its construction' — the blank must name something beyond the lab, not the lab itself. Also echoes the rejected individualist rhetoric ('discoveries are made in laboratories')."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "Grammatically well-formed, but it restates the individualist creed ('the product of inspired patience... an inquiring but unbiased mind') that the passage explicitly discredits ('almost nobody thinks they can provide a basis for action in public contexts'). Filling the blank with it yields a self-contradictory paragraph."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "Grammatically well-formed, but the passage states that a scientist who seeks publicity before expert review 'is automatically castigated as a publicity seeker' — publicity is stigmatized, not standing-conferring. A publicity campaign is the antithesis of authorization by disciplinary specialists, so the proposition 'truth gains standing by becoming a publicity campaign' is refuted by the text itself."
+    },
+    {
+      "label": "4",
+      "verdict": "accept",
+      "reason": "Grammatical seam is clean ('becomes a collective product'). Logically entailed by the two governing premises: (i) 'knowledge isn't knowledge unless it has been authorized by disciplinary specialists' — a collective body; (ii) 'What happens in somebody's laboratory is only one stage in its construction' — 'construction' anaphorically requires a constructed artifact, i.e., a 'product', built in multiple stages by multiple agents, i.e., 'collective'. Both long-distance cues converge uniquely on this option."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "'Unbiased' belongs to the individualist rhetoric under critique ('an inquiring but unbiased mind'), and 'impression' denotes a subjective, individual mental state — the opposite of communal authorization. 'A truth becomes an unbiased impression' is also a category mismatch (truth is not an impression), and the pronoun chain 'its construction' cannot coherently refer to an impression."
+    }
+  ],
+  "note": "Blind solve under the grammarian/logician lens. The final sentence's anaphor 'its construction' functions as a formal constraint: the blank must supply a noun phrase denoting a constructed, multi-stage, multi-agent artifact. Only option 4 satisfies both the grammatical seam and the passage's central claim (scientific knowledge requires collective authorization). Options 1, 2, and 5 each restate the discredited individualist rhetoric; option 3 is directly stigmatized in the text. No alternative reading makes any distractor defensible; the item is clean with a single answer."
+}

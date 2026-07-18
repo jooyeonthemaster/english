@@ -1,0 +1,69 @@
+{
+  "pid": "J019",
+  "blindAnswer": "5",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-minor",
+      "severity": "minor",
+      "evidence": "완성문 'when they are feeling a different way, one might alter their decisions' 에서 종속절 대명사 they 와 주절 주어 one 이 혼용된다. 원문은 they→the same individual 의 후방조응이었으나 선지가 one 으로 바꾸면서 대명사 일관성이 어색해졌다(one...their 자체는 singular they 로 허용). 비문은 아니어서 V3 실패로는 판정하지 않음."
+    },
+    {
+      "code": "V3-minor",
+      "severity": "minor",
+      "evidence": "선지 2 'individuals tend to follow blindly prescribed ethical codes' 의 부사 위치가 어색하다. 'blindly follow prescribed ethical codes' 가 자연스러우며, 현재 어순은 'blindly prescribed(맹목적으로 규정된) codes' 로 오파싱될 수 있다. 다만 문법 위반으로 탈락하는 수준은 아니고 내용으로 오답이 되므로 유형 의도는 유지된다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "polarity reversal — 개인 내 가변성 논지를 '일관성 유지'로 뒤집은 극성 반전",
+      "temptingBecause": "'ethical judgment' 등 지문 핵심 어휘를 재사용하고, '원칙(principles of conduct)'이라는 단어에서 안정성을 연상하게 함",
+      "decisiveFlaw": "빈칸 문장 자체가 'under different circumstances... a different way' 로 가변성을 전제하는 appositive(meaning that ...)여서 일관성 주장은 문장 내부에서 즉시 모순됨"
+    },
+    {
+      "label": "2",
+      "intent": "thesis contradiction — 'follow a prescribed set of ethical codes' 문장을 앵커로 한 논지 반전",
+      "temptingBecause": "'prescribed ethical codes' 가 지문 4번째 문장에 그대로 등장하는 표면 중첩",
+      "decisiveFlaw": "지문은 규정된 코드를 따르기보다 스스로 사고해야 한다(think through ... rather than follow)고 주장하므로 맹목적 추종은 논지와 정반대이고, 빈칸 자리(개인 내 상황 의존성 설명)와도 무관"
+    },
+    {
+      "label": "3",
+      "intent": "actor swap + scope shift — 뒷문장(other people's codes)의 '타인' 요소를 빈칸 자리로 끌어옴",
+      "temptingBecause": "'others', 'evaluate issues' 가 지문 도입부와 마지막 문장의 어휘와 겹침",
+      "decisiveFlaw": "빈칸은 'Individual perspectives may also be context dependent' 를 부연하는 자리로 동일 개인 내부의 가변성을 말해야 하는데, 이 선지는 주체를 타인으로 바꾸고 지문에 없는 '더 공정하게(more fairly)' 라는 비교 평가까지 첨가함"
+    },
+    {
+      "label": "4",
+      "intent": "overextension / condition loss — 'formal and informal learning experiences' 문장을 앵커로 한 과확장",
+      "temptingBecause": "'formal learning' 이 바로 앞 문장에 등장하고, 학습이 가치관을 형성한다는 지문 내용과 절반쯤 일치(half-truth)",
+      "decisiveFlaw": "'permanently fixes' 는 빈칸 문장의 전제인 context dependence(같은 개인도 상황에 따라 달라짐)와 직접 충돌하는 절대어 과확장"
+    },
+    {
+      "label": "5",
+      "intent": "정답 — source span 'the same individual may make different choices' 의 재진술",
+      "temptingBecause": "N/A (정답)",
+      "decisiveFlaw": "없음. 다만 'depending on the situation' 꼬리가 문장 앞부분의 'under different circumstances' 및 'context dependent' 를 그대로 반향하여 잉여적이고, 단서 누출로 작동함(감점 요인, 오류 아님)"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1: 원지문 대비 렌더 지문의 유일한 변경은 'the same individual may make different choices' → '_____' 단일 절 치환임을 word-level diff 로 확인. 접합 파손·중복·누락 없음, 선지 5개·정답 라벨 5 일치. V2: 각 선지 독립 삽입 검증 결과 5만 성립 — 1(일관성)·4(영구 고정)는 빈칸 문장 내부 전제와 모순, 2는 논지 반전, 3은 주체 전환+무근거 비교로 탈락. 대안 정답 없음. 다섯 선지 모두 완전한 절로 동일 통사 슬롯에 들어가 문법만으로 일부 오답이 탈락하지 않음(§D 1조 충족). V3: 완성문 문법적(one/they 혼용은 minor). V4: 해설의 문장 귀속('앞 문장에서 가치관이 학습 경험에 영향받음', '타인 코드는 뒷문장') 모두 실제 지문과 일치, 오분석·환각 없음. V5: 정답 라벨·선지·오답해설(1~4)·keyPoints 동기화 양호. 공예: 빈칸이 문단의 핵심 기제(개인 내 가변성)를 겨냥해 C1=3, 네 오답이 서로 다른 앵커·함정 유형을 가져 C2=3. 그러나 치명적 공예 결함은 난이도 정합 — 요청 난이도 KILLER 인데 빈칸 문장 자체의 appositive frame('meaning that under different circumstances, at a different time, when they are feeling a different way')이 단일 문장 국소 단서로 정답을 거의 결정하고, 가변성(+) 대 고정성(−) 극성 하나로 1·2·4 가 일괄 소거되며, 정답 5는 source span 의 근사 축자 재진술에 'depending on the situation' 이라는 반향 꼬리까지 붙어 추상화가 부족함. §D KILLER 조건(두 문장/두 논리 단서 연결 필수, 극성 하나로 정답 불가) 명백 미충족 → killerConditionsMet=false, C3=2, C4=2, C5=1. C6=3(해설 정확·간결, 정답 근거와 함정 분리 양호). 모든 V 통과이나 합계 14, C5=1 로 재설계 필요 → grade C. 개선 방향: 빈칸을 마지막 문장의 'how these may coincide, alongside recognizing...' 쪽 통합 지점으로 옮기거나, 정답을 'the very same person may arrive at divergent conclusions' 급으로 추상화하고 appositive 의 삼중 나열 단서를 축약해야 KILLER 성립."
+}

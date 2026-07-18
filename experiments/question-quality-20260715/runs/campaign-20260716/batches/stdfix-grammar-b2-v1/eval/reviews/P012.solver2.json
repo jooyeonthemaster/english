@@ -1,0 +1,35 @@
+{
+  "pid": "P012",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'our attention tends to be directed outward': 'direct' is transitive and 'attention' is the theme, not the agent, so the passive infinitive after 'tends to' is required. Active 'tends to direct' would lack an object. Grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'While' is a concessive subordinator introducing a full finite clause ('this pattern of attention is necessary ...'), with the main clause 'it actually prevents ...' following. Structure Sub + S + V, Main S + V is complete. Grammatical."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'necessary when solving problems analytically' is elliptical 'when [one is] solving problems'. A hardline dangling-modifier objection exists (matrix subject 'this pattern of attention' does not solve problems), but generic-agent ellipsis with 'when + V-ing' is standard accepted usage in descriptive grammar and KSAT convention. Not a formal error."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'the connections that lead to creative insights': relative pronoun 'that' has plural antecedent 'connections' and functions as subject of plural verb 'lead'. Agreement and case both check out. Grammatical."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "Perception-verb complement: 'hear the quiet voices ... to tell us' violates the rule that hear + object licenses only a bare infinitive ('tell') or present participle ('telling'), never a to-infinitive. Rescue readings fail: a purpose infinitive ('in order to tell us') would make 'we' the understood teller, which is semantically incoherent; an adjectival infinitive on 'voices' ('voices to tell us') carries futurity/modality contradicting the intended simultaneous sense and is blocked inside the perception-verb complement anyway. Should be 'telling' (or bare 'tell')."
+    }
+  ],
+  "note": "Single clear violation at (E) via the perception-verb bare-infinitive/participle rule; alternative parses (purpose infinitive, adjectival infinitive) were actively tested and all fail. (C) invites a strict dangling-modifier quibble but generic 'when + V-ing' ellipsis is conventionally licensed, so it is not defensible as an answer. Answer uniquely (E), high confidence."
+}

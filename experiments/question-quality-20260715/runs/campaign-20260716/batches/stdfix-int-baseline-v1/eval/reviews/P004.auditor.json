@@ -1,0 +1,72 @@
+{
+  "pid": "P004",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4",
+      "severity": "major",
+      "evidence": "④ 오답 해설이 '본문은...인지적 반응의 공통성을 시사하므로, 인지적 유사성을 부정한다는 대조적인 설명은 글의 핵심 방향과 정반대'라고 판정하나 이는 논리 오설명이다. ④를 빈칸에 넣으면 'but this need not be interpreted as a tool that disproves cognitive similarities between species'가 되며, 지배 부정어 'need not be interpreted as'로 인해 실제 완성문은 '발구르기의 인간 고유성을 종간 인지 유사성을 반증하는 근거로 볼 필요는 없다'가 되어 오히려 필자 논지(동물도 음악에 반응→인지적 공통성)와 일치한다. 즉 ④는 '유사성을 부정'하지도 '정반대'도 아니다. ④가 오답인 실제 이유는 국소 논점이 '음악적 반응/경험'(제거된 원문 span 및 후속 문장 'other musical features')인데 ④가 '종간 인지 일반'으로 범위를 이동시키기 때문인데, 해설은 부정어의 논리적 역할을 뒤집어 잘못 분석했다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "정답. 제거된 원문 span 'the decisive capacity involved in musical response'의 의미를 난이도에 맞게 추상화한 재진술('발구르기는 유기체가 음악을 경험하는 방식을 정의하는 유일한 척도가 아니다').",
+      "temptingBecause": "원문 핵심을 정확히 보존하고, 뒤 문장 'My dogs in fact responded to other musical features'가 '음악 경험 방식의 복수성 → 발구르기가 유일 척도 아님'을 직접 뒷받침한다.",
+      "decisiveFlaw": "없음(정답). 국소 문맥과 전체 논지, 후속 근거가 모두 이 선지로 수렴한다."
+    },
+    {
+      "label": "②",
+      "intent": "'particularly human skill'을 '인간의 우월성'으로 오독하도록 유도(superiority frame).",
+      "temptingBecause": "'인간 고유'라는 표현과 표면적으로 연결되고, 우월성 담론이 그럴듯하게 들린다.",
+      "decisiveFlaw": "본문은 인간 우월성을 주장하는 글이 아니라 동물의 리듬/음악 반응 능력을 옹호하는 글이다. 'humans surpass other species'는 논지와 무관·상충."
+    },
+    {
+      "label": "③",
+      "intent": "'음악적 반응'을 '모든 자극에 대한 유일한 진화적 기제'로 과잉 일반화(scope over-extension).",
+      "temptingBecause": "다윈 언급이 진화 프레임을 연상시켜 진화적 서술이 그럴듯해 보인다.",
+      "decisiveFlaw": "'the only evolutionary mechanism for reacting to stimuli'는 지문의 논점(음악적 리듬 반응) 범위를 진화 전반·모든 자극으로 과도 확장하며 본문 근거가 없다."
+    },
+    {
+      "label": "④",
+      "intent": "필자 논지(종간 인지 공통성)와 표면적으로 얽히도록 설계된 최강 미끼. 주제 정합성을 이용한 scope-shift 함정.",
+      "temptingBecause": "'need not be interpreted as'로 부정되면 완성문이 실제로 필자 견해와 일치하여(발구르기의 고유성이 인지 유사성을 반증하지 않는다) 매우 매력적이다.",
+      "decisiveFlaw": "국소 논점은 '음악적 반응/경험'을 정의하는 기준인데(제거된 원문 span·후속 'other musical features'가 이를 확정), ④는 '종간 인지 유사성 일반'으로 범위를 옮긴다. 후속 근거는 ①의 '음악 경험 방식 복수성'을 뒷받침하지 ④의 인지 일반론을 뒷받침하지 않는다. (주의: 이 선지에 대한 제공된 해설은 논리를 잘못 분석함 → V4)"
+    },
+    {
+      "label": "⑤",
+      "intent": "foot-tapping의 표면 어휘(rhythm·movement)를 재활용한 surface-match 함정.",
+      "temptingBecause": "'musical rhythms', 'movement' 등 지문 어휘가 반복되어 어휘 매칭 독자에게 매력적.",
+      "decisiveFlaw": "'a visual way of translating musical rhythms into movement'는 발구르기가 '과잉해석되지 말아야 할 대상'이 아니라 오히려 발구르기의 실제 본질을 서술한 것에 가깝고, 'visual'은 본문에 없는 부적합 규정이다. 빈칸이 요구하는 '거부할 과잉해석'과 논리적으로 맞지 않음."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "major",
+      "evidence": "④ 해설이 부정어 'need not be interpreted as'의 논리 역할을 무시하고 선지를 '인지적 유사성을 부정 → 정반대'로 오분석. 실제 완성문은 필자 논지와 일치하며, ④의 진짜 결함은 '음악적 반응'에서 '종간 인지 일반'으로의 범위 이동이다.",
+      "recommendation": "④ 해설을 '④는 필자 견해와 상충하지 않으나, 빈칸의 국소 논점(음악적 반응을 정의하는 기준)에서 종간 인지 일반론으로 범위를 옮겨 부적절하다'로 교정. 후속 문장 'other musical features'가 ①을 뒷받침함을 근거로 명시."
+    },
+    {
+      "severity": "minor",
+      "evidence": "정답 해설의 '하울링을 하거나 울부짖었다'는 동어 반복(howling=울부짖다). 또한 '장신구 소리...반응하여 하울링'은 지문상 하울링 유발원이 사이렌·색소폰임을 다소 뭉뚱그린 표현.",
+      "recommendation": "'사이렌·색소폰 소리에 하울링, 장신구 리듬에 열광적으로 반응' 식으로 반응 대상별로 정확히 분리 서술."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1 통과: 렌더 지문은 원지문과 동일하고 오직 'the decisive capacity involved in musical response' 구간만 밑줄 빈칸으로 대체됨(문장 접합·중복·누락·오탈자 없음). 라벨 ①~⑤와 선지·해설 키 일치. V2 통과: ①이 제거 span의 정밀 재진술이며 후속 근거('other musical features')가 이를 확정하므로 유일 최선답. ④가 주제 정합으로 강한 미끼지만 범위 이동이라는 결정적 결함이 있어 co-correct 아님. V3 통과: 모든 선지가 'interpreted as ___' 뒤 동일 명사구 슬롯에 들어가며 완성문 모두 문법적, tail 잔여 없음(빈칸 문미). V5 통과: 정답 라벨·본문 해설·keyPoints·오답키 상호 동기화. 그러나 V4 실패: ④ 오답 해설이 지배 부정어를 놓쳐 선지를 '정반대'로 잘못 분석(논리 오설명). 치명 게이트 실패는 공예 점수로 상쇄되지 않으므로 최종 등급 F. 공예 자체는 견고(합 17, C 최저 2)하여 ④ 해설 1문장 교정 시 B~A 진입 가능. KILLER 아님(요청 난이도 INTERMEDIATE)."
+}

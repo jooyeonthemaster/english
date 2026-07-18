@@ -1,0 +1,85 @@
+{
+  "pid": "J003",
+  "blindAnswer": "⑤",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-OPTION-ATTRIBUTION",
+      "severity": "major",
+      "evidence": "오답 해설 ③이 \"잔여 오염물(residual emissions) 및 세금 부과의 책무(tax liability) 등 본문 핵심 어휘를 활용하여\"라고 주장하지만, 선지 ③(funding private firms to pre-emptively mitigate waste before any tax liability arises)에는 'residual'이라는 어휘가 존재하지 않는다. 'residual discharges'는 선지 ②에 등장하는 표현이다. 해설이 실제 선지 내용과 대응하지 않는 귀속 오류(V4의 '오답 해설이 실제 그 선지 내용과 대응하는가' 위반)."
+    },
+    {
+      "code": "V3-STYLE-NOTE",
+      "severity": "minor",
+      "evidence": "정답 ⑤ 'expanding the implementation of direct environmental levies to a broader scope'는 문법적이지만 'expand X to a broader scope'는 다소 비관용적('expand the scope of X'가 자연스러움). ② 'substituting continuous measurement with a heavy flat-rate tax'의 substitute-with 용법도 규범 논쟁이 있는 표현. 둘 다 V3 실패 수준은 아님(감점 기록용)."
+    },
+    {
+      "code": "KILLER-SINGLE-CUE",
+      "severity": "major",
+      "evidence": "정답 ⑤만이 '직접 측정 기반 과세의 확대'라는 지문 결론과 같은 긍정 극성을 가지며(①은 과세 대상 전도, ②는 측정 폐기, ③은 보조금, ④는 과세 우회로 전부 역방향), 동시에 가장 추상적·일반적인 선지다. 극성/일반성 단서 하나만으로 정답 특정이 가능해 RUBRIC §D의 '극성·길이·고유어·절대어 하나로 정답을 찍을 수 없다' 및 '최소 두 문장/두 논리 단서 연결' 조건 미충족. (V 게이트가 아닌 KILLER 조건·C3/C5 감점 사유)"
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 2,
+    "C6": 1
+  },
+  "craftRationale": {
+    "C1": "빈칸이 글 전체 논증(유인 효과→측정 비용 장애→기술 발전→적용 확대)의 최종 귀결 문장을 겨냥함. 핵심 논리 지점으로 출제 가치 높음.",
+    "C2": "오답들이 서로 다른 함정 유형(①과세 대상 전도+인과 왜곡, ②메커니즘 폐기/양보구문 역행, ③정책 수단 전도, ④행위자·제도 방향 전도)을 시도. 다만 ②③④가 모두 '직접과세 논지 이탈'로 수렴해 오개념 다양성이 상한에는 못 미침.",
+    "C3": "정답만 긍정 극성이고 나머지가 전부 방향 이탈이라, 지문 요지만 잡으면 국소 판단 없이 일괄 소거 가능. 같은 극성의 미세 결함 선지(scope shift·half-truth형)가 없어 KILLER급 경쟁 압력 부재.",
+    "C4": "선지 길이 균형·절대어 부재·원문 'wider range' 표현 미누출은 양호하나, 정답이 유일하게 가장 추상적·일반적인 선지라는 메타 단서가 남음.",
+    "C5": "요청 난이도 KILLER 대비 실제 난이도는 표준 3점형 빈칸 수준. 'Nevertheless'+'In the future' 신호로 1단계 인과 추론이면 도달 가능해 라벨과 대체로만 일치.",
+    "C6": "정답 근거 서술 자체는 정확하나 ③ 해설의 residual emissions 어휘 귀속 오류라는 사실 오류가 있고, '디딤돌 삼아' 등 수사적 장황함이 있음."
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "과세 대상 전도(배출량→모니터링 비용) + '과세가 기술 혁신을 촉진한다'는 인과 왜곡",
+      "temptingBecause": "지문의 'measurement can be costly'와 'developing rapidly'를 표면 anchor로 결합해 비용·기술 담론과 어울려 보임",
+      "decisiveFlaw": "지문은 측정된 배출량에 대한 과세를 논하며, 모니터링 비용 자체에 과세한다는 개념은 지문에 없고 논리적으로도 비성립"
+    },
+    {
+      "label": "②",
+      "intent": "메커니즘 폐기(연속 측정을 정액세로 대체) — 양보 구문의 방향 역행",
+      "temptingBecause": "측정 비용이 장애물이라는 지문 진술에 착안한 그럴듯한 정책 우회안이며 'residual discharges' 어휘를 재사용",
+      "decisiveFlaw": "'Nevertheless' 전환은 측정 기술 발전으로 측정 기반 과세가 오히려 확대된다는 귀결을 예고 — 측정 포기는 정반대 방향"
+    },
+    {
+      "label": "③",
+      "intent": "정책 수단 전도(과세→사전 보조금)",
+      "temptingBecause": "'tax liability'와 'waste (discharges)' 어휘 anchor + '사전 예방이 곧 배출 감소'라는 직관적 매력",
+      "decisiveFlaw": "지문의 논지는 배출 측정 기반 과세 설계이지 민간 자금 지원이 아님 — 결론 슬롯과 주제 자체가 어긋남"
+    },
+    {
+      "label": "④",
+      "intent": "행위자·제도 방향 전도(자가 검증으로 중앙 과세 체계 우회)",
+      "temptingBecause": "모니터링·검증 어휘를 지문 단어들과 그럴듯하게 조합",
+      "decisiveFlaw": "지문의 귀결은 직접 과세 적용 범위의 확대이지 과세 체계의 우회가 아님 — 제도적 방향이 정반대"
+    },
+    {
+      "label": "⑤",
+      "intent": "정답 — 원문 span 'taxing measured emissions in a wider range of applications'의 추상화 패러프레이즈",
+      "temptingBecause": "(정답) 'direct environmental levies'가 지문의 'direct taxation of emissions'를, 'broader scope'가 'wider range of applications'를 보존",
+      "decisiveFlaw": "결함 없음. 단, 유일한 긍정 극성·최고 추상도 선지라 극성 단서만으로 노출되는 점이 KILLER 조건 미달 원인"
+    }
+  ],
+  "explanationIssues": [
+    "오답 해설 ③: 선지 ③이 'residual emissions' 어휘를 활용한다고 서술하나 해당 어휘는 선지 ②에만 존재 — 선지 내용 귀속 오류(V4 실패 근거)",
+    "정답 해설: 논지 요약과 패러프레이즈 설명은 정확하나 '디딤돌 삼아' 등 수사가 장황하고 문장이 김(C6 감점)"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "블라인드 풀이 정답 ⑤(확신 high, 대안 정답 없음) — V1/V2/V3/V5 통과. 그러나 V4에서 오답 해설 ③이 선지에 존재하지 않는 'residual emissions' 어휘 사용을 주장하는 귀속 오류가 확인되어 유효성 게이트 실패 → 등급 F(공예 점수로 상쇄 불가). 공예 합계 15/24. 요청 난이도 KILLER였으나 정답이 유일한 긍정 극성·최고 추상도 선지여서 단일 단서 소거가 가능하고, 두 논리 단서 결합을 강제하는 같은 극성의 정교한 미끼(scope shift·half-truth형)가 없어 §D KILLER 조건 미충족. 수리 방향: (1) ③ 해설의 어휘 귀속 문장 교정, (2) ①~④ 중 최소 1~2개를 '직접과세 확대에 긍정적이지만 범위/조건이 미세하게 어긋나는' 같은 극성 미끼로 교체해 극성 단서 무력화."
+}

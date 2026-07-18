@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "4",
+  "multipleDefensible": false,
+  "defensibleLabels": ["4"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "① 앞은 주제문(완벽 요구→마비 초래), 뒤는 'The pattern is predictable:'로 패턴 서술이 시작된다. 주어진 문장은 패턴의 결과(확신 형성)이므로 패턴 서술이 시작되기도 전에 'As a result'로 결론을 두는 것은 인과 순서 위반. 또한 주제문→패턴 소개 사이에는 단절이 전혀 없다."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "② 앞 '완벽히 할 수 있다고 상상하는 쪽으로 작업을 몰아간다'와 뒤 '이미 할 줄 아는 것에 더 매달린다'는 자연스러운 점층 연결(steer→cling)로 단절이 없다. 여기에 '결국 할 수 없다고 확신하게 된다'를 넣으면, 이미 확신이 선 뒤에 다시 매달리기·미루기 단계가 이어져 점층 구조가 역행한다."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "매력적 오답. 'cling... further from the work of your heart' 뒤에 'As a result... 할 수 없다는 확신'을 넣으면 표면상 인과가 성립하는 듯 보이고, 확신→미루기(delay)도 그럴듯해 실전에서 잠깐 끌린다. 그러나 ③ 뒤 문장의 근거절 'since to not work is to not make mistakes'는 실수 회피 심리(완벽주의 공포)가 미루기의 동기임을 보여주는 것으로, 이는 '전면적 무능 확신'보다 앞선 단계다. 또한 마지막 문장의 요약 'you misdirect; you stall; you quit'의 순서(오도→지연→포기)와 대응시키면 확신(→포기)은 지연(delay) 뒤에 와야 하므로 ③은 순서가 어긋난다. cling→delay 자체도 단절 없는 매끄러운 점층이다."
+    },
+    {
+      "label": "4",
+      "verdict": "accept",
+      "reason": "④ 앞까지는 오도(steer/cling)→지연(delay)만 서술되었는데, ④ 뒤 요약문은 'you misdirect your work; you stall; you quit'으로 '포기(quit)'까지 언급한다. 포기에 이르는 단계가 본문에 없어 논리적 공백이 있다. 주어진 문장 'As a result, believing that your work should be perfect, you gradually become convinced that you cannot do it'을 ④에 넣으면 지연 누적의 결과로 무능 확신이 형성되고, 그 확신이 곧 포기로 이어져 death spiral 요약(misdirect→stall→quit)이 본문 전개 순서와 정확히 1:1 대응한다. 'As a result'의 지시 대상(앞선 전 과정)도 온전히 확보된다."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "⑤는 'you misdirect; you stall; you quit'이라는 최종 요약 뒤다. 이미 포기(quit)까지 완결된 다음에 '할 수 없다는 확신이 서서히 생긴다'가 오면 시간 순서가 역전된다. 확신은 포기의 원인이므로 요약 앞에 있어야 한다."
+    }
+  ],
+  "note": "삽입문 유형. 핵심 장거리 단서는 마지막 문장의 3단 요약 'you misdirect your work; you stall; you quit'이 본문 전개(steer/cling=misdirect, delay=stall)와 대응하는데 'quit'에 해당하는 단계가 본문에 없다는 점이다. 주어진 문장(무능 확신)이 quit의 직전 단계를 공급하므로 ④가 유일 정답. ③이 매력적 오답으로 기능하나 'since to not work is to not make mistakes'의 동기 구조와 요약문 순서 대응으로 배제 가능. 원전(Bayles & Orland, Art & Fear)의 문장 배열과도 일치. 단일 정답으로 수렴하며 문항 성립."
+}

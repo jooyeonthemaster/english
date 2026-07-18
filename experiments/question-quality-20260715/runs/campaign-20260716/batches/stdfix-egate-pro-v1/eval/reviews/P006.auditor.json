@@ -1,0 +1,89 @@
+{
+  "pid": "P006",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V2-TENSION-SAME-POINT",
+      "severity": "minor",
+      "evidence": "(B)와 (C)가 동일한 등위 주어 'whale meat and blubber'의 수일치 영역을 공유한다. (C) 'Most of the whale meat and blubber is distributed'는 'Most of + 물질명사 집합'의 단수 일치로 표준 용법이며 원지문과 일치하므로 정답이 아니지만, '등위 주어 = 복수'로 단순 암기한 학생은 (B)(C)를 동시에 의심할 수 있다. 복수 답 성립은 아니므로 V2 통과."
+    },
+    {
+      "code": "V5-KEYPOINTS-PARTIAL",
+      "severity": "minor",
+      "evidence": "keyPoints가 (B)(C)(D)만 다루고 (A)(E)는 누락. 모순은 아니나 5개 밑줄 전체 커버리지가 불완전하다."
+    },
+    {
+      "code": "POINTCODE-DUPLICATE",
+      "severity": "minor",
+      "evidence": "markedExpressions에서 (C)와 (E)가 동일 pointCode 'e'(수동태)를 공유 — 디코이 포인트 중복."
+    }
+  ],
+  "craft": {
+    "C1": 2,
+    "C2": 2,
+    "C3": 1,
+    "C4": 3,
+    "C5": 0,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "대명사-선행사 수일치 (소유격 their)",
+      "temptingBecause": "선행사 'The Faroe Islands'를 단일 국가/지명으로 오독하면 'its'를 기대할 수 있다.",
+      "decisiveFlaw": "앞 절에서 'they are controlled'로 복수 취급이 이미 확립되어 'their'가 정확히 호응한다. 원지문과 동일 — 오류 아님."
+    },
+    {
+      "label": "(B)",
+      "intent": "정답 — and로 등위된 복수 주어와 동사의 수일치 (source 'are' → displayed 'is')",
+      "temptingBecause": "'whale meat and blubber'가 둘 다 물질명사라 'bread and butter is'류의 단일 단위 단수 취급으로 넘어갈 수 있다.",
+      "decisiveFlaw": "보어가 복수 'important parts'여서 단일 단위 해석이 차단되고, 별개 두 요소의 나열이므로 'are'가 필수. 교정하면 정확히 원문이 된다. 다만 주어와 동사가 인접하고 복수 보어 'parts'가 바로 뒤에 있어 오류가 즉시 노출된다 — KILLER 조건 위배."
+    },
+    {
+      "label": "(C)",
+      "intent": "수동태 적합성 + 암묵적으로 'Most of + 등위 물질명사'의 수일치 판단",
+      "temptingBecause": "(B)와 동일한 등위 주어가 단수 동사와 결합해 있어 '등위 주어 = 복수'로 기계 적용하면 함께 의심하게 된다. 지문 내 가장 실질적인 판단 지점.",
+      "decisiveFlaw": "'Most of + 물질명사 집합체'는 표준적으로 단수 일치가 허용되고 원지문 표현 그대로이며, 주어가 분배의 대상이므로 수동태도 정확하다 — 오류 아님."
+    },
+    {
+      "label": "(D)",
+      "intent": "형용사 자리 vs 부사 자리 (as...as 동등비교 내부)",
+      "temptingBecause": "as ~ as 구문 안이라 'as quick'처럼 형용사가 온다고 착각할 수 있다.",
+      "decisiveFlaw": "동사구 'take place'를 수식하는 자리이므로 부사 'quickly'가 필수 — 오류 아님. 원지문과 동일."
+    },
+    {
+      "label": "(E)",
+      "intent": "조동사 뒤 수동형 동사원형 (should be allowed to)",
+      "temptingBecause": "'allow A to V' 능동 구조와 혼동해 'allow to continue'를 기대할 수 있다.",
+      "decisiveFlaw": "'this practice'는 허가의 대상(피동작주)이므로 수동 'be allowed'가 정확 — 오류 아님. 원지문과 동일. 단 pointCode가 (C)와 중복(e)되어 디코이 의도 밀도를 낮춘다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "(C) 오답 해설이 태(수동)만 설명하고, 학생이 실제로 헷갈릴 지점인 'Most of + 등위 물질명사 주어의 단수 일치'(왜 (B)는 틀리고 (C)의 is는 옳은지)를 다루지 않는다.",
+      "recommendation": "(C) 해설에 'Most of + 불가산 집합은 단수 취급'을 한 줄 추가해 (B)와의 대비를 명시."
+    },
+    {
+      "severity": "minor",
+      "evidence": "각 밑줄에 대한 명시적 'why tempting' 필드가 없다. 오답 해설은 '왜 옳은지'만 서술 — RUBRIC §C의 'point / why tempting / why correct-incorrect' 3요소 중 tempting 근거 부재.",
+      "recommendation": "디코이별 매력 근거(오개념)를 별도 필드로 작성."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAudit": {
+    "minimalPair": "충족 — are→is 최소대립쌍, 교정 시 정확히 원문 복원.",
+    "clearGrammarJudgment": "충족 — 복수 보어 'parts'가 단일 단위 해석을 차단해 대안 분석 여지가 없는 명확한 수일치 판정.",
+    "perUnderlineRationale": "미충족 — 각 밑줄의 why tempting 근거 부재. 오답 해설은 why-correct만 존재.",
+    "structuralDepth": "미충족(치명) — 정답이 '붙어 있는 단순 수일치'로 즉시 드러난다. 주어 'whale meat and blubber'와 동사 'is'가 인접하고, 바로 뒤 복수 보어 'parts'가 오류를 표면에 노출한다. 구조 독해 없이 국소 스캔만으로 풀린다.",
+    "noMaskingDecoy": "충족 — (C)가 같은 수일치 영역이지만 정답을 가리지 않고 오히려 유일한 실질 판단 지점으로 기능한다."
+  },
+  "grade": "C",
+  "notes": "유효성 5개 게이트는 모두 통과 — 렌더 무결, (B) 단일 정답, 해설 사실성 양호(단일 단위 해석 반박까지 선제 처리한 점은 우수). 그러나 요청 난이도 KILLER 대비 실제 난이도가 초급 수준이다: 인접 주어-동사 수일치에 복수 보어 'parts'가 즉시 단서를 제공해 중위권 학생도 수 초 내 해결 가능(C5=0). 디코이 (A)(D)(E)는 원문 그대로의 명백한 정형 포인트라 실질 경쟁력이 없고(C3=1), (C)/(E)의 pointCode 중복으로 의도 밀도도 낮다(C2=2). KILLER 추가 조건 중 '구조를 읽어야 하며 붙어 있는 단순 수일치로 즉시 드러나지 않는다'를 정면 위반해 killerConditionsMet=false. 출하하려면 정답 포인트를 구조 의존형(도치·삽입구로 분리된 일치, 관계절 내 병렬 등)으로 재설계해야 한다."
+}

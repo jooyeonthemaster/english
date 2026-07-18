@@ -1,0 +1,32 @@
+{
+  "batchId": "grok45-grammar-v2",
+  "phase": "stdfix",
+  "atKst": "2026-07-17T18:57:14.167+09:00",
+  "assignments": 4,
+  "slotsConsumed": 8,
+  "accepted": 4,
+  "modelCalls": 20,
+  "inputTokens": 2154,
+  "outputTokens": 975,
+  "costUsd": 0.014593,
+  "ledgerAfter": {
+    "used": 807,
+    "cap": 1000,
+    "costUsd": 29.487142
+  },
+  "byArm": {
+    "GROK-G2": {
+      "n": 4,
+      "accepted": 4,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 8,
+      "costUsd": 0.014593
+    }
+  },
+  "models": {
+    "standard": "google/gemini-3.5-flash",
+    "premiumQgen": "x-ai/grok-4.5"
+  },
+  "durationMs": 551622
+}

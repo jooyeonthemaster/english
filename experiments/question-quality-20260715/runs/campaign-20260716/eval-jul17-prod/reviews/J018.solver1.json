@@ -1,0 +1,35 @@
+{
+  "pid": "J018",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "빈칸은 서사의 감정 전환점: 긴장·실수(rehearsal) → Tom의 격려('I'll be right behind you') → 심호흡 → ___ → 본공연 완벽 연주. '심호흡 후 평정을 되찾았다'가 이 아크를 정확히 완결한다. seam도 자연스럽다(took a deep breath and managed to regain...). 유일한 흠: 리허설 시점에는 실제 관중이 없으므로 'despite the overwhelming crowd'는 그가 '떠올린' 관중(how many people would be there)을 가리키는 것으로 읽어야 한다 — 약간의 표현상 스트레치이나 정답성을 흔들 정도는 아니다."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "옷 구매 서브플롯은 시종 긍정적(felt good as he arrived... wearing his new clothes). 옷에 대한 후회의 근거가 지문에 전혀 없고, 긴장의 원인은 관중 규모이지 옷이 아니다."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong (attractive distractor)",
+      "reason": "가장 강한 유혹. 직전에 'he struggled with the rhythm'이 문자 그대로 등장해 실수→리듬 교정이라는 표면 연결이 성립하는 듯 보인다. 그러나 빈칸 직전 비트는 Tom의 정서적 격려와 심호흡, 즉 감정적 안정의 신호이지 기술적 연습 결심이 아니다. 'entirely on the physical rhythm'이라는 전면적 기술 집중은 이후 청중을 매료시킨(fascinated) 표현력 있는 완벽 연주와도 결이 어긋난다. 어휘 반복에 의한 미끼."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong (attractive distractor)",
+      "reason": "'struggled', 'mistakes'를 재활용한 두 번째 미끼. 그러나 격려+심호흡 이후에 '여전히 긴장 극복에 애먹었다'를 놓으면 해소 아크가 붕괴하고, 바로 다음 장면이 완벽한 본공연이므로 미해결 상태로 장면이 끝나는 서사적 공백이 생긴다. 심호흡은 극복의 완료 신호이지 지속되는 고전의 신호가 아니다."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "리허설 현장에 있는 인물은 Jeff가 아니라 Tom이다(He looked at his friend = Tom). Jeff에게 보이려는 허세라는 동기가 성립할 장면이 아니며, '가장된 자신감'은 이후의 진짜 완벽 연주와 진심 어린 기쁨(beamed with joy)과 모순된다."
+    }
+  ],
+  "note": "빈칸 위치가 감정 아크의 전환점(긴장→해소)이라는 점이 명확해 정답이 1로 유일하게 수렴한다. 오답 3·4는 'rhythm/struggled/mistakes'의 어휘 반복으로 실제 흡인력이 있는 잘 설계된 미끼. 선지 1의 'despite the overwhelming crowd'는 리허설 시점에 물리적 관중이 없다는 점에서 표현이 다소 느슨하나('그가 떠올린 관중'으로 읽어야 함), 옹호 가능성을 위협할 수준의 결함은 아니다."
+}

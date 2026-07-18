@@ -1,0 +1,106 @@
+{
+  "batchId": "grok-high-retest-v1",
+  "phase": "grok2",
+  "note": "E5: @low에서 실패한 셀들의 high 재검 — 구조 변형형 4유형(순서/요약/삽입/무관) + 쉬운 난이도 빈칸(모지바케·V2붕괴 재현 셀)",
+  "concurrency": 4,
+  "providerRouting": "none",
+  "env": {
+    "PREMIUM_QGEN_MODEL_ID": "x-ai/grok-4.5",
+    "GRAMMAR_PREMIUM_MODEL_ID": "x-ai/grok-4.5",
+    "EXPLANATION_VERIFY_MODEL_ID": "google/gemini-3.1-pro-preview",
+    "OPENROUTER_REASONING_EFFORT": "high",
+    "QGEN_RESEARCH_MAX_TOKENS_FLOOR": "20000"
+  },
+  "assignments": [
+    {
+      "itemId": "rt-sord-s",
+      "frameId": "grammar-frame-v2-176",
+      "subType": "SENTENCE_ORDER",
+      "difficulty": "INTERMEDIATE",
+      "plan": "PREMIUM",
+      "armId": "RT-SORD",
+      "funnel": true
+    },
+    {
+      "itemId": "rt-sord-l",
+      "frameId": "adhoc-prod-04",
+      "subType": "SENTENCE_ORDER",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "RT-SORD",
+      "funnel": true
+    },
+    {
+      "itemId": "rt-summ-s",
+      "frameId": "blank-supply-v2-090",
+      "subType": "SUMMARY_COMPLETE_MC",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "RT-SUMM",
+      "funnel": true
+    },
+    {
+      "itemId": "rt-summ-l",
+      "frameId": "adhoc-prod-05",
+      "subType": "SUMMARY_COMPLETE_MC",
+      "difficulty": "INTERMEDIATE",
+      "plan": "PREMIUM",
+      "armId": "RT-SUMM",
+      "funnel": true
+    },
+    {
+      "itemId": "rt-sins-s",
+      "frameId": "grammar-frame-v2-128",
+      "subType": "SENTENCE_INSERT",
+      "difficulty": "INTERMEDIATE",
+      "plan": "PREMIUM",
+      "armId": "RT-SINS",
+      "funnel": true
+    },
+    {
+      "itemId": "rt-sins-l",
+      "frameId": "adhoc-prod-08",
+      "subType": "SENTENCE_INSERT",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "RT-SINS",
+      "funnel": true
+    },
+    {
+      "itemId": "rt-irre-s",
+      "frameId": "grammar-frame-v2-088",
+      "subType": "IRRELEVANT",
+      "difficulty": "INTERMEDIATE",
+      "plan": "PREMIUM",
+      "armId": "RT-IRRE",
+      "funnel": true
+    },
+    {
+      "itemId": "rt-irre-l",
+      "frameId": "adhoc-prod-07",
+      "subType": "IRRELEVANT",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "RT-IRRE",
+      "funnel": true
+    },
+    {
+      "itemId": "rt-b-037",
+      "frameId": "blank-supply-v2-037",
+      "subType": "BLANK_INFERENCE",
+      "difficulty": "INTERMEDIATE",
+      "plan": "PREMIUM",
+      "armId": "RT-B-EZ",
+      "funnel": true
+    },
+    {
+      "itemId": "rt-b-046",
+      "frameId": "blank-supply-v2-046",
+      "subType": "BLANK_INFERENCE",
+      "difficulty": "BASIC",
+      "plan": "PREMIUM",
+      "armId": "RT-B-EZ",
+      "funnel": true
+    }
+  ]
+}

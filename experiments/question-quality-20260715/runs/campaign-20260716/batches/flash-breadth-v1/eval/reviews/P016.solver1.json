@@ -1,0 +1,35 @@
+{
+  "pid": "P016",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "(A) originality는 지문의 personal flair / individual personality와 정확히 대응 — 소규모 제품(가구·조명·소형가전·생활용품)에서 'Personal flair is without doubt an absolute necessity'. (B) coordination은 대규모 프로젝트에서 'substantial numbers of designers are employed in implementing a concept', 'management organization and processes can be equally as relevant as designers' creativity'와 정확히 대응 — 관리자 역할의 관건은 다수 디자이너의 조율. 두 빈칸 모두 삽입 시 문법 결합(seam)과 지문 논리가 자연스러운 유일한 조합."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "가장 매력적인 반쪽 오답. (A) originality가 정답과 동일하게 성립하므로 (A)만 확정하고 고르면 걸려든다 — 실전에서 1·2 사이에서 실제로 고민한 지점. 그러나 (B) independence(독립성)는 대규모 프로젝트의 핵심이 그룹 작업·관리 조직·프로세스라는 지문 논리와 정반대. 독립성은 오히려 'working truly alone'인 소규모 개인 작업의 속성이다."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "(B) coordination은 옳지만 (A) regularity(규칙성)는 personal flair·개인 개성이라는 소규모 프로젝트 요건과 무관하며 오히려 반대 방향. 지문 어디에도 소규모 디자인이 규칙성을 요구한다는 근거가 없다. (B)만 보고 고르면 걸리는 반쪽 미끼."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "(B) leadership은 'a strong personality exercises powerful influence', 'creative managers' 표면 어휘 때문에 순간 끌린다 — 실전에서 잠깐 유혹을 느낀 지점. 그러나 지문의 방점은 리더 개인의 통솔이 아니라 management organization and processes(조직·프로세스, 즉 다수 인력의 조율)에 있고, 결정적으로 (A) uniformity(획일성)는 개인 개성·독창성의 정반대라 조합이 성립하지 않는다."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "(A) versatility(다재다능함)는 personal flair가 뜻하는 '개성적 독창성'과 다른 개념으로 지문 근거가 없고, (B) isolation(고립)은 다수 디자이너의 그룹 작업이 핵심인 대규모 프로젝트 논리와 정면 모순. 양쪽 모두 탈락하는 명백한 오답."
+    }
+  ],
+  "note": "최상위권 실전 풀이 순서: 역접(however) 전후 대비 구조를 잡고 (A)를 먼저 좁히면 originality만 성립(후보 1·2), 이어 (B)에서 independence는 집단 작업·관리 논지와 충돌하므로 coordination으로 확정. 유혹 기록: ②는 (A) 일치로 인한 전형적 반쪽 미끼, ④의 leadership은 표면 어휘로 잠깐 끌리지만 (A) uniformity가 즉시 배제시킨다. 대안 해석·복수정답 소지를 적극 탐색했으나 두 빈칸이 동시에 옹호 가능한 선지는 ①뿐 — 단일 정답 수렴, 신뢰도 높음."
+}

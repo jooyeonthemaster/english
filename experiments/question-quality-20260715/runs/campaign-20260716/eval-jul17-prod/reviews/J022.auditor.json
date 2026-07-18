@@ -1,0 +1,103 @@
+{
+  "pid": "J022",
+  "blindAnswer": "3",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-gloss",
+      "severity": "minor",
+      "evidence": "해설의 '사실적 작품은 … 실용적인 일상과 유사한 예측 가능성을 주지만'과 '예술의 불확실성을 수용하는 미적 태도'는, 원문에서 'Feelings of pleasure and uncertainty carry the viewer along'이 사실주의(representational) 블록에 위치한다는 점과 표면상 충돌한다. 'less readable (or easily interpreted)' 대비를 통한 해석적 예측 가능성 대 서사적 불확실성 구분으로 옹호 가능하므로 게이트 실패는 아니나, 학생 혼동 위험이 있는 부정확한 어휘 선택이다."
+    },
+    {
+      "code": "V4-minor-typo",
+      "severity": "minor",
+      "evidence": "해설의 조사 불일치: '④과 ①는'(→ ④와 ①은), '⑤은'(→ ⑤는). 사실 오류는 아니고 표기 결함이다."
+    },
+    {
+      "code": "V3-minor-collocation",
+      "severity": "minor",
+      "evidence": "정답 선지의 'overarching cognitive experience'는 문법적으로 문제없으나 다소 뻣뻣한(비관용적) 연어다."
+    },
+    {
+      "code": "V2-note-scope",
+      "severity": "minor",
+      "evidence": "source span 'fundamental to a balanced life'(삶 전체)를 'equilibrium in our overarching cognitive experience'(인지 경험)로 재진술하며 범위가 다소 좁아진다. 지문이 태도(인지적 자세) 전환을 다루므로 허용 가능한 추상화이며 유일 정답성은 훼손하지 않는다."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 4,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "조건 과확장 + 절대어 함정 (overextension / absolute mirror)",
+      "temptingBecause": "원문의 핵심 구 'departure from conventional forms'를 그대로 차용해 지문 어휘와 강하게 겹친다.",
+      "decisiveFlaw": "관습 형식 이탈은 표현주의 예술의 속성으로서 관람자에게 미적 태도를 상기시키는 장치일 뿐, 일상(routine)에서 관습 형식을 'completely discard'하라는 규범 주장은 지문 어디에도 없다. 절대어 completely가 과확장을 표시한다."
+    },
+    {
+      "label": "2",
+      "intent": "인과 역전 (causal reversal)",
+      "temptingBecause": "표현주의 작품의 'disquieting atmosphere'(불편함)라는 실제 지문 세부를 정확히 앵커로 삼는다.",
+      "decisiveFlaw": "지문은 미적 태도가 그 불편함을 회피하기 위해서가 아니라 작품 전체를 감상(appreciate)하고 성찰하기 위해 필요하다고 말한다. 회피 방향은 인과가 뒤집힌 것이다."
+    },
+    {
+      "label": "3",
+      "intent": "정답 — source span 'fundamental to a balanced life'의 추상화 재진술",
+      "temptingBecause": "정답이므로 해당 없음. trade-off 프레임과 두 태도 전환 구조 전체를 종합해야 도달한다.",
+      "decisiveFlaw": "없음. balance→equilibrium 재진술이며, 삭제된 원문 단어 'balanced'가 지문에 남아 있지 않아 단순 어휘 매칭으로는 도달 불가."
+    },
+    {
+      "label": "4",
+      "intent": "반쪽 진실 / 지문 진술 정면 모순 (half-truth contradiction)",
+      "temptingBecause": "지문의 중심 쌍인 style과 subject matter를 그대로 사용하고, 'trade-offs'라는 도입부 표현이 조화적 종합을 연상시킨다.",
+      "decisiveFlaw": "지문은 표현주의에서 스타일이 주제와 'inharmonious manner'로 작동하며 바로 그 부조화가 미적 태도를 촉발한다고 말한다. 조화로운 종합(synthesizing harmoniously)은 지문의 목표가 아니며 명시 진술과 모순된다."
+    },
+    {
+      "label": "5",
+      "intent": "극성 반전 (polarity reversal, anchored)",
+      "temptingBecause": "지문 전반부의 'pragmatic attitude of everyday life'와 실용성 어휘를 앵커로 삼아 그럴듯하다.",
+      "decisiveFlaw": "예술을 실용적 용도로 'entirely' 편입시키면 미적 태도 자체가 소거되어, 두 태도 사이를 '전환'한다는 결론과 정면 배치된다. 절대어 entirely가 반전을 표시한다."
+    }
+  ],
+  "explanationIssues": [
+    "'예측 가능성' gloss가 사실주의 블록의 'pleasure and uncertainty'와 표면 충돌 (해석적 readability로는 옹호 가능, 어휘 선택 부정확)",
+    "조사 불일치 '④과 ①는', '⑤은'",
+    "'절대어 거울'이라는 비표준 조어 사용 — 뜻은 통하나 학생 대상 해설 용어로 어색",
+    "본해설이 ④·①·⑤만 언급하고 ②는 오답해설에만 존재 (필드 간 동기화는 유지되므로 결함 아님, 완결성 측면 지적)"
+  ],
+  "killerConditionsMet": true,
+  "killerConditionsDetail": {
+    "sameSyntacticSlot": "5개 선지 모두 'is + 보어' 슬롯에 문법적으로 삽입 가능, suffix/tail로 인한 문법적 탈락 없음 — 충족",
+    "meaningPreservingAbstraction": "'fundamental to a balanced life' → 'equilibrium in overarching cognitive experience'. 경미한 범위 축소(삶→인지 경험)가 있으나 지문의 태도-전환 프레임 안에서 의미 보존 추상화로 판정 — 충족(주석 있음)",
+    "anchorOverlapFlaw": "네 오답 모두 source anchor·tempting overlap·단일 결정적 결함 보유 — 충족",
+    "multiCueRequired": "trade-off 도입 + 표현주의 문단 + 최종 종합문의 최소 2개 이상 논리 단서 연결 필요. 절대어 휴리스틱은 ①⑤만 제거하고 ②④가 생존하므로 단일 단서로 정답 특정 불가 — 충족",
+    "distinctTrapTypes": "과확장/절대어, 인과 역전, 반쪽 진실 모순, 극성 반전 — 서로 다른 함정 유형 — 충족"
+  },
+  "issues": [
+    {
+      "severity": "minor",
+      "evidence": "해설 조사 오류('④과 ①는', '⑤은') 및 '예측 가능성' gloss의 표면 충돌",
+      "recommendation": "조사 교정, '예측 가능성'을 '해석 용이성(readability)'으로 교체, '절대어 거울'을 표준 표현으로 순화"
+    },
+    {
+      "severity": "minor",
+      "evidence": "정답 선지의 'overarching cognitive experience' 연어가 다소 부자연스럽고, 정답만 추상적 어조라 test-wise 학생에게 미세한 스타일 신호를 줄 수 있음",
+      "recommendation": "'overall cognitive life' 등 자연스러운 표현 검토, 오답 1·5의 절대어(completely/entirely) 중 하나를 완화해 소거 휴리스틱 내성 강화"
+    }
+  ],
+  "grade": "B",
+  "notes": "V1~V5 전부 통과. 블라인드 풀이 정답 ③ 일치, 유일 정답성 확인(각 선지 독립 검증). 마지막 종합 문장을 빈칸화한 정전 포인트(C1=4), 네 오답이 서로 다른 함정 기제를 앵커와 함께 구현(C2=4). 다만 ①⑤의 절대어가 test-wise 소거에 취약해 실질 경쟁 선지가 ②④로 줄고(C3=3), 정답 재진술의 경미한 범위 축소(C4=3), 체감 난이도는 상~최상 경계로 KILLER 라벨 대비 약간 낮음(C5=3), 해설은 정확하나 조사 오류·비표준 조어·다소 장황(C6=3). 합계 20으로 A 기준(21) 미달 → B. §D KILLER 조건 자체는 충족하나 'beautiful KILLER'(A 전제)에는 미달. 작은 수정(해설 표기 정리, 절대어 완화)으로 출하 가능."
+}

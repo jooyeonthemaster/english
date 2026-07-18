@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "어휘 반복(echo) 미끼. 지문에 'higher levels of conceptual ethics or theory'가 그대로 등장하지만, 지문은 이 형태의 윤리가 그것과 'distinct'하다고 명시한다. 또한 'fixed decision rules'는 빈칸이 'rather than'으로 대비시키는 'prescribed set of ethical codes or rules'의 재진술이라 빈칸에 넣으면 문장이 자기모순('고정 규칙을 적용하라, 규정된 규칙을 따르기보다')이 된다. 최상위권도 순간 끌릴 수 있는 축자적 미끼지만 논리로 즉시 배제된다."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "마지막 문장 'recognizing and accepting that the factors that drive other people's codes and decision making may be different'과 정면 충돌. 자기 행동규범을 타인의 선택에 획일적 규칙으로 강요하는 것은 지문 주장의 정반대."
+    },
+    {
+      "label": "3",
+      "verdict": "correct",
+      "reason": "빈칸 뒤 전개 전체의 요약. 'evaluate ethical issues'는 서두의 윤리적 사고 정의(evaluating these issues from different perspectives)를, 'divergent personal factors'는 개인 간·개인 내에서 다른 가치(사회적·종교적·시민적 신념, 형식·비형식 학습)를, 'situational contexts'는 'context dependent... under different circumstances, at a different time' 문장을 각각 정확히 대응한다. 'rather than follow a prescribed set of codes'와의 대비(유연한 평가 vs 규칙 추종)도 정합적. learn to 뒤 문법 결합도 자연스럽다."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "두 번째 echo 미끼. 'formal and informal', 'social... civic' 어휘가 지문에 있으나, 지문에서 형식/비형식 학습은 가치관을 형성하는 요인일 뿐이며 형식적 윤리강령을 비형식적 관습으로 '대체'하라는 주장은 없다. 'purely'라는 극단 표현도 지문 논조와 불일치."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "지문이 윤리적 문제의 본질로 규정한 'there is no clear right or wrong response'와 정면 충돌. 명확한 정오가 나오는 문제만 고르라는 것은 윤리적 사고의 정의 자체를 부정한다."
+    }
+  ],
+  "note": "다섯 선지 모두 'learn to' 뒤에 문법적으로 결합 가능하므로 순수 논리 변별 문항. 대안 해석(중의성)으로 복수 정답이 성립할 여지는 없음. 가장 매력적인 오답은 축자적 어휘 반복을 쓴 1번이고 4번이 그 다음이나, 둘 다 지문의 명시적 진술('distinct from', 형성 요인 vs 대체 주장)로 확정 배제된다. 정답 3은 빈칸 이후 전개의 압축 요약으로 유일하게 옹호 가능."
+}

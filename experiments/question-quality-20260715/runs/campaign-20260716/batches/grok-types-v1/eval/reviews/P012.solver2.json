@@ -1,0 +1,35 @@
+{
+  "pid": "P012",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "consistent",
+      "reason": "Entailed by the passage: 'After his father's trading business went bankrupt, his family moved to Mexico City for two years. Its landscape influenced many of his works.' 'Collapsed' is synonymous with 'went bankrupt'; 'shaped much of his writing' paraphrases 'influenced many of his works.' No temporal or logical distortion."
+    },
+    {
+      "label": "2",
+      "verdict": "consistent",
+      "reason": "Entailed by F3+F4: he was inspired by the Romantic poets at Harvard, and the narrative order places Harvard before his departure for Paris, where he 'lived out his romanticized notion of bohemian life and made friendships with many artists.' The option's sequencing (Harvard inspiration -> later bohemian life among artists) matches the passage exactly."
+    },
+    {
+      "label": "3",
+      "verdict": "inconsistent",
+      "reason": "Temporal inversion. The passage states he joined the French army as a volunteer when WWI broke out in 1914, and that 'During the war, he wrote a poem, I Have a Rendezvous with Death... it made Seeger instantly famous when it was published.' Therefore fame from the poem came AFTER he volunteered, not 'before he volunteered for the French army' as the option claims. Formally: passage asserts volunteer(1914) < write(poem) < fame; option asserts fame < volunteer(1914). Direct contradiction; no alternative reading rescues it."
+    },
+    {
+      "label": "4",
+      "verdict": "consistent",
+      "reason": "Entailed by F7+F8: died during the Battle of the Somme in 1916; 'Following his death, the French Military awarded him the Croix de Guerre, the highest French military honor.' The option hedges with 'described as its highest military honor,' matching the passage's own assertion. (Real-world note: the Croix de Guerre is not actually France's highest honor — that is the Legion d'honneur — but the task is agreement with the passage, and the option faithfully reports the passage's description, so it cannot be the answer to a text-consistency question.)"
+    },
+    {
+      "label": "5",
+      "verdict": "consistent",
+      "reason": "Entailed by F3+F4+F5: 'Seeger returned to the States and later graduated from Harvard University... Seeger left for Paris, France... he joined the French army as a volunteer to defend his beloved France.' The option's chain (return from Mexico -> Harvard graduation -> France -> volunteered to defend a country he loved) mirrors the passage's order without distortion."
+    }
+  ],
+  "note": "Clean single-answer item. Option 3 contains a hard temporal-order contradiction (poem/fame placed before 1914 enlistment, whereas the passage places the poem 'During the war,' after enlistment). All other options are faithful paraphrases in correct sequence. Minor external-fact caveat on option 4 (Croix de Guerre is not truly France's highest honor), but since both passage and option make the same claim and the option even attributes it ('described as'), it does not create a second defensible answer for a '내용 일치' question. Lens: grammarian/logician — no grammatical seam issues; all options are well-formed; the discriminating feature is purely the temporal logic of option 3."
+}

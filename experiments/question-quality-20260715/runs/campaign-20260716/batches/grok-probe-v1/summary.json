@@ -1,0 +1,40 @@
+{
+  "batchId": "grok-probe-v1",
+  "phase": "grok",
+  "atKst": "2026-07-17T19:21:02.122+09:00",
+  "assignments": 4,
+  "slotsConsumed": 8,
+  "accepted": 3,
+  "modelCalls": 20,
+  "inputTokens": 61313,
+  "outputTokens": 12870,
+  "costUsd": 0.225636,
+  "ledgerAfter": {
+    "used": 815,
+    "cap": 1000,
+    "costUsd": 29.712778
+  },
+  "byArm": {
+    "PROBE-G": {
+      "n": 3,
+      "accepted": 2,
+      "gateRejected": 0,
+      "noCandidate": 1,
+      "slots": 7,
+      "costUsd": 0.186878
+    },
+    "PROBE-B": {
+      "n": 1,
+      "accepted": 1,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 1,
+      "costUsd": 0.038758
+    }
+  },
+  "models": {
+    "standard": "google/gemini-3.5-flash",
+    "premiumQgen": "x-ai/grok-4.5"
+  },
+  "durationMs": 356223
+}

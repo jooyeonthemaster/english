@@ -1,0 +1,103 @@
+{
+  "pid": "P003",
+  "requestedDifficulty": "KILLER",
+  "type": "BLANK_INFERENCE",
+  "blindAnswer": "1",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-minor",
+      "severity": "minor",
+      "evidence": "정답 삽입 완성문 'To keep the connection alive, deliberately keep a warm and regular contact thread.'에서 keep...keep 반복이 문체상 어색하고 'contact thread'는 다소 비관용적 연어(비문은 아님). 게이트 실패 아님."
+    },
+    {
+      "code": "V4-minor",
+      "severity": "minor",
+      "evidence": "해설 말미 '논지를 비틀린다'는 한국어 비문(올바른 형태: '비튼다'). 또한 ⑤를 '일회성 공유'로 서술했으나 선지 실제 내용은 '침묵이 길어질 때에만'이라는 제한 조건부 공유로, 일회성 단정은 경미한 과장. 구조 오분석·환각은 아니므로 게이트 실패 아님."
+    }
+  ],
+  "v1Evidence": "렌더 지문을 원지문과 전문 대조: 유일한 변형은 3번째 문장의 'make a conscious effort to stay in touch' 구간을 '_____'로 치환한 것뿐이며 마침표 보존, 나머지 문장 전부 원문과 축자 일치. 문장 접합 파손·중복·누락·고아 문장부호 없음. 선지 라벨 1~5와 선언 정답 1, 오답 해설 키 2~5 일치.",
+  "v2Evidence": "각 선지 독립 삽입 검증. (1) 'conscious effort'(=deliberately)와 후행 'friendly and consistent line of communication'(=warm and regular contact)의 재진술로 성립하며, 직후 'This doesn't mean... but rather maintaining...' 한정과 정합. (2)(3)은 바로 다음 문장 'This doesn't mean constantly reaching out with requests or updates'가 명시적으로 배제 — 삽입 시 자기모순. (4)는 능동적 연락 유지가 관계를 살린다는 순서를 뒤집고 'even if you haven't spoken in a while'과 충돌. (5)는 양보('even if')를 제한 조건('only when')으로 왜곡해 'consistent' 유지와 모순. 정답 집합 = {1}, 단일정답 확인.",
+  "v3Evidence": "지문·발문 문법적. 다섯 선지 모두 동일한 명령형 VP 슬롯에 들어가며 suffix/tail로 인한 문법적 탈락 없음. 정답 완성문 문법적(경미한 문체 어색함만 존재).",
+  "v4Evidence": "해설의 담화 분석(앞: 소통 중요성·팔로업 부족→고착 / 뒤: 요청·업데이트 배제, 우호·일관 소통, 가치 공유가 투자 증명)이 실제 지문과 일치. 오답 해설 4건 모두 해당 선지의 실제 문면과 대응(2=requests 차용, 3=updates 빈도 과잉, 4=순서 역전, 5=조건 왜곡). 용어 오분석·존재하지 않는 내용 첨가 없음. 경미한 한국어 오탈자 1건과 ⑤ '일회성' 과장 1건은 minor로 기록.",
+  "v5Evidence": "정답 라벨(1)·선지 5개·오답 해설 키{2,3,4,5}·keyPoints 3항이 상호 모순 없음. 해설의 ②③④⑤ 지시가 선지 번호와 정확히 대응.",
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 3
+  },
+  "craftRationale": {
+    "C1": "빈칸이 문단의 핵심 실천 제언(의식적 연락 유지)을 겨냥 — 의미 있는 중심 지점. 다만 지문 자체가 평이한 자기계발 조언문이라 정전급 논리 포인트까지는 아님.",
+    "C2": "네 오답이 각각 명시 배제 소재 차용(2), 빈도 과잉(3), 순서/인과 역전(4), 양보→제한 조건 왜곡(5)을 겨냥. 단 2와 3은 같은 배제 문장('This doesn't mean...')에서 나온 동일 계열 함정이라 밀도가 다소 중복됨.",
+    "C3": "빈칸 직후 문장이 2·3을 즉시 소거시키고, 정답 1은 원문 구간+후행 문장의 거의 축자적 동의어 치환(deliberately=conscious, warm=friendly, regular=consistent, contact=touch)이라 실제 판단이 갈리는 지점이 5 하나뿐.",
+    "C4": "정답이 유일하게 온건·긍정 프레임 선지이고 오답들은 repeatedly/constant·without pause/only 등 절대·제한 표지를 노출 — 표면 극성만으로 소거 가능한 꼬리 누출. 근거 자체는 충분하고 정답은 필연적이나 누출이 뚜렷.",
+    "C5": "요청 난이도 KILLER 대비 실제는 중(中) 수준: 추상화가 거의 없는 근접 재진술 정답 + 인접 한 문장만으로 풀리는 구조. 라벨과 뚜렷한 불일치.",
+    "C6": "짧고 근거·함정 분리가 선명하나 '비틀린다' 비문 오탈자와 ⑤ '일회성' 경미 과장이 있어 4는 불가."
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — 삭제 구간 'make a conscious effort to stay in touch'와 후행 'maintaining a friendly and consistent line of communication'의 결합 재진술",
+      "temptingBecause": "해당 없음(정답). deliberately↔conscious, warm↔friendly, regular↔consistent, contact thread↔line of communication의 대응",
+      "decisiveFlaw": "없음. 단, 동의어 1:1 치환 수준이라 추상화가 없어 KILLER 정답으로는 너무 투명함"
+    },
+    {
+      "label": "2",
+      "intent": "명시적 배제 소재 차용(요청 중심 연락)",
+      "temptingBecause": "본문의 'reaching out with requests' 어휘를 그대로 빌려 표면 겹침이 큼",
+      "decisiveFlaw": "빈칸 직후 문장 'This doesn't mean constantly reaching out with requests'가 문면으로 배제 — 삽입 시 자기모순"
+    },
+    {
+      "label": "3",
+      "intent": "빈도 과잉 확장(업데이트 남발)",
+      "temptingBecause": "'updates' 소재 차용 + consistent(일관)를 constant(끊임없는)로 혼동하게 유도",
+      "decisiveFlaw": "같은 배제 문장이 'updates'를 명시 배제하며 'constant/without pause'는 절대 표지로 즉시 탈락 — 2번과 함정 계열 중복"
+    },
+    {
+      "label": "4",
+      "intent": "순서/인과 역전(연락→유대 심화를 유대 심화→연락으로 전도)",
+      "temptingBecause": "outreach·bonds 등 주제 어휘를 사용하고 신중함의 뉘앙스를 풍김",
+      "decisiveFlaw": "글 전체가 선제적·의식적 연락을 촉구하며 'even if you haven't spoken in a while'이 대기 조건을 정면 부정"
+    },
+    {
+      "label": "5",
+      "intent": "예시 기반 half-truth + 조건 왜곡(양보 'even if'→제한 'only when')",
+      "temptingBecause": "기사·자료 공유 예시를 거의 그대로 반사해 표면 정합이 가장 높은 오답",
+      "decisiveFlaw": "'only when silence grows long'은 'friendly and consistent'한 상시 유지 및 양보절 'even if'와 모순 — 'only'라는 제한 표지가 표면 단서로도 노출"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "해설 '⑤는 ... 논지를 비틀린다' — 한국어 비문(피동 오형). '비튼다'가 맞음.",
+      "recommendation": "'논지를 비튼다'로 교정."
+    },
+    {
+      "severity": "minor",
+      "evidence": "해설이 ⑤를 '침묵 이후의 일회성 공유'로 규정했으나 선지 문면은 '침묵이 길어질 때에만 공유'라는 반복 가능한 조건부 행위로, '일회성'은 과장.",
+      "recommendation": "'침묵이 길어진 뒤에만 반응하는 조건부 공유'로 서술 교정."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAudit": {
+    "sameSyntacticSlot": true,
+    "answerPreservesSourceWithAbstraction": false,
+    "eachDistractorHasAnchorOverlapFlaw": true,
+    "requiresTwoCuesNoSurfacePick": false,
+    "distinctTrapMechanisms": true,
+    "detail": "슬롯 통일성과 오답별 anchor/overlap/flaw는 충족. 그러나 (a) 정답이 source span의 거의 축자적 동의어 치환이라 난이도에 맞는 추상화 부재, (b) 인접 한 문장만으로 2·3이 소거되고 오답들의 절대·제한 표지(without pause, only, repeatedly)와 정답의 유일한 온건·긍정 프레임 때문에 극성 단서 하나로 정답 선택이 가능 — §D의 '최소 두 문장/두 논리 단서 연결' 및 '극성·절대어 하나로 못 찍음' 조건 실패. (c) 2·3이 같은 함정 계열이라 함정 다양성도 부분 감점."
+  },
+  "grade": "C",
+  "notes": "치명 결함 없음: V1~V5 전부 통과, 정답 유일성 견고. 그러나 요청 난이도 KILLER 대비 실제 난이도가 중 수준(C5=1)이고, 정답의 무추상 재진술·오답의 표면 극성 누출로 변별력·단서 경제성이 약함(C3=C4=2). 공예 합계 14/24, C 최저 1이므로 B 기준(최저 2, 합계 17) 미달 — 등급 C(재설계 필요). 재설계 방향: 정답을 한 단계 추상화(예: 관계 담론 층위의 우회 표현)하고, 오답에서 절대·제한 표지를 제거해 담화 논리로만 갈리게 하며, 2·3 중 하나를 다른 함정 계열(scope shift, actor swap 등)로 교체."
+}

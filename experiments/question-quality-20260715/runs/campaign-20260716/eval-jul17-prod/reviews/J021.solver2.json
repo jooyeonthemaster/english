@@ -1,0 +1,35 @@
+{
+  "pid": "J021",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "valid",
+      "reason": "Seam: 'reminds the viewer or reader that they must adopt...' is well-formed (that-clause complement of remind; singular 'they' bound by 'the viewer or reader'). Logic: 'adopt a specialized frame of mind to fully engage with the art' = the 'aesthetic attitude' named in the final sentence, and adopting it is an act by the viewer, licensing the anaphor 'This active involvement' in the next sentence. It also matches the causal chain: less readable work → departure from convention signals that everyday (pragmatic) processing will not suffice → viewer must switch to a special (aesthetic) mode. Fully coherent."
+    },
+    {
+      "label": "②",
+      "verdict": "invalid",
+      "reason": "Grammatically fine in the blank, but logically reversed: the trigger in the passage is the work's DEPARTURE from conventional forms; a reminder that one must 'master conventional techniques to replicate the artist's original intention' points back toward convention and reproduction, which the passage nowhere endorses. It also fails the anaphor test: mastering techniques is a producer/artist-side skill, not the viewer's 'active involvement' in aesthetic processing."
+    },
+    {
+      "label": "③",
+      "verdict": "invalid",
+      "reason": "Grammatical, but directly contradicts the passage's pragmatic/aesthetic opposition: the final sentence distinguishes the 'pragmatic attitude' of everyday life from the 'aesthetic attitude,' and unreadable expressionist work is precisely what pulls the viewer OUT of pragmatic processing. Measuring artwork 'primarily through its pragmatic utility in life' is the opposite of what the departure from convention signals. Also fails 'This active involvement' — a valuation criterion is not an involvement."
+    },
+    {
+      "label": "④",
+      "verdict": "invalid",
+      "reason": "Grammatical, and superficially 'active' (cognitive efforts), but the content contradicts the passage: the disquieting atmosphere is presented as functional — it produces depth of aesthetic processing and reflection — not as discomfort to be SUPPRESSED. 'Prompt... efforts... to regain clarity' implies quickly restoring easy readability, whereas the passage values dwelling in the less-readable state for deeper reflection. The passage never frames the viewer's task as eliminating discomfort or restoring clarity."
+    },
+    {
+      "label": "⑤",
+      "verdict": "invalid",
+      "reason": "Grammatical, but contradicts the final sentence: 'An ability to SWITCH BETWEEN the pragmatic attitude and an aesthetic attitude is fundamental' presupposes the two domains remain distinct. A reminder that the boundaries 'should be permanently dissolved' negates the very switching the passage endorses. Nothing in the passage advocates merging daily life and art appreciation."
+    }
+  ],
+  "note": "Blank-type item. Key long-distance constraints: (a) the following sentence's anaphor 'This active involvement' requires the blank to describe an act undertaken by the viewer; (b) the final sentence's pragmatic/aesthetic attitude-switching claim requires the blank to signal a mode shift into a special (aesthetic) stance. Only ① satisfies both; ③ and ⑤ contradict the final sentence, ② reverses the convention-departure trigger, ④ inverts the function of the disquieting effect. Single defensible answer: ①."
+}

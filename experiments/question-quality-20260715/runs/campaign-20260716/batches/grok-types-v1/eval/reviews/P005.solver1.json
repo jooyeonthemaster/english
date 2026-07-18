@@ -1,0 +1,35 @@
+{
+  "pid": "P005",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "문자적(literal) 해석 함정. 무대 배치상 뒤에 설 수는 있으나 발문이 '함축 의미'를 요구하고, 발화 직후 서사 효과가 공간적 사실이 아니라 Garcia의 정서 회복(took a deep breath, felt much better)이므로 문자적 위치 진술은 함축 의미가 될 수 없다."
+    },
+    {
+      "label": "2",
+      "verdict": "correct",
+      "reason": "'be (right) behind you'의 관용적 의미 = 지지/응원. 등에 손을 얹는 위로 제스처, 'Don't worry'라는 선행 발화, 그리고 직후 Garcia가 심호흡 후 안정을 되찾아 리허설·본 공연을 성공적으로 마치는 전개와 정확히 정합한다."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "최상위권에게 가장 매력적인 오답. 음악 맥락에서 'back someone up'을 실수를 메워준다는 뜻으로 확장 해석하고 싶은 유혹이 있으나, '자리를 대신한다(take Garcia's place)'는 대체 개념은 본문 어디에도 근거가 없고, 결말은 Tom의 개입이 아닌 Garcia 본인의 flawless 연주로 해소되므로 과잉 진술이다."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "극성 모순. Tom은 'Don't worry'와 위로의 제스처(put a hand on Garcia's back)로 다가왔으므로 질책(scold)은 발화의 어조·맥락과 정반대다."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "앞부분 쇼핑 에피소드 어휘를 재활용한 무관 선지. 밑줄 발화는 리듬 실수로 인한 긴장 상황에서 나온 것으로 옷과는 아무 연결 고리가 없다."
+    }
+  ],
+  "note": "함축의미(implied meaning) 유형의 전형적 구조: 정답(관용적 지지 의미) vs 문자적 함정(1) vs 관용 의미 과잉확장(3). 오답 4·5는 극성/소재 불일치로 즉시 배제 가능. 밑줄 문장 자체에 대안 문법 해석 여지 없음. 단일 정답 2로 수렴, 복수 정답 소지 없음."
+}

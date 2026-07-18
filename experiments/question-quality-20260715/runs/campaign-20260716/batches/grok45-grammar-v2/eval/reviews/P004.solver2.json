@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "warn that절 내부에서 동명사구 'having more self-driving cars'가 진짜 주어이고 'means'가 정동사인 구조. 동명사 주어 + 단수 동사 일치 성립, 목적어 자리의 'having more potential targets'와의 대칭도 정합. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "proved that절의 주어는 복수 명사 today's \"smart\" cars(even은 초점부사). 복수 주어-복수 동사 'are vulnerable' 일치 성립. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'were not only able to change ..., adjust ..., and switch ... on'에서 병렬 시작점은 able to 뒤의 원형 change. to를 공유하는 3항 병렬(to change, (to) adjust, and (to) switch)이므로 원형 adjust가 규칙을 정확히 만족. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "as는 시간 접속사(~하는 동안)로 완전한 절 'it was driving down the highway'를 지배. it=the car이며 자율주행 문맥상 'the car was driving'의 의미도 성립. 어법·논리 모두 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "wrong",
+      "reason": "등위접속사 but 뒤의 절에 주어 it만 있고 정동사가 없다. sending은 비정형이므로 'but it sending a clear message'는 절로 성립 불가. 주어가 명시된 채 분사구문·축약 관계절 등 어떤 대안 분석으로도 구제되지 않으며, it sent(또는 sends)여야 한다. 어법상 틀림."
+    }
+  ],
+  "note": "정답 후보는 (E) 단일. (A)~(D)는 장거리 단서(진짜 주어, that절 주어 일치, able to 병렬 시작점, 접속사 as의 절 지배)를 모두 확인한 결과 형식적으로 정문임을 증명 가능. (E)는 finite verb 부재라는 명백한 절 구성 위반으로 유일 정답."
+}

@@ -1,0 +1,57 @@
+{
+  "pid": "P003",
+  "answer": "Following the new leader's refusal to step down, his army was immediately ordered to protect the palace.",
+  "multipleDefensible": false,
+  "defensibleLabels": [
+    "Following the new leader's refusal to step down, his army was immediately ordered to protect the palace."
+  ],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "Following",
+      "verdict": "used (position 1)",
+      "reason": "Capitalized, hence sentence-initial. Functions as preposition 'after', requiring an NP complement; the only NP head available is 'refusal', which in turn needs the genitive 'the new leader's'."
+    },
+    {
+      "label": "the new leader's",
+      "verdict": "used (position 2)",
+      "reason": "Genitive determiner required by the bare noun 'refusal' in chunk 'refusal to step down,'. Without it, 'Following refusal to step down' is determiner-less and ungrammatical."
+    },
+    {
+      "label": "refusal to step down,",
+      "verdict": "used (position 3)",
+      "reason": "Trailing comma marks the end of the introductory adjunct 'Following the new leader's refusal to step down,'. Nothing can grammatically intervene after the comma within the adjunct."
+    },
+    {
+      "label": "his army",
+      "verdict": "used (position 4)",
+      "reason": "Only available subject NP for the main clause. Matches passage: the leader 'gathered 3,000 soldiers and ordered them to protect his palace' — the soldiers/army are the ordered party, hence passive subject."
+    },
+    {
+      "label": "was immediately",
+      "verdict": "used (position 5)",
+      "reason": "Aux + adverb preceding the passive participle: 'was immediately ordered'. Standard adverb placement between auxiliary and participle. 'immediately' is not verbatim in the passage but is consistent with the narrative sequence."
+    },
+    {
+      "label": "ordered to",
+      "verdict": "used (position 6)",
+      "reason": "Fused chunk: 'to' must be immediately followed by a bare-infinitive VP, so this chunk must directly precede 'protect the palace.'. This fusion is what blocks any agent by-phrase between 'ordered' and 'to'."
+    },
+    {
+      "label": "protect the palace.",
+      "verdict": "used (position 7, final)",
+      "reason": "Contains the terminal period, so it is obligatorily sentence-final. This baked-in period is what renders the 'by the new leader' chunks unplaceable after the verb phrase."
+    },
+    {
+      "label": "by the new leader (copy 1)",
+      "verdict": "unused (distractor)",
+      "reason": "Unplaceable: after 'protect the palace.' is blocked by the period; 'was immediately by the new leader ordered to' is ungrammatical linear order; inside the adjunct it is blocked by the comma on 'refusal to step down,' and the determiner requirement on 'refusal'. Semantically it would be the passive agent, but no grammatical slot exists."
+    },
+    {
+      "label": "by the new leader (copy 2)",
+      "verdict": "unused (duplicate distractor)",
+      "reason": "Identical duplicate of the other distractor; same proof of unplaceability applies. Duplication is a generation artifact — both copies go unused."
+    }
+  ],
+  "note": "Arrangement is forced to a unique sentence by four hard constraints: sentence-initial capital on 'Following', terminal period inside 'protect the palace.', comma inside 'refusal to step down,', and the fused 'ordered to'. Answer matches the hint's causal structure (refusal -> order to defend palace) and the passage facts. Quality flag: the distractor 'by the new leader' appears TWICE and both copies must be discarded; the stem's '쓰지 않는 단어가 포함되어 있음' technically covers this, but an identical duplicated distractor is a construction artifact that may mislead students into believing at least one copy must be used. Recommend deduplicating to a single unused chunk. No alternative defensible arrangement found (fronting the main clause is blocked by the capital F and the period placement)."
+}

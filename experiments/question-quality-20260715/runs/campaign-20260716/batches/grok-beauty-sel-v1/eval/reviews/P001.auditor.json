@@ -1,0 +1,72 @@
+{
+  "pid": "P001",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-INFO-RENDER-FIELD-EMPTY",
+      "severity": "minor",
+      "evidence": "렌더 지문 필드가 '(렌더 지문 없음)'으로 비어 있다. TOPIC 유형은 지문 변형이 없어 원지문이 그대로 노출되는 구조로 해석되며, 원지문 자체는 접합 파손·중복·누락·고아 문장부호 없이 온전하다. 다만 파이프라인 상 렌더 필드를 원지문으로 명시 복사해 두는 편이 안전하다."
+    },
+    {
+      "code": "V3-INFO-SOURCE-TENSE-MIX",
+      "severity": "minor",
+      "evidence": "'Once the danger passed, you will still feel the fear churning away inside.' — 과거 시제 종속절 + 미래 시제 주절의 혼합. 원지문(출처 원문)에서 유래한 서술적 시제 혼용으로 생성 과정의 손상이 아니며, 가독성·풀이에 영향 없음. V3 실패로 보지 않는다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "세부 예시의 주제화(detail overextension) — 위기 후 공포 잔존(10~15초) 예시를 글 전체 주제로 격상",
+      "temptingBecause": "'Once the danger passed, you will still feel the fear churning away... 10 to 15 seconds' 문장과 어휘가 직접 대응해 지문을 부분적으로 기억하는 학생에게 매력적",
+      "decisiveFlaw": "해당 내용은 자동 반응 기제를 뒷받침하는 한 예시일 뿐, 지문 전반(감지→대처 준비→신체 변화→신호)의 포괄 논지를 담지 못한다"
+    },
+    {
+      "label": "2",
+      "intent": "정답 — 지문 전체 논지의 적정 추상화",
+      "temptingBecause": "첫 문장 'Emotions prepare us to deal with important events without us having to think', 'preparing us for different actions', 'We don't choose these changes; they simply happen'까지 전 문장이 수렴하는 상위 진술",
+      "decisiveFlaw": "없음(정답). 'automatic systems'는 지문에 표면어로 없지만 without thinking/we don't choose의 정확한 개념 압축이다"
+    },
+    {
+      "label": "3",
+      "intent": "극성 반전(causal/polarity reversal) — '의식적 전략'으로 글의 방향을 정반대로 뒤집음",
+      "temptingBecause": "near-miss danger 상황 대처라는 소재 자체는 지문과 일치",
+      "decisiveFlaw": "지문은 'without having to think', 'Nor would you have survived if you had to think consciously'로 의식적 판단을 명시적으로 배제한다 — conscious가 결정적 모순"
+    },
+    {
+      "label": "4",
+      "intent": "범위 밖 확장(out-of-scope shift) — 언급된 기제(자율신경계)에 언급되지 않은 프레임(진화적 기원)을 결합",
+      "temptingBecause": "'autonomic nervous system'이 지문에 실제 등장하고 heart rate/breathing 등 세부가 뒤따라 키워드 매칭 유혹이 있음",
+      "decisiveFlaw": "지문은 자율신경계의 작동(감정이 일으키는 변화)만 다룰 뿐 계통 발생·진화적 기원은 한 번도 다루지 않는다"
+    },
+    {
+      "label": "5",
+      "intent": "세부의 주제화 + 기능 왜곡(scope shift) — 마지막 부분의 신호 언급을 '사회적 역할'이라는 별도 논지로 격상",
+      "temptingBecause": "'Emotions also send out signals, changes in our expressions, face, voice...'와 '(and those around you)'가 사회적 기능 해석의 표면 단서를 제공",
+      "decisiveFlaw": "신호는 자동적 변화의 한 사례로 한 문장 언급될 뿐이며, 그 '사회적 역할'은 지문이 논증하지 않는다 — 부분을 전체로, 없는 기능 프레임을 더한 이중 결함"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "C6-STYLE-DOUBLE-TOPIC-MARKER",
+      "severity": "minor",
+      "evidence": "오답 해설 4·5의 '...선택지는 자율신경계 변화는...', '...선택지는 표정·목소리 신호는...' — 주제격 조사 '는' 이중 사용으로 한국어 문장이 다소 어색하다. 사실 오류는 아니며 이해에 지장 없음."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1~V5 전부 통과. V2: 각 선지 독립 검증 결과 정답 집합은 {2} 단일 — ①은 예시 세부, ③은 극성 반전(conscious vs automatic 명시 모순), ④는 지문에 없는 진화 프레임, ⑤는 한 문장 세부의 기능 왜곡으로 모두 배제되고 ②만 전 문장이 수렴하는 포괄 진술이다. V4: 해설·오답 해설 모두 실제 지문 구조 및 각 선지 내용과 정확히 대응하며 환각·용어 오류 없음. 공예: 4개 오답이 각각 다른 오독 유형(세부 격상 2종·극성 반전·범위 밖 확장)을 겨냥하고 지문 내 국소 앵커를 갖춰 C2·C3가 견실하나, 정답 ②가 첫 문장의 근접 paraphrase이고 유일하게 일반화된 표현이라 '가장 포괄적인 선지 고르기' 휴리스틱에 다소 노출되며(③ conscious, ④ evolutionary origins는 즉시 소거 가능), 합계 18로 A 기준(21)에 미달. INTERMEDIATE 난이도 정합은 양호(C5=3). 작은 손질(정답 표현의 표면 일반성 완화 또는 ④를 더 지문 밀착형 함정으로 교체)로 A 승격 가능한 B."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "(A)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(A)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "ungrammatical",
+      "reason": "주어는 동명사구 'Gaining an audience for your writing'(단수)이고 문장 전체에 정형동사가 없다. 'involving'을 유지하는 대안 해석을 전수 탐색했다: (i) 'your writing'을 수식하는 축약 관계절로 보아도 문장 전체가 술어 없는 명사구 파편이 되고, (ii) 분사구문/독립분사구문으로 보려 해도 부착할 주절이 존재하지 않으며, (iii) 도치·생략을 허가하는 요소도 없다. 어떤 파스로도 정문이 되지 않으므로 정형동사 'involves'가 필수. 범주적 오류."
+    },
+    {
+      "label": "(B)",
+      "verdict": "grammatical",
+      "reason": "'building a brand that makes them memorable and distinct..., drawing customers...'에서 drawing은 결과를 나타내는 자유 분사부가어. 의미상 주어는 관계절 주어 'that(=a brand)' 또는 상위 주어 'Entrepreneurs' 어느 쪽으로 통제되어도 의미가 성립(브랜드가/기업가가 고객을 끌어들임). 표준적 결과 분사구문으로 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "grammatical",
+      "reason": "전치사 'by' 뒤 동명사 3항 병렬: pinpointing / crafting / and shaping. 병렬 시작점은 by 직후이며 세 항 모두 동명사로 형태 일치. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "grammatical",
+      "reason": "'position oneself as the one who will address these overlooked areas'에서 선행사 'the one'은 [+human]이고 who는 관계절 내 주어 자리 공백을 채우며 정형동사 'will address'가 뒤따른다. 주격 관계대명사 who 적법."
+    },
+    {
+      "label": "(E)",
+      "verdict": "grammatical",
+      "reason": "전치사 'about'의 보어로 동명사 balancing이 오고 'balance X with Y' 논항구조('the expression of your ideas' with 'the development of a unique voice')가 충족된다. 정문. 다만 'a temporary impression'은 독특한 목소리가 남기는 인상으로는 의미상 부자연(lasting이어야 논리 정합)하나 이는 어휘/내용 결함이지 밑줄 친 balancing의 어법 문제가 아님."
+    }
+  ],
+  "note": "정답은 (A) 단독으로 방어 가능. (A)는 문장에 정형동사가 전무해지는 범주적 오류로, 어떤 대안 파스(축약 관계절·분사구문·도치)로도 구제 불가. 나머지 네 밑줄은 모두 형식적으로 정문. 별도 지적: (E) 인접 구간의 'temporary impression'은 지문 논지(독특한 목소리로 각인)와 모순되는 어휘 선택으로 보이며(의도는 lasting으로 추정), 어법 문항 성립에는 영향 없으나 지문 품질 결함으로 기록함."
+}

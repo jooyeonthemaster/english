@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "Seam failure: 'channeling economic success toward vulnerable groups alone to their populations' stacks two directional PPs ('toward B ... to C') with no licensing verb frame, producing an ungrammatical join. Logic failure: the passage explicitly concedes growth 'if it involves vulnerable groups' still cannot prevent famines without entitlement protection ('cannot hope to prevent famines without specialized entitlement protection mechanisms'), so 'economic success ... alone' directly contradicts the thesis."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "Internal defect: doubled adverbs 'mainly ... primarily' are redundant and stylistically ill-formed. Seam failure: 'diverting public funds mainly into continuous rural revival primarily to their populations in times of crisis' leaves 'to their populations' unattached ('divert into X to Y' is not a valid frame). Logic failure: 'revival of the rural economy' is listed in sentence 1 as the inadequate tendency the author argues against."
+    },
+    {
+      "label": "3",
+      "verdict": "accept",
+      "reason": "Seam holds: 'lie in extending state-backed entitlement safeguards ... to their populations' instantiates the licensed frame 'extend X to Y'; the interposed 'amid crisis' is a grammatical adjunct. Logic holds: 'state-backed entitlement safeguards' is a direct paraphrase of 'specialized entitlement protection mechanisms involving direct public intervention', and the Botswana/Kenya/Zimbabwe contrast (growth explains 'at best only a small part') entails their real achievement is exactly this public protection. Minor stylistic flaw only: 'amid crisis' is semantically redundant with the stem's 'in times of crisis', but this redundancy does not break grammaticality or logic."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "Seam failure: 'letting households diversify livelihoods until market recovery to their populations' provides no predicate to govern 'to their populations'; 'let + object + bare infinitive' cannot take a further 'to'-recipient, so the join is ungrammatical. Logic failure: 'diversification of economic activities' is named in sentence 1 as one of the insufficient tendencies, and a hands-off 'letting households' policy is the opposite of 'direct public intervention'."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "Logic failure (fatal): the passage states rapid growth 'explains at best only a small part of their success', so crediting sectoral growth as 'the chief preventive force' asserts the exact proposition the author denies. Seam is also degraded: 'crediting X as Y to their populations in times of crisis' has no natural attachment for the 'to'-phrase ('credit something to a population' would require a different constituent order and meaning)."
+    }
+  ],
+  "note": "Passage is the Dreze/Sen argument that famine prevention in Botswana/Kenya/Zimbabwe rests on direct public entitlement protection, not growth. Option 3 is the unique candidate that both satisfies the 'extend X to Y' grammatical frame across the seam and matches the thesis. Quality remark for the item author: option 3's 'amid crisis' duplicates the stem's closing 'in times of crisis' (redundant time adjunct), and option 2 contains an internal 'mainly/primarily' doubling that makes it self-evidently defective — these are craftsmanship flaws, but neither creates a second defensible answer."
+}

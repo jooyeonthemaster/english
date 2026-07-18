@@ -1,0 +1,89 @@
+{
+  "pid": "P009",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-TERMINOLOGY",
+      "severity": "major",
+      "evidence": "정답 해설 마지막 문장 '따라서 올바른 원형 reduced로 고쳐야 합니다' — reduced는 과거시제 정동사이지 원형(base form)이 아니다(원형은 reduce). 교정형을 지칭하는 자리에서의 용어 오류로, 학생이 교정형을 reduce로 오인할 실질적 혼동 위험이 있다."
+    },
+    {
+      "code": "V4-CAUSAL-MISEXPLANATION",
+      "severity": "major",
+      "evidence": "'관계절 속의 brought를 주절로 오인하더라도 남은 부분이 서술어를 갖지 못하므로 비문임이 확인됩니다' — brought를 주절 동사로 오인한 가정 아래에서는 주절이 서술어(brought)를 갖게 되므로 제시된 근거('남은 부분이 서술어를 갖지 못한다')는 양보 조건과 논리적으로 연결되지 않는다. 그 오독을 소거하는 실제 근거는 관계사 that이 무면허 성분이 된다는 점인데 해설은 이를 설명하지 못한다(인과 오설명)."
+    },
+    {
+      "code": "V4-MINOR-KOREAN",
+      "severity": "minor",
+      "evidence": "조사 오류 \"'reducing'는\"(올바르게는 \"'reducing'은\") 및 종결어미 혼용('고쳐야 한다' vs '성립합니다/합니다') — 해설 한 단락 안에서 문체가 오간다."
+    },
+    {
+      "code": "V5-CONVENTION-NOTE",
+      "severity": "minor",
+      "evidence": "markedExpressions (D)의 expression 필드가 렌더형 'reducing'이 아닌 원문형 'reduced'를 담고 있어 나머지 4개 항목(expression=렌더형)과 규약이 다르다. errorExpression('reducing')·correction('reduced')·라벨·해설 간 모순은 없어 V5 실패로는 보지 않으나 소비자 코드가 expression을 표시용으로 쓰면 어긋난다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "수동태 판정 — credit A with B 구문에서 선행사(the Italian explorer)가 인정의 대상이므로 be credited with가 옳다.",
+      "temptingBecause": "who 뒤 관계절 내부의 태 판단이고 'credit'의 능/수동 방향을 어휘적으로 알아야 한다.",
+      "decisiveFlaw": "탐험가는 공을 '인정받는' 쪽이므로 수동이 명백히 옳다 — 오답으로서의 유인력이 낮고 즉시 소거된다."
+    },
+    {
+      "label": "(B)",
+      "intent": "전치사 뒤 준동사형 선택 — with의 목적어 자리이므로 동명사 discovering이 옳다.",
+      "temptingBecause": "credited with -ing vs to-v 선택 혼동을 노린다.",
+      "decisiveFlaw": "전치사+동명사는 최기초 규칙이라 훈련된 학생에게 즉시 소거된다."
+    },
+    {
+      "label": "(C)",
+      "intent": "분사/전치사화된 considering의 자유 부가어 판정.",
+      "temptingBecause": "의미상 주어 불일치(considering의 행위 주체 vs 주절 주어 honoring the explorer) 탓에 현수분사로 오인해 틀렸다고 볼 여지가 있다 — 다섯 선지 중 가장 유인력 있는 디코이.",
+      "decisiveFlaw": "considering은 전치사화된 관용 부가어로 의미상 주어 일치 요건에서 면제되어 어법상 옳다."
+    },
+    {
+      "label": "(D)",
+      "intent": "정답 — 관계절이 주어를 수식해 길어진 뒤 주절 정동사 필요 판정(정동사 vs 준동사).",
+      "temptingBecause": "관계절 내부의 brought를 주절 동사로 오인하면 reducing이 부가 분사처럼 보일 수 있다.",
+      "decisiveFlaw": "brought는 that 관계절 내부에 갇혀 있어 주절에 정동사가 없다. brought를 주절 동사로 읽으면 that이 무면허가 된다. 어느 해석으로도 reducing은 성립하지 않으며 reduced로 고치면 정확히 원문이 된다 — 유일 정답."
+    },
+    {
+      "label": "(E)",
+      "intent": "관계절 내 등위 병렬 + 단수 주어 수일치(a new holiday → honors and remembers).",
+      "temptingBecause": "직전의 복수 명사 Native Americans에 이끌려 remember(무-s)를 기대하거나, that에서 멀어 병렬 축을 놓칠 수 있다.",
+      "decisiveFlaw": "honors와 and로 병렬이고 관계절 주어는 단수 a new holiday이므로 remembers가 옳다."
+    }
+  ],
+  "explanationIssues": [
+    "'올바른 원형 reduced' — 원형은 reduce이므로 용어 오용(교정형 혼동 유발).",
+    "brought 오인 시나리오의 소거 근거가 논리적으로 어긋남(오인 가정 하에서는 서술어가 존재하므로 '서술어를 갖지 못한다'는 근거가 성립하지 않음; 실제 근거는 that의 무면허화).",
+    "조사 오류('reducing'는→'reducing'은) 및 한다/합니다 종결어미 혼용.",
+    "오답 해설 자체(A·B·C·E)의 통사 분석은 모두 실제 문장 구조와 일치함 — 수동 의미(A), 전치사 목적어 동명사(B), 부가어 considering(C), honors와의 병렬(E) 모두 사실에 부합."
+  ],
+  "killerConditionsMet": false,
+  "killerConditionDetail": {
+    "minimalPairExactRestore": true,
+    "clearGrammarJudgmentNotContextPreference": true,
+    "perUnderlinePointTemptingCorrect": false,
+    "notInstantlyRevealed": false,
+    "noSamePointEasyDecoyShadowing": true,
+    "note": "각 밑줄에 pointCode와 why-correct는 있으나 why-tempting이 어떤 디코이에도 명시돼 있지 않다. 정답 포인트('주어+[that절]+-ing'의 정동사 부재)는 한국 수험가에서 가장 반복 훈련되는 정형 패턴이라 훈련된 학생에게 사실상 즉시 드러나며, 지문도 중학 수준으로 평이해 KILLER 깊이에 못 미친다."
+  },
+  "grade": "F",
+  "notes": "V1·V2·V3·V5는 통과: 렌더 지문은 의도된 reduced→reducing 단일 변형 외 원지문과 완전 일치하고, 5개 밑줄 독립 검증 결과 (D)만이 비문이며 교정 시 정확히 원문이 복원된다. 그러나 정답 해설의 용어 오류('원형 reduced')와 brought 오독 소거 논리의 인과 오설명으로 V4 실패 → 규정상 F(치명은 공예 점수로 상쇄 불가). 공예 측면에서도 요청 난이도 KILLER 대비 실난이도는 중(中) — 정답 포인트가 최빈출 정형 패턴이고 디코이 4개 중 3개((A)(B)(E))가 즉시 소거 수준이라 C5=1, C3=2. 해설 결함으로 C6=1. 출하하려면 (1) 해설의 '원형'→'과거형 정동사(또는 원문 형태)'로 수정, (2) brought 오독 소거 근거를 that 무면허화로 교체, (3) KILLER 유지 시 정답 포인트·디코이 재설계(또는 난이도 라벨 하향)가 필요하다."
+}

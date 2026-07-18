@@ -1,0 +1,70 @@
+{
+  "pid": "P012",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4_OPTION_WORD_ATTRIBUTION_HALLUCINATION",
+      "severity": "major",
+      "evidence": "오답 해설 ③: \"본문의 핵심 개념인 'misfortunes', 'achievement' 등의 단어를 활용했으나\" — 선지 ③('prioritize external recognition of their achievements over inner growth')에는 'misfortunes'라는 단어가 존재하지 않는다('misfortunes'는 선지 ⑤에 등장). 또한 지문에는 명사 'achievement'가 아니라 동사구 'achieve remarkable feats'만 존재하므로 '본문의 핵심 개념 단어'라는 지목도 부정확하다. 해설이 실제 선지 내용과 대응하지 않는 환각성 귀속 오류."
+    },
+    {
+      "code": "V4_UNSOURCED_FRAME_ADDITION",
+      "severity": "minor",
+      "evidence": "메인 해설의 '회복 탄력성이 높은 사람들' — 지문은 'People who know this'라고만 지칭하며 회복 탄력성(resilience) 개념·용어는 지문에 없다. 논지를 왜곡하지는 않는 해석적 첨가이지만 지문에 없는 프레임을 사실처럼 서술."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "극성 반전(passive resignation vs. active pursuit) — 그러나 §D가 금지하는 단순 random opposite에 가깝다",
+      "temptingBecause": "'their fate', 'remedies'가 지문의 misfortune/hardship 프레임과 어휘장을 공유하고, 큰 상실을 겪은 사람들의 초기 충격(initial shock) 서술을 체념으로 오독한 학생을 노린다",
+      "decisiveFlaw": "지문 전체가 'look for some positive aspect', 'overcome their problem', 'actively seek'로 능동성을 명시 — 극성 하나로 즉시 소거되는 정반대 진술"
+    },
+    {
+      "label": "②",
+      "intent": "정답 — 제거된 span 'actively seek the advantage in their disadvantage'의 추상화 패러프레이즈",
+      "temptingBecause": "해당 없음(정답). actively→deliberately, seek→pursue, advantage→constructive opportunities, disadvantage→setbacks로 원문 의미를 정확히 보존",
+      "decisiveFlaw": "없음. 'see opportunities where most of us fail to see them'과 'focus on what they can gain'이 모두 이 진술을 지지하며 유일 정답"
+    },
+    {
+      "label": "③",
+      "intent": "목적 왜곡(half-truth) — 성취(achievements) 요소는 지문과 겹치나 그 목적을 외부 인정으로 치환",
+      "temptingBecause": "'achieve remarkable feats'와 'achievements'의 어휘 중첩, 성공·성취 프레임의 표면적 유사성",
+      "decisiveFlaw": "지문은 외부 인정 대 내면 성장의 대비를 전혀 제기하지 않음 — 초점은 관점 전환(잃은 것보다 얻을 것)이지 인정 추구가 아님"
+    },
+    {
+      "label": "④",
+      "intent": "조건 과장(overstatement/condition loss) — 극복을 '기억의 완전 소거'로 극단화",
+      "temptingBecause": "'start anew'가 극복·재기 서사와 공명하고, 고난에서 벗어난다는 방향성 자체는 지문과 동일",
+      "decisiveFlaw": "'in spite of their hardships'와 'focus on what they can gain from their circumstance'는 고난을 기억·활용함을 전제 — 'completely erase'는 절대어 하나로도 탈락하는 무근거 극단 진술"
+    },
+    {
+      "label": "⑤",
+      "intent": "행위자 전도(actor swap) — 자신의 불행 극복을 타인의 불행 완화로 치환",
+      "temptingBecause": "'misfortunes'를 지문에서 그대로 재사용하고 'focus on'도 지문 표현('focus on what they can gain')과 겹침",
+      "decisiveFlaw": "지문의 모든 서술 대상은 자신의 misfortune/loss — 타인을 돕는다는 내용은 지문 어디에도 없음"
+    }
+  ],
+  "explanationIssues": [
+    "오답 해설 ③이 선지에 없는 단어 'misfortunes'를 해당 선지가 활용했다고 서술(실제로는 ⑤에 등장) — 학생 노출 해설의 사실 오류",
+    "메인 해설의 '회복 탄력성이 높은 사람들'은 지문에 없는 개념 프레임 첨가",
+    "오답 해설 ④의 '고난의 해결 방식을 과장' 판정 자체는 정확하나, 메인 해설과 오답 해설이 같은 내용을 이중 서술하여 다소 장황"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1/V2/V3/V5 통과, V4 실패로 F. 정답 유일성 자체는 견고: ②만이 제거된 span의 의미를 보존하며 나머지는 극성 반전(①)·목적 왜곡(③)·극단 과장(④)·행위자 전도(⑤)로 각각 독립 소거 가능. 그러나 V4에서 오답 해설 ③이 선지에 존재하지 않는 단어('misfortunes')를 그 선지가 활용했다고 귀속하는 환각이 확인되어 치명 처리(보수 원칙). KILLER 조건도 불충족: (1) 정답 ②는 '자신의 setbacks에 대한 긍정적·능동적 태도'라는 극성 단서 하나로 지목 가능하고, (2) 빈칸 문장 내부의 'every cloud has a silver lining' 관용구가 단독으로 정답을 함의하여 두 문장/두 논리 단서 연결이 강제되지 않으며, (3) ①은 §D가 금지하는 random opposite이고, (4) ①('passively...without')·④('completely')는 절대어·극성만으로 소거된다. 요청 난이도 KILLER 대비 실제 난이도는 중하 수준(C5=1). 재작업 방향: ③ 해설의 단어 귀속 수정, ①을 half-truth 또는 scope shift형(예: 초기 충격 단계의 서술을 이용한 부분 진실)으로 교체, 정답과 동일 극성의 경쟁 선지(예: 능동적이되 조건이 미묘하게 틀린 진술) 추가로 극성 단독 풀이 차단."
+}

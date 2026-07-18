@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "Seam is grammatical ('establish + NP', 'regarding + NP'), but the filler asserts exactly what sentence 2 prohibits: 'no fixed conclusions about a so-called national character should be drawn.' A 'Thus' clause cannot validly conclude a proposition the passage has just negated; 'directly establish a fixed national character' is a formal contradiction with the premise set."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "Grammatically well-formed ('conflict with + NP of + NP'), but the pivot sentence states the proverb's frequent use 'could be used TOGETHER WITH other social and cultural indicators' — a cooperation relation. 'Conflict with other social and cultural indicators' is the direct negation of that stated relation, so the inference under 'Thus' fails."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "Grammatical seam is fine, but 'solely construct the entire worldview and mentality' asserts sufficiency ('solely') and exhaustiveness ('entire'), both of which the passage denies: a proverb is only one indicator to be combined with others, and reading proverbs as expressing a people's whole worldview is exactly what sentence 1 warns against."
+    },
+    {
+      "label": "④",
+      "verdict": "accept",
+      "reason": "Seam check: 'it does serve as a partial reflection of the German attitude towards getting up early' — emphatic 'does' + bare infinitive 'serve', 'serve as + NP', 'reflection of + NP' all license the frame. Logic check: 'partial' precisely encodes the pivot's qualification (one signal usable only together with other indicators), and 'reflection' is evidentially weaker than 'establish/prove', so it respects the prohibition on fixed national-character conclusions. Unique filler consistent with both the 'Nevertheless' concession and the opening caution."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "Grammatical though clumsy ('prove a lineage ... for the German attitude'). Logically a non sequitur: the classical/Biblical/medieval point appears in the passage as evidence AGAINST national-character readings (proverbs are shared across cultures), and high frequency of current use cannot prove historical lineage. Nothing in the premises supports this conclusion under 'Thus'."
+    }
+  ],
+  "note": "Clean funnel structure: prohibition (no fixed national character) -> concession (proverb frequency usable together with other indicators) -> 'Thus' instantiation. Distractors ①③ overstate (fixed/solely/entire), ② negates the stated cooperation relation, ⑤ recycles surface vocabulary (classical/medieval) as a lure. All five options are grammatically viable in the seam, so discrimination is purely logical — no alternative parse (reduced relative, inversion, etc.) rescues any distractor. Single defensible answer: ④."
+}

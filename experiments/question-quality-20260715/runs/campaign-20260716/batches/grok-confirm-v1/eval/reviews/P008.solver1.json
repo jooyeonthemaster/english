@@ -1,0 +1,35 @@
+{
+  "pid": "P008",
+  "answer": "C",
+  "multipleDefensible": false,
+  "defensibleLabels": ["C"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "create의 목적어 자리에 선행사 포함 관계대명사 what이 자유 관계절(what psychologists call 'flashbulb' memories)을 이끈다. 뒤 절은 call + O + OC(5형식) 구조에서 목적어 O가 빠진 불완전절이므로 what이 옳다. that/which로 바꾸면 선행사 부재로 비문. 매력 포인트: 'call ... memories'가 완전절처럼 보이는 착시가 있으나 실제로는 목적어가 결여되어 있다."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "think O to be C의 수동태 'S is/are thought to be C'(주어 인상 구문). These memories are thought to be unforgettable은 교과서적 정문. to be 생략형도 가능하지만 존재 자체가 오류는 아니다."
+    },
+    {
+      "label": "C",
+      "verdict": "incorrect",
+      "reason": "삽입 분사구 'thoroughly reporting in the media'의 의미상 주어는 직전 명사구의 핵 the broad outlines (of such catastrophes). outlines는 언론에 의해 보도되는 대상이므로 수동의 과거분사 reported(= which are thoroughly reported in the media)여야 한다. 구제 해석 적극 탐색: (1) report의 자동사 용법으로 outlines를 주체로 보는 해석 — '개요가 언론에서 보도 활동을 한다'는 의미 불성립, (2) 동명사 해석 — 콤마 삽입 위치상 불가, (3) 의미상 주어를 media로 보는 독립분사구문 — in the media가 전치사구여서 구조상 불가. 어느 대안도 정문을 만들지 못한다. 정답."
+    },
+    {
+      "label": "D",
+      "verdict": "correct",
+      "reason": "be동사의 보어 자리이므로 형용사 precise가 옳다. 부사 precisely로의 착각을 유도하는 자리지만 'may not necessarily be precise'는 정확한 형용사 보어 용법. 논쟁 여지 없음."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "실전에서 가장 끌린 매력 오답. '조사받는 것은 respondents이지 memories가 아니지 않나'라는 collocation 위화감으로 잠시 유혹되었으나, memories는 survey하는 주체가 아니라 대상이므로 태(voice) 판별상 수동 were surveyed가 유일하게 옳다. 연구 맥락에서 'memories were surveyed(기억이 조사되었다)'는 환유적으로 통용되는 표현이며, 이는 연어 취향의 흔들기일 뿐 어법 오류가 아니다."
+    }
+  ],
+  "note": "실전 풀이 순서로 접근: (C)에서 능동/수동 분사 오류가 즉시 포착됨(outlines가 report의 대상). 최대 유혹 오답은 (E) surveyed — 'memories were surveyed'의 연어 위화감이 최상위권을 흔들 수 있으나 문법성 기준에서는 정문이어서 소거. (A) what도 '완전절 착시'로 2차 유혹이 있으나 call의 목적어 결여로 정문 확정. 단일 정답 (C), 복수 정답 여지 없음."
+}

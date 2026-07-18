@@ -1,0 +1,35 @@
+{
+  "pid": "P008",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "치환 검증: 'economics cannot, without moral orientation toward distributive justice, identify the goal.' 지문의 핵심 논증과 형식적으로 일치한다. (i) 'Tax is the application of a society's theories of distributive justice' — 세금의 목표는 분배 정의 이론에 근거한 도덕적 목표이고, (ii) 직후 문장 'Creating tax policy requires identifying a moral goal, which... must involve ethics and moral analysis' — 목표 식별에는 윤리·도덕 분석이 필수라고 명시한다. 따라서 'in a vacuum'(고립 상태에서, 다른 것의 도움 없이)이 결여하고 있는 그 '다른 것'은 곧 분배 정의를 향한 도덕적 지향이다. 논리적으로 유일하게 지문에서 도출 가능한 함축."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "치환하면 '역사가와 상의하지 않고서는 목표를 식별할 수 없다'가 되는데, 지문에서 역사는 입법자들이 이미 주의를 기울이는 대상('attentive to questions of economics and history')으로 제시될 뿐, 목표 식별의 필수 요건으로 제시된 적이 없다. 오히려 지문의 결론은 목표 식별에 필요한 것이 윤리·도덕 분석이라는 것이므로 전제와 상충한다. 지지 근거 없음."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "'법이 목표를 달성하는지 계산하는 일'은 지문이 economics가 할 수 있다고 명시한 바로 그 능력('Economics can go a long way towards helping... determine whether or not a particular tax law will help achieve a particular goal')이다. 대조 구문(can determine whether A achieves goal / cannot identify the goal)의 앞항을 결여 요소로 바꿔치기한 역전 미끼로, 지문의 대조 구조를 정면으로 위배한다."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "치환하면 'economics cannot, without any input from economics or history, identify the goal'이 되어 주어(economics)가 자기 자신의 입력을 결여한다는 순환·자기모순 명제가 된다. 형식적으로 성립 불가. 또한 지문은 경제학·역사가 아니라 윤리학의 결여를 문제 삼고 있으므로 내용상으로도 불일치."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "지문은 도덕적 질문이 입법 논쟁 '안에서' 밀려난다고 했을 뿐, 과세를 입법 논쟁으로부터 격리하지 않는 것이 목표 식별의 조건이라는 명제는 어디에도 없다. 'in a vacuum'의 표면 이미지(고립)를 'isolating'이라는 어휘로 흉내 낸 표면 유사 미끼이며, 치환 시 지문 논리와 연결되는 추론 경로가 존재하지 않는다."
+    }
+  ],
+  "note": "함축의미 문항. 'in a vacuum'은 'economics cannot, in a vacuum, identify the goal'에서 economics가 홀로(다른 학문의 도움 없이) 작동하는 상태를 뜻하며, 결여된 것이 무엇인지는 직후 문장(moral goal, ethics and moral analysis)과 앞 문장(distributive justice)이 이중으로 특정한다. 선지 1만이 이 함축과 논리적으로 동치이고, 3은 대조 역전, 4는 자기모순, 2·5는 근거 부재로 각각 형식적으로 배제된다. 정답이 1로 유일하게 수렴하는 깨끗한 문항."
+}

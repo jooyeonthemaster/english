@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "meticulously ruling out questionable alternatives — 대안을 꼼꼼히 배제하는 것은 전형적인 의식적·숙고적 인지 행위. 'she isn't thinking more'와 'perform without conscious awareness'에 정면 모순. '전문가스러운' 어감으로 유혹하지만 지문 논리와 반대 방향."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "acquiring more sophisticated rules of book knowledge — 지문의 이분법(실천지 ≠ 규칙 기반 책 지식)을 정확히 뒤집음. 실천지는 'cannot be taught or learned but only transmitted and acquired'이며 규칙으로 정식화되지 않는다."
+    },
+    {
+      "label": "③",
+      "verdict": "correct",
+      "reason": "bypassing deliberate cognitive calculations — 세미콜론 대조('isn't thinking more; she is ___')가 요구하는 '의식적 사고의 반대'를 정확히 충족. 'deliberately learned'(책 지식)의 어휘 반향을 우회 대상으로 삼고, 직후 문장 'perform without conscious awareness'가 직접 뒷받침. be + V-ing 결합도 자연스러움."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "evaluating the validity of her intuition before acting — 최대 매력 오답. 'intuition'이 지문에서 그대로 등장해 실제로 끌림을 느꼈으나, 행동 전에 직관의 타당성을 '평가'하는 것은 의식적 메타인지로 'without conscious awareness'와 정반대. 어휘 반복을 미끼로 쓴 전형적 함정."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "converting active experiences into verbal propositions — 경험을 언어적 명제로 전환하는 것은 암묵지를 명시화·정식화하는 행위로, 실천지가 'exists only in practice'이며 정식화 불가라는 지문 전제에 모순. 또한 지식은 'shared experience'로 전수된다고 명시되어 언어 명제 전환과 배치."
+    }
+  ],
+  "note": "빈칸 문장의 세미콜론 대조 구조가 지배 단서: 'not thinking more' ↔ 빈칸. 직후 문장의 'without conscious awareness'가 결정적 장거리 단서로 ③만 지지. 모든 선지가 V-ing구로 문법 결합(seam)은 전부 성립하므로 순수 논리 변별 문항. ④는 지문 어휘 'intuition' 재사용으로 강한 유혹을 주는 잘 설계된 미끼이나 'evaluating...before acting'이 의식적 숙고를 함의해 논리적으로 방어 불가. 복수 정답 여지 없음."
+}

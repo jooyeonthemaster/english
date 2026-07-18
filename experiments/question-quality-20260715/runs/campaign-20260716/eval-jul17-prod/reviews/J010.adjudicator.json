@@ -1,0 +1,39 @@
+{
+  "pid": "J010",
+  "finalV2": true,
+  "winningAnswer": "(B)",
+  "reason": "독립 재검증 결과 5개 밑줄 중 어법상 틀린 것은 (B) 하나뿐이다. (B) 'cannot deny'는 (i) 타동사 deny 뒤에 목적어 없이 문장이 종결되고 (ii) 주어 'The potential contribution'이 deny의 피동작주(부정되는 대상)여서 능동태가 성립할 수 없으므로 'cannot be denied'(원문 복원)가 강제된다. 구제 해석 전수 탐색 — 절대적 자동사 용법(현대 영어에 부재, 고어적 자동사 '거절하다'도 유생 행위주 필요), 중간태(*this contribution denies easily 비문), tough-구문, 목적어 생략/전치 — 모두 불성립. (A)(C)(D)(E)는 각각 시간부사절 현재완료, 관계부사+완전절, 목적어를 취하는 능동 후치수식 분사, 전치사 뒤 완료동명사로 전부 정문이며 원지문과 동일하다. 변형은 (B) 한 곳뿐임을 원지문 대조로 확인. 솔버1·솔버2 모두 과잉 판정 없이 동일 결론에 수렴했고, 감사자의 F 등급은 해설 문구 결함(V4: '양보의 조건절' 오명명 등)에 기인한 것으로 정답 유일성(V2)과 무관하다. 선언된 정답 (B)는 유일한 정답으로 최종 확정.",
+  "perDispute": [
+    {
+      "label": "(A) has settled down",
+      "claim": "시간부사절 내 현재완료가 어법 오류일 가능성",
+      "verdict": "정문 — 오류 아님",
+      "evidence": "단수 주어 'the dust' + 자동사 구동사 'settle down'. once 시간부사절에서 주절의 일반 현재 진술('There is a tendency')에 선행 완료된 사건을 현재완료로 표현하는 표준 용법. 'the dust settles'가 더 관용적이라는 점은 문체 문제일 뿐 어법 오류가 아니며 원지문과 동일."
+    },
+    {
+      "label": "(B) deny",
+      "claim": "선언된 정답 — 능동 'deny'가 비문이며 수동 'be denied'가 요구되는가",
+      "verdict": "오류 확정 — 유일한 정답",
+      "evidence": "두 개의 독립적 형식 근거: (1) 타동사 deny 뒤 목적어 부재(문장이 deny로 종결, 전치/생략된 목적어 없음), (2) 주어 'The potential contribution'은 deny의 의미상 대상(피동작주)으로 행위주가 될 수 없음. 구제 해석 전수 기각: 절대적 자동사 deny 부재(고어 자동사 '거절하다'도 유생 행위주 필요, contribution은 불가), 중간태 불허(*denies easily), tough-이동 구문 아님. 'cannot be denied'로 교정 시 원문(Drèze & Sen 계열)과 정확히 일치."
+    },
+    {
+      "label": "(C) where",
+      "claim": "관계부사 where가 부적절하거나 which여야 할 가능성; 인접 'derive' 수일치 착시",
+      "verdict": "정문 — 오류 아님",
+      "evidence": "선행사 countries(장소) + 후행절 'a large part of the population derive their livelihood from uncertain sources'는 주어·동사·목적어·전치사구가 모두 갖춰진 무공백(gap-free) 완전절이므로 관계부사 where(= in which)가 필수이고 which/that는 오히려 비문. 복수형 'derive'는 밑줄 밖 요소이며 부분사+집합명사(population)의 복수 호응으로 허용되는 (영국식) 용법 — 원지문 그대로."
+    },
+    {
+      "label": "(D) involving",
+      "claim": "후치수식 분사의 능/수동 선택(involving vs involved) 오류 가능성",
+      "verdict": "정문 — 오류 아님",
+      "evidence": "'mechanisms involving direct public intervention'에서 mechanisms가 involve의 의미상 주어(메커니즘이 개입을 수반)이고 분사가 목적어 'direct public intervention'을 직접 취하므로 능동 현재분사가 필연. involved(수동)로는 목적어를 취할 수 없어 비문."
+    },
+    {
+      "label": "(E) having provided",
+      "claim": "완료동명사가 과잉·오류이거나 분사구문 오용일 가능성",
+      "verdict": "정문 — 오류 아님",
+      "evidence": "전치사 in의 목적어 자리이므로 동명사가 요구되고, 완료형 having provided는 주절 현재시제 lie보다 앞선 과거의 지원 제공을 나타내는 표준적 시제 선행 표기. 의미상 주어는 these countries로 자연 회복되어 통제 문제 없음. 단순형 providing도 가능하나 이는 허용 변이일 뿐 완료형이 오류인 것은 아님."
+    }
+  ],
+  "solverOverclaimCheck": "솔버1·솔버2 모두 defensibleLabels를 {(B)} 단일로 보고했고, 기각한 대안 해석(자동사 용법·중간태·tough-구문)의 기각 논리도 재검증 결과 전부 타당. 성립하지 않는 대안을 성립한다고 우긴 과잉 판정 사례 없음. 감사자 V2=true 판정도 정당."
+}

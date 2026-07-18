@@ -1,0 +1,230 @@
+{
+ "P001": {
+  "itemId": "sw-f-condi",
+  "armId": "SW-F-CONDI",
+  "frameId": "grammar-frame-v2-133",
+  "subType": "CONDITIONAL_WRITING",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "Not until we are being massaged by warm water and unable to check our e-mail can we finally hear the quiet voices in the backs of our heads telling us about the insight.",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "writing-answer-verbatim-in-passage",
+    "message": "정답 어구가 원본 지문에 그대로 있어 학생이 INLINE 지문에서 베껴 쓸 수 있습니다(본문 답 노출): \"hear quiet voices backs heads telling about insight\". 정답은 지문 문장의 패러프레이즈/상위 추론으로 만드세요."
+   }
+  ]
+ },
+ "P002": {
+  "itemId": "sw-f-vocab",
+  "armId": "SW-F-VOCAB",
+  "frameId": "blank-supply-v2-119",
+  "subType": "VOCAB_CHOICE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "4",
+  "gateIssues": []
+ },
+ "P003": {
+  "itemId": "sw-g-word_",
+  "armId": "SW-G-WORD_",
+  "frameId": "grammar-frame-v2-115",
+  "subType": "WORD_ORDER",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "Following the new leader's refusal to step down, his army was immediately ordered to protect the palace.",
+  "gateIssues": []
+ },
+ "P004": {
+  "itemId": "sw-f-summa",
+  "armId": "SW-F-SUMMA",
+  "frameId": "blank-supply-v2-120",
+  "subType": "SUMMARY_COMPLETE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(A) severed, (B) material",
+  "gateIssues": []
+ },
+ "P005": {
+  "itemId": "sw-f-word_",
+  "armId": "SW-F-WORD_",
+  "frameId": "grammar-frame-v2-115",
+  "subType": "WORD_ORDER",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "had been led by his cousin",
+  "gateIssues": []
+ },
+ "P006": {
+  "itemId": "sw-g-condi",
+  "armId": "SW-G-CONDI",
+  "frameId": "grammar-frame-v2-133",
+  "subType": "CONDITIONAL_WRITING",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "Not until we are massaged by warm water without being able to check our e-mail can we finally hear the soft voices from the backs of our minds telling us of the insight.",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "writing-answer-verbatim-in-passage",
+    "message": "정답 어구가 원본 지문에 그대로 있어 학생이 INLINE 지문에서 베껴 쓸 수 있습니다(본문 답 노출): \"massaged warm water\". 정답은 지문 문장의 패러프레이즈/상위 추론으로 만드세요."
+   }
+  ]
+ },
+ "P007": {
+  "itemId": "sw-g-conte",
+  "armId": "SW-G-CONTE",
+  "frameId": "blank-supply-v2-135",
+  "subType": "CONTEXT_MEANING",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "3",
+  "gateIssues": []
+ },
+ "P008": {
+  "itemId": "sw-g-summa",
+  "armId": "SW-G-SUMMA",
+  "frameId": "blank-supply-v2-120",
+  "subType": "SUMMARY_COMPLETE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(A) disconnecting, (B) no material traces",
+  "gateIssues": []
+ },
+ "P009": {
+  "itemId": "sw-g-fill_",
+  "armId": "SW-G-FILL_",
+  "frameId": "grammar-frame-v2-096",
+  "subType": "FILL_BLANK_KEY",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "logical",
+  "gateIssues": []
+ },
+ "P010": {
+  "itemId": "sw-f-refer",
+  "armId": "SW-F-REFER",
+  "frameId": "adhoc-prod-04",
+  "subType": "REFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "③",
+  "gateIssues": []
+ },
+ "P011": {
+  "itemId": "sw-f-conte",
+  "armId": "SW-F-CONTE",
+  "frameId": "blank-supply-v2-135",
+  "subType": "CONTEXT_MEANING",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": []
+ },
+ "P012": {
+  "itemId": "sw-g-main_",
+  "armId": "SW-G-MAIN_",
+  "frameId": "blank-supply-v2-134",
+  "subType": "MAIN_IDEA",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "3",
+  "gateIssues": []
+ },
+ "P013": {
+  "itemId": "sw-g-vocab",
+  "armId": "SW-G-VOCAB",
+  "frameId": "blank-supply-v2-119",
+  "subType": "VOCAB_CHOICE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "5",
+  "gateIssues": []
+ },
+ "P014": {
+  "itemId": "sw-g-refer",
+  "armId": "SW-G-REFER",
+  "frameId": "adhoc-prod-04",
+  "subType": "REFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "2",
+  "gateIssues": []
+ },
+ "P015": {
+  "itemId": "sw-g-gramm",
+  "armId": "SW-G-GRAMM",
+  "frameId": "grammar-frame-v2-134",
+  "subType": "GRAMMAR_CORRECTION",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(A) in which",
+  "gateIssues": []
+ },
+ "P016": {
+  "itemId": "sw-f-fill_",
+  "armId": "SW-F-FILL_",
+  "frameId": "grammar-frame-v2-096",
+  "subType": "FILL_BLANK_KEY",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "presentation",
+  "gateIssues": []
+ },
+ "P017": {
+  "itemId": "sw-f-main_",
+  "armId": "SW-F-MAIN_",
+  "frameId": "blank-supply-v2-134",
+  "subType": "MAIN_IDEA",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": []
+ },
+ "P018": {
+  "itemId": "sw-f-gramm",
+  "armId": "SW-F-GRAMM",
+  "frameId": "grammar-frame-v2-134",
+  "subType": "GRAMMAR_CORRECTION",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(A) in which",
+  "gateIssues": []
+ }
+}

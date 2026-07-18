@@ -1,0 +1,35 @@
+{
+  "pid": "P011",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "correct",
+      "reason": "Seam: 'meet a challenge in a timeframe' is a well-formed adverbial PP; relative clause 'that feels close at hand' agrees with singular 'timeframe'. Logic: directly restates the passage's remedy — reframe the timeframe so the deadline sits inside the current time unit ('this winter' not 'next year'), making it feel near, prompting action. Also entails the following sentence: perceived proximity → early start → stress distributed and manageable → finishing in good time. Uniquely satisfies both the cause-of-problem premise (remoteness → inaction) and the claimed consequence."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "Grammatically fine at the seam ('meet a challenge far enough in the future...'), but logically the negation of the thesis: the passage identifies perceived remoteness as the cause of failure to act. 'Ease our minds' superficially echoes 'stress is more manageable' but contradicts 'jump into action' and 'starting in good time'. A remoteness-framing distractor."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "Grammatical ('by dividing them' — 'them' = deadlines, with a slight number wobble against singular 'a challenge'), but task decomposition into sub-stages is proposed nowhere. The only 'dividing' in the passage is the partitioning of time into units, which is presented as the SOURCE of the problem, not the remedy. Unsupported and thematically inverted."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "Grammatical, but the 'this winter' example uses a season as a psychological reframing device, not literal seasonal change. The word 'literal' inverts the passage's point — the recommended frame is an explicitly non-literal perceptual trick. Surface-lexeme distractor exploiting 'seasons' from the first sentence."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "Grammatical, but contradicts the remedy: the passage recommends SUBSTITUTING one artificial time frame for another ('this winter' instead of 'next year'), not abandoning time constraints. A deadline is itself a time constraint one must meet, so 'without relying on artificial time constraints' is incoherent with the advice given."
+    }
+  ],
+  "note": "Blank funnel is clean: the blank slot demands the property produced by the recommended reframing (perceived proximity of the deadline within the current time unit). ① uniquely satisfies both premises (remoteness → inaction) and the stated consequence (manageable stress, timely start/finish). ② is a direct antithesis distractor; ③–⑤ recycle surface vocabulary (dividing/units, seasons, time constraints) while inverting or missing the argument. No alternative parse (reduced relative, participial, inversion, etc.) rescues any wrong option. One caveat considered and dismissed: ②'s 'ease our minds' might tempt via 'stress is more manageable', but the causal chain in the passage attributes manageable stress to early starting, not to perceived distance."
+}

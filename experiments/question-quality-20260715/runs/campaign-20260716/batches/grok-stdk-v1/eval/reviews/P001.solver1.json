@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'too heavy to uphold' is the standard too+adj+to-V tough-construction: the sentence subject 'masks' is the understood object of the active infinitive (cf. 'The box is too heavy to lift'). The lure is thinking passive 'to be upheld' is required, but the active gapped-object infinitive is grammatical and idiomatic. I felt the pull of the passive reading briefly, then confirmed the tough-construction licenses the active form."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "Three-way verb parallelism under subject 'you': waste energy, sacrifice productivity, and lose people's trust. The parallel start point is the finite verb after 'you'; 'sacrifice' matches 'waste' and 'lose' in form. No defect."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "Causative 'make + object + bare infinitive': 'make them appear weak' is required form. The bait is expecting 'to appear', but bare infinitive after 'make' is the rule. Correct."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'..., creating a snowball effect' is a resultative participial clause whose implicit subject is the event of the preceding clause (subordinates doing the same encouraged by the culture) — a standard KSAT pattern. Past participle 'created' bait rejected; active present participle is right since the preceding event creates the effect."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect (the answer)",
+      "reason": "True subject is 'Some of the ways' — 'some of + plural noun' takes plural agreement, so it must be 'were', not 'was'. The reduced relative clause '(that) we helped the CEOs remove their masks' intervenes, and the nearest noun 'masks' creates proximity attraction, but 'masks' is inside the relative clause and cannot govern the verb. The complement is a list of three infinitives (to name, explore, and ask), consistent with plural 'ways'. I searched for a rescue reading treating 'Some of the ways...' as a singular notional unit; no accepted grammar supports that. Clear error."
+    }
+  ],
+  "note": "Solved blind as a top-tier examinee lens. Real-time distractor pulls recorded: (A) passive-infinitive temptation ('to be upheld') was the most attractive wrong pull, resolved by the tough-construction rule; (C) 'to appear' pull dismissed immediately by the causative-make rule. (E) is the unambiguous single answer via long-distance subject-verb agreement across a reduced relative clause — a well-formed, single-answer item with a classic proximity-attraction trap."
+}

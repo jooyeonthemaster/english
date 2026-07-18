@@ -1,0 +1,82 @@
+{
+  "pid": "P001",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V2-ALT-PARSE-CONTESTABLE",
+      "severity": "major",
+      "evidence": "정답 (B) 자리 'struggle to adapt to new information or finding ...'은 'adapt to'의 전치사 to 를 취해 'adapt to [new information or finding creative solutions to problems]'(전치사 목적어 NP-동명사구 등위)라는 통사적으로 적격한 대안 파스가 열리는 지점이다(cf. 'adapt to working from home'). 이 파스의 배제는 순수 문법이 아니라 담화 논리에 의존한다: 해당 문장은 'That means that...'으로 직전 주장('when you are unhappy, these skills suffer' = 능력 저하)을 재진술해야 하는데, 'adapt to finding creative solutions'는 해결책 찾기가 이미 일어나는 상황임을 전제해 능력 저하 진술과 모순되므로 담화상 파탄이다. 이 근거로 실제 오류 집합 {B} 유일성이 유지되고 (A)(C)(D)(E)는 각각 독립 검증 결과 전부 명백히 적격이므로 V2는 통과시키되, 오류 판정이 문맥·담화 배제에 부분 의존하는 자리라는 점은 이의신청 취약점이며 KILLER 부적격 사유다."
+    },
+    {
+      "code": "V4-OMITTED-STRONGEST-ALT",
+      "severity": "major",
+      "evidence": "해설은 상대적으로 약한 분사구문 해석만 반박하고, 가장 강한 대안인 'adapt to + 동명사(전치사 목적어 등위)' 해석은 전혀 다루지 않는다. 반박 근거 문구 'may·struggle의 지배 범위 안에 남은 성분이 없어'도 실제 배제 근거(분사구문 독해 시 등위접속사 or 의 둘째 접속항이 사라짐)를 정확히 기술하지 못하는 모호한 표현이다. 명백한 오분석·환각·용어 오류는 없어 V4는 통과시키되 완결성 결함으로 기록한다."
+    },
+    {
+      "code": "V4-MINOR-JOSA",
+      "severity": "minor",
+      "evidence": "오답 해설 (C) \"'critical'는\" — 조사 결합 오기('critical'은이 자연스러움). 의미 훼손 없는 표기 결함."
+    },
+    {
+      "code": "V5-KEYPOINTS-PARTIAL",
+      "severity": "minor",
+      "evidence": "keyPoints 가 (B)(A)(D)만 다루고 (C)(E)의 point 는 미기재. 필드 간 모순·비동기는 없어 V5 통과이나, §C '5개 밑줄 각각 point/why tempting/why correct' 요건 미달로 killer 조건 판정에 반영."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "능동 vs 수동 — be + 과거분사(are greatly enhanced) 수동태 판단",
+      "temptingBecause": "타동사 enhance 뒤에 목적어가 없어 능동 원형으로 고쳐야 한다고 순간 착각할 수 있음",
+      "decisiveFlaw": "정답 아님 — 주어 your critical thinking skills 가 향상의 대상이므로 수동 p.p.가 명백히 옳다. be 바로 뒤라 판단 거리도 짧아 즉시 소거되는 저매력 디코이."
+    },
+    {
+      "label": "(B)",
+      "intent": "정답 — 'struggle to [adapt ... or find ...]' 공유-to 병렬의 둘째 접속항 bare-V 자리에 -ing 을 넣어 등위 파괴",
+      "temptingBecause": "직전에 전치사 to(adapt to)가 있어 'to ... or finding'이 'adapt to + 동명사' 패턴처럼 보여 옳다고 넘길 수 있음",
+      "decisiveFlaw": "의도 파스에서 finding 은 to adapt 와 형태가 어긋나는 비문이고 find 로 교정하면 정확히 원문이 복원되는 최소대립쌍. 단, 'adapt to [NP or 동명사구]' 대안 파스가 통사적으로는 성립하고 담화 논리(That means... 재진술, 전제 충돌)로만 배제되므로 자리 선정이 KILLER 요건(대안 분석 배제·구조 독해 필수)에 부적격이며, 'or + -ing' 표면 패턴 스캔으로 즉시 탐지된다."
+    },
+    {
+      "label": "(C)",
+      "intent": "주격 보어 자리 형용사 — They're 뒤 critical (부사 critically 혼동 유도로 추정)",
+      "temptingBecause": "also 뒤 위치에서 부사를 기대하게 하려는 의도로 보이나 그 혼동을 촉발할 표면 단서가 없음",
+      "decisiveFlaw": "정답 아님 — be동사 보어 자리 형용사로 자명하게 옳다. 겨냥 오개념이 사실상 작동하지 않는 필러성 디코이."
+    },
+    {
+      "label": "(D)",
+      "intent": "정동사 vs 준동사 — 접속사 as 종속절 주어 some individuals 뒤 정동사 자리",
+      "temptingBecause": "as 를 전치사로 오독하면 individuals using 처럼 분사를 기대하게 됨",
+      "decisiveFlaw": "정답 아님 — as 는 이유의 접속사이고 절에는 정동사가 필요하므로 use 가 옳다. 주어 직후라 판단 부담이 작은 중하 강도 디코이."
+    },
+    {
+      "label": "(E)",
+      "intent": "비교 구문 — 'even more than other risk factors'의 비교급 more + than 연결",
+      "temptingBecause": "비교 축 생략(more [of a risk factor] than)이 낯설어 어색하게 느낄 수 있음",
+      "decisiveFlaw": "정답 아님 — 원문 그대로의 관용적 생략 비교로 적격. 어떤 오형태와의 최소대립인지 불분명해 겨냥 오개념이 없는 필러성 디코이."
+    }
+  ],
+  "explanationIssues": [
+    "가장 강한 대안 해석('adapt to' 전치사 + 동명사 등위)을 검토·반박하지 않고 약한 분사구문 해석만 반박 — 이의신청에 가장 취약한 지점이 해설에서 비어 있음",
+    "'may·struggle의 지배 범위 안에 남은 성분이 없어'는 모호한 통사 기술 — 실제 배제 근거는 분사구문 독해 시 등위접속사 or 의 둘째 접속항이 사라진다는 점",
+    "오답 해설 (E)가 생략된 비교 축(more가 무엇의 비교급인지)을 설명하지 않아 표층적",
+    "오답 해설 (C) 조사 오기(\"'critical'는\" → 'critical'은)",
+    "오답 해설이 why-correct 만 제공하고 why-tempting 이 없으며 keyPoints 도 (C)(E) 미기재 — §C 밑줄별 3요소 요건 미달"
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1: 렌더 지문을 원지문과 전수 대조 — 의도된 치환(find→finding) 외 접합 파손·중복·누락·고아 문장부호·오탈자 없음. 라벨 (A)~(E)가 선지 목록·markedExpressions 와 일치하고 (B)의 errorExpression=finding/correction=find 컨벤션도 일관. V2: 각 선지 독립 검증 — (A) 수동 p.p. 적격, (C) 보어 형용사 적격, (D) as절 정동사 적격, (E) 관용적 생략 비교 적격. (B)는 의도 파스에서 비문이고 대안 동명사 파스는 담화 전제 충돌로 배제 가능해 정답 집합 {B} 유일 — 통과하되 문맥 의존 배제라는 취약점을 major 로 기록. V3: 지문·발문·교정형(find) 대입 완성문 모두 문법적·자연스럽고, 비문은 정답 밑줄 하나뿐으로 유형 의도와 일치. V4: 해설의 병렬 분석·교정형·정답 라벨 정확, 오답 해설 4건 모두 실제 해당 선지 구조와 대응, 명백한 오개념·환각·용어 오류 없음(완결성 결함은 issues 기록). V5: 정답 라벨·선지·해설·keyPoints·markedExpressions 간 모순 없음. 공예: C1=3(공유-to 병렬은 정전 포인트이나 자리 선정 결함), C2=2((A)(D)만 실질 오개념 겨냥, (C)(E)는 필러), C3=2(디코이 대부분 즉시 소거, 실제 판단은 1~2회), C4=2(메타 누출은 없으나 정답의 필연성이 담화 배제에 의존하고 'or+-ing' 표면 단서로 정답이 노출), C5=1(요청 KILLER 대비 실제는 중위 난도 — 훈련된 학생이 표면 스캔으로 즉시 포착), C6=2(짧고 결론은 옳으나 핵심 대안 해석 누락·모호한 반박·조사 오기). 합계 12. KILLER 추가 조건: 최소대립쌍(교정 시 원문 복원)만 충족하고 '명확한 문법 판단(대안 분석 자리 제외)'·'구조 독해 필수(즉시 비노출)'·'5개 밑줄 각각 point/tempting/why' 을 불충족 → killerConditionsMet=false. 종합: 모든 V 통과이나 KILLER 로 출하하려면 재설계 필요 — 등급 C. 재설계 권고: 병렬 포인트 유지 시 첫 접속항 동사가 전치사 to 를 취하지 않는 자리로 이동하고, (C)(E)를 구조 판단이 필요한 디코이로 교체."
+}

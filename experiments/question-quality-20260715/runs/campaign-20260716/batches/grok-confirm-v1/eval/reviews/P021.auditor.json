@@ -1,0 +1,66 @@
+{
+  "pid": "P021",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V2-note",
+      "severity": "minor",
+      "evidence": "선지 ④(the only evidence needed to judge a dog's musical talent)가 유일한 실질 경쟁 선지다. 'need not'+배타어(only) 결이 정답과 유사하고 후속 문장(개들이 다른 음악적 특징에도 반응)을 '다른 증거도 있다'로 오독하면 지지되는 것처럼 보인다. 그러나 (a) 빈칸의 'this'는 발 구르기라는 행동/기술이며 기술을 '증거(evidence)'로 해석한다는 것은 범주 착오, (b) 지문의 논점은 음악 반응에 관여하는 능력 일반이지 '개 한 마리의 재능 판정' 증거 충분성이 아님(직전 문장: wrong to claim that animals are incapable of responding — 반응 능력 담론). 정답 유일성은 유지되나 상급 검토자 기록용으로 남긴다."
+    },
+    {
+      "code": "C3-note",
+      "severity": "minor",
+      "evidence": "②(prevents animals from hearing rhythms)는 첫 두 문장과 정면 모순, ③(equates every sound with true music)은 지문에 근거 없는 극단 기준, ⑤(verified Darwin's famous accounts)는 빈칸 시점에 Darwin 미등장으로 지시 불성립 — 세 선지는 중상위 학생에게 비교적 빠르게 소거된다. 유효성 결함은 아니며 경쟁력(C3)이 4가 아닌 3인 근거."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 4,
+    "C6": 4
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — source span 'the decisive capacity involved in musical response'를 'the essential ability required for reacting to music'로 환언. 양보(인간 특유 기술)-반론(그러나 결정적 능력은 아님) 구조와 후속 증거(사이렌·색소폰·콘서티나 음 반응)가 필연적으로 지지한다.",
+      "temptingBecause": "해당 없음(정답).",
+      "decisiveFlaw": "없음. 원문 의미를 보존하면서 INTERMEDIATE에 맞게 적절히 추상화했다."
+    },
+    {
+      "label": "2",
+      "intent": "극성 반전/과대확장 — '인간 특유 기술'이라는 양보를 '동물은 리듬을 들을 수 없다'로 극단화.",
+      "temptingBecause": "'particularly human skill'과 'rhythms' 어휘 앵커가 있고, 인간/동물 대비 프레임을 그대로 이어받는 것처럼 보인다.",
+      "decisiveFlaw": "개들이 규칙적 리듬에 열성적으로 반응했다는 도입부 및 'wrong to claim that animals are incapable of responding to pronounced rhythms'와 정면 모순. 또한 '기술이 동물의 청취를 막는다(prevents)'는 서술 자체가 의미적으로 비정합."
+    },
+    {
+      "label": "3",
+      "intent": "기준 과확장(scope shift) — 특정 리듬·음 반응 논의를 '모든 소리=진짜 음악' 동일시 기준으로 부풀림.",
+      "temptingBecause": "music/sound 어휘가 지문 전반과 겹치고 'sole criterion'이 빈칸의 강한 규정 어조와 유사하다.",
+      "decisiveFlaw": "지문 어디에도 소리 전반을 음악으로 간주하는 기준 논의가 없으며, 'this'(발 구르기 반응)를 그런 동일시 기준으로 해석할 지시적 근거가 성립하지 않는다."
+    },
+    {
+      "label": "4",
+      "intent": "프레임 전환+과협소(half-truth) — 능력(capacity) 담론을 증거(evidence) 담론으로 바꾸고, 음악 반응 일반을 '개의 재능 판정'으로 좁힘.",
+      "temptingBecause": "개 일화가 지문의 중심 사례이고, 'need not be interpreted as' 뒤에 배타어 'only'가 오는 결이 정답과 같으며, 후속 문장(다른 음악적 특징에도 반응)을 '다른 증거도 있으니 유일한 증거가 아니다'로 오독하면 지지되는 듯 보인다.",
+      "decisiveFlaw": "'this'는 발 구르기라는 행동/기술이므로 이를 '재능 판정에 필요한 증거'로 해석한다는 것은 범주 착오이고, 지문은 재능(talent)을 판정하는 담론이 아니라 반응 능력(capacity to respond)의 요건을 다룬다. 직전 문장과 후속 증거 모두 능력 담론으로 정렬된다."
+    },
+    {
+      "label": "5",
+      "intent": "소재 이탈(actor/topic swap) — 지문 후반 Darwin 언급을 앞으로 끌어와 관찰 검증 담론으로 치환.",
+      "temptingBecause": "Darwin과 그의 개 관찰 보고가 지문에 실재하는 표면 앵커다.",
+      "decisiveFlaw": "빈칸 시점에서 Darwin은 아직 언급되지 않았고, 발 구르기 행동을 'Darwin의 기록을 단독 검증한 관찰'로 해석하는 지시 관계가 성립하지 않는다. 빈칸의 논점(음악 반응의 결정 조건 부정)과 무관하다."
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "A",
+  "notes": "V1: 렌더 지문은 원지문에서 'the decisive capacity involved in musical response' 한 span만 빈칸화했고 그 외 전 구간이 원문과 일치한다(접합 파손·중복·누락·고아 문장부호 없음; 'beside'는 원저자 표기). V2: 독립 풀이 결과 ①이 유일 정답 — 양보-반론 pivot과 후속 증거(사이렌·색소폰·조율 안 된 콘서티나 음)가 '발 구르기는 음악 반응의 필수 능력이 아니다'를 필연화한다. ④가 최강 경쟁 선지이나 범주 착오(기술→증거)와 범위 협소(반응 일반→개 재능 판정)로 결정적으로 배제된다. V3: 다섯 선지 모두 'as' 뒤 동일 NP 슬롯에 문법적으로 들어가며 suffix 불일치로 탈락하는 선지가 없고, 정답 완성문이 자연스럽다. V4: 해설의 구조 분석(양보 직후 핵심 주장 마무리), 증거 인용, 오답 함정 분류(극성 반전/과확장/과협소/이탈)가 모두 실제 지문·선지 내용과 일치한다. V5: 정답 라벨 1=해설 ①, 오답 해설 2~5가 각 선지 실제 내용과 대응, keyPoints 모순 없음. 공예: 논지 핵심 span 빈칸화(C1=4), 4개 오답이 서로 다른 함정 의도(C2=3, ③의 개연성이 다소 낮음), 실질 경쟁은 ④ 하나 중심(C3=3), 메타 누출 없고 근거 충분(C4=3, 'reacting to music'의 경미한 어휘 반향), INTERMEDIATE 요구 사고 단계와 정확히 정합(C5=4), 해설 간결·정확·함정 분리 선명(C6=4). 합계 21, 전 축 3 이상, 전 V 통과 → A. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

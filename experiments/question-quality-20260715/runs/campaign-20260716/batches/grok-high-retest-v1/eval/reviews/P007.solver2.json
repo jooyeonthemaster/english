@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "(A) multiple perspectives는 지문 첫 문장의 'evaluating these issues from different perspectives'와 직접 대응하고, 요약문의 'rather than fixed rules' 대립축은 'think through ethical issues rather than follow a prescribed set of ethical codes or rules'와 정확히 일치한다. (B) context-dependent는 지문의 'Individual perspectives may also be context dependent'를 어구 그대로 반영하며, 같은 개인도 상황·시점·기분에 따라 다른 선택을 한다는 부연과 정합한다. 문법 결합도 정문: 'through + NP'(수단/경로), 'are + 형용사 보어'. 형식적으로 유일하게 두 빈칸 모두 성립."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "(A)는 성립하나 (B) universally fixed는 지문의 'these principles vary both between and within individuals' 및 'under different circumstances... the same individual may make different choices'와 정면 모순. 논리적으로 기각."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "(A) prescribed codes를 대입하면 'examine ethics through prescribed codes rather than fixed rules'가 되어 prescribed codes ≈ fixed rules인 동의 표현 간의 거짓 대립(자기모순)이 발생하고, 지문 주장('follow a prescribed set of ethical codes or rules'를 따르지 말 것)과 정반대. (B)는 옳으나 조합으로 기각."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "(A) ethical theories는 지문이 'This form of ethics is distinct from higher levels of conceptual ethics or theory'로 명시적으로 배제한 개념. (B) socially shared도 개인 간·개인 내 변이(vary between and within individuals) 및 맥락 의존성 논지와 충돌. 기각."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "(A) conceptual ethics 역시 'distinct from higher levels of conceptual ethics or theory'에 의해 명시적으로 배제. (B) individualistic은 개인차 논지와 부분 부합하지만, 지문 후반의 핵심인 '동일 개인 내에서도 맥락에 따라 달라짐'(context dependent)을 포착하지 못해 context-dependent보다 열등. (A) 실패로 조합 기각."
+    }
+  ],
+  "note": "문법가/논리학자 렌즈 블라인드 풀이. 요약문 빈칸의 결합 문법은 (A) 전치사 through의 목적어 NP, (B) be동사의 형용사 보어로 단순하여 문법적 중의성 없음. 판정은 순수 논리 정합성으로 결정되며, ①만이 (A)·(B) 동시 성립. ⑤(B) individualistic이 단독으로는 부분 옹호 가능하나 (A)가 지문에서 명시 배제되어 조합으로는 옹호 불가. 유일 정답 ①, 신뢰도 high."
+}

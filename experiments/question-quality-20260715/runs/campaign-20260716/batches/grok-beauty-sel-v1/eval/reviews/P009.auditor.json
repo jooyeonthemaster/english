@@ -1,0 +1,71 @@
+{
+  "pid": "P009",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-STEM-WORDING",
+      "severity": "minor",
+      "evidence": "발문 '밑줄 친 부분이 함축 의미하는 바로 가장 적절한 것은?' — '함축 의미하는'은 비표준 결합이다. 정전 발문은 '밑줄 친 ...이 다음 글에서 의미하는 바로 가장 적절한 것은?'. 이해에 지장은 없어 V3 실패로는 보지 않는다."
+    },
+    {
+      "code": "V3-OPTION5-AWKWARD",
+      "severity": "minor",
+      "evidence": "선지 5 'Standard English should be delayed until students themselves plan jobs or further study' — 'plan jobs'는 'plan for jobs'가 자연스럽고, 'Standard English should be delayed'는 '(teaching of) Standard English'가 생략된 다소 어색한 표현. 문법 파탄은 아님."
+    },
+    {
+      "code": "V2-NEAR-BOUNDARY-OPT1",
+      "severity": "major",
+      "evidence": "선지 1은 밑줄의 문자적 의미(결과 지연)를 일반화한 진술로, '가장 적절한 것' 최선답 관행에 기대어야 배제된다. 선지 1은 (a) 'language activities' 전체로 과잉 일반화, (b) 양보절을 '판단하지 말라'는 규범 명제로 변환, (c) 수용-구축 전략과 장기 이익 평가를 누락하므로 2가 유일 최선답임은 유지되나, 경계가 얇다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "표면/부분 해석 함정 — 밑줄의 문자적 내용(결과 지연)만 일반화",
+      "temptingBecause": "밑줄 'results won't be apparent immediately'를 거의 직역한 유일한 선지라 문자적 독해자가 끌린다",
+      "decisiveFlaw": "'language activities' 전반에 대한 판단 규범으로 과잉 일반화했고, 필자가 밑줄로 함축하는 핵심(수용 후 구축 전략이 장기적으로 가치 있다)의 전략·평가 요소를 모두 누락했다. 양보절은 판단 기준에 대한 처방이 아니다."
+    },
+    {
+      "label": "2",
+      "intent": "정답 — 권장 접근(먼저 수용, 그 위에 표준영어 구축)과 장기 이익 평가를 결합한 함축",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음. 단, 'pays off over time'이 밑줄 직후 주절 'the long-range benefits ... are worthwhile'과, 'building Standard English from them'이 'first accept the dialect and then build on it'과 거의 어휘적으로 대응해 정답이 인접 명시 문장으로부터 과도하게 유도된다(공예 결함, C4/C5)."
+    },
+    {
+      "label": "3",
+      "intent": "half-truth / 조건 상실 — 수용 요소만 취해 극단화",
+      "temptingBecause": "'complete acceptance'가 지문에 실재하는 표현이고, 권장 접근의 1단계(수용)와 방향이 같다",
+      "decisiveFlaw": "지문은 complete acceptance를 하나의 극단으로 제시할 뿐이며 권장안은 수용 '후 구축'이다. 'alone'이 지문의 build on it과 정면 충돌한다."
+    },
+    {
+      "label": "4",
+      "intent": "극성 역전(causal/stance reversal) — 필자가 배격하는 극단을 긍정으로 뒤집음",
+      "temptingBecause": "'rejection and correction'이 지문에서 그대로 인용된 어구라 표면 일치가 있다",
+      "decisiveFlaw": "지문은 이를 한 극단으로 제시하며 권장하지 않는다. 'faster ... gains' 주장 자체가 밑줄(결과가 즉시 드러나지 않음)과도 모순된다. 소거가 매우 빠른 선지."
+    },
+    {
+      "label": "5",
+      "intent": "동기 차용 + 조건/시기 왜곡 — 앞부분의 취업·진학 동기를 끌어와 지도 시기를 왜곡",
+      "temptingBecause": "'interview for a first job', 'post-high school education'이 지문 앞부분에 실재한다",
+      "decisiveFlaw": "지문은 학생들이 그 시점에 표준영어의 가치를 '깨닫는다'고 했을 뿐, 표준영어 지도를 그때까지 미루라는 주장은 어디에도 없다. 밑줄 함축과 무관."
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "모든 V 통과이나 KILLER 요구에 크게 미달하는 공예 결함으로 재설계 필요(등급 C). (1) 밑줄이 비유적 표현이 아닌 문자적 양보절이라 함축의미 유형 적합성이 약하고, 정답의 핵심 내용('pays off over time')이 밑줄 직후 주절 'the long-range benefits ... are worthwhile'에 거의 명시돼 있어 인접 어휘 대응만으로 정답 도달이 가능하다(C4=2). (2) 실질 경쟁 선지는 1 하나뿐이고 3·4·5는 즉시 소거되어 KILLER 변별 깊이가 없다(C3=2, C5=1). (3) §C(어법)/§D(빈칸) 어느 쪽도 유형상 직접 적용되지 않으며, §D를 준용해도 '단일 단서로 정답 지목 불가' 조건을 인접 어휘 대응이 무너뜨리므로 killerConditionsMet=false. (4) 오답 의도 밀도는 양호(표면해석/극단화/극성역전/동기차용, C2=3)하고 해설은 간결·정확(C6=3). 재설계 방향: 밑줄을 결론 주절과 분리된 비유적·압축적 표현으로 옮기고, 선지 1 계열의 경쟁 오답을 하나 더 보강."
+}

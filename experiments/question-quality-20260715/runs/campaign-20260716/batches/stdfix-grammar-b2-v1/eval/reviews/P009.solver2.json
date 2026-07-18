@@ -1,0 +1,35 @@
+{
+  "pid": "P009",
+  "answer": "E",
+  "multipleDefensible": false,
+  "defensibleLabels": ["E"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "'Such species, called keystone species, are vital...' 에서 called 는 species 를 수식하는 과거분사(축약 관계절 'which are called')이자 삽입 동격구. species 는 수동적으로 '~라 불리는' 대상이므로 과거분사 called 가 어법상 옳다."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "'The fact that other species depend on or are greatly affected by the keystone species...' 에서 that 은 추상명사 fact 의 내용을 설명하는 완전한 절을 이끄는 동격(appositive) 접속사. 뒤 절이 완전한 문장이므로 관계대명사가 아닌 동격 that 이 맞다. 어법상 옳다."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "문장의 진짜 주어는 단수 명사 'The fact' 이고 that 절은 동격절일 뿐이다. 동사 앞의 복수 명사(species)는 동격절 내부 요소이므로 수 일치에 영향을 주지 않는다. 따라서 단수 수동태 'is revealed' 가 옳다."
+    },
+    {
+      "label": "D",
+      "verdict": "correct",
+      "reason": "'other fruits are less plentiful' 에서 plentiful 은 be동사 are 의 주격보어로 쓰인 형용사. less 의 수식을 받는 형용사 원급으로 자연스럽고, 부사가 아닌 형용사가 필요한 자리이므로 어법상 옳다."
+    },
+    {
+      "label": "E",
+      "verdict": "incorrect",
+      "reason": "'Protects fig trees ... is an important conservation goal' 에서 문장의 주어가 필요한 자리인데 정동사(finite verb) 'Protects' 가 왔다. 정동사는 주어로 기능할 수 없으며, 뒤의 술어동사 is 와 함께 두 개의 정동사가 충돌한다. 주어 역할을 하려면 동명사 'Protecting' 또는 to부정사 'To protect' 여야 한다. 명백한 어법 오류."
+    }
+  ],
+  "note": "빈칸이 아니라 밑줄 어법 문항. (E) Protects 만이 유일하게 성립 불가능한 오류다 — 주어 자리에 정동사가 놓여 주어 부재 및 정동사 충돌이 발생하며, 동명사/to부정사로 교정해야 한다. 대안 해석(도치·분사구문 등)으로도 정문이 될 여지가 없다. 나머지 (A)~(D)는 모두 지배 규칙상 정문이므로 정답은 (E) 하나로 확정."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P010",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "주어는 'such prey'이며, 본문은 prey를 일관되게 복수(집합)로 취급한다(앞 문장 'such prey have coloring'). 따라서 복수 동사 'are'는 어법상 옳다. 'such prey are often distasteful' 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "주어의 핵은 단수명사 'Evidence'이고, 뒤의 'that ... conspicuous'는 동격절(Evidence를 수식/설명)이다. 장거리 삽입절에 현혹되지 않고 진짜 주어를 잡으면 단수 수동태 'was reported'가 옳다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'present + 사람 + with + 사물'(누군가에게 무엇을 제공하다) 구문의 수동태. 복수 주어 'Chicks'에 대해 'were presented with breadcrumbs'는 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "의도된 의미는 '빵부스러기를 맛없게(불쾌한 맛으로) 만들었다'로, 5형식 'make + O + 형용사(목적격 보어)'의 수동형이다. 능동: 'made the breadcrumbs distasteful' → 수동: 'breadcrumbs which had been made distasteful'. 보어 자리에는 형용사가 와야 하므로 부사 'distastefully'는 틀렸고 'distasteful'로 고쳐야 한다. (능동 문맥상 '불쾌한 방식으로 제조되었다'라는 부사 해석은 지문 논지(맛없는 먹이) 및 뒤 문장 'distasteful prey'와 맞지 않아 성립하지 않는다.)"
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'find + it(가목적어) + easier(목적격 보어 형용사 비교급) + to avoid ...(진목적어)' 구조. 'easier ... than when it is cryptic'로 비교 대상도 대응된다. 정문."
+    }
+  ],
+  "note": "전형적인 '수동태 목적격 보어' 함정 문항. 'A 수(수 일치), B 동격절 뒤 진짜 주어, C 수여식 수동태 with, E 가목적어/보어 형용사'는 모두 정문이며, 유일한 오류는 (D)로 'make O 형용사'의 수동형에서 형용사 보어가 와야 할 자리에 부사(distastefully)를 쓴 것. 정답 (D), distasteful로 정정. 대안 해석(부사=제조 방식) 탐색했으나 지문 논리와 충돌하여 기각."
+}

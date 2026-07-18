@@ -1,0 +1,35 @@
+{
+  "pid": "J009",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'students from their sister university in Singapore' — plural possessive 'their' referring to the host school community (Garcia's side). Antecedent is loose but pronoun-reference vagueness is a style matter, not a grammar error; the form itself is well-formed and mirrors authentic KSAT narrative phrasing. Distractor pull: one may briefly want 'its' (the university's sister school), but 'their' is defensible with the implied collective antecedent."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'these would look great on my brother' — linking verb 'look' + predicate adjective 'great' is correct (not adverb 'greatly'), and 'on + person' is the idiomatic complement for clothes suiting someone. No seam problem."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'...quickly changed to nervousness when he thought of how many people would be there' — 'when' correctly introduces a temporal adverbial clause with a finite verb. The slightly awkward passive 'was changed' is outside the underline and does not affect the judgment of 'when'."
+    },
+    {
+      "label": "(D)",
+      "verdict": "wrong (answer)",
+      "reason": "'he struggled with the rhythm, made several mistakes' — two finite verb phrases joined by only a comma with no coordinating conjunction. Actively searched for rescue parses: reduced relative on 'the rhythm' is semantically impossible ('the rhythm made mistakes'); appositive/absolute readings fail; two-item asyndetic VP coordination is non-standard. The slot requires a participial construction 'making several mistakes' (or 'and made'). Clear, single-rule error: 분사구문 자리의 정동사."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'each member took their place on stage' — past-tense 'took' with singular subject 'each member' is fine (past tense carries no agreement morphology). Distractor pull: eye is drawn to 'each ... their', but 'their' is not underlined and singular-they is accepted in source-text usage anyway; the underlined verb 'took' is unimpeachable."
+    }
+  ],
+  "note": "Solved blind as a top-tier examinee. The intended error is unambiguous: (D) 'made' must be 'making' (participial phrase after the main clause) since no conjunction licenses a second finite VP. The two designed temptations — (A) 'their' antecedent vagueness and (E) 'each ... their' agreement bait — both dissolve on inspection because neither underlines the actually questionable word, and both forms are attested in authentic KSAT narratives. Single defensible answer; no alternative parse renders (D) grammatical."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P010",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "밴드 멤버들은 밑줄 시점에 담화에 도입되지 않았고(후반부 Tom·무대 장면에서 처음 등장), 'a bit too colorful'이라는 술어와 의미 결합이 성립하지 않는다."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "싱가포르 자매대학 학생들은 첫 문단 배경 설명에만 등장하며 밑줄 발화의 담화 초점이 아니다. 'too colorful'과의 의미 결합도 불가."
+    },
+    {
+      "label": "③",
+      "verdict": "correct",
+      "reason": "직전 문장에서 Garcia가 가리키며 'Aren't these cool?'이라 말한 대상이 patterned red shirt and yellow pants이고, Jeff의 'they're a bit too colorful'은 그에 대한 반대(objected) 평가다. 'patterned red/yellow'와 'too colorful'의 의미 정합이 완벽하며, 뒤따르는 'Instead, Jeff picked out a white shirt and black jeans'의 대조가 지시 대상을 재확인해 준다."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "가장 그럴듯한 오답 후보(같은 옷 범주, 최종 구매 대상이라 서사적 현저성 높음)이지만 실제로는 이중으로 차단된다: (a) 흰 셔츠와 검은 청바지는 밑줄 발화 이후에야 담화에 도입되므로 대명사가 선행 지시할 수 없고, (b) 흰색·검정은 'too colorful'과 정면 모순된다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "리허설 실수는 밑줄보다 훨씬 뒤의 사건이며 'a bit too colorful'이라는 술어와 결합할 수 없다."
+    }
+  ],
+  "note": "지시어 추론 문항. 정답 ③이 인접 선행사·의미 정합·후행 대조(Instead...) 세 겹으로 확정되어 모호성이 없다. 최상위권 렌즈에서 유일하게 눈이 가는 매력 오답은 ④(최종 구매한 옷)이나, 시간 순서(후행 도입)와 색상 모순으로 즉시 배제되어 유혹 강도가 낮다. 대안 해석(총칭 they, these/they 지시 분리)도 검토했으나 성립하지 않음. 변별력 관점에서는 선행사가 바로 앞 문장에 있어 난도가 매우 낮은 편."
+}

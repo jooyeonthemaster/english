@@ -1,0 +1,35 @@
+{
+  "pid": "J003",
+  "answer": "⑤",
+  "multipleDefensible": false,
+  "defensibleLabels": ["⑤"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법 결합(think of + V-ing)은 성립하나 논리 파탄. '모니터링 비용 자체에 과세'는 지문에 근거가 전무하고, 비용을 과세 대상으로 삼는다는 발상은 범주 오류다. 녹색기술 혁신 가속과의 인과 연결도 지문에 없다."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "논리 방향이 정반대. 직전 문장(Nevertheless, 모니터링 기술 급속 발전)은 측정 의존을 '늘리는' 결론을 예고하는데, ②는 연속 측정을 정액세로 '대체'하자고 하여 담화 표지와 정면 충돌. 또한 flat-rate 세는 P2·P3의 한계적 유인 구조를 파괴하고, 'residual discharges에 대한 세금'은 여전히 배출 측정을 전제하므로 내적 모순."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "사전 보조금(funding firms to pre-emptively mitigate)은 과세와 별개의 정책 수단이며, 빈칸의 직접 전제인 모니터링 기술 발전(P5)과 인과적 연결이 전무. 지문은 배출세의 유인 구조를 논하지 보조금을 논하지 않는다."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "'중앙집중 과세 체계를 우회(bypass)'라는 목적이 지문이 옹호하는 직접 과세 자체를 부정한다. 자가 검증(self-verification)도 지문의 기술적 모니터링 발전과 무관하며, 오히려 오염자의 세금 회피 유인(P2)과 충돌하는 신뢰성 문제를 야기한다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "accept",
+      "reason": "P4(측정 비용이 많은 오염 문제에서 직접 과세의 주요 저해 요인) + P5(Nevertheless, 모니터링 기술 급속 발전) → 결론(장애 해소 시 직접 부과금을 더 넓은 범위로 확장 가능)의 전건-후건 연결이 유일하게 타당. 'think of expanding the implementation ... to a broader scope'의 문법 결합(seam)도 정문. direct environmental levies = 지문의 direct taxation of emissions의 정확한 환언."
+    }
+  ],
+  "note": "빈칸 직전의 담화 표지 Nevertheless가 결론의 방향(측정 기반 직접 과세의 확대)을 강제하므로 ⑤ 외의 선지는 모두 전제와의 논리 연결이 끊긴다. 복수 정답 여지 없음. 오답 선지들이 지문 어휘(monitoring, residual, waste, tax)를 재활용한 미끼로 잘 설계되어 있으나 각각 범주 오류·방향 역전·정책 수단 불일치·목적 모순으로 형식적으로 기각 가능."
+}

@@ -1,0 +1,44 @@
+{
+  "pid": "P004",
+  "finalV2": false,
+  "winningAnswer": "(C)",
+  "reason": "선언 정답 (C)는 유일하지 않다. 렌더 문장 'In highly expressionist works, novel stylistic devices working in an inharmonious manner against the subject matter thereby creating a disquieting atmosphere.'는 인쇄된 형태 그대로는 정동사가 하나도 없는 비문이며, 결함 위치가 (C)와 (D) 사이에서 형식적으로 미결정이다. (C) working→work 교정은 원문을 복원하는 정문이지만, (D) creating→create 교정 역시 'novel stylistic devices working ... against the subject matter thereby create a disquieting atmosphere'라는 완전한 정문(분사 후치수식 주어 + 복수 수일치 정동사 + 정동사 앞 부사 thereby)을 만든다. 밑줄별 독립 판정 규약(나머지 밑줄을 인쇄형으로 고정하고 해당 밑줄만 평가)에서 (C)를 고정하면 (D)가 틀린 것이 되고 (D)를 고정하면 (C)가 틀린 것이 되므로 실제 정답 집합은 {(C), (D)}. 유일성을 구제할 유일한 논거인 'thereby + 정동사는 비관용적'이라는 주장은 성립하지 않는다(thereby는 정동사 수식 부사로 표준·용례 다수). 솔버1·솔버2의 복수정답 판정은 과잉 판정이 아니라 정당하며, 감사자 V2=false를 인용(認容)한다. (A)(B)(E)는 재검증 결과 모두 정문으로 숨은 제3의 답은 없다. winningAnswer는 출제 의도상 정답 (C)를 기재하되, 단일정답형 요건(V2)은 불충족.",
+  "perDispute": [
+    {
+      "label": "(C)",
+      "claim": "인쇄형 working은 주절 정동사 부재를 야기하는 오류이며 work로 교정해야 한다 (선언 정답, 솔버1·2 공통).",
+      "verdict": "성립 (upheld)",
+      "evidence": "인쇄된 문장에서 working은 준동사(축약 관계절 분사)로만 기능 가능하고 creating도 분사 부가어이므로 주절에 정동사가 없다. working→work 교정 시 'devices work in an inharmonious manner ..., thereby creating a disquieting atmosphere'로 원지문이 정확히 복원되는 정문. (C)는 타당한 정답 후보다."
+    },
+    {
+      "label": "(D)",
+      "claim": "creating→create 교정으로도 정문이 되므로 (D)도 '어법상 틀린 것'으로 옹호 가능하다 (솔버1·2의 복수정답 주장, 감사자 V2-DUAL-ANSWER).",
+      "verdict": "성립 (upheld) — 과잉 판정 아님",
+      "evidence": "(C)를 인쇄형 working으로 고정하면 'novel stylistic devices [working ... against the subject matter]'는 분사 후치수식을 받은 주어 NP이고, creating→create 시 'thereby create'가 복수 주어 devices와 수일치하는 정동사 술어가 되어 문장이 완전해진다. 의미도 정합적('부조화하게 작동하는 장치들이 그로써 불안한 분위기를 만든다'). 문법·수일치·의미 어느 층위에서도 배제 불가능한 대안 교정이므로 (D)는 대등한 정답 후보이며, 정답 집합은 {(C),(D)}."
+    },
+    {
+      "label": "(D)-반론",
+      "claim": "'thereby + V-ing'가 고정 관용 패턴이므로 'thereby + 정동사(create)'는 비관용적이어서 (D) 교정은 배제된다는 잠재적 유일성 방어 논거.",
+      "verdict": "기각 (rejected)",
+      "evidence": "thereby는 정동사를 수식하는 일반 부사로도 표준적이며 용례가 풍부하다(예: 'and thereby creates a new obligation', 'they thereby become ...'). 'thereby V-ing'가 빈도상 우세하다는 사실은 문체적 선호일 뿐 문법성 판정 근거가 될 수 없다. 어법 문항의 판정 기준은 문법성이므로 이 논거로는 유일성이 구제되지 않는다. 또한 원문에 쉼표가 없어 구두점으로도 (C)/(D) 교정을 변별할 수 없다."
+    },
+    {
+      "label": "(A)",
+      "claim": "주격 관계대명사 that의 적법성 (비쟁점 — 제3 정답 가능성 점검).",
+      "verdict": "정문 확인 (correct)",
+      "evidence": "'subject matter that resembles everyday life' — 선행사 subject matter(불가산 단수)를 받는 주격 관계대명사이고 관계절 동사 resembles와 수일치가 정확하다. 오류 없음."
+    },
+    {
+      "label": "(B)",
+      "claim": "be동사 보어 자리 to facilitate의 적법성 (비쟁점 — 제3 정답 가능성 점검).",
+      "verdict": "정문 확인 (correct)",
+      "evidence": "'the role of background style is to facilitate the construction ...' — 'the role is to-V' 표준 서술 보어 구문이며 facilitate가 명사구 목적어를 정상 취한다. 오류 없음. (부기: 공식 해설이 이를 'be to 용법·목적'으로 오분석한 것은 감사자 V4 지적대로 해설 결함이나, 정답 유일성 판정에는 영향 없음.)"
+    },
+    {
+      "label": "(E)",
+      "claim": "수동 is needed의 적법성 (비쟁점 — 제3 정답 가능성 점검).",
+      "verdict": "정문 확인 (correct)",
+      "evidence": "'an aesthetic attitude is needed to appreciate the whole episode' — attitude는 필요로 되는 대상이므로 수동 is needed가 정확하고 목적 부정사 결합도 표준. 오류 없음."
+    }
+  ]
+}

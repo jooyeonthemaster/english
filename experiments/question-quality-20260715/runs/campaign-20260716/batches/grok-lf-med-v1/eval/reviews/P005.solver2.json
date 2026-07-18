@@ -1,0 +1,35 @@
+{
+  "pid": "P005",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "문법 결합: 'His confidence was, however, [suddenly replaced by stage anxiety]' — be동사 + 과거분사 수동 구문으로 완전한 정문. 논리 증명: 트리거 절 'when he thought of how many people would be there'(청중 규모 상상)는 무대 불안(stage anxiety)의 정의적 원인과 정확히 일치한다. 후행 문맥 'he struggled with the rhythm, making several mistakes'는 불안으로 인한 수행 저하를, Tom의 격려 후 'started to feel much better'는 불안의 해소를 보여 주어, 빈칸 = 자신감이 불안으로 대체됨이라는 명제가 전후 양방향으로 함의된다. 'suddenly'도 rehearsal 도착 직전까지 'felt good'이었다가 특정 생각 시점에 급변했다는 서술 구조와 정합."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "문법 결합은 성립(was gradually eroded by...)하나 논리 모순. 전제 검증: Garcia는 추천받은 옷을 사며 'felt good as he arrived ... wearing his new clothes'로 옷에 대한 만족이 명시되어 regret about the clothing의 존재 자체가 부정된다. 또한 트리거 절의 원인은 '사람이 얼마나 많을지'이지 옷이 아니므로 by-행위자 불일치. 'gradually'도 특정 생각 시점(when he thought)에 발생한 급격한 변화와 상충."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "문법 결합은 성립하나 논리 불성립. jealousy of his band mate를 지지하는 명제가 지문에 전무하다. 밴드메이트 Tom은 오히려 격려를 제공하는 조력자('Don't worry, I'll be right behind you')로 기능하며, Garcia는 그를 보고 'started to feel much better'. 질투의 원인·대상·표출 어느 것도 텍스트에 근거 없음. 트리거 절(청중 수 생각)과 by-행위자(질투)의 인과 연결도 성립 불가."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "문법 결합은 성립하나 이중 모순. (a) 'permanently'는 이후 서사 — Tom의 격려로 회복, 본공연에서 'flawless' 연주, 'beamed with joy' — 와 형식적으로 양립 불가(영구적 상실이면 회복 서사가 거짓이 됨). (b) 'flaws in the band's technique'는 빈칸 시점(리허설 시작 전, 청중 수를 생각한 순간)에 아직 발생하지 않은 사건이다. 리듬 실수는 빈칸 이후에 서술되며 그것도 밴드가 아닌 Garcia 개인의 실수이므로 원인-결과 시간 순서가 역전된다."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "문법 결합: 'was quietly transformed into isolation from the audience'는 통사적으로는 성립하나 의미 결합이 부자연스럽다 — confidence(심리 상태)가 isolation(관계 상태)으로 '변형'된다는 술어-논항 결합은 범주 오류에 가깝다. 논리 검증: 지문 어디에도 청중과의 단절·소외 묘사가 없고, 오히려 'everyone fell silent, fascinated by the music', 'the audience loudly cheered'로 청중과의 강한 연결이 서술된다. 트리거 절(사람이 많을 것이라는 생각)이 유발하는 것은 소외가 아니라 불안이다."
+    }
+  ],
+  "note": "빈칸은 be동사 뒤 과거분사구 자리로 다섯 선지 모두 통사적 결합(seam)은 성립하므로 판별은 순수 논리 적합성으로 이루어진다. 트리거 절(when he thought of how many people would be there) → 후행 결과(리듬 실수) → 회복(격려 후 호전) → 완벽한 본공연이라는 서사 사슬을 전부 만족하는 것은 1번뿐이다. 2·3·5는 by-행위자/전치사구의 전제가 지문에서 부정되거나 부재하고, 4는 부사 'permanently'와 회복 서사의 형식적 모순 + 원인 사건의 시간 순서 역전이라는 결정적 결함이 있다. 복수정답 여지 없음."
+}

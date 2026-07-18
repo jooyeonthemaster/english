@@ -1,0 +1,35 @@
+{
+  "pid": "P009",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "밑줄의 양보절(결과가 즉시 드러나지 않는다)을 '언어 활동은 가시적 변화 속도로 판단되어서는 안 된다'는 일반 규범 명제로 바꿔치기했다. 지문은 특정 접근법(수용 후 구축)에 대한 사실적 양보 + 장기 이익이라는 가치 판단을 진술할 뿐, 언어 활동 일반의 평가 기준(should not be judged)을 주장하지 않는다. 함축의 대상 범위를 과잉 일반화했고 주절의 핵심(장기적 보상)을 누락했으므로 논리적 함의가 성립하지 않는다. 가장 강한 오답지."
+    },
+    {
+      "label": "2",
+      "verdict": "accept",
+      "reason": "'honoring dialects first and then building Standard English from them' = 지문의 'first accept the dialect and then build on it'(구축의 목표가 Standard English임은 첫 문장 'the primary reason for teaching it'이 확정). 'pays off over time' = 밑줄의 양보(결과가 즉시 안 보임) + 주절(long-range benefits are worthwhile)의 결합적 함의와 정확히 동치. 밑줄이 문맥에서 함축하는 바를 형식적으로 온전히 포착한다."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "'complete acceptance ... alone'은 지문이 의견 스펙트럼의 한 극단으로 제시하고 채택하지 않은 입장이다. 지문의 채택 접근은 수용 '후 구축'(accept AND build)이므로 'alone(수용만으로)'과 명시적으로 모순된다."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "'prompt rejection and correction'은 스펙트럼의 반대 극단이며, 'secures faster ... gains'는 밑줄 자체('results won't be apparent immediately' — 빠른 성과를 기대하지 말라)와 정면 모순이다. 이중 모순."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "지문 첫 두 문장은 학생들이 취업 면접·진학 계획 시점에 표준영어의 가치를 '깨닫는다'고 서술할 뿐, 그 시점까지 표준영어 교육을 '미루라'고 처방하지 않는다. 시점 서술을 교육 지연 처방으로 왜곡한 선지."
+    }
+  ],
+  "note": "밑줄부는 비유가 아닌 문자적 양보절이므로 함축은 '주절과 결합된 문맥적 의미'로 해석해야 한다. 선지 2가 양보절+주절+지문 논지를 모두 포착하는 유일한 함의 성립 선지. 선지 1은 양보절만을 규범 명제로 재서술한 근접 오답이나 'should not be judged'라는 미주장 규범과 'language activities' 과잉 일반화로 함의가 깨져 옹호 불가. 정답 후보는 2 단독으로 수렴, 복수 정답 소지 없음."
+}

@@ -1,0 +1,82 @@
+{
+  "pid": "P012",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "KEYPOINTS_TYPO",
+      "severity": "minor",
+      "evidence": "keyPoints 3번 항목 '인물의 생해 단계별 세부 동기' — '생해'는 비단어로 '생애'의 오탈자. 학생 노출 여부에 따라 노출 필드 품질 저하 소지가 있으나 해설 본문의 사실성·구조 분석에는 영향 없음."
+    },
+    {
+      "code": "RENDER_FIELD_EMPTY_BY_TYPE",
+      "severity": "info",
+      "evidence": "렌더 지문 필드가 '(렌더 지문 없음)'이나, CONTENT_MATCH는 원지문을 무변형 노출하는 유형이므로 의도된 상태로 판단. 원지문 자체에 접합 파손·중복·누락·고아 문장부호 없음. 선지 라벨 1~5와 해설 키(정답 4, 오답 1·2·3·5) 일치."
+    },
+    {
+      "code": "EXTERNAL_FACT_CAVEAT",
+      "severity": "minor",
+      "evidence": "원지문의 'the Croix de Guerre, the highest French military honor'는 실제 사실과 다름(프랑스 최고 훈장은 레지옹 도뇌르). 다만 이는 원지문 자체의 주장이고 감사는 지문 내적 정합 기준이므로 선지 5의 일치 판정에는 영향 없음. 외부 지식이 있는 학생이 5를 오선택할 유인이 되는 점은 유의."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "파산(went bankrupt→business failure)·멕시코 이주·풍경의 작품 반영(landscape influenced→scenery reflected) 구간의 패러프레이즈 대조 능력 검증",
+      "temptingBecause": "어휘가 전면 치환되어 있어 표면 키워드 매칭만으로는 즉시 확정되지 않고 원문 대조가 필요함",
+      "decisiveFlaw": "지문 1~3문장과 완전 일치하는 참 진술이므로 '일치하지 않는 것'의 답이 될 수 없음"
+    },
+    {
+      "label": "2",
+      "intent": "graduated→completed his studies, Romantic poets→Romanticism 의 추상화 수준 변환 인식 검증",
+      "temptingBecause": "'Romanticism'이라는 사조 명사로의 추상화가 원문('the Romantic poets')과 다르게 느껴질 수 있음",
+      "decisiveFlaw": "하버드 졸업과 낭만주의 시인들로부터의 영감 모두 지문과 일치하는 참 진술"
+    },
+    {
+      "label": "3",
+      "intent": "romanticized notion→idealized vision, made friendships→closely associated 의 의미 보존 패러프레이즈 검증",
+      "temptingBecause": "동기(보헤미안 삶에 대한 이상)와 행위(파리 이주·예술가 교류)가 재구성된 문장 구조로 제시되어 대조 부담이 있음",
+      "decisiveFlaw": "지문의 파리 이주 문장과 완전 일치하는 참 진술"
+    },
+    {
+      "label": "4",
+      "intent": "정답. 자원입대 시점(1914 전쟁 발발 시)과 시 집필 시점(During the war)의 시간 순서를 역전시킨 temporal reversal 함정",
+      "temptingBecause": "poem·immediate fame·voluntary·French military 등 모든 어휘 앵커가 지문에 실재하여 키워드 매칭 전략으로는 참처럼 보이며, 두 문장을 연결해 시간 관계를 재구성해야만 오류가 드러남",
+      "decisiveFlaw": "지문상 시는 프랑스군 자원입대 후 '전쟁 중에' 쓰였으므로 '입대 이전(prior to his voluntary enlistment)에 쓰였다'는 진술은 지문과 불일치 — 유일 정답"
+    },
+    {
+      "label": "5",
+      "intent": "died during the Battle of the Somme→died in battle during WWI, Following his death→posthumously, highest French military honor→highest military decoration of France 의 다중 패러프레이즈 검증",
+      "temptingBecause": "posthumously라는 어휘 난도와, 크루아 드 게르가 실제로는 최고 훈장이 아니라는 외부 상식을 가진 학생에게 혼동 유발 가능",
+      "decisiveFlaw": "지문 내적으로는 마지막 두 문장과 완전 일치하는 참 진술이므로 답이 될 수 없음"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "오답 해설 1·2·3·5 각 항목이 해당 선지 전문을 영어 원문 그대로 재인용한 뒤 지문 내용을 재진술하는 동일 템플릿('...라고 언급하므로 일치하는 내용입니다')을 반복 — 정확하나 장황·반복적(C6 감점 요인)",
+      "recommendation": "선지 재인용을 제거하고 각 선지가 대응하는 지문 근거 구절과 패러프레이즈 대응쌍만 짧게 제시"
+    },
+    {
+      "severity": "minor",
+      "evidence": "keyPoints '생해 단계별' — '생애'의 오탈자(비단어)",
+      "recommendation": "'생애 단계별'로 교정"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 원지문 무손상, 정답 4 유일성 독립 검증 완료(1·2·3·5는 지문과 일치하는 참 진술, 4만 시간 순서 역전으로 불일치), 선지·발문 문법적, 해설 사실 정확, 필드 동기화 일치. 그러나 공예 측면에서 요청 난이도 KILLER와의 정합이 크게 미달: 함정이 4번의 단일 시간역전 하나뿐이고 나머지 4개 선지는 지문 순서대로 배열된 근접 패러프레이즈여서 순차 대조로 빠르게 소거된다(C3=2). CONTENT_MATCH는 구조적으로 중하 난이도 유형이며 본 문항의 요구 사고 단계는 2문장 연결 1회로 KILLER 함정 깊이에 못 미침(C5=1). RUBRIC §C(어법)/§D(빈칸)의 KILLER 추가 조건은 CONTENT_MATCH에 유형 정의가 없고, 유사 기준(다중 단서 연결 필수·단일 표지로 찍기 불가)을 준용해도 4번 한 선지만 그 성질을 가지므로 killerConditionsMet=false. 종합: V 전부 통과이나 C5=1(최저 2 미달)·합계 14로 B 기준(합계 17)에 미달하여 등급 C — 난이도 재설계(예: 다중 시점 교차·수치/기간 변형 결합) 필요."
+}

@@ -1,0 +1,80 @@
+{
+  "pid": "P010",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4_CORRUPTED_TERM",
+      "severity": "major",
+      "evidence": "해설 첫 문장 \"이 문장의 대절 내부 주어는 명사구 'the killing of whales'입니다\"의 '대절'은 한국어 문법 용어로 존재하지 않는 비단어/손상 용어다(표준어 '대절'은 차량 전세 의미). 'that절' 또는 '종속절'의 손상으로 추정되며, 학생 노출 해설의 도입 문장에 위치해 혼란을 유발한다. RUBRIC V4의 '용어 오류 없음' 및 감사 기준의 '비단어·손상 용어' 항목에 해당."
+    },
+    {
+      "code": "C5_DIFFICULTY_MISMATCH",
+      "severity": "major",
+      "evidence": "요청 난이도 KILLER 대비 실제 난이도가 크게 미달. 지문 자체가 B1급 평이한 교과서체이고, 정답 포인트가 'the killing of whales are'라는 가장 흔하게 훈련되는 단문형 수일치(주어 핵 + of-전치사구 1개)여서 구조 독해 없이 즉시 드러난다. RUBRIC §C 'KILLER 정답은 구조를 읽어야 하며 붙어 있는 단순 수일치로 즉시 드러나지 않는다' 위반. (V 실패는 아니고 공예/킬러조건 결함으로 분류)"
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "대명사 수일치 — 복수 선행사 'The Faroe Islands'를 받는 복수 대명사 판정",
+      "temptingBecause": "'The Faroe Islands'가 단일 국가/지역명이므로 단수 'it'로 받아야 한다고 오독할 여지",
+      "decisiveFlaw": "지문 전체가 일관되게 복수 취급('The Faroe Islands are', 'they have their own government')이므로 'they'는 명백히 옳음. 유혹도가 매우 낮아 사실상 필러에 가까움"
+    },
+    {
+      "label": "(B)",
+      "intent": "정답. 후치 수식(of-전치사구)이 붙은 긴 명사구 주어의 핵-동사 수일치",
+      "temptingBecause": "동사 바로 앞의 복수 명사 'whales'를 주어로 착각하면 'are'가 자연스러워 보임(근접 일치 함정)",
+      "decisiveFlaw": "절 주어의 핵은 단수 'the killing'이고 'of whales'는 수식어이므로 'are'는 비문. 'is'로 교정하면 원지문과 정확히 일치(최소대립쌍 성립)"
+    },
+    {
+      "label": "(C)",
+      "intent": "관계사 판정 — 선행사 있는 주격 관계대명사 that vs 접속사/what 혼동",
+      "temptingBecause": "'a law that says...'에서 that절을 동격절이나 명사절로 오분석하거나 what과 혼동할 여지",
+      "decisiveFlaw": "선행사 'a law'가 존재하고 뒤 절이 주어 결여('says each killing...')이므로 주격 관계대명사 'that'이 정확히 옳음"
+    },
+    {
+      "label": "(D)",
+      "intent": "부사 vs 형용사 — as ~ as 원급 비교 내부에서 동사 수식어 품사 판정",
+      "temptingBecause": "'as + 형용사 + as' 패턴(as efficient as)을 기계적으로 떠올리면 형용사가 와야 한다고 착각할 수 있음",
+      "decisiveFlaw": "수식 대상이 동사구 'take place'이고 부사 'quickly'와 병렬이므로 부사 'efficiently'가 옳음"
+    },
+    {
+      "label": "(E)",
+      "intent": "조동사 뒤 능동/수동 판정 — allow의 의미상 주어와의 태 관계",
+      "temptingBecause": "'allow ... to continue'의 능동 패턴(allow O to V)이 익숙해 'should allow to continue'류 능동을 기대할 수 있음",
+      "decisiveFlaw": "주어 'this practice'는 허용의 대상(피동작주)이므로 'should be allowed to continue' 수동이 옳음"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "NONWORD_TERM",
+      "severity": "major",
+      "evidence": "정답 해설의 '대절'은 존재하지 않는 문법 용어(비단어/손상 용어). 'that절' 혹은 '종속절 내부 주어'로 교체 필요. 이 용어를 제외하면 핵 판정('the killing' 단수), 'of whales' 후치 수식 분석, 근접 일치 함정 설명은 모두 실제 구조와 일치."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionsDetail": {
+    "minimalPair": true,
+    "clearGrammarJudgment": true,
+    "allFiveUnderlinesExplained": true,
+    "structuralReadingRequired": false,
+    "noEasyDecoySamePoint": true,
+    "failReason": "정답이 'the killing of whales are'라는 붙어 있는 단순 수일치(of구 1개 개입)로 즉시 드러난다. RUBRIC §C의 '구조를 읽어야 하며 단순 수일치로 즉시 드러나지 않는다' 조건 위반. 또한 지문 난도 자체가 KILLER에 요구되는 수준에 크게 미달."
+  },
+  "grade": "F",
+  "notes": "V1/V2/V3/V5 전부 통과: 렌더 무결(의도된 is→are 단일 변형 외 원지문과 완전 일치), 정답 집합 정확히 {(B)} 단일, 지문·발문·교정 완성문 문법적, 필드 동기화 무결(markedExpressions의 expression=원형/errorExpression=표시형 관례도 내적 일관). 그러나 V4에서 학생 노출 해설 도입부의 비단어 '대절'이 손상 용어로 확인되어 치명 판정(보수적 기준 적용) → 등급 F. 공예 측면에서는 오답 4개가 서로 다른 포인트(대명사 수일치·관계사·부사·태)를 겨냥해 의도 밀도는 양호하나, (A)·(D)의 유혹도가 낮고 정답 함정이 교과서 기본형 수일치여서 KILLER 요청 대비 난이도 정합(C5=1)이 심각하게 미달. 출하하려면 (1) '대절' 용어 교정, (2) KILLER 유지 시 정답 포인트를 구조 독해형(도치·삽입절·축약 관계절 개입 등)으로 재설계하거나 난이도 라벨을 중(中)으로 하향 필요."
+}

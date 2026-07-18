@@ -1,0 +1,35 @@
+{
+  "pid": "P005",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "no matter how well you believe you are disguising yourself: 'well'은 내포절 동사 'are disguising'을 수식하는 부사가 how와 함께 전치된 구조(you are disguising yourself well → how well ... you are disguising yourself). 'how' 뒤에서 형용사 good이 아니라 부사 well이 요구되는 자리이며, 'believe' 삽입절을 건너뛴 장거리 이동도 정상적인 wh-전치. 어법상 옳다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "be concerned that + 절: 'concerned'는 that-보문절을 취하는 형용사(감정 형용사 + that절)이며, 뒤에 완전한 절 'dropping their masks would make them appear weak'(동명사 주어 + would make + 목적어 + 원형보어)이 온다. 완전절 앞의 접속사 that으로 어법상 옳다. 관계대명사로 오독할 여지 없음(뒤가 완전절이므로)."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "..., creating a snowball effect: 앞 절 전체('This ... encouraged a culture where those subordinates did the same')를 의미상 주어로 하는 결과 분사구문. '그 결과 눈덩이 효과를 만들어냈다'는 능동 관계이므로 현재분사 creating이 옳다. 선행 명사 culture를 수식하는 것으로 보아도 능동 현재분사로 성립하므로 어느 해석에서도 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "병렬 위반. 'Some of the ways ... were to actually name the masks, (D) exploring ..., and ask the CEOs to reflect ...'에서 보어는 to부정사 병렬 'to name ..., (to) explore ..., and (to) ask ...' 구조다. 세 번째 항이 원형 'ask'(to 생략 병렬)로 명시되어 있어 A, B, and C 3항 열거임이 확정되고, 두 번째 항 exploring만 동명사/분사여서 병렬 시작점(to)과 불일치한다. 대안 해석 검토: exploring을 name에 딸린 분사구문으로 보고 'to name ..., [exploring ...,] and ask ...' 2항 병렬로 읽는 파스는 형식상 상정 가능하나, (i) '비용을 탐색하는 것'은 '가면에 이름 붙이기'의 동시 상황·결과가 아니라 별개의 조력 방법이라 부가어 의미가 성립하지 않고, (ii) 주어가 복수 'Some of the ways'로 방법들의 열거를 예고하며, (iii) Oxford comma 열거 패턴 'A, B, and C'와 정확히 일치한다. 따라서 explore로 고쳐야 하는 병렬 오류가 유일하게 옹호 가능한 판정."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "the costs of upholding them: them은 앞의 the masks(복수)를 지시한다. uphold의 목적어로 '가면을 유지하다'가 문두 문장 'Masks are too heavy to uphold'와 정확히 호응하며, 지시 대상이 복수이므로 복수 대명사 them이 옳다. costs를 uphold의 목적어로 삼는 순환 해석은 의미상 배제된다."
+    }
+  ],
+  "note": "정답 (D) exploring → explore. 병렬 3항(to name / explore / ask) 중 두 번째 항만 -ing로 어긋난 전형적 병렬 오류이며, 세 번째 항의 원형 ask가 3항 열거임을 확정하는 결정적 장거리 단서. 분사구문 대안 파스는 의미·구조 양면에서 기각. 나머지 네 밑줄은 모두 정문으로 단일 정답이 성립한다."
+}

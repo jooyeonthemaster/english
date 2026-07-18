@@ -1,0 +1,82 @@
+{
+  "pid": "P005",
+  "blindAnswer": "(B)",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 3,
+    "C2": 4,
+    "C3": 3,
+    "C4": 4,
+    "C5": 3,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "태(voice) 판단 — be + 과거분사 수동태에서 -ed/-ing 형태 선택",
+      "temptingBecause": "수동태 뒤에 능동 부정사 to last가 이어져 is constructed to last 연쇄가 어색해 보일 수 있고 constructing과의 태 혼동을 유도함",
+      "decisiveFlaw": "교량은 건설되는 대상이므로 is constructed 수동태가 명백히 옳음. 판단 근거가 문두에 인접해 소거가 매우 빠른 약한 디코이. 오류 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "정답 — 정동사 vs 준동사(문장 단편). 주어 Its presence에 대응하는 정동사 부재",
+      "temptingBecause": "Its presence making a lasting mark가 명사+분사 수식 구조나 분사구문처럼 유창하게 읽히고, 뒤따르는 관계절 that shows가 시선을 분산시켜 정동사 부재를 가림",
+      "decisiveFlaw": "독립된 한 문장 안에 정동사가 전혀 없어 필연적 비문. 분사구문으로 읽어도 주절이 없어 성립 불가. making → makes 교정 시 원문이 정확히 복원되는 최소대립쌍"
+    },
+    {
+      "label": "(C)",
+      "intent": "주어-동사 수일치 — one of + 복수명사 + 축약 관계절(a bridge must exhibit) 개재 후 핵심 주어 one 식별",
+      "temptingBecause": "동사 직전에 복수 qualities와 삽입절 동사 exhibit가 놓여 있고, exhibit concerns를 '동사+명사(우려)'로 오독하는 garden path까지 겹쳐 실제 구조 판단을 요구함",
+      "decisiveFlaw": "주어부의 핵은 단수 one이므로 단수 동사 concerns가 정확함. 오류 아님"
+    },
+    {
+      "label": "(D)",
+      "intent": "상관접속사 either A or B 병렬 — 조동사 must 아래 동사원형 병렬, 부사 indeed 개재",
+      "temptingBecause": "must와의 거리, adapt to의 전치사 잔류, or indeed의 개재로 병렬 거리가 벌어져 reinforces/to reinforce를 기대하게 만듦",
+      "decisiveFlaw": "either adapt to ... or ... reinforce가 must에 걸리는 동사원형 병렬이므로 원형 reinforce가 옳음. 오류 아님"
+    },
+    {
+      "label": "(E)",
+      "intent": "현수분사 점검 — depending on의 무(비)인칭 독립분사구문/관용 표현 인지",
+      "temptingBecause": "주절 주어 it(교량)이 '의존하는' 주체가 아니므로 현수분사(dangling participle)로 의심하게 만드는 고전적 함정",
+      "decisiveFlaw": "depending on은 주절 주어와의 일치를 요구하지 않는 관용화된(전치사화된) 표현이므로 어법상 옳음. 오류 아님"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "AWKWARD_PHRASING",
+      "severity": "minor",
+      "evidence": "정답 해설 첫 구 'Its presence가 뒤따르는 문장의 주어이므로' — Its presence는 해당 문장 자체의 주어인데 '뒤따르는 문장의 주어'로 오독될 여지가 있는 중의적 표현. 구조 분석 자체는 정확",
+      "recommendation": "'Its presence가 이 문장의 주어이므로, 뒤에는 정동사가 와야 합니다'로 명료화"
+    },
+    {
+      "code": "GARBLED_TERM",
+      "severity": "minor",
+      "evidence": "(E) 오답 해설의 '무인칭 독립분사구문 전치사표현'은 '무인칭(비인칭) 독립분사구문'과 '전치사화 표현'이 접합된 비표준 합성 용어. 지시 내용(주어 일치 불요, 관용 표현)은 표준 분석과 일치",
+      "recommendation": "표준 용어 하나('비인칭 독립분사구문' 또는 '전치사처럼 굳어진 관용 표현')로 통일"
+    },
+    {
+      "code": "REGISTER_MIX",
+      "severity": "minor",
+      "evidence": "(D) 오답 해설의 'dynamic한 술어부'는 판단에 기여하지 않는 외래어 혼용으로 학생 노출 해설의 격에 맞지 않음. 병렬 분석 자체는 정확",
+      "recommendation": "'조동사 must에 걸리는 술어부에서'로 단순화"
+    },
+    {
+      "code": "TERM_INCONSISTENCY",
+      "severity": "minor",
+      "evidence": "(C) 오답 해설은 one을 '단수 명사', keyPoints는 '단수 대명사'로 지칭 — 사실 판단에는 영향 없는 용어 불일치",
+      "recommendation": "한 용어로 통일"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 렌더 지문은 원지문에서 makes→making 단일 의도 변형 외 전 구간 동일하며 마커 (A)~(E)가 선택지·markedExpressions와 일치. V2: 5개 밑줄 독립 검증 결과 (B)만 비문(정동사 부재 fragment)이고 (A) 수동태, (C) one 단수 일치, (D) 원형 병렬, (E) 관용 분사구문은 모두 옳아 실제 정답 집합이 {(B)} 유일 — 선언과 일치. V3: 지문·발문·교정 완성문(Its presence makes...) 모두 문법적·자연스러움. V4: 해설의 구조 분석(준동사는 단독으로 정동사 불가, 분사구문으로 봐도 주절 부재)이 실제 문장과 일치하고 오답 해설 4건 모두 해당 선지의 실제 내용과 대응. 표현·용어 결함 4건은 모두 minor로 오분석 아님. V5: 정답 라벨·correction(makes)·오답 해설·keyPoints·pointCode 전부 동기화. 공예: 디코이 4개가 태/수일치/병렬/현수분사로 서로 다른 오개념을 겨냥해 C2=4, 최소대립쌍·단서 누출 없음·정답 필연으로 C4=4. 다만 (A)가 즉시 소거되는 약한 디코이이고 fragment 오류가 지문 2번째 문장에 위치해 숙련 학생에게 빠르게 노출되는 전형 포인트라 C1=3·C3=3, INTERMEDIATE 요청에는 부합(C5=3). 해설은 정확하나 중의적 첫 구·합성 용어·외래어 혼용으로 다듬어지지 않아 C6=2. 전 V 통과, C 최저 2, 합계 19 → B등급(해설 문구 소폭 수정만으로 출하 가능). 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P005",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'sacred healer of their physical limits'는 God의 표면 연상(sacred)만 차용. 지문 어디에도 신체 한계의 치유 논지가 없고, when절(움직이지 않으면서 타자를 움직이는 엘리트)과의 의미 결합이 성립하지 않음."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "아리스토텔레스의 '부동의 원동자(unmoved mover)' 그 자체. 'source of motion' = 돈·사물·사람을 움직이는 권력 행사, 'remains motionless' = 'they themselves do not need to move at all' 및 'terminal creatures who spend most of their time at rest'와 직결. when절의 두 술어(운동 유발 + 자신은 정지)를 모두 충족하는 유일한 선지."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "도입부의 'increasing acceleration ... travelling through geographical or virtual space'에 끌리게 설계된 미끼. 실제 풀이 중 잠깐 유혹을 느꼈으나, when절의 'do not need to move at all'과 정면 충돌(엘리트는 이동하지 않음). 'tireless traveler'는 논지의 정반대."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "가장 강한 매력적 오답. 'virtual', 'technological', 'acceleration', 'controller(≈power)' 등 지문 표면 어휘를 다수 재활용해 흡인력이 큼. 그러나 아리스토텔레스 신 이미지의 핵심 술어인 '자신은 움직이지 않음(motionless)'이 빠져 있고, 신-비유를 기술 통제로 왜곡함. 유비의 절반(운동 유발)만 만족하므로 탈락."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "마지막 두 문장(mobility-structured social exclusion, 이동할 권리도 머무를 권리도 없는 자들)과 정면 모순. '모두의 평등한 이동성을 보장하는 수호자'는 지문이 그리는 권력 비대칭의 정반대."
+    }
+  ],
+  "note": "빈칸은 'Aristotle's image of God as ___' 동격 NP 자리로 다섯 선지 모두 문법적 결합(seam)은 무결하며 변별은 순수 의미론적. when절이 '타자를 움직이되 자신은 전혀 움직이지 않는' 두 조건을 동시에 요구하므로 ②(부동의 원동자 패러프레이즈)로 유일하게 수렴. ④가 표면 어휘 재활용으로 가장 강한 미끼이나 motionless 요건 결여로 옹호 불가. 단일 정답, 복수 정답 소지 없음. (참고: 본 지문은 실제 수능 기출 소재 'unmoved mover' 유형과 동일 논지 구조.)"
+}

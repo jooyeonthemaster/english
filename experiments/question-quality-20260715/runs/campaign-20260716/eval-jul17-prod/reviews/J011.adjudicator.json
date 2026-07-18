@@ -1,0 +1,43 @@
+{
+  "pid": "J011",
+  "finalV2": true,
+  "winningAnswer": "D",
+  "reason": "독립 재검증 결과 어법상 틀린 밑줄은 (D) 하나뿐이다. 'particularly which there are many separate sources of emissions'에서 관계대명사 which는 선행사와 절 내부 공백(gap)을 모두 요구하지만, 후행절 'there are many separate sources of emissions'는 공백 없는 완전한 존재구문이고 부사어 자리에 성립 가능한 선행사도 없다. 구제 해석(자유관계사, 문장관계사, 간접의문, 한정사 which)을 전수 검토했으나 모두 실패 — which는 what과 달리 현대 표준영어에서 자유관계사를 이끌 수 없고, 문장관계사도 공백을 요구하며, 의문사 독해를 인가하는 동사가 없고, 한정사라면 뒤에 명사가 필요하다. 이 자리는 부사절 접속사 where(원문과 일치)여야 한다. 나머지 (A) 과거분사 후치수식(정동사 can be targeted 별도 존재, base의 수동 관계), (B) incentive+to부정사 명사보충 패턴, (C) 단수 주어 핵 attraction과의 수일치, (E) 복수 주어 핵 technologies 수일치+자동사 develop의 능동 진행상은 모든 대안 해석 하에서 문법적으로 성립한다. 솔버1·솔버2의 판정에 과잉 판정이나 누락된 대안 해석은 발견되지 않았고, 감사자의 V2=true도 확증된다. (C) 해설의 주어 핵 오분석(감사자 V4 지적)은 해설 품질 결함일 뿐 — 동명사구 주어로 오분석해도 단수 일치라는 결론은 동일하므로 — 정답 유일성에는 영향이 없다. 선언된 정답 (D)는 유일한 정답이다.",
+  "perDispute": [
+    {
+      "label": "(A)",
+      "claim": "과거분사 based가 옳은가 (능동 basing 또는 정동사 필요 여부)",
+      "verdict": "성립(옳음) — 정답 아님",
+      "evidence": "문장의 정동사는 'can ... be targeted'로 이미 존재하므로 이 자리는 비정형이어야 한다. base X on Y는 타동사이고 taxes는 base의 대상(수동 관계)이므로 축약 관계절의 과거분사 based('taxes [which are] based directly on measured emissions')가 정확히 옳다. 능동 basing 독해는 taxes가 무언가를 base한다는 불가능한 의미를 만들어 실패한다."
+    },
+    {
+      "label": "(B)",
+      "claim": "to reduce의 형용사적 용법(명사 incentive 수식)이 옳은가",
+      "verdict": "성립(옳음) — 정답 아님",
+      "evidence": "'incentive + to부정사'는 명사 보충의 표준 고빈도 패턴이며 암시적 행위자(the polluter)도 정합적이다. 이를 비문으로 만드는 대안 해석은 존재하지 않는다."
+    },
+    {
+      "label": "(C)",
+      "claim": "단수 동사 is의 수일치가 옳은가 (직전 복수명사 emissions에 의한 are 유혹)",
+      "verdict": "성립(옳음) — 정답 아님",
+      "evidence": "주어구는 'The great attraction of basing the tax directly on measured emissions'이고 주어 핵은 단수 명사 attraction이며 of구는 수식어다. 따라서 is가 옳다. 참고: 본 문항 해설은 동명사구를 '진짜 주어 핵'으로 오분석했으나(감사자 V4 지적과 일치), 동명사구 주어라 해도 단수 일치이므로 어느 분석으로도 is가 옳다는 결론은 불변 — 정답 유일성에 영향 없음."
+    },
+    {
+      "label": "(D)",
+      "claim": "which가 이 자리에서 성립 가능한가 (구제 해석 존재 여부)",
+      "verdict": "불성립(어법상 틀림) — 유일한 정답",
+      "evidence": "관계대명사 which는 선행사와 절 내부 공백을 요구하나, 'there are many separate sources of emissions'는 공백 없는 완전한 존재구문이고 particularly 뒤 부사어 자리에 선행사도 없다. 구제 해석 전수 검토: (1) 자유관계사 — which는 what과 달리 현대 표준영어에서 자유관계사 불가; (2) 문장관계사(', which') — 역시 절 내 공백 필요('which is costly'류), 여기엔 없음; (3) 간접의문 — 의문절을 인가하는 상위 술어 부재; (4) 한정사 which — 후행 명사 필요, 'there'가 즉시 후행하므로 불가; (5) 'in which' 생략형 — 'cases in which'류 명시적 선행 명사 없이는 불가. 모든 구제 실패. 부사절 접속사 where로 교정하면 원문과 정확히 일치한다."
+    },
+    {
+      "label": "(E)",
+      "claim": "have been developing의 수일치·능동태가 옳은가 (수동 have been developed 필요 여부)",
+      "verdict": "성립(옳음) — 정답 아님",
+      "evidence": "긴 주어구 'the technologies available for monitoring ... in waste discharges'의 핵은 복수 technologies이므로 have가 옳다(개입 명사 monitoring/discharges는 근접 미끼). develop은 '발전하다' 의미의 자동사(능격) 용법이 표준이므로 능동 현재완료진행 + rapidly가 옳고, 수동 강제 논리는 성립하지 않는다. 담화상으로도 '기술이 빠르게 발전해 왔다 → 미래에 적용 확대 가능'과 정합."
+    }
+  ],
+  "solverAssessment": {
+    "solver1": "과잉 판정·누락 없음. (D)의 자유관계사/문장관계사 구제 시도를 명시적으로 검토·기각했고 (A)(C)(E)의 함정 구조를 정확히 방어함.",
+    "solver2": "과잉 판정·누락 없음. (D)의 'in which 생략' 구제까지 검토·기각했고 나머지 선지 방어 논증도 정확함.",
+    "auditor": "V2=true 확증. V4 실패(C 해설의 주어 핵 오분석)와 KILLER 난이도 미달(C5=1)은 정답 유일성과 무관한 별도 품질 결함."
+  }
+}

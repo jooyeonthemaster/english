@@ -1,0 +1,35 @@
+{
+  "pid": "J005",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'The nature of an ethical issue ... is that there is no clear right or wrong response' — be동사 뒤 보어절을 이끄는 접속사 that. 뒤따르는 절(there is no clear right or wrong response)이 빠진 성분 없는 완전한 절이므로 what이 아니라 that이 맞다. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'learn to think through ethical issues rather than follow a prescribed set...' — rather than 뒤의 원형부정사는 표준 용법이며(decided to walk rather than drive 유형), learn to [think ... rather than follow ...]로 원형 think와의 병렬로도 성립한다. 최상위권도 'following/to follow가 아닌가' 하고 끌리게 설계된 매력적 오답이지만 두 규범 모두 원형을 허용하므로 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'being ethical is defined as acting ...' — 동명사구 주어(being ethical)에 대한 수동태 be defined as. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "'What a person values relating to their ... beliefs influenced by their ... experiences.' — 자유관계절 What a person values가 문장의 주어인데 정동사가 없다. influenced는 'by their experiences'라는 행위자구가 붙어 있어 beliefs를 수식하는 수동 분사로만 읽히고(능동 과거시제라면 목적어가 필요), 축약관계절·분사구문·도치 등 어떤 대안 해석으로도 정형절이 만들어지지 않아 문장 전체가 동사 없는 파편이 된다. relating → relates(단수 정동사)여야 한다. 어법상 틀림 — 정답."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'it is necessary to understand the personal factors ... and how these may coincide' — 가주어 it + be + 형용사 + to부정사(외치) 구문. understand의 목적어로 명사구와 how절이 병렬. 정문."
+    }
+  ],
+  "note": "장거리 단서 기반 판정: (D)는 주어(What a person values)와 문장 끝까지 정동사 부재를 확인해야 잡히는 fragment 오류로, 실전에서 (B) rather than + 원형이 1차 유혹이지만 규범상 정문이라 소거된다. 정답 후보는 (D) 하나로 수렴하며 복수 정답 소지는 발견하지 못함."
+}

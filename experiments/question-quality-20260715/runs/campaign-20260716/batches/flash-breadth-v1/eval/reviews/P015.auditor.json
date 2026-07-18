@@ -1,0 +1,77 @@
+{
+  "pid": "P015",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-content-addition",
+      "severity": "minor",
+      "evidence": "오답해설 5에서 '타인의 윤리적 기준이 자신과 다를 수 있음을 인정하고 타협하는 것'이라고 서술했으나, 지문은 'recognizing and accepting that the factors... may be different'(인정·수용)만 말하며 '타협(compromise)'은 지문에 없는 첨가다. 인용된 영어 스팬과 핵심 논거(다원주의 vs 통일)는 정확하므로 치명으로 보지 않는다."
+    },
+    {
+      "code": "V2-note-weak-anchor",
+      "severity": "minor",
+      "evidence": "정답 제목의 'Multi-layered'는 지문이 명시적 '층위' 구조를 제시하지 않아 앵커가 다소 약하다(사회·종교·시민적 신념, 형식·비형식 학습, 맥락 의존이라는 다중 요인으로 해석 가능). 'Flexible'은 강하게 뒷받침되며, 다른 어떤 선지도 경쟁 정답이 될 수 없어 유일성 자체는 유지된다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — 윤리 원칙의 개인 간·개인 내 가변성과 맥락 의존성(유연성), 다중 영향 요인(다층성)을 포괄하는 제목",
+      "temptingBecause": "해당 없음(정답). 'Flexible'은 'these principles vary both between and within individuals'와 'context dependent'에 직접 대응",
+      "decisiveFlaw": "없음. 단, 'Multi-layered'는 지문에 명시적 층위 서술이 없어 앵커가 약간 느슨하다"
+    },
+    {
+      "label": "2",
+      "intent": "극성 반전(polarity reversal) — 지문 주장을 정반대로 뒤집은 미끼",
+      "temptingBecause": "'Ethical Principles', 'Rules' 등 지문 핵심 어휘를 그대로 사용",
+      "decisiveFlaw": "지문은 'no clear right or wrong response'이며 학생이 'prescribed set of ethical codes or rules'를 따르기보다 스스로 사고해야 한다고 명시 — 'Absolute'는 직접 모순. 절대어 하나로 즉시 소거 가능"
+    },
+    {
+      "label": "3",
+      "intent": "과잉 일반화/half-truth — 부수 언급을 전체 논지로 확대",
+      "temptingBecause": "'context dependent'와 'when they are feeling a different way'가 실제 지문에 존재",
+      "decisiveFlaw": "감정은 맥락 의존성의 한 예시(종속절 하나)일 뿐이며, 'Dominated'는 지문의 분석·평가 중심 논지를 지우는 과장"
+    },
+    {
+      "label": "4",
+      "intent": "범위 축소 + 프레임 교체(actor/frame swap) — 요인 논의를 '외부 압력'으로 오프레임",
+      "temptingBecause": "행동 강령('code of behaviour')을 형성하는 요인 논의가 실제로 지문에 존재해 4개 오답 중 가장 실질적 판단을 요구",
+      "decisiveFlaw": "지문은 그 요인을 'personal factors'(신념·학습 경험·맥락)로 규정하며 '외부 압력'으로 부르지 않고, 핵심 주장(윤리적 사고 학습의 필요성·다원성 수용)을 전혀 담지 못하는 지엽 제목"
+    },
+    {
+      "label": "5",
+      "intent": "방향 반전(direction reversal) — 다원성 수용을 단일 윤리로의 통합으로 뒤집음",
+      "temptingBecause": "'Diverse Perspectives'가 지문 표현('from different perspectives')과 직접 겹침",
+      "decisiveFlaw": "지문의 결론은 타인의 요인이 다를 수 있음을 'recognizing and accepting'하라는 것 — 하나의 공유 윤리로 'Unifying'하자는 주장은 어디에도 없고 다원주의적 방향성과 정면 배치"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "content-addition",
+      "severity": "minor",
+      "evidence": "오답해설 5의 '타협하는 것'은 지문의 'accepting'(수용)을 넘어서는 첨가 — 지문은 타협/절충을 말하지 않는다"
+    },
+    {
+      "code": "interpretive-stretch",
+      "severity": "minor",
+      "evidence": "본해설이 '다층적(Multi-layered) 특성'을 지문이 직접 설명한 것처럼 서술하나, 지문에는 명시적 층위 구조 서술이 없어 해설의 해석적 확장이다(사실 오류 수준은 아님)"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "TITLE형, 요청 난이도 INTERMEDIATE. 모든 V 통과. 정답 ①은 유일 정답이며 'Flexible' 축은 강하게, 'Multi-layered' 축은 다소 느슨하게 앵커링됨. 오답 4종이 서로 다른 함정(극성 반전·과장·범위 축소/프레임 교체·방향 반전)을 사용해 의도 밀도는 양호하나, ②('Absolute')와 ⑤('Unifying')가 절대어/모순어로 즉시 소거되어 실질 경쟁은 ④ 하나에 그침 → C3=2. 해설은 정확하고 매핑이 온전하나 오답해설 5의 '타협' 첨가와 본해설의 장황함이 감점 요인. 공예 합계 17, 최저 2 → B(작은 수정으로 출하 가능: 'Multi-layered' 대신 지문 앵커가 더 강한 수식어 고려, ②·⑤의 즉소거성 완화, '타협' 삭제). KILLER 요청이 아니므로 killerConditionsMet=false."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P014",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "Anti-thesis trap built from the opening sentence. The passage explicitly denies growth as decisive: rapid growth in Botswana/Kenya/Zimbabwe 'explains at best only a small part' of famine-prevention success. 'Decisive shield' reverses the passage's polarity."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "Most attractive distractor. Diversification does appear in line 1 and the passage does concede limits of growth-based remedies, so it pulls a careless reader. But it is doubly off: diversification is only one of three listed remedies (too narrow), and the passage's emphasis falls on the positive claim in the pivot and conclusion (necessity of direct public support), not on cataloguing limits. A 'limits of X' topic would require the passage to end on the limitation; it ends on 'the real achievements... direct public support.'"
+    },
+    {
+      "label": "3",
+      "verdict": "correct",
+      "reason": "Matches the pivot sentence ('cannot hope to prevent famines without specialized entitlement protection mechanisms involving direct public intervention') and the concluding sentence ('real achievements... lie in having provided direct public support... in times of crisis'). Correct scope and polarity; restates the thesis with the passage's own key terms (entitlement protection, direct public intervention)."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "Detail distortion. The three countries are cited as examples of successful direct public support; the passage explicitly downgrades their sectoral/agricultural growth as an explanation ('at best only a small part'). 'Superior agricultural output' is neither claimed nor the topic."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Not in the passage. No historical decline of relief programs is discussed; on the contrary, crisis-time public support is praised as the real achievement. Fabricated frame using the word 'emergency' from line 1."
+    }
+  ],
+  "note": "Solved blind as a top-tier examinee. Clean topic question with a well-known Dreze/Sen-style argument structure (concession -> pivot -> examples -> conclusion). Distractor 2 is the only one with real pull (limits-of-growth half-truth plus lexical overlap with 'diversification'), but the final two sentences force the topic to the necessity of direct public entitlement protection. Single defensible answer: 3."
+}

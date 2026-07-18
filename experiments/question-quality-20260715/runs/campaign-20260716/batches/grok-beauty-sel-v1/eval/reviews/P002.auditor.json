@@ -1,0 +1,72 @@
+{
+  "pid": "P002",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-hedge-drop",
+      "severity": "minor",
+      "evidence": "오답 해설 3이 '이유 제시는 더 믿을 만하지 않다고 명시된다'라고 쓰지만 원문은 'not necessarily more believable'로 hedge('반드시')가 있다. 명시 강도를 과장한 표현. 메인 해설은 '반드시 더 믿을 만하지는 않다'로 정확히 기술하므로 치명 아님."
+    },
+    {
+      "code": "V1-info-render-absent",
+      "severity": "minor",
+      "evidence": "렌더 지문 필드가 '(렌더 지문 없음)'. TITLE은 무변형 유형으로 원지문을 그대로 노출하는 전제라면 문제없으나, 실제 학생 렌더에서 지문이 비는 구현이라면 치명이 된다. 원지문 자체는 접합 파손·중복·누락·오탈자 없이 온전함(Schank 계열 원문과 정합)."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 4,
+    "C3": 3,
+    "C4": 3,
+    "C5": 2,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "지엽 예시의 주제 격상(example-as-topic, scope 과소)",
+      "temptingBecause": "고양이/개 조언 예시가 지문 분량의 대부분을 차지하고 'useless advice'가 첫 예시 평가와 직결되어 표면 대응이 강함",
+      "decisiveFlaw": "애완동물 조언은 일반 논지(신념 전달 방식으로서의 이야기)를 보이기 위한 예시일 뿐이며, 제목이 예시 소재에 갇혀 글 전체를 포괄하지 못한다"
+    },
+    {
+      "label": "2",
+      "intent": "정답 — 첫 문장의 대비 구도(state beliefs vs tell stories that illustrate them)와 마지막 문장의 결론(take the advice more to heart), 중간 양보(helpful but not necessarily more believable)를 종합한 제목",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음 — 'stories illustrating beliefs'가 원문 표현을 보존하고 'more persuasive than bare reasons'가 중간 대비와 결론을 정확히 압축한다"
+    },
+    {
+      "label": "3",
+      "intent": "half-truth + 결과 왜곡: 'We need justifications' 문장을 근거로 논리적 정당화를 핵심 해법으로 격상",
+      "temptingBecause": "'justifications'가 세 번째 문장에 직접 등장하는 강한 lexical anchor",
+      "decisiveFlaw": "지문은 이유 제시가 'not necessarily more believable'이라며 논리적 정당화의 충분성을 부정하고, '확신을 행동으로 전환(Turning Confusion into Action)'이라는 결과는 지문에 존재하지 않는다"
+    },
+    {
+      "label": "4",
+      "intent": "절대화 과장(absolute overreach)",
+      "temptingBecause": "결론 문장의 이야기 효과를 읽은 학생에게 방향이 맞아 보임",
+      "decisiveFlaw": "'the Only Basis'가 지문의 상대적 비교(더 관심을 갖고 더 마음에 새긴다)를 유일 조건으로 과장한다 — 절대어 'only'로 훈련된 학생은 빠르게 소거 가능"
+    },
+    {
+      "label": "5",
+      "intent": "중간 양보의 half-truth (부분 포착, scope 과소)",
+      "temptingBecause": "'more helpful but not necessarily more believable'의 어휘를 거의 그대로 재사용해 표면 정합이 가장 강함",
+      "decisiveFlaw": "글이 귀결되는 이야기의 설득 효과를 전혀 담지 못하고 중간 대비 단계에서 멈춘다 — 제목으로서 글의 주장 방향이 없음"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "hedge-drop-option3",
+      "severity": "minor",
+      "evidence": "오답 해설 3: '이유 제시는 더 믿을 만하지 않다고 명시된다' — 원문의 'not necessarily'를 탈락시켜 지문이 실제보다 강한 주장을 명시한 것처럼 기술"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V 전부 통과. 정답 2는 각 선지 독립 검증에서 유일 정답으로 확인됨(1 예시 격상, 3 정당화 충분성 부정+무근거 결과, 4 절대어 과장, 5 중간 양보만 포착). 오답 설계는 서로 다른 함정 4종으로 의도 밀도가 높고(C2=4), 3·5가 실제 경쟁력을 갖는다(C3=3). 그러나 요청 난이도 KILLER 대비 실제 난이도가 미달(C5=2): 지문이 구체 예시 중심의 평이한 글이고, 정답 2가 첫 문장 표현('tell stories that illustrate them')을 거의 그대로 재사용해 표면 매칭만으로도 도달 가능하며, 경쟁 선지 4는 절대어 'only'로 즉시 소거된다. RUBRIC §C/§D는 어법·빈칸 전용이라 TITLE에 직접 사상되지 않으나, 그 정신(다문장 단서 종합 필수, 표면 단서 단독으로 정답 불가)을 기준으로 봐도 KILLER 조건 불충족이고 beautiful KILLER의 전제인 A등급도 아니므로 killerConditionsMet=false. 합계 19, 최저 C5=2 → B(작은 수정으로 출제 가능: 정답 표현을 한 단계 추상화하고 지문 첫 문장과의 어휘 중복을 줄이면 KILLER 정합성이 개선됨)."
+}

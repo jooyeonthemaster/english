@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "정답 — 문법·논리 모두 성립",
+      "reason": "결합(seam) 검증: 빈칸은 문장 전체 절 자리이며 뒤에 'when he thought of how many people would be there'가 붙는다. 'outward apparel-boosted calm soon yielded to stage fright'는 [ [outward-apparel]-boosted calm ]이라는 무관사 추상명사구 주어 + 'yielded to NP' 자동사 술어로 완전한 정문 절을 이룬다(추상명사 calm은 한정사 없이 주어 가능; 'Calm yielded to panic' 유형). when-절과의 인과-시간 결합도 자연스럽다: '군중 규모를 생각했을 때 옷차림이 준 겉보기 평정이 무대공포로 바뀌었다'. 담화 논리 검증: 직전 문장 'Garcia felt good ... wearing his new clothes'(옷이 준 평정) → 빈칸(평정의 붕괴) → 'As the rehearsal began, he struggled with the rhythm, making several mistakes'(무대공포의 결과) → Tom의 격려로 회복 → 본공연 성공. 서사의 감정 곡선(good → anxious → reassured → triumphant)과 형식적으로 완전히 정합하는 유일한 선지."
+    },
+    {
+      "label": "2",
+      "verdict": "오답 — 사실관계·인과 모두 붕괴",
+      "reason": "'bold clothing choices'부터 사실 오류: 화려한(bold) 빨간 셔츠·노란 바지는 Jeff가 기각했고 실제 구매한 것은 흰 셔츠·검은 진(수수한 선택)이다. 또한 'steadily enhanced his performance grit'을 빈칸에 넣으면 when-절과 결합해 '관객 수를 생각했을 때 투지가 강화되었다'가 되는데, 바로 다음 문장에서 리듬을 놓치고 여러 실수를 저지르므로 직후 서사와 정면 모순. 강화 서사라면 Tom의 위로('Don't worry, I'll be right behind you')도 무의미해진다. 논리적으로 성립 불가."
+    },
+    {
+      "label": "3",
+      "verdict": "오답 — 시제·사건 순서 위반",
+      "reason": "'anticipated audience silence confirmed ruthless technical mastery'는 이 시점(리허설 도착 직후)에 존재하지 않는 두 사건을 전제한다. 관객이 조용해진 것(everyone fell silent)과 연주가 완벽했던 것(flawless)은 모두 본공연에서야 일어나는 후행 사건이며, 빈칸 시점에서는 오히려 실수를 연발한다. 'confirmed ... mastery when he thought of how many people would be there'는 '군중을 생각하자 기량이 입증되었다'는 무의미한 인과가 되어 논리 결합 실패. 또한 'ruthless technical mastery'라는 평가어는 훈훈한 서사 톤과도 충돌한다."
+    },
+    {
+      "label": "4",
+      "verdict": "오답 — 원인 귀속 오류",
+      "reason": "'loyalty to Jeff's black jeans choice bred lingering self-doubt'는 불안의 원인을 옷 선택에 귀속시키지만, 지문에서 옷은 명시적으로 긍정 요인이다('Garcia felt good as he arrived ... wearing his new clothes'). 불안의 원인은 when-절이 지정하는 '관객 수'다. 이 선지를 넣으면 '군중을 생각했을 때, 검은 진에 대한 충성이 자기 회의를 낳았다'가 되어 when-절(관객)과 주절의 원인(옷)이 서로 다른 원인을 주장하는 인과 충돌이 발생한다. 'lingering'(지속되는) 역시 이후 Tom의 격려로 즉시 회복되고 본공연이 완벽했던 서사와 모순."
+    },
+    {
+      "label": "5",
+      "verdict": "오답 — 주체 오류·시점 오류",
+      "reason": "'late traffic stress'는 지문에서 Jeff의 지각 사유였을 뿐 Garcia가 겪은 스트레스가 아니다(Garcia는 'I haven't waited long'이라며 개의치 않음). 주체 귀속부터 실패. 또한 'resurfaced as choked trumpet mistakes'는 실수가 이미 일어났음을 서술하는데, 실수는 빈칸 다음 문장('As the rehearsal began, he struggled ... making several mistakes')에서 비로소 발생하므로 사건 순서가 역전된다. 'when he thought of how many people would be there'와의 결합도 '교통 스트레스가 군중 생각에 되살아났다'는 근거 없는 연결로 논리 부적합."
+    }
+  ],
+  "note": "빈칸은 완전한 주절 자리이며, when-절이 '관객 수 생각'이라는 트리거를 고정한다. 직전(옷으로 인한 good feeling)과 직후(리허설 실수·격려·회복)의 담화 구조상 '평정 → 무대공포 전환'을 서술하는 1번만이 문법 결합과 서사 논리를 동시에 만족한다. 1번의 'outward apparel-boosted' 복합 수식은 하이픈 처리가 다소 인위적이고 무한정 추상명사 주어(his 부재)가 문체상 어색하지만 정문성에는 문제가 없다. 다만 다섯 선지 모두 압축 명사구 문체로 되어 있어 서사체 지문 대비 문체 이질감이 크다는 점은 품질상 감점 요인(정답 방어성에는 영향 없음). 복수 정답 여지 없음."
+}

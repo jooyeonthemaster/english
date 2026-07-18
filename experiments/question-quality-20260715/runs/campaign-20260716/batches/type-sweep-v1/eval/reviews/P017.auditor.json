@@ -1,0 +1,77 @@
+{
+  "pid": "P017",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-INFO-NO-RENDER",
+      "severity": "info",
+      "evidence": "렌더 지문 필드가 '(렌더 지문 없음)'이다. MAIN_IDEA는 지문 변형이 없는 유형이며 동일 배치 18개 중 8개 파일이 같은 관례를 사용하므로 원지문이 그대로 노출되는 것으로 판단. 원지문 자체는 문장 접합 파손·중복·누락·고아 문장부호·오탈자 없이 온전하고, 선지 라벨 1~5와 선언 정답 1이 정확히 대응한다."
+    },
+    {
+      "code": "V4-STYLE-CLUNKY-FRAME",
+      "severity": "minor",
+      "evidence": "오답 해설 2·3의 프레임 문장이 이중 인용 구조로 비틀려 있다(예: \"선택지는 '...비중을 대폭 확대해야 한다'는 지문에서 언급된 '...'라는 필요성에만 지나치게 주목한 과장된 진술입니다\"). 사실 오류는 아니나 문장 골격이 어색하다. 치명이 아닌 스타일 결함으로 V4는 통과."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — 명시적 주제문 'The approach ... is to first accept the dialect and then build on it'의 재진술. '표준어 지식으로 확장'은 도입부의 표준어 교육 목적과 정합하는 허용 가능한 구체화.",
+      "temptingBecause": "해당 없음(정답).",
+      "decisiveFlaw": "없음. 유일 정답."
+    },
+    {
+      "label": "2",
+      "intent": "scope shift — 도입부의 표준어 필요성 근거(educational and economic opportunities)를 글 전체의 주장으로 확대.",
+      "temptingBecause": "첫 문장이 표준어의 기회 접근 기능을 실제로 언급하므로 도입부만 읽은 학생이 고를 수 있다.",
+      "decisiveFlaw": "지문은 '교육과정 내 비중 확대'나 '불평등 해결'을 주장한 적이 없고, 핵심은 비표준어 사용 학생에 대한 지도 방법론이다."
+    },
+    {
+      "label": "3",
+      "intent": "half-truth / extreme — 지문이 언급만 하고 배격하는 한 극단(complete acceptance)을 권고안으로 둔갑.",
+      "temptingBecause": "'방언 수용'이라는 표현이 정답의 'first accept'와 표면적으로 겹쳐 가장 매력적인 오답이다.",
+      "decisiveFlaw": "수용은 표준어로 build on 하기 위한 첫 단계일 뿐이며, '자유로운 사용 정착'과 '문화적 가치 보존'은 지문의 목적이 아니다. complete acceptance는 스펙트럼의 한 극단으로 소개될 뿐 권고되지 않는다."
+    },
+    {
+      "label": "4",
+      "intent": "causal/polarity opposite — 필자가 배격하는 다른 극단(rejection and correction)을 주장으로 제시.",
+      "temptingBecause": "지문에 'rejection and correction'이 실제로 등장하므로 어구 매칭으로 고를 수 있다.",
+      "decisiveFlaw": "필자의 권고(first accept, then build on it)와 정반대이며 'Although results won't be apparent immediately'가 즉각 교정 노선을 명시적으로 부정한다."
+    },
+    {
+      "label": "5",
+      "intent": "actor/setting swap + fabrication — 교실·교사 맥락을 가정 교육·읽기 지도로 치환.",
+      "temptingBecause": "'문화적 역량'이 culturally responsive teaching과 어휘상 유사해 보인다.",
+      "decisiveFlaw": "가정에서의 표준어 사용·읽기 지도는 지문에 전혀 등장하지 않는 무근거 첨가로, 소거가 가장 빠른 필러성 선지다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "STYLE-VERBOSE",
+      "severity": "minor",
+      "evidence": "본해설이 지문 전개를 순서대로 장황하게 재서술하며, 정답 근거와 핵심 함정(특히 3번의 '수용=방임' 혼동)의 분리가 선명하지 않다."
+    },
+    {
+      "code": "STYLE-BROKEN-FRAME",
+      "severity": "minor",
+      "evidence": "오답 해설 2: \"선택지는 '...'는 지문에서 언급된 '...'라는 필요성에만 지나치게 주목한 과장된 진술입니다\" — 인용 프레임이 이중으로 겹쳐 비문에 가까운 골격. 오답 해설 3도 \"선택지는 '...'거나 '...'는 주장은 ... 다릅니다\"로 주어 중복."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "모든 V 게이트는 통과한다: 원지문 온전, 정답 1 유일(각 선지 독립 검증 완료), 지문·선지 문법적, 해설 사실 정확, 필드 동기화 일치. 그러나 요청 난이도 KILLER 대비 공예가 크게 미달한다. (1) 정답이 명시적 주제문 한 문장의 거의 직역 재진술이라 주제문만 찾으면 즉시 풀리며(C3=2), 다문장 단서 종합이 전혀 필요 없다. (2) 4·5번은 극성 반대/무관 첨가로 즉시 소거되어 실질 경합은 2·3번뿐이다. (3) 따라서 난이도 정합 C5=1로 라벨과 명백히 불일치 — KILLER 재설계(예: 주제문을 덜 명시적으로 만드는 지문 선택, 정답의 추상화 수위 상향, 3번급 half-truth 오답 추가)가 필요하다. (4) 해설은 정확하나 장황하고 프레임 문장이 어색하다(C6=2). killerConditionsMet=false: RUBRIC §C/§D는 어법/빈칸 전용 조건으로 MAIN_IDEA에 해당 조건 세트가 없고, 준용하더라도 단일 문장 단서로 정답이 확정되며 등급도 A가 아니므로 불충족. 합계 14점, 등급 C(치명 없음, 재설계 필요 공예 결함)."
+}

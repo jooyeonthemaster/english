@@ -1,0 +1,44 @@
+{
+  "pid": "P008",
+  "finalV2": false,
+  "winningAnswer": "(A) disconnecting, (B) no material traces — 모범답안으로는 성립하나 유일한 정답 문자열로는 성립하지 않음",
+  "reason": "선언된 정답은 지문 근거상 최적의 모범답안이며 두 솔버 모두 동일 답에 수렴했다. 그러나 본 문항은 선택지 없는 서술형(빈칸 채우기)인데 (1) 발문에 '본문의 단어를 활용하여', 어형 조건, 단어 수 제한 등 형식 제약이 전혀 없고, (2) 허용 답안 집합·배제 경계가 정의되어 있지 않다. (A) 슬롯('thus ___ the ties ...')은 타동사 현재분사를 강제할 뿐 어휘를 강제하지 않으므로 severing/breaking/cutting (off)/dissolving 등 문법·논리 모두 성립하는 동치 답이 다수 존재하고, weakening/loosening처럼 'less sticky'에 근거한 약화된 진술의 인정 여부는 루브릭 부재로 판정 불능이다. (B) 슬롯('while leaving ___')은 의미 목표('no material traces')는 유일하게 수렴하지만 'no material traces behind', 'behind no material traces', 'no traces', 'no physical traces', '+ in the places where it was once an employer' 등 문법적으로 성립하는 표면 변형의 허용 경계가 미정이다. 따라서 선언된 정답 문자열이 유일한 정답이라는 명제는 성립하지 않으며 감사자의 V2=false 판정을 인용한다. 솔버들의 과잉 판정(성립하지 않는 대안을 성립한다고 주장한 사례)은 발견되지 않았고, 오히려 두 솔버 모두 동의어 답안군을 인정하면서도 multipleDefensible=false로 기재한 내적 비일관이 있다 — 경계 미정의 답안군의 존재는 곧 복수 정답 조건이다.",
+  "perDispute": [
+    {
+      "label": "(A) disconnecting (선언 정답)",
+      "claim": "'thus disconnecting the ties between service work and particular places'가 문법·논리적으로 성립하는 최적 답이다",
+      "verdict": "성립 (모범답안으로 확정)",
+      "evidence": "seam 검증: 'thus' 뒤 분사구문 자리로 앞의 'enabling'과 병렬을 이루며 목적어 NP 'the ties ...'를 취하는 타동사 V-ing가 요구된다. 의미상 주어는 문두 'Digital platforms'로 회수되어 현수분사 문제 없음. 지문 3문장 'ties between service work and particular places can be disconnected'의 수동태를 능동 분사로 굴절한 형태로 어휘 근거가 직접적이다. 반대 방향(strengthening/maintaining)은 지문 논지와 정면 충돌하여 배제 — 양 솔버의 이 판단은 타당하다."
+    },
+    {
+      "label": "(A) 동의어 계열 severing/breaking/cutting (off)/dissolving",
+      "claim": "disconnecting 외 동의어도 문법·논리적으로 성립하는 답이다",
+      "verdict": "성립 (유일성 파괴 요인)",
+      "evidence": "발문('빈칸 (A), (B)에 들어갈 말을 쓰시오')에 본문 어휘 활용 조건이 없으므로 지문 어근으로 답을 한정할 근거가 없다. 'severing/breaking/cutting off/dissolving the ties'는 모두 타동사 V-ing로 seam이 성립하고, 지문의 'ties can be disconnected'와 의미적으로 등가이다. 두 솔버 모두 이를 허용 가능으로 인정했다(솔버1: 'sever/cut/break 등 유의어 답안도 채점상 허용 가능', 솔버2: defensibleLabels에 severing/breaking 명시). 허용 경계가 문서화되지 않은 이상 선언 정답 문자열의 유일성은 성립하지 않는다."
+    },
+    {
+      "label": "(A) 약화 계열 weakening/loosening",
+      "claim": "'less sticky'에 근거해 weakening/loosening도 성립한다는 해석",
+      "verdict": "판정 불능 (루브릭 부재로 경계 미정 — V2 실패를 강화)",
+      "evidence": "'thus weakening the ties'는 문법적으로 완전하고 지문 1문장 'made a lot of work less sticky'가 부분 근거가 된다. 다만 지문의 명시적 주장은 'can be disconnected'(단절 가능)이고 결론은 'no material traces'(완전한 흔적 부재)이므로 weakening은 과소 진술이다. 솔버2는 이를 '차선'으로 강등했으나 배제하지는 않았다. 오답 처리할지 부분 인정할지 판단할 채점 기준이 문항에 전무하므로 판정 자체가 불가능하며, 이 미결정성이 곧 V2 실패의 실체다."
+    },
+    {
+      "label": "(B) no material traces (선언 정답)",
+      "claim": "'while leaving no material traces'가 문법·논리적으로 성립하며 의미 목표로서 유일하다",
+      "verdict": "성립 (의미 목표는 유일하게 수렴)",
+      "evidence": "'leaving'의 목적어 NP 자리에 지문 최종문 'the employer leaves behind no material traces in the places where it was once an employer'가 유일한 텍스트 근거로 대응한다. 대안 후보 'no offices or factories'/'no local taxes'는 요약문 앞부분 'without local facilities or taxes'에서 이미 소진되어 배제된다는 솔버1의 논증은 타당함을 독립 확인했다. 감사자가 지적한 행위자 전이(원문은 the employer가 흔적을 남기는 주체, 요약문은 Digital platforms로 읽힘)는 실재하나 경미하며 문법·논리 파손은 아니다."
+    },
+    {
+      "label": "(B) 표면 변형 'no material traces behind' / 'behind no material traces' / 'no traces' / 'no physical traces' / '+ in the places ...'",
+      "claim": "선언 정답 문자열 외의 자연 변형들도 성립한다",
+      "verdict": "성립 (유일성 파괴 요인)",
+      "evidence": "'leaving no material traces (behind)'와 'leaving behind no material traces'는 불변화사 behind의 위치 이동으로 모두 정문이며, 빈칸이 leaving 직후이므로 'behind no material traces' 기입도 문법적으로 성립한다는 솔버2의 형식 분석은 정확하다. 'no physical traces'는 material의 자연스러운 동의 치환, 'no traces'는 수식어 탈락형으로 의미 손실이 경미하다. 'in the places where it was once an employer' 부가형도 정문이다. 이 변형들의 허용/배제 기준이 문항·해설 어디에도 없다."
+    },
+    {
+      "label": "솔버 과잉 판정 여부",
+      "claim": "솔버들이 성립하지 않는 대안 해석을 성립한다고 주장했는지 검토",
+      "verdict": "과잉 판정 없음 (단, 복수 정답 과소 보고 있음)",
+      "evidence": "양 솔버가 성립한다고 주장한 대안(동의어 계열, behind 위치 이동, 관계절 부가)은 전부 독립 재검증에서 문법·논리적으로 성립함을 확인했다. 반면 양 솔버 모두 동의어 답안군의 존재를 스스로 인정하면서 multipleDefensible=false로 기재한 것은 서술형 문항에서 내적으로 비일관하다. 경계가 정의되지 않은 답안군은 곧 복수 정답 상태이므로, 유일성 관점의 올바른 보고는 감사자의 V2-NO-ACCEPTANCE-SET / V2-STEM-NO-CONSTRAINT 판정이다."
+    }
+  ]
+}

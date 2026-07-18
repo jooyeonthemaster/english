@@ -1,0 +1,35 @@
+{
+  "pid": "P017",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "지문의 명시적 주제문 'The approach most consistent with culturally responsive teaching is to first accept the dialect and then build on it'과 정확히 일치. 'build on it'의 내용은 교사가 'I ain't got no pencil'을 표준형 'Oh, you don't have a pencil'로 재구성(recast)하는 예시로 구체화되며, 이는 '표준어 지식으로 확장'이라는 선지 표현과 논리적으로 동치이다. 마지막 문장의 장기적 언어 발달 이익도 이 접근을 뒷받침한다."
+    },
+    {
+      "label": "2",
+      "verdict": "incorrect",
+      "reason": "첫 문장은 표준영어가 교육·경제적 기회 접근을 제공한다는 '교육 이유'를 제시할 뿐, 교육과정 내 표준어 교육 비중 확대나 불평등 해소를 주장하는 명제는 지문 어디에도 없다. 전제로부터의 비약(non sequitur)이며 요지가 아니다."
+    },
+    {
+      "label": "3",
+      "verdict": "incorrect",
+      "reason": "'complete acceptance'는 지문이 나열한 의견 스펙트럼의 한 극단으로 언급될 뿐 필자가 지지하는 입장이 아니다. 필자의 입장은 수용 후 표준어로 확장하는 중간 접근이므로, 방언의 자유로운 사용 정착(=완전 수용)은 주제문과 논리적으로 충돌한다. 방언의 문화적 가치 보존이라는 목적 자체도 지문에 없다."
+    },
+    {
+      "label": "4",
+      "verdict": "incorrect",
+      "reason": "'즉각적이고 엄격한 교정'은 지문이 제시한 반대 극단 'rejection and correction'에 해당하며, 주제문의 'first accept'와 정면으로 모순된다. 'results won't be apparent immediately'라는 서술도 즉각적 교정론과 배치된다."
+    },
+    {
+      "label": "5",
+      "verdict": "incorrect",
+      "reason": "가정에서의 표준어 사용이나 규칙적인 읽기 지도는 지문에 전혀 등장하지 않는 무근거 명제이다. 지문은 교실 내 교사의 대응 방식만을 다룬다."
+    }
+  ],
+  "note": "요지 문항으로서 구조가 깨끗하다. 주제문이 명시적('The approach most consistent with... is to first accept the dialect and then build on it')이고, 오답 4개가 각각 (2) 도입 전제의 과잉 확장, (3) 배척된 극단 A(완전 수용), (4) 배척된 극단 B(즉각 교정), (5) 지문 외 정보로 역할이 분명하게 분화되어 있다. 복수 정답 가능성 없음."
+}

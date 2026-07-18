@@ -1,0 +1,90 @@
+{
+  "pid": "P015",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-verified-clean",
+      "severity": "info",
+      "evidence": "원지문 vs 렌더 지문 단어 단위 diff 결과 차이는 정확히 1건(evaluating→evaluate, 밑줄 B 의도 변형)뿐. 마커 (A)~(E) 5개가 선지 목록과 표기·순서 모두 일치. 접합 파손·중복·누락·고아 문장부호 없음."
+    },
+    {
+      "code": "V2-verified-unique",
+      "severity": "info",
+      "evidence": "(B) evaluate만 비문: 전치사 about의 목적어 자리에서 identifying과 등위접속된 원형은 어떤 파스로도 성립 불가(정동사 병렬로 보려면 단수 주어 ethical thinking과 불일치, 명령문 불가). (A) to guide는 evidence 수식/명사화 전체의 목적 부가어 어느 해석으로도 문법적, (C) learn to-V 표준 보문, (D) 선행사 principles(복수)에 are 일치(conduct 부착 해석을 취하더라도 principles 부착이 문법적이므로 오류 판정 불가), (E) beliefs를 후치 수식하는 수동 과거분사로 의미역 정상."
+    },
+    {
+      "code": "V4-minor-A-attachment",
+      "severity": "minor",
+      "evidence": "(A) 해설이 to guide를 'evidence를 목적적으로 수식'으로 단정하나, 명사화구 'the identification and evaluation of evidence' 전체에 걸리는 목적 부가어 해석도 동등하게 가능. 오분석은 아니며 판정(어법상 옳음)에는 영향 없음 — V4 실패로 보지 않음."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "to부정사의 명사(구) 수식·목적 용법 판단 (pointCode k)",
+      "temptingBecause": "'evaluation of evidence to guide decision-making'에서 수식 대상이 병렬 명사화 뒤라 부착이 멀어 보이고, guiding으로 바꿔야 할 것 같은 착시가 있다",
+      "decisiveFlaw": "evidence 수식이든 명사화 전체의 목적 부가어든 어느 해석으로도 문법적 — 오답 불가"
+    },
+    {
+      "label": "(B)",
+      "intent": "전치사 about 뒤 동명사 등위 병렬 (identifying and evaluating) — 선언된 정답",
+      "temptingBecause": "evaluate를 뒤따르는 정동사로 잘못 읽으면 옳아 보인다(해설이 지목한 함정)",
+      "decisiveFlaw": "원형 evaluate는 성립 가능한 파스가 없다. evaluating으로 교정하면 정확히 원문 복원 — 유일 정답 확인"
+    },
+    {
+      "label": "(C)",
+      "intent": "learn + to부정사 보문 구조 (pointCode k — (A)와 중복 계열)",
+      "temptingBecause": "바로 뒤 'rather than follow'의 원형과 대비되어 형태 일관성을 의심하게 만든다",
+      "decisiveFlaw": "learn to-V는 표준 보문이며 rather than 뒤 원형 생략 병렬도 별도로 적법 — 오답 불가"
+    },
+    {
+      "label": "(D)",
+      "intent": "관계절 내 수일치 — 선행사 식별 (principles vs conduct)",
+      "temptingBecause": "직전 명사 conduct(단수)를 선행사로 오인하면 are가 틀려 보인다 — 5개 중 가장 실질적인 유혹",
+      "decisiveFlaw": "의미상 '옳다고 여겨지는' 것은 principles이며 복수 are 일치가 문법적 — 오답 불가"
+    },
+    {
+      "label": "(E)",
+      "intent": "명사 후치 수식 과거분사의 태 판단",
+      "temptingBecause": "긴 병렬 명사구(social, religious, or civic beliefs) 뒤라 정동사 자리로 오인하거나 influencing과의 태 선택을 고민하게 된다",
+      "decisiveFlaw": "beliefs는 influence의 대상(수동)이므로 influenced가 옳다 — 오답 불가"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "A-attachment-overassertion",
+      "severity": "minor",
+      "evidence": "(A) 오답 해설이 두 가지 적법한 부착 해석 중 하나(evidence 수식)만 단정. 판정 결과는 동일하므로 사실성 훼손은 아님."
+    },
+    {
+      "code": "why-tempting-absent",
+      "severity": "major",
+      "evidence": "오답 해설 4건 모두 why-correct만 서술하고 why-tempting이 없음. RUBRIC §C 3항(5개 밑줄 각각 point·why tempting·why correct) 위반 — KILLER 조건 미충족의 근거."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerAudit": {
+    "minimalPairRestoresSource": true,
+    "clearGrammarJudgment": true,
+    "allFivePointsDocumented": false,
+    "notImmediatelyDetectable": false,
+    "noShadowingEasyDecoy": true,
+    "evidence": "조건3 실패: 오답 해설에 why-tempting 미기재. 조건4 실패(보수 판정): 정답 (B)는 'about identifying ethical issues and evaluate'로 병렬 대상이 4어절 거리의 국소 패턴 — 전치사+동명사 병렬은 최다 훈련 유형이라 상위권 학생이 구조 독해 없이 패턴 매칭으로 즉시 적발. 철자/비단어/인접 수일치는 아니지만 KILLER가 요구하는 함정 깊이에 미달."
+  },
+  "grade": "C",
+  "notes": "유효성 5개 게이트 전부 통과 — 무결성(diff 1건), 정답 유일성(선지별 독립 검증), 문법성, 해설 사실성, 필드 동기화 모두 확인. 그러나 요청 난이도 KILLER 대비 실제 난이도는 중(中) 수준: 정답 포인트가 국소적·고빈도 훈련 패턴이라 C5=1, KILLER 추가 조건도 미충족(killerConditionsMet=false). (A)/(C)의 pointCode 중복(k)으로 디코이 스펙트럼이 약간 좁고, (D)만이 실질적 유혹을 제공해 C3=2. 문항 자체는 중난도 어법 문항으로는 출제 가능한 품질이나 KILLER 슬롯 재설계(정답 포인트를 장거리·구조 의존형으로 교체하고 오답 해설에 why-tempting 보강) 필요. 합계 15/24, 등급 C."
+}

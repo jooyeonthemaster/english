@@ -1,0 +1,88 @@
+{
+  "batchId": "grok-types-v1",
+  "phase": "grok",
+  "atKst": "2026-07-17T19:31:51.961+09:00",
+  "assignments": 16,
+  "slotsConsumed": 19,
+  "accepted": 16,
+  "modelCalls": 19,
+  "inputTokens": 95240,
+  "outputTokens": 29664,
+  "costUsd": 0.364816,
+  "ledgerAfter": {
+    "used": 865,
+    "cap": 1000,
+    "costUsd": 30.675771
+  },
+  "byArm": {
+    "GKB-TOPIC": {
+      "n": 2,
+      "accepted": 2,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 2,
+      "costUsd": 0.018942
+    },
+    "GKB-TITLE": {
+      "n": 2,
+      "accepted": 2,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 2,
+      "costUsd": 0.021518
+    },
+    "GKB-SINS": {
+      "n": 2,
+      "accepted": 2,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 2,
+      "costUsd": 0.06972
+    },
+    "GKB-SORD": {
+      "n": 2,
+      "accepted": 2,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 2,
+      "costUsd": 0.02835
+    },
+    "GKB-IMPL": {
+      "n": 2,
+      "accepted": 2,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 3,
+      "costUsd": 0.063458
+    },
+    "GKB-CONT": {
+      "n": 2,
+      "accepted": 2,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 2,
+      "costUsd": 0.030116
+    },
+    "GKB-IRRE": {
+      "n": 2,
+      "accepted": 2,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 2,
+      "costUsd": 0.05119
+    },
+    "GKB-SUMM": {
+      "n": 2,
+      "accepted": 2,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 4,
+      "costUsd": 0.081522
+    }
+  },
+  "models": {
+    "standard": "google/gemini-3.5-flash",
+    "premiumQgen": "x-ai/grok-4.5"
+  },
+  "durationMs": 102179
+}

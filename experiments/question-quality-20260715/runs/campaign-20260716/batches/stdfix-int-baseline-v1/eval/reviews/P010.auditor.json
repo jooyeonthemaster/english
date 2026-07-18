@@ -1,0 +1,72 @@
+{
+  "pid": "P010",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "answer-subtlety",
+      "severity": "minor",
+      "evidence": "(D) 'had been made distastefully' 는 이론상 '방식 부사' 로 파싱하면 ('형편없이 만들어졌다') 문법적으로 성립할 여지가 있으나, Gittleman·Harvey 실험 맥락(빵가루를 '맛없게 만든' 결과 보어)에서는 결과 보어 SVOC 해석만이 유효하므로 오답성립. 수능 관습상 clean minimal-pair 로 인정. V2 통과에는 영향 없음."
+    },
+    {
+      "code": "explanation-loose-term",
+      "severity": "minor",
+      "evidence": "(A) 오답해설이 불변복수/불가산 'prey' 를 '복수 명사' 로 다소 느슨하게 지칭. 수일치 결론은 정확하므로 사실오류 아님."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 4,
+    "C5": 4,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "복수 취급되는 주어 'such prey' 에 대한 주어-동사 수일치 점검",
+      "temptingBecause": "'prey' 를 단수로 오인하면 'is/has' 를 기대해 'are' 를 의심할 수 있음",
+      "decisiveFlaw": "지문 전반에서 'such prey have/are' 로 일관되게 복수 취급되므로 'are' 는 옳음 — 오류 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "긴 동격 that절로 주어와 분리된 단수 주어 'Evidence' 의 수일치·태 판단(수 견인 함정)",
+      "temptingBecause": "동사 직전에 복수 'prey' 와 'detected or conspicuous' 가 있어 'were' 로 끌릴 수 있음",
+      "decisiveFlaw": "실제 주어는 단수 'Evidence' 이므로 단수 수동태 'was reported' 가 옳음 — 오류 아님"
+    },
+    {
+      "label": "(C)",
+      "intent": "'present ~ with' 수동태 구문 판단(병아리가 제공받는 수동 관계)",
+      "temptingBecause": "능동/수동 혹은 'with' 유무를 의심할 수 있음",
+      "decisiveFlaw": "Chicks 가 빵가루를 제공받는 수동 관계이므로 'were presented with' 가 옳음 — 오류 아님"
+    },
+    {
+      "label": "(D)",
+      "intent": "5형식 동사 make 의 수동태에서 목적격보어(형용사) 유지 — 부사 오용 식별",
+      "temptingBecause": "'-ly' 형태가 동사 뒤 방식 부사처럼 보여 자연스러워 보임",
+      "decisiveFlaw": "make + O + 형용사보어 의 수동태(had been made)는 형용사 보어 'distasteful' 을 유지해야 하므로 부사 'distastefully' 는 어법상 틀림 — 정답"
+    },
+    {
+      "label": "(E)",
+      "intent": "가목적어 it + 진목적어 to부정사 구조에서 목적격보어(형용사 비교급) 판단",
+      "temptingBecause": "동사 find 뒤라 부사 'more easily' 나 원급 'easy' 를 기대해 'easier' 를 의심할 수 있음",
+      "decisiveFlaw": "'find it easier to avoid' 는 가목적어-진목적어 구조의 형용사 비교급 보어로 'easier' 가 옳음 — 오류 아님"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "verbosity",
+      "severity": "minor",
+      "evidence": "본해설이 정답 (D) 근거에 앞서 (B) 설명을 먼저 배치하고 교훈성 문장을 덧붙여 다소 장황함. 사실성 오류는 아니며 C6 에 반영."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "INTERMEDIATE GRAMMAR_ERROR. 단일정답 (D) 로 clean minimal pair(distasteful→distastefully). V1~V5 전부 통과. 5개 밑줄이 각각 (A)단순수일치·(B)수견인+태·(C)수동태·(D)SVOC수동태 보어형(정답)·(E)가목적어 보어 로 서로 다른 개념을 겨냥해 의도밀도 양호. (B)·(E) 가 실질 함정으로 변별력 확보, 다만 (A)·(C) 는 즉시 소거 가능. 정답의 '-ly' 단서가 다소 눈에 띄어 난이도는 intermediate 하단이나 SVOC 수동태 구조 이해를 요구해 라벨과 정합. 공예 합계 20(C1=3,C2=3,C3=3,C4=4,C5=4,C6=3) → A 기준(합≥21) 미달, 모든 V 통과·최저 C≥2·합≥17 로 B. 소폭 해설 축약 시 출제 가능."
+}

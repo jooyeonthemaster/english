@@ -1,0 +1,66 @@
+{
+  "pid": "P014",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-note",
+      "severity": "minor",
+      "evidence": "렌더 지문 필드가 '(렌더 지문 없음)'으로 비어 있음. TOPIC 유형은 지문 변형이 없어 원지문이 그대로 노출되는 것으로 해석되며 원지문 자체는 손상 없음(문장 접합·중복·누락·고아 문장부호 없음). 'a large part of the population derive'의 복수 일치는 원저(Dreze & Sen 계열 텍스트)의 영국식 집합명사 용법으로 오탈자가 아님. 다만 파이프라인상 렌더 필드가 실제로 비어 출제되면 결함이므로 출하 전 렌더 필드에 원지문이 채워지는지 확인 권장."
+    },
+    {
+      "code": "V2-note",
+      "severity": "minor",
+      "evidence": "블라인드 풀이 결과 정답 3 유일. ① 극성 반전(성장이 'decisive shield'라는 주장은 'cannot hope to prevent famines without... direct public intervention'과 정면 충돌), ② 반쪽 진실(도입부 양보 내용만 포착, 글의 긍정 명제인 공적 entitlement 보호 부재), ④ 세부 승격+사실 왜곡('explains at best only a small part'와 모순), ⑤ 지문 무근거(구호 프로그램의 역사적 쇠퇴 언급 전무). 복수 정답 가능성 없음."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 2,
+    "C5": 2,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "극성 반전 / 양보를 주장으로 오독 (concession-as-thesis)",
+      "temptingBecause": "'The potential contribution of greater economic success... cannot be denied'라는 양보문과 'economic growth', 'famine vulnerability' 등 1문장의 표면 어휘가 그대로 겹침. 첫 두 문장만 읽은 학생이 고름.",
+      "decisiveFlaw": "필자의 핵심 주장은 '아무리 빨리 성장해도 직접 공적 개입 없이는 기근을 못 막는다'로, 성장을 'decisive shield'로 격상하는 것은 저자 입장의 정반대."
+    },
+    {
+      "label": "2",
+      "intent": "반쪽 진실 / 범위 축소 (half-truth, scope narrowing)",
+      "temptingBecause": "글이 실제로 성장 중심 접근의 한계를 지적하고, 'diversification of economic activities'가 1문장에 명시적으로 등장함. 부정 논지를 포착한 학생에게 가장 매력적인 오답.",
+      "decisiveFlaw": "다각화는 도입부 나열 항목 중 하나일 뿐이고, 글의 무게중심인 긍정 명제(직접 공적 entitlement 보호의 필요성)가 빠져 있어 주제로서 불완전. 한계 지적은 그 명제를 세우기 위한 수단."
+    },
+    {
+      "label": "3",
+      "intent": "정답 — 3문장('cannot hope to prevent famines without specialized entitlement protection mechanisms involving direct public intervention')과 5문장('real achievements... direct public support')에서 이중으로 진술된 중심 명제.",
+      "temptingBecause": "해당 없음(정답).",
+      "decisiveFlaw": "해당 없음. 단, 'direct public entitlement protection'이 지문의 시그니처 어구를 거의 축자적으로 가져와 키워드 매칭만으로 도달 가능한 점이 공예상 결함(C4/C5 감점 사유)."
+    },
+    {
+      "label": "4",
+      "intent": "세부 승격 + 사실 왜곡 (detail elevation, fact distortion)",
+      "temptingBecause": "보츠와나·케냐·짐바브웨 세 나라가 지문 후반에 두드러지게 등장하고 농업·식량 생산 어휘가 겹침.",
+      "decisiveFlaw": "지문은 이들 나라의 성장·농업 산출이 성공을 'at best only a small part'만 설명한다고 명시 — 산출 '우위(superior)'는 주장된 바 없고 사례는 직접 공적 지원의 예시일 뿐."
+    },
+    {
+      "label": "5",
+      "intent": "지문 무근거 조작 + 주제 어휘 표면 중첩 (not-in-passage fabrication)",
+      "temptingBecause": "'emergency', 'famine relief' 등 지문 어휘를 재활용해 표면적으로 관련 있어 보임.",
+      "decisiveFlaw": "비상 구호 프로그램의 '역사적 쇠퇴'는 지문 어디에도 없음. source anchor가 사실상 부재해 소거가 가장 쉬운 선지 — KILLER 세트에서는 필러에 가까움."
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "모든 V 통과. 유효성 결함 없음: 원지문 무결, 정답 유일(3), 지문·발문·선지 문법적, 해설의 구조 분석(양보→반박→사례 귀속)이 실제 지문과 정확히 일치하고 4개 오답 해설이 각 선지 내용과 대응, 필드 동기화 완전. 공예: C1=4(핵심 논지인 양보-반박 구조의 결론을 정확히 묻음), C2=3(오답 4개가 극성 반전·반쪽 진실·세부 승격·무근거 조작으로 서로 다른 오독을 겨냥하나 ⑤의 source anchor가 약해 필러성), C3=3(②가 실질 판단을 요구하는 강한 경쟁 선지이나 정답의 축자성이 변별을 깎음), C4=2(정답 선지가 지문의 희귀·시그니처 어휘 'entitlement protection'/'direct public'을 거의 그대로 노출해 구조 독해 없이 키워드 매칭으로 도달 가능 — 메타 누출성 결함), C5=2(요청 난이도 KILLER 대비 실제 난이도는 중상: 정답 축자 중첩 + ⑤ 즉시 소거로 실질 3지선다), C6=3(간결·정확하나 표준적). 합계 17, 최저 2 → B. KILLER 판정: 유형이 TOPIC이라 §C(어법)·§D(빈칸)가 직접 적용되진 않으나, §D의 정신(단일 단서로 정답 도달 불가, 모든 오답의 anchor/overlap/flaw 구비)을 준용하면 정답의 단일 어휘 단서 도달 가능성과 ⑤의 anchor 부재로 불충족 → killerConditionsMet=false. 출하 가능하나 KILLER로 팔려면 정답 선지의 어휘 추상화(예: 'state-led safety nets as the indispensable core of famine prevention' 방향)와 ⑤ 교체가 필요."
+}

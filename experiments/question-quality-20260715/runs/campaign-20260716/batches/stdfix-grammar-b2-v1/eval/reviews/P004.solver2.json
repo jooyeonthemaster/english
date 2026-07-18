@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "(A)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(A)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "incorrect",
+      "reason": "'Originally __ in France, Brunel escaped...'는 주절 주어 Brunel을 의미상 주어로 하는 분사구문 자리. bear('낳다')와 Brunel의 관계는 수동(태어남)이므로 과거분사 born(= having been born)이 요구된다. 현재분사 bearing은 (i) 타동사 해석 시 목적어 결여, (ii) 자동사 해석('견디다/방향을 틀다') 시 'Originally bearing in France'가 어떤 정합적 명제도 형성하지 못해 비문. 축약 관계절·능동 분사 등 대안 해석을 모두 탐색해도 정문화 불가."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "escape의 자동사 과거시제. 방향 전치사구 'to the United States'와 시간 부사구 'during the French Revolution'과 결합해 완전한 정문. 주어 Brunel(능동 주체)과 태 일치."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "시간 부사절 접속사 When + 완전한 절(the Napoleonic Wars were at their height). 주절(he invented...)과 과거-과거 시제 정합. 'at their height'의 their도 Wars(복수)와 일치."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "imprison은 타동사이고 Brunel은 감금을 당하는 대상이므로 수동태 'was imprisoned for several months because of his debt'가 적법. 시제·태·전치사구 결합 모두 정합."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'move across it'의 it은 the River Thames(단수)를 지시. 수·성 일치하고 'move across the river'로 의미 정합. 가장 가까운 선행 명사구가 the River Thames여서 지시 모호성도 없음(London을 선행사로 보아도 'across it'이 의미상 배제됨)."
+    }
+  ],
+  "note": "렌즈: 문법가/논리학자. 전형적인 born/bearing 분사 태 오류 문항. (A) 외에는 공격 가능한 결함이 없어 단일 정답으로 수렴. 지문 사실관계(브루넬 전기)도 어법 판정에 영향 없음."
+}

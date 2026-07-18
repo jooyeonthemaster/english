@@ -1,0 +1,44 @@
+{
+  "pid": "P012",
+  "finalV2": true,
+  "winningAnswer": "(E)",
+  "reason": "독립 재검증 결과 선언된 정답 (E)가 유일한 어법 오류로 확정된다. (E)의 주어 핵은 복수 명사 'The real achievements'이고 'of these countries'는 수일치를 지배하지 않는 후치 수식 전치사구이므로 단수 동사 lies는 수일치 위반이며 lie로 교정 시 원문(Dreze & Sen 계열)이 정확히 복원된다. 구제 해석(도치, achievements의 집합/불가산 단수 재해석, lies의 명사 파싱)은 전부 성립하지 않는다 — 특히 lies를 명사로 읽으면 절에 정동사가 사라진다. 유일성의 실질적 위협은 (D)뿐이었으나, 핵-지배 해석(단수 핵 growth + or-등위 of-구 수식)과 대안 해석(growth of X 명사구 3개의 or-등위, 단수 등위항 간 or 수일치) 어느 쪽으로도 단수 explains가 정문이므로 복수 정답 위험이 없다. (A)(B)(C)는 각각 단수 핵 dust의 현재완료 수일치, 타동사 deny의 논리 목적어 승격에 따른 필수 수동, mechanisms와 involve의 능동 관계(목적어 보유)로 모두 적법. 밑줄 밖 'a large part of the population derive'는 원문 그대로의 notional plural이고 밑줄 대상이 아니므로 유일성에 영향 없다. 두 솔버 모두 놓친 대안 해석이나 과잉 판정이 없고, 감사자의 minor 지적(해설의 함정 경고 문장이 논리적으로 공허함 — countries도 복수라 근접 견인 위장이 안 됨)은 해설 품질 문제일 뿐 정답 유일성과 무관하다.",
+  "perDispute": [
+    {
+      "label": "(A)",
+      "claim": "시간 부사절 'once the dust of an emergency has settled down'의 현재완료 단수 정동사가 적법한가",
+      "verdict": "정문 — 오류 아님",
+      "evidence": "주어 핵은 단수 'the dust'이고 'of an emergency'는 수일치 비지배 후치 수식. 일반 현재 주절('There is a tendency...')과 결합한 시간절의 현재완료는 표준 용법이며 'the dust settles (down)'는 자동사 관용 표현. 대안 오류 해석(settles down 요구 등)은 성립하지 않는다."
+    },
+    {
+      "label": "(B)",
+      "claim": "'cannot be denied'의 수동태가 적법한가",
+      "verdict": "정문 — 오류 아님",
+      "evidence": "주어 'The potential contribution ...'은 타동사 deny의 논리적 목적어이므로 수동이 필수. 능동 'cannot deny'는 목적어가 결여되어 비문. 조동사 + be + 과거분사 형태도 적법. 대안 해석 없음."
+    },
+    {
+      "label": "(C)",
+      "claim": "'mechanisms involving direct public intervention'의 현재분사가 적법한가",
+      "verdict": "정문 — 오류 아님",
+      "evidence": "축약 관계절(= mechanisms which involve ...)로서 선행 명사 mechanisms가 involve의 의미상 주어인 능동 관계이고 뒤에 목적어(direct public intervention)가 있으므로 -ing가 필수. 과거분사 involved는 관계를 뒤집어 비문이 된다."
+    },
+    {
+      "label": "(D)",
+      "claim": "or-등위 of-구 3연쇄 뒤 단수 동사 'explains'가 복수 정답(제2 오류)이 될 수 있는가 — 유일성의 핵심 쟁점",
+      "verdict": "정문 — 복수 정답 위험 없음",
+      "evidence": "해석 1(핵 지배): 주어 핵은 단수 'Rapid growth' 하나이고 'of the economy / of the agricultural sector / of food production'은 growth에 걸리는 or-등위 후치 수식 → 단수 explains 정문. 해석 2(명사구 등위): '[growth of X] or [growth of Y] or [growth of Z]'의 생략 등위로 보아도 단수 등위항들의 or 결합은 단수 동사와 일치 → 여전히 정문. 두 해석이 모두 explains를 지지하므로 어느 경로로도 오류 판정이 불가능하고, 원문도 explains다. 솔버1의 근접 일치 보조 논거는 과잉 판정이 아니라 타당한 방어선이다."
+    },
+    {
+      "label": "(E)",
+      "claim": "선언된 정답 — 'The real achievements of these countries lies'의 수일치 위반이 확정적이고 구제 불가능한가",
+      "verdict": "비문 확정 — 유일 정답",
+      "evidence": "주어 핵 'achievements'는 복수, 'of these countries'는 비지배 수식 → lies는 수일치 위반, lie로 교정 시 원문 복원(source-correct/displayed-wrong 최소대립쌍). 구제 해석 전수 점검: (i) 도치 구문 아님(선행 부사구·부정어 없음), (ii) achievements는 집합/불가산 단수 재해석 불가, (iii) lies를 명사('거짓말들')로 파싱하면 절에 정동사가 없어져 비문, (iv) 'X lies in Y' 관용 패턴은 단수 주어(the achievement/the key)일 때만 성립. 모두 실패 — lies는 어떤 해석으로도 정문이 될 수 없다."
+    },
+    {
+      "label": "(참고) 밑줄 외 구간",
+      "claim": "'a large part of the population derive their livelihood'가 미밑줄 제2 오류로서 문항 성립을 훼손하는가",
+      "verdict": "영향 없음",
+      "evidence": "원문 그대로의 notional plural(부분 표현 'a large part of + 복수 취급 집합명사'의 통용 표기)이며 밑줄 선지가 아니므로 발문('밑줄 친 부분 중') 범위 밖. 정답 유일성에 영향을 주지 않는다. 감사자의 V3-minor 지적과 일치."
+    }
+  ]
+}

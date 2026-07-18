@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "flow-consistent",
+      "reason": "표상적(representational) 작품에서는 소재가 일상과 닮아 있고 스타일이 정신 모델 구성을 돕는다는 진술로, 뒤이어 나오는 표현주의(expressionist) 작품과의 대조 구조의 한 축을 세운다. 글 전체의 대조 프레임에 필수적."
+    },
+    {
+      "label": "②",
+      "verdict": "flow-consistent",
+      "reason": "표현주의 작품의 부조화·불안정한 분위기(less readable) 서술을 Thus로 받아, 관습적 형식에서의 이탈이 '심미적 태도(aesthetic attitude)'를 요구한다는 핵심 개념을 도입한다. 앞 문장과의 인과 연결이 자연스럽다."
+    },
+    {
+      "label": "③",
+      "verdict": "flow-consistent",
+      "reason": "This active involvement가 ②의 '심미적 태도가 필요한 감상 활동'을 지시하며, 그것이 심미적 처리의 깊이와 작품 의미에 대한 성찰의 토대가 된다고 발전시킨다. 지시어 연결과 논리 전개 모두 정합."
+    },
+    {
+      "label": "④",
+      "verdict": "irrelevant (ANSWER)",
+      "reason": "삽입문의 전형적 특징 두 가지가 모두 나타난다. (a) ③의 'depth of aesthetic processing and reflection on the meaning of the work'를 축어적으로 그대로 반복하는 기생적 어휘 차용. (b) 논리 역전·과잉 주장: 글의 흐름은 '심미적 태도 → 깊은 처리'인데 ④는 '깊은 처리가 심미적 태도를 균형 잡힌 삶의 (유일한) 토대로 확립한다'고 주장한다. 이는 ⑤의 결론 — 균형 잡힌 삶의 근본은 심미적 태도 단독이 아니라 실용적 태도와 심미적 태도를 '전환하는 능력' — 과 직접 충돌한다. ④를 '균형 잡힌 삶 개념을 예고하는 교량 문장'으로 옹호하는 대안 해석을 적극 시도했으나, ④의 주장은 ⑤가 부연하는 것이 아니라 반박하는 관계가 되어 교량 해석은 성립하지 않는다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "flow-consistent (attractive distractor)",
+      "reason": "매력적 오답으로 실제 유혹을 느꼈다: 'balanced life'가 갑자기 등장하는 듯 보이고, ④가 남아 있는 상태로 읽으면 ⑤가 중복처럼 느껴진다. 그러나 ④를 제거하면 ⑤는 일상의 실용적 태도 vs 예술 감상의 심미적 태도라는 글 전체의 대립 구도를 받아 마무리하는 자연스러운 결론 일반화가 된다. 반대로 ⑤를 제거하면 ④의 '심미적 태도 = 균형 잡힌 삶의 토대'라는 비약이 지지 없이 남는다. 따라서 ⑤는 정문."
+    }
+  ],
+  "note": "지문 서두의 ', background).'는 발췌 절단 흔적으로 판정에 영향 없음. ④는 ③의 구절 축어 반복 + ⑤와의 논리 충돌(심미적 태도 단독 토대 vs 두 태도 간 전환 능력)이라는 이중 근거로 삭제 대상이 ④ 하나로 수렴한다. 최상위권 실전 풀이에서 ⑤의 'balanced life' 급등장에 잠시 끌렸으나, ④ 제거 시 ⑤가 원문형 결론으로 완벽히 기능함을 확인하고 유혹을 기각했다. 복수 정답 가능성 없음."
+}

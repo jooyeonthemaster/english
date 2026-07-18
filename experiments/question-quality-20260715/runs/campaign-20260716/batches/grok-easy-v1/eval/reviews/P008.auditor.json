@@ -1,0 +1,72 @@
+{
+  "pid": "P008",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-TERM-MINOR",
+      "severity": "minor",
+      "evidence": "해설이 ③(friends should not arrive early)을 '과협소 함정'으로 명명하지만, 실제로는 지문 세부(도착 시각)를 끌어온 무관/지엽 연상 함정이다. '과협소'는 정답 의미의 부분집합을 가리키는 용어인데 ③은 표지판 의미의 부분집합이 아니다. 구조 오분석·환각은 아니어서 V4 실패로는 보지 않는다."
+    },
+    {
+      "code": "V2-NOTE-VERBATIM",
+      "severity": "minor",
+      "evidence": "정답 ②(we cannot park cars there)가 원문 삭제 span의 축자 복사다. 정답 유일성 자체는 성립하나(각 선지 독립 검증: ①은 친구의 'Of course you can stand there'와 정면 모순, ③은 표지 의미와 논리 연결 없음, ④는 후속절 'but we can stop to pick up passengers'와 모순, ⑤는 지문 어디서도 지지되지 않음), RUBRIC §D '난이도에 맞게 추상화' 관점에서 추상화가 0이다. BASIC이므로 게이트 실패가 아닌 공예 감점(C3/C4)으로 처리."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 4,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "극성 반전 — Carol의 오해(서 있으면 안 된다)를 그대로 재진술",
+      "temptingBecause": "지문에 'people aren't allowed to stand there'와 표지판 문구 'No Standing'이 명시적으로 등장해 표면 어휘 겹침이 크다.",
+      "decisiveFlaw": "빈칸 문장은 친구가 오해를 바로잡는 정정 발화다. 직전에 친구가 'Of course you can stand there'라고 명시적으로 부정했으므로 오해의 재진술은 담화상 불가능하다."
+    },
+    {
+      "label": "2",
+      "intent": "정답 — 표지판 'No Standing'의 실제 의미(주정차 금지)",
+      "temptingBecause": "해당 없음(정답). 후속절 'but we can stop to pick up passengers'의 양보 대비와 정확히 정합한다.",
+      "decisiveFlaw": "없음. 다만 원문 span의 축자 복사이며, 다섯 선지 중 유일하게 주어 'we'와 조동사 대비(cannot/can)가 꼬리절과 평행해 표면 단서만으로도 선택 가능하다(공예 감점 요인)."
+    },
+    {
+      "label": "3",
+      "intent": "지엽 세부 연상 — 도착 시각으로의 초점 이탈",
+      "temptingBecause": "지문의 'Carol arrived a little early'에서 어휘를 끌어와 훑어읽기 학생을 노린다.",
+      "decisiveFlaw": "표지판의 의미 설명 자리에 도착 시각 규범이 올 논리적 근거가 전혀 없고, 'but we can stop to pick up passengers'와의 대비도 성립하지 않는다."
+    },
+    {
+      "label": "4",
+      "intent": "과확장 — 특정 행위 금지를 모임 전면 금지로 확대",
+      "temptingBecause": "Carol 자신이 'it was a bad idea to meet at that corner'라고 말해 표면상 지지 어구가 존재한다.",
+      "decisiveFlaw": "빈칸 발화는 Carol의 걱정을 반박하며 웃는 친구의 말이고, 후속절이 '멈춰서 승객을 태울 수 있다'고 허용을 명시하므로 전면 금지와 모순된다."
+    },
+    {
+      "label": "5",
+      "intent": "소재 연상 — 도입부의 점심 초대 소재 재활용",
+      "temptingBecause": "이야기가 점심 초대로 시작하므로 주제어 매칭에 의존하는 학생을 노린다.",
+      "decisiveFlaw": "표지판 의미와 초대 가능 여부 사이에 어떤 논리 연결도 없어 문맥상 무의미하며 즉시 소거된다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "③을 '과협소'로 분류한 용어 선택이 부정확하다(실제로는 무관 세부 연상 함정). 오답 해설 본문('도착 시각은 표지판 의미와 무관하며')과도 자기모순적 명명이다.",
+      "recommendation": "'과협소'를 '지엽 연상' 또는 '무관 세부'로 교체."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1~V5 전부 통과, 정답 유일성 견고(단일정답 ②). 핵심 결함은 공예: (1) 정답이 원문 삭제 span의 축자 복사로 추상화가 전혀 없음(C3=2), (2) 꼬리절 'but we can stop to pick up passengers'의 주어 'we'·cannot/can 대비가 ②에만 평행해 의미 이해 없이도 표면 단서로 정답 도달 가능(C4=2). 난이도는 BASIC 요청과 정확히 정합(C5=4): 1단계 추론 + 오해 재진술(①)이라는 얕고 명확한 함정. 합계 17, 최저 2 → B. 소수정 제안: ②를 'drivers must not leave their cars parked there' 수준으로 가볍게 paraphrase하고 ③ 해설 용어를 교정하면 A 후보. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

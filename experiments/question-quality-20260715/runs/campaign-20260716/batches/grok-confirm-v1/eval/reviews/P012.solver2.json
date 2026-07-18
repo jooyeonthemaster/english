@@ -1,0 +1,35 @@
+{
+  "pid": "P012",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'the identification and evaluation of evidence to guide decision-making' — to-infinitive as purpose/adjectival modifier on the nominal phrase. Standard construction; no governing rule violated."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "Parallelism anchored at the preposition 'about': 'about identifying ethical issues and evaluating these issues'. Two coordinated gerunds, perfectly parallel."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'principles of conduct that are considered correct' — passive of 'consider + O + C' with relative 'that' (antecedent: principles) as passive subject and retained complement 'correct'. Well-formed."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "'beliefs influencing by their formal and informal learning experiences' — active participle 'influencing' would require a direct object (transitive 'influence'), but only an agentive 'by'-phrase follows, which formally marks a passive relation. The beliefs are influenced BY the experiences, so the reduced relative must be the past participle 'influenced by'. No alternative parse (gerund, absolute construction) rescues 'influencing by': each still leaves the transitive verb objectless with a passive agent phrase. Ungrammatical."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'may also be context dependent' — predicative adjective 'dependent' with noun premodifier 'context' forming the compound adjective 'context(-)dependent'. Missing hyphen is orthographic, not a grammatical error."
+    }
+  ],
+  "note": "Clean item. Exactly one formal grammaticality failure: (D) 'influencing' must be 'influenced' (passive reduced relative signalled by the agentive by-phrase and the absence of a direct object). All other underlines are provably well-formed; actively searched for rescuing parses (reduced relatives, gerunds, absolutes) and none legitimizes (D). Single defensible answer, high confidence."
+}

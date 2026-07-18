@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "흐름에 부합",
+      "reason": "도입부 절단 부분(', background)')은 subject matter와 background(style)의 구분을 선행 맥락으로 암시한다. ①은 재현적(representational) 작품에서는 초점이 일상과 닮은 subject matter에 있고 background style은 심적 모형(mental model) 구성을 돕는다고 하여 첫 번째 범주를 확립한다. 직후 문장 'Feelings of pleasure and uncertainty carry the viewer along...'이 재현적 작품의 수월한 처리 과정을 부연하므로 논리적 연결이 성립한다. 형식적으로: 재현적 작품 → 관습적/읽기 쉬운 처리. 결함 없음."
+    },
+    {
+      "label": "②",
+      "verdict": "흐름에 부합",
+      "reason": "표현주의(expressionist) 작품이라는 대조 범주를 도입한다. 'novel stylistic devices가 subject matter와 부조화(inharmonious)하게 작동하여 disquieting atmosphere를 만든다'는 명제는 ①의 재현적 작품(조화·수월한 해석)과 정확히 대구를 이루고, ④의 'less readable → aesthetic attitude 필요' 논증의 전제가 된다. 형식화: N(참신한 장치) → D(불안한 분위기). 이 함의는 이후 문장들과 정합적이다."
+    },
+    {
+      "label": "③",
+      "verdict": "흐름 파괴 — 정답",
+      "reason": "형식적 모순을 일으킨다. ②는 N(참신한 장치, 즉 관습적 형식으로부터의 이탈) → D(disquieting atmosphere)를 주장했는데, ③은 D → C(conventional forms에 의존) ∧ E(easily interpreted) ∧ ¬A(aesthetic attitude 불필요)를 주장한다. 그러나 ④는 ¬E(less readable) ∧ ¬C(departure from conventional forms) → A(aesthetic attitude 필요)를 주장하며, 이는 지문 전체의 결론('active involvement → depth of aesthetic processing')을 지지한다. 즉 ③의 귀결(C, E, ¬A)은 ②의 전제(관습 이탈)와도, ④의 결론(A 필요)과도 양립 불가능하다. 또한 ③을 그대로 두면 ④의 접속사 'Thus'가 직전 문장에서 도출되지 않는 비약이 된다(③: '미적 태도 없이 쉽게 해석됨' → ④: '따라서 미적 태도가 필요함'은 비논리). ③을 제거하면 ②→④가 'disquieting/less readable → aesthetic attitude 필요'로 매끄럽게 이어진다. 지문 어휘(disquieting atmosphere, conventional forms, aesthetic attitude)를 재활용해 위장했으나 논리 방향이 정반대인 전형적 삽입문이다."
+    },
+    {
+      "label": "④",
+      "verdict": "흐름에 부합",
+      "reason": "'Thus, when the work is less readable, its departure from conventional forms reminds the viewer that an aesthetic attitude is needed.' ③을 배제하면 ②(표현주의 작품의 불안한 분위기)로부터 자연스럽게 도출된다: 참신한 장치 → 읽기 어려움 → 미적 태도 요청. 직후 문장 'This active involvement provides a basis for depth of aesthetic processing...'의 'This active involvement'가 ④의 'aesthetic attitude가 필요함(=능동적 관여)'을 선행사로 받아 조응(anaphora)이 성립한다. 결함 없음."
+    },
+    {
+      "label": "⑤",
+      "verdict": "흐름에 부합 (약한 이탈 소지 있으나 옹호 불가 수준)",
+      "reason": "'pragmatic attitude of everyday life와 aesthetic attitude를 전환하는 능력이 balanced life에 근본적'이라는 결론적 일반화. 'balanced life'라는 표현이 예술 해석론에서 삶의 조언으로 반경을 넓히기는 하나, ①의 'everyday life'(실용적 태도의 영역)와 ④의 'aesthetic attitude'라는 지문의 양대 축을 명시적으로 통합하는 마무리 문장으로 읽히므로 흐름과 무관하다고 판정할 수 없다. 수능 지문에서 흔한 결론부 확장 일반화 패턴이며, ③과 달리 어떤 선행 명제와도 모순되지 않는다. 따라서 정답 후보로 옹호 불가."
+    }
+  ],
+  "note": "무관 문장 유형. ③이 유일하게 옹호 가능한 정답: ②(관습 이탈 → 불안한 분위기)와 ④(관습 이탈·낮은 가독성 → 미적 태도 필요) 사이에 끼어 정확히 반대 방향의 함의(불안한 분위기 → 관습 의존·쉬운 해석·미적 태도 불필요)를 주장하여 형식적 모순을 일으키고, ④의 'Thus' 연결까지 붕괴시킨다. ⑤의 'balanced life'가 유일한 미세 잡음이나 지문 양대 개념(pragmatic/aesthetic attitude)의 통합 결론으로 성립하므로 복수 정답 시비 없음. 문항 성립, 단일 정답."
+}

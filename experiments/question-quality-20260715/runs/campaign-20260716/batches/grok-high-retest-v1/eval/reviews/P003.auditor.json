@@ -1,0 +1,77 @@
+{
+  "pid": "P003",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "FORMAT_NONCONSECUTIVE_MARKERS",
+      "severity": "minor",
+      "evidence": "④와 ⑤ 사이에 비번호 원문 문장 3개('So our trust needs to be limited... no trust at all.')가 끼어 있다. 수능 무관문장 유형 관례상 ①~⑤는 연속 문장이어야 하며, 이 배치는 실물 형식과 어긋나 교사 검수 시 이질감을 준다. 다만 원문 손상·라벨 불일치는 아니므로 V1 실패는 아니다."
+    },
+    {
+      "code": "SURFACE_CUE_REPEATED_DISCOURSE_MARKER",
+      "severity": "minor",
+      "evidence": "삽입문 ③과 원문 ④가 모두 'Indeed,'로 시작해 연속 두 문장이 같은 담화표지로 열린다. 삽입으로 생긴 표면 이상 신호라 논리를 읽지 않고도 ③을 의심할 수 있는 꼬리 단서다(C4 감점 요인)."
+    },
+    {
+      "code": "MINOR_INFELICITY_IN_INSERTED_SENTENCE",
+      "severity": "minor",
+      "evidence": "③의 'more reliable than the specialized domain of experts'는 행위(observation)와 영역(domain)을 비교하는 범주 불일치로 다소 어색하다. 문법 오류 수준은 아니어서 V3 통과."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 2,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "원문 문장 — 도입 주장(과학자는 도덕·윤리 판단에 특권이 없다)의 일반화된 근거 제시",
+      "temptingBecause": "강한 일반 주장('lead to ignorance in many others')이라 도입의 구체 예시 흐름에서 단절처럼 오인할 수 있다",
+      "decisiveFlaw": "첫 문장의 기후과학자/물리학자 예시를 원리로 부연하는 필수 문장이므로 무관하지 않다"
+    },
+    {
+      "label": "②",
+      "intent": "원문 문장 — 비전문가 경험의 참고 가치를 도입하는 보완 전개",
+      "temptingBecause": "화제가 전문가의 무지에서 비전문가(lay people)로 전환되어 표면적으로 단절처럼 보일 수 있다",
+      "decisiveFlaw": "④의 북극평가 사례와 ⑤의 제한적 신뢰 결론으로 이어지는 필수 교량 문장이다"
+    },
+    {
+      "label": "③",
+      "intent": "정답(삽입문) — lay people·experiences·specialized domain 등 주변 어휘를 승계해 응집성을 위장하면서 평가를 역전(half-truth/strength overreach)시키는 함정",
+      "temptingBecause": "②의 'relevant experiences'를 'such experiences'로 자연스럽게 받아 국소 연결이 매끄럽고, 주제어가 전부 지문 어휘다",
+      "decisiveFlaw": "'일상 관찰이 전문가 영역보다 종종 더 신뢰할 만하다'는 평가 역전이 '제한적이되 필요한 전문가 신뢰'라는 글의 결론(⑤, So our trust... 단락)과 충돌하며, 제거하면 ②→④가 원문 그대로 매끄럽게 이어진다"
+    },
+    {
+      "label": "④",
+      "intent": "원문 문장 — ②의 주장을 구체 사례(Arctic Climate Impact Assessment의 원주민 관찰 반영)로 확인",
+      "temptingBecause": "고유명사 중심의 지엽적 사례라 흐름에서 벗어난 세부로 오인할 수 있고, 'recognize this'의 지시 대상 판단이 필요하다",
+      "decisiveFlaw": "②의 비전문가 경험 인정 주장을 실증하는 예시로 담화 기능이 명확하다"
+    },
+    {
+      "label": "⑤",
+      "intent": "원문 문장 — 'But' 역접으로 전환해 전문가 신뢰의 필요성이라는 최종 결론 제시",
+      "temptingBecause": "방향 전환 폭이 커서(비전문가 참고 → 전문가 신뢰 필수) 흐름 단절로 오인할 수 있다",
+      "decisiveFlaw": "'Blind trust... no trust at all'의 균형 논리를 완성하는 주제 결론 문장이다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "IMPRECISE_ANTECEDENT_IN_DISTRACTOR_NOTE",
+      "severity": "minor",
+      "evidence": "④ 오답해설의 '바로 앞 주장을 구체 사례로 확인'은 렌더 기준 바로 앞 문장이 무관문장 ③이므로 지시가 부정확하다. 실제 확인 대상은 ②의 주장이다. 문법 오분석·환각은 아니어서 V4 통과, 다만 '②의 주장을'로 명시 교정 권장."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1~V5 전부 통과. 원지문 8문장이 전부 무손상 유지되고 삽입문 ③만 추가된 정상 변형이며, ③은 어휘 응집 위장 + 평가 역전이라는 정석적 설계로 정답 유일성이 견고하다(제거 시 ②→④ 원문 복원). 감점 요인: (1) ③·④ 연속 'Indeed' 반복이 논리 독해 없이 정답을 의심하게 하는 표면 단서(C4=2), (2) ④~⑤ 사이 비번호 문장 3개로 실물 형식(연속 번호) 이탈, (3) ④ 오답해설의 '바로 앞' 지시 부정확. 합계 17, 최저 C=2로 B — ③의 문두 담화표지 교체(예: 'In fact' 제거 또는 다른 접속부사), 번호 연속 배치 재구성, ④ 해설 문구 교정이면 출제 가능. 요청 난이도 INTERMEDIATE이므로 KILLER 조건 판정 대상 아님(false)."
+}

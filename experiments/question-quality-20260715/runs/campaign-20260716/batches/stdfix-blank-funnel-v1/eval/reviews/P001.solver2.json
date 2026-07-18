@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'meticulously ruling out questionable alternatives'는 세심한 의식적 심사숙고 그 자체다. 빈칸 앞 세미콜론 대조 'she isn't thinking more; she is ___'는 빈칸이 '더 생각하기'의 반대항일 것을 형식적으로 요구하고, 뒤 문장 'without conscious awareness'가 이를 재확인한다. ①은 두 제약 모두 위반. 문법 결합(she is ruling out...)은 정문이나 논리 모순."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "'acquiring more sophisticated rules of book knowledge'는 지문 첫 문단의 이분법(book knowledge = formulated rules vs. practical knowledge = 규칙화 불가)을 정면으로 위반한다. 전문가가 실천지를 쓰는 순간을 규칙 습득으로 기술하면 지문 전체 논제가 붕괴. 문법 결합은 정문이나 논리적으로 성립 불가."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "'bypassing deliberate cognitive calculations'는 (i) 세미콜론 대조의 형식 요건('isn't thinking more'의 보완항 = 사고의 우회/생략), (ii) 후행 문장 'perform without conscious awareness'와의 정합, (iii) 첫 문장의 'deliberately learned'와의 어휘 반향까지 모두 충족. she is bypassing...(현재진행) 문법 결합도 정문. 유일하게 옹호 가능한 정답."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "'evaluating the validity of her intuition before acting'은 행동 전 타당성 평가라는 명시적 의식적 숙고로, 'isn't thinking more'와 'without conscious awareness' 두 장거리 단서를 모두 위반한다. 직관(intuition) 어휘가 지문에 등장해 만들어진 매력적 오답이나 논리 방향이 정반대. 문법 결합은 정문."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "'converting active experiences into verbal propositions'는 경험을 언어적 명제(=formulated rules, 즉 book knowledge)로 변환한다는 뜻으로, 실천지가 '가르치거나 규칙화할 수 없고 오직 실행 속에만 존재한다'는 지문 전제와 모순. 마지막 문장도 전수 경로를 'shared experience'로 규정하지 언어 명제화가 아니다. 문법 결합은 정문."
+    }
+  ],
+  "note": "다섯 선지 모두 V-ing구로 'she is ___' 현재진행 결합이 문법적으로 성립하므로 seam 결함은 없다. 판별은 순수 논리: 세미콜론 대조(not thinking more)와 후행 문장(without conscious awareness)이라는 두 개의 독립 제약을 동시에 만족하는 선지는 ③뿐이다. ①④는 의식적 숙고, ②⑤는 book knowledge로의 회귀로 각각 배제되며 대안 해석으로 구제되는 선지는 없다. 복수정답 소지 없음."
+}

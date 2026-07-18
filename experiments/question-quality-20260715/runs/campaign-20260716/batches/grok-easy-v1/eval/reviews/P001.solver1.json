@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "Seam: 'you must value adaptability rather than inflexibility most of the time' reads naturally. Logic: exact restatement of the passage's framed choice ('keeping my plans' vs 'learning to go with the flow'), and the following sentence ('expect that a certain percentage of plans will change', 'make allowances in your mind') confirms an attitude of flexible acceptance. This is the peaceful-person conclusion the passage builds toward."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "Momentarily tempting because its direction (anti-rigidity) matches, but 'abandon ALL rigid schedules for COMPLETE freedom' overgeneralizes. The passage explicitly scopes change to 'a certain percentage of plans' and hedges with 'most of the time' — it advocates accepting inevitable changes, not discarding scheduling altogether. Extreme-language distractor."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "Direct reversal: guarding plans against unwanted changes is the 'getting what I want and keeping my plans' pole the passage rejects. Also clashes with the advice to expect and make mental allowances for inevitable changes."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "Attractive because 'more often than not' superficially echoes 'most of the time' and 'a certain percentage of plans will change'. But the passage prescribes a mental attitude (accepting change peacefully), not a behavioral policy of frequently rewriting work timelines. It also creates an awkward redundancy with the trailing 'most of the time' and narrows the general question ('go with the flow' in life) to work scheduling only."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Baited by the four-year-old example, but that is a single illustration; the passage immediately generalizes ('The more general question is...') to flexibility vs. keeping plans. 'Always' is an extreme quantifier the passage never supports, and family-vs-work is not the axis of the blank sentence."
+    }
+  ],
+  "note": "Passage is the familiar Don't-Sweat-the-Small-Stuff style flow: excuse for frustration -> priorities -> general question (keep plans vs go with the flow) -> blank (peaceful person's choice) -> expect a percentage of plans to change. Blank must restate 'go with the flow' at the attitude level. All five options are grammatically insertable into 'you must ___ most of the time', so discrimination is purely logical. Options 2 and 5 fail on extreme quantifiers (all/complete, always); 4 fails on category (behavioral prescription vs attitude) and redundancy with 'most of the time'; 3 is antithetical. Answer converges cleanly on 1; no second defensible label. Minor artifact: the question stem contains mojibake ('들어�� 말로'), clearly intended as '들어갈 말로' — cosmetic only, does not affect solvability."
+}

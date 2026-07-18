@@ -1,0 +1,76 @@
+{
+  "pid": "P010",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-minor-naturalness",
+      "severity": "minor",
+      "evidence": "(C) 'His confidence was, however, quickly changed to nervousness' — 이 의미에서는 자동사 'changed to nervousness'가 관용적이고, 무행위자 수동 'was changed to'는 문법적으로는 성립하나(타동사 change의 수동) 다소 부자연스럽다. 원지문 자체가 이 형태이므로 렌더 손상은 아니며 제2정답도 되지 않지만, 예리한 학생의 이의신청 표적이 될 수 있는 잔여 어색함이다."
+    },
+    {
+      "code": "V4-minor-explanation-muddle",
+      "severity": "minor",
+      "evidence": "정답 해설 마지막 문장 '단순히 형태만 보고 판단하면, 뒤에 따라오는 수동의 행위자 표시인 by와의 호응 관계를 간과하여 함정에 빠지기 쉽습니다' — 사실 오류는 아니나 논리 연결이 모호하다(형태만 보는 것과 by 간과의 인과가 불명확하고, 실제로 이 문항에는 그런 '함정'이 없다). (B) 해설의 '반대하는 내용의 대화를 나눈 후에 이어지는 주절의 정동사'도 인용문 구조 기술로서 뭉개져 있다. (A) 해설의 '주어의 밴드가'(→주어인 밴드가), '역할을 하던'(시제 어색)도 표현 결함."
+    },
+    {
+      "code": "V5-minor-field-convention",
+      "severity": "minor",
+      "evidence": "markedExpressions에서 (A)~(D)는 expression == errorExpression == 표시 텍스트인데, (E)만 expression='fascinated'(교정형), errorExpression='fascinating'(표시형)로 필드 관례가 비대칭이다. correction·정답 라벨·해설·keyPoints 간 실질 모순은 없어 V5 통과로 판정하나 내부 스키마 일관성 결함."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "choose+O+to부정사 구조의 수동태 전환 시 to부정사(보어) 잔류 — 'had been chosen to perform'의 적법성 판단",
+      "temptingBecause": "수동태 완료형 뒤에 바로 to부정사가 이어지는 형태가 낯설어 'to performing'류 오형을 기대하는 학생이 흔들릴 수 있다",
+      "decisiveFlaw": "정답이 될 수 없는 이유: 'choose O to-V'의 수동 'be chosen to-V'는 표준 구조로 완전히 적법하다. 원지문과 동일 형태."
+    },
+    {
+      "label": "(B)",
+      "intent": "인용문 뒤 전달동사의 단순 과거 정동사 — 명시적 오개념 표적이 사실상 없음(필러 성격)",
+      "temptingBecause": "objected가 상대적으로 낯선 전달동사라는 것 외에 유인 요소가 약하다",
+      "decisiveFlaw": "정답이 될 수 없는 이유: 인용절을 목적어로 취하는 주절의 과거시제 정동사로 완전히 적법하다. 디코이로서 겨냥하는 오개념이 불분명한 것이 공예 결함(C2 감점 요인)."
+    },
+    {
+      "label": "(C)",
+      "intent": "수동태 be changed to의 적법성 — 능동/수동 판단",
+      "temptingBecause": "이 의미에서는 자동사 'changed to'가 더 관용적이어서 'was changed'가 어색하게 느껴질 수 있고, 삽입된 however로 구조 파악이 한 박자 늦어진다",
+      "decisiveFlaw": "정답이 될 수 없는 이유: 타동사 change('X를 Y로 바꾸다')의 무행위자 수동으로 문법적으로 성립하며 원지문과 동일 형태다. 다만 관용성 논쟁 여지가 있는 자리라는 점은 잔여 리스크."
+    },
+    {
+      "label": "(D)",
+      "intent": "분사구문의 태 — 주어 he가 능동적으로 실수를 '하는' 동작이므로 현재분사 making이 맞는지 판단. (E)와 같은 분사 태 포인트의 대조쌍",
+      "temptingBecause": "(E)와 동일한 '분사 태' 판단이라 수동 past participle을 기계적으로 기대하는 학생이 made로 고치고 싶어질 수 있다",
+      "decisiveFlaw": "정답이 될 수 없는 이유: 의미상 주어 he가 mistakes를 만드는 능동 관계이므로 현재분사가 정확하다."
+    },
+    {
+      "label": "(E)",
+      "intent": "선언된 정답. 분사의 태 — 경험주 주어 everyone이 음악에 '매혹당하는' 대상이므로 과거분사 fascinated가 필요한 자리에 능동형 fascinating을 배치한 최소대립쌍 오류",
+      "temptingBecause": "fascinating이 형용사로 더 고빈도 형태라 눈에 익어 지나칠 수 있다",
+      "decisiveFlaw": "오류인 결정적 근거: 'everyone fell silent, fascinat- by the music'에서 by 행위자구와 경험주 주어가 수동 과거분사를 강제한다. fascinating by는 비문이며 fascinated로 교정하면 정확히 원문이 된다. 유일 정답 확인. 단, by 단서가 노출되어 있어 판별이 사실상 1단계로 끝나는 쉬운 정답이라는 점이 변별력 한계."
+    }
+  ],
+  "explanationIssues": [
+    "정답 해설 마지막 문장의 '함정' 서술이 논리적으로 뭉개져 있다 — by가 오히려 정답을 드러내는 단서인데 함정 경고처럼 기술되어 혼란 유발 소지",
+    "(B) 오답 해설이 '단순 과거 시제 동사라 옳다' 수준으로, 어떤 오개념을 겨냥했는지 설명하지 못하는 필러성 해설",
+    "(A) 해설의 '주어의 밴드가'(조사 오류), '목적보어 역할을 하던'(시제 어색) 등 한국어 표현 결함",
+    "(B) 해설 '반대하는 내용의 대화를 나눈 후에 이어지는 주절의 정동사' — 인용문+전달동사 구조 기술이 부정확하게 뭉개짐(사실 오류까지는 아님)"
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1: 프로그램 diff로 원지문 대비 렌더 지문의 차이가 의도된 단일 변형(fascinated→fascinating, (E) 자리) 하나뿐임을 확인. 라벨 (A)~(E)와 선택지·markedExpressions 순서 일치. V2: 5개 밑줄 독립 검증 결과 (E)만 비문이고 (A)~(D)는 모두 원지문과 동일하며 문법적으로 방어 가능 — 단일 정답 성립. V3: 지문·발문·교정 완성문 모두 적법('was changed to'는 다소 부자연스러우나 성립). V4: 구조 분석에 사실 오류 없음(용어 오분석·환각 없음), 표현 품질 결함만 존재. V5: 정답 라벨·선지·해설·keyPoints 동기화 확인(markedExpressions (E) expression 필드의 관례 비대칭은 minor). 공예: 정답 포인트는 정전급(분사 태+by 행위자)이나 by 단서 노출로 사실상 1단계 판별이라 경쟁력이 낮고(C3=2), (B)가 필러 디코이라 의도 밀도 손실(C2=2), 해설이 정확하지만 둔하고 군데군데 뭉개짐(C6=2). C 합계 15로 B 기준(17) 미달 → 등급 C. 출하하려면 (B)를 실제 오개념을 겨냥한 디코이로 교체하고 해설 표현을 정리하는 재설계 필요. 요청 난이도 INTERMEDIATE이므로 KILLER 조건 판정 대상 아님(killerConditionsMet=false)."
+}

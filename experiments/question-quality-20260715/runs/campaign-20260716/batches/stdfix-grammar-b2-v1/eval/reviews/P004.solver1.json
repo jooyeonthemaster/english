@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "(A)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(A)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "incorrect",
+      "reason": "분사구문 자리에서 주어 Brunel과의 관계가 수동('프랑스에서 태어난')이므로 bear의 과거분사 born이 필요하다. 'Originally born in France'가 정문. 현재분사 bearing은 능동 의미인데 목적어도 없고 어떤 자동사 용법(bear left, bear on 등)을 대입해도 'Originally bearing in France'는 성립하지 않는다. 어법상 틀림."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "본동사 과거시제. 자동사 escape + 방향 전치사 to. 'escaped to the United States during the French Revolution' 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "시간 부사절 접속사 When + 완전한 절(the Napoleonic Wars were at their height). 어법상 문제없음."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "imprison은 타동사이고 Brunel이 투옥의 대상이므로 수동태 was imprisoned가 옳다. 능동이면 목적어가 없어 비문. 수동태 밑줄이라 함정처럼 보이지만 실제로는 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "it의 선행사는 the River Thames(단수)로 'move across it(강을 건너 이동)'이 자연스럽다. 지시·수 일치 모두 정확. 설령 London으로 읽어도 단수 it이므로 어법 오류 아님."
+    }
+  ],
+  "note": "정답이 (A)로 유일하게 좁혀지는 깨끗한 문항. 다만 (A)의 born/bearing 오류는 전형적이고 난도가 낮은 편이며, (B)(C)는 유혹 강도가 거의 없어 최상위권 기준 변별력은 (D) 수동태 의심 정도에 그친다. 대안 해석으로 (A)가 정문이 되는 경로는 탐색했으나 없음."
+}

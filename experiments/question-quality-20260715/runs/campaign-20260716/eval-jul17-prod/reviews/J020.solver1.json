@@ -1,0 +1,35 @@
+{
+  "pid": "J020",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "Passive infinitive after modal: 'Environmental taxes ... can be very precisely targeted to ...'. Taxes are the target-ee, so past participle 'targeted' after 'be' is required and correct. The interposed adverbial 'very precisely' is camouflage, not a fault. Collocation 'target A to B' -> 'A is targeted to B' is standard."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "Relative pronoun with antecedent 'any manner'; 'that' fills the SUBJECT gap of 'is less costly per unit of abatement'. The tempting objection ('manner' should take 'in which/how') only applies to adverbial gaps; here the manner itself is the subject being described as less costly, so plain subject-relative 'that' is exactly right. Singular agreement with 'is' also checks out."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'where' used as a conjunction meaning 'in cases/circumstances in which' ('particularly where there are many separate sources'). This antecedent-less circumstantial 'where' is standard academic English (cf. 'where applicable'). Tempting distractor for students who expect a locative antecedent, but fully grammatical."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect (the error)",
+      "reason": "'the technologies availably for monitoring ...' requires the postpositive adjective in a reduced relative: 'the technologies AVAILABLE for monitoring' (= technologies that are available). An adverb cannot postmodify a noun, and there is no verb or participle in the phrase for 'availably' to modify. Searched for alternative parses (elided participle, adverbial reading) - none licenses 'availably'. Clear, undefendable error."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'the technologies ... have been developing rapidly' - present perfect progressive with INTRANSITIVE 'develop' (= advance/progress). Felt the distractor pull toward 'have been developed' (passive instinct: technologies are developed by people), but intransitive progressive is idiomatic and natural with 'rapidly' over a recent span; the printed form is a well-formed sentence, so it cannot be called ungrammatical."
+    }
+  ],
+  "note": "Single clean answer (D): adverb 'availably' where postpositive adjective 'available' is required after 'technologies'. Strongest attractive distractors in real solving order: (E) via the passive instinct ('have been developed'), then (C) via the no-antecedent 'where' worry; both survive scrutiny as grammatical. (A) and (B) are straightforward once the passive collocation and subject-gap relative are identified. No alternative parse rescues (D)."
+}

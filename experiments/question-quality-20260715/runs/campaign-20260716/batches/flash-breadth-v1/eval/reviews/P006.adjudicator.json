@@ -1,0 +1,44 @@
+{
+  "pid": "P006",
+  "finalV2": true,
+  "winningAnswer": "4",
+  "reason": "렌더 지문만을 기준으로 전 선지를 처음부터 재검증한 결과, 선언된 정답 ④는 유일 정답으로 성립한다. 감사자의 V2=false 판정은 기각한다. 핵심 근거: 렌더에 그대로 남아 있는 마지막 문장의 3요소 요약 'a perfect death spiral: you misdirect your work; you stall; you quit'이 명시적 순서 로드맵을 제공한다. 본문 대응은 steer/cling=misdirect, 'You find reasons to delay'=stall이고, 주어진 문장('convinced that you cannot do it')은 quit 단계의 유일한 선행 서술 후보이므로 요약 순서(stall이 quit보다 앞)에 따라 delay 문장 뒤(=④)에만 놓일 수 있다. 감사자가 유력 경쟁지로 지목한 ③은 (a) quit 전제 문장이 stall보다 먼저 나와 요약 순서와 모순되고, (b) 직후 문장의 'since to not work is to not make mistakes'가 지연의 동기를 '실수 회피'로 자체 명시하는데 이는 계속 일할 의사를 전제하는 합리화여서 이미 '할 수 없다'는 확신이 선 상태 뒤에서는 화용적으로 퇴행이며(불가 확신이 섰다면 미룰 '이유를 찾을' 필요 자체가 없다), (c) 'gradually'가 표시하는 누적 종착점이 회피 행동 3단계(steer→cling→delay) 전부를 받지 못한다. 추가로 'Believing that your work should be perfect'와 'only the pattern itself achieves perfection'의 완벽 어휘 대조 아이러니가 ④ 인접 배치에서만 정확히 성립한다. 감사자는 '③ 삽입이 응집성 파탄 없이 읽힌다'를 근거로 유일성 붕괴를 선언했으나 이는 판정 기준 착오다 — 발문 기준은 '가장 적절한 곳'이고, 이의신청 방어 기준은 대안 위치에 지적 가능한 결함이 없어야 하는데 ③에는 위 세 가지 독립 결함이 있고 ④에는 렌더 기준 결함이 없다. 감사자가 '잔존 단서는 요약 순서 하나뿐'이라 한 것도 과소 집계다(순서 제약 + since절 동기 불일치 + gradually 누적 + perfection 아이러니 인접의 4중 수렴). 두 블라인드 솔버가 독립적으로 렌더 내부 단서만으로 4에 수렴하고 중의성을 보고하지 않은 것도 이를 뒷받침한다. 단, 본 판정은 정답 유일성(V2)에 한정된다. 감사자의 V1/V4/V5 지적 — 앵커 2문장('(You are correct.)', 'Sooner or later... you quit.')의 의도 외 삭제, 해설·keyPoints가 학생이 볼 수 없는 삭제 문장을 '직후 문장'으로 인용하는 사실 오류, 렌더-해설 비동기 — 는 전부 사실이며 출하 전 수리가 필요한 실결함이다. 그러나 이 결함들은 해설 품질·지문 무결성의 문제이지 렌더 문항의 정답 유일성을 무너뜨리지는 않는다.",
+  "perDispute": [
+    {
+      "label": "3",
+      "claim": "감사자(V2-UNIQUENESS-BROKEN): 앵커 문장 2개가 삭제된 렌더 기준으로 ③ 삽입도 '집착 → 불가 확신 → 그래서 지연 → 요약'으로 응집성 파탄 없이 성립하므로 ④와 실질 경쟁하는 방어 가능한 대안 정답이다.",
+      "verdict": "기각 — ③은 방어 가능한 대안이 아니다",
+      "evidence": "③ 삽입 완성문을 독립 재검증하면 세 가지 지적 가능한 결함이 있다. (1) 요약 순서 모순: 렌더에 남아 있는 종결 요약 'you misdirect your work; you stall; you quit'은 명시적 순서 제약이고, 주어진 문장은 본문에서 quit 단계에 대응하는 유일한 후보(불가 확신=포기의 직접 전제)이므로 stall 문장('You find reasons to delay') 뒤에 와야 한다. ③은 quit 전제를 stall보다 앞세워 요약과 역행한다. (2) 동기 구조 퇴행: ③ 직후 문장의 'since to not work is to not make mistakes'는 지연의 동기를 실수 회피로 자체 명시하는데, 이는 아직 일할 의사가 있는 자의 합리화다. 이미 '할 수 없다'고 확신한 상태 뒤라면 지연의 근거는 실수 회피가 아니라 무용(futility)이어야 하고, 미룰 '이유를 찾는' 행위 자체가 불필요해진다. 확신 문장이 delay 문장 앞에 오도록 쓰이지 않았다는 언어 내적 증거다. (3) 'gradually' 누적 부족: 종착점 표지 'gradually become convinced'는 선행 회피 행동의 누적을 전제하는데 ③ 시점에는 steer→cling 2단계뿐이고 delay가 뒤에 남는다. 감사자의 '응집성 파탄 없음' 기준은 발문('가장 적절한 곳')과 이의신청 심사 기준에 비추어 과소 요구이며, 위 결함들은 이의신청을 기각시키기에 충분히 명시적이다."
+    },
+    {
+      "label": "4",
+      "claim": "출제 측 선언 정답. 솔버1·2 공히 렌더 내부 단서(요약 3요소의 quit 전제 공백, 점층 구조, gradually)만으로 유일 정답으로 수렴.",
+      "verdict": "확정 — 유일 정답",
+      "evidence": "④ 삽입 완성문: delay(stall) → '완벽해야 한다는 믿음 속에 점점 할 수 없다고 확신' → 'And in one of those little ironies... you misdirect; you stall; you quit'. (1) 요약 3요소가 모두 선행 서술을 갖게 되며 순서(misdirect→stall→quit 전제)가 보존되는 유일한 위치다. (2) 'Believing that your work should be perfect'와 직후 요약의 'only the pattern itself achieves perfection ― a perfect death spiral'의 perfection 어휘 대조 아이러니가 인접 배치에서 정확히 성립한다. (3) 이음매 무결: 분사구문 'Believing...'의 주어는 you로 일치하고 'it'은 your work로 해소되며, 'And'가 총괄 요약을 자연스럽게 연다. 렌더 기준 ④에는 지적 가능한 결함이 없다. 단, 원문의 'Sooner or later... you quit' 문장이 렌더에서 소실되어 ④ 삽입 후에도 원문이 복원되지 않는 점은 사실이나(감사자 V1 지적 타당), 이는 유일성 판정과 별개의 지문 무결성 결함이다."
+    },
+    {
+      "label": "1",
+      "claim": "솔버1: 주어진 문장이 첫 문장(주제문)의 재진술처럼 읽혀 실전에서 끌리는 매력 오답('Believing... perfect ≈ To require perfection', 'cannot do it ≈ paralysis').",
+      "verdict": "배제 성립 — 오답 확정",
+      "evidence": "① 직후 문장 'The pattern is predictable:'은 콜론으로 주제문(perfection→paralysis)을 곧장 전개하는 도입부라 주제문과의 결속이 긴밀해 끼어들 수 없고, 'gradually become convinced'는 선행 과정의 누적을 전제하는데 ① 시점에는 서술된 과정이 전혀 없다. 또한 종착 단계가 패턴 도입보다 먼저 나와 서사가 사후 설명으로 전락한다. 솔버1의 매력도 평가와 배제 논리 모두 타당하며 과잉 판정 없음."
+    },
+    {
+      "label": "2",
+      "claim": "양 솔버: steer→cling의 점층 연결부를 끊는 위치로 배제.",
+      "verdict": "배제 성립 — 오답 확정",
+      "evidence": "'as you see error... you steer your work toward what you imagine you can do perfectly'를 'You cling ever more tightly to what you already know you can do'가 직접 부연하는 정교화 쌍 사이다. 종결적 확신 문장이 끼면 misdirect 단계 내부의 국소 응집이 끊기고, stall 단계도 나오기 전에 최종 심리 단계가 등장해 점층이 무너진다. 이견 없음."
+    },
+    {
+      "label": "5",
+      "claim": "양 솔버: 종결 요약문 뒤 배치는 인과·시간 역행으로 배제.",
+      "verdict": "배제 성립 — 오답 확정",
+      "evidence": "'a perfect death spiral: you misdirect; you stall; you quit'은 명백한 총괄 종결부다. '할 수 없다는 확신'은 quit의 논리적 선행 단계이므로 결과 서술 뒤에 두면 인과가 역전되고, 종결 케이던스 뒤에 중간 단계가 사족으로 붙는다. 이견 없음."
+    },
+    {
+      "label": "auditor-methodology",
+      "claim": "감사자: ④를 지지하는 잔존 단서는 요약부 순서라는 '미세한 단일 단서'뿐이므로 실질적 유일성이 확보되지 않는다.",
+      "verdict": "기각 — 단서 과소 집계 및 기준 착오",
+      "evidence": "잔존 단서는 단일이 아니라 4중 수렴이다: (1) 요약 3요소 순서 제약, (2) ③ 직후 since절의 실수 회피 동기와 불가 확신의 화용적 충돌, (3) 'gradually'의 누적 종착점 의미, (4) perfection 아이러니의 인접 대조. 이 중 (1)·(2)는 각각 단독으로도 ③을 기각시킬 수 있는 명시적 근거다. 또한 '대안 위치가 응집성 파탄 없이 읽히면 경쟁 답'이라는 감사자의 기준은 삽입 유형의 실제 판정 기준(최적 위치의 비교 우위 + 대안 위치의 지적 가능 결함)보다 과도하게 엄격해, 정상 문항의 매력 오답까지 경쟁 답으로 격상시키는 기준이다. 두 독립 블라인드 솔버가 모두 렌더 내부 단서만으로 중의성 보고 없이 4에 고신뢰 수렴한 사실이 실증적으로 이를 뒷받침한다. 단 감사자의 V1(앵커 2문장 무단 삭제)·V4(해설이 렌더에 없는 문장을 '직후 문장'으로 인용)·V5(keyPoints가 학생이 볼 수 없는 응집 단서를 핵심 포인트로 제시) 지적은 전부 사실이며 본 조정 결과와 무관하게 수리되어야 한다."
+    }
+  ]
+}

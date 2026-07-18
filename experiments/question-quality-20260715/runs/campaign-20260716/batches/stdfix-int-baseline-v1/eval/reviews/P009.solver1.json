@@ -1,0 +1,35 @@
+{
+  "pid": "P009",
+  "answer": "(A)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(A)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) is",
+      "verdict": "wrong",
+      "reason": "진짜 주어는 복수 'Racial microaggressions'. 삽입구 'such as assumptions about a person's intelligence or work ethic...' 속 단수 명사(a person's intelligence)가 근접 유혹을 만들지만 삽입구는 수일치에 관여하지 않는다. 보어도 복수 'indignities'여서 단수 해석의 여지가 전무. is → are. 원전(Sue et al.의 microaggression 정의문)도 'Racial microaggressions are ... indignities, whether intentional or unintentional, that communicate...'로 are를 쓴다."
+    },
+    {
+      "label": "(B) that",
+      "verdict": "correct",
+      "reason": "매력적 오답 — 'comma + that 관계절 불가' 규칙이 떠올라 실제로 끌린다. 그러나 that 앞 콤마는 비제한 관계절 표지가 아니라 삽입구 'whether intentional or unintentional'을 닫는 콤마다. 선행사는 복수 'indignities'이고 관계절 동사 'communicate'도 복수 일치. 제한적 관계절로 완전 정문."
+    },
+    {
+      "label": "(C) be seen",
+      "verdict": "correct",
+      "reason": "'experiential microaggressions ... can be seen in statements': 조동사 can 뒤 수동태 원형. 미세공격이 진술 속에서 '관찰되는' 대상이므로 수동이 의미상 타당. 정문."
+    },
+    {
+      "label": "(D) when giving",
+      "verdict": "correct",
+      "reason": "'A well-meaning nurse was yelling at him when giving him directions': 접속사 when 뒤 「주어+be」 생략 구문(when she was giving). 생략된 주어 = 주절 주어(nurse) = giving의 의미상 주어로 일치하므로 현수분사 문제 없음. 수여동사 give의 4형식(him directions)도 정상. 정문."
+    },
+    {
+      "label": "(E) is defined",
+      "verdict": "correct",
+      "reason": "'a hidden message that a person with a disability is defined as lesser...': message와 동격인 that절 내부에서 단수 주어 'a person'에 단수 수동태 일치. 'define A as B'의 수동형 'A is defined as B'로 as 보어가 잔류하는 정상 구조. 정문."
+    }
+  ],
+  "note": "장거리 수일치 유형의 전형. (A)는 삽입구를 걷어내면 'Racial microaggressions is ... indignities'로 즉시 비문이며, 주어·보어 모두 복수라 대안 해석으로 구제 불가. 유일하게 흔들리는 선지는 (B)였으나(comma+that 착시) 삽입구 콤마로 해소되는 제한적 관계절이라 정문. 옹호 가능한 정답은 (A) 단일이며 실전 난이도는 중하 — 다만 (B)의 콤마 착시가 중위권에게는 유효한 미끼로 작동할 것."
+}

@@ -1,0 +1,97 @@
+{
+  "pid": "P003",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityEvidence": {
+    "V1": "렌더 지문을 원지문과 전문 대조: 유일한 차이는 의도된 변형 prevents→preventing((C)) 하나뿐. 문장 접합 파손·중복·누락·고아 문장부호 없음. (A)~(E) 마커가 선지 목록(coming/directed/preventing/relaxing/telling)과 순서·위치 모두 일치. markedExpressions는 expression=원문형, errorExpression=표시형 규약으로 내부 일관((C): prevents/preventing/correction=prevents).",
+    "V2": "각 밑줄 독립 검증 — (A) associations를 후치수식하는 능동 현재분사로 적법(대안 해석 없음). (B) attention은 direct의 대상이므로 tends to be directed 수동 구조 필수·적법. (C) While 종속절 뒤 주절이 주어 it만 있고 유한동사가 전무 — 독립분사구문·생략 등 어떤 구제 해석도 불가, 유일하게 비문. (D) part가 relaxation을 유발하므로 -ing 분사형용사 적법. (E) voices가 tell의 능동 주체인 후치수식 분사로 적법(정형 관계절도 가능하나 분사가 틀린 것은 아님). 실제 정답 집합 = {(C)} 하나로 선언과 일치.",
+    "V3": "의도된 오류를 제외한 지문·발문 문법적. 교정 완성문 'it actually prevents us from detecting...'은 원문을 정확히 복원하며 자연스러움.",
+    "V4": "주 해설의 구조 분석(주절 유한동사 부재, 준동사 오인 함정, preventing→prevents 교정)은 실제 문장과 정확히 일치. 오답 해설 (A)(D)(E)도 실제 구조와 대응. (B) 해설과 keyPoints에 minor 수준의 표현·용어 결함 2건(아래 issues) 있으나 통사 판정 자체를 그르치지는 않음.",
+    "V5": "정답 라벨 (C), 선지 5개, 주해설, 오답해설 4건((A)(B)(D)(E) 전부 존재), keyPoints, markedExpressions(isError는 (C) 단독, correction이 원문 복원)이 상호 모순 없음."
+  },
+  "validityIssues": [
+    {
+      "code": "V4-wording-B",
+      "severity": "minor",
+      "evidence": "(B) 오답 해설 '주어 attention이 향하는 대상이므로 수동 구조가 올바르다' — 문면상 'attention이 (능동적으로) 향하는 대상'으로 읽혀 능동 주체 해석과 혼동될 수 있는 모호한 한국어. 의도('attention이 direct 동작의 대상')는 추정 가능하고 수동 p.p. 판정 자체는 정확하므로 minor."
+    },
+    {
+      "code": "V4-terminology-keyPoints",
+      "severity": "minor",
+      "evidence": "keyPoints '(B) 능동·수동 — tend to be + p.p.와 주어의 수혜 관계' — 수동문 주어 attention은 동작의 대상(피동작주/theme)이지 수혜자(beneficiary)가 아니므로 '수혜 관계'는 부정확한 문법 용어."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "craftRationale": {
+    "C1": "종속절 뒤 주절 정동사 필수(정동사 vs 준동사)는 정전급 핵심 문법 포인트. 다만 지문 논지와 결합된 정교함까지는 아님.",
+    "C2": "(A)와 (E)가 동일 pointCode 'c'(명사 후치수식 능동 분사)로 중복 — 한 디코이가 사실상 필러. (B) 수동, (D) 감정유발 분사형용사는 서로 다른 오개념을 겨냥하나 '모든 오답이 서로 다른 포인트' 기준 미달.",
+    "C3": "오류가 'it actually preventing'으로 주어 대명사 바로 뒤에 노출되어 숙련 학생은 즉시 소거 가능. (B)(D)는 교과서 표준형이라 실제 판단 부하가 낮고, 다수 선지가 매력적이지도 전체 구조에서 갈리지도 않음.",
+    "C4": "메타 누출·꼬리 힌트 없음. 교정형이 유일하며 정답은 필연적. 단서 경제성 자체는 건전.",
+    "C5": "요청 난이도 KILLER 대비 실제는 중위권 표준 문항. 정동사 누락이 주어 직후에 위치해 은폐 구조(긴 삽입구·병렬·관계절 거리 등)가 전무 — 라벨과 불일치.",
+    "C6": "주 해설은 짧고 정확하며 정답 근거와 함정(부대상황 분사구 오인)을 분리해 제시. (B) 표현 모호·'수혜 관계' 용어 흠으로 4는 불가."
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "명사(associations) 후치수식 현재분사의 능·수동 판단(pointCode c)",
+      "temptingBecause": "of remote associations coming from...으로 전치사구가 이어져 분사의 피수식어 확인에 최소한의 구조 독해가 필요함",
+      "decisiveFlaw": "associations가 come의 능동 주체이므로 현재분사가 명백히 적법 — 표준형이라 매력도 낮고, (E)와 동일 포인트 중복으로 필러에 가까움"
+    },
+    {
+      "label": "(B)",
+      "intent": "tend to be + p.p. 수동 구조 판단(pointCode e)",
+      "temptingBecause": "앞 문장의 능동 direct(we direct the spotlight)와 대비되어 능·수동 전환을 확인하게 유도",
+      "decisiveFlaw": "attention은 direct의 대상이므로 수동이 필수 — tends to be directed는 교과서 표준형으로 판단 부하가 낮음"
+    },
+    {
+      "label": "(C)",
+      "intent": "정답. While 종속절 뒤 주절 유한동사 필수 — 정동사 vs 준동사(pointCode a)",
+      "temptingBecause": "actually가 삽입되고 앞에 긴 종속절이 있어 분사구문(부대상황)으로 오인하도록 설계",
+      "decisiveFlaw": "주절에 유한동사가 전무해 문장이 미완성 — 다만 오류가 주어 it 바로 뒤에 있어 은폐 거리가 0에 가까움(KILLER 조건 위반 지점)"
+    },
+    {
+      "label": "(D)",
+      "intent": "감정유발동사 분사형용사 relaxing/relaxed 구별(pointCode f)",
+      "temptingBecause": "relaxed와의 혼동 및 최상급 수식 구조(the most ___ part)에서의 품사 판단 유도",
+      "decisiveFlaw": "part가 relaxation을 유발하는 주체이므로 -ing가 명백히 적법 — 빈출 기초 포인트라 즉시 소거됨"
+    },
+    {
+      "label": "(E)",
+      "intent": "명사(voices) 후치수식 현재분사의 능·수동 판단(pointCode c)",
+      "temptingBecause": "voices in the backs of our heads telling으로 피수식어와 분사 사이 거리가 있어 수식 관계 추적이 필요",
+      "decisiveFlaw": "voices가 tell의 능동 주체이므로 적법 — (A)와 동일 포인트여서 하나를 풀면 다른 하나도 자동 소거되는 중복"
+    }
+  ],
+  "explanationIssues": [
+    "(B) 해설 '주어 attention이 향하는 대상이므로' — 능동 주체 해석으로 오독될 수 있는 모호 표현(의도는 'direct 동작의 대상'). 구조 판정은 정확하므로 minor.",
+    "keyPoints의 '(B) 주어의 수혜 관계' — 수동 주어는 피동작주(theme)이지 수혜자가 아님. 용어 부정확(minor).",
+    "오답 해설이 각 선지의 '왜 맞는가'만 제시하고 '왜 매력적인가(why tempting)'는 명시하지 않음 — §C 요구 형식에 부분 미달."
+  ],
+  "killerConditionsMet": false,
+  "killerAudit": {
+    "minimalPair": true,
+    "minimalPairEvidence": "prevents→preventing 최소대립쌍이며 교정 시 정확히 원문 복원.",
+    "clearGrammarJudgment": true,
+    "clearGrammarJudgmentEvidence": "유한동사 부재는 문맥 선호가 아닌 명확한 문법 판단. valency·가정법류 대안 분석 자리 아님.",
+    "allFivePointsDocumented": false,
+    "allFivePointsEvidence": "5개 밑줄 모두 pointCode와 정오 근거는 있으나 'why tempting'이 명시되지 않았고, (A)·(E)가 동일 pointCode c로 중복되어 한쪽은 설명되는 독립 디코이가 아니라 필러.",
+    "notImmediatelyVisible": false,
+    "notImmediatelyVisibleEvidence": "오류 'it actually preventing'이 주어 대명사 직후에 노출 — 삽입구·거리·병렬 등 은폐 구조가 없어 구조 독해 없이도 즉시 드러남. 'KILLER 정답은 즉시 드러나지 않는다' 조건 명백 위반.",
+    "noEasyDecoySamePoint": true,
+    "noEasyDecoySamePointEvidence": "정답 pointCode a(정동사 vs 준동사)와 같은 포인트의 디코이 없음."
+  },
+  "grade": "C",
+  "notes": "V1~V5 전부 통과 — 무결성·정답 유일성·문법성·필드 동기화에 치명 결함 없음. 그러나 요청 난이도 KILLER 대비 실제 난이도가 크게 미달: 오류가 주어 it 바로 뒤에 노출되어 은폐 장치가 전무하고(C5=1), (A)/(E) 포인트 중복으로 디코이 의도 밀도가 낮으며(C2=2), 대부분의 오답이 교과서 표준형이라 변별 판단 부하가 낮다(C3=2). KILLER 추가 조건 중 '즉시 드러나지 않아야 한다'를 명백히 위반해 killerConditionsMet=false. 공예 합계 14, C5=1로 B 기준(최저 2, 합 17) 미달 — 등급 C. 출하하려면 KILLER가 아닌 중위 난이도 라벨로 재지정하거나, 오류 지점을 은폐 구조(긴 삽입·병렬·관계절 거리) 속으로 옮기고 (A)/(E) 중 하나를 다른 포인트(예: 관계대명사 what/that, 도치 수일치)로 교체하는 재설계가 필요."
+}

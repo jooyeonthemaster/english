@@ -1,0 +1,35 @@
+{
+  "pid": "P008",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "(A) 'not absolute': the passage explicitly states principles 'vary both between and within individuals' and are 'context dependent' — the negation of 'absolute' is exactly this variability, so the seam 'are not absolute but depend on personal and situational factors' is both grammatical (standard 'not ADJ but VP' coordination) and logically faithful. (B) 'guide': 'the different codes of behaviour that guide individuals' paraphrases 'the factors that drive other people's codes and decision making'; relative pronoun 'that' takes plural antecedent 'codes', plural verb 'guide' agrees. Both slots hold."
+    },
+    {
+      "label": "2",
+      "verdict": "incorrect",
+      "reason": "(A) 'absolute' is fine, but (B) 'restrict' fails logically: the passage never frames codes of behaviour as constraints limiting individuals; it frames them as what drives/shapes decision making ('factors that drive other people's codes and decision making'). Asserting a restrictive function imports a claim absent from the text."
+    },
+    {
+      "label": "3",
+      "verdict": "incorrect",
+      "reason": "(B) 'guide' is fine, but (A) yields a contradiction: 'ethical principles are not flexible' directly negates the passage's central claim that principles vary between/within individuals and are context dependent (i.e., they ARE flexible). Formally: passage asserts P = variable; option asserts ¬P."
+    },
+    {
+      "label": "4",
+      "verdict": "incorrect",
+      "reason": "(A) 'universal' is defensible ('not universal but depend on personal and situational factors' matches 'vary both between and within individuals'), but (B) 'evaluate' fails: 'codes of behaviour that evaluate individuals' reverses the agent-patient structure of the passage — the thinker evaluates issues/perspectives; codes are the object of understanding, never an evaluating agent. Grammatically well-formed but logically unsupported, so the pair fails."
+    },
+    {
+      "label": "5",
+      "verdict": "incorrect",
+      "reason": "(A) contradiction: 'not subjective' negates the passage's claim that what a person values relates to their own social/religious/civic beliefs and feelings (i.e., principles ARE subjective). (B) 'respect individuals' is a category error — inanimate codes cannot respect persons, and no such relation appears in the text. Both slots fail."
+    }
+  ],
+  "note": "Summary-completion item. The (A) slot is a negation test: the correct filler's negation must equal 'variable/context-dependent'. Both 'absolute' (1,2) and 'universal' (4) pass slot A, so slot B is the discriminator: only 'guide' matches the passage's 'factors that drive codes and decision making'. No alternative parse (e.g., reduced relative or inversion) rescues any distractor; the 'not ADJ but VP' coordination in the summary is standard English and grammatical for all candidates, so discrimination is purely semantic-logical. Single defensible answer: option 1."
+}

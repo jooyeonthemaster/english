@@ -1,0 +1,35 @@
+{
+  "pid": "P010",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "(A)-(C)-(B): A 뒤 C의 수치 연결($148→$14.80)은 성립하지만, B가 마지막에 오면 이미 C에서 실행·일반화까지 끝난 10% 규칙을 다시 도입하는 꼴이 되고, B의 'that category'가 선행사(주어진 글의 a budget category)와 멀리 떨어져 표류하며, 'You won't see sudden, drastic change'라는 전망형 진술이 사례 뒤에 오는 것도 부자연스럽다. 무엇보다 C의 마지막 문장(By introducing incremental shifts... stick with your habits)이 명백한 결론문이라 그 뒤에 어떤 단락도 올 수 없다. 예시(A)가 자기완결적이라 잠깐 끌리는 매력적 오답이지만 검증에서 붕괴한다."
+    },
+    {
+      "label": "2",
+      "verdict": "correct",
+      "reason": "(B)-(A)-(C): B의 'go entirely without'가 주어진 글의 'all-or-nothing'을 직접 환언하고 'that category'가 'a budget category'를 지시하는 이중 앵커로 주어진 글에 밀착. B의 일반 규칙(월 10% 감축)을 A가 구체 사례($148 커피 지출)로 예시하고, C의 'That's $14.80 less'가 A의 $148의 정확히 10%를 계산하는 경성 수치 사슬로 A에 직결. C 말미의 일반화 결론이 글을 닫는다. 모든 결속 단서가 일관되게 성립."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "(B)-(C)-(A): B에는 달러 금액이 없으므로 C 서두의 'That's $14.80 less'가 지시 대상을 잃는다. 즉시 탈락."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "(C)-(A)-(B): 첫 단락 C의 'That's $14.80 less'가 아무 선행 수치 없이 시작되어 지시 실패. 즉시 탈락."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "(C)-(B)-(A): 4번과 동일하게 C가 첫 단락으로 오는 순간 'That's'의 지시 대상이 없어 탈락."
+    }
+  ],
+  "note": "최상위권 실전 풀이 관찰: C-first 두 선지는 'That's $14.80 less' 하나로 3초 내 소거. 실질 경합은 1번(A-first)과 2번(B-first)인데, A가 자기완결적 예시라 A-first가 순간 끌린다. 그러나 (i) B의 'that category'+'go entirely without' 이중 앵커가 주어진 글 직후 위치를 강제하고, (ii) C의 종결 일반화 문장 뒤에 B가 올 수 없다는 담화 구조 논리로 유혹이 해소된다. A→C 수치 사슬($148→$14.80→$133.20→$119.88)이 경성 단서라 정답이 유일하게 좁혀지는 깨끗한 문항. 난이도는 중하 — 결속 단서가 다중·명시적이다."
+}

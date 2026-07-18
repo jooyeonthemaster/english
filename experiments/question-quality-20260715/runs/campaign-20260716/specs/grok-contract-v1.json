@@ -1,0 +1,89 @@
+{
+  "batchId": "grok-contract-v1",
+  "phase": "grok2",
+  "note": "E6: 구조 변형형 4유형 @high + 유형 표시 계약 주입(PREMIUM_TYPE_CONTRACT_INJECTION=on) — V1 필수필드 누락이 계약 부재 때문인지 최종 검증. E5와 동일 프레임 짝.",
+  "concurrency": 4,
+  "providerRouting": "none",
+  "env": {
+    "PREMIUM_QGEN_MODEL_ID": "x-ai/grok-4.5",
+    "GRAMMAR_PREMIUM_MODEL_ID": "x-ai/grok-4.5",
+    "EXPLANATION_VERIFY_MODEL_ID": "google/gemini-3.1-pro-preview",
+    "OPENROUTER_REASONING_EFFORT": "high",
+    "QGEN_RESEARCH_MAX_TOKENS_FLOOR": "20000",
+    "PREMIUM_TYPE_CONTRACT_INJECTION": "on"
+  },
+  "assignments": [
+    {
+      "itemId": "ct-sord-s",
+      "frameId": "grammar-frame-v2-176",
+      "subType": "SENTENCE_ORDER",
+      "difficulty": "INTERMEDIATE",
+      "plan": "PREMIUM",
+      "armId": "CT-SORD",
+      "funnel": true
+    },
+    {
+      "itemId": "ct-sord-l",
+      "frameId": "adhoc-prod-04",
+      "subType": "SENTENCE_ORDER",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "CT-SORD",
+      "funnel": true
+    },
+    {
+      "itemId": "ct-summ-s",
+      "frameId": "blank-supply-v2-090",
+      "subType": "SUMMARY_COMPLETE_MC",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "CT-SUMM",
+      "funnel": true
+    },
+    {
+      "itemId": "ct-summ-l",
+      "frameId": "adhoc-prod-05",
+      "subType": "SUMMARY_COMPLETE_MC",
+      "difficulty": "INTERMEDIATE",
+      "plan": "PREMIUM",
+      "armId": "CT-SUMM",
+      "funnel": true
+    },
+    {
+      "itemId": "ct-sins-s",
+      "frameId": "grammar-frame-v2-128",
+      "subType": "SENTENCE_INSERT",
+      "difficulty": "INTERMEDIATE",
+      "plan": "PREMIUM",
+      "armId": "CT-SINS",
+      "funnel": true
+    },
+    {
+      "itemId": "ct-sins-l",
+      "frameId": "adhoc-prod-08",
+      "subType": "SENTENCE_INSERT",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "CT-SINS",
+      "funnel": true
+    },
+    {
+      "itemId": "ct-irre-s",
+      "frameId": "grammar-frame-v2-088",
+      "subType": "IRRELEVANT",
+      "difficulty": "INTERMEDIATE",
+      "plan": "PREMIUM",
+      "armId": "CT-IRRE",
+      "funnel": true
+    },
+    {
+      "itemId": "ct-irre-l",
+      "frameId": "adhoc-prod-07",
+      "subType": "IRRELEVANT",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "CT-IRRE",
+      "funnel": true
+    }
+  ]
+}

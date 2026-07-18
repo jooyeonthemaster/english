@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "consistent",
+      "reason": "Direct paraphrase of 'This is music's greatest asset because it brings out the essential now without implications of a past and a potential future.' 'Put listeners into an essential present' is marginally stronger phrasing than 'brings out the essential now', but it is a fair paraphrase, not a contradiction."
+    },
+    {
+      "label": "2",
+      "verdict": "consistent",
+      "reason": "Matches 'Stravinsky pointed out that only through music are we able to realize the present.' 'Music alone' correctly renders 'only through music.'"
+    },
+    {
+      "label": "3",
+      "verdict": "inconsistent (ANSWER)",
+      "reason": "Front-loads a true premise (musical meaning cannot be detached from presentation) but reverses the passage's conclusion: the final sentence states that despite numerous attempts, 'the emphasis is still on pupils absorbing factual information about music.' Schools have NOT largely replaced factual study with direct musical work — the passage explicitly says the opposite outcome persists. Classic true-premise/false-conclusion trap."
+    },
+    {
+      "label": "4",
+      "verdict": "consistent",
+      "reason": "Near-verbatim restatement of 'the necessity of present-ing music... does not sit easily with a concept of education that rests mainly upon received factual knowledge and which, by tradition, uses the past to make sense of the present.'"
+    },
+    {
+      "label": "5",
+      "verdict": "consistent",
+      "reason": "Near-verbatim restatement of the final sentence: 'Yet, in spite of numerous attempts to develop a more musical music curriculum for the majority of school pupils, the emphasis is still on pupils absorbing factual information about music.'"
+    }
+  ],
+  "note": "Top-tier examinee lens: solved by locating each option's source sentence. Option 3 is the designed trap — its causal clause is lifted verbatim from the passage, tempting a skimmer to mark it consistent; only the outcome clause ('have largely replaced') contradicts the concessive 'Yet... still' structure. Options 4 and 5 are close restatements, offering no pull. No alternative reading (e.g., treating 'it would seem logical' as reporting actual school practice) survives, since that sentence is explicitly a recommendation, not a description. Single defensible answer: 3."
+}

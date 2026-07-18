@@ -1,0 +1,35 @@
+{
+  "pid": "J012",
+  "answer": "⑤",
+  "multipleDefensible": false,
+  "defensibleLabels": ["⑤"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'avoid wearing formal attire to maintain a casual style'은 뒤 문장 'That was why he had asked Jeff to help him pick out new clothes'와의 인과 함의가 성립하지 않는다. 격식 회피가 새 옷 구매(그것도 형의 도움)를 필연적으로 요구하지 않으며, 본문에서 Jeff는 오히려 화려한 옷 대신 더 차분한 흰 셔츠·검은 진을 고른다. 격식/캐주얼 대립 자체가 지문에 부재."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "'perform perfect music with Singaporean students'는 사실 왜곡: 밴드는 싱가포르 자매대학 학생들을 '환영하는' 행사에서 그들 '앞에서' 연주하는 것이지 그들과 '함께(with)' 연주하는 것이 아니다. 또한 완벽한 연주 목표가 옷 구매의 이유가 되는 인과 연결도 성립하지 않는다."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "'avoid being late for the welcoming ceremony rehearsal'은 옷 구매와 아무 논리적 연결이 없다. 지각 모티프는 Jeff가 교통 체증으로 늦은 부수적 사건일 뿐 Garcia의 목표가 아니며, 'That was why...' 인과문을 지탱하지 못한다."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "'hide his nervousness behind a flawless band performance'는 시제·서사 순서 위반: 빈칸 시점(쇼핑 전)에는 긴장이 아직 발생하지 않았고, 긴장은 리허설 장면에서야 처음 등장한다('His confidence was, however, quickly changed to nervousness'). 또한 옷 구매가 긴장을 연주 뒤에 숨기는 수단이 될 수 없어 인과 함의 실패."
+    },
+    {
+      "label": "⑤",
+      "verdict": "accept",
+      "reason": "'seek an ideal visual presentation for his upcoming stage' — 무대에서 최상의 시각적 인상을 원함 ⟹ 새 옷이 필요 ⟹ 안목 있는 형에게 옷 고르기를 부탁. 후행문 'That was why he had asked Jeff to help him pick out new clothes'의 인과 함의를 유일하게 충족하며, 이후 쇼핑 장면 및 새 옷을 입고 기분 좋게 리허설에 가는 전개와 정합. 'upcoming stage'(= 무대 출연)는 다소 느슨한 어법이나 의미 전달에 문제 없음."
+    }
+  ],
+  "note": "정답 논리는 ⑤로 유일하게 수렴하며 매력적 오답 간 경합 없음. 형식적 결함 하나: 빈칸이 독립 문장 슬롯('_____.')으로 인쇄되어 있는데 선지는 모두 원형부정사 VP여서, 어느 선지를 넣어도 그 자체로는 정문이 되지 않는다(서사문에서 명령문 해석 불가). 'He wanted to ___' 류의 운반구가 원문에서 탈락했거나 렌더링 과정에서 소실된 것으로 보인다. 다섯 선지가 동일 형태라 변별에는 영향이 없으나, 실물 출제 형식 기준으로는 빈칸 문장에 주어+시제 프레임을 복원해야 한다."
+}

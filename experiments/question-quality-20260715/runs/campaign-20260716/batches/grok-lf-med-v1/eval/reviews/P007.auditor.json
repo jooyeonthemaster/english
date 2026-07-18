@@ -1,0 +1,71 @@
+{
+  "pid": "P007",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": false,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-TAIL-KILLS-DISTRACTORS",
+      "severity": "critical",
+      "evidence": "The blank replaces 'having provided direct public support' but keeps the tail 'to their populations in times of crisis.' Only option 3 ('extending ... safeguards ... to ...') can govern a to-PP. Inserted completions for the other four options are ungrammatical: (1) 'channeling economic success toward vulnerable groups alone to their populations...', (2) 'diverting public funds mainly into continuous rural revival primarily to their populations...', (4) 'letting households diversify livelihoods until market recovery to their populations...', (5) 'crediting rapid sectoral growth as the chief preventive force to their populations...'. Distractors are eliminated by seam grammar, not by meaning, violating the BLANK_INFERENCE type intent (V3) and RUBRIC §D condition 1 ('남은 suffix/tail 때문에 일부 오답만 문법으로 탈락하지 않는다')."
+    },
+    {
+      "code": "V3-ANSWER-SEAM-REDUNDANCY",
+      "severity": "major",
+      "evidence": "The completed answer sentence reads '...extending state-backed entitlement safeguards amid crisis to their populations in times of crisis.' 'amid crisis' duplicates the retained tail 'in times of crisis', producing a redundant, unnatural sentence; 'amid crisis' also awkwardly interrupts the VP between the object and its to-complement."
+    },
+    {
+      "code": "V3-OPTION-INTERNAL-MALFORMATION",
+      "severity": "major",
+      "evidence": "Option 2 'diverting public funds mainly into continuous rural revival primarily' stacks two near-synonymous adverbs ('mainly ... primarily') in one phrase — malformed English on its own, making the option instantly discardable independent of content."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 1,
+    "C4": 0,
+    "C5": 0,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "half-truth: promotes sentence 2's concessive point (economic success involving vulnerable groups has potential contribution) into the real achievement",
+      "temptingBecause": "reuses the exact lexical anchors 'economic success' and 'vulnerable groups' from the passage's second sentence",
+      "decisiveFlaw": "the passage states the real achievement is direct public support, not directing economic success; 'alone' adds an absolute-word tell; and the completion 'toward vulnerable groups alone to their populations' is ungrammatical with the tail"
+    },
+    {
+      "label": "2",
+      "intent": "scope shift / overextension: elevates 'revival of the rural economy' — one of the first-line remedies the passage explicitly demotes — into the achievement",
+      "temptingBecause": "'rural revival' and 'public funds' echo sentence 1's list of commonly sought remedies",
+      "decisiveFlaw": "sentence 1 frames rural revival as the tendency being corrected, not the achievement; the option itself is malformed ('mainly ... primarily'); and 'into continuous rural revival primarily to their populations' cannot attach to the tail"
+    },
+    {
+      "label": "3",
+      "intent": "correct answer: abstracts source span 'having provided direct public support' via 'specialized entitlement protection mechanisms involving direct public intervention'",
+      "temptingBecause": "n/a (declared key)",
+      "decisiveFlaw": "none semantically — uniquely correct — but 'amid crisis' duplicates the retained tail 'in times of crisis', creating a redundant completed sentence and a syntactic uniqueness leak (only option able to govern the to-PP)"
+    },
+    {
+      "label": "4",
+      "intent": "actor swap + condition loss: replaces direct public (state) intervention with private household self-help and market recovery",
+      "temptingBecause": "'diversify livelihoods' echoes 'diversification of economic activities' from sentence 1",
+      "decisiveFlaw": "directly contradicts the passage's requirement of 'direct public intervention'; and 'until market recovery to their populations' is ungrammatical with the tail"
+    },
+    {
+      "label": "5",
+      "intent": "causal/weight reversal: promotes rapid sectoral growth from 'at best only a small part' to the chief preventive force",
+      "temptingBecause": "Botswana/Kenya/Zimbabwe growth examples immediately precede the blank sentence",
+      "decisiveFlaw": "sentence 4 explicitly caps growth's explanatory share at 'at best only a small part'; and 'as the chief preventive force to their populations' cannot attach to the tail"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1/V2/V4/V5 pass: the render is a faithful contiguous blanking of the original final sentence; option 3 is semantically the unique key (matches 'direct public support' / 'entitlement protection mechanisms'); the explanation's structural and causal claims match the actual text and each 오답해설 corresponds to its option's real content; labels, options, explanations, and keyPoints are synchronized. The item fails on V3: the blank span was cut mid-VP, stranding the tail 'to their populations in times of crisis', which only the key can govern syntactically — the item is solvable by seam grammar without reading the passage. This same defect voids KILLER §D conditions 1 (tail eliminates distractors grammatically) and 4 (answer reachable from a single surface cue), so killerConditionsMet=false despite the underlying two-sentence semantic design (sentence 3's entitlement-protection claim + sentence 4's 'small part' cap) being genuinely KILLER-shaped. Craft: C1=4 (blank sits on the passage's thesis), C2=3 (four distinct, documented trap intents, but 'alone'/'mainly...primarily'/'chief' absolute-word tells), C3=1 (four of five options die by grammar or malformation before any semantic judgment), C4=0 (meta leak via tail syntax plus 'amid crisis'/'in times of crisis' echo), C5=0 (requested KILLER, actual difficulty collapses to trivial), C6=3 (accurate, compact explanation with named trap types). Fix path: extend the blank to the end of the sentence (blank = 'having provided direct public support to their populations in times of crisis') or rewrite all five options to end with a to-PP-compatible predicate, and drop 'amid crisis' from the key."
+}

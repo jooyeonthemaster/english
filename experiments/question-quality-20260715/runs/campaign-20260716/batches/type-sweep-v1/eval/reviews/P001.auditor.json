@@ -1,0 +1,74 @@
+{
+  "pid": "P001",
+  "validity": {
+    "V1": true,
+    "V2": false,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V2-OPEN-WRITING-NO-ANSWER-SET",
+      "severity": "critical",
+      "evidence": "CONDITIONAL_WRITING(개방형 서술)인데 모범답안 1개와 가중치 3항 채점기준만 있고, RUBRIC B-1이 요구하는 최소 3개의 독립 정답 예시·최소 3개의 경계 오답·허용 동치답 집합·배제 경계가 전혀 정의되어 있지 않다. 실제로 경계가 미정인 자연 동치답이 다수 존재한다: (a) 원문 구조를 그대로 반영한 콤마 삽입구 변형 'Not until we are being massaged by warm water, unable to check our e-mail, can we...' — 문법적으로 완전하고 원문에 가장 충실하지만 채점기준 2가 '병렬 연결'을 요구해 인정 여부 미정, (b) 'we're' 축약형·'email' 철자·'the back of our heads'(단수) 정규화 허용 여부 미정, (c) 'finally'의 위치 이동/누락이 40% 항목('can we finally hear~' 인용)에서 감점인지 미정, (d) 'are massaged'(단순 수동)처럼 'being' 탈락형이 조건 3 위반으로 0점인지 부분점수인지 미정."
+    },
+    {
+      "code": "V4-TERMINOLOGY-MISLABEL",
+      "severity": "minor",
+      "evidence": "작성 조건 3이 'being massaged by warm water'를 '수동태 분사구문'이라 부르나, 원문과 모범답안 모두에서 이는 진행 수동태 'are being massaged'의 일부(be의 서술 보어로 기능하는 분사구)이지 부사적 분사구문이 아니다. 해설 ①·③은 '병렬 구조'/'분사구'로 서술해 실제 구조 설명 자체는 틀리지 않으므로 V4 실패로는 보지 않되 용어 오분류로 기록한다."
+    },
+    {
+      "code": "V4-FORMULA-SLOPPY",
+      "severity": "minor",
+      "evidence": "해설 ②의 공식 'Not until A + 조동사/be동사 + 주어 + 동사원형'은 be동사 도치의 경우 동사원형이 뒤따르지 않으므로 부정확한 축약이다. 본 문항의 can 도치 설명 자체는 정확하다."
+    },
+    {
+      "code": "V5-RENDER-FIELD-EMPTY",
+      "severity": "minor",
+      "evidence": "발문이 '지문의 내용을 바탕으로'인데 렌더 지문 필드가 '(렌더 지문 없음)'이다. 서술형 특성상 원지문 원형 노출로 가정되고 참조 문장+조건만으로도 수행 가능하므로 치명으로 보지 않으나, 노출 지문이 명시돼 있지 않은 점은 기록한다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 2,
+    "C5": 3,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "조건1(마지막 문장 핵심 의미·요소 포함)",
+      "intent": "의미 보존 능력 — 원문 tail NP(the quiet voices in the backs of our heads telling us about the insight)를 생략 없이 재현",
+      "temptingBecause": "학생이 'telling us about the insight' 같은 후위 수식을 누락하거나 축약하기 쉬움",
+      "decisiveFlaw": "원지문 마지막 문장이 학생에게 그대로 노출되므로 이 30% 배점은 사실상 전사 작업이며, 부분 누락 시 감점 폭이 미정의"
+    },
+    {
+      "label": "조건2(Not until 문두 + 도치)",
+      "intent": "부정어 문두 시 주절 주어-조동사 도치라는 핵심 통사 변환 능력",
+      "temptingBecause": "It-cleft 원문을 보고 'Not until ... that we can hear'처럼 that절을 남기거나 'we can finally hear' 평서 어순으로 쓰는 전형적 오류를 유도",
+      "decisiveFlaw": "없음 — 문항의 핵심 평가 지점으로 유효. 다만 도치 실패 시 40% 전체 감점인지 부분 감점인지 경계 미정"
+    },
+    {
+      "label": "조건3(두 구 포함·병렬 연결)",
+      "intent": "분사구(진행 수동 보어)와 형용사구를 공유된 be 뒤에 문법적으로 연결하는 능력",
+      "temptingBecause": "원문은 콤마 삽입구('warm water, unable to...')를 쓰므로 학생이 원문 그대로 옮길 가능성이 높음",
+      "decisiveFlaw": "채점기준 2의 '병렬 연결'이 and 결합만 인정하는지 원문형 콤마 삽입구도 인정하는지 미정의(핵심 채점 경계 공백). '수동태 분사구문' 용어도 오분류"
+    },
+    {
+      "label": "조건4(현재형 can을 도치절에 사용)",
+      "intent": "원문 'are able to'를 현재 시제 조동사 can으로 치환하는 시제·조동사 선택 능력",
+      "temptingBecause": "could로 쓰는 시제 오류를 차단하려는 의도",
+      "decisiveFlaw": "정답 조동사를 조건이 명시적으로 제공해 able→can 판단 자체가 소거됨 — 단서 과잉(C4 감점 요인)"
+    }
+  ],
+  "explanationIssues": [
+    "조건 3의 '수동태 분사구문' 용어 오분류: 'being massaged'는 원문·모범답안 모두 진행 수동 'are being massaged'의 일부이지 부사적 분사구문이 아님(해설 ③의 '분사구' 서술은 서술 보어 분석으로 방어 가능)",
+    "해설 ② 공식 'Not until A + 조동사/be동사 + 주어 + 동사원형'은 be동사 도치 시 동사원형이 없어 부정확한 일반화",
+    "could/that절 잔존/평서 어순 등 전형적 오답 유형과 감점 경계에 대한 안내 부재 — 서술형 해설로서 채점 지침 역할이 약함"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "모범답안 자체는 문법적·자연스럽고(진행 수동 분사구와 형용사구의 be 공유 병렬은 표준 영어에서 허용) it-cleft를 Not until 도치로 변환하는 출제 지점도 정전급이다. 그러나 개방형 서술의 V2 요건(허용 답안 집합·배제 경계·독립 정답 예시 3개·경계 오답 3개)이 전무해 채점 경계가 흐리다 — 특히 원문 구조 그대로의 콤마 삽입구 답안 처리 기준 부재가 결정적이다. V2 실패이므로 공예 합계 16과 무관하게 F. 출하하려면 (1) 동치답 허용 목록(축약형·철자·콤마 삽입구·finally 위치), (2) 경계 오답 3개 이상(could 사용, that절 잔존, being 탈락)과 감점 규칙, (3) 조건 3의 용어를 '분사구'로 교정하는 수정이 필요하다. 요청 난이도 INTERMEDIATE이므로 KILLER 조건 판정 대상 아님(false)."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "(C)",
+  "multipleDefensible": true,
+  "defensibleLabels": ["(C)", "(D)"],
+  "confidence": "medium",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'evaluating these issues from different perspectives to guide how to respond'의 목적 부정사. 지문 첫머리의 정의 'the identification and evaluation of evidence to guide decision-making'과 정확히 평행 구조이며, guide + wh-to부정사절(how to respond) 결합도 정상. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "관계대명사 that의 선행사는 'the principles of conduct'(복수)이고 관계절 동사 'are considered correct'가 복수 일치. which로 바꿔도 되는 자리이며 어법상 문제 없음. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "wrong (intended answer)",
+      "reason": "해당 문장 'What a person values (C) relating to their... beliefs (D) influenced by their... experiences.'는 명사절 주어(What a person values)만 있고 정동사(finite verb)가 없다. (D) influenced를 'beliefs'를 수식하는 과거분사(축약 관계절)로 읽는 것이 자연스러운 1차 독해이므로, 정동사 자리는 (C)이고 relating → relates로 고쳐야 한다. 한 단어 교체로 수리되는 전형적 '긴 명사절 주어 + 본동사를 분사로 위장' 패턴. 출제 의도 정답으로 판단."
+    },
+    {
+      "label": "(D)",
+      "verdict": "defensible alternative error (ambiguity)",
+      "reason": "매력적 오답이자 실제로 옹호 가능한 대안 정답. 'relating to'를 복합 전치사(= concerning, 예: issues relating to health)로 읽으면 'What a person values relating to their... beliefs'가 온전한 주어가 되고, 결핍된 정동사 자리는 (D)가 되어 influenced → is influenced로 고쳐야 한다. 이 대안 해석도 문법·의미 모두 성립하므로 (D)를 정답이라 주장해도 논리적으로 반박이 어렵다. 단, 수능 관례상 정답 수정은 한 단어 교체(relates)가 표준이고 'is' 삽입이 필요한 (D)는 2순위. 문장의 결함이 '정동사 부재'라는 단일 결함을 두 밑줄 중 어느 쪽에도 귀속시킬 수 있어 문항 자체에 중의성이 있음."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "alongside는 전치사이므로 동명사 recognizing (and accepting)이 오는 것이 옳다. 'recognizing and accepting that...' 병렬도 정상. 정문."
+    }
+  ],
+  "note": "핵심 결함: (C)/(D)가 걸린 문장은 정동사가 없는 비문인데, 그 결함을 (C) relating→relates 또는 (D) influenced→is influenced 어느 쪽으로 수리해도 문법적·의미적으로 성립한다. 최상위권 실전 풀이에서는 1차 파스와 한 단어 수정 관례에 따라 (C)를 고르겠지만, 'relating to = ~에 관한' 전치사 독해가 성립하는 이상 (D)도 방어 가능하여 이의신청에 취약한 문항. 나머지 (A)(B)(E)는 명백한 정문."
+}

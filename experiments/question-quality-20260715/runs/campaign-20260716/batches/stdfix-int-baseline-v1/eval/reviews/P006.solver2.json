@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "\"people cannot find the sign there\"는 서사와 직접 모순된다. Carol은 표지판을 실제로 발견(noticed a sign above her head)했고, 표지판을 못 찾는다는 명제는 '그 코너에서 만나는 것이 나쁜 생각'이라는 결론을 전혀 함의하지 못한다. 문법 결합(because + 절)은 성립하나 논리적으로 불성립."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "\"cars may stand there as long as they want\"는 허가 명제로서 'bad idea to meet'의 이유가 될 수 없고(허가는 회피 사유를 만들지 않음), 표지판 문면 'No Standing'과도 어떤 해석 하에서든 모순된다. Carol의 오해(보행자 금지)와도 무관. 문법적이지만 논리 불성립."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "외치(extraposition) 구문 'it is prohibited for pedestrians to stay in this spot'은 for-구가 부정사의 의미상 주어로 기능하는 정문. 논리적으로 Carol의 오해석(No Standing = 보행자 체류 금지)을 정확히 진술하며, 'bad idea to meet at that corner'를 함의하고, 친구의 반박 'Of course you can stand there'가 정확히 이 명제를 부정한다. 간접화법 속 시제(is)와 근칭 지시사(this)는 자유간접화법적 현재 규정 진술로 옹호 가능한 경미한 결함."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "\"pedestrians must stand in a straight line\"은 표지판 문면('No Standing', 줄서기와 무관)에서 도출 불가하며, 설령 참이라도 줄을 서면 준수 가능하므로 '그 코너에서 만나는 것이 나쁜 생각'이라는 결론을 함의하지 못한다. 논리 불성립."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "\"everyone should park their cars immediately\"는 표지판의 실제 의미(주정차 금지)와 정반대이고, 보행자인 Carol의 회피 행동(표지판에서 물러나 서성임)과도 인과가 닿지 않는다. 논리 불성립."
+    }
+  ],
+  "note": "빈칸은 Carol의 오해 내용을 담아야 하며, 후속 대화('Of course you can stand there' / 'the sign says No Standing')가 ③의 명제를 유일하게 지목한다. 유일 정답 ③, 복수 정답 여지 없음. 경미한 지적: ③의 시제·지시사(is/this spot)는 과거 간접화법 맥락에서 was/that spot이 더 자연스러우나 규정의 현재성 진술로 정문 처리 가능."
+}

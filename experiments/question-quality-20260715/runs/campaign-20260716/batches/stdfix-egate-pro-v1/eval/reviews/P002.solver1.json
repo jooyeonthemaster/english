@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "D",
+  "multipleDefensible": false,
+  "defensibleLabels": ["D"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "'The fact that ...'는 추상명사 fact 와 동격을 이루는 명사절을 이끄는 접속사 that. 뒤에 'other species depend on or are greatly affected by the keystone species'라는 완전한 절이 이어지므로 관계대명사가 아닌 동격 접속사 that 이 옳다. 매력적 오답: which/what 을 떠올릴 수 있으나 동격절에는 접속사 that 만 가능해 유혹이 무너진다."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "문장의 진주어는 단수 'The fact (that ... keystone species)'이고 동격절이 길게 삽입돼 있을 뿐이다. 따라서 단수 수동태 'is revealed'는 수 일치(단수)와 태(사실이 '드러나는' 대상 → 수동) 모두 정문. 삽입된 복수명사 species에 낚여 are 로 고치고 싶은 유혹이 있으나 지배 주어는 fact 단수라 옳다."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "'Although figs collectively produce a continuous crop, ... do not normally consume large quantities of figs'는 절+절 양보 구조. 뒤에 주어+동사를 갖춘 완전한 절이 오므로 부사절 접속사 Although 가 적절하고, '항상 열매가 있음에도 평소엔 많이 먹지 않는다'는 양보 논리도 성립. Despite(전치사)로 바꾸고 싶은 유혹이 있지만 절을 이끄므로 Although 가 정문."
+    },
+    {
+      "label": "D",
+      "verdict": "incorrect",
+      "reason": "틀린 부분. 'fig trees become importantly in sustaining ...'에서 become 은 주격보어를 취하는 연결동사(linking verb)이므로 보어 자리에는 형용사가 와야 한다. 부사 importantly 는 보어가 될 수 없어 형용사 important 로 고쳐야 한다(fig trees become important in sustaining ...). 대안 해석으로 importantly 를 문장부사·삽입으로 볼 여지가 있는지 검토했으나, 'become' 뒤 보어 자리에 놓여 있고 문장이 보어 없이 미완성이 되므로 성립하지 않는다. 명백한 어법 오류."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "주어가 동명사구 'Protecting fig trees in such tropical rainforest ecosystems'로 단수 취급되므로 단수 동사 is 가 옳다. 근접 복수명사 ecosystems 에 낚여 are 로 고치는 유혹이 있으나 실주어는 동명사 Protecting 단수라 정문."
+    }
+  ],
+  "note": "전형적 연결동사 보어 어법 문항. become 은 상태 연결동사로 형용사 보어를 요구하는데 밑줄 (D)가 부사 importantly 로 되어 있어 유일한 오류. 나머지 (A)동격 that, (B)단수 수동태 수일치, (C)절을 이끄는 양보 접속사 Although, (E)동명사 주어 단수 일치는 모두 정문이며 근접명사 낚시(species/ecosystems)에도 지배 규칙이 흔들리지 않는다. 정답 D로 단일하게 좁혀진다."
+}

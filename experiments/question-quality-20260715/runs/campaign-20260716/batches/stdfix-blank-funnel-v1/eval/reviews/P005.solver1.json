@@ -1,0 +1,35 @@
+{
+  "pid": "P005",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "매력적 오답. 앞의 협상/사업가 사례 잔상으로 'business'에 끌리지만, (a) 'stamina to convert their physical stamina'로 stamina 중복의 어색한 seam, (b) 골퍼의 메이저 대회 맥락에 'purely business-oriented strategy'는 화제 이탈 — 사업 사례는 유비였을 뿐. 유혹은 있으나 옹호 불가."
+    },
+    {
+      "label": "②",
+      "verdict": "correct",
+      "reason": "체력(strength and stamina)이 대회 종반까지 인지적(집중)·신체적 우위를 지속하게 한다는 의미로, 협상 사례의 'physical stamina to see the deal through' 및 'close out their opponents in major tournaments'와 정확히 호응. seam(to sustain both ... superiority)도 자연스러움."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "지문은 'not just on the practice range but in the weight room'으로 연습장 의존을 넘어섰다고 했고, 그들에게 stamina가 부족하다는 전제('their lack of stamina') 자체가 지문과 정면 모순."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "웨이트 훈련을 긍정적으로 서술한 지문과 정반대의 부정 방향. 'strength and stamina to undermine their mental game'은 in order to close out opponents와 논리적으로 성립 불가."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "지문 핵심은 신체 상태와 수행(협상·경기)의 연결·통합이지 분리가 아님. 신체-인지를 분리하는 것이 상대 제압의 수단이 될 수 없어 인과가 끊김."
+    }
+  ],
+  "note": "빈칸 방향이 명확하고(체력→종반까지 우위 지속→상대 제압) 정답 ②로 단일 수렴. ①이 협상 사례 잔상을 이용한 매력적 오답이나 stamina 중복 seam과 'purely business-oriented'의 맥락 이탈로 배제 확실. 나머지는 지문과 방향 모순으로 즉시 소거되는 편이라 오답 매력도는 ①에 집중된 구조. 복수정답·무정답 소지 없음."
+}

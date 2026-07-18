@@ -1,0 +1,35 @@
+{
+  "pid": "J019",
+  "answer": "5",
+  "multipleDefensible": false,
+  "defensibleLabels": ["5"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "Seam is grammatical, but logic fails: the blank is governed by 'meaning that', which forces it to gloss 'context dependent'. The stacked adverbials ('under different circumstances, at a different time, when they are feeling a different way') set up intra-individual variation; 'remains remarkably consistent' is its negation. A concessive rescue reading would require an overt marker (even/despite), which is absent, so the contradiction is formally unavoidable."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "Grammatically parseable (adverb placement 'follow blindly prescribed codes' is awkward but licit). Logically contradicts the passage's explicit thesis that students should think through ethical issues 'rather than follow a prescribed set of ethical codes or rules', and it is not a paraphrase of context dependence, which 'meaning that' requires."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "Seam failure: the anaphoric chain runs on generic 'they' ('when they are feeling a different way'); switching the matrix subject to 'we recognize' makes the fronted adverbials modify the recognizing event, which is incoherent — the circumstances/time/mood are supposed to condition the individual's judgment, not our recognition. Additionally, the comparative 'more fairly' has no comparison anchor anywhere in the passage."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "Grammatical seam, but 'permanently fixes cognitive perspectives' is the exact negation of 'context dependent' and of 'these principles vary both between and within individuals'. The passage's mention of 'formal and informal learning experiences' as an influence is a surface lexical lure; influence is not permanence. Also semantically clashes with the adverbial stack that presupposes change."
+    },
+    {
+      "label": "5",
+      "verdict": "accept",
+      "reason": "Fits the seam: a finite clause completing 'meaning that [adverbials], one might alter their decisions...'. The 'they' -> 'one ... their' shift is a generic-reference alternation (generic one with singular they), stylistically loose but grammatical and attested in academic ESL prose. 'Depending on the situation' is mildly redundant with the fronted adverbials, but functions as a coherent restatement, not a contradiction. Logically it is precisely the definition of 'context dependent' that 'meaning that' demands, and it feeds the following sentence about differing drivers of other people's decision making. Unique correct answer."
+    }
+  ],
+  "note": "Clean item. The 'meaning that' appositive plus the three fronted variation adverbials jointly pin the blank to a restatement of intra-individual, situation-driven change, which only option 5 supplies. Distractors 1 and 4 are polarity reversals, 2 contradicts an explicit earlier claim, 3 breaks pronoun cohesion and introduces an unanchored comparative. Minor stylistic quibbles in the key (one/their shift; redundancy of 'depending on the situation' after 'under different circumstances') do not create a second defensible answer."
+}

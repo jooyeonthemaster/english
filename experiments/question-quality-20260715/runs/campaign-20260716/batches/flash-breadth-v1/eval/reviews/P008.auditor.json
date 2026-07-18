@@ -1,0 +1,72 @@
+{
+  "pid": "P008",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-INFO-RENDER-EMPTY",
+      "severity": "minor",
+      "evidence": "'렌더된 지문' 필드가 '(렌더 지문 없음)'이다. SUMMARY_COMPLETE_MC는 지문을 무변형 노출하는 유형이므로 손상은 아니지만, 학생 노출본이 원지문과 동일함을 파일 자체로는 확증할 수 없다. 원지문 자체는 접합 파손·중복·누락·고아 문장부호 없이 온전하며(영국식 behaviour/analyse 철자 일관), 요약문 (A)/(B) 라벨은 선지 2열 구조와 정확히 일치한다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1 (absolute …… guide) — 정답",
+      "intent": "정답. 변이 주장('principles vary both between and within individuals', 'context dependent')의 추상화 = not absolute; 'the factors that drive other people's codes and decision making'의 재진술 = guide.",
+      "temptingBecause": "해당 없음(정답).",
+      "decisiveFlaw": "없음. 두 빈칸 모두 지문 논리와 정확히 정합하며 완성문이 문법적이다."
+    },
+    {
+      "label": "2 (absolute …… restrict)",
+      "intent": "half-truth: (A)는 정답과 동일하게 두고 (B)에서 관계 왜곡(guide→restrict, valence 왜곡).",
+      "temptingBecause": "(A)가 정답과 같아 A열만 판단한 학생을 끌어들이고, '행동 규범(codes of conduct)'이 행동을 제약한다는 일반 상식 스키마와 공명한다.",
+      "decisiveFlaw": "지문은 codes를 의사결정을 '이끄는(drive/guide)' 것으로만 규정하며 개인을 억압·제한한다는 서술이 전혀 없다. restrict는 지문에 없는 부정적 valence를 도입한다."
+    },
+    {
+      "label": "3 (flexible …… guide)",
+      "intent": "polarity trap: (B)는 정답과 동일하게 두고 (A)에 지문의 핵심어 계열(가변성)을 넣되 'not (A)' 부정 프레임 아래에서 논리가 반전되게 함.",
+      "temptingBecause": "flexible 자체는 지문의 '가변적 원칙'과 표면적으로 어울리는 어휘이고 (B) guide도 정답이라, 부정어 'not'을 요약문에서 놓친 학생이 고른다.",
+      "decisiveFlaw": "요약문에 넣으면 'ethical principles are not flexible'이 되어 지문의 context-dependence·개인 간 변이 주장과 정반대 진술이 된다."
+    },
+    {
+      "label": "4 (universal …… evaluate)",
+      "intent": "half-truth + actor/relation distortion: (A)는 실제로 성립 가능한 대안(not universal = 변이 주장과 정합)으로 두고 (B)에서 codes와 individuals의 관계를 '평가' 관계로 왜곡.",
+      "temptingBecause": "(A) universal은 'not' 아래에서 지문을 온전히 대변할 수 있어 강하게 매력적이고, evaluate는 지문 서두의 'identification and evaluation of evidence', 'evaluating these issues'에 verbatim 등장하는 어휘라 표면 매칭 학생을 끌어들인다.",
+      "decisiveFlaw": "지문에서 evaluate의 목적어는 evidence/issues이지 individuals가 아니다. 'codes of behaviour that evaluate individuals'는 규범이 개인을 평가한다는, 지문에 존재하지 않는 관계다."
+    },
+    {
+      "label": "5 (subjective …… respect)",
+      "intent": "polarity trap + 무근거 관계: (A)는 지문의 '개인마다 다름'을 연상시키는 어휘를 부정 프레임에서 반전시키고, (B)는 '타인 요인 수용(accepting)' 맥락을 codes-individuals 관계로 오전이.",
+      "temptingBecause": "subjective는 '윤리 원칙이 개인마다 다르다'는 지문 요지의 자연스러운 연상어이고, respect는 마지막 문장의 'recognizing and accepting' 정서와 공명한다.",
+      "decisiveFlaw": "'not subjective'는 지문 요지의 정반대가 되고, respect는 수용의 주체(사람)와 대상(타인의 요인)을 codes→individuals 관계로 잘못 옮긴 것이어서 지문 근거가 없다. 두 빈칸 모두 탈락."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "오답 2 해설의 'restrict ... 수동적이고 억압적인 뉘앙스' — restrict는 능동적 제한 동사이므로 '수동적'이라는 수식은 부정확한 표현 선택이다. 다만 오답 사유의 본질(지문에 없는 억압적 valence 도입)은 올바르게 짚고 있어 사실성 오류(V4 실패) 수준은 아니다.",
+      "recommendation": "'수동적이고' 삭제, '지문에 없는 억압·제한의 뉘앙스로 왜곡'으로 정리."
+    },
+    {
+      "severity": "minor",
+      "evidence": "오답 4 해설의 '다양하게 적용되는 개인들의 행동 주체를 평가한다는 의미가 되어' — 문장이 꼬여 있어 한 번에 읽히지 않는다(내용 자체는 정확).",
+      "recommendation": "'규범이 개인을 평가한다는 관계가 되어 지문의 인과(요인→결정)와 어긋난다'로 단문화."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V 전부 통과. blind solve 독립 정답 = 1(absolute/guide)로 선언 정답과 일치하며, 5개 선지를 각각 빈칸에 대입해 유일성을 확인했다(2·4는 A열만 참인 half-truth, 3·5는 'not' 극성 함정). A열 adjective 슬롯·B열 복수 타동사 슬롯이 전 선지 동형이라 문법 소거가 불가능하고, 정답 완성문도 자연스럽다. 공예: 요지(원칙의 가변성→다양한 규범 이해 필요)를 정면으로 묻고(C1=3), 오답들이 half-truth/극성반전/관계왜곡으로 역할 분담되나 3·5가 같은 극성 함정 메커니즘을 공유해 밀도가 만점은 아니다(C2=3). 2·3·4가 각각 한 열이 참이어서 실제 경쟁력이 있으나 B열 오답(restrict/evaluate/respect)은 collocation만으로도 비교적 쉽게 소거되고 guide가 지문에 verbatim 2회 등장해 표면 매칭 여지가 있다(C3=3, C4=3 — evaluate도 지문에 등장해 표면 매칭 단독으로는 안 풀리는 점이 상쇄). 한 단계 추상화 + 극성 검산이라는 요구 사고량은 INTERMEDIATE에 정확히 맞는다(C5=3). 해설은 정확하고 함정 분리가 되어 있으나 다소 장황하고 2번 해설의 '수동적' 등 표현 선택이 거칠다(C6=3). 합계 18 — 전 C≥3이지만 21 미만이므로 A 불가, B 판정. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

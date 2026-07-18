@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "(A) 'individual authorship' is the precise paraphrase of 'the emphasis on individuality is problematic — rather than actually designing': the misleading element is attributing the act of designing (authorship) to one individual while substantial numbers of employed designers actually implement the concept. (B) 'creative coordinators' is a direct synonym of the passage's 'creative managers'. The causal seam also holds formally: stress on authorship is misleading BECAUSE the figures coordinate rather than author. Both slots pass the entailment test."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "(A) is valid, but (B) 'solitary innovators' asserts the negation of two passage claims at once: the figures operate 'within collaborative settings' (not solitary) and 'function more as creative managers' rather than 'actually designing' (not innovators). The summary frame itself ('within collaborative settings') makes 'solitary' internally contradictory."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "Strongest distractor. (B) is correct, but (A) 'personal flair' fails the strict entailment test: the passage never asserts that stressing flair misleads. Its critique ('emphasis on individuality is therefore problematic') is derived from C2 — that many implementing designers are overlooked — i.e., it targets ATTRIBUTION of design activity, not the flair itself. Moreover 'personal flair' is lexically reserved by the summary's concessive clause (mirroring 'Personal flair is without doubt an absolute necessity in... small objects'), so reusing it in (A) collapses the concept shift the summary encodes and produces a claim absent from the passage. The explanatory link 'flair-stress misleads because figures act as coordinators' is weaker than the authorship reading, where the link is analytic."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "(A) 'technological complexity' is a category error: 'a low degree of technological complexity' merely characterizes the small product categories where flair matters; the passage contains no claim that stress on technological complexity is misleading anywhere. (B) 'organizational supervisors' drops the 'creative' component of 'creative managers' and over-generalizes, but (A) alone is disqualifying."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "(A) 'collective implementation' reverses the passage's polarity: collective implementation is what is 'easily overlooked', not what is over-stressed; the stress the passage criticizes falls on individuality. (B) 'aesthetic leaders' directly contradicts 'rather than actually designing... function more as creative managers'. Both slots fail."
+    }
+  ],
+  "note": "Grammarian/logician lens. Frame requirements: (A) must paraphrase the object of the problematic 'emphasis on individuality' (= crediting the individual with actually designing), (B) must paraphrase 'creative managers', and the seam '(A)-stress misleads because figures act as (B)' must be preserved. Only option 1 satisfies all three. Option 3 was actively tested as a co-defensible candidate (flair ~ demonstration of individual personality, per sentence 1) but rejected: the passage affirms flair's necessity only for small categories and locates the large-project problem in overlooked collective implementation, i.e., misattributed authorship — not in flair being stressed. No grammatical seam issues in any option (all NP pairs are syntactically well-formed in the blanks); discrimination is purely semantic/logical. Single uniquely defensible answer."
+}

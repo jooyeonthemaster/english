@@ -1,0 +1,81 @@
+{
+  "pid": "P004",
+  "blindAnswer": "③",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-ATTRIBUTION-MINOR",
+      "severity": "minor",
+      "evidence": "해설이 '본문 전반부에서 기존 도구와 무술의 필터링에 의존하면 실패할 수 있음을 지적'이라고 서술하지만, 필터(filter) 언급은 실제로는 후반부 6번째 문장(Experienced martial artists use their experience as a filter...)에 처음 등장한다. 전반부는 '익숙한 도구·기술 의존의 실패'만 다룬다. 압축 서술로 인한 문장 귀속 부정확이며 구조 분석의 핵심(필터 오작동 → 실수)은 정확하므로 치명은 아니다."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "극성 반전(polarity reversal): 실수의 원인을 '경험 의존'이 아니라 '경험 배제·직관 의존'으로 뒤집음",
+      "temptingBecause": "'rely', 'experience', 'a new problem' 등 1~2문장의 어휘를 그대로 재사용하여 국소 단서 일치가 강함",
+      "decisiveFlaw": "본문은 novel 상황에서 오히려 '아무것도 가정하지 않는(beginner's mind)' 태도를 권장하며, 마스터의 실수는 경험 필터의 오작동에서 나온다고 논증한다. 경험을 버리고 직관에 의존해서 실수한다는 인과는 논지와 정반대. 'entirely'라는 절대어도 방어력을 낮춤."
+    },
+    {
+      "label": "②",
+      "intent": "범위 축소(scope shift): 인지적 여과 차원의 논의를 '신체 기술 훈련'이라는 구체 상황으로 협소화",
+      "temptingBecause": "무술(martial arts)이라는 소재 프레임과 겹쳐, 표면 소재만 좇는 독자를 유인",
+      "decisiveFlaw": "'physical techniques', 'formal training sessions'는 본문 어디에도 앵커가 없다. 본문은 정보의 중요/비중요 여과라는 인지 과정을 논하므로 차원 자체가 어긋난다. 주의 깊은 독자는 즉시 소거 가능 — 앵커 부재로 KILLER 심도의 디코이로는 미달."
+    },
+    {
+      "label": "③",
+      "intent": "정답: source span 'that filter mistakenly screens out something essential'의 추상화 패러프레이즈",
+      "temptingBecause": "해당 없음(정답). 'stored expertise'=경험 기반 필터, 'blinds them to'=잘못 걸러냄, 'novel and critical details'=something essential(novel 문제 맥락)로 의미 보존이 정확함",
+      "decisiveFlaw": "없음. 완성문 'When stored expertise blinds them to novel and critical details of the situation, then even seasoned masters can make mistakes.'는 문법적이고 전체 논지(전문성 자체가 위험이 될 수 있음)와 정확히 정합."
+    },
+    {
+      "label": "④",
+      "intent": "절반-진실(half-truth): 여과 실패라는 사실을 '규칙의 의도적 위반'이라는 행위자 책임 프레임으로 왜곡",
+      "temptingBecause": "'separating essentials from irrelevant details'가 6번째 문장('separate the essential from the irrelevant')과 거의 축자적으로 겹치는 가장 강력한 경쟁 선지. 절대어도 없어 소거 휴리스틱을 통과함",
+      "decisiveFlaw": "본문의 실수는 필터가 'mistakenly' 작동하는 비의도적 오류이며, 마스터가 규칙을 어겨서가 아니라 오히려 평소 방식(경험 필터)을 그대로 따르는 중에 발생한다. '규칙 위반 → 실수' 구도는 '올바른 방법 자체가 위험'이라는 논지를 뒤집는다. 'the original rules'라는 규범 실체도 본문에 없음."
+    },
+    {
+      "label": "⑤",
+      "intent": "주체 전도(actor swap)+허구적 대결 구도: 초심자의 마음을 마스터를 압도하는 외부 세력으로 둔갑",
+      "temptingBecause": "'beginner's mind'라는 본문 핵심어를 재사용하고, 초심자 대 숙련자 대조 구도를 표면적으로 반영",
+      "decisiveFlaw": "본문에서 beginner's mind는 권장되는 태도이지 마스터의 전술과 대결하는 주체가 아니다. 마스터의 실수는 내부 인지 필터의 오작동이지 외부 압도가 아님. 'directly overwhelms'는 문장 자체가 반쯤 부조리하게 읽혀 유혹력이 낮다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "TRAP-LABEL-IMPRECISE",
+      "severity": "minor",
+      "evidence": "⑤ 오답 해설이 함정 유형을 '인과 역전'으로 분류했으나, 실제 결함은 원인 주체를 마스터 내부 필터에서 초심자라는 외부 행위자로 바꾼 주체 전도(actor swap)에 가깝다. 결함 실질 설명 자체는 정확."
+    },
+    {
+      "code": "V4-ATTRIBUTION-MINOR",
+      "severity": "minor",
+      "evidence": "정답 해설의 '전반부에서 ... 무술의 필터링에 의존하면 실패' 귀속 부정확 (필터 문장은 후반부). validityIssues와 동일 건."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": {
+    "D1_sameSyntacticSlot": "충족. 5개 선지 모두 'When ___,' 뒤에 들어가는 정형절이며, 잔여 tail('then even seasoned masters...') 때문에 일부만 문법 탈락하는 문제 없음.",
+    "D2_meaningPreservingAbstraction": "충족. ③은 source span의 의미를 보존하며 난이도에 맞게 추상화('novel' 첨가는 2문장의 'particularly novel' 맥락으로 정당화됨).",
+    "D3_anchorOverlapFlaw": "미충족. ②의 'physical techniques during formal training sessions'는 무술이라는 도메인 프레임 외에 본문 텍스트 앵커가 없고, ⑤는 진술 자체가 반부조리하여 tempting overlap이 약함. 실질 경쟁 선지는 ③ vs ④(+①)로 좁혀져 KILLER 심도의 5지 경쟁 구도에 미달.",
+    "D4_twoCueIntegration": "충족. ③/④ 변별에는 필터 문장(6번째)과 전체 논지(1~3문장: novel 문제에서 경험 의존의 실패)의 통합이 필요하다. 절대어 휴리스틱('entirely/excessively/directly')은 ①②⑤를 소거해도 ③④가 남으므로 단일 단서로 정답을 찍을 수는 없음.",
+    "D5_distinctTrapTypes": "충족. 극성 반전(①), 범위 축소(②), 절반-진실(④), 주체 전도(⑤)로 함정 유형이 서로 다름."
+  },
+  "grade": "B",
+  "notes": "V1~V5 전부 통과. 렌더 지문은 원지문 마지막 문장의 when절('that filter mistakenly screens out something essential')만 빈칸으로 치환했고 나머지는 무손상 일치. 독립 blind solve 결과 ③ 단독 정답(고신뢰) — ④가 축자 겹침으로 가장 근접하나 '의도적 규칙 위반' 프레임이 논지를 뒤집어 배제 가능. 공예 합계 19(C1=4, 나머지 3): 빈칸이 글의 결론부 핵심 인과(전문성 필터 → 인지적 눈멂 → 실수)를 정확히 겨냥해 출제 가치는 최상이나, ②·⑤의 앵커·유혹력 부족으로 실질 경쟁 선지가 2~3개에 그쳐 KILLER 요청 대비 함정 깊이가 다소 미달(A 기준 합계 21 미만). 절대어 분포(오답 3개에만 extreme adverb)도 test-wise 소거를 일부 허용. ②를 본문 앵커가 있는 디코이로 교체하고 ⑤의 부조리한 표현을 다듬으면 A/beautiful KILLER 승격 여지가 있음. 해설은 구조 분석이 정확하나 문장 귀속 1건·함정 분류 라벨 1건의 minor 부정확 존재."
+}

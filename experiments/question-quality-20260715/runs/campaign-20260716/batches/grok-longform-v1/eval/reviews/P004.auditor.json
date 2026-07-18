@@ -1,0 +1,61 @@
+{
+  "pid": "P004",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-source-span-reference",
+      "severity": "minor",
+      "evidence": "오답해설 ⑤가 '본문은 전문적 권원 보호와 직접 개입을 요구한다'고 서술하나, 해당 표현(specialized entitlement protection mechanisms involving direct public intervention)은 빈칸으로 제거된 원문 span이라 렌더 지문에는 직접 등장하지 않는다. 마지막 문장 'direct public support'로 간접 지지되므로 오개념·환각은 아니며 V4 실패로 보지 않는다."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 4,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "half-truth / 지엽 기제 승격 — 본문이 '기여를 부정할 수 없다'고 인정한 생산 확대를 필요조건으로 격상",
+      "temptingBecause": "'food production in Zimbabwe'와 'if it involves vulnerable groups'(→ among exposed groups)를 동시에 앵커링해 본문 어휘 밀착도가 가장 높다",
+      "decisiveFlaw": "성장·생산 확대는 'explains at best only a small part'로 명시적으로 격하되고, 빈칸 문장의 양보절 'no matter how fast they grow'가 성장 계열 필러를 원천 봉쇄한다"
+    },
+    {
+      "label": "2",
+      "intent": "growth panacea / 양보절 정면 모순",
+      "temptingBecause": "1문장의 'enhanced economic growth' 경향 서술을 정답처럼 보이게 재활용한다",
+      "decisiveFlaw": "빈칸 문장 자체의 'no matter how fast they grow'와 결합하면 '아무리 빨리 성장해도 가속 성장 없이는 기근을 못 막는다'는 자기모순 문장이 된다"
+    },
+    {
+      "label": "3",
+      "intent": "정답 — source span 'specialized entitlement protection mechanisms involving direct public intervention'의 추상화 재진술(entitlement → command over basic necessities)",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음. 양보절·'small part' 문장·마지막 문장 'direct public support' 수렴 구조와 유일하게 정합한다"
+    },
+    {
+      "label": "4",
+      "intent": "actor swap / 기제 반전 — 국가 개입을 명시적으로 배제한 시장 주도 부흥",
+      "temptingBecause": "'the revival of the rural economy'를 그대로 앵커링한다",
+      "decisiveFlaw": "'without organized state involvement'가 마지막 문장 'direct public support'와 정면 충돌한다. 다만 이 부정 표현 자체가 반명제임을 다소 자기노출한다"
+    },
+    {
+      "label": "5",
+      "intent": "condition loss / 비판 대상 승격 — 1문장에서 비판된 다각화를 필요조건으로 격상",
+      "temptingBecause": "'diversification'과 'uncertain sources of livelihood'라는 본문 어휘 두 개를 결합했다",
+      "decisiveFlaw": "'merely spreads uncertain sources'라는 자기부정 서술로 넣는 즉시 무의미해진다. 'merely'가 오답임을 자기표지해 경쟁력이 5개 중 가장 약하다"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V 전부 통과, 정답 유일성 견고(각 선지 독립 검증 완료: ①②는 양보절/'small part'로, ④는 마지막 문장으로, ⑤는 자기부정으로 탈락). 다섯 선지 모두 'without ___' 뒤 NP 슬롯에 문법적으로 들어가 suffix 탈락 문제 없음. 원지문 대비 렌더 손상 없음. 오답 4개가 half-truth, 양보절 모순, actor swap, condition loss로 서로 다른 함정을 구현해 C2=4. KILLER 미충족 사유: (1) 마지막 문장 'direct public support'가 정답 ③ 'deliberate public systems'와 어휘('public')까지 공유하는 근접 재진술이라 단일 단서 키워드 매칭만으로 정답 선택이 가능 — '최소 두 문장/두 논리 단서 연결' 요건 위배. (2) ⑤의 'merely', ④의 'without organized state involvement'가 자기표지형 표현으로 실질 경쟁 선지를 ①②로 축소. 따라서 실제 난이도는 상위권 3점 문항 수준이며 요청 난이도 KILLER에는 미달(C5=3). 개선 방향: 정답에서 'public' 어휘를 피해 추상화 거리를 넓히고(예: institutional guarantees of basic subsistence), ⑤의 'merely' 제거. 공예 합계 20/24로 A 기준(21) 미달 — B."
+}

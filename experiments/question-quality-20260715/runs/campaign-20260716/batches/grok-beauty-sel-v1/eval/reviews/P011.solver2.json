@@ -1,0 +1,35 @@
+{
+  "pid": "P011",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "Maps exactly onto the thesis sentence ('At the same time, it is important to recognize that, no matter how fast they grow, countries ... cannot hope to prevent famines without specialized entitlement protection mechanisms involving direct public intervention'). 'Growth-centered strategies' = the P1 tendency (growth / rural revival / diversification); 'limits' = 'cannot prevent famines' and 'explains at best only a small part'; 'public crisis safeguards' = 'direct public intervention / direct public support in times of crisis'. Both the negative claim about growth and the necessity claim about public protection are captured — a complete formal match to the passage's argument structure."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "Agricultural modernization appears only as one of three examples (Kenya's agricultural sector), and its explanatory power for famine prevention is explicitly minimized ('explains at best only a small part'). The option asserts 'effectiveness', which the passage denies in evaluative direction; also over-narrow (topic mismatch in scope and polarity)."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "The passage treats dependence on uncertain livelihood sources as a background condition, not as something it prescribes reducing. The closest strategy, 'diversification of economic activities', is listed among the primarily-sought but insufficient remedies. The option injects a prescription absent from the text — logically unsupported as the topic."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "Directly contradicts the passage's evaluative hierarchy: the text argues that direct public (state) support, not market diversification, is what actually prevented famines in Botswana/Kenya/Zimbabwe. The claimed 'superiority of market diversification over state food distribution' is the reverse of the thesis."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Captures only the concession (P2: growth's potential contribution 'cannot be denied') while omitting the governing thesis. The passage explicitly limits growth's role ('at best only a small part'), so a topic statement centering growth's role in famine prevention misrepresents the argument — a concession-trap distractor."
+    }
+  ],
+  "note": "Topic question, not a grammar item; the lens was applied by formally proving/refuting each option as a candidate thesis. Discourse markers ('At the same time', 'no matter how fast they grow', 'The real achievements ... lie in') converge uniquely on option 1. No alternative reading rescues options 2-5; single defensible answer. Passage is recognizably in the style of Dreze & Sen's famine/public-action literature, whose thesis (growth insufficient without public entitlement protection) matches option 1."
+}

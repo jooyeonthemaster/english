@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "Comparative ellipsis under 'no more qualified to comment... than a physicist is [qualified] to judge...'. The predicate adjective 'qualified' is elided under identity with the first conjunct, leaving copula 'is' + infinitive complement 'to judge'. Fully licensed ellipsis pattern; grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "Subject-verb agreement across an intervening relative clause: true subject head is plural 'features' ('The very features that create expertise in a specialized domain'), not the proximate singular 'domain'. Plural 'lead' is correct."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "Reduced relative clause: 'observations [which were] gathered from local native groups'. 'Observations' is the patient of 'gather', so the passive past participle is required and supplied. Grammatical."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "Relative pronoun 'who' with human plural antecedent 'the men and women', functioning as subject of 'have devoted' (plural agreement consistent). No gap requiring whom/whose. Grammatical."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect (answer)",
+      "reason": "In 'devote A to B', 'to' is a preposition requiring an NP/gerund complement: 'devoted their lives to sorting out...'. Substitution test ('devoted their lives to it') confirms prepositional 'to'. The purpose-infinitive rescue reading ('devoted their lives [in order] to sort out') fails because 'devote one's life' obligatorily selects a to-PP complement, which that parse leaves unsatisfied. Bare 'sort' after prepositional 'to' is ungrammatical."
+    }
+  ],
+  "note": "Uniquely determined answer. (A) tests comparative ellipsis, (B) long-distance agreement with a singular proximity trap ('domain'), (C) reduced passive relative, (D) relative pronoun choice, (E) prepositional 'to' + gerund in 'devote... to'. Alternative rescue analyses were actively searched for each option; none makes (A)-(D) ungrammatical and none makes (E) grammatical. Clean single-answer grammar item."
+}

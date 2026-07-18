@@ -1,0 +1,35 @@
+{
+  "pid": "P008",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "Seam: 'helped to transplant(V)' is grammatical. Logic: every premise builds the Europe-to-America arc (Russian Formalism 1915, Prague Linguistic Circle leadership, forced emigration, founding the Linguistic Circle of New York as an analogue of the Prague Circle, teaching at Harvard/MIT). 'Through his teaching in the United States' + transplanting Old World traditions into the American scene is the unique proposition entailed by the preceding biography and coheres with the following sentence ('father of modern structural linguistics')."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "Seam grammatical, but the direction of transfer is reversed (America -> Europe). Teaching 'in the United States' cannot carry methods 'back into surviving Formalist circles in Europe'; no premise mentions any return to Europe or surviving European circles. Contradicts the adverbial of the blank sentence itself."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "Seam grammatical, but 'pedagogical models' is an unsupported predicate — the passage is about linguistic theory and intellectual traditions, never about teaching methodology. Also over-narrow: restricts to Czech sources while the passage foregrounds Russian Formalism equally."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "Seam grammatical, but presupposition failure: 'merge European and American schools' presupposes an existing American school of linguistics, which no premise establishes. The passage depicts one-directional transplantation of European traditions, not a bilateral merger into 'one continuous tradition'."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Seam grammatical; strongest distractor via lexical echo of the final sentence. But the final sentence attributes the interdisciplinary effects (anthropology, art criticism, brain research) to his 'sophisticated theories', stated after and in addition to the blank sentence. Inserting 5 makes the blank redundant with the next sentence, mis-attributes theory-driven influence to 'his teaching', and ignores the entire preceding Europe-to-US biographical arc the blank must synthesize."
+    }
+  ],
+  "note": "All five options are bare infinitive complements of 'helped to', so no option fails grammatically; discrimination is purely logical. Option 1 is uniquely entailed by the biographical premises (Europe->US transfer). Option 5 is the designed near-miss (word recycling from the closing sentence) but fails discourse-structurally. Answer narrows cleanly to 1; no alternative parse rescues 2-5."
+}

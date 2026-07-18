@@ -1,0 +1,117 @@
+{
+  "batchId": "stdfix-grammar-b2-v1",
+  "phase": "stdfix",
+  "note": "B2: STD vs PREMIUM 풀 깔때기 6쌍 (H-STD-4 KILLER 라우팅)",
+  "concurrency": 4,
+  "providerRouting": "none",
+  "assignments": [
+    {
+      "itemId": "gf-std-120",
+      "frameId": "grammar-frame-v2-120",
+      "subType": "GRAMMAR_ERROR",
+      "difficulty": "KILLER",
+      "plan": "STANDARD",
+      "armId": "B2-STD",
+      "funnel": true
+    },
+    {
+      "itemId": "gf-prem-120",
+      "frameId": "grammar-frame-v2-120",
+      "subType": "GRAMMAR_ERROR",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "B2-PREM",
+      "funnel": true
+    },
+    {
+      "itemId": "gf-std-133",
+      "frameId": "grammar-frame-v2-133",
+      "subType": "GRAMMAR_ERROR",
+      "difficulty": "KILLER",
+      "plan": "STANDARD",
+      "armId": "B2-STD",
+      "funnel": true
+    },
+    {
+      "itemId": "gf-prem-133",
+      "frameId": "grammar-frame-v2-133",
+      "subType": "GRAMMAR_ERROR",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "B2-PREM",
+      "funnel": true
+    },
+    {
+      "itemId": "gf-std-134",
+      "frameId": "grammar-frame-v2-134",
+      "subType": "GRAMMAR_ERROR",
+      "difficulty": "KILLER",
+      "plan": "STANDARD",
+      "armId": "B2-STD",
+      "funnel": true
+    },
+    {
+      "itemId": "gf-prem-134",
+      "frameId": "grammar-frame-v2-134",
+      "subType": "GRAMMAR_ERROR",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "B2-PREM",
+      "funnel": true
+    },
+    {
+      "itemId": "gf-std-136",
+      "frameId": "grammar-frame-v2-136",
+      "subType": "GRAMMAR_ERROR",
+      "difficulty": "KILLER",
+      "plan": "STANDARD",
+      "armId": "B2-STD",
+      "funnel": true
+    },
+    {
+      "itemId": "gf-prem-136",
+      "frameId": "grammar-frame-v2-136",
+      "subType": "GRAMMAR_ERROR",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "B2-PREM",
+      "funnel": true
+    },
+    {
+      "itemId": "gf-std-146",
+      "frameId": "grammar-frame-v2-146",
+      "subType": "GRAMMAR_ERROR",
+      "difficulty": "KILLER",
+      "plan": "STANDARD",
+      "armId": "B2-STD",
+      "funnel": true
+    },
+    {
+      "itemId": "gf-prem-146",
+      "frameId": "grammar-frame-v2-146",
+      "subType": "GRAMMAR_ERROR",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "B2-PREM",
+      "funnel": true
+    },
+    {
+      "itemId": "gf-std-148",
+      "frameId": "grammar-frame-v2-148",
+      "subType": "GRAMMAR_ERROR",
+      "difficulty": "KILLER",
+      "plan": "STANDARD",
+      "armId": "B2-STD",
+      "funnel": true
+    },
+    {
+      "itemId": "gf-prem-148",
+      "frameId": "grammar-frame-v2-148",
+      "subType": "GRAMMAR_ERROR",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "B2-PREM",
+      "funnel": true
+    }
+  ]
+}

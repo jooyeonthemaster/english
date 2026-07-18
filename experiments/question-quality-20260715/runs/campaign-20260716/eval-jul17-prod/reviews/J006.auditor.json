@@ -1,0 +1,87 @@
+{
+  "pid": "J006",
+  "blindAnswer": "3",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "answer-abstraction-shift",
+      "severity": "minor",
+      "evidence": "Source span 'cannot be denied' is an unqualified concession; the answer 'should be acknowledged to a certain extent' adds a qualification ('to a certain extent') not present in the span itself. The hedge is licensed by the wider discourse ('explains at best only a small part'), so uniqueness and grammaticality are unaffected, but the span-level meaning is downgraded rather than exactly preserved."
+    },
+    {
+      "code": "distractor-explanation-loose-label",
+      "severity": "minor",
+      "evidence": "오답해설 ②는 '공적 개입이 경제 성장을 방해한다는 인과 역전'이라고 쓰지만, 선지 ②의 주어는 '경제적 성공의 잠재적 기여'다(성장 자체가 아님). 관계 방향 서술은 맞으나 주어 치환이 있고, '인과 역전'보다는 '역할/극성 반전'이 정확한 라벨이다. 사실 오류 수준은 아니어서 V4 실패로 보지 않음."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 4,
+    "C3": 3,
+    "C4": 3,
+    "C5": 2,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "극성 반전(완전 부정) — 경제 성장의 잠재적 긍정성 자체를 뒤집는다.",
+      "temptingBecause": "'rural livelihoods'가 S1의 'revival of the rural economy'와 S3의 'derive their livelihood from uncertain sources'를 어휘적으로 앵커링하고, 성장 비판적 어조가 글의 회의적 톤과 표면적으로 닮았다.",
+      "decisiveFlaw": "빈칸 문장의 주어가 'The potential contribution'이고 조건절 'if it involves vulnerable groups'가 긍정적 시나리오를 전제하므로, '기여가 불안정을 필연적으로 악화시킨다'는 서술은 문장 내적으로도 부정합하며 지문 어디에도 근거가 없다. 'inevitably'라는 절대어도 자체 탈락 요인."
+    },
+    {
+      "label": "2",
+      "intent": "관계/역할 반전 — 공적 개입을 조력자가 아닌 방해물로 뒤집는다.",
+      "temptingBecause": "S3의 핵심어 'public intervention'을 그대로 재사용하여 본문을 정독하지 않은 학생에게 키워드 일치 착시를 준다.",
+      "decisiveFlaw": "S3('cannot hope to prevent famines without ... direct public intervention')과 S5('direct public support ... real achievements')가 공적 개입을 필수 성공 요인으로 명시하므로 정면 모순."
+    },
+    {
+      "label": "3",
+      "intent": "정답 — 원문 'cannot be denied'의 담화 역할(일반적 경향에 대한 조건부·부분적 인정)을 보존한 추상화.",
+      "temptingBecause": "해당 없음(정답).",
+      "decisiveFlaw": "없음. 'At the same time' 역접 전환과 'explains at best only a small part'의 제한적 평가가 '어느 정도 인정'이라는 완충 표현을 필연적으로 지지한다."
+    },
+    {
+      "label": "4",
+      "intent": "과확장/절대화 — 성장의 효과를 무조건적 보장으로 부풀린다.",
+      "temptingBecause": "S4의 보츠와나·케냐·짐바브웨 성공 사례를 피상적으로 읽으면 '성장 → 기근 해결'로 오독할 수 있다.",
+      "decisiveFlaw": "'guarantees the complete eradication'은 S3의 'cannot hope to prevent famines without ...' 및 S4의 'explains at best only a small part'와 직접 충돌. 절대어 조합으로 시험 요령상으로도 자체 탈락한다."
+    },
+    {
+      "label": "5",
+      "intent": "조건 치환(half-truth) — '성장만으로는 불충분'이라는 글의 전역적 요지는 유지하되 필수 보완 요소를 바꿔친다.",
+      "temptingBecause": "'insufficient'가 글 전체 논지와 일치하고, 'diversification'(S1)과 'agricultural sector'(S4)가 지문 어휘를 앵커링한다. 다섯 선지 중 가장 경쟁력 있는 오답.",
+      "decisiveFlaw": "S3이 지목하는 필수 보완 요소는 'specialized entitlement protection mechanisms involving direct public intervention'이지 농업 다각화가 아니며, 다각화는 오히려 S1에서 비판되는 '경향'의 목록에 속한다. 또한 빈칸 문장의 양보(인정) 역할을 부정 서술로 바꿔 'At the same time' 역접 구조를 붕괴시킨다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "오답해설 ②: 선지의 실제 주어('경제적 성공의 잠재적 기여')를 '경제 성장'으로 치환해 서술하고 '인과 역전'이라는 다소 부정확한 라벨을 사용.",
+      "recommendation": "'본문이 필수적이라고 보는 공적 개입을 기여의 방해 요인으로 뒤집은 관계 반전 오답' 정도로 라벨과 주어를 교정."
+    },
+    {
+      "severity": "minor",
+      "evidence": "오답해설 ⑤: '경제 성공의 부족함의 조건으로 제시'라는 한국어 표현이 어색함(사실 관계는 정확).",
+      "recommendation": "'성장의 불충분함을 메울 요소를 공적 개입이 아닌 농업 다각화로 바꿔친 조건 치환 오답'으로 다듬기."
+    }
+  ],
+  "killerConditionsMet": true,
+  "killerConditionsDetail": {
+    "sameSyntacticSlot": "충족 — 다섯 선지 모두 단수 주어 'The potential contribution'에 일치하는 동사구(aggravates/is hampered/should be acknowledged/guarantees/proves)로 동일 슬롯에 삽입되며, suffix/tail로 문법 탈락하는 선지가 없다.",
+    "meaningPreservingAbstraction": "대체로 충족 — 'cannot be denied' → 'should be acknowledged'는 정확한 패러프레이즈이나 'to a certain extent'는 span 밖 담화('at best only a small part')에서 끌어온 완충으로, 엄밀하게는 span 의미의 하향 조정(minor 이슈로 기록).",
+    "anchorOverlapFlaw": "충족 — 네 오답 모두 source anchor(①rural, ②public intervention, ④성공 사례, ⑤diversification/insufficient)·tempting overlap·단일 결정적 결함을 갖는다.",
+    "twoCueRequirement": "문면상 충족 — 극성만으로는 {③,④}, 절대어 회피만으로는 {③,⑤ 등}이 남아 단일 단서로 정답 확정 불가. ⑤ 기각에는 빈칸 문장과 S3의 연결(두 문장)이 실제로 필요하다. 단, '유일한 완충형 긍정 선지'라는 선지 프로파일 휴리스틱(극성+완충 2중 표면 단서)으로 본문 정독 없이 ③에 도달하는 지름길이 존재해 체감 난이도는 KILLER에 못 미친다(C5=2에 반영).",
+    "variedTraps": "충족 — 극성 반전·관계 반전·과확장 절대화·조건 치환으로 함정 유형이 모두 상이."
+  },
+  "grade": "B",
+  "notes": "V1~V5 전부 통과: 렌더 지문은 의도된 span('cannot be denied') 제거 외 원지문과 완전 일치하고, 정답 ③은 독립 검증에서 유일하며, 완성문은 문법적·자연스럽고, 해설의 구조 분석은 실제 담화 구조(양보→At the same time 역접→사례→결론)와 일치하고, 라벨·선지·해설·keyPoints가 동기화되어 있다. 공예 합계 18(C1=3, C2=4, C3=3, C4=3, C5=2, C6=3). 강점: 오답 4종의 함정 유형 분화(C2=4)와 ⑤의 실질적 경쟁력. 약점: 요청 난이도 KILLER 대비 실효 난이도 부족 — 'At the same time' 신호가 강하게 노출되어 있고 정답이 유일한 완충형 긍정 선지라 선지 프로파일만으로 접근 가능하며, ①·④는 절대어로 조기 탈락해 실경쟁이 ⑤ 하나로 좁혀진다(C5=2). §D 구조 조건은 문면상 충족하나 'beautiful KILLER'(A 등급 전제)에는 미달. 소수정 방향: ④의 절대어 완화, ①의 문장 내 부정합 완화, 정답의 완충 표지 약화로 상향 가능."
+}

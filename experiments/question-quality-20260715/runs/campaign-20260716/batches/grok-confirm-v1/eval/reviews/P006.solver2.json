@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "Seam: 'becomes + [an outcome refined by expert communities]' is a well-formed singular NP with a reduced passive relative ('refined by...'), agreeing with subject 'it' (= a scientific truth). Logic: it formally restates the passage's asserted norm — 'knowledge isn't knowledge unless it has been authorized by disciplinary specialists' — and licenses the closing sentence 'What happens in somebody's laboratory is only one stage in its construction' (construction = multi-stage collective refinement). Entailment chain is complete; no contradiction with any prior premise."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "Seam: grammatical ('becomes the fruit of...'). Logic: fails by contradiction — this is the individualist rhetoric ('product of inspired patience, of skilled hands') that the passage explicitly demotes ('almost nobody thinks they can provide a basis for action'). 'Alone' directly contradicts 'only one stage in its construction'. If inserted, the final sentence would refute the blank sentence, an internal inconsistency."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "Seam: grammatical ('a private breakthrough that speaks for itself'; relative clause agrees). Logic: 'speaks for itself' is the rejected claim ('they speak for themselves... yet almost nobody thinks...'), and 'private' contradicts the requirement of authorization by disciplinary specialists. Inserting it makes the passage assert what it just denied — logically inadmissible."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "Seam defect: 'it becomes materials' pairs singular subject with bare plural predicate nominal — a number-concord strain that reads as ill-formed in this register. Logic: the passage states that announcing at a press conference WITHOUT prior expert review gets one 'automatically castigated', so press-conference exposure cannot be what confers standing. Doubly excluded (grammar seam + direct contradiction)."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Seam: grammatical (free relative 'what unbiased minds draw straight from nature' is a valid NP complement of 'becomes'). Logic: contradicts two explicit premises — 'nature does not speak unambiguously' (so nothing is drawn 'straight from nature') and the framing of the 'unbiased mind' as part of the rejected individualist rhetoric. Inadmissible."
+    }
+  ],
+  "note": "Blind solve, grammarian/logician lens. The passage has a clear concessive pivot ('yet almost nobody thinks...'), making the second half the author's authoritative stance: scientific truth requires collective/disciplinary authorization beyond the laboratory. Only option 1 is entailed by that stance and consistent with the final sentence's 'only one stage in its construction'. Options 2/3/5 are grammatically fine but each contradicts an explicit premise (individualist-rhetoric echoes used as distractors); option 4 additionally has a number-agreement seam ('it becomes materials'). I searched for rescue readings (ironic reading, alternative antecedents for 'it/its' — 'its' must refer to 'a scientific truth', confirmed by singular concord) and found none. Single defensible answer: 1."
+}

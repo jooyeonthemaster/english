@@ -1,0 +1,91 @@
+{
+  "batchId": "decider-flash-v1",
+  "phase": "decider",
+  "note": "결정전 대조군: flash + 신규 검사기·계약 전부 가동",
+  "concurrency": 4,
+  "providerRouting": "none",
+  "env": {},
+  "assignments": [
+    {
+      "itemId": "df-sente",
+      "frameId": "grammar-frame-v2-176",
+      "subType": "SENTENCE_ORDER",
+      "difficulty": "INTERMEDIATE",
+      "plan": "STANDARD",
+      "armId": "DF-SENTE",
+      "funnel": true
+    },
+    {
+      "itemId": "df-sente",
+      "frameId": "grammar-frame-v2-128",
+      "subType": "SENTENCE_INSERT",
+      "difficulty": "INTERMEDIATE",
+      "plan": "STANDARD",
+      "armId": "DF-SENTE",
+      "funnel": true
+    },
+    {
+      "itemId": "df-summa",
+      "frameId": "blank-supply-v2-090",
+      "subType": "SUMMARY_COMPLETE_MC",
+      "difficulty": "KILLER",
+      "plan": "STANDARD",
+      "armId": "DF-SUMMA",
+      "funnel": true
+    },
+    {
+      "itemId": "df-irrel",
+      "frameId": "grammar-frame-v2-088",
+      "subType": "IRRELEVANT",
+      "difficulty": "INTERMEDIATE",
+      "plan": "STANDARD",
+      "armId": "DF-IRREL",
+      "funnel": true
+    },
+    {
+      "itemId": "df-vocab",
+      "frameId": "blank-supply-v2-119",
+      "subType": "VOCAB_CHOICE",
+      "difficulty": "INTERMEDIATE",
+      "plan": "STANDARD",
+      "armId": "DF-VOCAB",
+      "funnel": true
+    },
+    {
+      "itemId": "df-summa",
+      "frameId": "blank-supply-v2-120",
+      "subType": "SUMMARY_COMPLETE",
+      "difficulty": "INTERMEDIATE",
+      "plan": "STANDARD",
+      "armId": "DF-SUMMA",
+      "funnel": true
+    },
+    {
+      "itemId": "df-fill_",
+      "frameId": "grammar-frame-v2-096",
+      "subType": "FILL_BLANK_KEY",
+      "difficulty": "INTERMEDIATE",
+      "plan": "STANDARD",
+      "armId": "DF-FILL_",
+      "funnel": true
+    },
+    {
+      "itemId": "df-word_",
+      "frameId": "grammar-frame-v2-115",
+      "subType": "WORD_ORDER",
+      "difficulty": "INTERMEDIATE",
+      "plan": "STANDARD",
+      "armId": "DF-WORD_",
+      "funnel": true
+    },
+    {
+      "itemId": "df-gramm",
+      "frameId": "grammar-frame-v2-134",
+      "subType": "GRAMMAR_CORRECTION",
+      "difficulty": "KILLER",
+      "plan": "STANDARD",
+      "armId": "DF-GRAMM",
+      "funnel": true
+    }
+  ]
+}

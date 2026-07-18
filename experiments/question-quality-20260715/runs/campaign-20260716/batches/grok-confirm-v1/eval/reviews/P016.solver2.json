@@ -1,0 +1,35 @@
+{
+  "pid": "P016",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "Seam is grammatical ('actively turn X into Y'), but the restrictor 'only' formally contradicts the passage's 'not only look for some positive aspect... but actually go one step further.' Laughter is the entry-level example the passage explicitly says these people surpass; reducing their behavior to 'only... public laughter' reverses the escalation structure."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "Seam is grammatical, but 'recovering objects taken by major losses' is an orientation toward what was lost, directly contradicting the explicit contrast 'focus on what they can gain from their circumstance rather than on what they have lost.' Logically negated by the passage."
+    },
+    {
+      "label": "3",
+      "verdict": "accept",
+      "reason": "'actively mine their adversities for concealed benefits' is a well-formed VP ('mine X for Y'). Logically it is an exact restatement of the silver-lining cliché (concealed benefit = the hidden silver lining inside the cloud) and of 'focus on what they can gain from their circumstance' / 'see opportunities where most of us fail to see them.' 'Actively mine' also matches the agentive tone ('gather their resources,' 'go one step further'). Uniquely satisfies all passage propositions."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "Grammatical but 'actively expect' is a weak collocation (expectation is not an activity), and logically unsupported: the passage says they achieve feats 'in spite of their hardships' by focusing on gain; it never claims achievements erase or 'wipe out all past hardships.' The universal 'all' adds an entailment the text nowhere licenses."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "Grammatical, but 'merely to ride out the first wave of shock' caps the behavior at surviving the initial shock, while the passage states that after the initial shock they gather resources, overcome the problem, and see opportunities — i.e., they go beyond mere shock-survival. 'Merely' formally inverts the passage's escalation, so the option is logically excluded."
+    }
+  ],
+  "note": "Blind solve, grammarian/logician lens. Every distractor contains a lexical limiter or direction reversal ('only', lost-object orientation, 'wipe out all', 'merely') that clashes with an explicit passage proposition, so each is formally refutable rather than merely dispreferred. All five options are grammatically compatible with the 'they actively ___' seam, so discrimination rests purely on logic — clean single-key item; answer 3."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "J012",
+  "answer": "⑤",
+  "multipleDefensible": false,
+  "defensibleLabels": ["⑤"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "avoid wearing formal attire to maintain a casual style — 지문 어디에도 격식 회피/캐주얼 지향 동기가 없다. 오히려 Jeff는 화려한 옷 대신 깔끔한 흰 셔츠·검은 진을 골라주며, '새 옷을 고르러 간 이유'로서 인과가 성립하지 않는다."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "perform perfect music with Singaporean students — 공연은 싱가포르 자매대학 학생들을 '환영하기 위한' 것이지 그들과 '함께' 연주하는 것이 아니다(with 오독 유도). 또한 완벽한 연주 욕구는 뒤 문장 'That was why he had asked Jeff to help him pick out new clothes'의 원인이 될 수 없다."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "avoid being late for the welcoming ceremony rehearsal — 지각 모티프는 지문에 존재하나(교통체증으로 늦은 것은 Jeff), Garcia의 옷 쇼핑 동기와 무관하다. 표면 단어(late, rehearsal) 재활용형 미끼."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "hide his nervousness behind a flawless band performance — 가장 강한 매력 오답. 'nervousness'와 'flawless'가 지문 후반에 원문 그대로 등장해 실제로 끌린다. 그러나 빈칸 시점(쇼핑 전)에 Garcia는 아직 긴장하지 않았고(자신감이 긴장으로 바뀌는 것은 리허설 장면에서야 발생), 긴장 은폐는 '새 옷 구매'의 이유가 되지 못한다. 시간 순서와 인과 연결 양쪽에서 탈락."
+    },
+    {
+      "label": "⑤",
+      "verdict": "correct",
+      "reason": "seek an ideal visual presentation for his upcoming stage — 무대에서 최상의 외양을 원했다는 동기가 바로 뒤의 'That was why he had asked Jeff to help him pick out new clothes'와 유일하게 인과적으로 정합한다. 이후 쇼핑 장면 전체(옷 고르기, 점원 동의, 새 옷 입고 리허설행)가 이 동기를 뒷받침한다."
+    }
+  ],
+  "note": "정답은 ⑤로 유일하게 옹호 가능. 다만 형식 결함(seam) 지적: 빈칸이 독립 문장 자리('_____.')로 제시되었는데 선지 5개가 모두 원형 동사구(seek/avoid/perform/hide)여서 그대로 넣으면 비문이 된다. 의도된 원문은 'He wanted to _____.' 류의 stem이었을 것으로 추정 — 다섯 선지가 동일한 결함 프레임을 공유하므로 변별에는 영향이 없으나 실전 출제 형식으로는 수정 필요. 매력 오답 ④는 후반부 어휘(nervousness, flawless)를 그대로 재활용해 시간 역행 유혹을 만드는 잘 설계된 미끼."
+}

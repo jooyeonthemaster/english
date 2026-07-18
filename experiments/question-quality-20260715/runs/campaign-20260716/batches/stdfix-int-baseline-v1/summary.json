@@ -1,0 +1,40 @@
+{
+  "batchId": "stdfix-int-baseline-v1",
+  "phase": "stdfix",
+  "atKst": "2026-07-17T18:19:25.884+09:00",
+  "assignments": 10,
+  "slotsConsumed": 19,
+  "accepted": 10,
+  "modelCalls": 42,
+  "inputTokens": 299546,
+  "outputTokens": 43510,
+  "costUsd": 0.882502,
+  "ledgerAfter": {
+    "used": 785,
+    "cap": 1000,
+    "costUsd": 29.190035
+  },
+  "byArm": {
+    "C-INT-G": {
+      "n": 5,
+      "accepted": 5,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 13,
+      "costUsd": 0.669212
+    },
+    "C-INT-B": {
+      "n": 5,
+      "accepted": 5,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 6,
+      "costUsd": 0.21329
+    }
+  },
+  "models": {
+    "standard": "google/gemini-3.5-flash",
+    "premiumQgen": "google/gemini-3.1-pro-preview"
+  },
+  "durationMs": 142800
+}

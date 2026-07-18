@@ -1,0 +1,35 @@
+{
+  "pid": "P005",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'no matter how well you believe you are disguising yourself'에서 well은 내포절 동사 are disguising을 수식하는 부사가 how와 함께 앞으로 이동한 구조. 'you believe [you are disguising yourself how well]'로 복원하면 부사가 필수임이 확인된다. 'how good'을 떠올리게 하는 미끼지만 believe의 보어가 아니므로 부사 well이 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'were concerned that S + V'는 형용사 concerned가 that 정형절 보문을 취하는 표준 구문. dropping their masks(동명사 주어) + would make + 목적어 + appear weak(원형부정사 보어)까지 절 내부도 정상."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'encouraged a culture where ... did the same, creating a snowball effect'는 앞 절 전체를 의미상 주어로 하는 결과 분사구문. 표준 용법이며 'which created'로 바꿀 필요 없음."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "장거리 병렬 단서: 'Some of the ways ... were to actually name the masks, ___, and ask the CEOs ...'. 세 번째 항목 ask가 원형으로 to를 공유하므로 계열은 to name, (to) explore, (to) ask의 원형부정사 병렬이어야 한다. exploring은 이 병렬을 깨므로 explore로 고쳐야 함. 구제 해석(exploring을 name의 부대상황 분사구로 보고 to name ... and ask 2항 병렬로 읽기)을 적극 검토했으나, (i) 복수 명사 ways에 대응해 '이름 붙이기·비용 탐색·성찰 요청'이 각각 방법으로 제시되는 의미 구조이고, (ii) 'A, B-ing, and C' 위치의 삽입 분사는 옥스퍼드 콤마 3항 리스트 패턴을 깨며 계사 주어 some of the ways에 대해 현수 분사가 되어 성립하지 않는다. 유일한 오류."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'the costs of upholding them'의 them은 the masks를 지시하는 복수 대명사. 첫 문장 'Masks are too heavy to uphold'와 동사 uphold가 호응해 지시가 확정된다. the CEOs로 읽으면 의미가 성립하지 않으므로 중의성 없음."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: (A)가 가장 강한 매력적 오답 — how 뒤 believe가 끼어 있어 'how good'으로 착각하기 쉬우나 내포절 복원으로 즉시 해소. (C)의 결과 분사구문도 흔한 유혹이나 표준 용법. 정답 (D)는 to부정사 3항 병렬(name/explore/ask)에서 두 번째 항만 -ing으로 깨진 전형적 병렬 문항이며, 세 번째 항 ask가 원형이라는 장거리 단서가 결정적. 분사구문 구제 해석은 의미·구두점·현수 문제로 기각. 단일 정답으로 수렴, 이의신청 여지 낮음."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "(A) flair: 지문이 소형·저기술복잡도 제품에서 'Personal flair is without doubt an absolute necessity'라고 명시 — 'individual flair is vital in small, simple products'와 정확히 대응. (B) organizational processes: 'management organization and processes can be equally as relevant as designers' creativity'가 요약문의 'making (B) equally decisive in group practice'와 직결. 두 빈칸 모두 지문의 명시적 진술과 일치하며 문법 결합(seam)도 자연스럽다."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "(A) flair는 정합하나 (B) technical complexity가 부적합. 'low degree of technological complexity'는 소형 제품군의 특성 서술일 뿐, 집단 작업에서 창의성만큼 결정적이라고 지문이 말한 요소는 관리 조직·프로세스다. 지문 어휘가 그대로 등장해 표면 매칭으로 유혹하는 오답."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "(B) organizational processes는 정합하나 (A) authorship이 부적합. 지문의 개인성 테마('the designer', 개성 과시)와 연상적으로 연결되어 가장 강한 매력 오답 — 특히 '지문 단어 그대로(flair)면 함정'이라는 상위권의 역발상 심리를 노린다. 그러나 소형 제품에서 절대 필수라고 명시된 것은 창작 귀속(authorship)이 아니라 개인적 재능·감각(flair)이며, 대규모 프로젝트 논의에서 문제 삼는 것도 authorship 개념 자체가 아니라 개인성 강조의 허상이다."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "(A) authorship, (B) technical complexity 모두 부정확. ③과 ②의 결함을 동시에 가진 조합으로, 어느 쪽 빈칸도 지문의 명시적 근거와 일치하지 않는다."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "(A) training은 'educated to work as individuals'에서 살짝 끌리지만 소형 제품에서 필수라고 한 요소가 아니고, (B) product categories는 지문 어휘 재활용일 뿐 'product categories가 집단 작업에서 똑같이 결정적'이라는 명제는 논리적으로 성립하지 않는다."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 정답 ①은 (A)(B) 모두 지문 표현(flair / organization and processes)과 거의 축자적으로 대응해 상위권에게는 오히려 '너무 쉬워서 함정 아닌가' 하는 역발상 유혹이 생기고, 그 심리를 ③(authorship)이 정확히 노린다. 그러나 authorship은 소형 제품 맥락의 명시 근거가 없어 옹호 불가. ②의 technical complexity도 축자 재활용 미끼로 잘 설계됨. 복수정답 소지 없음, 단일 정답 ①."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P015",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "Direct contradiction of the thesis. The passage explicitly argues students should 'think through ethical issues rather than follow a prescribed set of ethical codes or rules' and that principles of conduct 'vary both between and within individuals'. A title asserting codes must remain strict and universal negates both the thesis and the supporting claims (formal contradiction: passage asserts variability and flexibility; option asserts fixity and universality)."
+    },
+    {
+      "label": "2",
+      "verdict": "accept",
+      "reason": "Exact match at correct generality. 'Ethical Thinking' names the passage's topic term; 'Judging Issues' maps to 'identifying ethical issues and evaluating these issues from different perspectives'; 'Beyond Fixed Rules' maps to 'rather than follow a prescribed set of ethical codes or rules' plus the no-clear-right-or-wrong premise. The title subsumes both supports (inter/intra-individual variation, context dependence) without overreach. Grammatically well-formed as a title (NP: gerundive apposition)."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "Category error / misreading of the opening conditional. Critical thinking appears only as a definitional analogy ('If we understand critical thinking as..., then ethical thinking is about...') used to define ethical thinking, not to replace ethics. The passage argues FOR ethical thinking as a form of ethics ('This form of ethics is distinct from...'), so no replacement claim exists anywhere in the text."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "Part-for-whole overgeneralization. 'Religious' occurs once inside a disjunctive enumeration ('social, religious, or civic beliefs') as one of several influences on personal values; no primacy ('core') claim is made, and 'training' is never discussed. Elevating one list member to the title's core claim is formally unsupported."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "Double contradiction. The passage asserts (a) 'Individual perspectives may also be context dependent... the same individual may make different choices' (negating 'context-free') and (b) 'there is no clear right or wrong response' (negating 'one right choice forever'). The option is the logical negation of two explicit premises."
+    }
+  ],
+  "note": "Title question with a clean single answer. Distractors are all formally refutable: 1 and 5 are direct negations of explicit claims, 3 misreads a definitional analogy as a replacement thesis, 4 inflates a single list item. Option 2 is the only candidate covering thesis + both supports at the right level of generality. No alternative charitable reading rescues any other option. Lens: grammarian/logician; all rejections anchored to quoted textual premises."
+}

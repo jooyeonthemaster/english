@@ -1,0 +1,35 @@
+{
+  "pid": "P009",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "Seam test: 'recognizing and accepting that the factors that drive [others' ethical drivers] [may lead] them to make choices unlike one's own.' The blank supplies an object for 'drive' (others' ethical drivers) and a finite modal predicate ('may lead') for the plural head 'the factors' — no agreement or attachment failure. 'them' resolves to 'others' (possessive antecedent, acceptable in modern usage); 'unlike one's own' is licit ellipsis for 'one's own choices'. Logic: the passage's thesis is that ethical principles 'vary both between and within individuals'; the final sentence pairs understanding one's OWN personal factors ('how these may coincide') with recognizing that OTHERS' driving factors may produce different choices — exactly what this option asserts. Minor stylistic redundancy ('factors that drive ... drivers') is a flaw of authoring, not ungrammaticality, and the meaning is recoverable. Only fully defensible completion."
+    },
+    {
+      "label": "2",
+      "verdict": "incorrect",
+      "reason": "Seam: 'the factors that drive [the personal factors shaping one's own code of behaviour] [equally shape] others'' — plural verb agrees, so grammatically parseable, though 'factors that drive the personal factors' is a vacuous recursion. Logic fails decisively: claiming the factors 'equally shape others'' codes contradicts the explicit claim that 'these principles vary both between and within individuals' and that values depend on each person's distinct learning experiences."
+    },
+    {
+      "label": "3",
+      "verdict": "incorrect",
+      "reason": "Seam: 'the factors that drive [religious and civic beliefs] alone [account for] how others form ethical codes' — agreement is fine (plural 'factors' + 'account'). Logic fails: the passage lists 'social, religious, or civic beliefs influenced by their formal and informal learning experiences' as sources of values; 'religious and civic beliefs alone' excludes the social component and learning experiences, contradicting the text. The relative clause also produces an off-topic subject (factors driving beliefs, rather than factors driving conduct/choices)."
+    },
+    {
+      "label": "4",
+      "verdict": "incorrect",
+      "reason": "Seam: 'the factors that drive [changing circumstances] gradually [align] individuals with one prescribed set of codes' — grammatical (plural agreement holds). Logic fails on two counts: (a) the passage urges students to 'think through ethical issues rather than follow a prescribed set of ethical codes,' so convergence on 'one prescribed set' inverts the thesis; (b) context dependence is said to produce DIFFERENT choices by the same individual, i.e., divergence, not gradual alignment."
+    },
+    {
+      "label": "5",
+      "verdict": "incorrect",
+      "reason": "Seam failure: 'the factors that drive [evidence-based decision-making] requires treating...' — the only available parse takes plural 'the factors' as subject of singular 'requires': a number-agreement violation. The alternative parse (making 'evidence-based decision-making' the subject of 'requires') strands 'the factors that drive' without a predicate, so no grammatical reading exists. Logic also fails: treating others' personal factors 'as identical' contradicts the passage's core claim of inter- and intra-individual variability."
+    }
+  ],
+  "note": "Lens: grammarian/logician. The blank sits inside 'that the factors that drive ___', so every candidate was tested for (a) supplying drive's object and (b) supplying a finite predicate agreeing with plural 'the factors'. Options 2-4 pass the grammar test but each contradicts the passage's variability thesis; option 5 fails both grammar (factors...requires) and logic. Option 1 is the unique survivor; its only blemish is the stylistic redundancy 'the factors that drive others' ethical drivers', which does not create a second defensible answer. Answer 1, high confidence, no multiple-defensible concern."
+}

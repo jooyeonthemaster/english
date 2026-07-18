@@ -1,0 +1,35 @@
+{
+  "pid": "P005",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "Purely literal (positional) reading of 'be right behind you'. The stem asks for the implied (figurative) meaning, which excludes literal denotation by definition. Furthermore the text gives no staging evidence that Tom stands behind Garcia (only 'Garcia stood at the center of the stage'). Classic literal-decoy option."
+    },
+    {
+      "label": "2",
+      "verdict": "accept",
+      "reason": "Matches the conventional figurative sense of the idiom 'be behind someone' = 'support someone'. Contextual proof: uttered right after 'Don't worry' with a hand on Garcia's back while Garcia is nervous and struggling with rhythm; the immediate discourse effect ('took a deep breath and started to feel much better') confirms the reassurance/support-to-regain-calm function. Logically entailed and uniquely consistent."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "'Be behind you' never carries a substitution meaning ('take your place'); no textual support for Tom replacing Garcia, and the subsequent narrative shows Garcia performing flawlessly himself. Semantic mismatch with the idiom."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "Polarity contradiction: the utterance is framed as comfort ('Don't worry', hand on back), the opposite of scolding. Also 'interrupting the rehearsal' is not an event in the passage (Garcia made rhythm mistakes, not interruptions)."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "The clothing thread belongs to an earlier scene and is presented positively (Garcia 'felt good' in his new clothes); there is no lexical or pragmatic link between Tom's utterance and clothing. No inferential path supports this reading."
+    }
+  ],
+  "note": "Implied-meaning (함축 의미) item on the idiom 'I'll be right behind you'. Unambiguous: the figurative support reading (2) is both the conventional idiom meaning and the only reading consistent with the pre-context (nervousness, 'Don't worry', hand on back) and post-context (deep breath, felt much better). Option 1 is a well-formed literal decoy; options 3-5 fail on semantic or polarity grounds. No competing defensible label. Item difficulty appears low for the KSAT implied-meaning type, but construction is sound."
+}

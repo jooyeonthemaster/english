@@ -1,0 +1,57 @@
+{
+  "pid": "P003",
+  "answer": "Following the new leader's refusal to step down, his army was immediately ordered to protect the palace.",
+  "multipleDefensible": false,
+  "defensibleLabels": [
+    "Following the new leader's refusal to step down, his army was immediately ordered to protect the palace."
+  ],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "Following",
+      "verdict": "used (position 1)",
+      "reason": "Fronted preposition introducing the causal adverbial required by the hint (거부 → 방어 지시 인과). Comma at the end of chunk 'refusal to step down,' confirms the adverbial is sentence-initial."
+    },
+    {
+      "label": "the new leader's",
+      "verdict": "used (position 2)",
+      "reason": "Possessive determiner licenses the bare noun 'refusal'. Without it ('Following refusal to step down by the new leader') the noun phrase lacks a required determiner and is ungrammatical — this is the key discrimination point against the 'by the new leader' distractor."
+    },
+    {
+      "label": "refusal to step down,",
+      "verdict": "used (position 3)",
+      "reason": "Head noun of the adverbial; trailing comma anchors it as the close of the fronted phrase, ruling out arrangements that place the adverbial sentence-finally."
+    },
+    {
+      "label": "his army",
+      "verdict": "used (position 4)",
+      "reason": "Subject of the main clause; 'his' anaphorically refers to the new leader, matching the passage ('he gathered 3,000 soldiers and ordered them to protect his palace')."
+    },
+    {
+      "label": "was immediately",
+      "verdict": "used (position 5)",
+      "reason": "Auxiliary + adverb of the passive; combines with 'ordered to' to form 'was immediately ordered to' — standard adverb placement between be and past participle."
+    },
+    {
+      "label": "ordered to",
+      "verdict": "used (position 6)",
+      "reason": "Passive 'be ordered to V' retains the infinitive complement (order + O + to-V in the passive). Because 'ordered' and 'to' are fused in one chunk, an agent phrase cannot be inserted between them ('ordered by the new leader to' is impossible), which forces the distractor out."
+    },
+    {
+      "label": "protect the palace.",
+      "verdict": "used (position 7, sentence-final)",
+      "reason": "Bare infinitive complement of 'ordered to'; the period inside the chunk makes it obligatorily sentence-final, blocking '...protect the palace by the new leader'."
+    },
+    {
+      "label": "by the new leader (first copy)",
+      "verdict": "unused (distractor)",
+      "reason": "Attractive trap: solver is tempted to build 'Following refusal to step down by the new leader' or append an agent phrase after the passive. Both fail — the former lacks a determiner for 'refusal', the latter is blocked by the period in 'protect the palace.' and by the fused 'ordered to' chunk."
+    },
+    {
+      "label": "by the new leader (second copy)",
+      "verdict": "unused (distractor, duplicate)",
+      "reason": "Identical duplicate of the previous chunk; also unused for the same reasons. Duplicating the same distractor verbatim is unusual item construction but creates no ambiguity."
+    }
+  ],
+  "note": "Answer is uniquely determined by three hard constraints: (1) determiner requirement on 'refusal' forces the possessive 'the new leader's' over the agentive 'by the new leader'; (2) the comma in 'refusal to step down,' fixes the adverbial as sentence-initial; (3) the period in 'protect the palace.' fixes the sentence end, excluding any trailing agent phrase. I actively tried the tempting alternatives — 'Following refusal to step down by the new leader, ...' and '...ordered to protect the palace by the new leader' — and both fail on grammar/punctuation, so multipleDefensible=false. Minor quality flag: the distractor 'by the new leader' appears twice identically in the word bank, which looks like a generation artifact, and the 발문 says '쓰지 않는 단어' (could be read as one unused item) while two chunks go unused — worth a wording tweak ('쓰지 않는 단어(들)') but not answer-affecting."
+}

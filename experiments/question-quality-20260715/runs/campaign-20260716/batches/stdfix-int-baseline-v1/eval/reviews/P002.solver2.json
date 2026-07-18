@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "주격 관계대명사 that. 선행사 'a lasting mark'(단수)를 받아 관계절 동사 shows와 수 일치 성립. 제한적 관계절(콤마 없음)이므로 that 사용 적법. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "조동사 should 뒤 동사원형 be. 삽입 부사 then('should, then, be')은 통사 구조에 영향 없음. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "문장 주어는 'one of the first qualities [that] a bridge must exhibit'(접촉 관계절이 qualities 수식). 그 뒤 concerning은 전치사/분사이므로 문장에 정형 본동사가 없어 술어 없는 단편이 된다. 대안 해석(exhibit의 부가어로 보는 전치사구 해석, 분사구문 해석) 어느 쪽도 본동사 부재를 해소하지 못함. 'one of + 복수명사' 주어에 일치하는 단수 정형동사 concerns로 바꿔야 정문('...a bridge must exhibit concerns how it harmonizes with its surroundings'). 어법상 틀림."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "주격 관계대명사 that의 동사. 선행사 'an intrinsic beauty'(단수)와 단수 동사 works 수 일치 성립. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "재귀대명사 itself가 관계절 주어(= a bridge)와 동일 지시. 'spectacular in itself'(그 자체로 장관인)는 적법한 관용 표현. 정문."
+    }
+  ],
+  "note": "정답 (C) 단독. (C)는 주어 NP 뒤 정형동사 부재라는 구조적 비문으로, 축약 관계절·분사구문·도치 등 어떤 대안 해석으로도 구제 불가. 나머지 네 밑줄은 모두 장거리 단서(선행사 수 일치, 조동사-원형, 재귀 지시)까지 확인해 정문임을 검증. 복수 정답 여지 없는 깨끗한 문항."
+}

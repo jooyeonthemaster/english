@@ -1,0 +1,66 @@
+{
+  "pid": "P003",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-minor-option-awkwardness",
+      "severity": "minor",
+      "evidence": "선지 ② 'assign every hard project jointly in the morning hours'의 'jointly'는 지문에 없는 협업 개념을 끌어들여 어색하고, ③ 'subordinate team plans first to organizational goals'의 'first' 부사 위치도 다소 부자연스럽다. 비문은 아니므로 V3 실패는 아니다."
+    },
+    {
+      "code": "V1-note-span-scope",
+      "severity": "minor",
+      "evidence": "빈칸이 원지문 span 'do the right thing at the right time of day'를 정확히 대체하며 나머지 텍스트는 원지문과 문자 단위로 일치. 접합부 'is to _____.' 구두점 정상. 손상 없음(이슈 아님, 검증 기록)."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — 원 span('do the right thing at the right time of day')을 지문 전개(어려운 활동을 에너지 정점에 배치)로 구체화한 종합 표현",
+      "temptingBecause": "2~3문장('schedule difficult activities' when 'lots of energy')과 마지막 문장(개인차 인정)을 모두 포섭하는 유일한 일반 원리",
+      "decisiveFlaw": "없음(정답). 단, 'difficult activities→demanding tasks', 'lots of energy→peaks in personal energy'의 어휘 근접 패러프레이즈가 강해 KILLER치고 단서 누출이 크다"
+    },
+    {
+      "label": "2",
+      "intent": "과협소(over-narrowing): 아침 생산성 서술을 보편 규칙으로 확대",
+      "temptingBecause": "'If you have lots of energy early in the morning'과 'most people are far more productive in the morning'이라는 강한 표면 앵커",
+      "decisiveFlaw": "마지막 문장 'there are those who differ and hit their stride later in the day'와 정면 모순. 부가 결함: 'every'(절대어)와 지문에 없는 'jointly'가 이중 결함으로 소거를 더 쉽게 만든다"
+    },
+    {
+      "label": "3",
+      "intent": "주체·우선순위 전도(actor/priority swap): 팀 계획을 조직 목표에 종속",
+      "temptingBecause": "'Use the same principle in planning activities for your team'의 팀 계획 언급이 앵커",
+      "decisiveFlaw": "'organizational goals'는 지문에 전혀 등장하지 않는 개념 — 앵커가 얇아 실전에서는 즉시 소거되는 약한 디코이"
+    },
+    {
+      "label": "4",
+      "intent": "과확장(over-extension): 리듬 존중을 고정 일정 폐기로 비약",
+      "temptingBecause": "'Schedule intervals... and breaks', 'respect their own body rhythms when scheduling appointments' 등 유연한 일정 관리 뉘앙스",
+      "decisiveFlaw": "지문은 오히려 일정을 '짜라'(schedule)고 반복 지시하며 달력 폐기를 전혀 함의하지 않음. 'fully'(절대어)도 소거 단서"
+    },
+    {
+      "label": "5",
+      "intent": "절반-진실(half-truth): 휴식 배치라는 부차 논점을 주제로 승격",
+      "temptingBecause": "'Schedule intervals of productive time and breaks so that you get the most from people'이 직접 앵커",
+      "decisiveFlaw": "휴식은 보조 수단일 뿐 주제문(고난도 과업의 시간 배치)이 아니며 'longer'는 지문 무근거. 'all'(절대어)도 소거 단서"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "모든 V 통과: 렌더 무결(V1), 정답 유일성 독립 검증 통과(V2 — 다섯 선지 모두 'is to ___' 동일 to부정사 슬롯, ①만 성립), 문법성 양호(V3), 해설의 구조·귀속 서술 전부 사실(V4), 필드 동기화 정상(V5). 그러나 KILLER 요청 대비 실제 난이도가 크게 미달한다(C5=1): (a) 빈칸 주제문이 2~3문장에서 어휘 수준으로 거의 재진술되어('difficult activities'/'lots of energy') 3문장 하나만 읽어도 ①이 도출됨 — §D의 '최소 두 문장/두 논리 단서 연결' 요건 실질 불충족, (b) 오답 ②④⑤가 절대어(every/fully/all)를 공유해 시험 요령만으로 후보가 {①,③}으로 압축되고 ③은 무근거 개념('organizational goals')이라 즉시 탈락, (c) 매력 디코이가 ②(및 약하게 ⑤)뿐. 함정 유형 설계(과협소·전도·과확장·절반-진실)와 해설 품질은 준수하나, §D KILLER 추가 조건 미충족 + A등급 아님 → killerConditionsMet=false. 등급 C: V는 전부 통과하나 난이도 정합 결함으로 KILLER 슬롯 출하 불가, 재설계(추상화 수위 상향·근거 재진술 제거·절대어 패턴 해소) 필요."
+}

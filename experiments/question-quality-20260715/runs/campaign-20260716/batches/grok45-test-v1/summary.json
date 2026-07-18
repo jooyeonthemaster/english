@@ -1,0 +1,40 @@
+{
+  "batchId": "grok45-test-v1",
+  "phase": "stdfix",
+  "atKst": "2026-07-17T18:46:19.966+09:00",
+  "assignments": 8,
+  "slotsConsumed": 14,
+  "accepted": 8,
+  "modelCalls": 30,
+  "inputTokens": 65395,
+  "outputTokens": 21877,
+  "costUsd": 0.282514,
+  "ledgerAfter": {
+    "used": 799,
+    "cap": 1000,
+    "costUsd": 29.472549
+  },
+  "byArm": {
+    "GROK-G": {
+      "n": 4,
+      "accepted": 4,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 8,
+      "costUsd": 0.054918
+    },
+    "GROK-B": {
+      "n": 4,
+      "accepted": 4,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 6,
+      "costUsd": 0.227596
+    }
+  },
+  "models": {
+    "standard": "google/gemini-3.5-flash",
+    "premiumQgen": "x-ai/grok-4.5"
+  },
+  "durationMs": 212666
+}

@@ -1,0 +1,90 @@
+{
+  "pid": "P005",
+  "itemType": "GRAMMAR_ERROR",
+  "requestedDifficulty": "INTERMEDIATE",
+  "blindAnswer": "(B)",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityEvidence": {
+    "V1": "원지문과 렌더 지문을 문장 단위로 대조: 의도된 변형('that shows' -> 'who shows', (B) 자리) 외 전 문장 일치. 중복·누락·고아 문장부호·오탈자 없음. (A)~(E) 마커가 지문 등장 순서 및 선택지 목록과 정확히 일치.",
+    "V2": "각 밑줄 독립 검증 — (A) 'is normally constructed': be+p.p. 수동태, bridge가 피동 대상이므로 정확(오류 아님). (B) 'a lasting mark who shows': 무생물 선행사 mark 뒤 사람 관계대명사 who는 비문, that/which여야 함(유일 오류). (C) 'Depending on ~': 관용화된 문두 표현으로 표준 용법(오류 아님; dangling 논란이 없는 굳어진 형태). (D) 'must possess': 조동사 뒤 동사원형으로 정확(오류 아님). (E) 'that is spectacular ... but spoils': 관계사절 내 is와 spoils가 but으로 병렬된 정형 동사, that(=a bridge) 3인칭 단수 일치로 정확(오류 아님; spoil 원형이 되어야 한다는 대안 해석은 성립하지 않음). 정답 집합 {(B)} = 선언 정답, 단일정답 확인.",
+    "V3": "지문은 의도된 (B) 오류 외 전부 문법적·자연스러움. 발문은 표준 어법 발문. who -> that 교정 시 완성문이 원지문과 정확히 일치하며 문법적.",
+    "V4": "본해설의 구조 분석(선행사 mark + 관계절 주격 자리, that 교정, which 동치 허용)이 실제 통사와 일치. 오답 해설 4건 모두 실제 해당 선지의 구조를 서술. 다만 (E) 해설의 'that절' 지칭(관계사절을 명사절풍 용어로 부름)과 (C) 해설의 'depending on' 관용 표현을 'it과 의미상 연결된 분사구문'으로 설명한 부분은 엄밀성이 떨어지는 경미한 용어 느슨함 — 오개념 주입 수준은 아니어서 V4 통과로 판정.",
+    "V5": "선언 정답 (B) = markedExpressions의 isError:true 항목(errorExpression 'who', correction 'that', expression 'that') = 본해설 = keyPoints 1번 항목. 오답 해설 키 (A)(C)(D)(E)와 선지 라벨·내용 전부 동기화. 모순 없음."
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-terminology",
+      "severity": "minor",
+      "evidence": "(E) 오답 해설이 관계사절(that = 관계대명사)을 'that절 안에서'라고 지칭 — 명사절 that과 혼동될 수 있는 용어 사용. 구조 분석 자체(is와 spoils의 but 병렬, 시제·수일치)는 정확."
+    },
+    {
+      "code": "V4-minor-analysis-looseness",
+      "severity": "minor",
+      "evidence": "(C) 오답 해설이 관용 전치사구화된 'Depending on'을 '뒤 절의 it과 의미상 논리적으로 연결되는 문두 분사구문'으로 설명. 실제로는 주어 통제가 필요 없는 굳어진 표현이라 엄밀하지 않으나, 학교문법 통용 설명 범위 내."
+    }
+  ],
+  "craft": {
+    "C1": 2,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 2,
+    "C6": 3
+  },
+  "craftRationale": {
+    "C1": "관계대명사 who/that 선행사 유생성 판단은 정전 포인트지만 기계적·기초적 지점이며, 지문의 핵심 논리와 결합되지 않은 국소 문법 판정이라 '의미 있는 한 지점' 수준.",
+    "C2": "디코이 4개가 서로 다른 포인트(능수동태, 분사 관용 표현, 조동사+원형, 병렬구조)를 겨냥해 의도 밀도는 양호. 다만 (D) must possess는 함정 강도가 매우 약한 준필러.",
+    "C3": "정답 who가 무생물 선행사 mark 바로 뒤에 인접해 있어 스캔만으로 즉시 식별됨. 디코이들이 실제 판단을 붙잡는 시간이 짧아 변별력 낮음.",
+    "C4": "메타 누출 없음. 교정(who->that) 시 정확히 원문 복원되는 최소대립쌍으로 정답 필연성 확보.",
+    "C5": "요청 난이도 INTERMEDIATE 대비 실제 체감은 EASY~하위 INTERMEDIATE. 인접 선행사 유생성 판단은 요구 사고 단계가 1단계에 그쳐 라벨보다 쉬움 — '대체로 일치' 하한.",
+    "C6": "본해설이 짧고 정확하며 교정형·동치(which)까지 명시. 다만 (E)/(C) 해설의 용어 느슨함과 본해설 말미의 모호한 한 문장('조동사·분사 자리와 헷갈리기 쉬우나')이 선명함을 약간 깎음."
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "능수동태 판단 — be동사 뒤 과거분사(수동) vs 능동형",
+      "temptingBecause": "뒤따르는 'to last'의 능동 의미 때문에 constructing/constructs류 능동형을 떠올릴 수 있음",
+      "decisiveFlaw": "다리는 건설되는 대상이므로 is + constructed 수동이 정확 — 오류 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "정답 — 관계대명사 선택(무생물 선행사 뒤 who 불가)",
+      "temptingBecause": "shows의 주어가 비어 있는 주격 관계사 자리 자체는 올바르므로 형태만 훑으면 지나칠 수 있음",
+      "decisiveFlaw": "선행사 mark가 무생물이므로 who는 비문, that(또는 which)로 교정해야 하며 교정 시 원문과 정확히 일치"
+    },
+    {
+      "label": "(C)",
+      "intent": "문두 -ing 표현 판단 — 분사구문/관용 전치사구",
+      "temptingBecause": "문두 -ing이 주절 주어 it과의 관계가 불투명해 dangling participle로 의심하게 만듦",
+      "decisiveFlaw": "'Depending on'은 주어 통제 없이 쓰이는 관용화된 표준 표현 — 오류 아님"
+    },
+    {
+      "label": "(D)",
+      "intent": "정·준동사 — 조동사 must 뒤 동사원형",
+      "temptingBecause": "주어 the bridge가 3인칭 단수라 possesses로 고쳐야 한다고 착각할 수 있음",
+      "decisiveFlaw": "조동사 뒤에는 동사원형이 오므로 possess가 정확 — 오류 아님. 함정 강도가 약해 준필러 수준"
+    },
+    {
+      "label": "(E)",
+      "intent": "병렬구조 — 관계사절 내 정형 동사의 but 병렬과 수일치",
+      "temptingBecause": "but 뒤라 spoil(원형)이나 spoiling이어야 한다고 오독하거나 is와의 병렬 축을 놓치기 쉬움",
+      "decisiveFlaw": "that(=a bridge)을 주어로 하는 관계사절 안에서 is와 병렬된 3인칭 단수 현재 spoils가 정확 — 오류 아님"
+    }
+  ],
+  "explanationIssues": [
+    "(E) 해설의 '(that)절' 용어가 명사절 that과 혼동 소지 — 관계사절로 명시하는 편이 정확 (minor)",
+    "(C) 해설이 관용 표현 'depending on'을 it과 연결된 분사구문으로 설명 — 통용되나 엄밀하지 않음 (minor)",
+    "본해설 말미 '조동사·분사 자리와 헷갈리기 쉬우나 이 선행사-관계사 짝만 명백한 비문이다'는 근거 제시 없이 뭉뚱그린 문장으로 다소 장식적 (minor)"
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1~V5 전부 통과로 출하 차단 사유는 없음. 그러나 정답 who가 무생물 선행사 바로 뒤에 인접해 즉시 드러나는 구조라 변별력이 낮고(C3=2), 출제 지점이 기계적이며(C1=2), 요청 난이도 INTERMEDIATE보다 쉽게 체감됨(C5=2). 공예 합계 15로 B 기준(합계 17)에 미달 — 재설계(선행사-관계사 거리 확보, (D) 디코이 강화 등) 권장. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

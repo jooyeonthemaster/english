@@ -1,0 +1,35 @@
+{
+  "pid": "P008",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "(A) 'not absolute': the passage explicitly says principles 'vary both between and within individuals' and are 'context dependent', with 'no clear right or wrong response' — ethical principles are not absolute. (B) 'codes of behaviour that guide individuals': the passage frames codes/factors as things that 'drive other people's codes and decision making' and ethics as evaluation 'to guide how to respond' / 'guide decision-making'. Both slots fit grammatically and logically."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "(A) 'absolute' fits. (B) 'restrict' is the tempting trap — the phrase 'a prescribed set of ethical codes or rules' momentarily suggests restriction. But the summary's 'codes of behaviour' refers to individuals' personal 'code of behaviour' (quoted in the passage), which the text describes as driving/guiding decision-making, not restricting people. The passage never claims codes limit individuals; it says they shape choices. (B) fails."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "(B) 'guide' fits, but (A) fails: 'ethical principles are not flexible' directly contradicts the passage, which stresses that principles vary between/within individuals and are context dependent — i.e., they ARE flexible. Polarity reversal."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "(A) 'universal' is a genuine pull — 'not universal but depend on personal and situational factors' matches the passage as well as 'absolute' does. But (B) 'evaluate' fails: with 'codes of behaviour' as subject and 'individuals' as object, it would mean codes evaluate people; in the passage it is people who evaluate ethical issues, and codes drive/guide decisions. Semantic role mismatch kills this option."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "(A) fails: 'ethical principles are not subjective' contradicts the passage, which says what a person values relates to personal beliefs and experiences — principles ARE subjective/personal. (B) 'respect' also mismatches: codes of behaviour do not 'respect' individuals in any passage-supported sense."
+    }
+  ],
+  "note": "Solved blind as a top-tier examinee. The two real distractor pulls were (4) 'universal' for slot (A), which is fully synonymous-adequate with 'absolute', and (2) 'restrict' for slot (B) via the 'prescribed set of codes or rules' phrase. Both are cleanly eliminated by the other slot, so the item discriminates on (B) verb-argument semantics. Single defensible answer: 1. No grammar seam issues in the summary sentence with 'guide' (plural subject 'codes' + base verb in relative clause is correct)."
+}

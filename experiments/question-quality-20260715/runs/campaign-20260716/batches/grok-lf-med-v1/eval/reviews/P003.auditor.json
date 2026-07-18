@@ -1,0 +1,79 @@
+{
+  "pid": "P003",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-minor-distractor-seam",
+      "severity": "minor",
+      "evidence": "선지 ⑤를 넣은 완성문 'prior depth of aesthetic reflection prompts the work to appreciate the whole episode'는 tail이 'prompt NP to VP' 논항으로 흡수되어 '작품이 에피소드를 감상한다'는 의미적으로 불성립한 해석을 강제한다. 'prompt NP to VP' 프레임 자체는 통사적으로 성립하므로 V3 실패로는 판정하지 않되, 오답이 내용 판단 이전에 seam 이상으로 탈락 가능한 blemish다."
+    },
+    {
+      "code": "V1-note-lexical-survival",
+      "severity": "minor",
+      "evidence": "빈칸 span 제거는 깨끗하나(고아 따옴표·중복·누락 없음), 마지막 문장에 'pragmatic attitude of everyday life' vs 'aesthetic attitude' 대비가 원문 그대로 남아 정답 ③의 'non-everyday'와 직결되는 강한 어휘 다리를 제공한다. 무결성 훼손은 아니므로 V1은 통과."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 4,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "scope shift / overstatement — 표현주의=비재현이라는 절반-진실을 '스타일 전유(exclusive focus on style)'로 과장",
+      "temptingBecause": "빈칸 직전 문맥이 novel stylistic devices, departure from conventional forms 등 스타일 이탈을 강조하므로 '비재현·스타일'이 국소 단서와 강하게 겹친다.",
+      "decisiveFlaw": "완성문의 tail 'to appreciate the whole episode'와 본문의 aesthetic attitude는 소재+스타일 전체를 음미하는 수용 태도이지 스타일만 배타적으로 보는 것이 아니다. 'exclusive'가 결정적 과잉이다."
+    },
+    {
+      "label": "2",
+      "intent": "actor/target swap — 수용자의 태도 전환을 작가 의도 복원이라는 해석 활동으로 치환",
+      "temptingBecause": "후행 문장 'reflection on the meaning of the work'가 작품 의미 해석을 연상시켜 겹친다.",
+      "decisiveFlaw": "지문 어디에도 작가의 의도(intended message)는 등장하지 않으며, 빈칸이 요구하는 것은 수용자 측의 attitude(수용 틀)이지 메시지 복원 과제가 아니다."
+    },
+    {
+      "label": "3",
+      "intent": "정답 — source span 'an aesthetic attitude is needed'를 마지막 문장의 pragmatic(everyday)/aesthetic 대비를 이용해 'non-everyday framework for reception'으로 추상화한 재진술",
+      "temptingBecause": "(정답) 표현주의 문장(불협화음·가독성 저하)과 마지막 문장(everyday 대비)의 두 단서를 연결해야 도달한다.",
+      "decisiveFlaw": "없음 — 유일 정답. 완성문 'a non-everyday framework for reception is called for to appreciate the whole episode'는 문법적이다."
+    },
+    {
+      "label": "4",
+      "intent": "regime reversal — 재현적 작품의 기제(mental model의 원활한 구축)를 표현주의 국면에 이식한 절반-진실",
+      "temptingBecause": "mental models, facilitate 등 지문 전반부의 실제 어휘 anchor가 있어 표면 겹침이 크다.",
+      "decisiveFlaw": "빈칸 문장은 'less readable'한 표현주의 귀결부다. life-like mental model의 원활한 구축은 정확히 반대 진영(재현적 작품)의 기제이므로 인과 전도다."
+    },
+    {
+      "label": "5",
+      "intent": "causal reversal — aesthetic processing의 깊이(결과)를 작품을 촉발하는 선행 원인으로 뒤집음",
+      "temptingBecause": "후행 문장의 depth of aesthetic processing and reflection 어휘를 그대로 빌려와 표면 겹침이 있다.",
+      "decisiveFlaw": "본문 인과는 태도 환기 → active involvement → 깊은 처리의 순서다. 또한 완성문에서 tail이 'prompts the work to appreciate...'로 흡수되어 의미 불성립 해석을 강제하므로 내용 판단 이전에 탈락 가능하다(유일한 능동·비필요성 서법 형태라는 형태 단서도 있음)."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "'부정 극성 선지', '스타일 전유', '교차 근거를 보존한 재진술' 등 학생 노출 해설로는 불투명한 전문 용어가 있다. 사실 오류는 아니다.",
+      "recommendation": "학생용 어휘로 완화(예: '스타일에만 몰입하라는 과장', '두 문장의 근거를 결합한 재진술')."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": [
+    "FAIL D-1(동일 통사 슬롯): ⑤만 유일하게 능동·비필요성 서법이고 tail 흡수로 seam 이상 탈락이 가능하다. ①~④는 모두 '...is warranted/should be recovered/is called for/is required' 필요성 수동 형태로 통일되어 ⑤가 형태만으로 도드라진다.",
+    "FAIL D-4(단일 단서 금지): 마지막 문장에 'pragmatic attitude of everyday life'가 원문 그대로 남아 있어 ③의 'non-everyday'와의 단일 어휘 대응만으로 정답 도달이 가능한 지름길이 존재한다. 두 문장 연결이 의도된 경로이긴 하나 단일 단서 차단이 보장되지 않는다.",
+    "PASS D-2(의미 보존·추상화): 'aesthetic attitude is needed' → 'non-everyday framework for reception is called for'는 적절한 추상화다.",
+    "PASS D-3(anchor/overlap/flaw): 네 오답 모두 source anchor·tempting overlap·decisive flaw가 성립한다.",
+    "PASS D-5(함정 다양성): scope shift(①), actor swap(②), regime reversal(④), causal reversal(⑤)로 서로 다른 함정을 사용한다."
+  ],
+  "grade": "B",
+  "notes": "모든 V 통과. blind solve 시 ③ 유일 정답 확인(각 선지 독립 삽입 검증 완료). 공예 합계 20(C1=4 논지 피벗 정조준, C2=4 오답 4종이 서로 다른 오개념 겨냥). A 미달 사유: (1) ⑤의 tail 통합 이상과 형태 단서로 C3 저하, (2) 마지막 문장의 verbatim 어휘 다리로 C4 저하 및 KILLER 단일 단서 차단 실패, (3) 요구 난이도 KILLER 대비 실제 사고 깊이는 상위 중난도 수준(C5=3). 요청 난이도 KILLER이나 §D 조건 D-1·D-4 미충족으로 killerConditionsMet=false. 출하하려면 ⑤를 필요성 수동 형태의 의미 기반 오답으로 교체하고 마지막 문장의 'aesthetic attitude'를 완곡 표현으로 paraphrase 하는 소규모 재설계가 필요하다."
+}

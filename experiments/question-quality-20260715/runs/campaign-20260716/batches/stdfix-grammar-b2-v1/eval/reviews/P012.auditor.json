@@ -1,0 +1,77 @@
+{
+  "pid": "P012",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V2-ALT-PARSE-NOTE",
+      "severity": "minor",
+      "evidence": "(E) 'hear the quiet voices ... to tell us'에 형용사적 to부정사 독해('voices to tell us' = 앞으로 말해줄 목소리)가 이론상 구성 가능하나, 지각동사 hear의 보문 구조 하에서 의미적으로 비정합이라 정답 유일성을 위협하지 않는다고 판정. 다만 KILLER 기준(§C '대안 분석이 가능한 자리 제외')의 순도 관점에서는 감점 요인."
+    },
+    {
+      "code": "V4-IMPLIED-SUBJECT",
+      "severity": "minor",
+      "evidence": "(C) 오답 해설이 'when solving'의 의미상 주어를 '우리'로 서술하나, 통사적 통제자는 주절 주어 'this pattern of attention'이다(원문 자체가 관용적으로 허용되는 현수분사). 의도된 의미 기준 서술이므로 치명 오분석은 아니나 엄밀성이 떨어짐."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 4,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "능동태 vs 수동태 판단 (tends to + V 자리의 태 선택)",
+      "temptingBecause": "tends to 뒤 동사원형 자리라 능동 direct를 기대하기 쉽고, 첫 문장에 능동 'direct the spotlight of attention'이 등장해 능동형 잔상을 남긴다",
+      "decisiveFlaw": "direct는 타동사인데 뒤에 목적어가 없고 주어 our attention이 방향지어지는 대상이므로 수동태 be directed가 필수 — 어법상 옳아 오답"
+    },
+    {
+      "label": "(B)",
+      "intent": "전치사 vs 접속사 구별 (While vs During)",
+      "temptingBecause": "While 뒤에 명사구 this pattern of attention이 바로 이어져 전치사 자리로 오인할 수 있다",
+      "decisiveFlaw": "뒤에 주어(this pattern of attention)+동사(is)를 갖춘 완전한 절이 오므로 접속사 While이 정확 — 어법상 옳아 오답. 다만 절 확인이 즉각적이라 변별력 낮음"
+    },
+    {
+      "label": "(C)",
+      "intent": "접속사가 남은 분사구문의 능동/수동 판별 (solving vs solved)",
+      "temptingBecause": "주절 주어가 무생물(this pattern of attention)이라 수동 when solved를 떠올릴 수 있다",
+      "decisiveFlaw": "분사 뒤에 목적어 problems가 있어 능동 현재분사 solving이 필수 — 어법상 옳아 오답"
+    },
+    {
+      "label": "(D)",
+      "intent": "주격 관계대명사 that의 적격성 (선행사 유무 + 불완전절)",
+      "temptingBecause": "detecting의 목적어절로 오인해 what을 기대하거나, 복수 선행사-동사 lead의 수일치를 의심할 수 있다",
+      "decisiveFlaw": "선행사 the connections가 존재하고 뒤에 주어가 빠진 불완전한 절(lead...)이 이어지므로 주격 관계대명사 that이 정확 — 어법상 옳아 오답"
+    },
+    {
+      "label": "(E)",
+      "intent": "지각동사 hear의 목적격보어 형태 (원형/현재분사 vs to부정사) — 선언된 정답",
+      "temptingBecause": "목적어 NP가 'the quiet voices in the backs of our heads'로 길어 hear와의 5형식 연결이 끊겨 보이고, 같은 문장의 'able to'와 병렬인 듯한 착시를 준다",
+      "decisiveFlaw": "지각동사 hear + O + 원형/현재분사만 허용, to부정사 불가 → to tell은 오류. telling으로 교정하면 원문과 정확히 일치(최소대립쌍) — 정답 유일"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "(C) 해설의 '의미상 주어인 우리가' — when solving의 통사적 의미상 주어는 주절 주어 this pattern of attention이어야 하며(원문이 관용적 현수분사), '우리'는 의도 의미 기준의 실용적 서술",
+      "recommendation": "'일반 주어(우리)가 문제를 푸는 능동 관계로 해석되며' 정도로 완화하거나 목적어 존재 근거만으로 서술"
+    },
+    {
+      "severity": "minor",
+      "evidence": "오답 해설 4건이 '이 자리는 X를 묻습니다 → 옳습니다' 정형 패턴으로, 각 디코이가 '왜 매력적인지'(why tempting)에 대한 서술이 부재 — §C 3항(point/why tempting/why correct 3요소) 미충족",
+      "recommendation": "각 오답에 오인 유발 요인(예: (A) 첫 문장의 능동 direct 잔상, (C) 무생물 주절 주어) 한 줄씩 추가"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "유효성 5개 게이트 전부 통과: 렌더 지문은 (E) telling→to tell 단일 의도 변형 외 원문과 완전 일치(V1), 5개 밑줄 독립 검증 결과 정답 집합 {(E)} 유일(V2), 오류 의도 부위 외 전 문장 문법적(V3), 해설의 지각동사 5형식 분석과 교정형(telling) 정확·원문 복원(V4), 정답 라벨·선지·해설·keyPoints·markedExpressions 동기화(V5). 그러나 요청 난이도 KILLER 대비 실제 난이도는 중상 수준: hear+O+to-V는 한국 수능 어법에서 가장 집중 훈련되는 시그니처 포인트라 숙련 학생에게 준즉시 노출되고(§C 4항 경계선 미달), 디코이 (B)(D)는 국소 단서로 수 초 내 소거 가능(C3=2), KILLER 함정 깊이 부재(C5=1). §C 3항(각 밑줄의 why-tempting 서술)도 미충족되어 killerConditionsMet=false. 공예 합계 16(최저 1)으로 B 문턱(합17·최저2) 미달 → C. 표준 난이도 문항으로는 출하 가능한 견고한 품질이나, KILLER 라벨 충족에는 정답 포인트 자체의 구조적 은닉도(예: 병렬·도치·대용 결합) 재설계가 필요."
+}

@@ -1,0 +1,94 @@
+{
+  "batchId": "grok45-test-v1",
+  "phase": "stdfix",
+  "note": "grok-4.5 단발 테스트(사용자 지시): 프리미엄 사다리 파이프라인에서 생성모델만 x-ai/grok-4.5 로 교체 ($2/6 — pro 대비 출력 절반가). E-gate 검증기는 pro 고정(순수 생성모델 비교).",
+  "atKst": "2026-07-17T18:42:46.237+09:00",
+  "gitSha": "8d365701e339d7ad64bb1f808c76ec768e9855ee",
+  "gitDirty": true,
+  "worstCaseReserved": 32,
+  "spec": {
+    "batchId": "grok45-test-v1",
+    "phase": "stdfix",
+    "note": "grok-4.5 단발 테스트(사용자 지시): 프리미엄 사다리 파이프라인에서 생성모델만 x-ai/grok-4.5 로 교체 ($2/6 — pro 대비 출력 절반가). E-gate 검증기는 pro 고정(순수 생성모델 비교).",
+    "concurrency": 3,
+    "providerRouting": "none",
+    "env": {
+      "PREMIUM_QGEN_MODEL_ID": "x-ai/grok-4.5",
+      "EXPLANATION_VERIFY_MODEL_ID": "google/gemini-3.1-pro-preview"
+    },
+    "assignments": [
+      {
+        "itemId": "gk-g-062",
+        "frameId": "grammar-frame-v2-062",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "GROK-G",
+        "funnel": true
+      },
+      {
+        "itemId": "gk-g-087",
+        "frameId": "grammar-frame-v2-087",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "GROK-G",
+        "funnel": true
+      },
+      {
+        "itemId": "gk-g-088",
+        "frameId": "grammar-frame-v2-088",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "GROK-G",
+        "funnel": true
+      },
+      {
+        "itemId": "gk-g-095",
+        "frameId": "grammar-frame-v2-095",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "GROK-G",
+        "funnel": true
+      },
+      {
+        "itemId": "gk-b-070",
+        "frameId": "blank-supply-v2-070",
+        "subType": "BLANK_INFERENCE",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "GROK-B",
+        "funnel": true
+      },
+      {
+        "itemId": "gk-b-083",
+        "frameId": "blank-supply-v2-083",
+        "subType": "BLANK_INFERENCE",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "GROK-B",
+        "funnel": true
+      },
+      {
+        "itemId": "gk-b-090",
+        "frameId": "blank-supply-v2-090",
+        "subType": "BLANK_INFERENCE",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "GROK-B",
+        "funnel": true
+      },
+      {
+        "itemId": "gk-b-122",
+        "frameId": "blank-supply-v2-122",
+        "subType": "BLANK_INFERENCE",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "GROK-B",
+        "funnel": true
+      }
+    ]
+  }
+}

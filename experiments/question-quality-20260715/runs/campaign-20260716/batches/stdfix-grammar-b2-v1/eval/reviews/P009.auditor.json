@@ -1,0 +1,75 @@
+{
+  "pid": "P009",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1",
+      "severity": "info",
+      "evidence": "렌더 지문은 원지문에서 마지막 문장의 'Protecting'을 'Protects'로 바꾼 단일 의도 변형만 존재. 나머지 텍스트(문장 접합·구두점·철자)는 원문과 일치하고, 마커 (A)~(E)가 선지 5개와 정확히 대응한다. 손상 없음."
+    },
+    {
+      "code": "V5",
+      "severity": "minor",
+      "evidence": "keyPoints의 (B) 항목이 '관계사'라는 범주 라벨을 붙였으나 실제로는 동격 접속사(complementizer) that이며, 같은 항목 본문과 오답해설(B)는 올바르게 '접속사'로 설명한다. 학생 노출 필드 간 용어 라벨이 미세하게 불일치(관계사 vs 접속사). 핵심 설명은 정확하므로 치명은 아님."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 2,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "과거분사 동격구(축약 관계절) 'called keystone species'가 주어 'Such species'를 수식하고 본동사는 'are vital'임을 아는지 — 준동사 vs 정동사 판별.",
+      "temptingBecause": "주어 직후 위치라 학생이 'Such species'의 본동사로 오인하거나 'which are called'가 필요하다고 느낄 수 있다.",
+      "decisiveFlaw": "콤마로 분리된 수동 의미 과거분사 동격구이고 본동사는 뒤의 'are vital'이므로 어법상 정확 — 오류 아님."
+    },
+    {
+      "label": "(B)",
+      "intent": "추상명사 'The fact' 뒤에서 완전절을 이끄는 동격 접속사 that과, 불완전절을 이끄는 관계대명사 that의 구별.",
+      "temptingBecause": "'The fact that'에서 that을 관계대명사로 착각해 뒤 절이 불완전해야 한다고 생각하거나, that 자체를 불필요하다고 오판할 수 있다.",
+      "decisiveFlaw": "뒤 절 'other species depend on ... keystone species'가 완전절이므로 동격 접속사 that이 정확 — 오류 아님."
+    },
+    {
+      "label": "(C)",
+      "intent": "긴 동격절이 개입한 단수 주어 'The fact'에 대한 본동사 자리·수·태(수동) 판정.",
+      "temptingBecause": "주어와 동사 사이에 긴 동격절이 끼어 있어 수·태가 흐려 보이고, 앞에 정동사가 없다고 느껴 이 자리를 의심할 수 있다.",
+      "decisiveFlaw": "'The fact ... is revealed'는 단수 주어에 대한 단수 수동 본동사로 정확 — 오류 아님."
+    },
+    {
+      "label": "(D)",
+      "intent": "be동사(are)의 주격 보어 자리에 형용사가 와야 함 — 형용사 vs 부사 판별.",
+      "temptingBecause": "'less' 뒤라 부사 'plentifully'로 바꿔야 한다는 착각을 유도할 수 있다.",
+      "decisiveFlaw": "be동사 보어는 형용사여야 하므로 'plentiful'이 정확 — 오류 아님."
+    },
+    {
+      "label": "(E)",
+      "intent": "문두 주어 자리에 정동사 'Protects'가 잘못 위치 — 주어 역할을 할 동명사(준동사)와 정동사의 구별(정답).",
+      "temptingBecause": "실제 오류 자리이지만, 문두 대문자 3인칭 단수 정동사 'Protects'는 상위권 학생에게 다소 즉시 눈에 띄어 KILLER치고는 노출도가 높다.",
+      "decisiveFlaw": "실제 본동사는 뒤의 'is'이며, 접속사 없이 한 절에 정동사 두 개(Protects, is)가 생겨 비문 — 주어 슬롯에는 동명사 'Protecting'이 와야 함. 선언된 정답 (E)와 일치하며 유일한 오류."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "info",
+      "evidence": "(E) 정답 해설이 진짜 주어(무화과 보호 행위 전체)·진짜 본동사('is')·접속사 없는 정동사 중복 비문을 정확히 설명하고 교정형 'Protecting'을 제시. 오답해설 (A)~(D)도 각각 실제 통사 구조(과거분사 동격구/동격 접속사/단수 수동 본동사/be보어 형용사)와 정확히 대응. 오분석·환각 없음."
+    },
+    {
+      "severity": "minor",
+      "evidence": "keyPoints (B)의 '관계사' 범주 라벨은 동격 접속사 that에 대한 미세 용어 오분류. 다만 본문에서 '동격 완전절의 접속사 확인'으로 정정하고 오답해설(B)도 '접속사'로 정확히 기술하므로 실질 오개념은 아님."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "모든 V 통과. V2: 5개 밑줄 독립 검증 결과 (A)과거분사 동격구·(B)동격 접속사·(C)단수 수동 본동사·(D)be보어 형용사는 모두 정확하고 (E) 'Protects'만 유일 오류로 선언 정답과 일치. 교정 'Protecting'은 원문 복원(최소대립쌍). 공예는 견고하나 KILLER 정합이 약점: 문두 대문자 정동사 'Protects'는 구조를 읽게 하되 위치상 노출도가 높아 KILLER 요구(즉시 드러나지 않는 구조 판단)에 완전히 부합하지 않아 C5=2. 합계 17, 최저 C=2 → B(작은 수정으로 출제 가능; keyPoints (B) '관계사' 라벨을 '동격 접속사'로 정정 권장). KILLER 추가 조건 §C의 '정답이 철자·위치로 즉시 드러나지 않아야 한다'가 미충족이므로 killerConditionsMet=false."
+}

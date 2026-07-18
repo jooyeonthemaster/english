@@ -1,0 +1,181 @@
+{
+ "P001": {
+  "itemId": "lh-g-04",
+  "armId": "LH-G",
+  "frameId": "adhoc-prod-04",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(E)",
+  "gateIssues": [
+   {
+    "severity": "error",
+    "code": "grammar-shallow-participle-adjective-answer",
+    "message": "INTERMEDIATE/KILLER GRAMMAR_ERROR should not use a shallow participle adjective swap such as \"beamed\" -> \"beaming\" before a noun; require deeper structure."
+   },
+   {
+    "severity": "error",
+    "code": "grammar-killer-generic-answer-point",
+    "message": "KILLER GRAMMAR_ERROR answer is tagged with generic pointCode (a); use a precise structural frame such as agreement with modifier, participle clause, relative/nominal clause, voice, complement, dummy it, inversion, or nonfinite pattern."
+   }
+  ]
+ },
+ "P002": {
+  "itemId": "lh-g-06",
+  "armId": "LH-G",
+  "frameId": "adhoc-prod-06",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(E)",
+  "gateIssues": [
+   {
+    "severity": "error",
+    "code": "grammar-killer-generic-answer-point",
+    "message": "KILLER GRAMMAR_ERROR answer is tagged with generic pointCode (a); use a precise structural frame such as agreement with modifier, participle clause, relative/nominal clause, voice, complement, dummy it, inversion, or nonfinite pattern."
+   }
+  ]
+ },
+ "P003": {
+  "itemId": "lh-b-07",
+  "armId": "LH-B",
+  "frameId": "adhoc-prod-07",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   }
+  ]
+ },
+ "P004": {
+  "itemId": "lh-g-07",
+  "armId": "LH-G",
+  "frameId": "adhoc-prod-07",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(D)",
+  "gateIssues": [
+   {
+    "severity": "error",
+    "code": "grammar-killer-generic-answer-point",
+    "message": "KILLER GRAMMAR_ERROR answer is tagged with generic pointCode (a); use a precise structural frame such as agreement with modifier, participle clause, relative/nominal clause, voice, complement, dummy it, inversion, or nonfinite pattern."
+   }
+  ]
+ },
+ "P005": {
+  "itemId": "lh-b-06",
+  "armId": "LH-B",
+  "frameId": "adhoc-prod-06",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-weak-distractors",
+    "message": "BLANK_INFERENCE should have more wrong options with passage-keyword, semantic, or polarity overlap."
+   }
+  ]
+ },
+ "P006": {
+  "itemId": "lh-b-05",
+  "armId": "LH-B",
+  "frameId": "adhoc-prod-05",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   }
+  ]
+ },
+ "P007": {
+  "itemId": "lh-b-04",
+  "armId": "LH-B",
+  "frameId": "adhoc-prod-04",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-target-list-like",
+    "message": "BLANK_INFERENCE should not target a long, punctuated, or list-like span."
+   }
+  ]
+ },
+ "P008": {
+  "itemId": "lh-g-05",
+  "armId": "LH-G",
+  "frameId": "adhoc-prod-05",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(C)",
+  "gateIssues": [
+   {
+    "severity": "error",
+    "code": "grammar-killer-generic-answer-point",
+    "message": "KILLER GRAMMAR_ERROR answer is tagged with generic pointCode (a); use a precise structural frame such as agreement with modifier, participle clause, relative/nominal clause, voice, complement, dummy it, inversion, or nonfinite pattern."
+   },
+   {
+    "severity": "error",
+    "code": "grammar-pointcode-span-mismatch",
+    "message": "Underline (B) is tagged pointCode (k) but its surface \"follow\" has no token matching that grammar point — the label looks fabricated. Move the underline onto the real k-token or fix the code."
+   },
+   {
+    "severity": "error",
+    "code": "grammar-keypoint-untested-token",
+    "message": "Grammar keyPoints/explanation mention \"although\", but no marked option tests that token."
+   }
+  ]
+ }
+}

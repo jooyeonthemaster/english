@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "Grammatical but logically vacuous in the frame 'rather than actually designing, they ___': 'withdraw largely from hands-on creating' is merely the negation of 'actually designing', yielding a near-tautology ('rather than designing, they do not design') instead of the required alternative activity. It also fails forward cohesion: it gives no predicate that motivates the next sentences' pivot to management organization and processes being 'equally as relevant as designers' creativity'. Strongest decoy, but not defensible as best answer."
+    },
+    {
+      "label": "2",
+      "verdict": "accept",
+      "reason": "Grammatically clean seam (finite verb 'work' + gerundive postmodifier 'coordinating...'). Logically exact: supplies the alternative activity the contrastive frame demands; 'team implementation of concepts' echoes the passage's 'substantial numbers of designers are employed in implementing a concept' almost verbatim; 'leaders coordinating' directly licenses the concluding claim that 'management organization and processes can be equally as relevant as designers' creativity' for designers working in a group."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "Directly contradicts the passage: 'even where a strong personality exercises powerful influence' in larger-scale (technologically complex) projects asserts influence persists. Also 'lose personal influence' is not an activity alternative to 'actually designing', so the contrastive frame fails semantically."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "Contradicts the passage's causal structure: in large projects the personalities' output depends on teams implementing concepts, i.e., process management is integral ('equally as relevant'), so 'base their success solely on personal flair without process management' asserts the opposite of what the author argues. Personal flair is credited only for small, low-complexity product categories."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "Names an attitude ('regard X as secondary'), not an activity replacing designing, so the 'rather than actually designing' frame is not satisfied. It also inverts the author's thesis that managerial organization can be equally as relevant as creativity; the author criticizes overemphasis on individuality rather than reporting that personalities hold this belief as their substitute for designing."
+    }
+  ],
+  "note": "Blank-type item. Single defensible answer: 2. Key long-range cues: 'substantial numbers of designers are employed in implementing a concept' (lexical echo with option 2's 'team implementation of concepts') and the closing sentence elevating management organization/processes, which only option 2 sets up. Option 1 is the deliberate near-miss: it restates the negation already given by 'rather than actually designing' and adds no alternative predicate, failing both the contrast requirement and forward discourse cohesion."
+}

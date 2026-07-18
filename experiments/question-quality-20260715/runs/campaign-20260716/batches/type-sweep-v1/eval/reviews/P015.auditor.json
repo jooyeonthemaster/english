@@ -1,0 +1,59 @@
+{
+  "pid": "P015",
+  "validity": {
+    "V1": true,
+    "V2": false,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V2-EQUIVALENT-CORRECTION-MISSING",
+      "severity": "critical",
+      "evidence": "선언된 정답은 '(A) in which' 하나뿐이다. 그러나 선행사가 way일 때 'play is a way that children learn about the world and their place in it'(관계부사 대용 that + 완전절)은 표준 문법이자 한국 학교문법(EBS/교과서: the way, the way that, the way in which 모두 허용, the way how만 불가)에서 명시적으로 허용되는 형태이며, 관계사 생략('a way children learn ...')도 문법적이다. 즉 which → that 교정도 정답으로 인정돼야 하는데 허용 동치 교정 집합·배제 경계가 어디에도 정의되어 있지 않다. RUBRIC B-1 교정형 기준('허용 동치 교정이 선언과 일치, 채점 경계가 흐리면 V2 실패')에 따라 V2 실패."
+    },
+    {
+      "code": "V4-KEYPOINT-OVERGENERALIZATION",
+      "severity": "major",
+      "evidence": "keyPoints의 '(A) 관계사 — 완전절 앞에는 in which, 불완전절 앞에는 which/that'은 이 문항 맥락(선행사 way)에서 'that은 완전절 앞에 올 수 없다'는 함의를 갖는데, 이는 사실과 다르다. 'the way that + 완전절'은 관계부사 대용 that으로 문법적이며 교육과정에서도 가르치는 형태다. 학생 노출 필드에서 올바른 형태를 오답으로 각인시키는 오개념성 규칙 진술이고, V2의 정답 경계 결함과 직결된다. 해설 본문 자체의 완전절 분석(주어 children, 동사 learn, about 전치사구 목적어)은 정확하다."
+    },
+    {
+      "code": "C5-DIFFICULTY-MISMATCH",
+      "severity": "major",
+      "evidence": "요청 난이도 KILLER이나 실제로는 (1) 밑줄이 단 하나라 오류 위치가 사실상 주어지고, (2) 'the way in which'는 고빈도 암기 청크라 절의 완전/불완전 분석 없이 연어 기억만으로 즉답 가능하다. RUBRIC C의 'KILLER 정답은 구조를 읽어야 하며 즉시 드러나지 않는다' 취지에 미달."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 1,
+    "C3": 1,
+    "C4": 2,
+    "C5": 0,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "관계대명사 which 단독 vs 전치사+관계대명사 in which — 후행절의 완전/불완전 판단 (source-correct 'in which' → displayed-wrong 'which' 최소대립쌍, 교정 시 원문과 정확히 일치)",
+      "temptingBecause": "명사 선행사(a way) 바로 뒤의 which는 표면상 자연스러운 관계대명사로 보이고, 뒤 절이 길어(등위 목적어 the world and their place in it) 절 내 gap 부재를 놓치기 쉽다",
+      "decisiveFlaw": "which 뒤 절은 주어(children)·동사(learn)·about 전치사구까지 갖춘 완전절로 관계대명사가 채울 gap이 없다. 방법 선행사 way에는 in which(또는 that/관계사 생략)가 필요 — 단, 선언 정답은 in which만 인정하고 있어 동치 교정(that, 생략) 처리 기준 부재가 채점 결함"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "KEYPOINT-FALSE-DICHOTOMY",
+      "severity": "major",
+      "evidence": "keyPoint '완전절 앞에는 in which, 불완전절 앞에는 which/that'은 the way that + 완전절(관계부사 대용 that)이 문법적이라는 표준 사실과 충돌하는 이분법. 이 문항의 핵심 포인트 바로 그 지점에서 오개념을 유발."
+    },
+    {
+      "code": "EXPLANATION-OMITS-EQUIVALENTS",
+      "severity": "minor",
+      "evidence": "해설이 in which만 유일 교정으로 제시하고 that/관계사 생략 등 허용 가능한 동치 형태와 채점 처리 방침을 언급하지 않음. 해설 본문의 구조 분석 자체는 정확함."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionsDetail": "RUBRIC §C 기준: (1) 최소대립쌍·원문 복원 조건은 충족. (2) 문법 판단 포인트 자체는 명확하나, (3) '5개 밑줄 각각에 point/why tempting/why correct-incorrect' 조건은 밑줄이 1개뿐이고 디코이가 전무해 원천 미충족. (4) 'the way in which'는 암기 연어로 즉시 드러나는 포인트라 '구조를 읽어야 하며 즉시 드러나지 않는다' 위반. (5) 디코이 부재로 정답 은폐 구조 자체가 없음.",
+  "grade": "F",
+  "notes": "V1/V3/V5 통과: 렌더 지문은 의도된 최소 변형(in 삭제) 외 손상 없음, 라벨·정답·해설·keyPoints 상호 동기화됨, 교정 완성문은 원문과 동일하게 문법적. 치명 결함은 (a) 교정형 서술형인데 허용 동치 교정 집합(that, 관계사 생략)이 미선언·미처리인 V2 실패, (b) 학생 노출 keyPoint의 오개념성 이분법(V4). 공예 면에서도 밑줄 1개·디코이 0개 구조는 요청 난이도 KILLER와 정면 불일치(C5=0). 재설계 방향: 허용 동치 교정 명시(또는 '원문 복원형' 채점 기준 선언), 다중 밑줄+디코이 도입, keyPoint를 'way 선행사에서는 in which/that/생략 가능, which 단독만 불가'로 교정."
+}

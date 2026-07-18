@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'Garcia stood outside ..., waiting for his brother' — 현재분사 부대상황 구문. 분사의 의미상 주어가 주절 주어 Garcia와 일치하고 wait는 능동이므로 waiting이 옳다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'had been chosen to perform' — choose + O + to-V의 수동태에서 to부정사가 잔류하는 표준 패턴(be chosen to-V). 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct (defensible)",
+      "reason": "'His confidence was quickly changed to nervousness' — change는 타동사 용법(change X to Y)이 있으므로 수동 'X was changed to Y'는 형식적으로 성립한다. 자동사형 'His confidence changed/turned to nervousness'가 더 자연스럽다는 문체적 지적은 가능하나 어법상 오류로 증명되지 않는다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'everyone fell silent, fascinated by the music' — everyone은 fascinate의 피동 대상이므로 과거분사 부대상황이 옳다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect (the answer)",
+      "reason": "'Garcia beaming with joy at his brother's praise.' — 문장에 정형동사(finite verb)가 없다. 주어 + 현재분사만 있는 무정형 단편으로, 'Garcia beamed' 또는 'Garcia was beaming'이어야 한다. 앞 문장('he said.')의 분사구문으로 볼 수도 없고(별개 문장, 의미상 주어 Jeff와 불일치), 축약 관계절로 보아도 술어가 없어 문장이 성립하지 않는다. 어법상 틀림이 형식적으로 증명된다."
+    }
+  ],
+  "note": "정답은 (E) 단독. (C)는 수동태가 어색하다는 문체 시비가 가능하지만 타동사 change의 수동으로 형식적 정문이므로 복수정답 위험은 낮다. 나머지 밑줄은 모두 표준 구문."
+}

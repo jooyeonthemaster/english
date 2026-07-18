@@ -1,0 +1,35 @@
+{
+  "pid": "P008",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "'overlooking the physical pain they experience'는 복지(welfare) 진영의 관심사 그 자체다. 빈칸 문장은 'not one about treating animals inhumanely, but instead one about ___' 구조로, 비인도적 대우(=고통)를 명시적으로 부정한 뒤 더 근본적인 문제를 요구한다. 앞부분의 'human-inflicted pain and other kinds of suffering'에 앵커링한 훑어읽기 독자를 노린 매력적 오답 — 실제로 초반에 눈이 가지만 대조 구문(not X but Y)이 즉시 배제한다."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "'failing to regulate the scale of animal slaughter'는 여전히 규제의 충분성 문제, 즉 'curb the worst excesses' 수준의 복지 프레임이다. 권리론의 요지는 규모나 규제 강도가 아니라 이용(use) 자체가 문제라는 것('should not use in this way at all'). 도살 규모는 지문 어디서도 쟁점화되지 않는다."
+    },
+    {
+      "label": "③",
+      "verdict": "correct",
+      "reason": "'viewing them merely as instruments for our own ends'는 직전 문장 'animals are not the kinds of thing that humans should use in this way at all'(식용·실험 대상으로의 이용 자체 거부)의 직접 환언. 문법 결합도 깨끗함: about 뒤 동명사구로 'treating animals inhumanely'와 병렬, them=animals 지시 명확. 권리론의 근본 문제 제기(수단화 자체)와 정확히 일치한다."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "'denying the potential utility of scientific experimentation'은 방향이 뒤집힌 선지. 지문의 누구도 실험의 효용을 부정하는 것을 문제 삼지 않으며, 권리론은 오히려 효용이 있더라도 이용 자체가 부당하다는 입장이다. 'experimental subjects' 단어 재활용형 미끼."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "'ignoring the historical evolution of protective legislation'은 도입부 'for decades, even for centuries'의 단어를 재활용한 무관 선지. 입법의 역사적 전개는 배경 서술일 뿐 권리론의 논증과 무관하다."
+    }
+  ],
+  "note": "빈칸이 'not X but instead one about ___' 대조 구문의 Y 자리에 있고, 직전 문장이 정답의 명제('이용 자체가 문제')를 명시적으로 제공하므로 정답이 ③으로 유일하게 수렴한다. ①이 복지 프레임 앵커링을 노린 1차 매력 오답이지만 대조 구문이 확실히 차단하며, 대안 해석(문법적 재분석 등)으로 타 선지가 정문이 될 여지는 없다. 문항 성립에 결함 없음."
+}

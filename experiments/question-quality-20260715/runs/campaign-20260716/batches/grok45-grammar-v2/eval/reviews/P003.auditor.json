@@ -1,0 +1,66 @@
+{
+  "pid": "P003",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V5-minor-surroundingText-source-form",
+      "severity": "minor",
+      "evidence": "markedExpressions (D)와 (E)의 surroundingText가 렌더된 오류형 'sort'가 아닌 원문형 'to sorting out'을 담고 있다. 필드가 원지문 앵커라면 스키마상 일관되지만, 학생 노출 경로에 이 필드가 쓰이면 정답이 누출된다. 렌더 지문·선택지·정답·해설 간 모순은 없어 V5는 통과로 판정."
+    },
+    {
+      "code": "V5-minor-keyPoints-partial-coverage",
+      "severity": "minor",
+      "evidence": "keyPoints가 (E),(B),(A)만 다루고 (C),(D)는 누락. 모순은 아니므로 통과이나 디코이 의도 문서화가 불완전하다."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 4,
+    "C5": 2,
+    "C6": 4
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "비교 상관구문 'no more qualified to comment ... than a physicist is [qualified] to judge'에서 qualified 생략 병렬 판정",
+      "temptingBecause": "'is to judge'가 be to 용법(예정·의무)이나 어색한 잉여 구조처럼 보여, is 단독 또는 does로 고쳐야 한다고 오판하기 쉽다",
+      "decisiveFlaw": "than 절에서 형용사 qualified의 생략은 표준 비교 생략이며 'is to judge'는 'is qualified to judge'의 정상 축약 병렬 — 어법상 오류 없음"
+    },
+    {
+      "label": "(B)",
+      "intent": "관계절 'that create expertise in a specialized domain' 개입 뒤 진짜 주어 핵 features와의 수일치",
+      "temptingBecause": "동사 직전의 최근접 명사 domain(단수)에 이끌려 leads로 고쳐야 한다고 착각하기 쉽다",
+      "decisiveFlaw": "주어 핵은 복수 features이므로 복수 동사 lead가 정확 — 어법상 오류 없음"
+    },
+    {
+      "label": "(C)",
+      "intent": "명사 observations 후치 수식 분사의 태 판정(과거분사 vs 현재분사)",
+      "temptingBecause": "능동 gathering과의 태 혼동을 노리지만, 'observations가 수집되다'의 수동 관계가 비교적 투명해 유인력이 약하다",
+      "decisiveFlaw": "observations는 수집되는 대상이므로 수동 의미의 과거분사 gathered가 정확 — 어법상 오류 없음"
+    },
+    {
+      "label": "(D)",
+      "intent": "사람 선행사 the men and women에 대한 주격 관계대명사 선택",
+      "temptingBecause": "실질적 유인 요소가 거의 없다(whom/which 오판 여지가 얕음) — KILLER 문항 기준으로는 필러에 가까운 디코이",
+      "decisiveFlaw": "사람 선행사 + 관계절 내 주어 자리이므로 who가 정확 — 어법상 오류 없음"
+    },
+    {
+      "label": "(E)",
+      "intent": "정답. devote A to B 관용구에서 to의 전치사성 판정 — 전치사 to 뒤 동명사 필수",
+      "temptingBecause": "to 뒤 동사가 이어져 to부정사로 보이며, 'to sort out tough questions'가 목적 부정사처럼 자연스럽게 읽힌다",
+      "decisiveFlaw": "devote는 to-전치사구 보충어를 선택하므로 목적어로 동명사 sorting이 필수. sort로는 전치사 목적어가 성립하지 않는 비문. 교정 시 정확히 원문(sorting) 복원 — 최소대립쌍 성립"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1~V5 전부 통과. 유일 오류 (E) 'sort'는 source-correct(sorting)→displayed-wrong(sort) 최소대립쌍이며 교정 시 원문과 정확히 일치. (A)~(D) 각각 독립 검증 결과 모두 어법상 정답 불가 — 정답 유일성 확보. 해설의 통사 분석(전치사 to, qualified 생략 비교 병렬, features 수일치, 과거분사 후치수식, 주격 who) 전부 실제 구조와 일치. 다만 KILLER 요청 대비 정합 미달: (1) 정답 포인트 'devote to + 동명사'는 한국 수험가에서 가장 많이 훈련된 관용 판정 중 하나로, 구조 독해보다 암기 회상에 가까워 숙련 학생에게 준즉시 노출된다(C5=2). (2) §C 조건 중 '5개 밑줄 각각 point/why tempting/why correct' 요건에서 (C)는 유인 근거가 약하고 (D)는 사실상 필러 — why tempting이 성립하지 않는다. 따라서 killerConditionsMet=false. (A)·(B)는 실제 판단을 요구하는 좋은 디코이이며 해설도 우아함(C6=4). 공예 합계 20, 모든 V 통과, C 최저 2 → B등급. 개선 방향: (D)를 구조적 판정(예: 삽입구 뒤 관계사 생략/전치사+관계사)으로 교체하고, 정답 포인트를 더 깊은 구조 판정으로 상향하면 KILLER 정합 가능."
+}

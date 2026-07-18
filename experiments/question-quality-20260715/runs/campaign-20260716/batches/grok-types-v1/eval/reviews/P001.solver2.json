@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "첫 문장 'Emotions prepare us to deal with important events without us having to think about what to do'가 'automatically ready us for important situations'의 직접적 환언이다. 무의식적 위험 감시, 자율신경계의 행동 준비, 비선택적 신호 발생 등 모든 세부가 이 명제의 하위 증거로 포섭되고, 결론 'We don't choose these changes; they simply happen'이 자동성을 재진술한다. 정확성과 포괄성 모두 충족 — 단락 전체의 주제로 성립."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "지문의 논지와 형식적으로 모순. 'Nor would you have survived if you had to think consciously about what you should do'로 의식적 계획은 오히려 생존에 불리하다고 부정된다. 감정 대처의 비의식성이 논지이므로 'consciously plan'은 반대 방향."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "지문은 'there would not be much you could do to cut that short'라며 지속되는 공포를 단축할 방법이 없음을 진술한다. '단축 방법'을 다루는 것이 아니라 단축 불가능성을 말하므로 방향이 반대이고, 한 문장짜리 세부사항에 불과."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "autonomic nervous system은 심박·호흡 등을 조절하는 기능으로만 언급될 뿐, 'evolutionary history(진화사)'는 지문에 전혀 등장하지 않는다. 무근거."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "마지막 문장 'Emotions also send out signals, changes in our expressions, face, voice, and bodily posture'와 사실적으로 일치하나, 이는 감정 자동성의 여러 증거 중 하나(세부사항)일 뿐 단락 전체(생존 기능, 자율신경계 준비, 비의식성)를 포괄하지 못한다. 주제로는 지나치게 협소."
+    }
+  ],
+  "note": "전 단락이 '감정의 자동성/비의도성 + 대처 준비 기능'이라는 단일 논지로 수렴한다. 선지 1이 첫 문장 주제문의 정확한 환언이자 포괄적 요약이라 단일 정답으로 명확히 좁혀진다. 2·3은 지문 명제와 모순(의식적 계획 부정, 공포 단축 불가), 4는 무근거(진화사 미언급), 5는 지엽적 세부. 대안 해석·문법적 함정 없음. confidence high."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "J010",
+  "answer": "B",
+  "multipleDefensible": false,
+  "defensibleLabels": ["B"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "'once the dust of an emergency has settled down': singular subject 'the dust' + present perfect in a temporal clause expressing completion prior to the general-present main clause ('There is a tendency...'). Grammatical. The only quibble is idiomatic ('the dust settles' is more standard than 'settles down'), which is a style point, not an 어법 error."
+    },
+    {
+      "label": "B",
+      "verdict": "error",
+      "reason": "'The potential contribution ... cannot deny': the subject 'contribution' is the semantic patient of 'deny' (the contribution is what gets denied), and transitive 'deny' has no object here. Passive required: 'cannot be denied.' The long parenthetical 'if it involves vulnerable groups' separates subject from verb, and the familiar active collocation 'we cannot deny the contribution' creates a real pull to accept it on a fast read — the trap works, but subject-verb voice checking exposes it decisively."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "'countries where a large part of the population derive their livelihood from uncertain sources': antecedent 'countries' is a place, and the relative clause is structurally complete (no missing noun slot), so relative adverb 'where' (= in which) is correct. Distractor pull: the plural verb 'derive' after 'a large part of the population' feels off and tempts you to blame 'where', but 'derive' is not underlined and collective-plural agreement is acceptable (British) usage regardless."
+    },
+    {
+      "label": "D",
+      "verdict": "correct",
+      "reason": "'mechanisms involving direct public intervention': active present participle post-modifying 'mechanisms'; mechanisms involve intervention (active relation), so 'involving' is correct. No case for 'involved'."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "'achievements lie in having provided direct public support': preposition 'in' requires a gerund; the perfect gerund 'having provided' correctly marks the providing as anterior to the present achievement. Grammatical and semantically apt. This is the strongest surface lure for students who reflexively distrust perfect gerunds, but it is fully sound."
+    }
+  ],
+  "note": "Clean single-answer item. (B) is a classic voice error hidden behind a parenthetical clause and a familiar active collocation ('we cannot deny X'). Actively searched for rescuing parses of active 'deny' (ellipsis, fronted object, middle voice) — none exist; 'deny' does not have an intransitive/middle use meaning 'be undeniable'. Secondary lures at (C) (plural 'derive' near the underline) and (E) (perfect gerund) are well-built but clearly grammatical. Non-underlined 'derive' agreement is British-style collective plural, defensible, and outside the answer choices."
+}

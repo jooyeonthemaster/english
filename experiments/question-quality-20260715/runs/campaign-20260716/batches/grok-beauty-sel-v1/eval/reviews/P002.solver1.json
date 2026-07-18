@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "매력적 오답 시도: 도입 예시('A cat'만 말하면 useless advice)를 그대로 반영해 순간적으로 끌린다. 그러나 이는 3단 구조(단순 진술→이유 제시→이야기) 중 첫 번째 부정 사례만 다루고, 'Pet Advice'는 예시 소재를 주제로 격상시킨 과협소(too narrow) 제목이다. 글의 결론인 '이야기의 설득력'이 빠져 제목 부적합."
+    },
+    {
+      "label": "2",
+      "verdict": "accept",
+      "reason": "첫 문장 'We can simply state our beliefs, or we can tell stories that illustrate them'의 프레임과 마지막 문장의 결론(이야기로 조언하면 more to heart)을 정확히 포괄. 'More Persuasive Than Bare Reasons'는 중간 단계('more helpful but not necessarily more believable')와의 비교 구도까지 반영한 정확한 주제 제목."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "'We need justifications for the beliefs of others...' 문장을 표면적으로 재활용한 트랩. 그러나 지문은 곧바로 justification의 한계('not necessarily more believable')를 지적하며 이야기로 넘어가므로 justification이 'Essential'이라는 주장은 지문 논지와 어긋난다. 'Turning Confusion into Action'은 지문에 없는 조작된 구절."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "이야기(narrative)라는 승리 요소를 담고 있어 끌리지만 'the Only Basis'가 결정적 과잉 진술 — 지문은 이야기 조언이 '더' 마음에 와닿는다(more to heart)는 비교급 주장일 뿐 유일한 근거라 하지 않는다. 또한 'Shared'도 부정확: Bill 자신이 겪었거나 들은 이야기이지 두 사람이 공유한 경험이 아니다. 전형적 강도 과잉(quantifier) 오답."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "가장 강한 디테일 트랩: 'more helpful but not necessarily more believable' 문장의 정확한 패러프레이즈라 검토 중 실제로 잠시 끌렸다. 그러나 이는 글이 반박을 위해 거쳐가는 중간 단계(양보된 논점)일 뿐이며, 글 전체의 결론(이야기의 우월성)을 담지 못한다. 세부 사실로는 참이지만 제목으로는 범위 부적합."
+    }
+  ],
+  "note": "블라인드 풀이. 3단 상승 구조(bare statement < reasons < story)가 명확해 정답이 2로 유일하게 수렴. 매력적 오답은 5(중간 단계의 정확한 패러프레이즈)와 4(핵심 소재 narrative + 과잉 한정사 'Only') 순으로 유혹 강도가 높았다. 복수 정답 여지 없음."
+}

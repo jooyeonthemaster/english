@@ -1,0 +1,257 @@
+{
+ "P001": {
+  "itemId": "lf-g-04",
+  "armId": "GKA-G-KILLER",
+  "frameId": "adhoc-prod-04",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(E)",
+  "gateIssues": []
+ },
+ "P002": {
+  "itemId": "lf-b-01",
+  "armId": "GKA-B-KILLER",
+  "frameId": "adhoc-prod-01",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   }
+  ]
+ },
+ "P003": {
+  "itemId": "lf-b-07",
+  "armId": "GKA-B-KILLER",
+  "frameId": "adhoc-prod-07",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "2",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   }
+  ]
+ },
+ "P004": {
+  "itemId": "lf-b-06",
+  "armId": "GKA-B-KILLER",
+  "frameId": "adhoc-prod-06",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "3",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   }
+  ]
+ },
+ "P005": {
+  "itemId": "lf-b-04i",
+  "armId": "GKA-B-INT",
+  "frameId": "adhoc-prod-04",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-weak-distractors",
+    "message": "BLANK_INFERENCE should have more wrong options with passage-keyword, semantic, or polarity overlap."
+   }
+  ]
+ },
+ "P006": {
+  "itemId": "lf-b-04",
+  "armId": "GKA-B-KILLER",
+  "frameId": "adhoc-prod-04",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-target-list-like",
+    "message": "BLANK_INFERENCE should not target a long, punctuated, or list-like span."
+   }
+  ]
+ },
+ "P007": {
+  "itemId": "lf-g-08",
+  "armId": "GKA-G-KILLER",
+  "frameId": "adhoc-prod-08",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(A)",
+  "gateIssues": [
+   {
+    "severity": "error",
+    "code": "grammar-obvious-adverb-adjective",
+    "message": "GRAMMAR_ERROR should not use a bare adverb-to-adjective modifier swap such as \"precisely\" -> \"precise\" before another adjective; it is too local and shallow."
+   },
+   {
+    "severity": "error",
+    "code": "grammar-killer-overdrilled-answer",
+    "message": "KILLER GRAMMAR_ERROR rejected: the answer is an over-drilled adjective↔adverb (-ly) swap (\"precisely\" ↔ \"precise\") — a BASIC/INTERMEDIATE point every student drills. Move the error to a deeper site already in the passage: a long-distance subject-verb agreement across a genuine intervening relative/appositive or of/with phrase, a nominal vs relative clause-gap, a participle voice error, or a parallel-structure break."
+   }
+  ]
+ },
+ "P008": {
+  "itemId": "lf-b-08",
+  "armId": "GKA-B-KILLER",
+  "frameId": "adhoc-prod-08",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   }
+  ]
+ },
+ "P009": {
+  "itemId": "lf-b-05",
+  "armId": "GKA-B-KILLER",
+  "frameId": "adhoc-prod-05",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   }
+  ]
+ },
+ "P010": {
+  "itemId": "lf-g-04i",
+  "armId": "GKA-G-INT",
+  "frameId": "adhoc-prod-04",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(E)",
+  "gateIssues": []
+ },
+ "P011": {
+  "itemId": "lf-b-06i",
+  "armId": "GKA-B-INT",
+  "frameId": "adhoc-prod-06",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": []
+ },
+ "P012": {
+  "itemId": "lf-g-06i",
+  "armId": "GKA-G-INT",
+  "frameId": "adhoc-prod-06",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(E)",
+  "gateIssues": [
+   {
+    "severity": "error",
+    "code": "grammar-obvious-adjacent-sv-agreement",
+    "message": "GRAMMAR_ERROR answer \"lies\" is a directly adjacent subject-verb -s flip; choose an agreement target with an intervening modifier, relative clause, or attractor noun."
+   }
+  ]
+ },
+ "P013": {
+  "itemId": "lf-g-06",
+  "armId": "GKA-G-KILLER",
+  "frameId": "adhoc-prod-06",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(D)",
+  "gateIssues": [
+   {
+    "severity": "error",
+    "code": "grammar-killer-thin-answer",
+    "message": "KILLER GRAMMAR_ERROR answer looks like a local one-token change without a long-distance clause, modifier, relation, or parallel-structure check."
+   }
+  ]
+ },
+ "P014": {
+  "itemId": "lf-g-07",
+  "armId": "GKA-G-KILLER",
+  "frameId": "adhoc-prod-07",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(D)",
+  "gateIssues": []
+ },
+ "P015": {
+  "itemId": "lf-g-05",
+  "armId": "GKA-G-KILLER",
+  "frameId": "adhoc-prod-05",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(B)",
+  "gateIssues": []
+ }
+}

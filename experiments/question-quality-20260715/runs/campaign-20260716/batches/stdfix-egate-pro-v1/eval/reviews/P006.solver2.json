@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "Antecedent 'they' (= the Faroe Islands/islanders) is plural; possessive determiner 'their' before 'own government' is the required form. Grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect",
+      "reason": "Subject 'whale meat and blubber' is a coordination of two NPs, formally plural, requiring 'are'. Decisively, the predicate nominal is 'important parts' (plural): even under a single-unit mass construal ('bread and butter is...'), that construal would demand a singular complement ('is an important part'). 'is ... parts' is internally inconsistent under either construal; no alternative parse rescues it. Ungrammatical."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'Most of the whale meat and blubber' coordinates two non-count nouns naturally construed as one food supply; unit/notional agreement licenses singular 'is distributed' (cf. 'fish and chips is'). The passage's own continuation 'although some is sold' confirms the singular mass construal. Defensibly grammatical, so it does not compete with (B)."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'take place as quickly and efficiently as possible': adverb (not adjective) correctly modifies the VP 'take place' inside the equative frame 'as ADV as possible', with parallel adverbs 'quickly and efficiently' sharing one 'as...as possible'. Grammatical."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'whether this practice should be allowed to continue': modal + passive infinitive of 'allow X to continue' yields 'X should be allowed to continue' with correctly retained to-infinitive complement. Grammatical."
+    }
+  ],
+  "note": "Unique error is (B): the plural predicate nominal 'important parts' makes the singular verb indefensible under any construal, whereas (C)'s singular agreement is rescued by unit-mass (notional) agreement and is consistent with 'some is sold'. Mild design tension exists between (B) and (C) (both hinge on agreement with 'whale meat and blubber'), but only (B) is internally inconsistent, so the answer does not split."
+}

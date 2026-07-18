@@ -1,0 +1,102 @@
+{
+  "pid": "P006",
+  "itemType": "SENTENCE_INSERT",
+  "requestedDifficulty": "INTERMEDIATE",
+  "validity": {
+    "V1": false,
+    "V2": false,
+    "V3": true,
+    "V4": false,
+    "V5": false
+  },
+  "validityIssues": [
+    {
+      "code": "V1-RENDER-SENTENCE-LOSS",
+      "severity": "critical",
+      "evidence": "원지문 대비 렌더 지문에서 의도된 추출(주어진 문장 'Believing that your work should be perfect...') 외에 두 문장이 추가로 무단 삭제되었다: '(You are correct.)'와 'Sooner or later, since you cannot do what you are trying to do, you quit.' 렌더는 '...to not work is to not make mistakes. ④ And in one of those little ironies...'로 바로 건너뛴다. SENTENCE_INSERT의 의도된 변형은 대상 문장 1개 제거뿐이므로, 완결된 내용 문장('Sooner or later... you quit')의 소실은 의도 외 지문 손상이다. '(You are correct.)'는 주어진 문장에 의존하는 삽입구라 삭제가 의도적일 수 있으나 그 경우에도 해설과 동기화되지 않았다."
+    },
+    {
+      "code": "V1-DISCOURSE-GAP",
+      "severity": "major",
+      "evidence": "'Sooner or later... you quit' 삭제로, 정답을 넣어 완성해도 원문이 복원되지 않으며 마지막 문장의 요약 'a perfect death spiral: you misdirect your work; you stall; you quit'가 본문 어디에서도 서술된 적 없는 '포기(quit)' 단계를 재요약하는 담화 공백이 남는다."
+    },
+    {
+      "code": "V2-UNIQUENESS-BROKEN",
+      "severity": "critical",
+      "evidence": "④를 유일 정답으로 고정하던 결정적 응집 단서 두 개 — '(You are correct.)'의 동의 호응, 직후 문장의 'since you cannot do what you are trying to do'가 주어진 문장의 'you cannot do it'을 직접 받는 어휘 반복 — 가 모두 렌더에서 제거되었다. 손상된 렌더 기준으로 ③ 삽입을 독립 검증하면 '아는 것에 집착 → 완벽해야 한다는 믿음으로 할 수 없다고 확신 → 그래서 미룰 이유를 찾음(안 하면 실수도 없으므로) → 스파이럴 요약'이 응집성 파탄 없이 성립해 ④와 실질적으로 경쟁한다. ④를 지지하는 잔존 단서는 요약부의 'misdirect; stall; quit' 순서(확신·포기가 stall=지연 뒤라는 암시)라는 미세한 단일 단서뿐이다. ①·②는 given의 'gradually'가 전제하는 선행 단계 부재로, ⑤는 종결 요약문 뒤라는 점으로 소거 가능하나, ③이 방어 가능한 대안 정답이 되어 단일 정답이 확보되지 않는다."
+    },
+    {
+      "code": "V4-EXPLANATION-CITES-DELETED-CONTENT",
+      "severity": "critical",
+      "evidence": "해설의 정답 논증 전체가 렌더 지문에 존재하지 않는 문장에 의존한다. (a) \"그 괄호 안의 동의 표현('(You are correct.)')으로 자연스럽게 이어집니다\" — 해당 괄호 문장은 렌더에 없다. (b) \"직후 문장('Sooner or later, since you cannot do what you are trying to do, you quit.')에서 ... 직접적인 이유로 받아 가리키고 있으므로 ④번 자리가 ... 유일한 정답 위치입니다\" — 렌더에서 ④ 직후 문장은 'And in one of those little ironies of life...'이므로 문장 귀속 자체가 사실과 다르다. 해설이 변형 전 원지문 기준으로 작성되어 학생이 보는 문항과 불일치한다."
+    },
+    {
+      "code": "V4-DISTRACTOR-RATIONALE-UNSOUND",
+      "severity": "major",
+      "evidence": "오답 해설 3번의 '자신감을 상실하는 결과가 먼저 올 수 없습니다'라는 단정은 원문에서는 삭제된 앵커 문장이 뒷받침했으나 렌더 기준으로는 '확신 → 지연' 역순 배치도 성립해 배제 근거가 실제 지문 상태와 맞지 않는다. 오답 해설 5번의 \"주어진 문장 뒤에 와야 할 즉각적 결과('you quit')를 서술하는 문장\"도 삭제된 'Sooner or later... you quit'을 전제한 서술로 읽히며, 렌더에는 요약 재진술만 존재한다."
+    },
+    {
+      "code": "V5-FIELD-DESYNC-WITH-RENDER",
+      "severity": "critical",
+      "evidence": "학생 노출 필드인 렌더 지문이 불완전(2문장 결락)하고, keyPoints 2번 항목이 \"주어진 문장의 'you cannot do it'과 직후 문장의 'since you cannot do what you are trying to do' 간의 어휘적·개념적 응집성\"을 핵심 포인트로 제시하나 그 '직후 문장'은 학생이 볼 수 없다. 렌더-해설-keyPoints 간 동기화가 깨져 있다. 정답 라벨(④)·선지 번호(①~⑤)·오답해설 키({1,2,3,5}) 상호 간 표기 동기화 자체는 정상이다."
+    }
+  ],
+  "craft": {
+    "C1": 2,
+    "C2": 2,
+    "C3": 1,
+    "C4": 1,
+    "C5": 1,
+    "C6": 1
+  },
+  "craftNotes": {
+    "C1": "원문 기준 설계 포인트(지연→무능 확신→포기의 심리 단계, 'you cannot do it'/'since you cannot do what you are trying to do' 어휘 응집)는 정전급 삽입 포인트이나, 렌더에서 그 응집 장치가 삭제되어 실제 전달된 문항에서는 '의미 있는 한 지점' 수준으로 격하된다.",
+    "C2": "오답 위치 ①②③⑤ 각각에 단계-순서 오독을 겨냥한 개별 해설이 존재해 의도는 있으나, ③의 배제 논리가 렌더 상태에서 성립하지 않아 밀도가 훼손된다.",
+    "C3": "렌더에서 ③이 매력적인 것은 설계된 변별이 아니라 앵커 삭제로 인한 미해소 중의성이다. ①②⑤는 즉시 소거 수준이라 실제 판단은 한 곳뿐이며 그마저 결정 불가에 가깝다.",
+    "C4": "'정답은 필연적이다' 요건 위반 — 정답을 필연으로 만들던 근거 문장 2개가 지문에서 제거되어 충분한 근거가 없다.",
+    "C5": "INTERMEDIATE 요청 대비, 렌더된 문항은 결정 근거가 소실된 사실상의 중의 문항이라 요구 사고 단계·함정 깊이와 정합하지 않는다.",
+    "C6": "해설 문체는 정연하고 ①②⑤ 오답 논거는 대체로 정확하나, 정답 논증의 핵심 근거 두 개가 렌더에 존재하지 않는 문장 인용이어서 정확성이 무너진다."
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "주제문 직후에 패턴의 후반 단계 문장을 당겨 넣는 성급한 배치 디코이",
+      "temptingBecause": "given의 'Believing that your work should be perfect'가 첫 문장 'To require perfection is to invite paralysis'의 어휘를 직접 반복해 주제 인접성이 높아 보인다",
+      "decisiveFlaw": "직후 문장 'The pattern is predictable:'이 패턴 서사의 도입부이고, given의 'gradually become convinced'는 선행 단계들의 누적을 전제하므로 도입 앞에 올 수 없다. 배제 성립."
+    },
+    {
+      "label": "②",
+      "intent": "회피 행동 점층(steer→cling) 사이에 심리적 종착점을 끼워 넣는 단계 건너뛰기 디코이",
+      "temptingBecause": "직전 문장의 'what you imagine you can do perfectly'가 given의 'your work should be perfect'와 의미 중첩되어 국소 응집처럼 보인다",
+      "decisiveFlaw": "'You cling ever more tightly...'는 직전 문장의 회피 행동을 잇는 점층부로, 종결적 확신이 그 사이에 끼면 진행 순서가 끊긴다. 배제 성립."
+    },
+    {
+      "label": "③",
+      "intent": "지연(delay)과 확신 상실(conviction)의 선후를 뒤집는 인과 순서 디코이",
+      "temptingBecause": "위험 회피·집착 뒤에 '할 수 없다는 확신'이 오는 전개가 자연스럽게 읽히고, 삽입 후 '확신 → 그래서 지연' 인과도 성립한다",
+      "decisiveFlaw": "설계상으로는 원문 순서(지연이 확신에 선행, 요약부 'stall; quit' 순서와 일치)와 삭제된 후속 앵커가 배제 근거였으나, 렌더에서는 그 근거가 소실되어 결정적 결함이 성립하지 않는다. V2 실패의 직접 원인."
+    },
+    {
+      "label": "④",
+      "intent": "선언된 정답 위치 — 지연과 최종 요약 사이의 확신 단계",
+      "temptingBecause": "원문 기준 '지연 → 확신 상실 → (You are correct.) → 포기'의 인과 사슬에서 유일하게 성립하는 자리였다",
+      "decisiveFlaw": "해당 없음(정답). 단, 렌더에서는 후속 앵커 2문장 삭제로 필연성이 소멸했고, ④ 삽입 완성문도 포기 서술 없이 요약부로 건너뛰어 원문이 복원되지 않는다."
+    },
+    {
+      "label": "⑤",
+      "intent": "종결 요약문 뒤에 중간 단계를 후치시키는 종결 파괴 디코이",
+      "temptingBecause": "마지막 문장에 'you quit'이 있어 given의 'cannot do it'과 인과로 이어 붙이고 싶은 유혹이 있다",
+      "decisiveFlaw": "마지막 문장은 'death spiral: you misdirect; you stall; you quit'로 전체 패턴을 재요약하는 종결부이므로 그 뒤에 단계 서술이 올 수 없고, '할 수 없다는 확신'은 요약이 언급하는 quit에 선행해야 한다. 배제 성립."
+    }
+  ],
+  "explanationIssues": [
+    "해설이 렌더 지문에 존재하지 않는 '(You are correct.)'를 given 직후의 동의 호응으로 인용",
+    "해설이 렌더 지문에 존재하지 않는 'Sooner or later, since you cannot do what you are trying to do, you quit.'를 '직후 문장'으로 귀속해 유일성 논증의 핵심 근거로 사용 — 실제 렌더의 ④ 직후 문장은 'And in one of those little ironies of life...'",
+    "오답 해설 3: 렌더 상태에서는 '확신 → 지연' 역순도 성립하므로 '결과가 먼저 올 수 없습니다' 단정에 텍스트 근거가 없다",
+    "오답 해설 5: \"'you quit'을 서술하는 문장\"이 삭제된 문장을 전제한 서술로 읽히며, 렌더에는 요약 재진술만 존재",
+    "keyPoints 2번이 렌더 지문에 없는 'since you cannot do what you are trying to do'와의 응집성을 핵심 평가 포인트로 제시 — 학생이 사용할 수 없는 포인트"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "치명 결함의 뿌리는 하나다: SENTENCE_INSERT 렌더 생성 시 추출 대상(주어진 문장) 외에 정답 앵커 문장 2개('(You are correct.)', 'Sooner or later... you quit.')가 추가 삭제되었고, 해설·keyPoints는 삭제 전 원지문 기준으로 작성되었다. 5개 마커 템플릿에 문장 수를 맞추려 지문을 잘라낸 파이프라인 손상으로 추정된다. 결과: (1) 지문 무결성 파손(V1), (2) ③이 방어 가능한 경쟁 답이 되어 유일성 붕괴(V2), (3) 해설이 학생이 볼 수 없는 문장을 '직후 문장'으로 인용하는 사실성 오류(V4), (4) 렌더-해설-keyPoints 비동기(V5). V3은 통과 — 렌더 지문·발문·④ 삽입 완성문 모두 문장 단위로 문법적이고 오탈자·seam 손상이 없다. 원문과 정답 설계 자체는 우수하므로 두 앵커 문장을 렌더에 복원(마커 ④를 유지하고 ⑤ 위치 재조정)하면 상위 등급으로 회복 가능하다. 요청 난이도 INTERMEDIATE이므로 KILLER 조건 판정 대상 아님(killerConditionsMet=false). 공예 합계 8이나 V 실패는 공예로 상쇄되지 않는다 — 등급 F, 출하 금지."
+}

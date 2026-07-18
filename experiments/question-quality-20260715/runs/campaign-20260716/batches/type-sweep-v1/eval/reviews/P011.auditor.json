@@ -1,0 +1,90 @@
+{
+  "pid": "P011",
+  "blindAnswer": "1",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-note",
+      "severity": "minor",
+      "evidence": "렌더 지문과 원지문을 전문 대조한 결과 유일한 차이는 의도된 밑줄 마커(__heart__)뿐이다. 문장 접합 파손·중복·누락·고아 문장부호 없음. 발문의 '밑줄 친 단어'와 마커가 일치하고 선지 라벨 1~5, 선언 정답 1 모두 존재한다. 통과."
+    },
+    {
+      "code": "V2-note",
+      "severity": "minor",
+      "evidence": "독립 풀이에서 각 선지를 검증: 문맥상 'take ~ to heart'는 이야기 덕분에 조언의 신빙성이 높아져 '진지하게 받아들인다'는 인지적 수용이므로 1만 성립. 2(핵심·본질)는 'heart of the matter'류 의미로 이 관용구 내부에서 작동하지 않음. 3(체력)은 문맥 무관. 4(용기)는 별개 관용구 'take heart'의 의미. 5(공감·연민)는 타인에 대한 정서 반응이지 조언 수용 태도가 아니며, 지문 논지가 '믿을 만함(believable)→수용'이라는 인지적 경로임이 5를 배제한다. 정답 유일성 확인."
+    },
+    {
+      "code": "V3-note",
+      "severity": "minor",
+      "evidence": "지문·발문 모두 문법적. 어휘 문맥의미 유형이라 빈칸 seam이 없고, 선지는 명사구 gloss로 유형 관행상 자연스럽다. 비단어·오탈자 없음."
+    },
+    {
+      "code": "STEM-CONVENTION",
+      "severity": "minor",
+      "evidence": "발문은 '단어'의 의미를 묻지만 선지들은 사실상 관용구 'take ~ to heart' 안에서 heart가 기여하는 의미의 gloss다. 수능·내신 어휘 문맥의미 유형의 통상 관행 범위라 V 실패는 아니나, 엄밀히는 '밑줄 친 표현' 발문이 더 정확하다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — 관용구 'take ~ to heart'의 문맥적 의미(조언을 깊이·진지하게 새겨 수용)",
+      "temptingBecause": "지문 결론부('quite interested', 'take the advice more to heart')와 신빙성 논지가 직접 뒷받침",
+      "decisiveFlaw": "(정답) 이야기가 조언을 더 believable하게 만들어 진지한 수용으로 이어진다는 지문 논리와 정확히 합치"
+    },
+    {
+      "label": "2",
+      "intent": "다의어 함정 — heart의 '핵심·본질' 사전 의미(heart of the matter)로 오도",
+      "temptingBecause": "사전 지식이 있는 학생일수록 '핵심'이라는 대표 파생 의미를 떠올리고, 글이 '이야기의 힘'이라는 본질을 다룬다는 인상과 연상됨",
+      "decisiveFlaw": "'take X to heart' 관용구 내부에서 heart는 핵심·본질 의미로 기능하지 않으며, '조언을 본질적 부분으로 가져간다'는 독해는 문맥상 성립 불가"
+    },
+    {
+      "label": "3",
+      "intent": "축자 의미 함정 — 신체 기관으로서의 heart(체력·지구력) 연상",
+      "temptingBecause": "heart의 가장 기초적인 축자 의미라는 점 외에 유인 요소가 거의 없음",
+      "decisiveFlaw": "애완동물 조언 수용이라는 심리적 문맥과 전혀 무관 — 즉시 소거되는 사실상 필러에 가까운 선지"
+    },
+    {
+      "label": "4",
+      "intent": "관용구 혼동 함정 — 'take heart(용기를 얻다)'와 'take X to heart'의 형태 유사성",
+      "temptingBecause": "take와 heart가 결합한 다른 관용구를 어중간하게 암기한 학생이 '용기·결단'으로 오독하기 쉬움",
+      "decisiveFlaw": "'take heart'와 'take X to heart'는 별개 관용구이며, 문맥상 John에게 필요한 것은 용기가 아니라 조언의 수용"
+    },
+    {
+      "label": "5",
+      "intent": "정서 오독 함정 — heart=감정·공감이라는 대표 연상 + 이야기의 정서적 호소력이라는 지문 분위기",
+      "temptingBecause": "이야기가 마음을 움직인다는 지문의 정서적 결과 heart의 '감정' 의미가 겹쳐 가장 강력한 경쟁 선지",
+      "decisiveFlaw": "empathy/compassion은 타인을 향한 정서 반응인 반면, 지문 논지는 이야기가 조언을 '믿을 만하게' 만들어 진지하게 수용하게 한다는 인지·태도적 경로 — 공감 자체가 아님"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "오답 해설 3: \"'heart'가 신체 기관으로서 체력이나 스태미나를 비유적으로 뜻하는 경우가 있으나\" — 영어에서 heart의 비유 의미는 통상 '투지·기백(spirit, courage)'이지 '신체적 체력(physical strength and stamina)' 자체가 아니다. 헤지 표현이 있어 V4 실패까지는 아니나 어휘 기술이 다소 부정확하다.",
+      "recommendation": "'투지·기백을 뜻하는 경우는 있으나 신체적 체력 자체를 뜻하지는 않으며'로 수정"
+    },
+    {
+      "severity": "minor",
+      "evidence": "정답 해설과 오답 해설 5에서 '깊이 받아들이고 진지하게', '마음에 깊이 두어 진지하게' 등 동일 표현이 반복되어 다소 장황하다.",
+      "recommendation": "정답 근거 1회 제시 후 오답 해설에서는 각 함정의 결정적 결함만 짚도록 압축"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerAssessment": "요청 난이도는 KILLER이나 유형이 CONTEXT_MEANING이라 §C(어법)/§D(빈칸)가 직접 적용되지 않음. §D를 유추 적용하면 'KILLER는 최소 두 문장/두 논리 단서를 연결해야 하며 단일 단서로 정답을 찍을 수 없다'는 조건에 정면으로 실패한다: 'take ~ to heart'는 고교 어휘서에 흔한 관용구로, 이를 아는 학생은 지문을 읽지 않고 단일 어휘 지식만으로 즉답 가능하다. 또한 선지 3은 §D의 'random opposite가 아닌 서로 다른 함정' 기준에서 사실상 필러다.",
+  "grade": "C",
+  "notes": "V1~V5 전부 통과 — 렌더 무결, 정답 유일(블라인드 풀이 1, high confidence), 문법성·해설 사실성·필드 동기화 이상 없음. 그러나 공예 측면에서 치명적 난이도 부정합: KILLER 요청에 대해 관용구 암기만으로 원샷 해결되는 중난도 어휘 문항이 나왔다(C5=1). 선지 설계 자체는 heart의 서로 다른 의미 갈래(핵심/축자/별개 관용구/정서)를 겨냥해 의도 밀도가 좋고, 1 vs 5 변별은 지문의 believability 논지를 실제로 읽어야 갈리는 진짜 판단이다. C 합계 16, C5<2이므로 B 불가 → 등급 C. 재설계 방향: 관용구 지식만으로 뚫리지 않도록 덜 관용화된 다의어를 표적하거나, 두 문장 이상의 논리 단서 결합 없이는 1/5가 갈리지 않는 문맥 구조로 강화 필요."
+}

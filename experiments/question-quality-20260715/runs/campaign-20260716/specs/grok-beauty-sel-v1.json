@@ -1,0 +1,125 @@
+{
+  "batchId": "grok-beauty-sel-v1",
+  "phase": "grok-confirm",
+  "note": "선택형 공예 계약 주입(QGEN_SELECTION_CRAFT_DELTA=on) @grok high — GK-B 동일 프레임 짝. 빈칸 A급 레시피 이식으로 B→A 승급 가능성 검증.",
+  "concurrency": 4,
+  "providerRouting": "none",
+  "env": {
+    "PREMIUM_QGEN_MODEL_ID": "x-ai/grok-4.5",
+    "GRAMMAR_PREMIUM_MODEL_ID": "x-ai/grok-4.5",
+    "EXPLANATION_VERIFY_MODEL_ID": "google/gemini-3.1-pro-preview",
+    "OPENROUTER_REASONING_EFFORT": "high",
+    "QGEN_RESEARCH_MAX_TOKENS_FLOOR": "20000",
+    "QGEN_SELECTION_CRAFT_DELTA": "on"
+  },
+  "assignments": [
+    {
+      "itemId": "bs-title-s",
+      "frameId": "blank-supply-v2-135",
+      "subType": "TITLE",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "BSEL-TITL",
+      "funnel": true
+    },
+    {
+      "itemId": "bs-title-l",
+      "frameId": "adhoc-prod-05",
+      "subType": "TITLE",
+      "difficulty": "INTERMEDIATE",
+      "plan": "PREMIUM",
+      "armId": "BSEL-TITL",
+      "funnel": true
+    },
+    {
+      "itemId": "bs-topic-s",
+      "frameId": "blank-supply-v2-137",
+      "subType": "TOPIC",
+      "difficulty": "INTERMEDIATE",
+      "plan": "PREMIUM",
+      "armId": "BSEL-TOPI",
+      "funnel": true
+    },
+    {
+      "itemId": "bs-topic-l",
+      "frameId": "adhoc-prod-06",
+      "subType": "TOPIC",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "BSEL-TOPI",
+      "funnel": true
+    },
+    {
+      "itemId": "bs-impl-s",
+      "frameId": "blank-supply-v2-146",
+      "subType": "IMPLIED_MEANING",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "BSEL-IMPL",
+      "funnel": true
+    },
+    {
+      "itemId": "bs-impl-l",
+      "frameId": "adhoc-prod-04",
+      "subType": "IMPLIED_MEANING",
+      "difficulty": "INTERMEDIATE",
+      "plan": "PREMIUM",
+      "armId": "BSEL-IMPL",
+      "funnel": true
+    },
+    {
+      "itemId": "bs-cont-s",
+      "frameId": "blank-supply-v2-122",
+      "subType": "CONTENT_MATCH",
+      "difficulty": "INTERMEDIATE",
+      "plan": "PREMIUM",
+      "armId": "BSEL-CONT",
+      "funnel": true
+    },
+    {
+      "itemId": "bs-cont-l",
+      "frameId": "adhoc-prod-03",
+      "subType": "CONTENT_MATCH",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "BSEL-CONT",
+      "funnel": true
+    },
+    {
+      "itemId": "bs-title-2",
+      "frameId": "blank-supply-v2-119",
+      "subType": "TITLE",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "BSEL-TITL",
+      "funnel": true
+    },
+    {
+      "itemId": "bs-topic-2",
+      "frameId": "blank-supply-v2-120",
+      "subType": "TOPIC",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "BSEL-TOPI",
+      "funnel": true
+    },
+    {
+      "itemId": "bs-impl-2",
+      "frameId": "blank-supply-v2-134",
+      "subType": "IMPLIED_MEANING",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "BSEL-IMPL",
+      "funnel": true
+    },
+    {
+      "itemId": "bs-cont-2",
+      "frameId": "grammar-frame-v2-096",
+      "subType": "CONTENT_MATCH",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "BSEL-CONT",
+      "funnel": true
+    }
+  ]
+}

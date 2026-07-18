@@ -1,0 +1,108 @@
+{
+  "pid": "P023",
+  "requestedDifficulty": "KILLER",
+  "type": "GRAMMAR_ERROR",
+  "blindAnswer": "(D)",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityEvidence": {
+    "V1": "렌더 지문과 원지문의 유일한 차이는 (D) proved→proving 의도 변형뿐. (A) was issued, (B) that, (C) working, (E) being issued 는 모두 원지문 그대로이며 문장 접합 파손·중복·누락·고아 문장부호 없음. 라벨 (A)~(E)가 선지 목록·markedExpressions 와 일치.",
+    "V2": "각 밑줄 독립 검증 — (A) He was issued nine U.S. patents: 수여동사 issue 의 수령자 주어 수동(잔류 목적어)으로 표준 문법. (B) that: 선행사 the first invention, sold 의 목적어 공백을 가진 목적격 관계대명사로 올바름. (C) working: was working 정상 진행형. (D) proving: Although 종속절 밖에 정동사가 문장 전체에 하나도 없어 주절 부재 fragment — 절대구문 대안 해석도 주절이 없으므로 불가, 명백한 비문. (E) being issued: with+NP+수동분사 절대구문으로 올바름(being 생략 가능하나 오류 아님). 실제 정답 집합 {(D)} = 선언 정답, 단일정답 성립.",
+    "V3": "지문(의도 오류 제외)·발문·교정문(proving→proved 시 원문과 정확히 일치) 모두 문법적·자연스러움. 비단어·오탈자·seam 비문 없음.",
+    "V4": "주 해설의 구조 분석(부사절+주절 the 1930s ______ to be, 정동사 부재로 미완결, proved 교정, 앞 절 was working 유인 함정) 이 실제 문장과 일치. (A)(B)(E) 오답 해설의 구조 기술 정확. (C) 해설의 'he를 의미상 주어로 하여'는 정동사 진행형의 문법 주어를 의미상 주어로 부른 경미한 용어 느슨함이나 구조 오분석은 아님 — minor 로 기록, V4 통과.",
+    "V5": "정답 라벨 (D)·선지·해설·markedExpressions(errorExpression proving / correction proved / isError true)·keyPoints 상호 모순 없음. keyPoints 가 5개 중 3개 밑줄만 커버하는 점은 모순이 아닌 커버리지 미비로 minor."
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-terminology",
+      "severity": "minor",
+      "evidence": "(C) 오답 해설 '조동사 was 뒤에서 진행 시제를 만드는 현재분사로, Although 부사절 안에서 he를 의미상 주어로 하여' — he 는 정형절의 문법 주어이며, 비정형 구문에 쓰는 '의미상 주어' 용어를 정형 진행형에 적용한 느슨한 표현. 구조 자체의 오분석은 아니어서 치명 아님."
+    },
+    {
+      "code": "V5-minor-keypoints-coverage",
+      "severity": "minor",
+      "evidence": "keyPoints 가 (D)(E)(B) 3개만 기술하고 (A) 수여동사 수동·(C) 진행형 포인트가 빠짐. 필드 간 모순은 아니나 KILLER 조건(5개 밑줄 각각 point·why tempting·why correct)의 명시적 충족을 약화."
+    },
+    {
+      "code": "V5-minor-pointcode-overlap",
+      "severity": "minor",
+      "evidence": "markedExpressions 에서 (C)와 (E)가 동일 pointCode 'c'(분사 계열)를 공유 — 디코이 의도 중복 경향. 정답 (D) pointCode 'a'와는 구분되어 정답 은폐 문제는 없음."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 4,
+    "C5": 2,
+    "C6": 3
+  },
+  "craftRationale": {
+    "C1": "주절 정동사 필수(정동사 vs 준동사)는 정전급 핵심 통사 포인트이고 종속절·절대구문 사이에 배치한 설계는 유의미하나, 지문이 평이한 전기문이고 포인트 자체가 표준적이어서 4는 아님.",
+    "C2": "(A) 수여 수동 잔류목적어, (B) 목적격 관계사, (C) 진행형 -ing, (E) with 절대구문 능수동 — 각기 다른 오개념을 겨냥. 다만 (C)(E)가 같은 분사 계열(pointCode 동일)로 의도 밀도가 일부 중복.",
+    "C3": "(A)(E)는 실제 판단이 필요한 매력 선지, (D)는 전체 문장 구조 통독 요구. (B)는 중간, (C)는 훈련된 학생에게 즉시 소거 수준이라 4 미달.",
+    "C4": "메타 누출·꼬리 소거 단서 없음. fragment 판정은 반박 불가하여 정답이 필연적.",
+    "C5": "요청 난이도 KILLER 대비 미달. '주어+-ing에 정동사 부재'는 수능 어법에서 가장 많이 훈련되는 패턴이라 상위권 학생이 -ing 스캔으로 빠르게 포착. was working·being issued 의 -ing 위장이 난도를 중상까지 올리지만 킬러급 은폐 깊이는 아님 — 라벨과 부분 불일치로 2.",
+    "C6": "주 해설이 짧고 정확하며 정답 근거(정동사 부재)와 함정(앞 절 -ing 유인)을 분리 서술. (C) 용어 느슨함으로 1점 감점."
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "수여동사 issue 의 4형식 수동(수령자 주어+잔류 목적어) 판정",
+      "temptingBecause": "수동태 was issued 뒤에 목적어 nine U.S. patents 가 남아 있어 '수동태 뒤에 목적어가 오면 틀렸다'는 오개념을 강하게 자극 — 실질적으로 가장 매력적인 디코이",
+      "decisiveFlaw": "issue 는 이중목적어 동사로 수령자(He)를 주어로 한 수동에서 직접목적어가 잔류하는 것이 표준 — 문법적으로 옳아 정답 불가"
+    },
+    {
+      "label": "(B)",
+      "intent": "사물 선행사+목적격 관계대명사 that 판정(what/접속사 혼동 유도)",
+      "temptingBecause": "sold ... to Sheaffer Pen Company 의 전치사구가 이어져 목적어 공백 확인을 요구하고, that/what 선택 의심을 자극",
+      "decisiveFlaw": "선행사 the first invention 이 존재하고 sold 의 목적어 자리가 공백이므로 목적격 관계대명사 that 이 정확 — 옳은 표현"
+    },
+    {
+      "label": "(C)",
+      "intent": "be+현재분사 진행형의 -ing 적법성 판정",
+      "temptingBecause": "-ing 형태 자체에 대한 기계적 경계심을 자극하고 정답 (D)의 -ing 와 표면이 유사",
+      "decisiveFlaw": "정동사 was 가 앞에 있는 정상 진행형이라 즉시 소거 가능 — 옳은 표현(디코이로서 변별력 낮음)"
+    },
+    {
+      "label": "(D)",
+      "intent": "정답 — 주절 주어(the 1930s) 뒤 정동사 필수 판정(정동사 vs 준동사)",
+      "temptingBecause": "직전 종속절 was working 과 직후 with ... being issued 의 -ing 흐름 속에 놓여 분사구문처럼 위장되고, 문장이 길어 정동사 부재를 놓치기 쉬움",
+      "decisiveFlaw": "Although 절 밖에 정동사가 전혀 없어 문장 미완결 비문 — proving→proved 교정 시 정확히 원문 복원(최소대립쌍 성립)"
+    },
+    {
+      "label": "(E)",
+      "intent": "with 절대구문에서 분사의 능·수동 판정",
+      "temptingBecause": "with+명사+분사 구조에서 issuing/issued/being issued 선택 판단을 요구하고 정답 직후에 위치해 정밀 검토를 유도",
+      "decisiveFlaw": "patents 는 발급되는 대상이므로 수동 being issued 가 정확 — 옳은 표현"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "(C) 해설이 정형 진행형의 문법 주어 he 를 '의미상 주어'로 지칭 — 비정형 구문 전용 용어의 오적용에 가까운 느슨함",
+      "recommendation": "'was 와 함께 진행형을 이루는 현재분사로, 주어 he 와 정상 결합한다' 수준으로 수정"
+    },
+    {
+      "severity": "minor",
+      "evidence": "오답 해설이 (B)(C)(E)에서 '왜 옳은가'만 서술하고 '왜 매력적인가'(why tempting)를 명시하지 않음 — KILLER 조건 3(5개 밑줄 각각 point·why tempting·why correct) 명시 충족 실패",
+      "recommendation": "각 디코이에 유혹 포인트 한 문장씩 추가"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionEvidence": {
+    "minimalPair": "충족 — source-correct(proved) → displayed-wrong(proving), 교정 시 정확히 원문.",
+    "clearGrammarJudgment": "충족 — 정동사 부재 fragment 는 문맥 선호가 아닌 명백한 문법 판단. 대안 분석 여지 없음.",
+    "perUnderlineDocumentation": "미충족 — pointCode 와 why-correct 는 5개 전부 존재하나 명시적 why-tempting 이 (B)(C)(E)에 부재, keyPoints 도 3/5 커버.",
+    "structuralNotInstant": "경계선 — 철자·비단어·인접 수일치형은 아니고 전체 구조 통독이 필요하나, '주어+-ing 정동사 부재'는 고도로 훈련된 패턴이라 상위권에게 준-즉시 노출. 킬러급 은폐로 보기 어려움.",
+    "noSamePointEasyDecoy": "충족 — 정답 point 'a'(정·준동사)와 같은 포인트의 쉬운 디코이 없음. (C)(E)는 분사 계열 'c'로 정답을 가리지 않음."
+  },
+  "grade": "B",
+  "notes": "모든 V 통과. 정답 유일성은 견고하고(fragment 판정 반박 불가) 렌더 무결성·필드 동기화 양호. 다만 요청 난이도 KILLER 대비 정답 포인트가 가장 표준적인 정동사/준동사 패턴이라 C5=2 로 난이도 정합 미달이며, why-tempting 문서화 결손과 (C) 해설의 용어 느슨함이 minor 로 남음. C 합계 18, 최저 2 → B(작은 수정으로 출제 가능). KILLER 승급에는 조건 3 문서화 보완 + 더 깊은 은폐 구조(예: 병렬·도치·관계절 내부 정동사 판정)로의 재설계가 필요."
+}

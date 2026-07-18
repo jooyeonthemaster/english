@@ -1,0 +1,77 @@
+{
+  "pid": "P001",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-KEYPOINT-MISATTRIBUTION",
+      "severity": "major",
+      "evidence": "keyPoints[2] '단독 디자인과 집단 협업 모두에서 조직·과정이 핵심이라는 결론 연결하기'는 지문 귀속 오류. 원지문은 'A distinction needs to be made between designers working truly alone and those working in a group. In the latter case, management organization and processes can be equally as relevant as designers' creativity'로, 조직·과정의 중요성을 명시적으로 집단 작업(the latter case)에 한정한다. 이 구분 자체가 결론의 요지인데 keyPoint가 '모두에서'로 구분을 소거·확장하여 지문에 없는 주장을 학생 노출 필드에 기재했다."
+    },
+    {
+      "code": "V1-RENDER-ABSENT-NOTE",
+      "severity": "minor",
+      "evidence": "렌더 지문 필드가 '(렌더 지문 없음)'. SUMMARY_COMPLETE_MC는 지문 변형이 없는 유형이므로 원지문 그대로 노출되는 의도적 상태로 판단하여 V1 실패로 보지 않음. 다만 파이프라인 상 렌더 필드가 원지문 사본으로 채워지는지 확인 권장."
+    },
+    {
+      "code": "V2-BORDERLINE-DISTRACTOR-3",
+      "severity": "minor",
+      "evidence": "③ (A) 'personal flair'는 지문이 flair를 '개인 개성의 발현'으로 다루는 수사 구조상 '개인성 강조'와 근접해 경계선 디코이다. 다만 지문이 문제시하는 강조의 실체는 교육·문헌의 개인 저자성('educated to work as individuals', countless references to 'the designer', 'rather than actually designing')이고 personal flair는 소규모 제품 한정으로 명시적으로 인정된 장점이며, 요약문 양보절(Although personal flair is essential…)이 flair의 긍정 지위를 이미 고정하므로 ①이 엄격 우위 — V2는 유지. 단 이의신청 소지가 있는 근접도이므로 기록."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답: (A) 교육·문헌이 강조하는 개인 저자성, (B) 실제 수행 역할인 창의적 조율자",
+      "temptingBecause": "해당 없음(정답). 'individual authorship'은 'educated to work as individuals'+'references to the designer'를, 'creative coordinators'는 'function more as creative managers'를 정확히 압축",
+      "decisiveFlaw": "없음. 두 빈칸 모두 지문 논지와 정합"
+    },
+    {
+      "label": "2",
+      "intent": "half-truth: (A)는 정답과 동일, (B)에서 논지 방향 반전(causal/role reversal)",
+      "temptingBecause": "(A)가 정답과 같아 (A)만 검증한 학생을 포획. 'solitary'는 'working truly alone', 'educated to work as individuals'와 표면 중첩",
+      "decisiveFlaw": "지문은 유명 'personalities'가 단독 창작자가 아니라 집단 안의 관리자에 가깝다고 주장('rather than actually designing … function more as creative managers'). solitary innovators는 정반대"
+    },
+    {
+      "label": "3",
+      "intent": "scope shift/half-truth: (B)는 정답과 동일, (A)에서 인정된 개념을 문제시되는 강조점으로 치환",
+      "temptingBecause": "(B)가 정답과 같고, personal flair가 지문에 원문 그대로 등장하며 '개인 개성'과 의미상 근접. 최강 디코이",
+      "decisiveFlaw": "personal flair는 소규모 제품 범주에서 'an absolute necessity'로 명시적으로 인정된 장점. 문제시되는 것은 개인을 실제 설계 주체로 보는 저자성 관념이며, 요약문 양보절이 이미 flair의 긍정 지위를 고정하므로 (A) 자리에 오면 요지 왜곡"
+    },
+    {
+      "label": "4",
+      "intent": "detail elevation: 배경 세부 조건을 핵심 강조점으로 격상 + (B) 근접 오어휘",
+      "temptingBecause": "technological complexity와 supervisors 모두 지문 어휘('a low degree of technological complexity', 'management organization')와 표면 중첩",
+      "decisiveFlaw": "technological complexity는 소형 제품군을 규정하는 세부 조건일 뿐 '강조되어 문제가 되는' 대상이 아니고, organizational supervisors는 창의적 관리(creative managers)가 아닌 단순 감독으로 어긋남"
+    },
+    {
+      "label": "5",
+      "intent": "polarity/actor swap: 간과되는 사실을 강조되는 대상으로 반전 + (B)를 지문이 경계하는 이미지로 치환",
+      "temptingBecause": "collective implementation은 'substantial numbers of designers are employed in implementing a concept'와 직접 대응하는 실제 지문 내용",
+      "decisiveFlaw": "집단적 구현은 강조되는 것이 아니라 'can easily be overlooked'되는 사실 — 극성 반전. aesthetic leaders는 지문이 문제시하는 개성 중심 이미지로 (B) 역할과 정반대"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "KEYPOINT-3-SCOPE-ERROR",
+      "severity": "major",
+      "evidence": "keyPoints[2]가 '단독 디자인과 집단 협업 모두에서 조직·과정이 핵심'이라 서술 — 원지문은 'In the latter case'로 집단 작업에만 한정. V4 실패의 근거와 동일"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "본체는 견고한 요약문 완성 문항이다: 핵심 논지(소규모 flair 필요 vs 대규모 개인성 강조의 문제)를 정조준하고(C1=4), 오답 4개가 half-truth·reversal·detail elevation·polarity swap으로 서로 다른 함정을 구사한다. 그러나 (1) keyPoints의 지문 귀속 오류로 V4 실패 → 등급 F(공예 점수로 상쇄 불가), (2) KILLER 요건 미달: 정답 (B) 'creative coordinators'가 원문 'creative managers'의 근접 표면 echo여서 (B)열이 어휘 대응만으로 ①③ 이지선다로 즉시 축소되며, §D가 요구하는 '난이도에 맞는 추상화'와 표면단서 차단에 미달. 실측 난도는 상(上)이나 KILLER 상한에는 못 미침(C5=3). 수리 방향: keyPoints[2]를 '집단 작업의 경우 조직·과정이 창의성만큼 중요하다는 결론'으로 교정하면 V4 통과, (B) 정답·디코이의 표면 어휘 거리를 벌리면(예: managerial orchestrators 계열 추상화) KILLER 정합까지 도달 가능."
+}

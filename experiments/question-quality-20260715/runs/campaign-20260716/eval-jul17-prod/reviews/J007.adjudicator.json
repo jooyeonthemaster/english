@@ -1,0 +1,56 @@
+{
+  "pid": "J007",
+  "finalV2": false,
+  "winningAnswer": "(A) — 출제 의도상 최선의 답이나, 어법 판단만으로 유일하게 확정되지 않음",
+  "reason": "감사자의 V2=false 판정을 유지한다. (A) 'guiding'은 'different perspectives guiding how to respond'라는 축약 관계절(명사 후치수식 분사)로 통사적으로 흠결 없이 성립하며, 이 해석은 문맥상으로도 성립한다 — 지문 자체가 'Individual perspectives may also be context dependent... the same individual may make different choices', 'the personal factors that influence your own code of behaviour' 등으로 '관점이 반응/선택을 좌우한다'는 명제를 반복 주장하므로 '대응 방법을 안내하는 관점들'은 비정합적 독해가 아니다. 솔버들이 유일성의 결정적 근거로 삼은 정의 병렬('to guide decision-making'과의 대응)은 문법적 필연이 아니라 수사적 선호이며, 그 원형 표현 자체도 목적 부정사와 evidence 수식 부정사 관계절(evidence가 의사결정을 안내) 사이에서 중의적이어서 후자로 읽으면 'perspectives guiding how to respond'(관점이 대응을 안내)는 오히려 충실한 유비가 된다. (B)~(E)는 전원 일치대로 모두 명백한 정문이므로 제2의 정답 후보는 없으나, GRAMMAR_ERROR 유형에서 선언된 정답 밑줄이 '어법상 틀림'으로 확정되지 않는 것 자체가 정답 유일성(확정성) 붕괴다. 따라서 finalV2=false, 출하 불가.",
+  "perDispute": [
+    {
+      "label": "(A)-축약관계절",
+      "claim": "감사자: 'perspectives guiding how to respond'는 축약 관계절로 문법·의미 모두 성립 / 솔버1·2: 파싱은 되나 문맥상 비정합(관점이 아니라 식별·평가 행위가 대응을 안내)이므로 기각",
+      "verdict": "감사자 인용(성립). 솔버 측 과잉 판정",
+      "evidence": "통사: 'perspectives [that guide] how to respond' → 분사 후치수식으로 완전한 정문이며 guide+의문사 to부정사 보문은 표준 용법. 의미: 지문 후반부가 '관점·개인 요인이 선택과 행동 강령을 좌우한다'(Individual perspectives may also be context dependent... may make different choices / factors that influence your own 'code of behaviour')고 명시하므로 '대응을 안내하는 관점들'은 이 글의 논지와 정합한다. 솔버들의 '의미 통제자가 틀렸다'는 기각 논거는 병렬 선호에 기댄 것으로, 문법적 배제 근거가 되지 못한다."
+    },
+    {
+      "label": "(A)-정의 병렬 논거",
+      "claim": "솔버1·2: 문두 정의 'the identification and evaluation of evidence TO GUIDE decision-making'이 명시적 병렬을 강제하므로 to guide만 가능",
+      "verdict": "기각(선호일 뿐 강제 아님)",
+      "evidence": "원형 'evidence to guide decision-making' 자체가 (i) 명사화 전체에 걸리는 목적 부정사, (ii) evidence를 수식하는 부정사 관계절(의사결정을 안내하는 증거)의 두 독해를 허용하는 중의 구조다. (ii)로 읽으면 'perspectives guiding how to respond'는 병렬 위반이 아니라 '증거가 의사결정을 안내 :: 관점이 대응을 안내'라는 충실한 유비가 된다. 병렬 복원은 원문 재구성에는 유효한 단서지만 '어법상 틀림'을 확정하는 문법 규칙이 아니다."
+    },
+    {
+      "label": "(A)-무연결 분사구문",
+      "claim": "감사자: 콤마 없는 결과 분사구문 해석도 성립 / 솔버2: 콤마 없이는 명사 수식으로 강제 부착되므로 이 해석은 불가",
+      "verdict": "솔버2 인용(이 해석은 주변적)",
+      "evidence": "복수 명사구 직후 콤마 없는 -ing은 명사 수식으로 강하게 편향되며 시험 문법 기준으로 결과 분사구문 독해는 방어력이 약하다. 다만 이 쟁점의 승패는 결론에 무영향 — 축약 관계절 해석 하나만으로 guiding의 문법적 성립이 확보된다."
+    },
+    {
+      "label": "(B) is",
+      "claim": "전원: 정문",
+      "verdict": "확정 정문",
+      "evidence": "주어 핵은 단수 'form'('of ethics'는 전치사구 수식이며 ethics 자체도 단수 취급 학문명). 'is distinct from'은 표준 서술 구조."
+    },
+    {
+      "label": "(C) that",
+      "claim": "전원: 정문",
+      "verdict": "확정 정문",
+      "evidence": "'The nature of X is that S' 관용 구조. 후행절 'there is no clear right or wrong response'는 완전한 존재구문이므로 what이 아닌 명사절 접속사 that이 옳다."
+    },
+    {
+      "label": "(D) is defined",
+      "claim": "전원: 정문",
+      "verdict": "확정 정문",
+      "evidence": "동명사절 주어 'being ethical'은 단수 일치하며 'define A as B'의 수동 'A is defined as acting...'이 정확하다. 정의문의 총칭 현재 수동도 적절."
+    },
+    {
+      "label": "(E) may be",
+      "claim": "전원: 정문",
+      "verdict": "확정 정문",
+      "evidence": "진주어는 복수 'the factors'이고 개입 관계절 'that drive...'의 복수 일치도 정확하며, 법조동사 may는 수 굴절이 없어 'may be'는 흠결이 없다."
+    },
+    {
+      "label": "부수 결함(정답 누출)",
+      "claim": "감사자: 같은 문장의 'to guide decision-making'이 정답 형태를 그대로 누출",
+      "verdict": "인정(제작 결함, V2와 별개)",
+      "evidence": "KILLER 난이도 요구에도 원형 표현이 문두에 그대로 남아 비교만으로 의도 정답이 즉시 복원된다. 유일성 결함과 결합해 이중 결함 — 유일성 없는 자리에서 누출 단서만으로 답이 정해지는 구조."
+    }
+  ]
+}

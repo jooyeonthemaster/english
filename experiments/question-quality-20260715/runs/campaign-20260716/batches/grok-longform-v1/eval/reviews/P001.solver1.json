@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "\"Garcia stood outside Frontcountry Mall, waiting for his brother\" — 주절 동사 stood 뒤에 콤마로 이어지는 현재분사 부대상황 구문. 의미상 주어 Garcia가 waiting의 주체(그가 기다림)이므로 능동 현재분사가 정확하다. 매력도 낮음 — 분사구문 기본형이라 흔들 여지가 거의 없다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "\"Garcia's band had been chosen to perform\" — 밴드는 '선택되는' 대상이므로 수동, 그리고 이야기의 기준 시점(쇼핑몰 앞에 서 있던 과거)보다 선발이 먼저 일어났으므로 과거완료 수동 had been chosen이 정확하다. 실전에서 시제 일치를 의심하며 잠시 멈추게 되는 선지 — '그냥 was chosen이면 안 되나?' 하는 유혹이 있으나, 대과거 표현으로 had been chosen 역시 완전히 정문이므로 틀렸다고 볼 근거가 없다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "\"had asked Jeff to help him pick out\" — ask + 목적어 + to부정사 구조로 정확. 이어지는 help him pick out(help + 목적어 + 원형부정사)도 정문. 매력도 낮음."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "\"As the rehearsal began, he struggled with the rhythm, making several mistakes\" — 접속사 As절과 짝을 이루는 주절의 단순과거 struggled는 정확하고, 뒤의 making은 부대상황 분사구문으로 정문. 진행형(was struggling)이어야 한다는 압박은 성립하지 않는다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "\"He looked at his friend, took a deep breath and starting to feel much better.\" — 등위접속사 and가 잇는 병렬의 시작점은 주어 He 뒤의 정형동사 열(looked, took)이다. 세 번째 항도 정형 과거동사 started여야 하는데 준동사 starting이 와서 병렬이 깨졌다. 대안 해석 검토: (1) and 없이 콤마 뒤라면 ', starting to feel...'로 분사구문이 성립할 수 있으나, 여기서는 and가 명시적으로 세 번째 병렬 항을 도입하므로 분사구문 독해가 불가능하다(and + 분사구는 앞의 정형동사와 병렬이 안 됨). (2) 'and starting'을 'took'의 목적어 쪽에 붙일 방법도 없다(took a deep breath and starting은 명사구 병렬로도 성립 불가). 따라서 어떤 재해석으로도 정문이 되지 않는다 — 어법상 틀린 부분."
+    }
+  ],
+  "note": "실전 풀이 관찰: 최상위권 기준 (E)의 병렬 파괴는 and를 확인하는 즉시 잡힌다. 유일하게 손이 멈춘 곳은 (B)로, '대과거가 굳이 필요한가'를 따지게 만들지만 선발이 서 있는 시점보다 앞선 사건이므로 과거완료가 오히려 자연스럽고, 설령 단순과거를 선호하더라도 과거완료가 틀린 것은 아니라 오답 시비가 성립하지 않는다. 정답 후보는 (E) 단일. 지문은 수능 심경/일화형 장문에 어법을 얹은 형태로, 문항 자체의 어법 판정에는 모호성이 없다."
+}

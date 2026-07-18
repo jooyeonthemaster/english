@@ -1,0 +1,35 @@
+{
+  "pid": "P008",
+  "answer": "(A)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(A)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "wrong",
+      "reason": "'...is revealed __what__ the keystone species is removed.' 뒤의 종속절 'the keystone species is removed'는 주어(the keystone species)와 수동태 동사(is removed)를 모두 갖춘 완전한 절이다. 따라서 절 내부에서 명사(주어/목적어) 자리를 채워야 하는 관계·의문 대명사 'what'은 들어갈 자리가 없어 비문이다. 문맥상 '핵심종을 제거하면(제거될 때) 사실이 드러난다'는 시간·조건의 부사절을 이끄는 접속사 'when'이 와야 옳다. 대안 해석(명사절 '무엇이 제거되는지'=what ... is removed도 the keystone species가 이미 주어라 성립 불가)도 배제됨. 어법상 명백히 틀림."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'Although figs collectively produce a continuous crop of fruits, ... do not normally consume large quantities of figs' — 완전한 절 두 개를 잇는 양보 접속사로 문법상 정상. 논리도 '무화과가 늘 열매를 맺는데도 평소엔 많이 먹지 않는다'는 양보 관계가 성립한다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'fig trees become __important__' — 연결동사 become의 주격보어 자리에 형용사 important가 온 것으로 정문. 부사가 아니라 형용사가 옳다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'Should the fig trees disappear, most of the fruit-eating vertebrates __would be eliminated__.' — If가 생략된 도치 가정법(If the fig trees should disappear)의 주절로 would + 수동태(be eliminated)가 정확히 호응한다. 주어 most of the ... vertebrates는 복수이므로 be동사 수일치도 문제 없다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'Protecting fig trees ... __is__ an important conservation goal' — 동명사구 주어(Protecting fig trees ...)는 단수 취급하므로 단수동사 is가 옳다."
+    }
+  ],
+  "note": "(A)만 명확한 오답. 뒤에 완전한 절이 오므로 대명사 what은 자리가 없고, 시간/조건 부사절 접속사 when이 정답. 나머지 (B)~(E)는 모두 어법상 옳아 단일 정답으로 좁혀짐."
+}

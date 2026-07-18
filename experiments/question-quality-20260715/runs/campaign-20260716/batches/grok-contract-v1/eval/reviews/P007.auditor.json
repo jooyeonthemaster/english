@@ -1,0 +1,120 @@
+{
+  "pid": "P007",
+  "itemType": "SENTENCE_ORDER",
+  "requestedDifficulty": "KILLER",
+  "blindAnswer": "3",
+  "confidence": "high",
+  "validity": {
+    "V1": false,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-SENTENCE-DROPPED-SEAM",
+      "severity": "critical",
+      "evidence": "원지문의 'Garcia felt good as he arrived at the concert hall for the rehearsal wearing his new clothes.' 문장이 (C) 끝('...tonight's rehearsal, too.')과 (A) 시작('His confidence was, however, ...') 사이에서 삭제됨. SENTENCE_ORDER의 의도된 변형은 분할+재배열뿐이며 문장 삭제는 손상이다. 이 문장은 (A)의 'His confidence'와 'however' 대조의 명시적 선행 근거이므로 삭제로 C→A 결속 단서가 약화됨."
+    },
+    {
+      "code": "V1-SENTENCE-DROPPED-A-END",
+      "severity": "major",
+      "evidence": "원지문의 'He looked at his friend, took a deep breath and started to feel much better.' 문장이 (A) 말미('...I'll be right behind you.\"' 뒤)에서 삭제됨. Tom의 위로 → 회복이라는 감정 곡선의 해소 단계가 사라져 (A)→(B)의 심리적 연결이 원문과 달라짐."
+    },
+    {
+      "code": "V1-SENTENCES-DROPPED-ENDING",
+      "severity": "major",
+      "evidence": "원지문 결말 3문장 'After the show, Jeff approached Garcia. \"It was fantastic. I think that was the best performance I've ever seen,\" he said. Garcia beamed with joy at his brother's praise.' 가 (B) 말미에서 통째로 삭제됨. 형제 서사의 종결(수미상관: Jeff와의 만남→Jeff의 칭찬)이 잘려나감."
+    },
+    {
+      "code": "V4-EXPLAINS-ABSENT-CONTENT",
+      "severity": "major",
+      "evidence": "해설 '새 옷을 입고 리허설에 간 심리 전환'과 오답해설 1 '새 옷을 입은 뒤의 심리'는 삭제된 문장('Garcia felt good as he arrived at the concert hall for the rehearsal wearing his new clothes')에만 존재하는 내용이다. 학생에게 렌더된 문항 어디에도 '새 옷을 입고 리허설에 갔다'는 진술이 없으므로 해설이 문항에 없는 내용을 근거로 삼는다."
+    },
+    {
+      "code": "V4-KEYPOINT-ANAPHORA-REVERSED",
+      "severity": "minor",
+      "evidence": "keyPoints '재지시: (C)의 rehearsal가 (A)의 리허설 심리 전환을 받음' — 재지시 방향이 역전됨. 실제로는 (A)의 리허설 장면이 (C)의 'tonight's rehearsal' 언급을 받는(pick up) 구조다."
+    },
+    {
+      "code": "FORMAT-NONCANONICAL-OPTION-ORDER",
+      "severity": "minor",
+      "evidence": "선택지 순열 집합 {ACB, BCA, CAB, BAC, CBA}는 수능 표준 집합과 동일하나 배열 순서가 관행(1 ACB / 2 BAC / 3 BCA / 4 CAB / 5 CBA)과 다름(2·3·4 자리가 뒤섞임). 내부 정합성은 유지되므로 치명은 아님."
+    }
+  ],
+  "craft": {
+    "C1": 2,
+    "C2": 2,
+    "C3": 1,
+    "C4": 3,
+    "C5": 0,
+    "C6": 1
+  },
+  "craftRationale": {
+    "C1": "서사문 시간 순서·결속 단서 배열이라는 정당한 평가 지점이나, 쇼핑→리허설→공연이라는 투명한 연대기라 깊이가 얕음.",
+    "C2": "오답 해설이 순열별로 서로 다른 논거를 제시하긴 하나, 실제로는 모든 오답이 '연대기 하나'로 일괄 소거되어 서로 다른 오독을 겨냥하지 못함.",
+    "C3": "given이 'waiting for his brother Jeff'로 끝나고 (C)가 Jeff의 도착·사과로 시작하므로 첫 슬롯이 즉시 확정(선지 1·2·4 즉시 소거). 남은 A/B 순서도 리허설<공연으로 자명. 실질 판단 지점이 거의 없음.",
+    "C4": "단서가 모두 원문 내재적이고 메타 누출은 없으며 정답은 필연적. 다만 V1 삭제로 C→A 결속 단서 하나가 유실됨.",
+    "C5": "요청 난이도 KILLER 대비 실제로는 최하 난이도 유형(연대기 서사 순서 배열). 라벨과 완전 불일치.",
+    "C6": "해설이 간결하긴 하나 렌더 문항에 없는 내용을 근거로 인용하고 keyPoints 재지시 방향 오류가 있음(오류 포함 해설)."
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "sequence": "(A)-(C)-(B)",
+      "intent": "리허설 장면을 도입 직후로 당기는 오독(감정 서사 선행 배치)",
+      "temptingBecause": "(A)가 Garcia의 심리를 다뤄 given의 인물 서사와 표면적으로 이어져 보이고 'rehearsal'이 일찍 등장함",
+      "decisiveFlaw": "'His confidence'의 선행 근거(자신감의 성립)가 given에 없고, given이 예고한 Jeff의 도착이 (C)에 있으므로 (C)가 먼저 와야 함. 옷 구입 전에 '새 옷 관련 심리 전환'이 올 수 없음"
+    },
+    {
+      "label": "2",
+      "sequence": "(B)-(C)-(A)",
+      "intent": "본 공연 선행 배치(절정 우선 오배열)",
+      "temptingBecause": "(B) 첫 문장의 'the ceremony'가 given의 'welcoming ceremony'와 어휘적으로 겹쳐 직결처럼 보임",
+      "decisiveFlaw": "본 공연이 옷 구입·리허설보다 먼저 오는 완전한 시간 역전. given의 'waiting for Jeff' 흐름((C)의 도착)이 끊김"
+    },
+    {
+      "label": "3",
+      "sequence": "(C)-(A)-(B)",
+      "intent": "정답",
+      "temptingBecause": "정답 — Jeff 도착((C)), tonight's rehearsal→리허설((A)), 공연 성공((B))의 결속·연대기 수렴",
+      "decisiveFlaw": "없음 (선언 정답과 일치)"
+    },
+    {
+      "label": "4",
+      "sequence": "(B)-(A)-(C)",
+      "intent": "ceremony 표면 결속 + 인과 역전 함정",
+      "temptingBecause": "(B)의 'ceremony' 표면 반복이 given과 이어져 보임",
+      "decisiveFlaw": "완벽한 공연(B) 뒤에 리허설 실수·불안(A)이 오는 인과 역전, 서사의 출발점인 옷 구입(C)이 맨 끝에 놓임"
+    },
+    {
+      "label": "5",
+      "sequence": "(C)-(B)-(A)",
+      "intent": "올바른 출발 후 리허설 건너뛰기(부분 정답 함정)",
+      "temptingBecause": "(C)가 given을 올바르게 잇고, (B)의 공연이 given이 예고한 이벤트라 곧장 연결하고 싶어짐",
+      "decisiveFlaw": "(C) 말미의 'tonight's rehearsal' 직결 단서가 (A)를 지목하는데 이를 건너뛰며, 공연 뒤에 리허설 실수가 이어져 논리 붕괴"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "ABSENT-CONTENT-CITED",
+      "severity": "major",
+      "evidence": "해설 '새 옷을 입고 리허설에 간 심리 전환' 및 오답해설 1 '새 옷을 입은 뒤의 심리' — 해당 내용은 삭제된 원문 문장에만 존재하며 렌더된 문항에는 없음"
+    },
+    {
+      "code": "KEYPOINT-DIRECTION-ERROR",
+      "severity": "minor",
+      "evidence": "keyPoints의 재지시 방향 역전: '(C)의 rehearsal가 (A)의 …을 받음'은 '(A)가 (C)의 tonight's rehearsal를 받음'이어야 함"
+    },
+    {
+      "code": "WRONG-OPTION-EXPLANATIONS-ALIGNED",
+      "severity": "info",
+      "evidence": "오답 해설 1·2·4·5는 각각 실제 순열 내용과 대응함(귀속 오류 없음). 다만 1번 해설이 위의 삭제 문장 내용을 재인용함"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerRationale": "요청 난이도 KILLER이나 유형이 SENTENCE_ORDER라 §C(어법)/§D(빈칸)가 직접 적용되지 않음. §D의 정신(최소 두 단서 연결 필수, 단일 단서로 정답 확정 불가)으로 판정해도 given 말미의 'waiting for his brother' 하나만으로 (C) 선행이 즉시 확정되고 나머지도 자명한 연대기로 풀리므로 불충족.",
+  "grade": "F",
+  "notes": "V2·V3·V5는 통과: (C)-(A)-(B)는 삭제 손상에도 불구하고 유일 정답이며 필드 간 동기화도 유지된다. 그러나 V1(원문 문장 3곳 무단 삭제 — seam 결속 문장, (A) 말미 회복 문장, 결말 3문장)과 V4(삭제된 문장의 내용을 해설 근거로 인용, keyPoints 재지시 방향 역전)가 실패하므로 F. 공예 측면에서도 KILLER 요청 대비 실제 난이도가 최하 수준(C5=0)이라 난이도 정합이 전면 붕괴. 출하하려면 (1) 삭제된 문장 3곳 복원(특히 seam 문장), (2) 해설을 렌더 지문 기준으로 재작성, (3) keyPoints 재지시 방향 수정이 필요하며, KILLER 슬롯이라면 유형 자체를 재선정해야 한다."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "4",
+  "multipleDefensible": false,
+  "defensibleLabels": ["4"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "도입문(정밀 타겟팅 가능)에서 ① 뒤 문장(오염 증가분에 비례해 세금 납부)으로 이어지는 장점 상술의 흐름이 자연스럽다. 비용·저해요인(con)을 여기 넣으면 이후 ①~③의 장점 서술 블록과 정면 충돌하고, ② 뒤 문장의 'thus'가 가리키는 비례 과세 메커니즘 연결도 어색해진다."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "② 뒤 문장 'The polluter thus has an incentive...'의 'thus'는 바로 앞의 비례 과세 문장을 직접 받는다. 주어진 문장을 삽입하면 'thus'의 선행 논거가 끊긴다. 명백한 결속 파괴."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "비용 문제(con)를 넣은 직후 'The great attraction...'이 아무 대조 표지 없이 장점을 이어가게 되어 부자연스럽다. ③ 뒤 문장은 ①~② 장점 상술의 정점으로 pro-블록에 속하며, 그 앞에 단점이 끼어들 자리가 없다."
+    },
+    {
+      "label": "4",
+      "verdict": "accept",
+      "reason": "이중 결속이 완벽하다. (1) ③ 뒤 문장 '측정 기반 과세의 great attraction'(pro)에 대해 주어진 문장이 '그러나 연속 측정은 비용이 크고 직접 과세의 major disincentive'(con)로 자연스러운 반전을 이룬다. (2) ④ 뒤 문장의 'Nevertheless'가 요구하는 선행 부정 논점(측정 비용 문제)을 정확히 공급한다 — '측정은 비싸다, 그럼에도 모니터링 기술이 빠르게 발전 중'. 이어 ⑤ 뒤 '미래에는 더 넓은 적용 가능'으로 낙관 결론이 매끄럽게 연결된다."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "매력적 오답. 급하게 풀면 ④ 뒤 'Nevertheless'를 ③과의 대조로 오독하고 비용 문장을 ⑤ 자리에 넣고 싶어진다. 그러나 실제로 넣어보면 (1) 'Nevertheless' 앞에 양보할 부정 논점이 여전히 없어 원래의 결속 결함이 해소되지 않고, (2) '기술 급속 발전 → 미래 확대 적용'이라는 낙관 연쇄를 비용 문장이 끊어버린다. 기각."
+    }
+  ],
+  "note": "전형적 문장삽입 구조: pro-블록(①~③) → [주어진 문장: 비용이라는 con] → Nevertheless로 con 극복(기술 발전) → 미래 전망. 'Nevertheless'의 선행 논점 부재가 유일한 seam이며 ④에서만 해소된다. 유일 정답 ④, 신뢰도 높음. 원문은 OECD 계열 환경세 문헌 표준 서술로 보이며 지문 자체 결함 없음."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "'Outward apparel-boosted calm soon yielded to stage fright when he thought of how many people would be there.' Seam is grammatical (bare NP subject + finite verb 'yielded'; the trailing when-clause naturally marks the moment calm collapsed). Logic is exact: the preceding sentence establishes clothes-derived good feeling ('Garcia felt good... wearing his new clothes'), the when-clause supplies the crowd-size trigger, and the following sentences (rhythm struggles, several mistakes, Tom's reassurance 'Don't worry, I'll be right behind you', deep breath, feeling better) are the classic stage-fright arc. Uniquely fits the felt-good -> nervous -> mistakes -> reassured -> flawless narrative."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "'Bold clothing choices steadily enhanced his performance grit' fails on facts and direction. The bold/colorful clothes (patterned red shirt, yellow pants) were Garcia's rejected pick; he actually bought Jeff's plain white shirt and black jeans. Direction is also inverted: the very next sentence shows him struggling and making mistakes, so nothing was 'steadily enhanced' at this point. The when-clause about crowd size has no causal tie to enhancement."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "'Anticipated audience silence confirmed ruthless technical mastery' is chronologically and logically impossible here. The fascinated silence occurs only later at the actual ceremony performance; at the blank he is heading into a rehearsal where he immediately makes several mistakes, so nothing 'confirmed mastery'. Also 'ruthless technical mastery' clashes tonally with the warm narrative."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "Most attractive distractor: self-doubt genuinely appears in the next sentences, so a hurried reader can bite. But the causal attribution is false. The text explicitly says Garcia 'felt good' wearing the recommended clothes, so loyalty to Jeff's jeans choice did not breed doubt; the stated trigger in the when-clause is 'how many people would be there' (audience size), which contradicts making the clothes the cause. 'Lingering' also fails: his doubt dissolves quickly after Tom's one gesture and the performance is flawless. Felt the pull, rejected on cause-misattribution."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "'Late traffic stress resurfaced as choked trumpet mistakes' misassigns both agent and timing. The traffic delay was Jeff's, not Garcia's, and Garcia explicitly shrugged it off ('I haven't waited long'), so there is no prior traffic stress in Garcia to resurface. The mistakes also occur in the sentence AFTER the blank, and the when-clause about crowd size has no logical link to traffic."
+    }
+  ],
+  "note": "Lens: top-tier examinee, real-time solve order. The blank sits between 'felt good... wearing his new clothes' and 'struggled with the rhythm, making several mistakes', with the fixed trailing trigger 'when he thought of how many people would be there'. That trigger pins the blank to crowd-induced anxiety, which only option 1 encodes. Distractor 4 exerts genuine pull because self-doubt does occur, but its cause (the clothes) and duration ('lingering') both contradict the text. Options are stylistically awkward compressed NPs (e.g., 'apparel-boosted', 'performance grit') and read less natural than real KSAT options, but the keying is clean and single-answer. Grammar seams checked for all five: each forms a parsable clause, so elimination is purely logical, as intended for this type."
+}

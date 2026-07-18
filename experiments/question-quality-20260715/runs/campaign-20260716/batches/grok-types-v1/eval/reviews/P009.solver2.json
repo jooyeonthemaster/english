@@ -1,0 +1,35 @@
+{
+  "pid": "P009",
+  "answer": "3",
+  "multipleDefensible": true,
+  "defensibleLabels": ["1", "3"],
+  "confidence": "low",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "defensible",
+      "reason": "(A) prescribed ethical codes / (B) clear right answer. Under a negative-frame summary ('Rather than following (A), students should think through ethical issues because there is no (B)'), both elements are literal passage assertions: 'rather than follow a prescribed set of ethical codes or rules' and 'no clear right or wrong response'. Grammatically and logically well-formed; cannot be formally excluded because the summary sentence fixing (A)'s slot polarity is missing from the item."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "(B) 'shared civic belief' contradicts the passage's core variance thesis: 'these principles vary both between and within individuals'. Civic beliefs are cited only as one source of individual values, never as something shared that issues lack or that guides response. Fails in every constructible frame."
+    },
+    {
+      "label": "3",
+      "verdict": "defensible-intended",
+      "reason": "(A) personal value systems / (B) clear right answer. Under the standard positive frame ('Since ethical issues have no (B), ethical thinking requires understanding one's (A) and accepting that others' differ'), this matches the passage's culminating 'Therefore' sentence — 'understand the personal factors that influence your own code of behaviour' — plus 'no clear right or wrong response'. The passage's actual conclusion centers on the positive prescription, making this the most probable intended key."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "(A) 'formal learning experiences' is only a subsidiary causal influence on values (one of several: social/religious/civic beliefs, formal AND informal learning), not a thesis-level element usable in either slot. (B) 'objective moral theory' misstates what is absent: the passage denies a clear right/wrong RESPONSE and merely distinguishes this ethics from theory; it never asserts the nonexistence of objective moral theory."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "(A) 'higher conceptual ethics' is explicitly excluded: 'This form of ethics is distinct from higher levels of conceptual ethics or theory' — it cannot be the summary's operative element in any frame. (B) 'context-free decision' has partial support from context-dependence, but a summary pair fails if either blank fails."
+    }
+  ],
+  "note": "CRITICAL FORMAL DEFECT: the stem announces a one-sentence summary with blanks (A)/(B), but the summary sentence itself is absent from the item. Without the frame sentence, the polarity of slot (A) (thing-to-understand vs. thing-to-reject) is formally indeterminate. Options 1 and 3 share (B)='clear right answer' and each yields a grammatical, passage-faithful summary under its respective frame (negative frame -> 1, positive frame -> 3). The tie is broken only probabilistically: KSAT summary convention and the passage's concluding 'Therefore' sentence favor option 3. As presented, the item is not uniquely solvable; it needs the summary sentence restored, and if the intended frame is positive, option 1 additionally functions as a near-defensible distractor that should be reviewed for over-closeness."
+}

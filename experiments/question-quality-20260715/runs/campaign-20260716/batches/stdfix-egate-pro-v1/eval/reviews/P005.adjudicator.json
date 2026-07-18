@@ -1,0 +1,44 @@
+{
+  "pid": "P005",
+  "finalV2": true,
+  "winningAnswer": "(B)",
+  "reason": "독립 재검증 결과 (B)만이 어법 오류이며 유일 정답이다. 'play is a way which children learn about the world and their place in it'에서 관계절은 주어(children)·동사(learn)·about-전치사구 보충어(the world and their place in it 병렬)·in it(it=the world)까지 모든 성분이 포화된 완전절로, 관계대명사 which가 결속할 공백이 없다. 구제 독법(learn의 목적어로 which를 빼내는 재분석, 비표준 관계부사적 which, 융합관계사/간접의문 독법)은 전부 통사·의미적으로 성립하지 않으므로 in which(원문형)로의 교정만 가능하다. (A)(C)(D)(E)는 각각 현재완료 수동태, 소유격 수일치, allow+O+to-V, 층위 병렬로 모두 정문임을 확인했다. 솔버 1·2의 판정에 과잉 판정이나 누락된 대안 해석은 없었고, 선언 정답 (B)와 일치한다. V2 확정.",
+  "perDispute": [
+    {
+      "label": "(A) been seen",
+      "claim": "현재완료 수동태 'has long been seen as'가 정문인가",
+      "verdict": "정문 — 오류 아님",
+      "evidence": "주어 play는 'see A as B'의 대상이므로 수동태가 필수이고, has + (long) + been + seen 의 조동사-부사-분사 어순은 정형이다. long의 위치도 완료 조동사와 분사 사이의 표준 위치. 어떤 대안 분석으로도 결함이 생기지 않는다."
+    },
+    {
+      "label": "(B) which",
+      "claim": "완전절 앞의 관계대명사 which가 오류인가 (선언 정답)",
+      "verdict": "오류 확정 — 유일 정답",
+      "evidence": "관계절 'children learn about the world and their place in it'은 주어·동사·about-PP 보충어가 모두 채워졌고 in it의 it(=the world)도 포화 상태라 which가 결속할 논항 공백이 전혀 없다. 구제 독법 전수 검토: (1) which를 learn의 직접목적어로 재분석('learn a way about the world')하려면 learn X about Y에서 X=a way가 되어야 하나 way는 of V-ing 보충어를 취하지 way about은 비문이며 의미도 성립 안 함, (2) 'the way which S V'식 관계부사적 which는 표준 문법·수능 규범에서 불허(in which/that/zero만 가능), (3) 융합관계사·간접의문(learn which) 경로는 about구가 이미 후행해 통사적으로 차단. 원지문이 'a way in which'임이 확인되어 의도된 변형(in 삭제)임도 정합. 명백하고 유일하게 성립하는 오류."
+    },
+    {
+      "label": "(C) their",
+      "claim": "소유격 their의 지시·수일치가 정확한가",
+      "verdict": "정문 — 오류 아님",
+      "evidence": "their는 관계절 주어인 복수 children을 받으며, '세상 속 아이들 자신의 자리'라는 유일하게 정합적인 의미를 만든다. its(=play's 또는 the world's)로 바꾸면 의미가 붕괴된다. about의 목적어로 the world와 their place in it 두 NP가 병렬되는 구조도 정문. it=the world 조응도 정확."
+    },
+    {
+      "label": "(D) to try",
+      "claim": "allows children to try의 목적격보어 형태가 옳은가",
+      "verdict": "정문 — 오류 아님",
+      "evidence": "allow는 목적어 + to부정사 보어를 취하는 동사(let/make류 원형부정사 동사와 구별)이므로 to try가 정확하다. to try out and learn은 하나의 to를 공유하는 동사원형 병렬(try out / learn)로 역시 정문."
+    },
+    {
+      "label": "(E) to acquire",
+      "claim": "learn(무 to)과 to acquire(유 to)의 표면 비대칭이 병렬 오류인가",
+      "verdict": "정문 — 오류 아님 (최유혹 디코이)",
+      "evidence": "병렬 층위가 다르다: 내부 병렬은 [to [try out and learn] social behaviors]로 learn이 to를 공유하고, 상위 병렬은 [to try out and learn ...] and [to acquire ...]로 allows children의 두 to부정사 보어가 대등 연결된다. 등위 구조에서 두 번째 상위 접속항에 to를 반복하는 것은 선택적이며 완전히 문법적이다. '비대칭이므로 오류'라는 독법은 성립하지 않는다."
+    },
+    {
+      "label": "솔버 교차검증",
+      "claim": "솔버 1·2가 놓친 대안 해석 또는 과잉 판정이 있는가",
+      "verdict": "없음",
+      "evidence": "솔버1의 'learn 목적어 공백 불성립' 판단과 솔버2의 gap test·구제 독법(contact relative, object extraction, adverbial accusative) 기각은 모두 본 재검증과 일치한다. 성립하지 않는 대안 해석을 성립한다고 주장한 사례 없음. 감사자 V2=true도 정당. 선언 정답 (B) = 솔버1 B = 솔버2 (B)로 표기 차이만 있을 뿐 동일 판정."
+    }
+  ]
+}

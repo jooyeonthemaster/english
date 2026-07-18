@@ -1,0 +1,35 @@
+{
+  "pid": "P013",
+  "answer": "5",
+  "multipleDefensible": false,
+  "defensibleLabels": ["5"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1 pattern",
+      "verdict": "appropriate",
+      "reason": "옴부즈맨이 알아챈 것은 '난파선 기사마다 살아남은 고양이가 등장한다'는 반복적 규칙성이다. 'noticed a pattern in the newspaper's reporting'은 바로 뒤 콜론 이하(Each such story featured a cat)가 정의하는 반복 현상과 정확히 일치한다. 명사 pattern의 어휘 결합(notice a pattern in ~)도 정상. 문맥·문법 모두 성립."
+    },
+    {
+      "label": "2 feature",
+      "verdict": "appropriate",
+      "reason": "'I made the cat a feature of my story'는 make + O + OC(명사) 구문으로, 고양이를 기사의 '주요 소재/특집 요소'로 삼았다는 뜻. 이 기자만 고양이를 다뤄 특종이 되었고 다른 기자들이 'beaten'으로 질책받았다는 후속 서술과 논리적으로 정합. 첫 문장의 동사 featured와도 호응한다."
+    },
+    {
+      "label": "3 failed",
+      "verdict": "appropriate",
+      "reason": "다른 기자들은 고양이를 언급하지 '않았고(failed to mention)', 그 결과 특종을 빼앗겨(beaten) 편집장에게 질책받았다(called down ... for being beaten). '언급하지 못함 → 낙종 → 질책'의 인과 사슬이 완벽히 성립하므로 failed는 적절. fail to-V의 문법 결합도 정상."
+    },
+    {
+      "label": "4 severely",
+      "verdict": "appropriate",
+      "reason": "부사 severely 자체는 '질책/비난' 계열 동사와 결합할 때 자연스러운 강화사다(severely criticized/reprimanded). 문장의 논리 파탄은 뒤따르는 동사 (e)에서 발생하며, (e)를 criticized류로 교정하면 severely는 그대로 정문이 된다. 반대로 severely만 다른 부사로 바꿔도 'congratulated for being beaten'의 모순은 해소되지 않으므로, 오류의 귀속 지점은 (d)가 아니라 (e)임이 형식적으로 증명된다."
+    },
+    {
+      "label": "5 congratulated",
+      "verdict": "inappropriate — ANSWER",
+      "reason": "2차 난파 사건에서 화자는 (사실대로) 고양이를 빼고 기사를 썼고, 다른 기자들은 없는 고양이를 지어 넣었다. 편집장 관점에서 화자는 '낙종당한(beaten)' 것이므로 받아야 할 것은 축하가 아니라 질책이다. 1차 사건의 평행 구문 'were called down by their editors for being beaten'이 장거리 단서로서 for being beaten의 귀결을 '질책'으로 고정한다. 또한 마지막 문장 'Now ... all of us always put in the cat'(이후 모두가 고양이를 넣게 됨)은 화자가 부정적 제재를 받았을 때에만 인과적으로 도출된다. 'severely congratulated'는 연어 차원에서도 모순(강화사 severely는 비난·처벌 계열과 결합). 따라서 congratulated는 criticized/reprimanded/chided의 자리에 잘못 쓰인 낱말이다."
+    }
+  ],
+  "note": "저널리즘의 pack journalism(관행적 베껴쓰기)에 관한 고전 일화. 논리 구조: [1차] 고양이 언급 → 특종, 미언급 기자들 질책 / [2차] 고양이 없었는데 타 기자들은 허위로 삽입, 화자만 사실대로 누락 → 낙종으로 질책 → 이후 전원이 고양이를 관행적으로 삽입. (e)만이 이 인과 사슬과 정면 모순되며, (d)는 (e) 교정 시 정문이 되므로 오답 후보에서 형식적으로 배제된다. 단일 정답으로 수렴, 복수 옹호 가능성 없음."
+}

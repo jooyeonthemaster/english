@@ -1,0 +1,22 @@
+{
+  "pid": "P008",
+  "answer": "(A) disconnecting (B) no material traces (behind)",
+  "multipleDefensible": false,
+  "defensibleLabels": [
+    "(A) disconnecting / severing / breaking (B) no material traces (behind)"
+  ],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "disconnecting (또는 severing/breaking/cutting 계열 동의어)",
+      "reason": "형식 검증: 요약문의 골격은 'Digital platforms have made work less sticky by ..., enabling employers to hire ..., thus (A) the ties ... while leaving (B)'이다. (A) 자리는 'thus' 뒤에서 결과를 나타내는 분사구문의 머리이며, 뒤에 목적어 NP 'the ties between service work and particular places'를 직접 취하므로 타동사의 현재분사(V-ing)여야 한다. 명사·형용사·정형동사는 seam이 성립하지 않는다. 의미 검증: 지문이 명시적으로 'ties between service work and particular places can be disconnected'라고 진술하므로, 어휘적 최적해는 동일 어근의 'disconnecting'이다. 'severing/breaking/cutting'도 논리적으로 등가이며 옹호 가능하다. 'weakening/loosening'은 'less sticky'와는 어울리나 지문의 단정('can be disconnected', 'no material traces')보다 약한 주장이므로 차선. 분사구문의 의미상 주어는 앞선 'enabling'과 병렬로 문두 주어 'Digital platforms'(또는 그로 인해 가능해진 고용 행위)로 회수되어 논리적 결합에 모순이 없다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "no material traces (behind) — 필요시 'in the places where it was once an employer' 부가 가능",
+      "reason": "형식 검증: 'while leaving (B) __________'에서 (B)는 타동사 leaving의 목적어 NP 자리다. 지문 마지막 문장 'the employer leaves behind no material traces in the places where it was once an employer'가 직접 근거이므로 'no material traces'가 목적어로 들어가면 정문이 된다. 'leaving no material traces (behind)'와 'leaving behind no material traces' 모두 문법적으로 성립하며(불변화사 behind의 위치 이동), 빈칸이 leaving 바로 뒤이므로 'behind no material traces'로 쓰는 형태도 허용된다. 'while leaving'의 의미상 주어 역시 employers/platforms로 일관되어 dangling 문제 없음. 논리 검증: 요약의 두 축(장소-노동 결속의 절단 + 물리적 흔적 부재)이 지문의 결론 두 문장과 일대일 대응한다."
+    }
+  ],
+  "note": "선지 없는 서술형(요약문 빈칸 완성). (A)는 'thus ___ the ties'라는 분사구문 seam이 타동사 V-ing를 강제하고 지문 어휘 'disconnected'가 정답 어근을 직접 지시하므로 사실상 유일 계열의 답('disconnecting' 및 동의어). (B)는 'leaving'의 목적어로 지문 최종문 'no material traces'가 유일한 텍스트 근거. 두 빈칸 모두 장거리 단서(주어 회수, 병렬 분사 구조)에 모순 없음. 문항 자체는 성립하나, 서술형 특성상 채점 기준에 동의어 허용 범위(severing/cutting 등, behind 포함 여부)를 명시할 필요가 있다는 점만 유의."
+}

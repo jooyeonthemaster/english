@@ -1,0 +1,35 @@
+{
+  "pid": "P013",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) better",
+      "verdict": "correct",
+      "reason": "비교급 형용사 better가 'some jobs are better than others'에서 be동사의 보어로 쓰였고, 뒤의 than others가 비교 대상을 명시적으로 지배한다. 'Just as X, so would Y' 상관구문 내부의 첫 절로서 형태·기능 모두 정문. 대안 해석 불필요."
+    },
+    {
+      "label": "(B) blossoming",
+      "verdict": "correct",
+      "reason": "their blossoming towns에서 blossoming은 자동사 blossom의 현재분사가 명사 towns를 전위 수식하는 구조. towns가 '번성하는' 능동적 진행의 주체이므로 현재분사가 규칙상 옳다(과거분사 blossomed는 자동사의 수동 불가로 오히려 비문). 정문."
+    },
+    {
+      "label": "(C) have",
+      "verdict": "wrong",
+      "reason": "지배 구조는 'with + NP + 술어(비정형)' 부대상황(absolute) 구문의 병렬: 'with some roles [being] more dangerous and some ___ more plentiful access'. 첫 병렬항 'some roles more dangerous'는 with-절 안에서 무동사(형용사 술어)로 성립하므로, and로 이어지는 둘째 항의 술어도 비정형이어야 한다. 정형동사 have는 with 구문 안에 정형절을 만들 수 없어 비문이며 having이어야 한다. 대안 해석 검토: (i) 'and some have...'를 독립 정형절로 읽으려면 상위 절 'so would they have been...'과 등위 접속되어야 하는데 그 경우 시제·서법(would have been 가정 과거 vs 현재 have)이 충돌하고 with구 내부에 위치해 통사적으로도 불가능. (ii) 'some [who] have'의 주격 관계사 생략은 표준 문법에서 허용되지 않음. (iii) 도치·축약관계절 어느 해석으로도 구제 불가. 따라서 (C)가 유일한 어법 오류."
+    },
+    {
+      "label": "(D) to look",
+      "verdict": "correct",
+      "reason": "start는 to부정사와 동명사를 모두 목적어로 취하는 동사이므로 'some burials start to look different from others'는 정문. 주어 burials와 look의 의미 결합(무생물 주어 + 지각 계열 연결동사 look + 형용사 보어 different)도 성립. 정문."
+    },
+    {
+      "label": "(E) reveal",
+      "verdict": "correct",
+      "reason": "진짜 주어는 전치사구 'of teeth and long bones'를 걷어낸 핵명사 'chemical and isotope analyses'(복수 analyses)이므로 복수 동사 reveal이 수일치상 옳다. 뒤의 that절을 목적어로 취하는 타동 구문도 정상. 근접 명사 bones에 이끌린 착시를 배제하면 정문."
+    }
+  ],
+  "note": "형식적 판정: with-부대상황 구문 내 병렬 술어는 비정형이어야 한다는 지배 규칙에 의해 (C) have만이 비문(having 요구). 나머지 네 밑줄은 각각 비교급 보어, 능동 현재분사 전위수식, start+to부정사, 핵명사 복수 수일치로 모두 정문임을 확인. 정답 후보는 (C) 단일."
+}

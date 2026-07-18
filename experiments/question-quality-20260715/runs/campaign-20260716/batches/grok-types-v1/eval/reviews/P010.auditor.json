@@ -1,0 +1,98 @@
+{
+  "pid": "P010",
+  "type": "IMPLIED_MEANING",
+  "requestedDifficulty": "KILLER",
+  "blindAnswer": "2",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-minor-stem-wording",
+      "severity": "minor",
+      "evidence": "발문 '밑줄 친 부분이 함축 의미하는 바로 가장 적절한 것은?'은 비표준 표현이다. 수능 표준형은 '밑줄 친 부분이 다음 글에서 의미하는 바로 가장 적절한 것은?'이다. '함축 의미하는'은 어색하지만 의미 전달에 지장은 없어 V3 실패로는 보지 않는다."
+    },
+    {
+      "code": "V4-minor-distractor5-wording",
+      "severity": "minor",
+      "evidence": "오답해설 5의 첫 절 '도덕 논의를 제거해야 ‘진공’이 생긴다는 식으로'는 압축이 과해 기제 서술이 흐리다. 선지 5(without removing moral debates)를 대입하면 '도덕 논의를 제거하지 않으면 경제학이 목표를 식별할 수 없다', 즉 도덕 논의 제거를 전제조건으로 삼는 읽기인데, 해설의 문면은 그 방향을 정확히 재현하지 못한다. 다만 두 번째 문장('필자는 도덕 논의를 밀어내는 관행을 비판한다')이 결정적 결함(규범 방향 역전)을 정확히 짚으므로 사실 오류·오개념 수준은 아니라고 판단, V4는 통과시키되 문구 수정을 권고한다."
+    }
+  ],
+  "v1Evidence": "원지문과 렌더 지문을 프로그램 diff로 대조: 밑줄 마커 __in a vacuum__ 삽입 외에 완전 동일(문장 접합 파손·중복·누락·고아 문장부호·오탈자 없음). 마커는 정확히 1개 스팬이며 발문의 '밑줄 친 부분'(단수)과 일치. 선지 번호 1~5와 해설 키(정답 2 + 오답 1,3,4,5) 일치.",
+  "v2Evidence": "각 선지를 'economics cannot, ___, identify the goal' 슬롯에 독립 대입 검증. (1) 역사 고려 부재는 지문과 모순 — 입법자들은 오히려 경제·역사에는 attentive하다고 명시되므로 진공의 내용일 수 없음. (2) 윤리적 안내 부재 = 진공의 문맥 함축과 정확히 일치(세금=분배정의 적용, 목표 식별은 ethics/moral analysis 필요). 유일 정답. (3) '측정 부재'는 경제학이 이미 할 수 있다고 명시된 능력(whether a law will help achieve a goal 판단)을 결핍으로 오인 — 대입 시 지문 논지와 모순. (4) '경제 모델 부재'는 순환적이고(경제학 자체가 그 모델), 필자가 경제 분석의 유용성을 인정한 것과 모순. (5) '도덕 논쟁을 제거하지 않으면 목표 식별 불가'는 도덕 논의를 장애물로 보는 역전 읽기로 필자 입장과 정반대. 정답 집합 = {2}, 선언과 일치.",
+  "v3Evidence": "지문은 원문 그대로 문법적. 다섯 선지 모두 'without + 동명사/명사구'로 통사 평행하며 대입 시 문법적. 비단어·오탈자 없음. 발문 문구만 비표준(minor로 기록).",
+  "v4Evidence": "본해설의 구조 서술 전수 대조: 'in a vacuum'이 붙는 문장 위치(경제학의 도우미 역할 vs 목표 식별 불능) 정확, 앞 문맥(세금=분배정의 적용, 도덕 문제가 세법의 심장) 정확, 뒤 문맥(도덕 목표 설정 + ethics and moral analysis 요구) 정확. 오답해설 1·3·4는 각 선지의 실제 내용과 대응하며 결함 지목이 정확. 오답해설 5는 첫 절 문구가 흐리나(위 minor 참조) 결정적 결함 자체는 올바르게 지목. 환각·용어 오류·문장 귀속 오류 없음.",
+  "v5Evidence": "정답 라벨(2)·선지 5개·본해설 결론(2)·오답해설 키(1,3,4,5)·keyPoints 3항이 상호 모순 없음. keyPoints의 '측정/달성 판단 역할과 목표 설정 불능 혼동'은 오답 3 해설과 정합. markedExpressions 필드는 비어 있으나 렌더 지문에 밑줄 마커가 직접 포함되어 학생 노출 정보는 완전.",
+  "craft": {
+    "C1": 4,
+    "C2": 4,
+    "C3": 3,
+    "C4": 3,
+    "C5": 2,
+    "C6": 3
+  },
+  "craftRationale": {
+    "C1": "4 — 'in a vacuum'은 지문 전체 논지(경제학은 수단 판단만 가능, 목표 설정에는 도덕·윤리 필수)를 압축하는 결론부 핵심 비유다. 함축 파악이 곧 지문의 중심 논리 이해와 등치되는 정전급 출제 지점.",
+    "C2": "4 — 네 오답이 각기 다른 오독을 겨냥: 1=결핍 대상 오인(역사, 첫 문장 앵커), 3=능력·한계 혼동(half-truth), 4=인정된 역할의 부정(wrong lack, 순환), 5=규범 방향 역전(polarity reversal, 'too controversial' 앵커). 필러 없음.",
+    "C3": "3 — 1·3·5는 국소 어휘 앵커로 실제 매력적이고 전체 논지에서 갈린다. 다만 4는 같은 문장 안에서 순환이 드러나 빠르게 소거되고, 정답 2가 마지막 문장과 어휘적으로 직접 정렬되어(ethical↔ethics, ends↔goal) 상위권에게 소거 부담이 낮다.",
+    "C4": "3 — 메타 누출·꼬리 소거는 없고 근거는 충분·필연적이다. 그러나 마지막 문장이 함축 내용을 거의 명시적으로 진술하므로('requires identifying a moral goal... ethics and moral analysis') 추론 거리가 짧아 단서가 다소 후하다.",
+    "C5": "2 — 요청 난이도 KILLER 대비 미달. 밑줄 문장 바로 다음 문장 하나만 연결해도 정답 2가 도출되고, 정답이 지문 명시 어휘와 투명하게 겹친다. 극성 점검(5 배제)이 유일한 실질 방어선. 실전 감각으로는 수능 3점 중상 수준이지 킬러가 아니다.",
+    "C6": "3 — 본해설은 위치→전후 논지→종합의 구조로 짧고 정확하다. 오답해설 1·3·4도 선명하나 5의 첫 절이 흐려 우아함을 깎는다."
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "결핍 대상 오인 — 진공을 '역사적 맥락 무시'로 치환",
+      "temptingBecause": "첫 문장 'attentive to questions of economics and history'의 'history'가 어휘 앵커로 재등장해 초반부만 읽은 학생을 끈다.",
+      "decisiveFlaw": "지문에서 입법자들은 역사에 오히려 주의를 기울인다고 명시된다. 진공이 가리키는 결핍은 역사 인식이 아니라 도덕 목표 입력이다."
+    },
+    {
+      "label": "2",
+      "intent": "정답 — 진공 = 세제의 목적(ends)에 대한 윤리적 안내 부재",
+      "temptingBecause": "정답이므로 해당 없음. 세금=분배정의 적용, 목표 식별에 ethics/moral analysis 필요라는 전후 논지를 정확히 보존·추상화한다.",
+      "decisiveFlaw": "없음. 대입 시 'economics cannot, without any ethical guidance about which ends taxation should serve, identify the goal'로 논리·문법 모두 성립."
+    },
+    {
+      "label": "3",
+      "intent": "능력·한계 혼동(half-truth) — 경제학이 이미 하는 '측정'을 결핍으로 뒤집기",
+      "temptingBecause": "같은 문장의 'determine whether or not a particular tax law will help achieve a particular goal'과 표면이 강하게 겹친다.",
+      "decisiveFlaw": "측정·달성 판단은 경제학이 할 수 있다고 명시된 역할이다. 진공은 그 능력의 부재가 아니라 목표 설정 입력의 부재를 가리킨다."
+    },
+    {
+      "label": "4",
+      "intent": "인정된 역할의 부정(wrong lack) — 경제 모델 부재를 문제로 치환",
+      "temptingBecause": "'economics', 'models', 'revenue' 등 경제 어휘로 지문 소재와 표면 정합성이 있다.",
+      "decisiveFlaw": "주어가 economics인 문장에 대입하면 순환('경제학이 경제 모델 없이는')이 되고, 필자는 경제 분석의 유용성을 인정하며 한계만 지적하므로 모델 부재는 논점이 아니다."
+    },
+    {
+      "label": "5",
+      "intent": "규범 방향 역전(polarity reversal) — 도덕 논쟁 제거를 전제조건으로 삼는 읽기",
+      "temptingBecause": "'moral debates', 'too controversial'이 지문 2문장의 어휘를 그대로 재사용하며, 정답 2와 함께 'moral' 계열 키워드를 공유해 키워드 매칭 풀이를 교란한다.",
+      "decisiveFlaw": "대입하면 '도덕 논쟁을 제거하지 않으면 목표 식별 불가', 즉 도덕 논의가 장애물이라는 뜻이 된다. 필자는 도덕 논의를 밀어내는 관행 자체를 비판하고 도덕이 세법의 심장이라 주장하므로 정반대."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "target": "오답해설 5",
+      "evidence": "'도덕 논의를 제거해야 ‘진공’이 생긴다는 식으로'는 선지 5의 실제 읽기('제거하지 않으면 목표 식별 불가' = 제거를 전제조건화)를 정확히 재현하지 못하는 압축 표현이다.",
+      "recommendation": "'도덕 논쟁을 제거해야 경제학이 목표를 식별할 수 있다는 식으로 방향을 뒤집은 읽기이다'로 교체하면 기제가 선명해진다."
+    },
+    {
+      "severity": "minor",
+      "target": "발문",
+      "evidence": "'함축 의미하는 바로'는 비표준 표현.",
+      "recommendation": "'밑줄 친 부분이 다음 글에서 의미하는 바로 가장 적절한 것은?'으로 표준화."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionsNote": "유형이 어법(§C)·빈칸(§D)이 아닌 IMPLIED_MEANING이므로 §D를 근사 적용해 판정했다. 충족: 다섯 선지 동일 통사 슬롯('without ...'), 정답의 원문 의미 보존, 오답별 source anchor/tempting overlap/decisive flaw 존재, 함정 다양성(결핍 오인·half-truth·wrong lack·polarity reversal). 불충족: '최소 두 문장/두 논리 단서 연결' — 밑줄 직후 문장('Creating tax policy requires identifying a moral goal... ethics and moral analysis') 하나만으로 정답 2가 도출되며, 정답이 지문 명시 어휘(ethics→ethical, goal→ends)와 투명하게 겹쳐 어휘 정렬만으로 접근 가능하다(5와의 극성 대비가 유일한 방어선). 따라서 KILLER 조건 미충족.",
+  "grade": "B",
+  "notes": "V1~V5 전부 통과, 공예 합계 19(최저 C5=2)로 등급 B. 문항 자체는 결함 없는 견실한 함축의미 문항이나 요청 난이도 KILLER에는 미달한다: 정답의 어휘 투명성(ethical/ends가 마지막 문장의 ethics/goal과 직결)과 짧은 추론 거리(한 문장 연결로 충분)가 원인. 킬러로 올리려면 정답을 지문 어휘와 겹치지 않는 상위 추상('규범적 목적 설정 원리의 외부 공급 없이' 류)으로 재작성하고 4번을 순환이 덜 드러나는 앵커로 교체할 것을 권고. 오답해설 5 첫 절과 발문 문구는 소규모 수정 사항."
+}

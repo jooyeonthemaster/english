@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'our attention tends to be directed outward': tend to + 원형부정사 구조이며 attention은 direct의 대상이므로 수동태가 필수. 능동 'tends to direct'는 목적어 부재로 비문이 되므로 수동 be directed가 정확하다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "양보 접속사 While이 완전한 종속절(this pattern of attention is necessary...)을 이끌고 주절 'it actually prevents us...'가 뒤따르는 정상적 복문 구조. 형식적으로 결함 없음."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "'when solved problems analytically': 축약 부사절의 의미상 주어는 we이고, 분사 뒤에 목적어 problems가 잔류한다. 과거분사(수동)는 목적어를 취할 수 없어 형식적으로 붕괴. 대안 해석 전수 검토 — (1) when [they are] solved 수동 축약으로 봐도 뒤의 목적어 problems 설명 불가, (2) 'solved problems'를 명사구('해결된 문제들')로 보면 when절에 동사가 없어 비문, (3) solve는 수여동사가 아니므로 잔류 목적어 구성도 불가. 모든 경로에서 비문이며 능동 현재분사 solving이어야 정문. 어법상 틀린 밑줄."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'the connections that lead to creative insights': 복수 선행사 connections를 받는 주격 관계대명사 that, 관계절 동사 lead 복수 일치. 형식·일치 모두 성립."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'hear the quiet voices in the backs of our heads telling us...': 지각동사 hear + 목적어(voices) + 현재분사 보어. voices가 tell의 능동 주체이므로 현재분사 telling이 정확. 삽입 전치사구 'in the backs of our heads'는 지배 관계를 끊지 않는다."
+    }
+  ],
+  "note": "정답 후보는 (C) 단일로 유일하게 좁혀짐. (C)는 어떤 대안 해석(수동 축약, 명사구 재분석, 잔류 목적어)으로도 구제 불가능한 형식적 비문(과거분사가 목적어 problems를 지배하는 불가능 구조). 나머지 네 밑줄은 모두 명백한 정문으로 이중정답 소지 없음. 문항 성립 양호."
+}

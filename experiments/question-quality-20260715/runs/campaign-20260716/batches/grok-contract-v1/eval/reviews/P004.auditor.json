@@ -1,0 +1,89 @@
+{
+  "pid": "P004",
+  "blindAnswer": "④",
+  "confidence": "high",
+  "validity": {
+    "V1": false,
+    "V2": true,
+    "V3": false,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1",
+      "severity": "critical",
+      "evidence": "렌더 지문이 ', background). ①' 으로 시작한다. 원지문 첫 문장 'There are interesting trade-offs in the relative importance of subject matter (i.e., figure) and style (i.e., background).' 이 절단되어 고아 조각 ', background).' 만 남았다. IRRELEVANT 유형의 의도된 변형은 무관문 1개 삽입뿐이므로 이 절단은 의도 외 손상이며, 소재(figure)·양식(background) 대비라는 글의 주제 제시 문장이 파괴되어 ①~② 전개의 전제가 학생에게 보이지 않는다."
+    },
+    {
+      "code": "V1",
+      "severity": "major",
+      "evidence": "번호 문장이 비연속이다. ① 과 ② 사이에 번호 없는 문장 두 개('Feelings of pleasure and uncertainty...', 'In highly expressionist works...')가 끼어 있다. 수능 무관문장 유형은 도입부 이후 ①~⑤ 가 연속 문장에 부여되는 것이 규범이며, 비연속 번호는 형식 규약 위반이자 선지 문장 선택의 자의성을 드러낸다."
+    },
+    {
+      "code": "V3",
+      "severity": "critical",
+      "evidence": "학생에게 보이는 지문의 첫 표기 ', background).' 는 비문(문장 조각 + 고아 문장부호)이다. 지문 자체가 문두에서 문법성·자연성을 상실했다."
+    },
+    {
+      "code": "V4",
+      "severity": "minor",
+      "evidence": "오답 해설 ① 이 '주제인 소재·양식 비중 대비를 구체화하는' 이라고 원지문 첫 문장(trade-offs 주제문)에 근거해 설명하지만, 렌더 지문에서는 그 주제문이 절단되어 학생이 볼 수 없다. 해설 분석 자체는 원지문 기준으로 정확하므로 근본 원인은 V1 손상이다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 3,
+    "C4": 2,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "구상적(representational) 작품에서 소재가 전경, 양식이 정신 모형 구성 보조라는 원문 전개 문장. 글 후반부(미적 태도) 와 소재가 달라 보이는 초반 구체화 문장을 무관문으로 오인하는지 시험.",
+      "temptingBecause": "지문 후반이 미적 태도·균형 잡힌 삶으로 흐르므로 회화·연극·이야기 구체 예시가 지엽으로 보일 수 있고, 특히 주제문이 절단된 현재 렌더에서는 ① 이 맥락 없이 갑자기 시작하는 것처럼 보인다(의도 외 부작용).",
+      "decisiveFlaw": "표현주의 작품과의 대비(figure/background trade-off)를 세우는 필수 전개로, 이후 'In highly expressionist works...' 대비 구조의 전제가 되므로 흐름에 필수적이다. 원지문 원문 그대로다."
+    },
+    {
+      "label": "②",
+      "intent": "'Thus' 로 표현주의적 일탈 → 미적 태도 요구를 연결하는 교량 문장. 새 용어('aesthetic attitude', 'readable') 등장을 화제 이탈로 오인하는지 시험.",
+      "temptingBecause": "따옴표 신조어가 연달아 도입되어 앞 문장들과 어휘 표면이 달라 보인다.",
+      "decisiveFlaw": "바로 앞의 표현주의 문장(불협화·불안한 분위기)의 귀결이며, ③ 의 'This active involvement' 가 이 문장을 선행사로 삼으므로 제거하면 지시 연쇄가 끊긴다. 원문 그대로다."
+    },
+    {
+      "label": "③",
+      "intent": "'This active involvement' 의 지시 대상(② 의 미적 태도 요청) 추적 능력 시험.",
+      "temptingBecause": "추상적 일반 진술 형태라 구체 예시 흐름에서 떠 있는 것처럼 보일 수 있다.",
+      "decisiveFlaw": "② 의 미적 태도 요구를 받아 깊은 미적 처리·성찰의 기반으로 잇는 결과 진술이고, ⑤ 결론의 근거가 된다. 원문 그대로다."
+    },
+    {
+      "label": "④",
+      "intent": "정답(삽입 무관문). ③ 의 구절을 그대로 이어받되 '미적 태도 단독' 을 균형 잡힌 삶의 기반으로 격상시켜, 두 태도 간 전환을 강조하는 글의 최종 논지를 관점 면에서 뒤집는 은근한 왜곡 삽입.",
+      "temptingBecause": "'this depth of aesthetic processing and reflection on the meaning of the work' 를 ③ 에서 축자 인용해 응집성이 높아 보이고, 'balanced life' 를 공유해 ⑤ 로 가는 교량처럼 읽힌다.",
+      "decisiveFlaw": "⑤ 는 실용 태도와 미적 태도 사이의 '전환 능력' 이 근본이라 결론짓는데 ④ 는 미적 태도 하나를 기반으로 단정해 결론과 충돌하며, 결론 어휘(balanced life)를 선점해 중복을 만든다. 제거 시 원문 ③→⑤ 가 빈틈없이 복원된다."
+    },
+    {
+      "label": "⑤",
+      "intent": "결론 문장. 'pragmatic attitude' 첫 등장과 삶에 대한 일반화 전환을 갑작스러운 화제 확장으로 오인하는지 시험.",
+      "temptingBecause": "예술 논의에서 갑자기 '균형 잡힌 삶' 이라는 삶 일반론으로 확장되고 새 용어가 등장한다.",
+      "decisiveFlaw": "구상(실용적 읽기)·표현주의(미적 태도) 대비 전체를 두 태도의 전환 능력으로 수렴시키는 글의 실제 결론이다. 원문 그대로다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "target": "오답해설 ①",
+      "severity": "minor",
+      "detail": "'주제인 소재·양식 비중 대비' 는 원지문 첫 문장(trade-offs 주제문)의 내용인데, 렌더 지문에서 해당 문장이 절단되어 학생에게는 존재하지 않는 근거를 인용하는 셈이 된다(근본 원인은 V1 렌더 손상)."
+    },
+    {
+      "target": "정답 해설",
+      "severity": "none",
+      "detail": "인접 문장 요약, 관점 역전 설명, 제거-복원 검증 모두 실제 문장 구조·논리와 일치한다. 오분석·환각·용어 오류 없음."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "정답 설계 자체는 우수하다: ③ 의 구절을 축자 계승하며 '두 태도의 전환' 이라는 최종 논지를 '미적 태도 단독 우위' 로 비트는 삽입은 KILLER 급 관점 역전 함정이고, V2(정답 유일성)와 해설 사실성은 성립한다. 그러나 렌더 지문 첫 문장 절단(고아 조각 ', background).')이라는 치명적 V1/V3 손상으로 출하 불가(F)다. 부차 결함: (1) ①~⑤ 번호가 비연속이라 수능 형식 규약에 어긋남, (2) 삽입문이 ③ 의 11개 단어 구절을 축자 복사해 표면 단서(장문 반복 이질감)를 흘림 — KILLER 라면 paraphrase 로 가려야 함(C4=2), (3) 나머지 선지들이 비교적 쉽게 소거되어 실질 변별은 ④ 인지 여부 단일 축임. killerConditionsMet 는 유형이 IRRELEVANT 로 RUBRIC §C(어법)/§D(빈칸) 어느 쪽도 적용 대상이 아니고 V 게이트 실패이므로 false. 수리 방향: 원지문 첫 문장 복원 + ①~⑤ 연속 번호 재배치 + 삽입문 전반부 paraphrase."
+}

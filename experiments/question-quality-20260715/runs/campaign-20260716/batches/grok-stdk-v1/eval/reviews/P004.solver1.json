@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'Animals as well as humans engage' — 'A as well as B'에서 동사는 A(Animals, 복수)에 일치한다. 복수동사 engage가 옳다. 설령 학생이 humans를 일치 대상으로 착각해도 복수라서 어차피 engage가 맞으므로 함정이 성립하지 않는다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'play has long been seen as' — 현재완료 수동태. play는 '여겨지는' 대상이므로 수동이 의미상 필수이고 과거분사 seen이 옳다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "error",
+      "reason": "'a way of learn and practicing skills' — 전치사 of 뒤에는 동명사가 와야 하며, 병렬 두 번째 요소 practicing이 병렬 시작점이 동명사임을 확정한다. 'a way of learning and practicing'이어야 한다. learn에는 명사 용법이 없고, 원형을 허용할 조동사·사역 구문도 없으며, 'a way to learn and practice'라는 대안 표기는 본문에 없으므로 어떤 대안 해석으로도 정문이 되지 않는다. 어법상 틀림."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'a way in which children learn about the world' — 복원 검증: 'children learn about the world in that way'가 성립하므로 전치사+관계대명사 in which가 정문. 'the way (that)'와의 형식 차이 때문에 흔들릴 수 있으나 in which는 표준 용법이다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'Children's play serves as' — 주어의 핵은 단수명사 play(Children's는 소유격 수식어)이므로 3인칭 단수 serves가 옳다. 직전의 Children's가 복수 일치를 유도하는 시각적 미끼지만 핵 명사 확인으로 해소된다."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: (C)는 of 뒤 원형 + 병렬 짝 practicing이라는 이중 단서로 즉시 확정되는 명백한 오류. 매력적 오답 후보는 (E)(Children's 복수 미끼)와 (A)(as well as 일치)지만 둘 다 검증 즉시 해소되어 유혹 강도는 낮음. (C)의 오류가 지나치게 노출적(원형 learn이 눈에 바로 띔)이어서 변별력은 낮은 편이나, 정답 유일성·정문성에는 결함 없음."
+}

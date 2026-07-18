@@ -1,0 +1,35 @@
+{
+  "pid": "J010",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) has settled down",
+      "verdict": "correct",
+      "reason": "'once' 시간부사절의 주어는 'the dust (of an emergency)' 단수이고, 현재완료 has settled는 주절의 일반 현상 서술(There is a tendency ... to seek)과 시제 정합. 'settle down'은 자동사 구동사로 목적어 불필요 — 능동 자동사 용법이 형식적으로 성립한다. 관용상 'the dust settles'가 더 흔하지만 'settle down' 역시 정문이며 어법 오류로 볼 근거가 없다."
+    },
+    {
+      "label": "(B) deny",
+      "verdict": "incorrect",
+      "reason": "주절의 진짜 주어는 'The potential contribution (of greater economic success)'. deny는 타동사인데 (i) 목적어가 없고, (ii) '기여(contribution)'가 무언가를 부정하는 행위주가 될 수 없다. 의미상 '그 기여는 부정될 수 없다'로 주어가 deny의 피동작주이므로 수동태 'cannot be denied'가 요구된다. 대안 해석 탐색: 목적어 생략 자동사 용법(deny는 절대적 자동사 용법이 없음), tough-구문(deny는 tough-이동 허가 형용사 구문이 아님), 중간태(middle voice, *This contribution denies easily 류도 비문) 모두 성립하지 않음. 태(voice) 오류로 확정."
+    },
+    {
+      "label": "(C) where",
+      "verdict": "correct",
+      "reason": "선행사 'countries'(장소) 뒤에 완전한 절 'a large part of the population derive their livelihood from uncertain sources'가 이어진다 — 주어(a large part of the population)·동사(derive)·목적어(their livelihood) 모두 충족되어 관계부사 where(= in which)가 정확히 맞다. 절 내부에 공백(gap)이 없으므로 which/that로 바꾸면 오히려 비문. 참고로 'a large part of the population derive'의 복수 수일치는 부분사 표현에서 of 뒤 집합명사(population)를 복수 취급하는 용법으로 허용된다."
+    },
+    {
+      "label": "(D) involving",
+      "verdict": "correct",
+      "reason": "'specialized entitlement protection mechanisms involving direct public intervention' — 현재분사 involving이 mechanisms를 후치 수식(축약 관계절 which involve ...). mechanisms가 involve의 의미상 주어로서 능동 관계('메커니즘이 직접적 공공 개입을 수반한다')가 성립하므로 능동 분사가 옳다. involved로 쓰면 수동('개입에 연루된')이 되어 목적어 direct public intervention을 취할 수 없어 비문."
+    },
+    {
+      "label": "(E) having provided",
+      "verdict": "correct",
+      "reason": "전치사 in 뒤 동명사 자리. 완료동명사 having provided는 주절 동사 lie(현재: 진짜 성취가 ~에 있다)보다 앞선 시점(과거 위기 시에 지원을 제공했던 것)을 가리키므로 시제 선행성이 정확히 표현됨. having provided의 의미상 주어는 문장 주어 'The real achievements of these countries'의 소유주인 these countries로 자연스럽게 회복되어 통제(control) 문제도 없음. 단순 동명사 providing도 허용 가능했겠지만 완료형이 틀린 것은 아니다."
+    }
+  ],
+  "note": "지문은 Drèze & Sen 계열 기근 취약성/공공행동 논의로 보이며 원전 추정 문장은 'cannot be denied'. (B)는 목적어 부재 + 주어의 피동작주성이라는 두 개의 독립적 형식 근거로 태 오류가 증명되는 유일한 비문. 나머지 네 밑줄은 대안 해석을 적극 탐색해도 모두 정문으로만 성립. 단일 정답으로 수렴."
+}

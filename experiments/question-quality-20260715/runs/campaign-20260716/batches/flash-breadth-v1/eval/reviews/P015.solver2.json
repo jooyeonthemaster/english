@@ -1,0 +1,35 @@
+{
+  "pid": "P015",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "'The Multi-layered and Flexible Nature of Ethical Thinking' — 'multi-layered'는 원칙이 개인 간(between)·개인 내(within)에서 다층적으로 변이하고 사회/종교/시민적 신념·형식/비형식 학습 등 복수 요인이 작용한다는 명제들을, 'flexible'은 명확한 정오답 부재와 맥락 의존성(상황·시점·감정에 따라 동일인이 다른 선택)을 포괄한다. 지문 전체 논증(정의→변이성→맥락의존→자기·타인 코드 이해라는 결론)을 과부족 없이 덮는 유일한 제목."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "'Why Rules Are Absolute'는 지문 명제의 직접 부정. 지문은 'follow a prescribed set of ethical codes or rules'를 명시적으로 거부하고 'these principles vary both between and within individuals'라고 단언한다. 논리적으로 지문 테제의 모순 명제."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "'Dominated by Contextual Emotions'는 부분-전체 오류. 'when they are feeling a different way'는 맥락 요인 열거(circumstances, time, feelings) 중 하나일 뿐이며, 감정이 윤리적 결정을 '지배'한다는 우월성 주장은 지문 어디에도 없다. 종속적 세부를 지배 명제로 과잉 일반화한 오답."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "'External Pressures That Shape Our Behavior Codes'는 성격 규정 오류 + 범위 협소. 지문은 행동 코드를 형성하는 것을 'personal factors'(사회/종교/시민적 신념, 학습 경험)로 규정하지 '외부 압력'으로 규정하지 않으며, 이 제목은 변이성 명제 일부만 다루고 윤리적 사고 자체에 관한 결론(자기 코드 이해 + 타인 코드 수용)을 누락한다."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "'Unifying Diverse Perspectives into a Shared Social Ethic'은 결론 명제와 상반. 지문의 결론은 타인의 코드와 의사결정 요인이 다를 수 있음을 'recognizing and accepting'하라는 것이지 다양한 관점을 하나의 공유 윤리로 '통합'하자는 것이 아니다. 지문이 제안한 적 없는 종합(synthesis)을 단정한 오답."
+    }
+  ],
+  "note": "제목 추론 문항. 논리 렌즈로 각 선지를 지문 명제 집합과 대조한 결과 1번만이 전체 논증을 포괄하며, 2·5는 명시 명제와 모순, 3은 종속 세부의 과잉 일반화, 4는 요인의 성격 오규정 및 결론 누락. 복수 정답 가능성 없음. 오답 선지들이 비교적 명확히 배제되어 상위권 변별력은 다소 낮을 수 있으나 문항 자체는 단일 정답으로 건전."
+}

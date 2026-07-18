@@ -1,0 +1,35 @@
+{
+  "pid": "P010",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "they = The Faroe Islands (복수 고유명사구, 앞 문장 주어). 'Although they are controlled by Denmark, they have their own government'에서 두 they 모두 복수 지시로 일관되며 수·격 모두 정확. 섬 집단을 단수 국가 개념(it)으로 볼 여지도 있으나 뒤 절의 they와 일치하므로 복수 처리가 오히려 정합적. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect",
+      "reason": "진짜 주어는 'the killing'(단수)이고 'of whales'는 수식 전치사구일 뿐이므로 'are not done'이 아니라 'is not done'이어야 한다. 근접 명사 whales(복수)에 이끌리게 설계된 전형적 주어-동사 수일치 함정. 대안 해석 점검: insist가 요구/주장(mandative)일 때 가정법 현재 'be (not) done'은 가능하지만, 여기 insist는 '사실을 주장하다(claims)' 의미의 서술이므로 직설법이 자연스럽고, 설령 가정법을 허용해도 그 형태는 'be'이지 'are'가 아니다. 어떤 분석으로도 'are'는 정당화 불가. 어법상 틀림."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'There is a law that says ...'에서 that은 선행사 a law를 받는 주격 관계대명사로, 관계절 내 동사 says의 주어 역할을 한다. 선행사 단수-says 단수 일치도 맞음. 동격 that절('a law that each killing must...')로 바꿔 읽어도 되는 것 아닌가 순간 끌렸으나, says가 있으므로 주격 관계대명사 구조가 유일하게 성립하며 그 자체로 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'as quickly and efficiently as possible' — 동사 take place를 수식하는 부사 병렬(quickly and efficiently). 병렬 시작점이 as 뒤 부사이므로 형용사 efficient가 아닌 부사 efficiently가 맞다. 최상위권 시험에서 '형용사로 바꿔야 하나' 유혹하는 자리지만 수식 대상이 동사라 부사가 정답. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "allow + O + to-V 구문의 수동태: this practice should be allowed to continue. 능동 'allow this practice to continue'의 목적어가 주어로 승격되고 to continue가 잔류하는 정상적 5형식 수동 구조. should 뒤 동사원형 be도 맞음. 정문."
+    }
+  ],
+  "note": "실전 풀이 관점: 밑줄 (B)에서 주어-동사 거리(the killing [of whales] are)가 짧아 함정 난도는 낮은 편이나, insist 뒤 가정법 현재(be done)를 아는 상위권 학생이 '주장 동사니까 수일치 무관 아닌가'라고 흔들릴 수 있는 지점이 유일한 매력 요소. 그러나 가정법이라도 요구되는 형태는 be이지 are가 아니므로 오답 시비 여지 없음. 나머지 네 밑줄은 모두 명백한 정문으로 복수정답 위험 없음. 정답 (B) 단독 옹호."
+}

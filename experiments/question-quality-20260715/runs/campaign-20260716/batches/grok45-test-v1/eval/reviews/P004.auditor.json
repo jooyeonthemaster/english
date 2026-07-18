@@ -1,0 +1,82 @@
+{
+  "pid": "P004",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-typo",
+      "severity": "minor",
+      "evidence": "해설의 '이 두 근거를 잇면'은 '이으면'(ㅅ 불규칙)의 오표기. 의미 복원은 즉시 가능하며 문법·논리 오분석이 아니므로 V4 실패로는 판정하지 않음."
+    },
+    {
+      "code": "V4-minor-taxonomy",
+      "severity": "minor",
+      "evidence": "⑤에 대해 본해설은 '극성 반전', 오답 해설은 '인과적으로 뒤집는다'로 기술. 실제 ⑤는 '관리가 창의성 못지않게 중요' 진술의 우선순위(극성) 반전이지 인과 반전이 아님. 내용 대응 자체는 정확하므로 minor."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 2,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "과확장(overextension) — '창의적 관리자로 기능'을 '실작업에서의 순수 이탈'로 밀어 올린 함정",
+      "temptingBecause": "빈칸 직전의 'rather than actually designing'이 '디자인에서 손을 뗀다'는 인상을 주고, 'large teams'가 larger-scale projects의 인력 서술과 표면적으로 호응한다. 실질적으로 가장 강한 경쟁 선지.",
+      "decisiveFlaw": "'rather than actually designing, they withdraw from hands-on creating'은 동어반복에 가까워 그들이 대신 무엇을 하는지(긍정적 역할)를 제시하지 못하고, 후속 문장들이 전개하는 '관리 조직·과정' 논지와 단절된다. 'once large teams join'이라는 시점 조건도 본문에 없다."
+    },
+    {
+      "label": "2",
+      "intent": "정답 — 원문 span 'function more as creative managers'의 추상화",
+      "temptingBecause": "해당 없음(정답). 'implementing a concept'(4문장)와 'management organization and processes can be equally as relevant'(마지막 문장) 두 근거를 교차 연결해야 확정된다.",
+      "decisiveFlaw": "없음. 단, 'team implementation of concepts'가 지문의 'implementing a concept'와 사실상 verbatim 앵커여서 KILLER 수준 대비 추상화가 낮다(단서 노출, C4/C5 감점 사유)."
+    },
+    {
+      "label": "3",
+      "intent": "조건 협소화 + 명시문 모순 — 기술 복잡도라는 지엽 조건으로 논지를 축소",
+      "temptingBecause": "'technological complexity'가 3문장의 표현을 그대로 가져와 어휘 앵커로 작동한다.",
+      "decisiveFlaw": "본문은 대규모 프로젝트에서도 'a strong personality exercises powerful influence'라고 명시하여 '영향력을 잃는다'와 직접 모순되고, 복잡도 언급은 오히려 '낮은 복잡도 제품에서 개인 감각이 필수'라는 반대 방향의 근거다. 'the moment'라는 절대적 조건어로 소거가 빠르다."
+    },
+    {
+      "label": "4",
+      "intent": "극성 반전 — 개인 감각 단독 성공론으로 필자 논지를 정반대로 뒤집는 함정",
+      "temptingBecause": "'personal flair'가 3문장의 표현을 그대로 재사용해 표면 호응한다.",
+      "decisiveFlaw": "'개인성 강조가 문제(problematic)'라는 빈칸 문장 전반부 및 '관리 과정이 창의성 못지않게 중요'라는 결어와 정면 충돌. 'solely'라는 절대어로 즉시 소거 가능하며, ⑤와 같은 함정 계열이라 상호 변별이 약하다."
+    },
+    {
+      "label": "5",
+      "intent": "우선순위(극성) 반전 — 마지막 문장의 '관리 ≥ 창의' 진술을 뒤집는 함정",
+      "temptingBecause": "'managerial organization'이 마지막 문장의 'management organization'과 직결되는 어휘 앵커를 갖는다.",
+      "decisiveFlaw": "마지막 문장이 '관리 조직·과정이 창의성과 동등하게 중요할 수 있다'고 명시하므로 '부차적(secondary)'은 직접 모순. 'pure'라는 절대어 포함, ④와 동일 함정 계열(창의 우선 극성 반전)의 중복."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "'이 두 근거를 잇면' — '이으면'의 오표기(ㅅ 불규칙 활용 오류).",
+      "recommendation": "'이 두 근거를 이으면'으로 교정."
+    },
+    {
+      "severity": "minor",
+      "evidence": "⑤의 함정 유형 기술 불일치: 본해설 '극성 반전' vs 오답해설 '인과적으로 뒤집는다'. 실제는 우선순위/극성 반전.",
+      "recommendation": "오답해설 ⑤를 '중요도 서열을 뒤집는다(극성 반전)'로 통일."
+    },
+    {
+      "severity": "minor",
+      "evidence": "'상당수 디자이너가 개념 구현에 고용되어 개인 기여가 쉽게 간과된다' — 원문은 '다수 디자이너가 고용된다는 사실(the fact that ...)이 간과된다'이다. 취지는 보존되나 간과 대상의 지시가 다소 느슨한 의역.",
+      "recommendation": "'다수 디자이너가 구현에 투입된다는 사실 자체가 간과된다'로 정밀화."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1~V5 전부 통과: 렌더 지문은 의도된 span 제거 외 무손상이고, 각 선지를 독립 대입 검증한 결과 정답 집합은 {2}로 유일하며(①이 최대 경쟁 선지이나 동어반복성·무근거 시점조건으로 배제), 다섯 선지 모두 동일 통사 슬롯(복수 VP)에 문법적으로 들어가고, 해설의 구조 분석·라벨·오답 대응이 사실과 일치하며, 필드 동기화에 모순이 없다. 그러나 요청 난이도 KILLER 대비: (a) 정답 ②의 'team implementation of concepts'가 지문 'implementing a concept'의 준-verbatim 앵커로 추상화 수준이 낮고(§D '난이도에 맞는 추상화' 미충족), (b) ③④⑤가 절대어('the moment', 'solely', 'pure')와 명시문 극성 대조만으로 즉시 소거되어 실질 경쟁이 ①·② 2파전으로 좁혀지며, (c) ④·⑤가 동일 함정 계열(창의 우선 극성 반전)로 중복되어 §D '서로 다른 함정' 조건을 어긴다. 따라서 killerConditionsMet=false, C5=2(상위권용 중상 난이도 문항이지 KILLER 아님). C 합계 18, 최저 2 → 등급 B: ④ 또는 ⑤를 half-truth/scope shift 계열로 교체하고 ②의 verbatim 앵커를 의역하면 KILLER 재도전 가능."
+}

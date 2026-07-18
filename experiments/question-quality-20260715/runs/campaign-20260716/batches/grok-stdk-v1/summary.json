@@ -1,0 +1,32 @@
+{
+  "batchId": "grok-stdk-v1",
+  "phase": "grok2",
+  "atKst": "2026-07-17T20:12:21.634+09:00",
+  "assignments": 4,
+  "slotsConsumed": 9,
+  "accepted": 4,
+  "modelCalls": 23,
+  "inputTokens": 37585,
+  "outputTokens": 9330,
+  "costUsd": 0.153902,
+  "ledgerAfter": {
+    "used": 912,
+    "cap": 1000,
+    "costUsd": 31.602175
+  },
+  "byArm": {
+    "STDK-G": {
+      "n": 4,
+      "accepted": 4,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 9,
+      "costUsd": 0.153902
+    }
+  },
+  "models": {
+    "standard": "google/gemini-3.5-flash",
+    "premiumQgen": "x-ai/grok-4.5"
+  },
+  "durationMs": 240680
+}

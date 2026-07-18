@@ -1,0 +1,60 @@
+{
+  "batchId": "grok-stdk-v1",
+  "phase": "grok2",
+  "note": "E4: 표준지문 어법 KILLER grok 보강(n 4→8) — B2-STD/B2-PREM 동일프레임 짝",
+  "atKst": "2026-07-17T20:08:20.052+09:00",
+  "gitSha": "8d365701e339d7ad64bb1f808c76ec768e9855ee",
+  "gitDirty": true,
+  "worstCaseReserved": 20,
+  "spec": {
+    "batchId": "grok-stdk-v1",
+    "phase": "grok2",
+    "note": "E4: 표준지문 어법 KILLER grok 보강(n 4→8) — B2-STD/B2-PREM 동일프레임 짝",
+    "concurrency": 4,
+    "providerRouting": "none",
+    "env": {
+      "PREMIUM_QGEN_MODEL_ID": "x-ai/grok-4.5",
+      "GRAMMAR_PREMIUM_MODEL_ID": "x-ai/grok-4.5",
+      "EXPLANATION_VERIFY_MODEL_ID": "google/gemini-3.1-pro-preview",
+      "OPENROUTER_REASONING_EFFORT": "low"
+    },
+    "assignments": [
+      {
+        "itemId": "sk-g-120",
+        "frameId": "grammar-frame-v2-120",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "STDK-G",
+        "funnel": true
+      },
+      {
+        "itemId": "sk-g-133",
+        "frameId": "grammar-frame-v2-133",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "STDK-G",
+        "funnel": true
+      },
+      {
+        "itemId": "sk-g-134",
+        "frameId": "grammar-frame-v2-134",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "STDK-G",
+        "funnel": true
+      },
+      {
+        "itemId": "sk-g-136",
+        "frameId": "grammar-frame-v2-136",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "STDK-G",
+        "funnel": true
+      }
+    ]
+  }
+}

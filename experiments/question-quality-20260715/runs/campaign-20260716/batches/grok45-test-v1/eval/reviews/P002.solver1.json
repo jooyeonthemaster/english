@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "역방향 비교. '아이의 감정을 진정시키는 것 > 우리 자신의 반응 통제'로 우선순위를 뒤집었다. 지문은 'Parenting isn't about what our child does, but about how we respond'로 부모 자신의 반응 통제가 핵심이라고 명시한다. 어휘(calm, responses)가 지문과 겹쳐 순간적 유혹은 있으나 비교 구조가 정반대."
+    },
+    {
+      "label": "2",
+      "verdict": "correct",
+      "reason": "문법 결합 완벽: 'most of what we call parenting consists less in V-ing than in V-ing'. 의미상 'isn't about what our child does, but about how we respond' + 'managing our own emotions and actions is what allows us to feel peaceful'의 직접 패러프레이즈. 아이 행동 교정 < 자기 조절이라는 지문 전체 논지와 정확히 일치."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "이중 모순. 지문은 'respond constructively'를 명시적으로 가치 있게 보는데 이를 격하하고, 'we can't control our children or the obstacles they will face'라며 장애물 차단이 불가능하다고 했는데 shielding을 핵심으로 제시한다."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "최강 매력 오답. 'unfolds within the parent'는 내적 성장 논지를 정확히 반향해 실제로 끌렸다. 그러나 'once childish storms have already passed'라는 시점 한정이 치명적: 지문은 'When a storm brews, a parent's response will either calm it or...', 'those times when our buttons get pushed to reflect'로 작업의 무대를 폭풍 도중으로 명시한다. 사후가 아니라 실시간 자기조절이 핵심."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "성장 주체 전도. 'requires that we grow, too'와 'This inner growth ... enables you to become a more peaceful parent'는 성장을 부모의 과업으로 명시한다. 성장이 아이의 몫이라는 서술은 지문과 정면 충돌."
+    }
+  ],
+  "note": "최상위권 실전 렌즈. 정답 ②가 유일하게 옹호 가능. 오답 설계 품질 양호: ①은 어휘 재활용+비교 역전, ④는 핵심 논지 반향+시점 왜곡으로 각각 뚜렷한 유혹 벡터를 가짐. ④가 가장 강한 미끼였으나 'when a storm brews' 문장이 장거리 단서로 확실히 배제해 준다. 빈칸 문법 seam도 5개 선지 모두 자연스러워 문법 단서로 정답이 새지 않음. 복수정답 소지 없음."
+}

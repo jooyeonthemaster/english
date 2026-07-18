@@ -1,0 +1,35 @@
+{
+  "pid": "P010",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "지문 첫 문장이 history를 경제학과 함께 입법자들이 이미 주목하는(attentive) 요소로 명시한다. 밑줄이 지적하는 결핍은 history가 아니라 morality이므로, vacuum의 내용을 history 부재로 읽는 것은 지문 명제와 직접 모순된다."
+    },
+    {
+      "label": "2",
+      "verdict": "accept",
+      "reason": "밑줄 문장의 한계 서술 대상은 'identify the goal'이고, 직후 문장 'Creating tax policy requires identifying a moral goal, which ... must involve ethics and moral analysis'가 그 goal 식별에 필요한 결핍 요소를 ethics로 명시한다. 'which ends taxation should serve' = 'identify the goal', 'ethical guidance' = 'ethics and moral analysis'로 형식적 동치가 성립한다."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "수단-목표 적합성 측정(whether a particular tax law will help achieve a particular goal)은 경제학이 '할 수 있다'고 명시된 능력이다. 밑줄은 경제학이 '할 수 없는' 것(목표 식별)에 대한 한정어이므로, 이 선지는 밑줄의 지배 영역과 정반대를 가리킨다."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "vacuum 속에서 작동하는 주체가 economics 자신이다. '경제 모델을 참조하지 않고'는 경제학의 자기 부재를 요구하는 자기지시적 모순이며, 지문상 결핍 요소는 경제학 외부의 ethics다."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "도덕 논쟁을 controversial하다는 이유로 배제하는 태도는 지문 전반부가 비판하는 대상이다. 밑줄의 함축(도덕적 지침 없이는 목표 식별 불가)과 논리 방향이 반대이므로 성립하지 않는다."
+    }
+  ],
+  "note": "밑줄 'in a vacuum'은 관용적으로 '고립 상태에서, 다른 입력 없이'를 뜻하며, 그 고립의 내용은 직후 문장이 ethics and moral analysis로 유일하게 특정한다. 대안 해석(문법적 재분석, 다른 결핍 요소 대입)을 적극 탐색했으나 ①은 첫 문장과 모순, ③은 경제학의 가능 영역, ④는 자기지시 모순, ⑤는 지문 논지와 역방향이라 모두 기각된다. 정답 후보는 ② 유일."
+}

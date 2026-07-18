@@ -1,0 +1,18 @@
+{
+  "batchId": "grok45-grammar-v2",
+  "phase": "stdfix",
+  "note": "grok-4.5 어법 재시도: v1 은 사다리가 별도 env(GRAMMAR_PREMIUM_MODEL_ID)를 읽어 pro 로 돌았음(무효). 올바른 오버라이드로 재실행. 검증기는 pro 고정.",
+  "concurrency": 3,
+  "providerRouting": "none",
+  "env": {
+    "PREMIUM_QGEN_MODEL_ID": "x-ai/grok-4.5",
+    "GRAMMAR_PREMIUM_MODEL_ID": "x-ai/grok-4.5",
+    "EXPLANATION_VERIFY_MODEL_ID": "google/gemini-3.1-pro-preview"
+  },
+  "assignments": [
+    { "itemId": "gk2-g-062", "frameId": "grammar-frame-v2-062", "subType": "GRAMMAR_ERROR", "difficulty": "KILLER", "plan": "PREMIUM", "armId": "GROK-G2", "funnel": true },
+    { "itemId": "gk2-g-087", "frameId": "grammar-frame-v2-087", "subType": "GRAMMAR_ERROR", "difficulty": "KILLER", "plan": "PREMIUM", "armId": "GROK-G2", "funnel": true },
+    { "itemId": "gk2-g-088", "frameId": "grammar-frame-v2-088", "subType": "GRAMMAR_ERROR", "difficulty": "KILLER", "plan": "PREMIUM", "armId": "GROK-G2", "funnel": true },
+    { "itemId": "gk2-g-095", "frameId": "grammar-frame-v2-095", "subType": "GRAMMAR_ERROR", "difficulty": "KILLER", "plan": "PREMIUM", "armId": "GROK-G2", "funnel": true }
+  ]
+}

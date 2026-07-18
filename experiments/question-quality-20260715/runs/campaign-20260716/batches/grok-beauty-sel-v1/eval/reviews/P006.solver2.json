@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "consistent",
+      "reason": "'stagnate when people fail to follow up after the initial connection'은 지문의 'It's easy to connect with someone and then let the relationship get stuck due to a lack of follow-up'과 일대일 대응한다. stagnate ≡ get stuck, fail to follow up ≡ lack of follow-up. 일치."
+    },
+    {
+      "label": "2",
+      "verdict": "consistent",
+      "reason": "'requires deliberate attempts rather than leaving contact entirely to chance'는 지문의 'make a conscious effort to stay in touch'의 정확한 환언이다. deliberate ≡ conscious. 일치."
+    },
+    {
+      "label": "3",
+      "verdict": "inconsistent (정답)",
+      "reason": "지문은 'This doesn't mean constantly reaching out with requests or updates but rather maintaining a friendly and consistent line of communication'으로 요청(asks/requests)과 근황 업데이트(updates) 위주의 잦은 연락을 명시적으로 부정한다. 선지는 바로 그 부정된 내용('message regularly with further asks and personal updates')을 'The best way'라는 최상급 권고로 단언하므로 지문의 명시적 부정문과 직접 모순. 형식적으로: 지문 ¬P, 선지 P(그것도 최상급 강화형). 불일치 확정."
+    },
+    {
+      "label": "4",
+      "verdict": "consistent",
+      "reason": "'Even a brief check-in or a shared article can help keep an existing relationship active'는 지문의 'A simple message to check in or share something of value can go a long way in reinforcing your relationship'과 대응한다. 일치."
+    },
+    {
+      "label": "5",
+      "verdict": "consistent",
+      "reason": "'Sending a potentially useful resource can show that you still value someone you have not spoken to for some time'은 지문의 'if you come across an article or resource ... share it with them, even if you haven't spoken in a while. This shows that you're thinking of them and are invested in maintaining the relationship'과 대응한다. 일치."
+    }
+  ],
+  "note": "내용 불일치 유형. ③만이 지문이 명시적으로 부정한 명제(requests/updates 위주의 연락)를 최상급('The best way')으로 단언해 정면 모순을 이룬다. ①②④⑤는 각각 지문 문장과 일대일 환언 대응. 미끼 설계상 ③이 '규칙적 연락'이라는 지문 권고(consistent line of communication)를 절반 포함해 그럴듯하지만, 'further asks and personal updates' 부분이 결정적으로 부정된다. 단일 정답으로 방어 가능, 복수 정답 여지 없음."
+}

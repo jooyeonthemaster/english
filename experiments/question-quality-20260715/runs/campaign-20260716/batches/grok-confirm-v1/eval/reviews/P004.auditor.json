@@ -1,0 +1,69 @@
+{
+  "pid": "P004",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-overstatement-C",
+      "severity": "minor",
+      "evidence": "(C) 오답 해설이 'to부정사나 정동사 형태가 아닌 v-ing가 적절하다'라고 하여 to부정사 주어(To correct took time)가 어법상 불가한 것처럼 서술한다. 실제로는 부자연스러울 뿐 완전한 비문은 아니다. 해당 문장 자체(correcting = took의 동명사 주어)에 대한 분석은 정확하므로 V4 실패로는 보지 않는다."
+    },
+    {
+      "code": "KILLER-missing-why-tempting",
+      "severity": "minor",
+      "evidence": "RUBRIC §C는 5개 밑줄 각각에 point / why tempting / why correct-incorrect 존재를 요구하나, 문항 데이터에는 pointCode와 정오 근거만 있고 명시적 'why tempting' 서술이 없다. killerConditionsMet 판정에 반영."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 2,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "정동사 vs 준동사 — 목적 부사구(To demonstrate...) 뒤 주절에 정동사(명령형 consider)가 필요함을 판정",
+      "temptingBecause": "'To V..., V-ing...' 연쇄가 표면적으로 분사구문 연결처럼 보이고, considering은 전치사('~을 고려하면') 오독도 가능해 손상을 눈치채기 어려울 수 있다",
+      "decisiveFlaw": "문장 전체에 정동사가 없다. 분사구문 독해도 전치사 독해도 주절 부재로 성립하지 않으므로 명백한 비문 — 선언된 정답(오류)이며, consider로 교정하면 정확히 원문이 복원된다"
+    },
+    {
+      "label": "(B)",
+      "intent": "접속사 because vs 전치사 because of 구별",
+      "temptingBecause": "because/because of 치환 오류를 기대하는 학생이 뒤 구조를 대충 보고 전치사 자리로 오판할 수 있다",
+      "decisiveFlaw": "뒤에 주어(reference materials)+정동사(weren't)의 완전한 절이 오므로 접속사 because가 정확히 옳다. 다만 판별이 매우 쉬워 매력도는 낮다(준필러)"
+    },
+    {
+      "label": "(C)",
+      "intent": "동명사 주어 — 대시 뒤 독립절에서 v-ing가 took의 주어로 기능",
+      "temptingBecause": "대시 뒤에 갑자기 v-ing가 나와 분사 수식이나 비문처럼 보일 수 있고, correction(명사)이나 to correct를 기대하는 학생이 흔들린다",
+      "decisiveFlaw": "correcting은 'correcting took time' 독립절의 동명사 주어로 완전히 문법적이다 — 오류 아님"
+    },
+    {
+      "label": "(D)",
+      "intent": "등위 복수 주어(Memorization and precision)와 동사 수일치",
+      "temptingBecause": "추상명사 둘의 등위라 단일 개념 단수 취급(is)을 떠올릴 수 있다",
+      "decisiveFlaw": "A and B 등위 주어는 복수이므로 are가 옳다 — 오류 아님. 판별이 쉬운 편"
+    },
+    {
+      "label": "(E)",
+      "intent": "병렬 구조 — tuned to 아래 require와 become의 원형 병렬",
+      "temptingBecause": "to와의 거리가 멀고, makes와의 병렬로 오독하면 becomes를, 형용사적 연결로 오독하면 becoming을 기대하게 된다",
+      "decisiveFlaw": "become은 공유된 to 아래에서 require와 병렬인 원형으로 정확히 옳다 — 오류 아님"
+    }
+  ],
+  "explanationIssues": [
+    "(C) 해설의 'to부정사...형태가 아닌'은 to부정사 주어가 어법상 불가하다는 인상을 주는 경미한 과장 — 실제 문장 분석 자체는 정확",
+    "5개 밑줄에 대한 명시적 'why tempting' 서술 부재 (정오 근거만 존재)"
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "모든 V 통과: 렌더 지문은 consider→considering 단일 의도 변형 외 손상 없음(V1); 각 밑줄 독립 검증 결과 오류는 (A) 하나뿐 — considering이면 문장에 정동사가 전무하며 분사구문·전치사 독해 모두 주절 부재로 불성립, (B)(C)(D)(E)는 모두 문법적(V2); 해설의 구조 분석(목적 To부정사 부사구 + 명령형 주절 정동사 필요)이 실제 통사와 일치(V4); 필드 동기화 일치(V5). 공예 합계 17, 최저 C5=2 → B. KILLER 판정 false 근거: (1) §C의 '5개 밑줄 각각 point/why tempting/why correct-incorrect' 중 why tempting이 명시적으로 부재, (2) 최소대립쌍·명확한 문법판단·비(非)표면노출 조건은 자구상 충족하나, 'To demonstrate X, consider Y' 명령형 패턴은 수능 어법에서 가장 많이 훈련되는 정전 패턴이고 정답이 첫 문장에 위치해 상위권 학생에게 사실상 즉시 인지된다 — 함정 깊이가 KILLER 라벨에 못 미침(C5=2). 소규모 수정(더 깊은 위치의 덜 정형화된 정답 포인트, (B)(D) 매력도 보강, why tempting 명시)으로 출제 가능한 견실한 중상 난이도 문항."
+}

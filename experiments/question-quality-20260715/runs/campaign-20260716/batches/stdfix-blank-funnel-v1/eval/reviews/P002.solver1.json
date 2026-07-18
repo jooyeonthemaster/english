@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "'perform tasks at a constant pace regardless of our feelings'는 지문의 핵심 명제(에너지가 하루 동안 ebbs and flows 하므로 그 흐름에 주의를 기울이라)와 정면 모순되는 반(反)주제 오답. 결합(seam)은 문제없으나 논리적으로 즉시 배제."
+    },
+    {
+      "label": "②",
+      "verdict": "correct",
+      "reason": "'align our tasks with our biological energy patterns'는 이후 전개 전체와 정확히 일치 — body rhythm/internal clock 존중, 에너지가 높을 때 어려운 과제 배치, 팀에도 같은 원리 적용, 개인차(아침형 vs 늦게 페이스 오르는 사람) 인정까지 모두 포괄하는 일반화. 'is to align'의 문법 결합도 정상."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "매력적 오답. 'lots of energy early in the morning'과 'most people are far more productive in the morning'이 표면적으로 지지하는 듯해 실제로 끌린다. 그러나 마지막 문장 'there are those who differ and hit their stride later in the day'가 명시적으로 차단하고, 'all collaborative projects'라는 전칭 표현도 지문의 예시적 언급을 원리로 과잉 일반화한 것. 아침은 예시이지 원리가 아님."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "'adjust our internal clocks to meet organizational goals first'는 인과 방향을 뒤집은 오답. 지문은 internal clock을 '존중(respect)'하고 그에 맞춰 일정을 조정하라고 하지, 조직 목표에 맞춰 생체시계를 조정하라고 하지 않는다. 'respect your internal clock'과 정면 충돌."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "매력적 오답. 'Schedule intervals of productive time and breaks'와 어휘가 겹쳐 유혹이 강하다. 그러나 'equally'가 결정적 결함 — 지문의 요지는 균등 분배가 아니라 에너지 곡선에 맞춘 '불균등' 배치(피크 시간에 어려운 과제)이며, 균등 분배는 개인 리듬 존중이라는 핵심과 오히려 상충한다."
+    }
+  ],
+  "note": "모든 선지가 동사원형구로 'is to ___' 결합에 문법적 하자 없음(순수 논리 변별형). 정답 ②가 유일하게 지문 전체를 포괄. ③(아침 어휘 반복)과 ⑤(intervals/breaks 어휘 반복)가 설계된 매력 오답으로 각각 명시적 텍스트 차단 장치(개인차 문장, 'equally'의 모순)가 존재해 변별 타당. 복수 정답 소지 없음."
+}

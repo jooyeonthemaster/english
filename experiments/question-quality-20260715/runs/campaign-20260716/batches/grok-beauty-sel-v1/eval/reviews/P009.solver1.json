@@ -1,0 +1,35 @@
+{
+  "pid": "P009",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "attractive-distractor",
+      "reason": "실전에서 실제로 끌린 근접 미끼. 'how quickly classroom change becomes visible'이 밑줄 'won't be apparent immediately'와 표면 어휘가 거의 일대일로 공명해, 밑줄만 고립시켜 읽으면 정답처럼 보인다. 그러나 옹호에 세 단계 무근거 도약이 필요하다: (i) 특정 접근법(방언 수용 후 표준영어 축적)의 결과 → 'language activities' 일반으로 과잉일반화, (ii) '결과가 늦게 나타난다'는 서술적 양보 → '가시화 속도로 판단하지 말라'는 평가 규범으로 술어 변조(지문에 활동 평가 기준 논의 자체가 없음), (iii) 밑줄이 부정+immediately로 전제하는 '나중에는 결실이 드러난다'는 긍정적 함축을 누락. '가장 적절한 것' 비교에서 ②에 결정적으로 밀린다."
+    },
+    {
+      "label": "2",
+      "verdict": "correct",
+      "reason": "밑줄의 문맥 내 함축을 정확히 포착. 밑줄의 'results'는 생략적 지시로, 문맥상 '먼저 방언을 수용하고 그 위에 쌓는 접근(first accept the dialect and then build on it)'의 결과로 해소된다. 'won't be apparent immediately'는 부정 하의 immediately가 '나중에는 드러난다'(지연된 결실)를 전제·함축하며, 이것이 곧 'pays off over time'이다. 즉 ②는 주절의 단순 재진술이 아니라 밑줄의 지시 해소 + 시간 함축을 통합한 재진술이고, 주절('long-range benefits are worthwhile') 및 지문 중심 논지(문화감응교수법)와 완전 정합한다."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "지문이 의견 스펙트럼의 한 극단으로 소개만 한 'complete acceptance'를 최선의 접근으로 승격. 지문이 지지하는 것은 '수용 후 축적'이지 '완전 수용만(alone)'이 아니다. 'alone'이 결정적 모순."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "지문이 배격하는 반대 극단('rejection and correction')을 지지하는 데다, 'secures faster gains'는 밑줄('결과가 즉시 드러나지 않는다')과 정면 충돌한다."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "도입부는 학생들이 취업 면접·진학 계획 시점에 표준영어의 가치를 '깨닫는다'는 교육 이유의 예시일 뿐인데, 이를 '그때까지 표준영어 교육을 미루라'는 시점 연기 주장으로 왜곡. 지문 취지(지금 교실에서 수용-축적으로 가르치라)와 배치."
+    }
+  ],
+  "note": "최상위권 수험생 렌즈 유혹 기록: 1차 독해에서 지문 요지와 일치하는 ②로 기울었으나, 밑줄 범위가 양보절뿐임을 확인한 2차 검토에서 ①의 표면 어휘 공명(immediately/apparent ↔ quickly/visible)에 실제로 상당한 유혹을 느꼈다. '함축의미 정답은 명시 내용의 재진술이면 안 된다'는 논거로 ①을 옹호하는 시도도 가능해 보였으나, 검증 결과 ②는 명시 내용의 단순 재진술이 아니라 밑줄의 생략적 지시('results') 해소 + 부정+immediately의 전제 함축('나중에는 결실')을 통합한 문맥적 의미여서 함축의미 정답 요건을 충족하고, ①은 과잉일반화·술어 변조·결실 함축 누락의 3중 결함으로 옹호가 무너진다. 단일 수렴 ②. 품질 관찰: 이 장르(수능 21번)의 관행상 밑줄은 비유적 표현에 그어지는데 본 문항은 축자적 양보절에 밑줄을 그어 장르 이탈이며, 그 때문에 ①이 실제 수능보다 강한 이의신청 표면을 갖는 구조적 약점이 있다."
+}

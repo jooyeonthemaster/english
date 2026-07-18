@@ -1,0 +1,35 @@
+{
+  "pid": "P023",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'He was issued nine U.S. patents'는 수여동사 issue(issue him nine patents)의 간접목적어 수동태로, 직접목적어 'nine U.S. patents'가 잔류 목적어(retained object)로 남는 정문 구조다. 'The USPTO issued him nine patents' -> 'He was issued nine patents' 변환이 형식적으로 성립하며, and로 병렬된 'held patents...'와도 시제(과거) 병렬이 일치한다. 어법상 옳다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'the first invention that he successfully sold to Sheaffer Pen Company'에서 that은 선행사 the first invention을 받아 sold의 목적어 역할을 하는 목적격 관계대명사다. 선행사에 서수 first가 붙어 있어 오히려 that이 선호되는 환경이며, 관계절 내부에 목적어 공백(sold ___ to X)이 정확히 하나 존재한다. 어법상 옳다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'Although he was working as a real estate agent'는 접속사 Although + 주어 he + 과거진행 was working의 완전한 정형 부사절로, 1930년대 동안 지속되던 활동을 나타내는 과거진행 시제 선택도 문맥상 자연스럽다. 어법상 옳다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "wrong",
+      "reason": "문장 구조가 'Although [정형 부사절], the 1930s proving to be..., with [절대구문]'인데, Although 절은 종속절이므로 주절에 반드시 정형동사가 필요하다. 그러나 proving은 비정형 분사여서 이 문장에는 정형 주절 동사가 하나도 없다(with six... being issued then 역시 비정형 절대구문). 대안 해석 검토: (i) 'the 1930s proving...'을 독립분사구문(절대구문)으로 보더라도 그 경우 문장 전체에 주절이 사라져 여전히 단편(fragment)이다. (ii) 축약 관계절로 볼 선행 명사구 구조도 없다. (iii) 도치나 생략으로 구제할 경로도 없다. 따라서 proving은 정형동사 proved로 고쳐야 하며, 어법상 틀린 유일한 밑줄이다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'with six of his nine U.S. patents being issued then'은 with + 명사구 + 현재분사(수동 being issued)의 부대상황 절대구문으로, 의미상 주어 'six of his nine U.S. patents'와 issue의 수동 관계가 정확히 성립한다(특허는 발급되는 대상). being을 생략하고 issued만 써도 되지만 being issued 역시 완전한 정문이다. 어법상 옳다."
+    }
+  ],
+  "note": "형식 판정: 정답 후보는 (D) 하나로 유일하게 좁혀진다. 주절 정형동사 부재라는 문장 층위(장거리) 단서를 요구하는 양질의 오류 설계이며, (A) 수여동사 수동태의 잔류 목적어와 (E) with 절대구문이 매력적인 오답(겉보기에 이상해 보이지만 정문)으로 기능한다. 문항 성립에 결함 없음."
+}

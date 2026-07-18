@@ -1,0 +1,35 @@
+{
+  "pid": "P012",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "Temporal clause 'once the dust of an emergency has settled down': subject head is 'the dust' (singular); 'of an emergency' is a postmodifying PP that does not govern agreement. Present perfect singular 'has settled' agrees with 'dust' and is licensed alongside the generic present-tense main clause ('There is a tendency...'). 'settle down' is a valid intransitive phrasal verb. Grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'The potential contribution ... cannot be denied': transitive 'deny' with its logical object promoted to subject requires the passive; modal + be + past participle is well-formed. Active 'cannot deny' would strand the transitive verb without an object under an inanimate subject. Grammatical."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'mechanisms involving direct public intervention' is a reduced relative clause (= 'mechanisms which involve...'). The head 'mechanisms' is the notional subject of 'involve' in an active relation, so the present participle -ing is required; 'involved' (passive) would reverse the relation incorrectly. Grammatical."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "Subject = 'Rapid growth [of the economy in Botswana, or of the agricultural sector in Kenya, or of food production in Zimbabwe]'. The 'or' coordinates three of-PPs that all modify the single head noun 'growth' (singular); agreement is governed by the head, not the nearest noun. Singular 'explains' is correct. This is a distractor exploiting the long PP chain, but the form is grammatical."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "Subject = 'The real achievements of these countries'; head noun 'achievements' is plural, and 'of these countries' is a non-governing postmodifier. The verb must be 'lie', not 'lies'. No rescue reading exists: there is no inversion, 'achievements' is not a collective/notional singular, and 'lies' cannot be parsed as a noun without leaving the clause verbless. Classic proximity-agreement trap ('countries ... lies'). Ungrammatical."
+    }
+  ],
+  "note": "Blind solve, grammarian/logician lens. Exactly one indefensible item: (E) plural subject 'achievements' with singular 'lies'. (D) is the intended near-miss distractor (long coordinated of-PPs before a singular head-governed verb) but is formally correct. (A), (B), (C) each verified against long-distance governing rules (head-noun agreement, passive transitivity, reduced relative voice). Answer uniquely (E); no multiple-defensible concern."
+}

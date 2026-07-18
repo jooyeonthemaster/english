@@ -1,0 +1,33 @@
+{
+  "pid": "P018",
+  "answer": "what → that (또는 in which). 즉 \"play is a way that(= in which) children learn about the world and their place in it.\"",
+  "multipleDefensible": false,
+  "defensibleLabels": [
+    "what → that",
+    "what → in which"
+  ],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "From its earliest beginnings in infancy",
+      "verdict": "correct",
+      "reason": "전치 부가어 안의 소유격 its는 뒤따르는 주어 play를 선행 지시(cataphora)하는 표준 용법. beginnings 복수형도 관용적으로 성립."
+    },
+    {
+      "label": "play is a way",
+      "verdict": "correct",
+      "reason": "단수 주어 play + is 수일치 문제 없음. a way는 방식 명사로서 뒤에 관계절(that/in which S V) 또는 of V-ing/to V 보충을 요구."
+    },
+    {
+      "label": "what (children learn about the world and their place in it)",
+      "verdict": "incorrect",
+      "reason": "형식적 판정: (1) 관계사 파스 — what은 융합관계사(free relative)라 외부 선행사 a way를 취할 수 없으므로 불가. (2) 명사절 파스 — [what children learn about the world...]는 내부적으로는 정문(learn X about the world의 X 공백)이지만, 'a way + 명사절'의 무표지 동격 결합은 비문이라 seam에서 실패. 내포절 'children learn about the world and their place in it'은 공백 없는 완전절이므로, 방식 선행사 way가 허가하는 관계부사적 that(= in which)이 유일한 적법 연결사. 따라서 what을 that(또는 in which)으로 고쳐야 한다."
+    },
+    {
+      "label": "their place in it",
+      "verdict": "correct",
+      "reason": "their = children's, it = the world로 대명사 지시 모두 해소됨. learn about [the world and their place in it] 병렬도 성립."
+    }
+  ],
+  "note": "서술형(밑줄 오류 찾아 고치기) 문항. 오류 지점이 what 하나로 유일하게 수렴하며, 축약 관계절·도치·수동태 잔류목적어 등 대안 해석으로 what이 정문이 되는 경로는 존재하지 않음(외부 선행사를 취하는 what은 표준 문법에서 배제). 교정형은 that과 in which 둘 다 허용되나 동일 오류에 대한 등가 답안이므로 복수정답 문제는 아님. 참고로 'the way how'는 비문이므로 how 단독 교체(a way how)는 부적절, 'how children learn'으로 a way를 삭제하는 재작성은 문항 요구(밑줄 내 교정) 범위를 벗어남."
+}

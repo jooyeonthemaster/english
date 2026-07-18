@@ -1,0 +1,35 @@
+{
+  "pid": "P015",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "Antithesis of the passage. The text explicitly argues students should think through ethical issues 'rather than follow a prescribed set of ethical codes or rules' and that principles 'vary both between and within individuals' — the opposite of strict, universal codes. No lure for a careful reader."
+    },
+    {
+      "label": "2",
+      "verdict": "correct",
+      "reason": "Captures the full thesis: the passage's named topic ('ethical thinking' — identifying issues and evaluating them from different perspectives) plus its central anti-prescription claim (no clear right/wrong, principles vary between/within individuals, context-dependence, understanding one's own and others' differing codes). 'Judging Issues Beyond Fixed Rules' summarizes the whole passage at the right altitude."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "Attractive to a first-sentence skimmer because 'critical thinking' opens the passage prominently. But critical thinking serves only as a definitional analogy to frame ethical thinking; nothing in the passage suggests critical thinking replaces ethics — ethics is the entire subject. The lure dissolves after sentence one."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "Too-narrow detail distractor. Religious belief appears once inside a list ('social, religious, or civic beliefs') as one of several influences on personal values; it is never the organizing theme, and the passage's thrust is variability of moral drivers, not any single 'core'."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Direct contradiction. The passage states individual perspectives 'may also be context dependent' and that the same individual may make different choices under different circumstances — the opposite of context-free, permanent single right choices."
+    }
+  ],
+  "note": "Clean single-answer item. Reading path: thesis emerges by sentence 4 (think through issues rather than follow prescribed codes) and is reinforced by variability and context-dependence claims. Option 3 is the only distractor with genuine surface pull (first-sentence anchoring on 'critical thinking'), option 4 has mild keyword-match pull; options 1 and 5 are antithesis fillers with no pull. No alternative construal makes any distractor defensible."
+}

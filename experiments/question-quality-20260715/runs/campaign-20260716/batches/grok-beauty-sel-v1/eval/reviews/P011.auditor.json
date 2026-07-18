@@ -1,0 +1,83 @@
+{
+  "pid": "P011",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-CORRUPTED-TERM",
+      "severity": "major",
+      "evidence": "학생 노출 해설에 '직접적 공적 개입·entitle ment 보호'로 'entitlement'가 'entitle ment'로 쪼개져 렌더된다. 원지문의 'specialized entitlement protection mechanisms'를 지칭하는 핵심 용어가 손상 용어(비단어 분절)로 노출되므로 V4의 '비단어·손상 용어 금지' 기준 위반."
+    },
+    {
+      "code": "V4-LOOSE-PARAPHRASE",
+      "severity": "minor",
+      "evidence": "해설의 '취약 집단의 성장을 인정하면서도'는 원문 'The potential contribution of greater economic success, if it involves vulnerable groups, cannot be denied'(취약 집단을 포괄하는 조건 하에서 성장의 잠재적 기여 인정)를 '취약 집단의 성장'으로 압축해 조건절 의미를 흐린다. 논지 전달은 유지되나 부정확한 귀속."
+    },
+    {
+      "code": "V1-NOTE-NO-RENDER-FIELD",
+      "severity": "minor",
+      "evidence": "렌더 지문 필드가 '(렌더 지문 없음)'. TOPIC 유형은 지문 변형이 의도되지 않으므로 원지문 그대로 노출로 해석해 V1 통과 처리. 원지문 자체는 접합 파손·중복·누락·고아 문장부호 없이 무결('a large part of the population derive'의 복수 일치는 원전 영국식 용법)."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 4,
+    "C3": 3,
+    "C4": 2,
+    "C5": 2,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — 글의 중심 논지(성장 중심 전략은 직접적 공공 위기 보호 없이는 기근 예방에 불충분) 포착",
+      "temptingBecause": "해당 없음(정답). 마지막 두 문장('explains at best only a small part' → 'real achievements ... direct public support')과 3문장의 'cannot hope to prevent famines without ... direct public intervention'을 종합하면 필연적으로 도달.",
+      "decisiveFlaw": "없음. 단, 다섯 선지 중 유일하게 성장에 비판적인 'limits' 극성 프레임이라 시험 요령만으로도 지목 가능한 단서 누출이 있음(C4 감점 사유)."
+    },
+    {
+      "label": "2",
+      "intent": "예시의 과일반화 — Kenya 농업·Zimbabwe 식량생산 사례를 글 전체 주제로 확대",
+      "temptingBecause": "Kenya의 agricultural sector, Zimbabwe의 food production 등 아프리카 농업 관련 고유명사가 지문에 실제로 등장한다.",
+      "decisiveFlaw": "지문은 이들 성장의 설명력이 'at best only a small part'라고 명시하며, 농업 근대화의 '효과성'을 주장하기는커녕 축소한다. 사례는 성장 무용론의 근거로 동원될 뿐."
+    },
+    {
+      "label": "3",
+      "intent": "전제→처방 전환 — 취약성의 배경 조건을 필자의 해결책 주장으로 바꿔치기",
+      "temptingBecause": "'derive their livelihood from uncertain sources'가 기근 취약성의 핵심 조건으로 지문에 직접 언급되어 어휘 겹침이 강하다.",
+      "decisiveFlaw": "필자가 제시하는 처방은 의존 축소가 아니라 'specialized entitlement protection mechanisms involving direct public intervention'이다. 불확실한 생계는 진단이지 축소 대상 처방으로 주장된 바 없다."
+    },
+    {
+      "label": "4",
+      "intent": "입장 역전·허위 비교 — 필자가 하지 않은 시장 다각화 대 국가 배급 우열 비교를 날조",
+      "temptingBecause": "diversification of economic activities가 1문장에서 기근 대응 후보 전략으로 실제 거명된다.",
+      "decisiveFlaw": "지문은 다각화를 포함한 성장 계열 전략의 기여를 '잠재적'으로만 인정하고, 결론은 정반대로 direct public support가 실질 성과라고 못박는다. 우월성 비교 자체가 지문에 없다."
+    },
+    {
+      "label": "5",
+      "intent": "양보 논점의 주제 승격 — 표면 어휘 최대 중첩의 half-truth",
+      "temptingBecause": "'enhanced economic growth'와 'famine prevention'이 지문 전반의 표면 키워드와 가장 강하게 겹치고, 2문장에서 성장의 기여가 실제로 인정된다.",
+      "decisiveFlaw": "성장의 역할은 'at best only a small part'로 명시적으로 축소되며, 글의 무게중심은 성장의 역할 서술이 아니라 그 한계와 직접 공적 보호의 필수성이다. 양보를 주제로 읽으면 4~5문장의 반전을 놓친다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "CORRUPTED-TOKEN",
+      "severity": "major",
+      "evidence": "해설 본문 'entitle ment' — 'entitlement'의 분절 손상. 학생 노출 텍스트의 핵심 전문 용어."
+    },
+    {
+      "code": "IMPRECISE-ATTRIBUTION",
+      "severity": "minor",
+      "evidence": "'취약 집단의 성장을 인정' — 원문은 '취약 집단을 포괄하는 성장의 잠재적 기여'를 인정하는 조건부 양보. 주체·조건이 압축 왜곡됨."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionsNote": "RUBRIC §C(어법)/§D(빈칸)는 TOPIC 유형에 문자적으로 적용되지 않는다. §D를 유추 적용하더라도 정답 1이 다섯 선지 중 유일한 부정 극성('limits')이라 '극성 하나로 정답을 찍을 수 없다' 조건에 미달하고, 등급이 F이므로 beautiful KILLER의 전제(A등급)도 불충족. 따라서 false.",
+  "grade": "F",
+  "notes": "출처는 Drèze/Sen 계열의 기근-공공개입 논지 지문으로, C1(핵심 논지 겨냥)과 C2(오답 4종이 과일반화·전제→처방 전환·입장 역전·양보 승격으로 각기 다른 오독을 겨냥)는 우수하다. 그러나 (1) 해설의 손상 용어 'entitle ment'가 V4를 실패시켜 공예 점수와 무관하게 F이며, (2) KILLER 요청 대비 실제 난이도는 정답의 유일 부정 극성 프레임과 'without public crisis safeguards'의 원문 직역적 미러링 때문에 상급 3점 문항 수준에 그친다(C4=2, C5=2). 수리 방향: 해설의 'entitle ment'를 'entitlement'로 교정하고 '취약 집단의 성장' 문구를 조건부 양보로 정확화하면 V4 통과. KILLER 정합을 위해서는 오답 중 하나(예: 3번)를 부정 극성 프레임으로 재설계해 정답의 극성 유일성을 깨는 것이 필요하다."
+}

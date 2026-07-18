@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "주어 'all of the CEOs'의 핵은 복수 명사 CEOs이므로 복수 동사 were가 요구되며, 'be concerned that + 절'은 표준 구문. 어법상 옳음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "사역동사 make + 목적어(them) + 원형부정사 구조이므로 bare infinitive 'appear'가 정확히 요구되는 형태. 'appear weak'의 서술 형용사 결합도 정상. 어법상 옳음."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "관계대명사 which는 관계절 내부에서 주어·목적어·전치사 목적어 중 하나의 공백(gap)을 채워야 하는데, 'those subordinates did the same'은 주어(those subordinates)·동사(did)·목적어(the same)가 모두 충족된 완전한 절로 which가 결속할 공백이 없다. 관계부사 대용, 전치사 잔류(stranding), 접촉절 등 어떤 대안 해석으로도 정문이 되지 않으며, 'a culture in which(=where) those subordinates did the same'이 요구된다. 어법상 틀림 — 정답."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'each of the CEOs'에서 each는 문법적으로 단수 취급이므로 단수 동사 was가 정확. 어법상 옳음."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'a leadership identity based on values...'는 축약 관계절(identity [which is] based on ...)로서 과거분사 후치 수식이 정확한 형태. identity가 base 행위의 대상이므로 수동 분사 based가 맞음. 어법상 옳음."
+    }
+  ],
+  "note": "형식 문법 검증 기준으로 (C)만 유일하게 비문. 관계절 포화(saturation) 테스트에서 which의 공백 부재가 결정적이며, 나머지 네 밑줄은 수일치(A, D), 사역 원형부정사(B), 축약 관계절 분사(E)로 모두 정문. 복수 정답 여지 없음."
+}

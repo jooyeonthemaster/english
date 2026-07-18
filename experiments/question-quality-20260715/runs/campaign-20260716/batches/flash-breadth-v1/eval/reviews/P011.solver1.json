@@ -1,0 +1,35 @@
+{
+  "pid": "P011",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "in-flow",
+      "reason": "도입(잘린 첫머리의 style/background 언급)을 이어받아 재현적(representational) 작품에서 스타일이 배경 역할로서 심적 모델 구성을 돕는다는 주제 축을 세운다. 이후 ③의 표현주의 작품과의 대조 구도의 한 축이므로 흐름의 핵심."
+    },
+    {
+      "label": "②",
+      "verdict": "in-flow",
+      "reason": "재현적 작품(①)의 감상 과정 서술로 자연스럽게 이어진다. 'uncertainty'가 잠깐 걸렸으나(재현적=쉽게 읽힘과의 미세한 긴장) plays/stories의 서사적 서스펜스로 해석하면 '즐거움과 불확실성이 결말까지 감상자를 견인한다'는 진술은 매끄러운 처리(pragmatic 독해)의 묘사로 성립한다. 흐름을 깨지 않음 — 가장 매력적인 오답이었으나 결함이 아니라 유혹 수준."
+    },
+    {
+      "label": "③",
+      "verdict": "in-flow",
+      "reason": "①-②의 재현적 작품과 대조되는 표현주의 작품 소개. 양식적 장치가 소재와 부조화를 이루어 disquieting atmosphere를 만든다는 내용은 ⑤의 'less readable → aesthetic attitude 필요' 논리의 직접 전제가 된다."
+    },
+    {
+      "label": "④",
+      "verdict": "out-of-flow",
+      "reason": "정답. '불안한 분위기가 즉시 일상의 실용적 경험과 연결시켜 혼란을 쉽게 해소하게 한다'는 글의 논지를 정반대로 뒤집는다. (1) 글 전체는 낮은 가독성이 일상의 pragmatic attitude가 아닌 aesthetic attitude를 요구한다고 주장하는데 ④는 실용적 경험으로 쉽게 해소된다고 말한다. (2) ⑤의 'Thus'는 ③의 부조화/불안 분위기에서 자연 귀결되며 ④를 제거하면 ③→⑤가 매끄럽다. ④를 두면 '쉽게 해소된다, 따라서 미적 태도가 필요하다'는 비논리가 생긴다. (3) 'easily resolve any confusion'은 후행의 'active involvement provides a basis for depth of aesthetic processing'과도 모순."
+    },
+    {
+      "label": "⑤",
+      "verdict": "in-flow",
+      "reason": "③의 표현주의적 부조화에서 'Thus'로 귀결되는 핵심 결론: 덜 읽히는 작품의 관습 이탈이 미적 태도의 필요성을 상기시킨다. 마지막 두 문장(능동적 개입→깊은 미적 처리, pragmatic/aesthetic 태도 전환)으로 직결되므로 흐름의 중추."
+    }
+  ],
+  "note": "④는 단순 무관 문장이 아니라 논지 역전형 삽입 문장으로, ③의 'disquieting atmosphere'를 지시어로 이어받아 표면 응집성은 갖췄으나 의미상 글 전체 주장(비가독성→미적 태도 요구)과 정면 충돌한다. ②의 'uncertainty'는 원문 계열 표현('pleasure and interest'류)에서 변형된 듯한 미세 seam이 있어 최상위권도 잠깐 흔들릴 수 있으나 서사적 서스펜스 독해로 옹호 가능해 복수정답 소지는 없다. 지문 첫머리가 ', background).'로 잘려 있는 점은 문항 자체 결함이라기보다 발췌 절단으로 보이나 실전 제시문이라면 손질 필요."
+}

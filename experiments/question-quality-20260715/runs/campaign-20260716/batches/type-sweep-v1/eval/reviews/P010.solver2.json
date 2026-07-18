@@ -1,0 +1,35 @@
+{
+  "pid": "P010",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "형식적 검증: 'they'의 담화 선행사는 직전 발화 \"Aren't these cool?\"의 지시대명사 'these'와 동일 지시체여야 한다. 'these'는 'pointing at a patterned red shirt and yellow pants'로 명시적으로 고정되어 있다. 밴드 멤버들은 해당 시점(쇼핑 장면)의 담화 영역에 존재하지 않으며, 서술어 'a bit too colorful'은 의복의 색채 속성을 서술하므로 인물 집단을 주어로 취하면 의미 선택제약(selectional restriction) 위반이다. 성립 불가."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "싱가포르 자매대학 학생들은 지문 도입부에서 배경 정보로만 언급되었고, 밑줄 문장이 속한 쇼핑 대화의 활성 담화 영역(active discourse referents)에 없다. 또한 'too colorful'이라는 술어가 학생 집단에 적용될 논리적 근거가 전무하다. 성립 불가."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "형식적 증명: (i) 인접성 — 'they'는 직전 발화의 'these'를 재수용(anaphoric resumption)하며, 'these'는 동반 분사구 'pointing at a patterned red shirt and yellow pants'에 의해 지시체가 명시적으로 고정된다. (ii) 수 일치 — 복수 대명사 'they'와 복수 지시체(셔츠+바지 2점) 일치. (iii) 술어 정합 — 'a bit too colorful'은 'patterned red ... and yellow'라는 색채 기술과 직접 호응한다. (iv) 담화 논리 — Jeff가 'objected' 후 'Instead' 흰 셔츠·검은 청바지를 골랐다는 후속 문장은 'they'가 화려한 옷을 부정적으로 평가한 대상임을 확증한다. 유일하게 성립하는 지시체."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "시간 순서상 모순: 흰 셔츠와 검은 청바지는 밑줄 발화 이후에 'Instead, Jeff picked out...'으로 비로소 담화에 도입되므로, 밑줄 시점에는 선행사로 존재하지 않는다(후방조응 cataphora로 볼 통사적 장치도 없음). 또한 흰색·검은색 조합에 'too colorful'을 서술하면 명백한 의미 모순이다. 성립 불가."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "리허설의 실수들은 밑줄 발화보다 훨씬 뒤의 사건으로, 밑줄 시점의 담화에 존재하지 않는 지시체다. 선행사는 원칙적으로 대명사보다 앞서 도입되어야 하며 이를 뒤집을 어떤 문법적 장치도 없다. 술어 'too colorful' 역시 '실수'에 적용 불가능하다. 성립 불가."
+    }
+  ],
+  "note": "지시대명사 문항. 'they'는 직전 'these'(= patterned red shirt and yellow pants)를 재수용하며, 수 일치·술어 정합('too colorful' ↔ 'red/yellow patterned')·후속 담화('Instead' + 흰/검 선택)가 모두 ③을 유일 지시체로 수렴시킨다. 대안 해석(후방조응, 다른 복수 선행사) 탐색 결과 성립하는 경우 없음. 미끼 ④는 색채 술어와 모순, ①②⑤는 담화 영역 밖. 단일 정답으로 확정."
+}

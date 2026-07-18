@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong-but-attractive",
+      "reason": "실전에서 가장 끌리는 미끼. 표현주의 작품이 novel stylistic devices를 전면화하므로 'style에 집중하라'로 읽히지만, 'exclusive focus on style'이 결정적 결함이다. 지문의 핵심은 style이 subject matter와 불협화음으로 맞서는 상호작용 전체(the whole episode)를 능동적으로 감상하라는 것이지 style만 배타적으로 보라는 것이 아니다. 또한 뒤따르는 active involvement, pragmatic/aesthetic attitude 전환과도 연결이 약하다."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "작가의 의도된 메시지 복원은 지문 어디에도 근거가 없다. 지문은 수용자의 태도 전환(pragmatic → aesthetic)과 능동적 관여를 말할 뿐 작가 의도 해석을 다루지 않는다."
+    },
+    {
+      "label": "3",
+      "verdict": "correct",
+      "reason": "삽입 시 'reminds the viewer that a non-everyday framework for reception is called for to appreciate the whole episode'로 문법 결합(seam)이 자연스럽다. 논리적으로도 완벽 호응: less readable한 작품의 관습 이탈은 일상적 수용 방식이 통하지 않음을 일깨우며, 이는 직후의 'active involvement'와 마지막 문장의 pragmatic attitude of everyday life ↔ aesthetic attitude 전환 능력으로 정확히 회수된다. non-everyday framework = aesthetic attitude의 패러프레이즈."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong-but-attractive",
+      "reason": "정반대 미끼. smooth한 life-like mental model 구축은 representational 작품 쪽 서술(style이 mental model 구성을 facilitate)이며, less readable한 표현주의 작품은 바로 그 매끄러운 구축을 교란함으로써 능동적 관여를 유발한다. 지문 어휘를 재활용해 반대 방향으로 뒤집은 전형적 오답."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "인과 역전 + 문법 파탄. depth of aesthetic processing/reflection은 active involvement의 결과이지 선행(prior) 조건이 아니다. 또한 'prior depth of aesthetic reflection prompts the work to appreciate the whole episode'는 the work가 appreciate의 의미상 주어가 되어 의미적으로 성립하지 않는다."
+    }
+  ],
+  "note": "블라인드 풀이. 렌즈: 최상위권 수험생 실전 풀이. 빈칸 문장의 'reminds the viewer that ___ to appreciate the whole episode' 구조상 빈칸은 '평소와 다른 수용 태도가 요구된다'는 내용이어야 하며, 직후 active involvement와 마지막 문장 pragmatic/aesthetic attitude 대비가 결정적 장거리 단서. ①(style 배타적 집중, exclusive 과잉)과 ④(정반대 방향)이 매력적 오답으로 기능하나 모두 명확히 배제 가능. 정답 후보는 ③ 단독으로 좁혀짐."
+}

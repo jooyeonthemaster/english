@@ -1,0 +1,35 @@
+{
+  "pid": "J016",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'highly'는 형용사 'representational'을 수식하는 부사로 정확하다 ('highly representational paintings'). 명사구 앞이라 형용사를 기대하게 하는 가벼운 미끼가 있으나 수식 대상은 명사가 아니라 형용사이므로 부사가 옳다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'that'은 선행사 'subject matter'(단수 불가산)를 받는 주격 관계대명사이고 관계절 내 동사 'resembles'가 단수 일치한다. 전치사 'on'의 목적어 뒤 제한적 관계절로 that/which 모두 가능하므로 문제 없다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "진짜 주어는 복수 핵명사 'Feelings'이고 'of pleasure and uncertainty'는 전치사구 수식어다. 동사 바로 앞의 단수명사 'uncertainty'가 'carries'를 유혹하는 전형적 근접 일치 함정이지만, 복수 'carry'가 옳다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect (answer)",
+      "reason": "'... devices work against the subject matter thereby created a disquieting atmosphere'에서 'created'는 성립 불가. 대안 해석을 적극 검토했다: (1) 'the subject matter thereby created'를 축약 관계절(과거분사 후치수식)로 읽으면 뒤의 목적어 NP 'a disquieting atmosphere'가 어떤 동사에도 지배받지 못하고 남아 비문. (2) 정형동사 과거형으로 읽으면 'work'와 잇는 접속사가 없고 주어도 결여되어 비문. 결과를 나타내는 현재분사 'thereby creating a disquieting atmosphere'만이 정문이다 (분사의 의미상 주어 = 앞 절 전체/devices의 작용, 능동 + 목적어 보유이므로 현재분사)."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "that절 내 'an aesthetic attitude is needed to appreciate...'는 단수 주어 + need의 수동태로 의미(태도가 요구된다)와 수 일치 모두 정확하며, 목적의 to부정사 연결도 자연스럽다."
+    }
+  ],
+  "note": "정답은 (D) 하나로 수렴. 'thereby + 분사' 구문에서 목적어('a disquieting atmosphere')의 존재가 과거분사(수동) 독해와 축약 관계절 독해를 모두 차단하는 깔끔한 장거리 단서라 이의신청 여지가 없다. (C)의 근접 일치 함정이 매력적 오답 역할을 하나 상위권에게는 명백. 문항 성립성 양호."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P012",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "'조기 교정이 가장 효과적'은 지문이 소개하는 의견 스펙트럼의 한 극단('rejection and correction')일 뿐이며, 필자는 이를 채택하지 않는다. 필자의 처방(먼저 수용 후 확장)과 정면 배치."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "표준 영어의 취업·진학 실익은 '표준 영어를 가르치는 근본 이유'라는 배경 설명이고, 학생들이 면접·진학 준비 때 스스로 깨닫는다고 했을 뿐(Students realize this...), 교사가 먼저 설명해야 한다는 행위 처방은 지문 어디에도 없다."
+    },
+    {
+      "label": "3",
+      "verdict": "answer",
+      "reason": "'first accept the dialect and then build on it'과 정확히 대응. 예시에서 교사가 'I ain't got no pencil'을 'Oh, you don't have a pencil.'로 표준형 재구성(recast)해 주는 장면이 '표준 표현으로 확장'을 뒷받침한다. 필자의 주장과 완전 일치."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "매력적 오답. '수용'이라는 핵심어와 'language development and attitudes toward school'의 직역('학교 태도와 언어 발달')이 그대로 들어 있어 순간 끌린다. 그러나 'complete acceptance'는 지문에서 의견 스펙트럼의 반대쪽 극단으로 제시된 입장이지 필자의 접근이 아니며, '~만이 ... 보장한다'는 절대 표현도 지문에 근거가 없다. 필자는 수용 후 확장이라는 중간 경로를 주장한다."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "지문은 'results won't be apparent immediately'라고 명시하여 즉각적 효과 확인을 전제로 한 전환을 부정한다. 또한 문화 반응적 교수는 전환의 목적지가 아니라 필자가 처음부터 권하는 접근 자체다."
+    }
+  ],
+  "note": "블라인드 풀이. 최상위권 실전 순서: 주장 문항이므로 처방 문장(should/most consistent with) 탐색 → 'first accept the dialect and then build on it' 확정 → 선지 대조. ④가 지문 어휘를 그대로 차용한 전형적 극단화 미끼로 잠깐 유혹했으나 'complete acceptance'가 필자 입장이 아님이 명시적이라 쉽게 배제됨. 정답이 ③ 하나로 깨끗하게 좁혀지는 건전한 문항."
+}

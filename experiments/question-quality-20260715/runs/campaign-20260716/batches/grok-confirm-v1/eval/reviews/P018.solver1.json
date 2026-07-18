@@ -1,0 +1,35 @@
+{
+  "pid": "P018",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "'started to skip the formal toppings through hasty impatience' fits the seam (started to + V) and the logic: Chloe bit into the scone before the cream-and-jam step, matching 'boldly chose the biscuit-looking thing before her grandmother' and the clincher 'it was mostly all in her mouth already'. The grandmother spreading cream and jam on hers provides the contrast that defines the 'formal toppings' Chloe skipped."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "Trap keyed to the earlier 'carefully mirrored her grandmother's actions' theme, but the narrative explicitly breaks the pattern ('boldly chose... before her grandmother'). Copying the polite order exactly is contradicted by the scone being 'mostly all in her mouth' while grandmother was still spreading cream and jam."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "Directly contradicted by 'After a time, all the sandwiches were eaten up' — there is no sandwich left to select, and the object in her mouth is the scone, not a sandwich."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "Chloe did not even know the word 'scones' ('Scones, was that what they were called?'), so she had not started learning menu labels; and 'it was mostly all in her mouth already' cannot describe learning labels."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Strongest lure — cream-and-jam appears in the immediately preceding sentence, and I felt its pull on first read. But it inverts the meaning: mastering the custom would require spreading cream and jam like grandmother, whereas the scone being already in her mouth shows she bypassed the custom entirely."
+    }
+  ],
+  "note": "Clean single-answer item. The clincher clause 'in fact, it was mostly all in her mouth already' functions as a hard constraint that eliminates 2-5. Distractor 5 is the genuinely attractive near-miss (topical proximity to the previous sentence but polarity-reversed); distractor 2 catches skimmers who anchor on the earlier mirroring motif and miss the 'boldly... before her grandmother' turn. Minor style quibble: 'started to skip' is slightly awkward since skipping is quasi-instantaneous, but it does not create a second defensible answer."
+}

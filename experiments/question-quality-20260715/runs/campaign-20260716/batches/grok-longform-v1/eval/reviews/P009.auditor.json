@@ -1,0 +1,76 @@
+{
+  "pid": "P009",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": false,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-SLOT-AGREEMENT",
+      "severity": "critical",
+      "evidence": "선지 ⑤를 빈칸에 넣으면 'recognizing and accepting that the factors that drive evidence-based decision-making requires treating others' personal factors as identical.'이 된다. 유일하게 가능한 파스는 주어가 복수 핵명사 'the factors (that drive evidence-based decision-making)'이고 정형동사가 단수 'requires'인 구조여서 수일치가 깨진 비문이다. BLANK_INFERENCE에서 오답은 삽입 시 문법적이어야 하고 의미로만 탈락해야 하는데(§D 1조: 일부 오답만 문법으로 탈락 금지), ⑤는 의미를 읽지 않고 문법만으로 소거된다."
+    },
+    {
+      "code": "V3-SEAM-PLEONASM-ANSWER",
+      "severity": "major",
+      "evidence": "정답 ①을 넣은 완성문은 'the factors that drive others' ethical drivers may lead them to make choices unlike one's own'으로, 'factors that drive ... drivers'라는 동어반복(요인이 요인을 추동)이 생겨 부자연스럽다. 원문은 'the factors that drive other people's codes and decision making may be different'로 자연스러웠으나, 빈칸을 관계절 내부 목적어 자리부터 걸어 놓은 seam 설계 탓에 정답 완성문 자체가 원어민이 쓰지 않을 문장이 됐다. 'them'의 선행사가 소유격 others'뿐인 점도 어색함을 더한다."
+    },
+    {
+      "code": "SEAM-SPLIT-CONSTITUENT",
+      "severity": "major",
+      "evidence": "빈칸이 단일 구성성분이 아니라 [관계절 동사 drive의 목적어 NP] + [모문 주어 the factors의 술부]라는 두 구성성분에 걸쳐 있다. 그 결과 모든 선지가 '목적어 NP + 정형 술부' 접합을 강요받아 ②('factors that drive the personal factors')처럼 중첩이 어색한 완성문이 양산되고 ⑤에서는 수일치 파탄이 났다. 빈칸 자리 선정 자체가 결함이다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 1,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — 삭제된 span 'other people's codes and decision making may be different'의 재진술(타인의 윤리 동인은 나와 다른 선택으로 이어질 수 있다)",
+      "temptingBecause": "해당 없음(정답). 본문 후반의 '원칙은 개인 간·개인 내에서 다르다', '같은 개인도 상황에 따라 다른 선택을 한다'와 극성·내용이 정합한다.",
+      "decisiveFlaw": "정답이므로 의미 결함은 없으나, 삽입 시 'factors that drive others' ethical drivers'라는 동어반복 seam이 생기고 추상화 수준이 원문 거의 그대로여서 KILLER 요구에 못 미친다."
+    },
+    {
+      "label": "2",
+      "intent": "half-truth/동일시 과확대 — 자기 규범 요인 이해라는 어휘를 빌려 개인 간 차이를 소거",
+      "temptingBecause": "직전 구절 'the personal factors that influence your own code of behaviour'의 어휘를 그대로 재사용해 표면 유사도가 높다.",
+      "decisiveFlaw": "'equally shape others''는 'these principles vary both between and within individuals' 및 결론의 '타인의 요인은 다를 수 있다'와 정면 모순. 또한 삽입 완성문이 'factors that drive the personal factors'로 중첩되어 어색하다."
+    },
+    {
+      "label": "3",
+      "intent": "scope 축소(condition loss) — 'alone'으로 원인 집합을 일부 신념으로 한정",
+      "temptingBecause": "religious·civic beliefs가 본문에 실제로 명시된 요인이라 앵커가 있다.",
+      "decisiveFlaw": "본문은 social, religious, or civic beliefs에 formal/informal learning experiences, 맥락 의존성까지 복수 요인을 제시하므로 'alone'이 원인 범위를 왜곡한다. 절대어 'alone'이 즉시 소거 단서가 되기도 한다."
+    },
+    {
+      "label": "4",
+      "intent": "인과·극성 역전 — 맥락 변화를 처방 규범으로의 수렴으로 뒤집음",
+      "temptingBecause": "'changing circumstances'가 'under different circumstances ... different choices' 문장을 앵커로 삼는다.",
+      "decisiveFlaw": "본문은 'follow a prescribed set of ethical codes or rules'를 명시적으로 거부하고 가변성을 주장하므로 'one prescribed set of codes'로의 수렴은 이중으로 반대 방향이다. 'one prescribed set'이라는 절대 표현이 소거를 더 쉽게 만든다."
+    },
+    {
+      "label": "5",
+      "intent": "영역 혼동 — 서두의 비판적 사고(증거 평가) 정의를 윤리 결론 자리에 이식하고 요인 동일시를 주장",
+      "temptingBecause": "'evidence-based decision-making'이 첫 문장의 'identification and evaluation of evidence to guide decision-making'과 표면적으로 겹친다.",
+      "decisiveFlaw": "의미상 'treating others' personal factors as identical'이 차이 인정 결론과 모순일 뿐 아니라, 삽입 시 'the factors that ... requires'로 수일치가 깨진 비문이 되어 문법만으로 탈락한다(치명 결함, §D 위반)."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "해설의 지문 분석·오답 사유 자체는 사실과 일치하나, ⑤가 삽입 시 수일치 비문이 된다는 결함을 인지하지 못한 채 의미 결함만 서술한다. 해설 오류는 아니지만 문항 결함이 검수에서 걸러지지 않았음을 시사한다."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1·V2·V4·V5는 통과: 렌더 지문은 의도된 빈칸 외 손상이 없고, 의미 기준으로는 ①만이 유일 정답이며(②동일시, ③alone 축소, ④처방 수렴, ⑤동일시+영역혼동 모두 본문 모순), 해설·keyPoints·라벨 동기화도 정확하다. 그러나 V3 실패: (1) ⑤ 삽입 완성문 'the factors that drive evidence-based decision-making requires ...'는 수일치가 깨진 비문으로, 빈칸 유형에서 오답은 의미로만 탈락해야 한다는 유형 의도와 어긋난다. (2) 정답 ① 삽입 완성문도 'factors that drive others' ethical drivers'라는 동어반복으로 부자연스럽다. 근본 원인은 빈칸을 관계절 동사 drive의 목적어 중간부터 걸어 두 구성성분에 걸치게 한 seam 설계다. KILLER 조건 미충족: ⑤가 문법으로 탈락하고(§D 1조 위반), 유일하게 '다름' 극성을 가진 선지가 정답이라 극성 하나로 찍을 수 있으며(§D 4조 위반), 정답이 삭제 span의 거의 문자 그대로의 paraphrase여서 추상화가 없다. 실제 난이도는 중하 수준으로 KILLER 라벨과 불일치(C5=1), 극성 누출로 C4=1. 수리 방향: 빈칸을 'the factors that drive ___' 가 아니라 that절 전체('recognizing and accepting that ___') 또는 완결 구성성분으로 재설정하고, ⑤의 동사를 복수형으로 교정하며, 오답 중 최소 1~2개에 '다름' 극성을 부여해 극성 shortcut을 차단해야 한다."
+}

@@ -1,0 +1,40 @@
+{
+  "batchId": "grok-lf-med-v1",
+  "phase": "grok2",
+  "atKst": "2026-07-17T19:57:22.723+09:00",
+  "assignments": 8,
+  "slotsConsumed": 14,
+  "accepted": 7,
+  "modelCalls": 34,
+  "inputTokens": 72235,
+  "outputTokens": 22555,
+  "costUsd": 0.317061,
+  "ledgerAfter": {
+    "used": 879,
+    "cap": 1000,
+    "costUsd": 30.992832
+  },
+  "byArm": {
+    "LM-B": {
+      "n": 4,
+      "accepted": 4,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 6,
+      "costUsd": 0.274513
+    },
+    "LM-G": {
+      "n": 4,
+      "accepted": 3,
+      "gateRejected": 0,
+      "noCandidate": 1,
+      "slots": 8,
+      "costUsd": 0.042548
+    }
+  },
+  "models": {
+    "standard": "google/gemini-3.5-flash",
+    "premiumQgen": "x-ai/grok-4.5"
+  },
+  "durationMs": 411310
+}

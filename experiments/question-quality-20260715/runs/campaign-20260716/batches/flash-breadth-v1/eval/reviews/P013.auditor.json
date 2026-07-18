@@ -1,0 +1,70 @@
+{
+  "pid": "P013",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-minor-stem-wording",
+      "severity": "minor",
+      "evidence": "발문 '밑줄 친 부분이 함축 의미하는 바로 가장 적절한 것은?'에서 '함축 의미하는'은 비표준 어색 표현. 수능 표준 발문은 '밑줄 친 ...이/가 다음 글에서 의미하는 바로 가장 적절한 것은?'. 의미 전달에는 지장 없어 V3 실패로는 판정하지 않음."
+    },
+    {
+      "code": "V4-minor-unstated-inference",
+      "severity": "minor",
+      "evidence": "오답 ④ 해설 '리허설과 본 무대에서 입었으므로' — 본 무대(본 공연)에서 그 옷을 입었다는 진술은 지문에 명시되지 않음(리허설 착용과 'perfect clothing for the performance' 구매 목적에서의 합리적 추론). 정오 판정에는 영향 없는 경미한 첨가."
+    }
+  ],
+  "craft": {
+    "C1": 2,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 2,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "actor/topic swap — 밑줄의 'rhythm'과 'band mate' 표층 앵커를 이용해 원인을 '동료들의 새 음악 스타일 부적응'으로 치환",
+      "temptingBecause": "밑줄 자체가 음악적 어려움(rhythm)이고 직후 문장에 band mate(Tom)가 등장하므로 표층 연결이 자연스러움",
+      "decisiveFlaw": "지문 어디에도 새로운 음악 스타일이나 스타일 차이 언급이 없음. 어려움의 원인은 직전 문장의 nervousness로 명시됨"
+    },
+    {
+      "label": "②",
+      "intent": "정답 — confidence→nervousness 전환(관객 수를 생각한 순간)이 리허설 실수의 원인임을 포착",
+      "temptingBecause": "정답이므로 해당 없음. 직전 문장의 'His confidence was quickly changed to nervousness'와 직결",
+      "decisiveFlaw": "없음(유일 정답). 다만 'overwhelming'은 지문의 nervousness보다 다소 강한 표현이나 함축 의미 선지로 허용 범위"
+    },
+    {
+      "label": "③",
+      "intent": "half-truth — 도입부의 '기다림' 사실을 앵커로 육체적 피로라는 허위 인과를 구성",
+      "temptingBecause": "지문 서두에 Garcia가 형을 기다린 사실이 실제로 존재",
+      "decisiveFlaw": "Garcia 본인이 'I haven't waited long'이라고 말했고, 육체적 피로 묘사가 전혀 없음. long wait 자체가 지문과 모순"
+    },
+    {
+      "label": "④",
+      "intent": "polarity reversal — 옷 구매 에피소드를 앵커로 '형이 고른 옷에 대한 불만'이라는 반대 극성 구성",
+      "temptingBecause": "Garcia가 처음 고른 화려한 옷을 Jeff가 반대하고 다른 옷을 골라준 갈등 장면이 실제로 존재",
+      "decisiveFlaw": "Garcia는 추천받은 옷을 사서 'felt good'이라고 명시적으로 긍정 반응. 불만의 근거가 지문에 없음"
+    },
+    {
+      "label": "⑤",
+      "intent": "timeline/condition error — 후반부 관객 반응 요소를 앞의 리허설 장면으로 이식",
+      "temptingBecause": "'how many people would be there'와 후반 audience 언급이 있어 관객 관련 선지가 표층상 그럴듯함",
+      "decisiveFlaw": "밑줄 시점은 리허설로 관객 반응 자체가 존재하지 않으며, 본 공연에서는 오히려 관객이 환호함. 원인은 반응 부재가 아니라 관객 수에 대한 사전 불안"
+    }
+  ],
+  "explanationIssues": [
+    "오답 ④ 해설이 '본 무대에서 입었으므로'라고 지문에 명시되지 않은 사실을 단정(경미, 합리적 추론 범위)",
+    "정답 해설의 '극도의 불안감'은 지문의 nervousness보다 강한 표현이나 선지 ②의 overwhelming과 정합적이어서 허용",
+    "그 외 통사·인과 분석은 지문과 일치. 감정 곡선(confidence→nervousness→안정→joy) 추적 정확"
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1: 렌더 지문은 밑줄 마커(__struggled with the rhythm__) 2개 외 원지문과 문자 단위 동일함을 diff로 확인. 라벨 ①~⑤와 선언 정답 ② 일치. V2: 5개 선지 독립 검증 결과 ②만 성립 — ①(스타일 언급 없음), ③('haven't waited long'과 모순), ④('felt good'과 모순), ⑤(리허설엔 관객 반응 없음, 본 공연은 환호). 유일 정답 확정. V3: 지문·선지 영문 모두 문법적. 발문의 '함축 의미하는 바로'가 비표준 어색 표현(경미). V4: 해설의 인과·감정 흐름 분석이 지문과 일치, 오답 해설도 각 선지 내용과 정확히 대응. V5: 정답 라벨·선지·해설·keyPoints 상호 모순 없음. 공예 결함(재설계 필요 사유): (1) C1=2 — 밑줄 'struggled with the rhythm'은 문자 그대로의 서술이지 비유·관용 표현이 아니어서 IMPLIED_MEANING 유형 적합성이 약함. 정답이 '함축 의미'가 아니라 사실상 원인 설명에 가까움. 수능 21번식 함축 의미 문항은 표층 의미와 맥락 의미가 갈리는 표현을 요구. (2) C3=2, C5=2 — 밑줄 직전 문장에 nervousness가 명시돼 keyword match(nervousness→anxiety)만으로 즉시 풀리고, 오답 4개가 모두 명시적 모순으로 즉시 소거됨. INTERMEDIATE 요청 대비 실제 난이도는 LOW 수준. (3) C2=3 — 오답들이 각각 다른 함정 유형(actor swap/half-truth/polarity reversal/timeline error)을 갖는 점은 양호. C4=3 — 누출은 없으나 인접 문장의 과잉 단서로 정답이 지나치게 직접 지시됨. C6=3 — 해설 정확·명료하나 ④ 해설의 경미한 첨가. 합계 15, 모든 V 통과 → C 등급(밑줄 표현을 비유적 표현으로 교체하거나 단서 거리를 늘리는 재설계 필요). 요청 난이도 INTERMEDIATE(KILLER 아님) → killerConditionsMet=false."
+}

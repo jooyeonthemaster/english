@@ -1,0 +1,21 @@
+{
+  "batchId": "stdfix-blank-funnel-v1",
+  "phase": "stdfix",
+  "note": "A-NEW: STANDARD 빈칸 KILLER 풀 깔때기 — span-carve 게이트 + contract 유형필터 다이어트 적용본 (H-STD-1/2 + 빈칸 다이어트)",
+  "concurrency": 3,
+  "providerRouting": "none",
+  "assignments": [
+    { "itemId": "bf-002", "frameId": "blank-supply-v2-002", "subType": "BLANK_INFERENCE", "difficulty": "KILLER", "plan": "STANDARD", "armId": "A-NEW", "funnel": true },
+    { "itemId": "bf-012", "frameId": "blank-supply-v2-012", "subType": "BLANK_INFERENCE", "difficulty": "KILLER", "plan": "STANDARD", "armId": "A-NEW", "funnel": true },
+    { "itemId": "bf-015", "frameId": "blank-supply-v2-015", "subType": "BLANK_INFERENCE", "difficulty": "KILLER", "plan": "STANDARD", "armId": "A-NEW", "funnel": true },
+    { "itemId": "bf-017", "frameId": "blank-supply-v2-017", "subType": "BLANK_INFERENCE", "difficulty": "KILLER", "plan": "STANDARD", "armId": "A-NEW", "funnel": true },
+    { "itemId": "bf-028", "frameId": "blank-supply-v2-028", "subType": "BLANK_INFERENCE", "difficulty": "KILLER", "plan": "STANDARD", "armId": "A-NEW", "funnel": true },
+    { "itemId": "bf-031", "frameId": "blank-supply-v2-031", "subType": "BLANK_INFERENCE", "difficulty": "KILLER", "plan": "STANDARD", "armId": "A-NEW", "funnel": true },
+    { "itemId": "bf-035", "frameId": "blank-supply-v2-035", "subType": "BLANK_INFERENCE", "difficulty": "KILLER", "plan": "STANDARD", "armId": "A-NEW", "funnel": true },
+    { "itemId": "bf-038", "frameId": "blank-supply-v2-038", "subType": "BLANK_INFERENCE", "difficulty": "KILLER", "plan": "STANDARD", "armId": "A-NEW", "funnel": true },
+    { "itemId": "bf-040", "frameId": "blank-supply-v2-040", "subType": "BLANK_INFERENCE", "difficulty": "KILLER", "plan": "STANDARD", "armId": "A-NEW", "funnel": true },
+    { "itemId": "bf-041", "frameId": "blank-supply-v2-041", "subType": "BLANK_INFERENCE", "difficulty": "KILLER", "plan": "STANDARD", "armId": "A-NEW", "funnel": true },
+    { "itemId": "bf-056", "frameId": "blank-supply-v2-056", "subType": "BLANK_INFERENCE", "difficulty": "KILLER", "plan": "STANDARD", "armId": "A-NEW", "funnel": true },
+    { "itemId": "bf-077", "frameId": "blank-supply-v2-077", "subType": "BLANK_INFERENCE", "difficulty": "KILLER", "plan": "STANDARD", "armId": "A-NEW", "funnel": true }
+  ]
+}

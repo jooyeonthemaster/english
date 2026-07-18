@@ -1,0 +1,38 @@
+{
+  "pid": "P006",
+  "answer": "Not until we are massaged by warm water, without being able to check our e-mail, can we finally hear the quiet voices in the backs of our heads telling us about the insight.",
+  "multipleDefensible": true,
+  "defensibleLabels": [
+    "Not until we are massaged by warm water, without being able to check our e-mail, can we finally hear the quiet voices in the backs of our heads telling us about the insight.",
+    "Not until we're being massaged by warm water, without being able to check our e-mail, can we finally hear the quiet voices in the backs of our heads telling us about the insight."
+  ],
+  "confidence": "medium",
+  "perOption": [
+    {
+      "label": "조건1: 'Not until' 문두",
+      "verdict": "충족",
+      "reason": "원문 강조구문 'It's not until ~ that ...'을 'Not until + 부사절' 문두 배치로 전환. 답안이 Not until로 시작함."
+    },
+    {
+      "label": "조건2: 주어-조동사 도치",
+      "verdict": "충족",
+      "reason": "Not until 부사절이 문두에 오면 주절은 의무 도치. '~ can we finally hear ~'로 조동사 can + 주어 we 도치. 원문의 'we're finally able to hear'를 그대로 옮겨 'are we finally able to hear'로 쓰면 도치 조건은 충족하지만 35~36단어가 되어 조건4 위반 — 33단어 제한이 be able to → can 재구성을 강제하는 설계."
+    },
+    {
+      "label": "조건3: 'without being able to' 사용",
+      "verdict": "충족",
+      "reason": "원문의 형용사구 'unable to check our e-mail'(분사구문적 삽입)을 전치사구 'without being able to check our e-mail'로 치환. 의미('이메일을 확인할 수 없는 상태로') 보존됨."
+    },
+    {
+      "label": "조건4: 총 33단어",
+      "verdict": "충족(단, 유일해 아님)",
+      "reason": "wc -w 검증: 제출 답안 정확히 33단어(하이픈 'e-mail'=1단어 기준). 함정 검증 — 지문 그대로 'are we finally able to hear' + 진행수동 유지 시 36단어(위반), 진행수동 유지 + can 재구성 시 34단어(위반). 33단어를 만들려면 (a) 'we are massaged'(단순수동) 또는 (b) 'we're being massaged'(축약+진행수동) 중 택일해야 하며 둘 다 33단어로 조건 전부 충족."
+    },
+    {
+      "label": "매력적 오답(유혹) 기록",
+      "verdict": "함정 확인",
+      "reason": "최상위권일수록 지문 문장을 최대한 보존해 'Not until we are being massaged by warm water, without being able to check our e-mail, are we finally able to hear ...'(36단어)로 쓰려는 유혹이 강함 — 도치·Not until·without being able to 세 조건을 모두 만족하면서 단어 수만 초과하므로, 33단어 조건을 끝까지 검산하지 않으면 걸려드는 설계. 또한 '조동사 도치' 조건을 be동사 도치(are we)로 충족했다고 안심하기 쉬움(넓은 의미로는 허용되나 단어 수가 막음)."
+    }
+  ],
+  "note": "문항 자체는 풀이 가능하고 조건 4개가 상호 정합적이며, 33단어 제한이 원문 복사를 차단하는 좋은 장치로 작동한다. 다만 33단어를 만족하는 표면형이 유일하지 않다: (a) 'we are massaged'(단순수동, 진행 뉘앙스 '받고 있어' 일부 소실)와 (b) 'we're being massaged'(축약 1단어 계산 시 진행수동 보존) 모두 33단어로 전 조건 충족. 'do we finally hear' 류 도치도 33단어이나 '들을 수 있게 된다'의 가능 의미가 소실되어 열등. 서술형 채점에서는 등가 표현으로 복수 인정이 관례이므로 치명 결함은 아니지만, 단어 수로 답을 유일화하려는 의도였다면 축약형 계산 규칙(we're=1단어 여부) 명시가 없어 미세한 채점 시비 여지가 있음. 대표 답안은 축약 없는 (a)를 제시."
+}

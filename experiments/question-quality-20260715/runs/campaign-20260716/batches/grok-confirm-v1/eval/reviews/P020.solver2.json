@@ -1,0 +1,35 @@
+{
+  "pid": "P020",
+  "answer": "D",
+  "multipleDefensible": false,
+  "defensibleLabels": ["D"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "'an experiment showing (that) human perception and behavior can be influenced...' — present participle post-modifying 'experiment', reduced form of 'an experiment that shows'. 'show' licenses a that-less clausal complement. Grammatical."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "'asked them to create' — ask + object + to-infinitive is the required complementation pattern (ask sb to do sth). Grammatical."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "'Those students who had been exposed to...' — human antecedent 'students', 'who' functions as subject of the relative clause 'who had been exposed'. Grammatical."
+    },
+    {
+      "label": "D",
+      "verdict": "incorrect (the answer)",
+      "reason": "Skeleton test: 'Those students [who had been exposed to an elderly mix of words] ___ almost 40 percent longer to walk...' — with participle 'taking' the subject 'Those students' has no finite verb, leaving a verbless fragment. Rescue parses all fail: (i) absolute construction requires a separate matrix clause (none exists); (ii) stacked reduced relative still leaves no matrix predicate; (iii) no inversion/ellipsis trigger. The comparison 'than those who had been exposed to random words' also demands finite past 'took'. Must be 'took' — ungrammatical as written."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "'as if they were 50 years older than they actually were' — comparative adjective with measure phrase '50 years' plus than-clause; past 'were' after 'as if' (counterfactual) is standard. Grammatical."
+    }
+  ],
+  "note": "Clean item from the grammarian/logician lens: exactly one underline (D) is indefensible under every parse — the sentence lacks a finite matrix verb if 'taking' stands. All other underlines are provably well-formed with no alternative ungrammatical reading. Single defensible answer, high confidence."
+}

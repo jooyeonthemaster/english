@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "(C)",
+  "multipleDefensible": true,
+  "defensibleLabels": ["(C)", "(D)"],
+  "confidence": "medium",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "관계대명사 that의 선행사는 subject matter(단수·불가산)이고 관계절 동사 resembles가 수일치. 'focus is on subject matter that resembles everyday life' 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'the role of background style is to facilitate ...' — role/aim/goal + be + to부정사(주격 보어) 표준 패턴. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "wrong (intended answer)",
+      "reason": "해당 문장 'In highly expressionist works, novel stylistic devices working ... against the subject matter thereby creating a disquieting atmosphere.'에는 정동사가 하나도 없다. 'thereby + V-ing'(결과 분사구문)를 관용 패턴대로 유지하면 정동사 자리는 (C)이며 working → work로 고쳐야 한다. 출제 의도상의 오류 지점."
+    },
+    {
+      "label": "(D)",
+      "verdict": "defensible alternative (design flaw)",
+      "reason": "(C) working을 devices를 수식하는 축약 관계절로 보고 (D)를 creating → create(정동사)로 고치면 'novel stylistic devices working ... against the subject matter thereby create a disquieting atmosphere.'로 완전한 정문이 된다. thereby는 정동사 앞 부사로도 자연스럽다. 즉 문장 수리가 (C)수정/(D)수정 양쪽 모두 성립하여 논리적으로 유일해가 아니다. 'thereby V-ing' 고정 콜로케이션 때문에 수험생 다수는 (D)를 정문으로 두고 (C)를 고르겠지만, 엄밀한 어법 판정으로는 (D)도 옹호 가능한 답."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'an aesthetic attitude is needed to appreciate ...' — 수동태(is needed) + 목적 부정사. 정문."
+    }
+  ],
+  "note": "정동사 부재 문장에서 -ing 두 개((C),(D)) 중 어느 쪽을 정동사로 복원해도 문법적으로 성립하는 이중 정답 구조. 출제 의도는 'thereby creating' 관용 패턴을 근거로 (C)가 확실시되나(원문 추정: devices work ... thereby creating), 블라인드 기준으로는 (D)도 논리적으로 옹호 가능. 최상위권 유혹 기록: 정동사 스캔 → (C)/(D) 양자택일 → 'thereby V-ing' 학습 패턴이 (D)를 정문으로 보이게 만드는 미끼로 작동. (A),(B),(E)는 논란 여지 없음."
+}

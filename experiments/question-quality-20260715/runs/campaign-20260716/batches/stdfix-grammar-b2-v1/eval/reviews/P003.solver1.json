@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'play has long been seen as ~'. 주어 play는 '~로 여겨지는' 대상이므로 수동태가 필요하고, 'has long + p.p.'의 현재완료 수동(has been seen as)은 정확하다. 'see A as B'의 수동형 'be seen as'로 as구가 뒤따르는 것도 정합적. 능동 'has long seen'으로 착각하게 유도하는 표면 함정이 있으나 밑줄 자체는 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "관계절 'that are necessary for future survival'의 선행사는 복수 명사구 'skills and behaviors'이므로 are가 옳다. 장거리 함정 점검: 선행사를 단수 'a way'로 오인하면 is를 기대하게 되지만, '미래 생존에 필요한' 것은 의미상 skills and behaviors이며 관계절이 이에 인접해 있어 복수 일치가 유일하게 자연스러운 해석. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "'play is a way which children learn about the world and their place in it'에서 관계절 'children learn about the world and their place in it'은 주어·목적어·전치사 목적어가 모두 채워진 완전한 절이다. 관계대명사 which가 절 내부에서 맡을 공백(gap)이 없으므로 비문. 'in which'(방법의 부사적 관계) 또는 관용적으로 'that'/관계사 생략('the way (that) children learn')이어야 한다. 대안 해석 탐색: which가 learn의 목적어라 보기엔 learn about이 이미 목적어(the world and their place)를 취했고, 'in it'의 it은 the world를 지시하므로 way를 받을 수 없다. 축약·도치 등 어떤 재분석으로도 정문이 되지 않는다. 이것이 정답."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'allow + 목적어 + to부정사' 구문으로 allows children to try out은 정확하다. 병렬 점검: 'to try out and (to) learn social behaviors and to acquire values...'에서 try out과 learn이 첫 to를 공유하고, to acquire가 두 번째 병렬 축을 이룬다. 병렬 시작점이 다소 복잡해 매력적 오답으로 끌리는 지점이나(순간 'trying out'을 기대하게 됨), allow는 동명사 목적보어를 취하지 않으므로 to try out이 유일한 정형. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'traits that will be important in adulthood'에서 be동사의 보어 자리이므로 형용사 important가 옳다. 부사 importantly로 바꿔야 할 이유가 없다. 관계절 주어는 values and personality traits로 will be와의 결합도 문제없음. 정문."
+    }
+  ],
+  "note": "실전 풀이 관점: (A)의 수동태와 (D)의 병렬 구조가 1차 유혹 지점이지만 둘 다 규칙 확인 후 정문으로 확정된다. (B)는 선행사 오인(a way)을 노린 장거리 함정이나 복수 일치가 명백. 결정적 비문은 (C) — 완전한 절 앞의 which로, in which/that 대치 테스트로 즉시 확정된다. 정답 후보는 (C) 하나로 수렴하며 복수 정답 소지 없음. 참고로 이 지문은 '놀이의 발달적 기능'을 다루는 전형적 소재로, 문항 자체의 어법 대비점은 깔끔하다."
+}

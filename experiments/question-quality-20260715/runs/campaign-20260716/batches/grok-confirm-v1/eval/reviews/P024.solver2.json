@@ -1,0 +1,35 @@
+{
+  "pid": "P024",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "Seam: 'meet within + a timeframe' is a natural temporal collocation; participle 'freed from break-induced remoteness' post-modifies grammatically. Logic: exactly restates the passage's remedy — reframe the period ('this winter' instead of 'next year') so that the break no longer induces the sense of remoteness that delays action. Entailed by both the problem statement (break -> remote -> inaction) and the prescribed fix."
+    },
+    {
+      "label": "2",
+      "verdict": "incorrect",
+      "reason": "Grammatical, but logically over-quantified. The passage does not abolish calendar boundaries; it substitutes one calendar unit ('this winter' — itself a bounded unit) for another so the deadline falls inside the same unit. The universal 'every calendar boundary has been removed' is falsified by the text's own example."
+    },
+    {
+      "label": "3",
+      "verdict": "incorrect",
+      "reason": "Category error at the seam: 'meet a challenge within a workload' — 'within' requires a temporal container here, and 'workload' is an amount of work, not a timeframe. Logic also reversed: manageable stress is stated as a consequence of the reframing ('That way the stress is more manageable'), not a pre-existing condition ('has already been fully reduced')."
+    },
+    {
+      "label": "4",
+      "verdict": "incorrect",
+      "reason": "Contradicts the example: the deadline is in January, so the reframed interval (November to January, 'this winter') necessarily DOES stretch past the New Year; the whole point is that it crosses the break while being conceived as one continuous unit. Additionally 'alone' is a dangling adverb with no determinate scope (New Year? stretch?), weakening grammaticality."
+    },
+    {
+      "label": "5",
+      "verdict": "incorrect",
+      "reason": "Grammatical but logically inverted: the passage treats a break as a demotivating boundary whose effect must be neutralized, never as something to 'deliberately use as a motivator.' No sentence supports breaks having motivational value."
+    }
+  ],
+  "note": "Lens: grammarian/logician. Only option 1 satisfies both the syntactic seam (within + temporal NP) and the passage's entailment (eliminate break-induced remoteness by reframing the unit). Options 2 and 5 are grammatical distractors defeated purely on logic (over-quantification and polarity inversion respectively); 3 fails on both collocation and causal order; 4 is contradicted by the passage's own Nov-to-Jan example and carries a scope-ambiguous 'alone'. No alternative parse (reduced relative, participial, etc.) rescues any distractor. Single defensible answer."
+}

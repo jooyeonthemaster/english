@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) Although",
+      "verdict": "correct",
+      "reason": "Although 뒤에 완전한 절(they are controlled by Denmark)이 오고 주절(they have their own government)과 양보 관계가 성립한다. 접속사 자리이며 Despite/In spite of 같은 전치사와 혼동을 노린 자리이지만 절이 왔으므로 정문. 유혹 없음."
+    },
+    {
+      "label": "(B) is",
+      "verdict": "correct",
+      "reason": "가장 매력적인 오답 자리. insist + that절 → (should) 동사원형이라는 공식이 반사적으로 떠올라 'be'가 아니어서 틀렸다고 판단하고 싶어진다. 그러나 가정법 현재(should 생략)는 insist가 '요구·주장(~해야 한다)'일 때만 적용되고, 여기서는 정부가 '고래 사냥이 영리 목적이 아니라는 사실'을 단언(assert)하는 문맥이므로 직설법 is가 정확하다. 뒤 문장 'Most of the whale meat ... is distributed for free'가 이것이 사실 서술임을 뒷받침한다. 실제로 be로 바꾸면 '영리 목적으로 하지 말아야 한다고 요구한다'는 어색한 의미가 되어 문맥이 무너진다. 유혹을 느꼈으나 의미 판별로 기각."
+    },
+    {
+      "label": "(C) that",
+      "verdict": "correct",
+      "reason": "선행사 a law를 받아 says의 주어 역할을 하는 주격 관계대명사 that. 'There is a law that says ...' 구조로 완전한 정문. which로 대체 가능한 자리이며 결함 없음."
+    },
+    {
+      "label": "(D) efficiently",
+      "verdict": "correct",
+      "reason": "as quickly and efficiently as possible — 동사구 take place를 수식하는 부사 병렬. 병렬 시작점이 as 뒤의 부사 quickly이므로 efficiently(부사)가 맞다. 형용사 efficient로 바꿔야 할 근거(보어 자리 등)가 전혀 없다. 정문."
+    },
+    {
+      "label": "(E) allow",
+      "verdict": "wrong (정답)",
+      "reason": "whether this practice should allow to continue — allow는 'allow + 목적어 + to부정사'를 요구하는 타동사인데 목적어가 없다. 주어 this practice는 허용의 주체가 아니라 대상이므로 수동태 should be allowed to continue가 되어야 한다. 'allow to continue'가 성립하는 대안 해석(자동사 용법, 축약 구조 등)은 존재하지 않는다. 명백한 태(voice) 오류."
+    }
+  ],
+  "note": "최상위권 실전 풀이 시뮬레이션: 1차 통독에서 (E)의 수동태 누락이 즉시 눈에 들어오지만, (B)에서 insist-가정법 공식의 유혹이 강하게 작동한다. insist의 의미(요구 vs 단언)를 문맥으로 판별하면 (B)는 직설법이 맞고, (E)만이 유일하게 옹호 불가능한 오류로 남는다. 정답 후보는 (E) 단일. 지문 난도는 수능 어법 문항 기준 평이~중 수준이며 (B)가 의도된 매력 오답으로 잘 기능한다."
+}

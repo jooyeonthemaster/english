@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "D",
+  "multipleDefensible": true,
+  "defensibleLabels": ["C", "D"],
+  "confidence": "low",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "Purpose to-infinitive attached to 'identifying... and evaluating these issues from different perspectives'; it deliberately parallels the opening definition 'the identification and evaluation of evidence to guide decision-making'. 'guide + wh-infinitive clause' (guide how to respond) is attested academic usage. Grammatical."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "Subject relative pronoun; antecedent is the plural head 'principles (of conduct)' and the relative-clause verb 'are' agrees with it ('principles... that are considered correct'). Grammatical."
+    },
+    {
+      "label": "C",
+      "verdict": "defensible-error",
+      "reason": "The host sentence 'What a person values relating to... beliefs influenced by... experiences.' has a free-relative subject followed by two non-finite forms and NO finite matrix verb — formally ungrammatical as written. Repairing (C) to 'relates' restores a well-formed sentence ('What a person values relates to their... beliefs influenced by their... experiences', with 'influenced' as a reduced relative on 'beliefs'), which is grammatical and contextually coherent. Hence (C) is a defensible answer."
+    },
+    {
+      "label": "D",
+      "verdict": "error (primary answer)",
+      "reason": "Same missing-finite-verb defect: repairing (D) to 'is influenced' yields 'What a person values relating to their social, religious, or civic beliefs is influenced by their formal and informal learning experiences', with 'relating to...' as the standard postmodifier collocation 'values relating to X'. This reading is echoed by the later 'the personal factors that influence your own code of behaviour', making 'is influenced' the most probable intended matrix verb and (D) the most likely intended error (auxiliary 'is' stripped)."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "'alongside' is a preposition, so the gerund 'recognizing (and accepting) that...' is the required complement form, in clean coordination. Grammatical."
+    }
+  ],
+  "note": "Design flaw: the (C)/(D) sentence lacks any finite verb, and fixing EITHER underline ((C)->'relates' or (D)->'is influenced') produces a grammatical, contextually sensible sentence. No agreement or discourse cue formally forces one parse, so two answers are logically defensible. I pick (D) as primary because 'values relating to social/religious/civic beliefs' is the natural source-text collocation and the discourse theme (learning experiences as personal factors influencing one's values/code of behaviour) favors 'is influenced' as the matrix verb; but a challenge citing (C) would be hard to dismiss."
+}

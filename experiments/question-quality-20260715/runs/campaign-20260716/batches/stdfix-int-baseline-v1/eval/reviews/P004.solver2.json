@@ -1,0 +1,40 @@
+{
+  "pid": "P004",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "correct",
+      "reason": "빈칸 문장: '발 구르기/외부 리듬 표시는 특히 인간적인 기술로 보이지만, 이것이 ___로 해석될 필요는 없다.' ①을 넣으면 '발 구르기가 유기체가 음악을 경험하는 방식을 정의하는 유일한 척도(sole metric)로 해석될 필요는 없다'가 된다. 이어지는 문장 'My dogs in fact responded to other musical features...'(개들은 실제로 다른 음악적 요소들에 반응했다)가 이 주장을 직접 확증한다 — 발 구르기 외에도 음악을 경험/반응하는 다른 방식이 존재한다는 것. 'in fact'가 확증 근거를 도입하고, 'other musical features'가 ①의 'how organisms experience music'과 어휘·주제적으로 정확히 호응한다. 지문 전체 논지(동물이 리듬/음악에 반응할 수 없다는 주장은 틀렸다)와도 완벽히 일치. seam·논리 모두 성립.",
+      "grammatical": true
+    },
+    {
+      "label": "②",
+      "verdict": "incorrect",
+      "reason": "'인간이 다른 종을 능가하는 궁극적 이유'. 지문은 인간 우월성이나 '능가(surpass)'를 다루지 않는다. 이어지는 개들의 음악 반응 사례와 논리적으로 연결되지 않는다. 문법은 성립하나 지문 논리 부적합.",
+      "grammatical": true
+    },
+    {
+      "label": "③",
+      "verdict": "incorrect",
+      "reason": "'자극에 반응하는 유일한 진화적 메커니즘'. 발 구르기는 특정 인간 반응이지 '진화적 메커니즘'으로 규정하기 어렵고, 'reacting to stimuli'는 음악 주제와 느슨하게만 연결된다. 이어지는 문장의 '음악적 요소'와 호응이 약하다. 문법 성립, 논리 부적합.",
+      "grammatical": true
+    },
+    {
+      "label": "④",
+      "verdict": "incorrect",
+      "reason": "'종 간 인지적 유사성을 반증하는 도구'. 문장을 넣으면 '발 구르기의 인간 고유성이 종 간 인지 유사성을 반증하는 것으로 해석될 필요는 없다'로 표면상 일관된 문장이 되어 최유력 오답이다. 그러나 (a) 지문은 'cognitive similarities/종 간 인지 비교'를 전개하지 않고 '동물의 음악·리듬 반응 가능성'을 논한다. (b) 뒤 문장 'other musical features'는 인지 유사성보다 '음악 경험 방식의 다양성'(=①)을 더 직접적으로 확증한다. (c) 발 구르기를 '반증하는 도구(a tool that disproves)'로 부르는 것은 다소 부자연스럽고 한 단계 추론이 더 필요하다. 따라서 ①에 비해 확증 근거가 간접적이어서 공동 정답으로 옹호하기엔 부족하다.",
+      "grammatical": true
+    },
+    {
+      "label": "⑤",
+      "verdict": "incorrect",
+      "reason": "'음악적 리듬을 움직임으로 옮기는 시각적 방법'. 발 구르기는 문자 그대로 리듬을 움직임으로 옮기는 행위 그 자체이므로, '이것이 ~로 해석될 필요는 없다'는 부정 구문에 넣으면 정의(동어반복)를 부정하는 자기모순이 된다. 논리 부적합.",
+      "grammatical": true
+    }
+  ],
+  "note": "빈칸 앞뒤 논리: '발 구르기=인간 고유 기술이지만 이것이 ___로 해석될 필요는 없다' + 'in fact 개들은 다른 음악적 요소들에 반응했다'. 'in fact'가 도입하는 확증 근거('other musical features')가 ①의 'how organisms experience music'과 어휘·주제적으로 직결되어 ①이 유일하게 tight하게 지지된다. ④는 coherent한 문장을 만드는 최유력 매력 오답이나, 지문이 '인지 유사성' 주제를 전개하지 않고 확증이 한 단계 간접적이라 제외. 정답 ① 단일, 고신뢰."
+}

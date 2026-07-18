@@ -1,0 +1,88 @@
+{
+  "pid": "J009",
+  "blindAnswer": "(D)",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-ANTECEDENT-MISID",
+      "severity": "critical",
+      "evidence": "오답 해설 (A): \"Singapore의 자매 대학에서 온 '학생들(students)'을 지시하므로 복수 소유격 'their'가 어법상 옳습니다\" — 실제 문장은 'a large group of students from their sister university in Singapore'로, 학생들이 그 자매 대학'에서 온' 주체이므로 their가 students를 가리키면 '학생들 자신의 자매 대학에서 온 학생들'이라는 순환·비정합 해석이 된다. 실제 선행사는 Garcia's band(의 구성원들)/그들의 소속 대학이다. keyPoints 3번 항목도 동일한 오분석('students 지시')을 반복한다. 문법 판정(their 옳음)은 유지되지만 구조 분석이 사실과 불일치 — V4 실패."
+    },
+    {
+      "code": "V4-TERM-LOOSE",
+      "severity": "minor",
+      "evidence": "오답 해설 (E): \"등위접속사 and 뒤에 이어진 절의 병렬과 시제 일치를 묻고 있으며\" — 'The host introduced the band, and each member took their place'는 단순한 독립 과거절 등위 연결이며 '시제 일치'(주절-종속절 시제 호응) 기제가 작동하는 자리가 아니다. 병렬 판정 자체는 옳으나 용어 사용이 부정확하다."
+    },
+    {
+      "code": "V2-CAVEAT-ASYNDETON",
+      "severity": "minor",
+      "evidence": "(D) 'struggled with the rhythm, made several mistakes'는 문학적 asyndeton으로 두 VP를 쉼표만으로 잇는 실제 용례가 존재하나, 수능 학교문법 관행에서는 접속사 없는 정동사 이중 연결을 명백한 비문으로 판정하므로 정답 유일성은 유지된다(V2 통과, 참고 기록)."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "대명사 소유격의 수·지시 일치 판단 (their vs its)",
+      "temptingBecause": "선행사가 문두의 'Garcia's band'(형태상 단수 집합명사)로 멀리 있어 its를 기대하거나, 인접 명사 students에 이끌려 지시를 혼동할 수 있다",
+      "decisiveFlaw": "their는 Garcia의 밴드 구성원들(그들의 소속 대학)을 가리키는 자연스러운 복수 소유격이며 원문 그대로 — 오류 아님. 단, 공식 해설은 선행사를 students로 오분석함"
+    },
+    {
+      "label": "(B)",
+      "intent": "연결동사(감각동사) look 뒤 보어 자리의 형용사 vs 부사 판별",
+      "temptingBecause": "동사 뒤 수식 자리라는 표면 형태 때문에 부사 greatly를 기대할 수 있다",
+      "decisiveFlaw": "look은 여기서 연결동사로 형용사 보어 great를 취하는 것이 옳다 — 오류 아님"
+    },
+    {
+      "label": "(C)",
+      "intent": "완전한 절을 이끄는 시간 접속사 when의 적격성",
+      "temptingBecause": "선행 명사 nervousness 뒤라 관계사/의문사 자리로 착각할 여지가 있다",
+      "decisiveFlaw": "뒤에 주어(he)+동사(thought)의 완전한 부사절이 이어지므로 접속사 when이 옳다 — 오류 아님. 다만 검증이 즉각적이어서 변별 기여가 거의 없는 준-필러"
+    },
+    {
+      "label": "(D)",
+      "intent": "정답 — 접속사 없는 제2 정동사 vs 분사구문 (making → made 최소대립쌍)",
+      "temptingBecause": "직전의 과거 정동사 struggled와 서사 전체의 과거시제 흐름 때문에 made가 병렬 정동사처럼 보인다",
+      "decisiveFlaw": "주절 'he struggled with the rhythm'이 이미 완결된 절이고 등위접속사가 없으므로 쉼표 뒤 정동사 made는 비문 — 분사구문 making으로 교정해야 하며 교정 시 원문과 정확히 일치"
+    },
+    {
+      "label": "(E)",
+      "intent": "등위접속사 and 뒤 독립절의 정동사 적격성 (D와의 대조 지점)",
+      "temptingBecause": "(D)와 유사한 '쉼표+동사' 환경으로 보이고, 단수 주어 each member와 뒤따르는 their가 일치 점검을 유도한다",
+      "decisiveFlaw": "and가 명시되어 독립 정동사 took이 정당하다 — 오류 아님. 이 대조가 (D) 판정의 공정한 근거 단서로 기능"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "critical",
+      "target": "(A) 오답 해설 + keyPoints[2]",
+      "evidence": "their의 선행사를 'students'로 지목 — 실제 선행사는 Garcia's band(구성원들)/그들의 소속 대학. 'students from their sister university'에서 their=students'로 읽으면 순환 해석이 되어 사실 불일치",
+      "recommendation": "선행사를 'Garcia의 밴드(구성원들)의 소속 대학'으로 정정하고 keyPoints 문구도 동기화"
+    },
+    {
+      "severity": "minor",
+      "target": "(E) 오답 해설",
+      "evidence": "'시제 일치'라는 용어가 부적합 — 독립 과거절의 등위 연결일 뿐 시제 일치 기제가 없음",
+      "recommendation": "'and로 연결된 독립절의 정동사 자리'로 표현 정정"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": "충족: source-correct→displayed-wrong 최소대립쌍(making→made, 교정 시 원문 복원), 명확한 문법 판단, 동일 포인트 쉬운 디코이 없음. 미충족: (1) 정답 포인트가 '쉼표+과거동사→분사 점검'이라는 고빈도 훈련 패턴이라 구조 독해 없이 반사적으로 드러나 KILLER급 은닉이 아님, (2) (A)·(C) 디코이의 why-tempting 근거가 얇고 (A)는 point 해설 자체가 오분석, (3) 지문이 어휘·구문 모두 평이한 서사문이라 함정 깊이가 KILLER 라벨에 못 미침(C5=1).",
+  "grade": "F",
+  "notes": "V1/V2/V3/V5 통과, V4 실패로 F. 문항 본체(정답 유일성·렌더 무결성)는 건전하며 (D)는 유일 정답으로 확정적. 치명 결함은 해설 사실성: (A)의 선행사 오지목이 오답해설과 keyPoints에 반복 기재됨. 이 오분석만 정정하면 유효성은 회복되나, 요청 난이도 KILLER 대비 실제 난이도는 중위권 표준 문항 수준(C5=1)이어서 등급 재산정 시에도 KILLER 인증은 불가. 공예 합계 13/24."
+}

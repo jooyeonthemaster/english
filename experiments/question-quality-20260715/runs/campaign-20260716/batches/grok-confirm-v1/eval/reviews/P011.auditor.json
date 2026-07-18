@@ -1,0 +1,70 @@
+{
+  "pid": "P011",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "polarity reversal — claims amplified conscious scrutiny of formulated rules",
+      "temptingBecause": "recycles the salient phrase 'formulated rules' from sentence 1 and the theme of deliberate learning",
+      "decisiveFlaw": "directly contradicts the same-sentence cue 'she isn't thinking more' and conflates practical knowledge with technical/book knowledge"
+    },
+    {
+      "label": "2",
+      "intent": "over-narrowing — reduces the general mechanism to the single piano-key example",
+      "temptingBecause": "anchors on the vivid 'touch ... piano key' illustration that students remember",
+      "decisiveFlaw": "the piano touch is one bodily-metaphor example; the passage's claim is about expertise in general, and 'restricting her touch' matches nothing in the argument"
+    },
+    {
+      "label": "3",
+      "intent": "mechanism contradiction (labeled causal reversal in the explanation) — expert abandons the habit-built repertoire",
+      "temptingBecause": "reuses 'repertoire built through habit' verbatim from the following sentence, creating strong lexical overlap",
+      "decisiveFlaw": "the immediately following sentence states she HAS built up the repertoire and thereby extended unconscious performance — abandonment is flatly contradicted"
+    },
+    {
+      "label": "4",
+      "intent": "correct answer — abstract paraphrase of the removed clause 'she is thinking less'",
+      "temptingBecause": "n/a (correct)",
+      "decisiveFlaw": "none; matches the semicolon contrast with 'isn't thinking more' and the next sentence's 'without conscious awareness'"
+    },
+    {
+      "label": "5",
+      "intent": "half-truth / category conversion — practical knowledge gets converted into deliberate rules",
+      "temptingBecause": "correctly echoes 'transmitted' and 'deliberately learned' vocabulary from the opening dichotomy",
+      "decisiveFlaw": "the passage insists practical knowledge cannot be taught or reduced to formulated rules; conversion into deliberate rules inverts the central technical-vs-practical contrast"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "TRAP_LABEL_IMPRECISE",
+      "severity": "minor",
+      "evidence": "오답 해설 3 calls the trap '인과 역전' (causal reversal), but 'abandoning the repertoire' is a direct contradiction of the stated mechanism, not a reversal of cause and effect. The factual support sentence in the same explanation is accurate, so this is loose taxonomy, not misanalysis."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": {
+    "V1": "Rendered passage is identical to the source except the intended blank replacing 'she is thinking less.' No splice damage, duplication, omission, orphan punctuation, or typos. Option labels 1-5 align with the five choices.",
+    "V2": "Independent per-option solve confirms a unique answer: only option 4 satisfies the semicolon contrast 'isn't thinking more; ___'. Options 1 (polarity), 3 (contradicted by next sentence), 5 (contradicts the technical/practical dichotomy) are excluded by explicit text; 2 is an over-narrowed example. Declared answer 4 matches.",
+    "V3": "Completed sentence 'she isn't thinking more; she is operating with reduced conscious deliberation.' is grammatical and natural. All five options are same-shape clauses ('she is V-ing ...') fitting the slot; no seam ungrammaticality, no non-words.",
+    "V4": "Main explanation's structural claims (blank states the result; next sentence gives the habit/repertoire mechanism; final sentence converges on experience/transmission) all match the passage. Distractor explanations correspond to their actual option contents. One minor trap-label imprecision on option 3 (see explanationIssues), below V4-failure threshold.",
+    "V5": "Declared answer 4 = 해설 ④; 오답 해설 keys {1,2,3,5} exactly cover the distractors and match their contents; keyPoints consistent with the passage and answer.",
+    "killer": "Requested difficulty is KILLER but §D is not met: the answer is decidable from a single intra-sentence polarity cue ('isn't thinking more;' demands 'less'), and the adjacent sentence's 'without conscious awareness' lexically echoes 'reduced conscious deliberation'. §D explicitly forbids KILLER items solvable by one polarity cue and requires linking at least two sentences/logic cues. Slot uniformity and trap diversity (polarity / over-narrowing / mechanism contradiction / half-truth) do satisfy the other §D bullets.",
+    "craft": "C1=3: targets the passage's central thesis (expertise = less conscious thought), though the point is trivially recoverable. C2=3: four distinct trap mechanisms, each anchored in a different source span. C3=2: options 1 and 3 die instantly on adjacent-sentence contradictions and 2 on obvious narrowness; only 5 offers brief resistance — little real discrimination. C4=2: heavy local leakage — the blank's own clause telegraphs the answer via polarity, and 'conscious' recurs in the next sentence. C5=1: severe mismatch — easy-to-medium item under a KILLER label. C6=3: concise, accurate, separates basis from traps; docked for the trap-label imprecision.",
+    "grade_rationale": "All V pass so not F; craft total 14 with C5=1 fails B's minimum (min C >= 2, sum >= 17), and the difficulty mismatch plus cue leakage require re-blanking/redesign to reach the requested KILLER tier — grade C."
+  }
+}

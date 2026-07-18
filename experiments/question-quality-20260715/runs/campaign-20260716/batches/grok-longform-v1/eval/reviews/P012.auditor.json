@@ -1,0 +1,82 @@
+{
+  "pid": "P012",
+  "requestedDifficulty": "INTERMEDIATE",
+  "type": "GRAMMAR_ERROR",
+  "blindAnswer": "(E)",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-trap-claim",
+      "severity": "minor",
+      "evidence": "해설 말미 'of these countries를 주어로 착각하는 함정에 주의하세요'는 논리적으로 성립하지 않는다. countries 역시 복수이므로 그것을 주어로 착각해도 학생은 lie(복수 동사)를 기대하게 되어 오류 lies를 정당화하는 함정이 되지 못한다. 인접 명사가 단수일 때 쓰는 상투 경고를 잘못 이식한 것. 통사 구조 분석 자체(주어 핵 achievements 복수, of these countries 후치 수식, lies→lie 교정)는 정확하므로 V4 실패까지는 아님."
+    },
+    {
+      "code": "V5-note-expression-convention",
+      "severity": "minor",
+      "evidence": "markedExpressions의 (E)는 expression='lie'(원문형), errorExpression='lies'(렌더형), surroundingText도 원문 문장('...countries lie in...')을 담는다. 비오류 항목들은 expression=errorExpression=렌더형이라 '원문형 보존' 규약으로 내부 일관성은 있으나, 렌더 밑줄('lies')과 expression 필드가 다르므로 소비 코드가 expression을 표시용으로 쓰면 불일치가 난다. 확인 권고."
+    },
+    {
+      "code": "V3-note-source-notional-agreement",
+      "severity": "minor",
+      "evidence": "밑줄 없는 구간 'a large part of the population derive their livelihood'는 원문(Dreze & Sen 계열 학술 산문)의 notional plural 그대로이며 변형이 아니다. 밑줄 대상이 아니므로 정답 유일성에 영향 없음. 다만 예민한 학생이 미밑줄 오류로 오인해 이의를 제기할 소지가 있다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "시간 부사절(once) 내 현재완료 정동사 + 단수 주어 dust와의 수일치 판정",
+      "temptingBecause": "부사절 안의 완료시제가 어색하다고 느끼거나, of an emergency 개입 때문에 주어 핵 파악이 흔들릴 수 있다",
+      "decisiveFlaw": "주어 핵 dust는 단수이고 has settled는 그에 호응하는 현재완료 정동사로 완전히 적법하다. 유혹 강도가 낮아 5개 중 가장 필러에 가까운 디코이다"
+    },
+    {
+      "label": "(B)",
+      "intent": "능동·수동 태 판단 — cannot 뒤 원형 자리에서 deny/be denied 선택",
+      "temptingBecause": "조동사 뒤 원형 자리라 능동 deny가 더 단순해 보이고, contribution이 행위 주체인지 대상인지 판정을 요구한다",
+      "decisiveFlaw": "contribution은 deny의 대상이므로 수동 be denied가 필수. 능동이면 목적어가 없어 비문이 된다"
+    },
+    {
+      "label": "(C)",
+      "intent": "분사 능·수동 판별 — 선행 명사 mechanisms와 involve의 의미 관계",
+      "temptingBecause": "involved로도 자주 쓰이는 동사라 -ing/-ed 선택 판단을 유도하고, 명사구가 길어 수식 관계 추적이 필요하다",
+      "decisiveFlaw": "mechanisms가 direct public intervention을 involve하는 능동 관계이고 뒤에 목적어가 있으므로 현재분사 involving이 정확하다"
+    },
+    {
+      "label": "(D)",
+      "intent": "or-등위 of-구 나열 속 주어 핵 수일치 — 가장 경쟁력 있는 디코이",
+      "temptingBecause": "Botswana·Kenya·Zimbabwe 세 항목 나열과 문장 길이가 복수 인상을 주어 explain(복수형)을 기대하게 만든다",
+      "decisiveFlaw": "주어 핵은 단수 Rapid growth 하나이고 of-구들은 or로 등위된 후치 수식일 뿐이므로 3인칭 단수 explains가 맞다. 원문도 explains다"
+    },
+    {
+      "label": "(E)",
+      "intent": "정답 — of-구 개입 상황의 주어-동사 수일치. source-correct(lie) → displayed-wrong(lies) 최소대립쌍이며 교정 시 정확히 원문 복원",
+      "temptingBecause": "옳다고 넘기게 되는 경로는 주어 핵과 동사 사이 거리, 그리고 동명사구(having provided)로 이어지는 긴 후행부에 주의가 분산되는 것뿐이다",
+      "decisiveFlaw": "주어 핵 The real achievements는 복수이므로 lies는 수일치 위반, lie로 교정해야 한다. 단, 인접 명사 countries마저 복수라 근접 견인(attraction) 위장이 전혀 없어 'countries lies' 연쇄가 귀로도 즉시 어색하게 들린다 — 오류 위장이 약한 편"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "'of these countries를 주어로 착각하는 함정에 주의하세요' — countries가 복수라 이 착각은 lies를 정당화하지 못하므로 함정 설명이 공허하다",
+      "recommendation": "해당 문장을 삭제하거나 '주어 핵과 동사 사이의 수식어를 걷어내고 핵 achievements의 수를 확인하라'로 교체"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionsNote": "요청 난이도가 INTERMEDIATE이므로 §C KILLER 추가 조건 판정 대상이 아님 → 규약상 false. 참고로 판정했다면 '정답이 구조를 읽어야만 드러난다' 조건에서 탈락한다(인접 복수 명사 탓에 귀로 즉시 감지 가능).",
+  "grade": "B",
+  "notes": "유효성 5개 게이트 전부 통과. 유일 오류 (E) lies는 원문 lie와의 최소대립쌍이며 교정 시 원문이 정확히 복원된다. (D)가 or-등위 of-구 나열 속 단수 핵이라는 진짜 판단을 요구하는 좋은 디코이로 (E)와 수일치 대칭을 이룬다. 약점: (1) 정답 오류의 위장이 약함 — 인접 명사 countries도 복수라 근접 견인 함정이 없어 구조 분석 없이도 귀로 잡힌다(INTERMEDIATE에는 허용 범위), (2) (A)는 유혹 강도가 낮은 준-필러, (3) 해설의 함정 경고 문장이 논리적으로 공허(C6=2 감점 사유). 합계 17, C 최저 2 → B: 해설 한 문장 교체 정도의 작은 수정으로 출제 가능."
+}

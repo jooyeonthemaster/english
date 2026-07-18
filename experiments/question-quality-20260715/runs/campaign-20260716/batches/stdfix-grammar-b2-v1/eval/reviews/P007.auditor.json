@@ -1,0 +1,80 @@
+{
+  "pid": "P007",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V5-schema-note",
+      "severity": "minor",
+      "evidence": "markedExpressions (E)의 expression 필드가 표시형(attending)이 아닌 원문형(attended)을 담고 있다. errorExpression(attending)/correction(attended)과는 내부적으로 일관되고 렌더 지문과도 모순되지 않아 실패는 아니나, 다른 4개 항목(expression=표시형)과 필드 의미가 비대칭이다."
+    },
+    {
+      "code": "V5-keypoints-partial",
+      "severity": "minor",
+      "evidence": "keyPoints가 5개 밑줄 중 (E),(A),(D) 3개만 커버한다. (B),(C)의 포인트가 keyPoints에 없다. 동기화 모순은 아니므로 V5 통과."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "과거분사(수동) vs 현재분사 판단 (pointCode c) — 'is best known for'에서 knowing/known 태 선택",
+      "temptingBecause": "be동사 뒤 분사 자리라 knowing과의 태 혼동을 노리지만, 'be known for'는 굳어진 관용 표현이라 실제 유인력이 매우 낮다",
+      "decisiveFlaw": "주어 Brunel이 '알려지는' 대상이므로 수동 과거분사가 명백히 정문 — 정답이 될 수 없음"
+    },
+    {
+      "label": "(B)",
+      "intent": "완전한 절을 이끄는 시간 접속사 자리 판단 (pointCode l)",
+      "temptingBecause": "문두 접속사에 대한 의심(While/During 대체 등)을 유도하려 하나, 뒤에 완전한 절이 바로 보여 의심 지점이 거의 없다 — 사실상 필러에 가까운 디코이",
+      "decisiveFlaw": "완전한 정형절(the Napoleonic Wars were...)을 이끄는 접속사 When은 명백히 정문"
+    },
+    {
+      "label": "(C)",
+      "intent": "수동태 과거분사 판단 (pointCode e) — dividing/divided 태 선택",
+      "temptingBecause": "'very much divided'의 부사 수식 때문에 형용사/분사 판단을 한 번 더 하게 만들지만 표준 수동 구문이라 유인력이 낮다",
+      "decisiveFlaw": "London이 강에 의해 나뉘는 대상이므로 was divided 수동태가 정문. (A)와 같은 '수동 분사' 계열이라 포인트가 부분 중복된다"
+    },
+    {
+      "label": "(D)",
+      "intent": "to부정사 형용사적 용법 + 의미상 주어 for-NP 구조 판단 (pointCode k)",
+      "temptingBecause": "'for people and goods to move'에서 moving 대체나 for의 기능 오독을 노린다 — 디코이 중 가장 판단 부하가 있는 자리",
+      "decisiveFlaw": "'ways (for X) to-V'는 표준 명사 후치수식 구조로 정문"
+    },
+    {
+      "label": "(E)",
+      "intent": "정동사 vs 준동사 — 등위된 절의 본동사 유무 판단 (pointCode a). 선언된 정답",
+      "temptingBecause": "삽입 전치사구 'despite being in ill health'가 주어 Brunel과 동사를 분리해, -ing가 분사구문처럼 보이도록 위장한다",
+      "decisiveFlaw": "and 뒤 두 번째 등위절(주어 Brunel, 목적어 the opening ceremony)에 정형동사가 없어 비문. with 없는 절대구문 해석도 성립하지 않는다. attended로 교정하면 정확히 원문이 된다 — 유일 정답 확인"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "missing-tempting-rationale",
+      "severity": "minor",
+      "evidence": "오답 해설 4건이 모두 '왜 정문인가'만 설명하고 '왜 매력적인가(why tempting)'를 제공하지 않는다. §C의 '5개 밑줄 각각에 point, why tempting, why correct/incorrect 존재' 요건을 문서상 충족하지 못함. 사실 오류는 없음."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionsDetail": {
+    "minimalPair": true,
+    "clearGrammarJudgment": true,
+    "allFiveUnderlinesFullyDocumented": false,
+    "answerNotImmediatelyRevealed": false,
+    "noEasySamePointDecoyShadowing": true,
+    "reasoning": "최소대립쌍(attended→attending, 교정 시 원문 복원)과 명확한 문법 판단(정동사 필요)은 충족. 그러나 (1) 각 밑줄의 why-tempting이 문서화되어 있지 않고 (B)는 설명 가능한 유인 근거가 사실상 없는 필러 수준, (2) '주어 + 콤마 삽입구 + V-ing' 패턴은 수능 어법에서 가장 반복 훈련된 시그니처 유형이라 대상 학군에게 구조 독해 없이도 즉시 드러나는 편 — KILLER 요건 '즉시 드러나지 않는다'를 보수적으로 불충족 판정."
+  },
+  "grade": "C",
+  "notes": "유효성 5개 게이트는 모두 통과한 건전한 문항이다. 렌더 무결성 완전, 정답 (E) 유일성 독립 검증 완료(4개 디코이 각각 정문 확인), 해설의 통사 분석도 정확하다. 치명 결함은 없다. 그러나 요청 난이도 KILLER 대비 실제 난이도가 크게 미달한다: 지문 자체가 쉬운 전기문(기출 내용일치풍 서사)이고, 디코이가 (A) 관용 표현, (B) 필러급 접속사, (C) 표준 수동태, (D) 표준 to부정사로 모두 초중급 포인트이며, 정답 포인트(삽입구 뒤 본동사 자리)는 가장 널리 훈련된 고전 패턴이라 상위권 학생에게 즉시 소거된다. C5=1(난이도 정합 실패), C3=2(변별력 부족). (A)/(C)의 포인트 부분 중복도 감점 요인. B2 배치용 표준 문항으로는 출하 가능 수준이나 KILLER 라벨로는 재설계 필요 — 등급 C. 합계 15/24."
+}

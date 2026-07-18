@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "흐름에 부합",
+      "reason": "재현적(representational) 작품에서 스타일이 심적 모델 구성을 촉진한다는 명제는 뒤따르는 표현주의 작품(스타일이 소재와 불협화음)과의 대조 구도의 필수 대조항이다. 제거 시 표현주의 논의의 비교 기준이 사라진다."
+    },
+    {
+      "label": "②",
+      "verdict": "흐름에 부합",
+      "reason": "'Thus'는 직전의 표현주의 작품(불안한 분위기, 낮은 가독성) 논의로부터의 정당한 귀결이며, 'aesthetic attitude' 개념을 도입해 ③의 지시어와 ⑤의 결론을 준비한다. 접속·지시 연쇄 모두 성립."
+    },
+    {
+      "label": "③",
+      "verdict": "흐름에 부합",
+      "reason": "'This active involvement'의 지시 대상이 ②에서 요구된 미적 태도에 의한 능동적 감상 개입으로 유일하게 해소된다. 미적 처리의 깊이·의미 성찰이라는 결과 제시가 논증을 전진시킨다."
+    },
+    {
+      "label": "④",
+      "verdict": "흐름 무관 (정답)",
+      "reason": "③의 어구 'depth of aesthetic processing and reflection on the meaning of the work'를 축자 재활용한 어휘적 위장 문장. 명제 내용은 '미적 태도 단독 = 균형 잡힌 삶의 토대'인데, ⑤는 '실용적 태도와 미적 태도 사이의 전환 능력'이 균형 잡힌 삶에 근본적이라고 말하므로 양립 불가 — 'balanced'라는 술어 자체가 두 태도의 병존·전환을 전제한다. 또한 ③(미적 처리의 깊이)에서 '삶의 토대'로의 논리 비약이 무근거하다. ④를 제거하면 ③→⑤가 '기제 → 일반적 함의'로 자연스럽게 연결된다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "흐름에 부합",
+      "reason": "'pragmatic attitude of everyday life'는 ①의 everyday life 프레임과, 'aesthetic attitude'는 ②③과 호응하는 원문형 결론문. ⑤를 제거하고 ④를 남기면 'balanced'가 대조항(실용적 태도) 없이 고립되어 의미가 붕괴하므로, ⑤는 필수적이고 ④가 잉여·모순 문장이다."
+    }
+  ],
+  "note": "렌즈: 문법가/논리학자. ④는 어휘 반복으로 결속(cohesion)은 흉내 내지만 정합(coherence)이 깨지는 전형적 삽입문: (i) ③의 명사구 축자 반복, (ii) ⑤의 결론('두 태도 간 전환이 근본')과 명제 충돌('미적 태도 단독이 토대'), (iii) 'balanced'의 의미 전제 위반. 대안 해석(⑤의 pragmatic attitude 신출 개념 반론)을 검토했으나 ①의 everyday life 대응으로 기각. 지문 앞부분이 ', background).'로 절단되어 있으나 판정에는 영향 없음."
+}

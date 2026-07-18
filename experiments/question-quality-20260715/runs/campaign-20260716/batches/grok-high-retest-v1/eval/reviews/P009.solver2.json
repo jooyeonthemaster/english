@@ -1,0 +1,35 @@
+{
+  "pid": "P009",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "flow-consistent",
+      "reason": "지문 도입부의 figure/background(주제 대 양식) 구분을 대표적 재현주의(representational) 작품에 적용하는 문장. '초점은 일상을 닮은 subject matter에 있고, style은 배경 역할로서 mental model 구성을 돕는다'는 주장은 뒤따르는 expressionist 대비 구조(양식이 주제와 부조화하게 작동)의 한 축을 정확히 세운다. 논리적 전제 문장으로 성립."
+    },
+    {
+      "label": "②",
+      "verdict": "flow-breaking (정답)",
+      "reason": "형식적 모순 증명: ①은 [focus = subject matter, style = background(보조)]라는 역할 배정을 명시한다. ②는 'the background style ... can become the very focus'라고 하여 같은 담화 단위 안에서 style을 focus로 재배정한다 — figure/ground 구분 자체를 뒤집는 주장이다. 또한 ①에서 일상을 닮는 것은 subject matter인데 ②는 style이 '작품을 일상과 더 닮게 만든다'고 귀속을 바꾼다. 담화표지 'Indeed'는 ①의 강화를 가장하지만 실제 내용은 ①의 부정이며, ①의 어휘(background style, mental models, resemble everyday life)를 재조합한 전형적 삽입 문장이다. ②를 제거하면 ①(재현주의 작품의 매끄러운 처리)→③(즐거움이 감상자를 결말까지 이끈다)의 연결이 자연스럽게 복원된다."
+    },
+    {
+      "label": "③",
+      "verdict": "flow-consistent",
+      "reason": "재현주의 작품에서 감상이 매끄럽게 진행되어 감상자가 작품의 결말까지 실려 간다는 내용으로, ①이 기술한 '양식이 배경에서 mental model 구성을 촉진하는' 처리 방식의 결과 서술로 성립한다. 'uncertainty'라는 단어 선택이 재현주의 맥락에서 다소 어색하나(원전 계열 텍스트는 pleasure and interest 계통일 가능성), 흐름 자체를 단절시키지는 않으며 뒤의 expressionist 대비로 넘어가는 교량 역할을 한다."
+    },
+    {
+      "label": "④",
+      "verdict": "flow-consistent",
+      "reason": "직전 무번호 문장(표현주의 작품에서 novel stylistic devices가 주제와 부조화하게 작동해 disquieting atmosphere를 만든다)의 귀결로서 'Thus' 연결이 타당하다. '덜 readable한 작품 → 관습적 형식으로부터의 이탈 → aesthetic attitude 필요'는 인과 사슬이 형식적으로 성립하고, 뒤 문장의 'This active involvement'가 ④의 aesthetic attitude 요청을 지시하므로 전후 결속이 모두 확인된다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "flow-consistent (경미한 확장)",
+      "reason": "④에서 도입된 'aesthetic attitude'와 ①의 everyday life 축을 'pragmatic attitude'로 명명해 대비를 종합하는 결어. 'fundamental to a balanced life'는 예술 처리 기술에서 삶의 균형이라는 가치 판단으로 범위를 넓히는 일반화이지만, 지문의 이분 구도(일상적/미적 태도)를 직접 계승하므로 모순은 없다. ②와 달리 선행 내용을 부정하지 않아 흐름 단절로 판정할 수 없다."
+    }
+  ],
+  "note": "판정 논리: 무관 문장 문제에서 결정적 기준은 '선행 주장과의 형식적 모순 + 제거 시 결속 복원'이다. ②만이 ①의 역할 배정(focus=subject matter, style=background)을 정면으로 뒤집으면서 'Indeed'로 강화를 위장하고, 제거 시 ①→③ 연결이 복원되므로 유일한 정답. ⑤는 'balanced life'로의 범위 확장이 다소 튀지만 결어 관습 범위 내이며 모순이 없어 방어 가능한 대안 정답으로 보지 않는다. ③의 'uncertainty'는 어휘 차원의 미세한 어색함이나 흐름 판정에는 영향 없음."
+}

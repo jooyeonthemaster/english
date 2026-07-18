@@ -1,0 +1,35 @@
+{
+  "pid": "P008",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "Carol의 오해 그 자체를 재진술한 미끼. 친구가 직전에 'Of course you can stand there'로 보행자 서 있기 금지 해석을 명시적으로 부정했으므로, 빈칸에 넣으면 친구가 자기 말을 뒤집는 모순이 된다. 또한 뒤따르는 대조절 'but we can stop to pick up passengers'는 차량 행위와의 대조를 요구하는데 보행자 진술과는 결합이 성립하지 않는다. 지문을 대충 읽은 수험생에게는 표면적으로 끌리는 오답이나, 대조 seam 확인 즉시 탈락."
+    },
+    {
+      "label": "2",
+      "verdict": "correct",
+      "reason": "빈칸에 삽입 시 'That means we cannot park cars there, but we can stop to pick up passengers'로 문법 결합과 논리 대조가 완벽하다. 미국 교통표지 'No Standing'의 실제 의미(차량 대기/주차 금지, 승객 승하차를 위한 일시 정차는 허용)와 정확히 일치하며, 일화의 유머(보행자 금지로 오해한 문화 차이)를 해소하는 설명으로 지문 전체와 정합."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "Carol이 일찍 도착했다는 세부 정보를 재활용한 표면 미끼. 표지판 의미 설명이라는 빈칸의 담화 기능과 무관하고, 'but we can stop to pick up passengers'와의 대조도 성립하지 않는다."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "친구의 발화 취지(그 코너에서 만나는 것은 전혀 문제없다)와 정면 충돌한다. 'never allowed ... but we can stop to pick up passengers'는 자기모순 구문이 되어 탈락."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "점심 초대라는 도입부 소재만 차용한 완전 무관 진술. 표지판 의미와 아무 관련이 없고 대조절과도 결합 불가."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 빈칸 뒤 대조절 'but we can stop to pick up passengers'가 강력한 장거리 단서로 작동하여 차량 관련 금지 진술만 허용한다. 유일한 유혹 선지는 1(Carol의 오해 재진술)이나 친구의 명시적 부정('Of course you can stand there')과 대조절 결합 실패로 즉시 배제 가능. 정답이 2로 유일하게 수렴하는 깔끔한 문항. 난이도는 쉬운 편(기초 독해 수준)."
+}

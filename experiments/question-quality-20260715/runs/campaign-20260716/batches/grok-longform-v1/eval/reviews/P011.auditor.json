@@ -1,0 +1,98 @@
+{
+  "pid": "P011",
+  "requestedDifficulty": "INTERMEDIATE",
+  "type": "BLANK_INFERENCE",
+  "blindAnswer": "1",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": false,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-SLOT-PARALLELISM-BROKEN",
+      "severity": "critical",
+      "evidence": "빈칸 프레임은 'it is important to _____, countries where ... cannot hope to prevent famines ...'로, 빈칸 뒤에 콤마+완전한 주절이 이어진다. 정답 ①('admit that, regardless of their growth speed')만 that절 보문소+삽입 부사구 구조로 이 프레임에 문법적으로 들어간다. ②('claim that only inclusive economic expansion')와 ③('assume that rural economic revival alone')은 that절 안에 동사 없는 고아 명사구를 남겨 비문('...only inclusive economic expansion, countries ... cannot hope...'), ④('insist that protection works without any growth')는 완결절 뒤에 콤마로 주절이 붙는 comma splice, ⑤('argue that activity diversification alone can')는 보어 없는 조동사 can이 고아로 남는 비문을 만든다. BLANK_INFERENCE는 오답이 문법적으로 슬롯에 들어가되 의미로 탈락해야 하는 유형인데 오답 4개 전부가 통사적으로 탈락한다 — 오답의 비문 여부가 유형 의도와 불일치."
+    },
+    {
+      "code": "V4-EXPLANATION-OPTION-MISMATCH",
+      "severity": "major",
+      "evidence": "오답 해설 2는 '공적 개입 없이도 충분하다는 쪽에 기울어'라는 완결된 명제를 ②에 귀속시키지만, ②는 슬롯에 넣으면 술어가 성립하지 않는 파편이라 그런 주장을 실제로 담을 수 없다. 오답 해설 전체(2~5)가 실제 결정적 결함(통사 부적합)을 언급하지 않고, 문법적으로 성립하지 않는 완성문의 '의미'를 설명한다 — 해설과 실제 선지 상태의 대응 실패."
+    },
+    {
+      "code": "V4-CORRUPTED-QUOTE",
+      "severity": "minor",
+      "evidence": "keyPoints 두 번째 항목이 지문 인용을 'direc public support'로 표기 — 비단어 'direc'(원문 'direct public support')."
+    },
+    {
+      "code": "V4-INVENTED-TERM",
+      "severity": "minor",
+      "evidence": "keyPoints 세 번째 항목의 'decreased vulnerability theory'는 지문에 없는 영문 표현이다. 지문은 'a tendency ... to seek the reduction of famine vulnerability'라고 하며 이를 theory로 지칭하지 않는다 — 인용처럼 보이는 창작 용어."
+    }
+  ],
+  "v1Evidence": "렌더 지문은 원지문에서 'recognize that, no matter how fast they grow' 구간만 _____로 치환했고 후행 콤마를 보존했다. 나머지 문장 전체(문장 접합·구두점·어형 'derive' 포함)는 원문과 일치. 선지 라벨 1~5와 선언 정답 1, 빈칸 마커 1회 — 모두 정합.",
+  "v2Evidence": "각 선지 독립 검증 결과 ①만 문법·의미 모두 성립(원문 span의 정확한 paraphrase). ②~⑤는 통사적으로 비문이며 의미상으로도 본문 결론(성장 속도 무관, 직접 공적 개입 없이는 기근 예방 불가)과 충돌한다. 정답 집합 = {1}로 유일 — V2 자체는 통과.",
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 1,
+    "C4": 0,
+    "C5": 1,
+    "C6": 2
+  },
+  "craftRationale": {
+    "C1": "빈칸 위치는 지문의 수사적 축(양보→핵심 주장: 성장 속도와 무관하게 공적 개입 없이는 기근 예방 불가)을 정확히 겨냥 — 출제 가치 높음.",
+    "C2": "설계 의도상 오답들이 서로 다른 함정(② 포용 성장 충분론 half-truth, ③ 농촌 부흥 scope narrowing, ④ 성장 배제 causal reversal, ⑤ 다각화 단독 충분론)을 분담 — 지면상 의도 밀도는 양호.",
+    "C3": "통사 파손 때문에 실제 변별은 붕괴 — 문법만으로 ①이 유일하게 남아 독해 없이 정답 도달 가능. 주의 깊은 수험생에게는 즉시 소거 문항.",
+    "C4": "빈칸 뒤 tail(콤마+주절)과의 통사 적합성이 정답을 지목하는 결정적 메타 누출 — 단서 경제성 최악.",
+    "C5": "요청 난이도 INTERMEDIATE 대비, 통사 누출로 실효 난이도가 그 아래로 추락 — 의도된 의미 판별 과제가 작동하지 않음.",
+    "C6": "본해설의 논리 요약 자체는 정확·간결하나, 오답 해설 3의 한국어 비문('...논리는 아니라 범위를 좁힌다'), keyPoints의 'direc' 오탈자·창작 용어, 그리고 진짜 결정적 결함(통사)을 짚지 못한 점이 감점."
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — 원문 'recognize that, no matter how fast they grow'의 동치 paraphrase('admit that, regardless of their growth speed')",
+      "temptingBecause": "해당 없음(정답). 완성문이 문법적이며 양보-주장 대조 구조를 정확히 복원한다.",
+      "decisiveFlaw": "없음 — 유일 정답."
+    },
+    {
+      "label": "2",
+      "intent": "2문장 'The potential contribution of greater economic success, if it involves vulnerable groups' 양보를 과대해석한 half-truth(포용 성장 충분론)",
+      "temptingBecause": "inclusive/economic expansion이 본문 어휘(vulnerable groups, economic success)와 겹침",
+      "decisiveFlaw": "의도된 결함(개입 필수 논리와 충돌) 이전에 통사 탈락 — 'claim that only inclusive economic expansion, countries...'는 that절에 술어 없는 고아 NP를 남기는 비문."
+    },
+    {
+      "label": "3",
+      "intent": "1문장 'the revival of the rural economy'로의 scope narrowing(condition loss)",
+      "temptingBecause": "rural economic revival이 서두 어휘를 직접 재사용",
+      "decisiveFlaw": "의도된 결함(범위 축소) 이전에 통사 탈락 — 'assume that rural economic revival alone, countries...'는 술어 없는 고아 NP 비문."
+    },
+    {
+      "label": "4",
+      "intent": "causal/polarity reversal — 성장 없이 보호만으로 충분하다는 역독해",
+      "temptingBecause": "본문이 성장의 설명력을 'at best only a small part'로 깎고 공적 지원을 부각하는 흐름과 표면상 유사",
+      "decisiveFlaw": "의도된 결함(본문은 성장 기여를 부인하지 않음) 이전에 통사 탈락 — 'insist that protection works without any growth, countries ... cannot hope...'는 comma splice."
+    },
+    {
+      "label": "5",
+      "intent": "1문장 'the diversification of economic activities' 단독 충분론(means swap)",
+      "temptingBecause": "diversification이 서두 어휘를 직접 재사용",
+      "decisiveFlaw": "의도된 결함(개입 필수 조건 누락) 이전에 통사 탈락 — 'argue that activity diversification alone can, countries...'는 보어 없는 조동사 can이 고아로 남는 비문."
+    }
+  ],
+  "explanationIssues": [
+    "오답 해설 2가 파편 선지에 완결 명제('공적 개입 없이도 충분')를 귀속 — 선지 실제 내용과 불일치.",
+    "오답 해설 3의 한국어 연결이 비문에 가까움: \"'성장 속도와 무관한 한계' 논리는 아니라 범위를 좁힌다\".",
+    "keyPoints에 비단어 'direc'(원문 'direct public support' 인용 손상).",
+    "keyPoints의 'decreased vulnerability theory'는 지문에 없는 창작 영문 용어를 인용처럼 제시.",
+    "해설 전체가 오답들의 진짜 결정적 결함(빈칸 tail과의 통사 부적합)을 인지하지 못하고 의미 결함만 설명."
+  ],
+  "killerConditionsMet": false,
+  "killerNote": "요청 난이도가 INTERMEDIATE이므로 KILLER 조건 판정 대상 아님(false). 참고로 §D의 '동일 통사 슬롯' 조건은 어차피 위반 상태.",
+  "grade": "F",
+  "notes": "지문 무결성(V1)·정답 유일성(V2)·필드 동기화(V5)는 통과. 그러나 빈칸 뒤에 콤마+완전 주절이 남는 프레임 설계 탓에 오답 4개 전부가 통사적으로 성립하지 않아, 의미 추론 문항이 문법 소거 문항으로 붕괴한다(V3 실패, critical). 해설·keyPoints의 인용 손상과 파편 선지에 대한 명제 귀속(V4 실패)이 겹친다. 출제 지점 선정과 오답 함정 설계 의도 자체는 우수하므로, 빈칸 경계를 재조정(예: 빈칸을 'recognize that' 뒤 양보구만으로 한정하거나, 선지를 모두 '동사+that+부사구' 동형으로 재작성)하면 살릴 수 있는 문항."
+}

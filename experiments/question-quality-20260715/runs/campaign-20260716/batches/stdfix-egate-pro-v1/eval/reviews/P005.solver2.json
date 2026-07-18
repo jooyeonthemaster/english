@@ -1,0 +1,35 @@
+{
+  "pid": "P005",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'play has long been seen as a way of...' — subject 'play' is the patient of 'see A as B', so passive is required; present perfect passive 'has (long) been seen as' is well-formed, with 'long' correctly positioned between auxiliary and participle. The 'see as' frame survives passivization intact."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect",
+      "reason": "'play is a way which children learn about the world and their place in it' — gap test fails: the relative clause 'children learn about the world and their place in it' is syntactically saturated (subject, verb, and the about-PP complement all filled; 'in it' already has its own object 'it' = the world). A relative pronoun 'which' must bind an argument gap, and none exists. Required form is 'in which' (a way in which children learn...) or 'that'/zero as relative adverb ('the way (that) children learn'). No rescue reading (contact relative, object extraction of 'way' from 'learn', adverbial accusative) succeeds, since 'learn' here takes only the about-PP. This is the error."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'children learn about the world and their place in it' — 'their' agrees with plural antecedent 'children'; 'it' anaphorically picks up 'the world'. Coordination of two NPs ('the world' and 'their place in it') as objects of 'about' is well-formed, and the meaning (children's place in the world) is the only coherent one; 'its' (= play's place) would be semantically wrong."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'allows children to try out and learn social behaviors' — 'allow + object + to-infinitive' is the required complementation pattern; 'try out and learn' coordinates two bare verb stems under a single 'to', a legitimate parallel structure."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'allows children to try out and learn social behaviors and to acquire values...' — parallel start-point check: 'to try...' and 'to acquire...' are coordinated to-infinitive complements both governed by 'allows children'; repeating 'to' in the second conjunct is optional and grammatical."
+    }
+  ],
+  "note": "Unique, formally provable answer: (B). The relative clause after 'a way' contains no gap for 'which' to bind ('in it' is already saturated), so only 'in which'/'that'/zero would be grammatical. All other underlines pass their governing rules (passive 'see as', possessive agreement, allow+O+to-V, to-infinitive parallelism) with no defensible counter-reading. Clean single-answer item."
+}

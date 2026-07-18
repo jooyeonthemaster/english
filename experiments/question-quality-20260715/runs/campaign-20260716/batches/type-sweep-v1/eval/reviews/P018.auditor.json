@@ -1,0 +1,49 @@
+{
+  "pid": "P018",
+  "validity": {
+    "V1": true,
+    "V2": false,
+    "V3": true,
+    "V4": true,
+    "V5": false
+  },
+  "validityIssues": [
+    {
+      "code": "V2-EQUIVALENT-CORRECTIONS-UNDECLARED",
+      "severity": "critical",
+      "evidence": "선언된 정답은 '(A) in which' 하나뿐이나, 해설 본문이 스스로 \"'that'이나 'by which' 등으로 고쳐야 합니다\" 및 \"'that' 역시 올바른 답이 될 수 있습니다\"라고 인정한다. 실제로 'a way that children learn...'은 완전히 문법적이며, 관계사를 삭제한 'a way children learn...'(zero relative)도 문법적 동치 교정이다. 교정형은 허용 동치 교정 집합이 선언과 일치해야 하는데(RUBRIC §B-1), 정답 필드에는 동치 교정이 전혀 선언되지 않아 채점 경계가 흐리다. 'that'을 쓴 정답 학생이 오답 처리될 수 있다."
+    },
+    {
+      "code": "V5-KEYPOINTS-PHANTOM-LABELS",
+      "severity": "critical",
+      "evidence": "keyPoints가 '(G) 대명사 일치 — its/their'와 '(B) 명사절과 형용사절의 구분' 항목을 라벨 (G), (B)로 지목하지만, 문항에는 밑줄 세그먼트가 (A) 하나뿐이다. 존재하지 않는 밑줄 라벨을 참조하는 keyPoints로 필드 간 동기화가 깨져 있다. 또한 정답 필드(in which 단독)와 해설(that도 정답 가능)이 상호 모순된다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 1,
+    "C3": 1,
+    "C4": 2,
+    "C5": 0,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "선행사(a way)가 존재하고 뒤에 완전한 절이 오는 자리에 관계대명사 what을 넣어, '전치사+관계대명사(in which)' 판단을 요구",
+      "temptingBecause": "learn의 목적어처럼 보이는 요소가 뒤에 이어져 what을 명사절 유도어로 오독할 여지를 노린 설계이나, 실제로는 learn about 전치사구로 절이 완전하여 오독 여지가 얕다",
+      "decisiveFlaw": "what은 선행사를 내포하므로 명사 a way를 수식할 수 없고 뒤에 불완전한 절을 요구한다. 'children learn about the world and their place in it'은 완전한 절이므로 in which(또는 that, 관계사 생략)가 와야 한다. 교정 시 원문과 정확히 일치(최소대립쌍 성립). 다만 'a way what'은 한국 수험 문법에서 가장 널리 훈련된 패턴이라 구조 독해 없이 즉시 식별된다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "ANSWER-SET-WAVERING",
+      "severity": "major",
+      "evidence": "해설이 교정형을 'in which 또는 that이나 by which 등'으로 열어 놓고 괄호 단서에서 'in which가 가장 적절하며 that 역시 올바른 답이 될 수 있다'고 다시 좁히는 등 정답 집합을 오락가락 기술한다. 사실 오류는 아니나(way/how 비공기 서술, 완전절 분석 모두 정확) 채점 기준으로서의 명료성이 없고 선언된 정답 필드와 충돌한다."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionsNotes": "요청 난이도 KILLER이나 §C 조건 불충족: (1) 밑줄이 1개뿐이라 '5개 밑줄 각각 point/why tempting/why incorrect' 디코이 구조 자체가 없음, (2) 정답 오류 'a way what'은 '선행사 있으면 what 불가'라는 초중급 암기 패턴으로 구조를 읽지 않아도 즉시 드러남(KILLER는 구조 독해 요구 조건 위반), (3) 채점 경계 흐림(V2). 최소대립쌍·명확한 문법 판단 조건은 충족하나 나머지가 미달.",
+  "grade": "F",
+  "notes": "V1/V3/V4는 통과: 렌더 지문은 의도된 변형(in which→what) 외 손상이 없고, 해설의 통사 분석(선행사 a way, 완전한 절, what의 특성, way/how 비공기)은 모두 사실과 일치한다. 그러나 (a) 교정형의 허용 동치 교정('that', 관계사 생략 등)이 정답 필드에 선언되지 않아 해설과 정답 키가 모순되는 V2 실패, (b) 존재하지 않는 밑줄 라벨 (G)/(B)를 참조하는 keyPoints의 V5 실패로 출하 불가(F). 공예 측면에서도 KILLER 요청 대비 단일 밑줄·최다빈출 암기 패턴이라는 난이도 정합 붕괴(C5=0), 디코이·조건·부분점수 요소 부재(C2=1), 즉시 소거 가능한 변별력(C3=1)으로 재설계가 필요하다. 수정 방향: 정답 필드에 허용 동치 교정 집합을 명시하고, KILLER를 원한다면 대안 분석이 얕은 what 자리 대신 구조 독해가 필요한 오류(예: 원거리 수일치·분사 태·도치 등)로 교체하며, keyPoints를 실제 라벨과 동기화해야 한다."
+}

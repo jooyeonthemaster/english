@@ -1,0 +1,66 @@
+{
+  "pid": "P003",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-note-render-absent",
+      "severity": "minor",
+      "evidence": "렌더 지문 필드가 '(렌더 지문 없음)'. TITLE 유형은 원지문을 그대로 노출하는 유형이므로 의도된 무변형으로 판단(손상 아님). 원지문 자체는 접합 파손·중복·누락·고아 문장부호·오탈자 없음: 'Each such story featured a cat that had survived' 등 전 문장이 정상이며 'called down'은 '질책하다'의 정당한 관용 표현."
+    },
+    {
+      "code": "C4-meta-cue",
+      "severity": "minor",
+      "evidence": "선지 2만이 유일하게 추상적 논지형(topic이 아닌 thesis 문형: 'How X Transformed A into B')이어서 시험 요령이 좋은 학생이 내용 독해 없이도 2를 우선 후보로 좁힐 수 있는 약한 메타 단서가 존재. 정답 유일성(V2)에는 영향 없음."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 4,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "소재 표면 반복(topic title) 함정 — 현상 명명만 하고 논지 부재",
+      "temptingBecause": "지문 표면 어휘(pattern, surviving cat, shipwreck stories)를 그대로 재사용하며, 지문 도입부(옴부즈먼이 발견한 패턴)의 사실적 기술로서는 참이다.",
+      "decisiveFlaw": "글이 존재하는 이유인 인과 기제(경쟁 공포)와 결과(실재 디테일의 의무적 허구화)를 전혀 담지 못한다. 제목은 소재가 아니라 전체 논지를 압축해야 하므로 topic 수준에서 탈락."
+    },
+    {
+      "label": "2",
+      "intent": "정답 — '실재 디테일 → 경쟁(패배 질책) 공포 → 없는 고양이 상시 삽입(의무적 허구)'의 전체 인과 연쇄를 정확히 추상화",
+      "temptingBecause": "(정답) 지문 전 문장의 연쇄를 모두 포괄하는 유일한 선지.",
+      "decisiveFlaw": "없음. 'a Real Detail'(실제 있었던 첫 고양이), 'Competitive Fear'(called down for being beaten), 'Obligatory Fiction'(no cat but... put the cat in; all of us always put in the cat)이 각각 지문 근거와 1:1 대응."
+    },
+    {
+      "label": "3",
+      "intent": "행위자/원인 오귀속(actor swap) + 과일반화 함정",
+      "temptingBecause": "편집자가 기자를 질책하는 장면('called down by their editors')이 실제로 있고, 고양이 이야기가 감성적 동물 미담이라는 표면 대응이 있어 부주의한 독해에서는 '편집자가 시켜서'로 읽힌다.",
+      "decisiveFlaw": "편집자는 동물 이야기를 '요구(insist)'한 적이 없고 특종 경쟁에서 '패배한 것(being beaten)'을 질책했을 뿐이다. 또한 난파선 기사에 국한된 현상을 재난 기사 일반(Disaster Stories)으로 과일반화."
+    },
+    {
+      "label": "4",
+      "intent": "범위 확장(scope shift)형 half-truth 함정",
+      "temptingBecause": "전반부 'How One Exclusive Angle Became a Requirement'는 글의 전개(단독 특집 → 사실상 의무 관행)를 정확히 요약해 강한 표면 중첩을 가진다.",
+      "decisiveFlaw": "'for All Newspaper Sections'가 선박 뉴스(ship news) 담당 기자들 사이에서만 일어난 현상을 신문 전 섹션으로 과대 확장. 핵심 동력인 패배 공포도 누락."
+    },
+    {
+      "label": "5",
+      "intent": "지문이 지지하지 않는 결과 반전(unsupported outcome) 함정",
+      "temptingBecause": "옴부즈먼의 질문이 글의 프레임을 이루므로 '조사 → 교정'이라는 기대 서사를 투사하기 쉽다.",
+      "decisiveFlaw": "글은 'Now when there is a shipwreck all of us always put in the cat'으로 끝나 관행이 지속됨을 명시한다. 옴부즈먼은 원인을 물었을 뿐 중단(halt)의 근거는 지문 어디에도 없음 — 마지막 문장과 정면 모순."
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1~V5 전부 통과. 정답 유일성 확신 높음(blind solve = 2, high confidence). 해설·오답해설의 인과 재구성('실제 고양이 특집 → 경쟁 기자 질책 → 없는 고양이 삽입 → 원 기자도 빼면 질책 → 관행 고착')은 지문과 문장 단위로 일치하며 오귀속·환각 없음. 공예 합계 20(C1=4, C2=4, C3=3, C4=3, C5=3, C6=3)으로 B — A 기준(합계 21)에서 1점 부족. 감점 근거: (C3) 선지 5의 유인력이 약해 실질 경쟁은 1·4 대 2로 좁혀짐; (C4) 정답 2만 유일하게 추상 논지 문형이라는 약한 메타 단서; (C5) 어휘 부하(ombudsman, called down, beaten=특종 경쟁 패배)와 전체 연쇄 종합 요구는 상위 난이도이나, 제목 킬러 특유의 근사-논지 쌍둥이 오답(정답과 논지 층위에서 경합하는 제2 선지)이 없어 KILLER 정합은 '대체로 일치' 이상 '정확히 일치' 미만; (C6) 해설 첫 문장이 과밀한 장문. killerConditionsMet=false 근거: RUBRIC §C/§D는 어법·빈칸 전용이라 TITLE에 직접 적용 불가하며, §D를 유추 적용하면 '두 문장/두 논리 단서 연결'(충족)과 '함정 다양성'(충족)은 만족하나 '단일 단서로 정답을 찍을 수 없다' 기준이 논지-추상성 메타 단서 때문에 약화되므로 보수적으로 불충족 판정. 출하 가능 수준이며, KILLER 승급을 원하면 선지 1을 논지 층위 근사 오답(예: 인과를 부분 왜곡한 thesis형 문장)으로 교체하는 소수정이 유효."
+}

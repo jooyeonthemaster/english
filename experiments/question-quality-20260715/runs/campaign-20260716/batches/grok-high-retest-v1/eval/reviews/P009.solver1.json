@@ -1,0 +1,35 @@
+{
+  "pid": "P009",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "fits",
+      "reason": "표상적(representational) 작품 쪽 대비 축을 설정하는 문장. 초점은 일상을 닮은 소재(subject matter)에 있고 스타일은 배경에 머물며 심적 모델 구성을 돕는다는 진술로, 앞부분 절단 흔적(', background)')이 암시하는 소재/배경 구분 논의와 자연스럽게 이어지고, 이후 표현주의 작품과의 대조 구조의 전제가 된다."
+    },
+    {
+      "label": "②",
+      "verdict": "irrelevant",
+      "reason": "①과 정면 모순. ①은 초점이 소재에 있고 스타일은 배경에서 보조 역할만 한다고 했는데, ②는 그 배경 스타일이 '바로 그 초점(the very focus)'이 될 수 있다고 뒤집는다. 또한 일상과의 유사성은 ①에서 소재의 속성인데 ②는 이를 스타일의 효과로 잘못 귀속시킨다. 'Indeed'로 강화인 척하며 ①의 어휘(background style, mental models, resemble everyday life)를 재활용한 전형적 삽입 오답. 이 문장을 제거하면 ①(설정)→③(감상 경험)의 흐름이 매끄럽게 복원된다."
+    },
+    {
+      "label": "③",
+      "verdict": "fits",
+      "reason": "읽기 쉬운 표상적 작품에서 감상자가 결말까지 이끌려 가는 수용 경험을 서술, 표현주의 작품의 'disquieting atmosphere'와의 대조로 넘어가는 교량 역할. 'uncertainty'는 readable한 작품에는 'certainty'가 더 어울려 미세하게 어색하나, 이야기의 서스펜스로 읽으면 성립하며 흐름을 깨지는 않는다."
+    },
+    {
+      "label": "④",
+      "verdict": "fits",
+      "reason": "바로 앞 문장(표현주의 작품의 부조화적 장치→불안한 분위기)의 귀결을 'Thus'로 올바르게 도출: 덜 readable할수록 관습 이탈이 '미적 태도'의 필요성을 환기. 뒤 문장 'This active involvement...'가 이 문장의 미적 태도 채택을 지시하며 자연스럽게 이어진다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "fits",
+      "reason": "매력적 오답으로 실제 끌림이 있었음: 'fundamental to a balanced life'가 예술 감상론에서 삶의 조언으로 범위를 넓히는 듯 보인다. 그러나 ④가 도입한 '미적 태도' 개념을 일상의 '실용적 태도'와 대비시켜 확장하는 결론부 일반화로 읽히며, 어떤 진술과도 모순되지 않는다. ②의 명백한 자기모순 대비 방어 불가."
+    }
+  ],
+  "note": "렌즈: 최상위권 수험생 실전 풀이. 글 구조는 표상적 작품(소재 초점, 스타일=배경 보조) vs 표현주의 작품(스타일이 소재와 충돌→미적 태도 요구)의 대조. ②는 'Indeed'로 위장했지만 ①의 핵심 주장(스타일은 배경)을 뒤집는 삽입문으로, 제거 시 흐름이 완전히 복원된다. 유혹 기록: ⑤의 'balanced life' 일반화와 ③의 'uncertainty'에 잠시 끌렸으나 둘 다 흐름 단절이 아닌 허용 가능한 진술로 판정. 정답 후보는 ② 단일."
+}

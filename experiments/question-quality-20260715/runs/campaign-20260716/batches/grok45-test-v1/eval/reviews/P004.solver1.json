@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "attractive-wrong",
+      "reason": "가장 강한 매력적 오답. '실제로 디자인하기보다는 ~한다'의 빈칸에 '실무 창작에서 물러난다'를 넣으면 'rather than actually designing'의 부정 내용을 동어반복할 뿐, 대조 구문이 요구하는 '대신 무엇을 하는가'라는 신정보를 제공하지 못한다. 'once large teams join projects'라는 시간적 조건도 지문에 없는 첨가이며, 마지막 문장(management organization and processes ... equally as relevant)으로 이어지는 관리자 역할 논리를 놓친다. 실제로 끌렸으나 seam 검증에서 탈락."
+    },
+    {
+      "label": "2",
+      "verdict": "correct",
+      "reason": "'rather than actually designing, ... work mainly as leaders coordinating team implementation of concepts'는 대조 구문에 정확히 들어맞는 대안적 활동을 제시한다. 앞 문장의 'substantial numbers of designers are employed in implementing a concept'를 직접 받고, 뒤의 'management organization and processes can be equally as relevant as designers' creativity'로 자연스럽게 연결된다. 문법 결합·논리 적합성 모두 완전."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "'lose personal influence the moment technological complexity appears'는 지문의 'even where a strong personality exercises powerful influence'(대규모 프로젝트에서도 강한 개성이 강력한 영향력을 행사한다)와 정면 모순. 기술 복잡성은 소형 제품의 낮은 복잡성 언급에서 왜곡 차용한 함정."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "'base their success solely on personal flair without process management'는 논리 역전. 개인적 재능(flair)에 기반하는 것은 사실상 '실제로 디자인하는 것'에 가까워 'rather than actually designing' 프레임과 충돌하며, 지문이 말하는 실상(성공한 인물들이 사실상 관리자로 기능)과도 반대다. 'The emphasis on individuality is problematic'만 보고 비판 논조로 오독한 수험생을 노린 함정."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "'regard managerial organization as secondary to pure creative instincts'는 마지막 문장(관리 조직·프로세스가 창의성과 동등하게 중요)과 논조가 어긋나고, '디자인하는 대신 하는 행위'라는 빈칸 요구(대안적 활동)에 태도 진술을 넣는 것이라 seam 자체가 부적합."
+    }
+  ],
+  "note": "빈칸 문장의 'rather than X, Y' 대조 구문이 결정적 단서: Y는 X의 부정 재진술이 아니라 대안적 활동이어야 한다. 이 기준으로 ①(동어반복형 매력 오답)이 탈락하고 ②만 남는다. 지문은 Heskett 계열 디자인론 논지(성공한 디자이너 '인물'들은 실제로는 creative manager로 기능)와 정합적이며, 앞뒤 문장 모두 ②를 지지한다. 복수정답 소지 없음."
+}

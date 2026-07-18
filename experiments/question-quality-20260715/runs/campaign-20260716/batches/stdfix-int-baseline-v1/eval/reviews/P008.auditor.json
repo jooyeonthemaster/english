@@ -1,0 +1,101 @@
+{
+  "pid": "P008",
+  "requestedDifficulty": "INTERMEDIATE",
+  "type": "GRAMMAR_ERROR",
+  "blindAnswer": "(E)",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityEvidence": {
+    "V1": "렌더 지문을 원지문과 전수 대조: 의도된 변형(원문 'accepting' → 표시 'accept', (E)) 외에 문장 접합 파손·중복·누락·고아 문장부호·오탈자 없음. 마커 (A)~(E)가 각 1회씩 나타나고 선택지 목록과 표기·위치 모두 일치. 'analyse' 영식 철자, \"as: '...'\" 콜론 등 특이 표기는 원지문에 이미 존재.",
+    "V2": "각 밑줄 독립 검증. (A) learn은 to부정사 목적어를 취함('rather than follow'의 원형 병렬도 적법) → 옳음. (B) 선행사 'the principles of conduct'(복수)가 considered correct의 대상 → 수동·수일치 옳음. (C) 선행사 없음 + values의 목적어 공백 + 단수동사 relates와 정합 → 자유관계사 What 옳음. (D) beliefs는 학습 경험에 의해 영향받는 대상 → 과거분사 후치수식 옳음. (E) 전치사 alongside의 목적어 자리에서 recognizing과 등위 → 'accept'는 비문, 'accepting'으로 교정 시 정확히 원문 복원. 대안 해석('accept'를 'to understand'와 병렬로 보는 파스)은 'and accept' 앞 콤마 부재와 'recognizing and'가 전치사구 내부에 위치하는 구조상 성립 불가. 정답 유일.",
+    "V3": "오류 주입 후 지문은 의도된 (E) 한 곳만 비문이고 나머지는 문법적·자연스러움. 발문은 표준 어법 발문. 교정형('accepting')을 넣은 완성문은 원문과 동일하여 완전히 문법적.",
+    "V4": "핵심 구조 분석(전치사 alongside + 동명사구 2개의 and 병렬, 뒤따르는 긴 that 목적어절이 동사 착각 유발) 모두 실제 문장과 일치. 오답 해설 4건도 각 선지의 실제 구조(learn+to-V 보문 / 관계사절 내 복수 선행사 수동태 / 선행사 없는 what + 목적어 공백 / 분사 태)와 정확히 대응. '준동사인 accept'는 원형부정사를 준동사로 분류하는 학교문법 관행 내에서 허용 가능. 소소한 어휘 손상(하단 이슈)은 사실성 오류가 아님.",
+    "V5": "선언 정답 (E) = markedExpressions의 유일한 isError:true = 해설 대상 = keyPoints 첫 항목. 오답 해설 키 (A)~(D)가 비오류 선지와 정확히 대응. 선지 텍스트·라벨·교정형 모순 없음."
+  },
+  "validityIssues": [
+    {
+      "code": "V4-wording",
+      "severity": "minor",
+      "evidence": "해설: '전치사의 목적어 역할을 영위하는 동명사 recognizing' — '역할을 영위하다'는 손상된 콜로케이션(정상형: '역할을 하는/수행하는'). 구조 분석 자체는 정확하므로 치명 아님."
+    },
+    {
+      "code": "V4-wording",
+      "severity": "minor",
+      "evidence": "keyPoints (B): '수동태 형 수일치 판단' — '수동태 형태 및 수일치 판단'의 탈락형으로 읽히는 어색한 표현. 내용상 오개념은 없음."
+    },
+    {
+      "code": "V4-wording",
+      "severity": "minor",
+      "evidence": "해설: '문장 뒤에 긴 목적어절(that 이하)이 수반되어' — '밑줄(accept) 뒤에'가 정확한 지시. 지시 대상이 느슨하나 오독을 유발할 정도는 아님."
+    },
+    {
+      "code": "V5-note",
+      "severity": "minor",
+      "evidence": "markedExpressions (E).surroundingText가 렌더형 'accept'가 아닌 원문형 'accepting'을 포함. 실제 렌더 결과는 올바르므로 동기화 실패로 보지 않으나, surroundingText를 렌더 검증에 쓰는 소비자가 있다면 불일치 소지."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 4,
+    "C6": 2
+  },
+  "craftRationale": {
+    "C1": "전치사 목적어 자리의 동명사 병렬은 수능 어법의 정전 포인트이며, 문단 결론 문장의 실제 논리 접합부(recognizing and accepting)에 배치되어 의미 있음. 다만 독창적 지점이라기보다 표준 포인트.",
+    "C2": "다섯 밑줄이 서로 다른 평가요소를 겨냥(pointCode k/e/b/c/i): 동사 보문 형태, 관계사절 내 태·수일치, 관계대명사 what, 분사 태, 병렬. 중복 포인트 없음.",
+    "C3": "(B)는 인용부호 내부의 consider 5형식 수동, (C)는 선행사 탐색 습관, (D)는 분사 태로 각각 실제 판단을 요구. 정답 (E)는 'recognizing and accept'가 인접해 있어 훈련된 학생에게는 국소적으로 발견 가능 — 상급 변별력까지는 아님.",
+    "C4": "메타 누출 없음. 교정 시 정확히 원문이 복원되는 최소대립쌍이며 정답이 필연적. 꼬리 소거 단서 없음.",
+    "C5": "요청 난이도 INTERMEDIATE에 정확히 부합: 한 단계 구조 판단(전치사→동명사 병렬)에 긴 that절이라는 중간 깊이의 함정, 표준적 디코이 구성.",
+    "C6": "구조 설명은 정확하고 정답 근거·함정 분리도 되어 있으나 '역할을 영위하는', '수동태 형 수일치', '문장 뒤에' 등 어색한/손상된 한국어 표현이 반복되어 우아함이 깎임."
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "동사 learn의 목적어 보문 형태(to부정사 vs 동명사/원형) 판단",
+      "temptingBecause": "바로 뒤 'rather than follow'의 원형과 형태가 갈려 병렬 위반으로 오인할 수 있음",
+      "decisiveFlaw": "learn은 to부정사를 목적어로 취하며 'rather than + 원형'은 to부정사 병렬의 적법한 축약 — 옳은 표현이므로 정답 불가"
+    },
+    {
+      "label": "(B)",
+      "intent": "관계사절 내 동사의 태(수동) 및 수일치 판단",
+      "temptingBecause": "인용부호 내부에 묻힌 관계사절이라 구조 파악이 어렵고, consider의 5형식 수동(be considered correct)이 능동처럼 보일 수 있음",
+      "decisiveFlaw": "선행사 'the principles of conduct'(복수)가 고려되는 대상 — 태·수일치 모두 옳으므로 정답 불가"
+    },
+    {
+      "label": "(C)",
+      "intent": "선행사 포함 관계대명사 what vs that/which 판단",
+      "temptingBecause": "문두 명사절에 익숙하지 않으면 선행사를 찾으려 하거나 that으로 바꾸고 싶어짐",
+      "decisiveFlaw": "선행사가 없고 values의 목적어가 공백인 불완전절 + 단수동사 relates와 정합 — What이 옳으므로 정답 불가"
+    },
+    {
+      "label": "(D)",
+      "intent": "명사 후치 수식 분사의 능동/수동 판단",
+      "temptingBecause": "beliefs 뒤 분사가 본동사처럼 보이거나 influencing(능동)과 혼동 가능",
+      "decisiveFlaw": "beliefs는 학습 경험에 의해 영향을 받는 대상이므로 과거분사가 옳음 — 정답 불가"
+    },
+    {
+      "label": "(E)",
+      "intent": "전치사 목적어 자리의 동명사 병렬(recognizing and accepting) 판단 — 정답",
+      "temptingBecause": "뒤에 긴 that 목적어절이 이어져 'accept that...'이 정상적 동사구처럼 보임",
+      "decisiveFlaw": "전치사 alongside의 목적어로 recognizing과 등위 접속되므로 동명사 accepting이어야 함 — 표시형 accept는 비문(유일 오류)"
+    }
+  ],
+  "explanationIssues": [
+    "'전치사의 목적어 역할을 영위하는' — 손상 콜로케이션('수행하는'이 정상형)",
+    "keyPoints (B) '수동태 형 수일치 판단' — 탈락형으로 읽히는 어색한 표현",
+    "'문장 뒤에 긴 목적어절(that 이하)이 수반되어' — 지시 대상('accept 뒤에')이 느슨함"
+  ],
+  "killerConditionsMet": false,
+  "killerNote": "요청 난이도가 INTERMEDIATE이므로 KILLER 추가 조건 판정 대상 아님 → false.",
+  "grade": "B",
+  "notes": "V1~V5 전부 통과, 정답 (E) 유일성 확정(교정 시 원문 정확 복원). 공예 합계 18(3/3/3/3/4/2)로 최저 C6=2 — A 기준(전 항목 3 이상, 합계 21)에 미달하여 B. 해설의 한국어 표현 손상 3건과 markedExpressions (E).surroundingText의 원문형 포함이 작은 수정 대상이며, 수정 시 출제 가능."
+}

@@ -1,0 +1,76 @@
+{
+  "pid": "P006",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-reversed-phrasing",
+      "severity": "minor",
+      "evidence": "메인 해설의 '②는 비판적 사고 정의를 윤리 사고로 축소한 과협소'는 방향이 뒤집힌 표현이다. 실제로는 윤리 사고를 증거 평가(비판적 사고 정의)로 축소한 것이며, 오답 해설 2번('윤리 이슈·다관점 평가를 증거 평가로 축소한다')은 올바르게 서술되어 있어 오개념이 아닌 압축 표현 오류로 판정."
+    },
+    {
+      "code": "V4-minor-typo",
+      "severity": "minor",
+      "evidence": "오답 해설 4번의 '타인 차별만 내면화'는 '타인 차이만 내면화'의 오기로 보인다. 선지 ④의 'what separates other people's ethical codes'(차이)에 대응해야 하는데 '차별'(discrimination)로 표기됨. 의미 복원은 가능하므로 minor."
+    },
+    {
+      "code": "V4-minor-typo",
+      "severity": "minor",
+      "evidence": "오답 해설 3번의 '표현을 과확정해'는 메인 해설의 '과확장'(over-extension)의 오기로 보인다. '과확정'은 비표준 표현."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 4,
+    "C3": 3,
+    "C4": 2,
+    "C5": 2,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — 원문 span 'think through ethical issues'의 의미 보존 paraphrase + 1문장의 'evaluating these issues from different perspectives' 반영",
+      "temptingBecause": "해당 없음(정답). 'no clear right or wrong' 전제 → 과정적 숙고라는 귀결과 정확히 일치하고 tail의 '고정 규약 준수' 대조와 정합",
+      "decisiveFlaw": "없음. 다만 'multiple viewpoints'가 지문의 'different perspectives'를 거의 그대로 반향해 어휘 매칭만으로 도달 가능한 것이 킬러 관점의 약점"
+    },
+    {
+      "label": "2",
+      "intent": "scope shift — 윤리 사고를 첫 문장의 비판적 사고 정의(증거 식별·평가)로 축소",
+      "temptingBecause": "첫 문장의 'identification and evaluation of evidence' 어휘를 직접 차용하며, 'If we understand critical thinking as...' 프레임 때문에 두 정의를 동일시하기 쉽다",
+      "decisiveFlaw": "지문은 윤리 사고를 '윤리 이슈 식별 + 다관점 평가'로 별도 정의하며 증거 평가는 비판적 사고 쪽이다. 'guiding all choices'의 all도 과잉 확장. 유일한 실질 경쟁 선지"
+    },
+    {
+      "label": "3",
+      "intent": "over-extension(과확장) — '올바르다고 여겨지는 원칙에 따라 행동'이라는 인용을 보편 공유 원칙으로 과장",
+      "temptingBecause": "'in accordance with the principles of conduct that are considered correct' 인용구가 표면 anchor를 제공",
+      "decisiveFlaw": "바로 이어지는 'these principles vary both between and within individuals'가 정면 부정. 또한 'every community'라는 절대어가 훈련된 학생에게 즉시 소거 단서가 됨"
+    },
+    {
+      "label": "4",
+      "intent": "actor swap + exclusivity — 자기 요인 이해를 배제하고 타인 코드의 차이만 내면화하도록 주체·범위 왜곡",
+      "temptingBecause": "마지막 문장의 'the factors that drive other people's codes ... may be different'라는 anchor를 차용",
+      "decisiveFlaw": "마지막 문장은 자기 'code of behaviour' 요인 이해와 타인 차이 인정을 병렬('alongside')로 요구한다. 'only'가 이를 부정하며, 표현 자체도 어색해 실질 유인력이 낮다"
+    },
+    {
+      "label": "5",
+      "intent": "half-truth — 맥락 의존적 선택 변화를 '상황별 규칙 교체'라는 규약 준수로 비틈",
+      "temptingBecause": "'context dependent ... the same individual may make different choices' 문장이 anchor를 제공",
+      "decisiveFlaw": "규칙 교체도 여전히 규칙 준수여서 지문이 요구하는 사고 과정이 아니며, 빈칸 뒤에 남은 tail 'rather than follow a prescribed set of ethical codes or rules'와 국소적으로 충돌해 tail만으로 소거 가능"
+    }
+  ],
+  "explanationIssues": [
+    "메인 해설 '비판적 사고 정의를 윤리 사고로 축소한 과협소'는 축소 방향이 뒤집힌 압축 표현(정확히는 윤리 사고→증거 평가로의 축소). 오답 해설 2번이 올바른 방향으로 서술해 상쇄됨",
+    "오답 해설 4번 '타인 차별만 내면화' — '차이'의 오기로 추정, 표현 그대로는 오독 소지",
+    "오답 해설 3번 '과확정' — '과확장'의 오기로 추정되는 비표준 용어",
+    "그 외 전제('no clear right or wrong')→귀결(과정적 숙고) 구조 분석, 함정 유형 분류(과협소·과확장·주체 전도·절반-진실)는 실제 선지 내용과 정확히 대응"
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 원지문과 렌더 지문을 문장 단위 전수 대조 — 의도된 빈칸 치환('think through ethical issues' → _____) 외 변형·손상·중복·고아 문장부호 없음, 라벨 1~5와 선지·정답 선언 일치. V2: 5개 선지 독립 검증 결과 정답 집합 {①} 유일. ②가 유일한 실질 경쟁 선지이나 지문이 명시적으로 두 정의를 구분하므로 배제 확정적. V3: 5개 선지 모두 원형 동사구로 동일 통사 슬롯에 들어가며 완성문 문법적, seam 비문·비단어 없음. V4/V5: 통과(한국어 오기 3건은 minor). KILLER 조건 불충족 사유: (1) 정답이 원문 span의 저추상 paraphrase이고 'multiple viewpoints'≈'different perspectives' 어휘 반향으로 단일 어휘 단서 매칭만으로 도달 가능 — 두 문장 이상 연결 강제 실패, (2) ③'every'·④'only' 절대어 tell로 두 선지가 즉시 소거되고 ⑤는 빈칸 뒤 tail과의 국소 충돌만으로 소거돼 사실상 2지선다로 붕괴. C5=2: 요청 난이도 KILLER 대비 실제 난이도는 중상 수준. C4=2: 정답 어휘 반향 + 절대어 tell의 약한 누출. C6=2: 구조 분석은 선명하나 오기 3건. 합계 17, 최저 2, 전 V 통과 → B(작은 수정으로 출하 가능: 오기 교정, 정답 추상화 상향, ③④ 절대어 완화 권고)."
+}

@@ -1,0 +1,61 @@
+{
+  "pid": "P004",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-render-field-absent",
+      "severity": "minor",
+      "evidence": "파일에 '렌더된 지문' 필드가 '(렌더 지문 없음)'으로 표기됨. TOPIC 유형은 원지문을 무변형 노출하는 유형이므로 의도된 부재로 판단하여 V1 통과 처리. 원지문 자체는 문장 접합 파손·중복·누락·고아 문장부호·오탈자 없음('the business process of outsourcing'은 원문 표현으로 문법적으로 성립). 라벨 1~5와 선언 정답(2) 일치."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 4,
+    "C3": 3,
+    "C4": 3,
+    "C5": 2,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "과거 비교 예시(1990년대 BPO/call centre)를 전체 주제로 격상시키는 세부-주제 혼동(scope: detail-as-topic)",
+      "temptingBecause": "지문 세 번째 문장이 1990년대 아웃소싱과 'global reserve army'를 명시적으로 다루므로 표면 스캔 독자가 앵커로 삼기 쉬움",
+      "decisiveFlaw": "해당 문장은 'While ...' 양보절 속 과거 대조항일 뿐이며, 주절의 초점은 cloudwork가 바꾼 volume·granularity다. 1990년대 offshoring의 '확대'는 지문 어디에도 주장되지 않음"
+    },
+    {
+      "label": "2",
+      "intent": "정답 — 중심 화제(cloudwork/디지털 플랫폼)와 controlling viewpoint(장소 기반 유대의 해소)를 함께 담은 주제",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음. 문장 1('less sticky'), 문장 2('ties ... can be disconnected'), 마지막 문장('leaves behind no material traces')이 일관되게 뒷받침하는 유일한 선지"
+    },
+    {
+      "label": "3",
+      "intent": "예시 과잉일반화 + 행위자 전환(actor swap: 고용주 관점 → 프리랜서 관점)",
+      "temptingBecause": "Nairobi·New Delhi 프리랜서 고용 예시가 지문에 실재하므로 어휘 겹침이 있음",
+      "decisiveFlaw": "지문은 프리랜서가 쓰는 '방법(methods)'을 단 하나도 기술하지 않으며, 서술 주체는 일관되게 고용주(작은 기업·employer)다. 소거가 비교적 빠른 약한 디코이"
+    },
+    {
+      "label": "4",
+      "intent": "half-truth / 관점 누락 — 사실 진술로는 참에 가깝지만 필자의 controlling viewpoint(유대 해소·흔적 부재)를 중립적 '연결' 프레임으로 치환",
+      "temptingBecause": "digital platforms·global labor markets 등 핵심 어휘를 강하게 재사용하고, NY-Nairobi 고용 예시가 실제로 '연결'을 보여주므로 최강 경쟁 선지",
+      "decisiveFlaw": "지문의 논지 방향은 연결 자체가 아니라 연결의 결과인 장소로부터의 탈착(less sticky, ties disconnected, no offices/regulations/taxes, no material traces)이다. 첫 문장과 마지막 문장의 수미 호응을 놓치면 걸리는 함정"
+    },
+    {
+      "label": "5",
+      "intent": "극성 반전(polarity/causal reversal) — 지문 진술의 정반대 규범 주장",
+      "temptingBecause": "local regulations·hiring remotely 등 지문 어휘를 재사용",
+      "decisiveFlaw": "지문은 'no local regulations are observed'라고 명시하므로 '준수해야 하는 이유'는 필자 방향의 정반대. 즉시 소거 가능한 가장 약한 디코이"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "모든 V 게이트 통과. V2 독립 검증: 선지별 참·거짓 판정 결과 정답 집합은 {2}로 유일하며, 최강 경쟁 선지 4는 '연결 프레임 vs 탈착 논지'로 결정적으로 갈림. V4 검증: 해설의 구조 분석(modularised·standardised → 유대 절단 → 규제·세금·물리 흔적 부재)이 실제 지문과 일치하고, 오답 해설 4건 모두 실제 선지 내용과 대응하며 오분석·환각 없음. 공예 합계 19(C1=4, C2=4, C3=3, C4=3, C5=2, C6=3). 감점 근거: (C3) 선지 3·5가 빠르게 소거되어 실질 경쟁이 1·4로 좁혀짐, (C4) 정답이 지문 2문장의 근접 paraphrase이고 'service work'를 그대로 재사용하며 5개 선지 중 유일하게 지문 핵심어 'cloudwork'를 포함해 키워드 매칭 풀이가 가능한 경미한 누출, (C5) 요청 난이도 KILLER 대비 실측 난이도는 중상 — 논지가 2번 문장에 명시적으로 진술되어 단일 단서로 정답 도달 가능. KILLER 조건 판정(§D 정신 준용, TOPIC은 §C/§D 직접 대상 아님): '두 문장/두 논리 단서 연결 필수' 불충족(단일 단서로 충분), '고유어 하나로 정답을 찍을 수 없다' 불충족(cloudwork가 정답에만 등장) → killerConditionsMet=false. 등급 B: 소폭 수정(정답 선지의 cloudwork를 상위어로 추상화하거나 타 선지에 분산, 3·5 디코이 강도 상향)으로 출제 가능."
+}

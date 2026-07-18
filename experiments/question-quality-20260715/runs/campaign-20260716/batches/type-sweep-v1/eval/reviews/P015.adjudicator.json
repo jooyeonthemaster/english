@@ -1,0 +1,44 @@
+{
+  "pid": "P015",
+  "finalV2": false,
+  "winningAnswer": "which → in which (오류 위치는 'a way which'의 which로 유일; 모범 정정은 in which이나 that/관계사 생략도 동일 지점의 문법적 동치 정정)",
+  "reason": "오류 위치는 유일하게 성립한다: which 뒤 절 'children learn about the world and their place in it'은 주어(children)+동사(learn)+about 전치사구 보충어로 완전절이어서 관계대명사 which가 채울 gap이 없고, 대안 해석(which를 learn의 목적어로 읽는 'learn a way about the world')은 논항 구조·의미('their place in it'의 it=the world가 the world를 about구 내부 성분으로 확정) 양면에서 불성립한다. 그러나 본 문항은 서술형 교정형이고, 동일 오류 지점에 대해 'a way that children learn ...'(선행사 way에 대한 관계부사 대용 that + 완전절)과 관계사 생략('a way children learn ...')도 표준 문법 및 학교문법(the way how만 불가) 기준에서 완전한 정문을 만드는 동치 정정이다. 선언된 정답은 '(A) in which' 단일 표기뿐이며 허용 동치 정정 집합이나 원문 복원형 채점 기준이 어디에도 선언되어 있지 않고, 오히려 keyPoint('완전절 앞에는 in which, 불완전절 앞에는 which/that')가 that 정정을 오답으로 오인시키는 이분법을 학생 노출 필드에 명시하고 있다. 따라서 선언된 정답은 모범답안으로는 옳으나 유일하게 인정 가능한 답이 아니며, 채점 경계 미정의로 감사자의 V2 실패 판정을 유지한다. 솔버 1·2의 풀이와 대안 해석 기각은 모두 정확했고 과잉 판정은 없었다.",
+  "perDispute": [
+    {
+      "label": "(A) which — 단독 관계대명사의 비문 성립 여부",
+      "claim": "솔버1·2: 'children learn about the world and their place in it'은 완전절이므로 which 단독은 비문이고 in which로 고쳐야 한다.",
+      "verdict": "CONFIRMED",
+      "evidence": "관계절 내부에 주어(children)·동사(learn)·about 전치사구 보충어가 모두 채워져 관계대명사가 결속할 논항 gap이 없다. 선행사 a way는 절 내에서 방법·수단의 부사적 기능이므로 전치사+관계대명사 in which가 표준 정정이며, 정정 결과는 원지문과 정확히 일치한다."
+    },
+    {
+      "label": "대안 해석 — which를 learn의 목적어로 읽는 파스",
+      "claim": "일부 학생이 'children learn [which=a way] about the world'로 읽어 which가 성립한다고 주장할 가능성.",
+      "verdict": "REJECTED (불성립 — 솔버들의 기각이 옳음)",
+      "evidence": "learn은 'learn X about Y' 이중 보충 구조에서 X 자리에 way류 명사를 취하는 논항 구조가 없고('learn a way about the world'는 비관용·의미 불성립), 'their place in it'의 it이 the world를 지시하므로 the world는 about구 내부 성분으로 확정된다. 과잉 판정 아님."
+    },
+    {
+      "label": "정정 표기 'in which'의 유일성 (V2 쟁점)",
+      "claim": "감사자: which → that(관계부사 대용) 및 관계사 생략도 정문을 만드는 허용 동치 정정인데 답안 경계가 미선언이므로 V2 실패.",
+      "verdict": "UPHELD (V2 실패 유지)",
+      "evidence": "'the way (that) + 완전절'은 표준 영문법과 한국 학교문법 모두에서 허용되는 형태다(the way how만 불가). 발문은 '바르게 고쳐 쓰시오'만 요구하므로 that 또는 생략으로 고친 답안도 오류 위치 식별과 정문 산출을 모두 달성한다. 선언 정답은 in which 단일 표기이고 해설·keyPoints 어디에도 동치 정정 처리 방침이 없어 채점 경계가 흐리다. 솔버 1·2도 that을 허용 가능 변이로 명시해 이 결함 인식과 정합한다."
+    },
+    {
+      "label": "대체 정정 'how'의 허용 여부",
+      "claim": "which → how 정정 가능성.",
+      "verdict": "REJECTED (허용 불가)",
+      "evidence": "'the way how'는 현대 표준영어에서 비문이며, how를 쓰려면 선행사 a way를 삭제해야 하므로 밑줄 문장 유지 조건에서 성립하지 않는다. 솔버 1·2의 배제가 옳다."
+    },
+    {
+      "label": "제2 오류 후보 — its / beginnings / their / it",
+      "claim": "밑줄 내 다른 지점에 추가 오류가 있어 오류 위치가 복수일 가능성.",
+      "verdict": "REJECTED (추가 오류 없음)",
+      "evidence": "its=play's(단수 소유격 정합), 'from its earliest beginnings'는 관용적 복수, their=children's(복수 정합), it=the world(단수 정합). 오류 위치는 which 하나로 유일하다."
+    },
+    {
+      "label": "keyPoint 이분법의 오개념성 (V2 결함과의 연동)",
+      "claim": "감사자: '완전절 앞에는 in which, 불완전절 앞에는 which/that' keyPoint가 the way that+완전절을 오답으로 오인시킨다.",
+      "verdict": "UPHELD",
+      "evidence": "선행사 way에서는 that이 관계부사 대용으로 완전절을 이끌 수 있으므로 해당 이분법은 사실과 충돌한다. 이 진술이 학생 노출 필드에 있어 동치 정정(that)을 적극적으로 배제하는 방향으로 작동, V2 채점 경계 결함을 심화시킨다."
+    }
+  ]
+}

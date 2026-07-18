@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "빈칸 앞 절이 이미 'does seem to be a particularly human skill'(특히 인간적인 기술)이라고 인정한다. 그런데 'but this need not be interpreted as a skill confined primarily to the human species'(하지만 인간종에 국한된 기술로 해석될 필요는 없다)를 넣으면 양보절과 정면으로 모순된다. 'a particularly human skill'과 'confined primarily to the human species'는 사실상 같은 진술이므로 but으로 대비시키면 자기모순. seam은 문법적으로 붙지만 논리 성립 실패."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "'this'(발 구르기=인간의 기술)를 'a minor reflex limited to sirens, saxophones, and jewelry'(사이렌·색소폰·장신구에 한정된 사소한 반사)로 해석하는 것은 지시 대상이 어긋난다. 사이렌·색소폰은 뒤에서 '개'가 반응하는 대상이지 인간의 발 구르기 기술이 아니다. 지시·의미 결합 모두 깨진다."
+    },
+    {
+      "label": "3",
+      "verdict": "correct",
+      "reason": "'interpret X as Y' 구문에서 X=this(발 구르기/외부 리듬을 의도적으로 표시하는 기술), Y=the core faculty required for responding to music. '발 구르기가 인간 고유의 기술이라 해서, 그것을 음악에 반응하는 데 요구되는 핵심 능력으로 해석할 필요는 없다'로 완벽히 결합. 이어지는 근거(개가 사이렌·색소폰·음정 어긋난 소리 등 다른 음악적 특징에 반응)가 '발 구르기 없이도 음악에 반응 가능→발 구르기는 핵심 능력이 아님'을 뒷받침한다. 글 전체 주제(동물이 리듬/음악에 반응 불가하다는 주장은 틀렸다)와 정합. seam·논리 모두 성립하는 유일 선지."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "'this'(발 구르기 기술)를 'the total creative power to compose and perform complex works'(복잡한 작품을 작곡·연주하는 총체적 창조력)로 해석하는 것은 과장·비약. 발 구르기는 작곡/연주와 무관하며, 뒤 근거(개의 사이렌·색소폰 반응)와 논리적으로 연결되지 않는다."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "지문은 Aristotle와 Darwin이 동물의 음악 반응을 '관찰'했다고(Darwin은 음정 어긋난 소리에 낑낑대는 개를 관찰) 서술한다. 즉 그들은 동물의 능력을 인정하는 쪽 증거로 인용된다. 따라서 'an ability Aristotle and Darwin denied to non-human animals'(그들이 동물에게 부정한 능력)는 지문 사실과 정면 배치. 논리 성립 실패."
+    }
+  ],
+  "note": "빈칸 문장 구조: 'The specific response of tapping one's foot ... does seem to be a particularly human skill, but this need not be interpreted as ___.' 지시어 this=인간 고유의 발 구르기 기술. 뒤 문장들이 개가 다른 음악적 특징에 반응한다는 반례를 제시하므로, '발 구르기=음악 반응의 핵심 능력'이라는 해석을 부정하는 3번이 seam·논리 모두 유일하게 성립. 1번은 양보절과 동어반복적 모순, 2·4·5번은 지시 대상 어긋남 또는 지문 사실과 배치. 단일 정답으로 명확히 좁혀짐."
+}

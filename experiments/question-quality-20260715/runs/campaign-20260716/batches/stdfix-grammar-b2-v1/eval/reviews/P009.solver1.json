@@ -1,0 +1,35 @@
+{
+  "pid": "P009",
+  "answer": "E",
+  "multipleDefensible": false,
+  "defensibleLabels": ["E"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "'Such species, called keystone species, are vital...' 에서 called 는 주어 Such species 를 수식하는 과거분사(축약된 수동 관계절 'which are called ...')로, 콤마로 삽입된 동격/분사구를 이끈다. 종은 keystone species 라고 '불리는' 대상이므로 수동의 과거분사 called 가 문맥·어법상 옳다. 유혹: 능동형이 필요한가 잠깐 끌렸으나 명명 대상이 주어이므로 수동이 맞다."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "'The fact that other species depend on or are greatly affected by the keystone species' 에서 that 은 추상명사 The fact 의 동격절(appositive noun clause)을 이끄는 접속사다. 뒤에 완전한 절(주어 other species + 동사 depend/are affected)이 이어지므로 관계대명사 which/that(불완전절 요구)이 아니라 동격 접속사 that 이 정확하다."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "장거리 주어는 'The fact that ... the keystone species' 전체이며 핵어(head)는 단수 The fact 이다. 따라서 단수 동사 is 와 수 일치가 맞고, 사실이 '드러나는' 것이므로 수동태 is revealed 도 의미상 옳다. 유혹: 바로 앞 복수 명사 species 에 이끌려 are 를 떠올렸으나 진짜 주어는 The fact 이므로 is 가 정답."
+    },
+    {
+      "label": "D",
+      "verdict": "correct",
+      "reason": "'when other fruits are less plentiful' 에서 be동사 are 의 보어 자리이므로 형용사가 필요하고, less plentiful(덜 풍부한)은 형용사 plentiful 의 비교 표현으로 어법상 옳다. 부사 plentifully 가 아니라 보어 형용사가 맞다."
+    },
+    {
+      "label": "E",
+      "verdict": "incorrect",
+      "reason": "'Protects fig trees in such tropical rainforest ecosystems is an important conservation goal' 에서 문장의 주어 자리에 정동사 Protects 가 놓여 있다. 주어는 명사구여야 하므로 동명사 Protecting(또는 to부정사 To protect)이 와야 하며, 정동사 Protects 는 주어가 될 수 없다. 단수 동사 is 와 결합하는 주어로서 동명사가 요구되는 자리이므로 Protects 는 어법상 틀린다. 이것이 유일하게 명백히 틀린 선지다."
+    }
+  ],
+  "note": "정답은 (E). 문두의 정동사 Protects 가 주어 역할을 할 수 없어 동명사 Protecting 이 되어야 하는 명백한 오류. 나머지 (A) 수동 과거분사, (B) 동격 접속사 that, (C) 단수 핵어 The fact 와의 수일치 is revealed, (D) 보어 형용사 plentiful 은 모두 지배 규칙상 정문이다. (C)의 인접 복수명사 species, (A)의 능동/수동 판단이 매력적 미끼였으나 장거리 단서로 모두 정문 확정. 단일 정답, 옹호 가능한 다른 후보 없음."
+}

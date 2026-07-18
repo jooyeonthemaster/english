@@ -1,0 +1,44 @@
+{
+  "pid": "P003",
+  "finalV2": false,
+  "winningAnswer": "1",
+  "reason": "내용 차원에서는 선언 정답 ①(problematic / management organization)이 유일하게 성립하며 솔버 양측의 오답 기각(②~⑤)에 과잉 판정은 없다. 그러나 SUMMARY_COMPLETE_MC 유형임에도 (A)/(B) 빈칸을 포함한 요약문 자체가 학생 노출 문항에 통째로 부재한다(blind/full 모두 확인: 렌더 지문 없음, markedExpressions 없음). (A)/(B) 슬롯의 의미는 오직 숨겨진 요약문 프레임이 결정하는데, 프레임 문구에 따라 ②(problematic / personal flair)가 정답이 되는 대안 프레임(예: '(B)는 소형·단순 제품에서 필수적이다' 계열)이 원리적으로 구성 가능하고, 빈칸 결합부의 문법성은 완성문 부재로 검증 대상 자체가 없다. 정답 유일성 인증은 조정자가 재구성한 가정 프레임이 아니라 실제 렌더된 문항에 대해 부여되어야 하므로, 감사자의 보수적 V2 실패를 유지한다. 요약문 프레임을 복원하면(권장: 정답 항 paraphrase 추상화 포함) ① 단독 정답으로 V2 통과가 예상된다.",
+  "perDispute": [
+    {
+      "label": "FRAME",
+      "claim": "감사자: (A)/(B)를 담은 요약문이 문항에 존재하지 않아 정답 유일성·문법성 검증이 원리적으로 불가능하다(V2 실패).",
+      "verdict": "인정(감사자 판정 유지)",
+      "evidence": "blind/P003.md와 full/P003.md 모두 발문이 '빈칸 (A), (B)에 들어갈 말'을 지시하지만 요약문 문장이 어디에도 없음. full 파일 기준 '렌더된 지문: (렌더 지문 없음)', 'markedExpressions / 구조 필드: (없음)'. 해설만이 '요약문의 평가 항/대비·보완 항'이라는 미존재 구조물을 지목한다. 슬롯 의미가 프레임에 종속되므로, 숨겨진 프레임이 달라지면 정답 쌍이 바뀔 수 있어(아래 label 2 참조) 유일성은 재구성 가정 위에서만 성립한다. 솔버1 note('숨겨진 요약문의 실제 문구에 따라 (A)/(B) 슬롯의 의미가 달라질 수 있어')와 솔버2 note('빈칸 결합부(seam)의 문법성 검증은 형식적으로 불가능')도 동일 결함을 자인했다."
+    },
+    {
+      "label": "1",
+      "claim": "솔버1·2: problematic / management organization 쌍만 양 슬롯을 만족하는 단독 정답.",
+      "verdict": "내용 차원 성립(자연스러운 재구성 프레임 하에서 유일 정답) — 단 형식 인증은 불가",
+      "evidence": "(A)는 지문 'The emphasis on individuality is therefore problematic'의 명시적 평가 술어와, (B)는 'management organization and processes can be equally as relevant as designers' creativity'의 집단 작업 핵심 요인과 정확히 대응. 자연스러운 재구성 프레임('대형 프로젝트에서 개인성 강조는 (A)하며, 집단 작업에서는 (B)가 창의성만큼 중요하다') 하에서 다른 어떤 쌍도 양 슬롯을 동시에 만족하지 못한다. 두 항 모두 verbatim lift라는 공예 결함(감사자 VERBATIM_ANSWER_LEAK)은 유일성 판정과 별개로 타당."
+    },
+    {
+      "label": "2",
+      "claim": "솔버1·2: (A)는 성립하나 (B) personal flair가 집단 작업 슬롯에서 실패 → 오답.",
+      "verdict": "기각 타당(과잉 판정 없음) — 단, 프레임 부재 시 유일한 실질적 대안 정답 리스크",
+      "evidence": "지문에서 personal flair는 'relatively small objects, with a low degree of technological complexity'(가구·조명·소형가전·생활용품) 범주 한정의 필요조건이며, 집단 작업에서 창의성과 대등해지는 요인은 management organization and processes로 명시되어 P5와 정면 모순 — 의도된 프레임 하에서 기각은 확정적. 그러나 숨겨진 프레임이 '(B)는 소형·저복잡성 제품에서 필수적이다' 형태라면 ②가 정답이 되고 ①이 오답이 되는 역전이 가능하다. 이것이 프레임 부재가 유일성 인증을 막는 구체적 반례 경로다."
+    },
+    {
+      "label": "3",
+      "claim": "솔버1·2: (B)는 성립하나 (A) inevitable이 실패 → 오답.",
+      "verdict": "기각 타당(과잉 판정 없음)",
+      "evidence": "'should not be surprising'과 교육·문헌 배경은 개성 과시 성향이 자연스러운 경향임을 인정하는 서술일 뿐, 필자의 최종 평가 술어는 'therefore problematic'이다. 요약문의 평가 항에 inevitable을 넣으면 P4의 비판·교정 논지가 소거되어 '가장 적절한' 요약이 될 수 없다. inevitable이 이기는 합리적 프레임을 별도 탐색했으나, 그 경우에도 필자의 명시 술어 problematic이 항상 더 적합해 대안 정답으로 성립하지 않는다."
+    },
+    {
+      "label": "4",
+      "claim": "솔버1·2: (A) essential은 논지 정반대, (B) technological complexity는 범주 구분 조건에 불과 → 양 슬롯 실패.",
+      "verdict": "기각 타당(과잉 판정 없음)",
+      "evidence": "'absolute necessity'는 소품 한정 진술이므로 대규모 프로젝트의 individuality 강조를 essential로 평가하는 것은 극성 역전이다. technological complexity는 'low degree of technological complexity'로 소형 제품군을 한정하는 분류 기준으로만 등장하며 집단 작업에서 창의성과 동급 요인이 아니다. 어떤 재구성 프레임에서도 양 슬롯 동시 성립 경로가 없다."
+    },
+    {
+      "label": "5",
+      "claim": "솔버1·2: (A) overrated는 부분 옹호 가능하나 (B) design literature가 결정적으로 실패 → 오답.",
+      "verdict": "기각 타당(부분 옹호도 적절히 한정됨, 과잉 판정 없음)",
+      "evidence": "overrated는 비판적 극성이 같아 느슨한 패러프레이즈로 볼 여지가 있으나(솔버들의 부분 옹호는 이 한도 내에 머물렀음), design literature는 'contains countless references to the designer'라는 개인주의 담론의 배경 근거(P1 증거)로만 인용될 뿐 집단 작업의 관계항이 아니어서 (B) 슬롯에서 쌍이 붕괴한다. 쌍 단위 기각은 모든 합리적 프레임에서 유지된다."
+    }
+  ]
+}

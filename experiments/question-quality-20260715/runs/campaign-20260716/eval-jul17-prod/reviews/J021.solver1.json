@@ -1,0 +1,35 @@
+{
+  "pid": "J021",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "correct",
+      "reason": "Seam: 'reminds the viewer or reader that they must adopt a specialized frame of mind' — singular 'they' resolves cleanly to 'the viewer or reader'. Logic: 'a specialized frame of mind' = the 'aesthetic attitude' named in the final sentence; being reminded to adopt it is exactly the 'active involvement' the very next sentence refers back to ('This active involvement provides a basis for depth of aesthetic processing'). Fits both the local anaphora and the global pragmatic/aesthetic contrast."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "Contradicts the trigger clause: the reminder is caused by the work's DEPARTURE from conventional forms, so 'mastering conventional techniques' inverts the mechanism. 'Replicate the artist's original intention' has no basis in the passage; the text is about the viewer's processing mode, not reproduction of intent."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "Directly contradicts the closing distinction: the expressionist work pushes the viewer OUT of the everyday 'pragmatic attitude' into an 'aesthetic attitude'. Measuring artwork by pragmatic utility is the opposite of what the disruption reminds the viewer of."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong (attractive distractor)",
+      "reason": "Felt the pull as an examinee: 'disquieting atmosphere' primes 'emotional discomfort', and 'cognitive efforts' superficially echoes 'active involvement'. But the passage values the disquiet as productive — it grounds 'depth of aesthetic processing and reflection'. Suppressing the discomfort to 'regain clarity' would terminate that reflection, reversing the passage's direction. Also 'prompt ... to suppress' frames disquiet as a problem to fix, which the text never does."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "The final sentence prizes the ABILITY TO SWITCH between the pragmatic and aesthetic attitudes, which presupposes the two remain distinct. 'Permanently dissolved' boundaries would make switching meaningless — the absolute 'permanently' is the giveaway. Mild pull from the theme of connecting art and life, but it overshoots."
+    }
+  ],
+  "note": "Blank-completion item with a clear anaphoric anchor: the sentence after the blank ('This active involvement ...') and the closing pragmatic/aesthetic-attitude sentence jointly pin the blank to 'viewer must adopt a special (aesthetic) mindset'. ④ is a well-built emotional-vocabulary distractor (discomfort/clarity) but fails on argument direction; ⑤ fails on the switch-vs-dissolve distinction. Single defensible answer: ①."
+}

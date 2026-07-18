@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'The term X originated from [person]' — intransitive 'originate' in simple past with prepositional complement 'from'; subject 'The term' agrees; no passive/auxiliary required. Grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "Relative clause 'that are put-downs' with plural antecedent 'exchanges' (head of 'subtle, stunning, often automatic, and nonverbal exchanges'); plural 'are' agrees, and plural predicate nominal 'put-downs' is consistent. No singular head is available as an alternative antecedent. Grammatical."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "Adverb 'psychologically' modifies the verb 'impact' in 'to impact any oppressed group psychologically'; there is no post-verbal noun for an adjective to modify, so the adverbial form is required and correctly supplied. Grammatical."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "Subject is plural 'Racial microaggressions'; the intervening 'such as assumptions about a person's intelligence or work ethic based on their race or ethnicity' is a parenthetical exemplification, not the subject. The predicate nominal 'commonplace verbal, nonverbal, or environmental indignities' is also plural. Both agreement cues demand 'are'. Rescue parses fail: no metalinguistic singular-term reading (no quotation marks, real-world predication) and the parenthetical cannot be the syntactic subject. 'is' is ungrammatical."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "Causative 'make + object + bare infinitive': 'make target groups feel unwelcome, isolated, and unsafe'. Bare infinitive 'feel' is exactly the form governed by causative 'make'. Grammatical."
+    }
+  ],
+  "note": "Clean single-error item. (D) is a classic subject-verb agreement error with a long 'such as' parenthetical acting as distance-based distractor; both the plural subject and the plural predicate complement independently confirm 'are'. No other option admits any ungrammatical reading under alternative parses (reduced relatives, causatives, adverb placement all checked). Uniquely defensible answer: (D)."
+}

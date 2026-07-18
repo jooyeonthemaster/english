@@ -1,0 +1,35 @@
+{
+  "pid": "P016",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "(A) originality: passage asserts 'Personal flair is without doubt an absolute necessity' for relatively small, low-complexity objects (furniture, lighting, small appliances, housewares) — 'the originality of the individual designer' is a direct paraphrase of personal flair / individual personality. Seam check: 'demand the originality of the individual designer' (abstract noun + of-genitive) is well-formed. (B) coordination: for larger-scale projects the passage states substantial numbers of designers are employed in implementing a concept, successful designer 'personalities' function as creative managers rather than actually designing, and 'management organization and processes can be equally as relevant as designers' creativity' — coordination is the precise abstraction of organizing a group's implementation work. Seam check: 'a managerial role where coordination is crucial' — relative adverb 'where' with abstract antecedent 'role' is standard; clause well-formed. Both conjuncts entailed; only fully valid combination."
+    },
+    {
+      "label": "2",
+      "verdict": "incorrect",
+      "reason": "(A) originality holds, but (B) independence is contradicted by the passage: large projects are characterized by 'substantial numbers of designers', 'working in a group', and 'management organization and processes' — the negation of independence. Independence is a property of 'designers working truly alone' (the small-scale side), so placing it in slot (B) inverts the passage's contrast. Grammatically well-formed, logically false. Half-right (A-only) distractor."
+    },
+    {
+      "label": "3",
+      "verdict": "incorrect",
+      "reason": "(B) coordination holds, but (A) regularity fails: regularity (rule-governed sameness/consistency) has no textual support and is near-antonymic to 'personal flair' and 'individual personality', which the passage names as the necessity for small-scale products. The conjunction fails on (A). Half-right (B-only) distractor."
+    },
+    {
+      "label": "4",
+      "verdict": "incorrect",
+      "reason": "(A) uniformity directly contradicts 'personal flair' / 'demonstrate individual personality' — immediately falsified. (B) leadership finds partial support in 'a strong personality exercises powerful influence' and 'creative managers', but the passage's concluding emphasis is on 'management organization and processes' (coordination), not personal leadership; regardless, the falsified (A) slot invalidates the conjunction. No alternative reading rescues it."
+    },
+    {
+      "label": "5",
+      "verdict": "incorrect",
+      "reason": "(A) versatility (breadth/adaptability across tasks) is a different concept from personal flair (distinctive individual creativity) and has no supporting sentence. (B) isolation contradicts the group-based, managerially organized nature of large projects. Both conjuncts fail."
+    }
+  ],
+  "note": "Lens: grammarian/logician. Summary-completion item; each option evaluated as a conjunction (A)AND(B) against passage entailments. All five options are bare abstract nouns, so every option passes the grammatical seam test in both slots — discrimination rests purely on semantic/logical fit, which is appropriate for this item type. Passage thesis: small-scale products require personal flair of the individual; large-scale projects turn the designer into a creative manager where management organization and processes matter as much as creativity. Only option 1 (originality = personal flair; coordination = management organization/processes) has both conjuncts entailed. Options 2 (A-only) and 3 (B-only) are well-designed half-right distractors. Actively searched for alternative readings (e.g., construing 'strong personality exercises powerful influence' as leadership for option 4) — none elevates a second option because each has an independently falsified slot. Single defensible answer: 1."
+}

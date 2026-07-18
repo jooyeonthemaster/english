@@ -1,0 +1,35 @@
+{
+  "pid": "P013",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "The noun 'tendency' licenses an infinitival complement ('a tendency to V'). The intervening parenthetical adverbial clause 'once the dust of an emergency has settled down' does not break the noun-infinitive dependency, and 'seek X in Y' is an idiomatic valency frame ('seek the reduction ... in enhanced economic growth'). Grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "Past participle used attributively: 'enhanced economic growth' = growth that has been enhanced. A passive-resultative participle premodifying an NP is well-formed and requires no expressed agent. Grammatical."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "The subject 'The potential contribution of greater economic success' is the patient of 'deny', so the passive 'cannot be denied' is required and correctly supplied (modal + be + past participle). The conditional insert 'if it involves vulnerable groups' is parenthetical and irrelevant to voice. Grammatical."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "Subject-verb agreement across a long distractor chain: the subject head is singular 'Rapid growth', followed by coordinated prepositional complements 'of the economy in Botswana, or of the agricultural sector in Kenya, or of food production in Zimbabwe'. The 'or' coordinates of-phrases, not full subject NPs, so the head stays singular -> 'explains' is required. Even under the alternative parse of disjoined subjects, 'or'-coordination takes nearest-conjunct agreement with singular 'food production' -> still 'explains'. No available parse legitimizes plural 'explain'. Ungrammatical."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "Plural subject 'The real achievements of these countries' agrees with plural 'lie'; intransitive 'lie in + gerund' ('lie in having provided') is the correct idiom (not 'lay'). The perfect gerund 'having provided' properly marks anteriority. Grammatical."
+    }
+  ],
+  "note": "Uniquely determined answer: (D). Agreement violation is robust under every parse (head-noun agreement and nearest-conjunct agreement both demand singular 'explains'). All other underlines are grammatical with no defensible ungrammatical reading; the item is clean with a single answer. Passage appears adapted from Dreze & Sen-style famine/entitlement literature, but judgment was made solely from the given text."
+}

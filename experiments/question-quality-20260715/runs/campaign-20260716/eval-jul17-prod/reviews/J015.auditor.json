@@ -1,0 +1,93 @@
+{
+  "pid": "J015",
+  "blindAnswer": "(D)",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-terminology-minor",
+      "severity": "minor",
+      "evidence": "(A) 해설이 'no matter how'를 '복합관계부사'라고 부른다. 엄밀히는 복합관계부사 however와 동치인 접속사구('no matter'+의문부사 how)이며, 'no matter how' 자체를 복합관계부사로 분류하는 것은 한국 교재 관행상 통용되지만 느슨한 용어 사용이다. 판정 논리(부사 fast가 자동사 grow를 수식)는 정확하므로 V4 실패로 보지 않는다."
+    },
+    {
+      "code": "V3-passage-noise-minor",
+      "severity": "minor",
+      "evidence": "밑줄 없는 구간의 'a large part of the population derive'(단수형 명사구 + 복수 동사)는 영국식 집합명사 수일치로 원전(Dreze & Sen) 그대로이나, 한국 학교문법 기준으로 학생이 '표시되지 않은 오류'로 오인할 수 있는 잡음이다. 원문 보존이므로 실패는 아니며, 오히려 (B)를 매력적으로 만드는 부수 효과가 있다."
+    },
+    {
+      "code": "KILLER-C3-why-tempting-missing",
+      "severity": "minor",
+      "evidence": "RUBRIC §C 3번 조건: 5개 밑줄 각각에 point·why tempting·why correct가 있어야 한다. pointCode와 why-correct는 5개 모두 존재하지만 (A)/(C)/(E)의 '왜 매력적인가'(why tempting) 서술이 어디에도 없다. 특히 (E) their는 문맥상 헷갈릴 요소가 거의 없어 필러에 가깝다. killerConditionsMet=false의 근거."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 4,
+    "C5": 2,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "형용사와 형태가 같은 평서부사(flat adverb) 판별 — 'how ___ they grow' 자리의 부사 적격성",
+      "temptingBecause": "fast가 형용사로 익숙해 -ly가 없는 부사형을 비문으로 오인할 수 있고, no matter how 구문 자체가 어순 판단을 요구한다",
+      "decisiveFlaw": "fast는 표준 평서부사로 자동사 grow를 적법하게 수식한다('fastly'는 비단어). 오류 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "관계부사 vs 관계대명사 — 선행사 countries 뒤 절의 완전성 판정",
+      "temptingBecause": "직후의 'a large part of the population derive'가 한국 학교문법 감각으로 수일치 위반처럼 보여 이 구간 전체가 틀린 것 같은 잡음을 만들고, countries 뒤라 which/in which를 기대하는 학생이 많다",
+      "decisiveFlaw": "where 뒤 절은 주어·동사·목적어를 갖춘 완전한 절이고 선행사 countries는 장소적 선행사이므로 관계부사 where가 정확하다. 오류 아님"
+    },
+    {
+      "label": "(C)",
+      "intent": "현재분사 후치수식의 태 판정 — mechanisms와 involve의 능동 관계 및 목적어 유무",
+      "temptingBecause": "정답 (D)와 같은 -ing 표면형이라 준동사 계열 전체를 의심하는 학생을 흡수하고, involved(과거분사)로의 교체 가능성을 저울질하게 한다",
+      "decisiveFlaw": "목적어 direct public intervention을 취하는 능동 현재분사 후치수식으로 정확하다. 오류 아님"
+    },
+    {
+      "label": "(D)",
+      "intent": "정동사 vs 준동사 — 'A, or of B, or of C' 병렬 전치사구로 길어진 명사구 주어 뒤 필수 본동사 확인 (정답)",
+      "temptingBecause": "세 개의 'or of ...' 병렬 수식이 주어를 26어 문장 깊숙이 늘어뜨려, explaining을 앞 명사구를 잇는 분사 수식으로 읽고 지나치기 쉽다",
+      "decisiveFlaw": "이 문장에는 정동사가 하나도 없어 explaining이면 단문 조각(fragment)이 된다. 마침표로 끝나므로 분사구문·독립분사 해석도 불가. 단수 핵 growth에 일치하는 explains로 고치면 정확히 원문이 복원된다(최소대립쌍)"
+    },
+    {
+      "label": "(E)",
+      "intent": "대명사 소유격의 수 일치 — their의 선행사 판별",
+      "temptingBecause": "앞 문장들의 단수 명사 population, the economy 등이 시야에 있어 its를 기대할 여지가 이론상 있으나, 같은 문장 안에 these countries가 명시되어 실질적 유인력이 약하다",
+      "decisiveFlaw": "선행사는 같은 문장의 복수 these countries이므로 their가 정확하다. 오류 아님 (디코이로서는 가장 약함 — 필러에 근접)"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "(A) 해설: 'no matter how'를 복합관계부사로 지칭 — however(복합관계부사)와 동치인 접속사구를 느슨하게 부른 것. 판정 논리는 정확",
+      "recommendation": "'복합관계부사 however와 같은 뜻의 no matter how 뒤에서' 정도로 용어를 정돈"
+    },
+    {
+      "severity": "minor",
+      "evidence": "오답 해설 4건이 모두 '왜 맞는가'만 서술하고 '왜 매력적인가'가 없다. keyPoints도 (D)(B)(C)만 다루고 (A)(E)는 누락",
+      "recommendation": "각 디코이에 why-tempting 한 줄을 추가하고 keyPoints에 (A)(E) 판정 기준을 보강"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionDetail": {
+    "minimalPair": true,
+    "clearGrammarJudgment": true,
+    "allFivePointsDocumented": false,
+    "structuralReadRequired": true,
+    "noSamePointEasyDecoyMasking": true,
+    "note": "최소대립쌍(explains→explaining, 교정 시 원문 복원)·명확한 문법 판정·구조 독해 요구는 충족. 그러나 (A)/(C)/(E)의 why-tempting 문서화가 없고(§C 3번 위반), 본동사 누락 패턴은 가장 훈련된 고난도 정형이라 상위권 학생의 루틴 점검('정동사 없는 문장 찾기')에 수 초 내 걸린다. (C)(E) 두 약한 디코이까지 겹쳐 KILLER 함정 깊이에 미달 — C5=2"
+  },
+  "grade": "B",
+  "notes": "V1~V5 전부 통과. 렌더 지문은 explains→explaining 단일 변형 외 원문과 완전 일치, 마커·라벨 동기화 정상. 정답 (D)는 유일 오류로 독립 검증됨(각 디코이의 대안 해석 검토 포함). 해설의 통사 분석(명사구 주어 식별, 정동사 부재, explains 교정)은 사실과 일치. 출제 포인트는 정전급(C1=4)이고 단서 경제성도 좋으나(C4=4), 요청 난이도 KILLER 대비 함정 깊이가 부족하고(C5=2) (E)가 약한 디코이라 A가 아닌 B. 작은 수정(디코이 (E) 강화 또는 더 깊은 포인트로 교체, why-tempting 문서화)으로 출하 가능."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P008",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "flow-consistent",
+      "reason": "'The very features that create expertise in a specialized domain lead to ignorance in many others.'는 도입문(기후과학자↛의료개혁, 물리학자↛벌 군집 붕괴)의 일반화다. 도입부의 두 사례가 이 문장의 보편 명제의 인스턴스이므로 논리적 지지 관계가 형식적으로 성립한다. 제거 시 도입 사례와 ② 사이의 일반화 고리가 끊긴다."
+    },
+    {
+      "label": "②",
+      "verdict": "flow-consistent",
+      "reason": "'전문성은 영역 제한적'이라는 ①의 따름정리로서 '비전문가(농부·어부·환자·원주민)가 과학자가 배울 만한 관련 경험을 가질 수 있다'를 제시한다. 전문가 지식의 한계 → 비전문가 지식의 가치라는 논증 전개로 자연스럽고, ③의 대용어 this의 선행 명제 역할을 한다."
+    },
+    {
+      "label": "③",
+      "verdict": "flow-consistent",
+      "reason": "'Indeed ... scientists have begun to recognize this'의 this가 ②의 명제를 지시하고, Arctic Climate Impact Assessment가 원주민 관찰을 포함한다는 사실이 ②의 실증 사례로 기능한다. 담화표지 Indeed의 예시·강화 기능과 대용 결속이 모두 성립한다."
+    },
+    {
+      "label": "④",
+      "verdict": "irrelevant (정답)",
+      "reason": "'These experts ... can properly speak for the public on ANY matter linked to that world'는 전칭 명제(전문가는 자연 세계와 연결된 어떤 사안에든 공적으로 발언 가능)로서, 도입문과 ①이 명시적으로 부정한 '전문성의 영역 간 이전 가능성'을 주장한다. 즉 지문의 공리(전문성은 영역 제한적)와 형식적 모순이며, 직후 결론 'our trust needs to be limited, and focused ... very particular'와도 정면 충돌한다. ④를 제거하면 ③ → 'So our trust needs to be limited'가 매끄럽게 이어진다(무관 문장 문제의 삭제 검증 통과). ⑤의 표현('devoted their lives to ... tough questions about the natural world')을 어휘적으로 모방한 미끼이나 명제 내용은 정반대다. 또한 'These experts'의 지시도 불안정하다 — 직전 ③의 신정보는 원주민 집단인데 ④는 과학자를 가리키는 것으로 읽혀 대용 결속도 어긋난다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "flow-consistent",
+      "reason": "'Blind trust will get us into at least as much trouble as no trust at all'에 대한 대구로, But으로 반전해 '지정된 전문가에 대한 어느 정도의 신뢰가 없으면 마비된다'는 하한을 제시한다. '신뢰는 제한적·초점적이어야 하되 0이어서는 안 된다'는 지문 결론의 필수 반쪽이므로 흐름상 필수적이다. 대시 삽입구(the men and women who ...)의 동격 구문도 문법적으로 정상이다."
+    }
+  ],
+  "note": "무관 문장 유형. 논리 구조: 공리(전문성=영역 제한) → 일반화(①) → 따름정리(②) → 실증(③) → 결론(신뢰는 제한적·특정적이되 비영(非零), ⑤). ④만이 전칭 주장으로 공리와 모순되고 삭제 시 응집성이 오히려 향상된다. 대안 해석(④를 ⑤의 예고로 보는 독해)은 'any matter'의 전칭성이 'limited, focused, very particular'와 양립 불가하므로 기각. 옹호 가능 정답은 ④ 단일."
+}

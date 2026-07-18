@@ -1,0 +1,82 @@
+{
+  "pid": "P001",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-TYPO",
+      "severity": "minor",
+      "evidence": "오답 해설 ④에 '의식적 자각 없이Habit(습관)을 통해'로 한글과 영단어가 공백 없이 접합된 손상 표기가 있음. 내용 자체(습관을 통해 의식적 자각 없이 수행)는 지문과 일치하므로 오개념은 아님."
+    },
+    {
+      "code": "V4-MISQUOTE",
+      "severity": "minor",
+      "evidence": "오답 해설 ⑤가 '언어적 명제(formalized rules)'로 표기했으나 지문의 실제 표현은 'formulated rules'임. 괄호 주석(패러프레이즈)으로 볼 수 있으나 지문 인용으로 오독될 소지가 있는 근사 오기."
+    },
+    {
+      "code": "V4-REMOVED-SPAN-CITED",
+      "severity": "minor",
+      "evidence": "오답 해설 ①과 keyPoints가 \"본문의 'thinking less' 논지\"를 인용하지만 'thinking less'는 빈칸으로 제거된 구간이라 학생이 보는 렌더 지문에는 존재하지 않음. 정답 ③을 채우면 동일 의미가 복원되므로 논리 오류는 아니나 인용 표기가 부정확."
+    },
+    {
+      "code": "V4-OVERREACH",
+      "severity": "minor",
+      "evidence": "해설의 '몸의 감각(touch, feel, intuition)으로 체득된다고 설명했으며'는 과잉 해석. 지문은 practical knowledge를 말할 때 bodily metaphors를 '사용하는 경향이 있다'고 서술할 뿐, 몸의 감각을 습득 기제로 명시하지 않음(습득 기제는 experience/shared experience)."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "극성 역전 함정 — 전문가는 신중하게 대안을 배제하며 판단한다는 통념(deliberate analysis) 자극",
+      "temptingBecause": "'when you should plow ahead ... and when you should put it aside'의 판단·선구안 서술과 표면적으로 겹치고, 전문가상(꼼꼼함)에 대한 상식적 스키마와 부합",
+      "decisiveFlaw": "꼼꼼한 배제 검토는 의식적·분석적 사고를 늘리는 행위로, 'isn't thinking more'의 대구와 후행 문장 'without conscious awareness'에 정면 모순"
+    },
+    {
+      "label": "②",
+      "intent": "범주 전도(concept swap) — 대조된 두 지식 유형(technical vs practical)을 뒤바꾸는 오독 겨냥",
+      "temptingBecause": "첫 문장의 'formulated rules', 'book knowledge' 어휘 앵커를 그대로 재사용해 표면 겹침이 큼",
+      "decisiveFlaw": "practical knowledge를 '사용하는' 순간을 book knowledge '습득'으로 치환한 범주 모순 — 지문은 두 지식을 명시적으로 대조(on the other hand)"
+    },
+    {
+      "label": "③",
+      "intent": "정답 — source span 'thinking less'를 '의도적 인지 계산의 우회'로 난이도에 맞게 추상화",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음 — 'habit', 'without conscious awareness', 'isn't thinking more' 세 단서가 유일하게 수렴"
+    },
+    {
+      "label": "④",
+      "intent": "half-truth + 극성 역전 — 지문에 실재하는 'intuition'을 가져오되 '행동 전 검증'이라는 의식적 절차를 덧붙임",
+      "temptingBecause": "'an intuition for how events are going to unfold'와 직접 어휘 겹침이 있어 표면 대응이 가장 강함",
+      "decisiveFlaw": "직관의 타당성 '평가'는 의식적 메타인지 활동으로, 습관 기반 무의식 수행('without conscious awareness')과 모순"
+    },
+    {
+      "label": "⑤",
+      "intent": "기제 역전(mechanism reversal) — 실무 지식의 전수 경로를 언어적 명제화로 뒤집는 오독 겨냥",
+      "temptingBecause": "'formulated rules'와 'experience' 어휘 앵커를 결합해 그럴듯한 종합처럼 보임",
+      "decisiveFlaw": "언어적 명제화는 technical/book knowledge의 영역이며, 지문은 practical knowledge가 'passed along through shared experience'로 전달된다고 명시 — 게다가 명제화는 인지 노력을 늘리는 행위"
+    }
+  ],
+  "explanationIssues": [
+    "오답 해설 ④: '없이Habit' 공백 누락 및 돌출 대문자 — 표기 손상(minor)",
+    "오답 해설 ⑤: 지문 표현 'formulated rules'를 'formalized rules'로 근사 오기(minor)",
+    "오답 해설 ①·keyPoints: 빈칸으로 제거된 'thinking less'를 '본문의' 표현처럼 인용 — 렌더 지문 기준 부정확(minor)",
+    "본해설: bodily metaphors(서술 방식)를 '몸의 감각으로 체득'(습득 기제)으로 과잉 해석(minor)",
+    "keyPoints 3번: \"and, but 등 대조\"는 실제 대조 표지('on the other hand', 'but only')와 느슨하게만 대응하는 두루뭉술한 서술(minor)"
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "유효성 5개 게이트는 모두 통과한 건전한 문항이나, 요청 난이도 KILLER에 크게 미달한다. 결정적 결함: (1) 빈칸 직전의 대구 'she isn't thinking more; she is ___'가 문장 내부에서 극성을 확정해 주고, (2) 오답 4개가 전부 '의식적·능동적 인지 행위'라는 동일 극성이라 학생은 '덜 생각한다' 방향의 유일 선지 ③을 단일 국소 단서로 즉시 선택 가능하다. RUBRIC §D의 KILLER 조건 '최소 두 문장/두 논리 단서 연결'과 '극성 하나로 정답을 찍을 수 없다'를 모두 위반한다. C5=1(라벨-실난이도 불일치), C3=2(어휘 앵커로 표면 매력은 있으나 실제 판단은 극성 체크 하나로 종결). 오답의 앵커·함정 설계 자체(범주 전도·half-truth·기제 역전)는 양호하므로(C2=3), 재설계 방향은 (a) 빈칸 위치를 대구 밖(예: 마지막 문장의 전달 기제)으로 이동하거나 (b) 오답에 '적게 생각한다' 극성이되 기제가 틀린 선지(예: innate talent 귀속, 단순 반복 암기)를 2개 이상 투입해 극성 단독 소거를 차단하는 것. 해설은 논리적으로 정확하나 표기 손상·근사 오기·제거 구간 인용 등 마감 결함으로 C6=2. 합계 15/24, V 전체 통과이므로 등급 C(재설계 필요)."
+}

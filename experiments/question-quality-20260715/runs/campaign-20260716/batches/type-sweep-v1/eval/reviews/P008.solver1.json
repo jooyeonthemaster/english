@@ -1,0 +1,22 @@
+{
+  "pid": "P008",
+  "answer": "(A) disconnecting / (B) no material traces (behind)",
+  "multipleDefensible": false,
+  "defensibleLabels": [
+    "(A) disconnecting / (B) no material traces (behind)"
+  ],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "answer: disconnecting (severing/cutting/breaking도 의미상 허용)",
+      "reason": "지문 3문장 'ties between service work and particular places can be disconnected'를 능동 분사로 전환한 것. 요약문에서 앞의 'enabling'과 병렬을 이루는 분사 자리이며 'thus disconnecting the ties between service work and particular places'로 문법 결합(seam)이 완벽하다. 지문 전체 논지(노동의 탈장소화·less sticky)와 일치. 반대 방향(strengthening/maintaining)은 논지와 정면 충돌하여 배제."
+    },
+    {
+      "label": "(B)",
+      "verdict": "answer: no material traces (behind) / no material traces in the places where it was once an employer",
+      "reason": "지문 마지막 문장 'the employer leaves behind no material traces in the places where it was once an employer'를 그대로 재사용. 요약문의 'while leaving (B)'와 결합하면 'while leaving no material traces'로 문법·논리 모두 정합. 'no offices or factories'나 'no local taxes'는 요약문 앞부분 'without local facilities or taxes'에서 이미 소진되었으므로 (B)의 대안이 될 수 없다."
+    }
+  ],
+  "note": "선지 없는 서술형 요약문 완성 문항. 정답은 지문 어휘 직접 재사용으로 유일하게 수렴: (A) disconnecting, (B) no material traces (behind). (A)는 sever/cut/break 등 유의어 답안도 채점상 허용 가능하나 지문 근거 최적어는 disconnecting. seam 검증: 'thus disconnecting the ties ... while leaving no material traces' — 분사 병렬 구조 성립. 매력적 오답 유혹 요소는 사실상 없음(서술형이라 선지 간 변별 부담이 없고, (B)를 'no offices or factories'로 쓰려는 유혹은 요약문 앞부분과의 중복 확인으로 해소됨). 문항 자체는 성립하나, 수능 실전 유형(객관식 요약문 A/B 어휘쌍 5지선다)과 달리 서술형이라는 점은 형식 심사에서 검토할 사항."
+}

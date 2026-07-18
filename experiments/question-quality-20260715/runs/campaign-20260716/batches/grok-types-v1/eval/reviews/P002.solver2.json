@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "부분 포섭 + 과잉 진술. 지문은 정당화(justification)에 대해 'more helpful but not necessarily more believable'이라고 유보적으로 말할 뿐 'fail'이라고 단정하지 않는다. 또한 지문의 수사적 정점인 긍정 명제(이야기가 조언을 마음에 새기게 한다, 'But if Bill responds with a story...')를 전혀 담지 못한다. 부정 축만 취한 최강 오답지."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "범주 오류. 고양이/개는 논지를 예시하는 수단(vehicle)일 뿐 주제(tenor)가 아니다. '애완동물 선호가 의사결정을 형성한다'는 명제는 지문 어디에서도 주장되지 않는다."
+    },
+    {
+      "label": "3",
+      "verdict": "accept",
+      "reason": "지문의 3단 위계와 일대일 대응: 단순 단언('A cat')=assertions < 단순 이유('because the cat is cute and quiet')=simple reasons < 이야기(similar situation + how it worked out)=narratives. 'Outweigh'는 'take the advice offered by the story more to heart'와 정확히 대응. 부정 축과 긍정 축을 모두 포괄하는 유일한 선지."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "무근거 + 지문과 충돌. 'expert knowledge'는 지문에 등장하지 않으며, Bill의 이야기는 전문 지식이 아니라 간접 경험('or that he heard about')이어도 무방하다고 명시되어 있어 전문성이 작동 변수라는 주장을 오히려 반증한다."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "지문의 평가 서열과 정면 모순. 직접 진술('A cat')은 'useless advice'로 평가되므로 'the clearest way'라는 긍정 평가는 성립 불가. 역방향 오답지."
+    }
+  ],
+  "note": "제목 문항. 지문은 단언→이유 제시→이야기의 3단 대비 구조로, 이야기가 신빙성/설득력에서 우위라는 단일 논지(Schank류 서사 우위론)를 편다. 선지 3만이 대비 구조 전체를 포섭하며, 선지 1은 부정 축만 취한 부분 포섭 오답으로 잘 설계된 미끼다. 복수 정답 여지 없음."
+}

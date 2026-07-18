@@ -1,0 +1,82 @@
+{
+  "pid": "P009",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-INFO-NO-RENDER",
+      "severity": "minor",
+      "evidence": "렌더 지문 필드가 '(렌더 지문 없음)'이나 CONTENT_MATCH 유형은 지문 변형이 없어 원지문이 그대로 노출되는 설계다. 원지문 자체는 접합 파손·중복·누락·오탈자 없이 무결하므로 실패로 보지 않는다."
+    },
+    {
+      "code": "V2-NOTE-OPTION2-INFERENCE",
+      "severity": "minor",
+      "evidence": "선지 2의 'more important ... than constantly sending requests or updates'는 본문의 'This doesn't mean constantly reaching out with requests or updates but rather maintaining a friendly and consistent line of communication'(not-X-but-rather-Y 대조)에서 도출되는 온건한 추론으로, 일치 진술로 허용 가능하다. 제2정답 위험 없음."
+    },
+    {
+      "code": "V2-NOTE-OPTION3-INFERENCE",
+      "severity": "minor",
+      "evidence": "선지 3의 'even if it does not contain information of immediate interest'는 본문의 'A simple message to check in or share something of value can go a long way'에서 단순 안부(check in) 메시지만으로도 관계가 강화된다는 내용으로 지지된다. 일치 진술로 판정."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 2,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "본문 2~3문장(관계가 follow-up 부재로 정체됨 + 의식적 노력 필요)의 통합 패러프레이즈 검증. 일치 진술(비정답 유지).",
+      "temptingBecause": "'fade due to neglect'가 본문의 'get stuck due to a lack of follow-up'을 추상화한 표현이라 축자 대조가 아닌 의미 대조를 요구한다.",
+      "decisiveFlaw": "없음 — 'make a conscious effort to stay in touch' 및 'let the relationship get stuck due to a lack of follow-up'과 정확히 일치하는 참 진술이므로 정답이 될 수 없다."
+    },
+    {
+      "label": "2",
+      "intent": "not-X-but-rather-Y 대조 구문을 비교급('more important than')으로 재구성한 추론 검증. 일치 진술(비정답 유지).",
+      "temptingBecause": "본문에 'more important'라는 명시적 비교가 없어, 축자 대조만 하는 학생은 불일치로 오판할 수 있다 — 참 선지 중 가장 검증 부담이 큰 선지.",
+      "decisiveFlaw": "없음 — 'This doesn't mean constantly reaching out with requests or updates but rather maintaining a friendly and consistent line of communication'의 대조 구조가 Y의 우선성을 지지하므로 참 진술이다."
+    },
+    {
+      "label": "3",
+      "intent": "'check in' 메시지(정보 가치가 없는 단순 안부)도 관계를 강화한다는 함의 파악 검증. 일치 진술(비정답 유지).",
+      "temptingBecause": "본문 예시가 '관심 있을 만한 기사 공유'라서 'does not contain information of immediate interest'라는 조건이 본문과 어긋난다고 오판할 여지가 있다.",
+      "decisiveFlaw": "없음 — 'A simple message to check in or share something of value can go a long way'의 선언(check in 또는 정보 공유 둘 다 유효)이 이 선지를 지지하므로 참 진술이다."
+    },
+    {
+      "label": "4",
+      "intent": "정답. 본문의 양보 조건 'even if you haven't spoken in a while'을 정반대 제한 조건('only if ... very recently')으로 뒤집은 condition reversal.",
+      "temptingBecause": "'share a useful resource with a connection'이라는 본문 소재를 그대로 재사용해 표면 어휘 겹침이 크다.",
+      "decisiveFlaw": "본문은 '한동안 대화하지 않았더라도(even if you haven't spoken in a while)' 공유하라고 명시하므로 '최근에 대화한 경우에만 공유해야 한다'는 진술은 직접 모순 — 유일한 불일치 선지. 다만 'should only ... very recently'라는 절대어·당위 표현이 5개 중 유일해 본문을 읽지 않고도 찍을 수 있는 메타 단서가 된다."
+    },
+    {
+      "label": "5",
+      "intent": "마지막 문장('This shows ... invested in maintaining the relationship')의 근접 패러프레이즈 검증. 일치 진술(비정답 유지).",
+      "temptingBecause": "'genuinely'가 첨가어이긴 하나 본문의 'invested in maintaining the relationship'과 사실상 축자 대응이라 유혹 설계가 얕다.",
+      "decisiveFlaw": "없음 — 'This shows that you're thinking of them and are invested in maintaining the relationship'과 일치하는 참 진술이므로 정답이 될 수 없다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "오답 해설 1·2·3·5 전부가 \"...선택지는 '(영문 전문)' 진술은 본문의 ... 일치하므로 정답이 아닙니다\"라는 이중 주어 비문 프레임을 반복한다. 사실 오류는 아니나 문법적으로 어색하고 장황하다(영문 선지 전문 재인용도 중복).",
+      "recommendation": "\"선택지 N은 본문의 '...'와 일치한다\" 형태로 프레임을 교정하고 영문 전문 재인용을 제거하라."
+    },
+    {
+      "severity": "minor",
+      "evidence": "선지 3 해설의 요약('간단한 안부나 가치 있는 정보를 담은 메시지가 관계 강화에 도움이 된다')은 본문 내용의 패러프레이즈일 뿐, 선지 3의 핵심 조건절 'even if it does not contain information of immediate interest'가 왜 본문과 양립하는지를 직접 다루지 않는다.",
+      "recommendation": "check-in 메시지(정보 가치 없음)도 유효하다는 본문 근거를 명시해 선지의 'even if' 조건과 직접 연결하라."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 지문 무결, 정답 4 유일(각 선지 독립 검증 — 1·2·3·5는 본문 지지 참 진술, 4는 'even if you haven't spoken in a while'과 직접 모순), 문법성 양호, 해설 인용·귀속 정확, 필드 동기화 일치. 그러나 공예 합계 14/24로 C 등급: 정답 선지가 명시 문장의 단순 반전인 데다 절대어·당위 표현('should only ... very recently')이 5개 중 유일해 메타 단서로 누출되고(C3=2, C4=2), 요청 난이도 INTERMEDIATE 대비 실질 난이도가 BASIC 수준으로 미달하며(C5=2), 해설 프레임이 반복적 비문으로 둔하다(C6=2). 참 선지 2·3의 추론 요구 설계는 준수하나(C2=3) 정답 선지의 표면적 절대어를 제거하고 모순을 한 단계 추론 뒤로 숨기는 재설계가 필요하다."
+}

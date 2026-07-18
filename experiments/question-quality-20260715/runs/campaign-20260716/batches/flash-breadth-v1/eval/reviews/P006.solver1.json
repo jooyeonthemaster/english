@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "4",
+  "multipleDefensible": false,
+  "defensibleLabels": ["4"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong-but-attractive",
+      "reason": "실전에서 실제로 끌린 매력 오답. 주어진 문장이 'Believing that your work should be perfect ≈ To require perfection', 'convinced you cannot do it ≈ paralysis'로 첫 문장(주제문)의 부연·재진술처럼 읽혀 ①에 넣고 싶은 유혹이 강하다. 그러나 (a) 'gradually become convinced'의 gradually는 어떤 과정이 누적된 뒤의 종착점을 표시하는데 ① 시점에는 아직 아무 과정도 서술되지 않았고, (b) ①에 넣으면 'The pattern is predictable:'이 여는 단계적 전개(steer→cling→delay)의 결말이 먼저 나와 버려 패턴 서술이 사후 설명으로 전락하며, (c) 결정적으로 ①에 넣어도 ④ 자리의 논리 공백(quit의 선행 근거 부재)이 그대로 남는다. 기각."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "② 앞 문장(오류가 보이자 완벽히 할 수 있다고 상상하는 쪽으로 작업을 틂)과 뒤 문장(이미 할 줄 아는 것에 더 매달림)은 '방향 왜곡(misdirect)' 단계의 연속 서술로 긴밀히 이어진다. 그 사이에 '결국 못 한다고 확신하게 된다'는 결말급 문장이 끼면 steer→cling의 점층 연결이 끊기고, 아직 지연(stall) 단계도 나오기 전에 최종 단계가 등장한다. 끌리는 요소 없음."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "③ 앞(cling: 아는 것에 매달림)과 뒤(delay: 미룰 이유를 찾음)는 패턴의 2단계→3단계 진행이다. '못 한다는 확신 → 그래서 미룬다'로 읽으면 순간 그럴듯하지만, 뒤 문장의 'since to not work is to not make mistakes'는 여전히 '실수 회피' 동기를 말하고 있어 이미 '못 한다고 확신'해 버린 상태와 어긋나고, 마지막 요약의 순서(stall이 quit보다 앞)와도 역행한다."
+    },
+    {
+      "label": "4",
+      "verdict": "correct",
+      "reason": "결정적 장거리 단서는 마지막 문장의 삼요소 요약 'you misdirect your work; you stall; you quit'이다. misdirect는 steer/cling 문장(②·③ 주변), stall은 ④ 앞의 delay 문장에 각각 대응하는데, 'you quit'에 대응하는 선행 서술이 본문에 없다 — 주어진 문장('점점 못 한다고 확신하게 된다' = 포기의 직접 전제)이 ④에 들어가야 이 공백이 메워진다. 또한 'gradually'가 앞의 steer→cling→delay 누적 과정을 자연스럽게 받고, '완벽을 믿었던 네 작업은 좌초하고 오직 그 패턴만이 완벽(a perfect death spiral)을 달성한다'는 아이러니가 주어진 문장 직후에 놓일 때 정확히 성립한다. 삽입 전 ④ 자리의 결속 단절이 명확해 유일 정답."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "'a perfect death spiral: you misdirect; you stall; you quit'은 명백한 총괄 마무리 문장이라 그 뒤에 새 단계 서술이 오면 사족이 된다. '못 한다는 확신'은 'you quit'보다 논리적으로 선행하는 단계이므로 결말 뒤에 두면 인과·시간 순서가 역행하며, ④ 자리의 공백도 해소되지 않는다."
+    }
+  ],
+  "note": "삽입 유형의 표준 검증(삽입 전 공백 확인 → 삽입 후 결속 확인)이 모두 ④를 지지한다. 최상위권 실전 관점에서 ①의 '주제문 재진술' 유혹이 실재했으나, 마지막 요약 삼요소(misdirect/stall/quit)와 본문 단계의 1:1 대응 점검으로 quit의 전제 문장이 ④에 필요함이 드러나 단일 정답으로 좁혀진다. 원전(Bayles & Orland, Art & Fear)의 문장 배열('You find reasons to procrastinate... Believing that artwork should be perfect...')과도 일치하는 위치. 복수정답 소지 없음."
+}

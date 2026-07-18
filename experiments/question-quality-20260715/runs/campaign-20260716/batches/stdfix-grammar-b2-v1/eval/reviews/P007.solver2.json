@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "E",
+  "multipleDefensible": false,
+  "defensibleLabels": ["E"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "'is best known for + NP'는 수동태 관용 구조. 주어 Brunel은 know의 대상이므로 과거분사 known이 지배 규칙(be + p.p.)상 정확하다. 능동 knowing으로 볼 여지가 없고, 'best'는 부사로 known을 수식하는 표준 결합이다. 정문."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "'When the Napoleonic Wars were at their height'는 접속사 When + 완전한 정형절(주어 the Napoleonic Wars + 정형동사 were)로 시간 부사절을 이룬다. 주절 'he invented machines...'도 완전하므로 종속접속사 사용 조건이 형식적으로 충족된다. 정문."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "'London was very much divided by the River Thames' — divide의 대상이 주어 London이므로 수동태(be + p.p.)가 요구되고 divided가 이를 충족한다. by구가 행위자/원인(강에 의해 나뉨)을 표시하며, 'very much'는 분사/형용사적 divided를 수식하는 표준 강조어이다. 능동 dividing이면 목적어가 필요해 비문이 되므로 divided가 옳다. 정문."
+    },
+    {
+      "label": "D",
+      "verdict": "correct",
+      "reason": "'needed more ways for people and goods to move across it' — 'way(s) for + 의미상 주어 + to부정사' 구조. for people and goods가 to move의 의미상 주어이고, move는 자동사로 목적어 불요, across it(= the River Thames)이 방향 부사구로 결합한다. ways를 수식하는 to부정사의 형용사적 용법으로 형식적으로 완전하다. 정문."
+    },
+    {
+      "label": "E",
+      "verdict": "incorrect",
+      "reason": "'The Thames Tunnel officially opened..., and Brunel, despite being in ill health, attending the opening ceremony.' — 등위접속사 and가 정형절과 정형절을 병렬해야 하는 자리인데, 두 번째 접속항 'Brunel ... attending ...'에는 정형동사가 없다(attending은 비정형 분사). 대안 해석 검토: (1) attending을 Brunel 수식 분사로 보면 두 번째 접속항 전체가 동사 없는 명사구가 되어 절 병렬이 붕괴한다. (2) 독립분사구문(absolute)으로 보려 해도 absolute는 and로 정형절과 등위 병렬될 수 없고 쉼표로만 부가되어야 하므로 성립 불가. (3) 도치·생략 등으로 정형동사를 복원할 근거도 없다. 따라서 attended(정형 과거형)로 고쳐야만 병렬이 성립한다. 유일한 어법 오류."
+    }
+  ],
+  "note": "정답은 E로 유일하게 옹호 가능. and 병렬의 두 번째 접속항에 정형동사가 없다는 장거리 단서(문두 The Thames Tunnel...opened 절과의 등위 관계)가 결정적이며, 분사구문/absolute 대안 해석을 적극 탐색해도 and 등위 구조 때문에 정문화가 불가능하다. A~D는 각각 be+p.p. 관용구, 접속사+완전절, 수동 분사, for-의미상주어+to부정사로 모두 형식적으로 성립한다. 함정 설계상 D(to move vs moving)가 매력적 오답 역할이나 'ways for X to-V'는 표준 구조라 흔들리지 않는다."
+}

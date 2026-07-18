@@ -1,0 +1,74 @@
+{
+  "pid": "P007",
+  "blindAnswer": "1",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-INFO-NO-RENDER-FIELD",
+      "severity": "minor",
+      "evidence": "렌더 지문 필드가 '(렌더 지문 없음)'. SUMMARY_COMPLETE_MC는 지문 변형이 없는 유형이므로 원지문 그대로 노출로 간주해 V1 통과 판정. 원지문 자체는 접합 파손·중복·누락·고아 문장부호 없이 온전하며(analyse/recognizing 철자 혼용은 원문 소스 특성), 요약문 (A)/(B) 라벨은 blanks·선지와 정확히 일치한다. 단, 실제 렌더 파이프라인이 이 유형에서 원지문을 노출하는지 필드 관례는 별도 확인 권장."
+    },
+    {
+      "code": "V4-MINOR-VAGUE-D5",
+      "severity": "minor",
+      "evidence": "오답 해설 5의 'individualistic도 관점의 차이를 설명하는 핵심 표현이 아니다'는 사실 오류는 아니나 결정적 결함(같은 개인 안에서도 상황·시기에 따라 달라진다는 개인 내 변이를 individualistic이 포착하지 못함)을 짚지 않아 모호하다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 쌍 — (A) 다관점 평가, (B) 맥락 의존성",
+      "temptingBecause": "정답이므로 해당 없음. (A)는 'evaluating these issues from different perspectives', (B)는 'Individual perspectives may also be context dependent'에 각각 직접 대응한다.",
+      "decisiveFlaw": "없음 — 유일 정답. 완성문 'examine ethics through multiple perspectives rather than fixed rules ... are context-dependent'이 지문의 두 핵심 주장(규칙 추종이 아닌 다관점 사고 + 개인 규범의 맥락 의존성)을 정확히 보존한다."
+    },
+    {
+      "label": "2",
+      "intent": "(B) 극성 반전(polarity reversal) — 절대어 함정을 쓴 half-right pair",
+      "temptingBecause": "(A) multiple perspectives가 정답과 동일해 절반이 맞고, 'principles of conduct that are considered correct' 류의 규범 어휘가 고정성 인상을 줄 수 있다.",
+      "decisiveFlaw": "지문이 'these principles vary both between and within individuals', 'under different circumstances ... the same individual may make different choices'로 가변성을 명시하므로 universally fixed는 정면 모순."
+    },
+    {
+      "label": "3",
+      "intent": "(A) 기각 개념 치환(actor/concept swap) — 지문이 명시적으로 배격한 대안을 정답 자리에 배치한 half-right pair",
+      "temptingBecause": "(B) context-dependent가 정답과 동일하고, 'prescribed set of ethical codes'가 지문에 축자적으로 등장한다.",
+      "decisiveFlaw": "지문은 'think through ethical issues rather than follow a prescribed set of ethical codes or rules'로 prescribed codes를 배격한다. 또한 요약틀 자체가 '(A) rather than fixed rules'여서 'prescribed codes rather than fixed rules'는 동어반복 비논리 — 지문 없이도 소거 가능(C4 감점 근거)."
+    },
+    {
+      "label": "4",
+      "intent": "(A) 기각 개념 anchor + (B) scope shift(개인 간·내 변이를 사회적 공유로 확장)",
+      "temptingBecause": "theory가 지문에 등장하고, 'social, religious, or civic beliefs'가 socially shared와 어휘적으로 겹친다.",
+      "decisiveFlaw": "지문이 'This form of ethics is distinct from higher levels of conceptual ethics or theory'로 (A)를 직접 배제하고, principles가 개인 간·개인 내에서 모두 다르다고 하므로 socially shared는 성립하지 않는다."
+    },
+    {
+      "label": "5",
+      "intent": "(A) 기각 개념 anchor + (B) half-truth(개인 간 변이만 포착, 개인 내 변이 누락)",
+      "temptingBecause": "conceptual ethics가 지문에 축자적으로 등장하고, individualistic은 '개인마다 다르다'는 지문 내용과 부분 부합한다.",
+      "decisiveFlaw": "(A)는 4와 동일 문장('distinct from higher levels of conceptual ethics')으로 즉시 배제되고, (B) individualistic은 같은 개인도 상황·시기에 따라 달라진다는 맥락 의존성(개인 내 변이)을 담지 못한다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "오답 해설 5가 individualistic의 결정적 결함(개인 내/맥락 변이 누락)을 명시하지 않고 '핵심 표현이 아니다'로 처리 — 부정확은 아니나 둔하다.",
+      "recommendation": "individualistic이 개인 간 차이만 담고 '같은 개인도 상황에 따라 달라진다'는 (B)의 핵심을 놓친다는 점을 명시."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1~V5 전부 통과, 정답 유일성 확실(blind solve = 1, high confidence). 그러나 공예 합계 16(<17)으로 B 기준 미달 → C. 핵심 결함: (1) (A)·(B) 정답이 지문 표현('from different perspectives', 'context dependent')의 거의 축자 인용이라 키워드 매칭만으로 풀려 변별력이 낮다(C3=2). (2) 선지 3의 (A) 'prescribed codes'가 요약틀의 'rather than fixed rules'와 동어반복을 이뤄 지문을 읽지 않아도 소거되는 약한 누출(C4=2). (3) 선지 3·4·5의 (A)가 모두 '지문이 기각한 개념' 동일 유형이고 4·5는 같은 문장 하나로 동시 소거된다(C2=3 상한 요인). 수정 방향: 선지 3의 (A)를 비동어반복 개념으로 교체, 4·5의 (A) anchor 문장 분산, 정답 (B)를 한 단계 추상화(예: variable across situations 류)하면 B 이상 도달 가능. INTERMEDIATE 난이도 자체와는 대체로 정합(C5=3). KILLER 아님 → killerConditionsMet=false."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) to seek",
+      "verdict": "correct",
+      "reason": "지배 명사는 'a tendency'이며, 삽입구 'once the dust of an emergency has settled down'을 걷어내면 'There is a tendency to seek X primarily in Y' 구조가 드러난다. tendency는 to부정사 보충어를 취하는 명사(a tendency to-V)이므로 'to seek'은 형식적으로 정문이다. seek A in B(B에서 A를 찾다)의 논항 구조도 'the reduction of famine vulnerability ... in enhanced economic growth ...'로 충족된다."
+    },
+    {
+      "label": "(B) denied",
+      "verdict": "correct",
+      "reason": "주어 'The potential contribution of greater economic success'는 deny의 의미상 목적어(기여가 부정되는 대상)이므로 수동태 'cannot be denied'가 요구되고, be동사 뒤 과거분사 denied는 형식적으로 완결된 수동 구성이다. deny는 타동사이며 능동 'cannot deny'라면 목적어가 없어 비문이 되므로 수동형이 유일하게 성립한다. 정문."
+    },
+    {
+      "label": "(C) where",
+      "verdict": "correct",
+      "reason": "선행사는 'countries'(장소성 명사)이고, 관계절 내부 'a large part of the population derive their livelihood from uncertain sources'는 주어·동사·목적어·전치사구가 모두 채워진 완전한 절이다. 완전한 절 + 장소 선행사이므로 관계부사 where(= in which)가 정확히 요구되는 자리다. 관계절 내 'a large part of the population + derive(복수 일치)'는 집합명사의 복수 호응으로 표준 영국식 용법이며, 어차피 밑줄은 where에만 있다. 정문."
+    },
+    {
+      "label": "(D) involving",
+      "verdict": "correct",
+      "reason": "'specialized entitlement protection mechanisms involving direct public intervention'에서 involving은 명사 mechanisms를 후치 수식하는 현재분사(축약 관계절 which involve ...)다. mechanisms가 involve의 의미상 주어(메커니즘이 직접 공공 개입을 수반한다)로 능동 관계가 성립하므로 현재분사가 옳다. 정문."
+    },
+    {
+      "label": "(E) explaining",
+      "verdict": "incorrect",
+      "reason": "문장 전체를 형식 분석하면 주어는 'Rapid growth of the economy in Botswana, or of the agricultural sector in Kenya, or of food production in Zimbabwe'(of-구 병렬로 확장된 단일 명사구 head = Rapid growth)이고, 그 뒤 'explaining at best only a small part of their success ... famine.'으로 문장이 종결된다. explaining을 유지하면 이 문장에는 정형동사(finite verb)가 하나도 없어 무동사 단편(fragment)이 된다. 구제 가능한 대안 해석을 전수 탐색해도: (1) 분사구문으로 보려면 뒤따르는 주절이 있어야 하나 문장이 마침표로 끝나 주절이 부재하고, (2) 독립분사구문/절대구문으로 보아도 이 문장 자체가 독립된 문장으로 제시되어 있어 성립하지 않으며, (3) 도치·생략 구조도 발견되지 않는다. 주어 head 'growth'(단수, or-병렬은 of-구 층위이므로 근접 일치 논쟁과 무관하게 단수)에 맞춘 정형동사 'explains'가 유일한 정문 형태다. 어법상 틀림."
+    }
+  ],
+  "note": "지문은 Dreze & Sen 계열의 기근 취약성 논의로 논지 일관성 문제 없음. (E)만이 문장을 무정형(비정형) 단편으로 만드는 명백한 정형동사 결손 오류이며, 나머지 네 밑줄은 각각 명사 보충어 to부정사, 타동사 수동태, 완전절 앞 관계부사, 능동 후치수식 분사로 모두 형식적으로 증명 가능한 정문. 복수 정답 시비 여지 없음."
+}

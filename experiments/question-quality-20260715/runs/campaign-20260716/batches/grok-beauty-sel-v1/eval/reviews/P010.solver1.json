@@ -1,0 +1,35 @@
+{
+  "pid": "P010",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "'Ethical Thinking as Personal and Contextual Evaluation'은 지문 전체를 정확히 포괄한다. 'Personal'은 원칙이 개인 간·개인 내에서 다르고(vary both between and within individuals) 개인적 요인(personal factors)이 자신의 code of behaviour를 형성한다는 논지를, 'Contextual'은 '동일 인물도 상황·시점·감정 상태에 따라 다른 선택을 한다(context dependent)'는 명시적 문장을, 'Evaluation'은 서두의 정의(윤리적 쟁점을 식별하고 여러 관점에서 평가하여 대응을 안내)를 각각 담는다. 도입-전개-결론(자신과 타인의 코드를 움직이는 요인 이해)이 모두 이 제목 아래 정렬된다."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "논지 정반대. 지문은 'follow a prescribed set of ethical codes or rules'가 아니라 스스로 사고해야(think through) 한다고 명시하며, 윤리 문제에는 명확한 정오답이 없다(no clear right or wrong)고 했으므로 규정된 코드가 도덕적 결과를 '보장(Guarantee)'한다는 제목은 지문과 충돌한다. 'prescribed ethical codes'라는 어휘 반복이 유일한 미끼이나 극성이 뒤집혀 있어 상위권에게는 흡인력이 낮다."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "첫 문장의 critical thinking 정의('evidence to guide decision-making')만 앵커링한 오답. 비판적 사고는 윤리적 사고를 정의하기 위한 도입 유추일 뿐이고, 'factual evidence'는 이후 전혀 재등장하지 않는다. 글의 주제는 ethical thinking이므로 제목으로서 범위가 어긋난다. 첫 문장만 읽고 고르는 속독형 수험생을 노린 미끼로, 실제로 잠깐 시선이 갔으나 둘째 문장부터 주제가 윤리로 전환됨을 확인하면 즉시 배제된다."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "종교는 'social, religious, or civic beliefs' 열거 속 1회 언급된 세부사항에 불과하고, 지문은 오히려 원칙이 보편적(universal)이지 않고 개인 간·개인 내에서 가변적이라고 주장한다. 세부 과대포장과 논지 반전이 동시에 일어나는 이중 오류로 방어 불가."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "가장 유혹적인 오답. 'students learn to think through ethical issues'라는 교육 맥락과 'conceptual ethics or theory'라는 지문 어휘를 동시에 차용해 표면 일치도가 높다. 그러나 지문 둘째 문장이 이 윤리 형태는 'distinct from higher levels of conceptual ethics or theory'라고 명시적으로 배제하므로, 이 제목은 지문이 다루지 않겠다고 선언한 바로 그 대상을 주제로 내세운 것이다. 잠시 끌렸으나 배제 문장 확인 후 탈락."
+    }
+  ],
+  "note": "정답 1이 유일하게 방어 가능하며 모호성 없음. 제목 문항으로서 구조는 건전하나, 1번이 지문 논지의 거의 직역 수준 요약(personal/contextual/evaluation 키워드가 지문 표현과 1:1 대응)이라 최상위권에게는 변별력이 다소 낮다. 매력적 오답 축은 5(어휘 차용+교육 맥락) > 3(첫 문장 앵커링) > 2(어휘 반복·극성 반전) > 4 순. 2와 4는 논지 정반대라 상위권 흡인력이 약하다."
+}

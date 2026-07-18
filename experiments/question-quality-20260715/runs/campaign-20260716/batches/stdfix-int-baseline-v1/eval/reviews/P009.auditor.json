@@ -1,0 +1,70 @@
+{
+  "pid": "P009",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-TERM-TYPO",
+      "severity": "minor",
+      "evidence": "오답 해설 (B)와 keyPoints (B)에서 '불완전한 절'이 '불안전한 절'로 2회 오기됨. 구조 분석 자체('선행사 indignities 수식, 뒤에 주어가 빠진 절을 이끄는 주격 관계대명사')는 정확하여 오개념을 유발하지는 않으므로 V4 실패로 보지 않고 minor로 기록."
+    },
+    {
+      "code": "V4-STYLE-DOUBLE-PASSIVE",
+      "severity": "minor",
+      "evidence": "오답 해설 (E)의 '규정되어진'은 비표준 이중피동 표현('규정되는'이 표준). 사실 오류는 아님."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 4,
+    "C5": 4,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "주어-동사 수일치: 'such as ~ ethnicity' 삽입 수식어구를 건너뛰고 복수 주어 핵 'Racial microaggressions'에 일치시키는 능력. 선언된 정답(오류 자리).",
+      "temptingBecause": "동사 직전에 단수 명사 'ethnicity'가 놓여 근접 일치 착시를 유발하고, 삽입구가 길어(such as assumptions ~ ethnicity) 주어 핵이 시야에서 멀어짐.",
+      "decisiveFlaw": "주어 핵은 복수 'Racial microaggressions'이고 보어도 복수 'indignities'이므로 'is'는 'are'여야 한다. 'is'→'are' 교정 시 정확히 원문이 복원되는 최소대립쌍(diff 검증 완료). 대안 해석(단수 주어로 읽을 여지) 없음."
+    },
+    {
+      "label": "(B)",
+      "intent": "주격 관계대명사 판단: 콤마 삽입구('whether intentional or unintentional') 뒤에서 선행사와 떨어진 that이 주어 공백 절을 이끄는 구조 인식.",
+      "temptingBecause": "콤마 뒤 that이라 '비제한적 용법에는 that 불가' 규칙을 연상시키고, 선행사 'commonplace verbal, nonverbal, or environmental indignities'와 물리적으로 떨어져 있어 접속사 that(뒤 완전한 절)으로 오인할 수 있음.",
+      "decisiveFlaw": "뒤따르는 절 'communicate hostile or negative racial insults'는 주어가 빠진 불완전한 절이므로 that은 주격 관계대명사일 수밖에 없고, 복수 선행사 indignities와 동사 communicate의 수도 일치한다. 콤마는 삽입구 때문이며 원문 그대로로 적법 — 오류 아님."
+    },
+    {
+      "label": "(C)",
+      "intent": "조동사 뒤 태(voice) 판단: can + be p.p. 수동형의 적법성.",
+      "temptingBecause": "can 뒤 be seen의 수동 구조가 낯설거나, 주어 experiential microaggressions를 행위 주체로 오인해 능동 'can see'를 기대할 수 있음.",
+      "decisiveFlaw": "experiential microaggressions는 statements 속에서 '보이는(관찰되는)' 대상이므로 수동 'can be seen in ~'이 정확히 적법 — 오류 아님. 단, (E)와 동일 포인트(수동태, pointCode e)를 공유해 의도 밀도가 다소 떨어짐."
+    },
+    {
+      "label": "(D)",
+      "intent": "접속사를 유지한 분사구문: when (she was) giving 축약에서 주절 주어(nurse)와 분사의 능동 관계 판단.",
+      "temptingBecause": "접속사 when 바로 뒤에 -ing가 오는 형태가 절 형태(when she gave)에 익숙한 학생에게 어색해 보이고, given(수동)과의 태 대비를 검토하게 만듦.",
+      "decisiveFlaw": "분사의 의미상 주어 = 주절 주어 'a well-meaning nurse'이며 간호사가 지시를 '건네는' 능동 주체이므로 when giving이 적법 — 오류 아님."
+    },
+    {
+      "label": "(E)",
+      "intent": "동격 that절 내 태 판단: a person with a disability와 define의 수동 관계.",
+      "temptingBecause": "hidden message that ~ 동격절 내부라 구조가 한 겹 깊고, define의 능동/수동을 주어 의미역으로 판별해야 함.",
+      "decisiveFlaw": "a person with a disability는 '규정되는' 대상이므로 수동 'is defined as lesser'가 적법 — 오류 아님. (C)와 동일 계열(수동태) 포인트라는 중복이 유일한 흠."
+    }
+  ],
+  "explanationIssues": [
+    "오답 해설 (B)·keyPoints (B): '불안전한 절' → '불완전한 절' 오기(2회). 분석 내용 자체는 정확.",
+    "오답 해설 (E): '규정되어진' — 비표준 이중피동. '규정되는'으로 교정 권장.",
+    "정답 해설 마지막 문장('동사 바로 앞의 단수 명사 ethnicity에 일치시키는 형태를 취하면 안 됩니다')이 바로 앞 문장의 경고('ethnicity에 현혹되지 않고')를 반복 — 경미한 장황."
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 원지문-렌더 지문 전산 diff 결과 유일한 변경이 are→is(A 자리)로 의도된 최소대립쌍이며, 5개 마커 라벨·표현이 선택지와 정확히 일치. 접합 파손·중복·누락 없음. V2: 각 밑줄 독립 검증 — (A)만 오류(복수 주어 핵 vs is), (B) 주격 관계대명사(주어 공백 절+복수 일치) 적법, (C) 수동 can be seen 적법, (D) 접속사 유지 분사구문(능동 주체 nurse) 적법, (E) 동격절 내 수동 적법 → 단일 정답 확정. V3: 의도된 오류 외 지문·발문 모두 문법적, 교정 시 원문 복원. V4: 주어 핵/삽입구/근접 명사 함정 설명 모두 실제 구조와 일치, 선행사 지목 정확. 다만 '불안전한 절' 오기 2회와 이중피동 1회(minor). V5: 정답 라벨·markedExpressions(isError/correction)·해설·오답해설(B,C,D,E 전원 커버)·keyPoints 간 모순 없음. 공예: 삽입구 너머 수일치라는 정전 포인트에 근접 명사 함정이 잘 작동(C1=3, C4=4)하고 INTERMEDIATE 난이도에 정확히 부합(C5=4)하나, (C)/(E)가 동일 pointCode 'e'(수동태)를 공유해 오답 의도 밀도가 만점에 못 미치고(C2=3), (C)(D)(E)는 중위권 기준 비교적 빨리 소거됨(C3=3). 해설은 정확하지만 오기·이중피동·반복으로 C6=2. 합계 19, 최저 2 → B(오기 교정 등 작은 수정으로 출하 가능). 요청 난이도 INTERMEDIATE이므로 KILLER 조건 판정 대상 아님(killerConditionsMet=false)."
+}

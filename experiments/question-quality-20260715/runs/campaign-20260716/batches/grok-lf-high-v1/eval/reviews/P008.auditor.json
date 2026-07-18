@@ -1,0 +1,85 @@
+{
+  "pid": "P008",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-terminology",
+      "severity": "minor",
+      "evidence": "오답 해설 (D)가 'What a person values'의 What을 '의문사'로 지칭한다. 이 문맥('그 사람이 중시하는 것'이 신념과 관련된다)에서 표준 학교문법 분석은 선행사를 포함한 관계대명사 what이다. 다만 간접의문 해석도 언어학적으로 배제되지 않고, 두 분석 모두 '명사절 주어·단수 취급'이라는 핵심 결론이 동일하므로 구조 오분석(V4 실패)으로 보지 않는다."
+    },
+    {
+      "code": "V5-note-expression-convention",
+      "severity": "minor",
+      "evidence": "markedExpressions에서 오류 항목 (C)만 expression 필드가 원문형 'vary'(errorExpression='varying', correction='vary')이고 나머지 4개는 expression=errorExpression=표시형이다. 오류 항목은 원문형을 담는 컨벤션으로 보이며 correction·해설·선지 표시('varying')와 모순이 없어 동기화 실패는 아니다. 기록 차원에서만 남긴다."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 4,
+    "C3": 3,
+    "C4": 4,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "전치사 about 뒤 동명사 병렬 (identifying ~ and evaluating ~)",
+      "temptingBecause": "병렬 첫 항 identifying과의 거리, 그리고 뒤따르는 to guide 부정사 때문에 evaluate/to evaluate 형을 기대하며 흔들릴 수 있다",
+      "decisiveFlaw": "about의 목적어인 동명사 identifying과 정확히 병렬을 이루는 동명사로 자리·형태 모두 적법 — 오답 성립 불가"
+    },
+    {
+      "label": "(B)",
+      "intent": "rather than 뒤 (to) 원형부정사 병렬",
+      "temptingBecause": "rather than 뒤 following(동명사)이 더 익숙하게 느껴져 원형 follow를 틀렸다고 판단하기 쉽다",
+      "decisiveFlaw": "learn to think의 to부정사와 병렬인 원형부정사(to 생략)로 표준 용법 — 오답 성립 불가"
+    },
+    {
+      "label": "(C)",
+      "intent": "정답: recognition의 동격 that 명사절에서 주어 these principles의 술어 자리에 정동사 필요 (정·준동사 판별)",
+      "temptingBecause": "삽입된 although절의 정동사 is defined 때문에 절이 이미 완결됐다고 착각하기 쉽고, principles 바로 뒤 -ing이 분사 후치수식처럼 보인다",
+      "decisiveFlaw": "varying이면 that절이 서술어를 갖지 못해 비문. 절대구문 등 대안 해석도 that절 자체를 무절 상태로 만들어 성립 불가. vary로 교정하면 정확히 원문 복원 — 유일 정답"
+    },
+    {
+      "label": "(D)",
+      "intent": "관계대명사 what(선행사 포함) 명사절 주어의 단수 일치",
+      "temptingBecause": "직전 어형 values가 복수 명사처럼 보여 복수 일치 relate를 기대하게 하는 견인(attraction) 함정",
+      "decisiveFlaw": "What a person values는 명사절 주어로 단수 취급 — relates가 적법, 오답 성립 불가"
+    },
+    {
+      "label": "(E)",
+      "intent": "명사 후치수식 분사의 능·수동 판별",
+      "temptingBecause": "beliefs 뒤를 술어 자리로 오인하거나 influencing 능동형을 기대할 수 있다",
+      "decisiveFlaw": "beliefs는 학습 경험에 의해 '영향을 받는' 대상이므로 수동 과거분사 + by구가 적법 — 오답 성립 불가"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "오답 해설 (D): '의문사 What이 이끄는 명사절' — 이 문맥의 표준 분석은 선행사 포함 관계대명사 what. 결론(명사절 단수 일치)은 동일하게 성립하므로 용어 정밀도 문제에 그친다.",
+      "recommendation": "'관계대명사 what(선행사 포함)이 이끄는 명사절'로 수정"
+    },
+    {
+      "severity": "minor",
+      "evidence": "keyPoints가 (C)(D)(E)만 수록하고 (A)(B)를 누락. 또한 오답 해설 4건 모두 point와 why-correct는 있으나 why-tempting이 명시돼 있지 않다(정답 (C)만 'although 때문에 오해하기 쉽다'는 함정 서술 보유). KILLER §C '5개 밑줄 각각에 point, why tempting, why correct/incorrect' 조건 미충족의 직접 원인.",
+      "recommendation": "keyPoints에 (A) 병렬 동명사, (B) rather than 원형 병렬을 추가하고, 각 오답 해설에 매력 요인(why tempting) 한 줄씩 명시"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionsDetail": {
+    "minimalPair": true,
+    "clearGrammarJudgment": true,
+    "perUnderlineTriple": false,
+    "notInstantlyVisible": true,
+    "noSamePointEasyDecoy": true,
+    "note": "최소대립쌍(vary→varying, 교정 시 원문 정확 복원)·명확한 문법 판단·동일 point 쉬운 디코이 부재는 충족. 그러나 5개 밑줄 각각의 point/why-tempting/why-correct 삼요소가 갖춰지지 않았고(위 explanationIssues 참조), 정답 포인트(정동사 유무)가 가장 훈련량이 많은 정전 포인트라 '즉시 드러나지 않음'은 although 삽입절 덕에 경계선 통과 수준이다. 보수적으로 false."
+  },
+  "grade": "A",
+  "notes": "V1~V5 전부 통과. 변형은 (C) vary→varying 단 한 곳이며 렌더·라벨·마커·선지·해설·correction이 모두 정합. 각 선지 독립 검증 결과 (C)만 비문을 유발하는 유일 정답 — that 동격절 주어 these principles의 술어 부재는 어떤 대안 해석으로도 구제되지 않는다. 4개 디코이가 서로 다른 정전 포인트(병렬 동명사·원형 병렬·명사절 수일치·분사 능수동)를 겨냥해 의도 밀도가 높고, although 삽입절이 구조 독해를 강제한다. 공예 합계 21(4/4/3/4/3/3)로 A. 다만 정답 포인트 자체가 최다 빈출 유형이라 KILLER 최상위 함정 깊이에는 다소 못 미치고(C5=3), 밑줄별 why-tempting 명시 부재로 beautiful KILLER 조건은 미충족. (D) 해설의 '의문사' 용어는 관계대명사 what으로 정정 권장(경미)."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "Subject 'Animals as well as humans': with 'X as well as Y' the verb agrees with X ('Animals', plural), so plural 'engage' is formally correct. Even a proximity-agreement reading with 'humans' (plural) would still license 'engage'. No parse requires a singular verb."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'play has long been seen as a way of...' is a well-formed present-perfect passive (has + been + p.p.). 'see A as B' passivizes to 'A is seen as B' with the 'as B' complement retained. Grammatical."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect (the error)",
+      "reason": "'a way of learn and practicing skills...' — the preposition 'of' requires a gerund complement. The coordinated second conjunct 'practicing' (gerund sharing objects 'skills and behaviors') fixes the parallel start point inside the of-phrase, so the first conjunct must be 'learning'. Bare 'learn' has no licensor: it is not a noun in this frame, no modal/causative permits a bare infinitive, and no ellipsis licenses a finite verb after 'of'. Ungrammatical under every alternative parse."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'a way in which children learn about the world and their place in it' — pied-piped preposition + relative pronoun forming an adjunct relative ('children learn ... in that way'). The clause after 'in which' is complete (no missing argument), exactly the condition for 'in which'. Standard and grammatical."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "Head of the subject NP is singular 'play' ('Children's' is a possessive determiner, not the head), so 'serves' agrees. 'serve as + NP' is a standard frame. Grammatical."
+    }
+  ],
+  "note": "Clean item. Exactly one indefensible form: (C) 'learn' must be gerund 'learning' after 'of', confirmed by the long-distance parallelism cue 'and practicing'. Distractors each test a distinct rule (as-well-as agreement, perfect passive with 'see as', preposition+relative with complete clause, possessive-determiner subject agreement) and all survive adversarial re-parsing (no reduced-relative, inversion, or ellipsis reading rescues (C) or breaks the others)."
+}

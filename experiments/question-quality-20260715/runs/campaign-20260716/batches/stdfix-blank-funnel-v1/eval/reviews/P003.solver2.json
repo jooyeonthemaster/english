@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "correct",
+      "reason": "Seam: 'perceive the performance as a genuine slice of actual life, not just [as] fictional characters in a movie' — the elliptical second 'as' is standard, and the contrast pair <a genuine slice of actual life : fictional characters in a movie> is a clean real/fictional antonymy that the tail phrase requires. Logic: directly entailed by the passage's core axis ('truly feeling the emotions... rather than faking them', 'seem to actually become the characters'). The 'As a result' consequence for audiences is precisely that the performance reads as real life. Both grammar and discourse logic hold."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "Seam failure: the tail 'not just fictional characters in a movie' would need to contrast with 'the original script' under 'follow' ('follow the original script, not just fictional characters'), a category-mismatched, incoherent contrast. Logic failure: the passage never discusses audience demands about script fidelity; the script mention concerns emotions written in it, not adherence. Off-topic."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "Seam failure: 'distort the real emotions, not just fictional characters' is not a licit contrast pair (emotions vs. characters under 'distort'). Logic failure and contradiction: the passage asserts method acting produces genuine, non-fake emotion — even continuing after cameras are off — so 'camera techniques distort the real emotions' inverts the passage's claim."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "Anti-answer (polar opposite): the passage's whole point is that the reality/fiction boundary blurs — actors 'actually become' the characters and audiences see real feeling. 'Recognize the clear boundary' contradicts the 'As a result' inference. Seam also fails: 'the clear boundary, not just fictional characters' provides no coherent contrast head for the tail phrase."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "Experiencer-swap distractor: identity exploration and psychological/behavioral change are predicated of the ACTORS ('a journey for the actor to explore a whole new identity'), never of audiences. Seam reading 'disconnection from their own identities, not just [from] fictional characters' presupposes audiences disconnect from fictional characters, which is unsupported and directionally backwards (audiences would connect with, not disconnect from, characters). Fails on argument-structure logic."
+    }
+  ],
+  "note": "Lens: grammarian/logician. The tail 'not just fictional characters in a movie' acts as a formal filter: it demands a same-category contrast constituent inside the blank. Only ① supplies one (as-complement 'a genuine slice of actual life' with ellipted 'as'). Minor stylistic quibble — 'perceive the performance (sg.) as ... fictional characters (pl.)' has a number asymmetry across the ellipsis, but 'X, not just Y' contrastive appositives routinely tolerate this and it does not impair grammaticality. No alternative parse (reduced relative, participial adjunct, subject-contrast reading of the tail) rescues any other option. Single defensible answer."
+}

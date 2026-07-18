@@ -1,0 +1,38 @@
+{
+  "pid": "P002",
+  "finalV2": true,
+  "winningAnswer": "(D)",
+  "reason": "발문은 '어법상 틀린 것'을 묻는 GRAMMAR_ERROR 문항이며, 5개 밑줄을 처음부터 독립 재검증한 결과 오류는 (D) 하나로 유일하게 좁혀진다. (D) 'fig trees become importantly in sustaining ...'에서 become은 주격보어를 요구하는 연결동사(copular verb)이고 그 보어 자리에는 형용사(또는 명사)만 올 수 있는데 부사 importantly가 놓여 보어가 부재해 비문이 된다. importantly를 문장부사·삽입어로 볼 여지가 있는지 검토했으나, become 직후 보어 위치에 고정되어 있어 그 해석은 성립 불가 — 유일하게 확실한 오류다. 나머지 (A) 동격 that(뒤 완전절), (B) 단수주어 The fact와의 수일치+수동태, (C) 완전절을 이끄는 양보 종속접속사 Although, (E) 동명사구 주어의 단수 is 는 독립 분석상 모두 정문이며, 솔버들이 이들을 오류로 과잉 판정하거나 (D)를 방어한 흔적도 없다. 솔버1=D, 솔버2=(D), 둘 다 복수불가·후보 단일, 감사자 V2=true 와 완전 일치. 선언된 정답 (D)는 유일한 정답으로 확정된다.",
+  "perDispute": [
+    {
+      "label": "(A)",
+      "claim": "that — 추상명사 The fact 뒤 동격 접속사인가, 아니면 오류(관계대명사 오독)인가",
+      "verdict": "correct",
+      "evidence": "'The fact that other species depend on or are greatly affected by the keystone species is revealed.' 뒤 절이 완전한가를 독립 검증: 'other species depend on [the keystone species] or are greatly affected by [the keystone species]' — 목적어 the keystone species가 depend on과 affected by에 공유되어 절이 완전하다. 완전절을 이끄는 것은 관계대명사(불완전절 필요)가 아니라 동격의 접속사 that이므로 정문. 오류 아님."
+    },
+    {
+      "label": "(B)",
+      "claim": "is revealed — 단수 수일치 및 수동태 적절성",
+      "verdict": "correct",
+      "evidence": "지배 주어는 단수 'The fact'이고 'that ... keystone species'는 삽입된 동격절이라 수에 영향을 주지 않는다. 'fact가 드러나는 대상' → 수동태 is revealed 정당, 단수 일치도 정당. 근접 복수명사 species에 낚여 are로 고치려는 유혹이 있으나 지배 주어는 단수 fact. 정문, 오류 아님."
+    },
+    {
+      "label": "(C)",
+      "claim": "Although — 절을 이끄는 양보 접속사가 맞는가, Despite/However 로 교체해야 하는 오류인가",
+      "verdict": "correct",
+      "evidence": "뒤에 주어(figs)+동사(produce)를 갖춘 완전한 절이 오므로 전치사 Despite가 아니라 종속접속사 Although가 필요하고, 주절 'vertebrates do not normally consume large quantities of figs'와 양보·대조 관계를 이룬다('무화과는 연중 열매를 맺지만 평소엔 많이 먹지 않는다' → 다음 문장 '다른 열매가 적을 때는 중요해진다'로 대조 완성). 문법·논리 모두 성립. 오류 아님."
+    },
+    {
+      "label": "(D)",
+      "claim": "importantly — 연결동사 become의 주격보어 자리에 부사가 온 오류인가",
+      "verdict": "incorrect",
+      "evidence": "'fig trees become importantly in sustaining fruit-eating vertebrates.' become은 주격보어를 필수로 취하는 연결동사(copular)로 보어 자리에는 형용사/명사만 가능하다. 부사 importantly는 보어가 될 수 없어 문장이 보어 없이 미완성이 되므로 비문. 후행 전치사구 'in sustaining ...'도 보어 공백을 메우지 못한다. importantly를 문장부사/삽입어로 볼 여지도 become 직후 보어 위치 고정 때문에 배제됨. important로 교정하면 원지문과 정확히 일치. 유일하고 명백한 어법 오류 — 정답."
+    },
+    {
+      "label": "(E)",
+      "claim": "is — 동명사구 주어의 단수 수일치",
+      "verdict": "correct",
+      "evidence": "주어는 동명사구 'Protecting fig trees in such tropical rainforest ecosystems'로 단수 취급되어 단수 동사 is가 옳고, 명사구 보어 'an important conservation goal'과 정상 결합하며 because절도 완결된다. 근접 복수명사 ecosystems/fig trees에 낚여 are로 고치려는 유혹이 있으나 실주어는 동명사 Protecting 단수. 정문, 오류 아님."
+    }
+  ]
+}

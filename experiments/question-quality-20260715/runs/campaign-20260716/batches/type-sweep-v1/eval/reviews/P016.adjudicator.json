@@ -1,0 +1,32 @@
+{
+  "pid": "P016",
+  "finalV2": false,
+  "winningAnswer": "present-ing",
+  "reason": "선언된 정답 'presentation'은 원문 복원상 의미는 완벽하나, 본문 내 유일 출현 지점이 바로 빈칸 자리여서 블랭킹 후 렌더된 지문 어디에도 존재하지 않는다. 발문은 '본문에서 찾아 한 단어로 쓰시오'를 요구하므로 선언 정답은 문항 자체의 지시를 충족할 수 없는 자기지시적 클로즈 결함이다. 반면 'present-ing'은 렌더 지문에 그대로 출현하고('the necessity of present-ing music'), 'the act of present-ing'은 동명사 결합으로 문법 성립하며, 빈칸 문장 직후 문장이 빈칸 명제를 그대로 재진술-전개하여 담화 결속이 최대이고, 발문 괄호 단서(동사 포함 시 본문 제시 어형 그대로)가 정확히 이 형태를 지시한다. 따라서 발문 제약 하의 실질 정답은 present-ing이며 선언 정답과 불일치 — 정답 유일성 붕괴로 finalV2=false. 감사자 V2=false 판정을 인용(認容)한다. 솔버들이 부후보로 든 'performance'는 본문에 복수형 'performances'만 존재하고 'the act of performances'는 비문이며 단수형은 본문에서 찾을 수 없어 발문 제약상 성립하지 않는 경계 후보로, 조건부 옹호 판정은 경미한 과잉이나 결론에는 영향 없다.",
+  "perDispute": [
+    {
+      "label": "presentation (선언 정답)",
+      "claim": "출제자: 원문 어휘로서 유일 정답",
+      "verdict": "불성립(유일 정답 아님 — 발문 지시 위반)",
+      "evidence": "원지문 대조 결과 'presentation'은 지문 전체에서 빈칸 자리 단 1회만 출현. 블랭킹 후 렌더 지문에 부재하므로 '본문에서 찾아 쓰시오'라는 발문을 충족 불가. 의미상으로는 원전 복원형이지만, 규칙을 따르는 수험생은 이 답에 도달할 수 없고 도달한 학생은 발문을 위반한 셈이 된다. 해설의 'presentation이 들어가야 합니다'는 유일성 논증 없이 present-ing 대안을 다루지 않은 과잉 주장."
+    },
+    {
+      "label": "present-ing",
+      "claim": "솔버1·2: 발문 제약 하의 실질 정답",
+      "verdict": "성립(승리 답안)",
+      "evidence": "렌더 지문에 'the necessity of present-ing music - making it present here and now, without which it will not be music at all'로 어형 그대로 출현. 문법: 'the act of present-ing'은 동명사 결합으로 정문(목적어는 문맥상 music으로 복원, 'the act of presenting'과 동일 구조). 논리: 빈칸 문장(음악적 의미는 이 행위와 분리 불가) 직후 문장이 그 필연성을 'the necessity of present-ing music'으로 정확히 재진술하여 전제-귀결로 연결 — 담화 결속 최강. 발문 괄호 단서 '(동사를 포함할 경우 본문에 제시된 원형 또는 굴절형 그대로)'가 본문 표기 하이픈형을 그대로 쓰라는 지시로 기능. 다만 채점 기준에 'presenting'(하이픈 제거) 허용 여부가 미선언된 것은 별도 결함."
+    },
+    {
+      "label": "performance",
+      "claim": "솔버1·2: 복수 정답 가능 부후보(multipleDefensible 근거)",
+      "verdict": "불성립(경미한 과잉 판정)",
+      "evidence": "본문 출현형은 복수 'performances'뿐이며 'the act of performances'는 비문(act of는 동명사·단수/불가산 명사만 취함). 단수 'performance'는 본문에 존재하지 않아 발문의 '본문에서 찾아' 제약을 어떻게 읽어도 충족 불가 — 괄호 단서가 어형 고정을 동사에 한정한다 해도 '찾아 쓰기' 자체가 실패한다. 의미상 매력적이나 빈칸 직후 재진술 연결도 없어 담화 결속에서 present-ing에 열세. 따라서 옹호 가능한 공동 정답이 아니라 강한 오답 유인지에 해당하며, 솔버들의 조건부 옹호는 채점 기준 부재를 감안한 신중한 헤지로 이해되나 엄밀히는 기각이 옳다. 단, 이 기각은 유일성 판정에 영향 없음(present-ing 대 presentation 불일치만으로 V2 붕괴)."
+    },
+    {
+      "label": "realize / realizing / happens / happening / making / working / absorbing / performances",
+      "claim": "솔버들: 전원 오답 판정",
+      "verdict": "성립(기각 유지)",
+      "evidence": "'the act of realize/happens'는 비문, 'realizing/happening'은 본문 부재로 발문 위반, 'making'은 타동사 동명사로 목적어 없이는 비완결('making it present'의 일부), 'working'은 'working directly with music'의 일부로 단독으로는 빈칸 명제 담지 불가, 'absorbing'은 지문이 비판하는 수동적 지식 흡수 쪽으로 논지 정반대, 'performances'는 'the act of' 뒤 복수 가산명사로 비문. 솔버들의 배제 논증에 과잉·누락 없음."
+    }
+  ]
+}

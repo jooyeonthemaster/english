@@ -1,0 +1,232 @@
+{
+  "batchId": "grok-confirm-v1",
+  "phase": "grok-confirm",
+  "note": "grok 전환 확증 라운드: @high, 어법·빈칸 × KILLER/INT, 기존 flash(A-NEW/C-INT)·pro(B2)·G0 실측과 동일 프레임 짝비교.",
+  "concurrency": 4,
+  "providerRouting": "none",
+  "env": {
+    "PREMIUM_QGEN_MODEL_ID": "x-ai/grok-4.5",
+    "GRAMMAR_PREMIUM_MODEL_ID": "x-ai/grok-4.5",
+    "EXPLANATION_VERIFY_MODEL_ID": "google/gemini-3.1-pro-preview",
+    "OPENROUTER_REASONING_EFFORT": "high",
+    "QGEN_RESEARCH_MAX_TOKENS_FLOOR": "20000"
+  },
+  "assignments": [
+    {
+      "itemId": "cf-g-002",
+      "frameId": "grammar-frame-v2-002",
+      "subType": "GRAMMAR_ERROR",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "CONF-G-K",
+      "funnel": true
+    },
+    {
+      "itemId": "cf-g-003",
+      "frameId": "grammar-frame-v2-003",
+      "subType": "GRAMMAR_ERROR",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "CONF-G-K",
+      "funnel": true
+    },
+    {
+      "itemId": "cf-g-021",
+      "frameId": "grammar-frame-v2-021",
+      "subType": "GRAMMAR_ERROR",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "CONF-G-K",
+      "funnel": true
+    },
+    {
+      "itemId": "cf-g-035",
+      "frameId": "grammar-frame-v2-035",
+      "subType": "GRAMMAR_ERROR",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "CONF-G-K",
+      "funnel": true
+    },
+    {
+      "itemId": "cf-g-049",
+      "frameId": "grammar-frame-v2-049",
+      "subType": "GRAMMAR_ERROR",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "CONF-G-K",
+      "funnel": true
+    },
+    {
+      "itemId": "cf-g-058",
+      "frameId": "grammar-frame-v2-058",
+      "subType": "GRAMMAR_ERROR",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "CONF-G-K",
+      "funnel": true
+    },
+    {
+      "itemId": "cf-g-069",
+      "frameId": "grammar-frame-v2-069",
+      "subType": "GRAMMAR_ERROR",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "CONF-G-K",
+      "funnel": true
+    },
+    {
+      "itemId": "cf-g-074",
+      "frameId": "grammar-frame-v2-074",
+      "subType": "GRAMMAR_ERROR",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "CONF-G-K",
+      "funnel": true
+    },
+    {
+      "itemId": "cf-gi-011",
+      "frameId": "grammar-frame-v2-011",
+      "subType": "GRAMMAR_ERROR",
+      "difficulty": "INTERMEDIATE",
+      "plan": "PREMIUM",
+      "armId": "CONF-G-I",
+      "funnel": true
+    },
+    {
+      "itemId": "cf-gi-020",
+      "frameId": "grammar-frame-v2-020",
+      "subType": "GRAMMAR_ERROR",
+      "difficulty": "INTERMEDIATE",
+      "plan": "PREMIUM",
+      "armId": "CONF-G-I",
+      "funnel": true
+    },
+    {
+      "itemId": "cf-gi-028",
+      "frameId": "grammar-frame-v2-028",
+      "subType": "GRAMMAR_ERROR",
+      "difficulty": "INTERMEDIATE",
+      "plan": "PREMIUM",
+      "armId": "CONF-G-I",
+      "funnel": true
+    },
+    {
+      "itemId": "cf-gi-032",
+      "frameId": "grammar-frame-v2-032",
+      "subType": "GRAMMAR_ERROR",
+      "difficulty": "INTERMEDIATE",
+      "plan": "PREMIUM",
+      "armId": "CONF-G-I",
+      "funnel": true
+    },
+    {
+      "itemId": "cf-b-002",
+      "frameId": "blank-supply-v2-002",
+      "subType": "BLANK_INFERENCE",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "CONF-B-K",
+      "funnel": true
+    },
+    {
+      "itemId": "cf-b-012",
+      "frameId": "blank-supply-v2-012",
+      "subType": "BLANK_INFERENCE",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "CONF-B-K",
+      "funnel": true
+    },
+    {
+      "itemId": "cf-b-015",
+      "frameId": "blank-supply-v2-015",
+      "subType": "BLANK_INFERENCE",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "CONF-B-K",
+      "funnel": true
+    },
+    {
+      "itemId": "cf-b-017",
+      "frameId": "blank-supply-v2-017",
+      "subType": "BLANK_INFERENCE",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "CONF-B-K",
+      "funnel": true
+    },
+    {
+      "itemId": "cf-b-028",
+      "frameId": "blank-supply-v2-028",
+      "subType": "BLANK_INFERENCE",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "CONF-B-K",
+      "funnel": true
+    },
+    {
+      "itemId": "cf-b-031",
+      "frameId": "blank-supply-v2-031",
+      "subType": "BLANK_INFERENCE",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "CONF-B-K",
+      "funnel": true
+    },
+    {
+      "itemId": "cf-b-035",
+      "frameId": "blank-supply-v2-035",
+      "subType": "BLANK_INFERENCE",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "CONF-B-K",
+      "funnel": true
+    },
+    {
+      "itemId": "cf-b-038",
+      "frameId": "blank-supply-v2-038",
+      "subType": "BLANK_INFERENCE",
+      "difficulty": "KILLER",
+      "plan": "PREMIUM",
+      "armId": "CONF-B-K",
+      "funnel": true
+    },
+    {
+      "itemId": "cf-bi-037",
+      "frameId": "blank-supply-v2-037",
+      "subType": "BLANK_INFERENCE",
+      "difficulty": "INTERMEDIATE",
+      "plan": "PREMIUM",
+      "armId": "CONF-B-I",
+      "funnel": true
+    },
+    {
+      "itemId": "cf-bi-042",
+      "frameId": "blank-supply-v2-042",
+      "subType": "BLANK_INFERENCE",
+      "difficulty": "INTERMEDIATE",
+      "plan": "PREMIUM",
+      "armId": "CONF-B-I",
+      "funnel": true
+    },
+    {
+      "itemId": "cf-bi-046",
+      "frameId": "blank-supply-v2-046",
+      "subType": "BLANK_INFERENCE",
+      "difficulty": "INTERMEDIATE",
+      "plan": "PREMIUM",
+      "armId": "CONF-B-I",
+      "funnel": true
+    },
+    {
+      "itemId": "cf-bi-062",
+      "frameId": "blank-supply-v2-062",
+      "subType": "BLANK_INFERENCE",
+      "difficulty": "INTERMEDIATE",
+      "plan": "PREMIUM",
+      "armId": "CONF-B-I",
+      "funnel": true
+    }
+  ]
+}

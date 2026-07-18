@@ -1,5 +1,223 @@
 # 전 유형 문제 생성 품질 연구노트
 
+> ⚠ **이 파일은 원시 실험일지(append-only 아카이브)다.** 각 관찰의 "확정/기각/철회" 문구는 그 시점의 스냅샷이며 이후 관찰로 뒤집혔을 수 있다 — **현재 유효 결론과 트랙별 supersede 체인은 `research-ledger.md`(단일 진실원)가 담당한다.** 새 관찰은 여기 append 하되, 결론이 바뀌면 원장의 해당 트랙(§1·§2)을 같이 갱신할 것.
+
+## 2026-07-18 새벽~오전 KST — 통합구현 이후 실측: 결정전 config 부적합, 어법·빈칸 grok×grok 최초 인라인 실측(fail-open 실관측), async E-gate 분리
+
+### O185. 결정전(9유형 flash vs grok) 발사 — grok 런은 STANDARD 60초 시간창 부적합으로 무효, 결정전 미완
+
+- 03:18~03:30 KST, decider-flash-v1 + decider-grok-v1: 9유형(순서·삽입·요약MC·무관·어휘·요약서술·핵심빈칸·배열·고쳐쓰기) × STANDARD 경로 funnel, 신규 게이트·acceptedAnswers 계약 가동 워킹트리. 목적: O183 "모델 무관 구조 부채" 교정 후 재평가(로드맵 2순위 실측).
+- grok 런(env: OPENROUTER_STANDARD_MODEL=x-ai/grok-4.5, OPENROUTER_REASONING_EFFORT=high, QGEN_RESEARCH_MAX_TOKENS_FLOOR=20000): 36콜/36슬롯, 수락 3 — 요약MC 2/2·핵심빈칸 1/1, **6유형 후보 0**. 실패 콜 전원 "Invalid JSON response", 대부분 정확히 60.0s(일부 19.9s = 잔여예산 클램프 재시도). $0.108.
+- **근인(코드 확정): STANDARD 플랜 콜 시간창 = GEMINI_QUESTION_TIMEOUT_MS 기본 60_000ms(question-generation-llm.ts:32, flash 기준 설계).** grok@high 성공 콜 실측 35.7~55.4s(추론 1.1~3.4k tok) — 느린 콜이 창을 넘겨 응답 절단. **품질 데이터가 아니라 config 부적합 — grok 기각 근거로 쓸 수 없음.**
+- 부수: EXPLANATION_VERIFY_MODEL_ID=grok 을 세팅했으나 9유형 전부 E-gate 비대상(대상=어법·빈칸+선택형6) → 검증 콜 0. "생성 grok×검증 grok 인라인 stack"은 이 배치가 검증하지 못함(그 검증은 O186).
+- flash 런: 산출물 확보(batches/decider-flash-v1/), 블라인드 평가 미착수.
+- 상태: **결정전 미완.** 재실행 설계 = grok 런 GEMINI_QUESTION_TIMEOUT_MS 상향(예 240_000) 후 flash 런과 짝 블라인드.
+
+### O186. 어법·빈칸 grok 생성×grok 검증 최초 인라인 실측(로컬 fast 경로) — fail-open 실관측, 블로커는 모델이 아니라 "느린 생성+느린 검증 인라인 직렬"
+
+- 7/18 새벽 로컬 dev, fast 라우트(deadline 270s), KILLER, 6월모평 39·40 지문. 03:15 배치 = pro 생성+grok 검증(코드 기본값), 03:47 배치 = .env.local grok 생성 전환(GRAMMAR_PREMIUM_MODEL_ID·PREMIUM_QGEN_MODEL_ID=x-ai/grok-4.5, reasoning=high). **캠페인 grok 배치는 전부 verify=pro(스펙 확인), O184는 오프라인 벤치 — 두 느린 grok이 한 요청에 함께 돈 것은 이번이 처음.**
+- 총시간: pro 85.6/126.5/130.3/250.5s vs grok 174.7/273.5/275.2/275.2s. grok 생성 콜 69~152s(pro 5~47s) → 어법 2건 275s 벽 도달.
+- **fail-open 실관측(O153/O163이 경고한 그 경로의 인라인 첫 재현)**: 어법 2건 repair 타임아웃(0원 미과금 콜), 빈칸 1건 EXPL-VERIFY-FIX 타임아웃 → "[EXPL-VERIFY] gate call failed; passing without verdict" 무검증 출하, GRAMMAR-SOLVER 게이트도 타임아웃 스킵.
+- 원가: fast 경로 grok 151~245원 vs pro 84~234원. "grok 재시도 감소로 동급 이하"(O178·O181)는 funnel 하네스(인라인 데드라인 없음) 한정 — 인라인 경로 미성립. **원가·시간 결론에는 측정 경로 명기 규칙 채택.**
+- 품질(같은 지문 4v4 단독 판독): 2:2. 단 어법 craft grok 우위(관계절 정동사 함정 + 직전 배치 정답 creating을 적법 선지로 재배치한 역함정), 빈칸 grok 1건 정답 선지 영어 어색("state-run legal claims safeguards" 명사 적층). pro 어법 1건(39지문)은 게이트 자체 경고 3건 부착 출하 — grammar-too-basic-decoys("its" 약미끼)·grammar-marker-too-dense·grammar-killer-generic-answer-point, _reviewRecommended. blank-paraphrase-killer-too-easy는 pro·grok 공통 잔존 — 약미끼·얕은 패러프레이즈 모두 생성 프롬프트 축 과제.
+- 방법론: 외부 LLM 평가자의 "확신형" 치명 판정 2건이 검증에서 오콜로 확정 — ① explains 수일치를 "or 병렬 최근접 일치"로 오분석(실제 핵은 단수 growth; of-구 병렬은 등위 주어가 아님) ② 빈칸 ② 복수정답 주장(지문 잔존 문장 "provides a basis for depth of aesthetic processing"이 직접 반증). 확신 프로즈 ≠ 검증 — E-gate를 적대·fail-closed로 설계한 이유의 재확인.
+- 판정: grok 생성 자체는 유효(품질·원가 캠페인권 재현). **블로커는 아키텍처 — 해소는 O187.**
+
+### O187. async E-gate 분리 리팩터 — 구현·검수 완료(5파일), 커밋·배포 승인 대기
+
+- 사전 확인: "행콜 수리"(W2-A, ATLAS_MODEL_CALL_TIMEOUT_MS 240s)는 개별 콜 hang용으로 stack 초과와 무관 — async 개선은 이전에 존재하지 않았음(git·코드·본 노트 전수 확인 후 착수).
+- Part A(인라인 안전가드): explanation-verify-gate.ts 최소예산 가드(기본 190_000ms, env EXPLANATION_VERIFY_MIN_BUDGET_MS) — 남은 예산 미달 시 검증 시도 없이 `_explanationVerifyStatus="SKIPPED_BUDGET"` 표시(반려 아님). **조용한 fail-open 제거.**
+- Part B(임계경로 분리): fast 라우트 `deferExplanationVerify=true` → 인라인 게이트 스킵·PENDING 표시, 저장 후 Trigger.dev `workbench-explanation-verify` 인큐(.catch로 생성과 격리 — 워커 부재 시에도 생성 무영향). 워커: PENDING만 처리(멱등), deadline 480s, 수리 채택 시 QuestionExplanation+structuredData 트랜잭션 PATCH, 상태 VERIFIED/VERIFIED_REPAIRED/FAILED(+`_explanationVerifyIssue`). trigger.config syncEnvVars에 EXPLANATION_VERIFY_* 8키 동기화.
+- 검수 게이트: tsc 무필터 0에러, enforce-차단(continue) 경로 보존 확인, defer/PENDING 상호배타, E-gate 단위테스트 2/2, 스키마 마이그레이션 없음(structuredData JSON).
+- semantics 변화(사용자 승인 필요 사항으로 명시): fast 경로 enforce = "차단·재생성" → "출하 후 표시(ship-then-flag)". AI 문항 approved=false 교사 승인 게이트가 백스톱. 생성은 트리거 무경유 — 검증만 오프로드.
+- 상태: 커밋·배포 미실행. 다음 = 로컬 grok×grok 재실측(생성 데드라인 완주 + 워커 PATCH 확인) → 커밋 → vercel --prod → grok 운영 env.
+
+### O188. async E-gate 1차 실전(로컬 16:53~16:58 KST, grok 생성 4문항) — defer 정상 작동·fail-open 소멸, 단 워커 미구동 시 PENDING 무검증 출하의 실비용 즉시 실증
+
+- 사용자 로컬 생성 4문항(6월모평 36·37 지문, 어법·빈칸 × KILLER, grok@high 생성 유지): O187 리팩터 적용 첫 실전. **4/4 `_explanationVerifyStatus="PENDING"` 정확 표시, 인라인 검증 콜 0, fail-open 로그 0(구조적 소멸).**
+- 시간·원가(DB 원장, 잡↔문항 questionIds 확정 매핑): 빈칸36 79.1s/68원(1콜) · 빈칸37 148.5s/145원(2콜) · 어법37 175.5s/126원 · 어법36 274.3s/110원 — 합 449원(평균 112원). 리팩터 전 grok×grok 인라인(O186: 174~275s·708원) 대비 시간·비용 동시 개선. **역설: 최저가·최속 런(빈칸36, 1콜 무수리 통과)이 中文 혼입 오염 문항을, 최고가 빈칸 런(빈칸37, 게이트 반려→2콜째 수리)이 경고 0 A-급을 냄 — "싸고 빠른 런 ≠ 좋은 품질", 게이트 루프가 밥값을 한 실측.** 신규 게이트 후보: 해설 필드 CJK/한자 혼입 결정형 검출(정규식 0원 — 连接류 즉시 차단, E-gate 대기 불요).
+- **PENDING 적체의 실비용 실증**: Trigger 워커 미구동 상태라 4문항 무검증 대기 — 그중 빈칸 36번 해설에 **중국어 혼입("…뒤따른다고 连接한다", V4급 한국어 손상)이 무검증 출하**. 빈칸은 E-gate 대상이라 워커 구동 시 포착 기대 — "async = 워커 상시 구동이 운영 전제"가 배포 체크리스트 항목으로 승격.
+- 잔존 과제 재확인: 어법 36번은 사다리 repair 콜이 125.2s·0토큰으로 사망(270s 데드라인 클램프 abort) → `grammar-shallow-participle-adjective-answer`·`grammar-weak-filler-decoys`("it" 약미끼) 잔존 출하. grok 어법 사다리 생성 자체 속도(274s)는 O187 이후에도 데드라인 코앞 — 원장 §2.3 미결 그대로.
+- 세트 설계 관찰: 37번 지문의 빈칸(정답: think systematically and understand... 패러프레이즈)과 어법((E) understanding→understand)이 **같은 문장을 표적** — 한 시험지에 동시 출제 시 상호 누출 위험. 같은 지문 다문항 생성의 표적 중복 회피는 diversity 컨텍스트의 미커버 축(신규 관찰).
+
+### O189. 통합 라우팅 첫 혼합 배치(로컬 19:25, 37번 지문 × 6유형) — 라우팅·defer 대상판정 정확, 그러나 ①grok 해설 외국어 혼입 재발(패턴화) ②flash 콤보 V4 무방비 ③유형 간 표적 중복(세트 누출) 대규모 확정
+
+- 같은 지문(6월모평 37번 HRD) 6유형 동시 생성: 어법·빈칸→grok PREMIUM(112.7/148.2s·93/111원, PENDING 표시), 콤보·순서·어휘·삽입→flash STANDARD(15.6~33.8s·38~115원, 검증표시 없음=비대상 정확) — resolveUnifiedGenerationPlan·defer 대상판정 실전 정상. 합 487원.
+- **grok 해설 외국어 혼입 2례째**: 빈칸 해설 "들어 steals다"(영단어 삽입) — O188 中文 "连接"와 동계열(V4). 산발 아닌 **패턴** → 해설 필드 비한국어 토큰(CJK·라틴 혼입) 결정형 검출기(O188 등록 후보)의 우선순위 상향. 오답 설계 자체는 준수(주체/범위 비틀기), killer-too-easy 경고 동반.
+- **flash 콤보 V4 해설-표적 불일치**: 렌더 (A)=practices [what/that](주격 관계사 자리)인데 해설 (A)는 존재하지 않는 responsibility 동격절을 "완전한 절이 뒤따르므로 동격 that"으로 설명(+"복수 비동사" 오타). 정답 키(⑤)는 우연히 유지, 근거는 허구. **콤보는 E-gate 비대상이라 async 검증으로도 미포착** — O181 "기타 유형 병목=검증 부재"의 프로덕션 라이브 재현. E-gate 대상 확장(콤보 등) 또는 앵커 정합 게이트 필요.
+- **유형 간 표적 중복(세트 누출) 대규모 확정**: 삽입의 주어진 문장("Instead, … become learning facilitators")이 빈칸이 뚫은 표현 그 자체 — 삽입이 빈칸 정답을 지문째 노출. 어법 (C) encourage·어휘 indispensable↔insufficient 가 같은 문장, 콤보 (C) advise 는 어법37(O188)의 understand 와 같은 문장군. **diversity 컨텍스트는 동일 유형 내 회피만 하고 cross-type 표적 중복은 미커버** — O188 2문항 겹침 관찰의 확정판. 신규 과제: 유형 간 usedTargets 공유(지문 단위 표적 원장).
+- 부수: grok 어법 정답 포인트 3연속 병렬(understanding→stimulating→encouraging) — 포인트 다양성 스티어링 필요. flash 순서/어휘/삽입은 신규 게이트(T9·T10) 아래 형태 결함 0으로 통과(순서 1회 반려 후 재생성, 삽입 외부 재시도 1회) — 구조 무결 축은 긍정 신호, V4 축은 여전히 블라인드.
+
+## 2026-07-17 저녁 KST — 프로덕션 첫 실전 배치 전수감사 → STANDARD 근본수술 라운드 개시 (사용자 지시: "어떤 방식을 동원해서라도 STANDARD 빈칸·어법을 해결")
+
+### O163. 실전 배치 22문항(전부 KILLER) 전수감사: PREMIUM은 구조 증명, STANDARD는 두 셀 다 붕괴
+
+- 7/17 16:33~16:55 KST 사용자 실사용 배치. 원장 실청구 조인 + 블라인드 평가(솔버2+감사자+조정자, 70에이전트, `runs/campaign-20260716/eval-jul17-prod/`).
+- 원가: PREM빈칸 72원(콜 정확히 2: pro생성+pro검증, 5/5 첫시도), PREM어법 136원(사다리 4~9콜, 6/6 첫시도), STD빈칸 107원, STD어법 331원(4/5가 3-attempt, 생성콜 입력 ~25k tok ≈ 80원/발).
+- 품질(F): PREM빈칸 0/5, PREM어법 1/6, STD빈칸 4/6, STD어법 5/5. V2 붕괴 확정 2건(J007 어법: guiding 축약관계절 성립+정답누출 / J017 빈칸: 앵커 삭제로 ②⑤ 복수성립). A등급 0/22, killer조건충족 3/22.
+- E-gate warn 판정의 블라인드 검증: "수리 후 잔존" 경고 출하 3건(J007/J009/J011) 전부 감사 F — 게이트 판정은 정확했고 warn이라 출하됐다. 장애 시간대(잔액 0) fail-open 통과 2건(J002/J017)이 F에 포함 — fail-open의 실비용 확인.
+- 잔액 고갈 장애: 캠페인 지출($24.44)이 프로덕션과 같은 OpenRouter 계정을 소진시켜 16:33 6건 연속 500. 학원 크레딧 전액 자동환불 확인. 재발방지 규칙: 배치 발사 전 `GET /api/v1/credits` 필수.
+
+### O164. STANDARD 빈칸 F 3건의 근인은 "span 경계 선택" 단일 클래스다 — 지문 재작성 훼손이 아니다
+
+- 원지문 vs 렌더 지문 문장 단위 diff: 세 건 모두 **빈칸 문장 외 전 문장 바이트 동일**. 훼손은 빈칸 문장에 국한.
+- J001: 원문 "…success, if it involves vulnerable groups, cannot be denied." → span이 삽입구 중간(첫 콤마 직후)부터 문장 끝까지 걸쳐 "…success, _____." 고아 콤마+비문 이음새. J012: 서사 지문에서 **문장 전체를 통삭제**("Singapore. _____. That was why…") — 빈칸이 고아 문장 파편. J017: span("establish interpersonal connections…organizational culture")이 해당 개념의 **지문 내 유일 앵커**여서 삭제 즉시 정답 ②의 텍스트 근거 소멸 → ②⑤ 복수성립(V2).
+- 시사: (a) 전문장 blank·삽입구 절단은 결정형 규칙으로 사전 반려 가능. (b) 유일-앵커 삭제는 의미 검사 필요(결정형 불가) — E-gate 또는 생성 프롬프트의 span 선정 지침으로 공략. (c) J017 렌더의 비문("allows them ... chooses")은 원지문에 이미 존재 — 소재 지문 결함은 별도 축.
+
+### O165. KILLER 어법 원가 역전: pro 사다리(136원)가 flash 3-attempt(331원)보다 싸고 품질도 압도
+
+- flash는 KILLER 게이트(overdrilled/shallow/generic-point)에 계속 반려당해 25k tok 프롬프트를 3라운드 소모하고도 V4 전멸. pro 사다리는 첫 시도 통과 6/6, F 1/6(그마저 fail-open 출하분).
+- 가설 H-STD-4(아래)로 등록: STANDARD KILLER 어법을 내부적으로 pro 사다리에 라우팅하면 원가 절반+품질 회복. 판매가(146~264원) 대비도 흑자.
+
+### 가설 등록부 — STANDARD 근본수술 라운드 (잔여 예산 344 slot, 잔액 $47.26)
+
+| ID | 가설 | 검증 방법 | 예상 원가영향 |
+|---|---|---|---|
+| H-STD-1 | 빈칸 span 결정형 게이트(전문장 금지·삽입구 절단 금지·verbatim indexOf 계약)로 V1/V3 seam 결함 클래스 제거 | 결함 프레임 재생 + 신규 paired | +0원 (결정형) |
+| H-STD-2 | seam 기계 패턴 게이트(", _____." 고아콤마, "_____." 단독문장, 이중구두점) → 반려 시 표적 피드백 재시도 | 〃 | 재시도분만 |
+| H-STD-3 | E-gate 수리 모델 flash→pro 스왑(STANDARD 어법): V4 잔존 3/5의 근인이 "flash는 구조분석을 수리 못함" | paired n≥10 | +10~20원/문항 |
+| H-STD-4 | STANDARD KILLER 어법 → pro 사다리 내부 라우팅 | paired n≥10 | −195원/문항 (역전) |
+| H-STD-5 | 프롬프트 다이어트(어법 25k tok의 몸통 규명 후 positive-compact 재설계, G2 계보) | 섹션 해부 후 paired n≥15 | −40~60원/발 |
+| H-STD-6 | (제품) KILLER 난이도는 PREMIUM 전용으로 제한 — H-STD-4가 참이면 라우팅으로 충분, 거짓이면 제품 결정 | H-STD-4 결과로 판정 | — |
+| H-STD-7 | 빈칸 span의 "유일 앵커 삭제" 방지: 생성 프롬프트에 span 선정 계약(삭제 후에도 정답 추론 사슬이 지문에 잔존해야 함) 명시 + E-gate V2 확장 | paired n≥10 | 프롬프트만 |
+| H-STD-8 | STANDARD 어법 해설만 pro가 작성(생성은 flash, 해설 분리 콜): V4 근인이 flash의 구조 오분석이므로 수리가 아니라 작성을 위임 | paired n≥10 | +15~25원/문항 |
+| H-STD-9 | INTERMEDIATE STANDARD는 현행 유지 가능(붕괴는 KILLER 국한)인지 기준선 측정 | INT n=10×2유형 평가 | — |
+
+### O166. 포렌식 확정: 빈칸은 이미 코드 splice, 어법 비대의 몸통은 typePrompt 17KB+후보블록 30KB, 빈칸 contract 는 유형 미등록으로 28KB 통짜 수신
+
+- 빈칸 조립: LLM 은 passageWithBlank 를 출력하지 않는다 — originalExpression(축자 span)+surroundingText 만 내고 서버가 splice(`question-postprocess/processors/blank-inference.ts:90`). 즉 O164 의 seam 결함은 전부 "span 선택" 결함이고, 기존 게이트에는 전문장 span·삽입구 절단 검사가 없었다(가장 근접한 것은 선지-경계 중복 검사뿐).
+- 어법 STANDARD 프롬프트 비대: ① `STRUCTURED_TYPE_PROMPTS.GRAMMAR_ERROR` 상수 13,986자(빈칸의 2.6배) ② `buildGrammarErrorCandidateBlock` ~30KB(가드레일 13KB+9프레임+포인트카탈로그+**지문 재열거로 지문 2회 인쇄**). ③ 반면 contract tail 은 어법만 유형 필터 등록(~5KB), **빈칸은 미등록이라 full tail 29,587자를 통째로** 받고 있었다.
+- 재시도 사다리: STANDARD 어법 KILLER strict cap 4, 시도 간 한국어 교정 피드백 주입(`appendGrammarRetryDirectives`) — G2 가 customPrompt 를 지워 이 채널을 끊었던 것이 수락률 붕괴(2/10)의 유력 공범.
+- E-gate 수리 콜은 `generationPlan:"STANDARD"`(=flash) 하드코딩이었다 — V4 잔존 3/5 의 구조적 원인 후보(flash 는 자신이 오분석한 구조를 수리에서도 오분석).
+
+### O167. 구현 출하(무API 검증 완료): span-carve 게이트·빈칸 contract 다이어트·G4 프로필·E-gate 수리모델 env·러너 funnel 모드
+
+- `validators/blank/span-carve.ts` 신설: `blank-span-full-sentence`(전문장 빈칸+소문자 술부 선지), `blank-span-clause-carve`(콤마 직후 시작+span 내 콤마+주어NP 선행). 단위테스트 3/3(J001·J012 재현 차단, 건강 span 4종 통과). **DB 500문항 오탐 스캔: 발동 5건 = 실전 F 2건(J001·J012) + 소문자 문두 실결함 3건 — 오탐 사실상 0.** 문두 부사구 관용("After all,"류) 오탐 4건은 주어NP 화이트리스트로 제거, 인용부호 문장분리 버그도 수정.
+- `CONTRACT_TYPE_SECTIONS` 에 BLANK_INFERENCE 등록: 빈칸 contract 29,587→13,052자 (**콜당 16,535자 절감**, 자기 세그먼트 전량 보존).
+- G4_DIET_GUARDED 프로필: positive-core typePrompt(960자) + diet 후보블록(30KB→15KB: 지뢰지도·KILLER 사전판정·결핍모드·게이트짝 규칙 보존, 9프레임·카탈로그·해설공예지시·지문재열거 제거) + customPrompt(재시도 피드백 채널) 유지. **콜당 총 ~29KB 절감.**
+- `EXPLANATION_VERIFY_REPAIR_MODEL_ID` env: E-gate 수리 모델 스왑(H-STD-3 검증용, 미설정 시 바이트 동일).
+- 러너에 `funnel:true` 모드 추가: `runQuestionGenerationWithEmptyRetry`(strict 다회→rescue→relaxed→salvage) 풀 깔때기 실행. 전체 tsc 0 에러.
+
+### O168. 스모크(stdfix-smoke-v1, 7 slot, $0.28): funnel·A-NEW 정상, G4 는 2/2 반려로 G2류 붕괴 신호
+
+- A-NEW(빈칸 funnel, span게이트+contract다이어트): 2/2 첫시도 수락, ~50원/문항(E-gate warn pro검증 포함).
+- B2-STD(어법 funnel): 3 candidate 소모 후 수락, 207원 — 프로덕션 꼬리 재현 확인.
+- B1-G4: 2/2 게이트 반려 (marker-too-dense, killer-overdrilled, underline-wide, keypoint-mismatch, terminology-register 등) — 단발이라 교정 루프 없음 감안해도 G2류 신호. G0 짝비교(n=12)로 델타 실측 후 판정.
+### O169. B1 판정: 어법 다이어트(G4) 기각 — 수락 1/12 vs G0 6/12. 17KB 가드레일은 밥값을 한다
+
+- 단발 짝비교(confirmatory 12쌍, KILLER): G0 수락 6/12, G4 1/12. 콜 단가는 G4 가 44% 저렴하나 **수락당 원가 G0 $0.106 vs G4 $0.357 (3.4배 악화)**. H-STD-5 의 "positive-core 전면 교체" 계열은 G2(2/10)에 이어 재확인 기각.
+- 반려 해부의 교훈: G4 는 marker-too-dense 4건(G0 0건) — **지문 재열거(문장 번호 목록)는 낭비가 아니라 마커 분산 장치였다.** 9프레임/카탈로그 제거는 overdrilled·shallow-participle 재발과 동행. "지문 2회 인쇄 제거"조차 공짜가 아님이 실측됨.
+- 미검증 잔여 가설(등록만): G5 = 현행 typePrompt 유지 + 후보블록에서 9프레임/카탈로그만 제거(재열거·가드레일 보존, ~-17KB). 지금 라운드에서는 실행하지 않는다.
+- 단발 G0 50% 수락은 프로덕션 3-attempt 꼬리의 산술적 근거: 0.5 수락률이면 기대 attempts ≈ 2, cap 4. 어법 STANDARD 의 원가 문제는 프롬프트가 아니라 **flash 의 KILLER 소재 선택 능력** — 라우팅(B2)이 정답일 가능성에 무게.
+
+### O170. 빈칸 A-NEW 풀 깔때기: 12/12 수락, 중앙 ~67원, 재시도 동인은 전부 '진짜' 공예 게이트
+
+- 수락 12/12 (첫시도 8, 2attempt 3, 3attempt 1). 원가 48~177원, 총 $0.81. E-gate 수리 2건.
+- 재시도 사유: killer-giveaway-distractors, killer-span-too-wide, weak-distractors, killer-polarity-shortcut — 전부 공예 게이트 정상 작동. span-carve 발동 0 (꼬리 이벤트 보험 — 단위테스트·DB 스캔으로 이미 검증).
+- contract 다이어트(16.5KB 절감) 적용 상태로 jul17 실전(50~232원) 대비 원가 프로필 동등~개선. 품질은 블라인드 평가 대기.
+### O171. B2/B3 원가 wire 대사 + 빈칸 A-NEW 블라인드 판정
+
+- **원가 정정(wire 권위)**: 러너 기록치가 ladder 스테이지 usage 를 또 누락(기록 56원) — wire 재계산 결과 **B2-PREM 평균 199원/문항**(125~366원), B2-STD 평균 219원/문항(87~449원). 같은 6프레임 paired 에서 원가는 사실상 동률, jul17 실전(PREM 136 vs STD 331)보다 격차 축소. 라우팅의 승부처는 원가가 아니라 **품질**(블라인드 평가 대기)로 이동.
+- 빈칸 A-NEW 블라인드(12문항, 36에이전트): **분쟁 0, 양솔버 정답일치 12/12, V2 전원 통과** — jul17 의 유일성 붕괴(J017)·seam 붕괴(J001/J012) 클래스 소멸. F 5/12(42%, jul17 67%): V3-distractor seam 2(오답 선지의 슬롯 부적합 — span 문제 아님), V4 해설 3, V1 stray-marker 1. **잔여 축 = 오답 슬롯핏(V3)과 해설 사실성(V4, warn 잔존)**. killer 조건충족 0/12, craft 14.0 — 공예는 여전한 한계.
+- B3(E-gate pro 수리, 같은 6프레임): 검증 6/6 1차 PASS → **수리 이벤트 0, H-STD-3 미검증**(표본 우연 또는 프레임 특성). B2-STD 는 같은 프레임에서 수리 3건 발생 — 생성 확률성. B3 은 사실상 추가 STD 대조 표본으로만 사용.
+### O172. stdfix 라운드 종합 판정 (129 slot, $4.75, 평가 에이전트 194) — 재프레이밍: "STD 어법 전멸"의 절반은 지문 소재였다
+
+- **INT 기준선(C, funnel 10)**: F 1/10, craft 18.3, A1/B6 — **INTERMEDIATE STANDARD 는 건강하다.** 붕괴는 KILLER 국한(품질 기준). 단 INT 어법 원가 186원(374원 꼬리)은 최저 판매가 146원 초과 — 원가 문제는 난이도 불문 어법 구조 특성.
+- **어법 KILLER 코퍼스 프레임(표준 어법 적합 지문)**: B2-STD+B3 합산 F 2/12, B2-PREM F 1/6 — **품질 동률**, 원가도 199 vs 219원 동률. 반면 jul17 실전(장문 서사·요약문·문장삽입 지문에 어법 KILLER)은 STD 5/5 F. → **jul17 붕괴의 지배 변수는 '지문 소재 부적합'**: 사용자는 아무 지문에나 어법 KILLER 를 걸고, flash 는 부적합 지문에서 무너진다(pro 는 1/6 F 로 버팀).
+- V2 유일성: stdfix 전 배치(40문항) 분쟁 4건 전원 조정 V2ok — **유일성 붕괴 0**. span-carve 게이트+게이트 정상 작동 후 V2 축은 사실상 방어됨.
+- 잔여 지배 축 = **V4 해설 사실성**(F 의 대부분: STD·PREM 공통, warn 잔존) + **V3 오답 슬롯핏**(빈칸) + **craft/killer 조건**(KILLER 충족 1/28 — 아름다움은 여전히 미해결).
+- 가설 최종: H-STD-1/2 ✅출하검증, 빈칸 contract 다이어트 ✅(-16.5KB, 수락 12/12, F 67→42%), H-STD-5 ❌기각(G4 1/12), H-STD-4 → **부분 채택**(코퍼스에선 동률, 실전 부적합 지문에서 pro 우위 — jul17 근거로 라우팅 여전히 유효하나 근거 격하), H-STD-3 미검증(수리 이벤트 0), H-STD-9 ✅(INT 건강 → "KILLER 프리미엄 전용" 제품 결정 데이터 확보).
+- **신규 등록 가설 H-STD-10**: 어법 KILLER 사전 지문 적합성 가드 — 서사/장문/요약문 등 어법 밀도 낮은 지문에서 STD 어법 KILLER 요청 시 (a) pro 라우팅 or (b) 사용자 경고. jul17 실전 F 의 지배 원인 직격. H-STD-11: V4 공략 = STANDARD E-gate enforce 실측(수율 하락 측정) or 수리 이벤트 발생 표본에서 pro 수리 재검증.
+- 잔여 예산 215 slot, OpenRouter 잔액 $41.59.
+
+### O173. grok-4.5 1샷 테스트 (n=8, KILLER, 프리미엄 파이프라인 생성모델 스왑) — pro 동급 이상, 빈칸 craft 신호 우위
+
+- 단가: x-ai/grok-4.5 = $2/6 (pro-preview $2/12 대비 출력 절반가).
+- **빈칸(4)**: F 0/4, V 전통과, craft 18.3 — **캠페인 첫 A등급(23/24) 배출**. 원가 79원(pro 72원 동급). **어법(4)**: F 1/4(V4 용어 오분석 — 공통 축), craft 16.5, 원가 실측 147원+스트리밍 미계상 3콜 보정 ~165-175원(pro 199원 대비 소폭 우위). 4/4 첫시도 수락, 블라인드 정답일치 8/8.
+- 함정 2개 기록: ① 어법 사다리는 `GRAMMAR_PREMIUM_MODEL_ID` 별도 env — v1 배치는 pro 로 돌아 무효(재실행 v2). ② grok 응답 일부가 SSE 스트리밍으로 와서 wire cost 파싱 실패 + E-gate 검증콜이 4건 중 1건만 pro 로 관측됨(3건은 grok 스트리밍 콜과 미구분) — **grok 채택 전 verify 모델 고정 배선과 스트리밍 usage 회수를 정리해야 함**.
+- 판정: n=8 로 전환 결정엔 부족하나 "pro 동급 이상 + 원가 우위 + 빈칸 craft 우위" 신호. 채택 시 확증 라운드(paired n≥20) 권고.
+
+### O174. grok 통합 안정화 확정 + 대규모 라운드(GK) 개시 — 사용자 지시 "장문·비정형 지문 + 전 유형 대대적 연구"
+
+- **근인**: grok 요청에 추론 설정이 미전달 — atlas-ai 는 gemini 전용 env(OPENROUTER_GEMINI_REASONING_EFFORT)만 세팅돼 있었고 범용 env(`OPENROUTER_REASONING_EFFORT`)는 공란 → grok 기본(고강도) 추론으로 콜당 65~170초 + 빈응답 3/11.
+- **프로브(grok-probe-v1, reasoning=low)**: 콜 15~75초, 빈응답 0/11 — 완전 해소. **장문 서사 338단어 어법 KILLER 1시도 92초 수락**(실전에서 flash 전멸 지점). 생성시간 비교(중앙): STD빈칸 48s·STD어법 59s·pro어법 122s·grok빈칸 41~80s·grok어법 92~135s.
+- 코퍼스에 jul17 실전 지문 8종 adhoc 프레임 추가(adhoc-prod-01~08, 장문 서사 338w 포함). GK-A 장문 짝비교 16문항 + GK-B 8유형 브레드스 16문항 발사. pb-g-103 1건 no_candidate(표준 프레임, funnel 소진) — 코드 추후 분석.
+### O175. grok 대규모 라운드 최종 판정 (GK-A 장문 15 + GK-B 8유형 16, 80 slot/$1.49, 평가 100 에이전트) — 전면 채택 기각, 통합 모델 pro 유지
+
+- **GK-A 장문·비정형 (jul17 실전 지문 동일)**: grok F 7/15(47%) — 같은 지문 pro 실전 F 1/11(9%)에 완패. V4(용어 모순·**함정 조작 날조**)·V3 슬롯·V1 이중마침표. **E-gate(pro 검증 19콜·수리 5콜)가 켜져 있었는데도 통과 출하** — pro 검증기가 grok 해설 결함을 놓친다.
+- **GK-B 8유형 브레드스 (premium 경로)**: F 9/16(56%). 구조 변형형 전멸 — 순서 2/2 F(V2 붕괴, 솔버 오답), 요약 2/2 F(summaryWithBlanks 프레임 누락), 삽입 2/2 F(givenSentence 누락), 무관 2/2 F. 선택형(주제 B/B·함축 B/B·제목 B/F·내용일치 B/C)은 양호. **주의 교란**: premium 경로의 브레드스 유형은 프로덕션 실사용 희소 — grok 단독 귀책 불가(스키마 계약 미준수 축은 G3/B3 기각 계열과 동형). 브레드스 유형의 프로덕션 표준은 flash 경로(sentinel 50/52)이며 그대로 유지가 정답.
+- **표준 지문 어법/빈칸(O173)**: grok ≈ pro, 빈칸 craft 우위 신호 — 이 셀 한정 후속 검토 여지만 남김.
+- 원가/속도: grok 어법 KILLER 169원·빈칸 89원·선택형 13~57원, reasoning=low로 시간 실용권 — 원가·속도는 합격이었으나 품질 강건성(장문)에서 탈락.
+- **통합 최종 아키텍처 확정안**: 어법 전난이도+빈칸 KILLER=pro(사다리)+E-gate enforce / 빈칸 초중급=flash / 브레드스 유형=flash 현행 / grok=보류.
+- 신규 결정형 게이트 후보: blank seam 이중마침표(P002 V1-DOUBLE-PERIOD — span-carve R3 확장).
+- 캠페인 누계 865/1000 slot, $30.68. 잔액 $37.68.
+
+### O176. 반전(사용자 지적 적중): 장문 grok F 47% 의 범인은 모델이 아니라 내가 강제한 reasoning=low 였다 — O175 의 "전면 기각" 철회
+
+- 같은 장문 4지문 × 어법/빈칸, reasoning 스윕: **low F 7/15(47%) → high F 0/8 (V 전통과, A 1건, craft 16.6)**. medium 은 7/8 수락(평가 진행 중).
+- 원가 역설: high 가 low 보다 같거나 싸다 — 어법 128원·빈칸 82원 (low 169/89원). 추론이 깊어지면 재시도가 줄어 총원가가 내려간다. 교훈: **"추론 낮춰서 싸게"는 이 워크로드에서 거짓 절약.**
+- O175 의 기각 논리 중 "장문 품질 불안정"은 설정 교란이었으므로 철회. 유형 브레드스(구조 변형형 전멸)와 E-gate 통과 문제는 low 설정에서 측정된 것 — high 재검 필요 여지. 잔여 엔지니어링 이슈: 어법에서 콜 1개가 행으로 매달려 deadline(282s)까지 대기(수락엔 무영향, 시간 낭비) — 스트리밍 응답 처리 수리 필요.
+- 다음 관찰 번호: O177 (E1a medium·E2 easy·E4 표준킬러 평가 후 종합).
+
+### O177. grok 추론 강도 용량-반응 확정 + 잔여 셀 실측 (E1a/E2/E4)
+
+- **장문 용량-반응**: low F 7/15(47%) → **medium F 3/7(43%, V2 붕괴 2 — 어법 유일성 판정에 추론 부족)** → **high F 0/8**. 단조 개선, high 가 원가도 동급 이하. **grok 운용 규정 = reasoning high 필수** 확정.
+- E2 쉬운 난이도 @low: F 2/8 — 어법 INT/BASIC 은 0/4(B 3, craft 17.8)로 건강, 빈칸에서 V1 모지바케 1건(**인코딩 계열 — 추론 무관 통합 이슈 후보**)·V2 복수정답 1건. BASIC 빈칸에서 A등급(22/24) 1건 추가 — grok 빈칸 craft 강점 재확인.
+- E4 표준 어법 KILLER @low 보강: F 1/4, craft 13.8, 159원 — @low 에서도 pro(199원)와 품질 동급·원가 우위 유지.
+- 진행: E5(구조 변형형 4유형 + 쉬운 빈칸 @high 재검) 10문항 발사. 완료 시 grok 최종 종합(O178).
+
+### O178. grok-4.5 최종 종합 (전 매트릭스 완료, 누계 n=77 생성·평가) — "@high 한정, 어법·빈칸 생성기로 채택 후보" 확정
+
+- E5 @high 재검: **쉬운 빈칸 F 0/2 + A등급(22/24) 추가** — @low 의 모지바케·V2 붕괴 미재현. **구조 변형형(요약/순서/삽입/무관)은 @high 에서도 F 6/9, V1 필수필드 누락(summaryWithBlanks 프레임·givenSentence) 동일 재현** → 추론 무관, premium 경로에 이 유형들의 구조 계약이 미구현인 것. 이 유형군은 flash 경로가 프로덕션 표준(sentinel 50/52)이며 그대로 유지 — grok 귀책 아님으로 종결.
+- **grok 최종 성적 (@high, 어법·빈칸)**: 장문 F 0/8 + 쉬운 F 0/2, A등급 캠페인 누적 3개(전부 grok — flash·pro 는 0개), craft 16~18 vs pro ~15, 원가 82~159원(pro 199원 이하), 시간 27~157초(행 콜 제외).
+- **최종 분업안**: 어법·빈칸 생성 = grok-4.5 @reasoning high (채택 후보) / E-gate 검증 = pro 유지 / 구조 변형·선택형 유형 = flash 현행. 채택 전 필수: ① 행 콜(282s 대기) 수리 ② E-gate×grok 조합 recall 검증 ③ 확증 paired n≥20.
+- 캠페인 누계 ~925/1000 slot. O175 의 "전면 기각"은 공식 철회, 사용자 지적(설정 탐구 부족)이 옳았음을 기록.
+
+### O179. 평가 장비 결함 발견 — "구조 유형 전멸"의 상당 부분은 내 패킷 생성기가 만든 허상
+
+- 사용자 재질문("grok 전용 설계면 살아나냐")으로 원점 재검 → E6 수락 문항 원본 검사 결과 **summaryWithBlanks·blanks·givenSentence·paragraphs 전부 실재**. 죽은 곳은 생성이 아니라 **build-eval-packets.py** — 어법·빈칸용으로 짜여 요약문 틀·제시문·순서 조각을 패킷에 렌더하지 않았고, 채점자는 틀 없는 문제를 받아 "V1 필드누락/V2 풀수없음"으로 오판. GK-B·E5·E6 세 배치의 구조 유형(요약/삽입/순서) F 판정 전체가 오염 대상.
+- 무관문장(passageWithNumbers 는 렌더됨)·선택형 유형 판정과, V4 해설류 지적은 오염 무관(유효 추정).
+- 조치: type_display_sections() 패치(blind 는 정답 미포함 표시만, full 은 blanks 정답 포함) → E5·E6 reviews 삭제 후 재평가 발사. **교훈: 평가 장비도 피험체다 — 새 유형을 평가 궤도에 태울 때 패킷 렌더 커버리지를 먼저 검증할 것.**
+- E6 계약 주입의 효과 판정은 재평가 후로 보류(O180). 프리미엄 경로 계약 부재(코드 사실)와 잠복 프로덕션 리스크 지적은 유효하나, "주입해도 실패" 결론은 철회 대기.
+
+### O180. 구조 유형 × grok 최종 재판정 (장비 수정 후 E5·E6 재평가) — "전멸"은 허상, 실결함은 기계 검사 가능한 3축 + V4
+
+- **재평가 결과**: E5(주입 없음, @high) F 6/9→4/9·**V2 붕괴 4→0**(솔버 전원 정답, 순서·요약 모두 풀림). E6(계약 주입) F 7/8 — 주입이 유의미하게 돕지 않음(n 작음). `PREMIUM_TYPE_CONTRACT_INJECTION` env 는 기본 off 유지.
+- **실결함 3+1축 (전부 대응 가능)**: ① 순서: 조각화에서 원문 문장 누락(V1-SENTENCE-DROPPED — 결정형 검사: given+조각 합집합=원문) ② 삽입: 마커 위치 어긋남(V1-MARKER-DESYNC — 결정형) ③ 무관: 번호 비연속(결정형) ④ V4 해설(E-gate 유형 확장으로 커버 가능). 유일성·논리 붕괴는 없음.
+- **결론**: grok 으로 구조 유형을 살릴 여지 = **있음** — 단 필요한 것은 grok 전용 프롬프트가 아니라 **모델 불문 무결성 게이트 3종 + E-gate 확장**(flash 에도 동일 이득). 우선순위는 어법·빈칸 grok 전환이 먼저, 구조 유형은 게이트 공사 후 2순위.
+- 캠페인 누계 ~943/1000 slot. 다음 관찰 번호: O181.
+
+### O181. 최종 3종 실측 — grok 확증 통과, flash 브레드스 신화 붕괴, 선택형 A승급은 프롬프트만으론 미달
+
+- **grok 확증(24, 어법·빈칸 × K/I, @high)**: **F 2/24(8%), A 5개, V2 붕괴 0, 블라인드 정답 24/24, craft 16.9.** 원가 어법 153원·빈칸 77원. 동일 프레임 비교: flash A-NEW 빈칸 F 42%·94원, flash 어법 funnel F 17%·219원, pro F 17%·199원. **grok 전환 확증 — 품질·원가 동시 우위, 어법·빈칸 유일 경로로 확정 권고.**
+- **flash 브레드스 블라인드 기준선(16)**: **F 5~6/16(33%+)** — V4 환각·비단어·손상 용어, 삽입 1건 렌더 문장 손실(V1V2). "flash 기타 유형 양호"는 결정형 게이트의 환상이었음(sentinel 50/52 는 V4/craft 를 못 봄). **기타 유형도 방치 불가** — grok 브레드스(@high 재채점 F 44%)와 오십보백보, 즉 기타 유형의 진짜 병목은 모델이 아니라 **검증 부재**(E-gate 미커버 + 무결성 게이트 부재).
+- **아름다운-선택형(grok+공예계약, 12)**: F 2(전부 V4 한국어 손상), B 7, A 0, craft 16.7(대조군 16.4). 공예 계약은 B율만 소폭 상향 — **A 승급 열쇠는 프롬프트가 아니라 E-gate 의 선택형 확장**(V4 손상 차단)으로 판정. `QGEN_SELECTION_CRAFT_DELTA` 는 유지 가치 있으나 단독 불충분.
+- **캠페인 총결(수정판 유형 지도)**: ① 어법·빈칸 = grok@high + pro E-gate (확증 완료) ② 선택형 = grok@high + E-gate 확장(공사 필요) ③ 구조형 = 무결성 게이트 3종 공사 후 재평가(모델 무관) — "flash 유지"는 임시 방편일 뿐 장기 답이 아님.
+- 누계 ~1,010/1200 slot, ~$41 캠페인 총지출. 다음 번호: O182.
+
+### O182. G-ONE(어법 한 콜) 기각 — 사다리의 분해는 어법에서 하중을 받치는 구조였다
+
+- 사용자 가설("빈칸처럼 어법도 한 콜") 실측: G-ONE 8문항(확증과 동일 프레임, grok@high, 콤팩트 프롬프트 단일 콜 + 솔버 + E-gate 동형).
+- 결과: **수락 2/8(25%)** — 게이트 반려 2, 솔버 불일치 1, **응답 미귀환 타임아웃 3**(대형 단일 콜에서 행 이슈 재발). 콜당 원가 92~132원 — 한 콜인데도 안 싸다: 완성 문항 전체(밑줄 5·해설·바인딩)를 한 출력으로 뽑으면 reasoning+출력 토큰이 그만큼 커진다. **수락당 기대원가 ~280원+ vs 사다리 153원.**
+- 빈칸이 한 콜로 되는 이유: 출력이 작다(선지 5개+해설). 어법은 출력이 무겁고 결속 제약이 많아 **작은 스텝 분해(사다리)가 수락률과 콜당 원가를 동시에 지키는 구조**임이 확인됨. 어법 한 콜 계열은 기각, 사다리 유지.
+- 부수 확인: grok 대형 단일 콜(maxTokens 20k)에서 행/미귀환 3/8 — 행콜 수리 과제의 우선순위 상향.
+
+### O183. 미검증 상위 9유형 첫 블라인드(18, flash vs grok 짝) — F 67%, 모델 무관의 구조 부채 발견
+
+- 패킷 렌더 커버리지 선검증(O179 교훈 이행: 배열단어·작성조건·빈칸문장·모범답안 등 4유형 필드 보강) 후 평가.
+- **F 12/18 (flash 6/9, grok 6/9 — 모델 무관 공통 붕괴).** 지배 축:
+  - **서술형 계열(조건영작·요약서술·핵심빈칸·배열영작·어법고쳐쓰기) = "허용 답안 집합 부재"(V2-NO-ANSWER-SET / EQUIVALENT-CORRECTIONS-UNDECLARED)** — 문법적으로 동등한 다른 답(예: in which↔where, 등가 어순)을 쓰면 채점 불가. 단일 modelAnswer 만 저장하는 유형 스키마 설계 자체의 결함. 모델 교체로 해결 불가, **답안 집합 계약(acceptedAnswers/등가 규칙) 신설 필요.**
+  - **어휘(VOCAB_CHOICE, 생산량 3위)**: flash V1 고아조사 seam+V3 렌더 불일치, grok V4/V5 — 양쪽 F. 치환 조립 무결성 게이트 부재.
+  - REFERENCE grok F(선지 비단어·해설 비일관), flash C. 생존: CONTEXT_MEANING(B/C)·MAIN_IDEA(C/C)·조건영작 grok B.
+- 원가는 전 유형 11~97원으로 문제 아님 — **문제는 검증 인프라 부재.** 어법·빈칸에서 한 품질 공사(E-gate·결정형 게이트·조립 계약)가 롱테일 유형 전체에 필요하다는 것이 캠페인의 최종 프레임.
+- 캠페인 실측 완전 종료: 누계 1,079/1200 slot, 총 ~$43. 평가 에이전트 누계 ~850.
+
+### O184. 검증기 벤치마크(bench-verifier.ts, 생성 0콜) — pro 검증기 적발 0/12, grok@high 10/12·오경보 0. 검증기도 grok 교체 확정
+
+- 감사자 확정 라벨 24문항(V4 치명 12 + 전통과 12)을 동일 프롬프트로 두 검증기에 재검사. **pro: 적발 0/12·오경보 0/12(도장) / grok@high: 적발 10/12·오경보 0/12.** 검사비 pro 16원 vs grok 44원/문항.
+- 편향 주의(정직 기록): FAIL 세트는 "pro 게이트를 통과해 출하된" 결함 — 구성상 pro 에 불리. 단 이것이 정확히 프로덕션에서 지금 새는 모집단이므로 실전 유효성은 그대로. grok 자기산 결함 5/6 적발 — 자기 사각지대 미관측(n 소).
+- **최종 스택 확정: 생성(어법·빈칸·선택형)=grok@high / 검증(전 유형)=grok@high / pro 는 필수 자리 없음.** E-gate 확장 원가 추정 +15~25원→+44원/문항으로 정정.
+
 ## 2026-07-16 19:35 KST — live 캠페인 개시: 사용자 직접 지시로 실행 승인, 첫 실측 2건 + transport 인시던트 1건
 
 ### O145. 실행 승인의 근거는 봉인 절차가 아니라 사용자의 명시적 지시다

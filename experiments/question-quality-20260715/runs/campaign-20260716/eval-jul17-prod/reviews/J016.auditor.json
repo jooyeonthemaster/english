@@ -1,0 +1,85 @@
+{
+  "pid": "J016",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4_EXPLANATION_STRUCTURE_HALLUCINATION",
+      "severity": "major",
+      "evidence": "정답 해설이 '이와 연결되는 접속사 없이 콤마와 부사 thereby 뒤에 이어져 결과를 나타내는 분사구문 자리'라고 서술하나, 실제 문장은 '...work in an inharmonious manner against the subject matter thereby created a disquieting atmosphere.'로 thereby 앞에 콤마가 존재하지 않는다. 실제 문장에 없는 문장부호를 구조 설명에 첨가한 환각으로, '실제 통사 구조를 정확히 설명'해야 하는 V4를 위반한다. 학생이 해설대로 콤마를 찾으면 발견할 수 없어 혼란을 유발한다."
+    },
+    {
+      "code": "V4_TEMPTATION_DESCRIPTION_LOOSE",
+      "severity": "minor",
+      "evidence": "해설의 '본동사 work와 병렬 구조를 이루는 과거동사 created로 혼동하기 쉽지만'은 work(현재시제)와 created(과거시제)의 시제 불일치가 이미 병렬 독해를 차단한다는 점을 언급하지 않아 유혹 구조 서술이 다소 부정확하다. 다만 '접속사 없이 동사가 거듭될 수 없다'는 결정적 근거 자체는 정확하다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "정도부사의 형용사 수식(부사 vs 형용사 자리) — pointCode f",
+      "temptingBecause": "-ly 부사가 명사구(representational paintings) 앞에 있어 형용사 high가 필요하다고 기계적으로 의심할 수 있다.",
+      "decisiveFlaw": "highly는 형용사 representational을 수식하는 표준 용법으로 즉시 정문 판정된다. 실질적 유혹 강도가 낮아 필러에 가깝다."
+    },
+    {
+      "label": "(B)",
+      "intent": "주격 관계대명사 that vs 접속사 that/what 구분 — pointCode b",
+      "temptingBecause": "전치사 on의 목적어 명사 뒤 that이라 접속사 that(완전절 요구)이나 선행사 포함 what으로 혼동할 수 있다.",
+      "decisiveFlaw": "뒤가 주어 없는 불완전절(resembles everyday life)이고 선행사 subject matter가 존재하므로 주격 관계대명사 that이 정확하다. 오답 아님."
+    },
+    {
+      "label": "(C)",
+      "intent": "전치사구 수식을 받는 복수 주어와 동사 수일치 — pointCode i",
+      "temptingBecause": "동사 직전 인접 명사 uncertainty(단수)가 주어처럼 보여 carries를 기대하게 된다.",
+      "decisiveFlaw": "주어 핵은 복수 Feelings이므로 carry가 옳다. 오답 아님."
+    },
+    {
+      "label": "(D)",
+      "intent": "정답. thereby 뒤 결과 분사구문 자리의 현재분사(creating)를 과거형/과거분사(created)로 대치 — pointCode c",
+      "temptingBecause": "본동사 work와 병렬인 정동사로 읽거나, subject matter를 수식하는 과거분사로 오독할 수 있다.",
+      "decisiveFlaw": "접속사 없이 정동사가 거듭될 수 없고, 목적어 a disquieting atmosphere를 직접 취하므로 수동 과거분사도 불가 — creating만 가능하며 교정 시 원문과 정확히 일치하는 최소대립쌍. 다만 'thereby + ~ing'는 수험생에게 고정 청크로 드릴되는 대표 패턴이어서 트리거 부사 직후에 정답이 놓여 구조 독해 없이 즉시 식별된다(KILLER 은폐 실패)."
+    },
+    {
+      "label": "(E)",
+      "intent": "that절 내 태(수동태) 판단 — pointCode e",
+      "temptingBecause": "뒤의 to appreciate 때문에 능동 needs to appreciate 구조로 착각할 수 있다.",
+      "decisiveFlaw": "주어 an \"aesthetic attitude\"는 요구되는 대상이므로 수동 is needed가 옳다. 오답 아님."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "major",
+      "evidence": "해설의 '콤마와 부사 thereby 뒤에 이어져'는 실제 문장(thereby 앞 콤마 없음)과 불일치하는 환각 서술.",
+      "recommendation": "'콤마와' 삭제 — '접속사 없이 부사 thereby 뒤에 이어져 결과를 나타내는 분사구문 자리입니다'로 수정하면 실제 문장과 일치한다."
+    },
+    {
+      "severity": "minor",
+      "evidence": "'본동사 work와 병렬 구조를 이루는 과거동사 created로 혼동하기 쉽지만' — 시제 불일치(현재 work vs 과거 created)가 병렬 독해를 이미 차단한다는 점 미언급.",
+      "recommendation": "병렬 오독 유혹을 언급하려면 시제 불일치도 함께 짚어 유혹과 배제 근거를 정확히 분리."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAudit": {
+    "minimalPair": true,
+    "clearGrammarJudgment": true,
+    "allFiveUnderlinesExplained": true,
+    "structuralConcealment": false,
+    "noEasySamePointDecoy": true,
+    "note": "정답 오류가 트리거 부사 thereby 직후의 암기 청크('thereby + ~ing') 자리에 있어 구조를 읽지 않고도 즉시 드러난다. §C의 'KILLER 정답은 구조를 읽어야 하며 즉시 드러나지 않는다' 조건 미충족."
+  },
+  "grade": "F",
+  "notes": "지문 무결성(V1)·정답 유일성(V2)·문법성(V3)·필드 동기화(V5)는 모두 통과했고 최소대립쌍·교정 복원도 깨끗하다. 그러나 정답 해설이 실제 문장에 존재하지 않는 콤마를 구조 설명에 첨가(V4 환각)하여 비타협 게이트 실패로 F. 콤마 한 단어 삭제로 V4는 회복 가능하다. 회복하더라도 요청 난이도 KILLER 대비 실제 난이도는 중위권 표준 문항 수준(C5=1): 'thereby created→creating'은 가장 많이 드릴되는 패턴 중 하나로 킬러 은폐 조건을 충족하지 못하며, (A) highly는 필러성 디코이다. V4 수정 후에도 KILLER 슬롯이 아닌 중난이도 슬롯으로 재배치하는 것이 적절하다."
+}

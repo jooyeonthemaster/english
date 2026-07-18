@@ -1,0 +1,72 @@
+{
+  "pid": "P010",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-keypoint-drift",
+      "severity": "minor",
+      "evidence": "keyPoints의 '지시 대명사 those/these 및 복수 대명사 they' 항목에서 'those'는 지문에 등장하지 않는다(지문에는 these만 3회 등장: 'Aren't these cool?', 'Don't you think these...', 'I'll wear these'). 일반화된 학습 포인트 서술로 읽을 수 있어 V4 실패로는 판정하지 않으나 지문 사실과의 미세한 불일치다."
+    },
+    {
+      "code": "V4-minor-inference-addition",
+      "severity": "minor",
+      "evidence": "오답 해설 ②의 '밴드가 환영 공연을 해줄 관객 집단일 뿐'은 지문이 명시하지 않은 안전한 추론(환영식이 그 학생들을 위한 행사이므로 관객으로 봄)이다. 오개념·환각 수준은 아니므로 V4 통과."
+    }
+  ],
+  "craft": {
+    "C1": 2,
+    "C2": 2,
+    "C3": 2,
+    "C4": 1,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "지문 초반의 현저한 복수 명사구(Garcia's band 멤버들)로 시선 분산 — salience 미끼",
+      "temptingBecause": "밴드가 이야기 전체의 주체이고 복수 지시가 가능한 사람 집단이다",
+      "decisiveFlaw": "밑줄 문장은 옷가게 대화이며 'too colorful'은 사람 집단에 대한 서술로 성립하지 않는다. 국소 문맥에 밴드 멤버 언급이 전혀 없어 즉시 소거된다"
+    },
+    {
+      "label": "②",
+      "intent": "행사 배경의 복수 명사구(a large group of students) — 배경 정보 혼동 미끼",
+      "temptingBecause": "복수 집단이고 공연의 이유로 지문 앞부분에 강조되어 있다",
+      "decisiveFlaw": "옷가게 장면과 무관한 배경 정보이며 'a bit too colorful'의 서술 대상이 될 수 없다. 즉시 소거된다"
+    },
+    {
+      "label": "③",
+      "intent": "정답 — 직전 문장에서 가르시아가 가리킨 'a patterned red shirt and yellow pants'",
+      "temptingBecause": "정답",
+      "decisiveFlaw": "없음. 'Aren't these cool?'로 가리킨 대상에 대한 제프의 즉답 'they're a bit too colorful'이므로 지시 대상이 필연적으로 확정된다"
+    },
+    {
+      "label": "④",
+      "intent": "핵심 경쟁 선지 — 같은 장면의 다른 옷 세트로 actor/object swap (제프가 고른 옷 vs 가르시아가 고른 옷)",
+      "temptingBecause": "동일한 옷가게 장면의 복수 의류 명사구이고, 최종적으로 구매된 옷이라 기억에 남는다",
+      "decisiveFlaw": "제프의 반대 발언 이후('Instead')에 등장하는 대안이며, 흰 셔츠·검은 청바지는 'too colorful'의 반례로 제시된 것이므로 서술어와 정면 모순된다"
+    },
+    {
+      "label": "⑤",
+      "intent": "후반부의 복수 명사구(several mistakes) — 시간적 원거리 미끼",
+      "temptingBecause": "복수 명사구라는 형식 요건만 충족한다",
+      "decisiveFlaw": "밑줄 시점(옷가게)보다 뒤의 리허설 장면에 속해 시공간적으로 지시가 불가능하다. 즉시 소거된다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "keypoint-those-not-in-passage",
+      "severity": "minor",
+      "evidence": "keyPoints가 'those/these'를 병기했으나 지문에 those는 없다."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1: 렌더 지문은 마커 제거 시 원지문과 바이트 단위로 동일함을 스크립트 diff로 확인. 밑줄 마커는 정확히 1쌍이며 'they'('they're'의 they)에만 적용되어 발문의 '밑줄 친 they'와 일치. 지문 내 다른 they('as they entered')와 their 2회는 마킹되지 않아 혼동 없음. V2: 각 선지 독립 검증 결과 ③만 성립 — 밑줄 문장은 'Aren't these cool?'(빨간 셔츠·노란 바지를 가리킴)에 대한 즉답이므로 they=③이 유일. ④는 'Instead' 이후 등장하므로 담화 시점상 불가, ①②⑤는 국소 문맥·서술어(too colorful) 양쪽에서 탈락. V3: 지문은 원문 그대로 문법적('His confidence was, however, quickly changed to nervousness'는 원문 유래의 다소 어색한 표현이나 변형 손상이 아님), 발문·선지 한국어 자연스러움. V4: 해설의 구조 분석(직전 문장 인용, 복수 대명사 판정, 각 오답의 실제 지문 귀속) 모두 사실과 일치. minor 2건은 상기 참조. V5: 정답 라벨 ③, 선지 5개, 정답 해설, 오답 해설 ①②④⑤, keyPoints 모두 동기화. 공예 평가: 정답이 밑줄 '직전 문장'에 명시적 지시 행위(pointing at)와 함께 놓여 있어 요구 사고 단계가 1단계 조회에 불과하다. 결정적 결함은 C4 — 밑줄 문장의 서술어 'too colorful'이 선지 ③의 '화려한'과 직역 수준으로 어휘 일치하여, 지시 추적 없이 서술어-선지 어휘 매칭만으로 정답이 찍힌다(④의 '흰색/검은색'은 colorful과 정면 배치되어 유일한 경쟁 선지마저 어휘 층위에서 소거됨). C5 — 요청 난이도 INTERMEDIATE 대비 실제 난이도는 기초 수준으로 불일치. C2/C3 — ④만 실질 판단을 요구하고 ①②⑤는 형식 요건(복수 NP)만 채운 즉시 소거 선지. C6 — 해설은 정확하고 근거 인용이 선명하나 약간 장황. 종합: 모든 V 통과이나 단서 경제성·난이도 정합의 공예 결함으로 재설계 필요 → C. 개선 방향: 선지에서 '화려한' 술어 반향 제거(예: '가르시아가 처음 고른 옷'류의 중립 기술), 또는 ③/④ 모두 색채 중립 기술로 바꿔 담화 추적을 강제하고, 밑줄 대상을 원거리 지시(예: 후반부 'these' 또는 대조 장면의 대명사)로 옮겨 INTERMEDIATE에 맞는 2단계 추론을 확보."
+}

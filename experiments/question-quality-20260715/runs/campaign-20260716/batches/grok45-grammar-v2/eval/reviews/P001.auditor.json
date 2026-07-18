@@ -1,0 +1,66 @@
+{
+  "pid": "P001",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "SOURCE_COHERENCE",
+      "severity": "minor",
+      "evidence": "원지문·렌더 지문 공히 'a unique voice that leaves a temporary impression on your audience' — 지문 전체가 memorable/distinctive를 논증하는데 'temporary impression'은 의미상 역행한다. 진짜 출처는 'lasting impression'일 가능성이 높은 상류 소스 손상 의심. 다만 원지문 필드와 렌더가 일치하고 문법적이며 출제 포인트와 무관하므로 V1/V3 실패로는 판정하지 않음."
+    },
+    {
+      "code": "KEYPOINTS_INCOMPLETE",
+      "severity": "minor",
+      "evidence": "keyPoints가 (A)(B)(E) 3개만 다루고 (C)(D)가 누락. 모순은 없어 V5 통과이나, KILLER 요건인 '5개 밑줄 각각 point·why tempting' 문서화가 불완전하다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 4,
+    "C5": 2,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "정동사/준동사 — 동명사구 주어('Gaining an audience for your writing') 뒤 정동사 자리 판정. 선언된 정답.",
+      "temptingBecause": "문장 내 finding·ensuring 등 -ing가 연속되고, 'Gaining ... writing involving ...'을 명사구+분사 수식으로 오독하면 자연스러워 보인다.",
+      "decisiveFlaw": "이 해석을 따르면 문장 전체에 정동사가 없어 fragment가 된다(resonates는 that절 내부). involves로 교정하면 정확히 원문 복원 — 유일 오류로 확정."
+    },
+    {
+      "label": "(B)",
+      "intent": "분사구문 — 콤마 뒤 능동 현재분사 부가 서술의 적법성(수동 drawn 오판 유도).",
+      "temptingBecause": "콤마+-ing 구조라 dangling participle 또는 'drawn'(수동) 의심을 유발할 수 있다.",
+      "decisiveFlaw": "결함 없음(적법). 목적어 'customers'를 취하는 능동 분사이고 의미상 주어(브랜드 구축/브랜드)와 능동 관계가 성립한다."
+    },
+    {
+      "label": "(C)",
+      "intent": "병렬 — 전치사 by 지배 하 동명사 3항 병렬(pinpointing, crafting, shaping)의 어형 일치.",
+      "temptingBecause": "병렬 항 사이 거리와 콤마 나열 때문에 to craft나 정동사형으로 바꿔야 한다고 오판할 여지가 있다.",
+      "decisiveFlaw": "결함 없음(적법). by 아래 동명사 병렬이 정확히 유지된다."
+    },
+    {
+      "label": "(D)",
+      "intent": "관계사 — 사람 선행사 'the one'을 받는 주격 관계대명사 who의 적법성.",
+      "temptingBecause": "선행사가 대명사 'the one'이라 which/whom 혼동을 노리지만, 기초 수준이라 유인력이 약하다. 5개 중 가장 필러에 가까운 디코이.",
+      "decisiveFlaw": "결함 없음(적법). 사람 선행사 + 뒤 절의 주어 자리이므로 who가 정확하다."
+    },
+    {
+      "label": "(E)",
+      "intent": "전치사+동명사 — about의 목적어 자리 V-ing 선택(to부정사 오판 유도).",
+      "temptingBecause": "'It's about to balance ...'류의 to부정사 대체를 떠올릴 수 있다.",
+      "decisiveFlaw": "결함 없음(적법). 전치사 about의 목적어로 동명사 balancing이 정확하며 목적어 'the expression ...'을 취한다."
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V 전항 통과, 정답 유일성 확실(각 밑줄 독립 통사 검증 완료). 그러나 요청 난이도 KILLER 대비 실측 난이도는 중상 수준: 오류가 지문 첫 문장, 6단어짜리 짧은 동명사 주어 직후에 있어 정동사 부재가 1회독에서 거의 즉시 드러난다(§C '즉시 드러나지 않는다' 요건 미충족 판단). 또한 5개 밑줄 각각의 point/why-tempting 문서화가 불완전(keyPoints 3/5, 오답해설은 why-correct만 서술)하고 (D)는 유인력 낮은 준필러. 이에 C5=2, killerConditionsMet=false. -ing 4개 배치로 인허가 환경 구별을 강제한 설계는 우수(C4=4). 합계 18, 최저 C5=2 → B(소폭 수정으로 출제 가능: 오류 위치를 지문 중후반의 더 긴 주어 문장으로 이동하면 KILLER 정합 개선). 부수 권고: 'temporary impression'은 출처 원문('lasting') 훼손 의심 — 소스 재확인 요망."
+}

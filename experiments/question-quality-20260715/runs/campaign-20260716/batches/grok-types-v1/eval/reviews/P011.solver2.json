@@ -1,0 +1,36 @@
+{
+  "pid": "P011",
+  "answer": "4",
+  "multipleDefensible": false,
+  "defensibleLabels": ["4"],
+  "confidence": "low",
+  "unsolvable": true,
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "부적합",
+      "reason": "① 앞의 'To require perfection is to invite paralysis.'와 뒤의 'The pattern is predictable:'은 'The pattern'이 앞 문장의 paralysis 패턴을 직접 조응 지시하여 결속이 완전하다. 이 사이에 문장을 삽입하면 오히려 지시어 연결이 끊긴다. 단절 없음."
+    },
+    {
+      "label": "2",
+      "verdict": "부적합",
+      "reason": "'steer your work toward what you imagine you can do perfectly'(조향) → 'You cling ever more tightly to what you already know you can do'(고착)는 완벽주의 회피 행동의 자연스러운 점층 전개다. 어휘적 결속(what you ... can do 반복)도 유지된다. 단절 없음."
+    },
+    {
+      "label": "3",
+      "verdict": "부적합",
+      "reason": "고착(cling, away from risk) → 지연(find reasons to delay, since to not work is to not make mistakes)은 위험 회피 논리의 직접적 귀결로 연쇄가 매끄럽다. 단절 없음."
+    },
+    {
+      "label": "4",
+      "verdict": "최적 삽입 지점",
+      "reason": "④ 뒤 요약문이 death spiral을 'you misdirect your work; you stall; you quit'의 3단계로 열거하는데, misdirect(①-②의 조향)와 stall(③의 지연)은 선행 서사에 대응 단계가 있으나 'you quit'(포기)은 지문 어디에도 선행 제시되지 않았다. 열거 요약의 형식적 완결성을 위해 포기 단계를 도입하는 문장이 반드시 ④에 있어야 한다. 지문 내 유일한 결속 공백. (원전 Art & Fear에서도 이 위치에 '완벽해야 한다는 믿음 → 그런 작품을 만들 수 없다는 확신 → 포기' 문장이 존재한다.)"
+    },
+    {
+      "label": "5",
+      "verdict": "부적합",
+      "reason": "⑤는 'a perfect death spiral: you misdirect; you stall; you quit'이라는 총괄 요약으로 담화가 종결된 직후다. 요약 이후 새 서사 단계를 삽입하면 결말의 수사적 완결(3단 열거로 끝맺음)이 깨진다. 결론 재진술이 아닌 한 부적합."
+    }
+  ],
+  "note": "치명적 형식 결함: 문장삽입 유형인데 '주어진 문장'(삽입 대상 문장)이 문항 파일에 누락되어 있다. 지문·발문·위치선지만 존재하므로 문항은 제시된 형태로는 풀이 불가능(unsolvable)하다. 위 ④ 판정은 지문 내부 결속 분석상 유일한 논리 공백('you quit'의 선행 단계 부재)과 원전(Bayles & Orland, Art & Fear) 지식에 근거한 추론이며, 실제 주어진 문장이 무엇이냐에 따라 정답이 달라질 수 있다. 출제/조판 단계에서 주어진 문장 박스가 탈락한 것으로 보이므로 문항 수리(주어진 문장 복원) 후 재검수가 필요하다."
+}

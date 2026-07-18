@@ -1,0 +1,78 @@
+{
+  "pid": "P008",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "C3-CATEGORY-CLASH",
+      "severity": "minor",
+      "evidence": "선지 ③('payments that simply rise...')과 ⑤('duties that force firms...')는 빈칸 문장의 주어 'the actions the polluter can take to reduce tax liability'와 등가문으로 결합할 때 의미 범주 충돌(행위=지불액/의무)이 발생해, 내용 판단 이전에 준-소거가 가능하다. 문법 탈락은 아니므로 §D 1조 위반은 아니나 KILLER 경쟁력을 약화시킨다."
+    },
+    {
+      "code": "C4-LENGTH-SKEW",
+      "severity": "minor",
+      "evidence": "정답 ①이 13단어로 최장(오답 9~11단어). 단독 결정 단서 수준은 아니지만 시험 요령상 미세한 길이 신호가 존재한다."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 4,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — 원문 span 'actions that also reduce emissions'를 '부담금이 겨냥한 감축 목표를 진전시키는 조처'로 추상화. S1(정책 목표 정밀 조준)과 S3(단위 세액 대비 저렴한 abatement 유인)을 연결해야 등가성이 확인된다.",
+      "temptingBecause": "정답이므로 해당 없음. 'abatement', 'levy' 등 지문 어휘·상위어를 사용해 자연스럽게 결합한다.",
+      "decisiveFlaw": "없음 — 유일 정답. 교정 검증: 빈칸에 넣은 완성문이 원문 명제(세금 부채를 줄이는 행위 = 배출을 줄이는 행위)와 정확히 동치."
+    },
+    {
+      "label": "2",
+      "intent": "역할 전도/소재 연상 — 후반부(S5~S6)의 모니터링 기술 논의를 '매력'의 본체로 끌어온다.",
+      "temptingBecause": "'continuous monitoring of waste discharges'가 지문 S5('Continuous emissions measurement')·S6('waste discharges')의 어휘를 그대로 앵커로 사용해 표면 일치가 강하다.",
+      "decisiveFlaw": "본문에서 모니터링은 배출세의 비용·실행가능성 배경(단점 및 향후 확대 조건)이지, 세금 부채 감축 행위의 정의가 아니다. 오염자가 세금을 줄이려고 모니터링을 확대할 유인은 본문 어디에도 없다."
+    },
+    {
+      "label": "3",
+      "intent": "과협소 재진술 — S2의 비례 부과 사실만 반복하고 '행위-목표 정렬'이라는 매력 기제를 탈락시킨다.",
+      "temptingBecause": "'rise in proportion', 'residual emissions'가 S2·S3의 표현을 직접 재사용해 지문 근거가 있는 것처럼 보인다.",
+      "decisiveFlaw": "빈칸 주어는 '세금 부채를 줄이기 위한 행위'인데 '배출 증가 시 비례 상승하는 지불액'은 행위가 아니라 세금 자체의 성질이며 방향도 반대(줄이기 vs 상승)다. 등가문이 의미적으로 성립하지 않는다."
+    },
+    {
+      "label": "4",
+      "intent": "절반-진실 — 측정 용이화라는 실재 소재를 '매력'으로 승격시킨다.",
+      "temptingBecause": "'easier to measure at many separate sources'가 S5의 'many separate sources of emissions'를 앵커로 삼아 지문 밀착성이 높다.",
+      "decisiveFlaw": "본문은 측정 비용을 직접 과세의 '단점(disincentive)'으로 제시한다. 측정 용이화는 오염자의 세금 감축 행위가 아니고, 매력의 정의는 행위-배출 정렬에 있다."
+    },
+    {
+      "label": "5",
+      "intent": "과확장 — 유인 구조를 '모든 가능한 감축의 강제'로 부풀린다.",
+      "temptingBecause": "'residual pollution'이 S3의 'residual emissions'를 앵커로 쓰고, 강한 규범적 어조가 '큰 매력'이라는 프레임과 어울려 보인다.",
+      "decisiveFlaw": "S3은 잔여 배출 단위 세액보다 단위 저감 비용이 싼 방식의 감축만 유도한다고 명시한다. 'every possible cut'은 이 비용 문턱 조건과 정면 모순이며, '행위=의무'의 범주 충돌도 있다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "오답 해설 ②의 '역인과' 라벨은 부정확에 가깝다. 본문에서 모니터링은 과세의 전제/배경이고 ②는 이를 매력 본체로 옮긴 역할 전도·소재 연상이지 엄밀한 인과 역전은 아니다(방어 가능한 해석은 있으나 느슨함).",
+      "recommendation": "'역인과'를 '역할 전도' 또는 '소재 연상'으로 교체."
+    },
+    {
+      "severity": "minor",
+      "evidence": "해설·오답해설·keyPoints에 영어 'abatement'가 번역 없이 혼용된다('값싼 abatement만 유도'). 학생 노출 텍스트로는 다듬어지지 않았다.",
+      "recommendation": "'저감(abatement)' 병기 또는 '단위 저감 비용'으로 한글화."
+    }
+  ],
+  "killerConditionsMet": true,
+  "killerConditionsNotes": "§D 검증: (1) 5개 선지 모두 복수 NP 'N that ...'로 동일 통사 슬롯에 결합, suffix/tail로 인한 문법 탈락 없음 — 충족. (2) 정답은 source span 'actions that also reduce emissions'의 의미를 보존하며 난이도에 맞게 추상화 — 충족. (3) 각 오답이 source anchor·tempting overlap·single decisive flaw 보유(②모니터링 어휘/역할전도, ③비례 표현/과협소·방향모순, ④separate sources/절반-진실, ⑤residual/비용문턱 모순) — 충족. (4) 정답 확정에 S1(정책 목표 조준)+S3(abatement 유인) 두 논리 단서 연결이 필요하고 ②④ 기각에 S5~S6 담화 역할 독해가 필요하며, 극성·길이·고유어·절대어 단독으로 정답을 찍을 수 없음 — 경계선상이나 충족. 단, ③⑤의 범주 충돌 준-소거와 S3 단독으로 span이 거의 복원되는 점 때문에 함정 깊이는 최상위 killer보다 한 단계 낮다.",
+  "grade": "B",
+  "notes": "V1~V5 전부 통과. 렌더 지문은 의도된 빈칸 치환('actions that also reduce emissions' 제거) 외 원지문과 완전 일치. 정답 유일성은 5개 선지 슬롯 대입으로 독립 확인(①만 성립). 해설의 구조·인과 서술은 지문과 일치하고 오답 해설도 각 선지 실제 내용과 대응. 공예 합계 20(4+4+3+3+3+3)으로 A 기준(21)에 1점 미달 — C3(③⑤의 범주 충돌로 실질 경쟁 선지가 ②④ 둘), C5(함정 깊이가 상위 고난도 수준, 최상위 killer에는 약간 미달), C6('역인과' 라벨 느슨함·영한 혼용) 개선 시 A 승급 가능. 출하 가능 등급 B."
+}

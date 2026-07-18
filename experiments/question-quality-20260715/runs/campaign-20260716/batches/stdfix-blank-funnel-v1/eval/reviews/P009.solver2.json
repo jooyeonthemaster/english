@@ -1,0 +1,35 @@
+{
+  "pid": "P009",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'allow yourself temporary escapes to relieve task-related anxiety'는 지문이 명시적으로 규탄하는 행동 그 자체다. 지문은 커피를 가지러 가는 합리화를 '실제로는 책상 위 과제를 회피하려는 것'이라 단정하며, 무계획적 이탈(escape)이 procrastination trap으로 직결된다고 논증한다. 결론부 'to prevent procrastination'과 정면 모순. 어법상 명령문 VP로 seam은 성립하나 논리적으로 전제와 모순되어 기각."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "'remain flexible in revising your daily routine when feeling drained'은 근무 중 임의 변경(유연성)을 허용하는 처방인데, 지문은 'any other breaks in the midst of ongoing work hours are unwarranted'라며 사전 계획 외의 유연한 이탈을 금지한다. 유연성 옹호는 unscheduled break 허용과 논리적으로 동치이므로 전제와 모순. 기각."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "'strictly adhere only to your pre-established rest intervals' — 전제 (i) 휴식은 필요하다, (ii) 계획된 휴식은 이미 배치되어 있고 그 외는 unwarranted, (iii) scheduled breaks는 strategic하여 on track을 유지시킨다에서 형식적으로 도출되는 유일한 결론. 'instead'는 직전 행위(무계획 커피 브레이크 = unscheduled break) 대신이라는 대조를 요구하는데, '사전 확립된 휴식 구간만 엄수하라'가 정확히 그 대조항이다. 명령문 VP로 seam 성립, 'adhere only to' 결합도 정문. 채택."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "'eliminate all intervals of rest and sustain your focus continuously'는 첫 문장 'Breaks are necessary to revive your energy levels'와 두 번째 문장 'you should already have scheduled breaks'(계획된 휴식의 존재를 규범으로 승인)와 직접 모순. 모든 휴식 제거는 지문이 승인한 scheduled breaks까지 부정하므로 논리적으로 성립 불가. 'instead'와의 대조 seam 자체는 문법적으로 가능하나 내용 모순으로 기각."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "'limit the duration of physiological recovery during working hours' — 지문의 논증 축은 scheduled vs. unscheduled(계획 여부)이지 휴식의 길이(duration)가 아니다. 지문은 근무일 전반에 걸친 scheduled breaks를 긍정적으로 승인하므로 근무 중 회복 시간을 '제한하라'는 처방은 지지 전제가 없다. 범주 불일치(계획성 축 → 지속시간 축으로의 무근거 전환)로 기각."
+    }
+  ],
+  "note": "빈칸은 'So to prevent procrastination, ___ instead.'로, 다섯 선지 모두 명령문 VP여서 문법 seam은 전 선지에서 성립한다(문법으로는 변별 불가, 순수 논리 변별형). 'instead'의 대조 대상은 직전 문장들의 unscheduled break 행위이며, 이 대조를 만족하면서 전제 (휴식 필요 + 계획된 휴식만 정당)과 무모순인 선지는 ③뿐이다. ④는 'instead' 대조 자체는 자연스러워 보이나 첫 문장과 정면 모순되는 강도 초과(too strong) 오답. 대안 해석(①을 '계획된 escape'로 읽는 등)도 탐색했으나 'temporary escapes'가 지문에서 회피 행위로 낙인찍혀 있어 옹호 불가. 복수 정답 여지 없음."
+}

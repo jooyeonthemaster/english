@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'The people of the islands traditionally hunt pilot whales.' 부사 traditionally가 동사 hunt를 수식하는 표준 mid-position 부사 배치. 수식할 명사가 없으므로 형용사(traditional)로 바꿀 근거도 없음. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'The government insists (that) the killing of whales is not done for profit.' 최상위권도 순간 끌리는 최고 매력 오답. 암기 규칙 'insist + that + S + (should) 동사원형'이 유혹하지만, 가정법 현재는 insist가 '요구하다'일 때만 적용. 여기서는 insist가 '(사실을) 주장하다' 의미로 현재 사실 진술이므로 직설법 is가 옳음. 주어 the killing(단수)과의 수일치도 정확. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'although some is sold in supermarkets' — some = some of the whale meat and blubber(불가산 물질명사 덩어리)를 받으므로 단수 is가 옳고, 고기는 '팔리는' 대상이므로 수동태 is sold의 태도 옳음. 'some are'로 끌리는 2차 함정이나 부분사 수일치는 지시 대상(불가산)에 따라 단수. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'There is a law that says each killing must take place...' — that은 선행사 a law를 받아 says의 주어 역할을 하는 주격 관계대명사. 표준 구문. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "'whether this practice should be allowed continuing' — allow는 allow + O + to-V(allow this practice to continue) 구조이며, 수동태에서는 to부정사가 잔류하여 'be allowed to continue'가 되어야 함. 구제 해석 탐색: (i) allow + V-ing(목적어 없이 'allow smoking' 유형)은 여기서 성립 불가 — 수동 주어 this practice가 이미 allow의 목적어로 상승했으므로 잔류 보어는 to continue여야 함; (ii) continuing을 분사구문/후치 수식으로 보는 해석은 의미상 성립 불가. 정답(어법상 틀림)."
+    }
+  ],
+  "note": "정답 (E) 단독 수렴. 최상위권 실전 관점에서 가장 강한 유혹은 (B)의 'insist → should 원형' 암기 규칙이었으나 사실 주장 의미이므로 직설법이 옳다는 것이 장거리 의미 단서로 확정됨. (C)의 부분사 수일치가 2차 미끼. (E)는 수동태 잔류 to부정사(be allowed to continue)라는 명확한 지배 규칙 위반으로 대안 해석이 전무. 복수정답 소지 없음."
+}

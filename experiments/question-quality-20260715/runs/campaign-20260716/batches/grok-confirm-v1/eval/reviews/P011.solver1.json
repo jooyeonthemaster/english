@@ -1,0 +1,35 @@
+{
+  "pid": "P011",
+  "answer": "4",
+  "multipleDefensible": false,
+  "defensibleLabels": ["4"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "이중 오류: 'amplifying conscious scrutiny'는 세미콜론 앞 'she isn't thinking more'와 극성이 정반대이고, 'formulated rules'는 실용지식이 아닌 기술적(책) 지식 범주에 속한다. 서두의 'formulated rules'를 그대로 재활용해 표면 어휘 매칭으로 유혹하지만, 극성·범주 모두에서 탈락."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "범위 함정. 피아노는 'touch' 은유의 한 예시일 뿐인데 'restricting... only to piano-key technique'는 예시를 본론 명제로 축소·왜곡한다. 지문 어디에도 전문가가 기술을 축소한다는 논지가 없다."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "가장 매력적인 오답. 바로 다음 문장의 'repertoire... through habit'을 그대로 가져와 어휘 친숙도가 높지만, 다음 문장은 그 레퍼토리를 '구축했고 그 덕에 무의식적으로 수행 가능한 과제가 늘었다'고 하므로 'abandoning(버린다)'은 극성 반전으로 정면 모순."
+    },
+    {
+      "label": "4",
+      "verdict": "correct",
+      "reason": "정답. 'she isn't thinking more; she is operating with reduced conscious deliberation'은 원 논지 'thinking less'의 패러프레이즈로 세미콜론 대조 구조를 정확히 완성하며, 직후 문장의 장거리 단서 'perform without conscious awareness'가 이를 확증한다. 문법 결합(세미콜론 뒤 독립절)도 깨끗하다."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "지문 핵심 주장(실용지식은 규칙으로 환원 불가, 오직 실천으로 전수됨)을 정반대로 뒤집는다. 'transmitted', 'deliberate', 'rules' 등 지문 핵심 어휘를 조합해 그럴듯하게 보이지만 방향이 역전된 논지 반전형 오답."
+    }
+  ],
+  "note": "David Brooks 계열의 Oakeshott식 기술지식 vs 실용지식 대비 지문. 빈칸은 세미콜론 대조('isn't thinking more; ~')와 직후 문장의 'without conscious awareness'라는 장거리 단서로 일의적으로 결정된다. 매력 오답 ③(직후 문장 어휘 재활용+극성 반전)과 ①·⑤(지문 핵심어 재조합+논지 역전)에 실제로 끌려 검토했으나 모두 극성/범주/논지 방향에서 탈락. 복수 정답 여지 없음."
+}

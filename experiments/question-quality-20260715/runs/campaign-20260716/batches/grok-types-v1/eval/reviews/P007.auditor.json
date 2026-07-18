@@ -1,0 +1,71 @@
+{
+  "pid": "P007",
+  "validity": {
+    "V1": false,
+    "V2": true,
+    "V3": false,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1",
+      "severity": "critical",
+      "evidence": "렌더 지문이 ', background). ①' 으로 시작한다. 원지문 첫 문장 'There are interesting trade-offs in the relative importance of subject matter (i.e., figure) and style (i.e., background).' 의 앞부분 전체가 절단되어 고아 문장부호와 파편(', background).')만 학생 노출 지문 첫머리에 남았다. 무관 문장 삽입이라는 의도된 변형 외의 손상이며 문장 접합 파손에 해당한다."
+    },
+    {
+      "code": "V3",
+      "severity": "critical",
+      "evidence": "V1 절단의 결과로 학생에게 보이는 지문의 첫 단위 ', background).' 가 비문 파편이다. 삽입문 ③ 자체와 발문, 나머지 문장들은 문법적이지만, 지문 전체가 문법적·자연스럽다는 기준을 충족하지 못한다(동일 근원 결함)."
+    },
+    {
+      "code": "V1",
+      "severity": "minor",
+      "evidence": "번호 문장 사이에 무번호 문장이 끼어 있다(①과 ② 사이 'Feelings of pleasure and uncertainty…', ④와 ⑤ 사이 'This active involvement…'). 실제 수능 35번 형식은 무번호 도입부 이후 ①~⑤가 연속 배치된다. 정답 유일성을 해치지는 않으나 형식 이탈이다."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 2,
+    "C6": 4
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "재현적 작품 축 확립 — figure/background 대비의 한쪽을 세우는 원문 필수 문장",
+      "temptingBecause": "첫 문장이 절단된 렌더 상태에서는 프레임 없이 갑자기 세부 논의로 들어가 도입부가 어색하게 느껴질 수 있다",
+      "decisiveFlaw": "후속 'Feelings of pleasure and uncertainty…' 및 ②의 표현주의 대비가 이 문장을 전제하므로 제거하면 대비 구조 자체가 무너진다"
+    },
+    {
+      "label": "②",
+      "intent": "표현주의 작품 축 제시 — 양식·소재 불협화로 disquieting atmosphere 를 도입하는 원문 필수 문장",
+      "temptingBecause": "①까지의 쾌·재현 논조에서 불협화·불안으로 톤이 급전환되어 흐름 단절처럼 보일 수 있다",
+      "decisiveFlaw": "③(삽입문)과 원문 ④가 참조하는 'disquieting atmosphere'/'less readable' 의 지시 대상이 이 문장이므로 제거 불가"
+    },
+    {
+      "label": "③",
+      "intent": "정답(삽입 무관문) — 'Indeed'와 지시구 'this disquieting atmosphere' 로 어휘·지시 연속성을 위장하면서 평가·인과 방향을 역전",
+      "temptingBecause": "앞 문장의 핵심 명사구를 그대로 받고 conventional forms, easily interpreted, aesthetic attitude 등 지문 핵심 어휘를 재사용하여 표면 응집성이 높다",
+      "decisiveFlaw": "불안한 분위기가 관습 형식 의존과 '미적 태도 없이 쉽게 해석됨'을 가능케 한다는 주장은 바로 뒤 ④의 'less readable → aesthetic attitude is needed' 논리와 정면 모순이며, 제거 시 원지문이 정확히 복원된다"
+    },
+    {
+      "label": "④",
+      "intent": "핵심 인과 고리 — 덜 읽힘·관습 이탈이 미적 태도를 요청한다는 글의 중심 논리",
+      "temptingBecause": "'Thus' 가 직전 삽입문 ③의 내용과 충돌하여 이 문장 쪽이 흐름을 깨는 것처럼 착시를 유발할 수 있다",
+      "decisiveFlaw": "후속 'This active involvement…' 가 ④의 능동적 개입을 직접 지시하고, ②의 불협화 논의에서 자연히 도출되는 원문 문장이므로 제거하면 결론부가 공중에 뜬다"
+    },
+    {
+      "label": "⑤",
+      "intent": "결론 — 실용 태도와 미적 태도 간 전환 능력을 균형 잡힌 삶의 토대로 일반화",
+      "temptingBecause": "'balanced life' 로 화제가 미학 논의 밖으로 확장되는 듯 보여 무관 문장으로 오인될 수 있다",
+      "decisiveFlaw": "글 전체가 세워 온 pragmatic attitude vs aesthetic attitude 대비를 그대로 받아 마무리하는 원문 결론 문장이다"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "정답 설계 자체는 우수하다: 삽입문 ③이 지시어('this disquieting atmosphere')와 핵심 어휘 재사용으로 표면 응집성을 위장하면서 글의 중심 인과(덜 읽힘→미적 태도 필요)를 역전시키고, 제거 시 원지문이 정확히 복원되며, 해설도 함정 기제와 결정적 결함, 제거 검증까지 정확·간결하게 분리한다(V2·V4·V5 통과). 그러나 렌더 지문 첫머리에서 원지문 첫 문장이 절단되어 ', background).' 라는 고아 파편이 학생에게 그대로 노출된다 — 의도된 변형 외 손상으로 V1·V3 치명 실패이며 공예 점수로 상쇄되지 않아 F/출하 금지다. 부수적으로 번호 문장 사이에 무번호 문장이 끼는 형식 이탈이 있다. 난이도 면에서도 ③의 모순이 바로 다음 문장과의 1단계 극성 대조로 드러나 KILLER 요구 깊이에는 못 미친다(C5=2). killerConditionsMet: 유형이 IRRELEVANT 로 §C(어법)/§D(빈칸) 체크리스트 비적용 대상이고 등급이 F 이므로 false. 수정 방향: 원지문 첫 문장을 무번호 도입문으로 온전히 복원하고 번호 문장을 연속 배치하면 V1·V3 해소 가능."
+}

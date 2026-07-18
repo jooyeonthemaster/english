@@ -1,0 +1,82 @@
+{
+  "pid": "P005",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-note",
+      "severity": "minor",
+      "evidence": "렌더 지문 필드가 '(렌더 지문 없음)'이다. CONTENT_MATCH는 지문 변형이 없는 유형이므로 원지문 그대로 노출로 간주해 통과 처리했으나, 파이프라인상 렌더 필드가 비어 있는 점은 기록해 둔다."
+    },
+    {
+      "code": "V3-note",
+      "severity": "minor",
+      "evidence": "원지문 'about a soldier accepting his upcoming death and it made Seeger instantly famous'에서 등위 접속된 독립절 앞 쉼표가 없어 다소 run-on 느낌을 주지만 원지문 자체의 표기이며 문법 오류 수준은 아니다."
+    },
+    {
+      "code": "V4-note",
+      "severity": "minor",
+      "evidence": "지문·선지 5의 'the Croix de Guerre, the highest French military honor'는 실세계 사실로는 논란 여지가 있으나(프랑스 최고 무공훈장은 통상 레지옹 도뇌르), 내용일치 문항의 판정 기준은 지문이고 해설도 지문 내용을 정확히 재진술하므로 V 실패로 보지 않는다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 1,
+    "C4": 2,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "일치 진술(오답) — 파산→멕시코 2년 체류→풍경의 작품 영향, 두 문장을 통합한 재진술",
+      "temptingBecause": "두 문장(이주와 풍경 영향)을 하나로 접합해 통합 확인이 필요하고, 전기 서사의 지엽 소재라 불일치로 오인할 여지가 있다는 것이 출제 의도이나 실제로는 거의 축자적 대응이다",
+      "decisiveFlaw": "함정 없음 — 'After his father's trading business went bankrupt... moved to Mexico City for two years. Its landscape influenced many of his works'와 축자 대응하여 즉시 소거된다"
+    },
+    {
+      "label": "2",
+      "intent": "일치 진술(오답) — 귀국 후 하버드 졸업·낭만파 시인 영감의 재진술",
+      "temptingBecause": "낭만파 영감이 파리행 동기와 연결되는 서사라 시점 혼동을 노렸다는 것이 의도이나, 문장 자체가 지문 4문장을 그대로 옮긴 수준이다",
+      "decisiveFlaw": "함정 없음 — 'returned to the States and later graduated from Harvard University, where he was inspired by the Romantic poets'와 축자 대응하여 즉시 소거된다"
+    },
+    {
+      "label": "3",
+      "intent": "정답 — 시간 순서 왜곡(입대 이전 창작으로 뒤집기). 긴 관계절('that made... when published')로 핵심 술부 'was written before'를 뒤로 미뤄 구조적으로 은닉",
+      "temptingBecause": "시·유명세·발표 등 표면 어휘가 지문과 모두 일치하고, 'joined... in 1914'와 'During the war, he wrote'라는 두 문장을 연결해야 선후를 판정할 수 있다",
+      "decisiveFlaw": "지문상 시는 1914년 지원 입대 이후 전쟁 기간 중('During the war, he wrote')에 창작되었으므로 'was written before he volunteered'는 명백한 불일치 — 선언된 정답과 일치"
+    },
+    {
+      "label": "4",
+      "intent": "일치 진술(오답) — 파리행 동기(보헤미안 삶)와 예술가 교유의 재진술",
+      "temptingBecause": "'romanticized notion of bohemian life'를 그대로 빌려 다른 동기(참전 등)와의 혼동을 노렸다는 의도이나 사실상 원문 복사 수준이다",
+      "decisiveFlaw": "함정 없음 — 'Seeger left for Paris... to live out his romanticized notion of bohemian life and made friendships with many artists'와 축자 대응하여 즉시 소거된다"
+    },
+    {
+      "label": "5",
+      "intent": "일치 진술(오답) — 1916년 솜 전투 전사와 사후 무공훈장 수여의 재진술",
+      "temptingBecause": "수훈을 생전 일로 착각하거나 시 발표에 따른 명성과 혼동시키려는 의도이나, 선지가 'Following his death'를 명시하고 있어 착각 유도가 성립하지 않는다",
+      "decisiveFlaw": "함정 없음 — 'Following his death, the French Military awarded him the Croix de Guerre, the highest French military honor'와 축자 대응하여 즉시 소거된다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "오답 해설 4건이 각 선지의 영어 전문을 그대로 재인용해 장황하다(C6 감점 요인).",
+      "recommendation": "선지 재인용을 제거하고 대응 근거 문장만 짧게 지목하라."
+    },
+    {
+      "severity": "minor",
+      "evidence": "오답 해설의 '오인하기 쉽다'는 유혹 근거(예: 5번의 '생전 일로 착각')가 실제 선지 문면과 맞지 않아 작위적이다 — 선지가 이미 'Following his death'를 명시한다.",
+      "recommendation": "실재하는 혼동 지점만 유혹 근거로 기술하거나 해당 문구를 삭제하라."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "모든 V 게이트는 통과한다: 지문 무결, 불일치 선지는 3번 하나뿐(각 선지 독립 검증 완료), 해설의 시간순서 설명도 지문과 정확히 일치한다. 그러나 공예 품질이 KILLER 요청을 전혀 충족하지 못한다. (1) 오답 4개(1·2·4·5)가 지문 문장의 거의 축자적 재진술이어서 실제 판단이 필요한 선지는 정답 하나뿐이다(C3=1, 루브릭 앵커 '즉시 소거/베껴쓰기'). (2) 정답 3번만 유일하게 길고 통사적으로 복잡하며 유일하게 before/after 시간 주장을 담고, 지문 순서(파리행보다 뒤 사건)를 깨고 3번 자리에 배치되어 있어 구조적 메타 단서가 정답을 노출한다(C4=2). (3) 결과적으로 실제 난이도는 중하 수준으로 KILLER 라벨과 불일치한다(C5=1). KILLER 조건은 루브릭 §C(어법)/§D(빈칸) 어느 쪽도 CONTENT_MATCH에 적용되지 않으며, 그 정신(복수 단서 연결 강제, 단일 단서로 찍기 불가, 서로 다른 함정의 오답 세트)으로 보아도 미충족 — false. 재설계 방향: 오답들도 각각 미세 왜곡 후보(actor swap, 조건 탈락, 인과 뒤집기 직전의 half-truth 등)처럼 보이는 통합·추상 재진술로 바꾸고, 선지 길이·복잡도를 평준화하며, 지문 순서 관례를 지켜야 한다. 원지문의 'Croix de Guerre = 최고 훈장' 서술은 실세계 사실성 논란이 있으나 지문 기준 판정이므로 V에는 영향 없음(minor 기록)."
+}

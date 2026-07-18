@@ -1,0 +1,79 @@
+{
+  "pid": "P013",
+  "validity": {
+    "V1": false,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": false
+  },
+  "validityIssues": [
+    {
+      "code": "V1_MISSING_GIVEN_SENTENCE",
+      "severity": "critical",
+      "evidence": "SENTENCE_INSERT 문항인데 학생 노출 필드 어디에도 '주어진 문장'(원지문에서 제거된 'Nevertheless, the technologies available for monitoring the concentrations and flows of particular substances in waste discharges have been developing rapidly.')이 존재하지 않는다. 발문은 '주어진 문장이 들어가기에 가장 적절한 곳은?'이라고 지시하지만 삽입 대상 문장이 렌더 어디에도 없어, 렌더된 형태 그대로는 문항이 풀이 불가능하다. 문항 본체가 깨진 상태."
+    },
+    {
+      "code": "V5_STUDENT_FIELD_INCOMPLETE",
+      "severity": "critical",
+      "evidence": "학생 노출 필드 완전성 실패: 주어진 문장 필드 자체가 누락. 정답 라벨(④)·선택지(①~⑤)·해설·오답해설 키(1,2,3,5)·keyPoints 사이의 상호 동기화는 문제없으나, 필수 필드 하나가 통째로 빠져 V5를 통과할 수 없다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "장애(비용) 선행 논의가 전혀 없는 초반 자리 — Nevertheless의 역접 전제 검증",
+      "temptingBecause": "메커니즘 소개(S1–S2) 직후의 첫 전환 슬롯이라 무심코 이른 위치를 고르는 학생을 노린다",
+      "decisiveFlaw": "선행 문장(S2)은 비례 과세 메커니즘 설명이라 역접 대상이 없고, 삽입 시 S2→S3의 'thus' 인과 연쇄가 끊긴다"
+    },
+    {
+      "label": "②",
+      "intent": "인센티브 논증이 아직 전개 중인 자리 — 논증 미완 상태에서의 조기 전환 유혹",
+      "temptingBecause": "문단 중반의 자연스러운 전환처럼 보이는 위치",
+      "decisiveFlaw": "S3(인센티브)→S4(great attraction)로 장점 논증이 이어지는 구간이라 역접이 성립하지 않고, 감시 기술로 전환할 근거(비용 문제)가 아직 등장하지 않았다"
+    },
+    {
+      "label": "③",
+      "intent": "논리 역전 함정 — 비용 문제가 제기되기 전에 그 해결(기술 발전)을 배치",
+      "temptingBecause": "S4의 장점 요약 뒤라 '장점 ↔ 기술' 사이 어딘가의 전환으로 착각할 수 있고, 바로 뒤 S5와 기술이 소재상 인접해 보인다",
+      "decisiveFlaw": "Nevertheless의 역접 대상(부정적 선행)이 없고, 해결책이 문제(S5 비용/disincentive)보다 먼저 나와 이후 비용 문제가 이미 반박된 것처럼 읽히는 역전 논리가 된다"
+    },
+    {
+      "label": "④",
+      "intent": "정답 — disincentive(장애) 직후 역접, 기술 발전이 S7 'In the future… wider range'의 선행 근거가 되는 유일 슬롯",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음. S5(비용 장애)→Nevertheless(역접)→기술 발전→S7(미래 확장)의 역접·인과 고리가 유일하게 완결된다"
+    },
+    {
+      "label": "⑤",
+      "intent": "결론 이후 배치 함정 — 인과 순서 붕괴 검증",
+      "temptingBecause": "마지막 슬롯이라 기술 발전 문장이 마무리 소감처럼 보일 수 있다",
+      "decisiveFlaw": "S7 'In the future, it may be possible…'가 자신을 가능하게 하는 근거(기술 발전) 없이 S5의 'major disincentive' 바로 뒤에 오게 되어 S5→S7 응집 공백이 남고, 기술 발전이 결론의 선행 근거로 기능하지 못한다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "오답해설 1의 'Yet 없이 장점이 이어지는 구간에서'는 의미는 통하나 표현이 뒤틀려 있다(원문에 Yet이라는 단어가 등장하지 않으므로 '역접 연결어 없이'로 써야 정확)."
+    },
+    {
+      "severity": "minor",
+      "evidence": "본해설의 'monitoring technologies가 장애에 대한 반향을 제공한'에서 '반향'은 오용에 가깝다('대응/반전'이 적절). 사실 오류는 아니나 학생 노출 해설로는 부자연."
+    },
+    {
+      "severity": "minor",
+      "evidence": "keyPoints의 '어휘 lure만 보고'는 한국어 해설에 영어 술어가 그대로 박힌 손상된 용어 사용. 의미('어휘적 유인만 보고')는 복원 가능하나 출하 품질 미달."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "치명 결함: 주어진 문장(삽입 대상 문장) 필드가 학생 노출 렌더에 통째로 누락되어 문항이 렌더 상태 그대로는 풀이 불가능하다(V1·V5 실패 → F). 논리 자체는 건전하다: 제거 문장이 S6임을 전제하면 ④가 유일 정답이고(V2), 완성문은 원지문과 동일해 문법성 문제 없으며(V3), 본해설·오답해설의 구조 분석도 사실과 일치한다(V4, 표현 손상은 minor). 난이도 정합 실패가 두 번째 큰 문제: 'Nevertheless'라는 단일 연결어 단서 + 지문 내 유일한 부정 문장(S5)을 찾으면 즉시 풀리는 중난도 문항이라 요청 난이도 KILLER에 크게 미달한다(C5=1). §C/§D는 어법·빈칸 전용 조건이라 SENTENCE_INSERT에 직접 적용되지 않으나, 그 취지(단일 단서로 정답을 찍을 수 없어야 함) 기준으로도 불충족 — killerConditionsMet=false. ①/②가 기능상 거의 동일한 함정(장애 선행 부재)이라 선지 의도 밀도도 일부 중복된다. 수리 방향: (1) 주어진 문장 필드 복구, (2) KILLER를 원하면 역접 연결어가 덜 노출되는 문장을 제거 대상으로 재선정하거나 두 단서 이상을 요구하는 슬롯 설계로 재작업."
+}

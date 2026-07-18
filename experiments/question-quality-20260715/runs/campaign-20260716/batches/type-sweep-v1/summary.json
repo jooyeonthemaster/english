@@ -1,0 +1,168 @@
+{
+  "batchId": "type-sweep-v1",
+  "phase": "grok-confirm",
+  "atKst": "2026-07-17T23:52:10.163+09:00",
+  "assignments": 18,
+  "slotsConsumed": 23,
+  "accepted": 18,
+  "modelCalls": 23,
+  "inputTokens": 147351,
+  "outputTokens": 42007,
+  "costUsd": 0.52706,
+  "ledgerAfter": {
+    "used": 1039,
+    "cap": 1200,
+    "costUsd": 34.85474
+  },
+  "byArm": {
+    "SW-F-SUMMA": {
+      "n": 1,
+      "accepted": 1,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 1,
+      "costUsd": 0.016577
+    },
+    "SW-F-VOCAB": {
+      "n": 1,
+      "accepted": 1,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 1,
+      "costUsd": 0.025483
+    },
+    "SW-G-VOCAB": {
+      "n": 1,
+      "accepted": 1,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 1,
+      "costUsd": 0.013498
+    },
+    "SW-F-FILL_": {
+      "n": 1,
+      "accepted": 1,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 1,
+      "costUsd": 0.015732
+    },
+    "SW-F-MAIN_": {
+      "n": 1,
+      "accepted": 1,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 1,
+      "costUsd": 0.022996
+    },
+    "SW-G-FILL_": {
+      "n": 1,
+      "accepted": 1,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 1,
+      "costUsd": 0.007628
+    },
+    "SW-G-MAIN_": {
+      "n": 1,
+      "accepted": 1,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 1,
+      "costUsd": 0.011584
+    },
+    "SW-F-WORD_": {
+      "n": 1,
+      "accepted": 1,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 2,
+      "costUsd": 0.025258
+    },
+    "SW-G-SUMMA": {
+      "n": 1,
+      "accepted": 1,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 1,
+      "costUsd": 0.021476
+    },
+    "SW-F-GRAMM": {
+      "n": 1,
+      "accepted": 1,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 1,
+      "costUsd": 0.034061
+    },
+    "SW-F-CONDI": {
+      "n": 1,
+      "accepted": 1,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 4,
+      "costUsd": 0.069597
+    },
+    "SW-G-WORD_": {
+      "n": 1,
+      "accepted": 1,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 2,
+      "costUsd": 0.035578
+    },
+    "SW-F-REFER": {
+      "n": 1,
+      "accepted": 1,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 1,
+      "costUsd": 0.023025
+    },
+    "SW-F-CONTE": {
+      "n": 1,
+      "accepted": 1,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 1,
+      "costUsd": 0.021511
+    },
+    "SW-G-REFER": {
+      "n": 1,
+      "accepted": 1,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 1,
+      "costUsd": 0.012448
+    },
+    "SW-G-CONDI": {
+      "n": 1,
+      "accepted": 1,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 1,
+      "costUsd": 0.040938
+    },
+    "SW-G-GRAMM": {
+      "n": 1,
+      "accepted": 1,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 1,
+      "costUsd": 0.068522
+    },
+    "SW-G-CONTE": {
+      "n": 1,
+      "accepted": 1,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 1,
+      "costUsd": 0.061148
+    }
+  },
+  "models": {
+    "standard": "google/gemini-3.5-flash",
+    "premiumQgen": "x-ai/grok-4.5"
+  },
+  "durationMs": 201356
+}

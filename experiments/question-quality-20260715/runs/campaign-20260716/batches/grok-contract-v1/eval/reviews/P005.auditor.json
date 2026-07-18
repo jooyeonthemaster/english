@@ -1,0 +1,80 @@
+{
+  "pid": "P005",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-DAMAGED-TERM",
+      "severity": "major",
+      "evidence": "해설 문장: \"자신의 코드 of behaviour를 형성한 개인적 요인을 이해하고\" — '코드 of behaviour'는 한국어·영어가 접합된 손상 표현이다. 자연스러운 표기('code of behaviour' 또는 행동 규범(code of behaviour))가 아니라 생성 중 언어 혼합으로 깨진 학생 노출 텍스트로, V4가 명시하는 손상 용어에 해당한다."
+    },
+    {
+      "code": "V4-DEFINITION-MISATTRIBUTION",
+      "severity": "minor",
+      "evidence": "해설 첫 문장 \"윤리적 사고란 증거나 이슈를 평가해 대응을 정하는 것\" — 원지문에서 '증거의 식별·평가(identification and evaluation of evidence)'는 critical thinking의 정의이고, ethical thinking은 '윤리적 이슈를 식별하고 여러 관점에서 평가'하는 것이다. 두 정의를 뭉뚱그려 ethical thinking에 '증거 평가'를 귀속시켰다."
+    },
+    {
+      "code": "V1-RENDER-FIELD-EMPTY",
+      "severity": "minor",
+      "evidence": "'렌더된 지문' 필드가 '(렌더 지문 없음)'이다. SUMMARY_COMPLETE_MC는 원지문을 무변형 제시하는 유형이므로 손상으로 판정하지 않았으나, 학생 노출 파이프라인에서 원지문이 그대로 렌더되는지 확인이 필요하다."
+    },
+    {
+      "code": "V2-NEAR-SYNONYM-IN-DISTRACTOR",
+      "severity": "minor",
+      "evidence": "선택지 5의 (B) 'ethical codes'는 정답 (B) 'codes of behavior'와 의미상 매우 근접하다. 해당 쌍은 (A) 'formal learning experiences'가 결정적으로 오답이어서 V2(유일성)는 유지되지만, (B)축의 변별은 사실상 무력하다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — 지문의 핵심 대비(처방된 규칙 추종 지양 vs 다각적 사고)와 성찰 대상(자신·타인의 행동 규범)을 그대로 보존",
+      "temptingBecause": "해당 없음(정답). (A)는 'a prescribed set of ethical codes or rules', (B)는 \"your own 'code of behaviour'\"/\"other people's codes\"에 직접 대응한다.",
+      "decisiveFlaw": "없음. 완성문이 문법적이고 지문 논지를 정확히 요약한다."
+    },
+    {
+      "label": "2",
+      "intent": "half-truth + 요인/결과 전도: (A)는 정답과 동일, (B)에 가치 형성 '요인'을 배치",
+      "temptingBecause": "(A)가 정확하고 religious beliefs가 지문에 명시적으로 등장한다(social, religious, or civic beliefs).",
+      "decisiveFlaw": "지문에서 religious beliefs는 개인의 가치를 형성하는 요인이지, 개인적 요인에 의해 형성되어 성찰해야 할 행동 규범 자체가 아니다. 인과 방향이 지문과 반대다."
+    },
+    {
+      "label": "3",
+      "intent": "범주 혼동 + half-truth: (B)는 정답과 동일, (A)에 지문의 대조 개념(conceptual ethics)을 오용",
+      "temptingBecause": "conceptual ethics가 지문에 'distinct from higher levels of conceptual ethics or theory'로 명시 등장하고 (B)가 정확하다.",
+      "decisiveFlaw": "지문이 학생에게 의존하지 말라고 한 대상은 prescribed ethical codes or rules이지 conceptual ethics가 아니다. conceptual ethics는 이 글의 ethical thinking과 '구분'되는 상위 이론일 뿐 지양 대상이 아니다."
+    },
+    {
+      "label": "4",
+      "intent": "표면 문구 차용 + scope shift: 'no clear right or wrong response' 표현을 (A)로 전용",
+      "temptingBecause": "'명확한 정답이 없다'는 지문의 핵심 문구를 직접 빌려와 표면적 일치가 높다.",
+      "decisiveFlaw": "요약문 첫 절이 이미 '단일 정답이 없다'고 전제하므로 'clear right answers에 의존하는 것'은 지양할 대안 접근이 될 수 없고(중복·자기모순), (B) situational responses는 개인적 요인이 형성하는 성찰 대상(행동 규범)이 아니라 그 결과 현상이다."
+    },
+    {
+      "label": "5",
+      "intent": "역할 전도(actor/target swap): 배경 요인을 지양 대상 자리에, 지양 대상 어휘를 성찰 대상 자리에 배치",
+      "temptingBecause": "두 표현(formal learning experiences, ethical codes) 모두 지문에 문자 그대로 등장하며, (B) 'ethical codes'는 정답 (B)와 의미상 근접하다.",
+      "decisiveFlaw": "formal learning experiences는 가치 형성에 영향을 주는 배경 요인이지 학생이 의존을 지양해야 할 접근법이 아니다. (A)에서 결정적으로 탈락한다."
+    }
+  ],
+  "explanationIssues": [
+    "해설 내 '코드 of behaviour' — 한·영 혼합 손상 표현(학생 노출 텍스트 손상, V4 실패의 직접 근거)",
+    "해설 첫 문장이 critical thinking의 정의(증거 평가)를 ethical thinking에 뭉뚱그려 귀속(경미한 정의 귀속 오류)",
+    "오답 해설 5의 '(B)에 두면 지양 대상과 반성 대상의 관계가 바뀐다'는 설명은 성립하지만, ethical codes가 정답 (B)와 의미상 근접하다는 점을 언급하지 않아 (A) 중심 탈락 논거가 더 선명했을 것"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "정답 유일성(V2)·문법성(V3)·필드 동기화(V5)는 견고하다. 선택지 설계도 준수하다: 2·3번이 각각 한 칸씩 정답과 일치하는 half-truth 구조로 두 칸 동시 검증을 강제하고, 4·5번이 표면 차용·역할 전도라는 서로 다른 함정을 쓴다. 그러나 학생 노출 해설에 '코드 of behaviour'라는 언어 혼합 손상 표현이 있어 V4를 보수적으로 실패 처리했고, 규칙상 V 실패는 공예 점수로 상쇄되지 않으므로 F다. 해당 손상 표현을 \"'code of behaviour'(행동 규범)\"로 교정하고 해설 첫 문장의 정의 귀속을 다듬으면 B등급(공예 합계 16, C3·C6=2)으로 출하 가능하다. C3가 2인 이유: 정답 쌍이 지문 표현의 거의 그대로 인용(prescribed…rules, code of behaviour)이라 어휘 대조만으로 풀릴 여지가 있다. 요청 난이도 INTERMEDIATE이므로 killerConditionsMet=false."
+}

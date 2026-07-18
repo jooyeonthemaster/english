@@ -1,0 +1,61 @@
+{
+  "pid": "P019",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "META_CUE_ABSOLUTES",
+      "severity": "minor",
+      "evidence": "오답 3개가 절대어를 포함(②'only', ④'nearly all', ⑤'every')하는 반면 정답 ③만 원문과 같은 완화 표현 'most of the time'을 갖는다. 절대어 소거 전략만으로 후보가 ①③으로 좁혀지는 약한 test-wise 단서. V 실패는 아니며 C4 감점 요인."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 4,
+    "C3": 3,
+    "C4": 3,
+    "C5": 4,
+    "C6": 4
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "극성 반전(priority reversal) — 결론의 우선순위를 정반대로 뒤집은 함정",
+      "temptingBecause": "지문의 핵심 어휘 프레임(rigid plans, going with the flow)을 그대로 재사용해 표면 일치도가 가장 높다",
+      "decisiveFlaw": "원문 'prioritize flexibility over rigidity'와 정면 모순. 경직성 우선은 peaceful person이 되는 길과 반대 방향이다"
+    },
+    {
+      "label": "2",
+      "intent": "과협소(scope narrowing) — 일반 원리를 한 예시로 축소 + 'only'로 false dichotomy 생성",
+      "temptingBecause": "세 번째 문장의 four-year-old 질문에 직접 앵커되어 지문을 부분적으로만 읽은 학생에게 매력적",
+      "decisiveFlaw": "그 질문은 우선순위 대립을 보여주는 예시일 뿐이며, 지문은 일을 버리고 아이에게만 집중하라고 주장하지 않는다. 다음 문장의 일반 질문('The more general question is...')이 예시를 원리로 승격시키는 구조를 놓친 답"
+    },
+    {
+      "label": "3",
+      "intent": "정답 — source span 'prioritize flexibility over rigidity most of the time'의 의미 보존 패러프레이즈",
+      "temptingBecause": "(정답) 두 선행 질문의 대립(rigid schedule vs availability, keeping plans vs go with the flow)이 수렴하는 결론을 정확히 표현",
+      "decisiveFlaw": "없음. 'value A over B most of the time' 구조가 원문의 'prioritize A over B most of the time'과 완전 대응하며 hedge('most of the time')까지 보존"
+    },
+    {
+      "label": "4",
+      "intent": "과확장(overextension/half-truth) — 인접 문장의 진짜 조언을 정도만 부풀린 함정",
+      "temptingBecause": "바로 다음 문장 'expect that a certain percentage of plans will change'와 어휘·논지가 강하게 겹쳐 국소 단서 의존 학생에게 가장 매력적",
+      "decisiveFlaw": "원문은 'a certain percentage'(일부)인데 'nearly all'(거의 전부)로 과장. 또한 다음 문장이 'I have ALSO found it helpful...'로 추가 팁임을 표시하므로, 빈칸이 이 내용이면 담화상 중복·모순이 생긴다"
+    },
+    {
+      "label": "5",
+      "intent": "소재 오귀속(excuse misattribution) — 도입부의 '변명' 소재를 결론으로 끌어온 함정",
+      "temptingBecause": "첫 문장 'it is natural to be frustrated'의 어휘를 재사용해 지문 소재와의 표면 연결이 있다",
+      "decisiveFlaw": "지문은 좌절의 자연스러움을 넘어서야 할 'excuse'로 규정한다. 모든 계획 변경을 좌절이 자연스럽다는 증거로 삼는 것은 peaceful person이 되는 조건과 정반대이며 'every'도 과잉 절대화"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "A",
+  "notes": "V1: 렌더 지문은 원지문에서 'prioritize flexibility over rigidity most of the time'만 빈칸으로 치환했고 그 외 전 구간이 원문과 일치(하이픈·인용부호·물음표 포함), 손상 없음. V2: 5개 선지 독립 대입 검증 결과 ③만 성립 — ①은 극성 반전, ②는 'only' 포함 과협소, ④는 'nearly all' 과확장 + 후속 문장 'also'와 담화 충돌, ⑤는 excuse 프레임 오귀속. 단일 정답 확정. V3: 5개 선지 모두 'you must' 뒤 동사원형구로 동일 슬롯에 문법적으로 삽입되며 빈칸이 문장 말미라 seam 문제 없음. 정답 완성문 자연스러움. V4: 해설의 구조 분석(빈칸=두 질문을 수렴하는 결론)과 4개 오답 해설이 실제 선지 내용과 정확히 대응, 용어 오류·환각 없음. V5: 정답 라벨 3 = 해설 ③ = 오답해설 키 {1,2,4,5} = keyPoints, 동기화 완결. 공예: 핵심 논지 span을 빈칸화(C1=4), 4개 오답이 서로 다른 함정 유형(C2=4), ②④는 실제 판단 요구하나 ①⑤는 극성으로 조기 소거(C3=3), 절대어 패턴 메타 단서로 C4=3, INTERMEDIATE 요구 사고 단계와 정합(C5=4), 해설 간결·정확·함정 분리 선명(C6=4). 합계 22, 전 V 통과, 전 C>=3 → A. KILLER 아님(요청 난이도 INTERMEDIATE) → killerConditionsMet=false."
+}

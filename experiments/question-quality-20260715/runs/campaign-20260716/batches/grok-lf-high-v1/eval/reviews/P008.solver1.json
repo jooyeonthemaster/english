@@ -1,0 +1,35 @@
+{
+  "pid": "P008",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'ethical thinking is about identifying ethical issues and evaluating these issues...' — 전치사 about의 목적어로 동명사 identifying과 and로 병렬 연결된 자리. 병렬 시작점이 identifying이므로 evaluating(동명사)이 정확히 맞다. 실전에서 병렬 시작점을 is about까지 끌어올려 'is about identifying and (is) evaluating'처럼 오독하게 유도할 여지도 없다. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'learn to think through ethical issues rather than follow a prescribed set...' — rather than 뒤에서 to부정사 병렬 시 to가 생략된 원형(bare infinitive)이 오는 것은 표준 용법(learn to think ... rather than (to) follow). rather than following(동명사)도 가능하지만 원형 follow 역시 완전한 정문이다. 최상위권 입장에서 'rather than 뒤엔 -ing 아닌가?' 하는 유혹이 가장 강한 매력적 오답이지만, rather than + 원형은 기출에서도 반복 확인된 정문 패턴이므로 배제."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "'recognition that, although being ethical is defined as ..., these principles varying both between and within individuals.' — recognition that절 내부 구조를 보면 although 양보절(being ethical is defined...)이 끝난 뒤 주절이 와야 하는데, 주어 these principles에 대응하는 정동사(finite verb)가 없다. varying을 분사로 보면 that절 전체가 본동사 없는 파편(fragment)이 되고, 독립분사구문으로 구제하려 해도 그 분사구문이 걸릴 주절 자체가 존재하지 않는다. vary로 고쳐 'these principles vary both between and within individuals'가 되어야 한다. 명백한 오류."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'What a person values relates to their ... beliefs' — 주어는 관계대명사 what이 이끄는 명사절(What a person values)로 단수 취급, 따라서 단수 동사 relates가 맞다. values를 복수 명사로 오독해 'relate여야 하지 않나'로 끌리게 하는 장치이지만, values는 a person을 주어로 하는 동사(3인칭 단수)이고 진짜 주어는 what절이다. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'their social, religious, or civic beliefs influenced by their formal and informal learning experiences' — beliefs를 뒤에서 수식하는 과거분사(= beliefs which are influenced by...). beliefs가 영향을 '받는' 대상이므로 수동 의미의 influenced가 맞다. influencing으로 바꾸면 의미가 뒤집혀 오히려 틀린다. 축약 관계절로 완전한 정문."
+    }
+  ],
+  "note": "정답이 (C)로 유일하게 좁혀지는 깔끔한 문항. (C)는 that절 내 정동사 부재라는 장거리 단서(recognition that ... although 절 ... 주절 동사)를 요구하는 전형적 수능 어법 포인트. 매력적 오답 체감 순위: (B) rather than+원형(오답 유인 강함) > (D) what절 수일치 > (E) 분사 태. (A)는 유인력 낮음. 대안 해석(varying을 독립분사구문으로 보는 구제)은 주절 부재로 성립 불가함을 확인했다."
+}

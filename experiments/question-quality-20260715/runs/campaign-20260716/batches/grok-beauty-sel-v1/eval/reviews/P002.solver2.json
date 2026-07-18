@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "범위 오류(too narrow). 3단 점층 구조(단언→이유→스토리) 중 최하단 (a) '단순 단언은 쓸모없다'만 포착하고, 'pet advice'라는 예시 소재를 주제로 격상시켰다. 지문의 결론(스토리가 이유 제시보다 더 설득적)을 전혀 담지 못하므로 제목 자격 없음."
+    },
+    {
+      "label": "2",
+      "verdict": "accept",
+      "reason": "'Stories Illustrating Beliefs'는 첫 문장 'tell stories that illustrate them'의 직접 대응이고, 'More Persuasive Than Bare Reasons'는 (b) 'more helpful but not necessarily more believable' 대 (c) 'take the advice... more to heart'의 비교 관계를 정확히 형식화한다. 비교급 주장(comparative claim)을 비교급으로 옮겨 양화사 과잉도 없다. 지문 전체 논증 구조와 완전 일치."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "위계 전도. 지문은 justification을 기저 필요조건으로 인정하되('We need justifications... before we can begin to believe') 곧바로 'not necessarily more believable'로 한계를 지적하고 스토리가 이를 능가한다고 결론짓는다. justification을 제목의 핵심('Essential')으로 격상하면 논증 방향이 뒤집힌다. 또한 'Turning Confusion into Action'은 지문에 없는 개념(지문은 believability에 관한 것이지 행동 전환이 아님)."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "양화사 과잉(the Only Basis). 지문은 배타적 주장이 아니라 비교급 주장('more to heart')이며, 이유 제시도 'more helpful'로 유용성을 인정한다. 또한 'Shared Narrative Experience'는 사실 불일치 — 지문은 'a similar situation that he was in OR THAT HE HEARD ABOUT'으로 간접 전문(傳聞) 스토리도 허용하므로 '공유 경험'으로 한정할 수 없다."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "중간 양보절의 격상. 'more helpful but not necessarily more believable'이라는 (b) 단계의 양보적 중간 판정만 정확히 재진술했을 뿐, 논증의 결론(스토리의 우월성)을 전혀 포함하지 않는다. 결론이 아닌 양보절에 정박한 제목은 포괄성 요건을 위반."
+    }
+  ],
+  "note": "지문은 '단순 단언 < 이유 제시 < 스토리'의 3단 점층으로 스토리의 설득 우위를 논증하는 명확한 비교급 구조. ②만이 주제문(첫 문장)과 결론(마지막 문장)을 동시에 포괄하며 양화사·범위 오류가 없다. ①⑤는 하위 단계의 부분 포착, ③은 위계 전도+무근거 개념, ④는 'only' 배타 주장 및 'shared' 사실 불일치로 각각 형식적으로 기각됨. 복수 정답 가능성 없음."
+}

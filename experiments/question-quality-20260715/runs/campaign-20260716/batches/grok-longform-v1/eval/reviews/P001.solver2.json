@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "\"Garcia stood outside Frontcountry Mall, waiting for his brother\" — comma-attached present participial adjunct. Its implicit subject must be the matrix subject (Garcia), and Garcia is indeed the one waiting; active voice is right. Grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "\"Garcia's band had been chosen to perform\" — 'choose' is transitive and the band is the theme (someone chose the band), so passive voice is required; the selection precedes the past narrative timeline (it is the reason for the shopping trip already underway), so past perfect passive is licensed. Grammatical."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "\"had asked Jeff to help him pick out new clothes\" — control verb 'ask' in the pattern ask + NP + to-infinitive requires the to-infinitive; 'to help' satisfies it, and 'help him pick out' (bare infinitive after help) is standard. Grammatical."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "\"As the rehearsal began, he struggled with the rhythm, making several mistakes\" — finite past tense verb agreeing with 'he', consistent with the past narrative frame set by 'began'; the trailing participle 'making' attaches correctly to 'he'. Grammatical."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect (the flawed item)",
+      "reason": "\"He looked at his friend, took a deep breath and starting to feel much better\" — the coordinator 'and' joins a third conjunct to the finite past-tense series 'looked ... took ...', so the conjunct must be finite past 'started'. Alternative-parse search fails: (1) a free participial adjunct cannot be introduced by 'and' in this position; (2) 'took a deep breath and starting to feel...' cannot be object coordination since 'starting to feel much better' is not an NP 'took' can govern. No rescue parse exists; 'starting' is ungrammatical."
+    }
+  ],
+  "note": "Classic finite-verb parallelism item embedded in a narrative passage. (A)-(D) each survive formal verification with no marginal cases; (E) fails uniquely and no alternative construal (participial adjunct, object coordination) renders it a well-formed sentence. Single defensible answer: (E). Lens: grammarian/logician, blind solve without answer key."
+}

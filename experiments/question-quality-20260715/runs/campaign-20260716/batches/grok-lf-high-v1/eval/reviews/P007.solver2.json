@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "Syntax: complete independent clause (NP 'his clothing-fed composure' + 'soon' + V 'collapsed' + PP 'into stage anxiety') that attaches cleanly to the sentence-final adverbial 'when he thought of how many people would be there'. Logic: presupposition (composure) is licensed by the immediately preceding 'Garcia felt good ... wearing his new clothes'; the asserted transition to anxiety is causally licensed by the when-clause (thinking of the crowd) and confirmed by the immediately following consequences (rhythm struggles, mistakes, Tom's reassurance 'Don't worry'). Direction of state change, cause, and effect all cohere. Valid."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "Grammatical as a clause, but the state transition is inverted: it presupposes prior stage anxiety (contradicting 'Garcia felt good as he arrived'), and asserts resulting composure, which is refuted by the next sentence ('he struggled with the rhythm, making several mistakes'). Causally incoherent with the when-clause: thinking of how many people would be there cannot plausibly trigger a settling INTO composure. Invalid on presupposition failure, causal mismatch, and contradiction with the ensuing narrative."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "Grammatical, but temporally contradictory: the rhythm mistakes occur only AFTER the blank ('As the rehearsal began, he struggled...'), so at blank time no mistakes exist to erase anything. Additionally, 'mistakes ALONE erased his composure when he thought of how many people would be there' posits two competing causes in one sentence — 'alone' excludes the crowd-thought cause that the when-clause explicitly supplies. Double-cause incoherence plus reversed event order. Invalid."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "Grammatical (though 'soon itself fueled' is stylistically awkward), but factually contradicts the passage: Jeff's plainer choice (white shirt, black jeans) is exactly what made Garcia 'feel good' wearing them, endorsed by the clerk; the text never links the clothes to dread. It also misattributes the cause of anxiety to the clothing when the when-clause explicitly attributes it to thinking of the crowd size. Invalid."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Grammatical shell, but a coherence/category error: the wait for Jeff happened earlier at the mall, was explicitly trivial ('Don't worry. I haven't waited long'), and is narratively closed; a brief wait cannot 'harden into' fear of a crowd hours later at the concert hall. No causal connection to the when-clause ('when he thought of how many people would be there'), and 'the living crowd' has no antecedent in the text. Invalid."
+    }
+  ],
+  "note": "Blank sits between 'Garcia felt good ... wearing his new clothes' and 'As the rehearsal began, he struggled with the rhythm'. The required proposition is a composure-to-anxiety transition caused by the crowd-thought stated in the when-clause. Only option 1 satisfies syntax, presupposition, causal direction, and downstream confirmation simultaneously. Alternative rescuing readings for options 2-5 (foreshadowing, proleptic narration, etc.) were actively considered and fail against the immediate 'As the rehearsal began' sequencing and the explicit cause in the when-clause. Single defensible answer."
+}

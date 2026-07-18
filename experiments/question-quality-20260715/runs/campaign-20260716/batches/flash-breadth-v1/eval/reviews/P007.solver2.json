@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "correct",
+      "reason": "형식적 검증: 밑줄 명제는 'economics cannot, in a vacuum, identify [the goal]'이며, 직후 문장이 'Creating tax policy requires identifying a moral goal, which ... must involve ethics and moral analysis'로 밑줄의 함축을 명시적으로 전개한다. 즉 (i) the goal = a moral goal(윤리적 목표), (ii) 'in a vacuum' = 윤리·도덕 분석과 절연된 상태(without moral and ethical frameworks). 따라서 'cannot pinpoint ethical targets without moral and ethical frameworks'는 밑줄 명제와 논리적으로 동치(¬identify(goal | vacuum) ≡ ¬pinpoint(ethical targets | no moral framework)). 문법 결합도 성립: 주어 economics에 대해 'cannot pinpoint ...'가 정문 술어를 이룬다. 유일한 흠은 'ethical targets ... without moral and ethical frameworks'의 준-순환적 표현으로 정답이 다소 투명하다는 점이나, 정오 판정에는 영향 없음."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "지문 명제와 직접 모순: 'Economics can go a long way towards helping a legislature determine whether or not a particular tax law will help achieve a particular goal' — 경제학은 수단-결과(재정적 결과) 판정에는 유능하다고 명시했다. 밑줄은 경제학의 계산 능력 결함이 아니라 목표 설정 권한의 부재를 말한다. 'fails to calculate ... accurately'는 함축의 방향(수단 vs 목적 구분)을 정반대로 뒤집으므로 성립 불가."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "지문에 세율(tax rates) 조정이나 '변화하는 역사적 상황'에 대한 명제가 존재하지 않는다. 첫 문장의 'history'는 입법자들이 주의를 기울이는 대상 열거일 뿐, 경제학의 한계와 연결된 전제가 아니다. 전제 없는 결론이므로 함축으로 도출 불가(무근거 추론)."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "'too controversial'은 도덕적 질문이 입법 토론에서 밀려나는 이유로 제시된 술어이지, 경제학이 해결해야 할 대상이 아니다. 또한 '계급 간(among different classes)' 갈등은 지문 어디에도 등장하지 않는다. 밑줄의 논리 구조(목표 식별 불가)와 무관한 별개 명제이므로 함축 관계 불성립."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "'distributive justice'라는 어휘를 미끼로 쓴 규범적 처방(should not be used to justify ...)이나, 밑줄은 능력 서술(cannot identify)이지 사용 금지 처방이 아니다. 양상(modality)이 다르고(불능 ≠ 금지), 지문은 불평등 분배의 정당화 문제를 제기한 바 없다. 함축으로 성립 불가."
+    }
+  ],
+  "note": "함축의미 유형. 밑줄 직후 문장이 함축을 거의 축자적으로 재진술하는 구조라 논증 사슬이 짧고 명확하다: tax = 분배정의 이론의 적용 → 경제학은 수단 판정만 가능 → 목표(도덕적 목표) 식별에는 윤리·도덕 분석 필수. ①만이 이 동치를 보존한다. 품질 소견: ①이 'ethical targets / moral and ethical frameworks'로 지문 어휘를 준-순환적으로 재사용해 변별도가 낮은(정답이 투명한) 편이며, 오답지 ②~⑤는 모두 명백한 무근거·모순 유형이라 상위권 변별력은 제한적. 그러나 논리적 하자나 복수정답 여지는 없음."
+}

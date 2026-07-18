@@ -1,0 +1,35 @@
+{
+  "pid": "P005",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "Seam: 'without [targeted state-backed safeguards of the right to food] involving direct public intervention' — the participial modifier 'involving direct public intervention' attaches naturally to the head noun 'safeguards'; fully grammatical. Logic: the sentence asserts a necessary condition for famine prevention, and the final sentence identifies exactly this — 'direct public support to their populations in times of crisis.' 'State-backed safeguards' = public intervention; 'right to food' matches the entitlement-protection framing. Coherent with the concessive 'no matter how fast they grow' (growth alone insufficient)."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "Grammatical seam is acceptable, but logically self-contradictory in context: the clause is governed by 'no matter how fast they grow,' which explicitly discounts growth speed, and the Botswana/Kenya/Zimbabwe sentence states rapid growth 'explains at best only a small part' of famine-prevention success. Making 'accelerated expansion of productivity' the necessary condition inverts the author's thesis. Also 'expansion of productivity involving direct public intervention' is semantically strained."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "Seam defect: stacking the relative clause 'that merely include the destitute' before the participle forces 'involving direct public intervention' onto the nearest NP 'the destitute' (nonsense) or onto 'gains,' producing the internal contradiction 'market-led gains involving direct public intervention' (market-led vs public intervention). Logically it restates the conceded-but-insufficient factor (growth that 'involves vulnerable groups'), which the passage says cannot by itself prevent famines."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "'Postwar' is unsupported — the emergency in the passage is famine, not war; no war is mentioned. 'Rural restoration' echoes 'revival of the rural economy,' which the opening sentence lists as the mistaken tendency the author argues against, so it cannot be the necessary condition the author endorses. Double participle stacking ('strategies concentrating on ... involving ...') is also awkward, with ambiguous attachment of 'involving.'"
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Logical absurdity: inserting it claims countries 'cannot hope to prevent famines without growth models that intensify exposure to famine risk' — i.e., famine prevention requires famine-risk-intensifying models. No alternative parse (e.g., reading 'without' as concessive) rescues this; it is contradictory on any reading and contradicts the passage's endorsement of protective public support."
+    }
+  ],
+  "note": "Blind solve under grammarian/logician lens. The blank is the object of 'without' modified by 'involving direct public intervention'; only option 1 is both grammatically well-formed at the seam and logically consistent with the concessive frame ('no matter how fast they grow') and the concluding evidence sentence (direct public support in crises). Options 2/3/4 restate the insufficient growth/market/rural-revival factors the passage explicitly demotes; option 5 is self-contradictory. Alternative-parse search (participle attachment, gerund readings) found no rescue for any distractor. Answer uniquely 1."
+}

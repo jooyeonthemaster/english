@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "오답",
+      "reason": "trace fixed ethnic origins of sayings across cultures — 지문은 속담의 '기원 추적'이 아니라 '빈번한 사용이 태도를 일부 반영하는가'를 논한다. 게다가 'fixed'는 지문의 핵심 경고(no fixed conclusions should be drawn)와 정면 충돌하고, 'across cultures'는 오히려 속담이 범문화적이라 국민성 지표가 될 수 없다는 반례 근거로 쓰인 표현이다. 지문 어휘를 재활용한 표면 미끼."
+    },
+    {
+      "label": "2",
+      "verdict": "오답",
+      "reason": "establish an unchanging national character from proverbs alone — 'unchanging(=fixed)'과 'from proverbs alone'이 모두 빈칸 문장의 조건 'together with other social and cultural indicators'와 직접 모순. 지문 1~3문장이 명시적으로 금지한 결론을 그대로 진술한 안티테제 선지. 국민성(national character)이라는 지문 핵심어로 유혹하지만 헤지 방향이 반대라 즉시 배제."
+    },
+    {
+      "label": "3",
+      "verdict": "정답",
+      "reason": "abstract provisional shared notions with ancillary evidence — 세 요소가 지문과 정확히 정합. (a) 'provisional'은 'no fixed conclusions'와 'at least to some degree'의 잠정성 헤지를 계승, (b) 'shared notions'는 예시의 '독일인의 일찍 일어나기에 대한 태도' 같은 집단 공유 관념에 대응, (c) 'with ancillary evidence'는 빈칸 앞 'together with other social and cultural indicators'를 재진술. 빈칸에 넣으면 'could be used ... to abstract provisional shared notions' — to부정사 결합도 문법적으로 매끄럽다. 다만 'with ancillary evidence'가 빈칸 앞 'together with other indicators'와 의미 중복이라 문장이 다소 군더더기처럼 읽히는 점은 흠이지만 논리 모순은 아니다."
+    },
+    {
+      "label": "4",
+      "verdict": "오답",
+      "reason": "let social factors generate the proverbs later told — 인과 방향이 무관하다. 지문은 '속담 사용 빈도 → 태도의 부분적 반영(추론 방향)'을 논하지, '사회적 요인이 속담을 생성한다'는 발생론을 논하지 않는다. 빈칸에 넣으면 'indicators could be used to let social factors generate...'로 의미가 성립하지 않아 seam 자체가 어색. 유혹 강도 최저."
+    },
+    {
+      "label": "5",
+      "verdict": "오답",
+      "reason": "prove a people's total mentality solely through frequent sayings — 'mentality', 'frequent'라는 지문 핵심어를 그대로 써서 가장 매력적인 오답. 실제로 순간 끌렸으나, 'solely'는 'together with other indicators'와 모순, 'total'은 'at least to some degree'와 모순, 'prove'는 'no fixed conclusions'의 잠정성과 모순 — 강도 위반이 세 겹이라 배제. 극단어(solely/total/prove) 검출로 걸러지는 전형적 과잉일반화 미끼."
+    }
+  ],
+  "note": "실전 풀이 순서: 빈칸 문장의 'Nevertheless'와 'together with other indicators'에서 '단독으로는 안 되지만 보조 지표와 함께라면 잠정적 추론 가능'이라는 양보-절충 구조를 먼저 잡음. 5번이 지문 어휘 밀도가 가장 높아 매력적이나 극단어 3개(solely/total/prove)로 탈락. 정답 3번은 유일하게 잠정성(provisional)+공유성(shared)+보조증거(ancillary) 세 축을 모두 충족. 유일한 흠: 3번의 'with ancillary evidence'가 빈칸 앞 'together with other social and cultural indicators'와 중복되어 삽입 시 문장이 이중 부가어처럼 읽힘 — 논리 결함은 아니고 문체상 군더더기 수준. 단일 정답으로 수렴, 복수 정답 여지 없음."
+}

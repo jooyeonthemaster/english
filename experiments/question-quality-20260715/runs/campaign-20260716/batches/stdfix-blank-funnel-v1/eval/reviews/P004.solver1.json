@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "Seam is grammatical ('they' cataphoric to 'seasoned masters'), but the logic is inverted: the passage argues masters fail on novel problems BECAUSE they rely on experience (the filter), not because they abandon experience for raw intuition. 'Raw intuition' is never a contrast term in the passage. Attractive pull: the phrase 'a new problem' echoes the opening sentence, tempting a surface match, but the causal direction is backwards."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "Grammatically insertable but topically alien — the passage never discusses physical techniques vs. mental aspects or formal training sessions. No textual support; easy elimination."
+    },
+    {
+      "label": "③",
+      "verdict": "correct",
+      "reason": "Inserted: 'When stored expertise blinds them to novel and critical details of the situation, then even seasoned masters can make mistakes.' Grammatically clean (cataphoric 'them' resolved by 'seasoned masters' in the main clause). Logically it is the exact synthesis the paragraph builds toward: experience-as-filter (= stored expertise) applied to a particularly novel problem (= novel details) discards details that beginners would absorb (= critical details filtered out). Uniquely completes the argument."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "Most seductive distractor — it recycles the passage's own wording 'separate the essential from the irrelevant,' creating strong lexical overlap. But it claims masters err by VIOLATING the filtering rule, whereas the passage's thesis is that FOLLOWING the experience-filter is precisely what fails when the problem is novel. Surface-word match with inverted logic; a top student pauses here, checks the causal claim, and rejects it."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "Frames beginner's mind as a hostile force that 'overwhelms' masters' tactics, but the passage presents beginner's mind as the recommended remedy for novel problems, not a competing adversary. Semantically incoherent in context; 'directly overwhelms' has no textual referent."
+    }
+  ],
+  "note": "Solved blind as a top-tier examinee. The item funnels cleanly to ③. Distractor quality is decent: ④ is the strongest trap (verbatim lexical recycling with inverted causality) and ① is a secondary trap (echoes 'a new problem' but reverses the passage's diagnosis). ② and ⑤ are weak fillers. Checked alternative construals (cataphora in ③ is standard; no reading rescues ① or ④). Single defensible answer; no ambiguity found."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P010",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "Subject is 'such prey'. The passage treats 'prey' as plural throughout ('Some species of prey are...', 'such prey have coloring'), so plural 'are' agrees consistently."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "The true subject is 'Evidence' (singular/uncountable); the that-clause 'that it is useful for distasteful prey to be easily detected or conspicuous' is only a modifier. 'Evidence ... was reported' is correct singular passive agreement."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'present A with B' passivizes as 'A were presented with B'. Subject 'Chicks' is plural, so 'were presented' is correct."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "Causative 'make' (cause to be) takes an adjective object complement; passive 'had been made' therefore requires the adjective 'distasteful', not the adverb 'distastefully'. Semantically the breadcrumbs must BE distasteful (bad-tasting) so chicks avoid them, matching 'distasteful prey'. The manner-adverb alternative reading ('made in a distasteful manner') is syntactically possible for make=produce but contradicts the passage logic and is not the construction in play. Error."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'find it easier to avoid ...' follows the 'find + formal-object it + adjective complement + to-infinitive' pattern; comparative adjective 'easier' is the complement. Correct."
+    }
+  ],
+  "note": "Answer is (D): 'distastefully' should be the adjective 'distasteful' because the causative passive 'had been made' requires an adjective complement, and the passage requires the breadcrumbs to BE distasteful. The manner-adverb reading of 'distastefully' was checked and rejected as contextually and constructionally inappropriate. All other underlines (A subject-verb agreement, B singular 'Evidence'+'was reported', C 'present with' passive, E 'find it easier to') are grammatically sound. Single unambiguous answer."
+}

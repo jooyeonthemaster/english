@@ -1,0 +1,35 @@
+{
+  "pid": "P005",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "일치",
+      "reason": "지문: 'After his father's trading business went bankrupt, his family moved to Mexico City for two years. Its landscape influenced many of his works.' — 파산 후 멕시코시티 2년 체류, 풍경이 다수 작품에 영향. 선지의 재진술과 완전 일치."
+    },
+    {
+      "label": "2",
+      "verdict": "일치",
+      "reason": "지문: 'Seeger returned to the States and later graduated from Harvard University, where he was inspired by the Romantic poets.' — 귀국 후 하버드 졸업, 낭만주의 시인들에게 영감. 일치."
+    },
+    {
+      "label": "3",
+      "verdict": "불일치 (정답)",
+      "reason": "선지는 그 시가 '1차대전 발발 시 프랑스군 자원입대 이전에(before he volunteered)' 쓰였다고 주장하나, 지문은 1914년 자원입대를 서술한 뒤 'During the war, he wrote a poem'이라고 명시 — 시는 입대 후 전쟁 중에 쓰였다. 시간 순서가 정면으로 뒤집힌 명백한 불일치. 관계절('that made Seeger instantly famous when published')은 시 자체를 수식할 뿐이며, 주절 명제 'was written before he volunteered'를 정문으로 만드는 대안 독해는 존재하지 않는다."
+    },
+    {
+      "label": "4",
+      "verdict": "일치",
+      "reason": "지문: 'Seeger left for Paris, France to live out his romanticized notion of bohemian life and made friendships with many artists.' — 선지가 거의 그대로 재진술. 일치."
+    },
+    {
+      "label": "5",
+      "verdict": "일치",
+      "reason": "지문: 'Seeger died during the Battle of the Somme in 1916. Following his death, the French Military awarded him the Croix de Guerre, the highest French military honor.' — 사후 수훈 서술과 일치. 매력적 오답 유혹: 실제 현실에서는 Croix de Guerre가 프랑스 최고 무공훈장이 아니어서(레지옹 도뇌르가 상위) 배경지식 있는 수험생이 끌릴 수 있으나, 발문 기준은 '글의 내용과의 일치'이므로 지문을 충실히 옮긴 이 선지는 일치로 판정해야 한다."
+    }
+  ],
+  "note": "최상위권 실전 풀이 렌즈: 인물 일대기 세부일치 유형. 정답 ③은 시 집필 시점(입대 후 전쟁 중)을 입대 전으로 뒤집은 전형적 시간순서 왜곡으로, 논쟁 여지 없이 유일한 불일치. 유일한 유혹 지점은 ⑤ — 'the highest French military honor'라는 현실 오류성 서술(실제 최고 훈장은 레지옹 도뇌르)이 배경지식 보유자를 흔들지만 지문 자체가 그렇게 서술하므로 일치. 다만 출제 품질 관점에서 ⑤의 지문 원문 자체가 사실 오류를 포함한다는 점(그리고 Croix de Guerre 수여 주체·시점 등 실제 전기와의 정합성)은 팩트체크 레인에서 별도 확인할 가치가 있음. 문항 성립성 자체는 견고."
+}

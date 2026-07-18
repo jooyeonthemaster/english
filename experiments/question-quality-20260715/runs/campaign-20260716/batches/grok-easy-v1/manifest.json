@@ -1,0 +1,96 @@
+{
+  "batchId": "grok-easy-v1",
+  "phase": "grok2",
+  "note": "E2: 쉬운 난이도(INT/BASIC) 표준지문 × grok — flash INT 기준선(C배치 동일프레임)과 짝비교",
+  "atKst": "2026-07-17T20:05:47.147+09:00",
+  "gitSha": "8d365701e339d7ad64bb1f808c76ec768e9855ee",
+  "gitDirty": true,
+  "worstCaseReserved": 32,
+  "spec": {
+    "batchId": "grok-easy-v1",
+    "phase": "grok2",
+    "note": "E2: 쉬운 난이도(INT/BASIC) 표준지문 × grok — flash INT 기준선(C배치 동일프레임)과 짝비교",
+    "concurrency": 4,
+    "providerRouting": "none",
+    "env": {
+      "PREMIUM_QGEN_MODEL_ID": "x-ai/grok-4.5",
+      "GRAMMAR_PREMIUM_MODEL_ID": "x-ai/grok-4.5",
+      "EXPLANATION_VERIFY_MODEL_ID": "google/gemini-3.1-pro-preview",
+      "OPENROUTER_REASONING_EFFORT": "low"
+    },
+    "assignments": [
+      {
+        "itemId": "ez-g-011",
+        "frameId": "grammar-frame-v2-011",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "INTERMEDIATE",
+        "plan": "PREMIUM",
+        "armId": "EZ-G-INT",
+        "funnel": true
+      },
+      {
+        "itemId": "ez-g-020",
+        "frameId": "grammar-frame-v2-020",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "INTERMEDIATE",
+        "plan": "PREMIUM",
+        "armId": "EZ-G-INT",
+        "funnel": true
+      },
+      {
+        "itemId": "ez-g-028",
+        "frameId": "grammar-frame-v2-028",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "BASIC",
+        "plan": "PREMIUM",
+        "armId": "EZ-G-BAS",
+        "funnel": true
+      },
+      {
+        "itemId": "ez-g-032",
+        "frameId": "grammar-frame-v2-032",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "BASIC",
+        "plan": "PREMIUM",
+        "armId": "EZ-G-BAS",
+        "funnel": true
+      },
+      {
+        "itemId": "ez-b-037",
+        "frameId": "blank-supply-v2-037",
+        "subType": "BLANK_INFERENCE",
+        "difficulty": "INTERMEDIATE",
+        "plan": "PREMIUM",
+        "armId": "EZ-B-INT",
+        "funnel": true
+      },
+      {
+        "itemId": "ez-b-042",
+        "frameId": "blank-supply-v2-042",
+        "subType": "BLANK_INFERENCE",
+        "difficulty": "INTERMEDIATE",
+        "plan": "PREMIUM",
+        "armId": "EZ-B-INT",
+        "funnel": true
+      },
+      {
+        "itemId": "ez-b-046",
+        "frameId": "blank-supply-v2-046",
+        "subType": "BLANK_INFERENCE",
+        "difficulty": "BASIC",
+        "plan": "PREMIUM",
+        "armId": "EZ-B-BAS",
+        "funnel": true
+      },
+      {
+        "itemId": "ez-b-062",
+        "frameId": "blank-supply-v2-062",
+        "subType": "BLANK_INFERENCE",
+        "difficulty": "BASIC",
+        "plan": "PREMIUM",
+        "armId": "EZ-B-BAS",
+        "funnel": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "J003",
+  "answer": "⑤",
+  "multipleDefensible": false,
+  "defensibleLabels": ["⑤"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'Taxing the monitoring costs themselves' is semantically incoherent — a cost is not a tax base in this passage. The passage's tax base is measured emissions, and monitoring cost is the obstacle, not something to be taxed. No line of the passage supports taxing costs to 'accelerate innovation'."
+    },
+    {
+      "label": "②",
+      "verdict": "reject (attractive distractor)",
+      "reason": "Recycles passage vocabulary ('continuous measurement', 'residual discharges') and exploits the intuitive move 'measurement is costly, so replace it'. But the 'Nevertheless' pivot states monitoring technology is improving rapidly, so the future inference must be MORE measurement-based taxation, not substituting it away. A flat-rate tax also destroys the passage's stated 'great attraction' — strict proportionality between tax paid and emissions — so it contradicts the argument twice over. I felt the pull of this option on first pass; the pivot direction kills it."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "Subsidizing (funding) firms to mitigate waste is the opposite policy instrument from taxation and appears nowhere in the passage. 'Before any tax liability arises' has no textual anchor; the passage is about making emission taxes feasible, not pre-empting them."
+    },
+    {
+      "label": "④",
+      "verdict": "reject (secondary distractor)",
+      "reason": "Self-verification sounds like a plausible application of improved monitoring tech, which gives it surface pull. But 'to bypass centralized tax systems' inverts the passage's stance: the entire text advocates direct emissions taxation and treats measurement cost as the barrier to it. The future development should enable the tax, not provide an escape from it."
+    },
+    {
+      "label": "⑤",
+      "verdict": "accept",
+      "reason": "Completes the argument exactly: measurement cost was 'a major disincentive to direct taxation of emissions' for 'many pollution problems'; rapidly improving monitoring tech lowers that barrier; therefore direct environmental levies can be extended to a broader scope (the previously excluded cases). Grammatical seam is clean: 'think of + expanding' (gerund). Uniquely consistent with both the concessive structure and the passage's pro-direct-taxation stance."
+    }
+  ],
+  "note": "Clean single-answer item. Distractor ② is genuinely attractive (recycled lexis + intuitive 'replace costly measurement' move) but is defeated by the direction of the 'Nevertheless' pivot and by the proportionality logic. ④ is a secondary trap defeated by 'bypass'. No alternative reading makes any option other than ⑤ defensible."
+}

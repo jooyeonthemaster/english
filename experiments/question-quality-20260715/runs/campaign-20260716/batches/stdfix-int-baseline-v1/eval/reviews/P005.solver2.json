@@ -1,0 +1,35 @@
+{
+  "pid": "P005",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법 결합: 'God as the sacred healer of their physical limits' 자체는 정문이나, 'their'의 지시 대상이 seam 상 elites여야 하는데 지문 어디에도 신이 신체적 한계를 '치유'한다는 술어가 도입되지 않는다. 논리 판정: 빈칸 문장의 when-절은 '엘리트는 돈·사물·사람을 움직이면서 자신은 전혀 움직일 필요가 없다'로, 신 이미지의 정의부(빈칸)는 이 대조(타자를 움직임 ∧ 자신은 부동)를 형식적으로 재기술해야 한다. 'healer of physical limits'는 치유 술어 H(x)를 도입하지만 지문에는 H를 지지하는 전제가 0개. 성립 불가."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "문법 결합: 'Aristotle's image of God as the source of motion that remains motionless' — 관계절 'that remains motionless'의 선행사는 단수 명사 'the source'이며 단수 동사 remains와 수일치 완전. as-보어 자리의 명사구로 어법상 무결. 논리 판정: 빈칸은 P(신) ≡ [타자에게 운동을 야기 ∧ 자신은 부동]을 요구한다. when-절이 정확히 이 술어쌍을 엘리트에 적용한다: 'move money, things and people'(운동의 원천) ∧ 'they themselves do not need to move at all'(부동). 이는 아리스토텔레스의 '부동의 원동자(unmoved mover)' 개념과 문자 그대로 일치하며, 지문 전체의 대립축(움직이게 하는 자 vs 움직여지는 자)과도 정합. 유일하게 두 조건을 모두 충족하는 선지."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "문법 결합: 정문. 논리 판정: 'tireless traveler'는 신 자신이 이동함을 함의(Move(God)=true)하나, when-절은 'they themselves do not need to move at all'로 부동성을 명시한다. Move=true ∧ Move=false의 직접 모순. 형식적으로 반박 완료 — 빈칸 문장 내부에서 즉시 붕괴하는 반의어 미끼."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "문법 결합: 정문. 논리 판정: 'virtual controller of technological acceleration'은 지문 앞부분의 어휘(virtual space, acceleration, technical mobilities)를 재활용한 표면 어휘 미끼. 그러나 빈칸의 정의부가 요구하는 것은 [운동 야기 ∧ 자기 부동]이지 '기술적 가속의 통제'가 아니다. 아리스토텔레스의 신 이미지라는 역사적 참조와 'virtual/technological'은 범주 불일치이며, when-절의 'move money, things and people'은 기술 가속 통제로 환원되지 않는다. 핵심 술어 '자기 부동'이 선지에 부재 — 필요조건 미충족."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "문법 결합: 정문. 논리 판정: 'guardian ensuring everyone's equal mobility'는 지문 후반부와 정면 모순 — 'Others... are victims of mobility-structured social exclusion... without either the right to move or the right to stay'는 이동성의 불평등을 명시한다. 엘리트 권력에 비유된 신이 '만인의 평등한 이동성을 보장'한다는 명제는 지문의 결론부와 ¬P 관계. 또한 '자기 부동' 술어도 부재. 이중으로 반박됨."
+    }
+  ],
+  "note": "빈칸 문장의 when-절이 정의부를 자체 완결적으로 제공하는 구조: 신 = [타자를 움직이되 자신은 움직이지 않는 존재]. ②는 이 두 술어를 'source of motion'(운동 야기) + 'remains motionless'(자기 부동)로 정확히 형식 대응시키며, 아리스토텔레스의 '부동의 원동자' 개념과도 일치한다. ③은 부동성 모순, ⑤는 후반부 불평등 서술 모순, ①·④는 지문에 전제가 없는 술어 도입. 복수 정답 여지 없음. 참고: 이 지문은 실제 수능 기출(2022학년도 수능 34번)과 동일 소재로 보이며, 기출에서도 동일 취지의 선지가 정답이었다 — 블라인드 판정과 독립적으로 일치."
+}

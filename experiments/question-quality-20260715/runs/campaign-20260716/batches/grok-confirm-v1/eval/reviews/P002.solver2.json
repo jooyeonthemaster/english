@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "Seam is grammatical: 'to suspend ... and [to] inspect' is clean infinitive parallelism, and 'it' in the stem's 'anything like it' has a proper antecedent ('the problem' in the option / 'a new problem' upstream). Logically it is the only option that paraphrases BOTH developed motifs of the passage: 'suspend prior filters' maps onto 'experience as a filter' (whose erroneous screening causes masters' mistakes), and 'inspect every aspect' maps onto beginners who 'try to absorb every detail.' Fully entailed by the elaboration of beginner's mind."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "Grammatically well-formed in the blank, but logically overreaching: the passage criticizes the perceptual FILTER of experience, not the possession or use of practiced techniques as such. Experts legitimately use experience except when the filter errs ('when that filter mistakenly screens out something essential'). 'Discard all practiced techniques' is an unsupported absolute claim; the text never prescribes abandoning skill, only looking freshly."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "Grammatical, and superficially echoes sentence 1 (familiar tools fail on novel problems), so it is the strongest distractor. But it is a purely negative prescription that omits the passage's positive development — the beginner's-mind behavior of absorbing every detail — which the 'as if you have never seen anything like it before' clause and the following elaboration exist to define. 'Refuse to rely' is also categorically stronger than the text licenses (the familiar-tools approach 'can work well' for similar problems; the fault lies only in the filter's error). Not defensible as the best completion."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "Grammatical but logically incoherent with the passage: beginners are described as UNABLE to distinguish essential from irrelevant (hence they absorb everything); nothing prescribes deliberately mixing essential traits with irrelevant ones. 'Mix' misrepresents an epistemic incapacity as an intentional strategy."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Grammatical but the polar opposite of the passage's thesis: relying on seasoned filters to retain only 'valid' details is exactly the behavior identified as the failure mode ('even seasoned masters can make mistakes' when the filter screens out something essential). Also contradicts the stem's own 'as if you have never seen anything like it before.'"
+    }
+  ],
+  "note": "Clean item under a formal grammar/logic lens. All five options are grammatically compatible with the seam ('it is best to + VP ... as if you have never seen anything like it before'), so discrimination is purely logical. Option 1 uniquely satisfies both textual anchors (filter suspension + total-detail inspection). Distractors 2 and 3 recycle surface wording of the opening sentence but are absolutist negatives unsupported by the elaboration; 4 distorts an incapacity into a strategy; 5 is antithetical. No alternative reading (ellipsis, scope ambiguity of 'all', antecedent ambiguity of 'it') rescues any distractor. Single defensible answer: 1."
+}

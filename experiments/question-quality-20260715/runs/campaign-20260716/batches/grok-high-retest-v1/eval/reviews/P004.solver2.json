@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "(A) flair: 지문 명제 'Personal flair is without doubt an absolute necessity in ... relatively small objects, with a low degree of technological complexity'와 정확히 일치. 요약문 (A)절 'individual (A) is vital in small, simple products'의 술어를 텍스트 그대로 충족. (B) organizational processes: 지문 결론 'management organization and processes can be equally as relevant as designers' creativity'의 직접 대응이며, 요약문 'making (B) equally decisive in group practice'의 'equally'까지 지문의 'equally as relevant'와 호응. 문법 결합(seam)도 양쪽 모두 정문."
+    },
+    {
+      "label": "2",
+      "verdict": "incorrect",
+      "reason": "(A) flair는 성립. 그러나 (B) technical complexity 실패: 지문에서 technological complexity는 소형 제품의 '낮은' 속성으로 단 한 번 언급될 뿐, 그룹 실무에서 창의성과 동등하게 결정적이라는 명제의 주어가 될 텍스트 근거가 전무. 'technical complexity equally decisive in group practice'는 지문이 지목한 management organization and processes를 대체하지 못하며 논리적으로 지문과 모순."
+    },
+    {
+      "label": "3",
+      "verdict": "incorrect",
+      "reason": "(B) organizational processes는 성립. 그러나 (A) authorship 실패: 지문이 소형·저복잡도 제품에서 'absolute necessity'라고 단언한 것은 personal flair(개인의 재능·감각)이며, authorship(저작 주체성)이 소형 제품에서 vital하다는 명제는 지문 어디에도 없음. authorship은 '단독 작업 대 그룹 작업' 구분 논의에 인접한 개념이지만 (A)절이 지배받는 명제(소형 제품에서의 필수 요소)를 지지하지 못함. 부분 정답 미끼."
+    },
+    {
+      "label": "4",
+      "verdict": "incorrect",
+      "reason": "(A) authorship: 3번과 동일한 이유로 실패 — 지문이 필수라고 한 것은 flair. (B) technical complexity: 2번과 동일한 이유로 실패 — 그룹 실무의 동등 결정 요인은 management organization and processes. 양 빈칸 모두 텍스트 근거 없음."
+    },
+    {
+      "label": "5",
+      "verdict": "incorrect",
+      "reason": "(A) training: 'Most designers are educated to work as individuals'의 왜곡 — 교육 방식에 대한 서술이지 소형 제품 성공의 필수 요건이 아님. 'individual training is vital in small, simple products'는 지문이 주장한 바 없음. (B) product categories: 범주를 가리키는 명사로서 'equally decisive in group practice'의 주어가 되면 의미가 성립하지 않음(무엇과 동등하게 결정적인지의 논리 관계 자체가 형성 불가). 양 빈칸 모두 실패."
+    }
+  ],
+  "note": "요약 빈칸 유형. (A)는 지문 명제 1('personal flair ... absolute necessity in small objects')의 술어를, (B)는 결론 명제('management organization and processes ... equally as relevant')를 각각 받아야 하며, 두 조건을 동시에 만족하는 선지는 1번뿐. 3번은 (B)만 맞는 부분 정답 미끼, 2번은 (A)만 맞는 부분 정답 미끼로 미끼 설계는 균형적. 대안 해석(authorship을 lone creators와 호응시켜 (A)를 정문화하는 경로)을 검토했으나 (A)절의 지배 명제가 명제 1인 이상 flair만 텍스트로 증명 가능 — 복수 정답 불성립. 정답 어휘가 지문에 축자적으로 노출되어(flair, organization and processes) 난도는 낮은 편이나 문항 성립성에는 결함 없음."
+}

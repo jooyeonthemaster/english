@@ -1,0 +1,85 @@
+{
+  "pid": "P002",
+  "type": "VOCAB_CHOICE",
+  "requestedDifficulty": "INTERMEDIATE",
+  "blindAnswer": "4",
+  "confidence": "high",
+  "validity": {
+    "V1": false,
+    "V2": true,
+    "V3": false,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1_ORPHAN_PARTICLE_SEAM",
+      "severity": "critical",
+      "evidence": "원문의 구동사 'leaving out the cat'에서 head만 'including'으로 치환하고 particle 'out'이 렌더에 잔류하여 'I wrote the report, __(d) including__ out the cat'이라는 파손된 접합(seam)이 생겼다. markedWords 는 word='including'만 선언하지만 실제 렌더 결과물은 'including out'이라는 비존재 연쇄로, 의도된 단어 치환을 넘어선 문장 접합 파손이다."
+    },
+    {
+      "code": "V3_UNGRAMMATICAL_RENDER_TYPE_MISMATCH",
+      "severity": "critical",
+      "evidence": "VOCAB_CHOICE 의 유형 의도는 '문법적으로는 성립하되 문맥상 부적절한 낱말'인데, 정답 밑줄 (d)가 놓인 문장 'I wrote the report, including out the cat'은 영어에 존재하지 않는 결합으로 통사적으로 비문이다. 학생이 문맥(정직하게 고양이를 뺐다가 낙종으로 질책받는 반전)을 전혀 읽지 않아도 문법 파손만으로 정답이 즉시 노출된다. RUBRIC V3 '오답의 비문 여부가 유형 의도와 정확히 일치한다' 위반."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 1,
+    "C4": 1,
+    "C5": 1,
+    "C6": 3
+  },
+  "craftRationale": {
+    "C1": "묻는 지점 자체는 정전급이다. 'leaving out'(정직 보도) vs 'including'(관행 동조)은 이 일화의 핵심 반전 — 유일하게 정직했던 순간이 오히려 질책으로 이어져 가짜 관행이 굳어지는 논리 축 — 을 정확히 겨냥한다. 설계 의도는 3점, 다만 실행이 이를 무산시켰다.",
+    "C2": "(c) beaten 은 저널리즘 관용 의미(특종 경쟁에서 뒤처지다)를 몰라 축자 의미로 읽는 오독을 겨냥한 실질 디코이이고 (e) scolded 도 인접 논리를 시험하나, (a) curious 는 필러에 가깝고 디코이별 오개념 설계 선언이 없다. 부분적 의도만 인정.",
+    "C3": "'including out'이라는 비문 연쇄 때문에 문맥 판단 없이 표면 스캔만으로 정답이 소거된다. (c)의 진짜 유혹력이 있음에도 정답 자체가 즉시 노출되어 변별 경쟁이 성립하지 않는다.",
+    "C4": "잔류 particle 'out'이 결정적 메타 누출이다. 문맥 근거(뒤이은 'scolded for being beaten')는 충분히 설계되어 있으나 문법 단서가 이를 선점해 근거 경제성이 붕괴했다.",
+    "C5": "요청 난이도 INTERMEDIATE 대비, 렌더 파손으로 실효 난이도가 최하급으로 추락했다. 문맥 반전 읽기라는 요구 사고 단계가 실제로는 발동되지 않는다.",
+    "C6": "해설은 사실관계가 정확하고 일화의 인과(정직 보도 → 낙종 → 질책 → 관행 고착)를 올바르게 재구성하며 오답 4개 해설도 각 선지 실제 내용과 대응한다. 다만 다소 장황하고, 렌더의 'including out' 파손을 전혀 인지하지 못한 채 순수 문맥 문항인 것처럼 설명한다."
+  },
+  "optionAudit": [
+    {
+      "label": "① (a) curious",
+      "intent": "패턴 반복에 대한 화자(옴부즈맨) 태도 어휘의 정합 확인 — 저부하 확인용 선지",
+      "temptingBecause": "'curious coincidence'라는 결합을 어색하게 느끼거나 curious 를 '호기심 많은'(사람 서술) 의미로만 아는 학생이 의심할 수 있다",
+      "decisiveFlaw": "정답 아님 — 난파선마다 고양이가 생존했다는 기이한 반복 패턴에 대한 질문이므로 '기묘한'의 curious 는 문맥상 정확하다"
+    },
+    {
+      "label": "② (b) failed",
+      "intent": "첫 사건에서 타 기자들의 누락(낙종)이라는 사실 관계 어휘 판단",
+      "temptingBecause": "타 기자들이 고양이를 '안 쓴 것'을 의도적 선택으로 읽으면 failed(못 했다)가 과한 표현처럼 보일 수 있다",
+      "decisiveFlaw": "정답 아님 — 바로 뒤에서 그들이 'called down by their editors for being beaten'(낙종으로 질책)당했으므로 언급하지 '못한' 것이며 failed 가 정확하다"
+    },
+    {
+      "label": "③ (c) beaten",
+      "intent": "저널리즘 관용 의미(be beaten to a story = 낙종하다) 이해 — 본 문항 최강 디코이",
+      "temptingBecause": "'두들겨 맞은'이라는 축자 의미로 읽으면 편집장에게 '맞았다'는 이상한 문장이 되어 부적절해 보인다; 같은 단어가 (e) 근처에 재등장해 의심을 증폭시킨다",
+      "decisiveFlaw": "정답 아님 — 특종 경쟁에서 타지에 뒤처졌다는 관용 의미로 두 등장 지점 모두 문맥 정합하며, 원문 그대로다"
+    },
+    {
+      "label": "④ (d) including",
+      "intent": "선언된 정답 — 일화의 핵심 반전(정직하게 뺐다가 낙종 질책)을 반의어 치환으로 시험",
+      "temptingBecause": "해당 없음(정답). 문맥상으로도 including 이면 낙종당할 이유가 없어 뒤 절 'scolded for being beaten'과 모순된다",
+      "decisiveFlaw": "문항 결함으로서의 파손 — 'including out the cat'은 비문(고아 particle 'out')이라 문맥 판단 이전에 문법만으로 정답이 노출된다. 올바른 치환이라면 'leaving out'→'including' 시 out 도 제거했어야 한다"
+    },
+    {
+      "label": "⑤ (e) scolded",
+      "intent": "질책 어휘의 인과 정합(정직 보도 → 낙종 → 질책) 확인",
+      "temptingBecause": "앞 문장의 'called down'과 의미가 중복되어 보이거나, 정직하게 썼는데 혼났다는 반전이 어색하게 느껴질 수 있다",
+      "decisiveFlaw": "정답 아님 — 혼자 고양이를 뺀 결과 낙종했으므로 심하게 질책받았다는 흐름에 scolded 가 정확히 부합하며, 원문 그대로다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "EXPLANATION_IGNORES_RENDER_BREAKAGE",
+      "severity": "minor",
+      "evidence": "해설은 (d)를 순수 문맥 어휘 오류('including'→'leaving (out)')로만 설명하고, 실제 렌더가 'including out the cat'이라는 비문 상태임을 전혀 반영하지 않는다. 해설 자체의 사실관계·인과 재구성·용어는 정확하다."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerNote": "요청 난이도가 INTERMEDIATE 이므로 KILLER 추가 조건(§C/§D) 판정 대상이 아니다 — false.",
+  "grade": "F",
+  "notes": "V2(정답 유일성)·V4(해설 사실성)·V5(필드 동기화)는 모두 통과했고 소재 선택과 출제 지점(C1=3)은 우수하나, 구동사 head 만 치환하고 particle 을 잔류시킨 렌더 파손이 V1·V3 을 동시에 무너뜨렸다. 'including out the cat'은 비문이라 정답이 문법 단서로 즉시 노출되어 INTERMEDIATE 문맥 어휘 문항으로 기능하지 않는다. 수리 방향: 렌더를 'I wrote the report, __(d) including__ the cat'으로 고치면(out 제거) 최소대립 문맥 반전 문항으로 복원되며, 그 경우 (c) beaten 디코이와 결합해 B~A 급 재평가 여지가 있다. 치명 결함은 공예 점수로 상쇄되지 않으므로 현 상태 등급은 F, 출하 금지."
+}

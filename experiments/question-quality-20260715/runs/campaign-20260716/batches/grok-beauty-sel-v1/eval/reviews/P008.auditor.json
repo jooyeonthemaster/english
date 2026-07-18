@@ -1,0 +1,101 @@
+{
+  "pid": "P008",
+  "blindAnswer": "1",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-minor-stem-wording",
+      "severity": "minor",
+      "evidence": "발문 '밑줄 친 부분이 함축 의미하는 바로 가장 적절한 것은?'의 '함축 의미하는 바'는 비표준 결합이다. 수능 정형 발문은 '밑줄 친 부분이 의미하는 바로 가장 적절한 것은?'(또는 '함축하는 의미로'). 의미 전달은 무손실이므로 게이트 실패가 아닌 경미 결함으로 판정."
+    },
+    {
+      "code": "V4-minor-imprecise-label",
+      "severity": "minor",
+      "evidence": "오답 해설 3의 '원인·결과를 뒤집는다'는 부정확한 명명이다. 실제 결함은 인과 반전이 아니라 수단(목표 달성 계산: 경제학이 할 수 있는 일)과 목적 설정(경제학이 할 수 없는 일)의 역할 혼동이다. 지문 사실관계 자체('경제학이 돕는 역할')는 정확히 인용됨."
+    },
+    {
+      "code": "V4-minor-anchor-attribution",
+      "severity": "minor",
+      "evidence": "해설의 '2·4는 서두 소재를'에서 4의 앵커 economics는 서두(S1)뿐 아니라 밑줄이 포함된 문장 6 자체에서도 나온다. 앵커 귀속이 절반만 맞는 경미한 부정확."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 4,
+    "C3": 4,
+    "C4": 2,
+    "C5": 2,
+    "C6": 3
+  },
+  "craftRationale": {
+    "C1": "밑줄 'in a vacuum'은 수단(경제학)과 목적 설정(윤리)을 가르는 논지 전환의 축이며, 함축 해석이 곧 글의 핵심 명제(도덕 목표의 선차성) 이해를 요구한다. 핵심 논리 지점.",
+    "C2": "네 오답이 각각 서로 다른 오독을 겨냥: 2=차원 치환(역사 자문), 3=수단/목적 역할 반전, 4=표면 어휘 직역(결핍 대상 오귀속), 5=vacuum의 축자 해석(고립)+장면 앵커. 필러 없음.",
+    "C3": "3은 밑줄 직전 절을 재사용, 4는 강한 어휘 중첩, 5는 vacuum의 축자 의미 유희로 국소 단서상 매력적이며 전체 구조(S5+S7 종합)에서 갈린다. 2는 상대적으로 약하나 앵커는 있음.",
+    "C4": "약한 누출: 정답 1만이 moral 계열 어휘를 담고 있고 S5의 'distributive justice'를 축자 인용한다. 지문 전반부가 morality 일색이므로 주제어 매칭만으로 1을 고를 수 있는 메타 지름길 존재. 도덕 테마를 건드리는 half-truth 디코이 부재.",
+    "C5": "요청 KILLER 대비 실효 난이도 미달. 다문장 종합(S5·S6·S7)을 설계했으나 C4의 주제어 지름길이 이를 우회시켜 실제 변별은 상(上) 수준에 그침.",
+    "C6": "짧고 정답 근거(문장 7 인용, distributive justice 연결)와 함정 앵커 분류가 선명하나, '원인·결과' 오명명과 '2·4 서두 소재' 부분 부정확 두 건이 있어 4는 아님."
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — 'in a vacuum'을 문맥 함축(도덕적 좌표 부재)으로 환원. S5(distributive justice)와 S7(moral goal, ethics)의 종합 재진술.",
+      "temptingBecause": "정답이므로 해당 없음. 단, moral/distributive justice 어휘가 선지 중 유일하게 등장해 주제 매칭으로도 선택 가능한 것이 결함.",
+      "decisiveFlaw": "(정답) 없음. 다만 S5의 'distributive justice' 축자 인용은 KILLER급 추상화 기준 미달."
+    },
+    {
+      "label": "2",
+      "intent": "차원 치환 — 결핍된 것을 도덕이 아닌 역사 자문으로 오귀속시키는 서두 앵커 함정.",
+      "temptingBecause": "S1의 'attentive to questions of economics and history'에서 history가 명시적으로 언급됨.",
+      "decisiveFlaw": "입안자들은 역사에 이미 attentive하다고 S1이 명시한다. 밑줄이 지적하는 결핍은 역사적 자문이 아니라 도덕 목표 설정이다. 또한 '역사가 자문'은 지문의 '역사에 관한 질문'을 인물 자문으로 왜곡."
+    },
+    {
+      "label": "3",
+      "intent": "수단/목적 역할 반전 — 경제학이 보유한 능력(목표 달성 계산)을 결핍으로 뒤집는 함정.",
+      "temptingBecause": "밑줄 직전 절 'determine whether or not a particular tax law will help achieve a particular goal'을 그대로 재사용해 국소 단서가 강함.",
+      "decisiveFlaw": "지문은 경제학이 그 계산을 '할 수 있다'(can go a long way)고 명시한다. in a vacuum이 부정하는 것은 목표 식별이지 달성 계산이 아니다. 대입 시 '계산 없이는 목표를 식별할 수 없다'는 순환·비논리 완성문이 됨."
+    },
+    {
+      "label": "4",
+      "intent": "표면 어휘 직역 — economics/history 어휘 중첩으로 결핍 대상을 오귀속시키는 함정.",
+      "temptingBecause": "economics·history가 S1과 밑줄 문장 자체에 등장해 어휘 중첩이 가장 강함. 'vacuum=아무 입력 없음'의 축자 독해와도 맞물림.",
+      "decisiveFlaw": "주어가 economics 자신이므로 '경제학의 입력 없이'는 자기모순이며, 지문이 문제 삼는 결핍은 경제·역사가 아니라 도덕 분석이다(입안자들은 경제·역사에는 이미 attentive)."
+    },
+    {
+      "label": "5",
+      "intent": "축자 해석 + 장면 앵커 — vacuum을 '고립'으로 직역해 입법 토론 장면(S2)에 연결하는 함정.",
+      "temptingBecause": "vacuum의 사전적 의미(진공=고립)와 S2의 legislative debate 장면이 결합되어 그럴듯함.",
+      "decisiveFlaw": "밑줄은 경제학의 목표 식별 능력을 한정하는 표현이지 과세와 토론의 분리 여부가 아니다. 지문의 비판은 오히려 도덕을 토론 밖으로 밀어낸 관행(S2)이므로 방향도 어긋남."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "오답 해설 3: means/ends 역할 혼동을 '원인·결과를 뒤집는다'로 명명 — 함정 유형 명명 부정확(사실관계 인용 자체는 정확).",
+      "recommendation": "'경제학이 할 수 있는 일(달성 계산)과 할 수 없는 일(목표 식별)을 맞바꾼 해석'으로 수정."
+    },
+    {
+      "severity": "minor",
+      "evidence": "해설 '2·4는 서두 소재를': 4의 economics 앵커는 밑줄 문장(S6) 자체에도 있으므로 서두 소재로만 귀속하는 것은 부분 부정확.",
+      "recommendation": "'2는 서두 소재를, 4는 표면 어휘를'로 분리 서술."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerAudit": {
+    "sameSyntacticSlot": true,
+    "meaningPreservingAbstraction": false,
+    "perDistractorAnchorOverlapFlaw": true,
+    "multiSentenceSynthesisRequired": true,
+    "noSingleCueSolve": false,
+    "distinctTrapTypes": true,
+    "evidence": "정답 1만이 moral 계열 어휘를 보유하고 S5의 'distributive justice'를 축자 인용한다. 지문 주제(도덕의 근본성)만 파악하면 밑줄의 국소 문맥 분석 없이 유일한 도덕 테마 선지를 단일 단서(고유 어휘·주제 매칭)로 고를 수 있어 §D의 '단일 단서로 찍을 수 없다'와 'KILLER급 추상화' 요건을 충족하지 못한다. 두 문장 종합 설계 자체는 존재하나 지름길이 이를 우회시킨다."
+  },
+  "grade": "B",
+  "notes": "V1~V5 전부 통과, 정답 유일성 견고(블라인드 풀이 일치, 각 오답 독립 기각 가능). 디코이 공학(특히 3·4)은 수준급이나, 정답 선지의 moral/distributive justice 어휘 독점 + 축자 인용이 주제 매칭 지름길을 열어 KILLER 요건 미충족(C4=2, C5=2). 소수정 처방: (1) 정답을 'distributive justice' 축자 인용 없이 재추상화(예: without an ethical compass for how burdens should be shared), (2) 도덕 테마를 절반만 건드리는 half-truth 디코이 1개 추가/교체(예: without questioning the fairness of legislative procedures — 절차 공정성으로 scope shift), (3) 발문을 정형 '의미하는 바로'로 교정, (4) 오답 해설 3의 함정 명명 수정. 이 수정이면 A/beautiful KILLER 재도전 가능."
+}

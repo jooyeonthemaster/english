@@ -1,0 +1,419 @@
+{
+ "J001": {
+  "jobId": "cmron5ffq001qju045sopw80h",
+  "questionId": "cmron6g1e0034ju04bl8e8bnx",
+  "plan": "STANDARD",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "costKrw": 124,
+  "calls": 3,
+  "passageTitle": "2025학년도 6월 모평 영어 40번 · 요약문",
+  "correctAnswer": "④",
+  "qualityWarnings": null,
+  "explanationRepaired": null,
+  "reviewRecommended": null
+ },
+ "J002": {
+  "jobId": "cmromg82h0009l5041l6za7he",
+  "questionId": "cmromh25q000pl5040faofjot",
+  "plan": "PREMIUM",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "costKrw": 100,
+  "calls": 4,
+  "passageTitle": "2026학년도 수능 영어 34번 · 빈칸추론 (변형)",
+  "correctAnswer": "(C)",
+  "qualityWarnings": [
+   {
+    "code": "grammar-shallow-participle-adjective-answer",
+    "message": "INTERMEDIATE/KILLER GRAMMAR_ERROR should not use a shallow participle adjective swap such as \"enabled\" -> \"enabling\" before a noun; require deeper structure.",
+    "severity": "warning"
+   },
+   {
+    "code": "grammar-killer-generic-answer-point",
+    "message": "KILLER GRAMMAR_ERROR answer is tagged with generic pointCode (a); use a precise structural frame such as agreement with modifier, participle clause, relative/nominal clause, voice, complement, dummy it, inversion, or nonfinite pattern.",
+    "severity": "warning"
+   }
+  ],
+  "explanationRepaired": null,
+  "reviewRecommended": true
+ },
+ "J003": {
+  "jobId": "cmron6y6p004nju04mzqfkz7f",
+  "questionId": "cmron7tye005nju04uyiappjm",
+  "plan": "STANDARD",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "costKrw": 96,
+  "calls": 3,
+  "passageTitle": "2025학년도 6월 모평 영어 38번 · 문장삽입",
+  "correctAnswer": "⑤",
+  "qualityWarnings": null,
+  "explanationRepaired": null,
+  "reviewRecommended": null
+ },
+ "J004": {
+  "jobId": "cmron3vwh000fju04vwm1b40m",
+  "questionId": "cmron49w2000nju042uackydl",
+  "plan": "STANDARD",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "costKrw": 68,
+  "calls": 2,
+  "passageTitle": "2025학년도 6월 모평 영어 41-42번 · 장문",
+  "correctAnswer": "②",
+  "qualityWarnings": [
+   {
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options.",
+    "severity": "warning"
+   },
+   {
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load.",
+    "severity": "warning"
+   },
+   {
+    "code": "blank-killer-polarity-shortcut",
+    "message": "PARAPHRASE blank should include at least 2 negative-polarity wrong options to block polarity scanning.",
+    "severity": "warning"
+   }
+  ],
+  "explanationRepaired": null,
+  "reviewRecommended": null
+ },
+ "J005": {
+  "jobId": "cmron5fco001mju04c324gmd4",
+  "questionId": "cmron6m6e003yju04e72m3qa9",
+  "plan": "PREMIUM",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "costKrw": 143,
+  "calls": 5,
+  "passageTitle": "2025학년도 6월 모평 영어 41-42번 · 장문",
+  "correctAnswer": "(D)",
+  "qualityWarnings": [
+   {
+    "code": "grammar-killer-generic-answer-point",
+    "message": "KILLER GRAMMAR_ERROR answer is tagged with generic pointCode (a); use a precise structural frame such as agreement with modifier, participle clause, relative/nominal clause, voice, complement, dummy it, inversion, or nonfinite pattern.",
+    "severity": "warning"
+   }
+  ],
+  "explanationRepaired": null,
+  "reviewRecommended": true
+ },
+ "J006": {
+  "jobId": "cmron69r2002jju04wgzq3d7m",
+  "questionId": "cmron6oph0049ju04rpo4u6vm",
+  "plan": "PREMIUM",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "costKrw": 59,
+  "calls": 2,
+  "passageTitle": "2025학년도 6월 모평 영어 40번 · 요약문",
+  "correctAnswer": "3",
+  "qualityWarnings": [
+   {
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load.",
+    "severity": "warning"
+   }
+  ],
+  "explanationRepaired": null,
+  "reviewRecommended": null
+ },
+ "J007": {
+  "jobId": "cmron4a2c000qju04mi3fetcj",
+  "questionId": "cmron69la002gju04utlm82v7",
+  "plan": "STANDARD",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "costKrw": 349,
+  "calls": 9,
+  "passageTitle": "2025학년도 6월 모평 영어 41-42번 · 장문",
+  "correctAnswer": "(A)",
+  "qualityWarnings": [
+   {
+    "code": "explanation-verify-warning",
+    "message": "해설 사실검증 실패(수리 후에도 잔존): 결함 잔존",
+    "severity": "warning"
+   }
+  ],
+  "explanationRepaired": null,
+  "reviewRecommended": null
+ },
+ "J008": {
+  "jobId": "cmron3ovc000bjs04xvpcqgju",
+  "questionId": "cmron5f82000pjs045dpqk9an",
+  "plan": "PREMIUM",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "costKrw": 140,
+  "calls": 5,
+  "passageTitle": "2025학년도 6월 모평 영어 43-45번 · 장문",
+  "correctAnswer": "(D)",
+  "qualityWarnings": [
+   {
+    "code": "grammar-killer-generic-answer-point",
+    "message": "KILLER GRAMMAR_ERROR answer is tagged with generic pointCode (a); use a precise structural frame such as agreement with modifier, participle clause, relative/nominal clause, voice, complement, dummy it, inversion, or nonfinite pattern.",
+    "severity": "warning"
+   }
+  ],
+  "explanationRepaired": null,
+  "reviewRecommended": true
+ },
+ "J009": {
+  "jobId": "cmron3jkk0007js04606z50ct",
+  "questionId": "cmron60hx001cjs04amhuhsnk",
+  "plan": "STANDARD",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "costKrw": 395,
+  "calls": 10,
+  "passageTitle": "2025학년도 6월 모평 영어 43-45번 · 장문",
+  "correctAnswer": "(D)",
+  "qualityWarnings": [
+   {
+    "code": "explanation-verify-warning",
+    "message": "해설 사실검증 실패(수리 후에도 잔존): TERMINOLOGY: 복수 소유격 대명사 'their'는 맥락상 가르시아와 그의 밴드 멤버들(Garcia's band)의 소속 대",
+    "severity": "warning"
+   }
+  ],
+  "explanationRepaired": null,
+  "reviewRecommended": null
+ },
+ "J010": {
+  "jobId": "cmron60po001uju04id3d8whm",
+  "questionId": "cmron6lot003hju04b7adsbs8",
+  "plan": "STANDARD",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "costKrw": 105,
+  "calls": 3,
+  "passageTitle": "2025학년도 6월 모평 영어 40번 · 요약문",
+  "correctAnswer": "(B)",
+  "qualityWarnings": null,
+  "explanationRepaired": null,
+  "reviewRecommended": null
+ },
+ "J011": {
+  "jobId": "cmron71ar004yju04xip2jgc0",
+  "questionId": "cmron9uar0088ju04i48odbqm",
+  "plan": "STANDARD",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "costKrw": 439,
+  "calls": 10,
+  "passageTitle": "2025학년도 6월 모평 영어 38번 · 문장삽입",
+  "correctAnswer": "(D)",
+  "qualityWarnings": [
+   {
+    "code": "explanation-verify-warning",
+    "message": "해설 사실검증 실패(수리 후에도 잔존): TERMINOLOGY: 뒤에 완전한 격을 갖춘 부사절이 이어지므로 관계대명사 which를 관계부사 where로 전환해야 함",
+    "severity": "warning"
+   }
+  ],
+  "explanationRepaired": null,
+  "reviewRecommended": null
+ },
+ "J012": {
+  "jobId": "cmron3jkz0007ju04alsbzzqh",
+  "questionId": "cmron5f6d001jju04lsbk6oyi",
+  "plan": "STANDARD",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "costKrw": 232,
+  "calls": 7,
+  "passageTitle": "2025학년도 6월 모평 영어 43-45번 · 장문",
+  "correctAnswer": "⑤",
+  "qualityWarnings": null,
+  "explanationRepaired": true,
+  "reviewRecommended": null
+ },
+ "J013": {
+  "jobId": "cmron795e005dju04ld3z3oqp",
+  "questionId": "cmron82d4005yju045k2n0j0v",
+  "plan": "PREMIUM",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "costKrw": 59,
+  "calls": 2,
+  "passageTitle": "2025학년도 6월 모평 영어 38번 · 문장삽입",
+  "correctAnswer": "5",
+  "qualityWarnings": null,
+  "explanationRepaired": null,
+  "reviewRecommended": null
+ },
+ "J014": {
+  "jobId": "cmron6ovd004cju044vk73nm7",
+  "questionId": "cmron78z8005aju04udpvo4vy",
+  "plan": "PREMIUM",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "costKrw": 62,
+  "calls": 4,
+  "passageTitle": "2025학년도 6월 모평 영어 39번 · 문장삽입",
+  "correctAnswer": "(C)",
+  "qualityWarnings": null,
+  "explanationRepaired": null,
+  "reviewRecommended": null
+ },
+ "J015": {
+  "jobId": "cmron6f4v002uju04v51mhuml",
+  "questionId": "cmron93ky0074ju04t6uwtv1c",
+  "plan": "PREMIUM",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "costKrw": 241,
+  "calls": 9,
+  "passageTitle": "2025학년도 6월 모평 영어 40번 · 요약문",
+  "correctAnswer": "(D)",
+  "qualityWarnings": [
+   {
+    "code": "grammar-killer-generic-answer-point",
+    "message": "KILLER GRAMMAR_ERROR answer is tagged with generic pointCode (a); use a precise structural frame such as agreement with modifier, participle clause, relative/nominal clause, voice, complement, dummy it, inversion, or nonfinite pattern.",
+    "severity": "warning"
+   }
+  ],
+  "explanationRepaired": true,
+  "reviewRecommended": true
+ },
+ "J016": {
+  "jobId": "cmron6lx3003kju04aypiri40",
+  "questionId": "cmron91ur006jju047ovnyb2r",
+  "plan": "STANDARD",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "costKrw": 368,
+  "calls": 9,
+  "passageTitle": "2025학년도 6월 모평 영어 39번 · 문장삽입",
+  "correctAnswer": "(D)",
+  "qualityWarnings": null,
+  "explanationRepaired": true,
+  "reviewRecommended": null
+ },
+ "J017": {
+  "jobId": "cmromgyi2000dl504ob1dj93p",
+  "questionId": "cmromhkw70014l504e8iah7f3",
+  "plan": "STANDARD",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "costKrw": 50,
+  "calls": 1,
+  "passageTitle": "2026학년도 고3 5월 영어 29번 · 어법",
+  "correctAnswer": "②",
+  "qualityWarnings": [
+   {
+    "code": "blank-weak-distractors",
+    "message": "BLANK_INFERENCE should have more wrong options with passage-keyword, semantic, or polarity overlap.",
+    "severity": "warning"
+   }
+  ],
+  "explanationRepaired": null,
+  "reviewRecommended": null
+ },
+ "J018": {
+  "jobId": "cmron3oud000bju04neohtd7z",
+  "questionId": "cmron56j4000yju049vslm5ac",
+  "plan": "PREMIUM",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "costKrw": 120,
+  "calls": 2,
+  "passageTitle": "2025학년도 6월 모평 영어 43-45번 · 장문",
+  "correctAnswer": "1",
+  "qualityWarnings": [
+   {
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options.",
+    "severity": "warning"
+   },
+   {
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load.",
+    "severity": "warning"
+   }
+  ],
+  "explanationRepaired": null,
+  "reviewRecommended": null
+ },
+ "J019": {
+  "jobId": "cmron56pk0011ju04rrrwslx5",
+  "questionId": "cmron6eyn002rju048sflrfov",
+  "plan": "PREMIUM",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "costKrw": 62,
+  "calls": 2,
+  "passageTitle": "2025학년도 6월 모평 영어 41-42번 · 장문",
+  "correctAnswer": "5",
+  "qualityWarnings": null,
+  "explanationRepaired": null,
+  "reviewRecommended": null
+ },
+ "J020": {
+  "jobId": "cmron7u4h005qju049pg75h58",
+  "questionId": "cmron9j9l007lju0486t8hja8",
+  "plan": "PREMIUM",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "costKrw": 130,
+  "calls": 7,
+  "passageTitle": "2025학년도 6월 모평 영어 38번 · 문장삽입",
+  "correctAnswer": "(D)",
+  "qualityWarnings": [
+   {
+    "code": "grammar-killer-overdrilled-answer",
+    "message": "KILLER GRAMMAR_ERROR rejected: the answer is an over-drilled adjective↔adverb (-ly) swap (\"available\" ↔ \"availably\") — a BASIC/INTERMEDIATE point every student drills. Move the error to a deeper site already in the passage: a long-distance subject-verb agreement across a genuine intervening relative/appositive or of/with phrase, a nominal vs relative clause-gap, a participle voice error, or a parallel-structure break.",
+    "severity": "warning"
+   }
+  ],
+  "explanationRepaired": null,
+  "reviewRecommended": true
+ },
+ "J021": {
+  "jobId": "cmron6g9l0037ju04m3bjhq67",
+  "questionId": "cmron6xxy004kju04o2lsd8bz",
+  "plan": "STANDARD",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "costKrw": 69,
+  "calls": 2,
+  "passageTitle": "2025학년도 6월 모평 영어 39번 · 문장삽입",
+  "correctAnswer": "①",
+  "qualityWarnings": [
+   {
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options.",
+    "severity": "warning"
+   },
+   {
+    "code": "blank-weak-distractors",
+    "message": "BLANK_INFERENCE should have more wrong options with passage-keyword, semantic, or polarity overlap.",
+    "severity": "warning"
+   }
+  ],
+  "explanationRepaired": null,
+  "reviewRecommended": null
+ },
+ "J022": {
+  "jobId": "cmron6mcw0041ju048qhdrojb",
+  "questionId": "cmron7136004vju042yr8y18c",
+  "plan": "PREMIUM",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "costKrw": 59,
+  "calls": 2,
+  "passageTitle": "2025학년도 6월 모평 영어 39번 · 문장삽입",
+  "correctAnswer": "3",
+  "qualityWarnings": [
+   {
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load.",
+    "severity": "warning"
+   }
+  ],
+  "explanationRepaired": null,
+  "reviewRecommended": null
+ }
+}

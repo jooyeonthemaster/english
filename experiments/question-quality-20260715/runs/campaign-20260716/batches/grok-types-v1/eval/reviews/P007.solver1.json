@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "flow-consistent",
+      "reason": "Continues the truncated lead-in (', background)') about style/background: representational works' subject matter resembles everyday life and background style facilitates mental-model construction. Sets up the first pole of the contrast; the following bridge sentence (pleasure/uncertainty carrying the viewer) follows naturally from this easy-processing mode."
+    },
+    {
+      "label": "②",
+      "verdict": "flow-consistent",
+      "reason": "Introduces the contrasting pole: expressionist works use novel stylistic devices working inharmoniously against subject matter, creating a disquieting atmosphere. This 'disquieting atmosphere' and 'departure from convention' are exactly what ④ builds on."
+    },
+    {
+      "label": "③",
+      "verdict": "flow-breaking (answer)",
+      "reason": "Surface cohesion only: it echoes ②'s 'this disquieting atmosphere' but reverses the logic — claiming the atmosphere lets the viewer RELY ON conventional forms so the work remains EASILY interpreted WITHOUT an aesthetic attitude. This contradicts ② (novel devices = inharmonious, anti-conventional) and collides head-on with ④ ('Thus, when the work is less readable... departure from conventional forms... aesthetic attitude is needed'). ④'s 'Thus' is incoherent after ③ (③ concludes easy interpretation; ④ premises low readability), but the chain ② → ④ → 'This active involvement...' reads perfectly once ③ is deleted. No alternative reading rescues it: the contradiction is propositional."
+    },
+    {
+      "label": "④",
+      "verdict": "flow-consistent",
+      "reason": "Payoff of the expressionist branch: less readable work + departure from conventional forms → viewer reminded that an aesthetic attitude is needed. The next sentence's 'This active involvement' refers to this aesthetic attitude, confirming ④'s place in the chain."
+    },
+    {
+      "label": "⑤",
+      "verdict": "flow-consistent (tempting distractor)",
+      "reason": "Felt the pull: 'fundamental to a balanced life' looks like a new self-help topic planted at the end — the classic distractor position. But it is a legitimate concluding generalization: 'pragmatic attitude of everyday life' ties back to ①'s everyday-life/mental-model processing, and 'aesthetic attitude' is the key term established in ④. It synthesizes the two poles rather than derailing them. Removing ⑤ merely costs a conclusion; removing ③ actively repairs the argument, so ③ dominates."
+    }
+  ],
+  "note": "Lens: top-tier examinee, real-time solving with recorded temptation. Main temptation was ⑤ (new concept 'balanced life' at the end), resolved by noting it generalizes the passage's two established attitudes. ③ is the uniquely defensible answer: it contradicts both ② and ④, and its deletion restores a coherent causal chain (② disquieting atmosphere → ④ less readable, aesthetic attitude needed → active involvement → depth of processing). Item quality note: the planted sentence uses proper lexical cohesion ('this disquieting atmosphere') with propositional reversal — a well-formed KSAT-style 35 item; the truncated opening (', background).') is an artifact of excerpting but does not impede solving."
+}

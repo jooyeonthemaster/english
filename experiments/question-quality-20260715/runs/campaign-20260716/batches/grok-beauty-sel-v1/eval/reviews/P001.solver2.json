@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "'the lingering physical power of fear after a crisis ends'는 지문 중반의 한 세부(공포 감각이 10~15초간 지속되며 이를 단축할 수 없다는 문장)만을 포섭한다. 논리적으로 검증하면: 이 명제는 첫 문장(정서는 사고 없이 중요한 사건에 대비시킨다), 자율신경계 변화, 표정·음성·자세 신호 송출 등 지문 대부분의 명제를 함의하지도 포괄하지도 못한다. 주제는 지문 전체 명제 집합의 최소 상위 개념이어야 하므로 부분집합에 불과한 이 선지는 주제로 성립 불가. 전형적인 '지엽적 세부' 오답."
+    },
+    {
+      "label": "2",
+      "verdict": "accept",
+      "reason": "'emotions as automatic systems that prepare us for action'은 지문의 모든 핵심 명제를 포괄한다. 형식적으로 확인하면: (a) 첫 문장 'Emotions prepare us to deal with important events without us having to think' = automatic + prepare, (b) 위기 감지·대처 사례 = prepare for action의 예증, (c) 'without your knowing it is happening' 및 마지막 문장 'We don't choose these changes; they simply happen' = automatic의 재진술(수미상관), (d) 뇌·자율신경계 변화가 'preparing us for different actions' = prepare for action의 명시적 반복. 지문의 상위 명제와 정확히 동치이며 과대·과소 일반화가 없다. 주제로 성립."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "'conscious strategies for handling near-miss dangers'는 지문 명제와 직접 모순된다. 지문은 'without us having to think about what to do', 'Nor would you have survived if you had to think consciously'라고 명시하여 의식적 전략의 역할을 부정한다. 모순 관계에 있는 명제는 주제가 될 수 없으므로 형식적으로 기각. 'near-miss'라는 지문 어휘를 재활용한 반대 방향 미끼."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "'evolutionary origins of the autonomic nervous system'은 지문에 근거 명제가 존재하지 않는다. 자율신경계는 정서가 일으키는 신체 변화의 매개로 한 번 언급될 뿐이며, 그 '진화적 기원'에 대한 진술은 전무하다(생존 언급은 정서 기능의 예시이지 ANS의 계통발생 논의가 아님). 지문에 없는 논점을 주장하는 선지이므로 기각."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "'the social role of facial and vocal emotional signals'는 마지막 부분의 한 문장(표정·음성·자세 신호 송출)만을 근거로 삼는다. 게다가 지문은 신호의 '사회적 역할'을 논증하지 않고 신호가 비자발적으로 발생한다는 사실만 진술한다. 부분 세부 + 지문이 주장하지 않은 속성(social role) 부가라는 이중 결함으로 주제 성립 불가."
+    }
+  ],
+  "note": "본 문항은 주제 추론 유형. 지문 구조는 '주제문(자동적 대비 시스템) → 예증(위기 회피) → 무의식성 강조 → 생리적 변화(행동 준비) → 신호 송출 → 비선택성 재확인(수미상관)'으로, 선지 2가 처음·중간·끝의 모든 명제를 유일하게 포괄한다. 선지 1·5는 지엽 세부, 3은 지문과 모순, 4는 무근거. 논리적으로 옹호 가능한 정답은 2 하나뿐이며 복수정답 소지 없음. 지문 내 시제 혼용('Once the danger passed, you will still feel...', 'It would take...')이 다소 어색하나 문항 성립에는 영향 없음."
+}

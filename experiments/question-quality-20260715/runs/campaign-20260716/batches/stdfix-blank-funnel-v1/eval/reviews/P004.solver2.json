@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법 결합은 정상(정형절, they=seasoned masters의 선행 조응 허용). 논리 판정: 인과 역전. 지문의 실패 기제는 '경험에 대한 과의존'(familiar tools/experience as filter)이지 경험을 버리고 직관에 의존하는 것이 아님. 1~2문장의 전제와 정면 모순."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "문법 결합 정상. 논리 판정: '신체 기술 대 정신' 구분은 지문 어디에도 전제로 존재하지 않는 무근거 도입(non sequitur). formal training sessions도 지문 밖 소재."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "문법: 단수 주어 stored expertise + blinds 일치, 종속절 선행 위치의 cataphoric them은 주절 seasoned masters에 결속되어 적법. 논리: 전제(경험=필터로 essential/irrelevant 분리)와 전제(새로운 문제에서는 익숙한 도구가 실패)의 결합에서 형식적으로 도출되는 결론 — 축적된 전문성이 novel한 상황의 critical한 details를 걸러내 버려(blind) 실수를 유발. 'novel'은 particularly novel, 'details'는 absorb every detail과 어휘적으로 정확히 호응. 유일 성립."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "문법 결합 정상. 논리 판정: 역방향 오류. 지문상 대가의 실수는 필터링 습관을 '따를 때'(novel 상황에 그대로 적용할 때) 발생하지, 분리 규칙을 '위반할 때' 발생하는 것이 아님. 또한 'the original rules'는 지문에 선행 지시 대상이 없는 무근거 명사구(필터링은 규칙 체계로 기술된 바 없음)."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "문법적으로는 결합 가능하나 의미 결합이 비정합('simplicity가 tactics를 overwhelm'은 범주 오류에 가까운 무의미 서술). 논리 판정: beginner's mind는 지문이 권장하는 해법이지 대가의 실수 원인이 아님. 지문의 처방과 모순."
+    }
+  ],
+  "note": "빈칸은 When-조건절로, '경험 필터가 역효과를 내는 조건'을 요구한다. ①·④는 인과/방향 역전, ②는 무관 소재, ⑤는 처방-원인 뒤집기로 모두 형식적으로 기각되며 ③만이 전제들로부터 타당하게 도출된다. 대안 해석(축약 관계절·도치 등)으로 구제되는 선지 없음. 단일 정답으로 수렴 — 문항 성립."
+}

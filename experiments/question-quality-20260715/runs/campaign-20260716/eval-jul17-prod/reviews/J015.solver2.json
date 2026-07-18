@@ -1,0 +1,35 @@
+{
+  "pid": "J015",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "In 'no matter how fast they grow', 'fast' is a flat adverb modifying 'grow' ('fastly' does not exist). The concessive frame 'no matter how + ADV + S + V' is fully satisfied. Grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'where' is a relative adverb (= 'in which') with antecedent 'countries'. The relative clause 'a large part of the population derive their livelihood from uncertain sources' is syntactically complete (S+V+O+PP), so an adverbial relative is required rather than 'which/that'. Plural 'derive' with the collective 'a large part of the population' is standard notional agreement and is not the underlined element. Grammatical."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'involving' is an active present participle postmodifying 'mechanisms' ('mechanisms that involve direct public intervention'); the head noun is the agent of 'involve', so active voice is correct. Grammatical."
+    },
+    {
+      "label": "(D)",
+      "verdict": "INCORRECT (answer)",
+      "reason": "The sentence 'Rapid growth of the economy in Botswana, or of the agricultural sector in Kenya, or of food production in Zimbabwe, explaining at best only a small part of their success...' has no finite verb anywhere: 'Rapid growth ... Zimbabwe' is the subject NP (the 'or of...' strings are disjunct PP complements of 'growth'), and the string ends at the period. Rescue parses all fail: a participial adjunct needs a matrix clause to attach to (there is none); an absolute construction still leaves no main clause; a reduced relative reading leaves the same verbless fragment. The only repair is the finite singular 'explains' agreeing with the head noun 'growth'. Ungrammatical as written."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'their' is a plural possessive determiner anteceded by 'these countries' in the same sentence; 'direct public support to their populations' is referentially and grammatically coherent."
+    }
+  ],
+  "note": "Clean item. (D) is a classic finite-verb-deletion trap: three parallel 'or of...' PPs stretch the subject NP so the solver may misread 'explaining' as a participial adjunct, but the sentence contains no matrix verb, so only 'explains' is licensed. No other option admits even a plausible indictment; the non-underlined 'derive' (notional plural agreement) is acceptable British usage and does not create a second defensible target. Single defensible answer: (D)."
+}

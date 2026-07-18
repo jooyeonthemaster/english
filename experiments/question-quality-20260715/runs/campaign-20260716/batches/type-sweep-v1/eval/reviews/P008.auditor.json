@@ -1,0 +1,64 @@
+{
+  "pid": "P008",
+  "validity": {
+    "V1": true,
+    "V2": false,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V2-NO-ACCEPTANCE-SET",
+      "severity": "critical",
+      "evidence": "SUMMARY_COMPLETE가 선택지 없는 서술형(발문: '빈칸 (A), (B)에 들어갈 말을 쓰시오')으로 출제되었는데 허용 답안 집합·배제 경계·채점 기준이 전혀 정의되어 있지 않다. RUBRIC §B-1 폐쇄형 서술 규정('표기·대소문자·구두점 정규화, 굴절 변형, 의미 보존 paraphrase 중 무엇을 허용하는지 먼저 고정한다. model answer 한 개만 자연스럽다는 가정은 금지한다')을 위반한다. (A) 'thus ___ the ties between service work and particular places' 슬롯에는 disconnecting 외에 severing / breaking / cutting (off) / dissolving / weakening 등 의미·문법이 모두 성립하는 동치 답이 다수 존재하고, (B) 'while leaving ___' 슬롯에도 'no material traces' 외에 'no traces', 'no material traces behind', 'no physical traces' 등 자연스러운 변형이 존재한다. 이들의 허용 여부가 미정이므로 독립 풀이에서 허용돼야 할 답이 누락된 상태다."
+    },
+    {
+      "code": "V2-STEM-NO-CONSTRAINT",
+      "severity": "major",
+      "evidence": "발문이 '본문의 단어를 활용하여', 어형 변형 여부, 단어 수 제한 등 형식 조건을 전혀 명시하지 않아 채점 모호성이 가중된다. (A)는 원문 'can be disconnected'의 굴절 변형(disconnecting)을 요구하지만 이를 지시하는 조건이 없어 disconnected/to disconnect 류 오형 처리 기준도 부재하다."
+    },
+    {
+      "code": "V1-NOTE-NO-RENDER",
+      "severity": "minor",
+      "evidence": "렌더 지문 필드가 '(렌더 지문 없음)'이다. SUMMARY_COMPLETE는 원지문을 무변형 노출하는 유형이므로 손상으로 보지는 않았으나, 학생 노출 지문이 원지문 그대로임이 파일상 명시되지 않는다."
+    },
+    {
+      "code": "V3-NOTE-AGENT-DRIFT",
+      "severity": "minor",
+      "evidence": "요약문 구조상 'while leaving no material traces'의 행위주가 주절 주어 Digital platforms로 읽히지만, 원문에서는 'the employer leaves behind no material traces'로 고용주가 행위주다. 문법 파손은 아니나 경미한 행위자 전이(actor drift)가 있다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 1,
+    "C3": 2,
+    "C4": 1,
+    "C5": 2,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A) disconnecting",
+      "intent": "글의 핵심 명제(디지털 플랫폼이 서비스 노동과 장소의 유대를 끊는다)를 요약문에서 재산출하게 함. 원문 수동태 'ties ... can be disconnected'를 능동 분사구문 'thus disconnecting the ties'로 굴절 변형해야 한다.",
+      "temptingBecause": "해당 없음(선택지 없는 서술형이라 디코이가 설계되어 있지 않음). 빈칸 주변 프레임 'the ties between service work and particular places'가 원문 해당 문장에서 축자 복사되어 있어 문자열 대조만으로 답 위치가 드러난다.",
+      "decisiveFlaw": "허용 동치(severing/breaking/cutting off 등)와 오형(disconnect/disconnected) 처리 기준이 미정의라 정답 유일성이 성립하지 않는다."
+    },
+    {
+      "label": "(B) no material traces",
+      "intent": "결론 문장('the employer leaves behind no material traces')이 나타내는 고용 관계의 비물질성을 요약문에 재산출하게 함.",
+      "temptingBecause": "해당 없음(디코이 부재). 'while leaving ___'가 원문 'leaves behind no material traces'를 그대로 반향하여 축자 발췌로 즉시 해결된다.",
+      "decisiveFlaw": "원문 구 그대로 베껴 쓰는 수준이라 변별 기능이 거의 없고, 'no traces'/'no material traces behind' 등 자연 변형의 허용 여부가 미정이다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "해설이 정답의 형태 근거(왜 (A)가 -ing형이어야 하는지: thus 뒤 분사구문 슬롯)와 허용/배제 답안 경계를 전혀 다루지 않는다. 내용 요지 재진술로는 정확하나 서술형 채점 해설로서는 불완전하다.",
+      "recommendation": "허용 동치답 목록과 오형 배제 기준, (A)의 통사 슬롯(분사구문) 설명을 해설에 추가하라."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1/V3/V4/V5 통과. 지문 무결, 완성 요약문 문법적, 해설 내용 사실 일치, 필드 동기화 정상. 그러나 폐쇄형 서술형인데 허용 답안 집합과 채점 경계가 전무하여 V2 실패 → RUBRIC §A에 따라 등급 F(공예 점수로 상쇄 불가). 공예 측면에서도 (B)가 원문 축자 복사이고 (A) 주변 프레임이 원문 문장을 그대로 노출해 단서 경제성(C4=1)과 조건 설계 밀도(C2=1)가 낮으며, 실질 난이도는 요청된 INTERMEDIATE보다 낮은 '찾아 베끼기+경미한 굴절' 수준이다. 출하하려면 (1) 허용 답안 집합·배제 경계 명시, (2) 발문에 어형·어휘 활용 조건 부여, (3) 요약문 프레임의 축자 복사 구간을 paraphrase로 교체하는 재설계가 필요하다. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

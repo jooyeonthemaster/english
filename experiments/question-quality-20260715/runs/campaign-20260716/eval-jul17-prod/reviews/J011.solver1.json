@@ -1,0 +1,35 @@
+{
+  "pid": "J011",
+  "answer": "D",
+  "multipleDefensible": false,
+  "defensibleLabels": ["D"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "'based' is a reduced relative clause modifying 'Environmental taxes' ('taxes [that are] based directly on measured emissions'). The finite verb slot is already filled by 'can be targeted', so a participle is required, and the passive participle is right since taxes are what get based on emissions. Distractor pull: misreading 'based' as the main verb and wanting 'are based' — but 'can' already serves as the finite verb."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "'incentive + to-infinitive' ('an incentive to reduce emissions') is the canonical complementation pattern. No alternative parse makes it wrong."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "Head of the subject is 'The great attraction' (singular); 'of basing the tax directly on measured emissions' is a prepositional modifier. Singular 'is' is correct. Classic proximity trap: plural 'emissions' immediately before the verb tempts 'are', but the printed 'is' is exactly right."
+    },
+    {
+      "label": "D",
+      "verdict": "incorrect",
+      "reason": "'particularly which there are many separate sources of emissions' fails every parse: as a relative pronoun 'which' needs an antecedent and a gap in its clause, but 'there are many separate sources of emissions' is a complete existential clause with no gap and no plausible antecedent; 'which' cannot head a free relative in standard English; a sentential relative also requires a gap. The context requires the adverbial subordinator 'where' (or 'when'): 'particularly where there are many separate sources of emissions'. Ungrammatical — this is the answer."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "Head noun of the long subject is 'technologies' (plural), so 'have' agrees across the modifier 'available for monitoring ... in waste discharges'. Intransitive 'develop' (= advance/improve) makes active 'have been developing' correct; the tempting 'error' reading ('should be passive have been developed') fails because technologies develop on their own in this sense. Most seductive distractor for a rushed solver, but fully grammatical."
+    }
+  ],
+  "note": "Clean item. Exactly one ungrammatical underline (D: relative pronoun 'which' where adverbial 'where' is required — no gap, no antecedent). The other four are well-formed with genuine long-distance traps (C: proximity-plural before singular verb; E: long subject agreement + active/passive temptation with 'develop'; A: participle vs. finite verb). Actively searched for rescuing parses of (D) — free relative, sentential relative — none succeed. Single defensible answer."
+}

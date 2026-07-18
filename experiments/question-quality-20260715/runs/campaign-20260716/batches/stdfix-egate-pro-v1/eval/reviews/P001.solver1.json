@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "주어가 'all of the CEOs'(복수)이므로 were가 맞음. 'be concerned that + 절' 구문도 표준적. 수일치 함정 후보지만 'all of + 복수명사'는 복수 취급이 명백해 유혹이 약함."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "사역동사 make + 목적어 + 원형부정사 구조: 'make them appear weak'는 정확히 원형 appear가 요구됨. 'to appear'로 착각하도록 유도할 수 있으나 원형이 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "'a culture which those subordinates did the same'에서 관계절 내부가 완전한 절(주어 those subordinates + 동사 did + 목적어 the same)이라 which가 채울 공백(gap)이 없음. culture는 행위가 일어나는 장소/맥락이므로 'in which' 또는 'where'가 필요. 대안 해석 탐색: which를 did의 목적어로 보려 해도 'the same'이 이미 목적어 자리를 차지하고 있어 성립 불가. 유일하게 어법상 틀린 밑줄."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'each of the CEOs'의 핵어는 each(단수)이므로 was가 맞음. 동사 직전의 복수명사 CEOs에 이끌려 were로 고치고 싶어지는 전형적 근접 수일치 매력 오답 — 실제로 잠깐 끌렸으나 진짜 주어(each) 확인으로 해소."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'a leadership identity based on values...'는 축약 관계절(identity [that is/was] based on)로 과거분사 후치수식이 정문. identity가 가치에 '기반되는' 수동 의미이므로 basing이 아닌 based가 맞음."
+    }
+  ],
+  "note": "정답이 (C)로 유일하게 좁혀지는 깨끗한 문항. 매력적 오답 설계: (D)의 each of + 복수명사 근접 수일치가 가장 강한 미끼이고, (B)의 사역 원형부정사와 (E)의 분사 후치수식이 보조 미끼. (C)는 관계절 완전성(gap 유무) 판정이라는 장거리 단서를 요구해 변별력 있음. 복수정답 소지 없음."
+}

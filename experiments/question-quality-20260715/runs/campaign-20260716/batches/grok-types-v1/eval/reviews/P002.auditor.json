@@ -1,0 +1,81 @@
+{
+  "pid": "P002",
+  "blindAnswer": "3",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-RENDER-FIELD-EMPTY",
+      "severity": "minor",
+      "evidence": "'렌더된 지문' 필드가 '(렌더 지문 없음)'이다. TITLE 유형은 지문 변형이 없는 유형이므로 원지문 그대로 노출되는 것이 의도로 판단되어 V1 실패로 보지 않았다. 원지문 자체는 문장 접합·중복·누락·고아 문장부호 없이 온전하며(Schank 계열 storytelling 지문), 선지 라벨 1~5와 정답 라벨 3이 일치한다. 다만 감사 완결성을 위해 렌더 필드는 원지문 사본으로라도 채워지는 것이 바람직하다."
+    },
+    {
+      "code": "V4-TERM-IMPRECISION",
+      "severity": "minor",
+      "evidence": "오답 해설 2가 고양이·개 사례를 '비유'라고 부르나 실제로는 논지를 뒷받침하는 '예시(illustration)'다. 사실 왜곡은 아니고 용어 선택의 경미한 부정확성이므로 V4 실패로 보지 않았다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "half-truth / scope narrowing — 중간 층위(이유 제시의 한계)만을 제목으로 승격시켜 결론(서사의 우위)을 탈락시키는 함정",
+      "temptingBecause": "지문이 'more helpful but not necessarily more believable'과 'We need justifications... before we can begin to believe'를 명시하므로, 그 두 문장에 앵커한 학생이 선택하기 쉽다. 유일하게 실질적 경쟁력이 있는 오답이다.",
+      "decisiveFlaw": "글의 하중이 실린 결론은 이야기가 단언·이유의 한계를 넘어 조언을 받아들이게 한다는 것이다. 정당화의 '실패'만 다룬 제목은 종속 단계를 전체로 오독한 것이며, 클라이맥스(story 문장)를 전혀 포괄하지 못한다. 또한 bare reply('A cat')는 justification이 아니라 assertion이므로 'Bare Justifications'라는 표현 자체가 지문 구조와 어긋난다."
+    },
+    {
+      "label": "2",
+      "intent": "surface-example trap — 예시 소재(고양이·개)를 주제로 오인하게 하는 함정",
+      "temptingBecause": "지문에서 가장 구체적이고 기억에 남는 내용이 pet 선택 대화이므로 표면 독해 학생이 끌린다.",
+      "decisiveFlaw": "pet 예시는 설득 방식 비교를 위한 운반체일 뿐이며, 지문은 애완동물 선호가 의사결정을 형성하는 과정을 전혀 다루지 않는다. 즉시 소거 가능."
+    },
+    {
+      "label": "3",
+      "intent": "정답 — 3층위 대비(단순 진술 → 이유 → 이야기)를 '서사가 단언과 단순한 이유를 능가한다'로 정확히 추상화",
+      "temptingBecause": "(정답)",
+      "decisiveFlaw": "(없음) — Assertions=단순 진술, Simple Reasons=이유 제시, Narratives=이야기로 지문의 세 층위와 1:1 대응하며 결론의 방향(우위)까지 보존한다."
+    },
+    {
+      "label": "4",
+      "intent": "unmentioned-concept — 조언(advice) 도메인의 그럴듯한 일반론(전문성)을 끌어오는 함정",
+      "temptingBecause": "지문이 조언 상황을 다루므로 'Sound Advice'라는 표면 어휘 중첩이 있고, 상식적으로 그럴듯하게 들린다.",
+      "decisiveFlaw": "전문 지식은 지문에 한 번도 등장하지 않는다. 설득력의 원천은 전문성이 아니라 유사 상황 서사의 구체성이다. 즉시 소거 가능."
+    },
+    {
+      "label": "5",
+      "intent": "polarity reversal — 지문 첫 문장의 'simply state our beliefs'를 앵커로 논지를 정반대로 뒤집는 함정",
+      "temptingBecause": "첫 문장에 직접 진술이 언급되므로 표면 앵커는 존재한다.",
+      "decisiveFlaw": "지문은 단순 진술('A cat')을 'useless advice'로 평가한다. '가장 명료한 전달 방식'이라는 주장과 정면 충돌하므로 즉시 소거 가능."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "오답 해설 2의 '비유일 뿐' — 실제로는 비유(figurative analogy)가 아니라 예시(illustrative example)다.",
+      "recommendation": "'예시일 뿐'으로 수정."
+    },
+    {
+      "severity": "minor",
+      "evidence": "오답 해설 5의 '쓸모없거나 덜 믿기 쉬운 극단' — 'useless'는 단순 진술('A cat')에 대한 평가이고 '덜 믿기 쉬움(not necessarily more believable)'은 이유 제시 층위에 대한 평가인데 한 문장으로 뭉뚱그렸다. 결론(직접 진술이 중심 논지와 반대)은 옳으므로 사실성 실패는 아니다.",
+      "recommendation": "층위 귀속을 분리해 '단순 진술은 쓸모없는 조언으로 평가된다'로 한정."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionsNote": "요청 난이도는 KILLER이나 유형이 TITLE이어서 RUBRIC §C(어법)·§D(빈칸)의 추가 조건이 직접 적용되는 유형이 아니며, §D의 정신(최소 두 논리 단서의 연결 없이는 정답 불가, 다수 선지의 매력도)을 준용해도 미충족이다: 선지 2·4·5는 단일 문장 단서 또는 미언급 개념 확인만으로 즉시 소거되고, 실질 경쟁 선지는 1 하나뿐이다. 보수 원칙에 따라 false.",
+  "grade": "C",
+  "notes": "V1~V5 전부 통과, 정답 3의 유일성은 독립 검증에서 확고하다(1은 half-truth로 결론 미포괄, 2·4·5는 즉시 소거). 선지 설계 자체는 서로 다른 함정 유형(scope narrowing / example-as-topic / unmentioned concept / polarity reversal)을 겨냥해 의도 밀도가 양호하고 해설도 간결·정확하다. 그러나 치명적 공예 결함은 난이도 정합(C5=1): 지문이 짧고 구체적이며 3층위 구조가 명시적으로 드러나 있고, 실질 경쟁 오답이 1번 하나뿐이라 실제 체감 난이도는 중(中) 수준이다. KILLER 라벨을 정당화하려면 더 추상적인 지문 운용 또는 결론과 부분 진실을 더 정교하게 뒤섞은 경쟁 오답 2개 이상이 필요하다. C 합계 15(<17), C5<2이므로 등급 C — 유효하지만 KILLER 슬롯 출하는 불가, 난이도 재설계 필요."
+}

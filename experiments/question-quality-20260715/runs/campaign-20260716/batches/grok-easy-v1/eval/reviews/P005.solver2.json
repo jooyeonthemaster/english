@@ -1,0 +1,35 @@
+{
+  "pid": "P005",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'A bridge is normally constructed to last one hundred years': subject 'A bridge' is the patient of 'construct', so the passive 'is constructed' is required and well-formed; 'to last ...' is a standard purpose/result infinitive. No parse renders this ungrammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect",
+      "reason": "'a lasting mark who shows the evolution of society': the relative pronoun's antecedent is the inanimate NP 'a lasting mark', but relative 'who' formally requires a [+human] antecedent. No human NP is available ('Its presence' is inanimate; 'society' follows the gap and cannot serve), and no free-relative reading ('the person who') fits the frame 'makes a mark ___'. The grammar requires 'that' or 'which'. Ungrammatical."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'Depending on the type of bridge and the site, it is subordinate...': 'depending on' is a fossilized absolute participle (like 'judging from', 'considering'), exempt from strict dangling-subject requirements; and in any case the matrix subject 'it' (= the bridge) is a coherent notional subject. Grammatical."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'the bridge must possess an intrinsic beauty': modal 'must' governs the bare infinitive 'possess'. Grammatical; no agreement or form issue."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'a bridge that is spectacular in itself but spoils its local environment': the parallel start point is inside the relative clause — 'that' is the shared subject of the coordinated VPs 'is spectacular' and 'spoils'. Singular antecedent 'a bridge' licenses 3sg 'spoils'. An alternative coordination with 'to create' (demanding bare 'spoil') is not the licensed parse given 'but' conjoining with 'is'. Grammatical as written."
+    }
+  ],
+  "note": "Clean single-answer item. (B) is the only defensible error: inanimate antecedent 'a lasting mark' cannot take relative 'who'. All other underlines survive adversarial alternative-parse checks (passive, fossilized participle, modal + base form, relative-clause verb parallelism with 3sg agreement)."
+}

@@ -1,0 +1,50 @@
+{
+  "pid": "P006",
+  "finalV2": true,
+  "winningAnswer": "Not until we are massaged by warm water without being able to check our e-mail can we finally hear the soft voices from the backs of our minds telling us of the insight.",
+  "reason": "서술형(CONDITIONAL_WRITING) 문항이므로 '정답 유일성'은 표면 문자열의 유일성이 아니라 조건+채점기준이 허용 답안 집합을 정합적으로 정의하는지로 판정한다. 선언 모범답안을 처음부터 재검증한 결과 4개 조건(Not until 문두, can we 도치, without being able to 포함, 정확히 33단어[e-mail=1단어])을 모두 충족하고 문법·의미 모두 정문이다. 솔버 1·2가 제출한 변이형들(단순수동 33단어형, we're 축약 진행수동 33단어형)은 선언 정답과 경쟁하는 별개 정답이 아니라 조건 기반 루브릭(3/2/1/4점)에서 동일하게 만점 수용되는 등가 답안이며, 이는 서술형 채점 관례상 정상이다. 솔버들의 단어 수 주장을 전수 재계산으로 검증했고 전부 정확했다(축자역 진행형+can=34단어 위반, 진행형+are we finally able=36단어 위반 — 33단어 제약이 원문 복사를 차단하는 설계가 실제로 작동함). 과잉 판정 없음. 유일한 흠은 하이픈 복합어(e-mail=1)와 축약형(we're=1) 단어 산정 관례 미명시로, 감사자가 이미 minor로 기록한 설계 보완 사항이지 문항 성립을 무너뜨리지 않는다. 참고: 분쟁 요약에 인용된 선언 정답 문자열('...without being able to think')은 전달 과정의 절단 오류이며 실제 full 파일의 선언 정답은 온전한 33단어 문장이다. 따라서 V2 유지, 최종 성립.",
+  "perDispute": [
+    {
+      "label": "선언 모범답안: 'Not until we are massaged by warm water without being able to check our e-mail can we finally hear the soft voices from the backs of our minds telling us of the insight.'",
+      "claim": "4개 조건을 모두 충족하는 정문이며 모범답안으로 성립한다",
+      "verdict": "성립",
+      "evidence": "독립 재검증: Not until 문두 충족; 부정어구 전치에 따른 의무 도치 'can we finally hear' 충족; 'without being able to check our e-mail'은 주절/부사절 주어 we가 통제하는 정문 부가어; 단어 수 재계산 결과 정확히 33(e-mail=1단어). 'tell us of the insight'는 tell A of B 관용으로 문법적. 참조 문장의 3개 핵심 명제(온수 마사지 상태, 이메일 확인 불가, 내면 목소리 청취→통찰)를 모두 보존. quiet/heads/in/about을 soft/minds/from/of로 교체한 것은 의미 등가 패러프레이즈."
+    },
+    {
+      "label": "솔버 공통 답안: '... can we finally hear the quiet voices in the backs of our heads telling us about the insight.' (단순수동 무축약형)",
+      "claim": "선언 정답과 다른 표면형이지만 역시 전 조건 충족 정답이다",
+      "verdict": "성립 (등가 만점 답안)",
+      "evidence": "재계산 결과 정확히 33단어. 원문 어휘(quiet/heads/about)를 유지한 것 외에 선언 정답과 구조 동일. 조건 기반 루브릭(시작어·도치 3 / 필수구 2 / 33단어 1 / 의미 4)의 어느 축에서도 감점 사유가 없으므로 만점 수용된다. 이는 선언 정답의 유일성을 훼손하는 것이 아니라 서술형 허용 집합 내의 등가 답안이다."
+    },
+    {
+      "label": "솔버 대안 후보: 'Not until we're being massaged by warm water, ...' (we're 축약 + 진행수동 유지형)",
+      "claim": "축약을 1단어로 세면 33단어가 되어 진행상('받고 있어')을 보존하면서 전 조건을 충족한다",
+      "verdict": "성립 (단, 축약형=1단어 산정 관례 전제)",
+      "evidence": "재계산 결과 we're=1토큰 기준 정확히 33단어이며 문법적으로 정문, 참조 문장의 진행 뉘앙스를 가장 충실히 보존한다. 다만 문항에 축약형 단어 산정 규약이 명시되지 않아 채점 시비 여지가 있다는 솔버 지적은 타당하다. 과잉 판정 아님 — 실제로 성립하는 대안이다. 설계 개선 사항(minor)이지 문항 무효 사유는 아니다."
+    },
+    {
+      "label": "축자역 형태 1: 'Not until we are being massaged ... can we finally hear ...' (무축약 진행수동 + can)",
+      "claim": "솔버들이 34단어로 조건 위반이라 판정",
+      "verdict": "솔버 판정 정확 (34단어, 배제 타당)",
+      "evidence": "독립 재계산 결과 34단어로 '총 33단어' 조건 위반. 33단어 제약이 원문 축자 복사 경로를 차단한다는 솔버·감사자의 설계 해석이 사실로 확인된다."
+    },
+    {
+      "label": "축자역 형태 2: 'Not until we are being massaged ... are we finally able to hear ...' (be 도치 + able to 유지)",
+      "claim": "솔버들이 36단어로 조건 위반이라 판정",
+      "verdict": "솔버 판정 정확 (36단어, 배제 타당)",
+      "evidence": "독립 재계산 결과 36단어로 조건 위반. 또한 '조동사 도치' 조건을 be 도치로 충족했다고 볼지의 논쟁 여지도 단어 수 조건이 선제적으로 차단하므로 실전 분쟁으로 비화하지 않는다."
+    },
+    {
+      "label": "잠재 변이: 'do we finally hear' 도치형 (can 대신 do)",
+      "claim": "솔버1이 33단어이나 가능('들을 수 있게 된다') 의미 소실로 열등하다고 기록",
+      "verdict": "솔버 판정 타당 (부분 점수 답안, 결함 아님)",
+      "evidence": "can→do 치환 시 단어 수는 동일하게 33이나 참조 문장의 가능 의미가 소실되어 의미 축(4점)에서 감점 대상이다. 루브릭이 이를 변별할 수 있으므로 문항 결함의 증거가 아니다."
+    },
+    {
+      "label": "단어 산정 관례 공백 (e-mail=1단어, 축약형=1단어)",
+      "claim": "감사자 V2-WORDCOUNT-CONVENTION 및 솔버 노트의 공통 지적",
+      "verdict": "타당하나 minor — V2 불성립 사유 아님",
+      "evidence": "지문 자체가 'e-mail' 표기를 사용하고 하이픈 복합어=1단어가 통상 관례이므로 모범답안 33단어 성립에 실질 장애가 없다. 축약형 산정 규약 미명시는 we're형 수용 여부에만 영향을 주는 주변부 이슈로, 조건 기반 루브릭이 등가 답안을 수용하는 구조라 치명 결함이 아니다. 개선 권고(관례 명시, 동치 허용답 예시 추가)에 동의한다."
+    }
+  ]
+}

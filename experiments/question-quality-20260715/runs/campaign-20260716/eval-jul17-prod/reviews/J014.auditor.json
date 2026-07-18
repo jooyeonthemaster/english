@@ -1,0 +1,75 @@
+{
+  "pid": "J014",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V5-minor-keypoints-coverage",
+      "severity": "minor",
+      "evidence": "keyPoints가 (C),(B),(A) 3개 라벨만 다루고 (D),(E)는 누락. 모순은 아니어서 V5 실패는 아니나 5개 밑줄 전부의 포인트 문서화가 없다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "주격 관계대명사 that의 적격성 판단 — 선행사(subject matter)와 관계절 내 주어 역할 파악",
+      "temptingBecause": "관계대명사 뒤 단수동사 resembles를 보고 선행사 수일치를 의심하거나 what/which 대체 가능성을 떠올릴 수 있다",
+      "decisiveFlaw": "정답 불가 — subject matter(단수)를 받는 주격 that + resembles 단수 일치로 완전히 적법. 준비된 학생에게는 즉시 소거되는 약한 디코이"
+    },
+    {
+      "label": "(B)",
+      "intent": "전치사구를 사이에 둔 핵명사-동사 수일치 판별",
+      "temptingBecause": "동사 바로 앞의 인접 명사 uncertainty가 단수여서 carries로 착각하도록 유도",
+      "decisiveFlaw": "정답 불가 — 주어 핵은 복수명사 Feelings이므로 carry가 정확. 실제 판단을 요구하는 양질의 디코이"
+    },
+    {
+      "label": "(C)",
+      "intent": "정답 — 분사구문(부대상황 thereby V-ing)의 능/수동 판별. 목적어를 취하므로 현재분사 creating이어야 함",
+      "temptingBecause": "created가 앞의 과거분사류 표면형과 어울려 보이고, work...created를 병렬 동사로 오독할 여지",
+      "decisiveFlaw": "접속사 없는 정형동사 병렬 불가 + 과거분사로 보면 뒤의 목적어 a disquieting atmosphere를 설명할 수 없음. creating으로 교정하면 정확히 원문 복원(최소대립쌍). 단, 목적어 인접이라는 국소 단서와 'thereby V-ing' 암기 패턴으로 즉시 노출되어 KILLER급 은닉성이 없다"
+    },
+    {
+      "label": "(D)",
+      "intent": "수동태 be + p.p.의 태 판별 — (C)의 능동 분사와 대조되는 수동 자리",
+      "temptingBecause": "바로 뒤에 to appreciate가 이어져 needed to V 구조를 능동 need to V와 혼동하거나, (C)에서 p.p.가 틀렸으니 여기 p.p.도 틀렸다고 유추할 수 있다",
+      "decisiveFlaw": "정답 불가 — that절 주어 an aesthetic attitude가 '요구되는' 대상이므로 수동 is needed가 정확"
+    },
+    {
+      "label": "(E)",
+      "intent": "명사를 수식하는 to부정사의 형용사적 용법(ability to V)",
+      "temptingBecause": "switch 뒤 between 전치사구를 보고 of switching 등 전치사+동명사 형태를 떠올릴 수 있다",
+      "decisiveFlaw": "정답 불가 — an ability to V는 고정 결합으로 완전히 적법. 사실상 필러에 가까운 최약체 디코이"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "missing-why-tempting",
+      "severity": "minor",
+      "evidence": "오답 해설이 각 밑줄의 '왜 맞는가'만 서술하고 '왜 매력적인가(why tempting)'를 명시하지 않음 — RUBRIC §C 3항(5개 밑줄 각각 point/why tempting/why correct)의 요건 미달"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAudit": {
+    "minimalPair": true,
+    "clearGrammarJudgment": true,
+    "allFivePointsDocumented": false,
+    "notRevealedByLocalCue": false,
+    "noMaskingEasyDecoy": true,
+    "evidence": "정답 (C)는 최소대립쌍이고 교정 시 원문 복원되며 문법 판단도 명확하다. 그러나 (1) 밑줄 바로 뒤 목적어(a disquieting atmosphere)라는 인접 국소 단서 + 수능 최다 빈출 암기 패턴 'thereby V-ing'으로 구조 독해 없이 즉시 드러난다 — §C '구조를 읽어야 하며 즉시 드러나지 않는다' 위반. (2) 밑줄별 why tempting 문서화 부재, (E)는 설명이 궁색한 필러성 디코이."
+  },
+  "grade": "C",
+  "notes": "유효성 5개 게이트는 전부 통과한 정상 문항이다. 원지문 대비 손상 없는 단일 최소대립 변형(creating→created), 정답 유일성 확보(각 밑줄 대안 파스까지 검증), 해설의 구조 분석도 전부 사실과 일치한다. 그러나 요청 난이도 KILLER 대비 공예가 크게 미달한다: 정답이 '분사 뒤 목적어 → 능동' 이라는 1단계 국소 판정으로 풀리는 중위권 표준 유형이라 C5=1(난이도 불일치), (A)/(E)가 즉시 소거되는 약한 디코이라 C3=2. 합계 15, 최저 1점으로 A/B 기준(합계 21/17, 최저 3/2) 미달 → C. 재설계 방향: 오류 위치를 절 경계·도치·삽입구 너머로 옮겨 국소 단서를 제거하고, (E)를 실제 오개념을 겨냥한 디코이로 교체, 밑줄별 why tempting을 문서화할 것."
+}

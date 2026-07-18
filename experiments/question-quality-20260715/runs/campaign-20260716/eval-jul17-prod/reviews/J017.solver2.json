@@ -1,0 +1,35 @@
+{
+  "pid": "J017",
+  "answer": "⑤",
+  "multipleDefensible": false,
+  "defensibleLabels": ["⑤"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "Internal contradiction with the governing PP 'in an in-person job': an in-person job supplies the employer's workspace, so 'optimizing personal work environments to eliminate daily distractions' (the home-setup problem of S3) is precisely what years of in-person work would NOT consist of. The proposition is incoherent when inserted."
+    },
+    {
+      "label": "②",
+      "verdict": "reject (strongest distractor)",
+      "reason": "Grammatically clean and real-world plausible — networking/community integration is a genuine in-person good — but the passage contains no proposition about isolation, networks, or community. The stated difficulties are workload management (S1) and workspace/distractions (S3). Inserted, ② is textually orphaned: nothing in the paragraph entails it and it explains nothing that follows. World-plausibility without textual support fails the '가장 적절한' criterion."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "Contradiction: skills 'for remote collaboration' cannot be what one accumulates by virtue of many years of IN-PERSON work; it also inverts the premise by making older workers the remote-tool experts, which the passage neither states nor needs."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "Topically alien: no proposition in the passage concerns business models or their disruption; 'had many years to disrupt traditional business models in an in-person job' is neither supported nor coherent with the contrast frame."
+    },
+    {
+      "label": "⑤",
+      "verdict": "accept (answer)",
+      "reason": "Direct entailment chain with S1: young remote workers report MORE difficulty managing workload than older colleagues; the blank must name the advantage older workers gained from years in-person. 'Acquire autonomous scheduling skills to manage heavy workloads' supplies exactly that — they developed workload-/self-management skills within an externally structured in-person environment before going remote, while pandemic-era young workers had to exercise remote autonomy from day one. 'Moreover' then reads correctly as an additive elaboration of the S1 disparity. Only candidate anchored in the text."
+    }
+  ],
+  "note": "Blank-cohesion resolves uniquely: S1 fixes the difficulty dimension (workload management), and only ⑤ recycles that dimension as the skill older workers had time to acquire. ② is the designed near-miss (world-plausible, text-unsupported). Separate passage defect outside the blank: final sentence 'a fluid option that allows them ... chooses their day-to-day work location' is ungrammatical — should be 'to choose' — a flaw in passage editing, though it does not affect the blank judgment."
+}

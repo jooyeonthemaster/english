@@ -1,0 +1,75 @@
+{
+  "pid": "P017",
+  "blindAnswer": "1",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-terminology-wobble",
+      "severity": "minor",
+      "evidence": "메인 해설은 ②를 '극성 반전'이라 부르고 오답 해설은 같은 선지를 '극성 과장'이라 부른다. ②는 금지 범위를 사람+차로 넓힌 과장이므로 '과장'이 정확하다. 구조 오분석은 아니어서 V4 실패로는 보지 않음."
+    },
+    {
+      "code": "V3-lexical-oddity",
+      "severity": "minor",
+      "evidence": "선지 ⑤의 'waiters'는 '기다리는 사람들' 의도로 쓰였으나 현대 영어에서는 '식당 종업원'을 뜻하는 비표준 용법. 절 자체는 문법적이고 오답 선지이므로 V3 실패는 아님."
+    },
+    {
+      "code": "V2-unsupported-restriction",
+      "severity": "minor",
+      "evidence": "선지 ②의 'at that time'은 지문에 근거 없는 시간 제한 첨가. 오답 성립에는 문제 없으나 decisive flaw가 이중화되어 있음."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — source span 'we cannot park cars there, but we can stop to pick up passengers'의 정확한 환언 (주차 금지 + 승객 픽업용 일시 정차 허용)",
+      "temptingBecause": "결론 문장의 cannot…but… 대조 구조를 may not…though… 로 그대로 보존",
+      "decisiveFlaw": "(정답 — 결함 없음)"
+    },
+    {
+      "label": "2",
+      "intent": "극성 과장 — 금지 대상을 차량에서 사람+차량 전체로 확대",
+      "temptingBecause": "Carol의 최초 오독('사람이 서 있으면 안 된다')에 동조한 학생에게 표지의 문자적 의미처럼 보임",
+      "decisiveFlaw": "친구의 명시적 반박 'Of course you can stand there'와 정면 모순. 'at that time'이라는 무근거 시간 제한도 첨가"
+    },
+    {
+      "label": "3",
+      "intent": "scope shift(과협소) — 허용 조건만 남기고 금지 조항을 탈락시켜 모퉁이 전체를 픽업 전용으로 재정의",
+      "temptingBecause": "'픽업 허용'이라는 절반의 진실을 포함하고 pick up 표현이 원문과 겹침",
+      "decisiveFlaw": "'reserved solely … no other use'는 보행자가 서 있을 수 있다는 사실과 모순되고, passengers를 customers로 치환. 주차 금지라는 핵심 제약이 없음"
+    },
+    {
+      "label": "4",
+      "intent": "causal/polar 과확장 — 금지를 전면 허용으로 뒤집음",
+      "temptingBecause": "'차량 관련 규칙'이라는 소재는 정답과 공유",
+      "decisiveFlaw": "'can freely park'가 'cannot park cars there'와 정면 모순. 'load goods'도 지문에 없는 첨가"
+    },
+    {
+      "label": "5",
+      "intent": "surface association — 'standing' 소재만 차용해 보행자 예절 규칙으로 재구성",
+      "temptingBecause": "지문 전반의 '서 있기' 화제와 표면 어휘가 겹침",
+      "decisiveFlaw": "'must not lean on the pole'은 지문 어디에도 근거가 없는 완전 조작이며, 표지의 대상이 차량이라는 결론과 무관"
+    }
+  ],
+  "explanationIssues": [
+    "메인 해설의 '극성 반전'(②)과 오답 해설의 '극성 과장'(②) 용어 불일치 — 내용상 '과장'이 정확하며 사실 오류는 아님"
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1~V5 전부 통과. 렌더 지문은 결론 문장 1개만 빈칸화한 깨끗한 변형이고, 블라인드 풀이에서 ①이 유일 정답으로 확정됨(각 오답은 지문 명시 진술과 직접 모순되거나 무근거 첨가 포함). 오답 4개가 서로 다른 함정 유형(극성 과장·과협소·과확장·표면 연상)을 사용해 C2는 양호하나, ④·⑤가 즉시 소거되어 실질 경쟁 선지는 ②·③ 뿐이라 C3=2. ③의 'solely/no other use', ④의 'any/freely/whenever' 같은 절대어가 약한 꼬리-소거 단서를 제공(C4=3). 일화형 쉬운 지문 + 직접 환언 빈칸은 요청 난이도 INTERMEDIATE에 부합(C5=3). 합계 17, 최저 2 → B(작은 수정으로 출하 가능: ⑤의 'waiters' 어휘 교체, ②의 'at that time' 제거, 해설 용어 통일 권장). 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

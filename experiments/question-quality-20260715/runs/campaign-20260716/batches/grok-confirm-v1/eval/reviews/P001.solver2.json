@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "B",
+  "multipleDefensible": false,
+  "defensibleLabels": ["B"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "'your critical thinking skills are greatly enhanced' — enhance는 타동사이고 주어 skills는 피동작주이므로 be + p.p. 수동태가 요구되며 정확히 충족된다. 뒤따르는 대조절 'these skills suffer'가 수동 의미를 확증한다. greatly는 과거분사를 수식하는 부사로 적법. 정문."
+    },
+    {
+      "label": "B",
+      "verdict": "incorrect (정답)",
+      "reason": "'struggle to adapt to new information or finding creative solutions' — 병렬 시작점은 struggle to 이후의 원형 adapt이므로 or 뒤 등위항은 (to) find여야 한다. finding은 병렬 위반. 구제 가능한 대안 파스를 적극 검토함: (i) adapt to의 to를 전치사로 보아 'adapt to [new information or finding creative solutions]'로 등위 목적어 파스를 세우는 것은 통사적으로 구성 가능하나, '창의적 해결책을 찾는 일에 적응하기 어렵다'는 의미가 되어 담화 논리(비판적 사고력 저하 → 해결책을 찾는 능력 자체의 약화; 첫 문장 'ability to creatively solve problems'와의 호응)와 정면 충돌하므로 화용적으로 기각. (ii) 구어체 'struggle + V-ing'로 붙이는 파스는 finding이 or 뒤 부정사 보문 내부에 위치해 struggle에 인접하지 않으므로 성립 불가. 어떤 파스로도 의도된 명제를 산출하는 정문이 되지 않음. find로 고쳐야 한다."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "'They're also critical for mental and physical health' — 계사 are 뒤 서술 형용사 자리이므로 형용사 critical이 요구되며, critical for + NP는 표준 연어. 앞 문장의 'important for academic success'와도 평행. 정문."
+    },
+    {
+      "label": "D",
+      "verdict": "correct",
+      "reason": "'as some individuals use alcohol or drugs to cope ...' — as는 이유의 종속접속사(= because)로 정형절을 요구하고, 복수 주어 some individuals와 복수 현재형 use의 수일치가 성립. 일반적 사실 진술의 현재시제도 적절하며 목적 부정사 to cope 역시 적법. 정문."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "'a significant risk factor for death, even more than other risk factors like obesity, smoking, and heart disease' — 선행 명사구에서 회복 가능한 비교 핵을 생략한 비교구문(even more [of a risk factor / significant] than ...)으로 성립한다. 위험 크기의 비교라는 논리도 정합적. 'even more so than'이 문체상 더 깔끔하다는 것은 선호의 문제일 뿐 어법 오류가 아니다. 정문(다소 어색하나 옹호 가능)."
+    }
+  ],
+  "note": "렌즈: 문법가/논리학자. 단일 정답으로 깨끗하게 수렴하는 문항. 유일한 적대적 쟁점은 (B)에서 'adapt to + 동명사' 파스의 기술적 가용성이나, 해당 파스는 의미·담화 차원에서 비정합적이어서 (B)를 구제하지 못한다. (E)는 'more so than' 선호 시비가 가능한 가장 취약한 오답지이지만 문법성 자체는 유지되므로 복수정답 위험은 낮다."
+}

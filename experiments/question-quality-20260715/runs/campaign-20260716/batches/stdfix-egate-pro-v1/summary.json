@@ -1,0 +1,32 @@
+{
+  "batchId": "stdfix-egate-pro-v1",
+  "phase": "stdfix",
+  "atKst": "2026-07-17T18:16:31.369+09:00",
+  "assignments": 6,
+  "slotsConsumed": 14,
+  "accepted": 6,
+  "modelCalls": 26,
+  "inputTokens": 240900,
+  "outputTokens": 34284,
+  "costUsd": 0.595012,
+  "ledgerAfter": {
+    "used": 766,
+    "cap": 1000,
+    "costUsd": 28.307533
+  },
+  "byArm": {
+    "B3-EPRO": {
+      "n": 6,
+      "accepted": 6,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 14,
+      "costUsd": 0.595012
+    }
+  },
+  "models": {
+    "standard": "google/gemini-3.5-flash",
+    "premiumQgen": "google/gemini-3.1-pro-preview"
+  },
+  "durationMs": 99520
+}

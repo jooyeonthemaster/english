@@ -1,0 +1,82 @@
+{
+  "pid": "P004",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-hedged-analysis-A",
+      "severity": "minor",
+      "evidence": "(A) 오답 해설이 '명사구를 수식하거나 목적을 나타내어 ~평가~를 부사적으로 수식하는'이라며 두 분석을 병기하는데, 명사('평가')를 '부사적으로 수식'한다는 표현은 용어상 부정확하다. 핵심 판단(to부정사로 어법상 적절)은 옳으므로 V4 실패로 보지 않음."
+    },
+    {
+      "code": "V4-minor-relative-clause-subject-C",
+      "severity": "minor",
+      "evidence": "(C) 해설이 관계절의 주어를 'principles of conduct'라 칭하나 엄밀히는 주격 관계대명사 that이 주어이고 principles는 선행사다. 통용되는 교육적 축약 표현이며 구조 판단 자체는 정확하므로 V4 실패로 보지 않음."
+    },
+    {
+      "code": "V5-minor-surroundingText-source-form",
+      "severity": "minor",
+      "evidence": "markedExpressions (D)의 surroundingText가 렌더 형태 'influencing'이 아닌 원지문 형태 'influenced'를 담고 있다. expression 필드와 같은 원문 기준 규약으로 전 항목이 일관되고 학생 노출 필드(정답·선지·해설·keyPoints)는 완전 동기화되어 있어 V5 실패로 보지 않음."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 4,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "명사구 후치 수식/목적의 to부정사 판단 (pointCode k)",
+      "temptingBecause": "'evidence to guide decision-making'에서 동명사 guiding이나 관계절을 기대한 학생이 to부정사를 어색하게 느낄 수 있다.",
+      "decisiveFlaw": "정답 아님 — 'the identification and evaluation of evidence to guide ...'는 명사구를 수식하는(또는 목적을 나타내는) to부정사로 완전히 문법적이다."
+    },
+    {
+      "label": "(B)",
+      "intent": "rather than 병렬 구조에서 원형 부정사 판단 (pointCode i)",
+      "temptingBecause": "'rather than' 뒤에 following(동명사)을 기대하는 학생이 원형 follow를 오류로 오인하기 쉽다 — 디코이 중 가장 매력적.",
+      "decisiveFlaw": "정답 아님 — 'learn to think through ... rather than follow ...'는 to부정사 병렬에서 to가 생략된 표준 용법으로 문법적이다."
+    },
+    {
+      "label": "(C)",
+      "intent": "관계절 내 수동태 (be considered + 보어) 판단 (pointCode e)",
+      "temptingBecause": "'considered correct'에서 considered 뒤에 to be나 as가 없어 불완전해 보일 수 있다.",
+      "decisiveFlaw": "정답 아님 — 'that are considered correct'는 consider O C의 수동형으로 보어 correct가 남는 정문이다."
+    },
+    {
+      "label": "(D)",
+      "intent": "분사 후치 수식의 태(현재분사 vs 과거분사) — 정답 (pointCode c)",
+      "temptingBecause": "beliefs 뒤 분사가 능동/수동 어느 쪽도 가능해 보일 수 있고, 문장 앞부분의 What-절 주어가 시선을 분산시킨다.",
+      "decisiveFlaw": "'beliefs influencing by their ... experiences'는 현재분사가 목적어 없이 행위자 by구를 동반해 비문이다. beliefs는 영향을 '받는' 대상이므로 과거분사 influenced가 필요하며, 교정하면 정확히 원지문이 된다."
+    },
+    {
+      "label": "(E)",
+      "intent": "주격 보어 자리의 형용사 판단 (pointCode f)",
+      "temptingBecause": "'context dependent'가 붙어 있어 부사 dependently나 다른 품사를 기대하는 학생이 흔들릴 수 있다.",
+      "decisiveFlaw": "정답 아님 — dependent는 be동사의 주격 보어인 형용사(context-dependent 복합 형용사)로 문법적이다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "(A) 해설의 '두 분석 병기 + 명사를 부사적으로 수식'이라는 표현이 용어상 흐릿하다.",
+      "recommendation": "한 분석으로 확정하거나 '명사구 evidence를 수식하는 형용사적 용법(또는 목적의 부사적 용법으로 동사적 의미를 수식)'처럼 용어를 정돈할 것."
+    },
+    {
+      "severity": "minor",
+      "evidence": "(C) 해설의 '주어인 principles of conduct'는 엄밀히 선행사이며 관계절 주어는 that이다.",
+      "recommendation": "'선행사 principles of conduct를 받는 주격 관계대명사 that이 주어'로 표현 교정."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "요청 난이도 BASIC의 GRAMMAR_ERROR. 렌더 지문은 의도된 변형(influenced→influencing) 외 손상이 없고(V1), 5개 밑줄 독립 검증 결과 (D)만 비문으로 정답 유일성이 성립한다(V2). 정답 오류는 source-correct→displayed-wrong 최소대립쌍이며 교정 시 원문과 정확히 일치한다. 디코이 5종이 서로 다른 문법 포인트(k/i/e/c/f)를 겨냥해 의도 밀도가 좋고, 특히 (B) rather than 병렬이 실질적 변별을 만든다. 'by' 행위자구가 정답을 비교적 쉽게 드러내지만 이는 BASIC 난이도에 정합(C5=4). 해설은 정확하나 (A)의 병기 분석과 (C)의 주어/선행사 축약 표현 등 소소한 다듬기 여지가 있다. 공예 합계 19로 A 기준(21)에 미달, 전 V 통과·전 C≥3이므로 B. KILLER 아님."
+}

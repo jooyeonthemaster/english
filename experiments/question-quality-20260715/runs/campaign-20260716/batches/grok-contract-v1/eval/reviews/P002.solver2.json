@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "4",
+  "multipleDefensible": false,
+  "defensibleLabels": ["4"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "위치 ①(도입문과 'If a firm pollutes more...' 사이)에 삽입하면, 정밀 과세의 원리를 설명하기도 전에 측정 비용이라는 단점이 끼어들어 도입문—메커니즘 설명의 연결이 끊긴다. 또한 뒤따르는 ②문장의 'thus'가 비례 과세 문장을 근거로 삼는 추론 사슬과 무관한 자리이므로 성립하지 않는다."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "위치 ②('pays additional tax in proportion...'과 'The polluter thus has an incentive...' 사이)에 삽입하면 'thus'의 논리적 전제(비례 과세)와 결론(감축 유인) 사이에 무관한 비용 논의가 끼어들어 추론 연결어 'thus'가 참조할 직전 명제를 잃는다. 형식적으로 추론 사슬 절단."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "위치 ③(유인 문장과 'The great attraction...' 사이)에 삽입하면 부정적 명제(측정 비용·disincentive) 직후에 아무 대조 연결어 없이 긍정 평가('The great attraction')로 복귀하게 되어 담화 구조가 파탄난다. 'The great attraction' 문장에는 양보/대조 표지가 없으므로 이 자리의 삽입은 정당화 불가."
+    },
+    {
+      "label": "4",
+      "verdict": "answer",
+      "reason": "위치 ④('The great attraction...'과 'Nevertheless, the technologies...' 사이)가 유일하게 성립한다. 'Nevertheless'는 직전에 부정적/제한적 명제를 형식적으로 요구하는 양보 연결어인데, 원문 그대로는 긍정 평가 문장('great attraction') 뒤에 양보가 와서 모순이다. 주어진 문장(연속 측정은 비용이 크고 직접 과세의 주요 disincentive)이 바로 그 부정 전제를 공급하며, '그럼에도 모니터링 기술이 빠르게 발전 중 → 장래에 더 넓은 적용 가능'이라는 [장점 → 비용 한계 → 기술 발전(양보) → 미래 전망]의 완결된 논증 구조를 만든다."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "위치 ⑤('Nevertheless...'와 'In the future...' 사이)에 삽입하면 두 가지 형식적 결함이 생긴다: (a) 'Nevertheless'가 여전히 긍정 문장 뒤에 놓여 양보의 피양보 명제가 부재하고, (b) '측정이 비용이 크다'는 부정 명제 직후에 대조 표지 없이 'In the future, it may be possible...'이라는 낙관적 전망이 이어져 non sequitur가 된다."
+    }
+  ],
+  "note": "문장 삽입 유형. 결정적 장거리 단서는 ④ 위치 문장의 양보 연결어 'Nevertheless'로, 직전에 부정적 명제를 요구한다. 주어진 문장이 그 유일한 후보이며, 삽입 시 ⑤의 'In the future... wider range of applications'도 '기술 발전으로 비용 장애가 줄어든다'는 인과로 자연스럽게 귀결된다. 다른 위치는 모두 'thus' 추론 사슬 절단 또는 대조 표지 부재로 형식적으로 기각된다. 복수 정답 여지 없음."
+}

@@ -1,0 +1,97 @@
+{
+  "pid": "J002",
+  "blindAnswer": "(C)",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": false,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1_ORPHAN_PUNCTUATION",
+      "severity": "major",
+      "evidence": "원지문과 렌더 지문 모두 첫 문장 끝이 'but for liberty as well..'로 이중 마침표(고아 문장부호)다. 렌더가 새 손상을 추가한 것은 아니지만 RUBRIC V1은 '원지문·문항 본체가 깨지지 않고'를 요구하며, 학생 노출 텍스트에 손상된 문장부호가 그대로 출력된다. 소스 인제스트 단계의 텍스트 손상이 미교정 상태로 출하됐다."
+    },
+    {
+      "code": "V4_OVERGENERALIZED_RULE",
+      "severity": "major",
+      "evidence": "해설 ④ '부사절 접속사 뒤에는 반드시 주어와 정동사가 존재해야 합니다'는 일반 규칙으로서 거짓이다. while/when/though/if 등 부사절 접속사 뒤에는 분사·형용사 축약(e.g., 'while walking', 'if necessary', 'though tired')이 표준적으로 허용된다. because절에 국한하면 결론은 맞지만, 절대 규칙로 진술되어 다른 어법 문항(접속사+분사구문 유형)과 정면 충돌하는 오개념을 학생에게 심는다."
+    },
+    {
+      "code": "V4_OPTION_A_STRUCTURE_MUDDLE",
+      "severity": "minor",
+      "evidence": "(A) 오답 해설이 'the fundamental assurance를 부연 설명'(명사 후치 수식/동격적 수식)과 '부대 상황이나 계속적 의미를 지니는 분사구문'(부사적 분사구문)을 한 문장에서 동시에 주장한다. 두 분석은 상호 배타적이며, 부대상황 분사구문으로 보면 의미상 주어가 주절 주어 Kant가 되어 'Kant가 security를 provide한다'는 오분석이 된다. 실제 구조는 'the rule of law (as the fundamental assurance)'를 의미상 주어로 하는 비제한적 분사 수식이다. 판정 결론(providing 적법)은 맞으나 구조 기술이 부정확하다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 2,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "콤마 뒤 현재분사(비제한적 분사 수식/계속 용법)의 적법성 판단 — 능동 -ing이 성립하는 자리",
+      "temptingBecause": "콤마+V-ing이 dangling participle처럼 보이고, 주절 주어 Kant는 provide의 의미상 주어가 아니어서 '주어 불일치 분사구문'으로 의심하게 만든다. 정답 (C)와 같은 -ing 형태라 비교 검토를 유도한다.",
+      "decisiveFlaw": "분사는 직전 명사구 'the rule of law as the fundamental assurance'에 걸리는 비제한적 수식이며 'provide for(~을 보장하다)' 자동사 용법도 성립한다. 원문 그대로이므로 오류 아님."
+    },
+    {
+      "label": "(B)",
+      "intent": "명사 후치 수식 분사의 태(능동 regulating vs 수동 regulated) 판별",
+      "temptingBecause": "'forms가 regulate한다'로 능동 해석하면 regulating을 기대하게 되고, 뒤따르는 by구를 놓치면 태 판단이 흔들린다.",
+      "decisiveFlaw": "수식받는 forms는 legal frameworks에 의해 규제되는 대상(by 행위자구 명시)이므로 수동 과거분사 regulated가 정확하다. 오류 아님."
+    },
+    {
+      "label": "(C)",
+      "intent": "정답 — 접속사(because)절 내 주어를 서술할 정동사 자리에 준동사가 온 비문 판별",
+      "temptingBecause": "'such frameworks enabling people ...'을 명사+현재분사 후치수식으로 읽으면 국소적으로 자연스러워 보인다. 앞의 (A) providing이 적법한 -ing이어서 같은 형태로 묶어 넘기기 쉽다.",
+      "decisiveFlaw": "그렇게 읽으면 because절 전체에 정동사가 없어 절이 성립하지 않는다. 'because + S + 정동사'가 필요하며 enabled(과거형)로 교정하면 정확히 원문이 복원된다. 유일 정답 확인."
+    },
+    {
+      "label": "(D)",
+      "intent": "수식어가 붙은 긴 단수 주어(man's violent and conflict-prone nature)와 동사의 수일치",
+      "temptingBecause": "주어부가 길고 'violent and conflict-prone' 등위 형용사 연쇄가 복수 인상을 줄 수 있다. 다만 핵 명사 nature 바로 뒤에 동사가 붙어 유혹 강도는 약하다.",
+      "decisiveFlaw": "핵 명사 nature는 단수이고 개입 복수 명사(attractor)도 없어 makes가 명백히 적절하다. 오류 아님."
+    },
+    {
+      "label": "(E)",
+      "intent": "forbid의 목적격 보어 형태(forbid + O + to-V) 판별 — 어휘 결합 지식",
+      "temptingBecause": "'prohibit/prevent/stop A from -ing' 패턴과 혼동해 'forbid them from doing'만 맞다고 암기한 학생에게 to do가 틀려 보인다. 5개 중 가장 실질적인 디코이.",
+      "decisiveFlaw": "forbid는 'forbid sb to do'의 to부정사 보어 구문을 표준적으로 취하며 원문도 to do다. 오류 아님."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "major",
+      "evidence": "해설 ④의 '부사절 접속사 뒤에는 반드시 주어와 정동사가 존재해야 합니다' — 접속사 유지 분사구문(while/when/though + V-ing)을 부정하는 거짓 일반 규칙.",
+      "recommendation": "'because는 완전한 절(주어+정동사)을 요구하는 접속사이므로'로 because에 한정해 진술할 것."
+    },
+    {
+      "severity": "minor",
+      "evidence": "(A) 해설이 명사 부연 수식과 부대상황 분사구문 두 분석을 혼합 — 부대상황 분사구문 독법이면 의미상 주어가 Kant가 되어 오분석.",
+      "recommendation": "'직전 명사구 the rule of law as the fundamental assurance를 부연 수식하는 현재분사'로 단일 분석으로 정리할 것."
+    },
+    {
+      "severity": "minor",
+      "evidence": "오답 해설 (A),(B),(D)에 why-correct만 있고 why-tempting(왜 헷갈리게 설계했는지)이 명시돼 있지 않다. RUBRIC §C는 5개 밑줄 각각에 point·why tempting·why correct를 요구한다.",
+      "recommendation": "각 디코이에 유혹 포인트 한 줄을 추가할 것."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": {
+    "minimalPair": "충족 — enabled→enabling 최소대립쌍, 교정 시 원문과 정확히 일치.",
+    "clearGrammarJudgment": "충족 — 정동사 vs 준동사는 문맥 선호가 아닌 명확한 문법 판단이며 valency/가정법류 제외 대상 아님.",
+    "allUnderlinesDocumented": "미충족 — (A),(B),(D)의 why-tempting이 해설에 부재하고, (A)와 (B)의 pointCode가 'c'로 중복되어 5포인트 독립성이 완전하지 않다.",
+    "structureReading": "부분 충족 — 철자·수일치로 즉시 드러나지는 않으나, '접속사+주어+V-ing' 정동사 결손은 한국 수험가에서 가장 많이 훈련되는 표준 함정이라 상위권에게 즉시 노출된다. because절도 짧아 KILLER 은닉 깊이에 못 미친다.",
+    "noMaskingDecoy": "충족 — (A) providing이 같은 -ing 계열이지만 쉬운 오답이 정답을 가리는 구조는 아니다."
+  },
+  "grade": "F",
+  "notes": "블라인드 풀이 결과 (C)가 유일 오류임을 5개 밑줄 독립 검증으로 확인했다(V2 통과). 그러나 두 개의 게이트 실패로 F: (1) V1 — 학생 노출 지문 첫 문장에 'as well..' 이중 마침표가 원지문에서 그대로 유입(고아 문장부호, 소스 손상 미교정). (2) V4 — 해설 ④가 접속사 유지 분사구문을 부정하는 거짓 일반 규칙을 진술하고, (A) 해설이 상호 배타적 두 구조 분석을 혼합. 공예 면에서는 디코이 4개가 각기 다른 포인트(분사 태, 수일치, 동사 보어 결합, 분사 수식)를 겨냥해 밀도가 준수하나(C2=3), 정답 함정 자체가 표준 훈련 패턴이라 KILLER 요청 난이도에 미달(C5=2), 해설 오류로 C6=1. V4·V1 수정(마침표 교정, ④ because 한정 진술, (A) 분석 단일화) 후에도 KILLER로는 함정 은닉 깊이 보강이 필요하다. V3는 이중 마침표를 V1로 귀속시킨 전제에서 통과 판정(모든 문장이 문법적이고 교정 완성문 자연스러움)."
+}

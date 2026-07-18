@@ -1,0 +1,35 @@
+{
+  "pid": "J006",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "'inevitably aggravates the instability of rural livelihoods'는 극성 역전. 빈칸 문장의 조건절 'if it involves vulnerable groups'는 경제 성장이 취약 계층에게 긍정적 잠재 기여를 할 수 있다는 전제이며, 지문 어디에도 성장이 농촌 생계를 악화시킨다는 진술이 없다. 'At the same time' 이후의 제한적 논조와도 연결이 불가능(양보-제한 구조가 성립하려면 빈칸이 긍정 방향이어야 함)."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "'is fundamentally hampered by public interventions'는 주제 정면 반대. 지문은 direct public intervention(entitlement protection, direct public support)을 기근 예방의 진짜 성공 요인으로 상찬한다. 공적 개입이 성장의 기여를 방해한다는 주장은 Botswana/Kenya/Zimbabwe 사례의 결론('real achievements lie in having provided direct public support')과 정면 충돌."
+    },
+    {
+      "label": "3",
+      "verdict": "accept",
+      "reason": "'should be acknowledged to a certain extent'는 양보적 긍정으로, 뒤따르는 담화 표지 'At the same time, it is important to recognize... cannot hope to prevent famines without... direct public intervention'과 자연스러운 양보-제한 구조를 이룬다. 후반부 'explains at best only a small part of their success'가 '어느 정도까지는 인정'이라는 부분적 기여를 정확히 뒷받침. 문법 결합도 완전(주어 The potential contribution + 수동 술어). 원전(Drèze & Sen류 논조)의 'is certainly not to be underestimated'와 동일한 기능."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "'guarantees the complete eradication of food shortages'는 절대적 단언으로, 직후 문장 'no matter how fast they grow... cannot hope to prevent famines without specialized entitlement protection'과 직접 모순. 성장만으로는 기근 예방이 불가능하다는 것이 지문의 핵심 주장이므로 '완전 근절 보장'은 성립 불가."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "가장 매력적인 오답 — 실제로 끌렸던 선지. 'proves insufficient without ___' 골격이 지문의 'cannot hope to prevent famines without ___'와 구조적으로 동형이라 훑어 읽으면 정답처럼 느껴진다. 그러나 without의 보충어가 결정적으로 틀렸다: 지문이 요구하는 결핍 요소는 direct public intervention(entitlement protection)이고, agricultural diversification은 오히려 첫 문장에서 '사람들이 잘못 기대는 성장형 처방'(economic growth / rural revival / diversification) 목록에 명시된 비판 대상이다. 또한 빈칸이 이미 '불충분'을 단언하면 뒤의 대조 표지 'At the same time'의 양보-전환 기능이 붕괴(중복 진술이 됨). 문법 결합은 정상이나 논리 부적합."
+    }
+  ],
+  "note": "빈칸 뒤 'At the same time' 양보-제한 구조와 'explains at best only a small part' 병렬 근거로 3이 유일 정답. 최대 유혹 오답은 5(without 구조 동형 미끼, 보충어 오류 + diversification이 지문 내 비판 대상이라는 장거리 단서로 배제). 1은 극성 역전, 2는 주제 반대, 4는 절대 단언 모순. 단일 정답으로 수렴하는 깨끗한 문항."
+}

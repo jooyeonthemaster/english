@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'When children are exposed to two different languages from birth' — expose is transitive ('expose X to Y'); children are the recipients of the action, so passive 'are exposed to' is required and well-formed. An active form would leave the verb's object unassigned."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "Non-restrictive relative clause after a comma modifying the inanimate antecedent 'something called code-switching'; the relative pronoun functions as subject of 'occurs'. 'Which' is obligatory here ('that' is barred in non-restrictive clauses); grammatical."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "Relative 'that' takes the singular antecedent 'an extra ability' (head of the NP it modifies, not the plural 'children'), so singular agreement 'gives' is correct. Ditransitive frame 'gives [bilingual children] [cognitive advantages]' is well-formed."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "Anticipatory-it object construction: 'make it easier for them to switch' — dummy object 'it' anticipates the true object (the to-infinitive clause), 'for them' supplies the semantic subject. The to-infinitive is the required form."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect (answer)",
+      "reason": "The clause already has its finite predicate 'can make'; finite 'leads' attached by a bare comma with no conjunction and no subject yields a comma splice / illicit second predicate. No rescuing parse exists: parallelism to 'can make' would need 'and leads'; a relative reading would need 'which leads'; a free adjunct commenting on the preceding clause requires the participle 'leading'. Correct form: 'leading to superior problem-solving skills'."
+    }
+  ],
+  "note": "Standard participial-adjunct trap (leads vs leading). All four distractors are formally provable as grammatical under their governing rules (passive with transitive 'expose'; non-restrictive 'which'; singular agreement with antecedent 'an extra ability'; anticipatory-it + to-infinitive). Alternative parses for (E) were actively searched (coordination, reduced relative, absolute construction) and none licenses the finite verb, so the key is uniquely (E). No ambiguity; item is sound from the solver's perspective."
+}

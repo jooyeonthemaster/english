@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "주격 관계대명사 that. 선행사 'a lasting mark'가 명시적으로 존재하고 관계절 내 동사 shows(단수)도 일치. 선행사가 있으므로 what이 아닌 that이 맞음. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "조동사 should 뒤 동사원형 be. 삽입 부사 then은 구조에 영향 없음. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "문장 주어는 'one of the first qualities'이고 'a bridge must exhibit'은 목적격 관계대명사가 생략된 축약 관계절(qualities 수식). 따라서 이 자리는 문장의 본동사 자리인데 concerning(전치사/분사)을 쓰면 본동사가 없는 비문이 됨. concerns(단수 본동사, 'one'과 일치)로 고쳐야 함. 대안 해석 검토: concerning을 '~에 관하여'라는 전치사로 읽어도 문장 전체가 본동사 없는 명사구 덩어리로 남아 어떤 해석으로도 정문이 되지 않음. 어법상 틀린 부분."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "주격 관계대명사 that의 선행사는 단수 'an intrinsic beauty' → works 단수 일치 정합. 뒤의 surroundings(복수)로 선행사를 착각하게 만드는 미끼이나 that 직전 beauty가 선행사임이 명백. 정문. (가장 매력적인 오답 후보였으나 수 일치 확인으로 즉시 배제)"
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'spectacular in itself'(그 자체로 볼만한)는 표준 관용 표현. 재귀대명사 itself는 주어 a bridge를 지시. 정문."
+    }
+  ],
+  "note": "실전 풀이 관점: (C)에서 '본동사 부재'라는 결정적 결함이 확인되어 단일 정답으로 즉시 수렴. 축약 관계절(a bridge must exhibit)을 놓치고 concerning을 전치사로 읽는 학생을 노린 전형적 '동사 vs 준동사' 포인트로, 기출(2013 수능 유사 지문)과 동일 계열의 검증된 출제 포인트. (D)의 수 일치 미끼도 beauty 단수로 명확히 해소됨. 복수 정답 여지 없음."
+}

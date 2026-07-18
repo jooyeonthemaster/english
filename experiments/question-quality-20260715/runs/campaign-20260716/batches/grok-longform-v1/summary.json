@@ -1,0 +1,56 @@
+{
+  "batchId": "grok-longform-v1",
+  "phase": "grok",
+  "atKst": "2026-07-17T19:29:50.951+09:00",
+  "assignments": 16,
+  "slotsConsumed": 31,
+  "accepted": 15,
+  "modelCalls": 74,
+  "inputTokens": 147015,
+  "outputTokens": 38977,
+  "costUsd": 0.598177,
+  "ledgerAfter": {
+    "used": 846,
+    "cap": 1000,
+    "costUsd": 30.310955
+  },
+  "byArm": {
+    "GKA-G-KILLER": {
+      "n": 6,
+      "accepted": 5,
+      "gateRejected": 0,
+      "noCandidate": 1,
+      "slots": 16,
+      "costUsd": 0.104473
+    },
+    "GKA-B-KILLER": {
+      "n": 6,
+      "accepted": 6,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 10,
+      "costUsd": 0.384893
+    },
+    "GKA-B-INT": {
+      "n": 2,
+      "accepted": 2,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 2,
+      "costUsd": 0.062536
+    },
+    "GKA-G-INT": {
+      "n": 2,
+      "accepted": 2,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 3,
+      "costUsd": 0.046275
+    }
+  },
+  "models": {
+    "standard": "google/gemini-3.5-flash",
+    "premiumQgen": "x-ai/grok-4.5"
+  },
+  "durationMs": 448053
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "'Physical recovery from stressful events' latches onto a single detail (fear sensations taking 10-15 seconds to fade), but the passage's thrust is emotions PREPARING us for events, not recovering from them. Detail-trap; mild pull only from that one sentence."
+    },
+    {
+      "label": "2",
+      "verdict": "correct",
+      "reason": "Matches every controlling idea: 'without us having to think about what to do', 'without your knowing it is happening', autonomic changes 'preparing us for different actions', and involuntary expressive signals ('We don't choose these changes; they simply happen'). Both key features — unconsciousness and action-preparation — are captured."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "Most attractive distractor. 'Nor would you have survived if you had to think consciously...' genuinely tempts toward 'limitations of rational thinking', and I felt the pull on first pass. But that clause is supporting evidence for the value of emotional automaticity; the passage's topic is what EMOTIONS do, not the shortcomings of reason. Figure/ground inversion — too narrow and mis-centered."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "Directly contradicted by the passage: 'We don't choose these changes; they simply happen.' The passage emphasizes involuntariness, not the importance of voluntary control."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Reverses the causal direction. The passage says emotions PRODUCE changes in expression, face, voice, posture; it never claims posture/expressions influence emotional states (facial-feedback bait, unsupported by the text)."
+    }
+  ],
+  "note": "Clean main-idea item. Distractor 3 is the strong lure (built from the conscious-thought counterfactual), distractor 1 a weaker detail-trap, 4 an antonym trap, 5 a causality-reversal trap. No alternative reading makes any other option defensible; answer converges uniquely on 2."
+}

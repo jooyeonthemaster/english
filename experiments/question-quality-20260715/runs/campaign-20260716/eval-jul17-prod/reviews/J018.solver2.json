@@ -1,0 +1,35 @@
+{
+  "pid": "J018",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "문법 seam: 'took a deep breath and ___'는 looked/took과 병렬인 과거시제 VP를 요구하며 'managed to regain his composure'는 이를 충족한다. 논리: 서사 구조가 자신감→긴장(관객 수 생각)→리듬 실수→Tom의 위로(등에 손, 'I'll be right behind you')→친구를 바라봄→심호흡이라는 정서 회복의 연쇄이고, 직후 본공연에서 'flawless' 연주와 관객 환호가 이어지므로 빈칸은 정서적 전환점(평정 회복)이어야 한다. 유일하게 이 전환을 완성하는 선지. 단, 'despite the overwhelming crowd'는 리허설 시점에 군중이 물리적으로 존재하지 않으므로 엄밀히는 예기(anticipated) 군중—즉 '많은 사람들이 올 것'이라는 생각—을 가리키는 것으로 읽어야 성립하는 경미한 지시 결함이 있으나, 정답성을 훼손할 정도는 아니다."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "문법적으로는 'regretted relying...'이 병렬 과거 VP로 성립하나 논리 붕괴: 옷은 지문 전체에서 긍정적 요소(형의 추천, 점원 동의, 'felt good')이고 후회의 단서가 전무하다. 또한 'comfortable clothes'라는 속성 자체가 지문에 근거 없음(새 공연복일 뿐). 심호흡+친구 응시라는 회복 신호와도 무관하다."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "문법은 성립. 가장 그럴듯한 미끼: 그가 'struggled with the rhythm'했으므로 리듬에 집중하기로 결심했다는 인과가 표면적으로 이어진다. 그러나 (a) Tom의 개입은 기술 조언이 아니라 정서적 지지('Don't worry, I'll be right behind you')이고, (b) '친구를 바라보고 심호흡'은 감정 조절 행위이지 기술적 전략 수립 장면이 아니며, (c) 'focus entirely on the physical rhythm'은 문제의 원인(긴장)을 다루지 않아 flawless 결말로의 전환을 설명하지 못한다. 'physical rhythm'이라는 표현 자체도 어색하다. 옹호 불가 판정."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "문법은 성립하나 논리 역행: 빈칸은 Tom의 위로와 심호흡 직후, 즉 서사의 상승 전환점이다. 'struggled to overcome'(애썼으나 성공 함의 없음/지속적 고전)은 직전의 위로-심호흡 연쇄가 만든 회복 신호와 충돌하고, 빈칸 뒤 단락 전환('The band performance was the first event...')이 이미 해소된 상태를 전제한다. 또한 실수는 이미 'As the rehearsal began' 시점에 발생했으므로 'sudden tension from his initial mistakes'를 심호흡 이후에 새로 배치하는 것은 시간 구조상 부자연스럽다."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "문법은 성립하나 사실관계 붕괴: 리허설 현장에 Jeff는 부재한다(Jeff는 쇼핑 동행자였고 'After the show, Jeff approached Garcia'로 공연 후에야 재등장). 그 자리에 없는 형에게 보이기 위해 자신감을 가장한다는 것은 지시적으로 성립 불가. 또한 이후 flawless 연주는 가장된 자신감이 아니라 실제 회복을 시사한다."
+    }
+  ],
+  "note": "빈칸 seam은 'looked ..., took ..., and ___'의 3항 병렬로 모든 선지가 과거시제 VP라 문법 변별력은 없고, 변별은 순수 논리/서사 정합에서 발생한다. 정답 1이 유일하게 정서 회복 아크(긴장→위로→심호흡→평정→flawless 공연)를 완성한다. 유일한 흠은 1의 'despite the overwhelming crowd'가 리허설 시점에 물리적으로 존재하지 않는 군중을 지시한다는 점인데, '많은 사람들이 올 것'이라는 생각(the thought of how many people would be there)에 대한 예기적 지시로 읽으면 성립하며 다른 선지를 옹호 가능하게 만들지는 않는다. 미끼 3(리듬 집중)이 표면 인과로 가장 강하지만 정서적 지지 장면이라는 국면 판정에서 탈락. 단일 정답으로 수렴."
+}

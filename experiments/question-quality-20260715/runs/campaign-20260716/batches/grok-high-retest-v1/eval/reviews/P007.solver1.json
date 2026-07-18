@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "(A) 'multiple perspectives'는 본문의 'evaluating these issues from different perspectives'를 직접 환언하고, 'rather than fixed rules'와의 대조('think through ethical issues rather than follow a prescribed set of ethical codes or rules')와 정확히 정렬된다. (B) 'context-dependent'는 본문 'Individual perspectives may also be context dependent'의 거의 축자적 인용이며, '같은 개인도 상황·시점·기분에 따라 다른 선택을 한다'는 부연과 일치한다. 두 빈칸 모두 문법적 결합(through + NP, be동사 뒤 형용사구)도 자연스럽다."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "(A)는 옳으나 (B) 'universally fixed'는 'these principles vary both between and within individuals'와 정면 모순. 원칙이 보편적으로 고정되어 있다면 본문 전체의 논지(사고 훈련의 필요성)가 무너진다."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "(B) 'context-dependent'가 맞아 두 번째 빈칸만 훑는 수험생에게 실질적 유인이 있는 매력적 오답. 그러나 (A) 'prescribed codes'는 본문이 따르지 말라고 명시한 대상('rather than follow a prescribed set of ethical codes or rules')이며, 요약문에 넣으면 'prescribed codes rather than fixed rules'라는 자기모순(둘이 사실상 동의어)이 발생한다."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "(A) 'ethical theories'는 'This form of ethics is distinct from higher levels of conceptual ethics or theory'와 모순. (B) 'socially shared'는 가치가 사회적 신념과 관련된다는 언급을 왜곡한 것으로, 본문의 핵심은 공유가 아니라 개인 간·개인 내 변동성이다."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "'vary between individuals'에 꽂힌 수험생이 (B) 'individualistic'에 끌릴 수 있는 오답. 그러나 (A) 'conceptual ethics'는 본문이 명시적으로 배제한 층위이고, (B)도 요약문 두 번째 절이 겨냥하는 '동일 개인 내 상황 의존적 변동'(within individuals, context dependent)을 담지 못한다. individualistic은 개인마다 다르다는 절반만 포착하고 상황 의존성을 놓친다."
+    }
+  ],
+  "note": "정답이 ①로 유일하게 좁혀지는 깔끔한 요약문 완성 문항. (A)는 ①②만 통과, (B)는 ①③만 통과하여 교집합이 ① 하나. 매력적 오답 설계도 정석적: ③은 (B) 정답을 미끼로, ⑤는 'vary between individuals'의 부분 독해를 미끼로 쓴다. 다만 (B) 'context-dependent'가 본문 표현의 거의 축자적 재사용이라 최상위권에게는 변별력이 낮고 체감 난도는 평이한 편."
+}

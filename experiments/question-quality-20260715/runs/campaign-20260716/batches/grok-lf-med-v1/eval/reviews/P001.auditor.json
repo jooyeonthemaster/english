@@ -1,0 +1,97 @@
+{
+  "pid": "P001",
+  "blindAnswer": "(C)",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-AGREEMENT-CONTROLLER",
+      "severity": "major",
+      "evidence": "해설: '따라서 주어 values에 호응하는 3인칭 단수 정동사 relates로 고쳐야 한다.' — 'values'를 주어(호응 대상)로 지목했으나 values는 자유관계절 'What a person values' 내부의 동사이고, relates가 호응하는 주어는 명사절 전체다. 명사 values로 읽으면 복수형이라 '3인칭 단수'와 자기모순이며, 같은 해설 첫 문장('What a person values라는 명사절이 문장 주어로 기능')과도 충돌한다. 학생에게 수일치 오개념을 유발할 수 있는 구조 오설명."
+    },
+    {
+      "code": "V4-ATTACHMENT-A",
+      "severity": "minor",
+      "evidence": "오답 해설 (A): \"앞 명사구 'different perspectives' 뒤에서 목적·용도를 나타내는 to부정사\" — 'to guide how to respond'는 identifying/evaluating 행위 전체를 수식하는 부사적 목적 부정사이지 명사구 'different perspectives'를 수식하는 형용사적 용법이 아니다. keyPoints의 '(A) 명사 뒤에서 목적으로 쓰인 to부정사'도 같은 부착 오분석을 반복한다."
+    },
+    {
+      "code": "V4-TERM-PARTICIPLE",
+      "severity": "minor",
+      "evidence": "해설: '뒤에 이어지는 분사 구문을 보고' — 'influenced by ...'는 beliefs를 수식하는 관형(축소 관계절) 분사구이지 부사적 분사구문이 아니다. 학교문법 기준 용어 혼용."
+    },
+    {
+      "code": "V5-EXPRESSION-FIELD-NOTE",
+      "severity": "minor",
+      "evidence": "markedExpressions (C)의 expression='relates'(교정형)인 반면 다른 항목은 expression=표시형이다. errorExpression='relating', correction='relates'가 모두 존재해 해석 가능하므로 동기화 실패로는 보지 않으나 스키마 사용이 비일관적이다. V5 자체는 통과."
+    },
+    {
+      "code": "V1-VERIFIED",
+      "severity": "minor",
+      "evidence": "기계 대조 결과: 마커 제거 + (C) relating→relates 복원 시 렌더 지문이 원지문과 1471자 전부 일치(EXACT MATCH). 마커 A~E 순서·내용이 선지 목록과 일치. 손상 없음."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 4,
+    "C5": 2,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "준동사 자리 판단 — 부사적 목적 to부정사의 적정성",
+      "temptingBecause": "앞의 identifying/evaluating 동명사 병렬 흐름에 이어 나와 guiding으로의 병렬을 기대하게 만들고, 'to guide how to respond'의 부착 지점이 즉각적으로 보이지 않는다",
+      "decisiveFlaw": "목적을 나타내는 부사적 to부정사로 완전히 문법적 — 오답(정답 아님). 단, 해설이 이를 명사구 수식으로 오설명(V4 minor)"
+    },
+    {
+      "label": "(B)",
+      "intent": "주격 관계대명사 that vs 접속사 that 판별 + 수동태 연결",
+      "temptingBecause": "although절 내부의 인용부 안에 위치해 구조 추적이 번거롭고, 문장에 that절이 여럿이라 접속사/관계사 혼동을 유도한다",
+      "decisiveFlaw": "선행사 'the principles of conduct'를 받는 주격 관계대명사로 'are considered correct'와 정상 호응 — 문법적, 오답"
+    },
+    {
+      "label": "(C)",
+      "intent": "정답 — 명사절(자유관계절) 주어 뒤 정동사 필수 자리에서 준동사 relating 투입",
+      "temptingBecause": "'relating to'가 관용구처럼 보이고, 바로 뒤의 'influenced by ...' 분사와 사슬을 이루어 수식어 연쇄로 오독하기 쉽다(garden path)",
+      "decisiveFlaw": "relating이면 해당 문장에 정동사가 하나도 없어 문장이 성립하지 않는다. 유일 교정형 relates는 원지문과 정확히 일치(최소대립쌍 확인)"
+    },
+    {
+      "label": "(D)",
+      "intent": "분사 능수동 판별 — 피수식 명사와의 의미 관계",
+      "temptingBecause": "정답 (C)에 인접해 있고, beliefs가 행위 주체라고 오독하면 influencing을 기대하게 된다",
+      "decisiveFlaw": "beliefs는 learning experiences에 의해 '영향받는' 대상이므로 과거분사 influenced + by구가 정확 — 문법적, 오답"
+    },
+    {
+      "label": "(E)",
+      "intent": "전치사 뒤 동명사 + 병렬 구조 판단",
+      "temptingBecause": "'it is necessary to understand ... alongside ...' 흐름에서 understand와의 병렬로 (to) recognize를 기대할 수 있다",
+      "decisiveFlaw": "alongside는 전치사이므로 동명사 recognizing이 정확하며 뒤 accepting과 병렬 — 문법적, 오답"
+    }
+  ],
+  "explanationIssues": [
+    "'주어 values에 호응하는 3인칭 단수 정동사 relates' — 호응 대상 오지목(주어는 명사절 전체; 명사 values라면 복수라 자기모순). 주요 결함.",
+    "(A) 해설·keyPoints의 '명사구/명사 뒤에서 목적을 나타내는 to부정사' — 부사적 목적 부정사를 명사 수식으로 부착 오분석.",
+    "'뒤에 이어지는 분사 구문' — 관형 축소관계절 분사구를 부사적 분사구문 용어로 지칭.",
+    "각 밑줄별 'why tempting'이 어디에도 명시돼 있지 않다(오답 해설은 why-correct만 제공, keyPoints는 5개 중 3개만 커버) — §C KILLER 조건 3 미충족."
+  ],
+  "killerConditionsMet": false,
+  "killerConditionsDetail": {
+    "minimalPair": true,
+    "clearGrammarJudgment": true,
+    "allFiveUnderlinesDocumented": false,
+    "structureReadingRequired": true,
+    "noMaskingDecoy": true,
+    "note": "조건3 실패: why-tempting 부재, keyPoints 3/5. 조건4는 형식상 충족하나 'What ... values + -ing'는 한국 수험가에서 고빈도 훈련 패턴이라 상위권에게 패턴 매칭으로 즉시 노출되는 편 — KILLER 함정 깊이로는 한 단계 얕다(C5=2의 근거)."
+  },
+  "grade": "F",
+  "notes": "본체는 우수하다: 지문 무결(기계 대조 통과), 정답 유일성 독립 검증 통과(정동사 부재는 범주적 비문), 최소대립쌍 성립, 5개 밑줄이 서로 다른 문법 포인트를 겨냥. 그러나 학생 노출 해설이 수일치 호응 대상을 오지목하는 구조 오설명(V4 major)을 포함해 유효성 게이트 실패 — 공예 점수로 상쇄 불가, F. 수정 방향: 해설 문구를 \"명사절 'What a person values'가 단수 취급되는 주어이므로 relates\"로 교정하고, (A) 해설의 부착 설명을 부사적 목적 용법으로 고치고, 밑줄별 why-tempting을 보강하면 B~A 재판정 가능. C5는 KILLER 요청 대비 함정 깊이가 '상' 수준(패턴 매칭 취약)이라 2점."
+}

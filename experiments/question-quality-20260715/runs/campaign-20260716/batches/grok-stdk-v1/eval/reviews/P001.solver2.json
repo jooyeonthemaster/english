@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "too + Adj + to-V tough-construction with object gap bound to the subject: 'Masks are too heavy [for one] to uphold [them] indefinitely'. Same pattern as 'The box is too heavy to lift'. The collocation 'uphold a mask' is licensed by the passage itself ('costs of upholding them'). Grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "Inside 'that you waste energy, sacrifice productivity, and lose people's trust', the parallelism origin is 'you'; waste/sacrifice/lose are three parallel finite verbs agreeing with 'you'. Bare form 'sacrifice' is exactly right."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "Causative 'make + object + bare infinitive': 'make them appear weak'. 'appear' as linking verb takes the predicate adjective 'weak'. Grammatical."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "Free adjunct (resultative) participle: ', creating a snowball effect' takes the preceding clause's event (the spreading culture of mask-removal) as its notional subject — a standard sentential participial construction. Grammatical."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "Subject is 'Some of the ways [we helped the CEOs remove their masks]'. With 'some of + plural count noun', agreement is plural: 'were', not 'was'. The reduced relative clause modifying 'ways' cannot alter agreement, and no inversion or singular-head parse is available ('some' cannot be mass-partitive with count 'ways'). Attraction to the singular-feeling predicate ('was to name...') is a known error, not a licensed pattern. Should be 'were'."
+    }
+  ],
+  "note": "Adversarial re-parse search performed for every option (tough-movement gap for A, parallelism origin for B, causative bare infinitive for C, clause-level free adjunct for D, any singular-subject parse for E). Only (E) fails under every available parse; the other four are robustly grammatical. Answer narrows uniquely to (E) with high confidence."
+}

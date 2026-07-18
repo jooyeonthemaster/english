@@ -1,0 +1,35 @@
+{
+  "pid": "P010",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "Antecedent is 'The Faroe Islands', a plural proper noun (main-clause 'are' confirms plural construal). Plural pronoun 'they' agrees with plural antecedent in both clauses. Grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect",
+      "reason": "In 'the government insists the killing of whales are not done for profit', the embedded-clause subject is the singular gerundial noun 'the killing'; 'of whales' is a postmodifying PP that cannot control agreement (classic proximity-attraction trap). Required form is 'is not done' (indicative, since 'insists' here means 'asserts a fact') or bare subjunctive 'be done' under a mandative reading. Plural 'are' is licensed under no parse: 'done for profit' forces 'the killing' as subject, ruling out any 'whales are...' reading. Ungrammatical."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'a law that says...' — subject relative pronoun with antecedent 'a law' filling the subject gap of 'says' (singular agreement holds). The complementizer parse is unavailable because the clause would lack a subject, so the relative parse is forced and fully grammatical."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'as quickly and efficiently as possible' — two adverbs coordinated to modify the intransitive predicate 'take place' inside the as...as frame. Adverb+adverb parallelism holds; adjective 'efficient' would break it. Grammatical."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'whether this practice should be allowed to continue' — modal + passive bare infinitive of the 'allow NP to-inf' pattern; passivization retains the to-infinitive complement ('be allowed to continue'). Textbook-correct. Grammatical."
+    }
+  ],
+  "note": "Blind solve, grammarian/logician lens. Actively searched for rescuing parses for (B) (notional plurality, independent 'whales are' clause) — none succeed since 'done for profit' semantically and syntactically selects 'the killing' as subject and gerundial 'killing' is strictly singular. No other option admits an ungrammatical reading. Unique answer: (B)."
+}

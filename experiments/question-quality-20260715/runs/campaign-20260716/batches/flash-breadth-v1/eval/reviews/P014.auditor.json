@@ -1,0 +1,87 @@
+{
+  "pid": "P014",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-HALLUCINATED-EXAMPLE",
+      "severity": "critical",
+      "evidence": "해설 본문: '필자는 싱가포르나 보츠와나, 케냐 등의 구체적 사례를 들어'. 지문에 등장하는 국가는 Botswana, Kenya, Zimbabwe 뿐이며 싱가포르(Singapore)는 지문 어디에도 없다. 지문에 없는 내용을 사례로 첨가한 사실성 오류(환각)이며, 학생이 해설을 지문과 대조하면 즉시 신뢰가 무너진다."
+    },
+    {
+      "code": "V4-CORRUPTED-TERM",
+      "severity": "minor",
+      "evidence": "오답 해설 5: '직접적인 공지 지원 제도가 필수적임' — '공공 지원'의 오탈자로 '공지 지원'이라는 비단어 표현이 학생 노출 필드에 남아 있다."
+    },
+    {
+      "code": "V1-NOTE-RENDER-FIELD-EMPTY",
+      "severity": "minor",
+      "evidence": "렌더 지문 필드가 '(렌더 지문 없음)'. TOPIC 유형은 지문 무변형 사용이 의도이므로 원지문 그대로 노출된다고 보고 V1 통과 처리했으나, 파이프라인이 실제로 원지문을 표시하는지 확인 필요. 원지문 자체는 접합 파손·중복·누락·고아 문장부호 없이 온전하다."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 4,
+    "C3": 3,
+    "C4": 3,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — 지문의 핵심 대조(경제 성장만으로는 기근 예방 불가 vs 직접적 공공 개입의 필수성)를 'necessity of direct state intervention over mere economic growth'로 정확히 요약",
+      "temptingBecause": "정답이므로 해당 없음. 'cannot hope to prevent famines without ... direct public intervention'과 'The real achievements ... direct public support' 두 문장이 직접 근거",
+      "decisiveFlaw": "없음 — 유일 정답. 다만 'over mere economic growth' 대조 구조와 가장 긴 선지 길이가 정답임을 약하게 누출한다"
+    },
+    {
+      "label": "2",
+      "intent": "half-truth + scope shift — 도입부의 'diversification of economic activities'와 'famine vulnerability'를 앵커로 삼되 대상을 'natural disasters'로 치환",
+      "temptingBecause": "첫 문장에 diversification과 vulnerability가 문자 그대로 등장하여 어휘 매칭 독자를 유인",
+      "decisiveFlaw": "지문은 다각화를 불충분한 사후적 경향의 하나로 제시하며(주장 대상이 아님), 기근(famine)이 자연재해(natural disasters) 일반으로 범위가 바뀌어 있다"
+    },
+    {
+      "label": "3",
+      "intent": "polarity reversal / causal overreach — 케냐 농업·짐바브웨 식량 생산 사례를 성공 요인으로 승격",
+      "temptingBecause": "Kenya의 agricultural sector, Zimbabwe의 food production이 지문에 실명으로 등장",
+      "decisiveFlaw": "지문은 이들 성장이 기근 예방 성공의 'at best only a small part'만 설명한다고 명시 — 평가 극성이 정반대"
+    },
+    {
+      "label": "4",
+      "intent": "polarity reversal on key concept — 핵심 용어 'entitlement protection'을 그대로 쓰되 '한계(limitations)'로 뒤집음",
+      "temptingBecause": "지문의 가장 기술적인 핵심 용어(specialized entitlement protection mechanisms)를 포함하여 용어 매칭 독자를 유인",
+      "decisiveFlaw": "지문은 해당 정책의 필요성과 유효성(성공 사례)을 주장하지 한계를 논하지 않음 — 극성 하나로 즉시 소거 가능해 KILLER 변별력에는 오히려 마이너스"
+    },
+    {
+      "label": "5",
+      "intent": "fabricated relation — 'uncertain sources'(불안정한 생계)와 경제 성장 속도 사이에 지문이 주장하지 않은 상관관계를 날조",
+      "temptingBecause": "'derive their livelihood from uncertain sources'가 지문에 그대로 등장하고 성장도 반복 언급됨",
+      "decisiveFlaw": "지문은 'no matter how fast they grow'로 성장 속도의 무관함을 명시 — 불안정 생계와 느린 성장의 관계는 지문에 존재하지 않는 명제"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "critical",
+      "evidence": "본해설이 지문에 없는 '싱가포르'를 구체적 사례 국가로 지목 (실제 사례: Botswana, Kenya, Zimbabwe)",
+      "recommendation": "'싱가포르나 보츠와나, 케냐 등' → '보츠와나, 케냐, 짐바브웨'로 교정"
+    },
+    {
+      "severity": "minor",
+      "evidence": "오답 해설 5의 '공지 지원 제도' — '공공 지원 제도'의 오탈자",
+      "recommendation": "'공지' → '공공' 교정"
+    },
+    {
+      "severity": "minor",
+      "evidence": "본해설이 다소 장황하며 정답 근거와 핵심 함정(각 오답의 함정 유형)의 분리가 약함. 오답 해설 2는 natural disasters로의 범위 치환이라는 결정적 결함을 언급하지 않음",
+      "recommendation": "정답 근거 두 문장 인용 + 오답별 함정 유형 한 줄 구조로 압축"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V2는 견고하다: 정답 1이 유일하며 오답 4개가 서로 다른 함정 유형(scope shift, polarity reversal x2 각기 다른 대상, fabricated relation)을 사용해 선지 설계 자체는 우수하다. 그러나 (1) 해설의 싱가포르 환각이 V4 치명 실패이며 공예 점수로 상쇄되지 않는다. (2) 요청 난이도 KILLER 대비 실제 난이도가 크게 미달: 주제문이 지문에 두 번 명시적으로 진술되고('cannot hope to prevent famines without direct public intervention', 'real achievements lie in direct public support'), 정답 선지가 그 직접적 paraphrase이며, 선지 4는 극성 하나로 즉시 소거된다 — 두 문장 이상의 논리 연결 없이 단서 하나로 정답 도달이 가능해 KILLER 조건(§D의 정신 준용) 불충족(C5=1). (3) TOPIC 유형이라 §C/§D가 직접 적용되지는 않으나 KILLER 판정은 유추 적용으로 false. 수정 경로: 해설 사실 교정(싱가포르 제거, 공지→공공)만으로 V4는 회복되나, KILLER 라벨을 유지하려면 정답 선지의 추상화 수준을 높이고 대조 구조 누출('over mere economic growth')을 완화하는 재설계가 필요하다."
+}

@@ -1,0 +1,72 @@
+{
+  "pid": "P001",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-phrasing",
+      "severity": "minor",
+      "evidence": "(D) 오답 해설의 \"전치사구의 수식을 받는 'each of the CEOs' 문장에서\"는 문구가 어색하다(주어구를 '문장'이라 지칭). 다만 핵이 단수 each라는 분석 자체는 정확하므로 V4 실패로는 보지 않는다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "감정동사 concern의 수동형(be concerned that) 판단 — 태(voice) 포인트",
+      "temptingBecause": "were concerned 뒤에 바로 that절이 이어져 수동태 뒤 목적어절처럼 보일 수 있고, 능동 concern과의 구분을 요구한다",
+      "decisiveFlaw": "경험주 주어(all of the CEOs)가 감정을 느끼는 쪽이므로 수동형이 표준이고 be concerned that은 관용적으로 옳다 — 어법상 정답이 될 수 없다. 다만 훈련된 학생에게는 즉시 소거되는 약한 디코이"
+    },
+    {
+      "label": "(B)",
+      "intent": "사역동사 make의 목적격보어 형태(원형부정사) 판단",
+      "temptingBecause": "make them appear 연쇄에서 to appear/appearing을 기대하는 오개념을 자극한다",
+      "decisiveFlaw": "make는 목적격보어로 원형부정사를 취하므로 appear가 옳다 — 정답 불가"
+    },
+    {
+      "label": "(C)",
+      "intent": "관계대명사 vs 관계부사 — 후행절 완전성으로 판단 (선언된 정답)",
+      "temptingBecause": "정답으로서의 은폐력: 'a culture which' 표면 연쇄가 자연스럽게 읽히고, 추상명사 culture 뒤 which가 흔한 패턴이라 완전성 검사를 생략하면 지나치기 쉽다",
+      "decisiveFlaw": "후행절 'those subordinates did the same'이 주어·동사·목적어(the same)를 모두 갖춘 완전한 절이어서 which가 채울 공백이 없다(전치사 잔류 해석도 불가). where/in which로 교정해야 하며 교정 시 정확히 원문이 복원된다"
+    },
+    {
+      "label": "(D)",
+      "intent": "each of + 복수명사에서의 주어-동사 수일치(근접 명사 유인)",
+      "temptingBecause": "동사 바로 앞의 복수명사 CEOs가 were를 유도하는 고전적 attractor 구조",
+      "decisiveFlaw": "주어 핵은 단수 each이므로 was가 옳다 — 정답 불가. 디코이 중 가장 유인력 있음"
+    },
+    {
+      "label": "(E)",
+      "intent": "명사 후치수식 과거분사(reduced relative) vs 능동 분사/정동사 판단",
+      "temptingBecause": "identity based 연쇄에서 based가 정동사나 능동 basing처럼 보일 수 있다",
+      "decisiveFlaw": "identity가 based on의 수동 대상이므로 과거분사 수식이 옳다(= identity that is based on) — 정답 불가"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "(D) 해설 문구 \"전치사구의 수식을 받는 'each of the CEOs' 문장에서 진짜 주어의 핵은...\" — '문장에서'가 주어구를 잘못 지칭하는 어색한 표현. 분석 내용 자체는 정확",
+      "recommendation": "\"주어 'each of the CEOs'에서 of the CEOs는 전치사구 수식어이고 핵은 단수 each이므로\"로 다듬을 것"
+    },
+    {
+      "severity": "minor",
+      "evidence": "keyPoints가 (C)(B)(D)만 다루고 (A)(E) 포인트는 누락 — 모순은 아니므로 V5 실패는 아니나 커버리지가 불완전",
+      "recommendation": "keyPoints에 (A) 감정동사 수동, (E) 과거분사 후치수식 포인트를 추가"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 렌더 지문은 원지문 대비 where→which 단일 의도 변형만 있고(최소대립쌍, 교정 시 원문 복원), 5개 밑줄 독립 검증 결과 (C)만 비문으로 정답 유일성이 성립하며, 해설의 통사 분석(완전절 판단, 추상 선행사 where)도 사실과 일치한다. 그러나 요청 난이도 KILLER 대비 공예가 미달: 정답 포인트(which+완전절)는 수능 어법에서 가장 고빈도로 훈련되는 정형 패턴이고 판단이 단일 문장 내에서 국소적으로 완결되어 함정 깊이가 KILLER에 못 미친다(C5=1). 디코이 (A)(E)는 상위권 학생이 즉시 소거하는 약한 유인력(C3=2). KILLER §C 조건 중 '5개 밑줄 각각의 why tempting' 명시 문서화가 부재하고 정답 은폐 깊이가 부족하여 killerConditionsMet=false로 보수 판정. 종합: 유효하고 출하 가능한 표준 중상 난이도 문항이지만 KILLER 라벨과는 불일치 — 등급 C (합계 15, C5=1로 B 기준 미달)."
+}

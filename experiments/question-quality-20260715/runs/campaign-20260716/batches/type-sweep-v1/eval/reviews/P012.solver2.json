@@ -1,0 +1,35 @@
+{
+  "pid": "P012",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "'일찍 교정할 때 가장 효과적'은 지문이 하나의 극단으로 제시한 'rejection and correction' 입장이다. 필자는 P5에서 'first accept the dialect and then build on it'을 문화 반응적 교수와 가장 일치하는 접근으로 채택하므로 교정 우선론과 모순되며, 'results won't be apparent immediately'와도 충돌한다. 형식적으로: 지문 명제는 accept-then-build를 추천하므로 correct-first를 최선이라 단정하는 이 선지는 반박된다."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "지문 P2는 'Students realize this when they interview...' 즉 표준 영어의 취업·진학 실익을 학생 스스로 깨닫는다고 서술할 뿐, 교사가 그 실익을 '먼저 설명해야 한다'는 규범적 명제는 어디에도 없다. 교사의 첫 행동으로 지문이 지정한 것은 방언 수용이지 실익 설명이 아니다. 전제 없는 처방이므로 비성립."
+    },
+    {
+      "label": "3",
+      "verdict": "correct",
+      "reason": "지문의 핵심 주장 'The approach most consistent with culturally responsive teaching is to first accept the dialect and then build on it'과 동형이며, 예시(\"I ain't got no pencil\" → \"Oh, you don't have a pencil\")가 '표준 표현으로 확장'을 정확히 예화한다. 'build on it'의 내용이 표준형 재진술(recast)로 구체화되어 있으므로 선지의 '표준 표현으로 확장해 주어야'는 지문에 완전히 함의된다."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "'complete acceptance'는 P4에서 의견 스펙트럼의 반대 극단으로만 언급되며 필자의 입장(수용 후 확장)과 구별된다. 또한 '~만이 ... 보장한다'는 유일성·보장의 강한 양상 명제로, 지문의 'long-range benefits ... are worthwhile'(가치 있다, 즉각적이지 않음)보다 훨씬 강하다. 극단 입장 귀속 + 양상 과장의 이중 결함으로 반박된다."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "지문 P7 'results won't be apparent immediately'는 즉각적 효과의 부재를 명시하므로 '즉각적 교정 효과를 확인한 뒤에야 전환'이라는 조건은 전건 자체가 지문상 충족 불가능하다. 또한 문화 반응적 교수는 '전환 대상'이 아니라 처음부터 취해야 할 접근으로 제시되어 순서도 역전되어 있다. 이중 모순."
+    }
+  ],
+  "note": "주장 파악 유형. 렌즈(문법가/논리학자) 기준으로 각 선지를 지문 명제와 대조한 결과 3번만 함의(entailment) 관계가 성립하고, 1·4·5는 명시적 모순, 2는 무근거 처방으로 각각 배제된다. 오답들이 지문 속 어휘(교정, 완전한 수용, 즉각적, 취업·진학 실익)를 재활용한 그럴듯한 미끼로 설계되어 있으나 논리적 이탈이 분명해 복수정답 여지는 없다."
+}

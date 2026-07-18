@@ -1,0 +1,35 @@
+{
+  "pid": "P011",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "'admit that, regardless of their growth speed,' yields a perfectly grammatical frame: 'it is important to admit that, [adverbial insert], countries where ... derive their livelihood from uncertain sources cannot hope to prevent famines without specialized entitlement protection mechanisms.' Logic matches the evidence exactly: Botswana's rapid economic growth / Kenya's agricultural growth / Zimbabwe's food production 'explains at best only a small part' of famine-prevention success, and the real achievement is direct public support — i.e., regardless of how fast an economy grows, direct public intervention is indispensable."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "Seam failure: 'claim that only inclusive economic expansion' leaves a bare noun phrase as subject, but the sentence continues with a second full subject+verb ('countries ... cannot hope'), producing a double-subject non-sentence. No reduced-relative, appositive, or inversion reading rescues it. Attractive because 'inclusive' echoes 'if it involves vulnerable groups,' but even semantically the passage argues that growth of any kind is insufficient without direct public intervention, so 'only inclusive expansion' misstates the thesis."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "Same double-subject seam failure as option 2: 'assume that rural economic revival alone' cannot attach to the following complete clause 'countries ... cannot hope ...'. Semantically it also inverts the passage: the author explicitly rejects the idea that rural-economy revival alone reduces famine vulnerability, so 'it is important to assume that rural economic revival alone [suffices]' would contradict the argument even if it parsed."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "The most tempting distractor: the passage's thrust does elevate protection over growth, and 'insist that protection works' rides that current. But grammatically 'insist that protection works without any growth' is a self-complete that-clause, so the following 'countries ... cannot hope ...' becomes a comma splice with no conjunction. Logically, 'without ANY growth' is an overreach that collides with the concession 'The potential contribution of greater economic success ... cannot be denied' — the author never claims growth is useless, only that it is insufficient without direct public intervention."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Seam failure: the modal 'can' in 'argue that activity diversification alone can' is stranded with no main verb, and the following clause 'countries ... cannot hope' supplies its own subject and verb, so no ellipsis reading completes it. Semantically 'diversification alone can [prevent famines]' also contradicts the passage's central claim that no growth strategy alone suffices."
+    }
+  ],
+  "note": "Blind solve, top-tier examinee lens. The long trailing clause 'countries where ... cannot hope to prevent famines without specialized entitlement protection mechanisms' is the governing long-distance cue: the blank must end in 'that' plus at most a parenthetical adverbial so that 'countries' can serve as the that-clause subject. Only option 1 satisfies this seam; options 2/3/5 strand a noun phrase or modal (double subject / dangling 'can'), and option 4 creates a comma splice while overclaiming ('without any growth') against the explicit concession sentence. Felt the pull of option 4 (protection-over-growth theme) and option 2 ('inclusive' echoing 'involves vulnerable groups') before the grammar seam and the concession sentence eliminated both. Single defensible answer: 1."
+}

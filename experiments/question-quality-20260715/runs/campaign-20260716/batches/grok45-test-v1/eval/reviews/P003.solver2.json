@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "Seam: fronted purpose infinitive 'To keep the connection alive,' licenses a bare imperative VP; 'deliberately keep a warm and regular contact thread' is grammatical. Logic: 'warm' maps to 'friendly' and 'regular' maps to 'consistent' in the next sentence's positive definition ('but rather maintaining a friendly and consistent line of communication'), and the anaphor 'This' coherently takes the blank as antecedent, with the negated readings (requests/updates) serving as a natural refinement. Uniquely satisfies all constraints."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "Grammatical imperative, but formally contradicted by the immediately following anaphoric clause: 'This doesn't mean constantly reaching out with REQUESTS...'. If the blank asserted request-driven messaging, the next sentence would deny its own antecedent. Contradiction; invalid."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "Grammatical imperative, but formally contradicted by '...or UPDATES' in the same negation ('This doesn't mean constantly reaching out with requests or updates'). 'Constant professional updates without pause' is exactly the negated reading. Contradiction; invalid."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "Grammatical imperative, but logically inverted: the passage diagnoses relationships getting stuck 'due to a lack of follow-up', so delaying outreach until bonds deepen is the failure mode, not the remedy for keeping the connection alive. It also renders the following 'This doesn't mean constantly reaching out...' clarification incoherent (waiting could never be misread as constant outreach)."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Grammatical imperative and superficially attractive via the article-sharing example, but the exclusive restrictor 'ONLY when silence grows long' contradicts 'maintaining a friendly and CONSISTENT line of communication' and inverts the passage's concessive 'even if you haven't spoken in a while' (permission to share despite silence) into a necessary condition (share solely after long silence). Logically invalid."
+    }
+  ],
+  "note": "Grammarian/logician lens. All five options are bare-verb imperatives, so every seam with the fronted purpose infinitive is grammatical; the item discriminates purely on logic. The decisive constraint is the anaphoric sentence 'This doesn't mean constantly reaching out with requests or updates but rather maintaining a friendly and consistent line of communication', which negates 2 and 3 verbatim, while 4 contradicts the follow-up thesis and 5's 'only' inverts the concessive example. Option 1 alone matches the positive definition (warm=friendly, regular=consistent). Single defensible answer; no alternative parse rescues any distractor. Minor style note: 'contact thread' is slightly unidiomatic but unambiguous and does not affect solvability."
+}

@@ -1,0 +1,85 @@
+{
+  "pid": "P016",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-INFO-NO-RENDER",
+      "severity": "minor",
+      "evidence": "렌더된 지문 필드가 '(렌더 지문 없음)'. SUMMARY_COMPLETE_MC는 지문 변형이 없는 유형이므로 원지문 그대로 노출되는 전제로 보이나, 학생 노출 지문 필드가 비어 있다는 점은 파이프라인 차원에서 확인 필요. 원지문 자체는 손상(접합 파손·중복·누락·고아 문장부호·오탈자) 없음."
+    },
+    {
+      "code": "V4-MINOR-AWKWARD-TERM",
+      "severity": "minor",
+      "evidence": "해설의 '대행 디자이너들과의 조정 및 협력'에서 '대행 디자이너'는 어색한 조어. 지문의 'substantial numbers of designers ... implementing a concept'(구현 담당 디자이너들)을 가리키려는 의도로 보이며 사실 오류는 아니지만 표현이 부정확함."
+    },
+    {
+      "code": "V4-MINOR-MUDDLED-EXPLANATION",
+      "severity": "minor",
+      "evidence": "오답 해설 5의 'isolation(고립, 분리) 역시 복잡한 과정 속의 독립성을 왜곡할 수 있으나'는 논리 전개가 불명료함. 사실 오류는 아니나 무엇을 왜곡한다는 것인지 모호."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "1 (정답)",
+      "intent": "정답. (A) personal flair/individual personality → originality, (B) management organization and processes / working in a group → coordination 으로 원문 핵심 대비를 추상화.",
+      "temptingBecause": "해당 없음(정답). 두 빈칸 모두 원문 근거 span 을 정확히 보존하며 요약문 완성문이 자연스러움.",
+      "decisiveFlaw": "없음."
+    },
+    {
+      "label": "2",
+      "intent": "(A) 정답 유지 + (B) 함정: 스타 디자이너의 자율적·독립적 이미지를 이용한 half-truth 트랩. 5개 중 유일하게 실질적 판단을 요구하는 오답.",
+      "temptingBecause": "(A) originality 가 정답과 동일해 절반이 맞고, 'a strong personality exercises powerful influence' 에서 독립적 결정권의 인상을 받을 수 있음.",
+      "decisiveFlaw": "대규모 프로젝트 단락은 'working in a group', 'management organization and processes' 를 강조 — 관리자 역할의 핵심으로 independence 는 지문 논지와 정반대."
+    },
+    {
+      "label": "3",
+      "intent": "(B) 정답 유지 + (A) 오답. 의도상 교차형 함정이나 (A) regularity 의 source anchor 가 빈약해 사실상 준필러.",
+      "temptingBecause": "(B) coordination 이 정답과 동일해 절반이 맞음. (A)는 'low degree of technological complexity'(단순한 제품)에서 '정형성'을 연상할 여지가 약간 있는 정도.",
+      "decisiveFlaw": "소규모 제품에서 요구되는 것은 'personal flair'(개인적 재능·독창성)로, regularity 는 극성만으로 즉시 탈락. tempting overlap 이 실질적으로 없음."
+    },
+    {
+      "label": "4",
+      "intent": "(B) leadership 을 그럴듯하게 만들고 (A) 를 극성 반전(uniformity)으로 배치한 조합. (B) 축은 실제로 매력적이나 (A) 축이 꼬리 소거를 허용.",
+      "temptingBecause": "(B) leadership 은 'a strong personality exercises powerful influence', 'creative managers' 와 표면적으로 잘 부합해 실질적 매력이 있음.",
+      "decisiveFlaw": "(A) uniformity 는 지문의 'individual personality' 뿐 아니라 요약문 자체의 'the (A) of the individual designer' 와도 자체 모순 — 지문을 읽지 않아도 소거 가능."
+    },
+    {
+      "label": "5",
+      "intent": "random-opposite 성격의 필러 조합. (A) versatility 는 anchor 없는 일반 역량어, (B) isolation 은 단순 극성 반전.",
+      "temptingBecause": "(A) versatility 가 '디자이너의 개인 역량'처럼 들리는 정도의 약한 표면 매력.",
+      "decisiveFlaw": "(B) isolation 은 'working in a group'/'management organization and processes' 와 정면 모순으로 즉시 탈락. (A) versatility 도 지문 어디에도 근거 없음."
+    }
+  ],
+  "explanationIssues": [
+    "정답 해설은 사실관계·귀속 모두 정확하나 장황하고 반복적('독창적이고 개인적인 재능이 절대적인 경쟁력' 등 동어 반복).",
+    "'대행 디자이너들' — 부정확한 조어(구현 담당 디자이너 의도로 추정).",
+    "오답 해설 5의 isolation 설명이 불명료함(무엇의 독립성을 왜곡하는지 모호).",
+    "오답 해설이 각 선지의 실제 내용과 대응하는지는 전수 확인 — 2~5 모두 올바른 선지 내용을 다루고 있음."
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAudit": {
+    "sameSyntacticSlot": true,
+    "answerPreservesSourceMeaning": true,
+    "everyDistractorHasAnchorOverlapFlaw": false,
+    "requiresTwoClueIntegration": false,
+    "noSingleCueSolve": false,
+    "variedTrapTypes": false,
+    "evidence": "§D KILLER 조건 위반: (1) 정답 도달이 극성 단서 하나로 가능 — regularity/uniformity/isolation 은 지문 논지의 근사-반의어라 'individual/personal flair' 한 구절만으로 3개 선지가 즉시 소거되고, independence 도 'working in a group' 극성으로 탈락. 두 문장/두 논리 단서 연결이 강제되지 않음. (2) 선지 3·5는 source anchor 와 tempting overlap 이 결여된 준필러로, scope shift·causal reversal·half-truth 등 다양한 함정 유형 대신 단순 반대어에 의존. 유일한 실질 함정은 2(independence half-truth)와 4의 (B) leadership 뿐."
+  },
+  "grade": "C",
+  "notes": "V1~V5 전부 통과 — 정답 유일성 검증됨(5개 선지 양쪽 슬롯 전수 대입 확인, 통사 슬롯 동일, seam 비문 없음). 그러나 요청 난이도 KILLER 대비 실제 변별 구조는 중위권 수준: (A) 축에서 originality 만 극성상 생존해 즉시 {1,2} 로 압축되고, (B) 축의 independence 도 명시적 반대 근거로 탈락해 1이 빠르게 확정됨. 요약문 자체에 'individual designer' 가 포함되어 uniformity/regularity 가 지문 없이도 소거되는 단서 누출(C4)이 있음. C5=1(난이도 라벨 불일치), 합계 12로 B 기준(합계 17, 최저 2) 미달 → C. 재설계 방향: (A) 후보를 모두 '개인 자질' 계열(예: originality/versatility/consistency/efficiency)로 통일해 극성 소거를 차단하고, (B) 축에 leadership vs coordination 급의 실질 경합을 최소 2개 이상 배치하며, 요약문에서 'individual' 을 중립어로 교체해 자기누출을 제거할 것."
+}

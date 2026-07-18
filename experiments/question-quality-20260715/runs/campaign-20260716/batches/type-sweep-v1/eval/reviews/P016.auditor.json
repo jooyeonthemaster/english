@@ -1,0 +1,58 @@
+{
+  "pid": "P016",
+  "validity": {
+    "V1": true,
+    "V2": false,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V2",
+      "severity": "critical",
+      "evidence": "The blanked word 'presentation' occurs exactly once in the source, at the blank site, so after blanking it does not exist anywhere in the rendered passage. Yet the stem demands '본문에서 찾아 한 단어...로 쓰시오' — the declared key cannot satisfy the stem's own instruction. Meanwhile 'presenting/present-ing' IS present in the rendered passage ('the necessity of present-ing music'), and 'the act of presenting' is fully grammatical and meaning-identical in the slot. A student following the stem would legitimately answer 'presenting' (or 'present-ing'), so the true acceptable-answer set is not {presentation}. No 허용 답안 집합/배제 경계 (normalization, inflection tolerance, hyphenated form policy) is declared, violating RUBRIC §B-1 for 폐쇄형 서술 (FILL_BLANK_KEY): 'model answer 한 개만 자연스럽다는 가정은 금지'."
+    },
+    {
+      "code": "V4",
+      "severity": "major",
+      "evidence": "Explanation contains corrupted student-facing text: \"'현재성_now_에 있음을\" — an unclosed opening quote plus broken underscore (markdown italics) markup, i.e. 손상 용어. The explanation also asserts \"'presentation'이 들어가야 합니다\" as uniquely necessary while never addressing the equally valid inflectional alternative 'presenting', overclaiming a uniqueness that does not hold."
+    },
+    {
+      "code": "STEM-CLARITY",
+      "severity": "minor",
+      "evidence": "Stem parenthetical '(동사를 포함할 경우 본문에 제시된 원형 또는 굴절형 그대로)' is confusing and inapplicable to the declared noun key 'presentation'; it simultaneously invites the verb-derived answer 'presenting' that the answer key would reject."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 1,
+    "C3": 1,
+    "C4": 2,
+    "C5": 2,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "presentation (declared key)",
+      "intent": "Blank the thesis noun — musical meaning is inseparable from the act of presentation — forcing the student to derive the nominal form from the passage's 'present-ing' / 'making it present here and now' thread.",
+      "temptingBecause": "n/a (declared key); semantically it is the source-faithful completion and restores the original sentence exactly.",
+      "decisiveFlaw": "Not findable in the rendered passage (its unique occurrence was the blank itself), directly contradicting the stem's '본문에서 찾아' instruction; uniqueness over 'presenting' is never established or enforced."
+    },
+    {
+      "label": "presenting / present-ing (undeclared natural equivalent)",
+      "intent": "Not an intended distractor — an emergent alternative answer produced by the design defect.",
+      "temptingBecause": "It is the form that actually appears in the rendered passage ('the necessity of present-ing music'), fits the stem's 'find it in the passage' instruction and its verb-inflection parenthetical, and 'the act of presenting' is grammatical and meaning-identical in the slot.",
+      "decisiveFlaw": "None demonstrable — it is a legitimate correct answer excluded by the single declared key, which is precisely the V2 failure."
+    }
+  ],
+  "explanationIssues": [
+    "Corrupted text visible to students: \"'현재성_now_에 있음을\" (unclosed quote + broken underscore markup).",
+    "Asserts 'presentation' as the uniquely required answer without addressing the equally valid 'presenting/present-ing', i.e. no uniqueness argument for the noun form over the gerund.",
+    "No guidance on accepted forms/scoring boundary (hyphenation 'present-ing', gerund vs. noun, capitalization), which a closed-form written item requires.",
+    "오답 해설 absent is acceptable for FILL_BLANK_KEY, but the single paragraph is dense and does not separate 정답 근거 from the key trap (noun-vs-gerund form choice)."
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "Requested difficulty INTERMEDIATE (not KILLER), so §C/§D killer conditions are not applicable → killerConditionsMet=false. V1/V3/V5 pass: the rendered passage is a clean single-word blanking of the source with no other alteration; passage, stem, and key-completed sentence are grammatical; declared answer, 서술형 정답, 해설, and keyPoints are mutually consistent. The item fails on V2 (self-referential cloze defect: the unique occurrence of the key was removed while the stem still says 'find it in the passage', and the naturally occurring equivalent 'presenting/present-ing' is excluded with no declared acceptance boundary) and V4 (corrupted explanation text and an unsupported uniqueness claim). Craft sum 10 (C1=3, C2=1, C3=1, C4=2, C5=2, C6=1); the blank target itself is well chosen (core thesis), but condition design, discrimination, and explanation craft are weak. Per rubric, V failures are not offset by craft → grade F. Minimal repair path: (a) either restore a second occurrence of 'presentation' in the passage or rewrite the stem to '본문의 표현을 활용하여 알맞은 형태로 쓰시오'; (b) declare the acceptance set explicitly (e.g., accept 'presentation'; accept/reject 'presenting'/'present-ing' with rationale); (c) fix the corrupted explanation string and add a noun-vs-gerund justification."
+}

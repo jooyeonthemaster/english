@@ -1,0 +1,75 @@
+{
+  "batchId": "stdfix-egate-pro-v1",
+  "phase": "stdfix",
+  "note": "B3: STANDARD 어법 KILLER 풀 깔때기 + E-gate 수리모델 pro 스왑 (H-STD-3). 짝 대조군 = stdfix-grammar-arms-v1 의 B2-STD (동일 프레임)",
+  "atKst": "2026-07-17T18:14:50.804+09:00",
+  "gitSha": "8d365701e339d7ad64bb1f808c76ec768e9855ee",
+  "gitDirty": true,
+  "worstCaseReserved": 42,
+  "spec": {
+    "batchId": "stdfix-egate-pro-v1",
+    "phase": "stdfix",
+    "note": "B3: STANDARD 어법 KILLER 풀 깔때기 + E-gate 수리모델 pro 스왑 (H-STD-3). 짝 대조군 = stdfix-grammar-arms-v1 의 B2-STD (동일 프레임)",
+    "concurrency": 3,
+    "providerRouting": "none",
+    "env": {
+      "EXPLANATION_VERIFY_REPAIR_MODEL_ID": "google/gemini-3.1-pro-preview"
+    },
+    "assignments": [
+      {
+        "itemId": "gep-120",
+        "frameId": "grammar-frame-v2-120",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "armId": "B3-EPRO",
+        "funnel": true
+      },
+      {
+        "itemId": "gep-133",
+        "frameId": "grammar-frame-v2-133",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "armId": "B3-EPRO",
+        "funnel": true
+      },
+      {
+        "itemId": "gep-134",
+        "frameId": "grammar-frame-v2-134",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "armId": "B3-EPRO",
+        "funnel": true
+      },
+      {
+        "itemId": "gep-136",
+        "frameId": "grammar-frame-v2-136",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "armId": "B3-EPRO",
+        "funnel": true
+      },
+      {
+        "itemId": "gep-146",
+        "frameId": "grammar-frame-v2-146",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "armId": "B3-EPRO",
+        "funnel": true
+      },
+      {
+        "itemId": "gep-148",
+        "frameId": "grammar-frame-v2-148",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "armId": "B3-EPRO",
+        "funnel": true
+      }
+    ]
+  }
+}

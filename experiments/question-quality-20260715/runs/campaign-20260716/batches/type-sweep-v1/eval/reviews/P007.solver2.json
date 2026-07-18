@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1 decorate",
+      "verdict": "reject",
+      "reason": "Trades on the pictorial sense of illustrate (provide pictures/ornament). Substitution — 'stories that decorate our beliefs' — yields ornamentation, which contradicts the passage's stated function of the story (making advice interesting and believable via a concrete case). No reading of the passage supports it."
+    },
+    {
+      "label": "2 clarify",
+      "verdict": "reject",
+      "reason": "Illustrate can mean 'make clear' in some contexts, but the passage formally blocks this reading: the reason-giving reply ('A cat is good, because the cat is cute and quiet') is fully clear yet judged 'not necessarily more believable.' The story's distinctive contribution is not added clarity but serving as an instance. Hence clarify is not the closest contextual meaning."
+    },
+    {
+      "label": "3 exemplify",
+      "verdict": "accept",
+      "reason": "Substitution test passes: 'tell stories that exemplify them (= our beliefs)' — stories serving as concrete examples/instances of the beliefs. The passage's own elaboration confirms this sense: Bill's story is 'about a similar situation,' 'how the choice was made in that case and how it worked out' — i.e., an instance demonstrating the belief in action. Matches the dictionary sense 'make clear by giving or serving as an example.'"
+    },
+    {
+      "label": "4 justify",
+      "verdict": "reject",
+      "reason": "Strong distractor keyed to 'We need justifications for the beliefs of others.' But that sentence describes the pragmatic EFFECT of the story (it makes the advice believable), not the lexical meaning of illustrate. Illustrate does not denote 'show to be right/warranted'; the story justifies BY exemplifying. Conflating effect with meaning is the trap; formally, illustrate ≠ justify."
+    },
+    {
+      "label": "5 portray",
+      "verdict": "reject",
+      "reason": "Portray = depict/represent descriptively. A story about a similar case does not depict the beliefs themselves; it instantiates them as a worked example. Portray lacks the 'serve as an example/instance' component that the context requires, so it is strictly farther than exemplify."
+    }
+  ],
+  "note": "Vocabulary-in-context item on 'illustrate' (stories that illustrate beliefs). Unique defensible answer: 3 (exemplify). Main adversarial candidate was 4 (justify) via the passage's 'justifications' cue, but it names the story's rhetorical effect, not the word's meaning; 2 (clarify) is a dictionary synonym in other contexts but is explicitly neutralized by the passage (the clear reason-based reply is still not believable). Grammatical seam is trivial (transitive verb with 'them' as object) and all five options are transitive verbs, so the item turns purely on lexical semantics. Item is well-formed."
+}

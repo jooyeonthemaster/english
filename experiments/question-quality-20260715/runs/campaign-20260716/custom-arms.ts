@@ -648,8 +648,104 @@ async function runCraftReferee(deps: ArmDeps, typeId: "GRAMMAR_ERROR" | "BLANK_I
   return res;
 }
 
+// ── G-ONE (O182, 사용자 가설 "빈칸처럼 어법도 한 콜"): 콤팩트 프롬프트 단일 콜로
+// 완성 어법 문항 생성 → flash 솔버 게이트 → pro 해설검증(수리 1회, fail-closed).
+// 사다리(정답설계→미끼→수리, ~153원/4-5콜) 대비 원가·품질 짝비교용.
+async function runGONE(deps: ArmDeps): Promise<ArmResult> {
+  const trail: string[] = [];
+  const oneShotPrompt = `당신은 대한민국 수능 영어 어법 문항 출제자입니다. 아래 지문으로 어법 판단 문항 1개를 한 번에 완성하세요.
+
+## 지문
+${deps.passage}
+
+## 설계 규칙 (필수)
+- 원문은 전부 정문이라고 전제합니다. 정답 1곳만 원문 어간을 유지한 최소 형태 변형으로 비문을 만들고, 나머지 4곳은 원문 그대로 둡니다.
+- 정답 자리는 구조적으로 다층적인 문장(관계절·삽입구·분사구문·병렬·긴 수식어 중 2개 이상)을 고르고, 가장 강한 대안 해석으로도 정문이 되지 않는지 스스로 확인하세요. 밑줄은 판단 토큰 1~3단어만.
+- 미끼 4곳은 서로 다른 문법 포인트(수일치/태/준동사/관계사/병렬/대명사 등)를 각각 담당하며, 각자 실제 구조 판단이 필요해야 합니다. 밑줄 사이 간격은 8단어 이상, 한 문장에 몰지 마세요.
+- 과훈련 정형(that↔what 단독, ±ly 맞교환, 인접 수일치)은 정답으로 금지.
+- 난이도: ${deps.difficulty}.
+- 해설(explanation)은 한국어 200~450자, 4단 구조(문장 골격 → 판정+통사 근거 → 교정형 → 함정 한 줄). 표준 문법 용어만 사용하고, 확신 없는 범주명은 만들지 말고 구조를 서술하세요. wrongOptionExplanations 는 정답 제외 각 라벨당 한 문장.
+- markedExpressions 의 expression/correction 은 원문 축자, errorExpression 만 의도적 오형. surroundingText 는 판단에 필요한 의존 구간 전체를 원문 그대로.`;
+
+  const gen = await deps.generateQuestionObject({
+    schema: wrap1(deps.buildAiGrammarErrorSchema(5, 1)),
+    prompt: oneShotPrompt,
+    generationPlan: "PREMIUM",
+    logPrefix: "ARM-GONE",
+    maxTokens: 20000,
+    researchStage: { key: "question.structured", purpose: "candidate" },
+  });
+  const raw = (gen.object as { questions: Record<string, unknown>[] }).questions[0];
+  trail.push("gen:one-call");
+  const fin = finalize(deps, "GRAMMAR_ERROR", raw as Record<string, unknown>, trail);
+  if (!fin.accepted || !fin.question) return fin;
+  const q = fin.question;
+
+  // flash 솔버 게이트 (프로덕션 grammar.solver 동형)
+  const solver = await deps.generateQuestionObject({
+    schema: grammarSolverSchema,
+    prompt: `다음 어법 문항을 독립적으로 판정하라. 각 밑줄의 표기가 지문 문맥에서 어법상 옳은지 지배 규칙을 확인해 판정하고, 대안 해석이 성립해 정문이 되는 경우 반드시 isGrammaticalInContext=true 로 판정하라.\n\n${renderGrammarForSolver(q)}`,
+    generationPlan: "STANDARD",
+    logPrefix: "ARM-GONE-SOLVER",
+    maxTokens: 4000,
+    researchStage: { key: "grammar.solver", purpose: "evaluation" },
+  });
+  const solved = solver.object as z.infer<typeof grammarSolverSchema>;
+  const declaredAnswer = String(q.correctAnswer ?? "").replace(/[()]/g, "");
+  const solverErrors = solved.errorLabels.map((l) => l.replace(/[()]/g, ""));
+  if (!(solverErrors.length === 1 && solverErrors[0] === declaredAnswer)) {
+    trail.push(`solver-mismatch:[${solverErrors.join(",")}]≠${declaredAnswer}`);
+    return { ...fin, accepted: false, gateIssues: [...fin.gateIssues, { severity: "error", code: "gone-solver-mismatch" }], trail };
+  }
+  trail.push("solver:ok");
+
+  // pro 해설검증 → (FAIL) 수리 1회 → 재검증, fail-closed (프로덕션 E-gate 동형)
+  const verifierModelId =
+    process.env.EXPLANATION_VERIFY_MODEL_ID?.trim() || "google/gemini-3.1-pro-preview";
+  const verifySchema = z.object({
+    claims: z.array(z.object({ quote: z.string(), verdict: z.enum(["OK", "WRONG", "UNSUPPORTED"]), evidence: z.string() })),
+    overallVerdict: z.enum(["PASS", "FAIL"]),
+  });
+  const verifyOnce = async (question: Record<string, unknown>, round: number) => {
+    const r = await deps.generateQuestionObject({
+      schema: verifySchema,
+      prompt: `너는 해설 사실검증관이다. 아래 어법 문항의 해설이 실제 문장 구조와 일치하는지 주장 단위로 검증하라. 문법 용어 정확성, 구조 분석, 함정 인과, 한국어 비단어·손상 표현을 모두 본다. WRONG/UNSUPPORTED 가 하나라도 있으면 FAIL(보수적).\n\n## 지문\n${deps.passage}\n\n## 문항\n${renderGrammarForSolver(question)}\n\n## 정답\n${String(question.correctAnswer ?? "")}\n\n## 검증 대상 해설\n${JSON.stringify({ explanation: question.explanation, wrongOptionExplanations: question.wrongOptionExplanations, keyPoints: question.keyPoints }, null, 1)}`,
+      generationPlan: "PREMIUM",
+      modelId: verifierModelId,
+      logPrefix: `ARM-GONE-VERIFY-R${round}`,
+      maxTokens: 6000,
+      researchStage: { key: "question.solver", purpose: "evaluation" },
+    });
+    return r.object as z.infer<typeof verifySchema>;
+  };
+  let v = await verifyOnce(q, 1);
+  let finalQ = q;
+  if (v.overallVerdict !== "PASS") {
+    trail.push(`verify:FAIL(${v.claims.filter((c) => c.verdict !== "OK").length})`);
+    const rep = await deps.generateQuestionObject({
+      schema: z.object({ explanation: z.string(), wrongOptionExplanations: z.record(z.string(), z.string()), keyPoints: z.array(z.string()).length(3) }),
+      prompt: `아래 어법 문항의 본체는 확정이다 — 해설 필드만 결함을 바로잡아 다시 써라. 발견된 결함:\n${JSON.stringify(v.claims.filter((c) => c.verdict !== "OK"), null, 1)}\n\n## 지문\n${deps.passage}\n\n## 문항\n${renderGrammarForSolver(q)}\n\n## 현재 해설\n${JSON.stringify({ explanation: q.explanation, wrongOptionExplanations: q.wrongOptionExplanations, keyPoints: q.keyPoints }, null, 1)}\n\n해설 200~450자 4단 구조, 합니다체, 표준 용어만.`,
+      generationPlan: "PREMIUM",
+      logPrefix: "ARM-GONE-FIX",
+      maxTokens: 6000,
+      researchStage: { key: "question.candidate-repair", purpose: "design" },
+    });
+    finalQ = { ...q, ...(rep.object as Record<string, unknown>), _explanationRepaired: true };
+    v = await verifyOnce(finalQ, 2);
+    if (v.overallVerdict !== "PASS") {
+      trail.push("reverify:FAIL(fail-closed)");
+      return { ...fin, question: finalQ, accepted: false, gateIssues: [...fin.gateIssues, { severity: "error", code: "gone-explanation-verify-failed" }], trail };
+    }
+    trail.push("reverify:PASS");
+  } else {
+    trail.push("verify:PASS");
+  }
+  return { ...fin, question: finalQ, accepted: true, trail };
+}
+
 export async function runCustomArm(armId: string, deps: ArmDeps): Promise<ArmResult> {
   switch (armId) {
+    case "G-ONE": return runGONE(deps);
     case "G-V1": return runV1(deps, "GRAMMAR_ERROR");
     case "B-V1": return runV1(deps, "BLANK_INFERENCE");
     case "G-D1": return runGD1(deps);

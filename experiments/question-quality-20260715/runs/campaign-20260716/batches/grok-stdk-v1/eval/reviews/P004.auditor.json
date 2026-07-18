@@ -1,0 +1,89 @@
+{
+  "pid": "P004",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-keypoint-tag",
+      "severity": "minor",
+      "evidence": "keyPoints의 '(C) to-v/v-ing' 태그는 실제 대립(동사원형 learn vs 동명사 learning)과 어긋난다. 표시된 오류형은 to learn이 아니라 bare form learn이므로 정확한 태그는 'v/v-ing(전치사 목적어 동명사)'이다. 태그 뒤의 서술('전치사 of 목적어와 병렬로 동명사 판정')은 정확하므로 V4 실패로 보지 않는 minor 결함."
+    },
+    {
+      "code": "V4-minor-agreement-gloss",
+      "severity": "minor",
+      "evidence": "(A) 오답 해설이 \"'Animals as well as humans'는 복수 주어이므로\"라고 서술한다. 정확한 규칙은 'A as well as B는 A(Animals)에 수일치'이며, 결과적으로 Animals가 복수라 결론은 동일하므로 사실 오류는 아니나 규칙 진술이 느슨하다."
+    }
+  ],
+  "craft": {
+    "C1": 2,
+    "C2": 3,
+    "C3": 1,
+    "C4": 3,
+    "C5": 0,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "수일치 — 'A as well as B' 구조에서 동사는 앞 명사구 핵 Animals에 일치",
+      "temptingBecause": "as well as humans가 주어와 동사 사이에 끼어들어 가까운 명사에 이끌리거나, as well as를 and처럼 처리해야 할지 혼동을 유도",
+      "decisiveFlaw": "핵 명사 Animals가 복수이므로 engage가 정확히 옳다. 오답이 될 수 없음"
+    },
+    {
+      "label": "(B)",
+      "intent": "태 판단 — 주어가 행위의 대상인지로 수동태 판별",
+      "temptingBecause": "has long been seen의 완료수동 구조에서 seeing(능동)과의 대립을 떠올리게 함",
+      "decisiveFlaw": "play는 '~로 여겨지는' 대상이므로 수동 seen이 옳다. 오답이 될 수 없음"
+    },
+    {
+      "label": "(C)",
+      "intent": "정답 — 전치사 of의 목적어 자리 동명사 + and practicing과의 등위 병렬",
+      "temptingBecause": "정답 선지. 다만 'of learn'은 표면에서 즉시 비문으로 보이고 바로 옆의 practicing이 병렬 단서를 추가로 노출하여 사실상 유혹 구조가 아니라 즉답 구조",
+      "decisiveFlaw": "전치사 뒤 동사원형은 비문이며 learning으로 교정 시 정확히 원문 복원. 오류 자체는 유일·명확하나 KILLER 요건(구조를 읽어야 드러나는 오류)에는 미달"
+    },
+    {
+      "label": "(D)",
+      "intent": "전치사+관계대명사 — 선행사 a way를 받는 in which의 적절성",
+      "temptingBecause": "way 뒤 관계사로 that/where/which 단독 등 대안형이 떠올라 in which의 적법성을 의심하게 함",
+      "decisiveFlaw": "children learn about the world in a way의 성립으로 in which가 정확히 옳다. 오답이 될 수 없음"
+    },
+    {
+      "label": "(E)",
+      "intent": "수일치 — 소유격 수식 주어의 핵 판별(3인칭 단수)",
+      "temptingBecause": "Children's가 복수 표지처럼 보여 serve를 기대하게 함",
+      "decisiveFlaw": "주어 핵 play는 단수이므로 serves가 옳다. 다만 판별이 매우 쉬워 필러에 가까운 약한 디코이"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "keyPoints '(C) to-v/v-ing' 태그가 실제 대립(v vs v-ing)과 불일치. 서술부는 정확",
+      "recommendation": "태그를 'v/v-ing(전치사 목적어 동명사)'로 수정"
+    },
+    {
+      "severity": "minor",
+      "evidence": "정답 해설 말미 'practicing과 병렬이 어긋나는 점도 즉시 드러나 판단이 쉬워진다'는 문항이 쉽다는 자인으로, KILLER 문항 해설로서 부적절한 자기모순 진술",
+      "recommendation": "난이도 자평 문장을 제거하고 병렬 단서를 근거 서술로만 유지"
+    },
+    {
+      "severity": "major",
+      "evidence": "§C 요건 '5개 밑줄 각각에 point, why tempting, why correct/incorrect' 중 why tempting이 오답 해설에 부재. 오답 해설은 '왜 옳은가'만 서술",
+      "recommendation": "각 디코이의 유혹 기제(간섭 명사, 대안 관계사 등)를 해설에 명시"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAudit": {
+    "minimalPair": "충족 — learning→learn 최소대립쌍이며 교정 시 정확히 원문",
+    "clearGrammarPoint": "충족 — 전치사 목적어 동명사는 문맥 선호가 아닌 명확한 문법 판단",
+    "allUnderlinesExplained": "부분 미달 — point/why correct는 있으나 why tempting 부재, (E)는 필러 수준",
+    "notImmediatelyVisible": "미달(치명) — 'of learn'은 국소 표면에서 즉시 드러나며, 인접한 and practicing이 병렬 단서를 추가 노출해 이중으로 즉답 가능. 해설 스스로 '판단이 쉬워진다'고 자인",
+    "noShadowingDecoy": "충족 — 동일 포인트의 더 쉬운 디코이 없음"
+  },
+  "grade": "C",
+  "notes": "유효성 5개 게이트는 모두 통과한다: 렌더 지문은 의도된 learning→learn 외 원지문과 완전 일치하고, 5개 밑줄 독립 검증 결과 (C)만 유일 오류이며((A) as well as는 Animals 일치, (B) 수동 적절, (D) a way in which 표준, (E) 단수 핵 play), 해설의 구조 분석과 교정형·라벨·keyPoints 동기화도 정확하다. 그러나 요청 난이도 KILLER 대비 실제 난이도가 기초 수준이라는 공예 결함이 치명적이다. 전치사+동사원형은 표면 스캔만으로 즉시 발견되고 병렬 단서까지 인접해 이중으로 노출되며, 해설조차 쉬움을 자인한다. C5=0(난이도 정합 실패), C3=1(실제 변별 판단 거의 없음), 합계 12로 재설계 필요. KILLER 추가 조건 중 '즉시 드러나지 않는 구조적 오류' 요건 미달로 killerConditionsMet=false. 등급 C — 출하하려면 오류 포인트를 구조 독해가 필요한 자리(예: 원거리 병렬, 관계절 내 정동사/준동사 대립)로 재설계해야 한다."
+}

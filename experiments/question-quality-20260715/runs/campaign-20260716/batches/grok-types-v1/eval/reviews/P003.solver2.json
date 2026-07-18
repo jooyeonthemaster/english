@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "medium",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "정답 성립",
+      "reason": "(A) 'problematic'은 지문 명제 P4('The emphasis on individuality is therefore problematic')의 술어와 정확히 일치하고, (B) 'management organization'은 P5('management organization and processes can be equally as relevant as designers' creativity')에서 집단 작업 맥락의 핵심 요인으로 명시된다. 두 슬롯 모두 지문 논리에 형식적으로 부합하는 유일한 조합. 단, 두 어구 모두 지문 원문을 그대로 재사용한 verbatim lift로 미끼 설계 관점의 품질 결함은 있으나 정답성 자체는 흔들리지 않는다."
+    },
+    {
+      "label": "2",
+      "verdict": "오답",
+      "reason": "(A) 'problematic'은 성립하나, (B) 'personal flair'는 지문에서 소형·저기술 제품군(가구·조명·소형가전 등)에 한정된 필요조건으로 제시된 개념이다. 집단 작업 맥락에서 창의성과 대등하게 중요해지는 요인은 관리 조직·프로세스이지 개인적 재능이 아니므로 P5와 정면 모순. (B) 슬롯에서 기각."
+    },
+    {
+      "label": "3",
+      "verdict": "오답",
+      "reason": "(B) 'management organization'은 성립하나, (A) 'inevitable'이 실패한다. 지문 첫 문장의 'should not be surprising'은 개성 과시 '욕구'가 자연스럽다는 서술이지 개성 강조에 대한 최종 판정이 아니다. 논지의 술어는 명시적으로 'problematic'이며, 'inevitable'로 치환하면 P4의 비판적 교정 논지가 소거되어 요약 명제가 지문 주장과 불일치한다. (A) 슬롯에서 기각."
+    },
+    {
+      "label": "4",
+      "verdict": "오답",
+      "reason": "(A) 'essential'은 개성 강조를 긍정하는 술어로 P4의 'problematic'과 정면 모순. (B) 'technological complexity'는 개인적 재능이 필요한 소형 제품군을 한정하는 조건(low degree of technological complexity)으로만 등장하며, 집단 맥락에서 창의성과 대등한 요인이 아니다. 두 슬롯 모두 실패."
+    },
+    {
+      "label": "5",
+      "verdict": "오답",
+      "reason": "(A) 'overrated'는 P4의 'problematic'에 대한 느슨한 패러프레이즈로 부분적 옹호 여지가 있으나(지나치게 높이 평가됨 ≈ 문제적), (B) 'design literature'가 결정적으로 실패한다. 디자인 문헌은 디자이너가 개인으로 교육받는다는 배경 근거(P1의 증거)로만 인용되며, 집단 작업에서 창의성과 대등하게 중요한 요인으로 제시된 바 없다. (B) 슬롯에서 기각."
+    }
+  ],
+  "note": "형식 결함 지적: 발문이 '한 문장으로 요약'하며 빈칸 (A),(B)를 지시하지만 정작 빈칸이 포함된 요약문 자체가 문항에 누락되어 있다. 따라서 빈칸 결합부(seam)의 문법성 검증은 형식적으로 불가능했고, 판정은 지문 논리와 선지 쌍의 명제 적합성만으로 수행했다. 그 기준으로는 ①만 양 슬롯을 만족해 단독 정답. 추가 품질 결함: 정답 ①의 (A),(B) 모두 지문 원문 어구를 그대로 가져온 verbatim lift라 요약문항으로서의 변별력·미끼 설계가 약하다. confidence를 medium으로 둔 이유는 요약문 부재로 완전한 검증이 불가능했기 때문."
+}

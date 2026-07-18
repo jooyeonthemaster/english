@@ -1,0 +1,56 @@
+{
+  "pid": "P001",
+  "finalV2": true,
+  "winningAnswer": "(B)",
+  "reason": "처음부터 독립 재검증한 결과 오류 집합은 {(B)} 로 유일하다. (B) 'struggle to adapt to new information or finding ...'의 의도 파스는 공유-to 병렬(struggle to [adapt ...] or [find ...])이며 finding은 병렬 파괴 비문이고 find로 교정하면 원문이 정확히 복원되는 최소대립쌍이다. (B)를 구제할 수 있는 유일한 후보인 'adapt to [NP or 동명사구]' 전치사 목적어 등위 파스는 통사적으로는 조립 가능하나, 해당 문장이 'That means that...'으로 직전 명제(불행 → 사고력 저하)를 재진술해야 하고 단락 첫 문장이 'ability to creatively solve problems'를 피영향 능력으로 명시하는 담화 구조와 정면 충돌한다(해결책 찾기를 '적응 대상'으로 만들어 이미 일어나는 활동으로 전제 → 재진술 실패). 따라서 어떤 적격 파스로도 정문이 되지 않는다. 나머지 파스(struggle+V-ing 인접 파스, or 뒤 분사구문 파스)도 각각 비인접성·등위 범주 불일치로 성립 불가. (A) 수동 p.p., (C) 계사 보어 형용사, (D) as절 정형동사 수일치, (E) 생략 비교(even more [of a risk factor] than, 원문 그대로) 모두 명백한 정문으로 복수정답 소지가 없다. 솔버 1·2의 판정에 과잉 판정이나 누락된 대안 해석은 발견되지 않았고, 감사자의 V2=true 는 유지된다. 감사자가 기록한 '담화 의존 배제' 취약점은 난이도/공예(KILLER 부적격) 문제이지 정답 유일성 결함이 아니다. 최종 판정: 선언된 정답 (B) 단독 정답 확정.",
+  "perDispute": [
+    {
+      "label": "(B)",
+      "claim": "의도 파스(공유-to 병렬)에서 finding 은 to adapt 와 등위 형태가 어긋나는 병렬 오류이다",
+      "verdict": "성립(오류 확정)",
+      "evidence": "struggle to [adapt to new information] or [(to) find creative solutions] 구조에서 둘째 접속항은 bare-V(find)여야 한다. finding 은 등위 범주 불일치 비문이며 find 교정 시 원지문과 완전 일치하는 최소대립쌍임을 full 파일의 원지문 대조로 확인."
+    },
+    {
+      "label": "(B)",
+      "claim": "구제 파스: 'adapt to [new information or finding creative solutions]' 전치사 목적어 등위로 읽으면 정문이다",
+      "verdict": "기각",
+      "evidence": "통사적으로는 적격(cf. adapt to working from home)이나 담화상 파탄. 문장은 'That means that...'으로 직전 명제(when you are unhappy, these skills suffer)의 재진술이어야 하고, 단락 첫 문장 'ability to creatively solve problems'가 피영향 능력을 지정한다. 이 파스는 '해결책 찾기'를 능력 행사가 아닌 적응 대상 상황으로 바꿔 해결책 찾기가 이미 일어남을 전제하므로 능력 저하 진술과 모순되어 의도 명제를 산출하지 못한다. 어법 문항은 문맥 내 성립을 기준으로 판정하므로 이 파스는 (B)를 구제하지 못한다."
+    },
+    {
+      "label": "(B)",
+      "claim": "구어체 'struggle + V-ing'(struggle finding) 파스로 정문이 된다",
+      "verdict": "기각",
+      "evidence": "finding 은 struggle 에 인접하지 않고 등위접속사 or 뒤, 부정사 보문과의 등위 위치에 있다. 이 파스를 취하면 [to adapt to new information] 과 [finding ...] 의 혼합형 등위(to-V or V-ing)가 되어 표준 문법에서 비병렬 비문이므로 구제 불가."
+    },
+    {
+      "label": "(B)",
+      "claim": "finding 이하를 or 로 도입된 분사구문(부가어)으로 읽으면 정문이 된다",
+      "verdict": "기각",
+      "evidence": "등위접속사 or 는 동일 범주의 접속항을 요구한다. 분사 부가어 독법을 취하면 or 의 둘째 접속항이 사라져 등위 구조 자체가 붕괴하며, 콤마 등 부가어 표지도 없다. 성립하는 독법이 아니다."
+    },
+    {
+      "label": "(E)",
+      "claim": "'even more than'은 비교급 핵(형용사)이나 so 가 없어 'even more so than'이어야 하는 어법 오류다 (가장 강한 복수정답 시비 후보)",
+      "verdict": "기각(정문)",
+      "evidence": "선행 명사구 'a significant risk factor for death'에서 비교 핵이 회복되는 생략 비교(even more [of a (significant) risk factor] than other risk factors)로 표준적으로 허용된다. 'more so than'은 문체 선호일 뿐 문법 요건이 아니며, 해당 구간은 변형되지 않은 원지문 그대로다. 복수정답 불성립."
+    },
+    {
+      "label": "(A)",
+      "claim": "are greatly enhanced 의 수동 p.p. 적격성",
+      "verdict": "정문 확인",
+      "evidence": "타동사 enhance 의 피동작주 주어(skills) + be + p.p. 요건 충족. 능동형이면 목적어 결여로 비문. 대안 해석 여지 없음."
+    },
+    {
+      "label": "(C)",
+      "claim": "They're 뒤 critical 의 보어 형용사 적격성",
+      "verdict": "정문 확인",
+      "evidence": "계사 보어 자리 형용사 + critical for NP 표준 연어. 앞 문장 'important for academic success'와 평행 구조. 대안 해석 여지 없음."
+    },
+    {
+      "label": "(D)",
+      "claim": "as 종속절 정형동사 use 의 적격성",
+      "verdict": "정문 확인",
+      "evidence": "이유 접속사 as 는 정형절을 요구하고 복수 주어 some individuals 와 use 수일치 성립, 일반 사실 현재시제·목적 부정사 to cope 모두 적법. 대안 해석 여지 없음."
+    }
+  ]
+}

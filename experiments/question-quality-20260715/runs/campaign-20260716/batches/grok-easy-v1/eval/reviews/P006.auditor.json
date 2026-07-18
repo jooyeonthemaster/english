@@ -1,0 +1,92 @@
+{
+  "pid": "P006",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V5-minor-pointcode-duplication",
+      "severity": "minor",
+      "evidence": "markedExpressions에서 (B) 명사절 접속사 that과 (D) 주격 관계대명사 who가 동일한 pointCode \"b\"를 공유한다. 두 밑줄은 서로 다른 문법 범주(보문소 vs 관계사)인데 내부 코드가 같다. 학생 노출 필드에는 영향이 없어 V5 실패로는 판정하지 않음."
+    },
+    {
+      "code": "V4-minor-phrasing",
+      "severity": "minor",
+      "evidence": "(D) 오답 해설의 \"관계절 had been exposed를 이끄므로\"는 관계절을 그 동사(had been exposed)로 지칭한 느슨한 표현이다. 오분석은 아니지만 정밀하지 않음. 정확히는 who가 관계절 'who had been exposed to an \"elderly\" mix of words' 전체를 이끌며 그 안에서 주어 역할을 한다."
+    }
+  ],
+  "validityEvidence": {
+    "V1": "렌더 지문을 원지문과 전수 대조: 유일한 차이는 (A) showing→showed(의도된 오류 변형)뿐이다. (B)(C)(D)(E)는 원문 그대로이며, 문장 접합 파손·중복·누락·고아 문장부호·오탈자 없음. 인용부호(\"elderly\", \"random\", 단어 리스트, 예시 문장)도 보존됨. 마커 (A)~(E)가 선택지 목록과 1:1 일치.",
+    "V2": "각 밑줄 독립 검증: (A) 'Psychologist John Bargh did an experiment showed ...'는 주어의 정동사 did가 이미 존재하므로 관계사 없는 두 번째 정동사 showed는 불가. 대안 해석 검토 — 주격 관계사 생략은 비표준이라 불가, 수동 축약관계절 '(that was) showed'는 형태·의미상 성립 불가, 등위접속 없는 연쇄동사도 불가 → (A)는 확정적 오류. (B) tell+IO+that절의 보문소로 적법. (C) ask+O+to부정사 목적격보어로 적법. (D) 사람 선행사 students의 주격 관계대명사로 적법. (E) 비교급 longer의 상관어 than으로 적법. 실제 정답 집합 = {(A)} = 선언 정답. 단일정답 확인.",
+    "V3": "지문은 의도된 (A) 오류 외 전부 문법적·자연스러움. 'an experiment showing (that) human perception ... can be influenced'의 that 생략도 자연스러움. 발문은 표준 어법 발문. 교정형(showing)을 넣은 완성문은 원문과 동일하여 문법적.",
+    "V4": "주해설의 구조 분석('주어 Bargh의 정동사는 did 하나뿐', 'showing은 experiment 후치 수식 현재분사')이 실제 통사 구조와 일치. 교정형 showing이 원문을 정확히 복원. 오답 해설 4건 모두 해당 선지의 실제 내용·구조와 대응(B=명사절 접속사, C=목적격보어 to부정사, D=주격 관계대명사+실존 선행사 students, E=비교 상관어). 비단어·환각·용어 오류 없음.",
+    "V5": "선언 정답 (A) ↔ markedExpressions에서 (A)만 isError:true. errorExpression(showed)=렌더 표기, expression/correction(showing)=원문·교정형으로 상호 일치. 오답 해설 키 {(B),(C),(D),(E)}가 비정답 선지와 정확히 일치. keyPoints 3건 모두 해설·구조 필드와 모순 없음."
+  },
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 4,
+    "C5": 4,
+    "C6": 3
+  },
+  "craftRationale": {
+    "C1": "정동사 vs 준동사(명사 후치 수식 현재분사)는 수능 어법의 정전 포인트이며 문장 골격의 핵심을 묻는다. 다만 가장 표준적인 사례라 '정교함' 가산까지는 아님 → 3.",
+    "C2": "네 오답이 서로 다른 문법 범주(명사절 that / ask+O+to-v / 주격 관계사 / 비교 than)를 겨냥해 의도 분포는 양호. 단 (E) than은 즉시 확인 가능해 필러에 근접 → 3.",
+    "C3": "정답 (A)는 'the experiment showed that ...'라는 고빈도 연어 때문에 국소적으로 자연스러워 보이는 진짜 함정이 있고, 전체 구조(did가 정동사)를 읽어야 갈린다. 오답들은 즉시 소거 가능한 편이나 BASIC 목표에서는 허용 범위 → 3.",
+    "C4": "메타 누출·꼬리 소거 단서 없음. source-correct → displayed-wrong 최소대립쌍이며 교정 시 정확히 원문 복원. 정답 근거가 문장 내에 충분하고 필연적 → 4.",
+    "C5": "요청 난이도 BASIC과 정확히 정합: 단일 구조 판단 1스텝, 함정 깊이 얕음, 오답 소거 용이 → 4.",
+    "C6": "해설이 짧고 정확하며 정답 근거(정동사 유일성)와 핵심 함정(관계사/to-v 자리 혼동)을 분리해 제시. (D) 해설의 느슨한 표현이 감점 요인 → 3."
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "정동사 vs 준동사 — 명사(experiment)를 후치 수식하는 현재분사 자리에 정동사 과거형을 배치",
+      "temptingBecause": "'The experiment showed that ...'가 고빈도 연어라 'an experiment showed human perception ...'이 국소적으로 자연스럽게 읽힘",
+      "decisiveFlaw": "주어 Psychologist John Bargh의 정동사 did가 이미 존재하므로 관계사 없는 두 번째 정동사는 통사적으로 불가. showing(현재분사)이어야 하며 교정 시 원문과 정확히 일치"
+    },
+    {
+      "label": "(B)",
+      "intent": "tell+간접목적어 뒤 명사절 보문소 that 판단(관계사 that과의 구별)",
+      "temptingBecause": "간접목적어 명사구(a bunch of healthy undergraduates) 직후라 관계사로 오인하거나 what 자리로 의심할 수 있음",
+      "decisiveFlaw": "없음(어법상 적법) — 뒤에 완전한 절(he was testing their language abilities)이 오므로 명사절 접속사 that이 정확히 맞음"
+    },
+    {
+      "label": "(C)",
+      "intent": "ask+목적어+to부정사(목적격보어) 구조 판단",
+      "temptingBecause": "사역·지각동사류의 원형부정사 또는 동명사 보어와 혼동 가능",
+      "decisiveFlaw": "없음(어법상 적법) — ask는 목적격보어로 to부정사를 취하므로 to create가 맞음"
+    },
+    {
+      "label": "(D)",
+      "intent": "사람 선행사 뒤 주격 관계대명사 who 판단",
+      "temptingBecause": "whom/which와의 격·선행사 종류 혼동, 또는 뒤의 수동 완료형(had been exposed)이 낯설어 의심 가능",
+      "decisiveFlaw": "없음(어법상 적법) — 선행사 students(사람)이고 관계절 내 주어 자리이므로 주격 who가 맞음"
+    },
+    {
+      "label": "(E)",
+      "intent": "비교급(longer)과 상관하는 than 판단",
+      "temptingBecause": "as/to 등 다른 비교 상관어와의 짝 혼동을 노림",
+      "decisiveFlaw": "없음(어법상 적법) — 40 percent longer라는 비교급과 짝을 이루는 than이 맞음. 다만 즉시 확인 가능해 변별 기여는 낮음"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "(D) 해설 '관계절 had been exposed를 이끄므로' — 관계절 전체가 아닌 동사만 지칭한 느슨한 표현(오분석은 아님)",
+      "recommendation": "'관계절 who had been exposed to an \"elderly\" mix of words를 이끌며 절 내 주어 역할을 한다'로 정밀화"
+    },
+    {
+      "severity": "minor",
+      "evidence": "(B) 해설 'told 뒤에 이어지는 명사절' — 실제로는 간접목적어 뒤에 이어지는 명사절이므로 표현이 약간 축약됨",
+      "recommendation": "'told+간접목적어 뒤에 이어지는 명사절'로 명시하면 더 정확"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "요청 난이도 BASIC의 어법 문항. V1~V5 전부 통과, 정답 유일성 확정((A)만 오류, 대안 해석 배제 검증 완료). 공예 합계 20/24로 모든 축 3 이상이나 합계 21 미달 → A가 아닌 B. 정답 함정 설계(고빈도 연어 'experiment showed' 착시)는 우수하고 최소대립쌍·원문 복원도 깨끗함. 개선 여지: (E) than의 변별 기여가 낮아 더 판단이 필요한 디코이로 교체 가능, (B)/(D) pointCode 중복 정리, (D)·(B) 해설 표현 정밀화. KILLER 아님(killerConditionsMet=false는 난이도 비대상)."
+}

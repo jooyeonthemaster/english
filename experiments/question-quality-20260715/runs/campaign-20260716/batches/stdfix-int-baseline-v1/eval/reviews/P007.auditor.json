@@ -1,0 +1,77 @@
+{
+  "pid": "P007",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-MINOR-LOCATION",
+      "severity": "minor",
+      "evidence": "해설이 'The norms of scientific communication presuppose... authorized by disciplinary specialists' 문장을 '지문 중반부'라고 지칭하나 실제로는 지문 후반부(끝에서 세 번째 문장)에 위치한다. 인용 내용 자체는 정확하므로 V4 실패로 보지 않는다."
+    },
+    {
+      "code": "V5-MINOR-KEYPOINT-COVERAGE",
+      "severity": "minor",
+      "evidence": "keyPoints가 ③②⑤만 다루고 ①④는 다루지 않는다. 상호 모순은 없어 동기화 실패는 아니지만 커버리지가 불완전하다."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 4,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "polarity flip — 객관성/집단검증 요건의 정반대(주관·편향) 제시",
+      "temptingBecause": "지문의 'unbiased mind', 'prejudiced humans' 등 편향 관련 어휘가 표면 앵커로 작동할 수 있다",
+      "decisiveFlaw": "과학적 진실이 '주관적 견해의 편향된 표현'이 되어야 입지를 얻는다는 명제는 지문 전체 논지(전문가 승인·집단적 산물)와 정면 모순이며, 사실상 어떤 오독 경로로도 도달하기 어려운 near-absurd 선지라 변별 기여가 약하다"
+    },
+    {
+      "label": "②",
+      "intent": "half-truth / 통념 제시 — 지문 도입부의 개인주의적 발견관을 결론 자리에 이식",
+      "temptingBecause": "'discoveries are made in laboratories', 'inspired patience, skilled hands' 등 도입부 서술과 직접 겹쳐, 도입부만 읽거나 통념-반박 구조를 놓친 학생이 선택하기 쉽다",
+      "decisiveFlaw": "지문은 이 개인주의 수사를 '공적 맥락에서 행동의 근거가 될 수 없다'고 명시적으로 기각하며, 빈칸 직후 문장 'only one stage in its construction'이 고립된 개인 발견으로는 진실이 완성되지 않음을 확정한다"
+    },
+    {
+      "label": "③",
+      "intent": "정답 — 원문 span 'a collective product'의 의미 보존 추상화",
+      "temptingBecause": "해당 없음(정답). 'authorized by disciplinary specialists'의 근접 paraphrase로서 필연적 근거를 가진다",
+      "decisiveFlaw": "없음. 'an outcome approved by the scholarly community'는 통사 슬롯에 정확히 들어가고 직전 문장·직후 문장 양쪽 단서와 정합한다"
+    },
+    {
+      "label": "④",
+      "intent": "epistemic reversal — '자연이 스스로 말한다'는 지문이 기각한 전제를 정답 자리에 배치",
+      "temptingBecause": "'they speak for themselves', 'too powerfully... to silence them' 등 지문 전반부 문구와 표면적으로 강하게 겹친다",
+      "decisiveFlaw": "지문은 'nature does not speak unambiguously'라고 명시하여 자연의 직접 증명 가능성을 부정하므로, 이 선지는 지문이 반박하는 입장의 재진술이다"
+    },
+    {
+      "label": "⑤",
+      "intent": "actor/context trap — 기자회견 일화의 표면 소재를 결론으로 오귀속",
+      "temptingBecause": "'announces a so-called discovery at a press conference'라는 실제 지문 장면과 직접 대응하는 어휘 앵커가 있다",
+      "decisiveFlaw": "지문에서 대중 공표는 전문가 검토 없이 이루어질 경우 'castigated as a publicity seeker'로 비난받는 행위, 즉 입지 확보의 반례로 제시된다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "LOCATION-IMPRECISION",
+      "severity": "minor",
+      "evidence": "'지문 중반부' — 인용된 규범 문장은 실제로 지문 후반부에 위치"
+    },
+    {
+      "code": "OBJECTIVITY-FRAME-LOOSE",
+      "severity": "minor",
+      "evidence": "① 해설이 '객관성 요건'을 근거로 드는데, 지문의 핵심 프레임은 객관성 일반이 아니라 '전문가 집단의 승인(collective authorization)'이다. 결론(①이 오답)은 옳으나 근거 프레이밍이 다소 헐겁다"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1~V5 전부 통과. 원지문 대비 렌더 지문은 'a collective product' → 빈칸 치환 외 손상 없음(문장부호·아포스트로피 포함 일치). 각 선지를 빈칸에 대입해 독립 검증한 결과 ③만 논리적으로 성립하며 ①②④⑤는 각각 지문이 명시적으로 기각한 입장이라 정답 유일성이 확실하다. 다섯 선지 모두 동일 NP 슬롯에 문법적으로 들어가 suffix 기반 소거가 불가능하다. 공예 측면: 빈칸이 지문의 논지 결론 span을 정확히 겨냥해 출제 가치는 높고(C1=4), ②④⑤는 서로 다른 함정(통념 이식·인식론적 역전·소재 오귀속)에 표면 앵커를 갖추었으나 ①이 near-absurd 반대 선지라 의도 밀도를 깎는다(C2=3). 정답 ③만이 필자 입장과 극성이 일치하는 유일한 선지여서 극성 판단만으로 근접 가능해 변별 상한이 있다(C3=3). 직전 문장의 근접 paraphrase 1단계 추론은 INTERMEDIATE 라벨에 대체로 부합하되 약간 쉬운 편(C5=3). 해설은 정확하고 근거 인용이 올바르나 다소 장황하고 위치 지칭('중반부')이 부정확하다(C6=3). 합계 20으로 A 기준(≥21)에 1점 미달, 모든 C≥3·합계≥17이므로 B. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

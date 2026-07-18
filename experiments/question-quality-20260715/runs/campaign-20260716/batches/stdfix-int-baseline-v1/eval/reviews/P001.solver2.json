@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법 결합은 성립하나(If you stick firmly to...), 논리 모순. 지문 전체 명제는 '유연성 > 경직성'인데 ①은 경직성 고수를 지시한다. 또한 경직 고수가 참이라면 후행절의 평정한 수용('Here is one of those inevitabilities')이 도출되지 않는다 — 오히려 계획 변경 시 좌절이 예측된다. 조건-귀결 함의 관계 불성립."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "문법상 seam은 정상이나, '우선순위를 일과 가족으로 엄격히 구분'하는 행위는 'it'(계획 변경/차질)의 선행사를 제공하지 못하고, 'inevitabilities'(불가피성)라는 귀결 표현을 전혀 함의하지 않는다. 나아가 '엄격한 구분'은 지문이 거부하는 rigidity 계열 어휘로, 주제와 역방향."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "문법 결합 완전 성립: 'If you mentally prepare yourself for the certainty of disruption, then when it happens...'에서 'it'의 선행사가 disruption으로 명시적으로 확보된다. 논리 성립: 직전 문장 'expect that a certain percentage of plans will change'의 직접 패러프레이즈이고, 'certainty'는 귀결절의 'inevitabilities'와 어휘적 함의 관계(확실성→불가피성)를 이룬다. 조건(사전 심적 대비)→귀결(발생 시 평정한 수용 발화)의 함의가 형식적으로 타당."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "문법상 성립하나 논리 부적합. 네 살 아이는 우선순위 논증의 예시(illustration)일 뿐 결론이 아니다. '아이의 즉각적 필요 충족에 집중'이 참이어도 'it happens'의 지시 대상과 'inevitabilities' 발화가 도출되지 않는다. 예시를 일반 명제로 승격시키는 미끼."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "문법상 성립하나 내적 모순. '어떤 계획도 실패하지 않게 막는 완벽한 시스템'을 만들면 귀결절 'when it happens'(그것이 일어날 때)가 공허해진다 — 전건이 참이면 후건의 전제 사건이 발생하지 않아야 한다. 또한 '일정 비율의 계획은 변한다고 기대하라'는 지문 명제와 정면 모순."
+    }
+  ],
+  "note": "빈칸 문장은 조건문으로, (a) 'it'의 선행사 확보와 (b) 'one of those inevitabilities'를 정당화하는 기대 명제가 요구된다. 두 조건을 동시에 만족하는 선지는 ③뿐이다. ③의 'certainty of disruption'—'inevitabilities' 어휘 응집과 직전 문장 패러프레이즈가 결정적. 대안 해석(관계절 축약, 도치 등)으로 타 선지가 구제될 여지는 없음 — 모든 선지가 문법적으로는 결합 가능하므로 판별은 순수 논리·응집성 차원에서 이루어졌고, ③ 외에는 조건-귀결 함의가 성립하는 선지가 없다. 단일 정답, 복수 정답 시비 없음."
+}

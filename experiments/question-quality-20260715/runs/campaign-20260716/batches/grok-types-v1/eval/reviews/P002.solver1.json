@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "attractive-distractor",
+      "reason": "실전에서 실제로 끌린 오답. 지문이 'more helpful but not necessarily more believable'이라고 명시해 '근거만으로는 믿음을 못 준다'는 프레임이 겹친다. 그러나 (a) 지문의 최종 결론인 스토리(narrative)의 우위를 완전히 누락해 3단 대비(단순 진술→근거→스토리)의 중간 단계만 포착하고, (b) 'Fail'은 과장 — 지문은 'We need justifications... before we can begin to believe'라며 근거가 필요조건이자 'more helpful'하다고 인정하고 단지 불충분하다고 말할 뿐이다. 너무 좁고 왜곡됨."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "고양이/개는 단순 예시(illustration)일 뿐, 애완동물 선호가 의사결정을 좌우한다는 내용은 지문에 없음. 예시를 주제로 격상시킨 전형적 오답."
+    },
+    {
+      "label": "3",
+      "verdict": "correct",
+      "reason": "지문 구조와 1:1 대응 — narratives(스토리), assertions(단순 진술 'A cat' = simply state our beliefs), simple reasons(근거 'cute and quiet' = justifications). 스토리가 단순 주장과 단순 근거를 능가한다는 지문의 중심 논지를 완전하게 포괄하는 제목."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "전문 지식(expert knowledge)은 지문에 전혀 언급되지 않음. Bill에게 필요한 것은 전문성이 아니라 유사 상황의 스토리."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "지문과 정면 모순 — 단순 진술('A cat')은 'useless advice'로 규정됨. 직접 진술이 최선이라는 제목은 지문의 결론과 반대."
+    }
+  ],
+  "note": "최상위권 실전 풀이 렌즈. 3단 대비 구조(진술→근거→스토리)를 잡으면 정답은 3으로 유일하게 수렴. 선지 1이 believability 프레임을 공유해 실제로 유혹적이었으나 스토리 요소 누락 + 'Fail' 과장으로 배제 근거가 명확함. 대안 해석으로 1을 정문화할 경로 없음. 단일 정답, 신뢰도 높음."
+}

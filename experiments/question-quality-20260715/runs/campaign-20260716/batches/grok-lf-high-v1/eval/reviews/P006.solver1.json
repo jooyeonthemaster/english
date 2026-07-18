@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "Directly restates the passage's definition of ethical thinking ('evaluating these issues from different perspectives') and forms the intended contrast with 'rather than follow a prescribed set of ethical codes or rules'. Supported by every subsequent sentence: no clear right/wrong, principles vary between and within individuals, context dependence, and the closing call to understand one's own code while accepting that others' codes differ. Grammatical seam (learn to + base verb) is clean."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong (strongest distractor)",
+      "reason": "Lexically echoes the opening clause, so it exerts real pull on a fast reader. But that clause defines CRITICAL thinking; the passage explicitly reframes ethical thinking as evaluating issues from different perspectives, not evaluating evidence. Ethical issues are said to have no clear right or wrong, so evidence-evaluation is the wrong mechanism, and 'guiding all choices' overgeneralizes beyond ethical issues."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "Contradicted by the passage: 'these principles vary both between and within individuals' — there are no principles 'shared by every community' to align with. Also functionally equivalent to following a prescribed code, which the blank explicitly opposes."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "Distorts the final sentence. The passage asks students to recognize both how codes may COINCIDE and how they may differ; 'internalize only what separates other people's codes' is a nonsensical prescription and reverses the inclusive framing."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Twists the descriptive observation of context dependence into a prescription. The passage never advises abandoning one's personal code; it says to understand the factors behind it. 'Replace personal codes with rules' also clashes with the blank's contrast against rule-following."
+    }
+  ],
+  "note": "Clean single-answer item. Option 2 is a well-built verbatim-echo trap (critical-thinking definition recycled where the ethical-thinking definition belongs); options 3-5 are clearly refutable from explicit passage statements. No alternative reading makes any distractor defensible."
+}

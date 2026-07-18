@@ -1,0 +1,50 @@
+{
+  "pid": "P001",
+  "finalV2": false,
+  "winningAnswer": "(C)",
+  "reason": "선언된 정답 (C)는 '의도된 정답이자 최선의 답'이 맞으나 '유일한 답'은 아니다. 쟁점 문장 'What a person values relating to... beliefs influenced by... experiences.'는 정동사가 전혀 없는 범주적 비문이므로 오류의 존재 자체는 확실하다. 그러나 그 오류의 귀속이 유일하지 않다: (C) relating→relates로 고쳐도 문법 문장이 되고(원문 복원, 한 단어 교체), (C)를 유지한 채 (D) influenced→is influenced로 고쳐도 문법 문장이 된다('relating to'는 Longman/Cambridge 등재 전치사 '~에 관한'으로, 'What a person values relating to their social, religious, or civic beliefs'가 완결된 융합관계절 주어를 이루고 단수 호응 is influenced와 결합; '학습 경험이 개인 요인을 형성한다'는 지문 주제와도 정합). 두 독해를 강제로 배제할 수일치·구두점·담화 단서가 문장 내에 없으므로 (D)를 정답이라 주장하는 이의신청을 문법적으로 기각할 수 없다. 독립 블라인드 솔버 2인이 모두 같은 대안을 지적한 것도 경험적으로 이를 뒷받침한다. 감사자의 V2=true는 '정동사 부재=비문'이라는 오류 존재 증명을 오류 귀속의 유일성 증명으로 오인한 판정이라 파기한다. 결론: 정답 유일성 실패(finalV2=false). 수리 방향: 정동사 결핍 문장 안에 준동사 밑줄을 (C)·(D) 두 개 두지 말 것 — (D) 밑줄을 다른 문장의 확실한 정문 요소로 이동하거나, (D) 구간을 'which are influenced by...'로 바꿔 전치사 독해의 여지를 차단해야 한다.",
+  "perDispute": [
+    {
+      "label": "(C)",
+      "claim": "선언된 정답: 명사절(융합관계절) 주어 'What a person values' 뒤 정동사 필수 자리에 준동사 relating이 와서 비문 — relates로 교정해야 한다.",
+      "verdict": "CONFIRMED (성립 — 최선의 답)",
+      "evidence": "'a person values'에서 values는 관사 a 때문에 동사 독해만 가능하고, 주어는 융합관계절 'What a person values'다. 렌더 문장에는 정동사가 하나도 없어 비문이며, relating→relates 한 단어 교체만으로 원지문과 정확히 일치하는 정문이 복원된다(influenced는 beliefs 수식 축소관계절). 1차 파스·최소 수리 기준에서 가장 자연스러운 정답. 단, 아래 (D) 판정에 의해 '유일한' 정답 지위는 상실."
+    },
+    {
+      "label": "(D)",
+      "claim": "솔버1(대안)·솔버2(주정답): (C)의 'relating to'를 전치사(=concerning)로 읽으면 주어가 완결되고 결핍된 정동사 자리는 (D)가 되어 influenced→is influenced로 고쳐야 한다 — (D)도 정답으로 성립한다.",
+      "verdict": "SUSTAINED (대안 정답 성립 — 유일성 파괴)",
+      "evidence": "'relating to'는 Longman('laws relating to the sale of alcohol'=about, concerning)·Cambridge 등에 전치사로 등재된 표준 표현이다. 이 독해로 수리한 'What a person values relating to their social, religious, or civic beliefs is influenced by their formal and informal learning experiences.'는 (i) 융합관계절 주어+단수 호응 is influenced로 문법적이고, (ii) '개인의 가치는 형식·비형식 학습 경험의 영향을 받는다'는 의미가 후속 문장 'the personal factors that influence your own code of behaviour'와 담화적으로 정합하며, (iii) 이 파스를 배제할 구조적 단서(수일치·구두점·상충 성분)가 문장 내에 존재하지 않는다. '동사 자리에 온 분사 → be+p.p. 교정'은 학교문법에서 통용되는 표준 수리 유형이므로 조동사 삽입이 필요하다는 사정만으로 이의신청을 기각할 수 없다. 따라서 (D)는 방어 가능한 대안 정답이고 문항은 복수정답 결함을 가진다."
+    },
+    {
+      "label": "(D)-primary",
+      "claim": "솔버2의 추가 주장: (D)가 (C)보다 우선하는 '주정답'이며, 'values relating to social/religious/civic beliefs'가 원문형 연어라는 근거.",
+      "verdict": "REJECTED (과잉 판정)",
+      "evidence": "두 가지 오류: (i) 'values relating to X'를 명사 연어로 본 근거는 'a person values'에서 values의 명사 독해가 통사적으로 불가능(관사 a + 복수명사 불성립)하므로 무효 — 성립하는 것은 융합관계절+전치사구 독해뿐이다. (ii) 우선순위 판단도 뒤집혔다: (C) 수리는 한 단어 형태 교체로 원문을 정확히 복원하고 1차 파스와 일치하는 반면, (D) 수리는 조동사 삽입과 융합관계절 후치수식이라는 주변적 구성을 요구한다. (D)는 '방어 가능한 2순위'이지 주정답이 아니다. 다만 이 과잉이 (D)의 방어 가능성 자체(위 SUSTAINED)를 무효화하지는 않는다."
+    },
+    {
+      "label": "auditor-V2",
+      "claim": "감사자: V2=true — '정답 유일성 독립 검증 통과(정동사 부재는 범주적 비문)', alternativeAnswers=[].",
+      "verdict": "OVERTURNED (판정 파기)",
+      "evidence": "'문장에 정동사가 없어 비문'이라는 사실은 오류의 존재를 증명할 뿐, 그 오류가 (C) 밑줄에 유일하게 귀속됨을 증명하지 않는다. 정동사 결핍은 (C)·(D) 어느 쪽을 수리해도 해소되는 양방향 결함인데, 감사자는 두 솔버가 모두 지적한 'relating to' 전치사 독해를 검토·반박하지 않은 채 유일성을 선언했다(alternativeAnswers 공란). 유일성 게이트는 '성립하는 대안 파스의 부재'를 요구하므로 V2=true는 유지될 수 없다."
+    },
+    {
+      "label": "(A)",
+      "claim": "정문 여부 재검증: 목적 to부정사 'to guide how to respond'.",
+      "verdict": "CONFIRMED (정문)",
+      "evidence": "identifying/evaluating 행위를 수식하는 부사적 목적 to부정사로, 지문 서두 정의 'the identification and evaluation of evidence to guide decision-making'과 평행하며 guide+wh-to부정사절(how to respond)도 표준 용법. 대안 오류 해석 없음. (해설의 '명사구 different perspectives 수식' 부착 설명은 오설명이지만 이는 V4 문제이고 정답 유일성에는 영향 없음.)"
+    },
+    {
+      "label": "(B)",
+      "claim": "정문 여부 재검증: 주격 관계대명사 that.",
+      "verdict": "CONFIRMED (정문)",
+      "evidence": "선행사 'the principles of conduct'(복수)를 받는 주격 관계대명사로 관계절 동사 'are considered'와 복수 일치. 접속사 that 오독을 유도하는 배치일 뿐 어법 결함 없음."
+    },
+    {
+      "label": "(E)",
+      "claim": "정문 여부 재검증: 전치사 alongside 뒤 동명사 recognizing.",
+      "verdict": "CONFIRMED (정문)",
+      "evidence": "alongside는 전치사이므로 동명사 보충이 필수이고 'recognizing and accepting that...' 병렬도 정상. 'understand와의 병렬로 (to) recognize' 기대는 함정일 뿐 성립하지 않음. 대안 오류 해석 없음."
+    }
+  ]
+}

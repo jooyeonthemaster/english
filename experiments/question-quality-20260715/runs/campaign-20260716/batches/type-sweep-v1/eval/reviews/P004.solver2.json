@@ -1,0 +1,20 @@
+{
+  "pid": "P004",
+  "answer": "(A) disconnected / (B) material",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(A) disconnected / (B) material"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "disconnected",
+      "reason": "Frame 'has (A) the traditional connection between work and physical location' requires a transitive past participle taking 'connection' as object. The passage's only verb predicated of the work-place tie is 'ties between service work and particular places can be disconnected'; transformed from passive to active perfect it yields 'has disconnected'. Grammatically well-formed (cognate-object redundancy 'disconnect the connection' is stylistic, not ungrammatical) and semantically exact. Alternatives (severed, weakened, loosened) are not passage-grounded, violating the '본문에서 찾아' constraint; 'sticky/less sticky' cannot be inserted into the transitive frame."
+    },
+    {
+      "label": "(B)",
+      "verdict": "material",
+      "reason": "Frame 'without leaving any (B) presence in those regions' requires an attributive adjective on 'presence'. The summary clause directly paraphrases 'the employer leaves behind no material traces in the places where it was once an employer', so the modifier transfers unchanged: 'material'. 'Physical' fits semantically but is already used for 'physical location' in the summary and is not the passage's trace modifier; 'local' (from 'local regulations/taxes') would be redundant with 'in those regions' and is not the paraphrase source. 'any material presence' under the negation of 'without' is grammatically licensed."
+    }
+  ],
+  "note": "Constructed-response summary item; no MCQ options provided, so per-blank judgments replace per-option verdicts. Both blanks map uniquely onto passage lexemes ('disconnected', 'material') via the stated find-and-transform instruction, so the item has a single defensible key. Minor quality remark: 'disconnected the ... connection' is a cognate-object redundancy in the summary frame itself (the frame forces it), and the item would read better with 'severed'; this is a frame-design blemish, not an answer ambiguity."
+}

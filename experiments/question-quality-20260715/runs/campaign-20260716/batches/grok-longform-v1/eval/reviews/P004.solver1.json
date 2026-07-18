@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "매력적 오답. 'if it involves vulnerable groups'와 'food production in Zimbabwe'가 표면적으로 호응해 끌리지만, 바로 다음 문장이 식량 생산 증가는 성공의 'only a small part'만 설명한다고 명시적으로 반박한다. 성장/생산 계열은 빈칸(필요조건)이 될 수 없다."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "빈칸 직전의 'no matter how fast they grow'가 성장 무관성을 이미 양보절로 못 박았다. 이 선지를 넣으면 '아무리 빨리 성장해도 가속 성장 없이는 기근을 못 막는다'는 자기모순 문장이 된다."
+    },
+    {
+      "label": "3",
+      "verdict": "accept",
+      "reason": "정답. 마지막 문장 'The real achievements ... lie in having provided direct public support to their populations in times of crisis'가 빈칸을 유일하게 고정한다. 'deliberate public systems' = direct public support, 'command over basic necessities'는 Sen의 entitlement 논리와 정합. without + NP 문법 결합도 자연스럽다."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "반(反)정답. 'without organized state involvement'는 결론(국가의 직접 공적 지원)과 정반대. 첫 문장의 'revival of the rural economy'만 훑은 수험생을 노린 미끼로, 논지 전개를 따라가면 즉시 배제된다."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "'diversification'은 첫 문장에서 저자가 한계를 지적하는 통념 측 전략이고, 'merely spreads uncertain sources'라는 자기비하적 수식 자체가 빈칸이 요구하는 '진짜 필요조건'과 상충한다."
+    }
+  ],
+  "note": "Dreze-Sen 계열 기근/공적 지원 논지. 빈칸은 '성장으로는 부족하고 공적 직접 지원이 필수'라는 역접 구조의 귀결부로, 마지막 문장이 정답을 일의적으로 결정한다. 최상위권 실전 풀이에서 1번(취약계층+식량생산 어휘 재활용)과 4번(농촌경제 부활 어휘 재활용)이 표면 어휘 매칭으로 순간 끌리나, 'only a small part' 및 'direct public support' 장거리 단서로 모두 소거된다. 복수정답 여지 없음."
+}

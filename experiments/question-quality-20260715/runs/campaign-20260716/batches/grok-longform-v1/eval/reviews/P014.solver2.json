@@ -1,0 +1,35 @@
+{
+  "pid": "P014",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) that",
+      "verdict": "correct",
+      "reason": "제한적 관계대명사(주격). 선행사는 단수 'subject matter'이며 관계절 동사 'resembles'가 3인칭 단수로 일치. 'the focus is on subject matter that resembles everyday life'는 완전한 정문."
+    },
+    {
+      "label": "(B) to facilitate",
+      "verdict": "correct",
+      "reason": "주어 핵 'the role'(단수) + be동사 뒤 to부정사 주격 보어의 표준 구문(the role is to-V). 타동사 facilitate가 목적어 'the construction of mental models'를 정상적으로 지배. 정문."
+    },
+    {
+      "label": "(C) carry",
+      "verdict": "correct",
+      "reason": "주어 핵은 복수 'Feelings'('of pleasure and uncertainty'는 후치 전치사구 수식). 복수 동사 carry가 수 일치. 'carry the viewer along'의 결합도 자연스러움. 정문."
+    },
+    {
+      "label": "(D) created",
+      "verdict": "incorrect",
+      "reason": "정답(어법상 틀림). 의도된 구조는 결과를 나타내는 분사구문 'thereby creating a disquieting atmosphere'로, 목적어 'a disquieting atmosphere'를 취하려면 능동 현재분사 creating이 필수. 대안 파스 검증: (i) 'the subject matter thereby created'를 축약 관계절로 읽으면 후행 명사구 'a disquieting atmosphere'가 어떤 술어에도 지배되지 않는 고아 성분이 되어 문장이 붕괴하고, (ii) 정형 과거동사로 읽으려 해도 접속사·주어가 없어 병렬이 성립하지 않음. 어떤 해석으로도 정문이 되지 않으므로 유일하게 틀린 밑줄."
+    },
+    {
+      "label": "(E) provides",
+      "verdict": "correct",
+      "reason": "단수 주어 'This active involvement'와 단수 동사 provides의 수 일치. 'provide a basis for + 명사'의 표준 결합. 정문."
+    }
+  ],
+  "note": "문법가/논리학자 렌즈 블라인드 풀이. (D)만이 모든 대안 파스(축약 관계절, 정형동사 병렬)에서 비문으로 판정되며, 나머지 네 밑줄은 지배 규칙(선행사 일치, 주어 핵 수 일치, be+to부정사 보어)상 결함이 없다. 단일 정답으로 수렴하는 깨끗한 어법 문항."
+}

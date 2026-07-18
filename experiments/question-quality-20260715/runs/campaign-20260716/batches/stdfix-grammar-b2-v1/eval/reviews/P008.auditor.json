@@ -1,0 +1,71 @@
+{
+  "pid": "P008",
+  "blindAnswer": "(A)",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-render",
+      "severity": "minor",
+      "evidence": "렌더 지문은 원지문 대비 정확히 한 지점('when'→'what', (A))만 변형됐고 나머지 밑줄 (B)Although·(C)important·(D)would be eliminated·(E)is는 원문과 동일하다. 문장 접합·중복·누락·고아 부호 없음. 라벨 A~E와 선지 5개 일치."
+    },
+    {
+      "code": "V4/V5-terminology",
+      "severity": "minor",
+      "evidence": "keyPoints는 (A)를 '관계대명사 vs 관계부사'로 명명하나, 본 해설은 'when'을 부사절을 이끄는 접속사로 정확히 기술한다. 여기 'when'은 선행 명사(the time 등)가 없어 관계부사가 아니라 종속접속사이므로, 해설은 정확하고 keyPoints 라벨이 다소 부정확하다. 필드 간 경미한 용어 불일치이며 채점 경계·정답에는 영향 없음."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 4,
+    "C5": 2,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "부사절 접속사(when) 자리에 명사절/관계대명사 what을 심은 최소대립쌍 — 실제 정답(오류).",
+      "temptingBecause": "'what'이 연결어처럼 보여 뒤 절의 완전성(subject the keystone species + 수동태 is removed, gap 없음)과 슬롯이 부사영역임을 확인하지 않으면 넘어갈 수 있다.",
+      "decisiveFlaw": "뒤 절이 gap 없는 완전한 수동절이라 명사절/관계대명사 what은 격·연결이 불가하고, 'is revealed'를 수식하는 시간 부사절이 필요하므로 접속사 when이어야 한다. 교정 시 정확히 원문 'when'이 복원된다."
+    },
+    {
+      "label": "(B)",
+      "intent": "양보 종속접속사 Although가 완전한 절을 이끄는가.",
+      "temptingBecause": "Although를 전치사 Despite/In spite of와 혼동해 뒤에 명사구가 와야 한다고 오판할 여지.",
+      "decisiveFlaw": "Although 뒤 'figs(주어) collectively produce(동사)…'의 완전한 절이 이어지고 양보 의미가 문맥과 부합 — 어법상 옳다."
+    },
+    {
+      "label": "(C)",
+      "intent": "연결동사 become의 주격보어에 형용사가 오는가.",
+      "temptingBecause": "동사 뒤라는 이유로 부사(importantly)를 기대하는 오개념.",
+      "decisiveFlaw": "become은 연결동사로 주격보어에 형용사를 요구하며 important는 형용사 — 옳다."
+    },
+    {
+      "label": "(D)",
+      "intent": "도치 가정법 조건절(Should…)에 이어지는 주절의 조동사+수동태 판정.",
+      "temptingBecause": "도치 조건절이 낯설고, would+수동을 능동(would eliminate)으로 바꿔야 한다고 의심하기 쉬운 최강 디코이.",
+      "decisiveFlaw": "척추동물은 제거되는 대상(피동)이므로 'would be eliminated'의 수동이 필수이고 형태도 정확 — 옳다. (가정법·태 판정 자리로 대안분석 여지가 있으나 명백히 정답 아님)"
+    },
+    {
+      "label": "(E)",
+      "intent": "동명사구 주어의 단수 취급.",
+      "temptingBecause": "직전 명사 'ecosystems'(복수)에 이끌려 'are'로 오판.",
+      "decisiveFlaw": "주어의 핵은 동명사 'Protecting…'로 단수이므로 'is' — 옳다."
+    }
+  ],
+  "explanationIssues": [
+    "keyPoints의 (A) 명칭 '관계대명사 vs 관계부사'는 부정확(여기 when은 선행사 없는 부사절 접속사). 본 해설(접속사 when)이 옳으므로 keyPoints 라벨만 소폭 수정 권장.",
+    "(A) 해설이 정확하나 다소 장황('구조적 및 의미상', 마무리 문장) — 축약 여지."
+  ],
+  "killerConditionsMet": true,
+  "grade": "B",
+  "notes": "모든 V 통과(단일정답 (A) 확정). §C KILLER 조건은 문면상 충족: source-correct(when)→displayed-wrong(what) 최소대립쌍이고 교정 시 원문 복원, 정답은 절 완전성·부사슬롯을 읽어야 하는 명확한 구조 판단(철자·비단어·단순 수일치 아님), 5개 밑줄 모두 설명 가능, 동일 point의 쉬운 디코이 없음. 다만 'what+완전절' 오류는 국내 수능에서 비교적 빈출·인지 가능한 패턴이라 정답 자체의 체감 난도는 KILLER 하단 — 그래서 C5=2. (D)도치가정법 수동·(E)동명사 주어가 실질 디코이로 변별을 지탱. 공예 합계 18로 B(모든 V 통과, C 최저 2, 합계 17 이상, 소수정 출제 가능). A가 아니므로 beautiful KILLER 라벨은 아님."
+}

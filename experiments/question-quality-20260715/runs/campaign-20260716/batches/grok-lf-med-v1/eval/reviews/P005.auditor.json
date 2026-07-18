@@ -1,0 +1,72 @@
+{
+  "pid": "P005",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-refutation-stretch",
+      "severity": "minor",
+      "evidence": "오답 해설 ⑤가 '최종적으로 관객이 열렬히 환호하므로 고립 예측과 맞지 않으며'라고 본 공연 시점의 환호로 리허설 시점 심리 서술을 반박한다. 빈칸은 리허설 도착 직후의 심리 상태이므로 결정적 결함은 시간적으로 뒤에 오는 환호가 아니라 트리거 절('when he thought of how many people would be there')과의 인과 불일치다. 해설 후반부('전환의 동인은 고립이 아니라 관객 수에 대한 의식')가 올바른 근거를 함께 제시하므로 V4 실패로는 보지 않는다."
+    }
+  ],
+  "craft": {
+    "C1": 2,
+    "C2": 3,
+    "C3": 1,
+    "C4": 2,
+    "C5": 0,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — 삭제 span 'quickly changed to nervousness'의 near-paraphrase. quickly→suddenly, changed to→replaced by, nervousness→stage anxiety.",
+      "temptingBecause": "트리거 절(관객 수 인식)과 직결되고 이후 리허설 실수·Tom의 위로 흐름과 완전히 정합한다.",
+      "decisiveFlaw": "없음(정답). 다만 원문 의미의 추상화가 거의 없어 KILLER 수준 재구성이 아니다."
+    },
+    {
+      "label": "2",
+      "intent": "cause swap — 긴장의 원인을 관객 규모에서 의상 후회로 치환. 앞선 쇼핑 장면을 source anchor로 사용.",
+      "temptingBecause": "옷 선택 장면(형이 고른 옷, 점원 동의)이 지문 전반부를 차지해 표면 어휘 중첩이 있다.",
+      "decisiveFlaw": "빈칸 문장의 when 절이 원인을 '관객 수'로 명시하고, Garcia는 새 옷에 'felt good'이라 후회 근거가 전무하다. 'gradually'도 순간 전환('when he thought')과 상충한다."
+    },
+    {
+      "label": "3",
+      "intent": "actor/motive fabrication — 존재하지 않는 동료 질투 동기 삽입. band mate Tom을 anchor로 사용.",
+      "temptingBecause": "Tom이라는 실제 등장인물이 있어 표면적으로 지문에 닿아 있다.",
+      "decisiveFlaw": "Tom은 위로하고 지지하는 인물로만 등장하며 질투 단서가 전혀 없다. when 절의 원인(관객 수)과도 불일치. 'secretly'는 지문이 서술하는 명시적 심리 전환과 상충한다."
+    },
+    {
+      "label": "4",
+      "intent": "half-truth + overextension — 리허설 실수(실재)를 밴드 기술 결함에 의한 영구 붕괴로 과장.",
+      "temptingBecause": "'struggled with the rhythm, making several mistakes'라는 실재 anchor가 있다.",
+      "decisiveFlaw": "실수는 빈칸 이후의 결과이지 원인이 아니며(시간 역전), 'permanently'는 Tom의 위로 후 회복과 flawless 연주·환호로 즉시 반증된다."
+    },
+    {
+      "label": "5",
+      "intent": "scope/state shift — 긴장(nervousness)을 고립(isolation)이라는 다른 심리 범주로 치환. audience를 anchor로 사용.",
+      "temptingBecause": "'audience'가 관객 수 인식이라는 트리거와 어휘장을 공유한다.",
+      "decisiveFlaw": "관객 수를 의식한 결과는 불안이지 고립이 아니며, 이후 서사(실수→위로→회복)가 불안 서사를 뒷받침한다. 'confidence가 isolation으로 변형된다'는 결합 자체도 의미상 부자연스럽다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "⑤ 반박에 본 공연 시점의 '열렬한 환호'를 사용 — 빈칸(리허설 시점) 심리 서술의 반증으로는 시간적으로 간접적이다. 올바른 근거(트리거 절 인과 불일치)도 병기되어 있어 사실 오류는 아니다.",
+      "recommendation": "⑤ 반박을 트리거 절 인과 불일치 단일 근거로 정리."
+    },
+    {
+      "severity": "minor",
+      "evidence": "④ 반박의 'flawless 본 공연과 충돌' — 지문에서 flawless는 'Garcia's trumpet playing'에 대한 서술이며 밴드 전체 기술에 대한 직접 서술은 아니다. 다만 밴드 공연 전체가 환호를 받았으므로 실질 논지는 유지된다.",
+      "recommendation": "'Garcia의 연주가 flawless였고 공연이 환호를 받았다'로 귀속을 정확히."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "무결성 프로그램 검증: 렌더 지문의 빈칸에 'quickly changed to nervousness'를 복원하면 원지문과 문자 단위로 완전 일치(빈칸 1개). V1~V5 전부 통과, 정답 ① 유일성 확인. 그러나 공예 수준이 요청 난이도 KILLER와 심각하게 불일치한다. (1) 빈칸 문장에 남은 when 절('when he thought of how many people would be there')이 원인을 그대로 노출해 빈칸 문장 하나만 읽고 ①을 고를 수 있다 — §D의 '최소 두 문장/두 논리 단서 연결' 요건 위반. (2) 정답이 삭제 span의 near-verbatim paraphrase로 추상화가 없다. (3) 네 오답 모두 부사('gradually/secretly/permanently/quietly')와 무근거 원인으로 국소 소거되어 실제 경쟁 선지가 없다 — 절대어·극성 단서만으로 소거 가능하다는 점도 §D 위반. (4) 서사형 심리 전환 지문 자체가 KILLER 빈칸 소재로 부적합하게 평이하다. C5=0, C3=1, 합계 11로 재설계 필요. 등급 C: 유효하지만 KILLER 출하 불가, 하위 난이도(EASY~MEDIUM)로 재라벨하거나 빈칸 위치·선지 전면 재설계 필요."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "(A)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(A)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "incorrect (this is the wrong one)",
+      "reason": "'can, in principle, be very precise targeted to...' — the predicate head is the passive participle 'targeted' (be targeted to X). A participle must be modified by an adverb: 'very precisely targeted'. As written, adjective 'precise' directly precedes 'targeted' with no comma or coordination, which no licit parse rescues: 'be precise, targeted...' (adjective + free participial phrase) would require a comma that is absent, and 'be precise targeted' as stacked complements is not a grammatical structure. Must be 'precisely'."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'an incentive to reduce emissions' — to-infinitive complementing the noun 'incentive' (incentive to do X), a standard and required pattern. Correct."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'in any manner that is less costly per unit of abatement than the tax...' — relative 'that' has antecedent 'any manner' (singular), so singular 'is' agrees. Distractor pull: nearby plural 'emissions' tempts 'are', but semantically 'less costly per unit of abatement' describes the manner of abatement, not the emissions. Correct as written."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'the actions the polluter can take to reduce tax liability are actions that...' — subject head is plural 'the actions', modified by the reduced relative '[that] the polluter can take to reduce tax liability'. The singular 'tax liability' immediately before the verb is a classic proximity trap inviting 'is', but plural 'are' is correct."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'particularly where there are many separate sources of emissions' — 'where' as a subordinating conjunction meaning 'in cases/situations in which', standard in academic register with no physical-place antecedent required. Correct."
+    }
+  ],
+  "note": "Clean single-answer item. (A) 'precise' vs 'precisely' is a genuine adjective/adverb error governed by the passive participle 'targeted'. The most attractive distractors in a real exam are (D) (proximity-agreement trap with 'tax liability') and (C) (plural 'emissions' near the relative clause), but both survive analysis. (E) conjunction 'where' may momentarily tempt students who expect a locative antecedent, but it is standard usage. No alternative parse makes (A) grammatical; no second defensible answer found."
+}

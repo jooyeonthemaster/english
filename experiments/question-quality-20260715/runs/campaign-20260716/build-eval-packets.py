@@ -29,12 +29,45 @@ def fmt_options(q):
     opts = q.get("options") or []
     return "\n".join(f"{o.get('label')} {o.get('text')}" for o in opts if isinstance(o, dict))
 
+def type_display_sections(q, blind):
+    """유형 특이 표시 필드 렌더 (26-07-18 수정: 요약/순서/삽입의 핵심 표시 필드를
+    패킷에서 누락시켜 채점자가 '풀 수 없음'으로 오판하던 평가 장비 결함 교정)."""
+    parts = []
+    if isinstance(q.get("givenSentence"), str) and q["givenSentence"].strip():
+        parts.append("## 주어진 문장/글\n" + q["givenSentence"])
+    if isinstance(q.get("paragraphs"), list) and q["paragraphs"]:
+        chunks = "\n\n".join(
+            f"{p.get('label')} {p.get('text')}" for p in q["paragraphs"] if isinstance(p, dict)
+        )
+        parts.append("## 단락 (순서 배열 대상)\n" + chunks)
+    if isinstance(q.get("summaryWithBlanks"), str) and q["summaryWithBlanks"].strip():
+        parts.append("## 요약문 (빈칸 포함)\n" + q["summaryWithBlanks"])
+    if isinstance(q.get("sentenceWithBlank"), str) and q["sentenceWithBlank"].strip():
+        parts.append("## 빈칸 문장\n" + q["sentenceWithBlank"])
+    if isinstance(q.get("scrambledWords"), list) and q["scrambledWords"]:
+        words = list(q["scrambledWords"]) + [w for w in (q.get("wordBankDistractors") or []) if isinstance(w, str)]
+        parts.append("## 배열 대상 단어\n" + " / ".join(str(w) for w in words))
+    if isinstance(q.get("contextHint"), str) and q["contextHint"].strip():
+        parts.append("## 힌트\n" + q["contextHint"])
+    if isinstance(q.get("referenceSentence"), str) and q["referenceSentence"].strip():
+        parts.append("## 참조 문장\n" + q["referenceSentence"])
+    if isinstance(q.get("conditions"), list) and q["conditions"]:
+        parts.append("## 작성 조건\n" + "\n".join(f"- {c}" for c in q["conditions"]))
+    if not blind:
+        if isinstance(q.get("blanks"), list) and q["blanks"]:
+            parts.append("## blanks (정답 포함 — 감사용)\n" + json.dumps(q["blanks"], ensure_ascii=False, indent=1))
+        for key, label in [("modelAnswer", "모범답안"), ("answer", "정답(서술형)"), ("scoringCriteria", "채점 기준"), ("markedWords", "markedWords"), ("underlinedSegments", "underlinedSegments")]:
+            v = q.get(key)
+            if v:
+                parts.append(f"## {label} (감사용)\n" + (v if isinstance(v, str) else json.dumps(v, ensure_ascii=False, indent=1)))
+    return ("\n\n" + "\n\n".join(parts)) if parts else ""
+
 def blind_md(pid, q, passage_text):
     rp = rendered_passage(q) or passage_text
     return f"""# 문항 {pid}
 
 ## 지문
-{rp}
+{rp}{type_display_sections(q, blind=True)}
 
 ## 발문
 {q.get('direction') or '(발문 없음)'}
@@ -59,7 +92,7 @@ def full_md(pid, q, it, source_kind):
 {it.get('passageText','(별도 파일 참조)')}
 
 ## 렌더된 지문 (학생에게 보이는 형태)
-{rp}
+{rp}{type_display_sections(q, blind=False)}
 
 ## 발문
 {q.get('direction')}

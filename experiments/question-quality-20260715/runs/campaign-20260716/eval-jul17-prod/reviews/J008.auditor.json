@@ -1,0 +1,110 @@
+{
+  "pid": "J008",
+  "blindAnswer": "(D)",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-terminology-minor",
+      "severity": "minor",
+      "evidence": "keyPoints (B)는 help를 '사역동사'로, 오답 해설 (B)는 '준사역동사'로 표기해 용어가 불일치한다. help는 준사역동사가 정확하며, 오답 해설 본문은 옳으므로 V-fail은 아님."
+    },
+    {
+      "code": "V5-typo-minor",
+      "severity": "minor",
+      "evidence": "keyPoints (A) '능동 능동분사 vs 수동분사'에서 '능동'이 중복된 오타. 의미 전달에는 지장 없음."
+    },
+    {
+      "code": "V5-coverage-minor",
+      "severity": "minor",
+      "evidence": "keyPoints가 (D)(A)(B)만 수록하고 (C)look+형용사, (E)과거분사 포인트가 누락됨. 오답 해설에는 전 선지 설명이 존재하므로 모순은 아니나 필드 완전성이 약함."
+    }
+  ],
+  "v1Evidence": "원지문 대비 렌더 지문의 유일한 변형은 'quickly agreeing' → 'quickly agreed'(의도된 정답 오류)이며, 나머지 전 문장은 자모 단위로 일치. 문장 접합 파손·중복·누락·고아 문장부호 없음. 라벨 (A)~(E)가 선지 목록 및 markedExpressions와 일치.",
+  "v2Evidence": "독립 blind solve: (A) 'Garcia stood ..., waiting'은 본동사 stood가 있는 능동 분사구문으로 적법. (B) help him pick은 help+목적어+원형부정사로 적법. (C) look great는 연결동사+형용사 보어로 적법. (E) everyone fell silent, fascinated by the music은 매료되는 대상이므로 과거분사 적법. (D) 'The clerk stopped her work and looked at the clothes, quickly agreed'는 and가 이미 stopped와 looked를 연결한 상태에서 접속사 없이 콤마 뒤 세 번째 정형동사가 오는 comma splice — 대안 해석(the clothes 수식 축약관계절, 3항 무접속 병렬)은 의미·통사상 성립 불가. 정답 집합 정확히 {(D)}.",
+  "v3Evidence": "지문(정답 오류 제외)·발문·교정 완성문(agreeing 복원 시 원문과 동일) 모두 문법적·자연스러움. 오답 4개는 모두 적법 형태로 유형 의도('틀린 것 하나')와 일치.",
+  "v4Evidence": "해설의 구조 분석이 실제 문장과 일치: 주어 The clerk, 정동사 stopped·looked의 and 병렬, 접속사 부재 시 정형동사 불가, 현재분사 agreeing 분사구문 교정. 오답 해설 4건 모두 해당 밑줄의 실제 구조를 정확히 기술. 오분석·환각·비단어 없음.",
+  "v5Evidence": "선언 정답 (D) = markedExpressions isError:true 항목 = 해설 대상. correction 'agreeing'과 errorExpression 'agreed'가 렌더·원지문과 정합. 오답 해설 키 (A)(B)(C)(E)가 비정답 선지와 일치.",
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "craftRationale": {
+    "C1": "정동사 vs 준동사(접속사 개수 기반 본동사 자리 판별)는 정전급 핵심 포인트. 다만 서사 지문 특성상 논리 구조와의 결합은 없음.",
+    "C2": "디코이가 분사 능수동(A,E), 준사역 목적격보어(B), 연결동사 보어(C)로 서로 다른 오개념을 겨냥. 단 (A)(E)가 동일 pointCode 'c'로 부분 중복.",
+    "C3": "훈련된 학생은 A/B/C/E를 즉시 소거 가능한 기초 포인트라 실제 판단 경합이 약함. (D)만 문장 구조 추적을 요구.",
+    "C4": "메타 누출 없음. 오류는 필연적이고 교정은 유일하게 원문을 복원.",
+    "C5": "요청 난이도 KILLER 대비 실제 체감 중하 난도. 서사(43~45형) 지문은 최저 난도 지문군이고, 정답 포인트는 가장 많이 반복 훈련되는 정형 패턴('콤마 뒤 정형동사 → 분사')이며 디코이 전부 즉시 검증 가능. 라벨과 실측 난이도의 명백한 불일치.",
+    "C6": "해설이 짧고 정확하며 정답 근거(접속사 부재)와 교정 방향(분사구문)을 선명히 분리. keyPoints 오타·용어 불일치로 만점은 아님."
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "분사구문의 능·수동 판단 (comma + 현재분사)",
+      "temptingBecause": "정답 (D)와 동일한 '콤마+분사류' 표면 구조라 본동사 자리로 오인하거나 waited로 고쳐야 한다고 착각할 수 있음",
+      "decisiveFlaw": "주어 Garcia의 본동사 stood가 이미 존재하고 Garcia가 기다리는 능동 주체이므로 현재분사 waiting이 완전히 적법 — 오류 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "준사역동사 help의 목적격 보어 형태(원형부정사)",
+      "temptingBecause": "asked ... to help의 to부정사 흐름에 이끌려 to pick이어야 한다고 오인할 수 있음",
+      "decisiveFlaw": "help는 목적격 보어로 원형부정사와 to부정사를 모두 허용하므로 pick은 적법 — 오류 아님"
+    },
+    {
+      "label": "(C)",
+      "intent": "연결동사 look의 주격 보어(형용사 vs 부사)",
+      "temptingBecause": "동사 look을 수식한다고 보아 부사 greatly를 기대할 수 있음",
+      "decisiveFlaw": "look은 여기서 연결동사이므로 형용사 보어 great가 정답 형태 — 오류 아님"
+    },
+    {
+      "label": "(D)",
+      "intent": "본동사 vs 준동사 — 접속사 없는 세 번째 정형동사 판별 (선언된 정답)",
+      "temptingBecause": "앞의 stopped, looked와 같은 과거형이라 시제 병렬로 자연스러워 보임",
+      "decisiveFlaw": "and가 이미 stopped와 looked를 연결했으므로 접속사 없는 콤마 뒤에 또 다른 정형동사 agreed는 불가 — 분사구문 agreeing으로 교정해야 하며 교정 시 원문과 정확히 일치"
+    },
+    {
+      "label": "(E)",
+      "intent": "감정타동사 과거분사의 능·수동 판단",
+      "temptingBecause": "fell silent 뒤 능동 fascinating과의 혼동, 또는 본동사 자리로 오인",
+      "decisiveFlaw": "의미상 주어 everyone이 음악에 매료되는 대상이므로 과거분사 fascinated가 적법 — 오류 아님"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "keyPoints (A) '능동 능동분사 vs 수동분사' — '능동' 중복 오타",
+      "recommendation": "'능동분사 vs 수동분사'로 수정"
+    },
+    {
+      "severity": "minor",
+      "evidence": "keyPoints (B) '사역동사에 따른' vs 오답 해설 (B) '준사역동사' 용어 불일치",
+      "recommendation": "help는 '준사역동사'로 통일"
+    },
+    {
+      "severity": "minor",
+      "evidence": "keyPoints가 5개 밑줄 중 3개만 수록 — (C), (E) 포인트 누락",
+      "recommendation": "전 밑줄 포인트를 keyPoints에 수록하거나 top-3 정책임을 명시"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAudit": {
+    "minimalPair": true,
+    "clearGrammarJudgment": true,
+    "allFiveUnderlinesDocumented": false,
+    "structuralNotSurface": true,
+    "noMaskingDecoy": true,
+    "notes": "조건3 미충족: 각 밑줄의 point·why correct는 있으나 'why tempting'이 어떤 필드에도 명시돼 있지 않음. 조건4는 형식상 충족(구조 추적 필요, 철자/비단어/인접 수일치 아님)이나, 해당 포인트가 국내에서 가장 반복 훈련되는 정형 패턴이라 KILLER급 함정 깊이에 실질적으로 미달 — C5=1과 함께 KILLER 부적합."
+  },
+  "grade": "C",
+  "notes": "유효성 5개 게이트 전부 통과 — 변형 무결, 정답 유일, 해설 사실적, 필드 동기화. 그러나 요청 난이도 KILLER 대비 실측 난이도가 중하 수준(서사 지문 + 최다 훈련 포인트 + 즉시 소거형 디코이)이라 C5=1로 난이도 정합이 붕괴. RUBRIC 등급 규정상 C 최저 2 미달로 B 불가 → C. 출하하려면 KILLER 슬롯이 아닌 중급 슬롯으로 재배정하거나, 디코이·정답 포인트를 구조적 함정(도치, 삽입절 경유 수일치, 관계사 격 판단 등)으로 재설계 필요. killerConditionsMet=false."
+}

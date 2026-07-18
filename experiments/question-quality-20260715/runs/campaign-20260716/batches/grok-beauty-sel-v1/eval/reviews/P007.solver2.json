@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "consistent",
+      "reason": "Direct paraphrase of sentence 2: 'This is music's greatest asset because it brings out the essential now without implications of a past and a potential future.' 'Greatest strength' = 'greatest asset'; 'free of any load of past or future implications' = 'without implications of a past and a potential future'. Truth-conditionally equivalent; the shift to 'listeners' is a benign specification of the experiencer."
+    },
+    {
+      "label": "2",
+      "verdict": "consistent",
+      "reason": "Sentence 3 attributes to Stravinsky: 'only through music are we able to realize the present.' The option's 'music alone makes it possible' is logically equivalent to the exclusive 'only through music'. Faithful attribution, faithful modality."
+    },
+    {
+      "label": "3",
+      "verdict": "contradicts",
+      "reason": "The premise clause (musical meaning inseparable from presentation) matches the passage, but the main assertion — 'schools have largely replaced factual study with direct musical work for most pupils' — formally contradicts the final sentence: 'in spite of numerous attempts to develop a more musical music curriculum for the majority of school pupils, the emphasis is STILL on pupils absorbing factual information about music.' The passage asserts the replacement did NOT happen; the option asserts it did. No alternative reading reconciles 'have largely replaced' with 'the emphasis is still on factual information'."
+    },
+    {
+      "label": "4",
+      "verdict": "consistent",
+      "reason": "Matches the 'However' sentence: the necessity of making music present here and now 'does not sit easily with a concept of education that rests mainly upon received factual knowledge and which, by tradition, uses the past to make sense of the present.' The option compresses the two relative clauses into 'received factual knowledge drawn from the past' — a benign conflation that preserves both the content and the polarity ('does not sit easily')."
+    },
+    {
+      "label": "5",
+      "verdict": "consistent",
+      "reason": "Near-verbatim restatement of the final sentence: concessive 'Yet, in spite of numerous attempts...' = 'Although there have been many attempts...', and 'the emphasis is still on pupils absorbing factual information about music' = 'schools still emphasize absorption of factual information about music'."
+    }
+  ],
+  "note": "Content-mismatch item (일치하지 않는 것). Options 1, 2, 4, 5 are each anchored one-to-one to a passage sentence with preserved truth conditions. Option 3 uses a true premise from the passage to smuggle in a conclusion whose negation the passage explicitly asserts in its final concessive sentence — a clean, uniquely determinable answer. No grammatical seam issues; no defensible alternative labels."
+}

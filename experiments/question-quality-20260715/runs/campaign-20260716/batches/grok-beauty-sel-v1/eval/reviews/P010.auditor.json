@@ -1,0 +1,77 @@
+{
+  "pid": "P010",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-CORRUPTED-TERM",
+      "severity": "major",
+      "evidence": "해설 두 번째 문장 '개인의 가치· codе of behaviour는'에서 'codе'의 네 번째 글자가 라틴 'e'(U+0065)가 아니라 키릴 문자 'е'(U+0435)다(파일 오프셋 2089에서 바이트 단위 확인). 학생 노출 필드인 해설에 비단어/손상 용어가 포함된 것으로, V4의 '비단어·손상 용어 없음' 기준 위반이다. 검색·복사·TTS·폰트 폴백 환경에서 실제 결함으로 드러난다."
+    },
+    {
+      "code": "V4-EXPLANATION-TYPO-SPACING",
+      "severity": "minor",
+      "evidence": "같은 자리 '가치· codе'에서 가운뎃점(·) 뒤에 공백이 있어 같은 해설 내 '사회·신념·학습'의 무공백 가운뎃점 표기와 불일치한다. 손상 용어와 결합된 표기 파손이다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — 중심 논지의 종합(윤리적 사고 = 개인적 요인 + 맥락 의존적 평가)",
+      "temptingBecause": "해당 없음(정답). 'no clear right or wrong', 'principles vary both between and within individuals', 'context dependent', 'personal factors' 등 지문 전반의 단서를 정확히 포괄한다.",
+      "decisiveFlaw": "없음. 유일 정답으로 독립 검증됨."
+    },
+    {
+      "label": "2",
+      "intent": "논지 정반전(causal/polarity reversal)",
+      "temptingBecause": "지문에 'a prescribed set of ethical codes or rules', 'principles of conduct that are considered correct' 등 규범·강령 어휘가 실제로 등장한다.",
+      "decisiveFlaw": "지문은 규정 강령 추종이 아니라 쟁점을 스스로 사고하는 것이 필수라고 주장하며, 'no clear right or wrong response'와 절대어 'Guarantee'가 정면충돌한다. 즉시 소거 가능."
+    },
+    {
+      "label": "3",
+      "intent": "도입 유추로의 초점 이탈(scope shift to framing analogy)",
+      "temptingBecause": "첫 문장이 critical thinking을 'identification and evaluation of evidence'로 정의하여 표면 어휘가 겹친다.",
+      "decisiveFlaw": "critical thinking은 ethical thinking을 정의하기 위한 빗대기 장치일 뿐이고, 글의 주제는 사실적 증거 식별이 아니라 윤리적 쟁점의 다관점·개인적 평가다."
+    },
+    {
+      "label": "4",
+      "intent": "세부 요인의 과잉 일반화(half-truth + 절대화)",
+      "temptingBecause": "'social, religious, or civic beliefs'에서 종교가 가치 형성 요인으로 실제 언급된다.",
+      "decisiveFlaw": "종교는 여러 영향 요인 중 하나에 불과하고, 'Universal Principles'는 원칙이 개인 간·개인 내에서 달라진다는 지문의 명시적 주장('these principles vary both between and within individuals')과 모순된다."
+    },
+    {
+      "label": "5",
+      "intent": "지문이 명시적으로 배제한 개념과의 혼동(condition/scope confusion)",
+      "temptingBecause": "'students learn'이라는 교육 맥락이 있고 'conceptual ethics or theory'가 지문에 원문 그대로 등장한다.",
+      "decisiveFlaw": "지문은 'This form of ethics is distinct from higher levels of conceptual ethics or theory'로 해당 개념을 명시적으로 구별·배제하며, 교실 적용 방법은 논의되지 않는다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "major",
+      "evidence": "해설의 'codе of behaviour'에 키릴 문자 е(U+0435) 혼입 — 학생 노출 텍스트의 손상 용어(homoglyph corruption).",
+      "recommendation": "'codе'를 라틴 문자 'code'로 교체하고, '가치· codе' 공백을 '가치·code' 또는 \"'code of behaviour'\"로 정규화."
+    },
+    {
+      "severity": "minor",
+      "evidence": "가운뎃점 뒤 공백('가치· codе')이 같은 해설 내 표기('사회·신념·학습')와 불일치.",
+      "recommendation": "가운뎃점 표기 통일."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "내용 감사 요약. V1: TITLE 유형으로 지문 변형이 의도되지 않으며 원지문이 그대로 노출된다 — 원지문에 접합 파손·중복·누락·고아 문장부호 없음, 선지 라벨 1~5 정렬 일치, 통과. V2: 각 선지 독립 검증 결과 1만 성립(2는 논지 정반전+절대어, 3은 유추 장치로의 초점 이탈, 4는 요인 과잉 일반화+'universal' 모순, 5는 명시적으로 배제된 개념) — 단일 정답 확정, 통과. V3: 지문·발문·선지 모두 문법적, 통과. V4: 해설의 논리 요약과 오답 해설 4건의 내용 대응은 모두 정확하나, 학생 노출 해설에 키릴 homoglyph 손상 용어 'codе'(U+0435)가 혼입되어 '비단어·손상 용어 없음' 기준을 위반 — 실패. V5: 정답 라벨 1, 오답 해설 키 2~5, keyPoints 3건 모두 상호 모순 없음, 통과. 공예: 중심 논지를 정확히 겨냥(C1=3), 4개 오답이 서로 다른 함정 기제 사용(C2=3), 다만 2·4가 절대어('Guarantee', 'Universal')로 즉시 소거되어 실질 경쟁 선지는 3·5 정도(C3=2, C4=3 — 절대어 꼬리 단서가 약한 누출이나 정답 근거는 필연적), INTERMEDIATE 요구 난이도에 1단계 종합형 title로 부합(C5=3), 해설 산문 자체는 간결·정확하나 손상 토큰과 표기 파손 포함(C6=1). 합계 15. 치명 규칙에 따라 V4 실패는 공예 점수로 상쇄되지 않으므로 최종 F. 수정은 'codе'→'code' 1글자 교체로 충분하며, 수정 시 재감사 예상 등급은 B(합계 17 부근, C6 재평가 3 시 18). 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "(A)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(A)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "incorrect (this is the answer)",
+      "reason": "'did an experiment showed ...'에서 showed가 성립할 경로가 전무하다. (i) 새 절의 정동사로 볼 수 없다 — 상위절 정동사 did가 이미 있고 접속사가 없다. (ii) 축약 관계절로 볼 수 없다 — 주격 관계절 축약은 수동 과거분사(an experiment conducted by ...)나 현재분사(an experiment showing ...)만 허용하며, 능동 정형 과거형 showed는 축약 대상이 아니다. (iii) 관계대명사 생략으로도 볼 수 없다 — 관계절의 '주어' 역할을 하는 관계대명사(an experiment that/which showed)는 표준 문법에서 생략 불가. 따라서 that showed 또는 showing이어야 하며, showed는 어법상 틀리다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'told a bunch of healthy undergraduates that he was testing ...' — tell은 [간접목적어 + that절] 논항 구조를 취하는 동사이며, that은 완전한 절(he was testing their language abilities)을 이끄는 보문소로 완전히 적법하다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'asked them to create a coherent sentence' — ask + 목적어 + to부정사(목적격 보어)의 전형적 목적어 통제 구문. to create는 정확하다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'Those students who had been exposed ...' — 선행사 students(사람), 관계절 내 주어 기능이므로 주격 관계대명사 who가 정확하다. 장거리 단서상으로도 문제 없음(who ... had been exposed, 복수 일치도 자연스러움)."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'took almost 40 percent longer to walk down the hall than those who had been exposed to random words' — 비교급 longer는 than을 의무적으로 선택하며, 비교 대상(elderly 단어에 노출된 학생들 vs random 단어에 노출된 사람들)이 병렬적으로 대응한다. 정확하다."
+    }
+  ],
+  "note": "형식 문법 판정상 (A)만이 유일하게 옹호 불가능한 밑줄이다. (A)를 구제할 대안 해석(축약 관계절, 무접속 등위, 삽입절 등)을 적극 탐색했으나 모두 불성립: 능동 정형동사 showed는 관계절 축약·주격 관계사 생략 어느 경로로도 정문이 될 수 없다. 나머지 (B)~(E)는 공격 가능한 지점이 없어 정답이 (A) 하나로 유일하게 좁혀진다. 지문 자체(Bargh 점화 실험)도 논리적으로 일관됨."
+}

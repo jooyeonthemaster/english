@@ -1,0 +1,84 @@
+{
+  "pid": "P010",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V5-minor-keypoints-coverage",
+      "severity": "minor",
+      "evidence": "keyPoints가 (E)/(B)/(D) 3개 밑줄만 다루고 (A) be headed, (C) what 포인트는 누락. 학생 노출 필드 간 모순은 없으므로 V5 실패는 아님."
+    },
+    {
+      "code": "V4-minor-inversion-wording",
+      "severity": "minor",
+      "evidence": "해설이 '​not only 도치 구조에서'라고 서술하나 렌더된 문장(being)에는 실제 도치가 성립하지 않음. 교정형(are) 기준의 의도 구조 설명이라 오분석은 아니지만 표현이 느슨함."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "be headed의 형용사적 과거분사(태·형태) 판별 — pointCode c",
+      "temptingBecause": "where we are headed 의문사절 내부라 head의 태(headed vs heading)를 의심하게 만듦",
+      "decisiveFlaw": "be headed는 '향하고 있다'는 관용적 과거분사 서술로 정문. 원지문과 동일하며 오류 아님."
+    },
+    {
+      "label": "(B)",
+      "intent": "or 병렬에서 have to 공유 원형 일치 — pointCode i",
+      "temptingBecause": "직전 명사 postponement에 이끌려 'adjust to a postponement or creating'류 명사 병렬로 오독하면 create가 틀려 보임",
+      "decisiveFlaw": "have to (adjust ... or create)로 to를 공유하는 동사 원형 병렬이 성립하는 정문. 오류 아님."
+    },
+    {
+      "label": "(C)",
+      "intent": "선행사 포함 관계대명사 what vs 접속사 that 판별 — pointCode b",
+      "temptingBecause": "This is ___ happens... 보어절 자리라 that으로 바꿔야 한다고 착각하기 쉬움",
+      "decisiveFlaw": "뒤따르는 happens의 주어가 필요하므로 불완전절을 이끄는 what이 정확. that이면 주어 결손으로 비문. 오류 아님."
+    },
+    {
+      "label": "(D)",
+      "intent": "end up + V-ing 준동사 선택 — pointCode k",
+      "temptingBecause": "end up to spend류 to부정사 오형과 비교하게 유도",
+      "decisiveFlaw": "end up 뒤에는 V-ing가 정형이므로 spending은 정문. 오류 아님."
+    },
+    {
+      "label": "(E)",
+      "intent": "정답 — that절 내 not only 상관구문에서 정동사 필수(정동사 vs 준동사) — pointCode a",
+      "temptingBecause": "being을 분사구문·동명사구로 읽어 넘기면 오류를 놓칠 수 있고, 뒤의 but they are also가 문장을 이어주는 듯 보임",
+      "decisiveFlaw": "Remember that 이하 내포절에 정동사가 하나도 없어 절이 붕괴함. being은 서술 기능이 없는 준동사이므로 비문이고, are로 교정하면 not only 도치 구문의 원문이 정확히 복원됨(최소대립쌍). 유일 정답."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "정답 해설의 'not only 도치 구조에서 ... 정동사가 필수'는 교정 후 구조 기준 서술. 렌더 문장 자체에는 도치가 없으므로 '도치가 되어야 할 자리'임을 명시했으면 더 정확.",
+      "recommendation": "'not only가 절 앞에 오면 조동사/be동사 도치가 일어나며 그 자리에 정동사 are가 필요하다'로 서술 순서를 교정형 기준으로 명확화."
+    },
+    {
+      "severity": "minor",
+      "evidence": "(B) 해설의 'have to 뒤 원형 부정사 병렬'은 to를 공유하는 to부정사 병렬(원형 노출)의 관행적 표현으로 사실 오류는 아니나 용어가 느슨함.",
+      "recommendation": "'have to의 to를 공유하는 동사원형 병렬'로 표현 정밀화."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAudit": {
+    "minimalPair": "충족 — are→being 단일 치환, 교정 시 원문 정확 복원",
+    "clearGrammarPoint": "충족 — 정동사 vs 준동사는 문맥 선호가 아닌 명확한 문법 판단",
+    "perUnderlineRationale": "미충족 — 각 밑줄에 pointCode와 why-correct는 있으나 명시적 why-tempting 필드가 없음 (§C 3항)",
+    "structuralDepth": "미충족(보수 판정) — '정동사 자리의 being'과 'not only 도치'는 한국 수험시장에서 가장 집중 훈련되는 패턴이라 절의 유일한 정동사가 사라진 파손이 즉시 드러남. 구조 은닉 깊이가 KILLER 수준에 미달 (§C 4항)",
+    "noMaskingDecoy": "충족 — 동일 포인트의 쉬운 디코이가 정답을 가리지 않음"
+  },
+  "grade": "C",
+  "notes": "V1~V5 전부 통과, 정답 유일성 견고. 그러나 요청 난이도 KILLER 대비 실제 난이도가 중위권 표준 문항 수준: (E)는 절의 유일한 정동사를 being으로 바꾼 고빈도 훈련 포인트이고, 디코이 4개(be headed·or 병렬·what·end up V-ing)도 모두 표준 소거 대상이라 상위권 학생에게 실질 경합이 약함(C3=2, C5=1). C 최저점이 2 미만이므로 등급 C — 출하하려면 난이도 라벨을 중상으로 낮추거나, 오류 지점을 구조적으로 더 은닉된 자리(예: 원거리 병렬·관계사 내부 태)로 재설계 필요. 해설 자체는 정확하고 간결(C6=3)."
+}

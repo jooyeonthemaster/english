@@ -1,0 +1,88 @@
+{
+  "pid": "P008",
+  "blindAnswer": "1",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-ATTRIB-MINOR",
+      "severity": "minor",
+      "evidence": "해설 '뉴욕 언어학 서클과 하버드·MIT에서 가르친 과정' — 지문은 Linguistic Circle of New York의 founding member·vice president였다고만 하고 그곳에서 가르쳤다고는 하지 않는다. 사소한 귀속 확대이며 정답 논리에는 영향 없음."
+    },
+    {
+      "code": "D2-SPAN-FIDELITY",
+      "severity": "minor",
+      "evidence": "source span 'bridge the gap between European and American linguistics'(양방향 연결·매개)를 정답 ①은 'transplant Old World linguistic traditions into the American scholarly scene'(일방향 이식)으로 재개념화했다. 지문 근거로 ①이 유일 최선임은 유지되나(V2 통과), '의미를 정확히 보존한 추상화'라는 KILLER §D 조건에는 미달. 오히려 오답 ④가 은닉 span의 의미('잇다')에 어휘적으로 더 근접하고 과장('one continuous tradition')만으로 탈락하는 구조라 정답-span 정합이 뒤집혀 있다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 4,
+    "C3": 3,
+    "C4": 3,
+    "C5": 2,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — 유럽 경력(러시아 형식주의·프라하 서클) + 미국 활동(뉴욕 서클 창립, Harvard/MIT 교수)을 종합한 재진술",
+      "temptingBecause": "정답이므로 해당 없음. 원문 verbatim('bridge the gap')을 피해 'transplant/Old World'로 바꿔 베껴쓰기 소거를 차단했다.",
+      "decisiveFlaw": "없음(정답). 단, 'bridge the gap'(양방향 연결)을 'transplant into'(일방향 이식)로 좁힌 의미 이동이 있어 완전한 의미 보존 추상화는 아님 — D2 캐비앳."
+    },
+    {
+      "label": "2",
+      "intent": "방향 전도(vector/actor reversal)",
+      "temptingBecause": "'Formalist circles', 유럽-미국 교류 소재가 지문 어휘와 겹친다.",
+      "decisiveFlaw": "지문의 이동은 유럽→미국 단방향(피난 후 미국 정착·교수)이며, 미국 구조주의 방법을 유럽으로 되가져갔다는 근거가 전무하다."
+    },
+    {
+      "label": "3",
+      "intent": "과협소(scope narrowing) + 소재 조합 함정",
+      "temptingBecause": "체코슬로바키아 교수 경력과 Harvard/MIT라는 고유명사가 그대로 등장한다.",
+      "decisiveFlaw": "지문 어디에도 '교수법(pedagogical models)'이 없다. 빈칸이 잇는 것은 언어학 전통이지 교실 수업 방식의 이전이 아니다."
+    },
+    {
+      "label": "4",
+      "intent": "범위 과장(bridge→merger exaggeration)",
+      "temptingBecause": "유럽·미국 양쪽 경험의 '종합'이라는 담화 기능에 정확히 부합하는 외형이며, 은닉된 원문 span의 의미에 다섯 선지 중 가장 근접한다.",
+      "decisiveFlaw": "'하나의 연속된 전통으로 통합(merge into one continuous linguistic tradition)'을 지지하는 문장이 지문에 없다. 간극을 이었다는 것과 두 학파가 하나가 됐다는 것은 다른 주장이다."
+    },
+    {
+      "label": "5",
+      "intent": "절반-진실 + 층위 혼동(마지막 문장 verbatim anchor 유용)",
+      "temptingBecause": "anthropology, art criticism, brain research가 마지막 문장에 글자 그대로 존재해 어휘 겹침이 가장 강하다.",
+      "decisiveFlaw": "타 학문 파급은 다음 문장에서 그의 '이론(sophisticated theories)'의 귀결로 별도 진술된다. ⑤를 넣으면 다음 문장과 중복되어 담화가 붕괴하고, 'Through his teaching in the United States'가 잇는 유럽–미국 서사 기능을 상실한다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "해설이 뉴욕 언어학 서클을 '가르친' 기관으로 묶었으나 지문상 그는 창립 멤버·부회장이다(지문에 없는 내용 첨가에 해당하는 경미한 귀속 확대).",
+      "recommendation": "'뉴욕 언어학 서클을 창립하고 하버드·MIT에서 가르친 과정'으로 수정."
+    },
+    {
+      "severity": "minor",
+      "evidence": "④ 오답 해설이 '지문은 간극을 이은 가교 역할'이라고 진술하나, 렌더 지문에는 해당 표현(제거된 span)이 없으므로 이는 지문 인용이 아니라 추론된 명제다. 학생 입장에서 다소 순환적으로 읽힐 수 있다.",
+      "recommendation": "'지문이 지지하는 것은 두 전통을 잇는 역할까지이며 통합을 말하는 근거는 없다'는 추론 기반 표현으로 완화."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": {
+    "sameSlotFit": true,
+    "spanMeaningPreserved": false,
+    "distractorAnchorOverlapFlaw": true,
+    "multiCueRequired": true,
+    "noSingleCueShortcut": true,
+    "detail": "다섯 선지 모두 'helped to ___' 뒤 동일 부정사 VP 슬롯에 들어가고(문미 blank라 tail 문제 없음), 각 오답이 anchor·overlap·decisive flaw를 갖추며, 전도/과협소/과장/절반-진실로 함정 유형이 모두 다르다. 두 문장 이상(유럽 경력부 + 미국 교수부, ⑤ 배제엔 마지막 문장까지) 연결이 필요하고 극성·길이·고유어·절대어 단일 단서로 찍을 수 없다. 그러나 (1) 정답이 source span 의미를 정확히 보존하지 못하고 일방향 이식으로 재개념화됐으며(D2 미달), (2) 기저 지문이 평이한 연대기적 인물 소개문이라 요구 사고 깊이가 킬러급에 못 미친다(C5=2). 따라서 killer 조건 불충족."
+  },
+  "grade": "B",
+  "notes": "V1~V5 전부 통과, 치명 결함 없음. 오답 4개가 서로 다른 함정 유형(방향 전도·과협소·범위 과장·층위 혼동)을 겨냥하고 각각 지문 anchor를 가진 점은 우수(C2=4). 다만 (1) 요청 난이도 KILLER 대비 지문이 지나치게 평이한 전기문이어서 실제 체감 난도는 상위 4점 문항 수준(C5=2), (2) 정답 ①이 은닉 span 'bridge the gap'의 양방향 의미를 일방향 'transplant'로 좁혀 span 정합이 흔들리고 오답 ④가 오히려 span 의미에 더 가까운 역전 구조, (3) 해설의 경미한 귀속 확대 1건. 합계 18, C 최저 2 → B(작은 수정으로 출하 가능: 정답을 연결·매개 의미로 재조정하거나 ④와의 의미 거리 재배치, 해설 귀속 수정)."
+}

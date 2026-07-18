@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1 (A)-(B)-(C)",
+      "verdict": "불성립",
+      "reason": "(A) 첫 문장 'That's $14.80 less, for a total of $133.20'의 지시어 That과 수치($14.80 = $148의 10%)가 주어진 글 어디에도 선행 근거가 없다. $148이라는 기준액은 (C)에서 처음 도입되므로 (A)가 최선두에 오는 순서는 지시 해소(anaphora resolution)가 형식적으로 실패한다. 즉각 배제."
+    },
+    {
+      "label": "2 (B)-(C)-(A)",
+      "verdict": "성립",
+      "reason": "주어진 글의 'cutting out a budget category'(전면 삭감)와 'all-or-nothing'에 대해 (B)의 'Instead of forcing yourself to go entirely without'(전면 포기 대신)이 정확한 대조 접속을 형성하고, (B)의 'that category'가 주어진 글의 'a budget category'를 지시한다. (B)의 일반 원칙(매달 10% 감축)을 (C)가 'Say you spent $148 at coffee shops'로 구체 예시화하고, (C) 말미의 질문 'what if you challenged yourself to spend just 10 percent less?'에 (A)의 'That's $14.80 less'($148×0.10)가 직접 응답한다. (A)의 'that expense'도 (C)의 커피 지출을 지시. 모든 지시어·수치 연쇄가 빈틈없이 해소되는 유일한 순서."
+    },
+    {
+      "label": "3 (B)-(A)-(C)",
+      "verdict": "불성립",
+      "reason": "(B)에는 구체 금액이 전혀 없으므로 (B) 직후의 (A) 'That's $14.80 less, for a total of $133.20'는 지시·수치의 선행사를 잃는다. $148 기준액이 (C)에서야 나오므로 (A)가 (C)보다 앞서는 배열은 산술적 지시 연쇄가 붕괴한다. 배제."
+    },
+    {
+      "label": "4 (C)-(B)-(A)",
+      "verdict": "불성립",
+      "reason": "표면상 (C)가 주어진 글 뒤에 예시로 올 수 있어 보이나 두 가지 결함이 있다. (i) (C) 말미의 제안 질문('10 percent less on coffee this month?') 뒤에 (B)의 일반 지침('reduce spending on that category by just 10 percent each month')이 오면 이미 제시된 10% 감축을 새 지시처럼 반복하는 잉여·역행이 되고, (B)의 'Instead of forcing yourself to go entirely without'는 주어진 글의 all-or-nothing 프레임에 대한 직접 반박이어서 예시 뒤가 아니라 주어진 글 직후에 와야 결속이 성립한다. (ii) (A)의 'That's $14.80 less'는 (C)의 질문에 대한 즉답인데 (B)가 개입하면 지시어 That이 두 문단을 건너뛰어야 해 결속이 끊긴다. 논증적으로 방어 불가."
+    },
+    {
+      "label": "5 (C)-(A)-(B)",
+      "verdict": "불성립",
+      "reason": "(C)-(A) 국소 연결 자체는 정합하나, (B)가 말미에 오면 파탄난다. (B)는 '전면 포기 대신 매달 10%씩 줄여라'라는 방법 제시 명령문으로, 이미 (C)-(A)에서 그 방법이 실행·계산까지 끝난 뒤에 다시 처음 제안하듯 등장하는 것은 화행 순서상 모순이다. 또한 (B)의 'You won't see sudden, drastic change... will be a lot easier'라는 예고형 미래 서술은 예시에 선행해야 자연스럽고, (B)의 'that category' 지시가 주어진 글의 'a budget category'와 결속되는 구조도 상실된다. 배제."
+    }
+  ],
+  "note": "순서배열 문항. 정답 후보는 2번 (B)-(C)-(A) 단일. 판정 근거는 전부 형식적 결속 장치로 환원 가능: (1) 주어진 글 'cutting out'/'all-or-nothing' ↔ (B) 'Instead of ... go entirely without'의 대조 접속 + 'that category' 지시, (2) (B) 일반론 → (C) 구체 예시($148), (3) (C) 질문 → (A) 'That's $14.80'($148×0.10) 즉답 및 'that expense' 지시. 수치 연쇄($148→$133.20→$119.88)가 (C)→(A) 순서를 산술적으로 강제하므로 오답 선지들이 모두 형식적으로 붕괴하며, 복수 정답 시비 여지는 없다. 부기: 원 지문의 결말 문장('By introducing incremental shifts...')이 (A)(B)(C) 어느 단락에도 수록되지 않아 세트 구성상 누락이 있으나 정답 판정에는 영향 없음."
+}

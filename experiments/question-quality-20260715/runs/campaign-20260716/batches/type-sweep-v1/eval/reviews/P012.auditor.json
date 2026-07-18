@@ -1,0 +1,74 @@
+{
+  "pid": "P012",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-INFO-NO-RENDER",
+      "severity": "minor",
+      "evidence": "렌더 지문 필드가 '(렌더 지문 없음)'이다. MAIN_IDEA는 지문 변형이 없는 유형이므로 원지문이 곧 노출 지문으로 간주되어 실패는 아니나, 파이프라인 산출물로서 렌더 필드가 비어 있음은 기록한다. 원지문 자체는 문장 접합·중복·누락·오탈자 없이 무결하다."
+    },
+    {
+      "code": "V4-MINOR-TEMPLATE-KO",
+      "severity": "minor",
+      "evidence": "오답 해설 4건 모두 \"'…선택지 전문…' 선택지는 [근거]…\" 형태의 템플릿 접합으로 이중 주제어 비문에 가까운 한국어가 생성됨. 예: \"선택지는 초반 교정·거부는 제시된 여러 의견 중 하나일 뿐이며\". 사실 오류는 아니고 문체 결함."
+    },
+    {
+      "code": "V4-MINOR-REBUTTAL-DRIFT",
+      "severity": "minor",
+      "evidence": "오답 해설 4는 \"효과가 즉시 보장된다고도 하지 않는다\"라고 반박하나 선택지 4의 실제 주장은 '동시에 보장'이지 '즉시 보장'이 아님. 핵심 반박(완전 수용이 아니라 수용 후 구축)은 정확하므로 치명 아님."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 4,
+    "C3": 3,
+    "C4": 2,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "스펙트럼의 한쪽 극단('rejection and correction')을 필자의 권고로 오독하게 유도 + '가장 효과적' 절대화",
+      "temptingBecause": "지문이 표준 영어 교육의 중요성을 전제하고 'rejection and correction'이라는 어구가 실제로 등장한다",
+      "decisiveFlaw": "거부·교정은 'Opinions vary from … to …'로 나열된 여러 의견 중 한 극단일 뿐이며, 필자가 지지하는 것은 '먼저 수용 후 구축'이다. 조기 교정의 효과 비교는 지문에 없다"
+    },
+    {
+      "label": "2",
+      "intent": "배경 근거(취업·진학 실익)를 교사의 일차 행동 지침으로 격상시키는 역할 전이(reason-as-action)",
+      "temptingBecause": "첫 두 문장이 취업 면접·고교 이후 진학이라는 실익을 명시적으로 다룬다",
+      "decisiveFlaw": "실익은 표준 영어를 '가르치는 이유'이지 비표준 발화 상황에서의 대응 절차가 아니다. 필자가 제시한 일차 대응은 실익 설명이 아니라 방언 수용이다"
+    },
+    {
+      "label": "3",
+      "intent": "정답 — 'first accept the dialect and then build on it'과 재진술 예시('Oh, you don't have a pencil')의 정확한 paraphrase",
+      "temptingBecause": "명시적 주제문과 예시 모두에 직접 대응한다",
+      "decisiveFlaw": "없음 (정답)"
+    },
+    {
+      "label": "4",
+      "intent": "반대쪽 극단(complete acceptance) 채택 + '만이 … 보장' 절대화의 half-truth",
+      "temptingBecause": "'complete acceptance'가 지문에 그대로 등장하고, 언어 발달·학교 태도라는 장기 이점 어휘도 지문과 겹친다",
+      "decisiveFlaw": "필자는 완전 수용이 아닌 '수용 후 구축'을 권하며, 이점은 'worthwhile'일 뿐 보장이 아니고 결과는 즉시 드러나지 않는다고 명시한다"
+    },
+    {
+      "label": "5",
+      "intent": "조건·시간 역전(condition reversal) — 즉각 효과 확인을 문화 반응적 교수의 전제 조건으로 둔갑",
+      "temptingBecause": "'교정 효과'와 '문화 반응적 교수'라는 지문 핵심 어휘를 모두 사용한다",
+      "decisiveFlaw": "지문은 'results won't be apparent immediately'라며 즉각 효과가 없어도 이 접근을 지지한다. 전환의 전제 조건 구조 자체가 지문에 존재하지 않는다"
+    }
+  ],
+  "explanationIssues": [
+    "오답 해설 템플릿이 선택지 전문을 그대로 반복 인용해 장황하고, '…선택지는 …는 …이며' 형태의 이중 주제어 비문투를 만든다 (C6 감점 요인)",
+    "오답 해설 4가 선택지에 없는 '즉시 보장' 주장을 반박 대상으로 삼는 경미한 표적 이탈"
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "유효성 5개 게이트는 모두 통과한다: 지문 무결(V1), 정답 3 유일(V2, 각 선지 독립 검증 완료), 문법성 이상 없음(V3), 해설 사실 정합(V4, 경미 결함 2건), 필드 동기화 완전(V5). 그러나 요청 난이도 KILLER 대비 실제 난이도가 크게 미달한다: 정답 3이 명시적 주제문 한 문장('The approach most consistent with culturally responsive teaching is to first accept the dialect and then build on it')의 근사 번역이어서 단일 문장 매칭으로 풀리고, 오답 1·4·5가 각각 '가장', '만이…보장', '~한 뒤에야'라는 절대어·조건어 표지를 달고 있어 '온건한 선지 고르기' 시험 요령만으로도 정답이 유출된다(C4=2). RUBRIC §C/§D는 어법·빈칸 전용이라 MAIN_IDEA에 직접 적용되지 않으나, §D의 정신(두 문장 이상 단서 결합 필수, 절대어 하나로 판정 불가)을 준용하면 두 조건 모두 불충족이므로 killerConditionsMet=false. 선지 설계 자체는 4종의 상이한 함정(극단 채택/역할 전이/반대 극단+절대화/조건 역전)으로 의도 밀도가 높아(C2=4) 중~중상 난이도 문항으로는 우수하나, C5=1로 B 하한(최저 2, 합계 17)을 벗어나 등급 C — 난이도 재설계(명시적 주제문의 추상화·재배치, 절대어 표지 제거) 없이는 KILLER 슬롯 출하 불가."
+}

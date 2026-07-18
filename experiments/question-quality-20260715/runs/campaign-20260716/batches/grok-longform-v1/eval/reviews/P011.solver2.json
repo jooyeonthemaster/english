@@ -1,0 +1,35 @@
+{
+  "pid": "P011",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "Seam test: 'important to admit that, regardless of their growth speed, countries where ... cannot hope to prevent famines without ... direct public intervention.' The fronted adjunct 'regardless of their growth speed' is properly closed by the comma already printed in the passage, and 'countries ... cannot hope' supplies the that-clause's subject and predicate — fully grammatical. Logic: 'growth speed is irrelevant; direct public intervention is necessary' is exactly entailed by the evidence sentences ('rapid growth ... explains at best only a small part' / 'real achievements ... direct public support'). Both grammar and logic hold."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "Seam yields 'that only inclusive economic expansion, countries ... cannot hope...' — the NP 'only inclusive economic expansion' is left with no predicate; no licit parse exists (not an absolute construction, not apposition to 'countries'). Ungrammatical. Logically it also contradicts the passage, which downgrades economic expansion of any kind to 'at best only a small part' of famine prevention."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "Seam yields 'that rural economic revival alone, countries ... cannot hope...' — dangling subject NP with no verb, then an unrelated full clause. Ungrammatical. Logically, 'rural economic revival alone' as sufficient contradicts sentences 4-5, which attribute success to direct public support, not sectoral growth."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "'that protection works without any growth' is already a complete embedded clause, so the following ', countries ... cannot hope...' becomes a comma splice inside the that-clause — ungrammatical. Logically overstrong as well: the passage explicitly concedes that growth's contribution 'cannot be denied,' so asserting protection works 'without any growth' misstates the author's position."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Seam yields '...activity diversification alone can, countries...' — the modal 'can' is stranded with no VP complement, and VP-ellipsis fails for lack of an antecedent VP. Ungrammatical. Logically, claiming diversification alone suffices contradicts the passage's thesis that direct public intervention is the necessary mechanism."
+    }
+  ],
+  "note": "Only option 1 survives the formal seam test: the printed comma after the blank demands a completion ending in a fronted adjunct (or nothing), with 'countries ... cannot hope' serving as the that-clause core. Options 2/3/5 strand an NP or modal; option 4 creates a comma splice. Logically the passage (Dreze & Sen-style argument) asserts growth is insufficient regardless of pace and direct public entitlement protection is necessary — option 1 states precisely this. Single defensible answer; distractors fail on both grammatical and logical grounds, making the item clean."
+}

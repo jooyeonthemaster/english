@@ -1,0 +1,35 @@
+{
+  "pid": "P005",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "Seam is clean ('asked Jeff to assist him in choosing good clothing') and the anaphoric causal chain locks it in: 'Garcia was hoping to find the perfect clothing... That was why he had asked Jeff to ___.' Downstream narrative confirms: Jeff picks out the white shirt and black jeans, consults the clerk, and Garcia buys the recommended clothes."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "Jeff is not a band member and never touches the performance itself; the governing cause clause concerns clothing, not preparing the performance. No textual support."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong (main attractive distractor)",
+      "reason": "Tempting because 'traffic was terrible' appears in the very next sentence, but it fails twice: (a) causally — hoping to find perfect clothing cannot be the reason to ask someone to hurry; (b) temporally — the request predates the traffic, so 'hasten his arrival after heavy traffic' is incoherent as a prior request. Pure surface-word echo."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "Trumpet mistakes occur only later at the rehearsal, where Jeff is absent; the actual performance is flawless and no one criticizes Garcia. Also clashes with the clothing-purpose cause clause."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong (secondary lure)",
+      "reason": "Encouragement does appear in the story, but it comes from bandmate Tom at the rehearsal, not from Jeff, and it happens after the mall scene. The long-range antecedent ('That was why' pointing to the clothing hope) rules it out."
+    }
+  ],
+  "note": "Solved as a top-tier examinee under exam conditions. The 'That was why' anaphora immediately preceding the blank makes this a single-answer item; option 3 is the strongest lure via lexical echo of 'traffic' but collapses on cause and timeline, option 5 is a weaker lure via the Tom encouragement scene with an agent mismatch. No alternative reading makes any other option defensible."
+}

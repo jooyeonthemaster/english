@@ -1,0 +1,35 @@
+{
+  "pid": "P015",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'the identification and evaluation of evidence to guide decision-making'에서 to guide는 명사구를 수식하는 목적/용도 to부정사로 표준 용법. 'guiding'이어야 한다는 유혹이 잠깐 있으나 근거 없음. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "wrong (정답)",
+      "reason": "'ethical thinking is about identifying ethical issues and evaluate these issues...'에서 지배 구조는 전치사 about + 동명사이며 병렬 시작점이 identifying이므로 evaluating이어야 한다. 대안 해석 탐색: if절의 'understand'와 병렬이라는 구제 독해는 'then ethical thinking is about...'으로 if절이 이미 종결되었고 evaluate 이하 내용이 ethical thinking의 서술이므로 성립 불가. 원형부정사를 허가할 to부정사·조동사도 선행하지 않음. 어떤 해석으로도 정문이 되지 않는 유일한 오류."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "learn + to부정사는 필수 패턴. 진짜 함정은 뒤의 'rather than follow'인데, rather than 뒤 원형(follow)은 (to) think와의 병렬로 표준 용법이라 to think 자체는 흠 없음. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'the principles of conduct that are considered correct'에서 that의 선행사는 자연스럽게 복수 principles(그 원칙들에 따라 행동함)이므로 are가 옳다. 선행사를 conduct로 보게 유도하는 매력적 오답이지만 의미상 principles가 핵. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'beliefs influenced by their formal and informal learning experiences'는 축약 관계절(beliefs [that are] influenced by...)로, beliefs가 영향을 받는 대상이므로 과거분사가 옳다. influencing으로의 유혹은 의미상 성립 불가. 정문."
+    }
+  ],
+  "note": "최상위권 실전 풀이 렌즈. (B)의 병렬 오류는 장거리 단서(about + identifying)로 명확하며, 구제 독해(understand와의 병렬, 원형부정사 허가)를 적극 탐색했으나 모두 기각. (D)의 수일치 미끼(conduct 선행사 유도)와 (C) 주변의 rather than follow가 매력적 오답으로 기능하나 모두 정문. 정답 후보는 (B) 단일."
+}

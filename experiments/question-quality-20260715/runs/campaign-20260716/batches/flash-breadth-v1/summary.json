@@ -1,0 +1,88 @@
+{
+  "batchId": "flash-breadth-v1",
+  "phase": "grok-confirm",
+  "atKst": "2026-07-17T23:09:48.063+09:00",
+  "assignments": 16,
+  "slotsConsumed": 25,
+  "accepted": 16,
+  "modelCalls": 25,
+  "inputTokens": 220668,
+  "outputTokens": 33395,
+  "costUsd": 0.631557,
+  "ledgerAfter": {
+    "used": 994,
+    "cap": 1200,
+    "costUsd": 33.528659
+  },
+  "byArm": {
+    "FB-TITLE": {
+      "n": 2,
+      "accepted": 2,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 2,
+      "costUsd": 0.039622
+    },
+    "FB-TOPIC": {
+      "n": 2,
+      "accepted": 2,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 2,
+      "costUsd": 0.041283
+    },
+    "FB-IMPL": {
+      "n": 2,
+      "accepted": 2,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 10,
+      "costUsd": 0.262693
+    },
+    "FB-SINS": {
+      "n": 2,
+      "accepted": 2,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 2,
+      "costUsd": 0.065147
+    },
+    "FB-SORD": {
+      "n": 2,
+      "accepted": 2,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 2,
+      "costUsd": 0.052695
+    },
+    "FB-SUMM": {
+      "n": 2,
+      "accepted": 2,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 2,
+      "costUsd": 0.053287
+    },
+    "FB-CONT": {
+      "n": 2,
+      "accepted": 2,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 2,
+      "costUsd": 0.039581
+    },
+    "FB-IRRE": {
+      "n": 2,
+      "accepted": 2,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 3,
+      "costUsd": 0.077249
+    }
+  },
+  "models": {
+    "standard": "google/gemini-3.5-flash",
+    "premiumQgen": "google/gemini-3.1-pro-preview"
+  },
+  "durationMs": 115960
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P013",
+  "answer": "5",
+  "multipleDefensible": false,
+  "defensibleLabels": ["5"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "적절",
+      "reason": "옴부즈맨이 발견한 것은 '난파선 기사마다 살아남은 고양이가 등장한다'는 반복되는 규칙성이므로 pattern은 정확히 들어맞는다. 뒤 문장의 'Each such story featured a cat'이 pattern의 내용을 직접 풀어주는 장거리 단서."
+    },
+    {
+      "label": "2",
+      "verdict": "적절",
+      "reason": "실제로 고양이가 있었고 선원들이 구하러 돌아간 첫 난파 사건에서, 기자가 그 고양이를 기사의 핵심 소재(feature)로 삼았다는 서술. 첫 문장 'featured a cat'과 동일 어근으로 호응하며 이후 다른 기자들이 고양이를 놓쳐 질책받는 전개와 인과적으로 일치한다."
+    },
+    {
+      "label": "3",
+      "verdict": "적절",
+      "reason": "다른 기자들은 고양이 이야기를 쓰지 못했고(failed to mention) 그 때문에 특종을 빼앗겼다고(being beaten) 편집장에게 질책당했다(called down). '언급하지 못했다 → 물먹었다 → 혼났다'의 인과 사슬이 완결되므로 failed는 적절. 의도적 누락으로 읽어 succeeded류를 기대할 여지는 없다."
+    },
+    {
+      "label": "4",
+      "verdict": "적절(단, 매력적 오답)",
+      "reason": "'severely congratulated'라는 결합이 눈에 띄게 어색해 부사 쪽이 문제라고 순간 끌린다. 그러나 문맥상 이 자리에는 '심하게 질책받았다(severely criticized/chided)'가 와야 하며, 그 경우 severely는 완벽히 자연스럽다. 어색함의 원인은 부사가 아니라 동사이므로 severely 자체는 적절. severely를 다른 부사로 바꿔도 'congratulated for being beaten'의 논리 모순은 해소되지 않는다는 점이 결정적."
+    },
+    {
+      "label": "5",
+      "verdict": "부적절 (정답)",
+      "reason": "두 번째 난파에서 실제로 고양이가 없었고 기자는 사실대로 고양이를 뺐는데, 다른 신문들은 모두 고양이를 넣었다. 편집장 입장에서는 그가 특종을 빼앗긴(beaten) 것으로 보이므로 그는 '심하게 질책받았어야(criticized/chided/called down)' 한다. 앞선 병렬 사건('called down by their editors for being beaten')과 결말('이후 모두가 반드시 고양이를 넣게 됐다')이 모두 부정적 제재를 전제한다. 칭찬받았다면(congratulated) 고양이를 빼는 쪽이 강화됐을 것이므로 결말과 정면 모순. congratulated → criticized 계열로 바꾸면 severely와의 결합까지 포함해 전체가 정합적으로 복원된다."
+    }
+  ],
+  "note": "실전 풀이 순서: 첫 사건(고양이 있음, 쓴 기자만 무사)과 둘째 사건(고양이 없음, 뺀 기자만 제재)의 대칭 구조를 잡으면 (e)가 즉시 무너진다. 최대 유혹 지점은 (d) severely — 'severely congratulated'의 비문법적 collocation 때문에 부사를 범인으로 착각하기 쉽지만, 이 유형의 판정 기준은 '해당 낱말을 반의어 계열로 교체했을 때 전체 논리가 복원되는가'이며 그 조건을 만족하는 것은 congratulated뿐이다. (3) failed도 '의도적으로 안 쓴 것 아닌가'로 잠깐 흔들 수 있으나 called down/beaten과의 인과가 failed를 지지한다. 대안 해석(축약 관계절·분사구문 등)이 개입할 문법 구조 문제가 아니라 순수 어휘 적절성 문항이며, 복수 정답 여지는 없다. 원전으로 추정되는 저널리즘 일화(원문은 'severely chided for being beaten')와도 일치."
+}

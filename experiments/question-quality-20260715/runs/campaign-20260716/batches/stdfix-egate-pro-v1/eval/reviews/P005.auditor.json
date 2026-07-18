@@ -1,0 +1,76 @@
+{
+  "pid": "P005",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-MINOR-TERMINOLOGY",
+      "severity": "minor",
+      "evidence": "(A) 오답 해설의 '타동사의 과거분사형인 been seen' — 엄밀히는 'seen'만이 타동사 see의 과거분사이고 'been'은 be의 과거분사다. '현재완료 수동태 has been p.p.' 분석 자체는 정확하므로 V4 실패로는 보지 않으나 용어가 느슨하다."
+    },
+    {
+      "code": "V5-CONVENTION-NOTE",
+      "severity": "minor",
+      "evidence": "markedExpressions (B)의 expression 필드가 원문형 'in which'이고 errorExpression이 렌더형 'which'다. 비오류 항목은 세 필드가 동일하므로 내부적으로는 일관된 규약(expression=정형, errorExpression=표시형)으로 읽히나, 렌더 선택지 '(B) which'와 필드명이 혼동될 소지가 있다. 학생 노출 필드(선택지·렌더 지문)는 완전히 일치하므로 V5 통과."
+    },
+    {
+      "code": "KEYPOINTS-PARTIAL-COVERAGE",
+      "severity": "minor",
+      "evidence": "keyPoints가 (B)(D)(E)만 다루고 (A) 수동태, (C) 대명사 포인트는 누락. 모순은 아니어서 V5 실패는 아니나 밑줄별 point 명세로는 불완전하다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "현재완료 수동태(has long been seen) 판정 — 주어 play가 see의 동작 대상임을 읽는가",
+      "temptingBecause": "has와 been 사이에 부사 long이 끼어 있고 been seen이라는 p.p. 중첩이 형태상 낯설게 보일 수 있다",
+      "decisiveFlaw": "play는 '보여지는' 대상이므로 수동태가 필수이고 has + been + p.p.는 정형이다. 오류 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "관계대명사 vs 전치사+관계대명사 — 뒤 절의 완전성 판단 (정답)",
+      "temptingBecause": "선행사 a way 뒤에 which가 오는 표면형이 평범한 관계절처럼 보인다",
+      "decisiveFlaw": "which 뒤 절 'children learn about the world and their place in it'은 주어·동사·전치사구가 모두 채워진 완전한 절로 관계대명사가 차지할 공백이 없다. in which로 고쳐야 하며 교정 시 원문과 정확히 일치한다"
+    },
+    {
+      "label": "(C)",
+      "intent": "소유격 대명사의 수 일치 — 지시 대상 children(복수) 확인",
+      "temptingBecause": "직전 명사 the world(단수)와의 거리 때문에 its로 착각할 여지가 있다는 정도이나 실제로는 지시 대상이 자명하다",
+      "decisiveFlaw": "their는 복수 children을 받는 소유격으로 정확하다. 오류 아님. 다만 판별이 즉각적이어서 KILLER 디코이로는 필러에 가깝다"
+    },
+    {
+      "label": "(D)",
+      "intent": "allow + 목적어 + to부정사(목적격보어) 구문 판정",
+      "temptingBecause": "let/make 등 원형부정사를 취하는 사역류와 혼동 가능",
+      "decisiveFlaw": "allow는 목적격보어로 to부정사를 요구하므로 to try는 정확하다. 오류 아님"
+    },
+    {
+      "label": "(E)",
+      "intent": "등위 병렬 — to try out and learn과 대등한 to acquire의 형태 일치",
+      "temptingBecause": "직전의 원형 learn(to 공유 병렬) 때문에 acquire도 원형이어야 한다고 오판할 수 있다. 디코이 중 가장 실질적 판단을 요구",
+      "decisiveFlaw": "to acquire는 첫 목적격보어 to try (out and learn)와 and로 병렬된 두 번째 to부정사로 정확하다. 오류 아님"
+    }
+  ],
+  "explanationIssues": [
+    "(A) 오답 해설: '타동사의 과거분사형인 been seen' — been seen 전체를 과거분사형이라 부른 용어 부정확(minor). 핵심 논지(수동 대상이므로 수동태 옳음)는 사실과 일치.",
+    "(D) 오답 해설: allows를 '요청·허용을 나타내는 본동사'로 분류 — allow는 허용이며 '요청'은 이 동사에 해당하지 않는 범주 확장(minor).",
+    "본해설: '목적격 관계대명사 which' 명명은 학생의 유혹적 오독 프레임 기준으로는 통용 가능하나, 주격 which도 불가하므로 '관계대명사 which'가 더 정확했을 표현(minor).",
+    "본해설 말미 '구조적 흐름을 파악하는 것이 중요합니다'류의 군더더기 문장이 있어 간결성이 떨어진다."
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 렌더는 원지문에서 'in' 삭제라는 의도된 변형만 있고 손상 없음; (B)가 유일 정답임을 5개 밑줄 독립 검증으로 확인; 해설의 구조 분석은 정확(minor 용어 이슈만). 그러나 요청 난이도 KILLER 대비 치명적 공예 결함: 정답 포인트 'a way which + 완전한 절'은 수능 어법에서 가장 반복 훈련된 정형 청크로, 구조를 깊이 읽지 않아도 즉시 드러난다(§C-4 위반). (C) their는 필러 수준 디코이이고 (A)(C)의 why-tempting이 해설·keyPoints 어디에도 명세되지 않음(§C-3 부분 위반). 실질 난이도는 중위권 표준 문항으로 C5=1(라벨 불일치). 합계 14/24, C 최저 1 → B 기준(최저 2, 합계 17) 미달. KILLER로 출하하려면 정답 포인트 자체를 구조 독해형(예: 병렬·삽입절 결합)으로 재설계해야 한다."
+}

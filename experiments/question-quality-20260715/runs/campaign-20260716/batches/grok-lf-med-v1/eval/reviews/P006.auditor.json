@@ -1,0 +1,82 @@
+{
+  "pid": "P006",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-OK",
+      "severity": "info",
+      "evidence": "Rendered passage with blank restored to source span 'think through ethical issues' is byte-identical to the original (verified by mechanical diff). No junction damage, duplication, omission, orphan punctuation, or typos. Options labeled 1-5, declared answer 3, distractor explanations keyed 1/2/4/5 — all consistent."
+    },
+    {
+      "code": "V2-OK",
+      "severity": "info",
+      "evidence": "Independent solve of each option: (1) contradicts sentence 2 'This form of ethics is distinct from higher levels of conceptual ethics or theory' and is self-defeating against the tail 'rather than follow a prescribed set of ethical codes or rules'; (2) contradicts the closing injunction to accept that 'the factors that drive other people's codes and decision making may be different' — the passage never advocates imposing one's code on others; (3) uniquely correct: restates 'think through ethical issues' synthesizing the multi-perspective definition (S1) with personal-factor/context variability (later sentences); (4) the passage says formal AND informal learning experiences jointly shape values — replacing formal codes with 'purely informal customs' is unsupported; (5) direct polarity reversal of 'there is no clear right or wrong response'. Exactly one correct answer."
+    },
+    {
+      "code": "V3-OK",
+      "severity": "info",
+      "evidence": "Completed sentence 'It is therefore essential that students learn to evaluate ethical issues in light of divergent personal factors and situational contexts rather than follow a prescribed set of ethical codes or rules.' is grammatical and natural. All five options occupy the same bare-VP slot after 'learn to' and none is grammatically excluded by the remaining tail."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 4,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "scope over-extension — inflate the practical-ethics discussion into applying higher conceptual theory as fixed rules",
+      "temptingBecause": "borrows the exact passage phrase 'higher levels of conceptual ethics or theory'",
+      "decisiveFlaw": "the passage explicitly says this form of ethics is DISTINCT from higher conceptual ethics/theory, and 'fixed decision rules' collides with the tail's rejection of prescribed rules — internally self-defeating"
+    },
+    {
+      "label": "2",
+      "intent": "actor swap / direction inversion — turn self-understanding of one's code into imposing it on others",
+      "temptingBecause": "reuses the passage's key term 'codes of behaviour' and the theme of rules governing choices",
+      "decisiveFlaw": "the passage demands recognizing and ACCEPTING that others' driving factors differ; imposing uniform rules on others is the exact opposite stance"
+    },
+    {
+      "label": "3",
+      "intent": "correct answer — abstracted restatement of source span 'think through ethical issues' fused with the passage's two supports (multi-perspective evaluation; personal/contextual variability of principles)",
+      "temptingBecause": "n/a (correct)",
+      "decisiveFlaw": "none — but note it is the only option free of an extreme marker, which leaks it (see C4/killer note)"
+    },
+    {
+      "label": "4",
+      "intent": "half-truth / scope narrowing — convert 'don't merely follow prescribed codes' into 'discard formal codes for purely informal customs'",
+      "temptingBecause": "anchors on 'formal and informal learning experiences' and 'social... or civic beliefs', and it alone among distractors survives the local anti-rule-following contrast",
+      "decisiveFlaw": "the passage treats formal and informal influences as jointly shaping values and never advocates replacement; 'purely' distorts the synthesis"
+    },
+    {
+      "label": "5",
+      "intent": "polarity reversal — restrict attention to issues with clear right/wrong answers",
+      "temptingBecause": "reuses the salient phrase 'clear right or wrong response'",
+      "decisiveFlaw": "the passage defines ethical issues precisely by the ABSENCE of a clear right or wrong response; selecting only decidable issues would make multi-perspective thinking unnecessary"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "Main 해설 dispatches ①②⑤ inline but leaves ④ only to the separate 오답 해설 block — a small asymmetry, though ④'s dedicated explanation is accurate.",
+      "recommendation": "Either cover all four distractors in the main 해설 or none, for parallel structure."
+    },
+    {
+      "severity": "minor",
+      "evidence": "keyPoints[0] says the therefore-sentence must bind '앞선 다관점 평가 정의와 원칙의 개인·맥락 변이' — the principle-variability material actually FOLLOWS the blank sentence; the main 해설 gets this right ('이어서 ... 서술한다') but the keyPoint's '앞선' framing is loosely worded.",
+      "recommendation": "Reword keyPoints[0] to make clear the variability evidence comes after the blank."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "All five validity gates pass: the item is shippable as a correct question, but it fails its requested KILLER difficulty on two §D conditions. (a) Absolutes leak: every distractor carries an extreme marker ('fixed', 'uniform', 'purely', 'only') while the answer is the sole moderate option — a test-wise student can shortcut via the moderation heuristic, violating '절대어 하나로 정답을 찍을 수 없다'. (b) Two-cue requirement is weak: the retained tail 'rather than follow a prescribed set of ethical codes or rules' locally determines that the blank must be the flexible-thinking alternative, and only ③ (and marginally ④) fits that frame, so genuine multi-sentence synthesis is not required to reach the answer. The answer also echoes passage vocabulary ('personal factors', context) at low abstraction. Craft: blank placement on the thesis sentence is excellent (C1=4) and each distractor encodes a distinct, well-anchored trap type (C2=4), but real competitiveness collapses to a single judgment call on ④ (C3=2), the option-set design leaks the answer (C4=2), and effective difficulty is upper-mid rather than KILLER (C5=1). 해설 is accurate and names trap types crisply (C6=3). Sum=16, C5<2 → grade C: needs option-set redesign (add extreme-free distractors, deepen the required inference) before it can carry a KILLER label."
+}

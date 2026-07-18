@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) to guide",
+      "verdict": "correct",
+      "reason": "Infinitive of purpose modifying the nominal 'the identification and evaluation of evidence' ('...evidence (in order) to guide decision-making'). To-infinitive purpose modifiers of noun phrases are fully licensed; semantics fit the definition of critical thinking. Grammatical."
+    },
+    {
+      "label": "(B) follow",
+      "verdict": "correct",
+      "reason": "'learn to think through ethical issues rather than follow...': 'rather than' coordinates with the to-infinitive 'to think'; bare-infinitive (to-deleted) parallelism after 'rather than' is a standard licensed form ('learn to think X rather than (to) follow Y'). 'following' would also be possible, but 'follow' is not wrong. Grammatical."
+    },
+    {
+      "label": "(C) considered",
+      "verdict": "correct",
+      "reason": "'principles of conduct that are considered correct': passive of 'consider X correct' with retained adjectival object complement ('X is considered correct') inside a relative clause whose antecedent 'principles' agrees with plural 'are'. Grammatical."
+    },
+    {
+      "label": "(D) influencing",
+      "verdict": "wrong (the error)",
+      "reason": "'beliefs influencing by their formal and informal learning experiences': intended structure is a reduced relative 'beliefs (which are) influenced by their learning experiences'. With an agentive by-phrase and no direct object, the participle must be passive 'influenced'. Active 'influencing' requires an object and cannot take 'by + agent'; no alternative parse (gerund, absolute construction, means-adjunct) yields a well-formed reading. Ungrammatical — this is the error."
+    },
+    {
+      "label": "(E) dependent",
+      "verdict": "correct",
+      "reason": "'perspectives may also be context dependent': predicate adjective 'dependent' with noun premodifier 'context' (= context-dependent). Missing hyphen is orthographic style, not a grammatical error; the following 'meaning that...' participial clause is also well-formed. Grammatical."
+    }
+  ],
+  "note": "Clean single-error item. (D) is uniquely indefensible: 'influencing by' has no grammatical parse, while the passive 'influenced by' reduced relative is clearly what the context requires. All other underlines survive adversarial alternative-parse checks ((B) bare infinitive after 'rather than' in parallel with a to-infinitive is standard; (C) passive with retained complement; (E) hyphenation-only issue). Answer (D), high confidence, no competing defensible labels."
+}

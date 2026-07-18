@@ -1,0 +1,44 @@
+{
+  "pid": "P003",
+  "finalV2": true,
+  "winningAnswer": "Following the new leader's refusal to step down, his army was immediately ordered to protect the palace.",
+  "reason": "선언된 정답은 유일한 정답이다. 분쟁 요약에 기재된 '선언된 정답=...his army was defeated'는 파일 실체와 불일치하는 손상/구버전 메타데이터다: full/P003.md 30-31행의 선언 정답은 'Following the new leader's refusal to step down, his army was immediately ordered to protect the palace.'로 두 솔버의 답과 문자열까지 동일하며, 칩 목록에 'defeated'라는 단어 자체가 존재하지 않아 'his army was defeated'는 애초에 조립 불가능하다. 독립 재검증 결과 배열은 4중 기계 제약(유일한 대문자 칩 Following의 문두 고정, 'protect the palace.'의 마침표 문말 고정, 'refusal to step down,'의 쉼표 도입구 폐쇄, 'ordered to' 융합)과 'refusal'의 한정사 요구로 완전 결정되며, 디코이 'by the new leader'(중복 2개)는 의미상 타당한 수동 행위자임에도 삽입 가능한 통사 슬롯이 전무해 모든 대안 배열이 탈락한다. 솔버들의 과잉 판정도, 놓친 대안 해석도 없다. finalV2=true.",
+  "perDispute": [
+    {
+      "label": "분쟁 요약의 선언 정답 'his army was defeated'",
+      "claim": "선언된 정답이 'Following the new leader's refusal to step down, his army was defeated'라서 솔버 합의 답과 충돌한다",
+      "verdict": "REJECT — 메타데이터 손상/구버전",
+      "evidence": "full/P003.md '## 선언된 정답'(31행)과 '## 모범답안'(22행) 모두 '...his army was immediately ordered to protect the palace.'로 솔버1·솔버2 답과 문자 단위로 동일하다. 또한 칩 목록(Following / was immediately / his army / protect the palace. / refusal to step down, / ordered to / by the new leader / the new leader's / by the new leader)에 'defeated'가 없어 'his army was defeated'는 조립 자체가 불가능하다. 실제 분쟁은 존재하지 않는다."
+    },
+    {
+      "label": "by the new leader — 수동 행위자 삽입 대안",
+      "claim": "'his army was immediately ordered by the new leader to protect the palace.' 또는 '...to protect the palace by the new leader.'가 문법적 대안 정답이다",
+      "verdict": "REJECT — 통사 슬롯 전무",
+      "evidence": "의미·문법적으로 by-행위자구 자체는 타당하나(원문: 'he gathered 3,000 soldiers and ordered them to protect his palace'), 칩 제약이 모든 슬롯을 봉쇄한다: (a) 'ordered to'가 한 칩으로 융합되어 ordered와 to 사이 삽입 불가, (b) 'protect the palace.'가 마침표를 포함해 문말 이후 배치 불가, (c) 'was immediately by the new leader ordered'는 현대 영어에서 비문 어순, (d) 'his army by the new leader'는 정문 NP가 아니다. 두 복사본 모두 미사용이 강제된다."
+    },
+    {
+      "label": "Following refusal to step down by the new leader — 도입구 내 대안",
+      "claim": "소유격 대신 'Following refusal to step down by the new leader,'로 도입구를 구성할 수 있다",
+      "verdict": "REJECT — 한정사 결여 + 쉼표 봉쇄",
+      "evidence": "가산 단수 명사 'refusal'은 한정사 없이 'Following refusal to step down'으로 쓰일 수 없고(비문), 쉼표가 'refusal to step down,' 칩에 부착되어 있어 by구를 그 뒤에 넣으면 'Following refusal to step down, by the new leader ...'로 도입구가 쉼표에서 이미 닫혀 비문이 된다. 'Following by the new leader refusal...'도 비문. 따라서 'the new leader's'가 유일한 선택이다."
+    },
+    {
+      "label": "능동 해석 'his army ordered to protect the palace'",
+      "claim": "'was immediately'를 미사용 처리하고 능동 과거형으로 읽는 대안 배열이 성립한다",
+      "verdict": "REJECT — 문법·의미 동시 탈락",
+      "evidence": "이 의미의 order는 목적어+to부정사('order someone to V')를 요구하므로 목적어 없는 'his army ordered to protect the palace'는 비문이고, 의미상으로도 명령의 주체는 새 지도자이지 군대가 아니어서 지문('ordered them to protect his palace')·힌트(거부→방어 지시 인과)와 모순된다."
+    },
+    {
+      "label": "동일 디코이 칩 중복(by the new leader x2)",
+      "claim": "완전 동일 디코이가 2개 수록되어 정답 유일성에 영향을 줄 수 있다",
+      "verdict": "CONFIRM(제작 결함) / 유일성 무영향",
+      "evidence": "두 복사본 모두 삽입 가능한 슬롯이 없어 미사용이 강제되므로 정답 배열의 유일성(V2)에는 영향이 없다. 다만 감사자의 V1 지적대로 해설('해당 칩은 쓰지 않는다' — 단수 전제)과 칩 목록의 desync인 생성 단계 중복 결함이며, 수리 시 1개 제거가 필요하다."
+    },
+    {
+      "label": "감사자 V4 — 해설의 디코이 배제 근거",
+      "claim": "해설이 '군대가 명령받은 쪽이므로 by the new leader를 쓰지 않는다'고 설명한 것은 거짓 문법 논리다",
+      "verdict": "CONFIRM — 다만 유일성(V2)과는 무관",
+      "evidence": "감사자 판단이 옳다. 피명령자가 주어인 수동문에서 by-행위자구는 완전히 문법적이며('his army was ordered by the new leader to ...'는 정문), 실제 배제 근거는 칩 융합과 문말 마침표라는 기계적 제약이다. 이는 해설 품질 결함(V4)이지 정답 유일성 결함이 아니므로 finalV2 판정에는 영향이 없다."
+    }
+  ]
+}

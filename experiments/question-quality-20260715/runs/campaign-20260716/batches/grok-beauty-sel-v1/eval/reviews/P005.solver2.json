@@ -1,0 +1,35 @@
+{
+  "pid": "P005",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "consistent",
+      "reason": "Exact restatement of sentences 2-3: bankruptcy of father's trading business -> family spent two years in Mexico City -> its landscape influenced many works. Causal and temporal structure ('Following the bankruptcy') matches the passage's 'After his father's trading business went bankrupt'. No distortion."
+    },
+    {
+      "label": "2",
+      "verdict": "consistent",
+      "reason": "Mirrors sentence 4: 'Seeger returned to the States and later graduated from Harvard University, where he was inspired by the Romantic poets.' The relative clause 'where' in the option attaches the Romantic-poet inspiration to Harvard exactly as the passage does."
+    },
+    {
+      "label": "3",
+      "verdict": "inconsistent (ANSWER)",
+      "reason": "Formal temporal contradiction. Option asserts Write(poem) < Volunteer(French army, at outbreak of WWI). Passage asserts Volunteer(1914, when WWI broke out) < Write(poem), via 'During the war, he wrote a poem...'. Since composition occurred during the war, i.e., after enlistment at the war's outbreak, the option states the exact negation of the passage's ordering. The descriptive content (a soldier accepting his upcoming death; instant fame when published) matches, isolating the temporal claim as the sole and decisive falsity. No alternative parse rescues it: 'at the outbreak of World War I' modifies the volunteering event and cannot invert the before-relation."
+    },
+    {
+      "label": "4",
+      "verdict": "consistent",
+      "reason": "Near-verbatim restatement of sentence 5: 'Seeger left for Paris... to live out his romanticized notion of bohemian life and made friendships with many artists.' The coordination structure is preserved; no shift in meaning."
+    },
+    {
+      "label": "5",
+      "verdict": "consistent",
+      "reason": "Matches the final two sentences: died during the Battle of the Somme in 1916; following his death the French Military awarded him the Croix de Guerre, 'the highest French military honor'. Note: in reality the Croix de Guerre is not France's highest military honor (the Legion d'honneur is), but the passage itself makes this claim, and the task tests agreement with the passage, not external fact. Under the stated question type, 5 agrees with the text and is not defensible as an answer."
+    }
+  ],
+  "note": "Clean single-answer item. Option 3 is the unique passage-contradicting statement via reversed temporal ordering of poem composition vs. enlistment. Options 1, 2, 4, 5 are near-verbatim paraphrases. Minor quality observation (not affecting solvability): the passage's claim that the Croix de Guerre is 'the highest French military honor' is factually wrong in the real world; a solver applying outside knowledge could momentarily suspect 5, but the question stem ('다음 글의 내용과 일치하지 않는 것') anchors judgment to the passage, so 3 remains the only defensible label. Recommend fact-fixing the passage's Croix de Guerre description to avoid teaching a false fact."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'When' is a subordinating conjunction heading a finite temporal clause ('When the Napoleonic Wars were at ~ height'), properly attached to the main clause 'he invented machines...'. A stative durational predicate ('were at ~ height') is fully compatible with 'When'. No grammatical fault."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect (the answer)",
+      "reason": "The only available antecedent for the possessive pronoun is 'the Napoleonic Wars', which is plural — confirmed by plural verb agreement in the very same clause ('the Napoleonic Wars WERE'). Pronoun-antecedent number agreement therefore requires 'their height', not 'its height'. No rescue reading exists: a notionally-singular event-name reading is foreclosed because the same NP cannot trigger plural verb agreement and singular pronominal agreement within one clause, and no other singular inanimate antecedent (London, the Thames) has been introduced at this point in the discourse."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'After' functions as a conjunction taking a finite clause; 'the Wars ended' uses intransitive 'end' in the simple past, matching the narrative past tense. Simple past after 'after' is standard (past perfect would also be acceptable but is not required). Grammatical."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'needed more ways for people and goods to move across it': the noun 'ways' licenses the [for-NP + to-infinitive] complement pattern ('ways for X to V'); comparative determiner 'more' with plural count noun 'ways' is well-formed; 'it' resolves unambiguously to 'the River Thames'. Grammatical."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'officially' is an adverb in canonical preverbal position modifying the intransitive verb 'opened' ('The Thames Tunnel officially opened on 25 March 1843'). Adverb form and placement are both correct; an adjective ('official') would be ungrammatical here. No fault."
+    }
+  ],
+  "note": "Clean single-error item. The error at (B) is a genuine long-distance agreement violation (pronoun vs. plural antecedent 'the Napoleonic Wars'), with the in-clause plural verb 'were' serving as an internal consistency cue that eliminates any defensible singular reading. All four distractors are unambiguously grammatical under every parse I could construct (no hidden reduced relatives, inversions, or retained-object passives are involved). Uniquely defensible answer: (B)."
+}

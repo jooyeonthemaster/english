@@ -1,0 +1,35 @@
+{
+  "pid": "P015",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "incorrect",
+      "reason": "Inserted, the sentence commands us to ensure that the lapse becomes 'the regular dominance of unplanned meetings over self-care goals' — the exact negation of the author's warning about the cumulative impact of not prioritizing self-care. Logically inverted relative to the imperative 'make sure.'"
+    },
+    {
+      "label": "2",
+      "verdict": "incorrect",
+      "reason": "Category error: the woodworking class is an illustrative token of self-care, not the whole type. The passage's concern spans exercise, hobbies, and relaxation generally; 'confined merely to canceled woodworking classes' fails to instantiate the occasional-vs-habitual contrast, and is semantically incoherent as a predicate of 'this' (the lapse in self-care)."
+    },
+    {
+      "label": "3",
+      "verdict": "correct",
+      "reason": "Seam is clean: 'this is a rare surrender of wellness under pressure rather than settled practice' is a well-formed predicate nominal. The 'rather than' contrast maps exactly onto the passage's structure: 'occasionally have days when that happens' (= rare surrender under pressure) vs. 'cumulative impact of not prioritizing self-care' (= settled practice). The anaphor 'this' (= giving up self-care under deadline pressure) resolves coherently."
+    },
+    {
+      "label": "4",
+      "verdict": "incorrect",
+      "reason": "Trap: states the desired end-state but breaks anaphora. 'This' refers to the lapse / not prioritizing self-care (pinned by the immediately preceding 'cumulative impact of not prioritizing self-care'); equating that lapse with 'the enduring precedence of health routines' is a self-contradictory identity statement. The positive outcome would need a different subject ('health routines take precedence'), not 'this is.' Even under a loose situational reading of 'this,' the identity predicate remains contradictory."
+    },
+    {
+      "label": "5",
+      "verdict": "incorrect",
+      "reason": "Temporal contradiction: 'in the long term, this is the short-term superiority of grant work' is formally incoherent. It also endorses permanently subordinating hobbies to work, the opposite of the passage's caution about cumulative harm."
+    }
+  ],
+  "note": "Grammarian/logician lens. Key formal device: resolving the anaphor 'this' — the nearest and topical antecedent is the lapse in self-care ('days when that happens' / 'not prioritizing self-care'). Only option 3 forms a coherent identity predicate with that referent and reproduces the passage's occasional-vs-cumulative contrast via 'rather than.' Option 4 is the strongest distractor (correct sentiment, wrong subject-predicate binding) but is rejected on referent grounds. Single defensible answer."
+}

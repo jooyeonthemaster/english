@@ -1,0 +1,81 @@
+{
+  "pid": "J017",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": false,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-PASSAGE-UNGRAMMATICAL",
+      "severity": "major",
+      "evidence": "마지막 문장 'a fluid option that allows them, if possible, depending on the job role, chooses their day-to-day work location' — 'allows them' 뒤에는 to부정사(to choose)가 와야 하는데 정형동사 chooses가 와서 명백한 비문. 원지문에서 그대로 승계된 오류이지만(V1 위반은 아님) 학생에게 노출되는 지문이 비문이므로 V3 게이트 실패. 빈칸 seam 자체('many years to build ... community in an in-person job')는 문법적으로 깨끗함."
+    },
+    {
+      "code": "V3-ORPHAN-COMMA",
+      "severity": "minor",
+      "evidence": "넷째 문장 '...work onsite other times, would work well for them' — 주어(hybrid model 명사구)와 동사 would 사이 고아 쉼표. 역시 원지문 승계 결함."
+    },
+    {
+      "code": "V4-WRONG-OPTION-RATIONALE",
+      "severity": "major",
+      "evidence": "⑤ 해설이 '본문에 나타난 젊은 층의 실제 어려움을 오히려 해결된 주체적 역량인 것처럼 왜곡'이라고 설명하나, 빈칸 문장의 주어는 젊은 층이 아니라 기성세대(those in older generations)다. ⑤를 넣으면 '기성세대가 대면 근무 수년간 스케줄링 능력을 습득했다'는 의미가 되며 이는 1문장(젊은층이 기성세대보다 업무 관리에 더 어려움)과 오히려 정합적이어서 '인과 흐름에 어긋난다'는 오답해설의 결정적 근거도 성립하지 않는다. 실제 결함(Moreover의 추가 논점 요구 위반, 대면 특유 습득물 아님)을 짚지 못한 귀속 오류·인과 오설명."
+    },
+    {
+      "code": "V4-PARTICLE-ERRORS",
+      "severity": "minor",
+      "evidence": "해설의 조사 오류: '②이 정답'(②가), '④은'(④는), '③는'(③은), '①는'(①은). 사실성 오류는 아니나 해설 품질 저하."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 2,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "3문장의 지엽 세부(lack of suitable workspace or distractions)를 표면 앵커로 재활용한 인프라 차원 혼동",
+      "temptingBecause": "지문 어휘(workspace, distractions)가 직접 재등장하여 스캐닝 풀이자를 유인",
+      "decisiveFlaw": "빈칸 문장은 기성세대가 '대면 근무'에서 수년간 얻은 것을 요구하는데, 개인 작업환경 최적화는 재택근무의 제약에 대한 이야기이며 대면 근무 특유의 이점(사회화)이 아니다"
+    },
+    {
+      "label": "②",
+      "intent": "정답 — source span 'establish interpersonal connections and embed themselves in the organizational culture'의 재진술",
+      "temptingBecause": "해당 없음(정답). professional networks = interpersonal connections, integrate into the workplace community = embed in the organizational culture 로 의미 보존",
+      "decisiveFlaw": "없음. 다만 추상화 수준이 낮아 원문 표현의 거의 직역 수준 paraphrase이며 'in an in-person job'이라는 국소 단서와 주제 상식만으로도 도달 가능 — KILLER 요구 수준에 못 미침"
+    },
+    {
+      "label": "③",
+      "intent": "원격근무 스키마로의 화제 전환(기술적 차원)",
+      "temptingBecause": "지문 전체가 remote work 담론이라 '원격 협업 도구 숙달'이 주제 연상으로 그럴듯함",
+      "decisiveFlaw": "'대면 직무에서(in an in-person job)' 원격 협업 도구를 숙달했다는 것은 자기모순이며 지문에 디지털 도구 언급이 전무"
+    },
+    {
+      "label": "④",
+      "intent": "범위 과장(scope exaggeration)",
+      "temptingBecause": "거창한 학술적 어조 외에는 유인 요소가 사실상 없음",
+      "decisiveFlaw": "'비즈니스 모델 파괴'는 텍스트 앵커가 전무하여 즉시 소거됨 — source anchor 요건을 충족하지 못한 필러에 가까움(§D 위반)"
+    },
+    {
+      "label": "⑤",
+      "intent": "1문장 workload 앵커를 이용한 차원 혼동/half-truth (가장 강한 디코이)",
+      "temptingBecause": "첫 문장 'difficulties in managing their workload'와 직결되는 강한 텍스트 앵커가 있어 인과적 설명처럼 보임",
+      "decisiveFlaw": "Moreover는 1문장과 별개의 추가 논점(사회화 결여)을 요구하는데 ⑤는 1문장의 반복이며, 자율적 스케줄링은 대면 근무 '특유의' 습득물이 아니고(오히려 원격근무가 요구하는 역량), 후속 담화(하이브리드로 대면 접촉 보전)와도 연결되지 않음"
+    }
+  ],
+  "explanationIssues": [
+    "⑤ 오답 근거가 완성문의 실제 의미(기성세대가 습득)와 불일치 — 젊은 층에 귀속시키는 오설명이며, 제시된 '인과 흐름 위배' 논거는 성립하지 않음 (V4 실패 사유)",
+    "조사 오류 4건(②이/④은/③는/①는)",
+    "정답 근거 자체(대조 구조, 1·4문장 수렴)는 정확하나 ⑤ 부분의 논리 결함으로 해설 전체 신뢰도 저하"
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": "동일 통사 슬롯 조건은 충족(5개 모두 'many years to + 동사원형'). 그러나 (1) ④에 source anchor가 없어 '각 오답은 anchor·overlap·decisive flaw를 갖는다' 위반, (2) 정답이 원문 span의 거의 직역 수준 재진술이라 KILLER에 맞는 추상화가 아니며, (3) 'in an in-person job'이라는 빈칸 문장 내 국소 단서 + '원격 시작 세대는 사회화 기회 결여'라는 정형화된 주제 상식만으로 정답 도달이 가능해 두 문장/두 단서 연결 강제 조건이 실질적으로 미충족.",
+  "grade": "F",
+  "notes": "V1·V2·V5는 통과. 정답 유일성은 견고하며(⑤가 유일하게 실질 경쟁력 있는 디코이지만 Moreover 담화 기능과 대면 특유성 결여로 배제 가능) 선지 함정 설계도 ④를 제외하면 서로 다른 오개념을 겨냥해 공예 수준은 준수하다. 그러나 (a) 학생 노출 지문에 원지문 승계 비문('allows them ... chooses')이 존재해 V3 실패, (b) ⑤ 해설의 결정적 근거가 완성문의 실제 의미와 불일치해 V4 실패 — 치명 결함 2건으로 F. 난이도 정합(C5=2): KILLER 요청 대비 실제 체감은 준킬러 이하 — 정답 paraphrase가 투명하고 국소 단서가 강함. 수리 방향: (1) 원지문 승계 비문 2건 교정(chooses→to choose, 고아 쉼표 제거), (2) ⑤ 해설을 'Moreover의 추가 논점 요구 + 대면 특유 습득물 아님'으로 재작성, (3) ④를 텍스트 앵커가 있는 디코이로 교체, (4) 정답 선지의 추상화 수준 상향 시 KILLER 재도전 가능."
+}

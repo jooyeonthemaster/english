@@ -1,0 +1,101 @@
+{
+  "pid": "P005",
+  "blindAnswer": "1",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-OK",
+      "severity": "info",
+      "evidence": "렌더 지문은 원지문에서 'specialized entitlement protection mechanisms'만 빈칸으로 치환했고 나머지 전 문장이 원문과 일치한다. 접합 파손·중복·누락·고아 문장부호 없음. 선지 라벨 1~5와 본문 마커 일치."
+    },
+    {
+      "code": "V2-OK-UNIQUE",
+      "severity": "info",
+      "evidence": "각 선지를 독립 대입 검증한 결과 ①만 성립. ②는 같은 문장의 양보절 'no matter how fast they grow' 및 'explains at best only a small part'와 정면 충돌, ③은 성장 기여 인정이 충분조건이 아니라는 논지와 충돌하고 'market-led'가 tail 'involving direct public intervention'과 모순, ④는 농촌 회생이 필자가 불충분하다고 규정한 경향의 일부이며 실성취는 위기 시 직접 지원이라는 결론과 불일치, ⑤는 본문이 주장하지 않은 성장→기근 심화 인과이며 'cannot prevent famines without ___' 프레임에서 화용적으로 불성립."
+    },
+    {
+      "code": "C4-TAIL-LEAK",
+      "severity": "major",
+      "evidence": "빈칸 뒤에 원문 tail 'involving direct public intervention'이 그대로 남아 빈칸이 '직접 공공 개입을 수반하는 것'이어야 함을 국소 단서 하나로 누설한다. 이 seam만으로 ②(생산성 확장)·③(market-led)·⑤(기근 위험 심화)가 의미적으로 즉시 탈락하고, 마지막 문장 'direct public support'까지 겹쳐 정답 ①이 지문 전체 독해 없이 특정된다. V 실패는 아니나 KILLER 단서 경제성의 핵심 결함."
+    },
+    {
+      "code": "C3-WEAK-DECOYS",
+      "severity": "major",
+      "evidence": "⑤는 'cannot prevent famines without ___' 프레임에서 극성만으로 즉시 소거되는 polarity giveaway, ②는 동일 문장 내 'no matter how fast they grow'와의 국소 모순으로 즉시 소거. 실질 경합은 ①-④ 한 쌍뿐이라 KILLER급 변별 구조가 성립하지 않는다."
+    },
+    {
+      "code": "C5-DIFFICULTY-MISMATCH",
+      "severity": "major",
+      "evidence": "요청 난이도 KILLER 대비 실제 난이도는 tail 누설과 약한 디코이로 중(中) 수준. 요구 사고 단계(두 문장 이상 논리 연결)가 강제되지 않는다."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 4,
+    "C3": 2,
+    "C4": 1,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — source span 'specialized entitlement protection mechanisms'를 '표적화된 국가 뒷받침의 식량권 보호'로 추상화한 paraphrase(entitlement→right to food, specialized→targeted, mechanisms→safeguards)",
+      "temptingBecause": "해당 없음(정답). 마지막 문장 'direct public support to their populations in times of crisis'가 전역 근거로 수렴한다",
+      "decisiveFlaw": "없음 — 빈칸 문장의 tail 및 결론 문장과 정합하는 유일한 완성"
+    },
+    {
+      "label": "2",
+      "intent": "scope shift / 성장 제일 경향의 과확장",
+      "temptingBecause": "서두의 'enhanced economic growth', 'diversification of economic activities' 어휘를 재활용하여 성장 담론에 익숙한 학생을 유인",
+      "decisiveFlaw": "같은 문장의 'no matter how fast they grow'와 직접 모순이며, 본문은 성장이 성공의 'at best only a small part'만 설명한다고 명시. tail 'involving direct public intervention'과도 의미 충돌"
+    },
+    {
+      "label": "3",
+      "intent": "half-truth / 충분조건 오독",
+      "temptingBecause": "'The potential contribution of greater economic success, if it involves vulnerable groups, cannot be denied'를 거의 그대로 반향(include the destitute ≈ involves vulnerable groups)",
+      "decisiveFlaw": "본문은 그 기여를 인정하되 그것만으로는 기근 방지가 불가하다는 불충분성 논지이며, 'market-led'는 tail의 'direct public intervention'과 정면 모순"
+    },
+    {
+      "label": "4",
+      "intent": "condition loss / 시점·성격 전환(위기 시 직접 지원 → 사후 복구 전략)",
+      "temptingBecause": "서두 'once the dust of an emergency has settled down'과 'the revival of the rural economy'를 결합해 그럴듯한 정책 어휘로 재조립. 공공 전략으로 읽힐 수 있어 tail과도 표면상 양립",
+      "decisiveFlaw": "농촌경제 회생은 필자가 불충분하다고 경계하는 경향의 항목이며, 실성취는 'in times of crisis'의 직접 지원이지 사후 복구가 아님. 'postwar'는 지문의 emergency를 전쟁으로 바꿔치기한 어휘 치환"
+    },
+    {
+      "label": "5",
+      "intent": "causal reversal / 성장→기근 심화 인과 날조",
+      "temptingBecause": "growth·famine risk 등 본문 고빈도 어휘의 표면적 결합",
+      "decisiveFlaw": "본문은 성장의 불충분함만 말할 뿐 성장이 기근 노출을 심화시킨다는 주장은 없음. 나아가 'cannot prevent famines without [기근 위험을 심화시키는 모델]'은 화용적으로 불성립하여 극성만으로 즉시 소거되는 giveaway"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "④ 오답 해설은 '비상 후 농촌경제 회생'으로 설명하나 선지 표면 어휘는 'postwar'로, 지문의 'emergency'와 정확히 대응하지 않는 치환임을 해설이 언급하지 않는다. 함정 의도 설명 자체는 선지 내용과 대응하므로 V4 실패는 아님.",
+      "recommendation": "해설에서 postwar가 지문 근거 없는 어휘 치환임을 명시하거나 선지를 'post-emergency'로 정렬"
+    },
+    {
+      "severity": "minor",
+      "evidence": "해설이 실제 최강 풀이 단서인 잔존 tail 'involving direct public intervention'을 언급하지 않아, 학생이 실제로 정답에 도달하는 경로(국소 seam 단서)와 해설의 서술 경로(전역 논지 수렴)가 어긋난다.",
+      "recommendation": "빈칸 경계를 'specialized entitlement protection mechanisms involving direct public intervention' 전체로 확장하면 해설 경로와 실풀이 경로가 일치"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAudit": {
+    "sameSyntacticSlot": "통과 — 다섯 선지 모두 명사구로 동일 슬롯에 들어가며 문법 자체로 탈락하는 선지는 없음",
+    "meaningPreservingAbstraction": "통과 — ①은 entitlement protection을 식량권 보호로 적절히 추상화",
+    "distractorAnchors": "통과 — 4개 오답 모두 source anchor·tempting overlap·단일 결정적 결함 보유, 함정 유형도 scope/half-truth/condition-loss/causal-reversal로 상이",
+    "twoClueRequirement": "실패 — 잔존 tail 'involving direct public intervention' 단일 국소 단서로 ②③⑤가 탈락하고 정답이 사실상 특정되어 두 문장/두 논리 단서 연결이 강제되지 않음. ⑤는 극성 하나로 소거 가능",
+    "noTailElimination": "실패(정신 위배) — 문법 탈락은 아니나 suffix/tail이 오답을 의미적으로 대량 소거하는 동일한 폐해를 일으킴"
+  },
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 지문 무결, 정답 유일성 독립 검증 완료, 해설 사실성 정확, 필드 동기화 양호. 그러나 KILLER 요청 대비 결정적 설계 결함 — 빈칸을 'specialized entitlement protection mechanisms'까지만 파내고 'involving direct public intervention'을 남겨, 정답의 핵심 속성(직접 공공 개입)이 빈칸 바로 뒤에 노출된다. 여기에 ②의 동일 문장 내 모순, ⑤의 극성 giveaway가 겹쳐 실질 경합이 ①-④로 축소된다. C3=2, C4=1, C5=1로 합계 15 — 재설계(빈칸 경계 확장 또는 tail 제거) 없이는 KILLER 출하 불가. 소재·선지 함정 설계 자체(C1·C2)는 우수하므로 빈칸 경계만 수정하면 상급 문항으로 회복 가능."
+}

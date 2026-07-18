@@ -1,0 +1,35 @@
+{
+  "pid": "P005",
+  "answer": "5",
+  "multipleDefensible": false,
+  "defensibleLabels": ["5"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "(A)-(C)-(B): (A) opens with 'wearing his new clothes' and 'the rehearsal' — both anaphors have no antecedent yet (purchase happens in (B), rehearsal is first foreshadowed in (B)). Also (C) would place Jeff's arrival/apology AFTER (A), yet the given sentence says Garcia is still waiting for Jeff. Temporal contradiction; formally unsound."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "(B)-(A)-(C): (B) presupposes 'the store' (definite NP) with no prior entry event — the entry ('they entered the lively shopping center') occurs only at the end of (C). Moreover Jeff converses with Garcia in (B) before Jeff has arrived (arrival is narrated in (C)). Presupposition failure plus temporal contradiction."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "(B)-(C)-(A): same failure as option 2 at the (B) seam — Garcia and Jeff shop together in (B) while the given sentence leaves Garcia still waiting for Jeff outside the mall; Jeff's late arrival in (C) cannot follow the joint shopping scene. Contradiction."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "(C)-(A)-(B): (C) correctly resolves the waiting, but (A) then has Garcia 'wearing his new clothes' at 'the rehearsal' before the clothes are chosen/purchased in (B). 'His new clothes' is an unbound anaphor; (B)'s closing line 'Maybe I'll wear these for tonight's rehearsal, too' proves purchase strictly precedes rehearsal. Contradiction."
+    },
+    {
+      "label": "5",
+      "verdict": "accept",
+      "reason": "(C)-(B)-(A): (C) resolves the given sentence's open 'waiting' state (Jeff arrives, apologizes for lateness; 'the performance' and 'had asked Jeff' bind back to the given sentence) and ends by entering the shopping center, licensing (B)'s definite 'the store'. (B) ends with the purchase and foreshadows 'tonight's rehearsal', supplying antecedents for (A)'s 'his new clothes' and 'the rehearsal'. Every anaphor bound, every temporal precedence satisfied; the only coherent total order."
+    }
+  ],
+  "note": "Formal ordering proof: waiting-state resolution forces (C) first; definite-NP licensing ('the store') forces (C)<(B); anaphor binding ('his new clothes', 'the rehearsal') forces (B)<(A). Unique solution (C)-(B)-(A) = option 5. The blind file's '지문' field also contains the full narrative in original order, independently confirming (C)-(B)-(A), but the answer is derivable from the paragraphs alone. No ambiguity; single defensible label."
+}

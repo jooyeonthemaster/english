@@ -1,0 +1,35 @@
+{
+  "pid": "P015",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "'Flexible'은 지문의 핵심 주장(정답이 정해져 있지 않음, 원칙이 개인 간·개인 내에서 변동, 맥락 의존성)과 정확히 대응하고, 'Multi-layered'는 다양한 관점 및 여러 층위의 요인(사회·종교·시민적 신념, 공식·비공식 학습, 상황, 감정 상태)을 포괄한다. 글 전체를 아우르는 제목."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "지문은 'follow a prescribed set of ethical codes or rules'를 명시적으로 거부하고 원칙이 가변적이라고 주장하므로 'Rules Are Absolute'는 정면 모순."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "매력적 오답. 'when they are feeling a different way'라는 구절이 감정·맥락을 언급해 끌리지만, 이는 여러 요인 중 하나의 예시일 뿐이며 'Dominated by Contextual Emotions'는 과잉 일반화. 글의 초점인 윤리적 사고의 본질과 자기·타인 요인 이해를 포괄하지 못함."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "두 번째 매력적 오답. 신념·학습 경험이 행동 규범을 형성한다는 내용이 있으나 지문은 이를 'personal factors'로 규정한다. 'External Pressures' 프레임은 지문과 어긋나고, 글의 주제는 압력 목록이 아니라 윤리적 사고의 유연한 본질임."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "지문은 타인의 규범·의사결정 요인이 다를 수 있음을 '인정하고 수용'하라고 하지, 다양한 관점을 하나의 공유된 사회 윤리로 '통합'하라고 하지 않음. 결론 방향이 반대."
+    }
+  ],
+  "note": "최상위권 실전 풀이 렌즈: ③(감정 언급 구절)과 ④(신념·학습 경험 구절)가 지문 일부를 그대로 재활용해 실제 유혹이 있었으나, 각각 'dominated'와 'external'이라는 단어가 지문의 명시적 진술과 충돌해 소거됨. ①이 유일하게 글 전체를 포괄하며 정답이 하나로 수렴하는 깔끔한 문항."
+}

@@ -1,0 +1,77 @@
+{
+  "pid": "P006",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": false,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-DISTRACTOR-SLOT-BREAK",
+      "severity": "critical",
+      "evidence": "Stem is 'Chloe had _____ without the cream and jam; ...'. Option ① begins with 'had' ('had strictly adhered ...') yielding 'Chloe had had strictly adhered' (double auxiliary), and option ② begins with 'was' ('was attempting to ...') yielding 'Chloe had was attempting' (finite verb after auxiliary). Both insertions are ungrammatical. For BLANK_INFERENCE the type intent is that distractors are grammatical fits wrong only in meaning; two of five distractors are eliminable by pure syntax, so the '오답의 비문 여부가 유형 의도와 일치' requirement of V3 fails."
+    },
+    {
+      "code": "D-FUNNEL-TAIL-GIVEAWAY",
+      "severity": "major",
+      "evidence": "The retained tail 'without the cream and jam; in fact, it was mostly all in her mouth already' (a) forces the blank to contain an eating verb with a singular food-object antecedent for 'it' — under ①, ③, ⑤ the pronoun 'it' has no coherent antecedent and 'etiquette/desserts without the cream and jam' reads as nonsense ('introduce the cream and jam without the cream and jam' under ③) — and (b) semantically states the answer outright: food crammed in her mouth = hasty eating. Violates RUBRIC §D conditions 1 and 4 (KILLER must require linking multiple cues; here one local tail clause decides it). Not booked as an additional V-gate failure because the declared answer set is still exactly {④}, but it destroys discrimination."
+    },
+    {
+      "code": "D-DISTRACTOR-NO-ANCHOR",
+      "severity": "minor",
+      "evidence": "Option ② (analyzing 'the nutritional balance of the scones') has no source anchor or tempting overlap anywhere in the passage — it is a random off-topic filler rather than a scope-shift/half-truth style trap required by §D condition 3/5."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 1,
+    "C3": 1,
+    "C4": 1,
+    "C5": 0,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "Polarity reversal — claims Chloe strictly followed the grandmother's etiquette, opposite of her impetuous scone-eating.",
+      "temptingBecause": "Earlier in the passage Chloe genuinely does mirror her grandmother ('waited for her grandmother to make the first move', 'carefully mirrored her grandmother's actions'), so a skimming reader may project that behavior onto the final sentence.",
+      "decisiveFlaw": "Contradicted by the scone episode ('boldly chose the biscuit-looking thing before her grandmother', ate it without cream and jam before the demonstration). Additionally the option starts with 'had', producing the ungrammatical 'Chloe had had strictly adhered' — it is eliminable by syntax alone, which is itself a defect."
+    },
+    {
+      "label": "②",
+      "intent": "Unsupported addition — imports a nutrition-analysis motive absent from the text.",
+      "temptingBecause": "Barely tempting; only surface word 'scones' overlaps with the passage. No behavioral or thematic anchor.",
+      "decisiveFlaw": "Zero textual support for nutritional analysis, and the insertion 'Chloe had was attempting' is syntactically broken — instant elimination without reading the passage."
+    },
+    {
+      "label": "③",
+      "intent": "Temporal/causal reversal — claims she politely waited for the grandmother to introduce cream and jam, reversing the actual sequence.",
+      "temptingBecause": "Echoes Chloe's earlier waiting behavior ('waited for her grandmother to make the first move') and reuses the passage phrase 'cream and jam'.",
+      "decisiveFlaw": "The past-perfect frame plus 'in fact, it was mostly all in her mouth already' shows she had eaten before the grandmother's demonstration. The completed sentence also collapses into nonsense: 'waited for her grandmother to introduce the cream and jam without the cream and jam', and 'it' loses its referent."
+    },
+    {
+      "label": "④",
+      "intent": "Declared key — paraphrases the source span 'already started to eat hers' as 'begun consuming the unfamiliar teatime treat impetuously'.",
+      "temptingBecause": "N/A (correct answer). 'unfamiliar' is licensed by 'Scones, was that what they were called?' and 'impetuously' by 'boldly chose ... before her grandmother'.",
+      "decisiveFlaw": "None — grammatical after 'had', gives 'it' a singular antecedent (the treat), and coheres with both the 'without the cream and jam' tail and the mouth-full clause. Uniquely correct."
+    },
+    {
+      "label": "⑤",
+      "intent": "Half-truth/unsupported trait — attributes dignified posture during dessert selection.",
+      "temptingBecause": "The refined afternoon-tea setting and Chloe's earlier careful mirroring suggest decorum.",
+      "decisiveFlaw": "Unsupported and contradicted by her excitement (eyes rounding, almost gasping, mouth stuffed). The tail also fails referentially: 'the desserts without the cream and jam' is odd and singular 'it' has no antecedent."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "MINOR-GENERIC-CLOSER",
+      "severity": "minor",
+      "evidence": "The final sentence of the main 해설 ('대조적인 선지들에 유의해야 합니다') is generic advice that adds no analytical content; the explanation is otherwise factually accurate — no misattributed syntax, no hallucinated content, and each distractor explanation matches its actual option content. None of the explanations acknowledge that ① and ② are ungrammatical in the slot, which papers over the item's structural defect."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1/V2/V4/V5 pass: the rendered passage is an exact copy of the source except the intended blank over 'already started to eat hers'; ④ is the unique correct completion; the Korean explanation's narrative analysis (careful mirroring early vs. impetuous scone-eating late, eating before the grandmother's cream-and-jam demonstration) matches the text; labels, options, explanations, and keyPoints are mutually consistent. The item fails V3 because two of five options (① 'had ...', ② 'was ...') cannot even be inserted grammatically after 'Chloe had', which contradicts the blank-inference type intent that distractors be grammatical fits. Beyond the gate failure, the item badly misses its KILLER label: the retained tail 'without the cream and jam; in fact, it was mostly all in her mouth already' both grammatically/referentially disqualifies ①②③⑤ and semantically announces the answer, so the blank is solvable from one local cue (§D conditions 1, 4 violated); distractor trap types are two near-duplicate polarity reversals (①③), one anchorless filler (②), and one weak trait claim (⑤) (§D conditions 3, 5 violated). Requested difficulty KILLER vs. actual difficulty low → C5=0. Repair direction: move the blank to cover a span without a self-answering tail (or trim the tail into the blank), rewrite ①② to fit the 'had + past participle' slot, and give each distractor a distinct source-anchored trap mechanism."
+}

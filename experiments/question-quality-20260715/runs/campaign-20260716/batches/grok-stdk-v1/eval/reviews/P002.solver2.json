@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'Although' is a subordinating conjunction and is followed by a finite clause ('they are controlled by Denmark'), with a full main clause after the comma. The conjunction-vs-preposition test (Although+clause / Despite+NP) is satisfied. Grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'insists (that) the killing of whales is not done for profit' — assertive 'insist' (reporting a claim of fact) takes the indicative, not the mandative subjunctive; the subjunctive rule applies only to volitional insist (demands for future action). Head noun 'the killing' is singular ('of whales' is a postmodifier), so singular 'is' agrees. Grammatical."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'a law that says...' — 'that' is a subject relative pronoun with antecedent 'a law', filling the subject gap of 'says' (hence not omissible). Agreement 'law ... says' holds. Grammatical."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'take place as quickly and efficiently as possible' — both conjuncts modify the VP 'take place' inside the equative construction, so adverb+adverb parallelism ('quickly and efficiently') is required and satisfied. Adjective 'efficient' would break the parallel. Grammatical."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "'whether this practice should allow to continue' — 'allow' requires [allow + NP + to-inf] in the active; here the subject 'this practice' is the semantic patient and no object NP follows, so the passive 'should be allowed to continue' is obligatory. Rescue analyses fail: intransitive 'allow' does not exist, no middle-voice reading is available, and no dative-passive residual-object analysis applies. Ungrammatical as written."
+    }
+  ],
+  "note": "Clean item. Exactly one underline is formally ungrammatical: (E) active 'allow' with a patient subject where the passive 'be allowed' is required. (B) is the only plausible distractor for test-takers who over-apply the insist-subjunctive rule, but assertive 'insist' formally requires the indicative, so (B) is not defensibly wrong. Single defensible answer: (E)."
+}

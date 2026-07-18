@@ -1,0 +1,35 @@
+{
+  "pid": "P017",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "미국 교통 표지 'No Standing'의 실제 의미(차량의 주·정차 대기 금지, 승객 승하차를 위한 짧은 정지는 허용)와 정확히 일치. 친구가 바로 그 코너에서 Carol을 픽업한 서사와 완벽히 정합하며, 'Of course you can stand there'(사람은 서 있어도 됨)라는 친구의 말과도 모순 없음. 빈칸 문법 결합(That means + 명사절 상당 구문)도 자연스러움."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "'nor walkers'가 치명적 결함. 보행자도 금지 대상이면 Carol의 오해가 오히려 옳은 것이 되어 친구의 폭소와 'Of course you can stand there'라는 반박과 정면 모순. 'drivers'가 포함되어 절반쯤 맞아 보이는 매력적 오답이나 서사 논리가 붕괴됨."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "가장 유혹적인 오답 — 친구가 픽업하러 온 서사와 표면적으로 어울려 '픽업 전용 구역' 해석이 그럴듯해 보임. 그러나 'No Standing'은 금지(prohibition) 표지이지 특정 용도 전용 예약(reserved solely) 표지가 아니며, 'customers'라는 상업적 어휘도 상황과 무관. 표지판 문구의 의미론과 어긋나 탈락."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "'can freely park or wait'는 금지 표지의 의미를 정반대로 뒤집은 것. 'No Standing'이 자유로운 주정차 허용을 의미할 수 없음. 명백한 오답."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "'waiters'(종업원)와 'stand'의 말장난에 기댄 난센스. 표지판은 사람 직업군과 무관한 차량 대상 교통 표지이며, 'must not lean on the pole'은 지문 어디에도 근거 없음."
+    }
+  ],
+  "note": "블라인드 실전 풀이. 유머 포인트: Carol은 'standing'을 사람이 서 있는 것으로 오해했으나 실제로는 차량의 정차 대기 금지를 뜻함. 정답 판별 핵심 장거리 단서는 (a) 친구의 'Of course you can stand there' — 사람은 대상이 아님, (b) 친구가 실제로 그 코너에서 픽업함 — 승하차용 짧은 정지는 허용되어야 서사가 성립. 두 단서를 모두 만족하는 선지는 1뿐. 3번이 최다 오답 예상 매력지(픽업 서사 연상)이나 '전용 예약' 의미론으로는 금지 표지를 설명할 수 없음. 복수 정답 여지 없음."
+}

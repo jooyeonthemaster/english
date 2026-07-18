@@ -1,0 +1,93 @@
+{
+  "pid": "P003",
+  "validity": {
+    "V1": false,
+    "V2": false,
+    "V3": false,
+    "V4": false,
+    "V5": false
+  },
+  "validityIssues": [
+    {
+      "code": "MISSING_SUMMARY_FRAME",
+      "severity": "critical",
+      "evidence": "유형이 SUMMARY_COMPLETE_MC이고 발문이 '빈칸 (A), (B)에 들어갈 말'을 묻는데, 문항 전체 어디에도 (A)/(B) 빈칸을 포함한 요약문이 존재하지 않는다. '렌더된 지문' 필드는 '(렌더 지문 없음)', 'markedExpressions / 구조 필드'는 '(없음)'. 발문이 참조하는 (A)/(B) 마커가 학생 노출 콘텐츠 어디에도 없어 마커-발문 불일치이며, 문항이 풀이 불가능한 상태로 렌더된다. V1(마커/렌더 일치)·V5(학생 노출 필드 완전성) 동시 실패."
+    },
+    {
+      "code": "ANSWER_SET_UNVERIFIABLE",
+      "severity": "critical",
+      "evidence": "요약문 프레임이 없어 다섯 선지가 동일 통사 슬롯에 들어가는지, ①만이 유일 정답이 되는지를 원리적으로 검증할 수 없다. 추정 프레임(예: 'the emphasis on individuality in large-scale design is (A), where (B) can matter as much as designers' creativity')에서는 ①이 정답으로 작동하지만, 이는 감사자가 재구성한 가정일 뿐 문항이 제공한 것이 아니다. 보수적 원칙에 따라 V2 실패."
+    },
+    {
+      "code": "COMPLETED_SENTENCE_UNVERIFIABLE",
+      "severity": "critical",
+      "evidence": "정답을 넣은 완성문(요약문+problematic+management organization)이 존재하지 않으므로 문법성·자연스러움을 점검할 대상 자체가 없다. 원지문과 발문 자체는 문법적이나 V3의 핵심 검증 대상이 부재하므로 보수적으로 V3 실패."
+    },
+    {
+      "code": "EXPLANATION_REFERENCES_NONEXISTENT_FRAME",
+      "severity": "major",
+      "evidence": "해설이 '요약문의 평가 항은 problematic, 대비·보완 항은 management organization'이라고 존재하지 않는 요약문의 슬롯 구조를 지목한다. 지문 수준의 내용 요약 자체는 정확하나(소품 범주의 personal flair 필요성, 대규모 프로젝트의 individuality 비판, creative managers 역할 전환, 집단 작업에서 management organization의 동등한 중요성 모두 원지문과 일치), 해설의 결론부가 문항에 없는 구조물을 전제하므로 검증 불가. 보수적으로 V4 실패."
+    },
+    {
+      "code": "VERBATIM_ANSWER_LEAK",
+      "severity": "major",
+      "evidence": "(A) 'problematic'은 지문의 'The emphasis on individuality is therefore problematic'에, (B) 'management organization'은 'management organization and processes can be equally as relevant'에 축자적으로 등장한다. 두 빈칸 모두 지문 문자열 그대로여서 추상화가 전혀 없고, 키워드 대조만으로 ①을 특정할 수 있다. RUBRIC §D의 '정답은 source span의 의미를 보존하되 난이도에 맞게 추상화', 'KILLER는 최소 두 논리 단서 연결 필요·단일 단서로 찍기 불가' 조건에 정면 위배(공예/킬러 조건 결함, V게이트는 아님)."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 1,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — 필자의 평가(problematic)와 집단 작업의 대응 요소(management organization) 결합",
+      "temptingBecause": "해당 없음(정답). 지문의 명시적 평가 'therefore problematic'과 결론 'management organization and processes can be equally as relevant'를 그대로 반영",
+      "decisiveFlaw": "없음. 단, 두 항 모두 지문 축자 복사여서 문자열 대조만으로 도달 가능 — 유효성 결함은 아니나 KILLER 공예 결함"
+    },
+    {
+      "label": "2",
+      "intent": "half-truth + 요소 치환 — (A) 정답 유지, (B)를 소품 범주 요소로 바꿈",
+      "temptingBecause": "personal flair가 지문에서 'absolute necessity'로 강하게 긍정되어 눈에 띄는 축자 표현",
+      "decisiveFlaw": "flair의 필요성은 '소형·저복잡성 제품' 범주에 국한된 조건이며, 집단 작업에서 창의성만큼 중요하다고 명시된 것은 management organization and processes다"
+    },
+    {
+      "label": "3",
+      "intent": "half-truth + 양태/극성 전이 — (B) 정답 유지, (A)를 평가어에서 필연 판단으로 바꿈",
+      "temptingBecause": "'should not be surprising'과 교육·문헌 담론 배경 때문에 개성 강조가 불가피해 보일 수 있음",
+      "decisiveFlaw": "필자는 'therefore problematic'으로 명시적 비판 입장을 취하며, 흔한 경향임을 인정하는 것과 불가피하다고 결론짓는 것은 다르다"
+    },
+    {
+      "label": "4",
+      "intent": "극성 역전 + scope shift — (A)를 긍정 평가로 뒤집고 (B)를 분류 기준 세부어로 치환",
+      "temptingBecause": "'essential'이 지문의 'absolute necessity'를 연상시키고 'technological complexity'가 축자 등장",
+      "decisiveFlaw": "'absolute necessity'는 소품 한정 진술이고 요약의 평가 대상은 대규모 프로젝트의 individuality 강조(비판적)이다. technological complexity는 제품 범주를 가르는 조건일 뿐 집단 작업에서 창의성과 동급인 요소가 아니다"
+    },
+    {
+      "label": "5",
+      "intent": "근접 극성 뉘앙스 + 배경 요소 치환 — (A)를 비판 계열 유사어로, (B)를 담론 배경으로 바꿈",
+      "temptingBecause": "'overrated'가 필자의 비판적 스탠스와 극성이 같고 design literature도 지문에 축자 등장",
+      "decisiveFlaw": "필자의 논지는 단순 과대평가가 아니라 개성 강조가 집단 실행의 실체를 가리고 역할을 오인시킨다는 '문제성'이며, design literature는 개성 담론의 배경 근거일 뿐 집단 작업의 핵심 관계항이 아니다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "major",
+      "evidence": "정답 해설이 '요약문의 평가 항 / 대비·보완 항'이라는, 문항에 존재하지 않는 요약문 슬롯을 전제로 결론을 내린다.",
+      "recommendation": "요약문 프레임을 문항에 복원한 뒤 해설이 그 실제 슬롯을 지목하도록 동기화하라."
+    },
+    {
+      "severity": "minor",
+      "evidence": "오답 해설 2·3·4·5는 각 선지의 실제 (A)/(B) 내용과 정확히 대응하고 지문 사실과도 일치한다(오분석·환각 없음). 해설 본문의 지문 요약도 원지문과 일치한다.",
+      "recommendation": "프레임 복원 후 재사용 가능한 수준."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionsDetail": "요청 난이도 KILLER에 대해 §D 판정: (1) 다섯 선지의 동일 통사 슬롯 적합성 — 요약문 부재로 검증 불가, 실패. (2) 정답의 난이도 맞춤 추상화 — (A)(B) 모두 지문 축자 복사로 추상화 전무, 실패. (3) 최소 두 문장/두 논리 단서 연결 필요 — 'therefore problematic'과 'management organization ... equally as relevant' 두 축자 문자열 대조만으로 정답 특정 가능해 다단 추론 불요, 실패. (4) 오답 함정 다양성(half-truth, 극성 전이, scope shift, 요소 치환)은 충족되어 있으나 앞선 실패로 전체 불충족.",
+  "grade": "F",
+  "notes": "치명 결함은 단 하나의 근본 원인에서 파생된다: SUMMARY_COMPLETE_MC 문항에 (A)/(B) 빈칸을 담은 요약문이 통째로 누락되어 학생이 풀 수 없는 상태다(V1·V5 직접 실패, V2·V3·V4는 검증 불가에 따른 보수적 실패). 원지문 자체는 손상 없이 온전하며(문장 접합·중복·누락·오탈자 없음), 선지 설계는 half-truth 쌍(②③)과 극성/scope 함정(④⑤)으로 의도 밀도가 양호하고 오답 해설도 각 선지와 정확히 대응한다. 그러나 요약문이 복원되더라도 (A) 'problematic'·(B) 'management organization'이 지문 축자 표현이라 키워드 대조로 즉답 가능해 KILLER 난이도 정합(C5=1)과 단서 경제성(C4=1)이 무너진다. 재출제 시 요약문 프레임 복원과 함께 정답 항을 의미 보존 paraphrase(예: 'misleading/open to question', 'coordinating structures and processes' 계열)로 추상화해야 한다. 공예 합계 13/24, V 실패로 등급 F."
+}

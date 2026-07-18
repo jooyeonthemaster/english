@@ -1,0 +1,35 @@
+{
+  "pid": "J007",
+  "answer": "(A)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(A)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "incorrect (the flawed item)",
+      "reason": "The sentence sets up an explicit definitional parallel: critical thinking = 'the identification and evaluation of evidence TO GUIDE decision-making'; the then-clause mirrors it, so ethical thinking = 'identifying ethical issues and evaluating these issues from different perspectives TO GUIDE how to respond'. The purpose infinitive 'to guide' is required. Alternative parses were actively tested and fail: (i) reduced relative 'perspectives [that guide] how to respond' is syntactically well-formed but contextually incoherent — it is the act of identifying/evaluating, not the perspectives themselves, that guides the response, and this reading destroys the definitional parallelism the sentence is built on (the definition becomes circular: perspectives that already guide the response are used to evaluate in order to... nothing); (ii) a resultive free adjunct ('..., thereby guiding how to respond') would need a comma — comma-less attachment directly after the NP forces noun modification — and in any case a participle cannot express the required purpose meaning. Hence 'guiding' has no route to being a correct form in this context; it must be 'to guide'."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'This form of ethics is distinct...' — subject head noun is singular 'form' ('of ethics' is a PP modifier; 'ethics' as a discipline is singular anyway), so singular 'is' agrees. Predicative adjective 'distinct from' is standard."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'The nature of an ethical issue ... is that there is no clear right or wrong response.' Complementizer 'that' introduces a nominal (predicative complement) clause after copular 'be'; the clause it introduces is complete (existential 'there is' + full NP), so 'that' (not 'what') is required and correct. 'The nature of X is that S' is fully idiomatic."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'although being ethical is defined as acting in accordance with...' — subject is the gerund clause 'being ethical' (gerund subjects take singular agreement); passive of 'define X as Y' yields 'X is defined as V-ing', and 'as acting' correctly parallels the pattern. Generic present passive fits the definitional statement."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'...that the factors that drive other people's codes and decision making may be different.' Long-distance check: the true subject of 'may be' is plural 'the factors'; 'that drive other people's codes and decision making' is an intervening relative clause (whose plural 'drive' also agrees with 'factors'). Modal 'may' is uninflected for number and takes bare 'be' — grammatical."
+    }
+  ],
+  "note": "Clean single-answer item. (A) is the classic purpose-infinitive vs. participle point, reinforced by an in-sentence structural parallel ('to guide decision-making') that acts as a long-distance cue. The only threat to uniqueness — reading 'guiding' as a reduced relative on 'perspectives' — was examined and rejected on contextual/logical grounds (breaks the definitional parallel; wrong semantic controller), which is the standard KSAT '문맥상 어법' adjudication. (B)–(E) are provably well-formed under their governing rules (singular head agreement, complete-clause 'that', gerund-subject passive, plural subject across an intervening relative clause)."
+}

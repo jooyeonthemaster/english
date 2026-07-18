@@ -1,0 +1,70 @@
+{
+  "pid": "P005",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-SCENE-ATTRIBUTION-OPT4",
+      "severity": "major",
+      "evidence": "오답 해설 ④ '연주 실수는 리허설 뒤 장면이며'는 사실과 불일치. 지문은 'As the rehearsal began, he struggled with the rhythm, making several mistakes'로 실수가 리허설 도중에 발생했음을 명시하며, 리허설 이후 본무대 연주는 'Garcia's trumpet playing was flawless'로 실수가 없었다. '리허설 뒤 장면'이라는 귀속은 어느 해석으로도 지문과 맞지 않는 장면 귀속 오류다."
+    },
+    {
+      "code": "V4-SCENE-ATTRIBUTION-OPT5",
+      "severity": "major",
+      "evidence": "오답 해설 ⑤ '리허설 전 안심시키는 말은 Tom이 한 지지이며'는 사실과 불일치. Tom의 격려('Don't worry, I'll be right behind you')는 리허설이 시작되어 실수가 나온 뒤, 즉 리허설 도중에 이루어졌다. '리허설 전'에 안심시키는 말은 지문에 존재하지 않으므로, 존재하지 않는 장면을 사실처럼 단정한 귀속 오류다(선지 문구의 반향이 아니라 해설의 사실 진술로 쓰였음)."
+    }
+  ],
+  "craft": {
+    "C1": 2,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 2,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — 원문 삭제 구간 'help him pick out new clothes'의 의미 보존 paraphrase",
+      "temptingBecause": "직전 문장 'Garcia was hoping to find the perfect clothing for the performance'와 That was why의 인과 연결이 그대로 지시한다.",
+      "decisiveFlaw": "(없음 — 유일 정답. 다만 근거 문장이 빈칸 바로 앞이라 paraphrase 거리가 매우 짧아 변별 기여는 낮다.)"
+    },
+    {
+      "label": "2",
+      "intent": "scope overextension — 옷 고르기 도움을 '공연 전체 준비'로 과확장",
+      "temptingBecause": "이야기 전체가 공연을 향해 진행되므로 공연 준비라는 상위 프레임이 그럴듯하다.",
+      "decisiveFlaw": "Jeff는 밴드 구성원이 아니며 지문에서 그의 역할은 쇼핑몰에서 옷을 골라 주는 것뿐이다. That was why의 선행 근거도 의상 탐색으로 한정된다."
+    },
+    {
+      "label": "3",
+      "intent": "irrelevant-detail / causal misdirection — 지각·교통 세부를 부탁의 목적으로 오귀속",
+      "temptingBecause": "빈칸 문장 직후에 교통 체증과 사과 장면이 이어져 국소 인접성이 있다.",
+      "decisiveFlaw": "부탁은 교통 체증 이전에 이미 이루어졌고, 교통은 Jeff가 늦은 이유일 뿐 Garcia가 Jeff를 부른 목적과 무관하다. 시간 순서상으로도 성립 불가."
+    },
+    {
+      "label": "4",
+      "intent": "actor/scene swap + 소재 연상 — 트럼펫·실수 소재를 부탁 목적으로 이식",
+      "temptingBecause": "리허설 장면의 'struggled with the rhythm, making several mistakes'와 트럼펫 소재가 지문에 실재한다.",
+      "decisiveFlaw": "실수는 쇼핑 이후 리허설 도중 장면이며, Jeff는 어디서도 비판하지 않는다(오히려 마지막에 칭찬). 부탁 시점에는 아직 일어나지도 않은 사건이다."
+    },
+    {
+      "label": "5",
+      "intent": "actor swap — Tom의 격려 역할을 Jeff에게 전가",
+      "temptingBecause": "격려 장면('Don't worry, I'll be right behind you')이 지문에 실재하고 형제 관계와 정서적으로 어울린다.",
+      "decisiveFlaw": "그 격려는 리허설 도중 밴드 동료 Tom이 한 것이며, Jeff를 쇼핑몰로 부른 목적(의상 선택)과 무관하다."
+    }
+  ],
+  "explanationIssues": [
+    "오답 해설 ④: '연주 실수는 리허설 뒤 장면' — 실제로는 리허설 도중 발생(As the rehearsal began ... making several mistakes). 리허설 뒤 본무대는 flawless여서 어느 해석으로도 거짓.",
+    "오답 해설 ⑤: '리허설 전 안심시키는 말은 Tom이 한 지지' — Tom의 격려는 리허설 시작 후(도중) 장면. '리허설 전' 시점 단정은 지문에 없는 사실.",
+    "본해설의 '과대한 ②' 등 압축 표현은 정확하나, ④·⑤를 '역할·장면을 뒤바꾼'으로 묶은 뒤 개별 해설에서 위 두 건의 장면 시점을 잘못 진술해 해설 전체의 신뢰도를 깎는다."
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "빈칸 자체는 유효하다: 렌더 무결(V1), 정답 유일(V2, {1}), 완성문 문법성(V3), 필드 동기화(V5) 모두 통과. 그러나 오답 해설 ④·⑤가 지문 타임라인을 두 곳에서 잘못 귀속(리허설 '뒤'/'전' vs 실제 '도중')하여 V4 실패 → 등급 F. 두 구절만 '리허설 도중'으로 교정하면 V4는 회복 가능. 공예 측면에서는 정답 근거 문장이 빈칸 바로 앞에 있어 paraphrase 거리가 짧고 변별력이 낮으며(C3=2), 서사 지문에 BLANK_INFERENCE를 적용한 것 자체가 유형 관행상 이례적이고 요청 난이도 INTERMEDIATE보다 쉽다(C5=2). 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

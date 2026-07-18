@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "decorate는 illustrate의 '삽화를 넣다' 파생 의미 연상 미끼. 문맥은 믿음을 장식하는 것이 아니라 사례로 보여주는 것이므로 부적합."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "clarify는 illustrate의 사전 의미('예를 들어 명확히 하다') 때문에 유혹이 강한 오답. 그러나 지문에서 이유 제시('because the cat is cute and quiet')만으로도 내용은 이미 명확하지만 believable하지 않다고 했으므로, 이야기의 기능은 명확화가 아니라 구체 사례로의 실증. 탈락."
+    },
+    {
+      "label": "3",
+      "verdict": "correct",
+      "reason": "exemplify가 정답. 지문의 논리 사다리(단순 진술 -> 이유 제시 -> 유사 상황 사례담)의 최종 단계가 '구체적 사례로 믿음을 구현해 보여주기'이며, 'stories that exemplify them'으로 대입 시 문법 결합과 지문 논리 모두 완벽히 성립."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "justify는 가장 강한 미끼. 지문에 'We need justifications for the beliefs'가 명시되어 표면 어휘 반향으로 끌리지만, 정당화는 이야기가 낳는 결과적 효과이지 illustrate라는 단어의 의미가 아님. 또한 'because...' 이유 제시도 justification의 일종인데 지문은 그것만으로 부족하다고 하므로 illustrate=justify 등식은 지문 논리와도 충돌. 전형적인 지문 단어 재활용 오답."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "portray는 '묘사하다'로 그림/서사 연상 미끼. 이야기가 믿음을 묘사하는 것이 아니라 유사 사례로 실증하는 것이므로 문맥 의미와 어긋남."
+    }
+  ],
+  "note": "어휘 문맥의미 문항. 정답 3(exemplify)은 명확하며, 최상위권 기준 실질 미끼는 4(justify, 지문 내 justifications 어휘 반향)와 2(clarify, 사전 의미 간섭). 두 미끼 모두 '단어의 의미'가 아닌 '기능적 결과' 또는 '다른 사전 의미'로 판별 가능해 복수정답 소지 없음. 참고: 지문은 Roger Schank 계열의 스토리텔링-설득 논지로 기출 지문과 유사한 소재."
+}

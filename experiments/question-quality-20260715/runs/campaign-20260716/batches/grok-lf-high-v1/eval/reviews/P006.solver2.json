@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "Seam: 'learn to deliberate over ethical questions from multiple viewpoints rather than follow ...' — bare-infinitive parallelism with 'follow' holds. Logic: directly instantiates the passage's own definition of ethical thinking ('evaluating these issues from different perspectives') and is the exact antithesis of following prescribed codes, which is what 'rather than' requires. Licensed by the premises that ethical issues have no clear right/wrong response and that principles vary between and within individuals. Entailed, not merely compatible."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "Grammatically well-formed in the seam, but it restates the definition of CRITICAL thinking ('identification and evaluation of evidence'), which the passage explicitly distinguishes from ethical thinking ('This form of ethics is distinct...'). Ethical issues here have no evidential fact of the matter (no clear right or wrong), so evidence evaluation cannot be the essential skill; 'all choices' also overgeneralizes. Classic echo-of-opening-clause distractor."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "Directly contradicted by 'these principles vary both between and within individuals' — the passage denies that principles are shared by every community. Moreover, aligning conduct with a fixed shared principle set is functionally identical to 'following a prescribed set of ethical codes', the very thing the 'rather than' clause excludes. Logically self-defeating in the seam."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "Grammatical ('internalize only what separates other people's ethical codes' — free relative as object) but incoherent with the conclusion: the passage requires understanding the factors behind one's OWN code alongside recognizing/accepting that others' differ. 'Internalize only the differences' is asserted nowhere and the restrictive 'only' makes it strictly false relative to the text."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Exploits the context-dependence sentence, but the passage presents context-variability as a fact to recognize and understand, never as a prescription to swap codes per context. 'Replace personal codes with rules' also re-introduces rule-following, contradicting 'rather than follow a prescribed set of ethical codes or rules'. Fails both the contrast requirement and the passage's actual recommendation."
+    }
+  ],
+  "note": "Blank sentence demands the positive counterpart of 'follow a prescribed set of ethical codes or rules', entailed by (i) ethical thinking = evaluating issues from different perspectives, (ii) no clear right/wrong response exists, (iii) principles vary between/within individuals and across contexts. Only option 1 satisfies all three; options 2-5 each contradict an explicit premise or collapse into the excluded 'rule-following' disjunct. Grammar seam is clean for all five options (bare-infinitive parallelism with 'follow'), so discrimination is purely logical — single defensible answer."
+}

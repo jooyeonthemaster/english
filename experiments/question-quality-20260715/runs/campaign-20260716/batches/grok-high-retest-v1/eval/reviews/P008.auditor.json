@@ -1,0 +1,93 @@
+{
+  "pid": "P008",
+  "itemType": "SENTENCE_INSERT",
+  "requestedDifficulty": "INTERMEDIATE",
+  "blindAnswer": "③",
+  "confidence": "high",
+  "validity": {
+    "V1": false,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-MARKER-DESYNC",
+      "severity": "critical",
+      "evidence": "렌더 지문의 마커가 연속 gap에 배치되지 않았다. ①~③은 연속이지만 '...cannot do it. (You are correct.)'와 'Sooner or later...' 사이 gap에는 마커가 없고, ④는 'you quit.' 뒤, ⑤는 지문 맨 끝에 있다. 오답해설 4('직후 (You are correct.)')와 5('직후 cannot do...quit')의 인접 문장 서술은 의도된 배치(④=Believing...cannot do it. 뒤, ⑤=(You are correct.) 뒤)를 전제하고 있어, 렌더된 마커 배치가 문항이 의도한 배치와 불일치함이 내부 증거로 확인된다. 렌더/마커 손상."
+    },
+    {
+      "code": "V4-ADJACENCY-MISATTRIBUTION-OPT4",
+      "severity": "critical",
+      "evidence": "오답해설 4: \"직후 '(You are correct.)'가 delay의 결과로 읽히면 논리 순서가 거꾸로 된다\" — 렌더 지문에서 ④ 직후 문장은 'And in one of those little ironies of life...'이며 '(You are correct.)'는 ④보다 앞에 위치한다. 존재하지 않는 인접 관계를 근거로 오답을 설명하는 문장 귀속 오류."
+    },
+    {
+      "code": "V4-ADJACENCY-MISATTRIBUTION-OPT5",
+      "severity": "critical",
+      "evidence": "오답해설 5: \"직후 'cannot do...quit' 서술과도 인과 순서가 역전된다\" — ⑤는 지문 최종 위치로 직후 문장이 아예 없고, 'cannot do...quit'(Sooner or later 문장)은 ⑤보다 두 문장 앞이다. 또한 '포기의 직전 확신 단계 뒤에 delay를 넣으면'도 ⑤ 직전 문장(death spiral 요약)과 맞지 않는다. 렌더 지문과 무관한 가상의 위치를 설명한다."
+    },
+    {
+      "code": "V1-NOTE-INTENDED-MOD",
+      "severity": "minor",
+      "evidence": "주어진 문장은 원문 'You find reasons to delay...'에 연결사 'As a result,'를 추가한 형태로, 삽입 유형의 의도된 변형으로 판단(손상 아님). 그 외 지문 텍스트는 원지문과 축자 일치하며 중복·누락·고아 문장부호 없음."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 1
+  },
+  "craftRationale": {
+    "C1": "완벽주의→회피→지연→무능력 확신→포기라는 지문의 핵심 인과 사슬에서 실제 중추 단계 문장을 제거해 인과·순서 응집을 묻는다. 의미 있는 정전 포인트.",
+    "C2": "①(원인 선행 부재)·②(단계 조기 배치)는 서로 다른 오독을 겨냥하나, 렌더된 ④·⑤는 둘 다 'quit 이후'라는 동일 유형의 자명한 탈락 위치로 의도 밀도가 중복·희석된다.",
+    "C3": "실질 경쟁 선지는 ② 하나뿐이고 ④·⑤는 즉시 소거된다. 가장 경쟁력 있었을 gap((You are correct.) 주변)은 마커가 생략되어 변별 기회가 사라졌다.",
+    "C4": "'As a result' 연결사는 유형 관례상 적정한 단서이고 메타 누출은 없다. 정답 ③은 원인(위험 회피·이탈)-결과(지연)-심화(무능력 확신) 순서로 필연적이다.",
+    "C5": "INTERMEDIATE 요청 대비 실질 2지선다에 가까워 약간 쉬운 편이나, ②/③ 변별에 단계 논리 판단이 필요해 대체로 난이도 라벨과 일치한다.",
+    "C6": "정답 해설(③)과 오답해설 1·2는 정확하나, 오답해설 4·5가 렌더 지문에 존재하지 않는 인접 문장을 근거로 삼는 사실 오류를 포함한다."
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "패턴 도입 이전, 논제 수준 문장 뒤에 결과 단계를 조기 배치하는 오독 유도",
+      "temptingBecause": "'paralysis(마비)'가 지연(delay)의 원인처럼 보일 수 있어 As a result가 표면적으로 이어지는 듯하다",
+      "decisiveFlaw": "직후 'The pattern is predictable:'이 단계 열거를 새로 시작하므로 패턴의 중간 단계인 주어진 문장이 그보다 앞에 올 수 없고, As a result의 구체적 행동 원인(위험 회피)이 아직 서술되지 않았다"
+    },
+    {
+      "label": "②",
+      "intent": "완벽 추구·실수 회피 키워드 중복을 미끼로 한 단계 조기 배치 (최강 디코이)",
+      "temptingBecause": "직전 문장의 'error'·'perfectly'가 주어진 문장의 'to not work is to not make mistakes'와 어휘·주제적으로 겹쳐 인과처럼 읽힌다",
+      "decisiveFlaw": "'일을 안 하는' 지연 단계가 '아는 일에 더 매달리는(cling ever more tightly)' 단계보다 앞에 오면 회피의 점증 구조(안전한 일→일 중단→포기)가 역전되고, steer→cling의 연속 서술이 끊긴다"
+    },
+    {
+      "label": "③",
+      "intent": "정답 — 원문 제거 지점",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음 — 'away from risk and exploration...' 회피 행동이 As a result의 원인이 되고, 직후 'Believing...convinced that you cannot do it'으로 지연→무능력 확신 심화가 자연스럽게 닫힌다. 원문 순서와 정확히 일치"
+    },
+    {
+      "label": "④",
+      "intent": "'cannot do'·quit 어휘 겹침을 미끼로 한 결말 이후 배치 (렌더 기준)",
+      "temptingBecause": "직전 문장에 'you cannot do what you are trying to do'가 있어 무능력→지연 인과로 착각할 수 있다",
+      "decisiveFlaw": "직전 문장이 이미 '포기(you quit)'로 끝났으므로 그 뒤에 지연 단계가 올 수 없고, 직후는 전체 패턴을 요약하는 아이러니 문장이라 새 단계 삽입이 불가하다. 단, 공식 오답해설은 이 위치가 아닌 다른 배치(직후 '(You are correct.)')를 설명하고 있어 렌더와 불일치"
+    },
+    {
+      "label": "⑤",
+      "intent": "지문 말미 기본 선택 성향을 노린 종결 이후 배치 (렌더 기준)",
+      "temptingBecause": "삽입 유형에서 후반 위치를 습관적으로 고르는 학생을 걸러내는 자리",
+      "decisiveFlaw": "'you misdirect your work; you stall; you quit'로 죽음의 나선 요약이 이미 완결된 지문 최종 위치이며 직후 문장이 없어 응집 자체가 성립하지 않는다. 공식 오답해설은 존재하지 않는 직후 문장('cannot do...quit')을 근거로 들어 렌더와 불일치"
+    }
+  ],
+  "explanationIssues": [
+    "오답해설 4의 '직후 (You are correct.)' 서술은 렌더 지문의 ④ 위치(직후 = And in one of those little ironies...)와 불일치 — 문장 귀속 오류",
+    "오답해설 5의 '직후 cannot do...quit' 서술은 렌더 지문의 ⑤ 위치(지문 최종, 직후 문장 없음)와 불일치 — 존재하지 않는 인접 문장 인용",
+    "오답해설 4·5는 마커가 '(You are correct.)' 앞뒤 연속 gap에 배치된 다른 레이아웃을 전제로 작성된 것으로 추정 — 생성 시점 의도와 렌더 파이프라인 간 마커 배치 desync가 근본 원인으로 보임",
+    "정답 해설과 오답해설 1·2는 렌더 지문과 정확히 대응하며 오류 없음"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "정답 ③ 자체는 렌더된 5개 위치 중 유일 정답으로 성립한다(V2 통과). 그러나 (1) 마커가 연속 gap 규칙을 어기고 '(You are correct.)' 주변 gap을 건너뛰었으며, 오답해설 4·5의 내용이 그 생략된 배치를 전제하고 있어 렌더 마커 배치가 문항 의도와 어긋난 손상으로 판정(V1 실패), (2) 오답해설 4·5가 렌더 지문에 존재하지 않는 인접 관계를 근거로 설명(V4 실패). 치명 결함은 공예 점수로 상쇄되지 않으므로 F. 수리 방향: 마커를 의도된 연속 gap(④=...cannot do it. 뒤, ⑤=(You are correct.) 뒤)으로 재배치하거나, 현 렌더 배치에 맞게 오답해설 4·5를 재작성. 전자 채택 시 '(You are correct.) 뒤' 위치의 경쟁력이 살아나 C2·C3도 개선될 것. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

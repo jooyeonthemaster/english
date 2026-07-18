@@ -1,0 +1,35 @@
+{
+  "pid": "P008",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "learn + to-infinitive is the required complementation ('students learn to think through ethical issues'). The following 'rather than follow' uses the bare form in parallel with the to-infinitive (to elided after rather than), which is standard. No violation."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "Relative clause 'that are considered correct' modifies the head noun 'principles' (plural), not the nearer 'conduct'. Semantically it is the principles that are judged correct, so plural 'are' agrees. Attractive proximity trap toward 'is considered' via 'conduct', but the long-distance antecedent is 'principles'. Felt the pull, rejected it."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'What a person values' is a free relative functioning as subject of 'relates'; transitive 'values' needs an object, which 'What' supplies. Substituting 'That' would leave 'values' objectless and ungrammatical. Singular 'relates' agrees with the clausal subject. Correct."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'beliefs influenced by their formal and informal learning experiences' is a reduced passive relative clause (beliefs [which are] influenced by...). Beliefs are the affected entity, so past participle is right; 'influencing' would reverse the meaning and a finite verb is not needed since 'relates' is the main verb. Correct."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect (answer)",
+      "reason": "Preposition 'alongside' governs a gerund; the coordination is 'recognizing and accepting that the factors... may be different', with the that-clause as shared object. Bare 'accept' breaks parallelism inside the prepositional gerund phrase. Rescue parse attempted: reading 'and accept' as second conjunct of 'necessary to understand X and accept Y' fails because it strands 'alongside recognizing' without an object and lacks the comma/punctuation needed to detach the conjunct. Must be 'accepting' — this is the grammatical error."
+    }
+  ],
+  "note": "Clean item from a top-tier solver's viewpoint. Strongest distractor is (B) (singular 'conduct' proximity pulls toward is/are agreement doubt); (C) tempts a What/That swap but transitive 'values' settles it. (E) is unambiguous once parallelism under 'alongside' is checked; alternative parses were actively searched and none legitimizes bare 'accept'. Single defensible answer: (E)."
+}

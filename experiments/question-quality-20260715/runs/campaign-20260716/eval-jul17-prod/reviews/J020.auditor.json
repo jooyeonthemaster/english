@@ -1,0 +1,94 @@
+{
+  "pid": "J020",
+  "blindAnswer": "(D)",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "조동사+be 뒤 수동 과거분사 vs 능동 -ing 판별 (pointCode c, 태)",
+      "temptingBecause": "'be'와 분사 사이에 'very precisely'라는 부사구가 끼어 있어 수동태 골격이 한눈에 안 들어오고, target을 능동 'targeting'으로 오인할 여지가 있다",
+      "decisiveFlaw": "정문. 세금(taxes)이 '표적이 되는' 대상이므로 'can be ... targeted to'의 수동 구조가 정확하다. 오류 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "주격 관계대명사 that + 주어 공백 구조 판별 (pointCode b, 관계사)",
+      "temptingBecause": "'in any manner that is less costly per unit of abatement than ...'의 긴 비교 구문 속에서 that 뒤 절 구조를 놓치면 접속사 that(완전절 필요)로 오독해 what/which 교체를 떠올릴 수 있다",
+      "decisiveFlaw": "정문. 선행사 'any manner'를 받는 주격 관계대명사이고 뒤에 주어가 빠진 불완전절(is less costly)이 이어지므로 that이 정확하다. 오류 아님"
+    },
+    {
+      "label": "(C)",
+      "intent": "where + 완전절(부사절) vs which/that + 불완전절 판별 (pointCode b, 관계사/접속사)",
+      "temptingBecause": "앞에 명시적 장소 선행사가 없어 where가 어색해 보이고, 'there are ~' 존재구문의 완전성 판단을 요구한다",
+      "decisiveFlaw": "정문. where가 'many separate sources가 있는 경우에'라는 완전한 절(there are many separate sources ...)을 이끄는 부사절 표지로 쓰였으므로 적절하다. 오류 아님"
+    },
+    {
+      "label": "(D)",
+      "intent": "정답. 명사 후치수식 형용사(available for ~) vs 부사 판별 (pointCode f, 품사)",
+      "temptingBecause": "뒤에 'for monitoring ...'이라는 긴 전치사구와 'have been developing'이라는 진짜 동사가 이어져, 문장 골격(the technologies [available for ...] have been developing)을 읽어야 한다는 것이 설계 의도",
+      "decisiveFlaw": "부사는 명사를 직접 수식할 수 없다. 'the technologies availably'는 비문이며 형용사 available로 고치면 정확히 원지문이 된다(source-correct → displayed-wrong 최소대립쌍 성립). 다만 'availably'는 준비단어 수준의 극히 어색한 부사형이라 구조를 읽기 전에 표면 어형만으로 즉시 오류가 드러난다"
+    },
+    {
+      "label": "(E)",
+      "intent": "현재완료진행 능동(자동사 develop) vs 수동 판별 (pointCode a, 태/시제)",
+      "temptingBecause": "'technologies는 사람이 개발하는 것'이라는 의미 직관으로 'have been developed'(수동)를 요구한다고 오판할 수 있고, (D)와 같은 문장에 있어 주어-동사 원거리 구조 파악도 요구한다",
+      "decisiveFlaw": "정문. develop이 '발전하다'라는 자동사로 쓰여 'have been developing rapidly'(현재완료진행 능동)가 자연스럽고 문법적이다. 오류 아님"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "(C) 오답 해설이 where 절을 '장소를 부가적으로 설명하는 절'이라 했으나, 실제 의미는 물리적 장소가 아니라 '배출원이 많이 존재하는 경우/상황에'라는 추상적 조건·상황이다. '완전한 문장 구조(there are ~)를 이끈다'는 구조 분석 자체는 정확하므로 V4 실패로 보지는 않음",
+      "recommendation": "'장소' 대신 '~한 경우·상황을 나타내는 부사절'로 기술"
+    },
+    {
+      "severity": "minor",
+      "evidence": "(D) 정답 해설 첫 문장 '문장의 주어 the technologies를 명사 뒤에서 수식하는 구문의 첫머리입니다'는 문법적으로 참이지만 문장이 어색하고(주어를/명사 뒤에서 수식) 밑줄 위치의 역할 규정이 한 박자 늦게 나온다",
+      "recommendation": "'밑줄은 주어 the technologies를 뒤에서 수식하는 형용사구 자리다'로 즉답형 재기술"
+    }
+  ],
+  "issues": [
+    {
+      "severity": "major",
+      "evidence": "요청 난이도 KILLER 대비 정답 (D) 'availably'는 사전 등재가 무의미할 정도로 희귀·어색한 부사형이 명사 바로 뒤에 붙어 있어, 문장 구조(the technologies [available for ...] have been developing)를 읽지 않고도 표면 어형만으로 즉시 오답임이 드러난다. RUBRIC §C 'KILLER 정답은 구조를 읽어야 하며 철자·비단어·붙어 있는 단순 수일치로 즉시 드러나지 않는다' 위반",
+      "recommendation": "정답 포인트를 구조 의존형으로 재설계(예: (E) 자리를 원거리 주어-동사 수일치나 분사구문 태 판단으로 바꾸고 그쪽을 정답으로, available은 정문 디코이로 유지)"
+    },
+    {
+      "severity": "minor",
+      "evidence": "(B)와 (C)가 동일 pointCode 'b'(관계사 계열)로, 5개 밑줄이 서로 다른 오개념을 겨냥해야 한다는 C2 만점 기준에서 의도 밀도가 약간 희석된다. 다만 주격 관계대명사(불완전절)와 where(완전절)는 판단 축이 달라 필러는 아니다",
+      "recommendation": "둘 중 하나를 병렬구조·도치·대동사 등 다른 계열 포인트로 교체"
+    },
+    {
+      "severity": "minor",
+      "evidence": "keyPoints가 (D)(B)(C)만 다루고 (A)(E)는 누락 — 필드 모순은 아니어서 V5 실패는 아니나 완결성이 떨어진다",
+      "recommendation": "5개 밑줄 전부의 판정 포인트를 keyPoints에 수록"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionsDetail": {
+    "minimalPair": true,
+    "clearGrammarJudgment": true,
+    "allFiveUnderlinesDocumented": true,
+    "answerRequiresStructuralReading": false,
+    "noEasySamePointDecoyMasking": true,
+    "note": "최소대립쌍·명확한 문법 판단·5개 밑줄 설명은 충족하나, 정답이 준비단어(availably)의 표면 어형만으로 즉시 드러나 '구조를 읽어야 한다' 조건을 위반 → KILLER 조건 전체 불충족"
+  },
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 렌더는 (D) available→availably 단일 의도 변형 외 원지문과 완전 일치, 정답 유일성 성립(각 디코이 독립 검증 완료), 해설의 통사 분석도 사실과 부합, 필드 동기화 무결. 그러나 요청 난이도 KILLER에 대해 정답 포인트가 기초 수준의 형용사/부사 어형 오류이고 'availably'가 비단어에 가까워 즉시 소거되므로 C5=1, C3·C4도 동반 하락. 정작 진짜 판단력을 요구하는 (B)(C)(E) 디코이의 설계는 좋아서, 정답 자리만 구조 의존형으로 바꾸면 상위 등급 재설계 여지가 크다. 총점 14/24, 등급 C(치명 결함은 없으나 KILLER로는 재설계 필요)."
+}

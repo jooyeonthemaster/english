@@ -1,0 +1,35 @@
+{
+  "pid": "J001",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법: 단수 주어 'The potential contribution'과 'is realized' 수일치 성립, 정문. 논리: '성장의 기여가 주로 농촌 농업생산의 급속한 다각화를 통해 실현된다'는 경로 주장인데, 지문 S1에서 diversification은 성장과 병렬된, 비판 대상 '경향'의 한 항목일 뿐 성장의 실현 경로가 아니다. 'primarily'를 지지하는 전제가 전무하고, 'rural agricultural production'으로의 축소도 원문의 'economic activities'와 불일치. 뒤따르는 'At the same time' 양보-전환과의 담화 기능도 성립하지 않음."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "문법: 정문. 논리: '성장이 특수 자격보호 메커니즘의 필요를 대체한다'(P)는 바로 다음 문장 S3 '그 메커니즘 없이는 기근을 막을 수 없다'(¬P)와 형식적 모순. 저자가 P 직후 ¬P를 단언하는 자기모순 텍스트가 되므로 성립 불가. 'At the same time'을 역접으로 읽어도 단순 대조가 아닌 명제 부정이라 구제되지 않음."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "문법: 'is guaranteed to automatically shield' 정문(부정사 분리 수식은 규범상 허용). 논리: '자동적으로 보호함이 보장된다'는 보편 충분성 주장은 S3의 'no matter how fast they grow ... cannot hope to prevent famines'가 직접 반박하는 명제. 성장속도와 무관하게 보호가 실패할 수 있다는 지문 주장과 모순. 기각."
+    },
+    {
+      "label": "④",
+      "verdict": "accept",
+      "reason": "문법: 정문. 논리: '성장의 잠재적 기여는 그 혜택이 소외 계층에게 향할 때에만 유효하다'는 제한적 타당성(validity) 주장. S3의 불충분성 명제와 모순 없이 공존(유효 ≠ 충분 — 자격보호는 여전히 필요)하며, S4–S5(성장 자체는 성공의 극히 일부만 설명, 실제 성취는 위기 시 인구에게 '직접 도달한' 공적 지원)가 이 제한 조건을 실질적으로 뒷받침. 'At the same time'이 요구하는 '조건부 양보 → 더 강한 필요조건 제시'의 담화 구조를 유일하게 충족. 유일하게 무모순인 선지."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "문법: 정문. 논리: '성장이 직접적 공적 개입보다 우선되어야 한다'는 우선순위 주장은 S4('성장은 기껏해야 작은 부분만 설명')와 S5('진짜 성취는 직접적 공적 지원')가 명시하는 서열과 정반대. 지문 결론과의 형식적 충돌로 기각."
+    }
+  ],
+  "note": "발문 seam 특이사항: 원문 스템이 '...economic success, ___.'로 주어와 빈칸 사이에 콤마를 남겨 두어, 어느 선지를 넣어도 주어–동사 사이 콤마(비규범적)가 생긴다. 원전(Drèze & Sen, Hunger and Public Action 계열 텍스트)의 삽입 동격구('and especially of ...')를 삭제하면서 남은 조판 흔적으로 보이며, 5개 선지에 동일하게 작용하므로 변별을 해치지는 않으나 스템 교정 대상. 판정 자체는 ②③⑤가 지문 명제와 직접 모순, ①이 무근거 경로 주장이라 ④가 유일 정답으로 깔끔히 좁혀짐."
+}

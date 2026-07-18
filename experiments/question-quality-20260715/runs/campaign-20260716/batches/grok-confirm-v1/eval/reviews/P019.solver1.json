@@ -1,0 +1,35 @@
+{
+  "pid": "P019",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "저자의 주장과 정반대. 지문은 rigid work schedule 고수를 부정적으로 제시하고 go with the flow 쪽을 옹호하는 흐름이므로, 경직된 계획을 우선하라는 진술은 빈칸 앞 'to become a more peaceful person'과 정면 충돌한다."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "네 살 아이 예시는 우선순위 대비를 보여주는 하나의 사례일 뿐이며, 지문이 곧바로 'The more general question is...'로 일반화한다. 'focus only ... instead of work'는 사례를 절대화한 과잉 진술로, 빈칸이 요구하는 일반 원리가 아니다."
+    },
+    {
+      "label": "3",
+      "verdict": "correct",
+      "reason": "빈칸 직전의 수사적 양자택일('keeping my plans' vs 'learning to go with the flow')에 대한 답으로 정확히 기능한다. 'you must value going with the flow over sticking to your plans'는 평화로운 사람이 되기 위한 결론과 논리적으로 일치하고, 'most of the time'이라는 완화 표현도 이후 '일부 계획 변경을 예상하라'는 보조 조언과 자연스럽게 호응한다. 문법 결합(must + value A over B)도 정문."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "가장 매력적인 오답. 다음 문장이 계획 변경을 예상하라는 내용이라 실제로 끌렸으나, (a) 그 문장이 'I have ALSO found it helpful to expect...'로 시작하므로 빈칸 내용은 이 '예상하기' 조언과 별개여야 하고(also가 추가 정보임을 명시), (b) 지문은 'a certain percentage of plans'라고 했는데 선지는 'nearly all'로 정도를 과장 왜곡했다. 담화표지 위반 + 정도 왜곡의 이중 결함."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "지문 첫 문장에서 저자가 'excuse'라고 부르며 반박하는 바로 그 통념('좌절은 자연스럽다')을 강화하는 진술. 평화로운 사람이 되기 위한 처방으로서 정반대 방향이다."
+    }
+  ],
+  "note": "정답 3으로 명확히 수렴하는 정상 문항. 매력적 오답 4는 인접 문장 내용을 차용하되 'also' 담화표지와 'a certain percentage → nearly all' 정도 왜곡으로 오답 처리되는 전형적이고 잘 설계된 미끼. 최상위권 기준 실전 체감 난도는 중하 수준이며 복수 정답 가능성 없음."
+}

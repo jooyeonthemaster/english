@@ -1,0 +1,35 @@
+{
+  "pid": "J014",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "Restrictive relative pronoun 'that' with antecedent 'subject matter' (singular mass noun); 'resembles' agrees. 'the focus is on subject matter that resembles everyday life' is a complete standard relative clause. Mild lure for students over-applying 'preposition + which' instincts, but the preposition 'on' governs 'subject matter', not the relative pronoun, so 'that' is fine."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "True subject is the plural head 'Feelings' in 'Feelings of pleasure and uncertainty', so plural 'carry' is correct. Strongest distractor pull: proximity agreement with the nearest singular noun 'uncertainty' makes 'carry' momentarily feel wrong, but the long-distance subject check resolves it."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "'devices work ... against the subject matter thereby created a disquieting atmosphere' requires the resultative present participle 'creating' after 'thereby'. As written, 'created' fails every parse: (i) as a finite past verb there is no conjunction (run-on) and it clashes with present-tense 'work'; (ii) as a passive past participle it cannot take the direct object 'a disquieting atmosphere'; (iii) the reduced-relative parse 'the subject matter thereby created' strands 'a disquieting atmosphere' with no syntactic role since 'work' is intransitive here. Must be 'creating'."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'an aesthetic attitude is needed to appreciate the whole episode' — passive 'is needed' is right because the attitude is the thing required; purpose infinitive 'to appreciate' attaches naturally. Active 'needs' would require an agent subject, which 'attitude' is not."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'An ability to switch between X and Y' — 'ability' conventionally takes a to-infinitive complement ('ability to do'), and 'between ... and ...' correlation is intact. No gerund requirement applies here."
+    }
+  ],
+  "note": "Clean single-answer item. (C) is the unambiguous error ('thereby creating' required); alternative parses (reduced relative, finite past) were actively tested and all fail because 'a disquieting atmosphere' needs 'created/creating' as its governing verb with an object. Distractors (A) and (B) provide realistic but resolvable pulls (that/which instinct; proximity agreement). Difficulty appropriate; no defensibility ambiguity found."
+}

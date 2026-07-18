@@ -1,0 +1,35 @@
+{
+  "pid": "P016",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "매력적 오답. 일화가 웃음(laughter)이고 둘째 문장이 'Laughter can turn any disadvantage into an advantage'라 첫인상 유혹이 강하다. 그러나 지문은 이런 사람들이 'not only look for some positive aspect... but actually go one step further'라고 명시 — 웃음/긍정적 측면 찾기는 출발점이지 종착점이 아니다. 한정어 'only'가 'one step further' 구조와 정면 충돌하므로 오답."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "'focus on what they can gain from their circumstance rather than on what they have lost'와 직접 모순. 잃은 것(objects taken by losses)의 회복에 집중하는 것은 지문이 명시적으로 배제한 태도. 또한 major loss의 'loss'를 물건 상실로 오독하게 유도하는 표면 어휘 미끼."
+    },
+    {
+      "label": "3",
+      "verdict": "correct",
+      "reason": "'mine'(캐내다)이 'actively'와 자연스럽게 결합하고, 'concealed benefits'는 'every cloud has a silver lining'(구름 속 숨은 은빛)과 'see opportunities where most of us fail to see them'의 정확한 패러프레이즈. 'adversities'는 misfortunes/hardships를 받는다. 결합(seam)도 'they actively mine their adversities for concealed benefits'로 문법적으로 완전하며, 지문 전체 논지(역경 속 숨은 이득을 능동적으로 발굴)와 일치."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "지문은 'achieve remarkable feats in spite of their hardships'라고 했을 뿐, 성취가 과거 고난을 지워준다(wipe out)는 기대는 어디에도 없다. 'expect'라는 수동적 기대는 'actively'와도 어울리지 않는 논리적 비약."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "매력적 오답. 'gather their resources', 'initial shock'의 표면 어휘를 그대로 재활용해 유혹하지만, 지문은 자원을 모은 뒤 문제를 극복하고 기회를 본다는 상승 진행 구조. 'merely to ride out the first wave of shock'는 그 진행을 충격 견디기 수준으로 축소해 'go one step further' 논지와 모순."
+    }
+  ],
+  "note": "빈칸 유형. 정답 근거 사슬이 명확: silver lining(숨은 이득) + actively + see opportunities → ③ mine adversities for concealed benefits. ①(웃음 일화 재활용+only)과 ⑤(어휘 반복 미끼+merely)가 설계된 매력적 오답으로, 각각 한정어(only/merely)가 지문의 'one step further' 진행 구조와 충돌해 배제된다. 복수 정답 여지 없음."
+}

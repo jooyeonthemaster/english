@@ -1,0 +1,77 @@
+{
+  "pid": "P003",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V5-minor-internal-field",
+      "severity": "minor",
+      "evidence": "markedExpressions (D)의 expression 필드가 렌더된 표시형 'is'가 아니라 원문형 'are'로 기록되어 있고 surroundingText 도 원문(are) 문장이다. errorExpression='is', correction='are' 와의 컨벤션이 혼재하나, 학생 노출 필드(렌더 지문·선택지 '(D) is'·해설)는 모두 동기화되어 있어 V5 실패로 보지 않는다."
+    },
+    {
+      "code": "V1-verified-by-diff",
+      "severity": "info",
+      "evidence": "원지문 대비 렌더 지문 전수 단어 diff 결과 변경점은 위치 71의 are→is 단 하나(의도된 (D) 오류 주입)뿐이며, 마커 (A)~(E)와 선택지 라벨·문자열이 정확히 일치한다. 접합 파손·중복·누락·오탈자 없음."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "자동사 originate 의 능동 과거시제 적합성 판단(수동태 'was originated' 오개념 유도)",
+      "temptingBecause": "첫 밑줄이고 뒤에 from + 사람 명사가 이어져 수동태가 필요한지 잠시 고민하게 만든다",
+      "decisiveFlaw": "originate 는 자동사로 능동 과거시제가 정확하다. 오류가 될 수 없다. 다만 함정 강도가 약해 준필러에 가깝다"
+    },
+    {
+      "label": "(B)",
+      "intent": "주격 관계대명사 that + 선행사 수일치(exchanges 복수 → are)",
+      "temptingBecause": "선행사 exchanges 앞에 긴 형용사 열거(subtle, stunning, often automatic, and nonverbal)가 있어 선행사 파악과 be동사 수일치를 확인해야 한다",
+      "decisiveFlaw": "선행사 exchanges 가 복수이므로 that are 는 정확하다. 정답 (D)와 같은 수일치 계열이라는 점은 포인트 중복이나, 쉬운 자리라 정답을 가리지는 않는다"
+    },
+    {
+      "label": "(C)",
+      "intent": "형용사/부사 품사 구별(동사구 수식 자리)",
+      "temptingBecause": "impact any oppressed group 뒤 자리를 목적격 보어(형용사 psychological) 자리로 오인할 수 있다",
+      "decisiveFlaw": "동사 impact 를 수식하는 부사 자리이므로 psychologically 가 정확하다"
+    },
+    {
+      "label": "(D)",
+      "intent": "긴 such as 삽입구를 사이에 둔 주어-동사 수일치 (정답)",
+      "temptingBecause": "동사 직전 명사가 단수 ethnicity(그 앞도 단수 work ethic, a person's intelligence)라 단수 is 가 맞는 것처럼 보인다",
+      "decisiveFlaw": "주어 핵은 복수 Racial microaggressions 이므로 is 는 오류이고 are 로 고치면 정확히 원문이 복원된다(최소대립쌍). 단, 뒤따르는 복수 보어 commonplace ... indignities 가 국소 단서로 작용해 주어 파싱 없이도 탐지될 수 있다"
+    },
+    {
+      "label": "(E)",
+      "intent": "사역동사 make 의 목적격 보어 형태(원형부정사)",
+      "temptingBecause": "to feel / feeling 이 와야 한다는 준사역·지각동사 혼동을 유도한다",
+      "decisiveFlaw": "make + 목적어 + 원형부정사 구조이므로 feel 이 정확하다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "keyPoints 가 5개 밑줄 중 (D)(C)(E) 3개만 다루고 (A)(B)는 누락되어 있다. 모순은 아니나 커버리지가 불완전하다.",
+      "recommendation": "keyPoints 에 (A) 자동사 능동 과거시제, (B) 관계대명사 수일치 항목을 추가"
+    },
+    {
+      "severity": "minor",
+      "evidence": "정답 해설이 '지문 속에서 수 일치 어법에 어긋납니다 → 이를 are로 고쳐야' 로 다소 반복적이나 문법 용어·구조 분석(주어 핵 복수, such as 삽입구, 삽입구 내 단수 명사 혼동)은 모두 실제 문장과 일치한다.",
+      "recommendation": "한 문장으로 압축 가능하나 필수 수정은 아님"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V 전부 통과. 유일 오류 (D) is→are 는 source-correct → displayed-wrong 최소대립쌍이며, 각 선지 독립 검증에서 (A)(B)(C)(E) 모두 문법적으로 정답 후보에서 배제됨을 확인했다(대안 해석 없음). 공예 합계 17, 최저 C3=2 → B. C3 를 2로 둔 이유: (A)(C)(E) 디코이가 중간 수준 학생도 빠르게 소거 가능하고, (D) 뒤 복수 보어 indignities 가 국소 단서를 제공해 삽입구 파싱이라는 설계 의도를 우회할 수 있어 경쟁 압력이 제한적이다. 요청 난이도 INTERMEDIATE 에는 전형적 수일치+삽입구 구성이 대체로 부합(C5=3). KILLER 아님 → killerConditionsMet=false. 작은 수정(키포인트 보강, (A)를 더 유혹적인 디코이로 교체)으로 출제 가능."
+}

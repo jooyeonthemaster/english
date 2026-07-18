@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "1990s 콜센터 오프쇼어링은 'While...' 종속절에서 대조 배경으로 한 번 언급될 뿐이다. 지문의 핵심은 그 이후 cloudwork가 바꾼 것(규모·granularity, 장소 결속 해체)이므로 범위가 지나치게 좁고 초점이 어긋난다."
+    },
+    {
+      "label": "2",
+      "verdict": "accept",
+      "reason": "주제문 'ties between service work and particular places can be disconnected'와 결론 'the employer leaves behind no material traces'를 정확히 패러프레이즈한다. 사무실·현지 규제·현지 세금 부재 등 모든 세부 사례가 이 '장소 기반 결속의 해체'를 뒷받침한다. 첫 문장 'less sticky'와도 일치."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "관점 오류. 지문은 프리랜서가 원격으로 일하는 '방법'이 아니라 고용주/플랫폼 측에서 노동이 장소에서 분리되는 구조 변화를 다룬다. 프리랜서는 예시(Nairobi transcriber)에서 객체로만 등장한다."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "매력적 오답 — 실제로 끌렸다. NY 사업체가 Nairobi/New Delhi 노동자와 연결되는 장면은 '글로벌 노동시장 연결'로 읽히기 때문이다. 그러나 지문의 논지 프레임은 정반대 방향, 즉 장소로부터의 '분리'(disconnected, no material traces, less sticky)다. '연결'은 배경 메커니즘 서술이지 논지가 아니며, 지문 고유의 핵심 주장(무장소성·현지 흔적 부재)을 담지 못하는 부분 진실 함정이다."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "지문 내용과 정면 모순. 'no local regulations are observed'라고 명시하므로 원격 고용 시 현지 규제를 지켜야 하는 이유를 다룬다는 진술은 반대 방향이다."
+    }
+  ],
+  "note": "단독 정답 2. 오답 유혹도는 4번이 가장 높으나(연결 vs 분리 프레임 반전 함정) 주제문·결론문 정합성 기준에서 2번이 명확히 우월하여 복수정답 소지는 없다. 5번은 명백한 모순, 1·3번은 범위/관점 오류로 즉시 배제 가능. 문항 자체는 깔끔하게 성립한다."
+}

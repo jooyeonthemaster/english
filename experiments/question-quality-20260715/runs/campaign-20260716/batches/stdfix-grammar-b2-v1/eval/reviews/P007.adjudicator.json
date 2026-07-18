@@ -1,0 +1,38 @@
+{
+  "pid": "P007",
+  "finalV2": true,
+  "winningAnswer": "(E)",
+  "reason": "선언된 정답 (E)가 유일한 어법 오류임을 처음부터 독립 재검증으로 확인. 등위접속사 and가 정형절(The Thames Tunnel officially opened on 25 March 1843)과 두 번째 접속항을 병렬하는 자리인데, 두 번째 접속항 'Brunel, despite being in ill health, attending the opening ceremony'에는 정형동사가 없어 비문이다. 구제 가능한 대안 해석 3종을 전수 검토했으나 모두 성립 불가: (1) attending을 Brunel 수식 분사로 보면 두 번째 접속항이 동사 없는 명사구가 되어 절-NP 등위로 병렬이 붕괴, (2) 절대구문(absolute construction)은 콤마로만 부가되며 and로 정형절과 등위될 수 없음, (3) 생략·도치로 정형동사를 복원할 선행 근거 없음. attended로 교정하면 원지문과 정확히 일치(최소대립쌍 확인). (A) be known for 수동 관용구, (B) 접속사+완전 정형절, (C) be+p.p. 수동태(by 행위자), (D) ways for-의미상주어 to부정사 후치수식은 모두 정문으로 대안 정답이 될 수 없다. 솔버1·솔버2 모두 (E) 단독 수렴이며 과잉 판정(성립하지 않는 대안 해석의 옹호)이나 누락된 대안 해석은 발견되지 않았다. 감사자 V2=true와도 일치. 분쟁 실체 없음 — 정답 유일성 최종 확정.",
+  "perDispute": [
+    {
+      "label": "(A)",
+      "claim": "known이 어법 오류일 가능성 (knowing 능동 대체)",
+      "verdict": "불성립 — 정문",
+      "evidence": "'is best known for + NP'는 be known for 수동 관용 구조. 주어 Brunel이 know의 대상이므로 be + 과거분사가 필수이며 best는 known을 수식하는 부사. 능동 knowing은 의미·통사 양면에서 불가. 정답 후보에서 배제."
+    },
+    {
+      "label": "(B)",
+      "claim": "When이 어법 오류일 가능성 (During 등 전치사 대체 미끼)",
+      "verdict": "불성립 — 정문",
+      "evidence": "When 뒤에 완전한 정형절 'the Napoleonic Wars were at their height'가 오고 주절 'he invented machines...'도 완전하므로 종속접속사 사용 조건 충족. 다음 문장의 During(전치사+명사구)과의 표면 대비는 미끼일 뿐, 절이 따르는 자리에는 When이 옳다. 정답 후보에서 배제."
+    },
+    {
+      "label": "(C)",
+      "claim": "divided가 어법 오류일 가능성 (dividing 능동 대체)",
+      "verdict": "불성립 — 정문",
+      "evidence": "'London was very much divided by the River Thames' — divide의 대상이 주어 London이므로 be+p.p. 수동태가 요구되고 by구가 행위자를 표시. very much는 분사/형용사 divided를 수식하는 표준 강조어. 능동 dividing이면 목적어가 필요해 비문. 동사적 수동/형용사적 분사 어느 분석으로도 형태는 정확. 정답 후보에서 배제."
+    },
+    {
+      "label": "(D)",
+      "claim": "to move가 어법 오류일 가능성 (moving 대체, for 기능 오독)",
+      "verdict": "불성립 — 정문",
+      "evidence": "'ways for people and goods to move across it'은 'way(s) for + 의미상 주어 + to부정사'의 표준 명사 후치수식 구조. for people and goods가 to move의 의미상 주어이고 move는 자동사로 across it(= the River Thames)과 결합. ways of moving 유혹은 있으나 for-NP가 있는 이상 to부정사가 표준. 정답 후보에서 배제."
+    },
+    {
+      "label": "(E)",
+      "claim": "attending이 정문으로 옹호될 가능성 (분사 수식·절대구문·생략 등 대안 해석)",
+      "verdict": "성립 불가 — 유일한 어법 오류로 확정",
+      "evidence": "삽입구 'despite being in ill health'를 걷어내면 'and Brunel attending the opening ceremony'로 정형동사 부재가 명확. 대안 해석 전수 검토: (1) Brunel 수식 분사 해석 시 두 번째 접속항이 동사 없는 NP가 되어 and의 절 병렬 붕괴, (2) 절대구문은 and로 정형절과 등위 불가(콤마 부가만 허용), (3) 도치·생략으로 정형동사를 복원할 선행사 없음. attended로 교정하면 원지문(full 파일 §원지문)과 정확히 일치하는 최소대립쌍. 솔버1·솔버2의 대안 해석 봉쇄 논증도 모두 타당하며 과잉 판정 없음."
+    }
+  ]
+}

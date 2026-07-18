@@ -1,0 +1,35 @@
+{
+  "pid": "P012",
+  "answer": "E",
+  "multipleDefensible": false,
+  "defensibleLabels": ["E"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "once 시간 부사절의 주어는 'the dust'(단수, of an emergency는 수식 전치사구). 현재완료 'has settled'는 단수 일치·시제 모두 적법. 관용 표현 'the dust settles(사태가 진정되다)'와도 자연스럽게 결합한다. 밑줄 (A)에는 결함 없음."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "주어 'The potential contribution of greater economic success'는 deny의 대상이므로 수동태 'cannot be denied'가 옳다. deny가 타동사이고 기여는 '부정되는' 쪽이므로 능동 'deny'로 바꿀 이유가 없다. 조동사 cannot 뒤 원형 be도 적법."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "'mechanisms involving direct public intervention'은 명사 mechanisms를 수식하는 현재분사구. mechanisms가 intervention을 '포함하는' 능동 관계이므로 involving이 맞고, 축약 관계절 'which involve...'로도 환원 가능. involved(과거분사)였다면 오히려 의미가 뒤집혀 어색했을 자리다."
+    },
+    {
+      "label": "D",
+      "verdict": "correct",
+      "reason": "매력적 오답. 'Botswana... or Kenya... or Zimbabwe' 나열과 긴 삽입 탓에 복수 취급 유혹이 있으나, 문장 주어의 핵은 단수 명사 'Rapid growth' 하나이고 'of the economy / of the agricultural sector / of food production'은 모두 growth에 걸리는 전치사구의 or-병렬일 뿐이다. 설령 주어 자체의 or-병렬로 보더라도 or 등위 주어는 근접 일치(가장 가까운 단수)와 맞아 단수 동사 explains가 여전히 적법. 실전에서 가장 오래 붙잡게 되는 선지였으나 어느 해석으로도 단수 동사가 성립한다."
+    },
+    {
+      "label": "E",
+      "verdict": "incorrect",
+      "reason": "주어의 핵은 복수 명사 'The real achievements'이고 'of these countries'는 수식 전치사구다. 따라서 동사는 lie여야 하는데 단수형 lies가 쓰였다. 도치·존재구문·불가산 재해석 등 lies를 정문으로 만들 대안 해석을 탐색했으나 성립하지 않는다. 'What ... lies in' 유형의 단수 관용 패턴(the achievement lies in)에 익숙한 눈이 그냥 지나치기 쉽게 설계된 전형적 수일치 함정. 어법상 틀린 부분은 (E)."
+    }
+  ],
+  "note": "정답 (E) 단일. (D)가 의도된 매력 오답으로 보이나 근접 일치까지 고려하면 어느 해석으로도 정문이어서 논리적 옹호 불가. 지문 중 밑줄 밖의 'a large part of the population derive'는 집합명사의 복수 취급(영국식)으로 통용되는 표기이며 밑줄 대상이 아니므로 판정에 영향 없음. 문항 성립에 결함 없음."
+}

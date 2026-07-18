@@ -1,0 +1,35 @@
+{
+  "pid": "P012",
+  "answer": "4",
+  "multipleDefensible": false,
+  "defensibleLabels": ["4"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "일치",
+      "reason": "지문 'After his father's trading business went bankrupt, his family moved to Mexico City... Its landscape influenced many of his works'와 정확히 대응. 이주 사유(사업 파산)와 풍경의 작품 반영 모두 명시됨."
+    },
+    {
+      "label": "2",
+      "verdict": "일치",
+      "reason": "지문 'graduated from Harvard University, where he was inspired by the Romantic poets'와 대응. '학업 완료(completed his studies)'는 graduated의 정당한 재진술이고, 낭만주의 영향도 명시됨."
+    },
+    {
+      "label": "3",
+      "verdict": "일치",
+      "reason": "지문 'left for Paris... to live out his romanticized notion of bohemian life and made friendships with many artists'와 대응. 동기(보헤미안 삶의 이상)와 예술가 교유 모두 일치."
+    },
+    {
+      "label": "4",
+      "verdict": "불일치 (정답)",
+      "reason": "선지는 시가 '자원 입대 이전(prior to his voluntary enlistment)'에 쓰였다고 하나, 지문은 1914년 입대 서술 뒤에 'During the war, he wrote a poem, I Have a Rendezvous with Death'라고 명시 — 집필 시점은 입대 이후 전쟁 중이다. 시간 순서를 정반대로 뒤집은 명백한 불일치."
+    },
+    {
+      "label": "5",
+      "verdict": "일치",
+      "reason": "지문 'Seeger died during the Battle of the Somme in 1916. Following his death, the French Military awarded him the Croix de Guerre, the highest French military honor'와 대응. 전사 사실과 사후 수훈 모두 일치. 실세계에서는 Croix de Guerre가 프랑스 최고 훈장이 아니지만(레지옹 도뇌르가 최고), 내용일치 문항은 지문 내 진술 기준으로 판정하므로 선지-지문 간에는 일치."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: ④의 'prior to his voluntary enlistment'는 재진술이 매끄러워 스키밍 시 통과시킬 수 있는 시간순서 왜곡형 정답 — 'During the war'라는 명시적 장거리 단서로 확정. ⑤는 실세계 지식(Croix de Guerre ≠ 최고 훈장)을 아는 수험생에게 순간적 유혹이 되지만, 발문이 '글의 내용과' 일치 여부를 묻는 이상 지문 진술과 일치하므로 정답이 될 수 없다. 다만 지문 자체의 사실 오류(Croix de Guerre를 'the highest French military honor'로 서술)는 품질 관점에서 지적할 만하다. 정답은 ④ 단일 확정, 복수 옹호 가능성 없음."
+}

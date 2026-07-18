@@ -1,0 +1,92 @@
+{
+  "pid": "P002",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-TERMINOLOGY-MISANALYSIS",
+      "severity": "major",
+      "evidence": "오답 해설 (D): \"'to switch'는 make it easier for + 목적어 뒤에 오는 to부정사 보어 구조\" — 실제 구조는 make + it(가목적어) + easier(목적격보어) + for them(의미상 주어) + to switch(진목적어·외치된 진짜 목적어)이다. 이 구문에서 보어는 easier이고 to switch는 진목적어이므로, to부정사를 '보어'로 부르는 것은 밑줄 표현의 문법 기능을 오호칭한 용어 오류다(명사절 that을 관계대명사로 부르는 류). 정오 판단 자체(D는 올바름)는 맞지만 RUBRIC V4의 '용어 오류가 없다' 조건을 위반한다."
+    },
+    {
+      "code": "V4-MINOR-SUBJECT-SIMPLIFICATION",
+      "severity": "minor",
+      "evidence": "오답 해설 (C): \"'gives'의 주어 핵은 단수 명사 ability\" — 엄밀히 gives의 주어는 관계대명사 that이고 ability는 그 선행사다. 교육 현장 통용 표현이라 단독으로는 실패 사유가 아니며 keyPoints는 '관계절 선행사 ability'로 정확히 기술한다."
+    },
+    {
+      "code": "V1-NOTE-SOURCE-FORM-IN-STRUCT",
+      "severity": "minor",
+      "evidence": "markedExpressions (E)의 expression(\"leading\")과 surroundingText는 렌더 형태(leads)가 아닌 원문 형태를 담고 있다. (A)~(D)는 원문=렌더라 판별 불가하므로 '원문 기준 기록' 컨벤션으로 해석 가능하고, 학생 노출 선택지는 정확히 'leads'이므로 실패로 보지 않는다. 다만 렌더 파이프라인이 expression 필드를 재사용하면 desync 위험이 있어 기록한다."
+    },
+    {
+      "code": "KILLER-SPEC-MISSING-WHY-TEMPTING",
+      "severity": "minor",
+      "evidence": "RUBRIC §C: 5개 밑줄 각각에 point·why tempting·why correct/incorrect가 있어야 하나, 오답 해설 4건은 '왜 옳은가'만 있고 '왜 헷갈리는가'가 없다. why tempting은 정답 (E) 해설에만 존재한다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "태 판단 — 과거분사(수동) vs 현재분사(능동) exposed/exposing",
+      "temptingBecause": "expose가 'be exposed to' 관용 패턴이라 to를 보고 능동/수동을 재고하게 만들 수 있다",
+      "decisiveFlaw": "children은 노출되는 대상이므로 수동 exposed가 명백히 옳다. 판단이 즉각적이라 디코이 강도는 매우 낮다(사실상 즉시 소거)."
+    },
+    {
+      "label": "(B)",
+      "intent": "계속적 용법 관계대명사 which — that/what 대체 불가 자리 판별",
+      "temptingBecause": "콤마 뒤 관계사 자리에서 선행사(code-switching)를 찾아야 하고, that로 바꿔 쓸 수 없는 비제한 용법 판단을 요구한다",
+      "decisiveFlaw": "비제한 관계절에서 which는 정확히 옳다. 기초 포인트라 훈련된 학생은 즉시 소거한다."
+    },
+    {
+      "label": "(C)",
+      "intent": "관계절 내 동사 수일치 — 선행사(ability) 식별",
+      "temptingBecause": "인접한 복수 명사(children, advantages, peers)가 시야에 들어와 선행사를 오인하면 give로 고치고 싶어진다. 다섯 디코이 중 가장 실질적인 판단을 요구한다",
+      "decisiveFlaw": "that의 선행사는 단수 an extra ability이므로 gives가 옳다."
+    },
+    {
+      "label": "(D)",
+      "intent": "가목적어-진목적어 구문에서 to부정사 형태 판단 (make it easier for O to-v)",
+      "temptingBecause": "for them 뒤 동사 형태로 switching 등을 떠올릴 수 있고, 문장 앞의 동명사 shifting과의 병렬 착시를 유도한다",
+      "decisiveFlaw": "make it + 형용사 + for O + to-v는 고정 패턴이므로 to switch가 옳다."
+    },
+    {
+      "label": "(E)",
+      "intent": "정답 — 정동사/준동사 구별: 콤마 뒤 결과 분사구문 자리에 정동사 삽입 (leading → leads)",
+      "temptingBecause": "콤마 뒤를 새로운 절의 시작으로 착각하면 leads를 정동사로 수용하게 된다; 주어로 착각할 만한 shifting이 앞에 있다",
+      "decisiveFlaw": "접속사도 주어도 없이 정동사 leads가 올 수 없다. leading으로 교정하면 정확히 원문이 복원되는 최소대립쌍이다. 다만 ', + 정동사' 패턴은 고도로 훈련된 유형이라 상위권 학생에게는 빠르게 드러난다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "D-COMPLEMENT-MISLABEL",
+      "severity": "major",
+      "evidence": "(D) 해설이 진목적어 to switch를 'to부정사 보어 구조'로 오호칭 — V4 실패의 근거."
+    },
+    {
+      "code": "C-SUBJECT-HEAD-LOOSE",
+      "severity": "minor",
+      "evidence": "(C) 해설 '주어 핵은 단수 명사 ability' — 주어는 관계대명사 that, ability는 선행사. 통용 수준의 단순화."
+    },
+    {
+      "code": "MISSING-WHY-TEMPTING",
+      "severity": "minor",
+      "evidence": "오답 4건 모두 '왜 옳은가'만 설명하고 '왜 매력적인가'가 없다(§C 요건 및 C2/C6 감점 요인)."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1/V2/V3/V5는 견고하다: 변형은 leading→leads 단 한 곳의 최소대립쌍이고, 5개 밑줄 독립 검증에서 정답은 (E)로 유일하며, 교정 시 원문이 정확히 복원된다. 그러나 (D) 오답 해설이 가목적어-진목적어 구문의 진목적어를 '보어'로 오호칭하여 V4(용어 오류 없음)를 실패한다 — 치명 실패는 공예 점수로 상쇄되지 않으므로 F. 또한 요청 난이도 KILLER 대비 실제 난이도가 크게 미달한다(C5=1): 지문 자체가 매우 평이하고, ', + 정동사' 오류는 고도로 훈련된 정형 패턴이라 구조 독해 없이도 패턴 매칭으로 적발되며, (A)(B)는 즉시 소거 가능한 약한 디코이다. KILLER 추가 조건 중 최소대립쌍·포인트 상이성은 충족하나 밑줄별 why-tempting 부재와 정답의 즉시 노출성으로 killerConditionsMet=false. 수리 방향: (D) 해설의 '보어'를 '진목적어'로 교정하면 V4는 회복되지만, KILLER 등급으로 출하하려면 정답 포인트를 더 깊은 구조 판단(예: 삽입구로 거리를 벌린 수일치, 도치, 병렬 심층 구조)으로 재설계하고 (A)(B)급 디코이를 실질 판단 포인트로 교체해야 한다."
+}

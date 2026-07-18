@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "correct",
+      "reason": "밑줄 'economics cannot, in a vacuum, identify (the goal)'의 함축을 정확히 환언. 마지막 문장이 'identifying a moral goal ... must involve ethics and moral analysis'라고 명시하므로 'in a vacuum' = 'without moral and ethical frameworks', 'the goal' = 'ethical targets(moral goal)'로 1:1 대응한다. 경제학은 수단 평가는 가능하지만 목표 설정은 윤리 없이는 불가하다는 글의 핵심 대비와 일치."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "지문의 양보절 'Economics can go a long way towards helping a legislature determine whether or not a particular tax law will help achieve a particular goal'과 정면 모순. 경제학이 재정적 결과 계산에 무능하다는 주장이 아니라, 오히려 결과/수단 분석에는 유능하다고 인정한다. 'cannot'만 보고 성급히 고르면 끌리는 매력적 오답이지만 대비 구조를 확인하면 탈락."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "'history'는 첫 문장에서 입법자들이 오히려 주의를 기울이는 대상으로만 언급되며, 세율 조정이나 역사적 상황 변화 대응은 지문 어디에도 없다. 유인력 낮음."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "'too controversial'은 도덕적 질문이 입법 논쟁에서 배제되는 방식을 묘사한 표현일 뿐, 경제학이 계급 간 정치적 논쟁을 해결하지 못한다는 내용은 없다. 밑줄의 초점(목표 식별 불가)과 무관."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "지문에 'distributive justice'가 등장해 표면적 유인력이 가장 강한 오답. 그러나 밑줄은 능력 결여에 대한 기술적 진술(cannot identify)이지 규범적 금지(should not be used to justify)가 아니며, 지문은 경제학이 불평등 분배를 정당화한다고 비난한 적이 없다. 함축 의미 문항에서 서술 양상(기술 vs 규범)이 어긋나므로 탈락."
+    }
+  ],
+  "note": "최상위권 렌즈 실전 풀이: 대비 구조(can help determine whether ... BUT cannot identify the goal)와 마지막 문장의 명시적 해설(identifying a moral goal ... must involve ethics)이 ①로 강하게 수렴한다. 매력적 오답은 ⑤(distributive justice 어휘 재활용)와 ②(cannot 오독 유도)이나 둘 다 정밀 독해에서 붕괴. 다만 ①이 마지막 문장의 거의 직역 수준 환언이라 변별력은 중하 수준 — 정답 시비 소지는 없음. 단일 정답 확정."
+}

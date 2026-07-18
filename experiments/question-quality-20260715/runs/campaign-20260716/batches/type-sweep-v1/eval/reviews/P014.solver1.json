@@ -1,0 +1,35 @@
+{
+  "pid": "P014",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong-but-attractive",
+      "reason": "빨간 셔츠·노란 바지는 Garcia가 앞서 'Aren't these cool?'이라 말한 대상이라 동일 대명사 재등장으로 착각을 유도하는 미끼. 그러나 밑줄 친 these는 Jeff의 발화이고, Jeff는 이 옷을 'a bit too colorful'이라 거부한 뒤 'Instead' 다른 옷을 골랐으므로 자신이 거부한 옷을 '동생에게 잘 어울린다'고 점원에게 물을 수 없다. 담화 단절(Instead)로 성립 불가."
+    },
+    {
+      "label": "2",
+      "verdict": "correct",
+      "reason": "밑줄 직전 문장이 'Instead, Jeff picked out a white shirt and black jeans.'로 가장 가까운 복수 선행사이며, 후행 문맥이 결정적으로 확증한다: 점원이 'Jeff's choice'에 동의했고 Garcia가 'the recommended clothes'를 구매했다. 발화자(Jeff)·근접성·후행 조응 모두 일치."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "Frontcountry Mall은 단수 장소 명사로 복수 대명사 these와 수 일치가 안 되고, 'would look great on my brother'(옷이 어울린다)라는 술어와 의미 결합이 불가능하다."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "사람(도착한 학생들)은 'look great on my brother'의 주어가 될 수 없어 의미상 즉시 배제. 선지 문면 자체도 '전문 상에 도착한'으로 한국어가 깨져 있어 지문의 어떤 대상인지조차 불명확하다."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "자매대학 학생 무리 역시 옷이 아니므로 술어와 결합 불가, 밑줄 발화 시점의 담화(옷 가게 대화)와 무관하다. '짝 대학 자매교'라는 표현도 비문."
+    }
+  ],
+  "note": "정답 2로 유일하게 좁혀지는 매우 쉬운 문항. 구조적 결함: (a) 선지 한국어 손상 — 1번 '알레무니 무늬'(원문 patterned의 오염 추정), 4번 '전문 상에 도착한 학생들', 5번 '짝 대학 자매교 학생 무리'는 깨진 표현으로 실전 출제 불가 수준. (b) 3~5번은 복수 대명사·술어 결합 자체가 불가능한 무기능 선지라 실질 2지선다가 되어 변별력이 없다. (c) 지문은 심경 변화·장문 서사형인데 발문이 지칭 추론이라 지문 난도 대비 문항 난도가 극히 낮다. 정답 자체는 논쟁 여지 없음."
+}

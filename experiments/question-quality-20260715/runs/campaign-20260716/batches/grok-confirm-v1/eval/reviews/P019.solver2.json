@@ -1,0 +1,35 @@
+{
+  "pid": "P019",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "Seam grammatical ('must prioritize X over Y'), but logically inverted: the passage's rhetorical question and the goal 'to become a more peaceful person' clearly valorize flexibility over rigid schedules. Inserting this makes the sentence contradict the entire argument."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "Seam grammatical, but the four-year-old is an illustrative example; the passage explicitly generalizes past it ('The more general question is...'). 'Only... instead of work' is an exclusive-universal overreach not licensed by the text."
+    },
+    {
+      "label": "3",
+      "verdict": "accept",
+      "reason": "'Must value going with the flow over sticking to your plans' directly answers the generalized either/or question ('keeping my plans, or learning to go with the flow?') in the direction required for peace of mind. The hedge 'most of the time' coheres with 'a certain percentage of plans will change' (not all). Grammatical seam clean (value X over Y; gerund parallelism intact)."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "Quantifier mismatch: passage says 'a certain percentage,' not 'nearly all.' Decisive discourse cue: the next sentence begins 'I have ALSO found it helpful to expect that...', marking the expectation tip as additional content distinct from the blank; putting it in the blank renders 'also' incoherent."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "Reinstates the opening excuse ('it is natural to be frustrated') that the passage sets out to undermine ('That depends, however, on what your priorities are'). Treating every changed plan as proof of natural frustration is the opposite of becoming a more peaceful person."
+    }
+  ],
+  "note": "Blind solve, grammarian/logician lens. Single clean key (3). Distractors are formally excludable: 1 and 5 by direct contradiction, 2 by example-to-universal overreach, 4 by quantifier mismatch plus the 'also' cohesion cue. Source appears to be Richard Carlson-style self-help prose; blank placement and options are well-formed with no alternative construals rescuing any distractor."
+}

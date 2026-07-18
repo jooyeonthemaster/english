@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "a tendency ... to seek: 명사 tendency의 보충어로 to부정사가 표준 결합. 삽입절 'once the dust of an emergency has settled down'이 tendency와 to seek을 멀리 떨어뜨린 장거리 함정이지만 결합 자체는 정문. seeking으로 바꿀 이유 없음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "The potential contribution ... cannot be denied: 주어 contribution이 deny의 대상이므로 수동태 적합. 삽입 조건절 'if it involves vulnerable groups'는 판정과 무관."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "countries where a large part of the population derive their livelihood from uncertain sources: where 뒤에 주어+타동사+목적어+부사구를 갖춘 완전한 절이 오므로 관계부사 where 적격(= in which). 'population derive'의 복수 호응은 집합명사의 영국식 용법이며 밑줄 대상도 아님. 유혹 포인트였으나 기각."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "entitlement protection mechanisms involving direct public intervention: mechanisms를 수식하는 능동 현재분사(= which involve direct public intervention). mechanisms가 intervention을 포함하는 능동 관계이므로 involving 적절."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "Rapid growth of the economy in Botswana, or of the agricultural sector in Kenya, or of food production in Zimbabwe, explaining ...: 문장에 정동사가 전혀 없다. 'Rapid growth'(or-병렬의 핵은 단수 growth)가 주어이므로 정동사 explains가 필요. explaining이면 술어 없는 조각문이 되며, 분사구문으로 옹호하려 해도 결합할 주절이 존재하지 않아 성립 불가. 어법상 틀림."
+    }
+  ],
+  "note": "정답 (E) 단독. 대안 해석 탐색: (E)를 분사구문·축약 관계절로 읽어 정문화할 수 있는지 검토했으나 해당 문장에 다른 정동사가 없어 어떤 해석으로도 완전한 문장이 되지 않음. (A)는 삽입절로 인한 거리 함정, (C)는 집합명사 복수 호응(derive)이 시선을 끄는 매력적 미끼였으나 둘 다 정문으로 확정. 문항 성립에 결함 없음."
+}

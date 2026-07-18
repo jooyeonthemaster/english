@@ -1,0 +1,64 @@
+{
+  "pid": "P002",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-terminology",
+      "severity": "minor",
+      "evidence": "keyPoints (A) '추상명사를 수식하는 동격의 that 분석' — 동격 that절은 선행 명사를 관계절처럼 '수식(modify)'하는 것이 아니라 그 내용을 보충(appositive)하는 구조다. 오답 해설 본문은 '동격절을 이끌고'로 정확히 서술하고 있어 실질 오분석은 아니나 keyPoints 표현이 다소 느슨하다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 4,
+    "C3": 3,
+    "C4": 4,
+    "C5": 2,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "동격(appositive) that vs 관계대명사 판별 — 추상명사 The fact 뒤 that의 정체를 묻는다.",
+      "temptingBecause": "that를 관계대명사로 읽으면 뒤 절에서 빠진 요소를 찾으려다 불완전절로 오독해 오류 후보로 삼을 수 있다.",
+      "decisiveFlaw": "뒤 절 'other species depend on ... or are greatly affected by the keystone species'는 목적어(the keystone species)가 depend on/affected by에 공유되는 완전한 절이므로, that는 동격의 접속사로 정문이다. 정답이 될 수 없다."
+    },
+    {
+      "label": "(B)",
+      "intent": "태(수동) 적절성과 단수 주어 수일치.",
+      "temptingBecause": "능동 'reveals'로 바꿔야 한다거나 주어를 복수로 착각하면 오류로 몰 수 있다.",
+      "decisiveFlaw": "주어 'The fact(that...)'는 제거 시 '드러나는' 대상이므로 수동태가 정당하고, 단수 주어에 is가 일치한다. 정문이다."
+    },
+    {
+      "label": "(C)",
+      "intent": "양보 접속사 Although vs 전치사(Despite)/부사(However) 혼동.",
+      "temptingBecause": "Despite/However와 기능을 혼동하면 절 앞 자리에 접속사가 와도 부적절하다고 오판할 수 있다.",
+      "decisiveFlaw": "뒤에 주어(figs)+동사(produce)를 갖춘 완전한 절이 이어지므로 절을 이끄는 양보 접속사 Although가 정당하다. 정문이다."
+    },
+    {
+      "label": "(D)",
+      "intent": "2형식 연결동사 become의 주격보어 자리 — 형용사 vs 부사 판정.",
+      "temptingBecause": "'중요하게 된다'는 우리말 해석상 부사 importantly가 자연스러워 보이고, -ly 부사가 서술어 뒤에 놓여 부사어처럼 오독될 수 있다.",
+      "decisiveFlaw": "become은 주격보어로 형용사를 요구하는 연결동사이며 보어 자리에 부사(importantly)는 올 수 없다. important로 교정해야 하고 그러면 원지문과 정확히 일치한다. 실제 오류이자 선언된 정답 (D)."
+    },
+    {
+      "label": "(E)",
+      "intent": "동명사구 주어의 단수 수일치.",
+      "temptingBecause": "근접한 복수명사 ecosystems/fig trees 때문에 복수동사 are로 착각하기 쉽다.",
+      "decisiveFlaw": "문장의 주어는 동명사구 'Protecting fig trees ... ecosystems'로 단수 취급되어 단수 동사 is가 정당하다. 정문이다."
+    }
+  ],
+  "explanationIssues": [
+    "keyPoints (A)의 '수식하는' 표현이 동격절(내용 보충)을 관계절처럼 오도할 소지가 있는 느슨한 용어 (minor).",
+    "정답 (D) 해설은 정확하나 다소 장황하다('우리말 해석의 함정에 빠져 문장 형식 규칙을 놓치지 않아야 합니다'). 사실성 오류는 없음."
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "GRAMMAR_ERROR, 요청 난이도 KILLER. V1~V5 모두 통과: 렌더 지문은 (D) important→importantly 최소대립 변형 외 손상 없고 라벨·마커·선지 정합, 오류는 (D) 단일이며 나머지 4개 밑줄은 독립 분석상 모두 정문이라 정답 유일성 성립, 완성문(important) 자연스럽고 오답 해설 5종 모두 실제 통사구조와 일치, 정답/선지/해설/keyPoints/markedExpressions 동기화됨. 공예: 오답들이 서로 다른 개념(동격 that / 수동·수일치 / 양보접속사 / 동명사주어 수일치)을 겨냥해 C2 밀도가 높고(4), 단서 누출 없음(C4=4), 다수 오답이 국소적으로 매력적(C3=3). 다만 정답 포인트(become+형용사, 2형식 보어)는 한국 수능 어법에서 가장 많이 훈련되는 기초·중급 포인트이고 -ly 형태가 시각적으로 노출되어, KILLER가 요구하는 '구조를 읽어야 하며 즉시 드러나지 않는다' 기준에는 미달한다 → C5=2, killerConditionsMet=false. §C의 최소대립·명확한 문법판단·5밑줄 설명·동일 point 쉬운 디코이 부재 조건은 충족하나 정답 자체의 즉시 노출성 때문에 보수적으로 KILLER 미충족 판정. 등급 B: 전 V 통과, C 최저 2, 합계 19(≥17), 난이도 재라벨(HARD) 또는 정답 포인트 심화라는 소규모 수정으로 출제 가능."
+}

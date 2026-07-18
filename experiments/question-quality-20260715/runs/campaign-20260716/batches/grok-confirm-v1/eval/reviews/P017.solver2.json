@@ -1,0 +1,35 @@
+{
+  "pid": "P017",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "Grammatical seam: 'That means + [finite clause]' is well-formed. Logic: matches the actual US traffic-law meaning of a 'No Standing' sign — it regulates vehicles (no waiting/parking, but brief stops to pick up passengers allowed), not pedestrians. This resolves the humor: Carol, a pedestrian, was never the sign's target, which is consistent with the friend's 'Of course you can stand there' and with the friend picking Carol up at that very corner."
+    },
+    {
+      "label": "2",
+      "verdict": "incorrect",
+      "reason": "Including 'walkers' (pedestrians) in the prohibition directly contradicts the friend's explicit assertion 'Of course you can stand there.' The phrase 'at that time' introduces a temporal restriction with no basis in the sign. Logically inconsistent with the passage."
+    },
+    {
+      "label": "3",
+      "verdict": "incorrect",
+      "reason": "'No Standing' is a prohibition on vehicle waiting, not an exclusive reservation of the corner. 'Reserved solely ... and no other use' would again exclude Carol from standing there, contradicting the friend's statement, and 'customers' is an unsupported specification."
+    },
+    {
+      "label": "4",
+      "verdict": "incorrect",
+      "reason": "Directly contradicts the prohibitive force of a 'No ___' sign: 'can freely park or wait' is precisely what the sign forbids. Additionally, goods-loading is an allowance associated with 'No Parking' zones, not 'No Standing' zones."
+    },
+    {
+      "label": "5",
+      "verdict": "incorrect",
+      "reason": "Rests on an absurd pun ('waiters' as restaurant staff / people waiting); the sign says nothing about leaning on poles. Fails factually and logically, and does not explain the friend's laughter as a vehicle-vs-pedestrian misunderstanding."
+    }
+  ],
+  "note": "Clean item under the grammarian/logician lens. The blank demands the legal meaning of 'No Standing' constrained by two textual anchors: the friend's 'Of course you can stand there' (sign targets vehicles, not pedestrians) and the pickup scenario itself (brief passenger stops must be permitted). Option 1 uniquely satisfies both; each distractor formally contradicts at least one anchor or the sign's prohibitive semantics. Minor quibble: option 1's 'may not remain parked' slightly understates that 'No Standing' also bars waiting while attended, but 'though brief stops to collect people are allowed' captures the distinctive allowance, so the option remains uniquely correct."
+}

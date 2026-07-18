@@ -1,0 +1,35 @@
+{
+  "pid": "P016",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "일치",
+      "reason": "지문 'It's easy to connect with someone and then let the relationship get stuck due to a lack of follow-up'와 직접 대응. 'get stuck' ↔ 'become inactive', 'lack of follow-up' ↔ 'fail to follow up after first connecting'의 충실한 패러프레이즈로, 명제적 함의가 성립한다."
+    },
+    {
+      "label": "2",
+      "verdict": "불일치 (정답)",
+      "reason": "지문은 'This doesn't mean constantly reaching out with requests or updates but rather maintaining a friendly and consistent line of communication'으로 해당 행위를 명시적으로 부정한다. 선지는 'should mean repeatedly sending others requests or frequent personal updates'라는 양상(should) 긍정 명제로, 지문의 부정문(¬P)에 대해 P를 주장하는 형식적 모순. 'constantly' ↔ 'repeatedly/frequent', 'requests or updates' ↔ 'requests or personal updates'로 외연도 일치하여 다른 해석으로 구제될 여지가 없다."
+    },
+    {
+      "label": "3",
+      "verdict": "일치",
+      "reason": "지문 'A simple message to check in or share something of value can go a long way in reinforcing your relationship'와 대응. 'brief check-in message' ↔ 'simple message to check in', 'something useful' ↔ 'something of value', 'strengthen' ↔ 'reinforcing'. 함의 성립."
+    },
+    {
+      "label": "4",
+      "verdict": "일치",
+      "reason": "지문 'if you come across an article ... share it with them ... This shows that you're thinking of them and are invested in maintaining the relationship'과 대응. 'show continued care for the relationship' ↔ 'invested in maintaining the relationship'. 함의 성립."
+    },
+    {
+      "label": "5",
+      "verdict": "일치",
+      "reason": "지문 첫 문장 'One of the most important aspects of sustaining long-term relationships is communication'과 대응. 'key factor in keeping lasting relationships going' ↔ 'most important aspects of sustaining long-term relationships'. 함의 성립."
+    }
+  ],
+  "note": "내용 일치 유형. ①③④⑤는 각각 지문 문장의 근접 패러프레이즈로 전부 함의가 성립하고, ②만이 지문의 명시적 부정문('This doesn't mean constantly reaching out with requests or updates')을 긍정으로 뒤집은 직접 모순이다. 선지 간 간섭이나 이중해석 여지 없음. 단, ②가 지문 문장의 표면형을 거의 그대로 뒤집은 것이라 변별 난도는 매우 낮다는 품질상 소견은 있으나 정답 유일성에는 문제 없음."
+}

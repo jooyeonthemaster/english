@@ -1,0 +1,35 @@
+{
+  "pid": "P005",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "문법: 'asked Jeff to assist him in choosing good clothing'은 ask+NP+to-inf, assist X in V-ing 결합 모두 정문. 논리: 빈칸 직전 'Garcia was hoping to find the perfect clothing for the performance. That was why...'에서 인과 지시사 That이 옷 찾기 동기를 지시하므로, 그 결과인 부탁 내용은 옷 고르기 조력이어야 함. 이후 담화에서 Jeff가 옷을 평가('a bit too colorful')하고 흰 셔츠·검은 진을 골라 점원 동의까지 구하는 행위가 조력 요청을 후행적으로 확증. 유일하게 성립."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "문법상 정문이나 논리 파탄: Jeff는 밴드 구성원이 아니며(밴드 동료는 Tom), '완벽한 옷을 찾고 싶었다'는 원인절에서 '공연 전체 준비 부탁'이라는 결과가 도출되지 않음. 인과 연결어 That was why와 모순."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "문법상 정문이나 시제·인과 불성립: 요청은 과거완료(had asked)로 만남 이전에 이루어졌는데 교통 정체는 Jeff 도착 시점에야 드러난 사후 정보. 옷 찾기 동기가 '교통 정체 후 도착을 서두르라'는 요청의 원인이 될 수 없음. 지문의 사과 대사에서 표면 어휘(traffic)만 차용한 미끼."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "문법상 정문이나 시간 역행 오류: 트럼펫 실수는 쇼핑 이후 리허설에서 발생. 과거완료 시점의 요청이 미래 사건을 지시할 수 없고, 비판 요청은 옷 찾기 동기와 무관하며 서사 전체(형의 칭찬으로 종결)와도 어긋남."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "문법상 정문이나 행위자 불일치: 리허설 전 격려를 수행한 인물은 밴드 동료 Tom('Don't worry, I'll be right behind you')이지 Jeff가 아님. 또한 격려 요청은 '완벽한 옷을 찾고 싶었다'는 원인절과 인과적으로 연결되지 않음."
+    }
+  ],
+  "note": "다섯 선지 모두 ask+NP+to-inf의 원형부정사 보어로서 통사적 결합(seam)은 무결하므로 판별자는 순수 논리·담화 정합성. 인과 대용어 That이 옷 찾기 동기에 강결합되어 있고 후행 담화(Jeff의 옷 선택·점원 동의)가 1번만 확증. 축약관계절·분사구문 등 대안 해석으로 타 선지가 구제될 여지 없음. 복수정답 소지 없는 깔끔한 문항."
+}

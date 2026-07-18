@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "Seam: 'must value adaptability rather than inflexibility most of the time' is fully grammatical ('rather than' coordinates parallel NPs). Logic: it restates the passage's preferred horn ('learning to go with the flow') against the rejected horn ('rigid work schedule / keeping my plans'), and is compatible with the hedge 'most of the time' and with the following advice to expect a certain percentage of plans to change."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "Grammatical but logically over-strong: universal 'all rigid schedules' and 'complete freedom' contradict the hedge 'most of the time' and the passage's moderate stance — the author still keeps plans and merely expects 'a certain percentage' of them to change. Abandoning all schedules is never advocated."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "Grammatical but logically inverted: 'guard careful plans against unwanted changes' endorses the 'keeping my plans / rigid schedule' horn that the passage explicitly rejects in favor of going with the flow. Anti-thesis distractor."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "Seam defect: inserting it yields 'revise work timelines more often than not most of the time' — two stacked frequency adverbials ('more often than not' + 'most of the time'), a redundant/anomalous string. Logically off-point: the passage prescribes an attitude of acceptance toward inevitable change, not a policy of actively revising timelines."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Seam defect: 'always ... most of the time' is an internal quantifier contradiction. Logically overgeneralizes the illustrative four-year-old example into a family-vs-work rule, whereas the passage's stated general question is 'keeping my plans vs. going with the flow'. Adverb placement 'put family needs always above' is also awkward."
+    }
+  ],
+  "note": "Blind solve, grammarian/logician lens. Only option 1 fits both the grammatical seam (compatible with trailing 'most of the time') and the passage's thesis (flexibility over rigidity for peace of mind). Options 4 and 5 are additionally eliminated on formal seam grounds (adverbial redundancy / quantifier clash), 2 on extremity, 3 on polarity reversal. No alternative parse (reduced relative, participial, inversion, etc.) rescues any distractor. Single defensible answer."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) having",
+      "verdict": "correct",
+      "reason": "warn that 뒤 명사절의 주어 자리에 온 동명사구 'having more self-driving cars'가 단수 취급되어 동사 means와 수 일치하며, 보어 자리의 'means having...'과도 자연스럽게 대응한다. 실전에서 'that + 동명사 주어' 구조가 낯설어 잠깐 눈이 가지만(having→to have로 바꿔야 하나 유혹), 동명사 주어는 완전한 정문이므로 유혹을 기각했다."
+    },
+    {
+      "label": "(B) are",
+      "verdict": "correct",
+      "reason": "proved의 목적어인 that절 주어가 복수 명사 cars('smart' cars)이므로 복수 동사 are가 옳다. 'even today's'라는 삽입 수식이 주어를 가리는 전형적 장치지만 핵 명사는 cars로 명확하다."
+    },
+    {
+      "label": "(C) adjust",
+      "verdict": "correct",
+      "reason": "were able to 뒤 병렬: to change ..., (to) adjust ..., and (to) switch ... on. 병렬 시작점이 to 뒤의 원형 change이므로 원형 adjust가 정확히 평행하다. 가장 강한 매력적 오답 — 콤마 나열 속에서 adjusting(분사)이어야 할 것 같은 착시가 있고, 앞의 volume(명사)에 붙는 수식처럼 잘못 읽으면 틀려 보인다. 그러나 and switch가 원형으로 이어지는 것을 확인하면 3항 병렬 A, B, and C 구조가 확정되어 정문이다."
+    },
+    {
+      "label": "(D) as",
+      "verdict": "correct",
+      "reason": "'~하는 동안'의 시간 접속사 as + 완전한 절(it was driving down the highway)로 옳다. 두 번째 유혹 포인트 — '차가 주행되는 것이니 it was being driven이어야 하지 않나(driving→being driven?)'라는 태 의심이 들지만, 밑줄은 as 자체이며 as의 접속사 용법은 흠이 없다. 게다가 the car was driving은 자동사적(중간태) 용법으로도, 자율주행차 맥락으로도 성립하므로 driving 부분조차 정문이다."
+    },
+    {
+      "label": "(E) sending",
+      "verdict": "wrong",
+      "reason": "등위접속사 but가 연결하는 두 번째 절 'it ___ a clear message ...'에 정형동사가 없다. it sending은 주어+분사로 절을 이루지 못하므로 sent(과거) 또는 was sending이어야 한다. 분사구문/독립분사구문으로 구제하려 해도 but라는 등위접속사가 절과 절을 연결하는 자리이므로 비정형 분사구는 올 수 없다. 유일하게 옹호 불가능한 밑줄."
+    }
+  ],
+  "note": "실전 풀이 순서: (E)에서 정형동사 부재가 즉시 눈에 띄어 1차 답 확정 → 나머지 4개를 역검증. 매력적 오답 체감 순위는 (C) 병렬(adjust vs adjusting 착시) > (D) as절 내부의 태(driving vs being driven) > (A) 동명사 주어. (B)는 평이. 대안 해석(절대구문·분사구문)으로 (E)를 정문으로 만들 경로를 탐색했으나 but 뒤에는 정형절이 필요하므로 불가 — 정답은 (E) 하나로 수렴한다. 지문은 2015년 Jeep 원격 해킹 시연 사건을 소재로 한 것으로 사실 관계도 자연스럽다."
+}

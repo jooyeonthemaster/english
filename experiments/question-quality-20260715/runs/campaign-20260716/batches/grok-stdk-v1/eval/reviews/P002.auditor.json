@@ -1,0 +1,77 @@
+{
+  "pid": "P002",
+  "blindAnswer": "(E)",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V5-FIELD-CONVENTION",
+      "severity": "minor",
+      "evidence": "markedExpressions (E)의 expression('be allowed')과 surroundingText('...should be allowed to continue.')가 렌더된 표시형('allow')이 아니라 원문 교정형을 담고 있다. errorExpression('allow')과 렌더 지문 자체는 정확히 일치하므로 학생 노출 결과에 모순은 없으나, 비오류 밑줄들은 expression=표시형 규약을 따르고 있어 (E)만 규약이 달라 다운스트림 소비자가 혼동할 여지가 있다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 4,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 4
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "접속사 vs 전치사(Although/Despite) 구분",
+      "temptingBecause": "문두 양보 표지 자리라 전치사 despite/in spite of와의 교체 가능성을 떠올리게 함",
+      "decisiveFlaw": "바로 뒤에 정형절 'they are controlled by Denmark'가 오므로 접속사 Although가 명백히 옳다. 오류 아님 — 절 존재가 즉시 보여 변별력은 매우 낮다."
+    },
+    {
+      "label": "(B)",
+      "intent": "개입 전치사구(of whales)에 의한 수일치 견인 함정",
+      "temptingBecause": "동사 직전의 복수명사 whales에 이끌려 are로 고치고 싶어짐; insists 뒤 that 생략 구조라 주어 경계 파악도 요구",
+      "decisiveFlaw": "주어 핵은 단수 명사 the killing이므로 is가 옳다. insists는 여기서 주장(assert) 의미라 가정법 현재(be) 대안 분석도 성립하지 않는다. 오류 아님 — 4개 디코이 중 유일하게 실질 판단을 요구."
+    },
+    {
+      "label": "(C)",
+      "intent": "주격 관계대명사 적격성(선행사 + 관계절 내 주어 공백)",
+      "temptingBecause": "There is 구문 뒤의 that을 명사절 접속사로 오독하면 says의 주어가 없다고 느낄 수 있음",
+      "decisiveFlaw": "선행사 a law를 받아 관계절에서 says의 주어 역할을 하는 주격 관계대명사로 정상. 오류 아님."
+    },
+    {
+      "label": "(D)",
+      "intent": "형용사/부사 자리 구분(as ~ as 동등비교 내부, 동사구 수식)",
+      "temptingBecause": "as ... as 사이 자리라 형용사 efficient를 떠올릴 수 있음",
+      "decisiveFlaw": "수식 대상이 동사구 take place이므로 부사 자리이고 quickly와 병렬로 부사가 필수. 오류 아님 — quickly와의 병렬이 노출되어 있어 즉시 소거된다."
+    },
+    {
+      "label": "(E)",
+      "intent": "조동사 뒤 태(능동 vs 수동) 판정 — 주어의 행위자/대상 관계 파악",
+      "temptingBecause": "should 뒤 동사원형이라는 형태 규칙만 확인하면 원형 allow가 정상처럼 보임",
+      "decisiveFlaw": "this practice는 허용의 대상(피동작주)이고 표시된 allow는 필수 목적어조차 없다 → should be allowed to continue가 필요. 유일 오류, 선언 정답과 일치. 다만 'allow to continue'의 목적어 결손이 4단어 국소 창 안에서 즉시 드러나 KILLER급 구조 독해를 요구하지 않는다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "오답 해설 (A)(C)(D)는 point와 why-correct만 있고 why-tempting(왜 끌리는가)이 명시돼 있지 않다. RUBRIC §C '5개 밑줄 각각에 point, why tempting, why correct/incorrect가 존재' 요건에 미달(사실 오류는 아님).",
+      "recommendation": "각 디코이에 학생이 틀리게 되는 구체적 오독 경로를 1문장씩 추가."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionsDetail": {
+    "minimalPair": true,
+    "clearGrammarJudgment": true,
+    "allUnderlinesDocumented": false,
+    "notInstantlyDetectable": false,
+    "noShadowingDecoy": true,
+    "reason": "정답 (E)는 'allow' 바로 뒤 'to continue'와 목적어 부재만으로 국소적으로 즉시 판별되며(be allowed to는 중등 수준 기본 패턴), 문장 간 구조 독해가 필요 없다 — §C 'KILLER 정답은 구조를 읽어야 하며 즉시 드러나지 않는다' 위반. 또한 (A)(C)(D)의 why-tempting 문서화가 없다."
+  },
+  "grade": "C",
+  "notes": "유효성 5개 게이트는 모두 통과: 렌더는 원지문 대비 'be allowed'→'allow' 단일 의도 변형뿐이고(V1), 각 선지 독립 검증 결과 (E)만 비문으로 단일 정답(V2), 교정 시 정확히 원문 복원(V3), 해설의 통사 분석(주어 핵 수일치·주격 관계대명사·부사 병렬·태 판정)이 모두 실제 구조와 일치(V4), 라벨·선지·해설·keyPoints 동기화(V5). 그러나 요청 난이도 KILLER 대비 실제 난이도는 중위권 표준 문항 수준이다: 지문 자체가 단문 위주 평이한 서술문이고, 디코이 (A)(C)(D)는 상위권 기준 즉시 소거되며(C3=2), 정답 포인트는 국소 창에서 형태만으로 드러나는 기본 태 판정이라 난이도 정합이 크게 어긋난다(C5=1). 디코이 5개가 서로 다른 정전 포인트(접속사/수일치 견인/관계사/형·부/태)를 겨냥한 의도 밀도(C2=4)와 간결하고 함정을 분리한 해설(C6=4)은 우수하다. 등급 C: V 전부 통과이나 C 최저점 1(C5)로 B 요건(최저 2) 미달 — KILLER 라벨에 맞추려면 정답 포인트를 원거리 구조 의존형으로 재설계하고 디코이 유혹도를 끌어올리는 재작업이 필요."
+}

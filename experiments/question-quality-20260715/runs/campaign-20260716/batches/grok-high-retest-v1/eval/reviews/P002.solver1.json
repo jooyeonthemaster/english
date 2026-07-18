@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "attractive-wrong",
+      "reason": "가장 강한 매력 오답. 'particularly human skill'을 표면 반향하고 글 전체 주제(동물도 리듬에 반응한다)와 어울려 보여 실제로 끌린다. 그러나 삽입하면 '박자 맞추기는 특히 인간적인 기술로 보이지만, 인간 종에 주로 국한된 기술로 해석될 필요는 없다'가 되어 직전 양보(does seem to be a particularly human skill)와 사실상 자기모순이며, 결정적으로 후속 근거가 이를 지지하지 않는다 — 개들은 리듬을 '표시(marking)'한 적이 없고(admittedly they did not tap their feet) 리듬 외 다른 음악적 특징(사이렌·색소폰)에 반응했을 뿐이다. 근거는 '음악 반응 일반이 인간 전유물이 아님'을 보여줄 뿐 '리듬 표시가 인간 전유물이 아님'을 보여주지 않는다."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "빈칸의 'this'는 인간의 발 구르기/리듬 표시 기술을 가리키는데, 이를 '사이렌·색소폰·장신구에 국한된 사소한 반사'로 해석한다는 것은 의미상 성립 불가. 지문 어휘(sirens, saxophones, jewelry)를 재활용한 표면 미끼이며, 해당 자극들은 개(동물)의 반응 사례이지 인간 기술의 속성이 아니다."
+    },
+    {
+      "label": "3",
+      "verdict": "correct",
+      "reason": "삽입 시: '리듬을 의도적으로 표시하는 것은 특히 인간적인 기술로 보이지만, 이것이 음악에 반응하기 위해 요구되는 핵심 능력으로 해석될 필요는 없다.' 직후 문장 'My dogs in fact responded to other musical features beside the regular jingling'이 정확히 이를 뒷받침한다 — 개들은 리듬 표시 없이도 음악(사이렌, 색소폰, 음정 나간 콘서티나)에 반응했으므로, 리듬 표시는 음악 반응의 필요조건(core faculty)이 아니다. 아리스토텔레스·다윈의 관찰 사례도 동일 논지를 강화. 'interpreted as + NP' 문법 결합도 자연스럽다."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "작곡·연주라는 '창작 능력'은 지문 어디에서도 쟁점이 아니다. 논의 범위는 '외부 리듬/음악에 대한 반응'이지 음악 생산이 아니므로 범위 불일치로 탈락."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "이름 미끼. 지문에서 아리스토텔레스는 '아마 관찰했을 것'이고 다윈은 '실제로 관찰·보고'했다 — 즉 두 사람은 동물의 음악 반응을 부정(denied)한 것이 아니라 목격한 쪽이다. 지문 사실관계와 정면 배치되며, 'this'(리듬 표시 기술)를 이들이 부정한 능력으로 해석할 근거도 전무하다."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 첫 독해에서 ①에 실제로 끌렸다 — 글의 대주제(동물의 리듬 반응 가능)와 표면적으로 공명하기 때문. 그러나 빈칸 문장의 양보-반전 구조(does seem human... but need not be interpreted as ___)를 정밀하게 읽으면 ①은 양보부와 모순되고, 후속 증거(개들은 리듬 표시가 아니라 '다른 음악적 특징'에 반응)가 ③만을 지지한다. 문법 seam은 전 선지 동일('interpreted as + NP')하므로 순수 논리 문항. 대안 해석 탐색 결과 'this'의 지시 대상을 어떻게 잡아도(기술 자체 vs 관찰 전체) ①을 구제할 수 없음. 정답 후보는 ③ 단일."
+}

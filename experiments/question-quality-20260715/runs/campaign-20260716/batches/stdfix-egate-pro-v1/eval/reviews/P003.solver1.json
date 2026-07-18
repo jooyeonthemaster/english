@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "When은 뒤에 완전한 절(the Napoleonic Wars were at ... height)을 이끄는 시간 접속사로 정문. During(전치사)과의 혼동을 노린 자리로 보이나 When + 절 구조에 결함 없음. 매력도 낮음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect",
+      "reason": "선행사 the Napoleonic Wars는 복수이며 같은 절의 동사가 이미 were로 복수 일치함. 따라서 소유격은 their height여야 하고 its는 수 일치 위반. '전쟁을 단일 사건으로 단수 취급' 해석은 동사 were와 자기모순이라 정문 구제 불가. 유일한 어법 오류."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "After가 접속사로 절(the Wars ended)을 이끌며 정형 과거동사 ended는 시제 적절. had ended/ending으로의 유혹이 잠깐 있으나 접속사 After + 단순과거는 완전한 정문. 매력적 오답으로서 중간 정도의 유혹."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "needed의 목적어 more ways(비교급 + 복수명사) 뒤에 for people and goods to move(의미상 주어 동반 to부정사의 형용사적 수식)가 이어지는 표준 구조. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "officially는 자동사 opened를 수식하는 부사로 품사·위치 모두 적절. 형용사 official이었다면 오류였겠으나 부사형이 맞게 쓰임. 정문."
+    }
+  ],
+  "note": "정답이 (B) 하나로 유일하게 좁혀지는 깨끗한 문항. 결정 단서가 같은 절 내 복수 동사 were라는 근거리+명시적 단서여서 최상위권에게는 난도가 낮은 편. (C)의 시제(had ended) 유혹이 가장 그럴듯한 오답 축이나 정문임이 명확해 이의신청 여지 없음."
+}

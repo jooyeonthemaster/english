@@ -1,0 +1,35 @@
+{
+  "pid": "P012",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "형식적 결함 + 문자적 오독. (a) 등위된 동사 'show'가 목적어/보어 없이 끝나 명제로 성립하지 않는 비문(불완전 등위). (b) 내용상으로도 'be right behind you'의 공간적·문자적 해석인데, 발화의 효과가 '심호흡 후 한결 나아짐'이라는 정서적 안도로 서술되므로 물리적 위치/시범 약속이라는 해석은 담화 기능과 모순된다. 함축의미 문항의 전형적 문자해석 미끼."
+    },
+    {
+      "label": "2",
+      "verdict": "accept",
+      "reason": "관용구 'be (right) behind someone' = '지지하다/뒷받침하다'와 정확히 일치. 화맥 검증: Tom은 명시적으로 'band mate'(teammate ✓), 발화 앞에 'Don't worry'와 등을 두드리는 위로 제스처(지지적 화행 ✓), Garcia의 불안 대상이 다가올 공연이므로 지지의 범위가 공연 전반에 미침(throughout the performance ✓). 이후 서사(안도→완벽한 공연)와도 정합. 유일하게 옹호 가능한 함축."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "위협/경고 독해로, 'Don't worry'라는 위로의 발화 수반력 및 손을 얹는 제스처와 논리적으로 모순. Garcia가 '한결 나아졌다'는 결과와도 양립 불가."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "주제 불일치. 옷 화제는 Jeff와의 쇼핑 장면에 귀속되며, Tom의 발화는 리허설 중 연주 불안에 대한 반응이다. 발화에서 옷 점검으로 이어지는 추론 경로가 전무."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "리허설 장면에 Jeff는 부재하며, 발화 어디에도 제3자(Jeff) 개입 전제가 없다. 근거 없는 전제 도입으로 논리적으로 성립 불가."
+    }
+  ],
+  "note": "관용구 함축 문항으로 정답이 2로 유일하게 수렴. 유일한 경쟁 독해(1, 문자적 해석)는 'and show'가 목적어 없이 끝나는 비문이라는 형식 결함까지 안고 있어 미끼로서의 완성도가 다소 떨어짐(선지 문장 자체가 불완전). 문항 성립에는 지장 없음."
+}

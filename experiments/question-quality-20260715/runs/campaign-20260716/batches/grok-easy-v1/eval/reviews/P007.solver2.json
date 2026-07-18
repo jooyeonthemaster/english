@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "'this need not be interpreted as the defining skill that alone proves musical response' — 문맥상 'this'는 '발로 박자 맞추기/의도적 리듬 표시가 인간 고유의 기술이라는 사실'을 가리킨다. 저자는 그 인간 고유성을 인정하되(concession), 그것이 '음악적 반응을 증명하는 유일하고 결정적인 기술'로 해석될 필요는 없다고 반박한다. 바로 다음 문장 'My dogs in fact responded to OTHER MUSICAL FEATURES beside the regular jingling'가 이 판정을 직접 뒷받침한다 — 사이렌·색소폰·음정 어긋난 콘서티나에 대한 개의 반응은 발박자가 아닌 '다른 방식의 음악적 반응' 증거이므로, 발박자가 음악적 반응의 유일한 증거가 아님을 보여준다. seam('interpreted as' + 명사구)도 정합, 'human skill'↔'defining skill' 대구도 자연스럽다."
+    },
+    {
+      "label": "2",
+      "verdict": "incorrect (strong distractor)",
+      "reason": "'proof that animals never react to any pronounced rhythm' — 앞 주제문('animals are incapable of responding to pronounced rhythms'가 틀렸다)의 어휘 'rhythm'과 겹쳐 매력적이나 지역 정합성이 깨진다. (a) 뒤 문장이 제시하는 증거는 '리듬'이 아니라 '지글링 소리 외의 다른 음악적 특징(사이렌·색소폰·음정)'이므로 '동물이 리듬에 반응한다'는 결론을 직접 뒷받침하지 못한다. (b) 'never...any'로 리듬에 전혀 반응 못한다는 주장은 이미 도입부 일화(규칙적 리듬의 지글링에 개가 반응)로 반박되어 빈칸에서 재차 언급하기엔 잉여적이다. 논리적 seam은 맞으나 후속 문장과의 응집성이 1보다 약하다."
+    },
+    {
+      "label": "3",
+      "verdict": "incorrect",
+      "reason": "'a trait unique only to dogs among nonhuman animals' — 발박자/리듬 표시는 본문에서 명시적으로 'a particularly human skill'로 규정되었으므로 이를 '개에게만 고유한 특성'으로 해석하는 것은 자기모순이다. 게다가 개는 발박자를 하지 않는다('did not tap their feet')고 이미 명시. 문법은 성립하나 의미가 정면 충돌한다."
+    },
+    {
+      "label": "4",
+      "verdict": "incorrect",
+      "reason": "'merely a sign that an instrument is out of tune' — 'out of tune'은 마지막 다윈 일화(음정 어긋난 콘서티나에 개가 낑낑댐)에서만 등장하는 지엽적 소재로, '발박자가 인간 고유 기술'이라는 화제와 논리적 연결이 없다. 빈칸 문장의 반박 대상이 될 수 없다."
+    },
+    {
+      "label": "5",
+      "verdict": "incorrect",
+      "reason": "'the sole form of marking external rhythm by tapping' — 'marking external rhythm by tapping'은 문두의 'tapping one's foot or deliberately marking any external rhythm'을 그대로 되풀이하는 동어반복적 표현으로, '탭핑이 탭핑에 의한 유일한 형태'라는 순환적/공허한 의미가 된다. 또한 후속 문장의 'musical features'(음악적 반응)로의 확장과 연결되지 않아 1보다 응집성이 현저히 낮다."
+    }
+  ],
+  "note": "빈칸 핵심은 양보-반박 구조: '의도적 발박자는 인간 고유 기술이지만, 그것이 (음악적 반응을 증명하는 유일·결정적 기술)로 해석될 필요는 없다'. 결정적 단서는 직후 문장 'My dogs in fact responded to OTHER MUSICAL FEATURES'로, 논의를 '리듬'에서 '음악적 반응 일반'으로 확장한다. 이 확장은 정답이 'musical response'를 담은 1임을 확정한다. 2는 앞 주제문의 'rhythm'을 재활용한 최강 미끼지만, 후속 증거가 리듬이 아닌 '다른 음악적 특징'이라 지역 응집성에서 탈락. 오답 3(자기모순)·4(지엽)·5(동어반복)는 명확히 배제된다. 단일 정답으로 수렴하며 문항 품질 양호."
+}

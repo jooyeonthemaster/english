@@ -1,0 +1,83 @@
+{
+  "pid": "P009",
+  "itemType": "FILL_BLANK_KEY",
+  "requestedDifficulty": "INTERMEDIATE",
+  "blindAnswer": "essential (task-compliant reading: the stem says '본문에서 찾아 쓰시오' and 'essential' is the only passage-internal word that fits the slot); 'logical' only if the stem is ignored and the item is treated as a free cloze",
+  "confidence": "high",
+  "alternativeAnswers": ["essential", "reasonable", "sensible", "natural"],
+  "validity": {
+    "V1": true,
+    "V2": false,
+    "V3": true,
+    "V4": true,
+    "V5": false
+  },
+  "validityIssues": [
+    {
+      "code": "V2",
+      "severity": "critical",
+      "evidence": "발문이 '다음 빈칸에 들어갈 알맞은 말을 본문에서 찾아 쓰시오'인데, 선언 정답 'logical'은 렌더 지문에서 빈칸으로 제거되어 본문 어디에도 존재하지 않는다. 규칙을 따르는 학생은 본문에 실재하는 단어만 후보로 삼게 되고, 'the essential now'의 essential이 유일하게 슬롯에 들어가는 본문 내 형용사로서 'it would seem essential to acknowledge this difference...'라는 문법적·문맥적으로 그럴듯한 완성문을 만든다. 선언된 과제 하에서 실제 정답 집합과 선언 정답이 불일치한다."
+    },
+    {
+      "code": "V2",
+      "severity": "major",
+      "evidence": "RUBRIC §B-1 폐쇄형 서술 요건 위반: 표기 정규화·굴절 변형·동치답(reasonable, sensible, natural 등) 허용 여부를 고정한 채점 기준이 전혀 없다. 자유 cloze로 읽으면 'it would seem reasonable/sensible/natural to acknowledge...'가 모두 문법·논리적으로 성립하므로 허용돼야 할 답이 누락된 상태다. 'model answer 한 개만 자연스럽다'는 가정에 의존하고 있다."
+    },
+    {
+      "code": "V5",
+      "severity": "critical",
+      "evidence": "학생 노출 필드 간 모순: 발문의 제약('본문에서 찾아')과 정답 필드('logical', 본문에서 제거됨)가 동기화되지 않는다. 또한 폐쇄형 서술임에도 허용 답안 집합·배제 경계·정규화 규칙 필드가 부재하다(선택지·오답해설·markedExpressions 모두 공란)."
+    }
+  ],
+  "craft": {
+    "C1": 2,
+    "C2": 1,
+    "C3": 1,
+    "C4": 1,
+    "C5": 2,
+    "C6": 3
+  },
+  "craftRationale": {
+    "C1": "빈칸 문장은 지문의 결론(음악의 현재성과 기존 교육의 괴리를 인정하고 직접 활동에 비중을 두라)이며 logical은 그 추론 관계를 지시하므로 의미 있는 한 지점이다. 그러나 평가 대상이 평가적 형용사 한 단어라 핵심 논리를 '정교하게' 묻는 수준에는 못 미친다.",
+    "C2": "서술형 C2는 조건·보기·힌트·채점요소의 의도 밀도인데, 이 문항에는 조건도 보기도 부분점수 요소도 허용 답안 규정도 전혀 없다. 발문 한 줄 외의 설계 요소가 0이다.",
+    "C3": "정답 경계에 도달하기 위해 원문 의미와 목표 형식을 함께 운용할 필요가 거의 없다. 흔한 형용사 하나를 감으로 채우는 과제이고, 과제 지시('본문에서')가 깨져 있어 변별이 성립하지 않는다.",
+    "C4": "메타 누출은 없으나 정답의 필연성이 없다. 동의어(reasonable/sensible/natural)와 본문 내 대안(essential)이 모두 생존하므로 '충분한 근거에 의한 필연적 정답' 요건을 충족하지 못한다.",
+    "C5": "앞뒤 문장의 대조를 연결해 결론의 성격을 파악하는 사고 단계 자체는 INTERMEDIATE에 대체로 부합하나, 과제 결함으로 실제 체감 난이도가 불안정하다(규칙대로 풀면 오답 유도, 무시하면 쉬움).",
+    "C6": "해설은 앞 문장(현재성 vs 사실 지식 교육)과 뒤 문장(사실 정보 흡수 비판)의 담화 구조를 정확·간결하게 짚고 logical의 의미역('합리적·당연한 결론')을 선명히 제시한다. 다만 동치답 허용 경계와 '본문에서 찾기' 불가 문제에 대해서는 침묵한다."
+  },
+  "optionAudit": [
+    {
+      "label": "logical (선언 정답)",
+      "intent": "괴리 인정→직접 활동 강화가 '논리적 귀결'임을 파악했는지 평가",
+      "temptingBecause": "원문 복원 시 완전히 자연스럽고 해설의 담화 분석과 일치한다",
+      "decisiveFlaw": "렌더 지문에 존재하지 않아 '본문에서 찾아 쓰시오'라는 발문 제약을 스스로 위반한다 — 선언 과제 하에서는 도달 불가능한 정답"
+    },
+    {
+      "label": "essential (본문 내 경쟁 답)",
+      "intent": "(의도되지 않음) 발문을 준수한 학생이 도달하는 답",
+      "temptingBecause": "본문에 실재하며('the essential now') 'it would seem essential to acknowledge this difference'가 문법적이고, 차이 인정이 '필수적'이라는 독해도 지문 논지와 충돌하지 않는다",
+      "decisiveFlaw": "원문 어휘가 아니라는 것뿐, 문항 자체 기준으로는 배제 근거가 제시되어 있지 않다 — 이 선지가 배제되지 않는 것이 V2 실패의 핵심 증거"
+    },
+    {
+      "label": "reasonable / sensible / natural (자유 cloze 동치답)",
+      "intent": "(의도되지 않음) 발문을 무시하고 자유 빈칸으로 풀 때의 의미 보존 동치답",
+      "temptingBecause": "'it would seem reasonable/sensible/natural to acknowledge...'가 모두 문법·논리적으로 성립하며 logical과 사실상 동의",
+      "decisiveFlaw": "배제할 문법·의미 근거가 없다. 허용/배제 여부가 채점 기준에 정의되지 않아 채점 경계가 흐리다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "해설이 폐쇄형 서술의 필수 요소인 허용 답안 경계(동치 형용사 허용 여부, 표기 정규화)를 전혀 다루지 않는다.",
+      "recommendation": "정답 인정 범위(logical만 인정인지, reasonable 등 동치 허용인지)와 그 근거를 해설 또는 채점 기준 필드에 명시하라."
+    },
+    {
+      "severity": "minor",
+      "evidence": "해설이 '본문에서 찾아 쓰시오' 발문과 정답의 모순(정답이 본문에 부재)을 인지하지 못한 채 작성되었다.",
+      "recommendation": "발문을 '문맥상 알맞은 한 단어를 쓰시오' 류로 교체하거나, 본문 내 실재 어휘를 정답으로 하는 설계로 재구성하라."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1/V3/V4는 통과: 렌더 지문은 logical→빈칸 치환 외 원지문과 완전 일치하고, 완성문은 문법적이며, 해설의 담화 구조 분석은 실제 지문과 정확히 대응한다. 그러나 발문('본문에서 찾아 쓰시오')과 정답('logical', 본문에서 제거됨)의 모순이 V2·V5를 동시에 무너뜨린다: 발문 준수 시 본문 내 유일 적합어 essential이 정답이 되고, 발문 무시 시 reasonable/sensible 등 동치답 허용 경계가 미정의다. 수리 방향은 (1) 발문을 '문맥에 알맞은 한 단어(원문 어휘)를 쓰시오'로 교체하고 허용 답안 집합을 명시하거나, (2) 첫 글자 힌트(l______) 또는 철자 수 조건을 추가해 정답을 유일화하는 것. 공예 합계 10/24이며, 치명 결함과 무관하게 조건·채점요소 설계(C2)와 정답 필연성(C4)도 재설계가 필요하다. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

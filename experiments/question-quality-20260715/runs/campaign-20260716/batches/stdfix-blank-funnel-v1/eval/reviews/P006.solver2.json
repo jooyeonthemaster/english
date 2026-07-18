@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "Seam OK ('had strictly adhered' = had + past participle), but logically contradicted: Chloe 'boldly chose the biscuit-looking thing before her grandmother', breaking the mirroring pattern, and she eats without cream/jam while grandmother uses them — the opposite of adhering to grandmother's etiquette. The adjunct 'without the cream and jam' cannot coherently modify 'adhered to etiquette'."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "Seam failure: 'Chloe had was attempting' stacks the auxiliary 'had' onto finite past 'was' — ungrammatical (past perfect requires a past participle, e.g. 'had been attempting'). Formally impossible before semantics is even considered; semantically ('analyze the nutritional balance') it is also unsupported by the text."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "Seam OK ('had politely waited'), but directly contradicted by the following clause 'it was mostly all in her mouth already' (she did not wait) and by 'boldly chose ... before her grandmother'. Additionally, 'waited for her grandmother to introduce the cream and jam without the cream and jam' is internally redundant/incoherent."
+    },
+    {
+      "label": "④",
+      "verdict": "accept",
+      "reason": "Perfect seam: 'had begun consuming' = had + past participle + gerund complement. Full discourse fit: 'unfamiliar teatime treat' matches 'Scones, was that what they were called?' (she didn't know the name); 'impetuously' matches 'boldly chose ... before her grandmother' (abandoning her mirroring strategy); 'without the cream and jam' contrasts with grandmother spreading cream and jam on hers; and the semicolon clause 'it was mostly all in her mouth already' confirms she had already begun eating it. Every constraint satisfied."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "Seam OK ('had kept her posture dignified'), but the trailing adjunct 'without the cream and jam' cannot sensibly modify posture-keeping, and the semicolon continuation about the scone being mostly in her mouth is a non sequitur to posture. No textual support for a posture theme."
+    }
+  ],
+  "note": "Answer is uniquely ④ by both formal (seam) and logical tests. Design flaw worth flagging: distractor ② is ungrammatical when inserted after 'had' ('had was attempting'), so it is eliminable on pure syntax without reading the passage — a weak distractor for a blank item. Distractor ③ is eliminable by the immediately following clause alone. The item is solvable and unambiguous, but discrimination power of ② is near zero."
+}

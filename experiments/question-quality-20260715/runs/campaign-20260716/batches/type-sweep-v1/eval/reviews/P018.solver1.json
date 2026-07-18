@@ -1,0 +1,25 @@
+{
+  "pid": "P018",
+  "answer": "what → in which (또는 that): \"play is a way in which children learn about the world and their place in it.\"",
+  "multipleDefensible": false,
+  "defensibleLabels": ["what → in which/that"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) from its earliest beginnings in infancy",
+      "verdict": "correct",
+      "reason": "전치사구로 정상. its는 play를 지시하며 지시·수 일치 문제 없음."
+    },
+    {
+      "label": "(A) play is a way",
+      "verdict": "correct",
+      "reason": "주어-동사-보어 구조 정상."
+    },
+    {
+      "label": "(A) a way what children learn ...",
+      "verdict": "incorrect",
+      "reason": "what은 선행사를 자체 포함하는 관계대명사(= the thing(s) which)여서 선행사 a way 뒤에 올 수 없다. 또한 뒤 절 'children learn about the world and their place in it'은 목적어 공백이 없는 완전한 절이므로 관계대명사 자리가 아니라 관계부사(또는 전치사+관계대명사) 자리다. 따라서 what → in which(또는 that)로 고쳐야 한다. 동격 명사절 해석(a way = what children learn)은 의미상 성립하지 않아 정문화 경로 없음. 'the way how'는 현대 영어에서 배제되므로 how로 바꾸려면 a way 삭제가 필요해 최소 수정이 아니다."
+    }
+  ],
+  "note": "서술형 문항. 오류 지점이 하나로 명확히 좁혀지며(what), 표준 답안은 in which 또는 that. 매력적 오답 유혹 관점: 'learn about'을 타동사 learn + 목적어 공백으로 착각하면 what을 정당화하고 싶어지지만, about이 전치사로 목적어(the world and their place)를 이미 취하고 있어 공백이 없다. 지문 논리·다른 문장에는 어법 쟁점 없음."
+}

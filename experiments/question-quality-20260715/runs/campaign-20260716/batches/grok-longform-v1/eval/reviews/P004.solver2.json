@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "'rapid expansion of agricultural and food production'은 다음 문장 'Rapid growth ... of food production in Zimbabwe explains at best only a small part of their success'가 명시적으로 격하하는 요인이다. 지문이 부차적이라고 판정한 것을 기근 방지의 필요조건(without X)으로 세우면 자기모순. 'among exposed groups' 한정으로도 이 모순은 해소되지 않는다."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "빈칸 문장 자체가 'no matter how fast they grow'라는 양보절로 시작한다. 성장 속도와 무관하게 X가 없으면 기근을 막을 수 없다는 구조에서 X에 '가속화된 국가 성장'을 넣으면 형식적 자기모순(성장과 무관 ∧ 성장이 필요조건)이 된다."
+    },
+    {
+      "label": "3",
+      "verdict": "accept",
+      "reason": "마지막 문장 'The real achievements ... lie in having provided direct public support to their populations in times of crisis'가 빈칸의 필요조건을 직접 지시한다. 'deliberate public systems that secure people's command over basic necessities'는 direct public support의 정확한 환언(센의 entitlement = command over necessities). 'without + NP' 문법 결합 정문, 논리 정합."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "'market-led revival ... without organized state involvement'를 넣으면 '국가 개입 없는 시장 주도 부활 없이는 기근을 못 막는다', 즉 국가 불개입이 필요조건이라는 명제가 되어, 공적 직접 지원이 진짜 성취라는 지문 결론과 정면 모순. without 이중 중첩으로 가독성도 훼손되나 문법 자체는 성립—기각 근거는 논리 모순."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "'merely spreads uncertain sources of livelihood'는 선지 내부에서 이미 무익하다고 평가된 다각화다. 빈칸 문장의 주어가 '불확실한 생계원 의존 인구가 많은 나라'인데, 불확실한 원천을 단지 더 퍼뜨리는 것이 기근 방지의 필요조건이라는 명제는 논리적으로 불성립. 또한 다각화는 1문장에서 통념으로 제시된 뒤 반박되는 항목이다."
+    }
+  ],
+  "note": "센·드레즈 'Hunger and Public Action' 계열 논변. 통념(성장·다각화) 양보 후 'At the same time'으로 전환, 보츠와나·케냐·짐바브웨 사례에서 성장의 설명력을 격하하고 direct public support를 진짜 성취로 지목하는 구조라 빈칸 단서가 이중(양보절 + 마지막 문장)으로 잠긴다. 오답 4개 모두 지문 내 명시 반박 근거가 있어 단일 정답으로 수렴. 문법 seam 문제 없음."
+}

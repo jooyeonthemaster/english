@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "삽입 시 seam은 정문: 'reminds the viewer that everyday perception should replace interpretive effort to appreciate...' (that절 내 조동사+수동 아님, 능동 replace로 문법 성립). 그러나 논리적으로 정반대다. 지문의 논증: 작품이 less readable할수록 관습 형식에서 이탈 → 일상적 지각(pragmatic attitude)으로는 부족하며 해석적 노력이 '요구'된다. 이어지는 'This active involvement'는 빈칸 내용이 능동적·해석적 관여임을 전제하는데, 해석 노력을 일상 지각으로 '대체'하라는 명제는 active involvement의 선행 내용이 될 수 없다. 형식적으로: 전제 P(이탈은 특별한 태도를 상기시킴) ∧ Q(그 태도 = active involvement)에서 ¬(해석 노력 폐기)가 도출되므로 모순."
+    },
+    {
+      "label": "2",
+      "verdict": "accept",
+      "reason": "삽입 시 'reminds the viewer or reader that a detached contemplative stance must be adopted to appreciate the whole episode' — that절 수동태 + 목적 부정사 구성으로 문법 성립(to appreciate의 의미상 주어는 문맥상 viewer/reader로 회복 가능, 허용되는 구성). 논리: 마지막 문장이 'pragmatic attitude'와 'aesthetic attitude' 간 전환 능력을 결론으로 제시하므로, 빈칸은 '미적 태도가 필요하다'의 패러프레이즈여야 한다. 'detached contemplative stance'(무관심적·관조적 태도)는 미학에서 aesthetic attitude의 표준 정의(일상의 실용적 관심에서의 detachment + 관조)와 일치한다. 'detached'가 다음 문장 'active involvement'와 표면상 긴장돼 보이나, detachment는 실용적 태도로부터의 거리두기이고 involvement는 해석적 처리에의 능동 참여로 층위가 달라 모순이 아니다(심리적 거리 이론과 정합). 유일하게 결론 문장과 정합하는 선지."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "문법 seam은 성립('that conventional story forms ought to be wholly rejected to appreciate...'). 논리 결함 둘: (a) 행위자 오귀속 — 관습 형식에서 이탈하는 주체는 '작품'이며, 빈칸은 '감상자'가 취해야 할 태도를 서술해야 한다('reminds the viewer that...' + 'This active involvement'가 감상자의 관여를 지시). 형식을 전면 거부하라는 규범 명제는 감상자의 active involvement로 지칭될 수 있는 내용이 아니다. (b) 'wholly rejected'는 과잉 일반화 — 지문 결론은 두 태도 간 '전환(switch)' 능력이지 한쪽의 전면 폐기가 아니며, representational 작품(관습 형식)도 긍정적으로 기술된다."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "문법 성립('that the plot details alone should be traced carefully to appreciate...'). 논리적으로 배제: plot details는 subject matter(figure)에 해당하고, expressionist 작품에서는 스타일 장치가 subject matter와 불협화음을 이루며 의미를 생성한다고 명시돼 있다. 'the whole episode'를 감상하려면 figure뿐 아니라 background(style)까지 처리해야 하므로 'alone'이 결정적으로 지문과 모순. 또한 plot 추적은 representational 작품의 독법(mental model 구성, 결말까지 따라가기)이지 less readable 작품에 요구되는 태도가 아니다."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "문법 성립('that mental models of daily life should be reinforced to appreciate...'). 논리적으로 배제: mental model 구성은 representational 작품에서 background style이 수행하는 촉진 기능으로 명시돼 있고, 빈칸의 조건절은 그 반대 극(expressionist·less readable)이다. less readable 작품은 관습 형식에서 '이탈'하여 일상 유사성 기반 mental model 구성을 교란하므로, 일상 모델을 '강화'하라는 명제는 조건절의 전제(departure from conventional forms)와 정면 모순. 이어지는 aesthetic processing·reflection과도 연결 불가."
+    }
+  ],
+  "note": "렌즈: 문법가/논리학자. 5개 선지 모두 seam(that절 내부 구조 + 목적 부정사 'to appreciate the whole episode' 접속)은 문법적으로 성립하므로 판별은 순수 논리 정합성으로 귀결된다. 결론 문장(pragmatic attitude ↔ aesthetic attitude 전환)이 빈칸의 필요조건을 고정: 빈칸 = 'aesthetic attitude가 필요하다'의 패러프레이즈. 이를 만족하는 것은 2뿐. 2의 'detached'와 후행 'This active involvement' 간 표면 긴장은 미적 태도의 표준 정의(실용적 관심으로부터의 거리두기 + 능동적 관조 처리)로 해소되어 결함이 아니다. 1·4·5는 representational 독법을 expressionist 조건절에 투입하는 극성 반전 오답, 3은 행위자 오귀속 + 과잉 진술. 단일 정답으로 수렴, 복수 정답 소지 없음."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P021",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "Seam: 'this need not be interpreted as the essential ability required for reacting to music.' Grammatically clean (interpreted as + NP). Logic fits perfectly: the passage concedes that foot-tapping / deliberately marking rhythm is a 'particularly human skill' (contrast marker 'but'), yet argues via 'need not' that this human-only skill is NOT essential/necessary for reacting to music. The following sentences supply the proof — dogs respond to other musical features (jingling, sirens, saxophone, out-of-tune concertina) WITHOUT foot-tapping. So foot-tapping is not the essential ability required for reacting to music. Concessive 'but ... need not be interpreted as [essential]' resolves the whole argument that animals CAN respond to rhythm/music."
+    },
+    {
+      "label": "2",
+      "verdict": "incorrect",
+      "reason": "'the unique skill that prevents animals from hearing rhythms' — semantically incoherent as a reading of foot-tapping. A skill possessed by humans does not 'prevent' animals from hearing anything, and the passage explicitly asserts animals DO respond to rhythms. Also contradicts the thesis (it wrongly presupposes animals cannot hear rhythms). Reject."
+    },
+    {
+      "label": "3",
+      "verdict": "incorrect",
+      "reason": "'the sole criterion that equates every sound with true music' — foot-tapping is not a criterion for equating sound with music, and nothing in the passage concerns equating every sound with 'true music.' Off-topic and produces a non-sequitur at the seam. Reject."
+    },
+    {
+      "label": "4",
+      "verdict": "incorrect",
+      "reason": "'the only evidence needed to judge a dog's musical talent' — the passage is not about evidentiary standards for judging a dog's musical talent; it is about whether foot-tapping is required to respond to music. 'this need not be interpreted as the only evidence needed to judge a dog's talent' does not connect to the human-skill concession nor to the ensuing dog-reaction examples. Weak/mismatched. Reject."
+    },
+    {
+      "label": "5",
+      "verdict": "incorrect",
+      "reason": "'the observation that alone verified Darwin's famous accounts' — Darwin's concertina anecdote appears only at the very end as one more supporting example; it is not what 'this' (the human foot-tapping skill) could be interpreted as. Logically disconnected non-sequitur. Reject."
+    }
+  ],
+  "note": "Blank-inference. Argument spine: animals are NOT incapable of responding to rhythms; foot-tapping is a uniquely human skill (concession, 'but'); 'need not' signals denial that this human skill is a necessary condition. Only option 1 supplies the necessary-condition idea ('essential ability required for reacting to music') that the following dog-reaction evidence refutes. Every option is a grammatically valid NP after 'interpreted as', so the discriminator is purely logical/contextual — and it points uniquely to 1. No defensible alternative."
+}

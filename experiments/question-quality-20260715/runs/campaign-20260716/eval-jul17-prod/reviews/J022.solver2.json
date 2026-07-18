@@ -1,0 +1,35 @@
+{
+  "pid": "J022",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "'required to completely discard conventional forms in our routine' — 관습적 형식으로부터의 이탈(departure from conventional forms)은 표현주의 작품의 속성으로 제시된 것이지 일상 루틴에 적용할 규범이 아니다. 전환 능력의 목적을 '일상에서 관습 형식의 완전 폐기'로 놓는 명제는 지문 어디서도 도출되지 않으며 'completely'라는 극단 표지도 무근거. 논리 성립 불가."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "'essential for avoiding the discomfort of expressionist works' — 지문에서 disquieting atmosphere는 회피 대상이 아니라 aesthetic attitude를 촉발하여 심층적 미적 처리(depth of aesthetic processing)와 의미 성찰의 기반이 되는 기능적 요소다. '불편의 회피'는 지문 논지(불편을 통한 능동적 개입·심화)와 정면 모순."
+    },
+    {
+      "label": "3",
+      "verdict": "accept",
+      "reason": "'what maintains equilibrium in our overarching cognitive experience' — 의사분열문 결합으로 문법 seam 정상. 첫 문장의 trade-off 프레임 아래 사실주의 작품은 일상 유사 처리(pragmatic 친화), 표현주의 작품은 aesthetic attitude 요구로 대응되며, 두 태도 사이를 오가는 전환 능력이 전체 인지 경험의 균형을 유지한다는 총괄 일반화로 자연스럽게 수렴. 다섯 선지 중 유일하게 지문과 모순이 없다. 단 'equilibrium'이 지문에 명시 어휘로 등장하지 않는 추상화 도약은 존재(감점 요인이 아니라 추론형 빈칸의 통상 범위)."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "'the prerequisite for synthesizing style and subject harmoniously' — 지문은 표현주의에서 양식이 주제와 inharmonious하게 작동하는 것 자체가 미적 개입의 원천이라고 명시한다. '양식과 주제의 조화로운 종합'을 목표로 상정하는 것은 핵심 기제와 모순이며, 전환 능력은 감상자의 태도 층위 문제이지 작품 내 양식-주제 통합의 전제조건이 아니다."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "'what allows us to assimilate art entirely into practical use' — aesthetic attitude는 정의상 일상의 pragmatic attitude와 구별되는 태도인데, 예술을 '전적으로 실용적 용도에 동화'시킨다는 것은 그 구별 자체를 소거하는 자기모순. 'entirely' 극단 표지 역시 무근거. 지문 논지(미적 태도의 독자성)와 정면 충돌."
+    }
+  ],
+  "note": "빈칸은 pragmatic/aesthetic 두 태도 전환 능력에 대한 결론적 일반화 자리. ①②④⑤는 각각 극단 표지·논지 역행·명시적 모순('inharmonious')·자기모순으로 형식적으로 배제되고 ③만 남는다. ③의 'equilibrium'은 지문 명시 어휘가 아닌 추상화이지만 첫 문장의 trade-off 프레임과 두 작품 유형-두 태도 대응 구조가 균형 독해를 지지하므로 유일 정답으로 옹호 가능. 오답 매력도는 ④(harmonious 종합)가 가장 높으나 'inharmonious manner' 명시 구절로 확정 배제 가능해 이의 제기 여지는 낮다."
+}

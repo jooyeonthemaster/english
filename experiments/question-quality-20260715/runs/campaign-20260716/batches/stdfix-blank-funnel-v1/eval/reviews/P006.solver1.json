@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "Seam failure: stem already supplies 'had', so insertion yields 'Chloe had had strictly adhered' — ungrammatical double auxiliary. Semantics also reversed: the pivot 'boldly chose the biscuit-looking thing before her grandmother' shows she abandoned the mirroring etiquette. Surface pull only from the etiquette/grandmother theme words."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "Seam failure: 'Chloe had was attempting' is ungrammatical (had + finite was). Content ('nutritional balance') is register-alien to a child delighting in tea desserts. Eliminable without reading the passage."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong (most attractive distractor)",
+      "reason": "Grammatically clean ('had politely waited'). Strong pull: the first half of the passage builds exactly this behavior ('waited for her grandmother to make the first move', 'carefully mirrored'). Killed by long-range cues after the pivot: she 'boldly chose... before her grandmother', and 'it was mostly all in her mouth already' proves she did not wait. Also self-contradictory when inserted: 'waited for her grandmother to introduce the cream and jam without the cream and jam' is incoherent."
+    },
+    {
+      "label": "④",
+      "verdict": "correct",
+      "reason": "Reads: 'Chloe had begun consuming the unfamiliar teatime treat impetuously without the cream and jam; in fact, it was mostly all in her mouth already.' Grammar clean (had + begun). Every element locks to the text: 'unfamiliar' matches 'Scones, was that what they were called?'; 'impetuously' matches 'boldly... before her grandmother'; 'without the cream and jam' contrasts with grandmother spreading hers; the following clause ('mostly all in her mouth already') confirms consumption had begun."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "Grammatical ('had kept'), but 'without the cream and jam' attaches meaninglessly to keeping posture, and the follow-up clause 'it was mostly all in her mouth already' has no logical connection to posture. Mild surface appeal from 'dignified/desserts' only."
+    }
+  ],
+  "note": "Answer uniquely ④; no alternative parse (ellipsis, inversion, reduced clause) rescues ① or ②. Quality flag: options are not form-parallel — ① and ② are grammatically impossible at the seam ('had had strictly adhered', 'had was attempting'), so a seam-checking student eliminates 2/5 without reading the passage, weakening discrimination. ③ is a well-built content distractor (mirrors the passage's first-half behavior pattern) and carries the real temptation; the item still resolves cleanly via the 'boldly... before her grandmother' pivot and the final clause."
+}

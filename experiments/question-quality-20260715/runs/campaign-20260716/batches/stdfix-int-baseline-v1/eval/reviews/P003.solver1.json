@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'an experiment showing (that) human perception and behavior can be influenced...' — 현재분사 showing이 experiment를 후치 수식하며, 실험이 '보여주는' 주체이므로 능동 분사가 옳다. showing 뒤 명사절의 that 생략도 허용된다. 'shown'으로 바꾸면 의미가 뒤집혀 오히려 틀린다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'He presented them with a list ... and asked them to create ...' — 병렬 시작점은 주어 He 뒤의 정형동사 presented이며, asked는 이와 병렬된 과거 정형동사. ask + 목적어 + to부정사 보문 구조도 정확하다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'One of the lists was ...' — 진짜 주어는 단수 One이고 of the lists는 전치사구 수식어. 근접 복수명사 lists에 이끌려 were로 착각하기 쉬운 전형적 함정이지만 단수 was가 옳다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'students who had been exposed to an elderly mix of words' — 선행사 students는 단어에 '노출되는' 대상이므로 수동 be exposed to가 옳다. 긴 관계절 안의 태 판정 함정이지만 had been + exposed 수동 구조가 정확하다. 가장 매력적인 오답 후보였으나 대안 능동 해석이 성립하지 않는다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "문장 골격: 'Those students [who had been exposed to an elderly mix of words] taking almost 40 percent longer ... than those [who ...].' 관계절을 걷어내면 주어 Those students에 대응하는 정형 본동사가 문장 어디에도 없다. 뒤에 다른 정형동사 없음, 독립분사구문 성립 불가(주절 부재), 도치 없음, 축약 관계절로 읽으면 문장 전체가 명사구 파편이 됨 — 어떤 대안 해석도 정문을 만들지 못한다. taking → took이어야 한다."
+    }
+  ],
+  "note": "정답 (E) 단독. 오답 유혹 순위: (C) 수일치 근접함정 > (D) 관계절 내 태 함정 > (A) 분사 태. 모두 지배 규칙(진짜 주어 One, 수동 선행사, 능동 수식) 확인으로 해소됨. (E)는 긴 관계절이 본동사 부재를 가리는 구조적 함정으로, 수능 어법 전형 유형에 부합."
+}

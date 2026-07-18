@@ -1,0 +1,61 @@
+{
+  "pid": "P004",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V-DOC-MINOR",
+      "severity": "minor",
+      "evidence": "5개 밑줄 각각의 'why tempting'이 명시 필드로 존재하지 않는다(오답 해설은 'why correct'만 제공). keyPoints도 (B)·(E)를 다루지 않는다. V 게이트 위반은 아니지만 RUBRIC §C의 KILLER 문서화 요건에는 미달."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "to부정사 자리의 태 판단 — direct의 능동/수동",
+      "temptingBecause": "'direct attention' 능동 연어에 익숙한 학생은 'tends to direct'를 기대하고 수동형을 의심한다.",
+      "decisiveFlaw": "주어 'our attention'이 향해지는 대상이고 뒤에 목적어가 없으므로 수동 'be directed'가 옳다. 오류 아님."
+    },
+    {
+      "label": "(B)",
+      "intent": "접속사 vs 전치사 구분 (While vs During/Despite)",
+      "temptingBecause": "문두 종속절이 길어 절 구조 파악을 요구하는 듯 보인다.",
+      "decisiveFlaw": "뒤에 주어(this pattern of attention)+동사(is)의 완전한 정형절이 오므로 접속사 While이 옳다. 검증이 즉각적이라 소거가 빠른 약한 디코이. 오류 아님."
+    },
+    {
+      "label": "(C)",
+      "intent": "정답 — 접속사가 남은 분사구문의 태 (when solving vs when solved)",
+      "temptingBecause": "'solved problems'를 형용사+명사구로 오독하면 일견 성립하는 듯 보이고, when 뒤 축약절 구조 인식이 필요하다.",
+      "decisiveFlaw": "수동분사 'solved'는 직접목적어 'problems'를 취할 수 없고, NP 독법으로는 when절에 동사가 없다. 'solving'으로 교정하면 정확히 원문 복원 — 최소대립쌍 성립. 유일 정답."
+    },
+    {
+      "label": "(D)",
+      "intent": "주격 관계대명사 that — 선행사 유무·불완전절 (vs what)",
+      "temptingBecause": "that의 다용도성(접속사/관계사) 때문에 표면상 판단을 요구한다.",
+      "decisiveFlaw": "선행사 'the connections'가 존재하고 주어가 빠진 불완전절(lead to...)이 이어지므로 that이 옳다. 상위권에게 즉시 소거되는 약한 디코이. 오류 아님."
+    },
+    {
+      "label": "(E)",
+      "intent": "지각동사 hear의 목적격보어 분사 태 (telling vs told/to tell)",
+      "temptingBecause": "'the quiet voices'와 'telling' 사이에 전치사구 'in the backs of our heads'가 개입해 거리 판단을 요구한다.",
+      "decisiveFlaw": "voices가 말하는 능동 주체이므로 현재분사 telling이 옳다(보어 분석·축약 관계절 분석 모두 동일 결론). 오류 아님."
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "모든 V 게이트 통과: 렌더는 의도된 solving→solved 단일 변형 외 원지문과 완전 일치(V1); 5개 밑줄 독립 검증 결과 (C)만 오류로 유일정답(V2); 지문·발문·교정문 모두 문법적(V3); 해설의 구조 분석(접속사 잔류 분사구문, 수동태, 완전절, 선행사+주격 관계사, 지각동사 보어)이 실제 통사와 일치하고 오개념 없음(V4); 정답 라벨·선지·해설·keyPoints·markedExpressions 동기화(V5). 그러나 요청 난이도 KILLER 대비 정합 실패: 정답 오류가 바로 인접한 목적어 'problems'로 국소·즉시 노출되는 다빈도 훈련 패턴(when solving/solved)이라 RUBRIC §C '즉시 드러나지 않는다' 요건을 실질적으로 충족하지 못하고, 밑줄별 why-tempting 문서화 부재, (B)·(D)가 즉시 소거되는 약한 디코이. C5=1로 B 하한(C 최저 2, 합계 17) 미달 → 합계 15, 등급 C. 중상 난이도 슬롯으로는 출제 가능한 견실한 문항이나 KILLER 슬롯에는 재설계 필요."
+}

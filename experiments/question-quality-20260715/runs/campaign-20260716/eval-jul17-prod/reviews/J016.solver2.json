@@ -1,0 +1,35 @@
+{
+  "pid": "J016",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "Degree adverb 'highly' modifies the adjective 'representational' within the NP 'highly representational paintings, plays, or stories.' Adverb-modifying-adjective is the required category; the adjective 'high' would be ungrammatical. Well-formed."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "Subject relative pronoun 'that' with antecedent 'subject matter' (singular, non-human); the relative-clause verb 'resembles' shows matching singular agreement, confirming the antecedent is 'subject matter', not the plural 'paintings, plays, or stories.' Well-formed."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "Subject is 'Feelings of pleasure and uncertainty'; the head noun 'Feelings' is plural, and 'of pleasure and uncertainty' is a postmodifying PP (a proximity-agreement trap). Plural head requires plural 'carry.' Well-formed."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect (the answer)",
+      "reason": "The clause's finite verb is 'work' ('novel stylistic devices work ... against the subject matter'); 'thereby' is an adverb, not a coordinator, so 'created' cannot serve as a second finite verb. Since the participle takes the direct object 'a disquieting atmosphere', it must be the active present participle 'creating' (result-participial adjunct: 'thereby creating a disquieting atmosphere'). The rescue reading as a reduced passive relative on 'subject matter' ('the subject matter thereby created' = 'which is thereby created') fails formally: passive 'created' of monotransitive 'create' cannot license the residual object NP 'a disquieting atmosphere', which would be left without any theta role or case assigner ('create' is not ditransitive, so no retained-object passive is available). No grammatical parse exists; 'created' is ungrammatical."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "Inside the that-complement of 'reminds the viewer or reader that ...': 'an aesthetic attitude is needed to appreciate the whole episode.' The attitude is the patient of 'need' (it is needed, it does not need), so the passive 'is needed' is required; the to-infinitive is a purpose adjunct. Active 'needs' would be semantically and syntactically wrong. Well-formed."
+    }
+  ],
+  "note": "Clean single-answer item. (D) is the only ungrammatical form: after adverbial 'thereby' with a following direct object, only active 'creating' parses; the reduced-passive-relative alternative was tested and formally rejected because the residual object NP would be unlicensed. (C) is a plural-head agreement trap and (B) an antecedent-identification trap, but both are unambiguously correct. No competing defensible label found."
+}

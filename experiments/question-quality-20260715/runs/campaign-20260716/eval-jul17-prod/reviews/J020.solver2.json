@@ -1,0 +1,35 @@
+{
+  "pid": "J020",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) targeted",
+      "verdict": "correct",
+      "reason": "수동태 구조 'can ... be very precisely targeted to ~'. 주어 'Environmental taxes'는 target의 대상(피행위자)이므로 be + p.p.가 요구되며, 'target X to Y'의 수동형 'X be targeted to Y'로 정확히 성립한다. 부사 precisely가 과거분사를 수식하는 것도 정상. 어법상 옳다."
+    },
+    {
+      "label": "(B) that",
+      "verdict": "correct",
+      "reason": "선행사 'any manner'를 받는 주격 관계대명사. 관계절 내부에서 'that is less costly per unit of abatement than ~'의 주어 역할을 하며, 관계절에 주어 공백이 있으므로 주격 that이 형식적으로 필수. in which/that(방식의 manner 뒤 관계사)로도 관용적으로 허용되는 자리이며 어느 해석으로도 정문. 어법상 옳다."
+    },
+    {
+      "label": "(C) where",
+      "verdict": "correct",
+      "reason": "'particularly where there are many separate sources of emissions'에서 where는 장소·상황을 나타내는 접속사(= in cases where)로, 뒤에 완전한 절(there are ~)을 이끈다. 완전한 절 앞이므로 관계대명사가 아닌 접속사/관계부사 where가 정확히 요구되는 자리. 어법상 옳다."
+    },
+    {
+      "label": "(D) availably",
+      "verdict": "incorrect",
+      "reason": "'the technologies availably for monitoring ~'은 성립 불가. 이 자리는 명사 technologies를 후치 수식하는 축약 관계절 '(that are) available for ~'로, 형용사 available이 와야 한다. 부사 availably는 명사를 수식할 수 없고, 문장 내에 availably가 수식할 동사·형용사도 없다(본동사 have been developing은 이미 rapidly가 수식하며 어순상도 연결 불가). 대안 해석(도치, 분사구문 등)을 모두 탐색해도 부사가 정당화되는 파스가 존재하지 않는다. 어법상 틀림 — 정답."
+    },
+    {
+      "label": "(E) developing",
+      "verdict": "correct",
+      "reason": "'the technologies ... have been developing rapidly'. develop은 '발전하다'라는 자동사 용법이 표준적이므로(cf. Technology has been developing rapidly) 현재완료진행 have been developing이 정문. 'have been developed'(수동)도 가능하겠으나 자동사 진행형 역시 완전히 문법적이므로 developing을 틀렸다고 볼 근거가 없다. 어법상 옳다."
+    }
+  ],
+  "note": "정답 후보는 (D) 단일. availably(부사)는 명사 후치 수식 자리에 올 수 없고 available(형용사, 축약 관계절)이어야 한다. (E) developing은 자동사 용법으로 정문이므로 오답 시비 여지 없음. 나머지 (A)(B)(C)도 모두 명백한 정문으로, 복수정답 위험 없는 깨끗한 문항."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "선행사는 같은 문장의 'they'(= the Faroe Islands)로, 'they are controlled... they have their own government'까지 일관되게 복수 취급. 복수 소유격 their 적법. 복수형 국가명을 단수 취급하는 대안(cf. The Philippines is)도 검토했으나, 지문 자체가 이미 'they are controlled'로 복수를 확정했으므로 their는 내적으로 정합적이다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect",
+      "reason": "'whale meat and blubber is important parts of the local diet'. 등위된 주어를 'bread and butter'식 단일 덩어리로 보아 단수 동사를 옹호하는 대안 해석을 적극 탐색했으나, 보어가 복수형 'important parts'로 명시되어 필자가 meat와 blubber를 식단의 두 개별 '부분'으로 취급함이 드러난다. 따라서 복수 주어 + 복수 보어 구조로 'are'가 필수이며, 단수 is + 복수 보어 parts는 어떤 해석으로도 정문이 될 수 없다. 유일한 어법 오류."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "가장 강한 매력적 오답. 'X and Y → 복수 → are distributed'라는 등위 본능에 실제로 끌렸다. 그러나 'most of + 불가산 물질명사'는 양(quantity) 일치로 단수가 표준이고, 여기서 whale meat and blubber는 배급되는 하나의 합쳐진 식량 덩어리다. 결정적으로 같은 문장의 후행절 'although some is sold in supermarkets'가 단수 취급을 지문 내적으로 확정한다. (B)와 달리 복수 보어 같은 강제 단서가 없어 단수 수동태 is distributed는 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'take place as quickly and efficiently as possible'. take place는 자동사이므로 부사 수식이 필요하고, 'as quickly and (as) efficiently as possible'은 as~as possible 틀을 공유하는 적법한 부사 병렬. 형용사 quick을 요구할 보어 자리가 아니므로 부사형이 옳다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'whether this practice should be allowed to continue'. 조동사 뒤 수동 'should be allowed'와 allow X to-V의 수동태에서 잔류하는 to부정사('be allowed to continue')는 표준 구문. 정문."
+    }
+  ],
+  "note": "정답은 (B) 단독. 매력적 오답은 (C)로, 등위 주어에 대한 복수 일치 본능을 자극하지만 'most of + 물질명사' 규칙과 동일 문장 내 'some is sold'라는 장거리 병렬 단서가 단수를 옹호하므로 정답 후보로 성립하지 않는다. (B)는 주어 해석(단일 덩어리 vs 개별 항목)과 무관하게 복수 보어 'parts'가 복수 동사를 강제하므로 유일하고 논쟁 여지 없는 오류. 문항 자체는 정답 유일성이 확보된 정상 문항이나, 지문 난도와 오류 유형(수일치)이 수능 실전 대비로는 평이한 편."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "(A)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(A)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "incorrect (this is the answer)",
+      "reason": "'To demonstrate how our minds have adapted, considering a typical high school task: ...' contains no finite verb. 'considering' cannot be the matrix predicate (participle/gerund), and reading it as the preposition 'considering' (= in view of) still leaves the sentence without a main clause — a fragment. No rescue parse works: the following sentence ('Baby Boomers most likely went...') is independently complete, so no host clause exists for a participial adjunct, and no absolute construction supplies a finite predicate. The required form is the imperative 'consider' (canonical 'To demonstrate X, consider Y' pattern)."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'because' introduces a finite adverbial reason clause with two conjoined finite clauses ('reference materials weren't readily available and the process of checking was time consuming'). Fully licit; no because/because-of confusion since a full clause follows."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'correcting took time' — gerund as subject of the finite verb 'took'. Gerund subjects are grammatical; past-tense 'took' is number-neutral so agreement is trivially satisfied. The dash-appended clause is a legitimate independent clause explaining the preceding statement."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'Memorization and precision are less essential' — coordinated NP subject denoting two distinct properties requires plural agreement; 'are' satisfies it. No notional-singular (single-concept) reading forces 'is'."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'tuned to require more stimulation and become more easily bored' — 'become' is a bare infinitival conjunct sharing the 'to' of 'to require' (to [require ... and become ...]). Coordination of bare-infinitive VPs under one 'to' is standard. The parse conjoining with finite 'makes' would demand 'becomes', but the shared-to parse is fully licit and semantically coherent, so 'become' stands as written."
+    }
+  ],
+  "note": "Clean item under the grammarian/logician lens. (A) is formally provable as ungrammatical: the opening sentence is verbless under every available parse (participial, gerundive, prepositional 'considering'), so only imperative 'consider' repairs it. All other underlines survive adversarial alternative-parse testing (gerund subject at C, plural coordination at D, shared-to infinitive coordination at E). Exactly one defensible answer."
+}

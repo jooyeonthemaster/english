@@ -1,0 +1,35 @@
+{
+  "pid": "P009",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "관계절 'who is credited with ...'에서 who의 선행사는 단수 'the Italian explorer'. 'be credited with'는 고정 수동 연어이며, 콜럼버스가 현재까지도 공로를 인정받고 있다는 서술이므로 현재시제 단수 수동태 'is credited'는 어법상 옳다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "전치사 with의 목적어 자리이므로 동명사가 요구된다. 'credited with discovering America'는 전치사+동명사의 정규 결합으로 옳다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'Considering X, 주절' 구문에서 considering은 regarding/given과 같은 준전치사(무주어 허용 분사)로 굳어진 표현이라 주절 주어(honoring the explorer)와의 의미상 주어 불일치가 문제되지 않는다. 어법상 옳다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "wrong",
+      "reason": "문장 'the diseases that Columbus and other Europeans brought with them severely reducing the population ...'에서 관계절 'that ... brought with them'을 걷어내면 주어 the diseases에 대응하는 정형동사가 없어 문장 단편(fragment)이 된다. 절대구문으로 보려 해도 결합할 주절 자체가 없고, reducing을 축약 관계절(현재분사 후치수식)로 읽어도 정형 술어 부재는 해소되지 않는다. brought와 시제 병행하는 정형 과거형 'reduced'여야 한다. 어법상 틀림 — 정답."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'a new holiday that honors ... and remembers ...'에서 remembers는 관계절 내 honors와 병렬된 두 번째 정형동사로, 단수 선행사 holiday와 수일치한다. 병렬 시작점(that 이하 동사구)과 일치 모두 성립하여 옳다."
+    }
+  ],
+  "note": "문법가/논리학자 렌즈 블라인드 풀이. (D)는 주절 정형동사 부재라는 구조적 결함으로 유일하게 비문이며, 절대구문·축약 관계절 등 대안 해석으로도 구제 불가. 나머지 네 밑줄은 각각 수동 연어·전치사+동명사·준전치사 considering·관계절 병렬 수일치로 모두 정문임을 확인. 복수 정답 소지 없음."
+}

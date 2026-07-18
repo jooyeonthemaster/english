@@ -1,0 +1,63 @@
+{
+  "pid": "P003",
+  "validity": {
+    "V1": false,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": false
+  },
+  "validityIssues": [
+    {
+      "code": "V1",
+      "severity": "major",
+      "evidence": "배열 대상 단어에 'by the new leader' 칩이 두 번 등장한다(7번째·9번째). 해설은 '미끼 by the new leader … 해당 칩은 쓰지 않는다'로 단수 칩을 전제하므로 의도된 이중 디코이가 아니라 생성 단계의 중복(손상)이다. 동일 다어절 칩의 완전 중복은 학생에게 '둘 다 써야 하나'라는 불필요한 혼란을 주는 본체 파손이다."
+    },
+    {
+      "code": "V4",
+      "severity": "critical",
+      "evidence": "해설이 디코이 배제 근거를 '군대가 명령받은 쪽이므로 주어 자리에 두고 해당 칩은 쓰지 않는다'라고 설명하나 이는 오개념이다. 원문에서 명령의 행위자는 새 지도자('he gathered 3,000 soldiers and ordered them to protect his palace')이므로 'his army was immediately ordered by the new leader to protect the palace'는 문법적으로도 의미적으로도 완전히 올바른 수동문이다. 군대가 주어(피명령자)라는 사실은 by-행위자구 사용을 배제하지 않는다. 이 칩이 실제로 쓰일 수 없는 유일한 이유는 기계적 제약이다: 'ordered to'가 한 칩으로 융합되어 있어 ordered와 to 사이에 삽입이 불가하고, 'protect the palace.'가 마침표를 포함해 문말 이후 배치도 불가하다. 해설은 이 실제 근거 대신 거짓 문법 논리를 제시한다."
+    },
+    {
+      "code": "V5",
+      "severity": "major",
+      "evidence": "keyPoints[2] 'refuse·surrender·protect 등 전쟁 맥락 핵심 동사 활용' — 'surrender'는 목표 문장(모범답안)에 전혀 등장하지 않는다(지문에만 존재). 'refuse'도 문장에는 명사형 refusal로만 나타난다. 또한 해설(단수 디코이 칩)과 칩 목록(동일 디코이 2개)이 desync 상태다. 폐쇄형 서술 채점 기준(허용 동치·정규화 범위) 선언도 없으나, 칩·구두점 제약으로 답이 단일해 이는 부차적이다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 2,
+    "C5": 3,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "chip: by the new leader (중복 2개)",
+      "intent": "수동태 문장에 by-행위자구를 넣고 싶어지는 심리를 겨냥한 유일한 디코이",
+      "temptingBecause": "was ordered 수동 구조를 만들고 나면 행위자 'by the new leader'를 붙이는 것이 자연스러워 보이고, 실제로도 의미상 올바른 행위자다",
+      "decisiveFlaw": "삽입 가능한 통사 슬롯이 칩 융합으로 봉쇄됨 — 'ordered to'가 한 칩이라 ordered와 to 사이 삽입 불가, 'protect the palace.'가 마침표 포함이라 문말 배치 불가. 즉 배제 근거가 문법 판단이 아니라 기계적 제약이며, 동일 칩이 2개 중복 수록된 것은 생성 결함이다"
+    },
+    {
+      "label": "chip: Following / refusal to step down, / protect the palace.",
+      "intent": "골격 칩 — Following 인과구 + 본절 구성",
+      "temptingBecause": "해당 없음(정답 구성 칩)",
+      "decisiveFlaw": "대문자 Following, 쉼표·마침표가 칩에 부착되어 문장 골격(도입구→주절→문말)이 사실상 노출된다. 배열 판단이 기계적 조립에 가까워져 변별력이 약화된다"
+    },
+    {
+      "label": "chip: the new leader's / his army / was immediately / ordered to",
+      "intent": "소유격+명사화(refusal) 결합, 능동→수동 전환 감각 평가",
+      "temptingBecause": "the new leader's를 refusal 앞과 army 앞 중 어디에 둘지 잠시 고민하게 함",
+      "decisiveFlaw": "'his army'가 융합 칩이라 'the new leader's army' 구성이 원천 불가 — 유일하게 실질적이던 배치 고민도 칩 융합이 대신 풀어준다"
+    }
+  ],
+  "explanationIssues": [
+    "디코이 배제 근거 오설명(critical): '군대가 명령받은 쪽이므로 by the new leader를 쓰지 않는다'는 거짓 인과 — by-행위자구는 의미상 완전히 타당하며 실제 배제 근거는 칩 융합('ordered to')과 문말 마침표 칩이라는 기계적 제약이다. 학생에게 '수동문에서 피명령자가 주어면 by-행위자를 못 쓴다'는 오개념을 심을 수 있다",
+    "해설이 디코이 칩을 단수로 지칭하나 칩 목록에는 동일 칩이 2개 존재(desync)",
+    "keyPoints[2]의 'surrender'는 목표 문장에 존재하지 않는 동사(지문 내용 혼입)"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "정답 배열 자체는 유일하다(V2 통과): 'ordered to' 융합, 'protect the palace.' 마침표, 'refusal to step down,' 쉼표, 대문자 Following, 그리고 인과 관계를 요구하는 힌트가 결합해 선언된 모범답안 외 문법적 대안 배열이 존재하지 않음을 독립 검증했다. 완성문 'Following the new leader's refusal to step down, his army was immediately ordered to protect the palace.'는 문법적·자연스럽다(V3 통과). 그러나 (1) 동일 디코이 칩 중복 수록(V1), (2) 디코이 배제 근거의 문법 오개념(V4), (3) keyPoints의 사실 불일치 및 해설-칩 desync(V5)로 치명 결함 3건 — F. 공예 측면에서도 구두점·대문자 칩 부착이 골격을 누출하고(C4=2), 유일한 함정이 기계적으로 회피 가능해(C3=2) 실질 판단 부하가 낮다. 수리 방향: 중복 칩 1개 제거, 디코이 해설을 '의미상 타당하나 ordered to 융합 칩과 문말 마침표 때문에 들어갈 자리가 없다'로 교체(또는 ordered/to 칩 분리 후 by구 삽입 위치를 실제 판단 지점으로 승격), keyPoints[2]에서 surrender 삭제. 요청 난이도 INTERMEDIATE이므로 KILLER 조건 판정 대상 아님."
+}

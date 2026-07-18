@@ -1,0 +1,62 @@
+{
+  "pid": "P004",
+  "validity": {
+    "V1": true,
+    "V2": false,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V2",
+      "severity": "critical",
+      "evidence": "발문이 '본문에서 찾아 알맞게 변형하여 쓰시오'라고 지시하는데 (A)의 선언 정답 'severed'는 본문에 어떤 굴절형으로도 존재하지 않는다. 본문의 실제 단서는 'ties between service work and particular places can be disconnected'의 'disconnected'이며, 지시를 따른 학생의 답 'has disconnected'는 슬롯에 문법적으로 들어가지만 정답 집합에 없다. 독립 풀이에서 허용돼야 할 답이 누락된 V2 실패."
+    },
+    {
+      "code": "V2",
+      "severity": "major",
+      "evidence": "폐쇄형 서술(SUMMARY_COMPLETE)임에도 허용 답안 집합·표기 정규화·굴절 허용·동의어 허용 범위가 전혀 고정되어 있지 않다(RUBRIC §B-1). 해설은 '(disconnect를 변형한 형태) 또는 이에 준하는 동사'라며 동치 동사를 허용하는 듯 말하지만 선언 정답 필드는 'severed' 단일 답이어서 채점 경계가 모순적으로 흐리다."
+    },
+    {
+      "code": "V4",
+      "severity": "major",
+      "evidence": "해설이 severed를 '본문의 disconnect를 변형한 형태'라고 설명하나, sever는 disconnect와 별개 어휘소로 어형 변화 관계가 아니다. 어휘 오분석이며, 발문(본문에서 찾기)과 정답(본문 밖 단어) 사이의 모순을 가리는 서술이다."
+    },
+    {
+      "code": "V3",
+      "severity": "minor",
+      "evidence": "발문의 '알맞게 변형하여'와 달리 (B) material은 본문 형태 그대로 무변형 전사이고, (A)의 본문 단서 disconnected 역시 'has disconnected'로 형태 변화가 없다. 또한 요약문의 'those regions'는 문장 내 선행 명사구가 없어 지시 대상이 느슨하다(경미)."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 2,
+    "C5": 2,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "지문 핵심 논지(디지털 플랫폼에 의한 노동-장소 연결의 절단)를 'disconnected' 단서에서 찾아 has 뒤 과거분사 슬롯에 맞게 산출하게 함",
+      "temptingBecause": "요약문 'has ___ the traditional connection'이 '끊다' 계열 동사를 강하게 유도하고 본문에 disconnected가 명시적으로 존재",
+      "decisiveFlaw": "선언 정답 severed가 본문에 없는 어휘소라 발문 지시와 정면 모순. 지시를 따른 정답 후보 disconnected가 정답 집합에서 누락되어 채점 불가능한 키"
+    },
+    {
+      "label": "(B)",
+      "intent": "'leaves behind no material traces'에서 material을 찾아 명사(presence) 앞 형용사 슬롯에 넣게 함",
+      "temptingBecause": "요약문 'without leaving any ___ presence'가 본문 'leaves behind no material traces'와 어휘·구문이 병렬이라 단서 연결이 직접적",
+      "decisiveFlaw": "병렬이 지나치게 강해 사실상 베껴쓰기 수준(변형 0)이라 변별력이 낮음. 정답 자체는 유효"
+    }
+  ],
+  "explanationIssues": [
+    "severed를 'disconnect를 변형한 형태'로 기술한 어휘 오분석(별개 어휘소).",
+    "'또는 이에 준하는 동사'라는 허용 문구가 단일 선언 정답과 충돌해 채점 기준을 모호하게 만듦.",
+    "한 문단 장문 나열식으로 정답 근거와 함정 분리가 없고, 오답/경계답 해설이 전무('오답 해설 (없음)')."
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "요약 대상 선정(노동의 지리적 탈동조화)은 지문 핵심을 정확히 짚어 C1은 양호하나, (A) 정답 키가 발문 지시('본문에서 찾아')와 모순되는 본문 밖 어휘(severed)로 선언된 것이 치명 결함. 폐쇄형 서술 필수 요건인 허용 답안 집합·정규화 정책 부재까지 겹쳐 V2 실패, 이를 가리는 해설 오분석으로 V4 실패. 요청 난이도 INTERMEDIATE이므로 KILLER 조건 판정 대상 아님(false). 수정 방향: (A) 정답을 disconnected(또는 severed/cut off 등 동치 동사 허용 집합 명시)로 재선언하고 발문 문구와 채점 경계를 일치시킬 것."
+}

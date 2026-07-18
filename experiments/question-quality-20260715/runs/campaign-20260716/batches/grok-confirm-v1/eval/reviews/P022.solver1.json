@@ -1,0 +1,35 @@
+{
+  "pid": "P022",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "Antecedent 'people' (plural, human) with subject relative pronoun 'who' governing 'have been adopted'. Agreement and case are both right."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "True subject is 'all their attempts' (plural), not the adjacent 'this information' inside the infinitive phrase 'to discover this information'. Plural 'are' is required, and passive 'be met with (firm) resistance' is idiomatic. This is the proximity-agreement distractor: the nearby singular noun tempts an 'is met' correction, but subject-tracing confirms 'are met' is right."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "Adverb 'publicly' correctly modifies the verb phrase 'have protested'; 'protest' is used transitively ('protested this situation'), which is standard American usage. No adjective slot exists here."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'make the search much harder' = make + object + objective complement; the complement describing 'the search' must be an adjective, and 'harder' is the comparative adjective, properly intensified by 'much'. Momentary adjective-vs-adverb temptation dissolves once the SVOC frame is identified."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "'devote all their time and energy to find' violates the idiom 'devote A to B', where 'to' is a preposition requiring a gerund: it should be 'to finding (out) more about their origins'. The rescue reading of 'to find' as a purpose infinitive fails because transitive 'devote' would then lack its obligatory 'to + NP/gerund' complement — 'devote time and energy' alone is incomplete. No defensible alternative parse makes the underlined form grammatical."
+    }
+  ],
+  "note": "Clean single-answer item. The designed magnet is (B) (proximity agreement with 'this information'), which a careful subject-spine trace defeats; (E) is unambiguously wrong under the devote-to-gerund rule, and the purpose-infinitive escape is blocked by devote's obligatory complement structure. Minor style note (not a grammar flaw): 'find more about' would more naturally be 'find out more about', but the tested point (gerund after prepositional 'to') is unaffected."
+}

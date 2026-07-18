@@ -1,0 +1,80 @@
+{
+  "pid": "P001",
+  "itemType": "GRAMMAR_ERROR",
+  "requestedDifficulty": "KILLER",
+  "blindAnswer": "(E)",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4",
+      "severity": "major",
+      "evidence": "해설의 함정 설명 '관계절의 CEOs나 단수 개념을 주어로 착각하면 오류를 놓치기 쉬우므로'는 인과가 뒤집힌 오설명이다. CEOs는 복수이므로 이를 주어로 착각한 학생은 복수 동사(were)를 기대하게 되어 오히려 was를 오류로 '잡게' 되지, 놓치지 않는다. 또한 해당 문장(Some of the ways ... their masks was to ...) 안에는 단수 유인 명사가 실재하지 않아 '단수 개념을 주어로 착각'이 지시하는 대상이 지문에 없다. 학생에게 잘못된 추론 패턴을 가르치는 인과 오설명."
+    },
+    {
+      "code": "V4",
+      "severity": "minor",
+      "evidence": "(B) 오답 해설이 'waste energy, sacrifice productivity, and lose people's trust가 동일한 동사 원형으로 병렬'이라고 기술하나, 이들은 주어 you에 일치한 정형(finite) 현재시제 동사의 병렬이다(형태가 원형과 우연히 일치할 뿐). 구조 판단(3개 동사 병렬)은 맞으나 용어가 부정확."
+    },
+    {
+      "code": "V5",
+      "severity": "minor",
+      "evidence": "markedExpressions (E)의 expression('were')과 surroundingText(원문형 문장, were 포함)가 원문 기준으로 기록되어, 렌더형 기준으로 기록된 (A)~(D) 항목과 규약이 불일치한다. 학생 노출 필드(렌더 지문 'was', 선택지 '(E) was', 정답 라벨, 해설)는 상호 동기화되어 있어 V5 실패로는 판정하지 않으나, 이 구조 필드가 UI에 노출되면 정답 누출 위험이 있다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "too + 형용사 + to부정사(tough형, 주어가 부정사의 의미상 목적어인 목적어 공백 구문) 자리 검증",
+      "temptingBecause": "uphold의 목적어가 표면에 없어 'to be upheld'(수동)로 고쳐야 한다고 느낄 수 있음",
+      "decisiveFlaw": "too ~ to-v 구문은 'too heavy to lift'형 능동 부정사가 표준이므로 어법상 옳다. 다만 패턴이 관용적이라 유인력이 낮은 디코이."
+    },
+    {
+      "label": "(B)",
+      "intent": "that절 내 동사 병렬 구조(waste / sacrifice / lose) 검증",
+      "temptingBecause": "병렬 둘째 항이라 sacrificing 등 형태 변화가 필요하다고 착각할 여지",
+      "decisiveFlaw": "주어 you를 공유하는 세 정형 현재동사의 병렬로 정확. 표면적으로 명백해 유인력 낮음."
+    },
+    {
+      "label": "(C)",
+      "intent": "사역동사 make + 목적어 + 원형부정사 목적격보어 검증",
+      "temptingBecause": "make them to appear처럼 to부정사 보어를 기대하는 학생을 겨냥 — 디코이 중 가장 실질적 판단 유발",
+      "decisiveFlaw": "사역 make는 원형부정사 보어를 취하므로 appear는 옳다."
+    },
+    {
+      "label": "(D)",
+      "intent": "앞 절 전체를 의미상 주어로 하는 결과·부연 분사구문(creating) 검증",
+      "temptingBecause": "encouraged와의 병렬로 and created여야 한다거나 which creates가 필요하다고 착각할 여지",
+      "decisiveFlaw": "결과를 잇는 능동 분사구문으로 옳다. 정형 병렬로 바꿔도 문법적이어서 '틀렸다'고 판단할 근거가 없음."
+    },
+    {
+      "label": "(E)",
+      "intent": "정답 — 관계절(we helped the CEOs remove their masks)이 개입한 장거리 주어-동사 수일치. source 'were' → displayed 'was' 최소대립쌍, 교정 시 원문 복원",
+      "temptingBecause": "주어 핵과 동사 사이 7단어 관계절 개입; 보어가 to부정사 나열이라 단수 서술로 느껴질 수 있음",
+      "decisiveFlaw": "Some of the ways(복수 핵)이므로 were여야 한다. 치명적 약점: 동사 인접 명사 masks도, 관계절의 CEOs도 모두 복수라 잘못된 근접일치 휴리스틱으로도 was가 즉시 발각된다. 단수 유인 명사가 전무해 KILLER급 은폐가 없다."
+    }
+  ],
+  "explanationIssues": [
+    "정답 해설의 함정 기술이 인과 역전: 'CEOs를 주어로 착각하면 놓치기 쉽다'고 하나 CEOs는 복수라 그 착각은 오히려 정답 적중으로 이어진다. '단수 개념' 유인물도 문장에 실재하지 않는다.",
+    "(B) 해설: 정형 현재동사 병렬을 '동사 원형' 병렬로 기술 — 용어 부정확(minor).",
+    "(A)·(B)에 대한 why-tempting 서술 부재 — 해설이 why-correct만 제공하며, keyPoints도 (E)(C)(D)만 다뤄 §C의 '5개 밑줄 각각 point·why tempting·why correct' 요건 미충족."
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": "§C 판정: (1) 최소대립쌍·원문 복원 충족. (2) 명확한 문법 판단(수일치) 충족. (3) 5개 밑줄 각각의 why-tempting 미비 — (A)(B)는 why-correct만 존재. (4) 'KILLER 정답은 구조를 읽어야 하며 즉시 드러나지 않는다' 불충족 — 문장 내 모든 인접 명사(ways/CEOs/masks)가 복수여서 구조 독해 없이 근접일치 직감만으로도 was가 튀어 보인다. 단수 attractor가 없는 수일치 오류는 KILLER 은폐 요건을 만족하지 못한다. (5) 동일 포인트의 쉬운 디코이 없음 — 충족.",
+  "grade": "F",
+  "notes": "지문 무결성·정답 유일성·필드 동기화는 견고하다: 렌더 변형은 (E) were→was 하나뿐이고, (A)~(D)는 각각 독립 검증에서 모두 어법상 옳으며 (E)만 유일 오류다. 그러나 두 축이 문항을 무너뜨린다. 첫째, 해설의 함정 설명이 사실과 어긋난다(복수 CEOs를 주어로 착각하면 오류를 '놓친다'는 역방향 인과, 존재하지 않는 단수 유인 지목) — V4 실패, 치명은 공예로 상쇄되지 않으므로 F. 둘째, KILLER 요청 대비 실제 난이도가 중위권이다: 수일치 오류 주변에 단수 attractor가 하나도 없어 정확한 구조 분석과 부정확한 근접일치 휴리스틱이 같은 답을 내므로 변별 깊이가 없다(C5=1). 재설계 방향: (a) 해설 함정 문장을 '보어인 to부정사 나열을 단수 서술로 느껴 was를 수용하기 쉽다' 류의 실재하는 유인으로 교체, (b) KILLER를 원하면 관계절 내부에 단수 명사(예: the CEO of each firm 류)가 동사 직전에 오도록 소재를 고르거나 다른 오류 포인트(구조 의존형)로 전환, (c) (A)(B)의 why-tempting 보강."
+}

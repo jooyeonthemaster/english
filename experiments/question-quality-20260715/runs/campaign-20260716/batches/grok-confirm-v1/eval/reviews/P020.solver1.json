@@ -1,0 +1,35 @@
+{
+  "pid": "P020",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'did an experiment showing (that) human perception and behavior can be influenced...' — 현재분사 showing이 experiment를 후치 수식하는 축약 관계절(= an experiment that shows ...)이며, showing의 목적어로 접속사 that이 생략된 명사절이 온 표준 구조. 매력적 오답 포인트: 이중 축약(분사 + that 생략) 때문에 'that showed'가 필요해 보이는 유혹이 있으나 완전한 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'asked them to create a coherent sentence' — ask + 목적어 + to부정사의 교과서적 5형식 패턴. 문제 없음."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'Those students who had been exposed to...' — 선행사 students(사람)를 받는 주격 관계대명사 who, 관계절 내 동사 had been exposed의 주어 역할. 정상."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "문장 골격 추적: 주어 'Those students' + 관계절 [who had been exposed to an elderly mix of words] 뒤에 본동사가 와야 하는데 taking(분사)만 있고 문장 전체에 정동사가 없다. had been exposed는 관계절 내부 동사이므로 주절 동사가 될 수 없음. 뒤따르는 'than those who...'는 비교구일 뿐 동사를 제공하지 않음. 분사구문·도치 등 대안 해석으로 구제 불가 — took로 고쳐야 한다. 어법상 틀린 부분."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'as if they were 50 years older than they actually were' — 정도 명사구(50 years) + 비교급 older + than절의 표준 결합. as if 가정법 과거 were도 정상."
+    }
+  ],
+  "note": "정답이 (D) 하나로 명확히 좁혀지는 깨끗한 문항. 주절 정동사 부재라는 장거리 단서(주어-관계절-본동사 구조 추적)를 요구하는 전형적 수능 어법 유형. (A)가 이중 축약(분사 + that 생략)으로 가장 매력적인 오답이지만 정문임이 분명해 이의 소지 없음."
+}

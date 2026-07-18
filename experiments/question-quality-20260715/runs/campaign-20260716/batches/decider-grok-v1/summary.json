@@ -1,0 +1,80 @@
+{
+  "batchId": "decider-grok-v1",
+  "phase": "decider",
+  "atKst": "2026-07-18T03:30:07.056+09:00",
+  "assignments": 9,
+  "slotsConsumed": 36,
+  "accepted": 3,
+  "modelCalls": 36,
+  "inputTokens": 28209,
+  "outputTokens": 8703,
+  "costUsd": 0.107868,
+  "ledgerAfter": {
+    "used": 1088,
+    "cap": 1200,
+    "costUsd": 35.25594
+  },
+  "byArm": {
+    "DG-SUMMA": {
+      "n": 2,
+      "accepted": 2,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 4,
+      "costUsd": 0.067392
+    },
+    "DG-SENTE": {
+      "n": 2,
+      "accepted": 0,
+      "gateRejected": 0,
+      "noCandidate": 2,
+      "slots": 10,
+      "costUsd": 0
+    },
+    "DG-IRREL": {
+      "n": 1,
+      "accepted": 0,
+      "gateRejected": 0,
+      "noCandidate": 1,
+      "slots": 5,
+      "costUsd": 0
+    },
+    "DG-VOCAB": {
+      "n": 1,
+      "accepted": 0,
+      "gateRejected": 0,
+      "noCandidate": 1,
+      "slots": 5,
+      "costUsd": 0
+    },
+    "DG-FILL_": {
+      "n": 1,
+      "accepted": 1,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 2,
+      "costUsd": 0.040476
+    },
+    "DG-WORD_": {
+      "n": 1,
+      "accepted": 0,
+      "gateRejected": 0,
+      "noCandidate": 1,
+      "slots": 5,
+      "costUsd": 0
+    },
+    "DG-GRAMM": {
+      "n": 1,
+      "accepted": 0,
+      "gateRejected": 0,
+      "noCandidate": 1,
+      "slots": 5,
+      "costUsd": 0
+    }
+  },
+  "models": {
+    "standard": "x-ai/grok-4.5",
+    "premiumQgen": "google/gemini-3.1-pro-preview"
+  },
+  "durationMs": 615796
+}

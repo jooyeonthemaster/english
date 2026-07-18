@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "US traffic usage of 'No Standing' means vehicles may not park or wait, but may stop briefly to pick up/drop off passengers. This matches the narrative exactly: the friend chose this corner as a pickup point and did stop there to pick Carol up. Grammatical seam after 'That means' is clean, and the friend's laughing correction ('Of course you can stand there') confirms the sign targets cars, not pedestrians."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "This restates Carol's mistaken interpretation (pedestrians may not stand/pause), which the friend explicitly refutes with 'Of course you can stand there.' Filling the blank with this would make the friend's laughter and correction self-contradictory. Trap for readers who miss that the friend is correcting Carol."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "No support in the passage: 'the whole avenue' and 'during the lunch hour' are fabricated scope/time restrictions. A 'No Standing' sign posted at one corner regulates that spot, and nothing ties the sign to lunch hours."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "Most attractive distractor — it correctly shifts the sign's scope from pedestrians to vehicles, giving a false 'aha' click. But 'must never stop or wait' describes a 'No Stopping' zone, not 'No Standing,' and it is contradicted by the story itself: the friend planned the pickup at that very corner and just stopped there to pick Carol up. The long-range narrative cue (the pickup actually occurring) rules it out."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Echoes Carol's own claim that the corner was 'a bad idea' for meeting — the position the friend is laughing at and refuting. Also 'picnic meeting corner' is incoherent with the passage (they are going to lunch by car, not a picnic). Logically opposite to the friend's reassurance."
+    }
+  ],
+  "note": "Solver lens: top-tier examinee, real-time solving with distractor-pull logging. Felt a momentary pull toward option 4 at the vehicle-scope realization, but the in-text pickup event (friend stopped at the corner) immediately disqualifies 'never stop or wait.' Option 1 is the unique defensible answer; it states the precise legal meaning of 'No Standing' (no parking/waiting, brief passenger pickup allowed) and is internally consistent with every narrative detail. No alternative reading makes any other option viable. Clean single-key item."
+}

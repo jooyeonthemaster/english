@@ -1,0 +1,77 @@
+{
+  "pid": "P014",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor",
+      "severity": "minor",
+      "evidence": "해설이 (D) 문장의 주어를 '현재분사가 수식하는 명사구'로만 분석한다. 'People raising their voices while speaking to him implied a hidden message'는 의미상 동명사절 주어(사람들이 목소리를 높이는 행위가 메시지를 함축) 해석이 더 자연스럽고, 분사 수식 명사구 해석은 대안 파스다. 다만 두 해석 모두에서 정동사 필수라는 핵심 판정은 동일하므로 오개념을 가르치지는 않는다."
+    },
+    {
+      "code": "V5-minor",
+      "severity": "minor",
+      "evidence": "keyPoints가 5개 밑줄 중 (D)(C)(A) 3개만 다룬다. 모순은 없고 (B)(E)는 오답 해설에 근거가 존재하므로 동기화 실패는 아니나, 완전 커버리지는 아니다."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 4,
+    "C5": 4,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "주격 관계대명사 that 판별 — 선행사 파악과 관계절 동사 수일치(exchanges ... that are)",
+      "temptingBecause": "선행사 exchanges 앞에 'subtle, stunning, often automatic, and nonverbal' 나열 수식이 길게 끼어 있어 선행사 특정에 한 단계가 필요하고, that을 접속사/what 자리와 혼동할 여지를 노린다",
+      "decisiveFlaw": "정답 아님 — that은 복수 선행사 exchanges를 받는 주격 관계대명사이고 관계절 동사 are가 정확히 호응하므로 흠이 없다"
+    },
+    {
+      "label": "(B)",
+      "intent": "명사 potential 뒤 to부정사 보충 구조(the potential to V) 판정",
+      "temptingBecause": "potential 뒤에 of -ing를 기대하거나 to를 전치사로 오인하면 impacting으로 고치고 싶어진다",
+      "decisiveFlaw": "정답 아님 — 'have the potential to + 동사원형'은 표준 구문이며 to impact는 정확한 용법이다. 다만 단독 매력도는 낮은 편"
+    },
+    {
+      "label": "(C)",
+      "intent": "명사 후치 수식 현재분사(능동) 판정 — 정답 (D)와 같은 -ing 형태로 병렬 배치된 핵심 디코이",
+      "temptingBecause": "(D)의 implying과 동일한 -ing 표면형이라, 정동사 유무를 실제로 파싱하지 않으면 어느 쪽이 틀렸는지 구분할 수 없다. involved로 고쳐야 한다는 능/수동 오판도 유도한다",
+      "decisiveFlaw": "정답 아님 — involving은 instance를 수식하는 능동 분사이고 문장의 정동사 highlights가 별도로 존재하므로 완전한 문장이다"
+    },
+    {
+      "label": "(D)",
+      "intent": "정동사 vs 준동사 — 분사가 내장된 긴 주어 뒤 정동사 필수 판정 (선언된 정답)",
+      "temptingBecause": "주어 내부의 raising, speaking 등 -ing가 연쇄되어 있어 implying까지를 분사구문의 연속으로 착각하기 쉽고, 뒤따르는 동격절의 is defined를 정동사로 오인할 수 있다",
+      "decisiveFlaw": "실제 오류 — 주어 'People raising their voices while speaking to him'(분사 수식 명사구 또는 동명사절 어느 파스로도) 뒤에 정동사가 없어 문장이 조각이 된다. is defined는 message의 동격 that절 내부 동사라 주절을 완성하지 못한다. implied로 교정하면 정확히 원문이 복원된다"
+    },
+    {
+      "label": "(E)",
+      "intent": "수동태 과거분사 판정(are delivered) — 능동 delivering과의 태 구분",
+      "temptingBecause": "examples가 deliver의 주체처럼 읽히면 are delivering으로 고치고 싶어질 수 있다",
+      "decisiveFlaw": "정답 아님 — examples는 전달되는 대상이므로 수동태 are delivered가 정확하다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "정답 해설의 '이 주어는 현재분사가 수식하는 명사구이므로'는 두 가지 정당한 파스 중 하나만 제시한 것으로, 동명사절 주어 해석이 의미상 더 자연스럽다. 정동사 필수라는 판정 자체는 두 해석 모두에서 성립하므로 사실 오류는 아니다.",
+      "recommendation": "'분사 수식 명사구(또는 동명사구) 주어' 정도로 표현을 넓히면 논쟁 소지가 사라진다"
+    },
+    {
+      "severity": "minor",
+      "evidence": "(C) 오답 해설의 '사물을 한정하며'는 다소 어색한 표현이다(instance는 사물이라기보다 사례). 문법 분석 자체는 정확하다.",
+      "recommendation": "'명사 instance를 능동 의미로 후치 수식' 정도로 다듬기"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "A",
+  "notes": "V1: 렌더 지문은 원지문 대비 마커 삽입과 (D) implied→implying 최소대립 변형뿐이며 접합 파손·중복·누락·고아 문장부호 없음, 라벨·마커·선지 완전 일치. V2: 5개 밑줄 독립 검증 결과 (A)(B)(C)(E)는 모든 대안 해석에서 문법적이고 (D)만 모든 파스에서 정동사 부재 조각문 — 단일 정답 확정. V3: 지문·발문·교정 완성문 모두 문법적, 비문은 (D) 하나로 유형 의도와 정확히 일치. V4: 핵심 분석(정동사 필수, implied 교정) 정확, 오답 해설 4건 모두 실제 구조와 대응, 파스 프레이밍 소소한 quibble만 존재. V5: 정답 라벨·markedExpressions(isError/correction)·해설·keyPoints 상호 모순 없음. 공예: (C) involving을 정답 (D)와 같은 -ing 표면형으로 병렬 배치해 실제 파싱을 강제한 설계가 우수하고, 함정 깊이(주어 내장 분사 위장)가 INTERMEDIATE에 정확히 부합. 약점은 (B)(E)의 낮은 매력도. 합계 21, 전 V 통과, 전 C≥3 → A. 요청 난이도 INTERMEDIATE이므로 killerConditionsMet=false."
+}

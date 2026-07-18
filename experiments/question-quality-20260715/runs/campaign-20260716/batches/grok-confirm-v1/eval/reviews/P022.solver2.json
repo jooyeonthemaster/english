@@ -1,0 +1,35 @@
+{
+  "pid": "P022",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) who",
+      "verdict": "correct",
+      "reason": "선행사 people(사람, 복수)을 받는 주격 관계대명사. 관계절 내 동사 have been adopted가 복수 일치하며 주어 자리가 비어 있으므로 who가 정확히 요구되는 자리다. whom/which/whose로 바꿀 근거 없음. 정문."
+    },
+    {
+      "label": "(B) are met",
+      "verdict": "correct",
+      "reason": "진짜 주어는 all their attempts (to discover this information은 attempts를 수식하는 to부정사). 복수 주어 attempts에 are 일치 정확. 의미상 attempts는 resistance를 '만나게 되는' 대상이므로 수동태 be met with(~에 부딪히다)가 관용적으로 성립. 능동 meet으로 쓸 이유 없음. 정문."
+    },
+    {
+      "label": "(C) publicly",
+      "verdict": "correct",
+      "reason": "동사 protested를 수식하므로 부사 publicly가 옳다. 조동사 have와 과거분사 protested 사이의 부사 위치(mid-position)도 표준 어순. 형용사 public이라면 수식 대상이 없어 비문이 된다. protest를 타동사로 쓰는 것(protested this situation)도 미국 용법에서 표준. 정문."
+    },
+    {
+      "label": "(D) harder",
+      "verdict": "correct",
+      "reason": "make + 목적어(the search) + 목적격보어(형용사) 구조에서 비교급 harder가 목적격보어로 성립. 비교 강조 부사 much는 비교급만 수식 가능하므로 much harder 결합이 오히려 비교급을 요구한다(원급 hard면 much와 충돌). more harder 같은 중복 비교도 없음. 정문."
+    },
+    {
+      "label": "(E) find",
+      "verdict": "wrong (정답)",
+      "reason": "지배 구문은 devote A to B로, 이때 to는 부정사 표지가 아니라 전치사다. 따라서 devote all their time and energy to 뒤에는 동명사 finding(또는 명사구)이 와야 하며 원형 find는 비문. 대안 해석으로 to find를 목적 부정사('찾기 위해 시간과 에너지를 바치다')로 읽는 시도를 검토했으나, devote는 to-보충어(귀착점)를 강하게 요구하는 동사여서 devote their time and energy만으로는 논항이 불완전하고, 의미상으로도 시간과 에너지가 바쳐지는 귀착점이 바로 '알아내는 일'이므로 전치사 to + 동명사 독법이 유일하게 자연스럽다. 표준 어법 판정상 find → finding으로 고쳐야 한다. 오류 확정."
+    }
+  ],
+  "note": "블라인드 풀이 결과 (E)가 유일한 오류로 확정된다. (A)~(D)는 각각 관계대명사 일치, 장거리 주어-동사 수일치(attempts...are), 부사 어순, 비교급 보어로 모두 형식적으로 정문임을 증명 가능. (E)는 devote A to B(전치사 to) 규칙 위반으로 finding이어야 한다. 부수적으로 find more about은 find out more about이 더 관용적이지만 이는 어법 문제의 판정 대상 오류(품사/형태)와 별개의 어휘 관용성 문제로, 정답 판정에 영향 없음. 복수 정답 소지 없음."
+}

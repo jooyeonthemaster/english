@@ -1,0 +1,98 @@
+{
+  "pid": "J001",
+  "blindAnswer": "④",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": false,
+    "V2": true,
+    "V3": false,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-ORPHAN-COMMA",
+      "severity": "critical",
+      "evidence": "원문 2문장은 'The potential contribution of greater economic success, if it involves vulnerable groups, cannot be denied.'로, 삽입절을 여는 쉼표가 있다. 렌더는 삽입절+본동사구('if it involves vulnerable groups, cannot be denied')를 통째로 빈칸 처리하면서 여는 쉼표를 지우지 않아 'The potential contribution of greater economic success, _____.'가 되었다. 다섯 선지가 모두 정형동사(is/replaces/is/is/should)로 시작하므로 어떤 선지를 넣어도 'success, is valid ...'처럼 주어와 술어 사이에 고아 쉼표가 남는다. 의도된 변형(빈칸화) 외의 손상(고아 문장부호)이다."
+    },
+    {
+      "code": "V3-SEAM-UNGRAMMATICAL",
+      "severity": "critical",
+      "evidence": "정답 ④를 넣은 완성문 'The potential contribution of greater economic success, is valid only when its benefits are directed toward marginalized populations.'는 단독 쉼표가 주어와 동사를 분리하는 구두점 비문이다. 이 seam 비문은 5개 완성문 전부에 동일하게 발생한다(선지 간 차별 단서는 아니지만 완성문 문법성 게이트 자체를 통과하지 못함)."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "메커니즘 오귀속 + half-truth: 성장의 기여가 '주로 농업 생산 다각화를 통해 실현된다'는 부분 사실 조합",
+      "temptingBecause": "1문장의 'diversification of economic activities', 'revival of the rural economy'와 4문장의 'agricultural sector in Kenya', 'food production in Zimbabwe'를 어휘적으로 재조합해 지문 표면과 강하게 겹친다",
+      "decisiveFlaw": "4문장이 바로 그 성장·농업·식량 생산이 기근 방지 성공의 'at best only a small part'만 설명한다고 명시적으로 격하하므로 'primarily through'가 직접 반박된다"
+    },
+    {
+      "label": "②",
+      "intent": "대체(substitution)형 논리 역전: 경제 성공이 특화된 권리 보호 장치를 대체한다는 주장",
+      "temptingBecause": "3문장의 핵심구 'specialized entitlement protection mechanisms'와 5문장의 'in times of crisis'를 그대로 재사용한다",
+      "decisiveFlaw": "3문장 'cannot hope to prevent famines WITHOUT specialized entitlement protection mechanisms'가 해당 장치의 불가결성을 단언하므로 'replaces the need for'는 본문 논지의 정반대"
+    },
+    {
+      "label": "③",
+      "intent": "인과 과확장(automatic-guarantee): 성장이 취약층을 자동 방어한다는 절대 진술",
+      "temptingBecause": "'vulnerable populations'(=vulnerable groups), 'livelihood'(=derive their livelihood from uncertain sources) 등 본문 핵심 어휘를 정밀 재사용한다",
+      "decisiveFlaw": "3문장이 '아무리 빨리 성장해도' 직접 공적 개입 없이는 기근을 못 막는다고 단언해 자동 방어를 부정한다. 또한 'guaranteed to automatically'라는 이중 절대어는 시험 요령만으로도 소거되는 꼬리 단서다"
+    },
+    {
+      "label": "④",
+      "intent": "정답: 원문 excised span 'if it involves vulnerable groups, cannot be denied'를 'vulnerable groups→marginalized populations'로 추상화해 재진술",
+      "temptingBecause": "해당 없음(정답). 유일하게 성장의 가치를 제한하는 극성을 가진 선지",
+      "decisiveFlaw": "결함 아님. 단, 원문의 'if'(충분조건적 양보)를 'only when'(필요조건)으로 논리 강화했고 'cannot be denied'→'is valid'로 약화 치환했다. 지문 전체 논지로 정당화 가능하나 'source span 의미의 정확한 보존'에는 미달"
+    },
+    {
+      "label": "⑤",
+      "intent": "우선순위 역전(polarity reversal): 성장을 공적 개입보다 앞세우는 주장",
+      "temptingBecause": "지문의 핵심 대조축(greater economic success vs direct public intervention)을 그대로 사용하고 'long-term food supply'가 그럴듯한 정책 담론 어조를 만든다",
+      "decisiveFlaw": "1문장이 성장에'만' 기대는 경향 자체를 경계 대상으로 놓고 5문장이 진짜 성취를 direct public support에 귀속시키므로 우선순위가 정확히 반대"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "V4-MINOR-STRUCTURE-LABEL",
+      "severity": "minor",
+      "evidence": "해설이 완성문을 '양보 구조의 문장'이라 부르나, ④를 넣은 완성문은 'only when' 제한 조건문이지 통사적 양보 구문이 아니다(양보성은 담화 층위에서만 성립)"
+    },
+    {
+      "code": "V4-MINOR-CAUSAL-TERM",
+      "severity": "minor",
+      "evidence": "'인과적 전제', '인과적으로 우선시되어야 한다' 등에서 조건(only when)·우선순위(priority) 관계를 '인과'로 서술한 용어 느슨함. ⑤ 선지 원문에는 인과 표현이 없다"
+    },
+    {
+      "code": "V4-MINOR-IF-VS-ONLYIF",
+      "severity": "minor",
+      "evidence": "해설이 원 빈칸 문장이 \"'취약 계층을 포함할 때'에만 인정될 수 있다는 전제\"를 담는다고 서술하나 원문 span은 'if'(충분조건)이지 'only if'가 아니다. ④와는 정합하지만 원문 구조 기술로는 강화된 오기술"
+    },
+    {
+      "code": "V4-MINOR-ADDITION",
+      "severity": "minor",
+      "evidence": "'장기적 관점에서'는 지문에 근거 없는 첨가이며, ② 해설의 '경제적 성공지표'는 선지에 없는 '지표' 개념을 도입한다"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAudit": {
+    "sameSyntacticSlot": true,
+    "sourceSpanMeaningPreserved": false,
+    "distractorAnchorOverlapFlaw": true,
+    "twoClueIntegrationNoSingleCueSolve": false,
+    "distinctTrapTypes": false,
+    "detail": "(1) 다섯 선지 모두 동일 VP 슬롯이며 문법만으로 탈락하는 선지는 없다(고아 쉼표는 전 선지 공통). (2) 정답이 'if→only when' 논리 강화로 source span 의미를 정확히 보존하지 못한다. (3) 각 오답의 anchor/overlap/flaw는 성립. (4) 핵심 실패: ④만이 성장의 가치를 제한하는 유일한 극성 선지이고 ①②③⑤는 전부 '성장 충분/우월' 계열이라 극성 단독으로 정답 지목이 가능하다 — 'KILLER는 극성 하나로 찍을 수 없어야 한다' 위반. ③의 'guaranteed to automatically' 절대어도 단독 소거 단서. (5) ②(대체)·⑤(우선순위 역전)·③(자동 보장)은 모두 동일한 반(反)논지 '성장 만능' 오개념의 표면 변형이라 함정 유형 분화가 불완전하다."
+  },
+  "grade": "F",
+  "notes": "V2는 통과: ④가 유일 정답이며 ①②③⑤는 각각 지문 명시 문장(4문장 'small part', 3문장 'without' 불가결성, 1·5문장 논지)으로 독립 반박된다. V4·V5도 통과(해설 이슈는 전부 minor). 그러나 렌더가 원문 삽입절의 여는 쉼표를 남긴 채 빈칸화하여 모든 완성문에 주어-술어 분리 고아 쉼표가 발생 — V1(고아 문장부호)·V3(완성문 비문) 동시 실패로 등급은 F(치명은 공예로 상쇄 불가). 수리 자체는 사소함: 렌더에서 'success' 뒤 쉼표 제거만으로 V1/V3 해소. 다만 수리 후에도 극성 단독 풀이 가능성(C3=2, C4=2)과 KILLER 요건 미충족(C5=1)으로 KILLER 라벨 출하는 부적합하며, 중상 난이도 문항으로 재라벨하거나 오답 극성 분산 재설계가 필요하다. 공예 합계 13."
+}

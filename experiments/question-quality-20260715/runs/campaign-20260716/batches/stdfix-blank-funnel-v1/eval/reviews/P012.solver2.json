@@ -1,0 +1,35 @@
+{
+  "pid": "P012",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법 결합: 'they passively accept their fate...'는 정문. 논리: 지문 전체가 '수동적 수용'의 정반대를 기술한다 — 'gather their resources, overcome their problem, see opportunities', 'go one step further'. 'without looking for remedies'는 'look for some positive aspect... but actually go one step further'와 형식적으로 모순(P: 그들은 긍정적 측면을 찾는다 / ①: 그들은 해결책을 찾지 않는다 → 직접 충돌). 논리적으로 성립 불가."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "문법 결합: 'they deliberately pursue constructive opportunities within their setbacks' — 주어 they에 대한 능동 동사구, 정문. 논리: 앞선 등위 명제들과 완전 정합 — (a) 'see opportunities where most of us fail to see them' → opportunities 재진술, (b) 'focus on what they can gain from their circumstance' → constructive/gain 대응, (c) 'every cloud has a silver lining'(불운 속의 이득) → 'within their setbacks'가 cloud–silver lining 은유의 문자적 번역. 'and they ___'는 silver lining 신념의 행동적 귀결을 요구하며 ②가 그것을 충족. 유일하게 성립."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "문법 결합: 정문. 논리: '외적 인정 vs 내적 성장'이라는 대립축은 지문 어디에도 도입되지 않음. 지문의 대립축은 'what they can gain vs what they have lost'이며 recognition/inner growth와 무관. 전제 없는 신규 술어 도입으로 담화 결속 실패."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "문법 결합: 정문. 논리: 지문의 인물들은 역경의 '기억을 지우는' 것이 아니라 역경으로부터 '얻을 것에 초점'을 둔다('focus on what they can gain from their circumstance'). 얻을 것을 찾으려면 그 circumstance(역경)를 인지·보유해야 하므로 'completely erase the memory'는 오히려 전제와 충돌. 'in spite of their hardships'도 역경이 지워지지 않고 존속함을 함의. 성립 불가."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "문법 결합: 정문. 논리: 지문은 시종 자기 자신의 불운(their misfortunes, their problem, their circumstance)을 다루며 타인의 불운 구제라는 이타적 전환은 어떤 문장에서도 예비되지 않음. 'they focus on what they can gain'과 초점 대상이 어긋남(자기 이득 vs 타인 구제). 담화 논리상 성립 불가."
+    }
+  ],
+  "note": "빈칸은 'They believe in the old cliché that every cloud has a silver lining, and they ___' 구조로, silver-lining 신념의 행동적 귀결을 요구한다. 다섯 선지 모두 'they + 동사구'로 문법 seam은 전부 정문이므로 판별은 순수 논리 적합성으로 이루어지며, ②만이 'see opportunities', 'focus on what they can gain', 'go one step further'(적극성 = deliberately)와 삼중으로 정합한다. 나머지는 각각 직접 모순(①), 신규 대립축 도입(③), 전제 충돌(④), 초점 대상 불일치(⑤)로 기각. 복수 정답 여지 없음. 난이도는 다소 평이한 편 — 오답들이 지문 어휘를 재활용한 근접 미끼가 아니라 명백한 방향 이탈이라 상위권 변별력은 낮을 수 있으나 문항 성립에는 결함 없음."
+}

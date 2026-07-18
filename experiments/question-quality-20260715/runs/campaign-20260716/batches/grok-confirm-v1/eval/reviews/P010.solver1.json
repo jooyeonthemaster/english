@@ -1,0 +1,35 @@
+{
+  "pid": "P010",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'where we are headed'의 be headed는 방향·행선지를 나타내는 표준 관용 표현(미국식 영어에서 'we are headed' = 'we are heading'). wh-절이 know의 목적어로 온전히 성립한다. heading/headed 둘 다 정문이므로 흔들 요소가 없다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'we have to adjust to a postponement or create a whole new set of circumstances'에서 create는 공유된 have to 아래 adjust와 병렬인 원형부정사. 'adjust to [명사] or [명사]' 병렬을 기대하면 create가 침입한 것처럼 보여 가장 강한 매력적 오답으로 작동하지만, 'have to [adjust ... or create ...]' 동사 병렬로 완전한 정문이며 의미(새 상황을 만들어내다)도 자연스럽다. 실제로 잠시 끌렸다가 병렬 시작점(have to) 확인 후 정문으로 판정."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'This is what happens'에서 what은 선행사를 포함한 관계대명사로 happens의 주어 역할을 하며 보어절을 이끈다. that이면 절 내부 주어가 비어 비문이 되므로 what이 맞다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'end up + V-ing'는 고정 패턴이므로 spending이 맞다. 문맥(결과적으로 몇 시간을 보내게 되다)에도 부합."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "부정·제한 어구 not only가 절 앞에 오면 주어-조동사 도치가 의무적: 'not only ARE curveballs the universe's way...'가 되어야 한다. being으로는 첫 등위절에 정형동사가 전혀 없어 'curveballs the universe's way...'가 매달린 비문이 되고, 뒤의 'but they are also...'(정형절)와 짝을 이룰 수 없다. 절대구문·동명사 주어 등 대안 해석을 적극 탐색했으나 Remember that절 내부에서 'not only [being ...] but [정형절]' 구조를 정문으로 만드는 해석은 존재하지 않는다. being → are 가 유일한 수정. 어법상 틀린 부분."
+    }
+  ],
+  "note": "정답 후보는 (E) 단독. 최상위권 실전 풀이 관점에서 (B)의 병렬 seam('adjust to a postponement or create...')이 가장 강한 유혹이었으나 have to를 병렬 시작점으로 잡으면 정문임이 확정된다. (A)의 headed/heading 선택도 순간적 흔들림을 주지만 둘 다 정문. (E)는 not only 문두 도치 규칙 위반 + 정형동사 부재로 어떤 대안 해석으로도 구제 불가하여 정답이 유일하게 좁혀진다."
+}

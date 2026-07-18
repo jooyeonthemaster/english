@@ -1,0 +1,35 @@
+{
+  "pid": "P013",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'failed to adapt to the new musical styles of his bandmates' — 지문 어디에도 새로운 음악 스타일이나 밴드 내 스타일 변화 언급이 없다. 밴드메이트 Tom은 오히려 격려하는 조력자로만 등장한다. 텍스트 근거 전무."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "밑줄 직전 문장 'His confidence was, however, quickly changed to nervousness when he thought of how many people would be there'가 원인(청중 규모에 대한 불안)을, 밑줄 뒤 'making several mistakes'가 결과(제대로 연주 못함)를 명시한다. 'unable to perform well due to overwhelming anxiety'는 이 인과를 정확히 압축한다. 'overwhelming'이 원문 'nervousness'보다 다소 강한 표현이지만 confidence가 nervousness로 '빠르게 뒤집힐' 정도였으므로 허용 범위. 유일한 정답."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "'physical exhaustion after a long wait' — 쇼핑몰 대기 장면을 재활용한 미끼지만 Garcia가 직접 'I haven't waited long'이라고 말했고, 신체적 피로 묘사는 전혀 없다. 실제로 끌리는 정도도 낮음."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "'disliked the choice of wardrobe' — 옷 스레드를 재활용한 미끼. 그러나 Garcia는 'felt good as he arrived... wearing his new clothes'로 새 옷에 만족했고, 리허설 실수의 원인은 옷이 아니라 청중 규모에 대한 긴장으로 명시된다. 지문과 정반대."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "'lack of response from the audience' — 리허설과 본공연을 혼동하면 끌릴 수 있는 가장 매력적인 오답. 그러나 밑줄 시점은 리허설로 청중 반응 자체가 존재하지 않고, 본공연에서는 'the audience loudly cheered'로 반응이 열렬했다. 시점 확인으로 배제."
+    }
+  ],
+  "note": "정답 ②로 단일 수렴. 인과 사슬(긴장→리듬 난조→실수)이 밑줄 전후에 명시적으로 배치되어 있어 최상위권 기준 논쟁 여지 없음. 다만 밑줄 'struggled with the rhythm'이 비유적 표현이 아니라 거의 축자적 서술이어서, '함축 의미' 유형이라기보다 원인 포함 패러프레이즈 문항에 가깝다는 유형 적합성 약점이 있다(수능 21번 함축의미 유형은 통상 비유적/반어적 표현에 밑줄). 매력적 오답 강도: ⑤(시점 혼동 유도) > ④(소재 재활용) > ③(소재 재활용) > ①(근거 전무). 난이도는 평이한 편."
+}

@@ -1,0 +1,84 @@
+{
+  "pid": "P005",
+  "type": "SENTENCE_ORDER",
+  "requestedDifficulty": "KILLER",
+  "declaredAnswer": "5 ((C)-(B)-(A))",
+  "blindAnswer": "5 ((C)-(B)-(A))",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-TAIL-TRUNCATION",
+      "severity": "minor",
+      "evidence": "원지문의 마지막 섹션(\"The band performance was the first event of the ceremony.\" ~ \"Garcia beamed with joy at his brother's praise.\", 약 6문장: 본공연·관객 환호·Jeff의 칭찬·기쁨)이 (A)/(B)/(C) 어디에도 포함되지 않고 통째로 생략되었다. 절단면이 문장 경계·장면 경계와 정확히 일치하고((A)가 'started to feel much better'라는 준(準)해소 지점에서 끝남), 생략부에 의존하는 순서 단서가 전혀 없으므로 의도된 길이 조정으로 판단해 V1 실패로는 보지 않는다. 다만 서사 완결성(공연 결과)이 사라지는 점은 기록한다."
+    }
+  ],
+  "v2Verification": {
+    "method": "각 순서를 독립적으로 전제(presupposition) 검증",
+    "chainEvidence": [
+      "주어진 글→(C): 'waiting for his brother, Jeff' → \"I'm sorry. I'm late...\" Jeff apologized as he arrived. (C)만이 주어진 글의 대기 상황을 직접 해소하며, (C) 말미 'entered the lively shopping center'가 매장 장면의 전제를 연다.",
+      "(C)→(B): (B)의 'the store'(정관사), 'he had found in the store'는 쇼핑센터 입장 이후에만 성립. (B) 말미 \"Maybe I'll wear these for tonight's rehearsal, too\"가 리허설을 전방 조응으로 예고.",
+      "(B)→(A): (A)의 'wearing his new clothes'는 (B)의 구매를 전제하고, 'arrived at the concert hall for the rehearsal'은 (B)의 리허설 예고를 실현한다."
+    ],
+    "alternativeOrderings": "1·2·3·4 모두 최소 한 개 이상의 결정적 전제 위반(구매 전 새 옷 착용, 입장 전 매장 장면, 도착 전 Jeff 등장, 리허설 후 리허설 예고)으로 독립 탈락. 정답 집합 = {5}, 단일정답 확정."
+  },
+  "craft": {
+    "C1": 2,
+    "C2": 2,
+    "C3": 1,
+    "C4": 3,
+    "C5": 0,
+    "C6": 4
+  },
+  "craftRationale": {
+    "C1": "서사문 시간·공간 응집성(지시·어휘 연쇄)을 묻는 정당한 지점이지만, 순서 단서가 전부 표층적(장소 이동·소지품)이어서 핵심 논리를 정교하게 묻는다고 보기 어렵다.",
+    "C2": "오답 4개가 각각 식별 가능한 상이한 오류(시공간 전면 역전 / B우선 오독 / B우선+A말미 / 구매 생략)로 설명되나, 표준 5순열 구성의 구조적 산물에 가깝고 경쟁적 오독을 겨냥해 설계된 흔적은 약하다.",
+    "C3": "변별력 최하 수준. (C) 첫 위치는 Jeff 도착 사과 한 줄로 즉시 확정되고, (B)-(A) 순서도 'new clothes' 한 단서로 즉시 확정된다. 모든 오답이 국소 단서 하나로 즉시 소거되어 실제 판단이 거의 개입하지 않는다.",
+    "C4": "메타 누출은 없고 정답은 필연적이다. 다만 결정 단서가 3중 이상으로 중복(공간 이동, 어휘 연쇄, 리허설 예고)되어 난이도를 끌어내린다.",
+    "C5": "요청 난이도 KILLER와 전면 불일치. 이 지문은 평이한 서사문이고 단서가 과잉 중복되어 하위권도 풀 수 있는 최하 난이도 순서 문항이다. 요구된 사고 단계·함정 깊이가 KILLER에 근접조차 하지 않는다.",
+    "C6": "해설이 짧고 정확하며 공간 이동·어휘 연쇄·리허설 예고라는 수렴 단서 3계열을 선명히 분리한다. 오답 해설 4건도 각 순서의 실제 결함과 정확히 대응한다."
+  },
+  "optionAudit": [
+    {
+      "label": "1 (A)-(C)-(B)",
+      "intent": "주어진 글의 '공연' 언급에 이끌려 리허설 장면(A)을 직접 연속으로 붙이는 오독 겨냥",
+      "temptingBecause": "주어진 글이 band/perform을 소개하므로 공연 준비 장면(A)이 화제상 이어져 보일 수 있다",
+      "decisiveFlaw": "(A)의 'wearing his new clothes'와 concert hall 도착이 (C)의 몰 입장·(B)의 구매를 전제하므로 시간·공간이 전면 역전된다"
+    },
+    {
+      "label": "2 (B)-(A)-(C)",
+      "intent": "쇼핑(옷) 화제 연속성만 보고 매장 장면(B)을 먼저 붙이는 오독 겨냥",
+      "temptingBecause": "주어진 글의 장소가 몰 앞이라 옷 고르는 장면(B)이 곧바로 이어지는 듯 보인다",
+      "decisiveFlaw": "'the store'/'he had found in the store'는 (C)의 'entered the lively shopping center' 이후에만 성립하고, (B)에 등장하는 Jeff는 (C)에서야 도착하므로 (C) 최후 배치는 인과 붕괴다"
+    },
+    {
+      "label": "3 (B)-(C)-(A)",
+      "intent": "(A) 최후 배치는 맞히되 (B)/(C) 순서를 화제 연속성으로 뒤집는 오독 겨냥",
+      "temptingBecause": "(A)를 마지막에 둔 점이 옳아 부분적으로 그럴듯하고, (B)의 옷 화제가 몰 배경과 맞아 보인다",
+      "decisiveFlaw": "매장 대화(B)가 쇼핑센터 입장(C)보다 앞서고, Jeff가 도착(C)하기 전에 매장에서 발화(B)하는 모순"
+    },
+    {
+      "label": "4 (C)-(A)-(B)",
+      "intent": "(C) 첫 배치는 맞히되 구매 장면(B)을 건너뛰고 리허설(A)로 직행하는 오독 겨냥",
+      "temptingBecause": "(C) 첫 위치가 옳고, 공연 준비 서사로 보면 리허설(A)이 다음 사건처럼 보인다",
+      "decisiveFlaw": "(A)의 'wearing his new clothes'가 (B)의 구매 없이는 무전제가 되고, (B) 말미의 'tonight's rehearsal' 예고가 리허설 실행(A) 뒤에 오는 시제 모순"
+    },
+    {
+      "label": "5 (C)-(B)-(A)",
+      "intent": "정답 — 대기 해소→입장→매장 구매→리허설의 유일한 정합 사슬",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음. 공간 이동(밖→몰→매장→홀)·어휘 연쇄(clothes→recommended clothes→new clothes)·리허설 전방 조응이 모두 수렴"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "killerRationale": "유형이 SENTENCE_ORDER라 RUBRIC §C(어법)/§D(빈칸)의 조건이 직접 적용되지 않으며, §D의 KILLER 정신(두 문장/두 논리 단서 결합 필수, 단일 표층 단서로 즉답 불가)에 유비해도 본 문항은 단일 국소 단서('new clothes', Jeff 도착 사과 등)만으로 각 배치가 즉시 확정되므로 KILLER 조건 불충족.",
+  "grade": "C",
+  "notes": "유효성 5개 게이트는 모두 통과한 정확하고 깨끗한 문항이나, 요청 난이도 KILLER와의 정합이 전면 붕괴(C5=0, C3=1). 평이한 서사 지문에 단서가 3중으로 중복되어 상위권 변별이 불가능하다. KILLER 순서 문항이 되려면 표층 단서(소지품·장소 정관사)가 덜 노골적인 추상·논설 지문에서 지시어/논리 연결의 다단 결합이 필요한 지문을 골라 재설계해야 한다. 부수적으로 원지문 결말부(공연·환호·칭찬) 통째 생략은 의도적 절단으로 판단되나 기록해 둔다."
+}

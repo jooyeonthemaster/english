@@ -1,0 +1,35 @@
+{
+  "pid": "P010",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "(A)-(C)-(B): A-C adjacency is internally fine ($148 -> $14.80), but placing B last inverts the logic: B introduces the general 10-percent rule ('reduce spending on that category by just 10 percent each month') which A's 'spend just 10 percent less' presupposes, and C already delivers the concluding generalization ('By introducing incremental shifts... you're more likely to stick'). A prescriptive rule statement after the conclusion is redundant and logically misplaced; also 'that category' in B is severed from its natural antecedent 'a budget category' in the given text."
+    },
+    {
+      "label": "2",
+      "verdict": "accept",
+      "reason": "(B)-(A)-(C): Every anaphoric/logical chain resolves in order. B's 'that category' binds to 'a budget category' in the given text and 'go entirely without' paraphrases 'all-or-nothing'; B introduces the 10-percent rule. A instantiates the rule with a concrete example ($148 at coffee shops, 'spend just 10 percent less'). C's deictic 'That's $14.80 less' arithmetically requires A's $148 (10% of 148 = 14.80) as the immediate antecedent, and C closes with the summarizing generalization. This is the unique coherent ordering."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "(B)-(C)-(A): C's opening 'That's $14.80 less, for a total of $133.20' has no numeric antecedent in B; the referent $148 appears only in A, which here comes after C. The deixis fails formally; additionally A ending the passage with an open question ('what if you challenged yourself...?') that C was supposed to answer breaks discourse closure."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "(C)-(A)-(B): C first is impossible — 'That's $14.80 less' dangles with no antecedent anywhere in the given text; the given text contains no dollar figure. Immediate referential failure."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "(C)-(B)-(A): Same fatal defect as option 4 — C's 'That's' has no antecedent when C opens the sequence. Also A would end the passage on an unanswered rhetorical question whose computation (C) already appeared earlier, an incoherent order."
+    }
+  ],
+  "note": "Grammarian/logician lens. The ordering is fully determined by three formal binding chains: (1) 'that category' (B) -> 'a budget category' (given); (2) '10 percent less' (A) presupposes the rule stated in B; (3) 'That's $14.80 less' (C) -> '$148' (A), verified arithmetically (0.10 x 148 = 14.80; 148 - 14.80 = 133.20; 133.20 - 13.32 = 119.88, matching C's $119.88). Options 4 and 5 fail on unresolvable deixis; option 3 fails on the same chain; option 1 fails on rule-before-example logic and discourse closure. Single defensible answer: 2. No structural ambiguity or alternative reading rescues any distractor."
+}

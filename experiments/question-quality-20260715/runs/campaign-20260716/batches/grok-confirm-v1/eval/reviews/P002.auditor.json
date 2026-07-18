@@ -1,0 +1,85 @@
+{
+  "pid": "P002",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-TRAP-LABEL",
+      "severity": "minor",
+      "evidence": "오답해설 4의 함정 유형 라벨 '주체-대상 전도'는 실제 메커니즘(무분별 관찰의 왜곡: 구별 불가 상태의 전체 흡수를 '의도적 혼합' 지시로 바꿈)과 어긋난다. 주어/목적어가 뒤바뀐 곳은 없다. 같은 문장의 실질 설명('본문은 아직 중요도를 모르는 채 세부를 흡수하라는 뜻')은 정확하므로 사실 오분석이 아닌 분류 라벨 오류로 판정, 게이트 실패로는 보지 않음."
+    },
+    {
+      "code": "V2-NEAR-MISS-3",
+      "severity": "minor",
+      "evidence": "선지 3(refuse to rely on the tools and skills already familiar to you)은 1문장 부정의 표면 재진술이라 강력한 경쟁 선지다. 그러나 결정적 탈락 근거가 본문에 존재한다: 빈칸 직후 'this sense of looking freshly at something'이 빈칸 내용을 요약해야 하는데 '도구 의존 거부'는 보는 방식(sense of looking)이 아니며, 후반부가 요구하는 '모든 세부 흡수' 성분도 결여한다. 유일정답 성립."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 4,
+    "C5": 2,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — source span('assume nothing and treat the problem')을 본문 후반 두 단서(초보의 전 세부 흡수 + 경험 필터의 essential 오차단)로 종합한 재진술",
+      "temptingBecause": "해당 없음(정답). 단, 'filters'·'every aspect(≈every detail)'·'the problem' 등 본문 어휘와의 표면 중첩이 커서 어휘 대조만으로도 끌린다",
+      "decisiveFlaw": "없음. 'this sense of looking freshly at something' 조응을 유일하게 충족하는 선지"
+    },
+    {
+      "label": "2",
+      "intent": "scope 과확장 — 익숙한 접근에 대한 경계를 '축적 기술 전면 폐기'로 부풀림",
+      "temptingBecause": "1문장의 'relying heavily on the tools and skills'가 실패 원인으로 제시되므로 그 전면 부정처럼 읽힌다",
+      "decisiveFlaw": "본문의 권고는 인식적 태도(assume nothing)이지 기술 폐기가 아니다. 숙련 무술가도 기술·경험을 계속 쓰며 위험은 '필터'에 있다고 명시됨. '보는 방식' 조응에도 불합치"
+    },
+    {
+      "label": "3",
+      "intent": "표면 반향/표적 이탈 — 1문장 부정을 그대로 빈칸에 이식해 '수단 배척'으로 좁힘",
+      "temptingBecause": "novel problem에서 익숙한 도구 의존이 실패한다는 직전 대비 구조와 정확히 맞물리는 가장 강한 경쟁 선지",
+      "decisiveFlaw": "빈칸 내용은 다음 문장에서 'this sense of looking freshly at something'으로 지칭되는데 도구 의존 거부는 관찰 방식이 아니다. 또한 후반부 근거(전 세부 흡수·필터 정지)를 전혀 담지 못함"
+    },
+    {
+      "label": "4",
+      "intent": "왜곡 — 초보의 '구별 불능 상태의 전체 흡수'를 '필수·무관의 의도적 혼합' 지시로 변조",
+      "temptingBecause": "essential/irrelevant라는 본문 핵심 어휘쌍과 'examining the problem'을 그대로 포함",
+      "decisiveFlaw": "'섞으라'는 이미 무엇이 essential인지 분류할 수 있음을 전제하므로 초심자 상태와 모순이며, 본문 권고는 혼합이 아니라 사전 필터 없는 전수 관찰이다"
+    },
+    {
+      "label": "5",
+      "intent": "극성 반전/절반-진실 — 숙련 필터 활용을 권고로 뒤집음",
+      "temptingBecause": "'filter'·'essential/irrelevant 분리'라는 마지막 두 문장의 어휘를 그대로 재활용",
+      "decisiveFlaw": "본문 결말은 바로 그 숙련 필터가 essential을 잘못 걸러 고수도 실수한다는 경고다. 권고와 정반대"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "TRAP-LABEL-MISMATCH",
+      "severity": "minor",
+      "evidence": "오답해설 4: '주체-대상 전도' 라벨이 실제 함정 유형(왜곡/distortion)과 불일치. 실질 내용 설명은 정확함"
+    },
+    {
+      "code": "PHRASING",
+      "severity": "minor",
+      "evidence": "주해설 첫 문장 'beginner's mind를 쓰는 귀결이다' — 빈칸 문장은 beginner's mind 도입 이전이며 빈칸 내용이 이후 beginner's mind로 명명되는 구조이므로 '귀결'보다 '명명 대상'이 정확. 채점 영향 없는 표현 수준 문제"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerAudit": {
+    "sameSyntacticSlot": true,
+    "twoClueSynthesis": true,
+    "distractorAnchorsAndFlaws": true,
+    "noSingleCueShortcut": false,
+    "abstractionAdequate": false,
+    "evidence": "탈락 사유 2건: (1) 오답 4개 중 3개(②all, ③refuse, ⑤only)가 절대어/극단 표지를 갖고 정답만 온건 어휘여서 극단어 회피 휴리스틱만으로 ①·④ 2파전으로 압축된다. (2) 정답 ①이 본문 어휘 최대 중첩 선지('filters', 'every aspect≈every detail', 'the problem')라 KILLER가 요구하는 추상화 수준에 못 미치고 어휘 대조 풀이가 통한다. 두 문장 단서 연결 요건 자체는 충족하나 위 지름길들이 이를 우회 가능"
+  },
+  "grade": "B",
+  "notes": "V 게이트 전부 통과. 렌더 지문은 의도된 빈칸 치환 외 원지문과 완전 일치(V1). 각 선지를 독립 대입 검증한 결과 유일정답 ① 성립(V2) — 최강 경쟁 선지 ③은 'this sense of looking freshly at something' 조응 불충족과 '전 세부 흡수' 성분 결여로 결정적으로 탈락. 다섯 완성문 모두 동일 VP 슬롯에 문법적으로 안착, tail('as if you have never seen anything like it before')로 인한 문법 탈락 없음(V3). 해설의 구조·인과 설명은 본문과 일치하고 오답 해설이 각 선지 실내용과 대응(V4, 함정 라벨 1건만 minor). 필드 동기화 이상 없음(V5). 공예: 빈칸이 논지 핵심 권고에 위치(C1=4), ②·③이 동일 앵커(1문장 도구/기술) 중복으로 오개념 분산 저하(C2=3), ①vs③ 실질 대결은 좋으나 ⑤ 극성 즉시 소거·정답 어휘 중첩으로 변별 약화(C3=3), 메타 누출 없고 조응 단서로 정답 필연(C4=4), 요청 난이도 KILLER 대비 실난이도는 상위권 중상 수준(C5=2), 해설은 간결·정확하나 라벨 1건 어긋남(C6=3). 합계 19, 최저 2 → B. KILLER 추가 조건은 절대어 편중과 저추상화로 미충족. 개선 제안: ③을 유지하되 ②를 다른 앵커(예: 조건 상실·인과 역전)로 교체하고, 정답 표현에서 'filters'를 본문 비출현 어휘로 추상화하며, ②·⑤의 all/only를 완화해 극단어 휴리스틱을 차단하면 KILLER 정합에 근접."
+}

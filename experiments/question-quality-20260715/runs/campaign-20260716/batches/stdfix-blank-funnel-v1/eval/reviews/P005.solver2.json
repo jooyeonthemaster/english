@@ -1,0 +1,35 @@
+{
+  "pid": "P005",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "형식적 결합(to + VP)은 성립하나 논리 붕괴. 주어는 메이저 대회의 골퍼인데 'purely business-oriented strategy'는 협상 예시(businesspeople)를 잘못된 영역으로 이식한 미끼. 또한 'stamina to convert their physical stamina...'는 자기 자신을 변환 대상으로 삼는 순환 구조로 의미가 성립하지 않음."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "'the strength and stamina to sustain both cognitive and physical superiority'로 문법 결합 정상. 논리적으로도 정확: 협상가가 'physical stamina to see the deal through'를 갖듯, 체력 단련이 대회 막판까지 정신적·신체적 우위를 유지하게 하여 상대를 제압(close out)한다는 지문 논지(신체 관리가 전체 수행의 기반)와 완전히 정합. in order to 목적절이 요구하는 '승리를 가능케 하는 긍정적 역량' 조건 충족."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "지문의 'not just on the practice range but in the weight room'과 정면 모순(연습장 루틴에만 의존하는 것이 아님). 또한 'stamina to ... compensate for their lack of stamina'는 체력을 가진 주체가 체력 부족을 보완한다는 자기모순."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "'strength and stamina to undermine their mental game'은 힘과 체력이 부여하는 역량 자리에 부정적 결과를 넣은 것으로, 'in order to close out their opponents'라는 목적절과 논리적으로 양립 불가. 과훈련으로 멘탈이 무너지는 것은 상대 제압의 수단이 될 수 없음."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "지문의 논지는 신체 관리가 인지적·전체적 수행을 떠받친다는 통합 명제인데, 신체적 측면을 인지적 요구로부터 '분리'하는 것은 논지의 부정. 분리 능력이 상대 제압으로 이어진다는 인과도 지문 어디에도 근거 없음."
+    }
+  ],
+  "note": "빈칸은 'have the strength and stamina to ___ in order to close out their opponents' 구조로, 체력 단련이 부여하는 긍정적 역량(승리 수단)만 들어갈 수 있음. ②만 문법·논리 양면에서 성립하며 나머지는 영역 오이식(①), 텍스트 직접 모순(③), 목적절 양립 불가(④), 논지 부정(⑤)으로 각각 형식적으로 배제됨. 단일 정답으로 수렴, 복수정답 소지 없음. 'cognitive'가 지문에 명시어로는 없으나 'see the deal through'(집중·지구력)와 논지 전체가 함의하므로 추론 폭 내 정상."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P005",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "(A) 'prescribed ethical rules'는 지문의 'rather than follow a prescribed set of ethical codes or rules'와 거의 축자적으로 대응하며, 요약문의 'instead of relying on (A)' 자리(대조 구문)에 문법·논리 모두 정확히 결합한다. (B) 'codes of behavior'는 'the personal factors that influence your own code of behaviour ... the factors that drive other people's codes'와 정확히 대응 — 요약문의 'their own and others' (B)' 구조(자신+타인 양쪽)까지 지문과 일치한다. 두 슬롯 모두 결함 없음."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "(A)는 정답과 동일해 강한 유혹이 있으나 (B) 'religious beliefs'는 인과 방향이 뒤집혔다. 지문에서 religious beliefs는 개인적 요인(personal factors) 그 자체의 일부('values relates to their social, religious, or civic beliefs')이지, 그 요인들이 형성하는 결과물이 아니다. 'personal factors that shape ... religious beliefs'는 지문 논리(요인→행동규범)와 불일치. religious beliefs가 지문에 축자 등장해 매력도는 높지만 기각."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "(B)는 정답과 동일하나 (A) 'conceptual ethics'가 오답. 지문의 'This form of ethics is distinct from higher levels of conceptual ethics or theory'는 논의 범위를 한정하는 서술일 뿐, 학생들이 conceptual ethics에 '의존하지 말라'는 경고가 아니다. 학생 학습에 대한 명시적 대조 대상은 'a prescribed set of ethical codes or rules'다. distinct-from 구문을 대조 대상으로 오독하게 만드는 함정."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "(A) 'clear right answers'는 요약문 첫 절('ethical issues often lack a single correct answer')과 중복되어 잉여적이고, 지문에서 thinking-through의 대안으로 제시된 것은 정답이 아니라 규정된 규칙 준수다. (B) 'situational responses'는 맥락 의존성 서술을 왜곡 — personal factors가 형성하는 것은 code of behaviour/decision making이지 'situational responses'라는 소유물이 아니다. 양쪽 슬롯 모두 결함."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "(B) 'ethical codes'는 'code of behaviour'와 근접해 부분 매력이 있으나, (A) 'formal learning experiences'가 명백히 오답. 지문에서 formal learning experiences는 개인의 신념에 영향을 주는 배경 요인일 뿐, 학생들이 윤리적 사고 대신 의존한다고 지목된 대상이 아니다. (A) 슬롯에서 즉시 기각."
+    }
+  ],
+  "note": "요약문 완성 유형으로서 결함 없음. 정답 ①은 (A)(B) 모두 지문과 축자·구조적으로 대응. 매력적 오답 설계가 전형적 반반(half-correct) 구조: ②는 (A) 정답 공유 + (B) 축자 미끼(religious beliefs), ③은 (B) 정답 공유 + (A) distinct-from 구문 오독 미끼(conceptual ethics). 실전에서 ②·③에 실제 유혹을 느꼈으나 각각 인과 방향 역전, 대조 대상 혼동으로 명확히 기각 가능. 복수정답 소지 없음."
+}

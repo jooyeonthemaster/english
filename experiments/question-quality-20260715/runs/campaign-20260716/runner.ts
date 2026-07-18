@@ -28,8 +28,11 @@ interface Assignment {
   subType: "GRAMMAR_ERROR" | "BLANK_INFERENCE" | string;
   difficulty: "BASIC" | "INTERMEDIATE" | "KILLER" | string;
   plan: "STANDARD" | "PREMIUM";
-  profile?: string | null; // G0..G3 / B0..B3 연구 프롬프트 프로필 (null=현행 프로덕션 surface)
+  profile?: string | null; // G0..G4 / B0..B3 연구 프롬프트 프로필 (null=현행 프로덕션 surface)
   armId: string;
+  /** true = 프로덕션 외곽 사다리(runQuestionGenerationWithEmptyRetry: strict 다회
+   * →rescue→relaxed→scarce/salvage)까지 포함한 풀 깔때기 실행. profile 과 병용 불가. */
+  funnel?: boolean;
 }
 interface Spec {
   batchId: string;
@@ -119,6 +122,12 @@ async function main() {
 
   // 최악 예약: STANDARD 2, PREMIUM(어법) 4, PREMIUM(기타) 3, 커스텀 V1 3 / 기타 커스텀 2 slot/item
   const worstOf = (a: Assignment) => {
+    if (a.armId === "G-ONE") return 2;
+    if (a.funnel) {
+      // 풀 깔때기: strict 다회(어법 STD KILLER cap 4) + rescue/relaxed + salvage.
+      if (a.plan === "PREMIUM") return a.subType === "GRAMMAR_ERROR" ? 5 : 3;
+      return a.subType === "GRAMMAR_ERROR" ? 7 : 4;
+    }
     if (["G-V1", "B-V1", "G-X2", "B-X2", "G-X3", "B-X3"].includes(a.armId)) return 3;
     if (["G-CX", "B-CX"].includes(a.armId)) return 3;
     if (a.armId === "G-LX") return 5;
@@ -157,7 +166,7 @@ async function main() {
   const postMod = await import("../../../../src/lib/question-postprocess");
   const schemasMod = await import("../../../../src/lib/question-ai-schemas-mc");
   const armsMod = await import("./custom-arms");
-  const CUSTOM_ARMS = new Set(["G-V1", "B-V1", "G-D1", "B-D1", "G-X1", "B-T1", "G-X2", "B-X2", "G-X3", "B-X3", "G-CX", "B-CX", "G-LX", "G-E1", "B-E1"]);
+  const CUSTOM_ARMS = new Set(["G-ONE", "G-V1", "B-V1", "G-D1", "B-D1", "G-X1", "B-T1", "G-X2", "B-X2", "G-X3", "B-X3", "G-CX", "B-CX", "G-LX", "G-E1", "B-E1"]);
 
   const runGen = genMod.runQuestionGeneration as (
     input: Record<string, unknown>,
@@ -319,6 +328,31 @@ async function main() {
             warnings: armRes.gateIssues.filter((i) => i.severity === "warning"),
           } as never);
         }
+      } else if (a.funnel) {
+        if (a.profile) throw new Error(`funnel arm ${a.armId} cannot combine with profile`);
+        const runFunnel = genMod.runQuestionGenerationWithEmptyRetry as (
+          input: Record<string, unknown>,
+          opts: Record<string, unknown>,
+        ) => Promise<{
+          questions: Record<string, unknown>[];
+          attempts: number;
+          relaxedFallback: boolean;
+          rejectionSummary: Record<string, unknown>;
+        }>;
+        const funnelRes = await itemAls.run(ctx, () =>
+          rtMod.runWithQuestionGenerationResearchRuntime(makeRuntime(`${spec.batchId}:${a.itemId}`), () =>
+            runFunnel(input, {
+              logPrefix: `CAMPAIGN-${spec.batchId}`,
+              deadlineAt: Date.now() + (a.plan === "PREMIUM" ? 280_000 : 260_000),
+            }),
+          ),
+        );
+        questions = funnelRes.questions;
+        armExtra = {
+          funnelAttempts: funnelRes.attempts,
+          relaxedFallback: funnelRes.relaxedFallback,
+          rejectionSummary: funnelRes.rejectionSummary,
+        };
       } else {
         questions = await itemAls.run(ctx, () =>
           rtMod.runWithQuestionGenerationResearchRuntime(makeRuntime(`${spec.batchId}:${a.itemId}`), () => {

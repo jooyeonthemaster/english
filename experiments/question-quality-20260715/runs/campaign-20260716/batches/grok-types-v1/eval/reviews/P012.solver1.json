@@ -1,0 +1,35 @@
+{
+  "pid": "P012",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "match",
+      "reason": "Passage: father's trading business went bankrupt -> family moved to Mexico City for two years -> 'Its landscape influenced many of his works.' Option restates all three facts faithfully ('collapsed' = 'went bankrupt', 'shaped much of his writing' = 'influenced many of his works'). Consistent."
+    },
+    {
+      "label": "2",
+      "verdict": "match",
+      "reason": "Passage: graduated from Harvard 'where he was inspired by the Romantic poets', then 'left for Paris... to live out his romanticized notion of bohemian life and made friendships with many artists.' Option preserves both the Harvard inspiration and the subsequent bohemian life among artists, in the correct order (Harvard before Paris). Consistent."
+    },
+    {
+      "label": "3",
+      "verdict": "mismatch",
+      "reason": "Option claims the poem made Seeger instantly famous BEFORE he volunteered for the French army in 1914. Passage timeline is the reverse: WWI broke out in 1914 -> he joined the French army as a volunteer -> 'During the war, he wrote a poem, I Have a Rendezvous with Death' -> it made him instantly famous when published. The fame came after volunteering, not before. Sequence inversion = factual mismatch with the passage. This is the answer."
+    },
+    {
+      "label": "4",
+      "verdict": "match",
+      "reason": "Passage: died during the Battle of the Somme in 1916; 'Following his death, the French Military awarded him the Croix de Guerre, the highest French military honor.' Option mirrors this, and its hedge 'described as its highest military honor' defers to the passage's own claim. Real-world lure: the Croix de Guerre is not actually France's highest honor (that would be the Legion d'honneur), which tempts a knowledge-rich solver, but the task is consistency with the passage, and the option matches the passage. Not defensible as the answer."
+    },
+    {
+      "label": "5",
+      "verdict": "match",
+      "reason": "Passage: 'Seeger returned to the States and later graduated from Harvard' -> 'left for Paris, France' -> when WWI broke out 'he joined the French army as a volunteer to defend his beloved France.' Option compresses this chain (Mexico -> US -> Harvard -> France -> volunteered to defend a country he loved) without inverting any step; 'where he volunteered' correctly locates the volunteering in France. Consistent."
+    }
+  ],
+  "note": "Solved blind under the top-tier test-taker lens, tracking the passage timeline in reading order. The intended lure structure works as designed: option 4 pulls on outside knowledge (Croix de Guerre is not really the highest French honor) but its 'described as' hedge keeps it passage-consistent, and option 5 compresses many steps, inviting a hasty misread, but inverts nothing. Only option 3 contradicts the passage via a before/after inversion of volunteering vs. fame. Single clean answer: 3. Minor authoring observation (not a defensibility issue): the passage itself asserts a real-world inaccuracy (Croix de Guerre as 'the highest French military honor'), which a fact-check lens might flag, but it does not create a second defensible answer for this consistency question."
+}

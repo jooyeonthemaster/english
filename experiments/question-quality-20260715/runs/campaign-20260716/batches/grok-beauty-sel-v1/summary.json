@@ -1,0 +1,56 @@
+{
+  "batchId": "grok-beauty-sel-v1",
+  "phase": "grok-confirm",
+  "atKst": "2026-07-17T23:14:02.249+09:00",
+  "assignments": 12,
+  "slotsConsumed": 14,
+  "accepted": 12,
+  "modelCalls": 14,
+  "inputTokens": 67062,
+  "outputTokens": 42972,
+  "costUsd": 0.389268,
+  "ledgerAfter": {
+    "used": 1008,
+    "cap": 1200,
+    "costUsd": 33.917927
+  },
+  "byArm": {
+    "BSEL-TOPI": {
+      "n": 3,
+      "accepted": 3,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 3,
+      "costUsd": 0.032438
+    },
+    "BSEL-TITL": {
+      "n": 3,
+      "accepted": 3,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 3,
+      "costUsd": 0.07185
+    },
+    "BSEL-CONT": {
+      "n": 3,
+      "accepted": 3,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 3,
+      "costUsd": 0.094366
+    },
+    "BSEL-IMPL": {
+      "n": 3,
+      "accepted": 3,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 5,
+      "costUsd": 0.190614
+    }
+  },
+  "models": {
+    "standard": "google/gemini-3.5-flash",
+    "premiumQgen": "x-ai/grok-4.5"
+  },
+  "durationMs": 239051
+}

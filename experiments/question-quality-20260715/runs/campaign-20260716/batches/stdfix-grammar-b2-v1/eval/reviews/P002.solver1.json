@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "주어 'all of the CEOs'는 복수이므로 복수 동사 were 일치가 맞고, 'be concerned that절'은 표준 결합. 어법상 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "사역동사 구조 'make + them + 원형부정사(appear)'. 'would make them appear weak'에서 원형 appear가 정확하다. to appear를 기대하게 만드는 자리지만 원형이 옳다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect (정답)",
+      "reason": "'a culture which those subordinates did the same'에서 관계사절 내부 'those subordinates did the same'은 주어·동사·목적어(the same)가 모두 갖춰진 완전한 절이다. which가 절 안에서 맡을 문법적 역할(주어/목적어)이 없으므로 'in which' 또는 'where'가 되어야 한다. the same이 이미 did의 목적어 자리를 채우고 있어 which를 목적어로 보는 대안 해석도 성립하지 않는다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'ask + 목적어(the CEOs) + to부정사(to reflect)' 구조로 정확하다. 상위 병렬은 'were to actually name ..., explore ..., and ask ...'로 name/explore/ask가 병렬이며 to reflect는 ask의 목적격보어이므로 병렬 위반이 아니다. 병렬 착시로 원형 reflect를 기대하게 하는 매력적 오답이나 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'each of the CEOs was ready' — 진짜 주어는 each이므로 단수 동사 was가 맞다. 근접 복수 명사 CEOs에 끌려 were를 고르게 만드는 전형적 함정으로, 실전에서 (C)와 마지막까지 견주게 되는 최강 매력 오답이지만 each 단수 일치 규칙이 확고하다."
+    }
+  ],
+  "note": "정답은 (C) 하나로 유일하게 수렴한다. 관계부사/전치사+관계대명사 자리에 관계대명사 which를 놓은 전형적 완전절 유형. (E)의 each 수일치와 (D)의 병렬 착시가 실질적 유혹 선지였고, 특히 (E)는 CEOs 복수에 끌리는 힘이 상당했으나 규칙상 논쟁 여지가 없다. 대안 해석(축약 관계절·분사구문·도치 등)으로 (C)가 정문이 되는 경로는 발견되지 않았다."
+}

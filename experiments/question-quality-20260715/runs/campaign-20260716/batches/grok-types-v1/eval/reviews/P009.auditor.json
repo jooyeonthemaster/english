@@ -1,0 +1,82 @@
+{
+  "pid": "P009",
+  "validity": {
+    "V1": false,
+    "V2": false,
+    "V3": false,
+    "V4": true,
+    "V5": false
+  },
+  "validityIssues": [
+    {
+      "code": "V1",
+      "severity": "critical",
+      "evidence": "발문이 '빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?'이라고 (A)/(B) 마커를 참조하지만, 렌더 지문은 '(렌더 지문 없음)'이고 markedExpressions/구조 필드도 '(없음)'이다. SUMMARY_COMPLETE_MC의 핵심 본체인 요약문(빈칸 (A), (B)를 포함한 한 문장)이 문항 어디에도 존재하지 않는다. 발문·선지가 참조하는 마커가 렌더에 없으므로 렌더/라벨/마커 불일치다."
+    },
+    {
+      "code": "V2",
+      "severity": "critical",
+      "evidence": "요약문 프레임이 없으면 정답 집합이 결정되지 않는다. 해설이 암시하는 프레임('(A)를 따르는 것을 피하고 (B)가 있다는 전제를 받아들이지 말라')에서는 ①이 정답이지만, 똑같이 자연스러운 대안 프레임('(A)를 이해해야 하며 (B)를 추구해서는 안 된다')에서는 ③(personal value systems / clear right answer)이 정답이 된다 — 지문의 'understand the personal factors that influence your own code of behaviour'와 'no clear right or wrong response'가 이 프레임을 직접 지지한다. 요약문 미제시 상태에서 단일 정답 유일성이 성립하지 않는다."
+    },
+    {
+      "code": "V3",
+      "severity": "critical",
+      "evidence": "정답을 넣은 완성문의 문법성·자연성을 검증할 대상(요약문)이 존재하지 않아 검증 자체가 불가능하다. 지문 원문과 발문 자체는 문법적이나, V3의 '정답을 넣은 완성문' 요건을 충족할 수 없으므로 보수적으로 실패 판정."
+    },
+    {
+      "code": "V5",
+      "severity": "critical",
+      "evidence": "학생 노출 필드가 불완전하다: 요약문(문항 본체)이 누락되어 발문·선지('…… '로 연결된 (A)/(B) 쌍)·해설이 참조하는 구조물이 학생에게 전혀 보이지 않는다. 문항이 현 상태로는 풀이 불가능하다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 2,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답(선언). 지문의 두 핵심 명제 — 'rather than follow a prescribed set of ethical codes or rules'와 'there is no clear right or wrong response' — 를 (A)/(B)로 결합.",
+      "temptingBecause": "해당 없음(정답).",
+      "decisiveFlaw": "없음 — 단, 두 표현 모두 지문에서 거의 축자적으로 그대로 가져온 것이어서(prescribed ... ethical codes / clear right (or wrong)) 추상화 없이 표면 매칭만으로 도달 가능하다. 또한 요약문이 없어 정답으로 확정할 프레임 자체가 부재하다."
+    },
+    {
+      "label": "2",
+      "intent": "half-truth: (A)는 정답과 동일하게 두고 (B)만 scope shift(개인·상황차를 인정하라는 논지를 '공유된 시민 신념' 도달로 왜곡).",
+      "temptingBecause": "(A)가 정답과 같고, 지문에 'civic beliefs'가 실제로 등장한다.",
+      "decisiveFlaw": "지문은 civic beliefs를 개인 가치의 형성 요인 중 하나로 언급할 뿐, 공유된 신념의 존재·도달을 논지로 삼지 않는다. 핵심 논지는 '명확한 정답 부재'다."
+    },
+    {
+      "label": "3",
+      "intent": "half-truth + role confusion: (B)는 정답과 같고 (A)에 '개인적 가치 체계'를 넣어, 이해·분석 대상인 개인 요인을 회피/준수 대상으로 오배치.",
+      "temptingBecause": "(B)가 정답과 같고 'personal factors', 'what a person values'가 지문의 중심 소재다.",
+      "decisiveFlaw": "지문이 따르지 말라고 하는 것은 prescribed codes이지 개인 가치 체계가 아니다 — 개인 가치는 오히려 이해해야 할 요인이다. 단, 이 결함은 해설이 암시한 프레임에서만 결정적이며, 요약문 부재 시 대안 프레임에서는 이 선지가 정답이 될 수 있다(V2 이슈)."
+    },
+    {
+      "label": "4",
+      "intent": "factor-vs-target confusion: 가치 형성의 배경 요인(formal learning experiences)을 (A) 자리에, 지문이 명시적으로 거리를 둔 이론 윤리를 연상시키는 'objective moral theory'를 (B)에 배치.",
+      "temptingBecause": "'formal and informal learning experiences'가 지문에 축자 등장하고, theory도 첫 단락에 언급된다.",
+      "decisiveFlaw": "형식적 학습 경험은 회피 대상이 아니라 가치의 영향 요인이며, 지문은 객관적 도덕 이론의 존재를 다루지 않는다. 두 슬롯 모두 지문 논지와 어긋나 상대적으로 쉽게 소거된다."
+    },
+    {
+      "label": "5",
+      "intent": "contrast-concept misuse: 지문이 '구분된다'고만 한 higher conceptual ethics를 (A)의 회피 대상으로 승격, (B)에는 맥락 의존성 논지를 뒤집은 'context-free decision'을 배치.",
+      "temptingBecause": "'higher levels of conceptual ethics'와 'context dependent'가 모두 지문에 등장한다.",
+      "decisiveFlaw": "지문은 학생들이 고차 개념 윤리를 따르고 있다고 말한 적이 없고(구분 언급뿐), 맥락 의존성은 인정해야 할 사실이지 버려야 할 렌즈가 아니다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "E1",
+      "severity": "major",
+      "evidence": "해설과 오답 해설 전체가 존재하지 않는 요약문 프레임('(A)를 따르는 것을 피하고, (B)가 있다는 전제를 받아들이면 안 된다')을 전제로 서술한다. 해설의 지문 내용 서술 자체는 사실에 부합하나(no clear right or wrong, principles vary, understand personal factors 등 모두 지문과 일치), 학생이 볼 수 없는 구조물을 설명하고 있어 문항과의 정합이 깨진다."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "치명 결함: SUMMARY_COMPLETE_MC인데 빈칸 (A), (B)를 포함한 요약문이 학생 노출 필드 어디에도 없다(렌더 지문 없음, markedExpressions 없음). 발문과 선지는 (A)/(B) 쌍을 참조하지만 참조 대상이 부재하여 문항이 풀이 불가능하다 → V1·V5 실패. 요약문 프레임이 없으면 ①(선언 정답)과 ③이 각각 다른 자연스러운 프레임에서 정답이 되므로 정답 유일성도 성립하지 않는다 → V2 실패. 완성문 검증 불가 → V3 실패(보수적). 해설의 지문 사실 서술 자체는 정확하여 V4만 통과. 설계 의도 수준의 공예는 준수하다: 정답 포인트가 지문의 핵심 논리(정답 부재·규약 준수 거부)를 겨냥하고(C1=3), 오답 4개가 half-truth·scope shift·factor confusion·contrast misuse로 서로 다른 함정을 구현했다(C2=3). 다만 정답 (A)/(B)가 모두 지문 축자 표현이라 표면 매칭으로 도달 가능해 변별·단서 경제가 약하고(C3=2, C4=2), INTERMEDIATE 대비 다소 쉬운 설계다(C5=2). 해설은 간결·정확하나 부재 프레임 의존(C6=3). 수리 방향: 빈칸 (A), (B)를 포함한 요약문을 학생 노출 필드에 추가하고, 정답 표현을 축자 인용 대신 한 단계 추상화(예: externally imposed rules / single correct resolution)하면 B 이상 가능. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

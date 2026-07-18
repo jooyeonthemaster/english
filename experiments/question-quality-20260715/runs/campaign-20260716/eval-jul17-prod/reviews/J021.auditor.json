@@ -1,0 +1,80 @@
+{
+  "pid": "J021",
+  "blindAnswer": "①",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-MINOR-PARTICLE",
+      "severity": "minor",
+      "evidence": "해설 본문의 한국어 조사 오기 2건: '⑤은'(→⑤는), '②와 ③는'(→②와 ③은). 사실 오류가 아닌 표기 문제로 V4 실패로 보지 않음."
+    },
+    {
+      "code": "V4-MINOR-COVERAGE",
+      "severity": "minor",
+      "evidence": "메인 해설이 ②③⑤만 언급하고 ④를 다루지 않음. 다만 별도 오답 해설에서 ④가 정확히 설명되어 필드 전체로는 완결됨."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 4,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "정답 — source span 'an \"aesthetic attitude\" is needed to appreciate the whole episode'의 의미 보존 추상화",
+      "temptingBecause": "정답이므로 해당 없음. 'specialized frame of mind'는 aesthetic attitude의 직접 어휘 복사가 아닌 적절한 추상화이며, 'fully engage'가 후속 문장 'This active involvement'의 선행 내용을 제공해 응집성이 성립한다.",
+      "decisiveFlaw": "없음(정답). 확정 근거: (a) 관습 이탈→다른 태도 필요라는 빈칸 문장 자체 논리, (b) 다음 문장 'This active involvement'와의 응집, (c) 마지막 문장의 pragmatic/aesthetic attitude 전환 개념 — 최소 두 문장 이상을 연결해야 확정된다."
+    },
+    {
+      "label": "②",
+      "intent": "방향 역전(direction/causal reversal) — 'conventional forms'를 어휘 앵커로 관습 '이탈'을 관습 기법 '숙달·복제'로 뒤집음",
+      "temptingBecause": "지문의 'conventional forms', 'representational' 등 어휘가 그대로 등장하고, 예술 감상에 노력이 필요하다는 표면 논조와 겹침",
+      "decisiveFlaw": "지문은 관습적 형태로부터의 departure가 미적 태도를 환기한다고 주장하므로, 관습 기법을 마스터해 작가 의도를 복제해야 한다는 진술은 논지와 정반대"
+    },
+    {
+      "label": "③",
+      "intent": "개념 오적용(concept misapplication / half-truth) — 마지막 문장의 'pragmatic attitude'를 앵커로 실용적 태도를 예술 가치 척도로 승격",
+      "temptingBecause": "'pragmatic'이라는 지문 핵심 어휘를 재사용하고, 마지막 문장이 pragmatic attitude를 긍정적으로 언급하는 것처럼 보임",
+      "decisiveFlaw": "지문은 pragmatic attitude와 aesthetic attitude의 '전환 능력'을 말할 뿐이며, 예술 작품의 가치를 실용적 유용성으로 측정하라는 것은 미적 태도 개념 자체를 부정하는 왜곡"
+    },
+    {
+      "label": "④",
+      "intent": "극성 역전 + half-truth — 'disquieting atmosphere'와 uncertainty를 앵커로, 인지적 노력(참)을 불편함 억제·명료성 회복(거짓)에 연결",
+      "temptingBecause": "표현주의 작품의 불편함·불확실성이 실제 지문에 있고, 'cognitive efforts'가 후속 문장의 'active involvement'와 표면상 호응하는 것처럼 보임",
+      "decisiveFlaw": "지문은 disquieting/less readable 성질이 깊이 있는 미적 처리를 '가능하게 하는' 생산적 요소라고 보므로, 불편함을 억제하고 신속히 명료함을 회복해야 한다는 진술은 논지에 역행"
+    },
+    {
+      "label": "⑤",
+      "intent": "범위 왜곡(scope/degree distortion) — 마지막 문장의 attitude 'switch'를 경계의 '영구 해체'로 과장",
+      "temptingBecause": "pragmatic/aesthetic attitude, 일상과 예술이라는 지문의 핵심 대비 어휘를 가장 충실히 재사용해 최강 매력지",
+      "decisiveFlaw": "마지막 문장은 두 태도 사이를 '전환(switch)'하는 능력을 말하므로 경계는 유지가 전제이며, 'permanently dissolved'는 전환 개념 자체를 부정하는 극단화"
+    }
+  ],
+  "explanationIssues": [
+    "한국어 조사 오기: '⑤은'(→⑤는), '②와 ③는'(→②와 ③은)",
+    "메인 해설이 ④ 미언급(오답 해설 필드에서 보완됨) — 해설 구조상 완결성은 유지되나 우아함 감점 요인",
+    "해설이 다소 장황함 — 정답 근거와 함정 분리는 정확하나 압축 여지 있음"
+  ],
+  "killerConditionsMet": true,
+  "killerConditionsDetail": {
+    "sameSyntacticSlot": "다섯 선지 모두 'reminds ... that' 뒤 정형절로 동일 슬롯에 삽입되며, 빈칸 뒤 tail이 없어 문법 소거 불가 — 충족",
+    "meaningPreservingAbstraction": "① = 'an aesthetic attitude is needed to appreciate the whole episode'의 정확한 의미 보존 + 난이도에 맞는 추상화('specialized frame of mind') — 충족",
+    "anchorOverlapFlaw": "②(conventional forms)·③(pragmatic)·④(disquieting/uncertainty)·⑤(switch/두 태도) 모두 source anchor, tempting overlap, 단일 결정적 결함 보유 — 충족",
+    "multiCueRequirement": "정답 확정에 빈칸 문장 + 후속 문장(active involvement) + 마지막 문장(attitude switch) 연결 필요. 극성·길이·절대어 하나로 ①을 찍을 수 없음(절대어 휴리스틱은 ⑤ 소거에만 기여) — 충족",
+    "variedTrapTypes": "direction reversal / concept misapplication / polarity half-truth / scope distortion으로 함정 유형 분산 — 충족"
+  },
+  "grade": "B",
+  "notes": "V1~V5 전부 통과, §D KILLER 기계적 조건도 전부 충족하는 견고한 빈칸 문항. 빈칸이 논지 피벗(source span의 핵심 주장)에 정확히 놓였고 4개 오답이 서로 다른 함정 유형과 실제 텍스트 앵커를 가진다. 다만 ②③이 요지를 잡은 상급 학생에게 비교적 빨리 소거되어 실질 경쟁은 ⑤(최강)·④(중간)에 집중되며, ①의 'fully engage'가 후속 문장 'active involvement'와 다소 직접적으로 호응해 최상위 KILLER 대비 확정 경로가 한 단계 짧다(C3=3, C4=3, C5=3). 해설은 정확하나 조사 오기 2건과 장황함(C6=3). 합계 20으로 A 기준(21) 1점 미달 → B. ②를 '관습 이탈 자체가 목적'류의 근사-참 진술로 교체해 경쟁력을 올리거나 해설을 압축·교정하면 A 도달 가능. beautiful KILLER는 A 등급 전제이므로 현 상태로는 미달."
+}

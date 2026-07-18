@@ -1,0 +1,64 @@
+{
+  "batchId": "grok-high-retest-v1",
+  "phase": "grok2",
+  "atKst": "2026-07-17T20:24:33.031+09:00",
+  "assignments": 10,
+  "slotsConsumed": 13,
+  "accepted": 9,
+  "modelCalls": 15,
+  "inputTokens": 68683,
+  "outputTokens": 36406,
+  "costUsd": 0.360938,
+  "ledgerAfter": {
+    "used": 925,
+    "cap": 1000,
+    "costUsd": 31.963113
+  },
+  "byArm": {
+    "RT-SUMM": {
+      "n": 2,
+      "accepted": 2,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 2,
+      "costUsd": 0.031244
+    },
+    "RT-SINS": {
+      "n": 2,
+      "accepted": 2,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 2,
+      "costUsd": 0.090648
+    },
+    "RT-IRRE": {
+      "n": 2,
+      "accepted": 2,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 2,
+      "costUsd": 0.04072
+    },
+    "RT-SORD": {
+      "n": 2,
+      "accepted": 1,
+      "gateRejected": 0,
+      "noCandidate": 1,
+      "slots": 5,
+      "costUsd": 0.098326
+    },
+    "RT-B-EZ": {
+      "n": 2,
+      "accepted": 2,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 2,
+      "costUsd": 0.1
+    }
+  },
+  "models": {
+    "standard": "google/gemini-3.5-flash",
+    "premiumQgen": "x-ai/grok-4.5"
+  },
+  "durationMs": 280020
+}

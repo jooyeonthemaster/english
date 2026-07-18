@@ -1,0 +1,35 @@
+{
+  "pid": "J001",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "'다각화(diversification)'는 문장 1에서 경제 성장·농촌경제 부활과 병렬된 별개의 통념적 처방일 뿐, 성장의 기여가 다각화를 '통해(through)' 실현된다는 진술은 지문에 없다. 오히려 케냐 농업·짐바브웨 식량생산 사례가 '성장은 성공의 작은 부분만 설명(at best only a small part)'이라며 반박한다. 문장 1의 어휘(rural, diversification)를 재활용한 표면 매칭 미끼."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "가장 매력적인 오답. 빈칸 문장을 문장 1의 통념 부연으로 읽고 'At the same time'을 저자의 반박 전환으로 해석하면 끌린다(실제로 잠깐 끌렸음). 그러나 빈칸 문장에 귀속 표지(it is often thought 등)가 없어 저자 자신의 단언이 되고, 바로 다음 문장 'cannot hope to prevent famines WITHOUT specialized entitlement protection mechanisms'와 정면 모순 — 저자가 자기모순에 빠진다. 'At the same time'은 역접 반박이 아닌 병립·추가 표지라 반박-전환 독법도 성립하지 않음."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "'guaranteed', 'automatically'의 극단 표현. 문장 3 'no matter how fast they grow ... cannot hope to prevent famines'와 직접 모순. ②와 동일한 함정 구조이나 표현이 더 노골적으로 극단이어서 유혹은 약함."
+    },
+    {
+      "label": "④",
+      "verdict": "correct",
+      "reason": "성장의 잠재적 기여를 인정하되 '혜택이 소외·취약 계층에게 향할 때만 유효하다'는 조건부 양보. 문장 3의 취약층 서술(a large part of the population derive their livelihood from uncertain sources) 및 문장 5의 '인구에 대한 직접 공적 지원(direct public support to their populations)'과 정합한다. 필요조건 진술이므로 '동시에 직접 개입도 필수'라는 문장 3과 모순 없이 병립하며, 담화 표지 'At the same time'이 두 개의 제한 조건을 잇는 구조가 자연스럽다. 다섯 선지 중 유일하게 지문의 어떤 문장과도 충돌하지 않음."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "'직접 공적 개입보다 우선되어야 한다'는 결론 문장 'The real achievements of these countries lie in having provided direct public support'와 정면 모순. ②와 동일하게 통념 부연으로 읽는 유혹이 있으나 귀속 장치 부재로 기각."
+    }
+  ],
+  "note": "원전은 Drèze & Sen 계열 기근 논의로 추정되며, 원문 빈칸 자리는 'can scarcely be denied'류의 무조건 양보였을 것으로 보이나 선지에는 그 형태가 없고 ④가 조건부 양보로 유일 정합. 형식 결함 1건: 빈칸 앞 'success,' 의 고아 쉼표 — 원전 삽입구 제거 잔재로 보이며 모든 선지가 동사로 시작해 주어-동사 사이 쉼표가 남는 seam 결함(전 선지 공통이라 변별력에는 영향 없으나 실전 문항으로는 수정 필요). 매력 오답 축은 ②(통념 부연 독법 유혹)이며, 'At the same time'의 병립 기능과 귀속 표지 부재를 근거로 기각 가능."
+}

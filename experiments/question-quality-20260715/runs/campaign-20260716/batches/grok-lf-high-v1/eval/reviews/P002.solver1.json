@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'There is a tendency ... to seek' — 명사 tendency는 to부정사 보충어를 취하는 전형 패턴(tendency to-V). 삽입된 부사절 'once the dust ... settled down'이 거리를 벌려 놓았지만 지배 명사는 tendency이므로 to seek이 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct (attractive distractor)",
+      "reason": "'a large part of the population derive their livelihood' — 한국식 암기 규칙(part of + N은 N에 수일치, population은 단수형)으로는 derives가 먼저 떠올라 강하게 끌리는 선지. 그러나 population은 집합명사로 복수 호응(British concord)이 성립하며, 밑줄이 아닌 후행 대명사 'their livelihood'가 복수 해석을 확정하는 장거리 단서다. derive가 틀렸다면 their도 틀려야 하는데 their는 출제되지 않았다. 원전(Drèze & Sen 계열 텍스트)에서도 derive로 쓰이는 용법. 정문으로 판정."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'mechanisms involving direct public intervention' — mechanisms를 후치 수식하는 현재분사. mechanisms가 intervention을 '포함하는' 능동 관계이므로 involving이 정문(= mechanisms that involve ...)."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'Rapid growth of the economy ..., or of the agricultural sector ..., or of food production ..., explains' — 주어의 핵은 단수 명사 growth이고 or로 병렬된 것은 of-전치사구(수식어)일 뿐이다. 세 항목 나열 때문에 복수로 착각하기 쉬우나(잠깐 끌림), 어느 병렬 독법으로도 단수 growth에 일치하므로 explains가 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "WRONG — 정답",
+      "reason": "'The real achievements of these countries lying in having provided ...' — lying을 유지하면 문장에 정동사(finite verb)가 하나도 없어 단편(fragment)이 된다. 구제 독법을 적극 탐색했으나 모두 실패: (1) 축약 관계절로 보면 'achievements [that are] lying in ...'이 되어 술어가 사라짐, (2) 절대구문은 동반 주절이 없어 불성립, (3) 동명사 주어로 봐도 술어 부재. 본동사 lie(lie in = ~에 있다)로 바꿔야 한다: 'The real achievements ... lie in having provided direct public support.' 어법상 틀린 유일한 밑줄."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 풀이 순서상 (B)가 설계된 매력 오답으로 가장 강하게 유혹함 — 'part of + 단수형 명사 → 단수동사' 암기 규칙이 발동하지만, 집합명사 population의 복수 호응 + 밑줄 밖의 'their'라는 장거리 단서로 정문임을 확인하고 탈출. (D)도 or 병렬 나열로 잠깐 복수 착시를 유발하나 핵명사 growth가 단수라 즉시 해소. (E)는 본동사 부재라는 구조적 결함으로 대안 해석이 전무해 유일하게 옹호 불가능. 단일 정답으로 수렴, 신뢰도 높음."
+}

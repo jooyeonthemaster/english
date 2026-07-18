@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "Seam is grammatical ('...is warranted to appreciate the whole episode'), but logic fails: 'exclusive focus on style' contradicts appreciating 'the whole episode' (figure AND ground). The passage describes an inharmonious figure-ground interaction in expressionist works, not exclusion of subject matter. The extreme 'exclusive' is the disqualifier, and the content does not license the anaphor 'This active involvement'."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "Grammatically acceptable (implicit-agent purpose infinitive after passive), but logically unsupported: recovering the artist's intended message is a decoding/readability operation closer to the pragmatic mode, whereas the passage argues reduced readability demands a changed mode of reception (aesthetic attitude). 'Artist's intended message' appears nowhere in the passage's conceptual apparatus."
+    },
+    {
+      "label": "3",
+      "verdict": "accept",
+      "reason": "Seam is grammatical: 'a non-everyday framework for reception is called for (in order) to appreciate the whole episode'. Logic holds bidirectionally: (a) forward, 'non-everyday framework' = the 'aesthetic attitude' contrasted with the 'pragmatic attitude of everyday life' in the final sentence; (b) it is triggered exactly by departure from conventional, everyday-resembling forms; (c) the viewer's adoption of such a framework is an act, licensing the following anaphor 'This active involvement provides a basis for depth of aesthetic processing'."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "Grammatical but directly contradictory: smooth building of a life-like mental model is the stated mechanism of highly REPRESENTATIONAL works; the sentence's antecedent condition is that the work is LESS readable because expressionist style works against the subject matter, i.e., precisely when smooth model-building is blocked. Antithesis of the required content."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "Seam failure: insertion forces the parse 'prior depth of aesthetic reflection prompts the work to appreciate the whole episode' (prompt + NP + to-infinitive), making 'the work' the controller of 'appreciate' — semantically incoherent, and no alternative parse (rationale-clause detachment, etc.) rescues it. Logic is also reversed: depth of aesthetic processing/reflection is stated as the RESULT of the active involvement ('This active involvement provides a basis for depth...'), not a prior cause prompting the work."
+    }
+  ],
+  "note": "Blind solve, grammarian/logician lens. The blank must (i) combine with the trailing purpose infinitive 'to appreciate the whole episode' and (ii) serve as antecedent of 'This active involvement'. Only option 3 passes both the grammatical-seam test and the discourse-logic test; it also cashes out the final sentence's pragmatic-vs-aesthetic attitude contrast. Distractors are cleanly rejectable: 1 (extreme 'exclusive', whole-episode contradiction), 2 (unmentioned authorial intention, pragmatic decoding), 4 (direct antithesis), 5 (control/seam incoherence + causal reversal). Single defensible answer; well-formed item."
+}

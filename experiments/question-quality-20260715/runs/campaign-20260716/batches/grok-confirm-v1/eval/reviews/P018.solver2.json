@@ -1,0 +1,35 @@
+{
+  "pid": "P018",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "Seam: 'had already started to skip the formal toppings' is a grammatical inceptive VP, and 'it' in the follow-up clause ('it was mostly all in her mouth already') resolves cleanly to the scone. Logic: the passage entails Chloe broke her mirroring pattern ('boldly chose the biscuit-looking thing before her grandmother') and ate the scone plain while the grandmother was still spreading cream and jam — i.e., she skipped the formal toppings out of eager haste. Minor stylistic wrinkles ('start to skip' treats a punctual omission as inceptive; 'hasty impatience' is mildly pleonastic) do not create a grammatical or truth-conditional failure."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "Directly contradicted by the text: she chose the scone BEFORE her grandmother, i.e., she had stopped copying her grandmother's order at exactly this moment. Also incompatible with the follow-up clause — having the scone mostly in her mouth while grandmother is still spreading cream and jam cannot be described as copying her polite order exactly."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "Presupposition failure: the passage states 'all the sandwiches were eaten up' before this point, so no sandwich remains to select. The anaphor 'it... in her mouth' would also misrefer — the context sentence is about the scone she boldly took."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "Contradicted: 'Scones, was that what they were called?' shows she does not know menu labels, so she cannot have 'started to finish learning every label correctly.' 'Started to finish learning' is also aspectually incoherent, and the follow-up clause about the scone in her mouth is a non sequitur to label-learning."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Contradicted: the grandmother, not Chloe, is applying cream and jam; the scone being already mostly in Chloe's mouth entails she bypassed that custom rather than mastered it. 'Started to master... completely' also pairs an inceptive with a completive incoherently."
+    }
+  ],
+  "note": "Lens: grammarian/logician. The post-blank clause 'in fact, it was mostly all in her mouth already' acts as a hard logical constraint; only option 1 is consistent with it and with the earlier cue 'boldly chose the biscuit-looking thing before her grandmother.' Options 2-5 each contain a direct textual contradiction or presupposition failure, so the answer is uniquely determined. Option 1's phrasing is slightly unidiomatic ('skip... through hasty impatience') but defensible; no alternative reading rescues any distractor."
+}

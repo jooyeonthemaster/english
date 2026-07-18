@@ -1,0 +1,69 @@
+{
+  "pid": "P001",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-NOTE-SOURCE-TENSE",
+      "severity": "minor",
+      "evidence": "원지문 자체에 시제 혼용이 있다: 'Once the danger passed, you will still feel the fear churning away inside. It would take 10 to 15 seconds...' (과거 + will + would 혼재). TOPIC 유형이라 렌더 변형이 없고('렌더 지문 없음'은 이 배치의 비변형 유형 표준 표기, P002 TITLE도 동일), 이는 출처 문체를 그대로 계승한 것이므로 렌더 손상이 아니다. V1 실패로 보지 않되 출처 검수 시 참고."
+    },
+    {
+      "code": "V4-NOTE-KO-STYLE",
+      "severity": "minor",
+      "evidence": "오답 해설 2의 한국어가 이중 주제어 구문으로 어색하다: \"'...' 선택지는 지문은 의식적 계획이 아니라 ... 감정 작용을 강조하므로 관점이 반대이다.\" 내용 자체는 지문 사실('Nor would you have survived if you had to think consciously...')과 정확히 일치하므로 사실성 실패는 아니고 문장 다듬기 수준."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — 첫 문장 thesis('Emotions prepare us to deal with important events without us having to think')와 마지막 문장('We don't choose these changes; they simply happen')을 관통하는 자동성·준비 기능을 명사구로 추상화",
+      "temptingBecause": "글 전체(위험 감시, 뇌·자율신경계 변화, 표현 신호)가 모두 이 명제의 하위 근거로 정렬된다",
+      "decisiveFlaw": "없음(유일 정답). 다만 'important situations'가 원문 'important events'를 거의 그대로 반향해 경쟁력을 낮춘다"
+    },
+    {
+      "label": "2",
+      "intent": "극성 반전(자동/무의식 -> 의식적 계획)",
+      "temptingBecause": "'imminent danger'가 지문 표현과 어휘 일치하고, 위험 대처가 실제 소재라 표면적으로 그럴듯하다",
+      "decisiveFlaw": "지문이 명시적으로 부정하는 관점이다: 'Nor would you have survived if you had to think consciously about what you should do' — 의식적 계획은 오히려 생존을 막았을 요인으로 제시된다"
+    },
+    {
+      "label": "3",
+      "intent": "half-truth + 존재하지 않는 처방(디테일을 방법론으로 확장)",
+      "temptingBecause": "위험이 지난 뒤 두려움이 10~15초 남는다는 문장이 실제로 존재해 anchor가 있다",
+      "decisiveFlaw": "지문은 오히려 'there would not be much you could do to cut that short'라며 단축 불가능을 말하고, '방법'은 어디에도 없다. 게다가 한 문장 디테일이지 글의 주제가 아니다"
+    },
+    {
+      "label": "4",
+      "intent": "scope shift(언급된 개체 + 언급 안 된 측면)",
+      "temptingBecause": "'autonomic nervous system'이 지문에 실제 등장하는 핵심어라 키워드 매칭 습관을 노린다",
+      "decisiveFlaw": "진화 역사(evolutionary history)는 지문 어디에도 없다. 자율신경계는 감정의 준비 작용을 보여주는 예시로만 언급된다"
+    },
+    {
+      "label": "5",
+      "intent": "part-for-whole(하위 근거를 주제로 승격)",
+      "temptingBecause": "'Emotions also send out signals, changes in our expressions, face, voice, and bodily posture'와 어휘가 거의 그대로 겹친다",
+      "decisiveFlaw": "표현 신호는 마지막에 덧붙는('also') 하나의 결과 예시일 뿐, 위험 감시·신경계 변화까지 포괄하는 중심 관점이 아니다"
+    }
+  ],
+  "explanationIssues": [
+    "오답 해설 2의 '선택지는 지문은 ...' 이중 주제어 구문이 어색함(내용 오류는 아님)",
+    "오답 해설이 4개 모두 정확하나 '...일 뿐 ...가 아니다' 패턴이 반복되어 다소 정형적"
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "블라인드 풀이 정답 1(confidence high, 대안 정답 없음). 모든 V 통과. 함정 설계는 반전·half-truth·scope shift·part-for-whole로 서로 다른 오개념을 겨냥해 C2가 탄탄하다. 약점은 C3: 정답 선지가 첫 문장의 근접 패러프레이즈('important events' -> 'important situations')여서 첫 문장만 읽어도 도달 가능하고, 2·4는 즉시 소거에 가까워 실질 경쟁은 3·5뿐이다. INTERMEDIATE 라벨에는 하한선 수준으로 부합. 정답 선지의 어휘 반향을 줄이고(예: 'how emotions equip us to act before deliberation' 류) 4를 지문 내용 기반 함정으로 교체하면 A 후보. 합계 17, 최저 C 2 -> B."
+}

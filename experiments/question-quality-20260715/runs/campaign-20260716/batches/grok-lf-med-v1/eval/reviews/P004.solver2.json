@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "C",
+  "multipleDefensible": true,
+  "defensibleLabels": ["C", "D"],
+  "confidence": "medium",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "'subject matter that resembles everyday life' — 'that' is a restrictive relative pronoun whose antecedent is the singular non-human NP 'subject matter'; it functions as subject of 'resembles' and singular agreement holds. Grammatical."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "'the role of background style is to facilitate ...' — canonical predicative to-infinitive after 'the role ... is'; 'facilitate' takes the NP object 'the construction of mental models'. Grammatical."
+    },
+    {
+      "label": "C",
+      "verdict": "wrong (primary error)",
+      "reason": "As printed, the clause 'novel stylistic devices working ... against the subject matter thereby creating a disquieting atmosphere' contains no finite verb: 'working' can only be a reduced relative / participle and 'creating' a participial adjunct, so the sentence is verbless. Minimal repair working->work yields 'devices work ..., thereby creating ...', which is fully grammatical and matches the highly idiomatic 'thereby + V-ing' result-participle pattern. This is the most natural attribution of the error."
+    },
+    {
+      "label": "D",
+      "verdict": "conditionally wrong (alternative attribution — item ambiguity)",
+      "reason": "Under the alternative parse that keeps (C) as a reduced relative ('devices [that are] working ... against the subject matter'), the repair creating->create gives 'novel stylistic devices working ... thereby create a disquieting atmosphere' — also fully grammatical ('thereby' as a plain adverb before a finite verb is attested), and semantically coherent (by working inharmoniously, the devices create the atmosphere). Hence the single-error location is formally underdetermined between C and D; D is a defensible answer, though the 'thereby + V-ing' idiom and the presumable source sentence favor C as intended."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "'an aesthetic attitude is needed to appreciate ...' — passive 'is needed' with a purpose to-infinitive; the notional subject of 'to appreciate' is the generic viewer/reader, standard usage. Grammatical."
+    }
+  ],
+  "note": "Real defect confirmed: the expressionist-works sentence lacks a finite verb. However this is the classic two-way ambiguous 'missing finite verb' construction: changing either (C) working->work or (D) creating->create independently yields a fully grammatical sentence, so a rigorous solver cannot uniquely locate the error from grammar alone. Intended answer is almost certainly C (idiomatic 'thereby creating' and the likely source text 'stylistic devices work ... , thereby creating a disquieting atmosphere'), but D survives formal scrutiny as an alternative repair point. Recommend flagging as a defensibility/ambiguity issue."
+}

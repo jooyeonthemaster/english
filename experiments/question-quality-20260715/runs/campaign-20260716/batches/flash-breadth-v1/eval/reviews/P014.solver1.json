@@ -1,0 +1,35 @@
+{
+  "pid": "P014",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "지문의 핵심 주장과 정확히 일치. 도입부에서 '기근 취약성 감소를 주로 경제성장에서 찾으려는 경향'을 제시한 뒤, 'no matter how fast they grow ... cannot hope to prevent famines without specialized entitlement protection mechanisms involving direct public intervention'으로 직접적 공공 개입의 필수성을 단언하고, 보츠와나·케냐·짐바브웨 사례로 '성장은 기근 예방 성공의 작은 부분만 설명하며 진짜 성취는 위기 시 직접적 공공 지원'이라고 마무리한다. 'necessity of direct state intervention over mere economic growth in preventing famines'는 이 대조 구조(성장만으로는 불충분 vs 직접 개입 필수)를 온전히 포착한다."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "첫 문장에 'diversification of economic activities'가 언급되어 도입부만 읽으면 끌리는 미끼. 그러나 이는 지문이 비판적으로 상대화하는 통념 측이지 주장이 아니며, 'natural disasters'는 지문의 주제인 famine(기근)보다 범위가 어긋난 스코프 치환이다. 실전에서 첫 문장 키워드 매칭으로 잠깐 눈이 가지만, 역접(At the same time) 이후 논지를 확인하면 즉시 배제된다."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "케냐의 농업 부문 성장 사례가 언급되나, 지문은 그것이 'explains at best only a small part of their success'라고 명시적으로 격하한다. 지문 논지의 정반대(성장 기여 강조)이므로 오답. 사례 문장만 발췌독하면 걸리는 전형적 세부사항 함정."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "가장 매력적인 오답. 'entitlement protection'이라는 지문 핵심 어휘를 그대로 재사용해 어휘 일치 유혹이 강하다. 그러나 지문은 이 정책의 '한계(limitations)'가 아니라 '필수성'을 주장하며, 보츠와나 등은 이 정책이 성공한 사례로 제시된다. 극성(polarity)이 반전된 선지. 어휘만 보고 고르면 걸려드는 미끼로, 'limitations'라는 단어 하나가 논지 방향과 정면 충돌함을 확인하고 배제했다."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "'uncertain sources of livelihood'라는 지문 표현을 차용했으나, 지문은 불안정한 생계원과 '느린 성장'의 관계를 다루지 않는다. 오히려 'no matter how fast they grow'라며 성장이 빨라도 기근을 막지 못한다고 말하므로, 성장 속도와의 상관을 주제로 삼는 이 선지는 지문에 없는 관계를 날조한 것이다."
+    }
+  ],
+  "note": "전형적 '통념 제시 → 역접 → 진짜 주장' 구조의 주제 문항. Dreze & Sen 계열 기근·공적 개입 논의 지문. 정답 1은 대조 구조(mere economic growth vs direct state intervention)를 그대로 담아 유일하게 옹호 가능. 매력도 순위: 4(핵심 어휘 재사용+극성 반전) > 2(도입부 키워드+스코프 치환) > 3(사례 발췌 함정) > 5(관계 날조). 복수정답 소지 없음."
+}

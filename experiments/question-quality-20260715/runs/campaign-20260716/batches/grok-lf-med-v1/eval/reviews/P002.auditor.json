@@ -1,0 +1,77 @@
+{
+  "pid": "P002",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V5-FIELD-ASYMMETRY",
+      "severity": "minor",
+      "evidence": "markedExpressions에서 정답 항목 (E)의 expression 필드가 표시형 'explaining'이 아니라 교정형 'explains'를 담고 있고 surroundingText도 교정된 문장('...in Zimbabwe, explains at best...')을 담는다. 비오류 항목 (A)~(D)는 expression=errorExpression=표시형으로 저장되어 필드 의미가 비대칭이다. 다만 학생에게 노출되는 렌더 지문·선지·정답·해설은 모두 'explaining'으로 정확히 동기화되어 있어 실노출 결함은 아니다."
+    },
+    {
+      "code": "V1-SOURCE-AGREEMENT-NOTE",
+      "severity": "minor",
+      "evidence": "(C) 인접 구간의 'a large part of the population derive'는 원지문 그대로의 영국식 집합명사 복수 호응이다. 변형·손상이 아니므로 V1 위반은 아니나, 밑줄 밖 위치에서 수일치 논란처럼 보일 수 있어 이의신청 소지가 있다."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 4,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "명사 tendency의 to부정사 보충(a tendency to-V) 판정 — 삽입절로 인한 원거리 결합",
+      "temptingBecause": "tendency와 to seek 사이에 'once the dust of an emergency has settled down' 삽입절이 끼어 있어 결합 관계 파악이 어렵고, seeking(동명사)으로 고쳐야 한다는 오인을 유도한다.",
+      "decisiveFlaw": "'a tendency to seek'은 명사 뒤 to부정사 보충의 표준 용법으로 완전히 문법적이다. 정답이 될 수 없다."
+    },
+    {
+      "label": "(B)",
+      "intent": "조동사 수동태(cannot be + p.p.) 형태 판정",
+      "temptingBecause": "긴 주어 'The potential contribution of greater economic success'와 조건 삽입절 'if it involves vulnerable groups' 뒤에서 태를 판단해야 한다는 점 외에는 유인 요소가 약하다. 사실상 필러에 가까운 약한 디코이다.",
+      "decisiveFlaw": "contribution은 부정되는 대상(피동주)이므로 'cannot be denied' 수동태가 필수이고 형태가 정확하다. 정답이 될 수 없다."
+    },
+    {
+      "label": "(C)",
+      "intent": "관계부사 vs 관계대명사 선택 — 후행 절의 완전성 판정",
+      "temptingBecause": "관계절 내부의 'a large part of the population derive'가 단수처럼 보이는 주어에 복수 동사를 취해 시선을 끌고, where를 which/in which류로 바꿔야 한다는 오인을 유도한다.",
+      "decisiveFlaw": "관계절 'a large part of the population derive their livelihood from uncertain sources'는 주어·동사·목적어를 갖춘 완전한 절이므로 장소 선행사 countries(= in which)를 받는 관계부사 where가 정확하다. 정답이 될 수 없다."
+    },
+    {
+      "label": "(D)",
+      "intent": "분사 능·수동 — 명사 후치 수식 현재분사(involving) vs 과거분사(involved) 판정",
+      "temptingBecause": "mechanisms가 involve의 대상처럼 읽히면 involved로 고치고 싶어지며, 정답 (E)와 같은 -ing 형태여서 형태 대조 전략을 교란한다.",
+      "decisiveFlaw": "mechanisms가 direct public intervention을 '포함하는' 능동 주체이므로 현재분사 involving이 정확하다. 정답이 될 수 없다."
+    },
+    {
+      "label": "(E)",
+      "intent": "정동사 vs 준동사 — 긴 or 병렬 주어 뒤 주절 정동사 필요 여부 판정 (선언된 정답)",
+      "temptingBecause": "'Rapid growth of the economy in Botswana, or of the agricultural sector in Kenya, or of food production in Zimbabwe,' 뒤의 콤마+-ing이 분사구문처럼 보이고, 직전 문장의 involving 등 분사 사용 맥락이 -ing을 자연스럽게 느끼게 한다.",
+      "decisiveFlaw": "explaining이면 문장 전체에 정동사가 없어 복구 불가능한 비문이 된다. 정동사 explains로 교정해야 하며 교정 시 원지문과 정확히 일치한다(source-correct → displayed-wrong 최소대립쌍). 유일한 오류로 확정된다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "MISSING-TEMPTING-RATIONALE",
+      "severity": "minor",
+      "evidence": "오답 해설 (A)~(D)는 '왜 올바른가'만 서술하고 '왜 매력적인가(why tempting)' 근거가 없다. RUBRIC §C-3(5개 밑줄 각각에 point·why tempting·why correct/incorrect 존재)의 명시 요건을 충족하지 못한다. 특히 (B)는 유인 논리를 설명하기 어려운 필러성 디코이다."
+    },
+    {
+      "code": "UNADDRESSED-DISTRACTION",
+      "severity": "minor",
+      "evidence": "(C) 해설이 관계절 인접의 'a large part of the population derive'(집합명사 복수 호응, 원문 그대로)를 언급하지 않아, 이 지점을 오류로 오인한 학생의 혼란을 해소하지 못한다. 사실 오류는 아니다."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1~V5 전부 통과. 유일한 의도 변형은 explains→explaining이며 렌더 지문은 원지문과 그 외 완전 일치, 정답 (E)는 정동사 부재로 유일 오류임을 독립 검증했다. 해설의 통사 분석((A) 명사+to부정사, (B) 조동사 수동태, (C) 완전절+관계부사, (D) 능동 후치수식 분사, (E) 정동사 결손)은 모두 실제 구조와 일치한다. KILLER 조건은 최소대립쌍·명확한 문법 판단·구조적 독해 요구·동일 포인트 차폐 부재는 충족하나, §C-3(밑줄별 why tempting 존재) 미충족 및 (B)의 필러성으로 killerConditionsMet=false. 공예 합계 20(C1=4, C2=3, C3=3, C4=4, C5=3, C6=3)으로 A 기준(합계 21)에 1점 미달, 최저 C가 3이므로 등급 B. (B) 디코이를 실제 오개념을 겨냥한 디코이로 교체하고 오답 해설에 유인 근거를 보강하면 A/KILLER에 근접한다."
+}

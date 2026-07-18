@@ -1,0 +1,32 @@
+{
+  "pid": "P001",
+  "answer": "Not until we are being massaged by warm water, unable to check our e-mail, can we finally hear the quiet voices in the backs of our heads telling us about the insight.",
+  "multipleDefensible": false,
+  "defensibleLabels": [
+    "Not until we are being massaged by warm water, unable to check our e-mail, can we finally hear the quiet voices in the backs of our heads telling us about the insight."
+  ],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "조건1-의미요소",
+      "verdict": "충족",
+      "reason": "따뜻한 물 마사지(being massaged by warm water), 이메일 확인 불가(unable to check our e-mail), 비로소/마침내(finally), 머릿속 뒤편의 조용한 목소리(the quiet voices in the backs of our heads), 통찰에 대해 말해줌(telling us about the insight) — 원문 마지막 문장의 의미 요소가 전부 답안에 포함된다."
+    },
+    {
+      "label": "조건2-Not until 도치",
+      "verdict": "충족",
+      "reason": "부정 부사구 'Not until + 절'이 문두에 오면 주절에 조동사-주어 도치가 의무적이다. 'can we finally hear'로 도치가 형식적으로 성립한다. 원문의 'It is not until ~ that ~' 강조구문과 진리조건이 동일함도 확인."
+    },
+    {
+      "label": "조건3-수동태 분사구문·형용사구",
+      "verdict": "충족(용어상 결함 있음)",
+      "reason": "문자열 'being massaged by warm water'와 'unable to check our e-mail'은 모두 포함된다. 다만 형식문법상 결함: 자연스러운 정답 렌더링에서 'we are being massaged'는 진행형 수동태의 정형 동사구이지 분사구문(free adjunct)이 아니다. 출제 조건이 이를 '수동태 분사구문'으로 명명한 것은 부정확하며, 문자 그대로 분사구문을 강제하면 'Not until we become unable to check our e-mail, being massaged by warm water, can we...'라는 대체 표층 구조도 조건을 만족해 채점 기준에 중의성이 생긴다. 'unable to check our e-mail'은 무동사 자유 부가어(형용사구)로 정상 성립."
+    },
+    {
+      "label": "조건4-can 현재형",
+      "verdict": "충족",
+      "reason": "지문 전체가 일반 현재 시제(총칭적 진술)이므로 도치절의 조동사는 could가 아닌 can이 시제 일치상 옳다. 'can we finally hear'로 충족."
+    }
+  ],
+  "note": "선다형이 아닌 조건 영작 서술형. 모범답안은 원문 강조구문의 표준 도치 변환으로 유일하게 수렴하므로 multipleDefensible=false. 단, 출제 조건의 문법 용어 결함 1건: 'being massaged by warm water'를 '수동태 분사구문'이라 지칭했으나 의도된 정답 문장에서는 진행형 수동태 정형 동사(are being massaged)의 일부다. 진짜 분사구문 독법을 강제할 경우 대체 답안(Not until we become unable to check our e-mail, being massaged by warm water, can we...)도 형식적으로 옹호 가능해져 채점 시비 소지가 있다. 채점 기준표에 '조건의 두 어구가 문자열로 포함되면 인정' 등의 명시가 필요하다. 사소한 표기: 'e-mail' 하이픈 표기는 지문과 일치시켰다."
+}

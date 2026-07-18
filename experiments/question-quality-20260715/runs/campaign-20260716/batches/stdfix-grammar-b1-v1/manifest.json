@@ -1,0 +1,234 @@
+{
+  "batchId": "stdfix-grammar-b1-v1",
+  "phase": "stdfix",
+  "note": "B1: G0 vs G4 단발 짝비교 12쌍 (H-STD-5)",
+  "atKst": "2026-07-17T18:07:21.022+09:00",
+  "gitSha": "8d365701e339d7ad64bb1f808c76ec768e9855ee",
+  "gitDirty": true,
+  "worstCaseReserved": 48,
+  "spec": {
+    "batchId": "stdfix-grammar-b1-v1",
+    "phase": "stdfix",
+    "note": "B1: G0 vs G4 단발 짝비교 12쌍 (H-STD-5)",
+    "concurrency": 3,
+    "providerRouting": "none",
+    "assignments": [
+      {
+        "itemId": "g0-002",
+        "frameId": "grammar-frame-v2-002",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "profile": "G0_CURRENT_CONTROL",
+        "armId": "B1-G0"
+      },
+      {
+        "itemId": "g4-002",
+        "frameId": "grammar-frame-v2-002",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "profile": "G4_DIET_GUARDED",
+        "armId": "B1-G4"
+      },
+      {
+        "itemId": "g0-003",
+        "frameId": "grammar-frame-v2-003",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "profile": "G0_CURRENT_CONTROL",
+        "armId": "B1-G0"
+      },
+      {
+        "itemId": "g4-003",
+        "frameId": "grammar-frame-v2-003",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "profile": "G4_DIET_GUARDED",
+        "armId": "B1-G4"
+      },
+      {
+        "itemId": "g0-021",
+        "frameId": "grammar-frame-v2-021",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "profile": "G0_CURRENT_CONTROL",
+        "armId": "B1-G0"
+      },
+      {
+        "itemId": "g4-021",
+        "frameId": "grammar-frame-v2-021",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "profile": "G4_DIET_GUARDED",
+        "armId": "B1-G4"
+      },
+      {
+        "itemId": "g0-035",
+        "frameId": "grammar-frame-v2-035",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "profile": "G0_CURRENT_CONTROL",
+        "armId": "B1-G0"
+      },
+      {
+        "itemId": "g4-035",
+        "frameId": "grammar-frame-v2-035",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "profile": "G4_DIET_GUARDED",
+        "armId": "B1-G4"
+      },
+      {
+        "itemId": "g0-049",
+        "frameId": "grammar-frame-v2-049",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "profile": "G0_CURRENT_CONTROL",
+        "armId": "B1-G0"
+      },
+      {
+        "itemId": "g4-049",
+        "frameId": "grammar-frame-v2-049",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "profile": "G4_DIET_GUARDED",
+        "armId": "B1-G4"
+      },
+      {
+        "itemId": "g0-058",
+        "frameId": "grammar-frame-v2-058",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "profile": "G0_CURRENT_CONTROL",
+        "armId": "B1-G0"
+      },
+      {
+        "itemId": "g4-058",
+        "frameId": "grammar-frame-v2-058",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "profile": "G4_DIET_GUARDED",
+        "armId": "B1-G4"
+      },
+      {
+        "itemId": "g0-069",
+        "frameId": "grammar-frame-v2-069",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "profile": "G0_CURRENT_CONTROL",
+        "armId": "B1-G0"
+      },
+      {
+        "itemId": "g4-069",
+        "frameId": "grammar-frame-v2-069",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "profile": "G4_DIET_GUARDED",
+        "armId": "B1-G4"
+      },
+      {
+        "itemId": "g0-074",
+        "frameId": "grammar-frame-v2-074",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "profile": "G0_CURRENT_CONTROL",
+        "armId": "B1-G0"
+      },
+      {
+        "itemId": "g4-074",
+        "frameId": "grammar-frame-v2-074",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "profile": "G4_DIET_GUARDED",
+        "armId": "B1-G4"
+      },
+      {
+        "itemId": "g0-079",
+        "frameId": "grammar-frame-v2-079",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "profile": "G0_CURRENT_CONTROL",
+        "armId": "B1-G0"
+      },
+      {
+        "itemId": "g4-079",
+        "frameId": "grammar-frame-v2-079",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "profile": "G4_DIET_GUARDED",
+        "armId": "B1-G4"
+      },
+      {
+        "itemId": "g0-093",
+        "frameId": "grammar-frame-v2-093",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "profile": "G0_CURRENT_CONTROL",
+        "armId": "B1-G0"
+      },
+      {
+        "itemId": "g4-093",
+        "frameId": "grammar-frame-v2-093",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "profile": "G4_DIET_GUARDED",
+        "armId": "B1-G4"
+      },
+      {
+        "itemId": "g0-096",
+        "frameId": "grammar-frame-v2-096",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "profile": "G0_CURRENT_CONTROL",
+        "armId": "B1-G0"
+      },
+      {
+        "itemId": "g4-096",
+        "frameId": "grammar-frame-v2-096",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "profile": "G4_DIET_GUARDED",
+        "armId": "B1-G4"
+      },
+      {
+        "itemId": "g0-115",
+        "frameId": "grammar-frame-v2-115",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "profile": "G0_CURRENT_CONTROL",
+        "armId": "B1-G0"
+      },
+      {
+        "itemId": "g4-115",
+        "frameId": "grammar-frame-v2-115",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "STANDARD",
+        "profile": "G4_DIET_GUARDED",
+        "armId": "B1-G4"
+      }
+    ]
+  }
+}

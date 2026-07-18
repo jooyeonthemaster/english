@@ -1,0 +1,66 @@
+{
+  "pid": "P024",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-minor",
+      "severity": "minor",
+      "evidence": "선지 ④ 'an interval that does not stretch past the New Year alone'의 문미 'alone'이 수식 대상이 모호해 어색하다(비문은 아님: 'by itself/only'로 파싱 가능). 오답 선지라 정답성에는 영향 없음."
+    },
+    {
+      "code": "V4-minor",
+      "severity": "minor",
+      "evidence": "해설의 '처방의 핵심 술부' 표현은 부정확 소지가 있다 — 빈칸은 술부 전체가 아니라 술부 내 전치사구(within ___)의 명사구 보충어다. 통사 오분석 수준은 아니어서 V4 통과."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 4,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 4
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — source span 'a period that's imminent'를 지문 논리(break→remoteness→착수 지연, this winter 재프레이밍)로 추상화",
+      "temptingBecause": "연구 문장('break', 'remote')과 처방 예시('this winter')의 두 근거를 정확히 종합한다",
+      "decisiveFlaw": "없음(정답). 완성문 'meet within a timeframe freed from break-induced remoteness'가 원문 의미를 보존한다"
+    },
+    {
+      "label": "2",
+      "intent": "scope shift(과확장): 재프레이밍을 '모든 달력 경계 제거'로 확대",
+      "temptingBecause": "'calendar boundary'가 지문의 units/break 어휘와 겹치고, 단절이 문제라는 진단과 표면상 정합해 보인다",
+      "decisiveFlaw": "지문의 처방은 경계 제거가 아니라 마감을 같은 임박 단위('this winter'도 하나의 단위)로 재귀속시키는 것이다. 'every'의 절대성도 본문과 불일치"
+    },
+    {
+      "label": "3",
+      "intent": "causal reversal(인과 역전): 결과를 선행 조건으로 제시",
+      "temptingBecause": "마지막 문장 'the stress is more manageable'의 어휘(tension/stress)를 앵커로 쓴다",
+      "decisiveFlaw": "스트레스 완화는 임박 프레이밍의 결과('That way ...')이지 마감을 감당하기 위한 사전 조건이 아니다. 'within a workload'는 의미상으로도 부자연"
+    },
+    {
+      "label": "4",
+      "intent": "half-truth(과협소): 원리를 New Year 사례 하나로 축소",
+      "temptingBecause": "지문 예시의 'the New Year'를 그대로 반복해 국소 대응이 강하다",
+      "decisiveFlaw": "예시 자체가 반증한다 — 'this winter' 프레임은 새해를 넘어 1월 마감까지 포괄한다(새해를 넘지 않는 구간이면 1월 마감을 담을 수 없음). 또한 원리는 weeks·months·seasons 등 모든 단절에 적용된다"
+    },
+    {
+      "label": "5",
+      "intent": "mechanism inversion(기제 전도): 장애 요인을 동기 장치로 뒤집음",
+      "temptingBecause": "핵심어 'break'를 재사용하고, '마감을 도전으로 보라'는 능동적 어조와 어울려 보인다",
+      "decisiveFlaw": "연구 결과에서 break는 마감을 remote하게 만들어 착수를 늦추는 장애 기제다. 동기 장치로 쓰라는 진술은 지문 어디에도 없고 진단과 정반대다"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": true,
+  "grade": "A",
+  "notes": "V1: 렌더 지문은 원지문에서 'a period that's imminent'→'_____' 치환 외 완전 동일(접합·중복·누락·고아 문장부호 없음), 라벨 1~5와 선지 일치. V2: 5개 선지 독립 대입 검증 결과 ①만 성립, 단일 정답. V3: 완성문 문법적·자연스러움, 5개 선지 모두 'within ___' 동일 NP 슬롯에 문법적으로 들어가며 문법만으로 탈락하는 오답 없음(③은 의미상 어색하나 문법적). V4: 해설의 구조 기술(진단→처방, 두 근거 종합)과 오답 기제 명명이 실제 선지 내용과 정확히 대응. V5: 정답 라벨·오답 해설 키·keyPoints 동기화. KILLER §D: 동일 통사 슬롯 충족, 정답은 source span 의미 보존+추상화, 각 오답에 anchor/overlap/decisive flaw 존재, 극성·길이·고유어·절대어 단일 단서로 정답 특정 불가(정답 확정에 연구 문장+winter 예시 두 단서 연결 필요), 오답 함정이 scope shift/causal reversal/half-truth/mechanism inversion으로 상호 구별됨 — 충족. 감점 요인: C4=3(②'every'·③'fully'의 절대어가 시험 요령상 약한 소거 단서), C5=3(정답 ①이 지문 핵심어 'break'·'remote'를 직접 재사용해 어휘 대응만으로 후보 압축이 다소 쉬워 최상위 KILLER 깊이에서 반걸음 모자람), C3=3(③이 상대적으로 조기 소거됨). 합계 21, 최저 3, 모든 V 통과 → A. beautiful KILLER 요건(A+§D)도 충족하나 위 감점 요인이 상한을 깎는다."
+}

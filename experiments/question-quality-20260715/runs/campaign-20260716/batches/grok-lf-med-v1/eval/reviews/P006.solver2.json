@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "'apply higher levels of conceptual ethics or theory as fixed decision rules'는 지문 두 번째 문장 'This form of ethics is distinct from higher levels of conceptual ethics or theory'와 정면 모순. 또한 'fixed decision rules'는 빈칸 문장의 대조항 'rather than follow a prescribed set of ethical codes or rules'와 같은 범주여서, 빈칸에 넣으면 'X rather than X' 꼴의 논리적 모순/공허문이 된다. 문법 결합(learn to + 동사원형)은 정상."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "'impose their own codes of behaviour as uniform rules for others'' choices'는 지문 결론부 'recognizing and accepting that the factors that drive other people's codes and decision making may be different'의 직접 부정. 원리가 개인 간·개인 내에서 다양하다(these principles vary both between and within individuals)는 전제와도 양립 불가. 문법 결합은 정상이나 논리적으로 기각."
+    },
+    {
+      "label": "3",
+      "verdict": "accept",
+      "reason": "'evaluate ethical issues'는 첫 문장의 정의(identifying ethical issues and evaluating these issues from different perspectives)를 그대로 재현하고, 'divergent personal factors'는 후반부 'principles vary both between and within individuals / What a person values relates to their social, religious, or civic beliefs'로, 'situational contexts'는 'Individual perspectives may also be context dependent... under different circumstances... the same individual may make different choices'로 각각 지문 내에서 명시적으로 입증된다. 'rather than follow a prescribed set of codes'와의 대조(유연한 평가 vs 고정 규칙)도 성립. 문법 seam(learn to evaluate) 무결. 모든 내용어가 지문에 의해 라이선스되는 유일한 선지."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "'replace formal ethical codes with purely informal social and civic customs'는 어휘 미끼: 지문의 'formal and informal'은 learning experiences(학습 경험)를 수식하며, 공식 규범을 비공식 관습으로 '대체'하라는 주장은 어디에도 없다. 지문의 처방은 규칙의 종류 교체가 아니라 관점 민감적 평가·이해다. 'purely'라는 배타 한정도 지문 근거 없음. 문법 결합은 정상이나 논리적으로 기각."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "'select only those ethical issues that yield a clear right or wrong response'는 세 번째 문장 'The nature of an ethical issue... is that there is no clear right or wrong response'와 정면 모순 — 지문 정의상 그런 이슈는 존재하지 않으므로 이 선택 행위는 공집합 선택으로 공허하다. 문법 결합은 정상이나 논리적으로 기각."
+    }
+  ],
+  "note": "빈칸 문장은 'It is therefore essential that students learn to X rather than follow a prescribed set of ethical codes or rules' 구조로, X는 (i) 고정 규칙 준수와 대조되고 (ii) 앞의 therefore가 요구하는 전제(윤리 문제엔 명확한 정오답이 없음, 다양한 관점에서 평가)에서 도출되어야 한다. 다섯 선지 모두 'learn to' 뒤 동사원형으로 문법 결합은 무결하므로 판별은 순수 논리 적합성으로 이루어지며, 조건 (i)(ii)를 동시에 만족하는 것은 3번뿐이다. 1·5번은 지문 명제와 직접 모순, 2번은 결론부 부정, 4번은 수식 대상 전치(어휘 미끼). 복수 정답 여지 없음."
+}

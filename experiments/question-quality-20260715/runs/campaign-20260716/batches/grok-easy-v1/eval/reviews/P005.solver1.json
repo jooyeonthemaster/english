@@ -1,0 +1,35 @@
+{
+  "pid": "P005",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'A bridge is normally constructed to last one hundred years' — 다리는 건설되는 대상이므로 수동태 is constructed가 정확. to last는 목적/결과의 to부정사로 자연스러움. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect (정답)",
+      "reason": "'makes a lasting mark who shows...' — 관계사의 선행사는 사물인 a lasting mark이므로 who 불가, which/that이어야 함. 선행사를 사람으로 읽을 대안 해석(mark를 인물로 보거나 다른 선행사를 상정)을 적극 탐색해도 성립하는 독법이 없음. 어법 오류 확정."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'Depending on the type of bridge and the site, it is subordinate...' — depending on은 관용화된 무주어 분사구(전치사구화)로 현수분사 시비가 성립하지 않는 표준 표현. 수동형 Depended on은 오히려 비문. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'the bridge must possess an intrinsic beauty' — 조동사 must 뒤 동사원형 possess. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "가장 매력적인 오답. 'a bridge that is spectacular in itself but spoils its local environment' — spectacular(형용사)와의 병렬로 착각해 spoiling을 기대하게 유도하지만, 병렬 시작점은 관계절 내 동사 층위: that [is spectacular...] but [spoils...]. is와 spoils가 단수 선행사 that(=bridge)에 수 일치하는 동사 병렬로 완벽한 정문."
+    }
+  ],
+  "note": "정답 (B)가 유일하게 옹호 가능. 최대 유혹 지점은 (E)의 spoils(형용사 spectacular와의 표면 병렬 착시)였으나 관계절 내부 동사 병렬(is ... but spoils)로 정문임을 확인하고 기각. (C) Depending도 현수분사 프레임으로 끌 수 있으나 관용 표현으로 무결. 단일 정답, 복수 정답 시비 없음."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "(A)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(A)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "wrong",
+      "reason": "동명사구 'Gaining an audience for your writing'이 문장의 진짜 주어인데 정동사가 없다. 'involving'을 그대로 두면 본동사 없는 fragment. 대안 해석 시도: 'involving...'을 'your writing'을 수식하는 축약 관계절로 읽어도 문장 전체 술어가 여전히 부재하여 비문. 'involves'(단수 동명사 주어 일치)여야 한다. 유일하게 어법상 틀린 항목."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'building a brand that makes them..., drawing customers...' — 결과/부대상황 분사구문. 의미상 주어를 'a brand'(브랜드가 고객을 끌어들임)로 보든 주절 주어 'Entrepreneurs'로 보든 능동 관계가 성립하므로 현재분사가 옳다. 유혹 기록: 'which draws가 필요한가 / dangling인가' 순간 의심했으나 어느 해석에서도 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'by pinpointing their target audience, crafting a unique value proposition, and shaping a recognizable identity' — 전치사 by의 목적어 동명사 3항 병렬. 병렬 시작점(pinpointing)과 정확히 정렬되어 옳다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "선행사 'the one'을 받아 관계절 내에서 'will address'의 주어 역할 → 주격 관계대명사 who가 옳다. whom/which로 끌릴 요소 없음."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "전치사 about의 목적어 자리이므로 동명사 balancing이 옳다. 'balance A with B' 결합도 온전('balancing the expression... with the development...')."
+    }
+  ],
+  "note": "정답은 (A) 단일로 확정적. 구조상 본동사 부재라는 장거리 단서(동명사 주어 + not just A but B 보어 병렬)가 명확해 대안 해석으로도 구제 불가. 어법 외 관찰: 마지막 문장 'leaves a temporary impression'은 문맥상 lasting이어야 자연스러운 어휘 이상(밑줄 아님, 어법 판정 무관)으로 원문 변형 흔적 가능성이 있어 품질 검수 참고로 기록."
+}

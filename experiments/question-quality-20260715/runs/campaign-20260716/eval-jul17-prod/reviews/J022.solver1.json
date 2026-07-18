@@ -1,0 +1,35 @@
+{
+  "pid": "J022",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "관습 형식(conventional forms)의 이탈은 표현주의 '작품'의 특성이지, 일상 루틴에서 관습 형식을 버리라는 주장은 지문에 없음. 'completely discard'라는 극단 표현도 지문의 온건한 trade-off 논조와 불일치. 빈칸 결합(be required to...)은 문법적으로 성립하나 논리 탈락."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong (강한 매력 오답)",
+      "reason": "'disquieting atmosphere' 때문에 미적 태도로 전환해 불편을 피한다고 읽고 싶어지는 유혹이 실제로 강함. 그러나 지문은 그 불편/부조화가 회피 대상이 아니라 능동적 개입과 깊은 미적 처리(depth of aesthetic processing)를 '촉발하는' 생산적 장치라고 말함. 'avoiding'은 지문의 가치 방향을 정반대로 뒤집음."
+    },
+    {
+      "label": "3",
+      "verdict": "correct",
+      "reason": "지문은 재현적 작품(일상적·실용적 처리)과 표현주의 작품(미적 태도·깊은 처리)이라는 두 모드의 trade-off를 제시하고, 결론 문장에서 두 태도 사이를 '전환하는 능력'을 총평함. 두 모드를 오가는 능력 = 전체 인지 경험(overarching cognitive experience)에서 균형(equilibrium)을 유지하는 것으로, 어떤 문장과도 모순되지 않는 유일한 선지. 단 'equilibrium'은 지문 명시 어휘보다 한 단계 높은 추상화라 소거법 의존도가 다소 있음."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong (매력 오답)",
+      "reason": "지문 어휘(style, subject matter)를 그대로 미러링해 끌리지만, 표현주의 작품의 핵심 기제는 양식이 소재와 'inharmonious'하게 작동하는 것. 미적 태도는 그 부조화를 조화롭게 합성하는 것이 아니라 부조화 자체를 온전한 에피소드로 감상하게 하는 것이므로 'harmoniously'가 지문 핵심과 정면 충돌."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "예술을 '전적으로 실용적 용도로 동화(assimilate entirely into practical use)'시킨다는 것은 실용적 태도와 구별되는 미적 태도의 존재 자체를 부정하는 정반대 방향. 'entirely' 극단 표현도 지문과 불일치."
+    }
+  ],
+  "note": "빈칸 문항. 5개 선지 모두 빈칸과의 문법 결합은 자연스러워 seam 단서는 없음. ②(불편 회피)와 ④(조화로운 합성)가 지문 어휘를 재활용한 매력 오답으로 실제 유혹이 있었으나 각각 가치 방향 역전, 핵심 기제(부조화) 모순으로 탈락. ③이 유일하게 모순 없이 성립하는 단일 정답. 약점: ③의 'equilibrium in our overarching cognitive experience'는 지문이 직접 말한 결론('깊은 미적 처리와 성찰의 기반')보다 추상화가 한 단계 높아, 정답을 적극적으로 지지하는 문장이 없고 소거법으로 도달하게 되는 구조."
+}

@@ -1,0 +1,86 @@
+{
+  "pid": "P002",
+  "blindAnswer": "1",
+  "confidence": "high",
+  "validity": {
+    "V1": false,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-DOUBLE-PERIOD",
+      "severity": "major",
+      "evidence": "첫 문장 말미 'but for liberty as well.. He believed'에 마침표가 두 개 연속으로 찍혀 있다. 이 고아 문장부호(문장 접합 파손 흔적)는 원지문 필드와 학생 노출 렌더 지문 양쪽에 그대로 존재하여 학생에게 손상된 텍스트가 노출된다. RUBRIC A V1의 '원지문·문항 본체가 깨지지 않고' 요건 및 감사 기준의 고아 문장부호·오탈자 항목에 해당한다."
+    },
+    {
+      "code": "V3-NOTE-REDUNDANCY",
+      "severity": "minor",
+      "evidence": "정답 삽입 완성문 'the law is the materialization of the free agreements that all rational beings would freely choose'에서 'free ... freely'가 중복되어 다소 부자연스럽다. 비문은 아니므로 V3 실패로는 판정하지 않으나, 이 어휘 반복은 C4 단서 누출과 연결된다."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 4,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — 원문 span 'the embodiment of those political principles'의 paraphrase(embodiment→materialization, political principles→free agreements).",
+      "temptingBecause": "해당 없음(정답). 근거: 조화·번영·협력을 가능케 하는 틀 → 합리적 존재가 스스로 택할 원리 → 그런 법은 자유 제약이 아님이라는 전체 논증과 정합.",
+      "decisiveFlaw": "없음. 단, 'agreements'가 원문 'principles'보다 계약론적 어감으로 살짝 이동하고, 가시 tail의 'freely choose'와 'free'가 어휘적으로 조응해 표면 단서만으로도 선택 가능하다는 설계 결함이 있다."
+    },
+    {
+      "label": "2",
+      "intent": "전제 모순형 — 법의 기반을 인간 본성의 선(benevolence)에 두는 오독. 칸트를 도덕적 이상주의자로 아는 배경지식 침입도 겨냥.",
+      "temptingBecause": "지문에 benevolence, goodwill이라는 단어가 실제로 등장한다.",
+      "decisiveFlaw": "지문이 'We cannot count on people's benevolence or goodwill'로 명시적으로 부정하는 내용이라 해당 문장을 읽은 학생은 즉시 소거한다. 매력도가 낮은 약한 디코이."
+    },
+    {
+      "label": "3",
+      "intent": "범위 축소(scope shift) — 법의 보장 범위를 평화 전용으로 좁히는 과협소.",
+      "temptingBecause": "'secure peace', 'live in harmony' 등 평화·조화가 지문 전반에서 반복 강조된다.",
+      "decisiveFlaw": "첫 문장이 'not just for security and peace, but for liberty as well'로 범위를 명시적으로 넓혔고, 'mere peace'라는 축소 표지가 빈칸 문장의 이상적(Ideally) 규정과 충돌한다. 4개 오답 중 가장 경쟁력 있는 선지."
+    },
+    {
+      "label": "4",
+      "intent": "절반-진실 과장(half-truth) — '더 합리적인 형태로의 진보'를 인간 본성 자체의 개량으로 바꿔치기.",
+      "temptingBecause": "'moving towards more rational forms'가 진보·향상의 인상을 주어 본성 개량 서사로 오독하기 쉽다.",
+      "decisiveFlaw": "지문은 진보의 근거가 낙관적 인간관이 아니라 Hobbes적 갈등 본성 전제라고 명시한다. 법은 본성을 승화시키는 게 아니라 악마의 국민도 구속하는 틀이다. 두 문장을 연결해야 소거되는, 상대적으로 좋은 디코이."
+    },
+    {
+      "label": "5",
+      "intent": "극성 반전(polarity/causal reversal) — 법을 자유와 통제를 맞바꾸는 도구로 뒤집기.",
+      "temptingBecause": "'binds every citizen', 'forbid'처럼 구속·금지 어휘가 표면적으로 통제 프레임을 연상시킨다.",
+      "decisiveFlaw": "마지막 문장이 그런 법은 'cannot be understood as a restraint on their freedom'이라고 정면 부정하고, 첫 문장도 법이 liberty를 제공한다고 했다. 유일하게 강한 부정 극성 선지라 극성만으로도 소거 가능."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "본해설의 '②는 선의 기반 전제의 주체 전도'와 오답해설 2의 '정반대 주체 설정' — 실제 함정 기제는 주체 전도(actor swap)가 아니라 지문이 명시적으로 부정한 전제의 채택(premise contradiction)이다. 사실 오류는 아니나 함정 유형 명명이 부정확하다.",
+      "recommendation": "'주체 전도'를 '명시적으로 부정된 전제 채택'으로 수정."
+    },
+    {
+      "severity": "minor",
+      "evidence": "본해설 '④는 본성 그대로를 전제한 착시를 본성 개량으로 과장'은 문장이 뒤틀려 있어 한 번에 읽히지 않는다. 내용 자체(진보≠본성 개량)는 지문과 일치한다.",
+      "recommendation": "'④는 본성 개량 없이 구속 틀로 달성되는 진보를 본성 승화로 과장'류로 평이하게 재서술."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerAudit": {
+    "sameSyntacticSlot": "통과(경계) — 다섯 선지 모두 NP로 슬롯 정합. 다만 ④⑤는 자체 관계절 뒤에 가시 tail 관계절이 중첩되어 자연도가 떨어진다(문법 탈락 수준은 아님).",
+    "meaningPreservingAbstraction": "통과 — materialization/free agreements가 embodiment/political principles를 대체로 보존.",
+    "distractorAnchors": "부분 통과 — ③④는 anchor·overlap·flaw가 온전하나 ②는 지문이 정면 부정한 명제라 tempting overlap이 약하고, ⑤는 극성 자체가 anchor를 상쇄한다.",
+    "multiClueRequirement": "실패 — 빈칸 직후 tail 'that all rational beings would freely choose'와 마지막 문장만으로 ①이 국소적으로 확정되고, 정답 선지의 'free'가 가시 tail의 'freely'와 어휘 조응해 키워드 매칭만으로도 도달 가능하다. ⑤(및 사실상 ②)는 극성 하나로 소거된다. '두 문장/두 논리 단서 연결 필수, 단일 단서로 찍기 불가' 조건 위반.",
+    "distinctTrapTypes": "통과 — 전제 모순/범위 축소/절반-진실/극성 반전으로 상이."
+  },
+  "grade": "F",
+  "notes": "블라인드 풀이 정답 ①(confidence high, 두 독립 경로 일치: 논증 종합 경로와 표면 어휘 경로 모두 ①). V2~V5는 통과 — 정답 유일성 확실, 해설 사실성 양호, 필드 동기화 무결. 그러나 V1에서 학생 노출 지문의 이중 마침표('as well..')가 원지문부터 렌더까지 그대로 전파된 텍스트 손상으로 확인되어 비타협 게이트 위반, 등급 F(치명은 공예로 상쇄 불가). 공예 합계 16/24: C1·C2는 우수(정전 포인트·오답 의도 밀도)하나, C3는 ②⑤가 빠르게 소거되는 약체 디코이라 실질 경쟁이 ①③④로 좁고, C4는 정답 선지의 free-freely 어휘 누출, C5는 요청 난이도 KILLER 대비 실제 난도가 중상 수준에 그쳐 라벨 불일치(단일 국소 단서로 정답 도달 가능). killerConditionsMet=false(§D 다중 단서 요건 위반이 결정적). 출하 전 최소 수정: (1) '..' 오탈자 제거, (2) 정답 선지에서 'free' 제거(예: 'the materialization of principles all rational beings would consent to'류), (3) ②를 지문이 직접 부정하지 않는 더 정교한 반절-진실로 교체하면 B~A 재도전 가능."
+}

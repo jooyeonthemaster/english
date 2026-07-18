@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "traditionally는 주어 'The people of the islands'와 정형동사 hunt 사이의 중간 위치(mid-position)에서 동사 hunt를 수식하는 부사로, 부사 어순 규칙상 완전히 정문. 형용사 traditional이 들어갈 자리(명사 수식)가 아니다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "insists (that) the killing of whales is not done...에서 that절 주어의 핵은 단수 명사 killing이고 of whales는 후치 수식 전치사구이므로 단수 is가 수일치상 옳다. 또한 이 insist는 요구(mandative)가 아니라 사실 주장(assertive) 용법이므로 가정법 be가 아닌 직설법 is가 요구된다. 장거리 함정(of whales 복수)에 속지 않으면 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "some은 불가산 물질명사구 'the whale meat and blubber'를 받는 부분사 대명사로, 앞 문장 'Most ... is distributed'가 보여주듯 단수 취급된다. 고기는 팔리는 대상이므로 수동태 is sold가 태·수 모두 옳다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "that은 선행사 a law를 받아 관계절 내부에서 says의 주어 역할을 하는 주격 관계대명사. 주격 관계절은 관계사 생략이 불가하므로 that이 반드시 필요하며 정문. which로도 대체 가능하나 that 자체에 하자 없음."
+    },
+    {
+      "label": "(E)",
+      "verdict": "wrong",
+      "reason": "능동 allow X to continue의 수동태는 X should be allowed to continue이며, 수동태에서 to부정사 보어는 그대로 잔류해야 한다. 'be allowed continuing'을 허가하는 규칙은 없다: allow + V-ing 패턴은 능동에서 목적어 없이 쓰일 때(allow smoking)만 성립하고 그 수동은 'V-ing is allowed' 형태다. 구제 가능한 대안 해석을 적극 탐색했으나 — 분사구문('허용되면서 ~을 계속하며')은 practice가 행위주가 아니어서 의미상 불성립, 축약 관계절·독립분사구문 해석도 불가 — 어떤 파스로도 정문이 되지 않는다. to continue로 고쳐야 한다."
+    }
+  ],
+  "note": "오답 후보는 (E) 하나로 유일하게 좁혀진다. (B)의 of whales(복수 명사 인접), (C)의 some 수일치가 미끼로 설계된 것으로 보이나 둘 다 명백한 정문이라 복수 정답 시비 여지 없음. 문항 논리 구조 건전."
+}

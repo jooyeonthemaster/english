@@ -1,0 +1,77 @@
+{
+  "pid": "P004",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V5-minor-field-semantics",
+      "severity": "minor",
+      "evidence": "markedExpressions (E) carries expression='sends' and surroundingText with the source form 'sends', while entries (A)-(D) carry the displayed/rendered form in the same fields. Decodable (errorExpression='sending', correction='sends' are correct) and non-contradictory, so not a V5 failure, but the field semantics are inconsistent across entries."
+    },
+    {
+      "code": "V4-minor-trap-overstatement",
+      "severity": "minor",
+      "evidence": "Main explanation claims sending 'demonstration 뒤에 이어지는 분사구문처럼 보이기 쉬운 함정'. With the explicit sequence 'but it sending', the participial-phrase reading is not actually available to a parser (the overt subject 'it' blocks it), so the stated temptation is overstated. The grammatical analysis itself (finite verb required after 'but it') is accurate, so V4 passes."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "v-ing vs to-v: gerund phrase as subject inside a that-clause ('having more self-driving cars ... means having ...')",
+      "temptingBecause": "Double -ing surface ('having ... means having') can look redundant; students may expect 'to have' as clause subject",
+      "decisiveFlaw": "None as an error — gerund subject of 'means' is fully grammatical, so it cannot be the answer; decoy functions correctly"
+    },
+    {
+      "label": "(B)",
+      "intent": "Subject-verb agreement ('cars are')",
+      "temptingBecause": "Nominally invites mis-association with singular nouns earlier in the sentence (a demonstration)",
+      "decisiveFlaw": "Plural head noun 'cars' stands immediately before 'are' with no intervening material, so no real agreement trap exists; near-filler decoy, trivially eliminated"
+    },
+    {
+      "label": "(C)",
+      "intent": "Parallelism: bare-form infinitives sharing 'to' after 'able to' ('change, adjust, and switch')",
+      "temptingBecause": "Distance from 'to change' may make students expect 'adjusting' or 'to adjust'",
+      "decisiveFlaw": "None as an error — three-way parallel bare forms after 'able to' are grammatical; legitimate decoy"
+    },
+    {
+      "label": "(D)",
+      "intent": "Conjunction vs preposition: 'as' introducing a full clause ('as it was driving down the highway')",
+      "temptingBecause": "'as' has many uses (preposition/conjunction) and 'the car ... driving' may look like it needs a participle or 'during'",
+      "decisiveFlaw": "None as an error — 'as' is followed by a complete finite clause, so the conjunction use is correct; legitimate decoy"
+    },
+    {
+      "label": "(E)",
+      "intent": "Finite verb vs participle: clause after coordinating 'but' requires a finite verb ('it sends', displayed as 'it sending')",
+      "temptingBecause": "Item intends a participial-phrase misreading after 'a demonstration,'; in practice weak, because the overt subject 'it' immediately precedes 'sending'",
+      "decisiveFlaw": "Correct answer: 'but it sending a clear message' leaves the clause with no finite verb; correcting to 'sends' restores the source exactly. However the error is adjacent to the explicit pronoun subject and is spotted instantly without structural reading — below KILLER depth"
+    }
+  ],
+  "explanationIssues": [
+    "Main explanation's trap framing ('분사구문처럼 보이기 쉬운') overstates the available misparse given explicit 'but it' before sending (minor; grammar analysis itself is accurate)",
+    "(B) explanation's phrase '진짜 주어는 복수명사 cars' implies a distance/interference agreement trap that does not exist in the sentence — subject is directly adjacent to the verb"
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAudit": {
+    "minimalPairRestoresSource": true,
+    "clearGrammarJudgmentNotContextPreference": true,
+    "allFiveUnderlinesHavePointTemptingWhy": true,
+    "answerRequiresStructuralReadingNotImmediatelyVisible": false,
+    "noEasySameFocusDecoyMasksAnswer": true,
+    "failReason": "The error 'it sending' sits immediately after the overt subject 'it' with zero intervening structure; any mid-level student flags it on first read. RUBRIC §C requires the KILLER answer to require structural reading and not be immediately revealed — this item fails that condition. The advertised participial-phrase trap is not parsable once 'but it' is read."
+  },
+  "grade": "C",
+  "notes": "All validity gates pass: rendering is clean, (E) is the unique error, explanations are factually sound, and fields are synchronized (one minor field-semantics inconsistency in markedExpressions (E)). The fatal shortfall is craft-difficulty mismatch: the item is requested as KILLER but plays as an easy item — the finite-verb error is adjacent to its explicit pronoun subject and self-announcing, decoy (B) is toothless (subject directly adjacent to verb), and the claimed participial trap is blocked by the overt 'but it'. Craft sum 15 with C5=1 (label mismatch) and C3=2 (little real discrimination since the answer pops immediately). Per rubric: all V pass but craft defect requires redesign -> grade C, killerConditionsMet=false. Redesign path: create real subject-verb distance (e.g., embed modifiers between subject and the -ing form) or relocate the error to a position where the participle reading is genuinely available, and give (B) an interference noun before the verb."
+}

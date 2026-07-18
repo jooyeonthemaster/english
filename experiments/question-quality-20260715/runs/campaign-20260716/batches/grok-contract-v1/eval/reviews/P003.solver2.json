@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "4",
+  "multipleDefensible": false,
+  "defensibleLabels": ["4"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "선행문은 thesis(완벽 요구→마비) 단독이라 'As a result'가 받을 인과 사슬이 형성되지 않았고, 후행문 'The pattern is predictable:'은 패턴 서술의 개시 신호이므로 결론적 심리 상태 문장이 그 앞에 올 수 없다. 담화표지-선행맥락 결합 실패."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "S1(작업을 상상 속 완벽 쪽으로 misdirect) 직후에 '할 수 없다는 확신'이 오면, 뒤따르는 S2 '이미 할 줄 아는 것에 더 집착'과 심리 전개가 역행한다. 확신-of-inability는 점층 구조의 종착점이어야 하는데 그 뒤에 집착·미루기 단계가 다시 나와 점층 위반."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "표면적으로는 읽히나 형식적으로 열등: (a) 'gradually become convinced'는 misdirect(S1-S2)와 stall(S3)이 모두 누적된 뒤가 자연스럽고, (b) S4의 나선 요약 'you misdirect; you stall; you quit' 순서와 대조하면 확신(quit 직전 단계)이 stall(S3 delay)보다 앞에 놓여 요약 순서와 삽입 순서가 불일치한다. 지문 자체가 순서를 명시적으로 재진술하므로 방어 불가."
+    },
+    {
+      "label": "4",
+      "verdict": "accept",
+      "reason": "S3(미룸=stall)까지 완성된 인과 사슬을 'As a result'가 정확히 받고, '할 수 없다는 확신'이 quit으로 이어지는 최종 심리 단계를 공급한다. 삽입 시 S1-S2(misdirect)→S3(stall)→확신→S4 요약(misdirect; stall; quit)이 완전 동형 대응. 원문 상태에서는 S3→S4 사이에 quit의 근거가 되는 심리 단계가 누락된 gap이 존재하여 삽입 필요성 단서도 이 위치에 있다."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "S4는 'you quit'으로 종결된 총괄 요약·결론문이다. 그 뒤에 quit의 선행 단계인 '할 수 없다는 확신' 문장이 오면 시간·인과 역전이 발생하고, 'As a result'가 요약문 전체를 받는 해석도 성립하지 않는다."
+    }
+  ],
+  "note": "문법가/논리학자 렌즈. 주어진 문장의 'As a result'는 누적된 과정(misdirect+stall)을 요구하고, 내용(할 수 없다는 확신)은 quit의 직전 단계다. S4가 나선의 순서를 misdirect-stall-quit으로 명시 재진술하므로 삽입 위치는 stall(S3) 뒤, 결론(S4) 앞인 4가 유일하게 정합적이다. 3은 요약 순서와의 불일치로 배제 가능하여 복수정답 소지 없음. 지문은 Bayles & Orland의 Art & Fear 계열 텍스트로 보이며 원전 어순도 동일 위치를 지지하나 판정은 지문 내적 논리만으로 완결된다."
+}

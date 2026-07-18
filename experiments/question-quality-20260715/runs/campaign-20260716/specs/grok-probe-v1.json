@@ -1,0 +1,19 @@
+{
+  "batchId": "grok-probe-v1",
+  "phase": "grok",
+  "note": "GK-C0 통합 안정화 프로브: OPENROUTER_REASONING_EFFORT=low 주입(기존엔 grok에 추론설정 미전달 → 콜 80~170s + 빈응답 3건). 장문 서사 포함. 지연·빈응답 해소 확인용.",
+  "concurrency": 2,
+  "providerRouting": "none",
+  "env": {
+    "OPENROUTER_REASONING_EFFORT": "low",
+    "PREMIUM_QGEN_MODEL_ID": "x-ai/grok-4.5",
+    "GRAMMAR_PREMIUM_MODEL_ID": "x-ai/grok-4.5",
+    "EXPLANATION_VERIFY_MODEL_ID": "google/gemini-3.1-pro-preview"
+  },
+  "assignments": [
+    { "itemId": "pb-g-narr", "frameId": "adhoc-prod-04", "subType": "GRAMMAR_ERROR", "difficulty": "KILLER", "plan": "PREMIUM", "armId": "PROBE-G", "funnel": true },
+    { "itemId": "pb-g-29", "frameId": "adhoc-prod-02", "subType": "GRAMMAR_ERROR", "difficulty": "KILLER", "plan": "PREMIUM", "armId": "PROBE-G", "funnel": true },
+    { "itemId": "pb-g-103", "frameId": "grammar-frame-v2-103", "subType": "GRAMMAR_ERROR", "difficulty": "KILLER", "plan": "PREMIUM", "armId": "PROBE-G", "funnel": true },
+    { "itemId": "pb-b-34", "frameId": "adhoc-prod-01", "subType": "BLANK_INFERENCE", "difficulty": "KILLER", "plan": "PREMIUM", "armId": "PROBE-B", "funnel": true }
+  ]
+}

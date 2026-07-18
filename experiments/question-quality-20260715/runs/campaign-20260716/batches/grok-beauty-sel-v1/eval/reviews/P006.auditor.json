@@ -1,0 +1,66 @@
+{
+  "pid": "P006",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-note",
+      "severity": "minor",
+      "evidence": "렌더 지문 필드가 '(렌더 지문 없음)'이나 CONTENT_MATCH 유형은 원지문을 무변형 제시하는 유형이므로 손상 아님. 원지문 자체는 접합 파손·중복·누락·고아 문장부호·오탈자 없음. 라벨 1~5와 선지 5개 일치."
+    },
+    {
+      "code": "V3-note",
+      "severity": "minor",
+      "evidence": "발문은 한국어, 선지는 영어 패러프레이즈 — 수능 실물(25~28번)은 한국어 선지가 관례이나 학원형 영어 선지 변형으로 통용되는 형식이며 문법성·유효성 문제는 아님. 선지 3의 'further asks'는 비즈니스 구어체 명사 용법이지만 문법적으로 허용."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "지문 도입부(관계 정체의 원인) 축자 대응 — 일치 선지",
+      "temptingBecause": "'stagnate'가 지문의 'get stuck'을 다른 어휘로 바꿔 표현해 축자 매칭이 즉각적이지 않음",
+      "decisiveFlaw": "정답 아님 — 'let the relationship get stuck due to a lack of follow-up'이 그대로 지지하므로 일치"
+    },
+    {
+      "label": "2",
+      "intent": "'conscious effort' 구절의 함의(운에 맡기지 않는 의도적 접촉) 추론 대응 — 일치 선지",
+      "temptingBecause": "'leaving contact entirely to chance'는 지문에 명시적 표현이 없어 불일치로 오인할 수 있음",
+      "decisiveFlaw": "정답 아님 — 'make a conscious effort to stay in touch'의 자연스러운 함의로 일치"
+    },
+    {
+      "label": "3",
+      "intent": "정답 — 지문의 'doesn't mean constantly reaching out with requests or updates' 부정 구문을 뒤집은 half-truth 함정",
+      "temptingBecause": "'message regularly'는 지문의 'consistent line of communication' 권고와 겹쳐 전반부만 읽으면 참으로 보임",
+      "decisiveFlaw": "지문이 명시적으로 부정한 '요청·근황 업데이트 위주의 상시 연락'을 'the best way'로 격상 — 권고와 정반대이므로 유일한 불일치"
+    },
+    {
+      "label": "4",
+      "intent": "체크인 메시지·자료 공유의 효과 문장 대응 — 일치 선지",
+      "temptingBecause": "'brief', 'existing relationship active' 등 지문 어휘를 바꾼 패러프레이즈라 대조에 한 단계 필요",
+      "decisiveFlaw": "정답 아님 — 'A simple message to check in or share something of value can go a long way'가 직접 지지"
+    },
+    {
+      "label": "5",
+      "intent": "예시 문장(오랜만이어도 자료 공유가 관심의 표시)의 대응 — 일치 선지",
+      "temptingBecause": "'still value'는 지문의 'thinking of them and invested'를 추상화한 표현이라 즉시 매칭되지 않음",
+      "decisiveFlaw": "정답 아님 — 'even if you haven't spoken in a while... shows that you're thinking of them and are invested'가 직접 지지"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V 전 항목 통과. 정답 유일성 견고: ③만이 지문의 명시적 부정 구문과 충돌하고 ①②④⑤는 각각 서로 다른 지문 구간에 독립 대응. 정답 선지는 참인 전반부('message regularly')와 거짓 후반부('further asks and personal updates'를 best way로 격상)를 결합한 half-truth 설계로 CONTENT_MATCH 로서는 양질. 감점 요인: (1) 'The best way'라는 절대어 프레이밍이 ③을 유일하게 처방적 어조로 만들어 시험 요령만으로도 의심 가능한 약한 메타 단서(C4), (2) ①④⑤가 비교적 직행 패러프레이즈여서 소거가 빠름(C3), (3) 유형 자체의 사고 단계 상한으로 C1~C6 전축 3점, 합계 18 — A 컷(21) 미달. INTERMEDIATE 난이도 라벨과는 정확히 정합(C5). 소수정 없이 출제 가능한 B."
+}

@@ -1,0 +1,40 @@
+{
+  "batchId": "grok-lf-high-v1",
+  "phase": "grok2",
+  "atKst": "2026-07-17T20:05:30.526+09:00",
+  "assignments": 8,
+  "slotsConsumed": 13,
+  "accepted": 8,
+  "modelCalls": 31,
+  "inputTokens": 55810,
+  "outputTokens": 16650,
+  "costUsd": 0.234996,
+  "ledgerAfter": {
+    "used": 892,
+    "cap": 1000,
+    "costUsd": 31.227828
+  },
+  "byArm": {
+    "LH-B": {
+      "n": 4,
+      "accepted": 4,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 5,
+      "costUsd": 0.234996
+    },
+    "LH-G": {
+      "n": 4,
+      "accepted": 4,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 8,
+      "costUsd": 0
+    }
+  },
+  "models": {
+    "standard": "google/gemini-3.5-flash",
+    "premiumQgen": "x-ai/grok-4.5"
+  },
+  "durationMs": 470527
+}

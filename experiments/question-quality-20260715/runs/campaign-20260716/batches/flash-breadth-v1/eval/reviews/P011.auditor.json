@@ -1,0 +1,83 @@
+{
+  "pid": "P011",
+  "validity": {
+    "V1": false,
+    "V2": true,
+    "V3": false,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1_TRUNCATED_INTRO_ORPHAN_PUNCTUATION",
+      "severity": "critical",
+      "evidence": "렌더 지문이 ', background). ①' 으로 시작한다. 원지문 첫 문장 'There are interesting trade-offs in the relative importance of subject matter (i.e., figure) and style (i.e., background).' 이 렌더 과정에서 절단되어 고아 문장부호 조각 ', background).' 만 남았다. IRRELEVANT 유형의 의도된 변형(무관 문장 1개 삽입 + 5문장 번호 부여) 외의 손상이며, figure/background 프레이밍을 제공하는 도입 문장이 학생에게 전달되지 않는다."
+    },
+    {
+      "code": "V3_UNGRAMMATICAL_FRAGMENT_IN_PASSAGE",
+      "severity": "critical",
+      "evidence": "학생 노출 지문의 첫 토큰이 비문 조각 ', background).' 이다. 지문 자체가 문법적/자연스러운 텍스트가 아니므로 V3 실패. (발문과 각 번호 문장 자체는 문법적이며, 삽입문 ④ 'prompts the viewers to relate ... and easily resolve ...' 도 통사적으로는 적법하다.)"
+    },
+    {
+      "code": "V4_EXPLANATION_CORRUPTED_TERMS_AND_ADDITION",
+      "severity": "major",
+      "evidence": "오답 해설 ③: '앞설 설명한'(손상 용어, '앞서'의 오기) 및 '생동하거나 불안한 분위기' — 원문은 'a disquieting atmosphere' 하나뿐이며 '생동(생기 있음)'은 지문에 없는 내용 첨가이자 disquieting 과 의미상 충돌하는 오기술이다. keyPoints 3번째 항목의 ''미적 대도(aesthetic attitude)'' 는 '미적 태도'의 손상 용어다."
+    },
+    {
+      "code": "V4_SENTENCE_ATTRIBUTION_LOOSE",
+      "severity": "minor",
+      "evidence": "오답 해설 ⑤가 '앞 문장의 타당한 인과적 결론' 이라고 하나, 렌더 순서상 ⑤의 직전 문장은 삽입문 ④다. 의도한 지시 대상은 ③이며(④ 제거 후의 흐름), '앞 문장' 표현이 문장 귀속을 흐린다. 같은 결로 본해설의 '③번 문장까지는 표현주의 예술이 ... 기술하고 있습니다' 도 ①②(구상주의 내용)를 뭉뚱그려 부정확하다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "원문 문장(구상주의 측 논리의 출발점) — 배경 양식이 심적 모델 구성을 돕는다는 주장. 유지 대상.",
+      "temptingBecause": "매력도 낮음. 도입 문장이 절단된 탓에 'In highly representational...' 이 갑작스러운 시작처럼 보일 수는 있으나 주제와 직결된다.",
+      "decisiveFlaw": "정답이 될 수 없음: ②의 감상 심리와 ③의 대조 구도가 모두 ①을 전제하므로 제거하면 글의 대립축 자체가 무너진다."
+    },
+    {
+      "label": "②",
+      "intent": "원문 문장 — 구상주의 작품에서 감상자가 결말까지 이끌리는 심리적 기제 구체화.",
+      "temptingBecause": "'uncertainty' 라는 단어가 표면적으로는 표현주의(불안) 쪽 어휘처럼 보여 구상주의 단락과 어긋난다고 오독할 여지가 있다.",
+      "decisiveFlaw": "정답이 될 수 없음: ①의 'subject matter that resembles everyday life' 감상 과정을 직접 이어받으며, pleasure/uncertainty 는 원문에서 구상주의 감상의 추동력으로 명시된다."
+    },
+    {
+      "label": "③",
+      "intent": "원문 문장 — 구상주의와 대조되는 표현주의 특성 도입(부조화 → disquieting atmosphere).",
+      "temptingBecause": "'In highly expressionist works' 로 화제가 전환되어 갑작스러운 방향 전환처럼 보일 수 있다.",
+      "decisiveFlaw": "정답이 될 수 없음: ①의 'In highly representational...' 과 명시적 평행/대조 구문을 이루며 ⑤의 결론('less readable' → aesthetic attitude)의 전제를 공급한다."
+    },
+    {
+      "label": "④",
+      "intent": "삽입된 무관 문장(정답). 직전 문장의 핵심어 'disquieting atmosphere' 를 어휘적 접합 고리로 재사용해 응집성이 있는 척 위장.",
+      "temptingBecause": "'This disquieting atmosphere' 라는 지시+핵심어 반복이 표면 응집성을 만들고, 'everyday practical experiences' 는 글 말미의 'pragmatic attitude of everyday life' 와 어휘가 겹친다.",
+      "decisiveFlaw": "인과 역전: 지문 논지는 불안한 분위기가 실용적 태도를 버리고 미적 태도를 요구한다는 것인데, ④는 그것이 일상적·실용적 경험과의 연결로 혼란을 '쉽게 해소'하게 한다고 정반대로 주장하여 ⑤('Thus... aesthetic attitude is needed')와 정면 충돌한다. 또한 'immediately/easily' 가 문장 내부에서조차 disquieting 과 자기모순을 일으켜 국소 단서만으로도 탈락 가능하다."
+    },
+    {
+      "label": "⑤",
+      "intent": "원문 결론 문장 — less readable → aesthetic attitude 라는 글의 핵심 인과.",
+      "temptingBecause": "④를 참으로 받아들인 학생에게는 ④(혼란이 쉽게 해소됨) 뒤의 'Thus, when the work is less readable...' 이 비약처럼 보여 ⑤를 무관 문장으로 오판할 수 있다 — 유일하게 실질적인 경쟁 선지.",
+      "decisiveFlaw": "정답이 될 수 없음: ④를 제거하면 ③의 disquieting atmosphere 에서 ⑤의 결론으로 자연스럽게 이어지며, ⑤는 이후 미번호 문장들('This active involvement...', 'An ability to switch...')의 직접 전제다."
+    }
+  ],
+  "explanationIssues": [
+    "오답 해설 ③ '앞설 설명한' — 손상 용어(오탈자).",
+    "오답 해설 ③ '생동하거나 불안한 분위기' — 지문에 없는 '생동' 첨가, disquieting 의 오기술.",
+    "keyPoints '미적 대도' — '미적 태도'의 오탈자(손상 용어).",
+    "오답 해설 ⑤ '앞 문장의 ... 인과적 결론' — 렌더 순서상 직전 문장은 ④이므로 귀속이 흐림(의도 대상은 ③).",
+    "본해설 '③번 문장까지는 표현주의 예술이 ...' — ①②는 구상주의 내용이므로 범위 기술이 부정확.",
+    "본해설이 정답 ④의 함정 구조(핵심어 재사용 위장)는 정확히 짚었으나 전반적으로 장황하다."
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "정답 유일성(V2)과 필드 동기화(V5)는 통과하나 세 개의 V 실패로 F. (1) 렌더 절단: 도입 문장이 ', background).' 조각으로 파손되어 V1·V3 동시 실패 — 출하 불가의 1차 원인이며 렌더 파이프라인 결함으로 보인다. (2) 해설/keyPoints 에 손상 용어('앞설', '미적 대도')와 지문에 없는 내용 첨가('생동')가 있어 V4 실패. 공예 측면: 삽입문의 어휘 접합('This disquieting atmosphere') 설계는 좋으나 'immediately/easily resolve any confusion' 이 문장 내부 자기모순 수준의 극성 신호를 내어 전체 구조를 읽지 않고도 탈락 가능 — 요청 난이도 KILLER 에 크게 미달(C5=1). killerConditionsMet=false: 유형이 IRRELEVANT 라 §C/§D 가 그대로 적용되진 않으나, 등급 A 전제부터 불충족이고 '극성 하나로 정답을 찍을 수 없어야 한다'는 KILLER 정신에도 위배된다. 수리 방향: (a) 도입 문장 렌더 복원, (b) 삽입문에서 immediately/easily 류 극성 신호 제거 후 ⑤와의 충돌을 다중 문장 통합으로만 드러나게 재설계, (c) 해설 오탈자·첨가 교정."
+}

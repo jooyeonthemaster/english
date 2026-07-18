@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "빈칸에 넣으면 'reminds the viewer or reader that viewers must adopt a contemplative aesthetic orientation to appreciate the whole episode' — that절+to부정사 결합(seam)이 자연스럽다. 결정적 근거는 장거리 단서 두 개: (a) 바로 다음 문장의 'This active involvement'가 빈칸 내용을 지시하는데, 관람자가 스스로 미적 태도를 '채택(adopt)'하는 것이 곧 능동적 개입이므로 지시 관계가 성립한다. (b) 마지막 문장이 'aesthetic attitude'를 명시해 빈칸의 'aesthetic orientation'과 어휘 사슬을 이룬다. 덜 '읽기 쉬운'(less readable) 표현주의 작품은 관습적 형식에서 이탈하므로, 일상적 실용 태도로는 안 되고 관조적·미적 태도를 취해야 전체를 감상할 수 있다는 논지와 정확히 합치한다."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "'subject matter should remain close to everyday experience'는 재현적(representational) 작품 쪽 서술이다. 빈칸 문맥은 표현주의 작품, 즉 관습에서 이탈한 덜 읽기 쉬운 작품에 대한 것이므로 정반대 진영의 내용. 넣어 보면 '관습 이탈이 관람자에게 소재가 일상에 가까워야 함을 상기시킨다'가 되어 자기모순. 앞부분 어휘(everyday life)를 재활용한 위치-역전형 오답."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "'feelings of pleasure alone can carry readers to the end'는 3번째 문장 'Feelings of pleasure and uncertainty carry the viewer along...'을 거의 그대로 복사한 표면 어휘 미끼. 첫째, 그 문장은 재현적 작품에 대한 것이고 빈칸은 표현주의 작품 문맥이라 논리가 뒤집힌다. 둘째, 원문도 pleasure '와 uncertainty' 둘 다인데 'alone'으로 축소해 원문과도 어긋난다. 셋째, seam도 어색하다: 'can carry readers to the end to appreciate...'는 목적 to부정사 연결이 부자연스럽다. 실전에서 앞문장 복사 어휘 때문에 순간 눈이 가지만, '덜 읽기 쉬운 작품일수록 쾌감만으로는 안 된다'는 게 글의 요지이므로 즉시 배제."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "가장 매력적인 오답. 마지막 문장 'ability to switch between pragmatic attitude and aesthetic attitude ... balanced life'의 키워드(switching, balanced)를 그대로 가져와 최상위권도 한 번 멈칫하게 한다. 실제로 끌려 넣어 보면: 'reminds the viewer that switching attitudes becomes a lifelong balanced agenda to appreciate the whole episode' — (a) seam 붕괴: 'becomes a lifelong agenda to appreciate the whole episode'는 '전체 작품(episode)을 감상하기 위해'라는 국소적 목적과 'lifelong(평생의)'이라는 시간 스케일이 충돌한다. 한 작품 감상은 평생 의제가 아니다. (b) 'This active involvement'가 지시할 능동적 개입 행위가 아니라 일반론적 결론 진술이다. (c) 마지막 문장은 빈칸 논지에서 확장된 마무리 일반화이지 빈칸 자체의 내용이 아니다. 결론 문장을 빈칸으로 역수입한 전형적 미끼로 판정, 배제."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "'style should quietly support mental-model construction'은 2번째 문장의 재현적 작품에서 배경 양식의 역할('facilitate the construction of mental models')을 재서술한 것. 빈칸 문맥의 표현주의 작품은 양식이 소재와 '부조화하게 맞서는'(work in an inharmonious manner against) 경우이므로 정반대. 넣으면 '관습 이탈이 양식은 조용히 보조해야 함을 상기시킨다'는 자기부정이 된다. 2번과 같은 계열의 위치-역전형 오답."
+    }
+  ],
+  "note": "실전 풀이 순서: 빈칸 문장 앞뒤를 먼저 정독 → 다음 문장 'This active involvement'가 빈칸의 지시 대상임을 포착 → 빈칸은 '관람자가 능동적으로 취해야 할 태도'여야 함을 확정 → 1번만 부합. 유혹 기록: 4번은 마지막 문장 키워드(switch/balanced)를 그대로 써서 순간적으로 끌렸으나, 넣어 보면 'lifelong ... to appreciate the whole episode'의 시간 스케일 충돌과 'active involvement' 지시 실패로 탈락. 3번도 앞문장 복사 어휘로 눈길을 끌지만 논리 방향이 역전되어 있음. 2·5번은 재현적 작품 쪽 서술의 위치 역전. 정답은 1번 하나로 좁혀지며 복수 정답 소지 없음. 참고: 이 지문은 figure/ground 미학 처리 이론(실제 학술 문헌 계열, 2022 수능 기출 소재와 동일 원전 추정)을 사용하나 블라인드 판정은 지문 내 단서만으로 수행함."
+}

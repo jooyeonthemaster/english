@@ -1,0 +1,44 @@
+{
+  "pid": "P009",
+  "finalV2": false,
+  "winningAnswer": "1",
+  "reason": "SUMMARY_COMPLETE_MC인데 빈칸 (A),(B)를 포함한 요약문이 학생 노출 필드 어디에도 없다(렌더 지문 없음, markedExpressions 없음). 요약문 프레임이 부재하면 (A) 슬롯의 극성(회피 대상 vs 이해 대상)이 결정되지 않아 정답 집합이 프레임 의존적이 된다. 부정 프레임('(A)를 따르지 말고 스스로 사고하라, (B)는 없다')에서는 ①(prescribed ethical codes / clear right answer)이 지문의 'rather than follow a prescribed set of ethical codes or rules'와 'no clear right or wrong response'에 축자 대응하여 정답이고, 긍정 프레임('(B)가 없으므로 자신의 (A)를 이해하고 타인의 차이를 인정하라')에서는 ③(personal value systems / clear right answer)이 지문의 결론 문장 'understand the personal factors that influence your own code of behaviour... factors that drive other people's codes... may be different'에 직접 대응하여 정답이다. 두 프레임 모두 수능 요약문의 표준형이며 지문 정합성이 대등하다 — 오히려 지문의 최종 'Therefore' 문장은 긍정 프레임을 축자 지지한다. 선언 정답 ①은 해설이 전제한 부정 프레임에서만 유일하고, 그 프레임은 학생에게 보이지 않는 해설에만 존재하므로 문항 자체로는 정답 유일성이 성립하지 않는다. 선지 교차 설계(①·②가 (A) 공유, ①·③이 (B) 공유)로 ①을 추정하는 것은 메타게이밍이지 풀이가 아니다. 양 솔버의 [1,3] 복수 성립 판정은 과잉이 아닌 정확한 판정이며, ②·④·⑤ 기각에도 과잉 기각이 없음을 전 프레임에 대해 확인했다. finalV2=false. winningAnswer는 해설 프레임 기준 의도 정답 ①로 기재하되, 요약문 복원 없이는 출제 불가. 수리 방향: (A),(B) 포함 요약문을 학생 노출 필드에 추가해 슬롯 극성을 고정하면 ①/③ 중 하나만 성립하게 되어 유일성 회복 가능.",
+  "perDispute": [
+    {
+      "label": "1",
+      "claim": "선언 정답. 솔버1이 최유력 정답으로 지지, 솔버2도 defensible로 인정.",
+      "verdict": "성립 — 단, 부정 프레임 한정",
+      "evidence": "(A)는 'rather than follow a prescribed set of ethical codes or rules', (B)는 'there is no clear right or wrong response'에 거의 축자 대응. 부정 프레임 요약문('Rather than following (A), students should think through ethical issues because there is no (B)')에서 문법·논리 모두 완결. 해설도 이 프레임을 전제한다. 그러나 해당 프레임을 고정할 요약문이 문항에 부재하므로 이 성립은 문항 외적 정보(해설)에 의존한다."
+    },
+    {
+      "label": "3",
+      "claim": "솔버2가 실제 정답으로 선택, 솔버1은 조건부 옹호. 긍정 프레임에서 성립한다는 주장.",
+      "verdict": "성립 — 대등하게 옹호 가능(과잉 판정 아님)",
+      "evidence": "긍정 프레임('Since ethical issues have no (B), ethical thinking requires understanding one's (A) and accepting that others' differ')은 지문의 결론 문장 'Therefore, in order to analyse ethical issues and think ethically it is necessary to understand the personal factors that influence your own code of behaviour... the factors that drive other people's codes and decision making may be different'에 직접 대응한다. (B)='clear right answer'는 ①과 동일하게 정확. 이 프레임은 부정 프레임과 동등하게 자연스러운 표준 요약형이며, 지문의 최종 결론이 긍정 처방이라는 점에서 텍스트 지지도는 오히려 더 강하다. 따라서 솔버2의 판정은 성립하지 않는 대안을 우긴 과잉이 아니라 정당한 프레임 비결정성 지적이다."
+    },
+    {
+      "label": "2",
+      "claim": "솔버들이 기각. 과잉 기각 여부 재검증 대상.",
+      "verdict": "기각 정당 — 전 프레임에서 불성립",
+      "evidence": "(B) 'shared civic belief'는 지문 논지 'these principles vary both between and within individuals'와 정면 모순. civic beliefs는 개인 가치의 형성 요인 중 하나로만 등장하며 '공유'된다는 진술 자체가 없다. 부정·긍정 어느 프레임에서도 (B) 슬롯('결여된 것' 또는 '전제하지 말아야 할 것')을 채울 수 없다."
+    },
+    {
+      "label": "4",
+      "claim": "솔버들이 기각. 과잉 기각 여부 재검증 대상.",
+      "verdict": "기각 정당 — 전 프레임에서 불성립",
+      "evidence": "(A) 'formal learning experiences'는 가치 형성의 부수적 인과 요인(social/religious/civic beliefs와 병렬, formal AND informal 중 절반)일 뿐 논지 층위 요소가 아니어서 회피·이해 어느 슬롯에도 부적합. (B) 'objective moral theory'는 결여 대상을 오기술 — 지문은 clear right or wrong RESPONSE의 부재를 말하고 이론 윤리와의 '구분'만 언급할 뿐 객관적 도덕 이론의 부존재를 주장하지 않는다."
+    },
+    {
+      "label": "5",
+      "claim": "솔버들이 기각. 과잉 기각 여부 재검증 대상.",
+      "verdict": "기각 정당 — 구제 가능한 대안 프레임 없음",
+      "evidence": "(A) 'higher conceptual ethics'는 'This form of ethics is distinct from higher levels of conceptual ethics or theory'라는 배경 대조 언급뿐으로, 학생이 그것을 따르고 있다는 전제가 없어 회피 슬롯에 들어갈 수 없다. (B) 'context-free decision'은 'context dependent'의 반전 조어로 부분 지지는 있으나, 두 빈칸이 모두 배경 대조 개념인 요약문은 지문의 주제(정답 부재 + 개인 요인 이해)를 담지 못해 어떤 자연스러운 프레임도 구성되지 않는다. 쌍 단위 판정에서 한 슬롯이라도 실패하면 기각."
+    },
+    {
+      "label": "요약문 부재(구조 결함)",
+      "claim": "감사자 V1/V2/V3/V5 실패 판정의 근거이자 본 분쟁의 근본 원인.",
+      "verdict": "확인 — 정답 유일성 붕괴의 직접 원인",
+      "evidence": "blind/full 양쪽 모두에서 발문은 '한 문장으로 요약'과 빈칸 (A),(B)를 참조하지만 요약문 자체가 존재하지 않는다(렌더 지문 없음, markedExpressions 없음). 요약문이 슬롯 극성을 고정해야만 ①과 ③ 중 하나가 배타적으로 성립한다. 선지 교차 구조((A) 공유: ①·②, (B) 공유: ①·③)로 ①을 추정하는 것은 출제 관습 메타게이밍이며 정당한 풀이 경로가 아니다. 따라서 문항 현 상태로는 판정 불가이고, 감사자의 V2=false 판정을 인용(認容)한다."
+    }
+  ]
+}

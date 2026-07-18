@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "'suspend prior filters and inspect every aspect' matches the supporting elaboration exactly: beginners 'try to absorb every detail' and experienced practitioners' 'filter' can mistakenly screen out essentials. Also coheres with the immediate co-text 'as if you have never seen anything like it before' and with the following demonstrative 'this sense of looking freshly at something', which requires the blank to denote an act of fresh observation. Grammatical seam is clean."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "Attractive distractor built from the opening sentence, but 'discard ALL practiced techniques' is an over-extreme distortion. The passage targets the perceptual filter (what to notice), not permanent abandonment of accumulated skill; the filter is normally useful and only fails when it screens out something essential."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "Strongest attractive distractor — a direct negation of sentence 1 ('relying heavily on familiar tools and skills... fails'), and I genuinely felt its pull on first pass. It fails because (a) the beginner's-mind elaboration defines the blank as an active behavior (absorbing every detail), not mere refusal to rely; (b) the demonstrative 'this sense of looking freshly' immediately after the blank requires the blank to describe an act of observation, which 'refuse to rely' is not; (c) blanket refusal is again over-extreme relative to the passage's claim."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "Distortion with no textual support: beginners absorb everything because they CANNOT distinguish essential from irrelevant, not because deliberately mixing them is desirable. The passage never recommends mixing."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Opposite of the passage: relying on seasoned filters to retain only 'valid' details is precisely the failure mode described ('when that filter mistakenly screens out something essential, even seasoned masters can make mistakes')."
+    }
+  ],
+  "note": "Solved blind as a top-tier examinee. Real pull toward option 3 on first read (it mirrors sentence 1), but the cataphoric link 'this sense of looking freshly' plus the filter/every-detail vocabulary of the support sentences uniquely selects option 1. Options 2 and 3 are both over-extreme (discard all / refuse), a classic distractor design. Single defensible answer: 1."
+}

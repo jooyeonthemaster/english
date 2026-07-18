@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "4",
+  "multipleDefensible": false,
+  "defensibleLabels": ["4"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "appropriate",
+      "reason": "curious coincidence: 난파선 기사마다 생존 고양이가 등장하는 패턴은 옴부즈맨 입장에서 '기이한/의아한' 우연이 맞다. curious(호기심을 끄는, 기이한)는 명사 수식 용법으로 자연스럽고, 뒤에 기자에게 캐묻는 행위와도 논리적으로 정합. 유혹 없음."
+    },
+    {
+      "label": "2",
+      "verdict": "appropriate",
+      "reason": "failed to mention: 첫 난파 사건에서 실제로 고양이가 있었는데 다른 기자들은 그 디테일을 놓쳐 보도하지 못했고, 그 결과 편집장에게 질책당했다는 흐름. '(써야 할 것을) 쓰지 못했다'는 의미의 failed가 정확히 부합. 잠깐 'refused/declined이 아닌가' 하는 유혹을 시험해 봤으나, 이들은 의도적 거부를 뜻해 뒤의 질책(being beaten) 논리와 어긋난다. failed가 옳다."
+    },
+    {
+      "label": "3",
+      "verdict": "appropriate",
+      "reason": "called down for being beaten: 저널리즘 관용어로 beaten = '특종을 빼앗기다/물먹다'. 경쟁지가 고양이 기사로 앞섰으니 편집장이 물먹었다고 질책한 것. 최상위권이 아니면 beaten의 저널리즘 용법을 몰라 매력적 오답으로 끌릴 수 있는 자리 — 실제로 잠시 '맞았다(폭행)로 읽히나?' 하는 유혹이 있었지만, (e) 뒤에 동일 표현 scolded for being beaten이 반복되며 '남들이 가진 기사를 못 가져서 혼남'이라는 병렬 구조가 성립해 문맥상 적절함이 확정된다."
+    },
+    {
+      "label": "4",
+      "verdict": "inappropriate",
+      "reason": "including out the cat: 두 번째 난파에는 고양이가 없었고, 화자는 사실대로 고양이를 빼고(leaving out) 기사를 썼기 때문에 '남들은 넣었는데 너만 빠뜨렸다'며 혼난 것. 문맥상 required 낱말은 leaving(out)이며 including은 정반대 — including이었다면 뒤의 'severely scolded for being beaten'이 성립하지 않는다. 추가 결함: 밑줄 낱말만 바꾸면서 원문의 out이 지문에 잔류해 'including out'이라는 비문이 되어, 어휘 판단 이전에 문법 결합(seam)만으로 정답이 노출된다. 대안 해석(구동사 including ~ out 등)을 적극 탐색했으나 영어에 include out이라는 결합은 존재하지 않아 정문화 불가."
+    },
+    {
+      "label": "5",
+      "verdict": "appropriate",
+      "reason": "severely scolded for being beaten: 다른 기자들은 (없는) 고양이를 넣었고 화자만 빼고 썼으므로, 편집장 눈에는 화자가 '물먹은' 것이 되어 심하게 질책당한 상황. scolded는 앞의 called down과 동의 반복으로 병렬 정합. 적절."
+    }
+  ],
+  "note": "정답은 4(including)로 유일하게 옹호 가능. 원전은 유명 저널리즘 일화('leaving out the cat')로, 원문 낱말 leaving을 including으로 치환한 전형적 어휘 문항. 다만 out이 지문에 그대로 남아 'including out'이라는 어법상 비문이 형성되어, 문맥 판단 없이도 문법 위화감만으로 정답이 특정되는 품질 결함(정답 노출)이 있다. 출제 정상화를 위해서는 밑줄을 'including out' 전체로 잡거나 out을 삭제했어야 한다. 매력적 오답으로는 (c) beaten이 유일하게 기능하나(저널리즘 용법 미숙지 시), (e)의 동일 표현 반복이 힌트가 되어 유혹 강도는 중간 이하."
+}

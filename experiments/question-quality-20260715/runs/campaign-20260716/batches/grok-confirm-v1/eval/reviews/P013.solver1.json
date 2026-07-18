@@ -1,0 +1,35 @@
+{
+  "pid": "P013",
+  "answer": "C",
+  "multipleDefensible": false,
+  "defensibleLabels": ["C"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "'some jobs are better than others' — comparative adjective 'better' as subject complement with the 'than others' comparison. Standard and unambiguous."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "'with their blossoming towns' — present participle used attributively with active meaning (towns that are blossoming). No passive/participle confusion available; 'blossom' is intransitive so '-ed' form is impossible anyway."
+    },
+    {
+      "label": "C",
+      "verdict": "incorrect (answer)",
+      "reason": "Governing structure is a 'with'-absolute: 'with some roles [being] more dangerous and some ___ more plentiful access'. Inside the with-phrase a finite verb is illegal; the parallel second conjunct requires the participle 'having'. Rescue attempts fail: (i) reading 'and some have...' as a new independent clause clashes in tense/mood with 'so would they have been' (past hypothetical about early societies vs bare present) and strands the first conjunct 'some roles more dangerous', destroying the two-part parallelism; (ii) parallelism with 'would ... have been' would require 'some would have', not bare 'have'. No defensible parse makes 'have' grammatical."
+    },
+    {
+      "label": "D",
+      "verdict": "correct",
+      "reason": "'some burials start to look different' — start takes either to-infinitive or gerund; 'to look' is fully standard. 'look different' (adjective complement of look) is also correct."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "Long-distance subject check: true subject is plural 'chemical and isotope analyses (of teeth and long bones)', so plural 'reveal' agrees. Even the proximity noun 'bones' is plural, so no reading yields a singular subject. This is the designed temptation option — a hasty solver pattern-matches to 'record shows' earlier and suspects agreement, but tracing the head noun kills it."
+    }
+  ],
+  "note": "Clean item. Single uniquely wrong option (C: finite 'have' inside a with-absolute needing 'having'), classic KSAT long-distance point. Main distractor pull is (E) via a pseudo proximity-agreement trap that dissolves on head-noun identification; (D) mildly tempts students who over-apply a start+-ing preference. Actively searched for alternative parses that would legitimize 'have' (independent-clause coordination, ellipsis of 'would') — none survive tense/mood and parallelism constraints. Answer defensible as C only."
+}

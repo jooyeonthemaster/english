@@ -1,0 +1,108 @@
+{
+  "batchId": "stdfix-int-baseline-v1",
+  "phase": "stdfix",
+  "note": "H-STD-9: STANDARD INTERMEDIATE 풀 깔때기 기준선 (붕괴가 KILLER 국한인지 — 'KILLER는 프리미엄 전용' 제품 결정의 데이터)",
+  "atKst": "2026-07-17T18:17:02.050+09:00",
+  "gitSha": "8d365701e339d7ad64bb1f808c76ec768e9855ee",
+  "gitDirty": true,
+  "worstCaseReserved": 55,
+  "spec": {
+    "batchId": "stdfix-int-baseline-v1",
+    "phase": "stdfix",
+    "note": "H-STD-9: STANDARD INTERMEDIATE 풀 깔때기 기준선 (붕괴가 KILLER 국한인지 — 'KILLER는 프리미엄 전용' 제품 결정의 데이터)",
+    "concurrency": 3,
+    "providerRouting": "none",
+    "assignments": [
+      {
+        "itemId": "gi-011",
+        "frameId": "grammar-frame-v2-011",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "INTERMEDIATE",
+        "plan": "STANDARD",
+        "armId": "C-INT-G",
+        "funnel": true
+      },
+      {
+        "itemId": "gi-020",
+        "frameId": "grammar-frame-v2-020",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "INTERMEDIATE",
+        "plan": "STANDARD",
+        "armId": "C-INT-G",
+        "funnel": true
+      },
+      {
+        "itemId": "gi-028",
+        "frameId": "grammar-frame-v2-028",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "INTERMEDIATE",
+        "plan": "STANDARD",
+        "armId": "C-INT-G",
+        "funnel": true
+      },
+      {
+        "itemId": "gi-032",
+        "frameId": "grammar-frame-v2-032",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "INTERMEDIATE",
+        "plan": "STANDARD",
+        "armId": "C-INT-G",
+        "funnel": true
+      },
+      {
+        "itemId": "gi-039",
+        "frameId": "grammar-frame-v2-039",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "INTERMEDIATE",
+        "plan": "STANDARD",
+        "armId": "C-INT-G",
+        "funnel": true
+      },
+      {
+        "itemId": "bi-037",
+        "frameId": "blank-supply-v2-037",
+        "subType": "BLANK_INFERENCE",
+        "difficulty": "INTERMEDIATE",
+        "plan": "STANDARD",
+        "armId": "C-INT-B",
+        "funnel": true
+      },
+      {
+        "itemId": "bi-042",
+        "frameId": "blank-supply-v2-042",
+        "subType": "BLANK_INFERENCE",
+        "difficulty": "INTERMEDIATE",
+        "plan": "STANDARD",
+        "armId": "C-INT-B",
+        "funnel": true
+      },
+      {
+        "itemId": "bi-046",
+        "frameId": "blank-supply-v2-046",
+        "subType": "BLANK_INFERENCE",
+        "difficulty": "INTERMEDIATE",
+        "plan": "STANDARD",
+        "armId": "C-INT-B",
+        "funnel": true
+      },
+      {
+        "itemId": "bi-062",
+        "frameId": "blank-supply-v2-062",
+        "subType": "BLANK_INFERENCE",
+        "difficulty": "INTERMEDIATE",
+        "plan": "STANDARD",
+        "armId": "C-INT-B",
+        "funnel": true
+      },
+      {
+        "itemId": "bi-063",
+        "frameId": "blank-supply-v2-063",
+        "subType": "BLANK_INFERENCE",
+        "difficulty": "INTERMEDIATE",
+        "plan": "STANDARD",
+        "armId": "C-INT-B",
+        "funnel": true
+      }
+    ]
+  }
+}

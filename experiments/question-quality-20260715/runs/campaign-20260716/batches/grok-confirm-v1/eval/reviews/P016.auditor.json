@@ -1,0 +1,77 @@
+{
+  "pid": "P016",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-solvepath-overstatement",
+      "severity": "minor",
+      "evidence": "해설('이 두 근거를 이으면')과 keyPoints('후반 일반화 두 문장을 묶어야 복원된다')는 두 문장 종합이 필수라고 주장하지만, 빈칸 문장의 남은 전반부 'They believe in the old cliché that every cloud has a silver lining'이 이미 정답(③ concealed benefits in adversities)의 근사 동의 재진술이어서 단일 문장 단서만으로 복원 가능하다. 지문 내용 자체의 오기술은 아니므로 V4 실패는 아니나 풀이 경로 서술이 과장돼 있다."
+    },
+    {
+      "code": "V3-minor-awkward-distractor",
+      "severity": "minor",
+      "evidence": "②의 'recovering objects taken by major losses'는 문법적이지만 'objects'가 상실의 대상 일반을 가리키기에 의미적으로 어색하다. 슬롯 적합성은 유지되므로 V3 실패는 아니다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 4,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "예시 과협소(도입 일화로 전체 축소, scope narrowing)",
+      "temptingBecause": "만년필 판매원 일화와 'Laughter can turn any disadvantage into an advantage'가 지문 서두에 명시돼 있어 웃음 소재가 국소 앵커로 작동한다.",
+      "decisiveFlaw": "'only'가 'not only look for... but actually go one step further'와 정면 충돌한다. 본문은 웃음을 넘어 기회 포착 일반 태도로 확장하므로 배타 한정이 성립하지 않는다. 절대어 'only' 자체가 표면 소거 단서가 되는 부작용도 있다."
+    },
+    {
+      "label": "2",
+      "intent": "극성 반전(얻을 이득 대신 잃은 것의 회복에 고착)",
+      "temptingBecause": "'major loss' 어휘를 본문에서 그대로 차용해 상실 극복 서사와 표면적으로 겹친다.",
+      "decisiveFlaw": "'focus on what they can gain from their circumstance rather than on what they have lost'가 명시적으로 반박한다. 상실 회복이 아니라 상황에서의 이득 추구가 초점이다."
+    },
+    {
+      "label": "3",
+      "intent": "정답 — 삭제 span 'seek the advantage in their disadvantage'의 의미 보존 추상화",
+      "temptingBecause": "해당 없음(정답). 'see opportunities where most of us fail to see them'과 'focus on what they can gain'의 종합이며, 같은 문장의 silver lining 관용구와도 동치다.",
+      "decisiveFlaw": "없음. 'mine their adversities for concealed benefits'는 원문 span과 정확히 동치이며 완성문이 문법적·자연스럽다."
+    },
+    {
+      "label": "4",
+      "intent": "인과 역전/과잉 확장(성취가 고난을 소거한다는 기대)",
+      "temptingBecause": "'achieve remarkable feats'와 'hardships' 어휘를 본문에서 차용한다.",
+      "decisiveFlaw": "본문은 'in spite of their hardships' — 고난이 존속하는 채로 이득 집중 때문에 성취가 따른다고 하며, 성취가 과거 고난을 지운다는 기대는 어디에도 없다."
+    },
+    {
+      "label": "5",
+      "intent": "절반 진실/조건 상실(초기 충격 대처 단계에서 절단)",
+      "temptingBecause": "'gather their resources'와 'initial shock'을 직접 차용해 본문 문장과 강하게 겹친다.",
+      "decisiveFlaw": "'merely'가 후속 서술('overcome their problem, and see opportunities')을 절단한다. 자원 수집은 충격 넘기기가 아니라 기회 포착까지 이어지는 수단이다. 절대어 'merely' 자체가 표면 소거 단서가 되는 부작용도 있다."
+    }
+  ],
+  "explanationIssues": [
+    "해설과 keyPoints가 '후반 두 문장을 묶어야만 복원된다'고 주장하나, 빈칸 문장 전반부의 silver lining 관용구가 정답의 근사 동의 재진술로 남아 있어 실제로는 단일 문장 단서로도 풀린다. 풀이 경로 과장(minor).",
+    "해설이 빈칸 문장 내 관용구 단서의 존재를 언급하지 않아, 정답 근거 제시가 실제 최단 풀이 경로와 어긋난다(minor)."
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAudit": {
+    "sameSyntacticSlot": true,
+    "meaningPreservingAbstraction": true,
+    "distractorAnchorsAndFlaws": true,
+    "requiresTwoClueSynthesis": false,
+    "distinctTrapTypes": true,
+    "detail": "§D 4항 실패: 빈칸 문장에 남은 'every cloud has a silver lining' 관용구가 정답의 동의 재진술이라 두 문장/두 단서 연결 없이 단일 문장 내 단서로 정답이 복원된다. 또한 ①('only')과 ⑤('merely')의 절대어 한정 때문에 test-wise 소거로 5지가 3지로 즉시 축소되고, ②는 명시 문장('rather than on what they have lost')과의 정면 모순으로 빠르게 탈락해 실효 난이도가 KILLER가 아닌 중간 수준이다."
+  },
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 렌더 지문 무손상(삭제 span 'seek the advantage in their disadvantage'만 블랭크 처리), 정답 ③ 유일성 독립 검증 완료, 5개 선지 모두 동일 통사 슬롯 적합, 해설 사실성·필드 동기화 이상 없음. 그러나 요청 난이도 KILLER 대비 실효 난이도가 크게 미달한다(C5=1): (a) 빈칸 문장 전반부의 silver lining 관용구가 정답을 사실상 누설하는 강한 잔존 단서(C4=2), (b) ①⑤의 절대어('only'/'merely')로 표면 소거 가능, (c) ②는 명시 문장 정면 모순으로 즉시 탈락. 오답 4종의 함정 설계 의도(과협소·극성 반전·인과 역전·절반 진실)는 서로 구별되고 우수하나(C2=4) 실행 단계의 누설로 경쟁력이 약하다(C3=2). 합계 15, C5<2이므로 B 기준(최저 2, 합계 17) 미달 — 등급 C. 재설계 제안: silver lining 절을 함께 삭제하거나 그 문장 전체를 빈칸화하고, ①⑤의 절대어 한정을 제거해 함정을 내용 기반으로 재구성해야 KILLER 성립 가능."
+}

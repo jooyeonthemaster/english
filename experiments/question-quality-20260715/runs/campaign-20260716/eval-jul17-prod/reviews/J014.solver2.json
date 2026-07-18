@@ -1,0 +1,35 @@
+{
+  "pid": "J014",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) that",
+      "verdict": "correct",
+      "reason": "선행사 'subject matter'(불가산 단수)를 받는 제한적 주격 관계대명사. 관계절 동사 'resembles'가 단수로 일치하며 'the focus is on [NP + that-절]' 구조가 완전하다. 정문."
+    },
+    {
+      "label": "(B) carry",
+      "verdict": "correct",
+      "reason": "주어 핵은 복수 명사 'Feelings'이고 'of pleasure and uncertainty'는 후치 수식 전치사구. 복수 핵-복수 동사 일치가 성립한다. 'carry A along to B' 결합도 적법. 정문."
+    },
+    {
+      "label": "(C) created",
+      "verdict": "wrong",
+      "reason": "'thereby ___ a disquieting atmosphere'에서 뒤따르는 명사구가 목적어 자리를 요구하므로 능동 분사구문 'thereby creating'이 유일한 적법 구조. 대안 해석 검증: (i) 'the subject matter thereby created'(축약 수동 관계절)로 읽으면 'a disquieting atmosphere'가 어떤 문법적 역할도 배정받지 못하고 좌초한다. (ii) 'created'를 두 번째 정형 동사로 읽으면 접속사 부재로 run-on이 된다('thereby'는 부사이지 접속사가 아님). 따라서 created는 어법상 틀렸고 creating이어야 한다."
+    },
+    {
+      "label": "(D) needed",
+      "verdict": "correct",
+      "reason": "'an aesthetic attitude is needed to appreciate ...' — 타동사 need의 수동태로 attitude가 피요구 대상이며, to부정사는 목적 부사구로 적법. 정문."
+    },
+    {
+      "label": "(E) to switch",
+      "verdict": "correct",
+      "reason": "'ability'는 to부정사 보충어를 취하는 전형적 명사('an ability to switch'). 'between the pragmatic attitude and an aesthetic attitude' 병렬도 대등하고, 주절 동사 is는 단수 핵 ability와 일치. 정문."
+    }
+  ],
+  "note": "문법가/논리학자 렌즈 블라인드 풀이. (C)만이 유일하게 옹호 불가능한 표기 — 능동 분사구문(creating)만이 후행 목적어 'a disquieting atmosphere'를 인허할 수 있으며, 수동 축약 관계절·제2 정형동사 등 모든 대안 파스가 형식적으로 실패함을 확인했다. 나머지 네 밑줄은 장거리 단서(주어 핵 일치, 선행사 수 일치, 수동태 논항 구조, 명사 보충어)까지 점검했을 때 모두 정문."
+}

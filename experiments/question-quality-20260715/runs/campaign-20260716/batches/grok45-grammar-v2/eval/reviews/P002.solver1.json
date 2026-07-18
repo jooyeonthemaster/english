@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) exposed",
+      "verdict": "correct",
+      "reason": "When children are exposed to two different languages: 주어 children이 노출을 '당하는' 대상이므로 수동태 be exposed to가 필수. 능동 exposing이면 목적어가 없어 비문. 정문."
+    },
+    {
+      "label": "(B) which",
+      "verdict": "correct",
+      "reason": "something called 'code-switching,' which occurs...: 콤마 뒤 계속적 용법 관계대명사. 선행사 code-switching, occurs 앞 주어 자리 공백. that은 계속적 용법 불가이므로 which가 정확. 정문."
+    },
+    {
+      "label": "(C) gives",
+      "verdict": "correct",
+      "reason": "an extra ability that gives...: 관계대명사 that의 선행사는 단수 an extra ability이므로 단수 동사 gives가 옳음. 직전 문장의 bilingual people mix와 동사 바로 뒤 복수 bilingual children이 복수 착시를 유도하지만 장거리 선행사 확인으로 해소. give+간접목적어+직접목적어 4형식도 적법. 정문."
+    },
+    {
+      "label": "(D) to switch",
+      "verdict": "correct",
+      "reason": "make it easier for them to switch: make+가목적어 it+목적격보어 easier+의미상 주어 for them+진목적어 to부정사 구문. 사역동사 make의 원형부정사 자리로 착각하도록 유도하나(원형 switch 미끼), it easier for them 틀이 있으므로 to부정사가 정확. 정문."
+    },
+    {
+      "label": "(E) leads",
+      "verdict": "incorrect",
+      "reason": "shifting ... can make it easier ..., leads to...: 문장의 정동사(can make)가 이미 존재하는데 접속사 없이 콤마만으로 두 번째 정동사 leads가 이어져 comma splice/이중 술어로 비문. 구제 해석 전수 탐색: (1) can make와 병렬 → and 부재로 불가, (2) tasks를 선행사로 한 축약 관계절 → 복수라 lead여야 하고 의미상으로도 shifting이 원인이므로 불가, (3) 연속 동작/결과 표현 → which leads 또는 분사 leading이어야 함. 정답 형태는 leading(분사구문). 어법상 틀림."
+    }
+  ],
+  "note": "렌즈(최상위권 실전 풀이): (C)의 수일치 착시(직후 복수 명사 bilingual children)와 (D)의 사역동사 원형부정사 미끼에 실제로 끌려봤으나, 각각 단수 선행사 an extra ability와 make it easier for them 가목적어 틀 확인으로 기각. (E)는 정동사 중복이라는 명확한 단일 결함으로 대안 해석이 전혀 성립하지 않아 정답이 하나로 깔끔하게 좁혀짐. 다만 지문 소재·구조가 EBS/교과서형 기출 변형 수준으로 전형적이며 (E) 유형(분사구문 leading→leads)은 빈출 패턴이라 최상위권에게는 변별력이 낮은 편."
+}

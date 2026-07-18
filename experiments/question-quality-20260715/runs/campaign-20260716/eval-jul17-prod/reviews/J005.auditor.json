@@ -1,0 +1,55 @@
+{
+  "pid": "J005",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "명사절 접속사 that 뒤 절의 완전성 판단 (that vs what / 관계사 혼동 유도)",
+      "temptingBecause": "'is that ...' 구조에서 학생이 that 뒤 절의 완전성을 스스로 검증해야 하고, 관계대명사 that(불완전절)과 혼동하거나 what이 필요하다고 오판할 수 있다",
+      "decisiveFlaw": "that 뒤 'there is no clear right or wrong response'는 완전한 절이므로 주격 보어 명사절을 이끄는 접속사 that은 어법상 정확하다 — 오답 성립 불가"
+    },
+    {
+      "label": "(B)",
+      "intent": "rather than 전후 병렬 구조 — to부정사 뒤 to 생략 원형 판단",
+      "temptingBecause": "'rather than following'도 실제 영어에서 흔한 형태라 학생이 rather than 뒤에는 -ing가 와야 한다고 오판할 수 있다. 5개 밑줄 중 실질적 판단 부담이 가장 큰 디코이",
+      "decisiveFlaw": "learn to think ... rather than (to) follow 병렬에서 to가 생략된 원형부정사 follow는 표준 어법으로 정확하다 — 오답 성립 불가"
+    },
+    {
+      "label": "(C)",
+      "intent": "능동태 vs 수동태 — being ethical과 define의 태 관계 판정",
+      "temptingBecause": "is 뒤 분사 형태 선택(defining vs defined)을 표면적으로 검토하게 하지만, 수동 의미가 명백해 유혹 강도는 낮다",
+      "decisiveFlaw": "being ethical이 '정의되는' 대상이므로 is defined 수동태가 명백히 정확하다 — 거의 즉시 소거되는 얕은 디코이"
+    },
+    {
+      "label": "(D)",
+      "intent": "정답 — what 명사절 주어 뒤 정동사/준동사 판별 (본동사 부재 판정)",
+      "temptingBecause": "'relating to'가 고빈도 연어라 국소적으로 자연스럽게 읽히고, 뒤따르는 분사 'influenced by ...'가 본동사처럼 보이는 위장을 제공하여 문장 전체를 파싱해야만 정동사 부재를 확인할 수 있다",
+      "decisiveFlaw": "relating이면 문장에 정동사가 하나도 없어(influenced는 분사) 비문. relates로 교정 시 정확히 원문 복원 — 유일 정답 확정. 다만 what절 주어+준동사 패턴은 수능 대비에서 가장 많이 훈련되는 정전 패턴이라 숙련 학생에게 빨리 노출된다"
+    },
+    {
+      "label": "(E)",
+      "intent": "가주어 it — 진주어 to부정사 구조 판정",
+      "temptingBecause": "앞의 긴 부사구 'in order to analyse ... and think ethically'와의 병렬로 오인해 understanding 등을 기대할 여지를 노리지만 유혹 강도는 낮다",
+      "decisiveFlaw": "it is necessary to understand는 가주어-진주어의 교과서적 구조로 명백히 정확하다 — 거의 즉시 소거되는 얕은 디코이"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1: 원지문 대비 렌더 지문을 문장 단위 전수 대조 — 유일한 변형은 (D) relates→relating(의도된 오류 주입)이며 접합 파손·중복·누락·오탈자 없음, 라벨/마커/선지 일치. V2: 5개 밑줄 독립 검증 결과 (A)(B)(C)(E) 모두 어법상 정확(대안 해석 포함 검토: (B)의 rather than+원형은 표준, (D) 문장에서 influenced를 본동사로 읽을 수 있는 파스 없음), (D)만 정동사 부재로 비문 — 단일 정답 확정. V3: 지문·발문·교정 완성문(What a person values relates to ...) 모두 문법적, 오답 밑줄의 비문 여부가 유형 의도와 정확히 일치. V4: what을 '관계대명사(선행사 포함)가 이끄는 명사절'로 부르는 것은 한국 학교문법 표준 관행이며, 3인칭 단수 일치·수동태·가주어/진주어·병렬 설명 모두 실제 구조와 일치, 환각·용어 오류 없음. V5: 정답 라벨·markedExpressions(isError/correction)·해설·keyPoints 상호 모순 없음. 공예: 정전 포인트(C1=3)와 서로 다른 오개념을 겨냥한 디코이 설계(C2=3)는 견고하나, (C)(E)가 즉시 소거되어 실제 판단은 (B)와 정답에 집중(C3=2). 메타 누출은 없음(C4=3). 치명적 공예 결함은 C5: 요청 난이도 KILLER인데 what절 주어+준동사 패턴은 가장 많이 훈련된 정전 패턴이고 디코이 2개가 얕아 실측 난이도는 중상 수준 — 라벨과 실질 불일치(C5=1). 해설은 짧고 정확하나 정답 함정('relating to' 연어 위장, influenced 분사 위장)을 명시적으로 분리해 주지 않음(C6=3). KILLER 조건: 최소대립쌍·명확한 문법 판단·동일 포인트 쉬운 디코이 부재는 충족하나, 5개 밑줄 각각의 명시적 'why tempting'이 부재(§C 조건 3 미충족)하고 정답 포인트가 정전 훈련 패턴이라 구조 독해 전에 패턴 인지로 노출되는 점에서 '즉시 드러나지 않음' 조건의 취지를 충족하지 못함 → killerConditionsMet=false. 합계 15, 모든 V 통과이나 C5=1로 B 기준(C 최저 2, 합계 17) 미달 → 등급 C. 재설계 방향: KILLER 유지 시 정답 포인트를 덜 훈련된 구조 판단으로 교체하거나 (C)(E)를 실제 판단이 필요한 디코이로 강화."
+}

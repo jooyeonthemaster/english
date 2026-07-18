@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "(A) individual authorship: 지문의 핵심 문제 제기는 'The emphasis on individuality is therefore problematic'인데, 그 근거가 '실제로는 다수의 디자이너가 concept 구현에 고용되어 있다는 사실이 간과된다'와 'rather than actually designing, many successful designer personalities function more as creative managers'이다. 즉 문제가 되는 것은 디자인을 한 개인의 창작물로 귀속시키는 것(=개인 저작권/저자성)이다. (B) creative coordinators: 'function more as creative managers'의 직접적 패러프레이즈. 요약문의 seam도 자연스럽다: 'the stress on individual authorship becomes misleading in larger projects, where distinguished designer figures often act more as creative coordinators within collaborative settings.' 첫 절의 'personal flair is essential for small-scale products'는 지문 3문장과 정확히 대응하고, (A)가 flair가 아닌 authorship이어야 대비 구조(재능은 인정하되 단독 저자성 강조가 오도적)가 성립한다."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "(A) individual authorship는 적절하나 (B) solitary innovators는 정반대. 지문은 대형 프로젝트에서 유명 디자이너가 '단독 혁신가'가 아니라 'creative managers'로 기능한다고 명시한다. 'within collaborative settings'와 'solitary'는 그 자체로 모순되어 결합 단계에서 즉시 탈락."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "최대 매력 오답. (B) creative coordinators는 정답과 동일하게 옳고, (A) personal flair도 'individuality'와 의미장이 겹쳐 실전에서 강하게 끌린다. 실제로 넣어 읽으면 'Although personal flair is essential for small-scale products, the stress on personal flair becomes misleading in larger projects'가 되어 소형/대형 대비로 읽힐 여지도 있다. 그러나 두 가지 이유로 기각: (i) 지문이 오도적이라고 지목한 것은 flair(창의적 재능) 자체가 아니라 individuality의 강조, 즉 실제 설계를 한 사람이 누구인가에 대한 개인 귀속이다 — 'substantial numbers of designers are employed in implementing', 'rather than actually designing ... function as creative managers', 'distinction between working truly alone and in a group'이 모두 저자성(authorship) 문제를 가리킨다. 대형 프로젝트에서도 flair 있는 인물이 'powerful influence'를 행사한다는 점은 지문이 인정하므로 flair 강조 자체가 오도적이라는 명제는 지문과 어긋난다. (ii) 요약문이 첫 절에서 이미 'personal flair'를 사용해 (A)를 다른 개념으로 채우도록 대비 구조를 설계했으며, 같은 어구를 반복하면 양보-대조 구조가 동어반복으로 무너진다. 따라서 '가장 적절한' 답이 될 수 없다."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "(A) technological complexity: 기술적 복잡도는 flair가 필요한 소형 제품군을 한정하는 배경 조건('low degree of technological complexity')일 뿐, 대형 프로젝트에서 오도적으로 '강조되는' 대상이 아니다. (B) organizational supervisors도 'creative managers'의 창의적 측면을 탈락시켜 부정확하다. (A)에서 즉시 탈락."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "(A) collective implementation은 인과가 정반대. 지문에서 집단적 구현은 오도적으로 강조되는 것이 아니라 오히려 '쉽게 간과되는(easily overlooked)' 사실이다. (B) aesthetic leaders도 'creative managers'와 어긋난다. 지문 논리를 뒤집은 역방향 오답."
+    }
+  ],
+  "note": "실전 풀이 순서: 지문의 요지(소형=개인 flair 필수 / 대형=개인성 강조가 문제, 유명 디자이너는 사실상 창의적 관리자)를 잡은 뒤 (B)부터 소거하면 2·4·5가 먼저 탈락하고 1·3이 남는다. 3의 유혹이 실제로 강했다 — (A) 자리에 넣어도 문장이 성립하는 것처럼 읽히기 때문. 그러나 지문이 문제 삼는 것은 재능(flair)이 아니라 단독 저자성(authorship)의 신화이며, 요약문 첫 절이 flair를 이미 소진해 대조 구조상 (A)는 별개 개념이어야 한다. 정답은 1로 유일하게 옹호 가능. 대안 해석(어법적 쟁점)은 해당 없음 — 요약문 빈칸 유형이며 모든 선지가 문법적으로는 결합 가능하고 변별은 순수 논리 적합성에서 발생한다."
+}

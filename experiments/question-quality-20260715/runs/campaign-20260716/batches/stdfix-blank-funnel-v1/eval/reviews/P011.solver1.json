@@ -1,0 +1,35 @@
+{
+  "pid": "P011",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "correct",
+      "reason": "Inserted: 'view deadlines as a challenge that you have to meet in a timeframe that feels close at hand.' Grammatical seam is clean ('meet a challenge in a timeframe'). Logically it restates the passage's core prescription — reframe the deadline ('this winter' not 'next year') so it falls inside the current time unit and feels near, which counters the 'remote deadline → less ready to act' effect and coheres with 'better chance of starting - and therefore finishing - in good time.'"
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "Attractive distractor: 'far enough in the future to ease our minds' momentarily matches 'the stress is more manageable.' But the passage's central finding is that deadlines perceived as remote make us LESS ready to jump into action, so pushing the deadline psychologically far reverses the argument. The manageable stress follows from nearness-with-a-frame, not from distance. I felt the pull of the stress clause but the causal chain rejects it."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "'by dividing them into segmented sub-stages' echoes 'we tend to break up time into units,' but unit-chopping is presented as the CAUSE of the procrastination problem, and the passage never proposes milestone/sub-goal decomposition as the remedy. Mechanism not supported anywhere in the text."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "'according to the literal changes of the seasons' misreads the 'this winter' example: it is a psychological labeling trick to keep the deadline inside the current unit, not advice to align work with actual seasonal change. The word 'literal' is precisely the opposite of the passage's framing-based point."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "'without relying on artificial time constraints' is tempting because the units ARE arbitrary, but the recommended fix still uses a time frame ('this winter' rather than 'next year') — the passage advocates re-framing units, not abandoning them, and a deadline is itself a time constraint, making the phrase self-contradictory in context."
+    }
+  ],
+  "note": "Clean single-answer item. ① is the only choice consistent with the passage's causal logic (remote-feeling deadline → inaction; near-feeling frame → action). Strongest lure is ② via the 'stress is more manageable' clause; ⑤ is a secondary lure via the arbitrariness of time units. No grammatical seam issues in any option; discrimination is purely logical, which is appropriate for a KSAT blank item."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "J004",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "Lexical decoy: 'formal learning' and 'codes' both appear in the passage, creating surface pull. But the passage explicitly rejects following 'a prescribed set of ethical codes or rules' and denies objective right/wrong ('no clear right or wrong response'). 'Verifying compliance with objective codes' is the exact anti-thesis of the passage."
+    },
+    {
+      "label": "②",
+      "verdict": "correct",
+      "reason": "'Assessing' parallels 'evaluation' in the critical-thinking definition; 'non-fixed' maps to context-dependence and within-individual variation ('under different circumstances... the same individual may make different choices'); 'multifaceted' maps to between-individual variation ('these principles vary both between and within individuals'). Gerund joins cleanly: 'identifying ethical issues and assessing... to guide how to respond'. Minor redundancy between 'ethical issues' and 'moral dilemmas' noted, but it does not impair correctness."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "The passage instructs recognizing and ACCEPTING that others' driving factors differ — it never advocates minimizing differences or reaching compromises. Reverses the passage's stance on diversity of ethical perspectives."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "Tempting because 'rational decision-making' echoes the critical-thinking definition's 'guide decision-making'. But the passage treats emotional state ('when they are feeling a different way') as a legitimate source of variation to be understood, not something to detach from. Emotional detachment is never prescribed."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "Directly contradicts the passage: 'these principles vary both between and within individuals' and choices are context-dependent. 'Consistent and universally applicable guidelines' is the polar opposite; also clashes with the rejection of prescribed rules."
+    }
+  ],
+  "note": "Lens: top-tier test-taker. All five options are gerund-initial so no grammar seam discriminates; resolution is purely logical. Strongest distractor pulls: ① (lexical overlap with 'formal learning'/'codes') and ④ ('decision-making' echo), both rejected on the passage's explicit anti-prescriptivism and acceptance of affective variability. Single defensible answer: ②."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "Seam: 'the materialization of the free agreements that all rational beings would freely choose' — the relative clause attaches naturally to 'agreements' (one chooses agreements). Logic: law embodies what rational agents would freely agree to, which is exactly why the final sentence can conclude the law is not a restraint on freedom, and it is consistent with the 'nation of devils' point (rationality suffices, benevolence not required). Fits both grammar and argument."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "Directly contradicts 'We cannot count on people's benevolence or goodwill.' Seam also fails: 'benevolence that all rational beings would freely choose' is semantically broken — benevolence is not something one chooses. Word-match trap recycling 'benevolence' from the passage."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "Contradicts sentence 1: the rule of law provides 'not just for security and peace, but for liberty as well.' 'Limited to securing mere peace' is the explicit opposite. Tempting only if anchored on the middle Hobbesian paragraph about securing peace; the frame sentences at both ends rule it out."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "The 'nation of devils' line asserts the law works WITHOUT improving human nature — devils remain devils yet live in harmony — so 'a reforming force that elevates human nature' inverts the passage's anti-perfectionist core. Seam is also awkward: the appended clause 'that all rational beings would freely choose' would stack onto 'human nature,' producing a nonsensical double relative. Most attractive distractor for rushed readers because 'rational beings freely choose' superficially harmonizes with moral uplift."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Contradicts the final sentence ('the law cannot be understood as a restraint on their freedom') and the opening claim that law provides liberty. The Hobbesian 'violent nature needs control' framing makes it superficially tempting, but 'trades liberty for control' is precisely the claim the passage refutes."
+    }
+  ],
+  "note": "Lens: top-tier examinee, real-time solving order. Blank sentence plus the conditional final sentence form a long-range pair: law = what rational agents would themselves choose, hence no loss of freedom. Distractor pull experienced: (4) briefly tempting via 'rational beings would freely choose' association with moral improvement, (5) via Hobbesian control framing, (3) via mid-passage peace anchoring — all eliminated by the frame sentences. Only label 1 passes both the grammatical seam test and passage logic; single defensible answer. Minor typo in source passage ('as well..' double period) noted but does not affect solvability."
+}

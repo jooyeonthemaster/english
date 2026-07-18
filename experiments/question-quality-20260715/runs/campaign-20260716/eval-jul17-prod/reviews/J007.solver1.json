@@ -1,0 +1,35 @@
+{
+  "pid": "J007",
+  "answer": "A",
+  "multipleDefensible": false,
+  "defensibleLabels": ["A"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "incorrect (정답 후보)",
+      "reason": "문두의 정의 틀 'If we understand critical thinking as: the identification and evaluation of evidence TO GUIDE decision-making, then ethical thinking is...'가 명시적 병렬을 요구한다. identification→identifying, evaluation→evaluating, evidence→these issues 로 정확히 대응되므로 마지막 요소도 목적의 to부정사 'to guide how to respond'여야 한다. 'guiding'을 살리는 대안 해석을 적극 탐색해 보면: (1) perspectives를 수식하는 축약 관계절('perspectives that guide how to respond') — 표면상 파싱은 되지만, 응답을 인도하는 것은 '관점' 자체가 아니라 '쟁점을 식별·평가하는 행위'이므로 의미가 어긋나고 정의의 병렬 구조(행위의 목적)를 파괴한다. (2) 분사구문(결과) — 콤마 없이 gerund구에 붙는 무연결 분사로 비문에 가깝다. (3) 제3의 등위 동명사 — 'and'로 등위가 이미 닫혀 있어 불가. 따라서 'guiding'은 어법상 틀렸고 'to guide'가 옳다."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "주어 'This form (of ethics)'은 단수 핵 'form'이므로 단수 동사 'is'가 옳다. 전치사구 내 'ethics'에 이끌려 오판할 여지도 거의 없다."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "'The nature ... is that there is no clear right or wrong response.' 보어 자리의 명사절을 이끄는 접속사 that. 뒤 절이 완전한 절(there is + 주어)이므로 what이 아니라 that이 맞다. 최상위권도 습관적으로 'is 뒤 명사절 = what?'을 떠올리며 잠깐 끌리지만, 절의 완전성을 확인하면 that이 정문임이 명확하다."
+    },
+    {
+      "label": "D",
+      "verdict": "correct",
+      "reason": "동명사구 주어 'being ethical'은 단수 취급 → is 일치 옳음. 'define A as B'의 수동태 'A is defined as B(= acting in accordance with ...)' 구조도 정확하다. 능동/수동 함정으로 보이게 한 밑줄이지만 ethical함이 '정의되는' 대상이므로 수동이 맞다."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "장거리 일치 함정처럼 보이는 자리: 직전 명사 'decision making'(단수)이 붙어 있어 순간적으로 수일치를 의심하게 되지만, 진짜 주어는 'the factors (that drive other people's codes and decision making)'로 복수이고, 무엇보다 'may be'는 법조동사라 수 굴절 자체가 없어 어느 쪽이든 정문이다. 'that drive'의 복수 일치도 선행사 factors와 정확히 맞는다."
+    }
+  ],
+  "note": "최상위권 실전 렌즈 소회: 실제 풀이 순서는 (A)에서 병렬 위반을 즉시 감지 → (C)의 that/what, (E)의 근접 명사 수일치에 한 번씩 끌렸으나 각각 완전한 절, 법조동사라는 결정적 근거로 기각. (A)의 축약 관계절 대안 해석('관점이 응답을 인도한다')은 표면 파싱은 가능하나 정의 병렬 틀과 의미 논리를 모두 깨뜨려 정답 방어에 실패한다. B/C/D/E가 모두 흠결 없는 정문이므로 답은 (A) 하나로 수렴. 유일 정답, 장거리 단서(문두 정의의 to guide)가 명확한 양질의 문항."
+}

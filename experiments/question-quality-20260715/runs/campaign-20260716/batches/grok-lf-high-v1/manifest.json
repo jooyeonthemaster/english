@@ -1,0 +1,97 @@
+{
+  "batchId": "grok-lf-high-v1",
+  "phase": "grok2",
+  "note": "E1b: 장문 재실험 @ reasoning=high + 출력한도 20k",
+  "atKst": "2026-07-17T19:57:39.009+09:00",
+  "gitSha": "8d365701e339d7ad64bb1f808c76ec768e9855ee",
+  "gitDirty": true,
+  "worstCaseReserved": 32,
+  "spec": {
+    "batchId": "grok-lf-high-v1",
+    "phase": "grok2",
+    "note": "E1b: 장문 재실험 @ reasoning=high + 출력한도 20k",
+    "concurrency": 4,
+    "providerRouting": "none",
+    "env": {
+      "PREMIUM_QGEN_MODEL_ID": "x-ai/grok-4.5",
+      "GRAMMAR_PREMIUM_MODEL_ID": "x-ai/grok-4.5",
+      "EXPLANATION_VERIFY_MODEL_ID": "google/gemini-3.1-pro-preview",
+      "OPENROUTER_REASONING_EFFORT": "high",
+      "QGEN_RESEARCH_MAX_TOKENS_FLOOR": "20000"
+    },
+    "assignments": [
+      {
+        "itemId": "lh-g-04",
+        "frameId": "adhoc-prod-04",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "LH-G",
+        "funnel": true
+      },
+      {
+        "itemId": "lh-b-04",
+        "frameId": "adhoc-prod-04",
+        "subType": "BLANK_INFERENCE",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "LH-B",
+        "funnel": true
+      },
+      {
+        "itemId": "lh-g-05",
+        "frameId": "adhoc-prod-05",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "LH-G",
+        "funnel": true
+      },
+      {
+        "itemId": "lh-b-05",
+        "frameId": "adhoc-prod-05",
+        "subType": "BLANK_INFERENCE",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "LH-B",
+        "funnel": true
+      },
+      {
+        "itemId": "lh-g-06",
+        "frameId": "adhoc-prod-06",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "LH-G",
+        "funnel": true
+      },
+      {
+        "itemId": "lh-b-06",
+        "frameId": "adhoc-prod-06",
+        "subType": "BLANK_INFERENCE",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "LH-B",
+        "funnel": true
+      },
+      {
+        "itemId": "lh-g-07",
+        "frameId": "adhoc-prod-07",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "LH-G",
+        "funnel": true
+      },
+      {
+        "itemId": "lh-b-07",
+        "frameId": "adhoc-prod-07",
+        "subType": "BLANK_INFERENCE",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "armId": "LH-B",
+        "funnel": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P008",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "flow-consistent",
+      "reason": "'The very features that create expertise in a specialized domain lead to ignorance in many others'는 첫 문장(기후과학자가 의료개혁에, 물리학자가 벌 군집 붕괴에 자격이 없다)의 일반화·재진술로 도입 논지와 직결된다. 흐름에 필수적."
+    },
+    {
+      "label": "②",
+      "verdict": "flow-consistent",
+      "reason": "'scientists have begun to recognize this'의 this가 바로 앞 문장(일반인의 관련 경험에서 과학자가 배울 수 있다)을 지시하고, Arctic Climate Impact Assessment의 원주민 관찰 수집이 그 구체적 사례로 기능한다. 조응·예시 관계가 정확히 성립."
+    },
+    {
+      "label": "③",
+      "verdict": "flow-consistent",
+      "reason": "'So our trust needs to be limited, and focused'는 앞 내용(전문성의 영역 한정성 + 일반인 지식의 가치)에서 도출되는 결론이며, 뒤따르는 'It needs to be very particular'의 It이 ③의 our trust를 선행사로 요구한다. ③을 빼면 It의 지시 대상이 사라지는 장거리 결속 단서가 있어 제거 불가."
+    },
+    {
+      "label": "④",
+      "verdict": "irrelevant — ANSWER",
+      "reason": "'제한된 신뢰가 아침 출근 같은 일상적 준비를 신뢰할 수 없게 만든다'는 주장은 지문 논지의 인과를 뒤집는다. 지문에서 마비(출근 준비를 해야 할지 모름)는 ⑤가 말하듯 '신뢰가 전혀 없을 때'의 결과이지 '제한된 신뢰'의 결과가 아니다. 또한 ④는 ③('our trust needs to be limited')과 그 연속 문장('It needs to be very particular') 사이에 끼어들어 결속을 끊는다. ⑤의 morning commute 어휘를 재활용한 어휘적 위장이 매력 요소이나, 명제 내용이 논지와 모순되어 흐름과 무관."
+    },
+    {
+      "label": "⑤",
+      "verdict": "flow-consistent",
+      "reason": "'But without some degree of trust... we are paralyzed'는 직전 문장 'Blind trust will get us into at least as much trouble as no trust at all'의 균형(맹신도 무신뢰도 위험)을 완성하는 결말부. But으로 시작해 길어서 순간 끌리지만, 무신뢰의 대가(마비, 출근 준비 여부를 모름)를 제시하는 필수 문장이다."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: ④는 ⑤의 'morning commute'를 미리 끌어다 쓴 어휘 위장형 삽입 문장으로, 표면적 어휘 연결에 끌리는 순간이 있으나 명제 방향(제한된 신뢰→일상 마비)이 지문 논지(무신뢰→마비, 제한·집중된 신뢰는 권장)와 정면 모순. ③ 제거 시도는 'It needs to be very particular'의 지시사 공백 때문에 즉시 기각됨. 대안 해석으로 ④를 정합화할 경로(양보·가정 해석 등)를 탐색했으나 'Such limited trust'가 ③의 결론을 직접 받으면서 그 결론을 부정적 결과로 귀결시키므로 성립하지 않음. 단일 정답 ④."
+}

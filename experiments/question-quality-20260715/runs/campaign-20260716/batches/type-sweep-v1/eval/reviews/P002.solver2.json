@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "4",
+  "multipleDefensible": false,
+  "defensibleLabels": ["4"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "appropriate",
+      "reason": "curious coincidence: 옴부즈맨이 관찰한 사실은 '난파선 기사마다 항상 고양이가 생존해 등장한다'는 통계적으로 기이한 반복 패턴이다. 이를 '기이한(curious) 우연'이라 부르는 것은 관찰 명제와 정확히 정합한다. 형용사-명사 결합(curious coincidence)도 표준 콜로케이션. 문법·논리 모두 성립."
+    },
+    {
+      "label": "2",
+      "verdict": "appropriate",
+      "reason": "failed to mention: 후속절 'were called down by their editors for being beaten'이 전제하는 조건은 '다른 기자들이 고양이를 기사에 싣지 않았다'는 것이다. 고양이를 언급하지 않았기에(=failed to mention) 특종을 놓쳐 질책당했다는 인과 사슬이 완결된다. fail to + 동사원형 결합도 정문. 성립."
+    },
+    {
+      "label": "3",
+      "verdict": "appropriate",
+      "reason": "beaten: 저널리즘 관용 표현으로 'be beaten (on a story)'은 경쟁지에 특종을 선수당하다(=scooped)의 의미. 화자만 고양이 기사를 실었고 나머지는 놓쳤으므로, 그들이 '선수당한 것(beaten)'에 대해 편집장에게 질책받았다는 진술은 의미상 정확하다. 수동 분사로서의 문법 결합(for being beaten)도 정문. 성립."
+    },
+    {
+      "label": "4",
+      "verdict": "inappropriate",
+      "reason": "including out: 이중으로 파탄. (i) 문법/콜로케이션 — 'include out'이라는 구동사는 영어에 존재하지 않는다. 밑줄 뒤에 잔류한 불변화사 out은 원래 자리에 'leaving/left'(leave out = 빼다) 계열 동사가 있었음을 강제하며, including은 out과 결합 불가능한 봉합선(seam) 결함을 만든다. (ii) 논리 — 직후에 'I was severely scolded for being beaten'(선수당했다고 질책받았다)이 온다. 화자가 고양이를 '포함'했다면 다른 기자들과 동일한 기사가 되어 선수당할 수 없으므로 질책은 논리적으로 불가능하다. 고양이를 '뺐기'(leaving out) 때문에, 고양이를 넣은 타지 기사에 비해 특종을 놓친 것으로 오인되어 질책받았다는 해석만이 담화 전체(마지막 문장 'all of us always put in the cat'로의 귀결)와 정합한다. 따라서 including은 문맥상 부적절 — 정답."
+    },
+    {
+      "label": "5",
+      "verdict": "appropriate",
+      "reason": "scolded: (d)를 leaving으로 복원하면, 고양이 없는 사실대로 쓴 화자가 '선수당했다'는 오해로 심하게 질책받았다(severely scolded)는 진술은 앞선 3번 선지의 질책 사건과 평행 구조를 이루며, 마지막 문장 '이제 우리 모두 항상 고양이를 넣는다'는 결말(질책 회피 동기)을 논리적으로 유도한다. 성립."
+    }
+  ],
+  "note": "정답은 4로 유일하게 옹호 가능. 다만 품질 결함 하나를 지적한다: 밑줄은 including에만 있는데 원문의 불변화사 out이 지문에 그대로 잔류하여 'including out'이라는 비문 봉합선이 생겼다. 이 때문에 본 문항은 '문맥상 낱말 쓰임' 판단 없이도 순수 문법 단서만으로 정답이 노출된다(어휘 문항이 사실상 어법 문항으로 퇴화). including을 밑줄 처리할 것이라면 out까지 제거해 'I wrote the report, including the cat'으로 만들어 순수 의미 판단을 요구했어야 했다. 대안 해석 탐색: 'including out'을 정문으로 만드는 축약 관계절·분사구문·도치 등 어떤 재분석도 존재하지 않음(include는 불변화사 out을 취하는 구동사 용법이 없음)을 확인했다. 나머지 선지에 대해 제2정답 시비 가능성도 점검: (c) beaten은 저널리즘 관용구 지식이 없으면 어색하게 느낄 수 있으나 문맥 내 '특종 경쟁' 프레임에서 유일하게 정합하는 독법이 존재하므로 부적절 판정 불가. 복수정답 없음."
+}

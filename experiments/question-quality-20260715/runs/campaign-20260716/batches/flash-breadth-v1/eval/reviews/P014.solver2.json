@@ -1,0 +1,35 @@
+{
+  "pid": "P014",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "지문의 핵심 명제 'countries ... cannot hope to prevent famines without specialized entitlement protection mechanisms involving direct public intervention'은 형식적으로 '직접 공공 개입은 기근 방지의 필요조건'(¬개입→¬방지)이며, 이는 선지의 necessity of direct state intervention과 동치다. 'over mere economic growth'는 'Rapid growth ... explains at best only a small part'와 'The real achievements ... lie in having provided direct public support'로 직접 뒷받침된다. 통념(성장 중심 접근)→상대화→핵심 주장→3개국 사례의 글 전체 구조를 온전히 포괄한다."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "'diversification of economic activities'는 첫 문장에서 반박 대상인 통념(tendency)의 한 항목으로만 언급되며 이후 논의되지 않는다. 또한 지문의 위험 대상은 famine이지 natural disasters 일반이 아니므로 범위도 어긋난다. 부분 소재를 주제로 승격한 오답."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "지문은 케냐의 농업 부문 급성장이 기근 방지 성공의 '기껏해야 작은 부분(at best only a small part)'만 설명한다고 명시적으로 격하한다. 이 선지는 지문이 반박하는 명제를 주제로 내세우므로 극성이 반대다."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "지문은 entitlement 보호 메커니즘의 필수성을 주장하며 그 한계(limitations)는 어디서도 논하지 않는다. 지문 어휘(entitlement protection)를 재활용하되 논지 방향을 뒤집은 극성 반전 오답."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "지문은 'no matter how fast they grow'라고 하여 불확실한 생계원 의존과 빠른 성장이 양립함을 오히려 전제한다. 불확실한 생계원이 성장 둔화와 관계있다는 인과·상관 명제는 지문에 존재하지 않으므로 논리적 근거가 전무하다."
+    }
+  ],
+  "note": "주제 추론 문항으로서 정답이 하나로 명확히 수렴한다. ①은 지문 핵심 문장의 필요조건 구문(cannot ... without)과 사례 문단의 대조(growth의 작은 기여 vs direct public support)를 모두 반영한 유일한 선지다. 오답들은 각각 부분 소재 승격(②), 극성 반전(③④), 무근거 관계 창작(⑤)으로 기능이 분화되어 미끼 설계도 건전하다. 복수 정답 소지 없음."
+}

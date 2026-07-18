@@ -1,0 +1,35 @@
+{
+  "pid": "P008",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "서사 방향(러시아 형식주의·프라하 서클 → 나치 침공 망명 → 1941 미국행 → 뉴욕 언어학 서클 창립 → 하버드·MIT 강의)이 일관되게 '유럽 전통의 미국 이식'을 가리킨다. 뉴욕 언어학 서클 창립은 프라하 서클의 미국판 재현이라는 결정적 단서이며, 'transplant Old World traditions into the American scholarly scene'이 망명 전기 서사의 귀결로 완벽히 정합. 문법 결합(helped to transplant ... into ...)도 자연스럽다."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "방향이 정반대(미국 → 유럽). 지문에 유럽으로 방법론을 되가져갔다는 언급이 전혀 없고, 'surviving Formalist circles'라는 개념도 지문 밖 정보다."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "지문 속 고유명사(체코, Harvard, MIT)를 짜깁기한 표면 매력형 미끼. 지문의 초점은 언어학 전통·이론이지 '교수법(pedagogical models)'이 아니며, 체코 교수법을 각색했다는 내용은 어디에도 없다."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "그럴듯하지만 지문에 '미국 학파'의 존재나 양 학파의 쌍방 '융합(merge)'이라는 개념이 없다. 지문이 지지하는 것은 단방향 이식이지 두 전통의 통합이 아니다. 'continuous tradition'을 선해할 여지를 검토했으나 'merge European and American schools'가 명시적으로 쌍방 통합을 요구해 근거 부재."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "가장 강력한 매력 오답 — 바로 다음 문장의 어휘(anthropology, art criticism, brain research)를 그대로 재활용해 표면적 유혹이 크다. 실제로 끌려 검증했으나 (a) 다음 문장이 학제적 영향을 'his teaching in the US'가 아닌 'his theories'의 효과로 별도 귀속하고, (b) 빈칸에 넣으면 뒷문장과 완전한 동어반복이 되어 담화 전개가 붕괴한다. 빈칸 자리는 망명 서사의 귀결(유럽 전통의 미국 이식)이어야 하고 학제적 영향은 그 다음 단계의 서술이다."
+    }
+  ],
+  "note": "최상위권 실전 렌즈. 오답 매력도 서열: 5(다음 문장 어휘 복사, 동어반복 함정) > 4(방향성 왜곡: 이식을 융합으로) > 3(고유명사 짜깁기) > 2(방향 정반대). 정답 ①은 역사적 사실(Jakobson의 구조주의 미국 전파)과도 일치. 유일 정답으로 깔끔히 수렴하는 양질의 빈칸 문항."
+}

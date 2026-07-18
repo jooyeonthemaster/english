@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "비교구문 'no more qualified to comment ... than a physicist is [qualified] to judge ...'에서 형용사 qualified가 생략된 표준 생략(ellipsis) 구조. 병렬(qualified to comment / qualified to judge)을 복원하면 'is to judge'는 정문. 매력적 오답: 'be to 용법'처럼 보여 어색하게 느껴지는 유혹이 강했으나, 비교 대상 병렬 복원으로 해소됨."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "주어는 복수 'The very features'이고 'that create expertise in a specialized domain'은 관계절 수식어. 인접 명사 domain(단수)에 이끌려 leads를 기대하게 만드는 근접 일치 함정이지만, 진짜 주어가 복수이므로 lead가 옳음."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'observations [that were] gathered from local native groups'의 축약 관계절. observations는 수집되는 대상(수동 관계)이므로 과거분사 gathered가 옳음. gathering이면 오답."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "선행사 'the men and women'(사람) + 관계절 내 주어 역할('who have devoted') → 주격 관계대명사 who가 옳음."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect (정답 선지)",
+      "reason": "'devote A to B'의 to는 전치사이므로 동명사/명사를 취해야 함: 'devoted their lives to sorting out'. 대안 해석 검토 — 목적의 부정사('~하기 위해 삶을 바쳤다')로 정문화되는지 적극 탐색했으나, devote의 논항 구조상 to-전치사구가 필수 보충어여서 목적 부정사 독법이 성립하지 않음. 어법상 틀림."
+    }
+  ],
+  "note": "정답은 (E) 단독으로 옹호 가능. 오답 유혹 순위: (A) 생략 비교구문(가장 강한 유혹) > (B) 근접 일치 함정. (C)(D)는 표준 포인트로 유혹 약함. 지문은 Oreskes 계열의 과학 신뢰 논지로 문맥 일관성 문제 없음."
+}
