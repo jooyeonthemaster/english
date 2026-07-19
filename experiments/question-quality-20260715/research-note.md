@@ -22,6 +22,21 @@
 - **grok 생성 전환(사용자 결정)**: Vercel production env 3개 등록 — PREMIUM_QGEN_MODEL_ID=x-ai/grok-4.5(빈칸+선택형6, 선택형은 같은 env 라 동반 전환), GRAMMAR_PREMIUM_MODEL_ID=x-ai/grok-4.5(어법 사다리), OPENROUTER_REASONING_EFFORT=high(gemini 는 OPENROUTER_GEMINI_REASONING_EFFORT="" 별도 보호 — 프로덕션 실측 확인). 어법 사다리 175~274s vs 270s 데드라인 리스크는 사용자가 인지하고 수용(전면 전환 선택).
 - 배포: 커밋 b3639625(수정)·55c624b0(연구 기록) 푸시 → vercel --prod READY(nara-9a0wsnh2y) + Trigger 20260719.1(12태스크) — 스모크 307 정상. **현 프로덕션 스택 = grok 생성 + grok 검증(async) + flash 어법 솔버.** 다음 = 실사용 재실측(원가 지도 갱신: 검증비 원장 포함 전체 원가·어법 데드라인 근접률·외국문자 게이트 발화).
 
+### O192. grok 생성 첫 실전 8문항 + gemini "사고 강제" 정책 사건(응급 배포) + 사고 가설 예비 실측(H-G0/G1)
+
+**A. grok 생성 첫 실전(02:16~02:19 KST, 4지문 × 빈칸·어법 KILLER 8건, 프로덕션)**
+- 8/8 COMPLETED·1-attempt. 빈칸 20.7~123.5s(평균 88s), **어법 250.7~270.9s — 4건 중 3건이 정확히 270s 데드라인 클램프**: repair 콜 0토큰 사망(신규 원장의 ESTIMATE 0/0 행으로 첫 가시화) + flash 솔버 스킵(3/4). 완주는 4js6ph(250.7s)뿐. **어법 사다리 검산(수리·솔버)이 데드라인에 잘려나가는 구조 — 속도 수술(수리 async 이관/콜 병합/타임아웃 재배분) 시급 확정.** async E-gate 는 8/8 소화(VERIFIED 7·REPAIRED 1) — grok 해설 수리율 1/8 vs pro 배치 3/8.
+- **O191 원장 배선 첫 실전 검증**: EXPLANATION_VERIFY 행 문항당 기록(수리 문항은 verify→repair→re-verify 3행), provider OPENROUTER 정상. 원가: 빈칸 생성 평균 75원+검증 ~30원, 어법 생성 평균 134원+검증 ~24원 — **올인 빈칸 ~105원/어법 ~158원**(pro 배치 올인 ~149원과 대동소이, 어법 3건은 사다리 절단 상태라 과소계상 주의).
+- 품질 8건 정독: 어법 4/4 포인트 유효(encourages→ing 콤마 스플라이스/계속적 that→which/starting→starts/measuring→measure), 정답 위치 분산 양호(빈칸 ②②③①·어법 CDBD). 빈칸은 cewdw7(디자인, 속성 교차 함정) B+/A-가 최고, te1guv 는 weak-distractors 포함 3경고 B-. `blank-paraphrase-killer-too-easy` 4/4 잔존(grok도 동일 — 프롬프트 축 병목 재확인). 외국문자 혼입 0. **cross-type 누출 4/4 재재확정**(e3rra1 어법 지문이 r5uqfp 빈칸 정답 문장을 그대로 노출 — (B) 밑줄 선행사 문장이 빈칸 문장 자체).
+**B. gemini "사고 강제" 정책 사건 — 응급 대응 완료**
+- 17:21Z(마지막 flash 솔버 성공)~18:00Z 사이 OpenRouter/Google 정책 전환: **flash·pro 모두 reasoning 비활성 요청을 400 거부**("Reasoning is mandatory for this endpoint"). 프로덕션 parity 재현(atlas 경로 라이브 콜 3회 전부 400) — **당시 프로덕션 gemini 전 콜(STANDARD 유형·솔버 게이트 등) 잠재 전면 붕괴 상태**, 단 18:00Z 이후 잡 0건이라 실피해 0. O147(flash 거부 관찰)의 pro 확장판.
+- 응급 조치: `OPENROUTER_GEMINI_REASONING_EFFORT` ""→**low** (effort=low 는 atlas 경로 200 확인, 2.4s·사고 125tok) + vercel --prod 재배포(nara-rfgfxt89b READY, 스모크 307). **"gemini thinking-off"는 이제 선택지가 아님** — O47/O48 계약은 provider 정책으로 영구 폐기, 기본 사고 상태가 새 기준선(원가 재실측 필요: flash 솔버·STANDARD 원가 상승 예상).
+**C. 사고 가설 예비 실측(H-G0 완료, H-G1 예비 n=1 — 확증 아님)**
+- H-G0: none=400 거부 / low·high 수락 / **필드 생략 시 기본 사고 ON**(프로브: flash 1,628tok·pro 1,849tok). 사고 토큰 실측: flash low 1,004→high 1,221 / pro low 1,766→high 3,099(동일 문제).
+- 검수 지능(정답지 있는 d7cqjm 결함 해설 + 올바른 수리본 대조): **pro@high FAIL 판정+오류 지점 정확 적발, flash@high 2개 WRONG claim 정밀 적발, 둘 다 수리본은 PASS(오경보 0)** — O184 "pro 도장(0/12)"은 능력 한계가 아니라 **사고 예산 문제**였다는 가설 강화. 검수 속도 ~10s(grok 33~50s 대비 3~5배 빠름), 원가 pro@high ~38원/flash@high ~56원(grok ~22~35원이 여전히 최저).
+- 생성 지능(grok te1guv 와 동일 기술실업 지문 paired, 간이 프롬프트): pro@medium·flash@high 둘 다 fulfilment 절 표적 + 함정 기제 명시 4종 — 눈판독으로 grok 실전 문항(te1guv, weak-distractors 3경고)과 경쟁 이상. flash@high 정답 선지("non-material anchor that translates professional engagement into personal worth") 추상화 A급 후보. 10s/45~60원.
+- 한계 명시: n=1 케이스쌍, 간이 프롬프트(프로덕션 계약 아님), V4 게이트 미적용 — 확증은 paired n≥20 블라인드 필요(H-G1 본실험).
+
 ## 2026-07-18 새벽~오전 KST — 통합구현 이후 실측: 결정전 config 부적합, 어법·빈칸 grok×grok 최초 인라인 실측(fail-open 실관측), async E-gate 분리
 
 ### O185. 결정전(9유형 flash vs grok) 발사 — grok 런은 STANDARD 60초 시간창 부적합으로 무효, 결정전 미완
