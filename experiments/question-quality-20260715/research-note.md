@@ -15,6 +15,13 @@
 - **cross-type 표적 중복 4/4 전수 재확정(O188·O189 확정판)**: 지문1~3은 빈칸 문항 지문이 어법 정답 원형(take / are speaking / stretches)을 그대로 노출, 지문4는 어법 밑줄 문장(undone→undoing 변형)이 빈칸이 뚫은 표적 문장 그 자체 — 같은 지문 쌍 생성 시 상호 누출이 예외가 아니라 **기본값**임이 확정. 유형 간 usedTargets 공유(지문 단위 표적 원장) 과제 우선순위 상향 근거.
 - 품질(8건 전수 판독): 어법 4/4 포인트 유효·오콜 0(정동사 taking→take / while절 being→are / 강조구문 수일치 stretch→stretches / 분사 태 undoing→undone), 선지 전부 방어 가능. 빈칸 4/4 정답 유일성 방어 가능, 최고작은 105원/63s 우주팽창 빈칸(통념vs진실 극성 설계·경고 0·A-급) — **O188 "최고가 런이 최고 품질" 재재현(2연속)**. 빈칸 3/4에 `blank-paraphrase-killer-too-easy` 잔존(pro 생성 병목 그대로), 빈칸 정답 위치 ③③③④ — 지문이 달라 diversity 스티어링 미작동 구간의 ③ 편중 관찰. 외국어 혼입 0(pro 생성이라 비교군 아님 — grok 전환 후 게이트 발화 관찰 필요).
 
+### O191. O190 결함 2건 수정 + grok 생성 운영 전환 배포(7/20, 사용자 승인 "빈칸이랑 어법")
+
+- **결함① 수정**: 게이트 1지점 정규화 `normalizeRepairedWrongOptionExplanations`(수리 배열형→Record, 빈 배열은 원본 유지) + repairAdopt 회귀 테스트 추가(2/2 통과). **기존 DB 배열형 8문항**(7/20 배치 3 + 인라인 수리 시절 5 — cmron*×3·cmrove*·cmrp9il9l) structuredData·QuestionExplanation 양쪽 정규화 마이그레이션 적용, 재스캔 0건.
+- **결함② 수정**: 워커에 onModelUsage→recordPlatformApiUsageCost 배선(sourceKey `workbench_ai_job:{jobId}:explverify:{questionId}:{idx}` 결정적·재시도 멱등, sourceDetail EXPLANATION_VERIFY:{subType}), fast 라우트 페이로드에 jobId 조인 추가. 부수: providerFromModel 에 x-ai/grok 게이트웨이 버킷 추가(기존 grok 29행 UNKNOWN 분류 교정 — 신규 행부터).
+- **grok 생성 전환(사용자 결정)**: Vercel production env 3개 등록 — PREMIUM_QGEN_MODEL_ID=x-ai/grok-4.5(빈칸+선택형6, 선택형은 같은 env 라 동반 전환), GRAMMAR_PREMIUM_MODEL_ID=x-ai/grok-4.5(어법 사다리), OPENROUTER_REASONING_EFFORT=high(gemini 는 OPENROUTER_GEMINI_REASONING_EFFORT="" 별도 보호 — 프로덕션 실측 확인). 어법 사다리 175~274s vs 270s 데드라인 리스크는 사용자가 인지하고 수용(전면 전환 선택).
+- 배포: 커밋 b3639625(수정)·55c624b0(연구 기록) 푸시 → vercel --prod READY(nara-9a0wsnh2y) + Trigger 20260719.1(12태스크) — 스모크 307 정상. **현 프로덕션 스택 = grok 생성 + grok 검증(async) + flash 어법 솔버.** 다음 = 실사용 재실측(원가 지도 갱신: 검증비 원장 포함 전체 원가·어법 데드라인 근접률·외국문자 게이트 발화).
+
 ## 2026-07-18 새벽~오전 KST — 통합구현 이후 실측: 결정전 config 부적합, 어법·빈칸 grok×grok 최초 인라인 실측(fail-open 실관측), async E-gate 분리
 
 ### O185. 결정전(9유형 flash vs grok) 발사 — grok 런은 STANDARD 60초 시간창 부적합으로 무효, 결정전 미완
