@@ -34,6 +34,8 @@
 
 **배포 완료(7/18 저녁, 사용자 승인)**: 브랜치 `20260718jooyeon`(커밋 4개: 품질게이트 202d90d4 / 단일화+async d84a2691 / 연구 0657cc7b / 외국문자게이트 e2b1ca89, 493943da 시험분석 포함) 푸시 → `vercel --prod` READY(dpl_GnuLoBkV8iWtQUs6tzvQ4UB5xzMC) + **Trigger.dev 20260718.1 배포(12태스크, workbench-explanation-verify 포함)**. 현 프로덕션 config = **pro 생성 + grok 검증(async E-gate)** — grok 생성 운영 env는 미설정(의도적 보류: 워커 정상가동 확인 + 어법 148s 속도 과제 해소 후 별도 스위치). 남은 것: 배포 후 24h 감사(PENDING 소화율·실사용 F율). → **7/20 새벽 첫 실사용 8문항으로 워커 실가동 확증(O190: 8/8 소화, 수리 실효 1건)** — 24h 감사의 핵심 항목 해소, 수리형식·원장 2결함 신규 등록. → **7/20 오후 O191 배포: 결함 2건 수정 + grok 생성 운영 전환**(커밋 b3639625·55c624b0, vercel nara-9a0wsnh2y READY, Trigger 20260719.1). 현 스택 = **grok 생성 + grok 검증(async) + flash 어법 솔버**. 다음 = 실사용 재실측(전체 원가·어법 데드라인 근접률·외국문자 게이트 발화).
 
+**등록 가설(7/20, 사용자 발의 — 검증 전, §1 결론 아님): gemini 사고 모드 개방이 품질을 올리는가.** 배경: gemini 추론-품질 스윕은 캠페인 내내 부재(용량반응 실측은 grok뿐 — low 47%/med 43%/high 0%), 현행 pro "F 17%"는 전부 thinking-off 성적, thinking-off 자체는 O47/O48의 의도적 계약(재검 조건 = grok 용량반응 발견으로 충족). 경제 예측: 사고 토큰은 출력 과금이고 출력 단가 grok $6 < flash $9 < pro $12/M(와이어 검산) — pro+사고의 가치는 원가가 아니라 **속도 유지 품질(어법 데드라인 B안 업그레이드)**, flash+사고는 **재시도 감소로 유효원가 절감**(grok high 선례 기제) 가능성. 반대 예측: killer-too-easy 얕은 패러프레이즈는 사고량 무관(grok@high 잔존 실측) — 프롬프트 공예 축. 실험: H-G0 와이어 프로브(O147 "flash 사고 비활성 거부" 재검 — 현 프로덕션 flash는 사실상 무사고 작동 중, provider 의존 미확정) → H-G1 pro@low·medium funnel paired n≥20 블라인드 vs grok@high → H-G2 flash@사고 arm 을 결정전 재실행에 합류 → H-G3 GRAMMAR-SOLVER 사고 상향 재현율 벤치(생성 0콜). 실험은 연구 하네스 콜 단위 — 전역 gemini env·프로덕션 불변.
+
 ---
 
 ## §2. 트랙별 결론 변천사 (supersede 체인)
