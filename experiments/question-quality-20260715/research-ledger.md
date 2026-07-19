@@ -21,18 +21,18 @@
 
 | 트랙 | 현재 결론 | 상태 | 근거 |
 |---|---|---|---|
-| **어법·빈칸 생성 모델** | **grok-4.5 @reasoning=high** — funnel 확증 F 2/24(8%)·A 5개·정답 24/24, 어법 153원/빈칸 77원(flash 빈칸 F 42%·pro F 17%/199원 동시 격파). 품질은 확정, 단 인라인 투입은 async E-gate 배포가 전제 | `[조건부: O187 배포+재실측]` | O178→O181→O186→O187 |
-| **검증기 (E-gate)** | **grok-4.5 @high** (verify→repair→re-verify). pro는 도장(적발 0/12 vs grok 10/12·오경보 0) — 스택에서 필수 자리 없음. flash 검증기는 그 이전에 기각(재현율 64%) | `[조건부: O187 배포]` | O155→O156→O184 |
+| **어법·빈칸 생성 모델** | **grok-4.5 @reasoning=high** — funnel 확증 F 2/24(8%)·A 5개·정답 24/24, 어법 153원/빈칸 77원(flash 빈칸 F 42%·pro F 17%/199원 동시 격파). 전제였던 async E-gate는 배포·실가동 확증됨(O190) — 남은 건 grok 생성 운영 env 스위치(사용자 결정)와 전환 후 재실측 | `[조건부: env 스위치+재실측]` | O178→O181→O186→O187→O190 |
+| **검증기 (E-gate)** | **grok-4.5 @high** (verify→repair→re-verify). pro는 도장(적발 0/12 vs grok 10/12·오경보 0) — 스택에서 필수 자리 없음. flash 검증기는 그 이전에 기각(재현율 64%). **프로덕션 실가동 확증(7/20 첫 실사용 8/8 소화·수리 실효 1건)** — 단 수리본 wrongOptionExplanations **배열형 렌더 파손**·워커 **검증비 원장 미기록** 2결함 미결 | `[유효 — 수리형식·원장 결함 수정 전까지 주의]` | O155→O156→O184→O190 |
 | **E-gate 대상 유형** | 어법·빈칸 + 선택형 6종(TITLE/TOPIC/MAIN_IDEA/TOPIC_MAIN_IDEA/IMPLIED_MEANING/CONTENT_MATCH). 확장 원가 +44원/문항 | `[구현완료·미배포]` | O181, O184, W2-F |
-| **운영 아키텍처** | E-gate는 인라인 임계경로에서 **분리**(fast 라우트 defer→Trigger 워커, 예산가드 190s·SKIPPED_BUDGET 표시). "grok 생성+grok 검증 인라인 직렬"은 270s 데드라인과 양립 불가로 판명 | `[구현완료·미배포]` | O186→O187 |
+| **운영 아키텍처** | E-gate는 인라인 임계경로에서 **분리**(fast 라우트 defer→Trigger 워커, 예산가드 190s·SKIPPED_BUDGET 표시). "grok 생성+grok 검증 인라인 직렬"은 270s 데드라인과 양립 불가로 판명. 7/20 프로덕션 실측: PENDING→PATCH 3분 내 8/8, 사용자 체감 대기 빈칸 평균 29s·어법 62s | `[유효 — 실가동 확증]` | O186→O187→O190 |
 | **구조형 (순서·삽입·무관·요약MC)** | 병목은 모델이 아니라 검증 인프라. "전멸"은 평가 장비 허상이었고(V2 붕괴 0) 실결함은 결정형 3축+V4 → 무결성 게이트 3종 구현됨. flash vs grok 재평가는 **미완**(결정전 grok 런이 60s 시간창 부적합으로 무효) | `[미결: 결정전 재실행]` | O179→O180→O183→O185 |
 | **선택형** | grok@high + E-gate 확장. 공예계약(QGEN_SELECTION_CRAFT_DELTA)은 B율 상향만 — A 승급 열쇠는 E-gate 확장 | `[조건부: 배포 후 실측]` | O181 |
 | **서술형·어휘** | 답안집합 부재(V2-NO-ANSWER-SET)가 스키마 설계 부채(모델 무관, flash·grok 공통 F 67%) → acceptedAnswers 계약+채점 집합대조+어휘 seam 게이트 구현됨. 재평가 미완 | `[미결: 결정전 재실행]` | O31→O183→W1/T8·T9 |
 | **원가 지도** | grok 단가 $2/6(출력 pro 절반). funnel: grok 어법 153원·빈칸 77원. **fast 인라인: grok 151~245원 vs pro 84~234원 — funnel 우위가 인라인에선 미성립(경로 의존)**. E-gate +44원/문항. INT 어법 STANDARD 원가 186원은 최저 판매가 146원 초과(역마진) | `[유효]` | O181, O184, O186, O172 |
 | **제품 정책** | 일반/프리미엄 상품 구분 폐지 — 유형이 파이프라인 결정(resolveUnifiedGenerationPlan: 어법·빈칸·선택형6=PREMIUM 파이프라인), 크레딧 2x 차감 폐지. 크레딧 단가 1.5x 인상은 별도(사용자 시점) | `[구현완료·미배포]` | 사용자 결정 7/17, W2-E |
-| **품질 잔여 병목** | beautiful KILLER ~3%(craft), `blank-paraphrase-killer-too-easy`(pro·grok 공통), 어법 약미끼("its"·"it"), **grok 해설 외국어 혼입 패턴**(中文 连接·영어 steals — 결정형 검출기 후보 등록), **유형 간 표적 중복 세트 누출**(diversity가 cross-type 미커버 — 삽입 제시문이 빈칸 정답 노출), **E-gate 비대상 유형(콤보 등)의 V4 무방비**, grok 어법 포인트 병렬 3연속 편중 | `[미결]` | O162, O181, O186, O188, O189 |
+| **품질 잔여 병목** | beautiful KILLER ~3%(craft), `blank-paraphrase-killer-too-easy`(pro·grok 공통), 어법 약미끼("its"·"it"), **grok 해설 외국어 혼입 패턴**(中文 连接·영어 steals — 결정형 검출기 후보 등록), **유형 간 표적 중복 세트 누출**(diversity가 cross-type 미커버 — 삽입 제시문이 빈칸 정답 노출), **E-gate 비대상 유형(콤보 등)의 V4 무방비**, grok 어법 포인트 병렬 3연속 편중, **E-gate 수리본 wrongOptionExplanations 배열형 렌더 파손**(수리 채택 문항 전체, 잠복 버그 — 게이트 정규화+데이터 정규화 필요), **async 검증비 원장 미기록**(워커 onModelUsage 미배선 — 문항당 실원가 계측 공백) | `[미결]` | O162, O181, O186, O188, O189, O190 |
 
-**배포 대기 열**: 통합 2웨이브 + async E-gate(O187) 커밋 → `vercel --prod` → grok 운영 env(GRAMMAR_PREMIUM_MODEL_ID·PREMIUM_QGEN_MODEL_ID=x-ai/grok-4.5, OPENROUTER_REASONING_EFFORT=high) → 배포 후 24h 감사. 전부 사용자 승인 대기.
+**배포 완료(7/18 저녁, 사용자 승인)**: 브랜치 `20260718jooyeon`(커밋 4개: 품질게이트 202d90d4 / 단일화+async d84a2691 / 연구 0657cc7b / 외국문자게이트 e2b1ca89, 493943da 시험분석 포함) 푸시 → `vercel --prod` READY(dpl_GnuLoBkV8iWtQUs6tzvQ4UB5xzMC) + **Trigger.dev 20260718.1 배포(12태스크, workbench-explanation-verify 포함)**. 현 프로덕션 config = **pro 생성 + grok 검증(async E-gate)** — grok 생성 운영 env는 미설정(의도적 보류: 워커 정상가동 확인 + 어법 148s 속도 과제 해소 후 별도 스위치). 남은 것: 배포 후 24h 감사(PENDING 소화율·실사용 F율). → **7/20 새벽 첫 실사용 8문항으로 워커 실가동 확증(O190: 8/8 소화, 수리 실효 1건)** — 24h 감사의 핵심 항목 해소, 수리형식·원장 2결함 신규 등록.
 
 ---
 
@@ -94,7 +94,12 @@ O187   구조 수정: ①예산가드(190s 미만이면 시도 없이 SKIPPED_BU
 O188   1차 실전(로컬): defer 정상 — PENDING 4/4 표시·인라인 검증 0콜·fail-open 소멸.
        ★단 워커 미구동이면 PENDING = 무검증 출하 — V4급 결함(해설 중국어 혼입) 실제 통과.
        "워커 상시 구동"이 배포 체크리스트 승격
-현재   [조건부] grok@high 검증, async 경로 — O187 배포 + 워커 구동이 조건
+O190   프로덕션 실가동 확증(7/20 첫 실사용 8문항): PENDING→PATCH 3분 내 8/8(VERIFIED 5·
+       REPAIRED 3·FAILED 0), 수리 1건은 pro 해설 구조 오분석을 실질 교정 — 루프 밥값 실측.
+       ★신규 결함 2: ①수리본 wrongOptionExplanations 배열형(스키마 ↔ 렌더 계약 불일치,
+       수리 채택 문항 해설 뷰 파손 — 리페어 도입 이래 잠복) ②워커 검증비 원장 0행
+       (onModelUsage 미배선 — async 검증 실원가 계측 공백)
+현재   [유효] grok@high 검증, async 경로 실가동 — 수리형식 정규화·검증비 원장 배선이 다음 수술
 ```
 
 ### 2.3 운영 아키텍처 (시간창·데드라인·행콜)

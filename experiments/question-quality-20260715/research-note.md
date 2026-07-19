@@ -2,6 +2,19 @@
 
 > ⚠ **이 파일은 원시 실험일지(append-only 아카이브)다.** 각 관찰의 "확정/기각/철회" 문구는 그 시점의 스냅샷이며 이후 관찰로 뒤집혔을 수 있다 — **현재 유효 결론과 트랙별 supersede 체인은 `research-ledger.md`(단일 진실원)가 담당한다.** 새 관찰은 여기 append 하되, 결론이 바뀌면 원장의 해당 트랙(§1·§2)을 같이 갱신할 것.
 
+## 2026-07-20 새벽 KST — 배포 후 첫 실사용 배치: async E-gate 프로덕션 실가동 확증 + 수리본 형식 결함·검증비 원장 누락 발견
+
+### O190. 프로덕션 첫 실사용 8문항(01:26 KST, 4지문 × 어법·빈칸 KILLER) — 워커 8/8 소화(3분 내)·수리 실효 1건 확증, 단 ①수리본 wrongOptionExplanations 배열형 렌더 파괴 ②워커 검증비 원장 미기록 ③cross-type 누출 4/4 전수 재확정
+
+- 사용자 실사용 배치(7/20 01:26:17~01:27:15 KST, 배포본 프로덕션): 4지문 각각 빈칸+어법 KILLER 1쌍, 8잡 전부 COMPLETED·1-attempt·relaxed 0. 운영 config 실측 확인 = **pro(gemini-3.1-pro-preview) 생성 + flash 솔버 게이트 + grok 검증(async)** — grok 생성 env 미설정 상태 그대로. `requestedGenerationPlan=STANDARD`가 PREMIUM으로 승격 기록 — W2-E 통합 라우팅 프로덕션 정상.
+- **async E-gate 실가동 확증(배포 체크리스트 항목 해소)**: 8/8 `PENDING` → 워커 PATCH 완료(생성 후 71초~3분), 최종 VERIFIED 5 + VERIFIED_REPAIRED 3, FAILED 0. 수리 중 1건은 실질 교정 — 어법 d7cqjm의 pro 해설이 오류 위치를 "that절 진주어 술어 부족"으로 오분석한 것을 grok 수리가 "while 부사절 they의 정동사(are) 자리"로 정정(문항 본체 무변경). **O156 계보의 verify→repair 루프가 프로덕션에서 밥값 한 첫 실측.** O188의 "워커 미구동 = PENDING 무검증 출하" 리스크는 프로덕션에선 비발생.
+- 시간(잡 durSec): 빈칸 12/10/31/63s(평균 29s), 어법 49/59/62/76s(평균 62s) — 인라인 grok 검증 시대(O186 174~275s, O188 어법 274s)의 임계경로 문제가 분리로 해소된 실측. 사용자 체감 대기는 생성만, 검증은 배경 완결.
+- 원가(원장 RECORDED, 생성만): 빈칸 47/44/41/105원=237원, 어법 125/99/112/166원=502원 — 합 739원, 평균 92원/문항(어법 126원·빈칸 59원). 어법 166원 건은 사다리 내부 재시도(answer+decoys 2회분 6콜). **주의: 검증·수리 grok 콜은 원장 0행(아래 결함②) — 이 평균은 생성비만이다.**
+- **결함① (수리본 형식 파손, 리페어 도입 이래 잠복)**: `EXPLANATION_REPAIR_SCHEMA`(explanation-verify-gate.ts:62)가 wrongOptionExplanations를 `{label, explanation}[]` **배열**로 출력하고 인라인·워커 양쪽이 `{...question, ...repair.object}`로 원계약(`Record<라벨, 문장>`) 위에 그대로 덮어씀 → VERIFIED_REPAIRED 3문항 DB에 배열 잔존. 렌더러(question-renderer-primitives.tsx ExplanationSection·question-renderers.tsx 오답 분석)는 `Object.entries` 객체 가정 — 배열이면 라벨이 0/1/2로 뜨고 객체가 React child로 들어가 해설 뷰 파손. 수정 = 게이트 1지점에서 배열→객체 정규화 + 기존 배열 데이터 정규화 마이그레이션(+렌더 방어).
+- **결함② (검증비 원장 실명)**: 워커 runExplanationVerifyGate 호출에 onModelUsage 미배선·recordPlatformApiUsageCost 부재 → 배치 시간창 내 원장 grok 행 0(실측). 인라인 시절 검증비는 잡 경유로 기록됐으나 async 분리 후 검증·수리비가 청구 추적 불가 — 원가 지도 "E-gate +44원/문항"은 인라인 실측이므로 async 검증비 계측은 현재 공백.
+- **cross-type 표적 중복 4/4 전수 재확정(O188·O189 확정판)**: 지문1~3은 빈칸 문항 지문이 어법 정답 원형(take / are speaking / stretches)을 그대로 노출, 지문4는 어법 밑줄 문장(undone→undoing 변형)이 빈칸이 뚫은 표적 문장 그 자체 — 같은 지문 쌍 생성 시 상호 누출이 예외가 아니라 **기본값**임이 확정. 유형 간 usedTargets 공유(지문 단위 표적 원장) 과제 우선순위 상향 근거.
+- 품질(8건 전수 판독): 어법 4/4 포인트 유효·오콜 0(정동사 taking→take / while절 being→are / 강조구문 수일치 stretch→stretches / 분사 태 undoing→undone), 선지 전부 방어 가능. 빈칸 4/4 정답 유일성 방어 가능, 최고작은 105원/63s 우주팽창 빈칸(통념vs진실 극성 설계·경고 0·A-급) — **O188 "최고가 런이 최고 품질" 재재현(2연속)**. 빈칸 3/4에 `blank-paraphrase-killer-too-easy` 잔존(pro 생성 병목 그대로), 빈칸 정답 위치 ③③③④ — 지문이 달라 diversity 스티어링 미작동 구간의 ③ 편중 관찰. 외국어 혼입 0(pro 생성이라 비교군 아님 — grok 전환 후 게이트 발화 관찰 필요).
+
 ## 2026-07-18 새벽~오전 KST — 통합구현 이후 실측: 결정전 config 부적합, 어법·빈칸 grok×grok 최초 인라인 실측(fail-open 실관측), async E-gate 분리
 
 ### O185. 결정전(9유형 flash vs grok) 발사 — grok 런은 STANDARD 60초 시간창 부적합으로 무효, 결정전 미완
