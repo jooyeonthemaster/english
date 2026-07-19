@@ -38,6 +38,21 @@
 - 생성 지능(grok te1guv 와 동일 기술실업 지문 paired, 간이 프롬프트): pro@medium·flash@high 둘 다 fulfilment 절 표적 + 함정 기제 명시 4종 — 눈판독으로 grok 실전 문항(te1guv, weak-distractors 3경고)과 경쟁 이상. flash@high 정답 선지("non-material anchor that translates professional engagement into personal worth") 추상화 A급 후보. 10s/45~60원.
 - 한계 명시: n=1 케이스쌍, 간이 프롬프트(프로덕션 계약 아님), V4 게이트 미적용 — 확증은 paired n≥20 블라인드 필요(H-G1 본실험).
 
+### O193. H-G1 본실험(사용자 발의·확장 지시): 5모델 사고 ON paired 블라인드 — pro@medium 사고가 grok@high 와 동급 이상(F 최저·2.5배 빠름), 부수로 DB 오염 지문 발견
+
+- **설계**: 동일 지문 10개(당일 실전 8 + DB 2) × 빈칸·어법 KILLER × 5암 전부 사고 ON — grok@high(챔피언 기준선)/pro@medium/flash@high/deepseek-v4-pro@high/sonnet-5@thinking8k. 동일 간이 하네스(프로덕션 계약·게이트 없음 — **암 간 상대 비교만 유효, 절대 F율은 프로덕션과 비교 금지**). 생성 100 + 검수벤치 35 + 수리벤치 15 = 150콜, $4.9(예산가드 $6.5, 발사 전 잔액 확인 $22.6→잔여 ~$17.7 **충전 필요**). 잘림 가드(finish=length→2배 재시도) 발동 0. 채점 = 워크플로 138에이전트 블라인드(모델명 은닉·셔플·결정형 계약검사) + F/A 전건 2-refuter 적대검증(**뒤집힘 0**).
+- **생성 성적(F/B/A, 지문기인 F 분리)**:
+  | 암 | 빈칸 | 어법 | 실질F(오염지문 제외) | A | 원가/문항 | 중앙시간 |
+  | pro@medium | 1/9/0 | 0/9/1 | **0/20** | 1 | 48원 | 33s |
+  | grok@high | 1/7/2 | 1/9/0 | 1/20 | **2** | 50원 | 84s |
+  | flash@high | 1/9/0 | 1/9/0 | 1/20 | 0 | 68원 | 30s |
+  | deepseek-v4-pro | 3/7/0 | 2/8/0 | 3/20 | 0 | **19원** | 136s |
+  | sonnet-5 | 2/8/0 | 4/6/0 | 4/20 | 0 | 75원 | 50s |
+- **헤드라인**: 사고 켠 pro@medium 이 실질 F 0/20 + A 1 로 grok@high(F 1, A 2)와 동급 — 원가 동일(48 vs 50원), 속도 2.5배(33 vs 84s). **어법 grok 데드라인 문제(O192)의 유력 대안 = pro@medium 사고 생성.** grok 은 A(공예) 최다로 킬러 공예 우위 유지. flash@high 견실(F 1, A 0). deepseek 초저가(19원)지만 F 3. sonnet-5 최하 F 4 — 사고 예산 8k 중 평균 922tok 만 소극 사용(effort 매핑 아닌 예산 지정 방식의 한계 가능).
+- **검수·수리 벤치**: 합성 결함 2케이스(수일치 두목명사 오귀속·근거 극성 역전) — **5모델 전원 검수 적발 2/2·수리 정확 2/2, 실오경보 ~0**(clean-blank-2 오경보 3건은 재검토 결과 해설의 ①⑤ 묶음 서술을 꼬집은 정당 지적 — GT 애매로 재분류). 사고 ON 이면 이 난이도의 도장 문제는 전 모델 소멸. ⚠ 실전 케이스(d7cqjm pre-repair)는 **벤치 구성 결함으로 폐기** — 변형 미적용 원문 지문을 제공해 결함 위치가 지문에 실존하지 않았음(5모델이 제각각 위치 추측). 재실험 조건: 변형 반영 지문 필수.
+- **부수 발견(조치 필요)**: DB 지문 cmrs251gp000dja0apyfs37lt(2026 6월모평 41-42 장문)의 말미 "make humanoids **distinguishable** from a human body"는 논지·Similarly 병렬과 정면 모순 — 원문 in**dis**tinguishable 의 오염 추정. 채점관 다수가 독립적으로 적발(이 지문 기인 F 5건은 암 비교에서 분리 집계). 서비스 지문 정합성 스캔 후보.
+- 방법론 한계 명시: LLM 패널 채점(사람 확증 아님)·간이 프롬프트·n=20/암. 다음 = 프로덕션 계약(사다리·게이트 포함)으로 pro@medium 사고 파일럿 → 어법 생성 전환 검토.
+
 ## 2026-07-18 새벽~오전 KST — 통합구현 이후 실측: 결정전 config 부적합, 어법·빈칸 grok×grok 최초 인라인 실측(fail-open 실관측), async E-gate 분리
 
 ### O185. 결정전(9유형 flash vs grok) 발사 — grok 런은 STANDARD 60초 시간창 부적합으로 무효, 결정전 미완
