@@ -703,7 +703,9 @@ export function providerFromModel(model: string): PlatformCostProvider {
     lower.includes("google/") ||
     lower.includes("openrouter") ||
     lower.includes("moonshot") ||
-    lower.includes("kimi")
+    lower.includes("kimi") ||
+    lower.includes("x-ai/") ||
+    lower.includes("grok")
   ) {
     // 실제 트래픽이 통과하는 게이트웨이 버킷(OPENROUTER | ATLASCLOUD).
     // 과거 행은 ATLASCLOUD 로 남고 새 행부터 활성 게이트웨이로 기록된다.
