@@ -7,6 +7,12 @@ import {
   WORKBENCH_QUESTION_TRIGGER_MAX_ATTEMPTS,
 } from "@/lib/concurrency-config";
 import { prisma } from "@/lib/prisma";
+import {
+  providerFromModel,
+  readAiUsageCost,
+  readAiUsageTokens,
+  recordPlatformApiUsageCost,
+} from "@/lib/platform-api-costs";
 import { normalizePassageWhitespace } from "@/lib/question-postprocess/text-utils";
 import { runExplanationVerifyGate } from "@/app/api/ai/generate-questions-auto/_lib/explanation-verify-gate";
 
@@ -28,7 +34,60 @@ type Input = {
   questionIds: string[];
   passageId: string;
   academyId: string;
+  /** 인큐한 생성 잡 — 원장 행을 잡 단위로 조인하기 위한 식별자(과거 페이로드 호환 optional). */
+  jobId?: string;
 };
+
+type VerifyUsageEvent = {
+  usage: unknown;
+  modelId: string;
+  attempts: number;
+  durationMs: number;
+};
+
+/**
+ * 검증·수리 콜의 원가를 생성 경로(fast 라우트 recordCostSafely)와 같은 원장에
+ * 기록한다. 인라인 시절에는 onModelUsage 가 잡 usage 이벤트로 흘러 자동 기록됐지만
+ * async 분리 후 이 배선이 끊겨 검증비가 원장 0행이었다(연구노트 O190 결함②).
+ * sourceKey 는 잡·문항·콜 인덱스로 결정적 — Trigger 재시도에도 중복 upsert 없다.
+ */
+async function recordVerifyUsage(
+  events: VerifyUsageEvent[],
+  ctx: { jobId?: string; questionId: string; academyId: string; subType: string },
+): Promise<void> {
+  for (const [idx, event] of events.entries()) {
+    try {
+      const tokens = readAiUsageTokens(event.usage);
+      const actual = readAiUsageCost(event.usage);
+      await recordPlatformApiUsageCost({
+        sourceKey: `workbench_ai_job:${ctx.jobId ?? ctx.questionId}:explverify:${ctx.questionId}:${idx}`,
+        sourceType: "WORKBENCH_AI_JOB",
+        sourceId: ctx.jobId ?? ctx.questionId,
+        sourceDetail: `EXPLANATION_VERIFY:${ctx.subType}`,
+        academyId: ctx.academyId,
+        provider: providerFromModel(event.modelId),
+        model: event.modelId,
+        unitType: "TOKENS",
+        inputTokens: tokens.inputTokens,
+        outputTokens: tokens.outputTokens,
+        recordedCostUsd: actual.costUsd,
+        usageAt: new Date(),
+        metadata: {
+          questionId: ctx.questionId,
+          attempts: event.attempts,
+          durationMs: event.durationMs,
+          ...(actual.generationId ? { generationId: actual.generationId } : {}),
+        },
+      });
+    } catch (error) {
+      // 원가 기록 실패가 검증 결과 반영을 막아선 안 된다.
+      logger.warn("failed to record verify usage cost", {
+        questionId: ctx.questionId,
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
+  }
+}
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -118,7 +177,7 @@ export const workbenchExplanationVerifyTask = task({
   // 검증/수리 X3(grok@high)는 문항당 수십 초, 배치(여러 문항)면 누적된다 — 넉넉히.
   maxDuration: 600,
   async run(payload: Input) {
-    const { questionIds, passageId, academyId } = payload;
+    const { questionIds, passageId, academyId, jobId } = payload;
     const taskStartedAt = Date.now();
 
     if (!Array.isArray(questionIds) || questionIds.length === 0) {
@@ -172,6 +231,7 @@ export const workbenchExplanationVerifyTask = task({
             ? structured._generationPlan
             : "PREMIUM";
 
+        const usageEvents: VerifyUsageEvent[] = [];
         const result = await runExplanationVerifyGate({
           subType,
           generationPlan,
@@ -179,6 +239,20 @@ export const workbenchExplanationVerifyTask = task({
           passage: passageContent,
           // 임계경로 밖이라 넉넉한 예산 — 인라인 예산 가드(190s)를 넘겨 실제 검증한다.
           deadlineAt: taskStartedAt + 480_000,
+          onModelUsage: (event) => {
+            usageEvents.push({
+              usage: event.usage,
+              modelId: event.modelId,
+              attempts: event.attempts,
+              durationMs: event.durationMs,
+            });
+          },
+        });
+        await recordVerifyUsage(usageEvents, {
+          jobId,
+          questionId,
+          academyId,
+          subType,
         });
 
         if (result.updatedQuestion) {

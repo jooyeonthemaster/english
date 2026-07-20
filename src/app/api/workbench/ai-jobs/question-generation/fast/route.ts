@@ -671,6 +671,8 @@ export async function POST(req: NextRequest) {
           questionIds: createdQuestionIds,
           passageId: passage.id,
           academyId: job.academyId,
+          // 워커의 검증비 원장 행을 생성 잡에 조인하기 위한 식별자(O190 결함② 배선).
+          jobId: job.id,
         },
         {
           idempotencyKey: `explanation-verify:${job.id}`,

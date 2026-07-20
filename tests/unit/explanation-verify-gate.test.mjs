@@ -236,6 +236,7 @@ async function runScenario(name, opts) {
     warning: res.warning || null,
     updatedExplanation: res.updatedQuestion ? res.updatedQuestion.explanation : null,
     repairedFlag: res.updatedQuestion ? res.updatedQuestion._explanationRepaired === true : null,
+    updatedWrongOptions: res.updatedQuestion ? res.updatedQuestion.wrongOptionExplanations : null,
     fetches: wire.length,
     wire: wire.map((w) => ({ model: w.model, reasoning_effort: w.reasoning_effort, hasReasoning: "reasoning" in (w || {}), hasStreamKey: "stream" in (w || {}), stream: w.stream, isRepairCall: JSON.stringify(w).includes("해설 교정 전문가") })),
   };
@@ -325,6 +326,13 @@ test("E-gate WIRE: grok 기본 모델 + reasoning=high 콜 단위 전달, 선택
   assert.equal(rep.fetches, 3, "expected verify→repair→re-verify (3 calls)");
   assert.equal(rep.updatedExplanation, "교정된 해설입니다. 근거가 실제 구조와 일치합니다.");
   assert.equal(rep.repairedFlag, true);
+  // 수리본 오답해설은 저장·렌더 계약(Record<라벨, 문장>)으로 정규화되어야 한다 —
+  // 수리 스키마의 배열형이 그대로 저장되면 오답 분석 렌더가 깨진다(O190 결함①).
+  assert.deepEqual(
+    rep.updatedWrongOptions,
+    { "①": "오답 해설입니다." },
+    `repaired wrongOptionExplanations must be normalized to Record form: ${JSON.stringify(rep.updatedWrongOptions)}`,
+  );
   // 수리 콜(2번째)도 grok + reasoning=high 로 나간다.
   assert.equal(rep.wire[1].model, "x-ai/grok-4.5");
   assert.equal(rep.wire[1].reasoning_effort, "high");

@@ -2,6 +2,64 @@
 
 > ⚠ **이 파일은 원시 실험일지(append-only 아카이브)다.** 각 관찰의 "확정/기각/철회" 문구는 그 시점의 스냅샷이며 이후 관찰로 뒤집혔을 수 있다 — **현재 유효 결론과 트랙별 supersede 체인은 `research-ledger.md`(단일 진실원)가 담당한다.** 새 관찰은 여기 append 하되, 결론이 바뀌면 원장의 해당 트랙(§1·§2)을 같이 갱신할 것.
 
+## 2026-07-20 새벽 KST — 배포 후 첫 실사용 배치: async E-gate 프로덕션 실가동 확증 + 수리본 형식 결함·검증비 원장 누락 발견
+
+### O190. 프로덕션 첫 실사용 8문항(01:26 KST, 4지문 × 어법·빈칸 KILLER) — 워커 8/8 소화(3분 내)·수리 실효 1건 확증, 단 ①수리본 wrongOptionExplanations 배열형 렌더 파괴 ②워커 검증비 원장 미기록 ③cross-type 누출 4/4 전수 재확정
+
+- 사용자 실사용 배치(7/20 01:26:17~01:27:15 KST, 배포본 프로덕션): 4지문 각각 빈칸+어법 KILLER 1쌍, 8잡 전부 COMPLETED·1-attempt·relaxed 0. 운영 config 실측 확인 = **pro(gemini-3.1-pro-preview) 생성 + flash 솔버 게이트 + grok 검증(async)** — grok 생성 env 미설정 상태 그대로. `requestedGenerationPlan=STANDARD`가 PREMIUM으로 승격 기록 — W2-E 통합 라우팅 프로덕션 정상.
+- **async E-gate 실가동 확증(배포 체크리스트 항목 해소)**: 8/8 `PENDING` → 워커 PATCH 완료(생성 후 71초~3분), 최종 VERIFIED 5 + VERIFIED_REPAIRED 3, FAILED 0. 수리 중 1건은 실질 교정 — 어법 d7cqjm의 pro 해설이 오류 위치를 "that절 진주어 술어 부족"으로 오분석한 것을 grok 수리가 "while 부사절 they의 정동사(are) 자리"로 정정(문항 본체 무변경). **O156 계보의 verify→repair 루프가 프로덕션에서 밥값 한 첫 실측.** O188의 "워커 미구동 = PENDING 무검증 출하" 리스크는 프로덕션에선 비발생.
+- 시간(잡 durSec): 빈칸 12/10/31/63s(평균 29s), 어법 49/59/62/76s(평균 62s) — 인라인 grok 검증 시대(O186 174~275s, O188 어법 274s)의 임계경로 문제가 분리로 해소된 실측. 사용자 체감 대기는 생성만, 검증은 배경 완결.
+- 원가(원장 RECORDED, 생성만): 빈칸 47/44/41/105원=237원, 어법 125/99/112/166원=502원 — 합 739원, 평균 92원/문항(어법 126원·빈칸 59원). 어법 166원 건은 사다리 내부 재시도(answer+decoys 2회분 6콜). **주의: 검증·수리 grok 콜은 원장 0행(아래 결함②) — 이 평균은 생성비만이다.**
+- **결함① (수리본 형식 파손, 리페어 도입 이래 잠복)**: `EXPLANATION_REPAIR_SCHEMA`(explanation-verify-gate.ts:62)가 wrongOptionExplanations를 `{label, explanation}[]` **배열**로 출력하고 인라인·워커 양쪽이 `{...question, ...repair.object}`로 원계약(`Record<라벨, 문장>`) 위에 그대로 덮어씀 → VERIFIED_REPAIRED 3문항 DB에 배열 잔존. 렌더러(question-renderer-primitives.tsx ExplanationSection·question-renderers.tsx 오답 분석)는 `Object.entries` 객체 가정 — 배열이면 라벨이 0/1/2로 뜨고 객체가 React child로 들어가 해설 뷰 파손. 수정 = 게이트 1지점에서 배열→객체 정규화 + 기존 배열 데이터 정규화 마이그레이션(+렌더 방어).
+- **결함② (검증비 원장 실명)**: 워커 runExplanationVerifyGate 호출에 onModelUsage 미배선·recordPlatformApiUsageCost 부재 → 배치 시간창 내 원장 grok 행 0(실측). 인라인 시절 검증비는 잡 경유로 기록됐으나 async 분리 후 검증·수리비가 청구 추적 불가 — 원가 지도 "E-gate +44원/문항"은 인라인 실측이므로 async 검증비 계측은 현재 공백.
+- **cross-type 표적 중복 4/4 전수 재확정(O188·O189 확정판)**: 지문1~3은 빈칸 문항 지문이 어법 정답 원형(take / are speaking / stretches)을 그대로 노출, 지문4는 어법 밑줄 문장(undone→undoing 변형)이 빈칸이 뚫은 표적 문장 그 자체 — 같은 지문 쌍 생성 시 상호 누출이 예외가 아니라 **기본값**임이 확정. 유형 간 usedTargets 공유(지문 단위 표적 원장) 과제 우선순위 상향 근거.
+- 품질(8건 전수 판독): 어법 4/4 포인트 유효·오콜 0(정동사 taking→take / while절 being→are / 강조구문 수일치 stretch→stretches / 분사 태 undoing→undone), 선지 전부 방어 가능. 빈칸 4/4 정답 유일성 방어 가능, 최고작은 105원/63s 우주팽창 빈칸(통념vs진실 극성 설계·경고 0·A-급) — **O188 "최고가 런이 최고 품질" 재재현(2연속)**. 빈칸 3/4에 `blank-paraphrase-killer-too-easy` 잔존(pro 생성 병목 그대로), 빈칸 정답 위치 ③③③④ — 지문이 달라 diversity 스티어링 미작동 구간의 ③ 편중 관찰. 외국어 혼입 0(pro 생성이라 비교군 아님 — grok 전환 후 게이트 발화 관찰 필요).
+
+### O191. O190 결함 2건 수정 + grok 생성 운영 전환 배포(7/20, 사용자 승인 "빈칸이랑 어법")
+
+- **결함① 수정**: 게이트 1지점 정규화 `normalizeRepairedWrongOptionExplanations`(수리 배열형→Record, 빈 배열은 원본 유지) + repairAdopt 회귀 테스트 추가(2/2 통과). **기존 DB 배열형 8문항**(7/20 배치 3 + 인라인 수리 시절 5 — cmron*×3·cmrove*·cmrp9il9l) structuredData·QuestionExplanation 양쪽 정규화 마이그레이션 적용, 재스캔 0건.
+- **결함② 수정**: 워커에 onModelUsage→recordPlatformApiUsageCost 배선(sourceKey `workbench_ai_job:{jobId}:explverify:{questionId}:{idx}` 결정적·재시도 멱등, sourceDetail EXPLANATION_VERIFY:{subType}), fast 라우트 페이로드에 jobId 조인 추가. 부수: providerFromModel 에 x-ai/grok 게이트웨이 버킷 추가(기존 grok 29행 UNKNOWN 분류 교정 — 신규 행부터).
+- **grok 생성 전환(사용자 결정)**: Vercel production env 3개 등록 — PREMIUM_QGEN_MODEL_ID=x-ai/grok-4.5(빈칸+선택형6, 선택형은 같은 env 라 동반 전환), GRAMMAR_PREMIUM_MODEL_ID=x-ai/grok-4.5(어법 사다리), OPENROUTER_REASONING_EFFORT=high(gemini 는 OPENROUTER_GEMINI_REASONING_EFFORT="" 별도 보호 — 프로덕션 실측 확인). 어법 사다리 175~274s vs 270s 데드라인 리스크는 사용자가 인지하고 수용(전면 전환 선택).
+- 배포: 커밋 b3639625(수정)·55c624b0(연구 기록) 푸시 → vercel --prod READY(nara-9a0wsnh2y) + Trigger 20260719.1(12태스크) — 스모크 307 정상. **현 프로덕션 스택 = grok 생성 + grok 검증(async) + flash 어법 솔버.** 다음 = 실사용 재실측(원가 지도 갱신: 검증비 원장 포함 전체 원가·어법 데드라인 근접률·외국문자 게이트 발화).
+
+### O192. grok 생성 첫 실전 8문항 + gemini "사고 강제" 정책 사건(응급 배포) + 사고 가설 예비 실측(H-G0/G1)
+
+**A. grok 생성 첫 실전(02:16~02:19 KST, 4지문 × 빈칸·어법 KILLER 8건, 프로덕션)**
+- 8/8 COMPLETED·1-attempt. 빈칸 20.7~123.5s(평균 88s), **어법 250.7~270.9s — 4건 중 3건이 정확히 270s 데드라인 클램프**: repair 콜 0토큰 사망(신규 원장의 ESTIMATE 0/0 행으로 첫 가시화) + flash 솔버 스킵(3/4). 완주는 4js6ph(250.7s)뿐. **어법 사다리 검산(수리·솔버)이 데드라인에 잘려나가는 구조 — 속도 수술(수리 async 이관/콜 병합/타임아웃 재배분) 시급 확정.** async E-gate 는 8/8 소화(VERIFIED 7·REPAIRED 1) — grok 해설 수리율 1/8 vs pro 배치 3/8.
+- **O191 원장 배선 첫 실전 검증**: EXPLANATION_VERIFY 행 문항당 기록(수리 문항은 verify→repair→re-verify 3행), provider OPENROUTER 정상. 원가: 빈칸 생성 평균 75원+검증 ~30원, 어법 생성 평균 134원+검증 ~24원 — **올인 빈칸 ~105원/어법 ~158원**(pro 배치 올인 ~149원과 대동소이, 어법 3건은 사다리 절단 상태라 과소계상 주의).
+- 품질 8건 정독: 어법 4/4 포인트 유효(encourages→ing 콤마 스플라이스/계속적 that→which/starting→starts/measuring→measure), 정답 위치 분산 양호(빈칸 ②②③①·어법 CDBD). 빈칸은 cewdw7(디자인, 속성 교차 함정) B+/A-가 최고, te1guv 는 weak-distractors 포함 3경고 B-. `blank-paraphrase-killer-too-easy` 4/4 잔존(grok도 동일 — 프롬프트 축 병목 재확인). 외국문자 혼입 0. **cross-type 누출 4/4 재재확정**(e3rra1 어법 지문이 r5uqfp 빈칸 정답 문장을 그대로 노출 — (B) 밑줄 선행사 문장이 빈칸 문장 자체).
+**B. gemini reasoning 비활성 거부 — env 기본 경로 잠복 구멍 봉합 (⚠ 최초 보고는 "긴급 전면 붕괴"로 과장했다가 사용자 지적으로 정정 — §5 정신)**
+- 현상 자체는 **O147(7/16) 기지 사실**(flash 엔드포인트 reasoning 비활성 거부)이고, 팀 대응도 이미 있었다: exam-report 는 콜 단위 명시 `reasoningEffort:"low"` 고정(model-config.ts:79, 26-07-17 A/B 검증 형상), E-gate 는 콜 단위 grok@high, 캠페인 parity 판정 low. **콜 단위 명시 경로는 전부 무관.**
+- 남는 실측: 프로덕션 Vercel env 는 `OPENROUTER_GEMINI_REASONING_EFFORT=""`(빈값)이라 **명시값 없는 경로(STANDARD 유형 생성·어법 flash 솔버)는 disable 요청을 전송** — 이 요청이 지금 와이어에서 3/3 400("Reasoning is mandatory", pro 도 동일 거부 확인 = O147 의 pro 확장 데이터). 단 현 스택에서 이 경로의 노출은 작다(PREMIUM 생성·검증=grok, 솔버는 never-fail 조용한 스킵; 400 창에서 잡 0건 — 실피해 0). 02:21 KST flash 솔버는 disable 로 성공 → 거부의 시간적 확대인지 엔드포인트 변형별 차이인지 **미확정**(단정 금지).
+- 조치: env ""→**low**(atlas 경로 200 확인, 2.4s·사고 125tok) + vercel --prod(nara-rfgfxt89b READY) — 성격은 응급 구조가 아니라 **잠복 구멍 봉합 + exam-report 형상 통일**. thinking-off 는 provider 가 거부하므로 기본 사고(low+)가 기준선 — env 기본 경로(flash 솔버·STANDARD) 원가 재실측 필요.
+**C. 사고 가설 예비 실측(H-G0 완료, H-G1 예비 n=1 — 확증 아님)**
+- H-G0: none=400 거부 / low·high 수락 / **필드 생략 시 기본 사고 ON**(프로브: flash 1,628tok·pro 1,849tok). 사고 토큰 실측: flash low 1,004→high 1,221 / pro low 1,766→high 3,099(동일 문제).
+- 검수 지능(정답지 있는 d7cqjm 결함 해설 + 올바른 수리본 대조): **pro@high FAIL 판정+오류 지점 정확 적발, flash@high 2개 WRONG claim 정밀 적발, 둘 다 수리본은 PASS(오경보 0)** — O184 "pro 도장(0/12)"은 능력 한계가 아니라 **사고 예산 문제**였다는 가설 강화. 검수 속도 ~10s(grok 33~50s 대비 3~5배 빠름), 원가 pro@high ~38원/flash@high ~56원(grok ~22~35원이 여전히 최저).
+- 생성 지능(grok te1guv 와 동일 기술실업 지문 paired, 간이 프롬프트): pro@medium·flash@high 둘 다 fulfilment 절 표적 + 함정 기제 명시 4종 — 눈판독으로 grok 실전 문항(te1guv, weak-distractors 3경고)과 경쟁 이상. flash@high 정답 선지("non-material anchor that translates professional engagement into personal worth") 추상화 A급 후보. 10s/45~60원.
+- 한계 명시: n=1 케이스쌍, 간이 프롬프트(프로덕션 계약 아님), V4 게이트 미적용 — 확증은 paired n≥20 블라인드 필요(H-G1 본실험).
+
+### O193. H-G1 본실험(사용자 발의·확장 지시): 5모델 사고 ON paired 블라인드 — pro@medium 사고가 grok@high 와 동급 이상(F 최저·2.5배 빠름), 부수로 DB 오염 지문 발견
+
+- **설계**: 동일 지문 10개(당일 실전 8 + DB 2) × 빈칸·어법 KILLER × 5암 전부 사고 ON — grok@high(챔피언 기준선)/pro@medium/flash@high/deepseek-v4-pro@high/sonnet-5@thinking8k. 동일 간이 하네스(프로덕션 계약·게이트 없음 — **암 간 상대 비교만 유효, 절대 F율은 프로덕션과 비교 금지**). 생성 100 + 검수벤치 35 + 수리벤치 15 = 150콜, $4.9(예산가드 $6.5, 발사 전 잔액 확인 $22.6→잔여 ~$17.7 **충전 필요**). 잘림 가드(finish=length→2배 재시도) 발동 0. 채점 = 워크플로 138에이전트 블라인드(모델명 은닉·셔플·결정형 계약검사) + F/A 전건 2-refuter 적대검증(**뒤집힘 0**).
+- **생성 성적(F/B/A, 지문기인 F 분리)**:
+  | 암 | 빈칸 | 어법 | 실질F(오염지문 제외) | A | 원가/문항 | 중앙시간 |
+  | pro@medium | 1/9/0 | 0/9/1 | **0/20** | 1 | 48원 | 33s |
+  | grok@high | 1/7/2 | 1/9/0 | 1/20 | **2** | 50원 | 84s |
+  | flash@high | 1/9/0 | 1/9/0 | 1/20 | 0 | 68원 | 30s |
+  | deepseek-v4-pro | 3/7/0 | 2/8/0 | 3/20 | 0 | **19원** | 136s |
+  | sonnet-5 | 2/8/0 | 4/6/0 | 4/20 | 0 | 75원 | 50s |
+- **헤드라인**: 사고 켠 pro@medium 이 실질 F 0/20 + A 1 로 grok@high(F 1, A 2)와 동급 — 원가 동일(48 vs 50원), 속도 2.5배(33 vs 84s). **어법 grok 데드라인 문제(O192)의 유력 대안 = pro@medium 사고 생성.** grok 은 A(공예) 최다로 킬러 공예 우위 유지. flash@high 견실(F 1, A 0). deepseek 초저가(19원)지만 F 3. sonnet-5 최하 F 4 — 사고 예산 8k 중 평균 922tok 만 소극 사용(effort 매핑 아닌 예산 지정 방식의 한계 가능).
+- **검수·수리 벤치**: 합성 결함 2케이스(수일치 두목명사 오귀속·근거 극성 역전) — **5모델 전원 검수 적발 2/2·수리 정확 2/2, 실오경보 ~0**(clean-blank-2 오경보 3건은 재검토 결과 해설의 ①⑤ 묶음 서술을 꼬집은 정당 지적 — GT 애매로 재분류). 사고 ON 이면 이 난이도의 도장 문제는 전 모델 소멸. ⚠ 실전 케이스(d7cqjm pre-repair)는 **벤치 구성 결함으로 폐기** — 변형 미적용 원문 지문을 제공해 결함 위치가 지문에 실존하지 않았음(5모델이 제각각 위치 추측). 재실험 조건: 변형 반영 지문 필수.
+- **부수 발견(조치 필요)**: DB 지문 cmrs251gp000dja0apyfs37lt(2026 6월모평 41-42 장문)의 말미 "make humanoids **distinguishable** from a human body"는 논지·Similarly 병렬과 정면 모순 — 원문 in**dis**tinguishable 의 오염 추정. 채점관 다수가 독립적으로 적발(이 지문 기인 F 5건은 암 비교에서 분리 집계). 서비스 지문 정합성 스캔 후보.
+- 방법론 한계 명시: LLM 패널 채점(사람 확증 아님)·간이 프롬프트·n=20/암. 다음 = 프로덕션 계약(사다리·게이트 포함)으로 pro@medium 사고 파일럿 → 어법 생성 전환 검토.
+
+### O194. H-G1 확장(사용자 발의 "3.0 flash 같은 초저가도"): gemini-3-flash·3.1-flash-lite 2암 추가 — F 회피는 초저가도 동급, A(공예)는 grok·pro 전유물로 판명
+
+- 동일 하네스·동일 지문 paired 2암 추가(생성 40+검수 12+수리 6, $0.46): **gemini-3-flash-preview@high**($0.5/$3)·**gemini-3.1-flash-lite@high**($0.25/$1.5). 블라인드 채점 44에이전트(동일 프로토콜, F/A 적대검증).
+- 결과(실질 F/20, 오염지문 p9 기인 분리): **flash3 0/20**(문항당 14원·중앙 23s), **lite31 1/20**(문항당 **7원**·중앙 **11s**). 검수 벤치(합성 2): 둘 다 적발 2/2, lite31 오경보 0. 수리도 둘 다 정확.
+- **종합 판도(7암)**: 실질F — pro 0 = flash3 0 < grok 1 = flash35 1 = lite31 1 < deepseek 3 < sonnet 4. **A등급은 grok 2·pro 1 뿐, 초저가 4암 전원 A 0** — 채점관 서술 반복 패턴 "유효하나 평범"(TRIVIAL_POINT 경향: 표면형 어법 포인트·짧은 추론 거리). 즉 **사고 ON 이후 "F 안전"은 상향 평준화(모델 단가와 거의 무관), 변별축은 A(킬러 공예)로 이동 — 공예 상한은 grok > pro ≫ 저가 티어**.
+- 시사점(제품 설계 후보): 유형·티어 라우팅 재편 여지 — 킬러/프리미엄 = grok(공예 상한) 또는 pro@medium(속도·F 최저), 표준/대량 = flash3(14원, F 0) 또는 lite31(7원), 검수·수리 = 사고 ON 이면 저가 티어도 후보(단 변별 벤치 미비 — 어려운 실전형 케이스로 재검 필요). 확증 전 프로덕션 계약 파일럿 필수는 동일.
+
 ## 2026-07-18 새벽~오전 KST — 통합구현 이후 실측: 결정전 config 부적합, 어법·빈칸 grok×grok 최초 인라인 실측(fail-open 실관측), async E-gate 분리
 
 ### O185. 결정전(9유형 flash vs grok) 발사 — grok 런은 STANDARD 60초 시간창 부적합으로 무효, 결정전 미완

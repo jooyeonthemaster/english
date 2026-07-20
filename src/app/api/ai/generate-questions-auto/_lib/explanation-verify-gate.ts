@@ -65,6 +65,36 @@ const EXPLANATION_REPAIR_SCHEMA = z.object({
   keyPoints: z.array(z.string()).length(3),
 });
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+/**
+ * 수리 스키마의 wrongOptionExplanations 는 배열({label, explanation}[])이지만
+ * 저장·렌더 계약(생성 계약·question-renderer-primitives ExplanationSection·
+ * QuestionExplanation 직렬화)은 전부 Record<라벨, 문장>이다 — 여기 1지점에서
+ * 객체형으로 정규화해 수리본이 원계약 그대로 저장되게 한다. 유효 항목이 없으면
+ * undefined 를 돌려 원본 필드를 유지한다(빈 배열이 기존 오답해설을 지우지 않게).
+ */
+export function normalizeRepairedWrongOptionExplanations(
+  value: unknown,
+): Record<string, string> | undefined {
+  if (!Array.isArray(value)) {
+    return isRecord(value)
+      ? (value as Record<string, string>)
+      : undefined;
+  }
+  const out: Record<string, string> = {};
+  for (const item of value) {
+    if (!isRecord(item)) continue;
+    const label = typeof item.label === "string" ? item.label.trim() : "";
+    const explanation =
+      typeof item.explanation === "string" ? item.explanation : "";
+    if (label && explanation) out[label] = explanation;
+  }
+  return Object.keys(out).length > 0 ? out : undefined;
+}
+
 export type ExplanationVerifyGateMode = "off" | "warn" | "enforce";
 
 function parseMode(raw: string | undefined): ExplanationVerifyGateMode | undefined {
@@ -346,9 +376,16 @@ export async function runExplanationVerifyGate(
       attempts: repair.attempts,
       durationMs: repair.durationMs,
     });
+    const normalizedWrongOptions = normalizeRepairedWrongOptionExplanations(
+      repair.object.wrongOptionExplanations,
+    );
     const repaired: Record<string, unknown> = {
       ...input.question,
       ...repair.object,
+      // 배열형(수리 스키마) → Record(저장·렌더 계약) 정규화. 유효 항목이 없으면
+      // 원본 오답해설을 유지한다.
+      wrongOptionExplanations:
+        normalizedWrongOptions ?? input.question.wrongOptionExplanations,
       _explanationRepaired: true,
     };
 
