@@ -114,6 +114,8 @@ export function AssignmentComposer({
     startTime: "08:00",
     examMode: preset?.examMode ?? "TABLET",
     examDurationMin: "",
+    studyMode: "standard",
+    studyRequired: true,
   });
   const [confirmClose, setConfirmClose] = useState(false);
   const [submitting, startSubmit] = useTransition();
@@ -155,6 +157,8 @@ export function AssignmentComposer({
       startTime: "08:00",
       examMode: preset?.examMode ?? prefs.examMode ?? "TABLET",
       examDurationMin: "",
+      studyMode: "standard",
+      studyRequired: true,
     });
     setConfirmClose(false);
     setTargetsLoading(true);
@@ -258,7 +262,10 @@ export function AssignmentComposer({
             : undefined,
         worksheet:
           kind === "WORKSHEET" && content
-            ? { passageReportId: content.refId }
+            ? {
+                passageReportId: content.refId,
+                study: { mode: form.studyMode, required: form.studyRequired },
+              }
             : undefined,
         questions: kind === "QUESTIONS" ? { questionIds } : undefined,
         grammar: kind === "GRAMMAR" ? grammarSpec : undefined,

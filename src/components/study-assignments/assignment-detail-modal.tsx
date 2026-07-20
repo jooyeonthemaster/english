@@ -40,6 +40,7 @@ import {
   TaskTable,
 } from "./assignment-detail-parts";
 import { AssignmentQuestionStats } from "./assignment-question-stats";
+import { WorksheetStudyReportTab } from "./study-report-tab";
 import type {
   StudyAssignmentDetail,
   StudyAssignmentKind,
@@ -55,7 +56,7 @@ const KIND_ICON: Record<StudyAssignmentKind, typeof FileText> = {
   GRAMMAR: SpellCheck,
 };
 
-type DetailView = "tasks" | "content" | "stats";
+type DetailView = "tasks" | "content" | "stats" | "study";
 
 /** 서울(UTC+9) 현재 시각 "HH:mm" — "N시 갱신" 표시용 */
 function nowHm(): string {
@@ -183,6 +184,9 @@ export function AssignmentDetailModal({
         ["tasks", "배정 현황"],
         ["content", detail.kind === "GRAMMAR" ? "출제 범위" : "과제 내용"],
         ...(statsAvailable ? ([["stats", "문항 통계"]] as [DetailView, string][]) : []),
+        ...(detail.kind === "WORKSHEET"
+          ? ([["study", "학습 현황"]] as [DetailView, string][])
+          : []),
       ]
     : [];
 
@@ -389,6 +393,11 @@ export function AssignmentDetailModal({
               <div className={cn(view !== "stats" && "hidden")}>
                 <AssignmentQuestionStats assignmentId={detail.id} active={view === "stats"} />
               </div>
+            ) : null}
+
+            {/* 학습 현황 — WORKSHEET 스터디 모드: 학생별 단계 매트릭스 + 반 취약점 */}
+            {detail.kind === "WORKSHEET" && view === "study" ? (
+              <WorksheetStudyReportTab assignmentId={detail.id} />
             ) : null}
 
             {/* 학생별 태스크 테이블 — 드릴다운(답안 검토·답안 대조·훈련 기록) 포함 */}

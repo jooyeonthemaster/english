@@ -53,7 +53,11 @@ export interface CreateStudyAssignmentInput {
   targets: StudyTargetInput[];
   /** durationMin: 제한시간 오버라이드(분) — null/미지정 = 시험지 duration 사용 */
   exam?: { examId: string; mode: "TABLET" | "OMR"; durationMin?: number | null };
-  worksheet?: { passageReportId: string };
+  /** study: 모바일 스터디 모드 — 미지정 시 { mode:"standard", required:true } 로 배포 */
+  worksheet?: {
+    passageReportId: string;
+    study?: { mode: "off" | "light" | "standard" | "intense"; required: boolean };
+  };
   questions?: { questionIds: string[] };
   grammar?: GrammarAssignmentPayload;
 }
@@ -160,7 +164,20 @@ export async function createStudyAssignment(
       if (!report) return { success: false, error: "학습지를 찾을 수 없습니다." };
       title = title || report.title;
       refId = report.id;
-      payload = { passageTitle: report.title } satisfies WorksheetAssignmentPayload;
+      // 스터디 모드 설정 방어 정규화 — 신규 배포 기본은 표준 코스 + 완료 조건 on.
+      const rawStudy = input.worksheet.study;
+      const studyMode =
+        rawStudy?.mode === "off" ||
+        rawStudy?.mode === "light" ||
+        rawStudy?.mode === "standard" ||
+        rawStudy?.mode === "intense"
+          ? rawStudy.mode
+          : "standard";
+      const study = {
+        mode: studyMode,
+        required: studyMode !== "off" && rawStudy?.required !== false,
+      };
+      payload = { passageTitle: report.title, study } satisfies WorksheetAssignmentPayload;
     } else if (input.kind === "QUESTIONS") {
       const questionIds = [...new Set(input.questions?.questionIds ?? [])].filter(Boolean);
       if (questionIds.length === 0) {

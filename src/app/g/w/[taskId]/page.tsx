@@ -1,30 +1,30 @@
 // ============================================================================
-// /g/w/[taskId] — 학생 앱 학습지 뷰어 (서버 가드 + 문서 로드)
+// /g/w/[taskId] — 학습지 진입점: 스터디 허브 또는 원본 뷰어 (서버 분기)
 //
-// 세션 가드 → WORKSHEET 태스크 소유 검증 → refId 로 PassageReport 로드
-// (academyId 스코프·deletedAt null) → 문서 판별:
-//   - generationPlan PRIME/PRIME_KO(또는 모양 폴백) → AnalysisReport 렌더
-//   - 그 외 → Phase2 reportDocumentSchema(pages/blocks) 렌더
-// 열람 진입 시 markTaskInProgress(멱등). 로드 실패는 친절한 안내로 종결 —
-// 학생에게 스택/기술 문구를 노출하지 않는다. 문구는 전부 합니다체.
+// 분기(docs/worksheet-study-spec.md §8.1):
+//  1) 태스크 없음/종류 불일치 → 안내
+//  2) 잠금(공개 전·CLOSED 미완료) → 잠금 안내 (현행 유지)
+//  3) 스터디 불가(문서가 영어 PRIME 아님 / mode "off" / 채점 스테이지 < 2)
+//     → 기존 A4 뷰어 그대로 렌더(무회귀 — 기존 UX 픽셀 동일)
+//  4) 그 외 → 스터디 허브(단계 맵·이어하기·원본 CTA)
+// 열람 진입 시 markTaskInProgress(멱등). 문구는 전부 합니다체.
 // ============================================================================
 
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ArrowLeft, FileX } from "lucide-react";
-import { PRIME_REPORT_MARKERS } from "@/actions/workbench/passage-constants";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { getGrammarSession } from "@/lib/grammar-drill/auth";
-import { parseAnalysisReportForPreview } from "@/lib/passage-report/analysis-report/preview-parse";
-import { reportDocumentSchema } from "@/lib/passage-report/schema";
-import { prisma } from "@/lib/prisma";
-import { isTaskLocked } from "@/lib/study-assignments/status";
+import { dDayLabel, isTaskLocked, seoulDayDiff } from "@/lib/study-assignments/status";
 import {
   loadOwnedStudentTask,
   markTaskInProgress,
 } from "@/lib/study-assignments/student-runtime";
-import { WViewerClient, type WorksheetViewerDoc } from "./w-viewer-client";
+import { loadStudyContext } from "@/lib/worksheet-study/server";
+import { loadWorksheetViewerDoc } from "./doc-loader";
+import { WorksheetStudyHub, type HubStageRow } from "./hub-client";
+import { WViewerClient } from "./w-viewer-client";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default async function WorksheetViewerPage({
+export default async function WorksheetEntryPage({
   params,
 }: {
   params: Promise<{ taskId: string }>;
@@ -50,8 +50,7 @@ export default async function WorksheetViewerPage({
   }
 
   // 예정(availableFrom 미래)·선생님이 마감한(CLOSED) 과제는 진입 잠금 —
-  // 학생 카드(actionHref null)와 동일 규칙. dueAt 지남은 잠그지 않으며,
-  // 이미 완료(DONE)한 학습지는 CLOSED 이후에도 읽기 전용 재열람을 허용한다.
+  // 이미 완료(DONE)한 학습지는 CLOSED 이후에도 재열람을 허용한다(현행 유지).
   if (
     task.taskStatus !== "DONE" &&
     (isTaskLocked(task.availableFrom, new Date()) || task.assignmentStatus === "CLOSED")
@@ -64,50 +63,59 @@ export default async function WorksheetViewerPage({
     );
   }
 
-  const report = task.refId
-    ? await prisma.passageReport.findFirst({
-        where: { id: task.refId, academyId: session.academyId, deletedAt: null },
-        select: { id: true, title: true, theme: true, pages: true, generationPlan: true },
-      })
-    : null;
-  if (!report) {
-    return <ViewerFallback title="학습지를 불러올 수 없습니다" />;
-  }
+  const ctx = await loadStudyContext(task, session.academyId);
 
-  // ── 문서 판별 — PRIME 계열(A4 분석 보고서) vs Phase2(pages/blocks 자유 편집) ──
-  let doc: WorksheetViewerDoc | null = null;
-  if (PRIME_REPORT_MARKERS.includes(report.generationPlan)) {
-    const prime = parseAnalysisReportForPreview(report.pages);
-    if (prime) doc = { type: "PRIME", report: prime };
-  } else {
-    const parsed = reportDocumentSchema.safeParse({
-      id: report.id,
-      title: report.title,
-      theme: report.theme,
-      pages: report.pages,
-    });
-    if (parsed.success) {
-      doc = { type: "PAGES", document: parsed.data };
-    } else {
-      // 마커가 어긋난 구버전 대비 — 모양이 PRIME 이면 PRIME 으로 구제.
-      const prime = parseAnalysisReportForPreview(report.pages);
-      if (prime) doc = { type: "PRIME", report: prime };
+  // ── 스터디 불가 → 기존 뷰어 그대로 (무회귀 경로) ──────────────────────────
+  if (!ctx.plan) {
+    const loaded = await loadWorksheetViewerDoc(task.refId, session.academyId);
+    if (!loaded) {
+      return <ViewerFallback title="학습지를 불러올 수 없습니다" />;
     }
-  }
-  if (!doc) {
-    return <ViewerFallback title="학습지를 불러올 수 없습니다" />;
+    await markTaskInProgress(task.taskId, session.studentId);
+    return (
+      <WViewerClient
+        taskId={task.taskId}
+        title={task.title}
+        instructions={task.instructions}
+        initialDone={task.taskStatus === "DONE"}
+        doc={loaded.doc}
+      />
+    );
   }
 
-  // 열람 시작 마킹 — ASSIGNED 일 때만 IN_PROGRESS 로 승격(멱등)
+  // ── 스터디 허브 ────────────────────────────────────────────────────────────
   await markTaskInProgress(task.taskId, session.studentId);
 
+  const stages: HubStageRow[] = ctx.plan.stages.map((s) => {
+    const st = ctx.summary.stages[s.id];
+    return {
+      id: s.id,
+      title: s.title,
+      subtitle: s.subtitle,
+      estMin: s.estMin,
+      itemCount: s.items.length,
+      graded: s.graded,
+      status: st?.status ?? "todo",
+      score: st?.score,
+    };
+  });
+  const doneCount = stages.filter((s) => s.status === "done").length;
+  const dDay = task.dueAt ? dDayLabel(seoulDayDiff(new Date(), task.dueAt)) : null;
+  const taskDone = task.taskStatus === "DONE";
+
   return (
-    <WViewerClient
+    <WorksheetStudyHub
       taskId={task.taskId}
       title={task.title}
       instructions={task.instructions}
-      initialDone={task.taskStatus === "DONE"}
-      doc={doc}
+      dDay={dDay}
+      stages={stages}
+      masteryPct={ctx.summary.masteryPct}
+      doneCount={doneCount}
+      taskDone={taskDone}
+      requiredMode={ctx.config.required}
+      legacyCompleteAllowed={!ctx.config.required}
+      initialLegacyDone={taskDone}
     />
   );
 }

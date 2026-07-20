@@ -119,6 +119,10 @@ export interface ComposerFormState {
   examMode: "TABLET" | "OMR";
   /** 제한시간 입력 원문 — 빈 문자열 = 오버라이드 없음(제출 시 클램프) */
   examDurationMin: string;
+  /** WORKSHEET 모바일 학습 모드 — off=원본 뷰어만 (docs/worksheet-study-spec.md §9) */
+  studyMode: "off" | "light" | "standard" | "intense";
+  /** 학습 단계 완료를 과제 완료 조건으로 (studyMode off 면 무시) */
+  studyRequired: boolean;
 }
 
 // ── kind 표시 상수 ───────────────────────────────────────────────────────────
@@ -154,6 +158,14 @@ const KIND_DESC: Record<StudyAssignmentKind, string> = {
 };
 
 const DUE_TIME_QUICK = ["18:00", "21:00", "23:59"] as const;
+
+/** 학습 모드 도움말 — docs/worksheet-study-spec.md §9 요약 문구 */
+const STUDY_MODE_HELP: Record<ComposerFormState["studyMode"], string> = {
+  off: "학생은 A4 학습지 지면만 열람하고 '다 확인했습니다'로 완료합니다.",
+  light: "지문 통독 · 어휘 카드/시험 · 직독직해 · 빈칸 복원 · 실전 문제 — 핵심만 가볍게.",
+  standard: "어휘·직독직해·어법·빈칸·어순·해석 쓰기·실전 문제 — 표준 코스.",
+  intense: "표준 코스 + 백지 영작 · 고밀도 빈칸 — 통암기 최대 훈련.",
+};
 
 function dueChipClass(active: boolean): string {
   return cn(
@@ -469,6 +481,53 @@ export function ComposerConfigForm({
               durationMin={form.examDurationMin}
               onDurationMinChange={(value) => onPatch({ examDurationMin: value })}
             />
+          ) : null}
+
+          {/* WORKSHEET 모바일 학습 모드 — 단계별 인터랙티브 코스 설정 */}
+          {kind === "WORKSHEET" ? (
+            <div>
+              <p className="mb-1.5 flex items-center gap-1.5 text-[12px] font-semibold text-slate-500">
+                <BookOpenCheck className="size-3.5" aria-hidden /> 모바일 학습 모드
+                <span className="font-normal text-slate-400">
+                  — 어휘·빈칸·영작 등 단계별 학습 코스로 배포됩니다
+                </span>
+              </p>
+              <div className="flex flex-wrap items-center gap-1.5" role="radiogroup" aria-label="학습 모드">
+                {(
+                  [
+                    ["off", "원본만"],
+                    ["light", "가볍게"],
+                    ["standard", "표준"],
+                    ["intense", "최대"],
+                  ] as const
+                ).map(([value, label]) => (
+                  <button
+                    key={value}
+                    type="button"
+                    role="radio"
+                    aria-checked={form.studyMode === value}
+                    onClick={() => onPatch({ studyMode: value })}
+                    className={dueChipClass(form.studyMode === value)}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+              <p className="mt-1.5 text-[11px] leading-relaxed text-slate-400">
+                {STUDY_MODE_HELP[form.studyMode]}
+              </p>
+              {form.studyMode !== "off" ? (
+                <label className="mt-2 flex cursor-pointer items-center gap-2 text-[12px] text-slate-600">
+                  <input
+                    type="checkbox"
+                    checked={form.studyRequired}
+                    onChange={(e) => onPatch({ studyRequired: e.target.checked })}
+                    className="size-3.5 accent-blue-600"
+                  />
+                  학습 단계를 모두 완료해야 과제가 완료 처리됩니다
+                </label>
+              ) : null}
+            </div>
           ) : null}
         </>
       ) : (

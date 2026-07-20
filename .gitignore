@@ -167,3 +167,6 @@ docs/grammar_1000_analysis/
 
 # 모바일 앱 셸 종속물
 /mobile/node_modules
+
+# QA 스크래치 (Playwright 스크린샷·검증 스크립트)
+/.tmp-ws-study-qa/
