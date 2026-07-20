@@ -5224,6 +5224,59 @@ model StudyAssignmentTask {
   @@map("study_assignment_tasks")
 }
 
+/// 학습지 스터디 모드 — 학생×태스크 상태 (태스크당 1행). plan 은 저장하지 않고
+/// 매 로드 시 (report, mode, taskId) 에서 결정론 재컴파일한다.
+/// relation-free soft-ref 설계 — 적용은 수동 SQL(prisma/migrations-manual/20260720_worksheet_study.sql),
+/// migrate deploy / db push 금지. 계약: docs/worksheet-study-spec.md §6.
+model WorksheetStudyState {
+  id           String    @id @default(cuid())
+  academyId    String
+  taskId       String    @unique // StudyAssignmentTask soft-ref
+  assignmentId String
+  studentId    String
+  reportId     String // PassageReport soft-ref
+  planHash     String? // 마지막 플러시 시점 plan 해시(드리프트 감지)
+  stageStates  Json      @default("{}") // Record<StudyStageId, StudyStageState>
+  weakness     Json? // StudyWeakness 캐시(플러시마다 증분 재계산)
+  masteryPct   Int?
+  totalTimeMs  Int       @default(0)
+  startedAt    DateTime?
+  completedAt  DateTime? // 필수 스테이지 전부 done 된 시각
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([academyId, assignmentId])
+  @@index([studentId, updatedAt])
+  @@map("worksheet_study_states")
+}
+
+/// 학습지 스터디 — 문항 단위 응답 로그 (append-only, GrammarDrillAttempt 선례).
+/// (stateId, stageId, itemKey, attempt) 유니크로 중복 플러시 멱등(createMany skipDuplicates).
+model WorksheetStudyItemLog {
+  id          String   @id @default(cuid())
+  academyId   String
+  stateId     String // WorksheetStudyState soft-ref
+  studentId   String
+  stageId     String
+  itemKey     String
+  skill       String // "vocab"|"chunk"|"grammar"|"cloze"|"order"|"production"|"comprehension"
+  sentenceNo  Int?
+  wordKey     String?
+  grammarCode String?
+  attempt     Int      @default(1)
+  correct     Boolean?
+  selfGrade   String? // "O" | "D" | "X"
+  response    String?  @db.Text
+  timeMs      Int?
+  hintUsed    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@unique([stateId, stageId, itemKey, attempt])
+  @@index([stateId, createdAt])
+  @@index([academyId, studentId, createdAt])
+  @@map("worksheet_study_item_logs")
+}
+
 // ─── 단체 세미나 ──────────────────────────────────────────────────────────────
 // 1:1 세미나(SeminarRequest)와 달리 운영자가 "세미나 클래스"를 개설(GroupSeminar)해
 // 두면 여러 원장이 정보를 보고 신청(GroupSeminarRegistration)하는 1-대-다 구조.
