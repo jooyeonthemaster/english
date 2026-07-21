@@ -21,7 +21,7 @@ import {
 import type { PassageItem, QueueItem } from "../generate-page-types";
 import {
   buildOptimisticItem,
-  createFastQuestionGenerationJob,
+  createQuestionGenerationJobSmart,
   mergeTeacherPointsIntoTypeSettings,
   replaceQueueItemInPlace,
 } from "../use-generation-handlers";
@@ -725,7 +725,7 @@ export function useWorkspaceGeneration({
             fastUnits.map((unit) =>
               scheduleFastGeneration(async () => {
                 try {
-                  const result = await createFastQuestionGenerationJob({
+                  const result = await createQuestionGenerationJobSmart({
                     passageId: unit.passage.id,
                     mode: "MANUAL",
                     count: 1,
@@ -735,6 +735,14 @@ export function useWorkspaceGeneration({
                     customPrompt: prompt || undefined,
                     generationPlan: unit.generationPlan,
                     clientTempId: unit.tempId,
+                    onPreview: (preview) =>
+                      setSessionQueue((prev) =>
+                        prev.map((item) =>
+                          item.id === unit.tempId
+                            ? { ...item, streamPreview: preview }
+                            : item,
+                        ),
+                      ),
                   });
                   const doneItem = {
                     ...buildOptimisticItem({

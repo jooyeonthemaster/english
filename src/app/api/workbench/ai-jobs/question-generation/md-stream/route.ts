@@ -1,0 +1,779 @@
+import { NextRequest, NextResponse } from "next/server";
+import type { Prisma } from "@prisma/client";
+import { z } from "zod";
+
+import { getStaffSession } from "@/lib/auth";
+import { isKoreanSubject } from "@/lib/korean/core/passage-meta";
+import { ATLAS_STANDARD_QGEN_MODEL_ID } from "@/lib/atlas-ai";
+import { CREDIT_COSTS, type OperationType } from "@/lib/credit-costs";
+import { InsufficientCreditsError, refundCredits } from "@/lib/credits";
+import {
+  providerFromModel,
+  recordPlatformApiUsageCost,
+} from "@/lib/platform-api-costs";
+import {
+  getQuestionGenerationCreditCost,
+  mergeQuestionGenerationPlanTag,
+  normalizeQuestionGenerationPlan,
+  resolveEffectiveGenerationPlan,
+  sanitizeAiModelDisclosureText,
+} from "@/lib/question-generation-plans";
+import { toUserFacingQuestionGenerationError } from "@/lib/question-generation-llm";
+import { saveGeneratedQuestionsForJob } from "@/lib/question-generation-persistence";
+import { prisma } from "@/lib/prisma";
+import { ensureWorkbenchAiJobCharged } from "@/lib/workbench-ai-job-credit";
+import { cleanupStaleWorkbenchAiJobs } from "@/lib/workbench-ai-job-stale-cleanup";
+import { preflightQuestionFeasibility, validateQuestionQuality } from "@/lib/question-quality";
+import { postProcessQuestion } from "@/lib/question-postprocess";
+import { shuffleQuestionOptionsForDiversity } from "@/lib/question-diversity";
+import {
+  readQuestionTypeDifficultySetting,
+  resolveQuestionTypeGenerationSettings,
+} from "@/lib/question-type-generation-settings";
+import {
+  buildMdBlankPrompt,
+  buildMdGrammarPrompt,
+  type MdDifficulty,
+} from "@/lib/md-qgen/prompts";
+import {
+  autoSnapGrammarMarks,
+  gateMdQuestion,
+  parseMdBlank,
+  parseMdGrammar,
+  type MdQuestion,
+} from "@/lib/md-qgen/parser";
+import {
+  adaptMdBlankToAiQuestion,
+  adaptMdGrammarToAiQuestion,
+} from "@/lib/md-qgen/adapter";
+import { TYPE_LABELS } from "@/app/api/ai/generate-questions-auto/_lib/constants";
+
+// ============================================================================
+// md-stream — 빈칸·어법 전용 "마크다운 원큐 + SSE 스트리밍" 생성 라우트.
+// (26-07-21 심플 스택 1·2단계) 기존 fast 라우트는 바이트 무변경으로 두고, 적격
+// 요청(빈칸 단일 / 어법 5마커·1정답, 교사포인트 없음)만 클라이언트가 이 라우트로
+// 보낸다. 부적격·오류 시 클라이언트는 fast 로 폴백한다(서버는 400 MD_STREAM_INELIGIBLE).
+//
+// 과금·저장·원장·환불은 fast 라우트와 동일 규약:
+//   잔액 게이트 → 잡 PROCESSING → ensureWorkbenchAiJobCharged → 생성(스트림)
+//   → saveGeneratedQuestionsForJob → 잡 COMPLETED / 실패 시 refundCredits+FAILED.
+// 검수리·E-gate 는 이 레인에 없다(사용자 결정: 원큐 + 0원 게이트만). 품질 검증기
+// 결과는 차단 없이 result.qualityIssues 로 기록만 한다.
+//
+// 클라이언트 이탈: 스트림 emit 실패는 무시하고 생성·저장을 계속 시도한다. 단
+// 서버리스 런타임이 연결 종료 후 실행을 회수할 수 있으므로 완주는 보장이 아니라
+// 최선 시도다 — 회수돼 PROCESSING 고아가 되면 stale-cleanup(10분, fastPath 규칙)이
+// FAILED+환불로 정리하고, 완주했다면 세션 큐 DB 복원이 카드를 되살린다.
+//
+// 예산 원장(question-generation-assignment-budget)은 의도적으로 미경유 — 그 원장은
+// 엔진 경유 콜의 예산 상한 계측용이고, md 레인은 콜이 최대 2회로 고정이라 폭주
+// 여지가 없다(실지출은 platformApiUsageCost 로 전액 기록).
+// ============================================================================
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+export const maxDuration = 300;
+
+const MD_STREAM_SUBTYPES = new Set(["BLANK_INFERENCE", "GRAMMAR_ERROR"]);
+
+const requestSchema = z.object({
+  passageId: z.string().min(1),
+  mode: z.literal("MANUAL").default("MANUAL"),
+  count: z.number().int().min(1).max(1).default(1),
+  questionType: z.string(),
+  questionTypeSettings: z.unknown().optional(),
+  difficulty: z.string().default("INTERMEDIATE"),
+  customPrompt: z.string().max(4000).optional(),
+  generationPlan: z.unknown().optional(),
+  // 같은 배치에서 병렬 생성되는 N개 중 몇 번째인지 — 표적 분산 힌트로 프롬프트에 주입.
+  variantIndex: z.number().int().min(0).max(99).optional(),
+  variantCount: z.number().int().min(1).max(99).optional(),
+  clientTempId: z.string().min(1).max(200).optional(),
+});
+
+interface StreamCallResult {
+  text: string;
+  reasoningChars: number;
+  costUsd: number | null;
+  inputTokens: number;
+  outputTokens: number;
+  durationMs: number;
+}
+
+function sseEncode(payload: Record<string, unknown>): Uint8Array {
+  return new TextEncoder().encode(`data: ${JSON.stringify(payload)}\n\n`);
+}
+
+async function recordCostSafely(input: {
+  sourceKey: string;
+  sourceId: string;
+  sourceDetail: string;
+  academyId: string;
+  model: string;
+  operationType: OperationType;
+  inputTokens: number;
+  outputTokens: number;
+  recordedCostUsd: number | null;
+  metadata: Record<string, unknown>;
+}) {
+  try {
+    await recordPlatformApiUsageCost({
+      sourceKey: input.sourceKey,
+      sourceType: "WORKBENCH_AI_JOB",
+      sourceId: input.sourceId,
+      sourceDetail: input.sourceDetail,
+      academyId: input.academyId,
+      provider: providerFromModel(input.model),
+      model: input.model,
+      operationType: input.operationType,
+      unitType: "TOKENS",
+      inputTokens: input.inputTokens,
+      outputTokens: input.outputTokens,
+      recordedCostUsd: input.recordedCostUsd,
+      usageAt: new Date(),
+      metadata: input.metadata as Prisma.InputJsonValue,
+    });
+  } catch (error) {
+    console.warn("[md-stream] Failed to record API cost", error);
+  }
+}
+
+/** OpenRouter 직접 스트림 1콜 — 사고/본문 델타를 emit 으로 흘리고 최종 usage 를 회수. */
+async function streamOnce(args: {
+  prompt: string;
+  modelId: string;
+  timeoutMs: number;
+  emit: (payload: Record<string, unknown>) => void;
+}): Promise<StreamCallResult> {
+  const apiKey = process.env.OPENROUTER_API_KEY;
+  if (!apiKey) throw new Error("OPENROUTER_API_KEY missing");
+  const startedAt = Date.now();
+  const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model: args.modelId,
+      messages: [{ role: "user", content: args.prompt }],
+      // 사고+출력이 상한을 공유한다 — 6k 절단 실측(O208 계열) 후 14k.
+      max_tokens: 14_000,
+      stream: true,
+      usage: { include: true },
+      reasoning: { enabled: true, effort: "high", exclude: false },
+    }),
+    signal: AbortSignal.timeout(Math.max(10_000, args.timeoutMs)),
+  });
+  if (!res.ok || !res.body) {
+    const detail = await res.text().catch(() => "");
+    throw new Error(`generation upstream ${res.status}: ${detail.slice(0, 200)}`);
+  }
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  let text = "";
+  let reasoningChars = 0;
+  let usage: {
+    cost?: number;
+    prompt_tokens?: number;
+    completion_tokens?: number;
+  } | null = null;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split("\n");
+    buffer = lines.pop() ?? "";
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed.startsWith("data:")) continue;
+      const payload = trimmed.slice(5).trim();
+      if (payload === "[DONE]") continue;
+      try {
+        const j = JSON.parse(payload);
+        const delta = j.choices?.[0]?.delta ?? {};
+        const reasoningDelta: string =
+          delta.reasoning ?? delta.reasoning_content ?? "";
+        if (reasoningDelta) {
+          reasoningChars += reasoningDelta.length;
+          // 모델명 은닉 정책 — 사고/본문 스트림에 프로바이더·모델명이 노출될 수
+          // 있어 표시용 델타만 마스킹한다(파싱에 쓰는 내부 누적 text 는 원문 유지).
+          args.emit({ t: "r", d: sanitizeAiModelDisclosureText(reasoningDelta) });
+        }
+        const contentDelta: string = delta.content ?? "";
+        if (contentDelta) {
+          text += contentDelta;
+          args.emit({ t: "c", d: sanitizeAiModelDisclosureText(contentDelta) });
+        }
+        if (j.usage) usage = j.usage;
+      } catch {
+        /* partial SSE line */
+      }
+    }
+  }
+  if (!text.trim()) {
+    throw new Error("모델이 본문 출력을 내지 않았습니다.");
+  }
+  return {
+    text,
+    reasoningChars,
+    costUsd:
+      typeof usage?.cost === "number" && usage.cost > 0 ? usage.cost : null,
+    inputTokens: usage?.prompt_tokens ?? 0,
+    outputTokens: usage?.completion_tokens ?? 0,
+    durationMs: Date.now() - startedAt,
+  };
+}
+
+function parseAndGate(
+  subType: string,
+  text: string,
+  passage: string,
+): { question: MdQuestion; gateIssues: string[]; corrections: string[] } {
+  if (subType === "BLANK_INFERENCE") {
+    const q = parseMdBlank(text);
+    return { question: q, gateIssues: gateMdQuestion(q, passage), corrections: [] };
+  }
+  let q = parseMdGrammar(text);
+  const snapped = autoSnapGrammarMarks(q, passage);
+  q = snapped.question;
+  return {
+    question: q,
+    gateIssues: gateMdQuestion(q, passage),
+    corrections: snapped.corrections,
+  };
+}
+
+export async function POST(req: NextRequest) {
+  const requestStartedAt = Date.now();
+  const staff = await getStaffSession();
+  if (!staff) {
+    return NextResponse.json({ error: "Authentication required" }, { status: 401 });
+  }
+  const parsed = requestSchema.safeParse(await req.json().catch(() => ({})));
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: "Invalid payload", details: parsed.error.issues },
+      { status: 400 },
+    );
+  }
+  const config = {
+    ...parsed.data,
+    generationPlan: normalizeQuestionGenerationPlan(parsed.data.generationPlan),
+  };
+  const subType = config.questionType;
+
+  // ── md 적격성 — 부적격은 400 으로 즉시 반환해 클라이언트가 fast 로 폴백한다 ──
+  // 서버측 런타임 킬스위치 — 인시던트 시 재빌드 없이 md 레인을 끈다(클라 플래그는
+  // 빌드타임이라 즉시성이 없음). off 면 전 요청이 fast 로 폴백된다.
+  if (process.env.QGEN_MD_STREAM?.trim().toLowerCase() === "off") {
+    return NextResponse.json(
+      { error: "md-stream disabled", code: "MD_STREAM_INELIGIBLE" },
+      { status: 400 },
+    );
+  }
+  if (!MD_STREAM_SUBTYPES.has(subType)) {
+    return NextResponse.json(
+      { error: "md-stream ineligible type", code: "MD_STREAM_INELIGIBLE" },
+      { status: 400 },
+    );
+  }
+  const effectiveDifficulty = readQuestionTypeDifficultySetting(
+    config.questionTypeSettings,
+    config.difficulty,
+  );
+  const resolvedSettings = resolveQuestionTypeGenerationSettings(
+    subType,
+    config.questionTypeSettings,
+    effectiveDifficulty,
+  );
+  const blankCount =
+    (resolvedSettings as { blankInferenceBlankCount?: number | null })
+      .blankInferenceBlankCount ?? 1;
+  const markerCount =
+    (resolvedSettings as { grammarMarkerCount?: number | null })
+      .grammarMarkerCount ?? 5;
+  const answerCount =
+    (resolvedSettings as { grammarAnswerCount?: number | null })
+      .grammarAnswerCount ?? 1;
+  const rawSettings =
+    typeof config.questionTypeSettings === "object" &&
+    config.questionTypeSettings !== null
+      ? (config.questionTypeSettings as Record<string, unknown>)
+      : {};
+  const hasTeacherPoints =
+    Array.isArray(rawSettings.teacherPoints) &&
+    rawSettings.teacherPoints.length > 0;
+  const mdEligible =
+    !hasTeacherPoints &&
+    ((subType === "BLANK_INFERENCE" && blankCount === 1) ||
+      (subType === "GRAMMAR_ERROR" && markerCount === 5 && answerCount === 1));
+  if (!mdEligible) {
+    return NextResponse.json(
+      { error: "md-stream ineligible settings", code: "MD_STREAM_INELIGIBLE" },
+      { status: 400 },
+    );
+  }
+
+  const effectiveGenerationPlan = resolveEffectiveGenerationPlan(
+    config.generationPlan,
+  );
+  // 이원 티어 복귀(QUESTION_GENERATION_SINGLE_TIER=off) 시 PREMIUM 요청은 프리미엄
+  // 파이프라인(fast)이 담당한다 — md 레인은 일반(STANDARD) 전용.
+  if (effectiveGenerationPlan !== "STANDARD") {
+    return NextResponse.json(
+      { error: "md-stream ineligible plan", code: "MD_STREAM_INELIGIBLE" },
+      { status: 400 },
+    );
+  }
+
+  const passage = await prisma.passage.findFirst({
+    where: { id: config.passageId, academyId: staff.academyId },
+    select: { id: true, title: true, content: true, subject: true },
+  });
+  if (!passage) {
+    return NextResponse.json({ error: "Passage not found" }, { status: 404 });
+  }
+  // KO(국어) 지문은 md 레인 비대상 — 기존 경로로.
+  if (isKoreanSubject(passage.subject)) {
+    return NextResponse.json(
+      { error: "md-stream ineligible subject", code: "MD_STREAM_INELIGIBLE" },
+      { status: 400 },
+    );
+  }
+
+  await cleanupStaleWorkbenchAiJobs({
+    academyId: staff.academyId,
+    domain: "QUESTION_GENERATION",
+    passageId: passage.id,
+  });
+
+  const feas = preflightQuestionFeasibility(
+    subType,
+    effectiveDifficulty,
+    passage.content,
+  );
+  if (!feas.ok) {
+    return NextResponse.json(
+      { error: feas.error, code: feas.code, ...feas.detail },
+      { status: 400 },
+    );
+  }
+
+  const operationType: OperationType = "QUESTION_GEN_SINGLE";
+  const creditCost = getQuestionGenerationCreditCost(
+    CREDIT_COSTS[operationType],
+    effectiveGenerationPlan,
+  );
+  const preflightBalance = await prisma.creditBalance.findUnique({
+    where: { academyId: staff.academyId },
+    select: { balance: true },
+  });
+  if ((preflightBalance?.balance ?? 0) < creditCost) {
+    return NextResponse.json(
+      {
+        error: "Insufficient credits",
+        balance: preflightBalance?.balance ?? 0,
+        required: creditCost,
+      },
+      { status: 402 },
+    );
+  }
+
+  const job = await prisma.workbenchAiJob.create({
+    data: {
+      academyId: staff.academyId,
+      createdById: staff.id,
+      domain: "QUESTION_GENERATION",
+      status: "PROCESSING",
+      title: passage.title,
+      passageId: passage.id,
+      mode: config.mode,
+      questionType: subType,
+      generationPlan: effectiveGenerationPlan,
+      difficulty: effectiveDifficulty,
+      requestedCount: 1,
+      startedAt: new Date(),
+      config: {
+        mode: config.mode,
+        count: 1,
+        questionType: subType,
+        questionTypeSettings: config.questionTypeSettings ?? null,
+        difficulty: effectiveDifficulty,
+        customPrompt: config.customPrompt ?? "",
+        generationPlan: effectiveGenerationPlan,
+        requestedGenerationPlan: config.generationPlan,
+        fastPath: true,
+        mdStream: true,
+        clientTempId: config.clientTempId ?? null,
+      },
+    },
+  });
+
+  const modelId = ATLAS_STANDARD_QGEN_MODEL_ID;
+  const mdDifficulty: MdDifficulty =
+    effectiveDifficulty === "BASIC" || effectiveDifficulty === "INTERMEDIATE"
+      ? effectiveDifficulty
+      : "KILLER";
+
+  // ── 다양성(축약판) — md 레인은 엔진의 diversity 컨텍스트를 안 타므로, 같은
+  // 지문+유형의 기존 표적(빈칸원문·어법 정답 표현)을 회피 목록으로 프롬프트에
+  // 직접 주입한다. 병렬 배치(variantCount>1)는 분산 힌트를 추가한다. 조회 실패는
+  // 생성 자체를 막지 않는다.
+  let diversityBlock = "";
+  try {
+    const recent = await prisma.question.findMany({
+      where: {
+        academyId: staff.academyId,
+        passageId: passage.id,
+        subType,
+        deletedAt: null,
+      },
+      orderBy: { createdAt: "desc" },
+      take: 8,
+      select: { structuredData: true },
+    });
+    const targets: string[] = [];
+    for (const q of recent) {
+      try {
+        const data =
+          typeof q.structuredData === "string"
+            ? JSON.parse(q.structuredData)
+            : q.structuredData;
+        const record = (data ?? {}) as Record<string, unknown>;
+        if (typeof record.originalExpression === "string" && record.originalExpression.trim()) {
+          targets.push(record.originalExpression.trim().slice(0, 90));
+        }
+        if (Array.isArray(record.markedExpressions)) {
+          const err = (record.markedExpressions as Array<Record<string, unknown>>).find(
+            (m) => m?.isError === true,
+          );
+          if (typeof err?.expression === "string" && err.expression.trim()) {
+            targets.push(err.expression.trim().slice(0, 90));
+          }
+        }
+      } catch {
+        /* 개별 문항 파싱 실패 무시 */
+      }
+    }
+    const unique = [...new Set(targets)].slice(0, 8);
+    const parts: string[] = [];
+    if (unique.length > 0) {
+      parts.push(
+        `## 표적 회피 — 이 지문에서 이미 출제된 자리(정답·빈칸이 겹치지 않게 하라)\n${unique.map((t) => `- ${t}`).join("\n")}`,
+      );
+    }
+    if ((config.variantCount ?? 1) > 1) {
+      parts.push(
+        `이 요청은 같은 지문의 병렬 생성 ${(config.variantIndex ?? 0) + 1}/${config.variantCount}번째다 — 다른 병렬 문항과 표적·정답 자리가 겹치지 않도록 지문의 서로 다른 부분을 노려라.`,
+      );
+    }
+    diversityBlock = parts.join("\n\n");
+  } catch (error) {
+    console.warn("[md-stream] diversity context failed", error);
+  }
+
+  const buildPrompt = (feedback: string | null): string => {
+    const base =
+      subType === "BLANK_INFERENCE"
+        ? buildMdBlankPrompt(passage.content, "full", mdDifficulty)
+        : buildMdGrammarPrompt(passage.content, "full", mdDifficulty);
+    const extras: string[] = [];
+    if (diversityBlock) extras.push(diversityBlock);
+    if (config.customPrompt?.trim()) {
+      extras.push(`## 교사 추가 지시\n${config.customPrompt.trim()}`);
+    }
+    if (feedback) {
+      extras.push(
+        `[반려 재생성] 직전 출력이 기계 검사에서 반려되었다: ${feedback}. 위반을 전부 해소하고 같은 요구사항으로 완제품을 다시 설계하라.`,
+      );
+    }
+    return extras.length > 0 ? `${base}\n\n${extras.join("\n\n")}` : base;
+  };
+
+  const stream = new ReadableStream<Uint8Array>({
+    start(controller) {
+      let closed = false;
+      const emit = (payload: Record<string, unknown>) => {
+        if (closed) return;
+        try {
+          controller.enqueue(sseEncode(payload));
+        } catch {
+          // 클라이언트 이탈 — 이후 emit 은 무시하고 생성·저장은 계속한다.
+          closed = true;
+        }
+      };
+      const finish = () => {
+        if (closed) return;
+        try {
+          controller.close();
+        } catch {
+          /* already closed */
+        }
+        closed = true;
+      };
+
+      void (async () => {
+        let creditTxId: string | null = null;
+        const callResults: StreamCallResult[] = [];
+        try {
+          const credit = await ensureWorkbenchAiJobCharged({
+            jobId: job.id,
+            academyId: job.academyId,
+            staffId: job.createdById,
+            operationType,
+            metadata: {
+              passageId: passage.id,
+              mode: config.mode,
+              questionType: subType,
+              count: 1,
+              generationPlan: effectiveGenerationPlan,
+              difficulty: effectiveDifficulty,
+              creditCost,
+              fastPath: true,
+              mdStream: true,
+            },
+            creditCost,
+          });
+          creditTxId = credit.transactionId;
+          emit({ t: "meta", jobId: job.id });
+
+          // ── 생성 (1콜 + 무결성 게이트 반려 시 1회 재생성) ────────────────
+          // 시간 예산: Vercel maxDuration 300s. 콜 타임아웃은 항상 "270s 벽까지
+          // 남은 시간"으로 잘라, 재생성이 벽을 넘겨 함수 강제종료(잡 고아 →
+          // 환불 누락)로 이어지는 것을 막는다(fast 라우트 deadlineAt 안전판 등가).
+          const elapsed = () => Date.now() - requestStartedAt;
+          const budgetMs = () => 270_000 - elapsed();
+          let call = await streamOnce({
+            prompt: buildPrompt(null),
+            modelId,
+            timeoutMs: Math.min(240_000, budgetMs()),
+            emit,
+          });
+          callResults.push(call);
+          let parsedMd = parseAndGate(subType, call.text, passage.content);
+          if (parsedMd.gateIssues.length > 0 && budgetMs() > 30_000) {
+            emit({ t: "retry", reason: parsedMd.gateIssues.join(", ") });
+            const retryCall = await streamOnce({
+              prompt: buildPrompt(parsedMd.gateIssues.join(", ")),
+              modelId,
+              timeoutMs: Math.min(240_000, budgetMs()),
+              emit,
+            });
+            callResults.push(retryCall);
+            const retryParsed = parseAndGate(
+              subType,
+              retryCall.text,
+              passage.content,
+            );
+            if (retryParsed.gateIssues.length <= parsedMd.gateIssues.length) {
+              call = retryCall;
+              parsedMd = retryParsed;
+            }
+          }
+          // 실지출 원장은 저장 성공 여부와 무관하게 생성 직후 기록한다 —
+          // 어댑터/후처리/저장 실패 시에도 OpenRouter 과금은 이미 발생했다(fast 순서 정합).
+          for (const [idx, result] of callResults.entries()) {
+            await recordCostSafely({
+              sourceKey: `workbench_ai_job:${job.id}:generation:${idx}`,
+              sourceId: job.id,
+              sourceDetail: `QUESTION_GENERATION:${subType}`,
+              academyId: job.academyId,
+              model: modelId,
+              operationType,
+              inputTokens: result.inputTokens,
+              outputTokens: result.outputTokens,
+              recordedCostUsd: result.costUsd,
+              metadata: {
+                passageId: passage.id,
+                generationPlan: effectiveGenerationPlan,
+                difficulty: effectiveDifficulty,
+                fastPath: true,
+                mdStream: true,
+                durationMs: result.durationMs,
+              },
+            });
+          }
+          // 어법 오형 미도입은 학생 표면에서 문항 자체가 성립 불가(정답 없음) —
+          // 재생성 후에도 남으면 저장하지 않고 실패(환불)로 처리한다.
+          if (
+            subType === "GRAMMAR_ERROR" &&
+            parsedMd.gateIssues.some((issue) => issue.includes("변형 밑줄"))
+          ) {
+            throw new Error(
+              `어법 오형 미도입: ${parsedMd.gateIssues.join(", ")}`,
+            );
+          }
+
+          // ── 어댑터 → 프로덕션 후처리 → 검증(기록만) → 셔플 ────────────────
+          const adapt =
+            parsedMd.question.kind === "blank"
+              ? adaptMdBlankToAiQuestion(
+                  parsedMd.question,
+                  passage.content,
+                  effectiveDifficulty,
+                )
+              : adaptMdGrammarToAiQuestion(
+                  parsedMd.question,
+                  passage.content,
+                  effectiveDifficulty,
+                );
+          if (!adapt.ok || !adapt.aiQuestion) {
+            throw new Error(`생성 결과 변환 실패: ${adapt.error ?? "unknown"}`);
+          }
+          const pp = postProcessQuestion(
+            subType,
+            passage.content,
+            adapt.aiQuestion,
+          );
+          if (!pp.success || !pp.data) {
+            throw new Error(`후처리 실패: ${pp.error ?? "unknown"}`);
+          }
+          const mapped: Record<string, unknown> = {
+            ...(pp.data as Record<string, unknown>),
+            _typeId: subType,
+            _typeLabel: TYPE_LABELS[subType] || subType,
+            _generationPlan: effectiveGenerationPlan,
+            difficulty: effectiveDifficulty,
+          };
+          const finalQuestion = shuffleQuestionOptionsForDiversity(
+            mapped,
+            subType,
+          );
+          const qualityIssues = validateQuestionQuality({
+            typeId: subType,
+            question: finalQuestion,
+            passage: passage.content,
+            requestedDifficulty: effectiveDifficulty,
+            ...(subType === "GRAMMAR_ERROR"
+              ? { grammarMarkerCount: 5, grammarAnswerCount: 1 }
+              : {}),
+          });
+          const tags = mergeQuestionGenerationPlanTag(
+            [],
+            effectiveGenerationPlan,
+          );
+          const questionForDisplay: Record<string, unknown> = {
+            ...finalQuestion,
+            _generationPlan: effectiveGenerationPlan,
+            tags,
+          };
+
+          // ── 저장 → 원장 → 잡 완료 (fast 규약) ─────────────────────────────
+          const createdQuestionIds = await saveGeneratedQuestionsForJob({
+            academyId: job.academyId,
+            passageId: passage.id,
+            questions: [questionForDisplay],
+            generationPlan: effectiveGenerationPlan,
+            skipPassageEligibilityCheck: true,
+          });
+          const completedAt = new Date();
+          const debugTiming = {
+            queueWaitMs: 0,
+            creditMs: 0,
+            planningMs: 0,
+            generationAttempts: callResults.length,
+            generationMs: callResults.reduce((a, c) => a + c.durationMs, 0),
+            persistenceMs: 0,
+            totalRunMs: Date.now() - requestStartedAt,
+          };
+          await prisma.workbenchAiJob.update({
+            where: { id: job.id },
+            data: {
+              status: "COMPLETED",
+              successCount: 1,
+              failedCount: 0,
+              resultCount: 1,
+              result: JSON.parse(
+                JSON.stringify({
+                  passageId: passage.id,
+                  questions: [questionForDisplay],
+                  questionIds: createdQuestionIds,
+                  rationale: "",
+                  generationPlan: effectiveGenerationPlan,
+                  debugTiming,
+                  fastPath: true,
+                  mdStream: true,
+                  mdCorrections: parsedMd.corrections,
+                  qualityIssues: qualityIssues
+                    .filter((issue) => issue.severity === "error")
+                    .map((issue) => issue.code),
+                }),
+              ),
+              completedAt,
+            },
+          });
+          emit({
+            t: "done",
+            jobId: job.id,
+            status: "COMPLETED",
+            questions: [questionForDisplay],
+            questionIds: createdQuestionIds,
+            generationPlan: effectiveGenerationPlan,
+            creditsRemaining: credit.balanceAfter,
+            createdAt: job.createdAt.toISOString(),
+            completedAt: completedAt.toISOString(),
+            debugTiming,
+          });
+          finish();
+        } catch (err) {
+          const rawMessage =
+            err instanceof Error ? err.message : "Question generation failed.";
+          // 내부 오류 원문(스택·업스트림 상세)은 서버 로그에만 — 사용자 표면·DB 는
+          // fast 와 동일하게 새니타이즈한다.
+          console.error("[md-stream] generation failed", rawMessage);
+          const message = toUserFacingQuestionGenerationError(rawMessage);
+          if (err instanceof InsufficientCreditsError) {
+            await prisma.workbenchAiJob
+              .update({
+                where: { id: job.id },
+                data: {
+                  status: "FAILED",
+                  failedCount: 1,
+                  errorMessage: `Insufficient credits: have ${err.currentBalance}, need ${err.requiredCredits}`,
+                  completedAt: new Date(),
+                },
+              })
+              .catch(() => undefined);
+            emit({ t: "error", message: "Insufficient credits" });
+            finish();
+            return;
+          }
+          if (creditTxId) {
+            await refundCredits(
+              job.academyId,
+              operationType,
+              creditTxId,
+              "md-stream question generation failed",
+              creditCost,
+            ).catch((refundErr) => {
+              console.error("[md-stream] refund failed", refundErr);
+            });
+          }
+          await prisma.workbenchAiJob
+            .update({
+              where: { id: job.id },
+              data: {
+                status: "FAILED",
+                failedCount: 1,
+                errorMessage: message.slice(0, 500),
+                completedAt: new Date(),
+              },
+            })
+            .catch(() => undefined);
+          emit({ t: "error", message });
+          finish();
+        }
+      })();
+    },
+  });
+
+  return new Response(stream, {
+    headers: {
+      "Content-Type": "text/event-stream; charset=utf-8",
+      "Cache-Control": "no-cache, no-transform",
+      Connection: "keep-alive",
+    },
+  });
+}

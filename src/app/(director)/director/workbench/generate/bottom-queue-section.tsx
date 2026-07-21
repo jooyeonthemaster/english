@@ -109,6 +109,63 @@ type ReviewStatusFilter = "ALL" | "PENDING" | "APPROVED";
 type QuestionViewMode = "flat" | "passage";
 type CardLayoutMode = "grid2" | "grid3" | "list";
 
+/**
+ * md-stream 실시간 미리보기 패널 — 로딩 카드의 metaSlot 에 들어간다.
+ * 고정 높이(헤더 1줄 + 본문 64px) + overflow hidden + 하단 정렬이라 텍스트가
+ * 아무리 흘러도 카드 레이아웃이 절대 밀리지 않는다(CLS 0). 위쪽 페이드 마스크로
+ * 오래된 줄이 부드럽게 사라지는, 위로 흐르는 콘솔 미학.
+ */
+function StreamPreviewPane({
+  preview,
+}: {
+  preview: NonNullable<QueueItem["streamPreview"]>;
+}) {
+  // 250ms 로컬 틱 — 토큰 공백(사고 정체) 구간에도 초 카운터가 멈추지 않게 한다.
+  const [, forceTick] = useState(0);
+  useEffect(() => {
+    const timer = window.setInterval(() => forceTick((v) => v + 1), 250);
+    return () => window.clearInterval(timer);
+  }, []);
+  const thinking = preview.phase === "thinking";
+  const thinkSec = Math.max(
+    0,
+    ((preview.outputStartedAt ?? Date.now()) - preview.startedAt) / 1000,
+  );
+  const genSec = preview.outputStartedAt
+    ? Math.max(0, (Date.now() - preview.outputStartedAt) / 1000)
+    : 0;
+  return (
+    <div className="mt-2 overflow-hidden rounded-lg border border-slate-700/50 bg-slate-900/90 shadow-inner">
+      <div className="flex items-center gap-1.5 px-2 pt-1.5">
+        <span
+          className={`inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[9px] font-bold tracking-tight tabular-nums ${
+            thinking
+              ? "bg-violet-500/20 text-violet-300"
+              : "bg-emerald-500/20 text-emerald-300"
+          }`}
+        >
+          <span
+            className={`size-1 animate-pulse rounded-full ${
+              thinking ? "bg-violet-400" : "bg-emerald-400"
+            }`}
+          />
+          {thinking ? `사고 중 ${thinkSec.toFixed(0)}s` : `작성 중 ${genSec.toFixed(0)}s`}
+        </span>
+        {!thinking && (
+          <span className="text-[9px] font-medium tabular-nums text-slate-500">
+            사고 {thinkSec.toFixed(0)}s
+          </span>
+        )}
+      </div>
+      <div className="h-[64px] overflow-hidden px-2 pb-1.5 [mask-image:linear-gradient(to_bottom,transparent,black_16px)] [-webkit-mask-image:linear-gradient(to_bottom,transparent,black_16px)]">
+        <p className="flex h-full flex-col justify-end whitespace-pre-wrap break-all font-mono text-[9.5px] leading-[13px] text-slate-300/90">
+          {preview.tail}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 const cardLayoutClassNames: Record<CardLayoutMode, string> = {
   grid2: "grid grid-cols-1 items-stretch gap-3 md:grid-cols-2",
   grid3: "grid grid-cols-1 items-stretch gap-3 md:grid-cols-3",
@@ -823,7 +880,11 @@ export function BottomQueueSection({
         <WorkbenchLoadingCard
           key={item.id}
           title={item.passageTitle}
-          contentPreview={`${item.passageContent.slice(0, 200)}...`}
+          contentPreview={
+            // 생성 카드는 프리뷰를 균일 길이로 고정 — 스트리밍 패널이 나중에
+            // 마운트돼도 지문 프리뷰 줄수가 변하지 않아 카드 중단부 리플로우가 없다.
+            `${item.passageContent.slice(0, 120)}...`
+          }
           statusLabel="생성 중"
           progressLabel={`AI가 ${requestedCount}문제를 생성 중입니다...`}
           wordCount={countWords(item.passageContent)}
@@ -831,6 +892,11 @@ export function BottomQueueSection({
           statusIcon={Loader2}
           variant="analyzing"
           fixedHeight
+          metaSlot={
+            item.streamPreview ? (
+              <StreamPreviewPane preview={item.streamPreview} />
+            ) : undefined
+          }
           ariaLabel={`${item.passageTitle} - 문제 생성 중`}
           planBadge={
             // 모델 셀렉터가 꺼져 있어도 이미 PREMIUM으로 생성된 항목은 배지를 보인다.
