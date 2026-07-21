@@ -474,7 +474,7 @@ export async function POST(req: NextRequest) {
     console.warn("[md-stream] diversity context failed", error);
   }
 
-  const buildPrompt = (feedback: string | null): string => {
+  const buildPrompt = (): string => {
     const base =
       subType === "BLANK_INFERENCE"
         ? buildMdBlankPrompt(passage.content, "full", mdDifficulty)
@@ -483,11 +483,6 @@ export async function POST(req: NextRequest) {
     if (diversityBlock) extras.push(diversityBlock);
     if (config.customPrompt?.trim()) {
       extras.push(`## 교사 추가 지시\n${config.customPrompt.trim()}`);
-    }
-    if (feedback) {
-      extras.push(
-        `[반려 재생성] 직전 출력이 기계 검사에서 반려되었다: ${feedback}. 위반을 전부 해소하고 같은 요구사항으로 완제품을 다시 설계하라.`,
-      );
     }
     return extras.length > 0 ? `${base}\n\n${extras.join("\n\n")}` : base;
   };
@@ -546,41 +541,21 @@ export async function POST(req: NextRequest) {
           creditTxId = credit.transactionId;
           emit({ t: "meta", jobId: job.id });
 
-          // ── 생성 (1콜 + 무결성 게이트 반려 시 1회 재생성) ────────────────
-          // 시간 예산: Vercel maxDuration 300s. 콜 타임아웃은 항상 "270s 벽까지
-          // 남은 시간"으로 잘라, 재생성이 벽을 넘겨 함수 강제종료(잡 고아 →
-          // 환불 누락)로 이어지는 것을 막는다(fast 라우트 deadlineAt 안전판 등가).
+          // ── 생성 (무조건 원큐 — 재생성 없음, md-lab 규약) ─────────────────
+          // 시간 예산: Vercel maxDuration 300s. 콜 타임아웃은 270s 벽까지 남은
+          // 시간으로 잘라 함수 강제종료(잡 고아 → 환불 누락)를 막는다
+          // (fast 라우트 deadlineAt 안전판 등가).
           const elapsed = () => Date.now() - requestStartedAt;
           const budgetMs = () => 270_000 - elapsed();
-          let call = await streamOnce({
-            prompt: buildPrompt(null),
+          const call = await streamOnce({
+            prompt: buildPrompt(),
             modelId,
             timeoutMs: Math.min(240_000, budgetMs()),
             emit,
           });
           callResults.push(call);
-          let parsedMd = parseAndGate(subType, call.text, passage.content);
-          if (parsedMd.gateIssues.length > 0 && budgetMs() > 30_000) {
-            emit({ t: "retry", reason: parsedMd.gateIssues.join(", ") });
-            const retryCall = await streamOnce({
-              prompt: buildPrompt(parsedMd.gateIssues.join(", ")),
-              modelId,
-              timeoutMs: Math.min(240_000, budgetMs()),
-              emit,
-            });
-            callResults.push(retryCall);
-            const retryParsed = parseAndGate(
-              subType,
-              retryCall.text,
-              passage.content,
-            );
-            if (retryParsed.gateIssues.length <= parsedMd.gateIssues.length) {
-              call = retryCall;
-              parsedMd = retryParsed;
-            }
-          }
-          // 실지출 원장은 저장 성공 여부와 무관하게 생성 직후 기록한다 —
-          // 어댑터/후처리/저장 실패 시에도 OpenRouter 과금은 이미 발생했다(fast 순서 정합).
+          // 실지출 원장은 게이트·저장 성공 여부와 무관하게 생성 직후 기록한다 —
+          // 반려·어댑터 실패 시에도 OpenRouter 과금은 이미 발생했다(fast 순서 정합).
           for (const [idx, result] of callResults.entries()) {
             await recordCostSafely({
               sourceKey: `workbench_ai_job:${job.id}:generation:${idx}`,
@@ -602,14 +577,18 @@ export async function POST(req: NextRequest) {
               },
             });
           }
-          // 어법 오형 미도입은 학생 표면에서 문항 자체가 성립 불가(정답 없음) —
-          // 재생성 후에도 남으면 저장하지 않고 실패(환불)로 처리한다.
-          if (
-            subType === "GRAMMAR_ERROR" &&
-            parsedMd.gateIssues.some((issue) => issue.includes("변형 밑줄"))
-          ) {
+          const parsedMd = parseAndGate(subType, call.text, passage.content);
+          // 원큐 규약(26-07-21 사용자 확정): 무결성 게이트 반려 = 즉시 실패·환불.
+          // md-lab 원형과 동일하게 자동 재생성은 없다 — 깨진 문항은 저장하지
+          // 않고, 재시도는 사용자의 다음 클릭이다(양치기). 반려 사유 원문은
+          // 지문 조각을 포함할 수 있어 서버 로그에만 남긴다.
+          if (parsedMd.gateIssues.length > 0) {
+            console.error(
+              "[md-stream] integrity gate rejected",
+              parsedMd.gateIssues,
+            );
             throw new Error(
-              `어법 오형 미도입: ${parsedMd.gateIssues.join(", ")}`,
+              "생성물이 무결성 검사에서 반려되어 저장하지 않았어요. 크레딧은 환불되었습니다. 한 번 더 생성해 주세요.",
             );
           }
 

@@ -387,11 +387,6 @@ async function createMdStreamQuestionGenerationJob({
         if (!outputStartedAt) outputStartedAt = Date.now();
         contentTail = (contentTail + event.d).slice(-900);
         emitPreview();
-      } else if (event.t === "retry") {
-        outputStartedAt = undefined;
-        contentTail = "";
-        reasoningTail = `기계 검사 반려 — 재설계 중…\n${String(event.reason ?? "")}`;
-        emitPreview(true);
       } else if (event.t === "error") {
         throw new Error(String(event.message ?? "Question generation failed."));
       } else if (event.t === "done") {
