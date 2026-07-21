@@ -15,6 +15,8 @@ const ALLOWED_MODELS = new Set([
   "google/gemini-3-flash-preview",
   "google/gemini-3.1-pro-preview",
   "google/gemini-3.5-flash",
+  "google/gemini-3.5-flash-lite",
+  "google/gemini-3.6-flash",
 ]);
 const ALLOWED_EFFORTS = new Set(["off", "low", "medium", "high"]);
 
