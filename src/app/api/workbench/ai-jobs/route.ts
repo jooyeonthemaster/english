@@ -3,9 +3,40 @@ import { Prisma } from "@prisma/client";
 
 import { getStaffSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { cleanupStaleWorkbenchAiJobs } from "@/lib/workbench-ai-job-stale-cleanup";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+
+// ── 좀비 잡 자가 치유 ──
+// stale-cleanup 은 원래 "새 생성 요청" 라우트에서만 돌아, 서버가 생성 도중 죽으면
+// (dev 재시작·서버리스 함수 강제종료) PROCESSING 고아가 다음 생성 시도까지 UI
+// 큐에서 영원히 돈다. 폴링이 고아 후보(10분 초과 활성 잡)를 목격하면 학원 스코프
+// 청소(FAILED+환불, 검증된 규칙)를 발사해 폴링 자체가 치유 경로가 되게 한다.
+// 인스턴스 메모리 스로틀은 베스트에포트 — 놓쳐도 다음 폴에서 다시 발사된다.
+const STALE_CANDIDATE_MS = 10 * 60 * 1000;
+const CLEANUP_THROTTLE_MS = 60 * 1000;
+const lastCleanupByAcademy = new Map<string, number>();
+
+function maybeCleanupStaleJobs(
+  academyId: string,
+  jobs: Array<{ status: string; createdAt: Date }>,
+) {
+  const cutoff = Date.now() - STALE_CANDIDATE_MS;
+  const hasCandidate = jobs.some(
+    (j) =>
+      (j.status === "PENDING" || j.status === "PROCESSING") &&
+      j.createdAt.getTime() < cutoff,
+  );
+  if (!hasCandidate) return;
+  const last = lastCleanupByAcademy.get(academyId) ?? 0;
+  if (Date.now() - last < CLEANUP_THROTTLE_MS) return;
+  lastCleanupByAcademy.set(academyId, Date.now());
+  // 응답을 막지 않는다 — 결과는 다음 폴에서 FAILED 카드로 반영된다.
+  void cleanupStaleWorkbenchAiJobs({ academyId }).catch((error) => {
+    console.error("[ai-jobs] stale cleanup failed", error);
+  });
+}
 
 function normalizeDomain(raw: string | null): string | undefined {
   if (!raw || raw === "all") return undefined;
@@ -79,6 +110,7 @@ export async function GET(req: NextRequest) {
       orderBy: { createdAt: "desc" },
       take: limit,
     });
+    maybeCleanupStaleJobs(staff.academyId, passageJobs);
     return NextResponse.json({ jobs: passageJobs });
   }
 
@@ -112,6 +144,7 @@ export async function GET(req: NextRequest) {
       orderBy: { createdAt: "desc" },
       take: limit,
     });
+    maybeCleanupStaleJobs(staff.academyId, summaryJobs);
     return NextResponse.json({ jobs: summaryJobs });
   }
 
@@ -209,5 +242,6 @@ export async function GET(req: NextRequest) {
           };
         });
 
+  maybeCleanupStaleJobs(staff.academyId, jobs);
   return NextResponse.json({ jobs: sanitizedJobs });
 }
