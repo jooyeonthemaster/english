@@ -1,0 +1,1568 @@
+{
+  "counts": {
+    "CLEAN": 42,
+    "CONFIRMED": 32,
+    "NOT_TARGET": 2,
+    "UNCONFIRMED": 3
+  },
+  "results": [
+    {
+      "g": "G001",
+      "e": "(미상)",
+      "verdict": "CLEAN",
+      "questionType": "other",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "요약문 완성(빈칸 A/B) 유형이라 지문 본문에 심긴 오답 단어가 없는 문항. 원형숫자 ①~⑤는 지문 내 마커가 아니라 (A)(B) 선택지 번호다(정답 ④ harmful/persistence). 지문 본문(personality/behavioral plasticity)은 문법·논지 모두 자연스럽게 성립하며 변형본이 1개뿐이라 대조 증거도 없음. 결함 없음.",
+      "verifierNotes": "요약문(빈칸 A/B) 유형 — 어법/어휘 오답 심기 대상 아님. ①~⑤는 지문 오류 마커가 아니라 객관식 선지(adaptive/harmful 등). 변형본 1개뿐이라 대조 불가. 지문 정독 결과 문법 위반·논지 모순 없음. 정답 ④(harmful/persistence)가 본문 논지(일관된 성격=부적응 가능)와 정합. 심긴 단어 없음."
+    },
+    {
+      "g": "G019",
+      "e": "(미상)",
+      "verdict": "CLEAN",
+      "questionType": "vocab",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Single variant with circled markers ①~⑤ (vocab-style, 30번). All five marked words (①remove ②permanently ③create ④modesty ⑤significant) are grammatically sound and logically consistent — ⑤significant matches the closing claim that soft-path engineers ",
+      "verifierNotes": "Single variant, markers ①~⑤ intact (remove/permanently/create/modesty/significant). All five cohere with the soft-path vs hard-path argument; ⑤ significant is confirmed by the following \"ecologically important\" sentence. \"removes the landscape\" (③ vi"
+    },
+    {
+      "g": "G032",
+      "e": "(미상)",
+      "verdict": "CONFIRMED",
+      "questionType": "other",
+      "confirmed": [
+        {
+          "plantedText": "grows.Even",
+          "correctedText": "grows. Even",
+          "plantedExcerpt": "how big and dangerous the animal may become as it grows.Even relatively small animals",
+          "correctedExcerpt": "how big and dangerous the animal may become as it grows. Even relatively small animals",
+          "targetVariants": [
+            "D"
+          ],
+          "markerEvidence": null,
+          "confidence": "high",
+          "reason": "OCR damage only: missing space after the period fuses two sentences; Variant A has the correct \"grows. Even\" at the same spot."
+        }
+      ],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "B is a sentence-insertion question (given sentence + ①~⑤ slots), not grammar/vocab underlines. A/D vs C wording differences (more and more/more; harsh and cruel, often ending up/harsh and often end up; out of nature/from the wild) are all grammatical",
+      "verifierNotes": "Variant B's circled markers are sentence-insertion slots (삽입 문항), not error positions; the target sentence precedes the passage. Variant C is a paraphrased edition (e.g., \"harsh and often end up killing\" vs \"harsh and cruel, often ending up\"), gramma",
+      "web": {
+        "found": false,
+        "evidence": null
+      }
+    },
+    {
+      "g": "G043",
+      "e": "(미상)",
+      "verdict": "NOT_TARGET",
+      "questionType": "other",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NOT_EXAM_VARIANT",
+      "verifierVerdict": "NOT_EXAM_VARIANT",
+      "solverNotes": "G043 is not an English passage: it is a Korean MATH problem (연립부등식/quadratic inequality) answer-key + full solution (\"[정답] ②\", ㄱㄴㄷ 보기, ①~⑤ choices). All formulas are replaced by base64-like encrypted blobs, so content is mostly unreadable. Circled ma",
+      "verifierNotes": "영어 지문이 아님: 수학(연립부등식) 문항의 정답+해설 세트. 수식 부분은 전부 base64형 암호화 블롭으로 대체되어 있고, 한국어 해설 텍스트(ㄱ/ㄴ/ㄷ 보기, ①~⑤ 선택지, \"[정답] ②\")만 남음. 어법/어휘 오답 심기 판정 대상이 아님."
+    },
+    {
+      "g": "G012",
+      "e": "2023 6월 고1 모평 29번",
+      "verdict": "CONFIRMED",
+      "questionType": "grammar",
+      "confirmed": [
+        {
+          "plantedText": "being",
+          "correctedText": "is",
+          "plantedExcerpt": "knows how to do things being likely to make him endure longer in problem-solving efforts",
+          "correctedExcerpt": "knows how to do things is likely to make him endure longer in problem-solving efforts",
+          "targetVariants": [
+            "B"
+          ],
+          "markerEvidence": null,
+          "confidence": "high",
+          "reason": "The gerund subject 'Thinking of himself as a boy who...' has no finite verb with 'being', leaving the sentence ungrammatical; Variant A preserves the correct finite 'is', matching the classic 29번 plan"
+        },
+        {
+          "plantedText": "self-image Thinking",
+          "correctedText": "self-image. Thinking",
+          "plantedExcerpt": "to incorporate that information into his self-image Thinking of himself as a boy",
+          "correctedExcerpt": "to incorporate that information into his self-image. Thinking of himself as a boy",
+          "targetVariants": [
+            "A"
+          ],
+          "markerEvidence": null,
+          "confidence": "high",
+          "reason": "OCR dropped the sentence-final period: two sentences run together with a capitalized 'Thinking' mid-line, while Variant B shows the period at the same position."
+        }
+      ],
+      "unconfirmed": [],
+      "solverVerdict": "PLANTED_FOUND",
+      "verifierVerdict": "PLANTED_FOUND",
+      "solverNotes": "No circled markers survive in either variant. Variant B is the planted exam print (is→being); Variant A carries the correct verb but has an OCR-lost period after 'self-image'. Neither variant alone is fully clean; corrected text combines A's verb wit",
+      "verifierNotes": "A is the clean/corrected copy except for a dropped period after 'self-image'; B is the printed exam copy retaining the planted 어법 error (is→being). No ①~⑤ markers survive in either variant. Rest of the two texts is identical (apart from curly vs stra",
+      "web": {
+        "found": false,
+        "evidence": null
+      }
+    },
+    {
+      "g": "G011",
+      "e": "2023 6월 고1 모평 30번",
+      "verdict": "CONFIRMED",
+      "questionType": "vocab",
+      "confirmed": [
+        {
+          "plantedText": "increased",
+          "correctedText": "decreased",
+          "plantedExcerpt": "buying their bread from stores or bakeries, so consumer demand for yeast increased",
+          "correctedExcerpt": "buying their bread from stores or bakeries, so consumer demand for yeast decreased",
+          "targetVariants": [
+            "B"
+          ],
+          "markerEvidence": null,
+          "confidence": "high",
+          "reason": "People switching from homemade bread (yeast's use) to store-bought bread, plus the producer hiring an agency to boost sales, entails demand fell; 'increased' contradicts the passage's logic and varian"
+        }
+      ],
+      "unconfirmed": [],
+      "solverVerdict": "PLANTED_FOUND",
+      "verifierVerdict": "PLANTED_FOUND",
+      "solverNotes": "Variant B's row title itself is tagged '어휘', matching the hypothesis that it is the exam-print copy with the answer word planted; A (2 rows) and C carry the corrected text. No markers survive in any variant.",
+      "verifierNotes": "Variant B (titled '...30번 · 어휘') is the printed exam copy with the vocab answer word planted; A and C match the original. Only other A/B/C differences are curly vs straight apostrophes/quotes (typographic, not defects).",
+      "web": {
+        "found": false,
+        "evidence": null
+      }
+    },
+    {
+      "g": "G044",
+      "e": "2024 6월 고1 모평 29번",
+      "verdict": "CONFIRMED",
+      "questionType": "grammar",
+      "confirmed": [
+        {
+          "plantedText": "what",
+          "correctedText": "that",
+          "plantedExcerpt": "and it was in farming villages what epidemic diseases first took root.",
+          "correctedExcerpt": "and it was in farming villages that epidemic diseases first took root.",
+          "targetVariants": [
+            "B"
+          ],
+          "markerEvidence": null,
+          "confidence": "high",
+          "reason": "The it-cleft construction 'it was in farming villages ___ epidemic diseases first took root' grammatically requires 'that'; 'what' cannot introduce a cleft clause after a fully formed clause, and Vari"
+        }
+      ],
+      "unconfirmed": [],
+      "solverVerdict": "PLANTED_FOUND",
+      "verifierVerdict": "PLANTED_FOUND",
+      "solverNotes": "No circled markers survive in either variant. A and B differ only at this one word (plus curly vs straight quotes and a double-space, both cosmetic). B is the exam-print copy with the planted answer word; A matches the original text.",
+      "verifierNotes": "Variant B title carries the 어법 tag, consistent with a printed exam copy storing the planted answer word. A/B otherwise differ only in curly vs straight quotes and a double space in A — cosmetic, not defects. No circled markers survive.",
+      "web": {
+        "found": false,
+        "evidence": null
+      }
+    },
+    {
+      "g": "G015",
+      "e": "2024 6월 고1 모평 30번",
+      "verdict": "CONFIRMED",
+      "questionType": "vocab",
+      "confirmed": [
+        {
+          "plantedText": "disappears",
+          "correctedText": "appears",
+          "plantedExcerpt": "act differently when temptation for immediate pleasure disappears.",
+          "correctedExcerpt": "act differently when temptation for immediate pleasure appears.",
+          "targetVariants": [
+            "B"
+          ],
+          "markerEvidence": null,
+          "confidence": "high",
+          "reason": "The passage defines weakness of will as abandoning one's resolve when tempted, so the agent acts differently when temptation APPEARS; 'disappears' directly contradicts the argument, and Variant A pres"
+        }
+      ],
+      "unconfirmed": [],
+      "solverVerdict": "PLANTED_FOUND",
+      "verifierVerdict": "PLANTED_FOUND",
+      "solverNotes": "A and B are otherwise identical (B rows are titled '어휘', matching a 30번 vocab source). Only trivial difference besides the planted word: A has a double space after 'weakness of will.' — not a defect. 'preference of a delayed reward' is awkward but pr",
+      "verifierNotes": "Variants differ only at the final word (A: appears / B: disappears). B is titled '어휘' (vocab print copy), consistent with a planted answer word. A also has a harmless double space after 'weakness of will.'; no other divergences.",
+      "web": {
+        "found": false,
+        "evidence": null
+      }
+    },
+    {
+      "g": "G056",
+      "e": "2025 10월 고2 수능 29번",
+      "verdict": "CONFIRMED",
+      "questionType": "grammar",
+      "confirmed": [
+        {
+          "plantedText": "give",
+          "correctedText": "giving",
+          "plantedExcerpt": "their genetic specifications change, sometimes give organisms new ways to exploit",
+          "correctedExcerpt": "their genetic specifications change, sometimes giving organisms new ways to exploit",
+          "targetVariants": [
+            "A"
+          ],
+          "markerEvidence": null,
+          "confidence": "high",
+          "reason": "\"specifications change\" is already the finite verb; a second finite \"give\" joined only by a comma is ungrammatical, so the original participle \"giving\" (modifying the clause) is uniquely required."
+        }
+      ],
+      "unconfirmed": [],
+      "solverVerdict": "PLANTED_FOUND",
+      "verifierVerdict": "PLANTED_FOUND",
+      "solverNotes": "Single variant, no circled markers. Classic 29번 finite-verb vs. participle trap: main clause is \\\"their genetic specifications change,\\\" and the following phrase must be the participial \\\"giving organisms new ways to exploit... to survive... and to r",
+      "verifierNotes": "Single variant (A), no circled ①-⑤ markers survive, so position pinned by grammar alone. Rest of passage (indistinguishable, disrupting, perpetuated, etc.) is well-formed. The distributive/parallel-participle contrast is the classic 29번 point.",
+      "web": {
+        "found": false,
+        "evidence": null
+      }
+    },
+    {
+      "g": "G057",
+      "e": "2025 10월 고2 수능 30번",
+      "verdict": "CONFIRMED",
+      "questionType": "vocab",
+      "confirmed": [
+        {
+          "plantedText": "rejecting",
+          "correctedText": "accepting",
+          "plantedExcerpt": "assign welfare responsibilities to the family, rejecting inequalities stemming from the existence of the family",
+          "correctedExcerpt": "assign welfare responsibilities to the family, accepting inequalities stemming from the existence of the family",
+          "targetVariants": [
+            "A"
+          ],
+          "markerEvidence": null,
+          "confidence": "high",
+          "reason": "The passage explicitly states Confucians keep the family 'even if it results in certain societal inequalities', so 'rejecting' family-derived inequalities directly contradicts the thesis; the Confucia"
+        }
+      ],
+      "unconfirmed": [],
+      "solverVerdict": "PLANTED_FOUND",
+      "verifierVerdict": "PLANTED_FOUND",
+      "solverNotes": "Only 1 variant (2 identical rows), both titled as 30번 어휘 source; no circled markers survive, but the contradiction uniquely pins the planted word. No other grammar/OCR issues found.",
+      "verifierNotes": "Single variant (2 identical rows), no circled markers. Only one candidate contradicts the argument; all other contrast-bearing words (outweighs, never be abandoned, impose restrictions) are consistent with the liberal-vs-Confucian thesis.",
+      "web": {
+        "found": false,
+        "evidence": null
+      }
+    },
+    {
+      "g": "G070",
+      "e": "2025 6월 고1 모평 29번",
+      "verdict": "CONFIRMED",
+      "questionType": "grammar",
+      "confirmed": [
+        {
+          "plantedText": "having",
+          "correctedText": "have",
+          "plantedExcerpt": "Rather, experts having knowledge in a specific domain - such as chess, chemistry,",
+          "correctedExcerpt": "Rather, experts have knowledge in a specific domain - such as chess, chemistry,",
+          "targetVariants": [
+            "A"
+          ],
+          "markerEvidence": null,
+          "confidence": "high",
+          "reason": "The clause has no finite verb — 'having' leaves 'experts ... and are not generalists' broken, since the coordination 'and are' requires a parallel finite verb 'have'."
+        }
+      ],
+      "unconfirmed": [],
+      "solverVerdict": "PLANTED_FOUND",
+      "verifierVerdict": "PLANTED_FOUND",
+      "solverNotes": "Single variant, no circled markers. Only one grammatical defect found; the later 'having expertise in a topic means' is a valid gerund subject, not a defect.",
+      "verifierNotes": "Single variant only (1 row), no circled markers, so no cross-variant contrast; but the defect is a hard grammar break uniquely repaired by 'have', and title explicitly tags this as the 29번 어법 source print.",
+      "web": {
+        "found": false,
+        "evidence": null
+      }
+    },
+    {
+      "g": "G071",
+      "e": "2025 6월 고1 모평 30번",
+      "verdict": "CONFIRMED",
+      "questionType": "vocab",
+      "confirmed": [
+        {
+          "plantedText": "low",
+          "correctedText": "high",
+          "plantedExcerpt": "to live in neighborhoods where crime rates were already low; they could not afford",
+          "correctedExcerpt": "to live in neighborhoods where crime rates were already high; they could not afford",
+          "targetVariants": [
+            "A"
+          ],
+          "markerEvidence": null,
+          "confidence": "high",
+          "reason": "The passage states crime rates were highest where immigrants lived and that they could not afford housing in 'safer neighborhoods', so saying their neighborhoods' crime rates were 'already low' direct"
+        }
+      ],
+      "unconfirmed": [],
+      "solverVerdict": "PLANTED_FOUND",
+      "verifierVerdict": "PLANTED_FOUND",
+      "solverNotes": "Only one variant (no marker copy, no cross-variant contrast). Vocab-item (30번) logic alone pins the planted word: 'low' contradicts both the co-occurrence premise and the 'safer neighborhoods' clause. Rest of passage reads clean.",
+      "verifierNotes": "Single variant only, no circled markers. Title tags it as the 30번 어휘 source passage, consistent with a printed answer-word ('low') left in the stored copy. Sentence-level contradiction is decisive despite lack of cross-variant evidence.",
+      "web": {
+        "found": false,
+        "evidence": null
+      }
+    },
+    {
+      "g": "G058",
+      "e": "2025 6월 모평 29번",
+      "verdict": "CLEAN",
+      "questionType": "grammar",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Both variants carry the correct form at every marker-candidate site, incl. \"Giving someone a test ... improves\" (the likely exam answer site). A/B differ only in apostrophe glyphs and \"multiple-choice\" vs \"multiple choice\" — typographic, not defects.",
+      "verifierNotes": "A/B differ only cosmetically: \"multiple-choice\" (A) vs \"multiple choice\" (B) and straight vs curly apostrophes. All 어법 candidate slots (leads / in which / where / improves / making) are in correct form in both variants — both look like clean original"
+    },
+    {
+      "g": "G061",
+      "e": "2025 6월 모평 30번",
+      "verdict": "UNCONFIRMED",
+      "questionType": "vocab",
+      "confirmed": [],
+      "unconfirmed": [
+        {
+          "who": "divergent-correction",
+          "plantedText": "drives",
+          "solver": "hinders",
+          "verifier": "prevents",
+          "reason": "The passage's entire argument is that salient external controls keep a person externally regulated and dependent on external controls (illustrated by "
+        }
+      ],
+      "solverVerdict": "PLANTED_FOUND",
+      "verifierVerdict": "PLANTED_FOUND",
+      "solverNotes": "Single variant (2 identical rows), no circled markers preserved. Sentence sits right after the reward/cajole example and before 'Alternatively,' — the contrast structure confirms the negative sense. Exact original wording may differ (e.g. 'undermines",
+      "verifierNotes": "Only one variant (2 identical rows), titled '어휘', so no cross-variant contrast; no circled markers survive. The contradiction sentence sits exactly where a 30번 answer word would. 'emotional understanding of difficulties overcoming problems' is awkwar"
+    },
+    {
+      "g": "G062",
+      "e": "2025 6월 모평 41번",
+      "verdict": "CONFIRMED",
+      "questionType": "vocab",
+      "confirmed": [
+        {
+          "plantedText": "coincide",
+          "correctedText": "conflict",
+          "plantedExcerpt": "your own 'code of behaviour' and how these may coincide, alongside recognizing",
+          "correctedExcerpt": "your own 'code of behaviour' and how these may conflict, alongside recognizing",
+          "targetVariants": [
+            "A"
+          ],
+          "markerEvidence": "No circled markers survive in the DB copy, but the official KICE exam PDF shows this word as underlined item (e), and th",
+          "confidence": "high",
+          "reason": "Verified against the official 2025학년도 6월 모평 question paper: item (e) 'coincide' is the planted answer word for 42번 (정답 ⑤); the passage argues principles vary both between and within individuals and th"
+        }
+      ],
+      "unconfirmed": [],
+      "solverVerdict": "PLANTED_FOUND",
+      "verifierVerdict": "PLANTED_FOUND",
+      "solverNotes": "Single variant (2 identical rows) = the printed exam version of the 41-42 장문 with 42번's wrong word still planted. Downloaded official exam PDF (horaeng mirror) confirms (a)-(e) items and (e)=coincide; answer ⑤ cross-checked via orbi commentary (46% 정",
+      "verifierNotes": "Single variant (2 identical rows) — both rows store the 42번 exam-printed defective form. Byte-identical flagged copy exists in src/data/exam-passages/passages.json with hasDeliberateError:true, so DB rows should be restored to 'conflict' (or flagged ",
+      "web": {
+        "found": false,
+        "evidence": null
+      }
+    },
+    {
+      "g": "G045",
+      "e": "2025 9월 고1 모평 29번",
+      "verdict": "CONFIRMED",
+      "questionType": "grammar",
+      "confirmed": [
+        {
+          "plantedText": "putting",
+          "correctedText": "put",
+          "plantedExcerpt": "If putting into an enclosure, they are likely to panic, and either die of shock",
+          "correctedExcerpt": "If put into an enclosure, they are likely to panic, and either die of shock",
+          "targetVariants": [
+            "A"
+          ],
+          "markerEvidence": null,
+          "confidence": "high",
+          "reason": "The subject 'they' (the animals) receives the action, so the reduced conditional clause needs a past participle (passive); active '-ing' is a grammar violation."
+        }
+      ],
+      "unconfirmed": [],
+      "solverVerdict": "PLANTED_FOUND",
+      "verifierVerdict": "PLANTED_FOUND",
+      "solverNotes": "Single variant (A), no marker digits present. Reduced adverbial clause 'If (they are) put into an enclosure' requires passive past participle; planted 'putting' makes it active and ungrammatical. Rest of passage reads clean.",
+      "verifierNotes": "Single variant (A), no marker digits retained. Defect is the classic 29번 reduced-passive-clause error: 'If putting' should be 'If put'. No cross-variant comparison available, but grammar uniquely determines the correction.",
+      "web": {
+        "found": false,
+        "evidence": null
+      }
+    },
+    {
+      "g": "G046",
+      "e": "2025 9월 고1 모평 30번",
+      "verdict": "CONFIRMED",
+      "questionType": "vocab",
+      "confirmed": [
+        {
+          "plantedText": "increased",
+          "correctedText": "decreased",
+          "plantedExcerpt": "combined with our increased physical interaction with the \"common folk,\" starts to create",
+          "correctedExcerpt": "combined with our decreased physical interaction with the \"common folk,\" starts to create",
+          "targetVariants": [
+            "A"
+          ],
+          "markerEvidence": null,
+          "confidence": "high",
+          "reason": "The passage argues that having more leads to bigger fences and security that 'keep people away,' so only decreased interaction with common folk can logically produce the resulting 'disconnection or bl"
+        }
+      ],
+      "unconfirmed": [],
+      "solverVerdict": "PLANTED_FOUND",
+      "verifierVerdict": "PLANTED_FOUND",
+      "solverNotes": "Variants A and B are otherwise identical. A is titled as the 30번 어휘 exam print (planted-answer copy); B (올포전국 12강-1) carries the restored reading. No circled markers survive in either variant.",
+      "verifierNotes": "Two variants are otherwise verbatim identical; sole divergence is increased(A)/decreased(B) in the final sentence. B ('올포전국 12강-1') carries the clean/original text; A is the exam-print copy with the planted answer word.",
+      "web": {
+        "found": false,
+        "evidence": null
+      }
+    },
+    {
+      "g": "G054",
+      "e": "2025 9월 고2 모평 29번",
+      "verdict": "CONFIRMED",
+      "questionType": "grammar",
+      "confirmed": [
+        {
+          "plantedText": "depend",
+          "correctedText": "depends",
+          "plantedExcerpt": "Our choice of which differences to mark depend firstly on what we can observe",
+          "correctedExcerpt": "Our choice of which differences to mark depends firstly on what we can observe",
+          "targetVariants": [
+            "A"
+          ],
+          "markerEvidence": null,
+          "confidence": "high",
+          "reason": "The singular head noun 'Our choice' requires 'depends' (subject-verb agreement); the parallel later sentence 'How we mark the differences ... depends' confirms the singular verb is the passage's own p"
+        }
+      ],
+      "unconfirmed": [],
+      "solverVerdict": "PLANTED_FOUND",
+      "verifierVerdict": "PLANTED_FOUND",
+      "solverNotes": "Single variant only, no circled markers. All other candidate verbs (make/were/would use) are grammatically sound, consistent with a 29번 grammar item leaving exactly one planted agreement error.",
+      "verifierNotes": "Single variant only; no circled markers survive. Title explicitly tags 어법 29번, consistent with the printed exam copy retaining the answer word. Rest of the passage is grammatically sound.",
+      "web": {
+        "found": true,
+        "evidence": "검색 스니펫: 2025년 9월 고2 모의고사 29번 어법 문항에서 \"depend\"를 \"depends\"로 고쳐야 한다는 해설 — \"Our choice of which differences to mark depends firstly on what we can observe and secondly on what is important in our lives\" (주어 Our choice 단수 일치). 출처: https://myenglishstory2.com/620 (고2 2025년 9월 영어 모의고사 상세 문제 풀이), https://www.nernter.com/board/view?bd=pds&at_id=20671"
+      }
+    },
+    {
+      "g": "G055",
+      "e": "2025 9월 고2 모평 30번",
+      "verdict": "CONFIRMED",
+      "questionType": "vocab",
+      "confirmed": [
+        {
+          "plantedText": "efficient",
+          "correctedText": "inefficient",
+          "plantedExcerpt": "Thus, the prescription for more empathy is often efficient in cases of conflict.",
+          "correctedExcerpt": "Thus, the prescription for more empathy is often inefficient in cases of conflict.",
+          "targetVariants": [
+            "A"
+          ],
+          "markerEvidence": null,
+          "confidence": "high",
+          "reason": "The entire passage presents critics arguing empathy worsens conflict (\"empathy makes such conflicts worse\", \"can further encourage conflict\"), so saying the prescription for more empathy is \"efficient"
+        }
+      ],
+      "unconfirmed": [],
+      "solverVerdict": "PLANTED_FOUND",
+      "verifierVerdict": "PLANTED_FOUND",
+      "solverNotes": "Single variant only, no circled markers, so position inferred purely from logic. Minimal fix applied (in- prefix); actual exam original could be \"ineffective\" — either restores the argument.",
+      "verifierNotes": "Single variant only, no circled markers, so position pinned by logic alone. Original wording could also be \"ineffective\"; \"inefficient\" chosen as minimal prefix-flip repair per rules.",
+      "web": {
+        "found": false,
+        "evidence": null
+      }
+    },
+    {
+      "g": "G008",
+      "e": "2026",
+      "verdict": "NOT_TARGET",
+      "questionType": "other/grammar",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NOT_EXAM_VARIANT",
+      "verifierVerdict": "NOT_EXAM_VARIANT",
+      "solverNotes": "Single variant is a full internal-exam question set, not a passage: word box + choices, passage [I]-[V] with underlined (a)-(c) items, Q6 (5 choices), Q7 grammar-pair table. Passage's grammar errors (for solve, who are you, stop yourself to feel, thi",
+      "verifierNotes": "Single variant containing a full question-set dump: word box + ①~⑤ answer choices (with stray \"X\" answer mark), question stems 6~7, comprehension options, and an answer-grid table. Passage grammar errors (e.g. \"for solve problems\", \"who are you\", \"th"
+    },
+    {
+      "g": "G017",
+      "e": "2026",
+      "verdict": "CONFIRMED",
+      "questionType": "vocab",
+      "confirmed": [
+        {
+          "plantedText": "preserves",
+          "correctedText": "eliminates",
+          "plantedExcerpt": "at every stage selection favors some cells and preserves others",
+          "correctedExcerpt": "at every stage selection favors some cells and eliminates others",
+          "targetVariants": [
+            "A",
+            "D"
+          ],
+          "markerEvidence": "VARIANT D marks ③preserves others, so the planted vocab answer sits exactly here.",
+          "confidence": "high",
+          "reason": "Selection keeps favored cells and discards the rest; 'preserves others' means everything is kept, contradicting selection and the later line 'those that don't are eliminated', and marker ③ pins this w"
+        }
+      ],
+      "unconfirmed": [],
+      "solverVerdict": "PLANTED_FOUND",
+      "verifierVerdict": "PLANTED_FOUND",
+      "solverNotes": "42번 유형(어휘). 마커 D의 ③ 위치가 심긴 단어. B/C는 이미 수정된 사본(eliminates). ②meet/satisfy, ⑤variation/variability 차이는 동의어 교체로 결함 아님. ①④는 정상.",
+      "verifierNotes": "Vocab (30번) type; marker variant D pins ③=preserves. B/C are corrected copies with 'eliminates'. Other cross-variant diffs (②meet/satisfy, variation/variability) are synonym paraphrases across copies, not planted defects. No OCR damage.",
+      "web": {
+        "found": false,
+        "evidence": null
+      }
+    },
+    {
+      "g": "G028",
+      "e": "2026",
+      "verdict": "CLEAN",
+      "questionType": "other",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Underlined-phrase implication question, not grammar/vocab. Passage body identical in A/B and clean. Artifacts: question stem remnant, appended answer choices with OCR damage (\"concrete concrete\" duplication, scrambled fragments \"clear and...a\"), all ",
+      "verifierNotes": "Question type is underlined-phrase meaning inference, not grammar/vocab. Passage body identical in A/B and clean. Both variants carry leftover answer choices appended after the passage (A also keeps the stem \"1. 밑줄 친 ... 다음 글에서\"); choice text has OCR"
+    },
+    {
+      "g": "G029",
+      "e": "2026 29번(밑줄 함의)",
+      "verdict": "UNCONFIRMED",
+      "questionType": "other",
+      "confirmed": [],
+      "unconfirmed": [
+        {
+          "who": "solver-only",
+          "plantedText": "a clean water. act.",
+          "correctedText": "a clean water act.",
+          "excerpt": "Say you're pushing for a clean water. act. Even if what emerges isn't as well-funded",
+          "reason": "OCR-inserted period splits the noun phrase 'clean water act' into a broken fragment ('act.' alone is not a sentence); Variant B preserves the correct "
+        },
+        {
+          "who": "verifier-only",
+          "plantedText": "water. act.",
+          "correctedText": "water act.",
+          "excerpt": "Say you're pushing for a clean water. act. Even if what emerges isn't as well-funded",
+          "reason": "OCR punctuation break: a spurious period splits the noun phrase 'clean water act', leaving the ungrammatical fragment 'a clean water.' plus orphan 'ac"
+        }
+      ],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "PLANTED_FOUND",
+      "solverNotes": "2026 29번은 밑줄 함의 추론 문항이라 심긴 오답 단어 유형이 아님. A/B/C 본문은 동일하며 유일한 차이는 A·C의 OCR 구두점 파손('water. act.'). Variant C는 발문 잔재(\"2. 밑줄 친 helping move the needle forward...\")와 선택지 5개가 지문 앞뒤에 붙어 있음.",
+      "verifierNotes": "밑줄 함의(29번) 유형이라 심긴 오답 단어는 없음 — 유일한 결함은 A·C의 OCR 구두점 파손(water. act). VARIANT C는 발문 잔재(\"2. 밑줄 친 helping move...\")와 선택지 5개가 지문 뒤에 붙어 있고 줄바꿈이 잘게 쪼개진 인쇄본 OCR. B가 정본."
+    },
+    {
+      "g": "G003",
+      "e": "2026 30번",
+      "verdict": "CLEAN",
+      "questionType": "vocab",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Single variant only (21 rows, identical text, no markers). Passage is logically coherent end-to-end; all vocab pivot points (leads to a feeling / rarely a result of / influenced by reasoning / before we begin to reason) fit the thesis. Appears to be ",
+      "verifierNotes": "Only one variant (21 identical rows). No ①~⑤ markers. All polarity-sensitive words (non-reason, rarely, influenced, before) align with the thesis that reasons rest on emotion, so no planted answer word is present; text appears to be the clean origina"
+    },
+    {
+      "g": "G065",
+      "e": "2026 3월 고1 수능 29번",
+      "verdict": "CONFIRMED",
+      "questionType": "grammar",
+      "confirmed": [
+        {
+          "plantedText": "helps",
+          "correctedText": "help",
+          "plantedExcerpt": "you see displayed on a computer screen helps people create the conceptual model",
+          "correctedExcerpt": "you see displayed on a computer screen help people create the conceptual model",
+          "targetVariants": [
+            "A"
+          ],
+          "markerEvidence": null,
+          "confidence": "high",
+          "reason": "Subject is the plural 'The files, folders, and icons' ('you see displayed on a computer screen' is a reduced relative clause), so the verb must be plural 'help'; singular 'helps' is a grammatical viol"
+        }
+      ],
+      "unconfirmed": [],
+      "solverVerdict": "PLANTED_FOUND",
+      "verifierVerdict": "PLANTED_FOUND",
+      "solverNotes": "Single variant only (1 row), so no cross-variant contrast and no circled markers; passage is from Norman's The Design of Everyday Things. All other candidate spots (designed / for that is where / whereas / located) are grammatical.",
+      "verifierNotes": "Single variant only (1 row), no circled markers. Passage is Don Norman's conceptual-model text; all other candidate spots (them easier to use, for that is where, whereas, located) are grammatically sound. Only the agreement error qualifies.",
+      "web": {
+        "found": false,
+        "evidence": null
+      }
+    },
+    {
+      "g": "G066",
+      "e": "2026 3월 고1 수능 30번",
+      "verdict": "CONFIRMED",
+      "questionType": "vocab",
+      "confirmed": [
+        {
+          "plantedText": "same",
+          "correctedText": "opposite",
+          "plantedExcerpt": "however, the attitude and policies are just the same: walking is efficient",
+          "correctedExcerpt": "however, the attitude and policies are just the opposite: walking is efficient",
+          "targetVariants": [
+            "A"
+          ],
+          "markerEvidence": null,
+          "confidence": "high",
+          "reason": "The contrast marker 'however' pits the developing world's view of walking as an unavoidable burden against the Western view praising walking as efficient/healthful, so 'just the same' directly contrad"
+        }
+      ],
+      "unconfirmed": [],
+      "solverVerdict": "PLANTED_FOUND",
+      "verifierVerdict": "PLANTED_FOUND",
+      "solverNotes": "Single variant only, no circled markers, so position inferred purely from discourse logic. All other vocab candidates (constraints, expend, burden, reversed, simulate) fit context; only 'same' clashes with 'however' and the following praise of walkin",
+      "verifierNotes": "Single variant only, no circled markers, so position pinned by logic alone: 'however' plus the burden-vs-praise contrast makes 'just the same' a frontal contradiction, consistent with a stored 30번 어휘 print version.",
+      "web": {
+        "found": false,
+        "evidence": null
+      }
+    },
+    {
+      "g": "G072",
+      "e": "2026 3월 고2 수능 29번",
+      "verdict": "CONFIRMED",
+      "questionType": "grammar",
+      "confirmed": [
+        {
+          "plantedText": "occurring",
+          "correctedText": "occurred",
+          "plantedExcerpt": "The development of a true piano factory occurring first in the United States, led by Jonas",
+          "correctedExcerpt": "The development of a true piano factory occurred first in the United States, led by Jonas",
+          "targetVariants": [
+            "A"
+          ],
+          "markerEvidence": null,
+          "confidence": "high",
+          "reason": "With 'occurring' the sentence has no finite main verb ('led by...' is a participial appositive, not a predicate), so grammar uniquely requires the finite past 'occurred'."
+        }
+      ],
+      "unconfirmed": [],
+      "solverVerdict": "PLANTED_FOUND",
+      "verifierVerdict": "PLANTED_FOUND",
+      "solverNotes": "Single variant only; no circled markers survive. All other candidate sites (did have, in which...taught, were made, which were thought) are grammatical. OCR hyphen in '5-10' is benign.",
+      "verifierNotes": "Single variant only, no circled markers. All other candidate spots (did have, were made, which were thought) are grammatical; the missing-finite-verb defect is the classic 29번 planted answer.",
+      "web": {
+        "found": false,
+        "evidence": null
+      }
+    },
+    {
+      "g": "G051",
+      "e": "2026 3월 고2 수능 30번",
+      "verdict": "CONFIRMED",
+      "questionType": "vocab",
+      "confirmed": [
+        {
+          "plantedText": "facilitating",
+          "correctedText": "hindering",
+          "plantedExcerpt": "during the programme, potentially facilitating students' ability to adapt to diverse career paths",
+          "correctedExcerpt": "during the programme, potentially hindering students' ability to adapt to diverse career paths",
+          "targetVariants": [
+            "A"
+          ],
+          "markerEvidence": null,
+          "confidence": "high",
+          "reason": "The sentence says the singular focus LIMITS breadth of knowledge and skills, so it must hinder (not facilitate) adaptation to diverse careers; Variant B preserves the correct 'hindering' at the same p"
+        }
+      ],
+      "unconfirmed": [],
+      "solverVerdict": "PLANTED_FOUND",
+      "verifierVerdict": "PLANTED_FOUND",
+      "solverNotes": "No circled markers survive in either variant. Variant B has minor OCR artifacts: doubled spaces before several words (likely erased underline slots) and 'thesisbased' missing its hyphen; these are OCR damage, not planted errors.",
+      "verifierNotes": "Variant A is the printed exam copy with the planted answer word; Variant B is clean. B has minor OCR damage: 'thesisbased' missing hyphen (line 23) and stray double spaces; sentence-per-line formatting.",
+      "web": {
+        "found": false,
+        "evidence": null
+      }
+    },
+    {
+      "g": "G068",
+      "e": "2026 3월 고3 수능 29번",
+      "verdict": "CLEAN",
+      "questionType": "grammar",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Single variant (A), no circled ①~⑤ markers, so no cross-copy comparison possible. Read as a 어법 item: every candidate structure (participle \"producing\", reflexive \"impose itself\"/\"alter themselves\", agreement \"aspects...imply\", \"than there are resourc",
+      "verifierNotes": "Single variant only (no cross-copy comparison possible), no residual circled markers. Passage read as a grammar (29번) item: reflexive agreement (organism/itself, offspring/themselves), subject-verb agreement (aspects imply), participial 'with organis"
+    },
+    {
+      "g": "G063",
+      "e": "2026 3월 고3 수능 30번",
+      "verdict": "CONFIRMED",
+      "questionType": "vocab",
+      "confirmed": [
+        {
+          "plantedText": "acknowledges",
+          "correctedText": "ignores",
+          "plantedExcerpt": "\"Lawn\" acknowledges the varieties of grass and all the nongrassy plants that are there.",
+          "correctedExcerpt": "\"Lawn\" ignores the varieties of grass and all the nongrassy plants that are there.",
+          "targetVariants": [
+            "A"
+          ],
+          "markerEvidence": null,
+          "confidence": "high",
+          "reason": "The passage's thesis is that category words abstract away and 'leave out' differences (you must 'zoom in' to find individuality), so saying 'Lawn' acknowledges the varieties of grass directly contradi"
+        }
+      ],
+      "unconfirmed": [],
+      "solverVerdict": "PLANTED_FOUND",
+      "verifierVerdict": "PLANTED_FOUND",
+      "solverNotes": "Only 1 variant, no circled markers, so no cross-variant corroboration; finding rests on direct logical contradiction with the passage's thesis. All other candidate verbs are consistent with the argument.",
+      "verifierNotes": "Single variant only, no circled markers, so position inferred from logic alone. Title tag confirms 어휘(30번) source. All other candidate verbs (co-categorizes, leave out, need not be co-categorized) are consistent with the thesis.",
+      "web": {
+        "found": true,
+        "evidence": "오르비 게시글 \"3월 고3 30번 어휘 — 2점짜리가 오답률 2위 킬러가 된 이유 (EBSi 선지 데이터)\" (https://orbi.kr/00078071069) 및 관련 검색 스니펫에서 해당 문항(3월 고3 영어 30번 어휘 문제)의 틀린 낱말로 \"acknowledges(인정한다)\"가 언급되며, 문맥상 반대 의미(ignores, 무시한다)가 맞다는 취지의 해설이 확인됨. 보조: https://suue7telos.com/entry/%EA%B3%A03%EB%AA%A8%EC%9D%98%EA%B3%A0%EC%82%AC%EC%98%81%EC%96%B4%EC%98%A4%EB%8B%B5%EB%A5%A01%EC%9C%84%EB%AC%B8%EC%A0%9C"
+      }
+    },
+    {
+      "g": "G053",
+      "e": "2026 5월 고3 수능 29번",
+      "verdict": "CONFIRMED",
+      "questionType": "grammar",
+      "confirmed": [
+        {
+          "plantedText": "chooses",
+          "correctedText": "to choose",
+          "plantedExcerpt": "allows them, if possible, depending on the job role, chooses their day-to-day work location.",
+          "correctedExcerpt": "allows them, if possible, depending on the job role, to choose their day-to-day work location.",
+          "targetVariants": [
+            "A"
+          ],
+          "markerEvidence": null,
+          "confidence": "high",
+          "reason": "The verb 'allow' requires an object + to-infinitive complement ('allows them ... to choose'); the finite 'chooses' has no possible subject and breaks the sentence, a classic 29번 planted error."
+        }
+      ],
+      "unconfirmed": [],
+      "solverVerdict": "PLANTED_FOUND",
+      "verifierVerdict": "PLANTED_FOUND",
+      "solverNotes": "Single variant, no circled markers. Only one grammar violation found; other slightly awkward spots (e.g. comma before 'would work well') are grammatically viable and left untouched.",
+      "verifierNotes": "Single variant only, no circled markers preserved, so no cross-variant contrast; but the violation is structurally unambiguous. Other awkward spots (comma before 'would work well') are punctuation style, not defects.",
+      "web": {
+        "found": false,
+        "evidence": null
+      }
+    },
+    {
+      "g": "G026",
+      "e": "2026 6월 고1 모평 29번",
+      "verdict": "CLEAN",
+      "questionType": "grammar",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Variant B retains question stem, [3점], markers ①-⑤ and glossary. All 5 marker positions (connecting/Despite/convey/have/reflected) are grammatical and identical across A/B/C — planted answer word not present in any copy. Only cosmetic diffs: soft hyp",
+      "verifierNotes": "A/B/C textually identical at all 5 marker slots; every marked form (connecting/Despite/convey/have/reflected) is grammatical, so the DB holds the corrected passage, not the defective print. Variant B retains question stem, markers, glossary, and a so"
+    },
+    {
+      "g": "G064",
+      "e": "2026 6월 고1 모평 30번",
+      "verdict": "CLEAN",
+      "questionType": "vocab",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "B retains stem+markers (①whole ②focus ③help ④size ⑤block out); A/C identical wording. All 5 marked words fit context and grammar (viewfinder isolates/blocks out rest), so planted answer word appears already restored in every copy. C has OCR damage: ②",
+      "verifierNotes": "Variants A/B/C agree verbatim at all 5 marker slots; every candidate word (whole/focus/help/size/block out) fits context, so no planted answer survives. B keeps the 30번 question stem; C has OCR-degraded markers (① ② lost, ③④⑤ as bare digits) but inta"
+    },
+    {
+      "g": "G039",
+      "e": "2026 6월 고2 모평 29번",
+      "verdict": "CONFIRMED",
+      "questionType": "grammar",
+      "confirmed": [
+        {
+          "plantedText": "producing",
+          "correctedText": "produced",
+          "plantedExcerpt": "offered no savings to recipients producing just as much customer response as did",
+          "correctedExcerpt": "offered no savings to recipients produced just as much customer response as did",
+          "targetVariants": [
+            "A"
+          ],
+          "markerEvidence": "No circled markers survive; variant divergence B/C 'produced' vs A 'producing' pins the position.",
+          "confidence": "high",
+          "reason": "Subject 'Mailed-out coupons' followed by relative clause 'that ... offered no savings to recipients' has no finite main verb with 'producing'; grammar uniquely requires 'produced', which variants B an"
+        }
+      ],
+      "unconfirmed": [],
+      "solverVerdict": "PLANTED_FOUND",
+      "verifierVerdict": "PLANTED_FOUND",
+      "solverNotes": "A is the planted exam printing (also uses straight quotes/hyphen dash); B is clean original; C matches B textually but has OCR artifacts: soft-hyphen glyphs (automobile­tire, Mailed­out, error­free) and irregular multi-space runs — words themselves i",
+      "verifierNotes": "A also uses plain hyphens/quotes vs em-dashes in B/C (formatting only, not defects). C has OCR spacing artifacts (multiple spaces, soft-hyphen glyphs in 'automobile­tire') but text content matches B. No circled markers remain in any variant.",
+      "web": {
+        "found": false,
+        "evidence": null
+      }
+    },
+    {
+      "g": "G040",
+      "e": "2026 6월 고2 모평 30번",
+      "verdict": "CONFIRMED",
+      "questionType": "vocab",
+      "confirmed": [
+        {
+          "plantedText": "more",
+          "correctedText": "less",
+          "plantedExcerpt": "forerunners - are more sensitive to price than to additional performance",
+          "correctedExcerpt": "forerunners - are less sensitive to price than to additional performance",
+          "targetVariants": [
+            "A"
+          ],
+          "markerEvidence": null,
+          "confidence": "high",
+          "reason": "The passage argues buyers with deep pockets ready to spend a lot make demand price-inelastic, so they must be LESS sensitive to price than to performance; 'more' directly contradicts the thesis, and V"
+        }
+      ],
+      "unconfirmed": [],
+      "solverVerdict": "PLANTED_FOUND",
+      "verifierVerdict": "PLANTED_FOUND",
+      "solverNotes": "A는 어휘 문항 정답어(more)가 심긴 인쇄본 사본, B는 정상본, C는 B와 동일 텍스트의 OCR 사본(다중 공백·soft hyphen 'high­tech'·em dash)으로 별도 결함 아님. 원형숫자 마커 잔존 없음.",
+      "verifierNotes": "B and C agree on 'less' (C is an OCR-spaced copy with soft-hyphen artifacts like 'high­tech' but same wording). No circled markers survive in any variant. Only material divergence between variants is more/less.",
+      "web": {
+        "found": false,
+        "evidence": null
+      }
+    },
+    {
+      "g": "G060",
+      "e": "2026 6월 모평 29번",
+      "verdict": "CLEAN",
+      "questionType": "grammar",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Single variant, no circled markers. All typical 29번 underline positions (induced / with whom / make / is used / watch...search / distanced / removed) are grammatically correct and the argument is coherent. Copy appears to be the clean original (Ben-Z",
+      "verifierNotes": "Single variant, no circled markers, no cross-copy comparison possible. All likely 29-style underline sites (are/induced/with whom/letting...watch...search/distanced/removed) are grammatically correct; passage is coherent. Appears to be a clean restor"
+    },
+    {
+      "g": "G059",
+      "e": "2026 6월 모평 30번",
+      "verdict": "CONFIRMED",
+      "questionType": "vocab",
+      "confirmed": [
+        {
+          "plantedText": "temporary",
+          "correctedText": "lasting",
+          "plantedExcerpt": "a unique voice that leaves a temporary impression on your audience.",
+          "correctedExcerpt": "a unique voice that leaves a lasting impression on your audience.",
+          "targetVariants": [
+            "A"
+          ],
+          "markerEvidence": null,
+          "confidence": "high",
+          "reason": "The passage argues for building a memorable, distinctive brand/voice that makes authors 'memorable and distinct', so a voice leaving only a 'temporary' impression directly contradicts the thesis; 'las"
+        }
+      ],
+      "unconfirmed": [],
+      "solverVerdict": "PLANTED_FOUND",
+      "verifierVerdict": "PLANTED_FOUND",
+      "solverNotes": "Single variant, no circled markers, clean text. Title tag confirms 어휘(30번) origin, consistent with one planted vocabulary word left from the printed exam version.",
+      "verifierNotes": "Single variant, no circled markers, tagged 어휘 (30번). Words like \"alien\" and \"overlooked\" fit context; only \"temporary\" contradicts the memorability thesis. Passage otherwise clean, no OCR damage.",
+      "web": {
+        "found": false,
+        "evidence": null
+      }
+    },
+    {
+      "g": "G067",
+      "e": "2026 6월 모평 41번",
+      "verdict": "CLEAN",
+      "questionType": "vocab",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Single variant, no circled markers. Passage on technological seamlessness is logically coherent throughout; key vocab candidates (hidden, complicated, less visible, immerse, indistinguishable) all match the argument — e.g. humanoids \"indistinguishabl",
+      "verifierNotes": "Single variant only; no circled markers. All vocab pivot points (hidden, complicated, less visible, indistinguishable) are in their logically correct original form. Passage may be only the first half of the full 41-42 long text (ends at the humanoid "
+    },
+    {
+      "g": "G030",
+      "e": "2026 수능 29번",
+      "verdict": "CLEAN",
+      "questionType": "grammar",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Single variant only (no A/B cross-check possible) and no circled ①~⑤ markers present. Passage (Henrich, The Secret of Our Success) is grammatically sound throughout: subject-verb agreement (\"package...is\"), participles (\"used by\", \"confronted\"), and ",
+      "verifierNotes": "Single variant A, no circled markers. All grammatically loaded spots are correct: \"package...is\" (singular agreement), \"in which we live\", \"than other species are\", \"pools...that greatly exceed\" (plural agreement). Passage is coherent and grammatical"
+    },
+    {
+      "g": "G031",
+      "e": "2026 수능 30번",
+      "verdict": "CONFIRMED",
+      "questionType": "vocab",
+      "confirmed": [
+        {
+          "plantedText": "abandon",
+          "correctedText": "gain",
+          "plantedExcerpt": "on the field or court as possible to abandon competitive advantages.",
+          "correctedExcerpt": "on the field or court as possible to gain competitive advantages.",
+          "targetVariants": [
+            "A"
+          ],
+          "markerEvidence": null,
+          "confidence": "high",
+          "reason": "The passage argues athletes stretch situational ethics to get away with fouls because winning outweighs fairness, so trying to 'abandon' competitive advantages directly contradicts the whole point of "
+        }
+      ],
+      "unconfirmed": [],
+      "solverVerdict": "PLANTED_FOUND",
+      "verifierVerdict": "PLANTED_FOUND",
+      "solverNotes": "Single variant only, no circled markers, so position inferred purely from logic. Rest of passage is coherent (pickup game honesty vs. officiated game dishonesty), consistent with the printed exam copy carrying the vocab-question answer word.",
+      "verifierNotes": "Single variant only (1 row), no circled markers, so position is fixed by logic alone. Title tag '어휘' confirms this is a 30번 vocab source; 'abandon' is the lone direct-contradiction word — rest of the passage is coherent.",
+      "web": {
+        "found": false,
+        "evidence": null
+      }
+    },
+    {
+      "g": "G033",
+      "e": "2026 수능 41번",
+      "verdict": "CONFIRMED",
+      "questionType": "vocab",
+      "confirmed": [
+        {
+          "plantedText": "unlikely",
+          "correctedText": "likely",
+          "plantedExcerpt": "it is unlikely that displays of historic dress would be awkward imitations of the intentions",
+          "correctedExcerpt": "it is likely that displays of historic dress would be awkward imitations of the intentions",
+          "targetVariants": [
+            "A"
+          ],
+          "markerEvidence": null,
+          "confidence": "high",
+          "reason": "The passage argues art sources are essential evidence for how garments were worn, so WITHOUT that information displays WOULD be awkward imitations — 'unlikely' directly contradicts the thesis, a class"
+        }
+      ],
+      "unconfirmed": [],
+      "solverVerdict": "PLANTED_FOUND",
+      "verifierVerdict": "PLANTED_FOUND",
+      "solverNotes": "Single variant, no circled markers (41-42 장문 지문이라 42번 어휘 밑줄이 유실됨). Rest of passage is coherent; only the final sentence carries the contradiction.",
+      "verifierNotes": "Single variant only, so no cross-variant comparison possible; no circled markers remain. Judgment rests on the final sentence's frontal contradiction of the passage's argument (art evidence is indispensable), consistent with a planted vocab answer fo",
+      "web": {
+        "found": false,
+        "evidence": null
+      }
+    },
+    {
+      "g": "G024",
+      "e": "2027 6월 모평 29번",
+      "verdict": "CLEAN",
+      "questionType": "grammar",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Single variant, 6 identical rows, no ①~⑤ markers. All candidate underline sites (was made / that were / being placed / Allowed / demonstrating / identified) are grammatically correct. \"became increasingly fancier\" is redundant but grammatical native ",
+      "verifierNotes": "Single variant (6 identical rows), no circled markers. All grammar points check out: participle \"Allowed only for higher social classes\" correctly modifies \"luxurious styles\"; \"came to be incorporated\", \"could be identified\", \"being placed\" all corre"
+    },
+    {
+      "g": "G025",
+      "e": "2027 6월 모평 30번",
+      "verdict": "CONFIRMED",
+      "questionType": "vocab",
+      "confirmed": [
+        {
+          "plantedText": "thick",
+          "correctedText": "thin",
+          "plantedExcerpt": "what is left is the dialogue, known as the book or libretto, and it can be very thick",
+          "correctedExcerpt": "what is left is the dialogue, known as the book or libretto, and it can be very thin",
+          "targetVariants": [
+            "A"
+          ],
+          "markerEvidence": null,
+          "confidence": "high",
+          "reason": "The passage says musicals have a diminished emphasis on dialogue, so the libretto left after removing music/lyrics must be thin; 'thick' directly contradicts this stated logic, and Variant B preserves"
+        }
+      ],
+      "unconfirmed": [],
+      "solverVerdict": "PLANTED_FOUND",
+      "verifierVerdict": "PLANTED_FOUND",
+      "solverNotes": "Variants A and B are identical except thick/thin at the libretto sentence (B also has a paragraph break). Vocab tag on A's titles supports A being the printed exam version with the planted answer word.",
+      "verifierNotes": "Variants A and B are otherwise verbatim identical (B splits into two paragraphs). Divergence is a single word thick/thin at a classic 30번 vocab answer position; A (5 rows, titled '30번 · 어휘') is the printed exam copy, B is clean.",
+      "web": {
+        "found": true,
+        "evidence": "Search result summary for the 2027학년도 6월 모의평가 영어 해설 states that in 30번, \"thick\" is the incorrect word and should be \"thin\": when music and lyrics are removed from a musical script, the remaining dialogue would be very thin (not thick). Source: EBS 정답 및 해설 PDF — https://wdown.ebsi.co.kr/W61001/01exam/20260604/go3/eng_main_hsj_BAA79V5A.pdf (also listed at https://horaeng.com/462). Note: confirmation came from the search engine's summarized answer, not a directly quoted page snippet."
+      }
+    },
+    {
+      "g": "G027",
+      "e": "2027 6월 모평 41번",
+      "verdict": "CONFIRMED",
+      "questionType": "vocab",
+      "confirmed": [
+        {
+          "plantedText": "obey",
+          "correctedText": "defy",
+          "plantedExcerpt": "why glass behaves the way it does. Glass seems to obey most molecular laws.",
+          "correctedExcerpt": "why glass behaves the way it does. Glass seems to defy most molecular laws.",
+          "targetVariants": [
+            "A"
+          ],
+          "markerEvidence": null,
+          "confidence": "high",
+          "reason": "The preceding sentence states the paradox that scientists still cannot comprehend glass's behavior, so 'obey most molecular laws' directly contradicts the passage's thesis, while variant B preserves t"
+        }
+      ],
+      "unconfirmed": [],
+      "solverVerdict": "PLANTED_FOUND",
+      "verifierVerdict": "PLANTED_FOUND",
+      "solverNotes": "Variants otherwise identical; only other difference is 400˚C (A) vs 400°C (B), a typographic glyph variant, not a defect. B (single row) is the clean copy; A (5 rows) carries the planted exam print.",
+      "verifierNotes": "Variants A (5 rows) and B (1 row) are otherwise identical except a harmless glyph difference: 400˚C (A) vs 400°C (B). No circled markers remain. B appears to be the clean/corrected copy; A is the exam-print copy with the planted vocab answer.",
+      "web": {
+        "found": false,
+        "evidence": null
+      }
+    },
+    {
+      "g": "G013",
+      "e": "29번(해커스 수불패 8회)",
+      "verdict": "UNCONFIRMED",
+      "questionType": "grammar",
+      "confirmed": [],
+      "unconfirmed": [
+        {
+          "who": "solver-only",
+          "plantedText": "record them accurately",
+          "correctedText": "record accurately",
+          "excerpt": "many sounds are too quiet or unclear for equipment to record them accurately as they take place",
+          "reason": "In the too-adjective-for-X-to-infinitive construction the main subject (many sounds) is already the understood object of the infinitive, so the redund"
+        },
+        {
+          "who": "verifier-only",
+          "plantedText": "record them",
+          "correctedText": "record",
+          "excerpt": "many sounds are too quiet or unclear for equipment to record them accurately as they take place",
+          "reason": "In the too~to(for-phrase) construction the infinitive's object is the sentence subject ('many sounds'), so the retained pronoun 'them' is a genuine gr"
+        }
+      ],
+      "solverVerdict": "PLANTED_FOUND",
+      "verifierVerdict": "PLANTED_FOUND",
+      "solverNotes": "Single variant (4 identical rows), no circled markers, so position could not be cross-checked; the too~to redundant-object rule uniquely determines the fix. Rest of passage (despite seeming..., match it, being a Foley artist requires) is grammatical.",
+      "verifierNotes": "Only 1 variant (4 identical rows), no circled markers, so no cross-variant corroboration — hence medium confidence. All other sentences are grammatically sound; 'despite seeming as though they are authentic' is awkward but valid, not a defect."
+    },
+    {
+      "g": "G006",
+      "e": "29번(No.29)",
+      "verdict": "CLEAN",
+      "questionType": "grammar",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Single variant, no circled markers. All candidate grammar sites check out: causative \"having farmers commit\", \"commit to not exceeding\", relative \"that could be used\", pronoun references (they=policies/farmers), \"price of what they produced\" (correct",
+      "verifierNotes": "Single variant, no circled markers, no cross-variant contrast available. Passage (Winders & Nibert, Agricultural Adjustment Acts) reads grammatically and logically coherent throughout: \"having farmers commit to not exceeding\", \"instead of controlling"
+    },
+    {
+      "g": "G034",
+      "e": "올림포스 29-5",
+      "verdict": "CLEAN",
+      "questionType": "grammar",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Single variant (A) only, no circled markers, no cross-variant comparison possible. Passage (Commoner, ecosystem/stress) reads grammatically clean at every underline-candidate spot: subj-verb agreement (\"amount...is\", \"circle...breaks down\"), correlat",
+      "verifierNotes": "Single variant only (no cross-variant comparison, no residual ①-⑤ markers). Text is Barry Commoner ecosystem passage; all candidate grammar points (\"successfully\" adv, past-subjunctive \"if the lynx had...they might survive\", parallel \"simplified and "
+    },
+    {
+      "g": "G035",
+      "e": "올림포스 29-6",
+      "verdict": "CLEAN",
+      "questionType": "grammar",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Single variant, no circled markers. All typical 29번 target points check out: \"unchanging\" (adj), \"in which\" relatives (both correct), \"accepted\" main verb, \"could not be static, but must be either expanding or contracting\" (parallel), participle \"cal",
+      "verifierNotes": "Single variant, no circled markers, no cross-variant contrast. All candidate 29-type sites (participial \"looking out\", \"in which\", parallel \"be born, live and die\", \"must be either expanding or contracting\", infinitive \"to hold\") are grammatical, and"
+    },
+    {
+      "g": "G048",
+      "e": "수능특강 29-3",
+      "verdict": "CLEAN",
+      "questionType": "grammar",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Single variant (2 identical rows), no circled markers. Full grammar pass: relative \"by which\", plural \"facilities are situated\", \"three times more likely ... than\" all correct. Tense shift \"could not ... cannot breathe\" and \"Similarly to\" are awkward",
+      "verifierNotes": "Single variant (2 identical rows), no circled markers. Read as an 어법(29) source: all candidate points check out — \"was not only that... but also that...\", \"The process by which... is situated\", \"are ... situated\", \"three times more likely ... than\". "
+    },
+    {
+      "g": "G049",
+      "e": "수능특강 29-1",
+      "verdict": "CLEAN",
+      "questionType": "grammar",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Single variant only. All classic 29번 target sites (inversion \"goes\", infinitive-subject \"requires/does not\", participle \"embodied\", pronoun \"those\", parallel verbs) are in correct form; passage reads as clean original.",
+      "verifierNotes": "Single variant, no markers. All typical grammar targets (inversion 'goes', infinitive-subject 'requires', 'embodied', 'those', 'does not') are in correct form; passage is clean original."
+    },
+    {
+      "g": "G050",
+      "e": "수능특강 29-2",
+      "verdict": "CLEAN",
+      "questionType": "grammar",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Single variant, no markers. All classic 29번 target positions (making/transferring/facilitated/those promoting/with consumers demanding/forcing up) are grammatically correct and consistent with the argument; passage reads as clean original.",
+      "verifierNotes": "Single variant only, no circled markers, no cross-variant contrast available. All participial constructions grammatically valid; \"forcing up the desire\" is awkward but grammatical and consistent with the argument. No planted error identifiable."
+    },
+    {
+      "g": "G073",
+      "e": "29번(지문 29)",
+      "verdict": "CLEAN",
+      "questionType": "grammar",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Variants A/B are textually identical except hyphen/dash rendering (\"shipbuilding-just\" vs \"ship-building ― just\") — OCR/formatting, not a planted word. No circled markers. Full grammar scan (what were called collegia, There was + list, guilds...had t",
+      "verifierNotes": "Variants A/B differ only in \"shipbuilding-just\" (A, hyphen run-on from OCR) vs \"ship-building ―\" (B, em-dash); both readable, not sentence-breaking. No ①~⑤ markers. All verb forms, relatives, and logic check out; no planted word found."
+    },
+    {
+      "g": "G079",
+      "e": "29번(지문 29)",
+      "verdict": "CLEAN",
+      "questionType": "grammar",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Single variant, no circled markers, no cross-copy contrast. All typical 29번 underline sites (that collect / hold true / whether or not / to spend / are / find...await parallelism) are grammatical; logic consistent. \"spend money for\" is slightly unidi",
+      "verifierNotes": "Single variant, no ①~⑤ markers, no cross-copy contrast. All plausible 29번 grammar targets (denied, whether or not, to get you to spend, parallel verbs, await) are in their correct original forms; logic is consistent. Appears to be a clean restored/or"
+    },
+    {
+      "g": "G007",
+      "e": "30번(No.30)",
+      "verdict": "CLEAN",
+      "questionType": "vocab",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Single variant, no ①~⑤ markers, no cross-copy contrast available. All likely underline slots (preventing / prevent / will not consider / sensitivity...consumption / project responsibility) are logically consistent with the anti-green-advertising thes",
+      "verifierNotes": "Single variant only (no cross-copy contrast, no circled markers). Passage is awkward ESL-style prose (likely sourced from a non-native academic paper on green advertising) but logically consistent throughout: ads falsely suggest consumption prevents "
+    },
+    {
+      "g": "G014",
+      "e": "30번(해커스 수불패 8회)",
+      "verdict": "CLEAN",
+      "questionType": "vocab",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Variants A/B identical except apostrophe glyph in \"Newton's\"; no ①~⑤ markers. Physics argument fully self-consistent (pillow example correctly contrasts same-object cancellation). Awkward phrasing (\"pushes the same upward force\", \"a force that is dow",
+      "verifierNotes": "Variants A/B are identical except apostrophe glyph (curly vs straight) in \"Newton's\" — pure duplicate rows. No circled markers. Physics logic is internally consistent (cancellation only on same object; pillow example matches). Some awkward phrasing ("
+    },
+    {
+      "g": "G036",
+      "e": "올림포스 30-4",
+      "verdict": "CLEAN",
+      "questionType": "vocab",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Single variant (A), no copies to cross-check, no ①~⑤ markers present. Passage reads fully coherent both grammatically and logically: thesis is that all life is the \"equal product\" of evolution and complexity is not a directional march — every candida",
+      "verifierNotes": "Single variant (A) only, no cross-copy comparison and no residual ①-⑤ markers. 30번(어휘) source. Passage is thesis-consistent throughout: bacteria simplest yet most abundant, evolution not toward more-complex organisms, all life equal product of 4 b.y."
+    },
+    {
+      "g": "G037",
+      "e": "올림포스 30-5",
+      "verdict": "CLEAN",
+      "questionType": "vocab",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Single variant, no circled markers. Passage (informativeness/negativity bias in person perception) is fully coherent: negative info deviates from mildly positive expectations, extreme info reveals unusual traits, both are informative, attract attenti",
+      "verifierNotes": "Single variant, no markers, no cross-variant contrast. Argument chain is fully coherent: informative info -> salient -> more weight; negative info deviates from mildly positive expectations; extreme info reveals unusual characteristics; both are more"
+    },
+    {
+      "g": "G038",
+      "e": "올림포스 30-6",
+      "verdict": "CLEAN",
+      "questionType": "vocab",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Single variant, no circled markers, no cross-variant contrast available. Passage (division of labor -> morality grew complex) is logically consistent throughout: \"expanded in complexity\", \"doing right\", \"needed to be accepted\" all fit the argument. \"",
+      "verifierNotes": "Single variant only; no markers, no cross-variant contrast possible. All plausible vocab slots (expanded/accepted/right/sophisticated) match the argument. \"could ... and still must be looked upon\" is heavy but grammatical original-style prose, not a "
+    },
+    {
+      "g": "G074",
+      "e": "30번(지문 30)",
+      "verdict": "CLEAN",
+      "questionType": "vocab",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Single variant only (2 identical rows), no markers. Passage (Woodworth, on behaviorism) is grammatically and logically coherent end-to-end. \"When then\" reflects original prose with commas dropped — cosmetic, not sentence-breaking.",
+      "verifierNotes": "Single variant only (2 identical rows), no ①~⑤ markers. Early-20th-century behaviorism passage; logic is internally consistent at every candidate slot (objected/rebelled/offensive/mistake all align with the anti-consciousness thesis). \"When then\" is "
+    },
+    {
+      "g": "G080",
+      "e": "30번(지문 30)",
+      "verdict": "CLEAN",
+      "questionType": "vocab",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Single variant, no markers, no cross-variant contrast available. All 30번-style candidate words (secondhand, increase, reverse, less eager, downplay, compensate, critical, blindly optimistic) carry the logically required polarity; passage is grammatic",
+      "verifierNotes": "Single variant, no circled markers, no cross-variant contrast possible. Grammar is clean throughout. Sole candidate examined: \"downplay the failure of the team\" — but minimizing failure is a coherent coping response, parallel to the later \"blindly op"
+    },
+    {
+      "g": "G052",
+      "e": "2018 3월 고1 29번",
+      "verdict": "CONFIRMED",
+      "questionType": "grammar",
+      "confirmed": [
+        {
+          "plantedText": "lowering",
+          "correctedText": "lowered",
+          "plantedExcerpt": "attached it to a pole, and lowering it beneath the waves off the coast",
+          "correctedExcerpt": "attached it to a pole, and lowered it beneath the waves off the coast",
+          "targetVariants": [
+            "A"
+          ],
+          "markerEvidence": null,
+          "confidence": "high",
+          "reason": "Parallel past-tense series \"waterproofed ..., attached ..., and ___\" grammatically requires \"lowered\"; the gerund \"lowering\" breaks the coordination and is the classic planted grammar answer for this "
+        }
+      ],
+      "unconfirmed": [],
+      "solverVerdict": "PLANTED_FOUND",
+      "verifierVerdict": "PLANTED_FOUND",
+      "solverNotes": "Single variant only, no circled markers. Minor OCR artifacts present but not sentence-breaking: missing space in \"survived.Underwater\", soft-hyphen glyphs in \"10 ­minute\" and \"deep­sea\".",
+      "verifierNotes": "Single variant only. Minor OCR artifacts not reported as findings: missing space in \"survived.Underwater\", soft-hyphen glyphs in \"10 ­minute\" and \"deep­sea\". No circled markers remain.",
+      "web": {
+        "found": false,
+        "evidence": null
+      }
+    },
+    {
+      "g": "G077",
+      "e": "2017 3월 고1 41번",
+      "verdict": "CLEAN",
+      "questionType": "other",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Single variant, no markers. Passage is the 41-42 long-passage source; 41 is the title question. All candidate vocab slots (ignore, omission, no thanks, denies) are logically consistent with the thesis; grammar clean. No cross-variant contrast availab",
+      "verifierNotes": "Single variant only (1 row, no cross-variant contrast, no circled markers). Passage reads grammatically clean and logically coherent throughout (teacher-student anecdote consistently supports \"focus on what was done, not omitted\"). 41번 is typically t"
+    },
+    {
+      "g": "G009",
+      "e": "41번(No.41)",
+      "verdict": "CLEAN",
+      "questionType": "unknown/other",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Single variant, no circled markers, no cross-variant contrast available. Passage (Pentland, Social Physics — big data vs. lab/survey social science) is grammatically sound and logically coherent throughout: micropatterns argument flows without contra",
+      "verifierNotes": "Single variant, no circled markers, no cross-variant contrast available. Passage (Pentland, Social Physics — big data vs. classical social science) reads grammatically clean and logically coherent throughout; \"when all of our mental quirks operate\" a"
+    },
+    {
+      "g": "G021",
+      "e": "2025 41번",
+      "verdict": "CLEAN",
+      "questionType": "unknown/vocab",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Single variant, no circled markers. Passage (Lehrer, credit-card pain-of-paying / Prelec-Simester Celtics auction) is fully grammatical and logically consistent throughout: credit reduces insula activity -> less pain -> higher/reckless bids. No word ",
+      "verifierNotes": "Single variant, no circled markers. Passage (Lehrer, credit-card pain-of-payment) is internally consistent: reduced insula activity → anesthetized against payment pain → spend more; credit bids twice cash bids → more reckless. No grammar violations o"
+    },
+    {
+      "g": "G075",
+      "e": "올포 비문학 T41",
+      "verdict": "CLEAN",
+      "questionType": "unknown/other",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Single variant, no markers, no cross-variant contrast. Passage (chimps delaying gratification) is grammatically clean and logically coherent throughout — \"inaccessible\" (during accumulation) vs \"accessible\" (periodic windows when chimps must",
+      "verifierNotes": "Single variant (A) only, no circled markers (①~⑤), so no cross-variant or marker evidence available. Passage (chimps/impulsivity delayed-gratification study) is grammatically clean and logically coherent end to end; ending sentence \"focused on toys w"
+    },
+    {
+      "g": "G010",
+      "e": "42번(No.42)",
+      "verdict": "CLEAN",
+      "questionType": "vocab",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Single variant, no markers. All 42-type content words internally consistent (closing sentence mirrors \"loss of fear/growing concern\"). Only oddity: connective \"even though it does not seem that the future will be any different\" (expect \"and\"), but gr",
+      "verifierNotes": "Single variant, no circled markers, no cross-variant contrast possible. Passage is thesis-coherent throughout (distrust of science grows as fear of authority declines; final \"decrease in fear... increase in concern\" matches). Only oddity: concessive "
+    },
+    {
+      "g": "G047",
+      "e": "올포 비문학 T42",
+      "verdict": "CLEAN",
+      "questionType": "vocab",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Single variant, no circled markers. Passage (Bruce Hood-style text on Titmuss/crowding out) is logically coherent throughout: paying donors reduces donations, charity option preserves them, warm-glow game result all align. 'considered nasty' and the ",
+      "verifierNotes": "Single variant only; no markers, no cross-copy contrast. Argument chain (crowding out: payment drops donations; warm-glow giving persists) is internally consistent. \"considered nasty\" is awkward but negative-valenced as context requires — not a defec"
+    },
+    {
+      "g": "G069",
+      "e": "2024 6월 30번",
+      "verdict": "CLEAN",
+      "questionType": "vocab",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Single variant, no markers. Classic answer slot reads \"decelerate adaptation\" — the logically correct form (planted form would be \"accelerate\"), so this copy is clean. Fragment \"Because these less enjoyable moments...\" matches source style; no cross-",
+      "verifierNotes": "Single variant, no markers. All classic swap sites (increase/opposite/pleasurable/decelerate/enjoyable) carry the logically correct form. The 'Because...' fragment is source-style, not OCR damage."
+    },
+    {
+      "g": "G076",
+      "e": "2022 6월 30번",
+      "verdict": "CLEAN",
+      "questionType": "vocab",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Single variant only. Double spaces at \"a  paradox\", \"become  distracted\", \"a  passive\", \"the  flexibility\" are stripped circled-marker residue. All candidate words verified verbatim against the original source (The Knowledge Illusion excerpt on Nauti",
+      "verifierNotes": "Single variant only. Double-space gaps before \"paradox/distracted/passive/flexibility\" suggest stripped underline markers (30번 어휘). Checked each candidate plus \"collaborating/oversight/reveals/more likely\": all fit the automation-paradox argument (be"
+    },
+    {
+      "g": "G023",
+      "e": "2026 6월 41번",
+      "verdict": "CLEAN",
+      "questionType": "unknown/other",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Only divergence: A \"the absence of predictability\" vs B \"the lack of predictability\" — synonyms, both grammatical and logic-consistent; transcription variance, not a plant. No markers, no OCR damage (A has double-spacing artifacts only). Likely a 41-",
+      "verifierNotes": "A/B differ only at \"absence\"(A) vs \"lack\"(B) of predictability — synonyms, both grammatical and logic-consistent; plus spacing/curly-quote differences. No ①~⑤ markers, no contradiction. 41번(제목류) 지문으로 심긴 오답 단어 부재."
+    },
+    {
+      "g": "G016",
+      "e": "2023 6월 고1 41-42번",
+      "verdict": "CONFIRMED",
+      "questionType": "vocab",
+      "confirmed": [
+        {
+          "plantedText": "surpluses.With",
+          "correctedText": "surpluses. With",
+          "plantedExcerpt": "yields and provide ever larger surpluses.With improved technology and favorable",
+          "correctedExcerpt": "yields and provide ever larger surpluses. With improved technology and favorable",
+          "targetVariants": [
+            "B"
+          ],
+          "markerEvidence": null,
+          "confidence": "high",
+          "reason": "OCR/extraction damage, not a planted word: Variant B fuses the paragraph boundary into one token while Variant A keeps the correct sentence break."
+        }
+      ],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Both variants are textually identical and fully coherent (grammar and logic all hold: leaders hunted because surpluses were seldom sufficient; surplus supported nonfarmers; nonfarmers gave leadership/security; specialization brought stability). No ci",
+      "verifierNotes": "No planted answer word in either variant; all vocab slots (sufficient/changed/increase/specialized/stability) fit the argument. Variant B also has soft-hyphen chars in \"hunter-gatherer\"/\"full-time\" and a double space before \"The development\" — minor ",
+      "web": {
+        "found": false,
+        "evidence": null
+      }
+    },
+    {
+      "g": "G020",
+      "e": "2024 6월 고1 41-42번",
+      "verdict": "CLEAN",
+      "questionType": "vocab/other",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "A and B are textually identical (B is line-split). All 42-style vocab candidates (non-threatening/reward/mastery/safe/directly) are logically consistent; grammar clean. Oddity in both: \"any of these tissues\" lacks an antecedent — likely a phrase drop",
+      "verifierNotes": "2024 6월 고1 41-42번 지문(safe threat/칠리·capsaicin). VARIANT A와 B는 어휘가 완전히 동일; B는 줄바꿈과 em-dash 주변 공백만 다름(A: \"chillies —  capsaicin — touches\", B: \"chillies—capsaicin—touches\"). 원형숫자 마커 없음. 논지(고통=보상, mastery)에 정면 모순되는 단어나 문법 위반 없음. \"these tissues\"는 선행사가 약하"
+    },
+    {
+      "g": "G005",
+      "e": "2025 6월 고2 29번",
+      "verdict": "CLEAN",
+      "questionType": "grammar",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Official print (passages.json ebsi_go2_20250604-q29, answer ②) planted \"has\" in \"forms or objects ... actually has depth\"; all 3 variants already have corrected \"have\". \"appear differently\" is attested in the official print (correct-as-underlined opt",
+      "verifierNotes": "Verified against official exam PDF (horaeng.com): print plants ②has (orig. have); all variants read \"have\" = corrected clean copies. \"appear differently\" is verbatim original (④ underlined \"viewed\"). Only trivial diffs: curly/straight apostrophe, glo"
+    },
+    {
+      "g": "G022",
+      "e": "2025 6월 고2 30번",
+      "verdict": "CLEAN",
+      "questionType": "vocab",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "A and B are textually identical apart from line-wrapping, A's gloss line (* logistics ...), and a harmless double space in B (\"price  decreases\"). All polarity-sensitive words (benefit/stimulating/boost/slowed/concern) are contextually correct; passa",
+      "verifierNotes": "A and B are textually identical apart from line-wrapping and a double space in B (\"price  decreases\"). No circled markers, no cross-variant word divergence. All six plausible vocab slots (benefit/stimulating/boost/proves/slowed/concern) align with th"
+    },
+    {
+      "g": "G002",
+      "e": "한영고 1학년",
+      "verdict": "CLEAN",
+      "questionType": "unknown",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "A and B are textually identical (A merely adds circled markers ①–⑪ on every sentence — sentence enumeration, not the 5-position ①–⑤ answer markers). Recall/recognition logic is consistent at every polarity point; no grammar errors, no OCR damage.",
+      "verifierNotes": "A and B are textually identical except A retains circled markers ①~⑪ numbering every sentence (11 markers, not the 5-choice ①~⑤ pattern), so markers do not pin a planted position. Full grammar/logic read-through: recall-vs-recognition argument is con"
+    },
+    {
+      "g": "G078",
+      "e": "2002 고3 수능 29번",
+      "verdict": "CONFIRMED",
+      "questionType": "grammar",
+      "confirmed": [
+        {
+          "plantedText": "came the lights on",
+          "correctedText": "the lights came on",
+          "plantedExcerpt": "Neither could my sister. All at once, came the lights on. An attendant was hurrying toward us.",
+          "correctedExcerpt": "Neither could my sister. All at once, the lights came on. An attendant was hurrying toward us.",
+          "targetVariants": [
+            "A"
+          ],
+          "markerEvidence": null,
+          "confidence": "high",
+          "reason": "Inversion is not licensed after the time adverbial 'All at once' (unlike the valid 'Out of the dark came a vague voice' earlier in the passage), so 'came the lights on' is ungrammatical and is the pla"
+        }
+      ],
+      "unconfirmed": [
+        {
+          "who": "solver-only",
+          "plantedText": "museum. saying.,",
+          "correctedText": "museum, saying,",
+          "excerpt": "He looked angry as he led us out of the museum. saying., \"We closed fifteen minutes ago!\"",
+          "reason": "OCR-broken punctuation: a sentence-ending period before lowercase participle 'saying' plus the impossible 'saying.,' sequence breaks the sentence; the"
+        },
+        {
+          "who": "verifier-only",
+          "plantedText": "out of the museum. saying.,",
+          "correctedText": "out of the museum, saying,",
+          "excerpt": "He looked angry as he led us out of the museum. saying., \"We closed fifteen minutes ago!\"",
+          "reason": "OCR punctuation damage, not a planted item: the period before the participial phrase strands \"saying., …\" as a verbless fragment, and \".,\" is not vali"
+        }
+      ],
+      "solverVerdict": "PLANTED_FOUND",
+      "verifierVerdict": "PLANTED_FOUND",
+      "solverNotes": "Single variant only, no cross-copy comparison possible and no circled markers. Passage matches the known 2002 수능 29번 inversion-grammar item; the printed wrong-answer inversion 'came the lights on' is stored verbatim. Second finding is OCR punctuation",
+      "verifierNotes": "Single variant only (no cross-copy comparison possible). Finding 1 is the exam's planted grammar answer (inversion word order); finding 2 is OCR punctuation breakage, judged from internal evidence since no second variant exists. No circled markers re",
+      "web": {
+        "found": false,
+        "evidence": null
+      }
+    },
+    {
+      "g": "G018",
+      "e": "모의고사 30번(체스)",
+      "verdict": "CLEAN",
+      "questionType": "vocab",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "Single variant, no markers. All polarity-critical words (reduced/disappears/increased/longer/better) match the thesis. Final sentence reads like an appended summary sentence (typical of 요약/30번 stems) but is logically consistent; \"even when it involve",
+      "verifierNotes": "Single variant, no circled markers. All candidate vocab positions (reduced/disappears/randomly/increased/conventional) align with the thesis that expert memory advantage holds only for familiar patterns; grammar is sound throughout. No cross-variant "
+    },
+    {
+      "g": "G042",
+      "e": "수능 29번(지문 29)",
+      "verdict": "CONFIRMED",
+      "questionType": "grammar",
+      "confirmed": [
+        {
+          "plantedText": "for less-than-first-place finish",
+          "correctedText": "for a less-than-first-place finish",
+          "plantedExcerpt": "expressions of disappointment or criticism for less-than-first-place finish, intrinsic",
+          "correctedExcerpt": "expressions of disappointment or criticism for a less-than-first-place finish, intrinsic",
+          "targetVariants": [
+            "B"
+          ],
+          "markerEvidence": null,
+          "confidence": "high",
+          "reason": "OCR damage, not a planted answer: the article 'a' was displaced to a stray trailing 'a' after the final period in B, while A preserves the correct 'a less-than-first-place finish'."
+        }
+      ],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "A and B are otherwise identical; no circled markers. B ends with orphan token ' a' after '...may be reduced.' — the displaced article. A is the clean copy. No grammar violation or logic-contradicting word found, so no planted 29번 answer word survives",
+      "verifierNotes": "No circled markers in either variant. A and B are otherwise identical; B's only divergence is the missing article before \"less-than-first-place finish\" plus a stranded \" a\" appended after the final sentence — classic OCR token displacement, not a pla",
+      "web": {
+        "found": false,
+        "evidence": null
+      }
+    },
+    {
+      "g": "G041",
+      "e": "수능 30번(지문 30)",
+      "verdict": "CLEAN",
+      "questionType": "vocab/other",
+      "confirmed": [],
+      "unconfirmed": [],
+      "solverVerdict": "NO_DEFECT",
+      "verifierVerdict": "NO_DEFECT",
+      "solverNotes": "2 variants, wording identical. Only diff: VARIANT A keeps em-dashes around appositive (\"life forms - the fruit fly and the pea - that possess\"), VARIANT B dropped them (\"life forms the fruit fly and the pea that possess\"). This is minor OCR punctuati",
+      "verifierNotes": "2 variants, near-identical. Only diff: VARIANT A brackets the appositive with em-dashes (\"life forms - the fruit fly and the pea - that possess\"); VARIANT B drops both dashes (\"life forms the fruit fly and the pea that possess\"). This is minor punctu"
+    }
+  ]
+}

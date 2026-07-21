@@ -353,7 +353,7 @@
       "마커잔존"
     ],
     "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G017.md",
-    "copyCount": 7,
+    "copyCount": 10,
     "variantCount": 4,
     "anchorExpanded": [
       "cmp9w6ayk000dv3lcbm7gvhsi(\"지문 34\")",
@@ -370,9 +370,17 @@
       "cmpaqf9ey0013l204nnoouqbe",
       "cmpci166c0001ko0bpx7gnjku",
       "cmpqvdzht0001mmu80piqom02",
-      "cmpr580mr000lmmogu86qkqjr"
+      "cmpr580mr000lmmogu86qkqjr",
+      "cmpcavlwr001djv04old0huvg",
+      "cmru6pmff0010l104uhcdkr32",
+      "cmru6xica000djv04ap1tsdoc"
     ],
-    "hasMarkerCopy": true
+    "hasMarkerCopy": true,
+    "closureAdded": [
+      "cmpcavlwr001djv04old0huvg",
+      "cmru6pmff0010l104uhcdkr32",
+      "cmru6xica000djv04ap1tsdoc"
+    ]
   },
   {
     "groupId": "G028",
@@ -833,7 +841,7 @@
       "title번호"
     ],
     "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G025.md",
-    "copyCount": 6,
+    "copyCount": 7,
     "variantCount": 2,
     "anchorExpanded": [
       "cmq2ed3hr0005jr04zobmdeph(\"Classical works by playwrights\")"
@@ -844,9 +852,13 @@
       "cmrbbc2a2000tld04kf8msqvr",
       "cmrn206xb000xl404cw25fojv",
       "cmrq60z2k000tkx0apqnw5ldd",
-      "cmq2ed3hr0005jr04zobmdeph"
+      "cmq2ed3hr0005jr04zobmdeph",
+      "cmq98facv000s9qzhbenqjrxq"
     ],
-    "hasMarkerCopy": false
+    "hasMarkerCopy": false,
+    "closureAdded": [
+      "cmq98facv000s9qzhbenqjrxq"
+    ]
   },
   {
     "groupId": "G027",
