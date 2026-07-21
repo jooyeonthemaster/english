@@ -188,13 +188,20 @@ test("EN-REG-4/ISO-3: /api/passages/list 폴더 목록에 과목 스코프 + P20
 });
 
 test("ISO-4: 국어 generate 폴더 생성이 subject=KOREAN 을 전달", () => {
+  // 리팩토링(afb3d1b1)으로 폴더 생성 핸들러가 generate-page-client.tsx 에서
+  // use-passage-collections.ts 훅으로 이동 — 배선 검사 지점을 함께 이동한다.
+  const hook = src(
+    "src/app/(director)/director/workbench/generate/use-passage-collections.ts",
+  );
+  assert.match(
+    hook,
+    /createPassageCollection\(\{[\s\S]*?\.\.\.\(subjectScope === "KOREAN" \? \{ subject: "KOREAN" as const \} : \{\}\)/,
+  );
+  // 본체가 subjectScope 를 훅에 실제로 배선하는지도 함께 고정한다.
   const client = src(
     "src/app/(director)/director/workbench/generate/generate-page-client.tsx",
   );
-  assert.match(
-    client,
-    /createPassageCollection\(\{[\s\S]*?\.\.\.\(subjectScope === "KOREAN" \? \{ subject: "KOREAN" as const \} : \{\}\)/,
-  );
+  assert.match(client, /usePassageCollections\(\{[\s\S]*?subjectScope/);
 });
 
 test("ISO-5: 국어 시험지 생성/편집이 국어 전용 라우트로 착륙한다(경로 완전 분리)", () => {

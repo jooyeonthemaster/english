@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import { QUESTION_TYPE_GROUPS } from "@/lib/question-type-ui";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import type { QuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";

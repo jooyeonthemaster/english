@@ -1,7 +1,11 @@
-// @ts-nocheck
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useState,
+  type MouseEvent as ReactMouseEvent,
+} from "react";
 import {
   FileText,
   GripVertical,
@@ -242,7 +246,9 @@ export function GenerationConfigPanel({
     const byId = new Map(allTypeItems.map((item) => [item.id, item]));
     return normalizeTypeOrder(typeOrder)
       .map((id) => byId.get(id))
-      .filter(Boolean);
+      // 타입가드: filter(Boolean) 은 undefined 를 못 좁혀 하류 전체가 'possibly
+      // undefined' 가 된다 — 런타임 동일(Boolean(item) 호출)한 술어로만 교체.
+      .filter((item): item is (typeof allTypeItems)[number] => Boolean(item));
   }, [allTypeItems, allTypeIds, typeOrder]);
   const [draggingTypeId, setDraggingTypeId] = useState<string | null>(null);
   const [dragOverTypeId, setDragOverTypeId] = useState<string | null>(null);
@@ -536,7 +542,10 @@ export function GenerationConfigPanel({
   const rawGrammarAnswerCount = Math.round(
     Number(
       grammarErrorSettings.answerCount ??
-        grammarErrorSettings.correctAnswerCount,
+        // 캐스트 사유: correctAnswerCount 는 타입 미선언 레거시 분석 필드(저장된
+        // 구설정 호환 읽기) — CONTENT_MATCH 와 동일 관례. 읽기 전용 좁은 캐스트.
+        (grammarErrorSettings as { correctAnswerCount?: number })
+          .correctAnswerCount,
     ) || GRAMMAR_ANSWER_COUNT_DEFAULT,
   );
   const grammarAnswerMax = Math.max(
@@ -596,7 +605,9 @@ export function GenerationConfigPanel({
   const rawGrammarCorrectionErrorCount = Math.round(
     Number(
       grammarCorrectionSettings.errorCount ??
-        grammarCorrectionSettings.answerCount,
+        // 캐스트 사유: answerCount 는 타입 미선언 레거시 별칭 필드(저장된 구설정
+        // 호환 읽기) — errorCount 로 해석. 읽기 전용 좁은 캐스트.
+        (grammarCorrectionSettings as { answerCount?: number }).answerCount,
     ) || GRAMMAR_CORRECTION_ERROR_COUNT_DEFAULT,
   );
   const grammarCorrectionErrorCount = Math.min(
@@ -697,7 +708,10 @@ export function GenerationConfigPanel({
     );
   };
 
-  const handleTypeSectionClick = (event, id: string) => {
+  const handleTypeSectionClick = (
+    event: ReactMouseEvent<HTMLElement>,
+    id: string,
+  ) => {
     const target = event.target as HTMLElement | null;
     if (isTypeControlTarget(target)) {
       return;
@@ -705,7 +719,10 @@ export function GenerationConfigPanel({
     incrementTypeCount(id);
   };
 
-  const handleTypeSurfaceClick = (event, id: string) => {
+  const handleTypeSurfaceClick = (
+    event: ReactMouseEvent<HTMLElement>,
+    id: string,
+  ) => {
     const target = event.target as HTMLElement | null;
     if (isTypeControlTarget(target)) {
       return;
@@ -741,7 +758,15 @@ export function GenerationConfigPanel({
       return (
         <KoTypeDetailContent
           typeId={typeId}
-          questionTypeSettings={questionTypeSettings}
+          questionTypeSettings={
+            // 캐스트 사유: QuestionTypeGenerationSettings 의 인덱스 시그니처가
+            // unknown 이라 KO 상세가 기대하는 Record 형과 불일치 — 런타임 값은
+            // 유형별 설정 객체 그대로(무변경)라 좁은 캐스트로 맞춘다.
+            questionTypeSettings as Record<
+              string,
+              Record<string, unknown> | undefined
+            >
+          }
           patchTypeSettings={patchTypeSettings}
         />
       );
@@ -786,11 +811,11 @@ export function GenerationConfigPanel({
   // 싶을 때 override 한다. 값은 questionTypeSettings[typeId].difficulty 에 쓰며,
   // 서버는 readQuestionTypeDifficultySetting(…, 전역 difficulty) 로 이를 우선 적용한다.
   // undefined = 전역 따름(오늘과 동일 동작). 순수 프런트엔드(백엔드 변경 0).
-  const renderPerTypeDifficulty = (typeId) => TypeNumericDetail.renderPerTypeDifficultyImpl({ typeId, difficulty, patchTypeSettings, questionTypeSettings });
+  const renderPerTypeDifficulty = (typeId: string) => TypeNumericDetail.renderPerTypeDifficultyImpl({ typeId, difficulty, patchTypeSettings, questionTypeSettings });
 
   // Every type gets language toggles; numeric/special settings render above them.
   // KO 유형은 언어토글(영어 stem/option 전용)·플랜 셀렉터 없이 KO 전용 상세만 렌더.
-  const renderTypeDetailContent = (typeId) =>
+  const renderTypeDetailContent = (typeId: string) =>
     typeId.startsWith("KO_")
       ? renderTypeNumericDetailContent(typeId)
       : TypeNumericDetail.renderTypeDetailContentImpl({ typeId, getTypeOptionLanguage, getTypeStemLanguage, renderTypeNumericDetailContent, setTypeLanguage });
@@ -822,7 +847,10 @@ export function GenerationConfigPanel({
                   key={mode}
                   type="button"
                   onClick={() => {
-                    setGenMode(mode);
+                    // 캐스트 사유: as const 가 스프레드 삼항 분기 내부 리터럴까지
+                    // 전파되지 않아 mode 가 string 으로 넓혀짐 — 실제 리터럴 값은
+                    // "manual"|"set" 뿐(런타임 무변경).
+                    setGenMode(mode as "manual" | "set");
                     if (mode === "manual") {
                       dispatchGenerateTourMilestone(
                         "generation-mode-manual-opened",
@@ -952,8 +980,15 @@ export function GenerationConfigPanel({
                                   dragOverTypeId === item.id &&
                                   draggingTypeId !== item.id;
                                 // 이 유형의 실제 난이도(미설정이면 기본 난이도).
+                                // 캐스트 사유: 인덱스 시그니처(unknown) 키 접근이라
+                                // 공통 필드(difficulty)만 읽는 좁은 캐스트를 앞단에
+                                // 추가 — 기존 as 난이도 단언 의미 그대로(런타임 무변경).
                                 const effDiff =
-                                  (questionTypeSettings[item.id]?.difficulty as
+                                  ((
+                                    questionTypeSettings[item.id] as
+                                      | { difficulty?: unknown }
+                                      | undefined
+                                  )?.difficulty as
                                     | "BASIC"
                                     | "INTERMEDIATE"
                                     | "KILLER"

@@ -70,7 +70,14 @@ export interface GenerationConfigPanelProps {
   // Manual config
   typeCounts: Record<string, number>;
   setTypeCount: (id: string, count: number) => void;
-  setTypeCounts: (v: Record<string, number>) => void;
+  // setQuestionTypeSettings 와 동형의 업데이터 수용 계약 — 패널 내부가 업데이터
+  // 함수로 호출하므로 값 전용 세터를 넘기면 안 된다(공급자는 React setState 또는
+  // 업데이터 수용 래퍼여야 한다).
+  setTypeCounts: (
+    v:
+      | Record<string, number>
+      | ((prev: Record<string, number>) => Record<string, number>),
+  ) => void;
   questionTypeSettings: QuestionTypeGenerationSettings;
   setQuestionTypeSettings: (
     v:

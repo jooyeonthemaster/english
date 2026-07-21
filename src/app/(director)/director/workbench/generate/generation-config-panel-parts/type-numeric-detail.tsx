@@ -1,10 +1,11 @@
-// @ts-nocheck
 "use client";
 
 // generation-config-panel.tsx 의 renderTypeNumericDetailContent 에서 유형별 세부설정 렌더를
 // verbatim 추출한 순수 함수들. 컴포넌트 상태/세터/파생값은 인자로 주입(효과는 main 잔류).
-// 호출부 인라인 함수호출이라 React reconciliation 동일. @ts-nocheck=원본 충실(인자 타입 생략).
+// 호출부 인라인 함수호출이라 React reconciliation 동일. 파라미터 타입은
+// generation-config-panel.tsx 의 실측 캡처 시그니처와 동형(타입 전용 — 런타임 무영향).
 
+import type { MouseEvent as ReactMouseEvent, ReactNode } from "react";
 import { DIFFICULTY_TONES, VOCAB_GENERATION_TYPE_IDS } from "./constants";
 import { resolvePointPickerMeta } from "./point-picker-config";
 import { renderLanguageSetting, renderNumberSetting, renderSegSetting, renderToggleSetting } from "./setting-fields";
@@ -15,9 +16,40 @@ import { CREDIT_COSTS } from "@/lib/credit-costs";
 import { dispatchGenerateTourMilestone } from "@/lib/generate-tour-demo";
 import { getQuestionGenerationCreditCost } from "@/lib/question-generation-plans";
 import { ANTONYM_PAIR_COUNT_MAX, ANTONYM_PAIR_COUNT_MIN, BLANK_INFERENCE_BLANK_COUNT_MAX, BLANK_INFERENCE_BLANK_COUNT_MIN, CONTENT_MATCH_ANSWER_COUNT_MIN, CONTENT_MATCH_OPTION_COUNT_MAX, CONTENT_MATCH_OPTION_COUNT_MIN, GENERIC_OPTION_COUNT_MAX, GENERIC_OPTION_COUNT_MIN, GRAMMAR_ANSWER_COUNT_MIN, GRAMMAR_CORRECTION_ERROR_COUNT_MAX, GRAMMAR_CORRECTION_ERROR_COUNT_MIN, GRAMMAR_MARKER_COUNT_MAX, GRAMMAR_MARKER_COUNT_MIN, IRRELEVANT_SLOT_COUNT_MAX, IRRELEVANT_SLOT_COUNT_MIN, SENTENCE_INSERT_SLOT_COUNT_MAX, SENTENCE_INSERT_SLOT_COUNT_MIN, SUMMARY_COMPLETE_BLANK_COUNT_MAX, SUMMARY_COMPLETE_BLANK_COUNT_MIN, SUMMARY_COMPLETE_MC_BLANK_COUNT_MAX, SUMMARY_COMPLETE_MC_BLANK_COUNT_MIN, SUMMARY_WRITING_BLANK_COUNT_DEFAULT, SUMMARY_WRITING_BLANK_COUNT_MAX, SUMMARY_WRITING_BLANK_COUNT_MIN, SUMMARY_WRITING_DISTRACTOR_COUNT_DEFAULT, SUMMARY_WRITING_DISTRACTOR_COUNT_MAX, SUMMARY_WRITING_DISTRACTOR_COUNT_MIN, SUMMARY_WRITING_TARGET_WORDS_DEFAULT, SUMMARY_WRITING_TARGET_WORDS_MAX, SUMMARY_WRITING_TARGET_WORDS_MIN, TOPIC_SENTENCE_WRITING_BLANK_COUNT_MAX, TOPIC_SENTENCE_WRITING_BLANK_COUNT_MIN, TOPIC_SENTENCE_WRITING_DISTRACTOR_COUNT_MAX, TOPIC_SENTENCE_WRITING_DISTRACTOR_COUNT_MIN, VOCAB_CHOICE_ANSWER_COUNT_MIN, VOCAB_CHOICE_MARKER_COUNT_MAX, VOCAB_CHOICE_MARKER_COUNT_MIN, getQuestionLanguageToggleScope, resolveTopicSentenceWritingSettings, supportsGistAnswerPolarity } from "@/lib/question-type-generation-settings";
+import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
+import type {
+  BlankInferenceGenerationSettings,
+  ContentMatchGenerationSettings,
+  GrammarChoiceComboGenerationSettings,
+  GrammarCorrectionGenerationSettings,
+  GrammarErrorGenerationSettings,
+  QuestionTypeGenerationSettings,
+} from "@/lib/question-type-generation-settings";
 import { Cpu, Crosshair, FileText, Minus, Plus, Target } from "lucide-react";
 
-export function renderAntonymDetail({ antonymPairCount, setAntonymPairCount }) {
+// ─── 주입 파라미터 공용 타입 — generation-config-panel.tsx 캡처와 동형 ───
+
+/** 패널 난이도 리터럴 — GenerationConfigPanelProps.difficulty 와 동일. */
+type PanelDifficulty = "BASIC" | "INTERMEDIATE" | "KILLER";
+/** generation-config-panel.tsx 의 patchTypeSettings 시그니처. */
+type PatchTypeSettings = (typeId: string, patch: Record<string, unknown>) => void;
+/** GenerationConfigPanelProps.setQuestionTypeSettings 시그니처. */
+type SetQuestionTypeSettings = (
+  v:
+    | QuestionTypeGenerationSettings
+    | ((prev: QuestionTypeGenerationSettings) => QuestionTypeGenerationSettings),
+) => void;
+/** 세트 멤버 오버라이드 — GenerationConfigPanelProps.setMemberOverrides 원소와 동형. */
+type PanelSetMemberOverride = {
+  difficulty?: PanelDifficulty;
+  generationPlan?: QuestionGenerationPlan;
+  typeSettings?: Record<string, unknown>;
+};
+
+export function renderAntonymDetail({ antonymPairCount, setAntonymPairCount }: {
+  antonymPairCount: number;
+  setAntonymPairCount: (next: number) => void;
+}) {
       return renderNumberSetting({
         title: "단어 쌍 개수",
         badges: [
@@ -34,7 +66,15 @@ export function renderAntonymDetail({ antonymPairCount, setAntonymPairCount }) {
       });
     }
 
-export function renderContentMatchDetail({ contentMatchAnswerCount, contentMatchAnswerMax, contentMatchOptionCount, contentMatchSettings, setContentMatchAnswerCount, setContentMatchOptionCount, setQuestionTypeSettings }) {
+export function renderContentMatchDetail({ contentMatchAnswerCount, contentMatchAnswerMax, contentMatchOptionCount, contentMatchSettings, setContentMatchAnswerCount, setContentMatchOptionCount, setQuestionTypeSettings }: {
+  contentMatchAnswerCount: number;
+  contentMatchAnswerMax: number;
+  contentMatchOptionCount: number;
+  contentMatchSettings: ContentMatchGenerationSettings;
+  setContentMatchAnswerCount: (next: number) => void;
+  setContentMatchOptionCount: (next: number) => void;
+  setQuestionTypeSettings: SetQuestionTypeSettings;
+}) {
       const contentMatchPolarityOptions: { value: "일치" | "불일치"; label: string }[] = [
         { value: "불일치", label: "불일치" },
         { value: "일치", label: "일치" },
@@ -111,7 +151,10 @@ export function renderContentMatchDetail({ contentMatchAnswerCount, contentMatch
       );
     }
 
-export function renderIrrelevantDetail({ irrelevantSlotCount, setIrrelevantSlotCount }) {
+export function renderIrrelevantDetail({ irrelevantSlotCount, setIrrelevantSlotCount }: {
+  irrelevantSlotCount: number;
+  setIrrelevantSlotCount: (next: number) => void;
+}) {
       return renderNumberSetting({
         title: "Option count",
         badges: [
@@ -128,7 +171,10 @@ export function renderIrrelevantDetail({ irrelevantSlotCount, setIrrelevantSlotC
       });
     }
 
-export function renderSummaryCompleteDetail({ setSummaryCompleteBlankCount, summaryCompleteBlankCount }) {
+export function renderSummaryCompleteDetail({ setSummaryCompleteBlankCount, summaryCompleteBlankCount }: {
+  setSummaryCompleteBlankCount: (next: number) => void;
+  summaryCompleteBlankCount: number;
+}) {
       return renderNumberSetting({
         title: "Blank count",
         badges: [
@@ -145,7 +191,10 @@ export function renderSummaryCompleteDetail({ setSummaryCompleteBlankCount, summ
       });
     }
 
-export function renderSummaryWritingDetail({ patchTypeSettings, questionTypeSettings }) {
+export function renderSummaryWritingDetail({ patchTypeSettings, questionTypeSettings }: {
+  patchTypeSettings: PatchTypeSettings;
+  questionTypeSettings: QuestionTypeGenerationSettings;
+}) {
       const sw = (questionTypeSettings.SUMMARY_WRITING || {}) as Record<
         string,
         unknown
@@ -421,7 +470,11 @@ export function renderSummaryWritingDetail({ patchTypeSettings, questionTypeSett
       );
     }
 
-export function renderTopicSentenceWritingDetail({ patchTypeSettings, questionTypeSettings, difficulty }) {
+export function renderTopicSentenceWritingDetail({ patchTypeSettings, questionTypeSettings, difficulty }: {
+  patchTypeSettings: PatchTypeSettings;
+  questionTypeSettings: QuestionTypeGenerationSettings;
+  difficulty: PanelDifficulty | undefined;
+}) {
       // 미설정 옵션은 "선택한 난이도의 프리셋"으로 표시한다(SUMMARY_WRITING이 고정 중급
       // 폴백을 쓰는 것과 다른 핵심 요구사항). resolve가 강사 설정값 우선 + 미설정은
       // 난이도 프리셋 + 호환성 매트릭스(F)까지 적용하므로, 화면에 보이는 값 = 실제 생성될 값.
@@ -608,7 +661,10 @@ export function renderTopicSentenceWritingDetail({ patchTypeSettings, questionTy
       );
     }
 
-export function renderGrammarChoiceComboDetail({ grammarChoiceComboSettings, patchTypeSettings }) {
+export function renderGrammarChoiceComboDetail({ grammarChoiceComboSettings, patchTypeSettings }: {
+  grammarChoiceComboSettings: GrammarChoiceComboGenerationSettings;
+  patchTypeSettings: PatchTypeSettings;
+}) {
       return (
         <div className="space-y-1.5 lg:space-y-3">
           <div className="flex items-center justify-between gap-3">
@@ -667,7 +723,15 @@ export function renderGrammarChoiceComboDetail({ grammarChoiceComboSettings, pat
       );
     }
 
-export function renderGrammarErrorDetail({ grammarAnswerCount, grammarAnswerMax, grammarErrorSettings, grammarMarkerCount, patchTypeSettings, setGrammarAnswerCount, setGrammarMarkerCount }) {
+export function renderGrammarErrorDetail({ grammarAnswerCount, grammarAnswerMax, grammarErrorSettings, grammarMarkerCount, patchTypeSettings, setGrammarAnswerCount, setGrammarMarkerCount }: {
+  grammarAnswerCount: number;
+  grammarAnswerMax: number;
+  grammarErrorSettings: GrammarErrorGenerationSettings;
+  grammarMarkerCount: number;
+  patchTypeSettings: PatchTypeSettings;
+  setGrammarAnswerCount: (next: number) => void;
+  setGrammarMarkerCount: (next: number) => void;
+}) {
       return (
         <div className="space-y-1.5 lg:space-y-3">
           <div className="flex items-center justify-between gap-3">
@@ -814,7 +878,12 @@ export function renderGrammarErrorDetail({ grammarAnswerCount, grammarAnswerMax,
       );
     }
 
-export function renderGrammarCorrectionDetail({ grammarCorrectionErrorCount, grammarCorrectionSettings, patchTypeSettings, setGrammarCorrectionErrorCount }) {
+export function renderGrammarCorrectionDetail({ grammarCorrectionErrorCount, grammarCorrectionSettings, patchTypeSettings, setGrammarCorrectionErrorCount }: {
+  grammarCorrectionErrorCount: number;
+  grammarCorrectionSettings: GrammarCorrectionGenerationSettings;
+  patchTypeSettings: PatchTypeSettings;
+  setGrammarCorrectionErrorCount: (next: number) => void;
+}) {
       return (
         <div className="space-y-1.5 lg:space-y-3">
           <div className="flex items-center justify-between gap-3">
@@ -928,7 +997,10 @@ export function renderGrammarCorrectionDetail({ grammarCorrectionErrorCount, gra
       );
     }
 
-export function renderSummaryCompleteMcDetail({ setSummaryCompleteMcBlankCount, summaryCompleteMcBlankCount }) {
+export function renderSummaryCompleteMcDetail({ setSummaryCompleteMcBlankCount, summaryCompleteMcBlankCount }: {
+  setSummaryCompleteMcBlankCount: (next: number) => void;
+  summaryCompleteMcBlankCount: number;
+}) {
       return (
         <div className="flex items-center justify-between gap-3">
           <div className="min-w-0">
@@ -987,7 +1059,12 @@ export function renderSummaryCompleteMcDetail({ setSummaryCompleteMcBlankCount, 
       );
     }
 
-export function renderBlankInferenceDetail({ blankInferenceBlankCount, blankSettings, setBlankInferenceBlankCount, updateBlankSetting }) {
+export function renderBlankInferenceDetail({ blankInferenceBlankCount, blankSettings, setBlankInferenceBlankCount, updateBlankSetting }: {
+  blankInferenceBlankCount: number;
+  blankSettings: BlankInferenceGenerationSettings;
+  setBlankInferenceBlankCount: (next: number) => void;
+  updateBlankSetting: (next: Partial<BlankInferenceGenerationSettings>) => void;
+}) {
       const isMultiBlank = blankInferenceBlankCount >= 2;
       return (
         <div className="space-y-1.5 lg:space-y-3">
@@ -1185,7 +1262,15 @@ export function renderBlankInferenceDetail({ blankInferenceBlankCount, blankSett
       );
     }
 
-export function renderVocabChoiceDetail({ patchTypeSettings, questionTypeSettings, setVocabChoiceAnswerCount, setVocabChoiceMarkerCount, vocabChoiceAnswerCount, vocabChoiceAnswerMax, vocabChoiceMarkerCount }) {
+export function renderVocabChoiceDetail({ patchTypeSettings, questionTypeSettings, setVocabChoiceAnswerCount, setVocabChoiceMarkerCount, vocabChoiceAnswerCount, vocabChoiceAnswerMax, vocabChoiceMarkerCount }: {
+  patchTypeSettings: PatchTypeSettings;
+  questionTypeSettings: QuestionTypeGenerationSettings;
+  setVocabChoiceAnswerCount: (next: number) => void;
+  setVocabChoiceMarkerCount: (next: number) => void;
+  vocabChoiceAnswerCount: number;
+  vocabChoiceAnswerMax: number;
+  vocabChoiceMarkerCount: number;
+}) {
       const vocabSynonymVariants =
         questionTypeSettings.VOCAB_CHOICE?.synonymVariants === true;
       return (
@@ -1264,7 +1349,12 @@ export function renderVocabChoiceDetail({ patchTypeSettings, questionTypeSetting
       );
     }
 
-export function renderSentenceInsertDetail({ patchTypeSettings, questionTypeSettings, sentenceInsertSlotCount, setSentenceInsertSlotCount }) {
+export function renderSentenceInsertDetail({ patchTypeSettings, questionTypeSettings, sentenceInsertSlotCount, setSentenceInsertSlotCount }: {
+  patchTypeSettings: PatchTypeSettings;
+  questionTypeSettings: QuestionTypeGenerationSettings;
+  sentenceInsertSlotCount: number;
+  setSentenceInsertSlotCount: (next: number) => void;
+}) {
       const sentenceInsertParaphrasePrefix =
         questionTypeSettings.SENTENCE_INSERT?.paraphrasePrefix === true;
       const sentenceInsertPointFocus =
@@ -1375,7 +1465,10 @@ export function renderSentenceInsertDetail({ patchTypeSettings, questionTypeSett
       );
     }
 
-export function renderSentenceOrderDetail({ patchTypeSettings, questionTypeSettings }) {
+export function renderSentenceOrderDetail({ patchTypeSettings, questionTypeSettings }: {
+  patchTypeSettings: PatchTypeSettings;
+  questionTypeSettings: QuestionTypeGenerationSettings;
+}) {
       const sentenceOrderPrefixVariationCount = Math.min(
         3,
         Math.max(
@@ -1406,12 +1499,18 @@ export function renderSentenceOrderDetail({ patchTypeSettings, questionTypeSetti
       });
     }
 
-export function renderPerTypeDifficultyImpl({ typeId, difficulty, patchTypeSettings, questionTypeSettings }) {
-    const raw = questionTypeSettings[typeId]?.difficulty as
-      | "BASIC"
-      | "INTERMEDIATE"
-      | "KILLER"
-      | undefined;
+export function renderPerTypeDifficultyImpl({ typeId, difficulty, patchTypeSettings, questionTypeSettings }: {
+  typeId: string;
+  difficulty: PanelDifficulty;
+  patchTypeSettings: PatchTypeSettings;
+  questionTypeSettings: QuestionTypeGenerationSettings;
+}) {
+    // 캐스트 사유: 인덱스 시그니처 값이 unknown 이라 difficulty 필드만 읽는 형상으로 좁힘(런타임 동일 — ?. 접근 그대로).
+    const raw = (
+      questionTypeSettings[typeId] as
+        | { difficulty?: "BASIC" | "INTERMEDIATE" | "KILLER" }
+        | undefined
+    )?.difficulty;
     // 미설정이면 기본 난이도(전역 difficulty, 보통 중급)가 선택된 것으로 표시한다.
     const effective = raw ?? difficulty;
     return (
@@ -1453,11 +1552,16 @@ export function renderPerTypeDifficultyImpl({ typeId, difficulty, patchTypeSetti
 // POINT_PICKER_CONFIG 등재 유형 타일에 항상 렌더한다. 포인트가 없으면 과녁
 // 아이콘 버튼, 있으면 과녁+개수 배지 — 둘 다 클릭 시 그 유형의 픽커로 진입한다.
 // 콜백 없는 호출자(픽커 미배선 패널)·미등재 유형은 렌더하지 않는다(죽은 버튼 0).
-export function renderTypePointBadge({ typeId, pointCount, onOpenPointPicker, questionTypeSettings }) {
+export function renderTypePointBadge({ typeId, pointCount, onOpenPointPicker, questionTypeSettings }: {
+  typeId: string;
+  pointCount: number;
+  onOpenPointPicker: ((typeId: string) => void) | undefined;
+  questionTypeSettings: QuestionTypeGenerationSettings | undefined;
+}) {
       if (typeof onOpenPointPicker !== "function") return null;
       if (!resolvePointPickerMeta(typeId, questionTypeSettings?.[typeId])) return null;
       const count = Math.max(0, Math.round(Number(pointCount) || 0));
-      const open = (event) => {
+      const open = (event: ReactMouseEvent<HTMLButtonElement>) => {
         event.stopPropagation();
         onOpenPointPicker(typeId);
       };
@@ -1488,7 +1592,17 @@ export function renderTypePointBadge({ typeId, pointCount, onOpenPointPicker, qu
       );
     }
 
-export function renderTypeDetailContentImpl({ typeId, getTypeOptionLanguage, getTypeStemLanguage, renderTypeNumericDetailContent, setTypeLanguage }) {
+export function renderTypeDetailContentImpl({ typeId, getTypeOptionLanguage, getTypeStemLanguage, renderTypeNumericDetailContent, setTypeLanguage }: {
+  typeId: string;
+  getTypeOptionLanguage: (typeId: string) => string;
+  getTypeStemLanguage: (typeId: string) => string;
+  renderTypeNumericDetailContent: (typeId: string) => ReactNode;
+  setTypeLanguage: (
+    typeId: string,
+    key: "stemLanguage" | "optionLanguage",
+    next: "ko" | "en",
+  ) => void;
+}) {
     const numericContent = renderTypeNumericDetailContent(typeId);
     const languageScope = getQuestionLanguageToggleScope(typeId);
     // 상품 단일화 1단계: 유형별 생성 플랜(일반/프리미엄) 선택 UI 를 노출하지 않는다.
@@ -1508,7 +1622,9 @@ export function renderTypeDetailContentImpl({ typeId, getTypeOptionLanguage, get
             title: "질문 언어",
             value: getTypeStemLanguage(typeId),
             description: "학생에게 보이는 질문(지시문) 언어입니다.",
-            onChange: (value) => setTypeLanguage(typeId, "stemLanguage", value),
+            // 캐스트 사유: renderLanguageSetting onChange 는 string 이지만 실제 값은 내부 토글("ko"/"en")뿐.
+            onChange: (value) =>
+              setTypeLanguage(typeId, "stemLanguage", value as "ko" | "en"),
           })}
         </div>
         {languageScope === "stem-option" ? (
@@ -1517,8 +1633,9 @@ export function renderTypeDetailContentImpl({ typeId, getTypeOptionLanguage, get
               title: "보기 언어",
               value: getTypeOptionLanguage(typeId),
               description: "학생에게 보이는 보기(선택지) 언어입니다.",
+              // 캐스트 사유: renderLanguageSetting onChange 는 string 이지만 실제 값은 내부 토글("ko"/"en")뿐.
               onChange: (value) =>
-                setTypeLanguage(typeId, "optionLanguage", value),
+                setTypeLanguage(typeId, "optionLanguage", value as "ko" | "en"),
             })}
           </div>
         ) : null}
@@ -1526,7 +1643,15 @@ export function renderTypeDetailContentImpl({ typeId, getTypeOptionLanguage, get
     );
   }
 
-export function renderGenericGistDetail({ getGenericAnswerCount, getGenericOptionCount, patchTypeSettings, questionTypeSettings, setGenericAnswerCount, setGenericOptionCount, typeId }) {
+export function renderGenericGistDetail({ getGenericAnswerCount, getGenericOptionCount, patchTypeSettings, questionTypeSettings, setGenericAnswerCount, setGenericOptionCount, typeId }: {
+  getGenericAnswerCount: (typeId: string) => number;
+  getGenericOptionCount: (typeId: string) => number;
+  patchTypeSettings: PatchTypeSettings;
+  questionTypeSettings: QuestionTypeGenerationSettings;
+  setGenericAnswerCount: (typeId: string, next: number) => void;
+  setGenericOptionCount: (typeId: string, next: number) => void;
+  typeId: string;
+}) {
       const genericOptionCount = getGenericOptionCount(typeId);
       const genericAnswerCount = getGenericAnswerCount(typeId);
       const genericAnswerMax = Math.max(1, genericOptionCount - 1);
@@ -1605,7 +1730,14 @@ export function renderGenericGistDetail({ getGenericAnswerCount, getGenericOptio
       );
     }
 
-export function renderWorkspaceGenerateButton({ onWorkspaceGenerate, workspaceCreditCost, workspaceGenerating, workspaceSelectedOnlyCount, workspaceTotalQuestions, workspaceVariantCount }) {
+export function renderWorkspaceGenerateButton({ onWorkspaceGenerate, workspaceCreditCost, workspaceGenerating, workspaceSelectedOnlyCount, workspaceTotalQuestions, workspaceVariantCount }: {
+  onWorkspaceGenerate: (() => void) | undefined;
+  workspaceCreditCost: number;
+  workspaceGenerating: boolean;
+  workspaceSelectedOnlyCount: number;
+  workspaceTotalQuestions: number;
+  workspaceVariantCount: number;
+}) {
   return (
 <div className="px-4 py-3 border-t border-slate-100 bg-white shrink-0">
           {workspaceVariantCount > 0 ? (
@@ -1665,7 +1797,14 @@ export function renderWorkspaceGenerateButton({ onWorkspaceGenerate, workspaceCr
   );
 }
 
-export function renderLibraryGenerateButton({ canGenerate, generationPlan, handleBatchGenerate, selectedIds, totalQuestions, typeCounts }) {
+export function renderLibraryGenerateButton({ canGenerate, generationPlan, handleBatchGenerate, selectedIds, totalQuestions, typeCounts }: {
+  canGenerate: boolean;
+  generationPlan: QuestionGenerationPlan;
+  handleBatchGenerate: () => void;
+  selectedIds: Set<string>;
+  totalQuestions: number;
+  typeCounts: Record<string, number>;
+}) {
   return (
 <div className="px-4 py-3 border-t border-slate-100 bg-white shrink-0">
           {(() => {
@@ -1738,7 +1877,28 @@ export function renderLibraryGenerateButton({ canGenerate, generationPlan, handl
   );
 }
 
-export function renderSetBuilderSection({ activePassageId, difficulty, editingRow, generationPlan, onSetMemberOverridesByPresetChange, onSetMemberOverridesChange, onSetPresetChange, onSetPresetCountsChange, selectedIds, setDifficulty, setMemberOverrides, setMemberOverridesByPreset, setPresetCounts, setPresetId, workspaceActive, workspaceRowCount }) {
+export function renderSetBuilderSection({ activePassageId, difficulty, editingRow, generationPlan, onSetMemberOverridesByPresetChange, onSetMemberOverridesChange, onSetPresetChange, onSetPresetCountsChange, selectedIds, setDifficulty, setMemberOverrides, setMemberOverridesByPreset, setPresetCounts, setPresetId, workspaceActive, workspaceRowCount }: {
+  activePassageId: string | null;
+  difficulty: PanelDifficulty;
+  editingRow: boolean;
+  generationPlan: QuestionGenerationPlan;
+  onSetMemberOverridesByPresetChange:
+    | ((next: Record<string, PanelSetMemberOverride[]>) => void)
+    | undefined;
+  onSetMemberOverridesChange:
+    | ((next: PanelSetMemberOverride[]) => void)
+    | undefined;
+  onSetPresetChange: ((presetId: string | null) => void) | undefined;
+  onSetPresetCountsChange: ((next: Record<string, number>) => void) | undefined;
+  selectedIds: Set<string>;
+  setDifficulty: (v: PanelDifficulty) => void;
+  setMemberOverrides: PanelSetMemberOverride[] | undefined;
+  setMemberOverridesByPreset: Record<string, PanelSetMemberOverride[]> | undefined;
+  setPresetCounts: Record<string, number> | undefined;
+  setPresetId: string | null | undefined;
+  workspaceActive: boolean;
+  workspaceRowCount: number;
+}) {
   return (
 <>
             {!editingRow && workspaceActive ? (

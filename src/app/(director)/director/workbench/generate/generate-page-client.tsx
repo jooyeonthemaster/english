@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
@@ -6,7 +5,10 @@ import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { QuestionReviewModal } from "@/components/workbench/question-review-modal";
 import { PassageAnalysisModal } from "@/components/workbench/passage-analysis-modal";
-import { PassageContentModal } from "@/components/workbench/passage-content-modal";
+import {
+  PassageContentModal,
+  type PassageContentModalPassage,
+} from "@/components/workbench/passage-content-modal";
 import { type QuestionCardItem } from "@/components/workbench/question-card";
 import { getCustomPrompts } from "@/actions/custom-prompts";
 import {
@@ -31,7 +33,6 @@ import {
 import { GenerateUploadPanel } from "./intake/generate-upload-panel";
 import { ExamPassageLibrary } from "@/components/workbench/exam-passage-library";
 import { KoreanExamPassageLibrary } from "@/components/workbench/korean-exam-passage-library";
-import { triggerHintGlowWithin } from "@/lib/hint-glow";
 import { useGenerateExtraction } from "./intake/use-generate-extraction";
 import { ExtractionLoadingCards } from "./intake/extraction-loading-cards";
 import { ExtractionDetailModal } from "./intake/extraction-detail-modal";
@@ -41,44 +42,33 @@ import { GenerationConfigPanel } from "./generation-config-panel";
 import { EmbeddedQuestionBank } from "./embedded-question-bank";
 import { useGenerationHandlers } from "./use-generation-handlers";
 import { useKoreanSetGeneration } from "./use-korean-set-generation";
+import { useRowSettingsPanel } from "./use-row-settings-panel";
+import { usePointPicker } from "./use-point-picker";
+import { useMobileStepFlow } from "./use-mobile-step-flow";
 import { useGenerationSessionQueue } from "./generation-session-store";
 import { EditQuestionDialog } from "@/components/workbench/question-bank-client/edit-question-dialog";
 import { useQuestionEditor } from "@/components/workbench/question-bank-client/use-question-editor";
 import { type QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import {
   getDefaultQuestionTypeGenerationSettings,
-  readSentenceInsertSlotCountSetting,
   type QuestionTypeGenerationSettings,
 } from "@/lib/question-type-generation-settings";
 import { WorkflowPageTitle } from "@/components/workbench/workflow-page-title";
 import {
   MobileStepHeader,
   MobileStepNav,
-  useIsMobileViewport,
 } from "@/components/workbench/mobile-step-flow";
 import { QuestionGenerationIcon } from "@/components/icons/workflow-icons";
 import { WorkspaceShell } from "./workspace-shell";
 import {
   countWords,
-  diffQuestionTypeSettings,
-  isOverrideEmpty,
-  overrideHasTypeCounts,
   rowNeedsVariant,
-  type RowOverride,
 } from "./workspace/workspace-types";
 import { useWorkspaceRows } from "./workspace/use-workspace-rows";
 import { useWorkspaceGeneration } from "./workspace/use-workspace-generation";
 import { PassageWorkspace } from "./workspace/passage-workspace";
 import { PassageGenerateModal } from "./workspace/passage-generate-modal";
-import {
-  PassagePointPicker,
-  type PointSuggestState,
-} from "./workspace/passage-point-picker";
-import {
-  resolvePointPickerMeta,
-  type TeacherPoint,
-} from "./generation-config-panel-parts/point-picker-config";
-import { QUESTION_TYPE_UI } from "@/lib/question-type-ui";
+import { type TeacherPoint } from "./generation-config-panel-parts/point-picker-config";
 import { LearningGenerationIndicator } from "@/components/workbench/learning-generation-indicator";
 import { useLearningGenerationTasks } from "@/lib/learning-generation-tracker";
 import {
@@ -99,7 +89,6 @@ import {
   MOBILE_FLOW_STEPS,
   SAVED_QUESTIONS_DONE_REFRESH_DELAY_MS,
   derivePastedTitle,
-  hashPassageText,
   type MobileStep,
 } from "./generate-page-client-lib";
 import {
@@ -226,11 +215,6 @@ export function GeneratePageClient({
       : "intake",
   );
   const [intakeTab, setIntakeTab] = useState<IntakeTab>("paste");
-  // 모바일(<lg) 현재 스텝 — PC 렌더링에는 관여하지 않는다.
-  const [mobileStep, setMobileStep] = useState<MobileStep>(
-    initialMobileStepRef.current ??
-      (initialPassageIdsRef.current.length > 0 ? "library" : "input"),
-  );
   // 직접 입력 보드 연동 — 하단 고정 바의 '다음'이 등록(다음으로 내 지문함)
   // 버튼을 대신한다. ref 로 시작 동작을, 콜백으로 누적 수·작업 상태를 받는다.
   const pasteStartRef = useRef<(() => void) | null>(null);
@@ -332,31 +316,16 @@ export function GeneratePageClient({
   // 워크스페이스가 '내 지문함'을 덮어 표시되는지 여부. true면 가운데 컬럼이
   // 내 지문함 대신 워크스페이스로 교체된다 (왼쪽 패널 모달 방식 폐기).
   const [workspaceOpen, setWorkspaceOpen] = useState(false);
-  // 지문별 '문제 생성' 모달의 대상 행. 우측 사이드 설정 컬럼을 폐기하고, 각
-  // 지문 카드의 '문제 생성' 버튼으로 이 지문만의 유형·난이도를 설정하는 모달을
-  // 연다 — "어떤 지문의 설정인지" 혼동을 없애는 재설계의 핵심.
-  const [activeRowId, setActiveRowId] = useState<string | null>(null);
-  const [genModalOpen, setGenModalOpen] = useState(false);
 
   // ── "포인트 짚어주기" (point-picker-design.md §2) ──
   // 지문 스코프의 교사 지정 출제 포인트 — passageId → typeId → TeacherPoint[].
   // 지문 간 누출을 막기 위해 반드시 passageId 로 스코프하고, 본문이 바뀌면
-  // (아래 해시 불일치 effect) 그 지문의 포인트를 통째로 무효화한다.
+  // (해시 불일치 effect — use-point-picker.tsx) 그 지문의 포인트를 통째로
+  // 무효화한다. 이 상태만 본체에 남는 이유: 아래 useGenerationHandlers/
+  // useWorkspaceGeneration 이 픽커 훅(usePointPicker)보다 먼저 소비한다.
   const [teacherPointsByPassage, setTeacherPointsByPassage] = useState<
     Record<string, Record<string, TeacherPoint[]>>
   >({});
-  // passageId → 포인트를 지정하던 시점의 본문 해시(hashPassageText).
-  const teacherPointsHashRef = useRef<Record<string, string>>({});
-  // 생성 모달 안에서 열린 픽커 대상 — null 이면 기존 설정 콘솔 단독(1컬럼).
-  const [pickerOpen, setPickerOpen] = useState<{
-    passageId: string;
-    typeId: string;
-  } | null>(null);
-  // 픽커의 AI 제안 채널 — (passageId, typeId) 스코프. 픽커를 열거나 전환할
-  // 때마다 idle 로 리셋하고, 낡은 응답은 시퀀스 가드로 폐기한다(실패 비차단).
-  const [pointSuggestState, setPointSuggestState] =
-    useState<PointSuggestState>({ status: "idle" });
-  const pointSuggestSeqRef = useRef(0);
 
   // ── Analysis detail modal ──
   const [analysisModalPassage, setAnalysisModalPassage] = useState<any>(null);
@@ -621,7 +590,10 @@ export function GeneratePageClient({
   // 바뀐다.
   const analysisActivityJobs = usePassageAnalysisActivity({
     onSettled: useCallback(
-      (completedPassageIds, failedPassageIds) => {
+      // 타입 주석 사유: useCallback 래핑이 옵션 객체의 문맥 타입(onSettled
+      // 시그니처)을 파라미터까지 전달하지 못한다(noImplicitAny) — 훅 선언
+      // (PassageAnalysisActivityOptions.onSettled)과 동일 타입을 명시.
+      (completedPassageIds: string[], failedPassageIds: string[]) => {
         const settled = [...completedPassageIds, ...failedPassageIds];
         if (settled.length === 0) return;
         void patchPassages(settled);
@@ -988,7 +960,6 @@ export function GeneratePageClient({
     handleApproveQuestion,
     handleUnapproveQuestion,
   } = useQuestionReviewActions({
-    savedQuestions,
     setSavedQuestions,
     setDetailQuestion,
     setSessionQueue,
@@ -1021,7 +992,9 @@ export function GeneratePageClient({
             ? { ...p, id: realId, source: null, extractionReviewDraft: null }
             : p;
         })
-        .filter(Boolean);
+        // 타입가드: filter(Boolean) 은 null 을 못 좁힌다 — 술어로 명시
+        // (Boolean 판정 동일, 런타임 무변경).
+        .filter((p): p is PassageItem => Boolean(p));
       if (failedCount > 0) {
         toast.warning(`${failedCount}개 자료는 지문으로 준비하지 못해 제외했어요.`);
       }
@@ -1126,345 +1099,98 @@ export function GeneratePageClient({
       new Set(
         workspaceApi.rows
           .flatMap((r) => [r.passageId, r.variantOfId])
-          .filter(Boolean),
+          // 타입가드: filter(Boolean) 은 undefined 를 못 좁힌다 — 술어로
+          // 명시(Boolean 판정 동일, 런타임 무변경). Set<string> 보장.
+          .filter((id): id is string => Boolean(id)),
       ),
     [workspaceApi.rows],
   );
 
-  // ── 모바일 스텝 플로우: 전환 + URL(?step=) 동기화 ──
-  const isMobileViewport = useIsMobileViewport();
+  // ── 모바일 스텝 플로우: 전환 + URL(?step=) 동기화 + 하단 이전/다음 바 모델
+  // — use-mobile-step-flow.ts 훅으로 추출(스텝 상태·popstate·인테이크 동기 포함).
+  const {
+    isMobileViewport,
+    mobileStep,
+    goToMobileStep,
+    mobilePrev,
+    mobileNext,
+    mobileNextHint,
+    boardFixedFooterActive,
+    workspacePending,
+  } = useMobileStepFlow({
+    initialMobileStepRef,
+    initialPassageIdsRef,
+    setWorkspaceOpen,
+    setIntakeView,
+    workspaceVisible,
+    workspaceActive,
+    intakeView,
+    intakeTab,
+    pasteBoard,
+    pasteStartRef,
+    selectedIds,
+    handleLoadSelectedToWorkspace,
+    workspaceApi,
+    workspaceRowStats,
+    handleWorkspaceGenerate,
+    queueCounts,
+  });
   // 워크스페이스 스텝 하단 고정 '담긴 유형' 장바구니 펼침 상태(모바일).
   const [workspaceCartOpen, setWorkspaceCartOpen] = useState(false);
   // 내 지문함(library) 스텝 하단 고정 '담긴 지문'(선택한 지문) 장바구니 펼침 상태(모바일).
   const [libraryCartOpen, setLibraryCartOpen] = useState(false);
 
-  // 스텝이 가리키는 인테이크 상태를 함께 맞춘다. results 는 하단 결과
-  // 섹션만 보여주므로 인테이크 상태를 건드리지 않는다(뒤로가면 그대로 복귀).
-  const applyMobileStep = useCallback((step: MobileStep) => {
-    setMobileStep(step);
-    if (step === "input") {
-      setWorkspaceOpen(false);
-      setIntakeView("intake");
-    } else if (step === "library") {
-      setWorkspaceOpen(false);
-      setIntakeView("library");
-    } else if (step === "workspace") {
-      setWorkspaceOpen(true);
-    }
-  }, []);
-
-  const pushMobileStepUrl = useCallback((step: MobileStep) => {
-    const url = new URL(window.location.href);
-    if (url.searchParams.get("step") === step) return;
-    url.searchParams.set("step", step);
-    // router.push 대신 네이티브 pushState — 서버 리페치 없이 히스토리만
-    // 쌓아 브라우저 뒤로가기가 '이전 단계'로 동작하게 한다.
-    window.history.pushState(null, "", url.toString());
-  }, []);
-
-  const goToMobileStep = useCallback(
-    (step: MobileStep) => {
-      applyMobileStep(step);
-      pushMobileStepUrl(step);
-      window.scrollTo({ top: 0 });
-    },
-    [applyMobileStep, pushMobileStepUrl],
-  );
-
-  // 브라우저 뒤로/앞으로 — URL 의 step 을 그대로 적용.
-  useEffect(() => {
-    if (!isMobileViewport) return;
-    const onPop = () => {
-      const raw = new URLSearchParams(window.location.search).get("step");
-      const step: MobileStep =
-        raw === "library" || raw === "workspace" || raw === "results"
-          ? raw
-          : "input";
-      applyMobileStep(step);
-      window.scrollTo({ top: 0 });
-    };
-    window.addEventListener("popstate", onPop);
-    return () => window.removeEventListener("popstate", onPop);
-  }, [isMobileViewport, applyMobileStep]);
-
-  // 기존 UI 동작('다음으로' CTA, 워크스페이스 자동 열림/닫힘 등)이
-  // intakeView/workspaceOpen 을 바꾸면 스텝을 뒤따라 맞춘다 — 스텝을 모르는
-  // 기존 핸들러를 하나도 고치지 않기 위한 단방향 동기화. results 에서는
-  // 인테이크 상태가 화면 밖(숨김)이므로 동기화하지 않는다.
-  useEffect(() => {
-    if (!isMobileViewport) return;
-    if (mobileStep === "results") return;
-    const derived: MobileStep = workspaceVisible
-      ? "workspace"
-      : intakeView === "library"
-        ? "library"
-        : "input";
-    if (derived !== mobileStep) {
-      setMobileStep(derived);
-      pushMobileStepUrl(derived);
-      window.scrollTo({ top: 0 });
-    }
-  }, [
-    isMobileViewport,
-    workspaceVisible,
-    intakeView,
-    mobileStep,
-    pushMobileStepUrl,
-  ]);
-
   // ── 지문별 개별 설정 (워크스페이스) ───────────────────────────────
-  // 워크스페이스 행을 클릭하면 우측 '유형·생성 설정'이 그 지문만 편집한다.
-  // 편집 대상 행이 있으면(editingRow) 난이도·유형 개수·유형별 세부옵션을
-  // 행 오버라이드로 읽고/쓰며(전체 설정값을 시드로 fork), 생성 모드·프롬프트
-  // 등은 그대로 전체 공통값을 쓴다. 행이 없으면 기존처럼 전체 설정을 편집.
-  const activeRow =
-    workspaceVisible && activeRowId
-      ? (workspaceApi.rows.find((r) => r.localId === activeRowId) ?? null)
-      : null;
-  const editingRow = activeRow !== null;
-  // 설정 패널 헤더에 카드와 똑같은 ① 번호 배지를 비추기 위한 인덱스
-  // (왼쪽 선택 지문 ↔ 오른쪽 설정의 정체성 일치 신호).
-  const activeRowIndex = activeRow
-    ? workspaceApi.rows.findIndex((r) => r.localId === activeRow.localId)
-    : -1;
-
-  // 워크스페이스가 사라지면 개별 설정 선택을 해제하고 생성 모달도 닫는다.
-  useEffect(() => {
-    if (!workspaceVisible) {
-      if (activeRowId !== null) setActiveRowId(null);
-      if (genModalOpen) setGenModalOpen(false);
-    }
-  }, [workspaceVisible, activeRowId, genModalOpen]);
-
-  // 지문 카드 본문 클릭 → 그 지문을 선택(설정 대상)으로 바인딩 (선택 링 표시).
-  const selectRow = useCallback((localId: string) => {
-    setActiveRowId(localId);
-  }, []);
-
-  // 카드의 '문제 생성' 버튼/설정 배지 클릭 → 이 지문을 선택하고 생성 모달을 연다.
-  const handleSetActiveRow = useCallback(
-    (localId: string) => {
-      selectRow(localId);
-      setGenModalOpen(true);
-    },
-    [selectRow],
-  );
-
-  // 모달을 닫는다 — 선택(링)은 유지하지 않고 해제해 깔끔하게 비운다.
-  const closeGenModal = useCallback(() => {
-    setGenModalOpen(false);
-    setActiveRowId(null);
-  }, []);
-
-  // 이 지문 하나로 생성 — 생성을 시작(fire-and-forget)하고 모달을 닫는다.
-  const handleGenerateActiveRow = useCallback(() => {
-    if (!activeRowId) return;
-    // 생성은 시작 시점에 행 설정을 동기적으로 캡처하므로(setOverride 는 불변
-    // 업데이트라 캡처된 참조에 영향 없음), 호출 직후 이 지문의 유형 지정을
-    // 비워 초기화해도 안전하다. 난이도·유형별 세부 설정은 보존한다.
-    void handleWorkspaceGenerate(activeRowId);
-    const row = workspaceApi.rows.find((r) => r.localId === activeRowId);
-    if (row?.override && overrideHasTypeCounts(row.override)) {
-      const next = { ...row.override, typeCounts: {} };
-      workspaceApi.setOverride(
-        activeRowId,
-        isOverrideEmpty(next) ? null : next,
-      );
-    }
-    closeGenModal();
-  }, [activeRowId, handleWorkspaceGenerate, closeGenModal, workspaceApi]);
-
-  // 활성 행의 오버라이드를 부분 수정한다. 결과가 전체 설정과 같아지면(빈
-  // 오버라이드) null 로 저장해 '전체 설정 따름'으로 되돌린다.
-  const writeActiveOverride = useCallback(
-    (updater: (base: RowOverride) => RowOverride) => {
-      if (!activeRowId) return;
-      const row = workspaceApi.rows.find((r) => r.localId === activeRowId);
-      const base: RowOverride = row?.override
-        ? { ...row.override }
-        : { typeCounts: {}, difficulty: null };
-      const next = updater(base);
-      workspaceApi.setOverride(
-        activeRowId,
-        isOverrideEmpty(next) ? null : next,
-      );
-    },
-    [activeRowId, workspaceApi],
-  );
-
-  // 우측 패널에 넘길 '유효 설정' — 편집 중이면 행 오버라이드(없으면 전체
-  // 설정 시드), 아니면 전체 설정. 세터는 편집 중이면 오버라이드에 쓴다.
-  const panelDifficulty = editingRow
-    ? (activeRow.override?.difficulty ?? difficulty)
-    : difficulty;
-  const panelSetDifficulty = editingRow
-    ? (v: "BASIC" | "INTERMEDIATE" | "KILLER") =>
-        writeActiveOverride((o) => ({ ...o, difficulty: v }))
-    : setDifficulty;
-
-  // 개별 설정 중인 행은 '빈 슬레이트'에서 시작한다 — 지정하지 않은 지문은
-  // 0개(생성 제외)이므로, 전체 설정 유형을 시드로 채우지 않는다(채우면 화면엔
-  // 보이는데 실제로는 생성/합산되지 않아 어긋난다). 행에 이미 개별 지정이
-  // 있으면 그 값을 보여준다.
-  const panelTypeCounts = editingRow
-    ? overrideHasTypeCounts(activeRow.override)
-      ? activeRow.override!.typeCounts
-      : {}
-    : typeCounts;
-  const panelSetTypeCount = editingRow
-    ? (id: string, count: number) =>
-        writeActiveOverride((o) => {
-          const seed = overrideHasTypeCounts(o) ? o.typeCounts : {};
-          const nextCounts = { ...seed };
-          if (count <= 0) delete nextCounts[id];
-          else nextCounts[id] = count;
-          return { ...o, typeCounts: nextCounts };
-        })
-    : setTypeCount;
-  // 패널은 setTypeCounts 를 값/업데이터 함수 양쪽으로 호출한다(정렬·증감 등).
-  // 업데이터에는 '현재 행 typeCounts'(개별 지정 없으면 빈 슬레이트)를 넘긴다.
-  const panelSetTypeCounts = editingRow
-    ? (
-        v:
-          | Record<string, number>
-          | ((prev: Record<string, number>) => Record<string, number>),
-      ) =>
-        writeActiveOverride((o) => {
-          const seed = overrideHasTypeCounts(o) ? o.typeCounts : {};
-          const next = typeof v === "function" ? v(seed) : v;
-          return { ...o, typeCounts: next };
-        })
-    : setTypeCounts;
-  const panelTotalQuestions = editingRow
-    ? Object.values(panelTypeCounts).reduce((a, b) => a + b, 0)
-    : totalQuestions;
-
-  const panelQuestionTypeSettings = editingRow
-    ? { ...questionTypeSettings, ...(activeRow.override?.questionTypeSettings ?? {}) }
-    : questionTypeSettings;
-  const panelSetQuestionTypeSettings = editingRow
-    ? (
-        v:
-          | QuestionTypeGenerationSettings
-          | ((
-              prev: QuestionTypeGenerationSettings,
-            ) => QuestionTypeGenerationSettings),
-      ) =>
-        writeActiveOverride((o) => {
-          const merged = {
-            ...questionTypeSettings,
-            ...(o.questionTypeSettings ?? {}),
-          };
-          const nextFull = typeof v === "function" ? v(merged) : v;
-          return {
-            ...o,
-            questionTypeSettings: diffQuestionTypeSettings(
-              nextFull,
-              questionTypeSettings,
-            ),
-          };
-        })
-    : setQuestionTypeSettings;
-
-  // 생성 모드(자동/유형지정/장문세트)와 생성 플랜(일반/프리미엄)도 개별 설정
-  // 대상이다 — 행 편집 중이면 그 행 오버라이드에 쓰고/읽고(없으면 전체 설정을
-  // 시드로), 아니면 전체 공통 설정을 그대로 쓴다.
-  const panelGenMode = editingRow
-    ? (activeRow.override?.mode ?? genMode)
-    : genMode;
-  const panelSetGenMode = editingRow
-    ? (m: "manual" | "set") =>
-        writeActiveOverride((o) => ({ ...o, mode: m }))
-    : setGenMode;
-  const panelGenerationPlan = editingRow
-    ? (activeRow.override?.generationPlan ?? generationPlan)
-    : generationPlan;
-  const panelSetGenerationPlan = editingRow
-    ? (p: "STANDARD" | "PREMIUM") =>
-        writeActiveOverride((o) => ({ ...o, generationPlan: p }))
-    : setGenerationPlan;
-  // 세트 프리셋 선택도 지문별로 저장한다(자동/유형지정과 동일 원리). 편집 중인
-  // 행의 override.setPresetId/difficulty 를 controlled 값으로 넘기고, 변경 시 그 행에 쓴다.
-  const panelSetPresetId = editingRow
-    ? (activeRow.override?.setPresetId ?? null)
-    : undefined;
-  const panelSetPresetCounts = editingRow
-    ? (activeRow.override?.setPresetCounts ??
-        (activeRow.override?.setPresetId ? { [activeRow.override.setPresetId]: 1 } : {}))
-    : undefined;
-  const panelOnSetPresetChange = editingRow
-    ? (presetId: string | null) =>
-        writeActiveOverride((o) => {
-          const nextCounts = { ...(o.setPresetCounts ?? {}) };
-          if (presetId) {
-            nextCounts[presetId] = Math.max(1, Number(nextCounts[presetId] ?? 1));
-          }
-          return {
-            ...o,
-            mode: "set",
-            setPresetId: presetId ?? undefined,
-            setPresetCounts: presetId ? nextCounts : {},
-            // 프리셋이 바뀌면 멤버 인덱스가 달라지므로 legacy 멤버 오버라이드는 리셋한다.
-            setMemberOverrides:
-              presetId === o.setPresetId ? o.setMemberOverrides : undefined,
-          };
-        })
-    : undefined;
-  const panelOnSetPresetCountsChange = editingRow
-    ? (next: Record<string, number>) =>
-        writeActiveOverride((o) => {
-          const first =
-            Object.entries(next).find(([, count]) => Number(count) > 0)?.[0] ??
-            undefined;
-          return {
-            ...o,
-            mode: "set",
-            setPresetId: first,
-            setPresetCounts: next,
-          };
-        })
-    : undefined;
-  // 세트 멤버별 난이도·세부설정도 지문별로 저장한다(프리셋 멤버 순서 평행 배열).
-  const panelSetMemberOverrides = editingRow
-    ? (activeRow.override?.setMemberOverrides ?? [])
-    : undefined;
-  const panelSetMemberOverridesByPreset = editingRow
-    ? (activeRow.override?.setMemberOverridesByPreset ??
-        (activeRow.override?.setPresetId && activeRow.override?.setMemberOverrides
-          ? { [activeRow.override.setPresetId]: activeRow.override.setMemberOverrides }
-          : {}))
-    : undefined;
-  const panelOnSetMemberOverridesChange = editingRow
-    ? (
-        next: Array<{
-          difficulty?: "BASIC" | "INTERMEDIATE" | "KILLER";
-          generationPlan?: "STANDARD" | "PREMIUM";
-          typeSettings?: Record<string, unknown>;
-        }>,
-      ) =>
-        writeActiveOverride((o) => ({
-          ...o,
-          mode: "set",
-          setMemberOverrides: next,
-        }))
-    : undefined;
-  const panelOnSetMemberOverridesByPresetChange = editingRow
-    ? (
-        next: Record<
-          string,
-          Array<{
-            difficulty?: "BASIC" | "INTERMEDIATE" | "KILLER";
-            generationPlan?: "STANDARD" | "PREMIUM";
-            typeSettings?: Record<string, unknown>;
-          }>
-        >,
-      ) =>
-        writeActiveOverride((o) => ({
-          ...o,
-          mode: "set",
-          setMemberOverridesByPreset: next,
-        }))
-    : undefined;
+  // activeRow/editingRow 파생 + 행 선택·생성 모달 핸들러 + 우측 패널 '유효
+  // 설정'(panel*) fork — use-row-settings-panel.ts 훅으로 추출.
+  const {
+    activeRowId,
+    setActiveRowId,
+    genModalOpen,
+    activeRow,
+    editingRow,
+    activeRowIndex,
+    selectRow,
+    handleSetActiveRow,
+    closeGenModal,
+    handleGenerateActiveRow,
+    panelDifficulty,
+    panelSetDifficulty,
+    panelTypeCounts,
+    panelSetTypeCount,
+    panelSetTypeCounts,
+    panelTotalQuestions,
+    panelQuestionTypeSettings,
+    panelSetQuestionTypeSettings,
+    panelGenMode,
+    panelSetGenMode,
+    panelGenerationPlan,
+    panelSetGenerationPlan,
+    panelSetPresetId,
+    panelSetPresetCounts,
+    panelOnSetPresetChange,
+    panelOnSetPresetCountsChange,
+    panelSetMemberOverrides,
+    panelSetMemberOverridesByPreset,
+    panelOnSetMemberOverridesChange,
+    panelOnSetMemberOverridesByPresetChange,
+  } = useRowSettingsPanel({
+    workspaceApi,
+    workspaceVisible,
+    handleWorkspaceGenerate,
+    difficulty,
+    setDifficulty,
+    typeCounts,
+    setTypeCount,
+    setTypeCounts,
+    totalQuestions,
+    questionTypeSettings,
+    setQuestionTypeSettings,
+    genMode,
+    setGenMode,
+    generationPlan,
+    setGenerationPlan,
+  });
 
   // ── Can generate? ──
   const canGenerate = selectedIds.size > 0 && totalQuestions > 0;
@@ -1690,226 +1416,26 @@ export function GeneratePageClient({
     setSetRefreshNonce,
   });
 
-  // ── "포인트 짚어주기" 배선 (point-picker-design.md §1·§2·§5) ──
-  // 본문이 지정 시점 해시와 어긋난 지문의 포인트를 무효화한다(1줄 안내). 워크
-  // 스페이스에서 내려갔거나 변형본으로 재바인딩된 지문의 포인트는 조용히 정리
-  // 한다 — 어느 쪽이든 낡은 오프셋·축자를 생성에 실어 보내지 않는다.
-  useEffect(() => {
-    const staleIds: string[] = [];
-    const staleTitles: string[] = [];
-    for (const passageId of Object.keys(teacherPointsByPassage)) {
-      const row = workspaceApi.rows.find((r) => r.passageId === passageId);
-      if (
-        row &&
-        hashPassageText(row.content) === teacherPointsHashRef.current[passageId]
-      ) {
-        continue;
-      }
-      staleIds.push(passageId);
-      if (row) staleTitles.push(row.title);
-    }
-    if (staleIds.length === 0) return;
-    setTeacherPointsByPassage((prev) => {
-      const next = { ...prev };
-      for (const id of staleIds) delete next[id];
-      return next;
-    });
-    for (const id of staleIds) delete teacherPointsHashRef.current[id];
-    for (const title of staleTitles) {
-      toast.info(
-        `"${title}" 본문이 수정되어 지정한 출제 포인트가 초기화됐습니다.`,
-      );
-    }
-  }, [workspaceApi.rows, teacherPointsByPassage]);
-
-  // 모달이 닫히면(어느 경로로든) 픽커도 닫는다 — 다음엔 설정 콘솔부터 연다.
-  useEffect(() => {
-    if (!genModalOpen && pickerOpen) setPickerOpen(null);
-  }, [genModalOpen, pickerOpen]);
-
-  // 유형 세부설정의 진입 행(type-numeric-detail)이 호출 — 활성 지문 스코프로
-  // 픽커를 연다. 스코프가 바뀌므로 AI 제안 채널도 idle 로 갈아끼운다.
-  const handleOpenPointPicker = (typeId: string) => {
-    if (!activeRow) return;
-    pointSuggestSeqRef.current += 1; // 이전 스코프의 늦은 응답 폐기
-    setPointSuggestState({ status: "idle" });
-    setPickerOpen({ passageId: activeRow.passageId, typeId });
-  };
-
-  // 픽커 닫기(설정 콘솔 복귀) — '선택 완료' 버튼과 모달 Esc 사다리 1단 공용.
-  const closePointPicker = () => {
-    pointSuggestSeqRef.current += 1;
-    setPickerOpen(null);
-  };
-
-  // 렌더 가드 — 픽커 대상과 활성 행이 어긋나면(행 전환·변형 재바인딩 직후)
-  // 렌더하지 않는다. 미등재 유형(메타 없음)도 방어적으로 걸러낸다.
-  const pickerTarget =
-    pickerOpen && activeRow && pickerOpen.passageId === activeRow.passageId
-      ? pickerOpen
-      : null;
-  const pickerMeta = pickerTarget
-    ? resolvePointPickerMeta(
-        pickerTarget.typeId,
-        panelQuestionTypeSettings[pickerTarget.typeId],
-      )
-    : undefined;
-
-  // '선택 완료' 완료 닫기 — Esc(취소, closePointPicker)와 달리 "포인트만 찍고
-  // 문항 수 0"인 헛수고 상태를 차단한다: 이 유형 문항 수가 0이면 1로 올리고,
-  // 어떤 유형에 문항이 잡혔는지 해당 유형 타일을 힌트 글로우로 안내한다.
-  // (SENTENCE_INSERT 는 패널의 짧은 지문 게이트와 같은 조건이면 올리지 않는다.)
-  const completePointPicker = () => {
-    const target = pickerTarget;
-    closePointPicker();
-    if (!target) return;
-    if ((panelTypeCounts[target.typeId] ?? 0) > 0) return;
-    if (target.typeId === "SENTENCE_INSERT" && activeRow) {
-      const requiredSentences =
-        readSentenceInsertSlotCountSetting(
-          panelQuestionTypeSettings.SENTENCE_INSERT,
-        ) + 1;
-      const sentenceCount = countPassageSentences(activeRow.content);
-      if (sentenceCount > 0 && sentenceCount < requiredSentences) return;
-    }
-    panelSetTypeCount(target.typeId, 1);
-    // 픽커 닫힘·카운트 반영이 커밋된 뒤 해당 유형 타일만 글로우한다.
-    window.setTimeout(() => {
-      triggerHintGlowWithin(
-        document.body,
-        `[data-question-type-id="${target.typeId}"]`,
-      );
-    }, 120);
-  };
-
-  // ScanSearch 버튼 명시 호출 — POST /api/workbench/point-suggest (크레딧 0).
-  // 실패는 완전 비차단(픽커가 안내만 표시, 수동 선택 계속). 시퀀스 가드로
-  // 픽커 전환 뒤 도착한 낡은 응답을 폐기한다.
-  const handleRequestPointSuggest = () => {
-    if (!pickerTarget || !pickerMeta) return;
-    if (pointSuggestState.status === "loading") return;
-    const { passageId, typeId } = pickerTarget;
-    const seq = (pointSuggestSeqRef.current += 1);
-    setPointSuggestState({ status: "loading" });
-    void (async () => {
-      try {
-        const res = await fetch("/api/workbench/point-suggest", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({
-            passageId,
-            questionType: typeId,
-            unit: pickerMeta.unit,
-            // 후보는 항상 라우트 상한(8개)까지 받아 교사가 고르게 한다 —
-            // 반영 상한(maxPoints)은 픽커가 승격 시점에 따로 강제한다.
-            maxPoints: 8,
-          }),
-        });
-        const data = await res.json().catch(() => ({}));
-        if (pointSuggestSeqRef.current !== seq) return; // 픽커 전환 — 폐기
-        if (!res.ok) {
-          throw new Error(
-            typeof data?.error === "string" && data.error
-              ? data.error
-              : "AI 포인트 제안에 실패했습니다.",
-          );
-        }
-        setPointSuggestState({
-          status: "done",
-          suggestions: Array.isArray(data?.suggestions)
-            ? data.suggestions
-            : [],
-          cached: data?.cached === true,
-        });
-      } catch (err) {
-        if (pointSuggestSeqRef.current !== seq) return;
-        setPointSuggestState({
-          status: "error",
-          message:
-            err instanceof Error && err.message
-              ? err.message
-              : "AI 포인트 제안에 실패했습니다.",
-        });
-      }
-    })();
-  };
-
-  // 픽커 onChange — 반환값은 이미 start 정렬 + 축자 검증 완료(픽커 계약).
-  // 지정 시점의 본문 해시를 함께 기록해 위 무효화 effect 의 기준으로 삼는다.
-  const handleTeacherPointsChange = (next: TeacherPoint[]) => {
-    if (!pickerTarget || !activeRow) return;
-    const { passageId, typeId } = pickerTarget;
-    teacherPointsHashRef.current[passageId] = hashPassageText(
-      activeRow.content,
-    );
-    setTeacherPointsByPassage((prev) => {
-      const forPassage = { ...(prev[passageId] ?? {}) };
-      if (next.length === 0) delete forPassage[typeId];
-      else forPassage[typeId] = next;
-      if (Object.keys(forPassage).length === 0) {
-        const rest = { ...prev };
-        delete rest[passageId];
-        return rest;
-      }
-      return { ...prev, [passageId]: forPassage };
-    });
-  };
-
-  // 활성 지문의 유형별 포인트 수 — 유형 타일 "포인트 N" 배지(패널)와 푸터
-  // '포인트 N개 반영' 칩(모달)에 쓴다.
-  const activeRowTeacherPoints = activeRow
-    ? (teacherPointsByPassage[activeRow.passageId] ?? {})
-    : {};
-  const activeRowPointCounts: Record<string, number> = Object.fromEntries(
-    Object.entries(activeRowTeacherPoints).map(([typeId, points]) => [
-      typeId,
-      points.length,
-    ]),
-  );
-  const activeRowPointTotal = Object.values(activeRowPointCounts).reduce(
-    (a, b) => a + b,
-    0,
-  );
-  // 푸터 '포인트 N개 반영' 칩 — 포인트는 있는데 문항 수가 0인 유형이 있으면
-  // '문항 수를 지정하세요' 보조 문구를 붙이고, 클릭 시 그 유형(없으면 첫 포인트
-  // 유형)의 픽커로 재진입시킨다("포인트만 찍고 문항 수 0" 헛수고의 복구 동선).
-  const pointTypeIds = Object.keys(activeRowPointCounts);
-  const zeroCountPointTypeIds = pointTypeIds.filter(
-    (typeId) => (panelTypeCounts[typeId] ?? 0) === 0,
-  );
-  const handlePointChipClick = () => {
-    const targetTypeId = zeroCountPointTypeIds[0] ?? pointTypeIds[0];
-    if (targetTypeId) handleOpenPointPicker(targetTypeId);
-  };
-
-  // 모달 좌컬럼 지문 무대 — key 리마운트로 지문/유형 전환 시 픽커 내부 제스처
-  // 상태를 초기화한다(suggestState 는 handleOpenPointPicker 가 함께 리셋).
-  const pointPickerNode =
-    pickerTarget && pickerMeta && activeRow ? (
-      <PassagePointPicker
-        key={`${pickerTarget.passageId}:${pickerTarget.typeId}`}
-        passageId={pickerTarget.passageId}
-        passageText={activeRow.content}
-        typeId={pickerTarget.typeId}
-        typeLabel={
-          QUESTION_TYPE_UI[pickerTarget.typeId]?.label ?? pickerTarget.typeId
-        }
-        meta={pickerMeta}
-        points={
-          teacherPointsByPassage[pickerTarget.passageId]?.[
-            pickerTarget.typeId
-          ] ?? []
-        }
-        onChange={handleTeacherPointsChange}
-        maxPoints={pickerMeta.maxPoints}
-        // '선택 완료' = 완료 닫기(문항 수 0이면 1로 보정) — Esc 취소 닫기
-        // (onPickerClose=closePointPicker)와 의미를 분리한다.
-        onClose={completePointPicker}
-        suggestState={pointSuggestState}
-        onRequestSuggest={handleRequestPointSuggest}
-      />
-    ) : null;
+  // ── "포인트 짚어주기" 배선 — use-point-picker.tsx 로 추출 ──
+  // 픽커 상태·staleness 무효화·핸들러·pointPickerNode JSX 클러스터.
+  const {
+    handleOpenPointPicker,
+    closePointPicker,
+    activeRowPointCounts,
+    activeRowPointTotal,
+    zeroCountPointTypeIds,
+    handlePointChipClick,
+    pointPickerNode,
+  } = usePointPicker({
+    workspaceApi,
+    teacherPointsByPassage,
+    setTeacherPointsByPassage,
+    genModalOpen,
+    activeRow,
+    panelQuestionTypeSettings,
+    panelTypeCounts,
+    panelSetTypeCount,
+  });
 
   const genModal =
     genModalOpen && activeRow ? (
@@ -2011,162 +1537,6 @@ export function GeneratePageClient({
         />
       </PassageGenerateModal>
     ) : null;
-
-  // ── 모바일 하단 이전/다음 바 구성 ──
-  const mobilePrev =
-    mobileStep === "input"
-      ? null
-      : {
-          label: "이전",
-          onClick: () =>
-            goToMobileStep(
-              mobileStep === "library"
-                ? "input"
-                : mobileStep === "workspace"
-                  ? "library"
-                  : workspaceActive
-                    ? "workspace"
-                    : "library",
-            ),
-        };
-  // 워크스페이스 스텝: 이번 세션에 생성(중/완료/오류)된 문제가 하나라도 있어야
-  // '문제 확인'이 의미 있다. 없으면 하단 CTA 를 비활성으로 눌러 '다음으로(유형선택)'
-  // 으로 먼저 생성하도록 유도한다(결과로의 이동 자체는 상단 스텝 헤더 4번 탭으로
-  // 언제든 가능 — 자유 이동은 막지 않는다).
-  const hasSessionQuestions =
-    queueCounts.done > 0 ||
-    queueCounts.generating > 0 ||
-    queueCounts.error > 0;
-  // 담긴 지문 중 '유형이 설정된'(=생성 대기) 지문 수·문제 수 — 모바일 '문제 확인'
-  // 버튼이 담긴 전 지문을 일괄 생성할지, 결과만 볼지 판단하는 데 쓴다.
-  const workspacePending = (() => {
-    let rows = 0;
-    let questions = 0;
-    for (const row of workspaceApi.rows) {
-      const st = workspaceRowStats.get(row.localId);
-      if (st && st.questions > 0) {
-        rows += 1;
-        questions += st.questions;
-      }
-    }
-    return { rows, questions };
-  })();
-  const mobileNext = (() => {
-    if (mobileStep === "input") {
-      // 직접 입력 탭에 등록할 지문이 쌓여 있으면 '다음' = 등록하고 내 지문함
-      // (콘텐츠 안의 '다음으로 (내 지문함)' 버튼을 하단 바로 옮긴 것 — 등록
-      // 성공 시 intakeView 가 library 로 바뀌며 스텝이 자동으로 넘어간다).
-      if (intakeTab === "paste" && intakeView === "intake" && pasteBoard.count > 0)
-        return {
-          label: pasteBoard.busy
-            ? "등록 중…"
-            : `다음으로 (내 지문함) · 지문 ${pasteBoard.count}개`,
-          onClick: () => pasteStartRef.current?.(),
-          disabled: pasteBoard.busy,
-        };
-      return {
-        label: "내 지문함으로",
-        onClick: () => goToMobileStep("library"),
-      };
-    }
-    if (mobileStep === "library") {
-      // 선택한 지문이 있으면 '다음'이 곧 워크스페이스 담기 — PC 의
-      // '편집(워크스페이스로)' 버튼과 같은 핸들러를 쓴다. 담기 성공 시
-      // workspaceOpen 이 켜지고 동기화 효과가 스텝을 넘긴다.
-      if (selectedIds.size > 0)
-        return {
-          label: `선택 ${selectedIds.size}개 워크스페이스로`,
-          onClick: () => void handleLoadSelectedToWorkspace(),
-        };
-      if (workspaceActive)
-        return {
-          label: "워크스페이스로",
-          onClick: () => goToMobileStep("workspace"),
-        };
-      // 비활 사유 = 선택 0개 → 눌러도 막지 말고 지문 카드들을 글로우해 선택을 유도.
-      return {
-        label: "워크스페이스로",
-        disabled: true,
-        onDisabledHint: () =>
-          triggerHintGlowWithin(document.body, "[data-drag-item-id]", {
-            max: 24,
-            // 대상이 화면 밖일 수 있으니 하단 고정 바에 가리지 않게 가운데로 스크롤.
-            scrollBlock: "center",
-          }),
-      };
-    }
-    if (mobileStep === "workspace") {
-      const totalWorkspaceRows = workspaceApi.rows.length;
-      // ① 담긴 지문 중 하나라도 유형이 있으면 → 생성 준비 단계. 단 '모든' 담긴
-      //    지문이 각각 유형을 담아야 활성(사용자 요청). 활성 시 담긴 전 지문을 한 번에
-      //    일괄 생성한 뒤 각 typeCounts 를 비우고(재생성 방지) 결과 스텝으로 이동한다.
-      if (workspacePending.rows > 0) {
-        if (workspacePending.rows === totalWorkspaceRows)
-          return {
-            label: `${workspacePending.rows}개 지문 문제 생성 (${workspacePending.questions}문제)`,
-            onClick: () => {
-              void handleWorkspaceGenerate();
-              workspaceApi.rows.forEach((row) => {
-                if (row.override && overrideHasTypeCounts(row.override)) {
-                  const next = { ...row.override, typeCounts: {} };
-                  workspaceApi.setOverride(
-                    row.localId,
-                    isOverrideEmpty(next) ? null : next,
-                  );
-                }
-              });
-              goToMobileStep("results");
-            },
-          };
-        // 일부 지문만 유형을 담음 → 비활성. 눌러도 막지 말고 지문 행들을 글로우해
-        // 남은 지문에도 유형을 담도록 유도한다.
-        const remaining = totalWorkspaceRows - workspacePending.rows;
-        return {
-          label: `${remaining}개 지문에 유형을 더 담아주세요`,
-          disabled: true,
-          onDisabledHint: () =>
-            triggerHintGlowWithin(
-              document.body,
-              '[data-generate-tour="row-generate-button"]',
-              { scrollBlock: "center" },
-            ),
-        };
-      }
-      // ② 담긴 유형은 없지만 이미 생성물이 있으면 → 결과 보기.
-      if (hasSessionQuestions)
-        return {
-          label: queueCounts.generating > 0 ? "문제 확인 (생성 중)" : "문제 확인",
-          onClick: () => goToMobileStep("results"),
-        };
-      // ③ 아무 지문도 유형 설정이 안 됐고 생성물도 없음 → 비활성. 눌러도 막지 말고
-      //    지문별 '유형선택하고 지문 담기' 버튼들을 글로우해 유형 담기를 유도한다.
-      return {
-        label: "문제 확인",
-        disabled: true,
-        onDisabledHint: () =>
-          triggerHintGlowWithin(
-            document.body,
-            '[data-generate-tour="row-generate-button"]',
-            // 생성 버튼이 긴 지문 아래·고정 바 뒤에 가려질 수 있으니 가운데로 스크롤.
-            { scrollBlock: "center" },
-          ),
-      };
-    }
-    return null;
-  })();
-  const mobileNextHint =
-    mobileStep === "library" && selectedIds.size === 0 && !workspaceActive
-      ? "지문 카드를 선택하면 워크스페이스로 보낼 수 있어요"
-      : // 워크스페이스 안내는 하단 '담긴 유형' 장바구니 바가 대신하므로 힌트 생략.
-        undefined;
-
-  // 파일업로드·직접입력·기출 탭(지문 입력 스텝)에서는 각 보드가 자체 하단 고정
-  // 액션 바(담긴 지문 + 추출/등록/담기 버튼)를 렌더하므로, 중복되는 공용 스텝 네비를
-  // 숨기고 그 높이만큼 아래 여백을 예약한다(고정 바에 콘텐츠가 가리지 않게).
-  const boardFixedFooterActive =
-    mobileStep === "input" &&
-    intakeView === "intake" &&
-    (intakeTab === "upload" || intakeTab === "paste" || intakeTab === "exam");
 
   // ── 모바일 하단 고정 장바구니 2종 — generate-mobile-carts.tsx 로 추출 ──
   const workspaceCart = (
@@ -2408,7 +1778,17 @@ export function GeneratePageClient({
           !!contentModalPassage &&
           reviewActionPassageIds.has(contentModalPassage.id)
         }
-        onToggleExtractionReview={handleToggleExtractionReview}
+        // 캐스트 사유: 이 모달의 passage 는 본체가 PassageItem(계열)만 넣으므로
+        // (contentModalPassage 상태·setContentModalPassage 주입 경로 전부),
+        // 콜백이 되받는 인자는 런타임상 PassageItem 이다. 훅 시그니처
+        // ((passage: PassageItem) => Promise<void>)는 구조적 최소형
+        // PassageContentModalPassage 파라미터와 반변(contravariance) 방향이
+        // 어긋나(publisher·difficulty 부재) 직접 캐스트가 불가 — unknown 경유.
+        onToggleExtractionReview={
+          handleToggleExtractionReview as unknown as (
+            passage: PassageContentModalPassage,
+          ) => void
+        }
       />
 
       {/* ─── 추출/입력 지문 "전체 보기" — 복원 근거 + 추출 이미지 상세 모달 ─── */}

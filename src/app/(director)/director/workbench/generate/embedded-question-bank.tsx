@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 
 // ---------------------------------------------------------------------------
@@ -105,6 +104,21 @@ interface LocalFilters {
   starred?: boolean;
   sort?: string;
   search?: string;
+}
+
+// LocalFilters 의 문자열 필터 키(숫자 page·불리언 approved/starred 제외) —
+// updateFilter/updateFilters 가 string key 로 인덱싱할 때 좁히는 데 쓴다.
+type LocalFilterTextKey = Exclude<keyof LocalFilters, "page" | "approved" | "starred">;
+
+// PassageGroupedView 의 onActivePassageChange 콜백이 넘겨주는 "현재 지문" 요약
+// 형상(question-bank-passage-view.tsx 프롭 타입과 동일 — 재수출되지 않아 재선언).
+interface ActivePassageContext {
+  id: string;
+  title: string;
+  visibleCount: number;
+  totalQuestionCount: number;
+  hasAnalysis: boolean;
+  isOpen: boolean;
 }
 
 const PAGE_SIZE = 20;
@@ -445,7 +459,9 @@ export function EmbeddedQuestionBank({
         next[key] =
           value === "true" ? true : value === "false" ? false : undefined;
       } else {
-        next[key] = normalize(value);
+        // 캐스트 사유: 툴바 계약(updateFilter)이 key 를 string 으로 넘기지만,
+        // approved/starred 분기 밖에서 실제 도달하는 키는 문자열 필터 키뿐이다.
+        next[key as LocalFilterTextKey] = normalize(value);
       }
       return next;
     });
@@ -468,7 +484,10 @@ export function EmbeddedQuestionBank({
           next[key] =
             value === "true" ? true : value === "false" ? false : undefined;
         } else {
-          next[key] = normalize(value);
+          // 캐스트 사유: 툴바 계약(updateFilters)이 Record<string, string> 을
+          // 넘기지만, view/collectionId/approved/starred 분기 밖에서 실제
+          // 도달하는 키는 문자열 필터 키뿐이다.
+          next[key as LocalFilterTextKey] = normalize(value);
         }
       }
       return next;
@@ -517,14 +536,13 @@ export function EmbeddedQuestionBank({
     return rawGroupedPassages
       .map((p) => ({
         ...p,
-        questions: p.questions.filter((q) => !removedIds.has(q.id)),
+        questions: p.questions.filter((q: { id: string }) => !removedIds.has(q.id)),
       }))
       .filter((p) => p.questions.length > 0);
   }, [rawGroupedPassages, removedIds]);
 
-  const [activePassageContext, setActivePassageContext] = useState<any | null>(
-    null,
-  );
+  const [activePassageContext, setActivePassageContext] =
+    useState<ActivePassageContext | null>(null);
   const [expandedPassageIds, setExpandedPassageIds] = useState<
     Record<string, boolean>
   >({});
@@ -740,7 +758,9 @@ export function EmbeddedQuestionBank({
     const result = await approveWorkbenchQuestion(id);
     if (result.success) {
       toast.success("검수완료");
-      setDetailQuestion((prev) =>
+      // 상세 문항 상태가 명시적 any(any | null)라 함수형 업데이트 파라미터가
+      // 문맥 타입을 못 받는다 — 이 갱신이 읽는 id·쓰는 approved 만 좁혀 명시.
+      setDetailQuestion((prev: { id: string; approved: boolean } | null) =>
         prev && prev.id === id ? { ...prev, approved: true } : prev,
       );
       refreshAfterMutation();
@@ -753,7 +773,9 @@ export function EmbeddedQuestionBank({
     const result = await unapproveWorkbenchQuestion(id);
     if (result.success) {
       toast.success("검수 취소됨");
-      setDetailQuestion((prev) =>
+      // 상세 문항 상태가 명시적 any(any | null)라 함수형 업데이트 파라미터가
+      // 문맥 타입을 못 받는다 — 이 갱신이 읽는 id·쓰는 approved 만 좁혀 명시.
+      setDetailQuestion((prev: { id: string; approved: boolean } | null) =>
         prev && prev.id === id ? { ...prev, approved: false } : prev,
       );
       refreshAfterMutation();

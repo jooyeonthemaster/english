@@ -185,7 +185,10 @@ test("premium generation plan is wired through generation and review surfaces", 
       // 가드하지 않는다(서버측 읽기 로직은 아래 shared.ts 엔트리로 별도 가드).
       "src/app/(director)/director/workbench/generate/generation-config-panel-parts/type-numeric-detail.tsx",
       [
-        "questionTypeSettings[typeId]?.difficulty",
+        // @ts-nocheck 제거(2라운드)로 읽기가 형상 좁힘 캐스트를 경유하지만
+        // 의미는 동일: typeId 인덱싱 + ?.difficulty 옵셔널 읽기 + 패치 쓰기.
+        "questionTypeSettings[typeId]",
+        ")?.difficulty",
         "patchTypeSettings(typeId, { difficulty:",
       ],
     ],

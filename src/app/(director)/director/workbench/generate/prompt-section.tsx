@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 
 import { toast } from "sonner";
@@ -57,7 +56,9 @@ export function PromptSection({
   setEditingPromptId: (v: string | null) => void;
   editingName: string;
   setEditingName: (v: string) => void;
-  loadSavedPrompts: () => Promise<void>;
+  // 반환 promise 를 체이닝하지 않으므로 sync/async 구현을 모두 수용한다 —
+  // 공유 Props(types.ts)의 () => void 공급자가 캐스트 없이 그대로 들어온다.
+  loadSavedPrompts: () => void | Promise<void>;
 }) {
   return (
     <div
