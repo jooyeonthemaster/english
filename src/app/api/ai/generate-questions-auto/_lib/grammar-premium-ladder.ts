@@ -55,7 +55,11 @@ import type {
 
 // ── 모델 ─────────────────────────────────────────────────────────────────────
 
-const DEFAULT_GRAMMAR_PREMIUM_MODEL_ID = "google/gemini-3.1-pro-preview";
+// 26-07-20 차세대 이원 티어(O197~O201): gemini-3.1-pro-preview → flash3 통일.
+// grok 운영 실측(O192)의 어법 사다리 270s 데드라인 상시 클램프가 flash3 전환으로
+// 해소된다. 사다리 예산·프롬프트는 pro 실측 캘리브레이션이므로 flash3 전환 후
+// give-up 비율 관측 필요(급증 시 env GRAMMAR_PREMIUM_MODEL_ID 로 즉시 롤백).
+const DEFAULT_GRAMMAR_PREMIUM_MODEL_ID = "google/gemini-3-flash-preview";
 
 /**
  * 사다리 전 콜 공용 모델. preview 만료/교체 대비 env 오버라이드
@@ -471,6 +475,8 @@ export interface GrammarPremiumLadderInput extends GrammarPremiumPromptContext {
   onModelUsage?: (event: QuestionGenerationUsageEvent) => void;
   /** usage 이벤트에 기록할 qualityMode (기본 "strict") */
   qualityMode?: QualityMode;
+  /** usage 이벤트에 기록할 호출자 플랜 (기본 "PREMIUM" — 단일 상품의 STANDARD 사다리 지원). */
+  generationPlan?: "STANDARD" | "PREMIUM";
   /**
    * 표적수리 프롬프트에 동봉할 미끼 재료 후보 라인(코드 탐지 상위) —
    * 상위 15줄만 사용한다. 미제공 시 후보 블록 없이 수리한다.
@@ -497,6 +503,8 @@ interface LadderCallContext {
   modelId: string;
   difficulty: string;
   qualityMode: QualityMode;
+  /** usage 원장에 남길 호출자 플랜(단일 상품에서 STANDARD 사다리 지원) — 미지정 시 PREMIUM. */
+  generationPlan?: "STANDARD" | "PREMIUM";
   deadlineAt?: number;
   onModelUsage?: (event: QuestionGenerationUsageEvent) => void;
   calls: GrammarPremiumLadderCall[];
@@ -529,7 +537,9 @@ async function fireOnce<T>(
       subType: "GRAMMAR_ERROR",
       qualityMode: ctx.qualityMode,
       difficulty: ctx.difficulty,
-      generationPlan: "PREMIUM",
+      // 26-07-21 단일 상품: 사다리가 STANDARD KILLER 도 태우므로 호출자 플랜을
+      // 원장에 그대로 남긴다(미전달 시 기존 PREMIUM — 하위호환).
+      generationPlan: ctx.generationPlan ?? "PREMIUM",
       usage,
       provider: ATLAS_CLOUD_PROVIDER,
       modelId: normalizedModelId,
@@ -544,6 +554,19 @@ async function fireOnce<T>(
       prompt: args.prompt,
       maxRetries: ctx.sdkMaxRetries,
       maxOutputTokens: LADDER_MAX_TOKENS,
+      // 26-07-20 flash3 통일: 사다리 콜 사고 강도를 콜 단위로 명시 고정(전역 env
+      // 비의존). 기본 low — 스모크 A/B 실측: 사다리@high 는 221s/142원(fast 270s
+      // 데드라인 근접) vs @low 85s/48원 완주(수용·소프트 잔존 정상), 품질 이득
+      // 근거 없음(프리미엄 확증 스택의 사고 ON 은 생성+E-gate 계약 기준이지 사다리
+      // 형상이 아님 — 검증 축은 E-gate@high 가 담당). camelCase reasoningEffort →
+      // wire reasoning_effort → gemini reasoning 객체(transformRequestBody).
+      // env GRAMMAR_PREMIUM_REASONING_EFFORT 로 상향 조정 가능.
+      providerOptions: {
+        [ATLAS_CLOUD_PROVIDER]: {
+          reasoningEffort:
+            process.env.GRAMMAR_PREMIUM_REASONING_EFFORT?.trim() || "low",
+        },
+      },
       abortSignal: AbortSignal.timeout(computeAbortMs(ctx.deadlineAt)),
     });
     ctx.calls.push({
@@ -571,8 +594,9 @@ async function fireOnce<T>(
 /**
  * 논리 콜 1회 = fireOnce 최대 2회.
  * strict 스키마 호출의 산발 파싱 실패("No object generated"/스키마 불일치)만
- * 동일한 thinking-off 요청으로 1회 재시도한다. Gemini reasoning을 켜는 폴백은
- * 사용자 계약과 비용 상한을 깨므로 허용하지 않는다.
+ * 동일 요청으로 1회 재시도한다. (구 주석의 "reasoning 폴백 금지"는 pro 시대
+ * 계약 — 26-07-20 flash3 통일 이후 사다리 콜은 아래 fireOnce 에서 사고 high 를
+ * 콜 단위 고정한다. O197~O201 프리미엄 확증이 사고 ON 기준이기 때문.)
  */
 async function callLadderModel<T>(
   ctx: LadderCallContext,
@@ -642,6 +666,7 @@ export async function runGrammarPremiumLadder(
     modelId,
     difficulty: input.difficulty,
     qualityMode: input.qualityMode ?? "strict",
+    generationPlan: input.generationPlan,
     deadlineAt: input.deadlineAt,
     onModelUsage: input.onModelUsage,
     calls,

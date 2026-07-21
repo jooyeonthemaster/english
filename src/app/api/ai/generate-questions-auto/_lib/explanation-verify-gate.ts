@@ -10,10 +10,11 @@
 //   - 검증·수리 대상은 해설 필드(explanation/wrongOptionExplanations/keyPoints)뿐
 //     — 문항 본체(선지·정답·밑줄)는 절대 바꾸지 않는다.
 //   - 대상 유형(W2-F 확장): 어법·빈칸 + 선택형(TITLE·TOPIC·MAIN_IDEA·
-//     TOPIC_MAIN_IDEA·IMPLIED_MEANING·CONTENT_MATCH). W2-E 통합 라우팅의 PREMIUM
-//     표와 동일 집합이라 PREMIUM=enforce 로 자연 정합. 구조형·서술형은 기본 제외
-//     (무결성 게이트가 담당). env EXPLANATION_VERIFY_GATE_TYPES 로 오버라이드
-//     (콤마 구분, "ALL"=전 유형).
+//     TOPIC_MAIN_IDEA·IMPLIED_MEANING·CONTENT_MATCH). 이원 티어(26-07-20)에서는
+//     사용자가 PREMIUM 을 고른 경우에만 이 유형들이 enforce 레인에 실린다 —
+//     STANDARD 는 기본 off 로 인라인 통합 검수리 게이트(review-repair-gate)가
+//     대체한다. 구조형·서술형은 기본 제외(무결성 게이트가 담당). env
+//     EXPLANATION_VERIFY_GATE_TYPES 로 오버라이드(콤마 구분, "ALL"=전 유형).
 //   - 검증기/수리기 모델(W2-F): 기본 x-ai/grok-4.5(실측 O184: gemini-3.1-pro 적발
 //     0/12 vs grok@high 10/12·오경보 0). grok 콜에는 reasoning=high 를 콜 단위로
 //     명시 전달한다(범용 env 미의존). env EXPLANATION_VERIFY_MODEL_ID /
@@ -104,11 +105,13 @@ function parseMode(raw: string | undefined): ExplanationVerifyGateMode | undefin
 }
 
 /**
- * 플랜별 모드 결정 (Phase C 확증, 연구노트 O160):
- * - PREMIUM 기본 enforce — 사다리+솔버+E-gate 구성의 출하분 F 0/11 (V4 0) vs
- *   현행 사다리 단독 F 5/18. 반려는 outer retry/salvage 가 흡수(never-fail 불변).
- * - STANDARD 기본 warn — 저가 티어의 수율 보존. 수리본이 재검증을 통과하면 채택,
- *   실패 시 경고만 부착(sentinel 실측: 반려 0, 해설 수리 채택 다수).
+ * 플랜별 모드 결정 (Phase C 확증 O160 → 26-07-20 이원 티어 개편 O201):
+ * - PREMIUM 기본 enforce — 풀 파이프라인 티어의 품질 보증 축. 반려는 outer
+ *   retry/salvage 가 흡수(never-fail 불변).
+ * - STANDARD 기본 off — 이원 티어에서 스탠다드는 E-gate 대신 인라인 통합
+ *   검수·수리 1콜(standard-review-gate)이 해설·정답 검증을 담당한다(O201 S3i:
+ *   콘텐츠성 F 0/46). off 라 PENDING 스탬프도 안 찍혀 async 워커 대상에서
+ *   자동 제외된다(이중 검증 비용 차단).
  * - env 로 강제 가능: EXPLANATION_VERIFY_GATE_MODE(전역) >
  *   EXPLANATION_VERIFY_GATE_MODE_PREMIUM / _STANDARD(플랜별) > 위 기본값.
  */
@@ -121,15 +124,19 @@ export function getExplanationVerifyGateMode(
     return parseMode(process.env.EXPLANATION_VERIFY_GATE_MODE_PREMIUM) ?? "enforce";
   }
   if (generationPlan === "STANDARD") {
-    return parseMode(process.env.EXPLANATION_VERIFY_GATE_MODE_STANDARD) ?? "warn";
+    return parseMode(process.env.EXPLANATION_VERIFY_GATE_MODE_STANDARD) ?? "off";
   }
   return "off";
 }
 
-// 검증기·수리기 기본 모델 (W2-F, 실측 O184): gemini-3.1-pro 는 해설 결함을 거의
-// 못 잡았고(적발 0/12), x-ai/grok-4.5 를 reasoning=high 로 돌리면 10/12 적발·오경보
-// 0. env 로 개별 오버라이드(EXPLANATION_VERIFY_MODEL_ID / _REPAIR_MODEL_ID).
-const DEFAULT_EXPLANATION_VERIFY_MODEL_ID = "x-ai/grok-4.5";
+// 검증기·수리기 기본 모델 — 26-07-20 flash3 통일(O196/O197): 골든셋 재검증에서
+// 치명 V4 재현율이 grok 1/3 = flash3 1/3 로 동급(상보적)이라 grok 검증 프리미엄의
+// 근거가 약화됐고, 차세대 프리미엄 확정 스택(flash3 생성+flash3 E-gate+풀계약,
+// 실질 F 2.2% 3중 재현)이 flash3 검증 기준으로 실측됐다. 원가 회당 ~44원(grok)
+// → ~수원(flash3). gemini 는 사고를 콜 단위 opt-in(applyReasoningEffortToGemini)
+// 으로 싣는다. env 로 개별 오버라이드(EXPLANATION_VERIFY_MODEL_ID /
+// _REPAIR_MODEL_ID — grok 롤백 경로 유지).
+const DEFAULT_EXPLANATION_VERIFY_MODEL_ID = "google/gemini-3-flash-preview";
 
 function resolveVerifierModelId(): string {
   const raw = process.env.EXPLANATION_VERIFY_MODEL_ID?.trim();
@@ -148,11 +155,13 @@ function resolveVerifierReasoningEffort(): string {
   return process.env.EXPLANATION_VERIFY_REASONING_EFFORT?.trim() || "high";
 }
 
-// 인라인 예산 가드 최소치 — verify→repair→재검증(X3, grok@high)은 회당 수십 초라,
-// 남은 시간예산이 얇으면 검증/수리 콜이 abort→catch(fail-open) 되어 무판정 통과·
-// 침묵 출하된다(O153 근인). 남은 예산이 이 값 미만이면 판정을 건너뛰고 호출자가
-// SKIPPED_BUDGET 로 표시하게 한다. env EXPLANATION_VERIFY_MIN_BUDGET_MS 로 조정.
-const DEFAULT_EXPLANATION_VERIFY_MIN_BUDGET_MS = 190_000;
+// 인라인 예산 가드 최소치 — verify→repair→재검증(X3)은 남은 시간예산이 얇으면
+// 검증/수리 콜이 abort→catch(fail-open) 되어 무판정 통과·침묵 출하된다(O153
+// 근인). 남은 예산이 이 값 미만이면 판정을 건너뛰고 호출자가 SKIPPED_BUDGET 로
+// 표시하게 한다. 26-07-20 flash3 전환으로 콜 지연이 grok(수십 초) 대비 크게
+// 줄어 190s → 120s 로 하향(3콜 worst-case ~100s 커버) — 인라인 경로의 과도한
+// SKIPPED_BUDGET 양산 방지. env EXPLANATION_VERIFY_MIN_BUDGET_MS 로 조정.
+const DEFAULT_EXPLANATION_VERIFY_MIN_BUDGET_MS = 120_000;
 
 function resolveMinBudgetMs(): number {
   const raw = process.env.EXPLANATION_VERIFY_MIN_BUDGET_MS?.trim();
@@ -163,10 +172,13 @@ function resolveMinBudgetMs(): number {
 }
 
 // E-gate 대상 유형 기본 집합 (W2-F): 어법·빈칸 + 선택형(대의파악 계열·함축·
-// 내용일치). W2-E resolveUnifiedGenerationPlan 의 PREMIUM 표와 동일 집합이라 통합
-// 라우팅(유형→플랜)과 자연 정합한다(전부 PREMIUM=enforce 레인). 구조형·서술형은
-// 무결성 게이트가 담당하므로 기본 제외.
-const DEFAULT_EXPLANATION_VERIFY_GATE_TYPES: ReadonlySet<string> = new Set([
+// 내용일치). 이원 티어(26-07-20)에서 이 집합은 "PREMIUM 선택 시 E-gate 가 담당하는
+// 유형"을 뜻한다 — STANDARD 는 기본 off(통합 검수리 게이트가 대체)이고, 이 집합
+// 밖의 객관식 유형은 플랜 무관 검수리 게이트가 커버한다(review-repair-gate 의
+// 대상 집합이 이 집합을 포함). 구조형·서술형은 무결성 게이트가 담당하므로 기본
+// 제외. review-repair-gate.ts 가 이 집합을 import 해 자기 기본 집합을 파생한다
+// (두 집합의 수동 드리프트 방지).
+export const DEFAULT_EXPLANATION_VERIFY_GATE_TYPES: ReadonlySet<string> = new Set([
   "GRAMMAR_ERROR",
   "BLANK_INFERENCE",
   "TITLE",
@@ -285,8 +297,10 @@ async function verifyOnce(
     ].join("\n\n"),
     generationPlan: "PREMIUM",
     modelId: resolveVerifierModelId(),
-    // grok 은 high 추론에서만 결함을 적발(O184) — 콜 단위로 명시 전달(범용 env 미의존).
+    // 검증은 high 추론에서만 결함을 적발(O184 grok / O196~O201 flash3) — 콜 단위로
+    // 명시 전달(범용 env 미의존). flash3(gemini) 기본 모델에도 실리도록 opt-in.
     reasoningEffort: resolveVerifierReasoningEffort(),
+    applyReasoningEffortToGemini: true,
     logPrefix: `EXPL-VERIFY-R${round}`,
     maxTokens: 6_000,
     deadlineAt: input.deadlineAt,
@@ -360,6 +374,7 @@ export async function runExplanationVerifyGate(
       generationPlan: "PREMIUM",
       modelId: repairModelId,
       reasoningEffort: resolveVerifierReasoningEffort(),
+      applyReasoningEffortToGemini: true,
       logPrefix: "EXPL-VERIFY-FIX",
       maxTokens: 4_000,
       deadlineAt: input.deadlineAt,

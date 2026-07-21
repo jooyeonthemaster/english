@@ -28,7 +28,7 @@ import {
   getQuestionGenerationCreditCost,
   mergeQuestionGenerationPlanTag,
   normalizeQuestionGenerationPlan,
-  resolveUnifiedGenerationPlan,
+  resolveEffectiveGenerationPlan,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
 import { saveGeneratedQuestionsForJob } from "@/lib/question-generation-persistence";
@@ -184,14 +184,11 @@ export const workbenchQuestionGenerationTask = task({
     }
     const passage = job.passage;
     const config = parseConfig(job.config, job.generationPlan);
-    // 상품 단일화(W2-E): 품질 파이프라인·요금은 유형이 결정한다. 저장된 config 의
-    // generationPlan / questionTypeSettings.generationPlan(과거 PREMIUM config
-    // 포함)은 무력화 — subType 만으로 유도한다(fast/async 진입점과 동일 규칙). 클라
-    // 원요청 플랜은 async 진입점이 job.config.requestedGenerationPlan 에 남겨 둔다.
-    const effectiveGenerationPlan =
-      config.mode === "MANUAL" && config.questionType
-        ? resolveUnifiedGenerationPlan(config.questionType)
-        : config.generationPlan;
+    // 단일 상품(26-07-21): 결정 함수 단일 소스 — 잡 저장 플랜을 정규화 + 단일
+    // 상품 클램프(fast/async/단건 진입점과 동일 규칙, 구버전 잡 재실행도 안전).
+    const effectiveGenerationPlan = resolveEffectiveGenerationPlan(
+      config.generationPlan,
+    );
     const effectiveDifficulty =
       config.mode === "MANUAL" && config.questionType
         ? readQuestionTypeDifficultySetting(

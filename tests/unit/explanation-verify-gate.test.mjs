@@ -143,10 +143,10 @@ main().catch((e) => { console.error(e); process.exit(1); });
 test("E-gate: 플랜별 모드 + 대상 유형 판정 테이블 + env 오버라이드 + off/비대상 무판정 통과", () => {
   const r = runHarness(PURE_HARNESS);
 
-  // 플랜별 모드 (기존 무회귀)
+  // 플랜별 모드 — 이원 티어(26-07-20): STANDARD 기본 off(통합 검수리 게이트가 대체).
   assert.equal(r.noPlanDefault, "off");
   assert.equal(r.premiumDefault, "enforce");
-  assert.equal(r.standardDefault, "warn");
+  assert.equal(r.standardDefault, "off");
   assert.equal(r.premiumEnvOverride, "warn");
   assert.equal(r.globalOffWins, "off");
   assert.equal(r.invalidGlobalFallsThrough, "warn");
@@ -238,25 +238,26 @@ async function runScenario(name, opts) {
     repairedFlag: res.updatedQuestion ? res.updatedQuestion._explanationRepaired === true : null,
     updatedWrongOptions: res.updatedQuestion ? res.updatedQuestion.wrongOptionExplanations : null,
     fetches: wire.length,
-    wire: wire.map((w) => ({ model: w.model, reasoning_effort: w.reasoning_effort, hasReasoning: "reasoning" in (w || {}), hasStreamKey: "stream" in (w || {}), stream: w.stream, isRepairCall: JSON.stringify(w).includes("해설 교정 전문가") })),
+    wire: wire.map((w) => ({ model: w.model, reasoning_effort: w.reasoning_effort ?? null, reasoning: w.reasoning ?? null, hasReasoning: "reasoning" in (w || {}), hasStreamKey: "stream" in (w || {}), stream: w.stream, isRepairCall: JSON.stringify(w).includes("해설 교정 전문가") })),
   };
 }
 
 async function main() {
   const out = {};
 
-  // 1) grok 기본 모델 해석 + reasoning=high + stream:false (어법, PREMIUM=enforce, PASS)
-  out.grokGrammar = await runScenario("grokGrammar");
+  // 1) flash3 기본 모델 해석 + gemini reasoning 객체(enabled/high/exclude) (어법, PREMIUM=enforce, PASS)
+  out.defaultGrammar = await runScenario("defaultGrammar");
 
-  // 2) 선택형(TITLE) 확장 — 게이트가 실제로 발동해 grok 검증 콜을 낸다(E2E 확장 증명)
-  out.grokTitle = await runScenario("grokTitle", { subType: "TITLE" });
+  // 2) 선택형(TITLE) 확장 — 게이트가 실제로 발동해 검증 콜을 낸다(E2E 확장 증명)
+  out.defaultTitle = await runScenario("defaultTitle", { subType: "TITLE" });
 
-  // 3) 검증기 모델 env 오버라이드
+  // 3) 검증기 모델 env 오버라이드(grok 롤백 경로) — flat reasoning_effort 로 실린다
   process.env.EXPLANATION_VERIFY_MODEL_ID = "x-ai/grok-4.5-fast";
   out.modelOverride = await runScenario("modelOverride");
   delete process.env.EXPLANATION_VERIFY_MODEL_ID;
 
-  // 4) gemini 오버라이드 — 바이트 보존(reasoning_effort:high 누출 금지, stream 키 없음)
+  // 4) gemini 계열 오버라이드 — E-gate 는 gemini opt-in 이라 reasoning 객체가 실린다
+  //    (stream 키는 gemini 계약대로 없음)
   process.env.EXPLANATION_VERIFY_MODEL_ID = "google/gemini-3.5-flash";
   out.geminiOverride = await runScenario("geminiOverride");
   delete process.env.EXPLANATION_VERIFY_MODEL_ID;
@@ -266,14 +267,19 @@ async function main() {
   out.reasoningOverride = await runScenario("reasoningOverride");
   delete process.env.EXPLANATION_VERIFY_REASONING_EFFORT;
 
-  // 6) 수리 경로: verify FAIL → grok 수리 → 재검증 PASS → 해설 교체(updatedQuestion)
+  // 6) 수리 경로: verify FAIL → 수리 → 재검증 PASS → 해설 교체(updatedQuestion)
   out.repairAdopt = await runScenario("repairAdopt", { responses: [chat(verifyFail), chat(repairObj), chat(verifyPass)] });
 
   // 7) fail-closed(enforce): 재검증까지 FAIL → blocking 반려
   out.repairEnforceFail = await runScenario("repairEnforceFail", { responses: [chat(verifyFail), chat(repairObj), chat(verifyFail)] });
 
-  // 8) warn(STANDARD): 재검증 FAIL → 경고만, issue 없음
+  // 8) STANDARD 기본 off(이원 티어) — 콜 0, 무판정 통과
+  out.standardOffNoCalls = await runScenario("standardOffNoCalls", { plan: "STANDARD", responses: [] });
+
+  // 9) warn(STANDARD env 강제): 재검증 FAIL → 경고만, issue 없음
+  process.env.EXPLANATION_VERIFY_GATE_MODE_STANDARD = "warn";
   out.repairWarnFail = await runScenario("repairWarnFail", { plan: "STANDARD", responses: [chat(verifyFail), chat(repairObj), chat(verifyFail)] });
+  delete process.env.EXPLANATION_VERIFY_GATE_MODE_STANDARD;
 
   return out;
 }
@@ -287,40 +293,45 @@ main().then((out) => {
 });
 `;
 
-test("E-gate WIRE: grok 기본 모델 + reasoning=high 콜 단위 전달, 선택형 확장, env 오버라이드, gemini 바이트 보존", () => {
+test("E-gate WIRE: flash3 기본 모델 + gemini reasoning 콜 단위 전달, 선택형 확장, env 오버라이드", () => {
   const out = runHarness(WIRE_HARNESS);
 
-  // 1) grok 기본: 검증 콜이 x-ai/grok-4.5 로, reasoning_effort=high, stream:false 로 나간다.
-  const g = out.grokGrammar;
+  // 1) flash3 기본: 검증 콜이 google/gemini-3-flash-preview 로, gemini reasoning
+  //    객체({enabled, effort:"high", exclude})로 나간다 (26-07-20 이원 티어 —
+  //    콜 단위 opt-in 이라 전역 gemini env 미의존). gemini 는 stream 키 없음.
+  const g = out.defaultGrammar;
   assert.equal(g.issue, null, JSON.stringify(g));
   assert.equal(g.fetches, 1);
-  assert.equal(g.wire[0].model, "x-ai/grok-4.5");
-  assert.equal(g.wire[0].reasoning_effort, "high");
-  assert.equal(g.wire[0].hasReasoning, false, "grok should carry reasoning_effort, not a reasoning object");
-  assert.equal(g.wire[0].stream, false);
+  assert.equal(g.wire[0].model, "google/gemini-3-flash-preview");
+  assert.equal(g.wire[0].hasReasoning, true, `gemini must carry a reasoning object: ${JSON.stringify(g.wire[0])}`);
+  assert.equal(g.wire[0].reasoning?.effort, "high");
+  assert.equal(g.wire[0].reasoning?.enabled, true);
+  assert.equal(g.wire[0].reasoning_effort, null, "gemini must not carry flat reasoning_effort");
+  assert.equal(g.wire[0].hasStreamKey, false, "gemini wire must stay stream-key-clean");
 
-  // 2) 선택형(TITLE) 확장이 실제 콜을 낸다 — grok 검증 1콜.
-  const t = out.grokTitle;
+  // 2) 선택형(TITLE) 확장이 실제 콜을 낸다 — 검증 1콜.
+  const t = out.defaultTitle;
   assert.equal(t.fetches, 1, `TITLE must trigger the gate end-to-end: ${JSON.stringify(t)}`);
-  assert.equal(t.wire[0].model, "x-ai/grok-4.5");
-  assert.equal(t.wire[0].reasoning_effort, "high");
+  assert.equal(t.wire[0].model, "google/gemini-3-flash-preview");
+  assert.equal(t.wire[0].reasoning?.effort, "high");
 
-  // 3) 검증기 모델 env 오버라이드가 와이어 model 을 바꾼다(reasoning 은 grok 계열이라 유지).
+  // 3) grok 롤백 env 오버라이드 — flat reasoning_effort=high + stream:false 유지.
   assert.equal(out.modelOverride.wire[0].model, "x-ai/grok-4.5-fast");
   assert.equal(out.modelOverride.wire[0].reasoning_effort, "high");
+  assert.equal(out.modelOverride.wire[0].hasReasoning, false, "grok should carry reasoning_effort, not a reasoning object");
+  assert.equal(out.modelOverride.wire[0].stream, false);
 
-  // 4) gemini 오버라이드 — 바이트 보존: reasoning_effort:high 를 싣지 않고(gemini 자체
-  //    reasoning 제어), stream 키도 없어야 한다(gemini 요청 본문 불변 계약).
+  // 4) gemini 계열 오버라이드 — E-gate 는 gemini opt-in: reasoning 객체 high, stream 키 없음.
   const gem = out.geminiOverride;
   assert.equal(gem.wire[0].model, "google/gemini-3.5-flash");
-  assert.notEqual(gem.wire[0].reasoning_effort, "high");
-  assert.equal(gem.wire[0].reasoning_effort ?? null, null, `gemini must not carry reasoning_effort: ${JSON.stringify(gem.wire[0])}`);
+  assert.equal(gem.wire[0].reasoning?.effort, "high");
+  assert.equal(gem.wire[0].reasoning_effort, null, `gemini must not carry flat reasoning_effort: ${JSON.stringify(gem.wire[0])}`);
   assert.equal(gem.wire[0].hasStreamKey, false, `gemini wire must stay stream-key-clean: ${JSON.stringify(gem.wire[0])}`);
 
-  // 5) reasoning 강도 env 오버라이드.
-  assert.equal(out.reasoningOverride.wire[0].reasoning_effort, "medium");
+  // 5) reasoning 강도 env 오버라이드(기본 flash3 → reasoning 객체의 effort 로 반영).
+  assert.equal(out.reasoningOverride.wire[0].reasoning?.effort, "medium");
 
-  // 6) 수리 경로: verify FAIL → 수리(grok) → 재검증 PASS → 해설 교체.
+  // 6) 수리 경로: verify FAIL → 수리 → 재검증 PASS → 해설 교체.
   const rep = out.repairAdopt;
   assert.equal(rep.issue, null, JSON.stringify(rep));
   assert.equal(rep.fetches, 3, "expected verify→repair→re-verify (3 calls)");
@@ -333,9 +344,9 @@ test("E-gate WIRE: grok 기본 모델 + reasoning=high 콜 단위 전달, 선택
     { "①": "오답 해설입니다." },
     `repaired wrongOptionExplanations must be normalized to Record form: ${JSON.stringify(rep.updatedWrongOptions)}`,
   );
-  // 수리 콜(2번째)도 grok + reasoning=high 로 나간다.
-  assert.equal(rep.wire[1].model, "x-ai/grok-4.5");
-  assert.equal(rep.wire[1].reasoning_effort, "high");
+  // 수리 콜(2번째)도 flash3 + reasoning high 로 나간다.
+  assert.equal(rep.wire[1].model, "google/gemini-3-flash-preview");
+  assert.equal(rep.wire[1].reasoning?.effort, "high");
   assert.equal(rep.wire[1].isRepairCall, true, "second call must be the repair call");
 
   // 7) fail-closed(enforce): 재검증까지 FAIL → blocking 반려.
@@ -345,7 +356,12 @@ test("E-gate WIRE: grok 기본 모델 + reasoning=high 콜 단위 전달, 선택
   assert.equal(enf.issue.code, "explanation-verify-failed");
   assert.equal(enf.updatedExplanation, null, "blocked candidate must not adopt the repair");
 
-  // 8) warn(STANDARD): 재검증 FAIL → 경고만, issue 없음.
+  // 8) STANDARD 기본 off(이원 티어): 콜 0, 무판정 통과 — 통합 검수리 게이트가 대체.
+  const off = out.standardOffNoCalls;
+  assert.equal(off.fetches, 0, `STANDARD default must be off (no calls): ${JSON.stringify(off)}`);
+  assert.equal(off.issue, null);
+
+  // 9) warn(STANDARD env 강제): 재검증 FAIL → 경고만, issue 없음.
   const wn = out.repairWarnFail;
   assert.equal(wn.fetches, 3);
   assert.equal(wn.issue, null, `warn must not block: ${JSON.stringify(wn)}`);

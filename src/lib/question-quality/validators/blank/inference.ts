@@ -5,7 +5,11 @@ import { findInfinitivePastOnlyForms } from "./option-grammar";
 import { validateBlankAnswerParaphraseMode } from "./paraphrase";
 import { analyzeBlankSeam } from "./seam";
 import { findBlankSourceReconstructionMismatch } from "./source-reconstruction";
-import { findBlankSpanCarveIssues } from "./span-carve";
+import {
+  findBlankSentenceSwallowIssue,
+  findBlankSpanCarveIssues,
+  findBlankTrailingDependentIssue,
+} from "./span-carve";
 
 
 
@@ -64,6 +68,18 @@ export function validateBlankInferenceQuestion(
   // span 경계 선택 결함(전문장 통삭제·삽입구 절단) — O164 실전 붕괴 클래스의 결정형 차단.
   for (const carve of findBlankSpanCarveIssues(passageWithBlank, originalExpression, correctText)) {
     add("error", carve.code, carve.message);
+  }
+
+  // O201 S3i 이식 게이트 2종 — 문장삼킴 비율(호스트 문장의 88%↑, 결정형 error)과
+  // 빈칸 직후 의존 잔여 구문(", nor/which/in which/whom …" — 선행사 중의성 때문에
+  // 경고로만 발화, 확정 판정은 통합 검수리 콜 축⑤ 담당. 리뷰 실측 판정 26-07-20).
+  const sentenceSwallow = findBlankSentenceSwallowIssue(passage, originalExpression);
+  if (sentenceSwallow) {
+    add("error", sentenceSwallow.code, sentenceSwallow.message);
+  }
+  const trailingDependent = findBlankTrailingDependentIssue(passageWithBlank);
+  if (trailingDependent) {
+    add("warning", trailingDependent.code, trailingDependent.message);
   }
 
   // Every option must enter the same syntactic slot. A fixed relative/finite

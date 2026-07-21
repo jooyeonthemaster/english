@@ -13,6 +13,11 @@ import {
   isExplanationVerifyGateTargetType,
   runExplanationVerifyGate,
 } from "./explanation-verify-gate";
+import {
+  isReviewRepairGateEnabled,
+  isReviewRepairGateTargetType,
+  runReviewRepairGate,
+} from "./review-repair-gate";
 import { getKoTypeModule, isKoQuestionType } from "@/lib/korean/registry";
 import { readKoResolvedSettings } from "@/lib/korean/settings";
 import { postProcessQuestion } from "@/lib/question-postprocess";
@@ -20,7 +25,7 @@ import { reorderChipsAwayFromAnswer, reshuffleTopicSentenceWritingChips } from "
 import { normalizePassageWhitespace } from "@/lib/question-postprocess/text-utils";
 import { QUESTION_SCHEMAS, STRUCTURED_TYPE_PROMPTS } from "@/lib/question-schemas";
 import { buildQuestionTypeSettingsPrompt, getQuestionTypeGenerationTokenFloor, readQuestionTypeDifficultySetting, readSummaryWritingBlankCountSetting, readTopicSentenceWritingBlankCountSetting, resolveQuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
-import { resolveUnifiedGenerationPlan } from "@/lib/question-generation-plans";
+import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import { buildQuestionTargetCandidateBlock, getTypeQualityRubric, type QuestionQualityIssue, validateQuestionQuality } from "@/lib/question-quality";
 import { analyzeEnglishPassageIntegrity } from "@/lib/question-quality/passage-integrity";
 import { selectUsableGrammarCandidates } from "@/lib/question-quality/candidate-blocks/grammar";
@@ -32,7 +37,11 @@ import { isAdoptableDecoyOnlyRepairResidual, isDecoyOnlyRepairableGrammarIssue, 
 import { fallbackResponseSchema } from "./schemas";
 import { buildGenerationPrompt, STRUCTURED_OUTPUT_INSTRUCTIONS, UNSTRUCTURED_OUTPUT_INSTRUCTIONS } from "./prompts";
 import { isNonRetryableQuestionGenerationProviderError } from "@/lib/question-generation-llm";
-import { ATLAS_PREMIUM_QGEN_MODEL_ID, isAtlasClaudeModel } from "@/lib/atlas-ai";
+import {
+  ATLAS_PREMIUM_QGEN_MODEL_ID,
+  ATLAS_STANDARD_MODEL_ID,
+  isAtlasClaudeModel,
+} from "@/lib/atlas-ai";
 import { buildResearchAwareQuestionResponseSchema } from "@/lib/question-generation-research-schema";
 import {
   adaptQuestionGenerationResearchProfileCandidate,
@@ -168,6 +177,32 @@ const GRAMMAR_RETRY_DIRECTIVES: Record<string, string> = {
   "grammar-decoy-filler-span":
     "장식 필러(only·given·지시사·단순 전치사 등) 미끼를 다시 쓰지 말 것 — 해당 미끼를 학생이 실제로 맞는지 틀리는지 저울질하는 구조적 문법 판단 자리로 교체할 것",
 };
+
+// 생성·수리 콜의 gemini 사고 강도 (26-07-20 이원 티어). 전역 env
+// (OPENROUTER_GEMINI_REASONING_EFFORT — 전 gemini 소비자 공용, 프로덕션 low)를
+// 건드리지 않고 문제생성 콜에만 콜 단위로 싣는다.
+//  - 빈칸·선택형(출력 짧음): high — O197~O201 확증 계약.
+//  - 어법: medium — 7/21 00시 실사용 실측: 프로덕션 어법 KILLER 프롬프트(대형
+//    컴팩트 계약+12k 출력캡)에 high 사고를 얹으면 콜당 120s 상시 초과(전 시도
+//    타임아웃 → 1건 실패·1건 salvage). medium 프로브 2지문 E2E 76s/151s 완주.
+//    (S3i 의 어법@high 63s 는 경량 실험 계약 기준 — 프로덕션 프롬프트 다이어트가
+//    후속 과제. 그 전까지 medium 이 데드라인 안전선.)
+//  - 무거운 구조형(순서·삽입·무관·요약MC·콤보 — 출력 큼): medium — 스모크 실측
+//    high 가 1콜 170s+ 로 fast 데드라인(270s)을 태움. O199 S6(medium 원샷 F 0%)이
+//    품질 근거. env QGEN_GEMINI_REASONING_EFFORT 는 전 유형 강제 오버라이드.
+const QGEN_MEDIUM_EFFORT_SUBTYPES: ReadonlySet<string> = new Set([
+  "GRAMMAR_ERROR",
+  "SENTENCE_ORDER",
+  "SENTENCE_INSERT",
+  "IRRELEVANT",
+  "SUMMARY_COMPLETE_MC",
+  "GRAMMAR_CHOICE_COMBO",
+]);
+function resolveQgenReasoningEffort(subType?: string): string {
+  const override = process.env.QGEN_GEMINI_REASONING_EFFORT?.trim();
+  if (override) return override;
+  return subType && QGEN_MEDIUM_EFFORT_SUBTYPES.has(subType) ? "medium" : "high";
+}
 
 function grammarRetryDirectiveForCode(code: string): string | null {
   const direct = GRAMMAR_RETRY_DIRECTIVES[code];
@@ -415,9 +450,10 @@ export async function runQuestionGeneration(
     analysisContext,
     diffLabel,
     diffInstruction,
-    // 상품 단일화(W2-E): top-level generationPlan(클라 값)은 프로덕션 라우팅에
-    // 더 이상 소비되지 않는다 — 유형 기반 effectiveGenerationPlan(아래)이 대체.
-    // 단 연구 런타임 활성 시에만 파이프라인 비교 실험을 위해 존중된다(게이트 정정).
+    // 이원 티어(26-07-20): top-level generationPlan(호출자=사용자 선택)이 라우팅의
+    // 1차 입력이다 — 진입점이 normalize+유형별 저장 설정까지 반영해 넘긴다.
+    // 하류 소비: 모델 매핑·프롬프트 표면·토큰 상한·어법 사다리·검수리/E-gate 모드.
+    // KO(국어) 유형만 아래에서 STANDARD 로 동결된다(개편 범위 밖).
     generationPlan,
     customPrompt,
     typeSettings,
@@ -522,19 +558,23 @@ export async function runQuestionGeneration(
         : effectiveDiffLabel;
       const effectiveDiffInstruction =
         DIFF_DESCRIPTION[effectiveDiffLabel] || diffInstruction;
-      // ── 상품 단일화(W2-E) 라우팅 값 소비부 ──────────────────────────────────
-      // 품질 파이프라인은 오직 문항 유형이 결정한다. 호출자가 넘긴 top-level
-      // generationPlan(클라 값)과 rawTypeSettings.generationPlan(과거 저장 PREMIUM
-      // config 포함)은 여기서 무력화 — subType 만으로 플랜을 유도한다. 하류 전부
-      // (프롬프트·토큰 상한·어법 프리미엄 사다리·E-gate 모드·_generationPlan 스탬프)가
-      // 이 값을 소비하므로 이 한 줄이 모든 runQuestionGeneration 호출자의 라우팅을
-      // 유형 기반으로 통일한다.
-      // 예외(게이트 정정): 연구 런타임 활성 시에만 호출자 지정 플랜을 존중한다 —
-      // 파이프라인 비교 실험(러너 spec 의 plan 필드)이 클램프에 침묵 무력화되는 것을
-      // 막기 위함. 프로덕션 경로에서는 연구 런타임이 절대 활성화되지 않는다.
-      const effectiveGenerationPlan = hasQuestionGenerationResearchRuntime()
-        ? generationPlan
-        : resolveUnifiedGenerationPlan(subType);
+      // KO(국어) 유형은 이원 티어 개편 동결 대상 — 아래 플랜/모델 결정이 참조한다.
+      // 연구 런타임 활성 시에는 동결을 풀어 호출자 플랜을 존중한다(구 클램프의
+      // 게이트 정정 계승 — KO 프리미엄 비교 실험이 침묵 무력화되지 않게).
+      const koTypeFrozenStandard =
+        isKoQuestionType(subType) && !hasQuestionGenerationResearchRuntime();
+      // ── 이원 티어 라우팅 값 소비부 (26-07-20, W2-E 유형 클램프 해체) ─────────
+      // 캠페인 O197~O201 확정 아키텍처: 모델은 전 유형 flash3 로 통일되고, 티어는
+      // 파이프라인 무게를 고른다 — STANDARD = 생성+통합 검수리 2콜(+결정형 게이트),
+      // PREMIUM = 풀 파이프라인(어법 사다리·솔버·E-gate). 유형→플랜 강제
+      // (resolveUnifiedGenerationPlan 클램프)를 해체하고 호출자(사용자 선택) 플랜을
+      // 존중한다. 하류 전부(프롬프트·토큰 상한·어법 사다리·검수리/E-gate 모드·
+      // _generationPlan 스탬프)가 이 값을 소비한다.
+      // KO(국어) 예외: KO 서브시스템은 이번 개편 범위 밖 — 기존 프로덕션 동작
+      // (항상 STANDARD 레인 + 레거시 표준 모델)을 그대로 동결한다.
+      const effectiveGenerationPlan: QuestionGenerationPlan = koTypeFrozenStandard
+        ? "STANDARD"
+        : generationPlan;
 
       console.log(
         `[AUTO-GEN] Step 2: Generating ${subType} x${typeCount} via ${effectiveGenerationPlan} plan (${effectiveDiffLabel})...`,
@@ -694,6 +734,21 @@ export async function runQuestionGeneration(
           ? (koPassageKind as KoPassageKind)
           : null;
 
+      // S3i 경량 생성 계약 발동 판정(26-07-21, O204 후속) — 실험이 검증한 표준
+      // 형상(단일 빈칸 / 어법 5마커·정답1)의 스탠다드 레인만. 그 외 형상·유형·
+      // KO·연구 프로필은 기존 컴팩트 프롬프트 유지. env STANDARD_LEAN_CONTRACT=off
+      // 로 즉시 롤백 가능. 경량 계약의 안전망 = 결정형 게이트 + 검수리 콜.
+      const useStandardLeanContract =
+        effectiveGenerationPlan === "STANDARD" &&
+        !koTypeFrozenStandard &&
+        !researchSingleShotProfileActive &&
+        process.env.STANDARD_LEAN_CONTRACT?.trim().toLowerCase() !== "off" &&
+        ((subType === "BLANK_INFERENCE" &&
+          (blankInferenceBlankCount ?? 1) === 1) ||
+          (subType === "GRAMMAR_ERROR" &&
+            (grammarMarkerCount ?? 5) === 5 &&
+            (grammarAnswerCount ?? 1) === 1));
+
       const hasAiSchema = !!AI_QUESTION_SCHEMAS[subType];
       const isStructured = hasAiSchema || !!QUESTION_SCHEMAS[subType];
       // SUMMARY_WRITING(요약문 영작)은 SUMMARY_COMPLETE 의 blankCount 경로를 미러한다.
@@ -798,6 +853,7 @@ export async function runQuestionGeneration(
           // prompts.ts 가 "## 교사 지정 출제 포인트 (필수 반영)" 블록으로 소비.
           teacherPoints,
           customPrompt: researchPromptSurface.customPrompt,
+          useStandardLeanContract,
         };
         const { system: generationSystem, prompt: generationPrompt } = koMod
           ? buildKoGenerationPrompt({
@@ -827,9 +883,19 @@ export async function runQuestionGeneration(
             ? Math.min(
                 20_000,
                 Math.max(
-                  effectiveDiffLabel === "KILLER" ? 12_000 : 8_192,
+                  // 경량 계약(고사고)은 사고 토큰이 출력 예산을 공유하므로 실험
+                  // 실측 상한(16k)을 쓴다 — 12k 면 사고가 출력분을 잠식해 절단.
+                  useStandardLeanContract
+                    ? 16_000
+                    : effectiveDiffLabel === "KILLER"
+                      ? 12_000
+                      : 8_192,
                   (Number(typeCount) || 1) *
-                    (effectiveDiffLabel === "KILLER" ? 12_000 : 8_192),
+                    (useStandardLeanContract
+                      ? 16_000
+                      : effectiveDiffLabel === "KILLER"
+                        ? 12_000
+                        : 8_192),
                 ),
               )
             : generationMaxTokens;
@@ -1120,9 +1186,15 @@ export async function runQuestionGeneration(
         // 의 diversityUsedTargets)가 계속 강제하므로 사다리 대상에서 빼지 않는다.
         // ⚠️ 배포: fast/큐/트리거 3경로 공통 코드 — vercel 과 trigger.dev 워커를
         // 동시에 재배포해야 한다(§2-5).
+        // 26-07-21 단일 상품: 어법 KILLER 는 플랜 무관 사다리 라우팅 — 1방 생성은
+        // 게이트 반려 재시도가 지배해 190~280s(O205), 사다리는 29~64s/28~111원으로
+        // 더 싸고 빠르고 품질 우위(jul17 실측 재확인). PREMIUM 잔존 경로(이원 복귀
+        // 시)도 기존대로 사다리. STANDARD KILLER 사다리 수용본은 이후 통합 검수리
+        // 게이트가 커버한다(E-gate 휴면).
         const useGrammarPremiumLadder =
           subType === "GRAMMAR_ERROR" &&
-          effectiveGenerationPlan === "PREMIUM" &&
+          (effectiveGenerationPlan === "PREMIUM" ||
+            effectiveDiffLabel === "KILLER") &&
           !researchSingleShotProfileActive &&
           qualityMode === "strict" &&
           !koMod &&
@@ -1173,6 +1245,7 @@ export async function runQuestionGeneration(
             difficultyInstruction: effectiveDiffInstruction,
             deadlineAt,
             qualityMode,
+            generationPlan: effectiveGenerationPlan,
             onModelUsage,
             // 표적수리 미끼 재료 — 기존 후보 블록의 비어 있지 않은 줄(상위 15줄
             // 절단은 사다리 쪽 캡이 수행).
@@ -1328,6 +1401,22 @@ export async function runQuestionGeneration(
                 system: generationSystem,
                 deadlineAt,
                 forceJsonFallback: premiumForceJsonFallback,
+                // KO 동결: 레거시 표준 모델(3.5-flash)·기존 60s 콜 타임아웃 유지 —
+                // flash3 통일·타임아웃 상향(120s)의 범위 밖.
+                // 영어 유형: 경량 계약(S3i)이면 실험 계약대로 high, 그 외에는
+                // 유형별 티어(무거운 컴팩트 프롬프트의 어법·구조형은 medium —
+                // O204). 전역 gemini env 미의존, env 로 모델 교체 시 자동 무시.
+                modelId: koMod ? ATLAS_STANDARD_MODEL_ID : undefined,
+                timeoutMs: koMod ? 60_000 : undefined,
+                // 경량 계약 A/B 실측(O205): 빈칸은 lean+high 가 59s/27원(입증),
+                // 어법은 lean 이어도 high 면 일부 콜이 120s 타임아웃(출력이 큼)
+                // → 어법은 lean 에서도 medium 유지.
+                reasoningEffort: koMod
+                  ? undefined
+                  : useStandardLeanContract && subType === "BLANK_INFERENCE"
+                    ? process.env.QGEN_GEMINI_REASONING_EFFORT?.trim() || "high"
+                    : resolveQgenReasoningEffort(subType),
+                applyReasoningEffortToGemini: !koMod,
               },
             );
 
@@ -1477,6 +1566,10 @@ export async function runQuestionGeneration(
               deadlineAt,
               system: generationSystem,
               forceJsonFallback: premiumForceJsonFallback,
+              // 원 생성과 동일 사고 계약(flash3@high) — KO 는 SHIP-FIRST repair
+              // 자체가 제외라 이 경로는 영어 유형 전용이다.
+              reasoningEffort: resolveQgenReasoningEffort(subType),
+              applyReasoningEffortToGemini: true,
               onModelUsage: (result) => {
                 onModelUsage?.({
                   phase: "question_generation",
@@ -1594,6 +1687,9 @@ export async function runQuestionGeneration(
                 passage: passageContent,
                 mod: koMod,
                 generationPlan: effectiveGenerationPlan,
+                // KO 동결 — 문제생성 STANDARD 매핑이 flash3 로 바뀌어도 KO 솔버는
+                // 레거시 표준 모델을 유지한다(이원 티어 개편 범위 밖).
+                modelId: ATLAS_STANDARD_MODEL_ID,
                 deadlineAt,
                 onModelUsage: (result) => {
                   onModelUsage?.({
@@ -1639,9 +1735,13 @@ export async function runQuestionGeneration(
           // (형식가정법·수동+양태부사·동일문장 이중답 등)를 학생 시점 블라인드 풀이로
           // 차단. strict+relaxed 두 레인 실행(F의 relaxed 출하 금지), scarce/salvage
           // 최후 사다리는 생략 — never-fail 보존. 솔버 장애는 무판정 통과.
+          // 26-07-20 이원 티어: PREMIUM(풀 파이프라인) 전용으로 조정 — STANDARD 는
+          // S3i 확정 스펙(2콜: 생성+통합 검수리)이 담당하며, 검수리 콜의 축①
+          // (가리고 풀기+반박)이 솔버 역할을 흡수한다(O201 실측 콘텐츠성 F 0/46).
           if (
             !researchSingleShotProfileActive &&
             subType === "GRAMMAR_ERROR" &&
+            effectiveGenerationPlan === "PREMIUM" &&
             (qualityMode === "strict" || qualityMode === "relaxed")
           ) {
             const grammarSolverIssue = await runGrammarSolverGate({
@@ -1649,10 +1749,12 @@ export async function runQuestionGeneration(
               researchParentCandidate: researchEnabled
                 ? researchDecisionCandidate
                 : undefined,
-              // 솔버는 항상 STANDARD(flash) — 6라운드+42구성 실측이 flash 솔버 기준이고,
-              // PREMIUM 플랜을 그대로 넘기면 Claude 콜(고가+strict 파싱실패 실측,
-              // 26-07-15 E2E)로 풀이하게 된다. 플랜과 무관한 독립 검증 콜.
+              // 솔버는 항상 STANDARD 플랜 + 레거시 표준 모델(3.5-flash) 고정 —
+              // 6라운드+42구성 실측이 flash 솔버 기준이고, 이원 티어에서 STANDARD
+              // 매핑이 생성 모델(flash3)과 같아졌으므로 modelId 를 고정하지 않으면
+              // 생성기가 자기 문항을 푸는 자기검증이 된다(O199: 외부>셀프).
               generationPlan: "STANDARD",
+              modelId: ATLAS_STANDARD_MODEL_ID,
               deadlineAt,
               onModelUsage: (result) => {
                 onModelUsage?.({
@@ -1688,6 +1790,121 @@ export async function runQuestionGeneration(
                 );
               }
               continue;
+            }
+          }
+
+          // 통합 검수·수리 게이트 (26-07-20 이원 티어, O201 S3i 확정 스펙) —
+          // 결정형 게이트를 통과한 후보를 1콜로 적대 검수하고, 결함이 있으면 수리본을
+          // 받아 finalizeCandidate 로 재검증 후 채택한다(게이트 위반 수리본은 원본
+          // 유지 — S3i FIXED_GATE_REJECTED 시맨틱). 발동 조건:
+          //   - STANDARD: 영어 객관식 전 유형에서 이 게이트가 해설·정답 검증을
+          //     담당한다(스탠다드 티어의 품질 축). env 로 E-gate STANDARD 모드를
+          //     되살려도 이 게이트는 유지된다 — 리뷰 지적: fast 라우트는 E-gate 를
+          //     defer(async 해설 전용)하므로 E-gate env 가 이 게이트를 끄면 정답
+          //     축이 통째로 무검증이 된다.
+          //   - PREMIUM: E-gate 대상 유형(어법·빈칸·선택형)만 E-gate 소관으로
+          //     제외하고, 그 외 객관식(콤보·순서·삽입·어휘·무관·요약MC 등 — 캠페인
+          //     실측 F 33% 레인)은 이 게이트가 커버한다.
+          // KO(국어)는 셔플 좌표계 문제로 제외(기존 KO 솔버 게이트가 담당).
+          // 전 품질 레인(strict/relaxed/scarce) 실행 — 이 게이트는 후보를 반려하지
+          // 않으므로(수리 채택 또는 원본 유지) never-fail 과 충돌하지 않고, salvage
+          // 출하물이 무검증으로 나가는 구멍(리뷰 지적)을 막는다.
+          if (
+            !researchSingleShotProfileActive &&
+            !koMod &&
+            isReviewRepairGateEnabled() &&
+            isReviewRepairGateTargetType(subType) &&
+            !(
+              effectiveGenerationPlan === "PREMIUM" &&
+              isExplanationVerifyGateTargetType(subType) &&
+              getExplanationVerifyGateMode(effectiveGenerationPlan) !== "off"
+            )
+          ) {
+            const review = await runReviewRepairGate({
+              subType,
+              question: fin.finalQuestion,
+              passage: passageContent,
+              generationPlan: effectiveGenerationPlan,
+              // KILLER 어법의 미끼 스페어(G=K+1) 스키마를 검수리에 그대로 쓰면
+              // 수리본이 K 마커라 스키마 검증에 죽거나 검수 안 된 6번째 마커를
+              // 창작하게 된다(리뷰 지적) — 검수리는 최종 형상(K) 스키마로 재구성.
+              responseSchema: grammarDecoySurplusActive
+                ? getAiResponseSchema(subType, {
+                    irrelevantSlotCount,
+                    grammarMarkerCount,
+                    grammarAnswerCount,
+                    grammarCorrectionErrorCount,
+                    summaryCompleteMcBlankCount,
+                    summaryCompleteBlankCount,
+                    summaryWritingBlankCount,
+                    topicSentenceWritingBlankCount,
+                    contentMatchOptionCount,
+                    contentMatchAnswerCount,
+                    vocabChoiceMarkerCount,
+                    vocabChoiceAnswerCount,
+                    sentenceInsertSlotCount,
+                    antonymPairCount,
+                    blankInferenceBlankCount,
+                    genericOptionCount,
+                    genericAnswerCount,
+                    expectedQuestionCount: 1,
+                  })
+                : responseSchema,
+              researchParentCandidate: researchEnabled
+                ? researchDecisionCandidate
+                : undefined,
+              deadlineAt,
+              onModelUsage: (result) => {
+                onModelUsage?.({
+                  phase: "question_generation",
+                  subType,
+                  qualityMode,
+                  difficulty: effectiveDiffLabel,
+                  generationPlan: effectiveGenerationPlan,
+                  usage: result.usage,
+                  provider: result.provider,
+                  modelId: result.modelId,
+                  attempts: result.attempts,
+                  durationMs: result.durationMs,
+                });
+              },
+            });
+            let reviewStamp: string | null = null;
+            if (review.status === "FIXED" && review.fixedItem) {
+              const fixedFin = finalizeCandidate(review.fixedItem);
+              if (fixedFin.ok && fixedFin.blockingErrors.length === 0) {
+                console.log(
+                  `[AUTO-GEN] review-repair adopted a fixed ${subType} item (defects: ${(review.defects ?? []).slice(0, 3).join(" | ") || "unspecified"})`,
+                );
+                if (researchEnabled) {
+                  await decideQuestionGenerationResearchCandidate(
+                    researchDecisionCandidate,
+                    "parsed_rejected",
+                  );
+                  researchDecisionCandidate = review.fixedItem;
+                }
+                fin = fixedFin;
+                reviewStamp = "REPAIRED";
+              } else {
+                // 수리본이 결정형 게이트에 걸림 — 원본 유지(검수 결함 표시만 부착).
+                console.warn(
+                  `[AUTO-GEN] review-repair fix rejected by deterministic gates for ${subType}; keeping the original item.`,
+                );
+                reviewStamp = "FIX_REJECTED";
+              }
+            } else if (review.status === "FIX_REJECTED") {
+              reviewStamp = "FIX_REJECTED";
+            } else if (review.status === "PASS") {
+              reviewStamp = "VERIFIED";
+            } else if (review.status === "SKIPPED_BUDGET") {
+              reviewStamp = "SKIPPED_BUDGET";
+            }
+            // ERROR/SKIPPED_SCHEMA 는 무판정 통과(표시 없음) — never-fail.
+            if (reviewStamp) {
+              fin.finalQuestion._reviewRepairStatus = reviewStamp;
+              if (reviewStamp !== "VERIFIED" && reviewStamp !== "SKIPPED_BUDGET") {
+                fin.finalQuestion._reviewRepairDefects = (review.defects ?? []).slice(0, 6);
+              }
             }
           }
 
@@ -1876,17 +2093,26 @@ export async function runQuestionGenerationWithEmptyRetry(
   usageEvents: QuestionGenerationUsageEvent[];
 }> {
   const usageEvents: QuestionGenerationUsageEvent[] = [];
+  const hasEnglishGenerationRequested = input.plan.some(
+    (item) => item.count > 0 && !isKoQuestionType(item.subType),
+  );
   const inputWithUsage: RunGenerationInput = {
     ...input,
+    // KO(국어) 동결의 외곽 정합(이원 티어 리뷰 지적): 내부 runQuestionGeneration 이
+    // KO 유형을 STANDARD 로 동결하는데 외곽 루프(재시도 상한·PREMIUM salvage 직행
+    // 분기)가 호출자 PREMIUM 을 그대로 읽으면 KO 요청이 relaxed 폴백 레인을 잃는다.
+    // 생성 대상이 전부 KO 면 외곽 플랜도 STANDARD 로 접는다(영어 혼합 요청은 유지).
+    generationPlan:
+      input.generationPlan === "PREMIUM" && !hasEnglishGenerationRequested
+        ? "STANDARD"
+        : input.generationPlan,
     onModelUsage: (event) => {
       usageEvents.push(event);
       input.onModelUsage?.(event);
     },
   };
   const rejectionRecorder: RejectionRecorder = { issues: [] };
-  const hasEnglishGeneration = inputWithUsage.plan.some(
-    (item) => item.count > 0 && !isKoQuestionType(item.subType),
-  );
+  const hasEnglishGeneration = hasEnglishGenerationRequested;
   const passageIntegrityFindings = hasEnglishGeneration
     ? analyzeEnglishPassageIntegrity(inputWithUsage.passageContent)
     : [];

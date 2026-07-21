@@ -10,7 +10,7 @@ import {
 import { prisma } from "@/lib/prisma";
 import {
   normalizeQuestionGenerationPlan,
-  resolveUnifiedGenerationPlan,
+  resolveEffectiveGenerationPlan,
 } from "@/lib/question-generation-plans";
 import { preflightQuestionFeasibility } from "@/lib/question-quality";
 import { countPassageSentences } from "@/lib/passage-sentence-utils";
@@ -93,19 +93,14 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // 클라이언트가 보낸 플랜 — 상품 단일화(W2-E) 이후 요금·라우팅에는 쓰지 않고
-  // 로깅/감사(job.config.requestedGenerationPlan)용으로만 보존한다(정규화만 유지).
   const generationPlan = normalizeQuestionGenerationPlan(
     parsed.data.generationPlan,
   );
-  // 상품 단일화(W2-E): 품질 파이프라인·요금은 유형이 결정한다. 클라 generationPlan /
-  // questionTypeSettings.generationPlan(과거 저장 PREMIUM config 포함)은 무력화된다.
-  // 이 값이 job.generationPlan 컬럼·config 에 저장되고 trigger 워커가 동일 규칙으로
-  // 재유도하므로 PENDING 시점부터 표시가 유형 기반으로 일관된다.
-  const effectiveGenerationPlan =
-    parsed.data.mode === "MANUAL" && parsed.data.questionType
-      ? resolveUnifiedGenerationPlan(parsed.data.questionType)
-      : generationPlan;
+  // 단일 상품(26-07-21): 결정 함수 단일 소스 — 정규화 + 단일 상품 클램프.
+  // 이 값이 job.generationPlan 컬럼·config 에 저장되고 trigger 워커가 그대로 소비.
+  const effectiveGenerationPlan = resolveEffectiveGenerationPlan(
+    parsed.data.generationPlan,
+  );
   const effectiveDifficulty =
     parsed.data.mode === "MANUAL" && parsed.data.questionType
       ? readQuestionTypeDifficultySetting(

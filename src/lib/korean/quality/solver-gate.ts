@@ -41,6 +41,12 @@ export interface RunKoSolverGateInput {
   passage: string;
   mod: KoTypeModule;
   generationPlan: QuestionGenerationPlan;
+  /**
+   * 플랜→모델 매핑 오버라이드 — 26-07-20 이원 티어에서 문제생성 STANDARD 매핑이
+   * flash3 로 바뀌었으나 KO 서브시스템은 개편 동결 대상이라, 호출자가 레거시 표준
+   * 모델을 명시해 KO 솔버 콜의 모델을 기존과 동일하게 유지한다.
+   */
+  modelId?: string;
   deadlineAt?: number;
   onModelUsage?: (result: KoSolverUsageResult) => void;
 }
@@ -103,6 +109,7 @@ export async function runKoSolverGate(
       schema: KO_SOLVER_SCHEMA,
       prompt: buildKoSolverPrompt(input),
       generationPlan: input.generationPlan,
+      modelId: input.modelId,
       logPrefix: "KO-SOLVER",
       maxTokens: 2_048,
       deadlineAt: input.deadlineAt,

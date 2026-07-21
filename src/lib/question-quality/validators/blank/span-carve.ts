@@ -7,7 +7,11 @@
 import { splitBlankSurface } from "./seam";
 
 export interface BlankSpanCarveFinding {
-  code: "blank-span-full-sentence" | "blank-span-clause-carve";
+  code:
+    | "blank-span-full-sentence"
+    | "blank-span-clause-carve"
+    | "blank-span-sentence-swallow"
+    | "blank-trailing-dependent";
   message: string;
   evidence: Record<string, unknown>;
 }
@@ -81,4 +85,65 @@ export function findBlankSpanCarveIssues(
   }
 
   return findings;
+}
+
+// ── O201 S3i 이식분 (실험 게이트 FULL_SENTENCE_SWALLOW·TRAILING_DEPENDENT) ────
+// 공백 정규화는 core 단일 소스(normalizeText)를 재사용 — 로컬 사본이 core 의
+// 향후 보강(NBSP 등)과 어긋나 오염 지문에서 침묵 미발화하는 것을 막는다.
+
+import { normalizeText as WS_NORM } from "../../core";
+
+/**
+ * 문장삼킴 비율 게이트 (S3i FULL_SENTENCE_SWALLOW): 원문에서 스팬이 속한 문장을
+ * 찾아 스팬이 그 문장의 88% 이상을 차지하면 사실상 문장 전체 빈칸 — 고아 파편
+ * 위험 + "문장 통째 삼키기 금지" 계약(R1) 위반. 기존 blank-span-full-sentence
+ * (빈칸이 문장을 열고+직후 종결+소문자 술부 선지의 좁은 케이스)보다 넓은 결정형
+ * 커버리지다. O201 확증런에서 프리미엄 계약과 함께 3중 재현된 스펙 그대로.
+ */
+export function findBlankSentenceSwallowIssue(
+  passage: string | undefined,
+  originalExpression: string | undefined,
+): BlankSpanCarveFinding | null {
+  const oe = WS_NORM(originalExpression ?? "");
+  const pnorm = WS_NORM(passage ?? "");
+  if (!oe || !pnorm || !pnorm.includes(oe)) return null;
+  const sentences = pnorm.split(/(?<=[.!?])\s+/);
+  const host = sentences.find((sentence) => sentence.includes(oe));
+  if (!host || oe.length < host.length * 0.88) return null;
+  return {
+    code: "blank-span-sentence-swallow",
+    message:
+      "The blanked span swallows (almost) the entire host sentence. Blank a phrase/clause-level span inside the sentence — keep the sentence frame (its subject or predicate anchor) visible.",
+    evidence: {
+      hostSentence: host.slice(0, 160),
+      originalExpression: oe.slice(0, 120),
+      ratio: Number((oe.length / host.length).toFixed(2)),
+    },
+  };
+}
+
+// 빈칸 직후 의존 잔여 구문 — 빈칸 내용에 문법적으로 의존하는 등위/관계 구문이
+// 바로 뒤에 남으면 선행사 고아·비문 결합 위험이 있다. S3i R2 계약의 결정형 짝.
+// ⚠ 리뷰 실측 판정(26-07-20): ", which"·", nor" 류는 빈칸 앞 명사/절을 선행사로
+// 취하는 정문 케이스(문장 관계절·전방 부가)가 실존해 결정형으로 확정 불가 —
+// 이 게이트는 "경고"로만 발화하고(차단 아님), 확정 판정은 통합 검수리 콜의
+// 축⑤(절단 건전성 — 전체 문맥 재파싱)가 담당한다.
+const TRAILING_DEPENDENT_AFTER_BLANK =
+  /^\s*,?\s*(?:nor\b|which\b|behind which\b|in which\b|whom\b|and neither\b)/i;
+
+export function findBlankTrailingDependentIssue(
+  passageWithBlank: string | undefined,
+): BlankSpanCarveFinding | null {
+  if (!passageWithBlank) return null;
+  const { right, blankCount } = splitBlankSurface(passageWithBlank);
+  if (blankCount !== 1) return null;
+  if (!TRAILING_DEPENDENT_AFTER_BLANK.test(right)) return null;
+  return {
+    code: "blank-trailing-dependent",
+    message:
+      'A dependent-looking remnant (", nor …", ", which …", "in which …", "whom …") immediately follows the blank. Verify it does not depend on the removed span (orphaned antecedent) — include the tail in the span or move the blank if it does.',
+    evidence: {
+      after: right.slice(0, 60),
+    },
+  };
 }

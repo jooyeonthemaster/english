@@ -20,6 +20,7 @@ import { GRAMMAR_UNDERLINE_HARD_MAX_CHARS, GRAMMAR_UNDERLINE_HARD_MAX_WORDS, GRA
 import { validateImpliedMeaningQuestion } from "./validators/implied";
 import { validateIrrelevantQuestion } from "./validators/irrelevant";
 import { validateExplanationForeignText } from "./validators/explanation-foreign-text";
+import { findExplanationQuotedTokenIssue } from "./validators/explanation-quoted-tokens";
 import { validateKillerBar, validateTypeSignature } from "./validators/misc";
 import { validateOptions } from "./validators/options";
 import { validateReferenceQuestion } from "./validators/reference";
@@ -834,6 +835,12 @@ export function validateQuestionQuality({
   // 있어 제외, 영어 유형의 한국어 해설 필드만 검사.
   if (!isKoQuestionType(typeId)) {
     validateExplanationForeignText(question, add);
+    // 해설 인용 실재 게이트(O201 S3i QUOTED_TOKEN_MISSING 이식) — 해설이 따옴표로
+    // 인용한 영어 표현이 문항 표시 표면 어디에도 없으면 환각 인용(V4 부분집합).
+    const quotedTokenIssue = findExplanationQuotedTokenIssue(question, passage);
+    if (quotedTokenIssue) {
+      add("error", quotedTokenIssue.code, quotedTokenIssue.message);
+    }
   }
   validateTypeSpecific(
     question,

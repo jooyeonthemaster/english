@@ -206,6 +206,9 @@ export interface RepairCandidateInput {
   system?: string;
   /** strict 구조화 출력을 생략하고 프롬프트 인라인 JSON 모드로 교정 (Wave-3 SW/TSW PREMIUM — 원 생성 라우팅과 동일) */
   forceJsonFallback?: boolean;
+  /** 콜 단위 사고 강도(원 생성과 동일 계약 — S3i flash3@high). gemini 는 applyReasoningEffortToGemini 와 함께. */
+  reasoningEffort?: string;
+  applyReasoningEffortToGemini?: boolean;
   onModelUsage?: (result: GenerateQuestionObjectResult<unknown>) => void;
 }
 
@@ -239,6 +242,8 @@ export async function repairQuestionCandidate(
     deadlineAt,
     system,
     forceJsonFallback,
+    reasoningEffort,
+    applyReasoningEffortToGemini,
     onModelUsage,
   } = input;
 
@@ -333,6 +338,8 @@ export async function repairQuestionCandidate(
         system,
         deadlineAt,
         forceJsonFallback,
+        reasoningEffort,
+        applyReasoningEffortToGemini,
         researchStage: {
           key: forceJsonFallback
             ? QUESTION_GENERATION_RESEARCH_STAGES.QUESTION_CANDIDATE_REPAIR_JSON

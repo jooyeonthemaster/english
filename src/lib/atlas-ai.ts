@@ -214,17 +214,34 @@ export const ATLAS_PREMIUM_MODEL_ID = resolveAtlasModel(
 );
 
 /**
- * 문제 생성(question generation) 전용 PREMIUM 모델 — 26-07-14 유저 확정 교체:
- * anthropic/claude-sonnet-5 → google/gemini-3.1-pro-preview. preview 만료/롤백에
- * 대비해 env PREMIUM_QGEN_MODEL_ID 로 오버라이드한다(어법 사다리의
- * GRAMMAR_PREMIUM_MODEL_ID 와 동일 패턴 — 그쪽은 자체 env·자체 modelId 라 별개).
+ * 문제 생성(question generation) 전용 PREMIUM 모델 — 26-07-20 차세대 이원 티어
+ * 전환(캠페인 O197~O201 3중 재현 확증): gemini-3.1-pro-preview → google/
+ * gemini-3-flash-preview. 프리미엄 풀 파이프라인(생성+E-gate 풀계약)을 flash3 로
+ * 돌렸을 때 실질 F 2.2%·77~81원·~100s 로 현행 grok(F 8%·105~158원·어법 데드라인
+ * 클램프)을 전면 대체한다. preview 만료/롤백에 대비해 env PREMIUM_QGEN_MODEL_ID
+ * 로 오버라이드한다(어법 사다리의 GRAMMAR_PREMIUM_MODEL_ID 와 동일 패턴 — 그쪽은
+ * 자체 env·자체 modelId 라 별개).
  * 다른 PREMIUM 소비자(exam-report·question-ai-edit·similar-exam-generation·
  * 지문분석 generateQuestionText 경로)는 ATLAS_PREMIUM_MODEL_ID(Claude)를 그대로
  * 쓴다 — 이 상수는 generateQuestionObject 의 PREMIUM 플랜 매핑 전용이다.
  */
 export const ATLAS_PREMIUM_QGEN_MODEL_ID = resolveAtlasModel(
   ["PREMIUM_QGEN_MODEL_ID"],
-  "google/gemini-3.1-pro-preview",
+  "google/gemini-3-flash-preview",
+);
+
+/**
+ * 문제 생성 전용 STANDARD 모델 (26-07-20 차세대 이원 티어, O201 S3i 확정 스펙:
+ * flash3 2콜(생성+통합 검수리)+결정형 게이트 = 콘텐츠성 F 0/46·38원·63s).
+ * ⚠️ ATLAS_STANDARD_MODEL_ID(OPENROUTER_STANDARD_MODEL)를 그대로 뒤집지 않는
+ * 이유: 그 상수는 튜터·웹툰 detect/review·지문분석·exam-report 등 문제 생성이
+ * 아닌 광역 소비자가 공유하는 노브라 방사 피해가 크다. 문제 생성의 STANDARD
+ * 플랜 매핑(QUESTION_GENERATION_MODEL_CONFIGS)만 이 상수를 쓴다.
+ * env STANDARD_QGEN_MODEL_ID 로 오버라이드(롤백: google/gemini-3.5-flash).
+ */
+export const ATLAS_STANDARD_QGEN_MODEL_ID = resolveAtlasModel(
+  ["STANDARD_QGEN_MODEL_ID"],
+  "google/gemini-3-flash-preview",
 );
 
 export const ATLAS_OCR_MODEL_ID = resolveAtlasModel(

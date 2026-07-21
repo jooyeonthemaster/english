@@ -874,9 +874,9 @@ export function GenerationConfigPanel({
           ) : null}
         </div>
 
-        {/* 생성 모델(플랜)은 글로벌 셀렉터를 두지 않는다 — 유형별 세부옵션의
-            "생성 플랜 · 이 유형만"에서만 정의한다. 미설정 유형은 기본(STANDARD)으로
-            생성된다. (전역 generationPlan 은 미설정 유형의 fallback 으로만 남는다.) */}
+        {/* 단일 상품(26-07-21 사용자 결정): 생성 티어 셀렉터 미노출 — 서버가 전
+            요청을 일반 레인으로 접는다(resolveEffectiveGenerationPlan). 이원 티어
+            복귀 시(env QUESTION_GENERATION_SINGLE_TIER=off) 여기 셀렉터를 복원. */}
 
         {/* Manual Mode Config */}
         {genMode === "manual" && (

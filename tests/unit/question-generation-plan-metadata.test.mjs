@@ -128,12 +128,12 @@ test("premium generation plan is wired through generation and review surfaces", 
     [
       "src/app/api/ai/generate-question/route.ts",
       [
-        // 상품 단일화(W2-E): 플랜은 유형이 결정 — 클라 questionTypeSettings.
-        // generationPlan 을 읽던 readQuestionTypeGenerationPlanSetting 호출 폐지.
-        "resolveUnifiedGenerationPlan(questionType)",
+        // 단일 상품(26-07-21): 결정 함수 단일 소스. 저장 스탬프는 엔진의 문항별
+        // _generationPlan 을 우선한다(KO 동결 정합).
+        "resolveEffectiveGenerationPlan(",
         "readQuestionTypeDifficultySetting(",
         "getQuestionGenerationCreditCost(CREDIT_COSTS[operationType], generationPlan)",
-        "withQuestionGenerationPlanMetadata(question, generationPlan)",
+        "withQuestionGenerationPlanMetadata(",
       ],
     ],
     [
@@ -141,15 +141,16 @@ test("premium generation plan is wired through generation and review surfaces", 
       [
         "const generationPlan = normalizeQuestionGenerationPlan(rawGenerationPlan);",
         "getQuestionGenerationCreditCost(",
-        "withQuestionGenerationPlanMetadata(question, generationPlan)",
+        // 엔진의 문항별 스탬프 우선(KO 동결 정합) — 26-07-20.
+        "withQuestionGenerationPlanMetadata(",
+        "._generationPlan ??",
       ],
     ],
     [
       "src/app/api/workbench/ai-jobs/question-generation/fast/route.ts",
       [
-        "const effectiveGenerationPlan =",
-        // 상품 단일화(W2-E): 유형 기반 라우팅 — 클라 플랜 지정 무력화.
-        "resolveUnifiedGenerationPlan(config.questionType)",
+        // 단일 상품(26-07-21): 결정 함수 단일 소스.
+        "resolveEffectiveGenerationPlan(",
         "readQuestionTypeDifficultySetting(",
         "getQuestionGenerationCreditCost(",
         "mergeQuestionGenerationPlanTag(",
@@ -160,9 +161,8 @@ test("premium generation plan is wired through generation and review surfaces", 
     [
       "src/trigger/workbench-question-generation.ts",
       [
-        "const effectiveGenerationPlan =",
-        // 상품 단일화(W2-E): 유형 기반 라우팅 — 저장된 config 플랜 지정 무력화.
-        "resolveUnifiedGenerationPlan(config.questionType)",
+        // 단일 상품(26-07-21): 결정 함수 단일 소스.
+        "resolveEffectiveGenerationPlan(",
         "readQuestionTypeDifficultySetting(",
         "getQuestionGenerationCreditCost(",
         "mergeQuestionGenerationPlanTag(",
