@@ -26,7 +26,6 @@ import {
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
-  AlertTriangle,
   CheckCircle2,
   ChevronDown,
   ChevronUp,
@@ -34,13 +33,10 @@ import {
   Database,
   FileText,
   FolderX,
-  Gem,
   Loader2,
-  RotateCcw,
   Rows3,
   Trash2,
 } from "lucide-react";
-import { PearlIcon } from "@/components/icons/pearl-icon";
 
 import {
   getWorkbenchQuestions,
@@ -65,7 +61,7 @@ import {
 import { createExam } from "@/actions/exams";
 import { QuestionSetSection } from "@/components/workbench/question-set-section";
 import { getAcademyQuestionSetMemberMap } from "@/actions/question-sets";
-import { EXAM_SEED_QUESTION_IDS_KEY } from "@/lib/exam-paper-seed";
+import { seedExamAndNavigate } from "./seed-exam-and-navigate";
 
 import { confirmNative } from "@/lib/browser-confirm";
 import { DragSelect } from "@/components/ui/drag-select";
@@ -91,12 +87,8 @@ import { QuestionDetailDialog } from "@/components/workbench/question-bank-clien
 import { QuestionFiltersToolbar } from "@/components/workbench/question-bank-client/filters-toolbar";
 import { useQuestionEditor } from "@/components/workbench/question-bank-client/use-question-editor";
 
-import { WorkbenchLoadingCard } from "@/components/workbench/workbench-loading-card";
-import { FEATURE_FLAGS } from "@/lib/feature-flags";
-import { getQuestionGenerationPlanConfig } from "@/lib/question-generation-plans";
-import { getFriendlyQuestionGenerationError } from "@/lib/workbench-generation-errors";
-import { countWords, typeLabel, type QueueItem } from "./generate-page-types";
-import { StreamPreviewPane } from "./stream-preview-pane";
+import { type QueueItem } from "./generate-page-types";
+import { QueueStatusCard } from "./queue-status-card";
 
 // ---------------------------------------------------------------------------
 // Local filter shape (mirrors the filters QuestionBankClient receives, minus
@@ -169,127 +161,6 @@ function useMeasuredHeight(enabled: boolean) {
     };
   }, [enabled]);
   return [ref, height] as const;
-}
-
-// ── Live generation queue strip card (ported from BottomQueueSection) ──
-// Renders generating / error queue items at the very front of the bank list.
-function QueueStripCard({
-  item,
-  onRetryGeneration,
-}: {
-  item: QueueItem;
-  onRetryGeneration?: (item: QueueItem) => void | Promise<void>;
-}) {
-  const planConfig = getQuestionGenerationPlanConfig(
-    item.config.generationPlan || "STANDARD",
-  );
-
-  if (item.status === "generating") {
-    const requestedCount = Object.values(item.config.typeCounts).reduce(
-      (a: number, b: any) => a + Number(b),
-      0,
-    );
-    return (
-      <WorkbenchLoadingCard
-        title={item.passageTitle}
-        contentPreview={
-          // 생성 카드는 프리뷰를 균일 길이로 고정 — 스트리밍 패널이 나중에
-          // 마운트돼도 지문 프리뷰 줄수가 변하지 않아 카드 중단부 리플로우가 없다.
-          `${item.passageContent.slice(0, 120)}...`
-        }
-        statusLabel="생성 중"
-        progressLabel={`AI가 ${requestedCount}문제를 생성 중입니다...`}
-        wordCount={countWords(item.passageContent)}
-        showCheckbox={false}
-        statusIcon={Loader2}
-        variant="analyzing"
-        fixedHeight
-        metaSlot={
-          item.streamPreview ? (
-            <StreamPreviewPane preview={item.streamPreview} />
-          ) : undefined
-        }
-        ariaLabel={`${item.passageTitle} - 문제 생성 중`}
-        planBadge={
-          FEATURE_FLAGS.SHOW_MODEL_SELECTOR ? (
-            <span className="shrink-0 inline-flex items-center gap-1 rounded-md border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[10px] font-bold text-slate-600">
-              {planConfig.id === "PREMIUM" ? (
-                <Gem className="w-3 h-3" />
-              ) : (
-                <PearlIcon className="w-3 h-3" />
-              )}
-              {planConfig.shortLabel}
-            </span>
-          ) : null
-        }
-      />
-    );
-  }
-
-  if (item.status === "error") {
-    const questionType = Object.keys(item.config.typeCounts).find(
-      (typeId) => Number(item.config.typeCounts[typeId]) > 0,
-    );
-    const errorDetail = getFriendlyQuestionGenerationError(
-      item.error,
-      questionType,
-    );
-    const requestedTypes = Object.entries(item.config.typeCounts)
-      .filter(([, count]) => Number(count) > 0)
-      .map(([typeId, count]) => `${typeLabel(typeId)} ${count}개`)
-      .join(", ");
-
-    return (
-      <div className="h-[340px] overflow-hidden rounded-xl border border-red-200 bg-red-50/30 p-4">
-        <div className="flex items-center gap-3">
-          <AlertTriangle className="w-5 h-5 text-red-500 shrink-0" />
-          <div className="min-w-0">
-            <div className="flex items-center gap-1.5 min-w-0">
-              <h4 className="text-[13px] font-bold text-slate-800 truncate">
-                {item.passageTitle}
-              </h4>
-              {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
-                <span className="shrink-0 inline-flex items-center gap-1 rounded-md border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[10px] font-bold text-slate-600">
-                  {planConfig.id === "PREMIUM" ? (
-                    <Gem className="w-3 h-3" />
-                  ) : (
-                    <PearlIcon className="w-3 h-3" />
-                  )}
-                  {planConfig.shortLabel}
-                </span>
-              )}
-            </div>
-            <span className="text-[11px] text-red-500 font-medium">
-              생성 실패
-            </span>
-            {requestedTypes && (
-              <p className="mt-1 text-[11px] font-medium text-slate-500">
-                {requestedTypes} · {item.config.difficulty}
-              </p>
-            )}
-            {errorDetail && (
-              <p className="mt-1 line-clamp-5 break-words text-[11px] leading-4 text-red-600">
-                {errorDetail}
-              </p>
-            )}
-          </div>
-        </div>
-        {onRetryGeneration && (
-          <button
-            type="button"
-            onClick={() => onRetryGeneration(item)}
-            title="이 카드에 사용된 유형·난이도·조건 그대로 다시 생성합니다"
-            className="mt-3 inline-flex h-8 shrink-0 items-center gap-1.5 rounded-md border border-red-200 bg-white px-3 text-[11.5px] font-bold text-red-600 shadow-sm transition-colors hover:bg-red-50"
-          >
-            <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
-            같은 조건으로 다시 생성하기
-          </button>
-        )}
-      </div>
-    );
-  }
-
-  return null;
 }
 
 // 방금 생성 완료된 문제의 파란 글로우 — passage-card-grid 의 fresh 글로우와 동일.
@@ -1409,15 +1280,7 @@ export function EmbeddedQuestionBank({
               return;
             }
             // 선택한 문제 id 를 sessionStorage 로 넘겨 빌더가 미리보기에 바로 올린다.
-            try {
-              window.sessionStorage.setItem(
-                EXAM_SEED_QUESTION_IDS_KEY,
-                JSON.stringify(ids),
-              );
-            } catch {
-              /* sessionStorage 실패해도 이동은 진행 (빈 빌더로 열림) */
-            }
-            router.push("/director/workbench/exams/create");
+            seedExamAndNavigate(router, ids);
           }}
           className={
             // 모바일: min-w-0 + basis-auto 로 좁으면 줄어들어 한 줄을 유지(요청대로
@@ -1470,7 +1333,7 @@ export function EmbeddedQuestionBank({
             }`}
           >
             {queueStripItems.map((item) => (
-              <QueueStripCard
+              <QueueStatusCard
                 key={item.id}
                 item={item}
                 onRetryGeneration={onRetryGeneration}
