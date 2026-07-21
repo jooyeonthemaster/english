@@ -30,7 +30,10 @@ import {
   normalizeQuestionGenerationPlan,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
-import { type QuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
+import {
+  getEffectiveQuestionTypeGenerationPlan,
+  type QuestionTypeGenerationSettings,
+} from "@/lib/question-type-generation-settings";
 import {
   clampTeacherPoints,
   type TeacherPoint,
@@ -835,6 +838,15 @@ export function useGenerationHandlers({
             questionTypeSettings[typeId],
             teacherPointsByPassage?.[p.id]?.[typeId],
           );
+          // 유형별 플랜 오버라이드(이원 티어 복귀, 26-07-22): 서버는 요청
+          // 플랜만 진실원으로 삼고 유형별 저장 설정은 읽지 않으므로(좀비 설정
+          // 함정 차단 — fast 라우트 주석), 유닛 디스패치 시점에 유형별 지정을
+          // 요청 플랜으로 해석해 싣는다. 요금(2배)·모델 라우팅이 이 값을 따른다.
+          const unitGenerationPlan = getEffectiveQuestionTypeGenerationPlan(
+            questionTypeSettings,
+            typeId,
+            generationPlan,
+          );
           for (let index = 0; index < repeatCount; index += 1) {
             units.push({
               passage: p,
@@ -851,7 +863,7 @@ export function useGenerationHandlers({
                 difficulty,
                 prompt: customPrompt.trim(),
                 mode: genMode,
-                generationPlan,
+                generationPlan: unitGenerationPlan,
               },
             });
           }

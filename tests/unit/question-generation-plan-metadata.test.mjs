@@ -93,8 +93,8 @@ test("question generation plan metadata unifies pricing and preserves tags", () 
     const result = JSON.parse(raw);
 
     assert.equal(result.standardCost, 7);
-    // 상품 단일화(W2-E): 2x 프리미엄 멀티플라이어 폐지 — 플랜 무관 단일가.
-    assert.equal(result.premiumCost, 7);
+    // 이원 요금 v2(26-07-22 사용자 확정): PREMIUM = 2배 부활(O213 3.6 프리미엄).
+    assert.equal(result.premiumCost, 14);
     assert.deepEqual(result.premiumTags, ["프리미엄 생성", "빈칸 추론"]);
     assert.equal(result.premiumPlanFromTags, "PREMIUM");
     assert.equal(result.enrichedPlan, "PREMIUM");
@@ -112,8 +112,8 @@ test("question generation plan metadata unifies pricing and preserves tags", () 
     assert.equal(result.inheritedTypePlan, "STANDARD");
     assert.equal(result.mappedTypePlan, "PREMIUM");
     assert.equal(result.mappedTypeDifficulty, "KILLER");
-    // 상품 단일화(W2-E): 유형 설정이 PREMIUM 이어도 단가는 baseCost 단일가.
-    assert.equal(result.mappedTypeCreditCost, 7);
+    // 이원 요금 v2: 유형 설정이 PREMIUM 이면 유형별 단가도 2배를 따른다.
+    assert.equal(result.mappedTypeCreditCost, 14);
   } finally {
     rmSync(harnessPath, { force: true });
   }

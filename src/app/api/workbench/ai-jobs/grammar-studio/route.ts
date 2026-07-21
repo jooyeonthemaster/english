@@ -175,8 +175,13 @@ export async function POST(req: NextRequest) {
   // 실차감은 워커가 잡당 QUESTION_GEN_SINGLE(2)로 수행: AUTO_GEN_BATCH(2)×count
   // = QUESTION_GEN_SINGLE×잡수 로 동가(단가 상수가 갈라지면 고지만 어긋나고
   // 과금은 워커 단가를 따른다 — credit-costs.ts 참조).
+  // 플랜 동기(26-07-22 이원 요금 부활): 워커는 잡의 generationPlan 으로 2배를
+  // 적용하므로 사전 고지·잔액 검사도 같은 플랜으로 계산해야 어긋나지 않는다.
+  // 단일상품 모드에서는 STANDARD 로 클램프되어 현행 1배 그대로다.
+  const planForBilling = resolveEffectiveGenerationPlan("PREMIUM");
   const perQuestionCredits = getQuestionGenerationCreditCost(
     CREDIT_COSTS.AUTO_GEN_BATCH,
+    planForBilling,
   );
   const totalCredits = perQuestionCredits * parsed.data.count;
   const balanceRow = await prisma.creditBalance.findUnique({

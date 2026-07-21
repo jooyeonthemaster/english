@@ -10,11 +10,11 @@ export interface QuestionGenerationPlanConfig {
   creditMultiplier: number;
 }
 
-// 이원 티어(26-07-20, 캠페인 O197~O201 확정): 두 티어 모두 동일 모델(flash3)이며
-// 차이는 파이프라인 무게다 — STANDARD = 생성+통합 검수리 2콜+결정형 게이트,
-// PREMIUM = 풀 파이프라인(어법 사다리·솔버·E-gate 검증/수리). 요금은 현행 단일가
-// (getQuestionGenerationCreditCost)라 creditMultiplier 는 두 티어 모두 1 —
-// 티어별 가격 차등은 별도 사용자 결정 사항이다(결정 시 이 표와 요금 함수 동기 수정).
+// 이원 티어 v2(26-07-22, O213 벤치 확정): 차이는 "모델"이다 — STANDARD =
+// flash3, PREMIUM = env PREMIUM_QGEN_MODEL_ID(3.6-flash 예정, 블라인드 정면비교
+// 8/10 1위·A 8/10). 빈칸·어법은 두 티어가 같은 md 원큐 구조에서 모델만 갈리고,
+// 그 외 유형 PREMIUM 은 기존 풀 파이프라인(어법 사다리·E-gate 검수리)을 탄다.
+// 요금(사용자 확정): PREMIUM = 2배 — getQuestionGenerationCreditCost 와 동기.
 export const QUESTION_GENERATION_PLANS: Record<
   QuestionGenerationPlan,
   QuestionGenerationPlanConfig
@@ -30,8 +30,8 @@ export const QUESTION_GENERATION_PLANS: Record<
     id: "PREMIUM",
     label: "프리미엄 문제 생성",
     shortLabel: "프리미엄",
-    description: "정밀 검수 · 심층 검증 파이프라인",
-    creditMultiplier: 1,
+    description: "상위 모델 · 정밀 검수 파이프라인",
+    creditMultiplier: 2,
   },
 };
 
@@ -139,17 +139,18 @@ export function resolveEffectiveGenerationPlan(
 }
 
 /**
- * 상품 단일화(W2-E)의 산물: 플랜별 2x 멀티플라이어를 폐지했다. 플랜과 무관하게
- * 단일가(baseCost)를 청구한다. 이원 티어에서도 단일가를 유지한다 — 티어별 가격
- * 차등은 사용자 결정 대기 사항. `plan` 파라미터는 호출부 시그니처 호환·로깅을
- * 위해 남겨두되 요금 계산에는 절대 쓰지 않는다.
+ * 티어별 요금(26-07-22 사용자 확정): PREMIUM = 2배. 단일상품(W2-E) 때 폐지했던
+ * 멀티플라이어를 이원 티어 복귀(O213, 3.6-flash 프리미엄)와 함께 부활 —
+ * QUESTION_GENERATION_PLANS 의 creditMultiplier 표와 반드시 동기 유지.
+ * plan 미전달 호출부(플랜 개념 없는 기능)는 STANDARD 단가로 계산된다.
  */
 export function getQuestionGenerationCreditCost(
   baseCost: number,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- 시그니처 호환용: 다수 호출부가 plan 을 위치 인자로 넘긴다. 요금은 플랜 무관 단일가라 값은 쓰지 않는다.
   plan?: QuestionGenerationPlan,
 ): number {
-  return baseCost;
+  return plan === "PREMIUM"
+    ? baseCost * QUESTION_GENERATION_PLANS.PREMIUM.creditMultiplier
+    : baseCost;
 }
 
 export function getQuestionGenerationPlanTag(plan: QuestionGenerationPlan): string {
