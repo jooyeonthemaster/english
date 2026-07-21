@@ -74,7 +74,18 @@ function jobToQueueItem(
     ? result.questionIds.filter((id): id is string => typeof id === "string")
     : [];
   const hasPassageSnapshot = !!job.passage;
-  if (!hasPassageSnapshot && questions.length === 0 && !terminalFailure) {
+  // 진행 중(PENDING/PROCESSING) 잡은 지문 스냅샷·결과가 없어도 카드로 만든다 —
+  // view=summary 폴링(6/6 egress 절감)은 둘 다 항상 비어 있어, 이 가드가 DB 복원
+  // 경로 전체를 죽이고 있었다(페이지 이탈 → 복귀 시 로딩 카드 전멸의 원인).
+  // 완료 잡은 결과 문항 없이는 카드가 의미 없으므로 기존대로 숨긴다(hydration 이 별도 복원).
+  const isActiveJob =
+    !terminalFailure && job.status !== "COMPLETED" && job.status !== "PARTIAL";
+  if (
+    !hasPassageSnapshot &&
+    questions.length === 0 &&
+    !terminalFailure &&
+    !isActiveJob
+  ) {
     return null;
   }
 
@@ -140,6 +151,10 @@ function isFastTempItem(item: QueueItem): boolean {
   return item.id.startsWith("fast:");
 }
 
+// DB 복원 대상 터미널 카드(실패/완료)의 신선도 창 — 이보다 오래된 잡은 큐에
+// 부활시키지 않는다(과거 실패·완료가 방문 때마다 재등장하는 flood 방지, 은행 동선 유지).
+const FRESH_TERMINAL_WINDOW_MS = 15 * 60_000;
+
 function sameTypeCounts(
   a: Record<string, number>,
   b: Record<string, number>,
@@ -199,6 +214,15 @@ export function useGenerationSessionQueue(): [
   // 있던 것)이 새 temp 를 오염시키지 않게 하는 게이트. 양쪽 모두 클라이언트
   // 시계라 서버-클라이언트 시계 오차와 무관하다.
   const failedFirstSeenRef = useRef<Map<string, number>>(new Map());
+  // DB 복원(페이지 복귀) 지원 — 신선한 완료 잡의 결과 카드는 요약 응답에 문항이
+  // 없어 full 뷰 1회 조회로 채운다. attempted 는 실패 시 재폭주 방지용 1회 마킹.
+  const hydratedDoneRef = useRef<Map<string, QueueItem>>(new Map());
+  const hydrationAttemptedRef = useRef<Set<string>>(new Set());
+  // 로컬 낙관 카드가 이미 다루는 잡은 hydration 대상에서 제외(이중 카드 방지).
+  const localIdsRef = useRef<Set<string>>(new Set());
+  useEffect(() => {
+    localIdsRef.current = new Set(localQueue.map((item) => item.id));
+  }, [localQueue]);
 
   useEffect(() => {
     return startAdaptivePoll({
@@ -268,7 +292,64 @@ export function useGenerationSessionQueue(): [
             );
           }
 
-          setDbQueue(jobs.map((job) => jobToQueueItem(job)).filter(Boolean) as QueueItem[]);
+          // 신선한(최근 15분) 완료 잡 중 로컬 카드가 없는 것만 full 뷰 1회 조회로
+          // 결과 카드를 복원한다 — 생성 중 페이지를 벗어났다 완료 후 돌아온 경우.
+          // 오래된 완료 잡은 기존대로 은행 동선(큐 카드 부활 금지).
+          const now = Date.now();
+          const isFresh = (row: AiJobRow) => {
+            const t = Date.parse(row.createdAt);
+            return Number.isFinite(t) && now - t <= FRESH_TERMINAL_WINDOW_MS;
+          };
+          const needHydration = jobs.filter(
+            (j) =>
+              (j.status === "COMPLETED" || j.status === "PARTIAL") &&
+              isFresh(j) &&
+              !hydratedDoneRef.current.has(j.id) &&
+              !hydrationAttemptedRef.current.has(j.id) &&
+              !localIdsRef.current.has(j.id),
+          );
+          if (needHydration.length > 0) {
+            for (const j of needHydration) hydrationAttemptedRef.current.add(j.id);
+            try {
+              const fullRes = await fetch(
+                "/api/workbench/ai-jobs?domain=QUESTION_GENERATION&limit=20&view=full",
+                { credentials: "include", cache: "no-store", signal },
+              );
+              if (fullRes.ok) {
+                const fullData = (await fullRes.json()) as { jobs?: AiJobRow[] };
+                for (const row of fullData.jobs ?? []) {
+                  if (!needHydration.some((n) => n.id === row.id)) continue;
+                  const item = jobToQueueItem(row);
+                  if (item && (item.status === "done" || item.status === "reviewed")) {
+                    hydratedDoneRef.current.set(row.id, item);
+                  }
+                }
+              }
+            } catch {
+              // hydration 실패는 치명 아님 — 문항은 은행에 있고, attempted 마킹으로 재폭주 방지.
+            }
+          }
+          if (hydratedDoneRef.current.size > 100) {
+            const liveIds = new Set(jobs.map((j) => j.id));
+            for (const id of hydratedDoneRef.current.keys()) {
+              if (!liveIds.has(id)) hydratedDoneRef.current.delete(id);
+            }
+          }
+
+          // dbQueue = 진행 중 카드(요약 복원) + 신선한 실패 카드 + hydration 완료 카드.
+          const summaryItems = jobs
+            .map((job) => jobToQueueItem(job))
+            .filter(Boolean) as QueueItem[];
+          const freshErrorItems = jobs
+            .filter(
+              (j) => (j.status === "FAILED" || j.status === "CANCELLED") && isFresh(j),
+            )
+            .map((job) => jobToQueueItem(job, { includeTerminalFailures: true }))
+            .filter((item): item is QueueItem => !!item && item.status === "error");
+          const hydratedItems = jobs
+            .map((j) => hydratedDoneRef.current.get(j.id))
+            .filter(Boolean) as QueueItem[];
+          setDbQueue([...summaryItems, ...freshErrorItems, ...hydratedItems]);
           // Signature: status + successCount per job → snaps back to the fast
           // cadence on any start/progress/completion, backs off when idle.
           // 진행 중(PENDING/PROCESSING) 잡이 있는 동안은 서명에 시각을 섞어 백오프를
@@ -292,9 +373,10 @@ export function useGenerationSessionQueue(): [
 
   const queue = useMemo(() => {
     const byId = new Map<string, QueueItem>();
-    const activeFastTemps = localQueue.filter(
-      (item) => isFastTempItem(item) && item.status === "generating",
-    );
+    // 로컬 낙관 카드(fast temp)가 있는 작업은 상태 무관 로컬 카드가 진실원 —
+    // DB 복원 카드(generating/error)를 중복으로 얹지 않는다. 완료(done) DB 카드만
+    // 예외로 temp 를 대체한다(아래 completedDbItems 흡수).
+    const fastTemps = localQueue.filter(isFastTempItem);
     const completedDbItems = dbQueue.filter(
       (item) => item.status === "done" || item.status === "reviewed",
     );
@@ -309,8 +391,9 @@ export function useGenerationSessionQueue(): [
     }
     for (const item of dbQueue) {
       if (
-        item.status === "generating" &&
-        activeFastTemps.some((temp) => dbItemMatchesTemp(temp, item))
+        item.status !== "done" &&
+        item.status !== "reviewed" &&
+        fastTemps.some((temp) => dbItemMatchesTemp(temp, item))
       ) {
         continue;
       }
