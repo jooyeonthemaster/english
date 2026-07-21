@@ -58,12 +58,6 @@ function contextAround(
   return text.trim();
 }
 
-/** 오답해설 문장에서 기제 라벨("방향반대 — …")을 추출한다(없으면 null). */
-function mechanismOf(text: string): string | null {
-  const m = text.match(/^\s*([가-힣A-Za-z/·]+)\s*[—:-]/);
-  return m ? m[1].trim() : null;
-}
-
 export interface MdBlankAdaptResult {
   ok: boolean;
   error?: string;
@@ -93,16 +87,10 @@ export function adaptMdBlankToAiQuestion(
   if (q.options.length !== 5) return { ok: false, error: `선지 ${q.options.length}개` };
   if (!q.answer) return { ok: false, error: "정답 누락" };
   const wrong = q.wrong.filter((w) => w.label !== q.answer).slice(0, 4);
-  const mechanisms = wrong
-    .map((w) => mechanismOf(w.text))
-    .filter((v): v is string => !!v);
-  const keyPoints = [
-    "빈칸은 글의 논지가 수렴하는 자리에 배치했습니다.",
-    "정답은 원문 표현을 재사용하지 않는 추상적 재진술입니다.",
-    mechanisms.length > 0
-      ? `오답은 ${mechanisms.join("·")} 기제로 설계했습니다.`
-      : "오답 네 개는 서로 다른 함정 기제로 설계했습니다.",
-  ];
+  // keyPoints 합성 금지(26-07-21 실사용 평가 반영): 합성문은 문항 고유 정보가
+  // 없는 "출제자 노트" 템플릿이라 학생 학습 정보가 아니다. 빈 배열이면 검증기·
+  // 렌더 모두 안전하게 생략된다.
+  const keyPoints: string[] = [];
   return {
     ok: true,
     aiQuestion: {
@@ -202,19 +190,11 @@ export function adaptMdGrammarToAiQuestion(
     };
   });
 
-  // keyPoints 검증기 계약(shared.ts findGrammarKeypointChoiceMismatch): 각 항목은
-  // 실제 밑줄 라벨로 시작, 1번은 정답 라벨, 본문에 해당 포인트 주제어 포함.
-  // 라벨은 후처리가 지문 등장 순으로 재매핑해 주므로 여기선 원 라벨을 쓴다.
-  const decoys = q.marks.filter((m) => m.label !== q.answer);
-  const keyPoints = [
-    `${q.answer} ${answerMark.shown} → ${q.fix || answerMark.original}: ${POINT_NAME[answerMark.code] ?? "정동사·준동사"} 판단이 정답의 핵심입니다.`,
-    decoys[0]
-      ? `${decoys[0].label} ${decoys[0].original}: ${POINT_NAME[decoys[0].code] ?? "어법"} 자리로 원문 그대로가 옳습니다.`
-      : `${q.answer} 나머지 밑줄은 원문 그대로의 어법 자리입니다.`,
-    decoys[1]
-      ? `${decoys[1].label} ${decoys[1].original}: ${POINT_NAME[decoys[1].code] ?? "어법"} 자리로 원문 그대로가 옳습니다.`
-      : `${q.answer} 각 밑줄은 서로 다른 어법 포인트로 분산했습니다.`,
-  ];
+  // keyPoints 합성 금지(26-07-21 실사용 평가 반영): 모델의 포인트코드 오태깅
+  // (예: 전치사 Despite 에 f 형부)이 합성문을 타고 학생 표면에 "형용사·부사
+  // 자리"로 노출되는 사고가 실증됐다. 오답해설(모델이 직접 서술)은 정확했으므로
+  // 신뢰 가능한 텍스트만 남기고 keyPoints 는 생략한다(빈 배열 = 검증기 스킵).
+  const keyPoints: string[] = [];
 
   return {
     ok: true,

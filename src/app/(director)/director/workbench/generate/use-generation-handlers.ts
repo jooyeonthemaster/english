@@ -377,7 +377,10 @@ async function createMdStreamQuestionGenerationJob({
       }
       // 어떤 프레임이든 수신 = 서버가 요청을 접수(과금 커밋 가능성) — 폴백 금지 신호.
       onServerAck?.();
-      if (event.t === "r" && typeof event.d === "string") {
+      if (event.t === "meta") {
+        // 첫 델타 전에도 패널을 즉시 띄운다 — 사용자가 "사고 중 0s"부터 본다.
+        emitPreview(true);
+      } else if (event.t === "r" && typeof event.d === "string") {
         reasoningTail = (reasoningTail + event.d).slice(-900);
         emitPreview();
       } else if (event.t === "c" && typeof event.d === "string") {

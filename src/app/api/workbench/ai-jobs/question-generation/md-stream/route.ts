@@ -513,6 +513,13 @@ export async function POST(req: NextRequest) {
         }
         closed = true;
       };
+      // 스트림 개통 즉시 주석 프레임 — 일부 프록시/런타임의 초기 버퍼링을 뚫어
+      // 클라이언트가 헤더+첫 바이트를 지체 없이 받게 한다.
+      try {
+        controller.enqueue(new TextEncoder().encode(": open\n\n"));
+      } catch {
+        closed = true;
+      }
 
       void (async () => {
         let creditTxId: string | null = null;
@@ -774,6 +781,8 @@ export async function POST(req: NextRequest) {
       "Content-Type": "text/event-stream; charset=utf-8",
       "Cache-Control": "no-cache, no-transform",
       Connection: "keep-alive",
+      // 프록시(nginx 등) 응답 버퍼링 방지 — 델타가 실시간으로 흘러야 한다.
+      "X-Accel-Buffering": "no",
     },
   });
 }
