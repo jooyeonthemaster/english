@@ -18,7 +18,7 @@ export interface CollectionItem {
   duplicateCount?: number;
 }
 
-export type DragItemType = "question" | "passage" | "exam" | "draft";
+export type DragItemType = "question" | "passage" | "exam" | "draft" | "student";
 
 export interface PaginationData {
   page: number;

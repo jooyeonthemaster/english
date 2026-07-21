@@ -9,9 +9,22 @@
 // 학생 상세 과제 탭에서 오고, ?student={id} 딥링크(학생별 필터)와 함께
 // router.replace 로 URL 을 동기화한다. 학생/반 대상 필터는 서버 재조회
 // (listStudyAssignments({studentId|classId})), 종류·상태·검색·정렬은 클라 처리.
+//
+// embedded 계약(v3 C-1): embedded=true 면 자체 PageShell·SectionCard 타이틀 계층
+// (「새 과제」 헤더 액션 포함)을 렌더하지 않고 내용부(헤더리스 카드+모달)만 렌더
+// 한다 — 공통 셸(PageShell·페이지 헤더·뷰 스위처)은 C-2 (manage) layout 담당.
+// URL 동기화·딥링크(?open=·?student=)는 embedded 여부와 무관하게 동일 동작.
+// false/미지정이면 현행과 픽셀 동일(무회귀 — 기존 page.tsx 소비처 무변경).
 // ============================================================================
 
-import { useCallback, useEffect, useMemo, useState, useTransition } from "react";
+import {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useTransition,
+} from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { ClipboardList, Plus, Search } from "lucide-react";
 import { listStudyAssignments } from "@/actions/study-assignments";
@@ -25,6 +38,7 @@ import type {
   StudyAssignmentListRow,
 } from "@/lib/study-assignments/types";
 import { STUDY_KIND_META } from "@/lib/study-assignments/types";
+import { CTA_LABELS } from "@/lib/wording/director-glossary";
 import { cn } from "@/lib/utils";
 import { AssignmentsCalendar, seoulDateKey } from "./assignments-calendar";
 import { AssignmentDetailModal } from "./assignment-detail-modal";
@@ -77,6 +91,7 @@ export function AssignmentsBoardClient({
   initialRows,
   openAssignmentId,
   initialStudentId,
+  embedded = false,
 }: {
   /** 서울 기준 이번 달 — "YYYY-MM" */
   initialMonth: string;
@@ -88,6 +103,8 @@ export function AssignmentsBoardClient({
   openAssignmentId: string | null;
   /** ?student= 딥링크 — 학생별 필터(이름은 클라에서 로스터 로드 후 해석) */
   initialStudentId: string | null;
+  /** true: C-2 (manage) layout 셸에 얹히는 내용부 전용 렌더(상단 계약 주석 참조) */
+  embedded?: boolean;
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -321,21 +338,19 @@ export function AssignmentsBoardClient({
   const todayKey = seoulDateKey(now);
 
   return (
-    <PageShell>
-      <SectionCard
-        icon={ClipboardList}
-        title="과제 관리"
-        description="배포한 시험·학습지·문제·어법 훈련 과제의 마감과 진행을 한눈에 관리합니다."
+    <BoardShell embedded={embedded}>
+      <BoardCard
+        embedded={embedded}
         actions={
           <button
             type="button"
             onClick={() => openComposer(null)}
             className="inline-flex h-8 items-center gap-1.5 rounded-md bg-blue-600 px-3 text-[12.5px] font-semibold text-white transition-colors hover:bg-blue-700"
           >
-            <Plus className="size-3.5" aria-hidden />새 과제
+            <Plus className="size-3.5" aria-hidden />
+            {CTA_LABELS.NEW_TASK}
           </button>
         }
-        bodyClassName="p-4 sm:p-5"
       >
         {/* KPI 스트립 — 타일 클릭 = 필터/정렬 적용 */}
         {listRows.length > 0 ? (
@@ -434,11 +449,14 @@ export function AssignmentsBoardClient({
               onClick={() => openComposer(null)}
               className="mt-2 inline-flex h-9 items-center gap-1.5 rounded-md bg-blue-600 px-4 text-[13px] font-semibold text-white transition-colors hover:bg-blue-700"
             >
-              <Plus className="size-4" aria-hidden />새 과제
+              <Plus className="size-4" aria-hidden />
+              {CTA_LABELS.NEW_TASK}
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] xl:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
+          // 캘린더를 넓게(좌우 동등 폭) + 좌우 컬럼 높이 고정으로 아래 끝선 정렬 —
+          // 목록은 컬럼 안에서 내부 스크롤한다(spec §6 섹션 높이 정합).
+          <div className="grid grid-cols-1 items-start gap-4 lg:h-[660px] lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-stretch xl:h-[700px]">
             {/* 좌: 월 캘린더 */}
             <AssignmentsCalendar
               month={month}
@@ -464,7 +482,7 @@ export function AssignmentsBoardClient({
             />
           </div>
         )}
-      </SectionCard>
+      </BoardCard>
 
       <AssignmentComposer
         open={composerOpen}
@@ -485,6 +503,50 @@ export function AssignmentsBoardClient({
         // 스프레드 패턴. 시그니처는 플랜에서 U3·U4 사전 합의 완료.
         {...{ onDuplicate: handleDuplicate }}
       />
-    </PageShell>
+    </BoardShell>
+  );
+}
+
+// ── C-1 embedded 셸 분기 — 조건은 여기서만, 내용부는 위에서 단일 소스 ─────────────
+
+/** false: 현행 PageShell(픽셀 동일) / true: layout 셸 아래 형제 간격만 미러한 div */
+function BoardShell({
+  embedded,
+  children,
+}: {
+  embedded: boolean;
+  children: ReactNode;
+}) {
+  if (!embedded) return <PageShell>{children}</PageShell>;
+  return <div className="flex w-full min-w-0 flex-col gap-4">{children}</div>;
+}
+
+/** false: 현행 SectionCard(픽셀 동일) / true: 타이틀 계층 없는 동일 카드 프레임 */
+function BoardCard({
+  embedded,
+  actions,
+  children,
+}: {
+  embedded: boolean;
+  actions: ReactNode;
+  children: ReactNode;
+}) {
+  if (!embedded) {
+    return (
+      <SectionCard
+        icon={ClipboardList}
+        title="과제 관리"
+        description="배포한 시험·학습지·문제·어법 훈련 과제의 마감과 진행을 한눈에 관리합니다."
+        actions={actions}
+        bodyClassName="p-4 sm:p-5"
+      >
+        {children}
+      </SectionCard>
+    );
+  }
+  return (
+    <section className="flex min-w-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+      <div className="min-w-0 p-4 sm:p-5">{children}</div>
+    </section>
   );
 }

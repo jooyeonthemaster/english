@@ -17,6 +17,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   BarChart3,
+  BookA,
   BookOpen,
   ClipboardList,
   House,
@@ -257,6 +258,18 @@ export function GShell({
                   </Link>
                 );
               })}
+              <Link
+                href="/g/vocab"
+                className="gd-menu-item"
+                data-active={
+                  pathname === "/g/vocab" || pathname.startsWith("/g/vocab/") ? "true" : undefined
+                }
+                aria-current={pathname === "/g/vocab" ? "page" : undefined}
+                onClick={closeMenu}
+              >
+                <BookA className="h-4.5 w-4.5 shrink-0" strokeWidth={1.75} />
+                취약 단어장
+              </Link>
             </nav>
 
             <div className="gd-hairline-t gd-safe-b shrink-0 py-1">

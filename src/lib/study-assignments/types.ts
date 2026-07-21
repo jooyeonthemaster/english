@@ -7,6 +7,8 @@
 // DB 계약은 prisma/schema.prisma 의 StudyAssignment/StudyAssignmentTask 주석 참조.
 // ============================================================================
 
+import type { WeakSpot } from "@/lib/student-analytics/types";
+
 export type StudyAssignmentKind = "EXAM" | "WORKSHEET" | "QUESTIONS" | "GRAMMAR";
 
 export type StudyAssignmentStatus = "ACTIVE" | "CLOSED" | "ARCHIVED";
@@ -72,6 +74,17 @@ export interface GrammarAssignmentPayload {
   itemTypes?: string[];
   difficulties?: number[];
   count: number;
+}
+
+// ── 분석 시드 (컴포저 analysisSeed 계약 — v3 design D2-3) ────────────────────
+
+/**
+ * 취약점 CTA 진입 시 컴포저에 주입되는 분석 컨텍스트 시드.
+ * 컨텍스트 스트립·프리셋 채움의 데이터원 — 시드 없는 기존 진입은 미렌더(무회귀).
+ */
+export interface AnalysisSeed {
+  spots: WeakSpot[];
+  source: "study" | "exam" | "grammar";
 }
 
 // ── kind 메타(라벨·톤) — 아이콘은 소비처가 lucide 로 매핑 ───────────────────

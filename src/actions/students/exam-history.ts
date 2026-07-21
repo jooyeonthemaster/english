@@ -22,8 +22,16 @@ import {
   aggregateStudentExamHistory,
   type TrendSitting,
 } from "@/lib/exam-scoring/trend";
+import {
+  summarize,
+  type ExamHistorySummary,
+} from "@/lib/exam-scoring/summarize";
 
-// ── 타입 계약(전부 컴파일 시 소거 — "use server" 검증과 무관) ────────────────
+// ── 타입 계약 ────────────────────────────────────────────────────────────────
+// 요약 계산·타입 정본은 lib/exam-scoring/summarize.ts (v3 N-18 — 시험 탭
+// 클라 복제와의 드리프트 차단). ⚠ "use server" 모듈에서 `export type` 재수출은
+// Turbopack 서버 액션 변환이 런타임 바인딩을 만들어 ReferenceError 500 을
+// 던진다(실측) — 타입 소비처는 반드시 lib 에서 직접 import 한다.
 
 export interface ExamHistoryActionResult<T = undefined> {
   success: boolean;
@@ -31,55 +39,10 @@ export interface ExamHistoryActionResult<T = undefined> {
   data?: T;
 }
 
-export type ExamHistoryTrendDirection = "UP" | "FLAT" | "DOWN";
-
-export interface ExamHistorySummary {
-  /** 채점 완료 응시 수(INTERNAL+EXTERNAL) */
-  totalSittings: number;
-  /** 점수율 확정(scorePct≠null) 회차 평균(소수 1자리) — 확정 0회면 null */
-  avgScorePct: number | null;
-  /** 최근 3회(점수 확정분) 방향 — 확정 2회 미만이면 null(판단 불가) */
-  trend: ExamHistoryTrendDirection | null;
-  /** 가장 최근 확정 점수율 — 없으면 null */
-  latestScorePct: number | null;
-}
-
 export interface StudentExamHistoryData {
   /** 날짜 오름차순 시계열 — 차트/히트맵의 회차 축 정본 */
   sittings: TrendSitting[];
   summary: ExamHistorySummary;
-}
-
-// ── 내부 헬퍼(비export — "use server" 제약) ──────────────────────────────────
-
-/** 추세 방향 판정 임계(±3%p) — 미세 등락은 "유지(FLAT)"로 흡수한다 */
-const TREND_THRESHOLD_PCT = 3;
-
-function summarize(sittings: TrendSitting[]): ExamHistorySummary {
-  const scored = sittings
-    .map((s) => s.scorePct)
-    .filter((pct): pct is number => pct != null);
-
-  const avgScorePct =
-    scored.length > 0
-      ? Math.round((scored.reduce((sum, pct) => sum + pct, 0) / scored.length) * 10) / 10
-      : null;
-
-  // 최근 3회(확정분) 창에서 첫 회차 대비 마지막 회차의 변화량으로 방향 판정.
-  const window = scored.slice(-3);
-  let trend: ExamHistoryTrendDirection | null = null;
-  if (window.length >= 2) {
-    const delta = window[window.length - 1] - window[0];
-    trend =
-      delta >= TREND_THRESHOLD_PCT ? "UP" : delta <= -TREND_THRESHOLD_PCT ? "DOWN" : "FLAT";
-  }
-
-  return {
-    totalSittings: sittings.length,
-    avgScorePct,
-    trend,
-    latestScorePct: scored.length > 0 ? scored[scored.length - 1] : null,
-  };
 }
 
 // ── 공개 액션 ────────────────────────────────────────────────────────────────
@@ -110,7 +73,7 @@ export async function getStudentExamHistory(
       error:
         error instanceof Error && error.message
           ? error.message
-          : "응시 이력을 불러오는 중 오류가 발생했습니다.",
+          : "응시 기록을 불러오는 중 오류가 발생했습니다.",
     };
   }
 }

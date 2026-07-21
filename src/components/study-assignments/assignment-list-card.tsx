@@ -141,12 +141,20 @@ export function AssignmentListPanel({
 }) {
   const visibleCount = pinnedRows.length + restRows.length;
   return (
-    <div className="flex min-w-0 flex-col gap-2">
-      <div className="flex flex-wrap items-center gap-2">
+    <div className="flex min-h-0 min-w-0 flex-col gap-2 lg:h-full">
+      <div className="flex shrink-0 flex-wrap items-center gap-2">
         <p className="text-[12px] font-medium text-slate-400">
           과제 <span className="font-bold tabular-nums text-slate-600">{visibleCount}</span>건
           {refreshing ? <span className="ml-1.5">갱신 중…</span> : null}
         </p>
+        {/* "조치 필요" 는 목록 위 별도 줄이 아니라 이 헤더 줄에 둔다 — 줄 수를 늘리지
+            않고도 우선 신호가 먼저 읽힌다(핀 그룹은 카드 좌측 rose 보더로 계속 구분) */}
+        {pinnedRows.length > 0 ? (
+          <span className="inline-flex items-center gap-1 rounded-full bg-rose-50 px-2 py-0.5 text-[11.5px] font-bold text-rose-600">
+            <CalendarClock className="size-3.5" aria-hidden />
+            조치 필요 {pinnedRows.length}건
+          </span>
+        ) : null}
         {selectedDate ? (
           <>
             <button
@@ -184,37 +192,34 @@ export function AssignmentListPanel({
         </div>
       </div>
 
-      {visibleCount === 0 ? (
-        <div className="flex flex-col items-center gap-2 rounded-lg border border-dashed border-slate-200 bg-slate-50/50 py-12">
-          <ClipboardList className="size-8 text-slate-300" aria-hidden />
-          <p className="text-[13px] text-slate-400">
-            {selectedDate ? "이 날짜에 마감인 과제가 없습니다." : "조건에 맞는 과제가 없습니다."}
-          </p>
-        </div>
-      ) : (
-        <>
-          {pinnedRows.length > 0 ? (
-            <>
-              <p className="flex items-center gap-1 pt-1 text-[11.5px] font-bold text-rose-600">
-                <CalendarClock className="size-3.5" aria-hidden />
-                조치 필요 · {pinnedRows.length}건
-              </p>
+      {/* 목록 영역만 내부 스크롤 — 헤더는 고정, 컬럼 아래 끝선이 캘린더와 맞는다 */}
+      <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto pr-0.5">
+        {visibleCount === 0 ? (
+          <div className="flex flex-col items-center gap-2 rounded-lg border border-dashed border-slate-200 bg-slate-50/50 py-12">
+            <ClipboardList className="size-8 text-slate-300" aria-hidden />
+            <p className="text-[13px] text-slate-400">
+              {selectedDate ? "이 날짜에 마감인 과제가 없습니다." : "조건에 맞는 과제가 없습니다."}
+            </p>
+          </div>
+        ) : (
+          <>
+            {pinnedRows.length > 0 ? (
               <ul className="flex flex-col gap-2">
                 {pinnedRows.map((row) => (
                   <AssignmentListCard key={row.id} row={row} now={now} pinned onOpen={onOpen} />
                 ))}
               </ul>
-            </>
-          ) : null}
-          {restRows.length > 0 ? (
-            <ul className={cn("flex flex-col gap-2", pinnedRows.length > 0 && "pt-1")}>
-              {restRows.map((row) => (
-                <AssignmentListCard key={row.id} row={row} now={now} onOpen={onOpen} />
-              ))}
-            </ul>
-          ) : null}
-        </>
-      )}
+            ) : null}
+            {restRows.length > 0 ? (
+              <ul className={cn("flex flex-col gap-2", pinnedRows.length > 0 && "pt-1")}>
+                {restRows.map((row) => (
+                  <AssignmentListCard key={row.id} row={row} now={now} onOpen={onOpen} />
+                ))}
+              </ul>
+            ) : null}
+          </>
+        )}
+      </div>
     </div>
   );
 }
@@ -236,7 +241,9 @@ export function AssignmentListCard({
 }) {
   const Icon = KIND_ICON[row.kind];
   const dueDiff = row.dueAt ? seoulDayDiff(now, new Date(row.dueAt)) : null;
-  // 마감 경과(D+N 영역) — D-day 라벨 억제, rose "기한 지남"만 표기
+  // 마감 경과(D+N 영역) — D-day 라벨 억제. rose "기한 지남"은 미완료 연체
+  // (isActionNeeded — KPI·핀 그룹과 동일 판정)에만, 전원 완료·종료 행은
+  // 날짜만 남긴다(N-17 — 같은 단어 다른 의미 병존 해소).
   const isOverdue = dueDiff !== null && dueDiff < 0;
   const dday = isOverdue ? null : dDayLabel(dueDiff);
   const donePct = row.taskCount > 0 ? Math.round((row.doneCount / row.taskCount) * 100) : 0;
@@ -315,7 +322,7 @@ export function AssignmentListCard({
             </div>
           </div>
           <div className="flex shrink-0 flex-col items-end gap-1">
-            {isOverdue ? (
+            {isOverdue && isActionNeeded(row) ? (
               <span className="inline-flex items-center gap-1 text-[12px] font-bold text-rose-600">
                 <CalendarClock className="size-3.5" aria-hidden />
                 기한 지남
@@ -325,9 +332,9 @@ export function AssignmentListCard({
                 <CalendarClock className="size-3.5" aria-hidden />
                 {dday}
               </span>
-            ) : (
+            ) : !row.dueAt ? (
               <span className="text-[11px] text-slate-300">마감 없음</span>
-            )}
+            ) : null}
             {row.dueAt ? (
               <span className="text-[10.5px] text-slate-300">
                 {new Date(row.dueAt).toLocaleDateString("ko-KR", {

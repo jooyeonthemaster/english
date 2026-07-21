@@ -7,9 +7,15 @@
 // 테이블(grammar-lab-table) + 학원 취약 개념 랭킹(grammar-lab-concept-ranking).
 // 행 클릭은 학생 상세 허브의 어법 탭(/director/students/{id}?tab=grammar)으로
 // 이어진다 — 구 grammar-lab/[studentId] 직행 링크의 후계 동선.
+//
+// embedded 계약(v3 C-1): embedded=true 면 자체 PageShell·SectionCard 타이틀 계층
+// (「학생 앱 열기」 헤더 액션 포함)을 렌더하지 않고 내용부(헤더리스 카드+개념
+// 랭킹+팝오버+컴포저)만 렌더한다 — 공통 셸(PageShell·페이지 헤더·뷰 스위처)은
+// C-2 (manage) layout 담당. false/미지정이면 현행과 픽셀 동일(무회귀 — 기존
+// page.tsx 소비처 무변경).
 // ============================================================================
 
-import { useEffect, useMemo, useState } from "react";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChevronRight, ExternalLink, SpellCheck } from "lucide-react";
@@ -30,6 +36,7 @@ import {
   CONCEPT_SKELETON_BY_ID,
   GRAMMAR_UNITS,
 } from "@/lib/grammar-drill/curriculum";
+import { CTA_LABELS, METRIC_LABELS } from "@/lib/wording/director-glossary";
 import { cn } from "@/lib/utils";
 import { GrammarLabConceptRanking } from "./grammar-lab-concept-ranking";
 import {
@@ -63,9 +70,12 @@ const POPOVER_EST_HEIGHT = 208;
 export function GrammarLabListClient({
   students,
   conceptRanking,
+  embedded = false,
 }: {
   students: GrammarLabStudentRow[];
   conceptRanking: AcademyConceptRankingRow[];
+  /** true: C-2 (manage) layout 셸에 얹히는 내용부 전용 렌더(상단 계약 주석 참조) */
+  embedded?: boolean;
 }) {
   const router = useRouter();
   const [query, setQuery] = useState("");
@@ -77,7 +87,7 @@ export function GrammarLabListClient({
   const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [popover, setPopover] = useState<WeakestPopoverState | null>(null);
-  // 컴포저 — 팝오버 '이 개념으로 과제 배정' · 다중 선택 '어법 과제 만들기' 공용
+  // 컴포저 — 팝오버 '이 범위로 과제 보내기' · 다중 선택 '어법 과제 보내기' 공용
   const [composer, setComposer] = useState<{
     preset: ComposerPreset;
     studentIds: string[];
@@ -218,7 +228,7 @@ export function GrammarLabListClient({
       studentIds: [...selected],
     });
 
-  // 팝오버 → 해당 개념 프리셋 배정 — 학생 허브 '취약 개념 과제 만들기'와 동일 계약
+  // 팝오버 → 해당 개념 프리셋 배정 — 학생 허브 보충 과제 보내기 프리셋과 동일 계약
   const openAssignConcept = () => {
     if (!popover) return;
     setComposer({
@@ -239,11 +249,9 @@ export function GrammarLabListClient({
   };
 
   return (
-    <PageShell>
-      <SectionCard
-        icon={SpellCheck}
-        title="어법 훈련 현황"
-        description="학생별 어법 훈련 진행과 취약 개념을 모니터링합니다. 상세 분석은 학생 카드에서 이어집니다."
+    <LabShell embedded={embedded}>
+      <LabCard
+        embedded={embedded}
         actions={
           <a
             href="/g"
@@ -255,7 +263,6 @@ export function GrammarLabListClient({
             <ExternalLink className="size-3.5" aria-hidden />
           </a>
         }
-        bodyClassName="p-0"
       >
         {/* KPI 스트립 — 로스터 정본과 동일하게 카드 헤더 아래 내부 배치 */}
         <div className="border-b border-slate-100 bg-slate-50/50 px-4 py-3">
@@ -291,7 +298,7 @@ export function GrammarLabListClient({
               tone={stats.masteredUnits > 0 ? "blue" : "slate"}
             />
             <StatTile
-              label="미완료 배정"
+              label={METRIC_LABELS.INCOMPLETE_TASKS}
               value={`${stats.openAssignments}건`}
               tone={stats.openAssignments > 0 ? "blue" : "slate"}
             />
@@ -352,7 +359,7 @@ export function GrammarLabListClient({
             hasFilter ? "조건에 맞는 학생이 없습니다." : "표시할 학생이 없습니다."
           }
         />
-      </SectionCard>
+      </LabCard>
 
       <GrammarLabConceptRanking ranking={conceptRanking} />
 
@@ -369,7 +376,7 @@ export function GrammarLabListClient({
           />
           <div
             role="dialog"
-            aria-label={`취약 개념 — ${popover.weakest.title}`}
+            aria-label={`${METRIC_LABELS.WEAK} 개념 — ${popover.weakest.title}`}
             className="fixed z-50 w-72 rounded-lg border border-slate-200 bg-white p-3 shadow-xl"
             style={{ left: popover.left, top: popover.top }}
             onClick={(e) => e.stopPropagation()}
@@ -394,7 +401,7 @@ export function GrammarLabListClient({
                 onClick={openAssignConcept}
                 className="inline-flex h-7 items-center rounded-md border border-blue-200 bg-blue-50 px-2.5 text-[12px] font-semibold text-blue-700 transition-colors hover:bg-blue-100"
               >
-                이 개념으로 과제 배정
+                {CTA_LABELS.SEND_TASK_SCOPED}
               </button>
               <Link
                 href={`/director/students/${popover.studentId}?tab=grammar`}
@@ -418,6 +425,50 @@ export function GrammarLabListClient({
           router.refresh();
         }}
       />
-    </PageShell>
+    </LabShell>
+  );
+}
+
+// ── C-1 embedded 셸 분기 — 조건은 여기서만, 내용부는 위에서 단일 소스 ─────────────
+
+/** false: 현행 PageShell(픽셀 동일) / true: layout 셸 아래 형제 간격만 미러한 div */
+function LabShell({
+  embedded,
+  children,
+}: {
+  embedded: boolean;
+  children: ReactNode;
+}) {
+  if (!embedded) return <PageShell>{children}</PageShell>;
+  return <div className="flex w-full min-w-0 flex-col gap-4">{children}</div>;
+}
+
+/** false: 현행 SectionCard(픽셀 동일) / true: 타이틀 계층 없는 동일 카드 프레임 */
+function LabCard({
+  embedded,
+  actions,
+  children,
+}: {
+  embedded: boolean;
+  actions: ReactNode;
+  children: ReactNode;
+}) {
+  if (!embedded) {
+    return (
+      <SectionCard
+        icon={SpellCheck}
+        title="어법 훈련 현황"
+        description={`학생별 어법 훈련 진행과 ${METRIC_LABELS.WEAK} 개념을 모니터링합니다. 상세 분석은 학생 카드에서 이어집니다.`}
+        actions={actions}
+        bodyClassName="p-0"
+      >
+        {children}
+      </SectionCard>
+    );
+  }
+  return (
+    <section className="flex min-w-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+      <div className="min-w-0 p-0">{children}</div>
+    </section>
   );
 }

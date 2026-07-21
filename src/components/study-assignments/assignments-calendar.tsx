@@ -118,7 +118,9 @@ export function AssignmentsCalendar({
   ];
 
   return (
-    <div className="flex min-w-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white">
+    // h-full — 보드 그리드가 좌우 컬럼 높이를 맞추므로(§6 섹션 높이 정합)
+    // 날짜 셀이 남는 높이를 나눠 갖는다(auto-rows-fr).
+    <div className="flex h-full min-w-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white">
       {/* 월 이동 헤더 */}
       <div className="flex items-center justify-between gap-2 border-b border-slate-100 px-3 py-2.5">
         <p className="text-[13.5px] font-bold tabular-nums text-slate-900">
@@ -163,7 +165,7 @@ export function AssignmentsCalendar({
       </div>
 
       {/* 날짜 셀 — @container: 칩/도트 스위치는 뷰포트가 아니라 그리드 실폭 기준 */}
-      <div className="@container grid grid-cols-7 gap-1 p-1.5">
+      <div className="@container grid flex-1 auto-rows-fr grid-cols-7 gap-1 p-1.5">
         {cells.map(({ day, inMonth }, idx) => {
           if (!inMonth) {
             return (

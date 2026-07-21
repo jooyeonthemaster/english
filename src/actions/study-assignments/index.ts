@@ -5,9 +5,15 @@ export {
   closeStudyAssignment,
   reopenStudyAssignment,
   deleteStudyAssignment,
+  redeployStudyAssignment,
   type CreateStudyAssignmentInput,
   type CreateStudyAssignmentData,
+  type RedeployStudyAssignmentInput,
 } from "./mutations";
+export {
+  getAssignAnalysisContext,
+  type AssignAnalysisContext,
+} from "./assign-context";
 export {
   getAssignTargets,
   listStudyAssignments,

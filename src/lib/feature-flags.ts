@@ -141,6 +141,16 @@ export const FEATURE_FLAGS = {
     process.env.NEXT_PUBLIC_ENABLE_GRAMMAR_DRILL,
     true,
   ),
+
+  /**
+   * v3 어법 훈련소(/director/workbench/grammar-studio): 유닛 문항 브라우징 +
+   * 합성지문 AI 생성 허브. 기본 false 다크런칭(v3 design §D5-1) —
+   * 생성 P1 실측(b01 10문항·솔버 통과율) 확인 후 on.
+   */
+  ENABLE_GRAMMAR_STUDIO: publicBooleanFlag(
+    process.env.NEXT_PUBLIC_ENABLE_GRAMMAR_STUDIO,
+    false,
+  ),
 } as const;
 
 export type FeatureFlag = keyof typeof FEATURE_FLAGS;

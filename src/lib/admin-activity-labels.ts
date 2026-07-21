@@ -135,7 +135,7 @@ const PAGE_PATH_LABELS: Array<[string, string]> = [
   ["/director/tutor/programs/new", "튜터 프로그램 생성"],
   ["/director/tutor/programs", "튜터 프로그램 관리"],
   ["/director/tutor/distributions", "배포 관리"],
-  ["/director/tutor/monitor", "학습 현황"],
+  ["/director/tutor/monitor", "실시간 모니터"],
   ["/director/tutor", "튜터 운영 홈"],
   ["/director/credits", "크레딧 관리"],
   ["/director/notices", "공지사항"],

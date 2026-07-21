@@ -28,7 +28,11 @@ import type {
   StudyTargetInput,
   WorksheetAssignmentPayload,
 } from "@/lib/study-assignments/types";
-import { isStudyAssignmentKind } from "@/lib/study-assignments/types";
+import {
+  examPayloadDurationMin,
+  isStudyAssignmentKind,
+} from "@/lib/study-assignments/types";
+import { loadTaskLiveMap } from "@/lib/study-assignments/task-union";
 import {
   STUDY_ASSIGNMENT_PATHS,
   expandTargets,
@@ -412,5 +416,133 @@ export async function deleteStudyAssignment(assignmentId: string): Promise<Study
     return { success: true };
   } catch (error) {
     return { success: false, error: toErrorMessage(error, "과제 삭제 중 오류가 발생했습니다.") };
+  }
+}
+
+// ── 원클릭 재배포 (v3 design §D2-5) ─────────────────────────────────────────
+
+export interface RedeployStudyAssignmentInput {
+  /** ISO — null = 마감 없음. 무확인 배포 금지는 클라이언트 팝오버(마감 확정) 소관 */
+  dueAt: string | null;
+  /** true = 라이브 상태(브리지 조인)가 완료(DONE)가 아닌 학생만 대상 */
+  onlyIncomplete: boolean;
+}
+
+/**
+ * 원본 과제와 같은 kind·refId·payload 로 새 과제를 만들어 다시 보낸다.
+ * 여기서는 대상 산출(미완료 필터·개별 학생으로 평탄화)만 하고, 검증·브리지·
+ * 원자쌍·보상 삭제는 전부 createStudyAssignment 직접 호출로 재사용한다
+ * (공통 헬퍼 추출 없는 최소침습 — 반 대상 스냅샷은 학생 개별로 풀린다).
+ * 제목은 「{원제} (재배포)」 — 연쇄 재배포로 접미가 쌓이지 않게 1회로 정규화.
+ */
+export async function redeployStudyAssignment(
+  assignmentId: string,
+  input: RedeployStudyAssignmentInput,
+): Promise<StudyActionResult<CreateStudyAssignmentData>> {
+  try {
+    const staff = await requireStaffAuth();
+    const original = await prisma.studyAssignment.findFirst({
+      where: { id: assignmentId, academyId: staff.academyId },
+      select: {
+        id: true,
+        kind: true,
+        refId: true,
+        payload: true,
+        title: true,
+        instructions: true,
+      },
+    });
+    if (!original) return { success: false, error: "과제를 찾을 수 없습니다." };
+    if (!isStudyAssignmentKind(original.kind)) {
+      return { success: false, error: "올바르지 않은 과제 종류입니다." };
+    }
+
+    // 대상 산출 — 저장 status 가 아니라 라이브 상태(loadTaskLiveMap 정본)로
+    // 미완료를 판정한다(EXAM·GRAMMAR 는 브리지가 진실원).
+    const tasks = await prisma.studyAssignmentTask.findMany({
+      where: { assignmentId: original.id, academyId: staff.academyId },
+      select: {
+        id: true,
+        studentId: true,
+        status: true,
+        startedAt: true,
+        completedAt: true,
+        examSubmissionId: true,
+        grammarAssignmentId: true,
+        result: true,
+      },
+    });
+    let targetTasks = tasks;
+    if (input.onlyIncomplete) {
+      const liveMap = await loadTaskLiveMap(staff.academyId, tasks);
+      targetTasks = tasks.filter(
+        (t) => (liveMap.get(t.id)?.liveStatus ?? "ASSIGNED") !== "DONE",
+      );
+    }
+    const studentIds = [...new Set(targetTasks.map((t) => t.studentId))];
+    if (studentIds.length === 0) {
+      return { success: false, error: "다시 보낼 학생이 없습니다." };
+    }
+
+    const title = `${original.title.replace(/\s*\(재배포\)\s*$/u, "")} (재배포)`;
+    const payload = (original.payload ?? {}) as Record<string, unknown>;
+    const base = {
+      title,
+      instructions: original.instructions ?? undefined,
+      dueAt: input.dueAt,
+      // availableFrom 미지정 = 즉시 시작(create 기본값)
+      targets: studentIds.map((id) => ({ type: "STUDENT" as const, id })),
+    };
+
+    if (original.kind === "EXAM") {
+      if (!original.refId) {
+        return { success: false, error: "원본 시험지가 삭제되어 다시 보낼 수 없습니다." };
+      }
+      return createStudyAssignment({
+        ...base,
+        kind: "EXAM",
+        exam: {
+          examId: original.refId,
+          mode: payload.mode === "OMR" ? "OMR" : "TABLET",
+          durationMin: examPayloadDurationMin(payload),
+        },
+      });
+    }
+    if (original.kind === "WORKSHEET") {
+      if (!original.refId) {
+        return { success: false, error: "원본 학습지가 삭제되어 다시 보낼 수 없습니다." };
+      }
+      const study = (payload as WorksheetAssignmentPayload).study;
+      return createStudyAssignment({
+        ...base,
+        kind: "WORKSHEET",
+        worksheet: {
+          passageReportId: original.refId,
+          ...(study ? { study } : {}),
+        },
+      });
+    }
+    if (original.kind === "QUESTIONS") {
+      const rawIds = (payload as Partial<QuestionsAssignmentPayload>).questionIds;
+      const questionIds = Array.isArray(rawIds)
+        ? rawIds.filter((id): id is string => typeof id === "string")
+        : [];
+      if (questionIds.length === 0) {
+        return { success: false, error: "문항 스냅샷이 비어 있어 다시 보낼 수 없습니다." };
+      }
+      return createStudyAssignment({
+        ...base,
+        kind: "QUESTIONS",
+        questions: { questionIds },
+      });
+    }
+    // GRAMMAR — spec payload 그대로(count·빈 풀 검증은 create 가 재수행)
+    return createStudyAssignment({
+      ...base,
+      kind: "GRAMMAR",
+      grammar: payload as unknown as GrammarAssignmentPayload,
+    });
+  } catch (error) {
+    return { success: false, error: toErrorMessage(error, "재배포 중 오류가 발생했습니다.") };
   }
 }

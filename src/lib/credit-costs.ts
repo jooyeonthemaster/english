@@ -64,7 +64,7 @@ export const OPERATION_LABELS: Record<OperationType, string> = {
   WEBTOON_IMAGE_PREMIUM: "웹툰 이미지 생성 (프리미엄)",
   WEBTOON_EXAM_DOWNLOAD: "기출 웹툰 다운로드",
   EXAM_ANALYSIS: "시험지 문항 분석",
-  EXAM_STUDENT_REPORT: "학생 시험 리포트",
+  EXAM_STUDENT_REPORT: "학생 내신 리포트",
   EXAM_ANALYSIS_BOOST: "AI 심층분석 보강",
   EXAM_TREND_ANALYSIS: "AI 추세변화 분석",
 };

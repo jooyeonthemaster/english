@@ -118,7 +118,7 @@ export async function POST(
   if (history.length === 0) {
     return NextResponse.json(
       {
-        error: "채점이 완료된 응시 이력이 없습니다. 시험 응시와 채점을 완료한 후 다시 시도해 주십시오.",
+        error: "채점이 완료된 응시 기록이 없습니다. 시험 응시와 채점을 완료한 후 다시 시도해 주십시오.",
         code: "NO_HISTORY",
       },
       { status: 400 },

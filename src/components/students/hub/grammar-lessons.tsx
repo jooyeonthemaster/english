@@ -18,6 +18,7 @@ import {
 import type { GrammarLabStudentDetail } from "@/actions/grammar-drill-admin";
 import { formatDurationMs } from "@/lib/grammar-drill/display";
 import { cn } from "@/lib/utils";
+import { CTA_LABELS } from "@/lib/wording/director-glossary";
 
 type Lesson = GrammarLabStudentDetail["lessons"][number];
 
@@ -142,7 +143,7 @@ export function GrammarLessons({
           className="mt-2 inline-flex h-9 items-center gap-1.5 rounded-md bg-blue-600 px-4 text-[13px] font-semibold text-white transition-colors hover:bg-blue-700"
         >
           <Target className="size-4" strokeWidth={1.75} aria-hidden />
-          어법 훈련 과제 만들기
+          {CTA_LABELS.SEND_GRAMMAR_TASK}
         </button>
         <p className="text-[11.5px] text-slate-400">
           과제를 배정하면 학생이 해당 유닛의 개념 학습부터 시작합니다.
@@ -235,7 +236,8 @@ export function GrammarLessons({
             }
             className="mt-2.5 inline-flex h-8 items-center gap-1.5 rounded-md border border-rose-200 bg-white px-3 text-[12.5px] font-semibold text-rose-700 transition-colors hover:bg-rose-100"
           >
-            <Target className="size-3.5" strokeWidth={1.75} aria-hidden />이 개념으로 과제 만들기
+            <Target className="size-3.5" strokeWidth={1.75} aria-hidden />
+            {CTA_LABELS.SEND_TASK_CONCEPT}
           </button>
         </div>
       ) : null}

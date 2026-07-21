@@ -35,11 +35,39 @@ interface MoveOrCopyFolderPickerProps {
   disabled?: boolean;
   /** Renders the trigger as an icon-only square button with tooltip. */
   compact?: boolean;
+  /** M-11 문맥 어휘 — 트리거 라벨. 기본값은 현행 워크벤치 표기(무회귀). */
+  triggerLabel?: string;
+  /** M-11 문맥 어휘 — 옮기는 대상 명사(예: 「자료」·「학생」). 본문 설명에 쓰인다. */
+  itemNoun?: string;
+  /** M-11 문맥 어휘 — 목적지 명사(예: 「폴더」·「반」). 설명·검색·빈 상태에 쓰인다. */
+  targetNoun?: string;
 }
 
 const DROPDOWN_WIDTH = 320;
 const DROPDOWN_GAP = 4;
 const VIEWPORT_MARGIN = 8;
+
+// ── 한글 조사 결합(M-11) — 명사 prop 이 어떤 받침이든 문장이 깨지지 않게 ──────
+// 기본값(「자료」·「폴더」)에서는 현행 문구와 바이트 동일해야 한다(무회귀).
+
+/** 받침 유무 — 한글 음절이 아니면 받침 없음으로 간주 */
+function hasBatchim(word: string): boolean {
+  const code = word.charCodeAt(word.length - 1);
+  if (Number.isNaN(code) || code < 0xac00 || code > 0xd7a3) return false;
+  return (code - 0xac00) % 28 > 0;
+}
+
+/** 「자료를」·「학생을」 */
+function eulReul(word: string): string {
+  return `${word}${hasBatchim(word) ? "을" : "를"}`;
+}
+
+/** 「폴더로」·「반으로」 (받침 ㄹ은 「로」) */
+function euro(word: string): string {
+  const code = word.charCodeAt(word.length - 1);
+  const jong = code >= 0xac00 && code <= 0xd7a3 ? (code - 0xac00) % 28 : 0;
+  return `${word}${jong > 0 && jong !== 8 ? "으로" : "로"}`;
+}
 
 /**
  * Drop-in replacement for the legacy "폴더에 추가" dropdown used in
@@ -68,6 +96,9 @@ export function MoveOrCopyFolderPicker({
   onMove,
   disabled = false,
   compact = false,
+  triggerLabel = "이동 / 복사",
+  itemNoun = "자료",
+  targetNoun = "폴더",
 }: MoveOrCopyFolderPickerProps) {
   const isMobile = useIsMobile();
   const [open, setOpen] = useState(false);
@@ -258,8 +289,8 @@ export function MoveOrCopyFolderPicker({
           className={`px-3 py-2 ${descText} text-slate-500 leading-relaxed bg-blue-50/30 border-b border-blue-100/40`}
         >
           {mode === "copy"
-            ? "선택한 자료를 대상 폴더에도 추가합니다. 다른 폴더에 그대로 남습니다."
-            : "선택한 자료를 대상 폴더로 이동합니다. 현재 속한 다른 폴더에서는 제거됩니다."}
+            ? `선택한 ${eulReul(itemNoun)} 대상 ${targetNoun}에도 추가합니다. 다른 ${targetNoun}에 그대로 남습니다.`
+            : `선택한 ${eulReul(itemNoun)} 대상 ${euro(targetNoun)} 이동합니다. 현재 속한 다른 ${targetNoun}에서는 제거됩니다.`}
         </p>
 
         {/* Search (auto-shown when more than 4 folders) */}
@@ -267,7 +298,7 @@ export function MoveOrCopyFolderPicker({
           <div className="px-2 pt-2">
             <input
               type="text"
-              placeholder="폴더 검색..."
+              placeholder={`${targetNoun} 검색...`}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               className={`w-full px-2.5 ${searchH} rounded-md border border-slate-200 bg-slate-50 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10 placeholder:text-slate-400`}
@@ -279,7 +310,7 @@ export function MoveOrCopyFolderPicker({
         <div className={`${listMaxH} overflow-y-auto p-1`}>
           {collections.length === 0 ? (
             <div className="px-3 py-4 text-xs text-slate-400 text-center">
-              먼저 폴더를 만들어주세요.
+              먼저 {eulReul(targetNoun)} 만들어주세요.
             </div>
           ) : sorted.length === 0 ? (
             <div className="px-3 py-4 text-xs text-slate-400 text-center">
@@ -344,7 +375,7 @@ export function MoveOrCopyFolderPicker({
         {/* Footer hint — the drag tip only applies to desktop pointer DnD. */}
         {forMobile ? null : (
           <div className="px-3 py-1.5 text-[10px] text-slate-400 bg-slate-50 border-t border-slate-100">
-            팁: 폴더로 직접 드래그하면 이동·복사를 그 자리에서 고를 수 있어요.
+            팁: {euro(targetNoun)} 직접 드래그하면 이동·복사를 그 자리에서 고를 수 있어요.
           </div>
         )}
       </>
@@ -367,8 +398,8 @@ export function MoveOrCopyFolderPicker({
           else openPicker();
         }}
         disabled={disabled}
-        title={compact ? "이동 / 복사" : undefined}
-        aria-label={compact ? "이동 / 복사" : undefined}
+        title={compact ? triggerLabel : undefined}
+        aria-label={compact ? triggerLabel : undefined}
         className={
           compact
             ? "inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-blue-200 bg-white text-blue-700 transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
@@ -376,7 +407,7 @@ export function MoveOrCopyFolderPicker({
         }
       >
         <ArrowRightLeft className="w-3.5 h-3.5" />
-        {compact ? null : "이동 / 복사"}
+        {compact ? null : triggerLabel}
       </button>
 
       {/* Desktop: portalled anchored dropdown. */}
@@ -387,7 +418,7 @@ export function MoveOrCopyFolderPicker({
               className="fixed z-[1000] overflow-hidden rounded-lg border border-slate-200 bg-white shadow-2xl"
               style={{ top: pos.top, left: pos.left, width: DROPDOWN_WIDTH }}
               role="dialog"
-              aria-label="이동 또는 복사할 폴더 선택"
+              aria-label={`이동 또는 복사할 ${targetNoun} 선택`}
             >
               {renderBody(false)}
             </div>,
@@ -404,10 +435,10 @@ export function MoveOrCopyFolderPicker({
           <DrawerContent className="max-h-[calc(100dvh-1rem)]">
             <div className="mx-auto mt-2 mb-1 h-1.5 w-10 shrink-0 rounded-full bg-slate-300" />
             <DrawerHeader className="px-4 pb-2 pt-1 text-left">
-              <DrawerTitle className="text-base">폴더로 이동 · 복사</DrawerTitle>
+              <DrawerTitle className="text-base">{euro(targetNoun)} 이동 · 복사</DrawerTitle>
               <DrawerDescription className="text-[12px] text-slate-500">
                 {selectedCount > 0
-                  ? `선택한 ${selectedCount}개를 옮길 폴더를 고르세요.`
+                  ? `선택한 ${selectedCount}개를 옮길 ${eulReul(targetNoun)} 고르세요.`
                   : "먼저 카드를 선택해 주세요."}
               </DrawerDescription>
             </DrawerHeader>

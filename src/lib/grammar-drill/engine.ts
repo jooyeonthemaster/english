@@ -470,20 +470,27 @@ async function attemptStatsFor(
   return map;
 }
 
+/** 문항별 시도 요약(attemptStatsFor 반환 원소). */
+export interface ItemAttemptStat {
+  count: number;
+  lastCorrect: boolean;
+  lastAt: Date;
+}
+
 /**
- * 후보 문항을 서빙 우선순위로 정렬해 n개 자른다.
+ * pickItems 의 순수 코어 — 통계 맵을 받아 층위로 배열해 n개 자른다(단위 테스트 대상).
  * 1) 미출제 → 2) 마지막에 틀린 문항(오답 재출제) → 3) 가장 오래전에 본 문항.
+ * preserveOrder: 미출제층 shuffle 을 입력 순서 보존으로 대체 — assignment 취약
+ * 가중 정렬을 살리기 위한 옵션. wrong/seen 층위 로직은 그대로다(기본 false).
  */
-async function pickItems(
-  ctx: QueueContext,
+export function orderCandidates(
   candidates: GrammarItem[],
+  stats: Map<string, ItemAttemptStat>,
   n: number,
-): Promise<GrammarItem[]> {
-  const stats = await attemptStatsFor(
-    ctx.studentId,
-    candidates.map((c) => c.id),
-  );
-  const unseen = shuffle(candidates.filter((c) => !stats.has(c.id)));
+  opts?: { preserveOrder?: boolean },
+): GrammarItem[] {
+  const unseenPool = candidates.filter((c) => !stats.has(c.id));
+  const unseen = opts?.preserveOrder ? unseenPool : shuffle(unseenPool);
   const wrong = shuffle(
     candidates.filter((c) => stats.get(c.id) && !stats.get(c.id)!.lastCorrect),
   );
@@ -502,6 +509,38 @@ async function pickItems(
   wrong.forEach(push);
   seen.forEach(push);
   return merged.slice(0, n);
+}
+
+/**
+ * assignment 취약 가중 정렬 — (개념 숙달도 asc, 난이도 asc) 안정 정렬(순수).
+ * 숙달도 미기록 개념은 0점(최약) 취급 — drill 분기의 scoreOf 관용과 동일.
+ * Array.prototype.sort 는 안정 정렬이므로 동점은 입력(번들 등록) 순서를 보존한다.
+ */
+export function sortPoolByMastery(
+  pool: GrammarItem[],
+  scoreByConcept: Map<string, number>,
+): GrammarItem[] {
+  return [...pool].sort((a, b) => {
+    const gap =
+      (scoreByConcept.get(a.conceptId) ?? 0) -
+      (scoreByConcept.get(b.conceptId) ?? 0);
+    if (gap !== 0) return gap;
+    return a.difficulty - b.difficulty;
+  });
+}
+
+/** 후보 문항을 서빙 우선순위로 정렬해 n개 자른다(층위 로직은 orderCandidates). */
+async function pickItems(
+  ctx: QueueContext,
+  candidates: GrammarItem[],
+  n: number,
+  opts?: { preserveOrder?: boolean },
+): Promise<GrammarItem[]> {
+  const stats = await attemptStatsFor(
+    ctx.studentId,
+    candidates.map((c) => c.id),
+  );
+  return orderCandidates(candidates, stats, n, opts);
 }
 
 function itemsOf(
@@ -773,7 +812,22 @@ export async function buildQueue(
       if (spec.difficulties?.length && !spec.difficulties.includes(i.difficulty)) return false;
       return true;
     });
-    const picks = await pickItems(ctx, pool, Math.min(QUEUE_SIZE, remaining));
+    // 취약 우선 자동 편성 — 학생 숙달도로 (개념 asc, 난이도 asc) 안정 정렬 후
+    // preserveOrder 서빙(미출제층 순서 보존). assignment 분기는 mastery 를 달리
+    // 로드하지 않으므로 여기서 학생당 1회만 조회한다(개념 행 수십 건 — 부담 미미).
+    const masteries = await prisma.grammarDrillMastery.findMany({
+      where: { studentId: ctx.studentId },
+      select: { conceptId: true, masteryScore: true },
+    });
+    const scoreByConcept = new Map<string, number>(
+      masteries.map((m): [string, number] => [m.conceptId, m.masteryScore]),
+    );
+    const picks = await pickItems(
+      ctx,
+      sortPoolByMastery(pool, scoreByConcept),
+      Math.min(QUEUE_SIZE, remaining),
+      { preserveOrder: true },
+    );
     return {
       mode,
       title: assignment.title,

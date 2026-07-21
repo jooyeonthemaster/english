@@ -5269,11 +5269,15 @@ model WorksheetStudyItemLog {
   response    String?  @db.Text
   timeMs      Int?
   hintUsed    Boolean  @default(false)
+  /// 표제어 뜻 스냅샷 — 누적 취약 단어장이 원본 학습지 재파싱 없이 자립하도록
+  /// 기록 시점에 plan.vocabMeanings 에서 동봉(wordKey 있는 로그만).
+  wordMeaning String?
   createdAt   DateTime @default(now())
 
   @@unique([stateId, stageId, itemKey, attempt])
   @@index([stateId, createdAt])
   @@index([academyId, studentId, createdAt])
+  @@index([academyId, studentId, wordKey])
   @@map("worksheet_study_item_logs")
 }
 

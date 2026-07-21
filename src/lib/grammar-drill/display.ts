@@ -53,9 +53,9 @@ export const GRAMMAR_STAGE_LABEL: Record<string, string> = {
  * 아래 함수의 구간·색과 반드시 동기 유지한다.
  */
 export const MASTERY_HEAT_LEGEND: { swatch: string; label: string }[] = [
-  { swatch: "bg-blue-600", label: "80+" },
-  { swatch: "bg-blue-400", label: "60+" },
-  { swatch: "bg-blue-200", label: "40+" },
+  { swatch: "bg-emerald-600", label: "80+" },
+  { swatch: "bg-emerald-400", label: "60+" },
+  { swatch: "bg-emerald-200", label: "40+" },
   { swatch: "bg-rose-200", label: "20+" },
   { swatch: "bg-rose-400", label: "0~19" },
 ];
@@ -63,12 +63,15 @@ export const MASTERY_HEAT_LEGEND: { swatch: string; label: string }[] = [
 /**
  * 숙달도(0~100) → 히트맵 셀 클래스. 시도 없음은 슬레이트.
  * 주황/앰버 금지 계약 — 저숙달은 rose 계열로 표현한다.
+ * 상위 구간은 emerald — kit heatToneByRate(시험 탭)와 색 언어 통일(R4,
+ * v3 수리 N-11: "좋음=초록·나쁨=빨강"을 3탭 공통 학습). 소비처는 디렉터
+ * 허브 표면뿐이라 /g 학생면 무접촉.
  */
 export function masteryHeatClass(score: number, attempts: number): string {
   if (attempts <= 0) return "bg-slate-100 text-slate-400";
-  if (score >= 80) return "bg-blue-600 text-white";
-  if (score >= 60) return "bg-blue-400 text-white";
-  if (score >= 40) return "bg-blue-200 text-blue-900";
+  if (score >= 80) return "bg-emerald-600 text-white";
+  if (score >= 60) return "bg-emerald-400 text-white";
+  if (score >= 40) return "bg-emerald-200 text-emerald-900";
   if (score >= 20) return "bg-rose-200 text-rose-900";
   return "bg-rose-400 text-white";
 }

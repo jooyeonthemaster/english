@@ -4,7 +4,7 @@ export const DOMAIN_LABELS: Record<TaskDomain, string> = {
   extraction: "자료 추출",
   "passage-analysis": "학습지 생성",
   "question-generation": "문제 생성",
-  "exam-report": "시험 리포트",
+  "exam-report": "내신 시험 분석",
   "exam-generation": "시험지 생성",
   webtoon: "웹툰 생성",
 };

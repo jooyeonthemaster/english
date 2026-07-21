@@ -7,6 +7,11 @@
 // "지금 누구에게 배포되는지"를 항상 눈에 보이게 해 오배포를 방지한다.
 // sticky bottom — SectionCard 는 overflow-hidden 이라 카드 밖(PageShell 직속)
 // 에서 렌더해야 뷰포트 하단에 붙는다. 반 편성은 DIRECTOR 전용(서버에서도 검증).
+//
+// v3 C-3(D4-3 P0 무DnD 병행 경로): 기존 반 편성 팝오버 옆에 기성 폴더 피커
+// (MoveOrCopyFolderPicker)를 추가 배선 — 담기(복사)=선택 학생을 반에 추가,
+// 이동=현재 반 필터에서 빼고 대상 반으로 옮김(반 필터가 없으면 담기와 동일).
+// 기존 기능(반 편성·이 반에서 제외·과제 배포·선택 해제)은 전부 보존.
 // ============================================================================
 
 import { useState, useTransition } from "react";
@@ -21,6 +26,19 @@ import {
 import { toast } from "sonner";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { enrollStudentsToClass, removeStudent } from "@/actions/classes";
+import {
+  addStudentsToClass,
+  removeStudentsFromClass,
+} from "@/actions/students/class-folders";
+import { MoveOrCopyFolderPicker } from "@/components/workbench/shared/move-or-copy-folder-picker";
+import type { CollectionItem } from "@/components/workbench/shared/types";
+import {
+  CLASS_FOLDER_COPY,
+  CTA_LABELS,
+  MANAGE_VIEW_LABELS,
+  classEnrolledToast,
+  classRemovedToast,
+} from "@/lib/wording/director-glossary";
 import type { HubClass } from "@/app/(director)/director/tutor/_components/types";
 import { cn } from "@/lib/utils";
 
@@ -41,7 +59,7 @@ export function RosterSelectionBar({
   isDirector: boolean;
   /** 반 필터가 실제 반일 때 — "이 반에서 제외" 액션 노출 */
   activeClass?: { id: string; name: string } | null;
-  /** 과제 배포 — AssignmentComposer 오픈(부모 소관) */
+  /** 과제 보내기 — AssignmentComposer 오픈(부모 소관) */
   onAssign: () => void;
   onClear: () => void;
   /** 반 편성 성공 후 — 부모가 선택 해제 + 목록 새로고침 */
@@ -64,7 +82,8 @@ export function RosterSelectionBar({
         if (res.success) ok += 1;
       }
       if (ok > 0) {
-        toast.success(`${ok}명을 ${cls.name} 반에서 제외했습니다.`);
+        // N-14: 반 이름이 「~반」으로 끝나도 「반 반」이 되지 않는 글로서리 정본 소비
+        toast.success(classRemovedToast(cls.name, ok));
         onEnrolled();
       } else {
         toast.error("반에서 제외하지 못했습니다.");
@@ -81,12 +100,57 @@ export function RosterSelectionBar({
           res.alreadyCount && res.alreadyCount > 0
             ? ` (이미 재적 ${res.alreadyCount}명 제외)`
             : "";
-        toast.success(`${res.enrolledCount}명을 ${className} 반에 편성했습니다.${skipped}`);
+        // N-14: 글로서리 정본 소비 — 「{반이름} 반에」 중복 방지
+        toast.success(`${classEnrolledToast(className, res.enrolledCount ?? 0)}${skipped}`);
         setPickerOpen(false);
         onEnrolled();
       } else {
         toast.error(res.error || "반 편성에 실패했습니다.");
       }
+    });
+  }
+
+  // 폴더 피커용 반 → CollectionItem 매핑(평면) — 배지 수 = 재적(ENROLLED) 수
+  const pickerCollections: CollectionItem[] = activeClasses.map((c) => ({
+    id: c.id,
+    parentId: null,
+    name: c.name,
+    description: null,
+    color: null,
+    _count: { items: c.enrolledCount, children: 0 },
+  }));
+
+  // P0 무DnD 배정(v3 D4-3) — 담기(copy)=반에 추가, 이동(move)=현재 반 필터에서
+  // 빼고 대상 반으로. addedIds/removedIds 는 서버가 실제 반영한 값만 집계.
+  function assignViaPicker(classId: string, copy: boolean) {
+    if (isPending) return;
+    const target = activeClasses.find((c) => c.id === classId);
+    const ids = [...selected.keys()];
+    startTransition(async () => {
+      const res = await addStudentsToClass(classId, ids);
+      if (!res.success) {
+        toast.error(res.error || CLASS_FOLDER_COPY.ACTION_FAILED);
+        return;
+      }
+      const addedIds = res.addedIds ?? [];
+      let removedIds: string[] = [];
+      if (!copy && activeClass && activeClass.id !== classId) {
+        const rm = await removeStudentsFromClass(activeClass.id, ids);
+        if (rm.success) removedIds = rm.removedIds ?? [];
+        else if (rm.error) toast.error(rm.error);
+      }
+      const changed = new Set([...addedIds, ...removedIds]).size;
+      if (changed === 0) {
+        toast.info(CLASS_FOLDER_COPY.ALREADY_ENROLLED);
+        return;
+      }
+      toast.success(
+        CLASS_FOLDER_COPY.ENROLLED_TOAST(
+          target?.name ?? MANAGE_VIEW_LABELS.classes,
+          changed,
+        ),
+      );
+      onEnrolled();
     });
   }
 
@@ -175,6 +239,22 @@ export function RosterSelectionBar({
           </Popover>
         ) : null}
 
+        {isDirector && activeClasses.length > 0 ? (
+          // 선택 학생 → 반에 배정(P0 무DnD) — 기성 폴더 피커 재사용(반 목록·담기 모드).
+          // M-11: 학생/반 문맥 어휘 주입 — 워크벤치 기본값(자료/폴더)은 무회귀.
+          <MoveOrCopyFolderPicker
+            collections={pickerCollections}
+            activeFolder={activeClass?.id ?? null}
+            selectedCount={selected.size}
+            disabled={isPending}
+            onCopy={(classId) => assignViaPicker(classId, true)}
+            onMove={(classId) => assignViaPicker(classId, false)}
+            triggerLabel="반에 배정"
+            itemNoun="학생"
+            targetNoun="반"
+          />
+        ) : null}
+
         {isDirector && activeClass ? (
           <button
             type="button"
@@ -198,7 +278,7 @@ export function RosterSelectionBar({
           className="inline-flex h-8 shrink-0 items-center gap-1.5 rounded-md bg-blue-600 px-3 text-[12.5px] font-semibold text-white transition-colors hover:bg-blue-700"
         >
           <ClipboardList className="size-3.5" aria-hidden />
-          과제 배포
+          {CTA_LABELS.SEND_TASK}
         </button>
 
         <button

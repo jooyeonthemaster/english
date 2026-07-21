@@ -18,6 +18,7 @@ const WORKFLOW_ICON_NAMES = new Set([
   "PassageAnalysisIcon",
   "QuestionGenerationIcon",
   "ExamPaperGenerationIcon",
+  "GrammarStudioIcon",
 ]);
 
 interface NavItemProps {

@@ -53,7 +53,9 @@ export function FolderChip({
   onDelete,
   onFileDrop,
 }: FolderChipProps) {
-  void itemCountLabel;
+  // N-9: itemCountLabel 기반 단위 렌더 복원 — 사람(학생)은 「명」, 그 외 표면은
+  // 기존 「개」 그대로(8소비처 무회귀). 칩 폭(64px) 제약상 단위만 붙인다.
+  const countUnit = itemCountLabel === "학생" ? "명" : "개";
   const [isDragOver, setIsDragOver] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -179,7 +181,8 @@ export function FolderChip({
         {count.includesSubfolders ? (
           <Layers className="size-2" aria-hidden="true" />
         ) : null}
-        {count.display}개
+        {count.display}
+        {countUnit}
       </span>
       {count.note ? (
         <span

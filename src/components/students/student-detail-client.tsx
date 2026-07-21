@@ -15,7 +15,7 @@ import { StudentDetailConsultationTab } from "./student-detail-consultation-tab"
 import { StudentDetailParentTab } from "./student-detail-parent-tab";
 import { StudentAccessCard } from "./devices/student-access-card";
 import { StudentBillingSection } from "./billing/student-billing-section";
-import { StudentExamHistoryTab } from "./student-exam-history-tab";
+import { StudentExamTab } from "./hub/exam-tab/exam-tab";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 
 interface StudentDetailClientProps {
@@ -50,7 +50,7 @@ export function StudentDetailClient({
             <TabsTrigger value="overview">개요</TabsTrigger>
             {showResults && <TabsTrigger value="grades">성적</TabsTrigger>}
             {showExamHistory && (
-              <TabsTrigger value="exam-history">응시 이력</TabsTrigger>
+              <TabsTrigger value="exam-history">시험 분석</TabsTrigger>
             )}
             <TabsTrigger value="attendance">출결</TabsTrigger>
             <TabsTrigger value="billing">수납</TabsTrigger>
@@ -75,7 +75,7 @@ export function StudentDetailClient({
 
           {showExamHistory && (
             <TabsContent value="exam-history" className="mt-6">
-              <StudentExamHistoryTab studentId={student.id} />
+              <StudentExamTab studentId={student.id} />
             </TabsContent>
           )}
 

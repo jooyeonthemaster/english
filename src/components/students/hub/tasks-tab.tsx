@@ -27,12 +27,14 @@ import {
   type ComposerPreset,
 } from "@/components/study-assignments/assignment-composer";
 import type { WeakConceptPreset } from "@/components/study-assignments/composer-grammar-spec";
+import type { WeakSpot } from "@/lib/student-analytics/types";
 import type {
   StudentStudyTaskRow,
   StudyAssignmentKind,
 } from "@/lib/study-assignments/types";
 import { STUDY_KIND_META } from "@/lib/study-assignments/types";
 import { dDayLabel, seoulDayDiff } from "@/lib/study-assignments/status";
+import { CTA_LABELS } from "@/lib/wording/director-glossary";
 import { cn, formatRelativeTime } from "@/lib/utils";
 
 const KIND_ICON: Record<StudyAssignmentKind, typeof FileText> = {
@@ -91,6 +93,27 @@ async function copyTakeLink(tokenPath: string) {
   } catch {
     toast.error("복사하지 못했습니다. 잠시 후 다시 시도해 주세요.");
   }
+}
+
+/**
+ * 취약 프리셋 → WeakSpot 사상(M-3) — 어법 랭킹 행 진입(A-4 openDeployComposer,
+ * §D2-2 매핑표 「conceptIds:[해당], count 10」)과 동형. 컨텍스트 스트립
+ * (analysisSeed) 데이터원 — 계약은 lib/student-analytics/types 정본.
+ */
+function toConceptSpots(weak: WeakConceptPreset[]): WeakSpot[] {
+  return weak.map((w) => ({
+    domain: "grammar",
+    axis: "concept",
+    key: w.conceptId,
+    label: w.title,
+    metric: { kind: "mastery", value: w.score },
+    evidence: { attempts: w.attempts ?? 0, wrong: w.wrongCount ?? w.wrong ?? 0 },
+    deploy: {
+      kind: "GRAMMAR",
+      grammarSpec: { conceptIds: [w.conceptId], count: 10 },
+      weakConcepts: [w],
+    },
+  }));
 }
 
 function statusPill(row: StudentStudyTaskRow) {
@@ -196,12 +219,22 @@ export function StudentTasksTab({
             <button
               type="button"
               onClick={() =>
-                openComposer({ kind: "GRAMMAR", weakConcepts, grammarSpec: { count: 20 } })
+                // A-4 착지와 동형(M-3): 추천 개념을 conceptIds 로 프리체크하고
+                // analysisSeed 를 동봉 — 전체 범위 어법 과제 오배포 경로 차단.
+                openComposer({
+                  kind: "GRAMMAR",
+                  weakConcepts,
+                  grammarSpec: {
+                    count: 20,
+                    conceptIds: weakConcepts.map((w) => w.conceptId),
+                  },
+                  analysisSeed: { spots: toConceptSpots(weakConcepts), source: "grammar" },
+                })
               }
               className="inline-flex h-8 items-center gap-1.5 rounded-md border border-rose-200 bg-rose-50 px-3 text-[12.5px] font-semibold text-rose-700 transition-colors hover:bg-rose-100"
             >
               <Target className="size-3.5" aria-hidden />
-              취약 개념 과제
+              {CTA_LABELS.SEND_WEAK_TASK}
             </button>
           ) : null}
           <button
@@ -210,7 +243,7 @@ export function StudentTasksTab({
             className="inline-flex h-8 items-center gap-1.5 rounded-md bg-blue-600 px-3 text-[12.5px] font-semibold text-white transition-colors hover:bg-blue-700"
           >
             <Plus className="size-3.5" aria-hidden />
-            새 과제
+            {CTA_LABELS.NEW_TASK}
           </button>
         </div>
       </div>
@@ -265,7 +298,7 @@ export function StudentTasksTab({
               className="mt-1 inline-flex h-8 items-center gap-1.5 rounded-md bg-blue-600 px-3 text-[12.5px] font-semibold text-white transition-colors hover:bg-blue-700"
             >
               <Plus className="size-3.5" aria-hidden />
-              새 과제 만들기
+              {CTA_LABELS.NEW_TASK}
             </button>
           </div>
         ) : (
@@ -288,7 +321,8 @@ export function StudentTasksTab({
           {filtered.map((row) => {
             const Icon = KIND_ICON[row.kind];
             const pill = statusPill(row);
-            // 기한 지남이면 D-day 라벨 억제 — 상태 pill("기한 지남")이 정본 신호
+            // 기한 지남이면 D-day 라벨 억제 — 상태 pill("기한 지남")이 정본 신호,
+            // 우측은 날짜만 남긴다. 「마감 없음」 폴백은 dueAt null 행 전용(M-2).
             const dday =
               row.dueAt && !row.overdue
                 ? dDayLabel(seoulDayDiff(new Date(), new Date(row.dueAt)))
@@ -368,18 +402,13 @@ export function StudentTasksTab({
                 </div>
                 <div className="flex shrink-0 flex-col items-end gap-1">
                   {dday ? (
-                    <span
-                      className={cn(
-                        "inline-flex items-center gap-1 text-[12px] font-bold tabular-nums",
-                        row.overdue ? "text-rose-600" : "text-slate-600",
-                      )}
-                    >
+                    <span className="inline-flex items-center gap-1 text-[12px] font-bold tabular-nums text-slate-600">
                       <CalendarClock className="size-3.5" aria-hidden />
                       {dday}
                     </span>
-                  ) : (
+                  ) : !row.dueAt ? (
                     <span className="text-[11px] text-slate-300">마감 없음</span>
-                  )}
+                  ) : null}
                   {row.dueAt ? (
                     <span className="text-[10.5px] text-slate-300">
                       {new Date(row.dueAt).toLocaleDateString("ko-KR", {
