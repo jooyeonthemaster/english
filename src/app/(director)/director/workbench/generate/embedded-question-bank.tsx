@@ -96,6 +96,7 @@ import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { getQuestionGenerationPlanConfig } from "@/lib/question-generation-plans";
 import { getFriendlyQuestionGenerationError } from "@/lib/workbench-generation-errors";
 import { countWords, typeLabel, type QueueItem } from "./generate-page-types";
+import { StreamPreviewPane } from "./stream-preview-pane";
 
 // ---------------------------------------------------------------------------
 // Local filter shape (mirrors the filters QuestionBankClient receives, minus
@@ -191,7 +192,11 @@ function QueueStripCard({
     return (
       <WorkbenchLoadingCard
         title={item.passageTitle}
-        contentPreview={`${item.passageContent.slice(0, 200)}...`}
+        contentPreview={
+          // 생성 카드는 프리뷰를 균일 길이로 고정 — 스트리밍 패널이 나중에
+          // 마운트돼도 지문 프리뷰 줄수가 변하지 않아 카드 중단부 리플로우가 없다.
+          `${item.passageContent.slice(0, 120)}...`
+        }
         statusLabel="생성 중"
         progressLabel={`AI가 ${requestedCount}문제를 생성 중입니다...`}
         wordCount={countWords(item.passageContent)}
@@ -199,6 +204,11 @@ function QueueStripCard({
         statusIcon={Loader2}
         variant="analyzing"
         fixedHeight
+        metaSlot={
+          item.streamPreview ? (
+            <StreamPreviewPane preview={item.streamPreview} />
+          ) : undefined
+        }
         ariaLabel={`${item.passageTitle} - 문제 생성 중`}
         planBadge={
           FEATURE_FLAGS.SHOW_MODEL_SELECTOR ? (
