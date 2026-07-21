@@ -4,7 +4,10 @@ import { z } from "zod";
 
 import { getStaffSession } from "@/lib/auth";
 import { isKoreanSubject } from "@/lib/korean/core/passage-meta";
-import { ATLAS_STANDARD_QGEN_MODEL_ID } from "@/lib/atlas-ai";
+import {
+  ATLAS_PREMIUM_QGEN_MODEL_ID,
+  ATLAS_STANDARD_QGEN_MODEL_ID,
+} from "@/lib/atlas-ai";
 import { CREDIT_COSTS, type OperationType } from "@/lib/credit-costs";
 import { InsufficientCreditsError, refundCredits } from "@/lib/credits";
 import {
@@ -328,14 +331,10 @@ export async function POST(req: NextRequest) {
   const effectiveGenerationPlan = resolveEffectiveGenerationPlan(
     config.generationPlan,
   );
-  // 이원 티어 복귀(QUESTION_GENERATION_SINGLE_TIER=off) 시 PREMIUM 요청은 프리미엄
-  // 파이프라인(fast)이 담당한다 — md 레인은 일반(STANDARD) 전용.
-  if (effectiveGenerationPlan !== "STANDARD") {
-    return NextResponse.json(
-      { error: "md-stream ineligible plan", code: "MD_STREAM_INELIGIBLE" },
-      { status: 400 },
-    );
-  }
+  // 26-07-22 프리미엄 md 승차(O213 벤치 근거): 빈칸·어법 PREMIUM 도 동일한 md
+  // 원큐 구조로 처리한다 — 차이는 모델뿐(아래 modelId 플랜 분기). 이원 티어
+  // 복귀(QUESTION_GENERATION_SINGLE_TIER=off) 전에는 resolveEffectiveGenerationPlan
+  // 이 STANDARD 로 클램프하므로 현행 동작 무변경.
 
   const passage = await prisma.passage.findFirst({
     where: { id: config.passageId, academyId: staff.academyId },
@@ -420,7 +419,13 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  const modelId = ATLAS_STANDARD_QGEN_MODEL_ID;
+  // 플랜별 모델 분기 — 구조(프롬프트·파서·게이트·원큐/어법 재생성 정책)는 동일,
+  // 모델만 다르다. PREMIUM 은 env PREMIUM_QGEN_MODEL_ID(예: gemini-3.6-flash)로
+  // 지정하며 미설정 시 코드 기본(flash3)이라 사실상 STANDARD 와 동일 동작.
+  const modelId =
+    effectiveGenerationPlan === "PREMIUM"
+      ? ATLAS_PREMIUM_QGEN_MODEL_ID
+      : ATLAS_STANDARD_QGEN_MODEL_ID;
   const mdDifficulty: MdDifficulty =
     effectiveDifficulty === "BASIC" || effectiveDifficulty === "INTERMEDIATE"
       ? effectiveDifficulty

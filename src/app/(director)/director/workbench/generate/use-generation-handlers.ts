@@ -257,9 +257,11 @@ export function isMdStreamEligible(
   generationPlan?: QuestionGenerationPlan,
 ): boolean {
   if (process.env.NEXT_PUBLIC_QGEN_MD_STREAM === "off") return false;
-  // md 레인은 일반(STANDARD) 전용 — 이원 티어 복귀 시 PREMIUM 은 fast(프리미엄
-  // 파이프라인)로 보낸다(서버도 동일 검사로 재차 거른다).
-  if (generationPlan === "PREMIUM") return false;
+  // 26-07-22 프리미엄 md 승차(O213): 빈칸·어법은 PREMIUM 도 같은 md 원큐 구조로
+  // 간다 — 차이는 서버가 플랜별 모델(PREMIUM_QGEN_MODEL_ID, 기본 flash3)을 갈아
+  // 끼우는 것뿐. 단일상품 모드에서는 resolveEffectiveGenerationPlan 이 STANDARD
+  // 로 클램프하므로 이 분기 자체가 무의미(무회귀).
+  void generationPlan;
   if (!questionType || !MD_STREAM_TYPES.has(questionType)) return false;
   const settings =
     typeof questionTypeSettings === "object" && questionTypeSettings !== null
