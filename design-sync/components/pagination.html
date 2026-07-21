@@ -1,0 +1,53 @@
+<!-- @dsCard group="Components" -->
+<title>페이지네이션</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Pretendard",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;background:#fff;color:#111827;padding:28px;-webkit-font-smoothing:antialiased}
+h1{font-size:15px;font-weight:800;margin-bottom:4px}
+p.note{font-size:12px;color:#6B7280;margin-bottom:20px}
+h2{font-size:12px;font-weight:700;color:#374151;margin:18px 0 10px}
+.row{display:flex;flex-wrap:wrap;gap:4px;align-items:center;justify-content:center;padding:8px 0}
+.pgbtn{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;border:1px solid #E5E7EB;background:#fff;font-size:12px;font-family:inherit;color:#475569;cursor:pointer;font-variant-numeric:tabular-nums}
+.pgbtn:hover{background:#F8FAFC}
+.pgbtn.on{background:#1E293B;color:#fff;border-color:#1E293B;font-weight:600}
+.pgbtn.icon svg{width:16px;height:16px}
+.navbtn{display:inline-flex;align-items:center;justify-content:center;height:32px;border-radius:8px;border:1px solid #E5E7EB;background:#fff;padding:0 12px;font-size:12px;font-weight:500;font-family:inherit;color:#4B5563;cursor:pointer}
+.navbtn:hover{background:#F9FAFB}
+.navbtn:disabled{opacity:.4;cursor:not-allowed}
+.num{display:inline-flex;align-items:center;justify-content:center;height:32px;min-width:32px;border-radius:8px;padding:0 8px;font-size:12px;font-weight:600;font-family:inherit;border:1px solid #E5E7EB;background:#fff;color:#4B5563;cursor:pointer;font-variant-numeric:tabular-nums}
+.num:hover{background:#F9FAFB}
+.num.on{background:#0F172A;color:#fff;border-color:#0F172A}
+.dots{padding:0 6px;font-size:12px;color:#D1D5DB}
+.divider{border-top:1px solid #F3F4F6;margin:6px 0}
+</style>
+<h1>페이지네이션</h1>
+<p class="note">모바일 카드 목록은 10개/페이지 + 번호형. 공용 Pagination(워크벤치, 활성=slate-800) / AdminPagination(활성=slate-900, 1 … n±1 … total 윈도우).</p>
+
+<h2>공용 Pagination (모바일 ±1 / 데스크톱 ±2)</h2>
+<div class="row">
+  <button class="pgbtn icon" aria-label="첫 페이지"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m11 17-5-5 5-5"/><path d="m18 17-5-5 5-5"/></svg></button>
+  <button class="pgbtn icon" aria-label="이전"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+  <button class="pgbtn">3</button>
+  <button class="pgbtn">4</button>
+  <button class="pgbtn on">5</button>
+  <button class="pgbtn">6</button>
+  <button class="pgbtn">7</button>
+  <button class="pgbtn icon" aria-label="다음"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+  <button class="pgbtn icon" aria-label="마지막 페이지"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m13 17 5-5-5-5"/><path d="m6 17 5-5-5-5"/></svg></button>
+</div>
+
+<div class="divider"></div>
+
+<h2>AdminPagination (이전/다음 + 윈도우)</h2>
+<div class="row">
+  <button class="navbtn">이전</button>
+  <button class="num">1</button>
+  <span class="dots">…</span>
+  <button class="num">11</button>
+  <button class="num on">12</button>
+  <button class="num">13</button>
+  <span class="dots">…</span>
+  <button class="num">48</button>
+  <button class="navbtn">다음</button>
+</div>

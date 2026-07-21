@@ -1,0 +1,39 @@
+<!-- @dsCard group="Patterns" -->
+<title>힌트 글로우</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Pretendard",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;background:#fff;color:#111827;padding:28px;-webkit-font-smoothing:antialiased}
+h1{font-size:15px;font-weight:800;margin-bottom:4px}
+p.note{font-size:12px;color:#6B7280;margin-bottom:20px}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.card{border:1px solid #E5E7EB;border-radius:10px;padding:14px 16px;font-size:13px;color:#374151;background:#fff}
+.btn{display:inline-flex;align-items:center;height:36px;padding:0 16px;border-radius:8px;font-size:14px;font-weight:500;font-family:inherit;border:none;cursor:pointer}
+.btn.disabled{background:#E2E8F0;color:#94A3B8}
+@keyframes smoat-hint-glow{
+  0%{box-shadow:0 0 0 0 rgba(37,99,235,0);background-color:transparent}
+  15%{box-shadow:0 0 0 5px rgba(37,99,235,.45);background-color:rgba(191,219,254,.7)}
+  40%{box-shadow:0 0 0 2px rgba(37,99,235,.15)}
+  55%{box-shadow:0 0 0 5px rgba(37,99,235,.4);background-color:rgba(191,219,254,.55)}
+  100%{box-shadow:0 0 0 0 rgba(37,99,235,0);background-color:transparent}
+}
+.smoat-hint-glow{position:relative;z-index:1;animation:smoat-hint-glow 1.5s ease-out}
+@media (prefers-reduced-motion:reduce){.smoat-hint-glow{animation:none;box-shadow:0 0 0 3px rgba(37,99,235,.4)}}
+</style>
+<h1>힌트 글로우 (lib/hint-glow.ts)</h1>
+<p class="note">비활성 버튼을 누르면 "그걸 풀려면 해야 할 행동"의 대상 요소를 파란 글로우 2회로 유도. aria-disabled 트릭으로 클릭 이벤트를 살려두고 triggerHintGlow(targets) 호출.</p>
+
+<div class="row">
+  <button class="btn disabled" onclick="glow()">학습자료 생성 (비활성 — 눌러보세요)</button>
+  <div class="card" id="target">① 먼저 지문을 선택하세요 ← 이 카드가 글로우 대상</div>
+</div>
+
+<script>
+function glow(){
+  const el=document.getElementById('target');
+  el.classList.remove('smoat-hint-glow');
+  void el.offsetWidth;
+  el.classList.add('smoat-hint-glow');
+  el.addEventListener('animationend',()=>el.classList.remove('smoat-hint-glow'),{once:true});
+}
+</script>

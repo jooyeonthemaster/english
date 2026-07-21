@@ -78,7 +78,7 @@ export async function exportStudentsRosterCsv(
         },
       },
     },
-    orderBy: buildStudentsOrderBy(filters?.sort),
+    orderBy: buildStudentsOrderBy(filters?.sort, filters?.dir),
     // 상한+1건을 읽어 초과 여부만 판정하고 상한까지 잘라 내보낸다.
     take: EXPORT_ROW_CAP + 1,
   });

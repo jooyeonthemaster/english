@@ -13,7 +13,15 @@
 
 import type { DragEvent, MouseEvent } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowUpDown, ChevronLeft, ChevronRight, Copy } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUp,
+  ArrowUpDown,
+  ListFilter,
+  ChevronLeft,
+  ChevronRight,
+  Copy,
+} from "lucide-react";
 import { toast } from "sonner";
 import { StatusPill, type PillTone } from "@/components/layout/page-frame";
 import { cn, getGradeLabel, getInitials } from "@/lib/utils";
@@ -30,34 +38,47 @@ const STATUS_META: Record<string, { label: string; tone: PillTone }> = {
   WITHDRAWN: { label: "퇴원", tone: "rose" },
 };
 
-/** 로스터 정렬 키 — URL ?sort= 와 StudentFilters.sort 미러. */
-export type RosterSort = "recent" | "name" | "grade";
+/** 로스터 정렬 키 — URL ?sort= 와 StudentFilters.sort 미러.
+ *  반·접속 기기·수납이 빠진 이유는 buildStudentsOrderBy 주석 참조. */
+export type RosterSort = "recent" | "name" | "grade" | "school" | "status" | "contact";
+export type RosterSortKey = Exclude<RosterSort, "recent">;
+export type RosterSortDir = "asc" | "desc";
 
-/** 정렬 가능 헤더 버튼 — 활성 시 blue, 재클릭 = 기본(recent)으로 해제. */
+/** 정렬 가능 헤더 버튼 — 클릭 순환: 오름차순 → 내림차순 → 해제(기본 recent).
+ *  활성 시 blue + 방향 화살표(↑/↓), 비활성은 중립 ArrowUpDown 으로 "정렬 가능"만 알린다. */
 function SortHeadButton({
   label,
   sortKey,
   sort,
+  dir,
   onSort,
 }: {
   label: string;
-  sortKey: "name" | "grade";
+  sortKey: RosterSortKey;
   sort: RosterSort;
-  onSort: (key: "name" | "grade") => void;
+  dir: RosterSortDir;
+  onSort: (key: RosterSortKey) => void;
 }) {
   const active = sort === sortKey;
+  const Icon = !active ? ArrowUpDown : dir === "asc" ? ArrowUp : ArrowDown;
   return (
     <button
       type="button"
       onClick={() => onSort(sortKey)}
-      aria-label={`${label} 기준 정렬${active ? " 해제" : ""}`}
+      aria-label={
+        active
+          ? `${label} 기준 ${dir === "asc" ? "오름차순" : "내림차순"} — 클릭 시 ${
+              dir === "asc" ? "내림차순" : "정렬 해제"
+            }`
+          : `${label} 기준 오름차순 정렬`
+      }
       className={cn(
         "inline-flex items-center gap-1 transition-colors",
         active ? "text-blue-600" : "hover:text-slate-700",
       )}
     >
       {label}
-      <ArrowUpDown className="size-3" aria-hidden />
+      <Icon className="size-3" aria-hidden />
     </button>
   );
 }
@@ -91,7 +112,10 @@ export function RosterTable({
   showBilling,
   dense,
   sort,
+  dir,
   onSort,
+  unassignedOnly,
+  onToggleUnassigned,
   selected,
   dragAssign = false,
   onToggleSelect,
@@ -103,7 +127,11 @@ export function RosterTable({
   /** 행 밀도(좁게) — 툴바 토글, localStorage 유지 */
   dense: boolean;
   sort: RosterSort;
-  onSort: (key: "name" | "grade") => void;
+  dir: RosterSortDir;
+  onSort: (key: RosterSortKey) => void;
+  /** 반 열 헤더 = 미배정 필터 토글(구 반 칩의 [전체 반·미배정] 대체) */
+  unassignedOnly: boolean;
+  onToggleUnassigned: () => void;
   /** 벌크 선택 — id→이름(선택 바 이름 칩 표시용) */
   selected: ReadonlyMap<string, string>;
   /** 행 드래그 → 반 칩 드롭 편성(원장 전용) */
@@ -114,6 +142,10 @@ export function RosterTable({
 }) {
   const router = useRouter();
   const { students, page, pageSize, total, totalPages } = studentsData;
+
+  // 스크린리더용 정렬 상태 — 활성 열에만 방향을 싣는다.
+  const ariaSort = (key: RosterSortKey) =>
+    sort === key ? (dir === "asc" ? "ascending" : "descending") : undefined;
 
   const goDetail = (id: string) => router.push(`/director/students/${id}`);
 
@@ -156,7 +188,7 @@ export function RosterTable({
         <table className="w-full min-w-[960px] border-collapse">
           <thead>
             <tr className="border-b border-slate-100 bg-slate-50">
-              <th className={cn(headCell, "w-10 min-w-[40px]")}>
+              <th className={cn(headCell, "w-10 min-w-[40px]")} data-roster-select="">
                 <input
                   type="checkbox"
                   ref={(el) => {
@@ -168,21 +200,65 @@ export function RosterTable({
                   className="size-3.5 cursor-pointer accent-blue-600 align-middle"
                 />
               </th>
-              <th
-                className={cn(headCell, "w-[26%] min-w-[210px]")}
-                aria-sort={sort === "name" ? "ascending" : undefined}
-              >
-                <SortHeadButton label="학생" sortKey="name" sort={sort} onSort={onSort} />
+              <th className={cn(headCell, "w-[26%] min-w-[210px]")} aria-sort={ariaSort("name")}>
+                <SortHeadButton
+                  label="학생"
+                  sortKey="name"
+                  sort={sort}
+                  dir={dir}
+                  onSort={onSort}
+                />
               </th>
-              <th
-                className={cn(headCell, "w-[15%] min-w-[140px]")}
-                aria-sort={sort === "grade" ? "ascending" : undefined}
-              >
-                <SortHeadButton label="학교·학년" sortKey="grade" sort={sort} onSort={onSort} />
+              <th className={cn(headCell, "w-[15%] min-w-[140px]")} aria-sort={ariaSort("school")}>
+                <SortHeadButton
+                  label="학교·학년"
+                  sortKey="school"
+                  sort={sort}
+                  dir={dir}
+                  onSort={onSort}
+                />
               </th>
-              <th className={cn(headCell, "w-[15%] min-w-[140px]")}>반</th>
-              <th className={cn(headCell, "w-[10%] min-w-[76px]")}>상태</th>
-              <th className={cn(headCell, "w-[10%] min-w-[84px]")}>연락처</th>
+              {/* 반 — 정렬이 아니라 필터다. 표시값(ENROLLED 칩)이 쿼리 후 계산이라
+                  Prisma orderBy 로는 충실히 못 세우고(해제는 status=DROPPED 라
+                  _count 가 어긋난다), 미배정 여부는 where 로 정확히 걸린다.
+                  구 반 칩 줄의 [전체 반 · 미배정] 토글을 여기로 옮겨왔다. */}
+              <th className={cn(headCell, "w-[15%] min-w-[140px]")}>
+                <button
+                  type="button"
+                  onClick={onToggleUnassigned}
+                  aria-pressed={unassignedOnly}
+                  aria-label={
+                    unassignedOnly
+                      ? "미배정만 보는 중 — 클릭 시 전체 반"
+                      : "미배정 학생만 보기"
+                  }
+                  className={cn(
+                    "inline-flex items-center gap-1 transition-colors",
+                    unassignedOnly ? "text-blue-600" : "hover:text-slate-700",
+                  )}
+                >
+                  {unassignedOnly ? "반 · 미배정" : "반"}
+                  <ListFilter className="size-3" aria-hidden />
+                </button>
+              </th>
+              <th className={cn(headCell, "w-[10%] min-w-[76px]")} aria-sort={ariaSort("status")}>
+                <SortHeadButton
+                  label="상태"
+                  sortKey="status"
+                  sort={sort}
+                  dir={dir}
+                  onSort={onSort}
+                />
+              </th>
+              <th className={cn(headCell, "w-[10%] min-w-[84px]")} aria-sort={ariaSort("contact")}>
+                <SortHeadButton
+                  label="연락처"
+                  sortKey="contact"
+                  sort={sort}
+                  dir={dir}
+                  onSort={onSort}
+                />
+              </th>
               <th className={cn(headCell, "w-[10%] min-w-[92px]")}>접속 기기</th>
               {showBilling ? (
                 <th className={cn(headCell, "w-[12%] min-w-[124px]")}>이번 달 수납</th>
@@ -221,7 +297,11 @@ export function RosterTable({
                   )}
                 >
                   {/* 선택 체크박스 — 클릭이 행 이동으로 새지 않게 셀에서 차단 */}
-                  <td className={cellPad} onClick={(e) => e.stopPropagation()}>
+                  <td
+                    className={cellPad}
+                    data-roster-select=""
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <input
                       type="checkbox"
                       checked={isSelected}

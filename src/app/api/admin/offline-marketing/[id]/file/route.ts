@@ -13,6 +13,7 @@ import { requireAdminAuth } from "@/lib/auth-admin";
 import { isSuperAdmin } from "@/actions/admin-members/_shared";
 import { prisma } from "@/lib/prisma";
 import { downloadOfflineMarketingPdf } from "@/lib/offline-marketing/storage";
+import { offlineMarketingContentType } from "@/lib/offline-marketing/storage";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -52,7 +53,7 @@ export async function GET(
   return new NextResponse(new Uint8Array(buffer), {
     status: 200,
     headers: {
-      "Content-Type": "application/pdf",
+      "Content-Type": offlineMarketingContentType(asset.fileName),
       "Content-Disposition": disposition,
       "Content-Length": String(buffer.byteLength),
       "Cache-Control": "private, no-store",

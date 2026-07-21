@@ -281,21 +281,20 @@ export function HubClient() {
 
         {/* 카드2 — 분석 현황 보드(낙관 카드 + 라이브 진행률) */}
         <section className="flex min-w-0 flex-col rounded-lg border border-slate-200 bg-white shadow-sm">
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-4 py-3">
-            <div className="flex items-center gap-2.5">
-              <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 ring-1 ring-blue-100">
-                <FileClock className="size-5" aria-hidden="true" />
-              </span>
-              <div className="min-w-0">
-                <h2 className="text-[14px] font-bold text-slate-900">분석 현황</h2>
-                <p className="text-xs text-slate-400">
-                  화면을 닫아도 분석은 계속됩니다. 진행 상황은 실시간으로 갱신돼요.
-                </p>
-              </div>
-            </div>
-          </div>
-
           <AnalysesBoard
+            header={
+              <div className="flex min-w-0 items-center gap-2.5">
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 ring-1 ring-blue-100">
+                  <FileClock className="size-5" aria-hidden="true" />
+                </span>
+                <div className="min-w-0">
+                  <h2 className="text-[14px] font-bold text-slate-900">분석 현황</h2>
+                  <p className="text-xs text-slate-400">
+                    화면을 닫아도 분석은 계속됩니다. 진행 상황은 실시간으로 갱신돼요.
+                  </p>
+                </div>
+              </div>
+            }
             rows={boardRows}
             loading={loading}
             error={error}

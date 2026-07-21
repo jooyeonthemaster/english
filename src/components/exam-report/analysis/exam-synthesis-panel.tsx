@@ -11,6 +11,18 @@ import type { ExamLevelAnalysis } from "@/lib/exam-report/types";
 
 interface ExamSynthesisPanelProps {
   examLevel: ExamLevelAnalysis | null;
+  /**
+   * 총평 본문을 숨긴다 — 우측 패널 "총평" 탭은 총평을 **편집 가능한** 필드로 따로
+   * 그리므로, 같은 문구를 읽기전용으로 한 번 더 보여주지 않기 위함.
+   * (집계인 난이도 프로필·유형 분포는 계속 보여준다.)
+   */
+  hideOverview?: boolean;
+  /**
+   * 함정 총평·출제 범위 추정을 숨긴다 — 총평 시트는 이 둘을 **편집 가능한** 필드로
+   * 이미 그리므로, 같은 문구를 읽기전용으로 한 번 더 쌓지 않기 위함(유저 피드백).
+   * hideOverview 와 함께 켜면 남는 건 집계(난이도 프로필·유형 분포)뿐이다.
+   */
+  hideNarrative?: boolean;
 }
 
 const BUCKETS: {
@@ -42,7 +54,11 @@ function SectionTitle({
   );
 }
 
-export function ExamSynthesisPanel({ examLevel }: ExamSynthesisPanelProps) {
+export function ExamSynthesisPanel({
+  examLevel,
+  hideOverview = false,
+  hideNarrative = false,
+}: ExamSynthesisPanelProps) {
   if (!examLevel) {
     return (
       <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50 px-5 py-10 text-center">
@@ -61,13 +77,15 @@ export function ExamSynthesisPanel({ examLevel }: ExamSynthesisPanelProps) {
 
   return (
     <div className="space-y-6">
-      {/* 총평 */}
-      <div>
-        <SectionTitle icon={BarChart3}>시험지 총평</SectionTitle>
-        <p className="whitespace-pre-wrap text-sm leading-relaxed text-slate-700">
-          {examLevel.overview}
-        </p>
-      </div>
+      {/* 총평 — 우측 패널에서는 편집 필드로 대체되므로 숨긴다 */}
+      {!hideOverview && (
+        <div>
+          <SectionTitle icon={BarChart3}>시험지 총평</SectionTitle>
+          <p className="whitespace-pre-wrap text-sm leading-relaxed text-slate-700">
+            {examLevel.overview}
+          </p>
+        </div>
+      )}
 
       {/* 난이도 프로필 */}
       <div>
@@ -127,7 +145,7 @@ export function ExamSynthesisPanel({ examLevel }: ExamSynthesisPanelProps) {
       )}
 
       {/* 함정 총평 */}
-      {examLevel.trapOverview.trim() && (
+      {!hideNarrative && examLevel.trapOverview.trim() && (
         <div>
           <SectionTitle icon={Target}>함정 총평</SectionTitle>
           <p className="whitespace-pre-wrap text-sm leading-relaxed text-slate-700">
@@ -137,7 +155,7 @@ export function ExamSynthesisPanel({ examLevel }: ExamSynthesisPanelProps) {
       )}
 
       {/* 범위 추정 */}
-      {examLevel.scopeInference.trim() && (
+      {!hideNarrative && examLevel.scopeInference.trim() && (
         <div>
           <SectionTitle icon={BookOpen}>출제 범위 추정</SectionTitle>
           <p className="whitespace-pre-wrap text-sm leading-relaxed text-slate-700">

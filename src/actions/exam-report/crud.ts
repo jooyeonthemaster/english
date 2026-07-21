@@ -21,6 +21,7 @@ import {
   parseStudentResponses,
 } from "@/lib/exam-report/schemas";
 import { computeScoreSummary } from "@/lib/exam-report/grading";
+import type { ExamReviewState } from "@/lib/exam-report/types";
 import {
   requireAuth,
   assertExamAnalysisBelongsToAcademy,
@@ -190,7 +191,11 @@ export async function updateExamMap(
   examMap: unknown,
   version: number,
 ): Promise<
-  CasResult<"VERSION_CONFLICT" | "INVALID_MAP"> & { affectedStudents?: number }
+  CasResult<"VERSION_CONFLICT" | "INVALID_MAP"> & {
+    affectedStudents?: number;
+    /** 확인 해제까지 반영된 최종 reviewState — 클라가 이걸로 동기화한다(서버 권위). */
+    reviewState?: ExamReviewState;
+  }
 > {
   const staff = await requireAuth();
 
@@ -199,22 +204,59 @@ export async function updateExamMap(
     return { ok: false, error: "INVALID_MAP" };
   }
 
+  // 이전 상태는 총점 보존(B1)과 확인 해제 판정 양쪽에 필요하므로 한 번만 읽는다.
+  const existing = await prisma.examAnalysis.findFirst({
+    where: { id, academyId: staff.academyId, deletedAt: null },
+    select: { structure: true, reviewState: true },
+  });
+  const priorMap = parseExamMap(existing?.structure);
+
   // B1: totalPoints 파괴 방지(클라 방어와 동일 규칙) — 전 문항 배점이 non-null 일
   // 때만 합계를 총점으로 신뢰하고, null 이 하나라도 있으면 기존 저장 총점을 보존한다
   // (부분 입력·손상 payload 가 총점을 0/오합으로 덮어쓰는 것 차단).
+  // ※ 화면의 "입력분 부분 합계"는 표시 전용으로 클라이언트가 계산한다 — 저장 총점의
+  //   신뢰 규칙은 여기 그대로 두어야 과거 총점 파괴 버그가 부활하지 않는다.
   const allPointsPresent = parsed.questions.every((q) => q.points != null);
   if (!allPointsPresent) {
-    const existing = await prisma.examAnalysis.findFirst({
-      where: { id, academyId: staff.academyId, deletedAt: null },
-      select: { structure: true },
-    });
-    const priorMap = parseExamMap(existing?.structure);
     parsed.totalPoints = priorMap?.totalPoints ?? parsed.totalPoints;
   }
 
+  // 정답·배점이 바뀐 문항은 확인을 해제해 재확인을 강제한다(게이트 무결성).
+  // 이게 없으면 22/22 확인 후 값을 전부 바꿔도 게이트가 열린 채로 남는다.
+  const priorByNumber = new Map(
+    (priorMap?.questions ?? []).map((q) => [q.number, q]),
+  );
+  const changedNumbers = parsed.questions
+    .filter((q) => {
+      const before = priorByNumber.get(q.number);
+      if (!before) return false;
+      return (
+        before.points !== q.points ||
+        before.correctAnswer !== q.correctAnswer ||
+        before.kind !== q.kind
+      );
+    })
+    .map((q) => q.number);
+
+  const reviewState = parseExamReviewState(existing?.reviewState);
+  const nextReviewState =
+    changedNumbers.length > 0 &&
+    (reviewState.mapConfirmedNumbers?.length ?? 0) > 0
+      ? {
+          ...reviewState,
+          mapConfirmedNumbers: (reviewState.mapConfirmedNumbers ?? []).filter(
+            (n) => !changedNumbers.includes(n),
+          ),
+        }
+      : null;
+
   const result = await prisma.examAnalysis.updateMany({
     where: { id, academyId: staff.academyId, version, deletedAt: null },
-    data: { structure: toJson(parsed), version: { increment: 1 } },
+    data: {
+      structure: toJson(parsed),
+      ...(nextReviewState ? { reviewState: toJson(nextReviewState) } : {}),
+      version: { increment: 1 },
+    },
   });
   if (result.count === 0) return { ok: false, error: "VERSION_CONFLICT" };
 
@@ -236,7 +278,11 @@ export async function updateExamMap(
   }
 
   revalidatePath(workspacePath(id));
-  return { ok: true, affectedStudents: students.length };
+  return {
+    ok: true,
+    affectedStudents: students.length,
+    reviewState: nextReviewState ?? reviewState,
+  };
 }
 
 // ── examMap 확인 완료 (강사 확정) ───────────────────────────────────────────
@@ -263,6 +309,49 @@ export async function confirmExamMap(
         ...reviewState,
         mapConfirmed: true,
         ...(confirmedNumbers ? { confirmedNumbers } : {}),
+      }),
+      version: { increment: 1 },
+    },
+  });
+  if (result.count === 0) return { ok: false, error: "VERSION_CONFLICT" };
+  revalidatePath(workspacePath(id));
+  return { ok: true };
+}
+
+/**
+ * 정답·배점 **문항별** 확인 토글 — 학생 관리 게이트(map-gate)의 유일한 기록 경로.
+ * 일괄 confirmExamMap(레거시 뱃지)과 달리 번호 단위라, 배점/정답을 고치면
+ * 해당 번호만 빼서 재확인을 강제할 수 있다.
+ */
+export async function setMapQuestionConfirmed(
+  id: string,
+  version: number,
+  numbers: string[],
+  confirmed: boolean,
+): Promise<CasResult> {
+  const staff = await requireAuth();
+
+  const existing = await prisma.examAnalysis.findFirst({
+    where: { id, academyId: staff.academyId, deletedAt: null },
+    select: { reviewState: true },
+  });
+  if (!existing) return { ok: false, error: "VERSION_CONFLICT" };
+  const reviewState = parseExamReviewState(existing.reviewState);
+
+  // 병합 갱신(덮어쓰기 금지) — 「전체 검수 완료」가 배열을 통째로 갈아엎어
+  // 부분 되돌리기가 불가능했던 전철을 밟지 않는다.
+  const next = new Set(reviewState.mapConfirmedNumbers ?? []);
+  for (const n of numbers) {
+    if (confirmed) next.add(n);
+    else next.delete(n);
+  }
+
+  const result = await prisma.examAnalysis.updateMany({
+    where: { id, academyId: staff.academyId, version, deletedAt: null },
+    data: {
+      reviewState: toJson({
+        ...reviewState,
+        mapConfirmedNumbers: [...next],
       }),
       version: { increment: 1 },
     },

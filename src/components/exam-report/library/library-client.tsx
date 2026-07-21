@@ -1,7 +1,7 @@
 "use client";
 
 // ============================================================================
-// 학생 시험 리포트 — 라이브러리(리포트 관리) 컨테이너
+// 학생 시험 리포트 — 라이브러리(내신 리포트 관리) 컨테이너
 //
 // 허브와 동일한 분석 현황 보드(analyses-board)를 재사용한다 — 자체 테이블·
 // 인라인 폴링·상태 뱃지 복붙을 폐기하고 useExamReportActivity 훅 + board
@@ -40,7 +40,7 @@ export function ExamReportLibraryClient() {
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 px-4 py-3">
             <WorkflowPageTitle
               icon={FileChartColumn}
-              title="리포트 관리"
+              title="내신 리포트 관리"
               description="분석한 시험지와 학생 리포트를 한곳에서 관리합니다. (최근 50개)"
             />
             <Button

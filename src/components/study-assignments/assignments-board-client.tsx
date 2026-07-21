@@ -26,7 +26,8 @@ import {
   useTransition,
 } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { ClipboardList, Plus, Search } from "lucide-react";
+import { ClipboardList, ListFilter, Plus, Search } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { listStudyAssignments } from "@/actions/study-assignments";
 import { PageShell, SectionCard } from "@/components/layout/page-frame";
 import {
@@ -374,7 +375,7 @@ export function AssignmentsBoardClient({
           />
         ) : null}
 
-        {/* 필터 칩 — 종류 · 상태 · 대상(학생/반) · 검색 */}
+        {/* 필터 바 — 종류 탭(좌) + 우측 끝 고정 [필터·검색] 아이콘 팝오버 (어드민 공용 규약) */}
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pb-4">
           <div className="flex flex-wrap items-center gap-1.5">
             {KIND_FILTERS.map((f) => (
@@ -395,42 +396,93 @@ export function AssignmentsBoardClient({
               </button>
             ))}
           </div>
-          <span className="hidden h-4 w-px bg-slate-200 sm:block" aria-hidden />
-          <div className="flex flex-wrap items-center gap-1.5">
-            {STATUS_FILTERS.map((f) => (
-              <button
-                key={f.key}
-                type="button"
-                onClick={() => setStatusFilter(f.key)}
-                aria-pressed={statusFilter === f.key}
-                className={cn(
-                  "h-8 rounded-md border px-3 text-[12.5px] font-semibold transition-colors",
-                  statusFilter === f.key
-                    ? f.key === "OVERDUE"
-                      ? CHIP_ACTIVE_ROSE
-                      : CHIP_ACTIVE
-                    : CHIP_IDLE,
-                )}
+
+          <div className="ml-auto flex items-center gap-1.5">
+            <Popover>
+              <PopoverTrigger
+                title="필터"
+                aria-label="필터"
+                className="relative flex size-7 shrink-0 items-center justify-center rounded-md border border-input bg-transparent shadow-xs transition-[color,box-shadow] outline-none hover:bg-slate-50 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
               >
-                {f.label}
-              </button>
-            ))}
-          </div>
-          <span className="hidden h-4 w-px bg-slate-200 sm:block" aria-hidden />
-          <AssignmentsTargetFilter value={targetFilter} onChange={applyTargetFilter} />
-          <div className="relative ml-auto">
-            <Search
-              className="pointer-events-none absolute left-2 top-1/2 size-3.5 -translate-y-1/2 text-slate-300"
-              aria-hidden
-            />
-            <input
-              type="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="제목·대상 검색"
-              aria-label="과제 검색"
-              className="h-8 w-40 rounded-md border border-slate-200 bg-white pl-7 pr-2 text-[12px] text-slate-700 transition-[width] placeholder:text-slate-300 focus:w-56 focus:border-blue-300 focus:outline-none"
-            />
+                <ListFilter className="size-3.5 shrink-0" />
+                {statusFilter !== "ALL" || targetFilter !== null ? (
+                  <span
+                    aria-hidden="true"
+                    className="absolute top-1 right-1 inline-block size-1.5 rounded-full bg-blue-500"
+                  />
+                ) : null}
+              </PopoverTrigger>
+              <PopoverContent align="end" className="w-64 p-3">
+                <div className="flex flex-col gap-3">
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-[11px] font-medium text-slate-600">상태</span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {STATUS_FILTERS.map((f) => (
+                        <button
+                          key={f.key}
+                          type="button"
+                          onClick={() => setStatusFilter(f.key)}
+                          aria-pressed={statusFilter === f.key}
+                          className={cn(
+                            "h-7 rounded-md border px-2.5 text-[12px] font-semibold transition-colors",
+                            statusFilter === f.key
+                              ? f.key === "OVERDUE"
+                                ? CHIP_ACTIVE_ROSE
+                                : CHIP_ACTIVE
+                              : CHIP_IDLE,
+                          )}
+                        >
+                          {f.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-[11px] font-medium text-slate-600">대상</span>
+                    <AssignmentsTargetFilter
+                      value={targetFilter}
+                      onChange={applyTargetFilter}
+                    />
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
+
+            <Popover>
+              <PopoverTrigger
+                title="검색"
+                aria-label="검색"
+                className="relative flex size-7 shrink-0 items-center justify-center rounded-md border border-input bg-transparent shadow-xs transition-[color,box-shadow] outline-none hover:bg-slate-50 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+              >
+                <Search className="size-3.5 shrink-0" />
+                {query ? (
+                  <span
+                    aria-hidden="true"
+                    className="absolute top-1 right-1 inline-block size-1.5 rounded-full bg-blue-500"
+                  />
+                ) : null}
+              </PopoverTrigger>
+              <PopoverContent align="end" className="w-60 p-3">
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-[11px] font-medium text-slate-600">검색</span>
+                  <div className="relative">
+                    <Search
+                      className="pointer-events-none absolute left-2 top-1/2 size-3.5 -translate-y-1/2 text-slate-400"
+                      aria-hidden
+                    />
+                    <input
+                      autoFocus
+                      type="search"
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                      placeholder="제목·대상 검색"
+                      aria-label="과제 검색"
+                      className="h-8 w-full rounded-md border border-slate-200 bg-white pl-7 pr-2.5 text-[13px] text-slate-700 outline-none placeholder:text-slate-300 focus:border-blue-400"
+                    />
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
           </div>
         </div>
 

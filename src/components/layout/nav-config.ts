@@ -294,7 +294,7 @@ export function getNavGroups(
           ],
         },
         // "시험 리포트"(exam-report) 항목은 26-07-11 IA 재편으로 운영 그룹
-        // "학생 관리" 하위(내신 시험 분석·리포트 관리)로 이동 — 웹툰만 남는다.
+        // "학생 관리" 하위(내신 시험 분석·내신 리포트 관리)로 이동 — 웹툰만 남는다.
       ],
     },
     {
@@ -329,7 +329,7 @@ export function getNavGroups(
                   // exam-report 라우트 자체는 이동하지 않음(revalidatePath 리스크)
                   // — nav 계층·라벨만 재편(구 "리포트 생성" → "내신 시험 분석").
                   { label: "내신 시험 분석", href: `${basePath}/workbench/exam-report` },
-                  { label: "리포트 관리", href: `${basePath}/workbench/exam-report/library` },
+                  { label: "내신 리포트 관리", href: `${basePath}/workbench/exam-report/library` },
                 ],
               },
             ]

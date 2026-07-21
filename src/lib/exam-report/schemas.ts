@@ -357,6 +357,8 @@ export const examReviewStateSchema = z
   .object({
     mapConfirmed: z.boolean().optional(),
     confirmedNumbers: z.array(z.string()).optional(),
+    // 정답·배점 문항별 확인 — 학생 관리 게이트 근거(reviewState 는 Json 이라 추가 자유).
+    mapConfirmedNumbers: z.array(z.string()).optional(),
   })
   .catch({});
 

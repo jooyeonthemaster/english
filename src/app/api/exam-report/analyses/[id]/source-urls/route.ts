@@ -17,7 +17,16 @@ export const dynamic = "force-dynamic";
 
 const bodySchema = z.object({
   paths: z.array(z.string().min(1)).min(1).max(40),
+  /** 카드 썸네일용 축소본 요청 — 원본(~1MB+) 대신 ~20KB 로 서명한다. */
+  thumb: z.boolean().optional(),
 });
+
+/** 목록 카드 좌측 썸네일 규격 — 좌측 열 최대폭(md 164px)의 2배(레티나). */
+const THUMB_TRANSFORM = {
+  width: 320,
+  resize: "contain",
+  quality: 60,
+} as const;
 
 const sourceFilesSchema = z.array(
   z.object({ path: z.string(), page: z.number().optional() }),
@@ -68,7 +77,13 @@ export async function POST(
   }
 
   const urls = await Promise.all(
-    parsedBody.data.paths.map((p) => createSignedDownloadUrl(p, 60 * 30)),
+    parsedBody.data.paths.map((p) =>
+      createSignedDownloadUrl(
+        p,
+        60 * 30,
+        parsedBody.data.thumb ? { transform: THUMB_TRANSFORM } : undefined,
+      ),
+    ),
   );
   return NextResponse.json({ urls });
 }

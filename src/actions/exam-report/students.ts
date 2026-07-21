@@ -20,6 +20,7 @@ import {
   computeScoreSummary,
   normalizeResponses,
 } from "@/lib/exam-report/grading";
+import { createStudent } from "@/actions/students";
 import {
   requireAuth,
   assertExamAnalysisBelongsToAcademy,
@@ -58,6 +59,229 @@ export async function addExamStudents(
 
   revalidatePath(workspacePath(analysisId));
   return { students: created };
+}
+
+// ── 로스터(Student) 연동 ─────────────────────────────────────────────────────
+// 시험 리포트의 학생은 원래 이름 자유입력이라 학원 로스터와 따로 놀았다. 이제
+// 추가 경로를 로스터 기준으로 통일한다: 기존 학생은 studentId 로 귀속시키고,
+// 로스터에 없는 이름은 로스터에 먼저 등록(학생코드 발급)한 뒤 담는다. 그래야
+// 학생 관리 화면과 시험 리포트가 같은 학생을 가리키고 응시 이력이 축적된다.
+
+export type RosterStudentPick = {
+  id: string;
+  name: string;
+  grade: number;
+  studentCode: string;
+  schoolName: string | null;
+  /** 이미 이 분석에 담긴 학생 — 중복 추가 차단용 */
+  alreadyAdded: boolean;
+};
+
+/** 로스터 학생 검색(경량) — 시험 리포트 학생 추가 피커용. */
+export async function searchRosterStudents(
+  analysisId: string,
+  query: string,
+): Promise<RosterStudentPick[]> {
+  const staff = await requireAuth();
+  await assertExamAnalysisBelongsToAcademy(analysisId, staff.academyId);
+
+  const q = query.trim();
+  const [students, linked] = await Promise.all([
+    prisma.student.findMany({
+      where: {
+        academyId: staff.academyId,
+        status: { not: "WITHDRAWN" },
+        ...(q ? { name: { contains: q, mode: "insensitive" as const } } : {}),
+      },
+      select: {
+        id: true,
+        name: true,
+        grade: true,
+        studentCode: true,
+        school: { select: { name: true } },
+      },
+      orderBy: [{ grade: "asc" }, { name: "asc" }],
+      take: 50,
+    }),
+    prisma.examReportStudent.findMany({
+      where: {
+        examAnalysisId: analysisId,
+        deletedAt: null,
+        studentId: { not: null },
+      },
+      select: { studentId: true },
+    }),
+  ]);
+
+  const addedIds = new Set(linked.map((r) => r.studentId));
+  return students.map((s) => ({
+    id: s.id,
+    name: s.name,
+    grade: s.grade,
+    studentCode: s.studentCode,
+    schoolName: s.school?.name ?? null,
+    alreadyAdded: addedIds.has(s.id),
+  }));
+}
+
+/** 학교 목록 — 학생 추가 폼의 학교 선택용(세션 학원 스코프). */
+export async function listAcademySchools(): Promise<
+  { id: string; name: string; type: string }[]
+> {
+  const staff = await requireAuth();
+  return prisma.school.findMany({
+    where: { academyId: staff.academyId },
+    orderBy: { name: "asc" },
+    select: { id: true, name: true, type: true },
+  });
+}
+
+/** 로스터 학생을 이 시험 리포트에 담는다(studentId 귀속). 이미 담겼으면 그 행을 반환. */
+export async function addExamStudentFromRoster(
+  analysisId: string,
+  studentId: string,
+): Promise<{ student: { id: string; studentName: string } }> {
+  const staff = await requireAuth();
+  await assertExamAnalysisBelongsToAcademy(analysisId, staff.academyId);
+
+  const roster = await prisma.student.findFirst({
+    where: { id: studentId, academyId: staff.academyId },
+    select: { id: true, name: true },
+  });
+  if (!roster) throw new Error("학생을 찾을 수 없습니다.");
+
+  const existing = await prisma.examReportStudent.findFirst({
+    where: { examAnalysisId: analysisId, studentId: roster.id, deletedAt: null },
+    select: { id: true, studentName: true },
+  });
+  if (existing) return { student: existing };
+
+  const created = await prisma.examReportStudent.create({
+    data: {
+      examAnalysisId: analysisId,
+      academyId: staff.academyId,
+      studentName: roster.name,
+      studentId: roster.id,
+    },
+    select: { id: true, studentName: true },
+  });
+
+  revalidatePath(workspacePath(analysisId));
+  return { student: created };
+}
+
+/**
+ * 로스터에 없는 학생 — 로스터에 먼저 등록(학생코드 자동 발급)하고 이 시험에 담는다.
+ * 학생 관리 화면에서도 즉시 보이도록 createStudent 재사용(재검증 포함).
+ */
+export async function createRosterStudentForExam(
+  analysisId: string,
+  /** 학생 관리 등록과 동일 수준의 정보 — 학교·생년월일·성별·연락처·학부모까지. */
+  input: {
+    name: string;
+    grade: number;
+    birthDate?: string;
+    gender?: string;
+    phone?: string;
+    schoolId?: string;
+    memo?: string;
+    parentName?: string;
+    parentPhone?: string;
+    parentRelation?: string;
+    emergencyContact?: string;
+  },
+): Promise<{
+  student: { id: string; studentName: string };
+  rosterStudentId: string;
+  studentCode: string;
+}> {
+  const staff = await requireAuth();
+  await assertExamAnalysisBelongsToAcademy(analysisId, staff.academyId);
+
+  const name = input.name.trim();
+  if (!name) throw new Error("학생 이름을 입력해 주세요.");
+  const grade = Math.min(3, Math.max(1, Math.round(input.grade || 1)));
+
+  const result = await createStudent(staff.academyId, { ...input, name, grade });
+  if (!result.success || !result.studentId || !result.studentCode) {
+    throw new Error(result.error || "학생 등록에 실패했습니다.");
+  }
+
+  const created = await prisma.examReportStudent.create({
+    data: {
+      examAnalysisId: analysisId,
+      academyId: staff.academyId,
+      studentName: name,
+      studentId: result.studentId,
+    },
+    select: { id: true, studentName: true },
+  });
+
+  revalidatePath(workspacePath(analysisId));
+  return {
+    student: created,
+    rosterStudentId: result.studentId,
+    studentCode: result.studentCode,
+  };
+}
+
+/**
+ * 로스터에 연결되지 않은 기존 학생(studentId=null — 이름 자유입력 시절 데이터)을
+ * 학생 관리에 편입시킨다. 같은 이름의 로스터 학생이 있으면 연결하고, 없으면
+ * 로스터에 새로 등록(학생코드 발급)한 뒤 연결한다.
+ */
+export async function syncExamStudentsToRoster(
+  analysisId: string,
+  defaultGrade = 1,
+): Promise<{ linked: number; created: number }> {
+  const staff = await requireAuth();
+  await assertExamAnalysisBelongsToAcademy(analysisId, staff.academyId);
+
+  const orphans = await prisma.examReportStudent.findMany({
+    where: {
+      examAnalysisId: analysisId,
+      academyId: staff.academyId,
+      deletedAt: null,
+      studentId: null,
+    },
+    select: { id: true, studentName: true },
+  });
+  if (orphans.length === 0) return { linked: 0, created: 0 };
+
+  const grade = Math.min(3, Math.max(1, Math.round(defaultGrade || 1)));
+  let linked = 0;
+  let created = 0;
+
+  // 순차 처리 — 학생코드 발급이 학원 스코프 중복 검사를 하므로 병렬 금지.
+  for (const orphan of orphans) {
+    const name = orphan.studentName.trim();
+    if (!name) continue;
+
+    // 이미 이 분석에 같은 로스터 학생이 붙어 있으면 중복 연결하지 않는다.
+    const match = await prisma.student.findFirst({
+      where: { academyId: staff.academyId, name, status: { not: "WITHDRAWN" } },
+      select: { id: true },
+      orderBy: { createdAt: "asc" },
+    });
+
+    let rosterId = match?.id;
+    if (rosterId) {
+      linked += 1;
+    } else {
+      const result = await createStudent(staff.academyId, { name, grade });
+      if (!result.success || !result.studentId) continue;
+      rosterId = result.studentId;
+      created += 1;
+    }
+
+    await prisma.examReportStudent.updateMany({
+      where: { id: orphan.id, academyId: staff.academyId },
+      data: { studentId: rosterId },
+    });
+  }
+
+  revalidatePath(workspacePath(analysisId));
+  return { linked, created };
 }
 
 // ── 학생 마킹 사진 첨부 ──────────────────────────────────────────────────────

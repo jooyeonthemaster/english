@@ -1,0 +1,55 @@
+<!-- @dsCard group="Components" -->
+<title>토글 · 탭</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Pretendard",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;background:#fff;color:#111827;padding:28px;-webkit-font-smoothing:antialiased}
+h1{font-size:15px;font-weight:800;margin-bottom:4px}
+p.note{font-size:12px;color:#6B7280;margin-bottom:20px}
+h2{font-size:12px;font-weight:700;color:#374151;margin:18px 0 10px}
+.evt{position:relative;display:grid;grid-template-columns:1fr 1fr;overflow:hidden;border-radius:8px;border:1px solid #BFDBFE;background:#fff;padding:4px;width:260px}
+.evt .ind{pointer-events:none;position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);border-radius:4px;background:#2563EB;box-shadow:0 1px 2px rgba(37,99,235,.2);transition:transform .3s cubic-bezier(.22,1,.36,1)}
+.evt.right .ind{transform:translateX(100%)}
+.evt button{position:relative;z-index:1;display:flex;height:32px;align-items:center;justify-content:center;gap:6px;border-radius:4px;padding:0 8px;font-size:12px;font-weight:900;font-family:inherit;border:none;background:transparent;cursor:pointer;transition:color .2s}
+.evt button.on{color:#fff}
+.evt button.off{color:#1D4ED8}.evt button.off:hover{color:#1E3A8A}
+.tabs{display:inline-flex;background:#F9FAFB;border-radius:10px;padding:3px;gap:2px}
+.tabs button{border:none;background:transparent;border-radius:8px;padding:6px 14px;font-size:14px;font-weight:500;font-family:inherit;color:rgba(17,24,39,.6);cursor:pointer}
+.tabs button:hover{color:#111827}
+.tabs button.on{background:#fff;color:#111827;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+</style>
+<h1>토글 · 탭</h1>
+<p class="note">EditViewToggle: 문제수정 AI↔직접 전환 공용 컴포넌트. 파랑 테두리 + 슬라이딩 인디케이터(cubic-bezier(.22,1,.36,1) 300ms).</p>
+
+<h2>EditViewToggle</h2>
+<div style="display:flex;gap:16px;flex-wrap:wrap">
+  <div class="evt">
+    <span class="ind"></span>
+    <button class="on">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+      AI 수정
+    </button>
+    <button class="off">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/></svg>
+      직접 수정
+    </button>
+  </div>
+  <div class="evt right">
+    <span class="ind"></span>
+    <button class="off">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+      AI 수정
+    </button>
+    <button class="on">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/></svg>
+      직접 수정
+    </button>
+  </div>
+</div>
+
+<h2>Tabs (shadcn · bg-muted p-[3px])</h2>
+<div class="tabs">
+  <button class="on">전체</button>
+  <button>진행중</button>
+  <button>완료</button>
+</div>

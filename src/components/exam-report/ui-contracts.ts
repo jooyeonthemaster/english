@@ -52,6 +52,8 @@ export interface ExamStudentMeta {
 export interface ExamAnalysisStudentRow {
   id: string;
   studentName: string;
+  /** 로스터(Student.id) 귀속 — null 이면 학생 관리에 없는 학생(구 자유입력 데이터) */
+  studentId?: string | null;
   scoreSummary: ScoreSummary | null;
   gradingConfirmed: boolean;
   reportStatus: StudentReportStatus;
@@ -225,11 +227,20 @@ export interface AnalysisStepProps {
   onDetailChange: (next: ExamAnalysisDetail) => void;
   /** 분석 완료 후 학생 관리 탭으로 진행 */
   onAdvance: () => void;
+  /**
+   * 시험지 총평 시트 — 트리거 버튼은 상위(워크스페이스 헤더의 「시험지 원본」 옆)에
+   * 있지만, 총평 편집 저장은 이 스텝의 저장 파이프라인을 타야 버전 충돌이 없다.
+   * 그래서 시트 콘텐츠는 여기서 렌더하고 열림 상태만 상위가 제어한다.
+   */
+  overviewOpen?: boolean;
+  onOverviewOpenChange?: (open: boolean) => void;
 }
 
 export interface StudentsTabProps {
   detail: ExamAnalysisDetail;
   onDetailChange: (next: ExamAnalysisDetail) => void;
+  /** 하단 고정 바의 「이전」 — 문항 분석 탭으로 되돌린다(analysis-step 의 역방향) */
+  onBack?: () => void;
 }
 
 // ── 채점/리포트 컴포넌트 props (학생 워크스페이스) ──────────────────────────

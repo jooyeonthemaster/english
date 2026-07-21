@@ -8,22 +8,28 @@
 // analyses-board-cards, 표시 메타/판별식은 board-shared 로 단일화(중복 박멸).
 // ============================================================================
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
   AlertCircle,
   FileClock,
+  ListFilter,
   Loader2,
   RotateCw,
   Search,
+  X,
 } from "lucide-react";
 import type { ExamAnalysisStatus } from "@/lib/exam-report/types";
 import type { ExamReportSummaryRow } from "@/hooks/use-exam-report-activity";
 import { deleteExamAnalysis } from "@/actions/exam-report";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -70,6 +76,8 @@ export interface AnalysesBoardProps {
   onResumeDraft: (row: ExamReportSummaryRow) => void;
   /** 빈 목록 보조 문구(컨텍스트별 커스텀) */
   emptyHint?: string;
+  /** 툴바 줄 왼쪽에 넣을 제목 블록 — 있으면 제목·필터·검색이 한 줄이 된다 */
+  header?: ReactNode;
 }
 
 export function AnalysesBoard({
@@ -80,6 +88,7 @@ export function AnalysesBoard({
   onRefresh,
   onResumeDraft,
   emptyHint,
+  header,
 }: AnalysesBoardProps) {
   const router = useRouter();
   const [query, setQuery] = useState("");
@@ -174,58 +183,136 @@ export function AnalysesBoard({
     }
   }, [deleteTarget, onRefresh]);
 
+  // 데이터 없이 첫 페치 실패 → 전면 에러. rows 가 있으면(낙관적 "분석 중" 카드 등)
+  // 전면 에러로 가리지 않고 그리드를 유지한 채 상단 인라인 배너만 노출한다.
+  const showFullError = !loading && error && rows.length === 0;
+  // 폴 일부 실패했지만 보여줄 행이 있는 경우 — 그리드 위 인라인 재시도 배너.
+  const showInlineError = !loading && error && rows.length > 0;
   const showEmpty = !loading && !error && rows.length === 0;
   const showNoMatch =
-    !loading && !error && rows.length > 0 && filtered.length === 0;
+    !loading && rows.length > 0 && filtered.length === 0;
 
   return (
-    <div className="flex flex-col">
-      {/* 툴바 — 상태 필터 칩 + 검색 */}
-      <div className="flex flex-col gap-2.5 border-b border-slate-100 px-4 py-2.5 lg:flex-row lg:items-center lg:justify-between">
-        <div className="flex flex-wrap items-center gap-1.5">
-          {FILTER_CHIPS.map((chip) => {
-            const active = filter === chip.key;
-            return (
-              <button
-                key={chip.key}
-                type="button"
-                onClick={() => setFilter(chip.key)}
-                className={cn(
-                  "inline-flex h-8 max-w-full shrink-0 items-center gap-1.5 whitespace-nowrap rounded-md border px-3 text-[12.5px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500",
-                  active
-                    ? "border-blue-600 bg-blue-50/40 text-blue-700 shadow-sm"
-                    : "cursor-pointer border-transparent text-slate-400 hover:bg-slate-50 hover:text-slate-600",
-                )}
-              >
-                {chip.label}
-                <span
-                  className={cn(
-                    "text-[11px] tabular-nums",
-                    active ? "text-blue-500" : "text-slate-300",
-                  )}
-                >
-                  {counts[chip.key]}
-                </span>
-              </button>
-            );
-          })}
-        </div>
+    <div className="@container flex flex-col">
+      {/* 툴바 — 필터·검색 팝오버(문제 관리 툴바와 동일 규격: size-7 아이콘 팝오버).
+          상태 선택·개수는 필터 팝오버 안으로 접어 넣고, header 가 오면
+          제목 블록과 같은 줄(좌 제목 / 우 아이콘)로 합친다. */}
+      <div
+        className={cn(
+          "flex items-center border-b border-slate-100 px-4",
+          header
+            ? "flex-wrap justify-between gap-3 py-3"
+            : "justify-end gap-1.5 py-2.5",
+        )}
+      >
+        {header}
+        <div className="flex items-center gap-1.5">
+        {/* 필터 — 상태 선택(개수 포함) */}
+        <Popover>
+          <PopoverTrigger
+            title="필터"
+            aria-label="필터"
+            className="relative flex size-7 shrink-0 items-center justify-center rounded-md border border-input bg-transparent shadow-xs transition-[color,box-shadow] outline-none hover:bg-slate-50 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+          >
+            <ListFilter className="size-3.5 shrink-0" />
+            {filter !== "all" ? (
+              <span
+                aria-hidden="true"
+                className="absolute top-1 right-1 inline-block size-1.5 rounded-full bg-blue-500"
+              />
+            ) : null}
+          </PopoverTrigger>
+          <PopoverContent align="end" className="w-56 p-3">
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[11px] font-medium text-slate-600">
+                상태
+              </label>
+              <div className="flex flex-wrap gap-1.5">
+                {FILTER_CHIPS.map((chip) => {
+                  const active = filter === chip.key;
+                  return (
+                    <button
+                      key={chip.key}
+                      type="button"
+                      aria-pressed={active}
+                      onClick={() => setFilter(chip.key)}
+                      className={cn(
+                        "flex h-7 items-center gap-1.5 rounded-md border px-2.5 text-[11px] font-medium transition-colors",
+                        active
+                          ? "border-slate-800 bg-slate-800 text-white"
+                          : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-800",
+                      )}
+                    >
+                      {chip.label}
+                      <span
+                        className={cn(
+                          "text-[10px] tabular-nums",
+                          active ? "text-slate-300" : "text-slate-400",
+                        )}
+                      >
+                        {counts[chip.key]}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </PopoverContent>
+        </Popover>
 
-        <div className="relative w-full lg:max-w-xs">
-          <Search className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
-          <Input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="제목 · 학교 검색"
-            className="pl-9"
-          />
+        {/* 검색 — 제목·학교(로컬 즉시 필터) */}
+        <Popover>
+          <PopoverTrigger
+            title="검색"
+            aria-label="검색"
+            className="relative flex size-7 shrink-0 items-center justify-center rounded-md border border-input bg-transparent shadow-xs transition-[color,box-shadow] outline-none hover:bg-slate-50 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+          >
+            <Search className="size-3.5 shrink-0" />
+            {query ? (
+              <span
+                aria-hidden="true"
+                className="absolute top-1 right-1 inline-block size-1.5 rounded-full bg-blue-500"
+              />
+            ) : null}
+          </PopoverTrigger>
+          <PopoverContent align="end" className="w-60 p-3">
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[11px] font-medium text-slate-600">
+                검색
+              </label>
+              <div className="relative">
+                <Search
+                  className="pointer-events-none absolute top-1/2 left-2 size-3.5 -translate-y-1/2 text-slate-400"
+                  aria-hidden="true"
+                />
+                <input
+                  autoFocus
+                  placeholder="제목 · 학교 검색"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  className="h-8 w-full rounded-md border border-slate-200 bg-white pr-7 pl-7 text-[12px] text-slate-700 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10"
+                />
+                {query ? (
+                  <button
+                    type="button"
+                    onClick={() => setQuery("")}
+                    className="absolute top-1/2 right-1.5 inline-flex size-4 -translate-y-1/2 cursor-pointer items-center justify-center rounded text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+                    aria-label="검색 지우기"
+                  >
+                    <X className="size-3" />
+                  </button>
+                ) : null}
+              </div>
+            </div>
+          </PopoverContent>
+        </Popover>
         </div>
       </div>
 
       {/* 본문 */}
       <div className="px-4 py-4 sm:px-5">
         {loading ? (
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-3 @2xl:grid-cols-2 @5xl:grid-cols-3">
             {[0, 1, 2].map((i) => (
               <div
                 key={i}
@@ -233,7 +320,7 @@ export function AnalysesBoard({
               />
             ))}
           </div>
-        ) : error ? (
+        ) : showFullError ? (
           <div className="py-14 text-center">
             <AlertCircle className="mx-auto mb-3 h-10 w-10 text-rose-400" />
             <p className="font-medium text-slate-600">
@@ -279,21 +366,42 @@ export function AnalysesBoard({
             </div>
           </div>
         ) : (
-          /* 학습지 생성 목록과 동일 그리드 규격(gap-3 · lg 3열) — UI 통일 */
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {filtered.map((row) => (
-              <BoardCard
-                key={row.id}
-                row={row}
-                restarting={restartingIds.has(row.id)}
-                onOpen={handleOpen}
-                onRestart={handleRestart}
-                onResumeDraft={onResumeDraft}
-                onAddStudent={handleAddStudent}
-                onRequestDelete={setDeleteTarget}
-              />
-            ))}
-          </div>
+          /* 학습지 생성 목록과 동일 그리드 규격(gap-3 · 최대 3열) — 열 수는
+             뷰포트가 아닌 보드 컨테이너 폭 기준(@container): 사이드바·개발자
+             도구로 실제 폭이 좁아지면 3→2→1열로 줄어 카드가 짓눌리지 않는다 */
+          <>
+            {showInlineError && (
+              <div className="mb-3 flex flex-col gap-2 rounded-lg border border-rose-200 bg-rose-50/60 px-3.5 py-2.5 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-center gap-2 text-sm text-rose-600">
+                  <AlertCircle className="h-4 w-4 shrink-0" />
+                  <span>최신 목록을 불러오지 못했어요. 표시된 항목은 방금 요청한 분석입니다.</span>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={onRefresh}
+                  className="shrink-0 self-start border-rose-200 text-rose-600 hover:bg-rose-100 sm:self-auto"
+                >
+                  <RotateCw className="h-4 w-4" />
+                  다시 시도
+                </Button>
+              </div>
+            )}
+            <div className="grid grid-cols-1 gap-3 @2xl:grid-cols-2 @5xl:grid-cols-3">
+              {filtered.map((row) => (
+                <BoardCard
+                  key={row.id}
+                  row={row}
+                  restarting={restartingIds.has(row.id)}
+                  onOpen={handleOpen}
+                  onRestart={handleRestart}
+                  onResumeDraft={onResumeDraft}
+                  onAddStudent={handleAddStudent}
+                  onRequestDelete={setDeleteTarget}
+                />
+              ))}
+            </div>
+          </>
         )}
       </div>
 

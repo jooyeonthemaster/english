@@ -24,6 +24,7 @@ interface PageProps {
     search?: string;
     billing?: string;
     sort?: string;
+    dir?: string;
   }>;
 }
 
@@ -33,9 +34,13 @@ export default async function DirectorStudentsPage({ searchParams }: PageProps) 
 
   const params = await searchParams;
   // 정렬 키 화이트리스트 — 그 외 값은 기본(recent, 최근 등록순)으로.
+  // 서버 정렬 가능한 키만 받는다(buildStudentsOrderBy 주석 참조).
+  const SORT_KEYS = ["name", "grade", "school", "status", "contact"] as const;
   const sortParam = params.sort;
-  const sort: "name" | "grade" | undefined =
-    sortParam === "name" || sortParam === "grade" ? sortParam : undefined;
+  const sort = (SORT_KEYS as readonly string[]).includes(sortParam ?? "")
+    ? (sortParam as (typeof SORT_KEYS)[number])
+    : undefined;
+  const dir: "asc" | "desc" = params.dir === "desc" ? "desc" : "asc";
   const filters = {
     page: params.page ? parseInt(params.page) : 1,
     status: params.status || "ALL",
@@ -45,6 +50,7 @@ export default async function DirectorStudentsPage({ searchParams }: PageProps) 
     search: params.search || undefined,
     billing: params.billing || undefined,
     sort,
+    dir,
   };
 
   // 각 액션은 내부에서 세션 academyId 와 교차검증하므로 여기서 넘기는
@@ -65,6 +71,7 @@ export default async function DirectorStudentsPage({ searchParams }: PageProps) 
       stats={stats}
       filters={filters}
       sort={sort ?? "recent"}
+      dir={dir}
       isDirector={staff.role === "DIRECTOR"}
       showBilling={FEATURE_FLAGS.SHOW_TUTOR_BILLING}
       embedded

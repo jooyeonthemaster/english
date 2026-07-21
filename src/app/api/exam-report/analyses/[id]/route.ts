@@ -58,6 +58,8 @@ export async function GET(
         select: {
           id: true,
           studentName: true,
+          // 로스터(Student) 귀속 — null 이면 학생 관리에 없는 학생(이름 자유입력 시절 데이터)
+          studentId: true,
           gradingConfirmed: true,
           reportStatus: true,
           shareEnabled: true,

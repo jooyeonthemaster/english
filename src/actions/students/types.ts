@@ -12,7 +12,12 @@ export interface StudentFilters {
   /** "unpaid" → only students with an outstanding (PENDING/PARTIAL/OVERDUE) invoice. */
   billing?: string;
   /** 로스터 정렬 — 미지정 시 recent(최근 등록순). optional이라 타 호출부 무회귀. */
-  sort?: "recent" | "name" | "grade";
+  sort?: StudentsSortKey;
+  /** 정렬 방향 — 미지정 시 asc(recent 만 desc 고정). */
+  dir?: StudentsSortDir;
+  /** 특정 학생만(CSV 선택 내보내기). academyId 는 항상 별도로 걸리므로
+   *  여기에 남의 학원 id 를 섞어도 테넌트 밖으로 새지 않는다. */
+  ids?: string[];
   page?: number;
   pageSize?: number;
 }
@@ -70,6 +75,9 @@ export function buildStudentsWhere(
   if (filters?.schoolId) {
     where.schoolId = filters.schoolId;
   }
+  if (filters?.ids?.length) {
+    where.id = { in: filters.ids };
+  }
   if (filters?.classId === "__unassigned__") {
     // Virtual filter: active students belonging to no class.
     where.classEnrollments = { none: { status: "ENROLLED" } };
@@ -113,9 +121,42 @@ export function buildStudentsWhere(
   return where;
 }
 
-/** 로스터 정렬 키 → Prisma orderBy (기본 recent = 최근 등록순). */
-export function buildStudentsOrderBy(sort?: StudentFilters["sort"]) {
-  if (sort === "name") return [{ name: "asc" as const }];
-  if (sort === "grade") return [{ grade: "asc" as const }, { name: "asc" as const }];
-  return [{ createdAt: "desc" as const }];
+/** 로스터 정렬 키 → Prisma orderBy (기본 recent = 최근 등록순).
+ *
+ *  여기 있는 키만 **서버 정렬**이 가능하다 — 페이지네이션 때문에 화면 정렬은
+ *  전체 집합 기준이어야 하고, 클라이언트에서 현재 페이지만 재배열하면 거짓말이
+ *  된다. 반/접속 기기/이번 달 수납은 표시값이 쿼리 후 JS 계산(또는 필터된
+ *  to-many 집계)이라 Prisma orderBy 로 충실히 표현되지 않아 제외했다.
+ *  - 반: classEnrollments 는 해제 시 status update(하드 삭제 아님) → _count 가
+ *        화면의 ENROLLED 칩 수와 어긋난다.
+ *  - 접속 기기: 표시값은 revokedAt/expiresAt 로 필터한 활성 세션 수인데
+ *        orderBy _count 는 필터가 안 걸려 만료·폐기 세션까지 센다.
+ *  - 이번 달 수납: 당월 인보이스의 payments 합계와 finalAmount 비교로 도출.
+ *  이 셋은 raw SQL 없이는 불가하다.
+ */
+export type StudentsSortKey =
+  | "recent"
+  | "name"
+  | "grade"
+  | "school"
+  | "status"
+  | "contact";
+export type StudentsSortDir = "asc" | "desc";
+
+export function buildStudentsOrderBy(
+  sort?: StudentsSortKey,
+  dir: StudentsSortDir = "asc",
+) {
+  const d = dir === "desc" ? ("desc" as const) : ("asc" as const);
+  // 동점 시 이름순 — 페이지 경계에서 행이 흔들리지 않게 안정 정렬을 만든다.
+  const tie = [{ name: "asc" as const }, { id: "asc" as const }];
+  if (sort === "name") return [{ name: d }, { id: "asc" as const }];
+  if (sort === "grade") return [{ grade: d }, ...tie];
+  // 열 라벨이 "학교·학년"이라 읽는 순서대로 학교 → 학년 순으로 묶는다.
+  // (학교가 하나뿐인 학원에서는 사실상 학년 정렬로 동작한다.)
+  if (sort === "school")
+    return [{ school: { name: d } }, { grade: "asc" as const }, ...tie];
+  if (sort === "status") return [{ status: d }, ...tie];
+  if (sort === "contact") return [{ phone: d }, ...tie];
+  return [{ createdAt: dir === "asc" ? ("asc" as const) : ("desc" as const) }, { id: "asc" as const }];
 }

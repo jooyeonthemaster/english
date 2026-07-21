@@ -8,9 +8,20 @@
 //   워크스페이스 detail 폴링이 잇는다.
 // ============================================================================
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { Link2, Link2Off, MoreHorizontal, Trash2, UserPlus, Users } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowLeft,
+  ArrowUp,
+  ChevronsUpDown,
+  Link2,
+  Link2Off,
+  MoreHorizontal,
+  Trash2,
+  UserPlus,
+  Users,
+} from "lucide-react";
 import { toast } from "sonner";
 
 import {
@@ -30,11 +41,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { cn, formatRelativeTime } from "@/lib/utils";
+import { cn, formatDateTime } from "@/lib/utils";
 import {
   deleteExamStudent,
   disableAnswerLink,
   enableAnswerLink,
+  syncExamStudentsToRoster,
 } from "@/actions/exam-report";
 import { round2 } from "@/lib/exam-report/grading";
 import type { ScoreSummary, StudentReportStatus } from "@/lib/exam-report/types";
@@ -48,6 +60,15 @@ interface BadgeSpec {
   label: string;
   className: string;
   pulse?: boolean;
+}
+
+/**
+ * 분석의 학년 문자열("고2"·"2"·"중3"…)에서 1~3 학년 숫자를 뽑는다.
+ * 로스터 신규 등록 시 학년 기본값으로만 쓰며, 못 읽으면 1학년.
+ */
+function parseAnalysisGrade(grade?: string | null): number {
+  const digit = grade?.match(/[1-3]/)?.[0];
+  return digit ? Number(digit) : 1;
 }
 
 const REPORT_BADGE: Record<StudentReportStatus, BadgeSpec> = {
@@ -77,11 +98,11 @@ const GRADING_BADGE: Record<GradingBadge, string> = {
   확정: "border border-emerald-200 bg-emerald-50 text-emerald-700",
 };
 
-/** 답안 링크 뱃지 — 제출됨(상대시간) > 링크 활성 > 링크 없음. */
+/** 답안 링크 뱃지 — 제출됨(타임스탬프) > 링크 활성 > 링크 없음. */
 function answerLinkBadgeOf(s: ExamAnalysisStudentRow): BadgeSpec {
   if (s.answerSubmittedAt) {
     return {
-      label: `제출됨 ${formatRelativeTime(s.answerSubmittedAt)}`,
+      label: `제출됨 ${formatDateTime(s.answerSubmittedAt)}`,
       className: "border border-emerald-200 bg-emerald-50 text-emerald-700",
     };
   }
@@ -97,9 +118,85 @@ function answerLinkBadgeOf(s: ExamAnalysisStudentRow): BadgeSpec {
   };
 }
 
+// ── 헤더 정렬 ───────────────────────────────────────────────────────────────
+// 채점 지도 표(exam-map-table)와 같은 규약: 이름·점수 = 값 오름/내림차순,
+// 상태 열(답안 수집·채점·리포트·공유) = 같은 상태끼리 그룹(순서 정/역).
+// 클릭 사이클: 오름 → 내림 → 해제(기본 = 등록 순서).
+
+type SortKey = "name" | "answer" | "grading" | "score" | "report" | "share";
+type SortState = { key: SortKey; dir: "asc" | "desc" } | null;
+
+/** 답안 수집 상태 랭크 — 진행이 덜 된 쪽이 낮다(오름차순 = 할 일 먼저). */
+function answerRank(s: ExamAnalysisStudentRow): number {
+  if (s.answerSubmittedAt) return 2;
+  if (s.answerEnabled) return 1;
+  return 0;
+}
+
+const GRADING_RANK: Record<GradingBadge, number> = {
+  미채점: 0,
+  진행중: 1,
+  확정: 2,
+};
+
+const REPORT_RANK: Record<StudentReportStatus, number> = {
+  FAILED: 0,
+  NONE: 1,
+  GENERATING: 2,
+  GENERATED: 3,
+};
+
+function SortableTh({
+  label,
+  sortKey,
+  sort,
+  onSort,
+  className,
+}: {
+  label: string;
+  sortKey: SortKey;
+  sort: SortState;
+  onSort: (key: SortKey) => void;
+  className?: string;
+}) {
+  const active = sort?.key === sortKey;
+  return (
+    <th
+      aria-sort={
+        active ? (sort.dir === "asc" ? "ascending" : "descending") : undefined
+      }
+      className={cn("px-4 py-2.5 font-medium", className)}
+    >
+      <button
+        type="button"
+        onClick={() => onSort(sortKey)}
+        className={cn(
+          "inline-flex cursor-pointer items-center gap-0.5 whitespace-nowrap transition-colors hover:text-slate-800",
+          active && "font-semibold text-slate-800",
+        )}
+      >
+        {label}
+        {active ? (
+          sort.dir === "asc" ? (
+            <ArrowUp className="size-3" />
+          ) : (
+            <ArrowDown className="size-3" />
+          )
+        ) : (
+          <ChevronsUpDown className="size-3 text-slate-300" />
+        )}
+      </button>
+    </th>
+  );
+}
+
 // ── 탭 본체 ─────────────────────────────────────────────────────────────────
 
-export function StudentsTab({ detail, onDetailChange }: StudentsTabProps) {
+export function StudentsTab({
+  detail,
+  onDetailChange,
+  onBack,
+}: StudentsTabProps) {
   const router = useRouter();
   const pathname = usePathname();
   const base = examReportBasePrefix(pathname ?? "");
@@ -107,22 +204,110 @@ export function StudentsTab({ detail, onDetailChange }: StudentsTabProps) {
   const [addOpen, setAddOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<ExamAnalysisStudentRow | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [sort, setSort] = useState<SortState>(null);
+  const [syncing, setSyncing] = useState(false);
+
+  // 로스터에 연결되지 않은 학생 수 — 이름 자유입력 시절 데이터.
+  const orphanCount = detail.students.filter((s) => !s.studentId).length;
+
+  // 로스터 미연결 학생(이름 자유입력 시절 데이터)은 자동으로 학생 관리에 편입한다.
+  // 동명이 있으면 연결, 없으면 신규 등록 — 분석당 1회만 시도(ref 가드).
+  const syncedRef = useRef(false);
+  useEffect(() => {
+    if (syncedRef.current || syncing || orphanCount === 0) return;
+    syncedRef.current = true;
+    setSyncing(true);
+    void syncExamStudentsToRoster(detail.id, parseAnalysisGrade(detail.grade))
+      .then(({ linked, created }) => {
+        if (created > 0) {
+          toast.success(
+            `학생 관리에 ${created}명 등록했어요${linked > 0 ? ` (기존 ${linked}명 연결)` : ""}.`,
+          );
+        }
+        if (linked + created > 0) router.refresh();
+      })
+      .catch(() => {
+        // 실패해도 화면은 그대로 — 다음 진입에서 다시 시도한다.
+        syncedRef.current = false;
+      })
+      .finally(() => setSyncing(false));
+  }, [detail.id, detail.grade, orphanCount, syncing, router]);
+
+  const toggleSort = (key: SortKey) => {
+    setSort((prev) =>
+      prev?.key !== key
+        ? { key, dir: "asc" }
+        : prev.dir === "asc"
+          ? { key, dir: "desc" }
+          : null,
+    );
+  };
 
   // 외부 진입 관례(허브 보드 CTA 등): ?openAddStudent=1 로 들어오면 마운트 시
   // 학생 추가 다이얼로그를 즉시 열고, 뒤로가기/새로고침에 재발화하지 않도록
   // 쿼리를 URL 에서 제거한다. (useSearchParams 대신 window 조회 — Suspense 경계 불요)
+  //
+  // 여기서 router.replace 를 쓰면 안 된다: 그건 Next 클라이언트 내비게이션이라
+  // 워크스페이스 인터셉팅 라우트((.)[id])가 그걸 가로채, 이미 페이지로 떠 있는
+  // 팝업 위에 팝업을 하나 더 얹는다(딥링크 진입 시 두 겹). 여기서 필요한 건 라우팅이
+  // 아니라 주소창 청소뿐이므로 history.replaceState 로 URL 만 바꾼다.
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get("openAddStudent") !== "1") return;
     setAddOpen(true);
     params.delete("openAddStudent");
     const qs = params.toString();
-    router.replace(`${window.location.pathname}${qs ? `?${qs}` : ""}`, {
-      scroll: false,
-    });
-  }, [router]);
+    window.history.replaceState(
+      null,
+      "",
+      `${window.location.pathname}${qs ? `?${qs}` : ""}`,
+    );
+  }, []);
 
   const students = detail.students;
+
+  // 정렬 적용 — 동률은 항상 원래(등록) 순서로 안정화한다.
+  const displayed = useMemo(() => {
+    if (!sort) return students;
+    const dir = sort.dir === "asc" ? 1 : -1;
+    const idx = new Map(students.map((s, i) => [s.id, i]));
+    const tie = (a: ExamAnalysisStudentRow, b: ExamAnalysisStudentRow) =>
+      (idx.get(a.id) ?? 0) - (idx.get(b.id) ?? 0);
+    const cmp = (a: ExamAnalysisStudentRow, b: ExamAnalysisStudentRow): number => {
+      switch (sort.key) {
+        case "name":
+          return a.studentName.localeCompare(b.studentName, "ko") * dir || tie(a, b);
+        case "answer":
+          return (answerRank(a) - answerRank(b)) * dir || tie(a, b);
+        case "grading":
+          return (
+            (GRADING_RANK[gradingBadgeOf(a.gradingConfirmed, a.scoreSummary)] -
+              GRADING_RANK[gradingBadgeOf(b.gradingConfirmed, b.scoreSummary)]) *
+              dir || tie(a, b)
+          );
+        case "score": {
+          // 미채점(점수 없음)은 방향과 무관하게 항상 마지막 — 채점 대상이 묻히지 않게.
+          const av = a.scoreSummary?.totalScore ?? null;
+          const bv = b.scoreSummary?.totalScore ?? null;
+          if (av == null && bv == null) return tie(a, b);
+          if (av == null) return 1;
+          if (bv == null) return -1;
+          return (av - bv) * dir || tie(a, b);
+        }
+        case "report":
+          return (
+            (REPORT_RANK[a.reportStatus] - REPORT_RANK[b.reportStatus]) * dir ||
+            tie(a, b)
+          );
+        case "share":
+          return (
+            (Number(a.shareEnabled) - Number(b.shareEnabled)) * dir || tie(a, b)
+          );
+      }
+    };
+    return [...students].sort(cmp);
+  }, [students, sort]);
+
   const studentHref = (sid: string) =>
     `${base}/workbench/exam-report/${detail.id}/students/${sid}`;
 
@@ -223,17 +408,17 @@ export function StudentsTab({ detail, onDetailChange }: StudentsTabProps) {
             <table className="w-full min-w-[760px] text-sm">
               <thead>
                 <tr className="border-b border-slate-100 bg-slate-50 text-left text-xs text-slate-500">
-                  <th className="px-4 py-2.5 font-medium">이름</th>
-                  <th className="px-4 py-2.5 font-medium">답안 수집</th>
-                  <th className="px-4 py-2.5 font-medium">채점</th>
-                  <th className="px-4 py-2.5 font-medium">점수</th>
-                  <th className="px-4 py-2.5 font-medium">리포트</th>
-                  <th className="px-4 py-2.5 font-medium">공유</th>
+                  <SortableTh label="이름" sortKey="name" sort={sort} onSort={toggleSort} />
+                  <SortableTh label="답안 수집" sortKey="answer" sort={sort} onSort={toggleSort} />
+                  <SortableTh label="채점" sortKey="grading" sort={sort} onSort={toggleSort} />
+                  <SortableTh label="점수" sortKey="score" sort={sort} onSort={toggleSort} />
+                  <SortableTh label="리포트" sortKey="report" sort={sort} onSort={toggleSort} />
+                  <SortableTh label="공유" sortKey="share" sort={sort} onSort={toggleSort} />
                   <th className="w-10 px-4 py-2.5" />
                 </tr>
               </thead>
               <tbody>
-                {students.map((s) => {
+                {displayed.map((s) => {
                   const grading = gradingBadgeOf(s.gradingConfirmed, s.scoreSummary);
                   const report = REPORT_BADGE[s.reportStatus];
                   const link = answerLinkBadgeOf(s);
@@ -351,10 +536,26 @@ export function StudentsTab({ detail, onDetailChange }: StudentsTabProps) {
         )}
       </section>
 
+      {/* 하단 고정 바 — 문항 분석 탭의 「다음으로」와 대칭. 좌측에 회색(흰색
+          배경) 「이전」, 우측은 없음(학생 관리가 마지막 단계). analysis-step 의
+          sticky bottom-0 규격을 그대로 따른다(팝업 폭 가로지르기 + backdrop).
+          mt-auto: 학생이 적어 목록이 짧아도 바가 중간에 뜨지 않고 팝업 맨 아래에
+          붙는다(셸 min-h-full + main flex-1 이 남는 높이를 만들어 준다). 목록이
+          길어 넘칠 땐 sticky 가 스크롤 중에도 바닥에 고정한다. */}
+      {onBack && (
+        <div className="sticky bottom-0 z-20 -mx-4 -mb-4 mt-auto hidden items-center justify-between gap-3 border-t border-slate-200 bg-white/95 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6 lg:flex">
+          <Button type="button" variant="outline" onClick={onBack}>
+            <ArrowLeft className="h-4 w-4" />
+            이전
+          </Button>
+        </div>
+      )}
+
       <AddStudentDialog
         open={addOpen}
         onOpenChange={setAddOpen}
         analysisId={detail.id}
+        defaultGrade={parseAnalysisGrade(detail.grade)}
         onAdded={(row) =>
           onDetailChange({ ...detail, students: [...detail.students, row] })
         }

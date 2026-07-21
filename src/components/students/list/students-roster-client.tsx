@@ -11,14 +11,14 @@
 // 과제 배포(AssignmentComposer)·반 편성으로 이어진다.
 //
 // embedded 계약(v3 C-1): embedded=true 면 자체 PageShell·SectionCard 타이틀 계층
-// (헤더 액션 포함)을 렌더하지 않고 내용부(헤더리스 카드+선택 바+다이얼로그)만
-// 렌더한다 — 공통 셸(PageShell·페이지 헤더·뷰 스위처)은 C-2 (manage) layout 담당.
+// (헤더 액션 포함)을 렌더하지 않고 내용부(헤더리스 카드+다이얼로그)만 렌더한다
+// — 공통 셸(PageShell·페이지 헤더·뷰 스위처)은 C-2 (manage) layout 담당.
 // false/미지정이면 현행과 픽셀 동일(무회귀 — 기존 page.tsx 소비처 무변경).
 // ============================================================================
 
-import { type ReactNode, useEffect, useState, useTransition } from "react";
+import { type ReactNode, useState, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { SearchX, Upload, UserPlus, Users } from "lucide-react";
+import { SearchX, UserPlus, Users } from "lucide-react";
 import {
   PageShell,
   SectionCard,
@@ -27,7 +27,6 @@ import {
   type PillTone,
 } from "@/components/layout/page-frame";
 import { StudentFormDialog } from "@/components/students/student-form-dialog";
-import { StudentBulkImportDialog } from "@/app/(director)/director/tutor/_components/student-bulk-import-dialog";
 import { AssignmentComposer } from "@/components/study-assignments/assignment-composer";
 import {
   UNASSIGNED_CLASS_ID,
@@ -39,11 +38,11 @@ import {
 } from "@/app/(director)/director/tutor/_components/types";
 import { cn } from "@/lib/utils";
 import { RosterToolbar } from "./roster-toolbar";
-import { RosterTable, type RosterSort } from "./roster-table";
-import { RosterSelectionBar } from "./roster-selection-bar";
-
-/** 행 밀도(좁게) 선호 저장 키 */
-const DENSE_STORAGE_KEY = "students:roster:dense";
+import {
+  RosterTable,
+  type RosterSort,
+  type RosterSortDir,
+} from "./roster-table";
 
 const BASE_PATH = "/director/students";
 
@@ -65,6 +64,7 @@ export function StudentsRosterClient({
   stats,
   filters,
   sort,
+  dir,
   isDirector,
   showBilling,
   embedded = false,
@@ -76,6 +76,7 @@ export function StudentsRosterClient({
   stats: HubStats;
   filters: HubFilters;
   sort: RosterSort;
+  dir: RosterSortDir;
   isDirector: boolean;
   showBilling: boolean;
   /** true: C-2 (manage) layout 셸에 얹히는 내용부 전용 렌더(상단 계약 주석 참조) */
@@ -87,33 +88,11 @@ export function StudentsRosterClient({
   const [isPending, startTransition] = useTransition();
 
   const [studentDialogOpen, setStudentDialogOpen] = useState(false);
-  const [bulkImportOpen, setBulkImportOpen] = useState(false);
 
   // 벌크 선택 — id→이름. URL(페이지·필터) 전환에도 컴포넌트가 유지되므로
   // 여러 페이지를 오가며 모은 선택이 그대로 남는다(선택 바가 실명으로 노출).
   const [selected, setSelected] = useState<Map<string, string>>(new Map());
   const [composerOpen, setComposerOpen] = useState(false);
-
-  // 행 밀도 — 마운트 후 localStorage 로드(SSR 하이드레이션 미스매치 회피)
-  const [dense, setDense] = useState(false);
-  useEffect(() => {
-    try {
-      setDense(localStorage.getItem(DENSE_STORAGE_KEY) === "1");
-    } catch {
-      /* localStorage 접근 불가 환경 무시 */
-    }
-  }, []);
-  function toggleDense() {
-    setDense((prev) => {
-      const next = !prev;
-      try {
-        localStorage.setItem(DENSE_STORAGE_KEY, next ? "1" : "0");
-      } catch {
-        /* noop */
-      }
-      return next;
-    });
-  }
 
   const noStudentsAtAll = stats.totalStudents === 0;
 
@@ -230,14 +209,6 @@ export function StudentsRosterClient({
     <>
       <button
         type="button"
-        onClick={() => setBulkImportOpen(true)}
-        className="inline-flex h-8 items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 text-[12.5px] font-semibold text-slate-600 transition-colors hover:bg-slate-50"
-      >
-        <Upload className="size-3.5" aria-hidden />
-        대량 등록
-      </button>
-      <button
-        type="button"
         onClick={() => setStudentDialogOpen(true)}
         className="inline-flex h-8 items-center gap-1.5 rounded-md bg-blue-600 px-3 text-[12.5px] font-semibold text-white transition-colors hover:bg-blue-700"
       >
@@ -266,19 +237,11 @@ export function StudentsRosterClient({
             <div className="flex items-center gap-2">
               <button
                 type="button"
-                onClick={() => setBulkImportOpen(true)}
-                className="inline-flex h-9 items-center gap-1.5 rounded-md border border-slate-200 bg-white px-4 text-[13px] font-semibold text-slate-600 transition-colors hover:bg-slate-50"
-              >
-                <Upload className="size-3.5" aria-hidden />
-                대량 등록
-              </button>
-              <button
-                type="button"
                 onClick={() => setStudentDialogOpen(true)}
                 className="inline-flex h-9 items-center gap-1.5 rounded-md bg-blue-600 px-4 text-[13px] font-semibold text-white transition-colors hover:bg-blue-700"
               >
                 <UserPlus className="size-3.5" aria-hidden />
-                첫 학생 등록
+                학생 등록
               </button>
             </div>
           </div>
@@ -321,13 +284,12 @@ export function StudentsRosterClient({
 
             <RosterToolbar
               filters={filters}
-              classes={classes}
               schools={schools}
               sort={sort}
-              isPending={isPending}
-              dense={dense}
               isDirector={isDirector}
-              onToggleDense={toggleDense}
+              selectedIds={[...selected.keys()]}
+              onOpenComposer={() => setComposerOpen(true)}
+              onClearSelection={() => setSelected(new Map())}
               updateParams={updateParams}
               onRefresh={refresh}
             />
@@ -356,13 +318,33 @@ export function StudentsRosterClient({
                 <RosterTable
                   studentsData={studentsData}
                   showBilling={showBilling}
-                  dense={dense}
+                  dense={false}
                   sort={sort}
-                  onSort={(key) =>
-                    updateParams({ sort: sort === key ? undefined : key })
+                  dir={dir}
+                  onSort={(key) => {
+                    // 같은 열 재클릭 순환: 오름차순 → 내림차순 → 해제(기본 recent).
+                    // 정렬이 바뀌면 1페이지로 — 3페이지에 머물면 엉뚱한 구간이 보인다.
+                    if (sort !== key) {
+                      updateParams({ sort: key, dir: undefined, page: undefined });
+                    } else if (dir === "asc") {
+                      updateParams({ sort: key, dir: "desc", page: undefined });
+                    } else {
+                      updateParams({ sort: undefined, dir: undefined, page: undefined });
+                    }
+                  }}
+                  unassignedOnly={filters.classId === UNASSIGNED_CLASS_ID}
+                  onToggleUnassigned={() =>
+                    updateParams({
+                      classId:
+                        filters.classId === UNASSIGNED_CLASS_ID
+                          ? undefined
+                          : UNASSIGNED_CLASS_ID,
+                      page: undefined,
+                    })
                   }
                   selected={selected}
-                  dragAssign={isDirector}
+                  // 반 칩(드롭 대상)을 걷어내 끌어다 놓을 곳이 없다 — 드래그 비활성.
+                  dragAssign={false}
                   onToggleSelect={toggleSelect}
                   onTogglePage={togglePage}
                   onPage={(page) => updateParams({ page: page.toString() })}
@@ -373,23 +355,6 @@ export function StudentsRosterClient({
         )}
       </RosterCard>
 
-      {/* 벌크 선택 바 — SectionCard 가 overflow-hidden 이라 카드 밖에서 sticky */}
-      <RosterSelectionBar
-        selected={selected}
-        classes={classes}
-        isDirector={isDirector}
-        activeClass={
-          filters.classId && filters.classId !== UNASSIGNED_CLASS_ID
-            ? (classes.find((c) => c.id === filters.classId) ?? null)
-            : null
-        }
-        onAssign={() => setComposerOpen(true)}
-        onClear={() => setSelected(new Map())}
-        onEnrolled={() => {
-          setSelected(new Map());
-          refresh();
-        }}
-      />
 
       {/* 과제 배포 — 선택 학생 프리셀렉트(성공 토스트는 컴포저가 담당) */}
       <AssignmentComposer
@@ -413,11 +378,6 @@ export function StudentsRosterClient({
         isDirector={isDirector}
       />
 
-      <StudentBulkImportDialog
-        open={bulkImportOpen}
-        onOpenChange={setBulkImportOpen}
-        academyId={academyId}
-      />
     </RosterShell>
   );
 }

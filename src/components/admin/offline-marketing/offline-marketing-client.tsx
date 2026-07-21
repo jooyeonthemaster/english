@@ -2,7 +2,7 @@
 
 // ============================================================================
 // 오프라인 홍보 관리 — 관리자 콘솔. 2단 구조.
-//   홍보(캠페인) 1개 → 홍보물 파일(PDF) N개.
+//   홍보(캠페인) 1개 → 홍보물 파일(PDF·이미지) N개.
 //   - 홍보를 만들고, 펼쳐서 그 안에 파일을 추가/수정/삭제/인쇄.
 //   - 파일 "인쇄"는 same-origin 프록시 iframe으로 관리자 페이지에서 바로 인쇄.
 // SUPER_ADMIN 전용 페이지에서 렌더된다.
@@ -10,6 +10,7 @@
 
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { Reorder } from "framer-motion";
 import { toast } from "sonner";
 import {
@@ -18,6 +19,7 @@ import {
   Download,
   Eye,
   FileText,
+  ImageIcon,
   FolderOpen,
   GripVertical,
   Pencil,
@@ -617,6 +619,7 @@ function AssetRow({
   onEdit: () => void;
   onDelete: () => void;
 }) {
+  const isPdf = asset.fileName.toLowerCase().endsWith(".pdf");
   const meta = [
     formatBytes(asset.fileSize),
     asset.pageCount ? `${asset.pageCount}쪽` : null,
@@ -630,9 +633,29 @@ function AssetRow({
         pending ? "pointer-events-none opacity-50" : ""
       }`}
     >
-      <span className="grid size-9 shrink-0 place-items-center rounded-lg border border-rose-100 bg-rose-50 text-rose-500">
-        <FileText className="size-4" strokeWidth={1.7} />
-      </span>
+      {isPdf ? (
+        <span className="grid size-9 shrink-0 place-items-center rounded-lg border border-rose-100 bg-rose-50 text-rose-500">
+          <FileText className="size-4" strokeWidth={1.7} />
+        </span>
+      ) : (
+        <a
+          href={assetFileUrl(asset.id)}
+          target="_blank"
+          rel="noopener noreferrer"
+          title="이미지 미리보기"
+          className="relative h-10 w-16 shrink-0 overflow-hidden rounded-lg border border-blue-100 bg-blue-50"
+        >
+          <Image
+            src={assetFileUrl(asset.id)}
+            alt=""
+            fill
+            unoptimized
+            sizes="64px"
+            className="object-cover"
+          />
+          <ImageIcon className="absolute bottom-0.5 right-0.5 size-3 rounded bg-white/80 p-0.5 text-blue-500" />
+        </a>
+      )}
       <div className="min-w-0 flex-1">
         <div className="truncate text-[13px] font-semibold text-gray-800">{asset.title}</div>
         <div className="truncate text-[11px] text-gray-400">
@@ -644,14 +667,16 @@ function AssetRow({
         )}
       </div>
       <div className="flex shrink-0 items-center gap-1">
-        <button
-          onClick={onPrint}
-          title="인쇄"
-          className="inline-flex h-8 items-center gap-1.5 rounded-lg bg-blue-600 px-2.5 text-[12px] font-semibold text-white hover:bg-blue-700"
-        >
-          <Printer className="size-3.5" />
-          <span className="hidden sm:inline">인쇄</span>
-        </button>
+        {isPdf && (
+          <button
+            onClick={onPrint}
+            title="인쇄"
+            className="inline-flex h-8 items-center gap-1.5 rounded-lg bg-blue-600 px-2.5 text-[12px] font-semibold text-white hover:bg-blue-700"
+          >
+            <Printer className="size-3.5" />
+            <span className="hidden sm:inline">인쇄</span>
+          </button>
+        )}
         <a
           href={assetFileUrl(asset.id)}
           target="_blank"

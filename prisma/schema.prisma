@@ -2426,7 +2426,7 @@ model OfflineMarketingCampaign {
   @@map("offline_marketing_campaigns")
 }
 
-/// OfflineMarketingAsset — 홍보(캠페인)에 속한 개별 PDF 파일. 파일은 공개 Supabase
+/// OfflineMarketingAsset — 홍보(캠페인)에 속한 개별 PDF·이미지 파일. 파일은 공개 Supabase
 /// 버킷(offline-marketing)에 저장하고 공개 URL을 보관한다.
 model OfflineMarketingAsset {
   id               String                   @id @default(cuid())
@@ -2434,7 +2434,7 @@ model OfflineMarketingAsset {
   campaign         OfflineMarketingCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
   title            String // 파일 표시 이름
   description      String?                  @db.Text // 파일 메모(선택)
-  fileUrl          String                   @map("file_url") @db.Text // 공개 PDF URL
+  fileUrl          String                   @map("file_url") @db.Text // 공개 파일 URL
   storagePath      String                   @map("storage_path") // 버킷 내 경로(삭제용)
   fileName         String                   @map("file_name") // 원본 파일명
   fileSize         Int                      @default(0) @map("file_size") // 바이트
