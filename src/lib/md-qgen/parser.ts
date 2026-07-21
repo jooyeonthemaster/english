@@ -362,6 +362,60 @@ export function autoSnapGrammarMarks(
   };
 }
 
+/**
+ * 빈칸원문 자동 보정 — 어법 autoSnapGrammarMarks 의 빈칸 대칭(26-07-22 신설).
+ * 실사용 반려 주계통이 "빈칸원문이 지문에 축자로 없음"(모델이 표적 구간을
+ * 한두 단어 어긋나게 인용)인데 빈칸에는 스냅이 없어 그대로 실패하던 비대칭을
+ * 메운다. 오스냅이 정답 자리를 옮기면 반려보다 나쁘므로 보수 가드 3중:
+ * 머리·꼬리 2단어 축자 일치 + 후보 구간 유일 + 토큰 자카드 ≥ 0.66.
+ */
+export function autoSnapBlankExpression(
+  q: MdBlankQuestion,
+  passage: string,
+): { question: MdBlankQuestion; corrections: string[] } {
+  const none = { question: q, corrections: [] as string[] };
+  const oe = q.originalExpression?.trim();
+  if (!oe) return none;
+  if (passage.includes(oe)) return none;
+  // 정규화 일치는 게이트·어댑터가 이미 수용하므로 스냅 불요.
+  if (normalizeWs(passage).includes(normalizeWs(oe))) return none;
+  const words = oe.split(/\s+/).filter(Boolean);
+  if (words.length < 4) return none; // 짧은 구는 오스냅 위험 — 반려에 맡긴다.
+  const head = words.slice(0, 2).join(" ");
+  const tail = words.slice(-2).join(" ");
+  const maxSpanWords = Math.ceil(words.length * 1.25) + 2;
+  const minSpanWords = Math.max(4, Math.floor(words.length * 0.75));
+  const candidates: string[] = [];
+  let from = passage.indexOf(head);
+  while (from !== -1) {
+    let tIdx = passage.indexOf(tail, from + head.length);
+    while (tIdx !== -1) {
+      const span = passage.slice(from, tIdx + tail.length);
+      const spanWords = span.split(/\s+/).filter(Boolean).length;
+      if (spanWords > maxSpanWords) break; // 창 초과 — 더 먼 꼬리는 무의미.
+      if (spanWords >= minSpanWords) candidates.push(span);
+      tIdx = passage.indexOf(tail, tIdx + 1);
+    }
+    from = passage.indexOf(head, from + 1);
+  }
+  const unique = [...new Set(candidates)];
+  if (unique.length !== 1) return none; // 유일 구간이 아니면 스냅하지 않는다.
+  const snapped = unique[0];
+  const a = new Set(words.map((w) => w.toLowerCase()));
+  const spanTokens = snapped.split(/\s+/).filter(Boolean);
+  const b = new Set(spanTokens.map((w) => w.toLowerCase()));
+  let inter = 0;
+  for (const w of a) if (b.has(w)) inter += 1;
+  const jaccard = inter / (a.size + b.size - inter);
+  if (jaccard < 0.66) return none;
+  return {
+    question: { ...q, originalExpression: snapped },
+    corrections: [
+      `빈칸원문 자동 스냅: '${oe.slice(0, 80)}' → 지문 축자 '${snapped.slice(0, 80)}'`,
+    ],
+  };
+}
+
 const CIRCLED = ["①", "②", "③", "④", "⑤"] as const;
 
 /** 어법 라벨 (A)~(E) → 시험지 표기 ①~⑤ */

@@ -36,6 +36,7 @@ import {
   type MdDifficulty,
 } from "@/lib/md-qgen/prompts";
 import {
+  autoSnapBlankExpression,
   autoSnapGrammarMarks,
   gateMdQuestion,
   parseMdBlank,
@@ -232,8 +233,16 @@ function parseAndGate(
   passage: string,
 ): { question: MdQuestion; gateIssues: string[]; corrections: string[] } {
   if (subType === "BLANK_INFERENCE") {
-    const q = parseMdBlank(text);
-    return { question: q, gateIssues: gateMdQuestion(q, passage), corrections: [] };
+    let q = parseMdBlank(text);
+    // 0원 자동 보정(어법 스냅의 빈칸 대칭) — 반려 주계통 "빈칸원문 축자 부재"를
+    // 보수 가드 하에 지문 축자로 교정한다. 실패하면 그대로 게이트가 반려.
+    const snapped = autoSnapBlankExpression(q, passage);
+    q = snapped.question;
+    return {
+      question: q,
+      gateIssues: gateMdQuestion(q, passage),
+      corrections: snapped.corrections,
+    };
   }
   let q = parseMdGrammar(text);
   const snapped = autoSnapGrammarMarks(q, passage);
@@ -581,12 +590,25 @@ export async function POST(req: NextRequest) {
           // 원큐 규약(26-07-21 사용자 확정): 무결성 게이트 반려 = 즉시 실패·환불.
           // md-lab 원형과 동일하게 자동 재생성은 없다 — 깨진 문항은 저장하지
           // 않고, 재시도는 사용자의 다음 클릭이다(양치기). 반려 사유 원문은
-          // 지문 조각을 포함할 수 있어 서버 로그에만 남긴다.
+          // 지문 조각을 포함할 수 있어 사용자 표면에는 내지 않되, 실패 계통
+          // 추적을 위해 잡 result 에 남긴다(FAILED 잡의 result 는 UI 미소비 —
+          // 26-07-22 실사용 간헐 실패 포렌식이 콘솔 로그 휘발로 막혔던 구멍).
           if (parsedMd.gateIssues.length > 0) {
             console.error(
               "[md-stream] integrity gate rejected",
               parsedMd.gateIssues,
             );
+            await prisma.workbenchAiJob
+              .update({
+                where: { id: job.id },
+                data: {
+                  result: {
+                    mdStream: true,
+                    gateIssues: parsedMd.gateIssues.map((i) => i.slice(0, 300)),
+                  },
+                },
+              })
+              .catch(() => undefined);
             throw new Error(
               "생성물이 무결성 검사에서 반려되어 저장하지 않았어요. 크레딧은 환불되었습니다. 한 번 더 생성해 주세요.",
             );
