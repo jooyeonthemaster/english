@@ -111,8 +111,12 @@ export async function generateAnalysisReportCore(
     responseFormat: "json_object",
     isRecoverableJsonText: canRecover,
     thinkingBudget: 0,
-    timeoutMs: 110_000,
+    // 26-07-22 학습지 3.6-flash 사고 high 전환 — 사고 시간만큼 1콜이 길어져
+    // 110s→140s (재시도 1회 포함 최악 280s < 호출 라우트 300s 벽).
+    timeoutMs: 140_000,
     temperature: 0.1,
+    reasoningEffort: "high",
+    applyReasoningEffortToGemini: true,
   });
   const primaryUsage: AnalysisReportUsage = {
     usage: result.usage,
@@ -518,8 +522,10 @@ ${lastFailure}
 }
 
 function runWorksheetTextGeneration(prompt: string, logPrefix: string, deadlineAt?: number) {
-  // 데드라인이 있으면 호출 abort 를 남은 예산으로 좁힌다(없으면 기존 120s — 무회귀).
-  const timeoutMs = deadlineAt ? Math.max(1_000, Math.min(120_000, deadlineAt - Date.now())) : 120_000;
+  // 데드라인이 있으면 호출 abort 를 남은 예산으로 좁힌다. 26-07-22 실전 학습지
+  // 3.6-flash 사고 high 전환으로 무데드라인 기본·상한을 120s→140s 상향
+  // (워크북+추론 2콜 최악 280s < 워크시트 라우트 300s 벽, deadlineAt 은 계속 존중).
+  const timeoutMs = deadlineAt ? Math.max(1_000, Math.min(140_000, deadlineAt - Date.now())) : 140_000;
   return generateQuestionText({
     prompt,
     generationPlan: "STANDARD",
@@ -532,6 +538,8 @@ function runWorksheetTextGeneration(prompt: string, logPrefix: string, deadlineA
     thinkingBudget: 0,
     timeoutMs,
     temperature: 0.12,
+    reasoningEffort: "high",
+    applyReasoningEffortToGemini: true,
   });
 }
 

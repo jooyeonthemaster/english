@@ -1401,8 +1401,8 @@ export async function runQuestionGeneration(
                 system: generationSystem,
                 deadlineAt,
                 forceJsonFallback: premiumForceJsonFallback,
-                // KO 동결: 레거시 표준 모델(3.5-flash)·기존 60s 콜 타임아웃 유지 —
-                // flash3 통일·타임아웃 상향(120s)의 범위 밖.
+                // KO 동결: 광역 표준 모델(26-07-22 부터 3.6-flash)·기존 60s 콜
+                // 타임아웃 유지 — flash3 통일·타임아웃 상향(120s)의 범위 밖.
                 // 영어 유형: 경량 계약(S3i)이면 실험 계약대로 high, 그 외에는
                 // 유형별 티어(무거운 컴팩트 프롬프트의 어법·구조형은 medium —
                 // O204). 전역 gemini env 미의존, env 로 모델 교체 시 자동 무시.
@@ -1749,10 +1749,12 @@ export async function runQuestionGeneration(
               researchParentCandidate: researchEnabled
                 ? researchDecisionCandidate
                 : undefined,
-              // 솔버는 항상 STANDARD 플랜 + 레거시 표준 모델(3.5-flash) 고정 —
-              // 6라운드+42구성 실측이 flash 솔버 기준이고, 이원 티어에서 STANDARD
-              // 매핑이 생성 모델(flash3)과 같아졌으므로 modelId 를 고정하지 않으면
-              // 생성기가 자기 문항을 푸는 자기검증이 된다(O199: 외부>셀프).
+              // 솔버는 항상 STANDARD 플랜 + 광역 표준 모델(26-07-22 부터
+              // 3.6-flash) 고정 — 6라운드+42구성 실측은 3.5-flash 솔버 기준.
+              // 이원 티어에서 STANDARD 매핑이 생성 모델(flash3)과 같아졌으므로
+              // modelId 를 고정하지 않으면 생성기가 자기 문항을 푸는 자기검증이
+              // 된다(O199: 외부>셀프) — 3.6-flash 도 flash3 와 다른 모델이라
+              // 독립성은 유지된다.
               generationPlan: "STANDARD",
               modelId: ATLAS_STANDARD_MODEL_ID,
               deadlineAt,

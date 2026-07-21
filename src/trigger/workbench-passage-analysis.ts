@@ -215,7 +215,7 @@ export const workbenchPassageAnalysisTask = task({
           { input: 0, output: 0, costUsd: 0 },
         );
         if (koTokens.input > 0 || koTokens.output > 0) {
-          const koModelId = koResult.usages.find((u) => u.modelId)?.modelId ?? "gemini-3.5-flash";
+          const koModelId = koResult.usages.find((u) => u.modelId)?.modelId ?? "gemini-3.6-flash";
           await recordPlatformApiUsageCost({
             sourceKey: `workbench_ai_job:${jobId}:analysis`,
             sourceType: "WORKBENCH_AI_JOB",

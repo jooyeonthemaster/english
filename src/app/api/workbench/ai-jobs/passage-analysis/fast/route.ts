@@ -268,7 +268,7 @@ export async function POST(req: NextRequest) {
         { input: 0, output: 0, costUsd: 0 },
       );
       if (koTokens.input > 0 || koTokens.output > 0) {
-        const koModelId = koResilient.usages.find((u) => u.modelId)?.modelId ?? "gemini-3.5-flash";
+        const koModelId = koResilient.usages.find((u) => u.modelId)?.modelId ?? "gemini-3.6-flash";
         await recordCostSafely({
           sourceKey: `workbench_ai_job:${job.id}:analysis`,
           sourceId: job.id,
@@ -557,7 +557,7 @@ export async function POST(req: NextRequest) {
       { input: 0, output: 0, costUsd: 0 },
     );
     if (analysisTokens.input > 0 || analysisTokens.output > 0) {
-      const usageModelId = resilient.usages.find((u) => u.modelId)?.modelId ?? "gemini-3.5-flash";
+      const usageModelId = resilient.usages.find((u) => u.modelId)?.modelId ?? "gemini-3.6-flash";
       await recordCostSafely({
         sourceKey: `workbench_ai_job:${job.id}:analysis`,
         sourceId: job.id,
@@ -663,7 +663,7 @@ export async function POST(req: NextRequest) {
         { input: 0, output: 0, costUsd: 0 },
       );
       if (wsTokens.input > 0 || wsTokens.output > 0) {
-        const wsModelId = worksheet.usages.find((u) => u.modelId)?.modelId ?? "gemini-3.5-flash";
+        const wsModelId = worksheet.usages.find((u) => u.modelId)?.modelId ?? "gemini-3.6-flash";
         await recordCostSafely({
           sourceKey: `workbench_ai_job:${job.id}:worksheet`,
           sourceId: job.id,

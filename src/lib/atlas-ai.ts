@@ -10,7 +10,9 @@ export const ATLAS_CLOUD_PROVIDER = "atlascloud" as const;
 
 const ATLAS_DEFAULT_BASE_URL = "https://openrouter.ai/api/v1";
 const GEMINI_FLASH_LITE_MODEL = "google/gemini-3.1-flash-lite";
-const GEMINI_FLASH_MODEL = "google/gemini-3.5-flash";
+// 26-07-22 유저 지시: 광역 표준 모델 3.5-flash → 3.6-flash 전면 전환 (O213 벤치:
+// 3.6-flash 품질 압승). 롤백은 env OPENROUTER_STANDARD_MODEL=google/gemini-3.5-flash.
+const GEMINI_FLASH_MODEL = "google/gemini-3.6-flash";
 const CLAUDE_SONNET_MODEL = "anthropic/claude-sonnet-5";
 
 function readEnv(name: string): string | undefined {
@@ -40,7 +42,12 @@ export function normalizeAtlasModelId(modelId: string | undefined | null): strin
     return GEMINI_FLASH_LITE_MODEL;
   }
 
+  // 명시적 3.5-flash 핀(env 롤백용)은 기본값(3.6-flash)으로 흡수하지 않고 그대로 둔다.
   if (lower === "gemini-3.5-flash" || lower === "google/gemini-3.5-flash") {
+    return "google/gemini-3.5-flash";
+  }
+
+  if (lower === "gemini-3.6-flash" || lower === "google/gemini-3.6-flash") {
     return GEMINI_FLASH_MODEL;
   }
 

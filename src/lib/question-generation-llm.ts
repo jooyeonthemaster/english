@@ -87,7 +87,8 @@ const TEXT_GENERATION_MODEL_CONFIGS: Record<
   { provider: QuestionGenerationProvider; modelId: string; timeoutMs: number }
 > = {
   // 텍스트 경로 STANDARD(지문분석·passage-report 계열)는 문제생성 flash3 통일의
-  // 범위 밖 — 광역 표준 모델(기본 gemini-3.5-flash)·기존 60s 타임아웃을 유지한다.
+  // 범위 밖 — 광역 표준 모델(26-07-22 부터 기본 gemini-3.6-flash)·기존 60s
+  // 타임아웃을 유지한다(학습지 계열 호출자는 timeoutMs 를 자체 상향).
   STANDARD: {
     provider: ATLAS_CLOUD_PROVIDER,
     modelId: ATLAS_STANDARD_MODEL_ID,
@@ -233,6 +234,14 @@ interface GenerateQuestionTextArgs {
   thinkingBudget?: number;
   timeoutMs?: number;
   temperature?: number;
+  /** GenerateQuestionObjectArgs.reasoningEffort 와 동일 계약 — 콜 단위 사고 강도. */
+  reasoningEffort?: string;
+  /**
+   * GenerateQuestionObjectArgs.applyReasoningEffortToGemini 와 동일 계약 —
+   * true 일 때만 gemini 모델에 reasoningEffort 를 싣는다(기본 false = 기존 콜
+   * 바이트 불변). 26-07-22 학습지·실전 학습지 3.6-flash 사고 high 전환용 배선.
+   */
+  applyReasoningEffortToGemini?: boolean;
 }
 
 export interface GenerateQuestionObjectResult<T> {
@@ -1090,6 +1099,8 @@ export async function generateQuestionText({
   thinkingBudget,
   timeoutMs,
   temperature = 0.35,
+  reasoningEffort,
+  applyReasoningEffortToGemini = false,
 }: GenerateQuestionTextArgs): Promise<GenerateQuestionTextResult> {
   const planConfig = getTextGenerationModelConfig(generationPlan);
   const config = modelIdOverride
@@ -1128,6 +1139,11 @@ export async function generateQuestionText({
         maxOutputTokens: omitMaxTokens ? undefined : maxTokens,
         temperature,
         ...claudeQgenReasoningOptions(config.modelId),
+        ...explicitReasoningEffortOptions(
+          config.modelId,
+          reasoningEffort,
+          applyReasoningEffortToGemini,
+        ),
         abortSignal: AbortSignal.timeout(timeoutMs ?? config.timeoutMs),
         ...(responseFormat === "json_object" ? { output: Output.json() } : {}),
       });

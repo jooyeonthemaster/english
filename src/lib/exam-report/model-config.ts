@@ -89,14 +89,18 @@ const CONFIG_BY_STAGE: Record<ExamReportAiStage, ExamReportAiConfig> = {
   },
   // S4 학생 리포트 — 8 narratives + wrongItems 전수 + trapWhy 전수 + 주차계획을
   // 1콜에 담는 구조라 8192 로는 문항 많은 시험에서 서술이 압축·잘린다 → 12288.
-  // reasoning 미지정 시 모델 기본 사고가 출력 예산을 잠식하는 함정(studentRead
-  // 26-07-06 실측 선례)을 막기 위해 명시적으로 끈다. 출력이 커진 만큼 240s.
+  // 26-07-22 유저 지시: 표준 모델 3.6-flash 전환과 함께 Gemini 경로 사고 high 고정
+  // (reasoningEffort 가 atlasReasoningRequestFor 의 Gemini 분기에서 우선한다).
+  // reasoning:{enabled:false} 는 env 로 Claude 롤백 시에만 유효한 안전핀으로 유지
+  // — Claude 기본 사고가 출력 예산을 잠식하는 함정(studentRead 26-07-06 실측
+  // 선례) 차단. 출력이 커진 만큼 240s.
   report: {
     model: REPORT_MODEL,
     temperature: 0.4,
     maxOutputTokens: 12288,
     timeoutInMs: 240_000,
     reasoning: { enabled: false },
+    reasoningEffort: "high",
   },
 };
 
