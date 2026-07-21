@@ -483,7 +483,7 @@ export async function POST(req: NextRequest) {
     console.warn("[md-stream] diversity context failed", error);
   }
 
-  const buildPrompt = (): string => {
+  const buildPrompt = (feedback: string | null): string => {
     const base =
       subType === "BLANK_INFERENCE"
         ? buildMdBlankPrompt(passage.content, "full", mdDifficulty)
@@ -492,6 +492,11 @@ export async function POST(req: NextRequest) {
     if (diversityBlock) extras.push(diversityBlock);
     if (config.customPrompt?.trim()) {
       extras.push(`## 교사 추가 지시\n${config.customPrompt.trim()}`);
+    }
+    if (feedback) {
+      extras.push(
+        `[반려 재생성] 직전 출력이 기계 검사에서 반려되었다: ${feedback}. 위반을 전부 해소하고 같은 요구사항으로 완제품을 다시 설계하라.`,
+      );
     }
     return extras.length > 0 ? `${base}\n\n${extras.join("\n\n")}` : base;
   };
@@ -550,22 +555,22 @@ export async function POST(req: NextRequest) {
           creditTxId = credit.transactionId;
           emit({ t: "meta", jobId: job.id });
 
-          // ── 생성 (무조건 원큐 — 재생성 없음, md-lab 규약) ─────────────────
+          // ── 생성 정책 (26-07-22 사용자 확정): 빈칸 = 원큐(스냅 보정이 주계통
+          // 커버, 48h 실패율 7%) / 어법 = 게이트 반려 시 1회 자동 재생성(반려가
+          // 품질이 아니라 기계 파손이고 콜당 ~10~20% 확률 꼬리라, 실패 카드
+          // 대신 재생성으로 흡수 — 48h 실패율 21% 근거).
           // 시간 예산: Vercel maxDuration 300s. 콜 타임아웃은 270s 벽까지 남은
           // 시간으로 잘라 함수 강제종료(잡 고아 → 환불 누락)를 막는다
           // (fast 라우트 deadlineAt 안전판 등가).
           const elapsed = () => Date.now() - requestStartedAt;
           const budgetMs = () => 270_000 - elapsed();
-          const call = await streamOnce({
-            prompt: buildPrompt(),
-            modelId,
-            timeoutMs: Math.min(240_000, budgetMs()),
-            emit,
-          });
-          callResults.push(call);
-          // 실지출 원장은 게이트·저장 성공 여부와 무관하게 생성 직후 기록한다 —
-          // 반려·어댑터 실패 시에도 OpenRouter 과금은 이미 발생했다(fast 순서 정합).
-          for (const [idx, result] of callResults.entries()) {
+          // 실지출 원장은 게이트·저장 성공 여부와 무관하게 각 콜 직후 기록한다 —
+          // 반려·재생성 타임아웃·어댑터 실패 시에도 OpenRouter 과금은 이미
+          // 발생했다(fast 순서 정합).
+          const recordGenerationCost = async (
+            idx: number,
+            result: StreamCallResult,
+          ) => {
             await recordCostSafely({
               sourceKey: `workbench_ai_job:${job.id}:generation:${idx}`,
               sourceId: job.id,
@@ -585,14 +590,56 @@ export async function POST(req: NextRequest) {
                 durationMs: result.durationMs,
               },
             });
+          };
+          let call = await streamOnce({
+            prompt: buildPrompt(null),
+            modelId,
+            timeoutMs: Math.min(240_000, budgetMs()),
+            emit,
+          });
+          callResults.push(call);
+          await recordGenerationCost(0, call);
+          let parsedMd = parseAndGate(subType, call.text, passage.content);
+          let firstGateIssues: string[] | null = null;
+          if (
+            subType === "GRAMMAR_ERROR" &&
+            parsedMd.gateIssues.length > 0 &&
+            budgetMs() > 30_000
+          ) {
+            firstGateIssues = parsedMd.gateIssues;
+            console.error(
+              "[md-stream] gate rejected — grammar retry",
+              parsedMd.gateIssues,
+            );
+            emit({
+              t: "retry",
+              reason: parsedMd.gateIssues.join(", ").slice(0, 200),
+            });
+            const retryCall = await streamOnce({
+              prompt: buildPrompt(parsedMd.gateIssues.join(", ")),
+              modelId,
+              timeoutMs: Math.min(240_000, budgetMs()),
+              emit,
+            });
+            callResults.push(retryCall);
+            await recordGenerationCost(1, retryCall);
+            const retryParsed = parseAndGate(
+              subType,
+              retryCall.text,
+              passage.content,
+            );
+            // 재생성이 더 나빠지지 않았을 때만 채택 — 남은 반려는 아래 공통
+            // 반려 블록이 실패·환불 처리한다(재재생성 없음).
+            if (retryParsed.gateIssues.length <= parsedMd.gateIssues.length) {
+              call = retryCall;
+              parsedMd = retryParsed;
+            }
           }
-          const parsedMd = parseAndGate(subType, call.text, passage.content);
-          // 원큐 규약(26-07-21 사용자 확정): 무결성 게이트 반려 = 즉시 실패·환불.
-          // md-lab 원형과 동일하게 자동 재생성은 없다 — 깨진 문항은 저장하지
-          // 않고, 재시도는 사용자의 다음 클릭이다(양치기). 반려 사유 원문은
-          // 지문 조각을 포함할 수 있어 사용자 표면에는 내지 않되, 실패 계통
-          // 추적을 위해 잡 result 에 남긴다(FAILED 잡의 result 는 UI 미소비 —
-          // 26-07-22 실사용 간헐 실패 포렌식이 콘솔 로그 휘발로 막혔던 구멍).
+          // 반려 확정 = 즉시 실패·환불(빈칸은 원큐, 어법은 재생성 1회 소진 후).
+          // 깨진 문항은 저장하지 않고, 재시도는 사용자의 다음 클릭이다(양치기).
+          // 반려 사유 원문은 지문 조각을 포함할 수 있어 사용자 표면에는 내지
+          // 않되, 실패 계통 추적을 위해 잡 result 에 남긴다(FAILED 잡의 result
+          // 는 UI 미소비 — 콘솔 휘발로 포렌식이 막혔던 구멍의 봉합).
           if (parsedMd.gateIssues.length > 0) {
             console.error(
               "[md-stream] integrity gate rejected",
@@ -605,6 +652,13 @@ export async function POST(req: NextRequest) {
                   result: {
                     mdStream: true,
                     gateIssues: parsedMd.gateIssues.map((i) => i.slice(0, 300)),
+                    ...(firstGateIssues
+                      ? {
+                          firstGateIssues: firstGateIssues.map((i) =>
+                            i.slice(0, 300),
+                          ),
+                        }
+                      : {}),
                   },
                 },
               })

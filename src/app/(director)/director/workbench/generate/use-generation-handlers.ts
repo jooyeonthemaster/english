@@ -387,6 +387,12 @@ async function createMdStreamQuestionGenerationJob({
         if (!outputStartedAt) outputStartedAt = Date.now();
         contentTail = (contentTail + event.d).slice(-900);
         emitPreview();
+      } else if (event.t === "retry") {
+        // 어법 한정 게이트 반려 재생성(26-07-22) — 패널을 사고 단계로 되감는다.
+        outputStartedAt = undefined;
+        contentTail = "";
+        reasoningTail = `기계 검사 반려 — 재설계 중…\n${String(event.reason ?? "")}`;
+        emitPreview(true);
       } else if (event.t === "error") {
         throw new Error(String(event.message ?? "Question generation failed."));
       } else if (event.t === "done") {
