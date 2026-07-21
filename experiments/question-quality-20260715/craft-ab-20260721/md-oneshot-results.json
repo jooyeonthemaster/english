@@ -1,0 +1,362 @@
+[
+ {
+  "qtype": "grammar",
+  "p": 1,
+  "sec": 50,
+  "krw": 28,
+  "outTok": 3097,
+  "rsnTok": 2784,
+  "viol": [],
+  "raw": "밑줄:\n(A) spoken | spoken | c\n(B) who | who | b\n(C) are | is | d\n(D) productive | productive | f\n(E) their | their | g\n정답: (C)\n고침: are\n해설: 주어 핵 These words에 대응하는 복수 정동사 are가 와야 장거리 수일치가 성립합니다. 사이에 끼어 든 분사구와 majors에 이끌려 단수 is를 쓰는 순간 비문이 됩니다.\n오답:\n(A) 수동 의미의 과거분사가 words를 수식하는 구문을 이끄므로 학생이 정동사 spoke로 바꿔야 한다고 착각하기 쉽지만 준동사로 옳습니다.\n(B) create의 주어 역할을 하는 선행사 those를 받으므로 주격 관계사 who가 맞으며 whom으로 바꿔야 한다고 혼동하기 쉽습니다.\n(D) 연결동사 appear의 보어자리이므로 형용사 productive가 쓰이며 부사 productively를 요구한다고 착각하기 쉽습니다.\n(E) 성 중립 단수 선행사 the artist를 받는 대명사 their가 현대 규범상 허용되므로 his로 고쳐야 한다고 고민하기 쉽습니다.",
+  "item": {
+   "marks": [
+    {
+     "label": "(A)",
+     "original": "spoken",
+     "shown": "spoken",
+     "code": "c"
+    },
+    {
+     "label": "(B)",
+     "original": "who",
+     "shown": "who",
+     "code": "b"
+    },
+    {
+     "label": "(C)",
+     "original": "are",
+     "shown": "is",
+     "code": "d"
+    },
+    {
+     "label": "(D)",
+     "original": "productive",
+     "shown": "productive",
+     "code": "f"
+    },
+    {
+     "label": "(E)",
+     "original": "their",
+     "shown": "their",
+     "code": "g"
+    }
+   ],
+   "answer": "(C)",
+   "fix": "are",
+   "explanation": "주어 핵 These words에 대응하는 복수 정동사 are가 와야 장거리 수일치가 성립합니다. 사이에 끼어 든 분사구와 majors에 이끌려 단수 is를 쓰는 순간 비문이 됩니다.",
+   "wrong": [
+    {
+     "label": "(A)",
+     "text": "수동 의미의 과거분사가 words를 수식하는 구문을 이끄므로 학생이 정동사 spoke로 바꿔야 한다고 착각하기 쉽지만 준동사로 옳습니다."
+    },
+    {
+     "label": "(B)",
+     "text": "create의 주어 역할을 하는 선행사 those를 받으므로 주격 관계사 who가 맞으며 whom으로 바꿔야 한다고 혼동하기 쉽습니다."
+    },
+    {
+     "label": "(D)",
+     "text": "연결동사 appear의 보어자리이므로 형용사 productive가 쓰이며 부사 productively를 요구한다고 착각하기 쉽습니다."
+    },
+    {
+     "label": "(E)",
+     "text": "성 중립 단수 선행사 the artist를 받는 대명사 their가 현대 규범상 허용되므로 his로 고쳐야 한다고 고민하기 쉽습니다."
+    }
+   ]
+  }
+ },
+ {
+  "qtype": "blank",
+  "p": 12,
+  "sec": 66,
+  "krw": 39,
+  "outTok": 4399,
+  "rsnTok": 3935,
+  "viol": [],
+  "raw": "빈칸원문: an extension of human bodily and mental actions and capabilities\n① an intuitive architectural scripting that collides with the actual user/occupant's natural and instinctual needs and intentions\n② a form of spatial choreography that solely predetermines patterns of movement and behavior\n③ an all-encompassing structure that governs societal behaviors, cultural norms and historical developments\n④ a seamless outgrowth of the inhabitant's somatic urges and intellectual powers\n⑤ a pure aesthetic object created to evoke admiration through its innovative visual form\n정답: ④\n해설: 설계자가 거주자를 대신해 상상 속에서 집을 체험하며 창과 계단을 정확히 원하는 위치에 둔다는 부분과 성공적 건축이 설명서 없이 말없이 구조와 용도를 드러낸다는 부분을 연결하면 심오한 건물은 거주자의 몸과 마음이 하는 일과 그 힘을 그대로 이어 주는 존재임을 알 수 있습니다. 따라서 이 의미를 표면 어휘 없이 추상화한 ④가 정답입니다.\n오답:\n① 방향반대 — “intuitive architectural scripting”과 “natural and instinctual needs and intentions”를 원문 그대로 앞에 배치해 가장 매력적이나 “collides with”로 공명 관계를 정반대로 뒤집어 탈락합니다.\n② 도입부함정 — 글 첫머리의 spatial choreography와 predetermines patterns에만 시야가 고정된 학생이 고르기 쉽지만 이후 전환된 직관적 공명과 연장 논지를 담지 못해 탈락합니다.\n③ 범위확대 — 개인 거주자의 행위·능력을 사회·문화·역사 전체로  bul 키워 지문이 다루는 범위를 초과하므로 탈락합니다.\n⑤ 근거없음 — 건축을 시각적 경탄의 미적 대상로 보는 통념에 기대었을 뿐 지문 어디에도 근거가 없어 탈락합니다.",
+  "item": {
+   "originalExpression": "an extension of human bodily and mental actions and capabilities",
+   "options": [
+    {
+     "label": "①",
+     "text": "an intuitive architectural scripting that collides with the actual user/occupant's natural and instinctual needs and intentions"
+    },
+    {
+     "label": "②",
+     "text": "a form of spatial choreography that solely predetermines patterns of movement and behavior"
+    },
+    {
+     "label": "③",
+     "text": "an all-encompassing structure that governs societal behaviors, cultural norms and historical developments"
+    },
+    {
+     "label": "④",
+     "text": "a seamless outgrowth of the inhabitant's somatic urges and intellectual powers"
+    },
+    {
+     "label": "⑤",
+     "text": "a pure aesthetic object created to evoke admiration through its innovative visual form"
+    }
+   ],
+   "answer": "④",
+   "explanation": "설계자가 거주자를 대신해 상상 속에서 집을 체험하며 창과 계단을 정확히 원하는 위치에 둔다는 부분과 성공적 건축이 설명서 없이 말없이 구조와 용도를 드러낸다는 부분을 연결하면 심오한 건물은 거주자의 몸과 마음이 하는 일과 그 힘을 그대로 이어 주는 존재임을 알 수 있습니다. 따라서 이 의미를 표면 어휘 없이 추상화한 ④가 정답입니다.",
+   "wrong": [
+    {
+     "label": "①",
+     "text": "방향반대 — “intuitive architectural scripting”과 “natural and instinctual needs and intentions”를 원문 그대로 앞에 배치해 가장 매력적이나 “collides with”로 공명 관계를 정반대로 뒤집어 탈락합니다."
+    },
+    {
+     "label": "②",
+     "text": "도입부함정 — 글 첫머리의 spatial choreography와 predetermines patterns에만 시야가 고정된 학생이 고르기 쉽지만 이후 전환된 직관적 공명과 연장 논지를 담지 못해 탈락합니다."
+    },
+    {
+     "label": "③",
+     "text": "범위확대 — 개인 거주자의 행위·능력을 사회·문화·역사 전체로  bul 키워 지문이 다루는 범위를 초과하므로 탈락합니다."
+    },
+    {
+     "label": "⑤",
+     "text": "근거없음 — 건축을 시각적 경탄의 미적 대상로 보는 통념에 기대었을 뿐 지문 어디에도 근거가 없어 탈락합니다."
+    }
+   ]
+  }
+ },
+ {
+  "qtype": "blank",
+  "p": 1,
+  "sec": 71,
+  "krw": 43,
+  "outTok": 4787,
+  "rsnTok": 4354,
+  "viol": [],
+  "raw": "빈칸원문: inherently capitalist\n① an enterprise free of any need to demonstrate worth through market performance\n② an activity treated as an unprofessional hobby when separated from the marketplace\n③ the foundational principle underlying every aspect of Western cultural life\n④ a practice fundamentally anchored in the equation of legitimacy with earnings\n⑤ an ideal vehicle for transcending ordinary commercial realities\n정답: ④\n해설: 서양 문화에서는 전문적인 것과 상업적인 것을 분리하기가 거의 불가능하며 이에 따라 예술가는 돈을 벌 능력에 의해 정당화됩니다. 이 두 근거를 종합하면 전문 예술은 정당성을 수익과 동일시하는 방정식에 근본적으로 정박한 실천이 됩니다.\n오답:\n① 방향반대 — ‘market performance’와 ‘worth’ 등 후반부 핵심어를 앞세워 지문과 가장 닮아 attraction이 강하지만 정당화 근거를 ‘free of’로 뒤집어 논지를 정면 부정하므로 탈락합니다.\n② 도입부함정 — 교수 발언과 ‘hobby’ 구절로 시야가 정지된 학생에게 강력하게 끌리지만 후반부의 문화적·구조적 분석에 도달하지 못한 초기 진술에 불과하므로 탈락합니다.\n③ 범위확대 — ‘Western’이라는 소재를 붙잡아 매력적이지만 professional art 하나를 넘어 ‘every aspect of cultural life’로 범위를 부풀려 지문이 설정한 경계를 초과하므로 탈락합니다.\n⑤ 근거없음 — 예술이 상업을 초월한다는 낭만적 통념에 기대어 끌리지만 지문이 오히려 그 통념을 ‘hopelessly romantic’으로 배척할 뿐 어떤 근거도 제공하지 않으므로 탈락합니다.",
+  "item": {
+   "originalExpression": "inherently capitalist",
+   "options": [
+    {
+     "label": "①",
+     "text": "an enterprise free of any need to demonstrate worth through market performance"
+    },
+    {
+     "label": "②",
+     "text": "an activity treated as an unprofessional hobby when separated from the marketplace"
+    },
+    {
+     "label": "③",
+     "text": "the foundational principle underlying every aspect of Western cultural life"
+    },
+    {
+     "label": "④",
+     "text": "a practice fundamentally anchored in the equation of legitimacy with earnings"
+    },
+    {
+     "label": "⑤",
+     "text": "an ideal vehicle for transcending ordinary commercial realities"
+    }
+   ],
+   "answer": "④",
+   "explanation": "서양 문화에서는 전문적인 것과 상업적인 것을 분리하기가 거의 불가능하며 이에 따라 예술가는 돈을 벌 능력에 의해 정당화됩니다. 이 두 근거를 종합하면 전문 예술은 정당성을 수익과 동일시하는 방정식에 근본적으로 정박한 실천이 됩니다.",
+   "wrong": [
+    {
+     "label": "①",
+     "text": "방향반대 — ‘market performance’와 ‘worth’ 등 후반부 핵심어를 앞세워 지문과 가장 닮아 attraction이 강하지만 정당화 근거를 ‘free of’로 뒤집어 논지를 정면 부정하므로 탈락합니다."
+    },
+    {
+     "label": "②",
+     "text": "도입부함정 — 교수 발언과 ‘hobby’ 구절로 시야가 정지된 학생에게 강력하게 끌리지만 후반부의 문화적·구조적 분석에 도달하지 못한 초기 진술에 불과하므로 탈락합니다."
+    },
+    {
+     "label": "③",
+     "text": "범위확대 — ‘Western’이라는 소재를 붙잡아 매력적이지만 professional art 하나를 넘어 ‘every aspect of cultural life’로 범위를 부풀려 지문이 설정한 경계를 초과하므로 탈락합니다."
+    },
+    {
+     "label": "⑤",
+     "text": "근거없음 — 예술이 상업을 초월한다는 낭만적 통념에 기대어 끌리지만 지문이 오히려 그 통념을 ‘hopelessly romantic’으로 배척할 뿐 어떤 근거도 제공하지 않으므로 탈락합니다."
+    }
+   ]
+  }
+ },
+ {
+  "qtype": "grammar",
+  "p": 12,
+  "sec": 65,
+  "krw": 39,
+  "outTok": 4376,
+  "rsnTok": 4006,
+  "viol": [],
+  "raw": "밑줄:\n(A) that guides | that guide | d\n(B) lives, uses and feels | lives, uses and feels | i\n(C) to look | to look | k\n(D) is needed | is needed | e\n(E) its use | its use | g\n정답: (A)\n고침: that guides\n해설: 관계사 that의 선행사 핵은 중간에 개입된 structures나 forms가 아니라 단수 명사 choreography이므로 동사 guides로 수일치해야 합니다. that guide는 복수 동사를 써서 수일치가 어긋난 비문입니다.\n오답:\n(B) 동사 세 자리가 모두 원형으로 나열되어 and 앞뒤 형태가 어색하지 않은지 병렬 파괴를 의심하나 lives, uses and feels는 동일한 정동사 원형 병렬로 옳습니다.\n(C) wish 뒤 목적어로 to-v 자리인지 v-ing 자리인지 혼동하기 쉬우나 wishes to look의 to부정사 보완이 표준 용법이므로 옳습니다.\n(D) daylight가 행위 주체처럼 보여 능동태로 고쳐야 할지 고민하나 권한이 필요한 대상이므로 수동 is needed가 태 일치상 옳습니다.\n(E) 소유 대명사가 앞 복수 개념을 받아 their가 되어야 하는지 혹은 it’s와 혼동되나 단수 무생물 architecture를 받는 소유격 its가 대명사 일치상 옳습니다.",
+  "item": {
+   "marks": [
+    {
+     "label": "(A)",
+     "original": "that guides",
+     "shown": "that guide",
+     "code": "d"
+    },
+    {
+     "label": "(B)",
+     "original": "lives, uses and feels",
+     "shown": "lives, uses and feels",
+     "code": "i"
+    },
+    {
+     "label": "(C)",
+     "original": "to look",
+     "shown": "to look",
+     "code": "k"
+    },
+    {
+     "label": "(D)",
+     "original": "is needed",
+     "shown": "is needed",
+     "code": "e"
+    },
+    {
+     "label": "(E)",
+     "original": "its use",
+     "shown": "its use",
+     "code": "g"
+    }
+   ],
+   "answer": "(A)",
+   "fix": "that guides",
+   "explanation": "관계사 that의 선행사 핵은 중간에 개입된 structures나 forms가 아니라 단수 명사 choreography이므로 동사 guides로 수일치해야 합니다. that guide는 복수 동사를 써서 수일치가 어긋난 비문입니다.",
+   "wrong": [
+    {
+     "label": "(B)",
+     "text": "동사 세 자리가 모두 원형으로 나열되어 and 앞뒤 형태가 어색하지 않은지 병렬 파괴를 의심하나 lives, uses and feels는 동일한 정동사 원형 병렬로 옳습니다."
+    },
+    {
+     "label": "(C)",
+     "text": "wish 뒤 목적어로 to-v 자리인지 v-ing 자리인지 혼동하기 쉬우나 wishes to look의 to부정사 보완이 표준 용법이므로 옳습니다."
+    },
+    {
+     "label": "(D)",
+     "text": "daylight가 행위 주체처럼 보여 능동태로 고쳐야 할지 고민하나 권한이 필요한 대상이므로 수동 is needed가 태 일치상 옳습니다."
+    },
+    {
+     "label": "(E)",
+     "text": "소유 대명사가 앞 복수 개념을 받아 their가 되어야 하는지 혹은 it’s와 혼동되나 단수 무생물 architecture를 받는 소유격 its가 대명사 일치상 옳습니다."
+    }
+   ]
+  }
+ },
+ {
+  "qtype": "grammar",
+  "p": 19,
+  "sec": 51,
+  "krw": 32,
+  "outTok": 3477,
+  "rsnTok": 3189,
+  "viol": [],
+  "raw": "밑줄:\n(A) hiding | hiding | c\n(B) does | does | d\n(C) constituted | constituting | a\n(D) specified | specified | h\n(E) being | being | k\n정답: (C)\n고침: constituted\n해설: 대시 동격 구문을 건너뛴 to which의 선행사는 바로 앞 핵명사 the goal이므로 이 관계절에는 정동사가 와야 합니다. constituting은 준동사라 절을 구성하지 못해 비문입니다.\n오답:\n(A) hiding을 정동사 hides로 고쳐야 한다고 보지만 problem을 후위 수식하는 현재분사구로 옳습니다.\n(B) as 자리 동사를 복수 do로 바꾸어야 할지 고민하나 비교 대상인 인용절 전체가 단수 핵이므로 does가 일치합니다.\n(D) specified를 specify로 바꿔야 한다고 여기지만 need+O+목적격보어(p.p.) 구조에서 과거분사가 맞습니다.\n(E) of 뒤를 to-be로 해야 할지 망설이나 전치사 목적어 자리이므로 동명사 being이 옳습니다.",
+  "item": {
+   "marks": [
+    {
+     "label": "(A)",
+     "original": "hiding",
+     "shown": "hiding",
+     "code": "c"
+    },
+    {
+     "label": "(B)",
+     "original": "does",
+     "shown": "does",
+     "code": "d"
+    },
+    {
+     "label": "(C)",
+     "original": "constituted",
+     "shown": "constituting",
+     "code": "a"
+    },
+    {
+     "label": "(D)",
+     "original": "specified",
+     "shown": "specified",
+     "code": "h"
+    },
+    {
+     "label": "(E)",
+     "original": "being",
+     "shown": "being",
+     "code": "k"
+    }
+   ],
+   "answer": "(C)",
+   "fix": "constituted",
+   "explanation": "대시 동격 구문을 건너뛴 to which의 선행사는 바로 앞 핵명사 the goal이므로 이 관계절에는 정동사가 와야 합니다. constituting은 준동사라 절을 구성하지 못해 비문입니다.",
+   "wrong": [
+    {
+     "label": "(A)",
+     "text": "hiding을 정동사 hides로 고쳐야 한다고 보지만 problem을 후위 수식하는 현재분사구로 옳습니다."
+    },
+    {
+     "label": "(B)",
+     "text": "as 자리 동사를 복수 do로 바꾸어야 할지 고민하나 비교 대상인 인용절 전체가 단수 핵이므로 does가 일치합니다."
+    },
+    {
+     "label": "(D)",
+     "text": "specified를 specify로 바꿔야 한다고 여기지만 need+O+목적격보어(p.p.) 구조에서 과거분사가 맞습니다."
+    },
+    {
+     "label": "(E)",
+     "text": "of 뒤를 to-be로 해야 할지 망설이나 전치사 목적어 자리이므로 동명사 being이 옳습니다."
+    }
+   ]
+  }
+ },
+ {
+  "qtype": "blank",
+  "p": 19,
+  "sec": 78,
+  "krw": 44,
+  "outTok": 4901,
+  "rsnTok": 4463,
+  "viol": [],
+  "raw": "빈칸원문: a function of whether or not it solves the problem\n① determined by the factual correctness of the information about location it supplies\n② rooted in the convention of presenting practical difficulties in interrogative form\n③ measured by its contribution to surmounting the hindrance confronting the agent\n④ decided according to the degree of precision relative to the room's scale and orderliness\n⑤ established through the sincerity and helpful intent perceived by the listener\n정답: ③\n해설: 진실해도 목표 달성에 무용한 대답은 나쁘고 방의 상태에 따라 유용성이 달라지며 위치를 알려주지 않는 대답도 집을 나서는 장애를 없애면 좋다는 두 갈래 이상의 근거를 합치면 좋은 대답의 기준은 문제 해결 기여도임을 알 수 있습니다. 이를 표면 어휘 없이 추상화한 ③이 정답입니다.\n오답:\n① 방향반대 — 지문에 반복되는 location·truthfully 표현을 앞세워 지극히 매력적이나 좋은 대답의 조건을 정보 정확성으로 정반대 전환하므로 탈락합니다.\n② 도입부함정 — 문제를 의문문으로 표현한다는 글 머리 논지에 시야가 고정된 학생이 빠지기 쉽지만 빈칸은 대답의 좋고 나쁨 기준이므로 탈락합니다.\n④ 세부확대 — 크고 지저분한 방 사례라는 국소 細節을 전체 기준으로 부풀려 그럴듯하나 지문이 그 사례를 문제 해결의 한 예시로만 쓰므로 탈락합니다.\n⑤ 근거없음 — 진심과 호의가 좋은 대답을 만든다는 일상 통념에 기대지만 지문에 태도·의도 언급은 전무하므로 탈락합니다.",
+  "item": {
+   "originalExpression": "a function of whether or not it solves the problem",
+   "options": [
+    {
+     "label": "①",
+     "text": "determined by the factual correctness of the information about location it supplies"
+    },
+    {
+     "label": "②",
+     "text": "rooted in the convention of presenting practical difficulties in interrogative form"
+    },
+    {
+     "label": "③",
+     "text": "measured by its contribution to surmounting the hindrance confronting the agent"
+    },
+    {
+     "label": "④",
+     "text": "decided according to the degree of precision relative to the room's scale and orderliness"
+    },
+    {
+     "label": "⑤",
+     "text": "established through the sincerity and helpful intent perceived by the listener"
+    }
+   ],
+   "answer": "③",
+   "explanation": "진실해도 목표 달성에 무용한 대답은 나쁘고 방의 상태에 따라 유용성이 달라지며 위치를 알려주지 않는 대답도 집을 나서는 장애를 없애면 좋다는 두 갈래 이상의 근거를 합치면 좋은 대답의 기준은 문제 해결 기여도임을 알 수 있습니다. 이를 표면 어휘 없이 추상화한 ③이 정답입니다.",
+   "wrong": [
+    {
+     "label": "①",
+     "text": "방향반대 — 지문에 반복되는 location·truthfully 표현을 앞세워 지극히 매력적이나 좋은 대답의 조건을 정보 정확성으로 정반대 전환하므로 탈락합니다."
+    },
+    {
+     "label": "②",
+     "text": "도입부함정 — 문제를 의문문으로 표현한다는 글 머리 논지에 시야가 고정된 학생이 빠지기 쉽지만 빈칸은 대답의 좋고 나쁨 기준이므로 탈락합니다."
+    },
+    {
+     "label": "④",
+     "text": "세부확대 — 크고 지저분한 방 사례라는 국소 細節을 전체 기준으로 부풀려 그럴듯하나 지문이 그 사례를 문제 해결의 한 예시로만 쓰므로 탈락합니다."
+    },
+    {
+     "label": "⑤",
+     "text": "근거없음 — 진심과 호의가 좋은 대답을 만든다는 일상 통념에 기대지만 지문에 태도·의도 언급은 전무하므로 탈락합니다."
+    }
+   ]
+  }
+ }
+]

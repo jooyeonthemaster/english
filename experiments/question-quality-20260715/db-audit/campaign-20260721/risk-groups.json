@@ -1,0 +1,1725 @@
+[
+  {
+    "groupId": "G001",
+    "examSig": "(미상)",
+    "copyCount": 1,
+    "signals": [
+      "마커잔존"
+    ],
+    "hasMarkerCopy": true,
+    "representativeId": "cmpne97ry0001l204lxnmope1",
+    "titles": [
+      "[문제] 다음 글의 내용을 한 문장으로 요약하고자 한다"
+    ],
+    "memberIds": [
+      "cmpne97ry0001l204lxnmope1"
+    ],
+    "academies": 1,
+    "contentLen": 2797,
+    "representativeContent": "[문제] 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?\n\n\n\nConsistent individual differences in behavior within populations, also known as personality, are attracting the attention of many evolutionary biologists. One of the reasons why personality is interesting from an evolutionary perspective is that behaving in a consistent way across a variety of contexts or through time seems maladaptive. At some point, a mismatch between an individual’s behavior and the optimal strategy for a given situation may be expected. For example, an individual that is consistently uninhibited and bold will at some point incur an elevated risk of predation; the optimal individual should be bold only when it makes sense to be bold, and adjust its behavior when the situation changes. However, personality implies that individuals are limited in their behavioral plasticity; the individuals that are, for example, particularly active in the absence of predation risk are also those that are most active in the presence of predation risk.\n\n*incur: 초래하다 **elevated: 높은 ***plasticity: 가소성\n\n\n\n↓\n\n\n\nFrom an evolutionary perspective, personality may be (A) , as optimal individuals should adapt their behavior to changing circumstances, yet the (B) of personality suggests a limit to behavioral flexibility.\n\n\n\n \n\n(A) (B)\n\n① adaptive …… existence\n\n② adaptive …… formation\n\n③ harmful …… regulation\n\n④ harmful …… persistence\n\n⑤ influential …… modification\n\n \n\n[정답/모범답안] 4\n\n[해설]{소재}성격과 행동의 일관성\n\n{해석}\n\n개체군 내에서 행동에 있어서의 일관된 개인적 차이는, 성격이라고도 알려져 있는데, 많은 진화 생물학자의 관심을 끌고 있다. 진화론적 관점에서 성격이 흥미로운 이유 중 하나는 다양한 상황이나 시간의 흐름에 걸쳐 일관된 방식으로 행동하는 것이 부적응으로 보이기 때문이다. 어떤 시점에서는 개체의 행동과 주어진 상황에 적합한 최적의 전략 사이에 불일치가 예상될 수도 있다. 예를 들어, 일관되게 억제되지 않고 대담한 개체는 어느 시점에서는 높은 포식 위험을 초래할 것이며, 최적의 개체는 대담해야 할 때만 대담해야 하고, 상황이 바뀌면 자신의 행동을 조정해야 한다. 그러나 성격은 개체가 행동 가소성에 있어 한계가 있다는 것을 함축하는데, 예를 들어 포식 위험이 없을 때 특히 활동적인 개체들은 포식 위험이 있을 때도 역시 가장 활동적인 개체들이다.\n\n→ 진화론적 관점에서 볼 때, 성격은 해로울 수도 있는데, 그 이유는 최적의 개체는 변화하는 상황에 맞게 자신의 행동을 조정해야 하지만, 성격의 지속성이 행동 유연성에 대한 한계를 시사하기 때문이다.\n\n{Solution Guide}\n\n변화하는 상황에 따라 행동을 조절하는 것이 진화적으로 유리하지만, 성격의 지속성이 행동 유연성을 제한한다는 내용이므로, 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은 ④ ‘해로울 - 지속성’이다.\n\n① 적응성이 있을 - 존재\n\n② 적응성이 있을 - 형성\n\n③ 해로울 - 조절\n\n⑤ 영향을 미칠 – 수정\n\n{Structure in Focus}\n\n■ [One of the reasons {why personality is interesting from an evolutionary perspective}] is [that {behaving in a consistent way across a variety of contexts or through time} seems maladaptive].\n\n첫 번째 [ ]는 문장의 주어 역할을 하는 명사구이고, 그 안의 { }는 the reasons를 수식하는 관계절이다. 두 번째 [ ]는 is의 보어 역할을 하는 명사절이고, 그 안의 { }는 명사절의 주어 역할을 하는 동명사구이다.\n\n■ ~ the individuals [that are, for example, particularly active in the absence of predation risk] are also those [that are most active in the presence of predation risk].\n\n첫 번째 [ ]는 the individuals를 수식하는 관계절이고, 두 번째 [ ]는 those를 수식하는 관계절이다.",
+    "markerCopyId": "cmpne97ry0001l204lxnmope1"
+  },
+  {
+    "groupId": "G019",
+    "examSig": "(미상)",
+    "copyCount": 1,
+    "signals": [
+      "마커잔존"
+    ],
+    "hasMarkerCopy": true,
+    "representativeId": "cmpr2uw9g000xi804dtxfqpyg",
+    "titles": [
+      "What is soft-path river engineering? One way to visualize it"
+    ],
+    "memberIds": [
+      "cmpr2uw9g000xi804dtxfqpyg"
+    ],
+    "academies": 1,
+    "contentLen": 1103,
+    "representativeContent": "What is soft-path river engineering? One way to visualize its spirit is to liken it to a footpath in the forest. Suppose a tree falls across a footpath. A soft-path response would be simply to redirect the trail around the fallen tree. A more interventionist response would be to ①remove the tree and restore the original route. A still more interventionist response might be to straighten and pave the path to insert it more ②permanently in the landscape. The true high-modernist step would, of course, be to ③ create a superhighway that removes the landscape and bulldozes straight through all obstacles in the topography. Soft-path engineering has the unique advantage of intellectual ④modesty with respect to what we actually know about river movement and its environmental effects. In contrast to hard-path engineering, soft-path engineering accepts variability in the river’s movement as ⑤significant until proven otherwise. Backwaters, short-lived wetlands, braids and channels, swamps — all undesirable to hard-path engineering — are presumed by soft-path engineers to be ecologically important.",
+    "markerCopyId": "cmpr2uw9g000xi804dtxfqpyg"
+  },
+  {
+    "groupId": "G032",
+    "examSig": "(미상)",
+    "copyCount": 1,
+    "signals": [
+      "마커잔존"
+    ],
+    "hasMarkerCopy": true,
+    "representativeId": "cmq7t0h6w0003jy049nf9bswy",
+    "titles": [
+      "Another consideration is how big and dangerous the animal ma"
+    ],
+    "memberIds": [
+      "cmq7t0h6w0003jy049nf9bswy"
+    ],
+    "academies": 1,
+    "contentLen": 704,
+    "representativeContent": "Another consideration is how big and dangerous the animal may become as it\ngrows.\n\nIf your wish is to have an exotic pet, there are some very important issues you need\nto think about. ( ① ) Some exotics are becoming more and more common and have\nbeen bred in captivity, like the ferret. ( ② ) But others, like parrots, are frequently\ncaptured in the wild. ( ③ ) Methods used to catch and transport animals from the\nwild are harsh and cruel, often ending up killing the animals. ( ④ ) This is especially\ntrue with birds and reptiles, some of which are taken out of nature to the point of\nendangering the wild population. ( ⑤ ) Even relatively small animals can pose dangers\nto humans, especially children.",
+    "markerCopyId": "cmq7t0h6w0003jy049nf9bswy"
+  },
+  {
+    "groupId": "G043",
+    "examSig": "(미상)",
+    "copyCount": 1,
+    "signals": [
+      "마커잔존"
+    ],
+    "hasMarkerCopy": true,
+    "representativeId": "cmqi4j8h10007jx04qt41icfr",
+    "titles": [
+      "1. [정답] ②"
+    ],
+    "memberIds": [
+      "cmqi4j8h10007jx04qt41icfr"
+    ],
+    "academies": 1,
+    "contentLen": 7853,
+    "representativeContent": "1.  [정답] ②\n\n[해설]\nㄱ. \nrC2EL02C1o3E/xVb8W7Ut7jlkAoCWzLsZQ6bm79j51FPRUHipym9c5lijd8ShWlZV+g5FXS1ODp3AwwCJXTgbEEj42B1R/E=\n\n(ⅰ) \niJ2mkHFlku7HIzv8TnNh14N/Uh63F2gVXE4Cb9xWi48wnQw8bmVYbVbXdkuyYi+wY8WrYKAALjwbsSITr5JVPNumgKBKJQM=\n의 해는(\nXwL9tyhFNYAOEeMfbYS51F9PRtRKySubXamOLFY6rYGIph+QOzWqoFc8ZQ6mIZWR7/3WHs2hOsWqSUnFIMC0MpQoV75lmSo=\n-1) \n35sQ2c9/QGg0VF/72IMrwgrjL20DDW9xKauTcs+ERmyhmdCJZuPzmlG1Pq8xGvw4xDAYXfc8EtqyfHX0hqqgzsvdHpniDrw=\n일 때, \nCuFCJGwewu4OgD5SzZ5ziNPRTW5K7i+G1kKde9hx7Oo8hqmPog6m73ICm5wuhUA2HGqsE2fHgMoVoU7LqwNT2F/RoAzdhiI=\n 또는 \nt6VgoAGF6NRH0ywplpqBKz6KygJdkH1ArnfLZiw+SMurZ16KzXo4IYUS4YMOIR8GM9JFCHl0EhYLBvxZ9RQ3dt/afk7X1dg=\n(\nHmt2zcqFCcqh/LDEuD16Ocp8Au8W5ATgLklh+9bvzZZWRIe/yde8wJluhonpMyjO2HPMPyp8Qgvnx9IRZ6GJ4FlTwkL0os8=\n-2) \n1UUkQN1yFj9XHo9tPP7d5WQWr8f3FWbnWR/6G9JDZfmBXX3Rht5rZhb4h86qaj4C3dUi8HliDRUAvVwyfCPJCtqee6o9CkE=\n일 때, \nQoeAwLE4tmtxyMkmpjYol7uwV0w35T82JTBM1+KmNEvaydn9qeuqR2gVVn0nkDT7UN2Gx3E0hbBh68xNL/L+RUqDDCN9Uc8=\n 또는 \nBkQ9cYOfIu903/s/NjxsaH8M4mtRShfF6td4DReH0eEBDQLGNMpAro8PhUVHG+CRJs06SuahW3GlzsFduoeNBGGqv0k5u9Y=\n(\nliXZe29BlmognSSibaf4BmEEWPrJyXtXDWeA2T3tpNMcrZCV8Kc28BAQAr7utUOEjdH+RLKQGsQdGQaue3OKayn3VJpmn/w=\n-3) \nxgu309VnyrEFL8Uj1l30+O9dwXkMVkf5Mo1/pvorCt+lW01GKasUSx3w/TjvApermp1Kc3GVvJMc7z8IMiDE7vqD25UpicI=\n일 때, \nFMRz3HQbftNGlSjedZUZCnAULODI7ttWU4Tms9uCuyIsRfGSEbPy24YBL2wChJQ1imTYyX11Oe1b/zLBMFij4x+k89Y5dKM=\n인 모든 실수\n(ⅱ) \n/q5fV2qwSGlT0bRkzFH7aCo+piasNzLX4SAgTEpL5o3cEy5ehWwjxzERybstH9Wh7bXC10bajUMBu4nsdQBCgR8hjP3x4CA=\n의 해는\n(\nbPVGaEiHjoMSmN7WrfOK63zncdNLRHNcFVpQnad0OFJ4ExnmoAw6spquBbLUYEjpO4yrU2QKcGME9+ie6sOjeS4FwPkamD8=\n-1) \nvpvvte7f5sqHv7LAqdSxnek48C3//3NZkUhOZYmVnduZUwYWDQ6HDpACBIlJzk+nY3ZBgifZoa7s7wA+++3s313meAJIYlk=\n이면 \nGNTnywdSh3CsbotzNukT+OMNko/sJpNvEVevsAN6QL4bqyL58eK9s8LbZJ2vBhsxlPnTvRe4OqKui+4zV89OGYp8JhfNwkI=\n의판별식 \nROEujj5NTuZeXbNwJCsCIKzwGz0Fa0e9IVgkhZZLhIx2QiADvC74GD1tgm6QZFrMNAPqY5JzHJbZaEr/rECuP18IPDc+cFA=\n이므로 연립부등식의 해가 \nnXh+1DQ2Vm04f7nuX4xUFSOeEPPJx0iZ/6Btk8D4HFq2pZ+rba40pVjH5i86YjIC0aykTdy+uyi7ef4jKWjadgdsrH6pfRk=\n가 될 수 없다.\n(ⅱ-2) \nev+FGZAT94dt2JWnCFOwAjCB+fXwWPs/7wOBudPwl2zxD+PS2d7n14GBaHeHY04tOW3FplurCCvvvpZf9qeWmVTSGWadokU=\n이면 이차부등식의 해는㉠ \nJtazrDMY8jAyCNphuoUSFGJJwATeEPdLcH3Elpr+9qU7PoxQ+fy6t0DedQlYXdudF5Nzo5kbz1QBwg0HgLpJOUyc/FDzZc8=\n 또는 \nq91aKdg9dKnLDdOCOuOW9+cnvotJw8pVro9omYbFTmshAQlqnYFSLvP02t6JVIPeQtYlE9cNPcvSCi7hhpZwIriv0+pYQJw=\n,㉡ \nrFybBR1k2yoDtaKojfLcuSacTsxnN3+UKk/2kPG7TtegRUhkkAY1HEpqLLbsmJWhmRYV723ug7ByrI4gNJWls+COhHN+imY=\n인 모든 실수,㉢ \nfKa+i/q806rABYmyByKES2x8u41wBh4CI3C9EZWIB0rLa7hF7ka5vEYZab3N23/GdPFIYX7wZm1DkOMH3RcvemSgtaZF9pE=\n는 모든 실수 중 하나이므로 연립부등식의 해가 \nSXX9gTLfh7V2DWTSAnsO1jiEljuo0hTfveDglyLfv/lRsraAGAnB5UjQr3APBN9OGOAzFcj92PFp65tW4tKqX6l8JjCzjps=\n가 될 수 없다.\n(ⅱ-3) \ngGYtEQXaGeQc04J56DqlM+V1IO8Gqgpvi9lpoOpVSMyKv9W7tS1VVX1yCS8xoyNcoeWnUMtKVdi92q1UFFzqgcT3odoH2Yg=\n이면 이차부등식의 해는\nq5wCHwxdKHrUYYtdEDgMllpLp9A4AAqhd7cUKLfbJ3rL4IWjrrmiFLc6FaOGqi/sq6NWevakM1+eN1nTYP+3IggYxfXV5+w=\n이므로 연립부등식의 해는 \nrh9+8kebZO9iK5EPq5bKmrDhj1w45KFh75WE/zwNwAMWXp8/TK/kO05eJSw8LS6E3TnbJEBnARE4LkBDrOoKzqT+COaRkV4=\n이다.따라서 \nTVQTICIZS24G5Vo7H1QLfEEOPYoBMQCfvLYuhJX72YBD+Itv6qxVXMHOm2rxb/lvDcP2+vEhCVhiB4XLObSnQzQ0d8VlzuE=\n이다.\t\t(참)\nㄴ. 연립부등식의 해가 \nmCjkgoMJk1WpJholBLfpdrZk3Ffe+JHFVeU1UFtPOmxjX32pHDVw1FwCLoND+fk1k2+r2VkUvSwA8H4ZPoItBLW3zN2wiWc=\n이려면 두 부등식 중 적어도 하나는 일차부등식이어야 한다.\n(ⅰ) \nj1QjjTFPBRn8Z8J/snoL7ufWLPYi4+CqMTIipZYhuQm/OgjrbzRXpnAC1Pcxf/qjF+tUF9e2tLzSbx4iW79CFhf4zxVI1zU=\n인 경우\nKU92koG1KXqrmsCMwXvE5ZtMKsZUpYF5+AA9n7QJcVd0P3mkeMYae08raspbgX5Evf9aFG+LRi1A9yf4KJn1LUSRtjxP5qk=\n\n(\ndepaRB86pfOEln3UqWYfijOoeC0cxw4a1lzAb2bZePWxkLvKxoo8ooVltwLNDVuGZcqPlcqA2rqpX5OEVBjaQwWzF2njCms=\n-1) \nV08gteA7HbNFj0Geh87ZM6ib3AhVUz/XWYpW4sjY+sINgYtjOFklXeNGRX2VWEe/iELIFtYZMCOv7lBIniLjrcyUgnhHgZw=\n일 때,\nJydNItbBm+6eBg5DQ8q4YJAqbk40fb6Uyitt5NvfUA3iD9Rsjdr+hU/A1cHs/wIdjCZRiEACk+zg2V178ZqxITgPzkdXoY8=\n이므로 연립부등식의 해가 없다.\n(ⅰ-2) \nk+Nzj/yq50i8BnOMpLOotBuwW//UBC+JpZOoVbknyNjA1C6tymQM0IL/0hp/t03kRMTe+l8o7AKOc+aqA4J0saCz5dOk2Qk=\n일 때,\nGNduV8vRLrZDyJDduUZc8Tysyv3h1QwqWv337iq5BF+elSl23ovxLXnoSTclH940N0334rPngV9Lhm7gyqPNwkRZxy+vJqI=\n이므로 연립부등식의 해가 없다.\n(ⅰ-3) \n9a95gLQGwTZV40+J5XhwnciCT4eU7XCpp7zHDOX13PbTRBrgvBHSNxluWR5W2hNgipUmIoVJldzP0zwZP9aZzcISOwHGr70=\n일 때,\nWsXZGuTql9a0B8ILurQEuauABhZSeE0rKWxn7BwT62i8ySgVdWp6ncxqFa+eEqjdl/bKqKh3gP19Zls1k/+c7XKrDpsFQ/w=\n이므로 연립부등식의 해는㉠ \nlj1d63pGw4VxzL44daW2fbIP3jt12mDEaLUPE3czN4K6vEs75rcPF5D7BV3qILgBu+tayhluBi7saNdt5UXbYrp5ATGzlSs=\n,㉡ \nfFS2upJj2tRANWmHYNxXQtg9j7j95qWrmrToxJSpIDAyIQ/i3/HWG3JQb26CrJgzC/CNiJRdZ7t/dd15vYSmQrF9ZSH0DbQ=\n 중 하나가 되어 연립부등식의 해가 \ndsfZ8eo84JQmQPFwQsMjapeJIHckXkB0KrSEC/TkeR/qyZWAA9m3Zd4bmL9zMUoyCvaVq+E0WovwLoSiI23mj3+WOivV05c=\n가 될 수 없다.\n(ⅱ) \nhWfHcJjJozvnzM49VNO9ApiW6kKWRshchu0toWKYyEZq5rRBQbt0LdbnZrw3w8ysaznH97rfmM9QoxKrFODgHIjjOq9RuDY=\n인 경우\nzAvUbCtQ0GcWGMcETBrEdb/ODzL6jnMBUcsfRXJsZ9uCQc8cwrtiUDuIApEMzsM3O1spt4yJuFXlDXhe9WUeHkXdKvomw0o=\n\n(ⅱ-1) \nl54cDQxERcuJ3H4RpCYFyij24XNuftxC0eGf51k7odb9DxouYyLRXbOQK9+h4r/1cKu59vI2nUAIeOtZCN3l7O7+cJoNqRQ=\n일 때, \n0bXJHVELg0QhU9+rwfRi7zoVhqsUHbjg701HNEkN+O0CwP6j3IYH2CoyNEcqTYVYWp1OGf+vZbk17g9TL5omB5Mb7rq/qc0=\n이므로 연립부등식의 해가 없다.\n(ⅱ-2) \n9vSx/AtZjKWKZzMX7YLFWYcybwM73IOy23n2fL6kyCnj2T6P1KIboGAVaMcsWAC1YfgrfK78JelRP7dgIORcRpCx7mE/otg=\n일 때,\nd5nqJlFuctllw2J4lWE7ofIL+nKjVB8DaYFkGvTdafSChQvpvRKNmaOfKvlH00FYAZpCPQ4tvZ0PJUMEHw627w1diZzLCpE=\n에서 \n1mAkihMEssFvT7IGGqoF4LcwVKCIDi+4wQjVEEBhV+7MiW3jmvM6GHfcgE6ncapKuvDS1RymdDU/MOzeLzOk+f6p8TdTkqA=\n 또는 \nLp1v4OEtLewIJ1fvvi/d7dtRNWgjuX1GpCDiTgNt8Yc4c9OykEU4xdUGzsJHigLzGVd50CBUcO5znyTHdVlr+Xt+/8JfdhU=\n\n3gOOGfM278FxwMgvjE6Ye0EioO6Xar4Xzs3pSahjTWEl/qbForsVOEMuWo4/GHxqT+OuzbSs02ROuMcmGB8LWhHmbxji5TI=\n에서 \nWZKRb9ZsoNdS0GIzUUDRMI0WQrUayXFmEjlIzbkR418GYhtI5pIx9tO3QqHb2ywHj+q8ODftDwP9XafGXuozZXsmcDBvFkM=\n이므로\nDMOVUSurd5sinIcpR3/sxxTtI7kWg7Tq++z3ml9CCwKXQA1YLE939NX8478NcH+NszsCwLGH/OVeGM1vwAQETQQ9kFNV57s=\n이면 연립부등식의 해가\nSbGa7cvtn1O/y/z/VqZNGgYjE9jyEKRYzGOEu0DIqOfiKEDWOh3SLe2ewFxO9l7X7NuuFwD5rpfQJowf7SqFWh76j0RlT5k=\n이다.따라서 \n+IQcg15t8sIV9dsjcK1FTn2F7l+p2P0t8Pfzp8tANcpTHJbHvMVC9a/QsECM63TM6FWdaSMxB+cczxhfxz24GYcITj0202c=\n이고 \n4x68Ic2rreSedKDQpc+0OTqPHV0+E2jWVlev60UiLmDnCAt5JThYJxAV/owrokcp8oJKdrXeCpvJpK8kTy8euTAN2onoz5A=\n이므로 \nxwauOwi+EHoTzqFk8cFsx210v1I8g7a2mXOZs879RCMoy95sniMMVqsAliiPbraJZrV3Dmr3Sfmk24vz1Mpa/CsKVL8qAO0=\n이다.\t\t\t\t (참)\nㄷ. ㄴ에 의해 \ndphCjFtS13+aveeGbKsiPr4Ki8sdNdZlHrS1qViocwpbxZPLJ0i7x0GPI4+wur4XyoHZ2BOEt8s/8/N9CQjhmuc9t+fuHCE=\n이고 \nECHdnIU2AK0vO9ZkXK/humZT/2kk5iWJmUyZz+nKeOaaN0AO8Aee+juCyYUMjRbcxOM66OQWcBhMpTYHIPv1rcA+/2j0fDU=\n이므로\nON1pkC/gQcQsktwJxEdY1cMvEHf2Mzl1uAsz0vsVcmkIusHFhKnY2Oazdeo7W/nPvOSFwczx6XOVKON7uIKmBFVbjefbSLM=\n따라서 \niJX9tWtYw4cOWB5aR9o/eYxHj5LKQ/5LBTC0AeYVE56/Ltcb5WKMXbgrPy/t1KBz7O+/JFltBwMZfQVI+GdmjQpwjDAk+1Y=\n\t\t\t\t(거짓)\n옳은 것은 ㄱ, ㄴ이다.\n\nF3v9VTDe/n213jFrmdVvrrtbdgQxNHxXPQ83dOAmyZ2sAZvaaC6jIFTISUIpyVpQ5/tIfhYmapd/j0NNuskDMfNlv+Pgvok=\n에 대한 연립부등식\n\t\nyxubFFszyuH+87ahIYJ7jpKv/EieQOBdZKr1c0uwM6Cgv+sLn7ppm2bN3czQdmgvsVVhnGCKdlpQa9NmL43prCwkpuSsFwQ=\n\n을 만족시키는 모든 \n6JBCt6cxUfc8AsZxWLZ2SaqxH/xw1ylQTcIx6dDgBp+hG9r2jjCEh5UDUMFM87a1uoygLv2tUgxdM1Oq4siXb0ndWDVY3A8=\n의 값의 범위가 \nNkwWsmxSEv1mKRhYPqZtBSQDXGqpKkX6jkSsS4yqOh0Lfcv7ONfP+VP7sYErkaYZACH+8WwFrJThFq1N8g346rqNgnO2tFk=\n일 때, 옳은 것만을 <보기>에서 있는 대로 고른 것은? (단, \nIUEjx/+RpM2STu7A69uAIq/UPG75UC1ERxRD28Xr/zVpxcYoIECBwlPvWQ2mKv9o3/zDKyWqnNlP/SSzKjCMQxCRG0AWjV0=\n, \nFUFLyQWB2WvjgbtsM26fF6IdPAdTGEPLKCemyZlVJhVZypQBUQt0EvbK5DRw9GIzJnAf8U7ot/gJeHw4eDNd3oHus+FdWRs=\n, \ndfjMkJQrMgU2njKru8iULBuz4xxmKLO2TGNHNHaC4JGMRoU+EDHrYavJ0+HF2HS3qqYpAebfQInFGfy+Vu4PlvHggLJMm80=\n는 실수이다.)\n\n\n<보 기>\n\n\n\nㄱ. \n2USb/qpGDXNIctfNp83v2vmzCVOI+Y88T7xLndBnlyWkqXsYfhH3GPkR91qARwsyzhmYnDLoCkknPb9GpaYO+EcBR2Xc26g=\n일 때, \nFxm96dMAJRp/H2U8hukf+9D1pe+dpc5Jr82hGCXpuq0xVRCLKprWPYxbCpKQnV1QTAyLaWCHWq6M5mtEa9DVEPjvTJiqIi0=\n이다.\nㄴ. \nwCd/pi8schfErQgxU/weG4Dfp+HPqDv6zEFzS2fkbj1wBUMSLLOtoKa69A9qd2jRKBKgCG/oUfR+lyybnwG9kPkNp/dmH6k=\n\nㄷ. \nM/2MKEKjVuKg3WfwZcSSW0ACu/lW48Rz21rBAAUsbEPZgVpAA5Sw22I6oZUxv7GXlN8zmyCwIvwgcJYICBt/jywEWM42uac=\n\nXR6V4mr8QuvuB5GxdfdZ9lQZi/9BukFjliYlIH53pz8lswKxVP3DwmVA22Dj6qvZA9OJ3LN7j65CnYVQ9jm0dy3zS49+kfo=\n\n① ㄱ\t\t② ㄱ, ㄴ\t③ ㄱ, ㄷ\n④ ㄴ, ㄷ\t⑤ ㄱ, ㄴ, ㄷ",
+    "markerCopyId": "cmqi4j8h10007jx04qt41icfr"
+  },
+  {
+    "groupId": "G012",
+    "examSig": "2023 6월 고1 모평 29번",
+    "copyCount": 3,
+    "signals": [
+      "title번호",
+      "tag어법"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmpiiz4yr0001l504dy29bt2g",
+    "titles": [
+      "23년6월고1_29번",
+      "2023학년도 고1 6월 모평 영어 29번 · 어법",
+      "23년6월고1-29번"
+    ],
+    "memberIds": [
+      "cmpiiz4yr0001l504dy29bt2g",
+      "cmqxhk50f004ll504ttrye5mc",
+      "cmr20o1060005kw043vpeyn6n"
+    ],
+    "academies": 2,
+    "contentLen": 845,
+    "representativeContent": "Although praise is one of the most powerful tools available for improving young children’s behavior, it is equally powerful for improving your child’s self-esteem. Preschoolers believe what their parents tell them in a very profound way. They do not yet have the cognitive sophistication to reason analytically and reject false information. If a preschool boy consistently hears from his mother that he is smart and a good helper, he is likely to incorporate that information into his self-image Thinking of himself as a boy who is smart and knows how to do things is likely to make him endure longer in problem-solving efforts and increase his confidence in trying new and difficult tasks. Similarly, thinking of himself as the kind of boy who is a good helper will make him more likely to volunteer to help with tasks at home and at preschool.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G011",
+    "examSig": "2023 6월 고1 모평 30번",
+    "copyCount": 3,
+    "signals": [
+      "title번호",
+      "tag어휘"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmpiiz4hs0001l504rdxslqcw",
+    "titles": [
+      "23년6월고1_30번",
+      "23년6월고1-30번",
+      "2023학년도 고1 6월 모평 영어 30번 · 어휘"
+    ],
+    "memberIds": [
+      "cmpiiz4hs0001l504rdxslqcw",
+      "cmr20ohl00009kw04dnuahq9v",
+      "cmqxhk50m004pl5044jggyxw4"
+    ],
+    "academies": 2,
+    "contentLen": 769,
+    "representativeContent": "Advertisers often displayed considerable facility in adapting their claims to the market status of the goods they promoted. Fleischmann’s yeast, for instance, was used as an ingredient for cooking homemade bread. Yet more and more people in the early 20th century were buying their bread from stores or bakeries, so consumer demand for yeast decreased. The producer of Fleischmann’s yeast hired the J. Walter Thompson advertising agency to come up with a different marketing strategy to boost sales. No longer the “Soul of Bread,” the Thompson agency first turned yeast into an important source of vitamins with significant health benefits. Shortly thereafter, the advertising agency transformed yeast into a natural laxative. Repositioning yeast helped increase sales.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G044",
+    "examSig": "2024 6월 고1 모평 29번",
+    "copyCount": 3,
+    "signals": [
+      "title번호",
+      "tag어법"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmqjp6cja000dju04he6ulcbl",
+    "titles": [
+      "24년6월고1_29번",
+      "2024학년도 고1 6월 모평 영어 29번 · 어법",
+      "24년6월고1-29번"
+    ],
+    "memberIds": [
+      "cmqjp6cja000dju04he6ulcbl",
+      "cmqxhk4xf002pl504kgrff1cg",
+      "cmr2cybe30001jv04e32qqlh5"
+    ],
+    "academies": 2,
+    "contentLen": 932,
+    "representativeContent": "The hunter-gatherer lifestyle, which can be described as “natural” to human beings, appears to have had much to recommend it. Examination of human remains from early hunter-gatherer societies has suggested that our ancestors enjoyed abundant food, obtainable without excessive effort, and suffered very few diseases. If this is true, it is not clear why so many humans settled in permanent villages and developed agriculture, growing crops and domesticating animals: cultivating fields was hard work, and it was in farming villages that epidemic diseases first took root.  Whatever its immediate effect on the lives of humans, the development of settlements and agriculture undoubtedly led to a high increase in population density. This period, known as the New Stone Age, was a major turning point in human development, opening the way to the growth of the first towns and cities, and eventually leading to settled “civilizations.”",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G015",
+    "examSig": "2024 6월 고1 모평 30번",
+    "copyCount": 4,
+    "signals": [
+      "tag어휘",
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmr32stnt003ojx04etrr65nc",
+    "titles": [
+      "2024학년도 고1 6월 모평 영어 30번 · 어휘",
+      "24년6월고1_30번",
+      "24년6월고1-30번"
+    ],
+    "memberIds": [
+      "cmr32stnt003ojx04etrr65nc",
+      "cmqjp9luv0001jd0awgux4jek",
+      "cmqxhk4xm002tl504lyao6u3i",
+      "cmr2cytlm0001jb0aj7r2pzz3"
+    ],
+    "academies": 3,
+    "contentLen": 837,
+    "representativeContent": "Many human and non-human animals save commodities or money for future consumption. This behavior seems to reveal a preference of a delayed reward over an immediate one: the agent gives up some immediate pleasure in exchange for a future one. Thus the discounted value of the future reward should be greater than the un-discounted value of the present one. However, in some cases the agent does not wait for the envisioned occasion but uses their savings prematurely. For example, early in the year an employee might set aside money to buy Christmas presents but then spend it on a summer vacation instead. Such cases could be examples of weakness of will. That is, the agents may judge or resolve to spend their savings in a certain way for the greatest benefit but then act differently when temptation for immediate pleasure disappears.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G056",
+    "examSig": "2025 10월 고2 수능 29번",
+    "copyCount": 2,
+    "signals": [
+      "tag어법",
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmqqu802f000ll204pnpgn1zq",
+    "titles": [
+      "2025학년도 고2 10월 영어 29번 · 어법"
+    ],
+    "memberIds": [
+      "cmqqu802f000ll204pnpgn1zq",
+      "cmqs4vnu60001i904b4dqtkuf"
+    ],
+    "academies": 2,
+    "contentLen": 1098,
+    "representativeContent": "When a cell divides, the genomes of its two daughters are often not quite identical to each other or to that of the parent cell. On rare occasions, the error may represent a change for the better; more probably, it will cause no significant difference in the cell's prospects. But in some cases, the error will cause serious damage; for example, by disrupting the coding sequence for a key protein. Changes due to mistakes of the first type will tend to be perpetuated, because the altered cell has an increased likelihood of reproducing itself. Changes due to mistakes of the second type - neutral changes - may be perpetuated or not: it is a matter of chance whether the altered cell or its cousins will succeed. But changes that cause serious damage lead nowhere: the cell that suffers them dies, leaving no progeny. Through endless repetition of this cycle of mutation and natural selection organisms evolve: their genetic specifications change, sometimes give organisms new ways to exploit the environment more effectively, to survive in competition with others, and to reproduce successfully.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G057",
+    "examSig": "2025 10월 고2 수능 30번",
+    "copyCount": 2,
+    "signals": [
+      "tag어휘",
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmqqu802u000pl204w4b3bi2t",
+    "titles": [
+      "2025학년도 고2 10월 영어 30번 · 어휘"
+    ],
+    "memberIds": [
+      "cmqqu802u000pl204w4b3bi2t",
+      "cmqs4vnui0005i9048avulxcr"
+    ],
+    "academies": 2,
+    "contentLen": 1173,
+    "representativeContent": "Within liberal culture, the value of fair equality of opportunity for individuals outweighs the preservation of the family's integrity. In contrast, for Confucian culture, while seeking fair equality of opportunity for individuals is important, the family assumes a fundamental role in human flourishing, and living within a family institution is considered the essential way of life. Individuals are primarily understood as family members before they are regarded as state citizens. Therefore, for Confucians, the family possesses inherent value that should never be abandoned, even if it results in certain societal inequalities. Some cultures, like the liberal one, may choose to impose increasing restrictions on the role of families and implement more egalitarian government programs for education, healthcare, and other positive rights in society in the pursuit of fair equality of opportunity. On the other hand, other cultures, like the Confucian one, may prefer to primarily assign welfare responsibilities to the family, rejecting inequalities stemming from the existence of the family as long as everyone's basic freedoms and rights are safeguarded in the state.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G070",
+    "examSig": "2025 6월 고1 모평 29번",
+    "copyCount": 1,
+    "signals": [
+      "tag어법",
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmqxhk4tw000tl504ifdgmrwt",
+    "titles": [
+      "2025학년도 고1 6월 모평 영어 29번 · 어법"
+    ],
+    "memberIds": [
+      "cmqxhk4tw000tl504ifdgmrwt"
+    ],
+    "academies": 1,
+    "contentLen": 794,
+    "representativeContent": "Studies of experts provide insight into what it means to have deep and flexible understanding. Experts in a particular domain are people who have deep, richly interconnected ideas about the world. They are not just good thinkers or people who are exceptionally smart. Rather, experts having knowledge in a specific domain - such as chess, chemistry, or tennis - and are not generalists. However, experts do not just know \"a bunch of facts.\" In fact, having expertise in a topic means that knowledge is organized into coherent frameworks, and the expert understands the inter-relationship between facts and can distinguish which ideas are most central. This kind of deep but organized understanding allows for greater flexibility in learning and facilitates application across multiple contexts.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G071",
+    "examSig": "2025 6월 고1 모평 30번",
+    "copyCount": 1,
+    "signals": [
+      "tag어휘",
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmqxhk4u3000xl504nvyaam53",
+    "titles": [
+      "2025학년도 고1 6월 모평 영어 30번 · 어휘"
+    ],
+    "memberIds": [
+      "cmqxhk4u3000xl504nvyaam53"
+    ],
+    "academies": 1,
+    "contentLen": 936,
+    "representativeContent": "It is natural for people to observe happenings and then seek explanations for why those happenings occurred. But sometimes the reasoning is wrong because of one or more misconceptions. One of these is the ecological fallacy, where an argument claims that there is a causal relationship between two things merely because they occur together. For example, in the 1950s it was found that crime rates were the highest in neighborhoods where immigrants were most numerous. Some people used this \"co-occurrence\" to argue that immigrants were a cause of crime. But a careful analysis of this situation revealed that immigrants were forced to live in neighborhoods where crime rates were already low; they could not afford more expensive housing in safer neighborhoods. Immigrants themselves committed very few of the crimes. Unless you analyze the claim carefully, you would misinterpret the relationship and thereby construct a faulty belief.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G058",
+    "examSig": "2025 6월 모평 29번",
+    "copyCount": 2,
+    "signals": [
+      "tag어법",
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmron37y1000pj90arrwbxp1r",
+    "titles": [
+      "2025학년도 6월 모평 영어 29번 · 어법"
+    ],
+    "memberIds": [
+      "cmron37y1000pj90arrwbxp1r",
+      "cmqw3rvij000ljd09ndvkuh4o"
+    ],
+    "academies": 2,
+    "contentLen": 921,
+    "representativeContent": "What makes practicing retrieval so much better than review? One answer comes from the psychologist R. A. Bjork's concept of desirable difficulty. More difficult retrieval leads to better learning, provided the act of retrieval is itself successful. Free recall tests, in which students need to recall as much as they can remember without prompting, tend to result in better retention than cued recall tests, in which students are given hints about what they need to remember. Cued recall tests, in turn, are better than recognition tests, such as multiple-choice answers, where the correct answer needs to be recognized but not generated. Giving someone a test immediately after they learn something improves retention less than giving them a slight delay, long enough so that answers aren't in mind when they need them. Difficulty, far from being a barrier to making retrieval work, may be part of the reason it does so.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G061",
+    "examSig": "2025 6월 모평 30번",
+    "copyCount": 2,
+    "signals": [
+      "tag어휘",
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmron37yj000tj90alsg5z3w9",
+    "titles": [
+      "2025학년도 6월 모평 영어 30번 · 어휘"
+    ],
+    "memberIds": [
+      "cmron37yj000tj90alsg5z3w9",
+      "cmqw3rvj2000pjd09nbo1ydn4"
+    ],
+    "academies": 2,
+    "contentLen": 1151,
+    "representativeContent": "Internalization depends on supports for autonomy. Contexts that use controlling strategies such as salient rewards and punishments or evaluative, self-esteem-hooking pressures are least likely to lead people to value activities as their own. This is not to say that controls don't work to produce behavior ― decades of operant psychology prove that they can. It is rather that the more salient the external control over a person's behavior, the more the person is likely to be merely externally regulated or introjected in his or her actions. Consequently, the person does not develop a value or investment in the behaviors, but instead remains dependent on external controls. Thus, parents who reward, force, or cajole their child to do homework are more likely to have a child who does so only when rewarded, cajoled, or forced. The salience of external controls drives the acquisition of self-responsibility. Alternatively, parents who supply reasons, show an emotional understanding of difficulties overcoming problems, and use a minimum of external incentives are more likely to cultivate a sense of willingness and value for work in their child.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G062",
+    "examSig": "2025 6월 모평 41번",
+    "copyCount": 2,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmron383f0021j90ak9xid270",
+    "titles": [
+      "2025학년도 6월 모평 영어 41-42번 · 장문"
+    ],
+    "memberIds": [
+      "cmron383f0021j90ak9xid270",
+      "cmqw3rvn9001tjd09za73j38y"
+    ],
+    "academies": 2,
+    "contentLen": 1471,
+    "representativeContent": "If we understand critical thinking as: 'the identification and evaluation of evidence to guide decision-making', then ethical thinking is about identifying ethical issues and evaluating these issues from different perspectives to guide how to respond. This form of ethics is distinct from higher levels of conceptual ethics or theory. The nature of an ethical issue or problem from this perspective is that there is no clear right or wrong response. It is therefore essential that students learn to think through ethical issues rather than follow a prescribed set of ethical codes or rules. There is a need to encourage recognition that, although being ethical is defined as acting 'in accordance with the principles of conduct that are considered correct', these principles vary both between and within individuals. What a person values relates to their social, religious, or civic beliefs influenced by their formal and informal learning experiences. Individual perspectives may also be context dependent, meaning that under different circumstances, at a different time, when they are feeling a different way, the same individual may make different choices. Therefore, in order to analyse ethical issues and think ethically it is necessary to understand the personal factors that influence your own 'code of behaviour' and how these may coincide, alongside recognizing and accepting that the factors that drive other people's codes and decision making may be different.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G045",
+    "examSig": "2025 9월 고1 모평 29번",
+    "copyCount": 1,
+    "signals": [
+      "tag어법",
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmrm6d0pu000tl304q9is3z4c",
+    "titles": [
+      "2025학년도 고1 9월 모평 영어 29번 · 어법"
+    ],
+    "memberIds": [
+      "cmrm6d0pu000tl304q9is3z4c"
+    ],
+    "academies": 1,
+    "contentLen": 1041,
+    "representativeContent": "Big mammalian herbivore species react to danger from predators or humans in different ways. Some species are nervous, fast, and programmed for instant flight when they perceive a threat. Other species are slower, less nervous, seek protection in herds, stand their ground when threatened, and don't run until necessary. Naturally, the nervous species are difficult to keep in captivity. If putting into an enclosure, they are likely to panic, and either die of shock or hit themselves repeatedly to death against the fence in their attempts to escape. That's true, for example, of gazelles, which for thousands of years were the most frequently hunted game species in some parts of the Fertile Crescent. There is no mammal species that the first settled peoples of that area had more opportunity to domesticate than gazelles. But no gazelle species has ever been domesticated. Just imagine trying to herd an animal that runs away, blindly hits itself against walls, can leap up to nearly 30 feet, and can run at a speed of 50 miles per hour!",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G046",
+    "examSig": "2025 9월 고1 모평 30번",
+    "copyCount": 1,
+    "signals": [
+      "tag어휘",
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmrm6d0q4000xl304mf9m4p60",
+    "titles": [
+      "2025학년도 고1 9월 모평 영어 30번 · 어휘"
+    ],
+    "memberIds": [
+      "cmrm6d0q4000xl304mf9m4p60"
+    ],
+    "academies": 1,
+    "contentLen": 954,
+    "representativeContent": "For a species born in a time when resources were limited and dangers were great, our natural tendency to share and cooperate is complicated when resources are plenty and outside dangers are few. When we have less, we tend to be more open to sharing what we have. Certain nomadic tribes don't have much, yet they are happy to share because it is in their interest to do so. If you happen upon them in your travels, they will open up their homes and give you their food and hospitality. It's not just because they are nice people; it's because their survival depends on sharing, for they know that they may be the travelers in need of food and shelter another day. Ironically, the more we have, the bigger our fences, the more sophisticated our security to keep people away and the less we want to share. Our desire for more, combined with our increased physical interaction with the \"common folk,\" starts to create a disconnection or blindness to reality.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G054",
+    "examSig": "2025 9월 고2 모평 29번",
+    "copyCount": 1,
+    "signals": [
+      "tag어법",
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmqqqb6xa000pju04e0fo0i7m",
+    "titles": [
+      "2025학년도 고2 9월 모평 영어 29번 · 어법"
+    ],
+    "memberIds": [
+      "cmqqqb6xa000pju04e0fo0i7m"
+    ],
+    "academies": 1,
+    "contentLen": 900,
+    "representativeContent": "All human cultures mark the passing of time by the differences they observe in the world around them. Our choice of which differences to mark depend firstly on what we can observe and secondly on what is important in our lives. How we mark the differences - the shapes of our calendars and our rituals - depends on the connections we make between those two things. In the agricultural society of pre-modern Europe, where higher latitudes make the seasons easily observable, it was natural to monitor the solar cycle. Conversely, among the largely nomadic peoples of Arabia, for whom seasonal changes were less significant, the lunar calendar was a more sensible choice. That did not make it inevitable that Islam would use a lunar calendar and Roman Christianity a solar one, but political and religious decisions were made from options limited by geography and lifestyle, filtered through tradition.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G055",
+    "examSig": "2025 9월 고2 모평 30번",
+    "copyCount": 1,
+    "signals": [
+      "tag어휘",
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmqqqb6xm000tju04etmpa71h",
+    "titles": [
+      "2025학년도 고2 9월 모평 영어 30번 · 어휘"
+    ],
+    "memberIds": [
+      "cmqqqb6xm000tju04etmpa71h"
+    ],
+    "academies": 1,
+    "contentLen": 1140,
+    "representativeContent": "Although empathy is widely praised by scholars and public figures, not everyone is an empathy booster. Critics of empathy argue that empathy will not save us from interpersonal and intergroup conflict. In fact, they argue, empathy makes such conflicts worse. These critics maintain that empathy can be exhausting and lead to burnout or insensitivity to suffering. They argue that we tend to empathize strongly with our in-group and resist empathizing with out-groups, and even enjoy the suffering of out-groups in competitive or threatening contexts. Thus, the prescription for more empathy is often efficient in cases of conflict. Empathy, they argue, can further encourage conflict and force us into an us vs. them mentality. Finally, even when we try to empathize with others who are dissimilar from us or in unfamiliar contexts, sometimes we are unable to accurately empathize with their experiences, causing further misunderstandings and frustration. Critics of empathy argue that we should give up on empathy and employ other tools in pursuit of social harmony, e.g., rational compassion or moral emotions like fear, anger, and shame.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G008",
+    "examSig": "2026",
+    "copyCount": 1,
+    "signals": [
+      "마커잔존",
+      "발문잔재"
+    ],
+    "hasMarkerCopy": true,
+    "representativeId": "cmpcq19yl0001jz04tv513rx8",
+    "titles": [
+      "<Word Box> prestige impending trigge…"
+    ],
+    "memberIds": [
+      "cmpcq19yl0001jz04tv513rx8"
+    ],
+    "academies": 1,
+    "contentLen": 4583,
+    "representativeContent": "prestige impending triggers neuroscience\npatron misleading correlation impair\ndisplaced acoustic reveal discern\nincentive offset biodiversity deceptive\n\n① reveal, misleading, incentive\n\n② prestige, patron, offset, trigger\n\n③ discern, incentive, prestige\n\n④ impair, correlation, biodiversity, impending\n\n⑤ discern, displaced, acoustic, neuroscience X\n\n[6~7] 다음 글을 읽고 물음에 답하시오.\n\n[I] As a teen, you may feel like an adult, but your brain is still growing. (a)In your brain, there is a part that is responsible for solve problems and controlling your emotions. In your teen years, this part is still in development. (b)The changes in your brain lead you toward independence, social engagement, and creativity. (c)At the same time, however, you may feel confused about who are you. You may also be more sensitive to unfairness. Furthermore, your body is flowing with hormones. This significantly affects your mood. The combination of these factors intensifies your strong emotions.\n[Ⅱ] It is natural to feel angry from time to time; it doesn't mean there is something wrong with you. Anger can sometimes be a useful tool. For example, an angry but open conversation can resolve a conflict between friends. (a)The important thing is to manage your anger so that it does not turn into aggressive or violent behavior. (b) This does not mean that you should stop yourself to feel angry. (c)Rather, you should express it in a productive way. Ask yourself some questions about your angry feelings. This can help you to better understand your anger.\n[Ⅲ] (a)You need to learn how to deal with anger in a socially appropriate way. (b)Remember: anger is a feeling, but behavior is a choice. The first step is recognizing the physical signs of anger. It is possible to recognize those signs in advance. They include an increased heart rate, a flushed face, and the clenching of your fists. (c)When these things happens, take action to reduce your anger. For example, you could try taking a break to organize your thoughts or ending a conversation before it gets too intense.\n[Ⅳ] In some cases, the strategies mentioned above may not be enough, so you may need to find proper coping skills for your personal situation. (a)Without the right coping skills, you may find yourself becoming verbally or even physically aggression. (b)Explore various strategies to discover what is best for you, such as taking a walk, drawing a picture, or writing down things that come to your mind. You can also try to find possible solutions to a problem and then compare the advantages and disadvantages of each one. (c)By developing problem solving skills, you will learn that there are many ways to solve a problem without getting angry.\n[V] (a) Anger is an emotion that we all experience. (b) By managing your anger properly, you can be the boss of your feelings, not the other way around. (c) This is an important step in find your true self and taking control of your life.\n\n6. 윗글[Ⅰ]-[V]를 읽고 이해한 내용으로 적절하지 않은 것을 2개 고르면? [3.1점]\n\n① Experiencing anger during adolescence can be confusing and is often linked to brain development. Therefore, teenagers are advised to reduce situations that trigger anger and gradually minimize emotional responses whenever possible.\n\n② Teenagers often believe they are already mature, but their brains are still developing, especially in areas related to emotional control and decision-making. This ongoing development influences how they respond to situations and interact with others. As a result, their thoughts and behaviors may not always match those of fully developed adults.\n\n③ Anger can play a positive role when it is expressed in a healthy and open manner. For instance, discussing feelings honestly can help resolve conflicts between friends. In this way, anger can contribute to better communication and understanding.\n\n④ Learning effective coping strategies allows teenagers to manage their emotions more appropriately. Activities such as walking, writing, or thinking through possible solutions can reduce anger. Over time, these skills help individuals handle problems without becoming aggressive.\n\n⑤ Teenagers should express their feelings in order to prevent it from leading to negative outcomes. It is more effective to hide genuine emotions unless they fully understand their feelings and the situation so as not to aggravate the situation at hand.\n\n7. 윗글 [Ⅰ]-[V]의 밑줄 친 (a)-(c)가 어법상 적절하지 않은 것끼리만 짝지어진 것은? [2.9점]\n\n(표: 문항 7번의 선지 구성)\n[I] [II] [III] [IV] [V]\n① (a) (b) (c) (a) (b)\n② (b) (c) (a) (b) (c)\n③ (a) (a) (b) (c) (a)\n④ (c) (b) (c) (a) (c)\n⑤ (c) (a) (a) (b) (a)",
+    "markerCopyId": "cmpcq19yl0001jz04tv513rx8"
+  },
+  {
+    "groupId": "G017",
+    "examSig": "2026",
+    "copyCount": 1,
+    "signals": [
+      "마커잔존"
+    ],
+    "hasMarkerCopy": true,
+    "representativeId": "cmppqbcjp0004v30ozd54axc3",
+    "titles": [
+      "[7]번 문제 세트"
+    ],
+    "memberIds": [
+      "cmppqbcjp0004v30ozd54axc3"
+    ],
+    "academies": 1,
+    "contentLen": 1140,
+    "representativeContent": "Development of the human body from a single cell provides many examples of the structural richness that is possible when the repeated production of random variation is ①combined with nonrandom selection. All phases of body development from embryo to adult exhibit random activities at the cellular level, and body formation depends on the new possibilities generated by these activities coupled with selection of those outcomes that ②meet previously built-in criteria. Always new structure is based on old structure, and at every stage selection favors some cells and ③preserves others. The survivors serve to produce new cells that undergo further rounds of selection. Except in the immune system, cells and extensions of cells are not genetically selected during development, but rather, are ④positionally selected. Those in the right place that make the right connections are stimulated, and those that don't are eliminated. This process is much like sculpting. A natural consequence of the strategy is great ⑤variation from individual to individual at the cell and molecular levels, even though large-scale structures are quite similar.",
+    "markerCopyId": "cmppqbcjp0004v30ozd54axc3"
+  },
+  {
+    "groupId": "G028",
+    "examSig": "2026",
+    "copyCount": 1,
+    "signals": [
+      "발문잔재"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmq50ieyp003qmmm80156v11j",
+    "titles": [
+      "지문 1"
+    ],
+    "memberIds": [
+      "cmq50ieyp003qmmm80156v11j"
+    ],
+    "academies": 1,
+    "contentLen": 1520,
+    "representativeContent": "1. 밑줄 친 write an essay on a blank page가 다음 글에서\nTo understand memory, imagine your brain as a vast\ndigital archive. Accessing this data depends on two primary\nmethods: Recall and Recognition. Recall is like being asked\nto write an essay on a blank page. You must search your\ninternal 'hard drive' and reconstruct information from\nscratch without any hints. This requires significant cognitive\neffort, which is why short-answer questions or remembering\na friend's phone number can feel like 'mental heavy lifting.'\nRecognition, on the other hand, is like scrolling through a\nphoto gallery to find a specific image. The information is\nalready in front of you: you simply need to identify whether\nit matches a previous memory. This is why multiple-choice\nquestions are easier-you don't have to create the answer,\njust find it among the options. The main distinction is based\non the presence of cues. While recognition provides plenty\nof context, recall forces the brain to work in a vacuum. In\nlearning, being able to recognize a word in a textbook is\nonly the first step: true mastery is the ability to recall it\nwhen no hints are provided.\n convert abstract ideas into concrete concrete visual images like\nphotos\ndistinguish a specific piece of information from a set of\noptions\nclear and\norganize a vast digital archive into\nwell-structured written format\na\n restore information by relying solely on internal retrieval\nwithout external aids\n create a new narrative inspired by one's creative\nimagination rather than facts",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G029",
+    "examSig": "2026",
+    "copyCount": 1,
+    "signals": [
+      "발문잔재"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmq50ifck003smmm8dtl6gcbg",
+    "titles": [
+      "지문 2"
+    ],
+    "memberIds": [
+      "cmq50ifck003smmm8dtl6gcbg"
+    ],
+    "academies": 1,
+    "contentLen": 1159,
+    "representativeContent": "2. 밑줄 친 helping move the needle forward가 다음 글에\nEveryone's heard the expression don't let the perfect\nbecome the enemy of the good. If you want to get over an\nobstacle so that your idea can become the solution-based\npolicy you've long dreamed of, you can't have an\nall-or-nothing mentality. You have to be willing to alter\nyour idea and let others influence its outcome. You have\nto be okay with the outcome being a little different, even a\nlittle less, than you wanted. Say you're pushing for a clean\nwater. act. Even if what emerges isn't as well-funded as\nyou wished, or doesn't match how you originally conceived\nthe bill, you'll have still succeeded in ensuring that kids in\ntroubled areas have access to clean water. That's what\ncounts, that they will be safer because of your idea and\nyour effort. Is it perfect? No. Is there more work to be\ndone? Absolutely. But in almost every case, helping move\nthe needle forward is vastly better than not helping at all.\n dismissing partial solutions\nmaintaining a flexible mindset\naccepting a less-than-perfect outcome\nbeing open to modifying your original plan\n adjusting your expectations as the process unfolds",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G004",
+    "examSig": "2026 29번",
+    "copyCount": 3,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmp9w6bfd000fv3lcse4wslhl",
+    "titles": [
+      "지문 29"
+    ],
+    "memberIds": [
+      "cmp9w6bfd000fv3lcse4wslhl",
+      "cmp42en0c000ev37gfh0ld9fb",
+      "cmpcavlns000bjv045biib625"
+    ],
+    "academies": 2,
+    "contentLen": 918,
+    "representativeContent": "Everyone's heard the expression don't let the perfect become the enemy of the good. If you want to get over an obstacle so that your idea can become the solution-based policy you've long dreamed of, you can't have an all-or-nothing mentality. You have to be willing to alter your idea and let others influence its outcome. You have to be okay with the outcome being a little different, even a little less, than you wanted. Say you're pushing for a clean water. act. Even if what emerges isn't as well-funded as you wished, or doesn't match how you originally conceived the bill, you'll have still succeeded in ensuring that kids in troubled areas have access to clean water. That's what counts, that they will be safer because of your idea and your effort. Is it perfect? No. Is there more work to be done? Absolutely. But in almost every case, helping move the needle forward is vastly better than not helping at all.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G003",
+    "examSig": "2026 30번",
+    "copyCount": 2,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmp9w69qp0007v3lcz2vc52xu",
+    "titles": [
+      "지문 30"
+    ],
+    "memberIds": [
+      "cmp9w69qp0007v3lcz2vc52xu",
+      "cmpcavlvn0017jv046gc9tbhr"
+    ],
+    "academies": 2,
+    "contentLen": 1011,
+    "representativeContent": "A common but incorrect assumption is that we are creatures of reason when, in fact, we are creatures of both reason and emotion. We cannot get by on reason alone since any reason always eventually leads to a feeling. Should I get a wholegrain cereal or a chocolate cereal? I can list all the reasons I want, but the reasons have to be based on something. For example, if my goal is to eat healthy, I can choose the wholegrain cereal, but what is my reason for wanting to be healthy? I can list more and more reasons such as wanting to live longer, spending more quality time with loved ones, etc., but what are the reasons for those reasons? You should be able to see by now that reasons are ultimately based on non-reason such as values, feelings, or emotions. These deep-seated values, feelings, and emotions we have are rarely a result of reasoning, but can certainly be influenced by reasoning. We have values, feelings, and emotions before we begin to reason and long before we begin to reason effectively.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G065",
+    "examSig": "2026 3월 고1 수능 29번",
+    "copyCount": 1,
+    "signals": [
+      "tag어법",
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmqwl2ogh002dkq0a3sib5l7j",
+    "titles": [
+      "2026학년도 고1 3월 영어 29번 · 어법"
+    ],
+    "memberIds": [
+      "cmqwl2ogh002dkq0a3sib5l7j"
+    ],
+    "academies": 1,
+    "contentLen": 946,
+    "representativeContent": "A conceptual model is an explanation, usually highly simplified, of how something works. It doesn't have to be complete or even accurate as long as it is useful. The files, folders, and icons you see displayed on a computer screen helps people create the conceptual model of documents and folders inside the computer, or of apps or applications on the screen. In fact, there are no folders inside the computer - those are effective conceptualizations designed to make them easier to use. Sometimes these depictions can add to the confusion, however. When reading e-mail or visiting a website, the material appears to be on the device, for that is where it is displayed and used. But in fact, in many cases the actual material is \"in the cloud,\" located on some distant machine. The conceptual model is of one, coherent image, whereas it may actually consist of parts, each located on different machines that could be almost anywhere in the world.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G066",
+    "examSig": "2026 3월 고1 수능 30번",
+    "copyCount": 1,
+    "signals": [
+      "tag어휘",
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmqwl2ogw002hkq0azsbphmfq",
+    "titles": [
+      "2026학년도 고1 3월 영어 30번 · 어휘"
+    ],
+    "memberIds": [
+      "cmqwl2ogw002hkq0azsbphmfq"
+    ],
+    "academies": 1,
+    "contentLen": 812,
+    "representativeContent": "The principal transportation mode in the developing world, even in large cities, is still walking because of constraints on the resources needed to operate extensive transit systems. People cover long distances on foot every day and expend human energy that they can hardly spare. Walking under those conditions is an unavoidable burden that consumes productive capability. In North America and Western Europe, however, the attitude and policies are just the same: walking is efficient, healthful, and natural. We should do more of it - almost everybody agrees - and some of the current trends should be reversed. Ironically, among the most popular exercise machines in health clubs and in homes are tread-mills that simulate walking, which could be otherwise accomplished with a transport purpose on the street.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G072",
+    "examSig": "2026 3월 고2 수능 29번",
+    "copyCount": 1,
+    "signals": [
+      "tag어법",
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmqv05opa0001l40444nfm8fw",
+    "titles": [
+      "2026학년도 고2 3월 영어 29번 · 어법"
+    ],
+    "memberIds": [
+      "cmqv05opa0001l40444nfm8fw"
+    ],
+    "academies": 1,
+    "contentLen": 1000,
+    "representativeContent": "The Industrial Revolution did more than just invent new materials or machines. It invented a new process for manufacturing: the modern factory. Prior to around 1850, most piano shops used an apprentice system in which a master builder taught younger workers the skills of the trade, usually over the course of many years. The larger piano shops did have specialists - for example, one person who specialized in soundboards, another who made hammers, and so on. But even the largest piano makers of that time produced no more than 5-10 pianos per year per worker, as pianos were still made essentially one at a time. The development of a true piano factory occurring first in the United States, led by Jonas Chickering in Boston and later the Steinway family in New York City. These factories led to improvements in both efficiency and quality. For example, one of the factories of the time had its own iron casting facility where it made its metal plates, which were thought to be the best available.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G051",
+    "examSig": "2026 3월 고2 수능 30번",
+    "copyCount": 2,
+    "signals": [
+      "title번호",
+      "tag어휘"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmr1utf690009l504315d31wt",
+    "titles": [
+      "30번",
+      "2026학년도 고2 3월 영어 30번 · 어휘"
+    ],
+    "memberIds": [
+      "cmr1utf690009l504315d31wt",
+      "cmqv05opl0005l404fwbe4bjh"
+    ],
+    "academies": 2,
+    "contentLen": 1150,
+    "representativeContent": "In a thesis-based doctoral programme, students typically spend a significant amount of time and effort researching a specific topic. \nWhile this deep dive into a particular area allows for  thorough exploration and understanding, it can also result in narrowing the focus. \nAs students become deeply absorbed in their research, they may spend  less time exploring related fields or acquiring skills outside their immediate area of study. \nConsequently, this singular focus may limit the breadth of knowledge and skills developed during the programme, potentially  hindering students’ ability to adapt to diverse career paths or address interdisciplinary challenges. \nSome universities in Europe have  recognised the limitations of traditional thesisbased doctoral programmes and have started to implement more structured approaches. \nThese structured programmes often combine research with coursework and training in  transferable skills. \nBy incorporating coursework, seminars, workshops and internships into the curriculum, they aim to provide students with a broader skill set and better prepare them for a variety of career paths beyond academia.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G068",
+    "examSig": "2026 3월 고3 수능 29번",
+    "copyCount": 1,
+    "signals": [
+      "tag어법",
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmrs0c609000pks0al5760lii",
+    "titles": [
+      "2026학년도 고3 3월 영어 29번 · 어법"
+    ],
+    "memberIds": [
+      "cmrs0c609000pks0al5760lii"
+    ],
+    "academies": 1,
+    "contentLen": 1174,
+    "representativeContent": "Darwin understood that since inheritance is conservative, it is in the nature of the organism to impose itself on the surroundings, producing many highly similar but variable offspring regardless of the nature of the conditions. He further recognized that these fundamental aspects of the nature of the organism imply reproductive overrun, with organisms routinely producing more offspring than there are resources to support them. The need to survive implies that the capacity for using necessary resources must complement the opportunity to use them. But needs and opportunity do not perfectly match. Inheritance produces the capacities for exploiting the surroundings, but in a way that is indifferent to the surroundings. Offspring cannot anticipate the nature of the conditions in which they find themselves, much less alter themselves in ways that are suitable to any changes in those conditions. While it is true that organisms can express some amount of flexibility in their form and function in response to their immediate surroundings, these adjustments are minor compared to the constraints of inheritance. As a result, not every living thing can live everywhere.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G063",
+    "examSig": "2026 3월 고3 수능 30번",
+    "copyCount": 1,
+    "signals": [
+      "tag어휘",
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmrs0c60p000tks0a3gth7d0s",
+    "titles": [
+      "2026학년도 고3 3월 영어 30번 · 어휘"
+    ],
+    "memberIds": [
+      "cmrs0c60p000tks0a3gth7d0s"
+    ],
+    "academies": 1,
+    "contentLen": 1096,
+    "representativeContent": "Every time you conceptualize, categorize, and put a name on something that is not a proper name, you abstract away from its particularities. Picture daisies and clover flowers in a lawn. Those four ordinary nouns leave out their differences. \"Flower\" co-categorizes the white and yellow types with the beige ones, and all the many other sorts to be found elsewhere. \"Lawn\" acknowledges the varieties of grass and all the nongrassy plants that are there. Zoom in, and you will find individuality and uniqueness everywhere. No two daisies, no two clovers, are exactly alike, and yet they present to a quick glance a carpet patterned uniformly enough. For most practical purposes, the differences can be ignored - making a daisy chain, sunbathing, and the like. Not so, however, for the groundskeeper of a sports stadium, where the constituent grasses and their stages of growth really do matter. And to an infinite mind, with infinite memory, each blade of grass, with its own distinct life history, need not be co-categorized with all its fellows. Each could have its own name, as you yourself do.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G053",
+    "examSig": "2026 5월 고3 수능 29번",
+    "copyCount": 1,
+    "signals": [
+      "tag어법",
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmromggds0005js04zb6ho4hw",
+    "titles": [
+      "2026학년도 고3 5월 영어 29번 · 어법"
+    ],
+    "memberIds": [
+      "cmromggds0005js04zb6ho4hw"
+    ],
+    "academies": 1,
+    "contentLen": 1040,
+    "representativeContent": "A study by Eurofound found that young people who were working remotely reported more difficulties in managing their workload than older colleagues. Moreover, many young people began their careers working remotely during the pandemic, unlike those in older generations who had many years to establish interpersonal connections and embed themselves in the organizational culture in an in-person job. A survey by Prospects found that almost half of students and graduates in the United Kingdom found it difficult to work from home during the pandemic due to a lack of suitable workspace or distractions. While young people may struggle long-term with remote work, perhaps more of a hybrid model where they can work from home part of the time and work onsite other times, would work well for them. But it may not be that they need a formal hybrid structure with specific days of the week designated for working remotely but instead a fluid option that allows them, if possible, depending on the job role, chooses their day-to-day work location.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G026",
+    "examSig": "2026 6월 고1 모평 29번",
+    "copyCount": 8,
+    "signals": [
+      "title번호",
+      "마커잔존",
+      "발문잔재",
+      "tag어법"
+    ],
+    "hasMarkerCopy": true,
+    "representativeId": "cmq0pakbe0003la04ywbzulqg",
+    "titles": [
+      "29",
+      "2026학년도 고1 6월 모평 영어 29번 · 어법",
+      "26년6월고1_29번",
+      "26년 6월 29번"
+    ],
+    "memberIds": [
+      "cmq0pakbe0003la04ywbzulqg",
+      "cmrbhdeqp000tjo04u255jnfv",
+      "cmqevxfv80001k204urgr8zx9",
+      "cmrnq6jrj000pkk0a4bsy1ze0",
+      "cmqs6s0v5000pl504n4vhat23",
+      "cmqw5rdvz000hkz0497d4yfpr",
+      "cmqw47hsl000lkv04mj927xdi",
+      "cmru74mvm000pl404jg7shgxj"
+    ],
+    "academies": 6,
+    "contentLen": 1017,
+    "representativeContent": "29. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은? [3점]\n\nLiterature, in its essence, is a testament to the enduring \n\npower of human creativity and expression. It transcends time \n\nand space, ① connecting us with the thoughts and emotions \n\nof people from all walks of life, across centuries and \n\ncultures. ② Despite the rise of new technologies and the \n\never­changing landscape of media, literature has retained its \n\nrelevance and significance as a timeless art form. One \n\nreason for literature’s enduring power is its ability to \n\ncapture and ③ convey the complexities of the human \n\nexperience. Through the written word, authors ④ have the \n\nunique ability to explore the depths of human emotion, the \n\nnuances of relationships, and the challenges and triumphs\n\nof the human spirit. Literature allows us to see ourselves\n\n⑤ reflected in the pages of a book, to empathize with \n\ncharacters different from ourselves, and to gain a deeper \n\nunderstanding of the human condition. * testament: 증거 ** transcend: 초월하다 *** nuance: 미묘한 차이",
+    "markerCopyId": "cmq0pakbe0003la04ywbzulqg"
+  },
+  {
+    "groupId": "G064",
+    "examSig": "2026 6월 고1 모평 30번",
+    "copyCount": 8,
+    "signals": [
+      "title번호",
+      "tag어법",
+      "마커잔존",
+      "발문잔재",
+      "tag어휘"
+    ],
+    "hasMarkerCopy": true,
+    "representativeId": "cmq0pcwyn0005la043zb93vsg",
+    "titles": [
+      "26년 6월 30번",
+      "어법테스트",
+      "30",
+      "2026학년도 고1 6월 모평 영어 30번 · 어휘"
+    ],
+    "memberIds": [
+      "cmqw5re0u000lkz046g9q0ip8",
+      "cmru2joa10001ju041r9ulfvk",
+      "cmq0pcwyn0005la043zb93vsg",
+      "cmrbhdeqx000xjo04cq2o4dot",
+      "cmrnq6jrx000tkk0atpkympzo",
+      "cmqs6s0vh000tl504yakwv5ol",
+      "cmru74mvv000tl4045unpd3bx",
+      "cmqw47hsv000pkv04h5ef5n7p"
+    ],
+    "academies": 6,
+    "contentLen": 963,
+    "representativeContent": "30. 다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 \n\n않은 것은?\n\nA viewfinder is a piece of card with a hole cut through it \n\nin the middle, which can be used to isolate a part of a \n\npicture or object. It allows us to concentrate on one small \n\npart or area without being distracted by the ① whole of \n\nwhat can be seen. It is a useful tool that can help children \n\n② focus or organise their observation and drawing. It can \n\nsupport hesitant children by giving a boundary to what they \n\nare looking at and it can ③ help children who find it hard \n\nto keep track of where and what they are looking at, by \n\nbringing them back to the same area each time they look \n\nand look back. When you are making viewfinders for use \n\nwith the children you are supporting, take into consideration \n\nthe ④ size of the card. You need enough card around the \n\nhole to ⑤ block out the rest of the visual information from \n\nthe child’s field of vision, but it should not be too big and \n\nunwieldy.",
+    "markerCopyId": "cmq0pcwyn0005la043zb93vsg"
+  },
+  {
+    "groupId": "G039",
+    "examSig": "2026 6월 고2 모평 29번",
+    "copyCount": 6,
+    "signals": [
+      "title번호",
+      "tag어법"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmqckmicd0009jz043z67xlbq",
+    "titles": [
+      "26년6월고2_29번",
+      "26년6월고2-29번",
+      "2026학년도 고2 6월 모평 영어 29번 · 어법"
+    ],
+    "memberIds": [
+      "cmqckmicd0009jz043z67xlbq",
+      "cmql3lde10001i90besqbmozq",
+      "cmqsz1mf4000pl704nzralr0p",
+      "cmqv6rwet0001ja09gp2ohnkx",
+      "cmqxiycow001thy0aetvwy9dz",
+      "cmqxl4bmm000hjp04mc5p810d"
+    ],
+    "academies": 3,
+    "contentLen": 1225,
+    "representativeContent": "The renowned British philosopher Alfred North Whitehead asserted that “civilization advances by extending the number of operations we can perform without thinking about them.” Take,  for  example,  the  “advance”  offered  to  civilization by the discount coupon, which allows consumers to assume that   they   will   receive   a   reduced   purchase   price   by presenting  the  coupon.  The  extent  to  which  we  have learned  to  operate  mechanically  on  that  assumption  is illustrated   in   the   experience   of   one   automobile­tire company.  Mailed­out  coupons  that ― because  of  a  printing error ― offered no savings to recipients  produced just as much  customer  response  as  did  error­free  coupons  that offered  substantial  savings.  The  obvious  but  instructive point  here  is  that  we  expect  discount  coupons  to  do double  duty.  Not  only  do  we  expect  them  to  save  us money, we also expect them to save us the time and mental energy  required  to  think  about  how  to  do  it.  In  today’s world,  we  need  the  first  advantage  to  handle  pocketbook strain;   but   we   need   the   second   advantage   to   handle something  potentially more important ― brain strain.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G040",
+    "examSig": "2026 6월 고2 모평 30번",
+    "copyCount": 6,
+    "signals": [
+      "title번호",
+      "tag어휘"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmqcks6ze0001jj040hyr1mxt",
+    "titles": [
+      "26년6월고2_30번",
+      "26년6월고2-30번",
+      "2026학년도 고2 6월 모평 영어 30번 · 어휘"
+    ],
+    "memberIds": [
+      "cmqcks6ze0001jj040hyr1mxt",
+      "cmql3qgc10001kz04v2gq9kzq",
+      "cmqsz1mfi000tl704d7zqv2ej",
+      "cmqv6u0bq0001ji09e5llmcom",
+      "cmqxbeaq90005ie049ryo0vba",
+      "cmqxiycgu000lhy0apnc4724k"
+    ],
+    "academies": 3,
+    "contentLen": 1237,
+    "representativeContent": "Usually,   innovative   high­tech   products   have   low   price elasticity.  This  means  that  high  variation  in  price,  an increase  as  well  as  a  decrease,  does  not  significantly modify    demand.   These   high­tech   products   have   few substitutes,  meaning  that  the  costs  to  switch  to  another product  are   high.  Additionally,  at  the  first  stage  of  the technology,  buyers — either  innovators  or  forerunners — are  less  sensitive  to  price  than  to  additional  performance; they often have deep pockets or are ready to spend a lot for a new innovative and outstanding product. For instance, with   its   new   product   range,   a   high­end   mobile   phone manufacturer is aiming at the 3% of millionaire households with assets of more than $2.5 million; those are customers who  are  ready  to  accept  the  price  range  the  manufacturer has set. At that stage, the competitors are not interested in  lowering their price significantly whatsoever, because they are chasing the same categories of customers, not sensitive to  price.  Furthermore,  the  high  price  of  these  products  is often  perceived  as  a  sign  of  quality  and   reinforces  a customer’s confidence in the company.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G060",
+    "examSig": "2026 6월 모평 29번",
+    "copyCount": 1,
+    "signals": [
+      "tag어법",
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmqs4reou000xkx0b9fkbq6xz",
+    "titles": [
+      "2026학년도 6월 모평 영어 29번 · 어법"
+    ],
+    "memberIds": [
+      "cmqs4reou000xkx0b9fkbq6xz"
+    ],
+    "academies": 1,
+    "contentLen": 1023,
+    "representativeContent": "Changes in the degree of closeness are quite important in managing emotional intensity. Take, for example, emotions induced by television. Closeness and familiarity are important in making the fictional environment more real. Accordingly, most TV shows are set in the present or in a time within the memory of the viewers. Most characters are supposed to be types with whom we are familiar. Such closeness and familiarity make it easier for us to perceive the imaginary story to be a real one. In other circumstances, such as when violence is shown on TV, the closeness variable is used to reduce emotional intensity. Television entertainment tends to place social problems involving violence in another time and place, letting us watch those fictionalized characters search for solutions to our problems in settings safely distanced from our own. When violence occurs in a contemporary setting, it is generally the product of the interaction of police and criminals ― again, it is removed from the lives of good citizenry.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G059",
+    "examSig": "2026 6월 모평 30번",
+    "copyCount": 1,
+    "signals": [
+      "tag어휘",
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmqs4reoj000tkx0brk6afc7s",
+    "titles": [
+      "2026학년도 6월 모평 영어 30번 · 어휘"
+    ],
+    "memberIds": [
+      "cmqs4reoj000tkx0brk6afc7s"
+    ],
+    "academies": 1,
+    "contentLen": 1141,
+    "representativeContent": "Gaining an audience for your writing involves not just finding a voice but ensuring that voice resonates with your intended readers. Entrepreneurs understand the importance of building a brand that makes them memorable and distinct from their competitors, drawing customers to their products or services. They achieve this by pinpointing their target audience, crafting a unique value proposition, and shaping a recognizable identity. While scholars might initially find these entrepreneurial concepts alien, they actually engage in similar practices when they set themselves apart in their academic writing. Consider the typical literature review and motivation section of a scholarly article ― the aim is to highlight gaps in existing research and position oneself as the one who will address these overlooked areas. The challenge, as Labaree suggests, is not just in developing innovative ideas but in cultivating a distinctive voice that makes readers think, \"Ah, this sounds like [the author].\" It's about balancing the expression of your ideas with the development of a unique voice that leaves a temporary impression on your audience.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G067",
+    "examSig": "2026 6월 모평 41번",
+    "copyCount": 1,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmrs251gp000dja0apyfs37lt",
+    "titles": [
+      "2026학년도 6월 모평 영어 41-42번 · 장문"
+    ],
+    "memberIds": [
+      "cmrs251gp000dja0apyfs37lt"
+    ],
+    "academies": 1,
+    "contentLen": 1517,
+    "representativeContent": "In technological design, an aspiration towards seamlessness aims to make the technological experience for humans blend seamlessly into our everyday lives. Essentially, this aspiration aims towards experiences where people are no longer aware of the technology, the interface or the differences between human-technology and human-human interaction. Considering the metaphor of seams in clothing, we can say that we aspire to seamless aesthetics by stitching the seams closely, pressing them flat and making sure they are hidden on the inside so that we wear clothing rather than pieces of fabric. When designers and engineers talk about technological seamlessness, they are often referring to ease of use and convenience. For example, in interface design, an aspiration towards seamlessness ensures the experience for the user flows and is not stressful or irritating. Most of us would have had experiences of poor interface designs or apps in workplaces that make things more complicated and irritating, and have longed for more seamless interfaces. Technological seamlessness can also include less visible screens in new technologies, or virtual reality technologies with a seamless technological design. The aim is to immerse the user experience such that the visual interaction might be described as inside the screen rather than a body interacting with a digital console or object as separate entities. Similarly, seamlessness in humanoid robotic design aims to make humanoids indistinguishable from a human body.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G030",
+    "examSig": "2026 수능 29번",
+    "copyCount": 1,
+    "signals": [
+      "tag어법",
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmr8z79he006gmm0sr8zux1b2",
+    "titles": [
+      "2026학년도 수능 영어 29번 · 어법"
+    ],
+    "memberIds": [
+      "cmr8z79he006gmm0sr8zux1b2"
+    ],
+    "academies": 1,
+    "contentLen": 889,
+    "representativeContent": "We are exceptionally smart, and this helps us adapt to a wide range of environments. But we are not nearly smart enough as individuals to solve the adaptive problems that confronted modern humans as they spread across the globe. The package of tools, foraging techniques, ecological knowledge, and social arrangements used by any group of foragers is far too complex for any individual to create. We are able to learn all the things we need to know in each of the many different environments in which we live only because we acquire information from others. We are much better at learning from others than other species are, and we are motivated to learn from others even when we do not understand why our models are doing what they are doing. This psychology allows human populations to accumulate pools of adaptive information that greatly exceed the inventive capacities of individuals.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G031",
+    "examSig": "2026 수능 30번",
+    "copyCount": 1,
+    "signals": [
+      "tag어휘",
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmr8z79p8006kmm0swat4yw2v",
+    "titles": [
+      "2026학년도 수능 영어 30번 · 어휘"
+    ],
+    "memberIds": [
+      "cmr8z79p8006kmm0swat4yw2v"
+    ],
+    "academies": 1,
+    "contentLen": 1083,
+    "representativeContent": "Situational ethics is an ethical theory that takes into account the context of a situation or an act when judging whether it is ethical. Supporters of this theory willingly permit casting aside absolute moral standards. In the absence of a universal standard or law, what matters is the outcome or consequences; so, the end justifies the means. Possibly the following contrasting realities can help illustrate the application of situational ethics. In a pickup game of basketball played among friends, everyone is expected to call his or her own fouls or acknowledge knocking the ball out-of-bounds. Caring about one's friends and maybe getting to keep playing with the group leads to these actions. But, once an organized game is played with officials, most athletes will not admit to the same fouls or violations as the end goal of winning is more important than expressing concern for competitors. Situational ethics has been extended by many athletes and coaches to mean trying to get away with as many actions on the field or court as possible to abandon competitive advantages.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G033",
+    "examSig": "2026 수능 41번",
+    "copyCount": 1,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmr8z7c3h007smm0s9gfw34jf",
+    "titles": [
+      "2026학년도 수능 영어 41-42번 · 장문"
+    ],
+    "memberIds": [
+      "cmr8z7c3h007smm0s9gfw34jf"
+    ],
+    "academies": 1,
+    "contentLen": 1648,
+    "representativeContent": "There is an obvious problem with the history of dress in all of its displays and that is, although textiles survive from early periods and cultures of recorded history, actual garments do not provide an uninterrupted flow of evidence across the same long time-span. Therefore, to give the study of dress equal significance to other areas such as architecture, painting, prints, drawings and sculpture, it was inevitable that these other areas would provide much of the source material. The history of surviving dress really only starts in the 17th century, and like all artefacts described as fine or decorative art, is a highly visual subject. However, unlike most of the categories of collection and study that make up those areas, it is fluid rather than static. Garments should be seen in movement on a human body, not frozen on a display figure. This is one of the many difficulties when curating collections of costume and also why some modern writers find costume collections physically and intellectually lifeless. Fortunately, in the period after 1660, when more items of dress survive to enrich our understanding of the history of the subject, there are also many painted, printed, photographed and filmed sources of evidence of people in clothing, caught in movement. Often a variety of different types of illustrative examples will provide evidence about how a garment was worn within the period in which it was made. Without the information contained in art in all of its forms, from drawing to sculpture, it is unlikely that displays of historic dress would be awkward imitations of the intentions of their original makers and owners.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G024",
+    "examSig": "2027 6월 모평 29번",
+    "copyCount": 5,
+    "signals": [
+      "tag어법",
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmr3bliru0022mmf0qeppto36",
+    "titles": [
+      "2027학년도 6월 모평 영어 29번 · 어법"
+    ],
+    "memberIds": [
+      "cmr3bliru0022mmf0qeppto36",
+      "cmrbbc29r000pld04vbw9v2ti",
+      "cmrn206wy000tl404ng2n4hh6",
+      "cmrq60z26000pkx0a2c8n0784",
+      "cmqwl2o8w0009kq0a8lusssab"
+    ],
+    "academies": 5,
+    "contentLen": 1039,
+    "representativeContent": "Fashion is always deeply cultural, and an excellent example of this can be seen in the evolution of European clothing. At the beginning of the Middle Ages, clothing tended to be simple and was frequently made of rough wool or animal furs. With advances in cloth making, however, fashion began moving toward styles that were more elaborate and form-fitting. In the Renaissance and Elizabethan eras, styles became even more refined. The clothes that wealthy people were wearing became increasingly fancier, with a particular emphasis being placed on smaller waists. The connection between clothing and social status was so pronounced that laws were enacted to limit the wearing of certain luxury items. Allowed only for higher social classes, luxurious styles and decorations such as feathers, silk, or velvet were used as a means of demonstrating one's standing in society. This was further reinforced as upperclass styles came to be explicitly incorporated into cultural ceremonies so that their wearers' roles could be identified clearly.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G025",
+    "examSig": "2027 6월 모평 30번",
+    "copyCount": 5,
+    "signals": [
+      "tag어휘",
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmr3blizr0026mmf0j7tzly2p",
+    "titles": [
+      "2027학년도 6월 모평 영어 30번 · 어휘"
+    ],
+    "memberIds": [
+      "cmr3blizr0026mmf0j7tzly2p",
+      "cmrbbc2a2000tld04kf8msqvr",
+      "cmrn206xb000xl404cw25fojv",
+      "cmrq60z2k000tkx0apqnw5ldd",
+      "cmqwl2o9b000dkq0alcunagwp"
+    ],
+    "academies": 5,
+    "contentLen": 1126,
+    "representativeContent": "Classical works by playwrights such as Shakespeare or Euripides or even American musical song lyrics contain unconventional and unrealistic methods of communicating characters' thoughts and feelings, and take a bit more skill and patience to understand. The reader must be mindful not to let the poetic form or archaic word usage get in the way of getting meaningful information about the story, but instead see the form itself as a revealing stylistic technique. Scripts with complex language or unfamiliar styles may require several additional readings in order for the nuance to become clear. Musical theater pieces are particularly difficult to visualize when reading because of the diminished emphasis on dialogue and a significant emphasis on song and dance. For example, when the music and lyrics are removed from a musical theater script, what is left is the dialogue, known as the book or libretto, and it can be very thick. There is an emphasis on dance, movement, or action in musical theater that can be time-consuming when actually performed on stage, but can take very little space when typed into a play script.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G027",
+    "examSig": "2027 6월 모평 41번",
+    "copyCount": 5,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmr3bllej003emmf0f1dptmn9",
+    "titles": [
+      "2027학년도 6월 모평 영어 41-42번 · 장문"
+    ],
+    "memberIds": [
+      "cmr3bllej003emmf0f1dptmn9",
+      "cmrbbc2dh0021ld04pm9pf6by",
+      "cmrn2071h0025l404sfpy9mox",
+      "cmrq60z6o0021kx0a5fssg145",
+      "cmqwl2od9001hkq0aw30w4ulh"
+    ],
+    "academies": 5,
+    "contentLen": 1407,
+    "representativeContent": "The structure of glass is, frankly, a bit of a mess. Clear and perfect as it might appear to our eyes, down at the molecular level, glass looks more like a random ball-pit of atoms. The technical term for this mess depends on who you're asking: for some scientists it is an \"amorphous solid,\" for others a \"supercooled liquid.\" In theory it's both liquid and solid, though, given the way it behaves, in practice it's really the latter. In fact, at room temperature glass never behaves as a liquid, even an imperceptibly viscous one, even over long periods of time (though it can \"sweat\" if you don't add enough lime to the mix). Those misshapen sheets of glass you sometimes see in old stained-glass windows, thicker at the bottom than the top, are generally not that way because the glass is slowly sinking over time. Unless the church has endured temperatures of more than 400˚C, the chances are they are uneven because that's the way they were blown and solidified in the first place. Flat glass was only developed in the nineteenth century and we had to wait until the middle of the twentieth century for truly flat, thin sheets of glass. The paradox is that, despite it being one of the very oldest human-made substances, scientists still struggle to comprehend why glass behaves the way it does. Glass seems to obey most molecular laws. As one glassmaker put it, glass is not a material; it's a state.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G013",
+    "examSig": "29번",
+    "copyCount": 3,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmpmq0ryo0009js04c9bspguo",
+    "titles": [
+      "해커스 수불패 8회 29번"
+    ],
+    "memberIds": [
+      "cmpmq0ryo0009js04c9bspguo",
+      "cmpmq0rmj0005js044ry7lqwq",
+      "cmpmq0t0x0007l8049kd3furp"
+    ],
+    "academies": 1,
+    "contentLen": 758,
+    "representativeContent": "When movies are filmed, many sounds are too quiet or unclear for equipment to record them accurately as they take place on set.\n\nTo address this issue, special sound-effect artists are required.\n\nKnown as Foley artists, these individuals bring movies to life by looking carefully at camera footage and finding items to create sounds that match it.\n\nBeing a Foley artist requires a lot of creativity because, despite seeming as though they are authentic, many sounds are replicated in unusual ways.\n\nFor instance, the sound of a bird flapping its wings might be produced with a leather wallet.\n\nUltimately, the work of a Foley artist is invaluable as it adds a sense of authenticity and mood to films that would otherwise have to rely mostly on their visuals.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G006",
+    "examSig": "29번",
+    "copyCount": 1,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmquogrx3000djj0437a5zi9j",
+    "titles": [
+      "No.29"
+    ],
+    "memberIds": [
+      "cmquogrx3000djj0437a5zi9j"
+    ],
+    "academies": 1,
+    "contentLen": 1052,
+    "representativeContent": "In the 1930s, in the midst of the Great Depression, the U.S. government introduced the Agricultural Adjustment Acts to redress the overproduction in agriculture and to raise farm incomes. The mechanisms for doing so included providing price supports for agricultural products and controlling production by having farmers commit to not exceeding acreage limits. In their thorough analysis of these policies, Winders and Nibert conclude that, while these acts were successful in improving farm incomes, they stimulated further production instead of controlling it. This unintended consequence occurred because the policies limited the amount of acreage that could be used for production, but not the amount of the product that they could produce. Farmers therefore intensified production on the amount of land they were able to use so that they could capitalize on the artificially inflated price of what they produced. The strategy was to produce more animals on less land. These policies therefore further accelerated industrialization in the industry.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G034",
+    "examSig": "29번",
+    "copyCount": 1,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmqb4m1g40009l204gsm64j2x",
+    "titles": [
+      "올림포스29-5"
+    ],
+    "memberIds": [
+      "cmqb4m1g40009l204gsm64j2x"
+    ],
+    "academies": 1,
+    "contentLen": 1060,
+    "representativeContent": "The amount of stress which an ecosystem can absorb before it is driven to collapse is a result of its various interconnections and their relative speeds of response. The more complex the ecosystem, the more successfully it can resist a stress. For example, in the rabbit-lynx system, if the lynx had an alternative source of food they might survive the sudden depletion of rabbits. In this way, branching — which establishes alternative pathways — increases the resistance of an ecosystem to stress. Most ecosystems are so complex that the cycles are not simple circular paths, but are crisscrossed with branches to form a network or a fabric of interconnections. Like a net, in which each knot is connected to others by several strands, such a fabric can resist collapse better than a simple, unbranched circle of threads — which if cut anywhere breaks down as a whole. Environmental pollution is often a sign that ecological links have been cut and that the ecosystem has been artificially simplified and made more vulnerable to stress and to final collapse.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G035",
+    "examSig": "29번",
+    "copyCount": 1,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmqb4p4cv0005lh04bu17g9vf",
+    "titles": [
+      "올림포스29-6"
+    ],
+    "memberIds": [
+      "cmqb4p4cv0005lh04bu17g9vf"
+    ],
+    "academies": 1,
+    "contentLen": 996,
+    "representativeContent": "To the ancients, looking out at the night sky, the Universe seemed eternal and unchanging. Right up until the 1920s, what we now know to be the Milky Way galaxy, an island of a few hundred billion stars, was thought to be the entire Universe, in which individual stars might be born, live and die but the overall appearance always remained the same, like a forest in which individual trees live and die without changing the overall appearance. The idea of an unchanging Universe was so deeply rooted that even Albert Einstein, usually willing to entertain new ideas, accepted it without question. When he applied the equations of his general theory of relativity to describe the behaviour of the entire Universe (all of space and time), he found that the mathematics said that the Universe could not be static, but must be either expanding or contracting. This seemed so improbable to him that he added an extra factor to the equations, called the cosmological constant, to hold everything still.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G048",
+    "examSig": "29번",
+    "copyCount": 1,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmqmmlde00003ge0a90ajel80",
+    "titles": [
+      "수특29-3"
+    ],
+    "memberIds": [
+      "cmqmmlde00003ge0a90ajel80"
+    ],
+    "academies": 1,
+    "contentLen": 871,
+    "representativeContent": "What deeply affected so many Black communities globally was not only that they could not metaphorically breathe because of the oppressive forms and limits of white supremacy, but also that so many Black communities literally cannot breathe because of environmental racism. Similarly to Black communities in the UK, Black Americans are also more likely to live near landfills, industrial plants and fossil-fuel infrastructure. The process by which this hazardous infrastructure is deliberately situated close to African American communities is called redlining. This process means that fossil-fuelled power plants and hazardous-waste facilities are disproportionately and deliberately situated in Black or ethnic-minority neighbourhoods. As a result of this, Black Americans are three times more likely to die from exposure to air pollutants than their white counterparts.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G049",
+    "examSig": "29번",
+    "copyCount": 1,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmqmmkr0i0001lh042a180w3z",
+    "titles": [
+      "수특29-1"
+    ],
+    "memberIds": [
+      "cmqmmkr0i0001lh042a180w3z"
+    ],
+    "academies": 1,
+    "contentLen": 975,
+    "representativeContent": "Along with the mistaken notion that the law resides in the books goes the equally mistaken idea that law is secret, or at least inaccessible to the ordinary person. To understand and apply the law at the advanced, technical level that lawyers do requires professional knowledge, but to understand the basic substance of the law does not. Law reflects life. The principles and issues embodied in the law are not different from those that we experience in other aspects of our lives. Contract law, for example, is a commentary on the way people make, interpret, keep, and break their promises in commercial and noncommercial settings. Few nonlawyers can describe the objective theory of contract formation or the Statute of Frauds, but they have thought a lot about contracts and promises. If you cross your fingers when you make a promise, does it mean that the promise doesn’t count? If your newly purchased television doesn’t work, can you return it to the store? And so on.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G050",
+    "examSig": "29번",
+    "copyCount": 1,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmqmml2ns0001ge0amhbpgey0",
+    "titles": [
+      "수특29-2"
+    ],
+    "memberIds": [
+      "cmqmml2ns0001ge0amhbpgey0"
+    ],
+    "academies": 1,
+    "contentLen": 1088,
+    "representativeContent": "The internet has transformed the fashion marketplace, making it increasingly difficult to predict the demand for the selling season. Consumers can browse for product information and prices and gain comparative information almost instantaneously, making them more informed than ever before, transferring the balance of power from the retailer to the customer. This is exacerbated by open and real-time access to fashion shows, facilitated through livestreaming, coupled with social media access to celebrity looks and lifestyles and the sharing of all aspects of life on social media. Consumers use fashion choices to express their individual style and personality, especially those promoting ‘brand me’ on social media. The traditional two-season offer is no longer seen as enough, with consumers demanding new products throughout the whole year. This creates a problem for fashion retailers as many consumers are looking for more exclusive pieces to differentiate themselves, forcing up the desire for trend-led ever more rapidly changing styles, while still demanding affordable prices.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G073",
+    "examSig": "29번",
+    "copyCount": 1,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmqy2nfaw001fk204w30bart2",
+    "titles": [
+      "지문 29"
+    ],
+    "memberIds": [
+      "cmqy2nfaw001fk204w30bart2"
+    ],
+    "academies": 1,
+    "contentLen": 1089,
+    "representativeContent": "As civilizations started to grow and flourish, people found they could accomplish more with less effort if they\nspecialized and divided their work into separate designations. So, for example, the work of brick-making was\nconducted separately from the work of shipbuilding-just as the work of laying roads was separate from the work of\nfarming, which was separate from the work of building dwellings or making pots. Each line of work was its own distinct\nactivity, carried out by distinct practitioners who developed their work into an institution of sorts. As civilization\ncontinued to develop, differentiated forms of work became more sophisticated, more specialized, and more communal.\nIn ancient Rome, they became formalized with the creation of what were called collegia, or professional associations.\nThere was, for example, a college of woodworkers, a college of merchant mariners, a college of wine dealers, and a\ncollege of planters. In ancient China, a similar system developed. By the Middle Ages, guilds, a similar type of\norganization, had taken hold throughout much of Europe.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G079",
+    "examSig": "29번",
+    "copyCount": 1,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmr0e7gh5001hl104ic8ewsdg",
+    "titles": [
+      "지문 29"
+    ],
+    "memberIds": [
+      "cmr0e7gh5001hl104ic8ewsdg"
+    ],
+    "academies": 1,
+    "contentLen": 1052,
+    "representativeContent": "The phrase \"I have nothing to hide\" has become popular in discussions about social media companies that collect all of\nthe personal data they can get their hands on. You might hear it from users who prefer to pay with their data, not with\ntheir money. And the phrase could well hold true for those of us who live uneventful lives without any serious health\nissues, have never made any potential enemies, and wouldn't speak up on civil rights denied by a government. Yet the\nissue is not about hiding or the freedom to post pictures of adorable kittens at no cost. Tech companies don't care\nwhether or not you have something to hide. Rather, because you don't spend any money for their services, they have to\nemploy psychological tricks to get you to spend as much time as possible on their apps. You are not the customer; the\ncustomers are the advertisers who pay tech companies to grab your attention. Many of us have become glued to our\nsmartphones, find hardly any time for anything else, and eagerly await another dopamine shot via each new 'like'.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G007",
+    "examSig": "30번",
+    "copyCount": 1,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmquogs2m000hjj04kh8724dl",
+    "titles": [
+      "No.30"
+    ],
+    "memberIds": [
+      "cmquogs2m000hjj04kh8724dl"
+    ],
+    "academies": 1,
+    "contentLen": 1204,
+    "representativeContent": "It is understood that the global warming problem has been felt in daily life with water cuts, decreases of dam water levels, and the loss of agricultural production due to drought. Images of cracking soil becoming desert and emotional glacier scenes with polar bears and penguins are used to express the problem. These themes are used in ads to advertise products. A feeling is aroused in viewers that they can help starving polar bears unable to hibernate by “consuming more, buying more” and thus preventing global warming. These ads with environmental themes can sometimes prevent the stimulation of people truly acting to correct environmental problems and they suggest, instead, that the only way for people to express their sensitivity for these problems is through more consumption. In a capitalist system, it is obvious that companies, whose aim is to make profit, will not consider the environment as a field of responsibility. The understanding of “first economy, then ecology” as remarked by former president of the United States George W. Bush forms the basis of green advertising. Advertising is essentially an economic phenomenon; however, it may seem to project much social responsibility.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G014",
+    "examSig": "30번",
+    "copyCount": 1,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmpmq0tw30007jv040i8lwh61",
+    "titles": [
+      "해커스 수불패 8회 30번"
+    ],
+    "memberIds": [
+      "cmpmq0tw30007jv040i8lwh61"
+    ],
+    "academies": 1,
+    "contentLen": 902,
+    "representativeContent": "Newton’s Three Laws of Motion are the bedrock of physics.\n\nAmong the three, the third states that for every action there is an equal and opposite reaction.\n\nThis is something we experience yet rarely notice; all forces come in pairs.\n\nIf a person is walking, their body exerts a force that is downwards on the ground.\n\nThis is something we recognize because we see it and feel it when we walk.\n\nMeanwhile, the ground pushes the same upward force.\n\nThe action-reaction pair represents the symmetry in nature.\n\nAnd one might think that two such forces would offset each other, but interestingly, this only occurs when both forces are acting on the same object.\n\nIn the example above, the force of the person acts on the ground while the force of the ground acts on the person.\n\nHowever, if the person stepped on a pillow, the person and ground would exert their force on the pillow, cancelling the force.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G036",
+    "examSig": "30번",
+    "copyCount": 1,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmqb4sd2v0009jv0473noqchb",
+    "titles": [
+      "올림포스30-4"
+    ],
+    "memberIds": [
+      "cmqb4sd2v0009jv0473noqchb"
+    ],
+    "academies": 1,
+    "contentLen": 836,
+    "representativeContent": "Life on Earth is not defined solely by the largest creatures that we see inhabiting the lands and the oceans of the planet, even though those are the ones with which we are most familiar. Rather, it appears that the most abundant life on Earth may also be the simplest life — bacteria. In this sense, we cannot view the evolution of life on Earth as being a continuing evolution toward more-complex organisms.  All the life that exists today is the equal product of 4 b.y. of evolution, whether it be the simplest bacteria, the smallest plants, humans, or the largest organisms on the planet. That is, evolution has allowed organisms to evolve to fill essentially all of the available ecological niches. The largest species — those that we see on the surface of the planet — are in some sense no more evolved than the simplest bacteria.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G037",
+    "examSig": "30번",
+    "copyCount": 1,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmqb4v8200001jk04gcrhe93f",
+    "titles": [
+      "올림포스30-5"
+    ],
+    "memberIds": [
+      "cmqb4v8200001jk04gcrhe93f"
+    ],
+    "academies": 1,
+    "contentLen": 903,
+    "representativeContent": "Certain kinds of personal information are more informative than others, and what is informative will be salient, will attract attention, and hence will be given more weight in interpersonal judgments.        Specifically, negative information about a person reveals a way that the person deviates from the mildly positive expectations we generally have about others. Similarly, evaluatively extreme information — e.g., very positive and very negative behaviors — reveals ways in which the person has unusual characteristics. These properties make this information more informative about the target person, and therefore they become the focus of our attention. Judgments of a person should be based on information that is informative about that person’s qualities and characteristics. Therefore, negative and extreme information about a person will have increased importance, or weight, in our judgments.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G038",
+    "examSig": "30번",
+    "copyCount": 1,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmqb4z5ae000dl204xp3suoi3",
+    "titles": [
+      "올림포스30-6"
+    ],
+    "memberIds": [
+      "cmqb4z5ae000dl204xp3suoi3"
+    ],
+    "academies": 1,
+    "contentLen": 857,
+    "representativeContent": "At the dawn of history, some of us became herders, others hunters and others farmers. This development of individual skills was undoubtedly a difficult challenge because it required a whole new way to understand right and wrong. For the first time in the history of our species, labor was not just divided into two kinds, the male kind and the female kind. Suddenly, one’s labor might be any one of a number of different things. Within the sexes, one male or female could be doing something different from other males or females and still must be looked upon as doing right. How do we know what is right when everyone is doing his or her own thing? Morality expanded in complexity as the notion of individuality and community became more sophisticated. Before we could do different things, the idea that different things could be done needed to be accepted.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G074",
+    "examSig": "30번",
+    "copyCount": 1,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmqy2nfbd001hk204bfo6kkcs",
+    "titles": [
+      "지문 30"
+    ],
+    "memberIds": [
+      "cmqy2nfbd001hk204bfo6kkcs"
+    ],
+    "academies": 1,
+    "contentLen": 1031,
+    "representativeContent": "No one has objected so strenuously to defining psychology as the science of consciousness, and limiting it to\nconsciousness, as the group of animal psychologists. By energetic work, they had proved that the animal was a very\ngood subject for psychological study, and had discovered much that was important regarding instinct and learning in\nanimals. But from the nature of the case, they could not observe the consciousness of animals; they could only observe\ntheir behavior, that is to say, the motor (and in some cases glandular) activities of the animals under known\nconditions. When then the animal psychologists were warned by the mighty ones in the science that they must\ninterpret their results in terms of consciousness or not call themselves psychologists any longer, they rebelled; and\nsome of the best fighters among them took the offensive, by insisting that human psychology, no less than animal, was\nproperly a study of behavior, and that it had been a great mistake ever to define it as the science of consciousness.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G080",
+    "examSig": "30번",
+    "copyCount": 1,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmr0e7ghj001jl104y48dxh20",
+    "titles": [
+      "지문 30"
+    ],
+    "memberIds": [
+      "cmr0e7ghj001jl104y48dxh20"
+    ],
+    "academies": 1,
+    "contentLen": 1082,
+    "representativeContent": "Sport fans can develop a psychological attachment to sports, teams, and players. This connection can assist fans to\ndevelop a feeling of being strong, important, and successful. The term vicarious achievement refers to a sense of\naccomplishment that is felt secondhand, through the success of someone else. Some fans may experience an increase in\nself-esteem when their team is winning. Others may feel a sense of confidence and skillfulness by learning team\nstatistics and club history. Given that sport fans feel successful when their team is successful, the reverse occurs when\nthey must deal with the disappointment of scandals and poor team performances. In these situations, fans may be a little\nless eager to publicly announce their support of the team, and they might even downplay the failure of the team. Fans\ncan compensate for a team's poor performance by developing strong feelings of closeness with fellow fans, being critical\nof other successful teams, voicing criticism of umpiring or refereeing decisions, or by being blindly optimistic that things\nwill get better.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G052",
+    "examSig": "3월 고1 29번",
+    "copyCount": 1,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmr1reuqa0001hw0a676ih4uk",
+    "titles": [
+      "고1 18년 3월 29번"
+    ],
+    "memberIds": [
+      "cmr1reuqa0001hw0a676ih4uk"
+    ],
+    "academies": 1,
+    "contentLen": 698,
+    "representativeContent": "The first underwater photographs were taken by an Englishman named William Thompson. In 1856, he waterproofed a simple box camera, attached it to a pole, and lowering it beneath the waves off the coast of southern England. During the 10 ­minute exposure, the camera slowly flooded with seawater, but the picture survived.Underwater photography was born. Near the surface, where the water is clear and there is enough light, it is quite possible for an amateur photographer to take great shots with an inexpensive underwater camera. At greater depths—it is dark and cold there—photography is the principal way of exploring a mysterious deep­sea world, 95 percent of which has never been seen before.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G077",
+    "examSig": "3월 고1 41번",
+    "copyCount": 1,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmr1s7uft000ukw041seu7ovp",
+    "titles": [
+      "17년 고1 3월 41번"
+    ],
+    "memberIds": [
+      "cmr1s7uft000ukw041seu7ovp"
+    ],
+    "academies": 1,
+    "contentLen": 1129,
+    "representativeContent": "When someone has helped you, but has perhaps not done all that you requested, focus on what the person has done, not on what he hasn’t. Although this would seem to be morally obvious, many people are so caught up with their own needs that they ignore the good done for them. A teacher once received a letter from a student, asking fourteen unrelated questions on a variety of subjects. The teacher wrote back a long reply in which he dealt with thirteen of the questions. He soon received a return letter from the student, who not only noted the omission, but expressed no thanks for what the teacher had written. Though the teacher was a man of great patience, he was hurt by the student’s behavior: “Not only was there no word of thanks, but at the beginning of your letter you reminded me that there was one of your questions to which I forgot to give an answer. Was that the proper beginning and response to a letter of ten pages?” He went on to tell the student: “I mention this not because I need your thanks, but because of my love for you and concern that you should not become a person who denies the good done for him.”",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G009",
+    "examSig": "41번",
+    "copyCount": 1,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmquogtmb001pjj04hlabiu1w",
+    "titles": [
+      "No.41"
+    ],
+    "memberIds": [
+      "cmquogtmb001pjj04hlabiu1w"
+    ],
+    "academies": 1,
+    "contentLen": 994,
+    "representativeContent": "Most current social science is based on either analysis of laboratory phenomena or on surveys — that is, on descriptions of averages or stereotypes. These approaches don’t account for the complexity of real life, when all of our mental quirks operate at the same time. They also miss the critical fact that the details we learn about the people we interact with, and how we interact with them, matter as much as market forces or class structures. Social phenomena are really made up of billions of small transactions between individuals — people trading not only goods and money but also information, ideas, or just gossip. There are patterns in those individual transactions that drive phenomena such as financial crashes and Arab springs. We need to understand these micropatterns because they don’t just average out to the classical way of understanding society. Big data give us a chance to view society in all its complexity, through the millions of networks of person-to-person exchanges.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G021",
+    "examSig": "41번",
+    "copyCount": 1,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmr334pda0005js04z8t3ah5m",
+    "titles": [
+      "25년41"
+    ],
+    "memberIds": [
+      "cmr334pda0005js04z8t3ah5m"
+    ],
+    "academies": 1,
+    "contentLen": 1323,
+    "representativeContent": "Paying with plastic fundamentally changes the way we spend money, altering the calculus of our financial decisions.\n When you buy something with cash, the purchase involves an actual loss—your wallet is literally lighter.\n Credit cards, however, make the purchase abstract, so that you don’t really feel the downside of spending money.\n Brain-imaging experiments suggest that paying with credit cards actually reduces activity in the insula, a brain region associated with negative feelings.\nAs George Loewenstein, a neuroeconomist at Carnegie Mellon, says, “The nature of credit cards ensures that your brain is anesthetized against the pain of payment.”\n Spending money doesn’t feel bad, so you spend more money.\n Consider this experiment: Drazen Prelec and Duncan Simester, two business professors at MIT, organized a real-life, sealed-bid auction for tickets to a Boston Celtics game.\nHalf the participants in the auction were informed that they had to pay with cash; the other half were told they had to pay with credit cards.\n Prelec and Simester then averaged the bids for the two different groups.\n It turns out that the average credit card bid was twice as high as the average cash bid.\nWhen people used their credit cards, their bids were much more reckless.\n They no longer felt the need to limit their expenses.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G075",
+    "examSig": "41번",
+    "copyCount": 1,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmqz7l7nw0015l2046d8uah7e",
+    "titles": [
+      "올포 비문학 T41"
+    ],
+    "memberIds": [
+      "cmqz7l7nw0015l2046d8uah7e"
+    ],
+    "academies": 1,
+    "contentLen": 1284,
+    "representativeContent": "Coping with impulsivity is a more complicated ability than it appears, and for a long time we thought only humans could do it. If you put candy in front of a group of children and tell them that if they can resist eating it, they will eventually receive even more candy, a few interesting behaviors will follow. Some of the kids will try to distract themselves by playing with toys or drawing as a way to cope with the frustration of delaying gratification (some of the kids will just give up and grab the candy). This is quite advanced problem solving behavior, which is why it was surprising to find out that chimpanzees can do it, too. Researchers showed a group of chimps a small pile of candy that was accumulating more candy as time passed by, but the candy was inaccessible to them. Then they gave the chimps a set of toys. Every so often they would allow the chimps to have access to the candy. Several of the chimps caught on that the longer they waited, the more candy would accumulate, so they distracted themselves with the toys to avoid grabbing the candy until they could get a hefty amount. The chimps became intensely focused on the toys when the candy became accessible, showing that they really were diverting their attention so they could get a bigger reward later.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G010",
+    "examSig": "42번",
+    "copyCount": 1,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmquogtr7001tjj04w7ukpo54",
+    "titles": [
+      "No.42"
+    ],
+    "memberIds": [
+      "cmquogtr7001tjj04w7ukpo54"
+    ],
+    "academies": 1,
+    "contentLen": 1140,
+    "representativeContent": "Science and technology can be easily put to the service of any decision. Science’s esoteric character, its inaccessibility for many people, converts the scientific system into a resource that symbolizes independence and objectivity. That is why science has frequently been hailed as an authority that can be employed for controversial decisions. But a degree of distrust has always accompanied the development of science and technology, even though it does not seem that the future will be any different. A curious coincidence occurs in contemporary society: the loss of fear and respect for authority figures and for governmental regulations is accompanied by a growing concern about the negative effects of technological and scientific progress. When we consider the problems of the environment, the consequences of using certain technological devices, the perception that not all social problems can be rationally controlled or avoided or resolved through planning, it is clear that science and technology no longer enjoy general and unquestioned trust. It seems as if our decrease in fear is being compensated by an increase in concern.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G047",
+    "examSig": "42번",
+    "copyCount": 1,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmqz7l7ut0019l204al2ni9zq",
+    "titles": [
+      "올포 비문학 T42"
+    ],
+    "memberIds": [
+      "cmqz7l7ut0019l204al2ni9zq"
+    ],
+    "academies": 1,
+    "contentLen": 1908,
+    "representativeContent": "By internalizing the opinions of others, we become intrinsically motivated. We do things because it feels right, which is why we are suspicious of others who have ulterior motives or who are extrinsically motivated. This is why paying people for their kindness backfires. Take blood donation. We do this without expectation of reward. In his book The Gift Relationship, comparing blood services in the US and the UK, the sociologist Richard Titmuss concluded that paying blood donors (as happens in the US) was not only dangerous, because it incentivized the wrong individuals and created dubious practices and safety concerns, but that if the practice was introduced in the UK, it would remove people's intrinsic motivation to express altruism, and erode the communal efforts that are the bedrock of the National Health Service. To test his claims, Swedish researchers carried out a study where adults were asked to donate blood voluntarily, or received the equivalent of $7 in payment, or could donate this payment to a charity. In line with Titmuss's prediction, blood donations dropped significantly when donors were offered payment, but not if the money could be donated to a charity. This phenomenon, known as 'crowding out', sullies the good intentions derived from helping others because it removes the intrinsic value we get, which is why rewarding people financially for acts that are supposed to be morally motivated is considered nasty. When blood donors and non-blood donors were tested with a charitable game, in which blood donors were told that their selected charity would receive no more and no less than $7, with the difference being made up by the experimenter running the study and thus their additional financial donations made no difference to the final amount received by the charity, blood donors still gave more relative to non-blood donors for the sheer warm glow they experienced.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G069",
+    "examSig": "6월 30번",
+    "copyCount": 1,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmqxd7naw002jjp04wizkaiqn",
+    "titles": [
+      "24년 6월 30번"
+    ],
+    "memberIds": [
+      "cmqxd7naw002jjp04wizkaiqn"
+    ],
+    "academies": 1,
+    "contentLen": 979,
+    "representativeContent": "Because people tend to adapt, interrupting positive things with negative ones can actually increase enjoyment. Take commercials. Most people hate them, so removing them should make shows or other entertainment more enjoyable. But the opposite is true. Shows are actually more enjoyable when they're broken up by annoying commercials. Because these less enjoyable moments break up adaptation to the positive experience of the show. Think about eating chocolate chips. The first chip is delicious: sweet, melt-in-your-mouth goodness. The second chip is also pretty good. But by the fourth, fifth, or tenth chip in a row, the goodness is no longer as pleasurable. We adapt. Interspersing positive experiences with less positive ones, however, can decelerate adaptation. Eating a Brussels sprout between chocolate chips or viewing commercials between parts of TV shows disrupts the process. The less positive moment makes the following positive one new again and thus more enjoyable.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G076",
+    "examSig": "6월 30번",
+    "copyCount": 1,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmr1s3msr000fjo04pyjmulbt",
+    "titles": [
+      "22년6월 30번"
+    ],
+    "memberIds": [
+      "cmr1s3msr000fjo04pyjmulbt"
+    ],
+    "academies": 1,
+    "contentLen": 926,
+    "representativeContent": "The most advanced military jets are fly-by-wire: \nThey are so unstable that they require an automated system that can sense and act more quickly than a human operator to maintain control.\nOur dependence on smart technology has led to a  paradox.\nAs technology improves, it becomes more reliable and more efficient, and human operators depend on it even more.\nEventually they lose focus, become  distracted, and check out, leaving the system to run on its own.\nIn the most extreme case, piloting a massive airliner could become a  passive occupation, like watching TV.\nThis is fine until something unexpected happens.\nThe unexpected reveals the value of humans; what we bring to the table is the  flexibility to handle new situations.\nMachines aren’t collaborating in pursuit of a joint goal; they are merely serving as tools.\nSo when the human operator gives up oversight, the system is more likely to have a serious accident.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G023",
+    "examSig": "6월 41번",
+    "copyCount": 2,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmr37ba4a0001j90b26b4ust1",
+    "titles": [
+      "26년 41",
+      "26년 6월 41번"
+    ],
+    "memberIds": [
+      "cmr37ba4a0001j90b26b4ust1",
+      "cmqw5rfls0005l604zs89y3p9"
+    ],
+    "academies": 2,
+    "contentLen": 1374,
+    "representativeContent": "Commercial businesses aim for predictability and certainty, especially when it comes to product quality. But predictability and certainty are not always valued in the sporting world, especially when it comes to the delivery of professional sport competitions. From a spectator’s perspective the sport experience is better experienced when unpredictable. Sport events actually depend on that unpredictability in order to attract people to the game. When the results of games cannot be predicted, attendances at sporting contests are likely to be higher, as are the profits of leagues. However, the lack of predictability also leads to significant variability in the quality of sporting performances. Many factors can contribute to the variability of the sport product, including the weather, player injuries, the venue, the quality of the opponents, the closeness of the scores and even the size of the crowd. A cricket match can be exhilarating, boring or even frustrating, but fans still have to pay the same price. Sport marketers may attempt to overcome this by ‘improving’ the product in systematic ways, such as including a star player, offering premium seating or providing other forms of entertainment and inviting facilities. The uncertain nature of sport contests is just one element of a total experience, although it is an important element for financial success.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G016",
+    "examSig": "6월 고1 41번",
+    "copyCount": 2,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmpwrtddy0001l204yqwp5zqr",
+    "titles": [
+      "23년 6월 고1 모고 41번",
+      "23년6월고1-41/42번"
+    ],
+    "memberIds": [
+      "cmpwrtddy0001l204yqwp5zqr",
+      "cmr20udkg0009jv04uq63wyn8"
+    ],
+    "academies": 1,
+    "contentLen": 1361,
+    "representativeContent": "Early hunter-gatherer societies had minimal structure. A chief or group of elders usually\nled the camp or village. Most of these leaders had to hunt and gather along with the\nother members because the surpluses of food and other vital resources were seldom\nsufficient to support a full-time chief or village council. The development of agriculture\nchanged work patterns. Early farmers could reap 3-10 kg of grain from each 1 kg of\nseed planted. Part of this food/energy surplus was returned to the community and\nprovided support for nonfarmers such as chieftains, village councils, men who practice\nmedicine, priests, and warriors. In return, the nonfarmers provided leadership and\nsecurity for the farming population, enabling it to continue to increase food/energy\nyields and provide ever larger surpluses.\nWith improved technology and favorable conditions, agriculture produced consistent\nsurpluses of the basic necessities, and population groups grew in size. These groups\nconcentrated in towns and cities, and human tasks specialized further. Specialists such\nas carpenters, blacksmiths, merchants, traders, and sailors developed their skills and\nbecame more efficient in their use of time and energy. The goods and services they\nprovided brought about an improved quality of life, a higher standard of living, and, for\nmost societies, increased stability.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G020",
+    "examSig": "6월 고1 41번",
+    "copyCount": 2,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmr334p6j0001js044lo33o4o",
+    "titles": [
+      "24년 41",
+      "24년6월고1-41/42번"
+    ],
+    "memberIds": [
+      "cmr334p6j0001js044lo33o4o",
+      "cmr2eb1rl0005l604ez14537z"
+    ],
+    "academies": 2,
+    "contentLen": 1470,
+    "representativeContent": "All humans, to an extent, seek activities that cause a degree of pain in order to experience pleasure, whether this is found in spicy food, strong massages, or stepping into a too­cold or too­hot bath.\nThe key is that it is a ‘safe threat’.\nThe brain perceives the stimulus to be painful but ultimately non­threatening.\n Interestingly, this could be similar to the way humor works: a ‘safe threat’ that causes pleasure by playfully violating norms.\n We feel uncomfortable, but safe.\n In this context, where survival is clearly not in danger, the desire for pain is actually the desire for a reward, not suffering or punishment.\nThis reward­like effect comes from the feeling of mastery over the pain.\nThe closer you look at your chilli­eating habit, the more remarkable it seems.\nWhen the active ingredient of chillies—capsaicin—touches the tongue, it stimulates exactly the same receptor that is activated when any of these tissues are burned.\n Knowing that our body is firing off danger signals, but that we are actually completely safe, produces pleasure.\n All children start off hating chilli, but many learn to derive pleasure from it through repeated exposure and knowing that they will never experience any real harm.\nInterestingly, seeking pain for the pain itself appears to be uniquely human.\n The only way scientists have trained animals to have a preference for chilli or to self­harm is to have the pain always directly associated with a pleasurable reward.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G005",
+    "examSig": "6월 고2 29번",
+    "copyCount": 3,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmpru9xnl0001jm04cee4zqh4",
+    "titles": [
+      "25년6월고2_29번",
+      "25년 6월 고2 29번"
+    ],
+    "memberIds": [
+      "cmpru9xnl0001jm04cee4zqh4",
+      "cmpwu35r00003kw04dgcve6um",
+      "cmqafflhy0005js049ja1v066"
+    ],
+    "academies": 1,
+    "contentLen": 890,
+    "representativeContent": "In art, there are a number of ways to use perspective to obtain the illusion of depth, including using colors and graduated values of black and white, and accurately drawing the subject by applying the rules of the geometric system of perspective. In order to achieve perspective, you must make a number of observations. The forms or objects that you draw on a flat surface actually have depth and dimension in real life. As you view them and place their shapes and forms on a drawing surface, try to represent that depth to make the objects appear realistic and three-dimensional. Objects appear differently when viewed from various positions. Because of this, it’s important to establish the viewpoint, and stick with it. When observing a subject, you see depth and three dimensions. When you draw this subject onto a flat surface as it appears to the eye, you are drawing in perspective.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G022",
+    "examSig": "6월 고2 30번",
+    "copyCount": 2,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmpwu3jqc0001js04sexlxntk",
+    "titles": [
+      "25년 6월 고2 30번",
+      "25년6월고2_30번"
+    ],
+    "memberIds": [
+      "cmpwu3jqc0001js04sexlxntk",
+      "cmqafjr8v0001l8042mcxv7va"
+    ],
+    "academies": 1,
+    "contentLen": 1042,
+    "representativeContent": "Low oil prices are a good thing, because it means lower energy costs of production for the majority of industries, not least the automobile and the logistics industries. Firms directly benefit from the decrease in their costs of production and provision of services. This has the effect of stimulating the aggregate supply and provides a stimulus for growth. Conversely, a sudden rise in oil prices due to a shrink in oil production is never good news, even though it definitely gives a big boost to the energy sector. A look through the history of oil price fluctuations proves this notion, as this has been the subject of much economic research. Following an oil price jump of 10 per cent due to a contraction in supply, an economy (as typified by the US economy) typically sees its output (GDP) slowed by close to 1 percentage point. For a $15 trillion economy, that is a loss of $150 billion in potential wealth or economic growth. Conversely, there has never been much concern with oil price  decreases following an excess in its supply.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G002",
+    "examSig": "고1",
+    "copyCount": 1,
+    "signals": [
+      "마커잔존"
+    ],
+    "hasMarkerCopy": true,
+    "representativeId": "cmpr6wbbt0002mm3coikj9suy",
+    "titles": [
+      "한영고 1학년"
+    ],
+    "memberIds": [
+      "cmpr6wbbt0002mm3coikj9suy"
+    ],
+    "academies": 1,
+    "contentLen": 1125,
+    "representativeContent": "①  To understand memory, imagine your brain as a vast digital archive.\n②  Accessing this data depends on two primary methods: Recall and Recognition.\n③  Recall is like being asked to write an essay on a blank page.\n④  You must search your internal ‘hard drive’ and reconstruct information from scratch without any hints.\n⑤  This requires significant cognitive effort, which is why short-answer questions or remembering a friend’s phone number can feel like ‘mental heavy lifting.’\n⑥  Recognition, on the other hand, is like scrolling through a photo gallery to find a specific image.\n⑦  The information is already in front of you: you simply need to identify whether it matches a previous memory.\n⑧  This is why multiple-choice questions are easier — you don’t have to create the answer, just find it among the options.\n⑨  The main distinction is based on the presence of cues.\n⑩  While recognition provides plenty of context, recall forces the brain to work in a vacuum.\n⑪  In learning, being able to recognize a word in a textbook is only the first step: true mastery is the ability to recall it when no hints are provided.",
+    "markerCopyId": "cmpr6wbbt0002mm3coikj9suy"
+  },
+  {
+    "groupId": "G078",
+    "examSig": "고3 수능 29번",
+    "copyCount": 1,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmr1s2s57000djx04ccobzjlb",
+    "titles": [
+      "02년 고3 수능 29"
+    ],
+    "memberIds": [
+      "cmr1s2s57000djx04ccobzjlb"
+    ],
+    "academies": 1,
+    "contentLen": 545,
+    "representativeContent": "Last Friday afternoon my sister and I were visiting a museum. We became so interested in the mummies that we lost track of the time. Suddenly, the lights in the room dimmed twice and then went out. I couldn't see anything. Then I had visions of mummies coming toward us with cold, dead hands. Out of the dark came a vague voice, \"Who's there?\" I couldn't talk. Neither could my sister. All at once, came the lights on. An attendant was hurrying toward us. He looked angry as he led us out of the museum. saying., \"We closed fifteen minutes ago!\"",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G018",
+    "examSig": "모의고사 30번",
+    "copyCount": 1,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmpqt059e001h9q01byii99j0",
+    "titles": [
+      "Chess masters shown a chess board in the middle of a game for 5 seconds with 20 to 30 pieces still in play can immediately reproduce the position of the pieces from memory"
+    ],
+    "memberIds": [
+      "cmpqt059e001h9q01byii99j0"
+    ],
+    "academies": 1,
+    "contentLen": 1366,
+    "representativeContent": "Chess masters shown a chess board in the middle of a game for 5 seconds with 20 to 30 pieces still in play can immediately reproduce the position of the pieces from memory. Beginners, of course, are able to place only a few. Now take the same pieces and place them on the board randomly and the difference is much reduced. The expert's advantage is only for familiar patterns — those previously stored in memory. Faced with unfamiliar patterns, even when it involves the same familiar domain, the expert's advantage disappears.\n\nThe beneficial effects of familiar structure on memory have been observed for many types of expertise, including music. People with musical training can reproduce short sequences of musical notation more accurately than those with no musical training when notes follow conventional sequences, but the advantage is much reduced when the notes are ordered randomly. Expertise also improves memory for sequences of movements. Experienced ballet dancers are able to repeat longer sequences of steps than less experienced dancers, and they can repeat a sequence of steps making up a routine better than steps ordered randomly. In each case, memory range is increased by the ability to recognize familiar sequences and patterns.\n\nThe more conventional the patterns and sequences are, the more the experienced get benefits from their expertise.",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G042",
+    "examSig": "수능 29번",
+    "copyCount": 1,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmqf2l0f000dxv3i0gaix74dc",
+    "titles": [
+      "지문 29"
+    ],
+    "memberIds": [
+      "cmqf2l0f000dxv3i0gaix74dc"
+    ],
+    "academies": 1,
+    "contentLen": 1051,
+    "representativeContent": "In many situations both intrinsic and extrinsic motives are involved in an activity. A child may read a book because she enjoys reading and because it will be useful in a school project. She may play soccer for fun and to win social approval. She may conform to socially approved standards of behavior to please both herself and others. In many real-life situations extrinsic motivation complements intrinsic motivation. Achieving culturally approved goals, for instance, may enhance feelings of competence. However, in some situations extrinsic rewards can undermine intrinsic motives. When extrinsic rewards change the overall purpose or goal of an activity from achieving personal satisfaction to earning external rewards, intrinsic motivation can diminish or disappear. If a child who loves swimming is consistently encouraged to enter swimming competitions, rewarded with praise and prizes for winning, and receives expressions of disappointment or criticism for less-than-first-place finish, intrinsic enjoyment in the activity may be reduced. a",
+    "markerCopyId": null
+  },
+  {
+    "groupId": "G041",
+    "examSig": "수능 30번",
+    "copyCount": 1,
+    "signals": [
+      "title번호"
+    ],
+    "hasMarkerCopy": false,
+    "representativeId": "cmqf2l0tg00dzv3i0x8l1he7l",
+    "titles": [
+      "지문 30"
+    ],
+    "memberIds": [
+      "cmqf2l0tg00dzv3i0x8l1he7l"
+    ],
+    "academies": 1,
+    "contentLen": 1071,
+    "representativeContent": "One advantage of using animals as subjects is that we can more easily control their environments and thus determine which variables are important. A related advantage is studying simpler systems. To isolate the effects of a single variable, one strategy is to control the environment so that few variables will be present; an alternative strategy is to study a simpler system, in which fewer variables exert an influence. Suppose, for example, that you wanted to understand the principles of electronics. You would obviously find it easier to understand these principles if you began by studying a transistor radio rather than a giant computer: The simpler the system, the easier it is to understand its operations. Thus, scientists were able to isolate the fundamental principles of genetics by first studying two lower life forms the fruit fly and the pea that possess simpler systems. If, instead, they had first tried to understand these principles in a more complex system, we would probably understand little or nothing about the principles of genetic transmission.",
+    "markerCopyId": null
+  }
+]

@@ -1,0 +1,104 @@
+[
+ {
+  "model": "gemini-3-flash-preview",
+  "qtype": "grammar",
+  "p": 1,
+  "sec": 26,
+  "krw": 13,
+  "viol": [
+   "NV:(3)"
+  ]
+ },
+ {
+  "model": "gemini-3-flash-preview",
+  "qtype": "blank",
+  "p": 1,
+  "sec": 27,
+  "krw": 11,
+  "viol": []
+ },
+ {
+  "model": "gemini-3-flash-preview",
+  "qtype": "blank",
+  "p": 12,
+  "sec": 27,
+  "krw": 12,
+  "viol": []
+ },
+ {
+  "model": "grok-4.5",
+  "qtype": "blank",
+  "p": 12,
+  "sec": 56,
+  "krw": 35,
+  "viol": []
+ },
+ {
+  "model": "grok-4.5",
+  "qtype": "grammar",
+  "p": 1,
+  "sec": 102,
+  "krw": 56,
+  "viol": []
+ },
+ {
+  "model": "grok-4.5",
+  "qtype": "blank",
+  "p": 1,
+  "sec": 108,
+  "krw": 55,
+  "viol": []
+ },
+ {
+  "model": "gemini-3-flash-preview",
+  "qtype": "blank",
+  "p": 19,
+  "sec": 21,
+  "krw": 8,
+  "viol": []
+ },
+ {
+  "model": "gemini-3-flash-preview",
+  "qtype": "grammar",
+  "p": 12,
+  "sec": 49,
+  "krw": 33,
+  "viol": [
+   "NV:(D)"
+  ]
+ },
+ {
+  "model": "grok-4.5",
+  "qtype": "grammar",
+  "p": 12,
+  "sec": 99,
+  "krw": 52,
+  "viol": []
+ },
+ {
+  "model": "gemini-3-flash-preview",
+  "qtype": "grammar",
+  "p": 19,
+  "sec": 35,
+  "krw": 21,
+  "viol": [
+   "NV:(4)"
+  ]
+ },
+ {
+  "model": "grok-4.5",
+  "qtype": "blank",
+  "p": 19,
+  "sec": 88,
+  "krw": 43,
+  "viol": []
+ },
+ {
+  "model": "grok-4.5",
+  "qtype": "grammar",
+  "p": 19,
+  "sec": 106,
+  "krw": 59,
+  "viol": []
+ }
+]

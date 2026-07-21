@@ -1,0 +1,54 @@
+[
+ {
+  "model": "gemini-3.1-pro-preview",
+  "qtype": "blank",
+  "p": 12,
+  "sec": 32,
+  "krw": 49,
+  "viol": []
+ },
+ {
+  "model": "gemini-3.1-pro-preview",
+  "qtype": "blank",
+  "p": 1,
+  "sec": 39,
+  "krw": 55,
+  "viol": []
+ },
+ {
+  "model": "gemini-3.1-pro-preview",
+  "qtype": "grammar",
+  "p": 12,
+  "sec": 39,
+  "krw": 55,
+  "viol": [
+   "NV:(2)"
+  ]
+ },
+ {
+  "model": "gemini-3.1-pro-preview",
+  "qtype": "grammar",
+  "p": 1,
+  "sec": 57,
+  "krw": 86,
+  "viol": []
+ },
+ {
+  "model": "gemini-3.1-pro-preview",
+  "qtype": "grammar",
+  "p": 19,
+  "sec": 30,
+  "krw": 40,
+  "viol": [
+   "NV:(3)"
+  ]
+ },
+ {
+  "model": "gemini-3.1-pro-preview",
+  "qtype": "blank",
+  "p": 19,
+  "sec": 38,
+  "krw": 51,
+  "viol": []
+ }
+]
