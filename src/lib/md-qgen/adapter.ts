@@ -73,6 +73,10 @@ export function adaptMdBlankToAiQuestion(
   q: MdBlankQuestion,
   passage: string,
   difficulty: string,
+  // "빈칸 변형(정답 패러프레이즈)" 설정의 집행 지점(26-07-23): ON=PARAPHRASE
+  // (공예 정답 유지), OFF=SOURCE_EXACT — 후처리가 정답 선지를 빈칸원문 축자로
+  // 강제해 설정 계약("정답 선지를 원문 그대로")을 결정론으로 보장한다.
+  answerMode: "PARAPHRASE" | "SOURCE_EXACT" = "PARAPHRASE",
 ): MdBlankAdaptResult {
   const oe = q.originalExpression?.trim();
   if (!oe) return { ok: false, error: "빈칸원문 누락" };
@@ -97,9 +101,10 @@ export function adaptMdBlankToAiQuestion(
       direction: "다음 빈칸에 들어갈 말로 가장 적절한 것을 고르시오.",
       blankDesign: "md 원큐 경량 경로 — 설계 메모는 해설로 갈음합니다.",
       originalExpression: oe,
-      // ⚠ 필수: 미설정 시 후처리 SOURCE_EXACT 기본이 정답 선지를 원문 축자로
-      // 덮어써 추상 패러프레이즈 정답이 파괴된다(적대 검수 실증 — 26-07-21).
-      blankAnswerMode: "PARAPHRASE",
+      // ⚠ PARAPHRASE 모드 미설정 시 후처리 SOURCE_EXACT 기본이 정답 선지를 원문
+      // 축자로 덮어써 공예 정답이 파괴된다(적대 검수 실증 — 26-07-21). 반대로
+      // 설정이 OFF 면 그 덮어쓰기가 곧 계약 집행이다 — answerMode 로 갈린다.
+      blankAnswerMode: answerMode,
       // idx<0(정규화로만 존재)면 빈 문자열로 두어 후처리 전역 매칭에 맡긴다 —
       // Math.max(0,-1)=0 으로 지문 맨앞을 오려 보내던 오배치 방지.
       surroundingText: idx >= 0 ? contextAround(passage, idx, oe.length) : "",

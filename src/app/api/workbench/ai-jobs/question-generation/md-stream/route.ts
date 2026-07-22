@@ -13,6 +13,8 @@ import {
   type TeacherPointPayload,
 } from "@/app/(director)/director/workbench/generate/generation-config-panel-parts/point-picker-config";
 import { buildTeacherPointsPromptBlock } from "@/lib/question-generation-prompt-contract";
+import { buildBlankPointGuidance } from "@/lib/blank-point-catalog";
+import { buildGrammarPointGuidance } from "@/lib/grammar-point-catalog";
 import { CREDIT_COSTS, type OperationType } from "@/lib/credit-costs";
 import { InsufficientCreditsError, refundCredits } from "@/lib/credits";
 import {
@@ -398,12 +400,35 @@ export async function POST(req: NextRequest) {
   const answerCount =
     (resolvedSettings as { grammarAnswerCount?: number | null })
       .grammarAnswerCount ?? 1;
+  // ── 유형 세부 설정 소비(26-07-23 — "설정 무시" 계열 구멍 봉합) ──────────────
+  // 실사용 신고: '빈칸 변형' OFF 인데 정답이 패러프레이즈로 나옴 — md 레인이
+  // 설정을 안 읽고 PARAPHRASE 고정이었다. fast 와 동일한 결정 소스(dispatcher
+  // resolved)를 읽어 계약을 지킨다.
+  const blankParaphrase = Boolean(
+    (resolvedSettings as { blankInferenceParaphraseAnswer?: boolean })
+      .blankInferenceParaphraseAnswer,
+  );
+  const blankDoubleNegative = Boolean(
+    (resolvedSettings as { blankInferenceDoubleNegative?: boolean })
+      .blankInferenceDoubleNegative,
+  );
+  const blankGranularity =
+    (resolvedSettings as { blankInferenceGranularity?: string })
+      .blankInferenceGranularity ?? "auto";
+  const blankPointFocus = Boolean(
+    (resolvedSettings as { blankPointFocus?: boolean }).blankPointFocus,
+  );
+  const grammarPointFocus = Boolean(
+    (resolvedSettings as { grammarPointFocus?: boolean }).grammarPointFocus,
+  );
   // 26-07-23 교사 포인트 md 승차: "포인트 짚어주기" 생성도 md 스트리밍 레인을
   // 탄다(기존엔 fast 로 보내 스트리밍이 없었음 — 실사용 지적). 포인트는 아래에서
   // fast 와 동일 계약(클램프+축자 필터)으로 읽어 프롬프트 강제 + 결정론 준수
   // 게이트로 집행한다.
+  // 부정-부정(DOUBLE_NEGATIVE) 공예는 md 프롬프트에 미탑재 — 설정 계약 보존을
+  // 위해 fast(전용 공예 보유)로 보낸다.
   const mdEligible =
-    (subType === "BLANK_INFERENCE" && blankCount === 1) ||
+    (subType === "BLANK_INFERENCE" && blankCount === 1 && !blankDoubleNegative) ||
     (subType === "GRAMMAR_ERROR" && markerCount === 5 && answerCount === 1);
   if (!mdEligible) {
     return NextResponse.json(
@@ -597,6 +622,32 @@ export async function POST(req: NextRequest) {
         ? buildMdBlankPrompt(passage.content, "full", mdDifficulty)
         : buildMdGrammarPrompt(passage.content, "full", mdDifficulty);
     const extras: string[] = [];
+    // ── 유형 세부 설정 블록(26-07-23) — fast 와 같은 계약을 md 프롬프트로 집행 ──
+    if (subType === "BLANK_INFERENCE") {
+      if (!blankParaphrase) {
+        extras.push(
+          `## 정답 형식 (필수 — 위의 '추상 패러프레이즈' 지시보다 우선한다)\n- '빈칸 변형' 미사용 설정이다: 정답 선지는 빈칸원문을 **한 글자도 바꾸지 말고 그대로** 써라.\n- 오답 4개는 정답과 같은 문법 형식·길이·추상 층위로 설계해, 원문 축자 정답이 형식만으로 표나지 않게 하라. 오답 기제 4종 규칙은 그대로 적용한다.`,
+        );
+      }
+      if (blankGranularity !== "auto") {
+        const label =
+          blankGranularity === "word"
+            ? "단어"
+            : blankGranularity === "clause"
+              ? "절"
+              : "구";
+        extras.push(
+          `## 빈칸 단위 (교사 설정, 필수)\n- 빈칸원문은 반드시 ${label} 단위로 잡아라.`,
+        );
+      }
+      if (blankPointFocus) {
+        const guidance = buildBlankPointGuidance({ pointFocus: true });
+        if (guidance) extras.push(guidance);
+      }
+    } else if (grammarPointFocus) {
+      const guidance = buildGrammarPointGuidance({ pointFocus: true });
+      if (guidance) extras.push(guidance);
+    }
     // 교사 지정 블록은 fast 레인과 같은 공유 계약을 그대로 쓴다 — 블록 자체가
     // "다양성 회피 목록보다 우선"을 선언한다.
     const teacherBlock = buildTeacherPointsPromptBlock(teacherPoints);
@@ -788,6 +839,7 @@ export async function POST(req: NextRequest) {
                   parsedMd.question,
                   passage.content,
                   effectiveDifficulty,
+                  blankParaphrase ? "PARAPHRASE" : "SOURCE_EXACT",
                 )
               : adaptMdGrammarToAiQuestion(
                   parsedMd.question,

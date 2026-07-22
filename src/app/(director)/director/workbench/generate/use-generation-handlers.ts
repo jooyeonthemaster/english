@@ -269,7 +269,12 @@ export function isMdStreamEligible(
   // 26-07-23: 교사 지정 포인트(포인트 짚어주기)도 md 레인 적격 — 서버가 fast
   // 동일 계약(클램프+축자 필터)으로 프롬프트 강제 + 결정론 준수 게이트를 건다.
   // (기존엔 여기서 제외돼 fast 로 빠지면서 스트리밍이 사라졌다 — 실사용 지적.)
-  void questionTypeSettings;
+  const settings =
+    typeof questionTypeSettings === "object" && questionTypeSettings !== null
+      ? (questionTypeSettings as Record<string, unknown>)
+      : {};
+  // 부정-부정 빈칸(DOUBLE_NEGATIVE)은 md 미탑재 공예 — fast 전용(서버도 동일 판정).
+  if (settings.doubleNegative === true) return false;
   return true;
 }
 
