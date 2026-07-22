@@ -8,6 +8,11 @@ import {
   ATLAS_PREMIUM_QGEN_MODEL_ID,
   ATLAS_STANDARD_QGEN_MODEL_ID,
 } from "@/lib/atlas-ai";
+import {
+  clampTeacherPoints,
+  type TeacherPointPayload,
+} from "@/app/(director)/director/workbench/generate/generation-config-panel-parts/point-picker-config";
+import { buildTeacherPointsPromptBlock } from "@/lib/question-generation-prompt-contract";
 import { CREDIT_COSTS, type OperationType } from "@/lib/credit-costs";
 import { InsufficientCreditsError, refundCredits } from "@/lib/credits";
 import {
@@ -42,6 +47,7 @@ import {
   autoSnapBlankExpression,
   autoSnapGrammarMarks,
   gateMdQuestion,
+  normalizeWs,
   parseMdBlank,
   parseMdGrammar,
   type MdQuestion,
@@ -55,8 +61,10 @@ import { TYPE_LABELS } from "@/app/api/ai/generate-questions-auto/_lib/constants
 // ============================================================================
 // md-stream — 빈칸·어법 전용 "마크다운 원큐 + SSE 스트리밍" 생성 라우트.
 // (26-07-21 심플 스택 1·2단계) 기존 fast 라우트는 바이트 무변경으로 두고, 적격
-// 요청(빈칸 단일 / 어법 5마커·1정답, 교사포인트 없음)만 클라이언트가 이 라우트로
-// 보낸다. 부적격·오류 시 클라이언트는 fast 로 폴백한다(서버는 400 MD_STREAM_INELIGIBLE).
+// 요청(빈칸 단일 / 어법 5마커·1정답)만 클라이언트가 이 라우트로 보낸다. 교사
+// 지정 포인트(포인트 짚어주기)도 이 레인이 처리한다(26-07-23 — 프롬프트 강제
+// 공유 블록 + 결정론 준수 게이트). 부적격·오류 시 클라이언트는 fast 로 폴백한다
+// (서버는 400 MD_STREAM_INELIGIBLE).
 //
 // 과금·저장·원장·환불은 fast 라우트와 동일 규약:
 //   잔액 게이트 → 잡 PROCESSING → ensureWorkbenchAiJobCharged → 생성(스트림)
@@ -230,10 +238,85 @@ async function streamOnce(args: {
   };
 }
 
+/**
+ * 교사 지정 포인트를 fast 레인과 동일 계약으로 방어적으로 읽는다 — 클라 캡 =
+ * 서버 클램프 단일 규칙(clampTeacherPoints) + 지문 축자 포함된 것만(프롬프트
+ * 강제·준수 게이트 모두 축자 계약 위에서 동작).
+ */
+function readMdTeacherPoints(
+  questionType: string,
+  typeSettings: unknown,
+  passageContent: string,
+): TeacherPointPayload[] {
+  if (typeof typeSettings !== "object" || typeSettings === null) return [];
+  const raw = (typeSettings as Record<string, unknown>).teacherPoints;
+  if (!Array.isArray(raw) || raw.length === 0) return [];
+  const candidates = raw.filter(
+    (point): point is TeacherPointPayload =>
+      typeof point === "object" &&
+      point !== null &&
+      typeof (point as { text?: unknown }).text === "string",
+  );
+  if (candidates.length === 0) return [];
+  return clampTeacherPoints(questionType, typeSettings, candidates).filter(
+    (point) =>
+      point.text.trim().length > 0 && passageContent.includes(point.text),
+  );
+}
+
+/**
+ * 교사 지정 준수의 결정형 게이트(0원) — 프롬프트 강제만으로는 이행이 보장되지
+ * 않으므로 기계 검사한다. 빈칸: 빈칸원문이 지정 구간과 포함 관계(정규화 양방향)
+ * 여야 한다. 어법: 지정 표현마다 밑줄 5개 중 하나에 포함돼야 한다(원형·표시형
+ * 모두 허용). 위반은 무결성 게이트와 동일 경로 — 어법은 1회 재생성 피드백으로
+ * 전달되고, 빈칸은 원큐 규약대로 실패·환불된다.
+ */
+function teacherPointComplianceIssues(
+  q: MdQuestion,
+  points: TeacherPointPayload[],
+): string[] {
+  if (points.length === 0) return [];
+  const issues: string[] = [];
+  if (q.kind === "blank") {
+    const oe = normalizeWs(q.originalExpression ?? "");
+    const ok =
+      oe.length > 0 &&
+      points.some((p) => {
+        const pt = normalizeWs(p.text);
+        return pt.length > 0 && (oe.includes(pt) || pt.includes(oe));
+      });
+    if (!ok) {
+      issues.push(
+        `교사 지정 표적 미준수 — 빈칸원문이 지정 구간('${points[0].text.slice(0, 60)}')과 불일치`,
+      );
+    }
+  } else {
+    for (const p of points) {
+      const pt = normalizeWs(p.text);
+      if (!pt) continue;
+      const hit = q.marks.some((m) => {
+        const orig = normalizeWs(m.original);
+        const shown = normalizeWs(m.shown);
+        return (
+          orig.includes(pt) ||
+          pt.includes(orig) ||
+          shown.includes(pt) ||
+          pt.includes(shown)
+        );
+      });
+      if (!hit) {
+        issues.push(`교사 지정 표현이 밑줄에 없음: '${p.text.slice(0, 60)}'`);
+      }
+    }
+  }
+  return issues;
+}
+
 function parseAndGate(
   subType: string,
   text: string,
   passage: string,
+  teacherPoints: TeacherPointPayload[],
 ): { question: MdQuestion; gateIssues: string[]; corrections: string[] } {
   if (subType === "BLANK_INFERENCE") {
     let q = parseMdBlank(text);
@@ -243,7 +326,10 @@ function parseAndGate(
     q = snapped.question;
     return {
       question: q,
-      gateIssues: gateMdQuestion(q, passage),
+      gateIssues: [
+        ...gateMdQuestion(q, passage),
+        ...teacherPointComplianceIssues(q, teacherPoints),
+      ],
       corrections: snapped.corrections,
     };
   }
@@ -252,7 +338,10 @@ function parseAndGate(
   q = snapped.question;
   return {
     question: q,
-    gateIssues: gateMdQuestion(q, passage),
+    gateIssues: [
+      ...gateMdQuestion(q, passage),
+      ...teacherPointComplianceIssues(q, teacherPoints),
+    ],
     corrections: snapped.corrections,
   };
 }
@@ -309,18 +398,13 @@ export async function POST(req: NextRequest) {
   const answerCount =
     (resolvedSettings as { grammarAnswerCount?: number | null })
       .grammarAnswerCount ?? 1;
-  const rawSettings =
-    typeof config.questionTypeSettings === "object" &&
-    config.questionTypeSettings !== null
-      ? (config.questionTypeSettings as Record<string, unknown>)
-      : {};
-  const hasTeacherPoints =
-    Array.isArray(rawSettings.teacherPoints) &&
-    rawSettings.teacherPoints.length > 0;
+  // 26-07-23 교사 포인트 md 승차: "포인트 짚어주기" 생성도 md 스트리밍 레인을
+  // 탄다(기존엔 fast 로 보내 스트리밍이 없었음 — 실사용 지적). 포인트는 아래에서
+  // fast 와 동일 계약(클램프+축자 필터)으로 읽어 프롬프트 강제 + 결정론 준수
+  // 게이트로 집행한다.
   const mdEligible =
-    !hasTeacherPoints &&
-    ((subType === "BLANK_INFERENCE" && blankCount === 1) ||
-      (subType === "GRAMMAR_ERROR" && markerCount === 5 && answerCount === 1));
+    (subType === "BLANK_INFERENCE" && blankCount === 1) ||
+    (subType === "GRAMMAR_ERROR" && markerCount === 5 && answerCount === 1);
   if (!mdEligible) {
     return NextResponse.json(
       { error: "md-stream ineligible settings", code: "MD_STREAM_INELIGIBLE" },
@@ -431,6 +515,14 @@ export async function POST(req: NextRequest) {
       ? effectiveDifficulty
       : "KILLER";
 
+  // 교사 지정 포인트(포인트 짚어주기) — fast 동일 계약으로 읽는다. 있으면
+  // 프롬프트 강제 블록 + 결정론 준수 게이트가 함께 작동한다.
+  const teacherPoints = readMdTeacherPoints(
+    subType,
+    config.questionTypeSettings,
+    passage.content,
+  );
+
   // ── 다양성(축약판) — md 레인은 엔진의 diversity 컨텍스트를 안 타므로, 같은
   // 지문+유형의 기존 표적(빈칸원문·어법 정답 표현)을 회피 목록으로 프롬프트에
   // 직접 주입한다. 병렬 배치(variantCount>1)는 분산 힌트를 추가한다. 조회 실패는
@@ -471,7 +563,18 @@ export async function POST(req: NextRequest) {
         /* 개별 문항 파싱 실패 무시 */
       }
     }
-    const unique = [...new Set(targets)].slice(0, 8);
+    // 교사 지정 구간과 겹치는 회피 표적은 제외한다(정규화 양방향 포함) —
+    // "이미 출제된 자리 회피"가 교사 지시를 밀어내면 안 된다(fast 동일 규칙,
+    // 공유 블록의 '다양성 회피 목록보다 우선' 선언과 이중 방어).
+    const teacherNorm = teacherPoints
+      .map((p) => normalizeWs(p.text))
+      .filter(Boolean);
+    const unique = [...new Set(targets)]
+      .filter((t) => {
+        const tn = normalizeWs(t);
+        return !teacherNorm.some((p) => tn.includes(p) || p.includes(tn));
+      })
+      .slice(0, 8);
     const parts: string[] = [];
     if (unique.length > 0) {
       parts.push(
@@ -494,6 +597,10 @@ export async function POST(req: NextRequest) {
         ? buildMdBlankPrompt(passage.content, "full", mdDifficulty)
         : buildMdGrammarPrompt(passage.content, "full", mdDifficulty);
     const extras: string[] = [];
+    // 교사 지정 블록은 fast 레인과 같은 공유 계약을 그대로 쓴다 — 블록 자체가
+    // "다양성 회피 목록보다 우선"을 선언한다.
+    const teacherBlock = buildTeacherPointsPromptBlock(teacherPoints);
+    if (teacherBlock) extras.push(teacherBlock);
     if (diversityBlock) extras.push(diversityBlock);
     if (config.customPrompt?.trim()) {
       extras.push(`## 교사 추가 지시\n${config.customPrompt.trim()}`);
@@ -604,7 +711,7 @@ export async function POST(req: NextRequest) {
           });
           callResults.push(call);
           await recordGenerationCost(0, call);
-          let parsedMd = parseAndGate(subType, call.text, passage.content);
+          let parsedMd = parseAndGate(subType, call.text, passage.content, teacherPoints);
           let firstGateIssues: string[] | null = null;
           if (
             subType === "GRAMMAR_ERROR" &&
@@ -632,6 +739,7 @@ export async function POST(req: NextRequest) {
               subType,
               retryCall.text,
               passage.content,
+              teacherPoints,
             );
             // 재생성이 더 나빠지지 않았을 때만 채택 — 남은 반려는 아래 공통
             // 반려 블록이 실패·환불 처리한다(재재생성 없음).

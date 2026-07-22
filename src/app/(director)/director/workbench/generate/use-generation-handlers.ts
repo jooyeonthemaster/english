@@ -266,16 +266,10 @@ export function isMdStreamEligible(
   // 로 클램프하므로 이 분기 자체가 무의미(무회귀).
   void generationPlan;
   if (!questionType || !MD_STREAM_TYPES.has(questionType)) return false;
-  const settings =
-    typeof questionTypeSettings === "object" && questionTypeSettings !== null
-      ? (questionTypeSettings as Record<string, unknown>)
-      : {};
-  if (
-    Array.isArray(settings.teacherPoints) &&
-    settings.teacherPoints.length > 0
-  ) {
-    return false;
-  }
+  // 26-07-23: 교사 지정 포인트(포인트 짚어주기)도 md 레인 적격 — 서버가 fast
+  // 동일 계약(클램프+축자 필터)으로 프롬프트 강제 + 결정론 준수 게이트를 건다.
+  // (기존엔 여기서 제외돼 fast 로 빠지면서 스트리밍이 사라졌다 — 실사용 지적.)
+  void questionTypeSettings;
   return true;
 }
 
