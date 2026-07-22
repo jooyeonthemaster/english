@@ -45,7 +45,9 @@ export const ANALYSIS_REPORT_CSS = `
   padding-bottom: 2mm; margin-bottom: 5mm; font-weight: 700; flex: 0 0 auto;
 }
 .par-runhead-brand { display: flex; align-items: center; gap: 2.2mm; min-width: 0; }
-.par-runhead-logo { width: 9mm; height: 9mm; object-fit: contain; flex: 0 0 auto; }
+/* 26-07-22: 9mm 정사각 고정은 가로로 긴 로고를 레터박스로 축소시켰다 — 높이 기준
+   비율 유지 + 폭 상한만 두어 로고가 박스에 밀착되게 한다. */
+.par-runhead-logo { height: 9mm; width: auto; max-width: 26mm; object-fit: contain; flex: 0 0 auto; }
 .par-runhead .par-runhead-r { color: var(--text-muted); font-weight: 500; }
 .par-runfoot {
   display: flex; justify-content: space-between; align-items: center;
@@ -715,6 +717,29 @@ export const ANALYSIS_REPORT_CSS = `
 }
 .par-activity-run .par-wrap-activity {
   break-inside: avoid;
+}
+/* 실전 학습지 조각 병합 박스(ws-list) — activity-run 과 동일 의미론.
+   조각 간 간격은 margin 이 아닌 padding 으로 줘야 측정(offsetHeight)에 포함된다. */
+.par-ws-run {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  break-inside: auto;
+}
+.par-ws-run .par-block {
+  margin-bottom: 0;
+}
+.par-ws-run .par-block + .par-block {
+  padding-top: 1.6mm;
+}
+.par-ws-run .par-wrap-ws-list {
+  break-inside: avoid;
+}
+/* 드릴 소단원 구분(어법 선택 ↔ 단어배열) — 옛 .par-ws-drill-set + .par-ws-drill-set 시각 승계 */
+.par-ws-run-subsep {
+  margin-top: 1.4mm;
+  border-top: .3mm dashed var(--tint-border);
+  padding-top: 2mm;
 }
 .par-activity-list {
   list-style: none;

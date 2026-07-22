@@ -33,6 +33,11 @@ export type WrapKind =
   | "secheader"
   | "spacer"
   | "activity"
+  /** 실전 학습지 소단원의 문항 단위 조각 — 같은 orderId 조각들이 한 par-ws-block
+   *  박스로 병합 렌더되고, 페이지 경계에서 조각 단위로 나뉜다(activity 와 동일 패턴).
+   *  26-07-22: 통짜 소단원 블록이 잔여 공간보다 크면 섹션 첫 페이지가 헤더만 남고
+   *  통째로 비던 결함의 근본 수정. */
+  | "ws-list"
   | "custom-text"
   | "image"
   | "cover";

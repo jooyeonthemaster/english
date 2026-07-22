@@ -201,7 +201,7 @@ const LEARNING_WORKSHEET: LearningWorksheetSection = {
     ],
   },
   workbookSet: {
-    title: "EBS 워크북 유형 훈련",
+    title: "유형별 워크북 훈련",
     topicGist: {
       title: "주제 / 요지",
       topicTitle: "Recall vs. Recognition : Why True Mastery Demands Retrieval Without Cues",

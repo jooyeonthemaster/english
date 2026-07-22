@@ -163,12 +163,21 @@ function startLogoDrag(e: ReactPointerEvent<HTMLDivElement>, patch: (p: Partial<
   const baseT = (wRect.top - cRect.top) / pxPerMm;
   const sx = e.clientX;
   const sy = e.clientY;
-  // 즉시 절대배치로 전환(현재 위치 유지)
+  // 즉시 절대배치로 전환(현재 위치 유지). width 를 못박아 이동 중 shrink-to-fit
+  // 재계산으로 로고가 접히는 흔들림을 차단한다.
   wrap.style.position = "absolute";
   wrap.style.left = `${baseL}mm`;
   wrap.style.top = `${baseT}mm`;
+  wrap.style.width = `${wmm}mm`;
   wrap.style.zIndex = "5";
   wrap.style.justifyContent = "flex-start";
+  // pointer capture — 빠른 드래그로 포인터가 래퍼를 벗어나도 이벤트를 놓치지 않는다
+  // (리사이즈 핸들과 동일 계약). 실패해도 window 리스너가 폴백.
+  try {
+    wrap.setPointerCapture(e.pointerId);
+  } catch {
+    /* noop */
+  }
   let raf = 0;
   let curL = baseL;
   let curT = baseT;
@@ -182,13 +191,23 @@ function startLogoDrag(e: ReactPointerEvent<HTMLDivElement>, patch: (p: Partial<
       wrap.style.top = `${curT}mm`;
     });
   };
-  const up = () => {
+  const finish = () => {
     if (raf) cancelAnimationFrame(raf);
     window.removeEventListener("pointermove", move);
+    window.removeEventListener("pointerup", finish);
+    window.removeEventListener("pointercancel", finish);
+    // 드래그 중 박은 고정 폭/zIndex 를 React 가정 상태(width:max-content, zIndex 4)로
+    // 복원 — patch 재렌더 시 style prop 값이 이전과 같아 react-dom 이 DOM 을 다시
+    // 안 쓰므로, 여기서 안 되돌리면 고정 폭이 잔존해 이후 리사이즈에서 maxWidth
+    // 100%(=동결 폭) 레터박스가 재발한다(적대 리뷰 실측).
+    wrap.style.width = "max-content";
+    wrap.style.zIndex = "4";
     patch({ logoX: Math.round(curL * 10) / 10, logoY: Math.round(curT * 10) / 10 });
   };
   window.addEventListener("pointermove", move);
-  window.addEventListener("pointerup", up, { once: true });
+  // pointercancel 에도 커밋 — 기존엔 move 리스너가 남고 위치 커밋이 유실됐다.
+  window.addEventListener("pointerup", finish);
+  window.addEventListener("pointercancel", finish);
 }
 
 function startLogoResize(
@@ -209,11 +228,32 @@ function startLogoResize(
   const sx = e.clientX;
   const sy = e.clientY;
   const base = currentHeightMm;
+  // 비율 인지 상한 — 로고가 실제로 놓일 수 있는 가로 폭(자유배치: 종이 우측 여백,
+  // 정렬 슬롯: 존 폭)을 넘는 높이는 어차피 maxWidth 안전핀에 잘려 여백만 늘어난다.
+  // 그 지점 전에 드래그를 멈춰 "커지는 만큼만 커지는" 손맛을 보장한다.
+  const ratio = img.naturalHeight > 0 ? img.naturalWidth / img.naturalHeight : 0;
+  const wrapLeftMm = (wrap.getBoundingClientRect().left - cRect.left) / pxPerMm;
+  // 정렬 슬롯 모드의 가용 폭은 래퍼가 아니라 부모 존 기준 — classic/framed/index
+  // 템플릿은 래퍼가 shrink-to-fit flex 아이템이라 래퍼 폭=현재 로고 폭이 되어
+  // 상한이 시작값에 붙어 확대가 죽는다(적대 리뷰 실측). 래퍼·부모 중 큰 쪽을 쓴다.
+  const slotWidthPx = Math.max(
+    wrap.getBoundingClientRect().width,
+    wrap.parentElement?.getBoundingClientRect().width ?? 0,
+  );
+  const availWidthMm = wrap.classList.contains("par-cov-logo-free")
+    ? Math.max(10, 210 - wrapLeftMm - 2)
+    : Math.max(10, slotWidthPx / pxPerMm);
+  const maxHeightMm = ratio > 0 && Number.isFinite(ratio) ? Math.min(60, availWidthMm / ratio) : 60;
   let raf = 0;
   let next = base;
   const move = (ev: PointerEvent) => {
-    const deltaMm = ((ev.clientX - sx) + (ev.clientY - sy)) / 2 / pxPerMm;
-    next = clamp(base + deltaMm, 6, 60);
+    // 지배 축 1:1 — 평균((dx+dy)/2)은 한 축 제스처에서 절반으로 둔해지고,
+    // max(dx,dy)는 한 축만 음수일 때 축소가 무반응이 된다(적대 리뷰). 절대값이
+    // 큰 축을 그대로 쓴다.
+    const dx = ev.clientX - sx;
+    const dy = ev.clientY - sy;
+    const deltaMm = (Math.abs(dx) >= Math.abs(dy) ? dx : dy) / pxPerMm;
+    next = clamp(base + deltaMm, 6, Math.max(6, maxHeightMm));
     if (raf) return;
     raf = requestAnimationFrame(() => {
       raf = 0;
@@ -223,11 +263,13 @@ function startLogoResize(
   const finish = () => {
     if (raf) cancelAnimationFrame(raf);
     window.removeEventListener("pointermove", move);
+    window.removeEventListener("pointerup", finish);
+    window.removeEventListener("pointercancel", finish);
     patch({ logoHeightMm: Math.round(next * 10) / 10 });
   };
   window.addEventListener("pointermove", move);
-  window.addEventListener("pointerup", finish, { once: true });
-  window.addEventListener("pointercancel", finish, { once: true });
+  window.addEventListener("pointerup", finish);
+  window.addEventListener("pointercancel", finish);
 }
 
 function CoverLogo({
@@ -246,8 +288,13 @@ function CoverLogo({
   const align = fixedAlign ?? d.logoAlign;
   const justify = align === "left" ? "flex-start" : align === "right" ? "flex-end" : "center";
   const img = (
+    // 26-07-22 리사이즈 결함 수정: maxWidth 70% 캡이 높이(박스)만 키우고 비트맵을
+    // 레터박스로 동결시키던 원인. width:auto 로 비율을 브라우저가 유지해 박스=로고가
+    // 되고(점선·핸들 밀착, 여백 소멸), maxWidth 100% + objectFit contain 은 레거시
+    // 극단값(페이지 폭 초과)에서만 발동하는 안전핀으로 남긴다 — 정상 범위 성장은
+    // startLogoResize 의 비율 인지 클램프가 실제 한계까지 보장한다.
     // eslint-disable-next-line @next/next/no-img-element
-    <img src={d.logo} alt="" style={{ height: `${d.logoHeightMm}mm`, maxWidth: "70%", objectFit: "contain", display: "block", pointerEvents: "none" }} />
+    <img src={d.logo} alt="" style={{ height: `${d.logoHeightMm}mm`, width: "auto", maxWidth: "100%", objectFit: "contain", display: "block", pointerEvents: "none" }} />
   );
   const resizeHandle = editable ? (
     <button
@@ -263,7 +310,9 @@ function CoverLogo({
     return (
       <div
         className={cn("par-cov-logo par-cov-logo-free", editable && "par-cov-logo-draggable")}
-        style={{ position: "absolute", left: `${d.logoX}mm`, top: `${d.logoY}mm`, zIndex: 4, justifyContent: "flex-start" }}
+        // width:max-content — 자유배치 래퍼가 shrink-to-fit 계산에서 %max-width 와
+        // 얽혀 로고를 명목 크기 이하로 접던 결함 차단(박스=로고 크기 고정).
+        style={{ position: "absolute", left: `${d.logoX}mm`, top: `${d.logoY}mm`, zIndex: 4, justifyContent: "flex-start", width: "max-content", maxWidth: `${210 - (d.logoX ?? 0)}mm` }}
         onPointerDown={onDown}
       >
         {img}

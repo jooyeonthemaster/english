@@ -197,7 +197,7 @@ ${input.passageContent}
 export function buildLearningWorksheetPrompt(input: BuildAnalysisReportPromptInput, report: AnalysisReport): string {
   const level = levelHint(input.schoolType, input.grade);
   const compactReport = compactReportContext(report);
-  return `당신은 EBS 수능특강 워크북과 고품질 내신/수능 영어 학습지를 만드는 교재 편집자입니다.
+  return `당신은 고품질 내신/수능 영어 유형별 워크북 학습지를 만드는 교재 편집자입니다.
 아래 영어 지문과 이미 생성된 PRIME 분석을 바탕으로 A4 분석지 뒤에 자연스럽게 붙을 "실전 학습지" 섹션 1개를 생성하세요.
 
 # 생성 목표
@@ -208,6 +208,7 @@ export function buildLearningWorksheetPrompt(input: BuildAnalysisReportPromptInp
   2) PDF형: 주제/요지, 어법 선택, 어휘 빈칸 완성, 주요문장 단어배열 영작, 정답
 - 문제는 단순 UI 더미가 아니라 실제 수업/시험 대비용이어야 합니다. 모든 정답과 오답 근거는 원문 표현에 근거해야 합니다.
 - 너무 길게 늘이지 말고 A4 2~4쪽 안에서 편집 가능한 밀도 높은 학습지로 구성하세요.
+- ❗ 특정 교재·출판사·방송사 브랜드명(EBS, 수능특강, 수능완성 등)을 title·note·본문·해설 어디에도 쓰지 마세요. 워크북 세트 제목은 "유형별 워크북 훈련"처럼 중립적인 유형 훈련 명칭으로 씁니다.
 
 # 출제 품질 헌장
 - 모든 문항은 "정답이 맞는 이유"와 "오답이 틀린 이유"가 원문 특정 표현, 논리 흐름, 문장 구조로 설명 가능해야 합니다. 배경지식, 상식, 그럴듯한 추측으로만 풀리는 문항은 금지합니다.
@@ -247,7 +248,7 @@ export function buildLearningWorksheetPrompt(input: BuildAnalysisReportPromptInp
     ]
   },
   "workbookSet": {
-    "title": "EBS 워크북 유형 훈련",
+    "title": "유형별 워크북 훈련",
     "topicGist": {
       "title": "주제 / 요지",
       "topicTitle": "The 10,000-hour Myth : Mastery처럼 지문의 핵심을 압축한 영어 제목",

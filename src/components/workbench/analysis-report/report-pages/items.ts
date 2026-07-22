@@ -80,7 +80,8 @@ export const isStandalone = (w: WrapKind) =>
   w !== "map" &&
   w !== "vocab-grid" &&
   w !== "reading" &&
-  w !== "activity";
+  w !== "activity" &&
+  w !== "ws-list";
 
 export function isAutoFitItem(it: FlowItem): boolean {
   return /^s\d+-annotated-snt\d+/.test(it.id);
@@ -155,6 +156,7 @@ export function packFlow(
   let h = 0;
   let prevSection = -99;
   let prevWrap: WrapKind | null = null;
+  let prevOrderId = "";
   // 섹션 헤더(01·02·03… 번호+제목)는 무조건 새 페이지에서 시작. 단 첫 섹션 헤더는
   // 문서 제목과 같은 페이지에 두기 위해(빈 제목 페이지 방지) 강제 분할에서 제외한다.
   let sawSecHeader = false;
@@ -165,6 +167,9 @@ export function packFlow(
     const box = BOX_LIST_WRAPS.has(it.wrap);
     const mp = it.wrap === "map";
     const act = it.wrap === "activity";
+    const wsl = it.wrap === "ws-list";
+    // ws-list 조각의 그룹 시작점 — 같은 orderId(옛 통짜 블록 id) 조각들이 한 박스다.
+    const groupStart = orderIdOf(it) !== prevOrderId;
     const isCover = it.wrap === "cover";
     const isSecHeader = it.wrap === "secheader";
     const standalone = isStandalone(it.wrap);
@@ -173,24 +178,28 @@ export function packFlow(
     // 자동 독해 조각은 저장된 breakBefore/minHeight 때문에 다음 장으로 밀리지 않게 한다.
     // 학습 활동(activity)은 블록 메타가 모든 분할 항목(회차/문항)에 동일하게 걸려 회차마다 끊기므로,
     // 메타 기반 분할은 비활동 블록에만 적용한다. 활동의 '새 페이지'는 첫 항목의 it.breakBefore 가 담당.
+    // ws-list 조각은 그룹 메타(editId=옛 블록 id)의 breakBefore 를 그룹 첫 조각에만 적용한다.
     const forceBreak =
-      ((!!meta?.breakBefore && !autoFit && !act) || !!it.breakBefore || isCover || prevWrap === "cover" || (isSecHeader && sawSecHeader && !it.keepWithPrev)) &&
+      ((!!meta?.breakBefore && !autoFit && !act && (!wsl || groupStart)) || !!it.breakBefore || isCover || prevWrap === "cover" || (isSecHeader && sawSecHeader && !it.keepWithPrev)) &&
       page.length > 0;
     // 수동 리사이즈 높이는 모든 블록에서 페이지 분할에 반영(필기 캔버스 포함).
     // breakBefore 만 auto-fit(자동 독해 조각)에서 stale 값 무시(위 forceBreak 참고).
-    const metaMinHeight = meta?.minHeight ?? 0;
+    // ws-list 조각은 옛 통짜 블록에 저장된 minHeight 가 조각마다 반복 적용되면
+    // 페이지가 폭발하므로 무시한다(그룹 리사이즈는 resizable:false 로 폐지).
+    const metaMinHeight = wsl ? 0 : meta?.minHeight ?? 0;
     const hh = isCover ? PAGE_BODY_MM : Math.max(own[k], metaMinHeight);
 
-    const atTopInc = () => (tbl ? chrome.thead : 0) + (box ? BOX_PAD_MM : 0) + (act ? ACTIVITY_PAD_MM : 0) + hh;
+    const atTopInc = () => (tbl ? chrome.thead : 0) + (box ? BOX_PAD_MM : 0) + (act || wsl ? ACTIVITY_PAD_MM : 0) + hh;
 
     let inc: number;
     if (page.length === 0) {
       inc = atTopInc();
     } else {
       const newSection = it.sectionIndex !== prevSection;
-      const newRun = standalone || newSection || it.wrap !== prevWrap;
+      // ws-list 는 그룹(orderId)이 바뀌면 새 박스(런) — 연속 그룹이 한 박스로 합산되는 것 방지.
+      const newRun = standalone || newSection || it.wrap !== prevWrap || (wsl && groupStart);
       if (newRun) {
-        inc = RUN_GAP_MM + (tbl ? chrome.thead : 0) + (box ? BOX_PAD_MM : 0) + (act ? ACTIVITY_PAD_MM : 0) + hh;
+        inc = RUN_GAP_MM + (tbl ? chrome.thead : 0) + (box ? BOX_PAD_MM : 0) + (act || wsl ? ACTIVITY_PAD_MM : 0) + hh;
       } else {
         inc = (box ? LI_GAP_MM : mp ? ARROW_MM : 0) + hh;
       }
@@ -209,6 +218,7 @@ export function packFlow(
     h += inc;
     prevSection = it.sectionIndex;
     prevWrap = it.wrap;
+    prevOrderId = orderIdOf(it);
     if (isSecHeader) sawSecHeader = true;
   });
   if (page.length) pages.push(page);
