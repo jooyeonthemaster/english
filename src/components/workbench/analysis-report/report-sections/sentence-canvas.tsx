@@ -382,8 +382,13 @@ export function AnnotatedSentenceCanvas({
     const compute = () => {
       const rootRect = root.getBoundingClientRect();
       if (!rootRect.width) return;
-      const sheet = root.closest<HTMLElement>(".par-sheet");
-      const zoom = sheet ? parseFloat(getComputedStyle(sheet).zoom || "1") || 1 : 1;
+      // 시각 배율 보정 — 에디터는 .par-sheet 의 CSS zoom, 학습지 미리보기 모달·
+      // 페이지 썸네일은 상위 transform: scale 로 축소한다. 둘 다
+      // getBoundingClientRect 를 시각 크기로 줄이지만 SVG 오버레이 좌표계는
+      // 레이아웃 픽셀이므로 실측 비율(rect폭/offset폭)로 나눠 복원한다.
+      // (기존의 computedStyle zoom 파싱은 transform 을 못 봐서 미리보기 모달에서
+      // 연결 화살표가 0.78배 지점으로 무너져 그려졌다 — 26-07-22 수정.)
+      const zoom = root.offsetWidth > 0 ? rootRect.width / root.offsetWidth : 1;
       const raw: { x1: number; y1: number; lineBottom: number; bx: number; by: number; color: string }[] = [];
       listNotes.forEach((n) => {
         if (!n.anchorRange) return;
