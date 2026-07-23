@@ -1110,12 +1110,30 @@ export function renderBlankInferenceDetail({ blankInferenceBlankCount, blankSett
                 }),
             })}
           </div>
+          {(() => {
+            // 킬러 연동 시각화(26-07-23): 이 유형의 난이도가 킬러이고 변형이
+            // ON 이면 토글·라벨을 킬러 레드로 — "킬러 = 패러프레이즈 공예"라는
+            // 연동을 한눈에 보여준다. 킬러인데 수동 OFF 면 안내만 남긴다.
+            const isKillerType = blankSettings.difficulty === "KILLER";
+            const killerLinked = isKillerType && !!blankSettings.paraphraseAnswer;
+            return (
           <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-1.5 lg:pt-3">
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
-                <span className="text-[12px] font-bold text-slate-800">
+                <span
+                  className={`text-[12px] font-bold ${killerLinked ? "text-rose-600" : "text-slate-800"}`}
+                >
                   빈칸 변형
                 </span>
+                {killerLinked ? (
+                  <span className="inline-flex items-center gap-1 rounded-md border border-rose-200 bg-rose-50 px-1.5 py-0.5 text-[10px] font-bold text-rose-600">
+                    <span
+                      className="h-1.5 w-1.5 rounded-full bg-rose-500"
+                      aria-hidden="true"
+                    />
+                    킬러 연동
+                  </span>
+                ) : null}
               </div>
               <div className="mt-1 flex flex-wrap gap-1">
                 <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
@@ -1132,6 +1150,18 @@ export function renderBlankInferenceDetail({ blankInferenceBlankCount, blankSett
                 정답 선지를 원문 그대로 내지 않고, 지문 의미를 보존한
                 패러프레이즈로 생성합니다.
               </p>
+              {killerLinked ? (
+                <p className="mt-1 text-[10px] leading-snug text-rose-500">
+                  킬러 난이도 선택으로 자동 활성화됐습니다 — 원문 그대로
+                  출제하려면 끌 수 있습니다.
+                </p>
+              ) : null}
+              {isKillerType && !blankSettings.paraphraseAnswer ? (
+                <p className="mt-1 text-[10px] leading-snug text-rose-500">
+                  킬러 문항의 오답 설계는 패러프레이즈 정답에서 상한이 나옵니다
+                  — 원문 그대로 출제하려는 경우에만 꺼두세요.
+                </p>
+              ) : null}
             </div>
             <button
               type="button"
@@ -1146,7 +1176,9 @@ export function renderBlankInferenceDetail({ blankInferenceBlankCount, blankSett
               }}
               className={`relative h-6 w-11 rounded-full border transition-colors ${
                 blankSettings.paraphraseAnswer
-                  ? "border-blue-300 bg-blue-500"
+                  ? killerLinked
+                    ? "border-rose-300 bg-rose-500"
+                    : "border-blue-300 bg-blue-500"
                   : "border-slate-200 bg-slate-200"
               }`}
             >
@@ -1159,6 +1191,8 @@ export function renderBlankInferenceDetail({ blankInferenceBlankCount, blankSett
               />
             </button>
           </div>
+            );
+          })()}
           <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-1.5 lg:pt-3">
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
@@ -1531,7 +1565,16 @@ export function renderPerTypeDifficultyImpl({ typeId, difficulty, patchTypeSetti
                 key={d.value}
                 type="button"
                 onClick={() =>
-                  patchTypeSettings(typeId, { difficulty: d.value })
+                  patchTypeSettings(typeId, {
+                    difficulty: d.value,
+                    // 킬러 연동(26-07-23 사용자 결정): 빈칸 킬러의 공예 상한은
+                    // 정답 패러프레이즈에서 나온다 — 킬러 선택 시 '빈칸 변형'을
+                    // 자동 ON(패러프레이즈는 부정-부정과 배타). 수동으로 다시
+                    // 끌 수 있고, 다른 난이도 선택은 설정을 건드리지 않는다.
+                    ...(typeId === "BLANK_INFERENCE" && d.value === "KILLER"
+                      ? { paraphraseAnswer: true, doubleNegative: false }
+                      : {}),
+                  })
                 }
                 className={`flex flex-1 items-center justify-center gap-1 rounded-[6px] text-[12px] transition-all duration-150 ${
                   isActive
