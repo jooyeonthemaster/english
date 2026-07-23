@@ -1237,6 +1237,13 @@ export function renderBlankInferenceDetail({ blankInferenceBlankCount, blankSett
                   빈칸 1개일 때만 사용할 수 있습니다.
                 </p>
               ) : null}
+              {!isMultiBlank && blankSettings.doubleNegative ? (
+                <p className="mt-1.5 text-[10px] leading-snug text-amber-600">
+                  부정-부정은 전용 정밀 파이프라인으로 생성됩니다 — 실시간
+                  스트리밍 미지원, 생성에 2~3분이 걸립니다. 빠른 스트리밍
+                  생성이 필요하면 이 토글을 꺼주세요.
+                </p>
+              ) : null}
             </div>
             <button
               type="button"
