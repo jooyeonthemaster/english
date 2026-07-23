@@ -62,10 +62,12 @@ import {
 import { formatGrammarCorrectionChange, repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
 import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
 import {
+  multiBlankOptionMatrix,
   optionDisplayTextForSubtype,
   shouldRenderOptionListForSubtype,
   grammarMarkerDisplayLabel,
 } from "@/components/exams/paper-builder/option-display";
+import { MultiBlankOptionGrid } from "@/components/exams/multi-blank-option-grid";
 import {
   sanitizeAiModelDisclosureText,
   getQuestionGenerationPlanFromTags,
@@ -304,6 +306,10 @@ export function QuestionBankCard({
   }, [getDuplicateDragQuestionIds]);
 
   const options = parseJSON<{ label: string; text: string }[]>(q.options, []);
+  // SENTENCE_INSERT(위치 마커→원문자)만 표시 변환. BLANK_INFERENCE 다중 빈칸은
+  // 원문 유지 — 펼침 목록은 (A)/(B) 컬럼 헤더 그리드로, 접힘 미리보기는 한 줄
+  // 원문("값1 …… 값2")으로 렌더한다. 그 외(어법 등 마커형 포함)는 접힘 미리보기가
+  // 정답 '텍스트'를 보여줘야 하므로 원문 유지.
   const displayOptions =
     q.subType === "SENTENCE_INSERT"
       ? options.map((option, index) => ({
@@ -311,6 +317,9 @@ export function QuestionBankCard({
           text: optionDisplayTextForSubtype(q.subType, index, option.text),
         }))
       : options;
+  // 다중 빈칸(BLANK_INFERENCE) 조합 선지 컬럼 행렬 — 펼침 목록 그리드 발동 판정.
+  const multiBlankMatrix =
+    q.subType === "BLANK_INFERENCE" ? multiBlankOptionMatrix(options) : null;
   // 지문 마커형(어법·어휘·삽입·무관)은 시험지와 동일하게 하단 보기 리스트를 숨긴다
   // (마커는 지문에만). 같은 게이트(shouldRenderOptionListForSubtype) 공유 — 접힘/펼침 모두.
   const hideOptionList =
@@ -872,8 +881,40 @@ export function QuestionBankCard({
                 <RenderedSections sections={bodySections} expanded />
               )}
 
-              {/* Options (MC) */}
-              {!structuredQuestion && visibleOptions.length > 0 && (
+              {/* Options (MC) — 다중 빈칸 조합 선지는 (A)/(B) 컬럼 헤더 그리드 */}
+              {!structuredQuestion && visibleOptions.length > 0 && multiBlankMatrix && (
+                <div className="pl-1">
+                  <MultiBlankOptionGrid
+                    blankCount={multiBlankMatrix.blankCount}
+                    className="px-2 py-1 text-[12px]"
+                    headerCellClassName="text-slate-500"
+                    rows={multiBlankMatrix.rows.map(({ option, values }, i) => {
+                      const isCorrect = correctAnswerLabels.has(
+                        normalizeAnswerLabel(option.label),
+                      );
+                      return {
+                        key: option.label || i,
+                        numberCell: (
+                          <span
+                            className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                              isCorrect
+                                ? "bg-blue-600 text-white"
+                                : "border border-slate-300 bg-white text-slate-400"
+                            }`}
+                          >
+                            {badgeLabel(option.label)}
+                          </span>
+                        ),
+                        cells: values,
+                        cellClassName: isCorrect
+                          ? "text-blue-700 font-semibold"
+                          : "text-slate-600",
+                      };
+                    })}
+                  />
+                </div>
+              )}
+              {!structuredQuestion && visibleOptions.length > 0 && !multiBlankMatrix && (
                 <div className="space-y-1 pl-1">
                   {visibleOptions.map((opt) => {
                     const isCorrect = correctAnswerLabels.has(
@@ -1073,7 +1114,7 @@ export function QuestionBankCard({
                       {sortedLinks.map(({ exam }) => (
                         <a
                           key={exam.id}
-                          href={`/director/exams/${exam.id}`}
+                          href={`/director/workbench/exams/${exam.id}/edit`}
                           className="flex items-center gap-1.5 rounded-md px-2 py-1.5 transition-colors hover:bg-slate-100"
                         >
                           <FileText className="w-3 h-3 shrink-0 text-slate-400" />

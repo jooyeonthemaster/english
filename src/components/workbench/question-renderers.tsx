@@ -832,6 +832,8 @@ function renderTypedQuestion(typeId: string, q: any): React.ReactNode {
 /** Fallback for legacy/unstructured questions (backward compat with old questionText format) */
 function FallbackRenderer({ question: q }: { question: any }) {
   const [showExplanation, setShowExplanation] = useState(false);
+  // SENTENCE_INSERT 만 표시 변환(위치 마커→원문자). BLANK_INFERENCE 다중 빈칸은
+  // OptionList 가 subType 을 받아 (A)/(B) 컬럼 헤더 그리드로 렌더한다(원문 유지).
   const options =
     q._typeId === "SENTENCE_INSERT" && Array.isArray(q.options)
       ? q.options.map((option: unknown, index: number) => {
@@ -854,7 +856,11 @@ function FallbackRenderer({ question: q }: { question: any }) {
       </div>
 
       {options && options.length > 0 && (
-        <OptionList options={options} correctAnswer={q.correctAnswer} />
+        <OptionList
+          options={options}
+          correctAnswer={q.correctAnswer}
+          subType={typeof q._typeId === "string" ? q._typeId : null}
+        />
       )}
 
       <div className="flex items-center justify-between pt-1 border-t border-slate-100">

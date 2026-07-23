@@ -1,5 +1,5 @@
 import { PAPER_SIZE_SPECS, PREVIEW_PAGE_WIDTH, TWO_COLUMN_GAP } from "./constants";
-import { formatInlineMarkersForSubtype, optionDisplayTextForSubtype, splitSentenceInsertGivenBlock } from "./option-display";
+import { formatInlineMarkersForSubtype, multiBlankOptionMatrix, optionDisplayTextForSubtype, splitSentenceInsertGivenBlock } from "./option-display";
 import { isSummaryCompleteMc, isSummaryCompleteSubtype, splitSummaryCompleteMcQuestionText, summaryCompleteMcPassageForItem, summaryCompleteMcSummaryForItem } from "./summary-complete-mc-layout";
 import { isFlowStructuredSubtype, isInlineSourcePassageSubtype, isStructuredAtomicSubtype, questionStemAndBody, structuredSegments } from "./question-body-layout";
 import { questionHasEmbeddedPassage } from "./passage-policy";
@@ -649,12 +649,35 @@ export function estimateOptionBlockHeight(
 ): number {
   const compact = settings.density === "compact";
   const { columnWidth } = pageMetrics(settings, 0);
+  // BLANK_INFERENCE 다중 빈칸도 원문 텍스트("값1 …… 값2") 폭으로 추정한다 —
+  // 그리드 행(a4-paper-page MultiBlankOptionGrid)의 한 행 내용은 [번호][값1][……][값2]
+  // 로 인라인 원문과 같은 글자 폭이고, 칸이 좁으면 값 컬럼 안에서 줄바꿈되므로
+  // 줄 수 추정도 동일 모델이 맞다(헤더 행 높이는 multiBlankOptionsHeaderHeight 별도).
   const displayText = optionDisplayTextForSubtype(subType, optionIndex, option.text);
   // 선택지는 화면에서 문항 컨테이너 글꼴을 상속한다. 문항 pt 가 지정되면 선택지 줄 폭·
   // 줄높이도 같은 크기로 스케일해 미리보기와 분할이 어긋나지 않게 한다(미지정 시 기존 10/11).
   const optionFontPx = fontPx ?? (compact ? 10 : 11);
   const optionLines = estimateTextLines(displayText, Math.max(80, columnWidth - 22), optionFontPx);
   return Math.max(16, optionLines * optionFontPx * 1.45);
+}
+
+/**
+ * 다중 빈칸(BLANK_INFERENCE) 조합 선지의 (A)/(B)/(C) 컬럼 헤더 행 높이.
+ * a4-paper-page 는 첫 선지(①)가 배치된 조각에 헤더 행을 그리므로, pagination.ts 가
+ * 첫 선지 블록(index 0)의 높이에 이 값을 더해 렌더와 1:1 동기를 유지한다.
+ * 헤더 행 = 그리드 한 행(선지 최소 행높이 16 과 동일 모델) + 행 간격(gap-y-1 = OPTION_ROW_GAP).
+ * 다중 빈칸이 아니면 0 (단일 빈칸·타 유형 무영향).
+ */
+export function multiBlankOptionsHeaderHeight(
+  item: PaperItem,
+  settings: PaginationSettings,
+  fontPx?: number,
+): number {
+  if (item.sourceQuestion.subType !== "BLANK_INFERENCE") return 0;
+  if (!multiBlankOptionMatrix(item.options)) return 0;
+  const compact = settings.density === "compact";
+  const optionFontPx = fontPx ?? (compact ? 10 : 11);
+  return Math.max(16, optionFontPx * 1.45) + OPTION_ROW_GAP;
 }
 
 export function estimateAnswerBlockHeight(item: PaperItem): number {

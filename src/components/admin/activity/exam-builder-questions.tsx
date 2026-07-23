@@ -14,6 +14,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import type { QuestionBrief } from "@/actions/admin-activity";
+import { multiBlankOptionMatrix } from "@/components/exams/paper-builder/option-display";
+import { MultiBlankOptionGrid } from "@/components/exams/multi-blank-option-grid";
 
 export function ExamBuilderQuestions({
   questions,
@@ -171,15 +173,41 @@ function QuestionItem({
           <p className="text-[12.5px] text-gray-800 whitespace-pre-wrap break-words leading-relaxed">
             {q.questionText}
           </p>
-          {q.options && q.options.length > 0 && (
-            <ul className="mt-1.5 space-y-0.5">
-              {q.options.map((o, oi) => (
-                <li key={oi} className="text-[12px] text-gray-600">
-                  <span className="text-gray-400">{o.label}</span> {o.text}
-                </li>
-              ))}
-            </ul>
-          )}
+          {q.options &&
+            q.options.length > 0 &&
+            (() => {
+              // 다중 빈칸(BLANK_INFERENCE) 조합 선지 — (A)/(B) 컬럼 헤더 그리드
+              const multiBlank =
+                q.subType === "BLANK_INFERENCE"
+                  ? multiBlankOptionMatrix(q.options)
+                  : null;
+              if (multiBlank) {
+                return (
+                  <div className="mt-1.5">
+                    <MultiBlankOptionGrid
+                      blankCount={multiBlank.blankCount}
+                      className="text-[12px] text-gray-600"
+                      headerCellClassName="text-gray-400"
+                      numberCellClassName="text-gray-400"
+                      rows={multiBlank.rows.map(({ option, values }, oi) => ({
+                        key: oi,
+                        numberCell: option.label,
+                        cells: values,
+                      }))}
+                    />
+                  </div>
+                );
+              }
+              return (
+                <ul className="mt-1.5 space-y-0.5">
+                  {q.options.map((o, oi) => (
+                    <li key={oi} className="text-[12px] text-gray-600">
+                      <span className="text-gray-400">{o.label}</span> {o.text}
+                    </li>
+                  ))}
+                </ul>
+              );
+            })()}
           <div className="mt-1.5 flex items-center gap-3">
             <span className="text-[11px] text-emerald-700">
               정답: <span className="font-medium">{q.correctAnswer}</span>

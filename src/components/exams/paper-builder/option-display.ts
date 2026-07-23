@@ -271,6 +271,103 @@ export function splitSentenceInsertGivenBlock(
   return { beforeText, givenText };
 }
 
+// ── 다중 빈칸(BLANK_INFERENCE) 조합 선지 표시 변환 ──────────────────────────
+// 저장 계약(question-postprocess/processors/blank-inference.ts): 다중 빈칸 선지는
+// text = blankValues.join(" …… "), blankValues: string[2~3], 지문 마커는 "(A) _____".
+// 표시 계약(실제 수능 조합 선지 형식): 선지 목록 "위 한 줄"에 (A)/(B)/(C) 컬럼
+// 헤더를 얹고 각 선지는 값만 컬럼 정렬로 보여준다 — HTML 표면은 그리드
+// (multi-blank-option-grid.tsx), 텍스트 표면(DOCX/HWPX/클립보드)은 헤더 라인 또는
+// 인라인 라벨 근사. 저장 데이터는 불변, 표시 시점 변환만(어법 (A)→① 원칙과 동일).
+// 단일 빈칸 선지(" …… " 미포함)는 어떤 표면에서도 그대로 통과한다.
+export const MULTI_BLANK_VALUE_SEPARATOR = " …… ";
+/** 표시용 컬럼 구분 기호(값 사이 "……" — 공백 없는 표시형) */
+export const MULTI_BLANK_DISPLAY_SEPARATOR = "……";
+const MULTI_BLANK_SPLIT_PATTERN = /\s*……\s*/;
+const MULTI_BLANK_VALUE_LABELS = ["(A)", "(B)", "(C)", "(D)", "(E)"] as const;
+// 이미 (A)~(E) 라벨이 붙은 값(레거시/이중 변환 방어)은 재라벨하지 않는다.
+const MULTI_BLANK_ALREADY_LABELED_PATTERN = /^\([A-Ea-e]\)/;
+
+/** 다중 빈칸 값 라벨 — 지문 마커("(A) _____")와 동일한 (A)(B)(C) 축 */
+export function multiBlankValueLabel(index: number): string {
+  return MULTI_BLANK_VALUE_LABELS[index] ?? `(${index + 1})`;
+}
+
+/**
+ * 다중 빈칸 조합 선지의 값 배열 추출 — blankValues(저장 원본)가 있으면 우선,
+ * 없으면 text 를 " …… " 로 split 하는 폴백(표시 표면 다수가 {label,text}만 들고
+ * 다니므로 폴백이 실질 경로다). 값이 2개 미만이면 null(단일 빈칸 — 무변환 신호).
+ */
+export function multiBlankOptionValues(
+  optionText: string,
+  blankValues?: unknown,
+): string[] | null {
+  if (Array.isArray(blankValues)) {
+    const values = blankValues
+      .filter((v): v is string => typeof v === "string" && v.trim().length > 0)
+      .map((v) => v.trim());
+    if (values.length >= 2) return values;
+  }
+  const parts = optionText
+    .split(MULTI_BLANK_SPLIT_PATTERN)
+    .map((v) => v.trim())
+    .filter((v) => v.length > 0);
+  return parts.length >= 2 ? parts : null;
+}
+
+/**
+ * 다중 빈칸 인라인 표시형(텍스트 표면 전용 — 클립보드 등 흐름 텍스트에서 컬럼
+ * 정렬이 불가능할 때의 근사): "값1 …… 값2" → "(A) 값1 …… (B) 값2[ …… (C) 값3]".
+ * HTML 표면은 이 함수를 쓰지 말 것 — 컬럼 헤더 그리드(multi-blank-option-grid)가 계약.
+ */
+export function formatMultiBlankOptionText(
+  optionText: string,
+  blankValues?: unknown,
+): string {
+  const values = multiBlankOptionValues(optionText, blankValues);
+  if (!values) return optionText;
+  if (values.some((v) => MULTI_BLANK_ALREADY_LABELED_PATTERN.test(v))) {
+    return optionText;
+  }
+  return values
+    .map((value, index) => `${multiBlankValueLabel(index)} ${value}`)
+    .join(MULTI_BLANK_VALUE_SEPARATOR);
+}
+
+/** 다중 빈칸 컬럼 헤더 라벨 목록 — ["(A)", "(B)", ...] */
+export function multiBlankHeaderLabels(blankCount: number): string[] {
+  return Array.from({ length: blankCount }, (_, i) => multiBlankValueLabel(i));
+}
+
+export interface MultiBlankOptionMatrix<T> {
+  /** 컬럼 수(선지들 값 개수의 최댓값, 2~) */
+  blankCount: number;
+  /** 선지 순서 그대로 — values 는 blankCount 로 패딩(부족분 "") */
+  rows: Array<{ option: T; values: string[] }>;
+}
+
+/**
+ * 선지 목록 전체가 다중 빈칸 조합 선지일 때만 컬럼 행렬을 돌려준다(아니면 null —
+ * 단일 빈칸/타 유형은 무변환 신호). 컬럼 헤더 방식 렌더의 공용 게이트:
+ * 모든 표면이 이 판정을 공유해 "일부 선지만 그리드"가 되는 표면 분기를 막는다.
+ */
+export function multiBlankOptionMatrix<
+  T extends { text?: unknown; blankValues?: unknown },
+>(options: readonly T[]): MultiBlankOptionMatrix<T> | null {
+  if (options.length === 0) return null;
+  const rows: Array<{ option: T; values: string[] }> = [];
+  for (const option of options) {
+    const text = typeof option.text === "string" ? option.text : "";
+    const values = multiBlankOptionValues(text, option.blankValues);
+    if (!values) return null;
+    rows.push({ option, values });
+  }
+  const blankCount = Math.max(...rows.map((row) => row.values.length));
+  for (const row of rows) {
+    while (row.values.length < blankCount) row.values.push("");
+  }
+  return { blankCount, rows };
+}
+
 export function optionDisplayTextForSubtype(
   subType: string | null | undefined,
   index: number,
@@ -287,5 +384,8 @@ export function optionDisplayTextForSubtype(
     return getCircledNumber(positionMarkerIndex(optionText) ?? index);
   }
 
+  // BLANK_INFERENCE 다중 빈칸은 여기서 변환하지 않는다 — HTML 표면은 컬럼 헤더
+  // 그리드(multiBlankOptionMatrix + multi-blank-option-grid), 텍스트 표면은 각자
+  // 명시적으로 헤더 라인/인라인 근사를 선택한다(숨은 일괄 변환 금지).
   return optionText;
 }

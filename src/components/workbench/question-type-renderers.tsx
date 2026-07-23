@@ -96,11 +96,17 @@ function SourcePassageBlock({
 }
 
 export function BlankInferenceRenderer({ q }: { q: BlankInferenceQuestion }) {
+  // 다중 빈칸(빈칸 2~3개) 조합 선지는 OptionList 가 (A)/(B)/(C) 컬럼 헤더
+  // 그리드로 렌더한다(저장 text 불변 — multiBlankOptionMatrix 공용 판정).
   return (
     <>
       <Direction text={q.direction} />
       <PassageBlock>{renderBlanks(q.passageWithBlank)}</PassageBlock>
-      <OptionList options={q.options} correctAnswer={q.correctAnswer} />
+      <OptionList
+        options={q.options}
+        correctAnswer={q.correctAnswer}
+        subType="BLANK_INFERENCE"
+      />
       <AnswerRevealSection>
         <AnswerLine answer={q.correctAnswer} />
         <ExplanationSection explanation={q.explanation} keyPoints={q.keyPoints} wrongOptionExplanations={q.wrongOptionExplanations} />

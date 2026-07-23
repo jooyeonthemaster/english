@@ -14,7 +14,11 @@ import {
   readSummaryPairOption,
 } from "@/lib/summary-complete-mc";
 import { summaryWritingMaskedSummary } from "@/lib/summary-writing";
-import { shouldRenderOptionListForSubtype } from "@/components/exams/paper-builder/option-display";
+import {
+  multiBlankOptionValues,
+  multiBlankValueLabel,
+  shouldRenderOptionListForSubtype,
+} from "@/components/exams/paper-builder/option-display";
 import type {
   StudentRenderableQuestion,
   StudentSafeBlankSlot,
@@ -167,7 +171,8 @@ function blankKeyToLabel(key: string): string {
 }
 
 /**
- * 선지 화이트리스트 조립 — label/text 만, SUMMARY_COMPLETE_MC 는 blankValues 추가.
+ * 선지 화이트리스트 조립 — label/text 만, SUMMARY_COMPLETE_MC 와 BLANK_INFERENCE
+ * 다중 빈칸은 blankValues 추가(둘 다 학생 노출물 — 조합 선지의 (A)(B)… 라벨 표시용).
  * 마커 전용 4유형(어법·무관문장·문장삽입·어휘선택)은 시험지와 동일하게 선지 리스트를
  * 내보내지 않는다(선지 데이터에 정답형 표현이 섞일 수 있는 표면 자체를 제거).
  * slotValues(네모어법 정답 조합) 등 그 외 키는 어떤 유형에서도 복사하지 않는다.
@@ -187,6 +192,18 @@ export function buildSafeOptions(
       label,
       text: typeof rec.text === "string" ? rec.text : "",
     };
+    if (subType === "BLANK_INFERENCE") {
+      // 다중 빈칸 조합 선지(text = "값1 …… 값2", blankValues: string[2~3])만 해당 —
+      // 지문 마커("(A) _____")와 같은 (A)(B)(C) 라벨을 붙여 내보낸다. 값 자체는
+      // 이미 text 로 노출되는 학생 노출물이라 추가 누출 없음. 단일 빈칸은 미기록.
+      const values = multiBlankOptionValues(option.text, rec.blankValues);
+      if (values) {
+        option.blankValues = values.map((value, index) => ({
+          label: multiBlankValueLabel(index),
+          value,
+        }));
+      }
+    }
     if (subType === "SUMMARY_COMPLETE_MC") {
       const pair = readSummaryPairOption(rec);
       const values = Object.entries(pair.values ?? {})

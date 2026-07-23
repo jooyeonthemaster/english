@@ -4,7 +4,7 @@ import { isFlowStructuredSubtype, questionStemAndBody } from "./question-body-la
 import { isLineGapItem, LINE_GAP_MAX_PX, BLOCK_PX_PER_PT, type PaginationSettings, type PaperGroup, type PaperItem, type PaperPage, type RenderFragment, type RenderItemPart } from "./types";
 import { DEFAULT_IMAGE_ASPECT, imageAspectFromDataUrl } from "@/lib/image-dims";
 import type { FlowBlock, PaginationResult } from "./pagination-types";
-import { GIVEN_BOX_CHROME, ITEM_RENDER_OVERHEAD, MIN_PASSAGE_START_LINES, MIN_QUESTION_START_LINES, OPTION_BLOCK_TOP_GAP, OPTION_ROW_GAP, buildStructLineBlocks, embeddedPassageBodyChrome, estimateAnswerBlockHeight, estimateExplanationBlockHeight, estimateObjectiveAnswerBlockHeight, estimateOptionBlockHeight, estimateTeacherNoteHeight, estimateTextLines, pageMetrics, passageChromeHeight, passageContinuationReserveHeight, passageLineHeight, passageToLines, questionBodyToLines, questionLineHeight, questionMetaHeight, questionToLines, resolveItemFontPx } from "./pagination-metrics";
+import { GIVEN_BOX_CHROME, ITEM_RENDER_OVERHEAD, MIN_PASSAGE_START_LINES, MIN_QUESTION_START_LINES, OPTION_BLOCK_TOP_GAP, OPTION_ROW_GAP, buildStructLineBlocks, embeddedPassageBodyChrome, estimateAnswerBlockHeight, estimateExplanationBlockHeight, estimateObjectiveAnswerBlockHeight, estimateOptionBlockHeight, estimateTeacherNoteHeight, estimateTextLines, multiBlankOptionsHeaderHeight, pageMetrics, passageChromeHeight, passageContinuationReserveHeight, passageLineHeight, passageToLines, questionBodyToLines, questionLineHeight, questionMetaHeight, questionToLines, resolveItemFontPx } from "./pagination-metrics";
 
 export type {
   PaginationResult,
@@ -403,7 +403,17 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
                 // 경우에만 스케일을 넘긴다(미지정 시 기존 분할 그대로 — 회귀 0).
                 item.blockFontPt != null ? fontPx : undefined,
               ) +
-              (index === 0 ? OPTION_BLOCK_TOP_GAP : OPTION_ROW_GAP),
+              (index === 0 ? OPTION_BLOCK_TOP_GAP : OPTION_ROW_GAP) +
+              // 다중 빈칸(BLANK_INFERENCE) 컬럼 헤더 행 — 렌더(a4-paper-page)는
+              // 첫 선지(①)가 배치된 조각에 헤더를 그리므로 첫 선지 블록에만 더한다
+              // (블록은 원자 단위라 헤더+① 이 같은 칸에 함께 배치됨이 보장된다).
+              (index === 0
+                ? multiBlankOptionsHeaderHeight(
+                    item,
+                    settings,
+                    item.blockFontPt != null ? fontPx : undefined,
+                  )
+                : 0),
           });
         });
       }

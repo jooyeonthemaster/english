@@ -203,8 +203,7 @@ export const ANALYSIS_REPORT_CSS = `
   background: #fbfdff;
 }
 .par-read-no-cont {
-  background: #dbeafe;
-  color: #0369a1;
+  color: #94a3b8;
 }
 .par-reading-trans-flow {
   padding-bottom: .8mm;
@@ -288,16 +287,12 @@ export const ANALYSIS_REPORT_CSS = `
   align-items: baseline;
 }
 .par-read-no {
-  display: inline-flex;
-  align-items: center;
+  display: flex;
+  align-items: baseline;
   justify-content: center;
-  width: 5.5mm;
-  height: 5.5mm;
-  border-radius: 50%;
-  background: #0ea5e9;
-  color: #fff;
+  color: #0369a1;
   font-family: var(--font-ko);
-  font-size: calc(7.5pt * var(--par-fs, 1));
+  font-size: calc(11pt * var(--par-fs, 1));
   font-weight: 900;
 }
 .par-read-en {
@@ -1354,10 +1349,9 @@ export const ANALYSIS_REPORT_CSS = `
 .par-clean-line { display: grid; grid-template-columns: 6.5mm minmax(0, 1fr); gap: 1.8mm; align-items: baseline; }
 .par-clean-line .par-read-en { margin: 0; }
 .par-clean-no {
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 5.4mm; height: 5.4mm; border-radius: 50%;
-  background: #0ea5e9; color: #fff;
-  font-family: var(--font-ko); font-size: calc(7.3pt * var(--par-fs, 1)); font-weight: 900;
+  display: flex; align-items: baseline; justify-content: center;
+  font-family: var(--font-ko); font-size: calc(11pt * var(--par-fs, 1)); font-weight: 900;
+  color: #0369a1;
 }
 .par-clean-ko-row { display: grid; grid-template-columns: 6.5mm minmax(0, 1fr); gap: 1.8mm; margin-top: .9mm; align-items: baseline; }
 .par-clean-ko-mark { color: #94a3b8; text-align: center; font-size: calc(8pt * var(--par-fs, 1)); }
@@ -1389,13 +1383,12 @@ export const ANALYSIS_REPORT_CSS = `
   display: inline-flex; align-items: center; justify-content: center;
   flex: 0 0 auto;
   width: 5.4mm; height: 5.4mm; margin-right: 1.6mm;
-  border-radius: 50%;
-  background: #0ea5e9; color: #fff;
+  color: #0369a1;
   font-family: var(--font-ko);
-  font-size: calc(7.3pt * var(--par-fs, 1)); font-weight: 900;
+  font-size: calc(11pt * var(--par-fs, 1)); font-weight: 900;
   align-self: flex-start; margin-top: .3mm;
 }
-.par-canvas-no.is-cont { background: #dbeafe; color: #0369a1; }
+.par-canvas-no.is-cont { color: #94a3b8; }
 .par-canvas-chunk { display: flex; flex-direction: column; min-width: 0; max-width: 100%; }
 /* 끊어읽기 구분선 — 청크 사이 '/' */
 .par-canvas-sep {

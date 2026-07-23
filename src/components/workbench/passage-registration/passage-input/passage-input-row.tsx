@@ -17,11 +17,11 @@ import {
   Undo2,
   X,
 } from "lucide-react";
-import type { Editor } from "@tiptap/react";
 import { Button } from "@/components/ui/button";
 import {
-  PassageAnnotationEditor,
+  PassageMarkEditor,
   type Annotation,
+  type MarkEditorHandle,
 } from "@/components/workbench/editor";
 import { PassageContentEditor } from "@/components/workbench/editor/passage-content-editor";
 import { detectProblemFormArtifacts } from "@/lib/passage-source";
@@ -155,10 +155,11 @@ interface PassageInputRowProps {
 
 /**
  * One editable passage in the unified annotation stack. Mirrors the 문제 생성
- * page's PassageRow (per-row AI 복원, smart-split, problem-form hints) but its
- * body is a full PassageAnnotationEditor (tiptap) so the teacher can mark
- * vocab/grammar/structure/exam points right here — and those marks flow into
- * the analysis prompt + persist as PassageNote rows on 분석 시작.
+ * page's PassageRow (per-row AI 복원, smart-split, problem-form hints) — and its
+ * body is a full PassageMarkEditor (문제 생성의 WorkspaceSelectStage 제스처 +
+ * '직접 편집' textarea 토글을 그대로 이식) so the teacher can hover/click/
+ * double-click/drag to mark vocab/grammar/structure/exam points right here —
+ * and those marks flow into the analysis prompt + persist as PassageNote rows.
  */
 export function PassageInputRow({
   index,
@@ -294,9 +295,10 @@ export function PassageInputRow({
   };
 
   // ─── AI 변형 (문제생성 워크스페이스 메커니즘 이식) ───
-  // 마킹(annotations)을 보존하기 위해, 본문 치환은 editorSeed remount 대신 TipTap
-  // 트랜잭션(insertContentAt)으로 부분 적용한다 — 변형 구간 밖 마크는 그대로 유지.
-  const [editor, setEditor] = useState<Editor | null>(null);
+  // 마킹(annotations)을 보존하기 위해, 본문 치환은 editorSeed remount 대신 마킹
+  // 에디터의 문자 오프셋 뮤테이션(replaceRange/prependParagraph)으로 부분 적용한다
+  // — 변형 구간 밖 주석은 오프셋 보정으로 그대로 유지.
+  const [markApi, setMarkApi] = useState<MarkEditorHandle | null>(null);
   const [selection, setSelection] = useState<{
     from: number;
     to: number;
@@ -335,38 +337,41 @@ export function PassageInputRow({
   const anyPreview = !!paraPreview || !!prependPreview || !!variantPreview;
   const canTransform = charCount >= MIN_TRANSFORM_CHARS && !busy && !txBusy;
 
-  const handleEditorReady = useCallback((ed: Editor | null) => setEditor(ed), []);
-
-  // 선택 변경 추적 — '문장 변형' 버튼 활성화 + 적용 위치 확보.
+  // 변형/앞문단/문장변형 미리보기가 새로 뜨면 카드 하단으로 잘리기 쉬우므로,
+  // 마운트 직후(레이아웃 확정 후) 그 패널을 부드럽게 시야로 끌어온다.
+  const previewRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    if (!editor) {
-      setSelection(null);
-      return;
-    }
-    const update = () => {
-      const { from, to } = editor.state.selection;
-      const text = editor.state.doc.textBetween(from, to, " ");
+    if (!anyPreview) return;
+    const raf = requestAnimationFrame(() => {
+      previewRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [anyPreview]);
+
+  const handleMarkReady = useCallback(
+    (api: MarkEditorHandle | null) => setMarkApi(api),
+    [],
+  );
+
+  // 선택 변경 추적 — '문장 변형' 버튼 활성화 + 적용 위치 확보. 마킹 무대가 문자
+  // 오프셋 선택({from,to,text})을 올려주면, 12자 이상일 때만 문장 변형 대상으로 잡는다.
+  const handleSelectionChange = useCallback(
+    (sel: { from: number; to: number; text: string } | null) => {
       setSelection(
-        to > from && text.trim().length >= MIN_PARAPHRASE_CHARS
-          ? { from, to, text }
-          : null,
+        sel && sel.text.trim().length >= MIN_PARAPHRASE_CHARS ? sel : null,
       );
-    };
-    update();
-    editor.on("selectionUpdate", update);
-    editor.on("transaction", update);
-    return () => {
-      editor.off("selectionUpdate", update);
-      editor.off("transaction", update);
-    };
-  }, [editor]);
+    },
+    [],
+  );
 
   const runParaphrase = useCallback(
     async (avoidTexts: string[]) => {
-      const ed = editor;
-      if (!ed) return;
-      const { from, to } = ed.state.selection;
-      const text = ed.state.doc.textBetween(from, to, " ");
+      const sel = selection;
+      if (!sel) return;
+      const { from, to, text } = sel;
       if (to <= from || text.trim().length < MIN_PARAPHRASE_CHARS) {
         toast.info("본문에서 바꿀 문장을 드래그로 선택하세요.");
         return;
@@ -388,29 +393,26 @@ export function PassageInputRow({
         setTxBusy(null);
       }
     },
-    [editor, row.content],
+    [selection, row.content],
   );
 
   const applyParaphrase = useCallback(() => {
-    const ed = editor;
-    if (!paraPreview || !ed) return;
-    const cur = ed.state.doc.textBetween(paraPreview.from, paraPreview.to, " ");
+    if (!paraPreview || !markApi) return;
+    const cur = row.content.slice(paraPreview.from, paraPreview.to);
     if (cur !== paraPreview.original) {
       toast.error("본문이 변경돼 변형을 적용할 수 없어요. 문장을 다시 선택하세요.");
       setParaPreview(null);
       return;
     }
-    // insertContentAt 으로 구간만 치환 → 바깥 마크는 자동 보존(ProseMirror 매핑).
-    ed.chain()
-      .focus()
-      .insertContentAt(
-        { from: paraPreview.from, to: paraPreview.to },
-        { type: "text", text: paraPreview.text.replace(/\s+/g, " ").trim() },
-      )
-      .run();
+    // replaceRange 로 구간만 치환 → 바깥 주석은 오프셋 보정으로 보존.
+    markApi.replaceRange(
+      paraPreview.from,
+      paraPreview.to,
+      paraPreview.text.replace(/\s+/g, " ").trim(),
+    );
     setParaPreview(null);
     setSelection(null);
-  }, [editor, paraPreview]);
+  }, [markApi, paraPreview, row.content]);
 
   const runPrepend = useCallback(
     async (avoidTexts: string[]) => {
@@ -436,20 +438,11 @@ export function PassageInputRow({
   );
 
   const applyPrepend = useCallback(() => {
-    const ed = editor;
-    if (!prependPreview || !ed) return;
-    // 맨 앞에 새 문단을 끼워 넣는다 — 기존 마크는 뒤로 밀리며 보존된다.
-    ed.chain()
-      .focus()
-      .insertContentAt(0, {
-        type: "paragraph",
-        content: [
-          { type: "text", text: prependPreview.text.replace(/\s+/g, " ").trim() },
-        ],
-      })
-      .run();
+    if (!prependPreview || !markApi) return;
+    // 맨 앞에 새 문단을 끼워 넣는다 — 기존 주석은 뒤로 밀리며 보존된다.
+    markApi.prependParagraph(prependPreview.text.replace(/\s+/g, " ").trim());
     setPrependPreview(null);
-  }, [editor, prependPreview]);
+  }, [markApi, prependPreview]);
 
   const changePrependCount = (d: number) =>
     setPrependCount(Math.min(5, Math.max(1, prependCount + d)));
@@ -869,23 +862,26 @@ export function PassageInputRow({
                   placeholder="여기에 영어 지문을 붙여넣으세요..."
                 />
               ) : (
-                <PassageAnnotationEditor
+                <PassageMarkEditor
                   key={`${row.localId}:${row.editorSeed}`}
                   content={row.content}
                   onContentChange={handleContentChange}
                   annotations={row.annotations}
                   onAnnotationsChange={handleAnnotationsChange}
-                  onEditorReady={handleEditorReady}
+                  onReady={handleMarkReady}
+                  onSelectionChange={handleSelectionChange}
                   editable={!busy}
                   placeholder={
-                    "여기에 영어 지문을 붙여넣으세요...\n\n텍스트를 드래그하면 핵심 어휘·어법·출제 포인트를 마킹할 수 있어요. 빈칸·선지 마커가 섞인 '문제 형태'면 'AI 복원'으로 원문을 복구하세요."
+                    "여기에 영어 지문을 붙여넣으세요...\n\n단어에 마우스를 올려 클릭·더블클릭·드래그로 선택하면 핵심 어휘·어법·출제 포인트를 마킹할 수 있어요. 빈칸·선지 마커가 섞인 '문제 형태'면 'AI 복원'으로 원문을 복구하세요."
                   }
                 />
               )}
             </div>
           </div>
 
-          {/* AI 변형 미리보기 패널 (한 번에 하나만) — 문제생성과 동일 UI */}
+          {/* AI 변형 미리보기 패널 (한 번에 하나만) — 문제생성과 동일 UI.
+              새로 뜨면 아래로 잘리지 않게 부드럽게 스크롤해 시야에 들인다. */}
+          <div ref={previewRef}>
           {paraPreview ? (
             <div className="mt-2">
               <ParaphrasePreviewPanel
@@ -939,6 +935,7 @@ export function PassageInputRow({
               />
             </div>
           ) : null}
+          </div>
 
           {/* Split affordance */}
           {canSplit && split && (
