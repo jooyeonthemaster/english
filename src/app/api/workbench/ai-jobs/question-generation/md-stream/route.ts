@@ -13,7 +13,10 @@ import {
   type TeacherPointPayload,
 } from "@/app/(director)/director/workbench/generate/generation-config-panel-parts/point-picker-config";
 import { buildTeacherPointsPromptBlock } from "@/lib/question-generation-prompt-contract";
-import { buildBlankPointGuidance } from "@/lib/blank-point-catalog";
+import {
+  buildBlankPointGuidance,
+  buildMultiBlankPointGuidance,
+} from "@/lib/blank-point-catalog";
 import { buildGrammarPointGuidance } from "@/lib/grammar-point-catalog";
 import { CREDIT_COSTS, type OperationType } from "@/lib/credit-costs";
 import { InsufficientCreditsError, refundCredits } from "@/lib/credits";
@@ -43,29 +46,35 @@ import {
 import {
   buildMdBlankPrompt,
   buildMdGrammarPrompt,
+  buildMdMultiBlankPrompt,
   type MdDifficulty,
 } from "@/lib/md-qgen/prompts";
 import {
   autoSnapBlankExpression,
   autoSnapGrammarMarks,
+  autoSnapMultiBlankExpressions,
+  gateMdMultiBlank,
   gateMdQuestion,
   normalizeWs,
   parseMdBlank,
   parseMdGrammar,
-  type MdQuestion,
+  parseMdMultiBlank,
+  type MdAnyQuestion,
 } from "@/lib/md-qgen/parser";
 import {
   adaptMdBlankToAiQuestion,
   adaptMdGrammarToAiQuestion,
+  adaptMdMultiBlankToAiQuestion,
 } from "@/lib/md-qgen/adapter";
 import { TYPE_LABELS } from "@/app/api/ai/generate-questions-auto/_lib/constants";
 
 // ============================================================================
 // md-stream — 빈칸·어법 전용 "마크다운 원큐 + SSE 스트리밍" 생성 라우트.
 // (26-07-21 심플 스택 1·2단계) 기존 fast 라우트는 바이트 무변경으로 두고, 적격
-// 요청(빈칸 단일 / 어법 5마커·1정답)만 클라이언트가 이 라우트로 보낸다. 교사
-// 지정 포인트(포인트 짚어주기)도 이 레인이 처리한다(26-07-23 — 프롬프트 강제
-// 공유 블록 + 결정론 준수 게이트). 부적격·오류 시 클라이언트는 fast 로 폴백한다
+// 요청(빈칸 1~3개 / 어법 5~10마커·1~N정답 — 26-07-23 스펙 v1로 다중 빈칸·어법
+// 비표준 확장)만 클라이언트가 이 라우트로 보낸다. 교사 지정 포인트(포인트
+// 짚어주기)도 이 레인이 처리한다(26-07-23 — 프롬프트 강제 공유 블록 + 결정론
+// 준수 게이트). 부적격·오류 시 클라이언트는 fast 로 폴백한다
 // (서버는 400 MD_STREAM_INELIGIBLE).
 //
 // 과금·저장·원장·환불은 fast 라우트와 동일 규약:
@@ -269,12 +278,13 @@ function readMdTeacherPoints(
 /**
  * 교사 지정 준수의 결정형 게이트(0원) — 프롬프트 강제만으로는 이행이 보장되지
  * 않으므로 기계 검사한다. 빈칸: 빈칸원문이 지정 구간과 포함 관계(정규화 양방향)
- * 여야 한다. 어법: 지정 표현마다 밑줄 5개 중 하나에 포함돼야 한다(원형·표시형
- * 모두 허용). 위반은 무결성 게이트와 동일 경로 — 어법은 1회 재생성 피드백으로
- * 전달되고, 빈칸은 원큐 규약대로 실패·환불된다.
+ * 여야 한다. 다중 빈칸(26-07-23 스펙 v1): 지정 구간마다 빈칸원문 중 하나와 포함
+ * 관계(정규화 양방향)여야 한다. 어법: 지정 표현마다 밑줄 중 하나에 포함돼야
+ * 한다(원형·표시형 모두 허용). 위반은 무결성 게이트와 동일 경로 — 어법·다중
+ * 빈칸은 1회 재생성 피드백으로 전달되고, 단일 빈칸은 원큐 규약대로 실패·환불된다.
  */
 function teacherPointComplianceIssues(
-  q: MdQuestion,
+  q: MdAnyQuestion,
   points: TeacherPointPayload[],
 ): string[] {
   if (points.length === 0) return [];
@@ -291,6 +301,18 @@ function teacherPointComplianceIssues(
       issues.push(
         `교사 지정 표적 미준수 — 빈칸원문이 지정 구간('${points[0].text.slice(0, 60)}')과 불일치`,
       );
+    }
+  } else if (q.kind === "multiBlank") {
+    for (const p of points) {
+      const pt = normalizeWs(p.text);
+      if (!pt) continue;
+      const hit = q.blanks.some((b) => {
+        const be = normalizeWs(b.expression);
+        return be.length > 0 && (be.includes(pt) || pt.includes(be));
+      });
+      if (!hit) {
+        issues.push(`교사 지정 구간이 빈칸에 없음: '${p.text.slice(0, 60)}'`);
+      }
     }
   } else {
     for (const p of points) {
@@ -319,8 +341,25 @@ function parseAndGate(
   text: string,
   passage: string,
   teacherPoints: TeacherPointPayload[],
-): { question: MdQuestion; gateIssues: string[]; corrections: string[] } {
+  // 형식 파라미터(26-07-23 스펙 v1) — 기본 5·1·단일이면 종전 동작과 동일.
+  counts: { blankCount: number; markerCount: number; answerCount: number },
+): { question: MdAnyQuestion; gateIssues: string[]; corrections: string[] } {
   if (subType === "BLANK_INFERENCE") {
+    if (counts.blankCount >= 2) {
+      // 다중 빈칸(26-07-23 스펙 v1): 라벨식 신형 섹션 파싱 + 빈칸별 스냅 +
+      // 전용 게이트. blankCount 는 설정 실값으로 강제(파싱 개수 드리프트 반려).
+      let q = parseMdMultiBlank(text);
+      const snapped = autoSnapMultiBlankExpressions(q, passage);
+      q = snapped.question;
+      return {
+        question: q,
+        gateIssues: [
+          ...gateMdMultiBlank(q, passage, { blankCount: counts.blankCount }),
+          ...teacherPointComplianceIssues(q, teacherPoints),
+        ],
+        corrections: snapped.corrections,
+      };
+    }
     let q = parseMdBlank(text);
     // 0원 자동 보정(어법 스냅의 빈칸 대칭) — 반려 주계통 "빈칸원문 축자 부재"를
     // 보수 가드 하에 지문 축자로 교정한다. 실패하면 그대로 게이트가 반려.
@@ -341,7 +380,12 @@ function parseAndGate(
   return {
     question: q,
     gateIssues: [
-      ...gateMdQuestion(q, passage),
+      // 어법 비표준(마커 5~10·정답 1~N, 26-07-23 스펙 v1) — 게이트에 설정
+      // 실값을 전달한다(기본 5·1이면 종전 검사와 완전 동일).
+      ...gateMdQuestion(q, passage, {
+        markerCount: counts.markerCount,
+        answerCount: counts.answerCount,
+      }),
       ...teacherPointComplianceIssues(q, teacherPoints),
     ],
     corrections: snapped.corrections,
@@ -427,11 +471,16 @@ export async function POST(req: NextRequest) {
   // 게이트로 집행한다.
   // 26-07-23 부정-부정 md 승차(사용자 확정: "빈칸·어법은 어떤 설정이든 무조건
   // 신형"): DN 공예를 md 모드 블록으로 탑재 — fast 라우팅 제외를 철회한다.
-  // 잔여 md 밖 형식: 다중 빈칸(blankCount≥2)·어법 비표준(마커≠5·정답≥2)은
-  // 문항 형식 자체가 달라 md 공예·파서 신설이 필요한 별도 설계 대상.
+  // 26-07-23 스펙 v1: 다중 빈칸(blankCount 2~3)·어법 비표준(마커 5~10·정답 1~N)
+  // 도 md 승차 — 전용 프롬프트 빌더·파서·게이트·어댑터가 신설돼 형식 차이를
+  // 커버한다(설정 범위 밖 값만 fast 폴백).
   const mdEligible =
-    (subType === "BLANK_INFERENCE" && blankCount === 1) ||
-    (subType === "GRAMMAR_ERROR" && markerCount === 5 && answerCount === 1);
+    (subType === "BLANK_INFERENCE" && blankCount >= 1 && blankCount <= 3) ||
+    (subType === "GRAMMAR_ERROR" &&
+      markerCount >= 5 &&
+      markerCount <= 10 &&
+      answerCount >= 1 &&
+      answerCount <= markerCount);
   if (!mdEligible) {
     return NextResponse.json(
       { error: "md-stream ineligible settings", code: "MD_STREAM_INELIGIBLE" },
@@ -578,12 +627,24 @@ export async function POST(req: NextRequest) {
         if (typeof record.originalExpression === "string" && record.originalExpression.trim()) {
           targets.push(record.originalExpression.trim().slice(0, 90));
         }
+        // 다중 빈칸(26-07-23 스펙 v1): blanks[] 의 빈칸원문 전부 회피 표적.
+        if (Array.isArray(record.blanks)) {
+          for (const b of record.blanks as Array<Record<string, unknown>>) {
+            if (typeof b?.originalExpression === "string" && b.originalExpression.trim()) {
+              targets.push(b.originalExpression.trim().slice(0, 90));
+            }
+          }
+        }
         if (Array.isArray(record.markedExpressions)) {
-          const err = (record.markedExpressions as Array<Record<string, unknown>>).find(
+          // 복수 정답(26-07-23 스펙 v1): isError 전부 수집 — find 단일 수집이던
+          // 것을 filter 로(K≥2 문항의 정답 자리를 빠짐없이 회피).
+          const errs = (record.markedExpressions as Array<Record<string, unknown>>).filter(
             (m) => m?.isError === true,
           );
-          if (typeof err?.expression === "string" && err.expression.trim()) {
-            targets.push(err.expression.trim().slice(0, 90));
+          for (const err of errs) {
+            if (typeof err?.expression === "string" && err.expression.trim()) {
+              targets.push(err.expression.trim().slice(0, 90));
+            }
           }
         }
       } catch {
@@ -621,11 +682,48 @@ export async function POST(req: NextRequest) {
   const buildPrompt = (feedback: string | null): string => {
     const base =
       subType === "BLANK_INFERENCE"
-        ? buildMdBlankPrompt(passage.content, "full", mdDifficulty)
-        : buildMdGrammarPrompt(passage.content, "full", mdDifficulty);
+        ? blankCount >= 2
+          ? // 다중 빈칸(26-07-23 스펙 v1) — 전용 빌더. answerMode 는 '빈칸 변형'
+            // 설정(blankParaphrase)으로 갈리고, DN 은 설정 리졸버가 단일 전용으로
+            // 강제하므로(blankCount≥2 면 항상 false) 여기서 고려하지 않는다.
+            buildMdMultiBlankPrompt(
+              passage.content,
+              "full",
+              mdDifficulty,
+              blankCount === 3 ? 3 : 2,
+              blankParaphrase ? "PARAPHRASE" : "SOURCE_EXACT",
+            )
+          : buildMdBlankPrompt(passage.content, "full", mdDifficulty)
+        : buildMdGrammarPrompt(passage.content, "full", mdDifficulty, {
+            // 어법 비표준(26-07-23 스펙 v1) — 기본 5·1이면 기존 프롬프트와 바이트 동일.
+            markerCount,
+            answerCount,
+          });
     const extras: string[] = [];
     // ── 유형 세부 설정 블록(26-07-23) — fast 와 같은 계약을 md 프롬프트로 집행 ──
-    if (subType === "BLANK_INFERENCE") {
+    if (subType === "BLANK_INFERENCE" && blankCount >= 2) {
+      // 다중 빈칸: 단일 전용 모드 블록(부정-부정·'빈칸 변형 OFF' 축자 정답 절)은
+      // 주입하지 않는다 — 정답 모드는 위 빌더의 자체 절이 집행한다. 빈칸 단위·
+      // 포인트 집중은 프로덕션 계약대로 다중에도 적용(정찰 multiBlank §2-2).
+      if (blankGranularity !== "auto") {
+        const label =
+          blankGranularity === "word"
+            ? "단어"
+            : blankGranularity === "clause"
+              ? "절"
+              : "구";
+        extras.push(
+          `## 빈칸 단위 (교사 설정, 필수)\n- 각 빈칸원문은 반드시 ${label} 단위로 잡아라.`,
+        );
+      }
+      if (blankPointFocus) {
+        // 다중 빈칸은 프로덕션과 동일하게 빈칸별 코어 논리 분산 가이드를 쓴다.
+        const guidance = buildMultiBlankPointGuidance(blankCount, {
+          pointFocus: true,
+        });
+        if (guidance) extras.push(guidance);
+      }
+    } else if (subType === "BLANK_INFERENCE") {
       if (blankDoubleNegative) {
         // 부정-부정(부정 패러프레이즈) — 구형 dispatcher 계약의 핵심 증류판.
         extras.push(
@@ -733,10 +831,14 @@ export async function POST(req: NextRequest) {
           creditTxId = credit.transactionId;
           emit({ t: "meta", jobId: job.id });
 
-          // ── 생성 정책 (26-07-22 사용자 확정): 빈칸 = 원큐(스냅 보정이 주계통
-          // 커버, 48h 실패율 7%) / 어법 = 게이트 반려 시 1회 자동 재생성(반려가
-          // 품질이 아니라 기계 파손이고 콜당 ~10~20% 확률 꼬리라, 실패 카드
-          // 대신 재생성으로 흡수 — 48h 실패율 21% 근거).
+          // ── 생성 정책 (26-07-22 사용자 확정): 단일 빈칸 = 원큐(스냅 보정이
+          // 주계통 커버, 48h 실패율 7%) / 어법 = 게이트 반려 시 1회 자동 재생성
+          // (반려가 품질이 아니라 기계 파손이고 콜당 ~10~20% 확률 꼬리라, 실패
+          // 카드 대신 재생성으로 흡수 — 48h 실패율 21% 근거).
+          // 26-07-23 스펙 v1: 다중 빈칸(blankCount≥2)도 1회 재생성 허용 — 신형식
+          // (라벨식 빈칸원문·조합 선지)이라 초기 게이트 반려율 실측이 없어, 어법
+          // 도입기와 같은 보수 정책(실패 카드 대신 재생성 1회 흡수)으로 시작한다.
+          // 실측 누적 후 단일 빈칸처럼 원큐로 좁힐지 재결정한다.
           // 시간 예산: Vercel maxDuration 300s. 콜 타임아웃은 270s 벽까지 남은
           // 시간으로 잘라 함수 강제종료(잡 고아 → 환불 누락)를 막는다
           // (fast 라우트 deadlineAt 안전판 등가).
@@ -777,16 +879,27 @@ export async function POST(req: NextRequest) {
           });
           callResults.push(call);
           await recordGenerationCost(0, call);
-          let parsedMd = parseAndGate(subType, call.text, passage.content, teacherPoints);
+          const formatCounts = { blankCount, markerCount, answerCount };
+          let parsedMd = parseAndGate(
+            subType,
+            call.text,
+            passage.content,
+            teacherPoints,
+            formatCounts,
+          );
           let firstGateIssues: string[] | null = null;
+          // 재생성 적격: 어법(기존 정책 유지) + 다중 빈칸(위 정책 주석 근거).
+          const retryEligible =
+            subType === "GRAMMAR_ERROR" ||
+            (subType === "BLANK_INFERENCE" && blankCount >= 2);
           if (
-            subType === "GRAMMAR_ERROR" &&
+            retryEligible &&
             parsedMd.gateIssues.length > 0 &&
             budgetMs() > 30_000
           ) {
             firstGateIssues = parsedMd.gateIssues;
             console.error(
-              "[md-stream] gate rejected — grammar retry",
+              "[md-stream] gate rejected — retry",
               parsedMd.gateIssues,
             );
             emit({
@@ -806,6 +919,7 @@ export async function POST(req: NextRequest) {
               retryCall.text,
               passage.content,
               teacherPoints,
+              formatCounts,
             );
             // 재생성이 더 나빠지지 않았을 때만 채택 — 남은 반려는 아래 공통
             // 반려 블록이 실패·환불 처리한다(재재생성 없음).
@@ -814,7 +928,8 @@ export async function POST(req: NextRequest) {
               parsedMd = retryParsed;
             }
           }
-          // 반려 확정 = 즉시 실패·환불(빈칸은 원큐, 어법은 재생성 1회 소진 후).
+          // 반려 확정 = 즉시 실패·환불(단일 빈칸은 원큐, 어법·다중 빈칸은
+          // 재생성 1회 소진 후).
           // 깨진 문항은 저장하지 않고, 재시도는 사용자의 다음 클릭이다(양치기).
           // 반려 사유 원문은 지문 조각을 포함할 수 있어 사용자 표면에는 내지
           // 않되, 실패 계통 추적을 위해 잡 result 에 남긴다(FAILED 잡의 result
@@ -830,6 +945,11 @@ export async function POST(req: NextRequest) {
                 data: {
                   result: {
                     mdStream: true,
+                    // 형식 메타(26-07-23 스펙 v1) — 실패 계통을 형식별로 추적.
+                    mdFormat:
+                      subType === "BLANK_INFERENCE"
+                        ? { blankCount }
+                        : { markerCount, answerCount },
                     gateIssues: parsedMd.gateIssues.map((i) => i.slice(0, 300)),
                     ...(firstGateIssues
                       ? {
@@ -860,11 +980,19 @@ export async function POST(req: NextRequest) {
                       ? "PARAPHRASE"
                       : "SOURCE_EXACT",
                 )
-              : adaptMdGrammarToAiQuestion(
-                  parsedMd.question,
-                  passage.content,
-                  effectiveDifficulty,
-                );
+              : parsedMd.question.kind === "multiBlank"
+                ? adaptMdMultiBlankToAiQuestion(
+                    parsedMd.question,
+                    passage.content,
+                    effectiveDifficulty,
+                    // DN 은 단일 빈칸 전용(리졸버 강제) — 두 모드만 존재한다.
+                    blankParaphrase ? "PARAPHRASE" : "SOURCE_EXACT",
+                  )
+                : adaptMdGrammarToAiQuestion(
+                    parsedMd.question,
+                    passage.content,
+                    effectiveDifficulty,
+                  );
           if (!adapt.ok || !adapt.aiQuestion) {
             throw new Error(`생성 결과 변환 실패: ${adapt.error ?? "unknown"}`);
           }
@@ -892,9 +1020,18 @@ export async function POST(req: NextRequest) {
             question: finalQuestion,
             passage: passage.content,
             requestedDifficulty: effectiveDifficulty,
+            // 26-07-23 스펙 v1: 5·1 하드코딩 제거 — resolved 실값으로 검증한다
+            // (기본 5·1이면 종전과 동일 값). 다중 빈칸은 blankCount·paraphrase
+            // 실값을 넘겨 멀티 검증기 라우팅·모드 판정을 정확히 태운다(단일
+            // 빈칸은 종전대로 미주입 — 기존 기록 동작 무회귀).
             ...(subType === "GRAMMAR_ERROR"
-              ? { grammarMarkerCount: 5, grammarAnswerCount: 1 }
-              : {}),
+              ? { grammarMarkerCount: markerCount, grammarAnswerCount: answerCount }
+              : blankCount >= 2
+                ? {
+                    blankInferenceBlankCount: blankCount,
+                    blankInferenceParaphraseAnswer: blankParaphrase,
+                  }
+                : {}),
           });
           const tags = mergeQuestionGenerationPlanTag(
             [],
@@ -941,6 +1078,12 @@ export async function POST(req: NextRequest) {
                   debugTiming,
                   fastPath: true,
                   mdStream: true,
+                  // 형식 메타(26-07-23 스펙 v1) — 신형식(다중 빈칸·어법 비표준)
+                  // 산출물의 형식별 계측·포렌식용.
+                  mdFormat:
+                    subType === "BLANK_INFERENCE"
+                      ? { blankCount }
+                      : { markerCount, answerCount },
                   mdCorrections: parsedMd.corrections,
                   qualityIssues: qualityIssues
                     .filter((issue) => issue.severity === "error")

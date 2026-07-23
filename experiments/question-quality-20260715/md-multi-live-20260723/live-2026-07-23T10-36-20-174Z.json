@@ -1,0 +1,194 @@
+{
+  "generatedAt": "2026-07-23T10:36:20.176Z",
+  "model": "google/gemini-3-flash-preview",
+  "passageId": "cmrx3sqt00005l104imhx8rjj",
+  "passageTitle": "2025학년도 고3 10월 영어 40번 · 요약문 (변형)",
+  "rows": [
+    {
+      "key": "blank2-para",
+      "label": "빈칸2 PARAPHRASE",
+      "durationMs": 29179,
+      "costUsd": 0.0094755,
+      "gate": "PASS",
+      "corrections": [],
+      "adapter": "PASS",
+      "postprocess": "PASS",
+      "ppWarnings": [],
+      "validateErrors": [],
+      "validateWarnings": [
+        "few-key-points"
+      ],
+      "spotChecks": [
+        {
+          "name": "passageWithBlank 마커 (A)(B)",
+          "ok": true,
+          "detail": "(A):있음 (B):있음"
+        },
+        {
+          "name": "정답 blankValues 전부 재진술(비축자)",
+          "ok": true,
+          "detail": "축자 여부: [false, false]"
+        },
+        {
+          "name": "선지 5·값 개수 일치",
+          "ok": true,
+          "detail": "선지 5개, 값 [2,2,2,2,2]"
+        }
+      ],
+      "rawText": "빈칸원문(A): a regime of commands and prohibitions\n빈칸원문(B): identify the most unbearable ones in ourselves\n\n① a structured network of mandatory rules and restrictions …… confront the most overwhelming aspects of our inner life\n② a structured network of mandatory rules and restrictions …… isolate the self from the potentially harmful influence of affects\n③ a total suspension of institutionalized social control …… confront the most overwhelming aspects of our inner life\n④ a framework designed to empower individual freedom …… suppress the primitive drives that threaten social stability\n⑤ an organized system of collective behavioral norms …… avoid the unbearable reality of our internal psychological world\n\n정답: ①\n\n해설: 법은 인간 본성의 폭력성으로 인해 사회 질서 유지를 위한 (A) '명령과 금지의 체계'를 필수적으로 요구하며, 이와 대조적으로 영화는 법이 억제하려는 인간의 감정적 영역을 드러내어 우리로 하여금 (B) '자신 안의 견디기 힘든 감정들을 식별하게' 만듭니다. 따라서 (A)에는 법의 속성인 강제적 규범성이, (B)에는 영화의 기능인 내면의 고통스러운 감정 직시가 들어가야 합니다.\n\n오답:\n② (A)는 정답과 동일한 적절한 재진술이나, (B)에서 영화의 역할을 ‘감정의 영향으로부터 자아를 고립시키는 것’(법의 역할)으로 설명했기에 틀린 near-miss 선지입니다.\n③ (B)는 정답과 동일한 적절한 재진술이나, (A)에서 법의 역할을 ‘제도적 사회 통제의 전면적 중단’이라는 정반대의 논리로 설명했기에 틀린 near-miss 선지입니다.\n④ (A)에서 법을 ‘개인적 자유를 강화하는 틀’로, (B)에서 영화를 ‘원초적 충동을 억제하는 것’(법의 역할)으로 설명하여 두 빈칸 모두 지문의 논리 방향과 어긋납니다.\n⑤ (A)는 법의 속성을 어느 정도 반영하고 있으나, (B)에서 영화가 ‘내면의 심리적 세계를 회피하게 한다’고 설명하여 영화의 역할(직면)을 정반대로 왜곡했습니다."
+    },
+    {
+      "key": "blank3-para",
+      "label": "빈칸3 PARAPHRASE",
+      "durationMs": 30014,
+      "costUsd": 0.0123985,
+      "gate": "PASS",
+      "corrections": [],
+      "adapter": "PASS",
+      "postprocess": "PASS",
+      "ppWarnings": [],
+      "validateErrors": [],
+      "validateWarnings": [
+        "few-key-points"
+      ],
+      "spotChecks": [
+        {
+          "name": "passageWithBlank 마커 (A)(B)(C)",
+          "ok": true,
+          "detail": "(A):있음 (B):있음 (C):있음"
+        },
+        {
+          "name": "정답 blankValues 전부 재진술(비축자)",
+          "ok": true,
+          "detail": "축자 여부: [false, false, false]"
+        },
+        {
+          "name": "선지 5·값 개수 일치",
+          "ok": true,
+          "detail": "선지 5개, 값 [3,3,3,3,3]"
+        }
+      ],
+      "rawText": "빈칸원문(A): anxiety about human nature\n빈칸원문(B): keeps it in check\n빈칸원문(C): forcing us to identify the most unbearable ones\n\n① fundamental unease over inherent qualities of man …… encourages the free release of passions …… compelling us to recognize the most intolerable aspects\n② intrinsic apprehension regarding the human condition …… imposes restrictive boundaries upon it …… shielding us from confronting internal turmoil\n③ belief in the ultimate goodness of the soul …… maintains rigorous control over it …… prompting a detachment from emotional reality\n④ intrinsic apprehension regarding the human condition …… imposes restrictive boundaries upon it …… compelling us to recognize the most intolerable aspects\n⑤ longing for a utopian societal order …… yields to the spontaneous flow of feelings …… allowing us to neglect the darker parts of our psyche\n\n정답: ④\n\n해설: 법의 근간이 인간의 욕망과 폭력성에 대한 우려에서 비롯된다는 점을 통해 (A)의 근거를 도출하고, 영화가 감정을 표현하는 것과 대조적으로 법은 이를 억제한다는 문장 구조를 통해 (B)를 확정할 수 있습니다. 마지막으로 법이 감정을 억압하려 할 때 영화는 오히려 우리로 하여금 자신의 가장 견디기 힘든 감정까지 직면하게 유도한다는 대조적 서명을 통해 (C)를 완성할 수 있습니다.\n\n오답:\n① (B)의 '열정의 자유로운 분출을 장려한다'는 법이 감정적 삶을 억제하고 질서를 유지한다는 지문 전체의 논지와 정면으로 충돌하므로 오답입니다. (한 빈칸만 틀린 선지)\n② (C)의 '내면의 혼란을 직면하지 않게 보호한다'는 영화가 우리를 고통스러운 감정과 마주하게 한다는 설명과 정반대의 방향성을 가지므로 오답입니다. (한 빈칸만 틀린 선지)\n③ (A)의 '영혼의 선함에 대한 믿음'은 법이 인간의 위험한 본성에 대한 불안 때문에 존재한다는 본문의 전제와 어긋나며, (C) 또한 영화가 감정을 회피하게 만든다는 잘못된 진술입니다.\n⑤ (A)의 '유토피아적 질서'는 법이 다루는 '인간 관계의 난잡함'과 대조되는 개념이며, (B)와 (C)는 법과 영화의 각 역할을 뒤바꾸어 설명하고 있기에 오답입니다."
+    },
+    {
+      "key": "blank2-exact",
+      "label": "빈칸2 SOURCE_EXACT",
+      "durationMs": 32887,
+      "costUsd": 0.0130135,
+      "gate": "PASS",
+      "corrections": [],
+      "adapter": "PASS",
+      "postprocess": "PASS",
+      "ppWarnings": [],
+      "validateErrors": [],
+      "validateWarnings": [
+        "few-key-points"
+      ],
+      "spotChecks": [
+        {
+          "name": "passageWithBlank 마커 (A)(B)",
+          "ok": true,
+          "detail": "(A):있음 (B):있음"
+        },
+        {
+          "name": "정답 blankValues 전부 원문 축자",
+          "ok": true,
+          "detail": "축자 여부: [true, true]"
+        },
+        {
+          "name": "선지 5·값 개수 일치",
+          "ok": true,
+          "detail": "선지 5개, 값 [2,2,2,2,2]"
+        }
+      ],
+      "rawText": "빈칸원문(A): too violent to exist in a state of nature\n빈칸원문(B): identify the most unbearable ones in ourselves\n\n① too civil to conform to institutional order …… suppress the messiness of human relations\n② too violent to exist in a state of nature …… keep our cultural consciousness in order\n③ too violent to exist in a state of nature …… identify the most unbearable ones in ourselves\n④ too overwhelmed by his own creative media …… identify the most unbearable ones in ourselves\n⑤ too empathetic to respect the rules of law …… ignore the fundamental tensions of society\n\n정답: ③\n\n해설: 인간 본성에 대한 법의 근원적 불안은 인간이 욕망을 지닌 동시에 '자연 상태에서는 존재할 수 없을 만큼 폭력적(A)'이라는 인식에서 기인하며, 이 때문에 명령과 금지의 체계가 요구됩니다. 한편, 감정을 억제하려는 법의 속성과 달리 영화는 감정을 직면하게 하며 우리 내면의 '가장 견디기 힘든 것들을 식면(B)'하게 강제한다는 점에서 두 체제의 결정적 차이가 발생하므로 ③이 정답입니다.\n\n오답:\n① 법이 필요한 이유는 인간이 너무 시민적(civil)이기 때문이 아니며, 인간관계의 혼란상을 억제하는 것은 영화가 아닌 법의 역할입니다.\n② 빈칸 (A)는 정확하게 추론했으나, (B)에서 문화적 의식의 질서를 유지하는 것은 법의 기능적 측면을 영화에 잘못 투영한 것이므로 틀린 Near-miss 선지입니다. \n④ 빈칸 (B)는 정확하게 추론했으나, 인간이 자신의 창의적 매체에 압도당해 법이 필요해진다는 논리는 지문의 인과관계에 부합하지 않는 Near-miss 선지입니다.\n⑤ 인간이 너무 공감 능력이 좋아 법을 어긴다는 진술은 지문의 '폭력성' 언급과 충돌하며, 사회의 근본적 긴장을 무시한다는 설정 또한 첫 문장의 '스토리텔링은 거울'이라는 전제와 어긋납니다."
+    },
+    {
+      "key": "grammar7x2",
+      "label": "어법 7마커·2정답",
+      "durationMs": 56168,
+      "costUsd": 0.0251735,
+      "gate": "PASS",
+      "corrections": [],
+      "adapter": "PASS",
+      "postprocess": "PASS",
+      "ppWarnings": [],
+      "validateErrors": [
+        "grammar-killer-answer-point-repeated",
+        "grammar-killer-generic-answer-point",
+        "grammar-explanation-lint"
+      ],
+      "validateWarnings": [
+        "few-key-points"
+      ],
+      "spotChecks": [
+        {
+          "name": "correctAnswers 2개",
+          "ok": true,
+          "detail": "실제 2개: (A), (F)"
+        },
+        {
+          "name": "발문 '모두 고르시오'",
+          "ok": true,
+          "detail": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것을 모두 고르시오."
+        },
+        {
+          "name": "오답해설 키 5개",
+          "ok": true,
+          "detail": "실제 5개"
+        },
+        {
+          "name": "마커 7·isError 2",
+          "ok": true,
+          "detail": "마커 7, isError 2"
+        }
+      ],
+      "rawText": "밑줄지문:\nThroughout history, storytelling has served as a mirror reflecting the fundamental tensions of social organization. We often look to creative media to explore our deepest desires, while simultaneously [[A:rely]] on institutional structures to maintain order. These two parallel systems are [[B:inextricably]] linked in how they influence our cultural consciousness. Cinema and law share the same subjects and audience. Rather than an abstract desire for truth as a value in itself, the law deals with the messiness of human relations. Both disciplines struggle with what it means to be human and try to communicate to us something about our existence; both are human artifacts [[C:directed]] at man. Indeed, foundational to law [[D:is]] its anxiety about human nature: man desires but is simultaneously too violent to exist in a state of nature without a regime of commands and prohibitions. However, there is also an important difference here that [[E:makes]] a study of the interaction between cinema and law interesting: while cinema expresses man's affective life, the law keeps it in check. It tries to ensure that we are not overwhelmed and destroyed by our desires and drives. The law obsessively tries to suppress affects, fearing the horror of their consequences, whereas cinema introduces us to our affects, often [[F:forced]] us to identify the most unbearable ones in [[G:ourselves]].\n\n원형·포인트:\n(A) relying | a\n(B) inextricably | f\n(C) directed | c\n(D) is | d\n(E) makes | d\n(F) forcing | c\n(G) ourselves | g\n\n정답: (A), (F)\n\n고침(A): relying\n고침(F): forcing\n\n해설:\n(A) 접속사 while이 이끄는 분사구문 자리입니다. 주절의 주어인 We를 의미상 주어로 하며 뒤에 목적어(institutional structures)가 뒤따르므로, 현재분사 relying이 와야 합니다. 본동사인 look과 병렬 구조를 이룬다고 착각하기 쉬우나, 접속사 while 뒤에 주어 없이 동사 원형(rely)이 단독으로 올 수는 없습니다.\n\n(F) cinema를 주어로 하는 분사구문 자리로, 목적어인 'us'를 취하고 있으므로 능동의 의미를 지닌 현재분사 forcing이 적절합니다. 문장 앞부분의 introduces와 병렬을 이루는 과거형 동사(forced)로 착각할 수 있으나, 문맥상 현재 시제의 흐름이며 접속사(and) 없이는 동사가 거듭 기술될 수 없는 구조입니다.\n\n오답:\n(B) 수동태 linked를 수식하는 부사 자리입니다. '밀접하게 연결된'이라는 의미로 동사의 성질을 수식하므로 형용사 inextricable이 아닌 부사가 오는 것이 적절합니다.\n(C) 과거분사의 후치수식입니다. '인간을 향하는 인공물'이라는 의미로 artifacts를 수식하며, 목적어 없이 전치사구(at man)가 이어지므로 수동 의미의 directed는 적절합니다.\n(D) 보어인 foundational to law가 문두로 나간 도치 문장의 수일치입니다. 실제 주어는 동사 뒤의 its anxiety이므로 단수 동사 is는 적절하며, 도치 구조를 파악하는 것이 핵심입니다.\n(E) 주격 관계대명사 절 내의 수일치입니다. 선행사가 전치사구 앞의 an important difference이므로 단수 동사 makes는 적절하며, 수식어 수일치 혼동을 유도하는 함정입니다.\n(G) 재귀대명사의 재귀 용법입니다. cinema가 '우리(us)'에게 감정을 소개하고, '우리 자신(ourselves)' 속에 있는 것을 식별하게 하는 주체와 대상이 동일한 맥락이므로 적절합니다."
+    },
+    {
+      "key": "grammar10x3",
+      "label": "어법 10마커·3정답",
+      "durationMs": 34180,
+      "costUsd": 0.014033,
+      "gate": "PASS",
+      "corrections": [],
+      "adapter": "PASS",
+      "postprocess": "PASS",
+      "ppWarnings": [],
+      "validateErrors": [
+        "grammar-killer-answer-point-repeated",
+        "grammar-killer-overdrilled-answer",
+        "grammar-killer-overdrilled-answer",
+        "grammar-killer-overdrilled-answer",
+        "grammar-too-basic-decoys",
+        "grammar-weak-filler-decoys"
+      ],
+      "validateWarnings": [
+        "few-key-points"
+      ],
+      "spotChecks": [
+        {
+          "name": "correctAnswers 3개",
+          "ok": true,
+          "detail": "실제 3개: (D), (E), (H)"
+        },
+        {
+          "name": "발문 '모두 고르시오'",
+          "ok": true,
+          "detail": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것을 모두 고르시오."
+        },
+        {
+          "name": "오답해설 키 7개",
+          "ok": true,
+          "detail": "실제 7개"
+        },
+        {
+          "name": "마커 10·isError 3",
+          "ok": true,
+          "detail": "마커 10, isError 3"
+        }
+      ],
+      "rawText": "밑줄지문:\nThroughout history, storytelling has served as a mirror [[A:reflecting]] the fundamental tensions of social organization. We often look to creative media to explore our deepest desires, [[B:while]] simultaneously relying on institutional structures to maintain order. These two parallel systems are inextricably linked in how they [[C:influence]] our cultural consciousness. Cinema and law share the same subjects and audience. Rather than an abstract desire for truth as a value in itself, the law deals with the messiness of human relations. Both disciplines struggle with [[D:that]] it means to be human and try to communicate to us something about our existence; both are human artifacts directed at man. Indeed, foundational to law [[E:are]] its anxiety about human nature: man desires but is simultaneously too violent [[F:to exist]] in a state of nature without a regime of commands and prohibitions. However, there is also an important difference here that [[G:makes]] a study of the interaction between cinema and law [[H:interestingly]]: while cinema expresses man's affective life, the law keeps it in check. It tries to ensure that we are not overwhelmed and destroyed by our desires and drives. The law obsessively tries to suppress affects, [[I:fearing]] the horror of their consequences, whereas cinema introduces us to our affects, often forcing us to identify the most unbearable [[J:ones]] in ourselves.\n\n원형·포인트:\n(A) reflecting | c\n(B) while | b\n(C) influence | a\n(D) what | b\n(E) is | d\n(F) to exist | k\n(G) makes | d\n(H) interesting | f\n(I) fearing | c\n(J) ones | g\n\n정답: (D), (E), (H)\n고침(D): what\n고침(E): is\n고침(H): interesting\n\n해설:\n(D) 전치사의 목적어 역할을 하는 명사절에서 타동사 'means'의 목적어가 비어 있으며, 문맥상 '것'이라는 의미를 나타내야 하므로 접속사 'that'을 관계대명사 'what'으로 고쳐야 합니다.\n(E) 형용사구 'foundational to law'가 문두로 도치된 문장이며, 문장의 진정한 주어는 단수 명사인 'its anxiety'이므로 복수 동사 'are'를 단수 동사인 'is'로 고쳐야 합니다.\n(H) 5형식 동사 'makes'의 목적어는 'a study (of the interaction between cinema and law)'이며 그 뒤는 목적어의 상태를 설명하는 목적격 보어 자리이므로, 부사 'interestingly'를 형용사인 'interesting'으로 고쳐야 합니다.\n\n오답:\n(A) 분사구문이 아닌 현재분사가 앞의 명사 'mirror'를 능동적으로 수식하고 있으며 의미상 적절한 구조입니다.\n(B) 부사절 접속사로서 뒤에 분사구문 'relying'을 동반하여 '동시에 의존하면서'라는 대조 혹은 부수 상황을 나타내는 정상적인 표현입니다.\n(C) 'how'가 이끄는 명사절 내에서 주어인 'they'에 연결되는 정동사 자리이며, 시제와 수일치가 올바르게 구현되었습니다.\n(F) 'too ~ to' 용법으로 사용되어 앞의 형용사 'violent'를 수식하며 '존재하기에는 너무 ~한'이라는 의미를 완성하는 부사적 용법의 부정사입니다.\n(G) 'that'이 이끄는 관계절 내에서 선행사인 'difference'가 아닌, 수식어구의 핵인 'a study'를 주어로 보고 단수 동사를 쓴 것이 적절합니다.\n(I) 문장의 주어인 'The law'가 뒤에 오는 목적어인 'the horror'를 능동적으로 두려워한다는 의미를 나타내는 분사구문으로 적절한 형태입니다.\n(J) 앞에 나온 복수 명사인 'affects'를 대신하는 부정대명사로, 수의 일치와 문맥상 지시 대상이 명확합니다."
+    }
+  ]
+}
