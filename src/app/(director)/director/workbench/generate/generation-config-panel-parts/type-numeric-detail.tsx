@@ -1193,7 +1193,7 @@ export function renderBlankInferenceDetail({ blankInferenceBlankCount, blankSett
                   ...(next ? { doubleNegative: false } : {}),
                 });
               }}
-              className={`relative h-6 w-11 rounded-full border transition-colors ${
+              className={`relative h-6 w-11 shrink-0 rounded-full border transition-colors ${
                 paraActive
                   ? dnActive
                     ? "cursor-not-allowed border-blue-200 bg-blue-400/80"
@@ -1251,7 +1251,7 @@ export function renderBlankInferenceDetail({ blankInferenceBlankCount, blankSett
                 // 사용자가 두었던 원래 값으로 복귀한다.
                 updateBlankSetting({ doubleNegative: next });
               }}
-              className={`relative h-6 w-11 rounded-full border transition-colors ${
+              className={`relative h-6 w-11 shrink-0 rounded-full border transition-colors ${
                 isMultiBlank
                   ? "cursor-not-allowed border-slate-200 bg-slate-100"
                   : blankSettings.doubleNegative
@@ -1391,7 +1391,7 @@ export function renderVocabChoiceDetail({ patchTypeSettings, questionTypeSetting
                   synonymVariants: !vocabSynonymVariants,
                 })
               }
-              className={`relative h-6 w-11 rounded-full border transition-colors ${
+              className={`relative h-6 w-11 shrink-0 rounded-full border transition-colors ${
                 vocabSynonymVariants
                   ? "border-blue-300 bg-blue-500"
                   : "border-slate-200 bg-slate-200"
@@ -1461,7 +1461,7 @@ export function renderSentenceInsertDetail({ patchTypeSettings, questionTypeSett
                   paraphrasePrefix: !sentenceInsertParaphrasePrefix,
                 })
               }
-              className={`relative h-6 w-11 rounded-full border transition-colors ${
+              className={`relative h-6 w-11 shrink-0 rounded-full border transition-colors ${
                 sentenceInsertParaphrasePrefix
                   ? "border-blue-300 bg-blue-500"
                   : "border-slate-200 bg-slate-200"
