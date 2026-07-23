@@ -425,10 +425,12 @@ export async function POST(req: NextRequest) {
   // 탄다(기존엔 fast 로 보내 스트리밍이 없었음 — 실사용 지적). 포인트는 아래에서
   // fast 와 동일 계약(클램프+축자 필터)으로 읽어 프롬프트 강제 + 결정론 준수
   // 게이트로 집행한다.
-  // 부정-부정(DOUBLE_NEGATIVE) 공예는 md 프롬프트에 미탑재 — 설정 계약 보존을
-  // 위해 fast(전용 공예 보유)로 보낸다.
+  // 26-07-23 부정-부정 md 승차(사용자 확정: "빈칸·어법은 어떤 설정이든 무조건
+  // 신형"): DN 공예를 md 모드 블록으로 탑재 — fast 라우팅 제외를 철회한다.
+  // 잔여 md 밖 형식: 다중 빈칸(blankCount≥2)·어법 비표준(마커≠5·정답≥2)은
+  // 문항 형식 자체가 달라 md 공예·파서 신설이 필요한 별도 설계 대상.
   const mdEligible =
-    (subType === "BLANK_INFERENCE" && blankCount === 1 && !blankDoubleNegative) ||
+    (subType === "BLANK_INFERENCE" && blankCount === 1) ||
     (subType === "GRAMMAR_ERROR" && markerCount === 5 && answerCount === 1);
   if (!mdEligible) {
     return NextResponse.json(
@@ -624,7 +626,20 @@ export async function POST(req: NextRequest) {
     const extras: string[] = [];
     // ── 유형 세부 설정 블록(26-07-23) — fast 와 같은 계약을 md 프롬프트로 집행 ──
     if (subType === "BLANK_INFERENCE") {
-      if (!blankParaphrase) {
+      if (blankDoubleNegative) {
+        // 부정-부정(부정 패러프레이즈) — 구형 dispatcher 계약의 핵심 증류판.
+        extras.push(
+          [
+            "## 정답 형식: 부정-부정 빈칸 (필수 — 위의 정답 형식 지시를 이 절이 대체한다)",
+            "- 정답 선지는 빈칸원문의 의미를 정확히 보존하는 **부정/결여 패러프레이즈**다: not+반대 개념, without, lack(ing), fail to, prevent/keep ... from, cannot ... without, free from, non-/un-/in- 계열 중 **명확한 부정 기제 1개**를 사용하라.",
+            "- 빈칸원문은 여전히 지문 축자 그대로 뽑는다(변형은 정답 선지에서만 일어난다).",
+            "- 표적은 논리적 동작·관계를 담은 구(동사구·동명사구·분사구·수식 명사구)로 잡아라 — 단일 추상명사, 구두점 포함 구간, 예시 나열 자리(such as/including 뒤)는 금지.",
+            "- 부정 기제 사슬 금지: not...without 꼬임, fail 중복, 'No 주어 + 부정 술어' 구조는 만들지 마라. 정답을 빈칸에 끼운 완성문이 자연스럽고 원문과 논리 등가(축소·과장·반전 없음)인지 소리 내어 검산하라.",
+            "- 문법 슬롯 보존: 전치사 뒤 빈칸이면 정답이 또 전치사로 시작하면 안 되고, be동사 뒤면 보어구여야 한다.",
+            "- 오답 설계: **최소 2개의 오답에도 부정/결여 표현을 넣어** 부정어 유무만으로 정답이 식별되지 않게 하라. 오답은 지문 키워드·같은 의미장을 재활용하되 극성·범위·인과 역할·논지 방향의 미세한 이동으로 틀리게 만든다. 형식·길이·추상 층위는 다섯 선지 평행.",
+          ].join("\n"),
+        );
+      } else if (!blankParaphrase) {
         extras.push(
           `## 정답 형식 (필수 — 위의 '추상 패러프레이즈' 지시보다 우선한다)\n- '빈칸 변형' 미사용 설정이다: 정답 선지는 빈칸원문을 **한 글자도 바꾸지 말고 그대로** 써라.\n- 오답 4개는 정답과 같은 문법 형식·길이·추상 층위로 설계해, 원문 축자 정답이 형식만으로 표나지 않게 하라. 오답 기제 4종 규칙은 그대로 적용한다.`,
         );
@@ -839,7 +854,11 @@ export async function POST(req: NextRequest) {
                   parsedMd.question,
                   passage.content,
                   effectiveDifficulty,
-                  blankParaphrase ? "PARAPHRASE" : "SOURCE_EXACT",
+                  blankDoubleNegative
+                    ? "DOUBLE_NEGATIVE"
+                    : blankParaphrase
+                      ? "PARAPHRASE"
+                      : "SOURCE_EXACT",
                 )
               : adaptMdGrammarToAiQuestion(
                   parsedMd.question,

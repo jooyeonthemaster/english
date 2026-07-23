@@ -73,10 +73,11 @@ export function adaptMdBlankToAiQuestion(
   q: MdBlankQuestion,
   passage: string,
   difficulty: string,
-  // "빈칸 변형(정답 패러프레이즈)" 설정의 집행 지점(26-07-23): ON=PARAPHRASE
-  // (공예 정답 유지), OFF=SOURCE_EXACT — 후처리가 정답 선지를 빈칸원문 축자로
-  // 강제해 설정 계약("정답 선지를 원문 그대로")을 결정론으로 보장한다.
-  answerMode: "PARAPHRASE" | "SOURCE_EXACT" = "PARAPHRASE",
+  // "빈칸 변형(정답 패러프레이즈)"·"부정-부정" 설정의 집행 지점(26-07-23):
+  // PARAPHRASE=공예 재진술 정답, SOURCE_EXACT=후처리가 정답 선지를 빈칸원문
+  // 축자로 강제(설정 계약의 결정론 보장), DOUBLE_NEGATIVE=부정 패러프레이즈
+  // (후처리는 PARAPHRASE 와 같은 transformed 모드로 취급 — 정답 보존).
+  answerMode: "PARAPHRASE" | "SOURCE_EXACT" | "DOUBLE_NEGATIVE" = "PARAPHRASE",
 ): MdBlankAdaptResult {
   const oe = q.originalExpression?.trim();
   if (!oe) return { ok: false, error: "빈칸원문 누락" };
