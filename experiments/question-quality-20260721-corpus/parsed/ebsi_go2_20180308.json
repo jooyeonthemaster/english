@@ -1,0 +1,770 @@
+{
+ "examId": "ebsi_go2_20180308",
+ "source": "ebsi_go2_20180308_paper_eng_mun_3qrB0Xn2_10.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ① He’s working on a new novel. ② There’ll be a book signing in New York. ③ His new novel will be published in ",
+   "choices": [
+    "He’s working on a new novel.",
+    "There’ll be a book signing in New York.",
+    "His new novel will be published in April.",
+    "It’s in the newrelease section over there.",
+    "You can find a bigger bookstore down the street."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 264
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ① It’s cheaper to buy them at this store. ② You have to ask the store for a refund. ③ I had the groceries deli",
+   "choices": [
+    "It’s cheaper to buy them at this store.",
+    "You have to ask the store for a refund.",
+    "I had the groceries delivered this morning.",
+    "They become waste and hurt the environment.",
+    "We should consume more vegetables than meat."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 274
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을 듣고, 남자가 하는 말의 목적으로 가장 적절한 것을 고르시오. ① 드론 동호회 회원을 모집하려고 ② 새로 출시된 드론을 광고하려고 ③ 드론 사용 시 유의 사항을 안내하려고 ④ 드론의 다양한 응용 분야를 설명하려고 ⑤ 드론 조종 자격증의 취득 방법을 알려주려고",
+   "choices": [
+    "드론 동호회 회원을 모집하려고",
+    "새로 출시된 드론을 광고하려고",
+    "드론 사용 시 유의 사항을 안내하려고",
+    "드론의 다양한 응용 분야를 설명하려고",
+    "드론 조종 자격증의 취득 방법을 알려주려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 153
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 여자의 의견으로 가장 적절한 것을 고르시오. ① 아이의 건강을 위해 친환경 제품을 쓰는 것이 좋다. ② 이사를 자주 하는 것은 아이의 정서 발달에 해롭다. ③ 거주지를 결정할 때는 교육 시설을 고려할 필요가 있다. ④ 낯선 환경을 경험하는 것은 문제 해결 능력을 향상",
+   "choices": [
+    "아이의 건강을 위해 친환경 제품을 쓰는 것이 좋다.",
+    "이사를 자주 하는 것은 아이의 정서 발달에 해롭다.",
+    "거주지를 결정할 때는 교육 시설을 고려할 필요가 있다.",
+    "낯선 환경을 경험하는 것은 문제 해결 능력을 향상시킨다.",
+    "어린 시절을 자연과 보내는 것이 아이의 발달에 중요하다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 199
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 두 사람의 관계를 가장 잘 나타낸 것을 고르시오. ① 인테리어 디자이너– 의뢰인 ② 의류 판매업자– 패션모델 ③ 건물 주인– 세입자 ④ 식당 종업원– 손님 ⑤ 요리사– 견습생",
+   "choices": [
+    "인테리어 디자이너– 의뢰인",
+    "의류 판매업자– 패션모델",
+    "건물 주인– 세입자",
+    "식당 종업원– 손님",
+    "요리사– 견습생"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 109
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는것을 고르시오. ① ② ③ ④ ⑤",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 51
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 여자가 할 일로 가장 적절한 것을 고르시오. ① 지하철 타기 ② 음료 구매하기 ③ 영화표 예매하기 ④ 관람할 영화 고르기 ⑤ 상영관 확인하기",
+   "choices": [
+    "지하철 타기",
+    "음료 구매하기",
+    "영화표 예매하기",
+    "관람할 영화 고르기",
+    "상영관 확인하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 90
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, 남자가 전단지를 만들지 않는이유를 고르시오. ① 개인 정보 노출을 원하지 않아서 ②홍보 효과가 적을 것 같아서 ③ 룸메이트를 이미 구해서 ④ 만드는 데 시간이 오래 걸려서 ⑤ 인터넷으로 광고하는 것이 더 편해서",
+   "choices": [
+    "개인 정보 노출을 원하지 않아서",
+    "홍보 효과가 적을 것 같아서",
+    "룸메이트를 이미 구해서",
+    "만드는 데 시간이 오래 걸려서",
+    "인터넷으로 광고하는 것이 더 편해서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 129
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 대화를 듣고, 남자가 지불할 금액을 고르시오. ① $45 ② $50 ③ $54 ④ $60 ⑤ $63",
+   "choices": [
+    "$45",
+    "$50",
+    "$54",
+    "$60",
+    "$63"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 59
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 대화를 듣고, Dream Surf Camp에 관해 언급되지 않은것을 고르시오. ① 캠프 기간 ② 캠프 장소 ③ 예약 방법 ④ 강습 횟수 ⑤ 강습 내용",
+   "choices": [
+    "캠프 기간",
+    "캠프 장소",
+    "예약 방법",
+    "강습 횟수",
+    "강습 내용"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 89
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. Taste of Italy Tour에 관한 다음 내용을 듣고, 일치하지 않는것을 고르시오. [3점] ① 6시간 동안 투어가 진행된다. ② 이탈리아 음식을 맛볼 수 있다. ③ 가이드와 현지 시장을 방문한다. ④ 추가 비용 없이 와인 한 잔이 제공된다. ⑤ 인터넷으로 예약을 할 수 ",
+   "choices": [
+    "6시간 동안 투어가 진행된다.",
+    "이탈리아 음식을 맛볼 수 있다.",
+    "가이드와 현지 시장을 방문한다.",
+    "추가 비용 없이 와인 한 잔이 제공된다.",
+    "인터넷으로 예약을 할 수 있다. \n2018학년도 3월 고2 전국연합학력평가 문제지\n제3 교시\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 263
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 다음 표를 보면서 대화를 듣고, 여자가 주문할 휴지통을 고르시오. Trash Cans for Sale Model Size (liter) Open Type Material Shape ① A swing lid plastic oval ② B swing lid stainless stee",
+   "choices": [
+    "A\nswing lid\nplastic\noval",
+    "B\nswing lid\nstainless steel\nrectangle",
+    "C\nmotion sensor\nplastic\noval",
+    "D\nmotion sensor\nstainless steel\noval",
+    "E\nmotion sensor\nstainless steel\nrectangle"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 286
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. [3점] Man: ① No problem. You can teach me how to play the game. ② All right. I won’t let him use my phone too ",
+   "choices": [
+    "No problem. You can teach me how to play the game.",
+    "All right. I won’t let him use my phone too long.",
+    "Okay. Let’s take more photos with my phone.",
+    "Well, lack of sleep can cause poor eyesight.",
+    "Sure. I already had my eyes checked."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 354
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. [3점] Woman: ① I’m sorry, but it was canceled. ② Yes, the meeting was postponed. ③ Don’t worry. I’ll ask them ",
+   "choices": [
+    "I’m sorry, but it was canceled.",
+    "Yes, the meeting was postponed.",
+    "Don’t worry. I’ll ask them about it.",
+    "Oh, we’ve been waiting for an hour.",
+    "Sure, I’ll finish the project by Friday."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 303
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Kate가 선생님에게 할 말로 가장 적절한 것을 고르시오. Kate: ① Let’s return to the resort to stay one more night. ② My flight’s been canceled, so I can’t come to sc",
+   "choices": [
+    "Let’s return to the resort to stay one more night.",
+    "My flight’s been canceled, so I can’t come to school.",
+    "I think I’ll have to take the last flight tonight.",
+    "Fortunately, the storm has just stopped here.",
+    "I’ve been to the island many times before.\n[16 ~ 17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 393
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 여자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "types of music popular among kids",
+    "difficulties in teaching music to kids",
+    "choosing the right instrument for kids",
+    "using music to increase concentration",
+    "effects of music on other subjects"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 224
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 악기가 아닌것은?",
+   "choices": [
+    "piano",
+    "trumpet",
+    "guitar",
+    "saxophone",
+    "flute\n이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시\n에 따라 답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 115
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "지불해야 할 돈의 납부를 요청하려고",
+    "구매한 제품의 반품 방법을 알리려고",
+    "회원의 자격 요건에 대해 안내하려고",
+    "회원 자격이 회복되었음을 통보하려고",
+    "회비를 인상하게 된 이유를 설명하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 767
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 드러난 ‘I’의 심경 변화로 가장 적절한 것은?",
+   "choices": [
+    "cheerful →sad",
+    "worried →relieved",
+    "angry →ashamed",
+    "jealous →thankful",
+    "hopeful →disappointed\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 863
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "음식은 먹고 싶은 양보다 적게 섭취해야 한다.",
+    "음식물이 남지 않도록 계획을 세워 조리해야 한다.",
+    "위생을 고려해 냉장고를 정기적으로 청소해야 한다.",
+    "몸에 좋은 음식은 찾기 쉽고 가까운 곳에 두어야 한다.",
+    "식품을 구매하기 전에 반드시 유통기한을 확인해야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 963
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "경쟁과 협동은 똑같은 내적 동기에서 유발된다.",
+    "운동 후에는 충분한 휴식을 취하는 것이 중요하다.",
+    "아이들이 편히 놀 수 있는 안전한 장소가 필요하다.",
+    "스포츠에서 심리적 요인이 점점 더 중요해지고 있다.",
+    "둘 이상이 하는 경기는 아이의 사회화에 도움을 준다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 830
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "the early history of online newspapers",
+    "the bad effects of the Internet on youth",
+    "the disadvantage of delivering news online",
+    "the efforts of newspapers to reduce errors",
+    "the effectiveness of different news formats"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 951
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Harmony Brings Peace",
+    "Great Waves of Migration",
+    "Singing for a Better Home",
+    "An Endless Journey for Food",
+    "Too Much Competition Destroys All\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1033
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 도표의 내용과 일치하지 않는것은?",
+   "choices": [
+    "In 2015, the number of \nparticipants in outdoor swimming decreased compared to the \nprevious year.",
+    "In 2015, the most popular outdoor \nwatersport activity was coastal walking.",
+    "In 2014, the \nnumber of participants in any boating activity was more than \ntwice the number of participants in canoeing.",
+    "In 2015, the \nnumber of participants in canoeing slightly decreased from \nthe previous year, but it was more than the number of \nparticipants in angling in 2015.",
+    "The number of participants \nin angling in 2015 more than doubled compared to the \nprevious year."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 725
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. Grant Wood에 관한 다음 글의 내용과 일치하지 않는것은?",
+   "choices": [
+    "남은 종이 위에 숯을 사용하여 스케치하기도 했다.",
+    "열 살 때 아버지가 돌아가셨다.",
+    "대학에서 시간제로 공부를 한 적이 있다.",
+    "Jan van Eyck의 작품에서 영향을 받았다.",
+    "독일 여행 후에 사실주의 화풍에서 벗어났다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 954
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Science Showcase Video Contest에 관한 다음 안내문의 내용과 일치하지 않는것은?",
+   "choices": [
+    "8월 31일까지 영상물을 제출해야 한다.",
+    "수상자는 10월 초에 발표한다.",
+    "상금은 2,000달러까지 수여된다.",
+    "출품작은 1인당 한 편으로 제한된다.",
+    "영상물의 형식에는 제한이 없다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 760
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. 2018 Secret Garden Tour에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "전체 투어를 가이드가 안내한다.",
+    "일요일에 총 다섯 시간 동안 진행된다.",
+    "사전에 표를 구입하면 10달러를 할인해 준다.",
+    "12개의 정원을 둘러 볼 수 있다.",
+    "주차비가 부과되며 주차장은 오전 9시에 연다.\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 814
+  },
+  {
+   "qNum": 28,
+   "kind": "grammar_underline",
+   "stem": "28. 다음 글의 밑줄 친 부분 중, 어법상 틀린것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "made to athletes about foods",
+    "②": "have eaten dried figs to",
+    "③": "that she ate a plate",
+    "④": "because of their real or",
+    "⑤": "has stood the test of"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 972
+  },
+  {
+   "qNum": 29,
+   "kind": "vocab_underline",
+   "stem": "29. 다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "rare",
+    "②": "increases over time",
+    "③": "reluctant to reveal more",
+    "④": "mistake to assume that the",
+    "⑤": "likely to scare potential partners"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 878
+  },
+  {
+   "qNum": 30,
+   "kind": "mc",
+   "stem": "30. 밑줄 친 부분이 가리키는 대상이 나머지 넷과 다른것은?",
+   "choices": [
+    "his son \nMark was developing. Mark could not stand to lose at games \nby the time he was eight years old. Jack was contributing to \nMark’s attitude by always letting him win at chess because",
+    "he didn’t like to see Mark get upset and cry. One day, \nJack realized it was more important to allow Mark some \nexperience with losing, so",
+    "he started winning at least half \nthe games. Mark was upset at first, but soon began to win \nand lose with more grace. Jack felt a milestone had been \nreached one day when",
+    "he was playing catch with Mark \nand threw a bad ball. Instead of getting upset about missing \nthe ball, Mark was able to use",
+    "his sense of humor and \ncommented, “Nice throw, Dad. Lousy catch, Mark.”\n* milestone: 중대한 시점\n[31 ~ 34] 다음 빈칸에 들어갈 말로 가장 적절한 것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 845
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. Most importantly, money needs to be in a predictable way. Precious metals have been desirable as money across the millennia not only because they have intri",
+   "choices": [
+    "invested",
+    "scarce",
+    "transferred",
+    "divisible",
+    "deposited"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 824
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. In one experiment, children were told they could have one marshmallow treat if they chose to eat it immediately, but two treats if they waited. Most of the ",
+   "choices": [
+    "change their habit",
+    "get more things done",
+    "regulate their behavior",
+    "build their selfesteem",
+    "improve their speaking skills\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 999
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. The desire for fame has its roots in the . No one would want to be famous who hadn’t also, somewhere in the past, been made to feel extremely insignificant.",
+   "choices": [
+    "spread of media",
+    "experience of neglect",
+    "freedom from authority",
+    "curiosity about the unknown",
+    "misunderstanding of popularity"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 879
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. When the late Theodore Roosevelt came back from Africa, just after he left the White House in 1909, he made his first public appearance at Madison Square Ga",
+   "choices": [
+    "understood and made intelligent use of personal promotion",
+    "made public policies that were beneficial to his people",
+    "knew when was the right time for him to leave office",
+    "saw the wellbeing of his supporters as the top priority",
+    "didn’t appear before the public in an arranged setting"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1131
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는문장은?",
+   "choices": [
+    "Some \nmoisture is needed in the air to prevent dehydration during \nstorage, but too much moisture can encourage growth of \nmolds.",
+    "Some commercial storage units have controlled \natmospheres, with the levels of both carbon dioxide and \nmoisture being regulated carefully.",
+    "Though living things \nemit carbon dioxide when they breathe, carbon dioxide is \nwidely considered to be a pollutant.",
+    "Sometimes other \ngases, such as ethylene gas, may be introduced at controlled \nlevels to help achieve optimal quality of bananas and other \nfresh produce.",
+    "Related to the control of gases and \nmoisture is the need for some circulation of air among the \nstored foods.\n* dehydration: 탈수\n** controlled atmosphere: 저온 저장과 함께 공기의 농도를 조절하는 장치\n[36 ~ 37] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 \n것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 914
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. Studies show that no one is “born” to be an entrepreneur and that everyone has the potential to become one. (A) These traits are developed over time and evo",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1008
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. According to the consulting firm McKinsey, knowledge workers spend up to 60 percent of their time looking for information, responding to emails, and collabo",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n[38 ~ 39] 글의 흐름으로 보아, 주어진 문장이 들어가기에\n가장 적절한 곳을 고르시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38 ~ 39"
+    ]
+   },
+   "charLen": 953
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. However, this solution does not work in all situations because we also become increasingly sensitive to glare. Two major kinds of agerelated structural chan",
+   "choices": [
+    ") As you might suspect, \nthis change is one reason why older adults do not see as \nwell in the dark, which may account in part for their \nreluctance to go places at night. (",
+    ") One possible logical \nresponse to the need for more light would be to increase \nillumination levels in general. (",
+    ") In addition, our ability \nto adjust to changes in illumination, called adaptation, \ndeclines. (",
+    ") Going from outside into a darkened movie \ntheater involves dark adaptation; going back outside involves \nlight adaptation. (",
+    ") Research indicates that the time it \ntakes for both types of adaptation increases with age.\n* illumination: 조도, 조명"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 961
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. A clay pot is an example of a material artifact, which, although transformed by human activity, is not all that far removed from its natural state. By actin",
+   "choices": [
+    ") Thus we \ncreate \nartifacts, \nwhich \nform \nan \nimportant \naspect \nof \ntechnologies. (",
+    ") A plastic cup, a contact lens, and a \ncomputer chip, on the other hand, are examples of artifacts \nthat are far removed from the original states of the natural \nresources needed to create them. (",
+    ") Artifacts can serve \nas resources in other technological processes. (",
+    ") This is \none \nof \nthe \nimportant \ninteraction \neffects \nwithin \nthe \ntechnological system. (",
+    ") In other words, each new \ntechnology increases the stock of available tools and \nresources that can be employed by other technologies to \nproduce new artifacts. [3점]\n* artifact: 가공품"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 902
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "intention\n······\ndanger",
+    "intention\n······\nignorance",
+    "mood\n······\ndanger",
+    "experience\n······\nlaziness",
+    "experience\n······\nignorance\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n[41 ~ 42] 다음 글을 읽고, 물음에 답하시오.\nMary is an interior designer. A friend of hers bought a \nhouse that needed to be renovated, and had asked her to \ndo the interior decoration. Mary wanted the interior of the \nhouse to look attractive. However, she would ignore \nsafety standards and would not listen to other contractors, \nif she did not think their proposals fit her ideals. For all \nthe home products she picked for the house, her main \nconcern was whether they looked attractive, not whether \nthey were effective or reliable. She chose a fancylooking\ndoor lock, against the advice of the locksmith who did \nnot think it was dependable. As a consequence, a year \nlater, it was necessary to change the door lock, as there \nwas difficulty opening the lock with the key.\nIn addition, she picked toilets in an upscale model and \ndesign. However, the homeowner later found out that the \ntoilet handle must be held down to complete the flushing \naction. The plumber was not able to adjust the lever \ninside the toilet tank to fix the problem. \nMary prefers to think that she is always right. She \nchooses information that fits her       , and ignores \nother people’s recommendations. However, when facing a \nproblem, we should always have an open mind, and \nshould consider all relevant information. We definitely \nshould not let our prejudice and emotion take the better \npart of us."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2664
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Be Practical Rather Than Ideal",
+    "Don’t Give Up under Pressure",
+    "Deal with the Problem Now",
+    "Think about ShortTerm Profits",
+    "Equate the Inside with the Outside"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 185
+  },
+  {
+   "qNum": 42,
+   "kind": "mc",
+   "stem": "42. 윗글의 빈칸에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "liking",
+    "future",
+    "duty",
+    "budget",
+    "religion\n[43 ~ 45] 다음 글을 읽고, 물음에 답하시오.\n(A)\nIn May 1977, Leif Rongemo in Malmö, Sweden, \nreturning from the kitchen to the living room of his third \nfloor apartment, discovered that the casement window \nwas open and his twoyearold daughter was missing \nfrom the living room. When he looked outside, he saw \nthe street thirtysix feet below ― and (a) his\nlittle \ndaughter crawling on all fours along a narrow concrete \nledge that circled the building. (b) He tried not to let \nout a cry of alarm to avoid startling her, because an \nextraordinary kind of rescue was already under way.\n* casement: 여닫이 창(문)\n(B)\nHe called his wife to help from the window while (c) he\nrushed down to the street to try to catch the child. As \nthe baby girl crawled farther away from the window and \nsafety, the dog pushed forward determinedly and at last \nseized the child’s diaper in his jaws. To the amazement \nof those who had gathered on the street below ― they \nwere attempting to create a net to catch the child ― the \ndog then moved carefully backwards, inch by inch, \npulling the little girl back toward the window.\n(C)\nFollowing just behind the baby girl was the family’s \nAlsatian dog, whining softly in distress. Both dog and \ndaughter were far beyond reach and there was no room \non the narrow ledge for either to turn around and crawl \nback to the window. The father quickly realized that if \n(d) he attempted to get on the ledge, all three would \nprobably die.\n(D)\nThe heartpounding backwards journey took three \nminutes, until the mother could snatch her child. The \ndog then leapt into the room, proudly wagging his tail. \nThe family had been thinking of giving the dog to \nsomeone because they were concerned he might be too \nbig to keep around a small child. His bold rescue of \ntheir daughter, however, made (e) him a most treasured \nmember of the family."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1917
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) －(D) －(C)",
+    "(C) －(B) －(D)",
+    "(C) －(D) －(B)",
+    "(D) －(B) －(C)",
+    "(D) －(C) －(B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 130
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a)~(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 74
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글에 관한 내용으로 적절하지 않은것은?",
+   "choices": [
+    "아빠는 딸이 거실에서 사라진 것을 발견했다.",
+    "개가 아이의 기저귀를 입으로 물어서 붙잡았다.",
+    "사람들이 아이가 떨어지면 받으려고 하고 있었다.",
+    "개와 아이는 몸을 돌리기에 너무 좁은 곳에 있었다.",
+    "아이와 함께 기를 수 없어서 개를 다른 집에 보냈다.\n※ 확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)\n했는지 확인하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 222
+  }
+ ],
+ "sourcePdf": "ebsi_go2_20180308_paper_eng_mun_3qrB0Xn2_10.pdf"
+}

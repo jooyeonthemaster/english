@@ -1,0 +1,841 @@
+{
+ "examId": "ebsi_go3_20091015",
+ "source": "ebsi_go3_20091015_paper_20091015_eng_mun.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 대화를듣고두사람이주문할기념접시의도안을고르시오 , . 점 [1 ] ① ② ③ ④ ⑤",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 49
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를듣고남자의심정으로가장적절한것을고르시오 , . delighted ① curious ② nervous ③ envious ④ embarrassed ⑤",
+   "choices": [
+    "curious",
+    "nervous",
+    "envious",
+    "embarrassed",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 87
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을듣고무엇에관한내용인지고르시오 , . wedding invitation ① blind date ② honeymoon planning ③ housewarming party ④ marriage proposal ⑤",
+   "choices": [
+    "blind date",
+    "honeymoon planning",
+    "housewarming party",
+    "marriage proposal",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 122
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를듣고두사람이할일을알맞게짝지은것을고르시오 , . 인체탐험비누만들기 , ① 인체탐험공룡뼈맞추기 , ② 비누만들기셔츠염색하기 , ③ 비누만들기공룡뼈맞추기 , ④ 셔츠염색하기공룡뼈맞추기 , ⑤",
+   "choices": [
+    "인체탐험공룡뼈맞추기\n,",
+    "비누만들기셔츠염색하기\n,",
+    "비누만들기공룡뼈맞추기\n,",
+    "셔츠염색하기공룡뼈맞추기\n,",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 110
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를듣고여자가결제해야할총금액을고르시오 , . $60 ① $62 ② $70 ③ $72 ④ $100 ⑤",
+   "choices": [
+    "$62",
+    "$70",
+    "$72",
+    "$100",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 60
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 다음을듣고여자가하는말의목적으로가장적절한것을고 , 르시오. 도서관개관을축하하려고 ① 필독도서를공지하려고 ② 독서동아리를홍보하려고 ③ 작문강좌를소개하려고 ④ 도서관이용방법을안내하려고 ⑤",
+   "choices": [
+    "필독도서를공지하려고",
+    "독서동아리를홍보하려고",
+    "작문강좌를소개하려고",
+    "도서관이용방법을안내하려고",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 105
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를듣고남자가할일로가장적절한것을고르시오 , . to send out invitations ① to go shopping with Peggy ② to find the recipe book ③ to make a guest list ④ to call Peggy to invite her",
+   "choices": [
+    "to go shopping with Peggy",
+    "to find the recipe book",
+    "to make a guest list",
+    "to call Peggy to invite her",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 163
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를듣고두사람의관계를가장잘나타낸것을고르시오 , . 병원직원 환자 - ① 교수 학생 - ② 문구점주인 고객 - ③ 건물경비원 방문객 - ④ 학교행정직원 졸업생 - ⑤",
+   "choices": [
+    "교수\n학생\n-",
+    "문구점주인\n고객\n-",
+    "건물경비원\n방문객\n-",
+    "학교행정직원\n졸업생\n-",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 96
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 대화를듣고두사람이대화하고있는장소로가장적절한곳 , 을고르시오. 헌책방 ① 미술학원 ② 골동품가게 ③ 가구판매점 ④ 서예전시회장 ⑤",
+   "choices": [
+    "미술학원",
+    "골동품가게",
+    "가구판매점",
+    "서예전시회장",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 75
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 대화를듣고남자가여자에게부탁한일로가장적절한것을 , 고르시오. 한국어로광고번역하기 ① 중고차대리점소개하기 ② 한국신문구독신청하기 ③ 웹사이트에광고올리기 ④ 영어보고서작성도와주기 ⑤",
+   "choices": [
+    "중고차대리점소개하기",
+    "한국신문구독신청하기",
+    "웹사이트에광고올리기",
+    "영어보고서작성도와주기",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 103
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 다음표를보면서대화를듣고남자가선택할요금제를고르 , 시오 점 . [3 ]",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 43
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 다음을듣고 남자가안내하는콘테스트에관한내용과일치 , 하지않는것을고르시오. 월요일부터금요일까지실시한다. ① 영화음악을듣고주인공의이름을맞춘다. ② 방송국에전화를걸어서응모해야한다. ③ 상품으로영화표교환권을준다. ④ 일이내에는상을한번만탈수있다 . ⑤ 학년도 월고 전국연합학력평가문제지 20",
+   "choices": [
+    "영화음악을듣고주인공의이름을맞춘다.",
+    "방송국에전화를걸어서응모해야한다.",
+    "상품으로영화표교환권을준다.",
+    "일이내에는상을한번만탈수있다\n.",
+    "학년도\n월고\n전국연합학력평가문제지\n2009\n외국어영어\n(\n) 영역\n제3 교시\n외국어영어\n(\n) 영역\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 259
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 다음그림의상황에가장적절한대화를고르시오. ① ② ③ ④ ⑤",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 36
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를듣고여자의마지막말에대한남자의응답으로가장 , 적절한것을고르시오. Man: Well, I prefer reading poems to novels. ① His book’s about how to write an essay. ② Mr. Jackson usually gives lot",
+   "choices": [
+    "His book’s about how to write an essay.",
+    "Mr. Jackson usually gives lots of homework.",
+    "I like poems full of symbols and visual images.",
+    "You can borrow his books from the school library.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 279
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 대화를듣고남자의마지막말에대한여자의응답으로가장 , 적절한것을고르시오. Woman: All right. We can make it another time. ① We are going to have a meeting at nine. ② Why not?",
+   "choices": [
+    "We are going to have a meeting at nine.",
+    "Why not? I’m happy to meet your parents.",
+    "Let me tell you a good place for lunch.",
+    "Remember to send thank-you notes to them.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 262
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 대화를듣고여자의마지막말에대한남자의응답으로가장 , 적절한것을고르시오. Man: Let’s go get my cell phone. ① I saw that you called. What’s up?",
+   "choices": [
+    "I saw that you called. What’s up?",
+    "That’s because we only use our thumbs to text.",
+    "Tell her not to call me while I’m working.",
+    "Oh, add my name at the end, please.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 245
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 다음상황설명을듣고 이 에게할말로가장적절 , Paul Roger 한것을고르시오. Paul: The moving company is responsible for them. ① You can donate these books to an organization. ② Would you like me to give you my old books?",
+   "choices": [
+    "You can donate these books to an organization.",
+    "Would you like me to give you my old books?",
+    "Why don’t you apply for a job in the organization?",
+    "I don’t think the organization needs that old stuff.",
+    "이제듣기\n말하기문제는다끝났습니다\n번부터는\n. 18\nㆍ\n문제지의지시에따라답을하기바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 352
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 밑줄친This[this]가가리키는것으로가장적절한것은?",
+   "choices": [
+    "계단",
+    "담장",
+    "지붕",
+    "대문",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 626
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 밑줄친she가가리키는대상이나머지넷과다른것은?",
+   "choices": [
+    "she went to visit a friend who was dying. The\ndying woman asked her why she did not think of studying\nmedicine, since she was smart and healthy. When",
+    "she\nreminded\nher\ndying\nfriend\nthat\nthere\nwere\nno\nwomen\ndoctors, the woman sighed and said that if she had been\ntreated by a “lady doctor,” she might not be dying. Her sick\nfriend had been so ashamed to mention her internal problems\nto a man that",
+    "she hid her pain for too long. When she\nfinally sought treatment, it was too late to save her life.\nElizabeth couldn’t get the dying woman’s suggestion out of\nher mind. So",
+    "she decided to devote her life to medicine.\nIn 1849",
+    "she became the first woman in the United States\nto receive a medical degree."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 855
+  },
+  {
+   "qNum": 20,
+   "kind": "grammar_underline",
+   "stem": "20. 다음글의밑줄친부분중어법상 , 틀린것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "to produce more food for",
+    "②": "it for crops",
+    "③": "leaving it in the best",
+    "④": "defenselessly to wind and water",
+    "⑤": "much faster rate than the"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 672
+  },
+  {
+   "qNum": 21,
+   "kind": "box_choice",
+   "stem": "21. 의각네모안에서어법에맞는표현으로가장 (A), (B), (C) 적절한것은?",
+   "choices": [
+    "whether\nbecause\nconsidered",
+    "which\nbecause\nconsidered",
+    "whether\nbecause of\nconsidering",
+    "which\nbecause of\nconsidering",
+    "whether\nbecause"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 872
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음글에서전체흐름과관계없는문장은?",
+   "choices": [
+    "Mosques, where\nMuslims worship, are being built in neighborhoods where once\nonly churches or synagogues stood.",
+    "Women who wear scarves\ncovering their hair according to Islamic customs are now a\ncommon sight in many towns and cities.",
+    "Moreover, Muslim\nholidays are gaining official recognition in such places as Los\nAngeles, Toronto, and New York.",
+    "Islam is considered by\nmany to be an alien culture that can’t possibly have any\nrelationship\nwith\nnormal\nWestern\nvalues.",
+    "In\naddition,\nan\nincreasing number of employers are accommodating the religious\nneeds of their Muslim workers in the same way they respond\nto the needs of their Jewish workers.\n*\n유대교회당\nsynagogue:\n[23 ~ 27] 다음빈칸에들어갈말로가장적절한것을고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 824
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. Recently, a researcher found that has a direct influence on consumer behavior. In her experiments, participants were asked to eat ice cream and to judge its",
+   "choices": [
+    "hesitation",
+    "creativity",
+    "patience",
+    "independence",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 746
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. Do you know a teaching approach called “jigsaw”?",
+   "choices": [
+    "relieve interracial tension",
+    "satisfy curiosity for nature",
+    "motivate interest in drawing",
+    "reduce dependence on parents",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 902
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. Many choices faced in life are motivated by economic concerns, and top among these concerns is what job opportunity to seek or what kind of career to pursue",
+   "choices": [
+    "what to buy",
+    "when to retire",
+    "whom to trust",
+    "how to stay fit",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 697
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. A noted scientist, Ellsworth Huntington, concluded from other men’s work and his own involving people living in different climates, that climate and tempera",
+   "choices": [
+    "learn a foreign language",
+    "achieve some great results",
+    "catch up with school work",
+    "plan a new scientific experiment",
+    "외국어영어\n(\n) 영역\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 907
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. Thinning hair makes a woman look older. When your hair’s health weakens, it seems your personality is likewise affected. Most women who have gone through th",
+   "choices": [
+    "keep their hair clean and healthy",
+    "find out the reason they are losing hair",
+    "test a whole range of hair products",
+    "brush their hair to stimulate new hair growth",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 808
+  },
+  {
+   "qNum": 28,
+   "kind": "box_choice",
+   "stem": "28. 의각네모안에서문맥에맞는낱말로가장적 (A), (B), (C) 절한것은?",
+   "choices": [
+    "description　\ningredients\nawareness",
+    "subscription\nmanufacturers\nignorance",
+    "description　\nmanufacturers\nignorance",
+    "subscription\ningredients\nignorance",
+    "description　\ningredients"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1020
+  },
+  {
+   "qNum": 29,
+   "kind": "mc",
+   "stem": "29. 다음글에드러난 의심정으로가장적절한것은 점 ‘I’ ?",
+   "choices": [
+    "bored and indifferent",
+    "pleased and satisfied",
+    "curious and fascinated",
+    "safe and relieved",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 776
+  },
+  {
+   "qNum": 30,
+   "kind": "vocab_underline",
+   "stem": "30. 다음그림에대한글의내용중밑줄친낱말의쓰임이적절 , 하지않은것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "shore",
+    "②": "towards the shore",
+    "③": "head-on is like swimming upstream",
+    "④": "straight to the beach",
+    "⑤": "sandbar"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 756
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. 다음글의빈칸 에들어갈말로가장적절한것은 (A), (B) ?",
+   "choices": [
+    "In addition\nIn spite of",
+    "For example\nOwing to",
+    "On the contrary\nIn spite of",
+    "On the contrary\nInstead of",
+    "In addition\n외국어영어\n(\n) 영역\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n[32 ~\n다음글의주제로가장적절한것을고르시오\n33]\n."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1098
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. When an eight-lane bridge across the Mississippi River collapsed, nearly one hundred and fifty people were killed and injured. In the wake of this disaster,",
+   "choices": [
+    "친환경교량건설을위한첨단공법",
+    "신소재를이용한교량구조물의손상탐지",
+    "건축폐기물의효율적재활용방법",
+    "주변여건을고려한다양한교량시공법",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 876
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. Have you heard the words “venomous” and “poisonous” in reference to animals?",
+   "choices": [
+    "’ toxins\nhunting methods of spiders and frogs",
+    "the most toxic animal species in the world",
+    "safety tips for raising dangerous animals as pets",
+    "difference between venomous and poisonous animals",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 930
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. 다음글에서필자의주장으로가장적절한것은?",
+   "choices": [
+    "기초가튼튼해야큰성공을거둘수있다.",
+    "",
+    "세상의기준이아닌스스로의기준대로행동하라.\n위기에처했을때도와주는친구가진정한친구다.",
+    "",
+    "사업에성공하려면폭넓은인간관계가필요하다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 785
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음표의내용과일치하지않는문장은?",
+   "choices": [
+    "Book spending per person was the\nlargest in Ontario, and the smallest in Newfoundland.",
+    "The total spending on books of Ontario is more than three\ntimes as large as that of British Columbia.",
+    "While the\ntotal spending of Manitoba was larger than that of Nova\nScotia,\nthe\npersonal\nspending\nof\nManitoba\nwas\nsmaller\nthan that of Nova Scotia.",
+    "Quebec ranked second place in\nthe\ntotal\nspending, but\nthird place\nin\nits\nspending per\nperson.",
+    "Finally, New Brunswick ranked seventh both in\nthe total and per person spending."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 605
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. 에대한다음글의내용과일치하는것은 mica ?",
+   "choices": [
+    "쪼개진얇은판은탄성이없고휘어지지않는다.",
+    "두툼한결정체는책의모양을연상시킨다.",
+    "마그네슘과철을함유하지않으면검정색을띤다.",
+    "전도성이뛰어나가전제품에널리사용된다.",
+    "외국어영어\n(\n) 영역\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1032
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. 에관한다음글의내용과일치하지 four-o’clock 않는것은?",
+   "choices": [
+    "늦여름부터서리가내릴때까지꽃을피운다.",
+    "대개는스스로씨를퍼뜨린다.",
+    "뿌리로번식시키면생장능력이떨어진다.",
+    "한포기에서여러색깔의꽃이피기도한다.",
+    "[38 ~\n다음글의요지로가장적절한것을고르시오\n39]\n."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 873
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. Investigations have found that library corners were among the least popular areas in childhood classrooms during free play periods. In most classrooms, the ",
+   "choices": [
+    "학급문고시설을개선하자.",
+    "문학수업시간수를늘리자.",
+    "학교아동보호설비를확충하자.",
+    "아이들이다양한활동을하게하자.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 818
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. Have you ever had a favorite author and found out later that author wrote books under a different name you knew nothing about?",
+   "choices": [
+    "책을고를때저자를꼼꼼히살펴야한다.",
+    "필명을사용해야할필요성은작가마다다르다.",
+    "독자들은여러장르의글을쓰는작가를선호한다.",
+    "작가는독자의성향을잘파악해야한다.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 811
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 글의흐름으로보아 주어진문장이들어가기에가장적절한 , 곳은?",
+   "choices": [
+    "astrology shows are reporting an increase in calls, with\npeople asking whether the eclipse will mean years of bad\nluck and how to avoid it. (\n) Basically, eating, drinking",
+    "and sleeping are not advised. (\n) Moreover, pregnant",
+    "women are told to stay indoors just in case there’s an\nadverse effect on their unborn child. (\n) And hospitals",
+    "have reported that would-be parents postponed scheduled\ncaesarean operations, to ensure their children are not born\nunder bad omens. (\n) However, not everyone thinks this",
+    "eclipse is bad news; one local airline is scheduled to fly\nover Mount Everest to ensure it gets the best view of the\nevent.\n[41 ~\n다음글의제목으로가장적절한것을고르시오\n42]\n."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1031
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. Buildings ― contrary to popular thought ― are not lifeless objects. From the ruins of Byzantium to the streets of New York, from the roof of a Chinese pagod",
+   "choices": [
+    "How to Preserve Old Buildings",
+    "Human History Behind Buildings",
+    "Tourist Attractions Around the World",
+    "Architecture in Modern Times",
+    "외국어영어\n(\n) 영역\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 871
+  },
+  {
+   "qNum": 42,
+   "kind": "mc",
+   "stem": "42. In the 1950s, agricultural scientists around the world started a campaign known as the green revolution. It was an attempt to increase available food source",
+   "choices": [
+    "Famine in Some Asian Countries",
+    "Dangers of Chemicals in Agriculture",
+    "Achievements of Agricultural Scientists",
+    "Measures Against Food Shortage",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 922
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진글다음에이어질글의순서로가장적절한것은 점 ?",
+   "choices": [
+    "- (C) - (B)\n(B)",
+    "- (A) - (C)\n(B)",
+    "- (C) - (A)\n(C)",
+    "- (A) - (B)\n(C)",
+    "- (B) - (A)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1072
+  },
+  {
+   "qNum": 44,
+   "kind": "mc",
+   "stem": "44. 다음글의목적으로가장적절한것은 점 ?",
+   "choices": [
+    "상품의가격에대해문의하려고",
+    "보석제품판매회사를알아보려고",
+    "웹사이트를제작해준것에감사하려고",
+    "구매상품에대한만족감을표현하려고",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 790
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 다음글의내용을한문장으로요약하고자한다빈칸 와 . (A) 에들어갈말로가장적절한것은 (B) ?",
+   "choices": [
+    "climate\ndefinition",
+    "culture\ndistribution",
+    "climate\ndistribution",
+    "culture\nconsumption",
+    "wealth\n외국어영어\n(\n) 영역\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n[46 ~\n다음글을읽고\n물음에답하시오\n48]\n,\n.\n(A)\nMary and her husband Jim had a dog named “Lucky”.\nLucky\nwas\na\nreal\ncharacter.\n(a) Whatever\nstruck\nhis\nfancy, he would take it to his toy box in the basement.\nWhen something is missing, Mary or Jim would go to\nLucky’s toy box and there the treasure would be, amid all\nof Lucky’s other favorite toys. (b) One day, Mary was\ndiagnosed\nwith\nhaving\nstomach\ncancer.\nShe\nhad\nan\noperation but she was just sure it was fatal and she was\ngoing to die of this disease.\n(B)\nFrom then on, Mary forgot about dying. Instead she and\nLucky\nbegan\nliving\nagain,\nwalking\nfurther\nand\nfurther\ntogether every day. It’s been twelve years now and Mary\nfinds herself cancer-free: no trace of cancer has sprung\nup again in her stomach. She thinks Lucky is her life\nsaver.\n(c) Lucky ― He still\nsteals\ntreasures\nand\nkeeps\nthem in his toy box. But Mary remains his greatest\ntreasure.\n(C)\nWhen Mary woke for a second, she couldn’t understand\nwhat was wrong. She couldn’t move her head and her\nbody felt heavy and hot. But panic soon gave way to\nlaughter\nwhen\nMary\nrealized\nthe\nproblem.\nShe\nwas\ncovered, literally blanketed, with every treasure Lucky\nowned! (d) While she had slept, the sorrowing dog had\nmade trip after trip to the basement bringing his beloved\nmistress all his favorite things in life. He had covered\nher with his love.\n(D)\nWhile Mary was away for an operation, Lucky just\ndrooped, whining and miserable. When Mary came home\nafter\nspending\ntwo\nweeks\nin\nhospital,\nMary\nwas\nso\nexhausted she couldn’t even make it up the steps to her\nbedroom. Jim made his wife comfortable on the couch and\nleft her to nap. (e) Lucky stood watching her but he\ndidn’t come to her when she called. It made Mary sad but\nsleep soon overcame her and she dozed."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2687
+  },
+  {
+   "qNum": 46,
+   "kind": "mc",
+   "stem": "46. 위글 에이어질내용을순서에맞게배열한것으로가장 (A) 적절한것은?",
+   "choices": [
+    "- (C) - (D)\n(C)",
+    "- (B) - (D)\n(C)",
+    "- (D) - (B)\n(D)",
+    "- (B) - (C)\n(D)",
+    "- (C) - (B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 129
+  },
+  {
+   "qNum": 47,
+   "kind": "vocab_letter",
+   "stem": "47. 밑줄친 중에서 에대한 의사랑이가장 (a)~(e) Mary Lucky 잘드러난것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {
+    "e": "Mary Lucky"
+   },
+   "bracketChoices": {},
+   "charLen": 80
+  },
+  {
+   "qNum": 48,
+   "kind": "mc",
+   "stem": "48. 위글의내용과일치하지않는것은?",
+   "choices": [
+    "는\n의회복에큰도움을주었다\nLucky\nMary\n.",
+    "는\n의버릇을고쳐주었다\nMary\nLucky\n.",
+    "는\n가없는동안풀이죽어있었다\nLucky\nMary\n.",
+    "는\n주일간병원에입원해있었다\nMary\n.",
+    "[49 ~\n다음글을읽고\n물음에답하시오\n50]\n,\n.\nIn 1986, the California raisin growers were expecting a\nhuge harvest, yet they were beginning to panic. Year by\nyear,\n(a) they had seen\ntheir\nsales\ndropping by one\npercent\nannually.\nIn\ndesperation\nthey\nthought\nthey\nneeded to change people’s feelings about raisins. For\nmost people, raisins were considered lonely and dull.\nDried-up fruits do not give the sensations that most\npeople associate with feeling good about their lives. The\ntask\nwas\nclear:\npump\na\nhealthy\ndose\ninto\nthe\nshriveled-up fruit. What can (b) they associate to raisins\nthat would make people really want to buy them?\nAt the time, an old jazz song was enjoying a national\npopularity: “I Heard It Through the Grapevine.” Raisin\ngrowers\nused\nthe\nchance.\n(c) They\nhired\ninnovative\nanimators. Then (d) they created about thirty little clay\nraisin\nmodels\nfor\nthe\nfarmers,\neach\nwith\na\ndistinct\npersonality, to dance to the old tune. In those moments,\nthe\nNew\nCalifornia\nRaisins\nwere\nborn.\nThe\nfirst\nad\ncampaign of farmers created an instant sensation and\nsuccessfully linked the sensations to what (e) they hoped\nfor. As people watched the advertisement, they could\nlink strong feelings of fun, humor, and pleasure to the\nonce boring fruit. The raisin industry was rescued from\nits devastating slump in sales to a twenty percent annual\nincrease.\n*\n말라쪼글해진\nshriveled-up:"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1517
+  },
+  {
+   "qNum": 49,
+   "kind": "vocab_letter",
+   "stem": "49. 밑줄친 중에서가리키는대상이나머지넷과 (a)~(e) 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 69
+  },
+  {
+   "qNum": 50,
+   "kind": "mc",
+   "stem": "50. 위글의밑줄친a healthy dose의의미로가장적절한것은?",
+   "choices": [
+    "건포도의부정적이미지개선방안",
+    "포도수확량을늘리는농법도입",
+    "건포도를이용한다양한식품개발",
+    "건포도수출을위한해외시장개척",
+    "※ 확인사항\n◦답안지의해당란에필요한내용을정확히기입표기\n(\n)\n했는지확인하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 163
+  }
+ ],
+ "sourcePdf": "ebsi_go3_20091015_paper_20091015_eng_mun.pdf"
+}

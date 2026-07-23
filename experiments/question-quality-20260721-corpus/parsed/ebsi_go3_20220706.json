@@ -1,0 +1,758 @@
+{
+ "examId": "ebsi_go3_20220706",
+ "source": "ebsi_go3_20220706_paper_eng_mun_379OX1AF.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 다음을 듣고, 여자가 하는 말의 목적으로 가장 적절한 것을 고르시오. ① 환경보호 표어 대회 참여를 독려하려고 ② 학교 생태정원 이름짓기 공모를 안내하려고 ③ 학교 시설 보수공사 기간 연장을 공지하려고 ④ 학생회장 선출을 위한 온라인 투표 방법을 알리려고 ⑤ 생태정원 가꾸기 활동을",
+   "choices": [
+    "환경보호 표어 대회 참여를 독려하려고",
+    "학교 생태정원 이름짓기 공모를 안내하려고",
+    "학교 시설 보수공사 기간 연장을 공지하려고",
+    "학생회장 선출을 위한 온라인 투표 방법을 알리려고",
+    "생태정원 가꾸기 활동을 위한 자원봉사자를 모집하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 192
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 남자의 의견으로 가장 적절한 것을 고르시오. ① 학생 간 동료 피드백은 온라인 수업에 효과적이다. ② 수업 전 학생들과의 대화로 친밀감을 형성할 수 있다. ④ 긍정적인 격려로 학생들에게 자신감을 심어 주는 것이 좋다. ⑤ 학생의 다양한 수준을 고려하여 온라인 수업을 ",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 177
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 대화를 듣고, 두 사람의 관계를 가장 잘 나타낸 것을 고르시오. ① 사진작가 - 학생 ② 화가 - 잡지사 기자 ③ 미술 교사 - 학부모 ④ 전시회 기획자 - 의뢰인 ⑤ 큐레이터 - 인쇄물 제작업자",
+   "choices": [
+    "사진작가 - 학생",
+    "화가 - 잡지사 기자",
+    "미술 교사 - 학부모",
+    "전시회 기획자 - 의뢰인",
+    "큐레이터 - 인쇄물 제작업자"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 119
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고르시오.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 44
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 남자가 할 일로 가장 적절한 것을 고르시오. ① 영화 고르기 ② 스피커 설치하기 ③ 간식 만들기 ④ 담요 가지고 오기 ⑤ 쿠션 빌려오기",
+   "choices": [
+    "영화 고르기",
+    "스피커 설치하기",
+    "간식 만들기",
+    "담요 가지고 오기",
+    "쿠션 빌려오기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 126
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 여자가 지불할 금액을 고르시오. [3점] ① $225 ② $250 ③ $255 ④ $280 ⑤ $315",
+   "choices": [
+    "$225",
+    "$250",
+    "$255",
+    "$280",
+    "$315"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 71
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 여자가 벼룩시장 운영을 연기한 이유를 고르시오. ① 공원 긴급 보수 작업이 계획되어서 ② 행사 당일 폭우가 예상되어서 ③ 행사 물품 배송이 지연되어서 ④ 다른 행사와 시간이 겹쳐서 ⑤ 참가 인원이 적어서",
+   "choices": [
+    "공원 긴급 보수 작업이 계획되어서",
+    "행사 당일 폭우가 예상되어서",
+    "행사 물품 배송이 지연되어서",
+    "다른 행사와 시간이 겹쳐서",
+    "참가 인원이 적어서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 135
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, Young Edison Science Program에 관해 언급되지 않은 것을 고르시오. ① 장소 ② 주제 ③ 참여 가능 인원 ④ 운영 시간 ⑤ 준비물",
+   "choices": [
+    "장소",
+    "주제",
+    "참여 가능 인원",
+    "운영 시간",
+    "준비물"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 101
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. Flash Fiction Contest에 관한 다음 내용을 듣고, 일치하지 않는 것을 고르시오. ① 출품작의 단어 수에 제한이 있다. ② 참가자는 다수의 작품을 제출할 수 있다. ③ 제출 마감일은 7월 15일이다. ④ 심사는 학년별로 이루어진다. ⑤ 입상작은 학교 신문에 게재된다.",
+   "choices": [
+    "출품작의 단어 수에 제한이 있다.",
+    "참가자는 다수의 작품을 제출할 수 있다.",
+    "제출 마감일은 7월 15일이다.",
+    "심사는 학년별로 이루어진다.",
+    "입상작은 학교 신문에 게재된다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 174
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 다음 표를 보면서 대화를 듣고, 남자가 주문할 아웃도어용 시계를 고르시오. Outdoor Watches Model Price GPS tracking Material Feature ① A $200 × Plastic Waterproof ② B $240 ○ Plastic Waterpr",
+   "choices": [
+    "A\n$200\n×\nPlastic\nWaterproof",
+    "B\n$240\n○\nPlastic\nWaterproof",
+    "C\n$260\n○\nPlastic\nSolar charging",
+    "D\n$290\n○\nMetal\nWaterproof",
+    "E\n$320\n○\nMetal\nSolar charging"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 282
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ① Let’s ask where Monica’s classroom is. ② I’ll take her a bit earlier than usual then. ③ Okay. I’ll ask her ",
+   "choices": [
+    "Let’s ask where Monica’s classroom is.",
+    "I’ll take her a bit earlier than usual then.",
+    "Okay. I’ll ask her teacher when they close.",
+    "No problem. My meeting ended successfully.",
+    "Thank you. I’ll take care of the client instead."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 292
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ① Sorry. I can’t remember my script at all. ② With your help, the repairman fixed the copier. ③ Let’s try a d",
+   "choices": [
+    "Sorry. I can’t remember my script at all.",
+    "With your help, the repairman fixed the copier.",
+    "Let’s try a different copier on the second floor.",
+    "I was impressed by your presentation last time.",
+    "Don’t panic. You can finish your script next week.\n2022학년도 7월 고3 전국연합학력평가 문제지\n제3 교시\n고3"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 347
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. [3점] Man: ①It’s better to get dance training this time. ② Why don’t you try auditioning to join our team?",
+   "choices": [
+    "It’s better to get dance training this time.",
+    "Why don’t you try auditioning to join our team?",
+    "Okay. I’ll be sure to make the post by tomorrow.",
+    "Good job! The audition was tough, but we made it!",
+    "Offline performances are more fun than online ones."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 380
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. [3점] Woman: ①Of course. I’ll practice making Japanese dishes with you. ② Right. You’ll build confidence throu",
+   "choices": [
+    "Of course. I’ll practice making Japanese dishes with you.",
+    "Right. You’ll build confidence through continual practice.",
+    "Great! I’m so proud of you for passing the test.",
+    "Well, you need to be careful while cooking.",
+    "I agree. Empathy is the key to success."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 387
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Clara가 Jacob에게 할 말로 가장 적절한 것을 고르시오. Clara: ① You’ll have more followers soon, so don’t worry. ② Be more responsible when posting to social media. ③ It’s essential to actively interact with your followers. ④ How about putting away your smartphone at bedtime?",
+   "choices": [
+    "You’ll have more followers soon, so don’t worry.",
+    "Be more responsible when posting to social media.",
+    "It’s essential to actively interact with your followers.",
+    "How about putting away your smartphone at bedtime?",
+    "You should disable social media notifications during dinner.\n[16~17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 434
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 남자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "sounds and roles of string instruments in an orchestra",
+    "ways to tune different types of string instruments",
+    "importance of playing in harmony in an orchestra",
+    "stage positions of various orchestral instruments",
+    "origins of the names of musical instruments"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 298
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 악기가 아닌 것은?",
+   "choices": [
+    "violin",
+    "viola",
+    "double bass",
+    "cello",
+    "harp\n  이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시에 \n따라 답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 121
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "교통 신호등 추가 설치를 제안하려고",
+    "도로 교통 안전 법규 개정을 촉구하려고",
+    "학교 앞 교통 지도 인원의 증원을 건의하려고",
+    "학생 안전을 위해 등하굣길 폭의 확장을 요청하려고",
+    "학교 주변 불법 주정차 차량 단속 강화를 요구하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 918
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 나타난 ‘I’의 심경으로 가장 적절한 것은?",
+   "choices": [
+    "relieved and relaxed",
+    "pleased and delighted",
+    "bored and indifferent",
+    "alarmed and frightened",
+    "dissatisfied and angry"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 988
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "소유보다 경험에 가치를 두고 소비해야 한다.",
+    "물품 구매 시 품질을 우선으로 고려해야 한다.",
+    "경제 흐름을 분석한 후 투자 대상을 선정해야 한다.",
+    "단기 목표를 설정하여 잦은 성취 경험을 가져야 한다.",
+    "경험하지 않은 것에 대해 섣불리 옳고 그름을 판단해서는 안 된다. \n고3"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1195
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 밑줄 친 this civilization of leisure was, in reality, a Trojan horse가 다음 글에서 의미하는 바로 가장 적절한 것은?",
+   "choices": [
+    "Doing leisure activities increased communication between colleagues.",
+    "Labor was easily incorporated with leisure by the media.",
+    "People’s privacy was attacked because of low security.",
+    "Technology’s promise for leisure actually made people less free.",
+    "Technological innovations did not improve hierarchical working culture."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1360
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "조직이 처할 위기를 예측하여 사전 대책 수립이 필요하다.",
+    "리더는 업무 효율 향상을 위해 구성원의 사기를 높여야 한다.",
+    "조직에 대한 과도한 헌신을 강조하는 것은 역효과를 초래한다.",
+    "리더는 구성원의 비판적 의견을 수용하는 자세를 가져야 한다.",
+    "리더는 조직 내 신뢰 유지를 위해 구성원에게 진실을 알려야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1319
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "influence of mental health on physical performance",
+    "physiological responses to extreme emotional stimuli",
+    "role of negative emotions in dealing with difficult situations",
+    "necessity of staying objective in various professional contexts",
+    "brain’s interpretation of bodily sensations using concepts in context"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1354
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Better Predator Detection: Eyes’ Location Matters!",
+    "Escaping as a Primary Defense Tactic in a Field",
+    "Closer Eyes, Less Accurate Distance Perception",
+    "A Win‑Win Survival Strategy for Prey and Predator",
+    "Why Do Animals Have Longer Noses than Humans?\n고3"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1044
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. 다음 도표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "Among the six \ncountries represented in the graph, Germany had the highest \namount of both recycling and energy recovery while France \nhad the highest amount of landfill.",
+    "In the United Kingdom, \nthe combined amount of energy recovery and landfill was \nmore than half the total amount of plastic packaging waste \ntreated.",
+    "In Italy, plastic packaging waste recycled and \nplastic packaging waste recovered for energy each amounted \nto more than 800 thousand tons.",
+    "The amount of plastic \npackaging waste used for energy recovery in France was \nmore than four times that of Spain.",
+    "The total amount of \nplastic packaging waste treated in Poland was less than the \namount of plastic packaging waste recycled in the United \nKingdom."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 848
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Eric Carle에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "독일에서 예술 학교를 졸업했다.",
+    "The New York Times에서 그래픽 디자이너로 일했다.",
+    "1960년대 초반에 Bill Martin Jr.와의 첫 합작품을 출판했다.",
+    "The Very Hungry Caterpillar는 66개가 넘는 언어로 번역되었다.",
+    "아내와 Eric Carle Museum of Picture Book Art를 개관했다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1111
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. Black Box Short Play Festival에 관한 다음 안내문의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "3일간 진행된다.",
+    "The Black Box Theater에서 열린다.",
+    "Shrink to Fit은 8월 13일과 14일에 상연된다.",
+    "조기 예매 시 관람료는 연극당 15달러이다.",
+    "10세 미만의 어린이는 입장할 수 없다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 917
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. Newport Hackathon 2022에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "금요일 하루 동안 진행된다.",
+    "개인으로는 참가할 수 없다.",
+    "8월 31일부터 참가 등록이 시작된다.",
+    "주제는 행사 당일에 공지된다.",
+    "제출하는 영상의 길이는 5분 이상이어야 한다.\n고3"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 905
+  },
+  {
+   "qNum": 29,
+   "kind": "grammar_underline",
+   "stem": "29. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "that shows the relative size",
+    "②": "creating a spider web",
+    "③": "have taught in their first",
+    "④": "calculates the mean to plot",
+    "⑤": "to elicit further analysis of"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1027
+  },
+  {
+   "qNum": 30,
+   "kind": "vocab_underline",
+   "stem": "30. 다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "end in itself",
+    "②": "maintained",
+    "③": "individual needs will be what",
+    "④": "quality",
+    "⑤": "move from manufacturing to services"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1317
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. There is a difference between a newsworthy event and news. A newsworthy event will not necessarily become news, just as news is often about an event that is",
+   "choices": [
+    "subjective",
+    "passive",
+    "straightforward",
+    "consistent",
+    "crucial"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 955
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. Infants’ preference for looking at new things is so strong that psychologists began to realize that they could use it as a test of infants’ visual discrimination, and even their memory. Could an infant tell the difference between two similar images?",
+   "choices": [
+    "Memory distortion in infancy",
+    "Undeveloped vision of newborns",
+    "The preference for social interaction",
+    "The inbuilt attraction to novel images",
+    "Infants’ communication skills with parents\n고3"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1252
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. Imagine there are two habitats, a rich one containing a lot of resources and a poor one containing few, and that there is no territoriality or fighting, so ",
+   "choices": [
+    "fails to find adequate resources in time",
+    "invades the other habitat to get more resources",
+    "enjoys the same rate of acquisition of resources",
+    "needs to gather resources faster than newcomers",
+    "is more attracted to the rich habitat than the poor one"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1351
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. Neither Einstein’s relativity nor Bach’s fugues are such stuff as survival is made on. Yet each is a perfect example of human capacities that were essential",
+   "choices": [
+    "divert imagination away from innovation",
+    "cultivate a more flourishing cognitive landscape",
+    "keep humans from developing intellectual capacities",
+    "exclude morality from scientific decision making",
+    "define a boundary between art and science"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1348
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "When we turn the heat from burning \ncoal into electricity, a substantial amount of energy is lost \ndue to the inefficiency of the process.",
+    "But we are willing \nto accept that loss because coal is relatively cheap, and it \nwould be difficult and inconvenient to use burning coal \ndirectly to power lights, computers, and refrigerators.",
+    "Finding an economical way to use coal to produce carbon \nfibers will help revitalize rural communities suffering from \nthe decline in coal production.",
+    "In effect, we put a \ndiffering value on different forms of energy, with electricity \nat the top of the value ladder, liquid and gaseous fuels in \nthe middle, and coal or firewood at the bottom.",
+    "Solar and \nwind technologies have an advantage in that they produce \nhighvalue electricity directly.\n* versatile: 다용도의\n[36~37] 주어진 글 다음에 이어질 글의 순서로 가장 \n적절한 것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1142
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. It raises much less reactance to tell people what to do than to tell them what not to do. Therefore, advocating action should lead to higher compliance than",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n고3"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1349
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. One common strategy and use of passive misdirection in the digital world comes through the use of repetition. (A) This action is repeated over and over to n",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n[38~39] 글의 흐름으로 보아, 주어진 문장이 들어가기에 \n가장 적절한 곳을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38~39"
+    ]
+   },
+   "charLen": 1209
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. By now designers worked predominately within factories and no longer designed for individuals but for mass markets. Earliest indications of the need for ins",
+   "choices": [
+    ") Previously \ngarments \nwere \ncustom‑made by skilled individuals who later became known as \nor \nrecognized \nas \nbeing \nfashion \ndesigners. (",
+    ") These \nhandmade garments that are now accepted as being the fashion \ngarments of that time were only made for those with the \nmeans to pay for them. (",
+    ") The lesser‑privileged mass \nmarket wore homemade and handed down garments. (",
+    ") \nLater, by the end of the industrial revolution, fashion was more \nreadily available and affordable to all classes. (",
+    ") Thus the \ndirect communication link between the designer and client no \nlonger existed and designers had to rely on anticipating the \nneeds and desires of the new fashion consumer."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1195
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. This is why it is difficult to wake up from or scream out during a nightmare. Most dreaming occurs during REM sleep. ( ①) REM stands for Rapid Eye Movement,",
+   "choices": [
+    ") REM stands \nfor Rapid Eye Movement, a stage of sleep discovered by \nProfessor Nathaniel Kleitman at the University of Chicago in \n1958. (",
+    ") Along with a medical student, Eugene Aserinsky, \nhe noted that when people are sleeping, they exhibit rapid eye \nmovement, as if they were “looking” at something. (",
+    ") Ongoing \nresearch by Kleitman and Aserinsky concluded that it was \nduring this period of rapid eye movement that people dream, \nyet their minds are as active as someone who is awake. (",
+    ") \nInterestingly enough, studies have found that along with rapid \neye movement, our heart rates increase and our respiration is \nalso elevated — yet our bodies do not move and are basically \nparalyzed due to a nerve center in the brain that keeps our \nbodies motionless besides some occasional twitches and \njerks. (",
+    ") To sum it up, during the REM dream state, your \nmind is busy but your body is at rest. [3점]\n* twitch: 씰룩거림"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1054
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "larger  …… undo",
+    "larger  …… intensify",
+    "higher  …… supplement",
+    "smaller …… continue",
+    "smaller …… delay\n고3\n[41~42] 다음 글을 읽고, 물음에 답하시오. \n  Posts that hold up signs, street lights, and utility lines \nneed to be strong and durable enough to withstand winds, \nstorms, tsunamis, and earthquakes. Every so often, though, \nthese same posts are called upon to do something crucial \nbut fundamentally at odds with their everyday function: \nthey need to break (a) easily on impact. If hit by a \nfastmoving vehicle, posts need to come apart in just the \nright way in order to reduce damage and save lives. \nEngineers have spent a lot of time attempting to resolve \nthis apparent paradox.\n  One of the ways to get robust posts to break properly is \ncalled a “slip base” system. Instead of using a single \ncontinuous post, a slip base approach (b) joins two separate \nposts close to ground level using a connector plate. This \njoint allows the pair to break apart at an (c) intended \njuncture. It works basically like this: a lower post is put in \nthe ground, then an upper post is attached to it using \nbreakaway bolts. These bolts are made to fracture or \ndislodge when the post gets hit hard enough, so the upper \npost gets knocked over while the lower post passes safely \nunder the moving vehicle. When everything works as \ndesigned, such posts can also help slow down a vehicle and \n(d) minimize \ndamage. \nSubsequent \ninfrastructure \nrepair \nbecomes easier as well —in many cases, a new upper post \ncan simply be bolted onto the (e) damaged base post below \nit, which requires less material and work. The critical \nplatetoplate connections underpinning slip systems can be \nobvious to the naked eye or tucked away under plate covers.\n* juncture: 접합점  ** dislodge: 이탈시키다"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2997
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "How Street Posts Ruin the City View",
+    "Breakaway Posts Save Lives and Cost",
+    "Fewer Road Signs, Fewer Traffic Accidents",
+    "Recycled Materials Lead to Sustainable Cities",
+    "Dilemma Between Safety and Costefficiency"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 248
+  },
+  {
+   "qNum": 42,
+   "kind": "vocab_letter",
+   "stem": "42. 밑줄 친 (a)～(e) 중에서 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {
+    "a": "I am talking about",
+    "b": "he will reply",
+    "c": "I enjoyed the views",
+    "d": "I am turning this",
+    "e": "you think they were"
+   },
+   "bracketChoices": {},
+   "charLen": 2377
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) - (D) - (C)",
+    "(C) - (B) - (D)",
+    "(C) - (D) - (B)",
+    "(D) - (B) - (C)",
+    "(D) - (C) - (B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 146
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a)~(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 76
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글에 관한 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "남편과 나는 새 차를 타고 시골길을 지나갔다.",
+    "남편과 나는 거실에 나무로 된 닭과 오리를 진열해 놓았다.",
+    "어미 오리와 세 마리의 새끼 오리가 물에서 놀고 있었다.",
+    "운전 중 남편의 시야는 도로의 측면으로 제한되어 있었다.",
+    "나는 언덕 위에서 농가의 마당을 가리켰다.\n* 확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)했는지 확인\n하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 244
+  }
+ ],
+ "sourcePdf": "ebsi_go3_20220706_paper_eng_mun_379OX1AF.pdf"
+}

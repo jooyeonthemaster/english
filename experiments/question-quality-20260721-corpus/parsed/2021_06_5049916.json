@@ -1,0 +1,759 @@
+{
+ "examId": "2021_06_5049916",
+ "source": "54419bf4091095ae780c57e8de51953a.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 다음을 듣고, 남자가 하는 말의 목적으로 가장 적절한 것을 고르시오. ①발명 대회 참가 신청 마감일 변경을 안내하려고 ②수업 과제의 온라인 제출 방법을 설명하려고 ③학교 홈페이지 운영 도우미를 모집하려고 ④발명 아이디어 우수 사례를 소개하려고 ⑤발명가 초청 특별 강연을 홍보하려고",
+   "choices": [
+    "발명 대회 참가 신청 마감일 변경을 안내하려고",
+    "수업 과제의 온라인 제출 방법을 설명하려고",
+    "학교 홈페이지 운영 도우미를 모집하려고",
+    "발명 아이디어 우수 사례를 소개하려고",
+    "발명가 초청 특별 강연을 홍보하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 161
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 여자의 의견으로 가장 적절한 것을 고르시오. ①보고서 주제는 구체적이어야 한다. ②도표 활용은 자료 제시에 효과적이다. ③설문 대상에 따라 질문을 달리해야 한다. ④설문 조사자를 위한 사전 교육이 필요하다. ⑤보고서 작성 시 도표 제시 순서에 유의해야 한다.",
+   "choices": [
+    "보고서 주제는 구체적이어야 한다.",
+    "도표 활용은 자료 제시에 효과적이다.",
+    "설문 대상에 따라 질문을 달리해야 한다.",
+    "설문 조사자를 위한 사전 교육이 필요하다.",
+    "보고서 작성 시 도표 제시 순서에 유의해야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 156
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 대화를 듣고, 두 사람의 관계를 가장 잘 나타낸 것을 고르시오. ①화가－기자 ②작곡가－가수 ③시인－교사 ④영화감독－배우 ⑤무용가－사진작가",
+   "choices": [
+    "화가－기자",
+    "작곡가－가수",
+    "시인－교사",
+    "영화감독－배우",
+    "무용가－사진작가"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 80
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고르시오.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 42
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 여자가 남자를 위해 할 일로 가장 적절한 것을 고르시오. ②포스터 인쇄하기 ③프린터 구매하기 ④파일 전송하기 ⑤만화 그리기",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 82
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 남자가 지불할 금액을 고르시오. [3점] ① $54 ② $55 ③ $60 ④ $63 ⑤ $70",
+   "choices": [
+    "$54",
+    "$55",
+    "$60",
+    "$63",
+    "$70"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 64
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 동아리 봉사 활동이 연기된 이유를 고르시오. ①기부받은 옷 정리 시간이 더 필요해서 ②동아리 홍보 동영상을 제작해야 해서 ③중간고사 기간이 얼마 남지 않아서 ④동아리 정기 회의를 개최해야 해서 ⑤기부 행사 참가자가 부족해서",
+   "choices": [
+    "기부받은 옷 정리 시간이 더 필요해서",
+    "동아리 홍보 동영상을 제작해야 해서",
+    "중간고사 기간이 얼마 남지 않아서",
+    "동아리 정기 회의를 개최해야 해서",
+    "기부 행사 참가자가 부족해서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 136
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, Annual Charity Baseball Game에 관해 언급되지 않은 것을 고르시오. ①참가 선수 ②일시 ③입장료 ④기념품 ⑤장소",
+   "choices": [
+    "참가 선수",
+    "일시",
+    "입장료",
+    "기념품",
+    "장소"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 88
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. Kaufman Special Exhibition에 관한 다음 내용을 듣고, 일치하지 않는 것을 고르시오. ①1995년에 처음 개최되었다. ②월요일에는 열리지 않는다. ③올해의 주제는 예술과 기술의 결합이다. ④일일 관람객 수를 100명으로 제한한다. ⑤예매를 통해 할인을 받을 수 ",
+   "choices": [
+    "1995년에 처음 개최되었다.",
+    "월요일에는 열리지 않는다.",
+    "올해의 주제는 예술과 기술의 결합이다.",
+    "일일 관람객 수를 100명으로 제한한다.",
+    "예매를 통해 할인을 받을 수 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 167
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 다음 표를 보면서 대화를 듣고, 여자가 등록할 강좌를 고르시오. Community Center Classes in July Class Fee Location Start Time ① Graphic Design $50 Greenville 5 p.m. ② Coding $70 Green",
+   "choices": [
+    "Graphic Design\n$50\nGreenville\n5 p.m.",
+    "Coding\n$70\nGreenville\n7 p.m.",
+    "Photography\n$80\nWestside\n7 p.m.",
+    "Flower Art\n$90\nWestside\n5 p.m.",
+    "Coffee Brewing\n$110\nGreenville\n8 p.m."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 280
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ①I’ll be back tomorrow. ②You liked the food there. ③I go to the gym every day. ④You should be here by six. ⑤W",
+   "choices": [
+    "I’ll be back tomorrow.",
+    "You liked the food there.",
+    "I go to the gym every day.",
+    "You should be here by six.",
+    "We finished dinner already."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 189
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ①All right. I’ll take the bus then. ②No. My bicycle is broken again. ③No problem. I’ll give you a ride. ④Don’",
+   "choices": [
+    "All right. I’ll take the bus then.",
+    "No. My bicycle is broken again.",
+    "No problem. I’ll give you a ride.",
+    "Don’t worry. I’m already at school.",
+    "Indeed. I’m glad it’s getting warmer.\n제3 교시"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 238
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. [3점] Woman: ①Absolutely. I was impressed after reading this script. ②No doubt. I think I acted well in the la",
+   "choices": [
+    "Absolutely. I was impressed after reading this script.",
+    "No doubt. I think I acted well in the last comedy.",
+    "Great. I’ll write the script for your new drama.",
+    "I’m sorry. I’m not able to direct the movie.",
+    "Okay. I’ll let you know my decision soon."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 311
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. [3점] Man: ①That’s okay. You can reserve another place. ②I see. I should hurry to join your company event. ③Why not?",
+   "choices": [
+    "That’s okay. You can reserve another place.",
+    "I see. I should hurry to join your company event.",
+    "Why not? My company has its own sports facilities.",
+    "I agree. We should wait until the remodeling is done.",
+    "Thanks. I’ll call now to see if they’re available that day."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 326
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Mary가 Steve에게 할 말로 가장 적절한 것을 고르시오. Mary: ①Why don’t you take leave today and look after yourself?",
+   "choices": [
+    "Why don’t you take leave today and look after yourself?",
+    "Your interests should be the priority in your job search.",
+    "You’d better actively support your teammates’ ideas.",
+    "Let’s find a way to increase sales of health products.",
+    "How about changing the details of the contract?\n[16～17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 361
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 여자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "reasons why chemicals are harmful to plants",
+    "ways that plants protect themselves from danger",
+    "difficulties in preventing plants from overgrowing",
+    "tips for keeping dangerous insects away from plants",
+    "importance of recognizing poisonous plants in the wild"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 284
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 식물이 아닌 것은?",
+   "choices": [
+    "roses",
+    "tomato plants",
+    "clovers",
+    "cherry trees",
+    "walnut trees"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 78
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "구조원 양성 과정의 추가 개설을 요청하려고",
+    "구조원 양성 과정의 우수성을 홍보하려고",
+    "동계 수영 강습 프로그램 수강을 신청하려고",
+    "수영 강사 일자리가 있는지 문의하려고",
+    "구조원 양성 과정의 등록 방법을 안내하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 806
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 드러난 Sharon의 심경 변화로 가장 적절한 것은?",
+   "choices": [
+    "excited →bored",
+    "doubtful →amazed",
+    "calm\n→upset",
+    "ashamed →grateful",
+    "envious →indifferent"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 955
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "이성보다 감정에 호소하여 상대방을 설득해야 한다.",
+    "상대방의 기분을 상하게 하는 행동을 자제해야 한다.",
+    "문제 해결을 위해서는 문제를 직접적으로 언급해야 한다.",
+    "타인의 입장을 이해하려면 경청하는 자세를 가져야 한다.",
+    "목표 달성을 방해하는 문제점을 지속적으로 파악해야 한다.\n  이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시에 \n따라 답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1137
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 밑줄 친 journey edges가 다음 글에서 의미하는 바로 가장 적절한 것은?",
+   "choices": [
+    "requiring customers to purchase unnecessary goods",
+    "decreasing customers’ dependence on business services",
+    "focusing more on selling end products than components",
+    "adding a technological breakthrough to their core products",
+    "providing extra services beyond customers’ primary purchase"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1205
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "운동선수의 기량은 경기 자체를 즐길 때 향상된다.",
+    "공정한 승부를 위해 합리적인 경기 규칙이 필요하다.",
+    "스포츠의 대중화는 스포츠 산업의 정의를 바꾸고 있다.",
+    "스포츠의 정의는 신체 활동 참여와 건강에 영향을 미친다.",
+    "활발한 여가 활동은 원만한 대인 관계 유지에 도움이 된다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1151
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "importance of asking the right questions for better solutions",
+    "difficulty of using a metaphor to find solutions to a problem",
+    "reasons why problem framing prevents solutions from appearing",
+    "usefulness of preventive measures in reducing community crime",
+    "effect of problem framing on approaching and solving problems"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1235
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Which Adapts First, Behaviour or Genes?",
+    "The Brain Under Control of Selfish Genes",
+    "Why Animals Eat Meat: A Story of Survival",
+    "Genes Always Win the Battle Against Nature!",
+    "The Superior Efficiency of Genetic Adaptation"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1257
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. 다음 표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "The sector that generated plastic waste \nmost was packaging, accounting for 46.69% of all plastic \nwaste generated.",
+    "The textiles sector generated 38 million \ntons of plastic waste, or 12.58% of the total plastic waste \ngenerated.",
+    "The consumer and institutional products sector \ngenerated 37 million tons of plastic waste, and the amount was \nmore than twice that of plastic waste the transportation sector \ngenerated.",
+    "The electrical and electronic sector generated \njust as much plastic waste as the building and construction \nsector did, each sector accounting for 8.60% of the total plastic \nwaste generation.",
+    "Only one million tons of plastic waste \nwere generated in the industrial machinery sector, representing \nless than 0.50% of the total plastic waste generated."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1232
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. William McDougall에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "Cambridge University에서 학위를 받았다.",
+    "인간 행동이 세 가지 능력에 근거한다고 믿었다.",
+    "The Group Mind는 출판되었을 때 매우 인정받았다.",
+    "Duke University에서 다양한 연구를 계속하였다.",
+    "오늘날 심리학자들은 그의 지적 업적을 기린다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1209
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. Singing Tommy 사용에 관한 다음 안내문의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "인터넷에 연결되지 않아도 노래를 재생할 수 있다.",
+    "사용 전에 두 개의 AA 건전지를 넣어야 한다.",
+    "모자를 누르면 노래가 시작된다.",
+    "다섯 곡의 노래 중에 선택할 수 있다.",
+    "방수가 되지 않는다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 855
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. 2020 Crime & Spy Science Workshop에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "이틀 동안 진행된다.",
+    "참가비에 보험이 포함되어 있다.",
+    "등록은 이메일로만 할 수 있다.",
+    "점심과 간식은 제공되지 않는다.",
+    "적절한 도구를 선택하는 방법을 배울 것이다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 835
+  },
+  {
+   "qNum": 29,
+   "kind": "grammar_underline",
+   "stem": "29. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "as these serve as the",
+    "②": "depending primarily on one’s own",
+    "③": "driven to cope by appealing",
+    "④": "that East Asians prefer to",
+    "⑤": "who hold a more interdependent"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1056
+  },
+  {
+   "qNum": 30,
+   "kind": "vocab_underline",
+   "stem": "30. 다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "struggle to make sense of",
+    "②": "memory",
+    "③": "improbable by remembering the musical",
+    "④": "mentally replay the music from",
+    "⑤": "start of a musical phrase"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1180
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. Research with human runners challenged conventional wisdom and found that the ground-reaction forces at the foot and the shock transmitted up the leg and th",
+   "choices": [
+    "varied little",
+    "decreased a lot",
+    "suddenly peaked",
+    "gradually appeared",
+    "were hardly generated"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1075
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. One of the great risks of writing is that even the simplest of choices regarding wording or punctuation can sometimes in ways that may seem unfair. For exam",
+   "choices": [
+    "reveal your hidden intention",
+    "distort the meaning of the sentence",
+    "prejudice your audience against you",
+    "test your audience’s reading comprehension",
+    "create fierce debates about your writing topic"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1396
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. Even when we do something as apparently simple as picking up a screwdriver, our brain automatically . We can literally feel things with the end of the screw",
+   "choices": [
+    "recalls past experiences of utilizing the tool",
+    "recognizes what it can do best without the tool",
+    "judges which part of our body can best be used",
+    "perceives what limits the tool’s functional utility",
+    "adjusts what it considers body to include the tool"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1186
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. A large part of what we see is what we expect to see. This explains why we “see” faces and figures in a flickering campfire, or in moving clouds. This is wh",
+   "choices": [
+    "ignoring distracting information unrelated to visual clues",
+    "projecting images from within the mind out onto the world",
+    "categorizing objects into groups either real or imagined",
+    "strengthening connections between objects in the real world",
+    "removing the broken or missing parts of an original image"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1151
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "The pattern of life in the country and \nmost suburbs involves long hours in the automobile each week, \nburning fuel and pumping out exhaust to get to work, buy \ngroceries, and take kids to school and activities.",
+    "City dwellers, \non the other hand, have the option of walking or taking transit to \nwork, shops, and school.",
+    "The larger yards and houses found \noutside cities also create an environmental cost in terms of \nenergy use, water use, and land use.",
+    "This illustrates the \ntendency that most city dwellers get tired of urban lives and \ndecide to settle in the countryside.",
+    "It’s clear that the future of \nthe Earth depends on more people gathering together in compact \ncommunities. \n* compact: 밀집한\n[36～37] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 \n것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1183
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. Studies of people struggling with major health problems show that the majority of respondents report they derived benefits from their adversity. Stressful e",
+   "choices": [
+    "(A) －(C) －(B)",
+    "(B) －(A) －(C)",
+    "(B) －(C) －(A)",
+    "(C) －(A) －(B)",
+    "(C) －(B) －(A)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1237
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. The fruit ripening process brings about the softening of cell walls, sweetening and the production of chemicals that give colour and flavour. The process is",
+   "choices": [
+    "(A) －(C) －(B)",
+    "(B) －(A) －(C)",
+    "(B) －(C) －(A)",
+    "(C) －(A) －(B)",
+    "(C) －(B) －(A)\n[38～39] 글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 \n적절한 곳을 고르시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38～39"
+    ]
+   },
+   "charLen": 1230
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. Compounding the difficulty, now more than ever, is what ergonomists call information overload, where a leader is overrun with inputs ― via e-mails, meetings",
+   "choices": [
+    ") Some decisions \nby their nature present great complexity, whose many \nvariables must come together a certain way for the leader to \nsucceed. (",
+    ") Alternatively, the leader’s information might \nbe only fragmentary, which might cause her to fill in the gaps \nwith assumptions ― sometimes without recognizing them as \nsuch. (",
+    ") And the merits of a leader’s most important \ndecisions, by their nature, typically are not clear-cut. (",
+    ") \nInstead those decisions involve a process of assigning weights \nto competing interests, and then determining, based upon \nsome criterion, which one predominates. (",
+    ") The result is \none of judgment, of shades of gray; like saying that Beethoven \nis a better composer than Brahms. [3점]\n* ergonomist: 인간 공학자  ** fragmentary: 단편적인"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1158
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. When the team painted fireflies’ light organs dark, a new set of bats took twice as long to learn to avoid them. Fireflies don’t just light up their behinds",
+   "choices": [
+    ") When swallowed, chemicals \nreleased by fireflies cause bats to throw them back up. (",
+    ") \nThe team placed eight bats in a dark room with three or four \nfireflies plus three times as many tasty insects, including \nbeetles and moths, for four days. (",
+    ") During the first night, \nall the bats captured at least one firefly. (",
+    ") But by the \nfourth night, most bats had learned to avoid fireflies and catch \nall the other prey instead. (",
+    ") It had long been thought that \nfirefly bioluminescence mainly acted as a mating signal, but \nthe new finding explains why firefly larvae also glow despite \nbeing immature for mating.\n* bioluminescence: 생물 발광(發光)  ** larvae: larva(애벌레)의 복수형"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1145
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "experimental ……confirm",
+    "experimental ……reveal",
+    "environmental……clarify",
+    "environmental……conceal",
+    "accidental\n……mask\n[41～42] 다음 글을 읽고, 물음에 답하시오.\nIn many mountain regions, rights of access to water are \nassociated with the possession of land ― until recently in the \nAndes, for example, land and water rights were (a) combined \nso water rights were transferred with the land. However, \nthrough state land reforms and the development of additional \nsources of supply, water rights have become separated from \nland, and may be sold at auction. This therefore (b) favours \nthose who can pay, rather than ensuring access to all in the \ncommunity. The situation arises, therefore, where individuals \nmay hold land with no water. In Peru, the government grants \nwater to communities separately from land, and it is up to \nthe community to allocate it. Likewise in Yemen, the \ntraditional allocation was one measure (tasah) of water to one \nhundred ‘libnah’ of land. This applied only to traditional \nirrigation supplies ― from runoff, wells, etc., where a supply \nwas (c) guaranteed. Water derived from the capture of flash \nfloods is not subject to Islamic law as this constitutes an \nuncertain source, and is therefore free for those able to collect \nand use it. However, this traditional allocation per unit of land \nhas been bypassed, partly by the development of new supplies, \nbut also by the (d) decrease in cultivation of a crop of \nsubstantial economic importance. This crop is harvested \nthroughout the year and thus requires more than its fair share \nof water. The economic status of the crop (e) ensures that water \nrights can be bought or bribed away from subsistence crops.\n* irrigation: 관개(灌漑)  ** bribe: 매수하다\n*** subsistence crop: 생계용 작물"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3144
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Water Rights No Longer Tied to Land",
+    "Strategies for Trading Water Rights",
+    "Water Storage Methods: Mountain vs. Desert",
+    "Water Supplies Not Stable in Mountain Regions",
+    "Unending Debates: Which Crop We Should Grow"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 234
+  },
+  {
+   "qNum": 42,
+   "kind": "vocab_letter",
+   "stem": "42. 밑줄 친 (a)～(e) 중에서 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {
+    "a": "he said",
+    "b": "I am so proud",
+    "c": "Son",
+    "d": "He looked at the",
+    "e": "he would feel ashamed"
+   },
+   "bracketChoices": {},
+   "charLen": 2202
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) －(D) －(C)",
+    "(C) －(B) －(D)",
+    "(C) －(D) －(B)",
+    "(D) －(B) －(C)",
+    "(D) －(C) －(B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 125
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a)～(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 75
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글에 관한 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "Steven은 집 앞 계단에 앉아 편지를 자세히 읽었다.",
+    "방과 후에 집으로 돌아오는 Steven의 발걸음은 무거웠다.",
+    "아버지는 Steven에게 옳은 일을 하라고 조언했다.",
+    "에세이 대회에서 우승한 사람은 Stephanie였다.",
+    "Steven은 여동생과 놀이공원에 갈 계획이었다.\n* 확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)했는지 확인\n하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 235
+  }
+ ],
+ "sourcePdf": "54419bf4091095ae780c57e8de51953a.pdf",
+ "fileName": "3교시_영어_문제지.pdf"
+}

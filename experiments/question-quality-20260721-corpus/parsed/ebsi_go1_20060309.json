@@ -1,0 +1,2501 @@
+{
+ "examId": "ebsi_go1_20060309",
+ "source": "ebsi_go1_20060309_paper_20060309_eng_mun.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3
+  },
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3
+  },
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3
+  },
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 대화를듣고남자가가장좋아하는모자를고르시오 점 , . [1 ] ① ② ③ ④ ⑤",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 46
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를듣고두사람의심정으로가장적절한것을고르시오 , . excited ① scared ② bored ③ relaxed ④ surprised ⑤",
+   "choices": [
+    "scared",
+    "bored",
+    "relaxed",
+    "surprised",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 81
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을듣고무엇에관한안내인지고르시오 , . 교통법규 ① 숙박시설 ② 교통요금체계 ③ 놀이시설입장료 ④ 자동판매기이용법 ⑤",
+   "choices": [
+    "숙박시설",
+    "교통요금체계",
+    "놀이시설입장료",
+    "자동판매기이용법",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 70
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를듣고남자가여자에게부탁하는일을고르시오 , . 신문을보여달라 ① 고양이를사달라 ② 동화를읽어달라 ③ 팝콘을튀겨달라 ④ 쿠키를구워달라 ⑤",
+   "choices": [
+    "고양이를사달라",
+    "동화를읽어달라",
+    "팝콘을튀겨달라",
+    "쿠키를구워달라",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 80
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를듣고남자가내일오후에할일을고르시오 , . 스케이트를타러간다. ① 동생방을청소한다. ② 동생숙제를도와준다. ③ 자전거를고친다. ④ 친구를만난다. ⑤",
+   "choices": [
+    "동생방을청소한다.",
+    "동생숙제를도와준다.",
+    "자전거를고친다.",
+    "친구를만난다.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 87
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 다음을듣고남자가한말의목적으로가장적절한것을고르 , 시오. 생일잔치에초대하려고 ① 자동차구입을축하하려고 ② 교통편에관해문의하려고 ③ 약속에늦은것을사과하려고 ④ 기차를이용하도록충고하려고 ⑤",
+   "choices": [
+    "자동차구입을축하하려고",
+    "교통편에관해문의하려고",
+    "약속에늦은것을사과하려고",
+    "기차를이용하도록충고하려고",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 106
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를듣고두사람이영화를볼시각을고르시오 , . 6:00 ① 7:00 ② 7:30 ③ 8:30 ④ 9:30 ⑤",
+   "choices": [
+    "7:00",
+    "7:30",
+    "8:30",
+    "9:30",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 63
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를듣고두사람의관계를가장잘나타낸것을고르시오 , . 어머니와아들 ① 의사와환자 ② 점원과고객 ③ 운전사와승객 ④ 교사와학생 ⑤",
+   "choices": [
+    "의사와환자",
+    "점원과고객",
+    "운전사와승객",
+    "교사와학생",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 74
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 대화를듣고 남자가체중을줄이기위하여하고있는것을 , 고르시오. 다이어트 ① 조깅 ② 배드민턴 ③ 수영 ④ 에어로빅 ⑤",
+   "choices": [
+    "조깅",
+    "배드민턴",
+    "수영",
+    "에어로빅",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 67
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 대화를듣고 보고서에대하여여자가남자에게조언하는내 , 용을고르시오. 사실대로쓸것 ① 간결하게쓸것 ② 충분한예를들것 ③ 창의적으로쓸것 ④ 제출기한을지킬것 ⑤ 학년도 월고 전국연합학력평가문제지 2006 제 교시 ( ) 성명 수험번호 ( ) ━━━━━━━━━━━━━━━━━━━━━━━━━━",
+   "choices": [
+    "간결하게쓸것",
+    "충분한예를들것",
+    "창의적으로쓸것",
+    "제출기한을지킬것",
+    "학년도\n월고\n전국연합학력평가문제지\n2006\n제\n교시\n(\n)\n성명\n수험번호\n(\n)\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 198
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 대화를듣고 두사람이대화하는장소로가장적절한것을 , 고르시오. classroom ① theater ② hospital ③ museum ④ restaurant ⑤",
+   "choices": [
+    "theater",
+    "hospital",
+    "museum",
+    "restaurant",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 92
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 대화를듣고 다음양식에작성된사항중내용과일치하지 , 않는것을고르시오. ① ② ③ ④ ⑤",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 51
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 그림의상황에가장적절한대화를고르시오. ① ② ③ ④ ⑤",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 34
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를듣고남자의마지막말에대한여자의응답으로가장 , 적절한것을고르시오. Woman: __________________________________________ I’m happy for you. ① Can I show you the way?",
+   "choices": [
+    "Can I show you the way?",
+    "When did you play the game?",
+    "Cheer up. You’ll do better next time.",
+    "I’ll be missing you, too. Come back soon.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 253
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 대화를듣고여자의마지막말에대한남자의응답으로가장 , 적절한것을고르시오 점 . [3 ] Man: _____________________________________________ I don’t like news at all. ① TV is more interesting. ② I can",
+   "choices": [
+    "TV is more interesting.",
+    "I can read news anytime.",
+    "Koreans are very diligent.",
+    "I love this program very much.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 244
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 대화를듣고남자의마지막말에대한여자의응답으로가장 , 적절한것을고르시오. Woman: __________________________________________ No, I’m not good at singing. ① I play the guitar in the band. ② So, ",
+   "choices": [
+    "I play the guitar in the band.",
+    "So, we like the same kind of music.",
+    "No, I have no plans to go anywhere.",
+    "I didn’t know you could sing so well.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 272
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 다음상황설명을듣고 이 에게할말로가장적절한 , Jane Mike 것을고르시오. Jane: _____________________________________________ Do you like ice cream?",
+   "choices": [
+    "Do you get much exercise?",
+    "When did you learn to swim?",
+    "How much is this sun cream?",
+    "Why didn’t you put on sun cream?",
+    "이제듣기말하기문제는다끝났습니다\n번부터는문\n. 18\n․\n제의지시에따라답을하기바랍니다.\n(\n)\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 362
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 밑줄친them 중나머지넷과가리키는바가 , 다른하나는?",
+   "choices": [
+    "them\nfor ten years, and they really helped. I have another pair of\nglasses at home. I can wear",
+    "them.”\nYou try",
+    "them, but it is worse now. You say, “Oh, I\ndon’t think these work for me. I can’t see anything.”\nYour friend says, “Why not? They worked well for me.\nTry",
+    "them again.”\n“I am wearing",
+    "them, but I can’t see things,” you say.\nYour friend says, “You are unthankful.” What do you think of\nyour friend?"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 549
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 밑줄친This가가리키는것을그림에서고르면 점 ?",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 365
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 20,
+   "kind": "grammar_underline",
+   "stem": "20. 다음글의밑줄친부분중어법상 , 틀린것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "recycled paper saves one tree",
+    "②": "have trained their citizens to",
+    "③": "is keeping separate",
+    "④": "are taken to special centers",
+    "⑤": "recycling"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 389
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 21,
+   "kind": "box_choice",
+   "stem": "21. 의각네모안에서어법에맞는표현을골라 (A), (B), (C) 짝지은것으로가장적절한것은?",
+   "choices": [
+    "………\nbetter\n………\nshoots\nexciting",
+    "………\nbetter\n………\nshooting\nexciting",
+    "………\nbest\n………\nshoots\nexcited",
+    "………\nbest\n………\nshooting\nexcited",
+    "………\nbetter\n………\nshooting"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 822
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음글에서전체흐름과관계없는문장은?",
+   "choices": [
+    "For many of them,\nlife is like living in a goldfish bowl．",
+    "Everyone can see\neverything they do.",
+    "It’s not true that all stars make a lot\nof money.",
+    "They are followed by the paparazzi wherever\nthey go and we can read all about their private lives in\nnewspapers and magazines.",
+    "All this means that many film\nstars find it difficult to lead a normal life.\n*paparazzi: 파파라치유명인사를쫓아다니는프리랜서사진사들\n(\n)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 452
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음글을쓴목적으로가장적절한것은?",
+   "choices": [
+    "취소하려고",
+    "요청하려고",
+    "문의하려고",
+    "사과하려고",
+    "(\n)\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 610
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음은어느고등학교의학급당학생수를연도별로나타낸것 이다도표의내용과일치하지 . 않는것은?",
+   "choices": [
+    "In 1995, the number of students per class was 55.",
+    "From 1990 to 2000, the class size decreased to half.",
+    "The class size decreased the most from 1995 to 2000.",
+    "In 2000, a class had five more students than in 2005.",
+    "【25\n25 - 28\n28 】다음글을읽고빈칸에가장적절한것을고르시오\n다음글을읽고빈칸에가장적절한것을고르시오\n다음글을읽고빈칸에가장적절한것을고르시오\n다음글을읽고빈칸에가장적절한것을고르시오\n,\n.\n,\n.\n,\n.\n,\n."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 440
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. I live in California, and we have earthquakes here all the time. Sometimes they’re strong, but sometimes we don’t even notice them. One evening I was sittin",
+   "choices": [
+    "hungry",
+    "lonely",
+    "calm",
+    "proud",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 570
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Tourism is not good news for __________. First of all, transporting millions of tourists pollutes the air and the seas. Secondly, as more hotels are built, ",
+   "choices": [
+    "education",
+    "communication",
+    "the government",
+    "the environment",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 482
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. Some insects don’t hide at all. Instead, their wings have bright colors that can be seen from far away. Scientists say these wings have warning colors. The ",
+   "choices": [
+    "hurt its wings",
+    "hide somewhere",
+    "fly far away",
+    "tell others about the taste",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 567
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. Good listening is like listening to the radio. For good results, you should listen to only one station at a time. Don’t try to listen to your wife while you",
+   "choices": [
+    "buy a new radio",
+    "please other people",
+    "stop what you are doing",
+    "visit the radio station",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 576
+  },
+  {
+   "qNum": 29,
+   "kind": "mc",
+   "stem": "29.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 29,
+   "kind": "mc",
+   "stem": "29.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 29,
+   "kind": "mc",
+   "stem": "29.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 29,
+   "kind": "mc",
+   "stem": "29. 주어진글다음에이어질글의순서로가장적절한것은?",
+   "choices": [
+    "- (B) - (C)\n(A)",
+    "- (C) - (B)\n(B)",
+    "- (C) - (A)\n(C)",
+    "- (A) - (B)\n(C)",
+    "- (B) - (A)\n(\n)\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 595
+  },
+  {
+   "qNum": 30,
+   "kind": "mc",
+   "stem": "30.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 30,
+   "kind": "mc",
+   "stem": "30.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 30,
+   "kind": "mc",
+   "stem": "30.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 30,
+   "kind": "mc",
+   "stem": "30. 글의흐름으로보아밑줄친단어들중에서의미상그쓰임이 , 적절하지않은것은?",
+   "choices": [
+    "happy. So I think happiness is a state of",
+    "mind.\nWhether you’re fat or skinny, the way you think can make\nyour life",
+    "happy. And most people aren’t fat; they just\nhave a",
+    "healthy weight. But they think they are",
+    "skinny\nand feel unhappy."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 404
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 31,
+   "kind": "box_choice",
+   "stem": "31. 의각네모안에서문맥에맞는낱말을골라 (A), (B), (C) 짝지은것으로가장적절한것은?",
+   "choices": [
+    "………\nlost\n………\nowed\ngood",
+    "………\ngained ………\nowned\ngood",
+    "………\ngained ………\nowed\ngoods",
+    "………\nlost\n………\nowed\ngoods",
+    "………\nlost\n………\nowned"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 489
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. 다음글의분위기로가장적절한것은?",
+   "choices": [
+    "긴박하다",
+    "평화롭다",
+    "우울하다",
+    "낭만적이다",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 463
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. 다음글에드러난 의심경을가장잘나타낸것은 ‘I’ ?",
+   "choices": [
+    "기쁘다",
+    "따분하다",
+    "창피하다",
+    "자랑스럽다",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 576
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. 다음글에서필자의주장으로가장적절한것은?",
+   "choices": [
+    "만져보면더잘알수있다.",
+    "다른사람을배려해야한다.",
+    "듣는것보다보는것이낫다.",
+    "역사에관한지식을늘려야한다.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 589
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 글의흐름으로보아 주어진문장이들어가기에가장적절한 , 곳은?",
+   "choices": [
+    ")\nMuch of it is grown in the warm lowlands. (",
+    ") The first\nstep in planting rice is to make the field even. (",
+    ") Next,\na bank of earth about 30 centimeters high is made around\nthe field. (",
+    ") Farmers walk into the water and put small\nrice plants into the field. (",
+    ") While the rice grows, the\nfields must keep water.\n*even: 평평한\n(\n)\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n【36\n36 - 37\n다음글의주제로가장적절한것을고르시오\n다음글의주제로가장적절한것을고르시오\n다음글의주제로가장적절한것을고르시오\n다음글의주제로가장적절한것을고르시오.\n】"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 610
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. In everyday conversation, there are different ways to say what we want. When we are with a group of friends, we can say to them, “Go get me that plate!” or “Shut up!” However, when we are invited to other people’s house with our parents, we must say, “Could you please pass me that plate, if you don’t mind?",
+   "choices": [
+    "손님을접대하는방법",
+    "간결한표현의필요성",
+    "공통관심사의중요성",
+    "십대와의대화요령",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 522
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. Pigeons can see a very long distance ─about 2,000 feet. That’s why the Navy train them to look for orange color, the color of life jackets. In bad weather, ",
+   "choices": [
+    "how pigeons help save people",
+    "how far pigeons can see at sea",
+    "pigeons’ behavior in bad weather",
+    "ways of training pigeons in the Navy",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 602
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. 빈칸에들어갈말로가장적절한것은?",
+   "choices": [
+    "However",
+    "Unfortunately",
+    "For example",
+    "By the way",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 453
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. 에관한설명중다음글의내용과일치하는것은 Linda Ho , ?",
+   "choices": [
+    "그림을보고시적영감을얻었다.",
+    "상금으로그림도구를사려고한다.",
+    "고등학교졸업시험을준비하고있다.",
+    "대학에서문학을전공하려고한다.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 569
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음글의내용을한문장으로요약하고자한다빈칸 와 . (A) 에들어갈말로가장적절한것끼리짝지은것은 (B) ?",
+   "choices": [
+    "………\nforgetting\nyourself",
+    "………\nsharing\nyour teacher",
+    "………\nsharing\nyour teacher",
+    "………\nforgetting\nyour friend",
+    "………\nsharing\n(\n)\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 905
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 다음글에서언급되지않은것을그림에서고르면 점 ?",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    "【42\n42 - 43\n다음글의제목으로가장적절한것을고르시오\n다음글의제목으로가장적절한것을고르시오\n다음글의제목으로가장적절한것을고르시오\n다음글의제목으로가장적절한것을고르시오.\n】"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 673
+  },
+  {
+   "qNum": 42,
+   "kind": "mc",
+   "stem": "42.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 42,
+   "kind": "mc",
+   "stem": "42.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 42,
+   "kind": "mc",
+   "stem": "42.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 42,
+   "kind": "mc",
+   "stem": "42. You should not watch television and eat at the same time. You just get lost in a program and can’t stop eating too much. You’ll eat anything ─the worst things ─when the television is on. You may eat unhealthy food like cookies, snacks, and fast food. It is just like hanging around with the wrong friends in school. You’ll do things you wouldn’t do if you didn’t meet them. Why Healthy Food?",
+   "choices": [
+    "No TV While Eating",
+    "Fun with TV Programs",
+    "TV",
+    ": Your Lifelong Friend\nGood Friends, Happy Life",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 497
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. I was the odd duck in the family. I was very different from my brothers and sisters. I liked different music, different foods, different clothes, just about",
+   "choices": [
+    "Prepare for Your Future",
+    "Anger Must Be Controlled",
+    "Money Can’t Buy Happiness",
+    "Other Views Are Also Important",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 823
+  },
+  {
+   "qNum": 44,
+   "kind": "mc",
+   "stem": "44.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 44,
+   "kind": "mc",
+   "stem": "44.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 44,
+   "kind": "mc",
+   "stem": "44.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 44,
+   "kind": "mc",
+   "stem": "44. 다음글의요지로가장적절한것은?",
+   "choices": [
+    "수업태도를바르게해야한다.",
+    "쉬운문제를먼저풀어야한다.",
+    "시험준비를철저히해야한다.",
+    "시험볼때시간배분을잘해야한다.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 633
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 다음글을마무리하는문장의빈칸 와 에들어갈말로 (A) (B) 가장적절한것끼리짝지은것은?",
+   "choices": [
+    "………\nshame\npain",
+    "………\njoy\nweapon",
+    "………\nfashion\nenemy",
+    "………\nfriend\ntool",
+    "………\ntoy\n(\n)\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n【46\n46 - 48\n다음글을읽고물음에답하시오\n다음글을읽고물음에답하시오\n다음글을읽고물음에답하시오\n다음글을읽고물음에답하시오\n,\n.\n,\n.\n,\n.\n,\n.\n】\nDavid is a high school freshman. He likes to help others.\nWhether it’s with his family or friends, David has tried to\nbe there for them.\nWhen David’s sister was in danger of failing math, David\ndidn’t only help her study, but he also tried to make it\nmore fun. He made up examples that were related to things\nshe was interested in. His sister studied math with interest\nand passed the examination.\nLast year, his friend Sara failed to get into the school\nbasketball team. David wanted to help her. He joined a\ncommunity league team with Sara and practiced together.\nSara is ready to get into the school team now. She says,\n“David is the most ______________ person I know.”\nDavid sometimes felt like he was a little hard on himself.\nBut over time he has learned that what he did for others\nhas returned in even greater amounts. “Every time I do\nsomething for someone, I enjoy the feeling of helping,” he\nsays. “I feel good about myself because I can do something\nfor others.”"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1705
+  },
+  {
+   "qNum": 46,
+   "kind": "mc",
+   "stem": "46.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 46,
+   "kind": "mc",
+   "stem": "46.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 46,
+   "kind": "mc",
+   "stem": "46.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 46,
+   "kind": "mc",
+   "stem": "46. 위글의빈칸에가장적절한것은?",
+   "choices": [
+    "honest",
+    "clever",
+    "caring",
+    "humorous",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 66
+  },
+  {
+   "qNum": 47,
+   "kind": "mc",
+   "stem": "47.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 47,
+   "kind": "mc",
+   "stem": "47.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 47,
+   "kind": "mc",
+   "stem": "47.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 47,
+   "kind": "mc",
+   "stem": "47. 위글의내용과일치하지않는것은?",
+   "choices": [
+    "의여동생은수학에서낙제할뻔했다\nDavid\n.",
+    "는여동생의수학공부를도와주었다\nDavid\n.",
+    "는작년에학교농구팀에들어가지못했다\nSara\n.",
+    "와\n는올해학교농구팀에들어갔다\nDavid\nSara\n.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 155
+  },
+  {
+   "qNum": 48,
+   "kind": "mc",
+   "stem": "48.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 48,
+   "kind": "mc",
+   "stem": "48.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 48,
+   "kind": "mc",
+   "stem": "48.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 48,
+   "kind": "mc",
+   "stem": "48. 위글이시사하는바를다음과같이나타낼때 빈칸 와 , (A) 에들어갈말로가장적절한것끼리짝지은것은 (B) ?",
+   "choices": [
+    "………\nproud\nplay basketball",
+    "………\nexcited\npass a test",
+    "………\nsuccessful\nhelp others",
+    "………\nhappy\nenter high school",
+    "………\nresponsible\n【49\n49 - 50\n다음글을읽고물음에답하시오\n다음글을읽고물음에답하시오\n다음글을읽고물음에답하시오\n다음글을읽고물음에답하시오\n,\n.\n,\n.\n,\n.\n,\n.\n】\nOnce there lived a poor family. For generations their family\njob was washing clothes for others. They knew (a) a secret\nfor making an excellent hand cream which was very good for\nchapped hands.\n(A)\nAfter the war the king made the man a noble. With\n(b) the same knowledge, one man became a noble while\nthe family only got some money.\n(B)\nA man heard of this and offered a lot of money for the\nsecret recipe. The family discussed (c) the matter. “We\nhave washed clothes for others for generations,” they said,\n“but we never made more than a few pennies. Today we\ncan sell (d) our recipe for a lot of money. Let’s sell the\nidea!”\n(C)\nLater there broke out a war. It was winter time and the\nsoldiers were suffering from chapped hands. The man who\nhad bought (e) the idea presented it to the king of the\ncountry. It cured the soldiers and made them strong. They\ndefeated\nthe\nenemy\ncompletely\nwith\nthe\nhelp\nof\nthe\nwonderful cream.\n*chapped: 살갗이튼"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1269
+  },
+  {
+   "qNum": 49,
+   "kind": "mc",
+   "stem": "49.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 49,
+   "kind": "mc",
+   "stem": "49.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 49,
+   "kind": "mc",
+   "stem": "49.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 49,
+   "kind": "mc",
+   "stem": "49. 주어진글에이어질글의순서로가장적절한것은 점 ?",
+   "choices": [
+    "- (B) - (C)\n(B)",
+    "- (A) - (C)\n(B)",
+    "- (C) - (A)\n(C)",
+    "- (A) - (B)\n(C)",
+    "- (B) - (A)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 124
+  },
+  {
+   "qNum": 50,
+   "kind": "mc",
+   "stem": "50.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 50,
+   "kind": "mc",
+   "stem": "50.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 50,
+   "kind": "mc",
+   "stem": "50.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 4
+  },
+  {
+   "qNum": 50,
+   "kind": "vocab_letter",
+   "stem": "50. 밑줄친 중나머지넷과가리키는바가 (a)~(e) , 다른하나는?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 110
+  }
+ ],
+ "sourcePdf": "ebsi_go1_20060309_paper_20060309_eng_mun.pdf"
+}

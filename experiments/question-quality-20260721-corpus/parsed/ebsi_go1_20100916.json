@@ -1,0 +1,845 @@
+{
+ "examId": "ebsi_go1_20100916",
+ "source": "ebsi_go1_20100916_paper_20100916_eng_mun_1.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 대화를듣고, 여자가만들고있는장난감을고르시오. ① ② ③ ④ ⑤",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 38
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를듣고, 남자의심정으로가장적절한것을고르시오. ①jealous ②relieved ③indifferent ④delighted ⑤frustrated",
+   "choices": [
+    "jealous",
+    "relieved",
+    "indifferent",
+    "delighted",
+    "frustrated"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 85
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을듣고, 무엇에관한설명인지고르시오. ①비상구 ②방범창 ③소화기 ④보안카메라 ⑤화재경보기",
+   "choices": [
+    "비상구",
+    "방범창",
+    "소화기",
+    "보안카메라",
+    "화재경보기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 54
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를듣고, 여자가남자를위해할일로가장적절한것을 고르시오. ①식당예약하기 ②책빌려주기 ③먹을것사오기 ④보고서제출하기 ⑤보고서검토하기",
+   "choices": [
+    "식당예약하기",
+    "책빌려주기",
+    "먹을것사오기",
+    "보고서제출하기",
+    "보고서검토하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 76
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 다음을듣고, 남자가하는말의목적으로가장적절한것을 고르시오. ①버스운행시간변경을안내하려고 ②버스내승객안전지침을알려주려고 ③버스정거장에서줄서기를권장하려고 ④버스전용차선제의준수를당부하려고 ⑤버스정거장에주․정차자제를부탁하려고",
+   "choices": [
+    "버스운행시간변경을안내하려고",
+    "버스내승객안전지침을알려주려고",
+    "버스정거장에서줄서기를권장하려고",
+    "버스전용차선제의준수를당부하려고",
+    "버스정거장에주․정차자제를부탁하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 124
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를듣고, 남자가여자에게줄금액을고르시오. ①$60 ②$80 ③$100 ④$120 ⑤$240",
+   "choices": [
+    "$60",
+    "$80",
+    "$100",
+    "$120",
+    "$240"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 55
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를듣고, 여자가남자에게부탁한일을고르시오. ①to set up a video camera ②to videotape a lecture ③to pick up a guest speaker ④to prepare a sign board ⑤to arrange audience’s chairs",
+   "choices": [
+    "to set up a video camera",
+    "to videotape a lecture",
+    "to pick up a guest speaker",
+    "to prepare a sign board",
+    "to arrange audience’s chairs"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 161
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를듣고, 두사람이대화하고있는장소로가장적절한곳 을고르시오. [1점] ①소방서 ②경찰서 ③신문사 ④전화국 ⑤정비소",
+   "choices": [
+    "소방서",
+    "경찰서",
+    "신문사",
+    "전화국",
+    "정비소"
+   ],
+   "point": 1,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 67
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 대화를듣고, 두사람의관계를가장잘나타낸것을고르시오. ①doctor - patient ②pet trainer - pet owner ③pharmacist - patient ④animal doctor - pet owner ⑤pet trainer - assistant",
+   "choices": [
+    "doctor - patient",
+    "pet trainer - pet owner",
+    "pharmacist - patient",
+    "animal doctor - pet owner",
+    "pet trainer - assistant"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 148
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 대화를듣고, 여자가할일로가장적절한것을고르시오. ①집안일돕기 ②도서관가기 ③과제제출하기 ④남자의집방문하기 ⑤축구경기시청하기",
+   "choices": [
+    "집안일돕기",
+    "도서관가기",
+    "과제제출하기",
+    "남자의집방문하기",
+    "축구경기시청하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 72
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 다음표를보면서대화를듣고, 두사람이예약할공연장소와 시간을고르시오.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 40
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. Millennium Wheel에관한다음내용을듣고, 일치하지않는 것을고르시오. ①런던에있는놀이기구의일종이다. ②한바퀴회전하는데에30분이걸린다. ③각탑승용캡슐에는25명의승객이탈수있다. ④크리스마스에이용객이가장많다. ⑤지하철역에서걸어서갈수있는거리에있다. 2010학년도 9월 고1 전국연",
+   "choices": [
+    "런던에있는놀이기구의일종이다.",
+    "한바퀴회전하는데에30분이걸린다.",
+    "각탑승용캡슐에는25명의승객이탈수있다.",
+    "크리스마스에이용객이가장많다.",
+    "지하철역에서걸어서갈수있는거리에있다.\n2010학년도 9월 고1 전국연합학력평가 문제지\n외국어(영어) 영역\n성명\n수험번호\n제3 교시\n외국어(영어) 영역\n고1"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 209
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 다음그림의상황에가장적절한대화를고르시오. ① ② ③ ④ ⑤",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 36
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를듣고, 남자의마지막말에대한여자의응답으로가장 적절한것을고르시오. Woman: ________________________________________. ①No news is good news ②When it rains, it pours ③Two heads are better ",
+   "choices": [
+    "No news is good news",
+    "When it rains, it pours",
+    "Two heads are better than one",
+    "Where there is a will, there is a way",
+    "The grass is greener on the other side"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 248
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 대화를듣고, 여자의마지막말에대한남자의응답으로가장 적절한것을고르시오. [3점] Man: ________________________________________. ①Let me have my receipt, please ②I’ll gift-wrap the package for yo",
+   "choices": [
+    "Let me have my receipt, please",
+    "I’ll gift-wrap the package for you",
+    "Well, I want to get a refund for that",
+    "Then, the only choice is to send it by sea",
+    "Please give me an air ticket for one person"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 290
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 대화를듣고, 남자의마지막말에대한여자의응답으로가장 적절한것을고르시오. Woman: ________________________________________ ①That’s true. It’s important to be on time. ②Oh, my! I’m so glad to see you here again. ③That’s why you should sometimes say ‘no’. ④Calm down. Why don’t we finish our job first?",
+   "choices": [
+    "That’s true. It’s important to be on time.",
+    "Oh, my! I’m so glad to see you here again.",
+    "That’s why you should sometimes say ‘no’.",
+    "Calm down. Why don’t we finish our job first?",
+    "Then, will you attend the reunion instead of me?"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 318
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 다음상황설명을듣고, 아버지가Annie에게할말로가장 적절한것을고르시오. Father: _________________________________________ ①Make sure not to open the door to strangers. ②I’ll spend more time",
+   "choices": [
+    "Make sure not to open the door to strangers.",
+    "I’ll spend more time with you next weekend.",
+    "Don’t be scared. Monsters are not real.",
+    "I’ll buy you another monster animation DVD.",
+    "Don’t watch TV too much. It can harm your eyes.\n 이제 듣기 문제는 다 끝났습니다. 18번부터는 문제의 지시에 \n따라 답을 하기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 370
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 밑줄친This[this]가가리키는것으로가장적절한것은?",
+   "choices": [
+    "mud",
+    "wood",
+    "stone",
+    "straw",
+    "cement"
+   ],
+   "point": 1,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 668
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 밑줄친they[them]가가리키는대상이나머지넷과다른것은?",
+   "choices": [
+    "they disappear before the child reaches puberty.\nThey\nare\ncalled\n‘Mongolian\nblue\nspots’,\nand",
+    "they\nare\ncommon in East Asians, Turks, East Africans and Native\nAmericans. Koreans have believed that Samshin Halmoni, a\nlocal god in charge of childbirth, spanked the bottom of the\nbaby to encourage it to be born, and that is how their\nbabies were born with",
+    "them. Surprisingly, other races\nhave",
+    "them in different colors. Theirs are reddish and thus\ncalled ‘strawberry marks’.\nFor\nItalians\nand Arabians, the\nnames of birthmarks mean ‘wishes’, since",
+    "they believed\nthat\nbabies\nhave\nbirthmarks\nwhen\ntheir\nmothers\nhave\nunfulfilled wishes during pregnancy.\n*puberty 사춘기"
+   ],
+   "point": 1,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 827
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음글의목적으로가장적절한것은?",
+   "choices": [
+    "해외대학정보를수집하려고",
+    "상담전문교사를모집하려고",
+    "유학생들을위한조언을구하려고",
+    "학생들의수업출석을독려하려고",
+    "학생회게시판이용방법을알려주려고\n고1\n외국어(영어) 영역"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 756
+  },
+  {
+   "qNum": 21,
+   "kind": "box_choice",
+   "stem": "21. (A), (B), (C)의각네모안에서어법에맞는표현으로가장 적절한것은?",
+   "choices": [
+    "found\n……\nwhich\n……\nwas",
+    "found\n……\nwhich\n……\nwere",
+    "found\n……\nwhat\n……\nwere",
+    "finding\n……\nwhat\n……\nwas",
+    "finding\n……\nwhich\n……\nwere"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 850
+  },
+  {
+   "qNum": 22,
+   "kind": "grammar_underline",
+   "stem": "22. 다음글의밑줄친부분중, 어법상틀린것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "in which people share a",
+    "②": "regularly scheduled meetings",
+    "③": "sharing rather than protected and",
+    "④": "ones facing the problem",
+    "⑤": "to deal with problems ranging"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 668
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음글에서전체흐름과관계없는문장은?",
+   "choices": [
+    "However, it is the greatest concentration of the nutrients\nof an orange.",
+    "The pith has the highest level of vitamin P and\nanti-cancer qualities.",
+    "It can be processed into animal feed\nby removing water, using pressure and heat.",
+    "What is more\nsurprising is that you can find more vitamin C in the white\npith than in the actual orange.",
+    "Furthermore, there’s a great\ndeal of fiber in it. From now on, don’t take any of it off\nwhen you eat oranges.\n[24～28] 다음글의빈칸에들어갈말로가장적절한것을고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 678
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. Here’s some good news for parents of preteens and teens: You rule. According to a survey conducted by the Kaiser Family Foundation, typical kids aged 10 to ",
+   "choices": [
+    "praise",
+    "patience",
+    "diligence",
+    "achievement",
+    "regulation"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 813
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. New research, conducted with college freshmen, found that _____________ influenced what kind of relationships developed. The research shows that the course ",
+   "choices": [
+    "personal tastes",
+    "positive life styles",
+    "common interests",
+    "first quick judgments",
+    "successful interaction"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 776
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. In January 2009, Timothy Gowers, a professor of mathematics at Cambridge, decided to see if massively cooperative mathematics is possible. He posted a diffi",
+   "choices": [
+    "the wisdom of crowds",
+    "disadvantages of blogs",
+    "high participation in voting",
+    "abusive online communication",
+    "the importance of mathematics\n외국어(영어) 영역\n고1"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 884
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. People use coin tosses to break ties or make decisions. Nobody is certain whether it comes up heads or tails since each side is supposed to have an equal chance of winning. But does it really?",
+   "choices": [
+    "are never truly random",
+    "prevent conflicts among friends",
+    "should be done in a closed space",
+    "are a fair way in decision-making",
+    "cause people to entirely rely on luck"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 987
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. Electric cars drastically reduced the noise of the car engines. Unfortunately, the sweet silence of 21st-century technology rather causes a serious problem:",
+   "choices": [
+    "recycling of second hand cars",
+    "fake car noise that will alert people",
+    "practical safety education for drivers",
+    "vehicles that use alternative energy sources",
+    "road pavement for silent and smooth driving"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 841
+  },
+  {
+   "qNum": 29,
+   "kind": "mc",
+   "stem": "29. 다음글에드러난‘ I ’의심정으로가장적절한것은?",
+   "choices": [
+    "sorry and regretful",
+    "safe and relieved",
+    "upset and frustrated",
+    "bored and indifferent",
+    "excited and fascinated"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 758
+  },
+  {
+   "qNum": 30,
+   "kind": "vocab_underline",
+   "stem": "30. 다음그림에대한글의내용중, 밑줄친낱말의쓰임이적절 하지않은것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "modeling the shapes of oral",
+    "②": "touches the velum of the",
+    "③": "upward",
+    "④": "upper teeth",
+    "⑤": "low compared with the tip"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 674
+  },
+  {
+   "qNum": 31,
+   "kind": "box_choice",
+   "stem": "31. (A), (B), (C)의각네모안에서문맥에맞는낱말로가장적 절한것은?",
+   "choices": [
+    "common\n……\nloss\n……\npenalties",
+    "common\n……\nbenefit\n……\nincentives",
+    "uncommon\n……\nloss\n……\npenalties",
+    "uncommon\n……\nbenefit\n……\npenalties",
+    "uncommon\n……\nloss\n……\nincentives\n고1\n외국어(영어) 영역"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1044
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. 다음글의빈칸(A), (B)에들어갈말로가장적절한것은?",
+   "choices": [
+    "In addition\n……\nHowever",
+    "In addition\n……\nInstead",
+    "In addition\n……\nTherefore",
+    "For example\n……\nHowever",
+    "For example\n……\nTherefore\n[33～34] 다음글의주제로가장적절한것을고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 906
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. In the middle of global economic hardship, many people lose their jobs, pushing the unemployment rate higher. But not all of those fired workers are sitting",
+   "choices": [
+    "creating new jobs through globalization",
+    "pursuing higher education among women",
+    "difficulties people face in an economic crisis",
+    "companies’ efforts to overcome a poor economy",
+    "increasing college enrollment in economic depression"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 838
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. Most of us, males and females alike, love weddings. However, a good deal of evidence in the English language implies that weddings are more important to one",
+   "choices": [
+    "결혼과관련된다양한어휘의생성",
+    "영어권국가들의고유한결혼문화",
+    "결혼식준비과정에서의신랑, 신부의역할",
+    "여성의사회적지위상승에따른결혼적령기의변화",
+    "결혼이여성에게더중요함을보여주는어휘상의증거"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 861
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음도표의내용과일치하지않는문장은?",
+   "choices": [
+    "According to this graph, Human\nGiants had led Funniest Videos for the first three weeks.",
+    "Human Giants showed a slight decrease on the fourth\nweek and\nremained the same\non the fifth week.",
+    "The\nratings of Funniest Videos started lower than 15 percent on\nthe first week, but the ratings had gradually increased during\nthe whole period shown in the graph.",
+    "The lead of Human\nGiants was over on the fourth week when Funniest Videos\ngot 20 percent ratings.",
+    "Both programs showed the same\nratings on the fifth week, recording about 18 percent."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 640
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. Samuel Johnson에관한다음글의내용과일치하는것은?",
+   "choices": [
+    "생계를위해가르치는일을시작했다.",
+    "스무살연하의여인과결혼했다.",
+    "사전을집필하여처음으로이름을알렸다.",
+    "책의성공으로경제적어려움에서벗어났다.",
+    "한변호사가그의일생에관한책을썼다.\n외국어(영어) 영역\n고1"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 834
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. roadrunner에관한다음글의내용과일치하지않는것은?",
+   "choices": [
+    "미국남서부와멕시코북부의사막지대에산다.",
+    "방울뱀을잡아서먹을정도로빠르다.",
+    "위험을감지하면날기도한다.",
+    "대부분길에서생활하여, roadrunner라불린다.",
+    "주로육식을하지만, 때때로채식도한다.\n[38～39] 다음글의요지로가장적절한것을고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 880
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. Young kids have no idea what things cost. There’s no difference to them between the cost of a candy bar and that of a video game. Older kids may know what things cost, but they may have little idea about whether they’re getting value for their money. They may know that a pair of sneakers cost $100, but are they worth the money?",
+   "choices": [
+    "가격비교는현명한소비를가능케한다.",
+    "부모가검소한소비습관의본보기가되어야한다.",
+    "어린시기의과한용돈은성장후과소비로이어진다.",
+    "자녀들로하여금용돈을스스로벌게하는것이좋다.",
+    "자녀에게용돈을주어물건의값어치를가르칠수있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 795
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. Today people have readily accessible news 24 hours a day. In this flood of information, it has become increasingly difficult to find unbiased and straightfo",
+   "choices": [
+    "언론매체는여론에휘둘리기쉽다.",
+    "언론보도가항상신뢰할만한것은아니다.",
+    "정보의홍수시대에검색능력이곧경쟁력이다.",
+    "독자는자신의시각으로글을읽는경향이있다.",
+    "지적소양을갖추려면많은정보를접해야한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 771
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 글의흐름으로보아, 주어진문장이들어가기에가장적절한 곳은?",
+   "choices": [
+    ") That kind of motion sickness has\nbeen called simulator sickness. (",
+    ") It doesn’t affect just\nvideo-game players. (",
+    ") A 1995 report by the US Army\nResearch Institute found that almost half the military pilots\nwho used flight simulators developed aftereffects. (",
+    ") Like\nmotion sickness, simulator sickness seems to occur when\nthere is a disagreement in the brain between what you’re\nseeing and what your inner ear reports. (",
+    ") Experience\nalso\nhelps\nyou\nget\nover\nit.\nIt\nseems\nthat\nafter\nenough\nexposure to dizzying graphics, your brain gets used to them.\n[41～42] 다음글의제목으로가장적절한것을고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 805
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. Charlie was born at an animal shelter. His mom was too sick to nurse him, so the workers there struggled to keep the puppy healthy by bottle-feeding him eve",
+   "choices": [
+    "Cat Adopts Dog",
+    "Stop Abusing Pets!",
+    "Humans’ Life-long Friends",
+    "Rescue Kittens from Dogs!",
+    "Cats and Dogs, Rivals Forever\n고1\n외국어(영어) 영역"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 783
+  },
+  {
+   "qNum": 42,
+   "kind": "mc",
+   "stem": "42. Companies had focused mainly on improving the technical quality of their products. However, they have just started to notice that, for many consumers, “ease",
+   "choices": [
+    "No Investments, No Gains",
+    "Convenience Wins over Hi-fi",
+    "Amuse Your Senses with Entertainment",
+    "Multi-Functioning Products Are Coming Up",
+    "Generation Familiar with Electronic Devices"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 917
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진글다음에이어질글의순서로가장적절한것은?",
+   "choices": [
+    "(A) - (B) - (C)",
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 962
+  },
+  {
+   "qNum": 44,
+   "kind": "mc",
+   "stem": "44. 다음글의주장으로가장적절한것은?",
+   "choices": [
+    "예체능교과의비중을늘려라.",
+    "아이를키울때칭찬을많이하라.",
+    "약점을보완하여장점으로바꾸라.",
+    "다양한분야에대해관심을가져라.",
+    "못하는것보다잘하는것에집중하라."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 788
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 다음글의내용을한문장으로요약하고자한다. 빈칸(A)와 (B)에들어갈말로가장적절한것은?",
+   "choices": [
+    "plants\n……\nconfidence",
+    "nature\n……\nconcentration",
+    "affection\n……\nachievement",
+    "freedom\n……\nindependence",
+    "daylight\n……\nsensitivity\n외국어(영어) 영역\n고1\n[46～48] 다음글을읽고, 물음에답하시오.\n(A) It was Friday morning, and a young businessman\nfinally decided to ask his boss for a raise. Before\nleaving for work, (a) he told his wife what he was\nabout\nto\ndo.\nAll\nday\nlong\nhe\nfelt\nnervous\nand\nworried. Finally, in the late afternoon, he gathered\nthe\ncourage\nto\napproach\nhis\nboss,\nand\nto\nthe\nbusinessman’s delight, (b) he agreed to the raise.\n(B) Later on his way to the kitchen to help his wife\nserve dessert, (c) he noticed that a second card had\nfallen from her pocket. Picking it up off the floor, he\nread, “Don’t worry about not getting the raise! You\ndeserve it anyway! This dinner is to show you how\nmuch I love you.”\n(C) Finding her in the kitchen, he eagerly shared the\ndetails of his good news. They embraced and danced\naround\nthe\nroom\nbefore\nsitting\ndown\nto\nthe\nwonderful meal his wife had prepared. Next to his\nplate (d) he found an artistically lettered note that\nread, “Congratulations, darling! I knew you would\nget the raise! This dinner is to show you how much\nI love you.”\n(D) The excited husband arrived home to a beautiful\ntable set with their best china and lighted candles.\nSmelling the aroma of a festival meal, (e) he figured\nthat someone from the office had called his wife and\ntipped her off!"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2375
+  },
+  {
+   "qNum": 46,
+   "kind": "mc",
+   "stem": "46. 위글(A)에이어질내용을순서에맞게배열한것으로가장 적절한것은?",
+   "choices": [
+    "(B) - (D) - (C)",
+    "(C) - (B) - (D)",
+    "(C) - (D) - (B)",
+    "(D) - (B) - (C)",
+    "(D) - (C) - (B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 122
+  },
+  {
+   "qNum": 47,
+   "kind": "mc",
+   "stem": "47. 다음글의제목으로가장적절한것은?",
+   "choices": [
+    "Two Choices in Life",
+    "I Love You Anyway",
+    "We Just Got Married",
+    "A Businessman’s Sorrow",
+    "Notes from Husband"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 126
+  },
+  {
+   "qNum": 48,
+   "kind": "vocab_letter",
+   "stem": "48. 밑줄친(a)～(e) 중에서가리키는대상이나머지넷과다른 하나는?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1344
+  },
+  {
+   "qNum": 49,
+   "kind": "mc",
+   "stem": "49. 위글의빈칸에들어갈말로가장적절한것은?",
+   "choices": [
+    "universal",
+    "separate",
+    "changeable",
+    "formal",
+    "complicated"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 78
+  },
+  {
+   "qNum": 50,
+   "kind": "mc",
+   "stem": "50. 위글의요지로가장적절한것은?",
+   "choices": [
+    "외국어학습은문화이해와함께이루어져야한다.",
+    "부정적인어휘사용은인간관계에해를끼칠수있다.",
+    "정확한의사소통을위해서는문법적지식이필요하다.",
+    "외국어를습득하려면자기만의학습전략을개발해야한다.",
+    "유창성을기르기위해서는실수를두려워하지말아야한다.\n* 확인사항\n◦답안지의해당란에필요한내용을정확히기입(표기)했는지확인\n하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 186
+  }
+ ],
+ "sourcePdf": "ebsi_go1_20100916_paper_20100916_eng_mun_1.pdf"
+}

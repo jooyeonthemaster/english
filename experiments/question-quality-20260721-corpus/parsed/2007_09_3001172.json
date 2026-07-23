@@ -1,0 +1,846 @@
+{
+ "examId": "2007_09_3001172",
+ "source": "5c2166a1e592a18f85233cf50ac13708.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 대화를듣고, 여자아이가탈것을고르시오.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 24
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를듣고, 남자의심경변화로가장적절한것을고르시오. ①confused →relieved ②grateful →desperate ③envious →curious ④amused →disappointed ⑤bored →regretful",
+   "choices": [
+    "confused →relieved",
+    "grateful →desperate",
+    "envious →curious",
+    "amused →disappointed",
+    "bored →regretful"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 130
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을듣고, 여자의요청으로가장적절한것을고르시오. ①해양환경정화 ②추모공원조성 ③해양공원조성 ④구호활동지원 ⑤재해예방활동",
+   "choices": [
+    "해양환경정화",
+    "추모공원조성",
+    "해양공원조성",
+    "구호활동지원",
+    "재해예방활동"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 70
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를듣고, 파티에관한내용과일치하지않는것을고르시오. ①John의동생을위한파티이다. ②각자음식을준비해온다. ③15명정도가참석할예정이다. ④저녁6시30분에시작한다. ⑤Mary가참석할예정이다.",
+   "choices": [
+    "John의동생을위한파티이다.",
+    "각자음식을준비해온다.",
+    "15명정도가참석할예정이다.",
+    "저녁6시30분에시작한다.",
+    "Mary가참석할예정이다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 108
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를듣고, 여자가지불할총액을고르시오. ①$50 ②$100 ③$150 ④$200 ⑤$250",
+   "choices": [
+    "$50",
+    "$100",
+    "$150",
+    "$200",
+    "$250"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 54
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를듣고, 여자가하고있는일로가장적절한것을고르 시오. ①도서정리업무설명 ②시간제일자리신청 ③학교생활안내 ④도서대출안내 ⑤도서관소개",
+   "choices": [
+    "도서정리업무설명",
+    "시간제일자리신청",
+    "학교생활안내",
+    "도서대출안내",
+    "도서관소개"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 76
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 다음을듣고, 남자가남긴말의목적으로가장적절한것을 고르시오. ①시험일시를알리려고 ②건강검진에관해안내하려고 ③전화설문을실시하려고 ④첨단의료기기를홍보하려고 ⑤병원예약변경을통보하려고",
+   "choices": [
+    "시험일시를알리려고",
+    "건강검진에관해안내하려고",
+    "전화설문을실시하려고",
+    "첨단의료기기를홍보하려고",
+    "병원예약변경을통보하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 100
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를듣고, 두사람의관계를가장잘나타낸것을고르시오. ①teacher ― parent ②sea captain ― crew ③lifeguard ― scuba diver ④receptionist ― customer ⑤swimming instructor ― trainee",
+   "choices": [
+    "teacher ― parent",
+    "sea captain ― crew",
+    "lifeguard ― scuba diver",
+    "receptionist ― customer",
+    "swimming instructor ― trainee"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 150
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 대화를듣고, 두사람이대화하고있는장소로가장적절한 곳을고르시오. ①비디오대여점 ②영화관매표소 ③관광안내소 ④박물관전시실 ⑤스포츠용품점",
+   "choices": [
+    "비디오대여점",
+    "영화관매표소",
+    "관광안내소",
+    "박물관전시실",
+    "스포츠용품점"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 76
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 대화를듣고, 남자가할일로가장적절한것을고르시오. ①버스를기다린다. ②택시를타러간다. ③승용차를몰고간다. ④자전거를타고간다. ⑤지하철을타러간다.",
+   "choices": [
+    "버스를기다린다.",
+    "택시를타러간다.",
+    "승용차를몰고간다.",
+    "자전거를타고간다.",
+    "지하철을타러간다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 83
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 메뉴를보면서대화를듣고, 두사람이주문할음식의 종류를모두나열한것을고르시오. ①smoked salmon, ice cream, coffee ②smoked salmon, fruit, coffee ③beefsteak, fruit, orange juice ④salad, beefsteak, i",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    "제3 교시\n성명\n수험번호\n외국어(영어) 영역"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 235
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 다음을듣고, ‘말하는쓰레기통’에관한내용과일치하지않는 것을고르시오. ①도시곳곳에서발견할수있다. ②2,000개이상설치되어있다. ③태양열에의해작동된다. ④분리수거를위해고안되었다. ⑤쓰레기를넣으면“Thank you.”라고한다.",
+   "choices": [
+    "도시곳곳에서발견할수있다.",
+    "2,000개이상설치되어있다.",
+    "태양열에의해작동된다.",
+    "분리수거를위해고안되었다.",
+    "쓰레기를넣으면“Thank you.”라고한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 127
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 다음그림의상황에가장적절한대화를고르시오. [1점] ① ② ③ ④ ⑤",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "point": 1,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 41
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를듣고, 남자의마지막말에대한여자의응답으로 가장적절한것을고르시오. Woman: __________________________________________ ①Well, you’re too greedy. ②You needed a nice fishing rod. ③Oh, you j",
+   "choices": [
+    "Well, you’re too greedy.",
+    "You needed a nice fishing rod.",
+    "Oh, you just enjoy fishing itself.",
+    "Too bad you didn’t catch anything.",
+    "Let me know when the soup is ready."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 259
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 대화를듣고, 여자의마지막말에대한남자의응답으로 가장적절한것을고르시오. Man: _____________________________________________ ①See, you can’t have everything you want. ②I think your daughter ne",
+   "choices": [
+    "See, you can’t have everything you want.",
+    "I think your daughter needs a scholarship.",
+    "Sorry, your daughter failed to go to university.",
+    "Your daughter needs a dog to keep her company.",
+    "You don’t have any excuse to visit the university."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 329
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 대화를듣고, 남자의마지막말에대한여자의응답으로 가장적절한것을고르시오. [3점] Woman: __________________________________________ ①No, you didn’t. Summer will come late this year. ②Sorry. I did",
+   "choices": [
+    "No, you didn’t. Summer will come late this year.",
+    "Sorry. I didn’t know you bought an air conditioner.",
+    "Right. I really appreciated the repairman’s hard work.",
+    "Yes, you did. What matters is not the season but you.",
+    "Yes, you did. In the cold of winter, you’ll calm down."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 367
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 다음상황설명을듣고, Jenny Davidson이업무책임자에게 할말로가장적절한것을고르시오. Jenny Davidson: __________________________________ ①To satisfy your customers, lower the book prices. ②One",
+   "choices": [
+    "To satisfy your customers, lower the book prices.",
+    "One more mistake and I’ll find another company.",
+    "We’re out of stock right now. Please stop by later.",
+    "To find your parcel, check with the Lost & Found.",
+    "Please deliver the parcel to my office sometime later.\n이제듣기․말하기문제가\n끝났습니다. 18번부터는\n문제지의지시에따라답을하기바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 410
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 밑줄친They가가리키는것으로가장적절한것은?",
+   "choices": [
+    "clouds",
+    "waterfalls",
+    "typhoons",
+    "bubbles",
+    "waves"
+   ],
+   "point": 1,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 597
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음글에서밑줄친this phenomenon이뜻하는바로가장 적절한것은?",
+   "choices": [
+    "신구문화의조화",
+    "전통문화의현대화",
+    "세계문화간의융화",
+    "신세대의복고주의",
+    "소비문화의변화\n외국어(영어) 영역"
+   ],
+   "point": 1,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 694
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음글을쓴목적으로가장적절한것은?",
+   "choices": [
+    "to warn",
+    "to negotiate",
+    "to advertise",
+    "to praise",
+    "to apologize"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 609
+  },
+  {
+   "qNum": 21,
+   "kind": "box_choice",
+   "stem": "21. (A), (B), (C)의각네모안에서어법에맞는표현을골라 짝지은것으로가장적절한것은?",
+   "choices": [
+    "create\n----\nhave\n----\nwhat",
+    "create\n----\nam\n----\nhow",
+    "create\n----\nhave\n----\nhow",
+    "creating\n----\nam\n----\nwhat",
+    "creating\n----\nhave\n----\nwhat"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 760
+  },
+  {
+   "qNum": 22,
+   "kind": "grammar_underline",
+   "stem": "22. 다음글의밑줄친부분중, 어법상틀린것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "long known about IQ and",
+    "②": "because of recent advances in",
+    "③": "ignorant of that there is",
+    "④": "as visual intelligence",
+    "⑤": "granted"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 471
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음글에서전체의흐름과관계없는문장은?",
+   "choices": [
+    "This important nutrient has tremendous health benefits \nand is found in a variety of foods such as vegetables and \nfruits.",
+    "Fiber is best known for its ability to keep your \ndigestive system working smoothly.",
+    "The benefits of \nfiber do not stop in the internal organs.",
+    "Some \nphysicians emphasize the functions of the body and \nattempt to find new medicines.",
+    "Fiber has been shown \nto reduce the risk of heart disease, at least in part by \nreducing cholesterol levels.\n* roughage: 섬유질식품\n[24~27] 다음글의빈칸에들어갈말로가장적절한것을\n고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 657
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. The nineteenth century saw a change of attitude which led to a separation in people’s minds of the scientific and the artistic. From this period the roles o",
+   "choices": [
+    "distinct",
+    "excellent",
+    "similar",
+    "trivial",
+    "dependent"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 688
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. I scheduled a meeting with a client for 8:00 one morning. I called the day before to confirm the date and time. When I arrived at the client’s office the morning of the meeting, he looked puzzled. “What are you doing here?",
+   "choices": [
+    "He should have phoned me.",
+    "I must have read the e-mail.",
+    "He must have worked overnight.",
+    "He could have sent an e-mail to me.",
+    "I should have rescheduled the meeting.\n외국어(영어) 영역"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 925
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. The word “addiction” is often used loosely in conversation. People will refer to themselves as mystery book addicts or cookie addicts. E. B. White writes of",
+   "choices": [
+    "an experience that is hardly exotic",
+    "a search for an alternative to bad habits",
+    "temporary loneliness and recurrent relief",
+    "the inability to function normally without drugs",
+    "a strong desire for some pleasurable activities"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 724
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. The price of an autograph depends on ________________. For example, famous people like Angelina Jolie and Matt Damon sign a lot of autographs. Therefore, th",
+   "choices": [
+    "how old it is",
+    "what talent one has",
+    "how rare it is",
+    "which job one has",
+    "how famous one is"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 686
+  },
+  {
+   "qNum": 28,
+   "kind": "box_choice",
+   "stem": "28. (A), (B), (C)의각네모안에서문맥에맞는낱말을골라 짝지은것으로가장적절한것은?",
+   "choices": [
+    "confined\n----\nrejected\n----\nobjected",
+    "confined\n----\nreflected\n----\ncontributed",
+    "confined\n----\nrejected\n----\ncontributed",
+    "compared\n----\nrejected\n----\nobjected",
+    "compared\n----\nreflected\n----\nobjected"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 959
+  },
+  {
+   "qNum": 29,
+   "kind": "vocab_underline",
+   "stem": "29. 다음그림에관한설명에서밑줄친낱말의쓰임이적절하지 않은것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "automatically",
+    "②": "equipped with a small battery",
+    "③": "coated on the lens",
+    "④": "sandwiched between the two lenses",
+    "⑤": "distorts focus"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 745
+  },
+  {
+   "qNum": 30,
+   "kind": "mc",
+   "stem": "30. 빈칸에들어갈말로가장적절한것은?",
+   "choices": [
+    "Otherwise\n----\nfor example",
+    "Otherwise\n----\ntherefore",
+    "As a result\n----\nhowever",
+    "As a result\n----\nfor example",
+    "That is\n----\nhowever\n외국어(영어) 영역"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 902
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. 다음글에나타난필자의심경으로가장적절한것은?",
+   "choices": [
+    "annoyed",
+    "amused",
+    "indifferent",
+    "sympathetic",
+    "apologetic"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 698
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. 다음글에서필자의주장으로가장적절한것은?",
+   "choices": [
+    "과도한TV 시청을자제해야한다.",
+    "뉴스보도장비의현대화가시급하다.",
+    "현장취재가사건의분석보다중요하다.",
+    "뉴스보도의진정한가치정립이필요하다.",
+    "시청자의알권리를위해신속한보도가필요하다.\n[33~34] 다음글의주제로가장적절한것을고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 861
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. Chocolate, cake, and candies are full of sugar and one day it may power your car. Sugar is already the fuel for millions of Brazilian drivers. How is this possible?",
+   "choices": [
+    "알코올의생성원리",
+    "사탕수수재배법",
+    "친환경대체연료개발",
+    "에너지산업투자안내",
+    "알코올연료의장단점"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 708
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. When scientists use a device called a calorimeter, the piece of food to be measured is placed inside the device, sealed, and then burned. The energy from th",
+   "choices": [
+    "the energy capacity of food",
+    "various parts of a calorimeter",
+    "how to measure food temperature",
+    "various roles of water in food science",
+    "how to calculate the caloric value of food"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 876
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음도표의내용과일치하지않는문장은?",
+   "choices": [
+    "Korea \nshowed an increase in the production of electronic \nmerchandise in 2004 in comparison with that of 2001.",
+    "The U.S.A. was the largest producer of electronic \nmerchandise both in 2001 and in 2004.",
+    "Notably, \namong the top five countries, China achieved the largest \nincrease in amount in this period.",
+    "Japan also made an \nincrease in electronic products, but the Japanese increase \nwas smaller than that of Germany.",
+    "Each of the five \ncountries produced more electronic merchandise in 2004 \nthan in 2001.\n외국어(영어) 영역"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 766
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. 몽고제국에관한다음글의내용과일치하지않는것은?",
+   "choices": [
+    "군사력으로광대한영토를유지하였다.",
+    "붕괴의원인은내부에잠재해있었다.",
+    "칸과참모들에게권력이집중되어있었다.",
+    "피정복민을통치할법과제도를완비하였다.",
+    "새로운정복지들을경제적으로착취하였다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 786
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. 청각장애인을위한전화에관한다음글의내용과일치하는 것은?",
+   "choices": [
+    "전혀듣지못하는사람들은사용할수없다.",
+    "전자회로상자를일반전화기에연결하여사용한다.",
+    "시각장애가있는청각장애인은점멸식장치를사용한다.",
+    "열과빛을감지하는특수전자장치가부착되어있다.",
+    "시각장애가없는청각장애인은진동식장치를사용한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 782
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. 다음글의요지로가장적절한것은?",
+   "choices": [
+    "상점의영업시간이짧다.",
+    "상품진열이잘되어있다.",
+    "상점을이용하기편리하다.",
+    "점원들의근무자세가좋다.",
+    "상점의물건값이너무비싸다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 772
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. 한연구보고에관한다음글의요지로가장적절한것은?",
+   "choices": [
+    "강수량이식물생장의주된요인이었다.",
+    "기후변화가식물생장에도움을주었다.",
+    "기후요인에의해식물생장이억제되었다.",
+    "기후변화로인해식물의종류가다양해졌다.",
+    "지역적관점에서식물생장의요인이규명되었다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 906
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 글의흐름으로보아, 주어진문장이들어가기에가장적절한 곳은?",
+   "choices": [
+    ") Classical music is like \nperpetually wet clay. (",
+    ") A musician grabs hold of it \nand molds it according to personal tastes and experiences, \nleaving an impress on the music. (",
+    ") Obviously, this \nsort of freedom can be abused. (",
+    ") A musician who \nhas not researched the composer and the composition \nsufficiently may make decisions about tempos or phrasing \nthat are inappropriate, even harmful to the piece. (",
+    ") \nThere are, however, relatively few absolutes in music. \nThere is always room for new approaches.\n외국어(영어) 영역\n[41~42] 다음글의제목으로가장적절한것을고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 865
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. Golf is probably one of the world’s most popular sports. Building new golf courses is the fastest kind of land development in the world. An average person w",
+   "choices": [
+    "Golf: An Environment-Friendly Sport",
+    "Golf: The Fastest Growing Industry",
+    "Golf Courses: A Home for Wildlife",
+    "Golf Courses: Reality Behind Appearance",
+    "Beautiful Landscape Around the Clubhouse"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 809
+  },
+  {
+   "qNum": 42,
+   "kind": "mc",
+   "stem": "42. If you are the sort of parent who frowns when you hear the word “messy,” then relax. No one is suggesting that you spread mud or baked beans all over the wa",
+   "choices": [
+    "Negative Effects of Children’s Messy Play at Home",
+    "Messy Play: A Way of Enhancing Kids’ Creativity",
+    "Painting: A Cure for Lack of Concentration",
+    "Parenting: A Way of Self-Discipline",
+    "Tips for Keeping Your House Tidy"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 886
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 다음글이주는분위기로가장적절한것은?",
+   "choices": [
+    "warm and delightful",
+    "monotonous and idle",
+    "mysterious and scary",
+    "skeptical and cynical",
+    "solemn and grave"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 791
+  },
+  {
+   "qNum": 44,
+   "kind": "mc",
+   "stem": "44. 주어진글다음에이어질글의순서로가장적절한것은?",
+   "choices": [
+    "(A) - (B) - (C)",
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 990
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 다음글의내용을한문장으로요약하고자한다. 빈칸(A)와 (B)에들어갈말로가장적절한것끼리짝지은것은?",
+   "choices": [
+    "Certainty\n----\nkeep",
+    "Unpredictability\n----\nkeep",
+    "Unpredictability\n----\nchange",
+    "Diversity\n----\nkeep",
+    "Diversity\n----\nmake\n외국어(영어) 영역\n* 확인사항\n◦답안지의해당란에필요한내용을정확히기입(표기)했는지확인\n하시오.\n[46~48] 다음글을읽고, 물음에답하시오.\n(A)\nThere was a man who had four sons. He wanted his \nsons to learn not to judge things too quickly. So (a) he \nsent them each on a quest, in turn, to go and look at a \npear tree that was a great distance away. \n(B)\nThe man then explained to his sons that they were all \nright because they had each seen only one season in the \ntree’s life. (b) He said, “You should not judge a tree by \nonly one season. The same is true of people’s lives. A \nperson’s life can only be measured at the end, when all \nthe seasons are up. Therefore, sons, don’t give up when \nit’s winter. If you do, you will miss the promise of \nyour spring, the beauty of your summer, and the \nfulfillment of your fall.”\n(C)\nThe first son (c) he sent in the winter, the second in \nthe spring, the third in the summer, and the youngest \nson in the fall. When they had all gone and come back, \n(d) he called them together to describe what they had \nseen.\n(D)\nThe first son said that the tree was ugly, bent, and \ntwisted. The second son said it was covered with green \nbuds and full of promise. The third son disagreed; (e) he \nsaid it was filled with blossoms that smelled so sweet \nand looked so beautiful. The last son disagreed with all \nof them; he said it was ripe and bending with fruit, full \nof life and fulfillment."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2299
+  },
+  {
+   "qNum": 46,
+   "kind": "mc",
+   "stem": "46. 위글(A)에이어질내용을순서에맞게배열한것으로 가장적절한것은?",
+   "choices": [
+    "(B) - (C) - (D)",
+    "(B) - (D) - (C)",
+    "(C) - (B) - (D)",
+    "(C) - (D) - (B)",
+    "(D) - (C) - (B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 122
+  },
+  {
+   "qNum": 47,
+   "kind": "vocab_letter",
+   "stem": "47. 밑줄친(a)～(e) 중에서가리키는대상이나머지넷과다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 62
+  },
+  {
+   "qNum": 48,
+   "kind": "mc",
+   "stem": "48. 위글이주는교훈으로가장적절한것은?",
+   "choices": [
+    "찾아온기회는놓치지마라.",
+    "여행을통해견문을넓혀라.",
+    "타인의의견에좌우되지마라.",
+    "성공하기위해한우물만파라.",
+    "인생을한면으로만판단하지마라.\n[49~50] 두사람의대립된의견을읽고, 물음에답하시오.\nPerson A\nWe must switch to “daylight savings.” By \nstarting the day one hour earlier in the summer, people \ngain an hour of daylight, which gives them a longer day \nfor either work or leisure. Saving energy is another \nadvantage of setting the clock forward. With more \nsunlight late in the day, we can cut down on the use of \nelectricity to be spent on lighting and air-conditioning, \nfor example. Also, this new system helps the economy \nbecause people would _______________ for leisure \nactivities, shopping, and eating out in the evening. Most \nof the world’s economic powers are on this system \nalready, so it would be more convenient for international \ntrade and communication. Just from these points alone, \nyou can see why we should switch to this system. \nPerson B\nWe must stick to our current time system \nbecause the side effects of switching the clock back and \nforth one hour twice a year would be disastrous. It \nwould not only seriously harm people’s bio-rhythms and \nthus cause health problems, but also it would slow down \nwork, and the nation would lose money from the \nlowered production. Switching time back and forth \nwould be costly for businesses and airlines, and be \nconfusing for lots of people. We should remember that \nthe nation tried this system about 20 years ago, and that \nit caused so much trouble that we came back to the \nsystem we have now, which seems to work just fine. \nWhat’s the point of changing the time system that works \ninto the one that is going to be confusing?"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1639
+  },
+  {
+   "qNum": 49,
+   "kind": "mc",
+   "stem": "49. 위두글의핵심쟁점으로가장적절한것은?",
+   "choices": [
+    "putting daylight savings in operation",
+    "effects of daylight savings in the past",
+    "daylight savings in developed countries",
+    "international trade and daylight savings",
+    "saving energy to help the economy"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 222
+  },
+  {
+   "qNum": 50,
+   "kind": "mc",
+   "stem": "50. Person A의빈칸에들어갈말로가장적절한것은?",
+   "choices": [
+    "live longer",
+    "have more time",
+    "be more nervous",
+    "travel abroad more often",
+    "consume more energy"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 123
+  }
+ ],
+ "sourcePdf": "5c2166a1e592a18f85233cf50ac13708.pdf",
+ "fileName": "200709외국어.zip"
+}

@@ -1,0 +1,765 @@
+{
+ "examId": "2024_06_5084521",
+ "source": "e04e90133b6f6553fecb1d8b78f91ad1.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 다음을 듣고, 남자가 하는 말의 목적으로 가장 적절한 것을 고르시오. ①수족관 직원 채용 광고를 하려고 ②수족관 내 기념품 상점을 홍보하려고 ③수족관 내부 사진 촬영 금지를 안내하려고 ④수족관 물고기에게 먹이를 주지 말 것을 당부하려고 ⑤수족관 수조의 유리벽을 두드리지 말 것을 요",
+   "choices": [
+    "수족관 직원 채용 광고를 하려고",
+    "수족관 내 기념품 상점을 홍보하려고",
+    "수족관 내부 사진 촬영 금지를 안내하려고",
+    "수족관 물고기에게 먹이를 주지 말 것을 당부하려고",
+    "수족관 수조의 유리벽을 두드리지 말 것을 요청하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 166
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 여자의 의견으로 가장 적절한 것을 고르시오. ①아기용 선물은 깨끗이 소독해야 한다. ②아기의 체온 유지에 모자가 도움이 된다. ③실내에서는 모자를 벗는 것이 바람직하다. ④아기의 방은 적절한 온도 유지가 중요하다. ⑤에어컨 사용 시 주기적인 환기가 필요하다.",
+   "choices": [
+    "아기용 선물은 깨끗이 소독해야 한다.",
+    "아기의 체온 유지에 모자가 도움이 된다.",
+    "실내에서는 모자를 벗는 것이 바람직하다.",
+    "아기의 방은 적절한 온도 유지가 중요하다.",
+    "에어컨 사용 시 주기적인 환기가 필요하다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 156
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을 듣고, 남자가 하는 말의 요지로 가장 적절한 것을 고르시오. ①생각을 비울 수 있는 취미가 필요하다. ②악기 연주는 감수성 발달에 도움이 된다. ③작문 능력 향상에는 생각의 정리가 중요하다. ④올바른 자세를 위해 운동을 꾸준히 해야 한다. ⑤메시지를 명확하게 전달하는 습관을",
+   "choices": [
+    "생각을 비울 수 있는 취미가 필요하다.",
+    "악기 연주는 감수성 발달에 도움이 된다.",
+    "작문 능력 향상에는 생각의 정리가 중요하다.",
+    "올바른 자세를 위해 운동을 꾸준히 해야 한다.",
+    "메시지를 명확하게 전달하는 습관을 길러야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 170
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고르시오.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 41
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 여자가 할 일로 가장 적절한 것을 고르시오. ①청소 업체 예약하기 ②인터넷 설치 신청하기 ③아들의 새 학교에 연락하기 ④버릴 의자에 스티커 붙이기 ⑤이사 업체에 이사 날짜 확인하기",
+   "choices": [
+    "청소 업체 예약하기",
+    "인터넷 설치 신청하기",
+    "아들의 새 학교에 연락하기",
+    "버릴 의자에 스티커 붙이기",
+    "이사 업체에 이사 날짜 확인하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 112
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 남자가 지불할 금액을 고르시오. [3점] ①$36 ②$40 ③$45 ④$50 ⑤$54",
+   "choices": [
+    "$36",
+    "$40",
+    "$45",
+    "$50",
+    "$54"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 59
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 여자가 독서 모임에 참석하지 못한 이유를 고르시오. ①고객과의 대화가 계획보다 오래 걸려서 ②아이를 돌봐 줄 사람을 찾지 못해서 ③공상 과학 장르를 이해하지 못해서 ④신제품을 온라인에 출시해야 해서 ⑤모임 날짜를 전달받지 못해서",
+   "choices": [
+    "고객과의 대화가 계획보다 오래 걸려서",
+    "아이를 돌봐 줄 사람을 찾지 못해서",
+    "공상 과학 장르를 이해하지 못해서",
+    "신제품을 온라인에 출시해야 해서",
+    "모임 날짜를 전달받지 못해서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 139
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, Now-and-Then Tech Showcase에 관해 언급되지 않은 것을 고르시오. ①목적 ②시작일 ③장소 ④관람 시간 ⑤입장료",
+   "choices": [
+    "목적",
+    "시작일",
+    "장소",
+    "관람 시간",
+    "입장료"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 85
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. Found 211에 관한 다음 내용을 듣고, 일치하지 않는 것을 고르시오. ①H-rail 기차에서 분실한 물건에 대한 정보를 제공한다. ②웹사이트 회원이 아니어도 사용할 수 있다. ③분실한 물건 발견 시 문자 메시지로 통지한다. ④다양한 언어로 외국어 서비스가 제공된다. ⑤모바일 ",
+   "choices": [
+    "H-rail 기차에서 분실한 물건에 대한 정보를 제공한다.",
+    "웹사이트 회원이 아니어도 사용할 수 있다.",
+    "분실한 물건 발견 시 문자 메시지로 통지한다.",
+    "다양한 언어로 외국어 서비스가 제공된다.",
+    "모바일 앱에서도 사용할 수 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 175
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 다음 표를 보면서 대화를 듣고, 여자가 구매할 쿠키 커터 세트를 고르시오. Cookie Cutter Sets Type Shape Price Material Color ① A Heart $11 Metal Yellow ② B Circle $11 Plastic Red ③ C Heart",
+   "choices": [
+    "A\nHeart\n$11\nMetal\nYellow",
+    "B\nCircle\n$11\nPlastic\nRed",
+    "C\nHeart\n$14\nSilicone\nYellow",
+    "D\nStar\n$14\nMetal\nRed",
+    "E\nCircle\n$20\nSilicone\nYellow"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 236
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ①Sorry. I forgot to invite him to my birthday party last week. ②That’s too bad. I’ll let him know the meeting",
+   "choices": [
+    "Sorry. I forgot to invite him to my birthday party last week.",
+    "That’s too bad. I’ll let him know the meeting is cancelled.",
+    "That’s weird. He took all the pictures away with him.",
+    "Alright. Please say thanks to Mr. Williams for them.",
+    "I’d be happy to. He’ll love to have the pictures."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 336
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ①What do you mean?",
+   "choices": [
+    "What do you mean? The trip was last week.",
+    "I’m sorry to hear that. I hope he’ll get better soon.",
+    "That’s a relief. I’m glad that he’s doing well in school.",
+    "Pardon me? I completely forgot the festival tomorrow.",
+    "It’s no big deal. I’ll check the opening day for the festival.\n2024학년도 대학수학능력시험 6월 모의평가 문제지\n제3 교시"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 363
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. [3점] Man: ①Of course. He’ll be grateful for my valuable tips. ②I hope not. You don’t have enough time to stud",
+   "choices": [
+    "Of course. He’ll be grateful for my valuable tips.",
+    "I hope not. You don’t have enough time to study psychology.",
+    "Good idea. I can definitely get information on that from him.",
+    "What a shame! I should’ve invited the former graduates.",
+    "No wonder. They didn’t show up yesterday."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 338
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. Woman: ①No problem. I can walk him and get some exercise too. ②Certainly. He can help me with my assignment t",
+   "choices": [
+    "No problem. I can walk him and get some exercise too.",
+    "Certainly. He can help me with my assignment this weekend.",
+    "Absolutely! You can join me on my business trip tomorrow.",
+    "Keep it up! You can take care of yourself by working out.",
+    "Not at all. I don’t mind walking you to your house."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 347
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Kate가 Professor Lee에게 할 말로 가장 적절한 것을 고르시오. [3점] Kate: ①Do you mind if I change my topic for the writing contest?",
+   "choices": [
+    "Do you mind if I change my topic for the writing contest?",
+    "I was wondering why my presentation was postponed.",
+    "I’m looking forward to awarding you the first prize.",
+    "I’m afraid you’re not allowed to attend the ceremony.",
+    "Could I switch my presentation date with another student’s?\n[16～17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 380
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 여자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "the communication patterns of insects",
+    "the reasons why insects dry their wings",
+    "the ways insects protect their eggs in the rain",
+    "the behavior of various insects on a rainy day",
+    "the significance of insects’ role in the food chain"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 260
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 곤충이 아닌 것은?",
+   "choices": [
+    "cockroaches",
+    "beetles",
+    "mosquitos",
+    "ants",
+    "flies"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 66
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "공원 재개장 행사에 초대하려고",
+    "공원 운영 시간 변경을 공지하려고",
+    "공원 이용 규칙 준수를 당부하려고",
+    "공원 입장 시 유의 사항을 안내하려고",
+    "공원 리모델링 사업 계획을 설명하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 752
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 드러난 Jennifer의 심경 변화로 가장 적절한 것은?",
+   "choices": [
+    "worried\n→relieved",
+    "calm\n→terrified",
+    "bored\n→thrilled",
+    "excited →scared",
+    "disappointed →indifferent"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 858
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "창의성을 개발하기 위해서는 도전과 실패를 두려워하지 말아야 한다.",
+    "전문 지식과 기술을 전수하려면 집중적인 투자가 선행되어야 한다.",
+    "창의적인 인재를 육성하기 위해 다양한 교육과정을 준비해야 한다.",
+    "특정 영역에서 개발된 창의성이 영역 간 활용되도록 장려해야 한다.",
+    "조기 교육을 통해 특정 분야의 전문가를 지속적으로 양성해야 한다.\n  이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시에 \n따라 답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1309
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 밑줄 친 a stick in the bundle이 다음 글에서 의미하는 바로 가장 적절한 것은?",
+   "choices": [
+    "a legal obligation to develop the resource",
+    "a priority to legally claim the real estate",
+    "a right to use one aspect of the property",
+    "a building to be shared equally by tenants",
+    "a piece of land nobody can claim as their own"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1144
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "가상 세계 특유의 익명성 때문에 표현의 자유가 남용되기도 한다.",
+    "인터넷 정보의 신뢰도를 검증하는 기술은 점진적으로 향상되고 있다.",
+    "가상 세계에서는 현실 세계와 달리 자유로운 정보 공유가 가능하다.",
+    "안전한 인터넷 환경 구축을 위해 보안 프로그램을 설치하는 것이 좋다.",
+    "방어 기제가 덜 작동하는 가상 세계에서는 신중한 정보 검증이 중요하다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1287
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "importance of prioritising museums’ exhibition spaces",
+    "benefits of diverse activities in museums for audiences",
+    "necessity of expanding storerooms for displaying objects",
+    "consequences of profit-oriented management of museums",
+    "ways to increase museums’ commitment to the public good"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1349
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Is Hyper-mobility Always Good for Cities?",
+    "Accessibility: A Guide to a Web of Urban Areas",
+    "A Long and Winding Road to Economic Success",
+    "Inevitable Regional Conflicts from Hyper-mobility",
+    "Infrastructure: An Essential Element of Hyper-mobility"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1470
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. 다음 도표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "The share of people in the No Trips category was \nover 30% in each of the five age groups.",
+    "The percentage of \npeople in the Outbound Trips Only category was higher in the \n25—34 age group than in the 35—44 age group.",
+    "In the 35—44 \nage group, the percentage of people in the Domestic Trips \nOnly category was 34.2%.",
+    "The percentage of people in the \nDomestic & Outbound Trips category was lower in the 45—54 \nage group than in the 55—64 age group.",
+    "In the 65 or over \nage group, the percentage of people in the No Trips category \nwas more than 50%."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 708
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Jean Renoir에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "유명 화가의 아들이었다.",
+    "제1차 세계대전이 발발했을 때 프랑스 군에 복무 중이었다.",
+    "La Grande Illusion을 1937년에 만들었다.",
+    "제2차 세계대전 내내 프랑스에 머물렀다.",
+    "Academy Honorary Award를 수상하였다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1025
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. 2023 Cierra Basketball Day Camp에 관한 다음 안내문의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "전문가들로부터 다양한 기술을 배울 수 있다.",
+    "초급자만을 대상으로 한다.",
+    "팀 경기는 오후 1시에 시작한다.",
+    "온라인으로 등록할 수 있다.",
+    "수건이 무료로 제공될 것이다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 162
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. Creative Art Class for Kids에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "6월부터 9월까지 진행된다.",
+    "만화 그리기 강좌가 월요일마다 있다.",
+    "모든 강좌는 오전에 열린다.",
+    "월 수강료에 간식이 포함되어 있다.",
+    "강좌당 수강 아동 수에 제한이 없다.\n2023 Cierra Basketball Day Camp\nCierra Basketball Day Camp provides opportunities for \nteens to get healthy and have fun. Come and learn a variety \nof skills from the experts!\nSite & Dates\n∙Cierra Sports Center\n∙July 17th—July 21st\nAges & Level: 13—18 years, for beginners only\nCamp Activities\n∙Skill Drills: 1:00 p.m.—2:00 p.m.\n∙Team Games: 2:30 p.m.—3:30 p.m.\n∙Free Throw Shooting Contests: 4:00 p.m.—5:00 p.m.\nRegistration & Cost\n∙Register online at www.crrbbcamp.com.\n∙$40 (Full payment is required when registering.)\n※ A towel will be provided for free.\nCreative Art Class for Kids\nWant to encourage your child’s artistic talent? Color World \nArt Center is going to have art classes for kids from June 1st \nto August 31st.\nClass Programs & Schedule\n󰠂Clay Arts: Ages 4—6, Every Monday\n󰠂Cartoon Drawing: Ages 7—9, Every Thursday\n󰠂Watercolors: Ages 10—12, Every Friday\nClass Time: 4 p.m.—6 p.m.\nMonthly Fee\n󰠂$30 per child (snacks included)\n󰠂Family discounts are available (10% discount for each child).\nNotes\n󰠂Only 10 kids are allowed per class.\n󰠂Kids should wear clothes that they don’t mind getting dirty.\n※ Sign up at Color World Art Center."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1304
+  },
+  {
+   "qNum": 29,
+   "kind": "grammar_underline",
+   "stem": "29. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "them what they are missing",
+    "②": "to fulfill their wishes",
+    "③": "being attributes they already possess",
+    "④": "in which they are already",
+    "⑤": "motivated by little more than"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1070
+  },
+  {
+   "qNum": 30,
+   "kind": "box_choice",
+   "stem": "30. (A), (B), (C)의 각 네모 안에서 문맥에 맞는 낱말로 가장 적절한 것은?",
+   "choices": [
+    "compensate\n…… randomly\n…… protective",
+    "compensate\n…… purposefully …… protective",
+    "prepare\n…… randomly\n…… protective",
+    "compensate\n…… randomly\n…… independent",
+    "prepare\n…… purposefully …… independent\n[31～34] 다음 빈칸에 들어갈 말로 가장 적절한 것을 고르시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1494
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. People have always needed to eat, and they always will. Rising emphasis on self-expression values does not put an end to material desires. But prevailing ec",
+   "choices": [
+    "quantitative",
+    "nonmaterial",
+    "nutritional",
+    "invariable",
+    "economic"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1136
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. In labor-sharing groups, people contribute labor to other people on a regular basis (for seasonal agricultural work such as harvesting) or on an irregular b",
+   "choices": [
+    "legally established",
+    "regularly reported",
+    "socially regulated",
+    "manually calculated",
+    "carefully documented"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1022
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. Whatever their differences, scientists and artists begin with the same question: can you and I see the same thing the same way?",
+   "choices": [
+    "human beings must participate",
+    "objectivity should be maintained",
+    "science and art need to harmonize",
+    "readers remain distanced from the arts",
+    "she is disengaged from her own subjectivity"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1147
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. One of the common themes of the Western philosophical tradition is the distinction between sensual perceptions and rational knowledge. Since Plato, the supr",
+   "choices": [
+    "as the outcome of blindly following sensual experience",
+    "by moving away from the idea of perfect representation",
+    "beyond the limit of where rational knowledge can approach",
+    "through a variety of experiences rather than logical reasoning",
+    "not in the perception of the figure but in its rational representation"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1324
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "Each of these highly \npracticed skills then demands relatively few cognitive resources, \neffectively lowering the total cognitive load that experts \nexperience.",
+    "Thus, experts can perform complex tasks and \ncombine multiple tasks relatively easily.",
+    "Furthermore, \nbeginners are excellent at processing the tasks when the \ntasks are divided and isolated.",
+    "This is not because they \nnecessarily have more cognitive resources than beginners; \nrather, because of the high level of fluency they have achieved \nin performing key skills, they can do more with what they \nhave.",
+    "Beginners, on the other hand, have not achieved the \nsame degree of fluency and automaticity in each of the \ncomponent skills, and thus they struggle to combine skills that \nexperts combine with relative ease and efficiency.\n[36～37] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 \n것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1147
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. The growing complexity of computer software has direct implications for our global safety and security, particularly as the physical objects upon which we d",
+   "choices": [
+    "(A) －(C) －(B)",
+    "(B) －(A) －(C)",
+    "(B) －(C) －(A)",
+    "(C) －(A) －(B)",
+    "(C) －(B) －(A)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1246
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. Darwin saw blushing as uniquely human, representing an involuntary physical reaction caused by embarrassment and self-consciousness in a social environment.",
+   "choices": [
+    "(A) －(C) －(B)",
+    "(B) －(A) －(C)",
+    "(B) －(C) －(A)",
+    "(C) －(A) －(B)",
+    "(C) －(B) －(A)\n[38～39] 글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 \n적절한 곳을 고르시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38～39"
+    ]
+   },
+   "charLen": 1131
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. Instead, much like the young child learning how to play ‘nicely’, the apprentice scientist gains his or her understanding of the moral values inherent in th",
+   "choices": [
+    ") In some cases, this institutionalization \nhas a formal face to it, with rules and protocols written down, \nand specialized roles created to ensure that procedures are \nfollowed correctly. (",
+    ") The main institutions of state ―\nparliament, courts, police and so on ― along with certain of \nthe professions, exhibit this formal character. (",
+    ") Other \nsocial institutions, perhaps the majority, are not like this; \nscience is an example. (",
+    ") Although scientists are trained \nin the substantive content of their discipline, they are not \nformally instructed in ‘how to be a good scientist’. (",
+    ") We \nthink that these values, along with the values that inform many \nof the professions, are under threat, just as the value of the \nprofessions themselves is under threat.\n* apprentice: 도제, 견습\n** inherent: 내재된"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1224
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. As a result, they are fit and grow better, but they aren’t particularly long-lived. When trees grow together, nutrients and water can be optimally divided a",
+   "choices": [
+    ") Some individuals photosynthesize \nlike mad until sugar positively bubbles along their trunk.\n(",
+    ") This is because a tree can be only as strong as the \nforest that surrounds it. (",
+    ") And there are now a lot of \nlosers in the forest. (",
+    ") Weaker members, who would once \nhave been supported by the stronger ones, suddenly fall \nbehind. (",
+    ") Whether the reason for their decline is their \nlocation and lack of nutrients, a passing sickness, or genetic \nmakeup, they now fall prey to insects and fungi. [3점]\n* bereft: 잃은\n** stump: 그루터기\n*** photosynthesize: 광합성하다"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1090
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "improvement …… diet",
+    "obstacle ……surroundings",
+    "advantage\n…… genes",
+    "regulator ……mechanisms",
+    "guide\n…… traits\n[41～42] 다음 글을 읽고, 물음에 답하시오.\nMany negotiators assume that all negotiations involve a \nfixed pie. Negotiators often approach integrative negotiation \nopportunities as zero-sum situations or win-lose exchanges. \nThose who believe in the mythical fixed pie assume that \nparties’ interests stand in opposition, with no possibility for \nintegrative settlements and mutually beneficial trade-offs, so \nthey (a) suppress efforts to search for them. In a hiring \nnegotiation, a job applicant who assumes that salary is the \nonly issue may insist on $75,000 when the employer is \noffering $70,000. Only when the two parties discuss the \npossibilities further do they discover that moving expenses \nand starting date can also be negotiated, which may (b) block \nresolution of the salary issue.\nThe tendency to see negotiation in fixed-pie terms (c) varies \ndepending on how people view the nature of a given conflict \nsituation. This was shown in a clever experiment by Harinck, \nde Dreu, and Van Vianen involving a simulated negotiation \nbetween prosecutors and defense lawyers over jail sentences. \nSome participants were told to view their goals in terms of \npersonal gain (e.g., arranging a particular jail sentence will \nhelp your career), others were told to view their goals in \nterms of effectiveness (a particular sentence is most likely to \nprevent recidivism), and still others were told to focus on \nvalues (a particular jail sentence is fair and just). Negotiators \nfocusing on personal gain were most likely to come under \nthe influence of fixed-pie beliefs and approach the situation \n(d) competitively. Negotiators focusing on values were least \nlikely to see the problem in fixed-pie terms and more inclined \nto approach the situation cooperatively. Stressful conditions such \nas time constraints contribute to this common misperception, \nwhich in turn may lead to (e) less integrative agreements.\n* prosecutor: 검사\n** recidivism: 상습적 범행"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3449
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Fixed Pie: A Key to Success in a Zero-sum Game",
+    "Fixed Pie Tells You How to Get the Biggest Salary",
+    "Negotiators, Wake Up from the Myth of the Fixed Pie!",
+    "Want a Fairer Jail Sentence? Stick to the Fixed Pie",
+    "What Alternatives Maximize Fixed-pie Effects?"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 278
+  },
+  {
+   "qNum": 42,
+   "kind": "vocab_letter",
+   "stem": "42. 밑줄 친 (a)～(e) 중에서 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {
+    "a": "she altered her original",
+    "b": "you possibly move to",
+    "c": "I would like to",
+    "d": "she realized the gift",
+    "e": "she had just discovered"
+   },
+   "bracketChoices": {},
+   "charLen": 2225
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) －(D) －(C)",
+    "(C) －(B) －(D)",
+    "(C) －(D) －(B)",
+    "(D) －(B) －(C)",
+    "(D) －(C) －(B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 125
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a)～(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 75
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글에 관한 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "Ellen은 끝내야 할 영어 과제가 있었다.",
+    "카페에서는 요거트 스무디를 팔지 않았다.",
+    "한 무리의 학생들이 카페에 들어왔다.",
+    "Ellen의 아버지는 최근에 아침 축구 클럽에 가입했다.",
+    "Ellen은 카페에 전화를 걸었다.\n* 확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)했는지 확인\n하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 202
+  }
+ ],
+ "sourcePdf": "e04e90133b6f6553fecb1d8b78f91ad1.pdf",
+ "fileName": "영어영역_문제지.pdf"
+}

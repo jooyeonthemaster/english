@@ -1,0 +1,764 @@
+{
+ "examId": "ebsi_go1_20260324",
+ "source": "ebsi_go1_20260324_paper_eng_mun_7JJDC391.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 다음을 듣고, 남자가 하는 말의 목적으로 가장 적절한 것을 고 르시오. ① 축제 공연 일정 변경을 안내하려고 ② 밴드의 신입 부원 모집을 공지하려고 ③ 밴드의 경연 대회 우승 소식을 알리려고 ④ 축제에서 밴드가 연주할 곡을 추천받으려고 ⑤ 축제에서 지켜야 할 안전 수칙을 설명하려고",
+   "choices": [
+    "축제 공연 일정 변경을 안내하려고",
+    "밴드의 신입 부원 모집을 공지하려고",
+    "밴드의 경연 대회 우승 소식을 알리려고",
+    "축제에서 밴드가 연주할 곡을 추천받으려고",
+    "축제에서 지켜야 할 안전 수칙을 설명하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 161
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 여자의 의견으로 가장 적절한 것을 고르시오. ① 높은 강도의 운동을 한 뒤에는 휴식을 취해야 한다. ② 근육통을 방지하려면 영양을 고르게 섭취해야 한다. ③ 근육 발달을 위해서는 규칙적으로 운동을 해야 한다. ④ 근육통을 줄이기 위해 운동 후 스트레칭을 해야 한다. ",
+   "choices": [
+    "높은 강도의 운동을 한 뒤에는 휴식을 취해야 한다.",
+    "근육통을 방지하려면 영양을 고르게 섭취해야 한다.",
+    "근육 발달을 위해서는 규칙적으로 운동을 해야 한다.",
+    "근육통을 줄이기 위해 운동 후 스트레칭을 해야 한다.",
+    "운동 종류에 따른 적절한 스트레칭 방식을 익혀야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 193
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을 듣고, 여자가 하는 말의 요지로 가장 적절한 것을 고르 시오. ①새로운 환경에서는 언행을 신중하게 하는 것이 바람직하다. ②침착한 태도는 상대에게 긍정적인 인상을 주어 호감을 높인다. ③친구 관계는 서로를 배려하는 과정 속에서 자연스럽게 형성된다. ④먼저 인사를 건네는 것은",
+   "choices": [
+    "새로운 환경에서는 언행을 신중하게 하는 것이 바람직하다.",
+    "침착한 태도는 상대에게 긍정적인 인상을 주어 호감을 높인다.",
+    "친구 관계는 서로를 배려하는 과정 속에서 자연스럽게 형성된다.",
+    "먼저 인사를 건네는 것은 새로운 관계를 형성하는 데 도움이 된다.",
+    "원만한 인간관계를 위해서는 상대의 인사에 적절히 반응해야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 221
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고 르시오.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 42
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 남자가 할 일로 가장 적절한 것을 고르시오. ① 녹화 시작하기 ② 마이크 점검하기 ③ 자료 업로드하기 ④ 온라인 링크 공유하기 ⑤ 카메라 앵글 점검하기",
+   "choices": [
+    "녹화 시작하기",
+    "마이크 점검하기",
+    "자료 업로드하기",
+    "온라인 링크 공유하기",
+    "카메라 앵글 점검하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 96
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 여자가 지불할 금액을 고르시오. [3점] ① $25 ② $30 ③ $45 ④ $50 ⑤ $55",
+   "choices": [
+    "$25",
+    "$30",
+    "$45",
+    "$50",
+    "$55"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 64
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 남자가 도서관에서 책을 빌리지 못한 이유를 고 르시오. ① 도서관에 늦게 도착해서 ② 다른 학생이 이미 대출해서 ③ 학생증을 가져가지 않아서 ④ 제때 반납하지 않은 책이 있어서 ⑤ 도서관 네트워크 시스템에 문제가 있어서",
+   "choices": [
+    "도서관에 늦게 도착해서",
+    "다른 학생이 이미 대출해서",
+    "학생증을 가져가지 않아서",
+    "제때 반납하지 않은 책이 있어서",
+    "도서관 네트워크 시스템에 문제가 있어서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 134
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, Race Against Hunger 행사에 관해 언급되지 않은 것을 고르시오. ① 목적 ② 기간 ③ 상품 ④ 참가비 ⑤ 신청 방법",
+   "choices": [
+    "목적",
+    "기간",
+    "상품",
+    "참가비",
+    "신청 방법"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 85
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. AI Coding Afterschool Program에 관한 다음 내용을 듣고, 일 치하지 않는 것을 고르시오. ① 1학년 학생을 대상으로 한다. ② 3시간 동안 진행된다. ③ AI 코딩 실습을 포함한다. ④ 참가 학생은 자신의 컴퓨터를 가져와야 한다. ⑤ 프로그램을 완료한 학생은",
+   "choices": [
+    "1학년 학생을 대상으로 한다.",
+    "3시간 동안 진행된다.",
+    "AI 코딩 실습을 포함한다.",
+    "참가 학생은 자신의 컴퓨터를 가져와야 한다.",
+    "프로그램을 완료한 학생은 선물을 받는다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 170
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 다음 표를 보면서 대화를 듣고, 여자가 예약할 수업을 고르시오. Oneday Class Class Level Class Size Price ① Cake Baking Beginner 6 people $30 ② Cake Baking Intermediate 4 people $40 ③ ",
+   "choices": [
+    "Cake Baking\nBeginner\n6 people\n$30",
+    "Cake Baking\nIntermediate\n4 people\n$40",
+    "Cookie Baking\nBeginner\n10 people\n$30",
+    "Cookie Baking\nAdvanced\n7 people\n$50",
+    "Soap Making\nIntermediate\n5 people\n$30"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 275
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ① I’m sorry. I already bought a bike. ② Sure. Let’s go to the park together. ③ You’re right. It’s not so hard",
+   "choices": [
+    "I’m sorry. I already bought a bike.",
+    "Sure. Let’s go to the park together.",
+    "You’re right. It’s not so hard to fix.",
+    "That’s too bad. Try to fix it, though.",
+    "No thanks. I heard it’ll rain tomorrow."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 253
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. [3점] ①Don’t worry. Let’s meet and go over the rules together. ②That’s nice. I think I understand the rules mu",
+   "choices": [
+    "Don’t worry. Let’s meet and go over the rules together.",
+    "That’s nice. I think I understand the rules much better now.",
+    "Actually, yes. That’s the main reason I won the competition.",
+    "You’re welcome. I’ll ask our teammates to meet after school.",
+    "I agree with you. I also think the new rules are easy to follow.\n2026학년도 3월 고1 전국연합학력평가 문제지\n제3 교시\n고1"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 402
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. Man: ①Okay. I hope she understands our situation. ②Well done. He will be ready to start the project today. ③D",
+   "choices": [
+    "Okay. I hope she understands our situation.",
+    "Well done. He will be ready to start the project today.",
+    "Don’t worry. We finished the project last week already.",
+    "Right. Let’s email her about the rescheduled project date.",
+    "Great. It’ll be easy to run the project with just the two of us."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 397
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. [3점] Woman: ① Many visitors usually ask about the animals’ backgrounds. ② The event starts at 10 a.m., so ple",
+   "choices": [
+    "Many visitors usually ask about the animals’ backgrounds.",
+    "The event starts at 10 a.m., so please come by then.",
+    "Some animals get nervous when many people gather.",
+    "Please take photos of the visitors with the animals.",
+    "I’m planning to finish uploading the photos tonight."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 392
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Emily가 Lucas에게 할 말로 가장 적 절한 것을 고르시오. Emily: ① I’m so sorry to hear that your bag is missing. ② I appreciate your help in getting my bag back. ",
+   "choices": [
+    "I’m so sorry to hear that your bag is missing.",
+    "I appreciate your help in getting my bag back.",
+    "I’m afraid that I can’t help you find your bag.",
+    "Thank you for helping me buy a new bag.",
+    "I’m so glad you finally found your bag.\n[16 ~ 17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 374
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 남자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "meal patterns across different times of the day",
+    "various methods for preparing a quick breakfast",
+    "effective diet strategies aimed at health recovery",
+    "food choices recommended before morning exercise",
+    "practical tips for storing food items for busy people"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 289
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 음식이 아닌 것은?",
+   "choices": [
+    "banana",
+    "yogurt",
+    "honey",
+    "egg",
+    "nut\n이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시\n에 따라 답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 107
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "탁구 대회 운영을 위한 물품 기부를 요청하려고",
+    "탁구 센터 재개장 일정 연기를 알리려고",
+    "탁구 센터 이전 소식을 안내하려고",
+    "탁구 강습 프로그램을 홍보하려고",
+    "탁구 강습비 인상을 공지하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 814
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 드러난 Cassie의 심경 변화로 가장 적절한 것은?",
+   "choices": [
+    "excited → scared",
+    "amazed → envious",
+    "relaxed → annoyed",
+    "proud → embarrassed",
+    "confident → disappointed"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 760
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "청중에게서 신뢰감을 얻기 위해 화자의 전문성을 강조해야 한다.",
+    "청중에게 영향을 주려면 화자 자신의 이야기로 유대감을 형성해야 한다.",
+    "논리적인 타당성을 확보하기 위해 객관적인 통계 자료를 제시해야 한다.",
+    "강연의 일관성을 유지하려면 화자의 사적인 감정 표현을 자제해야 한다.",
+    "청중을 효과적으로 설득하기 위해 정보를 최대한 상세히 설명해야 한다.\n고1"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1147
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 밑줄 친 steal the shade from our descendants가 다음 글에 서 의미하는 바로 가장 적절한 것은?",
+   "choices": [
+    "ignore the benefits passed down from our fathers",
+    "remove environmental problems our generation faces",
+    "blame our children for their lack of responsibilities",
+    "take care of resources to give to the future generation",
+    "take from future generations what they deserve to have"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1381
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "뇌의 적응력은 나이가 들수록 급격히 저하된다.",
+    "어릴 때 형성된 식습관이 평생의 건강을 좌우한다.",
+    "개인의 식습관에는 유전적인 영향이 크게 작용한다.",
+    "다양한 음식의 섭취가 뇌의 구조적 발달을 촉진한다.",
+    "식성은 반복된 경험과 변화 의지를 통해 바꿀 수 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1060
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "negative effects of social influence on teenagers",
+    "various factors that influence group decisionmaking",
+    "changes in the tendency to follow peers across ages",
+    "differences between individual choices and group decisions",
+    "ways to overcome peer pressure in the early teenage years"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1132
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Stop Thinking and Just Go to the Gym Now!",
+    "Avoid Listening to Music While You Work Out",
+    "Why Smart Businesses Focus on Healthcare Service",
+    "The Key to Success in Life: Give Up Everyday Hobbies",
+    "Pairing Pleasure with Effort: Guiding People to New Behavior\n고1"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1233
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. 다음 도표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "The biggest benefit was ‘No Commute,’ chosen \nby just under 60 percent of respondents.",
+    "‘Save on Gas \nand Lunch Costs’ came in second place, and ‘Flexibility over \nWhen \nI \nWork’ \nranked \nthird.",
+    "The \npercentage \nof \nrespondents who selected ‘Less Time Getting Ready for \nWork’ \nwas \nover \npercent.",
+    "The \npercentage \nof \nrespondents citing ‘Individual Quiet Time’ was lower than \nthat of those who selected ‘Spending More Time with \nFamily and Friends.’",
+    "The gap between the percentage of \nrespondents who selected ‘Fewer Meetings’ and that of \nthose who selected ‘No Commute’ was about 50 percentage \npoints.\n* commute: 통근"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 825
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Gary Graffman에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "세 살에 피아노 연주를 시작했다.",
+    "1949년에 Leventritt Award를 수상했다.",
+    "오른손 손가락을 제어할 수 없게 되어 피아노 연주를 포기했다.",
+    "1980년에 Curtis Institute of Music으로 돌아갔다.",
+    "Lang Lang을 포함한 많은 뛰어난 젊은 음악가들을 가르쳤다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1090
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. Green Parking Pass에 관한 다음 안내문의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "시의 모든 공영 주차장에서 사용할 수 있다.",
+    "Basic 타입은 오전 9시부터 오후 6시까지 이용 가능하다.",
+    "Premium 타입의 가격은 120달러이다.",
+    "시 공영 주차장 사무소에서는 구매할 수 없다.",
+    "한 사람당 한 개만 구매할 수 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 744
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. One Week Online Film Camp에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "13세부터 참가할 수 있다.",
+    "주말에는 오후 5시에 시작한다.",
+    "요금은 1인당 100달러이다.",
+    "참가자는 10분 길이의 영화를 완성할 것이다.",
+    "참가 신청을 하려면 이메일을 보내야 한다.\n고1"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 714
+  },
+  {
+   "qNum": 29,
+   "kind": "grammar_underline",
+   "stem": "29. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "accurate as long as it",
+    "②": "helps people create the conceptual",
+    "③": "designed to make them easier",
+    "④": "where it is displayed and",
+    "⑤": "that could be almost anywhere"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1038
+  },
+  {
+   "qNum": 30,
+   "kind": "vocab_underline",
+   "stem": "30. 다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "long distances on foot every",
+    "②": "consumes productive capability",
+    "③": "same",
+    "④": "more of it",
+    "⑤": "accomplished with a transport purpose"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 949
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. Just like how other rooms in your home can cause anxiety when filled with too much stuff, the same is true for kids. If the play space houses every single t",
+   "choices": [
+    "Revision",
+    "Invitation",
+    "Collection",
+    "Possession",
+    "Cooperation"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 855
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. Students often mistake familiarity with true mastery, creating a dangerous “illusion of competence” where recognizing information feels like genuine knowled",
+   "choices": [
+    "adopting the teacher mindset",
+    "using leisure time effectively",
+    "activating background knowledge",
+    "supporting the emotional stability",
+    "reducing the amount of studying time\n고1"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1118
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. From around 3000 BC, the Sumerian officials would mark their lists of goods on clay tablets. If they wanted to record five fish, they would mark five pictur",
+   "choices": [
+    "adding more complex symbols to describe the quality of goods",
+    "separating the number from the object they were counting",
+    "representing the physical shape of each object accurately",
+    "connecting the count of an object with its market value",
+    "applying the use of numbers to only precious items"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1208
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. The emphasis on learning from the ingroup takes little account of individuals. Amazingly, while we may dislike some of the people in our ingroup, we still c",
+   "choices": [
+    "conforming to the rules and conventions of the ingroup",
+    "following outgroup behavior which is socially appropriate",
+    "avoiding behaviors demonstrated by the ingroup on purpose",
+    "pursuing the most efficient strategy for completing the task",
+    "maintaining an individual identity rather than a group identity"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1303
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "These fat cells then become “fuller” or “thinner” as you \ngain and lose weight as an adult.",
+    "The set point is the \ntrigger in these cells that will send a message to your brain \nsaying that your fat cells are getting too thin and that you \nmust eat more.",
+    "Different people’s fat cells will have \ndifferent set points, and the strength of the message is \naffected by the number of cells.",
+    "Some researchers report \nthat fat cells can release hormones and other chemicals \nthat could help treat a disease.",
+    "Thus a person with lots \nof fat cells and a high set point will battle with a strong \ndesire for food when dieting.\n* trigger: 방아쇠\n[36 ~ 37] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 것\n을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 947
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. Initially the catchphrase “less is more” had a simple meaning. (A) Over time, many of their buttons became viewed as “extra” and were removed, and with each",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n고1"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 965
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. We first need to understand the short but hidden history behind the plastics industry and how it became deeply rooted in our daily lives. Before plastic, pe",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n[38 ~ 39] 글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 \n적절한 곳을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38 ~ 39"
+    ]
+   },
+   "charLen": 1115
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. Thus, what we call major progress in science is not a movement from a less to a more accurate paradigm. As Kuhn proposed, our propositions about the world a",
+   "choices": [
+    ") \nThus, when scientists undertake research, they do so from \nwithin a specific paradigm. (",
+    ") Even the most exacting \nmeasurements are only sensible from within that paradigm. \n(",
+    ") For example, a look into a microscope tells you \nnothing unless you are already informed about the nature of \nthe instrument and what you are supposed to be looking at. \n(",
+    ") Rather, it is a horizontal shift from one ‘way of \nseeing the world’ to another. (",
+    ") For Kuhn, ‘the scientist \nwith a new paradigm sees differently from the way he had \nseen before.’ [3점]\n* embed: 깊이 박아 넣다  ** microscope: 현미경"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 922
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. Yet a few hours later, after the sun has warmed the greenhouses above freezing, the second visit presents a miraculous contrast. Making two visits to one of",
+   "choices": [
+    ") During \nthe dawn visit all the crops are frozen solid. (",
+    ") Raising the \ninner covers, which is difficult because they too are frozen, \nreveals a sight of hard, frostcoated leaves bleak enough to \nconvince anyone that this idea is foolish. (",
+    ") Under the inner \ncovers are closely spaced rows of vigorous, healthy leaves that \nstretch the length of the greenhouse. (",
+    ") The leaf colors in \ndifferent shades of greens, reds, maroons, and yellows stand \nbright against the dark soil. (",
+    ") It looks like a neverending \nspring.\n* frostcoated: 서리가 내려앉은  ** bleak: 황량한\n*** vigorous: 생기가 넘치는"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 903
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하려 한다. 빈칸 (A), (B) 에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "supportive\n···········\nmild",
+    "supportive\n···········\nstrict",
+    "educational\n···········\nstrict",
+    "competing\n···········\nmild",
+    "competing\n···········\npublic\n고1\n[41 ~ 42] 다음 글을 읽고, 물음에 답하시오.\nIt’s fair to say that patience has a terrible name. For \none thing, the prospect of doing anything that you’ve been \ntold will require patience simply seems unattractive. More \nspecifically, though, it’s disturbingly (a) passive. It is the \nvirtue that has traditionally been urged upon housewives, \nwhile their husbands led more exciting lives outside the \nhome; or on racial minorities, told to wait just a few more \ndecades for their full civil rights. The talented but \nselfeffacing \nemployee \nwho \n“waits \npatiently” \nfor \na \npromotion, we tend to feel, will be waiting a long time: \nshe ought to be trumpeting her (b) achievements instead. \nIn all such cases, patience is a way of psychologically \naccommodating yourself to a lack of power, an attitude \nintended to help you to resign yourself to your (c) lowly \nposition, in theoretical hopes of better days to come. But \nas society accelerates, something (d) shifts. In more and \nmore contexts, patience becomes a form of power. In a \nworld geared for hurry, the capacity to (e) feed the urge \nto hurry — to allow things to take the time they take — is \na way to gain purchase on the world, to do the work that \ncounts, and to derive satisfaction from the doing itself, \ninstead of putting off all your fulfillment to the future.\n* virtue: 미덕  ** selfeffacing: 자기를 내세우지 않는\n*** resign: 단념하다"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2757
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Patience Can Never Be an Answer",
+    "Focus on the Work That Truly Counts",
+    "Patience: Not a Weakness, but a Power",
+    "The Hidden Costs of Waiting Too Long",
+    "Being Patient: a Key to Longterm Relationship"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 223
+  },
+  {
+   "qNum": 42,
+   "kind": "vocab_letter",
+   "stem": "42. 밑줄 친 (a)~(e) 중에서 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {
+    "a": "he hoped to give",
+    "b": "I met seemed content",
+    "c": "he had found the",
+    "d": "I thought you",
+    "e": "his plans"
+   },
+   "bracketChoices": {},
+   "charLen": 1822
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) - (D) - (C)",
+    "(C) - (B) - (D)",
+    "(C) - (D) - (B)",
+    "(D) - (B) - (C)",
+    "(D) - (C) - (B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 140
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a)～(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 75
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글에 관한 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "현자는 소박한 삶을 살았기에 동전이 필요하지 않았다.",
+    "왕은 현자가 한 행동에 당황스러웠고 약간 불쾌함을 느꼈다.",
+    "현자는 전쟁을 마치고 돌아오는 왕을 궁전 근처에서 보았다.",
+    "왕은 현자에게 다가가 축복을 부탁했다.",
+    "왕은 침략을 취소했고 자신이 가진 것을 소중히 여기기로 했다.\n* 확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)\n했는지 확인하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 239
+  }
+ ],
+ "sourcePdf": "ebsi_go1_20260324_paper_eng_mun_7JJDC391.pdf"
+}

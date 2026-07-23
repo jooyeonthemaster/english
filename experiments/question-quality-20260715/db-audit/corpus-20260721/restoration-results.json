@@ -1,0 +1,5192 @@
+{
+  "shards": 96,
+  "convergedCount": 299,
+  "divergedCount": 274,
+  "samePositionCount": 235,
+  "converged": [
+    {
+      "sid": "C001",
+      "p": "P2",
+      "id": "2027_06_5095396-q30",
+      "plantedText": "thick",
+      "correctedText": "thin",
+      "plantedExcerpt": "known as the book or libretto, and it can be very thick",
+      "confidence": "high",
+      "reason": "뮤지컬 대본은 노래·춤 비중이 커 대사를 빼면 남는 분량이 적다는 논지이므로 thick은 정면 모순이다."
+    },
+    {
+      "sid": "C001",
+      "p": "P3",
+      "id": "2027_06_5095396-q41-42",
+      "plantedText": "obey",
+      "correctedText": "defy",
+      "plantedExcerpt": "Glass seems to obey most molecular laws. As one glassmaker put it",
+      "confidence": "high",
+      "reason": "유리는 분자 구조가 무질서하고 과학자들도 그 거동을 설명하지 못한다는 논지이므로 분자 법칙을 '따른다'는 정반대다."
+    },
+    {
+      "sid": "C001",
+      "p": "P4",
+      "id": "ebsi_go1_20260324-q29",
+      "plantedText": "helps",
+      "correctedText": "help",
+      "plantedExcerpt": "you see displayed on a computer screen helps people create the conceptual model",
+      "confidence": "high",
+      "reason": "주어가 The files, folders, and icons(복수)이므로 단수 동사 helps는 수 일치 위반이다."
+    },
+    {
+      "sid": "C001",
+      "p": "P5",
+      "id": "ebsi_go1_20260324-q30",
+      "plantedText": "the same",
+      "correctedText": "the opposite",
+      "plantedExcerpt": "however, the attitude and policies are just the same: walking is efficient",
+      "confidence": "high",
+      "reason": "however로 개도국(걷기=피할 수 없는 부담)과 대비되는 선진국 인식(걷기=효율적·건강)을 제시하므로 same은 논지 모순이다."
+    },
+    {
+      "sid": "C001",
+      "p": "P6",
+      "id": "ebsi_go1_20260604-q29",
+      "plantedText": "having",
+      "correctedText": "have",
+      "plantedExcerpt": "Through the written word, authors having the unique ability to explore",
+      "confidence": "high",
+      "reason": "주절에 정동사가 없어 분사 having은 성립하지 않으므로 정동사 have가 와야 한다."
+    },
+    {
+      "sid": "C002",
+      "p": "P1",
+      "id": "ebsi_go1_20260604-q30",
+      "plantedText": "confuse",
+      "correctedText": "help",
+      "plantedExcerpt": "it can confuse children who find it hard to keep track of where and what they are looking at",
+      "confidence": "high",
+      "reason": "뷰파인더의 효용을 나열하는 문맥이므로 '혼란시킨다'는 논지와 정면 모순이며 '돕는다'가 원형이다."
+    },
+    {
+      "sid": "C002",
+      "p": "P2",
+      "id": "ebsi_go2_20260324-q29",
+      "plantedText": "occurring",
+      "correctedText": "occurred",
+      "plantedExcerpt": "The development of a true piano factory occurring first in the United States, led by Jonas Chickering",
+      "confidence": "high",
+      "reason": "주절에 정동사가 없어 분사형은 문장을 성립시키지 못하므로 정동사 occurred가 되어야 한다."
+    },
+    {
+      "sid": "C002",
+      "p": "P3",
+      "id": "ebsi_go2_20260324-q30",
+      "plantedText": "facilitating",
+      "correctedText": "limiting",
+      "plantedExcerpt": "may limit the breadth of knowledge and skills developed during the programme, potentially facilitating students' ability to adapt",
+      "confidence": "high",
+      "reason": "지식 폭이 제한된다는 앞 절의 결과이므로 적응 능력을 '촉진'이 아니라 '제한'해야 논지가 일관된다."
+    },
+    {
+      "sid": "C002",
+      "p": "P4",
+      "id": "ebsi_go2_20260604-q29",
+      "plantedText": "producing",
+      "correctedText": "produced",
+      "plantedExcerpt": "offered no savings to recipients producing just as much customer response as did error-free coupons",
+      "confidence": "high",
+      "reason": "주어 Mailed-out coupons에 대한 정동사가 없어 분사가 아닌 produced가 필요하다."
+    },
+    {
+      "sid": "C002",
+      "p": "P5",
+      "id": "ebsi_go2_20260604-q30",
+      "plantedText": "more sensitive to price than to additional performance",
+      "correctedText": "less sensitive to price than to additional performance",
+      "plantedExcerpt": "buyers - either innovators or forerunners - are more sensitive to price than to additional performance",
+      "confidence": "high",
+      "reason": "뒤이어 '주머니가 두둑하고 신제품에 많이 지불할 준비가 되어 있다'고 하므로 가격에 덜 민감해야 한다."
+    },
+    {
+      "sid": "C002",
+      "p": "P6",
+      "id": "ebsi_go3_20260324-q29",
+      "plantedText": "which",
+      "correctedText": "in which",
+      "plantedExcerpt": "Offspring cannot anticipate the nature of the conditions which they find themselves",
+      "confidence": "high",
+      "reason": "find themselves 뒤에 장소 보어가 필요한 완전한 절이므로 목적격 관계대명사가 아닌 전치사+관계대명사가 와야 한다."
+    },
+    {
+      "sid": "C003",
+      "p": "P1",
+      "id": "ebsi_go3_20260324-q30",
+      "plantedText": "acknowledges",
+      "correctedText": "ignores",
+      "plantedExcerpt": "\"Lawn\" acknowledges the varieties of grass and all the nongrassy plants that are there.",
+      "confidence": "high",
+      "reason": "논지가 '범주화는 개별성을 지운다'인데 '인정한다'는 앞 문장 'leave out their differences'·'co-categorizes'와 정면 모순이므로 ignores가 원형이다."
+    },
+    {
+      "sid": "C003",
+      "p": "P2",
+      "id": "ebsi_go3_20260507-q29",
+      "plantedText": "chooses",
+      "correctedText": "to choose",
+      "plantedExcerpt": "allows them, if possible, depending on the job role, chooses their day-to-day work location",
+      "confidence": "high",
+      "reason": "allow는 목적격보어로 to부정사를 취하므로 정동사 chooses는 문법 위반이다."
+    },
+    {
+      "sid": "C003",
+      "p": "P3",
+      "id": "ebsi_go3_20260507-q30",
+      "plantedText": "accumulate",
+      "correctedText": "exclude",
+      "plantedExcerpt": "Plants feed beneficial bacteria species, so that they accumulate pathogenic microbes.",
+      "confidence": "high",
+      "reason": "바로 앞에서 근권 미생물이 병원균을 물리치는 방어막을 만든다고 했으므로 병원균을 '축적한다'는 정면 모순이며 배제한다가 맞다."
+    },
+    {
+      "sid": "C003",
+      "p": "P5",
+      "id": "2026_06_5090182-q30",
+      "plantedText": "temporary",
+      "correctedText": "lasting",
+      "plantedExcerpt": "a unique voice that leaves a temporary impression on your audience.",
+      "confidence": "high",
+      "reason": "글 전체가 기억에 남고 구별되는 목소리(memorable and distinct)를 기르라는 논지이므로 '일시적 인상'은 정면 모순이다."
+    },
+    {
+      "sid": "C003",
+      "p": "P6",
+      "id": "2026_06_5090182-q41-42",
+      "plantedText": "distinguishable",
+      "correctedText": "indistinguishable",
+      "plantedExcerpt": "seamlessness in humanoid robotic design aims to make humanoids distinguishable from a human body.",
+      "confidence": "high",
+      "reason": "seamlessness는 기술과 인간의 경계를 感지할 수 없게 만드는 것이므로 인간 신체와 '구별 가능하게'는 논지 정면 모순이다."
+    },
+    {
+      "sid": "C004",
+      "p": "P2",
+      "id": "2026_09_5091403-q30",
+      "plantedText": "insignificant",
+      "correctedText": "significant",
+      "plantedExcerpt": "engineering accepts variability in the river’s movement as insignificant",
+      "confidence": "high",
+      "reason": "soft-path 공학은 강의 변동성을 생태적으로 중요한 것으로 전제한다는 마지막 문장과 정면 모순된다."
+    },
+    {
+      "sid": "C004",
+      "p": "P3",
+      "id": "2026_09_5091403-q41-42",
+      "plantedText": "less routine",
+      "correctedText": "more routine",
+      "plantedExcerpt": "lean or less rich media for messages that were less routine in nature",
+      "confidence": "high",
+      "reason": "복잡·모호한 메시지에 rich media를, 일상적(routine) 메시지에 lean media를 쓴다는 논지와 반대다(회의시간 변경 이메일 예시)."
+    },
+    {
+      "sid": "C004",
+      "p": "P5",
+      "id": "2026_SN_5093799-q30",
+      "plantedText": "abandon",
+      "correctedText": "gain",
+      "plantedExcerpt": "as many actions on the field or court as possible to abandon competitive advantages",
+      "confidence": "high",
+      "reason": "승리를 우선해 반칙을 숨기고 넘어가려 한다는 문맥상 경쟁 우위를 '얻으려'는 것이므로 abandon은 논지 정면 모순이다."
+    },
+    {
+      "sid": "C004",
+      "p": "P6",
+      "id": "2026_SN_5093799-q41-42",
+      "plantedText": "unlikely",
+      "correctedText": "likely",
+      "plantedExcerpt": "it is unlikely that displays of historic dress would be awkward imitations",
+      "confidence": "high",
+      "reason": "미술 자료의 정보가 없다면 복식 전시는 어색한 모방이 될 '가능성이 크다'는 것이 글의 논지이므로 unlikely는 모순이다."
+    },
+    {
+      "sid": "C005",
+      "p": "P1",
+      "id": "ebsi_go1_20250326-q30",
+      "plantedText": "uninterested",
+      "correctedText": "interested",
+      "plantedExcerpt": "Therefore, marketers must know where the uninterested consumers are, and how to reach them.",
+      "confidence": "high",
+      "reason": "앞서 \"가장 좋아할 만한 소비자를 식별한다\"는 논지와 정면 모순 — 관심 있는(interested) 소비자의 위치를 알아야 한다."
+    },
+    {
+      "sid": "C005",
+      "p": "P2",
+      "id": "ebsi_go1_20250604-q29",
+      "plantedText": "having",
+      "correctedText": "have",
+      "plantedExcerpt": "Rather, experts having knowledge in a specific domain - such as chess, chemistry",
+      "confidence": "high",
+      "reason": "주어 experts에 대응하는 정동사 자리이며 뒤의 and are not generalists와 병렬되므로 have여야 한다."
+    },
+    {
+      "sid": "C005",
+      "p": "P3",
+      "id": "ebsi_go1_20250604-q30",
+      "plantedText": "low",
+      "correctedText": "high",
+      "plantedExcerpt": "immigrants were forced to live in neighborhoods where crime rates were already low",
+      "confidence": "high",
+      "reason": "이민자가 범죄 원인이 아니라 이미 범죄율이 높은 동네로 밀려났다는 반박 논지와 정면 모순된다."
+    },
+    {
+      "sid": "C005",
+      "p": "P4",
+      "id": "ebsi_go1_20250903-q29",
+      "plantedText": "putting",
+      "correctedText": "put",
+      "plantedExcerpt": "If putting into an enclosure, they are likely to panic, and either die of shock",
+      "confidence": "high",
+      "reason": "주어(they)가 우리에 넣어지는 대상이므로 분사구문은 수동의 과거분사 put이어야 한다."
+    },
+    {
+      "sid": "C005",
+      "p": "P5",
+      "id": "ebsi_go1_20250903-q30",
+      "plantedText": "increased",
+      "correctedText": "decreased",
+      "plantedExcerpt": "combined with our increased physical interaction with the \"common folk,\"",
+      "confidence": "high",
+      "reason": "울타리를 높이고 사람을 멀리한다는 앞 문장 및 결과인 단절(disconnection)과 모순 — 접촉은 감소해야 한다."
+    },
+    {
+      "sid": "C006",
+      "p": "P1",
+      "id": "ebsi_go1_20251014-q30",
+      "plantedText": "beneficial",
+      "correctedText": "harmful",
+      "plantedExcerpt": "ensuring that their money is not being used to fund beneficial practices",
+      "confidence": "high",
+      "reason": "윤리적 가치 중시 맥락에서 자금이 쓰이지 않기를 바라는 대상은 '유익한' 관행이 아니라 '해로운/비윤리적' 관행이므로 논지에 정면 모순된다."
+    },
+    {
+      "sid": "C006",
+      "p": "P2",
+      "id": "ebsi_go2_20250326-q29",
+      "plantedText": "does",
+      "correctedText": "do",
+      "plantedExcerpt": "the social events that supply food with its meaning, does not depend on the quality of sensations",
+      "confidence": "high",
+      "reason": "주어가 the ceremonies and rituals(복수)이므로 삽입구 뒤 동사는 do가 되어야 한다."
+    },
+    {
+      "sid": "C006",
+      "p": "P3",
+      "id": "ebsi_go2_20250326-q30",
+      "plantedText": "discouraged",
+      "correctedText": "encouraged",
+      "plantedExcerpt": "changes in eating patterns that appears to have discouraged higher use of sugar, now widely implicated",
+      "confidence": "high",
+      "reason": "설탕업계 자금으로 지방을 문제 삼아 설탕에서 눈을 돌린 결과 비만·당뇨의 원인으로 지목되는 설탕 소비가 '늘도록' 부추긴 것이므로 discouraged는 논지 모순이다."
+    },
+    {
+      "sid": "C006",
+      "p": "P4",
+      "id": "ebsi_go2_20250604-q29",
+      "plantedText": "has",
+      "correctedText": "have",
+      "plantedExcerpt": "The forms or objects that you draw on a flat surface actually has depth and dimension in real life",
+      "confidence": "high",
+      "reason": "주어 The forms or objects가 복수이므로 동사는 have여야 한다."
+    },
+    {
+      "sid": "C006",
+      "p": "P6",
+      "id": "ebsi_go2_20250903-q29",
+      "plantedText": "depend",
+      "correctedText": "depends",
+      "plantedExcerpt": "Our choice of which differences to mark depend firstly on what we can observe",
+      "confidence": "high",
+      "reason": "주어의 핵이 단수 Our choice이므로 동사는 depends가 되어야 한다."
+    },
+    {
+      "sid": "C007",
+      "p": "P1",
+      "id": "ebsi_go2_20250903-q30",
+      "plantedText": "efficient",
+      "correctedText": "inefficient",
+      "plantedExcerpt": "Thus, the prescription for more empathy is often efficient in cases of conflict.",
+      "confidence": "high",
+      "reason": "비판자들은 공감이 갈등을 악화시킨다고 주장하므로 갈등 상황에서 공감 처방은 '비효율적(inefficient)'이어야 논지와 맞는다."
+    },
+    {
+      "sid": "C007",
+      "p": "P2",
+      "id": "ebsi_go2_20251014-q29",
+      "plantedText": "give",
+      "correctedText": "giving",
+      "plantedExcerpt": "their genetic specifications change, sometimes give organisms new ways to exploit",
+      "confidence": "high",
+      "reason": "주절 정동사는 change이므로 뒤에 접속사 없이 이어지는 자리는 분사구문 giving이어야 한다."
+    },
+    {
+      "sid": "C007",
+      "p": "P3",
+      "id": "ebsi_go2_20251014-q30",
+      "plantedText": "rejecting",
+      "correctedText": "accepting",
+      "plantedExcerpt": "rejecting inequalities stemming from the existence of the family as long as",
+      "confidence": "high",
+      "reason": "유교 문화는 사회적 불평등이 생기더라도 가족의 가치를 포기하지 않는다고 했으므로 그 불평등을 '수용(accepting)'해야 한다."
+    },
+    {
+      "sid": "C007",
+      "p": "P5",
+      "id": "2025_06_5086961-q30",
+      "plantedText": "drives",
+      "correctedText": "undermines",
+      "plantedExcerpt": "The salience of external controls drives the acquisition of self-responsibility.",
+      "confidence": "high",
+      "reason": "외적 통제가 두드러질수록 내면화가 안 되고 외부 통제에 의존하게 된다는 논지이므로 자기책임 획득을 '저해한다'가 맞다."
+    },
+    {
+      "sid": "C007",
+      "p": "P6",
+      "id": "2025_06_5086961-q41-42",
+      "plantedText": "coincide",
+      "correctedText": "conflict",
+      "plantedExcerpt": "influence your own 'code of behaviour' and how these may coincide, alongside",
+      "confidence": "high",
+      "reason": "윤리 원칙이 개인 간에도 개인 내에서도 다양하다는 논지이므로 자신의 행동 규범을 이루는 요인들이 '충돌할' 수 있음을 이해해야 한다."
+    },
+    {
+      "sid": "C008",
+      "p": "P1",
+      "id": "ebsi_go3_20250710-q29",
+      "plantedText": "require",
+      "correctedText": "required",
+      "plantedExcerpt": "before investing the amounts require to build a full application",
+      "confidence": "high",
+      "reason": "명사 the amounts를 뒤에서 수식하는 자리이므로 정동사 require가 아니라 과거분사 required가 와야 한다."
+    },
+    {
+      "sid": "C008",
+      "p": "P2",
+      "id": "ebsi_go3_20250710-q30",
+      "plantedText": "decreases",
+      "correctedText": "increases",
+      "plantedExcerpt": "believe that they make decisions logically and consciously only decreases its influence",
+      "confidence": "high",
+      "reason": "무의식의 힘이 약해지지 않는다는 앞 문장 논지상, 논리적으로 결정한다는 착각은 무의식의 영향력을 오히려 키운다고 해야 한다."
+    },
+    {
+      "sid": "C008",
+      "p": "P4",
+      "id": "2025_09_5087695-q30",
+      "plantedText": "rationality",
+      "correctedText": "irrationality",
+      "plantedExcerpt": "Learning to understand the built-in rationality of our mental processes can also help us",
+      "confidence": "high",
+      "reason": "글 전체가 인간 사고의 '예측 가능한 비합리성'과 편향을 다루므로 이해해야 할 대상은 내재된 비합리성이다."
+    },
+    {
+      "sid": "C008",
+      "p": "P5",
+      "id": "2025_09_5087695-q41-42",
+      "plantedText": "sensitive",
+      "correctedText": "insensitive",
+      "plantedExcerpt": "most of us have become sensitive to the flood tide of words, millions of them every day",
+      "confidence": "high",
+      "reason": "파도 소리에 익숙해져 더 이상 듣지 못한다는 비유와 병렬되므로 말의 홍수에 무감각해졌다고 해야 한다."
+    },
+    {
+      "sid": "C008",
+      "p": "P6",
+      "id": "ebsi_go3_20251014-q29",
+      "plantedText": "which",
+      "correctedText": "by which",
+      "plantedExcerpt": "One of the key mechanisms which this occurs is increased blood flow to the hippocampus",
+      "confidence": "high",
+      "reason": "뒤 절이 완전한 문장이므로 관계대명사 which 단독이 아니라 전치사를 동반한 by(through) which가 필요하다."
+    },
+    {
+      "sid": "C009",
+      "p": "P1",
+      "id": "ebsi_go3_20251014-q30",
+      "plantedText": "forbidden",
+      "correctedText": "obliged",
+      "plantedExcerpt": "the reverse is true, and one is forbidden to make public certain information",
+      "confidence": "high",
+      "reason": "앞은 '공개 제한' 사례이고 뒤이어 제약사 부작용 공시·식품 영양표시 등 '공개 의무(l'obligation d'information)' 사례가 이어지므로 reverse는 '공개가 금지된다'가 아니라 '공개가 의무화된다'여야 한다."
+    },
+    {
+      "sid": "C009",
+      "p": "P3",
+      "id": "2025_SN_5089362-q30",
+      "plantedText": "stronger",
+      "correctedText": "weaker",
+      "plantedExcerpt": "lead to stronger motivation and performance in the pursuit of competitive goals",
+      "confidence": "high",
+      "reason": "바로 다음 문장이 이 정서 상태의 결과로 'lower task motivation'과 협력적 결과 선호를 든다는 점에서 죄책감이 동기·수행을 '더 강하게' 만든다는 서술은 논지와 정면 모순이다."
+    },
+    {
+      "sid": "C009",
+      "p": "P4",
+      "id": "2025_SN_5089362-q41-42",
+      "plantedText": "excludes",
+      "correctedText": "requires",
+      "plantedExcerpt": "from a rock knows that it excludes strong grips, constant rotation and repositioning",
+      "confidence": "high",
+      "reason": "글 전체가 정밀·강력한 인간 손 파지 능력이 석기 제작을 가능하게 했다는 논지이므로 석기 제작이 강한 파지·회전·타격을 '배제한다'가 아니라 '요구한다'여야 한다."
+    },
+    {
+      "sid": "C009",
+      "p": "P5",
+      "id": "ebsi_go1_20240328-q29",
+      "plantedText": "to count",
+      "correctedText": "count",
+      "plantedExcerpt": "much more energizing and satisfying, and to count their employment as one of their",
+      "confidence": "high",
+      "reason": "주어 Those who ...의 술어 find와 and로 병렬되는 자리이므로 to부정사가 아니라 정동사 count가 와야 한다."
+    },
+    {
+      "sid": "C010",
+      "p": "P1",
+      "id": "ebsi_go1_20240604-q29",
+      "plantedText": "what",
+      "correctedText": "that",
+      "plantedExcerpt": "and it was in farming villages what epidemic diseases first took root",
+      "confidence": "high",
+      "reason": "it-cleft 강조구문에서 강조 대상이 부사구(in farming villages)이므로 관계사 what이 아닌 that이어야 한다."
+    },
+    {
+      "sid": "C010",
+      "p": "P2",
+      "id": "ebsi_go1_20240604-q30",
+      "plantedText": "disappears",
+      "correctedText": "appears",
+      "plantedExcerpt": "but then act differently when temptation for immediate pleasure disappears",
+      "confidence": "high",
+      "reason": "의지박약은 즉각적 쾌락의 유혹이 '나타날' 때 결심과 다르게 행동하는 것이므로 disappears는 논지와 정면 모순이다."
+    },
+    {
+      "sid": "C010",
+      "p": "P4",
+      "id": "ebsi_go1_20240904-q30",
+      "plantedText": "inefficient",
+      "correctedText": "efficient",
+      "plantedExcerpt": "A tightly packed delivery truck is a far more inefficient transporter of goods than several hybrids",
+      "confidence": "high",
+      "reason": "배송 차량이 도시를 더 친환경적으로 만드는 필수 요소라는 논지이므로 승용차 여러 대보다 '더 효율적인' 운송수단이어야 한다."
+    },
+    {
+      "sid": "C010",
+      "p": "P5",
+      "id": "ebsi_go1_20241015-q29",
+      "plantedText": "what",
+      "correctedText": "that",
+      "plantedExcerpt": "normally the selling point is what the usefulness of the technology is obvious at first glance",
+      "confidence": "high",
+      "reason": "뒤 절이 완전하므로 선행사 없는 관계대명사 what이 아니라 보어절을 이끄는 접속사 that이어야 한다."
+    },
+    {
+      "sid": "C010",
+      "p": "P6",
+      "id": "ebsi_go1_20241015-q30",
+      "plantedText": "less",
+      "correctedText": "more",
+      "plantedExcerpt": "instead of holding less information than we have mental capacity for and indeed need to know",
+      "confidence": "medium",
+      "reason": "인지 용량이 부족해 계산을 분산한다는 논지상 '용량을 초과하는 더 많은 정보를 담는 대신'이 되어야 하므로 less는 모순이다."
+    },
+    {
+      "sid": "C011",
+      "p": "P1",
+      "id": "ebsi_go2_20240328-q29",
+      "plantedText": "using",
+      "correctedText": "used",
+      "plantedExcerpt": "when using alongside other behavior modification tactics and coping strategies",
+      "confidence": "high",
+      "reason": "분사구문의 의미상 주어(this technique)가 사용되는 대상이므로 능동 using이 아니라 수동 used여야 한다."
+    },
+    {
+      "sid": "C011",
+      "p": "P2",
+      "id": "ebsi_go2_20240328-q30",
+      "plantedText": "cultivate",
+      "correctedText": "thwart",
+      "plantedExcerpt": "they may cultivate adolescents' autonomy striving",
+      "confidence": "medium",
+      "reason": "Whereas ~ beneficial과 대조되고 뒤에 청소년이 부모에게서 멀어진다는 결과가 오므로 자율성 추구를 '길러준다'가 아니라 '좌절시킨다'여야 논지가 성립한다."
+    },
+    {
+      "sid": "C011",
+      "p": "P3",
+      "id": "ebsi_go2_20240604-q29",
+      "plantedText": "smiling",
+      "correctedText": "smile",
+      "plantedExcerpt": "when you look at them or, better still, smiling back at them.",
+      "confidence": "high",
+      "reason": "when절 안에서 앞의 동사 look과 or로 병렬되는 자리이므로 정동사 smile이어야 한다."
+    },
+    {
+      "sid": "C011",
+      "p": "P4",
+      "id": "ebsi_go2_20240604-q30",
+      "plantedText": "accelerate",
+      "correctedText": "slow",
+      "plantedExcerpt": "less positive ones, however, can accelerate adaptation.",
+      "confidence": "high",
+      "reason": "덜 긍정적인 경험을 끼워 넣으면 적응이 '방해된다(disrupts)'는 다음 문장과 정면 모순되므로 가속이 아니라 지연이어야 한다."
+    },
+    {
+      "sid": "C011",
+      "p": "P6",
+      "id": "ebsi_go2_20240904-q30",
+      "plantedText": "reduced",
+      "correctedText": "improved",
+      "plantedExcerpt": "As their diet reduced, hominids could physically and intellectually expand their territory.",
+      "confidence": "high",
+      "reason": "도구로 단백질·지방 섭취가 늘어 에너지가 증가했다는 앞 논지와 반대로 '식단이 줄었다'는 모순이므로 improved여야 한다."
+    },
+    {
+      "sid": "C012",
+      "p": "P1",
+      "id": "ebsi_go2_20241015-q29",
+      "plantedText": "have given",
+      "correctedText": "have been given",
+      "plantedExcerpt": "mice with cancer show a preference for the place where they have given morphine, a drug used to relieve pain",
+      "confidence": "high",
+      "reason": "쥐가 모르핀을 '투여받는' 대상이므로 수동태 have been given이어야 하며, 능동 have given은 목적어 관계상 문법 위반이다."
+    },
+    {
+      "sid": "C012",
+      "p": "P2",
+      "id": "ebsi_go2_20241015-q30",
+      "plantedText": "least",
+      "correctedText": "most",
+      "plantedExcerpt": "It's for making the least of the sudden breeding opportunity.",
+      "confidence": "high",
+      "reason": "비가 온 지 며칠 내 번식을 시작한다는 것은 갑작스러운 번식 기회를 최대한 활용하는 것이므로 least는 논지와 정면 모순이다."
+    },
+    {
+      "sid": "C012",
+      "p": "P5",
+      "id": "2024_06_5084521-q41-42",
+      "plantedText": "block",
+      "correctedText": "facilitate",
+      "plantedExcerpt": "moving expenses and starting date can also be negotiated, which may block resolution of the salary issue",
+      "confidence": "high",
+      "reason": "협상 가능한 쟁점이 추가로 발견되면 통합적 합의로 임금 쟁점 해결이 촉진되므로 block은 통합협상 논지와 정면 모순이다."
+    },
+    {
+      "sid": "C012",
+      "p": "P6",
+      "id": "ebsi_go3_20240711-q29",
+      "plantedText": "blooming",
+      "correctedText": "bloom",
+      "plantedExcerpt": "there are multiple Bachs who ascend slowly and blooming late",
+      "confidence": "high",
+      "reason": "관계대명사 who의 동사 ascend와 and로 병렬되는 자리이므로 정동사 bloom이어야 하며 분사 blooming은 문법 위반이다."
+    },
+    {
+      "sid": "C013",
+      "p": "P3",
+      "id": "2024_09_5085155-q30",
+      "plantedText": "countered",
+      "correctedText": "created",
+      "plantedExcerpt": "This countered a disconnect between consumers and the products they use",
+      "confidence": "high",
+      "reason": "섬유가 더 이상 place-bound가 아니게 되어 단절·이해 상실·경시가 '생겨났다'는 흐름이므로 '막았다(countered)'는 논지와 정면 모순이다."
+    },
+    {
+      "sid": "C013",
+      "p": "P4",
+      "id": "2024_09_5085155-q41-42",
+      "plantedText": "challenging",
+      "correctedText": "easy",
+      "plantedExcerpt": "you can see how it would be challenging to conclude you don't remember much",
+      "confidence": "high",
+      "reason": "출처(맥락) 기억이 어렵기 때문에 '학교에서 배운 게 별로 없다'고 잘못 결론짓기 쉽다는 논지이므로 challenging은 반대다."
+    },
+    {
+      "sid": "C013",
+      "p": "P5",
+      "id": "ebsi_go3_20241015-q29",
+      "plantedText": "last",
+      "correctedText": "lasting",
+      "plantedExcerpt": "for putting humans into hibernations last for centuries",
+      "confidence": "high",
+      "reason": "이미 전치사 for의 목적어 구조 안이라 정동사가 올 수 없고 hibernations를 수식하는 분사 lasting이어야 한다."
+    },
+    {
+      "sid": "C013",
+      "p": "P6",
+      "id": "ebsi_go3_20241015-q30",
+      "plantedText": "extends",
+      "correctedText": "expires",
+      "plantedExcerpt": "hits a certain point in adolescence, however, its puppy license extends",
+      "confidence": "high",
+      "reason": "however 이후 관용이 사라지고 성견 취급을 받는다는 전개이므로 면허가 '연장된다'는 논지와 정면 모순이며 '만료된다'가 맞다."
+    },
+    {
+      "sid": "C014",
+      "p": "P2",
+      "id": "2024_SN_5086091-q30",
+      "plantedText": "low",
+      "correctedText": "high",
+      "plantedExcerpt": "is careful not to directly ask for very low prices for video games because",
+      "confidence": "high",
+      "reason": "비디오게임이 필수품이 아니므로 판매자가 조심할 것은 '낮은' 값이 아니라 '높은' 값을 부르는 일이다."
+    },
+    {
+      "sid": "C014",
+      "p": "P4",
+      "id": "ebsi_go1_20230323-q29",
+      "plantedText": "are",
+      "correctedText": "is",
+      "plantedExcerpt": "more emotionally appealing, both to children and adults, are to give them",
+      "confidence": "high",
+      "reason": "주어가 단수 A general strategy이므로 동사는 is여야 한다."
+    },
+    {
+      "sid": "C014",
+      "p": "P6",
+      "id": "ebsi_go1_20230601-q29",
+      "plantedText": "being",
+      "correctedText": "is",
+      "plantedExcerpt": "who is smart and knows how to do things being likely to make him endure longer",
+      "confidence": "high",
+      "reason": "주어 Thinking of himself...에 대한 정동사 자리이므로 분사 being이 아니라 is여야 한다."
+    },
+    {
+      "sid": "C015",
+      "p": "P1",
+      "id": "ebsi_go1_20230601-q30",
+      "plantedText": "increased",
+      "correctedText": "decreased",
+      "plantedExcerpt": "were buying their bread from stores or bakeries, so consumer demand for yeast increased.",
+      "confidence": "high",
+      "reason": "사람들이 빵을 사 먹게 되어 이스트 수요가 줄었기에 새 마케팅 전략이 필요했다는 논지와 정면 모순된다."
+    },
+    {
+      "sid": "C015",
+      "p": "P2",
+      "id": "ebsi_go1_20230906-q29",
+      "plantedText": "themselves",
+      "correctedText": "them",
+      "plantedExcerpt": "many of them face criticism from fans and community members telling themselves how to run",
+      "confidence": "high",
+      "reason": "telling의 목적어는 주어(fans and community members)가 아니라 임원들이므로 재귀대명사가 아닌 them이어야 한다."
+    },
+    {
+      "sid": "C015",
+      "p": "P3",
+      "id": "ebsi_go1_20230906-q30",
+      "plantedText": "easy",
+      "correctedText": "difficult",
+      "plantedExcerpt": "Their understanding at this stage is quite literal, and it is easy for them to imagine",
+      "confidence": "high",
+      "reason": "이해가 문자적(literal) 수준이라는 진술은 새 집을 미리 상상하기 '어렵다'는 결론으로 이어져야 하므로 논지와 모순된다."
+    },
+    {
+      "sid": "C015",
+      "p": "P4",
+      "id": "ebsi_go1_20231219-q29",
+      "plantedText": "lack",
+      "correctedText": "lacking",
+      "plantedExcerpt": "brain death is an unreliable process lack precision. As a matter of consistency",
+      "confidence": "high",
+      "reason": "이미 is라는 정동사가 있는 절에 또 다른 정동사 lack이 접속사 없이 놓여 명사 process를 수식하는 분사 lacking이어야 한다."
+    },
+    {
+      "sid": "C015",
+      "p": "P5",
+      "id": "ebsi_go1_20231219-q30",
+      "plantedText": "maintained",
+      "correctedText": "replaced",
+      "plantedExcerpt": "item but sooner than later, this feeling will be maintained by the joy of clarity.",
+      "confidence": "high",
+      "reason": "미니멀리즘이 감정을 해치지 않는다는 논지이므로 슬픔이 유지되는 것이 아니라 명료함의 기쁨으로 대체되어야 한다."
+    },
+    {
+      "sid": "C015",
+      "p": "P6",
+      "id": "ebsi_go2_20230323-q29",
+      "plantedText": "generating",
+      "correctedText": "generate",
+      "plantedExcerpt": "Our brains then generating sensations, thoughts, and action plans to keep us safe",
+      "confidence": "high",
+      "reason": "and로 연결된 독립절의 정동사 자리인데 분사형이 쓰여 주절에 동사가 없다."
+    },
+    {
+      "sid": "C016",
+      "p": "P1",
+      "id": "ebsi_go2_20230323-q30",
+      "plantedText": "deny",
+      "correctedText": "assume",
+      "plantedExcerpt": "The logic was that statistical models deny stable conditions and therefore cannot account for the effects on demand of novel events",
+      "confidence": "high",
+      "reason": "통계 모형이 '안정된 조건을 가정하기 때문에' 신규 사건을 반영 못 한다는 논리라 deny는 정면 모순이다."
+    },
+    {
+      "sid": "C016",
+      "p": "P2",
+      "id": "ebsi_go2_20230601-q29",
+      "plantedText": "ask",
+      "correctedText": "are asked",
+      "plantedExcerpt": "trying to create a favorable impression, especially when subjects ask about sensitive issues",
+      "confidence": "high",
+      "reason": "subjects는 질문을 받는 대상이므로 능동 ask가 아니라 수동 are asked여야 한다."
+    },
+    {
+      "sid": "C016",
+      "p": "P4",
+      "id": "ebsi_go2_20230906-q29",
+      "plantedText": "reach",
+      "correctedText": "to reach",
+      "plantedExcerpt": "those items have already travelled hundreds of miles reach the shelves and once they go into waste",
+      "confidence": "high",
+      "reason": "정동사 travelled 뒤에 접속사 없이 동사원형 reach가 올 수 없어 목적 부정사 to reach여야 한다."
+    },
+    {
+      "sid": "C016",
+      "p": "P5",
+      "id": "ebsi_go2_20231219-q29",
+      "plantedText": "showed",
+      "correctedText": "showing",
+      "plantedExcerpt": "is also gaining support, with animal studies showed that 'lectins, once eaten, may be damaging the gut",
+      "confidence": "high",
+      "reason": "with 분사구문에서 studies가 show의 능동 주체이므로 과거형/과거분사 showed가 아니라 showing이어야 한다."
+    },
+    {
+      "sid": "C017",
+      "p": "P2",
+      "id": "2023_06_5076592-q30",
+      "plantedText": "accommodating",
+      "correctedText": "managing",
+      "plantedExcerpt": "the most direct approach to accommodating automobile demand is making motorized travel more expensive",
+      "confidence": "high",
+      "reason": "글의 논지는 자동차 수요를 수용(accommodate)하지 말고 관리(manage)해야 한다는 것인데, 통행료·규제를 통한 억제책을 '수용하는 접근'이라 부르는 것은 정면 모순이다."
+    },
+    {
+      "sid": "C017",
+      "p": "P4",
+      "id": "ebsi_go3_20230711-q29",
+      "plantedText": "being",
+      "correctedText": "are",
+      "plantedExcerpt": "Nor does it explain why orangutans, who seldom encounter their neighbors, being so intelligent.",
+      "confidence": "high",
+      "reason": "why가 이끄는 명사절에 정동사가 필요한 자리인데 분사 being이 쓰여 절에 술어동사가 없다."
+    },
+    {
+      "sid": "C018",
+      "p": "P1",
+      "id": "2023_09_5077481-q30",
+      "plantedText": "diminished",
+      "correctedText": "compounded",
+      "plantedExcerpt": "This frustration is then diminished by the fact that, to the general public, both the scientist",
+      "confidence": "high",
+      "reason": "과학자와 비전문가가 동등한 신뢰를 받는다는 사실은 좌절을 '가중'시키는 것이므로 diminished는 논지와 정면 모순이다."
+    },
+    {
+      "sid": "C018",
+      "p": "P2",
+      "id": "2023_09_5077481-q41-42",
+      "plantedText": "rapidly",
+      "correctedText": "gradually",
+      "plantedExcerpt": "environmental change can be \"imperceptible\"; it proceeds rapidly, only occasionally producing",
+      "confidence": "high",
+      "reason": "'감지 불가능(imperceptible)'하고 폭발적 사건은 '가끔만' 일어난다는 서술과 rapidly는 정면 모순이며 뒤의 occurred gradually와도 충돌한다."
+    },
+    {
+      "sid": "C018",
+      "p": "P3",
+      "id": "ebsi_go3_20231012-q29",
+      "plantedText": "becoming",
+      "correctedText": "became",
+      "plantedExcerpt": "diagnosis seem \"elementary\" becoming the inspiration for fiction's greatest detective",
+      "confidence": "high",
+      "reason": "And so the professor (who ~ ) 가 주어인 주절에 정동사가 없어 becoming은 문법 위반, became가 되어야 한다."
+    },
+    {
+      "sid": "C018",
+      "p": "P6",
+      "id": "2023_SN_5080827-q30",
+      "plantedText": "maintain",
+      "correctedText": "delay",
+      "plantedExcerpt": "the longer we will maintain their natural fusion with our lives, the hallmark of every",
+      "confidence": "high",
+      "reason": "컴퓨터가 별세계로 데려간다는 믿음이 길수록 삶과의 자연스러운 융합은 '지연'되는 것이므로 maintain은 논지와 모순이다."
+    },
+    {
+      "sid": "C019",
+      "p": "P1",
+      "id": "2023_SN_5080827-q41-42",
+      "plantedText": "relaxed",
+      "correctedText": "stressed",
+      "plantedExcerpt": "important steps or considerations aren't missed when people are feeling relaxed",
+      "confidence": "high",
+      "reason": "체크리스트는 사람이 이완돼 있을 때가 아니라 스트레스·피로 상태에서 중요한 단계를 놓치지 않게 해준다는 논지이므로 relaxed는 정면 모순이다."
+    },
+    {
+      "sid": "C019",
+      "p": "P2",
+      "id": "ebsi_go1_20220324-q29",
+      "plantedText": "what",
+      "correctedText": "that",
+      "plantedExcerpt": "This is a very common human tendency what is rooted in how our species developed.",
+      "confidence": "high",
+      "reason": "선행사 tendency를 수식하는 주격 관계대명사 자리이므로 선행사를 포함하는 what은 쓸 수 없고 that(which)이어야 한다."
+    },
+    {
+      "sid": "C019",
+      "p": "P3",
+      "id": "ebsi_go1_20220324-q30",
+      "plantedText": "welcomed",
+      "correctedText": "rejected",
+      "plantedExcerpt": "By deliberately getting yourself welcomed you'll grow a thicker skin",
+      "confidence": "high",
+      "reason": "거절 요법(rejection therapy)은 일부러 거절당해 내성을 기르는 것이므로 welcomed는 논지와 정면 모순이다."
+    },
+    {
+      "sid": "C019",
+      "p": "P4",
+      "id": "ebsi_go1_20220609-q29",
+      "plantedText": "dependently",
+      "correctedText": "dependent",
+      "plantedExcerpt": "caused more materials use, making us dependently on more natural resources",
+      "confidence": "high",
+      "reason": "make + 목적어 + 목적격보어 구조로 형용사가 와야 하므로 부사 dependently는 문법 위반이다."
+    },
+    {
+      "sid": "C019",
+      "p": "P6",
+      "id": "ebsi_go1_20221123-q29",
+      "plantedText": "are",
+      "correctedText": "do",
+      "plantedExcerpt": "will know more about you than your closest friends and family members are",
+      "confidence": "high",
+      "reason": "비교 대상이 일반동사 know이므로 대동사는 be동사 are가 아니라 do여야 한다."
+    },
+    {
+      "sid": "C020",
+      "p": "P1",
+      "id": "ebsi_go1_20221123-q30",
+      "plantedText": "faster",
+      "correctedText": "more slowly",
+      "plantedExcerpt": "Therefore, the lower side of the root will grow faster than the upper side.",
+      "confidence": "high",
+      "reason": "뿌리 옥신은 생장을 억제하고 아래쪽에 축적되어 발달을 방해하므로 아래쪽이 더 느리게 자라야 뿌리가 아래로 굽는다는 결론과 맞는다."
+    },
+    {
+      "sid": "C020",
+      "p": "P2",
+      "id": "ebsi_go1_20220901-q29",
+      "plantedText": "has been outsourced",
+      "correctedText": "have been outsourced",
+      "plantedExcerpt": "obtaining food - has been outsourced to the wider society",
+      "confidence": "high",
+      "reason": "주어가 many of the tasks(복수)이므로 동사는 have been이어야 한다."
+    },
+    {
+      "sid": "C020",
+      "p": "P3",
+      "id": "ebsi_go1_20220901-q30",
+      "plantedText": "less",
+      "correctedText": "more",
+      "plantedExcerpt": "it would mean that herbs are less intelligent than the human body",
+      "confidence": "high",
+      "reason": "허브가 몸을 낫게 하는 지능을 가진다면 허브가 인체보다 '더' 지적이라는 믿기 힘든 결론이 되어야 논지가 성립한다."
+    },
+    {
+      "sid": "C020",
+      "p": "P4",
+      "id": "ebsi_go2_20220324-q29",
+      "plantedText": "risk",
+      "correctedText": "risks",
+      "plantedExcerpt": "comparing ourselves with someone who's doing worse than we are risk scorn",
+      "confidence": "high",
+      "reason": "주어가 동명사구 comparing ourselves...이므로 단수 동사 risks가 되어야 한다."
+    },
+    {
+      "sid": "C020",
+      "p": "P5",
+      "id": "ebsi_go2_20220324-q30",
+      "plantedText": "corresponds with",
+      "correctedText": "conflicts with",
+      "plantedExcerpt": "gets an experimental result which corresponds with the paradigm, they will usually assume",
+      "confidence": "high",
+      "reason": "패러다임을 의심 없이 수용한다는 논지상, 패러다임과 '어긋나는' 결과가 나올 때 자기 실험 기법을 탓한다고 해야 모순이 없다."
+    },
+    {
+      "sid": "C021",
+      "p": "P1",
+      "id": "ebsi_go2_20221123-q29",
+      "plantedText": "are",
+      "correctedText": "is",
+      "plantedExcerpt": "there is very little in the way of market demand that are not accommodated",
+      "confidence": "high",
+      "reason": "관계절의 선행사가 단수 대명사 성격의 'very little'(불가산 market demand)이므로 복수동사 are가 아니라 is여야 한다."
+    },
+    {
+      "sid": "C021",
+      "p": "P3",
+      "id": "ebsi_go2_20220901-q29",
+      "plantedText": "fascinated",
+      "correctedText": "fascinating",
+      "plantedExcerpt": "inflecting their voices in ways that infants find fascinated",
+      "confidence": "high",
+      "reason": "find의 목적격보어가 목적어(ways)의 성질을 서술하므로 감정을 유발하는 현재분사 fascinating이 맞고 과거분사 fascinated는 문법 위반이다."
+    },
+    {
+      "sid": "C021",
+      "p": "P6",
+      "id": "2022_06_5063572-q30",
+      "plantedText": "increase",
+      "correctedText": "reduce",
+      "plantedExcerpt": "As a result, they may increase efficiency, productivity and the need to respond",
+      "confidence": "high",
+      "reason": "과거·전통에 대한 강한 애착이 변화 저항으로 이어진다는 부정적 영향 문단이므로 효율성·생산성·시장 대응 필요성을 '증가'시킨다는 것은 논지 모순이다."
+    },
+    {
+      "sid": "C022",
+      "p": "P1",
+      "id": "2022_06_5063572-q41-42",
+      "plantedText": "easier",
+      "correctedText": "harder",
+      "plantedExcerpt": "modern notions of private and family life, we find it easier to establish the limits",
+      "confidence": "high",
+      "reason": "바로 뒤 문장이 이 모호함을 \"변화에 적응할 수 있는 강점\"으로 재해석하므로, 한계 설정은 더 '어려워'져야 논지가 성립한다."
+    },
+    {
+      "sid": "C022",
+      "p": "P2",
+      "id": "ebsi_go3_20220706-q29",
+      "plantedText": "have taught",
+      "correctedText": "taught",
+      "plantedExcerpt": "confidence in year 7 students across a range of subjects have taught in their first term",
+      "confidence": "high",
+      "reason": "subjects는 가르쳐지는 대상이므로 능동 정동사 have taught가 아니라 명사를 수식하는 과거분사 taught여야 한다."
+    },
+    {
+      "sid": "C022",
+      "p": "P5",
+      "id": "2022_09_5064693-q30",
+      "plantedText": "seized",
+      "correctedText": "missed",
+      "plantedExcerpt": "In this case an opportunity has been seized, since the amount of transport being offered",
+      "confidence": "high",
+      "reason": "팔리지 않은 좌석·화물 용량은 회수 불가한 손실이므로 기회는 '포착'된 것이 아니라 '상실'된 것이다."
+    },
+    {
+      "sid": "C022",
+      "p": "P6",
+      "id": "2022_09_5064693-q41-42",
+      "plantedText": "different",
+      "correctedText": "similar",
+      "plantedExcerpt": "In experiments involving a nutrient, the diets of both groups must also be different",
+      "confidence": "high",
+      "reason": "두 집단을 동질화해 교란변수를 제거하라는 글 전체 논지상 식단은 '달라야'가 아니라 '유사해야' 한다."
+    },
+    {
+      "sid": "C023",
+      "p": "P2",
+      "id": "ebsi_go3_20221012-q30",
+      "plantedText": "rejected",
+      "correctedText": "accepted",
+      "plantedExcerpt": "Broadcasters rejected union demands for employment and decent wages, because the",
+      "confidence": "high",
+      "reason": "바로 뒤에 방송사가 오케스트라·밴드·가수를 고용하려 애썼다고 하고 녹음 사용이 덜 매력적이었다는 이유가 붙으므로 조합 요구를 '수용'했다가 맞다."
+    },
+    {
+      "sid": "C023",
+      "p": "P4",
+      "id": "2022_SN_5070164-q30",
+      "plantedText": "benefits",
+      "correctedText": "limits",
+      "plantedExcerpt": "In addition, there are benefits to the extensive use of either manure or legumes",
+      "confidence": "high",
+      "reason": "유기농법의 제약을 열거하는 단락(질소 공급 제한·잡초 방제 곤란)이므로 거름·콩과작물 대량 사용에는 '한계'가 있다가 논지에 맞다."
+    },
+    {
+      "sid": "C023",
+      "p": "P6",
+      "id": "ebsi_go1_20210325-q29",
+      "plantedText": "are",
+      "correctedText": "is",
+      "plantedExcerpt": "Finding different ways to produce sounds are an important stage of musical exploration.",
+      "confidence": "high",
+      "reason": "주어가 동명사구 Finding different ways로 단수이므로 동사는 is여야 한다."
+    },
+    {
+      "sid": "C024",
+      "p": "P1",
+      "id": "ebsi_go1_20210325-q30",
+      "plantedText": "increase",
+      "correctedText": "decrease",
+      "plantedExcerpt": "The increase in the price of light lit up the world. Not only did it turn night into day",
+      "confidence": "high",
+      "reason": "지문 전체가 조명 가격의 급락(dropped to almost nothing)이 세상을 바꿨다는 논지이므로 '가격 상승'은 정면 모순이다."
+    },
+    {
+      "sid": "C024",
+      "p": "P5",
+      "id": "ebsi_go1_20210831-q30",
+      "plantedText": "high",
+      "correctedText": "low",
+      "plantedExcerpt": "The costs to a hunter of giving away meat he cannot eat immediately are high",
+      "confidence": "high",
+      "reason": "바로 뒤 because절이 어차피 다 못 먹고 남으면 상한다는 이유를 대므로 비용은 '낮다'가 되어야 논리가 성립한다."
+    },
+    {
+      "sid": "C024",
+      "p": "P6",
+      "id": "ebsi_go1_20211124-q29",
+      "plantedText": "occurring",
+      "correctedText": "occur",
+      "plantedExcerpt": "Lower magnesium levels in soil also occurring with acidic soils and around 70%",
+      "confidence": "high",
+      "reason": "주절의 정동사 자리인데 분사 occurring이 쓰여 동사가 없는 비문이 된다."
+    },
+    {
+      "sid": "C025",
+      "p": "P1",
+      "id": "ebsi_go1_20211124-q30",
+      "plantedText": "capturing",
+      "correctedText": "releasing",
+      "plantedExcerpt": "hatchlings, capturing hatchlings once they are better equipped to protect themselves",
+      "confidence": "high",
+      "reason": "보호 사육 후 야생 복귀라는 논지상 스스로를 지킬 능력이 갖춰진 뒤에는 '방류(releasing)'해야 하는데 '포획(capturing)'은 정면 모순이다."
+    },
+    {
+      "sid": "C025",
+      "p": "P2",
+      "id": "ebsi_go2_20210325-q29",
+      "plantedText": "which",
+      "correctedText": "in which",
+      "plantedExcerpt": "as effective as inclusivity, which everyone's ideas are heard and a solution is developed",
+      "confidence": "high",
+      "reason": "뒤 절이 완전한 문장이므로 관계대명사 which가 아니라 '전치사+관계대명사(in which)'가 필요하다."
+    },
+    {
+      "sid": "C025",
+      "p": "P3",
+      "id": "ebsi_go2_20210325-q30",
+      "plantedText": "avoid",
+      "correctedText": "maintain",
+      "plantedExcerpt": "employs a static camera as much as possible in order to avoid this window effect",
+      "confidence": "high",
+      "reason": "카메라를 창문으로 보는 '창문 효과'를 유지하려고 고정 카메라를 쓴다는 흐름이므로 avoid는 논지와 반대다."
+    },
+    {
+      "sid": "C025",
+      "p": "P4",
+      "id": "ebsi_go2_20210603-q29",
+      "plantedText": "gives",
+      "correctedText": "given",
+      "plantedExcerpt": "Comparing results from rats gives the \"positive reinforcement\" of food for their bar-pressing",
+      "confidence": "high",
+      "reason": "rats를 수식하는 분사 자리이며 쥐는 먹이를 '받는' 대상이므로 능동 정동사 gives가 아니라 과거분사 given이어야 한다."
+    },
+    {
+      "sid": "C025",
+      "p": "P5",
+      "id": "ebsi_go2_20210603-q30",
+      "plantedText": "unpredictable",
+      "correctedText": "predictable",
+      "plantedExcerpt": "the possibility of a second worldwide conflict an unpredictable reality for governments",
+      "confidence": "high",
+      "reason": "명시적으로 이름 붙이면 문제를 의식하게 된다는 결론과 달리 '예측 불가능한 현실'은 논지를 정면으로 뒤집는다."
+    },
+    {
+      "sid": "C025",
+      "p": "P6",
+      "id": "ebsi_go2_20210831-q29",
+      "plantedText": "has",
+      "correctedText": "have",
+      "plantedExcerpt": "in the residual light zone of the ocean has excellent visual capabilities",
+      "confidence": "high",
+      "reason": "주어가 복수 Some predators이므로 단수 동사 has는 수일치 위반이다."
+    },
+    {
+      "sid": "C026",
+      "p": "P2",
+      "id": "ebsi_go2_20211124-q29",
+      "plantedText": "creating",
+      "correctedText": "create",
+      "plantedExcerpt": "\"chest pain,\" for example - creating anchors that might result in significant",
+      "confidence": "high",
+      "reason": "주어 Differences에 대한 정동사가 없는 문장이므로 분사 creating이 아니라 정동사 create여야 한다."
+    },
+    {
+      "sid": "C026",
+      "p": "P3",
+      "id": "ebsi_go2_20211124-q30",
+      "plantedText": "strengthens",
+      "correctedText": "weakens",
+      "plantedExcerpt": "studies have shown that the brain actively strengthens regions responsible for",
+      "confidence": "high",
+      "reason": "주요 기억을 방해하는 사소한 내용을 담당하는 영역은 억제·약화되어야 세부가 사라지고 핵심이 선명해진다는 뒤 문장과 이어지므로 '강화한다'는 논지와 정면 모순이다."
+    },
+    {
+      "sid": "C026",
+      "p": "P5",
+      "id": "2021_06_5049916-q30",
+      "plantedText": "improbable",
+      "correctedText": "possible",
+      "plantedExcerpt": "this seemingly awesome accomplishment of recall is made improbable by remembering",
+      "confidence": "high",
+      "reason": "청킹 덕분에 수천 음표를 암보할 수 있다는 논지이므로, 그 놀라운 기억은 음악적 '과정'을 기억함으로써 가능해지는 것이지 불가능해지는 것이 아니다."
+    },
+    {
+      "sid": "C026",
+      "p": "P6",
+      "id": "2021_06_5049916-q41-42",
+      "plantedText": "decrease",
+      "correctedText": "increase",
+      "plantedExcerpt": "but also by the decrease in cultivation of a crop of substantial economic importance",
+      "confidence": "high",
+      "reason": "그 작물이 연중 수확되며 물을 과도하게 쓰고 물권을 사들인다는 뒤 내용은 재배 '증가'가 전통적 배분을 무력화했다는 흐름이라야 성립한다."
+    },
+    {
+      "sid": "C027",
+      "p": "P1",
+      "id": "ebsi_go3_20210707-q29",
+      "plantedText": "believes",
+      "correctedText": "believing",
+      "plantedExcerpt": "small groups of people with each strongly believes they are correct",
+      "confidence": "high",
+      "reason": "전치사 with의 「with+목적어+분사」 구문 자리이므로 정동사 believes가 올 수 없고 분사 believing이어야 한다."
+    },
+    {
+      "sid": "C027",
+      "p": "P2",
+      "id": "ebsi_go3_20210707-q30",
+      "plantedText": "outdated",
+      "correctedText": "dominant",
+      "plantedExcerpt": "were consequently the outdated modes of the pre-industrial era.",
+      "confidence": "high",
+      "reason": "내륙 운송이 매우 제한적이었다는 논지상 해상·하천 운송이 전산업시대의 '지배적' 수단이었다는 결론이어야 하므로 outdated는 정면 모순이다."
+    },
+    {
+      "sid": "C027",
+      "p": "P4",
+      "id": "2021_09_5050886-q30",
+      "plantedText": "inappropriate",
+      "correctedText": "appropriate",
+      "plantedExcerpt": "to ensure that these are replaced by inappropriate thoughts",
+      "confidence": "high",
+      "reason": "감시 과정이 부적절한 생각을 감지하면 그것을 '적절한' 생각으로 대체하도록 촉구해야 논리가 성립한다."
+    },
+    {
+      "sid": "C027",
+      "p": "P5",
+      "id": "2021_09_5050886-q41-42",
+      "plantedText": "close",
+      "correctedText": "little",
+      "plantedExcerpt": "the author intended probably bears close correspondence to his original intention",
+      "confidence": "high",
+      "reason": "조악하게 쓰인 글에서는 독자가 파악한 의미가 저자의 원래 의도와 '거의 일치하지 않는다'는 것이 논지이므로 close는 정면 모순이다."
+    },
+    {
+      "sid": "C027",
+      "p": "P6",
+      "id": "ebsi_go3_20211012-q29",
+      "plantedText": "approached",
+      "correctedText": "approaching",
+      "plantedExcerpt": "have 'reached the level of something approached a local art form'",
+      "confidence": "high",
+      "reason": "something을 뒤에서 수식하며 목적어 a local art form을 취하는 자리이므로 과거분사 approached가 아니라 현재분사 approaching이어야 한다."
+    },
+    {
+      "sid": "C028",
+      "p": "P1",
+      "id": "ebsi_go3_20211012-q30",
+      "plantedText": "increase",
+      "correctedText": "reduce",
+      "plantedExcerpt": "for such offenders, which would increase my incentive to pay my parking tickets too.",
+      "confidence": "high",
+      "reason": "조정(coordination) 문단의 논지상 남들이 주차위반 딱지를 안 내면 사면 압력이 생겨 내가 낼 유인은 줄어들어야 하므로 increase는 정면 모순이다."
+    },
+    {
+      "sid": "C028",
+      "p": "P3",
+      "id": "2021_SN_5061633-q30",
+      "plantedText": "lacked",
+      "correctedText": "had",
+      "plantedExcerpt": "changed when someone lacked the courage to report what was actually measured",
+      "confidence": "high",
+      "reason": "편승 효과(bias) 패턴이 깨진 계기는 기대치가 아닌 실측값을 보고할 용기를 '가진' 사람이 나왔기 때문이므로 lacked는 논지와 모순된다."
+    },
+    {
+      "sid": "C028",
+      "p": "P4",
+      "id": "2021_SN_5061633-q41-42",
+      "plantedText": "complex",
+      "correctedText": "simple",
+      "plantedExcerpt": "In reality, the ant may be using a set of very complex rules: it is the interaction",
+      "confidence": "high",
+      "reason": "개미의 복잡한 궤적은 내부 복잡성이 아니라 단순 규칙과 해변 환경의 상호작용에서 나온다는 것이 요지이므로 very complex rules는 정면 모순이다."
+    },
+    {
+      "sid": "C028",
+      "p": "P5",
+      "id": "ebsi_go1_20200618-q29",
+      "plantedText": "arguing",
+      "correctedText": "argues",
+      "plantedExcerpt": "who is a developmental psychologist, arguing that three main forces shape our development",
+      "confidence": "high",
+      "reason": "주어 Judith Rich Harris에 대한 정동사가 없어 분사 arguing은 성립하지 않고 정동사 argues가 와야 한다."
+    },
+    {
+      "sid": "C029",
+      "p": "P1",
+      "id": "ebsi_go1_20200916-q29",
+      "plantedText": "gave",
+      "correctedText": "were given",
+      "plantedExcerpt": "such as 'prune and chocolate', when they gave white wine coloured with a red dye.",
+      "confidence": "high",
+      "reason": "주어 they(학생들)는 와인을 받은 쪽이므로 능동 gave가 아니라 수동 were given이 되어야 하며, 현재 문장은 gave의 목적어 구조상 의미·태가 어긋난다."
+    },
+    {
+      "sid": "C029",
+      "p": "P3",
+      "id": "ebsi_go1_20201118-q29",
+      "plantedText": "pleasantly",
+      "correctedText": "pleasant",
+      "plantedExcerpt": "relating to the ability to smell an odour, or how pleasantly it seems",
+      "confidence": "high",
+      "reason": "seem은 보어로 형용사를 취하는 2형식 동사이므로 부사 pleasantly는 문법 위반이고 pleasant가 와야 한다."
+    },
+    {
+      "sid": "C029",
+      "p": "P5",
+      "id": "ebsi_go2_20200312-q29",
+      "plantedText": "tends",
+      "correctedText": "tend",
+      "plantedExcerpt": "while crashes due to aircraft malfunction tends to occur during long-haul flight",
+      "confidence": "high",
+      "reason": "주어가 복수 crashes이므로 단수 동사 tends는 수일치 위반이며 tend가 되어야 한다."
+    },
+    {
+      "sid": "C029",
+      "p": "P6",
+      "id": "ebsi_go2_20200312-q30",
+      "plantedText": "disproved",
+      "correctedText": "supported",
+      "plantedExcerpt": "The cycle of weather disproved this idea: a puddle of water on the ground",
+      "confidence": "high",
+      "reason": "이어지는 물 순환 설명은 눈에 보이지 않는 입자의 존재를 뒷받침하는 근거이므로 '반증했다'는 논지와 정면 모순된다."
+    },
+    {
+      "sid": "C030",
+      "p": "P1",
+      "id": "ebsi_go2_20200618-q30",
+      "plantedText": "hard-earned",
+      "correctedText": "easy",
+      "plantedExcerpt": "We do not take into account the role that luck plays in such hard-earned gains.",
+      "confidence": "medium",
+      "reason": "운(luck)이 작용하는 갑작스러운 이득은 정의상 '쉽게 얻은(easy)' 것이므로, 노력으로 얻었다는 'hard-earned'는 앞 문장의 '진짜 성공은 노력으로 와야 한다'는 논지와 정면 모순된다."
+    },
+    {
+      "sid": "C030",
+      "p": "P2",
+      "id": "ebsi_go2_20200916-q29",
+      "plantedText": "to be",
+      "correctedText": "is",
+      "plantedExcerpt": "morality to be always about the treatment of people in social relationships",
+      "confidence": "high",
+      "reason": "주절의 정동사 자리에 to부정사가 와서 문장에 본동사가 없으므로 is여야 한다."
+    },
+    {
+      "sid": "C030",
+      "p": "P6",
+      "id": "2020_06_5037373-q30",
+      "plantedText": "forbid",
+      "correctedText": "motivate",
+      "plantedExcerpt": "Others' distrust of her might then forbid her to perform her share of the duties",
+      "confidence": "high",
+      "reason": "불신이 자기성찰의 유인이 되어 신뢰받을 만하게 행동하게 만든다는 논지이므로 '금지하다'는 정면 모순이며 '동기를 부여하다'여야 한다."
+    },
+    {
+      "sid": "C031",
+      "p": "P1",
+      "id": "2020_06_5037373-q41-42",
+      "plantedText": "promising",
+      "correctedText": "dangerous",
+      "plantedExcerpt": "Some theorists consider Utopian political thinking to be a promising undertaking, since it has led in the past to justifications of totalitarian viole",
+      "confidence": "high",
+      "reason": "since절이 '전체주의 폭력의 정당화로 이어졌다'는 부정적 근거를 제시하므로 'promising(유망한)'은 논지와 정면 모순이며 'dangerous'여야 한다."
+    },
+    {
+      "sid": "C031",
+      "p": "P2",
+      "id": "ebsi_go3_20200722-q29",
+      "plantedText": "lacking",
+      "correctedText": "lack",
+      "plantedExcerpt": "indicates that even our closest cousins, the chimpanzees, lacking this ability (although they possess",
+      "confidence": "high",
+      "reason": "that절의 주어 'our closest cousins'에 대한 정동사 자리이므로 분사 lacking이 아니라 lack이어야 한다."
+    },
+    {
+      "sid": "C031",
+      "p": "P3",
+      "id": "ebsi_go3_20200722-q30",
+      "plantedText": "overvalue",
+      "correctedText": "undervalue",
+      "plantedExcerpt": "they overvalue other impacts of population growth, such as diminished per capita food supplies for other people",
+      "confidence": "high",
+      "reason": "뒤이어 '재생산 비용이 대체로 공유된다'며 개별 가구가 타인에게 미치는 영향을 과소평가한다는 논지이므로 overvalue는 정면 모순이다."
+    },
+    {
+      "sid": "C031",
+      "p": "P5",
+      "id": "2020_09_5038442-q30",
+      "plantedText": "optional",
+      "correctedText": "essential",
+      "plantedExcerpt": "laws based upon ecological relationships among different kinds of organisms are optional for understanding evolution",
+      "confidence": "high",
+      "reason": "글 전체가 생물 간 상호작용이 진화 이해에 결정적임을 논증하므로 'optional(선택적)'은 결론과 정면 모순되며 essential이어야 한다."
+    },
+    {
+      "sid": "C031",
+      "p": "P6",
+      "id": "2020_09_5038442-q41-42",
+      "plantedText": "extended",
+      "correctedText": "limited",
+      "plantedExcerpt": "Similarly, experimental observations are extended to those organisms that we can collect live and keep",
+      "confidence": "high",
+      "reason": "앞 문장의 '표본이 심하게 편향된다'는 한계 논지와 Similarly로 연결되므로 관찰이 채집·배양 가능한 생물로 '제한된다(limited)'여야 한다."
+    },
+    {
+      "sid": "C032",
+      "p": "P1",
+      "id": "ebsi_go3_20201027-q29",
+      "plantedText": "promoting",
+      "correctedText": "promote",
+      "plantedExcerpt": "nonacademic factors that promoting learning and mastery must enhance explicit instruction",
+      "confidence": "high",
+      "reason": "주격 관계대명사 that 절에는 정동사가 와야 하는데 분사 promoting이 쓰여 문장에 동사가 없다."
+    },
+    {
+      "sid": "C032",
+      "p": "P2",
+      "id": "ebsi_go3_20201027-q30",
+      "plantedText": "weakness",
+      "correctedText": "strength",
+      "plantedExcerpt": "standing out and being different is often seen as a sign of weakness",
+      "confidence": "high",
+      "reason": "개인주의 문화는 개인의 자유·표현을 중시하고 일탈 허용 폭이 넓다고 했으므로 튀는 것은 약점이 아니라 강점으로 여겨져야 한다."
+    },
+    {
+      "sid": "C032",
+      "p": "P4",
+      "id": "2020_SN_5045859-q30",
+      "plantedText": "denying",
+      "correctedText": "accepting",
+      "plantedExcerpt": "Before denying that the remaining explanation is the correct one, consider whether other",
+      "confidence": "high",
+      "reason": "나머지 하나만 남았을 때 그것을 성급히 '받아들이기' 전에 숨은 선택지를 검토하라는 논지이므로 denying은 정면 모순이다."
+    },
+    {
+      "sid": "C032",
+      "p": "P5",
+      "id": "2020_SN_5045859-q41-42",
+      "plantedText": "Uncertainty",
+      "correctedText": "Understanding",
+      "plantedExcerpt": "Uncertainty about the knowledge intended in any activity comes from each student's",
+      "confidence": "high",
+      "reason": "학생의 개념 재구성과 토론·사고를 통해 지식 이해가 형성된다는 문장이므로 '불확실성'이 아니라 '이해'여야 한다."
+    },
+    {
+      "sid": "C033",
+      "p": "P1",
+      "id": "ebsi_go1_20190604-q29",
+      "plantedText": "do",
+      "correctedText": "does",
+      "plantedExcerpt": "only a few wavelengths of light, do not seem to have the same effect on mood",
+      "confidence": "high",
+      "reason": "주어가 단수 Artificial light이므로 삽입절(which ... contains) 뒤 정동사는 does여야 한다."
+    },
+    {
+      "sid": "C033",
+      "p": "P3",
+      "id": "ebsi_go1_20190904-q29",
+      "plantedText": "ensure",
+      "correctedText": "ensures",
+      "plantedExcerpt": "building new knowledge on older discoveries ensure that scientists correct their mistakes",
+      "confidence": "high",
+      "reason": "주어가 단수 This way이므로 동사는 ensures여야 한다(older discoveries는 전치사구 내부)."
+    },
+    {
+      "sid": "C033",
+      "p": "P6",
+      "id": "ebsi_go2_20190307-q28",
+      "plantedText": "its",
+      "correctedText": "whose",
+      "plantedExcerpt": "The koala is the only known animal its brain only fills half of its skull.",
+      "confidence": "high",
+      "reason": "선행사 animal을 수식하는 절을 이끌 연결사가 없어 소유격 관계대명사 whose가 필요하다."
+    },
+    {
+      "sid": "C034",
+      "p": "P1",
+      "id": "ebsi_go2_20190604-q29",
+      "plantedText": "hiring",
+      "correctedText": "hires",
+      "plantedExcerpt": "the doctor specializes in the provision of physician services and hiring someone",
+      "confidence": "high",
+      "reason": "when절의 주어 the doctor에 대한 정동사 specializes와 and로 병렬되어야 하므로 분사 hiring이 아니라 hires여야 한다."
+    },
+    {
+      "sid": "C034",
+      "p": "P3",
+      "id": "ebsi_go2_20190904-q29",
+      "plantedText": "which",
+      "correctedText": "for which",
+      "plantedExcerpt": "This was a fundamental new development, which there were no precedents in big history.",
+      "confidence": "high",
+      "reason": "뒤 절(there were no precedents)이 완전한 문장이므로 관계대명사 which 단독은 불가하고 전치사를 동반한 for which여야 한다."
+    },
+    {
+      "sid": "C034",
+      "p": "P5",
+      "id": "ebsi_go2_20191120-q29",
+      "plantedText": "interested",
+      "correctedText": "interesting",
+      "plantedExcerpt": "Because they use these neural circuits in novel ways, we find them especially interested.",
+      "confidence": "high",
+      "reason": "find의 목적격보어가 사물 목적어 them(특수 효과)의 성질을 서술하므로 감정을 느끼는 주체에 쓰는 interested가 아니라 interesting이어야 한다."
+    },
+    {
+      "sid": "C034",
+      "p": "P6",
+      "id": "ebsi_go2_20191120-q30",
+      "plantedText": "is sacrificial",
+      "correctedText": "are sacrificial",
+      "plantedExcerpt": "The few minutes of attention he is giving you is sacrificial.",
+      "confidence": "medium",
+      "reason": "주어가 복수 The few minutes이므로 술어동사는 is가 아니라 are여야 한다."
+    },
+    {
+      "sid": "C035",
+      "p": "P1",
+      "id": "2019_06_5023285-q41-42",
+      "plantedText": "disregarded",
+      "correctedText": "revered",
+      "plantedExcerpt": "for the attention of performers and listeners who disregarded the classical masterworks",
+      "confidence": "high",
+      "reason": "지문은 1900년대 청중이 고전 명작을 숭배해 신곡을 그 기준으로 판단했다고 했으므로 '무시했다'는 논지와 정면 모순이다."
+    },
+    {
+      "sid": "C035",
+      "p": "P2",
+      "id": "ebsi_go3_20190710-q28",
+      "plantedText": "leads",
+      "correctedText": "lead",
+      "plantedExcerpt": "it might actually be people's beliefs in the power of hypnosis that leads them to recall",
+      "confidence": "high",
+      "reason": "it-cleft 강조 대상이 복수 명사 beliefs이므로 관계사절 동사는 lead여야 한다."
+    },
+    {
+      "sid": "C035",
+      "p": "P6",
+      "id": "2019_09_5024244-q41-42",
+      "plantedText": "randomly",
+      "correctedText": "selectively",
+      "plantedExcerpt": "Subsequently, one partner may randomly recall a part of the other's story as a tactic",
+      "confidence": "high",
+      "reason": "협상의 '전술'로 상대 이야기를 끌어오는 행위이자 지문 전체가 기억의 선택적 편집을 논하므로 '무작위로'는 논지와 모순된다."
+    },
+    {
+      "sid": "C036",
+      "p": "P1",
+      "id": "ebsi_go3_20191015-q29",
+      "plantedText": "sends",
+      "correctedText": "sending",
+      "plantedExcerpt": "An individual neuron sends a signal in the brain uses as much energy as a leg muscle cell",
+      "confidence": "high",
+      "reason": "한 절에 정동사 sends와 uses가 중복되어 주어를 수식하는 현재분사 sending이 되어야 한다."
+    },
+    {
+      "sid": "C036",
+      "p": "P2",
+      "id": "ebsi_go3_20191015-q30",
+      "plantedText": "problematic",
+      "correctedText": "unproblematic",
+      "plantedExcerpt": "professions, etc. problematic until their consciousness becomes raised.",
+      "confidence": "high",
+      "reason": "의식이 고양되기 전까지는 혐오적 농담을 '문제없다'고 여긴다는 논지여야 하므로 problematic은 정면 모순이다."
+    },
+    {
+      "sid": "C036",
+      "p": "P5",
+      "id": "2019_SN_5031122-q41-42",
+      "plantedText": "promoted",
+      "correctedText": "disrupted",
+      "plantedExcerpt": "because it was better to do this than have work promoted by the casual taking of days off.",
+      "confidence": "high",
+      "reason": "제멋대로 결근하는 것은 작업을 '방해'하므로 이를 피하려 일괄 휴가기를 두었다는 문맥에 promoted는 반대다."
+    },
+    {
+      "sid": "C037",
+      "p": "P1",
+      "id": "ebsi_go1_20180308-q30",
+      "plantedText": "comfort",
+      "correctedText": "hurt",
+      "plantedExcerpt": "In the long term, lies with good intentions comfort people much more than telling the truth.",
+      "confidence": "high",
+      "reason": "글 전체가 \"절대 거짓말하지 말라\"는 정직 옹호 논지이므로 선의의 거짓말이 진실보다 사람을 더 \"위로한다\"는 결론은 논지와 정면 모순이며 hurt가 되어야 한다."
+    },
+    {
+      "sid": "C037",
+      "p": "P3",
+      "id": "ebsi_go1_20180905-q28",
+      "plantedText": "seems",
+      "correctedText": "seem",
+      "plantedExcerpt": "Memories of how we interacted seems funny to me today.",
+      "confidence": "high",
+      "reason": "주어가 복수명사 Memories(of 이하는 수식어)이므로 단수동사 seems는 수일치 위반이다."
+    },
+    {
+      "sid": "C037",
+      "p": "P4",
+      "id": "ebsi_go1_20180905-q29",
+      "plantedText": "similar",
+      "correctedText": "different",
+      "plantedExcerpt": "if any one of the events would not have occurred, the result would be similar",
+      "confidence": "high",
+      "reason": "복합적 사건 사슬의 모든 사건이 결과에 기여한다는 앞 문장 논지상, 그중 하나만 일어나지 않아도 결과는 달라져야 하므로 similar는 모순이다."
+    },
+    {
+      "sid": "C037",
+      "p": "P5",
+      "id": "ebsi_go1_20181121-q28",
+      "plantedText": "convenient",
+      "correctedText": "conveniently",
+      "plantedExcerpt": "Denial of who animals are convenient allows for maintaining false stereotypes",
+      "confidence": "high",
+      "reason": "동사 allows를 수식하는 자리이므로 형용사 convenient가 아니라 부사 conveniently가 와야 한다."
+    },
+    {
+      "sid": "C038",
+      "p": "P1",
+      "id": "ebsi_go2_20180308-q28",
+      "plantedText": "has",
+      "correctedText": "have",
+      "plantedExcerpt": "a high-carbohydrate meal the night before a competition, has stood the test of time",
+      "confidence": "high",
+      "reason": "주어가 복수 대명사 others이므로 단수 동사 has가 아니라 have여야 한다."
+    },
+    {
+      "sid": "C038",
+      "p": "P2",
+      "id": "ebsi_go2_20180308-q29",
+      "plantedText": "reluctant",
+      "correctedText": "willing",
+      "plantedExcerpt": "similar responses from the other person, we're reluctant to reveal more.",
+      "confidence": "high",
+      "reason": "자기노출이 잘 받아들여지고 상호 반응을 얻으면 더 많이 드러내게 된다는 점진적 증가 논지와 정면 모순된다."
+    },
+    {
+      "sid": "C038",
+      "p": "P5",
+      "id": "ebsi_go2_20180905-q28",
+      "plantedText": "filled",
+      "correctedText": "filling",
+      "plantedExcerpt": "A cat in a small box will behave like a fluid, filled up all the space.",
+      "confidence": "high",
+      "reason": "고양이가 공간을 채우는 능동 관계이므로 과거분사 filled가 아닌 현재분사 filling이어야 한다."
+    },
+    {
+      "sid": "C039",
+      "p": "P3",
+      "id": "ebsi_go3_20180711-q28",
+      "plantedText": "which",
+      "correctedText": "from which",
+      "plantedExcerpt": "the number of sources of information which we are to make the decisions has exploded",
+      "confidence": "high",
+      "reason": "관계절 'we are to make the decisions'에 빈자리가 없어 목적격 which가 성립하지 않으며 '~로부터 결정을 내리다'라는 전치사 from이 필요하다(전치사+관계대명사)."
+    },
+    {
+      "sid": "C040",
+      "p": "P1",
+      "id": "ebsi_go3_20181016-q28",
+      "plantedText": "humiliated",
+      "correctedText": "humiliating",
+      "plantedExcerpt": "it can be false; or it can be true but deeply humiliated. It may be increasingly difficult",
+      "confidence": "high",
+      "reason": "주어 This data는 굴욕을 주는 쪽이므로 수동 분사 humiliated가 아니라 현재분사 humiliating이어야 한다."
+    },
+    {
+      "sid": "C040",
+      "p": "P3",
+      "id": "2018_SN_5019793-q29",
+      "plantedText": "found",
+      "correctedText": "lost",
+      "plantedExcerpt": "before they are sold, no historical knowledge is found! On the contrary, archaeologists",
+      "confidence": "high",
+      "reason": "보물사냥 업체 소속 고고학자의 주장은 '지식이 손실되지 않는다'는 것이어야 뒤의 On the contrary 반박(수십 년 필요)과 논리가 맞는다."
+    },
+    {
+      "sid": "C040",
+      "p": "P4",
+      "id": "ebsi_go1_20170309-q28",
+      "plantedText": "cutting",
+      "correctedText": "cut",
+      "plantedExcerpt": "When you read the comics section of the newspaper, cutting out a cartoon that makes you laugh.",
+      "confidence": "high",
+      "reason": "주절의 정동사가 없는 명령문 자리이므로 분사 cutting이 아니라 동사원형 cut이어야 한다."
+    },
+    {
+      "sid": "C040",
+      "p": "P5",
+      "id": "ebsi_go1_20170601-q28",
+      "plantedText": "mean",
+      "correctedText": "means",
+      "plantedExcerpt": "Accepting your role in your problems mean that you understand the solution lies within you.",
+      "confidence": "high",
+      "reason": "주어가 동명사구 Accepting...로 단수이므로 동사는 means여야 한다."
+    },
+    {
+      "sid": "C041",
+      "p": "P1",
+      "id": "ebsi_go1_20171122-q28",
+      "plantedText": "that",
+      "correctedText": "what",
+      "plantedExcerpt": "not only in the way that it was made but also in that was shown",
+      "confidence": "high",
+      "reason": "전치사 in의 목적어 자리에 주어가 빠진 절이 와서 선행사를 포함한 관계대명사 what이 필요한데 접속사 that이 쓰여 비문이다."
+    },
+    {
+      "sid": "C041",
+      "p": "P3",
+      "id": "ebsi_go2_20170309-q28",
+      "plantedText": "being",
+      "correctedText": "be",
+      "plantedExcerpt": "must not only have commercial value, but being very competently written",
+      "confidence": "high",
+      "reason": "not only A but (also) B 병렬에서 조동사 must에 걸리는 원형동사 자리이므로 being이 아니라 be여야 한다."
+    },
+    {
+      "sid": "C041",
+      "p": "P4",
+      "id": "ebsi_go2_20170601-q28",
+      "plantedText": "do",
+      "correctedText": "are",
+      "plantedExcerpt": "Productivity improvements are as important to the economy as they do to the",
+      "confidence": "high",
+      "reason": "as ~ as 비교구문의 대동사가 앞의 be동사(are)를 받아야 하므로 do가 아니라 are가 옳다."
+    },
+    {
+      "sid": "C041",
+      "p": "P5",
+      "id": "ebsi_go2_20170601-q29",
+      "plantedText": "relieved",
+      "correctedText": "frustrated",
+      "plantedExcerpt": "Yet, the more options they have, the more relieved they become.",
+      "confidence": "high",
+      "reason": "선택지가 많을수록 우울·불만이 커진다는 지문 논지와 '더 안도한다'는 표현이 정면 모순된다."
+    },
+    {
+      "sid": "C042",
+      "p": "P2",
+      "id": "ebsi_go3_20170712-q28",
+      "plantedText": "relaxation",
+      "correctedText": "vigilance",
+      "plantedExcerpt": "The bigger the flock of birds, the less time an individual bird devotes to relaxation.",
+      "confidence": "high",
+      "reason": "무리가 커지면 개체가 줄이는 것은 '경계(vigilance)' 시간이며(뒤 문장의 '항상 누군가 망을 본다'가 근거), '휴식'은 지문 논지와 무관·모순이다."
+    },
+    {
+      "sid": "C042",
+      "p": "P3",
+      "id": "ebsi_go3_20170712-q29",
+      "plantedText": "having",
+      "correctedText": "had",
+      "plantedExcerpt": "both civilizations having extensive times of \"warring states\" within their own",
+      "confidence": "high",
+      "reason": "While절에 이어지는 주절의 정동사 자리이므로 분사 having이 아니라 정동사 had여야 한다."
+    },
+    {
+      "sid": "C042",
+      "p": "P4",
+      "id": "ebsi_go3_20171017-q28",
+      "plantedText": "which",
+      "correctedText": "that",
+      "plantedExcerpt": "with a lawyer, which the latter will not disclose to third parties the information",
+      "confidence": "high",
+      "reason": "be assured 뒤의 완전한 절을 이끄는 접속사 자리라 관계대명사 which가 아니라 that이어야 한다."
+    },
+    {
+      "sid": "C043",
+      "p": "P1",
+      "id": "ebsi_go1_20160310-q28",
+      "plantedText": "what",
+      "correctedText": "that",
+      "plantedExcerpt": "It is better what you make your mistakes early on rather than later in life.",
+      "confidence": "high",
+      "reason": "가주어 It ~ 진주어 명사절 구조로 뒤 절이 완전하므로 관계대명사 what이 아니라 접속사 that이 와야 한다."
+    },
+    {
+      "sid": "C043",
+      "p": "P5",
+      "id": "ebsi_go1_20160901-q28",
+      "plantedText": "become",
+      "correctedText": "becomes",
+      "plantedExcerpt": "she may become a praise lover who eventually become less interested in learning",
+      "confidence": "high",
+      "reason": "관계대명사 who의 선행사가 단수 a praise lover이므로 관계절 동사는 becomes여야 한다."
+    },
+    {
+      "sid": "C044",
+      "p": "P2",
+      "id": "ebsi_go2_20160310-q28",
+      "plantedText": "what",
+      "correctedText": "that",
+      "plantedExcerpt": "When it became clear to me what no doctor could answer my basic questions",
+      "confidence": "high",
+      "reason": "뒤에 완전한 절이 오고 it이 가주어이므로 명사절 접속사는 what이 아니라 that이어야 한다."
+    },
+    {
+      "sid": "C044",
+      "p": "P4",
+      "id": "ebsi_go2_20160602-q28",
+      "plantedText": "collecting",
+      "correctedText": "collect",
+      "plantedExcerpt": "A designer must first document the existing conditions of a problem and collecting relevant data",
+      "confidence": "high",
+      "reason": "조동사 must에 걸린 document와 and로 병렬되므로 원형 collect여야 한다."
+    },
+    {
+      "sid": "C044",
+      "p": "P6",
+      "id": "ebsi_go2_20160901-q28",
+      "plantedText": "is",
+      "correctedText": "does",
+      "plantedExcerpt": "It not only cleans clothes, but it is so with far less water, detergent, and energy",
+      "confidence": "high",
+      "reason": "앞의 일반동사 cleans를 대신하는 대동사 자리이므로 is가 아니라 does여야 한다."
+    },
+    {
+      "sid": "C045",
+      "p": "P2",
+      "id": "ebsi_go2_20161123-q28",
+      "plantedText": "provoking",
+      "correctedText": "provoked",
+      "plantedExcerpt": "such as a T-shirt with singer Barry Manilow on it, provoking only 23 percent",
+      "confidence": "high",
+      "reason": "주어 even noticeable clothes에 대한 정동사가 없어 분사 provoking은 문장 성립 불가, provoked가 되어야 한다."
+    },
+    {
+      "sid": "C045",
+      "p": "P6",
+      "id": "ebsi_go3_20160706-q28",
+      "plantedText": "depending",
+      "correctedText": "depends",
+      "plantedExcerpt": "Thus, the use of vibrations in communication depending on the ability of the sender",
+      "confidence": "high",
+      "reason": "주어 the use of vibrations에 정동사가 없어 분사 depending은 불가하고 depends여야 한다."
+    },
+    {
+      "sid": "C046",
+      "p": "P3",
+      "id": "2016_09_5000516-q29",
+      "plantedText": "absence",
+      "correctedText": "presence",
+      "plantedExcerpt": "The Canadian regarded the lawyers' absence as facilitating the successful completion",
+      "confidence": "high",
+      "reason": "캐나다인은 변호사 동석 회의를 먼저 제안했으므로 변호사의 '부재'가 아니라 '입회(presence)'를 협상 성사를 촉진하는 것으로 여겼다는 것이 논지다."
+    },
+    {
+      "sid": "C046",
+      "p": "P4",
+      "id": "ebsi_go3_20161011-q29",
+      "plantedText": "follow conventions",
+      "correctedText": "break conventions",
+      "plantedExcerpt": "The point is to follow conventions so your conversations become energizing",
+      "confidence": "high",
+      "reason": "상투적 인사(관습)를 버리고 모험적인 질문을 시도하라는 글이므로 관습을 '따르라'는 것은 논지 정면 모순이다."
+    },
+    {
+      "sid": "C047",
+      "p": "P1",
+      "id": "ebsi_go1_20150311-q28",
+      "plantedText": "what",
+      "correctedText": "that",
+      "plantedExcerpt": "One cool thing about my Uncle Arthur was what he could always pick the best places to camp.",
+      "confidence": "high",
+      "reason": "be동사 뒤 보어절이 완전한 문장이므로 선행 명사 없는 what이 아니라 접속사 that이어야 한다."
+    },
+    {
+      "sid": "C047",
+      "p": "P5",
+      "id": "ebsi_go1_20150902-q29",
+      "plantedText": "realizing",
+      "correctedText": "realized",
+      "plantedExcerpt": "Galileo, who heard about the Dutch spyglass and began making his own, realizing right away how useful",
+      "confidence": "high",
+      "reason": "주어 Galileo에 대한 정동사가 필요한 자리인데 분사가 쓰여 문장에 술어가 없다."
+    },
+    {
+      "sid": "C048",
+      "p": "P1",
+      "id": "ebsi_go1_20151117-q28",
+      "plantedText": "engaging",
+      "correctedText": "engage",
+      "plantedExcerpt": "People in today's fast-paced society engaging in this either for necessity",
+      "confidence": "high",
+      "reason": "문장에 정동사가 없어 분사 engaging이 주절 술어 자리를 차지하고 있으므로 정동사 engage가 되어야 한다."
+    },
+    {
+      "sid": "C048",
+      "p": "P3",
+      "id": "ebsi_go2_20150311_A-q28",
+      "plantedText": "leave",
+      "correctedText": "leaving",
+      "plantedExcerpt": "livers, and brains of the animals they kill, often leave the muscle meat for eagles",
+      "confidence": "high",
+      "reason": "이미 정동사 eat가 있는 절에 접속사 없이 또 다른 정동사 leave가 놓였으므로 분사구문 leaving이어야 한다."
+    },
+    {
+      "sid": "C048",
+      "p": "P5",
+      "id": "ebsi_go2_20150604-q28",
+      "plantedText": "paid",
+      "correctedText": "are paid",
+      "plantedExcerpt": "high school football coaches are typically teachers who paid a little extra",
+      "confidence": "high",
+      "reason": "교사는 수당을 '지급받는' 대상이므로 관계절 동사가 능동 paid가 아니라 수동 are paid여야 한다."
+    },
+    {
+      "sid": "C048",
+      "p": "P6",
+      "id": "ebsi_go2_20150902-q28",
+      "plantedText": "knowing",
+      "correctedText": "knows",
+      "plantedExcerpt": "anyone who has spent time with a five-year-old knowing that children this age",
+      "confidence": "high",
+      "reason": "주어 anyone에 대한 주절 정동사가 없어 분사 knowing이 아니라 정동사 knows가 되어야 한다."
+    },
+    {
+      "sid": "C050",
+      "p": "P2",
+      "id": "ebsi_go3_20150709-q28",
+      "plantedText": "tending",
+      "correctedText": "tend",
+      "plantedExcerpt": "unfavorable surface area to body weight ratio, tending to sleep a lot",
+      "confidence": "high",
+      "reason": "주어 many small mammals의 정동사 자리인데 분사 tending이 와서 문장에 본동사가 없다."
+    },
+    {
+      "sid": "C050",
+      "p": "P3",
+      "id": "ebsi_go3_20150709-q30",
+      "plantedText": "follows",
+      "correctedText": "drives",
+      "plantedExcerpt": "or motorcycles follows your beliefs about their benefits and their risks",
+      "confidence": "high",
+      "reason": "호오(감정)가 믿음을 결정한다는 논지인데 감정이 믿음을 '따른다'고 해 인과가 뒤집힌다."
+    },
+    {
+      "sid": "C050",
+      "p": "P5",
+      "id": "2015_09_3027897-q29",
+      "plantedText": "maximum",
+      "correctedText": "minimum",
+      "plantedExcerpt": "below a certain point, the maximum that must be charged in order to cover",
+      "confidence": "high",
+      "reason": "운영비를 충당하려면 받아야 하는 하한선이므로 임대료가 그 아래로 안 내려간다는 문맥과 maximum은 정면 모순된다."
+    },
+    {
+      "sid": "C050",
+      "p": "P6",
+      "id": "ebsi_go3_20151013-q20",
+      "plantedText": "to be taken",
+      "correctedText": "to take",
+      "plantedExcerpt": "they focus on the actions they need to be taken in order to achieve",
+      "confidence": "high",
+      "reason": "the actions가 need to take의 목적어로 선행사화된 구조라 수동 to be taken이면 목적어가 중복돼 비문이다."
+    },
+    {
+      "sid": "C051",
+      "p": "P3",
+      "id": "ebsi_go1_20140312-q23",
+      "plantedText": "what",
+      "correctedText": "that",
+      "plantedExcerpt": "I thought that I would be able to find another job what was a better match.",
+      "confidence": "high",
+      "reason": "선행사 another job이 있는 주격 관계대명사 자리이므로 선행사를 포함하는 what은 쓸 수 없고 that(which)이어야 한다."
+    },
+    {
+      "sid": "C051",
+      "p": "P5",
+      "id": "ebsi_go1_20140312-q25",
+      "plantedText": "disrespect",
+      "correctedText": "respect",
+      "plantedExcerpt": "in another person's language shows your disrespect for that person.",
+      "confidence": "high",
+      "reason": "상대 언어로 소통하려는 노력이 좋은 매너로 빛난다는 논지이므로 '무례함(disrespect)'은 정면 모순이고 respect여야 한다."
+    },
+    {
+      "sid": "C052",
+      "p": "P1",
+      "id": "ebsi_go1_20140612-q24",
+      "plantedText": "was included",
+      "correctedText": "included",
+      "plantedExcerpt": "It was included, in addition to watching TV, playing with Legos and going to the zoo.",
+      "confidence": "high",
+      "reason": "목록(list)이 항목들을 '포함하는' 능동 관계이므로 목적어를 취하는 능동태 included여야 하며, 수동태 was included는 뒤의 목적어들과 충돌한다."
+    },
+    {
+      "sid": "C052",
+      "p": "P6",
+      "id": "ebsi_go2_20140312-q23",
+      "plantedText": "form",
+      "correctedText": "forms",
+      "plantedExcerpt": "The skin around her eyes form small and thin lines, and the lines match mine.",
+      "confidence": "high",
+      "reason": "주어는 단수 The skin이고 around her eyes는 수식어구이므로 동사는 forms여야 한다."
+    },
+    {
+      "sid": "C053",
+      "p": "P2",
+      "id": "ebsi_go2_20140312-q25",
+      "plantedText": "positive",
+      "correctedText": "negative",
+      "plantedExcerpt": "If a buyer made a positive remark about the car he was selling, Pat would get upset",
+      "confidence": "high",
+      "reason": "고객이 칭찬을 했는데 화를 냈다는 것은 뒤에 이어지는 '포드가 낫다'는 비판 예시·말싸움 전개와 정면 모순이므로 negative(비하하는) 발언이어야 한다."
+    },
+    {
+      "sid": "C053",
+      "p": "P3",
+      "id": "ebsi_go2_20140612-q21",
+      "plantedText": "Cited",
+      "correctedText": "Citing",
+      "plantedExcerpt": "Cited the need for managers to write their own answers to day-to-day management",
+      "confidence": "high",
+      "reason": "주어 Welch가 능동적으로 '필요성을 언급하며' 하는 분사구문이므로 과거분사 Cited가 아니라 현재분사 Citing이어야 한다."
+    },
+    {
+      "sid": "C053",
+      "p": "P5",
+      "id": "ebsi_go2_20140903_A-q27",
+      "plantedText": "setting",
+      "correctedText": "set",
+      "plantedExcerpt": "its importance for our existence as social animals setting it apart from the communication",
+      "confidence": "high",
+      "reason": "the complexity, its ability, its importance가 and로 연결된 복수 주어의 정동사 자리이므로 분사 setting이 아니라 set이어야 한다."
+    },
+    {
+      "sid": "C053",
+      "p": "P6",
+      "id": "ebsi_go2_20141118_A-q27",
+      "plantedText": "which",
+      "correctedText": "in which",
+      "plantedExcerpt": "a practice known as 'pure talk' which they debated spiritual and philosophical issues",
+      "confidence": "high",
+      "reason": "뒤 절이 목적어를 갖춘 완전한 문장이므로 관계대명사 which가 아니라 전치사+관계대명사 in which(=where)여야 한다."
+    },
+    {
+      "sid": "C054",
+      "p": "P3",
+      "id": "2014_YB_5006654_B-q28",
+      "plantedText": "insufficient",
+      "correctedText": "sufficient",
+      "plantedExcerpt": "but the desert also provides insufficient means with which people can shelter themselves",
+      "confidence": "high",
+      "reason": "앞 문장 \"The desert is both harsh and generous\"와 뒤의 흙 건축 예시가 사막이 충분한 재료를 제공한다는 논지이므로 insufficient는 정면 모순이다."
+    },
+    {
+      "sid": "C054",
+      "p": "P5",
+      "id": "2014_YB_5006654_A-q32",
+      "plantedText": "insufficient",
+      "correctedText": "sufficient",
+      "plantedExcerpt": "but the desert also provides insufficient means with which people can shelter themselves",
+      "confidence": "high",
+      "reason": "사막이 harsh하면서도 generous하다는 대조 구조와 흙 건축 재료 제공이라는 뒤 내용에 비추어 insufficient는 논지와 정반대다."
+    },
+    {
+      "sid": "C054",
+      "p": "P6",
+      "id": "ebsi_go3_20140410-q24",
+      "plantedText": "dramatized",
+      "correctedText": "dramatizing",
+      "plantedExcerpt": "to stage musical events, some of them dramatized the tragedy that they were still recovering",
+      "confidence": "high",
+      "reason": "접속사 없이 콤마로 이어진 자리이므로 정동사 dramatized는 쓸 수 없고 분사구문 dramatizing이어야 한다."
+    },
+    {
+      "sid": "C055",
+      "p": "P5",
+      "id": "ebsi_go3_20140710_A-q24",
+      "plantedText": "to be",
+      "correctedText": "was",
+      "plantedExcerpt": "back when our mammalian ancestors were evolving -to be at least 1,000 parts per million.",
+      "confidence": "high",
+      "reason": "that절의 주어 the carbon dioxide level에 대한 정동사가 필요한 자리인데 to부정사가 놓여 절이 성립하지 않는다."
+    },
+    {
+      "sid": "C055",
+      "p": "P6",
+      "id": "ebsi_go3_20140710_A-q25",
+      "plantedText": "tolerant",
+      "correctedText": "intolerant",
+      "plantedExcerpt": "Guam rails, a kind of flightless bird, are tolerant of their own kind",
+      "confidence": "high",
+      "reason": "같은 종에게 관대하다면 사육 번식이 어려울 이유가 없어 뒤따르는 breeding ... very difficult와 정면 모순된다."
+    },
+    {
+      "sid": "C056",
+      "p": "P3",
+      "id": "2014_09_3020142_A-q28",
+      "plantedText": "follow",
+      "correctedText": "resist",
+      "plantedExcerpt": "Some children follow the suggestion that sandals may not be the best option for a snowy day.",
+      "confidence": "high",
+      "reason": "옷 선택이 부적절함을 이해하지 못하는 아이들이라는 앞 문장과 '조언을 따른다'는 정면 모순이며, 뒤의 '그런 아이들에겐 경험이 최고의 교사' 및 샌들 고집 사례와도 어긋난다."
+    },
+    {
+      "sid": "C056",
+      "p": "P4",
+      "id": "2014_09_3020142_B-q28",
+      "plantedText": "follow",
+      "correctedText": "resist",
+      "plantedExcerpt": "Some children follow the suggestion that sandals may not be the best option for a snowy day.",
+      "confidence": "high",
+      "reason": "조언을 거부하는 아이들이라야 뒤따르는 '경험이 최고의 교사'와 샌들 고집 일화가 성립하므로 follow는 논지 모순이다."
+    },
+    {
+      "sid": "C056",
+      "p": "P5",
+      "id": "ebsi_go3_20141007-q25",
+      "plantedText": "were",
+      "correctedText": "was",
+      "plantedExcerpt": "the area of vegetation loss on sites used by large commercial rafting companies were more",
+      "confidence": "high",
+      "reason": "주어가 단수 the area이므로 복수 동사 were는 수일치 위반이다."
+    },
+    {
+      "sid": "C057",
+      "p": "P3",
+      "id": "2014_SN_3022251_B-q28",
+      "plantedText": "evade",
+      "correctedText": "assume",
+      "plantedExcerpt": "as farmers evade responsibility for storing seeds away from moisture and predators",
+      "confidence": "high",
+      "reason": "인간 관리 하에서 두꺼운 종피가 불필요해진 이유는 농부가 보관 책임을 '떠맡기' 때문이므로 evade는 논지와 정면 모순이다."
+    },
+    {
+      "sid": "C057",
+      "p": "P4",
+      "id": "ebsi_go1_20130313_A-q27",
+      "plantedText": "which",
+      "correctedText": "who",
+      "plantedExcerpt": "You're the only artist in the world which can draw the way you do.",
+      "confidence": "high",
+      "reason": "선행사가 사람(artist)이므로 관계대명사 which는 문법 위반이며 who여야 한다."
+    },
+    {
+      "sid": "C057",
+      "p": "P5",
+      "id": "ebsi_go1_20130903-q27",
+      "plantedText": "are",
+      "correctedText": "do",
+      "plantedExcerpt": "do not make sound decisions as well as are grateful people. This includes",
+      "confidence": "high",
+      "reason": "비교 대상이 일반동사 make이므로 대동사는 do여야 하며 be동사 are는 문법 위반이다."
+    },
+    {
+      "sid": "C058",
+      "p": "P2",
+      "id": "ebsi_go1_20131114-q28",
+      "plantedText": "avoid",
+      "correctedText": "embrace",
+      "plantedExcerpt": "you cultivate positive employees who avoid the tough challenges",
+      "confidence": "high",
+      "reason": "영감을 주는 리더가 긍정적 직원을 길러낸다는 논지상 어려운 과제를 '피하는' 것이 아니라 '기꺼이 맞서는' 직원이어야 하므로 정면 모순이다."
+    },
+    {
+      "sid": "C058",
+      "p": "P3",
+      "id": "ebsi_go2_20130313_B-q27",
+      "plantedText": "whom",
+      "correctedText": "which",
+      "plantedExcerpt": "authority over their students whom they earned by many years of study",
+      "confidence": "high",
+      "reason": "관계사가 가리키는 선행사는 학생이 아니라 오랜 연구로 '얻은' 권위(a position of professional authority)이므로 사람 목적격 whom은 쓸 수 없다."
+    },
+    {
+      "sid": "C058",
+      "p": "P4",
+      "id": "ebsi_go2_20130313_B-q28",
+      "plantedText": "less",
+      "correctedText": "more",
+      "plantedExcerpt": "The more frequently these bacteria get new resources, the less acid they produce",
+      "confidence": "high",
+      "reason": "뒤 문장이 레모네이드를 반복해 마시는 것이 더 해롭다고 하므로 자원을 자주 얻을수록 산을 '더 많이' 만들어야 논지가 성립한다."
+    },
+    {
+      "sid": "C058",
+      "p": "P5",
+      "id": "ebsi_go2_20130313_A-q32",
+      "plantedText": "get",
+      "correctedText": "avoid",
+      "plantedExcerpt": "they get altitude sickness by climbing to one level and then resting for a few days",
+      "confidence": "high",
+      "reason": "한 단계씩 올라가 며칠 쉬며 몸을 적응시키는 것은 고산병을 '피하는' 방법이므로 get은 논지와 정면 모순이다."
+    },
+    {
+      "sid": "C058",
+      "p": "P6",
+      "id": "ebsi_go2_20130605_B-q27",
+      "plantedText": "bringing",
+      "correctedText": "brought",
+      "plantedExcerpt": "the enormous wealth bringing back to Italy allowed middle- and upper-class women",
+      "confidence": "high",
+      "reason": "부(wealth)는 이탈리아로 '되가져와진' 대상이므로 능동 현재분사가 아니라 과거분사 brought로 수식해야 한다."
+    },
+    {
+      "sid": "C059",
+      "p": "P1",
+      "id": "ebsi_go2_20130605_A-q32",
+      "plantedText": "prevent",
+      "correctedText": "promote",
+      "plantedExcerpt": "you can change your thinking and behavior in ways that prevent your success",
+      "confidence": "high",
+      "reason": "F를 피드백으로 보면 학습 전략을 바꿔 성공을 '촉진'한다는 논지이므로 '막는다(prevent)'는 정면 모순이다."
+    },
+    {
+      "sid": "C059",
+      "p": "P2",
+      "id": "ebsi_go2_20130903_B-q27",
+      "plantedText": "attaches",
+      "correctedText": "attached",
+      "plantedExcerpt": "which involves pulling an electric wire attaches to a portable generator",
+      "confidence": "high",
+      "reason": "이미 pulling이 본동사구이므로 wire를 수식하는 자리에는 정동사 attaches가 올 수 없고 과거분사 attached여야 한다."
+    },
+    {
+      "sid": "C059",
+      "p": "P4",
+      "id": "ebsi_go2_20130903_A-q32",
+      "plantedText": "uncertain",
+      "correctedText": "certain",
+      "plantedExcerpt": "making your donors feel uncertain their dollars are doing good things",
+      "confidence": "high",
+      "reason": "운영비를 따로 후원받아 기부금 전액이 수혜자에게 간다는 투명성 논지이므로 기부자는 '확신'해야 하며 uncertain은 뒤 문장(더 많은 기부를 낳는다)과 모순이다."
+    },
+    {
+      "sid": "C059",
+      "p": "P5",
+      "id": "ebsi_go2_20131114-q27",
+      "plantedText": "what",
+      "correctedText": "which",
+      "plantedExcerpt": "careless, and open to misinterpretation what could have serious consequences",
+      "confidence": "high",
+      "reason": "선행사 misinterpretation을 받는 주격 관계대명사 자리이므로 선행사를 포함하는 what은 쓸 수 없고 which여야 한다."
+    },
+    {
+      "sid": "C060",
+      "p": "P4",
+      "id": "2013_06_3008953-q32",
+      "plantedText": "reduce",
+      "correctedText": "increase",
+      "plantedExcerpt": "can help reduce food production significantly in the countries facing hunger",
+      "confidence": "high",
+      "reason": "기아 국가를 먹여 살리려면 화학 투입재가 식량 생산을 '늘려야' 하므로 reduce는 논지와 정면 모순이다."
+    },
+    {
+      "sid": "C060",
+      "p": "P5",
+      "id": "ebsi_go3_20130712_B-q27",
+      "plantedText": "turning out",
+      "correctedText": "turned out",
+      "plantedExcerpt": "among people observed by Whyte turning out to be watching other people",
+      "confidence": "high",
+      "reason": "주어 The most common activity에 대한 정동사가 필요한 자리인데 분사 turning out이 놓여 문장에 정동사가 없다."
+    },
+    {
+      "sid": "C061",
+      "p": "P1",
+      "id": "ebsi_go3_20130712_A-q32",
+      "plantedText": "prosperous",
+      "correctedText": "vulnerable",
+      "plantedExcerpt": "world standards. It will only make them more prosperous. The best example is Mexico",
+      "confidence": "high",
+      "reason": "보호벽이 세계 기준에 못 미치는 기업을 더 이상 지켜주지 못한다는 논지이므로 '더 번영하게'가 아니라 '더 취약하게' 만든다가 맞다."
+    },
+    {
+      "sid": "C061",
+      "p": "P4",
+      "id": "2013_09_3011547-q31",
+      "plantedText": "a cause",
+      "correctedText": "a consequence",
+      "plantedExcerpt": "the decline in wine consumption is a cause of the emergence of the faster, more modern",
+      "confidence": "high",
+      "reason": "와인은 여유로운 식사 소멸의 '희생자'이며 변화의 표적이 아니라고 했으므로, 소비 감소는 빠른 생활양식 등장의 원인이 아니라 결과다."
+    },
+    {
+      "sid": "C061",
+      "p": "P6",
+      "id": "ebsi_go3_20131008_B-q27",
+      "plantedText": "have",
+      "correctedText": "has",
+      "plantedExcerpt": "developed economies, have food become so plentiful and easy to obtain as to cause",
+      "confidence": "high",
+      "reason": "Only 부사구 도치문의 주어 food는 불가산 단수이므로 조동사는 have가 아니라 has여야 한다."
+    },
+    {
+      "sid": "C062",
+      "p": "P6",
+      "id": "ebsi_go1_20120314-q35",
+      "plantedText": "a bad spyware",
+      "correctedText": "bad spyware",
+      "plantedExcerpt": "It turned out that I had a bad spyware, and that's what was causing",
+      "confidence": "low",
+      "reason": "spyware는 불가산명사라 부정관사 a와 결합할 수 없어 유일한 명백한 문법 위반 지점이다."
+    },
+    {
+      "sid": "C063",
+      "p": "P1",
+      "id": "ebsi_go1_20120314-q36",
+      "plantedText": "blocking",
+      "correctedText": "helping",
+      "plantedExcerpt": "By blocking each other and trusting in the ropes, we finally reached the top safely.",
+      "confidence": "high",
+      "reason": "서로 밧줄로 묶어 힘을 빌린다는 논지상 '서로를 막아서(blocking)'는 정면 모순이며 '서로 도우며(helping)'여야 한다."
+    },
+    {
+      "sid": "C063",
+      "p": "P2",
+      "id": "ebsi_go1_20120607-q24",
+      "plantedText": "realized",
+      "correctedText": "realize",
+      "plantedExcerpt": "allowed Greg to have a different point of view and realized that he didn't have to be perfect",
+      "confidence": "high",
+      "reason": "allowed Greg to have ~ and (to) realize 로 to부정사 병렬이어야 하므로 정동사 realized는 문법 위반이다."
+    },
+    {
+      "sid": "C063",
+      "p": "P4",
+      "id": "ebsi_go1_20120904-q25",
+      "plantedText": "similar",
+      "correctedText": "opposite",
+      "plantedExcerpt": "winds in one region are accompanied by similar winds in another; therefore, if north winds are extremely cold",
+      "confidence": "medium",
+      "reason": "뒤이어 한쪽의 몹시 찬 북풍이 다른 쪽의 비정상적으로 따뜻한 남풍과 짝지어진다고 했으므로 'similar'는 논지와 모순이고 'opposite'여야 한다."
+    },
+    {
+      "sid": "C063",
+      "p": "P5",
+      "id": "ebsi_go1_20120904-q34",
+      "plantedText": "staying",
+      "correctedText": "stayed",
+      "plantedExcerpt": "one half moved to the mountains, and the other half staying near the beach",
+      "confidence": "high",
+      "reason": "and로 연결된 등위절의 정동사 자리이므로 분사 staying이 아니라 stayed여야 한다."
+    },
+    {
+      "sid": "C063",
+      "p": "P6",
+      "id": "ebsi_go1_20121114-q27",
+      "plantedText": "which",
+      "correctedText": "in which",
+      "plantedExcerpt": "We all like to watch people in situations which we ourselves might be pressured.",
+      "confidence": "high",
+      "reason": "뒤 절이 수동태로 완전하여 목적격 관계대명사 which가 들어갈 자리가 없고 전치사+관계대명사(in which/where)여야 한다."
+    },
+    {
+      "sid": "C064",
+      "p": "P3",
+      "id": "ebsi_go2_20120314-q26",
+      "plantedText": "situating",
+      "correctedText": "situated",
+      "plantedExcerpt": "Mauritius, a tropical island situating in the Indian Ocean",
+      "confidence": "high",
+      "reason": "섬은 스스로 '위치시키는' 주체가 아니라 위치되어 있는 대상이므로 수동의 과거분사 situated가 와야 한다."
+    },
+    {
+      "sid": "C064",
+      "p": "P6",
+      "id": "ebsi_go2_20120607_A-q24",
+      "plantedText": "must do",
+      "correctedText": "must be done",
+      "plantedExcerpt": "but no matter how much we hate it, it must do sooner or later",
+      "confidence": "high",
+      "reason": "주어 it(설거지)은 행위의 대상이므로 능동 must do가 아니라 수동 must be done이어야 한다."
+    },
+    {
+      "sid": "C065",
+      "p": "P1",
+      "id": "ebsi_go2_20120607_B-q24",
+      "plantedText": "to learn",
+      "correctedText": "learn",
+      "plantedExcerpt": "the effect may be temporary as drivers, particularly those who regularly travel that route, to learn which bumps are just illusions",
+      "confidence": "high",
+      "reason": "as절의 주어 drivers에 대응하는 정동사가 필요한 자리인데 to부정사가 놓여 절이 성립하지 않는다."
+    },
+    {
+      "sid": "C065",
+      "p": "P2",
+      "id": "ebsi_go2_20120904_B-q24",
+      "plantedText": "allowing",
+      "correctedText": "allow",
+      "plantedExcerpt": "Yet only a handful of these advancements like international conference calls, IP phones, and video chats allowing people to speak rather than to write",
+      "confidence": "high",
+      "reason": "주어 only a handful of these advancements의 정동사가 없어 분사 allowing이 아니라 정동사 allow여야 한다."
+    },
+    {
+      "sid": "C065",
+      "p": "P3",
+      "id": "ebsi_go2_20120904_B-q33",
+      "plantedText": "reduces",
+      "correctedText": "increases",
+      "plantedExcerpt": "you might write your texts both in your native language and in English, and this reduces the work needed for writing your document",
+      "confidence": "high",
+      "reason": "두 언어로 병행 집필하면 작성·유지 부담이 늘어난다는 문맥(유지 문제 강조)과 정면 모순된다."
+    },
+    {
+      "sid": "C065",
+      "p": "P4",
+      "id": "ebsi_go2_20121114_B-q27",
+      "plantedText": "that",
+      "correctedText": "what",
+      "plantedExcerpt": "Together, these impressions prompted that he called a \"sixth sense of danger.\"",
+      "confidence": "high",
+      "reason": "prompted의 목적어이면서 called의 목적어가 비어 있는 자리이므로 선행사를 포함한 관계대명사 what이 필요하다."
+    },
+    {
+      "sid": "C066",
+      "p": "P1",
+      "id": "ebsi_go2_20121114_A-q32",
+      "plantedText": "efficient",
+      "correctedText": "inefficient",
+      "plantedExcerpt": "Adam Smith pointed out that this craft-based approach was efficient. Taking the example of a pin factory",
+      "confidence": "high",
+      "reason": "뒤이어 한 사람이 혼자 하면 하루 한 개도 힘든 반면 분업하면 48,000개를 만든다고 대비하므로, 수공업 방식은 '비효율적'이어야 논지가 성립한다."
+    },
+    {
+      "sid": "C066",
+      "p": "P5",
+      "id": "2012_06_3001254-q33",
+      "plantedText": "flourished",
+      "correctedText": "declined",
+      "plantedExcerpt": "Despite its long tradition in Cambodia, bokator flourished when the Khmer Rouge took power in 1975",
+      "confidence": "high",
+      "reason": "Despite 양보와 '대가들 대부분을 처형했다'는 뒤 내용상 보카토르는 번성이 아니라 쇠퇴(거의 소멸)해야 한다."
+    },
+    {
+      "sid": "C066",
+      "p": "P6",
+      "id": "ebsi_go3_20120711-q20",
+      "plantedText": "speaking to",
+      "correctedText": "spoken to",
+      "plantedExcerpt": "girls \"were not supposed to speak unless speaking to.\" Restraint in speech was valued",
+      "confidence": "high",
+      "reason": "생략된 주어 girls는 말을 '거는' 쪽이 아니라 '걸림을 받는' 쪽이므로 unless (they were) spoken to의 수동 과거분사가 맞다."
+    },
+    {
+      "sid": "C067",
+      "p": "P6",
+      "id": "2012_09_3008944-q33",
+      "plantedText": "curable",
+      "correctedText": "incurable",
+      "plantedExcerpt": "When medical science pronounces him curable, he will not resign himself to fate but runs to the nearest quack",
+      "confidence": "high",
+      "reason": "운명에 체념하지 않고 회복의 희망을 파는 돌팔이에게 달려간다는 서술은 의학이 '불치(incurable)'라 선고했을 때만 성립하므로 curable은 논지 정면 모순이다."
+    },
+    {
+      "sid": "C068",
+      "p": "P1",
+      "id": "ebsi_go3_20121009-q20",
+      "plantedText": "holding",
+      "correctedText": "held",
+      "plantedExcerpt": "with a vacuum cleaner holding over the affected areas for up to twenty minutes",
+      "confidence": "high",
+      "reason": "부대상황 with + 목적어(a vacuum cleaner) 뒤에는 목적어가 '잡히는' 수동 관계이므로 현재분사 holding이 아니라 과거분사 held가 와야 한다."
+    },
+    {
+      "sid": "C068",
+      "p": "P2",
+      "id": "ebsi_go3_20121009-q35",
+      "plantedText": "exhaling",
+      "correctedText": "inhaling",
+      "plantedExcerpt": "placing his lips upon the handkerchief, and exhaling",
+      "confidence": "high",
+      "reason": "뒤 문장에서 손수건으로 의자의 먼지를 '빨아냈다(draw out)'고 하므로 흡입(inhaling)이어야 하며 exhaling은 흡입식 진공청소기 착안이라는 논지와 정면 모순된다."
+    },
+    {
+      "sid": "C068",
+      "p": "P5",
+      "id": "2012_SN_3001002-q32",
+      "plantedText": "slower",
+      "correctedText": "faster",
+      "plantedExcerpt": "Since this new breaststroke was about 15% slower, people using the conventional version",
+      "confidence": "high",
+      "reason": "기존 방식 사용자가 경쟁할 수 없었다는 결과가 성립하려면 새 영법이 더 빨라야 하므로 slower는 논지와 정면 모순이다."
+    },
+    {
+      "sid": "C069",
+      "p": "P1",
+      "id": "ebsi_go1_20110310-q20",
+      "plantedText": "for their studying",
+      "correctedText": "to study",
+      "plantedExcerpt": "the United States sent astronauts to the moon for their studying the moon",
+      "confidence": "low",
+      "reason": "목적을 나타내는 자리이므로 to부정사(to study ... and return)가 와야 하는데 전치사+소유격+동명사 구문으로 바뀌어 있다."
+    },
+    {
+      "sid": "C069",
+      "p": "P3",
+      "id": "ebsi_go1_20110310-q31",
+      "plantedText": "disagreed",
+      "correctedText": "agreed",
+      "plantedExcerpt": "the leaders of India and Pakistan disagreed to have peace and Gandhi stopped fasting",
+      "confidence": "medium",
+      "reason": "간디가 단식을 중단한 것은 지도자들이 평화에 '합의'했기 때문이므로 disagreed는 논지와 정면 모순이며 disagree는 to부정사 보어도 취하지 않는다."
+    },
+    {
+      "sid": "C069",
+      "p": "P4",
+      "id": "ebsi_go1_20110310-q32",
+      "plantedText": "uncommon",
+      "correctedText": "ordinary",
+      "plantedExcerpt": "They are just uncommon people except that they have excellent skills in their field.",
+      "confidence": "high",
+      "reason": "뒤의 except that they have excellent skills와 완벽할 필요가 없다는 논지상 '뛰어난 기술만 빼면 평범한 사람'이어야 하므로 uncommon은 모순이다."
+    },
+    {
+      "sid": "C070",
+      "p": "P2",
+      "id": "ebsi_go1_20110901-q32",
+      "plantedText": "behind",
+      "correctedText": "ahead of",
+      "plantedExcerpt": "In terms of language development, he was soon miles behind his age group.",
+      "confidence": "high",
+      "reason": "또래보다 훨씬 일찍 말하고 책을 통째로 외웠다는 앞 내용과 정면 모순이므로 '앞서 있었다'가 되어야 한다."
+    },
+    {
+      "sid": "C070",
+      "p": "P3",
+      "id": "ebsi_go1_20111115-q20",
+      "plantedText": "what",
+      "correctedText": "whether",
+      "plantedExcerpt": "Dogs can tell what you like them or not. If you like them, they like you back.",
+      "confidence": "high",
+      "reason": "'~인지 아닌지'의 or not과 호응하는 명사절 접속사는 whether이며, like의 목적어 them이 이미 있어 what은 문법 위반이다."
+    },
+    {
+      "sid": "C070",
+      "p": "P5",
+      "id": "ebsi_go1_20111115-q32",
+      "plantedText": "rationally",
+      "correctedText": "emotionally",
+      "plantedExcerpt": "Rather than react rationally, think about what you want to say and then say it calmly.",
+      "confidence": "high",
+      "reason": "'~하기보다 생각한 뒤 차분히 말하라'는 대비 구조상 배격 대상은 감정적 반응이어야 하므로 rationally는 논지 모순이다."
+    },
+    {
+      "sid": "C070",
+      "p": "P6",
+      "id": "ebsi_go2_20110310-q20",
+      "plantedText": "would send",
+      "correctedText": "would be sent",
+      "plantedExcerpt": "Although the living supplies for the settlers would send from Earth, taking the risk",
+      "confidence": "high",
+      "reason": "주어 supplies는 보내지는 대상이므로 능동 send는 태 위반이고 수동 be sent가 되어야 한다."
+    },
+    {
+      "sid": "C071",
+      "p": "P2",
+      "id": "ebsi_go2_20110310-q31",
+      "plantedText": "stimulate",
+      "correctedText": "accumulate",
+      "plantedExcerpt": "Other vitamins, especially Vitamins A and D, stimulate in the body and can cause damage",
+      "confidence": "low",
+      "reason": "타동사 stimulate가 목적어 없이 자동사처럼 쓰여 성립하지 않으며, 축적되어 해를 끼친다는 문맥상 accumulate가 원형이다."
+    },
+    {
+      "sid": "C071",
+      "p": "P3",
+      "id": "ebsi_go2_20110310-q32",
+      "plantedText": "permanent",
+      "correctedText": "temporary",
+      "plantedExcerpt": "Most people who are sensitive to caffeine experience a permanent increase in energy",
+      "confidence": "high",
+      "reason": "바로 뒤 문장에서 이 에너지 느낌이 금방 사라진다(quickly evaporates)고 하므로 permanent는 논지 정면 모순이다."
+    },
+    {
+      "sid": "C071",
+      "p": "P5",
+      "id": "ebsi_go2_20110901-q21",
+      "plantedText": "being sung",
+      "correctedText": "sung",
+      "plantedExcerpt": "on a stage in Great Britain, being sung by a mobile phone salesman named Paul Potts",
+      "confidence": "low",
+      "reason": "과거의 완료된 일회적 무대 상황을 수식하는 자리이므로 진행 수동 being sung이 아니라 과거분사 sung이 원형으로 보인다."
+    },
+    {
+      "sid": "C071",
+      "p": "P6",
+      "id": "ebsi_go2_20110901-q31",
+      "plantedText": "maintain",
+      "correctedText": "change",
+      "plantedExcerpt": "Students who misbehaved feel empowered to maintain the behavior when they have",
+      "confidence": "high",
+      "reason": "문제 행동을 학습 기회로 삼아 개선하도록 돕는다는 논지이므로 그 행동을 유지한다(maintain)는 정면 모순이다."
+    },
+    {
+      "sid": "C072",
+      "p": "P2",
+      "id": "ebsi_go2_20111115-q20",
+      "plantedText": "satisfied",
+      "correctedText": "satisfying",
+      "plantedExcerpt": "The gift of time can sometimes be more satisfied and more valuable than money.",
+      "confidence": "high",
+      "reason": "시간의 선물이 '만족을 주는' 주체이므로 과거분사 satisfied가 아니라 현재분사 satisfying이 보어로 와야 한다."
+    },
+    {
+      "sid": "C072",
+      "p": "P3",
+      "id": "ebsi_go2_20111115-q32",
+      "plantedText": "lower",
+      "correctedText": "higher",
+      "plantedExcerpt": "People who decorate their offices tend to have lower levels of job satisfaction.",
+      "confidence": "high",
+      "reason": "개인화가 직원·고용주 모두에게 이롭고 충성도를 높인다는 논지와 '낮은 직무만족도'는 정면 모순된다."
+    },
+    {
+      "sid": "C072",
+      "p": "P5",
+      "id": "2011_06_3001235-q21",
+      "plantedText": "himself",
+      "correctedText": "him",
+      "plantedExcerpt": "preserve the myth of their guest's perfection and keep himself from any embarrassment",
+      "confidence": "high",
+      "reason": "to부정사구의 의미상 주어는 villagers인데 목적어는 손님을 가리키므로 재귀대명사 himself가 아니라 him이어야 한다."
+    },
+    {
+      "sid": "C072",
+      "p": "P6",
+      "id": "2011_06_3001235-q31",
+      "plantedText": "unselfish",
+      "correctedText": "selfish",
+      "plantedExcerpt": "views of the free graces of Nature was unselfish and undemocratic",
+      "confidence": "high",
+      "reason": "Scott는 울타리를 없애려 했으므로 이웃의 자연 조망을 좁히는 행위는 '이기적'이라고 봐야 하며 unselfish는 논지와 모순된다."
+    },
+    {
+      "sid": "C073",
+      "p": "P2",
+      "id": "ebsi_go3_20110713-q20",
+      "plantedText": "whose",
+      "correctedText": "that",
+      "plantedExcerpt": "The animals whose prey on zebras are busiest during the cool hours of sunrise and sunset.",
+      "confidence": "high",
+      "reason": "소유격 관계대명사 whose 뒤에 명사 없이 동사 prey가 바로 와서 주격 관계대명사 that(which)이어야 한다."
+    },
+    {
+      "sid": "C074",
+      "p": "P2",
+      "id": "2011_09_3001251-q32",
+      "plantedText": "well",
+      "correctedText": "badly",
+      "plantedExcerpt": "But because of their reliance on shared assumptions, most jokes travel very well.",
+      "confidence": "high",
+      "reason": "공유된 전제에 의존하기 때문에 농담은 잘 전달되지 '않는다'는 것이 논지이며 뒤 문장(번역 불가·멍한 반응)과도 모순된다."
+    },
+    {
+      "sid": "C074",
+      "p": "P3",
+      "id": "ebsi_go3_20111012-q21",
+      "plantedText": "competitively",
+      "correctedText": "competitive",
+      "plantedExcerpt": "placing a premium on high skills that make workers more competitively, it increases income",
+      "confidence": "high",
+      "reason": "make + 목적어(workers) + 목적격보어 자리이므로 부사가 아니라 형용사 competitive가 와야 한다."
+    },
+    {
+      "sid": "C074",
+      "p": "P4",
+      "id": "ebsi_go3_20111012-q29",
+      "plantedText": "changeable",
+      "correctedText": "unchangeable",
+      "plantedExcerpt": "Dunbar went on to say that this number has been changeable throughout human history.",
+      "confidence": "high",
+      "reason": "선사시대 수렵채집 집단도 150명에서 분리됐다는 예시는 이 수치가 역사 내내 '변하지 않았다'는 주장을 뒷받침하므로 changeable은 논지 정면 모순이다."
+    },
+    {
+      "sid": "C075",
+      "p": "P2",
+      "id": "2011_SN_3000996-q32",
+      "plantedText": "neglects",
+      "correctedText": "enhances",
+      "plantedExcerpt": "Teach yourself to use your camera in a way that neglects your ongoing experiences",
+      "confidence": "high",
+      "reason": "카메라를 통해 오히려 현재를 진짜로 보라는 결론이므로 경험을 '소홀히 한다'는 정반대이며 enhances여야 한다."
+    },
+    {
+      "sid": "C075",
+      "p": "P3",
+      "id": "ebsi_go1_20100310-q21",
+      "plantedText": "exact",
+      "correctedText": "exactly",
+      "plantedExcerpt": "Just like people, no two places can be exact alike.",
+      "confidence": "medium",
+      "reason": "형용사 alike를 수식하므로 형용사 exact가 아니라 부사 exactly가 와야 한다."
+    },
+    {
+      "sid": "C075",
+      "p": "P4",
+      "id": "ebsi_go1_20100310-q22",
+      "plantedText": "that",
+      "correctedText": "if",
+      "plantedExcerpt": "I met my wife and son and asked that they knew who was shouting encouragement",
+      "confidence": "high",
+      "reason": "ask는 that절이 아니라 간접의문(if/whether)절을 목적어로 취하므로 that은 문법 위반이다."
+    },
+    {
+      "sid": "C075",
+      "p": "P5",
+      "id": "ebsi_go1_20100310-q31",
+      "plantedText": "attack",
+      "correctedText": "attract",
+      "plantedExcerpt": "clothing with bright colors or flowery prints which are known to attack insects",
+      "confidence": "medium",
+      "reason": "곤충에 물리지 않게 하라는 글이므로 밝은 색 옷은 곤충을 '유인한다(attract)'여야 논지가 성립한다."
+    },
+    {
+      "sid": "C076",
+      "p": "P1",
+      "id": "ebsi_go1_20100616-q22",
+      "plantedText": "what",
+      "correctedText": "whom",
+      "plantedExcerpt": "he gathered a group of intelligent followers what he trained in several subjects",
+      "confidence": "high",
+      "reason": "선행사 followers가 있고 trained의 목적어 자리이므로 관계대명사 whom(that)이 와야 하며 선행사를 포함하는 what은 쓸 수 없다."
+    },
+    {
+      "sid": "C076",
+      "p": "P4",
+      "id": "ebsi_go1_20100916-q22",
+      "plantedText": "sharing",
+      "correctedText": "shared",
+      "plantedExcerpt": "Information and knowledge are open and sharing rather than protected and controlled.",
+      "confidence": "high",
+      "reason": "주어가 정보·지식이므로 protected, controlled와 병렬을 이루는 수동 분사 shared가 와야 한다."
+    },
+    {
+      "sid": "C076",
+      "p": "P6",
+      "id": "ebsi_go1_20101123-q21",
+      "plantedText": "becomes",
+      "correctedText": "become",
+      "plantedExcerpt": "highway hypnosis, where our sense of time and consciousness becomes altered",
+      "confidence": "low",
+      "reason": "주어가 our sense of time and consciousness로 등위 접속된 복수 개념이므로 복수 동사 become이 맞다."
+    },
+    {
+      "sid": "C077",
+      "p": "P1",
+      "id": "ebsi_go1_20101123-q22",
+      "plantedText": "is",
+      "correctedText": "are",
+      "plantedExcerpt": "the milestones on the road to success is always the failures.",
+      "confidence": "high",
+      "reason": "주어가 복수 명사 the milestones이므로 단수 동사 is는 수일치 위반, are가 옳다."
+    },
+    {
+      "sid": "C077",
+      "p": "P2",
+      "id": "ebsi_go1_20101123-q30",
+      "plantedText": "shorter",
+      "correctedText": "longer",
+      "plantedExcerpt": "The diving suit for cave divers is usually shorter than recreational divers'.",
+      "confidence": "medium",
+      "reason": "동굴 다이버는 노출 보호(exposure protection)가 더 필요하다는 문맥이므로 잠수복이 더 짧다는 서술은 논지와 정면 모순된다."
+    },
+    {
+      "sid": "C077",
+      "p": "P4",
+      "id": "ebsi_go2_20100311-q22",
+      "plantedText": "will not accept",
+      "correctedText": "will not be accepted",
+      "plantedExcerpt": "This attitude, however, will not accept in Italy, where coffee is only a breakfast drink.",
+      "confidence": "medium",
+      "reason": "주어 This attitude는 받아들여지는 대상이므로 능동 accept가 아니라 수동태 be accepted여야 한다."
+    },
+    {
+      "sid": "C077",
+      "p": "P5",
+      "id": "ebsi_go2_20100311-q31",
+      "plantedText": "reproduce",
+      "correctedText": "reduce",
+      "plantedExcerpt": "on store shelves that promise to reproduce germs without the addition of running water",
+      "confidence": "medium",
+      "reason": "질병 예방을 돕는 손 세정 제품이라는 논지상 세균을 '번식시킨다'는 서술은 정면 모순이며 세균을 줄인다가 맞다."
+    },
+    {
+      "sid": "C078",
+      "p": "P1",
+      "id": "ebsi_go2_20100617-q22",
+      "plantedText": "made",
+      "correctedText": "are made",
+      "plantedExcerpt": "These robots made of a synthetic compound designed to be flexible in the tail",
+      "confidence": "high",
+      "reason": "주절에 정동사가 없어 문장이 성립하지 않으므로 'are made'가 되어야 한다."
+    },
+    {
+      "sid": "C078",
+      "p": "P4",
+      "id": "ebsi_go2_20101124-q22",
+      "plantedText": "which",
+      "correctedText": "in which",
+      "plantedExcerpt": "It features sports like sky surfing which people jump from airplanes with",
+      "confidence": "high",
+      "reason": "뒤 절이 완전한 문장이라 관계대명사 which가 아니라 'in which(=where)'가 필요하다."
+    },
+    {
+      "sid": "C078",
+      "p": "P5",
+      "id": "ebsi_go2_20101124-q30",
+      "plantedText": "up",
+      "correctedText": "down",
+      "plantedExcerpt": "If a filled square is encountered, one moves vertically up one square instead",
+      "confidence": "high",
+      "reason": "마방진 작성법에서 칸이 막히면 아래로 한 칸 내려가야 3×3 결과(8 1 6 / 3 5 7 / 4 9 2)가 나오므로 up은 논지 모순이다."
+    },
+    {
+      "sid": "C079",
+      "p": "P3",
+      "id": "ebsi_go3_20100708-q22",
+      "plantedText": "while",
+      "correctedText": "during",
+      "plantedExcerpt": "The dummy's job is to simulate a human being while a crash, collecting data",
+      "confidence": "high",
+      "reason": "while은 접속사라 절을 이끌어야 하는데 명사구 a crash가 뒤따르므로 전치사 during이 필요하다."
+    },
+    {
+      "sid": "C080",
+      "p": "P1",
+      "id": "ebsi_go3_20101012-q20",
+      "plantedText": "which",
+      "correctedText": "that",
+      "plantedExcerpt": "increase the likelihood which members of the target market will be exposed to it",
+      "confidence": "high",
+      "reason": "명사 likelihood 뒤의 동격절은 완전한 절을 이끄는 접속사 that이어야 하며, 관계대명사 which는 뒤 절이 완전하므로 쓸 수 없다."
+    },
+    {
+      "sid": "C080",
+      "p": "P6",
+      "id": "ebsi_go1_20090311-q22",
+      "plantedText": "received",
+      "correctedText": "receiving",
+      "plantedExcerpt": "Right after finishing his program and received his degree, Martin moved to Boulder.",
+      "confidence": "high",
+      "reason": "전치사구 after 뒤 finishing과 병렬이므로 동명사 receiving이어야 하는데 과거동사 received가 쓰여 구조가 깨진다."
+    },
+    {
+      "sid": "C081",
+      "p": "P2",
+      "id": "ebsi_go1_20090617-q22",
+      "plantedText": "are",
+      "correctedText": "is",
+      "plantedExcerpt": "One of the numerous reasons fans kept coming back are that the characters",
+      "confidence": "high",
+      "reason": "주어가 단수 One(of ~ reasons)이므로 동사는 is여야 하는데 are로 되어 있어 수일치 위반이다."
+    },
+    {
+      "sid": "C081",
+      "p": "P4",
+      "id": "ebsi_go1_20090917-q20",
+      "plantedText": "to come",
+      "correctedText": "come",
+      "plantedExcerpt": "How could he make their Christmas wish to come true?",
+      "confidence": "high",
+      "reason": "사역동사 make는 목적격보어로 원형부정사를 취하므로 to come이 아니라 come이어야 한다."
+    },
+    {
+      "sid": "C082",
+      "p": "P2",
+      "id": "ebsi_go1_20091118-q22",
+      "plantedText": "lately",
+      "correctedText": "late",
+      "plantedExcerpt": "I had to call because I'm going to be a little lately getting home.",
+      "confidence": "high",
+      "reason": "'be동사 보어 자리이며 '조금 늦게 도착한다'는 뜻이므로 '최근에'를 뜻하는 부사 lately가 아니라 형용사/부사 late가 와야 한다."
+    },
+    {
+      "sid": "C082",
+      "p": "P4",
+      "id": "ebsi_go2_20090312-q22",
+      "plantedText": "their",
+      "correctedText": "whose",
+      "plantedExcerpt": "The violinists and pianists their names you've heard regularly earn between",
+      "confidence": "high",
+      "reason": "선행사(violinists and pianists)를 받아 names를 수식하는 관계절을 이끌어야 하므로 대명사 their가 아니라 소유격 관계대명사 whose가 필요하다."
+    },
+    {
+      "sid": "C082",
+      "p": "P6",
+      "id": "ebsi_go2_20090618-q22",
+      "plantedText": "resulted",
+      "correctedText": "resulting",
+      "plantedExcerpt": "Pollution and fossil fuels have given us global warming, resulted in extreme weathers.",
+      "confidence": "high",
+      "reason": "접속사 없이 이어지는 자리이므로 정동사 resulted가 아니라 앞 절 전체를 받는 분사구문 resulting이어야 한다."
+    },
+    {
+      "sid": "C083",
+      "p": "P2",
+      "id": "ebsi_go2_20090918-q22",
+      "plantedText": "frustrating",
+      "correctedText": "frustrated",
+      "plantedExcerpt": "she often ran home with her ball after she grew frustrating with the negative attitudes",
+      "confidence": "high",
+      "reason": "주어(she)가 좌절감을 '느끼는' 대상이므로 grew 뒤에는 능동 현재분사가 아니라 과거분사 frustrated가 와야 한다."
+    },
+    {
+      "sid": "C083",
+      "p": "P4",
+      "id": "ebsi_go2_20091117-q20",
+      "plantedText": "themselves",
+      "correctedText": "itself",
+      "plantedExcerpt": "no reason why any e-commerce enterprise should limit themselves to marketing",
+      "confidence": "high",
+      "reason": "주어가 단수 any e-commerce enterprise이므로 재귀대명사는 itself여야 한다."
+    },
+    {
+      "sid": "C085",
+      "p": "P2",
+      "id": "ebsi_go3_20091015-q20",
+      "plantedText": "defenselessly",
+      "correctedText": "defenseless",
+      "plantedExcerpt": "making soil defenselessly to wind and water erosion. Sometimes, the wind blows",
+      "confidence": "high",
+      "reason": "make + 목적어(soil) + 목적격보어 자리이므로 부사가 아니라 형용사 defenseless가 와야 한다."
+    },
+    {
+      "sid": "C085",
+      "p": "P3",
+      "id": "2009_SN_3000950-q21",
+      "plantedText": "an aggressive behavior",
+      "correctedText": "aggressive behavior",
+      "plantedExcerpt": "personality factors such as an aggressive behavior or a passive temperament.",
+      "confidence": "medium",
+      "reason": "behavior는 불가산 추상명사로 부정관사 an을 붙일 수 없다."
+    },
+    {
+      "sid": "C086",
+      "p": "P3",
+      "id": "2008_06_3001212-q29",
+      "plantedText": "front",
+      "correctedText": "rear",
+      "plantedExcerpt": "while the front triangle consists of the seat tube, chain stays, and seat stays.",
+      "confidence": "high",
+      "reason": "seat tube·chain stays·seat stays로 이루어지는 것은 앞쪽이 아니라 뒤쪽 삼각형이며, 앞 문장의 main triangle과 짝을 이루는 것은 rear triangle이다."
+    },
+    {
+      "sid": "C087",
+      "p": "P1",
+      "id": "2008_09_3001186-q29",
+      "plantedText": "increase",
+      "correctedText": "decrease",
+      "plantedExcerpt": "It results in an increase in the distance between the top of her head",
+      "confidence": "high",
+      "reason": "다리를 수평으로 뻗으면 무게중심이 (몸 안에서) 위로 올라가므로 머리 꼭대기와 무게중심 사이 거리는 줄어들어야 하는데, 'increase'는 앞 문장의 'moves upward' 및 머리 높이가 일정하다는 논지와 정면 모순된다."
+    },
+    {
+      "sid": "C088",
+      "p": "P2",
+      "id": "2007_06_3001177-q35",
+      "plantedText": "loosens",
+      "correctedText": "stiffens",
+      "plantedExcerpt": "made of a special material that loosens in response to quick movements or impacts",
+      "confidence": "high",
+      "reason": "앞뒤에서 패드는 충격 시 굳어(stiffen) 분자가 결합하고 힘을 분산한다고 하므로 '느슨해진다(loosens)'는 정면 모순이다."
+    },
+    {
+      "sid": "C088",
+      "p": "P5",
+      "id": "2007_09_3001172-q28",
+      "plantedText": "characteristic",
+      "correctedText": "momentary",
+      "plantedExcerpt": "impressionistic art, inspired by the characteristic images of natural objects",
+      "confidence": "medium",
+      "reason": "인상주의는 대상의 고정적·전형적(characteristic) 모습이 아니라 햇빛 변화 같은 순간적(momentary) 인상을 포착한다는 뒤 문장과 모순된다."
+    },
+    {
+      "sid": "C089",
+      "p": "P6",
+      "id": "ebsi_go1_20060601-q21",
+      "plantedText": "that",
+      "correctedText": "which",
+      "plantedExcerpt": "Its name is Winter Queen Gamma 3, that is a kind of begonia.",
+      "confidence": "high",
+      "reason": "콤마 뒤 계속적 용법의 관계대명사 자리에는 that을 쓸 수 없으므로 which여야 한다."
+    },
+    {
+      "sid": "C090",
+      "p": "P1",
+      "id": "ebsi_go1_20061121-q22",
+      "plantedText": "frustrated",
+      "correctedText": "frustrating",
+      "plantedExcerpt": "It can be very frustrated to people who want to speak to an actual person",
+      "confidence": "high",
+      "reason": "주어 It(voice mail)이 감정을 유발하는 주체이므로 과거분사 frustrated가 아니라 현재분사 frustrating이어야 한다."
+    },
+    {
+      "sid": "C090",
+      "p": "P3",
+      "id": "ebsi_go1_20061121-q31",
+      "plantedText": "millions",
+      "correctedText": "million",
+      "plantedExcerpt": "Most dinosaurs have been extinct for about 65 millions years.",
+      "confidence": "medium",
+      "reason": "수사와 함께 쓰인 million은 복수형을 쓰지 않으므로 65 million years가 되어야 한다."
+    },
+    {
+      "sid": "C090",
+      "p": "P4",
+      "id": "ebsi_go1_20061121-q35",
+      "plantedText": "straightened",
+      "correctedText": "bent",
+      "plantedExcerpt": "In this position, the straightened right elbow and right knee should not quite touch.",
+      "confidence": "high",
+      "reason": "앞에서 'bring your bent right arm forward'라고 팔을 굽히라고 했으므로 팔꿈치는 편(straightened) 상태가 아니라 굽힌(bent) 상태여야 해 논지와 정면 모순된다."
+    },
+    {
+      "sid": "C090",
+      "p": "P5",
+      "id": "ebsi_go2_20060310-q21",
+      "plantedText": "moving",
+      "correctedText": "move",
+      "plantedExcerpt": "his or her arms and legs moving in a specific way in relation to his or her body",
+      "confidence": "high",
+      "reason": "whereas 앞 주절에 정동사가 없어 분사 moving이 아니라 정동사 move가 와야 한다."
+    },
+    {
+      "sid": "C091",
+      "p": "P1",
+      "id": "ebsi_go2_20060602-q21",
+      "plantedText": "rapidly",
+      "correctedText": "rapid",
+      "plantedExcerpt": "As a foreign student, you may encounter language problems in America. Spoken English may sound very rapidly.",
+      "confidence": "high",
+      "reason": "감각동사 sound는 보어로 형용사를 취하므로 부사 rapidly는 문법 위반이며 rapid가 되어야 한다."
+    },
+    {
+      "sid": "C092",
+      "p": "P1",
+      "id": "2006_09_3001166-q28",
+      "plantedText": "abundant",
+      "correctedText": "scarce",
+      "plantedExcerpt": "As oil becomes abundant, the pressure is on to find new technologies to unlock",
+      "confidence": "high",
+      "reason": "지문 논지는 값싼 석유의 종말·신규 유전 고갈이므로 석유가 '풍부해진다'는 것은 정면 모순이며, 새 기술을 찾을 압박이 생기는 이유는 석유가 희소해지기 때문이다."
+    },
+    {
+      "sid": "C092",
+      "p": "P5",
+      "id": "2006_SN_3000977-q30",
+      "plantedText": "enhance",
+      "correctedText": "eliminate",
+      "plantedExcerpt": "This will, in some cases, enhance subtle information about light versus dark",
+      "confidence": "high",
+      "reason": "바로 뒤 'hence the lack of detail in the eyes and mouth'가 미세 정보의 소실을 가리키므로 '강화한다'는 결과절과 정면 모순이며 '제거한다'여야 한다."
+    }
+  ],
+  "diverged": [
+    {
+      "sid": "C001",
+      "p": "P1",
+      "id": "2027_06_5095396-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C003",
+      "p": "P4",
+      "id": "2026_06_5090182-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C004",
+      "p": "P1",
+      "id": "2026_09_5091403-q29",
+      "solver": "gives→give",
+      "verifier": "not-found",
+      "samePosition": false
+    },
+    {
+      "sid": "C004",
+      "p": "P4",
+      "id": "2026_SN_5093799-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C005",
+      "p": "P6",
+      "id": "ebsi_go1_20251014-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C006",
+      "p": "P5",
+      "id": "ebsi_go2_20250604-q30",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C007",
+      "p": "P4",
+      "id": "2025_06_5086961-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C008",
+      "p": "P3",
+      "id": "2025_09_5087695-q29",
+      "solver": "result→resulted",
+      "verifier": "not-found",
+      "samePosition": false
+    },
+    {
+      "sid": "C009",
+      "p": "P2",
+      "id": "2025_SN_5089362-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C009",
+      "p": "P6",
+      "id": "ebsi_go1_20240328-q30",
+      "solver": "has enough time or ability→lacks the time or ability",
+      "verifier": "has enough time or ability→does not have enough time or ability",
+      "samePosition": true
+    },
+    {
+      "sid": "C010",
+      "p": "P3",
+      "id": "ebsi_go1_20240904-q29",
+      "solver": "which→where",
+      "verifier": "which→in which",
+      "samePosition": true
+    },
+    {
+      "sid": "C011",
+      "p": "P5",
+      "id": "ebsi_go2_20240904-q29",
+      "solver": "make→to make",
+      "verifier": "two make→two to make",
+      "samePosition": false
+    },
+    {
+      "sid": "C012",
+      "p": "P3",
+      "id": "2024_06_5084521-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C012",
+      "p": "P4",
+      "id": "2024_06_5084521-q30",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C013",
+      "p": "P1",
+      "id": "ebsi_go3_20240711-q30",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C013",
+      "p": "P2",
+      "id": "2024_09_5085155-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C014",
+      "p": "P1",
+      "id": "2024_SN_5086091-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C014",
+      "p": "P3",
+      "id": "2024_SN_5086091-q41-42",
+      "solver": "running the risk→avoiding the risk",
+      "verifier": "running→avoiding",
+      "samePosition": false
+    },
+    {
+      "sid": "C014",
+      "p": "P5",
+      "id": "ebsi_go1_20230323-q30",
+      "solver": "strengthened→destroyed",
+      "verifier": "strengthened→weakened",
+      "samePosition": true
+    },
+    {
+      "sid": "C016",
+      "p": "P3",
+      "id": "ebsi_go2_20230601-q30",
+      "solver": "poor→rich",
+      "verifier": "poor nations give→rich nations give",
+      "samePosition": false
+    },
+    {
+      "sid": "C016",
+      "p": "P6",
+      "id": "ebsi_go2_20231219-q30",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C017",
+      "p": "P1",
+      "id": "2023_06_5076592-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C017",
+      "p": "P3",
+      "id": "2023_06_5076592-q41-42",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C017",
+      "p": "P5",
+      "id": "ebsi_go3_20230711-q30",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C017",
+      "p": "P6",
+      "id": "2023_09_5077481-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C018",
+      "p": "P4",
+      "id": "ebsi_go3_20231012-q30",
+      "solver": "resistant→receptive",
+      "verifier": "resistant→sensitive",
+      "samePosition": true
+    },
+    {
+      "sid": "C018",
+      "p": "P5",
+      "id": "2023_SN_5080827-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C019",
+      "p": "P5",
+      "id": "ebsi_go1_20220609-q30",
+      "solver": "ignoring→envying",
+      "verifier": "ignoring→imitating",
+      "samePosition": true
+    },
+    {
+      "sid": "C020",
+      "p": "P6",
+      "id": "ebsi_go2_20220609-q30",
+      "solver": "less likely→more likely",
+      "verifier": "less→more",
+      "samePosition": false
+    },
+    {
+      "sid": "C021",
+      "p": "P2",
+      "id": "ebsi_go2_20221123-q30",
+      "solver": "reinforces→reduces",
+      "verifier": "reinforces→destroys",
+      "samePosition": true
+    },
+    {
+      "sid": "C021",
+      "p": "P4",
+      "id": "ebsi_go2_20220901-q30",
+      "solver": "scarce→excess",
+      "verifier": "scarce→surplus",
+      "samePosition": true
+    },
+    {
+      "sid": "C021",
+      "p": "P5",
+      "id": "2022_06_5063572-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C022",
+      "p": "P3",
+      "id": "ebsi_go3_20220706-q30",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C022",
+      "p": "P4",
+      "id": "2022_09_5064693-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C023",
+      "p": "P1",
+      "id": "ebsi_go3_20221012-q29",
+      "solver": "what referred to as→what was referred to as",
+      "verifier": "what referred to→what is referred to",
+      "samePosition": false
+    },
+    {
+      "sid": "C023",
+      "p": "P3",
+      "id": "2022_SN_5070164-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C023",
+      "p": "P5",
+      "id": "2022_SN_5070164-q41-42",
+      "solver": "abstract→obvious",
+      "verifier": "abstract→simple",
+      "samePosition": true
+    },
+    {
+      "sid": "C024",
+      "p": "P2",
+      "id": "ebsi_go1_20210603-q29",
+      "solver": "are lowered→is lowered",
+      "verifier": "are→is",
+      "samePosition": false
+    },
+    {
+      "sid": "C024",
+      "p": "P3",
+      "id": "ebsi_go1_20210603-q30",
+      "solver": "prevent→absorb",
+      "verifier": "prevent→accommodate",
+      "samePosition": true
+    },
+    {
+      "sid": "C024",
+      "p": "P4",
+      "id": "ebsi_go1_20210831-q29",
+      "solver": "situation which→situation in which",
+      "verifier": "which→in which",
+      "samePosition": false
+    },
+    {
+      "sid": "C026",
+      "p": "P1",
+      "id": "ebsi_go2_20210831-q30",
+      "solver": "monocultures→biodiversity",
+      "verifier": "benefits→dangers",
+      "samePosition": false
+    },
+    {
+      "sid": "C026",
+      "p": "P4",
+      "id": "2021_06_5049916-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C027",
+      "p": "P3",
+      "id": "2021_09_5050886-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C028",
+      "p": "P2",
+      "id": "2021_SN_5061633-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C028",
+      "p": "P6",
+      "id": "ebsi_go1_20200618-q30",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C029",
+      "p": "P2",
+      "id": "ebsi_go1_20200916-q30",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C029",
+      "p": "P4",
+      "id": "ebsi_go1_20201118-q30",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C030",
+      "p": "P3",
+      "id": "ebsi_go2_20200916-q30",
+      "solver": "hard→easy",
+      "verifier": "hard to believe→easier to believe",
+      "samePosition": false
+    },
+    {
+      "sid": "C030",
+      "p": "P4",
+      "id": "ebsi_go2_20201118-q30",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C030",
+      "p": "P5",
+      "id": "2020_06_5037373-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C031",
+      "p": "P4",
+      "id": "2020_09_5038442-q29",
+      "solver": "contained→is contained",
+      "verifier": "not-found",
+      "samePosition": false
+    },
+    {
+      "sid": "C032",
+      "p": "P3",
+      "id": "2020_SN_5045859-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C032",
+      "p": "P6",
+      "id": "ebsi_go1_20190307-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C033",
+      "p": "P2",
+      "id": "ebsi_go1_20190604-q30",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C033",
+      "p": "P4",
+      "id": "ebsi_go1_20190904-q30",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C033",
+      "p": "P5",
+      "id": "ebsi_go1_20191120-q30",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C034",
+      "p": "P2",
+      "id": "ebsi_go2_20190604-q30",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C034",
+      "p": "P4",
+      "id": "ebsi_go2_20190904-q30",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C035",
+      "p": "P3",
+      "id": "ebsi_go3_20190710-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C035",
+      "p": "P4",
+      "id": "2019_09_5024244-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C035",
+      "p": "P5",
+      "id": "2019_09_5024244-q30",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C036",
+      "p": "P3",
+      "id": "2019_SN_5031122-q29",
+      "solver": "their→its",
+      "verifier": "has→was",
+      "samePosition": false
+    },
+    {
+      "sid": "C036",
+      "p": "P4",
+      "id": "2019_SN_5031122-q30",
+      "solver": "not-found",
+      "verifier": "laboriously→easily",
+      "samePosition": false
+    },
+    {
+      "sid": "C036",
+      "p": "P6",
+      "id": "2019_SN_5031122-q43-44-45",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C037",
+      "p": "P2",
+      "id": "ebsi_go1_20180607-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C037",
+      "p": "P6",
+      "id": "ebsi_go1_20181121-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C038",
+      "p": "P3",
+      "id": "ebsi_go2_20180607-q28",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C038",
+      "p": "P4",
+      "id": "ebsi_go2_20180607-q29",
+      "solver": "improving→degrading",
+      "verifier": "improving→reducing",
+      "samePosition": true
+    },
+    {
+      "sid": "C038",
+      "p": "P6",
+      "id": "ebsi_go2_20181121-q28",
+      "solver": "them→whom",
+      "verifier": "many of them→many of whom",
+      "samePosition": false
+    },
+    {
+      "sid": "C039",
+      "p": "P1",
+      "id": "2018_06_5013302-q28",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C039",
+      "p": "P2",
+      "id": "2018_06_5013302-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C039",
+      "p": "P4",
+      "id": "ebsi_go3_20180711-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C039",
+      "p": "P5",
+      "id": "2018_09_5014608-q28",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C039",
+      "p": "P6",
+      "id": "2018_09_5014608-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C040",
+      "p": "P2",
+      "id": "2018_SN_5019793-q28",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C040",
+      "p": "P6",
+      "id": "ebsi_go1_20170906-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C041",
+      "p": "P2",
+      "id": "ebsi_go1_20171122-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C041",
+      "p": "P6",
+      "id": "2017_06_5005813-q28",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C042",
+      "p": "P1",
+      "id": "2017_06_5005813-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C042",
+      "p": "P5",
+      "id": "2017_SN_5008710-q28",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C042",
+      "p": "P6",
+      "id": "2017_SN_5008710-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C043",
+      "p": "P2",
+      "id": "ebsi_go1_20160310-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C043",
+      "p": "P3",
+      "id": "ebsi_go1_20160602-q28",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C043",
+      "p": "P4",
+      "id": "ebsi_go1_20160602-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C043",
+      "p": "P6",
+      "id": "ebsi_go1_20161123-q28",
+      "solver": "use→using",
+      "verifier": "some of them use→some of them using",
+      "samePosition": false
+    },
+    {
+      "sid": "C044",
+      "p": "P1",
+      "id": "ebsi_go1_20161123-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C044",
+      "p": "P3",
+      "id": "ebsi_go2_20160310-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C044",
+      "p": "P5",
+      "id": "ebsi_go2_20160602-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C045",
+      "p": "P1",
+      "id": "ebsi_go2_20160901-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C045",
+      "p": "P3",
+      "id": "ebsi_go2_20161123-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C045",
+      "p": "P4",
+      "id": "2016_06_3033341-q28",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C045",
+      "p": "P5",
+      "id": "2016_06_3033341-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C046",
+      "p": "P1",
+      "id": "ebsi_go3_20160706-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C046",
+      "p": "P2",
+      "id": "2016_09_5000516-q28",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C046",
+      "p": "P5",
+      "id": "2016_SN_5001717-q28",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C046",
+      "p": "P6",
+      "id": "2016_SN_5001717-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C047",
+      "p": "P2",
+      "id": "ebsi_go1_20150311-q30",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C047",
+      "p": "P3",
+      "id": "ebsi_go1_20150604-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C047",
+      "p": "P4",
+      "id": "ebsi_go1_20150604-q30",
+      "solver": "more→some",
+      "verifier": "inherited→inherit",
+      "samePosition": false
+    },
+    {
+      "sid": "C047",
+      "p": "P6",
+      "id": "ebsi_go1_20150902-q30",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C048",
+      "p": "P2",
+      "id": "ebsi_go1_20151117-q29",
+      "solver": "could be invisible→could not be seen",
+      "verifier": "not-found",
+      "samePosition": false
+    },
+    {
+      "sid": "C048",
+      "p": "P4",
+      "id": "ebsi_go2_20150311_A-q30",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C049",
+      "p": "P1",
+      "id": "ebsi_go2_20150902-q30",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C049",
+      "p": "P2",
+      "id": "ebsi_go2_20151117-q28",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C049",
+      "p": "P3",
+      "id": "ebsi_go2_20151117-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C049",
+      "p": "P4",
+      "id": "ebsi_go3_20150409_A-q28",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C049",
+      "p": "P5",
+      "id": "ebsi_go3_20150409_A-q30",
+      "solver": "defect→advantage",
+      "verifier": "defect→edge",
+      "samePosition": true
+    },
+    {
+      "sid": "C049",
+      "p": "P6",
+      "id": "2015_06_3026346-q27",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C050",
+      "p": "P1",
+      "id": "2015_06_3026346-q28",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C050",
+      "p": "P4",
+      "id": "2015_09_3027897-q28",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C051",
+      "p": "P1",
+      "id": "2015_SN_3029607-q28",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C051",
+      "p": "P2",
+      "id": "2015_SN_3029607-q30",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C051",
+      "p": "P4",
+      "id": "ebsi_go1_20140312-q24",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C051",
+      "p": "P6",
+      "id": "ebsi_go1_20140312-q26",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C052",
+      "p": "P2",
+      "id": "ebsi_go1_20140612-q25",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C052",
+      "p": "P3",
+      "id": "ebsi_go1_20140903-q27",
+      "solver": "was→did",
+      "verifier": "than it was at first→than it did at first",
+      "samePosition": false
+    },
+    {
+      "sid": "C052",
+      "p": "P4",
+      "id": "ebsi_go1_20140903-q28",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C052",
+      "p": "P5",
+      "id": "ebsi_go1_20141118-q27",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C053",
+      "p": "P1",
+      "id": "ebsi_go2_20140312-q24",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C053",
+      "p": "P4",
+      "id": "ebsi_go2_20140612-q28",
+      "solver": "relieved→anxious",
+      "verifier": "relieved→expectant",
+      "samePosition": true
+    },
+    {
+      "sid": "C054",
+      "p": "P1",
+      "id": "ebsi_go2_20141118_A-q28",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C054",
+      "p": "P2",
+      "id": "2014_YB_5006654_B-q27",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C054",
+      "p": "P4",
+      "id": "2014_YB_5006654_A-q31",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C055",
+      "p": "P1",
+      "id": "2014_06_3018186_A-q27",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C055",
+      "p": "P2",
+      "id": "2014_06_3018186_B-q27",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C055",
+      "p": "P3",
+      "id": "2014_06_3018186_A-q28",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C055",
+      "p": "P4",
+      "id": "2014_06_3018186_B-q28",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C056",
+      "p": "P1",
+      "id": "2014_09_3020142_A-q27",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C056",
+      "p": "P2",
+      "id": "2014_09_3020142_B-q27",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C056",
+      "p": "P6",
+      "id": "2014_SN_3022252_A-q27",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C057",
+      "p": "P1",
+      "id": "2014_SN_3022251_B-q27",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C057",
+      "p": "P2",
+      "id": "2014_SN_3022252_A-q28",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C057",
+      "p": "P6",
+      "id": "ebsi_go1_20130903-q28",
+      "solver": "sufficient→limited",
+      "verifier": "sufficient→insufficient",
+      "samePosition": true
+    },
+    {
+      "sid": "C058",
+      "p": "P1",
+      "id": "ebsi_go1_20131114-q27",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C059",
+      "p": "P3",
+      "id": "ebsi_go2_20130903_A-q31",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C059",
+      "p": "P6",
+      "id": "ebsi_go2_20131114-q28",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C060",
+      "p": "P1",
+      "id": "2013_06_3008953-q20",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C060",
+      "p": "P2",
+      "id": "2013_06_3008953-q21",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C060",
+      "p": "P3",
+      "id": "2013_06_3008953-q31",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C060",
+      "p": "P6",
+      "id": "ebsi_go3_20130712_A-q31",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C061",
+      "p": "P2",
+      "id": "2013_09_3011547-q20",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C061",
+      "p": "P3",
+      "id": "2013_09_3011547-q21",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C061",
+      "p": "P5",
+      "id": "2013_09_3011547-q32",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C062",
+      "p": "P1",
+      "id": "2013_SN_3014708-q20",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C062",
+      "p": "P2",
+      "id": "2013_SN_3014708-q21",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C062",
+      "p": "P3",
+      "id": "2013_SN_3014708-q30",
+      "solver": "deny→recognize",
+      "verifier": "deny→realize",
+      "samePosition": true
+    },
+    {
+      "sid": "C062",
+      "p": "P4",
+      "id": "2013_SN_3014708-q31",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C062",
+      "p": "P5",
+      "id": "ebsi_go1_20120314-q27",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C063",
+      "p": "P3",
+      "id": "ebsi_go1_20120607-q33",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C064",
+      "p": "P1",
+      "id": "ebsi_go1_20121114-q28",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C064",
+      "p": "P2",
+      "id": "ebsi_go2_20120314-q25",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C064",
+      "p": "P4",
+      "id": "ebsi_go2_20120314-q34",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C064",
+      "p": "P5",
+      "id": "ebsi_go2_20120314-q35",
+      "solver": "antibiotics→antibodies",
+      "verifier": "slowly→quickly",
+      "samePosition": false
+    },
+    {
+      "sid": "C065",
+      "p": "P5",
+      "id": "ebsi_go2_20121114_B-q28",
+      "solver": "accepted→resisted",
+      "verifier": "accepted→rejected",
+      "samePosition": true
+    },
+    {
+      "sid": "C065",
+      "p": "P6",
+      "id": "ebsi_go2_20121114_A-q31",
+      "solver": "not-found",
+      "verifier": "from the machine→from itself",
+      "samePosition": false
+    },
+    {
+      "sid": "C066",
+      "p": "P2",
+      "id": "2012_06_3001254-q20",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C066",
+      "p": "P3",
+      "id": "2012_06_3001254-q21",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C066",
+      "p": "P4",
+      "id": "2012_06_3001254-q32",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C067",
+      "p": "P1",
+      "id": "ebsi_go3_20120711-q21",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C067",
+      "p": "P2",
+      "id": "ebsi_go3_20120711-q33",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C067",
+      "p": "P3",
+      "id": "2012_09_3008944-q20",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C067",
+      "p": "P4",
+      "id": "2012_09_3008944-q21",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C067",
+      "p": "P5",
+      "id": "2012_09_3008944-q32",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C068",
+      "p": "P3",
+      "id": "2012_SN_3001002-q20",
+      "solver": "along→around",
+      "verifier": "not-found",
+      "samePosition": false
+    },
+    {
+      "sid": "C068",
+      "p": "P4",
+      "id": "2012_SN_3001002-q21",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C068",
+      "p": "P6",
+      "id": "2012_SN_3001002-q33",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C069",
+      "p": "P2",
+      "id": "ebsi_go1_20110310-q21",
+      "solver": "got off→get off",
+      "verifier": "got→get",
+      "samePosition": false
+    },
+    {
+      "sid": "C069",
+      "p": "P5",
+      "id": "ebsi_go1_20110901-q20",
+      "solver": "it lost→it was lost",
+      "verifier": "lost→was lost",
+      "samePosition": false
+    },
+    {
+      "sid": "C069",
+      "p": "P6",
+      "id": "ebsi_go1_20110901-q21",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C070",
+      "p": "P1",
+      "id": "ebsi_go1_20110901-q31",
+      "solver": "defining→defined",
+      "verifier": "not-found",
+      "samePosition": false
+    },
+    {
+      "sid": "C070",
+      "p": "P4",
+      "id": "ebsi_go1_20111115-q21",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C071",
+      "p": "P1",
+      "id": "ebsi_go2_20110310-q21",
+      "solver": "what→that",
+      "verifier": "is not true→are not true",
+      "samePosition": false
+    },
+    {
+      "sid": "C071",
+      "p": "P4",
+      "id": "ebsi_go2_20110901-q20",
+      "solver": "is developed→developed",
+      "verifier": "a system is developed→a system developed",
+      "samePosition": false
+    },
+    {
+      "sid": "C072",
+      "p": "P1",
+      "id": "ebsi_go2_20110901-q32",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C072",
+      "p": "P4",
+      "id": "2011_06_3001235-q20",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C073",
+      "p": "P1",
+      "id": "2011_06_3001235-q32",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C073",
+      "p": "P3",
+      "id": "ebsi_go3_20110713-q21",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C073",
+      "p": "P4",
+      "id": "ebsi_go3_20110713-q31",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C073",
+      "p": "P5",
+      "id": "2011_09_3001251-q20",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C073",
+      "p": "P6",
+      "id": "2011_09_3001251-q21",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C074",
+      "p": "P1",
+      "id": "2011_09_3001251-q31",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C074",
+      "p": "P5",
+      "id": "2011_SN_3000996-q20",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C074",
+      "p": "P6",
+      "id": "2011_SN_3000996-q21",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C075",
+      "p": "P1",
+      "id": "2011_SN_3000996-q31",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C075",
+      "p": "P6",
+      "id": "ebsi_go1_20100616-q21",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C076",
+      "p": "P2",
+      "id": "ebsi_go1_20100616-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C076",
+      "p": "P3",
+      "id": "ebsi_go1_20100916-q21",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C076",
+      "p": "P5",
+      "id": "ebsi_go1_20100916-q31",
+      "solver": "tax cut→tax cuts",
+      "verifier": "not-found",
+      "samePosition": false
+    },
+    {
+      "sid": "C077",
+      "p": "P3",
+      "id": "ebsi_go2_20100311-q21",
+      "solver": "use it→use",
+      "verifier": "it→(삭제)",
+      "samePosition": false
+    },
+    {
+      "sid": "C077",
+      "p": "P6",
+      "id": "ebsi_go2_20100617-q21",
+      "solver": "whichever→which",
+      "verifier": "not-found",
+      "samePosition": false
+    },
+    {
+      "sid": "C078",
+      "p": "P2",
+      "id": "ebsi_go2_20100617-q31",
+      "solver": "disqualifies→disqualified",
+      "verifier": "not-found",
+      "samePosition": false
+    },
+    {
+      "sid": "C078",
+      "p": "P3",
+      "id": "ebsi_go2_20101124-q21",
+      "solver": "was bounced back→bounced back",
+      "verifier": "blasting→being blasted",
+      "samePosition": false
+    },
+    {
+      "sid": "C078",
+      "p": "P6",
+      "id": "2010_06_3001224-q20",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C079",
+      "p": "P1",
+      "id": "2010_06_3001224-q21",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C079",
+      "p": "P2",
+      "id": "2010_06_3001224-q28",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C079",
+      "p": "P4",
+      "id": "2010_09_3001242-q21",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C079",
+      "p": "P5",
+      "id": "2010_09_3001242-q22",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C079",
+      "p": "P6",
+      "id": "2010_09_3001242-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C080",
+      "p": "P2",
+      "id": "ebsi_go3_20101012-q32",
+      "solver": "accept→challenge",
+      "verifier": "accept→reject",
+      "samePosition": true
+    },
+    {
+      "sid": "C080",
+      "p": "P3",
+      "id": "2010_SN_3000962-q21",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C080",
+      "p": "P4",
+      "id": "2010_SN_3000962-q22",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C080",
+      "p": "P5",
+      "id": "2010_SN_3000962-q31",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C081",
+      "p": "P1",
+      "id": "ebsi_go1_20090617-q21",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C081",
+      "p": "P3",
+      "id": "ebsi_go1_20090617-q28",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C081",
+      "p": "P5",
+      "id": "ebsi_go1_20090917-q21",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C081",
+      "p": "P6",
+      "id": "ebsi_go1_20090917-q28",
+      "solver": "in process→in progress",
+      "verifier": "not-found",
+      "samePosition": false
+    },
+    {
+      "sid": "C082",
+      "p": "P1",
+      "id": "ebsi_go1_20091118-q21",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C082",
+      "p": "P3",
+      "id": "ebsi_go1_20091118-q28",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C082",
+      "p": "P5",
+      "id": "ebsi_go2_20090618-q21",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C083",
+      "p": "P1",
+      "id": "ebsi_go2_20090618-q28",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C083",
+      "p": "P3",
+      "id": "ebsi_go2_20090918-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C083",
+      "p": "P5",
+      "id": "ebsi_go2_20091117-q21",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C083",
+      "p": "P6",
+      "id": "ebsi_go2_20091117-q28",
+      "solver": "cultivate→circulate",
+      "verifier": "natural→mechanical",
+      "samePosition": false
+    },
+    {
+      "sid": "C084",
+      "p": "P1",
+      "id": "2009_06_3001198-q21",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C084",
+      "p": "P2",
+      "id": "2009_06_3001198-q22",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C084",
+      "p": "P3",
+      "id": "2009_06_3001198-q28",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C084",
+      "p": "P4",
+      "id": "ebsi_go3_20090714-q22",
+      "solver": "that→for which",
+      "verifier": "that you can be thankful→that you can be thankful for",
+      "samePosition": false
+    },
+    {
+      "sid": "C084",
+      "p": "P5",
+      "id": "2009_09_3001204-q20",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C084",
+      "p": "P6",
+      "id": "2009_09_3001204-q21",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C085",
+      "p": "P1",
+      "id": "2009_09_3001204-q27",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C085",
+      "p": "P4",
+      "id": "2009_SN_3000950-q22",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C085",
+      "p": "P5",
+      "id": "2009_SN_3000950-q28",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C085",
+      "p": "P6",
+      "id": "2008_06_3001212-q21",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C086",
+      "p": "P1",
+      "id": "2008_06_3001212-q22",
+      "solver": "during→for",
+      "verifier": "not-found",
+      "samePosition": false
+    },
+    {
+      "sid": "C086",
+      "p": "P2",
+      "id": "2008_06_3001212-q28",
+      "solver": "slowly→rapidly",
+      "verifier": "not-found",
+      "samePosition": false
+    },
+    {
+      "sid": "C086",
+      "p": "P4",
+      "id": "2008_09_3001186-q21",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C086",
+      "p": "P5",
+      "id": "2008_09_3001186-q22",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C086",
+      "p": "P6",
+      "id": "2008_09_3001186-q28",
+      "solver": "direct→indirect",
+      "verifier": "not-found",
+      "samePosition": false
+    },
+    {
+      "sid": "C087",
+      "p": "P2",
+      "id": "2008_SN_3000991-q21",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C087",
+      "p": "P3",
+      "id": "2008_SN_3000991-q22",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C087",
+      "p": "P4",
+      "id": "2008_SN_3000991-q28",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C087",
+      "p": "P5",
+      "id": "2007_06_3001177-q21",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C087",
+      "p": "P6",
+      "id": "2007_06_3001177-q22",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C088",
+      "p": "P1",
+      "id": "2007_06_3001177-q34",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C088",
+      "p": "P3",
+      "id": "2007_09_3001172-q21",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C088",
+      "p": "P4",
+      "id": "2007_09_3001172-q22",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C088",
+      "p": "P6",
+      "id": "2007_SN_3000983-q22",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C089",
+      "p": "P1",
+      "id": "2007_SN_3000983-q23",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C089",
+      "p": "P2",
+      "id": "2007_SN_3000983-q30",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C089",
+      "p": "P3",
+      "id": "ebsi_go1_20060309-q20",
+      "solver": "is keeping→is kept",
+      "verifier": "keeping→kept",
+      "samePosition": false
+    },
+    {
+      "sid": "C089",
+      "p": "P4",
+      "id": "ebsi_go1_20060309-q21",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C089",
+      "p": "P5",
+      "id": "ebsi_go1_20060309-q31",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C090",
+      "p": "P2",
+      "id": "ebsi_go1_20061121-q23",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C090",
+      "p": "P6",
+      "id": "ebsi_go2_20060310-q31",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C091",
+      "p": "P2",
+      "id": "2006_06_3001159-q21",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C091",
+      "p": "P3",
+      "id": "2006_06_3001159-q22",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C091",
+      "p": "P4",
+      "id": "2006_06_3001159-q27",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C091",
+      "p": "P5",
+      "id": "2006_09_3001166-q21",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C091",
+      "p": "P6",
+      "id": "2006_09_3001166-q22",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C092",
+      "p": "P2",
+      "id": "2006_09_3001166-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C092",
+      "p": "P3",
+      "id": "2006_SN_3000977-q20",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C092",
+      "p": "P4",
+      "id": "2006_SN_3000977-q21",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C092",
+      "p": "P6",
+      "id": "2006_SN_3000977-q31",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C093",
+      "p": "P1",
+      "id": "2005_YB_5006647-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C093",
+      "p": "P2",
+      "id": "2005_YB_5006647-q30",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C093",
+      "p": "P3",
+      "id": "2005_YB_5006647-q36",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C093",
+      "p": "P4",
+      "id": "2005_06_3001149-q28",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C093",
+      "p": "P5",
+      "id": "2005_06_3001149-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C093",
+      "p": "P6",
+      "id": "2005_06_3001149-q30",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C094",
+      "p": "P1",
+      "id": "2005_09_3001156-q20",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C094",
+      "p": "P2",
+      "id": "2005_09_3001156-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C094",
+      "p": "P3",
+      "id": "2005_09_3001156-q31",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C094",
+      "p": "P4",
+      "id": "2005_SN_3000969-q20",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C094",
+      "p": "P5",
+      "id": "2005_SN_3000969-q21",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C094",
+      "p": "P6",
+      "id": "2005_SN_3000969-q22",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C095",
+      "p": "P1",
+      "id": "2005_SN_3000969-q23",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C095",
+      "p": "P2",
+      "id": "2005_SN_3000969-q24",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C095",
+      "p": "P3",
+      "id": "2004_06_3001194-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C095",
+      "p": "P4",
+      "id": "2004_06_3001194-q30",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C095",
+      "p": "P5",
+      "id": "2004_09_3001221-q26",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C095",
+      "p": "P6",
+      "id": "2004_09_3001221-q28",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C096",
+      "p": "P1",
+      "id": "2004_09_3001221-q32",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C096",
+      "p": "P2",
+      "id": "2003_YB_3009745-q29",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    },
+    {
+      "sid": "C096",
+      "p": "P3",
+      "id": "2003_YB_3009745-q30",
+      "solver": "not-found",
+      "verifier": "not-found",
+      "samePosition": true
+    }
+  ]
+}

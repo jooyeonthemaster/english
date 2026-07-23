@@ -1,0 +1,839 @@
+{
+ "examId": "ebsi_go2_20090918",
+ "source": "ebsi_go2_20090918_paper_20090918_eng_mun.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 대화를듣고남자가구입한애완견을고르시오 점 , . [1 ] ④ ⑤ ① ② ③",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 44
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를듣고 여자가마지막에느꼈을심정으로가장적절한 , 것을고르시오. envious ① touched ② proud ③ regretful ④ sympathetic ⑤",
+   "choices": [
+    "touched",
+    "proud",
+    "regretful",
+    "sympathetic",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 93
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을듣고무엇에관한설명인지고르시오 , . 함께걸어서등교하기 ① 카풀제참여하기 ② 이웃과정답게지내기 ③ 꾸준하게운동하기 ④ 친구들과도보여행하기 ⑤",
+   "choices": [
+    "카풀제참여하기",
+    "이웃과정답게지내기",
+    "꾸준하게운동하기",
+    "친구들과도보여행하기",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 84
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를듣고남자가지금할일을고르시오 , . 매뉴얼찾기 ① 고객센터에전화하기 ② 스팸번호지우기 ③ 저장된번호확인하기 ④ 수신번호로연락하기 ⑤",
+   "choices": [
+    "고객센터에전화하기",
+    "스팸번호지우기",
+    "저장된번호확인하기",
+    "수신번호로연락하기",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 79
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를듣고남자가목적지까지가는데걸릴시간을고르시오 , . 분 ① 분 ② 분 ③ 분 ④ 분 ⑤",
+   "choices": [
+    "분",
+    "분",
+    "분",
+    "분",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 53
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 다음을듣고남자가하는말의목적으로가장적절한것을고 , 르시오. 아파트대청소를안내하려고 ① 주민설문조사를실시하려고 ② 욕실개조할인행사를홍보하려고 ③ 수돗물공급의일시중단을알리려고 ④ 아파트 주년기념파티를안내하려고 ⑤",
+   "choices": [
+    "주민설문조사를실시하려고",
+    "욕실개조할인행사를홍보하려고",
+    "수돗물공급의일시중단을알리려고",
+    "아파트\n주년기념파티를안내하려고",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 119
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를듣고여자가남자에게부탁한일을고르시오 , . 이메일답장 ① 보고서제출 ② 우편물발송 ③ 과제물출력 ④ 프린터수리 ⑤",
+   "choices": [
+    "보고서제출",
+    "우편물발송",
+    "과제물출력",
+    "프린터수리",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 69
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를듣고두사람의관계를가장잘나타낸것을고르시오 , . 박물관해설사 학생 - ① 미술교사 학부모 - ② 건물관리인 방문객 - ③ 사극연출가 배우 - ④ 매표소직원 관람객 - ⑤",
+   "choices": [
+    "미술교사\n학부모\n-",
+    "건물관리인\n방문객\n-",
+    "사극연출가\n배우\n-",
+    "매표소직원\n관람객\n-",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 100
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 대화를듣고두사람이대화하고있는장소로가장적절한곳 , 을고르시오. 해양수족관 ① 관광안내소 ② 사진현상소 ③ 실내스케이트장 ④ 환경보호세미나장 ⑤",
+   "choices": [
+    "관광안내소",
+    "사진현상소",
+    "실내스케이트장",
+    "환경보호세미나장",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 82
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 대화를듣고 남자가여자를위해할일로가장적절한것을 , 고르시오. to give a list of good books ① to recommend a funny movie ② to do a survey for the students ③ to tell how to encourage read",
+   "choices": [
+    "to recommend a funny movie",
+    "to do a survey for the students",
+    "to tell how to encourage reading",
+    "to advise how to motivate writing",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 202
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 다음표를보면서대화를듣고여자가선택할항공편을고르 , 시오. 학년도 월고 전국연합학력평가문제지 2009 제 교시 ( ) 성명 수험번호 ( ) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 144
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 도로운전시험에관한다음안내방송을듣고일치하지 , 않는 것을고르시오. 수험자는안전운전능력을테스트받을것이다. ① 시험관은시험전에수험자가할일을설명할것이다. ② 시험관은운전중에불필요한말을하지않을것이다. ③ 시험관은운전할방향을알려줄것이다. ④ 수험자는결과를 주일이후에통보받을것이다 . ⑤",
+   "choices": [
+    "시험관은시험전에수험자가할일을설명할것이다.",
+    "시험관은운전중에불필요한말을하지않을것이다.",
+    "시험관은운전할방향을알려줄것이다.",
+    "수험자는결과를\n주일이후에통보받을것이다\n.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 158
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 다음그림의상황에가장적절한대화를고르시오. ① ② ③ ④ ⑤",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 36
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를듣고남자의마지막말에대한여자의응답으로가장 , 적절한것을고르시오. Woman : ________________________________ Group meetings are always fun. ① Yes, I felt terrible to hear that. ② The lib",
+   "choices": [
+    "Yes, I felt terrible to hear that.",
+    "The library would be good for me.",
+    "Any day after Tuesday will be fine.",
+    "He gave us the homework last Friday.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 266
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 대화를듣고여자의마지막말에대한남자의응답으로가장 , 적절한것을고르시오. Man : __________________________________ Cheating is not allowed. ① Yes, I’ve finished the exam. ② Thanks, a coffee will be good. ③ Oh, I don’t know how to get it. ④ Then, can I get you something?",
+   "choices": [
+    "Yes, I’ve finished the exam.",
+    "Thanks, a coffee will be good.",
+    "Oh, I don’t know how to get it.",
+    "Then, can I get you something?",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 241
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 대화를듣고남자의마지막말에대한여자의응답으로가장 , 적절한것을고르시오. Woman : ________________________________ I’ve already seen it before. ① I’ll be waiting for you anyway. ② I need to ru",
+   "choices": [
+    "I’ll be waiting for you anyway.",
+    "I need to run an errand for my mother.",
+    "Let me know when you will see the movie.",
+    "The actor and the actress are my favorites.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 278
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 다음상황설명을듣고 가 에게할말로가장 , Mr. Lee Mary 적절한것을고르시오 점 . [3 ] Mr. Lee : Mary, ________________________________ excellent! You have a talent for speech. ① how come your writing has so many errors?",
+   "choices": [
+    "how come your writing has so many errors?",
+    "great, but this course has not been that helpful.",
+    "your writing has improved a lot. Keep on working.",
+    "congratulations! You won the first prize for your novel.",
+    "이제듣기․ 말하기문제는다끝났습니다\n번부터는\n. 18\n문제지의지시에따라답을하기바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 405
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 밑줄친This[this]가가리키는것으로가장적절한것은 점 ?",
+   "choices": [
+    "윷놀이",
+    "장기",
+    "제기차기",
+    "연날리기",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 638
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 밑줄친he[He]가가리키는대상이나머지넷과다른것은?",
+   "choices": [
+    "he had been inspired by the French Impressionists.",
+    "He refused the university job and moved to Germany to\nstudy painting full time. Much of his early work depended\non the folk art",
+    "he experienced in Germany and in Russia.\n“Pure color” would become the central focus of his best\nworks. One art critic said that a new, spiritual age was\nabout to begin with him.",
+    "He saw the artist as a pioneer\nmoving into the future. The paintings",
+    "he produced at the\ntime are full of joy and liberation.\n(\n)\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 704
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음글의목적으로가장적절한것은?",
+   "choices": [
+    "바이러스의확산을알리려고",
+    "지나친보도경쟁을줄이려고",
+    "바이러스예방법을안내하려고",
+    "발표에이의를제기하려고\nWHO",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 642
+  },
+  {
+   "qNum": 21,
+   "kind": "box_choice",
+   "stem": "21. 의각네모안에서어법에맞는표현으로가장 (A), (B), (C) 적절한것은?",
+   "choices": [
+    "……\nwas\n……\nto produce\nthat",
+    "……\nwere\n……\nto produce\nthat",
+    "……\nwere\n……\nproduced\nwhat",
+    "……\nwas\n……\nproduced\nwhat",
+    "……\nwere\n……\nto produce"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 771
+  },
+  {
+   "qNum": 22,
+   "kind": "grammar_underline",
+   "stem": "22. 다음글의밑줄친부분중어법상 , 틀린것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "play her favorite game",
+    "②": "hers",
+    "③": "frustrating with the negative attitudes",
+    "④": "that she found around the",
+    "⑤": "destroying her dolls"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 632
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음글에서전체흐름과관계없는문장은?",
+   "choices": [
+    "Disney\nhas\ngeniuses\nin\npromoting\nits\nbrand,\nmagnificent\nmarketers,\nleaders\nin\nthe\ntheme\npark\nindustry,\nand\na\nuniversally\nrecognized brand.",
+    "Then what could possibly go wrong with\nits expansion into Hong Kong and the AsiaPacific market?",
+    "It\nwas\ncultural\nmisunderstanding\nwhich\nled\nDisney\nto\nunpredicted headaches and problems when expanding into\nglobal\nmarkets\nand\nworking\nwith\nother\ncultures.",
+    "All\nbusinesses\nseeking to explore\ninternational\nmarkets\nmust\nconsider national interests rather than cultural differences.",
+    "The lesson to be learned here is to spend time and\nmoney\nin\nunderstanding\nyour\noverseas\nmarkets\nand\nthe\nculture where you will be doing business.\n다음글의빈칸에들어갈말로가장적절한것을\n[24\n27]\n～\n고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 816
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. Back in 18th century Europe, Louis XV made it fashionable for men to powder their noses and rouge their lips. The Beatles in the 1960s broke women’s hearts ",
+   "choices": [
+    "interest",
+    "neglect",
+    "mercy",
+    "indifference",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 674
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. Two powerful instincts which exist in all human beings can be used in teaching: desire to be with other people and enjoyment of play. Give 50 people four ho",
+   "choices": [
+    "drop out more",
+    "study fewer hours",
+    "feel less comfortable",
+    "respect teachers less",
+    "(\n)\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 820
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. The change from a struggling, active survival to today’s more inactive lifestyle has played a major role in the rise of obesity. Two million years ago the e",
+   "choices": [
+    "the decline in physical activity",
+    "the growth of the food industry",
+    "the poor quality of delivery service",
+    "the access to nutrientbalanced food",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 828
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. On April 12, 1965, baseball changed the world of stadium architecture by opening the Harris County Domed Stadium in Houston. It became better known to the w",
+   "choices": [
+    "played baseball games at night",
+    "seen much nicer baseball stadiums",
+    "endured the uncomfortable weather",
+    "welcomed the formation of a new league",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 771
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. 다음글에드러난 의심경변화로가장적절한것은 Heather ?",
+   "choices": [
+    "→\nsurprised\nconfident",
+    "→\nexcited\nguilty",
+    "→\nfrustrated\nenvious",
+    "→\nscared\nrelieved",
+    "→"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 704
+  },
+  {
+   "qNum": 29,
+   "kind": "box_choice",
+   "stem": "29. 의각네모안에서문맥에맞는낱말로가장적 (A), (B), (C) 절한것은?",
+   "choices": [
+    "……\npray\n……\nprohibit\nreveals",
+    "……\npray\n……\nprovide\nconceals",
+    "……\nprey\n……\nprohibit\nreveals",
+    "……\nprey\n……\nprohibit\nconceals",
+    "……\nprey\n……\nprovide"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 767
+  },
+  {
+   "qNum": 30,
+   "kind": "vocab_underline",
+   "stem": "30. 다음그림에대한글의내용중밑줄친낱말의쓰임이적절 , 하지않은것은 점 ?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "identical",
+    "②": "the letter H and the",
+    "③": "less to do with how",
+    "④": "horizontal lines with a crossbar",
+    "⑤": "another thing when they are"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 831
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. 다음글의빈칸 에들어갈말로가장적절한것은 (A), (B) ?",
+   "choices": [
+    "……\nFor instance\nIn response",
+    "……\nSimilarly\nIn addition",
+    "……\nSimilarly\nIn addition",
+    "……\nFor instance\nIn contrast",
+    "……\nIn fact\n다음글의주제로가장적절한것을고르시오\n[32\n33]\n.\n～"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 857
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. If you want to interact with people in a country, staying on ranches and cattle farms offers a great opportunity for a crosscultural exchange and a real exp",
+   "choices": [
+    "rules for farmstays",
+    "advantages of farmstays",
+    "inconveniences of farmstays",
+    "ways of arranging farmstays",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 681
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. In 1808, when the slave trade was banned, many southerners in the U.S. thought that slavery would soon end. But the expectation proved false. During the nex",
+   "choices": [
+    "미국내노예제도가존속되었던이유",
+    "미국내노예소유에대한상반된의견",
+    "미국서부개척에따른면화생산량증가",
+    "미국의노예제도가산업혁명에미친영향",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 682
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. 다음글에서필자가주장하는바로가장적절한것은?",
+   "choices": [
+    "상처받은마음을솔직하게표현해야한다.",
+    "좋은말을할수없다면침묵하는것이더낫다.",
+    "다른사람들이말하는도중에끼어들지않아야한다.",
+    "수다스러운사람에게는그의단점을알려주어야한다.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 681
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음도표의내용과일치하지않는문장은?",
+   "choices": [
+    "Though the real GDP growth rate of\nEgypt was the lowest in 2003, it ranked top among the\nthree in 2008.",
+    "Egypt recorded the highest leap in the real\nGDP growth rate between 2005 and 2006.",
+    "In 2003, the\nWorld average rate was almost twice as high as that of\nEgypt.",
+    "The World average rate stayed within the range of\n5% and 7% from 2003 to 2008.",
+    "In 2008, the MENA\naverage rate was less than half of the real GDP growth rate\nof Egypt.\n(\n)\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 650
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. 에관한다음글의내용과일치하는것은 Toco toucan ?",
+   "choices": [
+    "작고화려한부리로인해인기가있다.",
+    "부리때문에나무열매를따먹는것이힘들다.",
+    "나무열매뿐만아니라곤충이나도마뱀도먹는다.",
+    "부리는적과싸우는아주유용한무기다.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 717
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. 에관한다음글의내용과일치하지 Aristotle 않는것은?",
+   "choices": [
+    "이라는대학을설립했다\nLyceum\n.",
+    "생물연구를위해세계에서동식물을수집했다.",
+    "주로뛰어난학생들을대상으로가르쳤다.",
+    "그의글중대부분은제자들이그의강의를기록한것이다.",
+    "다음글의요지로가장적절한것을고르시오\n[38\n39]\n.\n～"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 826
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. Jane’s first neighbor always shut the door very loudly. After he moved out, a pianist who played two hours a day moved in. She called the police for the noi",
+   "choices": [
+    "친척보다가까운이웃이더낫다.",
+    "모든일은자신이받아들이기나름이다.",
+    "나에게좋은일은다른사람에게도좋다.",
+    "악기연주를할때는이웃을배려해야한다.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 796
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. Review your goals and act on them daily. If you spend ten minutes or ten hours focusing on your goals, you will move toward them. Don’t wait for next year, ",
+   "choices": [
+    "목표에초점을두고지금실행하자.",
+    "행동하기전에먼저목표를설정하자.",
+    "목표달성을위해많은시간을투자하자.",
+    "일을하기전에먼저일의우선순위를정하자.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 582
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 글의흐름으로보아 주어진문장이들어가기에가장적절한 , 곳은?",
+   "choices": [
+    "are defined as 15 to 29yearold youngsters who have been\njobless\nfor\na\nlong\ntime\nbut\nare\nnot\nactively\nseeking\nemployment. (\n) NEETs don’t even consider employment",
+    "a possibility.\n(\n) Therefore, they have become a more",
+    "serious problem for not only households, but also society\nand the economy. (\n) It is time for the government to",
+    "pay attention to NEETs, because a society with a large\nnumber\nof\njobless\nyouth\ncan\nnever\nbe\nhealthy.\n(\n)",
+    "Instead\nof\nwasting\nvaluable\ntime\nwith\nunreasonably\nhigh\nhopes, they should face reality, lower their expectations, and\nkeep looking for work.\n(\n)\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n다음글의제목으로가장적절한것을고르시오\n[41\n42]\n.\n～"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 886
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. Few places on earth can match Madagascar as an ecotourism destination. About 70% of Madagascar’s animals are found only in this island nation. But Madagasca",
+   "choices": [
+    "Human Resources in Madagascar",
+    "Madagascar’s Outdated Park System",
+    "Environmental Problems in Madagascar",
+    "Madagascar’s Move toward Ecotourism",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 758
+  },
+  {
+   "qNum": 42,
+   "kind": "mc",
+   "stem": "42. Because the harp has a wide range of sound, it sends vibrations through the body better than other musical instruments. Research shows the harp’s vibration ",
+   "choices": [
+    "The Beauty of the Harp Sound",
+    "The Harp, Instrument of a God",
+    "The Harp, Loved from the Ancient",
+    "The Harmony of the Harp and the Angels",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 739
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 다음글의분위기로가장적절한것은 점 ?",
+   "choices": [
+    "lively and dynamic",
+    "disappointing and boring",
+    "encouraging and festive",
+    "depressing and sorrowful",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 689
+  },
+  {
+   "qNum": 44,
+   "kind": "mc",
+   "stem": "44. 주어진글다음에이어질글의순서로가장적절한것은?",
+   "choices": [
+    "(A)-(C)-(B)",
+    "(B)-(C)-(A)",
+    "(C)-(A)-(B)",
+    "(C)-(B)-(A)",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 704
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 다음글의내용을한문장으로요약하고자한다빈칸 와 . (A) 에들어갈말로가장적절한것은 점 (B) ?",
+   "choices": [
+    "……\nignore\nreality",
+    "……\nproduce\nmiracle",
+    "……\nexclude\nchallenge",
+    "……\nunderstand\nsimplicity",
+    "……\ninfer\n(\n)\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n다음글을읽고물음에답하시오\n[46~48]\n.\n(A) After working for 25 years as an officer in California,\nNancy retired and wanted to work for the community. She\ndecided\nto\nvolunteer\nfor\nthe\nRed\nCross\nbecause\nthe\norganization\nhad\nalways\nappealed to\nher.\nShe spent\na\nmonth in Texas in August-September 2008 to respond to\nHurricane Ike, which completely destroyed Galveston and\nother areas on the Gulf Coast.\n(B) The woman, a 94yearold grandmother, lived alone in\nGalveston and was moved out to the San Antonio shelter.\nWith\nthe\nadded\nstress\nof\nthe\nsituation,\nshe\ncouldn’t\nremember where she lived or her granddaughter’s last\nname. She feared that (a) she would die in the shelter.\nLuckily, the granddaughter was calling all the shelters to\nlook for (b) her, and Nancy was able to put the two\ntogether.\n(C) (c) She was assigned to an office to reunite people\nwho had lost track of each other during the evacuation\nand the confusion caused by the storm. While visiting a\nsmall shelter in San Antonio, she and the other volunteers\nnoticed an elderly woman lying curled up on a camp bed\nand looking extremely depressed.\n(D) She handed the phone to (d) her so that she could\ntalk to her granddaughter. Nancy watched with tears in\nher eyes as a wonderful smile lit up the elderly woman’s\nface. She was immediately changed. She went from being\nalone and weak in the middle of a disaster to hearing the\nvoice of someone she loved, someone that knew (e) her\nand cared for her."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2484
+  },
+  {
+   "qNum": 46,
+   "kind": "mc",
+   "stem": "46. 위글 에이어질내용을순서에맞게배열한것으로가장 (A) 적절한것은?",
+   "choices": [
+    "(B)-(D)-(C)",
+    "(C)-(B)-(D)",
+    "(C)-(D)-(B)",
+    "(D)-(C)-(B)",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 109
+  },
+  {
+   "qNum": 47,
+   "kind": "vocab_letter",
+   "stem": "47. 밑줄친 중에서가리키는대상이나머지넷과 (a)~(e) 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 69
+  },
+  {
+   "qNum": 48,
+   "kind": "mc",
+   "stem": "48. 위글의내용과일치하지않는것은?",
+   "choices": [
+    "할머니는손녀의이름을정확히기억했다.",
+    "는\nNancy",
+    "에있는작은대피소를방문했다\nSan Antonio\n.\n자원봉사자들이보기에할머니는매우우울해보였다.",
+    "의도움으로할머니는손녀와통화를했다\nNancy\n.",
+    "다음글을읽고물음에답하시오\n[49~50]\n.\n(A) Sitting in front of the television is one of the most\npopular pastimes in the world. According to a survey, the\naverage individual spends over 4 hours per day watching\ntelevision. It is no wonder, then, that television can be\nof\nadvertising\ndespite\nthe\nInternet’s\nsteady\nrise\nin\npopularity.\nAdvertising\non\ntelevision\nallows\nyou\nto show and\ntell\nyour\nbusiness,\nproduct,\nor\nservice\nto\na\nwider\naudience\nthan\nlocal\nnewspapers and radio stations do. Through a TV ad, you\ncan also use not only graphics and words, but also motion,\nlight and a number of other features that will make your\nmessage seem even more effective.\n(B) No other advertising medium is likely to use up your\nbudget as quickly as TV will. Producing an ad, which\nusually includes hiring script writers, actors, film editors,\nor an advertising agency, is just the beginning. You must\nalso\npay\nfor\nair\ntime.\nBecause\na\nTV\nad\ncan\nbe\nonly with repetition, you’ll almost\ncertainly want to run your ad many times. Another factor\nyou need to realize is how difficult it can be to make\nchanges to your ads.\nWith newspaper advertising, you\nhave only to update the sale pricing or a special offer.\nYet, with television advertising, it means updating your\nscript\nand\nremaking\nthe\nentire\nad,\nwhich\ncosts\nyou\nadditional money."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1463
+  },
+  {
+   "qNum": 49,
+   "kind": "mc",
+   "stem": "49. 위글 의공통된주제로가장적절한것은 (A), (B) ?",
+   "choices": [
+    "high cost of making TV ads",
+    "TV as an advertising medium",
+    "various kinds of major mass media",
+    "a contrast between newspapers and TV",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 196
+  },
+  {
+   "qNum": 50,
+   "kind": "mc",
+   "stem": "50. 위글의빈칸에공통으로들어갈말로가장적절한것은?",
+   "choices": [
+    "a cheap medium",
+    "an inefficient way",
+    "an oldfashioned method",
+    "a quickly changing trend",
+    "※ 확인사항\n문제지와답안지의해당란을정확히기입표기했는지\n(\n)\n확인하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 176
+  }
+ ],
+ "sourcePdf": "ebsi_go2_20090918_paper_20090918_eng_mun.pdf"
+}

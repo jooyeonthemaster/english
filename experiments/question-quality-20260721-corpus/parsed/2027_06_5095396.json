@@ -1,0 +1,747 @@
+{
+ "examId": "2027_06_5095396",
+ "source": "85c5a94d5776e68bb541a372cf332b30.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 다음을 듣고, 여자가 하는 말의 목적으로 가장 적절한 것을 고르시오. ①학생 회장 투표 기간의 연장을 알리려고 ②투표 결과에 따른 학생 라운지 이름을 발표하려고 ③학생 라운지 디자인 아이디어를 공모하려고 ④학교 시설 이용에 관한 새로운 수칙을 안내하려고 ⑤학교 내부 공사로 인한 출",
+   "choices": [
+    "학생 회장 투표 기간의 연장을 알리려고",
+    "투표 결과에 따른 학생 라운지 이름을 발표하려고",
+    "학생 라운지 디자인 아이디어를 공모하려고",
+    "학교 시설 이용에 관한 새로운 수칙을 안내하려고",
+    "학교 내부 공사로 인한 출입 제한을 공지하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 173
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 남자의 의견으로 가장 적절한 것을 고르시오. ①컵 쌓기 활동은 집중력 향상에 효과적이다. ②피라미드 구조는 심신의 안정감을 줄 수 있다. ③같은 일을 반복하면 장기 기억을 강화할 수 있다. ④장시간 게임에 몰두하는 것은 집중력을 저하시킨다. ⑤실수하는 경험을 통해 위",
+   "choices": [
+    "컵 쌓기 활동은 집중력 향상에 효과적이다.",
+    "피라미드 구조는 심신의 안정감을 줄 수 있다.",
+    "같은 일을 반복하면 장기 기억을 강화할 수 있다.",
+    "장시간 게임에 몰두하는 것은 집중력을 저하시킨다.",
+    "실수하는 경험을 통해 위기 대처 능력을 기를 수 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 178
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을 듣고, 남자가 하는 말의 요지로 가장 적절한 것을 고르시오. ①오래 달리기는 관절에 무리가 될 수 있다. ②바른 자세로 걷는 것은 다리 통증을 완화시킨다. ③달릴 때 보폭을 짧게 하는 것이 부상 위험을 줄일 수 있다. ④무릎 보호대 착용은 달릴 때 관절 보호에 도움이 된다.",
+   "choices": [
+    "오래 달리기는 관절에 무리가 될 수 있다.",
+    "바른 자세로 걷는 것은 다리 통증을 완화시킨다.",
+    "달릴 때 보폭을 짧게 하는 것이 부상 위험을 줄일 수 있다.",
+    "무릎 보호대 착용은 달릴 때 관절 보호에 도움이 된다.",
+    "걸을 때와 달릴 때는 다른 호흡법을 적용해야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 191
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고르시오.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 41
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 여자가 할 일로 가장 적절한 것을 고르시오. ①선물 포장하기 ②현수막 설치하기 ③우편함 만들기 ④음악 재생 목록 준비하기 ⑤편지지와 봉투 구매하기",
+   "choices": [
+    "선물 포장하기",
+    "현수막 설치하기",
+    "우편함 만들기",
+    "음악 재생 목록 준비하기",
+    "편지지와 봉투 구매하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 93
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 남자가 지불할 금액을 고르시오. ①$16 ②$18 ③$21 ④$31 ⑤$33",
+   "choices": [
+    "$16",
+    "$18",
+    "$21",
+    "$31",
+    "$33"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 54
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 여자가 Sunflower Festival에 갈 수 없는 이유를 고르시오. ①조카를 돌봐야 해서 ②테니스 레슨이 있어서 ③브런치 모임이 있어서 ④아르바이트를 해야 해서 ⑤여름 여행 일정이 있어서",
+   "choices": [
+    "조카를 돌봐야 해서",
+    "테니스 레슨이 있어서",
+    "브런치 모임이 있어서",
+    "아르바이트를 해야 해서",
+    "여름 여행 일정이 있어서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 120
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, Inner Peacefulness Workshop에 관해 언급되지 않은 것을 고르시오. ①날짜 ②장소 ③활동 내용 ④준비물 ⑤신청 기한",
+   "choices": [
+    "날짜",
+    "장소",
+    "활동 내용",
+    "준비물",
+    "신청 기한"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 88
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 2026 National Youth Biology Program에 관한 다음 내용을 듣고, 일치하지 않는 것을 고르시오. ①Pellington University에서 열린다. ②고등학생을 대상으로 한다. ③DNA를 추출하는 팀별 활동이 있다. ④유명 생물학자의 특별 강연이 있다. ",
+   "choices": [
+    "Pellington University에서 열린다.",
+    "고등학생을 대상으로 한다.",
+    "DNA를 추출하는 팀별 활동이 있다.",
+    "유명 생물학자의 특별 강연이 있다.",
+    "등록비에 점심이 포함된다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 177
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 다음 표를 보면서 대화를 듣고, 남자가 구입할 선글라스 케이스를 고르시오. Sunglasses Cases Model Price Color Material Strap ① A $12 Yellow Leather ☓ ② B $15 Pink Fabric ◯ ③ C $17 Pink Leat",
+   "choices": [
+    "A\n$12\nYellow\nLeather\n☓",
+    "B\n$15\nPink\nFabric\n◯",
+    "C\n$17\nPink\nLeather\n◯",
+    "D\n$25\nBlack\nLeather\n◯",
+    "E\n$32\nYellow\nFabric\n☓"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 216
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. [3점] ①Absolutely. You can order it now. ②I’m afraid that I can’t pick you up. ③I’ll let you know when the cak",
+   "choices": [
+    "Absolutely. You can order it now.",
+    "I’m afraid that I can’t pick you up.",
+    "I’ll let you know when the cake is ready.",
+    "Thanks. I’ll be sure to come before then.",
+    "I appreciate you bringing the cake to the party."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 266
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ①Don’t worry. I can take him to the dentist. ②Why not?",
+   "choices": [
+    "Don’t worry. I can take him to the dentist.",
+    "Why not? I’ll buy toothpaste for you.",
+    "Amazing. He’ll be a good dentist.",
+    "I’m sorry. I didn’t know you had a toothache.",
+    "Perfect. We’re more than ready for the meeting.\n2027학년도 대학수학능력시험 6월 모의평가 문제지\n제3 교시"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 302
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. [3점] Man: ①Well, I’m going to be a bit late for the exhibition. ②Unfortunately, the photos won’t be ready in ",
+   "choices": [
+    "Well, I’m going to be a bit late for the exhibition.",
+    "Unfortunately, the photos won’t be ready in time.",
+    "Great! We’ll meet you in the online conference then.",
+    "Fantastic. I can’t wait to go overseas for a wildlife shoot.",
+    "No problem. Please send us your recorded video message."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 340
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. Woman: ①Congrats. I’m glad you got the job. ②Okay. I’ll see you at the student center. ③I can’t. I have to wa",
+   "choices": [
+    "Congrats. I’m glad you got the job.",
+    "Okay. I’ll see you at the student center.",
+    "I can’t. I have to wait for the electrician.",
+    "Too bad. I hope you find your phone soon.",
+    "Sorry. There are no available seats in the library."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 281
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Susan이 Mike에게 할 말로 가장 적절한 것을 고르시오. [3점] Susan: ①You need to wait a while before signing up for a course. ②How about trying a shorter course to see if it suits you?",
+   "choices": [
+    "You need to wait a while before signing up for a course.",
+    "How about trying a shorter course to see if it suits you?",
+    "You should pick one instrument and stick with it.",
+    "You’d better post a flyer to promote the courses.",
+    "Why don’t you buy a second-hand guitar?\n[16～17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 352
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 여자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "dog-related metaphors around the globe",
+    "effective teaching strategies of dog trainers",
+    "most popular types of dogs around the world",
+    "evolutionary features tied to dogs’ sense of smell",
+    "uncommon roles that dogs have in different countries"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 267
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 나라가 아닌 것은?",
+   "choices": [
+    "France",
+    "Australia",
+    "Chile",
+    "Germany",
+    "Italy"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 61
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "홈런 대회 참가 선수를 발표하려고",
+    "야구 경기 일정 변경을 공지하려고",
+    "홈런 대회 참가를 요청하려고",
+    "경기 녹화에 대한 허가를 구하려고",
+    "야구 경기 관람권 환불 절차를 안내하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 801
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 드러난 Mark의 심경 변화로 가장 적절한 것은?",
+   "choices": [
+    "bored\n→amazed",
+    "angry\n→discouraged",
+    "jealous →anxious",
+    "delighted →scared",
+    "nervous →pleased"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 793
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "체육 교육은 학습자의 역량 향상을 위해 이론보다 실습을 강조해야 한다.",
+    "체육 활동은 참여자의 적성을 발굴하고 개발하는 데 집중해야 한다.",
+    "체육 지도자는 참여자가 체육 활동의 원리를 알고 훈련하도록 도와야 한다.",
+    "체육 프로그램은 참여자의 편의를 위해 단계적으로 계획되어야 한다.",
+    "체육 수업은 각 개인의 신체 능력에 맞는 다양한 활동을 제공해야 한다.\n  이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시에 \n따라 답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1241
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 밑줄 친 the ghost가 다음 글에서 의미하는 바로 가장 적절한 것은?",
+   "choices": [
+    "the claim that animal consciousness should be studied",
+    "the belief that consciousness is a quality exclusive to humans",
+    "the illusion that animals possess truly conscious inner worlds",
+    "the idea that human cognition is superior to that of animals",
+    "the concept that humans and animals are essentially alike"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1442
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "소비자 심리를 반영한 성난 외관의 자동차가 인기를 끌고 있다.",
+    "자동차 판매 증가를 위해 다양한 학문적 접근이 시도되고 있다.",
+    "구매자들은 이성보다는 감정적 판단에 근거하여 차를 선택한다.",
+    "자동차의 전면 디자인을 개조하기 위한 다양한 서비스가 있다.",
+    "안전감을 원하는 운전자들은 거친 모습의 SUV 차량을 선호하지 않는다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1386
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "chances of survival for animals with different time perceptions",
+    "significance of animal size in life spans and survival skills",
+    "benefits of energy reserves in animals’ environmental adaptation",
+    "limits of animals’ decision making according to body size",
+    "influences of predetermined behavior patterns on animal survival"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1609
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "The Bright and Dark Sides of Collapsing Tour Resources",
+    "Separate to Combined: Changes in the Tourism Business",
+    "Reduced Roles of Tour Operators in the Tourism Industry",
+    "Integration’s Failure: Not Meeting Customers’ Various Needs",
+    "New Challenges Facing Service Providers in Modern Tourism"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1474
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. 다음 도표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "Over 70% of weekday trips were \nmade by cars in North and South America.",
+    "In Europe, walking \nor cycling was less commonly used for weekday trips than cars.",
+    "In Asia, the percentage of weekday trips made by public \ntransport was the lowest among the three types of transportation.",
+    "Of the three types of transportation for weekday trips, \nwalking or cycling was the most common in Africa, while it was \nthe least common in Australia and New Zealand.",
+    "In each of \nthe above regions, the percentage of weekday trips made by \npublic transport was less than 50%."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 800
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Paul Grice에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "사업가이자 음악가인 Herbert Grice의 아들로 태어났다.",
+    "제2차 세계 대전 동안 영국 군대에서 약 5년간 복무하였다.",
+    "1948년에 “Meaning”이라는 논문을 출판했다.",
+    "UC Berkeley에서 1979년에 퇴직했다.",
+    "크리켓과 체스에 뛰어난 능력을 보였다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1083
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. Green Dewywood Drawing Competition에 관한 다음 안내문의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "환경 보존을 장려하기 위한 그림 그리기 대회이다.",
+    "일요일에 열린다.",
+    "온라인 등록이 요구된다.",
+    "모든 참가자는 동일한 크기의 종이를 사용한다.",
+    "우승자는 캔버스 가방을 받을 것이다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 818
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. Summer Night Drone Event에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "3일 동안 진행된다.",
+    "주차가 가능하다.",
+    "영화는 오후 6시에 시작한다.",
+    "음식과 음료가 판매될 것이다.",
+    "폭우 시 연기될 것이다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 713
+  },
+  {
+   "qNum": 29,
+   "kind": "grammar_underline",
+   "stem": "29. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "frequently made of rough wool",
+    "②": "what were more elaborate and",
+    "③": "to limit the wearing of",
+    "④": "Allowed only for higher social",
+    "⑤": "their wearers’ roles could be"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1094
+  },
+  {
+   "qNum": 30,
+   "kind": "vocab_underline",
+   "stem": "30. 다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "revealing stylistic technique",
+    "②": "clear",
+    "③": "significant emphasis on song and",
+    "④": "thick",
+    "⑤": "time-consuming when actually performed on"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1259
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. Ever since the early Enlightenment, preservation and conservation have been closely related. Taken as near synonyms, their meaning is to maintain an object ",
+   "choices": [
+    "desired",
+    "unstable",
+    "isolated",
+    "natural",
+    "delicate"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1251
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. Speakers don’t always put everything that’s important to them into words. Very often you can understand a speaker’s meaning by observing their nonverbal beh",
+   "choices": [
+    "pretend to pay attention to others",
+    "conceal what they mean and feel",
+    "interpret one’s nonverbal behavior",
+    "maintain the nonverbal communication",
+    "encounter a chance to understand others"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1259
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. Imagination continues to function when perception is not actively discerning objects, in cases of emotion, disease, and sleep. Emotions dispose one to see t",
+   "choices": [
+    "the more chances one gets to find differences",
+    "the less similarity is required for the thing to appear",
+    "the sooner the perceived similarity fades away",
+    "the more easily one can sense the world the way it is",
+    "the less slowly different emotions are released"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1109
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. The dependent and shifting nature of art values, not only on the market but inherently, is uppermost in the mind of today’s art collector, whether he buys f",
+   "choices": [
+    "he can predict where art is going",
+    "the artist behind the work is reliable",
+    "the art work tells the story of his time",
+    "his choice will lead to immediate profits",
+    "the originality of the work is unshakable"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1233
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "Their relatively \nthick bones in comparison to their mass mean they rarely build \nup enough energy, even at top speed, to do themselves much \ndamage.",
+    "Because of their increased mass (compounded by \nthe fact that they are falling from a greater height and that their \nreactions may be slower), adults falling over will impact the \nground with a much larger force.",
+    "The nonlinear relationship \nbetween mass and bone strength means that although their \nbones are thicker than a toddler’s in absolute terms, they may \nnot be relatively thick enough to compensate for the larger \nimpact caused by their increased mass.",
+    "The body mass \nindex (BMI) can serve as a convenient way for non-experts to \nexamine their health conditions in daily lives.",
+    "For the same \nreasons, taller people have been found to suffer more fall-related \ninjuries ― like hip breaks ― than shorter people.\n* innocuous: 무해한\n** toddler: 아장아장 걷는 아기\n[36～37] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 \n것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1214
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. Plants have evolved defenses almost as diverse as the number of genera. Some load their tissues with harsh compounds that either are unpleasant to insects o",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1359
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. Although there may be elements that trigger instinctive response, spectacle works primarily within a cultural frame and is subject to prevailing modes of pe",
+   "choices": [],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "B": [
+     "38～39"
+    ]
+   },
+   "charLen": 1360
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. To minimize vortex shedding, skyscraper designers do everything in their powers to confuse the wind. To minimize building costs and maximize revenues, skysc",
+   "choices": [
+    ") The difference in \npressures on the front and back faces of the building gives rise \nto vortices, or spinning currents of wind, that flow downstream \nfrom the building. (",
+    ") The vortices pull and push the \nbuilding in a direction perpendicular to the wind at frequencies \nthat can become dangerously self-sustaining. (",
+    ") Orienting \nthe building so that the longer face of the structure is parallel \nwith prevailing winds can help. (",
+    ") Chopping or rounding off \ncorners of a building can likewise make it more aerodynamic. \n(",
+    ") Roughing up the corners of the building through the \ncareful placement of balconies or stepped corners can help by \ndisturbing or delaying the formation of strong vortices.\n* vortex: 회오리바람\n** perpendicular: 직각을 이루는"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1263
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. It was also within the range of reds that they learned early on to diversify the palette and to produce varied tones and shades, as the oldest known color t",
+   "choices": [
+    ") Not that \nthey did not exist, but they had to wait a long time before they \nwere considered colors and then played a comparable role in \nmaterial culture, social codes, and systems of thought. (",
+    ") It \nwas with red that humans did their first color experiments, \nachieved their first successes, and then constructed a chromatic \nuniverse. (",
+    ") Here the lexicon seems in keeping with pictorial \npractices and coloring techniques. (",
+    ") In certain languages, \nthe same word can mean “red” or simply “colored,” depending \non the context, such as coloratus in classical Latin or colorado \nin modern Castilian. (",
+    ") In other languages, the words \nmeaning “red” and “beautiful” share a common root; for example, \nthat is the case in Russian, in which the terms krasnyy (red) \nand krasivy (beautiful) belong to the same lexical family. [3점]\n* hierarchical: 위계의** chromatic: 색채의*** lexicon: 어휘 목록"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1249
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "prevention……marginalized",
+    "spread\n……general",
+    "overlook\n……native",
+    "ignorance……wealthy",
+    "disregard ……underserved\n[41～42] 다음 글을 읽고, 물음에 답하시오.\nThe structure of glass is, frankly, a bit of a mess. Clear and \nperfect as it might appear to our eyes, down at the molecular \nlevel, glass looks more like a random ball-pit of atoms. The \ntechnical term for this mess depends on who you’re asking: \nfor some scientists it is an “amorphous solid,” for others a \n“supercooled liquid.” In theory it’s both liquid and solid, \nthough, given the way it behaves, in practice it’s really the \nlatter. In fact, at room temperature glass never behaves as \na (a) liquid, even an imperceptibly viscous one, even over \nlong periods of time (though it can “sweat” if you don’t add \nenough lime to the mix). Those (b) misshapen sheets of glass \nyou sometimes see in old stained-glass windows, thicker at \nthe bottom than the top, are generally not that way because \nthe glass is slowly sinking over time. Unless the church has \nendured temperatures of more than 400˚C, the chances are \nthey are uneven because that’s the way they were blown \nand (c) solidified in the first place. Flat glass was only \ndeveloped in the nineteenth century and we had to wait until \nthe middle of the twentieth century for truly flat, thin sheets \nof glass. The (d) paradox is that, despite it being one of the \nvery oldest human-made substances, scientists still struggle \nto comprehend why glass behaves the way it does. Glass seems \nto (e) obey most molecular laws. As one glassmaker put it, \nglass is not a material; it’s a state.\n* molecular: 분자의\n** amorphous: 무정형(無定形)의\n*** viscous: 들러붙는"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3108
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Unsolved Mystery Behind the Nature of Glass",
+    "Solid and Liquid Glass: Their Respective Uses",
+    "A Scientific Perspective on Problems with Stained Glass",
+    "Puzzling Glass: Why Solid but Easily Breakable?",
+    "Techniques for Producing Truly Flat Glass"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 265
+  },
+  {
+   "qNum": 42,
+   "kind": "vocab_letter",
+   "stem": "42. 밑줄 친 (a)～(e) 중에서 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {
+    "a": "her music wasn’t perfect",
+    "b": "She showed the young",
+    "c": "her the story",
+    "d": "I hope to see",
+    "e": "She turned to continue"
+   },
+   "bracketChoices": {},
+   "charLen": 2288
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 140
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a)～(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 70
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글에 관한 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "Sally는 헤드폰으로 음악을 듣는 것을 좋아했다.",
+    "노부인의 연주를 다시 듣게 되어 Sally는 행복했다.",
+    "Sally는 노부인을 매일 만나기로 약속했다.",
+    "Beatrice는 Sally의 음악적 재능을 칭찬했다.",
+    "노부인은 항상 바이올린을 배우고 싶어 했다.\n* 확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)했는지 확인\n하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 223
+  }
+ ],
+ "sourcePdf": "85c5a94d5776e68bb541a372cf332b30.pdf",
+ "fileName": "영어영역_문제지.pdf"
+}

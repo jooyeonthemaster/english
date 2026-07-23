@@ -1,0 +1,770 @@
+{
+ "examId": "ebsi_go1_20220609",
+ "source": "ebsi_go1_20220609_paper_eng_mun_ZF3A5B6F.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 다음을 듣고, 남자가 하는 말의 목적으로 가장 적절한 것을 고르시오. ① 사생활 보호의 중요성을 강조하려고 ② 건물 벽 페인트 작업을 공지하려고 ③ 회사 근무시간 변경을 안내하려고 ④ 새로운 직원 채용을 공고하려고 ⑤ 친환경 제품 출시를 홍보하려고",
+   "choices": [
+    "사생활 보호의 중요성을 강조하려고",
+    "건물 벽 페인트 작업을 공지하려고",
+    "회사 근무시간 변경을 안내하려고",
+    "새로운 직원 채용을 공고하려고",
+    "친환경 제품 출시를 홍보하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 144
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 여자의 의견으로 가장 적절한 것을 고르시오. ① 운전자는 제한 속도를 지켜야 한다. ② 교통경찰을 더 많이 배치해야 한다. ③ 보행자의 부주의가 교통사고를 유발한다. ④ 교통사고를 목격하면 즉시 신고해야 한다. ⑤ 대중교통을 이용하면 이동시간을 줄일 수 있다.",
+   "choices": [
+    "운전자는 제한 속도를 지켜야 한다.",
+    "교통경찰을 더 많이 배치해야 한다.",
+    "보행자의 부주의가 교통사고를 유발한다.",
+    "교통사고를 목격하면 즉시 신고해야 한다.",
+    "대중교통을 이용하면 이동시간을 줄일 수 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 157
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 대화를 듣고, 두 사람의 관계를 가장 잘 나타낸 것을 고르시오. ① 작가 - 출판사 직원 ② 관람객 - 박물관 해설사 ③ 손님 - 주방장 ④ 탑승객 - 항공 승무원 ⑤ 학생 - 사서",
+   "choices": [
+    "작가 - 출판사 직원",
+    "관람객 - 박물관 해설사",
+    "손님 - 주방장",
+    "탑승객 - 항공 승무원",
+    "학생 - 사서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 105
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고르시오. ① ② ③ ④ ⑤",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 51
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 남자가 할 일로 가장 적절한 것을 고르시오. ① 보고서 제출하기 ② 티켓 예매하기 ③ 자전거 수리하기 ④ 축구 연습하기 ⑤ 팝콘 구입하기",
+   "choices": [
+    "보고서 제출하기",
+    "티켓 예매하기",
+    "자전거 수리하기",
+    "축구 연습하기",
+    "팝콘 구입하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 89
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 여자가 지불할 금액을 고르시오. [3점] ① $40 ② $60 ③ $80 ④ $100 ⑤ $120",
+   "choices": [
+    "$40",
+    "$60",
+    "$80",
+    "$100",
+    "$120"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 66
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 남자가 음식 부스에 갈 수 없는 이유로 가장 적절한 것을 고르시오. ① 밴드 오디션 연습을 해야 해서 ② 보드게임 부스를 설치해야 해서 ③ 영어 프로젝트를 끝내야 해서 ④ 샌드위치를 준비해야 해서 ⑤ 친구를 만나러 가야 해서",
+   "choices": [
+    "밴드 오디션 연습을 해야 해서",
+    "보드게임 부스를 설치해야 해서",
+    "영어 프로젝트를 끝내야 해서",
+    "샌드위치를 준비해야 해서",
+    "친구를 만나러 가야 해서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 138
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, Spanish culture class에 관해 언급되지 않은 것을 고르시오. ① 강사 ② 활동 종류 ③ 수업 요일 ④ 준비물 ⑤ 수강료",
+   "choices": [
+    "강사",
+    "활동 종류",
+    "수업 요일",
+    "준비물",
+    "수강료"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 88
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. Summer Flea Market에 관한 다음 내용을 듣고, 일치하지 않는 것을 고르시오. [3점] ① 일주일 동안 진행된다. ② 학교 주차장에서 열린다. ③ 장난감, 양초와 같은 물품을 살 수 있다. ④ 상태가 좋은 중고 물품을 판매할 수 있다. ⑤ 첫날 방문하면 할인 쿠폰을 선",
+   "choices": [
+    "일주일 동안 진행된다.",
+    "학교 주차장에서 열린다.",
+    "장난감, 양초와 같은 물품을 살 수 있다.",
+    "상태가 좋은 중고 물품을 판매할 수 있다.",
+    "첫날 방문하면 할인 쿠폰을 선물로 받는다."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 169
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 다음 표를 보면서 대화를 듣고, 여자가 구입할 운동화를 고르시오. Sneakers Model Price Style Waterproof Color ① A $50 casual × black ② B $60 active × white C $65 casual ○ black ③ D $70 ",
+   "choices": [
+    "A\n$50\ncasual\n×\nblack",
+    "B\n$60\nactive\n×\nwhite\nC\n$65\ncasual\n○\nblack",
+    "D\n$70\ncasual\n○\nwhite",
+    "E\n$85\nactive\n○\nwhite",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 200
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ① All children’s books are 20% off. ② It takes time to write a good article. ③ I like to read action adventur",
+   "choices": [
+    "All children’s books are 20% off.",
+    "It takes time to write a good article.",
+    "I like to read action adventure books.",
+    "There are too many advertisements on TV.",
+    "The store has been closed since last month."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 259
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ① You’re welcome. I’m happy to help you. ② That’s not true. I made it with your help. ③ Okay. Good food always makes me feel better. ④ Really?",
+   "choices": [
+    "You’re welcome. I’m happy to help you.",
+    "That’s not true. I made it with your help.",
+    "Okay. Good food always makes me feel better.",
+    "Really? You should definitely visit the theater later.",
+    "Never mind. You’ll do better on the next presentation.\n2022학년도 6월 고1 전국연합학력평가 문제지            1\n제3 교시\n2                  영어영역              \n고1\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 450
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. Man: ① I’m excited to buy a new guitar. ② Summer vacation starts on Friday. ③ You can find it on the school w",
+   "choices": [
+    "I’m excited to buy a new guitar.",
+    "Summer vacation starts on Friday.",
+    "You can find it on the school website.",
+    "Let’s go to the school festival together.",
+    "You can get some rest during the vacation."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 311
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. Woman: ① I agree. There are many benefits of exercising at the gym. ② You’re right. Not all exercise is helpful for your brain. ③ Don’t worry. It’s not too difficult for me to exercise. ④ That sounds great. Can I join the course, too?",
+   "choices": [
+    "I agree. There are many benefits of exercising at the gym.",
+    "You’re right. Not all exercise is helpful for your brain.",
+    "Don’t worry. It’s not too difficult for me to exercise.",
+    "That sounds great. Can I join the course, too?",
+    "That’s too bad. I hope you get well soon."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 381
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Ted가 Monica에게 할 말로 가장 적절한 것을 고르시오. [3점] Ted: ① Can I draw your club members on the poster?",
+   "choices": [
+    "Can I draw your club members on the poster?",
+    "Are you interested in joining my drawing club?",
+    "Could you tell me how to vote in the election?",
+    "Can you help me make posters for the election?",
+    "Would you run in the next school president election?\n[16~17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 391
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 여자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "downsides of fatty food",
+    "healthy foods for breakfast",
+    "ways to avoid eating snacks",
+    "easy foods to cook in 5 minutes",
+    "the importance of a balanced diet"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 185
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 음식이 아닌 것은?",
+   "choices": [
+    "eggs",
+    "cheese",
+    "potatoes",
+    "yogurt",
+    "berries\n이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시에 \n따라 답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 116
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "제품의 고장 원인을 문의하려고",
+    "분실물 발견 시 연락을 부탁하려고",
+    "시설물의 철저한 관리를 당부하려고",
+    "여행자 보험 가입 절차를 확인하려고",
+    "분실물 센터 확장의 필요성을 건의하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 613
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 드러난 Matthew의 심경 변화로 가장 적절한 것은?",
+   "choices": [
+    "embarrassed → indifferent",
+    "excited → disappointed",
+    "cheerful → ashamed",
+    "nervous → touched",
+    "scared → relaxed"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 744
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "회의 결과는 빠짐없이 작성해서 공개해야 한다.",
+    "중요한 정보는 공식 회의를 통해 전달해야 한다.",
+    "생산성 향상을 위해 정기적인 평가회가 필요하다.",
+    "모든 참석자의 동의를 받아서 회의를 열어야 한다.",
+    "회의에서 다룰 사항은 미리 작성해서 공유해야 한다.\n고1               영어영역                  3\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 792
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 밑줄 친 put the glass down이 다음 글에서 의미하는 바로 가장 적절한 것은?",
+   "choices": [
+    "pour more water into the glass",
+    "set a plan not to make mistakes",
+    "let go of the stress in your mind",
+    "think about the cause of your stress",
+    "learn to accept the opinions of others"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1068
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "자신의 감정으로 인해 상황을 오해할 수 있다.",
+    "자신의 생각을 타인에게 강요해서는 안 된다.",
+    "인간관계가 우리의 감정에 영향을 미친다.",
+    "타인의 감정에 공감하는 자세가 필요하다.",
+    "공동체를 위한 선택에는 보상이 따른다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 728
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "difficulties of children in learning how to count",
+    "how children build mathematical understanding",
+    "why fingers are used in counting objects",
+    "importance of early childhood education",
+    "advantages of singing number songs"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 947
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "We Live in an Age of Algorithms",
+    "Mysteries of Ancient Civilizations",
+    "Dangers of Online Banking Algorithms",
+    "How Algorithms Decrease Human Creativity",
+    "Transportation: A Driving Force of Industry\n4                  영어영역              \n고1\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 943
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. 다음 도표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "In \n1988, more than half of U.S. households owned pets, and \nmore than 6 out of 10 U.S. households owned pets from \n2008 to 2020.",
+    "In the period between 1988 and 2008, pet \nownership increased among U.S. households by 6 percentage \npoints.",
+    "From 2008 to 2013, pet ownership rose an additional \n6 percentage points.",
+    "The percent of U.S. households with \npets in 2013 was the same as that in 2017, which was 68 \npercent.",
+    "In 2015, the rate of U.S. households with pets \nwas 3 percentage points lower than in 2020."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 724
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Claude Bolling에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "1930년에 프랑스에서 태어났다.",
+    "학교 친구를 통해 재즈를 소개받았다.",
+    "20대에 Best Piano Player 상을 받았다.",
+    "성공적인 영화 음악 작곡가였다.",
+    "1975년에 플루트 연주자와 협업했다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 917
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. Kids Taekwondo Program에 관한 다음 안내문의 내용과 일치 하지 않는 것은?",
+   "choices": [
+    "8월 8일부터 3일간 운영한다.",
+    "5세 이상의 어린이가 참가할 수 있다.",
+    "자기 방어 훈련 활동을 한다.",
+    "참가비에 간식비는 포함되지 않는다.",
+    "물병과 수건을 가져와야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 576
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. Moonlight Chocolate Factory Tour에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "주말 오후 시간에 운영한다.",
+    "초콜릿 제조 과정을 볼 수 있다.",
+    "네 가지 종류의 초콜릿을 시식한다.",
+    "마스크 착용은 참여자의 선택 사항이다.",
+    "공장 내부에서 사진 촬영이 가능하다.\n고1               영어영역                  5\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 679
+  },
+  {
+   "qNum": 29,
+   "kind": "grammar_underline",
+   "stem": "29. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "has nearly doubled recently",
+    "②": "that we are using more",
+    "③": "using fewer materials",
+    "④": "dependently on more natural resources",
+    "⑤": "did just over a century"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 810
+  },
+  {
+   "qNum": 30,
+   "kind": "vocab_underline",
+   "stem": "30. 다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "influence our choices",
+    "②": "ignoring how other people live",
+    "③": "recover control of your choices",
+    "④": "kindly",
+    "⑤": "expectations"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 935
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. One of the big questions faced this past year was how to keep innovation rolling when people were working entirely virtually. But experts say that digital w",
+   "choices": [
+    "restrictions",
+    "responsibilities",
+    "memories",
+    "coincidences",
+    "traditions"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 997
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. The law of demand is that the demand for goods and services increases as prices fall, and the demand falls as prices increase. Giffen goods are special type",
+   "choices": [
+    "order more meat",
+    "consume more rice",
+    "try to get new jobs",
+    "increase their savings",
+    "start to invest overseas\n6                  영어영역              \n고1\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 998
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. In a study at Princeton University in 1992, research scientists looked at two different groups of mice. One group was made intellectually superior by modify",
+   "choices": [
+    "by themselves for survival",
+    "free from social interaction",
+    "based on what is around you",
+    "depending on genetic superiority",
+    "so as to keep ourselves entertained"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1067
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. Researchers are working on a project that asks coastal towns how they are preparing for rising sea levels. Some towns have risk assessments; some towns even",
+   "choices": [
+    "it is not related to science",
+    "it is far away in time and space",
+    "energy efficiency matters the most",
+    "careful planning can fix the problem",
+    "it is too late to prevent it from happening"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 981
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "Fashion may be beautiful, \ninnovative, and useful; we can display creativity and good \ntaste in our fashion choices.",
+    "And in dressing with taste \nand care, we represent both selfrespect and a concern for \nthe pleasure of others.",
+    "There is no doubt that fashion can \nbe a source of interest and pleasure which links us to each \nother.",
+    "Although the fashion industry developed first in \nEurope and America, today it is an international and highly \nglobalized industry.",
+    "That is, fashion provides a sociable \naspect along with opportunities to imagine oneself differently\n― to try on different identities.\n* virtue: 가치\n[36~37] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 \n것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 838
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. Mrs. Klein told her first graders to draw a picture of something to be thankful for. She thought that most of the class would draw turkeys or Thanksgiving t",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n고1               영어영역                  7\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1160
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. According to legend, once a vampire bites a person, that person turns into a vampire who seeks the blood of others. A researcher came up with some simple ma",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n[38~39] 글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 \n적절한 곳을 고르시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38~39"
+    ]
+   },
+   "charLen": 1015
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. For example, if you rub your hands together quickly, they will get warmer. Friction is a force between two surfaces that are sliding, or trying to slide, ac",
+   "choices": [
+    ") The amount of \nfriction depends on the surface materials. (",
+    ") The rougher \nthe surface is, the more friction is produced. (",
+    ") Friction \nalso produces heat. (",
+    ") Friction can be a useful force \nbecause it prevents our shoes slipping on the floor when we \nwalk and stops car tires skidding on the road. (",
+    ") When \nyou walk, friction is caused between the tread on your shoes \nand the ground, acting to grip the ground and prevent sliding.\n* skid: 미끄러지다  ** tread: 접지면, 바닥"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 912
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. But, a blind person will associate the same friend with a unique combination of experiences from their nonvisual senses that act to represent that friend. H",
+   "choices": [
+    ") As a result, people with blindness at birth \ndevelop an amazing ability to understand the world through the \ncollection of experiences and memories that come from these \nnonvisual senses. (",
+    ") The dreams of a person who has been \nwithout sight since birth can be just as vivid and imaginative as \nthose of someone with normal vision. (",
+    ") They are unique, \nhowever, because their dreams are constructed from the \nnonvisual experiences and memories they have collected. (",
+    ") A \nperson with normal vision will dream about a familiar friend using \nvisual memories of shape, lighting, and colour. (",
+    ") In other \nwords, people blind at birth have similar overall dreaming \nexperiences even though they do not dream in pictures."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1027
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "likely\n…… random",
+    "willing\n…… minimal",
+    "willing\n…… active",
+    "hesitant\n…… unwanted",
+    "hesitant\n…… constant\n8                  영어영역              \n고1\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n[41~42] 다음 글을 읽고, 물음에 답하시오.\nU.K. researchers say a bedtime of between 10 p.m. and \n11 p.m. is best. They say people who go to sleep between \nthese times have a (a) lower risk of heart disease. Six \nyears ago, the researchers collected data on the sleep \npatterns of 80,000 volunteers. The volunteers had to wear \na special watch for seven days so the researchers could \ncollect data on their sleeping and waking times. The \nscientists then monitored the health of the volunteers. \nAround 3,000 volunteers later showed heart problems. \nThey went to bed earlier or later than the (b) ideal 10 p.m. \nto 11 p.m. timeframe.\nOne of the authors of the study, Dr. David Plans, \ncommented on his research and the (c) effects of bedtimes \non the health of our heart. He said the study could not \ngive a certain cause for their results, but it suggests that \nearly or late bedtimes may be more likely to disrupt the \nbody clock, with (d) positive consequences for cardiovascular \nhealth. He said that it was important for our body to wake \nup to the morning light, and that the worst time to go to \nbed was after midnight because it may (e) reduce the \nlikelihood of seeing morning light which resets the body \nclock. He added that we risk cardiovascular disease if our \nbody clock is not reset properly.\n* disrupt: 혼란케 하다  ** cardiovascular: 심장 혈관의"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2805
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "The Best Bedtime for Your Heart",
+    "Late Bedtimes Are a Matter of Age",
+    "For Sound Sleep: Turn Off the Light",
+    "Sleeping Patterns Reflect Personalities",
+    "Regular Exercise: A Miracle for Good Sleep"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 219
+  },
+  {
+   "qNum": 42,
+   "kind": "vocab_letter",
+   "stem": "42. 밑줄 친 (a) ~ (e) 중에서 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {
+    "a": "him",
+    "b": "him in the barn",
+    "c": "He was happily surprised",
+    "d": "He was delighted to",
+    "e": "He promised an attractive"
+   },
+   "bracketChoices": {},
+   "charLen": 1733
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) - (D) - (C)",
+    "(C) - (B) - (D)",
+    "(C) - (D) - (B)",
+    "(D) - (B) - (C)",
+    "(D) - (C) - (B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 140
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a) ~ (e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 77
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글에 관한 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "농부의 시계는 어린 시절의 행복한 기억을 불러일으켰다.",
+    "한 어린 소년이 농부에게 또 한 번의 기회를 달라고 요청했다.",
+    "소년이 한 손에 농부의 시계를 들고 나왔다.",
+    "아이들은 시계를 찾기 위해 헛간을 뛰쳐나왔다.",
+    "아이들 중 일부는 지쳐서 시계 찾기를 포기했다.\n＊확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)했는지 확인\n하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 229
+  }
+ ],
+ "sourcePdf": "ebsi_go1_20220609_paper_eng_mun_ZF3A5B6F.pdf"
+}

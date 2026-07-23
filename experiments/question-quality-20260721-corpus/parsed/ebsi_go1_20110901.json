@@ -1,0 +1,851 @@
+{
+ "examId": "ebsi_go1_20110901",
+ "source": "ebsi_go1_20110901_paper_201109011_eng_mun_1.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 대화를듣고, 두사람이제작할티셔츠를고르시오. ① ② ③ ④ ⑤",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 37
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를듣고, 여자의심정으로가장적절한것을고르시오. ①angry ②grateful ③excited ④worried ⑤surprised",
+   "choices": [
+    "angry",
+    "grateful",
+    "excited",
+    "worried",
+    "surprised"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 76
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을듣고, 남자가하는말의주제로가장적절한것을고르시오. ①여행자보험의필요성 ②인생에서의여행의의미 ③여행경비를절약하는방법 ④보험료를줄일수있는방법 ⑤여행지에서의응급상황대처법",
+   "choices": [
+    "여행자보험의필요성",
+    "인생에서의여행의의미",
+    "여행경비를절약하는방법",
+    "보험료를줄일수있는방법",
+    "여행지에서의응급상황대처법"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 97
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를듣고, 여자가남자를위해할일로가장적절한것을 고르시오. ①알람시계맞추기 ②방과후수업신청하기 ③라디오크게켜기 ④친구에게설명부탁하기 ⑤수학공부도와주기",
+   "choices": [
+    "알람시계맞추기",
+    "방과후수업신청하기",
+    "라디오크게켜기",
+    "친구에게설명부탁하기",
+    "수학공부도와주기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 86
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를듣고, 남자가한달에지불할금액을고르시오. ①$ 10 ②$ 30 ③$ 35 ④$ 45 ⑤$ 50",
+   "choices": [
+    "$ 10",
+    "$ 30",
+    "$ 35",
+    "$ 45",
+    "$ 50"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 58
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 다음을듣고, 여자가하는말의목적으로가장적절한것을 고르시오. ①휴대전화기부를장려하려고 ②휴대전화사용예절을안내하려고 ③휴대전화기부전유의사항을알리려고 ④휴대전화의새로운기능을광고하려고 ⑤휴대전화를이용한범죄를경고하려고",
+   "choices": [
+    "휴대전화기부를장려하려고",
+    "휴대전화사용예절을안내하려고",
+    "휴대전화기부전유의사항을알리려고",
+    "휴대전화의새로운기능을광고하려고",
+    "휴대전화를이용한범죄를경고하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 119
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를듣고, 여자가남자에게부탁한일로가장적절한것을 고르시오. ①책주문하기 ②주소알려주기 ③예약변경하기 ④약속취소하기 ⑤식사준비하기",
+   "choices": [
+    "책주문하기",
+    "주소알려주기",
+    "예약변경하기",
+    "약속취소하기",
+    "식사준비하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 75
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를듣고, 두사람이대화하고있는장소로가장적절한곳을 고르시오. ①안경점 ②옷가게 ③보석가게 ④미술용품점 ⑤화장품가게",
+   "choices": [
+    "안경점",
+    "옷가게",
+    "보석가게",
+    "미술용품점",
+    "화장품가게"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 67
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 대화를듣고, 두사람의관계를가장잘나타낸것을고르시오. ①경찰관 ― 운전자 ②택시운전사 ― 승객 ③렌터카직원 ― 고객 ④중고차판매원 ― 정비사 ⑤여행사직원 ― 항공사직원",
+   "choices": [
+    "경찰관\n―\n운전자",
+    "택시운전사\n―\n승객",
+    "렌터카직원\n―\n고객",
+    "중고차판매원\n―\n정비사",
+    "여행사직원\n―\n항공사직원"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 95
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 대화를듣고, 여자가할일로가장적절한것을고르시오. ①차로데려다주기 ②독서감상문쓰기 ③테니스라켓구매하기 ④입학원서제출하기 ⑤자기소개서작성도와주기",
+   "choices": [
+    "차로데려다주기",
+    "독서감상문쓰기",
+    "테니스라켓구매하기",
+    "입학원서제출하기",
+    "자기소개서작성도와주기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 82
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 다음표를보면서대화를듣고, 남자가선택하게될여행사를고 르시오. Trip to France Agency Number of cities Days Cost Free time ① A $ 2500 O ② B $ 2500 X ③ C $ 3000 O ④ D $ 3000 X ⑤ E $ 3500 O",
+   "choices": [
+    "A\n$ 2500\nO",
+    "B\n$ 2500\nX",
+    "C\n$ 3000\nO",
+    "D\n$ 3000\nX",
+    "E\n$ 3500\nO\n2011학년도 9월 고1 전국연합학력평가 문제지\n외국어(영어) 영역\n성명\n수험번호\n제3 교시\n외국어(영어) 영역\n고1"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 253
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. Park Partnership Card에관한다음내용을듣고, 일치하지않는 것을고르시오. [3점] ①편의점에서구입할수있다. ②카드판매수익금은공원발전에쓰인다. ③등록후1년간유효하다. ④사용할때신분증을함께제시해야한다. ⑤서점에서10% 할인을받을수있다.",
+   "choices": [
+    "편의점에서구입할수있다.",
+    "카드판매수익금은공원발전에쓰인다.",
+    "등록후1년간유효하다.",
+    "사용할때신분증을함께제시해야한다.",
+    "서점에서10% 할인을받을수있다."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 141
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 다음그림의상황에가장적절한대화를고르시오. [1점] ① ② ③ ④ ⑤",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "point": 1,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 41
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를듣고, 여자의마지막말에대한남자의응답으로가장 적절한것을고르시오. Man: ________________________________________ ①Garbage bags are very expensive. ②Sure! Let’s report him to the police.",
+   "choices": [
+    "Garbage bags are very expensive.",
+    "Sure! Let’s report him to the police.",
+    "Oh, you have a nice friendly neighbor.",
+    "I don’t really want an argument with you.",
+    "Then you can just mention it in conversation."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 291
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 대화를듣고, 남자의마지막말에대한여자의응답으로가장 적절한것을고르시오. Woman: _____________________________________ ①Why don’t you call him now?",
+   "choices": [
+    "Why don’t you call him now? This is his number.",
+    "I can’t believe it. He has never been to Spain.",
+    "That’s right. I’ve known him over 10 years.",
+    "Of course! That’s why I love him so much.",
+    "Then, when is he going back to Spain?"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 312
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 대화를듣고, 여자의마지막말에대한남자의응답으로가장 적절한것을고르시오. Man: ________________________________________ ①He always barks at strangers. He’s very aggressive. ②Come on! The owner might be looking for him. ③I’ve been looking for him for two weeks. ④Oh, how much did you pay for the dog?",
+   "choices": [
+    "He always barks at strangers. He’s very aggressive.",
+    "Come on! The owner might be looking for him.",
+    "I’ve been looking for him for two weeks.",
+    "Oh, how much did you pay for the dog?",
+    "It’s a relief that you found your dog."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 308
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 다음상황설명을듣고, Jennifer가남자에게할말로가장 적절한것을고르시오. Jennifer: ________________________________________ ①I apologize if you feel bad. ②Can I borrow your magazine?",
+   "choices": [
+    "I apologize if you feel bad.",
+    "Can I borrow your magazine?",
+    "Would you tell me how to order?",
+    "Please put me on your ‘do not call’ list.",
+    "Whenever you’re ready, call me back, please.\n 이제 듣기 문제는 다 끝났습니다. 18번부터는 문제의 지시에 \n따라 답을 하기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 328
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음글의목적으로가장적절한것은?",
+   "choices": [
+    "수면에대한연구를장려하려고",
+    "수면관련세미나등록을권유하려고",
+    "불면증치료전문병원을소개하려고",
+    "수면장애의새로운치료법을안내하려고",
+    "스트레스관련설문조사협조를요청하려고"
+   ],
+   "point": 1,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 630
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 밑줄친They[they]가가리키는대상이나머지넷과다른것은?",
+   "choices": [
+    "they\nalways wear diamonds and drive expensive cars. Actually,",
+    "they are far more likely to be wearing old jeans and driving\nan old pickup truck.",
+    "They don’t try to look different from\nordinary people, say authors Thomas Stanley and William Danko\nin their book.",
+    "They surveyed the rich in America and found\nthat the main secret that they could be wealthy was modest\nspending. In fact, eighty percent of millionaires in America\nmade their fortunes in one generation.",
+    "They didn’t inherit\ntheir money from their family.\n고1\n외국어(영어) 영역"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 619
+  },
+  {
+   "qNum": 20,
+   "kind": "grammar_underline",
+   "stem": "20. 다음글의밑줄친부분중, 어법상틀린것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "partially buried Roman town-city near",
+    "②": "during a long eruption of",
+    "③": "lost for over",
+    "④": "has provided a detailed insight",
+    "⑤": "visiting every year"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 595
+  },
+  {
+   "qNum": 21,
+   "kind": "box_choice",
+   "stem": "21. (A), (B), (C)의각네모안에서어법에맞는표현으로가장 적절한것은?",
+   "choices": [
+    "warm\n……\nattract\n……\nwhich",
+    "warm\n……\nattracting\n……\nwhich",
+    "warm\n……\nattracting\n……\nthat",
+    "warmly\n……\nattract\n……\nthat",
+    "warmly\n……\nattracting\n……\nwhich"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 797
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음글에서전체흐름과관계없는문장은?",
+   "choices": [
+    "The purpose is to\nidentify explosives that may be hidden on a person’s body.",
+    "The machine looks similar to the metal detectors now used\nat airports.",
+    "Passengers walk through the machine as the\nlasers test the surrounding air.",
+    "Many dogs are trained to\nsniff and detect explosive materials in passengers’ luggage.",
+    "Officials at this company say the machine can process one\nperson per second and produce almost immediate results."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 615
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음글에서필자가주장하는바로가장적절한것은?",
+   "choices": [
+    "계획을세우면즉시행동으로옮겨라.",
+    "장수하기위해서소식하는습관을길러라.",
+    "건강한삶을위해서규칙적인운동을해라.",
+    "식이요법을할때는전문가의조언을구하라.",
+    "체중감량을위해실천가능한계획을세워라.\n[24～29] 다음글의빈칸에들어갈말로가장적절한것을고\n르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 869
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. I believe that the greatest fear we all have as human beings is the fear of ―no one to love us, care about us, or be there for us. As a result of this funda",
+   "choices": [
+    "death",
+    "disease",
+    "loneliness",
+    "restriction",
+    "aggression"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 569
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. Researchers at the Eastman Institute for Oral Health noticed that the erosion of teeth is determined by the _______________ of drinks. Erosion is a chemical",
+   "choices": [
+    "flavor",
+    "amount",
+    "ingredients",
+    "temperature",
+    "place-of-origin\n외국어(영어) 영역\n고1"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 613
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. A new study suggests that children who often get serious ear infections are twice as likely to later in life than kids with healthier ears. To explain these",
+   "choices": [
+    "become overweight",
+    "suffer from deafness",
+    "get severe headaches",
+    "have a mental disorder",
+    "lose their sense of taste"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 904
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. A group of ecologists from the University of California released an interesting report about insects and global warming. According to the report the average",
+   "choices": [
+    "eating habits",
+    "breeding places",
+    "range of habitat",
+    "body shape and color",
+    "reproductive patterns"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 764
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. In a university four women pretended to be students in a class. The first woman attended one lecture, the second one ten lectures, and the third fifteen. Th",
+   "choices": [
+    "their grades in class",
+    "what lecture they had attended",
+    "when the students had seen them",
+    "their attitudes toward the professor",
+    "their repeated exposure to students"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 741
+  },
+  {
+   "qNum": 29,
+   "kind": "mc",
+   "stem": "29. It’s usually a waste of time and energy to put a lot of effort into assigning blame or determining who is at fault. That’s because fault exists in the past,",
+   "choices": [
+    "the hardship you have suffered",
+    "who should take the responsibility",
+    "the best of what can be done now",
+    "determining which side you are on",
+    "how much time you spent on blaming"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 705
+  },
+  {
+   "qNum": 30,
+   "kind": "mc",
+   "stem": "30. 다음글에드러난Simon의심경변화로가장적절한것은?",
+   "choices": [
+    "lonely\n→\nsad",
+    "bored\n→delighted",
+    "ashamed\n→\nproud",
+    "excited →disappointed",
+    "desperate\n→\nrelieved"
+   ],
+   "point": 1,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 875
+  },
+  {
+   "qNum": 31,
+   "kind": "box_choice",
+   "stem": "31. (A), (B), (C)의각네모안에서문맥에맞는낱말로가장 적절한것은?",
+   "choices": [
+    "defining\n……\nconceals\n……\ncommon",
+    "defining\n……\nreveals\n……\ncommon",
+    "defining\n……\nreveals\n……\nrare",
+    "denying\n……\nconceals\n……\ncommon",
+    "denying\n……\nconceals\n……\nrare\n고1\n외국어(영어) 영역"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 914
+  },
+  {
+   "qNum": 32,
+   "kind": "vocab_underline",
+   "stem": "32. 다음글의밑줄친부분중, 문맥상낱말의쓰임이적절하지 않은것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "often as I could",
+    "②": "worthwhile",
+    "③": "sooner than most children do",
+    "④": "recite the rest of the",
+    "⑤": "behind his age group"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 718
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. 다음글의빈칸(A), (B)에들어갈말로가장적절한것은?",
+   "choices": [
+    "However\n……\nOtherwise",
+    "However\n……\nConsequently",
+    "Likewise\n……\nIn fact",
+    "Likewise\n……\nBesides",
+    "Nevertheless\n……\nSimilarly\n[34～35] 다음글의주제로가장적절한것을고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 933
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. We often think of city living as unhealthy due to overcrowding and pollution, especially in times when there are many diseases and infections going around. ",
+   "choices": [
+    "a good way to adapt to city life",
+    "the danger of exposure to severe diseases",
+    "disadvantages of urbanization and dense population",
+    "higher resistance to diseases in urban environments",
+    "the importance of developing resistance to infections"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 881
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. Loss is painful. It’s natural for us to grieve over things we’ve lost. And it takes time to fill the hole left by loss. The larger the hole, the longer it t",
+   "choices": [
+    "things that cause feeling of loss",
+    "importance of managing loss in life",
+    "different attitudes to accepting gifts",
+    "tips on increasing profits in the business",
+    "seriousness of ignoring our responsibility"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 726
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. Bactrian camels에관한다음글의내용과일치하는것은?",
+   "choices": [
+    "사하라사막에서서식한다.",
+    "혹은항상원래모양을유지한다.",
+    "땀을많이흘려체액유지가어렵다.",
+    "두줄의속눈썹이눈을보호해준다.",
+    "야생종은더이상남아있지않다.\n외국어(영어) 영역\n고1"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 738
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. Salmonberry에관한다음글의내용과일치하지않는것은?",
+   "choices": [
+    "붉은색을띤열매도있다.",
+    "잎은나비나콧수염과유사한모양이다.",
+    "잎과꽃은이른봄에나온다.",
+    "열매는쓴맛이있어도보여행자들이먹지않는다.",
+    "작은농장가판대나시장에서주로판매된다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 785
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. 다음도표의내용과일치하지않는문장은?",
+   "choices": [
+    "American\nkids\nunder\nsend\nand\nreceive\nroughly\n2,800\ntexts per\nmonth, which is the most text-message usage throughout all\nage groups.",
+    "Meanwhile, people ages 18 to 24 talk on their\ncell phones more than any other age group.",
+    "From the\nyoungest age group to the eldest age group, both voice and\ntext usage continue to fall.",
+    "The text-message usage of\nkids under 18 is over twice as much as that of people ages\n18 to 24.",
+    "Statistically speaking, people ages 65 and older\nsend or receive approximately just one text-message per day.\n[39～40] 다음글의요지로가장적절한것을고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 730
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. Immortality, which means living forever, has been an unreachable ambition for many people. Now we are getting closer as medicine and science are curing coun",
+   "choices": [
+    "사람은누구나오래살고싶어한다.",
+    "영원한삶이언제나좋은것만은아니다.",
+    "배우자의죽음만큼고통스러운것은없다.",
+    "정신적인건강이노화방지에도도움이된다.",
+    "인류는질병치료를위해의학을발전시켜왔다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 721
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. There is a huge difference between saying “You act lazy sometimes.” and “You are a lazy person.” One is suggesting that your laziness is temporary while the",
+   "choices": [
+    "사람마다게으름의원인은다르다.",
+    "게으름을극복하려는의지가중요하다.",
+    "게으름은타고난천성이라고치기힘들다.",
+    "나쁜습관을버리면게으름도고칠수있다.",
+    "목표의식의부재가게으름의진정한원인이다.\n[41～42] 다음글의제목으로가장적절한것을고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 691
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. Musical concerts use up a lot of energy and money in electricity. Speakers, lights, and amplifiers all need power to help entertain the audience. However, a",
+   "choices": [
+    "Safety Rules for Riding Bicycles",
+    "Cycling: A Cheap Way to Travel",
+    "Various Electric Devices in a Concert",
+    "How about Cycling during a Concert?",
+    "Why Do People Like Going to Concerts?\n고1\n외국어(영어) 영역"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 807
+  },
+  {
+   "qNum": 42,
+   "kind": "mc",
+   "stem": "42. The baobab tree is leafless for most of the year and looks very much like it has its roots sticking up in the air. There are numerous stories offering expla",
+   "choices": [
+    "Myths of Baobab Trees",
+    "The Use of Baobab Trees",
+    "Life Cycle of Baobab Trees",
+    "Baobab Trees’ Bad Fortune",
+    "Baobab: The Shelter for Animals"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 766
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진글다음에이어질글의순서로가장적절한것은?",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 951
+  },
+  {
+   "qNum": 44,
+   "kind": "mc",
+   "stem": "44. 글의흐름으로보아, 주어진문장이들어가기에가장적절한 곳은?",
+   "choices": [
+    ") Also, many qualified individuals\nare hesitant to come to this country, and in many cases it\nhas nothing to do with money or treatment. (",
+    ") Because\nthese two requirements are not met, it’s only natural that\npeople do not want to come to live here. (",
+    ") In the age of\nglobal competition, a country cannot fill its jobs entirely with\nits own citizens. (",
+    ") A country must import at least some\nprofessional manpower from other countries. (",
+    ") To do that\nsuccessfully,\nhowever,\nit\nmust\ncreate\nan\nattractive\nliving\nenvironment for them by minimizing inconveniences."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 763
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 다음글의내용을한문장으로요약하고자한다. 빈칸(A)와 (B)에들어갈말로가장적절한것은?",
+   "choices": [
+    "unnecessary\n……\npurposes",
+    "separated\n……\nlinks",
+    "damaged\n……\nstrengths",
+    "healthy\n……\ndefects",
+    "similar\n……\ndifferences\n외국어(영어) 영역\n고1\n[46～47] 다음글을읽고, 물음에답하시오.\nThe cry of a newborn may sound the same to the ears\nof parents the world over, but according to scientists, that’s\nnot the case: Babies cry in the language their parents\nspeak from the first days of life.\nAn international team of researchers recorded the cries of\n60 healthy newborns, three to five days old, 30 born into\nFrench-speaking families and 30 born into German-speaking\nfamilies. French newborns tend to cry with a rising tone,\nwhile their German neighbors prefer a falling tone―patterns\nwhich fit with the characteristic differences between the\ntwo languages. This suggested that baby crying can be\ndistinguished according to their ______________.\nLead\nresearcher\nKathleen\nWermke\nsaid\nthis\nstudy\nshowed that newborns “are capable of producing different\ncry tones” and that they prefer tones in the pattern of the\nlanguage they heard in the womb.\n*womb 자궁"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1902
+  },
+  {
+   "qNum": 46,
+   "kind": "mc",
+   "stem": "46. 위글의빈칸에들어갈말로가장적절한것은?",
+   "choices": [
+    "gender role",
+    "current mood",
+    "native tongue",
+    "mother’s personality",
+    "personal preference"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 109
+  },
+  {
+   "qNum": 47,
+   "kind": "mc",
+   "stem": "47. 위글의제목으로가장적절한것은?",
+   "choices": [
+    "Mom, I Cry Like I Heard",
+    "I Do Not Want to Cry Anymore",
+    "Would You Record My Voice, Mom?",
+    "It’s Hard to Memorize Sounds, Mom",
+    "Please Tell Me How to Copy Your Tone\n[48～50] 다음글을읽고, 물음에답하시오.\n(A)\nA farmer owned land along the Atlantic seacoast. Most\npeople were reluctant to work on his farm because they\ndreaded the awful storms there. He constantly advertised\nfor workers and finally, a short, thin man, well past middle\nage, approached (a) him.\n(B)\nTo\nhis\namazement,\nhe\ndiscovered\nthat\nall\nof\nthe\nhaystacks had been covered well. The cows were in the\nbarn, and the doors were shut tightly. Everything was tied\ndown.\nNothing\ncould\nblow\naway.\nThe\nfarmer\nthen\nunderstood what the man meant, so (b) he returned to his\nbed to also sleep while the wind blew.\n(C)\n“Are you a good farm-hand?” the farmer asked him.\n“Well, I can sleep when the wind blows,” answered the\nman. Although puzzled by this answer, (c) he, desperate for\nhelp, hired him. The little man worked well around the\nfarm, busy from dawn to dusk, and the farmer felt satisfied\nwith the man’s work. Then one night the wind howled\nloudly in from offshore.\n(D)\nJumping out of bed, the farmer rushed next door to the\nworker’s room. (d) He shook the little man and yelled, “Get\nup! A storm is coming! Tie things down before they blow\naway!” The little man rolled over in bed and said firmly,\n“No, sir. I told you, I can sleep when the wind blows.”\nAngered by the response, the farmer was tempted to fire\n(e) him on the spot. Instead, he hurried outside to prepare\nfor the storm."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1550
+  },
+  {
+   "qNum": 48,
+   "kind": "mc",
+   "stem": "48. 주어진글(A)에이어질내용을순서에맞게배열한것으로 가장적절한것은?",
+   "choices": [
+    "(B) - (D) - (C)",
+    "(C) - (B) - (D)",
+    "(C) - (D) - (B)",
+    "(D) - (B) - (C)",
+    "(D) - (C) - (B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 124
+  },
+  {
+   "qNum": 49,
+   "kind": "vocab_letter",
+   "stem": "49. 밑줄친(a)～(e) 중에서가리키는대상이나머지넷과다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 62
+  },
+  {
+   "qNum": 50,
+   "kind": "mc",
+   "stem": "50. 주어진글의내용과일치하지않는것은?",
+   "choices": [
+    "대부분의사람들이농부의농장에서일하기를주저했다.",
+    "농부는건초더미가잘덮여있는것을확인했다.",
+    "면접할때농부는일꾼이한말을이해하지못했다.",
+    "태풍이몰아치던밤에일꾼은잠을자고있었다.",
+    "농부는일꾼의태만함에화가나서일꾼을해고했다.\n* 확인사항\n◦답안지의해당란에필요한내용을정확히기입(표기)했는지확인\n하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 180
+  }
+ ],
+ "sourcePdf": "ebsi_go1_20110901_paper_201109011_eng_mun_1.pdf"
+}

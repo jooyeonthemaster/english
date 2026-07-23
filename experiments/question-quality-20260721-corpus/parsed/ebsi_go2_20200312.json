@@ -1,0 +1,764 @@
+{
+ "examId": "ebsi_go2_20200312",
+ "source": "ebsi_go2_20200312_paper_eng_mun_861PVDOX.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ① Sorry, but our recipe is a secret. ② Sure. I’d like to buy this dressing. ③ No thanks. We don’t need the rec",
+   "choices": [
+    "Sorry, but our recipe is a secret.",
+    "Sure. I’d like to buy this dressing.",
+    "No thanks. We don’t need the recipe.",
+    "Yes, I can make you the vegetable soup.",
+    "Okay, I’ll bring you the salad right away."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 253
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ① I have no more clothes to donate. ② You can pick them up this afternoon. ③ Let me check if we can accept the",
+   "choices": [
+    "I have no more clothes to donate.",
+    "You can pick them up this afternoon.",
+    "Let me check if we can accept them.",
+    "I forgot to separate whites and colors.",
+    "Please bring the receipt to get a refund."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 250
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을 듣고, 남자가 하는 말의 목적으로 가장 적절한 것을 고 르시오. ① 병실 사용 시 유의 사항을 설명하려고 ② 병문안 시 면회 시간 준수를 당부하려고 ③ 병원 내 새로운 편의 시설을 소개하려고 ④ 병원 주변 도로 통제 구역을 공지하려고 ⑤ 병원 일부 출입구의 사용 제한을 안내",
+   "choices": [
+    "병실 사용 시 유의 사항을 설명하려고",
+    "병문안 시 면회 시간 준수를 당부하려고",
+    "병원 내 새로운 편의 시설을 소개하려고",
+    "병원 주변 도로 통제 구역을 공지하려고",
+    "병원 일부 출입구의 사용 제한을 안내하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 165
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 여자의 의견으로 가장 적절한 것을 고르시오. ① 꾸준한 봉사 활동은 자아 존중감을 높인다. ② 남을 가르칠 때 자신감을 갖는 것이 중요하다. ③ 학습량과 교과 성적이 정비례하는 것은 아니다. ④ 남을 가르치는 것은 자신의 학습에 도움이 된다. ⑤ 알고 있는 것과 가르",
+   "choices": [
+    "꾸준한 봉사 활동은 자아 존중감을 높인다.",
+    "남을 가르칠 때 자신감을 갖는 것이 중요하다.",
+    "학습량과 교과 성적이 정비례하는 것은 아니다.",
+    "남을 가르치는 것은 자신의 학습에 도움이 된다.",
+    "알고 있는 것과 가르치는 것은 별개의 문제이다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 178
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 두 사람의 관계를 가장 잘 나타낸 것을 고르시오. ① 뉴스 제보자- 기자 ② 해외 특파원- 방송 제작자 ③ 동아리 담당 교사- 방송 작가 ④ 방송 광고 의뢰인- 촬영 감독 ⑤ 방송국 견학 학생- 뉴스 진행자",
+   "choices": [
+    "뉴스 제보자- 기자",
+    "해외 특파원- 방송 제작자",
+    "동아리 담당 교사- 방송 작가",
+    "방송 광고 의뢰인- 촬영 감독",
+    "방송국 견학 학생- 뉴스 진행자"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 127
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고 르시오. ③ ⑤ ② ④ ①",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 52
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 남자가 여자에게 부탁한 일로 가장 적절한 것을 고르시오. ① 퇴임식장 예약하기 ② 사진 파일 보내주기 ③ 점심 식사 주문하기 ④ 행사 사진 촬영하기 ⑤ 신문 기사 작성하기",
+   "choices": [
+    "퇴임식장 예약하기",
+    "사진 파일 보내주기",
+    "점심 식사 주문하기",
+    "행사 사진 촬영하기",
+    "신문 기사 작성하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 108
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, 남자가 배드민턴 레슨에 갈 수 없는 이유를 고르 시오. ① 독감 예방 주사를 맞아서 ② 발표 준비를 해야 해서 ③ 수면 시간이 부족해서 ④ 왼쪽 발목을 다쳐서 ⑤ 진료 예약이 있어서",
+   "choices": [
+    "독감 예방 주사를 맞아서",
+    "발표 준비를 해야 해서",
+    "수면 시간이 부족해서",
+    "왼쪽 발목을 다쳐서",
+    "진료 예약이 있어서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 113
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 대화를 듣고, 여자가 지불할 금액을 고르시오. [3점] ① $36 ② $45 ③ $54 ④ $63 ⑤ $72",
+   "choices": [
+    "$36",
+    "$45",
+    "$54",
+    "$63",
+    "$72"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 64
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 대화를 듣고, Dream Bio Research Project에 관해 언급되지 않은 것을 고르시오. ① 연구원 수 ② 예산 규모 ③ 연구 목적 ④ 연구 장소 ⑤ 연구 기간",
+   "choices": [
+    "연구원 수",
+    "예산 규모",
+    "연구 목적",
+    "연구 장소",
+    "연구 기간"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 101
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. Marathon Reading Program에 관한 다음 내용을 듣고, 일치하 지 않는 것을 고르시오. ① 학생, 교사, 학부모를 대상으로 한다. ② 오후 2시에 시작한다. ③ 학생들은 독서 감상문을 써야 한다. ④ 간식과 음료는 제공되지 않는다. ⑤ 이번 주 금요일까지 신청해야",
+   "choices": [
+    "학생, 교사, 학부모를 대상으로 한다.",
+    "오후 2시에 시작한다.",
+    "학생들은 독서 감상문을 써야 한다.",
+    "간식과 음료는 제공되지 않는다.",
+    "이번 주 금요일까지 신청해야 한다.\n2020학년도 3월 고2 전국연합학력평가 문제지\n제3 교시\n고2"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 202
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 다음 표를 보면서 대화를 듣고, 여자가 주문할 휴대용 스피커 와 마이크 세트를 고르시오. Portable Speaker & Microphone Sets Model Price Running Time Color Clip Microphone ① A $65 8 hours White × ",
+   "choices": [
+    "A\n$65\n8 hours\nWhite\n×",
+    "B\n$70\n10 hours\nGrey\n○",
+    "C\n$80\n11 hours\nWhite\n○",
+    "D\n$85\n12 hours\nRed\n×",
+    "E\n$110\n15 hours\nGrey\n○"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 259
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. [3점] Man: ① Okay. We’ll let you have a onemonth break. ② Please come for a medical checkup after a month. ③ S",
+   "choices": [
+    "Okay. We’ll let you have a onemonth break.",
+    "Please come for a medical checkup after a month.",
+    "Sorry. You’d better look for another sports center.",
+    "Sure. You can take the swimming lesson next week.",
+    "We offer a 20% discount for an annual membership."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 367
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. [3점] Woman: ① We can throw a farewell party for him. ② I have another picture that I’ve almost finished. ③ I ",
+   "choices": [
+    "We can throw a farewell party for him.",
+    "I have another picture that I’ve almost finished.",
+    "I don’t think I can exhibit my painting this time.",
+    "He already submitted his painting for the exhibition.",
+    "I believe all the families will come to the exhibition."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 373
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Ryan이 Amy에게 할 말로 가장 적절 한 것을 고르시오. Ryan: ① I won’t break my promises to the students. ② We should use the school facilities more often. ③ I’ll ",
+   "choices": [
+    "I won’t break my promises to the students.",
+    "We should use the school facilities more often.",
+    "I’ll do my best whether I win or lose the election.",
+    "You need to put all your belongings in the locker now.",
+    "We’d better find out if the school can replace the lockers.\n[16 ~ 17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 405
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 여자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "the origin of the ancient Olympic Games",
+    "the positive effects of the Olympic Games",
+    "the selection process for the Olympic athletes",
+    "reasons why some Olympic Games were cancelled",
+    "changes to the sports events in the Olympic Games"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 266
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 스포츠 종목이 아닌 것은?",
+   "choices": [
+    "soccer",
+    "tennis",
+    "wrestling",
+    "handball",
+    "taekwondo\n이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시\n에 따라 답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 127
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "직원 연수 진행을 부탁하려고",
+    "연수 강사의 연락처를 문의하려고",
+    "연수에서 강연할 원고를 의뢰하려고",
+    "리더십 개발 연수 참석을 권유하려고",
+    "연수자 명단을 보내 줄 것을 요청하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 701
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 드러난 Alice의 심경 변화로 가장 적절한 것은?",
+   "choices": [
+    "nervous →delighted",
+    "embarrassed →scared",
+    "amazed →annoyed",
+    "hopeful →disappointed",
+    "angry →grateful\n고2"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 805
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "남과 비교하기보다는 자신의 성장에 주목해야 한다.",
+    "진로를 결정할 때는 다양한 의견을 경청해야 한다.",
+    "발전을 위해서는 선의의 경쟁 상대가 있어야 한다.",
+    "타인의 성공 사례를 자신의 본보기로 삼아야 한다.",
+    "객관적 자료에 근거하여 직원을 평가해야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 942
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 밑줄 친 creating a buffer가 다음 글에서 의미하는 바로 가장 적절한 것은?",
+   "choices": [
+    "knowing that learning is more important than winning",
+    "always being prepared for unexpected events",
+    "never stopping what we have already started",
+    "having a definite destination when we drive",
+    "keeping peaceful relationships with others"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1077
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "방송 통신과 관련된 법 개정이 시급하다.",
+    "공익 방송 시청률이 점점 하락하고 있다.",
+    "미디어 산업은 공익을 증진할 책임이 있다.",
+    "미디어 산업은 시설의 현대화를 꾀하고 있다.",
+    "미디어에 대한 비판적 시각을 기를 필요가 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 882
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "effects of recreational participation on memory",
+    "various motivations for recreational participation",
+    "importance of balance between work and leisure",
+    "social factors promoting the recreation movement",
+    "economic trends affecting recreational participation"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1190
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Artificial Sweeteners: Good or Bad?",
+    "Consumer Benefits of Ingredient Labeling",
+    "Sugar: An Energy Booster for Your Brain",
+    "Truth About Sugar Hidden in Food Labels",
+    "What Should We Do to Reduce Sugar Intake?\n고2"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1084
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. 다음 도표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "The injury rate of Thursday games was the lowest in \n2014 and the highest in 2017.",
+    "The injury rate of \nSaturday, Sunday and Monday games decreased steadily from \n2014 to 2017.",
+    "In all the years except 2017, the injury \nrate of Thursday games was lower than that of Saturday, \nSunday and Monday games.",
+    "The gap between the injury \nrate of Thursday games and that of Saturday, Sunday and \nMonday games was the largest in 2014 and the smallest in \n2017.",
+    "In two years out of the four, the injury rate of \nThursday games was higher than that of the 4year total."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 699
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Christiaan Huygens에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "대학에서 법과 수학을 공부했다.",
+    "1689년에 뉴턴을 만났다.",
+    "뉴턴의 만유인력 법칙을 받아들였다.",
+    "당대의 가장 정확한 시계 중 몇몇이 업적에 포함되었다.",
+    "자신의 망원경을 사용하여 천문학 연구를 수행했다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 993
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. Flower Arranging Contest에 관한 다음 안내문의 내용과 일 치하지 않는 것은?",
+   "choices": [
+    "학부모 중에서 전문가는 참여할 수 없다.",
+    "참가자에게 재료를 제공한다.",
+    "꽃꽂이를 끝내는 데 30분이 주어진다.",
+    "부문별 1등, 2등, 3등에게 상금을 준다.",
+    "2020년 5월 9일까지 꽃꽂이 작품이 전시된다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 692
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. Bright Cat Toy에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "구멍에서 정해진 순서대로 깃털이 나온다.",
+    "8분 후에 자동으로 작동을 멈춘다.",
+    "완전히 충전하는 데 5시간이 걸린다.",
+    "켜거나 끄려면 버튼을 길게 눌러야 한다.",
+    "총 세 개의 깃털이 제공된다.\n고2"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 688
+  },
+  {
+   "qNum": 29,
+   "kind": "grammar_underline",
+   "stem": "29. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "which separate traffic moving in",
+    "②": "to pass over airports while",
+    "③": "known as the",
+    "④": "searching out nearby planes",
+    "⑤": "tends to occur during longhaul"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 928
+  },
+  {
+   "qNum": 30,
+   "kind": "vocab_underline",
+   "stem": "30. 다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "detected by my nose",
+    "②": "existed beyond vision",
+    "③": "disproved this idea",
+    "④": "conserved even though the little",
+    "⑤": "late"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1044
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. When he was dying, the contemporary Buddhist teacher Dainin Katagiri wrote a remarkable book called Returning to Silence. Life, he wrote, “is a dangerous si",
+   "choices": [
+    "fragility",
+    "stability",
+    "harmony",
+    "satisfaction",
+    "diversity"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 848
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. Nothing happens immediately, so in the beginning we can’t see any results from our practice. This is like the example of the man who tries to make fire by r",
+   "choices": [
+    "he didn’t carry on to the end",
+    "someone told him not to give up",
+    "the sticks were not strong enough",
+    "he started without planning in advance",
+    "the weather was not suitable to start a fire\n고2"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1100
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. Translating academic language into everyday language can be an essential tool for you as a writer to . For, as writing theorists often note, writing is gene",
+   "choices": [
+    "finish writing quickly",
+    "reduce sentence errors",
+    "appeal to various readers",
+    "come up with creative ideas",
+    "clarify your ideas to yourself"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1050
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. The growing field of genetics is showing us what many scientists have suspected for years ⸻ . This information helps us better understand that genes are und",
+   "choices": [
+    "identical twins have the same genetic makeup",
+    "our preference for food is influenced by genes",
+    "balanced diet is essential for our mental health",
+    "genetic engineering can cure some fatal diseases",
+    "foods can immediately influence the genetic blueprint"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1183
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "Superstitions can be anything from not wanting to \nsay the last line of a play before the first audience comes, \nto not wanting to rehearse the curtain call before the final \nrehearsal.",
+    "Shakespeare’s famous tragedy Macbeth is said to \nbe cursed, and to avoid problems actors never say the title \nof the play out loud when inside a theater or a theatrical \nspace (like a rehearsal room or costume shop).",
+    "The \ninteraction between the audience and the actors in the play \ninfluences the actors’ performance.",
+    "Since the play is set \nin Scotland, the secret code you say when you need to say \nthe title of the play is “the Scottish play.”",
+    "If you do say \nthe title by accident, legend has it that you have to go \noutside, turn around three times, and come back into the \ntheater.\n[36 ~ 37] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 것\n을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 923
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. Habits create the foundation for mastery. In chess, it is only after the basic movements of the pieces have become automatic that a player can focus on the ",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n고2"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1016
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. Regardless of whether the people existing after agriculture were happier, healthier, or neither, it is undeniable that there were more of them. Agriculture ",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n[38 ~ 39] 글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 \n적절한 곳을 고르시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38 ~ 39"
+    ]
+   },
+   "charLen": 1025
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. Yet today if you program that same position into an ordinary chess program, it will immediately suggest the exact moves that Fischer made. The boundary betw",
+   "choices": [
+    ") Returning to \nthe game of chess, back in 1956, thirteenyearold child \nprodigy Bobby Fischer made a pair of remarkably creative \nmoves against grandmaster Donald Byrne. (",
+    ") First he \nsacrificed his knight, seemingly for no gain, and then \nexposed his queen to capture. (",
+    ") On the surface, these \nmoves seemed insane, but several moves later, Fischer used \nthese moves to win the game. (",
+    ") His creativity was \npraised at the time as the mark of genius. (",
+    ") It’s not \nbecause the computer has memorized the FischerByrne \ngame, but rather because it searches far enough ahead to \nsee that these moves really do pay off. \n* prodigy: 신동, 영재"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 884
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. In some cases, their brains had ceased to function altogether. Of all the medical achievements of the 1960s, the most widely known was the first heart trans",
+   "choices": [
+    ") The \npatient’s death 18 days later did not weaken the spirits of \nthose who welcomed a new era of medicine. (",
+    ") The \nability to perform heart transplants was linked to the \ndevelopment of respirators, which had been introduced to \nhospitals in the 1950s. (",
+    ") Respirators could save many \nlives, but not all those whose hearts kept beating ever \nrecovered any other significant functions. (",
+    ") The \nrealization that such patients could be a source of organs for \ntransplantation led to the setting up of the Harvard Brain \nDeath Committee, and to its recommendation that the \nabsence of all “discernible central nervous system activity” \nshould \nbe \n“a \nnew \ncriterion \nfor \ndeath”. \n(",
+    ") \nThe \nrecommendation \nhas \nsince \nbeen \nadopted, \nwith \nsome \nmodifications, almost everywhere. [3점]\n* respirator: 인공호흡기  ** discernible: 식별 가능한\n*** criterion: 기준"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1095
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "varying\n······\nbarrier",
+    "varying\n······\nshortcut",
+    "limiting\n······\nchallenge",
+    "limiting\n······\nbarrier",
+    "connecting\n······\nshortcut\n고2\n[41 ~ 42] 다음 글을 읽고, 물음에 답하시오.\nAnimal studies have dealt with the distances creatures \nmay keep between themselves and members of other \nspecies. These distances determine the functioning of the \nsocalled ‘flight or fight’ mechanism. As an animal senses \nwhat it considers to be a predator approaching within its \n‘flight’ distance, it will quite simply run away. The \ndistance at which this happens is amazingly (a) consistent, \nand Hediger, a Swiss biologist, claimed to have measured \nit remarkably precisely for some of the species that he \nstudied. Naturally, it varies from species to species, and \nusually the larger the animal the (b) shorter its flight \ndistance. I have had to use a long focus lens to take \nphotographs of giraffes, which have very large flight \ndistances. By contrast, I have several times nearly \nstepped on a squirrel in my garden before it drew \nattention to itself by suddenly escaping! We can only \nassume that this (c) variation in distance matches the \nanimal’s own assessment of its ability to accelerate and \nrun.\nThe ‘fight’ distance is always (d) smaller than the \nflight distance. If a perceived predator approaches within \nthe flight distance but the animal is trapped by obstacles \nor other predators and cannot (e) flee, it must stand its \nground. Eventually, however, attack becomes the best \nform of defence, and so the trapped animal will turn and \nfight."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2468
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "How Animals Migrate Without Getting Lost",
+    "Flight or Fight Mechanism: Still in Our Brain",
+    "Why the Size Matters in the Survival of Animals",
+    "Distances: A Determining Factor for Flight or Attack",
+    "Competition for Food Between Large and Small Animals"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 277
+  },
+  {
+   "qNum": 42,
+   "kind": "vocab_letter",
+   "stem": "42. 밑줄 친 (a)~(e) 중에서 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {
+    "a": "her to a nearby",
+    "b": "her head",
+    "c": "she thought would be",
+    "d": "she had never really",
+    "e": "her outside to have"
+   },
+   "bracketChoices": {},
+   "charLen": 1989
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) - (D) - (C)",
+    "(C) - (B) - (D)",
+    "(C) - (D) - (B)",
+    "(D) - (B) - (C)",
+    "(D) - (C) - (B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 140
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a)∼(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 75
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글에 관한 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "Yolanda는 자신이 크게 성공할 것이라고 자랑스럽게 말했다.",
+    "할머니는 역경으로부터 배울 수 있다고 말했다.",
+    "Yolanda는 집 밖에 심은 나무가 더 잘 자랄 거라고 말했다.",
+    "할머니는 두 나무를 정성스럽게 돌보았다.",
+    "Yolanda는 십 대가 되어 할머니를 다시 방문했다.\n* 확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)\n했는지 확인하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 240
+  }
+ ],
+ "sourcePdf": "ebsi_go2_20200312_paper_eng_mun_861PVDOX.pdf"
+}

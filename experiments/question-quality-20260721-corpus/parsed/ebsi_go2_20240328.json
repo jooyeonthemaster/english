@@ -1,0 +1,758 @@
+{
+ "examId": "ebsi_go2_20240328",
+ "source": "ebsi_go2_20240328_paper_eng_mun_HA42YF48.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 다음을 듣고, 남자가 하는 말의 목적으로 가장 적절한 것을 고 르시오. ① 꽃 사진 촬영 동아리 회원을 모집하려고 ② 꽃 사진 촬영 시 유의 사항을 당부하려고 ③ 꽃 사진 촬영 행사가 취소됨을 공지하려고 ④ 꽃 사진 촬영에 적합한 장비를 소개하려고 ⑤ 꽃 사진을 촬영하기에 좋은 장",
+   "choices": [
+    "꽃 사진 촬영 동아리 회원을 모집하려고",
+    "꽃 사진 촬영 시 유의 사항을 당부하려고",
+    "꽃 사진 촬영 행사가 취소됨을 공지하려고",
+    "꽃 사진 촬영에 적합한 장비를 소개하려고",
+    "꽃 사진을 촬영하기에 좋은 장소를 안내하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 169
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 여자의 의견으로 가장 적절한 것을 고르시오. ① 플래시 카드를 퀴즈에 활용하면 단어를 즐겁게 익힐 수 있다. ② 퀴즈를 내는 활동을 통해 학습자의 약점을 파악할 수 있다. ③ 단어 학습에 가장 효과적인 방법은 개인마다 차이가 있다. ④ 그림과 글이 함께 포함된 플래시",
+   "choices": [
+    "플래시 카드를 퀴즈에 활용하면 단어를 즐겁게 익힐 수 있다.",
+    "퀴즈를 내는 활동을 통해 학습자의 약점을 파악할 수 있다.",
+    "단어 학습에 가장 효과적인 방법은 개인마다 차이가 있다.",
+    "그림과 글이 함께 포함된 플래시 카드는 학습에 효과적이다.",
+    "플래시 카드를 활용한 단어 학습 프로그램 개발이 필요하다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 212
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을 듣고, 남자가 하는 말의 요지로 가장 적절한 것을 고르시오. ① 깔끔한 방을 유지하기 위해 필요 없는 물건을 없애야 한다. ② 쓰레기를 버릴 때는 환경에 미칠 악영향을 고려해야 한다. ③ 공간의 기능과 종류에 따라 효과적인 정리 방법이 다르다. ④ 사용하지 않는 물건은 보관",
+   "choices": [
+    "깔끔한 방을 유지하기 위해 필요 없는 물건을 없애야 한다.",
+    "쓰레기를 버릴 때는 환경에 미칠 악영향을 고려해야 한다.",
+    "공간의 기능과 종류에 따라 효과적인 정리 방법이 다르다.",
+    "사용하지 않는 물건은 보관하기보다 기부하는 것이 낫다.",
+    "상자를 이용하면 물건을 효과적으로 보관할 수 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 208
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고르시오.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 41
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 여자가 남자에게 부탁한 일로 가장 적절한 것을 고르시오. ① 설문 결과 정리하기 ② 원인 조사하기 ③ 그래프 제작하기 ④ 사진 고르기 ⑤ 데이터 전송하기",
+   "choices": [
+    "설문 결과 정리하기",
+    "원인 조사하기",
+    "그래프 제작하기",
+    "사진 고르기",
+    "데이터 전송하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 98
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 남자가 지불할 금액을 고르시오. [3점] ① $25 ② $29 ③ $31 ④ $34 ⑤ $36",
+   "choices": [
+    "$25",
+    "$29",
+    "$31",
+    "$34",
+    "$36"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 64
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 여자가 공연 동영상 파일을 보내줄 수 없는 이유 를 고르시오. ① 동영상을 촬영하지 않아서 ② 부원들의 동의를 구해야 해서 ③ 동영상 파일을 갖고 있지 않아서 ④ 공연을 성공적으로 마치지 못해서 ⑤ 학교 홍보 영상에 나오고 싶지 않아서",
+   "choices": [
+    "동영상을 촬영하지 않아서",
+    "부원들의 동의를 구해야 해서",
+    "동영상 파일을 갖고 있지 않아서",
+    "공연을 성공적으로 마치지 못해서",
+    "학교 홍보 영상에 나오고 싶지 않아서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 143
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, 학급 캠핑에 관해 언급되지 않은 것을 고르시오. ① 참여 학생 수 ② 날짜 ③ 대여 물품 ④ 비용 ⑤ 도착 시간",
+   "choices": [
+    "참여 학생 수",
+    "날짜",
+    "대여 물품",
+    "비용",
+    "도착 시간"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 74
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 2024 AI Expo에 관한 다음 내용을 듣고, 일치하지 않는 것을 고르시오. ① 5월 27일과 28일에 진행된다. ② 올해의 주제는 학교에서의 AI 활용이다. ③ 50개가 넘는 국가에서 채택된 AI 기술을 경험할 수 있다. ④ AI가 그려 주는 초상화를 받을 수 있다. ⑤ 웹사",
+   "choices": [
+    "5월 27일과 28일에 진행된다.",
+    "올해의 주제는 학교에서의 AI 활용이다.",
+    "50개가 넘는 국가에서 채택된 AI 기술을 경험할 수 있다.",
+    "AI가 그려 주는 초상화를 받을 수 있다.",
+    "웹사이트에서 20% 할인된 가격에 입장권을 구입할 수 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 193
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 다음 표를 보면서 대화를 듣고, 두 사람이 구매할 사진첩을 고르시오. Photo Albums Model Cover Material Pages Cover Color Price ① A paper white $16 ② B paper blue $19 ③ C fabric white $22",
+   "choices": [
+    "A\npaper\nwhite\n$16",
+    "B\npaper\nblue\n$19",
+    "C\nfabric\nwhite\n$22",
+    "D\nfabric\nblue\n$25",
+    "E\nleather\nbrown\n$30"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 205
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ① Fishing on the boat was the best for me. ② My grandparents visited us last weekend. ③ I am so glad that you",
+   "choices": [
+    "Fishing on the boat was the best for me.",
+    "My grandparents visited us last weekend.",
+    "I am so glad that you had a great time.",
+    "It took too long to get to the island.",
+    "Some activities were canceled."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 254
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ① Good idea. I’ll go to the bookstore tomorrow. ② I’m sorry, but I haven’t finished reading that book. ③ That",
+   "choices": [
+    "Good idea. I’ll go to the bookstore tomorrow.",
+    "I’m sorry, but I haven’t finished reading that book.",
+    "That’s okay. I’ve already returned the book to the library.",
+    "Not at all. I would be able to go to her birthday party.",
+    "Thank you. I’ve always wanted to write a book myself.\n2024학년도 3월 고2 전국연합학력평가 문제지\n제3 교시\n고2"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 368
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. [3점] Man: ① Don’t worry. You can pay with a credit card. ② I see. Then this one is a perfect choice for him. ③ It’ll be fine. Your husband can drop by and pick it up. ④ Really?",
+   "choices": [
+    "Don’t worry. You can pay with a credit card.",
+    "I see. Then this one is a perfect choice for him.",
+    "It’ll be fine. Your husband can drop by and pick it up.",
+    "Really? You’d better apply sunscreen before going out.",
+    "Exactly. A product with strong sun protection is better."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 389
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. [3점] Woman: ① Right. It’s better to hide weaknesses whenever possible. ② Good luck. Show them who you are, an",
+   "choices": [
+    "Right. It’s better to hide weaknesses whenever possible.",
+    "Good luck. Show them who you are, and you’ll make it.",
+    "Of course. You can handle your homework effectively.",
+    "I agree. You can make your schedule using a planner.",
+    "Be careful! A weakness keeps you from growing up."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 392
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Lucy가 James에게 할 말로 가장 적 절한 것을 고르시오. Lucy: ① Why don’t we start a campaign to ban the use of plastic?",
+   "choices": [
+    "Why don’t we start a campaign to ban the use of plastic?",
+    "How about making posters with me about recycling?",
+    "Will you prepare for the student council meeting?",
+    "I want your opinion on the school art festival.",
+    "Let me tell you how to recycle properly.\n[16 ~ 17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 398
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 남자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "historical events that inspired inventions",
+    "how inventions are unexpectedly created",
+    "hidden stories behind scientific inventions",
+    "unique inventions based on cultural identities",
+    "inventions that affected human life and history"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 261
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 발명품이 아닌 것은?",
+   "choices": [
+    "wheel",
+    "printing press",
+    "steam engine",
+    "light bulb",
+    "telephone\n이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시\n에 따라 답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 135
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 306
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. The rental fee is $50. All the money we receive from rental fees goes to support upcoming activities throughout the year. We expect all available spaces to be fully booked soon, so don’t get left out. We hope to see you at the fair. ① 지역 예술가를 위한 정기 후원을 요청하려고 ② 공예품 박람회의 부스 예약을 안내하려고 ③ 대여 물품의 반환 방법을 설명하려고 ④ 지역 예술가가 만든 물품을 홍보하려고 ⑤ 지역 행사 일정의 변경 사항을 공지하려고 19. 다음 글에 드러난 Sarah의 심경 변화로 가장 적절한 것은?",
+   "choices": [
+    "hopeful → regretful",
+    "relieved → grateful",
+    "excited → disappointed",
+    "depressed → frightened",
+    "discouraged → delighted"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1132
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "성공하기 위해서는 인내심을 길러야 한다.",
+    "안락함을 추구하기보다 한계에 도전해야 한다.",
+    "사회 변화의 속도에 맞춰 빠르게 대응해야 한다.",
+    "기회를 기다리기보다 능동적으로 행동해야 한다.",
+    "흥미를 잃지 않으려면 자신이 좋아하는 일을 해야 한다.\n고2"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 828
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 밑줄 친 we were still taping bricks to accelerators가 다음 글에서 의미하는 바로 가장 적절한 것은?",
+   "choices": [
+    "the importance of medical education was overlooked",
+    "selfdriving cars enabled patients to move around freely",
+    "the devices for safe driving were unavailable at that time",
+    "lack of advanced tools posed a challenge in understanding \npatients",
+    "appropriate technologies led to success in developing a \nnew medicine"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1518
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "새로운 기술은 효율적인 시간 관리에 도움이 된다.",
+    "새로운 기술에 비해 기존 기술의 영향력이 간과되고 있다.",
+    "현대 사회의 새로운 기술이 양육자의 역할을 대체하고 있다.",
+    "새로운 기술의 사용을 장려하는 사회적 인식이 요구된다.",
+    "기존 기술의 활용은 새로운 기술의 개발에 도움이 된다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 984
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "diverse benefits of good market research",
+    "negative factors in making business decisions",
+    "difficulties in designing products with empathic concern",
+    "efforts to build cognitive empathy among employees",
+    "different interpretations of empathy in business"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1401
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "From Symbols to Bytes: History of Communication",
+    "Parents’ Desire to Keep Their Children Within Reach",
+    "Building Trust: The Key to Ideal Human Relationships",
+    "The Positive Role of Digital Technology in Teen Friendships",
+    "Connected but Stressed: Challenges for Kids in the Digital Era\n고2"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1198
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. 다음 도표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "The U.S. showed the largest \namount of total animal protein consumption per person \namong the three countries.",
+    "Eggs and Dairy was the top \nanimal protein consumption source among four categories in \nthe U.S., followed by Meat and Poultry at 22.4g and 20.6g, \nrespectively.",
+    "Unlike the U.S., Brazil consumed the most \nanimal protein from Meat, with Eggs and Dairy being the \nsecond most.",
+    "Japan had less than 50g of the total animal \nprotein consumption per person, which was the smallest \namong the three countries.",
+    "Fish and Seafood, which was \nthe least consumed animal protein consumption source in the \nU.S. and Brazil, ranked the second highest in Japan."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 830
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Theodore von Kármán에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "어린 시절 수학과 과학에 재능을 보였다.",
+    "University of Göttingen에서 공학 박사 학위를 받았다.",
+    "1920년대에 강연자 겸 자문 위원으로 다니기 시작했다.",
+    "Caltech의 공학자를 초청하여 조언을 구했다.",
+    "National Medal of Science를 받았다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 913
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. Basic Latte Art Class에 관한 다음 안내문의 내용과 일치하 지 않는 것은?",
+   "choices": [
+    "세 가지 라떼 아트 디자인을 직접 만들 것이다.",
+    "수업은 4시간 동안 진행된다.",
+    "등록은 4월 24일부터 시작된다.",
+    "비용에 재료비가 포함되어 있다.",
+    "우유를 마시지 않는 사람은 대체 유제품을 사용할 수 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 715
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. Family Nighthiking Event에 관한 다음 안내문의 내용과 일 치하는 것은?",
+   "choices": [
+    "토요일과 일요일 이틀간 진행된다.",
+    "오후 5시에 시작된다.",
+    "어른과 어린이의 참가비는 같다.",
+    "어린이는 법적 보호자를 동반해야 한다.",
+    "추첨을 통해 구급상자가 무료로 제공된다.\n고2"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 656
+  },
+  {
+   "qNum": 29,
+   "kind": "grammar_underline",
+   "stem": "29. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "that the key to addressing",
+    "②": "is the part of personality",
+    "③": "ones",
+    "④": "using alongside other behavior modification",
+    "⑤": "What mental imagery does is"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1066
+  },
+  {
+   "qNum": 30,
+   "kind": "vocab_underline",
+   "stem": "30. 다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "primary socialization agents",
+    "②": "similar reactions in comparable situations",
+    "③": "cultivate adolescents’ autonomy striving",
+    "④": "adjusted",
+    "⑤": "indirect support of autonomous emotion"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1355
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. Dancers often push themselves to the limits of their physical capabilities. But that push is misguided if it is directed toward accomplishing something phys",
+   "choices": [
+    "habits",
+    "cultures",
+    "constraints",
+    "hostilities",
+    "moralities"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1027
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. We must explore the relationship between children’s film production and consumption habits. The term “children’s film” implies ownership by children — their",
+   "choices": [
+    "centered on giving moral lessons",
+    "consumed by audiences of all ages",
+    "appreciated through an artistic view",
+    "produced by inexperienced directors",
+    "separated from the cinema for adults\n고2"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1215
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. Beethoven’s drive to create something novel is a reflection of his state of curiosity. Our brains experience a sense of reward when we create something new ",
+   "choices": [
+    "had more standardized patterns",
+    "obtained more public popularity",
+    "became less predictable over time",
+    "reflected his unstable mental state",
+    "attracted less attention from the critics"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1159
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. Technologists are always on the lookout for quantifiable metrics. Measurable inputs to a model are their lifeblood, and like a social scientist, a technolog",
+   "choices": [
+    "regarding continuous progress as a valid solution",
+    "prioritizing shortterm goals over longterm visions",
+    "mistaking a personal bias for an established theory",
+    "substituting what is measurable for what is meaningful",
+    "focusing more on possible risks than concrete measures"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1242
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "Many spices have antibacterial \nproperties — in fact, common seasonings such as garlic, \nonion, and oregano inhibit the growth of almost every \nbacterium tested.",
+    "And the cultures that make the heaviest \nuse of spices — think of the garlic and black pepper of Thai \nfood, the ginger and coriander of India, the chili peppers of \nMexico — come \nfrom \nwarmer \nclimates, \nwhere \nbacterial \nspoilage is a bigger issue.",
+    "The changing climate can have \na significant impact on the production and availability of \nspices, influencing their growth patterns and ultimately \naffecting global spice markets.",
+    "In contrast, the most \nlightly spiced cuisines — those of Scandinavia and northern \nEurope — are from cooler climates.",
+    "Our uniquely human \nattention to flavor, in this case the flavor of spices, turns \nout to have arisen as a matter of life and death.\n* cuisine: 요리(법)\n[36 ~ 37] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 것\n을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1156
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. Development of the human body from a single cell provides many examples of the structural richness that is possible when the repeated production of random v",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n고2"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1310
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. In order to bring the everincreasing costs of home care for elderly and needy persons under control, managers of home care providers have introduced managem",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n[38 ~ 39] 글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 \n적절한 곳을 고르시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38 ~ 39"
+    ]
+   },
+   "charLen": 1337
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. However, there are many lines of evidence to suggest that vagrancy can, on rare occasions, dramatically alter the fate of populations, species or even whole",
+   "choices": [
+    ") In turn, it is also commonly assumed that \nvagrancy \nitself \nis \na \nrelatively \nunimportant \nbiological \nphenomenon. (",
+    ") This is undoubtedly true for the majority \nof cases, as the most likely outcome of any given vagrancy \nevent is that the individual will fail to find enough resources, \nand/or be exposed to inhospitable environmental conditions, \nand perish. (",
+    ") Despite being infrequent, these events can \nbe extremely important when viewed at the timescales over \nwhich ecological and evolutionary processes unfold. (",
+    ") The \nmost profound consequences of vagrancy relate to the \nestablishment of new breeding sites, new migration routes \nand wintering locations. (",
+    ") Each of these can occur \nthrough different mechanisms, and at different frequencies, \nand they each have their own unique importance. [3점]\n* vagrancy: 무리에서 떨어져 헤맴  ** doomed: 죽을 운명의\n*** inhospitable: 살기 힘든"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1256
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. Only then are they able to act quickly in accordance with their internalized expertise and evidencebased experience. Intuition can be great, but it ought to",
+   "choices": [
+    ") \nExperts, for example, are able to think on their feet because \nthey’ve invested thousands of hours in learning and practice: \ntheir intuition has become datadriven. (",
+    ") Yet most people \nare not experts, though they often think they are. (",
+    ") Most \nof us, especially when we interact with others on social media, \nact with expertlike speed and conviction, offering a wide \nrange of opinions on global crises, without the substance of \nknowledge that supports it. (",
+    ") And thanks to AI, which \nensures that our messages are delivered to an audience more \ninclined to believing it, our delusions of expertise can be \nreinforced by our personal filter bubble. (",
+    ") We have an \ninteresting tendency to find people more openminded, rational, \nand sensible when they think just like us.\n* intuition: 직관  ** delusion: 착각"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 997
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "overwhelm\nobtain",
+    "overwhelm\nexchange",
+    "enhance\napply",
+    "enhance\ndiscover",
+    "fulfill\naccess\n고2\n[41 ~ 42] 다음 글을 읽고, 물음에 답하시오.\nIt’s untrue that teens can focus on two things at once —\nwhat they’re doing is shifting their attention from one \ntask to another. In this digital age, teens wire their brains \nto make these shifts very quickly, but they are still, like \neveryone else, paying attention to one thing at a time, \nsequentially. Common sense tells us multitasking should \n(a) increase brain activity, but Carnegie Mellon University \nscientists using the latest brain imaging technology find it \ndoesn’t. As a matter of fact, they discovered that \nmultitasking actually decreases brain activity. Neither task \nis done as well as if each were performed (b) individually. \nFractions of a second are lost every time we make a \nswitch, and a person’s interrupted task can take 50 \npercent (c) longer to finish, with 50 percent more errors. \nTurns out the latest brain research (d) contradicts the old \nadvice “one thing at a time.”\nIt’s not that kids can’t do some tasks simultaneously. \nBut if two tasks are performed at once, one of them has \nto be familiar. Our brains perform a familiar task on \n“automatic pilot” while really paying attention to the other \none. That’s why insurance companies consider talking on a \ncell phone and driving to be as (e) dangerous as driving \nwhile drunk — it’s the driving that goes on “automatic \npilot” while the conversation really holds our attention. \nOur kids may be living in the Information Age but our \nbrains have not been redesigned yet."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2888
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Multitasking Unveiled: What Really Happens in Teens’ Brains",
+    "Optimal Ways to Expand the Attention Span of Teens",
+    "Unknown Approaches to Enhance Brain Development",
+    "Multitasking for a Balanced Life in a Busy World",
+    "How to Build Automaticity in Performing Tasks"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 283
+  },
+  {
+   "qNum": 42,
+   "kind": "vocab_letter",
+   "stem": "42. 밑줄 친 (a)~(e) 중에서 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {
+    "a": "She desperately hoped Leo",
+    "b": "you with updates as",
+    "c": "She patted him with",
+    "d": "I think Leo has",
+    "e": "she had to accept"
+   },
+   "bracketChoices": {},
+   "charLen": 1759
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) - (D) - (C)",
+    "(C) - (B) - (D)",
+    "(C) - (D) - (B)",
+    "(D) - (B) - (C)",
+    "(D) - (C) - (B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 140
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a)~(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 75
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글에 관한 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "Christine은 수의사가 Leo에 대해 잘 알고 있을 거라고 확신했다.",
+    "Christine은 병원을 방문한 다음 날 수의사의 전화를 받았다.",
+    "수의사는 Leo의 빠른 회복을 위한 조언을 했다.",
+    "대기실은 다른 반려동물의 주인들로 꽉 차 있었다.",
+    "Leo의 감염 여부를 알기 위해 검사를 할 필요가 있었다.\n* 확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)\n했는지 확인하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 255
+  }
+ ],
+ "sourcePdf": "ebsi_go2_20240328_paper_eng_mun_HA42YF48.pdf"
+}

@@ -1,0 +1,758 @@
+{
+ "examId": "ebsi_go2_20221123",
+ "source": "ebsi_go2_20221123_paper_eng_mun_OAA26991.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 다음을 듣고, 여자가 하는 말의 목적으로 가장 적절한 것을 고르시오. ①자전거 전용 도로의 정비 일정을 공지하려고 ②자전거 안전 장비 착용의 중요성을 강조하려고 ③공유 자전거 주차장의 설치 장소를 안내하려고 ④공유 자전거를 지정된 장소에 주차할 것을 당부하려고 ⑤친환경적인 교통수단",
+   "choices": [
+    "자전거 전용 도로의 정비 일정을 공지하려고",
+    "자전거 안전 장비 착용의 중요성을 강조하려고",
+    "공유 자전거 주차장의 설치 장소를 안내하려고",
+    "공유 자전거를 지정된 장소에 주차할 것을 당부하려고",
+    "친환경적인 교통수단을 이용해 등교할 것을 권장하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 180
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 남자의 의견으로 가장 적절한 것을 고르시오. ①눈병 예방을 위해 정기적인 안과 검진을 받아야 한다. ②적절한 휴식은 작업의 집중도를 높이는 데 도움이 된다. ③지나치게 밝은 컴퓨터 화면은 눈 건강에 해로울 수 있다. ④너무 작은 글씨를 읽는 것은 눈의 피로를 유발할 ",
+   "choices": [
+    "눈병 예방을 위해 정기적인 안과 검진을 받아야 한다.",
+    "적절한 휴식은 작업의 집중도를 높이는 데 도움이 된다.",
+    "지나치게 밝은 컴퓨터 화면은 눈 건강에 해로울 수 있다.",
+    "너무 작은 글씨를 읽는 것은 눈의 피로를 유발할 수 있다.",
+    "시력 보호를 위해 화면과의 적당한 거리 유지가 필요하다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 199
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 대화를 듣고, 두 사람의 관계를 가장 잘 나타낸 것을 고르시오. ①동화 작가 – 삽화가 ②악기 조율사 – 연주가 ③학부모 – 유치원 교사 ④피아노 강사 – 수강생 ⑤중고 용품점 직원 – 손님",
+   "choices": [
+    "동화 작가 – 삽화가",
+    "악기 조율사 – 연주가",
+    "학부모 – 유치원 교사",
+    "피아노 강사 – 수강생",
+    "중고 용품점 직원 – 손님"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 110
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고르시오. ① ② ④ ⑤ ③",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 51
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 남자가 할 일로 가장 적절한 것을 고르시오. ①명단 출력하기 ②의자 가져오기 ③동영상 내려받기 ④구급상자 확인하기 ⑤실험용 장갑 가져오기",
+   "choices": [
+    "명단 출력하기",
+    "의자 가져오기",
+    "동영상 내려받기",
+    "구급상자 확인하기",
+    "실험용 장갑 가져오기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 88
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 여자가 지불할 금액을 고르시오. [3점] ①$27 ②$34 ③$36 ④$37 ⑤$40",
+   "choices": [
+    "$27",
+    "$34",
+    "$36",
+    "$37",
+    "$40"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 59
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 남자가 레일 바이크를 타러 갈 수 없는 이유를 고르시오. ①가족 모임에 가야 해서 ②축구 연습을 해야 해서 ③아르바이트를 해야 해서 ④연극 의상을 제작해야 해서 ⑤뮤지컬 오디션이 예정되어 있어서",
+   "choices": [
+    "가족 모임에 가야 해서",
+    "축구 연습을 해야 해서",
+    "아르바이트를 해야 해서",
+    "연극 의상을 제작해야 해서",
+    "뮤지컬 오디션이 예정되어 있어서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 127
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, Winter Robot Camp에 관해 언급되지 않은 것을 고르시오. ①기간 ②장소 ③준비물 ④운영 프로그램 ⑤등록 방법",
+   "choices": [
+    "기간",
+    "장소",
+    "준비물",
+    "운영 프로그램",
+    "등록 방법"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 82
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. Go Greener Festival에 관한 다음 내용을 듣고, 일치하지 않는 것을 고르시오. ①11월 11일부터 13일까지 진행된다. ②환경에 관한 노래가 연주된다. ③무대는 재활용된 재료로 제작된다. ④물병을 가져오면 음료를 무료로 받을 수 있다. ⑤주차장 이용이 불가능하다.",
+   "choices": [
+    "11월 11일부터 13일까지 진행된다.",
+    "환경에 관한 노래가 연주된다.",
+    "무대는 재활용된 재료로 제작된다.",
+    "물병을 가져오면 음료를 무료로 받을 수 있다.",
+    "주차장 이용이 불가능하다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 161
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 다음 표를 보면서 대화를 듣고, 두 사람이 주문할 직소 퍼즐 세트를 고르시오. Jigsaw Puzzle Sets",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 68
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ①It was too late to learn something new. ②It was my aunt who taught me calligraphy. ③I used to teach my littl",
+   "choices": [
+    "It was too late to learn something new.",
+    "It was my aunt who taught me calligraphy.",
+    "I used to teach my little brother handwriting.",
+    "I didn’t know you had the same hobby as me.",
+    "I bought a special brush for calligraphy online."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 279
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ①I see. I’ll register for the available course. ②No way. I’m not interested in water activities. ③No problem. I’ll let you choose the 7 p.m. class. ④Wonderful. It’s my pleasure to teach scuba diving. ⑤Really?",
+   "choices": [
+    "B\nStarry Night\n800\n$38\nwooden",
+    "C\nWater Lilies\n700\n$35\nwooden",
+    "D\nBirth of Venus\n600\n$33\nmetal",
+    "E\nSunflowers\n400\n$30\nmetal",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 718
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. [3점] Man: ①It’ll be helpful to deliver DIY furniture. ②I’ll fix your computer by using the manual. ③I’ve alre",
+   "choices": [
+    "It’ll be helpful to deliver DIY furniture.",
+    "I’ll fix your computer by using the manual.",
+    "I’ve already mastered how to put it together.",
+    "I’d like you to buy a brand new bookcase online.",
+    "I should find a video for assembling the bookcase."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 301
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. Woman: ①Definitely. We should avoid eating only vegetables. ②Sorry. I prefer good-looking vegetables to ugly ",
+   "choices": [
+    "Definitely. We should avoid eating only vegetables.",
+    "Sorry. I prefer good-looking vegetables to ugly ones.",
+    "Good. Let’s see if the vegetables we need are for sale.",
+    "Exactly. Ugly vegetables are not appropriate for eating.",
+    "Excellent. I like the ugly vegetables you bought for me."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 341
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Sofia가 Henry에게 할 말로 가장 적절한 것을 고르시오. [3점] Sofia: ①You need to look at reviews when choosing books. ②Why don’t you show an example of a presentation?",
+   "choices": [
+    "You need to look at reviews when choosing books.",
+    "Why don’t you show an example of a presentation?",
+    "How about giving students a choice in their books?",
+    "I recommend you assign a book report to students.",
+    "You should give students time to work with others.\n[16 ~ 17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 351
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 남자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "migration patterns of various birds",
+    "bird diversity affected by city growth",
+    "everyday expressions related to birds",
+    "bird symbolism used in different cultures",
+    "impact of birds on agricultural development"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 233
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 새가 아닌 것은?",
+   "choices": [
+    "eagle",
+    "crane",
+    "owl",
+    "sparrow",
+    "hummingbird\n  이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시에 \n따라 답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 111
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "행사 홍보물 게시가 가능한지를 문의하려고",
+    "학교 퀴즈 행사에 사용할 물품 제작을 의뢰하려고",
+    "우승 상품으로 사용할 상품권을 기부해 줄 것을 요청하려고",
+    "학교 행사로 예상되는 소음 발생에 대해 양해를 구하려고",
+    "퀴즈 행사 개최를 위한 장소 사용 허가를 받으려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 958
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 드러난 ‘I’의 심경 변화로 가장 적절한 것은?",
+   "choices": [
+    "panicked\n→relieved",
+    "sorrowful →indifferent",
+    "sympathetic →content",
+    "jealous\n→delighted",
+    "confused\n→humiliated"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 850
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "조직이 구성원에게 제공하는 보상은 즉각적이어야 한다.",
+    "조직의 발전을 위해 구성원은 동료의 능력을 신뢰해야 한다.",
+    "조직 내 구성원의 능력에 맞는 명확한 목표를 설정해야 한다.",
+    "조직의 신뢰 형성을 위해 구성원에 대한 평가 요소가 명확해야 한다.",
+    "구성원의 의견 수용을 위해 신뢰에 기반한 조직 문화가 구축되어야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1116
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 밑줄 친 “eating my problems for breakfast”가 다음 글에서 의미하는 바로 가장 적절한 것은?",
+   "choices": [
+    "thinking of breakfast as fuel for the day",
+    "trying to reflect on pleasant events from yesterday",
+    "handling the most demanding tasks while full of energy",
+    "spending the morning time improving my physical health",
+    "preparing at night to avoid decision making in the morning"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1362
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "새로운 시작을 하기 전에 장기적인 계획을 세우는 것이 바람직하다.",
+    "자신이 해야 할 일을 일정표에 표시하는 것이 목표 달성에 효과적이다.",
+    "문제 행동을 개선하기 위해 원인이 되는 요소를 파악할 필요가 있다.",
+    "날짜가 시작이라는 의미와 관련지어질 때 목표 추구에 강한 동기가 \n부여된다.",
+    "상세한 일정표를 작성하는 것은 여러 목표를 동시에 달성하는 데 \n도움이 된다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1064
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "cultural differences in honoring war victims",
+    "benefits of utilizing sound and motion in warfare",
+    "functions of music in preventing or resolving conflicts",
+    "strategies of analyzing an enemy’s vulnerable points in war",
+    "effects of religious dances on lowering anxiety on the battlefield"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1305
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Cycling Contributes to a City’s Atmosphere and Identity",
+    "The Rise of Cycling: A New Status Symbol of City Dwellers",
+    "Cycling Is Wealth-Building but Worsens Social Inequality",
+    "How to Encourage and Sustain the Bicycle Craze in Urban Areas",
+    "Expanding Bike Lane Networks Can Lead to More Inclusive Cities"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1367
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. 다음 도표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "The percentage of vaccinated children in \nthe Western Pacific was lower than that of Europe in 2000, \nbut the vaccination percentage in 2020 of the Western Pacific \nexceeded that of Europe by 3 percentage points.",
+    "Among all \nregions, South-East Asia achieved the second biggest \nincrease in its percentage of vaccinated children over the two \ndecades, and it ranked third in the percentage of vaccinated \nchildren among the six regions in 2020.",
+    "In the Eastern \nMediterranean, the percentage of vaccinated children more than \ndoubled from 2000 to 2020, but did not exceed that of the \nAmericas in either year.",
+    "The percentage of vaccinated \nchildren in the Americas was the highest among the six regions \nin 2000, but it increased the least of all regions over the two \ndecades.",
+    "In Africa, the percentage of children who received \nthe vaccine in 2020 was more than seven times higher than in \n2000, but was still the lowest among the six regions in 2020."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1209
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Janaki Ammal에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "관습을 따르지 않고 대학에 입학하기로 결심했다.",
+    "세계에서 가장 단 사탕수수 품종 개발에 기여했다.",
+    "Chromosome Atlas of Cultivated Plants를 공동 집필했다.",
+    "식량 생산을 증가시키는 데 도움을 주기 위해 인도로 돌아갔다.",
+    "수력 발전 댐의 건설로부터 Silent Valley를 지키는 데 실패했다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1152
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. 2022 Strawberry Festival에 관한 다음 안내문의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "올해는 대면 행사로 개최된다.",
+    "6세 이하의 어린이에게는 입장료를 받지 않는다.",
+    "딸기파이 먹기 대회가 오후에 열린다.",
+    "매표소로 가는 트램 서비스는 주차비에 포함되지 않는다.",
+    "자원봉사에 관심이 있다면 신청서를 이메일로 보내야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 783
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. Maple Spring Light Art Exhibition에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "매주 월요일은 운영하지 않는다.",
+    "밤 11시 이후에도 입장이 가능하다.",
+    "관람 경로가 담긴 지도는 종이로만 제공한다.",
+    "기념품은 현장에서만 구매 가능하다.",
+    "지역 주민은 입장료의 10% 할인을 받을 수 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 821
+  },
+  {
+   "qNum": 29,
+   "kind": "grammar_underline",
+   "stem": "29. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "that might discourage rivals from",
+    "②": "doing it at a different",
+    "③": "when a new entrant launches",
+    "④": "are not accommodated",
+    "⑤": "untapped pockets of market demand"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1119
+  },
+  {
+   "qNum": 30,
+   "kind": "vocab_underline",
+   "stem": "30. 다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "bottom",
+    "②": "depth and allows the viewer",
+    "③": "visible when illuminated",
+    "④": "single color and easily blends",
+    "⑤": "reinforces the visual impression of"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1017
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. No learning is possible without an error signal. Organisms only learn when events violate their expectations. In other words, surprise is one of the fundame",
+   "choices": [
+    "audible",
+    "predictable",
+    "objective",
+    "countable",
+    "recorded"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1178
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. The connectedness of the global economic market makes it vulnerable to potential “infection.” A financial failure can make its way from borrowers to banks t",
+   "choices": [
+    "Fear and uncertainty can be damaging",
+    "Unaffordable personal loans may pose a risk",
+    "Ignorance about legal restrictions may matter",
+    "Accurate knowledge of investors can be poisonous",
+    "Strong connections between banks can create a scare"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1366
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. Negative numbers are a lot more abstract than positive numbers — you can’t see negative 4 cookies and you certainly can’t eat them — but you can think about",
+   "choices": [
+    "sidestep the dreaded negative sign",
+    "resolve stock market uncertainties",
+    "compensate for complicated calculating processes",
+    "unify the systems of expressing numbers below zero",
+    "face the truth that subtraction can create negative numbers"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1233
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. Observational studies of humans cannot be properly controlled. Humans live different lifestyles and in different environments. Thus, they are insufficiently",
+   "choices": [
+    "distort the interpretation of the medical research results",
+    "isolate the effects of the specific variable being studied",
+    "conceal the purpose of their research from subjects",
+    "conduct observational studies in an ethical way",
+    "refrain from intervening in their experiments"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1404
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "The reason for this elusiveness is \nsimple: we almost never directly express the envy we are \nfeeling.",
+    "Envy entails the admission to ourselves that we are \ninferior to another person in something we value.",
+    "Not only is \nit painful to admit this inferiority, but it is even worse for \nothers to see that we are feeling this.",
+    "Envy can cause illness \nbecause people with envy can cast the “evil eye” on someone \nthey envy, even unwittingly, or the envious person can become \nill from the emotion.",
+    "And so almost as soon as we experience \nthe initial feelings of envy, we are motivated to disguise it to \nourselves — it is not envy we feel but unfairness at the \ndistribution of goods or attention, resentment at this unfairness, \neven anger.\n* elusive: 이해하기 어려운\n[36 ~ 37] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 것을 \n고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 995
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. The right to be forgotten is a right distinct from but related to a right to privacy. The right to privacy is, among other things, the right for information",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1163
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. To an economist who succeeds in figuring out a person’s preference structure — understanding whether the satisfaction gained from consuming one good is grea",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n[38 ~ 39] 글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 \n적절한 곳을 고르시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38 ~ 39"
+    ]
+   },
+   "charLen": 1227
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. It does this by making your taste buds perceive these flavors as bad and even disgusting. In the natural world, if an animal consumes a plant with enough an",
+   "choices": [
+    ") This “intuition,” \nthough, is not just seen in animals. (",
+    ") Have you ever \nwondered why most children hate vegetables? (",
+    ") Dr. Steven \nGundry justifies this as part of our genetic programming, our \ninner intelligence. (",
+    ") Since many vegetables are full of \nantinutrients, your body tries to keep you away from them \nwhile you are still fragile and in development. (",
+    ") As you \ngrow and your body becomes stronger enough to tolerate these \nantinutrients, suddenly they no longer taste as bad as before.\n* taste bud: 미뢰(味蕾)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 912
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. However, the rigidity of rock means that land rises and falls with the tides by a much smaller amount than water, which is why we notice only the ocean tide",
+   "choices": [
+    ") \nIt makes our planet slightly stretched out along the line of sight \nto the Moon and slightly compressed along a line perpendicular \nto that. (",
+    ") The tidal stretching caused by the Moon’s gravity \naffects our entire planet, including both land and water, inside \nand out. (",
+    ") The stretching also explains why there are \ngenerally two high tides (and two low tides) in the ocean each \nday. (",
+    ") Because Earth is stretched much like a rubber band, \nthe oceans bulge out both on the side facing toward the Moon \nand on the side facing away from the Moon. (",
+    ") As Earth \nrotates, we are carried through both of these tidal bulges each \nday, so we have high tide when we are in each of the two bulges \nand low tide at the midpoints in between. [3점]\n* rigidity: 단단함  ** perpendicular: 직각을 이루는\n*** bulge: 팽창하다"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1100
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "preference …… outweigh",
+    "hesitation …… reinforce",
+    "preference …… strengthen",
+    "hesitation …… overwhelm",
+    "inability\n…… underlie\n[41 ~ 42] 다음 글을 읽고, 물음에 답하시오.\nA neuropsychologist, Michael Gazzaniga conducted a study \nthat shows that our brains (a) excel at creating coherent (but not \nnecessarily true) stories that deceive us. In the study, split-brain \npatients were shown an image such that it was visible to only their \nleft eye and asked to select a related card with their left hand. \nLeft-eye vision and left-side body movement are controlled by \nthe right hemisphere. In a split-brain patient, the connection \nbetween the right and left hemispheres has been broken, \nmeaning no information can cross from one hemisphere to the \nother. Therefore, in this experiment, the right hemisphere was \ndoing all of the work, and the left hemisphere was (b) aware of \nwhat was happening.\nGazzaniga then asked participants why they chose the card \nthat they did. Because language is processed and generated in \nthe left hemisphere, the left hemisphere is required to \nrespond. However, because of the experiment’s design, only \nthe right hemisphere knew why the participant selected the \ncard. As a result, Gazzaniga expected the participants to be \n(c) silent when asked to answer the question. But instead, \nevery subject fabricated a response. The left hemisphere was \nbeing asked to provide a (d) rationalization for a behavior done \nby the right hemisphere. The left hemisphere didn’t know the \nanswer. But that didn’t keep it from fabricating an answer. That \nanswer, however, had no basis in reality. Now if this study had \nbeen limited to split-brain patients, it would be interesting but \nnot very (e) relevant to us. It turns out split-brain patients \naren’t the only ones who fabricate reasons. We all do it. We all \nneed a coherent story about ourselves, and when information in \nthat story is missing, our brains simply fill in the details.\n* coherent: 일관성 있는"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3311
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Which Side of the Brain Do We Tend to Use More?",
+    "How Our Brain’s Hemispheres Interact in Storytelling",
+    "The Deceptive Brain: Insights from a Split-Brain Patient Study",
+    "To Be Creative, Activate Both Hemispheres of Your Brain!",
+    "The Dominance of the Left Brain in Image Processing"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 302
+  },
+  {
+   "qNum": 42,
+   "kind": "vocab_letter",
+   "stem": "42. 밑줄 친 (a)~(e) 중에서 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {
+    "a": "she stopped",
+    "b": "She leaped into the",
+    "c": "She got frustrated at",
+    "d": "you could",
+    "e": "her"
+   },
+   "bracketChoices": {},
+   "charLen": 1679
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) - (D) - (C)",
+    "(C) - (B) - (D)",
+    "(C) - (D) - (B)",
+    "(D) - (B) - (C)",
+    "(D) - (C) - (B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 135
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a)~(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 69
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글의 Chanel에 관한 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "연습 경기 중에 팀원들의 실망한 모습을 보았다.",
+    "라이벌 학교와의 챔피언십 경기에 출전했다.",
+    "팀을 우승시키는 마지막 슛을 성공했다.",
+    "슛 연습에서 연이은 실패 후에 12번째 슛이 들어갔다.",
+    "방과 후에 농구 슛을 연습하기 시작했다.\n※ 확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)했는지 확인\n하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 216
+  }
+ ],
+ "sourcePdf": "ebsi_go2_20221123_paper_eng_mun_OAA26991.pdf"
+}

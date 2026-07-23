@@ -1,0 +1,766 @@
+{
+ "examId": "ebsi_go2_20120314",
+ "source": "ebsi_go2_20120314_paper_201203142_eng_mun.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 대화를듣고두사람이제작할포스터를고르시오 , . ① ② ③ ④ ⑤",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 38
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를듣고여자의심경변화로가장적절한것을고르시오 , . gloomy hopeful ① → nervous cheerful ② → worried relieved ③ → excited disappointed ④ → indifferent curious ⑤ →",
+   "choices": [
+    "→\nnervous\ncheerful",
+    "→\nworried\nrelieved",
+    "→\nexcited\ndisappointed",
+    "→\nindifferent\ncurious",
+    "→"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 142
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을듣고남자가설명하는대상을고르시오 , . lamp ① mirror ② window ③ monitor ④ glasses ⑤",
+   "choices": [
+    "mirror",
+    "window",
+    "monitor",
+    "glasses",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 72
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를듣고 남자가여자를위해할일로가장적절한것을 , 고르시오. 자동차점검해주기 ① 추천서써주기 ② 직장까지태워주기 ③ 스피커교환해주기 ④ 이력서수정해주기 ⑤",
+   "choices": [
+    "추천서써주기",
+    "직장까지태워주기",
+    "스피커교환해주기",
+    "이력서수정해주기",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 89
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 다음을듣고 여자가하는말의목적으로가장적절한것을 , 고르시오. 영어시험일정을공지하려고 ① 과제수행방식을설명하려고 ② 캠핑시주의사항을안내하려고 ③ 새로운상벌점제도를홍보하려고 ④ 학점관리의중요성을강조하려고 ⑤",
+   "choices": [
+    "과제수행방식을설명하려고",
+    "캠핑시주의사항을안내하려고",
+    "새로운상벌점제도를홍보하려고",
+    "학점관리의중요성을강조하려고",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 116
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를듣고남자가학급신문제작비로지불할금액을고르시오 , . 점 [3 ] $135 ① $170 ② $180 ③ $190 ④ $200 ⑤",
+   "choices": [
+    "$170",
+    "$180",
+    "$190",
+    "$200",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 76
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를듣고두사람이대화하고있는장소로가장적절한곳을 , 고르시오. 배안 ① 박물관 ② 식물원 ③ 자동차안 ④ 해양수족관 ⑤",
+   "choices": [
+    "박물관",
+    "식물원",
+    "자동차안",
+    "해양수족관",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 69
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를듣고두사람의관계를가장잘나타낸것을고르시오 , . 어머니 아들 - ① 지휘자 연주자 - ② 기자 연기자 - ③ 사회자 방청객 - ④ 악기점점원 고객 - ⑤",
+   "choices": [
+    "지휘자\n연주자\n-",
+    "기자\n연기자\n-",
+    "사회자\n방청객\n-",
+    "악기점점원\n고객\n-",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 91
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 다음을듣고무엇에관한안내인지고르시오 , . 예술품구입 ① 전시회개최 ② 자서전출판 ③ 미술관의임시휴관 ④ 유럽미술사강좌 ⑤",
+   "choices": [
+    "전시회개최",
+    "자서전출판",
+    "미술관의임시휴관",
+    "유럽미술사강좌",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 71
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 대화를듣고 여자가 을데리러갈수 , Sam 없는이유를고르 시오. 교통체증이심해서 ① 자동차가고장나서 ② 친척병문안을가야해서 ③ 진료예약이되어있어서 ④ 큰아들이대신간다고말해서 ⑤ 학년도 월고 전국연합학력평가문제지 2012 제 교시 성명 수험번호 ━━━━━━━━━━━━━━━━━━━━━",
+   "choices": [
+    "자동차가고장나서",
+    "친척병문안을가야해서",
+    "진료예약이되어있어서",
+    "큰아들이대신간다고말해서",
+    "학년도\n월고\n전국연합학력평가문제지\n2012\n제\n교시\n성명\n수험번호\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 203
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 대화를듣고여자가남자에게부탁한일을고르시오 , . 생일선물전해주기 ① 소설책빌려주기 ② 도서관에책반납하기 ③ 작품내용설명하기 ④ 친구에게책제목물어보기 ⑤",
+   "choices": [
+    "소설책빌려주기",
+    "도서관에책반납하기",
+    "작품내용설명하기",
+    "친구에게책제목물어보기",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 88
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 다음일정표를보면서대화를듣고두사람이보게될공연을 , 고르시오.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 37
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 학교행사에대한다음내용을듣고 일치하지 , 않는것을 고르시오. 점 [3 ] 토요일에는교내체육대회가열린다. ① 오늘마지막수업은내일로연기되었다. ② 오늘학교에전직운동선수가방문할예정이다. ③ 오늘특별손님은건강의중요성에대해이야기할것이다. ④ 밴드부원은행사전에체육관으로가야한다. ⑤",
+   "choices": [
+    "오늘마지막수업은내일로연기되었다.",
+    "오늘학교에전직운동선수가방문할예정이다.",
+    "오늘특별손님은건강의중요성에대해이야기할것이다.",
+    "밴드부원은행사전에체육관으로가야한다.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 155
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 다음을듣고 남자가주장하는바로가장적절한것을고르 , 시오. 생각만하지말고실천하라. ① 계획을잘세우는것이중요하다. ② 화합을위해양보할줄알아야한다. ③ 합의를위해지속적인논의가필요하다. ④ 결과를책임지는자세를가지도록하라. ⑤",
+   "choices": [
+    "계획을잘세우는것이중요하다.",
+    "화합을위해양보할줄알아야한다.",
+    "합의를위해지속적인논의가필요하다.",
+    "결과를책임지는자세를가지도록하라.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 125
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음그림의상황에가장적절한대화를고르시오. ① ② ③ ④ ⑤",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 36
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 대화를듣고여자의마지막말에대한남자의응답으로가장 , 적절한것을고르시오. Man: We cannot handle it any more. ① We always do our best for customers. ② I think you should buy a different one. ③ ",
+   "choices": [
+    "We always do our best for customers.",
+    "I think you should buy a different one.",
+    "We can send you a delivery man tomorrow.",
+    "Delivery men are not working this afternoon.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 250
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 대화를듣고여자의마지막말에대한남자의응답으로가장 , 적절한것을고르시오. Man: You’d better wake up early then. ① You’ve finished registering classes. ② You can take them in the afternoon. ③ Y",
+   "choices": [
+    "You’ve finished registering classes.",
+    "You can take them in the afternoon.",
+    "You can go to Spain to study Spanish.",
+    "I have no time to check the class schedule.",
+    "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 309
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 대화를듣고남자의마지막말에대한여자의응답으로가장 , 적절한것을고르시오. 점 [3 ] Woman: We should make people around us happy. ① Human life is more valuable than anything else. ② Sure, climbin",
+   "choices": [
+    "Human life is more valuable than anything else.",
+    "Sure, climbing mountains is also good for health.",
+    "I’m saying the tragic accident shouldn’t happen again.",
+    "I mean at least we should respect his challenging spirit",
+    "."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 317
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 대화를듣고남자의마지막말에대한여자의응답으로가장 , 적절한것을고르시오. Woman: We should punish bike thieves. ① Yes, building bike roads is not easy. ② I should save money to buy a good bike",
+   "choices": [
+    "Yes, building bike roads is not easy.",
+    "I should save money to buy a good bike.",
+    "Sure, we need an eco",
+    "friendly bus to go green.\nRight. I should suggest this idea to our town office.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 269
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음상황설명을듣고 가관리인에게할말로가장 , Sally 적절한것을고르시오. Sally: I am really happy with this site. ① You should accept a site near waste bins. ② I’m sorry, but this is not t",
+   "choices": [
+    "You should accept a site near waste bins.",
+    "I’m sorry, but this is not the site I reserved.",
+    "No, there’s nothing wrong with this camping site.",
+    "Please help me reserve a site with a riverside view.",
+    "대화를듣고\n번과\n번의두물음에답하시오\n[21~22]\n, 21\n."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 324
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 대화의주제로가장적절한것을고르시오. 절벽등반의위험성 ① 절벽거주민의식습관 ② 절벽거주민의분포지역 ③ 미국남서부절벽탐험 ④ 절벽거주민의주거생활 ⑤",
+   "choices": [
+    "절벽거주민의식습관",
+    "절벽거주민의분포지역",
+    "미국남서부절벽탐험",
+    "절벽거주민의주거생활",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 84
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 절벽거주민이적을방어하는방법으로가장적절한것을고르 시오. 점 [3 ] by using the sun heat ① by blocking the rivers ② by taking down ladders ③ by digging deeper caves ④ by building wall st",
+   "choices": [
+    "by blocking the rivers",
+    "by taking down ladders",
+    "by digging deeper caves",
+    "by building wall structures",
+    "이제듣기․ 말하기문제는다끝났습니다\n번부터는\n. 23\n문제지의지시에따라답을하기바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 219
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음글의목적으로가장적절한것은?",
+   "choices": [
+    "평생교육의필요성을강조하려고",
+    "강좌취소시환불방법을알리려고",
+    "강의평가에따른결과를공지하려고",
+    "새로운강좌를담당할교수를선발하려고",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 714
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 밑줄친부분이가리키는대상이나머지넷과다른것은?",
+   "choices": [
+    "my\nson\nturned\nsixteen,\nhe\ndecided\nto\nget\na\ndriver’s license. I had to go with him to practice his driving\nevery night. I was always nervous and shouted at",
+    "him.\nFinally the day came for my son’s driving test. In just a few\nhours, my son came back with his driver’s license! I asked",
+    "him how the driving test went. He said the man giving\nhim the test was very nice. The man even asked if",
+    "he\ncould do anything to make my son more relaxed during the\ntest. My son told him, “When",
+    "I come to a traffic light\nyou can scream as if we’re going to die. Then I’ll feel like\nmy father is in the car.”\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 689
+  },
+  {
+   "qNum": 25,
+   "kind": "box_choice",
+   "stem": "25. 의각네모안에서어법에맞는표현으로가장 (A), (B), (C) 적절한것은 점 ?",
+   "choices": [
+    "Although\n‥‥‥\nhave\n‥‥‥\nillegally",
+    "Although\n‥‥‥\nhas\n‥‥‥\nillegal",
+    "Despite\n‥‥‥\nhave\n‥‥‥\nillegal",
+    "Despite\n‥‥‥\nhas\n‥‥‥\nillegally",
+    "Despite\n‥‥‥\nhas\n‥‥‥\nillegal"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 997
+  },
+  {
+   "qNum": 26,
+   "kind": "grammar_underline",
+   "stem": "26. 다음글의밑줄친부분중어법상 , 틀린것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "that if one becomes extinct",
+    "②": "relied on the nowextinct Dodo",
+    "③": "situating in the Indian Ocean",
+    "④": "disappeared",
+    "⑤": "to sprout"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 613
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. 다음글의주장으로가장적절한것은?",
+   "choices": [
+    "힘든순간을극복하려면운동을하자.",
+    "실패를통해성공을이루는방법을찾자.",
+    "보람있는삶을위해다양한활동을하자.",
+    "영화가담고있는의미를정확하게이해하자.",
+    "다음글의빈칸에들어갈말로가장적절한것을\n[28~32]\n고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 753
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. Language is an ability, inherent in us. We can know the ability only through studying the actual languages. Thus, one of the best reasons for studying languages is to find out about ourselves, about what makes us persons. And the best place to start such study is with our own language. Then what would be the good way to study a language?",
+   "choices": [
+    "physical",
+    "historical",
+    "economic",
+    "psychological",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 726
+  },
+  {
+   "qNum": 29,
+   "kind": "mc",
+   "stem": "29. “I used to expect John to read my mind,” says Belinda Brasley. “I wasn’t telling him what I needed, and I expected him to guess. Then when he didn’t guess r",
+   "choices": [
+    "in hatred",
+    "with regret",
+    "in advance",
+    "without communication",
+    "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 745
+  },
+  {
+   "qNum": 30,
+   "kind": "mc",
+   "stem": "30. Analysts have always tended to measure a society by classical economic and social statistics. Some statistics are important and revealing. But there is another statistic that I think is even more important and revealing: Does your society have more memories than dreams or more dreams than memories?",
+   "choices": [
+    "stick to its past glory",
+    "admit it was once in trouble",
+    "abandon what made it successful",
+    "accept it’s going to succeed someday",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 971
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. A famous diamond company deals with people’s psychology clearly. One component of marketing focuses on the “false expectation” the people’s subconsciousness",
+   "choices": [
+    "couples buy a diamond",
+    "love is maintained to the end",
+    "the company invests in marketing",
+    "romantic love ends up in marriage",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 839
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. Some people have the view that sometimes in life we have to take chances in order to make progress. I admire such people. It certainly takes courage to take",
+   "choices": [
+    "Two heads are better than one.",
+    "Don’t judge a book by its cover.",
+    "A bird in the hand is worth two in the bush.",
+    "Don’t count your chickens before they’re hatched.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 690
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. 다음글의분위기로가장적절한것은?",
+   "choices": [
+    "scary and mysterious",
+    "calm and peaceful",
+    "tragic and discouraging",
+    "monotonous and boring",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 747
+  },
+  {
+   "qNum": 34,
+   "kind": "box_choice",
+   "stem": "34. 의각네모안에서문맥에맞는낱말로가장 (A), (B), (C) 적절한것은?",
+   "choices": [
+    "tasty\n……\nfewer\n……\nbenefit",
+    "tasty\n……\nmore\n……\nharm",
+    "tasty\n……\nfewer\n……\nharm",
+    "bitter\n……\nmore\n……\nbenefit",
+    "bitter\n……\nfewer\n……\nharm\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 939
+  },
+  {
+   "qNum": 35,
+   "kind": "vocab_underline",
+   "stem": "35. 다음글의밑줄친부분중 문맥상낱말의쓰임이적절하지 , 않은것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "increased the nicotine delivered in",
+    "②": "slowly",
+    "③": "deprived of nicotine",
+    "④": "reducing the urge to smoke",
+    "⑤": "stimulates the immune system to"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 811
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. 다음글의빈칸 에들어갈말로가장적절한것은 (A), (B) ?",
+   "choices": [
+    "In contrast\n‥‥‥\nHowever",
+    "In contrast\n‥‥‥\nTherefore",
+    "As a result\n‥‥‥\nOtherwise",
+    "As a result\n‥‥‥\nSimilarly",
+    "For example\n‥‥‥\nNevertheless"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 885
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. 다음글의주제로가장적절한것은?",
+   "choices": [
+    "defeat of the war by the disease",
+    "effect of the combined forces’ victory",
+    "cause of Napoleon’s defeat in Waterloo",
+    "popularity of the movie about Napoleon",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 933
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. Little House on the Prairie에관한다음글의내용과일치하지 않는것은?",
+   "choices": [
+    "의유년시절에바탕을둔내용이다\nLaura Ingalls\n.",
+    "일반적으로자서전이아닌소설로분류된다.",
+    "초판인쇄후절판되었다.",
+    "시리즈로각색되기도하였다\nTV\n.",
+    "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 963
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. 다음글의요지로가장적절한것은?",
+   "choices": [
+    "기내음식은철저한위생관리가중요하다.",
+    "고객의마음을읽는것이진정한봉사이다.",
+    "낯선사람의접근은조심할필요가있다.",
+    "여행을통해사색할시간이필요하다.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 813
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음글의제목으로가장적절한것은?",
+   "choices": [
+    "Increase of Corn and Soybeans’ Yields",
+    "How to Invest in the Bio",
+    "fuel Industry\nSteps to Be Taken against Global Warming",
+    "Bio",
+    "fuels: The Right Answer for Global Warming?"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 927
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 글의흐름으로보아 주어진문장이들어가기에가장적절한 , 곳은?",
+   "choices": [
+    "included Tropical Music, but it seemed to exclude music from\ntemperate lands. (\n) The executives rejected Ethnic Music",
+    "because it sounded too academic and boring. (\n) The term",
+    "Roots Music was thought to exclude nontraditional music,\nwhile the term International Pop excluded more traditional\nmusic. (\n) Finally,",
+    "World Music was chosen. (\n) The",
+    "music executives also agreed to label all their international\nrecordings with stickers that identified the recordings as it."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 787
+  },
+  {
+   "qNum": 42,
+   "kind": "mc",
+   "stem": "42. 다음글의내용을한문장으로요약하고자한다 빈칸 . (A), 에들어갈말로가장적절한것은 점 (B) ?",
+   "choices": [
+    "higher\ndisadvantage",
+    "higher\nadvantage",
+    "average\ndisadvantage",
+    "lower\nefficiency",
+    "lower\nadvantage\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n다음글을읽고\n물음에답하시오\n[43\n45]\n,\n.\n∼\n(A) In 480 B.C. Xerxes, the son of the King of Persia,\nprepared to invade Greece. Sparta agreed to help Greece\nto stop the invading Persians. The Spartan king Leonidas\ndecided that the best defensive position was Thermopylae,\nwhere a 4milelong pass narrowed to 60 feet or less.\nXerxes would have to cross this pass to reach the rest of\nGreece.\n(B) The battle initially went as planned. The Persian\nadvantage of\nwas minimized because only\na few soldiers could go through the narrow pass at a\ntime. The Persians used short spears and shields that\nwere superior in an open field but no match for the\nGreeks’ long spears, heavy shields, and body armor, so\neffective in a narrow pass.\n(C) The Spartans held off the Persians, even beating back\nthe strong 10,000 Persian troops known as the Immortals.\nFor two days the Persians suffered heavy losses. But on\nthe\nthird\nday,\nowing\nto\na\nGreek\ntraitor,\nGreece\nwas\ndefeated\nand\nevery\nman\ndied.\nHowever,\nthe\nbattle\nat\nThermopylae\nis\ncelebrated\nas\nan\nexample\nof\nheroic\nresistance against overwhelming forces.\n(D)\nOn\nhis\nway\nto\nThermopylae,\nLeonidas\npicked\nup\n7,000 troops in addition to his own 300. However, they\ndid not believe in the Spartan phrase “stand and die” and\nmost fled or surrendered once the fighting began. It was\nup to Leonidas and his 300 Spartan soldiers to hold back\nthe force of 200,000 battletrained Persians."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2316
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진글 에이어질내용을순서에맞게배열한것으로 (A) 가장적절한것은?",
+   "choices": [
+    "(B) - (D) - (C)",
+    "(C) - (D) - (B)",
+    "(D) - (B) - (C)",
+    "(D) - (C) - (B)",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 131
+  },
+  {
+   "qNum": 44,
+   "kind": "mc",
+   "stem": "44. 위글 의빈칸에들어갈말로가장적절한것은 (B) ?",
+   "choices": [
+    "terrains",
+    "numbers",
+    "weapons",
+    "experiences",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 91
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 위글의내용과일치하지않는것은?",
+   "choices": [
+    "스파르타는전쟁에서자연지형을이용했다.",
+    "페르시아는짧은창과방패를사용했다.",
+    "그리스군전체는전투에서일치단결하였다.",
+    "는자신의군사만으로적을막아야했다\nLeonidas\n.",
+    "※ 확인사항\n문제지와답안지의해당란을정확히기입표기했는지\n(\n)\n확인하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 178
+  }
+ ],
+ "sourcePdf": "ebsi_go2_20120314_paper_201203142_eng_mun.pdf"
+}

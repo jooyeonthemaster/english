@@ -1,0 +1,758 @@
+{
+ "examId": "ebsi_go2_20201118",
+ "source": "ebsi_go2_20201118_paper_eng_mun_53P17K1B.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 다음을 듣고, 남자가 하는 말의 목적으로 가장 적절한 것을 고르시오. ①기초 체력 향상을 위한 운동법을 설명하려고 ②체육 대회 참가 시 필요한 준비물을 공지하려고 ③체육관 공사로 인한 수업 장소 변경을 알리려고 ④체육 수업 시간에 준수해야 할 규칙을 안내하려고 ⑤무리한 운동으로 인",
+   "choices": [
+    "기초 체력 향상을 위한 운동법을 설명하려고",
+    "체육 대회 참가 시 필요한 준비물을 공지하려고",
+    "체육관 공사로 인한 수업 장소 변경을 알리려고",
+    "체육 수업 시간에 준수해야 할 규칙을 안내하려고",
+    "무리한 운동으로 인한 부상의 위험성을 경고하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 178
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 여자의 의견으로 가장 적절한 것을 고르시오. ①족욕을 하는 것은 건강에 도움이 된다. ②발 건강을 위해서 양말을 신어야 한다. ③운동 종목에 적합한 신발을 선택해야 한다. ④계절에 맞는 소재의 양말을 구입해야 한다. ⑤높은 굽의 신발은 척추에 무리를 줄 수 있다.",
+   "choices": [
+    "족욕을 하는 것은 건강에 도움이 된다.",
+    "발 건강을 위해서 양말을 신어야 한다.",
+    "운동 종목에 적합한 신발을 선택해야 한다.",
+    "계절에 맞는 소재의 양말을 구입해야 한다.",
+    "높은 굽의 신발은 척추에 무리를 줄 수 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 159
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 대화를 듣고, 두 사람의 관계를 가장 잘 나타낸 것을 고르시오. ①가수 - 안무가 ②작곡가 - 작사가 ③성우 - 녹음 기사 ④방송 작가 - 프로듀서 ⑤뮤지컬 배우 - 음향 감독",
+   "choices": [
+    "가수 - 안무가",
+    "작곡가 - 작사가",
+    "성우 - 녹음 기사",
+    "방송 작가 - 프로듀서",
+    "뮤지컬 배우 - 음향 감독"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 102
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고르시오. ④ ③ ⑤ ① ②",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 52
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 남자가 여자에게 부탁한 일로 가장 적절한 것을 고르시오. ①집안 청소하기 ②저녁 식사 준비하기 ③부모님 마중 나가기 ④비행기 도착 시간 확인하기 ⑤자동차에 주유하기",
+   "choices": [
+    "집안 청소하기",
+    "저녁 식사 준비하기",
+    "부모님 마중 나가기",
+    "비행기 도착 시간 확인하기",
+    "자동차에 주유하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 104
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 여자가 지불할 금액을 고르시오. [3점] ①$72 ②$80 ③$90 ④$100 ⑤$108",
+   "choices": [
+    "$72",
+    "$80",
+    "$90",
+    "$100",
+    "$108"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 61
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 남자가 스터디 모임에 참여할 수 없는 이유를 고르시오. ①영어 수업을 들어야 해서 ②학교 도서관에 가야 해서 ③봉사 활동에 참여해야 해서 ④다친 다리를 치료해야 해서 ⑤건강 검진을 받아야 해서",
+   "choices": [
+    "영어 수업을 들어야 해서",
+    "학교 도서관에 가야 해서",
+    "봉사 활동에 참여해야 해서",
+    "다친 다리를 치료해야 해서",
+    "건강 검진을 받아야 해서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 120
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, Lakeville Campground에 관해 언급되지 않은 것을 고르시오. ①주변 자연환경 ②편의 시설 ③이용료 ④이용 시간 ⑤예약 방법",
+   "choices": [
+    "주변 자연환경",
+    "편의 시설",
+    "이용료",
+    "이용 시간",
+    "예약 방법"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 91
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. Circus Experience Festival에 관한 다음 내용을 듣고, 일치하지 않는 것을 고르시오. ①11월 20일에 시작해서 3일 동안 지속된다. ②마술과 저글링을 포함한 다양한 체험 활동을 제공할 것이다. ③각 활동의 참가자 수를 10명으로 제한할 것이다. ④포토존에서 서",
+   "choices": [
+    "11월 20일에 시작해서 3일 동안 지속된다.",
+    "마술과 저글링을 포함한 다양한 체험 활동을 제공할 것이다.",
+    "각 활동의 참가자 수를 10명으로 제한할 것이다.",
+    "포토존에서 서커스 광대들과 함께 사진을 찍을 수 있다.",
+    "기념품으로 무료 티셔츠를 증정할 것이다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 209
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 다음 표를 보면서 대화를 듣고, 여자가 구입할 무선 마이크 세트를 고르시오. Wireless Microphone Sets",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 78
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ①No problem. Just let me know when you’re ready. ②I’m afraid I can’t. I lost my library card yesterday. ③Sure",
+   "choices": [
+    "No problem. Just let me know when you’re ready.",
+    "I’m afraid I can’t. I lost my library card yesterday.",
+    "Sure. You can borrow my books anytime you want.",
+    "I’m sorry. The sunlight is too strong to go outside.",
+    "Of course. I’m going to walk to the library myself."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 312
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ①I see. I’ll take another road then. ②Really?",
+   "choices": [
+    "A\n10m\nnot included\nWhite\n$50\nB\n20m\nincluded\nSilver \n$65",
+    "C\n30m\nincluded\nRed\n$80",
+    "D\n40m\nincluded\nGold\n$90",
+    "E\n50m\nnot included\nBlack\n$100",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 657
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. Woman: ①Not really. I should change my major. ②I agree. I’d rather major in mathematics. ③Oh, no. Let me call",
+   "choices": [
+    "Not really. I should change my major.",
+    "I agree. I’d rather major in mathematics.",
+    "Oh, no. Let me call them and check again.",
+    "I got it. Popularity of the major is important.",
+    "Terrific! I can be a successful business person."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 284
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. [3점] Man: ①Don’t worry. I know they’ll definitely support your opinion. ②Of course not. We’re not able to swi",
+   "choices": [
+    "Don’t worry. I know they’ll definitely support your opinion.",
+    "Of course not. We’re not able to switch our club leaders now.",
+    "I understand. I’m going to look for another research topic then.",
+    "All right. That way we’ll satisfy more members than last time.",
+    "Never mind. We can reschedule a time for our group discussion."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 382
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Melissa가 Bob에게 할 말로 가장 적절한 것을 고르시오. [3점] Melissa: ①Make sure to set the password for your credit card. ②You have to check if the Internet connection is stable. ③Why don’t you keep your security program up-to-date?",
+   "choices": [
+    "Make sure to set the password for your credit card.",
+    "You have to check if the Internet connection is stable.",
+    "Why don’t you keep your security program up-to-date?",
+    "Don’t illegally access other people’s personal information.",
+    "How about adding the items to your online shopping cart?\n[16 ~ 17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 381
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 여자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "blooming seasons for flowers",
+    "implied meanings of flowers",
+    "ways to make flower beds",
+    "origins of national flowers",
+    "steps for planting flowers"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 171
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 꽃이 아닌 것은?",
+   "choices": [
+    "carnations",
+    "tulips",
+    "irises",
+    "roses",
+    "daisies\n 이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시에 \n따라 답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 113
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "학생 동아리 운영 성과를 보고하려고",
+    "댄스 동아리 특별 공연을 홍보하려고",
+    "댄스 동아리실 시설 보수를 건의하려고",
+    "댄스 동아리의 운동장 사용 허락을 요청하려고",
+    "학생 동아리 부원 모집 기간의 연장을 부탁하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 863
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 드러난 Ryan의 심경 변화로 가장 적절한 것은?",
+   "choices": [
+    "excited → disappointed",
+    "furious → regretful",
+    "irritated → satisfied",
+    "nervous → relaxed",
+    "pleased → jealous"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 804
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "타인의 신뢰를 얻기 위해서는 일관된 행동을 보여 주어라.",
+    "협상을 잘하기 위해 질문에 담긴 상대방의 의도를 파악하라.",
+    "논쟁을 잘하려면 자신의 가치관에서 벗어나려는 시도를 하라.",
+    "원만한 대인 관계를 유지하려면 상대를 배려하는 태도를 갖춰라.",
+    "설득하고자 할 때 상대방이 스스로 관점을 돌아보게 하는 질문을 하라."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1115
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 밑줄 친 turns the life stories of these scientists from lead to gold가 다음 글에서 의미하는 바로 가장 적절한 것은?",
+   "choices": [
+    "discovers the valuable relationships between scientists",
+    "emphasizes difficulties in establishing new scientific theories",
+    "mixes the various stories of great scientists across the world",
+    "focuses more on the scientists’ work than their personal lives",
+    "reveals only the scientists’ success ignoring their processes and errors"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1527
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "효율적인 업무 배분은 조직의 생산성을 향상시킨다.",
+    "유연한 사고방식은 원활한 의사소통에 도움이 된다.",
+    "사람들과 잘 어울려 일하는 능력이 성공을 가능하게 한다.",
+    "비판적 사고 능력은 정확성을 추구하는 태도에서 출발한다.",
+    "치열한 경쟁 사회에서 최고의 실력을 갖추는 것이 필수적이다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1178
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "abilities to construct a mental map for walking",
+    "factors that result in people walking in a circle",
+    "reasons why dominance exists in nature",
+    "instincts that help people return home",
+    "solutions to finding the right direction"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1110
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Earn Trust with Reliable Goods Rather Than with Words!",
+    "Linguistic Precision: A Key to Successful Economic Transactions",
+    "Difficulties in Overcoming Language Barriers and Distrust in Trade",
+    "The More the Economy Grows, the More Complex the World Gets",
+    "Excessive Confidence: The Biggest Reason for Miscommunication"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1375
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. 다음 도표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "For all six given cities, the percentage of \npeople who commuted by public transit was the highest, while \nthe percentage of people who commuted by cycling was the \nlowest.",
+    "The percentages of people who commuted by walking \nwere the same in both Toronto and Montréal even though the \npercentages of people who commuted by public transit in those \ntwo cities were different.",
+    "In Vancouver, the percentage of \npeople who commuted by public transit was over ten times higher \nthan that of people who commuted by cycling.",
+    "Even though \nOttawa ranked fourth in the percentage of people who commuted \nby public transit, this city was in first place in the percentage of \npeople who commuted by walking or cycling.",
+    "Compared with \nCalgary, Edmonton recorded lower percentages for all three \ngiven types of eco-friendly transportation."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1080
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Alice Coachman에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "집 근처에서 맨발로 달리며 훈련했다.",
+    "육상 경기에서의 재능을 고등학교 때부터 보였다.",
+    "런던 올림픽에서 높이뛰기 올림픽 기록과 미국 기록을 세웠다.",
+    "흑인 여성 최초로 올림픽 금메달리스트가 되었다.",
+    "9개의 명예의 전당에 올랐다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1116
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. Zero Waste Day 2020에 관한 다음 안내문의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "우천 시에도 행사가 예정대로 진행된다.",
+    "의류와 신발은 건조된 상태의 것만 받는다.",
+    "헤지거나 찢어진 침구류도 기부가 가능하다.",
+    "전자 기기에 저장된 모든 정보는 삭제되어야 한다.",
+    "기부 물품 접수가 거절되면 현장에서 버릴 수 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 899
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. Sign Language Class에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "어린이들도 어른 동반 없이 참여할 수 있다.",
+    "수업은 주 3일 진행된다.",
+    "수화 경험이 없어도 참여할 수 있는 수업이 있다.",
+    "환불은 예외 없이 불가능하다.",
+    "현장 등록이 가능하다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 863
+  },
+  {
+   "qNum": 29,
+   "kind": "grammar_underline",
+   "stem": "29. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "lies in their outer covering",
+    "②": "passively and can be opened",
+    "③": "containing in vessels",
+    "④": "its own individual and autonomous",
+    "⑤": "in which insect bodies are"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 959
+  },
+  {
+   "qNum": 30,
+   "kind": "box_choice",
+   "stem": "30. (A), (B), (C)의 각 네모 안에서 문맥에 맞는 낱말로 가장 적절한 것은?",
+   "choices": [
+    "relevant\n…… distinction …… shape",
+    "relevant\n…… connection …… overlook",
+    "irrelevant …… distinction …… overlook",
+    "irrelevant …… connection …… overlook",
+    "irrelevant …… distinction …… shape\n[31 ~ 34] 다음 빈칸에 들어갈 말로 가장 적절한 것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1383
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. Over 4.5 billion years ago, the Earth’s primordial atmosphere was probably largely water vapour, carbon dioxide, sulfur dioxide and nitrogen. The appearance",
+   "choices": [
+    "a barrier to evolution",
+    "a consequence of life",
+    "a record of primitive culture",
+    "a sign of the constancy of nature",
+    "a reason for cooperation among species"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1173
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. One of the primary ways by which music is able to take on significance in our inner world is by the way it interacts with memory. Memories associated with i",
+   "choices": [
+    "analyzing memories of the event thoroughly",
+    "increasing storage space for recalling the event",
+    "re-hearing the same music associated with the event",
+    "reconstructing the event in the absence of background music",
+    "enhancing musical competence to deliver emotional messages"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1133
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. We are now , instead of the other way around. Perhaps the clearest way to see this is to look at changes in the biomass — the total worldwide weight — of ma",
+   "choices": [
+    "imposing ourselves on nature",
+    "limiting our ecological impact",
+    "yielding our land to mammals",
+    "encouraging biological diversity",
+    "doing useful work for the environment"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1252
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. In the modern world, we look for certainty in uncertain places. We search for order in chaos, the right answer in ambiguity, and conviction in complexity. “",
+   "choices": [
+    "weigh the pros and cons of our actions",
+    "develop the patience to bear ambiguity",
+    "enjoy adventure rather than settle down",
+    "gain insight from solving complex problems",
+    "lose our ability to interact with the unknown"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1077
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "Hair was regarded as a source of power that personified \nthe individual and could be used for spiritual purposes or even to \ncast a spell.",
+    "Since it rests on the highest point on the body, \nhair itself was a means to communicate with divine spirits and it \nwas treated in ways that were thought to bring good luck or \nprotect against evil.",
+    "People had the opportunity to socialize \nwhile styling each other’s hair, and the shared tradition of hair \nwas passed down.",
+    "According to authors Ayana Byrd and Lori \nTharps, “communication from the gods and spirits was thought to \npass through the hair to get to the soul.”",
+    "In Cameroon, for \nexample, medicine men attached hair to containers that held \ntheir healing potions in order to protect the potions and enhance \ntheir effectiveness.\n* potion: (마법의) 물약\n[36 ~ 37] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 것을 \n고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1080
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. Mark Granovetter examined the extent to which information about jobs flowed through weak versus strong ties among a group of people. (A) This means that the",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1092
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. When we think of culture, we first think of human cultures, of our culture. We think of computers, airplanes, fashions, teams, and pop stars. For most of hu",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n[38 ~ 39] 글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 \n적절한 곳을 고르시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38 ~ 39"
+    ]
+   },
+   "charLen": 1178
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. But the flowing takes time, and if your speed of impact is too great, the water won’t be able to flow away fast enough, and so it pushes back at you. Liquid",
+   "choices": [
+    ") Liquids don’t do this; instead \nthey flow. (",
+    ") You see this in a river, or when you turn on a \ntap, or if you use a spoon to stir your coffee. (",
+    ") When you \njump off a diving board and hit a body of water, the water has to \nflow away from you. (",
+    ") It’s that force that stings your skin \nas you belly-flop into a pool, and makes falling into water from \na great height like landing on concrete. (",
+    ") The \nincompressibility of water is also why waves can have such \ndeadly power, and in the case of tsunamis, why they can \ndestroy buildings and cities, tossing cars around easily.\n＊compress: 압축하다  ** give: (힘을 받아) 휘다"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 927
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. However, according to Christakis and Fowler, we cannot transmit ideas and behaviours much beyond our friends’ friends’ friends (in other words, across just ",
+   "choices": [
+    ") \nMore recent research has shown that ideas ― even emotional \nstates and conditions ― can be transmitted through a social \nnetwork. (",
+    ") The evidence of this kind of contagion is clear: \n‘Students with studious roommates become more studious. \nDiners sitting next to heavy eaters eat more food.’ (",
+    ") This \nis because the transmission and reception of an idea or \nbehaviour requires a stronger connection than the relaying of a \nletter or the communication that a certain employment \nopportunity exists. (",
+    ") Merely knowing people is not the \nsame as being able to influence them to study more or \nover-eat. (",
+    ") Imitation is indeed the sincerest form of \nflattery, even when it is unconscious. [3점]\n* flattery: 아첨"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1032
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "stable\n…… falsified",
+    "fragile …… modified",
+    "stable\n…… intensified",
+    "fragile …… solidified",
+    "concrete …… maintained\n[41 ~ 42] 다음 글을 읽고, 물음에 답하시오.\nEvolutionary biologists believe sociability drove the \nevolution of our complex brains. Fossil evidence shows that \nas far back as 130,000 years ago, it was not (a) unusual for \nHomo sapiens to travel more than a hundred and fifty miles \nto trade, share food and, no doubt, gossip. Unlike the \nNeanderthals, their social groups extended far beyond their \nown families. Remembering all those (b) connections, who \nwas related to whom, and where they lived required \nconsiderable processing power.\nIt also required wayfinding savvy. Imagine trying to (c)maintain \na social network across tens or hundreds of square miles of \nPalaeolithic wilderness. You couldn’t send a text message to \nyour friends to find out where they were ― you had to go out \nand visit them, remember where you last saw them or \nimagine where they might have gone. To do this, you needed \nnavigation skills, spatial awareness, a sense of direction, the \nability to store maps of the landscape in your mind and the \nmotivation to travel around. Canadian anthropologist Ariane \nBurke believes that our ancestors (d) developed all these \nattributes while trying to keep in touch with their neighbours. \nEventually, our brains became primed for wayfinding. \nMeanwhile the Neanderthals, who didn’t travel as far, never \nfostered a spatial skill set; despite being sophisticated \nhunters, well adapted to the cold and able to see in the dark, \nthey went extinct. In the prehistoric badlands, nothing was \nmore (e) useless than a circle of friends.\n* savvy: 요령, 지식  ** Palaeolithic: 구석기 시대의"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3054
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Social Networks: An Evolutionary Advantage",
+    "Our Brain Forced Us to Stay Close to Our Family!",
+    "How We Split from Our Way and Kept Going on My Way",
+    "Why Do Some People Have Difficulty in Social Relationships?",
+    "Being Connected to Each Other Leads to Communicative Skills"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 292
+  },
+  {
+   "qNum": 42,
+   "kind": "vocab_letter",
+   "stem": "42. 밑줄 친 (a)~(e) 중에서 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {
+    "a": "her little girl",
+    "b": "she must have found",
+    "c": "She doesn’t laugh much",
+    "d": "she opened it",
+    "e": "her cheeks"
+   },
+   "bracketChoices": {},
+   "charLen": 2031
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) - (D) - (C)",
+    "(C) - (B) - (D)",
+    "(C) - (D) - (B)",
+    "(D) - (B) - (C)",
+    "(D) - (C) - (B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 140
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a)~(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 70
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글에 관한 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "올해는 Martha에게 힘든 한 해였다.",
+    "Fred가 선물받은 장난감을 마음에 들어 했다.",
+    "Martha가 자신의 방에서 작은 빨간 상자를 보았다.",
+    "Emma가 산타에게 편지를 썼다.",
+    "Emma가 Martha에게 산타가 보냈다고 말하며 카드를 내밀었다.\n※ 확인 사항\n답안지의 해당란에 필요한 내용을 정확히 기입(표기)했는지 확인하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 217
+  }
+ ],
+ "sourcePdf": "ebsi_go2_20201118_paper_eng_mun_53P17K1B.pdf"
+}

@@ -1,0 +1,770 @@
+{
+ "examId": "ebsi_go2_20190307",
+ "source": "ebsi_go2_20190307_paper_eng_mun_GSYmxi3C_10.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ① Right. He became a doctor to help people. ② No way. I don’t think he sprained his ankle. ③ Yes. He just told",
+   "choices": [
+    "Right. He became a doctor to help people.",
+    "No way. I don’t think he sprained his ankle.",
+    "Yes. He just told me to relax for a few days.",
+    "Of course. You should have been more careful.",
+    "No. I didn’t know that you were in the hospital."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 291
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ① No problem. I made a reservation yesterday. ② Thanks. The food will be served in a minute. ③ I’m sorry. I won’t be able to attend the party. ④ Okay. When are you going to throw the party?",
+   "choices": [
+    "No problem. I made a reservation yesterday.",
+    "Thanks. The food will be served in a minute.",
+    "I’m sorry. I won’t be able to attend the party.",
+    "Okay. When are you going to throw the party?",
+    "Great. Can you tell me the name of the restaurant?"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 294
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을 듣고, 남자가 하는 말의 목적으로 가장 적절한 것을 고 르시오. ① 올바른 안경 착용 및 관리 방법에 대해 알려 주려고 ② 전자기기를 활용한 효과적인 학습법을 안내하려고 ③ 어린이의 시력을 보호하는 방법을 소개하려고 ④ 어린이의 야외 활동 시 보호자의 동반을 권유하려고 ⑤ ",
+   "choices": [
+    "올바른 안경 착용 및 관리 방법에 대해 알려 주려고",
+    "전자기기를 활용한 효과적인 학습법을 안내하려고",
+    "어린이의 시력을 보호하는 방법을 소개하려고",
+    "어린이의 야외 활동 시 보호자의 동반을 권유하려고",
+    "성장기에 균형 있는 영양 섭취가 중요함을 강조하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 190
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 여자의 의견으로 가장 적절한 것을 고르시오. ① 가격과 품질이 반드시 비례하는 것은 아니다. ② 의류는 매장에서 직접 입어 보고 사는 것이 좋다. ③ 정해진 예산 내에서 소비하는 습관을 가져야 한다. ④ 인터넷에 있는 상품 평가를 그대로 믿어서는 안 된다. ⑤ 인터넷",
+   "choices": [
+    "가격과 품질이 반드시 비례하는 것은 아니다.",
+    "의류는 매장에서 직접 입어 보고 사는 것이 좋다.",
+    "정해진 예산 내에서 소비하는 습관을 가져야 한다.",
+    "인터넷에 있는 상품 평가를 그대로 믿어서는 안 된다.",
+    "인터넷을 통한 구매는 신뢰할 수 있는 곳에서 해야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 193
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 두 사람의 관계를 가장 잘 나타낸 것을 고르시오. ① 광고 방송 담당자– 의뢰인 ② 광고 제작자– 광고 모델 ③ 식당 주인– 주방장 ④ 식당 종업원– 손님 ⑤ 방송 프로듀서– 뉴스 진행자",
+   "choices": [
+    "광고 방송 담당자– 의뢰인",
+    "광고 제작자– 광고 모델",
+    "식당 주인– 주방장",
+    "식당 종업원– 손님",
+    "방송 프로듀서– 뉴스 진행자"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 117
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고 르시오. ① ② ③ ④ ⑤",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 52
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 남자가 할 일로 가장 적절한 것을 고르시오. ① 손님 명단 확인하기 ② 수건 교체하기 ③ 오븐 속 음식 확인하기 ④ 냉장고에 케이크 넣기 ⑤ 화장실에 화장지 갖다 놓기",
+   "choices": [
+    "손님 명단 확인하기",
+    "수건 교체하기",
+    "오븐 속 음식 확인하기",
+    "냉장고에 케이크 넣기",
+    "화장실에 화장지 갖다 놓기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 110
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, 남자가 여자와 함께 수리 센터에 갈 수 없는 이 유를 고르시오. ① 교수님과 약속이 있어서 ② 우편물을 수령해야 해서 ③ 컴퓨터를 사러 가야 해서 ④ 특별 강연을 들어야 해서 ⑤ 테니스 강습을 받아야 해서",
+   "choices": [
+    "교수님과 약속이 있어서",
+    "우편물을 수령해야 해서",
+    "컴퓨터를 사러 가야 해서",
+    "특별 강연을 들어야 해서",
+    "테니스 강습을 받아야 해서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 126
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 대화를 듣고, 여자가 지불할 금액을 고르시오. ① $30 ② $38 ③ $42 ④ $48 ⑤ $50",
+   "choices": [
+    "$30",
+    "$38",
+    "$42",
+    "$48",
+    "$50"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 59
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 대화를 듣고, Romance City에 관해 언급되지 않은 것을 고르 시오. ① 첫 방영 날짜 ② 주연 배우 ③ 줄거리 ④ 감독 ⑤ 원작 소설",
+   "choices": [
+    "첫 방영 날짜",
+    "주연 배우",
+    "줄거리",
+    "감독",
+    "원작 소설"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 84
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. Redland Festival에 관한 다음 내용을 듣고, 일치하지 않는 것 을 고르시오. [3점] ① 건강을 증진하기 위한 과일 축제이다. ② Blue River Park에서 열리는 연례행사이다. ③ 과일 뷔페를 무제한 이용할 수 있다. ④ 입장료에 스포츠 활동 비용이 포함된다.",
+   "choices": [
+    "건강을 증진하기 위한 과일 축제이다.",
+    "Blue River Park에서 열리는 연례행사이다.",
+    "과일 뷔페를 무제한 이용할 수 있다.",
+    "입장료에 스포츠 활동 비용이 포함된다.",
+    "사전 예약이 필요하다.\n2019학년도 3월 고2 전국연합학력평가 문제지\n제3 교시\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 275
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 다음 표를 보면서 대화를 듣고, 여자가 주문할 헤어드라이어 를 고르시오. Best-Selling Hair Dryers Model Power (wattage) Material Price Cool Shot Setting ① A 1,450 ceramic $30 × ② B 1,600 c",
+   "choices": [
+    "A\n1,450\nceramic\n$30\n×",
+    "B\n1,600\nceramic\n$35\n○",
+    "C\n1,650\nionic\n$40\n×",
+    "D\n1,700\nionic\n$45\n○",
+    "E\n1,800\nionic\n$53\n○"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 240
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. [3점] Woman: ① Not at all. We should empty the boxes first. ② Yes. We can keep clothes from getting dusty. ③ N",
+   "choices": [
+    "Not at all. We should empty the boxes first.",
+    "Yes. We can keep clothes from getting dusty.",
+    "No way. We should keep pants and shirts separately.",
+    "Great. We can donate unnecessary clothes to charities.",
+    "No. We should never put our clothes in a box."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 367
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. [3점] Man: ① That’s awesome! It’ll be very helpful. ② No, thanks. This app is not suitable for me. ③ Unbelieva",
+   "choices": [
+    "That’s awesome! It’ll be very helpful.",
+    "No, thanks. This app is not suitable for me.",
+    "Unbelievable! Your workout schedule is too tight.",
+    "Don’t worry. You can use another fitness center.",
+    "I see. Maybe I can help you download the app."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 354
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Willy가 수리 기사에게 할 말로 가장 적절한 것을 고르시오. Willy: ① How much should I pay for the repair?",
+   "choices": [
+    "How much should I pay for the repair?",
+    "You left one of your tools in my house.",
+    "I’m afraid the heater stopped working again.",
+    "Would you turn up the temperature for me?",
+    "Could you come and fix the heating system?\n[16 ~ 17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 359
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 여자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "home appliances made smarter with technology",
+    "ways of upgrading smart home appliances",
+    "how to buy smart home appliances online",
+    "benefits of energyefficient home appliances",
+    "negative impacts of AI technologies on humans"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 256
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 가전제품이 아닌 것은?",
+   "choices": [
+    "washing machines",
+    "refrigerators",
+    "speakers",
+    "air conditioners",
+    "vacuum cleaners\n이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시에 \n따라 답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 154
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "아파트 안전 진단 결과를 통보하려고",
+    "아파트 임대차 계약 연장을 논의하려고",
+    "아파트 도색 작업에 대한 허락을 받으려고",
+    "아파트 수리 비용 부담에 대해 상의하려고",
+    "아파트 도색에 대한 설문 결과를 알려 주려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 843
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 드러난 ‘I’의 심경 변화로 가장 적절한 것은?",
+   "choices": [
+    "moved\n→ nervous",
+    "fearful\n→ hopeful",
+    "lonely\n→ annoyed",
+    "sympathetic → amused",
+    "sorrowful → frightened\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 879
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "수입보다는 적성을 고려해 직업을 선택해야 한다.",
+    "성공하려면 다양한 분야에서 경험을 쌓아야 한다.",
+    "장래의 모습을 그리며 인생의 계획을 세워야 한다.",
+    "자신의 재능과 역량을 스스로 제한해서는 안 된다.",
+    "자신의 한계 내에서 최고가 되려고 시도해야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1034
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "편식을 피하고 다양한 음식을 섭취할 필요가 있다.",
+    "음식 섭취와 관련된 실험 결과가 왜곡되는 경우가 있다.",
+    "먹을 수 있는 음식의 종류가 많을 때 과식을 하게 된다.",
+    "열량이 높은 음식보다 영양가가 많은 음식을 먹어야 한다.",
+    "다이어트는 운동과 병행할 때 더 좋은 결과를 가져올 수 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 982
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "benefits and losses of medical development",
+    "inequality of medical care around the world",
+    "constant efforts to fight off serious diseases",
+    "endless competition to lengthen human life span",
+    "pros and cons regarding increasing medical budgets"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1052
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "An Animal as an Assistant for Psychotherapy",
+    "Patience: An Element for Taming Pets",
+    "Do Animals Really Have Emotions?",
+    "Animals in Experiments: Is It Ethical?",
+    "Unconsciousness Discovered in Treating Patients\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1226
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 도표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "The number of natural disasters in Asia was the largest \nof all five regions and accounted for 36 percent, which was \nmore than twice the percentage of Europe.",
+    "Americas had \nthe second largest number of natural disasters, taking up 23 \npercent.",
+    "The number of natural disasters in Oceania was \nthe smallest and less than a third of that in Africa.",
+    "The \namount of damage in Asia was the largest and more than \nthe combined amount of Americas and Europe.",
+    "Africa had \nthe least amount of damage even though it ranked third in \nthe number of natural disasters."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 697
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. Alexander Young Jackson에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "Montreal의 한 가난한 가정에서 태어났다.",
+    "인쇄소에서 일을 하며 미술에 관심을 갖게 되었다.",
+    "Ontario 북부를 횡단하는 기차 여행을 했다.",
+    "Toronto 전시회에서 비평가들로부터 좋은 평가를 받았다.",
+    "사망할 무렵에는 현대 풍경화의 개척자로 인정받았다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1077
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Safety Poster Contest에 관한 다음 안내문의 내용과 일치하 지 않는 것은?",
+   "choices": [
+    "올해의 주제는 교실 안전이다.",
+    "참가자의 연령 집단은 두 개로 나뉜다.",
+    "포스터 뒷면에 이름과 나이를 써야 한다.",
+    "출품작은 일 인당 두 편까지 허용된다.",
+    "1등 수상자는 50달러의 상품권을 받는다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 745
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. Adult Bike Repair Class에 관한 다음 안내문의 내용과 일치 하는 것은?",
+   "choices": [
+    "수업 인원은 최대 다섯 명이다.",
+    "월요일 오후에 4시간 동안 진행된다.",
+    "비용은 80달러이며 사전에 등록해야 한다.",
+    "첫째 주에는 자전거 안전 점검 수업을 한다.",
+    "수업에 필요한 자전거를 제공한다.\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 767
+  },
+  {
+   "qNum": 28,
+   "kind": "grammar_underline",
+   "stem": "28. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "because the compounds in eucalyptus",
+    "②": "that koalas have almost no",
+    "③": "do move",
+    "④": "have shrunk over the last",
+    "⑤": "its brain only fills half"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 826
+  },
+  {
+   "qNum": 29,
+   "kind": "vocab_underline",
+   "stem": "29. 다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "explosion of synthetic chemistry",
+    "②": "restrictive selection",
+    "③": "enough",
+    "④": "new in this",
+    "⑤": "expanded palette aided clarity and"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 964
+  },
+  {
+   "qNum": 30,
+   "kind": "mc",
+   "stem": "30. 밑줄 친 ‘The body works the same way.’가 다음 글에서 의 미하는 바로 가장 적절한 것은?",
+   "choices": [
+    "There is no definite order in treating an illness.",
+    "Minor health problems are solved by themselves.",
+    "You get more and more inactive as you get older.",
+    "It’ll never be too late to cure the endresult symptom.",
+    "The final symptom stems from the first minor problem.\n[31 ~ 34] 다음 빈칸에 들어갈 말로 가장 적절한 것을 고르시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1270
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. Would you expect the physical expression of pride to be biologically based or culturally specific?",
+   "choices": [
+    "innate",
+    "creative",
+    "unidentifiable",
+    "contradictory",
+    "offensive"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 827
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. Sometimes a person is acclaimed as “the greatest” because . For example, violinist Jan Kubelik was acclaimed as “the greatest” during his first tour of the ",
+   "choices": [
+    "there are moments of inspiration",
+    "there is little basis for comparison",
+    "he or she longs to be such a person",
+    "other people recognize his or her efforts",
+    "he or she was born with great artistic talent\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1079
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. Theseus was a great hero to the people of Athens. When he returned home after a war, the ship that had carried him and his men was so treasured that the townspeople preserved it for years and years, replacing its old, rotten planks with new pieces of wood. The question Plutarch asks philosophers is this: is the repaired ship still the same ship that Theseus had sailed?",
+   "choices": [
+    "the reminder of victory",
+    "the sum of all its parts",
+    "fit for the intended use",
+    "the property of the country",
+    "around for a long period of time"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 904
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. Credit arrangements of one kind or another have existed in all known human cultures. The problem in previous eras was not that no one had the idea or knew h",
+   "choices": [
+    "it never got any bigger",
+    "its value changed in time",
+    "it made everybody wealthier",
+    "there always was another pie",
+    "everyone could get an even share of it"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1135
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "As we grew older this inner \nwisdom became lost in a bewildering host of outer voices \nthat told us how we should eat.",
+    "We received conflicting \nmessages from our parents, from our peers, and from \nscientific research.",
+    "These messages created a confusion of \ndesires, impulses, and aversions that have made us unable to \njust eat and to eat just enough.",
+    "They have helped us see \nthings in our right perspectives, thus having an insight into \nthe world.",
+    "If we are to return to a healthy and balanced \nrelationship with food, it is essential that we learn to turn \nour awareness inward and to hear again what our body is \nalways telling us.\n* aversion: 반감, 혐오\n[36 ~ 37] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 \n것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 933
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. One of the first things I did in each classroom in South Milwaukee was to draw a diagram of the students’ desks, labelled with their names, as an aid to recognizing them. (A) One said, “Where’s your name?",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1017
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. A little boy sees and hears birds with delight. Then the “good father” comes along and feels he should “share” the experience and help his son “develop.” (A",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n[38 ~ 39] 글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 \n적절한 곳을 고르시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38 ~ 39"
+    ]
+   },
+   "charLen": 1089
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. Granted, it’s not quite the same thing, and the computer is not going to tell you when something doesn’t “sound right.” It can be helpful to read your own e",
+   "choices": [
+    ") Either reading will help \nyou to hear things that you otherwise might not notice when \nediting silently. (",
+    ") If you feel uncomfortable having \nsomeone read to you, however, or if you simply don’t have \nsomeone you can ask to do it, you can have your computer \nread your essay to you. (",
+    ") The computer also won’t \nstumble over things that are awkward — it will just plow \nright on through. (",
+    ") But hearing the computer read your \nwriting is a very different experience from reading it \nyourself. (",
+    ") If you have never tried it, you might find \nthat you notice areas for revision, editing, and proofreading \nthat you didn’t notice before.\n* stumble: 말을 더듬다"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 937
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. Rather, it is the air moving through a small hole into a closed container, as a result of air being blown out of the container by a fan on the inside. Huber",
+   "choices": [
+    ") In fact, he only \nclaimed to be the first to coin the term “vacuum cleaner” for \ndevices of this nature, which may explain why he is so \ncredited. (",
+    ") As we all know, the term “vacuum” is an \ninappropriate name, because there exists no vacuum in a \nvacuum cleaner. (",
+    ") But I suppose a “rapid air movement \nin a closed container to create suction” cleaner would not \nsound as scientific or be as handy a name. (",
+    ") Anyway, \nwe are stuck with it historically, and it is hard to find any \nreferences to “vacuum” prior to Booth. (",
+    ") Interestingly, \nBooth himself did not use the term “vacuum” when he filed \na provisional specification describing in general terms his \nintended invention. [3점]\n* provisional specification: 임시 제품 설명서"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 988
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "recall\n······\nadapt",
+    "recall\n······\nrepeat",
+    "overcome\n······\nerase",
+    "overcome \n······\nrepeat",
+    "prevent\n······\nerase\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n[41 ~ 42] 다음 글을 읽고, 물음에 답하시오.\nUnlike coins and dice, humans have memories and do \ncare about wins and losses. Still, the probability of a hit \nin baseball does not (a) increase just because a player \nhas not had one lately. Four outs in a row may have \nbeen bad luck, line drives hit straight into fielders’ \ngloves. This bad luck does not (b) ensure good luck the \nnext time at bat. If it is not bad luck, then a physical \nproblem may be causing the player to do poorly. Either \nway, a baseball player who had four outs in a row is not \ndue for a hit, nor is a player who made four hits in a \nrow due for an out. If anything, a player with four hits \nin a row is probably a (c) better batter than the player \nwho made four outs in a row.\nLikewise, missed field goals need not be balanced by \nsuccesses. A poor performance may simply suggest that \nthe kicker is not very good. Being rejected for jobs does \nnot make a job offer more likely. If anything, the \nevidence is mounting that this person is not qualified or \ninterviews poorly. Not having a fire does not increase \nthe chances of a fire — it may just be the mark of a \n(d) careless homeowner who does not put paper or cloth \nnear a stove, put metal in the microwave, leave home \nwith the stove on, or fall asleep smoking cigarettes. \nEvery safe airplane trip does not increase the chances \nthat the next trip will be a (e) crash."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2779
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Go with the Crowd",
+    "Chance Is Only Chance",
+    "Misfortune: A Blessing in Disguise",
+    "Strike the Iron While It Is Hot",
+    "No Rain from Loud Thunder"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 168
+  },
+  {
+   "qNum": 42,
+   "kind": "vocab_letter",
+   "stem": "42. 밑줄 친 (a)~(e) 중에서 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {
+    "a": "his men throughout the",
+    "b": "He handed over the",
+    "c": "his new sport and",
+    "d": "his shoulder",
+    "e": "he had listened to"
+   },
+   "bracketChoices": {},
+   "charLen": 1643
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) - (D) - (C)",
+    "(C) - (B) - (D)",
+    "(C) - (D) - (B)",
+    "(D) - (B) - (C)",
+    "(D) - (C) - (B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 140
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a)~(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 75
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글에 관한 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "왕은 아르메니아 최고의 거짓말쟁이를 찾으려 했다.",
+    "왕이 가난한 남자에게 황금 한 항아리를 하사했다.",
+    "왕은 승자를 발표하지 않고 대회를 중단하려고 했다.",
+    "가난한 남자가 커다란 자루를 메고 왕 앞에 나타났다.",
+    "온갖 부류의 사람들이 궁궐로 모여들기 시작했다.\n※ 확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)\n했는지 확인하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 227
+  }
+ ],
+ "sourcePdf": "ebsi_go2_20190307_paper_eng_mun_GSYmxi3C_10.pdf"
+}

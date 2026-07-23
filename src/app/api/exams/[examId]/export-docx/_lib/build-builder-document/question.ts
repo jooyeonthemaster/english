@@ -1,5 +1,6 @@
 import { AlignmentType, BorderStyle, Paragraph, TextRun, UnderlineType } from "docx";
-import { formatInlineMarkersForSubtype, optionDisplayLabel, optionDisplayTextForSubtype, optionOrdinalLabel, shouldRenderOptionListForSubtype } from "@/components/exams/paper-builder/option-display";
+import { formatInlineMarkersForSubtype, multiBlankOptionMatrix, optionDisplayLabel, optionDisplayTextForSubtype, optionOrdinalLabel, shouldRenderOptionListForSubtype } from "@/components/exams/paper-builder/option-display";
+import { buildMultiBlankOptionsTable } from "../render-options";
 import {
   KO_BOGI_HEADER_LINE_RE,
   KO_CONDITION_HEADER_LINE,
@@ -615,6 +616,19 @@ export function buildQuestionBlock(
 
   // 옵션 (preview 와 동일하게 원문자 번호 + 유형별 선택지 표시)
   if (options.length > 0) {
+    // 다중 빈칸(BLANK_INFERENCE) 조합 선지 — (A)/(B) 컬럼 헤더 무테두리 표
+    // (미리보기 그리드와 동일 형식: 헤더 한 줄 + 각 행은 값만).
+    const multiBlank =
+      subType === "BLANK_INFERENCE" ? multiBlankOptionMatrix(options) : null;
+    if (multiBlank) {
+      result.push(
+        buildMultiBlankOptionsTable(multiBlank, {
+          size: optionSize,
+          bold: qBold,
+          italics: qItalic,
+        }),
+      );
+    } else {
     options.forEach((opt, idx) => {
       const displayText = optionDisplayTextForSubtype(subType, idx, opt.text || "");
       const hasDisplayText = displayText.trim().length > 0;
@@ -647,6 +661,7 @@ export function buildQuestionBlock(
         }),
       );
     });
+    }
   }
 
   // 객관식 추가 선지

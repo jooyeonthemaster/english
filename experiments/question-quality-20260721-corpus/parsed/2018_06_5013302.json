@@ -1,0 +1,765 @@
+{
+ "examId": "2018_06_5013302",
+ "source": "7fd17ee3a9ce68a5deb33210b63a10b5.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ①He’s a gardener. ②She’s taking a picture. ③It’s next to Central Zoo. ④It’s open 9 a.m. to 6 p.m. ⑤I’m not fre",
+   "choices": [
+    "He’s a gardener.",
+    "She’s taking a picture.",
+    "It’s next to Central Zoo.",
+    "It’s open 9 a.m. to 6 p.m.",
+    "I’m not free this weekend."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 177
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ①Good idea. You can teach me French later. ②Okay. I’ll make a reservation for five people. ③No problem. They’v",
+   "choices": [
+    "Good idea. You can teach me French later.",
+    "Okay. I’ll make a reservation for five people.",
+    "No problem. They’ve already had lunch.",
+    "Of course. I really love these five books.",
+    "No. They didn’t come to the meeting."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 264
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을 듣고, 여자가 하는 말의 목적으로 가장 적절한 것을 고르시오. ①글쓰기 특강 참석을 독려하려고 ②효과적인 학습 전략을 소개하려고 ③교내 수학 동아리 회원을 모집하려고 ④온라인 설문 조사 일정을 공지하려고 ⑤장학금 신청 방법 변경 사항을 안내하려고",
+   "choices": [
+    "글쓰기 특강 참석을 독려하려고",
+    "효과적인 학습 전략을 소개하려고",
+    "교내 수학 동아리 회원을 모집하려고",
+    "온라인 설문 조사 일정을 공지하려고",
+    "장학금 신청 방법 변경 사항을 안내하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 147
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 남자의 의견으로 가장 적절한 것을 고르시오. ①좋은 대본을 쓰려면 다양한 경험이 필요하다. ②충분한 수면은 기억력 강화에 도움이 된다. ③반복적인 연습은 좋은 결과를 낳는다. ④건강을 위해서 일찍 일어나야 한다. ⑤실수는 성공의 밑거름이 된다.",
+   "choices": [
+    "좋은 대본을 쓰려면 다양한 경험이 필요하다.",
+    "충분한 수면은 기억력 강화에 도움이 된다.",
+    "반복적인 연습은 좋은 결과를 낳는다.",
+    "건강을 위해서 일찍 일어나야 한다.",
+    "실수는 성공의 밑거름이 된다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 149
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 두 사람의 관계를 가장 잘 나타낸 것을 고르시오. ① 편집장－기자 ② 서점 직원－학생 ③ 인쇄소 직원－교사 ④ 기계 수리공－경비원 ⑤ 실내 디자이너－건축가",
+   "choices": [
+    "편집장－기자",
+    "서점 직원－학생",
+    "인쇄소 직원－교사",
+    "기계 수리공－경비원",
+    "실내 디자이너－건축가"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 98
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고르시오.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 42
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 남자가 할 일로 가장 적절한 것을 고르시오. ①경고 방송하기 ②게시판 만들기 ③경고문 복사하기 ④ 사무실 청소하기 ⑤ 불법 광고물 제거하기",
+   "choices": [
+    "경고 방송하기",
+    "게시판 만들기",
+    "경고문 복사하기",
+    "사무실 청소하기",
+    "불법 광고물 제거하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 89
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, 여자의 청력이 나빠진 이유를 고르시오. ①시끄러운 음악을 헤드폰을 쓰고 자주 들어서 ②도서관 공사 소음에 오랫동안 노출되어서 ③ 과도한 업무에 대한 스트레스 때문에 ④귓속에 이물질이 들어가서 ⑤신체 노화로 인하여",
+   "choices": [
+    "시끄러운 음악을 헤드폰을 쓰고 자주 들어서",
+    "도서관 공사 소음에 오랫동안 노출되어서",
+    "과도한 업무에 대한 스트레스 때문에",
+    "귓속에 이물질이 들어가서",
+    "신체 노화로 인하여"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 131
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 대화를 듣고, 남자가 지불할 금액을 고르시오. [3점] ① $54 ② $60 ③ $70 ④ $81 ⑤ $90",
+   "choices": [
+    "$54",
+    "$60",
+    "$70",
+    "$81",
+    "$90"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 64
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 대화를 듣고, ‘I Care, We Cure’ 행사에 관해 언급되지 않은 것을 고르시오. ① 목적 ② 프로그램 ③ 장소 ④ 초청 강사 ⑤ 입장료",
+   "choices": [
+    "목적",
+    "프로그램",
+    "장소",
+    "초청 강사",
+    "입장료"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 86
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. Orange Tree Day Care Center에 관한 다음 내용을 듣고, 일치 하지 않는 것을 고르시오. ① Green Oak Park 옆에 위치해 있다. ② 연령에 알맞은 다양한 활동을 제공한다. ③ 울타리가 있는 놀이터가 있다. ④ 점심 식사와 함께 신선한 과일을 제공한다",
+   "choices": [
+    "Green Oak Park 옆에 위치해 있다.",
+    "연령에 알맞은 다양한 활동을 제공한다.",
+    "울타리가 있는 놀이터가 있다.",
+    "점심 식사와 함께 신선한 과일을 제공한다.",
+    "월요일부터 토요일까지 문을 연다.\n2018학년도 대학수학능력시험 6월 모의평가 문제지\n제3 교시"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 218
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 다음 표를 보면서 대화를 듣고, 두 사람이 선택한 프로그램을 고르시오. ① ② ③ ④ ⑤",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 55
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. [3점] Woman: ①I’ll record your performance with my phone. ②We’ll look for pictures of famous pianists. ③I stil",
+   "choices": [
+    "I’ll record your performance with my phone.",
+    "We’ll look for pictures of famous pianists.",
+    "I still have time to visit my uncle.",
+    "Your parents will get well soon.",
+    "The audience was not so big."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 256
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. [3점] Man: ①Sure. I often let my students go home early. ②Exactly. The video clip wasn’t helpful at all. ③True",
+   "choices": [
+    "Sure. I often let my students go home early.",
+    "Exactly. The video clip wasn’t helpful at all.",
+    "True. The professor was praised for his hard work.",
+    "Yeah. You should’ve gone to the lecture yesterday.",
+    "Right. We shouldn’t focus only on results when praising students."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 327
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Lucy가Ben에게 할 말로 가장 적절한 것을 고르시오. Lucy: ① Sorry. Your flight is canceled due to bad weather. ② Come on. We need to leave for the airport now. ③ ",
+   "choices": [
+    "Sorry. Your flight is canceled due to bad weather.",
+    "Come on. We need to leave for the airport now.",
+    "That’s okay. They arrived there on time.",
+    "Welcome. Thank you for flying with us.",
+    "Never mind. We can meet on Saturday.\n[16～17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 308
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 남자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "necessity of teaching hunting skills",
+    "various ways to feed young animals",
+    "animal fathers’ dedication to parenting",
+    "sacrifice of animal mothers for their babies",
+    "importance of animal reproduction in the wild"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 241
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 동물이 아닌 것은?",
+   "choices": [
+    "emperor penguin",
+    "bullfrog",
+    "seahorse",
+    "giant water bug",
+    "sea catfish"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 91
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "소설 창작 과정에 관한 강연을 요청하려고",
+    "강연 일정이 변경된 것에 대해 사과하려고",
+    "새로 발간된 잡지의 정기 구독을 권유하려고",
+    "출판물 편집에 관한 유의 사항을 안내하려고",
+    "잘못된 기사 내용에 대해 정정을 요구하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 856
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 드러난 Kate의 심경으로 가장 적절한 것은?",
+   "choices": [
+    "anxious and envious",
+    "bored and indifferent",
+    "pleased and relaxed",
+    "confused and puzzled",
+    "disappointed and regretful"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 962
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "진로 계획을 세울 때 시장의 수요를 정확히 예측해야 한다.",
+    "직업을 선택할 때 본인의 강점을 우선적으로 고려해야 한다.",
+    "자신의 분야에서 성공하기 위해서는 열정을 가져야 한다.",
+    "원하는 직업을 갖기 위해서는 전공을 잘 선택해야 한다.",
+    "취업을 준비할 때 다른 사람의 조언을 잘 들어야 한다.\n  이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시에 \n따라 답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1056
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "유아의 운동 능력 발달은 유아의 다른 발달에 기여한다.",
+    "부모와의 정서적 교감은 유아의 지적 호기심을 자극한다.",
+    "부모의 관심은 유아의 균형 있는 신체 발달에 필수적이다.",
+    "주변 환경의 변화는 유아기 운동 능력 발달을 촉진한다.",
+    "유아는 시행착오를 통해 공간 지각 능력을 발달시킨다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1304
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "necessity of being cooperative in a crisis situation",
+    "importance of taking the initiative in managing a crisis",
+    "problem of creating false stories to save an organization",
+    "significance of remaining silent in strengthening credibility",
+    "advantage of improving the corporate image through media"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1468
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "How Information Overload Can Cloud Your Judgment",
+    "Multitasking Increases Your Working Memory!",
+    "How to Prevent Information Flood",
+    "Do Flashing Screens Reduce Information Overload?",
+    "Emotional Judgment: The Secret of Successful Brokers"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1137
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 도표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "All the \nfive countries spent over seven percent of their GDP on direct \nexpenditures on education for all institutions combined.",
+    "Of \nthe five countries, Denmark spent the highest percentage of GDP \nfor all institutions combined.",
+    "In terms of direct expenditures \non elementary and secondary education, New Zealand spent \nthe highest percentage of GDP among the five countries.",
+    "As \nfor direct expenditures on postsecondary education, Iceland \nspent a higher percentage of GDP than the other four countries.",
+    "Compared with the Republic of Korea, Israel spent a lower \npercentage of GDP on postsecondary education."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 813
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. Albert C. Barnes에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "1872년에 태어나 Philadelphia에서 성장했다.",
+    "University of Pennsylvania에서 의학 학위를 받았다.",
+    "독일인 화학자와 함께 Argyrol을 발명하였다.",
+    "미술 교육을 장려하기 위해 Barnes Foundation을 설립했다.",
+    "자세한 설명과 함께 소장품을 전시했다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 967
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Mountaintop Yodeling Contest에 관한 다음 안내문의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "Mt. Billatus에 설치된 특별 야외무대에서 열린다.",
+    "등록 기한은 6월 1일까지이다.",
+    "프랑스어나 영어로 요들을 불러야 한다.",
+    "2등 상품은 London 왕복 항공권이다.",
+    "날씨가 좋지 않으면 취소된다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 741
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. Summerville Forest Trail Tour에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "6월부터 9월까지 매주 일요일에 진행된다.",
+    "8세 미만 아이들은 무료로 참가할 수 있다.",
+    "간식과 물이 제공된다.",
+    "Summerville Forest에 대한 소개가 한 시간 동안 진행된다.",
+    "온라인 예약은 방문 하루 전까지 해야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 734
+  },
+  {
+   "qNum": 28,
+   "kind": "grammar_underline",
+   "stem": "28. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "unsuspecting",
+    "②": "its victim",
+    "③": "leaves it for that bird",
+    "④": "technically called cleptoparasites",
+    "⑤": "that lives off another by"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1009
+  },
+  {
+   "qNum": 29,
+   "kind": "box_choice",
+   "stem": "29. (A), (B), (C)의 각 네모 안에서 문맥에 맞는 낱말로 가장 적절한 것은?",
+   "choices": [
+    "denying\n…… physical …… later",
+    "denying\n…… mental\n…… early",
+    "rationalizing …… physical …… early",
+    "rationalizing …… physical …… later",
+    "rationalizing …… mental\n…… early"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1417
+  },
+  {
+   "qNum": 30,
+   "kind": "mc",
+   "stem": "30. 밑줄 친 부분이 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [
+    "them. Interestingly, the increase in competition led health \ncare providers to recommend more services to the persons",
+    "they served. This phenomenon reflects a unique feature in \nthe health care industry ― provider-induced demand, which \nallows health care providers to maintain",
+    "their income even \nas competition increases. Average consumers of health care \ndo not know how to diagnose",
+    "their medical conditions and \ndo not have a license to order services or prescribe \nmedications. So consumers rely on the knowledge of health \ncare providers to determine what services are needed, even \nthough",
+    "they stand to make more money by ordering more \nservices.\n[31～34] 다음 빈칸에 들어갈 말로 가장 적절한 것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 967
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. Interest in extremely long periods of time sets geology and astronomy apart from other sciences. Geologists think in terms of billions of years for the age ",
+   "choices": [
+    "time scales of geological activity",
+    "global patterns in species diversity",
+    "regional differences in time perception",
+    "statistical methods for climate projections",
+    "criticisms of geological period classifications"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 994
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. Politics cannot be suppressed, whichever policy process is employed and however sensitive and respectful of differences it might be. In other words, there i",
+   "choices": [
+    "political development results from the freedom of speech",
+    "political disagreement is not the normal state of things",
+    "politics should not restrict any form of difference",
+    "freedom could be achieved only through tolerance",
+    "suppression could never be a desirable tool in politics"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1353
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. To make plans for the future, the brain must have an ability to take certain elements of prior experiences and reconfigure them in a way that does not copy ",
+   "choices": [
+    "mirror accurate images of the world outside",
+    "manipulate and transform these models",
+    "visualize the present reality as it is",
+    "bring the models back from memory",
+    "identify and reproduce past experiences faithfully"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1013
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. Since life began in the oceans, most life, including freshwater life, has a chemical composition more like the ocean than fresh water. It appears that most ",
+   "choices": [
+    "maintain an inner ocean in spite of surrounding fresh water",
+    "attain ion balance by removing salts from inside their body",
+    "return to the ocean to escape from their natural enemies",
+    "rebuild their external environment to obtain resources",
+    "change their physiology in accord with their surroundings"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1354
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "Cute, baby-like features are \ninherently appealing, producing a nurturing response in most \nhumans.",
+    "Teddy bears that had a more baby-like appearance\n― however slight this may have been initially ― were thus \nmore popular with customers.",
+    "Teddy bear manufacturers \nobviously noticed which bears were selling best and so made \nmore of these and fewer of the less popular models, to \nmaximize their profits.",
+    "As a result, using animal images \nfor commercial purposes was faced with severe criticism from \nanimal rights activists.",
+    "In this way, the selection pressure \nbuilt up by the customers resulted in the evolution of a more \nbaby-like bear by the manufacturers.\n[36～37] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 \n것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1072
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. It takes time to develop and launch products. Consequently, many companies know 6—12 months ahead of time that they will be launching a new product. (A) Thi",
+   "choices": [
+    "(A) －(C) －(B)",
+    "(B) －(A) －(C)",
+    "(B) －(C) －(A)",
+    "(C) －(A) －(B)",
+    "(C) －(B) －(A)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1137
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. There’s a direct counterpart to pop music in the classical song, more commonly called an “art song,” which does not focus on the development of melodic mate",
+   "choices": [
+    "(A) －(C) －(B)",
+    "(B) －(A) －(C)",
+    "(B) －(C) －(A)",
+    "(C) －(A) －(B)",
+    "(C) －(B) －(A)\n[38～39] 글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 \n적절한 곳을 고르시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38～39"
+    ]
+   },
+   "charLen": 1159
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. The net effect of this was that, although customers benefited, the banks lost out as their costs increased but the total number of customers stayed the same",
+   "choices": [
+    ") Because of this, competition becomes \na zero sum game in which one organization can only win at \nthe expense of others. (",
+    ") However, where the degree of \ncompetition is particularly intense a zero sum game can \nquickly become a negative sum game, in that everyone in the \nmarket is faced with additional costs. (",
+    ") As an example \nof this, when one of the major high street banks in Britain \ntried to gain a competitive advantage by opening on Saturday \nmornings, it attracted a number of new customers who found \nthe traditional Monday-Friday bank opening hours to be a \nconstraint. (",
+    ") However, faced with a loss of customers, \nthe competition responded by opening on Saturdays as \nwell. (",
+    ") In essence, this proved to be a negative sum \ngame."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1049
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. Human beings discovered this art thousands of years ago, and they have invented several devices to make it easier and faster. In fiber processing the word ‘",
+   "choices": [
+    ") One is the formation of individual \nfibers by squeezing a liquid through one or more small openings \nin a nozzle called a spinneret and letting it harden. (",
+    ") Spiders \nand silkworms have been spinning fibers in this way for millions \nof years, but chemists and engineers learned the procedure from \nthem only about a century ago. (",
+    ") In the other kind of \nspinning ― sometimes called throwing to prevent confusion \nwith the first kind ― two or more fibers are twisted together to \nform a thread. (",
+    ") The ancient distaff and spindle are \nexamples that were replaced by the spinning wheel in the Middle \nAges. (",
+    ") Later came the spinning jenny, the water frame, \nand Crompton’s mule ― spinning machines that became \nsymbols of the Industrial Revolution. [3점]\n* distaff and spindle: 실을 감는 막대와 추"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1007
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "securing\n…… freedom",
+    "sharing\n…… interaction",
+    "identifying …… exploration",
+    "sharing\n…… prosperity",
+    "securing\n…… survival\n[41～42] 다음 글을 읽고, 물음에 답하시오.\nAccording to many sociologists, the study of what our \nsociety calls ‘art’ can only really progress if we drop the \nhighly specific and ideologically loaded terminology of ‘art’, \n‘artworks’ and ‘artists’, and replace these with the more \nneutral and less historically specific terms ‘cultural forms’, \n‘cultural products’ and ‘cultural producers’. These cultural \nproducts ― be they paintings, sculptures, forms of music or \nwhatever ― should be regarded as being made by certain \ntypes of cultural producer, and as being used by particular \ngroups of people in particular ways in specific social \ncontexts. By using the more neutral term ‘cultural products’ \nfor particular objects, and ‘cultural producers’ for the people \nwho make those objects, the sociologist seeks to break with a \nview that she/he sees as having dominated the study of \ncultural forms for too long, namely trying to understand \neverything in terms of the category ‘art’. This is a category \nthat is too limited and context-specific to encompass all the \ndifferent cultural products that people in different societies \nmake and use. It is a term that is also too loaded to take at face \nvalue and to use naively in study of our own society. Since it \nis in the interests of certain social groups to define some \nthings as ‘art’ and others as not, the very term ‘art’ itself \ncannot be uncritically used by the sociologist who wishes to \nunderstand how and why such labelling processes occur. \nQuite simply, then, in order to study cultural matters, many \nsociologists believe one has to \n the terms ‘art’, \n‘artwork’ and ‘artist’ as the basis for our analysis. Instead, \nthese terms become important objects of analysis themselves."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3296
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Art: A Means to Overcome a Cultural Gap",
+    "Interpreting Culture In and Out of Context",
+    "Different Forms of Art in the World of Culture",
+    "Cultural Diversity: Cornerstones of Civilizations",
+    "Culture as a Basis of Understanding the Concept of Art"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 264
+  },
+  {
+   "qNum": 42,
+   "kind": "mc",
+   "stem": "42. 윗글의 빈칸에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "reject",
+    "borrow",
+    "introduce",
+    "stress",
+    "revive\n[43～45] 다음 글을 읽고, 물음에 답하시오.\n(A)\nAndrew steadied his eyes upon the black and white \nsquares. He thought awhile before pushing his knight to an \nunbeatable position. Now Andrew was sure he had beaten \nTimothy Tandon, the winner of the 2016 National Chess \nChampionship. Andrew, whom nobody had noticed before \nthe tournament this year, came to progress to the final match. \nAfter enjoying this memorable victory, Andrew headed straight \nto the nursing home where (a) his sick grandad was staying.\n(B)\nIt was the day of the final match. That morning Andrew had \nreceived a call from the nursing home informing him that \nGrandad’s condition had become serious. The news played \nupon Andrew’s mind as (b) he started to play. After several \nfierce battles, Andrew’s concentration wavered for a moment. \nHis mind travelled to his grandad, who was in another battle \nfor his life. It was then that Andrew made a big mistake! The \nmistake was a fatal one, and it was all over. (c) He had lost.\n(C)\nAndrew arrived at the nursing home in a gloomy mood, but \nhe was blessed with good news. His grandad was recovering. \nAndrew was greatly delighted, but (d) he could not help being \ndisappointed in a corner of his mind. “I tried my best to fulfill \nyour dream but I couldn’t make it,” Andrew said in \ndisappointment. “That’s all right,” said Grandad. “The real \nlesson of chess is learning how to tame your mind. See, my \nmind has won the battle over my body. I will recover soon and \nsee you become champion one day in perfect health.” Andrew \nwas relieved and smiled with joy.\n(D)\nWhen Andrew reached the nursing home, Grandad was \nsitting up in bed. “You won the semi-final?” (e) he asked, \noffering up a weak smile. Andrew nodded his head. Indeed, \nAndrew’s grandad was his chess master. As a kid, Andrew \nliked to observe Grandad play chess and often predicted his \nmoves even before he began to move the pieces. “Andrew,” \nsaid Grandad, inspired by his grandson’s superb victory, “you \nare now all set to fulfill my dream. Tomorrow you will surely \nwin the National Chess Championship.”"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2164
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) －(D) －(C)",
+    "(C) －(B) －(D)",
+    "(C) －(D) －(B)",
+    "(D) －(B) －(C)",
+    "(D) －(C) －(B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 130
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a)～(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 74
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글의 Andrew에 관한 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "2016 National Chess Championship 우승자에게 승리를 거두었다.",
+    "할아버지의 병세에 관한 전화를 받고 결승전에서 큰 실수를 했다.",
+    "결승전에서 패배한 사실을 할아버지에게 알리지 않았다.",
+    "할아버지로부터 체스가 주는 교훈에 관하여 들었다.",
+    "어렸을 때 할아버지의 체스 게임을 즐겨 봤다.\n* 확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)했는지 확인\n하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 260
+  }
+ ],
+ "sourcePdf": "7fd17ee3a9ce68a5deb33210b63a10b5.pdf",
+ "fileName": "문제지_영어.pdf"
+}

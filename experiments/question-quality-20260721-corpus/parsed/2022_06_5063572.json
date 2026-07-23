@@ -1,0 +1,765 @@
+{
+ "examId": "2022_06_5063572",
+ "source": "bffd4ecdecf411375d124d5cf8a934ca.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 다음을 듣고, 남자가 하는 말의 목적으로 가장 적절한 것을 고르시오. ①댄스 동아리 가입 조건을 안내하려고 ②동아리 개설 신청 기간을 홍보하려고 ③동아리 만족도 설문 조사 참여를 당부하려고 ④댄스 동아리 활동 장소 폐쇄 이유를 설명하려고 ⑤댄스 동아리 회원 모집 인원 증원을 공지하",
+   "choices": [
+    "댄스 동아리 가입 조건을 안내하려고",
+    "동아리 개설 신청 기간을 홍보하려고",
+    "동아리 만족도 설문 조사 참여를 당부하려고",
+    "댄스 동아리 활동 장소 폐쇄 이유를 설명하려고",
+    "댄스 동아리 회원 모집 인원 증원을 공지하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 164
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 여자의 의견으로 가장 적절한 것을 고르시오. ①불필요한 쓰레기를 줄이기 위해 과도한 포장을 지양해야 한다. ②환경 보호를 위해 쓰레기 분리배출을 철저히 해야 한다. ③선물을 고를 때는 받는 사람의 취향을 고려해야 한다. ④사용 빈도가 높지 않은 물건은 상자에 보관해야",
+   "choices": [
+    "불필요한 쓰레기를 줄이기 위해 과도한 포장을 지양해야 한다.",
+    "환경 보호를 위해 쓰레기 분리배출을 철저히 해야 한다.",
+    "선물을 고를 때는 받는 사람의 취향을 고려해야 한다.",
+    "사용 빈도가 높지 않은 물건은 상자에 보관해야 한다.",
+    "선물 종류에 따라 포장 방법을 달리해야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 193
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 대화를 듣고, 두 사람의 관계를 가장 잘 나타낸 것을 고르시오. ①잡지 기자－시나리오 작가 ②아나운서－작사가 ③라디오 진행자－음악 평론가 ④영화감독－배우 ⑤신문 기자－모델",
+   "choices": [
+    "잡지 기자－시나리오 작가",
+    "아나운서－작사가",
+    "라디오 진행자－음악 평론가",
+    "영화감독－배우",
+    "신문 기자－모델"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 99
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고르시오.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 41
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 여자가 남자를 위해 할 일로 가장 적절한 것을 고르시오. ①경제학 과제 자료 조사하기 ②자원봉사 신청서 제출하기 ③환경 캠페인 포스터 만들기 ④학생회관 가는 길 알려 주기 ⑤마라톤 코스 답사하기",
+   "choices": [
+    "경제학 과제 자료 조사하기",
+    "자원봉사 신청서 제출하기",
+    "환경 캠페인 포스터 만들기",
+    "학생회관 가는 길 알려 주기",
+    "마라톤 코스 답사하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 121
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 여자가 지불할 금액을 고르시오. [3점] ①$30 ②$36 ③$40 ④$45 ⑤$50",
+   "choices": [
+    "$30",
+    "$36",
+    "$40",
+    "$45",
+    "$50"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 59
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 남자가 컴퓨터 프로그래밍 강좌를 신청하지 않은 이유를 고르시오. ①수업이 30분 일찍 시작되어서 ②다른 도시로 이사를 가게 되어서 ③컴퓨터 프로그래밍에 흥미를 잃어서 ④퇴근 후에 수업 듣는 것이 너무 피곤해서 ⑤컴퓨터 프로그래밍이 자신의 경력과 무관해서",
+   "choices": [
+    "수업이 30분 일찍 시작되어서",
+    "다른 도시로 이사를 가게 되어서",
+    "컴퓨터 프로그래밍에 흥미를 잃어서",
+    "퇴근 후에 수업 듣는 것이 너무 피곤해서",
+    "컴퓨터 프로그래밍이 자신의 경력과 무관해서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 154
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, Samuel’s Woodworking Class에 관해 언급되지 않은 것을 고르시오. ①장소 ②시간 ③복장 ④등록비 ⑤모집 인원",
+   "choices": [
+    "장소",
+    "시간",
+    "복장",
+    "등록비",
+    "모집 인원"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 84
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 2021 Lakeside Essay Contest에 관한 다음 내용을 듣고, 일치하지 않는 것을 고르시오. ①주제는 여름으로부터의 메시지이다. ②Lakeside High School 전교생이 참가할 수 있다. ③에세이 분량은 3페이지를 넘으면 안 된다. ④제출 마감은 다음 주 금요",
+   "choices": [
+    "주제는 여름으로부터의 메시지이다.",
+    "Lakeside High School 전교생이 참가할 수 있다.",
+    "에세이 분량은 3페이지를 넘으면 안 된다.",
+    "제출 마감은 다음 주 금요일이다.",
+    "상위 10편의 에세이는 학교 웹 사이트에 게시될 예정이다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 200
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 다음 표를 보면서 대화를 듣고, 남자가 주문할 자전거를 고르시오. Bicycles for Commuters Model Color Price Frame Size Foldable ① A Black $190 Small ☓ ② B Yellow $210 Medium ☓ ③ C Silver",
+   "choices": [
+    "A\nBlack\n$190\nSmall\n☓",
+    "B\nYellow\n$210\nMedium\n☓",
+    "C\nSilver\n$270\nLarge\n☓",
+    "D\nWhite\n$290\nLarge\n◯",
+    "E\nBlue\n$320\nMedium\n◯"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 221
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ①Sure. Let me call him now. ②Not at all. My hair is really long. ③Yes. I really like my new hairstyle. ④Why not?",
+   "choices": [
+    "Sure. Let me call him now.",
+    "Not at all. My hair is really long.",
+    "Yes. I really like my new hairstyle.",
+    "Why not? I’ll text the number to you.",
+    "Not really. I don’t need to check your schedule."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 244
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ①Fine. I’ll look for another band. ②Great! You can be our drummer. ③Sorry. I can’t offer you the position. ④Really?",
+   "choices": [
+    "Fine. I’ll look for another band.",
+    "Great! You can be our drummer.",
+    "Sorry. I can’t offer you the position.",
+    "Really? It’ll be great to play in your band.",
+    "What a surprise! I didn’t know you play drums.\n2022학년도 대학수학능력시험 6월 모의평가 문제지\n제3 교시"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 289
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. [3점] Man: ①No problem. You’ll get your refund. ②Of course. That’s why I canceled my order. ③Excellent. I’ll e",
+   "choices": [
+    "No problem. You’ll get your refund.",
+    "Of course. That’s why I canceled my order.",
+    "Excellent. I’ll exchange it with a bigger size.",
+    "Good. I’m glad to hear you received the package.",
+    "Okay. We’ll send the gray skirt to you right away."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 294
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. Woman: ①All right. I’ll check if it’s in the jacket and call you back. ②Don’t worry. I’ll visit the lost and ",
+   "choices": [
+    "All right. I’ll check if it’s in the jacket and call you back.",
+    "Don’t worry. I’ll visit the lost and found for you.",
+    "Too bad. Let me have my credit card replaced.",
+    "I see. I’ll buy a new jacket if you can’t find it.",
+    "Thank you. Pick me up at the grocery store."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 321
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Rachel이 Kevin에게 할 말로 가장 적절한 것을 고르시오. [3점] Rachel: ①Is it necessary to exercise every day?",
+   "choices": [
+    "Is it necessary to exercise every day?",
+    "Why don’t you work out at the closer one?",
+    "I recommend the one with good facilities.",
+    "You should choose the one within your budget.",
+    "What about looking for a better place to work at?\n[16～17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 319
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 여자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "decline in employment opportunities due to drones",
+    "regulations for using drones in various fields",
+    "job skills necessary for drone development",
+    "workplace accidents caused by drone use",
+    "various uses of drones in different jobs"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 255
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 직업이 아닌 것은?",
+   "choices": [
+    "farmers",
+    "photographers",
+    "soldiers",
+    "police officers",
+    "firefighters"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 84
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "박물관 개관 50주년 기념행사 취소를 공지하려고",
+    "작년에 가입한 박물관 멤버십의 갱신을 요청하려고",
+    "박물관 멤버십 회원을 위한 추가 혜택을 알려 주려고",
+    "박물관 기념품점에서 새로 판매할 상품을 홍보하려고",
+    "박물관 전시 프로그램에서 변경된 내용을 안내하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 799
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 드러난 Natalie의 심경 변화로 가장 적절한 것은?",
+   "choices": [
+    "doubtful\n→satisfied",
+    "regretful →confused",
+    "confident →ashamed",
+    "bored\n→excited",
+    "thrilled\n→disappointed"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 771
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "과학의 대중화를 위해 여러 매체에서 과학자를 긍정적으로 묘사해야 한다.",
+    "작가로 전업한 과학자는 전공 지식을 작품에 사실적으로 반영해야 한다.",
+    "공상 과학 작가로 성공하려면 과학과 인문학을 깊이 이해해야 한다.",
+    "과학의 저변 확대를 위해 영화 주인공으로 과학자가 등장해야 한다.",
+    "과학 정책 논의에 과학자뿐만 아니라 인문학자도 참여해야 한다.\n  이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시에 \n따라 답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1249
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 밑줄 친 an empty inbox가 다음 글에서 의미하는 바로 가장 적절한 것은?",
+   "choices": [
+    "following an innovative course of action",
+    "attempting to satisfy other people’s demands",
+    "completing challenging work without mistakes",
+    "removing social ties to maintain a mental balance",
+    "securing enough opportunities for social networking"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1361
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "계획 수립 절차를 간소화하면 일의 진행 속도가 빨라진다.",
+    "안정적인 예산 확보는 일의 원활한 진행을 위해 필수적이다.",
+    "사업 계획은 급변하는 상황에 따라 유연하게 변경될 수 있다.",
+    "면밀한 계획 수립은 일의 효율성을 증대시키고 성공 가능성을 높인다.",
+    "대규모 사업에서는 지속적인 성장을 목표로 하는 세부 계획이 중요하다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1239
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "relationship between play types and emotional stability",
+    "reasons for identifying with imaginary characters in childhood",
+    "ways of helping adolescents develop good reading habits",
+    "continued engagement in altered forms of play after childhood",
+    "effects of narrative structures on readers’ imaginations"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1241
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Social Perception in Old Age: It’s Not All Bad News!",
+    "Blocking Out the Negative Sharpens Social Skills",
+    "Lessons on Life-long Goals from Senior Achievers",
+    "Getting Old: A Road to Maturity and Objectivity",
+    "Positive Mind and Behavior: Tips for Reversing Aging"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1295
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. 다음 도표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "The percentage of people in the 18-29 \ngroup who said they had read a print book was 74%, which \nwas the highest among the four groups.",
+    "The percentage of \npeople who said they had read a print book in the 50-64 group \nwas higher than that in the 65 and up group.",
+    "While 34% of \npeople in the 18-29 group said they had read an e-book, the \npercentage of people who said so was below 20% in the 65 and \nup group.",
+    "In all age groups, the percentage of people who \nsaid they had read an e-book was higher than that of people \nwho said they had listened to an audiobook.",
+    "Among the \nfour age groups, the 30-49 group had the highest percentage of \npeople who said they had listened to an audiobook."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 984
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Emil Zátopek에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "독특한 달리기 스타일로 유명했다.",
+    "신발 공장에서 일한 적이 있다.",
+    "1952년 Helsinki 올림픽에서 올림픽 기록을 깨지 못했다.",
+    "올림픽 금메달리스트인 Dana Zátopková와 결혼했다.",
+    "자신의 금메달 중 하나를 Ron Clarke에게 주었다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1029
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. Wing Cheese Factory Tour에 관한 다음 안내문의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "참가비에는 치즈 만들기 비용이 포함된다.",
+    "참가 신청은 6월 30일까지 해야 한다.",
+    "공장의 역사에 대한 비디오를 보는 일정이 있다.",
+    "참가자는 치즈 모양의 열쇠고리를 15달러에 살 수 있다.",
+    "공장 안에서 사진 촬영이 허용된다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 188
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. Treehouse Drive-in Movie Night에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "2021년에 두 번째로 열리는 행사이다.",
+    "티켓 판매 수입금 전액은 어린이 도서관에 기부될 것이다.",
+    "첫 번째 상영 시작 시간은 오후 10시이다.",
+    "티켓 가격은 자동차 한 대당 50달러이다.",
+    "아이스크림과 핫도그가 현장에서 판매된다.\nAttention, all cheese lovers! Come and experience our \nhistoric cheese-making process at the Wing Cheese Factory. \nLook around, taste, and make! \nParticipation \n∙Adults: $30, Children: $10 (Ages 3 and under: Free)\n∙The fee includes cheese tasting and making.\n∙Sign up for the tour at www.cheesewcf.com by June 30.\nTour Schedule\n∙10:00 a.m.: Watch a video about the factory’s history\n∙10:30 a.m.: Factory tour and cheese tasting\n∙11:30 a.m.: Cheese making\nNote \n∙Participants can buy a cheese-shaped key chain for $15.\n∙No photography is allowed inside the factory.\n∙We are closed on Saturdays, Sundays, and holidays.\nTreehouse Drive-in Movie Night\nLooking for a fun night out with the family? Come with \nyour loved ones and enjoy our first drive-in movie night of \n2021! All money from ticket sales will be donated to the \nlocal children’s hospital.\nFeatured Film: Dream Story\nDate: June 13, 2021\nPlace: Treehouse Parking Lot\nShowtimes\n∙First Screening: 7:30 p.m. \n∙Second Screening: 10:00 p.m.\nTickets: $30 per car\nAdditional Information \n∙50 parking spots are available (The gate opens at 6 p.m.).\n∙Ice cream and hot dogs are sold on site.\n∙Make your reservation online at www.tdimn.com."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1383
+  },
+  {
+   "qNum": 29,
+   "kind": "grammar_underline",
+   "stem": "29. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "their first formal method of",
+    "②": "is perhaps the best-known monument",
+    "③": "where the sun rises at",
+    "④": "been used to predict eclipses",
+    "⑤": "discovers deeper meanings in events"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1098
+  },
+  {
+   "qNum": 30,
+   "kind": "vocab_underline",
+   "stem": "30. 다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "identifying so strongly with their",
+    "②": "passionate about players",
+    "③": "failure",
+    "④": "increase efficiency",
+    "⑤": "defeated because it breaks a"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1274
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. The growth of academic disciplines and sub-disciplines, such as art history or palaeontology, and of particular figures such as the art critic, helped produ",
+   "choices": [
+    "competitive",
+    "novel",
+    "secondary",
+    "reliable",
+    "unconditional"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1003
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. Some of the most insightful work on information seeking emphasizes “strategic self-ignorance,” understood as “the use of ignorance as an excuse to engage ex",
+   "choices": [
+    "highlight the value of preferred activities",
+    "make current activities less attractive",
+    "cut their attachment to past activities",
+    "enable them to enjoy more activities",
+    "potentially become known to others"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1174
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. Concepts of nature are always cultural statements. This may not strike Europeans as much of an insight, for Europe’s landscape is so much of a blend. But in",
+   "choices": [
+    "has supported new environment-friendly policies",
+    "has increasingly been set by humanity",
+    "inspires creative cultural practices",
+    "changes too frequently to be regulated",
+    "has been affected by various natural conditions"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1107
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. Emma Brindley has investigated the responses of European robins to the songs of neighbors and strangers. Despite the large and complex song repertoire of Eu",
+   "choices": [
+    "variety and complexity characterize the robins’ songs",
+    "song volume affects the robins’ aggressive behavior",
+    "the robins’ poor territorial sense is a key to survival",
+    "the robins associate locality with familiar songs",
+    "the robins are less responsive to recorded songs"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1388
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "Eugene \nLitwak has referred to this pattern of behaviour as the ‘modified \nextended family’.",
+    "It is an extended family structure because \nmultigenerational ties are maintained, but it is modified \nbecause it does not usually rest on co-residence between the \ngenerations and most extended families do not act as corporate \ngroups.",
+    "Although modified extended family members often \nlive close by, the modified extended family does not require \ngeographical proximity and ties are maintained even when \nkin are separated by considerable distances.",
+    "The oldest \nmember of the family makes the decisions on important \nissues, no matter how far away family members live from each \nother.",
+    "In contrast to the traditional extended family where \nkin always live in close proximity, the members of modified \nextended families may freely move away from kin to seek \nopportunities for occupational advancement. \n* kin: 친족  ** proximity: 근접\n[36～37] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 \n것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1246
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. Spatial reference points are larger than themselves. This isn’t really a paradox: landmarks are themselves, but they also define neighborhoods around themse",
+   "choices": [
+    "(A) －(C) －(B)",
+    "(B) －(A) －(C)",
+    "(B) －(C) －(A)",
+    "(C) －(A) －(B)",
+    "(C) －(B) －(A)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1210
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. A firm is deciding whether to invest in shipbuilding. If it can produce at sufficiently large scale, it knows the venture will be profitable. (A) There is a",
+   "choices": [
+    "(A) －(C) －(B)",
+    "(B) －(A) －(C)",
+    "(B) －(C) －(A)",
+    "(C) －(A) －(B)",
+    "(C) －(B) －(A)\n[38～39] 글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 \n적절한 곳을 고르시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38～39"
+    ]
+   },
+   "charLen": 1187
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. A problem, however, is that supervisors often work in locations apart from their employees and therefore are not able to observe their subordinates’ perform",
+   "choices": [
+    ") This is because \nthe supervisor is responsible for the employee’s performance, \nproviding supervision, handing out assignments, and developing \nthe employee. (",
+    ") Should supervisors rate employees on \nperformance dimensions they cannot observe? (",
+    ") To \neliminate this dilemma, more and more organizations are \nimplementing assessments referred to as 360-degree evaluations.\n(",
+    ") Employees are rated not only by their supervisors but \nby coworkers, clients or citizens, professionals in other \nagencies with whom they work, and subordinates. (",
+    ") The \nreason for this approach is that often coworkers and clients or \ncitizens have a greater opportunity to observe an employee’s \nperformance and are in a better position to evaluate many \nperformance dimensions. \n* subordinate: 부하 직원"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1055
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. This is particularly true since one aspect of sleep is decreased responsiveness to the environment. The role that sleep plays in evolution is still under st",
+   "choices": [
+    ") One possibility is that it is an advantageous adaptive \nstate of decreased metabolism for an animal when there are no \nmore pressing activities. (",
+    ") This seems true for deeper \nstates of inactivity such as hibernation during the winter when \nthere are few food supplies, and a high metabolic cost to \nmaintaining adequate temperature. (",
+    ") It may be true in \ndaily situations as well, for instance for a prey species to avoid \npredators after dark. (",
+    ") On the other hand, the apparent \nuniversality of sleep, and the observation that mammals such \nas cetaceans have developed such highly complex mechanisms \nto preserve sleep on at least one side of the brain at a time, \nsuggests that sleep additionally provides some vital service(s) \nfor the organism. (",
+    ") If sleep is universal even when this \npotential price must be paid, the implication may be that it has \nimportant functions that cannot be obtained just by quiet, \nwakeful resting. [3점]\n* metabolism: 신진대사  ** mammal: 포유동물"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1155
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "unstable ……confirmation",
+    "unstable ……exaggeration",
+    "lasting\n……exhibition",
+    "lasting\n……manipulation",
+    "official ……justification\n[41～42] 다음 글을 읽고, 물음에 답하시오.\nThe right to privacy may extend only to the point where it \ndoes not restrict someone else’s right to freedom of \nexpression or right to information. The scope of the right to \nprivacy is (a) similarly restricted by the general interest in \npreventing crime or in promoting public health. However, \nwhen we move away from the property-based notion of a \nright (where the right to privacy would protect, for example, \nimages and personality), to modern notions of private and \nfamily life, we find it (b) easier to establish the limits of the \nright. This is, of course, the strength of the notion of privacy, \nin that it can adapt to meet changing expectations and \ntechnological advances. \nIn sum, what is privacy today? The concept includes a \nclaim that we should be unobserved, and that certain \ninformation and images about us should not be (c) circulated \nwithout our permission. Why did these privacy claims arise? \nThey arose because powerful people took offence at such \nobservation. Furthermore, privacy incorporated the need to \nprotect the family, home, and correspondence from \narbitrary (d) interference and, in addition, there has been a \ndetermination to protect honour and reputation. How is \nprivacy protected? Historically, privacy was protected by \nrestricting circulation of the damaging material. But if the \nconcept of privacy first became interesting legally as a \nresponse to reproductions of images through photography and \nnewspapers, more recent technological advances, such as data \nstorage, digital images, and the Internet, (e) pose new threats \nto privacy. The right to privacy is now being reinterpreted to \nmeet those challenges.\n* arbitrary: 임의의"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2960
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Side Effects of Privacy Protection Technologies",
+    "The Legal Domain of Privacy Claims and Conflicts",
+    "The Right to Privacy: Evolving Concepts and Practices",
+    "Who Really Benefits from Looser Privacy Regulations?",
+    "Less Is More: Reduce State Intervention in Privacy!"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 285
+  },
+  {
+   "qNum": 42,
+   "kind": "vocab_letter",
+   "stem": "42. 밑줄 친 (a)～(e) 중에서 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {
+    "a": "you scared",
+    "b": "I learned a lot",
+    "c": "her own reflection in",
+    "d": "she shouted",
+    "e": "me more confidence when"
+   },
+   "bracketChoices": {},
+   "charLen": 2251
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) －(D) －(C)",
+    "(C) －(B) －(D)",
+    "(C) －(D) －(B)",
+    "(D) －(B) －(C)",
+    "(D) －(C) －(B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 125
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a)～(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 75
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글에 관한 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "Mia와 Rebecca는 보트의 균형을 유지하려고 애썼다.",
+    "Rebecca는 몽골에서 영어를 가르친 경험이 있다.",
+    "Sophia와 친구들이 함께 탄 보트는 바위에 부딪치지 않았다.",
+    "Sophia는 래프팅을 하기 전에는 물을 두려워했다.",
+    "Sophia는 용기를 시험할 모험을 대학 졸업 후에 하길 원했다.\n* 확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)했는지 확인\n하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 247
+  }
+ ],
+ "sourcePdf": "bffd4ecdecf411375d124d5cf8a934ca.pdf",
+ "fileName": "3교시_영어영역_문제지.pdf"
+}

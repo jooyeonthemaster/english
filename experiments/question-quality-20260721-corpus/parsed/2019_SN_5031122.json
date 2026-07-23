@@ -1,0 +1,765 @@
+{
+ "examId": "2019_SN_5031122",
+ "source": "0649c5a08c5eb2c43db74485c1b30a05.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ①No. You can’t study with us. ②Okay. I’ll do the report by myself. ③Sure. I’ll call you when I’m done. ④Yes. I",
+   "choices": [
+    "No. You can’t study with us.",
+    "Okay. I’ll do the report by myself.",
+    "Sure. I’ll call you when I’m done.",
+    "Yes. I’m pleased to join your team.",
+    "Sorry. You have to finish by tomorrow."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 232
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ①I’m sorry. Your son has to wait longer. ②Great. I’ll register my son for the program. ③Wonderful. Let’s atten",
+   "choices": [
+    "I’m sorry. Your son has to wait longer.",
+    "Great. I’ll register my son for the program.",
+    "Wonderful. Let’s attend the program together.",
+    "I agree. The seats are very comfortable.",
+    "Be careful. The roads are slippery."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 265
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을 듣고, 남자가 하는 말의 목적으로 가장 적절한 것을 고르시오. ①시상식 일정 변경을 사과하려고 ②웹 사이트 점검을 안내하려고 ③경기장 개장을 홍보하려고 ④팬클럽 가입을 권유하려고 ⑤경기 취소를 공지하려고",
+   "choices": [
+    "시상식 일정 변경을 사과하려고",
+    "웹 사이트 점검을 안내하려고",
+    "경기장 개장을 홍보하려고",
+    "팬클럽 가입을 권유하려고",
+    "경기 취소를 공지하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 122
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 여자의 의견으로 가장 적절한 것을 고르시오. ①실패한 실험을 분석하면 실험에 성공할 수 있다. ②과학 수업에서는 이론과 실습이 병행되어야 한다. ③과학자가 되기 위해서는 인문학적 소양도 필요하다. ④실험 일지는 실험 보고서 작성에 도움이 된다. ⑤실험을 할 때마다 안",
+   "choices": [
+    "실패한 실험을 분석하면 실험에 성공할 수 있다.",
+    "과학 수업에서는 이론과 실습이 병행되어야 한다.",
+    "과학자가 되기 위해서는 인문학적 소양도 필요하다.",
+    "실험 일지는 실험 보고서 작성에 도움이 된다.",
+    "실험을 할 때마다 안전 교육을 해야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 173
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 두 사람의 관계를 가장 잘 나타낸 것을 고르시오. ①기증자－박물관 직원 ②모델－사진작가 ③영화 관람객－티켓 판매원 ④인테리어 디자이너－건축가 ⑤고객－가구점 직원",
+   "choices": [
+    "기증자－박물관 직원",
+    "모델－사진작가",
+    "영화 관람객－티켓 판매원",
+    "인테리어 디자이너－건축가",
+    "고객－가구점 직원"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 102
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고르시오.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 42
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 남자가 여자에게 부탁한 일로 가장 적절한 것을 고르시오. ①유인물 배부하기 ②식용 곤충 조사하기 ③설문 조사 결과 분류하기 ④사진 촬영하기 ⑤발표 주제 정하기",
+   "choices": [
+    "유인물 배부하기",
+    "식용 곤충 조사하기",
+    "설문 조사 결과 분류하기",
+    "사진 촬영하기",
+    "발표 주제 정하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 102
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, 여자가 드론 비행 대회에 참가할 수 없는 이유를 고르시오. ①드론을 갖고 있지 않아서 ②파트너를 구하지 못해서 ③졸업식에 참석해야 해서 ④취업 면접에 가야 해서 ⑤부모님이 방문하셔서",
+   "choices": [
+    "드론을 갖고 있지 않아서",
+    "파트너를 구하지 못해서",
+    "졸업식에 참석해야 해서",
+    "취업 면접에 가야 해서",
+    "부모님이 방문하셔서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 114
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 대화를 듣고, 남자가 지불할 금액을 고르시오. [3점] ①$120 ②$140 ③$160 ④$180 ⑤$200",
+   "choices": [
+    "$120",
+    "$140",
+    "$160",
+    "$180",
+    "$200"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 64
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 대화를 듣고, International Fireworks Festival에 관해 언급되지 않은 것을 고르시오. ①개최 일시 ②개최 장소 ③참가국 ④주제 ⑤교통편",
+   "choices": [
+    "개최 일시",
+    "개최 장소",
+    "참가국",
+    "주제",
+    "교통편"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 96
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 2018 Upcycling Workshop에 관한 다음 내용을 듣고, 일치하지 않는 것을 고르시오. ①3일간 진행될 것이다. ②세미나실에서 열릴 것이다. ③패션 디자이너가 가르칠 것이다. ④모든 재료가 제공된다. ⑤참가 연령에 제한이 없다. 2019학년도 대학수학능력시험 문제지 ",
+   "choices": [
+    "3일간 진행될 것이다.",
+    "세미나실에서 열릴 것이다.",
+    "패션 디자이너가 가르칠 것이다.",
+    "모든 재료가 제공된다.",
+    "참가 연령에 제한이 없다.\n2019학년도 대학수학능력시험 문제지\n제3 교시\n짝수형\n짝수형"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 175
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 다음 표를 보면서 대화를 듣고, 여자가 구매할 도마를 고르시오. Cutting Boards at Camilo’s Kitchen Model Material Price Handle Size ① A plastic $ 25 ☓ medium ② B maple $ 35 ◯ small ③ C",
+   "choices": [
+    "A\nplastic\n$ 25\n☓\nmedium",
+    "B\nmaple\n$ 35\n◯\nsmall",
+    "C\nmaple\n$ 40\n☓\nlarge",
+    "D\nwalnut\n$ 45\n◯\nmedium",
+    "E\nwalnut\n$ 55\n◯\nlarge"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 229
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. [3점] Man: ①Absolutely! You should go and see a doctor. ②No problem. I’ll visit you on my business trip. ③Sure",
+   "choices": [
+    "Absolutely! You should go and see a doctor.",
+    "No problem. I’ll visit you on my business trip.",
+    "Sure. You can check the directions before driving.",
+    "Okay. I’ll ask my team so I can take the medicine.",
+    "Right. Taking a trip is a great way to relieve stress."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 318
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. Woman: ①Thanks. Then, I’ll read the novel before I watch the musical. ②Great. I need a new musical instrument",
+   "choices": [
+    "Thanks. Then, I’ll read the novel before I watch the musical.",
+    "Great. I need a new musical instrument for our performance.",
+    "Good. Now, we should rewrite the script of the musical.",
+    "You’re right. Let’s wait for the reviews of the musical.",
+    "I agree. The actors performed well in the musical."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 350
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Steve가 Cathy에게 할 말로 가장 적절한 것을 고르시오. [3점] Steve: ①You’d better become more qualified as a volunteer. ②You need to spend more time practicing translation. ③Why don’t you help me write a self-introduction letter?",
+   "choices": [
+    "You’d better become more qualified as a volunteer.",
+    "You need to spend more time practicing translation.",
+    "Why don’t you help me write a self-introduction letter?",
+    "How about volunteering together for the translation club?",
+    "You should highlight your volunteer experience as a translator.\n[16～17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 379
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 여자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "why traditional foods are popular",
+    "misconceptions about organic foods",
+    "unexpected origins of common foods",
+    "when foods spread across countries",
+    "importance of eating fresh foods"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 206
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 음식이 아닌 것은?",
+   "choices": [
+    "Caesar salad",
+    "bagels",
+    "kiwis",
+    "potatoes",
+    "buffalo wings"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 73
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "요리 대회 일정을 안내하려고",
+    "요리 대회 심사 결과를 확인하려고",
+    "요리법 변경 가능 여부를 문의하려고",
+    "새로운 요리법 개발을 요청하려고",
+    "요리 대회 불참을 통보하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 120
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 드러난 Dave의 심경 변화로 가장 적절한 것은?",
+   "choices": [
+    "frustrated →delighted",
+    "bored\n→comforted",
+    "calm\n→annoyed",
+    "relieved →frightened",
+    "pleased\n→upset"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 778
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "전쟁과 적을 추상적이고 획일적으로 개념화하는 것을 경계해야 한다.",
+    "적에 따라 다양한 전략과 전술을 수립하고 적용해야 한다.",
+    "보편적 윤리관에 기초하여 적의 개념을 정의해야 한다.",
+    "전쟁 예방에 도움이 되는 정치적 결정을 해야 한다.",
+    "어떠한 경우에도 전쟁을 정당화하지 말아야 한다.\n  이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시에 \n따라 답을 하시기 바랍니다.\nDear Mr. Reese,\nA few days ago, I submitted my application and recipe \nfor the 2nd Annual DC Metro Cooking Contest. \nHowever, I would like to change my recipe if it is \npossible. I have checked the website again, but I could \nonly find information about the contest date, time, and \nprizes. I couldn’t see any information about changing \nrecipes. I have just created a great new recipe, and I \nbelieve people will love this more than the one I have \nalready submitted. Please let me know if I can change \nmy submitted recipe. I look forward to your response.\nBest Regards,\nSophia Walker\n짝수형"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1687
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 밑줄 친 refining ignorance가 다음 글에서 의미하는 바로 가장 적절한 것은?",
+   "choices": [
+    "looking beyond what is known towards what is left unknown",
+    "offering an ultimate account of what has been discovered",
+    "analyzing existing knowledge with an objective mindset",
+    "inspiring scientists to publicize significant discoveries",
+    "informing students of a new field of science"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1458
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "정보 기반 사회에서는 정보를 전달하는 방식이 중요하다.",
+    "정보 기반 사회에서 정보는 독자적 상품 가치를 지닌다.",
+    "정보 처리의 단순화는 신속한 의사 결정에 도움이 된다.",
+    "정보의 효율적 교환은 조직의 생산성을 향상시킨다.",
+    "정보화된 사회일수록 개인 정보 보호가 필요하다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1182
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "reforming diplomatic policies in poor countries",
+    "coping with climate change by reforming aid and policies",
+    "reasons for restoring economic equality in poor countries",
+    "increasing global awareness of the environmental crisis",
+    "roles of the OECD in solving international conflicts"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1564
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Be Careful, Numbers Magnify Feelings!",
+    "Preventing Potential Losses Through Technology",
+    "How to Reach Out a Hand to People in Desperate Need",
+    "Power of Numbers: A Way of Classifying Natural Disasters",
+    "Insensitivity to Mass Tragedy: We Are Lost in Large Numbers\n짝수형"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1269
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. 다음 표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "The total number of international students in 2016-2017 \nwas over three times larger than the total number of \ninternational students in 1979-1980.",
+    "Iran, Taiwan, and \nNigeria were the top three origin countries of international \nstudents in 1979-1980, among which only Taiwan was \nincluded in the list of the top ten origin countries in \n2016-2017.",
+    "The number of students from India was over \ntwenty times larger in 2016-2017 than in 1979-1980, and India \nranked higher than China in 2016-2017.",
+    "South Korea, \nwhich was not included among the top ten origin countries in \n1979-1980, ranked third in 2016-2017.",
+    "Although the \nnumber of students from Japan was larger in 2016-2017 than \nin 1979-1980, Japan ranked lower in 2016-2017 than in \n1979-1980."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1568
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Marjorie Kinnan Rawlings에 관한 다음 글의 내용과 일치 하지 않는 것은?",
+   "choices": [
+    "Washington, D.C.에서 태어난 미국 작가이다.",
+    "그녀의 이야기 중 하나가 The Washington Post에 실렸다.",
+    "대학교를 졸업한 후 저널리스트로 일했다.",
+    "The Yearling이라는 소설은 다른 제목으로 영화화되었다.",
+    "Cross Creek에 소유했던 땅은 Florida 주립 공원이 되었다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1095
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. Flying Eagle Zipline Ride에 관한 다음 안내문의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "13세 이상부터 탈 수 있다.",
+    "집라인의 길이는 500미터이다.",
+    "체중 제한이 있다.",
+    "분실한 귀중품에 대해 책임을 지지 않는다.",
+    "사전 예약이 필요하다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 148
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. Wireless Charging Pad 사용에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "스마트폰의 화면을 아래로 향하게 두어야 한다.",
+    "스마트폰을 충전 패드 중앙에 놓지 않아도 된다.",
+    "LED 빛이 흰색이면 스마트폰이 완전히 충전되지 않은 것이다.",
+    "스마트폰과 충전 패드 사이에 어떤 것도 놓지 않아야 한다.",
+    "충전 패드는 방수가 된다.\nWireless Charging Pad\n－Instructions －\nWireless Smartphone Charging: \n1. Connect the charging\npad to a power source.\n2. Place your smartphone on \nthe charging pad with the \ndisplay facing up.\n3. Place your smartphone on\nthe center of the charging\npad (or it will not charge).\nCharge Status LED:\n∙Blue Light: Your smartphone is charging. If there’s\na problem, the blue light will flash.\n∙White Light: Your smartphone is fully charged.\nCaution:\n∙Do not place anything between your smartphone and\nthe charging pad while charging.\n∙The charging pad is not water-resistant. Keep it dry. \nFlying Eagle Zipline Ride\nSoar through the treetops over Lost Forest on our thrilling \nFlying Eagle Zipline! Feel the thrill of flying like an eagle!\n∙Age requirement: 13 years old and over\n∙Price: ￡20\n∙Zipline length: 500 metres\n∙Duration: 30 minutes\n(including safety instruction)\n∙Restrictions:\n－People with back problems\nor serious heart conditions\n－Weight: over 125 kg\n－Height: under 120 cm\n※ We do not take responsibility for lost valuables.\n※ No advanced reservations are necessary.\nPlease visit our website at www.flyingeaglezip.co.uk for \nmore information.\n짝수형"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1348
+  },
+  {
+   "qNum": 29,
+   "kind": "grammar_underline",
+   "stem": "29. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "expressing the basic characteristic of",
+    "②": "did in Egypt",
+    "③": "those of Egypt in terms",
+    "④": "that constitutes the war memorial",
+    "⑤": "carved in wood"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1046
+  },
+  {
+   "qNum": 30,
+   "kind": "vocab_underline",
+   "stem": "30. 다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "uncertain task",
+    "②": "weakness that mankind would mercilessly",
+    "③": "vulnerable",
+    "④": "advantage he would gain by",
+    "⑤": "laboriously overtaken and killed prey"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 951
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. Finkenauer and Rimé investigated the memory of the unexpected death of Belgium’s King Baudouin in 1993 in a large sample of Belgian citizens. The data revea",
+   "choices": [
+    "repetitive",
+    "illegal",
+    "biased",
+    "temporary",
+    "rational"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 987
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. Minorities tend not to have much power or status and may even be dismissed as troublemakers, extremists or simply ‘weirdos’. How, then, do they ever have any influence over the majority?",
+   "choices": [
+    "the minority cooperates with the majority",
+    "the majority brings about social change",
+    "the majority cultivates the minority",
+    "the minority tones down its voice",
+    "the minority gets its point across\n짝수형"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1319
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. Heritage is concerned with the ways in which very selective material artefacts, mythologies, memories and traditions become resources for the present. The c",
+   "choices": [
+    "about preserving universal cultural values",
+    "a mirror reflecting the artefacts of the past",
+    "neither concerned with the present nor the future",
+    "as much about forgetting as remembering the past",
+    "a collection of memories and traditions of a society"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1189
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. The human species is unique in its ability to expand its functionality by inventing new cultural tools. Writing, arithmetic, science ― all are recent invent",
+   "choices": [
+    "our brains put a limit on cultural diversity",
+    "we can mobilize our old areas in novel ways",
+    "cultural tools stabilize our brain functionality",
+    "our brain regions operate in an isolated manner",
+    "we cannot adapt ourselves to natural challenges"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1332
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "Some painters made practical use of the invention.",
+    "There \nwere Impressionist painters who used a photograph in place of \nthe model or landscape they were painting.",
+    "But by and \nlarge, the photograph was a challenge to painting and was one \ncause of painting’s moving away from direct representation \nand reproduction to the abstract painting of the twentieth \ncentury.",
+    "Therefore, the painters of that century put more \nfocus on expressing nature, people, and cities as they were \nin reality.",
+    "Since photographs did such a good job of \nrepresenting things as they existed in the world, painters were \nfreed to look inward and represent things as they were in their \nimagination, rendering emotion in the color, volume, line, and \nspatial configurations native to the painter’s art.\n* render: 표현하다\n** configuration: 배치 \n[36～37] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 \n것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1078
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. Researchers in psychology follow the scientific method to perform studies that help explain and may predict human behavior. This is a much more challenging ",
+   "choices": [
+    "(A) －(C) －(B)",
+    "(B) －(A) －(C)",
+    "(B) －(C) －(A)",
+    "(C) －(A) －(B)",
+    "(C) －(B) －(A)\n짝수형"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1199
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. Clearly, schematic knowledge helps you ― guiding your understanding and enabling you to reconstruct things you cannot remember. (A) Likewise, if there are t",
+   "choices": [
+    "(A) －(C) －(B)",
+    "(B) －(A) －(C)",
+    "(B) －(C) －(A)",
+    "(C) －(A) －(B)",
+    "(C) －(B) －(A)\n[38～39] 글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 \n적절한 곳을 고르시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38～39"
+    ]
+   },
+   "charLen": 1220
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. The advent of literacy and the creation of handwritten scrolls and, eventually, handwritten books strengthened the ability of large and complex ideas to spr",
+   "choices": [
+    ") \nIt also added a certain amount of guaranteed error. (",
+    ") The \nspread of ideas by word of mouth was equivalent to a game of \ntelephone on a global scale. (",
+    ") But the incredible amount \nof time required to copy a scroll or book by hand limited the \nspeed with which information could spread this way. (",
+    ") A \nwell-trained monk could transcribe around four pages of text \nper day. (",
+    ") A printing press could copy information \nthousands of times faster, allowing knowledge to spread far \nmore quickly, with full fidelity, than ever before.\n* fidelity: 충실\n** propagate: 전파하다"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1056
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. A round hill rising above a plain, therefore, would appear on the map as a set of concentric circles, the largest at the base and the smallest near the top.",
+   "choices": [
+    ") Another, technically more accurate \nway is to draw contour lines. (",
+    ") A contour line connects all \npoints that lie at the same elevation. (",
+    ") When the contour \nlines are positioned closely together, the hill’s slope is steep; if \nthey lie farther apart, the slope is gentler. (",
+    ") Contour lines \ncan represent scarps, hollows, and valleys of the local \ntopography. (",
+    ") At a glance, they reveal whether the relief in \nthe mapped area is great or small: a “busy” contour map means \nlots of high relief. [3점]\n* concentric: 중심이 같은\n** scarp: 가파른 비탈\n*** relief: (토지의) 고저, 기복"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1083
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "immediate\n…… competitive",
+    "available\n…… expensive",
+    "delayed\n…… competitive",
+    "convenient …… expensive",
+    "abundant\n…… competitive\n짝수형\n[41～42] 다음 글을 읽고, 물음에 답하시오.\nIndustrial capitalism not only created work, it also created \n‘leisure’ in the modern sense of the term. This might seem \nsurprising, for the early cotton masters wanted to keep their \nmachinery running as long as possible and forced their employees \nto work very long hours. However, by requiring continuous \nwork during work hours and ruling out non-work activity, \nemployers had (a) separated out leisure from work. Some did \nthis quite explicitly by creating distinct holiday periods, when \nfactories were shut down, because it was better to do this \nthan have work (b) promoted by the casual taking of days off. \n‘Leisure’ as a distinct non-work time, whether in the form of \nthe holiday, weekend, or evening, was a result of the disciplined \nand bounded work time created by capitalist production. \nWorkers then wanted more leisure and leisure time was \nenlarged by union campaigns, which first started in the cotton \nindustry, and eventually new laws were passed that (c) limited \nthe hours of work and gave workers holiday entitlements.\nLeisure was also the creation of capitalism in another \nsense, through the commercialization of leisure. This no \nlonger meant participation in traditional sports and pastimes. \nWorkers began to (d) pay for leisure activities organized by \ncapitalist enterprises. Mass travel to spectator sports, especially \nfootball and horse-racing, where people could be charged for \nentry, was now possible. The importance of this can hardly \nbe exaggerated, for whole new industries were emerging to \nexploit and (e) develop the leisure market, which was to become \na huge source of consumer demand, employment, and profit.\n* discipline: 통제하다\n** enterprise: 기업(체)\n*** exaggerate: 과장하다"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3218
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "What It Takes to Satisfy Workers",
+    "Why Workers Have Struggled for More Leisure",
+    "The Birth and Evolution of Leisure in Capitalism",
+    "How to Strike a Balance Between Work and Leisure",
+    "The Light and Dark Sides of the Modern Leisure Industry"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 260
+  },
+  {
+   "qNum": 42,
+   "kind": "vocab_letter",
+   "stem": "42. 밑줄 친 (a)～(e) 중에서 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {
+    "a": "I learned about it",
+    "b": "her",
+    "c": "She kept filling her",
+    "d": "she and Ellie started",
+    "e": "she was right"
+   },
+   "bracketChoices": {},
+   "charLen": 2234
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) －(D) －(C)",
+    "(C) －(B) －(D)",
+    "(C) －(D) －(B)",
+    "(D) －(B) －(C)",
+    "(D) －(C) －(B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 126
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a)～(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 70
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글에 관한 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "할머니는 Olivia와 Ellie에게 도움을 요청했다.",
+    "Olivia와 Ellie는 양배추밭에 있는 애벌레를 잡지 않았다.",
+    "Olivia에게 양배추밭은 마치 전쟁터 같았다.",
+    "Olivia와 Ellie는 양배추밭이 얼마나 드넓은지 새삼 깨달았다.",
+    "할머니는 Olivia에게 자연의 섭리를 일깨워주었다.\n* 확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)했는지 확인\n하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 245
+  }
+ ],
+ "sourcePdf": "0649c5a08c5eb2c43db74485c1b30a05.pdf",
+ "fileName": "영어.zip"
+}
