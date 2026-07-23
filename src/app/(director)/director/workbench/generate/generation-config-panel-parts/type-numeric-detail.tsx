@@ -1114,8 +1114,14 @@ export function renderBlankInferenceDetail({ blankInferenceBlankCount, blankSett
             // 킬러 연동 시각화(26-07-23): 이 유형의 난이도가 킬러이고 변형이
             // ON 이면 토글·라벨을 킬러 레드로 — "킬러 = 패러프레이즈 공예"라는
             // 연동을 한눈에 보여준다. 킬러인데 수동 OFF 면 안내만 남긴다.
+            // 포함 관계 시각화(26-07-23 사용자 결정): 부정-부정은 "부정
+            // 패러프레이즈"라 패러프레이즈를 내포한다 — 부정-부정 ON 이면 이
+            // 토글도 켜진 상태(잠금)로 표시한다. 저장값(paraphraseAnswer)은
+            // 건드리지 않아, 부정-부정을 끄면 원래 설정으로 복귀한다.
             const isKillerType = blankSettings.difficulty === "KILLER";
-            const killerLinked = isKillerType && !!blankSettings.paraphraseAnswer;
+            const dnActive = !isMultiBlank && !!blankSettings.doubleNegative;
+            const paraActive = !!blankSettings.paraphraseAnswer || dnActive;
+            const killerLinked = isKillerType && paraActive && !dnActive;
             return (
           <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-1.5 lg:pt-3">
             <div className="min-w-0">
@@ -1132,6 +1138,11 @@ export function renderBlankInferenceDetail({ blankInferenceBlankCount, blankSett
                       aria-hidden="true"
                     />
                     킬러 연동
+                  </span>
+                ) : null}
+                {dnActive ? (
+                  <span className="inline-flex items-center gap-1 rounded-md border border-blue-200 bg-blue-50 px-1.5 py-0.5 text-[10px] font-bold text-blue-600">
+                    부정-부정에 포함
                   </span>
                 ) : null}
               </div>
@@ -1156,7 +1167,13 @@ export function renderBlankInferenceDetail({ blankInferenceBlankCount, blankSett
                   출제하려면 끌 수 있습니다.
                 </p>
               ) : null}
-              {isKillerType && !blankSettings.paraphraseAnswer ? (
+              {dnActive ? (
+                <p className="mt-1 text-[10px] leading-snug text-blue-500">
+                  부정-부정 변형이 패러프레이즈를 포함하므로 함께 활성
+                  상태입니다 — 부정-부정을 끄면 원래 설정으로 돌아갑니다.
+                </p>
+              ) : null}
+              {isKillerType && !paraActive ? (
                 <p className="mt-1 text-[10px] leading-snug text-rose-500">
                   킬러 문항의 오답 설계는 패러프레이즈 정답에서 상한이 나옵니다
                   — 원문 그대로 출제하려는 경우에만 꺼두세요.
@@ -1166,8 +1183,10 @@ export function renderBlankInferenceDetail({ blankInferenceBlankCount, blankSett
             <button
               type="button"
               role="switch"
-              aria-checked={!!blankSettings.paraphraseAnswer}
+              aria-checked={paraActive}
+              disabled={dnActive}
               onClick={() => {
+                if (dnActive) return;
                 const next = !blankSettings.paraphraseAnswer;
                 updateBlankSetting({
                   paraphraseAnswer: next,
@@ -1175,18 +1194,18 @@ export function renderBlankInferenceDetail({ blankInferenceBlankCount, blankSett
                 });
               }}
               className={`relative h-6 w-11 rounded-full border transition-colors ${
-                blankSettings.paraphraseAnswer
-                  ? killerLinked
-                    ? "border-rose-300 bg-rose-500"
-                    : "border-blue-300 bg-blue-500"
+                paraActive
+                  ? dnActive
+                    ? "cursor-not-allowed border-blue-200 bg-blue-400/80"
+                    : killerLinked
+                      ? "border-rose-300 bg-rose-500"
+                      : "border-blue-300 bg-blue-500"
                   : "border-slate-200 bg-slate-200"
               }`}
             >
               <span
                 className={`absolute left-0.5 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full bg-white shadow transition-transform ${
-                  blankSettings.paraphraseAnswer
-                    ? "translate-x-5"
-                    : "translate-x-0"
+                  paraActive ? "translate-x-5" : "translate-x-0"
                 }`}
               />
             </button>
@@ -1226,10 +1245,11 @@ export function renderBlankInferenceDetail({ blankInferenceBlankCount, blankSett
               disabled={isMultiBlank}
               onClick={() => {
                 const next = !blankSettings.doubleNegative;
-                updateBlankSetting({
-                  doubleNegative: next,
-                  ...(next ? { paraphraseAnswer: false } : {}),
-                });
+                // 포함 관계(26-07-23): 부정-부정이 패러프레이즈를 내포하므로
+                // 저장된 paraphraseAnswer 는 건드리지 않는다 — ON 동안은
+                // 패러프레이즈 토글이 "포함됨"으로 함께 켜져 보이고, OFF 하면
+                // 사용자가 두었던 원래 값으로 복귀한다.
+                updateBlankSetting({ doubleNegative: next });
               }}
               className={`relative h-6 w-11 rounded-full border transition-colors ${
                 isMultiBlank
