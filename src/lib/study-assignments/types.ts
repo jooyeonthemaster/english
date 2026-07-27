@@ -48,6 +48,16 @@ export function examPayloadDurationMin(payload: unknown): number | null {
 export interface WorksheetAssignmentPayload {
   /** 표시 캐시 — 원본 삭제 시에도 카드 제목 유지 */
   passageTitle?: string;
+  /**
+   * 모바일 스터디 모드 설정 — docs/worksheet-study-spec.md §3.
+   * 부재(기배포 과제) = { mode: "standard", required: false } 로 해석:
+   * 스터디는 제공하되 완료는 기존 "다 확인했습니다" 유지(무회귀).
+   * 해석은 resolveStudyConfig(@/lib/worksheet-study/types)가 정본.
+   */
+  study?: {
+    mode: "off" | "light" | "standard" | "intense";
+    required: boolean;
+  };
 }
 
 export interface QuestionsAssignmentPayload {

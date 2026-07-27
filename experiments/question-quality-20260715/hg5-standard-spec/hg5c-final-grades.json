@@ -1,0 +1,802 @@
+[
+ {
+  "code": "W001",
+  "arm": "PREM",
+  "qtype": "grammar",
+  "p": 1,
+  "grade": "B",
+  "defects": [
+   "KOREAN_BROKEN"
+  ]
+ },
+ {
+  "code": "W002",
+  "arm": "S3i",
+  "qtype": "grammar",
+  "p": 25,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W003",
+  "arm": "PREM",
+  "qtype": "grammar",
+  "p": 3,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W004",
+  "arm": "PREM",
+  "qtype": "blank",
+  "p": 5,
+  "grade": "F",
+  "defects": [
+   "OPTION_UNGRAMMATICAL_FIT",
+   "CONTRACT_BREACH"
+  ]
+ },
+ {
+  "code": "W005",
+  "arm": "S3i",
+  "qtype": "grammar",
+  "p": 1,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W006",
+  "arm": "S3i",
+  "qtype": "grammar",
+  "p": 2,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W007",
+  "arm": "S3i",
+  "qtype": "grammar",
+  "p": 3,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W008",
+  "arm": "PREM",
+  "qtype": "grammar",
+  "p": 19,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W009",
+  "arm": "S3i",
+  "qtype": "blank",
+  "p": 17,
+  "grade": "B",
+  "defects": [
+   "V4_EXPLANATION_MISMATCH"
+  ]
+ },
+ {
+  "code": "W010",
+  "arm": "PREM",
+  "qtype": "blank",
+  "p": 4,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W011",
+  "arm": "PREM",
+  "qtype": "grammar",
+  "p": 20,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W012",
+  "arm": "PREM",
+  "qtype": "grammar",
+  "p": 11,
+  "grade": "B",
+  "defects": [
+   "TRIVIAL_POINT"
+  ]
+ },
+ {
+  "code": "W013",
+  "arm": "S3i",
+  "qtype": "blank",
+  "p": 24,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W014",
+  "arm": "PREM",
+  "qtype": "grammar",
+  "p": 2,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W015",
+  "arm": "S3i",
+  "qtype": "grammar",
+  "p": 16,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W016",
+  "arm": "PREM",
+  "qtype": "grammar",
+  "p": 25,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W017",
+  "arm": "PREM",
+  "qtype": "blank",
+  "p": 14,
+  "grade": "B",
+  "defects": [
+   "KOREAN_BROKEN"
+  ]
+ },
+ {
+  "code": "W018",
+  "arm": "S3i",
+  "qtype": "grammar",
+  "p": 20,
+  "grade": "B",
+  "defects": [
+   "V4_EXPLANATION_MISMATCH"
+  ]
+ },
+ {
+  "code": "W019",
+  "arm": "S3i",
+  "qtype": "grammar",
+  "p": 5,
+  "grade": "B",
+  "defects": [
+   "OTHER"
+  ]
+ },
+ {
+  "code": "W020",
+  "arm": "PREM",
+  "qtype": "grammar",
+  "p": 13,
+  "grade": "B",
+  "defects": [
+   "OTHER"
+  ]
+ },
+ {
+  "code": "W021",
+  "arm": "PREM",
+  "qtype": "blank",
+  "p": 13,
+  "grade": "B",
+  "defects": [
+   "V4_EXPLANATION_MISMATCH"
+  ]
+ },
+ {
+  "code": "W022",
+  "arm": "S3i",
+  "qtype": "blank",
+  "p": 23,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W023",
+  "arm": "S3i",
+  "qtype": "blank",
+  "p": 16,
+  "grade": "B",
+  "defects": [
+   "TRIVIAL_POINT",
+   "KOREAN_BROKEN"
+  ]
+ },
+ {
+  "code": "W024",
+  "arm": "PREM",
+  "qtype": "grammar",
+  "p": 23,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W025",
+  "arm": "S3i",
+  "qtype": "blank",
+  "p": 12,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W026",
+  "arm": "S3i",
+  "qtype": "grammar",
+  "p": 21,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W027",
+  "arm": "S3i",
+  "qtype": "blank",
+  "p": 2,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W028",
+  "arm": "S3i",
+  "qtype": "grammar",
+  "p": 6,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W029",
+  "arm": "S3i",
+  "qtype": "blank",
+  "p": 19,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W030",
+  "arm": "PREM",
+  "qtype": "grammar",
+  "p": 14,
+  "grade": "B",
+  "defects": [
+   "OTHER"
+  ]
+ },
+ {
+  "code": "W031",
+  "arm": "PREM",
+  "qtype": "grammar",
+  "p": 12,
+  "grade": "B",
+  "defects": [
+   "V4_EXPLANATION_MISMATCH",
+   "OTHER"
+  ]
+ },
+ {
+  "code": "W032",
+  "arm": "S3i",
+  "qtype": "blank",
+  "p": 10,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W033",
+  "arm": "S3i",
+  "qtype": "blank",
+  "p": 20,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W034",
+  "arm": "S3i",
+  "qtype": "blank",
+  "p": 11,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W035",
+  "arm": "S3i",
+  "qtype": "blank",
+  "p": 1,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W036",
+  "arm": "PREM",
+  "qtype": "grammar",
+  "p": 6,
+  "grade": "B",
+  "defects": [
+   "OTHER"
+  ]
+ },
+ {
+  "code": "W037",
+  "arm": "S3i",
+  "qtype": "grammar",
+  "p": 22,
+  "grade": "B",
+  "defects": [
+   "V4_EXPLANATION_MISMATCH"
+  ]
+ },
+ {
+  "code": "W038",
+  "arm": "PREM",
+  "qtype": "grammar",
+  "p": 21,
+  "grade": "B",
+  "defects": [
+   "OTHER"
+  ]
+ },
+ {
+  "code": "W039",
+  "arm": "PREM",
+  "qtype": "blank",
+  "p": 22,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W040",
+  "arm": "S3i",
+  "qtype": "blank",
+  "p": 3,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W041",
+  "arm": "PREM",
+  "qtype": "blank",
+  "p": 9,
+  "grade": "B",
+  "defects": [
+   "TRIVIAL_POINT"
+  ]
+ },
+ {
+  "code": "W042",
+  "arm": "S3i",
+  "qtype": "grammar",
+  "p": 17,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W043",
+  "arm": "PREM",
+  "qtype": "grammar",
+  "p": 4,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W044",
+  "arm": "S3i",
+  "qtype": "grammar",
+  "p": 13,
+  "grade": "F",
+  "defects": [
+   "CONTRACT_BREACH",
+   "V4_EXPLANATION_MISMATCH"
+  ]
+ },
+ {
+  "code": "W045",
+  "arm": "S3i",
+  "qtype": "grammar",
+  "p": 7,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W046",
+  "arm": "PREM",
+  "qtype": "grammar",
+  "p": 5,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W047",
+  "arm": "PREM",
+  "qtype": "blank",
+  "p": 6,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W048",
+  "arm": "S3i",
+  "qtype": "grammar",
+  "p": 14,
+  "grade": "B",
+  "defects": [
+   "V4_EXPLANATION_MISMATCH"
+  ]
+ },
+ {
+  "code": "W049",
+  "arm": "PREM",
+  "qtype": "grammar",
+  "p": 16,
+  "grade": "B",
+  "defects": [
+   "TRIVIAL_POINT"
+  ]
+ },
+ {
+  "code": "W050",
+  "arm": "PREM",
+  "qtype": "blank",
+  "p": 7,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W051",
+  "arm": "PREM",
+  "qtype": "blank",
+  "p": 16,
+  "grade": "B",
+  "defects": [
+   "TRIVIAL_POINT"
+  ]
+ },
+ {
+  "code": "W052",
+  "arm": "PREM",
+  "qtype": "blank",
+  "p": 3,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W053",
+  "arm": "S3i",
+  "qtype": "blank",
+  "p": 6,
+  "grade": "B",
+  "defects": [
+   "OTHER"
+  ]
+ },
+ {
+  "code": "W054",
+  "arm": "PREM",
+  "qtype": "grammar",
+  "p": 9,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W055",
+  "arm": "S3i",
+  "qtype": "blank",
+  "p": 7,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W056",
+  "arm": "PREM",
+  "qtype": "blank",
+  "p": 21,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W057",
+  "arm": "PREM",
+  "qtype": "blank",
+  "p": 23,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W058",
+  "arm": "PREM",
+  "qtype": "blank",
+  "p": 1,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W059",
+  "arm": "PREM",
+  "qtype": "blank",
+  "p": 8,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W060",
+  "arm": "S3i",
+  "qtype": "blank",
+  "p": 25,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W061",
+  "arm": "PREM",
+  "qtype": "grammar",
+  "p": 17,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W062",
+  "arm": "S3i",
+  "qtype": "grammar",
+  "p": 19,
+  "grade": "F",
+  "defects": [
+   "CONTRACT_BREACH"
+  ]
+ },
+ {
+  "code": "W063",
+  "arm": "PREM",
+  "qtype": "grammar",
+  "p": 8,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W064",
+  "arm": "S3i",
+  "qtype": "blank",
+  "p": 14,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W065",
+  "arm": "PREM",
+  "qtype": "grammar",
+  "p": 7,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W066",
+  "arm": "PREM",
+  "qtype": "blank",
+  "p": 2,
+  "grade": "B",
+  "defects": [
+   "OTHER"
+  ]
+ },
+ {
+  "code": "W067",
+  "arm": "PREM",
+  "qtype": "grammar",
+  "p": 24,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W068",
+  "arm": "PREM",
+  "qtype": "blank",
+  "p": 20,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W069",
+  "arm": "S3i",
+  "qtype": "blank",
+  "p": 21,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W070",
+  "arm": "S3i",
+  "qtype": "grammar",
+  "p": 12,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W071",
+  "arm": "S3i",
+  "qtype": "grammar",
+  "p": 23,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W072",
+  "arm": "PREM",
+  "qtype": "blank",
+  "p": 10,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W073",
+  "arm": "S3i",
+  "qtype": "blank",
+  "p": 5,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W074",
+  "arm": "S3i",
+  "qtype": "grammar",
+  "p": 9,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W075",
+  "arm": "PREM",
+  "qtype": "blank",
+  "p": 11,
+  "grade": "B",
+  "defects": [
+   "TRIVIAL_POINT",
+   "OTHER"
+  ]
+ },
+ {
+  "code": "W076",
+  "arm": "PREM",
+  "qtype": "blank",
+  "p": 12,
+  "grade": "B",
+  "defects": [
+   "OTHER",
+   "OTHER"
+  ]
+ },
+ {
+  "code": "W077",
+  "arm": "PREM",
+  "qtype": "grammar",
+  "p": 10,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W078",
+  "arm": "PREM",
+  "qtype": "blank",
+  "p": 19,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W079",
+  "arm": "S3i",
+  "qtype": "grammar",
+  "p": 11,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W080",
+  "arm": "S3i",
+  "qtype": "blank",
+  "p": 4,
+  "grade": "B",
+  "defects": [
+   "V4_EXPLANATION_MISMATCH"
+  ]
+ },
+ {
+  "code": "W081",
+  "arm": "S3i",
+  "qtype": "grammar",
+  "p": 4,
+  "grade": "B",
+  "defects": [
+   "OTHER"
+  ]
+ },
+ {
+  "code": "W082",
+  "arm": "PREM",
+  "qtype": "blank",
+  "p": 17,
+  "grade": "B",
+  "defects": [
+   "OTHER"
+  ]
+ },
+ {
+  "code": "W083",
+  "arm": "PREM",
+  "qtype": "blank",
+  "p": 25,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W084",
+  "arm": "S3i",
+  "qtype": "blank",
+  "p": 8,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W085",
+  "arm": "S3i",
+  "qtype": "blank",
+  "p": 22,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W086",
+  "arm": "S3i",
+  "qtype": "blank",
+  "p": 9,
+  "grade": "B",
+  "defects": [
+   "OTHER"
+  ]
+ },
+ {
+  "code": "W087",
+  "arm": "PREM",
+  "qtype": "blank",
+  "p": 24,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W088",
+  "arm": "S3i",
+  "qtype": "grammar",
+  "p": 24,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W089",
+  "arm": "S3i",
+  "qtype": "grammar",
+  "p": 8,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W090",
+  "arm": "S3i",
+  "qtype": "blank",
+  "p": 13,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W091",
+  "arm": "S3i",
+  "qtype": "grammar",
+  "p": 10,
+  "grade": "B",
+  "defects": []
+ },
+ {
+  "code": "W092",
+  "arm": "PREM",
+  "qtype": "grammar",
+  "p": 22,
+  "grade": "B",
+  "defects": []
+ }
+]

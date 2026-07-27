@@ -114,12 +114,21 @@ export function WViewerClient({
   instructions,
   initialDone,
   doc,
+  backHref = "/g/tasks",
+  completion = "button",
 }: {
   taskId: string;
   title: string;
   instructions: string | null;
   initialDone: boolean;
   doc: WorksheetViewerDoc;
+  /** 뒤로가기 경로 — 스터디 허브에서 진입하면 허브로 복귀 */
+  backHref?: string;
+  /**
+   * 하단 완료 UI — "button"=기존 "다 확인했습니다"(기본, 무회귀),
+   * "study"=스터디 필수 모드: 완료 버튼 대신 학습 복귀 안내(단계 완료가 과제 완료 조건).
+   */
+  completion?: "button" | "study";
 }) {
   // ── 줌 상태 — fitScale(뷰포트 맞춤) × userZoom(1~3x 제스처) ────────────────
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -349,8 +358,8 @@ export function WViewerClient({
         style={{ background: "var(--gd-card)", borderBottom: "1px solid var(--gd-line)" }}
       >
         <Link
-          href="/g/tasks"
-          aria-label="과제 목록으로 돌아가기"
+          href={backHref}
+          aria-label={backHref === "/g/tasks" ? "과제 목록으로 돌아가기" : "학습 홈으로 돌아가기"}
           className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
           style={{ color: "var(--gd-ink-2)" }}
         >
@@ -477,11 +486,23 @@ export function WViewerClient({
         </div>
       </div>
 
-      {/* ── 하단 고정 바 — 완료 확인 ── */}
+      {/* ── 하단 고정 바 — 완료 확인 (또는 스터디 복귀 안내) ── */}
       <footer
         className="gw-chrome gd-safe-b shrink-0 px-4 pt-3"
         style={{ background: "var(--gd-card)", borderTop: "1px solid var(--gd-line)" }}
       >
+        {completion === "study" ? (
+          <div className="flex flex-col gap-1.5 pb-1">
+            <p className="gd-t-2xs text-center" style={{ color: "var(--gd-ink-3)" }}>
+              학습 단계를 모두 완료하면 과제가 완료됩니다
+            </p>
+            <Link href={backHref} className="gd-btn gd-btn-primary w-full">
+              <ArrowLeft className="h-4.5 w-4.5" strokeWidth={2} aria-hidden />
+              학습으로 돌아가기
+            </Link>
+          </div>
+        ) : (
+          <>
         {completeError ? (
           <p className="gd-t-xs mb-2 text-center" style={{ color: "var(--gd-bad)" }}>
             {completeError}
@@ -513,6 +534,8 @@ export function WViewerClient({
             )}
             {completing ? "처리 중…" : "다 확인했습니다"}
           </button>
+        )}
+          </>
         )}
       </footer>
     </div>
