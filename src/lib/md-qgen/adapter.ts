@@ -25,7 +25,7 @@ import {
 
 // 표기 주의: 린트(findKoreanEnglishGlue)가 한글-영문 붙임을 잡으므로 "vs"·"to"
 // 같은 영문 조각을 쓰지 않는다(주제어 패턴 KEYPOINT_TOPIC_KEYWORDS 는 유지 매칭).
-const POINT_NAME: Record<string, string> = {
+export const POINT_NAME: Record<string, string> = {
   a: "정동사·준동사",
   b: "관계사",
   c: "분사",
@@ -42,7 +42,7 @@ const POINT_NAME: Record<string, string> = {
 };
 
 /** 원문에서 표현 주변 문맥을 잘라 surroundingText 를 만든다(40~120자 지향). */
-function contextAround(
+export function contextAround(
   passage: string,
   index: number,
   length: number,
@@ -64,7 +64,7 @@ function contextAround(
 }
 
 /** md 라벨 표기 정규화 — 파서가 "A"/"(A)" 어느 쪽을 주든 AI 스키마 "(A)" 형으로. */
-function parenLabel(label: string): string {
+export function parenLabel(label: string): string {
   return label.startsWith("(") ? label : `(${label})`;
 }
 
@@ -72,7 +72,7 @@ function parenLabel(label: string): string {
 // 스키마·후처리·DB 실물(options 컬럼) 전부 숫자 문자열 축이다 — 어법의 (A) 축과
 // 다르므로 여기서만 변환한다. 이미 숫자형이면 그대로 통과.
 const BLANK_OPTION_CIRCLED = "①②③④⑤";
-function digitOptionLabel(label: string): string {
+export function digitOptionLabel(label: string): string {
   const i = BLANK_OPTION_CIRCLED.indexOf(label);
   return i >= 0 ? String(i + 1) : label;
 }

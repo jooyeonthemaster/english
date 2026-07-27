@@ -122,12 +122,40 @@ export function formatIrrelevantPassageMarkers(
     });
 }
 
-function formatVocabChoiceUnderlineContent(content: string): string {
+// 밑줄 마커 라벨 정규화 — "__(A) word__" 의 (A) 를 수능 표준 ① 로 바꾼다.
+// 어휘 적절성·반의어가 공유한다(후처리가 저장하는 내부 축은 (A)~(J) 이고,
+// 학생 표면 축은 ①~⑩ 이라는 계약 — 어법 formatGrammarUnderlineContent 와 동형).
+function formatLetterLabeledUnderlineContent(content: string): string {
   const match = content.match(/^\s*\(([A-Ja-j])\)\s+(.+)$/);
   if (!match) return content;
 
   const markerIndex = letterMarkerIndex(match[1]);
   return markerIndex === null ? content : `${getCircledNumber(markerIndex)} ${match[2].trim()}`;
+}
+
+function formatVocabChoiceUnderlineContent(content: string): string {
+  return formatLetterLabeledUnderlineContent(content);
+}
+
+/**
+ * 반의어(ANTONYM) 선지 텍스트에서 중복 라벨을 벗긴다.
+ * 후처리(processAntonym)는 선지를 `{label:"1", text:"(A) word - antonym"}` 로 저장한다 —
+ * 표면에서는 optionDisplayLabel 이 이미 ①~⑤ 를 붙이므로 "(A)" 가 남으면 라벨이 두 번
+ * 보인다(사용자 실사용 신고 26-07-26). 저장 형상은 그대로 두고 표시에서만 벗긴다.
+ */
+export function stripAntonymOptionLabel(optionText: string): string {
+  return optionText.replace(/^\s*\(([A-Ja-j])\)\s+/, "");
+}
+
+export function formatAntonymPassageMarkers(
+  text: string,
+  subType: string | null | undefined,
+) {
+  if (subType !== "ANTONYM") return text;
+  return text.replace(/__([^_]+)__/g, (full, content: string) => {
+    const formatted = formatLetterLabeledUnderlineContent(content);
+    return formatted === content ? full : `__${formatted}__`;
+  });
 }
 
 export function formatVocabChoicePassageMarkers(
@@ -235,10 +263,13 @@ export function formatInlineMarkersForSubtype(
   text: string,
   subType: string | null | undefined,
 ) {
-  return formatGrammarErrorPassageMarkers(
-    formatVocabChoicePassageMarkers(
-      formatIrrelevantPassageMarkers(
-        formatSentenceInsertPassageMarkers(text, subType),
+  return formatAntonymPassageMarkers(
+    formatGrammarErrorPassageMarkers(
+      formatVocabChoicePassageMarkers(
+        formatIrrelevantPassageMarkers(
+          formatSentenceInsertPassageMarkers(text, subType),
+          subType,
+        ),
         subType,
       ),
       subType,
@@ -382,6 +413,11 @@ export function optionDisplayTextForSubtype(
 
   if (subType === "SENTENCE_INSERT") {
     return getCircledNumber(positionMarkerIndex(optionText) ?? index);
+  }
+
+  if (subType === "ANTONYM") {
+    // 지문 밑줄이 ①~⑤ 로 표시되므로 선지에 남은 "(A)" 접두는 중복 라벨이다.
+    return stripAntonymOptionLabel(optionText);
   }
 
   // BLANK_INFERENCE 다중 빈칸은 여기서 변환하지 않는다 — HTML 표면은 컬럼 헤더

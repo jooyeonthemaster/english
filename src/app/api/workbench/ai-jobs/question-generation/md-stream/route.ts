@@ -66,6 +66,8 @@ import {
   adaptMdGrammarToAiQuestion,
   adaptMdMultiBlankToAiQuestion,
 } from "@/lib/md-qgen/adapter";
+import { getMdLane, MD_LANE_SUBTYPES } from "@/lib/md-qgen/lane-registry";
+import type { MdLaneContext, MdLaneParsed } from "@/lib/md-qgen/lane-types";
 import { TYPE_LABELS } from "@/app/api/ai/generate-questions-auto/_lib/constants";
 
 // ============================================================================
@@ -97,7 +99,13 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
 
-const MD_STREAM_SUBTYPES = new Set(["BLANK_INFERENCE", "GRAMMAR_ERROR"]);
+// 정본 2유형 + 레인 디스크립터로 승차한 신형 유형(26-07-26). 신규 승차는
+// lane-registry 에 등록하는 것만으로 이 집합에 자동 합류한다.
+const MD_STREAM_SUBTYPES = new Set([
+  "BLANK_INFERENCE",
+  "GRAMMAR_ERROR",
+  ...MD_LANE_SUBTYPES,
+]);
 
 const requestSchema = z.object({
   passageId: z.string().min(1),
@@ -465,6 +473,9 @@ export async function POST(req: NextRequest) {
   const grammarPointFocus = Boolean(
     (resolvedSettings as { grammarPointFocus?: boolean }).grammarPointFocus,
   );
+  // ── 신형 유형(26-07-26 승차) — 레인 디스크립터 위임 ─────────────────────────
+  // 빈칸·어법은 lane === null 이라 아래 기존 분기가 그대로 실행된다(바이트 무회귀).
+  const mdLane = getMdLane(subType);
   // 26-07-23 교사 포인트 md 승차: "포인트 짚어주기" 생성도 md 스트리밍 레인을
   // 탄다(기존엔 fast 로 보내 스트리밍이 없었음 — 실사용 지적). 포인트는 아래에서
   // fast 와 동일 계약(클램프+축자 필터)으로 읽어 프롬프트 강제 + 결정론 준수
@@ -474,13 +485,14 @@ export async function POST(req: NextRequest) {
   // 26-07-23 스펙 v1: 다중 빈칸(blankCount 2~3)·어법 비표준(마커 5~10·정답 1~N)
   // 도 md 승차 — 전용 프롬프트 빌더·파서·게이트·어댑터가 신설돼 형식 차이를
   // 커버한다(설정 범위 밖 값만 fast 폴백).
-  const mdEligible =
-    (subType === "BLANK_INFERENCE" && blankCount >= 1 && blankCount <= 3) ||
-    (subType === "GRAMMAR_ERROR" &&
-      markerCount >= 5 &&
-      markerCount <= 10 &&
-      answerCount >= 1 &&
-      answerCount <= markerCount);
+  const mdEligible = mdLane
+    ? mdLane.isEligible(resolvedSettings as unknown as Record<string, unknown>)
+    : (subType === "BLANK_INFERENCE" && blankCount >= 1 && blankCount <= 3) ||
+      (subType === "GRAMMAR_ERROR" &&
+        markerCount >= 5 &&
+        markerCount <= 10 &&
+        answerCount >= 1 &&
+        answerCount <= markerCount);
   if (!mdEligible) {
     return NextResponse.json(
       { error: "md-stream ineligible settings", code: "MD_STREAM_INELIGIBLE" },
@@ -529,7 +541,11 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const operationType: OperationType = "QUESTION_GEN_SINGLE";
+  // 과금 유형은 레인이 결정한다 — fast 레인 getOperationType 과 동일 규칙.
+  // 하드코딩을 유지하면 어휘 계열(ANTONYM 등, QUESTION_GEN_VOCAB = 1크레딧)이
+  // 2크레딧으로 이중 청구되고 클라이언트 견적(1)과도 어긋난다.
+  const operationType: OperationType =
+    mdLane?.operationType ?? "QUESTION_GEN_SINGLE";
   const creditCost = getQuestionGenerationCreditCost(
     CREDIT_COSTS[operationType],
     effectiveGenerationPlan,
@@ -599,6 +615,37 @@ export async function POST(req: NextRequest) {
     passage.content,
   );
 
+  // ── 교사 지정 구간 × 빈칸 단위 모순 해소 (26-07-27, 실사용 사고 근거) ──────
+  // 세미나 실측: 한 교사가 포인트로 단어 하나('Evidence')를 지정하면서 '빈칸 단위'
+  // 는 절(clause)로 둔 조합으로 **3연속 실패**했다. 절 단위 빈칸을 뽑으면 지정 단어와
+  // 겹칠 수 없어 준수 게이트가 매번 반려하는데, 사용자에게는 이유가 보이지 않아
+  // 같은 설정으로 계속 재시도했다(세미나 실패 20건 중 3건이 이 한 건).
+  // 교사가 지문에서 직접 드래그한 구간이 일반 단위 설정보다 구체적인 의사표시이므로,
+  // 포인트가 있으면 그 단위가 이긴다. 포인트가 없으면 설정이 그대로 유효하다.
+  const teacherPointUnit = teacherPoints[0]?.unit;
+  const effectiveBlankGranularity =
+    subType === "BLANK_INFERENCE" &&
+    teacherPoints.length > 0 &&
+    (teacherPointUnit === "word" ||
+      teacherPointUnit === "phrase" ||
+      teacherPointUnit === "clause")
+      ? teacherPointUnit
+      : blankGranularity;
+
+  // 레인 컨텍스트 — 신형 유형의 프롬프트·게이트·어댑터가 공유하는 단일 입력.
+  const laneCtx: MdLaneContext | null = mdLane
+    ? {
+        passage: passage.content,
+        difficulty: mdDifficulty,
+        rawDifficulty: effectiveDifficulty,
+        resolved: resolvedSettings as unknown as Record<string, unknown>,
+        rawTypeSettings: config.questionTypeSettings ?? null,
+        teacherPoints,
+        variantIndex: config.variantIndex ?? 0,
+        variantCount: config.variantCount ?? 1,
+      }
+    : null;
+
   // ── 다양성(축약판) — md 레인은 엔진의 diversity 컨텍스트를 안 타므로, 같은
   // 지문+유형의 기존 표적(빈칸원문·어법 정답 표현)을 회피 목록으로 프롬프트에
   // 직접 주입한다. 병렬 배치(variantCount>1)는 분산 힌트를 추가한다. 조회 실패는
@@ -647,6 +694,13 @@ export async function POST(req: NextRequest) {
             }
           }
         }
+        // 신형 유형은 자기 표적 필드를 레인이 안다(어댑터 필드가 유형마다 다름).
+        if (mdLane) {
+          for (const target of mdLane.diversityTargets(record)) {
+            const s = target.trim();
+            if (s) targets.push(s.slice(0, 90));
+          }
+        }
       } catch {
         /* 개별 문항 파싱 실패 무시 */
       }
@@ -681,7 +735,9 @@ export async function POST(req: NextRequest) {
 
   const buildPrompt = (feedback: string | null): string => {
     const base =
-      subType === "BLANK_INFERENCE"
+      laneCtx && mdLane
+        ? mdLane.buildBasePrompt(laneCtx)
+        : subType === "BLANK_INFERENCE"
         ? blankCount >= 2
           ? // 다중 빈칸(26-07-23 스펙 v1) — 전용 빌더. answerMode 는 '빈칸 변형'
             // 설정(blankParaphrase)으로 갈리고, DN 은 설정 리졸버가 단일 전용으로
@@ -701,15 +757,18 @@ export async function POST(req: NextRequest) {
           });
     const extras: string[] = [];
     // ── 유형 세부 설정 블록(26-07-23) — fast 와 같은 계약을 md 프롬프트로 집행 ──
-    if (subType === "BLANK_INFERENCE" && blankCount >= 2) {
+    if (laneCtx && mdLane) {
+      // 신형 유형의 설정 모드 블록은 레인이 전담한다(유형마다 노브가 다름).
+      extras.push(...mdLane.buildExtras(laneCtx));
+    } else if (subType === "BLANK_INFERENCE" && blankCount >= 2) {
       // 다중 빈칸: 단일 전용 모드 블록(부정-부정·'빈칸 변형 OFF' 축자 정답 절)은
       // 주입하지 않는다 — 정답 모드는 위 빌더의 자체 절이 집행한다. 빈칸 단위·
       // 포인트 집중은 프로덕션 계약대로 다중에도 적용(정찰 multiBlank §2-2).
-      if (blankGranularity !== "auto") {
+      if (effectiveBlankGranularity !== "auto") {
         const label =
-          blankGranularity === "word"
+          effectiveBlankGranularity === "word"
             ? "단어"
-            : blankGranularity === "clause"
+            : effectiveBlankGranularity === "clause"
               ? "절"
               : "구";
         extras.push(
@@ -742,11 +801,11 @@ export async function POST(req: NextRequest) {
           `## 정답 형식 (필수 — 위의 '추상 패러프레이즈' 지시보다 우선한다)\n- '빈칸 변형' 미사용 설정이다: 정답 선지는 빈칸원문을 **한 글자도 바꾸지 말고 그대로** 써라.\n- 오답 4개는 정답과 같은 문법 형식·길이·추상 층위로 설계해, 원문 축자 정답이 형식만으로 표나지 않게 하라. 오답 기제 4종 규칙은 그대로 적용한다.`,
         );
       }
-      if (blankGranularity !== "auto") {
+      if (effectiveBlankGranularity !== "auto") {
         const label =
-          blankGranularity === "word"
+          effectiveBlankGranularity === "word"
             ? "단어"
-            : blankGranularity === "clause"
+            : effectiveBlankGranularity === "clause"
               ? "절"
               : "구";
         extras.push(
@@ -880,18 +939,29 @@ export async function POST(req: NextRequest) {
           callResults.push(call);
           await recordGenerationCost(0, call);
           const formatCounts = { blankCount, markerCount, answerCount };
-          let parsedMd = parseAndGate(
-            subType,
-            call.text,
-            passage.content,
-            teacherPoints,
-            formatCounts,
-          );
+          let parsedMd: MdLaneParsed =
+            laneCtx && mdLane
+              ? mdLane.parseAndGate(call.text, laneCtx)
+              : parseAndGate(
+                  subType,
+                  call.text,
+                  passage.content,
+                  teacherPoints,
+                  formatCounts,
+                );
           let firstGateIssues: string[] | null = null;
           // 재생성 적격: 어법(기존 정책 유지) + 다중 빈칸(위 정책 주석 근거).
-          const retryEligible =
-            subType === "GRAMMAR_ERROR" ||
-            (subType === "BLANK_INFERENCE" && blankCount >= 2);
+          // 26-07-27 정책 개정(사용자 확정 · 세미나 실측 근거): 단일 빈칸도
+          // 재생성 1회를 허용한다. 종전 "단일 빈칸 = 원큐" 정책의 근거는
+          // "48h 실패율 7%" 였으나, 7/26 오프라인 세미나 실사용 1시간
+          // (14개 학원·208건)에서 빈칸 실패율이 **14%**(10/74)로 근거치의 2배가
+          // 나왔다. 같은 시간 어법은 31건 전건 성공(0%) — 유일한 구조 차이가
+          // 재생성 유무였다. 반려 사유 실측도 재생성으로 흡수될 계통이 다수였다
+          // (오답해설 1개 누락 3건 · 선지/정답/해설 형식 붕괴 1건).
+          // 비용은 반려 시에만 콜 1회 추가이며 예산 가드(budgetMs>30s)가 그대로 적용된다.
+          const retryEligible = mdLane
+            ? mdLane.retryEligible
+            : subType === "GRAMMAR_ERROR" || subType === "BLANK_INFERENCE";
           if (
             retryEligible &&
             parsedMd.gateIssues.length > 0 &&
@@ -914,13 +984,16 @@ export async function POST(req: NextRequest) {
             });
             callResults.push(retryCall);
             await recordGenerationCost(1, retryCall);
-            const retryParsed = parseAndGate(
-              subType,
-              retryCall.text,
-              passage.content,
-              teacherPoints,
-              formatCounts,
-            );
+            const retryParsed: MdLaneParsed =
+              laneCtx && mdLane
+                ? mdLane.parseAndGate(retryCall.text, laneCtx)
+                : parseAndGate(
+                    subType,
+                    retryCall.text,
+                    passage.content,
+                    teacherPoints,
+                    formatCounts,
+                  );
             // 재생성이 더 나빠지지 않았을 때만 채택 — 남은 반려는 아래 공통
             // 반려 블록이 실패·환불 처리한다(재재생성 없음).
             if (retryParsed.gateIssues.length <= parsedMd.gateIssues.length) {
@@ -946,10 +1019,11 @@ export async function POST(req: NextRequest) {
                   result: {
                     mdStream: true,
                     // 형식 메타(26-07-23 스펙 v1) — 실패 계통을 형식별로 추적.
-                    mdFormat:
-                      subType === "BLANK_INFERENCE"
+                    mdFormat: (laneCtx && mdLane
+                      ? mdLane.mdFormat(laneCtx)
+                      : subType === "BLANK_INFERENCE"
                         ? { blankCount }
-                        : { markerCount, answerCount },
+                        : { markerCount, answerCount }) as Prisma.InputJsonObject,
                     gateIssues: parsedMd.gateIssues.map((i) => i.slice(0, 300)),
                     ...(firstGateIssues
                       ? {
@@ -958,6 +1032,13 @@ export async function POST(req: NextRequest) {
                           ),
                         }
                       : {}),
+                    // 반려된 모델 원본 출력(선두 8k) — 26-07-26 실사용 반려
+                    // ("어휘쌍 3개 (5개 필요)") 조사에서 드러난 포렌식 공백의
+                    // 봉합이다. 이게 없으면 "모델이 형식을 어겼나 / 파서가 못
+                    // 읽었나"를 구분할 수 없어 원인 규명이 추측이 된다.
+                    // FAILED 잡의 result 는 UI 미소비 — 사용자 표면 노출 없음.
+                    mdRawText: call.text.slice(0, 8000),
+                    mdRawLength: call.text.length,
                   },
                 },
               })
@@ -968,10 +1049,15 @@ export async function POST(req: NextRequest) {
           }
 
           // ── 어댑터 → 프로덕션 후처리 → 검증(기록만) → 셔플 ────────────────
+          // 신형 유형은 레인이 어댑팅한다. 정본 경로는 MdAnyQuestion 유니언으로
+          // 좁혀 기존 분기를 그대로 태운다(캐스트는 타입 단언이라 런타임 무영향).
+          const legacyQuestion = parsedMd.question as MdAnyQuestion;
           const adapt =
-            parsedMd.question.kind === "blank"
+            laneCtx && mdLane
+              ? mdLane.adapt(parsedMd, laneCtx)
+              : legacyQuestion.kind === "blank"
               ? adaptMdBlankToAiQuestion(
-                  parsedMd.question,
+                  legacyQuestion,
                   passage.content,
                   effectiveDifficulty,
                   blankDoubleNegative
@@ -980,16 +1066,16 @@ export async function POST(req: NextRequest) {
                       ? "PARAPHRASE"
                       : "SOURCE_EXACT",
                 )
-              : parsedMd.question.kind === "multiBlank"
+              : legacyQuestion.kind === "multiBlank"
                 ? adaptMdMultiBlankToAiQuestion(
-                    parsedMd.question,
+                    legacyQuestion,
                     passage.content,
                     effectiveDifficulty,
                     // DN 은 단일 빈칸 전용(리졸버 강제) — 두 모드만 존재한다.
                     blankParaphrase ? "PARAPHRASE" : "SOURCE_EXACT",
                   )
                 : adaptMdGrammarToAiQuestion(
-                    parsedMd.question,
+                    legacyQuestion,
                     passage.content,
                     effectiveDifficulty,
                   );
@@ -1024,14 +1110,16 @@ export async function POST(req: NextRequest) {
             // (기본 5·1이면 종전과 동일 값). 다중 빈칸은 blankCount·paraphrase
             // 실값을 넘겨 멀티 검증기 라우팅·모드 판정을 정확히 태운다(단일
             // 빈칸은 종전대로 미주입 — 기존 기록 동작 무회귀).
-            ...(subType === "GRAMMAR_ERROR"
-              ? { grammarMarkerCount: markerCount, grammarAnswerCount: answerCount }
-              : blankCount >= 2
-                ? {
-                    blankInferenceBlankCount: blankCount,
-                    blankInferenceParaphraseAnswer: blankParaphrase,
-                  }
-                : {}),
+            ...(laneCtx && mdLane
+              ? mdLane.qualityArgs(laneCtx)
+              : subType === "GRAMMAR_ERROR"
+                ? { grammarMarkerCount: markerCount, grammarAnswerCount: answerCount }
+                : blankCount >= 2
+                  ? {
+                      blankInferenceBlankCount: blankCount,
+                      blankInferenceParaphraseAnswer: blankParaphrase,
+                    }
+                  : {}),
           });
           const tags = mergeQuestionGenerationPlanTag(
             [],
@@ -1081,13 +1169,21 @@ export async function POST(req: NextRequest) {
                   // 형식 메타(26-07-23 스펙 v1) — 신형식(다중 빈칸·어법 비표준)
                   // 산출물의 형식별 계측·포렌식용.
                   mdFormat:
-                    subType === "BLANK_INFERENCE"
-                      ? { blankCount }
-                      : { markerCount, answerCount },
+                    laneCtx && mdLane
+                      ? mdLane.mdFormat(laneCtx)
+                      : subType === "BLANK_INFERENCE"
+                        ? { blankCount }
+                        : { markerCount, answerCount },
                   mdCorrections: parsedMd.corrections,
-                  qualityIssues: qualityIssues
-                    .filter((issue) => issue.severity === "error")
-                    .map((issue) => issue.code),
+                  // 레인이 "설계상 예상된" 코드를 걸러낼 수 있다(미구현이면 전량 기록).
+                  qualityIssues: (() => {
+                    const codes = qualityIssues
+                      .filter((issue) => issue.severity === "error")
+                      .map((issue) => issue.code);
+                    return laneCtx && mdLane?.filterQualityIssues
+                      ? mdLane.filterQualityIssues(codes, laneCtx)
+                      : codes;
+                  })(),
                 }),
               ),
               completedAt,

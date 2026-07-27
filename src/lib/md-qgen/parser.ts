@@ -421,16 +421,16 @@ export function gateMdMultiBlank(
 // 교훈(26-07-21 실사용): "is" 를 순차 indexOf 로 찾으면 art"is"ts 단어 내부에
 // 마커가 박힌다. 표현 탐색은 반드시 단어 경계를 지키고, 다중 등장 표현은
 // 앵커(직전 문맥)로 자리를 유일 확정해야 한다 — 프로덕션 surroundingText 등가.
-function escapeRegExp(s: string): string {
+export function escapeRegExp(s: string): string {
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-function wordBoundaryRegex(expr: string): RegExp {
+export function wordBoundaryRegex(expr: string): RegExp {
   const body = escapeRegExp(expr.trim()).replace(/\s+/g, "\\s+");
   return new RegExp(`(?<![A-Za-z])${body}(?![A-Za-z])`, "g");
 }
 
-function countWordBoundaryMatches(passage: string, expr: string): number {
+export function countWordBoundaryMatches(passage: string, expr: string): number {
   if (!expr.trim()) return 0;
   return [...passage.matchAll(wordBoundaryRegex(expr))].length;
 }
@@ -473,7 +473,7 @@ export function locateMark(
 // 모델이 밑줄 표현을 지문과 미세하게 다르게 적는 최다 사례: 사이 단어 누락
 // ("to justify" vs 원문 "to perhaps justify"). 앵커로 자리를 아는 상태에서, 그
 // 근처의 실제 원문 구간으로 표현을 스냅한다. 재생성 콜 없이 코드로 복구.
-function snapSpanNearAnchor(
+export function snapSpanNearAnchor(
   passage: string,
   m: MdGrammarMark,
 ): { original: string; shown: string } | null {
@@ -598,7 +598,7 @@ export function autoSnapBlankExpression(
 
 // 빈칸 스냅 코어 — autoSnapBlankExpression 의 가드 로직 원본을 함수로 추출(동작 동일).
 // 반환 null = 스냅 불가(축자 성립·짧은 구·비유일·자카드 미달) — 반려에 맡긴다.
-function snapExpressionSpan(passage: string, oe: string): string | null {
+export function snapExpressionSpan(passage: string, oe: string): string | null {
   if (passage.includes(oe)) return null;
   // 정규화 일치는 게이트·어댑터가 이미 수용하므로 스냅 불요.
   if (normalizeWs(passage).includes(normalizeWs(oe))) return null;

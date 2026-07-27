@@ -13,6 +13,7 @@ import { WorkbenchLoadingCard } from "@/components/workbench/workbench-loading-c
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { getQuestionGenerationPlanConfig } from "@/lib/question-generation-plans";
 import { getFriendlyQuestionGenerationError } from "@/lib/workbench-generation-errors";
+import { readQuestionTypeDifficultySetting } from "@/lib/question-type-generation-settings";
 import { countWords, typeLabel, type QueueItem } from "./generate-page-types";
 import { StreamPreviewPane } from "./stream-preview-pane";
 
@@ -90,6 +91,15 @@ export function QueueStatusCard({
       .filter(([, count]) => Number(count) > 0)
       .map(([typeId, count]) => `${typeLabel(typeId)} ${count}개`)
       .join(", ");
+    // 유형별 난이도 설정이 배치 난이도를 덮는다(서버 readQuestionTypeDifficultySetting
+    // 과 동일 규칙). 배치 값을 그대로 찍으면 KILLER 로 돌린 실패 카드에 INTERMEDIATE
+    // 가 표시돼 사용자가 무엇으로 실패했는지 오인한다(26-07-26 실사용 신고).
+    const effectiveDifficulty = questionType
+      ? readQuestionTypeDifficultySetting(
+          item.config.questionTypeSettings?.[questionType],
+          item.config.difficulty,
+        )
+      : item.config.difficulty;
 
     return (
       <div className="h-[340px] overflow-hidden rounded-xl border border-red-200 bg-red-50/30 p-4">
@@ -116,7 +126,7 @@ export function QueueStatusCard({
             </span>
             {requestedTypes && (
               <p className="mt-1 text-[11px] font-medium text-slate-500">
-                {requestedTypes} · {item.config.difficulty}
+                {requestedTypes} · {effectiveDifficulty}
               </p>
             )}
             {errorDetail && (

@@ -238,7 +238,42 @@ export async function createFastQuestionGenerationJob({
 // 부적격(서버 400 MD_STREAM_INELIGIBLE)·네트워크 선실패는 fast 로 폴백한다.
 // 서버가 적격성의 최종 권위다 — 클라 검사는 빠른 우회용 최소 집합만 본다.
 
-const MD_STREAM_TYPES = new Set(["BLANK_INFERENCE", "GRAMMAR_ERROR"]);
+// 26-07-26 승차분 포함. 세부 설정 적격성은 서버가 최종 판정하고(범위 밖이면
+// 400 MD_STREAM_INELIGIBLE → fast 폴백), 여기서는 유형 집합만 본다.
+const MD_STREAM_TYPES = new Set([
+  // 정본
+  "BLANK_INFERENCE",
+  "GRAMMAR_ERROR",
+  // 1차 승차
+  "ANTONYM",
+  "VOCAB_CHOICE",
+  "GRAMMAR_CHOICE_COMBO",
+  "SENTENCE_ORDER",
+  // 2차 승차 — 선택형
+  "TITLE",
+  "TOPIC",
+  "MAIN_IDEA",
+  "TOPIC_MAIN_IDEA",
+  "IMPLIED_MEANING",
+  "REFERENCE",
+  "CONTENT_MATCH",
+  // 2차 승차 — 구조형
+  "SENTENCE_INSERT",
+  "IRRELEVANT",
+  "SUMMARY_COMPLETE_MC",
+  // 2차 승차 — 어휘
+  "SYNONYM",
+  "CONTEXT_MEANING",
+  "GRAMMAR_CORRECTION",
+  // 2차 승차 — 서술형
+  "CONDITIONAL_WRITING",
+  "SENTENCE_TRANSFORM",
+  "FILL_BLANK_KEY",
+  "SUMMARY_COMPLETE",
+  "SUMMARY_WRITING",
+  "WORD_ORDER",
+  "TOPIC_SENTENCE_WRITING",
+]);
 
 export interface MdStreamPreview {
   phase: "thinking" | "generating";

@@ -170,3 +170,6 @@ docs/grammar_1000_analysis/
 
 # QA 스크래치 (Playwright 스크린샷·검증 스크립트)
 /.tmp-ws-study-qa/
+# 로그인 storageState(세션 쿠키)·캡처 산출물이 들어간다 — 커밋 금지
+/.tmp-qa/
+.wave2-findings/

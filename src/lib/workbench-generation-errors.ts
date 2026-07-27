@@ -88,15 +88,23 @@ export function getFriendlyQuestionGenerationError(
     return "무관한 문장 선택지 수가 지문 길이에 비해 많습니다. 선택지 수를 줄여 주세요.";
   }
 
+  // 유형별 한국어 진단 passthrough — 서버가 이미 강사에게 그대로 보여줄 만한
+  // 한국어 사유를 만들어 둔 경우, 일반 문구로 덮어쓰지 않고 그대로 전달한다.
+  // (26-07-26) SENTENCE_ORDER 추가: preflightQuestionFeasibility 가
+  // "최소 6문장 이상이 필요합니다. 현재 지문은 4문장입니다" 같은 정확한 진단을
+  // 만드는데도 IRRELEVANT 하드 게이팅 때문에 아래 일반 문구로 삼켜져,
+  // 사용자에게는 원인 없는 "문제 생성 중 오류"만 보이던 실사용 결함의 봉합.
+  const KOREAN_PASSTHROUGH_KEYWORDS: Record<string, readonly string[]> = {
+    IRRELEVANT: ["무관한 문장", "첫 문장", "선택지", "지문"],
+    SENTENCE_ORDER: ["단락", "문장", "단어", "지문"],
+  };
+  const passthroughKeywords = questionType
+    ? KOREAN_PASSTHROUGH_KEYWORDS[questionType]
+    : undefined;
   if (
-    questionType === "IRRELEVANT" &&
+    passthroughKeywords &&
     hasKoreanUserMessage &&
-    (
-      strippedRaw.includes("무관한 문장") ||
-      strippedRaw.includes("첫 문장") ||
-      strippedRaw.includes("선택지") ||
-      strippedRaw.includes("지문")
-    )
+    passthroughKeywords.some((keyword) => strippedRaw.includes(keyword))
   ) {
     return strippedRaw;
   }
