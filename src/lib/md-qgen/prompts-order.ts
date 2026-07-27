@@ -131,9 +131,17 @@ export function buildMdSentenceOrderPrompt(
 
   const fewshotBlock = difficulty === "BASIC" ? "" : `${SENTENCE_ORDER_FEWSHOT}\n\n`;
   const variationBlock = variation > 0 ? `\n${paragraphVariationSection(variation)}\n` : "";
+  // 지문이 감당할 수 있는 만큼만 요구한다 — 짧은 지문에 "단락마다 2문장"을 시키면
+  // 모델이 만들 수 없는 것을 요구하는 셈이라 재시도해도 같은 자리에서 죽는다
+  // (26-07-27 실사용 신고: 5문장 지문이 생성 시도조차 못 하고 실패 카드로 떨어짐).
+  const passageSentences = passage.split(/(?<=[.!?])\s+/).filter((s) => s.trim()).length;
+  const shortPassage = passageSentences - 1 < 6;
+  const perParagraphRule = shortPassage
+    ? "1문장 이상(지문이 짧으니 한 문장짜리 단락도 괜찮다 — 대신 세 단락 분량을 최대한 고르게)"
+    : "2문장 이상";
   const givenLines = `주어진글: <지문 맨 앞 1~2문장을 한 글자도 바꾸지 말고 그대로. 개행 없이 한 줄.>`;
   const paragraphLines = SENTENCE_ORDER_MD_LABELS.map((l, i) => {
-    const exact = `단락(${l}): <지문의 연속 구간을 한 글자도 바꾸지 말고 그대로. 2문장 이상. 개행 없이 한 줄.>`;
+    const exact = `단락(${l}): <지문의 연속 구간을 한 글자도 바꾸지 말고 그대로. ${perParagraphRule}. 개행 없이 한 줄.>`;
     return i < variation
       ? `${exact}\n단락(${l},변형): <바로 위 줄의 **첫 문장만** 같은 뜻 다른 표현으로 다시 쓰고, 2번째 문장부터는 위 줄과 한 글자도 다르지 않게 그대로 이어 붙인다. 개행 없이 한 줄.>`
       : exact;

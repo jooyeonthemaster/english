@@ -224,11 +224,22 @@ export function gateMdSentenceOrder(
     const sentences = countDisplaySentences(p.text);
     const words = countWords(p.text);
     paragraphWords[paragraphWords.length - 1] = words;
-    if (sentences < SENTENCE_ORDER_MIN_PARAGRAPH_SENTENCES) {
-      v.push(`단락 ${p.label} 이 ${sentences}문장 (${SENTENCE_ORDER_MIN_PARAGRAPH_SENTENCES}문장 이상 필요)`);
+    // 지문이 줄 수 없는 것을 요구하지 않는다(26-07-27 실사용 신고 근거).
+    // "단락마다 2문장·24단어"는 지문이 넉넉할 때의 품질 기준이지, 짧은 지문에서는
+    // 도달 불가능한 요구가 되어 재시도해도 같은 사유로 죽는다. 지문이 실제로
+    // 감당할 수 있는 만큼으로 하한을 낮춘다(주어진 글 1문장을 뺀 나머지를 3등분).
+    const budgetSentences = Math.max(1, countDisplaySentences(passage) - 1);
+    const minSentences = budgetSentences >= 6 ? SENTENCE_ORDER_MIN_PARAGRAPH_SENTENCES : 1;
+    const budgetWords = Math.max(1, countWords(passage) - 12);
+    const minWords =
+      budgetWords >= SENTENCE_ORDER_MIN_PARAGRAPH_WORDS * 3
+        ? SENTENCE_ORDER_MIN_PARAGRAPH_WORDS
+        : Math.max(8, Math.floor(budgetWords / 3 / 2));
+    if (sentences < minSentences) {
+      v.push(`단락 ${p.label} 이 ${sentences}문장 (${minSentences}문장 이상 필요)`);
     }
-    if (words < SENTENCE_ORDER_MIN_PARAGRAPH_WORDS) {
-      v.push(`단락 ${p.label} 이 ${words}단어 (${SENTENCE_ORDER_MIN_PARAGRAPH_WORDS}단어 이상 필요)`);
+    if (words < minWords) {
+      v.push(`단락 ${p.label} 이 ${words}단어 (${minWords}단어 이상 필요)`);
     }
   }
 
