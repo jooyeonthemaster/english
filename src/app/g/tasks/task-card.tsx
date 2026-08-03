@@ -12,6 +12,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
+  BookA,
   BookOpenCheck,
   CalendarClock,
   ChevronRight,
@@ -29,13 +30,14 @@ import type {
 } from "@/lib/study-assignments/types";
 import { dDayLabel, dueCountdownText } from "@/lib/study-assignments/status";
 
-// ── kind 칩 (gd 라이트 고정 팔레트 — 시험 파랑/학습지 slate/문제 indigo/어법 emerald) ──
+// ── kind 칩 (gd 라이트 고정 팔레트 — 시험 파랑/학습지 slate/문제 indigo/어법 emerald/단어 teal) ──
 
 export const KIND_ICON: Record<StudyAssignmentKind, typeof FileText> = {
   EXAM: FileText,
   WORKSHEET: BookOpenCheck,
   QUESTIONS: ListChecks,
   GRAMMAR: SpellCheck,
+  VOCAB: BookA,
 };
 
 export const KIND_CHIP: Record<StudyAssignmentKind, { bg: string; fg: string }> = {
@@ -44,6 +46,8 @@ export const KIND_CHIP: Record<StudyAssignmentKind, { bg: string; fg: string }> 
   WORKSHEET: { bg: "#f1f5f9", fg: "#475569" },
   QUESTIONS: { bg: "#eef2ff", fg: "#4338ca" },
   GRAMMAR: { bg: "var(--gd-good-soft)", fg: "var(--gd-good)" },
+  // STUDY_KIND_META VOCAB tone=teal 정합 — teal-100/teal-700
+  VOCAB: { bg: "#ccfbf1", fg: "#0f766e" },
 };
 
 const STATUS_CHIP: Record<StudyTaskStatus, { label: string; bg: string; fg: string }> = {

@@ -13,6 +13,7 @@
 
 import { useId, useMemo, useState } from "react";
 import {
+  BookA,
   BookOpenCheck,
   CalendarClock,
   CalendarPlus,
@@ -137,6 +138,7 @@ const KIND_ICON: Record<StudyAssignmentKind, typeof FileText> = {
   WORKSHEET: BookOpenCheck,
   QUESTIONS: ListChecks,
   GRAMMAR: SpellCheck,
+  VOCAB: BookA,
 };
 
 /** 아이콘 타일 — kind 톤(STUDY_KIND_META tone) 조건부, 완성 문자열만 */
@@ -153,6 +155,7 @@ const SELECTABLE_KINDS: StudyAssignmentKind[] = [
   "WORKSHEET",
   "QUESTIONS",
   "GRAMMAR",
+  "VOCAB",
 ];
 
 const KIND_DESC: Record<StudyAssignmentKind, string> = {
@@ -160,6 +163,7 @@ const KIND_DESC: Record<StudyAssignmentKind, string> = {
   WORKSHEET: "A4 학습지 지면을 앱에서 열람",
   QUESTIONS: "문제은행에서 문항을 선택해 보내기 · 서버 채점",
   GRAMMAR: "보충 필요 개념 우선 자동 편성 · 즉시 채점",
+  VOCAB: "기출 코퍼스 단어장에서 자동 편성 · 즉시 채점",
 };
 
 const DUE_TIME_QUICK = ["18:00", "21:00", "23:59"] as const;

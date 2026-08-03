@@ -8,6 +8,7 @@
 // ============================================================================
 
 import { redirect } from "next/navigation";
+import { prisma } from "@/lib/prisma";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { getGrammarSession } from "@/lib/grammar-drill/auth";
 import { buildHomePayload } from "@/lib/grammar-drill/home";
@@ -24,9 +25,10 @@ export default async function GrammarDrillHomePage() {
   const session = await getGrammarSession();
   if (!session) redirect("/g");
 
-  const [home, taskRecords] = await Promise.all([
+  const [home, taskRecords, vocabProgress] = await Promise.all([
     buildHomePayload(session),
     loadStudentUnifiedTasks(session.studentId, session.academyId).catch(() => []),
+    loadVocabProgress(session.studentId).catch(() => null),
   ]);
   const now = new Date();
   const tasks = taskRecords.map((r) => toStudentTaskCard(r, now));
@@ -39,7 +41,35 @@ export default async function GrammarDrillHomePage() {
       tasksBadgeCount={pendingTasks}
       chatRemainingToday={home.chatRemainingToday}
     >
-      <HomeClient studentId={session.studentId} home={home} tasks={tasks} />
+      <HomeClient
+        studentId={session.studentId}
+        home={home}
+        tasks={tasks}
+        vocabProgress={vocabProgress}
+      />
     </GShell>
   );
+}
+
+// ── 어휘 트랙 카드 진행 요약 — 실패해도 홈은 살린다(null 폴백) ──
+async function loadVocabProgress(
+  studentId: string,
+): Promise<{ pct: number; done: number; total: number; nextLabel: string } | null> {
+  if (!FEATURE_FLAGS.ENABLE_VOCAB_DRILL) return null;
+  const [stat, due] = await Promise.all([
+    prisma.vocabDrillStat.findUnique({ where: { studentId } }),
+    prisma.vocabDrillMastery.count({
+      where: { studentId, dueAt: { lte: new Date() } },
+    }),
+  ]);
+  const sensesSeen = stat?.sensesSeen ?? 0;
+  const sensesMastered = stat?.sensesMastered ?? 0;
+  return {
+    pct: sensesSeen
+      ? Math.round((sensesMastered / Math.max(sensesSeen, 1)) * 100)
+      : 0,
+    done: sensesMastered,
+    total: sensesSeen,
+    nextLabel: due > 0 ? `복습 ${due}개 대기` : "오늘의 드릴",
+  };
 }

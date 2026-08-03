@@ -43,6 +43,8 @@ import {
   type StudentHubStats,
 } from "./overview-tab";
 import { StudentGrammarTab, collectWeakConcepts } from "./grammar-tab";
+import { StudentVocabTab } from "./vocab-tab";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { StudentStudyAnalyticsTab } from "./study-analytics-tab";
 import { StudentTasksTab, type StudentTaskFilter } from "./tasks-tab";
 import { StudentReportsTab } from "./reports-tab";
@@ -52,6 +54,7 @@ export type HubTabKey =
   | "study"
   | "exams"
   | "grammar"
+  | "vocab"
   | "tasks"
   | "reports"
   | "attendance"
@@ -85,12 +88,14 @@ export function StudentHubClient({
   legacyStats: unknown;
   /** 레거시 학부모 탭이 소비하는 원본 student(any 계약) */
   legacyStudent: unknown;
-  flags: { examHistory: boolean; grammar: boolean };
+  /** vocab 은 과도기 optional — 미전달 시 클라이언트 플래그로 판정(셸 무접촉) */
+  flags: { examHistory: boolean; grammar: boolean; vocab?: boolean };
   isDirector: boolean;
   initialTab: string | null;
 }) {
   const router = useRouter();
   const pathname = usePathname();
+  const vocabEnabled = flags.vocab ?? FEATURE_FLAGS.ENABLE_VOCAB_DRILL;
 
   const tabs = useMemo(() => {
     const pendingTasks = tasks.filter((t) => t.liveStatus !== "DONE").length;
@@ -103,6 +108,8 @@ export function StudentHubClient({
     // exams 배지 제거(R8) — 문서 수는 세그 라벨 「리포트 N」이 표기.
     list.push({ key: "study", label: "학습지" }, { key: "exams", label: "시험" });
     if (flags.grammar) list.push({ key: "grammar", label: "어법 훈련", divider: true });
+    // 단어 훈련 — 내장 프로그램 묶음. 어법이 꺼져 있으면 이 탭이 묶음 구분선을 진다.
+    if (vocabEnabled) list.push({ key: "vocab", label: "단어 훈련", divider: !flags.grammar });
     list.push(
       { key: "tasks", label: "과제", badge: pendingTasks || undefined, divider: true },
       { key: "attendance", label: "출결" },
@@ -111,7 +118,7 @@ export function StudentHubClient({
       { key: "parent", label: "학부모" },
     );
     return list;
-  }, [flags, tasks]);
+  }, [flags, vocabEnabled, tasks]);
 
   const isValidTab = useCallback(
     (t: string | null): t is HubTabKey => !!t && tabs.some((tab) => tab.key === t),
@@ -273,19 +280,26 @@ export function StudentHubClient({
       {
         label: "어법 정답률",
         value: grammarSnapshot?.accuracy !== null && grammarSnapshot ? `${grammarSnapshot.accuracy}%` : "—",
+        // 점수 임계는 허브 단일 축(kit scoreText: <50 rose · <80 blue · ≥80
+        // emerald)을 따른다. 여기만 70/50 이던 탓에 같은 정답률이 탭마다 다른
+        // 등급 색으로 보였다.
         tone:
           grammarSnapshot?.accuracy != null
-            ? grammarSnapshot.accuracy >= 70
+            ? grammarSnapshot.accuracy >= 80
               ? ("emerald" as const)
               : grammarSnapshot.accuracy < 50
                 ? ("rose" as const)
-                : undefined
+                : ("blue" as const)
             : undefined,
         onSelect: flags.grammar ? () => goTab("grammar") : undefined,
       },
       {
         label: "미완료 과제",
         value: `${pending}건`,
+        // 이 타일의 축(liveStatus!==DONE)은 기한 지남을 포함한다. 과제 탭 칩
+        // 「미완료(기한 내)」와 숫자가 달라 한 화면에서 4와 5가 동시에 보였던
+        // 결함 — sub 로 축을 명기하고, 탭 목록 헤더의 산식 캡션이 둘을 잇는다.
+        sub: "기한 지남 포함",
         tone: pending > 0 ? ("blue" as const) : undefined,
         onSelect: () => {
           // M-9 — 카운트 정의(liveStatus!==DONE)는 기한 지남을 포함하는데 OPEN
@@ -347,6 +361,9 @@ export function StudentHubClient({
                 {t.label}
                 {t.badge ? (
                   <span
+                    // 배지 숫자의 축을 밝힌다 — 퀵스탯 「미완료 과제」와 같은
+                    // 정의(기한 지남 포함)이지 과제 탭 칩 「미완료(기한 내)」가 아니다
+                    title={t.key === "tasks" ? "미완료 과제(기한 지남 포함)" : undefined}
                     className={cn(
                       "rounded-full px-1.5 py-0.5 text-[10px] font-bold tabular-nums",
                       tab === t.key
@@ -442,6 +459,10 @@ export function StudentHubClient({
                 어법 훈련 데이터를 불러오지 못했습니다.
               </p>
             )
+          ) : null}
+
+          {tab === "vocab" && vocabEnabled ? (
+            <StudentVocabTab studentId={header.id} />
           ) : null}
 
           {tab === "tasks" ? (

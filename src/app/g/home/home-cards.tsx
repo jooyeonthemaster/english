@@ -33,6 +33,7 @@ const KIND_ICON: Record<StudyAssignmentKind, typeof FileText> = {
   WORKSHEET: BookOpenCheck,
   QUESTIONS: ListChecks,
   GRAMMAR: SpellCheck,
+  VOCAB: BookA,
 };
 
 const TRACK_ICON: Record<StudyTrack["icon"], typeof FileText> = {
@@ -42,13 +43,17 @@ const TRACK_ICON: Record<StudyTrack["icon"], typeof FileText> = {
   School,
 };
 
-/** 트랙 카드 — 4장 전부 정식 카드. PREPARING 도 죽은 링크가 아니라 안내 화면으로 간다. */
+/** 트랙 카드 — 4장 전부 정식 카드. PREPARING 도 죽은 링크가 아니라 안내 화면으로 간다.
+ *  grammar 트랙은 기존 grammar 요약을 그대로 렌더(시각 결과 불변)하고,
+ *  다른 LIVE 트랙은 progress 가 있으면 동일 규격의 미터+진행 행을 렌더한다. */
 export function TrackCard({
   track,
   grammar,
+  progress,
 }: {
   track: StudyTrack;
   grammar: HomePayload["grammar"];
+  progress?: { pct: number; done: number; total: number; nextLabel: string };
 }) {
   const Icon = TRACK_ICON[track.icon];
   const live = track.status === "LIVE";
@@ -100,7 +105,7 @@ export function TrackCard({
       </p>
 
       <div className="mt-auto pt-2.5">
-        {live ? (
+        {live && track.id === "grammar" ? (
           <>
             <div className="gd-meter">
               <span style={{ width: `${grammar.progressPct}%` }} />
@@ -113,6 +118,18 @@ export function TrackCard({
               {grammar.currentUnitTitle
                 ? `다음 ${grammar.currentUnitTitle}`
                 : "전 유닛 마스터"}
+            </p>
+          </>
+        ) : live && progress ? (
+          <>
+            <div className="gd-meter">
+              <span style={{ width: `${progress.pct}%` }} />
+            </div>
+            <p className="gd-t-3xs mt-1 truncate" style={{ color: "var(--gd-ink-2)" }}>
+              <span className="gd-mono font-bold">
+                {progress.done}/{progress.total}
+              </span>{" "}
+              숙달 · {progress.nextLabel}
             </p>
           </>
         ) : (

@@ -33,6 +33,7 @@ import type {
   GrammarAssignmentPayload,
   StudyAssignmentKind,
   StudyTargetInput,
+  VocabAssignmentPayload,
 } from "@/lib/study-assignments/types";
 import { STUDY_KIND_META } from "@/lib/study-assignments/types";
 import { dDayLabel } from "@/lib/study-assignments/status";
@@ -58,6 +59,7 @@ import {
   type ComposerFormState,
 } from "./composer-config-form";
 import { ComposerGrammarPanel, type WeakConceptPreset } from "./composer-grammar-spec";
+import { ComposerVocabPanel } from "./composer-vocab-spec";
 import {
   AssignContentPreview,
   type AssignPreviewTarget,
@@ -74,6 +76,8 @@ export interface ComposerPreset {
   /** GRAMMAR: 초기 스펙·취약 프리셋 */
   grammarSpec?: Partial<GrammarAssignmentPayload>;
   weakConcepts?: WeakConceptPreset[];
+  /** VOCAB: 초기 스펙(덱/조건 프리필) */
+  vocabSpec?: Partial<VocabAssignmentPayload>;
   /** EXAM 기본 응시 모드 */
   examMode?: "TABLET" | "OMR";
   /**
@@ -129,6 +133,10 @@ export function AssignmentComposer({
   const [grammarSpec, setGrammarSpec] = useState<GrammarAssignmentPayload>({
     count: 20,
     ...preset?.grammarSpec,
+  });
+  const [vocabSpec, setVocabSpec] = useState<VocabAssignmentPayload>({
+    count: 20,
+    ...preset?.vocabSpec,
   });
   const [targets, setTargets] = useState<AssignTargetsData | null>(null);
   const [targetsLoading, setTargetsLoading] = useState(false);
@@ -196,6 +204,7 @@ export function AssignmentComposer({
     setContent(preset?.content ?? null);
     setQuestionIds(preset?.questionIds ?? []);
     setGrammarSpec({ count: 20, ...preset?.grammarSpec });
+    setVocabSpec({ count: 20, ...preset?.vocabSpec });
     setSelection({ classIds: new Set(), studentIds: new Set(defaultStudentIds ?? []) });
     setForm({
       title: "",
@@ -264,7 +273,9 @@ export function AssignmentComposer({
       ? `문제 세트 ${questionIds.length}문항`
       : kind === "GRAMMAR"
         ? `어법 훈련 ${grammarSpec.count}문항`
-        : (content?.title ?? ""));
+        : kind === "VOCAB"
+          ? `단어 훈련 ${vocabSpec.count}문항`
+          : (content?.title ?? ""));
 
   // 푸터 요약의 "내용물" — effectiveTitle 우선, 없으면 kind 라벨(+문항수)
   const summaryLabel =
@@ -272,15 +283,18 @@ export function AssignmentComposer({
     (kind
       ? kind === "GRAMMAR"
         ? `${STUDY_KIND_META.GRAMMAR.label} ${grammarSpec.count}문항`
-        : kind === "QUESTIONS"
-          ? `${STUDY_KIND_META.QUESTIONS.label} ${questionIds.length}문항`
-          : STUDY_KIND_META[kind].label
+        : kind === "VOCAB"
+          ? `${STUDY_KIND_META.VOCAB.label} ${vocabSpec.count}문항`
+          : kind === "QUESTIONS"
+            ? `${STUDY_KIND_META.QUESTIONS.label} ${questionIds.length}문항`
+            : STUDY_KIND_META[kind].label
       : "");
 
   const canSubmit =
     !!kind &&
     totalSelected > 0 &&
     (kind === "GRAMMAR" ||
+      kind === "VOCAB" ||
       (kind === "QUESTIONS" && questionIds.length > 0) ||
       ((kind === "EXAM" || kind === "WORKSHEET") && !!content));
 
@@ -289,9 +303,10 @@ export function AssignmentComposer({
   const step2Met =
     !!kind &&
     (kind === "GRAMMAR" ||
+      kind === "VOCAB" ||
       (kind === "QUESTIONS" ? questionIds.length > 0 : !!content));
-  // ③은 확인 단계 — GRAMMAR 는 패널 자체가 범위 구성이라 항상 충족으로 본다
-  const step3Met = kind === "GRAMMAR" ? true : step2Met;
+  // ③은 확인 단계 — GRAMMAR/VOCAB 은 패널 자체가 범위 구성이라 항상 충족으로 본다
+  const step3Met = kind === "GRAMMAR" || kind === "VOCAB" ? true : step2Met;
 
   // 미충족 첫 사유(D3-3) — 패널 번호 순서(① 대상 → ② 종류 → ② 내용물)
   const firstGuide = !step1Met
@@ -317,7 +332,9 @@ export function AssignmentComposer({
     // 시드 진입(스냅샷 없는 QUESTIONS preset)의 피커 선택도 작성 중으로 본다
     questionIds.length !== (preset?.questionIds?.length ?? 0) ||
     (kind === "GRAMMAR" &&
-      JSON.stringify(grammarSpec) !== JSON.stringify({ count: 20, ...preset?.grammarSpec }));
+      JSON.stringify(grammarSpec) !== JSON.stringify({ count: 20, ...preset?.grammarSpec })) ||
+    (kind === "VOCAB" &&
+      JSON.stringify(vocabSpec) !== JSON.stringify({ count: 20, ...preset?.vocabSpec }));
 
   const requestClose = () => {
     if (submitting) return;
@@ -376,6 +393,7 @@ export function AssignmentComposer({
             : undefined,
         questions: kind === "QUESTIONS" ? { questionIds } : undefined,
         grammar: kind === "GRAMMAR" ? grammarSpec : undefined,
+        vocab: kind === "VOCAB" ? vocabSpec : undefined,
       });
       if (res.success && res.data) {
         saveComposerPrefs({ dueTime: form.dueTime, examMode: form.examMode });
@@ -383,7 +401,11 @@ export function AssignmentComposer({
           res.data.skippedCount > 0
             ? COMPOSER_COPY.SENT_SKIPPED_SUFFIX(res.data.skippedCount)
             : "";
-        toast.success(`${COMPOSER_COPY.SENT_TOAST(res.data.taskCount)}${skipped}`);
+        toast.success(`${COMPOSER_COPY.SENT_TOAST(res.data.taskCount)}${skipped}`, {
+          // 서버가 조건을 보고 문항 수를 줄였으면 그 사실을 반드시 알린다
+          // (조용한 클램프는 배포자가 의도와 다른 과제를 보냈는지 모르게 만든다).
+          description: res.data.notice,
+        });
         onCreated?.(res.data.assignmentId);
         onClose();
       } else {
@@ -593,11 +615,15 @@ export function AssignmentComposer({
           />
 
           {/* ── ③ 실물 확인 — 실물 미리보기(EXAM/WORKSHEET/QUESTIONS) 또는
-                 어법 출제 범위 구성(GRAMMAR, B-3 소유 현행 유지)이 가장 넓게.
-                 캡션은 kind 정직 분기(M-8) — GRAMMAR 는 「③ 출제 범위」 ── */}
+                 출제 범위 구성(GRAMMAR/VOCAB — 어법은 B-3 소유 현행 유지)이 가장
+                 넓게. 캡션은 kind 정직 분기(M-8) — 범위 구성 kind 는 「③ 출제 범위」 ── */}
           <div className="flex min-h-0 flex-col border-t border-slate-100 max-lg:min-h-[360px] lg:border-t-0">
             <StepCaption
-              label={kind === "GRAMMAR" ? COMPOSER_COPY.STEP_SCOPE : COMPOSER_COPY.STEP_CONFIRM}
+              label={
+                kind === "GRAMMAR" || kind === "VOCAB"
+                  ? COMPOSER_COPY.STEP_SCOPE
+                  : COMPOSER_COPY.STEP_CONFIRM
+              }
               met={step3Met}
             />
             {kind === "GRAMMAR" ? (
@@ -606,6 +632,8 @@ export function AssignmentComposer({
                 onChange={setGrammarSpec}
                 weakConcepts={preset?.weakConcepts}
               />
+            ) : kind === "VOCAB" ? (
+              <ComposerVocabPanel spec={vocabSpec} onChange={setVocabSpec} />
             ) : (
               <AssignContentPreview
                 target={previewTarget}

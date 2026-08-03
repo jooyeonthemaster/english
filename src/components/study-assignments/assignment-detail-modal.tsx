@@ -9,14 +9,15 @@
 // 통계, WORKSHEET 학습 현황, GRAMMAR 훈련 현황)을 흡수한다. 본문 높이는
 // h-[min(78vh,900px)] 고정 + 탭 콘텐츠 내부 스크롤 — 탭 전환 시 모달 높이가
 // 출렁이지 않는다. 시작·마감 편집/종료·재개/삭제 푸터와 복제 재배포·조용한
-// 새로고침 클러스터는 ./assignment-detail-footer, 학생 행 드릴다운(EXAM 답안
-// 검토 드로어·QUESTIONS 답안 대조·GRAMMAR 훈련 기록·대상 팝오버)은
+// 새로고침 클러스터는 ./assignment-detail-footer, 학생 행 드릴다운(EXAM 시험
+// 상세 모달·QUESTIONS 답안 대조·GRAMMAR 훈련 기록·대상 팝오버)은
 // ./assignment-detail-parts 분리. 변경 성공 시 onChanged 로 부모 보드가
 // 목록·캘린더를 재조회한다.
 // ============================================================================
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
+  BookA,
   BookOpenCheck,
   FileText,
   Info,
@@ -27,7 +28,7 @@ import { toast } from "sonner";
 import { getStudyAssignmentDetail } from "@/actions/study-assignments";
 import { StatusPill } from "@/components/layout/page-frame";
 import { WideModal } from "@/components/layout/wide-modal";
-import { ReviewDrawer } from "@/components/exams/exam-detail-client-parts/deployment-tab-parts/review-drawer";
+import { SubmissionDetailModal } from "@/components/exams/exam-detail-client-parts/deployment-tab-parts/submission-detail-modal";
 import {
   AssignContentPreview,
   type AssignPreviewTarget,
@@ -60,6 +61,7 @@ const KIND_ICON: Record<StudyAssignmentKind, typeof FileText> = {
   WORKSHEET: BookOpenCheck,
   QUESTIONS: ListChecks,
   GRAMMAR: SpellCheck,
+  VOCAB: BookA,
 };
 
 /** 탭 3종 고정(spec §3.1) — kind 에 따라 탭 개수가 달라지는 것 금지 */
@@ -97,7 +99,7 @@ export function AssignmentDetailModal({
   const [refreshedAt, setRefreshedAt] = useState<string | null>(null);
   /** non-silent 로드마다 증가 — 푸터 폼(key)을 리마운트해 프리필 */
   const [prefillTick, setPrefillTick] = useState(0);
-  /** EXAM 행 "답안 검토" — 기존 채점 검토 드로어(ReviewDrawer) 재사용 */
+  /** EXAM 행 "답안 검토" — 시험 상세 모달(SubmissionDetailModal) 재사용 */
   const [reviewSubmissionId, setReviewSubmissionId] = useState<string | null>(null);
 
   const load = useCallback(async (id: string, opts?: { silent?: boolean }) => {
@@ -138,9 +140,10 @@ export function AssignmentDetailModal({
     }
   }, [assignmentId, load]);
 
-  // 드로어(Sheet, z-50)가 모달(WideModal, z-50) 위에 떠 있는 동안 —
-  // WideModal 도 document ESC 를 듣기 때문에 가드하지 않으면 ESC 한 번에
-  // 둘 다 닫힌다. 드로어 오버레이가 전면을 덮어 백드롭/X 는 어차피 차단됨.
+  // 시험 상세 모달(WideModal, z-50)이 이 모달(WideModal, z-50) 위에 떠 있는
+  // 동안 — 두 WideModal 이 각자 document ESC 를 듣기 때문에 가드하지 않으면
+  // ESC 한 번에 둘 다 닫힌다. 위 모달의 백드롭이 전면을 덮어 백드롭/X 클릭은
+  // 어차피 차단되므로, 여기서는 ESC 경로만 막으면 된다(2607 §7.3 모달 중첩).
   const handleModalClose = useCallback(() => {
     if (reviewSubmissionId) return;
     onClose();
@@ -468,9 +471,9 @@ export function AssignmentDetailModal({
       </div>
     </WideModal>
 
-    {/* EXAM 답안 검토 — 기존 채점 검토 드로어 재사용(Sheet z-50, WideModal 과
-        동급이지만 포털이 나중에 붙어 위에 그려진다). 뮤테이션 후 상세 재조회. */}
-    <ReviewDrawer
+    {/* EXAM 답안 검토 — 시험 상세 모달 재사용(WideModal 중첩: z-50 동급이지만
+        포털이 나중에 붙어 위에 그려진다). 뮤테이션 후 상세 재조회. */}
+    <SubmissionDetailModal
       submissionId={reviewSubmissionId}
       onClose={() => setReviewSubmissionId(null)}
       onMutated={() => {

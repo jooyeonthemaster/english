@@ -86,12 +86,20 @@ const ALL_VIEWS: {
     label: MANAGE_VIEW_LABELS.grammar,
     surface: "students-grammar",
   },
+  {
+    key: "vocab",
+    href: "/director/students/vocab",
+    label: MANAGE_VIEW_LABELS.vocab,
+    surface: "students-vocab",
+  },
 ];
 
 // N-2: 어법 현황 뷰는 훈련소 플래그와 3중 일치(nav children · 페이지 게이트 ·
-// 이 스위처) — 플래그 off 면 스위처에서도 미노출.
+// 이 스위처) — 플래그 off 면 스위처에서도 미노출. 단어 훈련도 동일 관용구.
 const VIEWS = ALL_VIEWS.filter(
-  (v) => v.key !== "grammar" || FEATURE_FLAGS.ENABLE_GRAMMAR_DRILL,
+  (v) =>
+    (v.key !== "grammar" || FEATURE_FLAGS.ENABLE_GRAMMAR_DRILL) &&
+    (v.key !== "vocab" || FEATURE_FLAGS.ENABLE_VOCAB_DRILL),
 );
 
 /** usePathname → 활성 뷰. 하위 세그먼트(딥링크 쿼리 등)도 startsWith 로 흡수 */
@@ -99,6 +107,7 @@ function resolveView(pathname: string): ManageViewKey {
   if (pathname.startsWith("/director/students/classes")) return "classes";
   if (pathname.startsWith("/director/students/assignments")) return "assignments";
   if (pathname.startsWith("/director/students/grammar")) return "grammar";
+  if (pathname.startsWith("/director/students/vocab")) return "vocab";
   return "roster";
 }
 
@@ -198,7 +207,7 @@ export function StudentsManageShell({
               {CTA_LABELS.SEND_TASK}
             </button>
           ) : null}
-          {view === "grammar" ? (
+          {view === "grammar" || view === "vocab" ? (
             <a href="/g" target="_blank" rel="noreferrer" className={SECONDARY_BTN}>
               <ExternalLink className="size-3.5" aria-hidden />
               {CTA_LABELS.OPEN_STUDENT_APP}

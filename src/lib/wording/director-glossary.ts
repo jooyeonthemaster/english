@@ -70,6 +70,8 @@ export const CTA_DISABLED_TITLES = {
   RESEND_WORKSHEET_NO_WEAKNESS: "이 학습지에는 다시 보낼 취약 기록이 없어요",
   /** 어법 포인트 코드 → 드릴 개념·유닛 매핑 부재(grammar-code-map 밖 코드) */
   GRAMMAR_CODE_UNMAPPED: "연결된 어법 훈련 개념이 없어 바로 보낼 수 없어요",
+  /** 생성 결과 패널 「과제 보내기」 — 선택된 문항 0건 */
+  ASSIGN_NEEDS_SELECTION: "문항을 선택하면 과제로 보낼 수 있어요",
 } as const;
 
 export type CtaDisabledTitleKey = keyof typeof CTA_DISABLED_TITLES;
@@ -98,6 +100,11 @@ export const METRIC_LABELS = {
   REVIEW_DUE: "복습 대상",
   /** 과제 지표 — 「미완료 배정」 대체(M-7). 어법 현황 KPI·테이블·CSV 공용 */
   INCOMPLETE_TASKS: "미완료 과제",
+  /**
+   * 학습지 진도 — 첫 시도 정답률과 **반드시 병기**한다(2607 §3).
+   * 정답률만 단독 노출하면 "쉬운 단계 하나만 만점"이 100%로 읽힌다.
+   */
+  COVERAGE: "진도",
 } as const;
 
 export type MetricLabelKey = keyof typeof METRIC_LABELS;
@@ -115,6 +122,8 @@ export const METRIC_HELP = {
   ACCURACY: "정답률은 맞고 틀림만 세는 단순 비율이에요",
   /** D6-1 「복습 대상」 정의의 문장화 */
   REVIEW_DUE: "복습 대상은 숙달한 뒤 21일이 지나 다시 확인이 필요한 개념이에요",
+  /** 2607 §3 — 진도의 정의. 정답률과 함께 읽어야 오해가 없다는 점을 문장에 담는다 */
+  COVERAGE: "진도는 이 학습지의 채점 문항 중 학생이 푼 비율이에요. 정답률은 푼 문항만으로 계산하니 두 숫자를 함께 보세요",
 } as const;
 
 export type MetricHelpKey = keyof typeof METRIC_HELP;
@@ -150,6 +159,142 @@ export const DEPLOY_DISABLED_REASONS = {
   EXAM_TYPE_UNMAPPED: "이 유형은 문제은행 유형 매핑이 없습니다",
 } as const;
 
+// ── 오답 → 변형 문제 생성 (2607 §8) ─────────────────────────────────────────
+
+export const VARIANT_COPY = {
+  /** 문항 1개 기준 CTA */
+  ONE: "이 문항 변형 만들기",
+  /** 오답 일괄 CTA — 소비처가 개수를 덧붙인다 */
+  BULK: "틀린 문항 변형 만들기",
+  /** 생성 페이지 컨텍스트 스트립 제목 */
+  STRIP_TITLE: "오답 기반 변형",
+  /** 스트립 보조 설명 */
+  STRIP_HINT: "이 학생이 틀린 문항의 지문·유형이 미리 담겼습니다. 개수와 난이도를 확인하고 생성하세요",
+  /** 스트립 해제 */
+  STRIP_CLEAR: "연결 해제",
+  /** 생성 결과 → 과제 보내기 안내 */
+  AFTER_GENERATE_HINT: "생성한 문항을 골라 바로 과제로 보낼 수 있습니다",
+  /** 컨텍스트 스트립 — 시드에서 만든 지시문이 생성에 실린다는 고지 */
+  STRIP_PROMPT_APPLIED: "생성할 때 이 지시문이 함께 전달됩니다",
+  /** 지시문 복사 */
+  STRIP_PROMPT_COPY: "지시문 복사",
+  /** 원본 문항 접기/펼치기 — 소비처가 개수를 덧붙인다 */
+  STRIP_SOURCE_TOGGLE: "원본 문항 보기",
+  /** from 파라미터 복귀 링크 */
+  STRIP_BACK: "돌아가기",
+  /** 원본 문항 목록을 펼친 상태의 토글 라벨 */
+  STRIP_SOURCE_COLLAPSE: "원본 문항 접기",
+  /** sessionStorage 시드 유실 — 지문·유형만 복원된 상태의 고지 */
+  SEED_LOST_TITLE: "원본 오답 기록을 불러오지 못했습니다",
+  SEED_LOST_HINT:
+    "지문·유형·난이도만 복원했습니다. 원본 문항과 변형 지시문 없이 생성됩니다 — 오답 기반으로 만들려면 원본 화면에서 다시 눌러 주세요.",
+  SEED_LOST_TOAST: "변형 기록을 불러오지 못했어요. 지문·유형만 복원했습니다(원본 오답 정보 없음).",
+  /** 지문 행 옆 버튼 — 이 지문에 걸린 오답 원본을 카드 UI 로 연다 */
+  SOURCE_BUTTON: "학생 오답 원본",
+  SOURCE_MODAL_TITLE: "학생이 틀린 원본 문항",
+  SOURCE_MODAL_HINT: "문제 은행과 같은 화면입니다 — 학생 답과 정답을 대조해 보세요",
+  /** 스트립 접기/펴기 */
+  STRIP_COLLAPSE: "접기",
+  STRIP_EXPAND: "펼치기",
+} as const;
+
+/** 변형 CTA 비활성 사유 — 침묵 대신 항상 사유를 보여준다 */
+export const VARIANT_DISABLED_REASONS = {
+  NO_QUESTIONS: "변형할 오답이 없습니다",
+  NO_PASSAGE: "원본 지문이 연결되지 않은 문항입니다",
+  UNSUPPORTED_TYPE: "생성이 지원되지 않는 유형입니다",
+} as const;
+
+export type VariantDisabledReasonKey = keyof typeof VARIANT_DISABLED_REASONS;
+
+// ── 시험 상세(응시) 표면 — 2607 §7 ──────────────────────────────────────────
+
+export const SITTING_DETAIL_COPY = {
+  /** 모달 푸터 안내 1줄 */
+  FOOTER_HINT: "문항을 누르면 원본 발문·지문·해설과 학생 답을 함께 봅니다",
+  /** 문항 목록 헤더 */
+  QUESTIONS_TITLE: "문항별 결과",
+  /** 우측 레일 헤더 */
+  ACTIONS_TITLE: "채점 관리",
+  /** 문항 미선택 안내 */
+  PICK_QUESTION: "왼쪽에서 문항을 고르면 여기에 원본과 학생 답이 열립니다",
+  /** 지문 접힘 토글 */
+  PASSAGE_TOGGLE: "지문 원문",
+  /** 오답 선지 해설 소제목 */
+  WRONG_OPTIONS: "오답 선지 해설",
+} as const;
+
+/** 응시 기록 행 비활성 사유 */
+export const EXAM_ROW_DISABLED_REASONS = {
+  NO_REPORT: "연결된 분석 리포트가 없어 열 수 없습니다",
+} as const;
+
+/** 학습지 성취 표기 — 정답률이 완료 전 값임을 알리는 배지 */
+export const STUDY_PROVISIONAL_BADGE = "학습 중";
+
+/** 과제 탭 보기 전환 세그먼트 */
+export const TASK_VIEW_LABELS = {
+  list: "목록",
+  calendar: "달력",
+} as const;
+
+/** 과제 탭 기간 필터의 축을 밝히는 캡션 — 마감이 아니라 배포일 기준이다 */
+export const TASK_PERIOD_AXIS_HINT = "배포일 기준";
+
+/** 필터 표면 공통 */
+export const FILTER_COPY = {
+  TITLE: "필터",
+  RESET: "초기화",
+  TARGET: "대상",
+  STATUS: "상태",
+  STUDENT: "학생",
+  CLASS: "반",
+  SEARCH_STUDENT: "이름·학번 검색",
+  SEARCH_CLASS: "반 이름 검색",
+  STUDENT_HINT: "이 학생에게 배정된 과제만 표시",
+  CLASS_HINT: "반 단위 배포 기준 — 개별 배포 과제는 학생 필터로",
+  NO_RESULT: "검색 결과가 없습니다",
+  LOADING: "불러오는 중…",
+  SEARCH: "검색",
+  ACTIVE_FILTERS: "적용된 필터",
+  /** 활성 칩의 해제 버튼 접근성 이름 접미 — `${scope} ${label} ${REMOVE_SUFFIX}` */
+  REMOVE_SUFFIX: "필터 해제",
+  /** 툴바 활성 칩 줄 끝 — 전 축 초기화 */
+  CLEAR_ALL: "모두 지우기",
+  DATE: "날짜",
+} as const;
+
+// ── 과제 달력 보드 KPI (2607 검수 — 리터럴 산재 정리) ────────────────────────
+
+export const BOARD_KPI = {
+  TODAY_DUE: "오늘 마감",
+  AVG_DONE_RATE: "평균 완료율",
+  SUB_BEFORE_CLOSE: "종료 전 과제",
+  /** 타일이 곧 필터 진입점임을 알리는 동작 안내(aria-label·title) */
+  HINT_ACTIVE: "진행 중 과제만 보기",
+  HINT_TODAY: "오늘 날짜로 이동",
+  HINT_OVERDUE: "기한 지남 과제만 보기",
+  HINT_PROGRESS: "완료율 낮은순으로 정렬",
+} as const;
+
+/**
+ * 달력 날짜 축 고지 — 목록은 마감일로 묶되 마감이 없는 과제는 시작일(배포일)로
+ * 떨어진다. 이 사실을 숨기면 「N월 N일 마감」 칩 아래에 「마감 없음」 카드가 섞여
+ * 사용자가 마감으로 오독한다(2607 검수 [7]).
+ */
+export const CALENDAR_DATE_AXIS_HINT = "마감일 기준 · 마감 없는 과제는 시작일";
+
+// ── 학습지 매트릭스 표기 (2607 검수 — 셀 의미 혼재 수리) ─────────────────────
+
+export const MATRIX_COPY = {
+  /** 매트릭스 하단 범례 — 한 컬럼에 %와 a/b 가 섞여 보이는 문제의 해설 */
+  LEGEND: "% = 첫 시도 정답률 · a/b = 푼 문항 · 회색 = 채점 없는 단계",
+  /** 무채점 스테이지 셀 툴팁 접미 */
+  UNGRADED_STAGE_HINT: "채점 없는 단계 — 정답률·진도 계산 제외",
+  /** 어법 포인트 전부가 오답 0건일 때 */
+  NO_WEAK_GRAMMAR: "보충이 필요한 어법 포인트가 없습니다.",
+} as const;
+
 /** 학생 관리 통합 셸 제목(D4-1) — (manage) 4뷰 공통 헤더 */
 export const STUDENTS_MANAGE_TITLE = "학생 관리";
 
@@ -161,6 +306,7 @@ export const MANAGE_VIEW_LABELS = {
   classes: "반 편성",
   assignments: ASSIGNMENT_CALENDAR_LABEL,
   grammar: GRAMMAR_SURFACE_NAMES.STATUS,
+  vocab: "단어 훈련",
 } as const;
 
 export type ManageViewKey = keyof typeof MANAGE_VIEW_LABELS;
@@ -174,6 +320,7 @@ export const HUB_TAB_ONELINERS = {
   study: "배포한 학습지에서 이 학생이 어디를 어려워하는지 봅니다 — 부족한 곳에서 바로 과제를 보내세요",
   exams: "시험 점수 흐름과 약한 유형을 봅니다 — 약한 유형에서 바로 과제를 보내세요",
   grammar: "어법 개념별 숙달도를 봅니다 — 보충이 필요한 개념에서 바로 과제를 보내세요",
+  vocab: "기출 단어 숙달도를 봅니다 — 취약 단어와 복습 예정을 확인하세요",
   tasks: "배포된 모든 과제의 수행 상태",
   // reports 는 시험 탭 내부 세그먼트 — 세그먼트 활성 시 설명 스트립에 사용
   reports: "시험 분석·상담 리포트 문서 관리(채점·공유·인쇄)",
@@ -194,11 +341,13 @@ export const SURFACE_ONELINERS = {
   "students-classes": "학생을 골라 반에 편성하거나, 카드를 반 폴더로 끌어다 놓으세요",
   "students-assignments": "나간 과제의 진행과 마감을 한눈에 봅니다",
   "students-grammar": "우리 학원 학생들의 어법 훈련 상태를 봅니다",
+  "students-vocab": "우리 학원 학생들의 단어 훈련 상태를 봅니다",
   // 학생 허브 탭 — HUB_TAB_ONELINERS 참조(단일 소스)
   "hub-overview": HUB_TAB_ONELINERS.overview,
   "hub-study": HUB_TAB_ONELINERS.study,
   "hub-exams": HUB_TAB_ONELINERS.exams,
   "hub-grammar": HUB_TAB_ONELINERS.grammar,
+  "hub-vocab": HUB_TAB_ONELINERS.vocab,
   "hub-tasks": HUB_TAB_ONELINERS.tasks,
   "hub-reports": HUB_TAB_ONELINERS.reports,
   "hub-attendance": HUB_TAB_ONELINERS.attendance,

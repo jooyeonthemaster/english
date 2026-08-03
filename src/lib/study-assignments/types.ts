@@ -1,19 +1,26 @@
 // ============================================================================
 // 통합 학습 과제(StudyAssignment) — 타입 계약 (플레인 모듈, 클라이언트 공유 가능)
 //
-// 시험지(EXAM)·학습지(WORKSHEET)·문제세트(QUESTIONS)·어법훈련(GRAMMAR)을
-// 학생/반 단위로 배포하는 통합 과제 레이어의 직렬화 가능한 계약 정본.
-// 라이브 상태 계산 규칙은 ./status.ts, 서버 조립은 ./task-union.ts(서버 전용).
-// DB 계약은 prisma/schema.prisma 의 StudyAssignment/StudyAssignmentTask 주석 참조.
+// 시험지(EXAM)·학습지(WORKSHEET)·문제세트(QUESTIONS)·어법훈련(GRAMMAR)·
+// 단어훈련(VOCAB)을 학생/반 단위로 배포하는 통합 과제 레이어의 직렬화 가능한
+// 계약 정본. 라이브 상태 계산 규칙은 ./status.ts, 서버 조립은 ./task-union.ts
+// (서버 전용). DB 계약은 prisma/schema.prisma 의 StudyAssignment/
+// StudyAssignmentTask 주석 참조. VOCAB 브리지는 접합 방향이 어법과 반대 —
+// vocab_drill_assignments.taskId 가 태스크를 아래→위로 가리킨다(init.sql 3-5).
 // ============================================================================
 
 import type { WeakSpot } from "@/lib/student-analytics/types";
 
-export type StudyAssignmentKind = "EXAM" | "WORKSHEET" | "QUESTIONS" | "GRAMMAR";
+export type StudyAssignmentKind =
+  | "EXAM"
+  | "WORKSHEET"
+  | "QUESTIONS"
+  | "GRAMMAR"
+  | "VOCAB";
 
 export type StudyAssignmentStatus = "ACTIVE" | "CLOSED" | "ARCHIVED";
 
-/** 태스크 상태 — EXAM/GRAMMAR 는 브리지 조인으로 계산된 라이브 값이 정본 */
+/** 태스크 상태 — EXAM/GRAMMAR/VOCAB 은 브리지 조인으로 계산된 라이브 값이 정본 */
 export type StudyTaskStatus = "ASSIGNED" | "IN_PROGRESS" | "DONE";
 
 // ── 배포 대상 ────────────────────────────────────────────────────────────────
@@ -76,6 +83,19 @@ export interface GrammarAssignmentPayload {
   count: number;
 }
 
+/**
+ * VocabDrillAssignment.spec 동형 — 단어 드릴 엔진 큐 편성 스펙.
+ * 풀 산정 우선순위는 학생 큐(buildVocabQueue assignment 모드)와 동일:
+ * senseIds > deckIds(각 덱 spec 파생 합) > tiers/difficulties.
+ */
+export interface VocabAssignmentPayload {
+  deckIds?: string[];
+  senseIds?: string[];
+  tiers?: string[];
+  difficulties?: number[];
+  count: number;
+}
+
 // ── 분석 시드 (컴포저 analysisSeed 계약 — v3 design D2-3) ────────────────────
 
 /**
@@ -99,10 +119,17 @@ export const STUDY_KIND_META: Record<
   WORKSHEET: { label: "학습지", tone: "slate" },
   QUESTIONS: { label: "문제 세트", tone: "indigo" },
   GRAMMAR: { label: "어법 훈련", tone: "emerald" },
+  VOCAB: { label: "단어 훈련", tone: "teal" },
 };
 
 export function isStudyAssignmentKind(v: unknown): v is StudyAssignmentKind {
-  return v === "EXAM" || v === "WORKSHEET" || v === "QUESTIONS" || v === "GRAMMAR";
+  return (
+    v === "EXAM" ||
+    v === "WORKSHEET" ||
+    v === "QUESTIONS" ||
+    v === "GRAMMAR" ||
+    v === "VOCAB"
+  );
 }
 
 // ── 디렉터면 계약 (서버 액션 반환 — 직렬화 가능) ────────────────────────────
@@ -156,6 +183,7 @@ export interface StudyAssignmentDetail extends StudyAssignmentListRow {
     | WorksheetAssignmentPayload
     | QuestionsAssignmentPayload
     | GrammarAssignmentPayload
+    | VocabAssignmentPayload
     | Record<string, never>;
   tasks: StudyTaskDirectorRow[];
 }
