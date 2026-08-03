@@ -16,12 +16,18 @@ import { getLessonBundle } from "@/lib/study-os/lesson-bundle";
 import { isTrackId, TRACK_BY_ID } from "@/lib/study-os/tracks";
 import type { GrammarLesson } from "@/lib/study-os/lesson-types";
 import {
+  listStudentDecks,
+  resolveDeckSenseCounts,
+} from "@/lib/vocab-drill/decks";
+import { WEAK_SCORE } from "@/lib/vocab-drill/engine";
+import {
   GrammarTrackClient,
   type NextMove,
   type TrackPartMeta,
   type TrackUnitRow,
 } from "./grammar-track-client";
 import { PreparingTrack } from "./preparing-track";
+import { VocabTrackClient, type VocabTrackPayload } from "./vocab-track-client";
 
 export const dynamic = "force-dynamic";
 
@@ -57,6 +63,77 @@ export default async function TrackPage({
     tasksBadgeCount: taskRecords.filter((t) => t.status !== "DONE").length,
     chatRemainingToday,
   };
+
+  // ── 어휘 트랙 — 덱 목록 + 학생 진행 요약 서버 조립 ──
+  if (track.id === "vocab" && track.status === "LIVE") {
+    // 질의는 2파(波)다. 1파: 덱 목록 + 덱과 무관한 학생 요약 3종을 동시에.
+    // (덱 목록은 비었을 때만 기본 덱을 심고 재조회한다 — listStudentDecks)
+    const [decks, dueCount, weakCount, stat] = await Promise.all([
+      listStudentDecks(session.academyId),
+      prisma.vocabDrillMastery.count({
+        where: { studentId: session.studentId, dueAt: { lte: new Date() } },
+      }),
+      prisma.vocabDrillMastery.count({
+        where: {
+          studentId: session.studentId,
+          masteryScore: { lt: WEAK_SCORE },
+          attempts: { gte: 2 },
+        },
+      }),
+      prisma.vocabDrillStat.findUnique({
+        where: { studentId: session.studentId },
+      }),
+    ]);
+
+    // 2파: 덱에 의존하는 둘. senseCount 재계산은 캐시가 낡은 덱만 골라 병렬로
+    // 돈다(resolveDeckSenseCounts) — 이전에는 count 0 을 미계산으로 오판해
+    // 빈 덱마다 매 렌더 COUNT 를 순차로 다시 돌렸다.
+    const [deckProgress, senseCounts] = await Promise.all([
+      prisma.vocabDrillDeckProgress.findMany({
+        where: {
+          studentId: session.studentId,
+          deckId: { in: decks.map((d) => d.id) },
+        },
+      }),
+      resolveDeckSenseCounts(decks),
+    ]);
+
+    const progressByDeck = new Map(deckProgress.map((p) => [p.deckId, p]));
+    const deckRows: VocabTrackPayload["decks"] = decks.map((deck) => {
+      const p = progressByDeck.get(deck.id);
+      return {
+        id: deck.id,
+        title: deck.title,
+        subtitle: deck.subtitle,
+        senseCount: senseCounts.get(deck.id) ?? deck.senseCountCache,
+        stage: p?.stage ?? "LEARN",
+        seenCount: p?.seenCount ?? 0,
+        masteredCount: p?.masteredCount ?? 0,
+        bestTestScore: p?.bestTestScore ?? null,
+      };
+    });
+
+    const payload: VocabTrackPayload = {
+      dueCount,
+      weakCount,
+      stat: stat
+        ? {
+            xp: stat.xp,
+            sensesSeen: stat.sensesSeen,
+            sensesMastered: stat.sensesMastered,
+            streakDays: stat.streakDays,
+            bestCombo: stat.bestCombo,
+          }
+        : null,
+      decks: deckRows,
+    };
+
+    return (
+      <GShell {...shell}>
+        <VocabTrackClient payload={payload} />
+      </GShell>
+    );
+  }
 
   if (track.status !== "LIVE" || track.id !== "grammar") {
     return (

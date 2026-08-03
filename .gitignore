@@ -173,3 +173,18 @@ docs/grammar_1000_analysis/
 # 로그인 storageState(세션 쿠키)·캡처 산출물이 들어간다 — 커밋 금지
 /.tmp-qa/
 .wave2-findings/
+
+# ── 문항은행(qbank) 대량 산출물 — 40만 문항 ≈ 1~2GB, git 진입 금지 ──
+/qbank/out/
+/qbank/work/
+/qbank/logs/
+# 스펙·하네스·일지는 커밋한다(세션 인수인계의 단일 진실원)
+
+# 게이트 번들(빌드 산출물 — 워커 시작 시 자동 재생성)
+qbank/harness/.build/
+
+# 단어 훈련 QA 하네스 — 세션 토큰(발급물, 커밋 금지)
+scripts/vocab-drill-qa/.cookie
+
+# 코퍼스 원본·중간 산출물(655MB) — 리포에 넣지 않는다. 재생성은 scripts/vocab-* 로.
+experiments/

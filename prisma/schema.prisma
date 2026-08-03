@@ -5164,6 +5164,391 @@ model GrammarDrillChatMessage {
 }
 
 // ============================================================================
+// 단어 훈련(VocabDrill) — 기출 단어 코퍼스 기반 어휘 학습 툴 (/g/track/vocab)
+//
+// 어법 드릴과 결정적으로 다른 점: 콘텐츠 7테이블(bundles~sense_aliases)은
+// **DB 가 정본**이다(코드 번들 아님 — 표제어 27,011·sense 35,341·예문 97,524 규모,
+// 근거는 prisma/sql/vocab-drill-init.sql §1 결정 1). 콘텐츠 테이블은 읽기 전용 —
+// 쓰기는 scripts/vocab-db-load.ts 만 한다. 학습 6테이블(attempts~stats)은 어법
+// 형상 복제. 전부 relation-free(FK 없는 soft-ref) — 공유 Student/Academy 모델
+// 블록을 건드리지 않는다. 부분 유니크·부분 인덱스는 Prisma 가 표현하지 못하므로
+// **@@unique 로 적지 않고 주석으로만 남긴다**(introspect drift 방지 — SQL 이 정본).
+// 적용 SQL: prisma/sql/vocab-drill-init.sql (surgical, migrate 금지)
+// ============================================================================
+
+/// 번들 원장 — 어떤 코퍼스 스냅샷이 테이블에 들어있는지의 정본. id 는 적재기가 주조.
+/// 부분 유니크(SQL 정본): UNIQUE(status) WHERE status='ACTIVE' — 활성 번들은 항상 1개.
+/// 적용 SQL: prisma/sql/vocab-drill-init.sql (surgical, migrate 금지)
+model VocabDrillBundle {
+  id           String    @id
+  version      String    @unique // 예: v4537-761b9699
+  sourcePath   String
+  checksum     String // sha256(lemmas.json)
+  docs         Int       @default(0) // 추출 완료 지문 수
+  corpusDocs   Int       @default(0) // 전체 지문 수
+  lemmaCount   Int       @default(0)
+  senseCount   Int       @default(0)
+  exampleCount Int       @default(0)
+  trapCount    Int       @default(0)
+  status       String    @default("STAGED") // STAGED | ACTIVE | RETIRED
+  meta         Json      @default("{}")
+  builtAt      DateTime?
+  loadedAt     DateTime  @default(now())
+  activatedAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([status, loadedAt])
+  @@map("vocab_drill_bundles")
+}
+
+/// 표제어 마스터 — id = sha1(lower(lemma)|pos)[0..15] 내용 주소(번들 무관, 적재기 주조).
+/// quant 계열이 NULL 인 것은 정상(신규 표제어). 은퇴는 retiredAt — DELETE 하지 않는다.
+/// 부분 인덱스(SQL 정본): trendLabel+per10k / per10k / lemma text_pattern_ops(접두 검색).
+/// 적용 SQL: prisma/sql/vocab-drill-init.sql (surgical, migrate 금지)
+model VocabDrillLemma {
+  id                 String    @id
+  bundleVersion      String
+  lemma              String
+  pos                String // noun|verb|adjective|adverb|preposition|conjunction|idiom|phrasal_verb|collocation
+  isPhrase           Boolean   @default(false)
+  senseCount         Int       @default(0)
+  totalEntries       Int       @default(0)
+  needsMergeJudgment Boolean   @default(false)
+  confusable         Json      @default("[]") // string[]
+  collocations       Json      @default("[]") // string[]
+  surfaces           Json      @default("[]") // 표면형 목록
+  totalOccurrences   Int?
+  passageCount       Int?
+  per10k             Float? // 코퍼스 정규화 빈도
+  per10kGo1          Float?
+  per10kGo2          Float?
+  per10kGo3          Float?
+  gradeTop           String? // 고1|고2|고3
+  gradeSkew          Float?
+  typeSkew           Float?
+  topTypes           Json      @default("[]") // [{typeGroup, per10k}] 상위 3
+  trendLabel         String? // 급증|증가|안정|감소|급감|신규 등장|중간기만 등장|미등장
+  trendRatio         Float?
+  trendSlope         Float?
+  earlyPer10k        Float?
+  latePer10k         Float?
+  yearsPresent       Int?
+  longestGap         Int?
+  trendBasis         String?
+  zeroKind           String? // null | none | absent
+  retiredAt          DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@unique([lemma, pos]) // 해시 충돌 감지기를 겸한다
+  @@index([bundleVersion])
+  @@map("vocab_drill_lemmas")
+}
+
+/// 표제어 연도/유형 시계열 — 표제어당 1행, PK 조회로만 읽힌다(목록 질의에 싣지 않는다).
+/// 값은 표제어가 실현한 **전 표면형 합산**(basis 1개 아님 — init.sql 2-3 정정 참조).
+/// 적용 SQL: prisma/sql/vocab-drill-init.sql (surgical, migrate 금지)
+model VocabDrillLemmaYearStat {
+  lemmaId          String   @id
+  bundleVersion    String
+  statsSource      String   @default("stats") // stats | phrase-stats | mixed
+  basis            String? // 추세 라벨의 대표 표면형(집계 기준 아님)
+  basisSurfaces    Json     @default("[]") // 실제 합산한 통계 행 키 전량
+  totalOccurrences Int      @default(0) // vocab_drill_lemmas.totalOccurrences 와 같아야 한다
+  byYear           Json     @default("{}") // {"2003":130,…} 25키(0 포함)
+  per10kByYear     Json     @default("{}")
+  byGrade          Json     @default("{}") // {"고1":…,"고2":…,"고3":…}
+  per10kByGrade    Json     @default("{}")
+  byType           Json     @default("{}") // 15종 typeGroup 원시 빈도
+  byBoard          Json     @default("{}") // 출제기관 원시 빈도
+  yearMin          Int? // 출현이 있는 첫 해(0 인 해는 등장이 아니다)
+  yearMax          Int?
+  yearsPresent     Int?
+  longestGap       Int?
+  gapFrom          Int?
+  gapTo            Int?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([bundleVersion])
+  @@map("vocab_drill_lemma_year_stats")
+}
+
+/// 뜻(sense) 마스터 — 이 도메인의 핵심 단위이자 숙달도의 축.
+/// id = lemmaId ':' sha1(senseKeyNorm)[0..7] — 정본은 sense-registry.json(적재기 주조).
+/// lemma/pos/per10k/gradeTop/isPhrase/trendLabel 은 표제어에서 역정규화(서빙 단일 테이블화).
+/// 부분 인덱스(SQL 정본): tier+gradeTop+per10k / difficulty+per10k / needsMerge (전부 미은퇴 한정).
+/// 적용 SQL: prisma/sql/vocab-drill-init.sql (surgical, migrate 금지)
+model VocabDrillSense {
+  id                 String    @id
+  bundleVersion      String
+  lemmaId            String
+  lemma              String
+  pos                String
+  senseKey           String    @db.Text // 영어 정의 원문(표제어 내 유니크)
+  senseKeyNorm       String // 해시 입력(정규화형) — 재빌드 매칭 기준
+  senseEn            String    @db.Text
+  senseEnVariants    Json      @default("[]")
+  senseKo            String
+  senseKoCandidates  Json      @default("[]") // [{ko, n}] 빈도순
+  tier               String    @default("core") // basic|core|academic|advanced
+  tiers              Json      @default("[]")
+  difficulty         Int       @default(3) // 1~5
+  difficultyAvg      Float     @default(3)
+  occurrences        Int       @default(0)
+  exampleCount       Int       @default(0)
+  trapCount          Int       @default(0)
+  trapRate           Float     @default(0) // 0~1
+  trapKinds          Json      @default("{}") // {kind: count}
+  senseOrder         Int       @default(0)
+  needsMergeJudgment Boolean   @default(false)
+  isPhrase           Boolean   @default(false)
+  per10k             Float?
+  gradeTop           String?
+  trendLabel         String?
+  retiredAt          DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@unique([lemmaId, senseKeyNorm])
+  @@index([lemmaId, senseOrder])
+  @@index([bundleVersion])
+  @@map("vocab_drill_senses")
+}
+
+/// 예문 — 어느 지문 어느 문장에서 왔는지가 존재 이유. id = 정체성 필드 해시(적재기 주조).
+/// 적용 SQL: prisma/sql/vocab-drill-init.sql (surgical, migrate 금지)
+model VocabDrillExample {
+  id            String    @id
+  bundleVersion String
+  senseId       String
+  lemmaId       String
+  passageId     String // exam-passages soft-ref
+  sentenceIndex Int
+  grade         String? // 고1|고2|고3
+  year          Int?
+  typeGroup     String?
+  surface       String // 실제 굴절형(made, making)
+  en            String    @db.Text
+  ko            String    @db.Text
+  ord           Int       @default(0) // sense 내 표시 순서(0~4)
+  retiredAt     DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([senseId, grade, ord])
+  @@index([passageId])
+  @@index([bundleVersion])
+  @@map("vocab_drill_examples")
+}
+
+/// 함정(trap) — sense 단위. note 는 **제출 후에만** 학생에게 노출한다.
+/// 적용 SQL: prisma/sql/vocab-drill-init.sql (surgical, migrate 금지)
+model VocabDrillTrap {
+  id            String    @id
+  bundleVersion String
+  senseId       String
+  lemmaId       String
+  kind          String // polysemy|collocation|syntax|form-confusion|false-friend|negation|register
+  note          String    @db.Text
+  ord           Int       @default(0)
+  retiredAt     DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([senseId, ord])
+  @@index([kind])
+  @@index([bundleVersion])
+  @@map("vocab_drill_traps")
+}
+
+/// sense 이관 원장 — 명시적 판정(4단계 LLM 병합 산출 또는 사람)만 담는다.
+/// 자동 유사도 매핑 금지(init.sql 2-7 정정). 비어 있는 것이 정상이다.
+/// 적용 SQL: prisma/sql/vocab-drill-init.sql (surgical, migrate 금지)
+model VocabDrillSenseAlias {
+  id            String   @id
+  fromSenseId   String   @unique // 은퇴한 senseId — 목적지는 하나(체인 가능, 분기 불가)
+  toSenseId     String
+  lemmaId       String
+  reason        String   @default("MERGE") // MERGE | RENAME | SPLIT_PICK | MANUAL
+  confidence    Float    @default(1) // 명시 판정은 1. 추정치 금지
+  fromSenseKey  String?  @db.Text
+  toSenseKey    String?  @db.Text
+  bundleVersion String
+  createdAt     DateTime @default(now())
+
+  @@index([toSenseId])
+  @@index([lemmaId])
+  @@map("vocab_drill_sense_aliases")
+}
+
+/// 문항 시도 로그 — 축적의 원장(append-only). 모든 분석이 여기서 파생된다.
+/// lemmaId 를 함께 든다 — sense 매핑이 끊겨도 표제어 단위 집계는 살아남는다.
+/// 부분 유니크(SQL 정본): UNIQUE(studentId, clientKey) WHERE clientKey IS NOT NULL — 멱등 제출.
+/// 적용 SQL: prisma/sql/vocab-drill-init.sql (surgical, migrate 금지)
+model VocabDrillAttempt {
+  id            String   @id @default(cuid())
+  academyId     String
+  studentId     String
+  senseId       String
+  lemmaId       String
+  deckId        String?
+  exampleId     String? // 문맥 문항이면 사용한 예문
+  itemType      String // MEANING_CHOICE | WORD_CHOICE | CONTEXT_FILL | SPELL | EXAMPLE_MATCH | TRAP_JUDGE | FLASH
+  difficulty    Int      @default(3)
+  correct       Boolean
+  answer        String   @db.Text // 학생 응답(500자 slice — 어법 관례)
+  timeMs        Int      @default(0) // 0~30분 clamp
+  hintUsed      Int      @default(0) // 0~2
+  meaningPeeked Boolean  @default(false) // 풀이 중 뜻 시트 열람
+  source        String   @default("DRILL") // DRILL | FLASH | CONTEXT | REVIEW | DECK_TEST | MIXED | ASSIGNMENT | WORKSHEET
+  assignmentId  String?
+  clientKey     String? // 클라 생성 UUID — 재시도/네트워크 중복 제출 멱등
+  createdAt     DateTime @default(now())
+
+  @@index([studentId, createdAt])
+  @@index([studentId, senseId])
+  @@index([studentId, lemmaId])
+  @@index([academyId, createdAt])
+  // 덱·과제 서빙 축(init.sql §0 Q8 ★). studentId 선두 3종으로는 deckId/assignmentId
+  // 필터가 인덱스를 못 타 학생 시도 전량을 훑는다 — 시도는 학생당 수천~수만 행이다.
+  @@index([studentId, deckId])
+  @@index([studentId, assignmentId])
+  @@map("vocab_drill_attempts")
+}
+
+/// 숙달도 — 학생×sense 1행. 계산식은 어법 engine.ts 와 동일(EWMA α=0.25 · Leitner ±).
+/// 어법에 없는 3컬럼: dueAt(복습 큐를 인덱스 range scan 으로) · lapses(box 하락 누적) ·
+/// remappedFrom(alias 이관 흔적). 학생×sense 는 수천~수만 행 — 전량 로드 금지, LIMIT 강제.
+/// 적용 SQL: prisma/sql/vocab-drill-init.sql (surgical, migrate 금지)
+model VocabDrillMastery {
+  id            String    @id @default(cuid())
+  academyId     String
+  studentId     String
+  senseId       String
+  lemmaId       String
+  attempts      Int       @default(0)
+  correct       Int       @default(0)
+  streak        Int       @default(0)
+  masteryScore  Float     @default(0) // 0~100 EWMA(소수 1자리)
+  box           Int       @default(0) // 0~5 라이트너
+  lapses        Int       @default(0)
+  firstSeenAt   DateTime?
+  lastAttemptAt DateTime?
+  dueAt         DateTime? // box → 간격 → 다음 복습 예정 시각
+  remappedFrom  String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@unique([studentId, senseId])
+  @@index([studentId, dueAt])
+  @@index([studentId, masteryScore])
+  @@index([studentId, lemmaId])
+  @@index([senseId])
+  @@index([academyId, updatedAt])
+  @@map("vocab_drill_mastery")
+}
+
+/// 단어장(덱) — "저장된 질의". 멤버십 테이블 없음 — 소속 sense 는 spec 에서 매번 파생.
+/// 부분 유니크(SQL 정본): UNIQUE(academyId, slug) WHERE slug IS NOT NULL.
+/// 적용 SQL: prisma/sql/vocab-drill-init.sql (surgical, migrate 금지)
+model VocabDrillDeck {
+  id              String   @id @default(cuid())
+  academyId       String // GLOBAL 덱은 시스템 학원 id
+  scope           String   @default("ACADEMY") // GLOBAL | ACADEMY
+  slug            String? // go2-core-500
+  title           String
+  subtitle        String?
+  spec            Json     @default("{}") // {grades?,tiers?,difficulties?,posList?,trendLabels?,minPer10k?,excludePhrase?,senseIds?,limit}
+  senseCountCache Int      @default(0) // 표시용 캐시(정본은 spec 파생)
+  orderIndex      Int      @default(0)
+  status          String   @default("ACTIVE") // ACTIVE | ARCHIVED
+  createdById     String? // staff soft-ref
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([academyId, status, orderIndex])
+  @@map("vocab_drill_decks")
+}
+
+/// 덱 진행 — 학생×덱 1행. 단계: LEARN → DRILL → CONTEXT → TEST → MASTERED.
+/// 적용 SQL: prisma/sql/vocab-drill-init.sql (surgical, migrate 금지)
+model VocabDrillDeckProgress {
+  id            String    @id @default(cuid())
+  academyId     String
+  studentId     String
+  deckId        String
+  stage         String    @default("LEARN")
+  learnDoneAt   DateTime?
+  drillDoneAt   DateTime?
+  contextDoneAt DateTime?
+  masteredAt    DateTime?
+  totalCount    Int       @default(0) // 덱 파생 시점 스냅샷
+  seenCount     Int       @default(0)
+  masteredCount Int       @default(0)
+  bestTestScore Int? // 0~100
+  lastStudiedAt DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@unique([studentId, deckId])
+  @@index([deckId, updatedAt])
+  @@index([academyId, updatedAt])
+  @@map("vocab_drill_deck_progress")
+}
+
+/// 단어 과제 — 배포 접합 방향이 어법과 반대: 여기의 taskId 가 study_assignment_tasks 를
+/// 아래→위로 가리킨다(공유 테이블 컬럼 추가 금지 규약 — init.sql 3-5 참조).
+/// 부분 유니크(SQL 정본): UNIQUE(taskId) WHERE taskId IS NOT NULL — 태스크당 브리지 1건.
+/// 적용 SQL: prisma/sql/vocab-drill-init.sql (surgical, migrate 금지)
+model VocabDrillAssignment {
+  id            String    @id @default(cuid())
+  academyId     String
+  studentId     String
+  staffId       String?
+  taskId        String? // study_assignment_tasks soft-ref (역방향)
+  assignmentId  String? // study_assignments soft-ref
+  title         String
+  note          String?   @db.Text // 학생에게 보이는 선생님 메모(합니다체)
+  spec          Json      @default("{}") // {deckIds?,senseIds?,lemmaIds?,tiers?,difficulties?,count}
+  status        String    @default("ASSIGNED") // ASSIGNED | IN_PROGRESS | DONE
+  resultSummary Json? // {total, correct, timeMs}
+  createdAt     DateTime  @default(now())
+  startedAt     DateTime?
+  completedAt   DateTime?
+
+  @@index([studentId, status])
+  @@index([academyId, createdAt])
+  @@map("vocab_drill_assignments")
+}
+
+/// 단어 스텟 — 학생당 1행. 칭호의 정본은 코드(순수 함수), titles 는 획득 시각 이력.
+/// XP 이중지급 방지는 attempts.clientKey 멱등이 담당한다(별도 원장 없음).
+/// 적용 SQL: prisma/sql/vocab-drill-init.sql (surgical, migrate 금지)
+model VocabDrillStat {
+  id             String    @id @default(cuid())
+  academyId      String
+  studentId      String    @unique
+  xp             Int       @default(0)
+  sensesSeen     Int       @default(0)
+  sensesMastered Int       @default(0) // masteryScore >= 80 도달 누적
+  decksCompleted Int       @default(0)
+  reviewsDone    Int       @default(0)
+  bestCombo      Int       @default(0)
+  tierXp         Json      @default("{}") // {"basic":0,"core":0,"academic":0,"advanced":0}
+  posXp          Json      @default("{}") // {"noun":0,…,"collocation":0}
+  titles         Json      @default("[]") // [{key, earnedAt}]
+  lastStudyDate  DateTime?
+  streakDays     Int       @default(0)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([academyId, updatedAt])
+  @@map("vocab_drill_stats")
+}
+
+// ============================================================================
 // 통합 학습 과제(StudyAssignment) — 시험지/학습지/문제세트/어법훈련 배포·과제
 //
 // 시험지(Exam)·학습지(PassageReport)·문제세트(Question[])·어법훈련(GrammarDrill

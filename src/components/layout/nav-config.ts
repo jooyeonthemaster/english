@@ -326,6 +326,11 @@ export function getNavGroups(
                   ...(FEATURE_FLAGS.ENABLE_GRAMMAR_DRILL
                     ? [{ label: MANAGE_VIEW_LABELS.grammar, href: `${basePath}/students/grammar` }]
                     : []),
+                  // 단어 훈련 — 어법과 동일 관용구(플래그 3중 일치: nav children ·
+                  // 페이지 게이트 · (manage) 셸 스위처).
+                  ...(FEATURE_FLAGS.ENABLE_VOCAB_DRILL
+                    ? [{ label: MANAGE_VIEW_LABELS.vocab, href: `${basePath}/students/vocab` }]
+                    : []),
                   // exam-report 라우트 자체는 이동하지 않음(revalidatePath 리스크)
                   // — nav 계층·라벨만 재편(구 "리포트 생성" → "내신 시험 분석").
                   { label: "내신 시험 분석", href: `${basePath}/workbench/exam-report` },

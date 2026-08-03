@@ -151,6 +151,17 @@ export const FEATURE_FLAGS = {
     process.env.NEXT_PUBLIC_ENABLE_GRAMMAR_STUDIO,
     false,
   ),
+
+  /**
+   * 26-08 단어 훈련(어휘 트랙 /g/track/vocab): 기출 단어 코퍼스(표제어 27,011 ·
+   * sense 35,341) 기반 학생 어휘 드릴. 콘텐츠 DB 적재 완료로 기본 ON —
+   * NEXT_PUBLIC_ENABLE_VOCAB_DRILL=false 로 내리면 트랙이 PREPARING 으로
+   * 돌아가고 코드 경로는 그대로 남는다.
+   */
+  ENABLE_VOCAB_DRILL: publicBooleanFlag(
+    process.env.NEXT_PUBLIC_ENABLE_VOCAB_DRILL,
+    true,
+  ),
 } as const;
 
 export type FeatureFlag = keyof typeof FEATURE_FLAGS;
