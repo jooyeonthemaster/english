@@ -12,6 +12,7 @@ import {
 import { cn } from "@/lib/utils";
 import { tokenizePassage } from "@/lib/passage-point-tokenizer";
 import type { AnnotationType } from "./annotation-marks";
+import { formatRemoved, ghostRemoved, type EditSpan } from "@/lib/passage-edit-diff";
 
 // ============================================================================
 // 지문 마킹 무대 — 문제 생성의 WorkspaceSelectStage(포인트 짚어주기 제스처)를
@@ -78,8 +79,14 @@ interface PassageMarkStageProps {
   onScroll?: React.UIEventHandler<HTMLDivElement>;
   /** 선택/편집 팝오버 — 부모가 anchor 로 배치한 절대요소. 본문과 함께 스크롤된다. */
   popover?: ReactNode;
-  /** 우상단 컨트롤(직접 편집·되돌리기)이 첫 줄을 가리지 않게 비울 폭(px). */
-  topRightReserve?: number;
+  /**
+   * 본문 위쪽 여백(px) — 우상단 컨트롤(직접 편집·되돌리기)이 첫 줄을 가리지 않게
+   * 비운다. '직접 편집' textarea 는 float 를 흉내 낼 수 없으므로 두 표면이 같은
+   * 방식(위 패딩)으로 자리를 비워야 모드 전환 시 줄바꿈 모양이 유지된다.
+   */
+  topPad?: number;
+  /** 직전 '직접 편집'으로 바뀐 자리 — 형광펜(change)·빨간 마커(delete). */
+  editSpans?: EditSpan[];
 }
 
 export function PassageMarkStage({
@@ -94,7 +101,8 @@ export function PassageMarkStage({
   onMouseLeave,
   onScroll,
   popover,
-  topRightReserve = 0,
+  topPad,
+  editSpans,
 }: PassageMarkStageProps) {
   const tokenized = useMemo(() => tokenizePassage(content), [content]);
   const allTokens = useMemo(
@@ -349,12 +357,51 @@ export function PassageMarkStage({
     dragRef.current = null;
   };
 
-  // ── 렌더 파생: 세그먼트별 선택/주석 클래스 ────────────────────────────────
+  // ── 렌더 파생: 세그먼트별 선택/주석/편집 클래스 ───────────────────────────
   const inSelection = (start: number, end: number) =>
     selection !== null && start >= selection.start && end <= selection.end;
 
+  // 편집 diff — 변경 구간은 겹치는 세그먼트를 형광펜으로, 삭제는 사라진 자리를
+  // 품은 세그먼트(대개 공백) 왼쪽 모서리에 빨간 마커로.
+  const changedAt = (start: number, end: number) =>
+    editSpans?.some((s) => s.kind === "change" && s.from < end && start < s.to) ??
+    false;
+  // 삭제 지점을 조각 단위로 나눠 갖는다 — [start, end) 반열린 구간이라 여백·
+  // 세그먼트·본문 끝이 서로 겹치지 않는다(같은 유령이 두 번 그려지지 않게).
+  const deleteSpansAt = (start: number, end: number) =>
+    editSpans?.filter(
+      (s) => s.kind === "delete" && s.from >= start && s.from < end,
+    ) ?? [];
+  /**
+   * 지운 자리에 되살릴 유령 텍스트 — 이 조각 '앞'에 렌더한다. 사라진 문장을
+   * 빨간 취소선으로 그 자리에 다시 그려야 "어디를 지웠는지"가 보인다.
+   */
+  const deleteGhost = (start: number, end: number): ReactNode => {
+    const hits = deleteSpansAt(start, end);
+    if (hits.length === 0) return null;
+    const text = hits.map((s) => ghostRemoved(s.removed)).filter(Boolean).join(" ");
+    if (!text) return <span className="pms-diff-del" aria-hidden="true" />;
+    return (
+      <span className="pms-del-ghost" title="여기서 지운 내용이에요 (본문에는 없어요)">
+        {text}
+      </span>
+    );
+  };
+  /** 문장 안에서 지워진 내용 — 문장 전체를 옅게 표시하고 툴팁으로 알려준다. */
+  const removedInSentence = (start: number, end: number) =>
+    editSpans
+      ?.filter((s) => s.kind === "delete" && s.from >= start && s.from <= end)
+      .map((s) => formatRemoved(s.removed))
+      .filter(Boolean)
+      .join(" / ") || undefined;
+
   const lastSentence = tokenized.sentences[tokenized.sentences.length - 1];
-  const trailingText = lastSentence ? content.slice(lastSentence.end) : content;
+  const trailingStart = lastSentence ? lastSentence.end : 0;
+  const trailingText = content.slice(trailingStart);
+
+  /** 문장 사이/끝 여백 — 토큰이 아니라 편집 표시만 얹는다. */
+  const gapCls = (start: number, end: number) =>
+    cn("pms-between", changedAt(start, end) && "pms-diff");
 
   return (
     <div
@@ -372,29 +419,29 @@ export function PassageMarkStage({
     >
       <div
         ref={wrapRef}
-        style={{ fontSize, lineHeight: 1.625 }}
+        style={{ fontSize, lineHeight: 1.625, paddingTop: topPad }}
         className={cn(
           "relative select-none whitespace-pre-wrap break-words py-2 pl-3 pr-16 text-slate-800",
           locked && "text-slate-500",
         )}
       >
-        {/* 우상단 컨트롤 회피 — 첫 줄 텍스트가 컨트롤 아래로 들어가지 않게 float 로
-            자리를 비운다(문제 생성 ProseMirror ::before float 더미와 동일 수법). */}
-        {topRightReserve > 0 ? (
-          <span
-            aria-hidden="true"
-            style={{ float: "right", width: topRightReserve, height: "1.9rem" }}
-          />
-        ) : null}
         {tokenized.sentences.map((sent, si) => {
-          const between =
-            si === 0
-              ? content.slice(0, sent.start)
-              : content.slice(tokenized.sentences[si - 1].end, sent.start);
+          const betweenStart = si === 0 ? 0 : tokenized.sentences[si - 1].end;
+          const between = content.slice(betweenStart, sent.start);
+          const sentRemoved = removedInSentence(sent.start, sent.end);
           return (
             <Fragment key={sent.start}>
-              {between ? <span className="pms-between">{between}</span> : null}
-              <span className="pms-sent">
+              {deleteGhost(betweenStart, sent.start)}
+              {between ? (
+                <span className={gapCls(betweenStart, sent.start)}>{between}</span>
+              ) : null}
+              <span
+                className={cn(
+                  "pms-sent",
+                  sentRemoved && "pms-sent-del",
+                )}
+                title={sentRemoved ? `지운 내용: ${sentRemoved}` : undefined}
+              >
                 <sup className="pms-sup" aria-hidden="true">
                   {si + 1}
                 </sup>
@@ -408,7 +455,9 @@ export function PassageMarkStage({
                     sel && selection !== null && seg.start === selection.start && "pms-sel-a",
                     sel && selection !== null && seg.end === selection.end && "pms-sel-b",
                     !sel && ann && `pms-ann pms-ann-${ann.type}`,
+                    !sel && !ann && changedAt(seg.start, seg.end) && "pms-diff",
                   );
+                  const ghost = deleteGhost(seg.start, seg.end);
                   const dataI =
                     seg.kind === "word"
                       ? sentenceTokenBase[si] + seg.wordIndex
@@ -417,184 +466,49 @@ export function PassageMarkStage({
                   // 동작한다. 선택 프리뷰가 있으면 선택이 시각적으로 우선한다.
                   if (ann && !sel) {
                     return (
-                      <mark
-                        key={seg.start}
-                        ref={registerSeg(seg.start)}
-                        className={cls}
-                        data-i={dataI}
-                        data-ann-id={ann.id}
-                      >
-                        {seg.text}
-                      </mark>
+                      <Fragment key={seg.start}>
+                        {ghost}
+                        <mark
+                          ref={registerSeg(seg.start)}
+                          className={cls}
+                          data-i={dataI}
+                          data-ann-id={ann.id}
+                        >
+                          {seg.text}
+                        </mark>
+                      </Fragment>
                     );
                   }
                   return (
-                    <span
-                      key={seg.start}
-                      ref={registerSeg(seg.start)}
-                      className={cls}
-                      data-i={dataI}
-                    >
-                      {seg.text}
-                    </span>
+                    <Fragment key={seg.start}>
+                      {ghost}
+                      <span
+                        ref={registerSeg(seg.start)}
+                        className={cls}
+                        data-i={dataI}
+                      >
+                        {seg.text}
+                      </span>
+                    </Fragment>
                   );
                 })}
               </span>
             </Fragment>
           );
         })}
-        {trailingText ? <span className="pms-between">{trailingText}</span> : null}
+        {deleteGhost(trailingStart, content.length)}
+        {trailingText ? (
+          <span className={gapCls(trailingStart, content.length)}>{trailingText}</span>
+        ) : null}
+        {/* 본문 맨 끝에서 지운 경우 — 뒤에 남은 조각이 없으므로 여기서 받는다. */}
+        {deleteGhost(content.length, content.length + 1)}
         {popover}
       </div>
 
       {/* "더블클릭 = 문장 선택" 안내 칩 — showHint/hideHint 가 DOM 으로만 이동 */}
       <div ref={hintRef} aria-hidden="true" style={{ display: "none" }} className="pms-hint">
-        더블클릭하면 문장 전체가 선택돼요
+        더블클릭 = 문장 전체 · 그냥 타이핑하면 바로 수정돼요
       </div>
-
-      {/* pms- 접두 전용 스타일 — WorkspaceSelectStage(wss-)와 동일한 시각 문법에,
-          하이라이트만 5종 주석 색으로 교체. 전역 무수정. */}
-      <style jsx global>{`
-        .pms-stage {
-          -webkit-tap-highlight-color: transparent;
-        }
-        .pms-sup {
-          margin-right: 3px;
-          font-size: 10px;
-          font-weight: 600;
-          color: #cbd5e1;
-          vertical-align: super;
-          user-select: none;
-          transition: color 0.12s ease;
-        }
-        .pms-sent:hover > .pms-sup {
-          color: #60a5fa;
-        }
-        .pms-between {
-          color: #94a3b8;
-        }
-        .pms-tok {
-          display: inline-block;
-          padding: 0 1px;
-          margin: 0 -1px;
-          border-radius: 2px;
-          cursor: pointer;
-          transition: background-color 0.12s ease;
-        }
-        .pms-tok:not(.pms-sel):not(.pms-drag):hover {
-          background-color: #dbeafe;
-          border-radius: 6px;
-        }
-        /* 선택 pill — 픽커의 커밋 선택과 동일 문법 (연속 배경 + 하단 스트로크) */
-        .pms-sel {
-          background-color: #bfdbfe;
-          box-shadow: inset 0 -2px 0 0 #3b82f6;
-          border-radius: 0;
-        }
-        .pms-sel-a {
-          border-top-left-radius: 6px;
-          border-bottom-left-radius: 6px;
-        }
-        .pms-sel-b {
-          border-top-right-radius: 6px;
-          border-bottom-right-radius: 6px;
-        }
-        /* 드래그 프리뷰 pill */
-        .pms-drag {
-          background-color: rgba(191, 219, 254, 0.55);
-          box-shadow: inset 0 -2px 0 0 #93c5fd;
-          border-radius: 0;
-        }
-        .pms-drag-a {
-          border-top-left-radius: 6px;
-          border-bottom-left-radius: 6px;
-        }
-        .pms-drag-b {
-          border-top-right-radius: 6px;
-          border-bottom-right-radius: 6px;
-        }
-        /* 범위 내 공백도 토큰과 같은 박스로 — 배경·스트로크 연속 */
-        .pms-gap.pms-sel,
-        .pms-gap.pms-drag {
-          display: inline-block;
-        }
-        /* ── 5종 주석 하이라이트 — PassageAnnotationEditor(ann-*)와 동일 색 문법 ── */
-        mark.pms-ann {
-          color: inherit;
-          cursor: pointer;
-          padding: 0 1px;
-        }
-        mark.pms-ann-vocab {
-          background: linear-gradient(to top, #dbeafe 35%, transparent 35%);
-          border-bottom: 2px solid #3b82f6;
-          border-radius: 1px;
-        }
-        mark.pms-ann-vocab:hover {
-          background: linear-gradient(to top, #bfdbfe 45%, transparent 45%);
-        }
-        mark.pms-ann-grammar {
-          text-decoration: underline wavy #8b5cf6;
-          -webkit-text-decoration: underline wavy #8b5cf6;
-          text-decoration-skip-ink: none;
-          text-underline-offset: 3px;
-        }
-        mark.pms-ann-grammar:hover {
-          background-color: #ede9fe;
-          border-radius: 2px;
-        }
-        mark.pms-ann-syntax {
-          border-bottom: 2px dashed #0891b2;
-        }
-        mark.pms-ann-syntax:hover {
-          background-color: #ecfeff;
-          border-radius: 2px;
-        }
-        mark.pms-ann-sentence {
-          background: linear-gradient(to top, #dcfce7 45%, transparent 45%);
-          box-shadow: inset 2px 0 0 0 #22c55e;
-          border-radius: 1px;
-        }
-        mark.pms-ann-sentence:hover {
-          background: linear-gradient(to top, #bbf7d0 55%, transparent 55%);
-        }
-        mark.pms-ann-examPoint {
-          background: linear-gradient(to top, #fef08a 40%, transparent 40%);
-          border-radius: 1px;
-        }
-        mark.pms-ann-examPoint:hover {
-          background: linear-gradient(to top, #fde047 50%, transparent 50%);
-        }
-        /* 단어 선택 직후 커서 옆 안내 칩 */
-        .pms-hint {
-          position: fixed;
-          z-index: 60;
-          padding: 4px 9px;
-          border-radius: 7px;
-          background: #0f172a;
-          color: #f8fafc;
-          font-size: 10.5px;
-          font-weight: 600;
-          line-height: 1.4;
-          white-space: nowrap;
-          box-shadow: 0 6px 18px rgba(15, 23, 42, 0.22);
-          pointer-events: none;
-        }
-        @media (prefers-reduced-motion: no-preference) {
-          .pms-hint {
-            animation: pmsHintIn 0.18s ease-out;
-          }
-        }
-        @keyframes pmsHintIn {
-          from {
-            opacity: 0;
-            transform: translateY(3px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
     </div>
   );
 }

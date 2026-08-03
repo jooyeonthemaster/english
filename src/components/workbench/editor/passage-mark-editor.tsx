@@ -13,7 +13,6 @@ import {
   X, Trash2, Undo2, Redo2, Pencil, Check,
 } from "lucide-react";
 import { SaveButton } from "@/components/ui/save-button";
-import { Textarea } from "@/components/ui/textarea";
 import {
   generateAnnotationId,
   type Annotation, type AnnotationType,
@@ -23,6 +22,8 @@ import {
   type StageAnchor,
   type StageSelection,
 } from "./passage-mark-stage";
+import { PassageMarkStyles } from "./passage-mark-styles";
+import { diffEditSpans, type EditSpan } from "@/lib/passage-edit-diff";
 
 // ============================================================================
 // 지문 마킹 에디터 — 문제 생성 워크스페이스(WorkspaceSelectStage + '직접 편집'
@@ -30,7 +31,25 @@ import {
 // 마킹 무대(단어 hover·클릭·더블클릭 문장·스냅 드래그), 타이핑이 필요하면
 // '직접 편집' 토글로 textarea 를 연다. 마킹/메모/실행취소/AI변형은 전부
 // 원문 문자 오프셋 기반으로 동작한다(ProseMirror 위치 X).
+//
+// 두 표면은 '같은 지오메트리'를 공유한다(SURFACE_*) — 폰트·행간·패딩이 1px 도
+// 어긋나면 모드를 토글할 때 줄바꿈 모양이 통째로 바뀌어 보인다. 우상단 컨트롤
+// 회피도 float 가 아니라 위 패딩으로 통일했다(textarea 는 float 를 못 흉내낸다).
+// '직접 편집' 중에도 마킹이 보이도록 textarea 뒤에 동일 지오메트리의 하이라이트
+// 백드롭(.pms-mirror)을 깔아 글자는 투명 렌더하고 마킹 배경만 노출한다 — 글자·
+// 커서·IME 는 진짜 textarea 그대로라 한글 조합 입력도 그대로 동작한다.
 // ============================================================================
+
+// 두 표면 공통 지오메트리 — 여기만 바꾸면 무대/편집이 함께 움직인다.
+const SURFACE_FONT_SIZE = "13px";
+const SURFACE_LINE_HEIGHT = 1.625;
+const SURFACE_PAD_L = 12; // = pl-3
+const SURFACE_PAD_R = 64; // = pr-16
+const SURFACE_PAD_B = 8; // = py-2
+// 우상단 컨트롤(직접 편집·되돌리기) 높이 + 여유. 주석 카운트 바가 떠 있으면
+// 컨트롤이 그 위에 겹치므로 본문은 기본 여백만 남긴다.
+const SURFACE_PAD_T_RESERVED = 40;
+const SURFACE_PAD_T = 8;
 
 const ANNOTATION_CONFIG: Record<
   AnnotationType,
@@ -151,6 +170,9 @@ export function PassageMarkEditor({
   const [anchor, setAnchor] = useState<StageAnchor | null>(null);
   const [popup, setPopup] = useState<PopupState | null>(null);
   const [memoInput, setMemoInput] = useState("");
+  // 직전 '직접 편집'에서 바뀐 자리 — 편집 완료 시 계산해 무대에 형광펜으로 칠한다.
+  const [editSpans, setEditSpans] = useState<EditSpan[]>([]);
+  const editBaseRef = useRef<string | null>(null);
   // undo/redo 버튼 활성화 상태 — 스택 변할 때마다 syncHist 로 갱신(렌더 중 ref 접근 X).
   const [hist, setHist] = useState({ canUndo: false, canRedo: false });
 
@@ -201,7 +223,10 @@ export function PassageMarkEditor({
       pastRef.current.push(snapshot());
       if (pastRef.current.length > 100) pastRef.current.shift();
       futureRef.current = [];
-      if (nextContent !== contentRef.current) onContentChange?.(nextContent);
+      if (nextContent !== contentRef.current) {
+        onContentChange?.(nextContent);
+        setEditSpans([]); // 본문이 또 바뀌면 직전 편집 표시는 유효하지 않다
+      }
       onAnnotationsChange(nextAnns);
       syncHist();
     },
@@ -209,7 +234,10 @@ export function PassageMarkEditor({
   );
   const applySnap = useCallback(
     (snap: { content: string; annotations: Annotation[] }) => {
-      if (snap.content !== contentRef.current) onContentChange?.(snap.content);
+      if (snap.content !== contentRef.current) {
+        onContentChange?.(snap.content);
+        setEditSpans([]);
+      }
       onAnnotationsChange(snap.annotations);
       pendingIdRef.current = null;
       setPopup(null);
@@ -444,8 +472,96 @@ export function PassageMarkEditor({
   const enterEditMode = useCallback(() => {
     setPopup(null);
     clearSelection();
+    // 편집 전 원문을 기억해 뒀다가 '편집 완료' 때 무엇이 바뀌었는지 되짚는다.
+    editBaseRef.current = contentRef.current;
+    setEditSpans([]);
     setEditMode(true);
   }, [clearSelection]);
+
+  /** '편집 완료' — 편집 전 원문과 비교해 바뀐 자리를 형광펜 구간으로 남긴다. */
+  const exitEditMode = useCallback(() => {
+    const base = editBaseRef.current;
+    editBaseRef.current = null;
+    setEditSpans(base === null ? [] : diffEditSpans(base, contentRef.current));
+    setEditMode(false);
+  }, []);
+
+  // ── 클릭하고 그냥 타이핑 = 바로 수정 ──────────────────────────────────────
+  // 무대에서 단어/문장을 고른 상태로 글자를 치면 그 자리를 고쳐 쓴다. 무대는
+  // 읽기 전용(contentEditable X)이라 캐럿이 없으므로, 선택 구간을 친 글자로
+  // 치환하면서 편집 표면으로 넘어가고 캐럿을 그 자리에 세운다. 두 표면 지오
+  // 메트리가 같아 글자가 움직이지 않으므로 '제자리 편집'처럼 보인다.
+  const pendingCaretRef = useRef<number | null>(null);
+  const typeEdit = useCallback(
+    (start: number, end: number, insert: string) => {
+      const cur = contentRef.current;
+      const next = cur.slice(0, start) + insert + cur.slice(end);
+      editBaseRef.current = cur;
+      setEditSpans([]);
+      pendingIdRef.current = null;
+      if (next !== cur) {
+        commitStep(
+          next,
+          adjustAnnotations(cur, next, annsRef.current).sort(byOffset),
+        );
+      }
+      pendingCaretRef.current = start + insert.length;
+      setPopup(null);
+      clearSelection();
+      setEditMode(true);
+    },
+    [commitStep, clearSelection],
+  );
+
+  useEffect(() => {
+    if (!editable || editMode || !selection) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      const t = e.target as HTMLElement | null;
+      if (
+        t &&
+        (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)
+      )
+        return;
+      if (!selection) return;
+      // IME 조합 중(한글 등)은 글자를 가로채지 않고 편집 표면만 연다 — 조합을
+      // 중간에 훔치면 입력이 깨진다.
+      if (e.isComposing || e.keyCode === 229 || e.key === "Process") {
+        e.preventDefault();
+        typeEdit(selection.start, selection.end, "");
+        return;
+      }
+      const insert =
+        e.key.length === 1
+          ? e.key
+          : e.key === "Enter"
+            ? "\n"
+            : e.key === "Backspace" || e.key === "Delete"
+              ? ""
+              : null;
+      if (insert === null) return;
+      e.preventDefault();
+      typeEdit(selection.start, selection.end, insert);
+    }
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [editable, editMode, selection, typeEdit]);
+
+  // 편집 표면 진입 직후 캐럿을 방금 고친 자리에 세운다(값 반영 후 1프레임 뒤).
+  useEffect(() => {
+    if (!editMode) return;
+    const pos = pendingCaretRef.current;
+    if (pos === null) return;
+    pendingCaretRef.current = null;
+    const el = textareaRef.current;
+    if (!el) return;
+    const id = window.requestAnimationFrame(() => {
+      el.focus();
+      const p = Math.min(pos, el.value.length);
+      el.setSelectionRange(p, p);
+    });
+    return () => window.cancelAnimationFrame(id);
+  }, [editMode, content]);
 
   const { canUndo, canRedo } = hist;
   const hasText = content.trim().length > 0;
@@ -458,6 +574,42 @@ export function PassageMarkEditor({
     () => annotations.map((a) => ({ id: a.id, type: a.type, from: a.from, to: a.to })),
     [annotations],
   );
+
+  // 상단 상태 바(주석 카운트 · 편집 표시)가 떠 있으면 우상단 컨트롤이 그 위에
+  // 얹히므로, 본문은 상단 여백을 비울 필요가 없다.
+  const statusBar = annotations.length > 0 || (editSpans.length > 0 && !editMode);
+
+  // 두 표면 공통 지오메트리 — 무대/편집이 정확히 같은 폭·행간으로 접힌다.
+  const surfaceStyle = useMemo(
+    () => ({
+      fontFamily: "inherit" as const,
+      fontSize: SURFACE_FONT_SIZE,
+      lineHeight: SURFACE_LINE_HEIGHT,
+      paddingTop:
+        editable && !statusBar ? SURFACE_PAD_T_RESERVED : SURFACE_PAD_T,
+      paddingBottom: SURFACE_PAD_B,
+      paddingLeft: SURFACE_PAD_L,
+      paddingRight: SURFACE_PAD_R,
+    }),
+    [editable, statusBar],
+  );
+
+  // 편집 모드 하이라이트 백드롭 — 본문을 [무마킹 | 마킹] 조각으로 쪼갠다.
+  // 겹치는 주석은 앞선 것이 이긴다(cursor 로 클램프).
+  const mirrorParts = useMemo(() => {
+    const parts: { text: string; type: AnnotationType | null }[] = [];
+    let cursor = 0;
+    for (const a of [...annotations].sort(byOffset)) {
+      const from = Math.max(cursor, Math.min(a.from, content.length));
+      const to = Math.max(from, Math.min(a.to, content.length));
+      if (to <= from) continue;
+      if (from > cursor) parts.push({ text: content.slice(cursor, from), type: null });
+      parts.push({ text: content.slice(from, to), type: a.type });
+      cursor = to;
+    }
+    if (cursor < content.length) parts.push({ text: content.slice(cursor), type: null });
+    return parts;
+  }, [content, annotations]);
 
   // ── 팝오버(툴바/메모/편집) — anchor(콘텐츠 좌표)에 배치, 본문과 함께 스크롤 ──
   const popover: ReactNode =
@@ -514,7 +666,7 @@ export function PassageMarkEditor({
                     })}
                   </div>
                   <div className="select-none pt-0.5 text-center text-[8.5px] font-medium tracking-wide text-white/45">
-                    Alt(⌥) + 단축키
+                    Alt(⌥) + 단축키 · 그냥 타이핑하면 바로 수정돼요
                   </div>
                 </div>
               ) : null}
@@ -604,7 +756,7 @@ export function PassageMarkEditor({
         >
           <button
             type="button"
-            onClick={() => (editMode ? setEditMode(false) : enterEditMode())}
+            onClick={() => (editMode ? exitEditMode() : enterEditMode())}
             title={editMode ? "마킹 모드로 돌아가기" : "본문을 직접 타이핑 수정"}
             className={
               "flex h-7 items-center gap-1 rounded-md px-2 text-[11px] font-semibold transition-colors " +
@@ -642,8 +794,8 @@ export function PassageMarkEditor({
         </div>
       ) : null}
 
-      {/* 주석 카운트 */}
-      {annotations.length > 0 ? (
+      {/* 주석 카운트 + 편집 표시 */}
+      {statusBar ? (
         <div className="flex shrink-0 items-center gap-3 border-b border-slate-100 bg-slate-50/50 px-4 py-2">
           {ANNOTATION_TYPES.map((type) =>
             counts[type] > 0 ? (
@@ -653,6 +805,18 @@ export function PassageMarkEditor({
               </span>
             ) : null,
           )}
+          {editSpans.length > 0 && !editMode ? (
+            <button
+              type="button"
+              onClick={() => setEditSpans([])}
+              title="편집한 자리 표시를 지웁니다 — 빨간 취소선은 지운 원문이며 본문에는 포함되지 않아요"
+              className="flex items-center gap-1 rounded-full bg-red-50 px-2 py-0.5 text-[11px] font-medium text-red-600 ring-1 ring-inset ring-red-200 transition-colors hover:bg-red-100"
+            >
+              <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
+              직접 편집 {editSpans.length}곳
+              <X className="h-3 w-3 opacity-60" />
+            </button>
+          ) : null}
         </div>
       ) : null}
 
@@ -662,31 +826,50 @@ export function PassageMarkEditor({
           content={content}
           annotations={stageAnnotations}
           locked={!editable}
-          fontSize="13px"
+          fontSize={SURFACE_FONT_SIZE}
           selection={selection}
           onSelect={handleStageSelect}
           onAnnotationClick={handleAnnotationClick}
           popover={popover}
-          topRightReserve={editable ? 172 : 0}
+          topPad={surfaceStyle.paddingTop}
+          editSpans={editSpans}
         />
       ) : (
-        <div className="relative flex min-h-0 flex-1 flex-col">
-          <Textarea
-            ref={textareaRef}
-            value={content}
-            autoFocus
-            onChange={handleTextareaChange}
-            readOnly={!editable}
-            spellCheck={false}
-            style={{ fontSize: "13px", lineHeight: 1.625, paddingRight: 180 }}
-            className="relative h-full min-h-0 flex-1 resize-none rounded-none border-0 bg-transparent py-2 pl-3 shadow-none focus-visible:ring-0"
-            placeholder={placeholder}
-          />
+        <div className="relative min-h-0 flex-1 overflow-y-auto overscroll-contain">
+          {/* 백드롭(높이 기준) + 그 위에 정확히 겹친 textarea. 스크롤은 바깥
+              컨테이너가 담당하므로 마킹과 글자가 절대 어긋나지 않는다. */}
+          <div className="relative min-h-full">
+            <div aria-hidden="true" className="pms-mirror" style={surfaceStyle}>
+              {mirrorParts.map((p, i) =>
+                p.type ? (
+                  <mark key={i} className={`pms-ann pms-ann-${p.type}`}>
+                    {p.text}
+                  </mark>
+                ) : (
+                  <span key={i}>{p.text}</span>
+                ),
+              )}
+              {/* 본문이 개행으로 끝날 때 마지막 빈 줄 높이 확보 */}
+              {"​"}
+            </div>
+            <textarea
+              ref={textareaRef}
+              value={content}
+              autoFocus
+              onChange={handleTextareaChange}
+              readOnly={!editable}
+              spellCheck={false}
+              style={surfaceStyle}
+              className="pms-input absolute inset-0 h-full w-full resize-none text-slate-800 placeholder:text-slate-400"
+              placeholder={placeholder}
+            />
+          </div>
         </div>
       )}
 
-      {/* 온보딩 힌트 — 아직 마킹 0개일 때만 */}
-      {showAnnotationHint && hasText && annotations.length === 0 && !popup && !editMode ? (
+      {/* 온보딩 힌트 — 아직 마킹 0개일 때만. 편집 모드에서도 문구만 바꿔 계속
+          띄운다(모드 토글에 본문 영역 높이가 흔들리지 않게). */}
+      {showAnnotationHint && hasText && annotations.length === 0 && !popup ? (
         <div
           className="relative flex shrink-0 items-center gap-2.5 overflow-hidden border-t border-blue-200/80 px-4 py-2.5"
           style={{
@@ -707,19 +890,26 @@ export function PassageMarkEditor({
             }}
           />
           <p className="relative text-[12px] font-medium leading-snug tracking-tight text-blue-800">
-            단어에 <b className="text-blue-900">마우스를 올리면</b> 표시되고,{" "}
-            <span className="rounded bg-white/70 px-1 py-0.5 font-bold text-blue-900 shadow-[0_0_8px_rgba(59,130,246,0.35)]">클릭·더블클릭·드래그</span>
-            로 선택해 어휘·어법·출제 포인트를 마킹할 수 있어요
+            {editMode ? (
+              <>
+                본문을 직접 고치는 중이에요 — 기존 마킹은 뒤에 그대로 표시되고,{" "}
+                <span className="rounded bg-white/70 px-1 py-0.5 font-bold text-blue-900 shadow-[0_0_8px_rgba(59,130,246,0.35)]">편집 완료</span>
+                를 누르면 마킹 화면으로 돌아가요
+              </>
+            ) : (
+              <>
+                단어에 <b className="text-blue-900">마우스를 올리면</b> 표시되고,{" "}
+                <span className="rounded bg-white/70 px-1 py-0.5 font-bold text-blue-900 shadow-[0_0_8px_rgba(59,130,246,0.35)]">클릭·더블클릭·드래그</span>
+                로 선택해 어휘·어법·출제 포인트를 마킹할 수 있어요
+              </>
+            )}
           </p>
-          <style jsx>{`
-            @keyframes pmsHintShimmer {
-              0% { background-position: 0% 50%; }
-              50% { background-position: 100% 50%; }
-              100% { background-position: 0% 50%; }
-            }
-          `}</style>
         </div>
       ) : null}
+
+      {/* 무대·백드롭이 공유하는 pms-* 전역 스타일 — 무대는 편집 모드에서
+          언마운트되므로 항상 살아 있는 이 호스트가 소유한다. */}
+      <PassageMarkStyles />
     </div>
   );
 }
