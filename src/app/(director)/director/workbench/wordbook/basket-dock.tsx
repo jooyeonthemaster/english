@@ -83,10 +83,16 @@ export function BasketDock({
   const [selected, setSelected] = useState<Set<string>>(new Set());
 
   // 단어 미리보기 — 카드 B(spec)·SendStep(deckId) 두 진입점이 상태를 공유한다.
+  // 제목·안내는 진입점이 정한다 — "조건으로 뽑힐 단어"와 "담은 단어"는 다른 개념.
   const [preview, setPreview] = useState<PreviewState | null>(null);
+  const [previewMeta, setPreviewMeta] = useState<{ title: string; note?: string } | null>(null);
   const previewSeq = useRef(0);
-  const openPreview = useCallback((input: { spec?: VocabDeckSpec; deckId?: string }) => {
+  const openPreview = useCallback((
+    input: { spec?: VocabDeckSpec; deckId?: string },
+    meta?: { title: string; note?: string },
+  ) => {
     const seq = ++previewSeq.current;
+    setPreviewMeta(meta ?? null);
     setPreview({ status: "loading" });
     previewVocabDeck(input)
       .then((res) => {
@@ -282,7 +288,10 @@ export function BasketDock({
 
                 <section className="rounded-lg border border-slate-200 p-3">
                   <h3 className="text-[12px] font-bold">지금 고른 조건으로 만들기</h3>
-                  <p className="mt-0.5 text-[10.5px] tabular-nums text-slate-400">지금 조건에 맞는 단어 {fmt(currentTotal)}개</p>
+                  <p className="mt-0.5 break-keep text-[10.5px] tabular-nums text-slate-400">
+                    지금 조건에 맞는 단어 {fmt(currentTotal)}개 — 위에 담은 단어와는
+                    별개로, 자주 나온 순서대로 자동으로 담습니다.
+                  </p>
                   <div className="mt-2.5 space-y-2">
                     <Field label="단어장 이름 (필수)">
                       <input value={titleB} onChange={(e) => setTitleB(e.target.value)} placeholder="예: 고3 학술어 집중" className={INPUT} />
@@ -298,8 +307,21 @@ export function BasketDock({
                       <button type="button" onClick={() => void handleSaveB()} disabled={!titleB.trim() || savingB} className={`${BTN_PRIMARY} flex-1`}>
                         {savingB && <Spin />}이 조건으로 저장
                       </button>
-                      <button type="button" onClick={() => openPreview({ spec: buildSpecB() })} className={BTN_GHOST} title="지금 조건으로 어떤 단어가 담기는지 미리 봅니다">
-                        <Eye className="size-3.5" />어떤 단어가 담기나 보기
+                      <button
+                        type="button"
+                        onClick={() =>
+                          openPreview(
+                            { spec: buildSpecB() },
+                            {
+                              title: "이 조건으로 뽑힐 단어",
+                              note: "위에 담은 단어 목록과는 별개입니다 — 지금 조건에 맞는 단어를 자주 나온 순서대로 위에서부터 담습니다.",
+                            },
+                          )
+                        }
+                        className={BTN_GHOST}
+                        title="이 조건으로 저장하면 어떤 단어가 담기는지 미리 봅니다"
+                      >
+                        <Eye className="size-3.5" />뽑힐 단어 미리 보기
                       </button>
                     </div>
                   </div>
@@ -343,7 +365,14 @@ export function BasketDock({
         </div>
       </div>
 
-      {preview && <PreviewModal state={preview} onClose={closePreview} />}
+      {preview && (
+        <PreviewModal
+          state={preview}
+          onClose={closePreview}
+          title={previewMeta?.title}
+          note={previewMeta?.note}
+        />
+      )}
     </div>
   );
 }

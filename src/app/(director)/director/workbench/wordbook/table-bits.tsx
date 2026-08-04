@@ -3,10 +3,7 @@
 // 탐색·의미 이동 테이블 공용 원자 — sense-table ↔ shift-table 이 같이 쓴다.
 // (한쪽에 두면 순환 import — 셸→sense-table→shift-table 단방향을 지키기 위한 파일)
 
-import type {
-  MouseEvent as ReactMouseEvent,
-  PointerEvent as ReactPointerEvent,
-} from "react";
+import type { MouseEvent as ReactMouseEvent } from "react";
 import { Check, Plus } from "lucide-react";
 import type {
   WordbookBasketItem,
@@ -37,22 +34,19 @@ export function shiftItem(r: WordbookShiftRow): WordbookBasketItem {
   };
 }
 
-/** 담기 버튼 — 클릭(토글·shift 범위)과 pointerdown(쓸어담기 시작)을 부모가 판정. */
+/** 담기 버튼 — 클릭(단건 토글·shift 범위)을 부모가 판정. 영역 드래그는 DragSelect 소관. */
 export function BasketButton({
   active,
   title,
-  onPointerDown,
   onClick,
 }: {
   active: boolean;
   title: string;
-  onPointerDown: (e: ReactPointerEvent) => void;
   onClick: (e: ReactMouseEvent) => void;
 }) {
   return (
     <button
       type="button"
-      onPointerDown={onPointerDown}
       onClick={(e) => {
         // 행 클릭(도시에 열기)과 겹치지 않도록 전파를 끊는다.
         e.stopPropagation();

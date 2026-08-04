@@ -1,13 +1,9 @@
 "use client";
 
 // 뜻이 달라진 단어 테이블 — sense-table 의 shift 모드 분리체(500줄 규약).
-// 페인트·클릭 핸들러는 sense-table(부모)이 소유한다 — 두 표가 한 제스처
-// 세션을 공유해야 하므로(드래그가 표 전환을 넘나들 일은 없지만 상태는 하나).
+// 마키(영역 드래그 담기)는 부모의 DragSelect 가 담당 — 행에 data-drag-item-id 만 단다.
 
-import type {
-  MouseEvent as ReactMouseEvent,
-  PointerEvent as ReactPointerEvent,
-} from "react";
+import type { MouseEvent as ReactMouseEvent } from "react";
 import { MoveRight } from "lucide-react";
 import { PosChip } from "./wordbook-ui";
 import { BasketButton, ShareCell, TH, shiftItem } from "./table-bits";
@@ -22,12 +18,6 @@ interface ShiftTableProps {
   addTitle: string;
   removeTitle: string;
   onRowClick: (lemmaId: string) => void;
-  onPaintEnter: (item: WordbookBasketItem) => void;
-  onStartPaint: (
-    e: ReactPointerEvent,
-    item: WordbookBasketItem,
-    inBasket: boolean,
-  ) => void;
   onBasketClick: (
     e: ReactMouseEvent,
     index: number,
@@ -44,8 +34,6 @@ export function ShiftTable({
   addTitle,
   removeTitle,
   onRowClick,
-  onPaintEnter,
-  onStartPaint,
   onBasketClick,
 }: ShiftTableProps) {
   const axisA = shiftAxis === "era" ? "2003~2015" : "고1";
@@ -88,8 +76,8 @@ export function ShiftTable({
               return (
                 <tr
                   key={r.lemmaId}
+                  data-drag-item-id={r.bSenseId}
                   onClick={() => onRowClick(r.lemmaId)}
-                  onPointerEnter={() => onPaintEnter(shiftItem(r))}
                   // 배경 우선순위: 도시에 선택 > 담김 > hover
                   className={`cursor-pointer border-b border-slate-100 ${
                     selected ? "bg-blue-50/70" : inBasket ? "bg-blue-50/40" : "hover:bg-slate-50"
@@ -100,7 +88,6 @@ export function ShiftTable({
                     <BasketButton
                       active={inBasket}
                       title={inBasket ? removeTitle : addTitle}
-                      onPointerDown={(e) => onStartPaint(e, shiftItem(r), inBasket)}
                       onClick={(e) => onBasketClick(e, i, shiftItem(r))}
                     />
                   </td>

@@ -117,7 +117,9 @@ export interface WordbookLemmaDossier {
   confusables: DossierConfusable[];
 }
 
-const EXAMPLES_PER_SENSE = 4;
+// 예문은 뜻당 12개까지 — 4개는 "나온 지문 113개" 같은 통계와 나란히 서면
+// 데이터가 빈약해 보인다(유저 실사용 피드백 2026-08-04). 표시는 접기로 조절.
+const EXAMPLES_PER_SENSE = 12;
 const TRAPS_PER_SENSE = 4;
 
 function toNumRecord(v: unknown): Record<string, number> {

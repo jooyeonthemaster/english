@@ -79,20 +79,26 @@ export type PreviewState =
   | { status: "error" }
   | { status: "ready"; rows: VocabDeckPreviewRow[]; total: number };
 
-/** 패널(z-50) 위에 뜨는 미리보기 — 백드롭 클릭으로 닫는다. */
+/** 패널(z-50) 위에 뜨는 미리보기 — 백드롭 클릭으로 닫는다.
+ *  title·note 는 진입점이 정한다 — "조건으로 뽑힐 단어"와 "담은 단어"가 다른
+ *  개념인데 제목이 하나면 정체를 오독한다(유저 실사용 피드백 2026-08-04). */
 export function PreviewModal({
   state,
   onClose,
+  title = "단어장에 담긴 단어",
+  note,
 }: {
   state: PreviewState;
   onClose: () => void;
+  title?: string;
+  note?: string;
 }) {
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
       <button type="button" aria-label="미리보기 닫기" onClick={onClose} className="absolute inset-0 bg-slate-900/40" />
-      <div role="dialog" aria-modal="true" aria-label="어떤 단어가 담기는지 미리보기" className="relative flex max-h-[80dvh] w-full max-w-md flex-col overflow-hidden rounded-lg bg-white shadow-2xl">
+      <div role="dialog" aria-modal="true" aria-label={title} className="relative flex max-h-[80dvh] w-full max-w-md flex-col overflow-hidden rounded-lg bg-white shadow-2xl">
         <header className="flex h-11 shrink-0 items-center gap-2 border-b border-slate-200 px-3">
-          <h3 className="shrink-0 text-[12.5px] font-bold">어떤 단어가 담기는지</h3>
+          <h3 className="shrink-0 text-[12.5px] font-bold">{title}</h3>
           {state.status === "ready" && (
             <span className="truncate text-[10.5px] tabular-nums text-slate-400">
               전체 {fmt(state.total)}개 중 앞 {fmt(state.rows.length)}개
@@ -102,6 +108,11 @@ export function PreviewModal({
             <X className="size-4" />
           </button>
         </header>
+        {note ? (
+          <p className="break-keep border-b border-slate-100 bg-amber-50/60 px-3 py-1.5 text-[10.5px] text-amber-700">
+            {note}
+          </p>
+        ) : null}
         <div className="min-h-0 flex-1 overflow-y-auto">
           {state.status === "loading" ? (
             <div className="flex justify-center py-14">

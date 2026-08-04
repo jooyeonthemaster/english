@@ -328,9 +328,10 @@ function SenseCard({
 
   const eraTotal = s.era.early + s.era.late;
   const gradeTotal = s.byGrade.g1 + s.byGrade.g2 + s.byGrade.g3;
-  const shownExamples = s.examples.slice(0, moreExamples ? 4 : 2);
+  // 예문은 서버가 뜻당 12개까지 내려준다 — 접힌 상태 2개, 펼치면 전부.
+  const shownExamples = s.examples.slice(0, moreExamples ? s.examples.length : 2);
   const shownTraps = s.traps.slice(0, moreTraps ? 4 : 2);
-  const hiddenExamples = Math.min(s.examples.length, 4) - 2;
+  const hiddenExamples = s.examples.length - 2;
   const hiddenTraps = Math.min(s.traps.length, 4) - 2;
   const toggleCls = "mt-0.5 text-[10.5px] font-medium text-blue-600 hover:underline";
 
@@ -410,8 +411,16 @@ function SenseCard({
       ))}
       {hiddenExamples > 0 ? (
         <button type="button" onClick={() => setMoreExamples((v) => !v)} className={toggleCls}>
-          {moreExamples ? "예문 접기" : `예문 ${hiddenExamples}개 더 보기`}
+          {moreExamples ? "예문 접기" : `수집한 예문 ${s.examples.length}개 모두 보기`}
         </button>
+      ) : null}
+      {/* "나온 지문 113개인데 예문이 왜 몇 개뿐?"에 대한 답 — 출현 전부를
+          문장으로 저장하지 않고 대표 예문만 수집한다는 사실을 명시한다 */}
+      {s.exampleCount > s.examples.length ? (
+        <p className="mt-1 text-[10px] text-slate-400 break-keep">
+          출현한 문장 전부가 아니라 대표 예문 {s.examples.length}개를 골라 보여
+          드립니다.
+        </p>
       ) : null}
 
       {shownTraps.length > 0 ? (

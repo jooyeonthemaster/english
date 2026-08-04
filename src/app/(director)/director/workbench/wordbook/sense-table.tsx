@@ -17,11 +17,10 @@ import {
   useEffect,
   useMemo,
   useRef,
-  useState,
   type MouseEvent as ReactMouseEvent,
-  type PointerEvent as ReactPointerEvent,
 } from "react";
 import { ArrowDown } from "lucide-react";
+import { DragSelect } from "@/components/ui/drag-select";
 import { DiffDots, MiniBar, PosChip, TierChip, TrendChip, fmt, fmt1 } from "./wordbook-ui";
 import { ShiftTable } from "./shift-table";
 import { BasketButton, TH, senseItem, shiftItem } from "./table-bits";
@@ -139,77 +138,38 @@ export function SenseTable({
     }
   }, [queryEpoch]);
 
-  // ── 드래그 쓸어담기(페인트) ─────────────────────────────────────────────────
-  // 진행 상태는 ref(렌더 무관·매 행 적용이 리렌더를 부르므로 state 면 세션이 끊긴다),
-  // select-none 토글만 state 로 든다. 시작 행은 pointerdown 에서 바로 적용하지
-  // 않는다 — 단순 클릭이면 click 이 토글을 맡고, 실제로 다른 행에 끌려 들어간
-  // 첫 순간에야 시작 행부터 적용한다(이중 적용·즉시 취소 꼬임 방지).
-  const [painting, setPainting] = useState(false);
-  const paintRef = useRef<{
-    on: boolean;
-    startItem: WordbookBasketItem;
-    startApplied: boolean;
-    painted: number;
-  } | null>(null);
-  /** 페인트로 2행 이상 지나간 직후 합성되는 click 1회 무시 — 행·버튼 공통 소비 */
-  const suppressClick = useRef(false);
+  // ── 영역 드래그(마키) 담기 — 리포 정본 DragSelect(문제 관리와 동일 UX) ──────
+  // 표 어디서든(+ 버튼·정렬 버튼 제외) 드래그하면 파란 사각형이 그려지고,
+  // 걸친 행이 전부 담긴다. 텍스트 선택은 DragSelect 가 드래그 중 차단한다.
+  // 마키는 **담기 전용**이다(비추가 드래그의 기본 선택 교체 의미를 그대로 쓰면
+  // 이전에 담아 둔 장바구니가 통째로 지워진다) — 빼기는 + 클릭·담은 단어 패널.
+  const itemById = useMemo(() => {
+    const map = new Map<string, WordbookBasketItem>();
+    if (mode === "senses") for (const r of rows) map.set(r.senseId, senseItem(r));
+    else for (const r of shiftRows) map.set(r.bSenseId, shiftItem(r));
+    return map;
+  }, [mode, rows, shiftRows]);
+
+  const marqueeValue = useMemo(() => new Set(basketSenseIds), [basketSenseIds]);
+  const handleMarquee = (next: Set<string>) => {
+    const additions: WordbookBasketItem[] = [];
+    for (const id of next) {
+      if (basketSenseIds.has(id)) continue;
+      const item = itemById.get(id);
+      if (item) additions.push(item);
+    }
+    if (additions.length) onApplyBasket(additions, true);
+  };
+
   /** shift+클릭 범위 앵커 — 마지막으로 담기 버튼을 클릭한 행 인덱스 */
   const anchorIndex = useRef<number | null>(null);
-
   useEffect(() => {
     // 질의·모드·축이 바뀌면 행 인덱스의 의미가 달라진다 — 범위 앵커 무효화
     anchorIndex.current = null;
   }, [mode, shiftAxis, queryEpoch]);
 
-  const startPaint = (e: ReactPointerEvent, item: WordbookBasketItem, inBasket: boolean) => {
-    // 터치는 시작하지 않는다 — 스크롤 제스처를 뺏으면 모바일이 죽는다.
-    if (e.pointerType === "touch") return;
-    // 새 제스처 시작 = 이전 릴리스가 남긴 무시 플래그는 소멸(창 밖 릴리스 대비).
-    suppressClick.current = false;
-    // on: 시작 행이 담겨 있었으면 빼기 모드
-    paintRef.current = { on: !inBasket, startItem: item, startApplied: false, painted: 0 };
-    setPainting(true);
-  };
-
-  const paintEnter = (item: WordbookBasketItem) => {
-    const s = paintRef.current;
-    if (!s) return;
-    if (!s.startApplied) {
-      s.startApplied = true;
-      s.painted += 1;
-      onApplyBasket([s.startItem], s.on);
-    }
-    s.painted += 1;
-    onApplyBasket([item], s.on);
-  };
-
-  useEffect(() => {
-    if (!painting) return;
-    const end = () => {
-      const s = paintRef.current;
-      paintRef.current = null;
-      setPainting(false);
-      // 2행 이상 쓸었으면 릴리스 직후의 click(도시에 열기·토글)을 1회 무시한다.
-      // 합성 click 은 같은 입력 시퀀스에서 동기 발화한다 — 다음 매크로태스크까지
-      // 남아 있으면 미소비(창 밖 릴리스)이므로 자동 소거해, 다음 진짜 클릭이
-      // 조용히 삼켜지는 잔존을 막는다(적대검수 2026-08-04 2차).
-      if (s && s.painted >= 2) {
-        suppressClick.current = true;
-        setTimeout(() => {
-          suppressClick.current = false;
-        }, 0);
-      }
-    };
-    window.addEventListener("pointerup", end);
-    return () => window.removeEventListener("pointerup", end);
-  }, [painting]);
-
   /** 담기 버튼 클릭 — shift+클릭이면 앵커~현재 범위 전부 담기, 아니면 단건 토글 */
   const basketClick = (e: ReactMouseEvent, index: number, item: WordbookBasketItem) => {
-    if (suppressClick.current) {
-      suppressClick.current = false;
-      return;
-    }
     const anchor = anchorIndex.current;
     if (e.shiftKey && anchor !== null) {
       const lo = Math.min(anchor, index);
@@ -226,14 +186,8 @@ export function SenseTable({
     anchorIndex.current = index;
   };
 
-  /** 행 클릭(도시에 열기) — 페인트 직후 1회는 무시 */
-  const rowClick = (lemmaId: string) => {
-    if (suppressClick.current) {
-      suppressClick.current = false;
-      return;
-    }
-    onSelect(lemmaId);
-  };
+  // 행 클릭(도시에 열기) — 마키 직후의 합성 click 은 DragSelect 가 삼킨다.
+  const rowClick = onSelect;
 
   /** 지금 목록에 보이는 단어 전부 담기 — shift 모드는 B축 뜻 전체 */
   const addAllVisible = () => {
@@ -243,7 +197,7 @@ export function SenseTable({
     );
   };
 
-  const addTitle = "단어장에 담습니다 · 누른 채 끌면 여러 개";
+  const addTitle = "단어장에 담습니다 · 표를 드래그하면 한꺼번에";
   const removeTitle = "단어장에서 뺍니다";
 
   return (
@@ -299,11 +253,13 @@ export function SenseTable({
         </div>
       </div>
 
-      {/* ── 스크롤 영역 — 페인트 중 텍스트 선택 금지 ── */}
-      <div
-        ref={scrollRef}
-        className={`min-h-0 flex-1 overflow-auto ${painting ? "select-none" : ""}`}
-      >
+      {/* ── 스크롤 영역 — DragSelect 가 마키(영역 드래그 담기)를 그린다 ── */}
+      <div ref={scrollRef} className="min-h-0 flex-1 overflow-auto">
+        <DragSelect
+          value={marqueeValue}
+          onChange={handleMarquee}
+          className="min-h-full"
+        >
         {mode === "senses" ? (
           <>
             <table className="w-full min-w-[920px] border-collapse text-[12.5px]">
@@ -335,8 +291,8 @@ export function SenseTable({
                   return (
                     <tr
                       key={r.senseId}
+                      data-drag-item-id={r.senseId}
                       onClick={() => rowClick(r.lemmaId)}
-                      onPointerEnter={() => paintEnter(senseItem(r))}
                       // 배경 우선순위: 도시에 선택 > 담김 > hover
                       className={`h-9 cursor-pointer border-b border-slate-100 ${
                         selected ? "bg-blue-50/70" : inBasket ? "bg-blue-50/40" : "hover:bg-slate-50"
@@ -346,7 +302,6 @@ export function SenseTable({
                         <BasketButton
                           active={inBasket}
                           title={inBasket ? removeTitle : addTitle}
-                          onPointerDown={(e) => startPaint(e, senseItem(r), inBasket)}
                           onClick={(e) => basketClick(e, i, senseItem(r))}
                         />
                       </td>
@@ -460,11 +415,10 @@ export function SenseTable({
             addTitle={addTitle}
             removeTitle={removeTitle}
             onRowClick={rowClick}
-            onPaintEnter={paintEnter}
-            onStartPaint={startPaint}
             onBasketClick={basketClick}
           />
         )}
+        </DragSelect>
       </div>
     </section>
   );
