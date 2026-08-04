@@ -153,10 +153,26 @@ export function SenseTable({
   const marqueeValue = useMemo(() => new Set(basketSenseIds), [basketSenseIds]);
 
   // 마키 성능 규율은 DragSelect deferCommit 이 담당한다 — 드래그 중 리액트
-  // 무접촉(인라인 틴트만), 릴리스에서 1회 커밋. 여기는 최종 집합에서 새 항목만
-  // 담는다(교체 의미로 쓰면 이전에 담아 둔 장바구니가 지워진다). 빼기는
-  // + 클릭·담은 단어 패널 소관.
-  const handleMarquee = (next: Set<string>) => {
+  // 무접촉(인라인 틴트만), 릴리스에서 1회 커밋.
+  // · 담기 드래그(빈 곳/미담김 행에서 시작): 최종 집합의 새 항목만 담는다
+  //   (교체 의미로 쓰면 다른 렌즈에서 담아 둔 장바구니까지 지워진다).
+  // · 해제 드래그(담긴 행에서 시작, meta.deferMode="remove"): next 는
+  //   "남길 집합" — 빠진 id 가 해제 대상이다. 화면 밖(다른 렌즈) 항목은
+  //   히트 자체가 안 되므로 next 에 그대로 남는다.
+  const handleMarquee = (
+    next: Set<string>,
+    meta?: { deferMode: "add" | "remove" },
+  ) => {
+    if (meta?.deferMode === "remove") {
+      const removals: WordbookBasketItem[] = [];
+      for (const id of basketSenseIds) {
+        if (next.has(id)) continue;
+        const item = itemById.get(id);
+        if (item) removals.push(item);
+      }
+      if (removals.length) onApplyBasket(removals, false);
+      return;
+    }
     const additions: WordbookBasketItem[] = [];
     for (const id of next) {
       if (basketSenseIds.has(id)) continue;
@@ -203,7 +219,7 @@ export function SenseTable({
   };
 
   const addTitle = "단어장에 담습니다 · 표를 드래그하면 한꺼번에";
-  const removeTitle = "단어장에서 뺍니다";
+  const removeTitle = "단어장에서 뺍니다 · 담긴 행에서 드래그하면 한꺼번에 해제";
 
   return (
     <section className="flex min-w-0 flex-1 flex-col">

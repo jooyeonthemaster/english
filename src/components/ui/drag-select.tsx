@@ -48,8 +48,12 @@ interface DragSelectProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> {
   /** 현재 선택된 id 집합 */
   value: Set<string>;
-  /** 새 선택 집합으로 갱신 */
-  onChange: (next: Set<string>) => void;
+  /**
+   * 새 선택 집합으로 갱신. meta 는 deferCommit 릴리스 커밋에서만 실린다 —
+   * "remove"(선택된 카드에서 시작한 해제 드래그)일 때 next 는 value−히트다.
+   * 기존 소비처는 인자 하나만 받아도 타입·동작 모두 무변화.
+   */
+  onChange: (next: Set<string>, meta?: { deferMode: "add" | "remove" }) => void;
   /** true 면 마키 선택 비활성화 */
   disabled?: boolean;
   /**
@@ -84,6 +88,8 @@ interface DragSelectProps
 
 /** deferCommit 드래그 중 히트 틴트 — blue-100/55(선택 확정색보다 살짝 진하게). */
 const DEFER_HIT_TINT = "rgb(219 234 254 / 0.55)";
+/** 해제 드래그(선택된 카드에서 시작) 틴트 — rose-100/60, "빠질 예정" 신호. */
+const DEFER_REMOVE_TINT = "rgb(254 226 226 / 0.6)";
 
 const EDGE_ZONE = 56; // px — 이 가장자리 안으로 들어오면 자동 스크롤
 const MAX_SCROLL_SPEED = 22; // px/frame
@@ -314,8 +320,13 @@ export function DragSelect({
       let nextEnteredIndex = 0;
       // deferCommit — 드래그 중 리액트 무접촉. 걸친 카드는 인라인 틴트로만
       // 표시하고(이전 인라인 배경을 보관·복원), 릴리스에서 한 번만 커밋한다.
+      // 시작점이 이미 선택된 카드면 **해제 드래그**다 — 걸친 선택 카드를 뺀다
+      // (선택된 걸 다시 드래그하면 해제 — 유저 요청 2026-08-05).
       let deferredNext: Set<string> | null = null;
       const paintedEls = new Map<string, { el: HTMLElement; prev: string }>();
+      const startCardId = card?.getAttribute("data-drag-item-id") ?? null;
+      const removeMode =
+        deferCommit && startCardId !== null && value.has(startCardId);
 
       // 자동 스크롤: 시작점을 "콘텐츠 기준"으로 고정해, 스크롤되면 선택 박스가 늘어난다.
       // 스크롤 대상은 "카드가 들어있는" 스크롤 컨테이너다. DragSelect 가 스크롤 영역을
@@ -409,9 +420,16 @@ export function DragSelect({
           .forEach((item) => next.add(item.id));
 
         if (deferCommit) {
-          // 리액트 무접촉 — 커밋은 릴리스에서. 이미 선택된 카드는 자기 선택
-          // 스타일이 있으므로 틴트를 덧칠하지 않는다.
-          deferredNext = next;
+          // 리액트 무접촉 — 커밋은 릴리스에서.
+          if (removeMode) {
+            // 해제 드래그: 최종 집합 = 기존 선택 − 걸친 카드. 틴트는 "빠질
+            // 예정"인 선택 카드에만(rose) — 미선택 카드는 대상이 아니다.
+            const remaining = new Set(value);
+            for (const id of hitEls.keys()) remaining.delete(id);
+            deferredNext = remaining;
+          } else {
+            deferredNext = next;
+          }
           for (const [id, entry] of paintedEls) {
             if (!hitEls.has(id)) {
               entry.el.style.backgroundColor = entry.prev;
@@ -419,9 +437,14 @@ export function DragSelect({
             }
           }
           for (const [id, el] of hitEls) {
-            if (!paintedEls.has(id) && !value.has(id)) {
+            if (paintedEls.has(id)) continue;
+            // 담기 모드: 미선택 카드만 파란 틴트(선택 카드는 자기 스타일 유지)
+            // 해제 모드: 선택 카드만 붉은 틴트
+            if (removeMode ? value.has(id) : !value.has(id)) {
               paintedEls.set(id, { el, prev: el.style.backgroundColor });
-              el.style.backgroundColor = DEFER_HIT_TINT;
+              el.style.backgroundColor = removeMode
+                ? DEFER_REMOVE_TINT
+                : DEFER_HIT_TINT;
             }
           }
         } else if (!setsEqual(next, lastSent)) {
@@ -513,7 +536,7 @@ export function DragSelect({
         // deferCommit — 드래그가 실제로 있었을 때만, 릴리스에서 1회 커밋.
         if (deferCommit && active && finalSet && !setsEqual(finalSet, lastSent)) {
           lastSent = finalSet;
-          onChange(finalSet);
+          onChange(finalSet, { deferMode: removeMode ? "remove" : "add" });
         }
       }
 
