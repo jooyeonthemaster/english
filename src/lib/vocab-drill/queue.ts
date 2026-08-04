@@ -14,7 +14,12 @@ import "server-only";
 
 import type { VocabDrillSense } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
-import { QUEUE_SIZE, DECK_TEST_SIZE, WEAK_SCORE } from "./constants";
+import {
+  QUEUE_SIZE,
+  DECK_TEST_SIZE,
+  WEAK_SCORE,
+  VOCAB_STOPWORDS,
+} from "./constants";
 import { getSensesByIds, resolveDeckSenses } from "./content";
 import { deckStageAllows } from "./deck-progress";
 import type {
@@ -85,22 +90,8 @@ async function attachBoxes(
   return senses.map((sense) => ({ sense, box: boxBySense.get(sense.id) ?? 0 }));
 }
 
-/**
- * 뜻 고르기 문항 가치가 없는 초고빈도 기능어 — 자동 편성에서만 제외한다
- * (덱 spec 이 명시하면 서빙된다 — 디렉터 의도 우선).
- */
-const DRILL_STOPWORDS = new Set([
-  "the", "a", "an", "and", "or", "but", "so", "that", "this", "these", "those",
-  "it", "its", "they", "them", "their", "he", "she", "his", "her", "him", "you",
-  "your", "we", "our", "who", "whom", "whose", "which", "what", "when", "where",
-  "how", "why", "not", "no", "yes", "do", "does", "did", "have", "has", "had",
-  "be", "been", "being", "was", "were", "will", "would", "can", "could", "may",
-  "might", "must", "shall", "should", "there", "here", "then", "than", "very",
-  "just", "only", "also", "too", "more", "most", "much", "many", "some", "any",
-  "all", "both", "each", "every", "other", "another", "such", "own", "same",
-  "one", "two", "first", "now", "even", "still", "again", "ever", "never",
-  "of one's", "one's",
-]);
+/** 기능어 불용 목록 — 정본은 constants.ts VOCAB_STOPWORDS(스튜디오와 공용). */
+const DRILL_STOPWORDS = new Set(VOCAB_STOPWORDS);
 
 /** 전역 드릴 풀 — ①만기 복습 ②취약 ③미학습 고빈도 3층 병합(각 층 인덱스 질의). */
 async function globalDrillSenses(studentId: string): Promise<VocabDrillSense[]> {

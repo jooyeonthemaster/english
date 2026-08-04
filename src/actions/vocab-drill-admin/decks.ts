@@ -78,6 +78,8 @@ function sanitizeDeckSpec(input: unknown): VocabDeckSpec {
     spec.minPer10k = raw.minPer10k;
   }
   if (raw.excludePhrase === true) spec.excludePhrase = true;
+  // 3상태 보존 — undefined 는 키 자체를 만들지 않는다(구형 덱 의미 유지).
+  if (typeof raw.allSenses === "boolean") spec.allSenses = raw.allSenses;
   const senseIds = pickStrings(raw.senseIds, undefined, LIMIT_MAX);
   if (senseIds.length) spec.senseIds = senseIds;
   const limitRaw = Number(raw.limit);

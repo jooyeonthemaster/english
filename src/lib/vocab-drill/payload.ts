@@ -189,6 +189,14 @@ export interface VocabDeckSpec {
   excludePhrase?: boolean;
   /** 명시 고정 목록 — 지정 시 다른 필터보다 우선 */
   senseIds?: string[];
+  /**
+   * 뜻 범위 3상태(적대검수 2026-08-04 — 스튜디오 조건형 덱의 풀이 화면과
+   * 달랐던 critical의 봉합):
+   *   undefined = 전 뜻 — 구형 덱·기본 덱의 기존 의미를 그대로 보존한다
+   *   false     = 대표 뜻(senseOrder=0)만 — 스튜디오 탐색 기본값과 일치
+   *   true      = 전 뜻 명시(스튜디오 「모든 뜻 보기」 상태의 저장)
+   */
+  allSenses?: boolean;
   limit?: number; // 기본 100 · 상한 500
 }
 

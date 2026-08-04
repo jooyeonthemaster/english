@@ -62,6 +62,29 @@ export const STAGE_ORDER = [
 ] as const;
 export type DeckStage = (typeof STAGE_ORDER)[number];
 
+/**
+ * 문항 가치가 없는 초고빈도 기능어 — **자동 편성·기본 렌즈에서만** 제외한다
+ * (덱 spec 이 명시하면 서빙된다 — 디렉터 의도 우선). 정본은 여기 하나다:
+ * 학생 드릴 큐(queue.ts)와 디렉터 단어장 스튜디오(wordbook-explore.ts)가 같이 쓴다.
+ */
+export const VOCAB_STOPWORDS: readonly string[] = [
+  // 전치사·불변화사 표기 — 품사 필터를 빠져나오는 태깅 변이(in 형용사, on 부사,
+  // about 부사 "약" 등)까지 막으려면 품사가 아니라 **철자**로 걸어야 한다
+  // (스튜디오 실측 2026-08-04: 핵심 빈출 상단이 to/of/in/for/as 로 도배됐다).
+  "to", "of", "in", "on", "at", "by", "for", "from", "with", "as", "about",
+  "up", "out", "off", "over", "if",
+  "the", "a", "an", "and", "or", "but", "so", "that", "this", "these", "those",
+  "it", "its", "they", "them", "their", "he", "she", "his", "her", "him", "you",
+  "your", "we", "our", "who", "whom", "whose", "which", "what", "when", "where",
+  "how", "why", "not", "no", "yes", "do", "does", "did", "have", "has", "had",
+  "be", "been", "being", "was", "were", "will", "would", "can", "could", "may",
+  "might", "must", "shall", "should", "there", "here", "then", "than", "very",
+  "just", "only", "also", "too", "more", "most", "much", "many", "some", "any",
+  "all", "both", "each", "every", "other", "another", "such", "own", "same",
+  "one", "two", "first", "now", "even", "still", "again", "ever", "never",
+  "of one's", "one's",
+];
+
 /** 서울(UTC+9) 기준 날짜 키 — 학습일·연속일 집계의 기준 시간대. */
 export function seoulDayKey(d: Date): string {
   return new Intl.DateTimeFormat("en-CA", {

@@ -68,6 +68,10 @@ function specWhere(spec: VocabDeckSpec) {
     where.id = { in: spec.senseIds.slice(0, DECK_MAX_LIMIT) };
     return where;
   }
+  // 대표 뜻 한정은 **명시적 false 일 때만** — undefined(구형·기본 덱)는 전 뜻
+  // 그대로다(기존 덱 풀 무접촉). per10k 가 표제어 역정규화 값이라 전 뜻 풀에선
+  // 다의어의 뜻들이 상위를 플러딩한다(적대검수 실측: 100단어 덱에 표제어 20개).
+  if (spec.allSenses === false) where.senseOrder = 0;
   if (spec.tiers?.length) where.tier = { in: spec.tiers };
   if (spec.grades?.length) where.gradeTop = { in: spec.grades };
   if (spec.difficulties?.length) where.difficulty = { in: spec.difficulties };
