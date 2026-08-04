@@ -151,14 +151,61 @@ export function SenseTable({
   }, [mode, rows, shiftRows]);
 
   const marqueeValue = useMemo(() => new Set(basketSenseIds), [basketSenseIds]);
+
+  // ── 마키 성능 규율 ──────────────────────────────────────────────────────────
+  // 드래그 중에는 React 상태를 절대 건드리지 않는다 — 히트마다 장바구니를
+  // 갱신하면 워크스테이션 전체(표 수백 행·도시에·레일)가 매 이동마다 리렌더돼
+  // 마키가 뻑뻑해진다(유저 피드백 2026-08-05). 하이라이트는 행 DOM 에 인라인
+  // 배경으로 직접 칠하고(리렌더 0), 마우스를 놓는 순간 한 번만 커밋한다.
+  // 부수 효과로 사각형을 줄이면 빠진 행은 담기지 않는다 — 선택 교정이 가능해졌다.
+  const pendingRef = useRef<Set<string> | null>(null);
+  const sessionCleanup = useRef<(() => void) | null>(null);
+  useEffect(() => () => sessionCleanup.current?.(), []);
+
+  const paintRow = (id: string, on: boolean) => {
+    const el = scrollRef.current?.querySelector<HTMLElement>(
+      `[data-drag-item-id="${CSS.escape(id)}"]`,
+    );
+    // blue-100/55 — 커밋 후 React 가 칠할 bg-blue-50/40 보다 살짝 진한 실시간 피드백
+    if (el) el.style.backgroundColor = on ? "rgb(219 234 254 / 0.55)" : "";
+  };
+
   const handleMarquee = (next: Set<string>) => {
-    const additions: WordbookBasketItem[] = [];
-    for (const id of next) {
-      if (basketSenseIds.has(id)) continue;
-      const item = itemById.get(id);
-      if (item) additions.push(item);
+    const prev = pendingRef.current;
+    if (!prev) {
+      // 세션 시작 — capture 로 DragSelect(bubble)보다 먼저 릴리스를 받고,
+      // 마지막 onChange 이후에 커밋되도록 다음 틱으로 미룬다.
+      const onUp = () => {
+        sessionCleanup.current?.();
+        setTimeout(() => {
+          const pending = pendingRef.current;
+          pendingRef.current = null;
+          if (!pending) return;
+          const additions: WordbookBasketItem[] = [];
+          for (const id of pending) {
+            paintRow(id, false); // 인라인 배경 원복 — React 는 인라인을 안 지운다
+            if (basketSenseIds.has(id)) continue;
+            const item = itemById.get(id);
+            if (item) additions.push(item);
+          }
+          if (additions.length) onApplyBasket(additions, true);
+        }, 0);
+      };
+      window.addEventListener("mouseup", onUp, true);
+      sessionCleanup.current = () => {
+        window.removeEventListener("mouseup", onUp, true);
+        sessionCleanup.current = null;
+      };
     }
-    if (additions.length) onApplyBasket(additions, true);
+    for (const id of next) {
+      if (!prev?.has(id) && !basketSenseIds.has(id)) paintRow(id, true);
+    }
+    if (prev) {
+      for (const id of prev) {
+        if (!next.has(id)) paintRow(id, false); // 사각형을 줄여 빠져나간 행
+      }
+    }
+    pendingRef.current = next;
   };
 
   /** shift+클릭 범위 앵커 — 마지막으로 담기 버튼을 클릭한 행 인덱스 */
