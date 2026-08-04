@@ -16,6 +16,10 @@ import {
   listWordbookSenses,
   listWordbookShift,
 } from "@/actions/vocab-drill-admin/wordbook";
+import {
+  PanelHandle,
+  useResizablePanels,
+} from "@/components/layout/resizable-panels";
 import { FilterRail } from "./filter-rail";
 import { SenseTable } from "./sense-table";
 import { LemmaDossier } from "./lemma-dossier";
@@ -86,6 +90,27 @@ export function WordbookClient({
     [lens],
   );
   const shiftAxis = lensDef.shiftAxis ?? null;
+
+  // ── 좌 레일·우 분석 패널 — 드래그 폭 조절 + 클릭 접기(시험지 빌더 핸들 공용) ──
+  const panelSpecs = useMemo(
+    () => [
+      { key: "rail", min: 184, max: 340, defaultWidth: 216, sign: 1 as const },
+      { key: "dossier", min: 340, max: 640, defaultWidth: 440, sign: -1 as const },
+    ],
+    [],
+  );
+  const {
+    containerRef: panelsRef,
+    widths: panelWidths,
+    collapsed: panelCollapsed,
+    startResize,
+    toggleCollapsed,
+    expand,
+  } = useResizablePanels({
+    panels: panelSpecs,
+    minCenter: 480,
+    storageKey: "wordbook-panel-widths",
+  });
 
   // ── 경합·스테일 가드(적대검수 2026-08-04) ──────────────────────────────────
   // reqSeq: senses 질의 / shiftSeq: 의미 이동 / dossierSeq: 도시에 — 각각 독립
@@ -431,7 +456,7 @@ export function WordbookClient({
       {view === "manage" ? (
         <DeploymentsPanel onSendDeck={handleSendDeck} />
       ) : (
-        <div className="flex min-h-0 min-w-0 flex-1">
+        <div ref={panelsRef} className="flex min-h-0 min-w-0 flex-1">
           <FilterRail
             lens={lens}
             onLens={handleLens}
@@ -440,6 +465,17 @@ export function WordbookClient({
             disabled={!!shiftAxis}
             mobileOpen={railMobileOpen}
             onMobileClose={() => setRailMobileOpen(false)}
+            desktopWidth={panelWidths.rail}
+          />
+          <PanelHandle
+            label="추천·조건"
+            panelKey="rail"
+            side="left"
+            collapsed={!!panelCollapsed.rail}
+            startResize={startResize}
+            toggleCollapsed={toggleCollapsed}
+            expand={expand}
+            className="hidden md:flex"
           />
           <SenseTable
             mode={shiftAxis ? "shift" : "senses"}
@@ -462,6 +498,16 @@ export function WordbookClient({
             hasMore={!shiftAxis && rows.length < total}
             queryEpoch={queryEpoch}
           />
+          <PanelHandle
+            label="단어 분석"
+            panelKey="dossier"
+            side="right"
+            collapsed={!!panelCollapsed.dossier}
+            startResize={startResize}
+            toggleCollapsed={toggleCollapsed}
+            expand={expand}
+            className="hidden lg:flex"
+          />
           <LemmaDossier
             dossier={dossier}
             loading={dossierLoading}
@@ -471,6 +517,7 @@ export function WordbookClient({
             onNavigateLemma={openDossier}
             mobileOpen={dossierMobileOpen}
             onClose={() => setDossierMobileOpen(false)}
+            desktopWidth={panelWidths.dossier}
           />
         </div>
       )}

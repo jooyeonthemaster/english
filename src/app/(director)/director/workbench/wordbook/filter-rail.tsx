@@ -29,6 +29,8 @@ interface FilterRailProps {
   disabled: boolean;
   mobileOpen: boolean;
   onMobileClose: () => void;
+  /** 데스크톱 열 폭(px) — 셸의 리사이저블 패널이 관장. 0 = 접힘(열 미렌더) */
+  desktopWidth?: number;
 }
 
 /** 추세 필터 선택지 — 적재기 trendLabel 8종 전체(wordbook-ui TREND_CHIP 과 동일 어휘). */
@@ -386,6 +388,7 @@ export function FilterRail({
   disabled,
   mobileOpen,
   onMobileClose,
+  desktopWidth,
 }: FilterRailProps) {
   const body = (
     <RailBody
@@ -399,10 +402,16 @@ export function FilterRail({
 
   return (
     <>
-      {/* 데스크톱 — 좌측 고정 열, 독립 스크롤 */}
-      <aside className="hidden w-[216px] shrink-0 overflow-y-auto border-r border-slate-200 md:block">
-        {body}
-      </aside>
+      {/* 데스크톱 — 좌측 열, 독립 스크롤. 폭은 셸의 핸들이 조절(0=접힘).
+          pl-2 — 창 끝에 텍스트가 딱 붙지 않게 숨 여백(유저 피드백 2026-08-05). */}
+      {desktopWidth !== 0 ? (
+        <aside
+          className="hidden shrink-0 overflow-y-auto border-r border-slate-200 pl-2 md:block"
+          style={{ width: desktopWidth ?? 216 }}
+        >
+          {body}
+        </aside>
+      ) : null}
 
       {/* 모바일 — 백드롭 + 좌측 패널 오버레이 */}
       {mobileOpen ? (

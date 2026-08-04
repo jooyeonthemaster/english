@@ -33,6 +33,8 @@ interface LemmaDossierProps {
   onNavigateLemma: (lemmaId: string) => void;
   mobileOpen: boolean;
   onClose: () => void;
+  /** 데스크톱 열 폭(px) — 셸의 리사이저블 패널이 관장. 0 = 접힘(열 미렌더) */
+  desktopWidth?: number;
 }
 
 // byBoard JSONB 실제 키 → 화면 라벨·색(색 규약은 wordbook-ui.tsx 헤더가 정본).
@@ -50,7 +52,7 @@ const GRADE_PARTS = [
 
 export function LemmaDossier({
   dossier, loading, overview, basketSenseIds, onToggleBasket, onNavigateLemma,
-  mobileOpen, onClose,
+  mobileOpen, onClose, desktopWidth,
 }: LemmaDossierProps) {
   const content = loading ? (
     <SkeletonPane />
@@ -67,13 +69,18 @@ export function LemmaDossier({
 
   return (
     <>
-      {/* 데스크톱 — 3열 워크스테이션의 우측 고정 열.
+      {/* 데스크톱 — 3열 워크스테이션의 우측 열. 폭은 셸의 핸들이 조절(0=접힘).
           key 로 표제어 전환 시 스크롤을 맨 위로 되돌린다(긴 도시에 잔류 방지) */}
-      <aside className="hidden w-[400px] shrink-0 flex-col border-l border-slate-200 lg:flex xl:w-[440px]">
-        <div key={dossier ? dossier.lemma.id : "overview"} className="min-h-0 flex-1 overflow-y-auto">
-          {content}
-        </div>
-      </aside>
+      {desktopWidth !== 0 ? (
+        <aside
+          className="hidden shrink-0 flex-col border-l border-slate-200 lg:flex"
+          style={{ width: desktopWidth ?? 440 }}
+        >
+          <div key={dossier ? dossier.lemma.id : "overview"} className="min-h-0 flex-1 overflow-y-auto">
+            {content}
+          </div>
+        </aside>
+      ) : null}
 
       {/* lg 미만 — 슬라이드오버(개관은 모바일에선 띄우지 않는다) */}
       {mobileOpen && (dossier || loading) ? (
