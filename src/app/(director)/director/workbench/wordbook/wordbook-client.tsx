@@ -20,6 +20,7 @@ import { FilterRail } from "./filter-rail";
 import { SenseTable } from "./sense-table";
 import { LemmaDossier } from "./lemma-dossier";
 import { BasketDock } from "./basket-dock";
+import { DeploymentsPanel } from "./deployments-panel";
 import { fmt } from "./wordbook-ui";
 import {
   BASKET_MAX,
@@ -66,6 +67,14 @@ export function WordbookClient({
   const [basketOpen, setBasketOpen] = useState(false);
   const [railMobileOpen, setRailMobileOpen] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+  /** 상단 뷰 — 단어 찾기(탐색 워크스테이션) / 보낸 단어장(단어장·배포 관리) */
+  const [view, setView] = useState<"explore" | "manage">("explore");
+  /** 「보낸 단어장」에서 [학생에게 보내기] → 바스켓을 전송 단계로 직행시키는 프리셋 */
+  const [presetDeck, setPresetDeck] = useState<{
+    id: string;
+    title: string;
+    senseCount: number;
+  } | null>(null);
 
   const lensDef = useMemo(
     () => WORDBOOK_LENSES.find((l) => l.key === lens) ?? DEFAULT_LENS,
@@ -260,6 +269,42 @@ export function WordbookClient({
     });
   }, []);
 
+  /** 드래그 쓸어담기·범위 담기 — 멱등 적용(on=담기 / off=빼기). 토글이 아니다. */
+  const applyBasket = useCallback(
+    (items: WordbookBasketItem[], on: boolean) => {
+      setBasket((prev) => {
+        if (!on) {
+          const drop = new Set(items.map((i) => i.senseId));
+          return prev.filter((b) => !drop.has(b.senseId));
+        }
+        const have = new Set(prev.map((b) => b.senseId));
+        const add = items.filter((i) => !have.has(i.senseId));
+        if (!add.length) return prev;
+        const room = BASKET_MAX - prev.length;
+        if (room <= 0) {
+          setNotice(`한 단어장에 담을 수 있는 최대치는 ${BASKET_MAX}개입니다.`);
+          return prev;
+        }
+        if (add.length > room) {
+          setNotice(
+            `${BASKET_MAX}개까지만 담을 수 있어 ${room}개만 담았습니다.`,
+          );
+        }
+        return [...prev, ...add.slice(0, room)];
+      });
+    },
+    [],
+  );
+
+  /** 「보낸 단어장」 → 저장된 단어장을 곧장 전송 단계로 */
+  const handleSendDeck = useCallback(
+    (deck: { id: string; title: string; senseCount: number }) => {
+      setPresetDeck(deck);
+      setBasketOpen(true);
+    },
+    [],
+  );
+
   // 알림 자동 소거
   useEffect(() => {
     if (!notice) return;
@@ -283,13 +328,32 @@ export function WordbookClient({
           <h1 className="shrink-0 text-[14px] font-bold tracking-tight">
             단어장 생성
           </h1>
-          <span className="hidden shrink-0 text-[11px] text-slate-400 sm:inline">
-            기출 단어 연구소
-          </span>
+          {/* 뷰 전환 — 단어 찾기 / 만든 단어장·보낸 기록 */}
+          <div className="ml-1 flex shrink-0 overflow-hidden rounded-md border border-slate-200">
+            {(
+              [
+                ["explore", "단어 찾기"],
+                ["manage", "보낸 단어장"],
+              ] as const
+            ).map(([key, label]) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setView(key)}
+                className={`h-7 px-2.5 text-[11.5px] font-semibold transition-colors ${
+                  view === key
+                    ? "bg-slate-900 text-white"
+                    : "bg-white text-slate-500 hover:bg-slate-50"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
         </div>
-        <div className="hidden min-w-0 items-center gap-2 text-[11px] tabular-nums text-slate-400 lg:flex">
+        <div className="hidden min-w-0 items-center gap-2 text-[11px] tabular-nums text-slate-400 xl:flex">
           <span className="h-3 w-px bg-slate-200" />
-          <span title="활성 번들 표제어 수">표제어 {fmt(overview.lemmaCount)}</span>
+          <span title="기출 지문에서 추린 단어 수">단어 {fmt(overview.lemmaCount)}</span>
           <span>·</span>
           <span>뜻 {fmt(overview.senseCount)}</span>
           <span>·</span>
@@ -304,24 +368,28 @@ export function WordbookClient({
         {/* min-w-0 + 검색만 수축 — 390px 폭에서 우측 그룹이 타이틀을 덮거나
             담은 단어 버튼이 화면 밖으로 잘리지 않게 한다 */}
         <div className="ml-auto flex min-w-0 flex-1 items-center justify-end gap-1.5 sm:flex-none">
-          <label className="relative min-w-0 flex-1 sm:flex-none">
-            <Search className="pointer-events-none absolute left-2 top-1/2 size-3.5 -translate-y-1/2 text-slate-400" />
-            <input
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              placeholder="표제어 검색 (영문 접두)"
-              disabled={!!shiftAxis}
-              className="h-8 w-full min-w-0 rounded-md border border-slate-200 bg-slate-50 pl-7 pr-2 text-[12px] outline-none transition-colors focus:border-blue-400 focus:bg-white disabled:opacity-40 sm:w-56 md:w-64"
-            />
-          </label>
-          <button
-            type="button"
-            onClick={() => setRailMobileOpen(true)}
-            className="flex h-8 shrink-0 items-center gap-1 rounded-md border border-slate-200 px-2 text-[12px] font-medium text-slate-600 hover:bg-slate-50 md:hidden"
-          >
-            <SlidersHorizontal className="size-3.5" />
-            필터
-          </button>
+          {view === "explore" ? (
+            <label className="relative min-w-0 flex-1 sm:flex-none">
+              <Search className="pointer-events-none absolute left-2 top-1/2 size-3.5 -translate-y-1/2 text-slate-400" />
+              <input
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                placeholder="단어 검색 (영어로 입력)"
+                disabled={!!shiftAxis}
+                className="h-8 w-full min-w-0 rounded-md border border-slate-200 bg-slate-50 pl-7 pr-2 text-[12px] outline-none transition-colors focus:border-blue-400 focus:bg-white disabled:opacity-40 sm:w-56 md:w-64"
+              />
+            </label>
+          ) : null}
+          {view === "explore" ? (
+            <button
+              type="button"
+              onClick={() => setRailMobileOpen(true)}
+              className="flex h-8 shrink-0 items-center gap-1 rounded-md border border-slate-200 px-2 text-[12px] font-medium text-slate-600 hover:bg-slate-50 md:hidden"
+            >
+              <SlidersHorizontal className="size-3.5" />
+              조건
+            </button>
+          ) : null}
           <button
             type="button"
             onClick={() => setBasketOpen(true)}
@@ -338,45 +406,50 @@ export function WordbookClient({
         </div>
       </header>
 
-      {/* ── 본문 3열 ── */}
-      <div className="flex min-h-0 min-w-0 flex-1">
-        <FilterRail
-          lens={lens}
-          onLens={handleLens}
-          filter={filter}
-          onFilter={handleFilter}
-          disabled={!!shiftAxis}
-          mobileOpen={railMobileOpen}
-          onMobileClose={() => setRailMobileOpen(false)}
-        />
-        <SenseTable
-          mode={shiftAxis ? "shift" : "senses"}
-          rows={rows}
-          shiftRows={shiftRows}
-          shiftAxis={shiftAxis ?? "era"}
-          total={total}
-          sort={sort}
-          onSort={handleSort}
-          loading={shiftAxis ? shiftLoading : loading}
-          selectedLemmaId={selectedLemmaId}
-          onSelect={openDossier}
-          basketSenseIds={basketSenseIds}
-          onToggleBasket={toggleBasket}
-          onLoadMore={handleLoadMore}
-          hasMore={!shiftAxis && rows.length < total}
-          queryEpoch={queryEpoch}
-        />
-        <LemmaDossier
-          dossier={dossier}
-          loading={dossierLoading}
-          overview={overview}
-          basketSenseIds={basketSenseIds}
-          onToggleBasket={toggleBasket}
-          onNavigateLemma={openDossier}
-          mobileOpen={dossierMobileOpen}
-          onClose={() => setDossierMobileOpen(false)}
-        />
-      </div>
+      {/* ── 본문 — 단어 찾기(3열 워크스테이션) / 보낸 단어장(관리 패널) ── */}
+      {view === "manage" ? (
+        <DeploymentsPanel onSendDeck={handleSendDeck} />
+      ) : (
+        <div className="flex min-h-0 min-w-0 flex-1">
+          <FilterRail
+            lens={lens}
+            onLens={handleLens}
+            filter={filter}
+            onFilter={handleFilter}
+            disabled={!!shiftAxis}
+            mobileOpen={railMobileOpen}
+            onMobileClose={() => setRailMobileOpen(false)}
+          />
+          <SenseTable
+            mode={shiftAxis ? "shift" : "senses"}
+            rows={rows}
+            shiftRows={shiftRows}
+            shiftAxis={shiftAxis ?? "era"}
+            total={total}
+            sort={sort}
+            onSort={handleSort}
+            loading={shiftAxis ? shiftLoading : loading}
+            selectedLemmaId={selectedLemmaId}
+            onSelect={openDossier}
+            basketSenseIds={basketSenseIds}
+            onToggleBasket={toggleBasket}
+            onApplyBasket={applyBasket}
+            onLoadMore={handleLoadMore}
+            hasMore={!shiftAxis && rows.length < total}
+            queryEpoch={queryEpoch}
+          />
+          <LemmaDossier
+            dossier={dossier}
+            loading={dossierLoading}
+            overview={overview}
+            basketSenseIds={basketSenseIds}
+            onToggleBasket={toggleBasket}
+            onNavigateLemma={openDossier}
+            mobileOpen={dossierMobileOpen}
+            onClose={() => setDossierMobileOpen(false)}
+          />
+        </div>
+      )}
 
       <BasketDock
         items={basket}
@@ -388,6 +461,8 @@ export function WordbookClient({
         onOpenChange={setBasketOpen}
         currentFilter={currentFilter}
         currentTotal={total}
+        presetDeck={presetDeck}
+        onPresetConsumed={() => setPresetDeck(null)}
       />
 
       {notice ? (

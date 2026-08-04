@@ -93,6 +93,12 @@ export interface VocabAssignmentPayload {
   senseIds?: string[];
   tiers?: string[];
   difficulties?: number[];
+  /**
+   * 출제 유형(채점 유형만 — FLASH 불가). 미지정 = 자동 믹스(box 난이도 창).
+   * **선호이지 보장이 아니다** — 조립 불가 단어(숙어의 SPELL 등)는 큐가 다른
+   * 유형으로 폴백한다(완료 가능성 우선, queue-items.buildWithFallback).
+   */
+  itemTypes?: string[];
   count: number;
 }
 

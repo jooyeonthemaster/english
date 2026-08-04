@@ -28,6 +28,7 @@ import { prisma } from "@/lib/prisma";
 import { assignStudentsToExam } from "@/actions/exams/assignments";
 import { countGrammarDrillPool } from "@/actions/grammar-drill-admin";
 import { assignmentPoolSize } from "@/lib/vocab-drill/engine";
+import { GRADED_ITEM_TYPES as VOCAB_GRADED_ITEM_TYPES } from "@/lib/vocab-drill/constants";
 import type {
   ExamAssignmentPayload,
   GrammarAssignmentPayload,
@@ -295,7 +296,23 @@ export async function createStudyAssignment(
                 .filter((d) => d >= 1 && d <= 5),
             }
           : {}),
+        // 출제 유형 — 채점 유형 화이트리스트(FLASH 는 자기평가라 차단).
+        // 큐(buildVocabQueue assignment)가 이 목록을 선호 순환으로 소비한다.
+        ...(spec.itemTypes?.length
+          ? {
+              itemTypes: [
+                ...new Set(
+                  spec.itemTypes.filter((t) =>
+                    (VOCAB_GRADED_ITEM_TYPES as string[]).includes(t),
+                  ),
+                ),
+              ],
+            }
+          : {}),
       };
+      if (clean.itemTypes && clean.itemTypes.length === 0) {
+        delete clean.itemTypes;
+      }
       // 브리지 부피 가드 — senseIds 는 학생 1명당 1행에 통째로 복제 저장된다.
       // 상한을 넘으면 트랜잭션이 타임아웃으로 무너지기 전에 명시적으로 거부한다.
       const senseIdCount = clean.senseIds?.length ?? 0;

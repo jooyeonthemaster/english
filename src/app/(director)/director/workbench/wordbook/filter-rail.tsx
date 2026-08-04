@@ -47,7 +47,7 @@ const GRADE_OPTIONS = ["고1", "고2", "고3"] as const;
 
 /** 시행처는 단일 선택(라디오) — null 이 「없음」(board 필터 해제)을 뜻한다. */
 const BOARD_OPTIONS: { label: string; value: WordbookBoard | null }[] = [
-  { label: "없음", value: null },
+  { label: "전체", value: null },
   { label: "수능", value: "수능" },
   { label: "모평", value: "모평" },
   { label: "학평", value: "학평" },
@@ -151,7 +151,7 @@ function RailBody({
     <div className="pb-6">
       {/* ── ① 렌즈 ── */}
       <div className="px-3 pt-3">
-        <SectionTitle>렌즈</SectionTitle>
+        <SectionTitle>추천 보기</SectionTitle>
       </div>
       <nav>
         {WORDBOOK_LENSES.map((def) => {
@@ -188,7 +188,7 @@ function RailBody({
       {/* ── ② 필터 ── */}
       <div className="mt-3 border-t border-slate-200 px-3 pt-3">
         <SectionTitle>
-          필터
+          조건
           {activeCount > 0 ? (
             <span className="ml-1.5 inline-flex size-4 items-center justify-center rounded-full bg-blue-600 align-text-bottom text-[9.5px] font-bold tabular-nums text-white">
               {activeCount}
@@ -198,7 +198,7 @@ function RailBody({
 
         {disabled ? (
           <p className="mb-2 break-keep text-[10.5px] leading-snug text-slate-400">
-            의미 이동 렌즈는 발굴 결과가 고정입니다.
+            이 보기는 찾아낸 결과라 조건을 바꿀 수 없습니다.
           </p>
         ) : null}
 
@@ -226,7 +226,7 @@ function RailBody({
 
           {/* 티어 */}
           <div>
-            <SectionTitle>티어</SectionTitle>
+            <SectionTitle>수준</SectionTitle>
             <div className="flex flex-wrap gap-1">
               {Object.entries(VOCAB_TIER_LABELS).map(([tier, label]) => (
                 <Chip
@@ -271,7 +271,7 @@ function RailBody({
 
           {/* 주 출현 학년 */}
           <div>
-            <SectionTitle>주 출현 학년</SectionTitle>
+            <SectionTitle>주로 나온 학년</SectionTitle>
             <div className="flex flex-wrap gap-1">
               {GRADE_OPTIONS.map((g) => (
                 <Chip
@@ -305,7 +305,7 @@ function RailBody({
 
           {/* 시행처 — 단일 선택(없음 = 해제) */}
           <div>
-            <SectionTitle>시행처</SectionTitle>
+            <SectionTitle>시험 종류</SectionTitle>
             <div className="flex flex-wrap gap-1" role="radiogroup">
               {BOARD_OPTIONS.map((o) => (
                 <Chip
@@ -328,7 +328,7 @@ function RailBody({
                   excludeStopwords: filter.excludeStopwords ? undefined : true,
                 })
               }
-              label="기능어 제외"
+              label="the·of 같은 기본 단어 빼기"
             />
             <ToggleRow
               checked={!!filter.excludePhrase}
@@ -337,14 +337,14 @@ function RailBody({
                   excludePhrase: filter.excludePhrase ? undefined : true,
                 })
               }
-              label="구·숙어 제외"
+              label="숙어·구동사 빼기"
             />
             <ToggleRow
               checked={!!filter.allSenses}
               onToggle={() =>
                 onFilter({ allSenses: filter.allSenses ? undefined : true })
               }
-              label="모든 뜻 보기"
+              label="한 단어의 모든 뜻 보기"
             />
           </div>
 
@@ -368,7 +368,7 @@ function RailBody({
             className="inline-flex items-center gap-1 text-[11.5px] font-medium text-slate-400 transition-colors hover:text-slate-600"
           >
             <RotateCcw className="size-3" />
-            필터 초기화
+            조건 모두 지우기
           </button>
         </div>
       </div>
@@ -409,14 +409,14 @@ export function FilterRail({
         <div className="fixed inset-0 z-40 md:hidden">
           <button
             type="button"
-            aria-label="필터 닫기"
+            aria-label="조건 닫기"
             onClick={onMobileClose}
             className="absolute inset-0 bg-slate-900/25"
           />
           <div className="relative h-full w-[264px] overflow-y-auto bg-white shadow-xl">
             <div className="sticky top-0 z-10 flex h-10 items-center justify-between border-b border-slate-200 bg-white px-3">
               <span className="text-[12.5px] font-bold text-slate-700">
-                렌즈 · 필터
+                추천 보기 · 조건
               </span>
               <button
                 type="button"

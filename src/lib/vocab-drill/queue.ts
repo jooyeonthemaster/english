@@ -19,6 +19,7 @@ import {
   DECK_TEST_SIZE,
   WEAK_SCORE,
   VOCAB_STOPWORDS,
+  GRADED_ITEM_TYPES,
 } from "./constants";
 import { getSensesByIds, resolveDeckSenses } from "./content";
 import { deckStageAllows } from "./deck-progress";
@@ -356,8 +357,17 @@ export async function buildVocabQueue(
         senseIds?: string[];
         tiers?: string[];
         difficulties?: number[];
+        itemTypes?: string[];
         count?: number;
       };
+      // 선생님이 고른 출제 유형 — 채점 유형만 통과(FLASH 는 자기평가라 시험이
+      // 아니다). 배포 시 mutations 가 이미 거르지만, 브리지 spec 은 JSONB 라
+      // 서빙 직전에 한 번 더 거른다(심층 방어).
+      const allowedTypes = Array.isArray(spec.itemTypes)
+        ? (spec.itemTypes.filter((t) =>
+            (GRADED_ITEM_TYPES as string[]).includes(t),
+          ) as VocabItemType[])
+        : [];
 
       let poolSenses: VocabDrillSense[] = [];
       if (spec.senseIds?.length) {
@@ -387,9 +397,15 @@ export async function buildVocabQueue(
         Math.min(Number(spec?.count ?? 20), poolSenses.length),
       );
 
+      // 채점 유형만 "푼 것"으로 센다 — FLASH 시도가 섞이면 그 단어가 큐에서
+      // 빠지는데 완료 판정(advanceAssignment)은 세지 않아 서로 어긋난다.
       const attempted = await prisma.vocabDrillAttempt.groupBy({
         by: ["senseId"],
-        where: { studentId, assignmentId: assignment.id },
+        where: {
+          studentId,
+          assignmentId: assignment.id,
+          itemType: { in: GRADED_ITEM_TYPES },
+        },
       });
       const doneIds = new Set(attempted.map((r) => r.senseId));
       const remaining = Math.max(0, target - doneIds.size);
@@ -403,7 +419,17 @@ export async function buildVocabQueue(
       const support = await collectSupport(nextSenses);
       const items: VocabClientItem[] = [];
       pool.forEach((p, i) => {
-        const item = buildWithFallback(p.sense, typeForBox(p.box, i), i, support);
+        // 유형이 지정됐으면 순환 배정으로 고르게 섞고, 아니면 box 난이도 창.
+        const preferred = allowedTypes.length
+          ? allowedTypes[i % allowedTypes.length]
+          : typeForBox(p.box, i);
+        const item = buildWithFallback(
+          p.sense,
+          preferred,
+          i,
+          support,
+          allowedTypes.length ? allowedTypes : undefined,
+        );
         if (item) items.push(item);
       });
       if (!items.length) return EMPTY(mode, assignment.title);

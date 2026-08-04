@@ -197,6 +197,11 @@ export interface VocabDeckSpec {
    *   true      = 전 뜻 명시(스튜디오 「모든 뜻 보기」 상태의 저장)
    */
   allSenses?: boolean;
+  /**
+   * 기능어(the·of 류, constants.VOCAB_STOPWORDS) 배제 — 기본 덱 미리보기 실측
+   * (2026-08-04): 「고1 핵심 200」 상위가 to·a·have 뜻들로 도배됐다.
+   */
+  excludeStopwords?: boolean;
   limit?: number; // 기본 100 · 상한 500
 }
 

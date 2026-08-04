@@ -12,6 +12,7 @@ import "server-only";
 
 import { prisma } from "@/lib/prisma";
 import type { VocabDrillSense } from "@prisma/client";
+import { VOCAB_STOPWORDS } from "./constants";
 import type { VocabDeckSpec } from "./payload";
 
 // ── 활성 번들 ────────────────────────────────────────────────────────────────
@@ -72,6 +73,7 @@ function specWhere(spec: VocabDeckSpec) {
   // 그대로다(기존 덱 풀 무접촉). per10k 가 표제어 역정규화 값이라 전 뜻 풀에선
   // 다의어의 뜻들이 상위를 플러딩한다(적대검수 실측: 100단어 덱에 표제어 20개).
   if (spec.allSenses === false) where.senseOrder = 0;
+  if (spec.excludeStopwords) where.lemma = { notIn: [...VOCAB_STOPWORDS] };
   if (spec.tiers?.length) where.tier = { in: spec.tiers };
   if (spec.grades?.length) where.gradeTop = { in: spec.grades };
   if (spec.difficulties?.length) where.difficulty = { in: spec.difficulties };

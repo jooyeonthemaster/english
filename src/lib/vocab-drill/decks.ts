@@ -19,40 +19,75 @@ interface DefaultDeck {
   orderIndex: number;
 }
 
+// ★ 스펙 규율(미리보기 실측 2026-08-04: 구 스펙은 「고1 핵심 200」 상위가
+//   to 뜻 6개·have 뜻 11개로 도배됐다):
+//   · 핵심 덱 = 대표 뜻만(allSenses:false) + 기능어 배제 — 표제어 다양성 우선
+//   · 고난도 덱 = 전 뜻(allSenses:true) — 흔한 단어의 고난도 "뜻"이 변별 재료다
 const DEFAULT_DECKS: DefaultDeck[] = [
   {
     slug: "go1-core-200",
     title: "고1 핵심 200",
     subtitle: "고1 기출에서 가장 자주 나오는 핵심 어휘",
-    spec: { grades: ["고1"], tiers: ["core", "basic"], excludePhrase: true, limit: 200 },
+    spec: {
+      grades: ["고1"],
+      tiers: ["core", "basic"],
+      excludePhrase: true,
+      allSenses: false,
+      excludeStopwords: true,
+      limit: 200,
+    },
     orderIndex: 10,
   },
   {
     slug: "go2-core-200",
     title: "고2 핵심 200",
     subtitle: "고2 기출 최다 빈출 어휘",
-    spec: { grades: ["고2"], tiers: ["core", "academic"], excludePhrase: true, limit: 200 },
+    spec: {
+      grades: ["고2"],
+      tiers: ["core", "academic"],
+      excludePhrase: true,
+      allSenses: false,
+      excludeStopwords: true,
+      limit: 200,
+    },
     orderIndex: 20,
   },
   {
     slug: "go3-core-200",
     title: "고3 핵심 200",
     subtitle: "고3·수능 기출 최다 빈출 어휘",
-    spec: { grades: ["고3"], tiers: ["core", "academic"], excludePhrase: true, limit: 200 },
+    spec: {
+      grades: ["고3"],
+      tiers: ["core", "academic"],
+      excludePhrase: true,
+      allSenses: false,
+      excludeStopwords: true,
+      limit: 200,
+    },
     orderIndex: 30,
   },
   {
     slug: "idioms-150",
     title: "구동사·숙어 150",
     subtitle: "기출 구동사·숙어·연어 고빈도 순",
-    spec: { posList: ["idiom", "phrasal_verb", "collocation"], limit: 150 },
+    spec: {
+      posList: ["idiom", "phrasal_verb", "collocation"],
+      allSenses: false,
+      limit: 150,
+    },
     orderIndex: 40,
   },
   {
     slug: "advanced-150",
     title: "고난도 어휘 150",
-    subtitle: "변별력을 가르는 advanced 티어",
-    spec: { tiers: ["advanced"], excludePhrase: true, limit: 150 },
+    subtitle: "변별력을 가르는 고난도 뜻 모음",
+    spec: {
+      tiers: ["advanced"],
+      excludePhrase: true,
+      allSenses: true,
+      excludeStopwords: true,
+      limit: 150,
+    },
     orderIndex: 50,
   },
 ];

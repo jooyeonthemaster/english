@@ -20,6 +20,7 @@ import { prisma } from "@/lib/prisma";
 import { advanceAssignment } from "./assignment";
 import {
   EWMA_ALPHA,
+  GRADED_ITEM_TYPES,
   INTERVAL_BY_BOX_MS,
   MASTERED_SCORE,
   seoulDayKey,
@@ -338,6 +339,20 @@ export async function processVocabSubmission(
     if (!deckId) return null; // 위조 시도 — 조용히 흡수하지 않는다
   }
 
+  // assignmentId 도 클라이언트 입력 — ① 내 과제인지 소유 검증, ② 채점 유형만
+  // 과제 문맥 허용. FLASH(자기평가 "알았다")를 assignmentId 에 실어 보내면
+  // 과제 진행·완료가 자가부여되는 유입구가 있었다(적대검수 2026-08-04 2차).
+  let assignmentId: string | null = null;
+  if (body.assignmentId) {
+    const ownedAsg = await prisma.vocabDrillAssignment.findFirst({
+      where: { id: body.assignmentId, studentId },
+      select: { id: true },
+    });
+    if (!ownedAsg) return null; // 남의/없는 과제 id 위조
+    if (!(GRADED_ITEM_TYPES as string[]).includes(body.itemType)) return null;
+    assignmentId = ownedAsg.id;
+  }
+
   // 원장 기록 — clientKey 부분 유니크가 멱등의 정본이다.
   try {
     await prisma.vocabDrillAttempt.create({
@@ -356,7 +371,7 @@ export async function processVocabSubmission(
         hintUsed: body.hintUsed,
         meaningPeeked: false,
         source,
-        assignmentId: body.assignmentId ?? null,
+        assignmentId,
         clientKey,
       },
     });
@@ -417,8 +432,8 @@ export async function processVocabSubmission(
       })
       .catch(() => undefined); // 진행 발자국 실패가 제출을 깨면 안 된다
   }
-  if (body.assignmentId) {
-    await advanceAssignment(studentId, body.assignmentId);
+  if (assignmentId) {
+    await advanceAssignment(studentId, assignmentId);
   }
 
   const shell = await buildVerdictShell(sense);

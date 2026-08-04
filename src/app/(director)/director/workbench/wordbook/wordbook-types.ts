@@ -68,8 +68,8 @@ export interface WordbookLensDef {
 export const WORDBOOK_LENSES: readonly WordbookLensDef[] = [
   {
     key: "hot",
-    label: "핵심 빈출",
-    desc: "기능어를 뺀 빈도 상위 — 단어장의 기본 재료",
+    label: "자주 나오는 단어",
+    desc: "the·of 같은 기본 단어는 빼고, 시험에 자주 나온 순서입니다",
     filter: {
       // 내용어 품사만 — 전치사·접속사는 뜻 문항 가치가 없다(레일 칩에 그대로
       // 드러나므로 디렉터가 한 클릭으로 되돌릴 수 있는 정직한 기본값).
@@ -90,44 +90,44 @@ export const WORDBOOK_LENSES: readonly WordbookLensDef[] = [
   },
   {
     key: "all",
-    label: "전체",
-    desc: "코퍼스 전 표제어 — 필터 없음",
+    label: "전체 단어",
+    desc: "기출에 나온 모든 단어를 조건 없이 봅니다",
     filter: {},
     sort: "per10k",
   },
   {
     key: "sn",
-    label: "수능 빈출",
-    desc: "수능 본시험 출현 순 — 모평·학평과 분리",
+    label: "수능에 자주 나온 단어",
+    desc: "수능 본시험 기준입니다. 모의고사는 따로 셉니다",
     filter: { board: "수능", excludeStopwords: true },
     sort: "sn",
   },
   {
     key: "rising",
-    label: "급증 추세",
-    desc: "최근 연도로 갈수록 잦아지는 단어",
+    label: "요즘 뜨는 단어",
+    desc: "최근 시험일수록 더 자주 나오는 단어입니다",
     filter: { trendLabels: ["급증"], excludeStopwords: true },
     sort: "per10k",
   },
   {
     key: "trap",
-    label: "함정 다발",
-    desc: "출현 대비 함정률 50% 이상 — 오답 지뢰밭",
+    label: "헷갈리기 쉬운 단어",
+    desc: "학생들이 뜻을 잘못 알기 쉬운 단어입니다",
     filter: { minTrapRate: 0.5, excludeStopwords: true },
     sort: "trapRate",
   },
   {
     key: "shift-era",
-    label: "의미 이동 · 연대",
-    desc: "2016년 전후로 지배 뜻이 바뀐 단어",
+    label: "뜻이 달라진 단어 · 시기",
+    desc: "예전 시험과 요즘 시험에서 다른 뜻으로 나옵니다",
     shiftAxis: "era",
     filter: {},
     sort: "per10k",
   },
   {
     key: "shift-grade",
-    label: "의미 이동 · 학년",
-    desc: "고1과 고3에서 다른 뜻으로 나오는 단어",
+    label: "뜻이 달라진 단어 · 학년",
+    desc: "고1과 고3 시험에서 다른 뜻으로 나옵니다",
     shiftAxis: "grade",
     filter: {},
     sort: "per10k",
@@ -139,12 +139,12 @@ export const DEFAULT_LENS = WORDBOOK_LENSES[0];
 // ── 정렬 라벨 (테이블 헤더·모바일 셀렉트 공용) ───────────────────────────────
 
 export const WORDBOOK_SORT_LABELS: Record<WordbookSort, string> = {
-  per10k: "빈도",
-  occurrences: "출현",
-  trapRate: "함정률",
-  difficulty: "난이도",
-  lemma: "철자",
-  sn: "수능",
-  mp: "모평",
-  hp: "학평",
+  per10k: "자주 나온 순",
+  occurrences: "출현 횟수 순",
+  trapRate: "헷갈림 순",
+  difficulty: "어려운 순",
+  lemma: "ABC순",
+  sn: "수능 출현 순",
+  mp: "모평 출현 순",
+  hp: "학평 출현 순",
 };

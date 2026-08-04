@@ -406,12 +406,28 @@ const TYPE_FALLBACKS: Record<VocabItemType, VocabItemType[]> = {
   FLASH: [],
 };
 
+/**
+ * @param allowed 선생님이 고른 출제 유형(과제 spec.itemTypes) — **선호이지 보장이
+ *   아니다**. 허용 집합을 먼저 순회하고, 전부 조립 불가(예: 숙어의 SPELL)면
+ *   전체 폴백 체인으로 넘어간다. 하드 제한으로 두면 유형 제약 탓에 서빙 불가
+ *   sense 가 생겨 과제가 영구 미완료가 된다(완료 가능성 > 유형 순도).
+ */
 export function buildWithFallback(
   sense: VocabDrillSense,
   type: VocabItemType,
   ord: number,
   support: BuildSupport,
+  allowed?: VocabItemType[],
 ): VocabClientItem | null {
+  if (allowed?.length) {
+    // 선호 유형부터, 이어서 허용 집합의 나머지를 순서대로.
+    const start = Math.max(0, allowed.indexOf(type));
+    for (let k = 0; k < allowed.length; k++) {
+      const t = allowed[(start + k) % allowed.length];
+      const item = buildItem(sense, t, ord, support);
+      if (item) return item;
+    }
+  }
   const item = buildItem(sense, type, ord, support);
   if (item) return item;
   for (const fb of TYPE_FALLBACKS[type]) {

@@ -81,7 +81,7 @@ export function TrendChip({
       className={`inline-flex h-[18px] items-center gap-1 rounded px-1.5 text-[10.5px] font-semibold leading-none whitespace-nowrap ${TREND_CHIP[label] ?? "bg-slate-100 text-slate-500"}`}
       title={
         typeof ratio === "number" && Number.isFinite(ratio)
-          ? `초기 대비 후기 ${ratio.toFixed(2)}배`
+          ? `예전보다 ${ratio.toFixed(2)}배`
           : undefined
       }
     >

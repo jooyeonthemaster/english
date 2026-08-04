@@ -11,7 +11,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { requireStaffAuth } from "@/lib/auth";
-import { countDeckPool } from "@/lib/vocab-drill/content";
+import { countDeckPool, resolveDeckSenses } from "@/lib/vocab-drill/content";
 import type { VocabDeckSpec } from "@/lib/vocab-drill/payload";
 
 export interface VocabDeckActionResult<T = undefined> {
@@ -80,6 +80,7 @@ function sanitizeDeckSpec(input: unknown): VocabDeckSpec {
   if (raw.excludePhrase === true) spec.excludePhrase = true;
   // 3상태 보존 — undefined 는 키 자체를 만들지 않는다(구형 덱 의미 유지).
   if (typeof raw.allSenses === "boolean") spec.allSenses = raw.allSenses;
+  if (raw.excludeStopwords === true) spec.excludeStopwords = true;
   const senseIds = pickStrings(raw.senseIds, undefined, LIMIT_MAX);
   if (senseIds.length) spec.senseIds = senseIds;
   const limitRaw = Number(raw.limit);
@@ -250,6 +251,68 @@ export async function updateVocabDeck(
   }
 }
 
+// ── 미리보기 ─────────────────────────────────────────────────────────────────
+
+export interface VocabDeckPreviewRow {
+  senseId: string;
+  lemma: string;
+  pos: string;
+  senseKo: string;
+  tier: string;
+  difficulty: number;
+}
+
+/**
+ * 단어장에 실제로 들어갈 단어 목록 — 저장 전(spec) 또는 저장된 덱(deckId) 확인용.
+ * 정본 해석기(resolveDeckSenses = 학생 서빙과 동일 질의)를 그대로 태워
+ * "미리보기 따로, 실제 따로"가 원천적으로 불가능하게 한다.
+ */
+export async function previewVocabDeck(input: {
+  spec?: VocabDeckSpec;
+  /** 저장된 덱 미리보기 — 소유 검증 후 그 spec 을 쓴다(spec 인자보다 우선) */
+  deckId?: string;
+}): Promise<VocabDeckActionResult<{ rows: VocabDeckPreviewRow[]; total: number }>> {
+  try {
+    const staff = await requireStaffAuth();
+    let rawSpec: unknown = input.spec ?? {};
+    if (input.deckId) {
+      const deck = await prisma.vocabDrillDeck.findFirst({
+        where: { id: String(input.deckId), academyId: staff.academyId },
+        select: { spec: true },
+      });
+      if (!deck) return { success: false, error: "단어장을 찾을 수 없습니다." };
+      rawSpec = deck.spec;
+    }
+    const spec = sanitizeDeckSpec(rawSpec);
+    const [senses, total] = await Promise.all([
+      resolveDeckSenses(spec),
+      countDeckPool(spec),
+    ]);
+    return {
+      success: true,
+      data: {
+        rows: senses.map((s) => ({
+          senseId: s.id,
+          lemma: s.lemma,
+          pos: s.pos,
+          senseKo: s.senseKo,
+          tier: s.tier,
+          difficulty: s.difficulty,
+        })),
+        total,
+      },
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error:
+        error instanceof Error && error.message
+          ? error.message
+          : "미리보기를 불러오지 못했습니다.",
+    };
+  }
+}
+
 // ── 보관 ─────────────────────────────────────────────────────────────────────
 
 export async function archiveVocabDeck(
@@ -276,6 +339,39 @@ export async function archiveVocabDeck(
         error instanceof Error && error.message
           ? error.message
           : "단어장을 보관하지 못했습니다.",
+    };
+  }
+}
+
+/**
+ * 보관 해제 — archive 의 대칭. 기본 덱(slug)은 보관하면 재프로비저닝되지
+ * 않으므로(ensureDefaultDecks 는 slug 존재 판정) 복원이 유일한 되돌림이다
+ * (적대검수 2026-08-04 2차: 보관이 비가역이었다).
+ */
+export async function restoreVocabDeck(
+  deckId: string,
+): Promise<VocabDeckActionResult> {
+  try {
+    const staff = await requireStaffAuth();
+    const deck = await prisma.vocabDrillDeck.findFirst({
+      where: { id: deckId, academyId: staff.academyId },
+      select: { id: true, status: true },
+    });
+    if (!deck) return { success: false, error: "단어장을 찾을 수 없습니다." };
+    if (deck.status === "ACTIVE") return { success: true };
+
+    await prisma.vocabDrillDeck.update({
+      where: { id: deck.id },
+      data: { status: "ACTIVE" },
+    });
+    return { success: true };
+  } catch (error) {
+    return {
+      success: false,
+      error:
+        error instanceof Error && error.message
+          ? error.message
+          : "단어장을 되살리지 못했습니다.",
     };
   }
 }

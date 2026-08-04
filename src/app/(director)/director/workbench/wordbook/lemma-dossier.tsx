@@ -113,7 +113,7 @@ function OverviewPane({ overview }: { overview: WordbookOverview }) {
   // 분포 4종은 모양이 같다 — 데이터로 접어 섹션 반복을 없앤다.
   const dists: { title: string; items: { label: string; value: number }[]; accent?: string; maxItems?: number }[] = [
     { title: "품사 분포", maxItems: 9, items: overview.posDist.map((d) => ({ label: posKo(d.key), value: d.count })) },
-    { title: "티어 분포", accent: "bg-violet-500", items: overview.tierDist.map((d) => ({ label: tierKo(d.key), value: d.count })) },
+    { title: "수준 분포", accent: "bg-violet-500", items: overview.tierDist.map((d) => ({ label: tierKo(d.key), value: d.count })) },
     { title: "난이도 분포", items: overview.diffDist.map((d) => ({ label: `난이도 ${d.key}`, value: d.count })) },
     { title: "추세 분포", maxItems: 8, items: overview.trendDist.map((d) => ({ label: d.key, value: d.count })) },
   ];
@@ -121,7 +121,7 @@ function OverviewPane({ overview }: { overview: WordbookOverview }) {
   return (
     <div>
       <div className="flex items-baseline justify-between gap-2 border-b border-slate-200 px-3 pb-2.5 pt-3">
-        <h2 className="text-[13px] font-bold tracking-tight text-slate-900">코퍼스 개관</h2>
+        <h2 className="text-[13px] font-bold tracking-tight text-slate-900">기출 전체 한눈에</h2>
         <span className="truncate text-[10px] text-slate-400" title="활성 번들">
           {overview.bundleVersion}
         </span>
@@ -133,7 +133,7 @@ function OverviewPane({ overview }: { overview: WordbookOverview }) {
         </Sec>
       ) : null}
 
-      <Sec title="시행처 구성">
+      <Sec title="시험 종류 구성">
         <SegBar
           parts={overview.boardTotals.map((b) => ({
             label: b.board,
@@ -189,12 +189,12 @@ function DossierPane({
         .sort((a, b) => b.value - a.value)
     : [];
   const stats: [string, string][] = [
-    [fmt1(lemma.per10k), "빈도/1만어"],
-    [fmt(lemma.passageCount), "지문"],
-    [fmt(lemma.totalOccurrences), "출현"],
-    [lemma.yearsPresent === null ? "—" : `${lemma.yearsPresent}/25`, "출현 연수"],
-    [lemma.longestGap === null ? "—" : `${lemma.longestGap}년`, "최장 공백"],
-    [lemma.gradeTop ?? "—", "주 학년"],
+    [fmt1(lemma.per10k), "1만 단어당"],
+    [fmt(lemma.passageCount), "나온 지문"],
+    [fmt(lemma.totalOccurrences), "총 출현"],
+    [lemma.yearsPresent === null ? "—" : `${lemma.yearsPresent}/25`, "나온 연수"],
+    [lemma.longestGap === null ? "—" : `${lemma.longestGap}년`, "안 나온 기간"],
+    [lemma.gradeTop ?? "—", "주로 나온 학년"],
   ];
 
   return (
@@ -223,7 +223,7 @@ function DossierPane({
 
       {/* ① 25개년 출현 — 코퍼스 전수 */}
       {yearStats ? (
-        <Sec title="25개년 출현" hint="코퍼스 전수 기준">
+        <Sec title="25개년 출현" hint="기출 전체 기준">
           <YearBars data={yearStats.byYear} from={2003} to={2027} height={56} />
           <div className="mt-2">
             <SegBar parts={GRADE_PARTS.map((g) => ({ label: g.key, value: yearStats.byGrade[g.key] ?? 0, color: g.color }))} />
@@ -233,14 +233,14 @@ function DossierPane({
 
       {/* ② 시행처 */}
       {yearStats ? (
-        <Sec title="시행처">
+        <Sec title="시험 종류">
           <SegBar parts={BOARD_PARTS.map((b) => ({ label: b.label, value: yearStats.byBoard[b.key] ?? 0, color: b.color }))} />
         </Sec>
       ) : null}
 
       {/* ③ 문항 유형 친화도 */}
       {typeItems.length > 0 ? (
-        <Sec title="문항 유형 친화도">
+        <Sec title="어떤 문제 유형에 잘 나오나">
           <HBarList items={typeItems} maxItems={6} />
         </Sec>
       ) : null}
@@ -284,7 +284,7 @@ function DossierPane({
       {/* ⑥ 혼동어 — 옵시디언식 링크 항해.
           -mx-2: 행 텍스트는 px-3 끝선에 맞추고 hover 배경만 살짝 넓힌다 */}
       {confusables.length > 0 ? (
-        <Sec title="혼동 주의">
+        <Sec title="같이 헷갈리는 단어">
           <div className="-mx-2">
             {confusables.map((c) => (
               <button
@@ -306,8 +306,8 @@ function DossierPane({
 
       {/* ⑦ 각주 — 표본/전수 척도 구분(파일 상단 주석 참조) */}
       <p className="break-keep px-3 pb-6 pt-2 text-[10px] leading-relaxed text-slate-400">
-        뜻별 연대·학년 분포는 수집된 기출 예문 표본 기준입니다. 25개년
-        출현·시행처·유형은 코퍼스 전수 기준입니다.
+        뜻별 시기·학년 숫자는 수집한 예문 기준입니다. 25개년 출현·시험
+        종류·문제 유형은 기출 전체 기준입니다.
       </p>
     </div>
   );
@@ -388,8 +388,8 @@ function SenseCard({
           <div>
             {eraTotal > 0 ? (
               <SegBar height={4} parts={[
-                { label: "초기", value: s.era.early, color: "bg-slate-400" },
-                { label: "후기", value: s.era.late, color: "bg-blue-500" },
+                { label: "예전(~2015)", value: s.era.early, color: "bg-slate-400" },
+                { label: "요즘(2016~)", value: s.era.late, color: "bg-blue-500" },
               ]} />
             ) : null}
           </div>
