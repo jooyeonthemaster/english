@@ -19,17 +19,19 @@ import {
   useRef,
   type MouseEvent as ReactMouseEvent,
 } from "react";
-import { ArrowDown } from "lucide-react";
 import { DragSelect } from "@/components/ui/drag-select";
 import { DiffDots, MiniBar, PosChip, TierChip, TrendChip, fmt, fmt1 } from "./wordbook-ui";
 import { ShiftTable } from "./shift-table";
+import { COLUMN_FILTERS, HeaderTh } from "./column-menu";
 import { BasketButton, TH, senseItem, shiftItem } from "./table-bits";
 import {
   WORDBOOK_SORT_LABELS,
   type WordbookBasketItem,
+  type WordbookFilter,
   type WordbookSenseRow,
   type WordbookShiftRow,
   type WordbookSort,
+  type WordbookSortDir,
 } from "./wordbook-types";
 
 interface SenseTableProps {
@@ -39,7 +41,11 @@ interface SenseTableProps {
   shiftAxis: "era" | "grade";
   total: number;
   sort: WordbookSort;
+  sortDir: WordbookSortDir;
   onSort: (s: WordbookSort) => void;
+  /** 헤더 깔때기 메뉴가 레일과 같은 필터를 패치한다(상태 단일 소스) */
+  filter: WordbookFilter;
+  onFilter: (patch: Partial<WordbookFilter>) => void;
   loading: boolean;
   selectedLemmaId: string | null;
   onSelect: (lemmaId: string) => void;
@@ -60,46 +66,15 @@ const MOBILE_SORT_KEYS: readonly WordbookSort[] = [
   "trapRate",
   "difficulty",
   "lemma",
+  "senseKo",
+  "pos",
+  "gradeTop",
+  "tier",
+  "trend",
   "sn",
   "mp",
   "hp",
 ];
-
-// ── 정렬 헤더 ────────────────────────────────────────────────────────────────
-
-function SortTh({
-  k, label, sort, onSort, className = "", title,
-}: {
-  k: WordbookSort;
-  label: string;
-  sort: WordbookSort;
-  onSort: (s: WordbookSort) => void;
-  className?: string;
-  /** 짧은 헤더(빈도·함정)를 풀어 쓰는 툴팁 */
-  title?: string;
-}) {
-  const active = sort === k;
-  return (
-    <th
-      className={`${TH} ${className}`}
-      title={title}
-      // lemma 만 오름차순(철자순)이지만 아이콘은 "정렬 중" 표시로 통일한다 —
-      // 방향 화살표를 섞으면 나머지 DESC 컬럼과 시각 문법이 충돌한다.
-      aria-sort={active ? (k === "lemma" ? "ascending" : "descending") : undefined}
-    >
-      <button
-        type="button"
-        onClick={() => onSort(k)}
-        className={`inline-flex items-center gap-0.5 ${
-          active ? "text-slate-900" : "text-slate-500 hover:text-slate-700"
-        }`}
-      >
-        {label}
-        {active ? <ArrowDown className="size-3" /> : null}
-      </button>
-    </th>
-  );
-}
 
 // ── 본체 ─────────────────────────────────────────────────────────────────────
 
@@ -110,7 +85,10 @@ export function SenseTable({
   shiftAxis,
   total,
   sort,
+  sortDir,
   onSort,
+  filter,
+  onFilter,
   loading,
   selectedLemmaId,
   onSelect,
@@ -284,26 +262,28 @@ export function SenseTable({
         >
         {mode === "senses" ? (
           <>
-            <table className="w-full min-w-[920px] border-collapse text-[12.5px]">
+            <table className="w-full min-w-[1000px] border-collapse text-[12.5px]">
+              {/* 전 컬럼 정렬(재클릭 = 방향 반전) + 깔때기 필터(레일과 같은 상태).
+                  z-20 — 마키 사각형(z-50)보다는 아래, 행 위 sticky 로만. */}
               <thead className="sticky top-0 z-10 bg-white shadow-[inset_0_-1px_0_theme(colors.slate.200)]">
                 <tr>
                   <th className={`${TH} w-9`}>
                     <span className="sr-only">담기</span>
                   </th>
-                  <SortTh k="lemma" label="단어" sort={sort} onSort={onSort} />
-                  <th className={`${TH} w-14`}>품사</th>
-                  <th className={TH}>대표 뜻</th>
-                  <SortTh k="per10k" label="빈도" sort={sort} onSort={onSort} className="w-[112px]" title="기출 지문 1만 단어마다 몇 번 나왔는지" />
+                  <HeaderTh label="단어" sortKey="lemma" sort={sort} sortDir={sortDir} onSort={onSort} filter={filter} onFilter={onFilter} />
+                  <HeaderTh label="품사" sortKey="pos" className="w-[68px]" sort={sort} sortDir={sortDir} onSort={onSort} filterSpec={COLUMN_FILTERS.pos} filter={filter} onFilter={onFilter} />
+                  <HeaderTh label="대표 뜻" sortKey="senseKo" sort={sort} sortDir={sortDir} onSort={onSort} filter={filter} onFilter={onFilter} />
                   {/* 함정을 빈도 바로 옆에 — "얼마나 자주 × 얼마나 위험"이 덱 편성의
                       핵심 조합이라 첫 화면 폭 안에 같이 들어와야 한다(1680px 실측). */}
-                  <SortTh k="trapRate" label="함정" sort={sort} onSort={onSort} className="w-12" title="학생이 뜻을 잘못 알기 쉬운 정도" />
-                  <SortTh k="sn" label="수능" sort={sort} onSort={onSort} className="w-[52px]" />
-                  <SortTh k="mp" label="모평" sort={sort} onSort={onSort} className="w-[52px]" />
-                  <SortTh k="hp" label="학평" sort={sort} onSort={onSort} className="w-[52px]" />
-                  <th className={`${TH} w-10`} title="주로 나온 학년">학년</th>
-                  <th className={`${TH} w-12`}>수준</th>
-                  <SortTh k="difficulty" label="난이도" sort={sort} onSort={onSort} className="w-14" />
-                  <th className={`${TH} w-20`}>추세</th>
+                  <HeaderTh label="빈도" sortKey="per10k" className="w-[112px]" hint="기출 지문 1만 단어마다 몇 번 나왔는지" sort={sort} sortDir={sortDir} onSort={onSort} filter={filter} onFilter={onFilter} />
+                  <HeaderTh label="함정" sortKey="trapRate" className="w-16" hint="학생이 뜻을 잘못 알기 쉬운 정도" sort={sort} sortDir={sortDir} onSort={onSort} filterSpec={COLUMN_FILTERS.trap} filter={filter} onFilter={onFilter} />
+                  <HeaderTh label="수능" sortKey="sn" className="w-[60px]" sort={sort} sortDir={sortDir} onSort={onSort} filterSpec={COLUMN_FILTERS.sn} filter={filter} onFilter={onFilter} />
+                  <HeaderTh label="모평" sortKey="mp" className="w-[60px]" sort={sort} sortDir={sortDir} onSort={onSort} filterSpec={COLUMN_FILTERS.mp} filter={filter} onFilter={onFilter} />
+                  <HeaderTh label="학평" sortKey="hp" className="w-[60px]" sort={sort} sortDir={sortDir} onSort={onSort} filterSpec={COLUMN_FILTERS.hp} filter={filter} onFilter={onFilter} />
+                  <HeaderTh label="학년" sortKey="gradeTop" className="w-16" hint="주로 나온 학년" sort={sort} sortDir={sortDir} onSort={onSort} filterSpec={COLUMN_FILTERS.grade} filter={filter} onFilter={onFilter} />
+                  <HeaderTh label="수준" sortKey="tier" className="w-16" sort={sort} sortDir={sortDir} onSort={onSort} filterSpec={COLUMN_FILTERS.tier} filter={filter} onFilter={onFilter} />
+                  <HeaderTh label="난이도" sortKey="difficulty" className="w-[76px]" sort={sort} sortDir={sortDir} onSort={onSort} filterSpec={COLUMN_FILTERS.difficulty} filter={filter} onFilter={onFilter} />
+                  <HeaderTh label="추세" sortKey="trend" className="w-24" hint="예전 시험 대비 요즘 시험에서 얼마나 잦아졌는지" sort={sort} sortDir={sortDir} onSort={onSort} filterSpec={COLUMN_FILTERS.trend} filter={filter} onFilter={onFilter} />
                 </tr>
               </thead>
               <tbody>

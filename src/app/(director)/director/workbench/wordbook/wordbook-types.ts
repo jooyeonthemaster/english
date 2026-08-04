@@ -19,6 +19,7 @@ export type {
   WordbookPage,
   WordbookSenseRow,
   WordbookSort,
+  WordbookSortDir,
 } from "@/lib/vocab-drill/wordbook-explore";
 export type {
   DossierConfusable,
@@ -144,7 +145,29 @@ export const WORDBOOK_SORT_LABELS: Record<WordbookSort, string> = {
   trapRate: "헷갈림 순",
   difficulty: "어려운 순",
   lemma: "ABC순",
+  senseKo: "뜻 가나다순",
+  pos: "품사별",
+  gradeTop: "학년별",
+  tier: "수준별",
+  trend: "요즘 뜨는 순",
   sn: "수능 출현 순",
   mp: "모평 출현 순",
   hp: "학평 출현 순",
+};
+
+/** 축별 첫 클릭 방향 — 서버(SORT_COLS.defaultDir)와 문자 일치해야 한다. */
+export const WORDBOOK_SORT_DEFAULT_DIR: Record<WordbookSort, "asc" | "desc"> = {
+  per10k: "desc",
+  occurrences: "desc",
+  trapRate: "desc",
+  difficulty: "desc",
+  lemma: "asc",
+  senseKo: "asc",
+  pos: "asc",
+  gradeTop: "asc",
+  tier: "desc",
+  trend: "desc",
+  sn: "desc",
+  mp: "desc",
+  hp: "desc",
 };

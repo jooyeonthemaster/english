@@ -57,9 +57,16 @@ export type WordbookSort =
   | "trapRate"
   | "difficulty"
   | "lemma"
+  | "senseKo" // 대표 뜻 가나다순
+  | "pos" // 품사
+  | "gradeTop" // 주로 나온 학년
+  | "tier" // 수준(기본→고난도 서열)
+  | "trend" // 추세 — trendRatio(예전 대비 요즘 배율) 수치 정렬
   | "sn" // 수능 출현 수
   | "mp" // 모평 출현 수
   | "hp"; // 학평 출현 수
+
+export type WordbookSortDir = "asc" | "desc";
 
 export interface WordbookSenseRow {
   senseId: string;
@@ -94,16 +101,45 @@ export interface WordbookPage {
 
 // ── 필터 → WHERE 절 ──────────────────────────────────────────────────────────
 
-const SORT_SQL: Record<WordbookSort, Prisma.Sql> = {
-  per10k: Prisma.sql`s."per10k" DESC NULLS LAST, s.occurrences DESC, s.lemma ASC`,
-  occurrences: Prisma.sql`s.occurrences DESC, s.lemma ASC`,
-  trapRate: Prisma.sql`s."trapRate" DESC, s.occurrences DESC, s.lemma ASC`,
-  difficulty: Prisma.sql`s.difficulty DESC, s."per10k" DESC NULLS LAST, s.lemma ASC`,
-  lemma: Prisma.sql`s.lemma ASC, s."senseOrder" ASC`,
-  sn: Prisma.sql`sn DESC, s."per10k" DESC NULLS LAST, s.lemma ASC`,
-  mp: Prisma.sql`mp DESC, s."per10k" DESC NULLS LAST, s.lemma ASC`,
-  hp: Prisma.sql`hp DESC, s."per10k" DESC NULLS LAST, s.lemma ASC`,
+/**
+ * 정렬 축 정본 — 표현식·기본 방향·NULL 취급을 한 곳에서 관장한다.
+ * 방향은 whitelist 분기(asc/desc 리터럴)로만 조립 — 문자열 보간 금지.
+ * 범주 축(품사·수준·학년·뜻)은 2차 정렬로 빈도를 태워 같은 값끼리도
+ * 의미 있게 줄 세운다(최종 타이브레이커 s.id 는 질의 지점에서 고정 부착).
+ */
+const SORT_COLS: Record<
+  WordbookSort,
+  { expr: Prisma.Sql; defaultDir: WordbookSortDir; nullable?: boolean }
+> = {
+  per10k: { expr: Prisma.sql`s."per10k"`, defaultDir: "desc", nullable: true },
+  occurrences: { expr: Prisma.sql`s.occurrences`, defaultDir: "desc" },
+  trapRate: { expr: Prisma.sql`s."trapRate"`, defaultDir: "desc" },
+  difficulty: { expr: Prisma.sql`s.difficulty`, defaultDir: "desc" },
+  lemma: { expr: Prisma.sql`s.lemma`, defaultDir: "asc" },
+  senseKo: { expr: Prisma.sql`s."senseKo"`, defaultDir: "asc" },
+  pos: { expr: Prisma.sql`s.pos`, defaultDir: "asc" },
+  gradeTop: { expr: Prisma.sql`s."gradeTop"`, defaultDir: "asc", nullable: true },
+  tier: {
+    // basic→core→academic→advanced 서열 — 사전순이 서열이 아니라 CASE 로 박는다
+    expr: Prisma.sql`CASE s.tier WHEN 'basic' THEN 0 WHEN 'core' THEN 1 WHEN 'academic' THEN 2 WHEN 'advanced' THEN 3 ELSE 4 END`,
+    defaultDir: "desc",
+  },
+  trend: { expr: Prisma.sql`l."trendRatio"`, defaultDir: "desc", nullable: true },
+  sn: { expr: Prisma.sql`sn`, defaultDir: "desc" },
+  mp: { expr: Prisma.sql`mp`, defaultDir: "desc" },
+  hp: { expr: Prisma.sql`hp`, defaultDir: "desc" },
 };
+
+function orderSql(sort: WordbookSort, dir?: WordbookSortDir): Prisma.Sql {
+  const col = Object.prototype.hasOwnProperty.call(SORT_COLS, sort)
+    ? SORT_COLS[sort]
+    : SORT_COLS.per10k;
+  const d = dir === "asc" || dir === "desc" ? dir : col.defaultDir;
+  const dirSql = d === "asc" ? Prisma.sql`ASC` : Prisma.sql`DESC`;
+  // NULL 은 방향과 무관하게 항상 꼴찌 — "값 없음"이 상단을 차지하면 안 된다.
+  const nulls = col.nullable ? Prisma.sql` NULLS LAST` : Prisma.empty;
+  return Prisma.sql`${col.expr} ${dirSql}${nulls}, s."per10k" DESC NULLS LAST`;
+}
 
 function sanitizeQ(q: string): string {
   // 표제어는 소문자 [a-z0-9' -] 로만 적재된다 — LIKE 메타문자(%_\)는 존재할 수
@@ -180,16 +216,15 @@ interface RawSenseRow {
 export async function listWordbookSensesData(input: {
   filter: WordbookFilter;
   sort: WordbookSort;
+  dir?: WordbookSortDir;
   offset: number;
   limit?: number;
 }): Promise<WordbookPage> {
   const where = buildWhere(input.filter ?? {});
-  // hasOwnProperty — sort:"constructor" 가 Object 생성자(truthy)를 돌려줘 ?? 폴백을
-  // 우회하는 프로토타입 함정 차단. NaN 은 Math.max/min 클램프를 그대로 통과하므로
+  // orderSql 이 sort·dir 을 자체 whitelist 로 검증한다(프로토타입 키·비정상 값
+  // 은 per10k/기본 방향 폴백). NaN 은 Math.max/min 클램프를 그대로 통과하므로
   // offset/limit 도 유한수 검사 후에만 쓴다.
-  const orderBy = Object.prototype.hasOwnProperty.call(SORT_SQL, input.sort)
-    ? SORT_SQL[input.sort]
-    : SORT_SQL.per10k;
+  const orderBy = orderSql(input.sort, input.dir);
   const rawLimit = Number(input.limit ?? WORDBOOK_PAGE_SIZE);
   const limit = Number.isFinite(rawLimit)
     ? Math.max(1, Math.min(PAGE_SIZE_MAX, Math.round(rawLimit)))

@@ -34,6 +34,8 @@ import {
   type WordbookSenseRow,
   type WordbookShiftRow,
   type WordbookSort,
+  type WordbookSortDir,
+  WORDBOOK_SORT_DEFAULT_DIR,
 } from "./wordbook-types";
 
 interface WordbookClientProps {
@@ -51,6 +53,9 @@ export function WordbookClient({
   const [lens, setLens] = useState<WordbookLens>(DEFAULT_LENS.key);
   const [filter, setFilter] = useState<WordbookFilter>(DEFAULT_LENS.filter);
   const [sort, setSort] = useState<WordbookSort>(DEFAULT_LENS.sort);
+  const [sortDir, setSortDir] = useState<WordbookSortDir>(
+    WORDBOOK_SORT_DEFAULT_DIR[DEFAULT_LENS.sort],
+  );
   const [q, setQ] = useState("");
   const [rows, setRows] = useState<WordbookSenseRow[]>(initialRows);
   const [total, setTotal] = useState(initialTotal);
@@ -91,6 +96,7 @@ export function WordbookClient({
   const dossierSeq = useRef(0);
   const filterRef = useRef(filter);
   const sortRef = useRef(sort);
+  const dirRef = useRef(sortDir);
   const qRef = useRef(q);
   const qTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastFiredQ = useRef(""); // 값 변화 기준 스킵 — StrictMode 이중 실행 안전
@@ -101,6 +107,7 @@ export function WordbookClient({
     async (
       f: WordbookFilter,
       s: WordbookSort,
+      d: WordbookSortDir,
       offset: number,
       append: boolean,
     ) => {
@@ -111,6 +118,7 @@ export function WordbookClient({
         const page = await listWordbookSenses({
           filter: f,
           sort: s,
+          dir: d,
           offset,
         });
         if (seq !== reqSeq.current) return;
@@ -135,8 +143,8 @@ export function WordbookClient({
   }, []);
 
   const runQuery = useCallback(
-    (f: WordbookFilter, s: WordbookSort) => {
-      void fetchPage({ ...f, q: qRef.current || undefined }, s, 0, false);
+    (f: WordbookFilter, s: WordbookSort, d: WordbookSortDir) => {
+      void fetchPage({ ...f, q: qRef.current || undefined }, s, d, 0, false);
     },
     [fetchPage],
   );
@@ -152,6 +160,7 @@ export function WordbookClient({
       void fetchPage(
         { ...filterRef.current, q: qRef.current || undefined },
         sortRef.current,
+        dirRef.current,
         0,
         false,
       );
@@ -168,15 +177,17 @@ export function WordbookClient({
       setLens(key);
       setFilter(def.filter);
       setSort(def.sort);
+      setSortDir(WORDBOOK_SORT_DEFAULT_DIR[def.sort]);
       filterRef.current = def.filter;
       sortRef.current = def.sort;
+      dirRef.current = WORDBOOK_SORT_DEFAULT_DIR[def.sort];
       setRailMobileOpen(false);
       if (def.shiftAxis) {
         const seq = ++shiftSeq.current;
         setShiftLoading(true);
         // senses 질의도 병행 — total 을 새 filter({})와 동기화해 바스켓 카드 B 가
         // 직전 렌즈 총계를 "현재 조건"으로 오표시하지 않게 한다.
-        runQuery(def.filter, def.sort);
+        runQuery(def.filter, def.sort, dirRef.current);
         listWordbookShift(def.shiftAxis)
           .then((rows) => {
             if (seq === shiftSeq.current) setShiftRows(rows);
@@ -189,7 +200,7 @@ export function WordbookClient({
             if (seq === shiftSeq.current) setShiftLoading(false);
           });
       } else {
-        runQuery(def.filter, def.sort);
+        runQuery(def.filter, def.sort, dirRef.current);
       }
     },
     [cancelQTimer, runQuery],
@@ -201,7 +212,7 @@ export function WordbookClient({
       const next = { ...filterRef.current, ...patch };
       setFilter(next);
       filterRef.current = next;
-      runQuery(next, sortRef.current);
+      runQuery(next, sortRef.current, dirRef.current);
     },
     [cancelQTimer, runQuery],
   );
@@ -209,9 +220,18 @@ export function WordbookClient({
   const handleSort = useCallback(
     (s: WordbookSort) => {
       cancelQTimer();
+      // 같은 축 재클릭 = 방향 반전, 새 축 = 그 축의 자연 방향부터.
+      const d: WordbookSortDir =
+        sortRef.current === s
+          ? dirRef.current === "desc"
+            ? "asc"
+            : "desc"
+          : WORDBOOK_SORT_DEFAULT_DIR[s];
       setSort(s);
+      setSortDir(d);
       sortRef.current = s;
-      runQuery(filterRef.current, s);
+      dirRef.current = d;
+      runQuery(filterRef.current, s, d);
     },
     [cancelQTimer, runQuery],
   );
@@ -220,6 +240,7 @@ export function WordbookClient({
     void fetchPage(
       { ...filterRef.current, q: qRef.current || undefined },
       sortRef.current,
+      dirRef.current,
       rows.length,
       true,
     );
@@ -427,7 +448,10 @@ export function WordbookClient({
             shiftAxis={shiftAxis ?? "era"}
             total={total}
             sort={sort}
+            sortDir={sortDir}
             onSort={handleSort}
+            filter={filter}
+            onFilter={handleFilter}
             loading={shiftAxis ? shiftLoading : loading}
             selectedLemmaId={selectedLemmaId}
             onSelect={openDossier}

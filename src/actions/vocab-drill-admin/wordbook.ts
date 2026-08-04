@@ -20,6 +20,7 @@ import {
   type WordbookOverview,
   type WordbookPage,
   type WordbookSort,
+  type WordbookSortDir,
 } from "@/lib/vocab-drill/wordbook-explore";
 import {
   getWordbookLemmaDossierData,
@@ -42,7 +43,8 @@ const TRENDS = [
 ];
 const BOARDS: WordbookBoard[] = ["수능", "모평", "학평"];
 const SORTS: WordbookSort[] = [
-  "per10k", "occurrences", "trapRate", "difficulty", "lemma", "sn", "mp", "hp",
+  "per10k", "occurrences", "trapRate", "difficulty", "lemma", "senseKo",
+  "pos", "gradeTop", "tier", "trend", "sn", "mp", "hp",
 ];
 
 function pick(v: unknown, allow: string[]): string[] | undefined {
@@ -102,6 +104,7 @@ export async function getWordbookOverview(): Promise<WordbookOverview> {
 export async function listWordbookSenses(input: {
   filter: WordbookFilter;
   sort: WordbookSort;
+  dir?: WordbookSortDir;
   offset: number;
   limit?: number;
 }): Promise<WordbookPage> {
@@ -109,6 +112,7 @@ export async function listWordbookSenses(input: {
   return listWordbookSensesData({
     filter: sanitizeFilter(input.filter),
     sort: SORTS.includes(input.sort) ? input.sort : "per10k",
+    dir: input.dir === "asc" || input.dir === "desc" ? input.dir : undefined,
     offset: input.offset,
     limit: input.limit,
   });
