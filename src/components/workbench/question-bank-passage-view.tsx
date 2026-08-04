@@ -33,6 +33,13 @@ interface PassageGroupedViewProps {
    * 공유하므로, 한 번의 드래그로 그룹을 가로질러 카드를 선택할 수 있다.
    */
   marqueeBoundaryRef?: React.RefObject<HTMLElement | null>;
+  /**
+   * 마키 릴리스 1회 커밋(DragSelect deferCommit) 관통 — 이 뷰는 3개 소비처
+   * (문제은행·생성 내장 은행·시험지 빌더) 공용이라 여기서 일괄 켜지 않는다.
+   * 시험지 빌더는 onChange 가 시험지 구성 reconcile 을 실제로 트리거하는
+   * 부수효과형이라 라이브 유지가 안전하다(전수조사 2026-08-05).
+   */
+  marqueeDeferCommit?: boolean;
   onToggleSelect: (id: string) => void;
   onDelete: (id: string) => void;
   onApprove: (id: string) => void;
@@ -115,6 +122,7 @@ export function PassageGroupedView({
   selectedIds,
   setSelectedIds,
   marqueeBoundaryRef,
+  marqueeDeferCommit = false,
   onToggleSelect,
   onDelete,
   onApprove,
@@ -455,6 +463,7 @@ export function PassageGroupedView({
                     value={selectedIds}
                     onChange={setSelectedIds}
                     boundaryRef={marqueeBoundaryRef}
+                    deferCommit={marqueeDeferCommit}
                   >
                     {passage.questions.map((q, idx) =>
                       renderQuestion ? (

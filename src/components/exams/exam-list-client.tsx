@@ -694,7 +694,7 @@ export function ExamListClient({
                   )}
                 </div>
               ) : viewType !== "list" ? (
-                <DragSelect
+                <DragSelect deferCommit
                   className={`grid min-w-0 ${EXAM_GRID_COL_CLASS[viewType]} gap-3`}
                   value={selection.selectedIds}
                   onChange={selection.setSelectedIds}
@@ -721,7 +721,7 @@ export function ExamListClient({
                 </DragSelect>
               ) : (
                 /* List view — with drag support */
-                <DragSelect
+                <DragSelect deferCommit
                   className="space-y-1.5"
                   value={selection.selectedIds}
                   onChange={selection.setSelectedIds}

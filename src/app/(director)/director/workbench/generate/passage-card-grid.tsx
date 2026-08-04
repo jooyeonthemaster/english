@@ -1416,7 +1416,7 @@ export function PassageCardGrid({
           </div>
         ) : (
           // boundaryRef: "학습지 관리" 패널 전체에서 드래그를 시작할 수 있게 한다(카드만 선택).
-          <DragSelect
+          <DragSelect deferCommit
             className="min-h-full"
             value={selectedIds}
             onChange={setSelectedIds}

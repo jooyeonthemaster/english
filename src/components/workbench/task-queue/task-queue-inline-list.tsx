@@ -378,7 +378,7 @@ export function TaskQueueInlineList({
                   ));
                   const cls = `flex flex-col gap-2 ${bodyPadding}`.trim();
                   return marqueeEnabled ? (
-                    <DragSelect
+                    <DragSelect deferCommit
                       className={cls}
                       value={marqueeSelectedTaskIds!}
                       onChange={onMarqueeChange!}
@@ -425,7 +425,7 @@ export function TaskQueueInlineList({
                   const cls =
                     `grid gap-3 ${bodyPadding} ${gridColsClass}`.trim();
                   return marqueeEnabled ? (
-                    <DragSelect
+                    <DragSelect deferCommit
                       className={cls}
                       value={marqueeSelectedTaskIds!}
                       onChange={onMarqueeChange!}

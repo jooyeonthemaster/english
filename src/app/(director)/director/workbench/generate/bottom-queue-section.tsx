@@ -1006,7 +1006,7 @@ export function BottomQueueSection({
         </header>
         {isOpen && (
           <div className="p-3">
-            <DragSelect
+            <DragSelect deferCommit
               className={cardLayoutClassNames[cardLayoutMode]}
               value={selectedQuestionIds}
               onChange={setSelectedQuestionIds}
@@ -1236,7 +1236,7 @@ export function BottomQueueSection({
                 filters={questionSetFilters}
                 gridClassName={cardLayoutClassNames[cardLayoutMode]}
               />
-              <DragSelect
+              <DragSelect deferCommit
                 className={cardLayoutClassNames[cardLayoutMode]}
                 value={selectedQuestionIds}
                 onChange={setSelectedQuestionIds}
