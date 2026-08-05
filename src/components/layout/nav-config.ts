@@ -15,7 +15,8 @@ import {
   Settings,
   Palette,
   BookOpenText,
-  BookMarked,
+  // BookMarked — 「단어장 생성」 메뉴 임시 숨김(26-08-05)으로 미사용. 복구 시 함께 해제.
+  // BookMarked,
   Activity,
   LifeBuoy,
   Users,
@@ -241,17 +242,19 @@ export function getNavGroups(
           ],
         },
         // 단어장 생성 — 기출 단어 코퍼스 탐색·분석 → 덱 구성 → 학생 전송
-        // 워크스테이션(/workbench/wordbook). 「학습지 생성」 직후 자리(유저 확정).
-        // ENABLE_VOCAB_DRILL 게이트 — 학생 관리 「단어 훈련」 children 과 동일 축.
-        ...(FEATURE_FLAGS.ENABLE_VOCAB_DRILL
-          ? [
-              {
-                label: "단어장 생성",
-                icon: BookMarked,
-                href: `${basePath}/workbench/wordbook`,
-              },
-            ]
-          : []),
+        // 워크스테이션(/workbench/wordbook). 「학습지 생성」 직후 자리.
+        // 26-08-05 유저 지시로 좌측 메뉴에서만 임시 숨김 — 라우트·페이지·기능은
+        // 전부 살아 있다(URL 직행 가능). 복구: 아래 블록 주석 해제 + BookMarked
+        // import 복원.
+        // ...(FEATURE_FLAGS.ENABLE_VOCAB_DRILL
+        //   ? [
+        //       {
+        //         label: "단어장 생성",
+        //         icon: BookMarked,
+        //         href: `${basePath}/workbench/wordbook`,
+        //       },
+        //     ]
+        //   : []),
         // 26-07-21 v3 D5-1: 어법 훈련소 — 합성지문 AI 생성 허브(제작 축).
         // 「학습지 생성」 직후 5번째 NavItem(nav-ia 확정 자리).
         // ENABLE_GRAMMAR_STUDIO(기본 false) 다크런칭 — off 시 nav 미노출
