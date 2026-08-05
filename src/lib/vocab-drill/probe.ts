@@ -29,8 +29,14 @@ export interface TrapProbe {
   kind: "TRAP_JUDGE";
   /** 채점 대상 sense */
   senseId: string;
-  /** 주장으로 보여준 뜻의 sense (senseId 와 같으면 참 주장) */
+  /**
+   * 주장으로 보여준 뜻의 sense (senseId 와 같으면 참 주장).
+   * 팩 trapClaims 의 거짓 주장은 sense 가 아니라 자유 표기이므로
+   * "pack:false" 감시값을 넣는다(≠ senseId → 거짓 판정, 기존 채점식 그대로).
+   */
   claimSenseId: string;
+  /** 팩 주장 원문 — verdict 의 claimKo 대조 표시용(거짓 주장은 실키가 없다) */
+  claimKo?: string;
   exampleId: string;
   at: number;
 }

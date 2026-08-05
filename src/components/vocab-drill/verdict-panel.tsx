@@ -97,6 +97,16 @@ export function VocabVerdictPanel({
           )}
       </div>
 
+      {/* 오답 해설 — 학생이 고른 그 선지가 왜 틀렸는지(문항 팩 whyWrong) */}
+      {!verdict.correct && verdict.explanation && (
+        <div className="gd-hairline-t mt-3 pt-3">
+          <p className="gd-label mb-1">고른 선지가 틀린 이유</p>
+          <p className="gd-t-xs leading-relaxed" style={{ color: "var(--gd-ink-2)" }}>
+            {verdict.explanation}
+          </p>
+        </div>
+      )}
+
       {/* 함정 노트 */}
       {verdict.traps.length > 0 && (
         <div className="gd-hairline-t mt-3 pt-3">

@@ -122,14 +122,28 @@ function OptionList({
 
 function MeaningChoiceView({ item, draft, setDraft, verdict }: VocabItemViewProps) {
   if (item.type !== "MEANING_CHOICE") return null;
+  // 팩 조립 문항은 문맥 문장이 함께 온다(단어는 원문 굴절형으로 복원돼 있다) —
+  // 같은 단어의 다른 뜻이 선지에 섞이는 의도적 함정(사람 vs 인칭)은 이 문맥이
+  // 있어야 단일 정답이 된다(서빙 계약 불변식).
+  const sentence = item.sentence ?? null;
   return (
     <div>
       <div className="flex flex-wrap items-baseline gap-2">
         <p className="gd-en gd-t-2xl font-bold">{item.lemma}</p>
         <PosPill pos={item.pos} />
       </div>
+      {sentence && (
+        <>
+          {item.sourceLabel && <p className="gd-label mt-3 mb-2">{item.sourceLabel}</p>}
+          <div className={`gd-card px-4 py-4 ${item.sourceLabel ? "" : "mt-3"}`}>
+            <p className="gd-en gd-t-md">{sentence}</p>
+          </div>
+        </>
+      )}
       <p className="gd-t-xs mt-3" style={{ color: "var(--gd-ink-2)" }}>
-        이 단어의 뜻으로 알맞은 것을 고르십시오.
+        {sentence
+          ? "이 문장에서 이 단어의 뜻으로 알맞은 것을 고르십시오."
+          : "이 단어의 뜻으로 알맞은 것을 고르십시오."}
       </p>
       <OptionList
         options={item.options}

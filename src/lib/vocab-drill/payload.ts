@@ -56,8 +56,17 @@ export type VocabClientItem =
   | (VocabClientItemBase & {
       type: "MEANING_CHOICE";
       lemma: string;
-      /** 선지 = 한국어 뜻 4개(정답 위치 셔플). 같은 표제어의 다른 뜻은 제외 규약 */
+      /**
+       * 선지 = 한국어 뜻 4개(정답 위치 셔플).
+       * · 런타임 조립(팩 없음): 같은 표제어의 다른 뜻 제외 규약.
+       * · 팩 조립: 같은 표제어의 다른 뜻이 **의도적 함정**으로 들어올 수 있다 —
+       *   그 경우 sentence(문맥 스템)가 반드시 함께 온다. 문맥 없이 내면
+       *   이중정답이다(문항 자산 캠페인 서빙 계약 불변식).
+       */
       options: string[];
+      /** 팩 문맥 스템 — 대상 어절이 ____ 로 비워진 기출 문장(팩 조립 시에만) */
+      sentence?: string | null;
+      sourceLabel?: string | null;
     })
   | (VocabClientItemBase & {
       type: "WORD_CHOICE";
@@ -152,6 +161,11 @@ export interface VocabSubmitVerdict {
   pairResults?: { exampleId: string; correct: boolean }[];
   /** 이 뜻에 달린 함정 노트(제출 후에만 공개) */
   traps: { kind: string; note: string }[];
+  /**
+   * 오답 해설 — 학생이 고른 그 오답이 왜 틀렸는지(팩 whyWrong).
+   * 오답 제출 + 해당 선지의 팩 해설이 있을 때만 온다.
+   */
+  explanation?: string;
   /** 대표 예문(en + 한국어 번역) */
   example: { en: string; ko: string } | null;
   mastery: {

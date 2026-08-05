@@ -30,7 +30,8 @@ import {
   getSenseById,
   getTrapsForSense,
 } from "./content";
-import { gradeAnswer, parseMatchAnswer, type GradeContext } from "./grade";
+import { gradeAnswer, normalizeAnswer, normalizeKo, parseMatchAnswer, type GradeContext } from "./grade";
+import { fetchPackAsset } from "./pack-assets";
 import type {
   VocabSubmitBody,
   VocabSubmitVerdict,
@@ -263,6 +264,38 @@ async function updateStats(
 
 // ── verdict 조립 ─────────────────────────────────────────────────────────────
 
+const CHOICE_TYPES = new Set<VocabItemType>([
+  "MEANING_CHOICE",
+  "WORD_CHOICE",
+  "CONTEXT_FILL",
+]);
+
+/**
+ * 오답 해설 — 문항 팩(vocab_drill_item_assets)의 whyWrong 에서, 학생이 고른
+ * 선지와 일치하는 오답의 해설을 찾는다. 팩이 없거나 런타임 조립 오답이면 없음.
+ */
+async function packExplanationFor(
+  senseId: string,
+  itemType: VocabItemType,
+  answer: string,
+): Promise<string | undefined> {
+  const pack = await fetchPackAsset(senseId);
+  if (!pack) return undefined;
+  if (itemType === "MEANING_CHOICE") {
+    const key = normalizeKo(answer);
+    for (const set of pack.meaningChoiceSets) {
+      const hit = set.distractors.find((d) => normalizeKo(d.ko) === key);
+      if (hit?.whyWrong?.trim()) return hit.whyWrong.trim();
+    }
+    return undefined;
+  }
+  const key = normalizeAnswer(answer);
+  const hit = pack.wordChoiceDistractors.find(
+    (d) => normalizeAnswer(d.en) === key,
+  );
+  return hit?.whyWrong?.trim() || undefined;
+}
+
 async function buildVerdictShell(sense: VocabDrillSense) {
   const [traps, examples] = await Promise.all([
     getTrapsForSense(sense.id, 4),
@@ -382,13 +415,24 @@ export async function processVocabSubmission(
       clientKey
     ) {
       // 중복 제출 — 숙달도·XP 재적용 없이 현재 상태로 응답한다.
+      // 판정 화면 재렌더가 깨지지 않게 해설·주장 대조는 그대로 채운다(적대검수 m-10).
       const shell = await buildVerdictShell(sense);
       const mastery = await prisma.vocabDrillMastery.findUnique({
         where: { studentId_senseId: { studentId, senseId: sense.id } },
       });
+      let dupClaimKo: string | undefined;
+      if (ctx.probe?.kind === "TRAP_JUDGE" && ctx.probe.claimSenseId !== sense.id) {
+        dupClaimKo =
+          ctx.probe.claimKo ?? (await getSenseById(ctx.probe.claimSenseId))?.senseKo;
+      }
       return {
         correct,
         ...shell,
+        claimKo: dupClaimKo,
+        explanation:
+          !correct && CHOICE_TYPES.has(body.itemType)
+            ? await packExplanationFor(sense.id, body.itemType, body.answer)
+            : undefined,
         pairResults,
         mastery: {
           senseId: sense.id,
@@ -440,13 +484,20 @@ export async function processVocabSubmission(
   // TRAP_JUDGE 는 "무엇이라고 주장했는지"를 판정 화면에서 대조해야 학습이 된다.
   let claimKo: string | undefined;
   if (ctx.probe?.kind === "TRAP_JUDGE" && ctx.probe.claimSenseId !== sense.id) {
-    const claim = await getSenseById(ctx.probe.claimSenseId);
-    claimKo = claim?.senseKo;
+    // 팩 거짓 주장은 실키 sense 가 없다 — probe 에 봉인된 표기가 정본이다.
+    claimKo =
+      ctx.probe.claimKo ?? (await getSenseById(ctx.probe.claimSenseId))?.senseKo;
+  }
+  // 오답 해설 — 학생이 고른 그 오답의 팩 whyWrong 을 찾아 준다(선택지 유형만).
+  let explanation: string | undefined;
+  if (!correct && CHOICE_TYPES.has(body.itemType)) {
+    explanation = await packExplanationFor(sense.id, body.itemType, body.answer);
   }
   return {
     correct,
     ...shell,
     claimKo,
+    explanation,
     pairResults,
     mastery: {
       senseId: sense.id,

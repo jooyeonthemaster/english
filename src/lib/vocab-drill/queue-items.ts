@@ -16,6 +16,7 @@ import type { VocabDrillSense } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { blankOutSurface, exampleSourceLabel, fetchDistractorPool } from "./content";
 import { normalizeAnswer, normalizeKo } from "./grade";
+import { fetchPackAssets, type PackRow, type PackSenseAsset } from "./pack-assets";
 import type { VocabClientItem, VocabItemType } from "./payload";
 import { opaqueLabel, sealProbe } from "./probe";
 
@@ -45,8 +46,12 @@ interface ExampleLite {
 
 export interface BuildSupport {
   examplesBySense: Map<string, ExampleLite[]>;
+  /** 예문 id 직조회 — 팩 stems·trapClaims 의 exampleId 를 출처 라벨로 되돌린다 */
+  exampleById: Map<string, ExampleLite>;
   lemmaById: Map<string, { confusable: string[]; collocations: string[] }>;
   siblingsByLemma: Map<string, VocabDrillSense[]>;
+  /** 사전 구축 문항 팩 — 있으면 런타임 조립보다 우선한다(문항 자산 캠페인) */
+  packBySense: Map<string, PackRow>;
   meanings: { senseKo: string; lemmaId: string; pos: string }[];
   lemmas: { lemma: string; lemmaId: string; pos: string }[];
 }
@@ -59,7 +64,7 @@ export async function collectSupport(senses: VocabDrillSense[]): Promise<BuildSu
     ...new Set(senses.flatMap((s) => [s.difficulty, Math.min(5, s.difficulty + 1), Math.max(1, s.difficulty - 1)])),
   ];
 
-  const [lemmaRows, siblingRows, pool] = await Promise.all([
+  const [lemmaRows, siblingRows, pool, packBySense] = await Promise.all([
     prisma.vocabDrillLemma.findMany({
       where: { id: { in: lemmaIds }, retiredAt: null },
       select: { id: true, confusable: true, collocations: true },
@@ -70,6 +75,7 @@ export async function collectSupport(senses: VocabDrillSense[]): Promise<BuildSu
       take: 200,
     }),
     fetchDistractorPool(posList, difficulties),
+    fetchPackAssets(senseIds),
   ]);
 
   // 예문은 대상 sense 뿐 아니라 **형제 sense 것까지** 떠온다 —
@@ -94,10 +100,12 @@ export async function collectSupport(senses: VocabDrillSense[]): Promise<BuildSu
   });
 
   const examplesBySense = new Map<string, ExampleLite[]>();
+  const exampleById = new Map<string, ExampleLite>();
   for (const e of examples) {
     const list = examplesBySense.get(e.senseId) ?? [];
     list.push(e);
     examplesBySense.set(e.senseId, list);
+    exampleById.set(e.id, e);
   }
   const lemmaById = new Map(
     lemmaRows.map((l) => [
@@ -118,7 +126,15 @@ export async function collectSupport(senses: VocabDrillSense[]): Promise<BuildSu
     list.push(s);
     siblingsByLemma.set(s.lemmaId, list);
   }
-  return { examplesBySense, lemmaById, siblingsByLemma, meanings: pool.meanings, lemmas: pool.lemmas };
+  return {
+    examplesBySense,
+    exampleById,
+    lemmaById,
+    siblingsByLemma,
+    packBySense,
+    meanings: pool.meanings,
+    lemmas: pool.lemmas,
+  };
 }
 
 // ── 오답 선지 ────────────────────────────────────────────────────────────────
@@ -210,17 +226,117 @@ const POS_KO: Record<string, string> = {
   collocation: "연어",
 };
 
+// ── 팩 보조 ──────────────────────────────────────────────────────────────────
+
+const HINT_FILLERS: [string, string] = [
+  "문장 속 쓰임을 떠올려 보세요.",
+  "함께 자주 나오는 말(연어)을 기억해 보세요.",
+];
+
+/**
+ * 팩 힌트의 **유형별 살균** (적대검수 C-1 — 팩 힌트는 sense당 1쌍인데 유형마다
+ * 정답이 반대라, 무살균 재사용은 정답 유출이다):
+ *  · 표제어가 정답인 유형(WORD_CHOICE·CONTEXT_FILL·SPELL): 힌트 속 표제어와
+ *    굴절형을 전부 ____ 마스킹. 그래도 남으면 그 힌트 폐기.
+ *  · 뜻이 정답인 유형(MEANING_CHOICE): senseKo·통용 표기의 어간이 힌트에
+ *    들어 있으면 폐기(팩 게이트의 정확일치 검사는 '손질하다'→"손질하고"를
+ *    못 잡았다 — 실측 33건).
+ */
+function packHints(
+  asset: PackSenseAsset,
+  sense: VocabDrillSense,
+  answerIs: "lemma" | "meaning",
+): [string, string] {
+  const out: string[] = [];
+  if (answerIs === "lemma") {
+    const escd = sense.lemma.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    // 굴절형까지: "getting"·"asked" — 표제어로 시작하는 영단어 토큰 전체를 지운다.
+    const re = new RegExp(`(?<![A-Za-z])${escd}[a-z]*`, "gi");
+    for (const h of asset.hints) {
+      const masked = h.replace(re, "____");
+      if (!masked.toLowerCase().includes(sense.lemma.toLowerCase()) || sense.lemma.length < 3) {
+        out.push(masked);
+      }
+    }
+  } else {
+    // 뜻 어간 유출 검사 — senseKo와 통용 표기의 어미를 벗긴 어간이 힌트에 보이면 폐기.
+    const cands = Array.isArray(sense.senseKoCandidates) ? sense.senseKoCandidates : [];
+    const stems = [sense.senseKo, ...cands.map((c) => (typeof c === "string" ? c : (c as { ko?: string })?.ko))]
+      .filter((x): x is string => typeof x === "string")
+      .map((x) => normalizeKo(x).replace(/(하다|하게|하는|하며|되다|스럽다|스러운|스럽게|히|이)$/, ""))
+      .filter((x) => x.length >= 2);
+    for (const h of asset.hints) {
+      const hNorm = normalizeKo(h);
+      if (!stems.some((s) => hNorm.includes(s))) out.push(h);
+    }
+  }
+  const clean = out.filter((x) => x.trim().length > 0);
+  return [clean[0] ?? HINT_FILLERS[0], clean[1] ?? HINT_FILLERS[1]];
+}
+
+/** 팩 스템 선택 — ord 로 결정론 순환(같은 sense 재출제 시 다른 예문). */
+function packStem(asset: PackSenseAsset, ord: number) {
+  if (!asset.stems.length) return null;
+  return asset.stems[ord % asset.stems.length];
+}
+
+/**
+ * 폴백(팩 없음) 힌트의 오라클 제거 — 감사 확정 병리(블라인드 98.3%의 주범이던
+ * "N글자입니다"류)를 서빙에서 삭제한다. 대체는 마스킹된 연어(의미 단서).
+ */
+function fallbackLemmaHint(
+  sense: VocabDrillSense,
+  support: BuildSupport,
+  posKo: string,
+): string {
+  const colloc = (support.lemmaById.get(sense.lemmaId)?.collocations ?? [])[0];
+  if (colloc) {
+    const masked =
+      blankOutSurface(colloc, sense.lemma) ??
+      (colloc.toLowerCase().includes(sense.lemma.toLowerCase()) ? null : colloc);
+    if (masked) return `자주 쓰는 연어: ${masked}`;
+  }
+  return `${posKo} 자리에서 쓰입니다.`;
+}
+
 export function buildItem(
   sense: VocabDrillSense,
   type: VocabItemType,
   ord: number,
   support: BuildSupport,
 ): VocabClientItem | null {
+  // 아티팩트 sense 전면 차단 — buildWithFallback 뿐 아니라 learn(FLASH)·context 가
+  // buildItem 을 직접 부르는 경로까지 막는다(적대검수 M-3).
+  if (support.packBySense.get(sense.id)?.serve === false) return null;
   const examples = support.examplesBySense.get(sense.id) ?? [];
   const posKo = POS_KO[sense.pos] ?? sense.pos;
+  const packRow = support.packBySense.get(sense.id);
+  const pack = packRow?.serve ? (packRow.asset ?? null) : null;
 
   switch (type) {
     case "MEANING_CHOICE": {
+      // ── 팩 우선: 설계된 오답 세트 + 문맥 예문 동반(이중정답 방지 불변식) ──
+      // 팩 MC 오답에는 같은 표제어의 다른 뜻이 들어간다 — 문맥이 **무조건** 필요하다
+      // (적대검수 M-7: contextRequired 여부와 무관). srcEx 는 LIVE 필터를 통과한
+      // 원문이다 — 스템 텍스트 복원은 이중 굴절·은퇴 예문 우회를 만든다(M-9).
+      if (pack && pack.meaningChoiceSets.length) {
+        const stem = packStem(pack, ord);
+        const srcEx = stem ? support.exampleById.get(stem.exampleId) : undefined;
+        if (srcEx) {
+          const set = pack.meaningChoiceSets[ord % pack.meaningChoiceSets.length];
+          return {
+            ...base(sense, type, ord),
+            lemma: sense.lemma,
+            options: shuffle([sense.senseKo, ...set.distractors.map((d) => d.ko)]),
+            sentence: srcEx.en,
+            sourceLabel: exampleSourceLabel(srcEx),
+            hints: packHints(pack, sense, "meaning"),
+          };
+        }
+      }
+      // 문맥 필수 sense 는 문맥 없는 런타임 MC 로도 내지 않는다(적대검수 M-6 —
+      // WORD_CHOICE/SPELL 의 null 이 폴백 체인으로 이 분기에 떨어지는 경로 봉인).
+      if (pack?.contextRequired) return null;
       const distractors = pickMeaningDistractors(sense, support, 3);
       if (distractors.length < 2) return null;
       const ex = examples[0];
@@ -232,14 +348,29 @@ export function buildItem(
         lemma: sense.lemma, // 이 유형은 표제어가 문제, 뜻이 정답
         options: shuffle([sense.senseKo, ...distractors]),
         hints: [
-          `${posKo} · ${sense.tier} 티어의 단어입니다.`,
+          `${posKo} 단어입니다.`,
           maskedExample
             ? `기출 예문: ${maskedExample}`
-            : `${sense.difficulty}단계 난이도의 단어입니다.`,
+            : "문장 속 쓰임을 떠올려 보세요.",
         ],
       };
     }
     case "WORD_CHOICE": {
+      // 문맥 필수 sense 는 문맥 없는 유형으로 내지 않는다(비대표 뜻 무맥락 병리).
+      if (pack?.contextRequired) return null;
+      // ── 팩 우선: DB 대조로 동의어·어간공유가 배제된 설계 오답 ──
+      if (pack && pack.wordChoiceDistractors.length >= 3) {
+        return {
+          ...base(sense, type, ord),
+          senseKo: sense.senseKo,
+          senseEn: sense.senseEn,
+          options: shuffle([
+            sense.lemma,
+            ...pack.wordChoiceDistractors.slice(0, 3).map((d) => d.en),
+          ]),
+          hints: packHints(pack, sense, "lemma"),
+        };
+      }
       const distractors = pickLemmaDistractors(sense, support, 3);
       if (distractors.length < 2) return null;
       return {
@@ -248,12 +379,44 @@ export function buildItem(
         senseEn: sense.senseEn,
         options: shuffle([sense.lemma, ...distractors]),
         hints: [
-          `${posKo} · ${sense.tier} 티어의 단어입니다.`,
-          `${sense.lemma.length}글자입니다.`,
+          `${posKo} 단어입니다.`,
+          // 감사 확정 병리: "N글자입니다" 힌트는 선지 길이 대조만으로 정답을
+          // 주는 오라클이었다 — 의미 단서(마스킹 연어)로 교체.
+          fallbackLemmaHint(sense, support, posKo),
         ],
       };
     }
     case "CONTEXT_FILL": {
+      // ── 팩 우선: 검증된 스템 + 설계 오답 ──
+      if (pack) {
+        const stem = packStem(pack, ord);
+        const srcEx = stem ? support.exampleById.get(stem.exampleId) : undefined;
+        if (stem && srcEx && pack.wordChoiceDistractors.length >= 3) {
+          // 정답 잔존 재마스킹(적대검수 C-2) — luna 마스킹은 첫 등장만 지운 사례가
+          // 있다("in one hour, it will use 10 Wh"). blankOutSurface 는 전 등장을
+          // 지운다(/g) — 표제어·표면형 순으로 재적용 후에도 표제어가 단어 경계로
+          // 남아 있으면 그 스템은 쓰지 않는다.
+          let text: string | null = stem.text;
+          text = blankOutSurface(text, sense.lemma) ?? blankOutSurface(text, stem.answerSurface) ?? text;
+          const leakRe = new RegExp(
+            `(?<![A-Za-z])${sense.lemma.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?![A-Za-z])`,
+            "i",
+          );
+          if (!leakRe.test(text)) {
+            return {
+              ...base(sense, type, ord),
+              exampleId: stem.exampleId,
+              sentence: text,
+              sourceLabel: exampleSourceLabel(srcEx),
+              options: shuffle([
+                sense.lemma,
+                ...pack.wordChoiceDistractors.slice(0, 3).map((d) => d.en),
+              ]),
+              hints: packHints(pack, sense, "lemma"),
+            };
+          }
+        }
+      }
       const ex = examples.find(
         (e) => blankOutSurface(e.en, e.surface) ?? blankOutSurface(e.en, sense.lemma),
       );
@@ -272,27 +435,81 @@ export function buildItem(
         hints: [
           // 뜻(senseKo)을 힌트로 주면 선지에서 뜻이 맞는 표제어를 고르면 되므로 곧 정답이다.
           `빈칸에는 ${posKo}가 들어갑니다.`,
-          `${sense.lemma.length}글자입니다.`,
+          // "N글자" 오라클 제거(감사 확정 병리) — 의미 단서로 교체.
+          fallbackLemmaHint(sense, support, posKo),
         ],
       };
     }
     case "SPELL": {
       // 철자 문항은 단일 낱말만 — 하이픈·아포스트로피 포함형은 입력 규약이 모호하다.
       if (sense.isPhrase || /[^a-zA-Z]/.test(sense.lemma)) return null;
+      // 팩이 부적격 판정(기능어·동의어 구분 불가·문맥 필수)한 sense 는 내지 않는다.
+      if (pack && (!pack.spellEligible || pack.contextRequired)) return null;
       return {
         ...base(sense, type, ord),
         senseKo: sense.senseKo,
         senseEn: sense.senseEn,
-        length: sense.lemma.length,
-        hints: [
-          `${sense.lemma.length}글자 ${posKo}입니다.`,
-          `첫 글자는 "${sense.lemma[0]}" 입니다.`,
-        ],
+        length: sense.lemma.length, // 입력 칸 렌더링용 — 형식 고유값
+        hints: pack
+          ? packHints(pack, sense, "lemma")
+          : [
+              `${posKo} 단어입니다.`,
+              // "첫 글자" 힌트는 절반의 정답 공개다(감사) — 의미 단서로 교체.
+              fallbackLemmaHint(sense, support, posKo),
+            ],
       };
     }
     case "TRAP_JUDGE": {
+      // ── 팩 우선: 함정노트 기반 설계 주장(근거 게이트 통과) ──
+      // 참/거짓을 코인플립으로 강제 균형한다(적대검수 M-5: 팩 주장의 83%가
+      // 거짓이라 그대로 내면 "무조건 X" 오라클이 된다). 참 주장이 팩에 없으면
+      // sense 의 senseKo 로 합성한다 — 런타임 경로의 참 주장과 같은 형태다.
+      if (pack && pack.trapClaims.length) {
+        const falses = pack.trapClaims.filter((t) => !t.isTrue);
+        const trues = pack.trapClaims.filter((t) => t.isTrue);
+        const useTrue = Math.random() < 0.5;
+        const pool = useTrue ? trues : falses;
+        const picked = pool.length
+          ? pool[Math.floor(Math.random() * pool.length)]
+          : null;
+        const anyEx = pack.trapClaims[Math.floor(Math.random() * pack.trapClaims.length)];
+        const claim =
+          picked ??
+          (useTrue
+            ? { exampleId: anyEx.exampleId, claimKo: sense.senseKo, isTrue: true }
+            : null);
+        const ex = claim ? support.exampleById.get(claim.exampleId) : undefined;
+        if (claim && ex) {
+          return {
+            ...base(sense, type, ord),
+            lemma: sense.lemma,
+            exampleId: claim.exampleId,
+            sentence: ex.en,
+            sourceLabel: exampleSourceLabel(ex),
+            claimKo: claim.claimKo,
+            probe: sealProbe({
+              kind: "TRAP_JUDGE",
+              senseId: sense.id,
+              // 거짓 주장은 실키 sense 가 아니라 자유 표기 — 감시값이 ≠senseId 를
+              // 보장해 기존 채점식(claimSenseId===senseId → 참)이 그대로 성립한다.
+              claimSenseId: claim.isTrue ? sense.id : "pack:false",
+              claimKo: claim.claimKo,
+              exampleId: claim.exampleId,
+            }),
+            hints: [
+              // 팩 힌트는 뜻 풀이라 주장 판정의 답을 흘린다 — 중립 힌트만 쓴다.
+              `이 표제어는 뜻이 여러 개인 다의어일 수 있습니다.`,
+              `문장 전체의 흐름과 뜻이 맞는지 확인하세요.`,
+            ],
+          };
+        }
+      }
       const siblings = (support.siblingsByLemma.get(sense.lemmaId) ?? []).filter(
-        (s) => s.id !== sense.id && normalizeKo(s.senseKo) !== normalizeKo(sense.senseKo),
+        (s) =>
+          s.id !== sense.id &&
+          normalizeKo(s.senseKo) !== normalizeKo(sense.senseKo) &&
+          // 아티팩트 형제 뜻이 주장으로 새는 우회 봉인(적대검수 M-4)
+          support.packBySense.get(s.id)?.serve !== false,
       );
       const ex = examples[0];
       if (!ex || !siblings.length) return null;
@@ -319,7 +536,10 @@ export function buildItem(
     }
     case "EXAMPLE_MATCH": {
       const siblings = (support.siblingsByLemma.get(sense.lemmaId) ?? []).filter(
-        (s) => (support.examplesBySense.get(s.id) ?? []).length > 0,
+        (s) =>
+          (support.examplesBySense.get(s.id) ?? []).length > 0 &&
+          // 아티팩트 형제 sense 가 짝짓기 선지·채점 정본으로 새는 우회 봉인(M-4)
+          support.packBySense.get(s.id)?.serve !== false,
       );
       const uniqueKo = new Map<string, VocabDrillSense>();
       for (const s of siblings) {
@@ -419,6 +639,9 @@ export function buildWithFallback(
   support: BuildSupport,
   allowed?: VocabItemType[],
 ): VocabClientItem | null {
+  // 추출 아티팩트("not a because b" 류) — 팩이 서빙 부적격 판정한 sense 는
+  // 어떤 유형으로도 내지 않는다(감사 확정 병리: 아티팩트 17종 서빙).
+  if (support.packBySense.get(sense.id)?.serve === false) return null;
   if (allowed?.length) {
     // 선호 유형부터, 이어서 허용 집합의 나머지를 순서대로.
     const start = Math.max(0, allowed.indexOf(type));
