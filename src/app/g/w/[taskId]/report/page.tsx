@@ -71,6 +71,8 @@ export default async function StudyReportPage({
       taskId={task.taskId}
       title={task.title}
       masteryPct={ctx.summary.masteryPct}
+      // 종합 카드가 정답률과 진도를 병기해야 하므로 표본까지 통째로 넘긴다(2607 §3.4)
+      mastery={ctx.summary.mastery}
       totalTimeMs={ctx.summary.totalTimeMs}
       stages={stages}
       weakness={ctx.summary.weakness}

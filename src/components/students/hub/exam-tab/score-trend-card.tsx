@@ -10,6 +10,17 @@
 //  - 점 클릭 → onSelectSitting(refId): 셸이 리프트한 하이라이트 상태로 응시
 //    테이블 행을 강조한다(§D1-3 와이어 「점 클릭 → 응시 행 하이라이트」).
 // connectNulls 유지 — 점수율 미확정(null) 회차는 점을 찍지 않는다(0점 왜곡 금지).
+//
+// 2607 적대 검수 수리 3건:
+//  - [23 critical] 툴팁 날짜가 `sitting.date.slice(0,10)`(UTC ISO 절단)이라 KST
+//    00:00~08:59 응시가 전날로 찍혔다. 응시 기록 표·상세 모달과 같은 KST 헬퍼
+//    (utils.formatDate = kstParts)로 통일한다. 정렬축(trend.ts)은 손대지 않는다.
+//  - [27·56·82] Y축 최상단 「100%」의 첫 글자가 잘려 「00%」로 읽혔다. 원인은
+//    음수 좌마진(left:-8)과 좁은 축 폭(width:40)의 합. 둘 다 되돌린다(0 / 44) —
+//    한쪽만 고치면 다른 뷰포트에서 재발한다.
+//  - [38] ResponsiveContainer 가 0폭/0높이 프레임에 마운트되며 recharts 경고를
+//    냈다. 부모 min-h-0 는 kit AnalyticsCard 본문이 이미 갖고 있으므로, 남은
+//    첫 프레임 방어로 컨테이너에 최소 높이를 명시한다.
 
 import {
   CartesianGrid,
@@ -22,6 +33,7 @@ import {
 } from "recharts";
 import { LineChart as LineChartIcon } from "lucide-react";
 import type { TrendSitting } from "@/lib/exam-scoring/trend";
+import { formatDate } from "@/lib/utils";
 import { EXAM_SCOPE_LABELS } from "@/lib/wording/director-glossary";
 import { AnalyticsCard, CardEmpty } from "../analytics/kit";
 
@@ -49,7 +61,8 @@ function toPoints(sittings: TrendSitting[]): ChartPoint[] {
     label: `${i + 1}회`,
     scorePct: sitting.scorePct,
     title: sitting.title,
-    date: sitting.date.slice(0, 10),
+    // KST 표기 — 표(회차 셀)·상세 모달과 같은 날짜여야 한다(UTC 절단 금지)
+    date: formatDate(sitting.date),
     sourceLabel:
       sitting.source === "INTERNAL"
         ? EXAM_SCOPE_LABELS.INTERNAL
@@ -108,8 +121,9 @@ export function ScoreTrendCard({
       icon={<LineChartIcon className="size-4 text-blue-600" aria-hidden />}
       title="점수율 추이"
       aside={
-        <span className="text-[11.5px] text-slate-400">
-          점을 누르면 아래 응시 기록에서 해당 회차를 강조합니다
+        // 보조 텍스트 하한 12px + slate-500(대비 4.5:1) — 11.5px/slate-400 은 AA 미달
+        <span className="text-[12px] text-slate-500">
+          점을 누르면 위 응시 기록에서 해당 회차를 강조합니다
         </span>
       }
     >
@@ -117,10 +131,14 @@ export function ScoreTrendCard({
         <CardEmpty text="점수율이 확정된 응시가 아직 없습니다." />
       ) : (
         <div className="h-full min-h-[260px] w-full">
-          <ResponsiveContainer width="100%" height="100%">
+          {/* minHeight — 부모 높이가 아직 0인 첫 프레임에 recharts 가 width/height -1
+              경고를 내며 빈 상자로 마운트되는 것을 막는다(탭 전환 시 재현) */}
+          <ResponsiveContainer width="100%" height="100%" minHeight={260}>
             <LineChart
               data={points}
-              margin={{ top: 12, right: 12, left: -8, bottom: 0 }}
+              // left 를 0 으로 되돌린다 — 음수 마진이 Y축을 8px 왼쪽으로 밀어
+              // 「100%」의 첫 글자를 컨테이너 밖으로 잘라냈다
+              margin={{ top: 12, right: 12, left: 0, bottom: 0 }}
               onClick={handleChartClick}
             >
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={CHART_COLORS.grid} />
@@ -138,7 +156,8 @@ export function ScoreTrendCard({
                 axisLine={false}
                 tickLine={false}
                 tick={{ fontSize: 11, fill: CHART_COLORS.tick }}
-                width={40}
+                // 11px 4글자(「100%」)는 약 30px + 눈금 여백 — 40 으로는 모자랐다
+                width={44}
                 tickFormatter={(v: number) => `${v}%`}
               />
               <Tooltip

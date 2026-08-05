@@ -128,10 +128,20 @@ const READ_MATERIAL_ENDPOINT = "/api/workbench/passage-authoring/read-material";
 const PAGE_UPLOAD_ENDPOINT = "/api/workbench/passage-authoring/page-uploads";
 
 /**
- * 하이브리드로 함께 보내는 페이지 수의 **하드 상한**(편당). 배치 6편이면 같은
- * 이미지가 6번 재전송되므로 여기서 조이지 않으면 원가가 편수에 곱해진다.
+ * 스토리지에 **올려 두는** 페이지 수의 상한.
+ *
+ * ⚠️ 26-08-04 에 의미가 갈렸다. 이 값은 더 이상 "모델이 보는 쪽 수"가 아니다.
+ *   · 여기(업로드) — 모델 원가 **0**. 드는 것은 브라우저 렌더 시간과 스토리지뿐이다.
+ *   · 실제 전송   — page-images.maxPageImagesFor(count) 가 정한다. 1편이면 20쪽,
+ *                   2편 이상이면 4쪽이다(같은 이미지가 편수만큼 재전송되므로).
+ * 둘을 다시 한 값으로 합치지 말 것. 합치면 둘 중 하나가 반드시 틀린 이유로 묶인다 —
+ * 업로드를 4로 조이면 1편 발주가 20쪽을 볼 방법이 사라지고, 전송을 20으로 열면
+ * 6편 배치의 입력 토큰이 5배가 된다.
+ *
+ * 20 인 이유: 판독 상한(MAX_PDF_PAGES)과 같은 값이다. "판독이 읽는 범위"와 "원본을
+ * 올려 두는 범위"가 어긋나면, 어느 쪽으로 보내느냐에 따라 자료의 끝이 달라진다.
  */
-export const MAX_SEND_PAGES = 4;
+export const MAX_SEND_PAGES = 20;
 
 const TEXT_EXTS = new Set(["txt", "md", "markdown", "csv", "tsv", "json"]);
 const DOC_EXTS = new Set(["docx"]);

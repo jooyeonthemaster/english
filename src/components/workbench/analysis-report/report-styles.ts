@@ -33,9 +33,57 @@ export const ANALYSIS_REPORT_CSS = `
   /* 화면 편집용 확대/축소 — .par-sheet 에만 적용(측정용 .par-measure 는 영향 없음). 기본 1. */
   zoom: var(--par-zoom, 1);
 }
-.par-sheet-body { flex: 1; min-height: 0; }
+
+/* ── 뷰포트 밖 페이지 렌더 스킵 (중앙 캔버스 전용) ────────────────────────────
+   .par-sheet 는 width/height 가 210mm×297mm 로 **명시**돼 있어 size containment 가
+   걸려도 박스 크기가 변하지 않는다 → 스크롤 점프도 재페이지네이션도 원리적으로 없다.
+   (contain-intrinsic-size 는 크기가 콘텐츠에서 나올 때만 쓰이므로 여기서는 사실상
+   무효인 안전핀이다. zoom(--par-zoom)·조상 transform:scale 과는 같은 배율로 함께
+   스케일되므로 어긋날 여지도 없다.)
+
+   선택자를 [data-page-index] 로 좁힌 것은 **둘 다 필수 조건**이다:
+   1) 측정 프로브(.par-measure 안의 .par-sheet.par-measure-sheet[data-cref="sheet"])에는
+      data-page-index 가 없다 → 절대 스킵되지 않는다. 이 프로브가 스킵되면 페이지 본문
+      가용 높이 실측이 죽어 페이지 분할이 통째로 붕괴한다.
+   2) 좌측 레일 썸네일의 .par-sheet 에도 data-page-index 가 없다 → 제외한다.
+      썸네일은 IntersectionObserver 가상화(page-thumbnail-rail.tsx)가 이미 담당한다.
+
+   :not(:has(.par-canvas)) — 필기 캔버스가 있는 페이지는 제외한다. 연결선 SVG 좌표를
+   getBoundingClientRect + ResizeObserver 로 실측하는데(report-sections/sentence-canvas.tsx),
+   RO 콜백은 비동기라 인쇄 레이아웃 전에 도착하지 못한다 → '화살표 없는 페이지'가
+   인쇄될 수 있다. 이 제외는 성능이 아니라 인쇄 정합의 문제이므로 떼지 말 것. */
+.par-sheet[data-page-index]:not(:has(.par-canvas)) {
+  content-visibility: auto;
+  contain-intrinsic-size: 210mm 297mm;
+}
+/* 벨트앤브레이스 — 화면 미디어 상태에서도 스킵을 즉시 해제하는 탈출구.
+   beforeprint 에서 documentElement 에 .par-print-reveal 을 얹고 afterprint 에서 떼면,
+   @media print 평가 시점이 늦는 드라이버에서도 인쇄 직전에 전 페이지가 레이아웃된다.
+   (아래 @media print 하드 리셋이 1차 방어선이고 이것은 예비 경로다.) */
+.par-print-reveal .par-sheet[data-page-index] {
+  content-visibility: visible !important;
+  contain-intrinsic-size: none !important;
+}
+
+.par-sheet-body {
+  flex: 1; min-height: 0;
+  /* 최후 방어선 — 조판 오차가 남아도 본문이 러닝 푸터를 '덮는' 일만은 없게 한다.
+     .par-sheet-body 는 flex:1 + min-height:0 이라 높이가 남은 공간에 못박히는데
+     overflow 가 visible 이면 초과분이 박스 밖으로 흘러 푸터 위에 그대로 그려진다.
+     단 overflow:hidden 은 금지 — 본문 박스 '바깥'(left:-6.5mm / right:-6.5~-8mm)에
+     절대배치된 편집 chrome(그립·삭제·리사이즈)이 통째로 잘린다. 세로만 clip 한다.
+     (visible + clip 조합은 Chromium 에서 auto 로 강등되지 않음을 실측 확인.) */
+  overflow-x: visible;
+  overflow-y: clip;
+}
 /* 측정용 숨김 컨테이너 (본문 폭과 동일) */
 .par-measure { position: absolute; visibility: hidden; pointer-events: none; left: -99999px; top: 0; width: 174mm; }
+/* 페이지 본문 가용 높이 실측용 프로브 시트 — 실제 러닝헤더/푸터를 가진 빈 시트를
+   .par-measure(174mm) 안에 '절대배치 210mm' 로 띄워 flow 폭·높이에 영향을 주지 않게 한다.
+   zoom 은 반드시 죽인다 — 모바일 뷰의 --par-zoom(0.42~0.72)이 걸리면 측정값이 축소돼
+   페이지 수가 폭발한다. */
+.par-measure .par-sheet { zoom: 1 !important; }
+.par-measure-sheet { position: absolute; left: 0; top: 0; width: 210mm; margin: 0; box-shadow: none; }
 
 /* ── 러닝 헤더/푸터 ── */
 .par-runhead {
@@ -44,18 +92,28 @@ export const ANALYSIS_REPORT_CSS = `
   color: var(--ink); border-bottom: .6mm solid var(--rule);
   padding-bottom: 2mm; margin-bottom: 5mm; font-weight: 700; flex: 0 0 auto;
 }
-.par-runhead-brand { display: flex; align-items: center; gap: 2.2mm; min-width: 0; }
+.par-runhead-brand { display: flex; align-items: center; gap: 2.2mm; min-width: 0; overflow: hidden; }
 /* 26-07-22: 9mm 정사각 고정은 가로로 긴 로고를 레터박스로 축소시켰다 — 높이 기준
    비율 유지 + 폭 상한만 두어 로고가 박스에 밀착되게 한다. */
 .par-runhead-logo { height: 9mm; width: auto; max-width: 26mm; object-fit: contain; flex: 0 0 auto; }
-.par-runhead .par-runhead-r { color: var(--text-muted); font-weight: 500; }
+/* 헤더/푸터 높이를 결정론적으로 — 긴 브랜드명·titleKo·docNo 가 2줄로 늘어나면 그만큼
+   본문 가용 높이가 줄어(각 4.1~4.4mm) 페이지 예산이 어긋난다. 1줄 + 말줄임으로 봉쇄한다.
+   높이(height)는 고정하지 않는다 — 로고 유무에 따른 차이는 프로브 실측이 자동으로
+   처리하므로 불필요하고, 고정하면 로고 없는 문서에서 페이지당 4.6mm 를 낭비한다. */
+.par-runhead-brand > span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.par-runhead .par-runhead-r {
+  color: var(--text-muted); font-weight: 500;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  min-width: 0; flex: 0 1 auto; text-align: right;
+}
 .par-runfoot {
-  display: flex; justify-content: space-between; align-items: center;
+  display: flex; justify-content: space-between; align-items: center; gap: 4mm;
   font-size: calc(7.5pt * var(--par-fs, 1)); color: var(--text-muted);
   border-top: .4mm solid var(--tint-border);
   padding-top: 2mm; margin-top: 5mm; letter-spacing: .03em; flex: 0 0 auto;
 }
-.par-runfoot .par-page { font-weight: 700; color: var(--ink); }
+.par-runfoot > span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.par-runfoot .par-page { font-weight: 700; color: var(--ink); flex: 0 0 auto; }
 
 /* ── 블록 간 간격 ── */
 .par-block { margin-bottom: 6mm; font-size: calc(10pt * var(--par-fs, 1)); }
@@ -561,11 +619,17 @@ export const ANALYSIS_REPORT_CSS = `
 .par-thesis .par-thesis-en { font-family: var(--font-en); font-style: italic; font-size: calc(11.5pt * var(--par-fs, 1)); line-height: 1.4; }
 
 /* ── 표 (04/05/06) ── */
-.par-table { width: 100%; border-collapse: collapse; font-size: calc(8.7pt * var(--par-fs, 1)); }
+/* table-layout: fixed 상시 — auto 였을 때는 열 폭이 '그 표에 든 셀 전부'로 정해져,
+   전 행이 한 표에 들어가는 측정 클론과 그 페이지 몫 행만 든 실제 표의 열 폭이 서로 달랐다
+   (= 측정 때 안 접히던 셀이 실제로 2줄이 되어 페이지가 넘침). thead 의 th 에 모든 보이는
+   열의 퍼센트 폭이 항상 주어지므로(table.tsx resolveColumnWidths) fixed 로 결정론화한다. */
+.par-table { width: 100%; table-layout: fixed; border-collapse: collapse; font-size: calc(8.7pt * var(--par-fs, 1)); }
 .par-vocab-test-table { table-layout: fixed; }
 /* 행(tr)에 --par-fs 가 실리므로 tr 기준으로 글자크기 → td 가 상속받아 행 단위 크기 조절이 먹는다 */
 .par-table tbody tr { font-size: calc(8.7pt * var(--par-fs, 1)); }
-.par-table th, .par-table td { border: .3mm solid var(--tint-border); padding: 2mm 2.5mm; text-align: left; vertical-align: top; }
+/* fixed 레이아웃에서는 열이 콘텐츠에 맞춰 늘지 않으므로, 긴 영어 표제어/동의어가
+   열을 넘치지 않게 어디서든 끊을 수 있게 한다. */
+.par-table th, .par-table td { border: .3mm solid var(--tint-border); padding: 2mm 2.5mm; text-align: left; vertical-align: top; overflow-wrap: anywhere; }
 .par-table thead th { background: var(--table-head-bg, var(--ink-fill, var(--ink))); color: var(--table-head-text, var(--ink-on-fill, #fff)); font-weight: 700; }
 .par-table tbody tr:nth-child(even) td { background: var(--table-stripe); }
 /* 열 너비 조절 손잡이 — thead th 오른쪽 경계에 떠 있는 세로 드래그 영역(편집 모드 전용). */
@@ -1613,6 +1677,19 @@ export const ANALYSIS_REPORT_CSS = `
   }
   .par-sheet { box-shadow: none !important; margin: 0 !important; break-after: page; zoom: 1 !important; }
   .par-sheet:last-child { break-after: auto; }
+  /* 인쇄에서는 무조건 전 페이지를 렌더한다 — content-visibility 스킵이 인쇄까지 남으면
+     '높이만 297mm 인 백지'가 그대로 출력된다(치명).
+     특이도 함정: !important 끼리는 특이도로 승부가 나므로 화면 규칙과 **완전히 동일한
+     선택자**를 여기서 그대로 다시 쓴다(같은 특이도 + 나중 선언 = 승리). 앞의 두 선택자는
+     혹시 모를 다른 경로까지 덮는 그물이다.
+     contain-intrinsic-size 는 auto 단독이 문법상 무효라 none 으로 되돌린다. */
+  .par-sheet,
+  .par-sheet[data-page-index],
+  .par-sheet[data-page-index]:not(:has(.par-canvas)) {
+    content-visibility: visible !important;
+    contain-intrinsic-size: none !important;
+    contain: none !important;
+  }
   .par-canvas { break-inside: avoid; }
   /* 연결선 SVG가 인쇄 래스터에서 캔버스 박스를 벗어나 다른 페이지(1페이지 좌상단)로
      새어나가지 않도록 인쇄 시에도 자기 캔버스 박스에 강제 클립한다.
@@ -1632,7 +1709,11 @@ export const ANALYSIS_REPORT_CSS = `
      강제해 모든 행이 색 띠로 구분되게 한다. 격자선(gap-fill)은 보조 장식.
      (print-color-adjust:exact 가 이미 강제돼 배경은 '배경 그래픽' 토글과 무관하게 인쇄됨.) */
   .par-table { border-collapse: separate !important; border-spacing: 0.5mm !important; background-color: #94a3b8 !important; border: 0.6mm solid #94a3b8 !important; box-sizing: border-box !important; }
-  .par-table th, .par-table td { border: 0 !important; background-clip: padding-box !important; }
+  /* 격자 방식이 collapse(셀 테두리 .3mm) → separate(칸 사이 간격 0.5mm)로 바뀌는 만큼
+     셀 패딩을 깎아 인쇄 표의 총 높이·폭을 화면(=페이지 분할을 계산한 레이아웃)과 맞춘다.
+     세로 2mm→1.85mm, 가로 2.5mm→2.2mm. 이 보정이 없으면 26행 표가 인쇄에서 세로로
+     약 6.6mm 커지고 가로로 4.2mm 좁아져, 화면이 멀쩡해도 PDF 에서 푸터를 뚫는다. */
+  .par-table th, .par-table td { border: 0 !important; background-clip: padding-box !important; padding: 1.85mm 2.2mm !important; }
   .par-table tbody tr td { background-color: #ffffff !important; }
   .par-table tbody tr:nth-child(even) td { background-color: #e2e8f0 !important; }
   .par-table thead th { background-color: var(--table-head-bg, var(--ink-fill, var(--ink))) !important; }

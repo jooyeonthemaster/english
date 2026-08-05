@@ -35,6 +35,10 @@ const ESTIMATE_USD_PER_ACTION: Record<OperationType, number> = {
   PASSAGE_RESTORATION: 0.0017,
   PASSAGE_TRANSFORM: 0.001,
   PASSAGE_VARIANT: 0.002,
+  // 지문 1편당 — 3.6-flash 1콜(자료 요약 입력 최대 수천 토큰 + 출력 ~400토큰).
+  // PASSAGE_VARIANT($0.002, flash-lite·입력 지문 1편)의 2배 가정: 상위 모델 +
+  // 자료(어법·단어장) 입력이 붙는 만큼만 올려 잡았다.
+  PASSAGE_AUTHORING: 0.004,
   WEBTOON_IMAGE: 0.008,
   WEBTOON_IMAGE_PREMIUM: 0.02,
   WEBTOON_EXAM_DOWNLOAD: 0.0002,
@@ -59,6 +63,7 @@ const FEATURE_ORDER: OperationType[] = [
   "PASSAGE_RESTORATION",
   "PASSAGE_TRANSFORM",
   "PASSAGE_VARIANT",
+  "PASSAGE_AUTHORING",
   "WEBTOON_IMAGE",
   "WEBTOON_IMAGE_PREMIUM",
   "WEBTOON_EXAM_DOWNLOAD",

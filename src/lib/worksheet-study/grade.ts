@@ -4,6 +4,7 @@
 // ============================================================================
 
 import type { StudyItemEvent, StudyWeakness } from "./types";
+import { STUDY_STAGE_META } from "./types";
 
 // ── 영어 정규화 ─────────────────────────────────────────────────────────────
 
@@ -196,21 +197,116 @@ export function accumulateWeakness(
   return w;
 }
 
+// ── 성취 지표 (첫 시도 정답률 + 진도) ───────────────────────────────────────
+
+/** computeStudyMastery 가 읽는 스테이지 상태의 최소 형태 */
+export interface MasteryStageInput {
+  status?: string;
+  firstCorrect?: number;
+  firstTotal?: number;
+  answered?: number;
+  total?: number;
+}
+
 /**
- * 종합 숙달도 — 완료된 채점 스테이지의 첫시도 정답률을 아이템 수로 가중 평균.
- * 완료된 채점 스테이지가 없으면 null.
+ * 학습지 성취 지표 — 정답률과 진도를 **함께** 낸다.
+ *
+ * 구 computeMasteryPct 는 `status === "done"` 스테이지만 집계해, 쉬운 단계 하나만
+ * 만점으로 끝내고 나머지를 손도 안 댄 학생이 100%로 보고되는 결함이 있었다
+ * (2026-07-25 실측: 어휘 시험 12/12 만 반영되고 오답 6문항이 전부 분모에서 탈락).
+ * 새 정의는 진행 중 스테이지의 첫 시도 기록도 전부 분모에 넣고, 얼마나 풀었는지를
+ * coveragePct 로 병기해 "정답률 100% · 진도 20%" 같은 사실을 숨기지 않는다.
+ * 규범: docs/student-hub-uiux-2607-spec.md §3.
+ */
+export interface StudyMastery {
+  /** 첫 시도 정답률(%) — 전 스테이지(done+in-progress) 누적. 첫 시도 채점 0건이면 null */
+  firstTryPct: number | null;
+  /** 진도(%) — 채점 문항 중 푼 비율. 산정 불가면 null */
+  coveragePct: number | null;
+  firstCorrect: number;
+  firstTotal: number;
+  answered: number;
+  totalItems: number;
+  stagesDone: number;
+  stagesTotal: number;
+  /** 상태가 있는 스테이지 중 done 이 아닌 것이 있으면 true — UI 「학습 중」 배지 */
+  provisional: boolean;
+}
+
+/**
+ * 채점 스테이지인가 — 진도 분모의 자격 판정.
+ * 무채점 스테이지(지문 통독·어휘 카드)는 진행 중일 때만 total 이 저장되고 완료되면
+ * 사라져, 상태에 따라 분모에 들어갔다 나갔다 하는 비일관이 생긴다. 카탈로그로
+ * 못박아 「진도 = 채점 문항 중 푼 비율」이라는 정의를 항상 지킨다.
+ * 카탈로그에 없는 스테이지 id 는 보수적으로 채점 취급(분모 유지).
+ */
+function isGradedStage(stageId: string): boolean {
+  return (STUDY_STAGE_META as Record<string, { graded?: boolean } | undefined>)[stageId]?.graded !== false;
+}
+
+export function computeStudyMastery(
+  stages: Partial<Record<string, MasteryStageInput | undefined>>,
+): StudyMastery {
+  let firstCorrect = 0;
+  let firstTotal = 0;
+  let answered = 0;
+  let totalItems = 0;
+  let stagesDone = 0;
+  let stagesTotal = 0;
+
+  for (const [stageId, s] of Object.entries(stages)) {
+    if (!s || typeof s.status !== "string") continue;
+    stagesTotal += 1;
+    if (s.status === "done") stagesDone += 1;
+
+    // 정답률 — status 무관. 첫 시도 채점 기록이 있는 스테이지만.
+    if (typeof s.firstTotal === "number" && s.firstTotal > 0) {
+      firstTotal += s.firstTotal;
+      if (typeof s.firstCorrect === "number") {
+        firstCorrect += Math.min(Math.max(s.firstCorrect, 0), s.firstTotal);
+      }
+    }
+
+    // 진도 — 채점 스테이지만. done 스테이지는 total 을 저장하지 않으므로
+    // firstTotal 을 문항 수로 본다(완주했으니 문항 수 = 첫 시도 채점 수).
+    if (!isGradedStage(stageId)) continue;
+    const stageTotal =
+      typeof s.total === "number" && s.total > 0
+        ? s.total
+        : typeof s.firstTotal === "number" && s.firstTotal > 0
+          ? s.firstTotal
+          : 0;
+    if (stageTotal > 0) {
+      totalItems += stageTotal;
+      const stageAnswered =
+        typeof s.answered === "number"
+          ? s.answered
+          : typeof s.firstTotal === "number"
+            ? s.firstTotal
+            : 0;
+      answered += Math.min(Math.max(stageAnswered, 0), stageTotal);
+    }
+  }
+
+  return {
+    firstTryPct: firstTotal === 0 ? null : Math.round((firstCorrect / firstTotal) * 100),
+    coveragePct: totalItems === 0 ? null : Math.round((answered / totalItems) * 100),
+    firstCorrect,
+    firstTotal,
+    answered,
+    totalItems,
+    stagesDone,
+    stagesTotal,
+    provisional: stagesTotal > 0 && stagesDone < stagesTotal,
+  };
+}
+
+/**
+ * 첫 시도 정답률(%) — computeStudyMastery 의 축약. 저장 캐시(masteryPct) 계산에도 쓴다.
+ * 이름은 DB 컬럼(masteryPct)과의 호환을 위해 유지하되 **의미는 첫 시도 정답률**이다.
  */
 export function computeMasteryPct(
-  stages: Partial<Record<string, { status?: string; firstCorrect?: number; firstTotal?: number }>>,
+  stages: Partial<Record<string, MasteryStageInput | undefined>>,
 ): number | null {
-  let correct = 0;
-  let total = 0;
-  for (const s of Object.values(stages)) {
-    if (!s || s.status !== "done") continue;
-    if (typeof s.firstCorrect !== "number" || typeof s.firstTotal !== "number") continue;
-    correct += s.firstCorrect;
-    total += s.firstTotal;
-  }
-  if (total === 0) return null;
-  return Math.round((correct / total) * 100);
+  return computeStudyMastery(stages).firstTryPct;
 }

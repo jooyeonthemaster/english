@@ -4,10 +4,14 @@ import { createPortal } from "react-dom";
 import {
   ChevronLeft,
   ChevronRight,
+  FileQuestion,
   GripVertical,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import {
   type MouseEvent as ReactMouseEvent,
+  type PointerEvent as ReactPointerEvent,
   type SetStateAction,
   useCallback,
   useDeferredValue,
@@ -53,7 +57,12 @@ import {
   type DropPlacement,
   type ReportEdit,
 } from "./report-pages";
-import { reportFlowItems, type FlowItem } from "./report-sections";
+import { reportFlowItems, reportOutline, reportSectionSlots, type FlowItem } from "./report-sections";
+// describeItems(=FlowItem[] → ItemDescriptor[]) 와 SectionFlowCache 는 배럴이 아니라
+// 정의 파일에서 직접 가져온다 — 같은 웨이브에서 신설되는 계약 API 라 배럴 갱신 여부와
+// 무관하게 컴파일되도록 경로를 고정한다(배럴은 여전히 기존 심볼만 재수출).
+import { describeItems } from "./report-pages/items";
+import { SectionFlowCache } from "./report-sections/flow-cache";
 import {
   applyBlockOrder,
   blankExamRow,
@@ -76,6 +85,7 @@ import {
   setVocabularyTestMode,
   setVocabularyTierFilter,
   setVocabularyTestOnly,
+  toggleHiddenSection,
   toggleTableCol,
 } from "./editor-mutations";
 import { ANALYSIS_REPORT_EDIT_CSS } from "./report-edit-styles";
@@ -83,6 +93,7 @@ import { ActivityToggleSwitch } from "./activity-palette-modal";
 import { type WebtoonPick } from "./webtoon-picker-modal";
 import type { ActivityAction } from "./custom-activity-renders";
 import {
+  activityBlockLabel,
   appliedActivityParams,
   appliedActivitySentences,
   applyManualBlankToBlock,
@@ -113,6 +124,8 @@ import { MobilePanelSheet, MobileReportActionBar } from "./mobile-editor-chrome"
 import { PropertiesPanel } from "./properties-panel";
 import { useIsMobile } from "@/hooks/use-is-mobile";
 import { SettingsTemplatePopover } from "./cover-logo-panels";
+import { SectionOutlinePopover, type OutlineCustomEntry } from "./section-outline-popover";
+import { ReportSaveAsDialog } from "./save-as-dialog";
 
 const REPORT_A4_WIDTH_PX = Math.round((210 * 96) / 25.4);
 const REPORT_A4_HEIGHT_PX = Math.round((297 * 96) / 25.4);
@@ -126,6 +139,11 @@ const LOGO_FILE_MAX_BYTES = 1.5 * 1024 * 1024;
 // 수동 줌 하한(PREVIEW_ZOOM_MIN=0.5)보다 낮게 둔다. 데스크톱은 캔버스가 넓어
 // fit 값이 늘 1로 수렴하므로 이 하한은 사실상 모바일에서만 작동한다.
 const FIT_ZOOM_MIN = 0.2;
+/**
+ * usePaperItemDrag 에 넘기는 미사용 세터(드롭 인디케이터 partKey — 이 편집기는 쓰지 않는다).
+ * 인라인 화살표로 두면 매 렌더 새 함수가 되어 startDrag 정체성을 흔든다.
+ */
+const NOOP = () => {};
 
 export type ReportEditorToolbarState = {
   dirty: boolean;
@@ -136,6 +154,10 @@ export type ReportEditorToolbarState = {
   worksheetBusy: boolean;
   worksheetHasContent: boolean;
   generateWorksheet: () => void;
+  /** '다른 이름으로 저장' 다이얼로그 열기. 다이얼로그 자체는 편집기가 소유한다(호스트마다 복제 금지). */
+  requestSaveAs: () => void;
+  /** 사본 저장 진행 중. 저장 버튼의 스피너·비활성 판정에 쓴다. */
+  savingAs: boolean;
 };
 
 interface Props {
@@ -178,6 +200,11 @@ export function AnalysisReportEditor({
   const [error, setError] = useState<string | null>(null);
   // 06 실전 학습지(워크북+수능추론) 옵트인 생성 진행 상태.
   const [worksheetBusy, setWorksheetBusy] = useState(false);
+  // '다른 이름으로 저장' — 이름 입력 다이얼로그 개폐 + 사본 저장 진행 상태.
+  const [saveAsOpen, setSaveAsOpen] = useState(false);
+  const [savingAs, setSavingAs] = useState(false);
+  // 사본 저장은 서버가 새 지문·보고서 행을 만든다 — 목록을 다시 읽어야 새 학습지가 보인다.
+  const router = useRouter();
 
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [dragOverId, setDragOverId] = useState<string | null>(null);
@@ -529,6 +556,11 @@ export function AnalysisReportEditor({
   );
 
   const [pageList, setPageList] = useState<string[][]>([]);
+  // 페이지 이동/재정렬 핸들러가 pageList 를 클로저로 잡으면, 재페이지네이션마다
+  // `edit` 객체가 새로 만들어져 문서 트리 memo 가 풀린다. 값은 ref 로 읽는다 —
+  // 두 핸들러 모두 사용자 조작 시점에만 호출되므로 항상 최신 pageList 를 본다.
+  const pageListRef = useRef(pageList);
+  pageListRef.current = pageList;
   const [activePageIndex, setActivePageIndex] = useState(0);
   const [pagesPanelCollapsed, setPagesPanelCollapsed] = useState(false);
   const [propertiesPanelCollapsed, setPropertiesPanelCollapsed] = useState(false);
@@ -612,9 +644,18 @@ export function AnalysisReportEditor({
     const scroller = previewScrollerRef.current;
     if (!scroller) return;
 
+    // 페이지 노드는 pageList 가 바뀔 때만 달라진다 → effect 진입 시 1회 조회해 캐시한다.
+    // (예전에는 스크롤 이벤트마다 문서 전체를 querySelectorAll 했다.)
+    let pageNodes: HTMLElement[] = [];
+    const refreshNodes = () => {
+      pageNodes = Array.from(scroller.querySelectorAll<HTMLElement>("[data-page-index]"));
+    };
+
     const updateActivePage = () => {
+      // 캐시가 비었거나(초기) 노드가 DOM 에서 떨어져 나갔으면 다시 조회 — 결과가
+      // 예전(매번 조회)과 100% 같도록 보장하는 안전판.
+      if (pageNodes.length === 0 || !pageNodes[0].isConnected) refreshNodes();
       const scrollerRect = scroller.getBoundingClientRect();
-      const pageNodes = Array.from(scroller.querySelectorAll<HTMLElement>("[data-page-index]"));
       let nextIndex = 0;
       let bestDistance = Number.POSITIVE_INFINITY;
       pageNodes.forEach((node) => {
@@ -629,14 +670,32 @@ export function AnalysisReportEditor({
       setActivePageIndex(nextIndex);
     };
 
+    // 스크롤 이벤트는 한 프레임에 여러 번 올 수 있다 → rAF 로 프레임당 1회로 합친다.
+    // 프레임 경계에서 읽는 스크롤 위치 = 그 프레임 마지막 이벤트의 위치이므로 결과값은 동일하다.
+    let raf = 0;
+    const onScroll = () => {
+      if (raf) return;
+      raf = window.requestAnimationFrame(() => {
+        raf = 0;
+        updateActivePage();
+      });
+    };
+
+    refreshNodes();
     updateActivePage();
-    const frame = window.requestAnimationFrame(updateActivePage);
-    scroller.addEventListener("scroll", updateActivePage, { passive: true });
+    const frame = window.requestAnimationFrame(() => {
+      refreshNodes();
+      updateActivePage();
+    });
+    scroller.addEventListener("scroll", onScroll, { passive: true });
     return () => {
       window.cancelAnimationFrame(frame);
-      scroller.removeEventListener("scroll", updateActivePage);
+      if (raf) window.cancelAnimationFrame(raf);
+      scroller.removeEventListener("scroll", onScroll);
     };
-  }, [pageList.length, zoom]);
+    // pageList.length 가 아니라 pageList 자체 — 페이지 수가 같아도 재분할되면
+    // 캐시한 노드를 다시 읽어야 한다(setPageList 는 samePages 가드로 참조가 안정적).
+  }, [pageList, zoom]);
 
   // 본문 미리보기를 스크롤하면(activePageIndex 변경) 좌측 썸네일 목록도 따라와
   // 현재 보고 있는 페이지 썸네일이 항상 보이게 한다. 이미 보이면 움직이지 않는다.
@@ -766,6 +825,10 @@ export function AnalysisReportEditor({
 
   const resetPreviewZoom = useCallback(() => setManualZoom(null), []);
 
+  // 캔버스 빈 배경 클릭 → 선택 해제. 인라인 화살표로 두면 EditorCanvas 의 memo 가
+  // 매 렌더 무효화되므로 정체성을 고정한다.
+  const deselect = useCallback(() => setActiveId(null), []);
+
   const fitPreviewToScreen = useCallback(() => {
     const scroller = previewScrollerRef.current;
     if (!scroller) return;
@@ -779,6 +842,11 @@ export function AnalysisReportEditor({
     setManualZoom(Math.round(clamped * 100) / 100);
   }, []);
 
+  // 드래그 시작 위치를 ref 로 읽어 핸들러 정체성을 영구 고정한다(deps []).
+  // 예전에는 deps 가 [zoomControlsPos] 라, 컨트롤을 한 번 움직일 때마다 EditorCanvas 의
+  // prop 이 새 함수가 되어 문서 트리 memo 가 통째로 무효화됐다.
+  const zoomControlsPosRef = useRef(zoomControlsPos);
+  zoomControlsPosRef.current = zoomControlsPos;
   const handlePreviewZoomControlsDragStart = useCallback(
     (event: ReactMouseEvent<HTMLSpanElement>) => {
       if (event.button !== 0) return;
@@ -787,30 +855,45 @@ export function AnalysisReportEditor({
 
       const startMouseX = event.clientX;
       const startMouseY = event.clientY;
-      const startTop = zoomControlsPos.top;
-      const startRight = zoomControlsPos.right;
+      const { top: startTop, right: startRight } = zoomControlsPosRef.current;
+      // 드래그 중에는 컨트롤 DOM 에 직접 반영하고(블록 리사이즈 핸들·표 열너비 드래그와
+      // 동일한 관용구), 포인터를 놓을 때 딱 한 번만 상태로 확정한다. mousemove 마다
+      // setState 하면 프레임당 문서 전체 트리를 건드리게 된다.
+      const controlsEl = event.currentTarget.parentElement as HTMLElement | null;
       const prevCursor = document.body.style.cursor;
       const prevUserSelect = document.body.style.userSelect;
       document.body.style.cursor = "grabbing";
       document.body.style.userSelect = "none";
 
+      let next = { top: startTop, right: startRight };
       const handleMove = (moveEvent: MouseEvent) => {
-        setZoomControlsPos({
+        next = {
           top: Math.max(0, startTop + (moveEvent.clientY - startMouseY)),
           right: Math.max(0, startRight - (moveEvent.clientX - startMouseX)),
-        });
+        };
+        if (controlsEl) {
+          controlsEl.style.top = `${next.top}px`;
+          controlsEl.style.right = `${next.right}px`;
+        } else {
+          // 컨트롤 DOM 을 못 찾는 경우(구조 변경 등)에는 예전 경로로 안전 복귀.
+          setZoomControlsPos(next);
+        }
       };
       const handleUp = () => {
         document.removeEventListener("mousemove", handleMove);
         document.removeEventListener("mouseup", handleUp);
         document.body.style.cursor = prevCursor;
         document.body.style.userSelect = prevUserSelect;
+        // 최종 위치를 React 상태로 확정 — 이후 리렌더가 같은 값을 다시 쓰므로 튐이 없다.
+        setZoomControlsPos((prev) =>
+          prev.top === next.top && prev.right === next.right ? prev : next,
+        );
       };
 
       document.addEventListener("mousemove", handleMove);
       document.addEventListener("mouseup", handleUp);
     },
-    [zoomControlsPos],
+    [],
   );
 
   const deleteActive = useCallback((id: string) => {
@@ -844,12 +927,13 @@ export function AnalysisReportEditor({
   const movePage = useCallback(
     (pageIds: string[], dir: -1 | 1) => {
       if (!pageIds.length) return;
-      const pi = pageList.findIndex(
+      const pages = pageListRef.current;
+      const pi = pages.findIndex(
         (p) => p.length > 0 && p[0] === pageIds[0],
       );
       if (pi < 0) return;
       const ti = pi + dir;
-      if (ti < 0 || ti >= pageList.length) return;
+      if (ti < 0 || ti >= pages.length) return;
       setReport((r) => {
         // 페이지 조각(part-key) → blockOrder 정렬 단위(orderId) 매핑.
         const orderOf = new Map<string, string>();
@@ -868,7 +952,7 @@ export function AnalysisReportEditor({
 
         // 각 orderId 의 "소유 페이지" = 그 블록의 첫 조각이 놓인 페이지(앞 페이지 우선).
         const ownerPage = new Map<string, number>();
-        pageList.forEach((parts, pageIdx) => {
+        pages.forEach((parts, pageIdx) => {
           for (const part of parts) {
             const oid = toOrder(part);
             if (!pos.has(oid) || ownerPage.has(oid)) continue;
@@ -900,7 +984,7 @@ export function AnalysisReportEditor({
         };
       });
     },
-    [pageList, setReport],
+    [setReport],
   );
   // 페이지를 드래그해 임의의 최종 위치(toPi)로 이동 — movePage 의 "소유 블록" 규칙을
   // 일반화한 버전. 페이지가 소유한 블록 묶음(첫 조각이 그 페이지에 놓인 orderId)을 통째로
@@ -909,6 +993,7 @@ export function AnalysisReportEditor({
   const reorderPages = useCallback(
     (fromPi: number, toPi: number) => {
       if (fromPi === toPi) return;
+      const pages = pageListRef.current;
       setReport((r) => {
         const orderOf = new Map<string, string>();
         for (const it of reportFlowItems(r)) {
@@ -925,7 +1010,7 @@ export function AnalysisReportEditor({
         const pos = new Map(ids.map((id, i) => [id, i] as const));
 
         const ownerPage = new Map<string, number>();
-        pageList.forEach((parts, pageIdx) => {
+        pages.forEach((parts, pageIdx) => {
           for (const part of parts) {
             const oid = toOrder(part);
             if (!pos.has(oid) || ownerPage.has(oid)) continue;
@@ -956,7 +1041,7 @@ export function AnalysisReportEditor({
         };
       });
     },
-    [pageList, setReport],
+    [setReport],
   );
   const onToggleCol = useCallback((si: number, key: string) => {
     setReport((r) => toggleTableCol(r, si, key));
@@ -1204,10 +1289,21 @@ export function AnalysisReportEditor({
     setActiveItemId: setActiveId,
     setDraggingItemId: setDraggingId,
     setDragOverItemId: setDragOverId,
-    setDragOverPartKey: () => {},
+    setDragOverPartKey: NOOP,
     setDragPlacement: setPlacement,
     onMoveItemToDropTarget: onReorder,
   });
+  // usePaperItemDrag(시험지 빌더와 공용 훅)는 훅 본문에서 함수를 선언해 매 렌더 새
+  // { startDrag } 를 돌려준다. 그게 아래 `edit` useMemo 의 의존성이라 edit 이 매 렌더
+  // 새 객체가 되어(= useMemo 가 사실상 no-op) 문서 전체 shell 트리가 재실행됐다.
+  // 공용 훅은 건드리지 않고 소비 측에서 ref 경유로 정체성만 고정한다.
+  // ※ ref 대입을 렌더 본문에서 매번 수행해야 stale closure 가 생기지 않는다.
+  const startDragRef = useRef(startDrag);
+  startDragRef.current = startDrag;
+  const stableStartDrag = useCallback(
+    (event: ReactPointerEvent<HTMLButtonElement>, id: string) => startDragRef.current(event, id),
+    [],
+  );
 
   const edit: ReportEdit = useMemo(
     () => ({
@@ -1227,21 +1323,65 @@ export function AnalysisReportEditor({
       onDeletePage: deletePage,
       onDelete: deleteActive,
       onMovePage: movePage,
-      drag: { startDrag, draggingId, dragOverId, placement },
+      drag: { startDrag: stableStartDrag, draggingId, dragOverId, placement },
     }),
-    [med, sectionEdit, activeId, onReorder, onBlockMeta, setCustom, insertTextAfter, onActivity, ced, onResize, onColWidths, onSectionHeading, deletePage, deleteActive, movePage, startDrag, draggingId, dragOverId, placement],
+    // stableStartDrag/med/sectionEdit/… 는 전부 영구 안정 → edit 은 이제
+    // activeId / draggingId / dragOverId / placement 4개가 바뀔 때만 새 객체가 된다.
+    [med, sectionEdit, activeId, onReorder, onBlockMeta, setCustom, insertTextAfter, onActivity, ced, onResize, onColWidths, onSectionHeading, deletePage, deleteActive, movePage, stableStartDrag, draggingId, dragOverId, placement],
   );
 
-  const descriptors = useMemo(() => enumerateItems(report), [report]);
+  // ─── 문서 FlowItem 계산 (한 번의 report 변경에 '두 벌'만) ─────────────────────
+  // 예전에는 report 1회 변경마다 reportFlowItems(문서 전체 JSX 조립)가 3벌 돌았다:
+  //   ① ReportPages 내부 natural(edit 포함) ② enumerateItems(descriptors, edit 없음)
+  //   ③ thumbItemsById(edit 없음, deferred)
+  // ①은 여기서 계산해 flowItems 로 주입하고(ReportPages 는 그대로 씀), ②③은 동일한
+  // '편집 콜백 없는' 호출이므로 한 벌로 합친다 → 3벌 → 2벌.
+  // 두 벌을 나눌 수밖에 없는 이유: 썸네일/descriptors 는 편집용 노드(contentEditable)를
+  // 절대 공유하면 안 되고, KO 보고서에서는 edit 유무로 아이템 수가 실제로 달라진다
+  // (ko-section-flow.tsx 의 `if (editable) push("ko-quiz-toggle")`).
+  const editFlow = useMemo(
+    () => ({ med, sectionEdit, setCustom, insertTextAfter, ced, onActivity, onSectionHeading }),
+    [med, sectionEdit, setCustom, insertTextAfter, ced, onActivity, onSectionHeading],
+  );
+  // 섹션 단위 캐시 — 안 바뀐 섹션의 FlowItem 배열(=React 엘리먼트 참조)을 보존해
+  // 측정 클론/본문/썸네일 3벌 모두에서 React 가 서브트리를 bailout 하게 한다.
+  // 편집본과 읽기전용본은 슬롯 키가 겹치므로 캐시 인스턴스를 반드시 분리한다.
+  const editFlowCacheRef = useRef<SectionFlowCache | null>(null);
+  if (!editFlowCacheRef.current) editFlowCacheRef.current = new SectionFlowCache();
+  const readOnlyFlowCacheRef = useRef<SectionFlowCache | null>(null);
+  if (!readOnlyFlowCacheRef.current) readOnlyFlowCacheRef.current = new SectionFlowCache();
+
+  /** 편집용(자연 순서). ReportPages 로 그대로 내려가 visibleFlowItems 가 적용된다. */
+  const naturalFlowItems = useMemo(
+    () => reportFlowItems(report, editFlow, editFlowCacheRef.current ?? undefined),
+    [report, editFlow],
+  );
+  /** 읽기전용(편집 콜백 없음) — descriptors + 썸네일이 공유. 예전 두 호출과 인자 동일. */
+  const readOnlyFlowItems = useMemo(
+    () => reportFlowItems(report, undefined, readOnlyFlowCacheRef.current ?? undefined),
+    [report],
+  );
+
+  const descriptors = useMemo(() => describeItems(readOnlyFlowItems), [readOnlyFlowItems]);
   // ─── 페이지 썸네일용 데이터 ───
   // 실제 블록 노드를 한 번만 계산해 모든 썸네일이 공유. 타이핑 중 썸네일
   // 재렌더가 입력을 끊지 않도록 deferred 값으로 낮은 우선순위로 갱신한다.
+  // (useDeferredValue 는 같은 컴포넌트 안에서 같은 패스에 함께 지연/확정되므로
+  //  deferredReport 와 deferredFlowItems 는 항상 같은 report 를 가리킨다.)
   const deferredReport = useDeferredValue(report);
+  const deferredFlowItems = useDeferredValue(readOnlyFlowItems);
+  // 레일이 실제로 보일 때만 썸네일 인덱스를 만든다. 모바일은 레일 자체가 미렌더이고
+  // (아래 `!isMobile &&` 가드), 접힘 상태에서는 PageThumbnailRail 이 early return 이라
+  // itemsById/pageInfo 를 한 번도 읽지 않는다 — 그동안은 순수 낭비였다.
+  // 레일을 펼치는 순간 thumbSource 가 붙어 그대로 복구된다.
+  const railActive = !isMobile && !pagesPanelCollapsed;
+  const thumbSource = railActive ? deferredFlowItems : null;
   const thumbItemsById = useMemo(() => {
     const map = new Map<string, FlowItem>();
-    for (const it of reportFlowItems(deferredReport)) map.set(it.id, it);
+    if (!thumbSource) return map;
+    for (const it of thumbSource) map.set(it.id, it);
     return map;
-  }, [deferredReport]);
+  }, [thumbSource]);
   // 표지를 제외한 본문 페이지 번호/총수 (중앙 캔버스의 푸터 번호와 일치).
   const thumbPageInfo = useMemo(() => {
     const coverFlags = pageList.map(
@@ -1263,6 +1403,79 @@ export function AnalysisReportEditor({
       return i > 0 ? orderedIds[i - 1] : null;
     },
     [orderedIds],
+  );
+
+  // ─── 섹션 목차(상단바 팝오버) ─────────────────────────────────────────────
+  // 20페이지 문서에서 타이핑 중에도 매 렌더 재계산되지 않도록 의존성을 좁힌다 —
+  // reportOutline 이 실제로 읽는 필드만 나열(report 전체를 넣으면 키 입력마다 재계산).
+  const outlineEntries = useMemo(
+    () => reportOutline(report),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [report.sections, report.hiddenSections, report.sectionHeadings, report.englishOnlyPage, report.vocabTestOnly],
+  );
+  // 커스텀 블록은 섹션 슬롯이 아니라 blockMeta[id].hidden 축이다(다른 스위치, 다른 그룹).
+  // 단어 시험지 전용 모드에서는 assemble 이 커스텀 블록을 아예 조판하지 않으므로(assemble 의
+  // `if (!vocabTestOnly)` 게이트) 목차에도 내보내지 않는다 — 안 그러면 지면에 없는 블록을
+  // 끄고 켤 수 있는 것처럼 보이고, 눌러도 이동할 대상이 없어 아무 일도 일어나지 않는다.
+  // (섹션 축은 section-slots 의 headless 슬롯이 이미 같은 처리를 한다.)
+  const outlineCustomEntries = useMemo<OutlineCustomEntry[]>(
+    () =>
+      (report.vocabTestOnly ? [] : (report.customBlocks ?? [])).map((block) => ({
+        id: block.id,
+        label:
+          block.kind === "activity"
+            ? activityBlockLabel(block)
+            : block.kind === "image"
+              ? "지문 웹툰 이미지"
+              : block.kind === "spacer"
+                ? "여백 블록"
+                : "텍스트 블록",
+        hidden: !!report.blockMeta?.[block.id]?.hidden,
+      })),
+    [report.customBlocks, report.blockMeta, report.vocabTestOnly],
+  );
+
+  /** 스크롤 애니메이션 때문에 적용이 지연된 목차 토글 키 — 같은 키의 연타를 삼킨다. */
+  const pendingOutlineTogglesRef = useRef<Set<string>>(new Set());
+
+  const toggleOutlineSection = useCallback(
+    (key: string) => {
+      // 끌 때는 scrollUpThenApply 가 상태 반영을 최대 450ms 늦춘다(스크롤 애니메이션 뒤에 적용).
+      // 그동안 팝오버 스위치는 report 파생값이라 꿈쩍도 하지 않아서, 사용자가 "안 눌렸나" 하고
+      // 한 번 더 누르면 같은 turningOff 로 두 번째 토글이 예약돼 껐다 켜진다(= 두 번 껐는데 켜져 있음).
+      // 대기 중인 키는 두 번째 클릭을 무시한다.
+      if (pendingOutlineTogglesRef.current.has(key)) return;
+      const turningOff = !(report.hiddenSections ?? []).includes(key);
+      const headId = reportSectionSlots(report).find((slot) => slot.key === key)?.headId ?? null;
+      const apply = () => {
+        pendingOutlineTogglesRef.current.delete(key);
+        setReport((r) => toggleHiddenSection(r, key));
+        setActiveId(null);
+      };
+      // 끌 때는 사라질 자리 바로 위로 먼저 스크롤해 '튕김'을 막고, 켤 때는 그 섹션으로 이동.
+      if (turningOff) {
+        pendingOutlineTogglesRef.current.add(key);
+        scrollUpThenApply(headId ? blockAbove(headId) : null, apply);
+      } else {
+        apply();
+        if (headId) scrollToBlockRef.current(headId);
+      }
+    },
+    [report, setReport, scrollUpThenApply, blockAbove],
+  );
+
+  const toggleOutlineCustom = useCallback(
+    (id: string) => {
+      const turningOff = !report.blockMeta?.[id]?.hidden;
+      // 되돌릴 때 hidden 을 false 가 아니라 undefined 로 지워 blockMeta 를 깨끗하게 유지한다.
+      const apply = () => setReport((r) => setBlockMeta(r, id, { hidden: turningOff || undefined }));
+      if (turningOff) scrollUpThenApply(blockAbove(id), apply);
+      else {
+        apply();
+        scrollToBlockRef.current(id);
+      }
+    },
+    [report.blockMeta, setReport, scrollUpThenApply, blockAbove],
   );
   const logicalActiveId = activeId?.startsWith("c-") ? activeId.split("::", 1)[0] : activeId;
   const active: ItemDescriptor | null = useMemo(
@@ -1307,6 +1520,54 @@ export function AnalysisReportEditor({
       setSaving(false);
     }
   }, [passageId, report, onSaved]);
+
+  /** 사본을 만든 적이 있으면 편집기가 닫힐 때 목록을 한 번 다시 읽는다(아래 saveAs 주석 참고). */
+  const listNeedsRefreshRef = useRef(false);
+
+  /**
+   * 다른 이름으로 저장 — 지금 편집 중인 보고서를 **새 학습지 사본**으로 복제한다.
+   *
+   * 원본(현재 passageId 의 보고서)은 한 바이트도 바뀌지 않는다. 그래서 성공해도
+   * dirty/baseline/history 를 절대 초기화하지 않는다 — 사본 저장은 저장이 아니라 복제다.
+   * (여기서 baseline 을 갱신하면 "저장했다고 생각하고 창을 닫아 편집을 잃는" 사고가 난다.)
+   *
+   * 서버가 새 지문 행을 만들었으므로 목록 갱신이 필요하지만, **여기서 바로 치면 안 된다.**
+   * 호스트 목록(passage-list-client)은 모달 대상을 `passages.find(id)` 로 잡는데,
+   * router.refresh() 가 목록을 새 배열로 갈아치우는 순간 그 find 가 잠시 비면
+   * 모달이 통째로 언마운트되고 **저장하지 않은 편집이 소리 없이 사라진다**
+   * (사본 저장은 원본 저장이 아니므로 편집은 그대로 살아 있어야 한다).
+   * 그래서 갱신 요청만 표시해 두고 편집기가 닫힐 때 한 번 친다.
+   * @returns 실패 사유(한국어) — 성공이면 null.
+   */
+  const saveAs = useCallback(async (nextTitle: string): Promise<string | null> => {
+    const title = nextTitle.trim();
+    if (!title) return "학습지 이름을 입력해주세요.";
+    setSavingAs(true);
+    try {
+      const res = await fetch(`/api/workbench/passage-reports/prime/${passageId}/save-as`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        // 미저장 편집까지 그대로 복제한다(서버는 report 생략 시 저장본을 복제).
+        body: JSON.stringify({ title, report }),
+      });
+      const j = (await res.json().catch(() => null)) as { error?: string } | null;
+      if (!res.ok) return j?.error ?? "사본 저장에 실패했습니다.";
+      toast.success(`'${title}' 사본으로 저장했습니다. 원본에는 저장되지 않았습니다.`);
+      listNeedsRefreshRef.current = true;
+      return null;
+    } catch (e) {
+      return e instanceof Error ? e.message : String(e);
+    } finally {
+      setSavingAs(false);
+    }
+  }, [passageId, report]);
+
+  useEffect(
+    () => () => {
+      if (listNeedsRefreshRef.current) router.refresh();
+    },
+    [router],
+  );
 
   const revert = useCallback(() => {
     if (dirty && !window.confirm("저장하지 않은 편집을 모두 되돌릴까요?")) return;
@@ -1456,6 +1717,10 @@ export function AnalysisReportEditor({
   }, [save, generateWorksheet]);
   const stableSave = useCallback(() => saveRef.current(), []);
   const stableGenerateWorksheet = useCallback(() => genRef.current(), []);
+  // '다른 이름으로 저장'은 다이얼로그를 여는 것뿐이라 setState 세터만 닫아 잡는다 —
+  // deps 가 빈 useCallback 이므로 save/generateWorksheet 와 동일하게 정체성이 영원히 고정된다.
+  // (편집 중인 report·title 을 여기로 끌어들이면 키 입력마다 호스트 모달이 리렌더된다.)
+  const stableRequestSaveAs = useCallback(() => setSaveAsOpen(true), []);
   useEffect(() => {
     onToolbarStateChange?.({
       dirty,
@@ -1464,8 +1729,11 @@ export function AnalysisReportEditor({
       worksheetBusy,
       worksheetHasContent: toolbarWorksheetHasContent,
       generateWorksheet: stableGenerateWorksheet,
+      requestSaveAs: stableRequestSaveAs,
+      // savingAs 는 사본 저장 시작·종료에만 바뀌는 의미 있는 boolean 이라 보고해도 안전하다.
+      savingAs,
     });
-  }, [dirty, saving, stableSave, worksheetBusy, toolbarWorksheetHasContent, stableGenerateWorksheet, onToolbarStateChange]);
+  }, [dirty, saving, stableSave, worksheetBusy, toolbarWorksheetHasContent, stableGenerateWorksheet, stableRequestSaveAs, savingAs, onToolbarStateChange]);
   useEffect(
     () => () => onToolbarStateChange?.(null),
     [onToolbarStateChange],
@@ -1648,8 +1916,16 @@ export function AnalysisReportEditor({
             끝나도록, 우측 편집 패널은 이 컬럼 바깥의 전체 높이 형제로 둔다(패널이 위까지 채워짐). */}
         <div className="flex min-w-0 min-h-0 flex-1 flex-col overflow-hidden">
           <EditorTopBar
-            pageCount={pageList.length}
-            themeId={report.themeId}
+            outlineSlot={
+              <SectionOutlinePopover
+                entries={outlineEntries}
+                customEntries={outlineCustomEntries}
+                pageCount={pageList.length}
+                onToggleSection={toggleOutlineSection}
+                onToggleCustom={toggleOutlineCustom}
+                onJump={scrollToBlock}
+              />
+            }
             error={error}
             dirty={dirty}
             saving={saving}
@@ -1658,6 +1934,10 @@ export function AnalysisReportEditor({
             worksheetBusy={worksheetBusy}
             worksheetHasContent={toolbarWorksheetHasContent}
             showGenerateWorksheet={!onToolbarStateChange && !koReport}
+            // 저장 버튼을 끌어올리지 않는 컨텍스트에는 사본 저장 입구가 없다 — 툴바에 인라인으로 둔다.
+            showSaveAs={!onToolbarStateChange}
+            savingAs={savingAs}
+            onSaveAs={stableRequestSaveAs}
             answerKeyIncluded={toolbarAnswerKeyIncluded}
             onToggleAnswers={() => onToggleWorksheetAnswers(toolbarWorksheetIndex)}
             onUndo={undo}
@@ -1693,6 +1973,7 @@ export function AnalysisReportEditor({
                     <div
                       role="button"
                       tabIndex={0}
+                      aria-pressed={toolbarVocabTestEnabled}
                       onClick={() => (toolbarVocabTestEnabled ? deactivateVocabTest() : activateVocabTest())}
                       onKeyDown={(event) => {
                         if (event.key === "Enter" || event.key === " ") {
@@ -1702,14 +1983,32 @@ export function AnalysisReportEditor({
                         }
                       }}
                       title={toolbarVocabTestEnabled ? "단어 시험지 끄기" : "단어 시험지 켜기"}
-                      className={`group flex w-full cursor-pointer flex-col gap-1.5 rounded-xl border p-3 text-left transition-colors ${
+                      className={cn(
+                        // 꺼짐 상태도 파랑을 유지한다 — 회색(border-slate-200 bg-white)이면 흰 배경에 묻혀
+                        // '꺼져 있음'이 곧 '존재감 없음'이 된다(사용자 지적). ring 으로 켜짐/꺼짐을 가른다.
+                        "group flex w-full cursor-pointer flex-col gap-2 rounded-xl border p-3 text-left transition-all",
                         toolbarVocabTestEnabled
-                          ? "border-blue-200 bg-blue-50/30 hover:border-blue-300 hover:bg-blue-50/60"
-                          : "border-slate-200 bg-white hover:border-blue-300 hover:bg-blue-50/40"
-                      }`}
+                          ? "border-blue-500 bg-blue-50 ring-2 ring-blue-500/15 hover:bg-blue-100/60"
+                          : "border-blue-300 bg-white shadow-sm ring-1 ring-blue-100 hover:border-blue-400 hover:bg-blue-50/50 hover:ring-blue-200",
+                      )}
                     >
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="text-[12.5px] font-bold text-slate-800">단어 시험지</span>
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={cn(
+                            "flex size-8 shrink-0 items-center justify-center rounded-lg transition-colors",
+                            toolbarVocabTestEnabled
+                              ? "bg-blue-600 text-white"
+                              : "bg-blue-50 text-blue-500 group-hover:bg-blue-100",
+                          )}
+                        >
+                          <FileQuestion className="size-4" />
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="block truncate text-[12.5px] font-black text-slate-900">단어 시험지</span>
+                          <span className="block truncate text-[10.5px] font-semibold text-slate-400">
+                            지문 단어로 시험지 페이지 생성
+                          </span>
+                        </span>
                         <ActivityToggleSwitch
                           on={toolbarVocabTestEnabled}
                           title={toolbarVocabTestEnabled ? "단어 시험지 끄기" : "단어 시험지 켜기"}
@@ -1720,11 +2019,22 @@ export function AnalysisReportEditor({
                           }}
                         />
                       </div>
-                      <p className="text-[11px] leading-snug text-slate-500">뜻·단어·동의어·반의어 시험 + 난이도 단계 선택 — 지문 단어로 시험지 페이지 생성</p>
-                      <div className="mt-0.5 rounded-md border border-slate-100 bg-slate-50/80 px-2 py-1.5">
-                        <span className="text-[9px] font-semibold uppercase tracking-wider text-slate-400">현재</span>
-                        <p className="mt-0.5 text-[11px] font-semibold text-slate-700">
-                          {toolbarVocabTestEnabled ? `${VOCAB_TEST_MODE_LABEL[toolbarVocabMode]}${report.vocabTestOnly ? " · 시험지만" : ""}` : "꺼짐 — 누르면 켜져요"}
+                      <div
+                        className={cn(
+                          "rounded-lg border px-2 py-1.5",
+                          toolbarVocabTestEnabled ? "border-blue-200 bg-white/70" : "border-blue-100 bg-blue-50/70",
+                        )}
+                      >
+                        <span className="text-[9px] font-black uppercase tracking-wider text-blue-400">
+                          {toolbarVocabTestEnabled ? "현재 출제" : "지금 꺼짐"}
+                        </span>
+                        <p className="mt-0.5 flex items-center gap-1 text-[11px] font-bold leading-snug text-blue-700">
+                          <span className="min-w-0 flex-1 truncate">
+                            {toolbarVocabTestEnabled
+                              ? `${VOCAB_TEST_MODE_LABEL[toolbarVocabMode]}${report.vocabTestOnly ? " · 시험지만" : ""}`
+                              : "눌러서 켜기 — 뜻·단어·동의어·반의어"}
+                          </span>
+                          <ChevronRight className="size-3 shrink-0 opacity-60 transition-transform group-hover:translate-x-0.5" />
                         </p>
                       </div>
                     </div>
@@ -1763,12 +2073,13 @@ export function AnalysisReportEditor({
           onFit={fitPreviewToScreen}
           onZoomControlsDragStart={handlePreviewZoomControlsDragStart}
           scrollerRef={previewScrollerRef}
-          onDeselect={() => setActiveId(null)}
+          onDeselect={deselect}
           a4Width={REPORT_A4_WIDTH_PX}
           contentHeight={previewContentHeight}
           report={report}
           edit={edit}
           onPagesChange={setPageList}
+          flowItems={naturalFlowItems}
         />
 
         {/* 인라인 텍스트 편집용 떠다니는 서식 툴바 — 모바일은 인라인 편집 자체가 꺼져 있어 미렌더 */}
@@ -1902,6 +2213,17 @@ export function AnalysisReportEditor({
           {editPanelAside}
         </MobilePanelSheet>
       )}
+
+      {/* '다른 이름으로 저장' — 호스트가 아니라 편집기가 소유한다(호스트마다 복제하면 즉시 드리프트).
+          호스트는 계약의 requestSaveAs() 만 부르고, 성공해도 원본 dirty/baseline 은 그대로다. */}
+      <ReportSaveAsDialog
+        open={saveAsOpen}
+        onOpenChange={setSaveAsOpen}
+        sourceTitle={report.meta.titleKo}
+        dirty={dirty}
+        saving={savingAs}
+        onSubmit={saveAs}
+      />
     </div>
   );
 }

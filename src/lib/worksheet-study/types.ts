@@ -223,12 +223,27 @@ export interface StudyItemEvent {
   hintUsed: boolean;
 }
 
+// 성취 지표 계약(StudyMastery)은 채점 순수함수 모듈이 소유한다 — 여기서는 재수출만.
+import type { StudyMastery } from "./grade";
+export type { StudyMastery };
+
 /** 진행 중 스테이지의 부분 진행 스냅샷 — 디렉터 매트릭스 "진행 n/m" 표기용 */
 export interface StudyStageProgress {
   answered: number;
   total: number;
   firstCorrect: number;
   firstTotal: number;
+}
+
+/**
+ * 스테이지의 첫 시도(attempt=1) 기록 — 중도 이탈 후 재입장 시 "이어 풀기" 복원용.
+ * 플레이어는 이것으로 (1) 이미 푼 문항을 건너뛰고 (2) 첫 시도 판정을 되살려
+ * 완주 점수가 이번 세션 분량만으로 계산되지 않게 한다.
+ */
+export interface StudyStageFirstAttempt {
+  itemKey: string;
+  correct?: boolean;
+  selfGrade?: "O" | "D" | "X";
 }
 
 export interface StudyEventsRequest {
@@ -279,8 +294,14 @@ export interface StudyWeakness {
 
 export interface StudyStateSummary {
   stages: Partial<Record<StudyStageId, StudyStageState>>;
-  /** 필수 채점 스테이지 첫시도 정답률의 아이템 수 가중 평균 (채점 완료 전 null) */
+  /**
+   * 첫 시도 정답률(%) — 전 스테이지(진행 중 포함) 누적. 첫 시도 채점 0건이면 null.
+   * 구 정의(완료 스테이지만 집계)는 부분 학습 학생을 100%로 보고해 폐기됐다
+   * (docs/student-hub-uiux-2607-spec.md §3).
+   */
   masteryPct: number | null;
+  /** 정답률과 함께 읽어야 하는 진도·표본 — computeStudyMastery 반환 그대로 */
+  mastery: StudyMastery;
   totalTimeMs: number;
   weakness: StudyWeakness | null;
   /** 플랜의 전체 스테이지(무채점 통독·카드 포함)가 전부 done 인지 — 과제 완료 조건 */

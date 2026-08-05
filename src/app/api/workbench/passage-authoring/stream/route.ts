@@ -24,6 +24,11 @@ import {
   authoringEnvelopeViolations,
   buildAuthoringMdRevisionPrompt,
 } from "@/lib/passage-authoring/md/adapter";
+import type { AuthoringPageImage } from "@/lib/passage-authoring/generate";
+import {
+  emptyProcuredPageImages,
+  procurePageImages,
+} from "@/lib/passage-authoring/page-images";
 import { parseAuthoredMd } from "@/lib/passage-authoring/md/parser";
 import { buildAuthoringMdOutputBlock } from "@/lib/passage-authoring/md/prompt";
 import {
@@ -60,18 +65,26 @@ import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
 // ── 왜 count === 1 에서만 쓰는가 (분기 근거) ────────────────────────────────
 //   SSE 연결 하나가 지문 1편을 끝까지 책임진다. count>=2 는 잡+폴링 경로가 그대로
 //   맡는다 — 거기에 (a) 동시성 3 워커, (b) 편 단위 점진 저장, (c) **실패 편수만큼의
-//   부분 환불**, (d) 편 간 소재 중복 경고, (e) 원본 페이지 이미지 조달이 살아 있다.
-//   그 다섯을 스트림으로 옮기면 한 연결이 6편·250초를 붙들고, 중간에 끊기면 부분
-//   환불의 주체가 사라진다. 스트리밍의 가치(사용자가 화면 앞에 있다)는 1편일 때
-//   가장 크고, 6편은 애초에 "다른 작업을 하세요"가 계약이다.
+//   부분 환불**, (d) 편 간 소재 중복 경고가 살아 있다. 그 넷을 스트림으로 옮기면 한
+//   연결이 6편·250초를 붙들고, 중간에 끊기면 부분 환불의 주체가 사라진다.
+//   스트리밍의 가치(사용자가 화면 앞에 있다)는 1편일 때 가장 크고, 6편은 애초에
+//   "다른 작업을 하세요"가 계약이다.
+//
+// ── 원본 페이지 이미지 (26-08-04 추가) ──────────────────────────────────────
+//   이 레인도 이제 원본 지면을 싣는다. 조달은 잡 레인과 **같은 함수**를 쓴다
+//   (page-images.procurePageImages — 예전엔 run-job 의 module-private 라 이 레인이
+//   접근할 수 없었고, 그래서 "이미지가 있으면 나는 부적격"이 부적격 사유 ② 였다).
+//   그 사유가 살아 있던 동안 자료 검토 모달의 '원본 페이지도 함께 보냄' 스위치를
+//   켜면 1편 발주가 조용히 실시간 미리보기를 잃었다 — 스위치와 인과가 없는
+//   부작용이라 사용자가 예측할 방법이 없었다.
+//   이미지는 **1차 사용자 턴에만** 붙이고, 수리 콜은 그 턴을 그대로 재사용한다.
 //
 // ── 부적격 → 400 AUTHORING_STREAM_INELIGIBLE → 클라이언트가 잡 경로로 폴백 ──
 //   ① count !== 1
-//   ② 원본 페이지 이미지(하이브리드)를 요청한 자료가 있음 — 조달(run-job.procure
-//      PageImages)이 그 파일의 module-private 함수라 이 레인이 쓸 수 없다. 텍스트만
-//      실어 조용히 다르게 만드는 것보다, 이미지가 사는 경로로 보내는 편이 옳다.
 //   ③ env PASSAGE_AUTHORING_STREAM=off (재빌드 없는 런타임 킬스위치)
 //   ④ 자료도 지시도 없음(잡 라우트와 같은 사전 차단)
+//   (② 는 위 문단대로 해소돼 사라졌다. 번호는 다른 문서·주석의 참조를 깨지 않으려고
+//    당기지 않는다.)
 //
 // ── 크레딧 계약(절대 파기 금지) ────────────────────────────────────────────
 //   잔액 게이트 → 잡 PROCESSING 생성 → deductCredits(2) → 스트림 안에서 생성 →
@@ -177,9 +190,53 @@ interface StreamCallResult {
  * (atlas-ai.atlasReasoningRequestFor)는 gemini 계열에 exclude:true 를 실어 사고
  * 델타가 아예 오지 않는다 — 그 상태로는 "사고 중" 단계가 영원히 빈 화면이다.
  */
+/**
+ * 이 레인이 게이트웨이에 실을 수 있는 메시지 본문.
+ *
+ * 문자열 하나이던 것을 파트 배열까지 받게 넓혔다(26-08-04) — 원본 페이지 이미지를
+ * 실으려면 `image_url` 파트가 필요하고, 게이트웨이는 OpenAI 호환 chat/completions
+ * 라 그 모양을 그대로 받는다(AI SDK 의 openai-compatible 변환기가 내는 것과 같은
+ * 형태다: `data:<mime>;base64,<...>`).
+ */
+type StreamTurnContent =
+  | string
+  | Array<
+      | { type: "text"; text: string }
+      | { type: "image_url"; image_url: { url: string } }
+    >;
+
+/**
+ * 1차 사용자 턴을 만든다 — 이미지가 없으면 **문자열 그대로**(기존 와이어 불변).
+ *
+ * 이미지는 1차 턴에만 붙인다. 수리(2차) 콜은 이 턴을 그대로 다시 싣기 때문에
+ * 자동으로 원본을 다시 보게 된다 — 수리하라고 시켜 놓고 근거를 뺏으면 모델이
+ * 본문만 보고 고치게 되고, 그게 바로 표·밑줄이 뭉개지는 경로다.
+ * (JSON 레인도 두 콜 모두에 같은 이미지를 싣는다 — generate.ts baseMessages.)
+ */
+function userTurnWithImages(
+  prompt: string,
+  images: ReadonlyArray<AuthoringPageImage>,
+): { role: "user"; content: StreamTurnContent } {
+  if (images.length === 0) return { role: "user", content: prompt };
+  return {
+    role: "user",
+    content: [
+      { type: "text", text: prompt },
+      ...images.map((image) => ({
+        type: "image_url" as const,
+        image_url: {
+          url: `data:${image.mediaType || "image/jpeg"};base64,${Buffer.from(
+            image.data,
+          ).toString("base64")}`,
+        },
+      })),
+    ],
+  };
+}
+
 async function streamMarkdownOnce(args: {
   system: string;
-  userTurns: Array<{ role: "user" | "assistant"; content: string }>;
+  userTurns: Array<{ role: "user" | "assistant"; content: StreamTurnContent }>;
   modelId: string;
   reasoningEffort: string;
   timeoutMs: number;
@@ -271,6 +328,8 @@ async function streamMarkdownOnce(args: {
 function buildStreamRequestSnapshot(
   request: AuthoringRequest,
   skeletons: ReadonlyArray<PassageSkeleton>,
+  /** 원본 페이지가 **실제로 실린** 자료 id(procurePageImages 결과). */
+  pagedMaterialIds: ReadonlySet<string>,
 ): NonNullable<AuthoringJobResult["request"]> {
   const charsSent = new Map(
     selectAuthoringMaterialsWithBudget(request.materials).map((entry) => [
@@ -290,8 +349,10 @@ function buildStreamRequestSnapshot(
       sourceKind: m.sourceKind,
       note: m.note,
       preview: m.content.slice(0, 200),
-      // 이 레인은 원본 페이지를 싣지 않는다(적격성 ②) — 사실대로 false.
-      sendPages: false,
+      // "켜 달라고 했는가"가 아니라 **실제로 실렸는가**를 말한다(잡 레인과 같은
+      // 규칙). 스위치는 켜졌는데 조달이 0장이면 여기는 false 여야 하고, 그 사실은
+      // 별도로 warnings 가 문장으로 알린다.
+      sendPages: pagedMaterialIds.has(m.id),
       charsSent: charsSent.get(m.id) ?? { sent: 0, total: m.content.length },
     })),
   };
@@ -324,9 +385,11 @@ export async function POST(req: NextRequest) {
     return ineligible("stream lane disabled");
   }
   if (request.count !== 1) return ineligible("stream lane is single-passage only");
-  if (request.materials.some((m) => m.sendPages && m.storagePath)) {
-    return ineligible("stream lane cannot carry page images");
-  }
+  // (구 부적격 사유 ② "원본 페이지 이미지를 요청한 자료가 있음" — 26-08-04 제거.
+  //  조달이 run-job 의 module-private 함수라 이 레인이 쓸 수 없다는 게 유일한
+  //  근거였는데, 그 함수를 page-images.ts 로 빼서 두 레인이 공유한다. 그 사유가
+  //  살아 있던 동안 '원본 페이지도 함께 보냄' 스위치를 켜면 1편 발주가 조용히
+  //  실시간 미리보기를 잃었다 — 스위치와 무관한 부작용이라 예측 불가능했다.)
   if (request.materials.length === 0 && !request.instruction.trim()) {
     return NextResponse.json(
       { error: "무엇을 만들지 알려주세요. 자료를 넣거나 요청을 적어주세요." },
@@ -549,14 +612,49 @@ export async function POST(req: NextRequest) {
             avoidTexts: request.avoidTexts ?? [],
             skeleton,
           })}\n\n${buildAuthoringMdOutputBlock()}`;
+          // ── 원본 페이지 조달 ───────────────────────────────────────────
+          // 잡 레인과 **같은 함수**를 쓴다(page-images.ts). 어떤 실패도 던지지
+          // 않으므로 스토리지가 흔들려도 0장으로 계속 간다 — 그래도 try 로 한 겹
+          // 더 감싸는 이유는 이 블록이 SSE 스트림 안이라, 예상 못 한 예외가 나면
+          // 차감된 크레딧의 환불 경로까지 함께 날아가기 때문이다.
+          //
+          // 위치가 계약이다: **사고 강도와 스냅샷보다 먼저** 와야 한다. 둘 다 조달
+          // 결과를 읽기 때문이다(강도는 이미지 장수를, 스냅샷은 실제로 실린 자료를).
+          let paged = emptyProcuredPageImages();
+          try {
+            paged = await procurePageImages({
+              logTag: `stream job=${job.id}`,
+              academyId: staff.academyId,
+              materials: request.materials,
+              // 이 레인은 정의상 1편이다(적격성 ①). 그래서 이미지가 정확히 한 번만
+              // 실리고, 상한도 20쪽 쪽이 잡힌다 — 상수를 손코딩하지 않고 request 를
+              // 그대로 넘겨 잡 레인과 **같은 판정 함수**를 타게 한다.
+              count: request.count,
+            });
+          } catch (procureErr) {
+            console.error(
+              `[PASSAGE-AUTHORING-STREAM] page image procurement aborted (job=${job.id}):`,
+              procureErr instanceof Error ? procureErr.message : procureErr,
+            );
+          }
+          const firstTurn = userTurnWithImages(prompt, paged.images);
+
           // 사고 강도는 이 요청의 실제 부피에서 파생한다(generate.ts 의 리졸버를
           // 그대로 쓴다 — 고정 손잡이를 하나 더 만들지 않는다). 이 레인은 출력
           // 상한이 16,000 이라 JSON 레인보다 여유가 크지만, 임계값은 공유한다.
+          // ⚠️ imageCount 를 0 으로 고정하지 말 것 — 이 레인이 이미지를 싣게 된
+          //   지금(26-08-04) 그 상수는 거짓이고, 리졸버가 이미지 붙은 요청에서
+          //   강도를 낮추는 판단(generate.ts:199, 26-07-25 절단 사고 대응)을
+          //   통째로 무력화한다.
           const reasoningEffort = resolveAuthoringReasoningEffort({
             promptChars: system.length + prompt.length,
-            imageCount: 0,
+            imageCount: paged.images.length,
           });
-          const snapshot = buildStreamRequestSnapshot(request, skeletons);
+          const snapshot = buildStreamRequestSnapshot(
+            request,
+            skeletons,
+            paged.pagedMaterialIds,
+          );
 
           const recordCall = async (index: number, call: StreamCallResult) => {
             try {
@@ -590,7 +688,7 @@ export async function POST(req: NextRequest) {
           // ── 1차 마크다운 콜 ────────────────────────────────────────────
           const first = await streamMarkdownOnce({
             system,
-            userTurns: [{ role: "user", content: prompt }],
+            userTurns: [firstTurn],
             modelId: ATLAS_AUTHORING_MODEL_ID,
             reasoningEffort,
             timeoutMs: Math.min(PRIMARY_TIMEOUT_MS, remainingMs()),
@@ -615,7 +713,9 @@ export async function POST(req: NextRequest) {
                 const second = await streamMarkdownOnce({
                   system,
                   userTurns: [
-                    { role: "user", content: prompt },
+                    // 1차와 **같은 턴**을 그대로 다시 싣는다 — 이미지가 붙어 있으면
+                    // 수리 콜도 원본을 본다(userTurnWithImages 주석).
+                    firstTurn,
                     { role: "assistant", content: first.text },
                     { role: "user", content: buildAuthoringMdRevisionPrompt(violations) },
                   ],

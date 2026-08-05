@@ -9,6 +9,9 @@ import type {
   VocabTestMode,
   VocabularyTier,
 } from "@/lib/passage-report/analysis-report/schema";
+// 배럴(index)이 아니라 파일을 직접 임포트 — section-slots 는 순수 TS 라
+// 뮤테이션 계층이 assemble 의 React 트리를 끌어오지 않는다.
+import { reportSectionSlots } from "./report-sections/section-slots";
 
 /**
  * 분석 보고서 편집을 위한 순수 불변 업데이트 헬퍼.
@@ -64,13 +67,41 @@ export function deleteSection(report: AnalysisReport, index: number): AnalysisRe
     ?.map((id) => shiftBlockIdAfterDelete(id, index))
     .filter((x): x is string => !!x);
 
+  // 목차 OFF 키(슬롯키 = `${kind}${idSuffix}`)도 함께 정리 — 같은 kind 섹션이 나중에 다시
+  // 생기면(실전 학습지 재생성) 유령 숨김이 되살아나는 것을 막는다.
+  const deletedKind = report.sections[index]?.kind;
+  const pruned = deletedKind
+    ? (report.hiddenSections ?? []).filter((k) => k !== deletedKind && !k.startsWith(`${deletedKind}-`))
+    : report.hiddenSections ?? [];
+
   return {
     ...report,
     sections: report.sections.filter((_, i) => i !== index),
     layout: layout.filter((_, i) => i !== index),
     blockMeta,
     blockOrder,
+    hiddenSections: pruned.length ? pruned : undefined,
   };
+}
+
+// ─── 목차(섹션 슬롯) 켜기/끄기 ───────────────────────────────────────────────
+/**
+ * 섹션 슬롯 on/off — 비파괴(데이터 보존). 키는 섹션 인덱스가 아니라 슬롯키
+ * `${kind}${idSuffix}`("passage" / "passage-anno" / "learning-worksheet-logic" …)로,
+ * sectionHeadings 라벨 오버라이드와 같은 식별자다(section-slots.ts 참고).
+ * 빈 배열은 undefined 로 정규화해 저장본을 오염시키지 않는다.
+ */
+export function toggleHiddenSection(report: AnalysisReport, key: string): AnalysisReport {
+  const cur = report.hiddenSections ?? [];
+  const next = cur.includes(key) ? cur.filter((k) => k !== key) : [...cur, key];
+  return { ...report, hiddenSections: next.length ? next : undefined };
+}
+
+/** 섹션 슬롯을 명시적으로 켜기/끄기 (이미 그 상태면 원본 그대로 반환 — 히스토리 오염 방지). */
+export function setSectionHidden(report: AnalysisReport, key: string, hidden: boolean): AnalysisReport {
+  const cur = report.hiddenSections ?? [];
+  if (cur.includes(key) === hidden) return report;
+  return toggleHiddenSection(report, key);
 }
 
 /** 섹션을 from → to 위치로 이동 (layout 동반 이동). */
@@ -213,20 +244,26 @@ function logicalBlockId(id: string): string {
 
 /**
  * 블록 id 하나를 삭제 — 노션식 미세 삭제.
- * 문장/표행/요약문/구문항목은 해당 배열에서 제거, 커스텀은 제거, 섹션헤더는 섹션 전체 삭제,
+ * 문장/표행/요약문/구문항목은 해당 배열에서 제거, 커스텀은 제거, 섹션헤더는 목차에서 OFF,
  * 구조도 노드/노트 등 구조적 블록은 숨김 처리.
  */
 export function deleteItem(report: AnalysisReport, id: string): AnalysisReport {
   if (id === "cover") return report.cover ? { ...report, cover: { ...report.cover, enabled: false } } : report;
   if (id.startsWith("c-")) return deleteCustomBlock(report, id);
+
+  // 섹션 헤더 블록 삭제 = '목차에서 그 섹션 끄기'(비파괴·되돌리기 가능).
+  // 예전에는 s{si}-head 만 섹션 전체 삭제로 잡히고 신형 헤더(s{si}-head-anno / -logic)는
+  // 아래 '헤더만 숨김'으로 떨어져 제목 없는 본문이 통째로 남았다 — 그 결함까지 함께 봉합한다.
+  // 파괴적 '섹션 전체 삭제'는 편집 패널의 빨간 버튼(확인 후 deleteSection) 경로에 그대로 남는다.
+  const slot = reportSectionSlots(report).find((s) => !s.headless && s.headId === id);
+  if (slot) return setSectionHidden(report, slot.key, true);
+
   const m = /^s(\d+)-(.+)$/.exec(id);
   if (!m) return setBlockMeta(report, id, { hidden: true }); // title / meta → 숨김
   const si = Number(m[1]);
   const suffix = m[2];
   const sec = report.sections[si];
   if (!sec) return report;
-
-  if (suffix === "head") return deleteSection(report, si);
 
   if (sec.kind === "passage") {
     const mm = /^snt(\d+)$/.exec(suffix);

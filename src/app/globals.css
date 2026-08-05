@@ -79,6 +79,82 @@
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
+   조판대(Composing Desk) 토큰 — 워크벤치 "AI로 지문 만들기" 전용
+   ══════════════════════════════════════════════════════════════════════════
+   왜 별도 네임스페이스(desk-)인가:
+     이 화면은 폰트 10종 118회(그중 51%가 0.5px 스텝)·간격 48% 오프그리드·
+     알파 표기 11종으로 무너져 있었다. 원인은 취향이 아니라 "각 상자가 자기
+     패딩·자기 크기를 새로 정했기 때문"이다. 값을 한 곳에 못 박고 원시 리터럴을
+     lint 로 막지 않으면 6개월 뒤 원상복귀한다 — 위 SMOAT/yshin 토큰이 이
+     기능에서 사용 0건인 것이 그 전례다.
+
+   소비 방식(중요):
+     · CSS·비-Tailwind 문맥은 여기 등록된 var(--text-desk-*) / var(--color-desk-*)
+       를 직접 쓴다.
+     · React 쪽 단일 진실원은
+       app/(director)/director/workbench/generate/intake/authoring/authoring-tokens.ts
+       의 DESK/SURFACE/SEG_ON/... 상수다. 그 파일이 여기 수치를 1:1로 미러링하며,
+       CI 게이트(scripts/check-authoring-tokens.mjs)가 "원시 px 리터럴은 그 파일
+       안에서만" 을 강제한다. 두 곳의 수치가 갈라지면 게이트가 아니라 이 주석이
+       근거다 — 값을 바꿀 때는 반드시 양쪽을 같이 바꾼다.
+
+   타이포는 5종이 전부다(9/9.5/10/10.5/11.5/12.5px 전량 폐기). 굵기 3단
+   (500/600/700), font-extrabold 금지 — 12~14px 한글에서 자간이 뭉개져 위계가
+   오히려 약해진다. 위계를 크기로 낮추지 않고 색(slate-700→slate-500)으로 낮춘다.
+   ────────────────────────────────────────────────────────────────────────── */
+@theme {
+  /* 15/500 · lh 1.75 — 이 화면에 정확히 두 곳(발주 입력, 지문 본문)만 존재하는
+     유일한 지배적 시선 시작점. 본업이 영문 지문 읽기·쓰기인데 13px+lh1.75 는
+     편안한 독서 하한 아래다. */
+  --text-desk-read: 15px;
+  --text-desk-read--line-height: 1.75;
+  --text-desk-read--font-weight: 500;
+  --text-desk-read--letter-spacing: 0em;
+
+  /* 14/700 · -0.01em — 마스트헤드/모달/결과 밴드/결과 카드 제목 */
+  --text-desk-title: 14px;
+  --text-desk-title--line-height: 1.4;
+  --text-desk-title--font-weight: 700;
+  --text-desk-title--letter-spacing: -0.01em;
+
+  /* 13/600 — 설정 라벨·값, 파일명, 모든 버튼 라벨, 드롭다운 항목, 링크, 지표 값 */
+  --text-desk-body: 13px;
+  --text-desk-body--line-height: 1.5;
+  --text-desk-body--font-weight: 600;
+  --text-desk-body--letter-spacing: 0em;
+
+  /* 12/500 — 부연·힌트·역할 라벨·글자수·지표 라벨·경고 본문 */
+  --text-desk-meta: 12px;
+  --text-desk-meta--line-height: 1.5;
+  --text-desk-meta--font-weight: 500;
+  --text-desk-meta--letter-spacing: 0em;
+
+  /* 11/700 · 0.04em — 섹션 머리표(발주/조판 결과/지문 설정), StatusPill, 뱃지 */
+  --text-desk-kicker: 11px;
+  --text-desk-kicker--line-height: 1.4;
+  --text-desk-kicker--font-weight: 700;
+  --text-desk-kicker--letter-spacing: 0.04em;
+
+  /* ── 색 — 불투명 토큰만. 알파 표기(/40 /50 /60 /70 /90)는 이 디렉터리 전면 금지.
+     bg-blue-50/40 은 흰 배경 합성 시 #f9fbff(ΔL 0.01)로 채움 기여가 0이었다. ── */
+  --color-desk-surface-base: #ffffff;
+  --color-desk-surface-sunken: #f8fafc; /* slate-50 — 내부 블록 유일 */
+  --color-desk-surface-info: #eff6ff;
+  --color-desk-surface-success: #ecfdf5;
+  --color-desk-surface-danger: #fef2f2;
+  --color-desk-rule: #e2e8f0; /* slate-200 — 전폭 구조선 */
+  --color-desk-hairline: #f1f5f9; /* slate-100 — 행 구분 */
+  --color-desk-text-strong: #0f172a; /* slate-900 */
+  --color-desk-text-body: #334155; /* slate-700 */
+  --color-desk-text-muted: #64748b; /* slate-500 — 정보 텍스트 색 하한(4.76:1).
+                                       slate-400(2.63:1)은 아이콘·구분선 전용이다. */
+  --color-desk-accent: #2563eb; /* blue-600 */
+  --color-desk-accent-hover: #1d4ed8; /* blue-700 */
+  --color-desk-accent-ring: #93c5fd; /* blue-300 — 포커스 링 단일값 */
+  --color-desk-danger: #e11d48; /* rose-600 — 조치 필요. amber/orange 는 금지다. */
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
    Student App v2: Professional ERP + Learning Design System
    ══════════════════════════════════════════════════════════════════════════ */
 :root {

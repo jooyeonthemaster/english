@@ -229,6 +229,12 @@ export function MaterialReaderModal({
   // 스냅샷은 위 렌더 중 조정에서 이미 박혔다. 혹시 없으면 "고친 곳 없음"이 맞다.
   const baseline = baselines[material.id];
   const dirty = baseline !== undefined && content !== baseline;
+  /**
+   * 판독본 없이 **원본 지면만으로** 실리는 자료인가(사진의 기본 경로).
+   * 본문이 비었다는 사실만으로는 판정할 수 없다 — 판독에 실패한 PDF 도 본문이
+   * 비므로, 실제로 보낼 원본이 있는지(storagePath)를 함께 본다.
+   */
+  const originalOnly = content.trim().length === 0 && Boolean(material?.storagePath);
   const hybrid = HYBRID_SOURCE_KINDS.has(material.sourceKind);
   const pageCount = material.pageCount ?? 0;
   const listItems =
@@ -411,6 +417,14 @@ export function MaterialReaderModal({
               <span aria-hidden="true">·</span>
               <span>{AUTHORING_COPY.MATERIAL.charCount(stats.chars)}</span>
             </p>
+            {/* 사진은 OCR 을 돌지 않는다(26-08-04) — 본문 칸이 비어 있는 것이
+                정상이고, 모델은 원본을 그대로 본다. 이 한 줄이 없으면 빈 칸이
+                "AI 가 글자를 못 읽었다"로 읽혀 선생님이 직접 타이핑하기 시작한다. */}
+            {originalOnly ? (
+              <p className={cn(DESK.meta, "mt-1 leading-snug text-slate-600")}>
+                {AUTHORING_COPY.MATERIAL.originalOnly}
+              </p>
+            ) : null}
           </div>
           {/* 문제지를 통째로 붙인 자료가 흔하다 — 선지 줄이 있을 때만 나타난다.
               (0줄인데 눌리는 버튼은 사용자에게 "내가 뭘 잘못했나"를 묻게 만든다.) */}

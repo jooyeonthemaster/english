@@ -10,6 +10,7 @@
 // 주입(오염 방어). 해석기 계약은 lib/student-analytics/types.ts 참조.
 // ============================================================================
 
+import { useId } from "react";
 import {
   CheckCircle2,
   Circle,
@@ -537,20 +538,42 @@ export function HeatCell({
 
 // ── 지표 도움말 (규칙 R10 — 첫 노출 카드의 ⓘ) ─────────────────────────────
 
-/** ⓘ 툴팁 — 호버·포커스 시 설명 노출(외부 라이브러리 없이 자체 렌더) */
-export function MetricHelpTip({ text, className }: { text: string; className?: string }) {
+/**
+ * ⓘ 툴팁 — 호버·포커스 시 설명 노출(외부 라이브러리 없이 자체 렌더).
+ *
+ * 위쪽으로 펼친다(bottom-full): 이 ⓘ 는 대부분 AnalyticsCard 헤더나 표 헤더에
+ * 붙는데, 아래로 펼치면 카드 본문의 `overflow-y-auto`/카드 셸의 `overflow-hidden`
+ * 에 잘려 정작 설명이 가장 필요한 화면(행이 한두 개뿐인 신규 학생)에서 읽히지
+ * 않았다. 헤더 위는 카드 여백이라 잘리지 않는다.
+ *
+ * `label` 을 주면 보조기술에도 "무엇의 설명인지"가 전달된다 — 라벨 없이 "지표 설명"
+ * 만 읽히면 같은 화면에 ⓘ 가 여럿일 때 구분이 안 된다.
+ */
+export function MetricHelpTip({
+  text,
+  label,
+  className,
+}: {
+  text: string;
+  /** 이 ⓘ 가 설명하는 지표 이름 — 버튼 접근성 이름에 합쳐진다 */
+  label?: string;
+  className?: string;
+}) {
+  const tipId = useId();
   return (
     <span className={cn("group relative inline-flex", className)}>
       <button
         type="button"
-        aria-label="지표 설명"
+        aria-label={label ? `${label} 설명` : "지표 설명"}
+        aria-describedby={tipId}
         className="inline-flex items-center text-slate-300 transition-colors hover:text-slate-500 focus-visible:text-slate-500 focus:outline-none"
       >
         <Info className="size-3.5" aria-hidden />
       </button>
       <span
+        id={tipId}
         role="tooltip"
-        className="pointer-events-none absolute left-1/2 top-full z-20 mt-1.5 hidden w-56 -translate-x-1/2 rounded-md bg-slate-800 px-2.5 py-1.5 text-left text-[11.5px] font-normal leading-relaxed text-white shadow-lg group-focus-within:block group-hover:block"
+        className="pointer-events-none absolute bottom-full left-1/2 z-30 mb-1.5 hidden w-56 -translate-x-1/2 rounded-md bg-slate-800 px-2.5 py-1.5 text-left text-[11.5px] font-normal leading-relaxed text-white shadow-lg group-focus-within:block group-hover:block"
       >
         {text}
       </span>

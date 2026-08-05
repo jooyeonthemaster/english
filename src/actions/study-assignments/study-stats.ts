@@ -16,6 +16,7 @@
 
 import { requireStaffAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { computeStudyMastery, type StudyMastery } from "@/lib/worksheet-study/grade";
 import { isoOf, toErrorMessage, type StudyActionResult } from "./_shared";
 
 /** 매트릭스 셀 — stageStates 1건. in-progress 필드는 파이프 v2(progress)가 저장 */
@@ -26,8 +27,12 @@ export interface StudyOverviewStageCell {
   /** in-progress 부분 진행 — 푼 문항 수 / 전체 문항 수 */
   answered?: number;
   total?: number;
-  /** in-progress 첫 시도 정답 수 / 첫 시도 판정 수 */
+  /** 첫 시도 정답 수 — 분모는 firstTotal. status 무관으로 정답률에 합산된다 */
   firstCorrect?: number;
+  /**
+   * 첫 시도 채점 문항 수 — 정답 수(firstCorrect)의 분모. 이게 없으면 UI 가
+   * "4/4 인데 첫 시도 정답 0개"를 해독할 수 없다(2607 §3.4).
+   */
   firstTotal?: number;
   /** 이 스테이지의 마지막 활동 시각(ISO) */
   lastAt?: string;
@@ -37,8 +42,15 @@ export interface StudyOverviewStudentRow {
   taskId: string;
   studentId: string;
   studentName: string;
-  /** 필수 채점 스테이지 첫 시도 정답률 가중 평균 — 채점 완료 전 null */
+  /**
+   * 첫 시도 정답률(%) — `mastery.firstTryPct` 의 별칭(호환 유지).
+   * 저장 스냅샷(WorksheetStudyState.masteryPct)이 아니라 **매 조회 재계산**이다:
+   * 저장값은 학생의 마지막 플러시 시점 값이라 학생면과 교사면이 갈렸고, 구 정의는
+   * 진행 중 스테이지를 분모에서 빼 부분 학습을 100%로 보고했다(2607 §3.1·§3.3).
+   */
   masteryPct: number | null;
+  /** 정답률·진도·표본을 한 덩어리로 — 정답률 단독 노출 금지(2607 §3.4) */
+  mastery: StudyMastery;
   totalTimeMs: number;
   /** 필수 스테이지 전부 완료 시각 — 미완료면 null */
   completedAt: string | null;
@@ -164,7 +176,7 @@ export async function getWorksheetStudyOverview(
         taskId: true,
         studentId: true,
         stageStates: true,
-        masteryPct: true,
+        // masteryPct(저장 스냅샷)는 더 이상 읽지 않는다 — stageStates 재계산이 정본(2607 §3.3)
         totalTimeMs: true,
         completedAt: true,
         updatedAt: true,
@@ -214,11 +226,15 @@ export async function getWorksheetStudyOverview(
           }
         }
       }
+      // 저장 스냅샷(st.masteryPct)을 읽지 않는다 — 학생면(재계산)과 값이 갈리고,
+      // 구 정의가 진행 중 스테이지를 분모에서 빼 부분 학습을 100%로 보고했다.
+      const mastery = computeStudyMastery(stages);
       return {
         taskId: st.taskId,
         studentId: st.studentId,
         studentName: nameById.get(st.studentId) ?? "(삭제된 학생)",
-        masteryPct: st.masteryPct,
+        masteryPct: mastery.firstTryPct,
+        mastery,
         totalTimeMs: st.totalTimeMs,
         completedAt: isoOf(st.completedAt),
         lastActivityAt:

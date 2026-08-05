@@ -78,9 +78,11 @@ function PassageBox({ text }: { text: string }) {
 function Explanation({ text }: { text?: string }) {
   if (!text) return null;
   return (
-    <div className="flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50/60 px-3 py-2.5">
-      <Lightbulb className="mt-0.5 size-4 shrink-0 text-amber-500" aria-hidden />
-      <p className="text-[13px] leading-relaxed text-amber-900">{text}</p>
+    // 해설은 경고가 아니라 중립 정보다 — 디렉터면 4색 축(slate/blue/emerald/rose)
+    // 밖의 앰버를 쓰면 같은 모달 안에서 색 언어가 두 벌이 된다(2607 §1.1 금지색).
+    <div className="flex items-start gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5">
+      <Lightbulb className="mt-0.5 size-4 shrink-0 text-slate-400" aria-hidden />
+      <p className="text-[13px] leading-relaxed text-slate-700">{text}</p>
     </div>
   );
 }

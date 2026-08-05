@@ -292,8 +292,15 @@ export function PassageRegistrationClient({
     () => queue.filter((q) => q.status === "pending" || q.status === "analyzing"),
     [queue],
   );
+  // 시그니처에 미리보기 틱을 포함한다 — id:status 만 보면 상태가 "analyzing" 으로
+  // 고정된 동안 스트리밍 델타가 아무리 흘러도 이 effect 가 재실행되지 않아
+  // 하단 목록이 영원히 낡은 항목을 들고 있게 된다(26-07-25 실사고: 미리보기가
+  // 큐에는 도달했는데 화면에 안 뜬 원인). tick 은 델타마다 증가한다.
   const generatingSignature = useMemo(
-    () => generatingItems.map((q) => `${q.id}:${q.status}`).join("|"),
+    () =>
+      generatingItems
+        .map((q) => `${q.id}:${q.status}:${q.streamPreview?.tick ?? -1}`)
+        .join("|"),
     [generatingItems],
   );
   const generatingItemsRef = useRef(generatingItems);
@@ -1375,6 +1382,9 @@ export function PassageRegistrationClient({
             workspaceActive={workspaceActive}
             onSubmitPastedRows={handleCreatePastedPassages}
             pasteSaving={pasteSaving}
+            // 국어 라우트면 직접 입력 탭의 영어 전용 모드(AI 원문 복원·AI 지문
+            // 생성)를 막는다 — 안 넘기면 영어 지문이 국어 지문함에 저장된다.
+            pasteSubjectScope={subjectScope}
             mobileStepTabs={mobileStep === "input" ? "sources" : "hidden"}
             includeWorksheet={includeWorksheet}
             setIncludeWorksheet={setIncludeWorksheet}

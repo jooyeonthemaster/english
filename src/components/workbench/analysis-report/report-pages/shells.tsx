@@ -200,13 +200,19 @@ export function LiShell({ it, edit, meta, listStyle, measure }: { it: FlowItem; 
   );
 }
 
-export function RowShell({ it, edit, meta, measure }: { it: FlowItem; edit?: ReportEdit; meta?: BlockMeta; measure?: boolean }) {
+/**
+ * 표 행. 편집 chrome 중 **핸들 열(.par-edit-hcell)만은 레이아웃 요소**라 measure 클론에도
+ * 렌더해야 한다 — 이 6mm 열이 내용 열을 3.45% 좁히는데 클론에만 없으면 클론에서 안 접히던
+ * 셀이 실제 페이지에서 2줄이 되어(행당 ~4.76mm) 표가 러닝 푸터를 뚫는다.
+ * 반대로 그립(상호작용)은 클론에 절대 넣지 않는다(아이콘 수백 개 = 렌더 비용).
+ */
+export function RowShell({ it, edit, meta, measure, handleCell }: { it: FlowItem; edit?: ReportEdit; meta?: BlockMeta; measure?: boolean; handleCell?: boolean }) {
   const cp = chromeProps(it, edit, measure);
   const editId = editIdOf(it);
   return (
     <tr data-mid={it.id} style={blockStyleOf(meta)} {...cp} className={(cp.className as string) ?? ""}>
-      {edit && !measure ? (
-        <td className="par-edit-hcell"><Grip edit={edit} id={editId} /></td>
+      {handleCell ? (
+        <td className="par-edit-hcell">{edit && !measure ? <Grip edit={edit} id={editId} /> : null}</td>
       ) : null}
       <BlockFontProvider
         blockId={editId}

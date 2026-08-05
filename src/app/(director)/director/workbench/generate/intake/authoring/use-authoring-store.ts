@@ -275,9 +275,21 @@ async function startRun(args: StartAuthoringArgs): Promise<string | null> {
   // 합쳐 2N 크레딧이 두 번 나가지 않는다.
   const requestId = createRequestId();
 
-  // 서버 계약은 READY 자료만 받는다 — 판독 중/실패 자료를 보내면 zod 가 튕긴다.
+  // 서버 계약(schema.authoringMaterialEntrySchema)이 받는 최소 실질 = **본문이
+  // 있거나 원본 페이지가 올라가 있거나**. 둘 다 없는 자료만 여기서 걸러낸다.
+  //
+  // ⚠️ 예전 조건은 `status === "READY" && content` 였다. 그 한 줄이 사진 경로를
+  //   막고 있었다 — 원본이 이미 스토리지에 올라가 실을 준비가 끝났는데도, OCR 이
+  //   끝나지 않았다는 이유로(READING) 또는 글자를 못 읽었다는 이유로(FAILED)
+  //   멀쩡한 사진이 통째로 빠졌다. 판정은 use-material-drafts.readyMaterials 와
+  //   **같은 규칙**이어야 한다(두 벌로 갈라지면 화면이 "실린다"고 말한 자료가
+  //   조용히 빠진다).
   const materials: AuthoringPayloadMaterial[] = args.materials
-    .filter((m) => m.status === "READY" && m.content.trim().length > 0)
+    .filter(
+      (m) =>
+        (m.status === "READY" && m.content.trim().length > 0) ||
+        Boolean(m.storagePath),
+    )
     .map((m) => ({
       id: m.id,
       role: m.role,
@@ -329,11 +341,15 @@ async function startRun(args: StartAuthoringArgs): Promise<string | null> {
 
   // ── 생중계 레인 적격성(계약 6) ────────────────────────────────────────────
   // 여기 검사는 **빠른 우회용 최소 집합**이고 최종 권위는 서버다(부적격이면 400 을
-  // 돌려주고 아래 잡 경로로 떨어진다). 원본 페이지를 함께 보내는 자료가 하나라도
-  // 있으면 조달이 사는 잡 경로로 보낸다 — 텍스트만 실어 조용히 다르게 만드는 것이
-  // 사용자가 켠 스위치를 배신하는 일이기 때문이다.
-  const streamEligible =
-    args.count === 1 && !materials.some((material) => material.sendPages);
+  // 돌려주고 아래 잡 경로로 떨어진다).
+  //
+  // ⚠️ 예전에는 `&& !materials.some(m => m.sendPages)` 가 붙어 있었다(26-08-04 제거).
+  //   근거는 "스트림 레인에 조달이 없다" 하나뿐이었는데 이제 두 레인이 같은 조달
+  //   함수를 쓴다(page-images.ts). 그 조건이 살아 있던 동안 사진을 붙이거나 '원본
+  //   페이지도 함께 보냄'을 켜면 1편 발주가 조용히 잡 레인으로 내려가 실시간
+  //   미리보기를 잃었다 — 사진이 기본 ON 이 된 지금은 **모든 사진 발주**가 그렇게
+  //   된다. 되돌리려면 스트림 라우트의 조달을 함께 되돌릴 것.
+  const streamEligible = args.count === 1;
 
   try {
     if (streamEligible) {

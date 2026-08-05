@@ -14,7 +14,7 @@ import {
   loadOwnedStudentTask,
   markTaskInProgress,
 } from "@/lib/study-assignments/student-runtime";
-import { loadStudyContext } from "@/lib/worksheet-study/server";
+import { loadStageFirstAttempts, loadStudyContext } from "@/lib/worksheet-study/server";
 import { StudyPlayerClient } from "@/components/worksheet-study/player-client";
 
 export const dynamic = "force-dynamic";
@@ -55,8 +55,15 @@ export default async function StudyStagePage({
   const nextId = rotated.find((id) => ctx.summary.stages[id]?.status !== "done") ?? null;
   const nextStageHref = nextId ? `/g/w/${task.taskId}/study/${nextId}` : null;
 
-  const reviewMode =
-    ctx.summary.stages[stage.id]?.status === "done" || task.taskStatus === "DONE";
+  const stageState = ctx.summary.stages[stage.id];
+  const reviewMode = stageState?.status === "done" || task.taskStatus === "DONE";
+
+  // 이어 풀기 — 중도 이탈한 스테이지에 한해 첫 시도 기록을 실어 보낸다.
+  // 복습(완료 스테이지)은 처음부터가 맞으므로 싣지 않는다.
+  const priorFirst =
+    !reviewMode && ctx.stateId && stageState?.status === "in-progress"
+      ? await loadStageFirstAttempts(ctx.stateId, stage.id)
+      : [];
 
   return (
     <StudyPlayerClient
@@ -66,6 +73,7 @@ export default async function StudyStagePage({
       backHref={backHref}
       nextStageHref={nextStageHref}
       reviewMode={reviewMode}
+      priorFirst={priorFirst}
     />
   );
 }

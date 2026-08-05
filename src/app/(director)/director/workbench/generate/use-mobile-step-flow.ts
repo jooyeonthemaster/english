@@ -36,7 +36,7 @@ interface UseMobileStepFlowParams {
   workspaceActive: boolean;
   intakeView: IntakeView;
   intakeTab: IntakeTab;
-  pasteBoard: { count: number; busy: boolean };
+  pasteBoard: { count: number; busy: boolean; fixedFooter?: boolean };
   pasteStartRef: MutableRefObject<(() => void) | null>;
   selectedIds: Set<string>;
   handleLoadSelectedToWorkspace: () => Promise<void>;
@@ -298,10 +298,17 @@ export function useMobileStepFlow({
   // 파일업로드·직접입력·기출 탭(지문 입력 스텝)에서는 각 보드가 자체 하단 고정
   // 액션 바(담긴 지문 + 추출/등록/담기 버튼)를 렌더하므로, 중복되는 공용 스텝 네비를
   // 숨기고 그 높이만큼 아래 여백을 예약한다(고정 바에 콘텐츠가 가리지 않게).
+  // 직접 입력 탭은 모드에 따라 고정 바가 없을 수 있다 — AI 지문 생성은 흐름 안의
+  // shrink-0 CTA 바를 쓰므로 보드가 fixedFooter:false 를 보고한다. 그때도 여기서
+  // true 로 치면 (a) 140px 빈 띠가 남고 (b) 공용 스텝 네비까지 숨겨져 모바일에서
+  // 다음 단계로 갈 수단이 사라진다. 미보고(레거시 호스트)는 기존대로 true 취급.
+  const pasteBoardHasFixedFooter = pasteBoard.fixedFooter ?? true;
   const boardFixedFooterActive =
     mobileStep === "input" &&
     intakeView === "intake" &&
-    (intakeTab === "upload" || intakeTab === "paste" || intakeTab === "exam");
+    (intakeTab === "upload" ||
+      (intakeTab === "paste" && pasteBoardHasFixedFooter) ||
+      intakeTab === "exam");
 
   return {
     isMobileViewport,

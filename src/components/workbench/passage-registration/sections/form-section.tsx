@@ -107,6 +107,14 @@ interface FormSectionProps {
     rows: PastedPassageInput[],
   ) => boolean | void | Promise<boolean | void>;
   pasteSaving?: boolean;
+  /**
+   * 직접 입력 탭의 과목 스코프. "KOREAN" 이면 국어 고정 모드가 되어 영어 전용
+   * 파이프라인(AI 원문 복원·AI 지문 생성)이 비활성된다.
+   * ⚠️ 이 프롭을 넘기지 않으면 국어 라우트(/korean/webtoon·/korean/passages/create)
+   * 에서도 koreanFixed=false 가 되어, 영어 전용 지문 생성이 열린 채 생성본이
+   * subject="KOREAN" 으로 국어 지문함에 저장된다(과목 오염 + 크레딧 낭비).
+   */
+  pasteSubjectScope?: "KOREAN";
 
   // ── 모바일 스텝 플로우(<lg 전용) — PC 무영향 ──
   /** IntakeSurface 탭 노출 제어(스텝이 이동을 담당하면 "hidden"/"sources"). */
@@ -294,6 +302,7 @@ export function FormSection(props: FormSectionProps) {
                 showPasteTab={!!props.onSubmitPastedRows}
                 onSubmitPastedRows={props.onSubmitPastedRows}
                 pasteSaving={props.pasteSaving}
+                pasteSubjectScope={props.pasteSubjectScope}
                 mobileStepTabs={props.mobileStepTabs}
                 pasteStartRef={props.pasteStartRef}
                 onPasteStateChange={props.onPasteStateChange}

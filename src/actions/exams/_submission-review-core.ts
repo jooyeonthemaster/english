@@ -67,6 +67,18 @@ function asRecord(value: unknown): Record<string, unknown> | null {
     : null;
 }
 
+/** Text 컬럼에 JSON 문자열로 실린 값 흡수(options·keyPoints 등). 파싱 실패는 null 로 강등. */
+function parseJsonish(value: unknown): unknown {
+  if (typeof value !== "string") return value;
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  try {
+    return JSON.parse(trimmed);
+  } catch {
+    return null;
+  }
+}
+
 /** 도메인 객체 → Prisma Json 입력(exam-report/_helpers.toJson 관례 미러) */
 export function toJson(value: unknown): Prisma.InputJsonValue {
   return value as Prisma.InputJsonValue;
@@ -344,6 +356,152 @@ export function typeLabelOf(subType: string | null | undefined): string {
   return QUESTION_TYPE_UI[subType]?.label ?? subType;
 }
 
+// ── 원본 문항 노출용 정규화(설계 §7.4 — 시험 상세 모달·변형 문제 생성) ────────
+//
+// 검토 그리드는 지금껏 발문 80자 요약(brief)만 썼지만, 새 상세 모달은 선지 원문·
+// 지문·해설까지 그린다. 데이터 원천이 스키마상 자유 형식(Text 컬럼의 JSON 문자열,
+// 두 가지 wrongOptionExplanations 형태)이라 여기서 한 번에 방어적으로 정규화한다.
+// 파싱 실패는 절대 throw 하지 않고 빈 배열/null 로 강등한다(채점 표면을 죽이지 않는다).
+
+/** 선지 1개 — 모달 렌더·변형 생성 시드가 공유하는 최소 형태 */
+export interface ReviewOption {
+  label: string;
+  text: string;
+}
+
+/**
+ * Question.options JSON → [{label, text}].
+ * 형태 2종을 모두 받는다: `[{label:"①", text:"..."}]` · `["...", "..."]`(라벨 없음).
+ * 라벨은 `labels`(= AnswerSpec.optionLabels)를 **우선** 쓴다 — correctChoiceLabels 가
+ * 그 축으로 만들어지므로, 여기서 다른 축을 쓰면 UI 가 정답 선지를 못 짚는다.
+ */
+export function normalizeOptions(raw: unknown, labels?: string[]): ReviewOption[] {
+  const parsed = parseJsonish(raw);
+  if (!Array.isArray(parsed)) return [];
+  const out: ReviewOption[] = [];
+  parsed.slice(0, MAX_CHOICES).forEach((item, index) => {
+    const fallbackLabel = labels?.[index] ?? String(index + 1);
+    if (typeof item === "string") {
+      const text = item.trim();
+      if (text) out.push({ label: fallbackLabel, text });
+      return;
+    }
+    const rec = asRecord(item);
+    if (!rec) return;
+    const text =
+      typeof rec.text === "string"
+        ? rec.text.trim()
+        : typeof rec.content === "string"
+          ? rec.content.trim()
+          : "";
+    const ownLabel = typeof rec.label === "string" ? rec.label.trim() : "";
+    const label = labels?.[index] ?? (ownLabel || String(index + 1));
+    // 라벨만 있고 본문이 빈 선지도 자리는 지켜야 번호↔선지 대응이 어긋나지 않는다
+    if (!text && !ownLabel) return;
+    out.push({ label, text });
+  });
+  return out;
+}
+
+/** 선지 원천 — options 컬럼이 정본, 마커형(SENTENCE_INSERT 등)은 structuredData 폴백(answer-spec 동일 축) */
+export function optionsOf(question: LiveQuestionRow, labels?: string[]): ReviewOption[] {
+  const fromColumn = normalizeOptions(question.options, labels);
+  if (fromColumn.length > 0) return fromColumn;
+  const data = asRecord(parseJsonish(question.structuredData));
+  return data ? normalizeOptions(data.options, labels) : [];
+}
+
+/** QuestionExplanation 원본 행(Text 컬럼 그대로) */
+export interface ExplanationSource {
+  content: string;
+  keyPoints: string | null;
+  wrongOptionExplanations: string | null;
+}
+
+/** 정규화된 해설 — 모달 해설 패널·변형 프롬프트의 출제 포인트 원천 */
+export interface ReviewExplanation {
+  content: string;
+  keyPoints: string[];
+  wrongOptions: ReviewOption[];
+}
+
+const MAX_KEY_POINTS = 20;
+
+/** keyPoints — JSON 문자열 배열. 배열이 아니면(구형 자유 서술) 한 줄로 취급. */
+function parseKeyPoints(raw: string | null): string[] {
+  const parsed = parseJsonish(raw);
+  if (Array.isArray(parsed)) {
+    return parsed
+      .map((p) => (typeof p === "string" ? p.trim() : ""))
+      .filter((p) => p.length > 0)
+      .slice(0, MAX_KEY_POINTS);
+  }
+  if (typeof parsed === "string") {
+    const one = parsed.trim();
+    return one ? [one] : [];
+  }
+  // 배열도 문자열도 아닌 JSON(객체 등)은 형태 불명 — 원문 덤프를 노출하지 않고 비운다
+  if (parsed != null && typeof parsed === "object") return [];
+  const plain = (raw ?? "").trim(); // JSON 이 아닌 구형 자유 서술
+  return plain ? [plain] : [];
+}
+
+/**
+ * wrongOptionExplanations — 두 형태가 모두 실존한다.
+ *  (a) `{"1":"왜 틀렸는지…", "2":"…"}`  숫자 키 → optionLabels[n-1] 로 라벨 복원
+ *  (b) `[{label:"②", explanation:"…"}]` 라벨 동봉
+ * 어느 쪽이든 [{label, text}] 로 통일한다. (a)는 숫자 오름차순으로 정렬해 표시 순서를 고정.
+ */
+function parseWrongOptions(raw: string | null, labels?: string[]): ReviewOption[] {
+  const parsed = parseJsonish(raw);
+  if (Array.isArray(parsed)) {
+    const out: ReviewOption[] = [];
+    parsed.slice(0, MAX_CHOICES).forEach((item, index) => {
+      const rec = asRecord(item);
+      if (!rec) return;
+      const text =
+        typeof rec.explanation === "string"
+          ? rec.explanation.trim()
+          : typeof rec.text === "string"
+            ? rec.text.trim()
+            : "";
+      if (!text) return;
+      const ownLabel = typeof rec.label === "string" ? rec.label.trim() : "";
+      out.push({ label: ownLabel || labels?.[index] || String(index + 1), text });
+    });
+    return out;
+  }
+  const rec = asRecord(parsed);
+  if (!rec) return [];
+  return Object.entries(rec)
+    .map(([key, value]) => {
+      const text = typeof value === "string" ? value.trim() : "";
+      if (!text) return null;
+      const num = Number(key);
+      // 숫자 키만 라벨 복원 가능 — 라벨이 결손이면 키 원문("1")을 그대로 노출
+      const label =
+        Number.isInteger(num) && num > 0 ? (labels?.[num - 1] ?? key) : key;
+      return { label, text, sort: Number.isInteger(num) && num > 0 ? num : 999 };
+    })
+    .filter((o): o is ReviewOption & { sort: number } => o != null)
+    .sort((a, b) => a.sort - b.sort)
+    .slice(0, MAX_CHOICES)
+    .map(({ label, text }) => ({ label, text }));
+}
+
+/** 해설 원본 → 표시 계약. 셋 다 비면 null(모달이 해설 섹션 자체를 감춘다). */
+export function buildExplanation(
+  source: ExplanationSource | undefined,
+  optionLabels?: string[],
+): ReviewExplanation | null {
+  if (!source) return null;
+  const content = (source.content ?? "").trim();
+  const keyPoints = parseKeyPoints(source.keyPoints);
+  const wrongOptions = parseWrongOptions(source.wrongOptionExplanations, optionLabels);
+  if (!content && keyPoints.length === 0 && wrongOptions.length === 0) return null;
+  return { content, keyPoints, wrongOptions };
+}
+
 // ── DB 로더 — 테넌트 격리(submission→exam.academyId 교차검증) ────────────────
 
 export async function loadScopedSubmission(academyId: string, submissionId: string) {
@@ -400,7 +558,11 @@ export interface LiveQuestionRow {
   options: string | null;
   correctAnswer: string;
   structuredData: unknown;
-  passage: { content: string } | null;
+  /** 원본 지문 id — 변형 문제 생성 딥링크(§8)의 passageIds 원천 */
+  passageId: string | null;
+  difficulty: string | null;
+  /** 지문 원문 — 채점(specFor)은 content 만 쓰고, id/title 은 모달 표시·딥링크용 */
+  passage: { id: string; title: string; content: string } | null;
   deletedAt: Date | null;
 }
 
@@ -420,11 +582,50 @@ export async function loadQuestions(
       options: true,
       correctAnswer: true,
       structuredData: true,
-      passage: { select: { content: true } },
+      passageId: true,
+      difficulty: true,
+      passage: { select: { id: true, title: true, content: true } },
       deletedAt: true,
     },
   });
   return new Map(rows.map((r) => [r.id, r as LiveQuestionRow]));
+}
+
+/**
+ * 해설 배치 로드(문항당 0~1행 — questionId @unique). 한 응시 문항 수는 수십 개라
+ * findMany 1회로 충분하다(문항별 조회 = N+1 금지).
+ * QuestionExplanation 에는 academyId 가 없지만, ids 는 loadQuestions(academyId) 를
+ * 통과한 문항 id 집합이므로 테넌트 격리가 이미 성립한다.
+ */
+export async function loadExplanations(
+  ids: string[],
+): Promise<Map<string, ExplanationSource>> {
+  if (ids.length === 0) return new Map();
+  try {
+    const rows = await prisma.questionExplanation.findMany({
+      where: { questionId: { in: ids } },
+      select: {
+        questionId: true,
+        content: true,
+        keyPoints: true,
+        wrongOptionExplanations: true,
+      },
+    });
+    return new Map(
+      rows.map((r) => [
+        r.questionId,
+        {
+          content: r.content,
+          keyPoints: r.keyPoints,
+          wrongOptionExplanations: r.wrongOptionExplanations,
+        },
+      ]),
+    );
+  } catch (error) {
+    // 해설은 부가 정보다 — 조회가 실패해도 채점 검토 화면 전체를 죽이지 않는다.
+    console.error("[submission-review] 해설 배치 조회 실패:", error);
+    return new Map();
+  }
 }
 
 /** LIVE(휴지통 아님) 문항만 남긴 스냅샷 — 삭제 문항은 채점·배점·표시에서 제외(W6 축). */

@@ -22,7 +22,7 @@ import {
   useState,
   type RefObject,
 } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import {
   CheckCircle2,
@@ -79,12 +79,15 @@ import {
 } from "@/components/workbench/shared/view-mode-cycle-button";
 import { QuestionBankCard } from "@/components/workbench/question-bank-card";
 import { PassageGroupedView } from "@/components/workbench/question-bank-passage-view";
+import { AssignQuestionsAction } from "@/components/workbench/question-bank-client/assign-questions-action";
 import { CreateExamDialog } from "@/components/workbench/question-bank-client/create-exam-dialog";
 import { EditQuestionDialog } from "@/components/workbench/question-bank-client/edit-question-dialog";
 import { GridToggle } from "@/components/workbench/question-bank-client/grid-toggle";
 import { QuestionDetailDialog } from "@/components/workbench/question-bank-client/question-detail-dialog";
 import { QuestionFiltersToolbar } from "@/components/workbench/question-bank-client/filters-toolbar";
 import { useQuestionEditor } from "@/components/workbench/question-bank-client/use-question-editor";
+
+import { VARIANT_COPY } from "@/lib/wording/director-glossary";
 
 import { type QueueItem } from "./generate-page-types";
 import { QueueStatusCard } from "./queue-status-card";
@@ -188,6 +191,12 @@ interface EmbeddedQuestionBankProps {
    * 필터도 국어 그룹으로 바뀐다. 미전달 = 영어 기본(KO_* 문항 제외).
    */
   subjectScope?: "KOREAN";
+  /**
+   * 생성 결과 → 「과제 보내기」에서 미리 선택할 학생(2607 §8.5).
+   * 미전달이면 이 컴포넌트가 직접 `?student=`(오답 변형 딥링크)를 읽는다 —
+   * 상위가 명시로 넘긴 값이 항상 우선.
+   */
+  defaultStudentIds?: string[];
   // ── Live generation queue (ported from BottomQueueSection) ──
   sessionQueue?: QueueItem[];
   queueCounts?: { generating: number; done: number; error: number };
@@ -205,6 +214,7 @@ interface EmbeddedQuestionBankProps {
 export function EmbeddedQuestionBank({
   academyId,
   subjectScope,
+  defaultStudentIds,
   sessionQueue = [],
   queueCounts = { generating: 0, done: 0, error: 0 },
   queueFilter = "all",
@@ -214,6 +224,15 @@ export function EmbeddedQuestionBank({
   marqueeBoundaryRef,
 }: EmbeddedQuestionBankProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // 오답 변형 딥링크(`?student=`)로 들어온 학생 — 생성한 문항을 그 학생에게
+  // 바로 보내는 흐름의 프리셀렉트 값(2607 §8.5). 상위 prop 이 있으면 그것을 쓴다.
+  const assignStudentIds = useMemo(() => {
+    if (defaultStudentIds && defaultStudentIds.length > 0) return defaultStudentIds;
+    const studentId = searchParams.get("student");
+    return studentId ? [studentId] : undefined;
+  }, [defaultStudentIds, searchParams]);
 
   // 모바일에선 한 페이지 카드 수를 10개로 줄인다(서버 페이지 크기 자체를 변경).
   const isMobile = useIsMobile();
@@ -1317,6 +1336,22 @@ export function EmbeddedQuestionBank({
           <span className="md:hidden">시험지 생성</span>
           <span className="hidden md:inline">다음으로 (시험지 생성)</span>
         </button>
+
+        {/* 과제 보내기 — 시험지 생성 바로 옆. 갓 만든 문항을 다른 메뉴로 건너가지
+            않고 그 자리에서 학생에게 보내는 마지막 칸(2607 §8.5).
+            국어(KO_*)는 학생 앱 문항 플레이어 미검증이라 문제 은행과 동일하게
+            게이트한다(question-bank-client 와 같은 판정 — 무회귀). */}
+        {subjectScope !== "KOREAN" ? (
+          <AssignQuestionsAction
+            selectedIds={selectedIds}
+            onAssigned={clearSelection}
+            defaultStudentIds={assignStudentIds}
+            disabled={selectedIds.size === 0}
+            title={
+              selectedIds.size === 0 ? VARIANT_COPY.AFTER_GENERATE_HINT : undefined
+            }
+          />
+        ) : null}
       </div>
       {/* 모바일은 ml-auto 제거 — auto 마진이 free space를 먹어 좌측 flex-1(시험지
           생성 grow)이 못 자라던 문제를 풀어, 시험지 생성이 오른쪽까지 채워지고
@@ -1487,6 +1522,13 @@ export function EmbeddedQuestionBank({
               style={{ top: folderStickyHeight }}
             >
               {toolbarRow}
+              {/* 생성 → 과제 동선 안내 한 줄. 버튼 바로 아래에 상시 두어 높이가
+                  선택 상태에 따라 흔들리지 않게 한다(스티키 바 레이아웃 안정). */}
+              {subjectScope !== "KOREAN" ? (
+                <p className="mt-1.5 text-[12px] text-slate-500">
+                  {VARIANT_COPY.AFTER_GENERATE_HINT}
+                </p>
+              ) : null}
             </div>
 
             <div
@@ -1534,6 +1576,7 @@ export function EmbeddedQuestionBank({
                     />
                   </div>
                   <PassageGroupedView
+                    marqueeDeferCommit
                     passages={groupedPassages}
                     gridCols={gridCols}
                     viewSize={viewSize}
@@ -1578,7 +1621,7 @@ export function EmbeddedQuestionBank({
                   )}
                 </div>
               ) : (
-                <DragSelect
+                <DragSelect deferCommit
                   value={selectedIds}
                   onChange={setSelectedIds}
                   boundaryRef={marqueeBoundaryRef}

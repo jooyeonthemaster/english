@@ -132,7 +132,6 @@ import {
 import { AUTHORING_COPY } from "@/lib/wording/passage-authoring-glossary";
 import { cn } from "@/lib/utils";
 
-import { AuthoringCoveragePanel } from "./authoring-coverage-panel";
 import { AuthoringButton, Kicker } from "./authoring-primitives";
 import {
   BTN_MD,
@@ -234,8 +233,8 @@ function AuthoringResultOkCard({
   targetWords,
   onFollowUp,
 }: AuthoringResultCardProps) {
-  // 목표 분량을 아는가. 모르면(복구 run) 커버리지 기대 사용량 안내를 생략한다.
-  const hasTarget = typeof targetWords === "number" && targetWords > 0;
+  // (hasTarget 은 커버리지 패널의 "N단어 지문에는 보통 …" 안내 전용이었다 —
+  //  패널과 함께 사라졌다. targetWords 자체는 편집기 높이 계산에 여전히 쓴다.)
 
   // 서버가 배치 후처리에서 붙인 표시용 경고. 비면 아무것도 그리지 않는다.
   const warnings = (item.warnings ?? [])
@@ -461,16 +460,15 @@ function AuthoringResultOkCard({
           </section>
         ) : null}
 
-        {/* 이행 — 단어장·어법 자료가 있을 때만 나타난다. 패널이 스스로 null 을
-            판정한다(hasAuthoringCoverage — 커버리지 파일 계약). flex 컬럼은 렌더되지
-            않은 자식에 gap 을 주지 않으므로 빈 줄도 남지 않는다.
-            목표 분량을 모르면 undefined 를 그대로 넘긴다(기본값으로 채우지 않는다).
-            패널은 targetWords 가 없으면 "N단어 지문에는 보통 …" 기대 사용량 안내를
-            렌더하지 않는다 — 모르는 분모로 정상 결과를 실패처럼 보이게 하지 않는다. */}
-        <AuthoringCoveragePanel
-          coverage={item.coverage}
-          targetWords={hasTarget ? targetWords : undefined}
-        />
+        {/* ⚠️ 여기 있던 커버리지 패널("요청하신 내용이 이렇게 반영됐어요" — 표제어
+            N개 중 M개 · %)은 26-08-04 오너 결정으로 **화면에서만** 제거했다.
+            근거: 선생님이 그 숫자를 보고 할 행동이 없었고, 분모가 올린 단어장
+            크기라 지문 길이와 무관해서(200표제어 vs 165단어) 정상 결과가 늘
+            실패처럼 읽혔다 — 패널 자체가 그 오독을 막으려고 안내 문구 세 줄을
+            달고 있었다는 사실이 곧 지표가 화면에 맞지 않는다는 증거였다.
+            item.coverage 는 **그대로 살아 있다**(서버 계산·스키마·DB 저장 불변).
+            되살릴 때는 사전(COVERAGE 묶음)을 먼저 복구할 것 — 문구를 여기 손코딩
+            하면 게이트 ⑤ 에 걸린다. */}
 
         {/* 행동 — 누르면 컴포저가 채워질 뿐 실행되지 않는다. 행의 마지막 덩어리. */}
         {onFollowUp ? (

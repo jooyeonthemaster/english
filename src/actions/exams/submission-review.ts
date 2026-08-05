@@ -44,11 +44,14 @@ import {
   NOT_FOUND_MESSAGE,
   REVIEWABLE_STATUSES,
   alignRowsToSnapshot,
+  buildExplanation,
   clampBrief,
   effectiveVerdict,
   liveSnapshotEntries,
   loadExamSubject,
+  loadExplanations,
   loadQuestions,
+  optionsOf,
   loadScopedSubmission,
   parseResponses,
   regradeRows,
@@ -100,6 +103,25 @@ export interface SubmissionReviewQuestion {
   /** 수동확정(manualStatus) 우선 최종 판정 — UNKNOWN = 미입력/미채점 */
   effectiveStatus: EffectiveStatus;
   effectiveEarnedPoints: number | null;
+
+  // ── 원본 문항 전문(설계 §7.4) — 시험 상세 모달·변형 문제 생성 전용 추가 필드.
+  //    전부 optional 이라 기존 소비처(정오 그리드·검토 패널)는 무회귀다.
+  //    brief 는 목록용 요약으로 그대로 유지한다(둘의 용도가 다르다).
+  /** 발문 전문(클램프 없음) */
+  questionText?: string;
+  /** 선지 원문 — 라벨 축은 optionLabels(=correctChoiceLabels)와 동일 */
+  options?: { label: string; text: string }[];
+  /** 원본 지문 id — 변형 생성 딥링크의 passageIds 원천. 없으면 변형 불가(§8.3) */
+  passageId?: string | null;
+  passage?: { id: string; title: string; content: string } | null;
+  /** 해설 — 본문·핵심 포인트·오답 선지별 해설. 셋 다 없으면 null */
+  explanation?: {
+    content: string;
+    keyPoints: string[];
+    wrongOptions: { label: string; text: string }[];
+  } | null;
+  /** "BASIC" | "INTERMEDIATE" | "KILLER" */
+  difficulty?: string | null;
 }
 
 export interface SubmissionReviewDetail {
@@ -201,6 +223,9 @@ export async function getSubmissionReviewDetail(
       reportAnalysisId = reportStudent?.examAnalysisId ?? null;
     }
 
+    // 해설은 문항당 최대 1행 — LIVE 문항 id 전체로 배치 1회만 조회(N+1 금지, §7.4 성능)
+    const explanationById = await loadExplanations(live.map((s) => s.questionId));
+
     const questions: SubmissionReviewQuestion[] = rows.map((row) => {
       const points = pointsByQuestion.get(row.questionId) ?? 0;
       // live 스냅샷 행이므로 문항은 반드시 존재 — 방어적으로만 옵셔널 처리
@@ -244,6 +269,26 @@ export async function getSubmissionReviewDetail(
           }));
         }
         if (spec.manualReason) item.manualReason = spec.manualReason;
+
+        // ── §7.4 원본 전문 — 상세 모달이 지문·선지·해설까지 그린다.
+        // 라벨 축을 spec.optionLabels 로 통일해야 정답 선지 강조(correctChoiceLabels)와
+        // 학생 선택 표시가 같은 키로 맞물린다.
+        item.questionText = question.questionText;
+        item.difficulty = question.difficulty ?? null;
+        item.passageId = question.passageId ?? null;
+        item.passage = question.passage
+          ? {
+              id: question.passage.id,
+              title: question.passage.title,
+              content: question.passage.content,
+            }
+          : null;
+        const options = optionsOf(question, item.optionLabels);
+        if (options.length > 0) item.options = options;
+        item.explanation = buildExplanation(
+          explanationById.get(row.questionId),
+          item.optionLabels,
+        );
       }
       return item;
     });

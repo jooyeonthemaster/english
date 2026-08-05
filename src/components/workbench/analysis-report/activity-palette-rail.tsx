@@ -75,6 +75,17 @@ export function ActivityPaletteRail({
               <p className="truncate text-[10.5px] font-semibold text-slate-400">{panelSubtitle}</p>
             </div>
           </div>
+          {/* ── 최상단 고정 강조 슬롯: 단어 시험지 ──────────────────────────
+              이 카드는 팔레트 '카탈로그 항목'이 아니라 문서 전역 스위치라, 아래
+              스크롤 영역(dir=rtl div) 바깥의 shrink-0 밴드에 둔다 — 팔레트를
+              끝까지 내려도 항상 헤더 바로 아래에 보인다.
+              koMode(국어)에서는 editor 가 vocabTestSlot 을 null 로 주지만,
+              빈 파란 띠가 새는 일이 없도록 여기서도 이중으로 가드한다. */}
+          {!koMode && vocabTestSlot ? (
+            <div className="shrink-0 border-b border-blue-100 bg-gradient-to-b from-blue-50/80 via-blue-50/30 to-white px-2.5 py-2.5">
+              {vocabTestSlot}
+            </div>
+          ) : null}
           {/* dir=rtl 로 스크롤바를 왼쪽에 두고, 내용은 dir=ltr 래퍼로 정상 방향 유지 */}
           <div dir="rtl" className="min-h-0 flex-1 overflow-y-auto p-2.5 [scrollbar-gutter:stable]">
             <div dir="ltr">
@@ -104,14 +115,14 @@ export function ActivityPaletteRail({
               onClose={onCloseWebtoonPicker}
               onPick={onPickWebtoon}
             />
-            {/* 영어 전용 학습 활동 카탈로그(빈칸·직독직해·어순·어휘) — KO 보고서에는 비노출 */}
+            {/* 영어 전용 학습 활동 카탈로그(빈칸·직독직해·어순) — KO 보고서에는 비노출.
+                단어 시험지는 위 고정 밴드가 소유하므로 여기로 내려보내지 않는다(중복 노출 금지). */}
             {koMode ? null : (
               <ActivityPalettePanel
                 report={report}
                 onPick={onPickActivity}
                 activityCounts={activityCounts}
                 onToggleOffKind={onToggleOffKind}
-                vocabTestSlot={vocabTestSlot}
               />
             )}
             </div>

@@ -18,6 +18,7 @@ import {
 } from "@/actions/study-assignments/_shared";
 import { requireStaffAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { computeStudyMastery, type StudyMastery } from "@/lib/worksheet-study/grade";
 
 // ── 반환 계약 ───────────────────────────────────────────────────────────────
 
@@ -58,6 +59,11 @@ export interface StudentStudyStageCell {
   total?: number;
   /** in-progress 첫 시도 정답 수 (툴팁용) */
   firstCorrect?: number;
+  /**
+   * 첫 시도 채점 문항 수 — 정답 수(firstCorrect)의 분모. 이게 없으면 UI 가
+   * "4/4 인데 첫 시도 정답 0개"를 해독할 수 없다(2607 §3.4).
+   */
+  firstTotal?: number;
 }
 
 export interface StudentStudyAssignmentRow {
@@ -65,7 +71,15 @@ export interface StudentStudyAssignmentRow {
   title: string;
   /** key = StudyStageId */
   stages: Record<string, StudentStudyStageCell>;
+  /**
+   * 첫 시도 정답률(%) — `mastery.firstTryPct` 의 별칭(호환 유지).
+   * 저장 스냅샷(WorksheetStudyState.masteryPct)이 아니라 **매 조회 재계산**이다:
+   * 저장값은 학생의 마지막 플러시 시점 값이라 학생면과 교사면이 갈렸고, 구 정의는
+   * 진행 중 스테이지를 분모에서 빼 부분 학습을 100%로 보고했다(2607 §3.1·§3.3).
+   */
   masteryPct: number | null;
+  /** 정답률·진도·표본을 한 덩어리로 — 정답률 단독 노출 금지(2607 §3.4) */
+  mastery: StudyMastery;
   totalTimeMs: number;
   completedAt: string | null;
   /** 이 과제의 마지막 학습 활동(state.updatedAt) */
@@ -116,7 +130,7 @@ export interface StudentStudyBreakdown {
   skills: StudentSkillMasteryMap;
   /** 오답률 내림차순 상위 — 오답 0건 문장 제외 */
   sentences: StudentWeakSentenceRow[];
-  /** 오답률 내림차순 — 출제된 코드 전부 */
+  /** 오답률 내림차순 — 오답 0건 코드 제외(sentences/words 와 동일 규칙) */
   grammarCodes: StudentWeakGrammarRow[];
   /** 오답 횟수 내림차순 상위 — 오답 0건 단어 제외 */
   words: StudentWeakWordSummaryRow[];
@@ -190,6 +204,7 @@ function parseStageStates(raw: unknown): Record<string, StudentStudyStageCell> {
       answered?: unknown;
       total?: unknown;
       firstCorrect?: unknown;
+      firstTotal?: unknown;
     };
     const cell: StudentStudyStageCell = {
       status: v.status === "in-progress" || v.status === "done" ? v.status : "todo",
@@ -202,6 +217,8 @@ function parseStageStates(raw: unknown): Record<string, StudentStudyStageCell> {
     if (total !== undefined) cell.total = total;
     const firstCorrect = finiteNum(v.firstCorrect);
     if (firstCorrect !== undefined) cell.firstCorrect = firstCorrect;
+    const firstTotal = finiteNum(v.firstTotal);
+    if (firstTotal !== undefined) cell.firstTotal = firstTotal;
     out[stageId] = cell;
   }
   return out;
@@ -261,7 +278,12 @@ function aggregateLogs(
     )
     .slice(0, 10);
 
+  // 오답 0건 코드 제외 — 이 배열의 소비처는 「보충 필요 문장·어법 포인트」 카드다.
+  // 필터가 없으면 한 번도 틀리지 않은 코드가 정답률 100%(emerald) 로 카드 최상단을
+  // 차지해 "보충 필요"라는 카드 주제와 정면으로 어긋난다. sentences(:268)·words(:292)
+  // 는 이미 같은 규칙을 쓰고 있었고 여기만 빠져 있었다.
   const grammarCodes: StudentWeakGrammarRow[] = [...byGrammar.entries()]
+    .filter(([, a]) => a.wrong > 0)
     .map(([code, a]) => ({
       code,
       wrongRate: wrongPct(a),
@@ -301,7 +323,8 @@ export async function getStudentStudyAnalytics(input: {
         id: true,
         assignmentId: true,
         stageStates: true,
-        masteryPct: true,
+        // masteryPct(저장 스냅샷)는 select 하지 않는다 — 아래에서 stageStates 로
+        // 매번 재계산한다(2607 §3.3). 남겨 두면 다음 사람이 아직 쓰는 값으로 오해한다.
         totalTimeMs: true,
         completedAt: true,
         updatedAt: true,
@@ -411,11 +434,16 @@ export async function getStudentStudyAnalytics(input: {
     const assignments: StudentStudyAssignmentRow[] = states
       .map((st) => {
         const counts = countsByAssignment.get(st.assignmentId);
+        const stages = parseStageStates(st.stageStates);
+        // 저장 스냅샷(st.masteryPct)을 읽지 않는다 — 학생면(재계산)과 값이 갈리고,
+        // 구 정의가 진행 중 스테이지를 분모에서 빼 부분 학습을 100%로 보고했다.
+        const mastery = computeStudyMastery(stages);
         return {
           assignmentId: st.assignmentId,
           title: titleById.get(st.assignmentId) ?? "(삭제된 과제)",
-          stages: parseStageStates(st.stageStates),
-          masteryPct: st.masteryPct,
+          stages,
+          masteryPct: mastery.firstTryPct,
+          mastery,
           totalTimeMs: st.totalTimeMs,
           completedAt: isoOf(st.completedAt),
           lastActivityAt: st.updatedAt.toISOString(),

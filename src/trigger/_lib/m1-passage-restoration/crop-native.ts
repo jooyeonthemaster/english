@@ -7,12 +7,16 @@
 // → DB 조회 → Gemini 복원(배치)" 다단계가 전부 불필요하다. 이 함수가 그 전부를 한 콜로
 // 대체한다(실제 평가원/모의고사 크롭 3종으로 RECITATION 없이 동작 검증 완료).
 //
-// 모델은 passage-restoration 스테이지 설정(Gemini 3.5 Flash)을 따른다. 응답은
-// responseSchema로 강제해 형태를 보장한다.
+// 모델은 passage-restoration 스테이지 설정(기본 gemini-3.5-flash-lite, env
+// OPENROUTER_RESTORATION_MODEL 로 오버라이드)을 따른다. 응답은 response_format:
+// json_schema(strict)로 와이어에서 강제하고, 파싱은 펜스 제거·별칭 흡수로 한 번 더
+// 방어한다(26-07-27 장애: json_object 만 보내던 시절 3.1-flash-lite 가 rawText 를
+// ocrText 로 자유작명 → 전건 EMPTY_OUTPUT DEAD).
 // ============================================================================
 
 import { postAtlasChatCompletionAsGeminiLike } from "@/lib/atlas-chat-rest";
 import { getExtractionAiModelName } from "@/lib/extraction/model-config";
+import { stripProblemMarkers } from "./text-utils";
 
 export interface CropRestoreChange {
   /** 어느 마커/빈칸을 고쳤는지(예: "(X)[As a result / However]", "ⓓ", "( Ⓔ )"). */
@@ -55,7 +59,14 @@ Do ALL of this in this single response:
 3) SOLVE it and write the fully RESTORED original passage: every blank filled with the
    correct answer, every inline choice replaced by the single correct option, order
    fixed, irrelevant sentence removed, grammar/word errors corrected. The restored
-   passage must read as clean prose with NO problem markers (ⓐ, (A), (X), ___) left.
+   passage must read as clean prose with NO problem markers left — this includes
+   ⓐ-ⓔ, lowercase letter markers (a)-(e), (A)/(B)/(C) chunk labels, (X), ___ blanks
+   (fill EVERY blank — never leave one), circled numbers ①-⑤, underlines, AND
+   insertion-slot markers like ( ① )( ② )( ③ )( ④ )( ⑤ ): remove every slot marker
+   after placing the inserted sentence. Also drop the question number, Korean
+   instruction line (발문), score tags like [3점], and the choice list — restoredText
+   is the passage body only. Keep word-gloss footnote lines (e.g. "* sanction: 제재를
+   가하다") verbatim at the end if present.
    If the passage is already clean (no problem to solve), restoredText must equal the
    OCR text and changes must be empty.
 4) For every SUBSTANTIVE restoration add a "changes" entry — the chosen answer for a
@@ -70,8 +81,14 @@ Do ALL of this in this single response:
    Do NOT add entries for merely stripping cosmetic markers (ⓐ, (A), (X) brackets)
    when the wording is otherwise unchanged — only real answer/correction edits.
 
-Output ONLY JSON. No prose outside JSON.`;
+Output ONLY JSON. No prose outside JSON. The JSON object must use EXACTLY these
+top-level keys and no others:
+  { "problemType": string, "rawText": string, "restoredText": string, "changes": [...] }
+"rawText" is the faithful OCR of step 1 (NOT "ocrText" or any other name);
+"restoredText" is the solved restoration of step 3.`;
 
+// response_format: json_schema 로 와이어에 실제 전송된다(strict). additionalProperties
+// 명시는 strict 모드 프로바이더 호환 요건.
 const RESPONSE_SCHEMA = {
   type: "object",
   properties: {
@@ -102,11 +119,47 @@ const RESPONSE_SCHEMA = {
           reason: { type: "string" },
         },
         required: ["marker", "before", "after", "type", "reason"],
+        additionalProperties: false,
       },
     },
   },
   required: ["problemType", "rawText", "restoredText", "changes"],
+  additionalProperties: false,
 };
+
+/**
+ * 모델 출력 JSON 방어 파싱 — 마크다운 펜스 제거 → 실패 시 최외곽 {} 재시도.
+ * json_schema 강제가 1차 방어지만, 프로바이더가 스키마를 무시/미지원해도
+ * 여기서 한 번 더 살린다.
+ */
+function parseModelJson(text: string): Record<string, unknown> {
+  const unfenced = text
+    .replace(/^\s*```(?:json)?\s*/i, "")
+    .replace(/\s*```\s*$/, "")
+    .trim();
+  try {
+    return JSON.parse(unfenced) as Record<string, unknown>;
+  } catch (err) {
+    const start = unfenced.indexOf("{");
+    const end = unfenced.lastIndexOf("}");
+    if (start >= 0 && end > start) {
+      return JSON.parse(unfenced.slice(start, end + 1)) as Record<string, unknown>;
+    }
+    throw err;
+  }
+}
+
+/** 키 자유작명 흡수 — 과거 장애에서 관측된 별칭(ocrText 등)을 정본 키로 정규화. */
+function readStringAlias(
+  obj: Record<string, unknown>,
+  keys: readonly string[],
+): string | undefined {
+  for (const key of keys) {
+    const value = obj[key];
+    if (typeof value === "string" && value.trim()) return value;
+  }
+  return undefined;
+}
 
 const CROP_RESTORE_TIMEOUT_MS = 90_000;
 
@@ -128,7 +181,7 @@ export async function restoreCropImage(params: {
     image: { mimeType: params.mimeType, base64: params.base64 },
     temperature: 0.2,
     maxOutputTokens: 8192,
-    responseMimeType: "application/json",
+    responseJsonSchema: { name: "crop_restore", schema: RESPONSE_SCHEMA },
     timeoutInMs: params.timeoutInMs ?? CROP_RESTORE_TIMEOUT_MS,
   }) as GeminiResponse;
 
@@ -143,28 +196,40 @@ export async function restoreCropImage(params: {
     throw err;
   }
 
-  let parsed: CropRestoreResult;
+  let parsed: Record<string, unknown>;
   try {
-    parsed = JSON.parse(text) as CropRestoreResult;
+    parsed = parseModelJson(text);
   } catch (err) {
-    throw new Error(
+    const wrapped = new Error(
       `Gemini crop-restore JSON parse failure: ${
         err instanceof Error ? err.message : String(err)
       }. Raw: ${text.slice(0, 300)}`,
     );
+    (wrapped as Error & { code?: string }).code = "PARSE_ERROR";
+    throw wrapped;
   }
-  // 최소 정합성 — rawText는 반드시, restoredText 비면 rawText로 폴백.
-  if (!parsed.rawText || typeof parsed.rawText !== "string") {
-    const err = new Error("Gemini crop-restore: rawText missing");
+  // 최소 정합성 — rawText는 반드시(별칭 흡수 포함), restoredText 비면 rawText로 폴백.
+  const rawText = readStringAlias(parsed, ["rawText", "ocrText", "ocr", "text"]);
+  if (!rawText) {
+    const err = new Error(
+      `Gemini crop-restore: rawText missing (keys=${Object.keys(parsed).join(",")})`,
+    );
     (err as Error & { code?: string }).code = "EMPTY_OUTPUT";
     throw err;
   }
+  // (a)~(e)·(A)~(Z) 마커는 모델(3.5-lite·3.6-flash 공통)이 지시에도 간헐적으로
+  // 남긴다 — 결정론적 후처리로 확실히 제거한다(텍스트 경로와 동일한 안전망).
+  const restoredText = stripProblemMarkers(
+    readStringAlias(parsed, ["restoredText", "restored", "restoredPassage"]) ?? "",
+  );
+  const changes = parsed.changes;
   return {
-    problemType: parsed.problemType ?? "unknown",
-    rawText: parsed.rawText,
-    restoredText: parsed.restoredText?.trim() || parsed.rawText,
-    changes: Array.isArray(parsed.changes)
-      ? parsed.changes.map((c) => ({
+    problemType:
+      typeof parsed.problemType === "string" ? parsed.problemType : "unknown",
+    rawText,
+    restoredText: restoredText?.trim() || rawText,
+    changes: Array.isArray(changes)
+      ? (changes as Array<Record<string, unknown> | null>).map((c) => ({
           marker: String(c?.marker ?? ""),
           before: String(c?.before ?? ""),
           after: String(c?.after ?? ""),

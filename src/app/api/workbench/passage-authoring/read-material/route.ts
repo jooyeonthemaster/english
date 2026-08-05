@@ -257,6 +257,13 @@ function parseReadTail(raw: string): ParsedTail {
 // ── 핸들러 ──────────────────────────────────────────────────────────────────
 
 export async function POST(req: NextRequest) {
+  // 지연 계측 — 클라(material-readers.logRead)는 **총 시간**만 알고, 그 안에서
+  // 업로드·서버·모델이 각각 얼마인지는 아무도 몰랐다. 그래서 "판독이 느리다"의
+  // 원인이 늘 추정으로만 말해졌다(그 추정이 틀린 채로 설계 판단에 쓰였다).
+  // 두 숫자를 함께 남기면 그 자리에서 갈린다:
+  //   총 − 모델 ≈ 업로드 + 콜드스타트 + 재압축   /   모델 = 축자 전사 자체
+  // 개인정보 없는 숫자만 남긴다(본문·파일명 금지 — logRead 와 같은 규칙).
+  const receivedAt = Date.now();
   const staff = await getStaffSession();
   if (!staff) {
     return NextResponse.json({ error: "인증이 필요합니다." }, { status: 401 });
@@ -307,6 +314,7 @@ export async function POST(req: NextRequest) {
     // 총 12MB 예산으로 재압축 — 원본 카메라 사진 여러 장이면 게이트웨이가 502 를
     // 돌려주는 실측 사례가 있어 전송 전에 반드시 통과시킨다(llm-images.ts).
     const prepared = await prepareLlmImages(buffers);
+    const preparedAt = Date.now();
 
     const response = await postAtlasChatCompletionAsGeminiLike({
       model: ATLAS_OCR_MODEL_ID,
@@ -319,6 +327,7 @@ export async function POST(req: NextRequest) {
       maxOutputTokens: 24_000,
       timeoutInMs: 90_000,
     });
+    const modelMs = Date.now() - preparedAt;
 
     // 원가는 성공·부분성공 여부와 무관하게 먼저 남긴다(호출이 일어났으므로).
     await recordAiCost({
@@ -348,6 +357,27 @@ export async function POST(req: NextRequest) {
 
     // 잘린 응답은 꼬리줄까지 잘려 나가므로 role/layout 이 비는 것이 정상이다.
     const { text, role, layout } = parseReadTail(raw);
+
+    // 계측 한 줄. 출력 토큰 수가 이 콜의 지연을 지배하는지(=축자 전사가 원인인지),
+    // 아니면 그 앞 구간(업로드·콜드스타트·재압축)이 원인인지를 이 줄 하나로 가른다.
+    // usage 는 게이트웨이 응답 모양에 따라 없을 수 있어 방어적으로 읽는다.
+    const usage = (response as { usageMetadata?: Record<string, unknown> })
+      .usageMetadata;
+    const outTokens =
+      typeof usage?.candidatesTokenCount === "number"
+        ? usage.candidatesTokenCount
+        : null;
+    console.log("[passage-authoring:read-material]", {
+      kind,
+      images: images.length,
+      model: ATLAS_OCR_MODEL_ID,
+      // 총 − 모델 = 업로드 수신 + 인증 + 재압축 (+ 콜드스타트).
+      totalMs: Date.now() - receivedAt,
+      modelMs,
+      outputChars: text.length,
+      outputTokens: outTokens,
+      truncated,
+    });
 
     if (!text) {
       return NextResponse.json(

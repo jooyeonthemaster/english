@@ -10,6 +10,11 @@ export const ATLAS_CLOUD_PROVIDER = "atlascloud" as const;
 
 const ATLAS_DEFAULT_BASE_URL = "https://openrouter.ai/api/v1";
 const GEMINI_FLASH_LITE_MODEL = "google/gemini-3.1-flash-lite";
+// 26-07-27 유저 지시: "AI로 원문 복원"(크롭 복원·passage-restoration)은 3.5-flash-lite
+// 로 상향. 3.1-flash-lite 가 크롭 복원 JSON 키를 자유작명(rawText→ocrText)해 전건
+// EMPTY_OUTPUT 으로 죽던 장애의 모델 축 대응(스키마 강제는 crop-native 에서 별도).
+// 롤백은 env OPENROUTER_RESTORATION_MODEL=google/gemini-3.1-flash-lite.
+const GEMINI_FLASH_LITE_35_MODEL = "google/gemini-3.5-flash-lite";
 // 26-07-22 유저 지시: 광역 표준 모델 3.5-flash → 3.6-flash 전면 전환 (O213 벤치:
 // 3.6-flash 품질 압승). 롤백은 env OPENROUTER_STANDARD_MODEL=google/gemini-3.5-flash.
 const GEMINI_FLASH_MODEL = "google/gemini-3.6-flash";
@@ -258,7 +263,7 @@ export const ATLAS_OCR_MODEL_ID = resolveAtlasModel(
 
 export const ATLAS_RESTORATION_MODEL_ID = resolveAtlasModel(
   ["ATLASCLOUD_RESTORATION_MODEL", "OPENROUTER_RESTORATION_MODEL", "GEMINI_RESTORATION_MODEL"],
-  ATLAS_FREE_MODEL_ID,
+  GEMINI_FLASH_LITE_35_MODEL,
 );
 
 export const ATLAS_TRANSFORM_MODEL_ID = resolveAtlasModel(
@@ -269,6 +274,15 @@ export const ATLAS_TRANSFORM_MODEL_ID = resolveAtlasModel(
 export const ATLAS_VARIANT_MODEL_ID = resolveAtlasModel(
   ["ATLASCLOUD_VARIANT_MODEL", "OPENROUTER_VARIANT_MODEL", "GEMINI_VARIANT_MODEL"],
   ATLAS_FREE_MODEL_ID,
+);
+
+// AI 지문 생성 전용 모델. 변형(flash-lite)과 달리 3.6-flash 로 한 단계 올린다 —
+// 여기선 입력이 "어법 교재·단어장·외부 지문" 같은 잡다한 자료 묶음이고, 그걸
+// 읽어 새 지문을 처음부터 써야 해서 지시 준수·장문 일관성이 품질을 좌우한다
+// (O213 벤치: 3.6-flash 가 3.5-flash 대비 품질 압승 — 광역 표준값과 동일 근거).
+export const ATLAS_AUTHORING_MODEL_ID = resolveAtlasModel(
+  ["OPENROUTER_AUTHORING_MODEL", "PASSAGE_AUTHORING_MODEL"],
+  GEMINI_FLASH_MODEL,
 );
 
 export const ATLAS_TUTOR_MODEL_ID = resolveAtlasModel(

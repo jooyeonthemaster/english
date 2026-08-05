@@ -63,11 +63,29 @@ import { WorkspaceShell } from "./workspace-shell";
 import {
   countWords,
   rowNeedsVariant,
+  type RowOverride,
 } from "./workspace/workspace-types";
 import { useWorkspaceRows } from "./workspace/use-workspace-rows";
 import { useWorkspaceGeneration } from "./workspace/use-workspace-generation";
 import { PassageWorkspace } from "./workspace/passage-workspace";
 import { PassageGenerateModal } from "./workspace/passage-generate-modal";
+import {
+  VariantContextStrip,
+  VariantSeedMissingStrip,
+} from "./workspace/variant-context-strip";
+import { VariantSourceModal } from "./workspace/variant-source-modal";
+// 오답 → 변형 생성 딥링크 수신 (docs/student-hub-uiux-2607-spec.md §8.4).
+// 시드·프롬프트·파싱 규칙은 전부 공유 모듈이 소유한다 — 여기서는 소비만 한다.
+import {
+  buildVariantPrompt,
+  clearVariantSeed,
+  parseTypeCounts,
+  parseVariantDifficulty,
+  readVariantSeed,
+  variantTypeCounts,
+  type VariantSeed,
+  type VariantSeedQuestion,
+} from "@/lib/question-variant";
 import { type TeacherPoint } from "./generation-config-panel-parts/point-picker-config";
 import { LearningGenerationIndicator } from "@/components/workbench/learning-generation-indicator";
 import { useLearningGenerationTasks } from "@/lib/learning-generation-tracker";
@@ -180,6 +198,78 @@ export function GeneratePageClient({
     })(),
   );
 
+  // ── 오답 기반 변형 딥링크 (spec §8.4) ──
+  // 위 passageIds/mode/step 과 같은 관용 — 마운트 시 1회만 캡처한다. 이후
+  // searchParams 가 바뀌어도(모바일 스텝 pushState, variant 해제 replaceState)
+  // 프리필이 되살아나지 않아야 한다.
+  /** `types=SUBTYPE:n,…` → 유형별 생성 개수. 카탈로그 밖 유형은 파서가 버린다. */
+  const initialTypeCountsRef = useRef<Record<string, number>>(
+    parseTypeCounts(searchParams.get("types")),
+  );
+  /**
+   * `difficulty=BASIC|INTERMEDIATE|KILLER`.
+   * 캐스트 사유: parseVariantDifficulty 는 이 세 값 또는 null 만 돌려주지만
+   * 반환 타입이 string|null 이라 RowOverride.difficulty 로 바로 못 넣는다.
+   */
+  const initialDifficultyRef = useRef<
+    "BASIC" | "INTERMEDIATE" | "KILLER" | null
+  >(
+    parseVariantDifficulty(searchParams.get("difficulty")) as
+      | "BASIC"
+      | "INTERMEDIATE"
+      | "KILLER"
+      | null,
+  );
+  /** `variant=<seedId>` — sessionStorage 리치 시드 키(원본 문항·학생 답·정답) */
+  const initialVariantIdRef = useRef<string | null>(searchParams.get("variant"));
+  // `student=<id>`(생성 후 「과제 보내기」 프리셀렉트)는 여기서 붙들지 않는다 —
+  // 실제 소비처인 결과 패널(embedded-question-bank)이 searchParams 에서 직접
+  // 읽는다(§8.5). 예전엔 여기서 파싱해 data-variant-student 속성으로 흘렸으나
+  // 그 속성을 읽는 코드가 0건이라 오해만 남기는 죽은 배선이었다.
+  /**
+   * `from=<내부 절대경로>` — 돌아가기 링크.
+   * `//evil.com` 은 브라우저가 프로토콜 상대 URL 로 읽어 외부로 나간다 —
+   * 오픈 리다이렉트를 막으려면 단일 슬래시로 시작하는 경로만 받아야 한다.
+   */
+  const initialFromRef = useRef<string | null>(
+    (() => {
+      const raw = searchParams.get("from");
+      return raw && raw.startsWith("/") && !raw.startsWith("//") ? raw : null;
+    })(),
+  );
+  /**
+   * 유형·난이도 프리필을 기다리는 지문 id — loadPassages 는 localId 를 돌려주지
+   * 않으므로(행 생성이 setRows 안에서 일어난다) 행이 실제로 담긴 뒤 rows 에서
+   * 찾아 setOverride 한다. 적용하면 null 로 비워 1회만 돌게 한다.
+   */
+  const pendingVariantPassageIdsRef = useRef<string[] | null>(null);
+  /** 복원한 리치 시드 — 컨텍스트 스트립의 근거이자 프롬프트 프리필의 원천 */
+  const [variantSeed, setVariantSeed] = useState<VariantSeed | null>(null);
+  /**
+   * 같은 시드의 동기 참조본. 아래 유형·난이도 프리필 이펙트는 rows 가 채워진
+   * 뒤(다음 렌더)에 도는데, state 로만 들고 있으면 그 시점에 아직 반영 전일 수
+   * 있어 프롬프트를 놓친다. 렌더와 무관한 소비는 ref 로 읽는다.
+   */
+  const variantSeedRef = useRef<VariantSeed | null>(null);
+  /**
+   * `?variant=` 는 있는데 sessionStorage 시드가 사라진 상태(새 탭·새로고침·
+   * 오래된 시드 청소). 무음으로 넘기면 사용자는 오답 변형을 만드는 줄 알고
+   * 평범한 신규 문항에 크레딧을 쓴다 — 축약 배너로 화면에 남긴다(§8.4).
+   */
+  const [variantSeedMissing, setVariantSeedMissing] = useState(false);
+  /**
+   * 「학생 오답 원본」 모달 — 지문 행 버튼이 넘긴 그 행의 오답 문항들.
+   * null 이면 닫힘. 시드가 살아 있을 때만 열 수 있다(원본 근거가 있어야 연다).
+   */
+  const [variantSourceView, setVariantSourceView] = useState<
+    VariantSeedQuestion[] | null
+  >(null);
+  /**
+   * 딥링크가 각 행 override 에 심어 둔 변형 지시문 — localId → prompt.
+   * 「연결 해제」 때 '사용자가 손대지 않은 것만' 되돌리기 위한 대조본이다.
+   */
+  const variantPromptRowsRef = useRef<Map<string, string>>(new Map());
+
   // ── Passage data ──
   const [passages, setPassages] = useState<PassageItem[]>([]);
   const [filterOptions, setFilterOptions] = useState<FilterOptions>({
@@ -218,9 +308,21 @@ export function GeneratePageClient({
   // 직접 입력 보드 연동 — 하단 고정 바의 '다음'이 등록(다음으로 내 지문함)
   // 버튼을 대신한다. ref 로 시작 동작을, 콜백으로 누적 수·작업 상태를 받는다.
   const pasteStartRef = useRef<(() => void) | null>(null);
-  const [pasteBoard, setPasteBoard] = useState({ count: 0, busy: false });
+  // fixedFooter: 직접 입력 탭이 하단 고정 바를 실제로 띄우는지. AI 지문 생성
+  // 모드에서는 텍스트 보드가 display:none 아래로 들어가 고정 바가 사라지므로
+  // false 로 온다 — 이걸 무시하면 140px 빈 띠가 남고 스텝 네비까지 숨겨진다.
+  const [pasteBoard, setPasteBoard] = useState({
+    count: 0,
+    busy: false,
+    fixedFooter: true,
+  });
   const handlePasteBoardState = useCallback(
-    (state: { count: number; busy: boolean }) => setPasteBoard(state),
+    (state: { count: number; busy: boolean; fixedFooter?: boolean }) =>
+      setPasteBoard({
+        count: state.count,
+        busy: state.busy,
+        fixedFooter: state.fixedFooter ?? true,
+      }),
     [],
   );
 
@@ -377,6 +479,21 @@ export function GeneratePageClient({
     }
     return map;
   }, [savedQuestions]);
+
+  /**
+   * 오답 시드를 지문별로 묶은 맵 — 지문 행이 「학생 오답 원본」 버튼을 띄울지
+   * 판단하는 근거. 시드가 없으면 빈 맵이라 버튼도 뜨지 않는다(죽은 버튼 금지).
+   */
+  const variantSourcesByPassage = useMemo(() => {
+    const map = new Map<string, VariantSeedQuestion[]>();
+    for (const q of variantSeed?.questions ?? []) {
+      if (!q.passageId) continue;
+      const list = map.get(q.passageId);
+      if (list) list.push(q);
+      else map.set(q.passageId, [q]);
+    }
+    return map;
+  }, [variantSeed]);
 
   // ── Question detail modal ──
   const [detailQuestion, setDetailQuestion] = useState<QuestionCardItem | null>(
@@ -703,6 +820,10 @@ export function GeneratePageClient({
       // 첫 로드가 끝났는데 라이브러리가 비어 있으면 딥링크 id 는 유효할 수
       // 없다 — 시드된 원시 선택만 정리하고 종결한다. (보류 상태로 남기면
       // 이후 붙여넣기 자동 선택을 아래 setSelectedIds 와이프가 지워버린다.)
+      // 무음 실패 금지(spec §8.4): 화면에는 아무 일도 안 일어난 것처럼 보인다.
+      toast.error(
+        `링크로 받은 지문 ${ids.length}개를 담지 못했어요. 지문함이 비어 있습니다.`,
+      );
       setSelectedIds(new Set());
       prefillAppliedRef.current = true;
       return;
@@ -716,10 +837,19 @@ export function GeneratePageClient({
         .map((id) => passages.find((p) => p.id === id))
         .filter(Boolean);
       workspaceApi.loadPassages(validPassages as PassageItem[]);
+      // 담긴 행에 ?types/?difficulty 를 얹을 대상 — rows 에 반영된 뒤 아래
+      // 프리필 이펙트가 setOverride 한다(loadPassages 는 localId 를 안 준다).
+      pendingVariantPassageIdsRef.current = validIds;
       toast.success(
         validIds.length === ids.length
           ? `지문 ${validIds.length}개를 워크스페이스에 담았어요.`
           : `지문 ${validIds.length}/${ids.length}개를 워크스페이스에 담았어요.`,
+      );
+    } else {
+      // 딥링크 id 가 전부 이 학원 지문함에 없다 — 삭제됐거나 다른 학원 URL.
+      // 조용히 빈 화면을 보여주지 않고 사유를 알린다(spec §8.4).
+      toast.error(
+        `링크로 받은 지문 ${ids.length}개를 지문함에서 찾지 못했어요. 삭제됐거나 다른 학원의 지문일 수 있어요.`,
       );
     }
     // 시드된 원시 선택을 정리 — 검증 전 id(다른 학원/삭제된 지문)가 선택
@@ -728,6 +858,128 @@ export function GeneratePageClient({
     setSelectedIds(new Set());
     prefillAppliedRef.current = true;
   }, [loadingPassages, passages, workspaceApi]);
+
+  // ── 변형 시드 복원 + 생성 지시문 프리필 (spec §8.4) ──
+  // sessionStorage 는 서버에 없다 — useState 초기화 함수로 읽으면 하이드레이션이
+  // 어긋나므로 마운트 후 1회만 복원한다.
+  useEffect(() => {
+    const seed = readVariantSeed(initialVariantIdRef.current);
+    if (!seed) {
+      // 무음 실패 금지(§8.4) — variant 파라미터로 들어왔는데 시드만 없는
+      // 경우다. 지문·유형·난이도는 URL 로 복원돼 화면은 '정상'으로 보이므로,
+      // 사유를 알리고 폴백 배너로 상태를 화면에 남긴다.
+      if (initialVariantIdRef.current) {
+        toast.error(
+          "변형 기록을 불러오지 못했어요. 지문·유형만 복원했습니다(원본 오답 정보 없음).",
+        );
+        setVariantSeedMissing(true);
+      }
+      return;
+    }
+    variantSeedRef.current = seed;
+    setVariantSeed(seed);
+    // 지시문은 전역 「추가 요청사항」이 아니라 **행 override 의 customPrompt** 로
+    // 싣는다(RowOverride.customPrompt 는 실재하고, use-workspace-generation 이
+    // `row.override?.customPrompt ?? prompt` 로 행 우선 배선을 마쳤다).
+    // 전역 하나로 합치면 유형이 다른 지문끼리 지시가 섞이고, 이후 사용자가 새로
+    // 담은 무관한 지문의 생성에도 그대로 실린다(2607 §8.4). 실제 주입은 아래
+    // 유형·난이도 프리필 이펙트가 행마다 수행한다.
+  }, []);
+
+  // ── 담긴 행에 유형·난이도 프리필 (spec §8.4) ──
+  // 위 딥링크 이펙트가 loadPassages 로 담은 행들이 rows 에 나타나면 그때 덮는다.
+  // 기존 override 를 통째로 갈아치우지 않고 필요한 키만 얹어, 이후 사용자가
+  // 모달에서 고친 값이 이 이펙트에 되돌려지지 않게 한 번만 돌린다.
+  useEffect(() => {
+    const pending = pendingVariantPassageIdsRef.current;
+    if (!pending || pending.length === 0) return;
+    const counts = initialTypeCountsRef.current;
+    const nextDifficulty = initialDifficultyRef.current;
+    const seed = variantSeedRef.current;
+    if (Object.keys(counts).length === 0 && !nextDifficulty && !seed) {
+      pendingVariantPassageIdsRef.current = null;
+      return;
+    }
+    const wanted = new Set(pending);
+    const targets = workspaceApi.rows.filter((r) => wanted.has(r.passageId));
+    // 아직 setRows 가 반영되기 전 — 다음 렌더에서 다시 시도한다.
+    if (targets.length === 0) return;
+    for (const row of targets) {
+      // 명시 타입 — `??` 폴백 리터럴에는 customPrompt 가 없어 union 으로
+      // 추론되면 아래 base.customPrompt 접근이 타입 오류가 난다.
+      const base: RowOverride = row.override ?? {
+        mode: "manual",
+        typeCounts: {},
+        difficulty: null,
+      };
+      // 이 행(지문)에서 나온 원본 오답만 추린다. URL 의 `types` 는 여러 지문의
+      // 합계라, 그대로 모든 행에 얹으면 지문 수만큼 생성량이 곱해진다.
+      // 시드가 있으면 지문별로 정확히 나눠 실어 그 곱셈을 없앤다.
+      const rowSeedQuestions = seed
+        ? seed.questions.filter((q) => q.passageId === row.passageId)
+        : [];
+      const rowCounts =
+        rowSeedQuestions.length > 0 ? variantTypeCounts(rowSeedQuestions) : {};
+      const effCounts =
+        Object.keys(rowCounts).length > 0
+          ? rowCounts
+          : Object.keys(counts).length > 0
+            ? { ...counts }
+            : base.typeCounts;
+      // 이 행에 걸린 유형의 지시문만 합친다 — 유형이 여러 개면 그 유형들만.
+      // (전역 프롬프트로 합치면 무관한 유형의 지시가 섞인다 — §8.4)
+      const rowPrompt = seed
+        ? [...new Set(rowSeedQuestions.map((q) => q.subType))]
+            .map((subType) => buildVariantPrompt(seed, subType))
+            .filter(Boolean)
+            .join("\n\n")
+        : "";
+      if (rowPrompt) variantPromptRowsRef.current.set(row.localId, rowPrompt);
+      workspaceApi.setOverride(row.localId, {
+        ...base,
+        // 유형을 URL 로 받았으면 그 유형만 담는다(원본이 겨눈 유형이 정본).
+        typeCounts: effCounts,
+        difficulty: nextDifficulty ?? base.difficulty,
+        // 사용자가 이미 손댄 지시문이 있으면 덮지 않는다.
+        customPrompt: rowPrompt || base.customPrompt || null,
+      });
+    }
+    pendingVariantPassageIdsRef.current = null;
+  }, [workspaceApi]);
+
+  /**
+   * 스트립 「연결 해제」 — 시드 상태를 비우고 sessionStorage 도 지운 뒤 URL 의
+   * variant 파라미터를 제거한다(새로고침으로 되살아나지 않게).
+   *
+   * 담긴 지문·유형은 사용자의 작업물이므로 남긴다. 다만 **딥링크가 자동으로 심은
+   * 변형 지시문**은 사용자가 쓴 글이 아니다 — 해제 후에도 남으면 스트립이 사라져
+   * 근거는 안 보이는데 보이지 않는 지시문만 계속 생성에 실린다('해제'가 약속한
+   * 것과 정반대). 그래서 우리가 심은 값 그대로인 행만 골라 되돌린다.
+   */
+  const handleClearVariantSeed = useCallback(() => {
+    clearVariantSeed(initialVariantIdRef.current);
+    variantSeedRef.current = null;
+    setVariantSeed(null);
+    setVariantSeedMissing(false);
+    const planted = variantPromptRowsRef.current;
+    if (planted.size > 0) {
+      for (const row of workspaceApi.rows) {
+        const mine = planted.get(row.localId);
+        // 사용자가 손댄 지시문은 보존 — 심은 값과 같을 때만 비운다.
+        if (!mine || !row.override || row.override.customPrompt !== mine) continue;
+        workspaceApi.setOverride(row.localId, {
+          ...row.override,
+          customPrompt: null,
+        });
+      }
+      planted.clear();
+    }
+    // 이 파일·모바일 스텝 훅의 관용 그대로 — router 왕복 없이 네이티브 history.
+    const url = new URL(window.location.href);
+    if (!url.searchParams.has("variant")) return;
+    url.searchParams.delete("variant");
+    window.history.replaceState(null, "", url.toString());
+  }, [workspaceApi]);
 
   // ── Load saved questions from DB ──
   const loadSavedQuestions = useCallback(async () => {
@@ -1217,6 +1469,30 @@ export function GeneratePageClient({
 
   const workspacePane = (
     <div className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden">
+      {/* 오답 기반 변형 컨텍스트 — 지문 행들 위, 워크스페이스가 열려 있을 때만.
+          "왜 이 지문이 여기 담겼는지"의 근거를 화면에서 잃지 않게 한다(§8.4).
+          시드가 유실됐으면(variantSeedMissing) 같은 자리에 축약 배너를 세워
+          '무엇이 복원됐고 무엇이 없는지'를 남긴다 — 무음으로 넘기지 않는다.
+          (기존 data-variant-* 속성은 읽는 코드가 0건인 죽은 표식이라 제거하고,
+           from 은 스트립의 「돌아가기」 링크 prop 으로 실제 동선에 연결했다.) */}
+      {variantSeed ? (
+        <div className="shrink-0 pb-2">
+          <VariantContextStrip
+            seed={variantSeed}
+            backHref={initialFromRef.current}
+            onClear={handleClearVariantSeed}
+          />
+        </div>
+      ) : variantSeedMissing ? (
+        <div className="shrink-0 pb-2">
+          <VariantSeedMissingStrip
+            typeCounts={initialTypeCountsRef.current}
+            difficulty={initialDifficultyRef.current}
+            backHref={initialFromRef.current}
+            onClear={handleClearVariantSeed}
+          />
+        </div>
+      ) : null}
       <div className="min-h-0 flex-1">
         <PassageWorkspace
           api={workspaceApi}
@@ -1225,6 +1501,8 @@ export function GeneratePageClient({
           questionCountByPassage={questionCountByPassage}
           questionsByPassage={questionsByPassage}
           onOpenQuestionDetail={(q) => setDetailQuestion(q)}
+          variantSourcesByPassage={variantSourcesByPassage}
+          onOpenVariantSources={setVariantSourceView}
           globalDifficulty={difficulty}
           globalGenerationPlan={generationPlan}
           setModeActive={genMode === "set"}
@@ -1732,6 +2010,17 @@ export function GeneratePageClient({
         handleApproveQuestion={handleApproveQuestion}
         handleUnapproveQuestion={handleUnapproveQuestion}
         editor={editor}
+      />
+
+      {/* ─── 학생 오답 원본 (오답 기반 변형 전용) ───
+          지문 행의 「학생 오답 원본」 버튼이 연다. 문제 은행과 같은 카드 UI 로
+          원본을 보여주고 그 위에 학생 답 → 정답 대조 바를 얹는다. */}
+      <VariantSourceModal
+        open={variantSourceView !== null}
+        sources={variantSourceView ?? []}
+        studentName={variantSeed?.studentName}
+        examTitle={variantSeed?.examTitle}
+        onClose={() => setVariantSourceView(null)}
       />
 
       <EditQuestionDialog

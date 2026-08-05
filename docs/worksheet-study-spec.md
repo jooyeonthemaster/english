@@ -183,7 +183,7 @@ export interface StudyEventsRequest {
   planHash: string;
   events: StudyItemEvent[];
   /** 스테이지 완주 시. score=첫 시도 정답률(0~100), timeMs=스테이지 벽시계,
-   *  firstCorrect/firstTotal=StudyStageState 파생용 원자료(가중 평균 숙달도 계산) */
+   *  firstCorrect/firstTotal=StudyStageState 파생용 원자료(§5.1 성취 지표 계산) */
   stageDone?: { score: number; timeMs: number; firstCorrect: number; firstTotal: number };
 }
 export interface StudyEventsResponse {
@@ -195,15 +195,30 @@ export interface StudyEventsResponse {
 // ── 상태 (서버 → 허브/플레이어) ──
 export interface StudyStageState {
   status: "todo" | "in-progress" | "done";
-  score?: number; timeMs?: number; completedAt?: string;
-  firstCorrect?: number; firstTotal?: number;
+  score?: number; timeMs?: number; completedAt?: string;  // score=최초 완주 시점 값(재학습으로 갱신 안 함)
+  firstCorrect?: number; firstTotal?: number;             // 첫 시도 채점 원자료 — 정답률 분자/분모
+  answered?: number; total?: number;                      // in-progress 부분 진행 (§7.1) — 진도 분자/분모
+  lastAt?: string;                                        // 이 스테이지 마지막 활동(ISO) — 라이브 표시용
 }
 export interface StudyStateSummary {
   stages: Partial<Record<StudyStageId, StudyStageState>>;
-  masteryPct: number | null;    // 필수 채점 스테이지 첫시도 정답률 가중 평균
+  /** 첫 시도 정답률(%) — 전 스테이지(진행 중 포함) 누적. 채점 0건이면 null.
+   *  컬럼 이름은 masteryPct 로 두되 **의미는 첫 시도 정답률**이다(§5.1). */
+  masteryPct: number | null;
+  /** 정답률과 반드시 함께 읽는 진도·표본 — computeStudyMastery 반환 그대로 */
+  mastery: StudyMastery;
   totalTimeMs: number;
   weakness: StudyWeakness | null;
   requiredDone: boolean;
+}
+// 성취 지표 계약(StudyMastery)의 정본은 grade.ts — types.ts 는 재수출만 한다.
+export interface StudyMastery {
+  firstTryPct: number | null;   // 첫 시도 정답률(%) — 채점 0건이면 null
+  coveragePct: number | null;   // 진도(%) — 산정 불가면 null
+  firstCorrect: number; firstTotal: number;   // 정답률 분자/분모
+  answered: number; totalItems: number;       // 진도 분자/분모
+  stagesDone: number; stagesTotal: number;    // 무채점 스테이지 포함
+  provisional: boolean;         // 전 스테이지 done 이 아니면 true → UI 「학습 중」 배지
 }
 export interface StudyWeakness {
   skills: Partial<Record<StudySkill, { correct: number; total: number }>>;
@@ -274,8 +289,49 @@ export function selfGradeScore(g: "O" | "D" | "X"): number              // 1 / 0
 - **스테이지 점수** = 첫 시도 기준: `round(100 × Σ(첫시도 정답 or selfGradeScore) / 채점 아이템 수)`.
 - **재도전 큐(완전학습)**: 오답 아이템은 스테이지 말미에 1회 재출제(attempt=2). 재도전 결과는
   점수에 미반영, 로그에는 기록(개선 추적). 재도전에서도 틀리면 정답·해설을 보여주고 통과.
-- **masteryPct** = 필수 채점 스테이지 score 의 아이템 수 가중 평균.
 - **취약점 롤업**: 첫 시도(attempt=1)만 집계. self-grade 는 O=정답, △/X=오답으로 카운트.
+
+### 5.1 성취 지표 — 첫 시도 정답률 + 진도 (개정 2026-07-25, 정본)
+
+```ts
+export function computeStudyMastery(stages: Record<string, StudyStageState>): StudyMastery
+export function computeMasteryPct(stages): number | null   // = computeStudyMastery(stages).firstTryPct
+```
+
+**구 정의(폐기)**: `masteryPct` = *완료된* 채점 스테이지 score 의 아이템 수 가중 평균.
+`status !== "done"` 스테이지를 분모에서 통째로 배제했기 때문에, 쉬운 단계 하나만 만점으로
+끝내고 나머지를 진행 중으로 남긴 학생이 **숙달도 100%** 로 보고됐다(실측: 어휘 시험 12/12 만
+반영되고 진행 중 스테이지의 오답 6문항이 전부 사라짐). 부분 학습을 완전 학습으로 오표시하는
+결함이라 정의 자체를 바꾼다. 규범: `docs/student-hub-uiux-2607-spec.md` §3.
+
+**새 정의 (집계 규칙 — 엄수)**
+- **첫 시도 정답률 `firstTryPct`** = `round(100 × Σ firstCorrect / Σ firstTotal)`.
+  **status 무관**하게 `firstTotal > 0` 인 모든 스테이지(done + in-progress)를 합산한다.
+  채점 기록이 0건이면 `null`.
+- **진도 `coveragePct`** = `round(100 × Σ answered / Σ total)`.
+  스테이지 분모는 `total ?? firstTotal`, 분자는 `answered ?? firstTotal`.
+  done 스테이지는 `total` 을 저장하지 않으므로 `firstTotal` 을 문항 수로 본다.
+  `total` 과 `firstTotal` 이 **둘 다 없는 무채점 done 스테이지(지문 통독 등)는 양쪽 모두에서 제외**한다.
+- 분자는 분모를 넘지 않도록 클램프한다(중복 플러시로 인한 100% 초과 표시 금지).
+- `provisional` = 상태가 있는 스테이지 중 `status !== "done"` 이 하나라도 있으면 `true`.
+- 순수함수 — `Date.now()`/`Math.random()` 금지(§5 모듈 규약).
+
+**계산 경로 통일 (critical)**
+- 표시 표면은 **전부 `stageStates` 로부터 재계산**한다. DB `WorksheetStudyState.masteryPct`
+  스냅샷을 읽어 표시하지 않는다(교사면/학생면 값이 갈리던 결함의 원인).
+  학생 허브·교사 매트릭스·`/g/w/[taskId]` 허브·리포트 4표면 모두 동일.
+- `masteryPct` 컬럼은 **새 정의로 쓰기만** 하는 캐시로 남긴다(마이그레이션 불필요).
+- UI 라벨은 「숙달도」가 아니라 **「첫 시도 정답률」**, 옆에 **「진도」**를 병기한다.
+  「숙달도」는 어법 EWMA 전용 용어다. `provisional` 이면 「학습 중」 배지를 함께 건다.
+
+**검산 (계기 — `tests/unit/worksheet-study-grade.test.mjs` 가 고정)**
+```
+reading    : done                                            → 무채점: 양쪽 제외
+vocab-quiz : done,        firstCorrect 12 / firstTotal 12
+vocab-match: in-progress, firstCorrect 0 / firstTotal 4,  answered 4 / total 4
+exam       : in-progress, firstCorrect 0 / firstTotal 2,  answered 2 / total 5
+→ firstTryPct = 12/18 = 67%   coveragePct = 18/21 = 86%   provisional = true   (구 정의: 100%)
+```
 
 ---
 
@@ -297,7 +353,7 @@ model WorksheetStudyState {
   planHash     String?   // 마지막 플러시 시점 plan 해시(정보용 — v2: 거절 사유로 쓰지 않음)
   stageStates  Json      @default("{}") // Record<StudyStageId, StudyStageState>
   weakness     Json?     // StudyWeakness 캐시(플러시마다 재계산)
-  masteryPct   Int?
+  masteryPct   Int?      // 첫 시도 정답률 캐시(§5.1) — 쓰기 전용. 표시 표면은 stageStates 로 재계산한다
   totalTimeMs  Int       @default(0)
   startedAt    DateTime?
   completedAt  DateTime? // 필수 스테이지 전부 done 된 시각
@@ -369,6 +425,24 @@ SQL 파일은 20260711_study_assignments.sql 의 형식(따옴표 camelCase, IF 
   스테이지 상태에 병합(answered 는 max 승격) → 디렉터 매트릭스가 부분 진행을 표기한다.
 - `StudyPlanDriftError` 는 폐기한다.
 
+### 7.2 스테이지 내부 이어 풀기 (2026-08-03 추가, 정본)
+
+이어하기는 **스테이지 단위(§8.2 허브 CTA)와 문항 단위 두 층**이다. 문항 단위가 없던
+동안 26문항짜리 어휘 시험을 2문항 풀고 나간 학생은 재입장 때 1번부터 다시 풀었다.
+
+- 진행 중(`status === "in-progress"`) 스테이지로 입장하면 서버가
+  `loadStageFirstAttempts(stateId, stageId)` 로 **attempt=1 로그**를 실어 준다
+  (`priorFirst`). 로그는 `(stateId, stageId, itemKey, attempt)` 유니크라 문항당 정확히
+  한 건 = 첫 시도 정본이다. 복습 입장(스테이지 done)에는 싣지 않는다 — 처음부터가 맞다.
+- 플레이어는 이것으로 (1) 첫 미응답 문항으로 시작 위치를 옮기고, (2) 첫 시도 판정을
+  `firstResults` 에 복원하고, (3) 지난 세션의 오답을 재도전 큐에 다시 넣는다.
+  (2)를 빼먹으면 완주 점수(`stageDone`)가 **이번 세션에 푼 문항만으로** 계산돼
+  이어 푼 학생의 점수가 통째로 틀어진다.
+- **첫 시도 판정은 덮어쓰지 않는다.** 안내의 "처음부터 보기"로 되돌아가 다시 풀어도
+  화면 점수는 최초 시도 기준을 유지한다 — 서버도 attempt=1 중복 로그를 무시하므로
+  (`skipDuplicates`), 덮어쓰면 학생 화면과 교사면 통계가 어긋난다. 같은 이유로
+  "이 문항은 마지막에 다시 나옵니다" 예고는 실제로 재도전 큐에 들어간 문항에만 띄운다.
+
 라우트 가드는 기존 패턴 그대로: `getGrammarSession()` → `loadOwnedStudentTask` →
 `FEATURE_FLAGS.ENABLE_GRAMMAR_DRILL`. 학생 노출 문구는 전부 **합니다체**, 기술 스택 문구 금지.
 
@@ -387,7 +461,8 @@ SQL 파일은 20260711_study_assignments.sql 의 형식(따옴표 camelCase, IF 
 
 허브 화면(모바일 1열, `.gd-page`):
 - 헤더: 뒤로(`/g/tasks`)·"학습지" 라벨·제목·D-day 칩. 선생님 안내문 밴드(뷰어와 동일 규칙).
-- 진행 히어로 카드(`.gd-card`): 원형 아님 — `.gd-meter` + "N/M 단계 완료 · 숙달도 NN%" +
+- 진행 히어로 카드(`.gd-card`): 원형 아님 — `.gd-meter` + "N/M 단계 완료 · 첫 시도 정답률 NN%"
+  (아래 보조행에 "진도 NN% · 푼 문항 a/b" 병기 — §5.1) +
   이어하기 CTA(`.gd-btn-primary` 전폭, 다음 미완료 스테이지로).
 - 스테이지 리스트: 스테이지당 `.gd-card` 행 — 좌측 번호 배지(`.gd-step-n` 스타일), 제목·subtitle·
   `estMin분·N문항`, 우측 상태(todo=화살표 / in-progress=진행 % / done=점수 배지 `.gd-good`).
@@ -451,7 +526,7 @@ SQL 파일은 20260711_study_assignments.sql 의 형식(따옴표 camelCase, IF 
 
 ### 8.4 `/g/w/[taskId]/report` — 학생 결과 리포트
 
-`.gd-page` 1열: 종합 카드(masteryPct 대형, 총 학습 시간, 완료 스테이지) → 스킬축 바 차트
+`.gd-page` 1열: 종합 카드(첫 시도 정답률 대형 + 진도 병기 필수(§5.1), 총 학습 시간, 완료 스테이지) → 스킬축 바 차트
 (recharts 금지 — `.gd-sys-bar` 유사 순수 CSS 바 7축) → 취약 문장 히트맵(문장번호 칩 그리드,
 오답률로 good→bad 3단 톤) + 탭하면 해당 문장 en/ko 시트 → 취약 단어장(오답 단어 리스트,
 word·meaning·오답 횟수) → 어법 취약 코드(있으면) → CTA "오답 다시 풀기"(오답 아이템만 모은
@@ -485,8 +560,8 @@ word·meaning·오답 횟수) → 어법 취약 코드(있으면) → CTA "오�
 ## 10. 과제 상세 학습 현황 (디렉터면)
 
 `study-stats.ts` 서버액션:
-- `getWorksheetStudyOverview(assignmentId)` → 학생별 행(스테이지 상태 매트릭스·masteryPct·
-  총시간·완료시각) + 반 집계(스테이지별 평균 점수, 최다 오답 문장 top5, 최다 오답 단어 top10,
+- `getWorksheetStudyOverview(assignmentId)` → 학생별 행(스테이지 상태 매트릭스·성취 지표
+  (첫 시도 정답률·진도 — **DB 스냅샷이 아니라 stageStates 재계산**, §5.1)·총시간·완료시각) + 반 집계(스테이지별 평균 점수, 최다 오답 문장 top5, 최다 오답 단어 top10,
   어법 코드별 오답률) — 로그 테이블 groupBy 사용, academyId 스코프 필수.
 `study-report-tab.tsx` — 과제 상세 모달의 **결과 분석 탭(WORKSHEET kind 내용)** 으로 렌더.
 (개정 2026-07-21: 구 "조건부 '학습 현황' 탭 추가" 조항은 director-console-spec §3.1
@@ -515,7 +590,8 @@ word·meaning·오답 횟수) → 어법 취약 코드(있으면) → CTA "오�
 
 1. `npx tsc --noEmit` (라운드마다) → `npm run lint` → `npm run build`(최종).
 2. `node --test tests/unit/worksheet-study-*.test.mjs` — 컴파일러(스테이지 구성·cap·결정론
-   seed 재현·빈 섹션 강등·itemKey 유일성)·채점(정규화·디프·cloze) 계약.
+   seed 재현·빈 섹션 강등·itemKey 유일성)·채점(정규화·디프·cloze)·성취 지표(§5.1 — 진행 중
+   스테이지 포함·무채점 done 제외·진도·provisional·실데이터 67/86 회귀) 계약.
 3. dev 하네스 `/dev/worksheet-study`: `RECALL_RECOGNITION_FIXTURE` 로 plan 컴파일 → 허브·
    플레이어(스테이지 셀렉터)·리포트를 무인증 렌더. Playwright 로 390×844 / 768×1024 / 1180×820
    3뷰포트 × 주요 화면 스크린샷 + 행동 테스트(MC 정답 탭→verdict, cloze 칩 채움, order 타일,

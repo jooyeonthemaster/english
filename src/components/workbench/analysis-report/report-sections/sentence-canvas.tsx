@@ -257,6 +257,49 @@ function CanvasNoteText({
 
 const KIND_LABEL: Record<CanvasNoteKind, string> = { grammar: "어법", parsing: "구문", exam: "출제", logic: "논리" };
 
+/** 서명 구분자 — 본문에 나올 수 없는 제어문자라 필드 경계가 섞이지 않는다(소스에는 escape 로만 둔다). */
+const SIG_F = String.fromCharCode(1);
+const SIG_R = String.fromCharCode(3);
+
+/**
+ * 커넥터 useLayoutEffect 의 **안정 서명**.
+ *
+ * `plan` 은 `reportFlowItems` 호출마다 새로 만들어지는 객체라 의존성에 그대로 두면
+ * "내용이 하나도 안 바뀌어도" 문장 캔버스 전 인스턴스가 일제히 ResizeObserver 를 떼었다 붙이고
+ * 노트당 getBoundingClientRect 3~4 회의 강제 동기 레이아웃을 다시 돈다
+ * (= 어휘 한 행 고쳤는데 20페이지가 멈추는 현상의 한 축).
+ *
+ * 그래서 **측정 대상 DOM 을 결정하는 값 전부**를 문자열로 접어 의존성으로 쓴다. 내용이 같으면
+ * 재실행해도 `sameConnectors` 로 같은 결과가 나오므로 건너뛰는 것이 동작상 100% 동일하고,
+ * 하나라도 다르면 서명이 달라져 지금과 똑같이 재실행된다(과잉 포함은 안전, 누락만 위험).
+ * DOM 크기가 바뀌는 변화(폰트 로드·줌·리사이즈)는 그대로 ResizeObserver 가 받는다.
+ */
+function canvasEffectSignature(
+  plan: SentenceCanvasPlan,
+  allNotes: PlacedNote[],
+  ko: string,
+  keywords: string[],
+  vocabNotes: VocabularyNoteRef[],
+  refs: Map<string, CanvasNoteRef>,
+  no: number,
+  isCont: boolean,
+  showTrans: boolean,
+): string {
+  const parts: string[] = [
+    `${no}${SIG_F}${isCont ? 1 : 0}${SIG_F}${showTrans ? 1 : 0}${SIG_F}${vocabNotes.length}${SIG_F}${refs.size}`,
+    ko,
+    keywords.join(SIG_F),
+  ];
+  for (const c of plan.chunks) parts.push(`c${SIG_F}${c.text}${SIG_F}${c.gloss ?? ""}${SIG_F}${c.role ?? ""}${SIG_F}${c.emphasis ?? ""}`);
+  for (const n of allNotes) {
+    parts.push(
+      `n${SIG_F}${n.key}${SIG_F}${n.kind}${SIG_F}${n.chunkIndex}${SIG_F}${n.anchorRange ? 1 : 0}${SIG_F}${n.anchorText ?? ""}` +
+        `${SIG_F}${n.role ?? ""}${SIG_F}${n.lines.join(SIG_F)}${SIG_F}${n.trap ?? ""}${SIG_F}${n.example ?? ""}${SIG_F}${n.exampleWrong ?? ""}${SIG_F}${n.exampleCorrect ?? ""}`,
+    );
+  }
+  return parts.join(SIG_R);
+}
+
 /** 함정 예문 — 시험이 파는 '틀린 형태'를 빨강 취소선, 정답을 초록으로(있으면). */
 function renderTrapExample(note: PlacedNote): ReactNode {
   const ex = note.example ?? "";
@@ -373,6 +416,11 @@ export function AnnotatedSentenceCanvas({
     chunkBadges.set(n.chunkIndex, arr);
   });
 
+  // 이 캔버스의 렌더 결과(= 아래 effect 가 실측할 DOM)를 결정하는 값 전부의 안정 서명.
+  // plan 객체 참조 대신 이걸 의존성으로 써서 ResizeObserver 해제/재부착과 강제 동기 레이아웃이
+  // **내용이 실제로 바뀔 때만** 일어나게 한다(내용이 같으면 재실행해도 결과가 같다 — sameConnectors).
+  const renderSig = canvasEffectSignature(plan, allNotes, ko, keywords, vocabNotes, refs, no, isCont, showTrans);
+
   // 연결선: 밑줄 왼쪽 → (살짝 내려) 왼쪽 여백 레인으로 ← → 레인 따라 ↓ → 설명 뱃지로 →.
   // 세로 하강은 항상 '왼쪽 여백(레인)'에서 일어나 본문 위를 지나지 않는다. 연결마다
   // 다른 레인 x + 다른 진입 높이로 분리해 서로 겹치지 않게 한다.
@@ -464,8 +512,10 @@ export function AnnotatedSentenceCanvas({
     const ro = new ResizeObserver(compute);
     ro.observe(root);
     return () => ro.disconnect();
+    // renderSig 가 plan 객체 참조를 대신한다(위 주석 참조). listNotes/sideNotes 는 plan 파생이고
+    // compute 가 쓰는 필드(key·kind·chunkIndex·anchorRange 유무)가 전부 서명에 들어 있다.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [plan, canvasId, en, editable]);
+  }, [renderSig, canvasId, en, editable]);
 
   const enEditable = editable && !!onCommitEn;
   const koEditable = editable && !!onCommitKo;

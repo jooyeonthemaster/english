@@ -60,10 +60,10 @@ const READ_CONCURRENCY = 2;
 
 export interface MaterialDraftsApi {
   materials: MaterialDraft[];
-  /** 서버로 보낼 수 있는 자료(판독 완료 + 본문 있음). */
+  /** 서버로 보낼 수 있는 자료(본문이 있거나, 원본 페이지가 올라가 있거나). */
   readyMaterials: MaterialDraft[];
-  /** 아직 읽는 중인 자료 수 — CTA 차단 사유 판정에 쓴다. */
-  readingCount: number;
+  /** 지금 보내면 통째로 빠지는 자료 수 — CTA 예약 판정에 쓴다(판독 중 ≠ 이 값). */
+  pendingCount: number;
   /** 상한에 도달했는가 — 드롭존 안내·차단 사유에 쓴다. */
   atCapacity: boolean;
   patchMaterial: (id: string, patch: Partial<MaterialDraft>) => void;
@@ -125,8 +125,22 @@ export function useMaterialDrafts(): MaterialDraftsApi {
     }
   }, []);
 
+  /**
+   * 원본 페이지를 스토리지에 올린다.
+   *
+   * ownsStatus: 이 업로드가 **자료의 수명 상태(READING/READY/FAILED)를 소유하는가.**
+   *   · true  — 사진. 판독을 아예 돌리지 않으므로 상태를 움직일 주체가 여기뿐이다.
+   *   · false — PDF 의 '원본도 함께 보냄' 토글. 그쪽은 판독이 상태를 소유하고 있어서
+   *             업로드가 status 를 건드리면 판독 결과를 덮어쓴다.
+   * 이 플래그가 없던 구조로 되돌리지 말 것 — 한쪽 경로가 반드시 조용히 깨진다.
+   */
   const uploadPages = useCallback(
-    async (id: string, file: File, sourceKind: MaterialSourceKind) => {
+    async (
+      id: string,
+      file: File,
+      sourceKind: MaterialSourceKind,
+      opts: { ownsStatus?: boolean } = {},
+    ) => {
       if (pageAbortersRef.current.has(id)) return;
       const controller = new AbortController();
       pageAbortersRef.current.set(id, controller);
@@ -135,6 +149,9 @@ export function useMaterialDrafts(): MaterialDraftsApi {
           materialId: id,
           file,
           sourceKind,
+          onProgress: opts.ownsStatus
+            ? (label) => patchDraft(id, { progressLabel: label })
+            : undefined,
           signal: controller.signal,
         });
         if (controller.signal.aborted) return;
@@ -142,15 +159,26 @@ export function useMaterialDrafts(): MaterialDraftsApi {
           storagePath: upload.storagePath,
           pageCount: upload.pageCount,
           sendPages: true,
+          ...(opts.ownsStatus
+            ? { status: "READY" as const, progressLabel: undefined, error: undefined }
+            : {}),
         });
       } catch (error) {
         if (isMaterialReadAborted(error) || controller.signal.aborted) return;
-        patchDraft(id, { sendPages: false, storagePath: undefined });
-        toast.warning(
+        const message =
           error instanceof Error && error.message
             ? error.message
-            : AUTHORING_COPY.TOAST.pageUploadFailed,
-        );
+            : AUTHORING_COPY.TOAST.pageUploadFailed;
+        patchDraft(id, {
+          sendPages: false,
+          storagePath: undefined,
+          // 상태를 소유할 때만 FAILED 로 내린다. 소유하지 않으면 자료 자체는
+          // 판독본으로 멀쩡히 살아 있고, 실패한 것은 '원본 첨부'라는 부가 기능뿐이다.
+          ...(opts.ownsStatus
+            ? { status: "FAILED" as const, progressLabel: undefined, error: message }
+            : {}),
+        });
+        toast.warning(message);
       } finally {
         if (pageAbortersRef.current.get(id) === controller) {
           pageAbortersRef.current.delete(id);
@@ -341,11 +369,33 @@ export function useMaterialDrafts(): MaterialDraftsApi {
         const space = Math.max(0, MAX_AUTHORING_MATERIALS - prev.length);
         return space === 0 ? prev : [...prev, ...drafts.slice(0, space)];
       });
-      enqueueRead(
-        drafts.map((draft, index) => ({ id: draft.id, file: accepted[index] })),
-      );
+      // ── 사진은 OCR 을 **아예 하지 않는다** (26-08-04 오너 결정) ─────────────
+      //
+      // 근거: 원본이 그대로 모델에 실리는 지금(defaultSendPages → 사진은 항상 ON),
+      // OCR 콜은 같은 지면을 두 번 읽는 순수 중복이다. 사람이 챗에 사진을 붙일 때
+      // 아무도 먼저 글자를 뽑지 않는 것과 같은 이유다 — 모델이 직접 본다.
+      // 그 콜이 사라지면서 함께 사라지는 것: 대기 시간, 그 콜의 원가, 그리고
+      // "사진에서 글자를 찾지 못했어요" 실패 모드.
+      // 값을 치른 것 두 가지(정직하게): 검토 모달의 '읽어낸 내용' 칸이 비고,
+      // 역할 자동분류가 파일명 휴리스틱까지만 간다. 둘 다 사람이 한 번에 고칠 수
+      // 있는 표면이 이미 있다(역할 칩 · 본문 직접 입력).
+      //
+      // ⚠️ PDF 는 **그대로 판독한다.** 원본은 앞 4쪽까지만 실리는데(MAX_SEND_PAGES)
+      //   판독은 20쪽을 덮으므로, 거기서 판독은 중복이 아니라 유일한 커버리지다.
+      //   사진은 1장이 곧 지면 전체라 그 문제가 없다 — 이것이 두 형식을 가르는
+      //   유일하고 실질적인 근거다(형식 취향이 아니다).
+      const toRead: Array<{ id: string; file: File }> = [];
+      for (const [index, draft] of drafts.entries()) {
+        const file = accepted[index];
+        if (draft.sourceKind === "FILE_IMAGE") {
+          void uploadPages(draft.id, file, draft.sourceKind, { ownsStatus: true });
+          continue;
+        }
+        toRead.push({ id: draft.id, file });
+      }
+      if (toRead.length > 0) enqueueRead(toRead);
     },
-    [enqueueRead, takeRoom],
+    [enqueueRead, takeRoom, uploadPages],
   );
 
   const handlePasteText = useCallback(
@@ -369,6 +419,18 @@ export function useMaterialDrafts(): MaterialDraftsApi {
         return;
       }
       cancelRead(id);
+      // 사진은 판독을 돌지 않으므로 '다시 읽기'가 곧 **원본 다시 올리기**다.
+      // 여기서 enqueueRead 로 보내면 되살아난 OCR 콜이 조용히 다시 생긴다.
+      if (target.sourceKind === "FILE_IMAGE") {
+        patchDraft(id, {
+          status: "READING",
+          error: undefined,
+          warning: undefined,
+          progressLabel: AUTHORING_COPY.MATERIAL.preparingOriginal,
+        });
+        void uploadPages(id, target.file, target.sourceKind, { ownsStatus: true });
+        return;
+      }
       patchDraft(id, {
         status: "READING",
         error: undefined,
@@ -377,7 +439,7 @@ export function useMaterialDrafts(): MaterialDraftsApi {
       });
       enqueueRead([{ id, file: target.file }]);
     },
-    [cancelRead, enqueueRead, patchDraft],
+    [cancelRead, enqueueRead, patchDraft, uploadPages],
   );
 
   const handleRemove = useCallback(
@@ -403,19 +465,60 @@ export function useMaterialDrafts(): MaterialDraftsApi {
     });
   }, []);
 
+  /**
+   * 서버로 보낼 수 있는 자료 = **모델이 볼 것이 하나라도 있는** 자료.
+   * 서버 계약(schema.authoringMaterialEntrySchema)의 refine 과 같은 판정이다.
+   *
+   * 판독 본문이 없어도 원본 페이지(storagePath)가 올라가 있으면 보낸다 — 사진이
+   * 그 경로다. status 를 보지 않고 storagePath 를 보는 이유가 여기 있다:
+   *  · READING 중이어도 업로드가 끝났으면 이미 실을 수 있다(사진의 무대기 경로).
+   *  · **FAILED 여도 마찬가지다.** OCR 이 실패한 것과 사진이 못 쓸 것은 다른
+   *    사실인데, 예전 계약은 글자를 못 읽었다는 이유로 멀쩡한 사진까지 버렸다.
+   */
   const readyMaterials = useMemo(
-    () => materials.filter((item) => item.status === "READY" && item.content.trim()),
+    () =>
+      materials.filter(
+        (item) =>
+          (item.status === "READY" && item.content.trim().length > 0) ||
+          Boolean(item.storagePath),
+      ),
     [materials],
   );
-  const readingCount = useMemo(
-    () => materials.filter((item) => item.status === "READING").length,
+  /**
+   * **실을 것이 아직 아무것도 없는** 자료 수 — CTA 예약 판정의 유일한 근거.
+   *
+   * ⚠️ "판독 중인 자료 수"가 아니다. 그 값을 쓰던 동안 사진은 원본이 이미 올라가
+   * 실을 준비가 끝났는데도 OCR 이 끝날 때까지 발주가 대기했다. 여기 남는 것은
+   * 지금 보내면 **정말로 통째로 빠지는** 자료뿐이다(= PDF·문서의 판독 대기).
+   */
+  const pendingCount = useMemo(
+    () =>
+      materials.filter((item) => {
+        // 실패한 자료는 기다릴 것이 없다 — 이미 결말이 났고, 화면이 따로 알린다.
+        if (item.status === "FAILED") return false;
+        // ① 실을 것이 아직 아무것도 없다(사진 업로드 중 · 문서 판독 중).
+        if (
+          item.status === "READING" &&
+          item.content.trim().length === 0 &&
+          !item.storagePath
+        ) {
+          return true;
+        }
+        // ② 원본을 보내기로 한 자료인데 업로드가 아직 안 끝났다.
+        //   판독본이 이미 있어 ①에는 안 걸리지만, 지금 보내면 **원본이 통째로
+        //   빠진 채** 스위치만 켜진 상태로 크레딧이 나간다(스토어가 storagePath
+        //   없는 sendPages 를 false 로 눕히므로 화면에도 흔적이 안 남는다).
+        //   업로드 상한이 4→20 으로 늘어난 26-08-04 이후로는 이 창이 5배 넓다.
+        if (item.sendPages === true && !item.storagePath) return true;
+        return false;
+      }).length,
     [materials],
   );
 
   return {
     materials,
     readyMaterials,
-    readingCount,
+    pendingCount,
     atCapacity: materials.length >= MAX_AUTHORING_MATERIALS,
     patchMaterial,
     handleFiles,

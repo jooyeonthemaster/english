@@ -5,6 +5,8 @@ import {
   ArrowLeft,
   Check,
   CheckCircle2,
+  Copy,
+  FileQuestion,
   FileText,
   Loader2,
   Pencil,
@@ -15,8 +17,13 @@ import { toast } from "sonner";
 
 import { renamePassage, updateWorkbenchPassage } from "@/actions/workbench";
 import { useUnsavedCloseGuard } from "@/components/shared/use-unsaved-close-guard";
+import { CreditCostChip } from "@/components/credits/credit-cost-chip";
+import { CREDIT_COSTS } from "@/lib/credit-costs";
 import { notifyCreditsChanged } from "@/lib/credits-client";
-import { AnalysisReportEditor } from "@/components/workbench/analysis-report/AnalysisReportEditor";
+import {
+  AnalysisReportEditor,
+  type ReportEditorToolbarState,
+} from "@/components/workbench/analysis-report/AnalysisReportEditor";
 import { Input } from "@/components/ui/input";
 import { SaveButton } from "@/components/ui/save-button";
 import { Textarea } from "@/components/ui/textarea";
@@ -126,6 +133,10 @@ export function ExtractionDetailModal({
   const [reportEditorOpen, setReportEditorOpen] = useState(false);
   // 학습자료(리포트) 편집기의 미저장 상태 — 닫기 경고 가드에 사용.
   const [reportDirty, setReportDirty] = useState(false);
+  // 학습자료 편집기의 저장/실전 학습지 상태를 이 창의 헤더로 끌어올린다.
+  // (다른 호스트 모달과 동일 계약 — 편집기 언마운트 시 null 로 해제된다)
+  const [editorToolbar, setEditorToolbar] =
+    useState<ReportEditorToolbarState | null>(null);
 
   const sourceLabel =
     draft?.job?.displayName?.trim() ||
@@ -174,12 +185,17 @@ export function ExtractionDetailModal({
 
   // 닫기 가드 — 표준 경고 다이얼로그(다른 편집 화면과 동일 디자인).
   const closeGuard = useUnsavedCloseGuard({ isDirty: reportDirty, onClose });
+  // ESC 핸들러가 의존하는 것은 가드 객체 전체가 아니라 requestClose 하나뿐이다.
+  // 멤버 표현식(closeGuard.requestClose)을 deps 에 적으면 exhaustive-deps 가
+  // 객체 전체를 요구하고, 그러면 가드가 매 렌더 새 객체일 때 리스너가 매번
+  // 재등록된다. 함수만 꺼내 쓰는 쪽이 규칙도 만족하고 재등록도 최소다.
+  const requestClose = closeGuard.requestClose;
 
   // ESC to close + body scroll lock.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (reportEditorOpen) return;
-      if (e.key === "Escape") closeGuard.requestClose();
+      if (e.key === "Escape") requestClose();
     };
     document.addEventListener("keydown", onKey);
     const previous = document.body.style.overflow;
@@ -188,7 +204,7 @@ export function ExtractionDetailModal({
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = previous;
     };
-  }, [reportEditorOpen, closeGuard.requestClose]);
+  }, [reportEditorOpen, requestClose]);
 
   useEffect(() => {
     let cancelled = false;
@@ -538,15 +554,73 @@ export function ExtractionDetailModal({
             ) : null}
           </div>
           {reportEditorOpen ? (
-            <button
-              type="button"
-              onClick={closeReportEditor}
-              title="뒤로가기"
-              aria-label="뒤로가기"
-              className="ml-2 inline-flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
-            >
-              <ArrowLeft className="size-3.5" aria-hidden="true" />
-            </button>
+            <>
+              <button
+                type="button"
+                onClick={closeReportEditor}
+                title="뒤로가기"
+                aria-label="뒤로가기"
+                className="ml-2 inline-flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
+              >
+                <ArrowLeft className="size-3.5" aria-hidden="true" />
+              </button>
+              {/* 학습자료 편집기 툴바를 헤더로 끌어올린다. 툴바 상태를 받는 순간
+                  편집기 안의 '실전 학습지 생성' 인라인 버튼은 숨겨지므로(계약),
+                  같은 버튼을 여기서 대신 렌더해 기능을 잃지 않게 한다. */}
+              {editorToolbar ? (
+                <div className="ml-1 flex shrink-0 items-center gap-1.5">
+                  {!editorToolbar.worksheetHasContent ? (
+                    <>
+                      <button
+                        type="button"
+                        onClick={editorToolbar.generateWorksheet}
+                        disabled={editorToolbar.worksheetBusy || editorToolbar.saving}
+                        title="실전 학습지(어법 선택·어휘 빈칸·배열 + 수능추론 5문항) 추가 생성"
+                        className="flex h-8 shrink-0 items-center justify-center gap-1.5 rounded-md border border-blue-200 bg-white px-2.5 text-[11.5px] font-semibold text-blue-700 transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-60"
+                      >
+                        {editorToolbar.worksheetBusy ? (
+                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                        ) : (
+                          <FileQuestion className="h-3.5 w-3.5" />
+                        )}
+                        <span className="hidden items-center gap-1.5 sm:inline-flex">
+                          {editorToolbar.worksheetBusy
+                            ? "실전 학습지 생성 중…"
+                            : "실전 학습지 생성"}
+                          {!editorToolbar.worksheetBusy && (
+                            <CreditCostChip
+                              amount={CREDIT_COSTS.PASSAGE_ANALYSIS}
+                              className="rounded bg-blue-100 px-1 py-px text-[10px] text-blue-700"
+                            />
+                          )}
+                        </span>
+                        <span className="sm:hidden">실전 학습지</span>
+                      </button>
+                      <span
+                        aria-hidden="true"
+                        className="h-5 w-px shrink-0 self-center bg-slate-200"
+                      />
+                    </>
+                  ) : null}
+                  {/* 저장 + 캐럿(다른 이름으로 저장) — 다이얼로그·복제 요청은 편집기 소유. */}
+                  <SaveButton
+                    onClick={editorToolbar.save}
+                    saving={editorToolbar.saving || editorToolbar.savingAs}
+                    disabled={!editorToolbar.dirty}
+                    iconOnly
+                    title="학습자료 저장"
+                    secondaryActions={[
+                      {
+                        label: "다른 이름으로 저장",
+                        icon: <Copy className="h-3.5 w-3.5" />,
+                        onClick: editorToolbar.requestSaveAs,
+                        disabled: editorToolbar.savingAs,
+                      },
+                    ]}
+                  />
+                </div>
+              ) : null}
+            </>
           ) : draft ? (
             // 복원문 섹션에 있던 저장 버튼을 창 오른쪽 위로 옮김. 전역 표준 SaveButton 사용.
             <SaveButton
@@ -624,6 +698,7 @@ export function ExtractionDetailModal({
                 onDraftChange={handleReportDraftChange}
                 onSaved={handleReportSaved}
                 onExit={closeReportEditor}
+                onToolbarStateChange={setEditorToolbar}
               />
             </div>
           ) : loading ? (

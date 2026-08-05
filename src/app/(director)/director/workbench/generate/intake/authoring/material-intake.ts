@@ -289,6 +289,14 @@ export function defaultSendPages(input: {
   sourceKind: MaterialSourceKind;
 }): boolean {
   if (!canSendPages(input.sourceKind)) return false;
+  // 사진은 **언제나** 원본을 보낸다(26-08-04 오너 결정). 사진 1장은 지면 전체이고
+  // 상한(MAX_SEND_PAGES=4)에 걸릴 일이 없어서, 원본만으로 자료가 완전하다 —
+  // 지면 형태를 따질 이유가 없다. PDF 와 달리 "텍스트가 더 많은 쪽을 덮는다"는
+  // 예외도 없다. layout 은 판독이 끝나야 알 수 있는 값이라, 여기서 layout 을 보는
+  // 한 사진은 영원히 판독을 기다려야 했다 — 그 대기가 이 화면의 최대 마찰이었다.
+  if (input.sourceKind === "FILE_IMAGE") return true;
+  // PDF 는 그대로 지면 형태로 판단한다. 원본은 앞 4쪽까지만 실리는데 판독은 20쪽을
+  // 덮으므로, 20쪽 교재에서 원본을 기본으로 켜면 16쪽이 조용히 사라진다.
   return input.layout === "TABLE_HEAVY" || input.layout === "DIAGRAM";
 }
 
@@ -329,7 +337,14 @@ export function suggestVariationRole(
 
 // ── 초안 생성 ───────────────────────────────────────────────────────────────
 
-/** 파일을 붙인 직후 화면에 즉시 뜨는 초안 (판독 전이므로 READING). */
+/**
+ * 파일을 붙인 직후 화면에 즉시 뜨는 초안.
+ *
+ * 사진과 그 외의 진행 라벨이 다르다: 사진은 판독(OCR)을 아예 돌지 않고 원본만
+ * 올리므로(use-material-drafts.handleFiles 주석) "읽는 중"은 거짓말이 된다.
+ * 상태는 둘 다 READING 이다 — 이 상태의 뜻은 "판독 중"이 아니라 **"아직 보낼
+ * 준비가 안 끝났다"** 이고, 사진에서는 업로드 완료가 그 끝이다.
+ */
 export function createFileDraft(file: File): MaterialDraft {
   const sourceKind = inferSourceKind(file);
   const guess = guessMaterialRole({ name: file.name, content: "", sourceKind });
@@ -343,7 +358,10 @@ export function createFileDraft(file: File): MaterialDraft {
     content: "",
     note: "",
     status: "READING",
-    progressLabel: AUTHORING_COPY.MATERIAL.reading,
+    progressLabel:
+      sourceKind === "FILE_IMAGE"
+        ? AUTHORING_COPY.MATERIAL.preparingOriginal
+        : AUTHORING_COPY.MATERIAL.reading,
     bytes: file.size,
     file,
   };

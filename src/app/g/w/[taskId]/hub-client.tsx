@@ -23,6 +23,10 @@ import {
   Loader2,
   Play,
 } from "lucide-react";
+import type { StudyMastery } from "@/lib/worksheet-study/grade";
+// 지표 이름은 교사면·학생면이 같은 말을 써야 오해가 없다 — 학생 앱이지만
+// 단일 소스(director-glossary)를 그대로 임포트한다(2607 §1.2).
+import { METRIC_LABELS, STUDY_PROVISIONAL_BADGE } from "@/lib/wording/director-glossary";
 
 export interface HubStageRow {
   id: string;
@@ -42,7 +46,14 @@ export interface WorksheetStudyHubProps {
   /** "D-3" | "D-DAY" | null — D+ 접두면 기한 지남(warn 톤) */
   dDay: string | null;
   stages: HubStageRow[];
+  /** 첫 시도 정답률(%) — mastery 미전달 호출부(dev 하네스)의 폴백 */
   masteryPct: number | null;
+  /**
+   * 정답률·진도·표본 묶음(ctx.summary.mastery). 정답률만 크게 띄우면 "쉬운 단계
+   * 하나만 만점" 학생이 100%로 보이므로 진도를 반드시 병기한다(2607 §3.4).
+   * 구 호출부 호환을 위해 optional — 없으면 masteryPct 단독 표기로 폴백한다.
+   */
+  mastery?: StudyMastery;
   /** done 스테이지 수 */
   doneCount: number;
   taskDone: boolean;
@@ -61,6 +72,7 @@ export function WorksheetStudyHub({
   dDay,
   stages,
   masteryPct,
+  mastery,
   doneCount,
   taskDone,
   requiredMode,
@@ -99,6 +111,17 @@ export function WorksheetStudyHub({
   const firstIncomplete = stages.find((s) => s.status !== "done");
   const allDone = stageTotal > 0 && !firstIncomplete;
   const started = doneCount > 0 || stages.some((s) => s.status === "in-progress");
+
+  // ── 성취 파생값 — 정답률 단독 노출 금지(2607 §3.4) ─────────────────────────
+  // firstTryPct 는 "푼 문항 중" 비율이라 진도를 빼면 과대평가로 읽힌다.
+  // coverageLine 은 그 분모를 학생에게 그대로 보여주는 보조행이다.
+  const firstTryPct = mastery ? mastery.firstTryPct : masteryPct;
+  const coverageLine =
+    mastery && mastery.coveragePct !== null
+      ? `${METRIC_LABELS.COVERAGE} ${mastery.coveragePct}% · 푼 문항 ${mastery.answered}/${mastery.totalItems}`
+      : null;
+  // 전 스테이지 완료 전이면 아직 확정 값이 아님을 배지로 밝힌다.
+  const provisional = mastery?.provisional ?? false;
 
   return (
     <div className="flex min-h-dvh flex-col">
@@ -199,16 +222,47 @@ export function WorksheetStudyHub({
                 단계 완료
               </p>
             </div>
-            {masteryPct !== null ? (
+            {firstTryPct !== null || coverageLine ? (
               <div className="shrink-0 text-right">
-                <p className="gd-label">숙달도</p>
-                <p className="gd-mono gd-t-2xl mt-1 font-bold leading-none">
-                  {masteryPct}
-                  <span className="gd-t-md">%</span>
+                <p className="gd-label">{METRIC_LABELS.FIRST_TRY_RATE}</p>
+                <p className="mt-1 flex items-baseline justify-end gap-1.5">
+                  {provisional ? (
+                    <span
+                      className="gd-t-3xs shrink-0 rounded-full px-1.5 py-0.5 font-semibold"
+                      style={{
+                        background: "var(--gd-paper)",
+                        border: "1px solid var(--gd-line)",
+                        color: "var(--gd-ink-2)",
+                      }}
+                    >
+                      {STUDY_PROVISIONAL_BADGE}
+                    </span>
+                  ) : null}
+                  {firstTryPct !== null ? (
+                    <span className="gd-mono gd-t-2xl font-bold leading-none">
+                      {firstTryPct}
+                      <span className="gd-t-md">%</span>
+                    </span>
+                  ) : (
+                    <span
+                      className="gd-mono gd-t-2xl font-bold leading-none"
+                      style={{ color: "var(--gd-ink-3)" }}
+                      title="아직 첫 시도 채점 기록이 없습니다"
+                    >
+                      —
+                    </span>
+                  )}
                 </p>
               </div>
             ) : null}
           </div>
+
+          {/* 정답률 바로 아래 진도 보조행 — 분모(푼 문항)를 같은 시선에 둔다 */}
+          {coverageLine ? (
+            <p className="gd-t-2xs mt-1.5 text-right" style={{ color: "var(--gd-ink-2)" }}>
+              {coverageLine}
+            </p>
+          ) : null}
 
           <div className="gd-meter mt-3" data-tone={allDone ? "good" : undefined}>
             <span style={{ width: `${progressPct}%` }} />

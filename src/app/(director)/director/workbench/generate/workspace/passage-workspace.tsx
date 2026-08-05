@@ -27,6 +27,7 @@ import {
 } from "@/lib/passage-transform/schema";
 import type { QueueItem } from "../generate-page-types";
 import type { QuestionCardItem } from "@/components/workbench/question-card";
+import type { VariantSeedQuestion } from "@/lib/question-variant";
 import { isRowDirty, rowNeedsVariant } from "./workspace-types";
 import type { WorkspaceRowsApi } from "./use-workspace-rows";
 import { WorkspacePassageRow } from "./workspace-passage-row";
@@ -76,6 +77,13 @@ interface PassageWorkspaceProps {
   questionsByPassage: Map<string, QuestionCardItem[]>;
   /** 행 히스토리 팝오버의 문제 클릭 시 '문제 상세' 모달을 연다. */
   onOpenQuestionDetail?: (q: QuestionCardItem) => void;
+  /**
+   * 「오답 기반 변형」 시드의 오답 문항 — passageId 로 묶은 맵.
+   * 지문 행이 자기 몫을 골라 「학생 오답 원본」 버튼을 띄운다(없으면 버튼도 없다).
+   */
+  variantSourcesByPassage?: Map<string, VariantSeedQuestion[]>;
+  /** 오답 원본 보기 — 그 행의 오답 문항 목록으로 모달을 연다. */
+  onOpenVariantSources?: (sources: VariantSeedQuestion[]) => void;
   /** 지문별 생성 통계 (문제 수·크레딧) — 카드 푸터 '문제 생성' 버튼 라벨용. */
   rowStats?: Map<string, { questions: number; creditCost: number }>;
   /** '지문 추가' 버튼 → 내 지문함으로 돌아가 지문을 더 고른다. */
@@ -96,6 +104,8 @@ export function PassageWorkspace({
   questionCountByPassage,
   questionsByPassage,
   onOpenQuestionDetail,
+  variantSourcesByPassage,
+  onOpenVariantSources,
   rowStats,
   onAddPassage,
 }: PassageWorkspaceProps) {
@@ -431,6 +441,22 @@ export function PassageWorkspace({
                   : []),
               ]}
               onOpenQuestionDetail={onOpenQuestionDetail}
+              {...(() => {
+                // 변형본 행은 새 passageId 로 재바인딩되므로 원본 id(variantOfId)로도 찾는다
+                const sources = [
+                  ...(variantSourcesByPassage?.get(row.passageId) ?? []),
+                  ...(row.variantOfId
+                    ? (variantSourcesByPassage?.get(row.variantOfId) ?? [])
+                    : []),
+                ];
+                return {
+                  variantSourceCount: sources.length,
+                  onOpenVariantSources:
+                    sources.length > 0 && onOpenVariantSources
+                      ? () => onOpenVariantSources(sources)
+                      : undefined,
+                };
+              })()}
               onChangeContent={(content) =>
                 api.setContent(row.localId, content)
               }

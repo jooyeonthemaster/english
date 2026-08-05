@@ -113,6 +113,18 @@ const VARIANTS: Record<string, Variant> = {
     build: buildProdPrompts,
     thinkingBudget: 0,
   },
+  // 26-07-27 복원 기본 모델 상향분 검증용 (프로덕션 프롬프트 그대로).
+  "lite35-prod": {
+    model: "google/gemini-3.5-flash-lite",
+    build: buildProdPrompts,
+    thinkingBudget: 0,
+  },
+  // 상위 티어 충분성 비교용 — 광역 표준(3.6-flash)을 복원 프롬프트로.
+  "flash36-prod": {
+    model: "google/gemini-3.6-flash",
+    build: buildProdPrompts,
+    thinkingBudget: 0,
+  },
   "lite-tuned": {
     model: "google/gemini-3.1-flash-lite",
     build: buildLiteTunedPrompts,
@@ -284,7 +296,7 @@ function scoreCase(
     !hasM1ProblemArtifacts(restored) &&
     // 蹂듭썝 遺덇? 耳?댁뒪??鍮덉뭏??'蹂댁〈?쇱빞' ?뺤긽?대?濡?諛묒쨪 寃?щ? ?쒖쇅.
     (c.expectUnresolved ? true : !/_{3,}/.test(restored)) &&
-    !/[????/.test(restored);
+    !/[①-⑩]/.test(restored);
   const failedMust = c.mustContain.filter((m) => !textHas(restored, m));
   const failedMustNot = c.mustNotContain.filter((m) => textHas(restored, m));
   let anchorsOk = true;
@@ -314,7 +326,7 @@ function scoreCase(
     );
     if (!found) {
       failedChanges.push(
-        `${exp.evidenceType ?? "*"}: ${exp.beforeIncludes ?? ""}??{exp.afterIncludes ?? ""}`,
+        `${exp.evidenceType ?? "*"}: ${exp.beforeIncludes ?? ""}→${exp.afterIncludes ?? ""}`,
       );
     }
   }
@@ -376,7 +388,10 @@ async function runVariant(
   cases: RestorationCase[],
 ): Promise<CaseScore[]> {
   console.log(
-    `\n${"??.repeat(72)}\n??variant: ${name} (model=${variant.model}, thinking=${variant.thinkingBudget})\n${"??.repeat(72)}`,
+    `
+${"═".repeat(72)}
+■ variant: ${name} (model=${variant.model}, thinking=${variant.thinkingBudget})
+${"═".repeat(72)}`,
   );
   const scores: CaseScore[] = new Array(cases.length);
   let cursor = 0;
@@ -476,25 +491,26 @@ function summarize(name: string, model: string, scores: CaseScore[]): void {
       .reduce((a, s) => a + s.reasonCanonicalRate, 0) /
     Math.max(1, scores.filter((s) => s.changeCount > 0).length);
   console.log(
-    `\n  ??${name}: ${passed}/${scores.length} PASS 쨌 avg sim ${avgSim.toFixed(3)} 쨌 parse fail ${parseFails} 쨌 ` +
-      `洹쇨굅 ${changesPassed}/${scores.length} (罹먮끂?덉뺄 reason ${Math.round(avgCanonical * 100)}%) 쨌 ` +
-      `${Math.round(avgMs)}ms 쨌 ${Math.round(avgIn)}in/${Math.round(avgOut)}out tok 쨌 $${costPerRestore.toFixed(5)}/嫄?,
+    `
+  ◆ ${name}: ${passed}/${scores.length} PASS · avg sim ${avgSim.toFixed(3)} · parse fail ${parseFails} · ` +
+      `근거 ${changesPassed}/${scores.length} (캐노니컬 reason ${Math.round(avgCanonical * 100)}%) · ` +
+      `${Math.round(avgMs)}ms · ${Math.round(avgIn)}in/${Math.round(avgOut)}out tok · $${costPerRestore.toFixed(5)}/건`,
   );
   for (const s of scores.filter((x) => !x.pass)) {
     console.log(
-      `    ??${s.caseId}: ` +
+      `    ✗ ${s.caseId}: ` +
         [
-          !s.parseOk ? "JSON?뚯떛?ㅽ뙣" : null,
-          !s.markersClean ? "留덉빱?붿〈" : null,
-          s.failedMust.length ? `?꾨씫[${s.failedMust.join(" | ")}]` : null,
+          !s.parseOk ? "JSON파싱실패" : null,
+          !s.markersClean ? "마커잔존" : null,
+          s.failedMust.length ? `누락[${s.failedMust.join(" | ")}]` : null,
           s.failedMustNot.length
-            ? `?붿〈[${s.failedMustNot.join(" | ")}]`
+            ? `잔존[${s.failedMustNot.join(" | ")}]`
             : null,
-          !s.anchorsOk ? "?쒖꽌遺덉씪移? : null,
-          !s.changesOk ? `洹쇨굅?꾨씫[${s.failedChanges.join(" | ")}]` : null,
-          !s.honestyOk ? `怨쇱옣蹂닿퀬(${s.modelStatus})` : null,
+          !s.anchorsOk ? "순서불일치" : null,
+          !s.changesOk ? `근거누락[${s.failedChanges.join(" | ")}]` : null,
+          !s.honestyOk ? `과장보고(${s.modelStatus})` : null,
           s.wordSim < 0.93 ? `sim=${s.wordSim}` : null,
-          s.error ? `?몄텧?ㅽ뙣:${s.error.slice(0, 60)}` : null,
+          s.error ? `호출실패:${s.error.slice(0, 60)}` : null,
         ]
           .filter(Boolean)
           .join(", "),
@@ -540,7 +556,10 @@ async function main() {
     );
   }
 
-  console.log(`\n${"??.repeat(72)}\n???붿빟\n${"??.repeat(72)}`);
+  console.log(`
+${"═".repeat(72)}
+■ 요약
+${"═".repeat(72)}`);
   for (const name of Object.keys(all)) {
     summarize(name, VARIANTS[name].model, all[name]);
   }

@@ -13,7 +13,10 @@
 import { useState, type CSSProperties } from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import type { StudyMastery } from "@/lib/worksheet-study/grade";
 import { STUDY_SKILL_LABELS } from "@/lib/worksheet-study/types";
+// 지표 이름은 교사면과 같은 말로 — 단일 소스(director-glossary) 임포트(2607 §1.2).
+import { METRIC_LABELS, STUDY_PROVISIONAL_BADGE } from "@/lib/wording/director-glossary";
 
 export interface ReportStageRow {
   id: string;
@@ -33,7 +36,14 @@ export interface ReportSentence {
 export interface WorksheetStudyReportProps {
   taskId: string;
   title: string;
+  /** 첫 시도 정답률(%) — mastery 미전달 호출부(dev 하네스)의 폴백 */
   masteryPct: number | null;
+  /**
+   * 정답률·진도·표본 묶음(ctx.summary.mastery). 대형 숫자 하나만 띄우면 진도가
+   * 낮은 학생을 과대평가하게 되므로 종합 카드가 둘을 나란히 쓴다(2607 §3.4).
+   * 구 호출부 호환을 위해 optional.
+   */
+  mastery?: StudyMastery;
   totalTimeMs: number;
   stages: ReportStageRow[];
   weakness: {
@@ -143,8 +153,16 @@ function ReportHeader({ taskId, title }: { taskId: string; title: string }) {
 // ── 본체 ────────────────────────────────────────────────────────────────────
 
 export function WorksheetStudyReport(props: WorksheetStudyReportProps) {
-  const { taskId, title, masteryPct, totalTimeMs, stages, weakness, sentences, wordMeanings } = props;
+  const { taskId, title, masteryPct, mastery, totalTimeMs, stages, weakness, sentences, wordMeanings } =
+    props;
   const [sheet, setSheet] = useState<ReportSentence | null>(null);
+
+  // ── 성취 파생값 — 정답률은 "푼 문항 중" 비율이라 진도 없이는 오독된다(2607 §3.4) ──
+  const firstTryPct = mastery ? mastery.firstTryPct : masteryPct;
+  const coveragePct = mastery?.coveragePct ?? null;
+  const provisional = mastery?.provisional ?? false;
+  // 둘 다 없으면 숫자를 지어내지 않고 안내문만 낸다.
+  const hasAchievement = firstTryPct !== null || coveragePct !== null;
 
   // ── 빈 상태 — 학습 기록이 전혀 없음 ──
   if (!weakness) {
@@ -185,24 +203,95 @@ export function WorksheetStudyReport(props: WorksheetStudyReportProps) {
     <div className="gd-page flex flex-col gap-4 px-5 pb-8 pt-4">
       <ReportHeader taskId={taskId} title={title} />
 
-      {/* ── 종합 카드 ── */}
-      <section className="gd-card px-5 py-6 text-center">
-        {masteryPct !== null ? (
-          <>
-            <p className="gd-label">숙달도</p>
-            <p className="gd-mono mt-1 text-5xl font-bold tracking-tight" style={{ color: "var(--gd-ink)" }}>
-              {masteryPct}
-              <span className="gd-t-xl" style={{ color: "var(--gd-ink-3)" }}>
-                %
-              </span>
-            </p>
-          </>
+      {/* ── 종합 카드 — 정답률과 진도를 같은 시선 안에 둔다(2607 §3.4).
+             대형 숫자 하나만 두면 "정답률 100% · 진도 20%" 를 숨기게 된다. ── */}
+      <section className="gd-card px-5 py-6">
+        {hasAchievement ? (
+          <div className="flex items-start justify-center gap-3">
+            <div className="min-w-0 flex-1 text-center">
+              {/* 라벨 줄도 높이를 고정 — 배지가 붙어도 두 컬럼의 숫자 시작선이 어긋나지 않는다 */}
+              <p className="flex h-[1.375rem] items-center justify-center gap-1.5">
+                <span className="gd-label">{METRIC_LABELS.FIRST_TRY_RATE}</span>
+                {provisional ? (
+                  <span
+                    className="gd-t-3xs shrink-0 rounded-full px-1.5 py-0.5 font-semibold"
+                    style={{
+                      background: "var(--gd-paper)",
+                      border: "1px solid var(--gd-line)",
+                      color: "var(--gd-ink-2)",
+                    }}
+                  >
+                    {STUDY_PROVISIONAL_BADGE}
+                  </span>
+                ) : null}
+              </p>
+              {/* 두 컬럼 모두 5xl 동일 크기 — 크기로 서열을 주면 진도가 눈에서 사라진다.
+                  서열은 색(ink vs ink-2)과 좌우 위치로만 준다. */}
+              {firstTryPct !== null ? (
+                <p
+                  className="gd-mono mt-1 text-5xl font-bold tracking-tight"
+                  style={{ color: "var(--gd-ink)" }}
+                >
+                  {firstTryPct}
+                  <span className="gd-t-xl" style={{ color: "var(--gd-ink-3)" }}>
+                    %
+                  </span>
+                </p>
+              ) : (
+                <p
+                  className="gd-mono mt-1 text-5xl font-bold tracking-tight"
+                  style={{ color: "var(--gd-ink-3)" }}
+                >
+                  —
+                </p>
+              )}
+              {mastery && mastery.firstTotal > 0 ? (
+                <p className="gd-t-2xs mt-2" style={{ color: "var(--gd-ink-2)" }}>
+                  첫 시도 정답 {mastery.firstCorrect}/{mastery.firstTotal}
+                </p>
+              ) : null}
+            </div>
+
+            {/* 진도 — 정답률의 분모를 밝히는 짝. 정답률만 크게 두면 병기 의미가 없다 */}
+            {mastery ? (
+              <>
+                <span
+                  className="mt-1 self-stretch"
+                  style={{ width: "1px", background: "var(--gd-line)" }}
+                  aria-hidden
+                />
+                <div className="min-w-0 flex-1 text-center">
+                  <p className="flex h-[1.375rem] items-center justify-center">
+                    <span className="gd-label">{METRIC_LABELS.COVERAGE}</span>
+                  </p>
+                  <p
+                    className="gd-mono mt-1 text-5xl font-bold tracking-tight"
+                    style={{ color: "var(--gd-ink-2)" }}
+                  >
+                    {coveragePct !== null ? (
+                      <>
+                        {coveragePct}
+                        <span className="gd-t-xl" style={{ color: "var(--gd-ink-3)" }}>
+                          %
+                        </span>
+                      </>
+                    ) : (
+                      <span style={{ color: "var(--gd-ink-3)" }}>—</span>
+                    )}
+                  </p>
+                  <p className="gd-t-2xs mt-2" style={{ color: "var(--gd-ink-2)" }}>
+                    푼 문항 {mastery.answered}/{mastery.totalItems}
+                  </p>
+                </div>
+              </>
+            ) : null}
+          </div>
         ) : (
-          <p className="gd-t-sm font-semibold" style={{ color: "var(--gd-ink-2)" }}>
-            채점 단계를 완료하면 숙달도가 계산됩니다
+          <p className="gd-t-sm text-center font-semibold" style={{ color: "var(--gd-ink-2)" }}>
+            채점 단계를 풀면 {METRIC_LABELS.FIRST_TRY_RATE}이 계산됩니다
           </p>
         )}
-        <p className="gd-t-xs mt-3" style={{ color: "var(--gd-ink-2)" }}>
+        <p className="gd-t-xs mt-4 text-center" style={{ color: "var(--gd-ink-2)" }}>
           총 학습 시간 {toMin(totalTimeMs)}분 · {doneCount}/{stages.length} 단계 완료
         </p>
       </section>

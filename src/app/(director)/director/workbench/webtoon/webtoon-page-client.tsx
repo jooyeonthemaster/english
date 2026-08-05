@@ -1100,6 +1100,9 @@ export function WebtoonPageClient({
             extractionPending={extractionPending}
             onSubmitPastedRows={handleCreatePastedPassages}
             pasteSaving={pasteSaving}
+            // 국어 라우트면 직접 입력 탭의 영어 전용 모드(AI 원문 복원·AI 지문
+            // 생성)를 막는다 — 안 넘기면 영어 지문이 국어 지문함에 저장된다.
+            pasteSubjectScope={subjectScope}
             // 모바일 스텝 플로우(<lg 전용): 입력 스텝에서만 소스 탭 노출, 그 외
             // 스텝은 하단 스텝 네비가 이동을 담당하므로 탭을 숨긴다.
             mobileStepTabs={mobileStep === "input" ? "sources" : "hidden"}

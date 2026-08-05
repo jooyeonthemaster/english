@@ -70,7 +70,15 @@ export function VerdictRow({
   const isPartial = response.status === "PARTIAL";
   const studentSubmitted = isStudentSubmitted(response);
   // 현재 선택된 선지 — 강사/학생 입력(chosenChoice) 우선, 없으면 AI 판독값 표시.
+  // 복수 정답 문항은 저장 규약상 "2, 5" 처럼 join 돼 오므로 집합으로 푼다 —
+  // 문자열 직비교로 두면 복수 선택 행에서 어떤 세그먼트도 활성으로 보이지 않는다.
   const activeChoice = response.chosenChoice ?? response.aiRead?.chosenChoice ?? null;
+  const activeChoices = new Set(
+    (activeChoice ?? "")
+      .split(/[,、·/]+/)
+      .map((t) => t.trim())
+      .filter(Boolean),
+  );
 
   return (
     <tr
@@ -112,7 +120,7 @@ export function VerdictRow({
         {entry.kind === "MC" ? (
           <div className="inline-flex items-center gap-1">
             {MC_CHOICES.map((choice) => {
-              const active = activeChoice === choice;
+              const active = activeChoices.has(choice);
               return (
                 <button
                   key={choice}

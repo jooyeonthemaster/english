@@ -23,6 +23,7 @@ import {
   ChevronUp,
 } from "lucide-react";
 import { PearlIcon } from "@/components/icons/pearl-icon";
+import { StreamPreviewPane } from "@/app/(director)/director/workbench/generate/stream-preview-pane";
 import { Badge } from "@/components/ui/badge";
 import {
   Tooltip,
@@ -257,7 +258,13 @@ export const PassageQueueCard = memo(function PassageQueueCard({
       </Tooltip>
     );
 
-    const metaSlot = (passage.schoolName || passage.grade || passage.unit || passage.publisher) ? (
+    // 생성 중 실시간 미리보기 — 문제 생성(md-stream)과 동일한 패널을 재사용해
+    // 두 큐의 로딩 카드가 같은 언어로 말하게 한다.
+    const streamSlot = passage.streamPreview ? (
+      <StreamPreviewPane preview={passage.streamPreview} />
+    ) : null;
+
+    const badgeRow = (passage.schoolName || passage.grade || passage.unit || passage.publisher) ? (
       <div className="flex items-center gap-1.5 flex-wrap mt-2.5">
         {passage.schoolName && (
           <Badge variant="outline" className="text-[9px] h-5 px-1.5 font-medium">
@@ -286,6 +293,14 @@ export const PassageQueueCard = memo(function PassageQueueCard({
         )}
       </div>
     ) : null;
+
+    const metaSlot =
+      badgeRow || streamSlot ? (
+        <>
+          {badgeRow}
+          {streamSlot}
+        </>
+      ) : null;
 
     return (
       <WorkbenchLoadingCard

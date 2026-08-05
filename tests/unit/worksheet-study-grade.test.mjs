@@ -12,9 +12,10 @@ const repoRoot = path.resolve(__dirname, "..", "..");
 //  - normalizeEn: 대소문자·구두점·스마트따옴표·공백 무시, 하이픈·아포스트로피 유지
 //  - gradeTyped: 정규화 완전 일치만 정답, typo 만 있으면 nearMiss
 //  - accumulateWeakness: attempt=1 만 집계, selfGrade △/X 는 오답
+//  - computeStudyMastery: 첫 시도 정답률 + 진도 (§5.1 — 2026-07-25 재정의)
 const harnessSource = `
 import gradeMod from "@/lib/worksheet-study/grade";
-const { normalizeEn, gradeTyped, gradeOrder, gradeCloze, diffWords, selfGradeScore, accumulateWeakness, computeMasteryPct } = gradeMod as any;
+const { normalizeEn, gradeTyped, gradeOrder, gradeCloze, diffWords, selfGradeScore, accumulateWeakness, computeMasteryPct, computeStudyMastery } = gradeMod as any;
 
 const failures: string[] = [];
 let passed = 0;
@@ -64,12 +65,83 @@ const w2 = accumulateWeakness(w, [
 ]);
 check("취약점: 증분 누적 불변성", w.words[0].wrong === 1 && w2.words[0].wrong === 2);
 
-check("숙달도: 가중 평균", computeMasteryPct({
+// ── 성취 지표: 첫 시도 정답률 + 진도 (docs/worksheet-study-spec.md §5.1) ──
+// 구 정의는 status==="done" 스테이지만 집계해, 쉬운 단계 하나만 만점으로 끝낸 학생을
+// 100%로 보고했다. 진행 중 스테이지의 오답이 분모에서 통째로 빠졌기 때문이다.
+// 아래 단언들이 그 배제 로직의 부활을 막는다.
+
+// (a) done + in-progress 혼합 — 진행 중 스테이지도 분자·분모에 들어간다.
+//     구 정의에서는 c 가 배제돼 (8+2)/(10+10)=50 이었다. 이제는 10/30=33 이어야 한다.
+const mixed = computeStudyMastery({
   a: { status: "done", firstCorrect: 8, firstTotal: 10 },
   b: { status: "done", firstCorrect: 2, firstTotal: 10 },
-  c: { status: "in-progress", firstCorrect: 0, firstTotal: 10 },
-}) === 50);
-check("숙달도: 완료 없음 → null", computeMasteryPct({ a: { status: "in-progress" } }) === null);
+  c: { status: "in-progress", firstCorrect: 0, firstTotal: 10, answered: 10, total: 10 },
+});
+check("정답률: 진행 중 스테이지도 분모에 포함", mixed.firstTotal === 30 && mixed.firstCorrect === 10);
+check("정답률: 구 정의(50) 부활 금지", mixed.firstTryPct === 33);
+check("정답률: computeMasteryPct 는 firstTryPct 의 축약", computeMasteryPct({
+  a: { status: "done", firstCorrect: 8, firstTotal: 10 },
+  b: { status: "done", firstCorrect: 2, firstTotal: 10 },
+  c: { status: "in-progress", firstCorrect: 0, firstTotal: 10, answered: 10, total: 10 },
+}) === mixed.firstTryPct);
+
+// (b) 무채점 done 스테이지(지문 통독 등)는 정답률·진도 양쪽에서 빠진다.
+//     스테이지 수(진행 배지 판단용)에는 남아야 한다.
+const ungraded = computeStudyMastery({
+  reading: { status: "done" },
+  "vocab-quiz": { status: "done", firstCorrect: 3, firstTotal: 4 },
+});
+check("무채점 done: 정답률 분모 제외", ungraded.firstTotal === 4 && ungraded.firstTryPct === 75);
+check("무채점 done: 진도 분모 제외", ungraded.totalItems === 4 && ungraded.answered === 4 && ungraded.coveragePct === 100);
+check("무채점 done: 스테이지 수에는 포함", ungraded.stagesTotal === 2 && ungraded.stagesDone === 2);
+
+// (c) 진도 — done 은 total 을 저장하지 않으므로 firstTotal 을 문항 수로 보고,
+//     in-progress 는 total(전체 문항)을 쓴다. 5 + 12 = 17 중 5 + 3 = 8 을 풀었다.
+const coverage = computeStudyMastery({
+  done: { status: "done", firstCorrect: 5, firstTotal: 5 },
+  live: { status: "in-progress", firstCorrect: 1, firstTotal: 3, answered: 3, total: 12 },
+});
+check("진도: done=firstTotal · in-progress=total 를 분모로", coverage.totalItems === 17);
+check("진도: 푼 문항 합산", coverage.answered === 8 && coverage.coveragePct === 47);
+
+// 분자가 분모를 넘는 이상 데이터(플러시 중복 등)는 클램프된다 — 100% 초과 표시 금지.
+const clamped = computeStudyMastery({
+  a: { status: "in-progress", firstCorrect: 9, firstTotal: 4, answered: 9, total: 4 },
+});
+check("클램프: 분자는 분모를 넘지 않는다", clamped.firstCorrect === 4 && clamped.answered === 4);
+check("클램프: 100% 초과 없음", clamped.firstTryPct === 100 && clamped.coveragePct === 100);
+
+// (d) provisional — 전 스테이지 done 이면 false, 하나라도 아니면 true.
+const allDone = computeStudyMastery({
+  reading: { status: "done" },
+  quiz: { status: "done", firstCorrect: 1, firstTotal: 2 },
+});
+check("provisional: 전 스테이지 done → false", allDone.provisional === false);
+check("provisional: 미완료 스테이지 있으면 true", computeStudyMastery({
+  a: { status: "done", firstCorrect: 1, firstTotal: 1 },
+  b: { status: "todo" },
+}).provisional === true);
+check("빈 입력: 지표 null · provisional false", (() => {
+  const empty = computeStudyMastery({});
+  return empty.firstTryPct === null && empty.coveragePct === null && empty.stagesTotal === 0 && empty.provisional === false;
+})());
+check("채점 기록 0건 → 정답률·진도 모두 null", (() => {
+  const none = computeStudyMastery({ a: { status: "in-progress" } });
+  return none.firstTryPct === null && none.coveragePct === null && computeMasteryPct({ a: { status: "in-progress" } }) === null;
+})());
+
+// (e) 실데이터 회귀 — 학생 cmpavfoiq0001mm9sga30eupz / state cmrxolcg60002kz049uqgfszo.
+//     DB masteryPct 스냅샷은 100 이었다. 오답 6문항이 진행 중이라는 이유로 사라졌기 때문이다.
+const real = computeStudyMastery({
+  reading: { status: "done" },
+  "vocab-quiz": { status: "done", firstCorrect: 12, firstTotal: 12 },
+  "vocab-match": { status: "in-progress", firstCorrect: 0, firstTotal: 4, answered: 4, total: 4 },
+  exam: { status: "in-progress", firstCorrect: 0, firstTotal: 2, answered: 2, total: 5 },
+});
+check("회귀(실데이터): 첫 시도 정답률 67%", real.firstTryPct === 67);
+check("회귀(실데이터): 진도 86%", real.coveragePct === 86);
+check("회귀(실데이터): provisional true", real.provisional === true);
+check("회귀(실데이터): 표본 12/18 · 18/21", real.firstCorrect === 12 && real.firstTotal === 18 && real.answered === 18 && real.totalItems === 21);
 
 console.log(JSON.stringify({ passed, failures }));
 `;
@@ -92,5 +164,6 @@ test("worksheet-study grade contract", () => {
   const lines = raw.trim().split(/\r?\n/);
   const result = JSON.parse(lines[lines.length - 1]);
   assert.deepEqual(result.failures, [], `실패한 검증: ${result.failures.join(", ")}`);
-  assert.ok(result.passed >= 20, `검증 수가 비정상적으로 적습니다: ${result.passed}`);
+  // 하한을 실제 검증 수에 맞춰 올린다 — 단언이 조용히 빠지는 것을 잡기 위한 계기.
+  assert.ok(result.passed >= 36, `검증 수가 비정상적으로 적습니다: ${result.passed}`);
 });

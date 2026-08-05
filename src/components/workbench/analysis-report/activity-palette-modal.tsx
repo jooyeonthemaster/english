@@ -1,6 +1,6 @@
 "use client";
 
-import type { KeyboardEvent, MouseEvent, ReactNode } from "react";
+import type { KeyboardEvent, MouseEvent } from "react";
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import { ChevronDown, ChevronUp, X } from "lucide-react";
@@ -38,14 +38,12 @@ export function ActivityPalettePanel({
   report,
   onPick,
   columns = 1,
-  vocabTestSlot,
   activityCounts,
   onToggleOffKind,
 }: {
   report: AnalysisReport;
   onPick: (kind: ActivityKind) => void;
   columns?: 1 | 2;
-  vocabTestSlot?: ReactNode;
   /** 문서에 추가된 유형별 블록 개수. 미전달 시 토글 UI 없이 기존 '추가' 동작만. */
   activityCounts?: Partial<Record<ActivityKind, number>>;
   /** ON 스위치/카드 클릭 — 그 유형의 활동 블록을 문서에서 전부 제거. */
@@ -114,16 +112,6 @@ export function ActivityPalettePanel({
           </section>
         );
       })}
-      {vocabTestSlot ? (
-        <section className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-          <PaletteSectionHeader
-            title="어휘"
-            collapsed={collapsedSections.has("__vocab")}
-            onToggle={() => toggleSection("__vocab")}
-          />
-          {!collapsedSections.has("__vocab") ? <div className="p-2.5">{vocabTestSlot}</div> : null}
-        </section>
-      ) : null}
     </div>
   );
 }

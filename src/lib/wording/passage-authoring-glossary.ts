@@ -97,7 +97,17 @@ export const AUTHORING_COPY = {
     korean:
       "AI로 지문 만들기는 영어 지문에서만 쓸 수 있어요. 영어 지문을 만드는 화면에서 써 주세요.",
     busy: "지문함에 담는 중이에요. 잠시만 기다려 주세요.",
-    reading: "자료를 읽고 있어요. 다 읽으면 바로 만들 수 있어요.",
+    /**
+     * ⚠️ 이 문장은 **더 이상 CTA 를 잠그는 사유가 아니다**(26-08-04). 판독 중에도
+     * 누를 수 있고, 누르면 판독이 끝나는 즉시 자동으로 실행된다 — 그래서 말투가
+     * "못 해요"가 아니라 "할게요"다. 종전 문안("자료를 읽고 있어요. 다 읽으면
+     * 바로 만들 수 있어요.")은 사실상 **사람이 판독을 지켜보다 다시 누르라는 뜻**
+     * 이었고, 사진 한 장이 10~20초 걸리는 구간에서 그 대기가 이 화면의 최대
+     * 마찰이었다(오너 지적). 렌더 자리는 그대로 CTA 바로 밑 캡션이다.
+     * 되돌리려면 authoring-board 의 queuedStart 배선을 함께 되돌릴 것 — 문구만
+     * 바꾸면 "다시 누르면 취소돼요"가 거짓말이 된다.
+     */
+    reading: "자료를 마저 읽고 바로 시작할게요. 다시 누르면 취소돼요.",
     overCapacity: (max: number) =>
       `자료는 ${n(max)}개까지 넣을 수 있어요. 쓰지 않을 자료를 빼 주세요.`,
     empty: "자료를 넣거나, 어떤 지문을 원하는지 한 줄만 적어 주세요.",
@@ -136,6 +146,17 @@ export const AUTHORING_COPY = {
     retry: "다시 읽기",
     reading: "자료를 읽는 중…",
     readingAgain: "다시 읽는 중…",
+    /**
+     * 사진 전용 진행 라벨. 사진은 OCR 을 돌지 않고 원본만 올린다(26-08-04) —
+     * "읽는 중"이라고 적으면 있지도 않은 판독을 기다리는 것처럼 보인다.
+     */
+    preparingOriginal: "원본을 준비하는 중…",
+    /**
+     * 자료 검토 모달에서 본문 칸이 비어 있는 사진에 붙는 설명. 빈 칸만 두면
+     * "AI 가 글자를 못 읽었나?"로 읽힌다 — 실제로는 읽을 필요가 없어서 안 읽은
+     * 것이고, 모델은 이 사진을 원본 그대로 본다.
+     */
+    originalOnly: "이 사진은 원본 그대로 AI에게 전달돼요. 따로 옮겨 적지 않아도 돼요.",
     /** 자료 4개째부터 목록을 접는다(3번째 스크롤 금지). */
     more: (count: number) => `자료 ${n(count)}개 · 모두 보기`,
     countLine: (count: number) => `붙인 자료 ${n(count)}개`,
@@ -402,27 +423,13 @@ export const AUTHORING_COPY = {
     outOfRange: "기출 범위 밖",
   },
 
-  /** 커버리지 패널 — 약속이 지켜졌는지 눈으로 확인시키는 자리. */
-  COVERAGE: {
-    title: "요청하신 내용이 이렇게 반영됐어요",
-    wordsLabel: "문맥에 녹인 표제어",
-    hitLabel: "들어간 단어",
-    missLabel: "못 넣은 단어",
-    summary: (hit: number, total: number, percent: number) =>
-      `표제어 ${n(total)}개 중 ${n(hit)}개 · ${percent}%`,
-    healthy: "적정 범위예요",
-    dense: "너무 많이 넣으면 문장이 부자연스러워져요",
-    hitTitle: (count: number) => `본문에서 ${n(count)}회 썼어요`,
-    missTitle: "이 단어는 본문에 넣지 못했어요",
-    /** 분모 정직성 — 클리핑·상한이 걸렸으면 반드시 함께 말한다. */
-    truncated: (compared: number, total: number) =>
-      `올리신 단어장 앞 ${n(compared)}개만 대조했어요(전체 ${n(total)}개)`,
-    expected: (words: number, low: number, high: number) =>
-      `${n(words)}단어 지문에는 보통 ${n(low)}~${n(high)}개가 들어가요. 단어장이 길면 비율은 자연히 낮아져요.`,
-    grammarLabel: "AI가 의도해서 넣은 어법",
-    /** 대조 불가라는 사실을 층위로 분리한다(채운 색 금지 — 점선 테두리). */
-    grammarUnverified: "본문 대조는 하지 않았어요",
-  },
+  // ⚠️ COVERAGE 묶음은 **의도적으로 없다**(26-08-04 오너 결정 — 화면만 제거).
+  //   "표제어 200개 중 24개 · 12%" 는 선생님이 읽고 할 행동이 없는 숫자였고,
+  //   분모(=올린 단어장 크기)가 지문 길이와 무관해서 정상 결과가 늘 실패처럼
+  //   보였다. 렌더 층(authoring-coverage-panel.tsx)과 함께 걷어냈다.
+  //   **계산·스키마는 그대로 살아 있다**(metrics.computeCoverage ·
+  //   schema.AuthoringCoverage · DB 저장값). 되살릴 때는 이 자리에 사전을 먼저
+  //   복구하고 패널을 새로 그린다 — 문구를 tsx 에 손코딩하면 게이트 ⑤ 에 걸린다.
 
   /** 결과 검토 모달. */
   RESULTS_MODAL: {

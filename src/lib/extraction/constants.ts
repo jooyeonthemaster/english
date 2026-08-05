@@ -47,7 +47,10 @@ export const PAGE_LEASE_DURATION_MS = 5 * 60 * 1000; // 5min
 /** Retries for transient Gemini errors. */
 export const MAX_PAGE_ATTEMPTS = EXTRACTION_PAGE_MAX_ATTEMPTS;
 
-/** PDF render scale for pdfjs-dist client-side. 2.0 ≈ ~200 DPI, Gemini-safe. */
+/** PDF render scale for pdfjs-dist client-side.
+ *  PDF 의 기준 해상도는 72 DPI 이므로 scale 2.0 = **144 DPI** 다.
+ *  (예전 주석의 "≈200 DPI" 는 오류였다 — 200 DPI 를 원하면 scale 2.78 이 필요하다.
+ *   해상도 판단을 이 주석에 기대어 내리던 곳이 있어 수치를 바로잡는다.) */
 export const PDF_RENDER_SCALE = 2.0;
 
 /** JPEG quality when encoding pdfjs canvas → blob. */

@@ -315,19 +315,24 @@ function buildVocabQuiz(b: BuildCtx): StudyItem[] {
 }
 
 /**
- * synonyms/antonyms 문자열에서 첫 유효 항목 추출 — "search, retrieve" → "search".
+ * synonyms/antonyms 문자열을 항목 배열로 — "search, retrieve" → ["search","retrieve"].
  * AI 생성 계약(prompt.ts)상 "해당 없음"은 "—"(em dash)로 오므로 반드시 배제한다.
  * 배제하지 않으면 같은 "—" 셀이 여러 개인 풀 수 없는 매칭이 만들어진다
  * (인쇄 엔진 study-activities.ts 의 동일 가드와 정합).
  */
-function firstToken(list: string | undefined): string | null {
-  if (!list) return null;
+function relationTokens(list: string | undefined): string[] {
+  if (!list) return [];
+  const out: string[] = [];
+  const seen = new Set<string>();
   for (const raw of list.split(/[,/·;]/)) {
     const t = raw.trim();
     if (!t || t === "—" || t === "-" || t === "–" || t === "N/A") continue;
-    return t;
+    const k = normLite(t);
+    if (seen.has(k)) continue;
+    seen.add(k);
+    out.push(t);
   }
-  return null;
+  return out;
 }
 
 /**
@@ -371,29 +376,88 @@ function buildMatchItem(
   } as StudyItem;
 }
 
+type RelationKey = "syn" | "ant";
+type RelationTokens = Record<RelationKey, string[]>;
+
+/**
+ * 그리드 1개의 짝을 확정한다 — **풀 수 있는 문항(solvability invariant)** 을 강제.
+ *
+ * 불변식: 좌측 i 에 배치된 우측 값들 중 정답이 아닌 것은 i 의 정답으로도 읽혀서는
+ * 안 된다. 의미 판정은 불가능하므로 학습지가 스스로 선언한 관계 목록으로 근사한다 —
+ * 어떤 후보어를 **그리드 안의 다른 행도 자기 동의어·반의어로 주장**하거나 그 단어가
+ * 다른 행의 표제어면, 그 배치는 정답이 둘이 되므로 채택하지 않는다. 안전한 후보가
+ * 하나도 없는 행은 그리드에서 뺀다(틀린 문항을 내보내느니 문항 수를 줄인다).
+ *
+ * 검사는 반드시 **양쪽 관계를 모두** 본다. 실제 사고가 교차 관계였다:
+ * "media effect" 의 반의어 첫 항목 "cause" 가 같은 그리드에 있는 "trigger" 의
+ * 동의어라, 앱이 바로 앞 문항에서 가르친 trigger→cause 로 답한 학생이 오답
+ * 처리됐다(정답을 낼 근거가 없는 문항). 같은 관계끼리만 비교하면 이 사고를 못 잡는다.
+ */
+function resolveGroupPairs(
+  group: GenVocab[],
+  tokensOf: Map<GenVocab, RelationTokens>,
+  rel: RelationKey,
+): { left: string; right: string }[] {
+  const heads = new Set(group.map((v) => normLite(v.headword)));
+  // 후보어 → 그 단어를 관계어로 주장하는 행들(동의어·반의어 통합)
+  const claimedBy = new Map<string, Set<GenVocab>>();
+  for (const v of group) {
+    const t = tokensOf.get(v);
+    if (!t) continue;
+    for (const tok of [...t.syn, ...t.ant]) {
+      const k = normLite(tok);
+      let owners = claimedBy.get(k);
+      if (!owners) {
+        owners = new Set();
+        claimedBy.set(k, owners);
+      }
+      owners.add(v);
+    }
+  }
+  const used = new Set<string>();
+  const out: { left: string; right: string }[] = [];
+  for (const v of group) {
+    const head = normLite(v.headword);
+    const pick = (tokensOf.get(v)?.[rel] ?? []).find((c) => {
+      const k = normLite(c);
+      if (!k || used.has(k)) return false; // 우측 값 유일성(인덱스 채점 전제)
+      if (k === head || heads.has(k)) return false; // 좌측 표제어와 동일 — 중의적
+      const owners = claimedBy.get(k);
+      return !owners || (owners.size === 1 && owners.has(v));
+    });
+    if (!pick) continue;
+    used.add(normLite(pick));
+    out.push({ left: v.headword.trim(), right: pick });
+  }
+  return out;
+}
+
 function buildVocabMatch(b: BuildCtx): StudyItem[] {
   const seed = stageSeed(b.seedKey, "vocab-match");
-  const syn = b.ctx.vocab
-    .map((v) => ({ v, pair: firstToken(v.synonyms) }))
-    .filter((x): x is { v: GenVocab; pair: string } => !!x.pair);
-  const ant = b.ctx.vocab
-    .map((v) => ({ v, pair: firstToken(v.antonyms) }))
-    .filter((x): x is { v: GenVocab; pair: string } => !!x.pair);
-  const groups: { rel: "동의어" | "반의어"; pairs: { v: GenVocab; pair: string }[] }[] = [];
-  for (let i = 0; i < syn.length; i += 6) groups.push({ rel: "동의어", pairs: syn.slice(i, i + 6) });
-  for (let i = 0; i < ant.length; i += 6) groups.push({ rel: "반의어", pairs: ant.slice(i, i + 6) });
+  const rows = b.ctx.vocab.filter((v) => v.headword.trim());
+  const tokensOf = new Map<GenVocab, RelationTokens>(
+    rows.map((v) => [v, { syn: relationTokens(v.synonyms), ant: relationTokens(v.antonyms) }]),
+  );
   const items: StudyItem[] = [];
-  groups.forEach((g, gi) => {
-    const item = buildMatchItem(
-      `vocab-match:match:${gi + 1}`,
-      "vocab",
-      "표제어",
-      g.rel,
-      g.pairs.map((p) => ({ left: p.v.headword, right: p.pair })),
-      seed + gi * 101,
-    );
-    if (item) items.push(item);
-  });
+  let gi = 0;
+  for (const [rel, key] of [
+    ["동의어", "syn"],
+    ["반의어", "ant"],
+  ] as const) {
+    const eligible = rows.filter((v) => (tokensOf.get(v)?.[key].length ?? 0) > 0);
+    for (let i = 0; i < eligible.length; i += 6) {
+      const item = buildMatchItem(
+        `vocab-match:match:${gi + 1}`,
+        "vocab",
+        "표제어",
+        rel,
+        resolveGroupPairs(eligible.slice(i, i + 6), tokensOf, key),
+        seed + gi * 101,
+      );
+      gi += 1;
+      if (item) items.push(item);
+    }
+  }
   return items;
 }
 
@@ -406,6 +470,14 @@ function buildChunk(b: BuildCtx): StudyItem[] {
     seed,
     (s) => (s.chunksFull?.filter((c) => c.text.trim()).length ?? 0) >= 3,
   );
+  // 디코이 풀 — **다른 문장**의 청크. 같은 문장 청크를 섞으면 정답이 은행에 두 번
+  // 들어가 채점이 무너지므로 문장 단위로 배제한다.
+  const chunkPool = new Map<number, string[]>();
+  for (const s of b.ctx.sentences) {
+    const texts = (s.chunksFull ?? []).map((c) => c.text.trim()).filter(Boolean);
+    if (texts.length) chunkPool.set(s.n, texts);
+  }
+
   const items: StudyItem[] = [];
   picked.forEach((s, si) => {
     const chunks = s.chunksFull!.filter((c) => c.text.trim());
@@ -450,13 +522,28 @@ function buildChunk(b: BuildCtx): StudyItem[] {
         segments.push({ t: c.text });
       }
     });
+    // 은행 = 정답 청크 + 다른 문장에서 온 디코이 ≤2. 디코이가 없으면 빈칸 2개에
+    // 은행 2개라 순서만 맞추면 되는 자유 득점이 된다(문장 빈칸 buildCloze 는 이미
+    // 디코이를 넣고 있어 같은 앱 안에서 비대칭이었다).
+    const bankSeen = new Set(answerKey.map(normLite));
+    const decoys: string[] = [];
+    const otherChunks = [...chunkPool.entries()]
+      .filter(([n]) => n !== s.n)
+      .flatMap(([, texts]) => texts);
+    for (const d of seededShuffle(otherChunks, rng)) {
+      if (decoys.length >= 2) break;
+      const k = normLite(d);
+      if (bankSeen.has(k)) continue;
+      bankSeen.add(k);
+      decoys.push(d);
+    }
     items.push({
       key: `chunk:cloze:${s.n}`,
       type: "cloze",
       skill: "chunk",
       sentenceNo: s.n,
       segments,
-      bank: seededShuffle(answerKey, rng),
+      bank: seededShuffle([...answerKey, ...decoys], rng),
       answerKey,
       cue: `단서: ${cues.join(" / ")}`,
     });
@@ -464,40 +551,68 @@ function buildChunk(b: BuildCtx): StudyItem[] {
   return items;
 }
 
+/** 단어 경계 기준 전역 매처 — "you" 가 "your" 안에서 잡히지 않게 한다. */
+function wholeWordMatcher(token: string): RegExp {
+  const esc = token.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`(?<![A-Za-z])${esc}(?![A-Za-z])`, "g");
+}
+
+/** 어법 포인트 중복 제거 키 — (문장번호, 정답 표기). OX 와 택일 드릴이 공유한다. */
+function grammarPointKey(sentenceNo: number | undefined, answer: string): string {
+  return `${sentenceNo ?? 0}|${normLite(answer)}`;
+}
+
 function buildGrammar(b: BuildCtx): StudyItem[] {
   if (b.caps.grammarItems === 0) return [];
   const seed = stageSeed(b.seedKey, "grammar");
   const rng = mulberry32(seed);
   const items: StudyItem[] = [];
+
+  // (b) 를 먼저 수집한다 — 택일 드릴은 **지문 원문 문장**을 쓰므로 AI 창작 예문인
+  // OX 보다 근거가 확실하다. 같은 (문장, 정답) 포인트가 양쪽에 있으면 택일을 남기고
+  // OX 를 버린다(같은 스테이지에서 같은 것을 두 번 묻던 중복 출제 제거).
+  const lw = b.report.sections.find((s) => s.kind === "learning-worksheet") as
+    | LearningWorksheetSection
+    | undefined;
+  const drills = (lw?.drills?.grammarChoices ?? []).filter(
+    (d) => d.text?.trim() && d.choices.length >= 2 && d.answer?.trim(),
+  );
+  const drillKeys = new Set(drills.map((d) => grammarPointKey(d.sentenceNo, d.answer.trim())));
+
   // (a) 어법 포인트 → OX (60% 오류 문장 / 40% 정상 문장)
   b.ctx.grammar.forEach((g, gi) => {
     if (!g.example?.trim() || !g.exampleWrong?.trim() || !g.exampleCorrect?.trim()) return;
-    const useWrong = rng() < 0.6;
-    const statement = useWrong
-      ? g.example.trim()
-      : g.example.trim().replace(g.exampleWrong.trim(), g.exampleCorrect.trim());
-    // 치환 실패(원문에 exampleWrong 부재) 시 오류 문장으로 폴백
-    const wrong = useWrong || statement === g.example.trim();
+    const example = g.example.trim();
+    const from = g.exampleWrong.trim();
+    const to = g.exampleCorrect.trim();
+    if (drillKeys.has(grammarPointKey(g.sentenceNo, to))) return; // 택일 드릴과 중복
+
+    // 정상 문장은 오류 토큰을 **단어 경계로 정확히 1회** 치환할 수 있을 때만 만든다.
+    // 단순 String.replace(문자열) 는 첫 일치만·경계 무시로 바꿔서 문장을 파괴했다.
+    // 실제 데이터: example="If you expose you to ads, ...", wrong="you" →
+    // "If yourself expose you to ads, ..." 를 '어법상 옳은 문장'으로 제시해,
+    // X(틀림)라고 정확히 판단한 학생을 오답 처리했다.
+    const occurrences = example.match(wholeWordMatcher(from))?.length ?? 0;
+    if (occurrences === 0) return; // 오류 토큰이 예문에 없다 — 출제 근거 없음
+    const corrected =
+      occurrences === 1 ? example.replace(wholeWordMatcher(from), to) : null;
+    const wrong = corrected === null || rng() < 0.6;
     items.push({
       key: `grammar:ox:${gi + 1}`,
       type: "ox",
       skill: "grammar",
       sentenceNo: g.sentenceNo,
       grammarCode: g.pointCode,
-      statement,
+      statement: wrong ? example : corrected,
       wrong,
-      fixFrom: wrong ? g.exampleWrong.trim() : undefined,
-      fixTo: wrong ? g.exampleCorrect.trim() : undefined,
+      fixFrom: wrong ? from : undefined,
+      fixTo: wrong ? to : undefined,
       explanation: [g.point, g.explanation].filter(Boolean).join(" — "),
     });
   });
+
   // (b) 실전 학습지 어법 택일 드릴
-  const lw = b.report.sections.find((s) => s.kind === "learning-worksheet") as
-    | LearningWorksheetSection
-    | undefined;
-  const drills = lw?.drills?.grammarChoices ?? [];
   drills.forEach((d, di) => {
-    if (!d.text?.trim() || d.choices.length < 2 || !d.answer?.trim()) return;
     items.push({
       key: `grammar:ic:${di + 1}`,
       type: "inline-choice",
@@ -674,8 +789,15 @@ function buildOrder(b: BuildCtx): StudyItem[] {
     | LearningWorksheetSection
     | undefined;
   const woSources = [...(lw?.drills?.wordOrders ?? []), ...(lw?.workbookSet?.wordOrders ?? [])];
+  // 이미 (a) 가 배열시킨 문장 — 같은 문장을 한 스테이지에서 두 번 배열시키지 않는다.
+  // 학습지 드릴은 문장 일부만 담는 경우가 있어 포함 관계로 비교한다
+  // (실제 중복: order:cs:7 = 문장7 전체 / order:wo:1 = 문장7 앞부분).
+  const orderedAnswers = items.map((it) => normLite((it as { answer: string }).answer));
   woSources.forEach((w, wi) => {
     if (!w.korean?.trim() || !w.answer?.trim() || w.chunks.length < 3) return;
+    const answerNorm = normLite(w.answer.trim());
+    if (orderedAnswers.some((a) => a.includes(answerNorm) || answerNorm.includes(a))) return;
+    orderedAnswers.push(answerNorm);
     items.push({
       key: `order:wo:${wi + 1}`,
       type: "order",
@@ -776,6 +898,37 @@ function resolveAnswerLabel(
   return null;
 }
 
+/**
+ * 인쇄 표면 마커를 학생 앱용 평문으로 정규화.
+ *
+ * 학습지 JSON 은 밑줄을 `__구절__`, 빈칸을 `____`·`_____(A)_____` 로 표기한다
+ * (인쇄 렌더러 editable-field.tsx 가 <u>·빈칸으로 복원). 스터디 앱의 mc 렌더러는
+ * 평문 출력이라 마커가 그대로 노출될 뿐 아니라 **마커 앞뒤 단어가 붙어버린다**:
+ *   "밑줄 친__builds up…manner__가"        → 친builds / manner가
+ *   "instead____________________over time"  → instead…over 접합
+ *   "trigger_____(A)_____responses"         → trigger…responses 접합
+ * 강조는 앱 공통 관용구인 홑따옴표로 옮긴다(밑줄 스타일은 잃지만 가독은 회복).
+ */
+function normalizeMarkers(text: string): string {
+  return (
+    text
+      // 세 마커를 **한 번의 순회**로 치환한다 — 순차 replace 로 하면 앞 규칙이 내놓은
+      // 빈칸 기호(______)를 뒤 규칙(__…__)이 다시 밑줄 마커로 오인해 문장을 망친다.
+      .replace(
+        /_{2,}\s*\(([A-Za-z])\)\s*_{2,}|__([^_\n]+?)__|_{3,}/g,
+        (_m, label?: string, underlined?: string) => {
+          if (label) return ` ______(${label}) `;
+          if (underlined) return ` ‘${underlined.trim()}’ `;
+          return " ______ ";
+        },
+      )
+      .replace(/[ \t]{2,}/g, " ")
+      .replace(/([’)])\s+([가-힣])/g, "$1$2") // "manner’ 가" → "manner’가"
+      .replace(/\s+([,.?!;:])/g, "$1")
+      .trim()
+  );
+}
+
 function buildExam(b: BuildCtx): StudyItem[] {
   const items: StudyItem[] = [];
   // (a) 학습 점검 (self-check)
@@ -793,10 +946,10 @@ function buildExam(b: BuildCtx): StudyItem[] {
         key: `exam:sc:${q.no}`,
         type: "mc",
         skill: "comprehension",
-        prompt: `[${q.type}] ${q.prompt}`,
-        choices,
+        prompt: normalizeMarkers(`[${q.type}] ${q.prompt}`),
+        choices: choices.map((c) => ({ ...c, text: normalizeMarkers(c.text) })),
         answerLabel,
-        explanation: ans.explanation || undefined,
+        explanation: ans.explanation ? normalizeMarkers(ans.explanation) : undefined,
       });
     });
   }
@@ -814,11 +967,11 @@ function buildExam(b: BuildCtx): StudyItem[] {
         key: `exam:inf:${q.no}`,
         type: "mc",
         skill: "comprehension",
-        prompt: q.prompt,
-        passage: q.passage || undefined,
-        choices: q.choices,
+        prompt: normalizeMarkers(q.prompt),
+        passage: q.passage ? normalizeMarkers(q.passage) : undefined,
+        choices: q.choices.map((c) => ({ ...c, text: normalizeMarkers(c.text) })),
         answerLabel,
-        explanation: q.explanation || undefined,
+        explanation: q.explanation ? normalizeMarkers(q.explanation) : undefined,
       });
     });
   }

@@ -170,6 +170,14 @@ export interface AuthoringComposerProps {
   onStart: () => void;
   starting: boolean;
   blockedReason: string | null;
+  /**
+   * 판독이 끝나는 즉시 자동 실행되도록 **예약된** 상태의 캡션(26-08-04).
+   * blockedReason 과 같은 자리에 뜨지만 성격이 반대다 — 저건 "못 해요"이고 이건
+   * "할게요"다. 그래서 첫인상 보호(attempted) 게이트를 타지 않는다: 이 값이
+   * 채워지는 유일한 경로가 **사용자가 방금 CTA 를 누른 것**이라, 숨길 이유가 없고
+   * 숨기면 클릭이 삼켜진 것처럼 보인다.
+   */
+  queuedReason?: string | null;
   credits: number;
   count: number;
   /** hint-glow 대상 = 밴드 루트. 막힌 CTA 가 "여기를 채우세요"라고 가리킬 곳. */
@@ -200,6 +208,7 @@ export function AuthoringComposer({
   onStart,
   starting,
   blockedReason,
+  queuedReason = null,
   credits,
   count,
   boxRef,
@@ -332,6 +341,13 @@ export function AuthoringComposer({
     attempted || instruction.trim().length > 0 || materials.length > 0;
   // 사유를 "드러낼지"만 가른다. aria-disabled 는 진짜 상태(blockedReason)를 말한다.
   const showBlocked = touched && Boolean(blockedReason);
+  /**
+   * CTA 밑 캡션 한 줄의 최종 문구. **예약이 사유를 이긴다** — 예약 중에는 자료가
+   * 아직 READY 가 아니라 blockedReason.empty 가 함께 켜져 있을 수 있는데, 그때
+   * "자료를 넣거나 한 줄 적어 주세요"를 띄우면 방금 자료를 넣고 누른 사람에게
+   * 자료를 넣으라고 말하는 화면이 된다.
+   */
+  const caption = queuedReason ?? (showBlocked ? blockedReason : null);
   const ctaMuted = showBlocked || starting;
   const remaining = INSTRUCTION_MAX_CHARS - instruction.length;
 
@@ -561,8 +577,10 @@ export function AuthoringComposer({
               setAttempted(true);
               onStart();
             }}
+            // aria-disabled 는 native disabled 가 아니다(계약) — 예약 중에도 클릭은
+            // 그대로 전달돼야 한다. 그 클릭이 "예약 취소"의 유일한 통로다.
             aria-disabled={Boolean(blockedReason) || starting}
-            title={blockedReason ?? AUTHORING_COPY.COMPOSER.startTitle}
+            title={caption ?? AUTHORING_COPY.COMPOSER.startTitle}
             className={cn(
               // 48px 전폭 막대에서 반투명은 상태가 아니라 고장으로 읽힌다(상단 계약).
               "aria-disabled:opacity-100",
@@ -615,17 +633,16 @@ export function AuthoringComposer({
             />
           </AuthoringButton>
 
-          {/* 막힌 이유 — 사용자가 움직인 뒤에만. 첫 화면에는 아무 줄도 차지하지 않는다.
-              조치 요구(rose)가 아니라 **안내**라 slate-600 + Info 다(금지색 amber 대체). */}
-          {showBlocked ? (
+          {/* 캡션 한 줄 — 막힌 이유이거나(사용자가 움직인 뒤에만) 예약 상태다.
+              첫 화면에는 아무 줄도 차지하지 않는다. 조치 요구(rose)가 아니라
+              **안내**라 slate-600 + Info 다(금지색 amber 대체). */}
+          {caption ? (
             <div className="flex items-start gap-2">
               <Info
                 className="size-3.5 shrink-0 translate-y-[3px] text-slate-500"
                 aria-hidden="true"
               />
-              <p className={cn(DESK.body, "min-w-0 text-slate-600")}>
-                {blockedReason}
-              </p>
+              <p className={cn(DESK.body, "min-w-0 text-slate-600")}>{caption}</p>
             </div>
           ) : null}
         </div>

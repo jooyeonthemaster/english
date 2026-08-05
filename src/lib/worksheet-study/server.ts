@@ -17,11 +17,12 @@ import { prisma } from "@/lib/prisma";
 import { isTaskLocked } from "@/lib/study-assignments/status";
 import type { OwnedStudentTask } from "@/lib/study-assignments/student-runtime";
 import { compileStudyPlan, planIsViable } from "./compile";
-import { accumulateWeakness, computeMasteryPct } from "./grade";
+import { accumulateWeakness, computeMasteryPct, computeStudyMastery } from "./grade";
 import type {
   StudyEventsRequest,
   StudyItemEvent,
   StudyPlan,
+  StudyStageFirstAttempt,
   StudyStageId,
   StudyStageState,
   StudyStateSummary,
@@ -105,11 +106,13 @@ function buildSummary(plan: StudyPlan | null, row: {
   totalTimeMs: number;
 } | null): StudyStateSummary {
   const stages = intersectStages(plan, parseStageStates(row?.stageStates));
+  // 저장된 masteryPct 가 아니라 현재 plan 에 살아 있는 스테이지로 재계산 —
+  // 학습지 편집으로 스테이지가 사라져도 정답률이 과대 표시되지 않는다.
+  const mastery = computeStudyMastery(stages);
   return {
     stages,
-    // 저장된 masteryPct 가 아니라 현재 plan 에 살아 있는 스테이지로 재계산 —
-    // 학습지 편집으로 스테이지가 사라져도 숙달도가 과대 표시되지 않는다.
-    masteryPct: computeMasteryPct(stages),
+    masteryPct: mastery.firstTryPct,
+    mastery,
     totalTimeMs: row?.totalTimeMs ?? 0,
     weakness: parseWeakness(row?.weakness),
     requiredDone: plan ? requiredStagesDone(plan, stages) : false,
@@ -172,6 +175,29 @@ export async function loadStudyContext(
     stateId: row?.id ?? null,
     locked,
   };
+}
+
+/**
+ * 진행 중 스테이지의 첫 시도 로그 — 플레이어의 "이어 풀기" 복원 입력.
+ *
+ * 로그는 (stateId, stageId, itemKey, attempt) 유니크라 attempt=1 만 뽑으면
+ * 문항당 정확히 한 건, 곧 첫 시도 정본이다. 재도전(attempt=2)은 점수에 들어가지
+ * 않으므로 제외한다.
+ */
+export async function loadStageFirstAttempts(
+  stateId: string,
+  stageId: StudyStageId,
+): Promise<StudyStageFirstAttempt[]> {
+  const rows = await prisma.worksheetStudyItemLog.findMany({
+    where: { stateId, stageId, attempt: 1 },
+    select: { itemKey: true, correct: true, selfGrade: true },
+  });
+  return rows.map((r) => ({
+    itemKey: r.itemKey,
+    correct: typeof r.correct === "boolean" ? r.correct : undefined,
+    selfGrade:
+      r.selfGrade === "O" || r.selfGrade === "D" || r.selfGrade === "X" ? r.selfGrade : undefined,
+  }));
 }
 
 const MAX_EVENTS_PER_FLUSH = 120;
@@ -504,6 +530,9 @@ export async function applyStudyEvents(
     summary: {
       stages,
       masteryPct,
+      // 저장 캐시(masteryPct)와 같은 stages 로 계산한 진도·표본을 함께 돌려준다 —
+      // 플레이어·리포트가 정답률만 단독으로 크게 띄우지 않도록(2607 §3.4)
+      mastery: computeStudyMastery(stages),
       totalTimeMs: merged.totalTimeMs,
       weakness,
       requiredDone,

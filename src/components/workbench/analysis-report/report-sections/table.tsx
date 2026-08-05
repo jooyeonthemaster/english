@@ -96,7 +96,12 @@ const DEFAULT_TABLE_COL_PCT: Record<string, Record<string, number>> = {
 const EDIT_HANDLE_COLUMN_WIDTH = "6mm";
 const EDIT_HANDLE_COLUMN_PERCENT = 3.448276;
 
-/** 보이는 열들의 너비(%)를 해석 — override(저장값) 우선, 없으면 기본 비율. 편집 모드는 핸들열 폭만큼 축소. */
+/**
+ * 보이는 열들의 너비(%)를 해석 — override(저장값) 우선, 없으면 기본 비율. 편집 모드는 핸들열 폭만큼 축소.
+ * 보이는 열 '전부'가 항상 퍼센트 폭을 받는다는 점이 `.par-table { table-layout: fixed }`
+ * (report-styles.ts)의 전제다 — 열 폭이 콘텐츠가 아니라 이 값으로만 정해져야 측정 클론(전 행)과
+ * 실제 페이지(그 페이지 몫 행)의 열 폭이 같아진다.
+ */
 function resolveColumnWidths(
   group: string,
   visibleKeys: string[],
@@ -114,6 +119,11 @@ function resolveColumnWidths(
   return out;
 }
 
+/**
+ * 표 머리글 행. `editable` 은 '레이아웃 chrome(6mm 핸들 열) 포함 여부'다 — 측정 클론도
+ * 편집 모드에서는 true 를 받아야 열 폭이 실제 페이지와 같아진다(runs.tsx 의 chromeLayout).
+ * 열 폭 드래그 핸들(ColResizeHandle)은 별도로 resize 콜백 유무로 게이트되므로 클론에는 안 생긴다.
+ */
 export function tableHeadRow(
   wrap: WrapKind,
   editable: boolean,

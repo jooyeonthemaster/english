@@ -1,5 +1,6 @@
 export type TaskDomain =
   | "extraction"
+  | "passage-authoring"
   | "passage-analysis"
   | "question-generation"
   | "exam-report"

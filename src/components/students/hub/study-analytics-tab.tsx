@@ -38,6 +38,7 @@ import {
   Loader2,
   MinusCircle,
   Timer,
+  X,
 } from "lucide-react";
 import {
   getStudentStudyAnalytics,
@@ -63,7 +64,6 @@ import {
   AnalyticsCard,
   CardEmpty,
   DetailRow,
-  FilterChip,
   MetricHelpTip,
   RefreshStrip,
   TabEmpty,
@@ -94,6 +94,7 @@ import {
   METRIC_HELP,
   METRIC_LABELS,
   PICKED_CONTENT_META,
+  STUDY_PROVISIONAL_BADGE,
   wrongExplain,
 } from "@/lib/wording/director-glossary";
 import {
@@ -126,6 +127,11 @@ function skillLabel(skill: string): string {
 /**
  * 같은 학습지를 여러 번 배포하면 제목이 완전히 같아 칩·행이 구분되지 않는다 —
  * 중복 제목에만 배포일을 덧붙인다(고유한 제목은 그대로).
+ *
+ * 구분자를 제목 **앞**에 둔다: 매트릭스 첫 컬럼(max-w-[280px] + truncate)·스코프
+ * 칩·피드 부제가 전부 말줄임이라, 뒤에 붙이면 구분자가 항상 먼저 잘려 중복 행 두
+ * 개가 화면에서 완전히 같아진다(2607 §6.2 — 매트릭스가 스코프 선택기이므로 행
+ * 구분 실패는 선택 자체를 도박으로 만든다).
  */
 function buildLabelMap(assignments: StudentStudyAssignmentRow[]): Map<string, string> {
   const countByTitle = new Map<string, number>();
@@ -136,7 +142,7 @@ function buildLabelMap(assignments: StudentStudyAssignmentRow[]): Map<string, st
   for (const a of assignments) {
     const dup = (countByTitle.get(a.title) ?? 0) > 1;
     const day = fmtDay(a.assignedAt);
-    out.set(a.assignmentId, dup && day ? `${a.title} · ${day} 배포` : a.title);
+    out.set(a.assignmentId, dup && day ? `${day} 배포 · ${a.title}` : a.title);
   }
   return out;
 }
@@ -211,60 +217,9 @@ function toWordSpot(w: StudentWeakWordSummaryRow, deploy: WeakDeployTarget | nul
 
 const LIVE_WINDOW_MS = 3 * 60_000;
 
-// ── 지문(학습지) 필터 ───────────────────────────────────────────────────────
-
-/**
- * 탭 전역 스코프 필터 — 지문을 고르면 피드뿐 아니라 숙달도·취약 단어·문장·어법이
- * 전부 그 지문 기준으로 바뀐다(spec §4.2.1). 학습지 1개면 렌더하지 않는다.
- */
-function WorksheetFilterBar({
-  assignments,
-  labels,
-  selectedId,
-  onSelect,
-}: {
-  assignments: StudentStudyAssignmentRow[];
-  /** assignmentId → 표시 라벨(중복 제목은 배포일 포함) */
-  labels: Map<string, string>;
-  selectedId: string | null;
-  onSelect: (id: string | null) => void;
-}) {
-  // 학습지가 1개여도 렌더한다 — 지금 어느 범위를 보고 있는지가 항상 보여야 한다
-  if (assignments.length === 0) return null;
-  const totalWrong = assignments.reduce((acc, a) => acc + a.wrongCount, 0);
-  return (
-    <div className="flex items-center gap-2.5 rounded-lg border border-slate-200 bg-white px-3 py-2">
-      <span className="flex shrink-0 items-center gap-1.5 text-[12.5px] font-semibold text-slate-500">
-        <BookOpen className="size-3.5 text-slate-300" aria-hidden />
-        학습지
-      </span>
-      <div
-        className="flex min-w-0 flex-1 items-center gap-1.5 overflow-x-auto pb-0.5"
-        role="group"
-        aria-label="학습지 필터"
-      >
-        <FilterChip
-          label="전체"
-          count={totalWrong}
-          active={selectedId === null}
-          onClick={() => onSelect(null)}
-        />
-        {assignments.map((a) => (
-          <FilterChip
-            key={a.assignmentId}
-            label={labels.get(a.assignmentId) ?? a.title}
-            title={labels.get(a.assignmentId) ?? a.title}
-            count={a.wrongCount}
-            active={selectedId === a.assignmentId}
-            onClick={() => onSelect(selectedId === a.assignmentId ? null : a.assignmentId)}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// 필터 칩(FilterChip)은 analytics/kit 로 승격 이동
+// 구 WorksheetFilterBar(학습지 칩 바)는 폐기됐다 — 매트릭스를 최상단으로 올리면
+// 칩 바와 매트릭스 첫 컬럼이 완전히 같은 목록이 되어 중복이다. 이제 **매트릭스
+// 행 선택이 곧 스코프 선택**이고, 현재 범위는 매트릭스 헤더의 칩이 알린다(2607 §6.2).
 
 // ── 피드 행 ─────────────────────────────────────────────────────────────────
 
@@ -541,8 +496,11 @@ function EventDetailModal({
           <div className="mb-3 flex items-center gap-2">
             <VerdictIcon correct={ev.correct} className="size-4" />
             <p className="text-[13px] font-semibold text-slate-700">문항</p>
+            {/* 앰버 금지(스펙 §1.1) — 이 배지는 「지금 보는 복원 문항이 최신 구성과
+                다를 수 있다」는 중립 고지다. rose(경고)도 아니고 emerald 도 아니므로
+                slate 정보 톤으로 통일한다(삭제 문항 고지와 같은 관용). */}
             {preview?.planStale ? (
-              <span className="rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-semibold text-amber-700">
+              <span className="rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[12px] font-semibold text-slate-600">
                 학습지가 수정되어 현재 구성과 다를 수 있습니다
               </span>
             ) : null}
@@ -637,8 +595,9 @@ function EventDetailModal({
                   <DetailRow
                     label="힌트"
                     value={
-                      <span className="inline-flex items-center gap-1.5 text-amber-600">
-                        <Lightbulb className="size-3.5" aria-hidden />
+                      // 힌트 사용은 경고가 아니라 중립 정보 — 앰버 금지(§1.1) 대체 톤
+                      <span className="inline-flex items-center gap-1.5 text-slate-500">
+                        <Lightbulb className="size-3.5 text-slate-400" aria-hidden />
                         힌트를 사용했습니다
                       </span>
                     }
@@ -664,7 +623,8 @@ function EventDetailModal({
                           <span className="block truncate text-[12.5px] text-slate-600">
                             {labels.get(r.assignmentId) ?? r.assignmentTitle}
                           </span>
-                          <span className="text-[11px] tabular-nums text-slate-400">
+                          {/* 보조 텍스트 하한 12px(§1.1) — 칩·배지가 아니다 */}
+                          <span className="text-[12px] tabular-nums text-slate-400">
                             {fmtAtSec(r.at)}
                             {r.attempt >= 2 ? " · 재도전" : ""}
                           </span>
@@ -678,7 +638,7 @@ function EventDetailModal({
                     ))}
                   </ul>
                 )}
-            <p className="mt-1.5 text-[11px] text-slate-400">최근 기록 200건 기준입니다.</p>
+            <p className="mt-1.5 text-[12px] text-slate-400">최근 기록 200건 기준입니다.</p>
           </div>
         </div>
       </div>
@@ -688,34 +648,92 @@ function EventDetailModal({
 
 // ── 매트릭스 셀 ─────────────────────────────────────────────────────────────
 
-function MatrixCell({ cell }: { cell?: StudentStudyStageCell }) {
-  if (!cell || cell.status === "todo") {
-    return <span className="text-slate-300">—</span>;
+/**
+ * 채점 스테이지 여부 — 카탈로그(STUDY_STAGE_META)가 정본. 카탈로그에 없는
+ * stage id 는 보수적으로 채점 취급한다(grade.ts 의 진도 분모 규칙과 동일 축,
+ * 2607 §3.2).
+ */
+function isGradedStage(stageId: string): boolean {
+  const meta = (STUDY_STAGE_META as Record<string, { graded: boolean } | undefined>)[stageId];
+  return meta ? meta.graded : true;
+}
+
+/** 무채점 스테이지 고지 — 셀 툴팁·범례 공용(리터럴 1곳) */
+const UNGRADED_STAGE_HINT = "채점 없는 단계 — 정답률·진도 계산 제외";
+
+/** 매트릭스 범례 — 셀 표기 축을 화면에 남긴다(툴팁은 터치·키보드에서 안 뜬다) */
+const MATRIX_LEGEND = "% = 첫 시도 정답률 · a/b = 푼 문항 · 회색 = 채점 없는 단계";
+
+/**
+ * 셀 툴팁 — 분모를 감추지 않는다. 구 툴팁은 「첫 시도 정답 0개」만 보여줘
+ * 칩의 4/4(푼 문항)와 분모가 다르다는 사실이 화면에 없었다(2607 §3.4).
+ * 무채점 스테이지는 이 칸의 숫자가 어느 계산에도 안 들어간다는 사실을 덧붙인다.
+ */
+function cellTitle(stageId: string, cell: StudentStudyStageCell): string {
+  const bits: string[] = [];
+  if (cell.answered != null && cell.total != null) {
+    bits.push(`푼 문항 ${cell.answered}/${cell.total}`);
   }
-  if (cell.status === "in-progress") {
-    const label =
-      cell.answered != null && cell.total != null ? `${cell.answered}/${cell.total}` : "진행";
+  if (cell.firstCorrect != null && cell.firstTotal != null) {
+    bits.push(`첫 시도 정답 ${cell.firstCorrect}/${cell.firstTotal}`);
+  } else if (cell.firstCorrect != null) {
+    bits.push(`첫 시도 정답 ${cell.firstCorrect}개`);
+  }
+  if (!isGradedStage(stageId)) bits.push(UNGRADED_STAGE_HINT);
+  const head = cell.status === "done" ? "완료" : "진행 중";
+  return bits.length > 0 ? `${head} · ${bits.join(" · ")}` : head;
+}
+
+/**
+ * 매트릭스 스테이지 셀.
+ *
+ * 구현은 한 컬럼 안에서 `100%`(정답률)와 `3/19`(진도)를 같은 자리에 섞어 놓아
+ * 강사가 진도를 정답률로 읽었다. 채점 스테이지는 **진도 컬럼과 같은 2행 조판**
+ * (위 % / 아래 푼 문항)으로 통일해 두 축이 자리로 구분되게 한다. 무채점
+ * 스테이지는 emerald(=양호) 대신 slate(=중립/기록없음)로 낮춘다 — 옆 칸의 초록
+ * 100%와 같은 색이면 「지문 통독 = 만점」으로 읽힌다(스펙 §1.1 색 의미).
+ */
+function MatrixCell({ stageId, cell }: { stageId: string; cell?: StudentStudyStageCell }) {
+  if (!cell || cell.status === "todo") {
+    return (
+      <span className="text-slate-300" title="아직 시작하지 않은 단계">
+        —
+      </span>
+    );
+  }
+
+  if (!isGradedStage(stageId)) {
     return (
       <span
-        title={
-          cell.firstCorrect != null ? `진행 중 · 첫 시도 정답 ${cell.firstCorrect}개` : "진행 중"
-        }
-        className="inline-flex rounded-full border border-blue-200 bg-blue-50 px-1.5 py-0.5 text-[11px] font-semibold tabular-nums text-blue-700"
+        title={cellTitle(stageId, cell)}
+        className="inline-flex rounded-full border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[11px] font-semibold text-slate-500"
       >
-        {label}
+        {cell.status === "done" ? "완료" : "진행"}
       </span>
     );
   }
-  if (typeof cell.score === "number") {
-    return (
-      <span className={cn("text-[13px] font-bold tabular-nums", scoreText(cell.score))}>
-        {cell.score}%
-      </span>
-    );
-  }
+
+  // 채점 스테이지 — 완료면 저장된 score, 진행 중이면 첫 시도 정답/분모로 같은 축을
+  // 산출한다(진행 중이라고 다른 지표를 보여주면 컬럼을 세로로 비교할 수 없다).
+  const pct =
+    typeof cell.score === "number"
+      ? cell.score
+      : cell.firstCorrect != null && cell.firstTotal != null && cell.firstTotal > 0
+        ? Math.round((cell.firstCorrect / cell.firstTotal) * 100)
+        : null;
+  const progress =
+    cell.answered != null && cell.total != null ? `${cell.answered}/${cell.total}` : null;
+
   return (
-    <span className="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-1.5 py-0.5 text-[11px] font-semibold text-emerald-700">
-      완료
+    <span className="flex flex-col items-center leading-tight" title={cellTitle(stageId, cell)}>
+      {pct != null ? (
+        <span className={cn("text-[13px] font-bold tabular-nums", scoreText(pct))}>{pct}%</span>
+      ) : (
+        <span className="text-[13px] text-slate-300">—</span>
+      )}
+      {progress ? (
+        <span className="text-[12px] tabular-nums text-slate-400">{progress}</span>
+      ) : null}
     </span>
   );
 }
@@ -858,6 +876,16 @@ export function StudentStudyAnalyticsTab({
     [data],
   );
 
+  /**
+   * 전 학습지 첫 시도 오답 합계 — 폐기된 칩 바의 「전체」 칩 배지가 갖고 있던
+   * 총계다(스펙 §1.3 무회귀: 삭제 허가 대상은 칩 바이지 이 지표가 아니다).
+   * 없으면 교사가 행별 배지를 암산으로 더해야 한다.
+   */
+  const totalWrong = useMemo(
+    () => (data?.assignments ?? []).reduce((acc, a) => acc + a.wrongCount, 0),
+    [data],
+  );
+
   const toggleGroup = useCallback((key: string) => {
     setExpandedGroups((prev) => {
       const next = new Set(prev);
@@ -956,13 +984,176 @@ export function StudentStudyAnalyticsTab({
         <RefreshStrip fetchedAt={fetchedAt} error={error} onRefresh={refresh} />
       </div>
 
-      {/* 지문(학습지) 스코프 필터 — 탭 전체에 적용 */}
-      <WorksheetFilterBar
-        assignments={data.assignments}
-        labels={labels}
-        selectedId={activeId}
-        onSelect={setSelectedId}
-      />
+      {/* 학습지별 진행 매트릭스 — 최상단 전폭(2607 §6.1). 이 탭의 스코프 선택기이자
+          한 학생의 학습지 전경을 한 화면에 담는 정본 표. 행 클릭 = 아래 카드 전부를
+          그 학습지 기준으로 재계산 */}
+      <AnalyticsCard
+        icon={<LayoutGrid className="size-4 text-blue-600" aria-hidden />}
+        title="학습지별 진행 매트릭스"
+        aside={
+          activeRow ? (
+            <button
+              type="button"
+              onClick={() => setSelectedId(null)}
+              className="inline-flex max-w-[22rem] items-center gap-1 rounded-full border border-blue-200 bg-blue-50 px-2 py-0.5 text-[11.5px] font-semibold text-blue-700 transition-colors hover:bg-blue-100"
+              title="전체 학습지로 되돌리기"
+            >
+              <span className="shrink-0 opacity-70">이 학습지만 분석 중</span>
+              <span className="truncate">
+                {labels.get(activeRow.assignmentId) ?? activeRow.title}
+              </span>
+              <X className="size-3 shrink-0" aria-hidden />
+            </button>
+          ) : (
+            // 총 오답 수는 폐기된 칩 바에서 되살린 지표다(§1.3 무회귀).
+            // 조작법 안내는 화면에서 가장 흐린 톤이면 발견되지 않는다 — slate-500 로 올린다.
+            <span className="text-[12px] text-slate-500">
+              전체 학습지 {data.assignments.length}개 · 첫 시도 오답 {totalWrong}개 · 학습지를 누르면
+              그 지문만 분석합니다
+            </span>
+          )
+        }
+      >
+        <div className="max-h-[420px] overflow-auto">
+          <table className="w-full min-w-[760px] text-left">
+            <thead className="sticky top-0 z-20">
+              <tr className="border-b border-slate-100 bg-slate-50 text-[12px] text-slate-500">
+                {/* 고정 컬럼: 배경은 tr 에서 상속(bg-inherit) — 하드코딩하면 행 hover·
+                    선택 배경이 이 칸만 덮여 세로 이음매가 생긴다(스펙 §6.2). 대신
+                    가로 스크롤 중 경계가 보이도록 우측 보더를 준다 */}
+                <th className="sticky left-0 z-10 whitespace-nowrap border-r border-slate-100 bg-inherit px-3 py-2 font-medium">
+                  학습지
+                </th>
+                {stageIds.map((id) => (
+                  <th key={id} className="whitespace-nowrap px-2 py-2 text-center font-medium">
+                    {stageTitle(id)}
+                  </th>
+                ))}
+                <th className="whitespace-nowrap px-3 py-2 text-right font-medium">
+                  <span className="inline-flex items-center gap-1">
+                    {METRIC_LABELS.FIRST_TRY_RATE}
+                    <MetricHelpTip text={METRIC_HELP.FIRST_TRY_RATE} />
+                  </span>
+                </th>
+                <th className="whitespace-nowrap px-3 py-2 text-right font-medium">
+                  <span className="inline-flex items-center gap-1">
+                    {METRIC_LABELS.COVERAGE}
+                    <MetricHelpTip text={METRIC_HELP.COVERAGE} />
+                  </span>
+                </th>
+                <th className="whitespace-nowrap px-3 py-2 text-right font-medium">총 학습</th>
+                <th className="whitespace-nowrap px-3 py-2 font-medium">마지막 활동</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.assignments.map((a) => {
+                const selected = activeId === a.assignmentId;
+                return (
+                  <tr
+                    key={a.assignmentId}
+                    aria-selected={selected}
+                    className={cn(
+                      "cursor-pointer border-b border-slate-50 text-[13px] text-slate-700 transition-colors last:border-0 hover:bg-blue-50/40",
+                      selected ? "bg-blue-50/70" : "bg-white",
+                    )}
+                    onClick={() => setSelectedId(selected ? null : a.assignmentId)}
+                  >
+                    {/* bg-inherit: tr 의 계산된 배경(hover·selected 포함)을 그대로
+                        따라가야 행 전체가 하나의 클릭 대상으로 읽힌다(스펙 §6.2) */}
+                    <td className="sticky left-0 z-10 max-w-[280px] border-r border-slate-100 bg-inherit px-3 py-2">
+                      <button
+                        type="button"
+                        aria-pressed={selected}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedId(selected ? null : a.assignmentId);
+                        }}
+                        className={cn(
+                          "flex w-full items-center gap-1.5 truncate text-left font-semibold transition-colors",
+                          selected ? "text-blue-700" : "text-slate-800 hover:text-blue-700",
+                        )}
+                        title={labels.get(a.assignmentId) ?? a.title}
+                      >
+                        <span className="truncate">{labels.get(a.assignmentId) ?? a.title}</span>
+                        {/* 라벨 없는 숫자 금지 — 「6」만 있으면 오답 수인지 문항 수인지
+                            회차인지 화면만으로 알 수 없고 의미가 툴팁에만 남는다.
+                            표기는 같은 파일 취약 단어 배지(「오답 N회」)와 맞춘다 */}
+                        {a.wrongCount > 0 ? (
+                          <span
+                            className="shrink-0 rounded-full bg-rose-50 px-1.5 text-[11px] font-bold tabular-nums text-rose-600"
+                            title={`첫 시도 오답 ${a.wrongCount}문항`}
+                          >
+                            오답 {a.wrongCount}
+                          </span>
+                        ) : null}
+                      </button>
+                    </td>
+                    {stageIds.map((id) => (
+                      <td key={id} className="px-2 py-2 text-center">
+                        <MatrixCell stageId={id} cell={a.stages[id]} />
+                      </td>
+                    ))}
+                    {/* 첫 시도 정답률 — 완료 전이면 「학습 중」 배지를 함께 건다.
+                        정답률 단독 노출 금지(2607 §3.4): 오른쪽 진도 컬럼이 항상 짝이다 */}
+                    <td className="whitespace-nowrap px-3 py-2 text-right">
+                      {a.mastery.firstTryPct != null ? (
+                        // 값이 먼저, 배지가 뒤(스펙 §6.3 「값 옆·우측」) — 우측 정렬
+                        // 컬럼에서 배지를 앞에 두면 배지 유무에 따라 숫자 시작점이
+                        // 행마다 달라져 세로 스캔이 깨진다
+                        <span className="inline-flex items-center justify-end gap-1.5">
+                          <span
+                            className={cn(
+                              "text-[13px] font-bold tabular-nums",
+                              scoreText(a.mastery.firstTryPct),
+                            )}
+                            title={`첫 시도 ${a.mastery.firstTotal}문항 중 ${a.mastery.firstCorrect}문항 정답`}
+                          >
+                            {a.mastery.firstTryPct}%
+                          </span>
+                          {a.mastery.provisional ? (
+                            <span className="rounded-full bg-slate-100 px-1.5 py-0.5 text-[10.5px] font-semibold text-slate-500">
+                              {STUDY_PROVISIONAL_BADGE}
+                            </span>
+                          ) : null}
+                        </span>
+                      ) : (
+                        <span className="text-slate-300" title="첫 시도 채점 기록이 아직 없습니다">
+                          —
+                        </span>
+                      )}
+                    </td>
+                    <td className="whitespace-nowrap px-3 py-2 text-right">
+                      {a.mastery.coveragePct != null ? (
+                        <span className="flex flex-col items-end leading-tight">
+                          <span className="text-[13px] font-semibold tabular-nums text-slate-700">
+                            {a.mastery.coveragePct}%
+                          </span>
+                          {/* 진도 분수는 §6.3 이 정답률 단독 노출을 막으려고 넣은 필수
+                              표본이다 — 보조 텍스트 하한 12px 준수(§1.1) */}
+                          <span className="text-[12px] tabular-nums text-slate-400">
+                            {a.mastery.answered}/{a.mastery.totalItems}
+                          </span>
+                        </span>
+                      ) : (
+                        <span className="text-slate-300">—</span>
+                      )}
+                    </td>
+                    <td className="whitespace-nowrap px-3 py-2 text-right text-[12px] tabular-nums text-slate-500">
+                      {fmtDuration(a.totalTimeMs)}
+                    </td>
+                    <td className="whitespace-nowrap px-3 py-2 text-[12px] tabular-nums text-slate-500">
+                      {fmtAt(a.lastActivityAt)}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        {/* 범례 — 스테이지 셀의 표기 축을 화면에 남긴다. 툴팁은 마우스에서만 뜨므로
+            터치·키보드 사용자에게는 숫자의 의미가 전달되지 않는다 */}
+        <p className="pt-2 text-[12px] text-slate-400">{MATRIX_LEGEND}</p>
+      </AnalyticsCard>
 
       <div className="grid gap-4 lg:grid-cols-2">
         {/* 실시간 학습 피드 */}
@@ -971,19 +1162,25 @@ export function StudentStudyAnalyticsTab({
           icon={<Activity className="size-4 text-blue-600" aria-hidden />}
           title="실시간 학습 피드"
           aside={
-            isLive ? (
-              <span className="flex items-center gap-1.5 text-[12px] font-semibold text-blue-700">
-                <span className="relative flex size-2" aria-hidden>
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75" />
-                  <span className="relative inline-flex size-2 rounded-full bg-blue-600" />
+            // 스코프 문구를 다른 3카드와 맞춘다 — 매트릭스 행을 고르면 피드도 조용히
+            // 좁아지는데(scopedEvents), 매트릭스는 스크롤 위로 사라져 있어 카운트가
+            // 줄어든 것을 「기록이 사라졌다」로 읽는다
+            <span className="flex items-center gap-2">
+              {activeId ? <span className="text-[12px] text-slate-400">이 학습지 기준</span> : null}
+              {isLive ? (
+                <span className="flex items-center gap-1.5 text-[12px] font-semibold text-blue-700">
+                  <span className="relative flex size-2" aria-hidden>
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75" />
+                    <span className="relative inline-flex size-2 rounded-full bg-blue-600" />
+                  </span>
+                  지금 학습 중
                 </span>
-                지금 학습 중
-              </span>
-            ) : data.lastActivityAt ? (
-              <span className="text-[12px] tabular-nums text-slate-400">
-                마지막 활동 {fmtAt(data.lastActivityAt)}
-              </span>
-            ) : null
+              ) : data.lastActivityAt ? (
+                <span className="text-[12px] tabular-nums text-slate-400">
+                  마지막 활동 {fmtAt(data.lastActivityAt)}
+                </span>
+              ) : null}
+            </span>
           }
           toolbar={
             <div className="inline-flex rounded-md border border-slate-200 bg-slate-50 p-0.5">
@@ -1044,7 +1241,7 @@ export function StudentStudyAnalyticsTab({
                 )}
               </ul>
               {data.eventsTruncated ? (
-                <p className="pt-2 text-center text-[11px] text-slate-400">
+                <p className="pt-2 text-center text-[12px] text-slate-400">
                   최근 200건 기준입니다.
                 </p>
               ) : null}
@@ -1169,8 +1366,11 @@ export function StudentStudyAnalyticsTab({
           icon={<AlertTriangle className="size-4 text-rose-500" aria-hidden />}
           title={ANALYTICS_CARD_TITLES.WEAK_POINTS}
           aside={
+            // 캡션의 축을 실제 표시값과 맞춘다 — 어법 포인트 행(WeakSpotRow)이 내보내는
+            // 숫자는 첫 시도 **정답률**(100-오답률)인데 캡션만 「오답률 순」이라
+            // 100%가 오답률로 읽혔다. 정렬 자체는 그대로(오답률 내림차순 = 정답률 오름차순)
             <span className="text-[12px] text-slate-400">
-              첫 시도 오답률 순 · {activeId ? "이 학습지 기준" : "전체 누적"}
+              {METRIC_LABELS.FIRST_TRY_RATE} 낮은 순 · {activeId ? "이 학습지 기준" : "전체 누적"}
             </span>
           }
         >
@@ -1206,8 +1406,11 @@ export function StudentStudyAnalyticsTab({
               </div>
               <div>
                 <p className="mb-2 text-[12px] font-semibold text-slate-500">어법 포인트</p>
+                {/* 서버가 오답 0건 코드를 걸러 내려보내므로(study-analytics.ts) 여기의
+                    0건은 「어법 기록이 없다」가 아니라 「보충할 게 없다」이다 —
+                    좌측 문장 블록과 같은 톤·같은 축의 빈 문구로 맞춘다 */}
                 {view.grammarCodes.length === 0 ? (
-                  <p className="text-[12px] text-slate-400">어법 문항 기록이 없습니다.</p>
+                  <p className="text-[12px] text-slate-400">보충이 필요한 어법 포인트가 없습니다.</p>
                 ) : onDeploy ? (
                   // v3 §D1-3 ② — 상시 CTA 행. metric 은 첫 시도 정답률(100-오답률),
                   // 말 설명은 오답률 문맥(wrongExplain — 「첫 시도 A회 중 W회 오답」).
@@ -1244,7 +1447,11 @@ export function StudentStudyAnalyticsTab({
                             style={{ width: `${Math.min(100, Math.max(0, g.wrongRate))}%` }}
                           />
                         </span>
-                        <span className="w-20 shrink-0 text-right text-[12px] tabular-nums text-slate-500">
+                        {/* 이 폴백 경로는 CTA 경로(WeakSpotRow)와 축이 반대(오답률)다 —
+                            카드 캡션이 정답률 축이므로 라벨 없이 두면 같은 카드에서
+                            100%가 두 가지 뜻을 갖는다. 축을 문자로 못박는다 */}
+                        <span className="w-28 shrink-0 text-right text-[12px] tabular-nums text-slate-500">
+                          오답률{" "}
                           <span
                             className={cn(
                               "font-bold",
@@ -1264,100 +1471,6 @@ export function StudentStudyAnalyticsTab({
           )}
         </AnalyticsCard>
       </div>
-
-      {/* 학습지별 진행 매트릭스 — 하단 전폭. 카드 셸은 kit AnalyticsCard 정본
-          (규칙 R2, N-21) — 세로 상한·가로 스크롤은 내부 단일 컨테이너가 계속
-          소유한다(sticky thead 의 스크롤 조상 유지, 시험 탭 테이블 카드 관용 동형) */}
-      <AnalyticsCard
-        icon={<LayoutGrid className="size-4 text-blue-600" aria-hidden />}
-        title="학습지별 진행 매트릭스"
-        aside={
-          <span className="text-[12px] text-slate-400">
-            학습지를 누르면 그 지문만 분석합니다 · 완료 단계는 첫 시도 정답률(%) · 진행 중은 푼
-            문항/전체
-          </span>
-        }
-      >
-        <div className="max-h-[440px] overflow-auto">
-          <table className="w-full min-w-[720px] text-left">
-            <thead className="sticky top-0 z-10">
-              <tr className="border-b border-slate-100 bg-slate-50 text-[12px] text-slate-500">
-                <th className="whitespace-nowrap px-3 py-2 font-medium">학습지</th>
-                {stageIds.map((id) => (
-                  <th key={id} className="whitespace-nowrap px-2 py-2 text-center font-medium">
-                    {stageTitle(id)}
-                  </th>
-                ))}
-                <th className="whitespace-nowrap px-3 py-2 text-right font-medium">숙달도</th>
-                <th className="whitespace-nowrap px-3 py-2 text-right font-medium">총 학습</th>
-                <th className="whitespace-nowrap px-3 py-2 font-medium">마지막 활동</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.assignments.map((a) => (
-                <tr
-                  key={a.assignmentId}
-                  aria-selected={activeId === a.assignmentId}
-                  className={cn(
-                    "cursor-pointer border-b border-slate-50 text-[13px] text-slate-700 transition-colors last:border-0 hover:bg-blue-50/40",
-                    activeId === a.assignmentId && "bg-blue-50/70",
-                  )}
-                  onClick={() =>
-                    setSelectedId(activeId === a.assignmentId ? null : a.assignmentId)
-                  }
-                >
-                  <td className="max-w-[260px] px-3 py-2">
-                    <button
-                      type="button"
-                      aria-pressed={activeId === a.assignmentId}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedId(activeId === a.assignmentId ? null : a.assignmentId);
-                      }}
-                      className={cn(
-                        "flex w-full items-center gap-1.5 truncate text-left font-semibold transition-colors",
-                        activeId === a.assignmentId
-                          ? "text-blue-700"
-                          : "text-slate-800 hover:text-blue-700",
-                      )}
-                      title={labels.get(a.assignmentId) ?? a.title}
-                    >
-                      <span className="truncate">{labels.get(a.assignmentId) ?? a.title}</span>
-                      {a.wrongCount > 0 ? (
-                        <span className="shrink-0 rounded-full bg-rose-50 px-1.5 text-[11px] font-bold tabular-nums text-rose-600">
-                          {a.wrongCount}
-                        </span>
-                      ) : null}
-                    </button>
-                  </td>
-                  {stageIds.map((id) => (
-                    <td key={id} className="px-2 py-2 text-center">
-                      <MatrixCell cell={a.stages[id]} />
-                    </td>
-                  ))}
-                  <td className="px-3 py-2 text-right">
-                    {a.masteryPct != null ? (
-                      <span
-                        className={cn("text-[13px] font-bold tabular-nums", scoreText(a.masteryPct))}
-                      >
-                        {a.masteryPct}%
-                      </span>
-                    ) : (
-                      <span className="text-slate-300">—</span>
-                    )}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-2 text-right text-[12px] tabular-nums text-slate-500">
-                    {fmtDuration(a.totalTimeMs)}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-2 text-[12px] tabular-nums text-slate-500">
-                    {fmtAt(a.lastActivityAt)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </AnalyticsCard>
 
       {/* 취약 단어 상세 이력 — 기존 드로어 재사용. assignmentId="" 는
           getStudentWeakWords 의 `input.assignmentId ? … : {}` 분기에서 falsy 로

@@ -10,6 +10,12 @@
 // 유지하고 우상단 아이콘만 돈다. in-progress 셀은 "진행 n/m" 부분 진행,
 // 마지막 활동 3분 이내 학생은 라이브 펄스 도트.
 // 규범: docs/worksheet-study-spec.md §10 · docs/director-console-spec.md §3.3·§5.3.
+//
+// 2607 §3.3·§3.4(지표 통일): 매트릭스 우측 지표를 학생 허브 매트릭스와 같은
+// 축으로 맞춘다 — 「숙달도」(구 정의, 진행 중 스테이지를 분모에서 빼 부분 학습을
+// 100%로 보고) 대신 「첫 시도 정답률」 + 「진도」 두 컬럼. 값은 서버가 stageStates
+// 로부터 재계산한 mastery(StudyMastery) — 저장 스냅샷을 읽지 않아 학생면과
+// 교사면의 값이 갈리지 않는다.
 // ============================================================================
 
 import { useEffect, useMemo, useState } from "react";
@@ -20,7 +26,13 @@ import {
   type StudyOverviewStageCell,
   type StudyOverviewStudentRow,
 } from "@/actions/study-assignments/study-stats";
+import { MetricHelpTip } from "@/components/students/hub/analytics/kit";
 import { GRAMMAR_POINT_CATALOG } from "@/lib/grammar-point-catalog";
+import {
+  METRIC_HELP,
+  METRIC_LABELS,
+  STUDY_PROVISIONAL_BADGE,
+} from "@/lib/wording/director-glossary";
 import { STUDY_STAGE_META } from "@/lib/worksheet-study/types";
 import { cn } from "@/lib/utils";
 import { fmtDateTime } from "./assignment-detail-parts";
@@ -74,22 +86,39 @@ function fmtClock(d: Date): string {
   return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
 }
 
+/**
+ * 셀 툴팁 — 분모를 감추지 않는다. 구 툴팁은 「첫 시도 정답 0개」만 보여줘 칩의
+ * 4/4(푼 문항)와 분모가 다르다는 사실이 화면에 없었다(2607 §3.4, 허브 매트릭스
+ * cellTitle 과 같은 문장 규범).
+ */
+function cellTitle(state: StudyOverviewStageCell): string {
+  const bits: string[] = [];
+  if (state.answered != null && state.total != null) {
+    bits.push(`푼 문항 ${state.answered}/${state.total}`);
+  }
+  if (state.firstCorrect != null && state.firstTotal != null) {
+    bits.push(`첫 시도 정답 ${state.firstCorrect}/${state.firstTotal}`);
+  } else if (state.firstCorrect != null) {
+    bits.push(`첫 시도 정답 ${state.firstCorrect}개`);
+  }
+  const head = state.status === "done" ? "완료" : "진행 중";
+  return bits.length > 0 ? `${head} · ${bits.join(" · ")}` : head;
+}
+
 function StageCell({ state }: { state?: StudyOverviewStageCell }) {
   if (!state || state.status === "todo") {
-    return <span className="text-slate-300">—</span>;
+    return (
+      <span className="text-slate-300" title="아직 시작하지 않은 단계">
+        —
+      </span>
+    );
   }
   if (state.status === "in-progress") {
-    // 파이프 v2 부분 진행 — 푼 문항/전체. 첫 시도 정답 수는 툴팁으로.
+    // 파이프 v2 부분 진행 — 푼 문항/전체. 첫 시도 정답은 분모와 함께 툴팁으로.
     if (typeof state.answered === "number" && typeof state.total === "number" && state.total > 0) {
-      const tip =
-        typeof state.firstCorrect === "number"
-          ? typeof state.firstTotal === "number"
-            ? `첫 시도 정답 ${state.firstCorrect}/${state.firstTotal}`
-            : `첫 시도 정답 ${state.firstCorrect}개`
-          : undefined;
       return (
         <span
-          title={tip}
+          title={cellTitle(state)}
           className="inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-blue-200 bg-blue-50 px-2 py-0.5 text-[11px] font-semibold text-blue-700"
         >
           진행
@@ -100,20 +129,29 @@ function StageCell({ state }: { state?: StudyOverviewStageCell }) {
       );
     }
     return (
-      <span className="inline-flex rounded-full border border-blue-200 bg-blue-50 px-2 py-0.5 text-[11px] font-semibold text-blue-700">
+      <span
+        title={cellTitle(state)}
+        className="inline-flex rounded-full border border-blue-200 bg-blue-50 px-2 py-0.5 text-[11px] font-semibold text-blue-700"
+      >
         진행
       </span>
     );
   }
   if (typeof state.score === "number") {
     return (
-      <span className={cn("text-[13px] font-bold tabular-nums", scoreText(state.score))}>
+      <span
+        title={cellTitle(state)}
+        className={cn("text-[13px] font-bold tabular-nums", scoreText(state.score))}
+      >
         {state.score}
       </span>
     );
   }
   return (
-    <span className="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">
+    <span
+      title="채점 없는 단계 — 정답률 계산에 포함되지 않습니다"
+      className="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700"
+    >
       완료
     </span>
   );
@@ -284,7 +322,18 @@ export function WorksheetStudyReportTab({ assignmentId }: { assignmentId: string
                         {stageTitle(id)}
                       </th>
                     ))}
-                    <th className="whitespace-nowrap px-3 py-2 text-right font-medium">숙달도</th>
+                    <th className="whitespace-nowrap px-3 py-2 text-right font-medium">
+                      <span className="inline-flex items-center gap-1">
+                        {METRIC_LABELS.FIRST_TRY_RATE}
+                        <MetricHelpTip text={METRIC_HELP.FIRST_TRY_RATE} />
+                      </span>
+                    </th>
+                    <th className="whitespace-nowrap px-3 py-2 text-right font-medium">
+                      <span className="inline-flex items-center gap-1">
+                        {METRIC_LABELS.COVERAGE}
+                        <MetricHelpTip text={METRIC_HELP.COVERAGE} />
+                      </span>
+                    </th>
                     <th className="whitespace-nowrap px-3 py-2 text-right font-medium">총 학습</th>
                     <th className="whitespace-nowrap px-3 py-2 font-medium">완료</th>
                   </tr>
@@ -344,15 +393,44 @@ export function WorksheetStudyReportTab({ assignmentId }: { assignmentId: string
                             <StageCell state={s.stages[id]} />
                           </td>
                         ))}
-                        <td className="px-3 py-2 text-right">
-                          {s.masteryPct != null ? (
+                        {/* 첫 시도 정답률 — 완료 전이면 「학습 중」 배지를 함께 건다.
+                            정답률 단독 노출 금지(2607 §3.4): 오른쪽 진도 컬럼이 항상 짝이다 */}
+                        <td className="whitespace-nowrap px-3 py-2 text-right">
+                          {s.mastery.firstTryPct != null ? (
+                            <span className="inline-flex items-center justify-end gap-1.5">
+                              {s.mastery.provisional ? (
+                                <span className="rounded-full bg-slate-100 px-1.5 py-0.5 text-[10.5px] font-semibold text-slate-500">
+                                  {STUDY_PROVISIONAL_BADGE}
+                                </span>
+                              ) : null}
+                              <span
+                                className={cn(
+                                  "text-[13px] font-bold tabular-nums",
+                                  scoreText(s.mastery.firstTryPct),
+                                )}
+                                title={`첫 시도 ${s.mastery.firstTotal}문항 중 ${s.mastery.firstCorrect}문항 정답`}
+                              >
+                                {s.mastery.firstTryPct}%
+                              </span>
+                            </span>
+                          ) : (
                             <span
-                              className={cn(
-                                "text-[13px] font-bold tabular-nums",
-                                scoreText(s.masteryPct),
-                              )}
+                              className="text-slate-300"
+                              title="첫 시도 채점 기록이 아직 없습니다"
                             >
-                              {s.masteryPct}%
+                              —
+                            </span>
+                          )}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-2 text-right">
+                          {s.mastery.coveragePct != null ? (
+                            <span className="flex flex-col items-end leading-tight">
+                              <span className="text-[13px] font-semibold tabular-nums text-slate-700">
+                                {s.mastery.coveragePct}%
+                              </span>
+                              <span className="text-[11px] tabular-nums text-slate-400">
+                                {s.mastery.answered}/{s.mastery.totalItems}
+                              </span>
                             </span>
                           ) : (
                             <span className="text-slate-300">—</span>

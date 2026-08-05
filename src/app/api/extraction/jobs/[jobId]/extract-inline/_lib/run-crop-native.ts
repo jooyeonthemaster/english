@@ -23,6 +23,7 @@ import {
   InsufficientCreditsError,
 } from "@/lib/extraction/restoration-credits";
 import type { StructuredOcrResponse } from "@/lib/extraction/ocr";
+import { hasUnresolvedM1ProblemArtifacts } from "@/lib/extraction/m1-restoration";
 import type { ExtractionMode, M1RestorationStatus } from "@/lib/extraction/types";
 import { prisma } from "@/lib/prisma";
 import { downloadAsBuffer } from "@/lib/supabase-storage";
@@ -285,9 +286,16 @@ export async function runCropNativeRestore(args: {
           const r = entry.result;
           const id = randomUUID();
           const hasChanges = r.changes.length > 0;
-          const status: M1RestorationStatus = hasChanges
-            ? "RESTORED"
-            : "NO_RESTORATION_NEEDED";
+          // 복원본에 문제지 잔존물(마커·미채움 빈칸)이 남았으면 RESTORED 로 뻥치지
+          // 않고 PARTIAL 로 내려 검수 UI가 교사 확인을 요구하게 한다(정직 게이트).
+          const unresolved =
+            hasUnresolvedM1ProblemArtifacts(r.restoredText) ||
+            /_{3,}/.test(r.restoredText);
+          const status: M1RestorationStatus = unresolved
+            ? "PARTIAL"
+            : hasChanges
+              ? "RESTORED"
+              : "NO_RESTORATION_NEEDED";
           await tx.extractionM1PassageDraft.create({
             data: {
               id,

@@ -44,8 +44,14 @@ export const maxDuration = 30;
 //    run-job 이 프리픽스를 list 해서 판정한다 — 이 라우트는 약속을 하지 않는다.
 // ============================================================================
 
-/** 한 자료에서 올릴 수 있는 페이지 수. material-readers.MAX_SEND_PAGES 와 같은 값. */
-const MAX_PAGES = 4;
+/**
+ * 한 자료에서 올릴 수 있는 페이지 수. material-readers.MAX_SEND_PAGES 와 같은 값.
+ *
+ * ⚠️ 이것은 **스토리지 상한**이지 모델이 보는 쪽 수가 아니다(26-08-04 분리).
+ * 실제 전송 상한은 page-images.maxPageImagesFor(count) 가 정한다 — 1편 20쪽 /
+ * 2편 이상 4쪽. 여기를 4 로 되돌리면 1편 발주가 20쪽을 볼 방법이 사라진다.
+ */
+const MAX_PAGES = 20;
 
 /** 발급 남용 가드(학원당 슬라이딩 윈도우). read-material 라우트와 같은 계열의 안전핀. */
 const RATE_WINDOW_MS = 60_000;

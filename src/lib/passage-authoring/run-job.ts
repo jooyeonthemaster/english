@@ -35,11 +35,15 @@ import type { Prisma } from "@prisma/client";
 
 import { CREDIT_COSTS } from "@/lib/credit-costs";
 import { refundCredits } from "@/lib/credits";
-import { STORAGE_BUCKET } from "@/lib/extraction/constants";
+import { runAuthoringGeneration } from "@/lib/passage-authoring/generate";
+// 조달은 이 파일의 module-private 함수였다 — 그래서 생중계 레인이 이미지를 실을
+// 방법이 없었다(stream/route.ts 의 부적격 사유 ②). 지금은 두 레인이 같은 한 벌을
+// 쓴다(page-images.ts 머리 주석). 여기로 되돌리지 말 것.
 import {
-  runAuthoringGeneration,
-  type AuthoringPageImage,
-} from "@/lib/passage-authoring/generate";
+  emptyProcuredPageImages,
+  procurePageImages,
+  type ProcuredPageImages,
+} from "@/lib/passage-authoring/page-images";
 import {
   assignSkeletons,
   authoringSkeletonSeed,
@@ -49,14 +53,12 @@ import {
   AUTHORING_CONCURRENCY,
   REFUND_CHECK_MARK,
   type AuthoringJobResult,
-  type AuthoringMaterial,
   type AuthoringRequest,
   type AuthoringResultItem,
   type PassageSkeleton,
 } from "@/lib/passage-authoring/schema";
 import { recordAiCost } from "@/lib/platform-api-costs";
 import { prisma } from "@/lib/prisma";
-import { downloadAsBuffer, getServiceSupabase } from "@/lib/supabase-storage";
 
 // ── 예산·동시성 상수 ────────────────────────────────────────────────────────
 
@@ -238,281 +240,6 @@ function buildRequestSnapshot(
       charsSent: charsSent.get(m.id) ?? { sent: 0, total: m.content.length },
     })),
   };
-}
-
-// ── 페이지 이미지 조달(하이브리드 판독) ─────────────────────────────────────
-//
-// 왜 여기서 받아오는가: 이미지 바이트를 요청 본문에 실으면 Vercel 4.5MB 벽에
-// 직행한다(next.config 의 bodySizeLimit 10mb 는 Server Actions 전용이라 API Route
-// 에는 적용되지 않는다). 그래서 클라이언트는 서명 업로드로 스토리지에 올리고
-// **경로 문자열만** 요청에 싣는다. 실제 바이트는 after() 안인 이 파일이 읽는다.
-//
-// 텍스트 판독을 대체하지 않는다 — 보강이다. 밑줄·굵게·박스·표·도식은 텍스트
-// 판독에서 전부 소멸하므로 그것만 이미지로 되살린다(material-readers.ts:10-12
-// 근거 ① "선생님이 무엇을 읽었는지 보고 고칠 수 있어야 한다"는 그대로 살아 있다).
-
-/**
- * 페이지 이미지 하드 상한.
- *
- * ⚠️ 이름은 "편당"이지만 **실제로는 런 전체 묶음 상한**이다 — 조달은 런에 1회만
- * 돌고(계약 6) 배치 전 편이 그 한 묶음을 그대로 공유하므로, 결과적으로 편당
- * 상한이기도 하다. 즉 이 값은 "한 번 실행에 모델이 보는 원본 쪽 수"의 총량이고,
- * 자료가 몇 건이든 여기서 더 늘지 않는다(원가가 편수만큼 곱해지지 않는 이유).
- * 이름을 그대로 두는 이유: 라우트(MAX_PAGES)·클라(MAX_SEND_PAGES)와 이 상수가
- * 같은 4 임을 tests/unit/passage-authoring-page-uploads.test.mjs 가 **문자열로**
- * 대조한다. 바꾸려면 그 테스트와 함께 바꿔야 한다.
- */
-const MAX_PAGE_IMAGES_PER_ITEM = 4;
-
-/** 조달 총 바이트 상한 — 4쪽 × 2.2배 렌더 JPEG 의 넉넉한 두 배. 초과분은 버린다. */
-const MAX_PAGE_IMAGE_BYTES = 8 * 1024 * 1024;
-
-const PAGE_IMAGE_EXT = /\.(jpe?g|png|webp)$/i;
-
-function pageMediaType(path: string): string {
-  const ext = path.toLowerCase().match(PAGE_IMAGE_EXT)?.[1] ?? "jpg";
-  if (ext === "png") return "image/png";
-  if (ext === "webp") return "image/webp";
-  return "image/jpeg";
-}
-
-/**
- * 클라이언트가 준 경로를 그대로 믿지 않는다. storagePath 는 요청 본문으로 들어오는
- * **사용자 입력**이라, 검증 없이 download 하면 다른 학원의 오브젝트를 읽어 모델
- * 프롬프트에 인라인하는 경로가 열린다. 학원 프리픽스 밖·상위 이동은 전부 버린다.
- */
-function safeStoragePath(raw: string | undefined, academyId: string): string | null {
-  const path = (raw ?? "").trim().replace(/\\/g, "/").replace(/^\/+|\/+$/g, "");
-  if (!path || path.length > 500) return null;
-  if (path.includes("..")) return null;
-  if (!path.startsWith(`${academyId}/`)) return null;
-  return path;
-}
-
-/**
- * storagePath 는 한 장(오브젝트 경로)일 수도, 여러 장이 든 묶음(프리픽스)일 수도
- * 있다 — 판독 단계(STEP 9)가 쪽 수만큼 올리기 때문이다. 확장자로 갈라 처리한다.
- */
-async function listPageObjects(path: string, limit: number): Promise<string[]> {
-  if (limit <= 0) return [];
-  if (PAGE_IMAGE_EXT.test(path)) return [path];
-  const { data, error } = await getServiceSupabase()
-    .storage.from(STORAGE_BUCKET)
-    .list(path, { limit: 100, sortBy: { column: "name", order: "asc" } });
-  if (error || !data) return [];
-  return data
-    .filter((entry) => entry.name && PAGE_IMAGE_EXT.test(entry.name))
-    .map((entry) => `${path}/${entry.name}`)
-    .slice(0, limit);
-}
-
-interface ProcuredPageImages {
-  images: AuthoringPageImage[];
-  /** 실제로 한 장이라도 실린 자료 id — 요청 스냅샷의 sendPages 표시가 이 집합을 쓴다. */
-  pagedMaterialIds: Set<string>;
-  /**
-   * 결과에 그대로 실을 한국어 안내(해요체). "켰는데 0장 실린 자료"가 생겼다는
-   * 사실은 스냅샷의 sendPages:false 만으로는 화면에 드러나지 않는다 — 스위치는
-   * 켜진 채 남아 "원본도 함께 보내요"라고 말하기 때문이다. 그래서 결과 카드가
-   * 이미 그리는 item.warnings 로 사실을 올려보낸다(차단하지 않는다).
-   */
-  warnings: string[];
-}
-
-/**
- * 페이지 예산의 **자료 간 공정 배분**.
- *
- * 왜 필요한가: 예전엔 자료를 순서대로 돌며 총량이 찰 때까지 담았다(선착순).
- * 자료 2건에 sendPages 를 켜면 첫 자료가 4장을 다 먹고 두 번째 자료는 통째로
- * 0장이 됐다 — 선생님은 두 자료를 다 켰는데 모델은 한쪽만 봤다.
- *
- * 규칙: 켜진 자료가 k 건이면 각 자료에 floor(총량/k)장(최소 1장)을 먼저 깔고,
- * 남은 자리를 앞에서부터 **한 바퀴에 한 장씩** 채운다. 총합은 절대 total 을
- * 넘지 않는다(원가 불변). k > total 이면 뒤쪽 자료는 0장이고, 그 사실은 호출부가
- * 경고로 알린다 — 상한을 늘려 조용히 원가를 올리지 않는다.
- */
-function allocatePageQuota(
-  available: ReadonlyArray<number>,
-  total: number,
-): number[] {
-  const alloc = available.map(() => 0);
-  const k = available.length;
-  if (k === 0 || total <= 0) return alloc;
-
-  let remaining = total;
-  const base = Math.max(1, Math.floor(total / k));
-  for (let i = 0; i < k && remaining > 0; i += 1) {
-    const take = Math.min(base, available[i] ?? 0, remaining);
-    alloc[i] = take;
-    remaining -= take;
-  }
-  // 남은 자리(예: 자료 1건이 base 만큼 못 채웠을 때)를 한 장씩 돌려 채운다.
-  // progressed 가 없으면 모든 자료가 가진 쪽을 다 쓴 뒤 무한 루프가 된다.
-  let progressed = true;
-  while (remaining > 0 && progressed) {
-    progressed = false;
-    for (let i = 0; i < k && remaining > 0; i += 1) {
-      if ((alloc[i] ?? 0) >= (available[i] ?? 0)) continue;
-      alloc[i] = (alloc[i] ?? 0) + 1;
-      remaining -= 1;
-      progressed = true;
-    }
-  }
-  return alloc;
-}
-
-/** 경고 문구에 담을 자료 이름 — 길어지지 않게 3건까지만 적고 나머지는 센다. */
-function materialNameList(names: ReadonlyArray<string>): string {
-  const head = names.slice(0, 3).join("·");
-  return names.length > 3 ? `${head} 외 ${names.length - 3}건` : head;
-}
-
-/**
- * sendPages 가 켜진 자료의 페이지 JPEG 를 읽어 온다. **런에 1회**만 돈다 —
- * 배치 6편이 같은 묶음을 공유하므로 편마다 받으면 같은 바이트를 6번 내려받는다.
- *
- * 예산은 자료 간 공정 배분이다(allocatePageQuota). 총 쪽 수 상한과 바이트 상한은
- * 그대로라 원가는 오르지 않고, 배분만 "선착순"에서 "돌아가며"로 바뀐다.
- * 그래도 0장이 된 자료가 있으면 out.warnings 에 사실을 남긴다.
- *
- * 어떤 실패도 밖으로 던지지 않는다(계약 7). 스토리지가 흔들려도 텍스트 판독본은
- * 그대로 있으니, 이미지 0장으로 생성을 계속하는 편이 전편 실패보다 언제나 낫다.
- */
-async function procurePageImages(args: {
-  jobId: string;
-  academyId: string;
-  materials: AuthoringMaterial[];
-}): Promise<ProcuredPageImages> {
-  const { jobId, academyId } = args;
-  const out: ProcuredPageImages = {
-    images: [],
-    pagedMaterialIds: new Set(),
-    warnings: [],
-  };
-
-  // 사용자가 켠 자료만 본다(숨은 자동 결정 금지). 이 한 줄은 문자열 그대로
-  // tests/unit/passage-authoring-page-uploads.test.mjs 가 대조하는 배선 계약이다.
-  const requested: AuthoringMaterial[] = [];
-  for (const material of args.materials) {
-    if (!material.sendPages) continue;
-    requested.push(material);
-  }
-  if (requested.length === 0) return out;
-
-  const displayName = (material: AuthoringMaterial): string =>
-    material.name.trim() ||
-    `자료 ${args.materials.findIndex((m) => m.id === material.id) + 1}`;
-
-  // ── ① 후보 수집: 경로 검증 + 목록 조회 ─────────────────────────────────
-  // 여기서 실패한 자료(경로 거절·빈 프리픽스·목록 오류)는 예산 문제가 아니라
-  // 조달 문제다. 원인이 다르면 안내 문구도 달라야 해서 따로 센다.
-  const candidates: Array<{ material: AuthoringMaterial; objects: string[] }> = [];
-  const unreadable: string[] = [];
-
-  for (const material of requested) {
-    const path = safeStoragePath(material.storagePath, academyId);
-    if (!path) {
-      if (material.storagePath) {
-        console.warn(
-          `[PASSAGE-AUTHORING] page image path rejected (job=${jobId}, material=${material.id})`,
-        );
-      }
-      unreadable.push(displayName(material));
-      continue;
-    }
-    try {
-      // 자료 하나가 아무리 많은 쪽을 갖고 있어도 런 총량 이상은 쓸 수 없다.
-      const objects = await listPageObjects(path, MAX_PAGE_IMAGES_PER_ITEM);
-      if (objects.length === 0) {
-        unreadable.push(displayName(material));
-        continue;
-      }
-      candidates.push({ material, objects });
-    } catch (err) {
-      console.error(
-        `[PASSAGE-AUTHORING] page image list failed (job=${jobId}, material=${material.id}):`,
-        err instanceof Error ? err.message : err,
-      );
-      unreadable.push(displayName(material));
-    }
-  }
-
-  // ── ② 공정 배분 → 라운드로빈 내려받기 ──────────────────────────────────
-  // 받는 순서를 "자료별 1쪽 → 자료별 2쪽 …"으로 짜는 이유는 바이트 상한 때문이다.
-  // 자료 순서대로 받으면 앞 자료의 큰 스캔 몇 장이 8MB 를 먹어 뒤 자료가 다시
-  // 굶는다. 첫 쪽부터 돌아가며 받으면 그 굶주림이 생기지 않는다.
-  const alloc = allocatePageQuota(
-    candidates.map((entry) => entry.objects.length),
-    MAX_PAGE_IMAGES_PER_ITEM,
-  );
-  const plan: Array<{ slot: number; page: number; object: string }> = [];
-  const deepest = alloc.reduce((max, value) => Math.max(max, value), 0);
-  for (let page = 0; page < deepest; page += 1) {
-    for (let slot = 0; slot < candidates.length; slot += 1) {
-      if (page >= (alloc[slot] ?? 0)) continue;
-      const object = candidates[slot]?.objects[page];
-      if (object) plan.push({ slot, page, object });
-    }
-  }
-
-  const fetched: Array<{ slot: number; page: number; image: AuthoringPageImage }> =
-    [];
-  let bytes = 0;
-  for (const step of plan) {
-    try {
-      const buffer = await downloadAsBuffer(step.object);
-      if (!buffer.length) continue;
-      // 상한을 넘기는 한 장은 건너뛰고 계속한다(중단하지 않는다) — 계획은 최대
-      // 4장이라 순회가 싸고, 뒤에 올 작은 쪽이 실릴 자리를 남겨 둔다.
-      if (bytes + buffer.length > MAX_PAGE_IMAGE_BYTES) continue;
-      bytes += buffer.length;
-      fetched.push({
-        slot: step.slot,
-        page: step.page,
-        image: { data: buffer, mediaType: pageMediaType(step.object) },
-      });
-      const material = candidates[step.slot]?.material;
-      if (material) out.pagedMaterialIds.add(material.id);
-    } catch (err) {
-      console.error(
-        `[PASSAGE-AUTHORING] page image fetch failed (job=${jobId}, object=${step.object}):`,
-        err instanceof Error ? err.message : err,
-      );
-    }
-  }
-
-  // 받는 순서는 공정성 때문에 라운드로빈이지만, **모델에 실을 순서**는 자료 순서
-  // → 쪽 순서로 되돌린다. 같은 자료의 쪽이 흩어져 붙으면 표·박스가 쪽 경계에서
-  // 끊긴 채 다른 자료 사이에 끼어 읽힌다.
-  fetched.sort((a, b) => a.slot - b.slot || a.page - b.page);
-  out.images = fetched.map((entry) => entry.image);
-
-  // ── ③ 0장이 된 자료를 사실대로 알린다 ──────────────────────────────────
-  // 원인을 섞지 않는다: 자리를 못 받은 것(예산)과 자리를 받고도 못 받아온 것
-  // (다운로드 실패·바이트 상한)은 선생님이 취할 다음 행동이 다르다 — 앞은
-  // "자료를 줄이거나 나눠 돌려요", 뒤는 "다시 시도해요"다.
-  const starved: string[] = [];
-  for (let slot = 0; slot < candidates.length; slot += 1) {
-    const entry = candidates[slot];
-    if (!entry || out.pagedMaterialIds.has(entry.material.id)) continue;
-    if ((alloc[slot] ?? 0) > 0) unreadable.push(displayName(entry.material));
-    else starved.push(displayName(entry.material));
-  }
-  if (starved.length > 0) {
-    out.warnings.push(
-      `원본 페이지는 한 번에 총 ${MAX_PAGE_IMAGES_PER_ITEM}쪽까지만 실려요 — ${materialNameList(starved)}의 원본 페이지는 이번에 함께 보내지 못했어요(판독 텍스트는 그대로 실렸어요)`,
-    );
-  }
-  if (unreadable.length > 0) {
-    out.warnings.push(
-      `${materialNameList(unreadable)}의 원본 페이지를 불러오지 못해 판독 텍스트만 실었어요`,
-    );
-  }
-
-  console.log(
-    `[PASSAGE-AUTHORING] page images ready (job=${jobId}): ${out.images.length}p / ${Math.round(bytes / 1024)}KB from ${out.pagedMaterialIds.size}/${requested.length} material(s)`,
-  );
-  return out;
 }
 
 // ── 배치 후처리: 편 간 중복 검사 (모델 호출 0회 · 차단 없음) ─────────────────
@@ -753,16 +480,15 @@ export async function runAuthoringJob(args: RunAuthoringJobArgs): Promise<void> 
   // ⚠️ 아래 두 구간은 메인 try 블록 **밖**이다 — 계약 1(after() 밖으로 예외 금지)을
   //    지키려면 각자 스스로 삼켜야 한다. 조달이 깨져도 이미지 0장으로, 스냅샷이
   //    깨져도 request 없이 계속 간다(둘 다 생성 자체를 막을 이유가 없다).
-  let paged: ProcuredPageImages = {
-    images: [],
-    pagedMaterialIds: new Set(),
-    warnings: [],
-  };
+  let paged: ProcuredPageImages = emptyProcuredPageImages();
   try {
     paged = await procurePageImages({
-      jobId,
+      logTag: `job=${jobId}`,
       academyId,
       materials: request.materials,
+      // 상한이 편수로 갈린다 — 이 레인은 1~6편을 모두 태우므로 반드시 실제 편수를
+      // 넘긴다(1편이면 20쪽, 2편 이상이면 4쪽. page-images.maxPageImagesFor).
+      count: request.count,
     });
   } catch (procureErr) {
     console.error(

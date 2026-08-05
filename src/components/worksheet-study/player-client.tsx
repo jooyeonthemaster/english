@@ -12,20 +12,43 @@
 
 import { createElement, useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, ArrowRight, CheckCircle2, RotateCcw, X } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  CheckCircle2,
+  MessageCircleQuestion,
+  RotateCcw,
+  X,
+} from "lucide-react";
 import type {
   StudyItemEvent,
   StudyEventsRequest,
   StudyStage,
+  StudyStageFirstAttempt,
 } from "@/lib/worksheet-study/types";
 import { eventScore } from "@/lib/worksheet-study/grade";
 import { rendererFor } from "./item-registry";
+import { StudyAskSheet } from "./ask-sheet";
 import type { ItemJudgement } from "./item-shared";
 
 /** 무채점 전진(통독·카드) 연타 배칭 디바운스 */
 const UNGRADED_FLUSH_DEBOUNCE_MS = 1200;
 /** 플러시 실패 백오프 — 성공할 때까지 반복 */
 const RETRY_BACKOFF_MS = 4000;
+
+/**
+ * 이어 풀기 시작 인덱스 — 첫 시도를 마치지 않은 첫 문항. 기록이 없거나 이미
+ * 전부 푼 상태(완주 직전 이탈)면 0 = 처음부터.
+ */
+function resumeIndex(
+  items: StudyStage["items"],
+  prior: StudyStageFirstAttempt[] | undefined,
+): number {
+  if (!prior || prior.length === 0) return 0;
+  const done = new Set(prior.map((p) => p.itemKey));
+  const next = items.findIndex((it) => !done.has(it.key));
+  return next < 0 ? 0 : next;
+}
 
 export interface PlayerProps {
   taskId: string;
@@ -37,6 +60,11 @@ export interface PlayerProps {
   nextStageHref: string | null;
   /** 이미 완료한 스테이지 재학습(복습) 여부 — 라벨 전용 */
   reviewMode?: boolean;
+  /**
+   * 이 스테이지에 이미 남아 있는 첫 시도 기록(중도 이탈 복원용). 비어 있으면
+   * 처음부터 시작한다. 복습 입장에서는 서버가 싣지 않는다.
+   */
+  priorFirst?: StudyStageFirstAttempt[];
   /** dev 하네스 — 네트워크 플러시 생략 */
   harness?: boolean;
 }
@@ -50,14 +78,32 @@ export function StudyPlayerClient({
   backHref,
   nextStageHref,
   reviewMode,
+  priorFirst,
   harness,
 }: PlayerProps) {
   const router = useRouter();
   const [phase, setPhase] = useState<Phase>("play");
-  const [idx, setIdx] = useState(0);
+  /** 이어 풀기 진입 위치 — 0 보다 크면 상단에 안내를 띄운다 */
+  const [resumedAt] = useState(() => resumeIndex(stage.items, priorFirst));
+  const [idx, setIdx] = useState(resumedAt);
+  const [resumeNotice, setResumeNotice] = useState(resumedAt > 0);
   const [judged, setJudged] = useState<ItemJudgement | null>(null);
-  const [retryList, setRetryList] = useState<number[]>([]);
+  // 지난 세션에서 첫 시도를 틀린 문항도 이번 완주의 "다시 풀기" 큐에 넣는다 —
+  // 이어 풀기 때문에 재도전 기회가 사라지지 않게.
+  const [retryList, setRetryList] = useState<number[]>(() => {
+    if (!priorFirst || priorFirst.length === 0) return [];
+    const wrong = new Set(
+      priorFirst
+        .filter((p) => {
+          const s = eventScore(p);
+          return s !== null && s < 1;
+        })
+        .map((p) => p.itemKey),
+    );
+    return stage.items.flatMap((it, i) => (wrong.has(it.key) ? [i] : []));
+  });
   const [exitOpen, setExitOpen] = useState(false);
+  const [askOpen, setAskOpen] = useState(false);
   const [taskDone, setTaskDone] = useState(false);
   /** 학습지가 수정돼 이 화면의 문제 구성이 낡음 — 새로 시작 안내 */
   const [staleNotice, setStaleNotice] = useState(false);
@@ -80,6 +126,19 @@ export function StudyPlayerClient({
     const now = Date.now();
     if (stageStartRef.current === 0) stageStartRef.current = now;
     if (itemStartRef.current === 0) itemStartRef.current = now;
+  }, []);
+
+  // 지난 세션의 첫 시도 판정 복원 — 이걸 빼먹으면 완주 점수(stageDone)가 이번
+  // 세션에 푼 문항만으로 계산돼, 이어 푼 학생의 점수가 통째로 틀어진다.
+  // 렌더 순수성(react-hooks/purity) 때문에 ref 주입은 마운트 이펙트에서 한다.
+  useEffect(() => {
+    for (const p of priorFirst ?? []) {
+      if (firstResults.current.has(p.itemKey)) continue;
+      firstResults.current.set(p.itemKey, { correct: p.correct, selfGrade: p.selfGrade });
+      answeredKeysRef.current.add(p.itemKey);
+    }
+    // 마운트 1회 복원 전용 — priorFirst 는 서버가 실어 준 고정 스냅샷이다
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const items = stage.items;
@@ -274,9 +333,16 @@ export function StudyPlayerClient({
         hintUsed: j.hintUsed === true,
       });
       if (phase === "play") {
-        firstResults.current.set(currentItem.key, j);
+        // 첫 시도 판정은 덮어쓰지 않는다 — "처음부터 보기"로 되돌아가 다시 풀어도
+        // 점수는 최초 시도 기준을 유지한다(서버도 attempt=1 중복 로그를 무시하므로,
+        // 여기서 덮어쓰면 화면 점수와 교사면 통계가 어긋난다).
+        if (!firstResults.current.has(currentItem.key)) {
+          firstResults.current.set(currentItem.key, j);
+          if (j.correct === false) {
+            setRetryList((prev) => (prev.includes(queue[idx]) ? prev : [...prev, queue[idx]]));
+          }
+        }
         answeredKeysRef.current.add(currentItem.key);
-        if (j.correct === false) setRetryList((prev) => [...prev, queue[idx]]);
       }
       setJudged(j);
       writeMirror();
@@ -342,6 +408,7 @@ export function StudyPlayerClient({
       scheduleFlush();
     }
     setJudged(null);
+    setAskOpen(false);
     itemStartRef.current = Date.now();
     if (idx + 1 < queue.length) {
       setIdx(idx + 1);
@@ -373,6 +440,7 @@ export function StudyPlayerClient({
       return;
     }
     setJudged(null);
+    setAskOpen(false);
     itemStartRef.current = Date.now();
     setIdx(idx - 1);
   }, [stage.graded, idx, exit]);
@@ -487,6 +555,29 @@ export function StudyPlayerClient({
       {/* ── 본문 (아이템 렌더러) ── */}
       <div className="gd-scroll min-h-0 flex-1">
         <div className="gd-page px-4 py-5">
+          {/* 이어 풀기 안내 — 진입 문항에서만. 전진하거나 처음으로 돌아가면 사라진다. */}
+          {resumeNotice && phase === "play" && idx === resumedAt ? (
+            <div className="gd-block mb-4" data-tone="accent" role="status">
+              <p className="gd-t-sm font-bold">지난번에 이어서 학습합니다</p>
+              <p className="gd-t-xs mt-1" style={{ color: "var(--gd-ink-2)" }}>
+                이미 푼 {resumedAt}문항은 건너뛰었습니다. 처음부터 다시 봐도 점수는 첫 시도
+                기준 그대로입니다.
+              </p>
+              <button
+                type="button"
+                className="gd-btn gd-btn-ghost mt-2.5"
+                onClick={() => {
+                  setResumeNotice(false);
+                  setJudged(null);
+                  setAskOpen(false);
+                  itemStartRef.current = Date.now();
+                  setIdx(0);
+                }}
+              >
+                처음부터 보기
+              </button>
+            </div>
+          ) : null}
           {staleNotice ? (
             <div className="gd-block mb-4" role="status">
               <p className="gd-t-sm font-bold">학습지가 새 구성으로 갱신되었습니다</p>
@@ -503,6 +594,23 @@ export function StudyPlayerClient({
       {/* ── 하단 바 ── */}
       <footer className="gd-safe-b shrink-0 px-4 pt-3" style={{ background: "var(--gd-card)", borderTop: "1px solid var(--gd-line)" }}>
         <div className="gd-page">
+          {/* 질문 — 어법 드릴 액션바의 ToolButton 과 동일 시각(칩 h-9),
+              터치 영역만 44px 로 확장. 문항이 바뀌면 시트는 닫힌다. */}
+          <div className="mb-2 flex">
+            <button
+              type="button"
+              onClick={() => setAskOpen(true)}
+              className="flex min-h-11 items-center disabled:opacity-40"
+            >
+              <span
+                className="gd-t-2xs flex h-9 items-center gap-1.5 rounded-lg border px-2.5 font-semibold"
+                style={{ borderColor: "var(--gd-line)", color: "var(--gd-ink-2)" }}
+              >
+                <MessageCircleQuestion className="h-4 w-4" strokeWidth={1.75} aria-hidden />
+                질문
+              </span>
+            </button>
+          </div>
           {judged && verdictTone ? (
             <div className="gd-verdict mb-2 flex items-center gap-2 px-3.5 py-2.5" data-tone={verdictTone} role="status">
               {verdictTone === "good" ? (
@@ -511,7 +619,13 @@ export function StudyPlayerClient({
                 <RotateCcw className="h-4.5 w-4.5 shrink-0" strokeWidth={2} style={{ color: "var(--gd-bad)" }} aria-hidden />
               )}
               <p className="gd-t-sm font-bold" style={{ color: verdictTone === "good" ? "var(--gd-good)" : "var(--gd-bad)" }}>
-                {verdictTone === "good" ? "정답입니다!" : phase === "play" ? "이 문항은 마지막에 다시 나옵니다" : "정답을 확인해 두세요"}
+                {/* 재도전 예고는 실제로 큐에 들어간 문항에만 — 이미 첫 시도를 마친
+                    문항을 "처음부터 보기"로 다시 풀 때는 큐에 넣지 않는다 */}
+                {verdictTone === "good"
+                  ? "정답입니다!"
+                  : phase === "play" && retryList.includes(queue[idx])
+                    ? "이 문항은 마지막에 다시 나옵니다"
+                    : "정답을 확인해 두세요"}
               </p>
             </div>
           ) : null}
@@ -539,6 +653,19 @@ export function StudyPlayerClient({
           )}
         </div>
       </footer>
+
+      {/* ── 질문(AI 튜터) 시트 ── */}
+      {askOpen ? (
+        <StudyAskSheet
+          taskId={taskId}
+          stageId={stage.id}
+          itemKey={currentItem.key}
+          itemLabel={stage.title}
+          // 이미 판정을 받았거나 복습 중이면 정답 근거를 들어도 된다
+          revealAllowed={judged !== null || reviewMode === true}
+          onClose={() => setAskOpen(false)}
+        />
+      ) : null}
 
       {/* ── 나가기 확인 시트 ── */}
       {exitOpen ? (

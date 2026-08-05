@@ -106,8 +106,16 @@ export const authoringMaterialSchema = z.object({
   /** 파일명 또는 사용자가 붙인 이름. */
   name: z.string().max(200).default(""),
   sourceKind: z.enum(MATERIAL_SOURCE_KINDS).default("TEXT"),
-  /** 판독·정규화된 본문. */
-  content: z.string().min(1).max(60_000),
+  /**
+   * 판독·정규화된 본문.
+   *
+   * ⚠️ **더 이상 필수가 아니다**(26-08-04). 예전 `min(1)` 은 "모든 자료는 텍스트로
+   * 정규화된다"는 옛 전제의 마지막 자물쇠였고, 그 한 글자 때문에 **사진을 원본
+   * 그대로만 보내는 자료가 서버에서 400 으로 튕겼다** — 모델은 이미지를 직접 읽을
+   * 수 있는데(generate.ts:685) 계약이 그걸 금지하고 있었던 셈이다.
+   * 대신 아래 refine 이 "본문도 원본도 없는 빈 자료"만 막는다.
+   */
+  content: z.string().max(60_000).default(""),
   /** "이 자료를 어떻게 쓸까요?" — 자료별 자유 메모. */
   note: z.string().max(500).default(""),
   // ── 하이브리드 판독(텍스트 + 원본 페이지 이미지) ────────────────────────
@@ -123,6 +131,21 @@ export const authoringMaterialSchema = z.object({
   /** 페이지 JPEG 묶음의 스토리지 경로(서명 업로드 결과). */
   storagePath: z.string().max(500).optional(),
 });
+
+/**
+ * 자료 1건의 **최소 실질** — 본문이든 원본 페이지든 모델이 볼 것이 하나는 있어야
+ * 한다. 둘 다 없는 자료는 프롬프트에서 이름만 차지하고 아무것도 기여하지 못하는데,
+ * usedMaterialIds 에는 잡혀서 "이 자료를 반영했습니다"라는 거짓 근거 표시를 만든다.
+ *
+ * ⚠️ refine 을 **여기(요소)** 에 걸고 배열에 걸지 않는 이유: 배열에 걸면 어느
+ * 자료가 문제인지 zod 이슈 경로에 안 남아, 자료 12개짜리 요청에서 사용자가 무엇을
+ * 고쳐야 할지 알 수 없다.
+ */
+export const authoringMaterialEntrySchema = authoringMaterialSchema.refine(
+  (material) =>
+    material.content.trim().length > 0 || Boolean(material.storagePath),
+  { message: "자료에 본문이나 원본 페이지 중 하나는 있어야 합니다." },
+);
 export type AuthoringMaterial = z.infer<typeof authoringMaterialSchema>;
 
 // ── §2. 지문 설계(난이도) ───────────────────────────────────────────────────
@@ -408,7 +431,7 @@ export const AUTHORING_CONCURRENCY = 3;
 
 export const authoringRequestSchema = z.object({
   /** 자료 0개도 허용 — 지시문만으로도 만들 수 있어야 진입장벽이 없다. */
-  materials: z.array(authoringMaterialSchema).max(12).default([]),
+  materials: z.array(authoringMaterialEntrySchema).max(12).default([]),
   instruction: z.string().max(4_000).default(""),
   spec: authoringSpecSchema.default(DEFAULT_AUTHORING_SPEC),
   count: z.number().int().min(1).max(MAX_PASSAGES_PER_RUN).default(1),

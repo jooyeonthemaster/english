@@ -18,6 +18,8 @@ import type {
   StudentResponse,
 } from "@/lib/exam-report/types";
 import type { ExamReviewQuestion } from "@/components/exam-report/ui-contracts";
+import { QUESTION_TYPE_UI } from "@/lib/question-type-ui";
+import { getDisplayQuestionTags } from "@/lib/question-generation-plans";
 import { numberKey } from "./grading-shared";
 
 // ── 타입 ─────────────────────────────────────────────────────────────────────
@@ -104,8 +106,8 @@ export const DIFFICULTY_RANK: Record<string, number> = {
   KILLER: 2,
 };
 
-/** JSON 문자열 배열/배열 → 트림된 string[]. */
-function parseTags(value: unknown): string[] {
+/** JSON 문자열 배열/배열 → 트림된 string[]. (해설 keyPoints 등도 같은 형태라 공용) */
+export function parseTags(value: unknown): string[] {
   let arr: unknown = value;
   if (typeof value === "string") {
     const trimmed = value.trim();
@@ -118,6 +120,70 @@ function parseTags(value: unknown): string[] {
   }
   if (!Array.isArray(arr)) return [];
   return arr.map((v) => String(v ?? "").trim()).filter((v) => v.length > 0);
+}
+
+/**
+ * 개념 축에 올리면 안 되는 라벨 — 유형 라벨(「어법 판단」)·난이도 라벨(「킬러」).
+ *
+ * 개념 축은 `perQuestion.keyConcepts` 가 정본이고, 없을 때만 문항 태그로 폴백한다.
+ * 그런데 문항 태그에는 생성 플랜(「일반 생성」)·모델 고지·유형·난이도가 섞여 있어
+ * 폴백을 그대로 쓰면 리포트가 「보강할 개념: 일반 생성」이라고 말한다 — 학습 개념이
+ * 아닌 내부 운영 값이 학습 진단으로 둔갑하는 경로라 축 자체에서 막는다.
+ */
+const NON_CONCEPT_TAGS = new Set<string>([
+  ...Object.values(QUESTION_TYPE_UI).map((meta) => meta.label),
+  ...Object.values(DIFFICULTY_LABEL),
+]);
+
+/**
+ * 문항 태그 → 학습 개념 후보.
+ * 생성 플랜·AI 모델 고지·기계 식별 키는 `getDisplayQuestionTags` 가 걷어내고,
+ * 유형·난이도 라벨은 위 집합으로 추가로 제외한다. 남는 게 없으면 빈 배열 —
+ * 그러면 「보강할 개념」 카드와 개념 탭이 아예 렌더되지 않는다(거짓 개념 금지).
+ */
+function conceptTagsOf(tags: unknown): string[] {
+  return getDisplayQuestionTags(parseTags(tags)).filter(
+    (tag) => !NON_CONCEPT_TAGS.has(tag),
+  );
+}
+
+/**
+ * 개념 축 정화 — **perQuestion.keyConcepts 에도 반드시 적용한다.**
+ *
+ * 실측(2026-07-25, analysis cmrxokvfp…): 저장된 keyConcepts 가
+ * `["일반 생성"]` 이었다. 분석 시점에 문항 태그를 그대로 복사해 넣는 바람에
+ * 생성 플랜 라벨이 학습 개념으로 굳은 것이라, 폴백(태그) 경로만 막아서는
+ * 「보강할 개념: 일반 생성」이 그대로 화면에 남는다. 1차 경로도 같은 체로 거른다.
+ */
+function sanitizeConcepts(values: readonly string[]): string[] {
+  return getDisplayQuestionTags(values).filter((tag) => !NON_CONCEPT_TAGS.has(tag));
+}
+
+/**
+ * 표시용 유형 라벨 — 카탈로그(QUESTION_TYPE_UI) 정본이 우선.
+ *
+ * examMap 의 `typeLabel` 은 분석이 뽑아낸 자유 문자열이라 「어법판단」처럼 카탈로그
+ * (「어법 판단」)와 표기가 갈린다. 같은 화면 위아래에서 두 표기가 동시에 보이므로
+ * 원본 재조회(subType)가 있으면 카탈로그 라벨로 정규화한다.
+ */
+export function resolveTypeLabel(
+  subType: string | null | undefined,
+  storedLabel?: string | null,
+  analysisLabel?: string | null,
+): string {
+  const catalog = subType ? QUESTION_TYPE_UI[subType]?.label : null;
+  return catalog || storedLabel || analysisLabel || "기타";
+}
+
+/**
+ * 지문 라벨 — 제목이 정본. 제목이 없을 때 쓰는 세트 라벨(「[43~45]」)은 지문 제목이
+ * 아니라 인쇄 묶음 머리표라, 접두 없이 내보내면 같은 자리의 다른 타일과 축이 섞인다.
+ */
+function passageLabelOf(review: ExamReviewQuestion | null | undefined): string | null {
+  const title = review?.passage?.title?.trim();
+  if (title) return title;
+  const setLabel = review?.setLabel?.trim();
+  return setLabel ? `세트 ${setLabel}` : null;
 }
 
 /** perQuestion.difficulty(1..5) → 난이도 키(기본/중급/킬러). */
@@ -135,6 +201,11 @@ export interface AnalysisRowMeta {
   number: string;
   /** 빈 라벨은 "기타"로 폴백(대시보드 byType 와 동일 규약 — 패널 간 목록 정합). */
   typeLabel: string;
+  /**
+   * 카탈로그(QUESTION_TYPE_UI) 키 — 원본 재조회가 있을 때만 채워진다.
+   * 변형 생성 자격 판정(filterVariantQuestions)의 정본 축이라 행 메타에 싣는다.
+   */
+  subType: string | null;
   status: ResponseStatus;
   kind: "MC" | "SHORT" | "ESSAY";
   points: number | null;
@@ -166,13 +237,16 @@ export function buildAnalysisRowMetas(input: {
       null;
     return {
       number: entry.number,
-      typeLabel: entry.typeLabel || pq?.typeLabel || "기타",
+      // 카탈로그 라벨 우선 — examMap 저장 문자열(「어법판단」)과 카탈로그(「어법 판단」)가
+      // 갈려 한 화면에 두 표기가 동시에 보이던 문제를 표시 직전 정규화로 없앤다.
+      typeLabel: resolveTypeLabel(review?.subType, entry.typeLabel, pq?.typeLabel),
+      subType: review?.subType ?? null,
       status: r?.status ?? "UNKNOWN",
       kind: entry.kind,
       points: entry.points,
       difficultyKey,
       passageId: review?.passageId ?? review?.passage?.id ?? null,
-      passageLabel: review?.passage?.title || review?.setLabel || null,
+      passageLabel: passageLabelOf(review),
     };
   });
 }
@@ -325,8 +399,14 @@ export function computeWeaknessBreakdown(input: {
       overall.unknown += 1;
     }
 
-    // ── 유형별(typeLabel — examMap 우선, 없으면 perQuestion)
-    const typeLabel = entry.typeLabel || analysis?.typeLabel || "기타";
+    // ── 유형별(카탈로그 라벨 우선 → examMap → perQuestion)
+    // 행 메타(buildAnalysisRowMetas)와 같은 규칙을 써야 그리드·필터·분해가 같은
+    // 이름으로 같은 버킷을 가리킨다.
+    const typeLabel = resolveTypeLabel(
+      review?.subType,
+      entry.typeLabel,
+      analysis?.typeLabel,
+    );
     bump(typeMap, typeLabel, typeLabel, status, points, earned, entry.number);
 
     // ── 난이도별(reviewItems.difficulty 우선, 없으면 perQuestion.difficulty)
@@ -351,7 +431,7 @@ export function computeWeaknessBreakdown(input: {
       bump(
         passageMap,
         review.passage.id,
-        review.passage.title || review.setLabel || "지문",
+        passageLabelOf(review) ?? "지문",
         status,
         points,
         earned,
@@ -363,10 +443,11 @@ export function computeWeaknessBreakdown(input: {
     // ── 개념별(perQuestion.keyConcepts 우선, 없으면 reviewItems.tags)
     // 한 문항의 중복 태그(["시제","시제"])는 Set 으로 문항당 1회만 집계한다 —
     // 분모(total/graded) 왜곡과 오답칩 중복 key 를 동시에 방지.
+    // 폴백(문항 태그)은 운영 태그를 걷어낸 뒤에만 개념으로 승격한다 — 걸러낸 결과가
+    // 비면 이 문항은 개념 축에 기여하지 않는다(「보강할 개념: 일반 생성」 방지).
+    const analysisConcepts = sanitizeConcepts(analysis?.keyConcepts ?? []);
     const rawConcepts =
-      analysis?.keyConcepts && analysis.keyConcepts.length > 0
-        ? analysis.keyConcepts
-        : parseTags(review?.tags);
+      analysisConcepts.length > 0 ? analysisConcepts : conceptTagsOf(review?.tags);
     const concepts = new Set(
       rawConcepts.map((c) => c.trim()).filter((c) => c.length > 0),
     );

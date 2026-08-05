@@ -495,6 +495,21 @@ export const TOTAL_MATERIAL_CHAR_BUDGET = 60_000;
 const MIN_USEFUL_CHARS = 200;
 
 /**
+ * 본문 없이 **원본 지면만** 실린 자료의 마커 안 자리표시(26-08-04, 사진 경로).
+ *
+ * 왜 빈 문자열이면 안 되나: 마커 사이가 비면 모델은 그것을 "읽을 수 없는 자료"나
+ * "빈 파일"로 읽는다 — 실제로는 같은 메시지에 그 지면의 이미지가 붙어 있는데도
+ * 없는 셈 치고 지문을 쓴다. 한 줄로 "네가 받은 이미지가 이 자리다"를 연결해 줘야
+ * 역할 지시(ROLE_DIRECTIVES)가 그 이미지에 적용된다.
+ *
+ * 영어인 이유: 이 문자열은 마커 **안**(데이터 영역)에 들어가지만 실제로는 모델에게
+ * 하는 말이라, 프롬프트 본체와 같은 언어여야 지시로 읽힌다. 절대규칙 4(마커 안은
+ * 데이터)와 충돌하지 않는다 — 명령이 아니라 이 블록이 무엇인지에 대한 서술이다.
+ */
+const PAGE_ONLY_MATERIAL_BODY =
+  "(No text was extracted for this material. Its original page image(s) are attached to this same message — read them directly and apply the group rules above to what you see there.)";
+
+/**
  * 예산 배분 우선순위.
  * TOPIC_BRIEF(지시성)가 먼저이고, 그 다음이 SOURCE_TO_VARY 다 — 변형 발주에서 원본이
  * 잘리면 "변형"이라는 과제 자체가 성립하지 않는다.
@@ -662,7 +677,16 @@ export function selectAuthoringMaterialsWithBudget(
 ): AuthoringMaterialBudget[] {
   const ordered = (materials ?? [])
     .map((material, order) => ({ material, order }))
-    .filter(({ material }) => (material?.content ?? "").trim().length > 0)
+    // 본문이 없어도 **원본 페이지가 실리는 자료는 남긴다**(26-08-04, 사진 경로).
+    // 예전 필터는 본문 길이만 봐서, 판독 없이 원본만 보내는 사진을 여기서 통째로
+    // 떨궜다 — 그러면 이미지는 모델에 도착하는데(run-job 조달은 별개 경로다)
+    // MATERIALS 블록에는 그 자료가 없고 usedMaterialIds 에도 안 잡혀서, 모델은
+    // "왜 이 사진이 붙어 있는지"를 듣지 못한 채 이미지만 받는다.
+    .filter(
+      ({ material }) =>
+        (material?.content ?? "").trim().length > 0 ||
+        Boolean(material?.storagePath),
+    )
     .sort((a, b) => {
       const pa = ROLE_PRIORITY.indexOf(a.material.role);
       const pb = ROLE_PRIORITY.indexOf(b.material.role);
@@ -672,6 +696,18 @@ export function selectAuthoringMaterialsWithBudget(
   let remaining = TOTAL_MATERIAL_CHAR_BUDGET;
   const selected: AuthoringMaterialBudget[] = [];
   for (const { material } of ordered) {
+    // 본문 없이 원본 페이지만 있는 자료 — 글자 예산을 **한 자도 쓰지 않는다**.
+    // (이미지 토큰은 이 예산의 단위가 아니다. 여기서 자리를 차지하면 같이 붙인
+    //  단어장·어법 교재가 그만큼 잘린다.) 본문 자리는 자리표시가 채우고, 실제
+    //  내용은 사용자 메시지에 함께 실린 이미지가 나른다(generate.ts:685).
+    if (!(material.content ?? "").trim()) {
+      selected.push({
+        material: { ...material, content: PAGE_ONLY_MATERIAL_BODY },
+        sentChars: 0,
+        totalChars: 0,
+      });
+      continue;
+    }
     const cap = Math.min(ROLE_CHAR_BUDGET[material.role] ?? 7_500, remaining);
     if (cap < MIN_USEFUL_CHARS) continue;
     const clipped = clipMaterial(

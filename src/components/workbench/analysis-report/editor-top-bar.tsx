@@ -1,21 +1,23 @@
 import {
+  Copy,
   FileQuestion,
-  FileText,
   Loader2,
   Redo2,
   RotateCcw,
   Undo2,
 } from "lucide-react";
+import type { ReactNode } from "react";
 
 import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
-import type { ReportThemeId } from "@/lib/passage-report/analysis-report/schema";
-
-import { DESIGN_TEMPLATE_LABELS } from "./editor-storage";
 
 type Props = {
-  pageCount: number;
-  themeId: ReportThemeId;
+  /**
+   * 좌측 슬롯 — 섹션 목차 트리거(SectionOutlinePopover). 상단바는 목차 로직을 모른다.
+   * (기존의 아이콘+'지문 학습자료 편집'+페이지 칩+템플릿 칩 뭉치를 대체했다. 페이지 수는
+   *  트리거 칩 안에 살아 있고, 템플릿명은 설정 패널에 이미 있다.)
+   */
+  outlineSlot?: ReactNode;
   error: string | null;
   dirty: boolean;
   saving: boolean;
@@ -25,6 +27,13 @@ type Props = {
   worksheetHasContent: boolean;
   /** 모달 헤더가 '실전 학습지 생성' 버튼을 대신 렌더하지 않는 컨텍스트에서만 툴바에 인라인으로 보인다. */
   showGenerateWorksheet: boolean;
+  /**
+   * 저장 버튼을 바깥(모달 헤더)에서 렌더하지 않는 컨텍스트에서만 '다른 이름으로 저장'을
+   * 툴바에 인라인으로 둔다 — 그 컨텍스트에는 사본 저장으로 가는 다른 입구가 없다.
+   */
+  showSaveAs: boolean;
+  savingAs: boolean;
+  onSaveAs: () => void;
   answerKeyIncluded: boolean;
   onToggleAnswers: () => void;
   onUndo: () => void;
@@ -34,8 +43,7 @@ type Props = {
 };
 
 export function EditorTopBar({
-  pageCount,
-  themeId,
+  outlineSlot,
   error,
   dirty,
   saving,
@@ -44,6 +52,9 @@ export function EditorTopBar({
   worksheetBusy,
   worksheetHasContent,
   showGenerateWorksheet,
+  showSaveAs,
+  savingAs,
+  onSaveAs,
   answerKeyIncluded,
   onToggleAnswers,
   onUndo,
@@ -53,18 +64,7 @@ export function EditorTopBar({
 }: Props) {
   return (
     <div className="no-print flex h-11 shrink-0 items-center justify-between gap-3 border-b border-slate-200 bg-white px-4">
-      <div className="flex min-w-0 items-center gap-2">
-        <FileText className="h-3.5 w-3.5 shrink-0 text-slate-400" />
-        {/* 모바일(<sm)은 우측 컨트롤(정답 토글+되돌리기 3버튼)만으로 폭이 차서
-            정적 라벨을 숨긴다 — 안 그러면 칩·토글이 겹침. 문서 제목은 모달 헤더에 있음. */}
-        <span className="hidden truncate text-[12px] font-bold text-slate-600 sm:inline">지문 학습자료 편집</span>
-        <span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-500">
-          {pageCount || 1}페이지
-        </span>
-        <span className="hidden shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-500 sm:inline-flex">
-          {DESIGN_TEMPLATE_LABELS[themeId]}
-        </span>
-      </div>
+      <div className="flex min-w-0 items-center gap-2">{outlineSlot}</div>
 
       <div className="flex min-w-0 items-center justify-end gap-2">
         {error ? <span className="max-w-[260px] truncate text-[11px] text-red-500">{error}</span> : null}
@@ -133,6 +133,21 @@ export function EditorTopBar({
         >
           <RotateCcw className="h-3.5 w-3.5" />
         </button>
+        {/* '다른 이름으로 저장' — 저장 버튼을 모달 헤더로 끌어올리는 컨텍스트에서는
+            그 헤더의 split 버튼(캐럿)이 담당하므로 숨긴다. 여기 보이는 경우는
+            툴바 상태를 끌어올리지 않는 컨텍스트(사본 저장 입구가 달리 없는 화면)뿐이다. */}
+        {showSaveAs ? (
+          <button
+            type="button"
+            onClick={onSaveAs}
+            disabled={savingAs || saving}
+            title="다른 이름으로 저장 — 원본은 그대로 두고 새 학습지 사본을 만듭니다"
+            aria-label="다른 이름으로 저장"
+            className="flex h-8 w-8 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {savingAs ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Copy className="h-3.5 w-3.5" />}
+          </button>
+        ) : null}
         {/* '실전 학습지 생성' — 모달 헤더(저장 버튼 옆)에서 렌더하는 컨텍스트에서는 숨기고,
             툴바 상태를 끌어올리지 않는 컨텍스트에서만 여기 인라인으로 보인다. */}
         {showGenerateWorksheet && !worksheetHasContent ? (

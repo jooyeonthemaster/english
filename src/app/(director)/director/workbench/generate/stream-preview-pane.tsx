@@ -9,18 +9,25 @@
 
 import { useEffect, useState } from "react";
 
-import type { QueueItem } from "./generate-page-types";
+/**
+ * 미리보기 프레임 계약 — 문제 생성(md-stream)과 학습지 분석(passage-analysis
+ * SSE)이 공유한다. stage 는 분석처럼 여러 단계를 도는 생성에서만 채운다.
+ */
+export interface StreamPreview {
+  phase: "thinking" | "generating";
+  startedAt: number;
+  outputStartedAt?: number;
+  tail: string;
+  /** "전체 초안" / "어휘" / "실전 워크북" 등 — 있으면 헤더에 표시 */
+  stage?: string;
+}
 
 /**
  * 고정 높이(헤더 1줄 + 본문 64px) + overflow hidden + 하단 정렬이라 텍스트가
  * 아무리 흘러도 카드 레이아웃이 절대 밀리지 않는다(CLS 0). 위쪽 페이드 마스크로
  * 오래된 줄이 부드럽게 사라지는, 위로 흐르는 콘솔 미학.
  */
-export function StreamPreviewPane({
-  preview,
-}: {
-  preview: NonNullable<QueueItem["streamPreview"]>;
-}) {
+export function StreamPreviewPane({ preview }: { preview: StreamPreview }) {
   // 250ms 로컬 틱 — 토큰 공백(사고 정체) 구간에도 초 카운터가 멈추지 않게 한다.
   const [, forceTick] = useState(0);
   useEffect(() => {
@@ -55,6 +62,11 @@ export function StreamPreviewPane({
         {!thinking && (
           <span className="text-[9px] font-medium tabular-nums text-slate-500">
             사고 {thinkSec.toFixed(0)}s
+          </span>
+        )}
+        {preview.stage && (
+          <span className="ml-auto truncate text-[9px] font-semibold text-slate-400">
+            {preview.stage}
           </span>
         )}
       </div>

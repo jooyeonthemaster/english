@@ -21,11 +21,18 @@ export function editIdOf(it: FlowItem): string {
   return it.editId ?? it.id;
 }
 
-export function enumerateItems(report: AnalysisReport): ItemDescriptor[] {
-  const items = reportFlowItems(report).filter((it) => !isActivityAnswerId(it.id));
+/**
+ * FlowItem[] → 편집기 패널용 디스크립터. 이미 계산해 둔 flow 가 있으면 이걸 써서
+ * `reportFlowItems` 재호출(= 문서 전체 JSX 1벌 재생성)을 피한다.
+ *
+ * 판정 규칙은 기존 `enumerateItems` 와 완전히 동일하다 —
+ * ① 활동 정답 페이지(파생 블록) 제외 ② orderId 중복 접기(첫 조각의 메타 채택).
+ */
+export function describeItems(items: FlowItem[]): ItemDescriptor[] {
   const seen = new Set<string>();
   const descriptors: ItemDescriptor[] = [];
   for (const it of items) {
+    if (isActivityAnswerId(it.id)) continue;
     const id = orderIdOf(it);
     if (seen.has(id)) continue;
     seen.add(id);
@@ -39,6 +46,14 @@ export function enumerateItems(report: AnalysisReport): ItemDescriptor[] {
     });
   }
   return descriptors;
+}
+
+/**
+ * report → 디스크립터. `setReport` 업데이터 내부처럼 "지금 막 만든 최신 r" 기준으로
+ * 계산해야 하는 호출부가 쓴다(렌더 시점의 flow 로는 대체 불가) — 시그니처·동작 유지.
+ */
+export function enumerateItems(report: AnalysisReport): ItemDescriptor[] {
+  return describeItems(reportFlowItems(report));
 }
 
 export function visibleFlowItems(report: AnalysisReport, natural: FlowItem[]): FlowItem[] {
@@ -145,12 +160,27 @@ export function chromeProps(it: FlowItem, edit?: ReportEdit, measure?: boolean) 
 }
 
 // ─── flow 패킹 ────────────────────────────────────────────────────────────────
+/**
+ * 측정된 블록 높이(own, mm)를 페이지 예산(pageBodyMm)에 맞춰 페이지로 채운다.
+ *
+ * @param chrome 표 머리글 높이. thead 는 공용 폴백, theadByGroup 은 표 종류별
+ *   (grammar/exam/vocab) 실측값 — 열을 숨기거나 좁히면 종류마다 2줄이 되는 시점이 달라
+ *   하나로 뭉뚱그리면 페이지당 4.76mm 씩 과소 계상된다.
+ * @param pageBodyMm 페이지 본문 가용 높이(mm). 러닝헤더 로고 유무로 4.6mm 가 달라지므로
+ *   호출부(pages.tsx)가 프로브 시트로 실측해 넘긴다. 생략 시 보수적 폴백 상수.
+ */
 export function packFlow(
   items: FlowItem[],
   own: number[],
   blockMeta: Record<string, BlockMeta> | undefined,
-  chrome: { thead: number },
+  chrome: { thead: number; theadByGroup?: Record<string, number> },
+  pageBodyMm: number = PAGE_BODY_MM,
 ): number[][] {
+  // 표 종류별 thead 실측값 우선(없으면 공용 참조표 값).
+  const theadOf = (w: WrapKind) => {
+    const g = w === "grammar" ? "grammar" : w === "exam" ? "exam" : "vocab";
+    return chrome.theadByGroup?.[g] ?? chrome.thead;
+  };
   const pages: number[][] = [];
   let page: number[] = [];
   let h = 0;
@@ -187,9 +217,9 @@ export function packFlow(
     // ws-list 조각은 옛 통짜 블록에 저장된 minHeight 가 조각마다 반복 적용되면
     // 페이지가 폭발하므로 무시한다(그룹 리사이즈는 resizable:false 로 폐지).
     const metaMinHeight = wsl ? 0 : meta?.minHeight ?? 0;
-    const hh = isCover ? PAGE_BODY_MM : Math.max(own[k], metaMinHeight);
+    const hh = isCover ? pageBodyMm : Math.max(own[k], metaMinHeight);
 
-    const atTopInc = () => (tbl ? chrome.thead : 0) + (box ? BOX_PAD_MM : 0) + (act || wsl ? ACTIVITY_PAD_MM : 0) + hh;
+    const atTopInc = () => (tbl ? theadOf(it.wrap) : 0) + (box ? BOX_PAD_MM : 0) + (act || wsl ? ACTIVITY_PAD_MM : 0) + hh;
 
     let inc: number;
     if (page.length === 0) {
@@ -199,13 +229,13 @@ export function packFlow(
       // ws-list 는 그룹(orderId)이 바뀌면 새 박스(런) — 연속 그룹이 한 박스로 합산되는 것 방지.
       const newRun = standalone || newSection || it.wrap !== prevWrap || (wsl && groupStart);
       if (newRun) {
-        inc = RUN_GAP_MM + (tbl ? chrome.thead : 0) + (box ? BOX_PAD_MM : 0) + (act || wsl ? ACTIVITY_PAD_MM : 0) + hh;
+        inc = RUN_GAP_MM + (tbl ? theadOf(it.wrap) : 0) + (box ? BOX_PAD_MM : 0) + (act || wsl ? ACTIVITY_PAD_MM : 0) + hh;
       } else {
         inc = (box ? LI_GAP_MM : mp ? ARROW_MM : 0) + hh;
       }
     }
 
-    if (forceBreak || (page.length > 0 && h + inc > PAGE_BODY_MM)) {
+    if (forceBreak || (page.length > 0 && h + inc > pageBodyMm)) {
       pages.push(page);
       page = [];
       h = 0;

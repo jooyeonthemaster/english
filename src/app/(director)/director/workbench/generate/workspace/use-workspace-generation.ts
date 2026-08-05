@@ -508,6 +508,8 @@ export function useWorkspaceGeneration({
         progressKey: string;
         /** 워크스페이스 행의 localId — 생성 성공 시 그 행을 비우는 데 쓴다. */
         localId?: string;
+        /** 행 개별 추가 지시문(없으면 전체 설정) — 변형 딥링크가 지문마다 다른 지시를 싣는다 */
+        customPrompt?: string;
       };
       const fastUnits: FastUnit[] = [];
       // 지문 세트 — 한 잡으로 생성(멤버를 한 번에). 큐엔 세트 1개의 생성중 카드만 뜨고,
@@ -528,6 +530,8 @@ export function useWorkspaceGeneration({
         tempId: string;
         passage: PassageItem;
         config: QueueItem["config"];
+        /** 행 개별 추가 지시문(없으면 전체 설정) — fast 유닛과 동형 */
+        customPrompt?: string;
       }[] = [];
       // 생성을 시도한 워크스페이스 행과, 그중 실패한 행 — 성공 행만 비운다.
       const attemptedLocalIds = new Set<string>();
@@ -559,6 +563,11 @@ export function useWorkspaceGeneration({
           item.kind === "workspace"
             ? (item.row.override?.generationPlan ?? generationPlan)
             : generationPlan;
+        // 추가 지시문도 행 개별 지정 우선 — 오답 변형 딥링크가 지문마다 다른 출제
+        // 포인트를 싣기 때문에 전역 프롬프트 하나로 합치면 유형별 지시가 섞인다.
+        const effPrompt = (
+          item.kind === "workspace" ? (item.row.override?.customPrompt ?? prompt) : prompt
+        ).trim();
         // 이 지문에 적용될 생성 모드 — 워크스페이스 행은 개별 모드(없으면 전체),
         // 선택-only 지문(내 지문 체크)은 전체 공통 모드를 따른다. (manual | set)
         const effMode =
@@ -617,13 +626,14 @@ export function useWorkspaceGeneration({
                 tempId: `fast:${item.passageId}:${typeId}:${runId}:${i}`,
                 progressKey: typeId,
                 localId: rowLocalId,
+                customPrompt: effPrompt,
                 config: {
                   typeCounts: { [typeId]: 1 },
                   questionTypeSettings: {
                     [typeId]: effSettings,
                   },
                   difficulty: effDifficulty,
-                  prompt,
+                  prompt: effPrompt,
                   mode: "manual",
                   generationPlan: effTypePlan,
                 },
@@ -660,11 +670,12 @@ export function useWorkspaceGeneration({
                 localId: rowLocalId,
                 tempId: `set:${item.passageId}:${presetId}:${runId}:${copyIndex}`,
                 passage: passageLike,
+                customPrompt: effPrompt,
                 config: {
                   typeCounts,
                   questionTypeSettings: {},
                   difficulty: setDiff,
-                  prompt,
+                  prompt: effPrompt,
                   mode: "manual",
                   generationPlan: effPlan,
                 },
@@ -732,7 +743,7 @@ export function useWorkspaceGeneration({
                     questionType: unit.questionType,
                     questionTypeSettings: unit.settings,
                     difficulty: unit.difficulty,
-                    customPrompt: prompt || undefined,
+                    customPrompt: unit.customPrompt || undefined,
                     generationPlan: unit.generationPlan,
                     clientTempId: unit.tempId,
                     onPreview: (preview) =>
@@ -809,7 +820,7 @@ export function useWorkspaceGeneration({
                 presetId: job.presetId,
                 difficulty: job.difficulty,
                 generationPlan: job.generationPlan,
-                customPrompt: prompt || undefined,
+                customPrompt: job.customPrompt || undefined,
                 memberOverrides: job.memberOverrides,
               }),
             });

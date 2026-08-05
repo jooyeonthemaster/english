@@ -23,6 +23,17 @@ export interface AtlasChatCompletionParams {
   topP?: number;
   maxOutputTokens?: number;
   responseMimeType?: "application/json";
+  /**
+   * OpenRouter 구조화 출력(response_format: json_schema) — 지정하면 응답 형태를
+   * 스키마로 강제한다. responseMimeType(json_object)보다 우선. json_object 는
+   * "JSON 이기만 하면 됨"이라 모델이 키 이름을 자유작명할 수 있다(26-07-27
+   * 크롭 복원 전멸 장애: 3.1-flash-lite 가 rawText 대신 ocrText 로 응답).
+   */
+  responseJsonSchema?: {
+    name: string;
+    schema: Record<string, unknown>;
+    strict?: boolean;
+  };
   timeoutInMs?: number;
   enableWebSearch?: boolean;
   /**
@@ -163,9 +174,20 @@ export async function postAtlasChatCompletionAsGeminiLike(
       top_p: params.topP,
       max_tokens: params.maxOutputTokens,
       ...reasoningRequest,
-      ...(params.responseMimeType === "application/json"
-        ? { response_format: { type: "json_object" } }
-        : {}),
+      ...(params.responseJsonSchema
+        ? {
+            response_format: {
+              type: "json_schema",
+              json_schema: {
+                name: params.responseJsonSchema.name,
+                strict: params.responseJsonSchema.strict ?? true,
+                schema: params.responseJsonSchema.schema,
+              },
+            },
+          }
+        : params.responseMimeType === "application/json"
+          ? { response_format: { type: "json_object" } }
+          : {}),
       ...(params.enableWebSearch
         ? { tools: [{ type: "openrouter:web_search" }] }
         : {}),

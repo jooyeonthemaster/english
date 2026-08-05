@@ -63,7 +63,11 @@ export function RunBlock({
   cols?: ColCtx;
   measure?: boolean;
 }) {
+  // 상호작용 chrome(그립·삭제·리사이즈·열 드래그) — 측정 클론에서는 렌더하지 않는다.
   const editable = !!edit && !measure;
+  // 레이아웃 chrome(표 왼쪽 6mm 핸들 열) — 이건 내용 열 폭을 3.45% 깎으므로 측정 클론에도
+  // '빈 칸으로' 반드시 렌더해야 측정 높이가 실제 페이지와 일치한다(푸터 침범의 지배적 원인).
+  const chromeLayout = !!edit;
   // 표 머리글·카드 사이 여백 등 '빈 영역' 클릭도 이 묶음의 첫 블록 선택으로 이어지게 —
   // 단어장 아무 곳을 눌러도 우측 패널에 열 표시·레이아웃 토글이 뜬다.
   // (행/카드(data-mid) 위 클릭은 각자 자기 블록을 선택하므로 건드리지 않는다.)
@@ -149,10 +153,10 @@ export function RunBlock({
           data-table-group={group}
           style={overrides ? { tableLayout: "fixed" } : undefined}
         >
-          <thead>{tableHeadRow(wrap, editable, run[0]?.hiddenCols, resize)}</thead>
+          <thead>{tableHeadRow(wrap, chromeLayout, run[0]?.hiddenCols, resize)}</thead>
           <tbody>
             {run.map((it) => (
-              <RowShell key={it.id} it={it} edit={edit} meta={blockMeta?.[editIdOf(it)] ?? blockMeta?.[it.id]} measure={measure} />
+              <RowShell key={it.id} it={it} edit={edit} meta={blockMeta?.[editIdOf(it)] ?? blockMeta?.[it.id]} measure={measure} handleCell={chromeLayout} />
             ))}
           </tbody>
         </table>

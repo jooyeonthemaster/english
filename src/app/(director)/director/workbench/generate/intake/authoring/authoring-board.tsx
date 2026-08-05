@@ -159,7 +159,7 @@ export function AuthoringBoard({
   const {
     materials,
     readyMaterials,
-    readingCount,
+    pendingCount,
     atCapacity,
     patchMaterial,
     handleFiles,
@@ -185,6 +185,19 @@ export function AuthoringBoard({
    * ref 로 두면 같은 클릭이 두 번 발주되는 것만 막고 렌더에는 아무 영향이 없다.
    */
   const startingRef = useRef(false);
+  /**
+   * "판독이 끝나면 자동으로 시작한다" 예약 — 26-08-04 오너 지시("붙이자마자 판독을
+   * 기다리는 게 최대 마찰이다")의 배선.
+   *
+   * 왜 state 인가(ref 가 아니라): 이 값은 **화면에 보여야 한다**. CTA 가 스피너로
+   * 바뀌고 그 밑에 "자료를 마저 읽고 바로 시작할게요"가 떠야, 누른 사람이 자기
+   * 클릭이 접수됐다는 것을 안다. ref 로 두면 눌러도 아무 일이 없는 것처럼 보여
+   * 사람이 한 번 더 누르고, 그 두 번째 클릭이 취소가 되어 영영 시작되지 않는다.
+   *
+   * 회귀 방지: 예약은 **반드시 사용자가 취소할 수 있어야 한다**(다시 누르면 해제).
+   * 취소 없는 자동 실행은 크레딧이 걸린 행동을 사용자 손에서 빼앗는 것이다.
+   */
+  const [queuedStart, setQueuedStart] = useState(false);
   const [registering, setRegistering] = useState(false);
   /**
    * 이 편을 지문함에 넣었을 때 받은 Passage id. **변형 지문 저장에만 쓴다** —
@@ -283,18 +296,25 @@ export function AuthoringBoard({
    * 찍히므로 말투가 전부 해요체로 맞춰져 있다(사전이 그것을 보증한다).
    * koreanFixed 는 이 화면에 바꿀 과목 컨트롤이 없으므로 "영어로 바꾸세요"가 아니라
    * "영어 지문 만드는 화면에서 써 주세요"다.
+   *
+   * ⚠️ **판독 중(pendingCount > 0)은 더 이상 여기 없다**(26-08-04). 그 분기가
+   * 있던 동안 사진 한 장을 붙이면 판독이 끝날 때까지 CTA 가 죽어 있었고, 판독은
+   * 지면 전문을 축자 전사하는 콜이라 10~20초가 든다 — 이 화면의 최대 마찰이
+   * 정확히 그 대기였다. 지금은 눌러 두면 판독 완료 시점에 자동으로 실행된다
+   * (queuedStart). 막는 대신 **예약**한다.
    */
   const blockedReason: string | null = koreanFixed
     ? AUTHORING_COPY.BLOCKED.korean
     : busy
       ? AUTHORING_COPY.BLOCKED.busy
-      : readingCount > 0
-        ? AUTHORING_COPY.BLOCKED.reading
-        : materials.length > MAX_AUTHORING_MATERIALS
-          ? AUTHORING_COPY.BLOCKED.overCapacity(MAX_AUTHORING_MATERIALS)
-          : readyMaterials.length === 0 && !instruction.trim()
-            ? AUTHORING_COPY.BLOCKED.empty
-            : null;
+      : materials.length > MAX_AUTHORING_MATERIALS
+        ? AUTHORING_COPY.BLOCKED.overCapacity(MAX_AUTHORING_MATERIALS)
+        : // 판독 중인 자료가 하나라도 있으면 "지금은 실을 게 없다"가 아직 사실이
+          // 아니다 — 그 자료가 곧 readyMaterials 가 된다. 여기서 empty 로 막으면
+          // 자료만 붙이고 곧바로 누른 사람이 예약 경로에 닿지 못한다.
+          readyMaterials.length === 0 && pendingCount === 0 && !instruction.trim()
+          ? AUTHORING_COPY.BLOCKED.empty
+          : null;
 
   // ── 조판 결과가 생기면 호스트 본문을 아래로 늘린다 ────────────────────────
   //
@@ -337,17 +357,12 @@ export function AuthoringBoard({
 
   // ── 실행 ──────────────────────────────────────────────────────────────────
 
-  const handleStart = useCallback(async () => {
-    if (startingRef.current) return;
-    if (blockedReason) {
-      // 하우스 규약: 막힌 CTA 는 침묵하지 않고 "무엇을 하면 되는지"를 가리킨다.
-      // 단 글로우는 손볼 칸이 있을 때만 — 국어 고정·저장 중은 어느 입력칸의 잘못도
-      // 아니라, 빛내면 멀쩡한 칸을 고치라고 시키는 셈이다(그땐 토스트로 말한다).
-      const target = locked ? null : composerBoxRef.current;
-      if (target) triggerHintGlow(target, { scrollBlock: "center" });
-      else toast.warning(blockedReason);
-      return;
-    }
+  /**
+   * 실제 발주 — 게이트를 통과한 뒤에만 불린다(직접 호출 금지). 예약 경로와 즉시
+   * 경로가 **같은 한 벌**을 쓰게 하려고 갈라 뒀다: 두 벌이 되면 예약으로 시작한
+   * 실행만 조용히 다른 인자로 도는 사고가 난다.
+   */
+  const runStart = useCallback(async () => {
     startingRef.current = true;
     // ⚠️ 여기서 await 를 잡고 finally 로 가드를 푸는 구조로 되돌리지 말 것.
     //   생중계 레인의 startRun 은 SSE 가 끝나야 resolve 하므로, 그 구조는 생성이
@@ -366,16 +381,61 @@ export function AuthoringBoard({
       count,
       diversify,
     });
-  }, [
-    blockedReason,
-    count,
-    diversify,
-    instruction,
-    locked,
-    readyMaterials,
-    spec,
-    startRun,
-  ]);
+  }, [count, diversify, instruction, readyMaterials, spec, startRun]);
+
+  const handleStart = useCallback(async () => {
+    if (startingRef.current) return;
+    // 예약 상태에서 한 번 더 누르면 **취소**다. 이 분기가 blockedReason 검사보다
+    // 먼저여야 한다 — 예약 중에 자료를 다 빼면 blockedReason.empty 가 켜지는데,
+    // 그때 글로우만 띄우고 돌아가면 예약이 해제되지 않은 채 남는다.
+    if (queuedStart) {
+      setQueuedStart(false);
+      return;
+    }
+    if (blockedReason) {
+      // 하우스 규약: 막힌 CTA 는 침묵하지 않고 "무엇을 하면 되는지"를 가리킨다.
+      // 단 글로우는 손볼 칸이 있을 때만 — 국어 고정·저장 중은 어느 입력칸의 잘못도
+      // 아니라, 빛내면 멀쩡한 칸을 고치라고 시키는 셈이다(그땐 토스트로 말한다).
+      const target = locked ? null : composerBoxRef.current;
+      if (target) triggerHintGlow(target, { scrollBlock: "center" });
+      else toast.warning(blockedReason);
+      return;
+    }
+    // 아직 읽는 중인 자료가 있으면 **막지 않고 예약한다**. 지금 그냥 보내면 그
+    // 자료가 readyMaterials 에 없어 통째로 빠진 채 크레딧이 나간다 — 붙인 자료가
+    // 무시된 결과만큼 나쁜 것은 없다.
+    if (pendingCount > 0) {
+      setQueuedStart(true);
+      return;
+    }
+    await runStart();
+  }, [blockedReason, locked, queuedStart, pendingCount, runStart]);
+
+  /**
+   * 예약 소진 — 판독이 전부 끝난 프레임에서 자동으로 발주한다.
+   *
+   * blockedReason 을 여기서 **다시** 본다. 판독이 전부 실패해 실을 자료가 하나도
+   * 남지 않았는데 지시문도 비어 있으면 그때는 실행하면 안 되고(빈 발주로 크레딧이
+   * 나간다), 그 사실을 사람에게 말해야 한다 — 예약해 놓고 조용히 아무 일도
+   * 일어나지 않는 것이 이 흐름의 최악이다.
+   */
+  useEffect(() => {
+    if (!queuedStart || pendingCount > 0) return;
+    setQueuedStart(false);
+    if (startingRef.current) return;
+    if (blockedReason) {
+      toast.warning(blockedReason);
+      return;
+    }
+    void runStart();
+  }, [queuedStart, pendingCount, blockedReason, runStart]);
+
+  // 실행이 접수되면 예약은 목적을 다했다. (예약 → runStart 경로는 위에서 이미
+  // 내렸지만, 즉시 실행 중에 새 자료가 들어와 pendingCount 가 오르는 경합에서
+  // 예약이 되살아나 두 번째 발주가 나가는 것을 막는 안전핀이다.)
+  useEffect(() => {
+    if (accepting) setQueuedStart(false);
+  }, [accepting]);
 
   /**
    * 재진입 가드 해제 — 접수가 끝나(STARTING 이탈) accepting 이 내려간 렌더에서 푼다.
@@ -825,8 +885,13 @@ export function AuthoringBoard({
               onMaterialRetry={handleRetry}
               onStart={handleStart}
               // 접수 왕복 구간에서만 true — 생성 중에는 CTA 가 살아 있어야 한다.
-              starting={accepting}
+              // 예약(판독 대기)도 같은 스피너를 쓴다: 사용자 입장에서 둘 다
+              // "눌렀고, 시작을 기다리는 중"이라 모양이 갈릴 이유가 없다.
+              starting={accepting || queuedStart}
               blockedReason={blockedReason}
+              // 예약 중임을 CTA 밑 캡션으로 말한다. blockedReason 과 같은 자리이고
+              // 이 값이 우선한다 — 예약은 사유가 아니라 **진행 상태**다.
+              queuedReason={queuedStart ? AUTHORING_COPY.BLOCKED.reading : null}
               credits={credits}
               count={count}
               boxRef={composerBoxRef}

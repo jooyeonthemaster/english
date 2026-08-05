@@ -35,9 +35,11 @@ import { loadPersistedAnnotations } from "@/app/api/ai/passage-analysis/[passage
 import { classifyAnalysisError } from "@/app/api/ai/passage-analysis/[passageId]/_lib/error-classification";
 import { generateLearningWorksheetResilient } from "@/lib/passage-report/analysis-report/generate";
 import {
+  defaultLlmText,
   generateAnalysisReportResilient,
   type ResilientCheckpoint,
 } from "@/lib/passage-report/analysis-report/resilient-generate";
+import { createStreamingLlmText } from "@/lib/passage-report/analysis-report/stream-llm";
 import {
   loadPriorCheckpoint,
   persistCheckpoint,
@@ -49,7 +51,10 @@ import {
   isKoreanPassage,
   saveKoPrimeReport,
 } from "@/lib/passage-report/analysis-report/ko-entry";
-import { generateKoAnalysisReportResilient } from "@/lib/passage-report/analysis-report/ko-resilient-generate";
+import {
+  generateKoAnalysisReportResilient,
+  koDefaultLlmText,
+} from "@/lib/passage-report/analysis-report/ko-resilient-generate";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -66,6 +71,12 @@ const requestSchema = z.object({
   analysisTone: z.unknown().optional(),
   /** true 면 기본 분석에 이어 실전 학습지(06)까지 한 번에 생성·병합한다 (+5크레딧). */
   includeWorksheet: z.boolean().optional(),
+  /**
+   * true 면 응답을 SSE 로 바꿔 생성 중 사고/본문 델타를 흘린다(문제 생성 md-stream
+   * 과 동일한 로딩 카드 미리보기). 생성·과금·저장 로직은 완전히 동일하고, 마지막에
+   * 같은 JSON 페이로드를 {t:"done"} 프레임으로 싣는다. 미지정이면 기존 JSON 응답.
+   */
+  stream: z.boolean().optional(),
 });
 
 function getAnalysisGenerationPlan(value: unknown): QuestionGenerationPlan | null {
@@ -129,14 +140,90 @@ async function recordCostSafely(input: {
   }
 }
 
+/** 스트리밍 미리보기 프레임 싱크 — 비스트리밍 모드에서는 no-op 이 들어온다. */
+type StreamEmit = (event: Record<string, unknown>) => void;
+const NOOP_EMIT: StreamEmit = () => {};
+
+/**
+ * SSE 래퍼 — 본체(runAnalysis)는 기존 그대로 NextResponse 를 반환하고, 여기서
+ * 그 최종 JSON 을 {t:"done"|"error"} 프레임으로 옮긴다. 본체의 12개 return 지점을
+ * 하나도 건드리지 않아 비스트리밍 경로는 바이트 동일하게 유지된다.
+ */
 export async function POST(req: NextRequest) {
+  const rawBody = await req.json().catch(() => ({}));
+  const wantStream = (rawBody as { stream?: unknown })?.stream === true;
+  if (!wantStream) return runAnalysis(req, rawBody, NOOP_EMIT);
+
+  const encoder = new TextEncoder();
+  const stream = new ReadableStream<Uint8Array>({
+    start(controller) {
+      let closed = false;
+      const emit: StreamEmit = (payload) => {
+        if (closed) return;
+        try {
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify(payload)}\n\n`));
+        } catch {
+          // 클라이언트 이탈 — 이후 프레임은 버리되 생성·과금·저장은 계속한다.
+          closed = true;
+        }
+      };
+      // 개통 즉시 주석 프레임 — 프록시/런타임 초기 버퍼링을 뚫는다.
+      try {
+        controller.enqueue(encoder.encode(": open\n\n"));
+      } catch {
+        closed = true;
+      }
+
+      void (async () => {
+        try {
+          const res = await runAnalysis(req, rawBody, emit);
+          const payload = await res.json().catch(() => ({}));
+          emit(
+            res.ok
+              ? { t: "done", ...payload }
+              : { t: "error", status: res.status, ...payload },
+          );
+        } catch (error) {
+          emit({
+            t: "error",
+            error: "Passage analysis failed",
+            details: error instanceof Error ? error.message : String(error),
+          });
+        }
+        if (!closed) {
+          try {
+            controller.close();
+          } catch {
+            /* already closed */
+          }
+          closed = true;
+        }
+      })();
+    },
+  });
+
+  return new Response(stream, {
+    headers: {
+      "Content-Type": "text/event-stream; charset=utf-8",
+      "Cache-Control": "no-store, no-transform",
+      Connection: "keep-alive",
+      "X-Accel-Buffering": "no",
+    },
+  });
+}
+
+async function runAnalysis(
+  req: NextRequest,
+  rawBody: unknown,
+  emit: StreamEmit,
+): Promise<NextResponse> {
   const requestStartedAt = Date.now();
   const staff = await getStaffSession();
   if (!staff) {
     return NextResponse.json({ error: "Authentication required" }, { status: 401 });
   }
 
-  const parsed = requestSchema.safeParse(await req.json().catch(() => ({})));
+  const parsed = requestSchema.safeParse(rawBody);
   if (!parsed.success) {
     return NextResponse.json(
       { error: "Invalid payload", details: parsed.error.issues },
@@ -179,11 +266,18 @@ export async function POST(req: NextRequest) {
     select: { id: true, status: true, createdAt: true },
   });
   if (active) {
+    // 이 경로는 LLM 을 한 번도 부르지 않으므로 델타가 0프레임이다. 스트림 요청이면
+    // 사유를 담은 phase 프레임을 1회 흘려 패널이 마운트되게 한다 — 그러지 않으면
+    // 사용자에겐 "스트리밍이 고장난 것"으로 보인다(26-07-25 실사고).
+    if (emit !== NOOP_EMIT) {
+      emit({ t: "phase", label: "이미 진행 중인 분석에 연결됨" });
+    }
     return NextResponse.json({
       jobId: active.id,
       status: active.status,
       createdAt: active.createdAt.toISOString(),
       fastPath: false,
+      attachedToExisting: true,
     });
   }
 
@@ -251,6 +345,12 @@ export async function POST(req: NextRequest) {
         {
           contentHash: currentHash,
           deadlineAt: requestStartedAt + 255_000,
+          // 영어 경로와 동형 — 폴백은 반드시 KO 기본 구현이어야 한다
+          // (영어 defaultLlmText 를 넣으면 logPrefix·재시도 정책이 KO 계약과 어긋남).
+          llmText:
+            emit === NOOP_EMIT
+              ? undefined
+              : createStreamingLlmText({ emit, fallback: koDefaultLlmText }),
         },
       );
       generationMs = Date.now() - generationStartedAt;
@@ -433,6 +533,11 @@ export async function POST(req: NextRequest) {
     if (!includeWorksheet && passage.analysis && passage.analysis.contentHash === currentHash) {
       const cachedAnalysis = JSON.parse(passage.analysis.analysisData);
       if (shouldUseCachedAnalysis(cachedAnalysis, generationPlan, analysisTone)) {
+        // LLM 을 부르지 않는 경로다. 가짜 사고 프레임은 만들지 않는다(허위 표시) —
+        // 대신 "캐시를 썼다"는 사실만 1회 알린다. tail 은 비어 있다.
+        if (emit !== NOOP_EMIT) {
+          emit({ t: "phase", label: "저장된 분석 불러오는 중" });
+        }
         const completedAt = new Date();
         const debugTiming = {
           queueWaitMs: 0,
@@ -474,6 +579,7 @@ export async function POST(req: NextRequest) {
           completedAt: completedAt.toISOString(),
           debugTiming,
           fastPath: true,
+          skippedGeneration: true,
         });
       }
     }
@@ -532,6 +638,12 @@ export async function POST(req: NextRequest) {
         // 호출이 더 붙으므로, 코어 데드라인을 낮춰 학습지 몫(≈135s)을 벽 안에 남겨 둔다.
         deadlineAt: requestStartedAt + (includeWorksheet ? 150_000 : 255_000),
         checkpoint: priorCheckpoint,
+        // 스트리밍 요청일 때만 게이트웨이 SSE 를 직접 읽는 구현으로 갈아끼운다.
+        // 실패 시 defaultLlmText 로 폴백하므로 생성 성공률은 무회귀(stream-llm.ts).
+        llmText:
+          emit === NOOP_EMIT
+            ? undefined
+            : createStreamingLlmText({ emit, fallback: defaultLlmText }),
         // promise 를 반환해 resilient 가 await — fire-and-forget 시 지연 쓰기가 최종
         // COMPLETED 결과를 덮어쓰는 레이스를 차단(쓰기 직렬화).
         onCheckpoint: (cp) => {
@@ -637,7 +749,12 @@ export async function POST(req: NextRequest) {
           grade: passage.grade,
         },
         primeReport,
-        { deadlineAt: requestStartedAt + 285_000 },
+        {
+          deadlineAt: requestStartedAt + 285_000,
+          // 코어와 동일하게 스트리밍 요청일 때만 델타를 흘린다 — 학습지 단계에서
+          // 미리보기 패널이 멈춘 것처럼 보이지 않게 한다(워크북·추론 2콜).
+          stream: emit === NOOP_EMIT ? undefined : { emit },
+        },
       );
       // 유효한 학습지 섹션일 때만 교체한다. null(유효한 학습지 생성 실패)이면 기존 코어
       // learning-worksheet(있으면)를 그대로 두거나 섹션을 비운다 — 무효 섹션 저장 금지.

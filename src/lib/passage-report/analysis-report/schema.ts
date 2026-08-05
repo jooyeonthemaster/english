@@ -951,6 +951,16 @@ export const analysisReportSchema = z
      * 같은 섹션이 여러 헤더로 나와도 슬롯키로 구분. 번호(par-sec-no)는 자동 생성이라 편집 대상 아님.
      */
     sectionHeadings: z.record(z.string(), z.object({ ko: z.string().optional(), en: z.string().optional() })).optional(),
+    /**
+     * (편집기) 목차에서 꺼 둔 섹션 슬롯키 목록. 값은 sectionHeadings 와 같은 슬롯키
+     * (`${kind}${idSuffix}` — 예: "passage", "passage-anno", "summary",
+     * "learning-worksheet-logic", "vocabulary", "learning-worksheet").
+     * 여기 담긴 슬롯은 헤더와 본문이 통째로 flow 에서 빠지고, 남은 섹션 번호(01·02…)가
+     * 자동으로 다시 매겨진다. 섹션 인덱스가 아니라 슬롯키인 이유: 한 섹션이 두 슬롯으로
+     * 나오고(passage → 원문 / 필기 분석), 실전 학습지 생성이 sections 순서를 재배치한다.
+     * 없거나 손상되면 전부 표시(하위호환 — 기존 저장 데이터는 필드가 없으므로 무변화).
+     */
+    hiddenSections: z.array(z.string().max(64)).max(32).optional().catch(undefined),
     /** Vocabulary worksheet only mode. Keeps source data but renders only the word-test sheet. */
     vocabTestOnly: z.boolean().optional(),
     /** (편집기) 표지 다음에 '영어 원문만' 단독 페이지를 추가할지. 기본 off. */

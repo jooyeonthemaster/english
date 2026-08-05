@@ -23,6 +23,12 @@ export interface RowOverride {
   /** null → 전체 설정의 난이도 사용. */
   difficulty: "BASIC" | "INTERMEDIATE" | "KILLER" | null;
   /**
+   * 이 지문에만 적용할 추가 지시문. null/undefined → 전체 설정의 「추가 요청사항」 사용.
+   * 오답 기반 변형 딥링크(question-variant)가 지문마다 다른 출제 포인트를 실어 보내므로,
+   * 전역 프롬프트 하나로 합치면 서로 다른 유형의 지시가 섞여 들어간다(2607 §8.4).
+   */
+  customPrompt?: string | null;
+  /**
    * 유형별 세부옵션(빈칸 수·선택지 수 등) 오버라이드. typeId → 설정.
    * 전체 설정과 다른 유형만 담는다 (없는 유형은 전체 설정을 따른다).
    */

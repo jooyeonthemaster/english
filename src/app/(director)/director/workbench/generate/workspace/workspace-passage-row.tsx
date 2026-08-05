@@ -411,6 +411,14 @@ export function WorkspacePassageRow({
   const [editSpans, setEditSpans] = useState<EditSpan[]>([]);
   // 아래 '고친 자리' 목록에서 고른 항목 — 본문의 그 표시를 잠깐 강조한다.
   const [focusedSpan, setFocusedSpan] = useState<number | null>(null);
+  // 본문의 붉은 표시에 커서를 올렸을 때 뜨는 설명 — 표시만으로는 무엇이
+  // 지워졌는지 알 수 없으므로, 그 자리에서 바로 읽히게 한다.
+  const [editTip, setEditTip] = useState<{
+    left: number;
+    top: number;
+    removed: string;
+    added: string;
+  } | null>(null);
   const [editListOpen, setEditListOpen] = useState(false);
   // 패널은 카드(overflow-hidden) 밖으로 나가야 잘리지 않는다 — 칩 위치를 재서
   // fixed 로 띄운다. 스크롤/리사이즈되면 좌표가 낡으므로 닫는다.
@@ -419,6 +427,7 @@ export function WorkspacePassageRow({
     top?: number;
     bottom?: number;
     width: number;
+    flip: boolean;
   } | null>(null);
   const baseRef = useRef(row.content);
   const selfEditRef = useRef<string | null>(null);
@@ -936,6 +945,34 @@ export function WorkspacePassageRow({
       handleEditorMouseMove(e);
       if (editorLocked || disabled) return;
       const off = offsetFromPoint(e.clientX, e.clientY);
+      // 붉은 편집 표시 위인가? — 그 자리에서 무엇이 사라졌는지 알려준다.
+      const area = editorAreaRef.current;
+      const hit =
+        off === null
+          ? undefined
+          : editSpans.find((sp) =>
+              sp.kind === "delete"
+                ? Math.abs(off - sp.from) <= 1
+                : off >= sp.from && off <= sp.to,
+            );
+      if (hit && area) {
+        const ar = area.getBoundingClientRect();
+        // 툴팁 높이 대략치 — 아래로 넘칠 것 같으면 커서 위로 뒤집는다.
+        // (마지막 줄에서 상자 밖으로 삐져나가던 문제)
+        const TIP_H = 74;
+        const y = e.clientY - ar.top;
+        const top =
+          y + 16 + TIP_H > ar.height ? Math.max(4, y - TIP_H - 8) : y + 16;
+        setEditTip({
+          left: Math.max(6, Math.min(e.clientX - ar.left - 20, ar.width - 260)),
+          top,
+          removed: formatRemoved(hit.removed, 140) ?? "",
+          added:
+            hit.kind === "change" ? row.content.slice(hit.from, hit.to) : "",
+        });
+      } else if (editTip) {
+        setEditTip(null);
+      }
       const tok = off === null ? null : tokenAt(off);
       setHoverTok((prev) => {
         if (!tok) return prev === null ? prev : null;
@@ -943,7 +980,16 @@ export function WorkspacePassageRow({
         return { start: tok.start, end: tok.end };
       });
     },
-    [handleEditorMouseMove, editorLocked, disabled, offsetFromPoint, tokenAt],
+    [
+      handleEditorMouseMove,
+      editorLocked,
+      disabled,
+      offsetFromPoint,
+      editSpans,
+      editTip,
+      row.content,
+      tokenAt,
+    ],
   );
 
   /** 드래그 판정 시작 — 움직였으면 클릭(단어 선택)이 아니라 구간 선택이다. */
@@ -1095,23 +1141,21 @@ export function WorkspacePassageRow({
       return;
     }
     const chip = editChipRef.current;
-    const area = editorAreaRef.current;
-    if (!chip || !area) return;
+    if (!chip) return;
     const c = chip.getBoundingClientRect();
-    const a = area.getBoundingClientRect();
-    const width = Math.min(400, window.innerWidth - 24);
-    // 1순위: 지문 카드 바로 오른쪽 여백 — 본문을 한 글자도 가리지 않는다.
-    if (a.right + width + 20 <= window.innerWidth) {
-      setPanelPos({ left: a.right + 10, top: Math.max(12, a.top - 28), width });
-    } else if (a.left - width - 20 >= 0) {
-      // 2순위: 왼쪽 여백
-      setPanelPos({ left: a.left - width - 10, top: Math.max(12, a.top - 28), width });
+    // 칩 바로 아래로 펼친다(카드가 overflow-hidden 이라 fixed 로 띄워야 잘리지
+    // 않는다). 아래 공간이 부족하면 위로 뒤집는다.
+    const width = Math.min(420, window.innerWidth - 24);
+    const left = Math.max(12, Math.min(c.left - 4, window.innerWidth - width - 12));
+    const roomBelow = window.innerHeight - c.bottom - 16;
+    if (roomBelow >= 140) {
+      setPanelPos({ left, top: c.bottom + 6, width, flip: false });
     } else {
-      // 3순위: 자리가 없으면 칩 위로(본문을 일부 덮지만 닫으면 그만)
       setPanelPos({
-        left: Math.max(12, Math.min(c.left, window.innerWidth - width - 12)),
-        bottom: Math.max(12, window.innerHeight - c.top + 8),
+        left,
+        bottom: Math.max(12, window.innerHeight - c.top + 6),
         width,
+        flip: true,
       });
     }
     setEditListOpen(true);
@@ -2146,6 +2190,7 @@ export function WorkspacePassageRow({
                   setOriginalTip(null);
                   scheduleHlHide();
                   setHoverTok(null);
+                  setEditTip(null);
                 }}
                 onPointerDown={handleEditorPointerDown}
                 onPointerUp={handleEditorPointerUp}
@@ -2163,6 +2208,33 @@ export function WorkspacePassageRow({
                 }
                 placeholder="지문 본문"
               />
+              {/* 붉은 편집 표시 설명 — 표시 위에 커서를 올리면 그 자리에서
+                  무엇이 사라졌는지 바로 읽힌다(본문 레이아웃 영향 없음). */}
+              {editTip && (editTip.removed || editTip.added) ? (
+                <div
+                  aria-hidden="true"
+                  style={{ left: editTip.left, top: editTip.top }}
+                  className="pointer-events-none absolute z-[7] w-max max-w-[260px] rounded-lg border border-red-200 bg-white px-2.5 py-1.5 text-[11px] leading-snug shadow-lg shadow-red-100/70 duration-100 animate-in fade-in"
+                >
+                  <div className="mb-0.5 flex items-center gap-1 text-[9.5px] font-bold text-red-500">
+                    <PenLine className="h-2.5 w-2.5" aria-hidden="true" />
+                    {editTip.added ? "여기를 고쳤어요" : "여기서 지웠어요"}
+                  </div>
+                  {editTip.removed ? (
+                    <div className="line-clamp-3 text-slate-400 line-through decoration-red-300">
+                      {editTip.removed}
+                    </div>
+                  ) : null}
+                  {editTip.added ? (
+                    <div className="line-clamp-2 font-medium text-slate-700">
+                      {editTip.added.length > 140
+                        ? `${editTip.added.slice(0, 140)}…`
+                        : editTip.added}
+                    </div>
+                  ) : null}
+                </div>
+              ) : null}
+
               {stagePopover}
 
               <style jsx global>{`
@@ -2176,19 +2248,25 @@ export function WorkspacePassageRow({
                   overflow: visible;
                   vertical-align: baseline;
                 }
-                /* 지운 자리 — 폭이 0이라 칠할 글자가 없다. 글자 높이의 얇은
-                   빨간 기둥(캐럿)으로 '여기서 빠졌다'만 조용히 알린다.
-                   점처럼 보이지 않게 세로로 길고 가늘게. */
+                /* 지운 자리 — 폭이 0이라 칠할 글자가 없다. 빨간 대괄호 빈칸
+                   [ ] 으로 "여기 있던 게 빠졌다"를 글자처럼 보여준다.
+                   세로 기준은 반드시 bottom(베이스라인) — 앵커가 height:0 이라
+                   top 으로 잡으면 막대가 베이스라인 아래로 흘러내려 줄 끝이나
+                   아랫줄에 떠 있는 것처럼 보인다(이전 버그). */
                 .wsr-del::before {
                   content: "";
                   position: absolute;
-                  left: -1px;
-                  top: -0.05em;
-                  height: 1.15em;
-                  width: 2px;
-                  border-radius: 1px;
-                  background: #f87171;
-                  box-shadow: 0 0 0 1.5px rgba(254, 226, 226, 0.9);
+                  left: -2.5px;
+                  bottom: -0.18em;
+                  width: 5px;
+                  height: 0.95em;
+                  box-sizing: border-box;
+                  border: 1px solid #ef4444;
+                  border-radius: 1.5px;
+                  /* 폭 5px — 단어 사이 공백(13px 기준 약 3.5px) 안에 거의 들어가
+                     앞뒤 글자를 덮지 않는다. 이보다 넓히면 반드시 글자 위로
+                     올라탄다(절대배치라 자리를 못 만든다). 속은 비워 둔다. */
+                  background: transparent;
                 }
                 /* 고친 자리 — 옅은 형광펜 + 빨간 밑줄 */
                 mark.wsr-diff {
@@ -2201,8 +2279,8 @@ export function WorkspacePassageRow({
                   box-shadow: inset 0 -2px 0 0 #dc2626;
                 }
                 .wsr-del.wsr-focus::before {
-                  background: #dc2626;
-                  height: 3px;
+                  border-color: #b91c1c;
+                  background: rgba(254, 202, 202, 0.7);
                 }
                 /* 단어 hover 틴트 — 선택 무대의 블럭 감각을 그대로 옮겼다.
                    백드롭에 칠하므로 textarea 의 캐럿·타이핑을 방해하지 않는다. */
@@ -2243,10 +2321,14 @@ export function WorkspacePassageRow({
                   ref={editListRef}
                   style={{
                     left: panelPos.left,
+                    top: panelPos.top,
                     bottom: panelPos.bottom,
                     width: panelPos.width,
                   }}
-                  className="fixed z-50 flex max-h-[min(320px,60vh)] flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-2xl shadow-slate-400/25"
+                  className={
+                    "fixed z-50 flex max-h-[min(300px,52vh)] flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-2xl shadow-slate-400/25 duration-200 ease-out animate-in fade-in " +
+                    (panelPos.flip ? "slide-in-from-bottom-2" : "slide-in-from-top-2")
+                  }
                 >
                   <div className="flex shrink-0 items-center gap-2 border-b border-slate-100 px-3 py-2">
                     <span className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-red-50">

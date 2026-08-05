@@ -98,7 +98,28 @@ export type SectionFlowOptions = {
   passageLayout?: "hlc" | "legacy";
   /** passage 섹션 렌더 뷰. "clean"=원문+해석만, "annotated"=필기 캔버스(기본). */
   passageRenderMode?: "clean" | "annotated";
+  /**
+   * `collectPassageStudyNotes` 결과 주입 — 없으면 passage flow 가 `allSections` 로 직접 계산한다.
+   * assemble 이 1회만 계산해 넘기므로 (a) 같은 지문을 clean/annotated 두 번 emit 해도 1회 계산이고
+   * (b) 섹션 캐시가 이 참조를 키로 써서 "어법/어휘가 안 바뀌면 필기 캔버스 재빌드 없음"을 만든다.
+   * 지문 섹션이 둘 이상인 문서에서는 첫 지문에만 주입된다(나머지는 자기 sentences 기준 자체 계산).
+   */
+  study?: PassageStudyNotes;
 };
+
+/**
+ * `collectPassageStudyNotes` 반환형의 명시 선언.
+ * study-notes.tsx 를 import 하면 types ↔ study-notes 순환이 생기므로 여기서 구조로 선언한다
+ * (구조적 타이핑이라 `ReturnType<typeof collectPassageStudyNotes>` 와 상호 대입 가능).
+ */
+export interface PassageStudyNotes {
+  grammarBySentence: Map<number, GrammarNoteRef[]>;
+  logicBySentence: Map<number, LogicNoteRef[]>;
+  examBySentence: Map<number, ExamNoteRef[]>;
+  vocabBySentence: Map<number, VocabularyNoteRef[]>;
+  parsingBySentence: Map<number, ParsingNoteRef[]>;
+  globalExam: ExamNoteRef[];
+}
 
 export type SectionFlowCtx = {
   si: number;
