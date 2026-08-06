@@ -56,12 +56,19 @@ function artifactSuspect(lemma) {
  *  오인 시 술어 오답을 요구하게 돼 해당 sense가 영구 불통과한다(실측 2건). */
 export function formSig(ko) {
   const t = String(ko ?? "").trim();
-  // '~다' 종결 오인 예외(실측 4건으로 수렴한 규칙):
+  // '~다' 종결 오인 예외(전량 실측으로 수렴한 규칙):
   //  · '마다' 종결은 항상 조사다('~마다', '~할 때마다' — 술어 중 '마다' 종결은 없다)
   //  · '보다·에다'는 물결 접두가 있을 때만 조사다(무접두 '보다'는 see/look의 술어 뜻)
-  const da = /다$/.test(t) && !/마다$/.test(t) && !/^[~〜]\s*(보다|에다)$/.test(t);
+  //  · 낱말로 선 '다'는 부사 '모두'다('하나 또는 둘 다' — and/or 실측)
+  const da = /다$/.test(t) && !/마다$/.test(t) && !/^[~〜]\s*(보다|에다)$/.test(t) && !/\s다$/.test(t);
   return { da, words: t.split(/\s+/).length, len: t.length };
 }
+
+/** 형태 정합에서 '~다' 종결 비교가 의미 있는 품사 — 명사 뜻은 '바다·베란다·소다'처럼
+ *  다로 끝나도 술어가 아니다(전량 게이트 실측: ocean/sea/veranda 영구 불통과의 원인). */
+export const DA_MATTERS = new Set([
+  "verb", "adjective", "adverb", "idiom", "phrasal_verb", "collocation", "conjunction", "preposition",
+]);
 export function formMatch(a, b) {
   return (
     a.da === b.da &&
@@ -108,7 +115,9 @@ export function bannedKoOf(sense) {
 
 async function distractorCandidates(sense, spelling) {
   const pool = await candidatePool(sense.pos, sense.isPhrase, sense.difficulty);
+  // 명사 뜻의 '다' 종결은 우연(바다)이라 후보에게 다-일치를 요구하면 풀이 말라붙는다.
   const sig = formSig(sense.senseKo);
+  if (!DA_MATTERS.has(sense.pos)) sig.da = false;
   const banned = bannedKoOf(sense);
   const seen = new Set(banned.map(normKo));
   // 퍼지 금지 — '정확히'가 정답인데 후보 '정확하게'를 실으면 게이트 MC_CAND_COLLISION
@@ -120,7 +129,9 @@ async function distractorCandidates(sense, spelling) {
     if (seen.has(key)) continue;
     const fk = fuzzyKo(c.senseKo);
     if (fk.length >= 2 && fuzzyBanned.has(fk)) continue;
-    if (!formMatch(sig, formSig(c.senseKo))) continue;
+    const csig = formSig(c.senseKo);
+    if (!DA_MATTERS.has(sense.pos)) csig.da = false;
+    if (!formMatch(sig, csig)) continue;
     seen.add(key);
     matched.push(c);
   }

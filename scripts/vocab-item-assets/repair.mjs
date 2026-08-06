@@ -18,12 +18,15 @@
 import fs from "fs";
 import path from "path";
 import {
-  prisma, buildDossier, normKo, fuzzyKo, stemShare, formSig,
+  prisma, buildDossier, normKo, fuzzyKo, stemShare, formSig, DA_MATTERS,
 } from "./dossier.mjs";
 
 const args = process.argv.slice(2);
 const opt = (n, d) => { const i = args.indexOf(`--${n}`); return i >= 0 ? args[i + 1] : d; };
 const DIR = opt("dir", "experiments/vocab-item-assets/packs");
+// --only <file>: 교정 대상 팩 파일명 목록(줄바꿈 구분) — 전량 게이트 후 critical
+// 팩만 골라 병렬 분할 교정할 때 쓴다(25k 전수 도시에 컴파일 회피).
+const ONLY = opt("only", null);
 
 const fixes = {};
 const FIX = (code) => { fixes[code] = (fixes[code] ?? 0) + 1; };
@@ -160,10 +163,12 @@ function repairSense(pack, variant, s, ds, lookups) {
       kept.push(mkDistractor(c));
       FIX("MC_BACKFILL");
     }
-    // 형태 유일 정답 스왑 — 후보는 컴파일 시점에 형태 정합이 보장돼 있다
+    // 형태 유일 정답 스왑 — 후보는 컴파일 시점에 형태 정합이 보장돼 있다.
     if (kept.length === 3) {
       const dSigs = () => kept.map((d) => formSig(d.ko));
-      if ((aSig.da && dSigs().every((x) => !x.da)) || (!aSig.da && dSigs().every((x) => x.da))) {
+      // '~다' 비교는 술어성 품사만(명사 '바다'류 오인 방지 — 게이트와 동일 기준).
+      if (DA_MATTERS.has(variant.pos) &&
+        ((aSig.da && dSigs().every((x) => !x.da)) || (!aSig.da && dSigs().every((x) => x.da)))) {
         const c = nextCand(seen);
         if (c) { seen.add(normKo(c.senseKo)); kept[kept.length - 1] = mkDistractor(c); FIX("FORM_DA_SWAP"); }
       }
@@ -313,7 +318,13 @@ async function repairPackFile(file) {
 }
 
 async function main() {
-  const files = fs.readdirSync(DIR).filter((f) => f.endsWith(".pack.json"));
+  let files = fs.readdirSync(DIR).filter((f) => f.endsWith(".pack.json"));
+  if (ONLY) {
+    const want = new Set(
+      fs.readFileSync(ONLY, "utf8").split("\n").map((s) => s.trim()).filter(Boolean),
+    );
+    files = files.filter((f) => want.has(f));
+  }
   console.log(`교정 대상 ${files.length}팩`);
   let changed = 0, done = 0;
   for (const f of files) {

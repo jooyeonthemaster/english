@@ -11,7 +11,7 @@
 import fs from "fs";
 import path from "path";
 // 정규화·형태 판정은 dossier.mjs가 단일 정본 — 사본이 어긋나면 유령 결함(파일럿 실측)
-import { prisma, normKo, fuzzyKo, stemShare, formSig as sig } from "./dossier.mjs";
+import { prisma, normKo, fuzzyKo, stemShare, formSig as sig, DA_MATTERS } from "./dossier.mjs";
 
 const args = process.argv.slice(2);
 const opt = (n, d) => { const i = args.indexOf(`--${n}`); return i >= 0 ? args[i + 1] : d; };
@@ -127,11 +127,14 @@ async function checkPack(file) {
           if (CONFESSION.test(String(d.whyWrong ?? "") + String(d.whyPlausible ?? "")))
             F(packName, tag, "critical", "MC_CONFESSION", `해설이 오답 불성립을 자인: "${d.ko}"`);
         }
-        // 형태 유일 정답(블라인드 풀이) 검사 — 감사 1순위 병리
+        // 형태 유일 정답(블라인드 풀이) 검사 — 감사 1순위 병리.
+        // '~다' 종결 비교는 술어성 품사에서만 — 명사의 다-종결(바다·베란다)은 우연이다.
         const a = sig(db.senseKo);
         const ds = set.distractors.map((d) => sig(d.ko));
-        if (a.da && ds.every((x) => !x.da)) F(packName, tag, "critical", "FORM_DA_OUTLIER", `세트${si}: 정답만 '~다' 종결`);
-        if (!a.da && ds.every((x) => x.da)) F(packName, tag, "critical", "FORM_DA_OUTLIER", `세트${si}: 정답만 비'~다'`);
+        if (DA_MATTERS.has(db.pos)) {
+          if (a.da && ds.every((x) => !x.da)) F(packName, tag, "critical", "FORM_DA_OUTLIER", `세트${si}: 정답만 '~다' 종결`);
+          if (!a.da && ds.every((x) => x.da)) F(packName, tag, "critical", "FORM_DA_OUTLIER", `세트${si}: 정답만 비'~다'`);
+        }
         if (a.words >= 3 && ds.every((x) => x.words <= 1)) F(packName, tag, "critical", "FORM_CLAUSE_OUTLIER", `세트${si}: 정답만 절 형태`);
         const maxD = Math.max(...ds.map((x) => x.len));
         if (a.len > maxD * 2.5 + 2) F(packName, tag, "major", "FORM_LEN_OUTLIER", `세트${si}: 정답이 오답 최장의 2.5배+`);
@@ -218,7 +221,18 @@ async function checkPack(file) {
 async function main() {
   const files = fs.readdirSync(DIR).filter((f) => f.endsWith(".pack.json")).map((f) => path.join(DIR, f));
   console.log(`게이트 대상 ${files.length}팩`);
-  for (const f of files) await checkPack(f);
+  // 8-way 병렬 + 진행 로그 — 25k 규모 순차 실행이 원격 DB 왕복에 매몰돼
+  // 수 시간 무소식으로 행처럼 보였던 실측의 교정. 검사 자체는 팩 단위 독립이다.
+  const queue = [...files];
+  let done = 0;
+  await Promise.all(Array.from({ length: 8 }, async () => {
+    while (queue.length) {
+      const f = queue.shift();
+      if (!f) break;
+      await checkPack(f);
+      if (++done % 500 === 0) console.log(`  … ${done}/${files.length}`);
+    }
+  }));
 
   const byLevel = { critical: 0, major: 0, minor: 0 };
   const byCode = {};
