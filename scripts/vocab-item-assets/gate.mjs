@@ -11,7 +11,10 @@
 import fs from "fs";
 import path from "path";
 // 정규화·형태 판정은 dossier.mjs가 단일 정본 — 사본이 어긋나면 유령 결함(파일럿 실측)
-import { prisma, normKo, fuzzyKo, stemShare, formSig as sig, DA_MATTERS } from "./dossier.mjs";
+import { prisma, normKo, fuzzyKo, stemShare, formSig as sig, DA_MATTERS, buildSynonymGraph, enOverlapSynonym } from "./dossier.mjs";
+
+/** 코퍼스 동의어 그래프 + 표기별 영어 정의 토큰 — main()에서 1회 로드(질의 1번). */
+let SYN = { graph: new Map(), glossEn: new Map() };
 
 const args = process.argv.slice(2);
 const opt = (n, d) => { const i = args.indexOf(`--${n}`); return i >= 0 ? args[i + 1] : d; };
@@ -37,7 +40,7 @@ async function checkPack(file) {
   const senseIds = pack.variants.flatMap((v) => v.senses.map((s) => s.senseId));
   const dbSenses = await prisma.vocabDrillSense.findMany({
     where: { id: { in: senseIds } },
-    select: { id: true, lemma: true, pos: true, senseKo: true, senseKoCandidates: true, isPhrase: true },
+    select: { id: true, lemma: true, pos: true, senseKo: true, senseKoCandidates: true, senseEn: true, isPhrase: true },
   });
   const senseById = new Map(dbSenses.map((s) => [s.id, s]));
 
@@ -115,6 +118,13 @@ async function checkPack(file) {
           else if (altKeys.has(key)) {
             // n=1도 critical — 수동검토 실측(82건 중 77건이 진짜 복수정답)으로 임계 폐지
             F(packName, tag, "critical", "MC_ALT_ANSWER", `오답 "${d.ko}"는 같은 뜻의 통용 표기(n=${altN.get(key) ?? 1}, 복수 정답)`);
+          } else if (SYN.graph.get(answerKey)?.has(key)) {
+            // 코퍼스 동의어 — 다른 sense에서 정답 표기와 같은 뜻으로 병기된 적 있는 표기
+            F(packName, tag, "critical", "MC_CORPUS_SYNONYM", `오답 "${d.ko}"는 코퍼스에서 정답 표기와 동의어로 병기된 표기(복수 정답 시비)`);
+          } else if (enOverlapSynonym(db.senseEn, key, SYN.glossEn)) {
+            // 영어 정의 토큰 겹침 — 단계적인↔점진적인(graduated 실서비스 시비)처럼
+            // 한국어 표기는 달라도 정의가 같은 유사어
+            F(packName, tag, "critical", "MC_EN_SYNONYM", `오답 "${d.ko}"의 영어 정의가 정답 뜻과 겹침(유사어 시비)`);
           } else {
             // 퍼지 충돌: '정확히'≈'정확하게' — 어미만 다른 대안 표기(패널 실측 7.32%)
             const fk = fuzzyKo(d.ko);
@@ -219,6 +229,8 @@ async function checkPack(file) {
 }
 
 async function main() {
+  SYN = await buildSynonymGraph();
+  console.log(`동의어 그래프: 표기 ${SYN.size}개`);
   const files = fs.readdirSync(DIR).filter((f) => f.endsWith(".pack.json")).map((f) => path.join(DIR, f));
   console.log(`게이트 대상 ${files.length}팩`);
   // 8-way 병렬 + 진행 로그 — 25k 규모 순차 실행이 원격 DB 왕복에 매몰돼

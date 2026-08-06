@@ -221,6 +221,71 @@ async function wordChoicePool(sense, spelling) {
   return safe.slice(0, 16).map((d) => ({ en: d.lemma, ko: d.ko }));
 }
 
+// ── 코퍼스 동의어 그래프 ─────────────────────────────────────────────────────
+// 같은 sense의 통용 표기 목록에 **함께 등장한** 두 표기는 코퍼스가 인정한 동의어다
+// (단계적인↔점진적인 — graduated 실서비스 시비 실측). 전이 폐쇄는 하지 않는다
+// ('하다'류 허브 표기가 무관 표기끼리 묶는 오염 방지) — 직접 쌍만 쓴다.
+const EN_STOP = new Set([
+  "something", "someone", "somebody", "thing", "things", "person", "people",
+  "that", "this", "with", "from", "into", "onto", "over", "under", "about",
+  "having", "being", "make", "makes", "making", "made", "give", "given",
+  "very", "more", "most", "other", "others", "some", "certain", "particular",
+  "way", "state", "quality", "manner", "used", "using", "cause", "causes",
+]);
+/** senseEn 정의문 → 판별력 있는 내용 토큰(4자+·불용어 제외). */
+export function enTokens(senseEn) {
+  return new Set(
+    String(senseEn ?? "").toLowerCase().match(/[a-z]+/g)?.filter(
+      (w) => w.length >= 4 && !EN_STOP.has(w),
+    ) ?? [],
+  );
+}
+
+let synGraphCache = null;
+export async function buildSynonymGraph() {
+  if (synGraphCache) return synGraphCache;
+  const rows = await prisma.vocabDrillSense.findMany({
+    where: LIVE,
+    select: { senseKo: true, senseKoCandidates: true, senseEn: true },
+  });
+  const graph = new Map(); // normKo → Set(normKo) — 같은 sense에 병기된 표기쌍
+  const glossEn = new Map(); // normKo → Set(en tokens) — 그 표기가 달린 전 sense의 정의 토큰
+  for (const r of rows) {
+    const keys = [...new Set(
+      [r.senseKo, ...(Array.isArray(r.senseKoCandidates) ? r.senseKoCandidates : [])
+        .map((c) => (typeof c === "string" ? c : c?.ko))]
+        .filter((x) => typeof x === "string")
+        .map(normKo)
+        .filter((k) => k.length >= 2),
+    )];
+    const toks = enTokens(r.senseEn);
+    for (const a of keys) {
+      if (toks.size) {
+        if (!glossEn.has(a)) glossEn.set(a, new Set());
+        for (const t of toks) glossEn.get(a).add(t);
+      }
+      if (keys.length < 2) continue;
+      if (!graph.has(a)) graph.set(a, new Set());
+      for (const b of keys) if (b !== a) graph.get(a).add(b);
+    }
+  }
+  synGraphCache = { graph, glossEn };
+  return synGraphCache;
+}
+
+/** 정답 sense 정의문과 오답 표기의 정의 토큰이 3개 이상 겹치면 동의어 시비.
+ *  임계 3인 이유: 반의어(가속↔감속)는 도메인 토큰(speed·rate) 2개를 공유하는
+ *  최고급 오답이라 2로 걸면 오탐(200팩 표본 실측). 동의어는 3개 이상 겹친다. */
+export function enOverlapSynonym(answerSenseEn, distractorKey, glossEn) {
+  const mine = enTokens(answerSenseEn);
+  if (mine.size < 3) return false;
+  const theirs = glossEn.get(distractorKey);
+  if (!theirs) return false;
+  let hit = 0;
+  for (const t of mine) if (theirs.has(t) && ++hit >= 3) return true;
+  return false;
+}
+
 export async function buildDossier(spelling) {
   const lemmaRows = await prisma.vocabDrillLemma.findMany({
     where: { lemma: spelling, ...LIVE },

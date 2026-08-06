@@ -18,8 +18,11 @@
 import fs from "fs";
 import path from "path";
 import {
-  prisma, buildDossier, normKo, fuzzyKo, stemShare, formSig, DA_MATTERS,
+  prisma, buildDossier, buildSynonymGraph, enOverlapSynonym, normKo, fuzzyKo, stemShare, formSig, DA_MATTERS,
 } from "./dossier.mjs";
+
+/** 코퍼스 동의어 그래프 + 표기별 영어 정의 토큰 — main()에서 1회 로드. */
+let SYN = { graph: new Map(), glossEn: new Map() };
 
 const args = process.argv.slice(2);
 const opt = (n, d) => { const i = args.indexOf(`--${n}`); return i >= 0 ? args[i + 1] : d; };
@@ -116,6 +119,8 @@ function repairSense(pack, variant, s, ds, lookups) {
   const candQueue = (ds.distractorCandidates ?? []).filter((c) => {
     const k = normKo(c.senseKo);
     if (bannedAll.has(k)) return false;
+    if (SYN.graph.get(answerKey)?.has(k)) return false;
+    if (enOverlapSynonym(ds.senseEn, k, SYN.glossEn)) return false;
     const fk = fuzzyKo(c.senseKo);
     if (fk.length >= 2 && (fuzzyBanned.get(fk) ?? 0) >= 1) return false;
     return true;
@@ -147,6 +152,8 @@ function repairSense(pack, variant, s, ds, lookups) {
       if (!k || seen.has(k)) drop = "MC_DUP";
       else if (k === answerKey) drop = "MC_EQUALS_ANSWER";
       else if ((altN.get(k) ?? 0) >= 1) drop = "MC_ALT_ANSWER";
+      else if (SYN.graph.get(answerKey)?.has(k)) drop = "MC_CORPUS_SYNONYM";
+      else if (enOverlapSynonym(ds.senseEn, k, SYN.glossEn)) drop = "MC_EN_SYNONYM";
       else if (confession.test(String(d.whyWrong ?? "") + String(d.whyPlausible ?? ""))) drop = "MC_CONFESSION";
       else {
         const fk = fuzzyKo(d.ko);
@@ -318,6 +325,7 @@ async function repairPackFile(file) {
 }
 
 async function main() {
+  SYN = await buildSynonymGraph();
   let files = fs.readdirSync(DIR).filter((f) => f.endsWith(".pack.json"));
   if (ONLY) {
     const want = new Set(
