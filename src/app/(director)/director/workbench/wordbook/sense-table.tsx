@@ -9,8 +9,9 @@
 // 상태는 전부 셸(wordbook-client)이 소유하고 여기는 표시+콜백만 한다.
 // 담기 입력 3종: 단건 토글(onToggleBasket) · shift+클릭 범위·드래그 쓸어담기·
 // 모두 담기(onApplyBasket — 멱등 적용. 상한 처리·알림은 셸 몫).
-// 좁은 화면에서 컬럼을 찌그러뜨리지 않기 위해 테이블에 min-width 를 걸고
-// 바깥 스크롤 영역(overflow-auto)이 가로 스크롤을 흡수한다.
+// 폭 전략: **가로 스크롤을 만들지 않는다.** table-fixed 로 지정폭 합계만 지키고
+// 남는 폭은 단어·대표 뜻이 나눠 가진다(넘치면 말줄임 + title). 그래도 안 들어가는
+// 좁은 구간에서는 COL_HIDE 가 값이 낮은 컬럼부터 접는다.
 // ============================================================================
 
 import {
@@ -58,6 +59,46 @@ interface SenseTableProps {
   /** 비-append 질의마다 증가 — 스크롤을 원점으로 되돌리는 신호(셸 소유) */
   queryEpoch: number;
 }
+
+// ── 컬럼 접힘 우선순위 ───────────────────────────────────────────────────────
+//
+// 표 고정폭 합계(760px, 범위 렌즈는 832px)에 단어·대표 뜻 가변폭이 얹히면
+// 가운데 열이 좁을 때 가로 스크롤이 난다. 강제 최소 너비로 버티면 컬럼이
+// 화면 밖으로 잘려 "추세가 안 보이는데 스크롤을 해야 나오는" 상태가 된다.
+//
+// 그래서 **컨테이너 쿼리로 값이 낮은 컬럼부터 접는다.** 뷰포트가 아니라
+// 컨테이너 기준이라 좌우 패널을 접거나 넓히면 그 즉시 컬럼이 돌아온다.
+// 접는 순서 근거(덱 편성 관점):
+//   1) 모평·학평 — 시행처 3종 중 수능만 남겨도 "본시험 비중" 신호는 유지된다
+//   2) 학년      — 좌측 조건에 같은 축 필터가 있다
+//   3) 추세      — 렌즈(「요즘 뜨는 단어」)로 대체 가능하다
+//   4) 수능      — 마지막 단계. 여기까지 오면 "단어·뜻·빈도·함정·수준·난이도"
+//                  라는 덱 편성 최소 축만 남는다(그 아래로는 접지 않는다)
+// ⚠️ th 와 td 가 **반드시 같은 상수**를 써야 한다. 하나만 접히면 그 행부터
+//    모든 컬럼이 한 칸씩 밀린다.
+// ⚠️ 임계값은 **정적 문자열이어야 한다** — Tailwind 는 소스에 그대로 적힌
+//    클래스만 생성한다. `@max-[${n}px]` 같은 조립은 스타일이 안 나온다.
+//    그래서 「이 범위」 컬럼(+72px)이 붙는 범위 렌즈용을 한 벌 더 적어 둔다.
+type ColHide = { mpHp: string; grade: string; trend: string; sn: string; trap: string; diff: string };
+
+const COL_HIDE_BASE: ColHide = {
+  mpHp: "@max-[1120px]:hidden",
+  grade: "@max-[1000px]:hidden",
+  trend: "@max-[920px]:hidden",
+  sn: "@max-[880px]:hidden",
+  trap: "@max-[560px]:hidden",
+  diff: "@max-[520px]:hidden",
+};
+
+/** 범위 렌즈 — 「이 범위」 72px 만큼 모든 임계값을 올린다. */
+const COL_HIDE_SCOPED: ColHide = {
+  mpHp: "@max-[1192px]:hidden",
+  grade: "@max-[1072px]:hidden",
+  trend: "@max-[992px]:hidden",
+  sn: "@max-[952px]:hidden",
+  trap: "@max-[632px]:hidden",
+  diff: "@max-[592px]:hidden",
+};
 
 /** 모바일 정렬 select 노출 순서 — 계약 고정. md 이상은 헤더 클릭이 담당한다. */
 const MOBILE_SORT_KEYS: readonly WordbookSort[] = [
@@ -199,6 +240,13 @@ export function SenseTable({
   /** 기출 범위 활성 여부 — 「이 범위」 컬럼의 표시 조건. 행의 scopeHits 로
    *  판정하지 않는다(질의 중 빈 rows 에서 컬럼이 깜빡인다). */
   const scoped = !!filter.passage;
+  /** 접힘 임계값 — 「이 범위」 유무로 한 벌을 고른다(위 두 상수는 정적). */
+  const COL_HIDE = scoped ? COL_HIDE_SCOPED : COL_HIDE_BASE;
+  const BOARD_COL_HIDE: Record<"sn" | "mp" | "hp", string> = {
+    sn: COL_HIDE.sn,
+    mp: COL_HIDE.mpHp,
+    hp: COL_HIDE.mpHp,
+  };
 
   const addTitle = "단어장에 담습니다 · 표를 드래그하면 한꺼번에";
   const removeTitle = "단어장에서 뺍니다 · 담긴 행에서 드래그하면 한꺼번에 해제";
@@ -261,7 +309,9 @@ export function SenseTable({
       </div>
 
       {/* ── 스크롤 영역 — DragSelect 가 마키(영역 드래그 담기)를 그린다 ── */}
-      <div ref={scrollRef} className="min-h-0 flex-1 overflow-auto">
+      {/* @container — 컬럼 접힘 판정 기준. 뷰포트가 아니라 **이 열의 실제 폭**이라
+          좌우 패널을 접으면 그 즉시 컬럼이 되돌아온다(COL_HIDE 주석 참조). */}
+      <div ref={scrollRef} className="@container min-h-0 flex-1 overflow-auto">
         <DragSelect
           value={marqueeValue}
           onChange={handleMarquee}
@@ -270,7 +320,13 @@ export function SenseTable({
         >
         {mode === "senses" ? (
           <>
-            <table className={`w-full border-collapse text-[12.5px] ${scoped ? "min-w-[1072px]" : "min-w-[1000px]"}`}>
+            {/* table-fixed — 가로 스크롤을 **구조적으로** 막는다.
+                auto 레이아웃에서는 셀 내용(긴 표제어·긴 뜻)이 열 너비를 밀어올려
+                아무리 컬럼을 접어도 넘침이 남는다(실측: 1366px 에서 9컬럼만
+                남겨도 259px 초과). fixed 로 두면 지정폭 합계만 지키고 나머지는
+                남는 폭을 나눠 가지므로, 내용이 길면 말줄임될 뿐 넘치지 않는다.
+                COL_HIDE 는 "지정폭 합계마저 안 들어가는" 더 좁은 구간의 안전망. */}
+            <table className={`w-full table-fixed border-collapse text-[12.5px] min-w-[480px]`}>
               {/* 전 컬럼 정렬(재클릭 = 방향 반전) + 깔때기 필터(레일과 같은 상태).
                   z-20 — 마키 사각형(z-50)보다는 아래, 행 위 sticky 로만. */}
               <thead className="sticky top-0 z-10 bg-white shadow-[inset_0_-1px_0_theme(colors.slate.200)]">
@@ -278,6 +334,8 @@ export function SenseTable({
                   <th className={`${TH} w-9`}>
                     <span className="sr-only">담기</span>
                   </th>
+                  {/* 단어·대표 뜻만 가변 — 남는 폭을 이 둘이 나눠 갖는다(table-fixed).
+                      길면 말줄임되고, 전체 문자열은 title 로 확인할 수 있다. */}
                   <HeaderTh label="단어" sortKey="lemma" sort={sort} sortDir={sortDir} onSort={onSort} filter={filter} onFilter={onFilter} />
                   <HeaderTh label="품사" sortKey="pos" className="w-[68px]" sort={sort} sortDir={sortDir} onSort={onSort} filterSpec={COLUMN_FILTERS.pos} filter={filter} onFilter={onFilter} />
                   <HeaderTh label="대표 뜻" sortKey="senseKo" sort={sort} sortDir={sortDir} onSort={onSort} filter={filter} onFilter={onFilter} />
@@ -287,15 +345,15 @@ export function SenseTable({
                   ) : null}
                   {/* 함정을 빈도 바로 옆에 — "얼마나 자주 × 얼마나 위험"이 덱 편성의
                       핵심 조합이라 첫 화면 폭 안에 같이 들어와야 한다(1680px 실측). */}
-                  <HeaderTh label="빈도" sortKey="per10k" className="w-[112px]" hint="기출 지문 1만 단어마다 몇 번 나왔는지" sort={sort} sortDir={sortDir} onSort={onSort} filter={filter} onFilter={onFilter} />
-                  <HeaderTh label="함정" sortKey="trapRate" className="w-16" hint="학생이 뜻을 잘못 알기 쉬운 정도" sort={sort} sortDir={sortDir} onSort={onSort} filterSpec={COLUMN_FILTERS.trap} filter={filter} onFilter={onFilter} />
-                  <HeaderTh label="수능" sortKey="sn" className="w-[60px]" sort={sort} sortDir={sortDir} onSort={onSort} filterSpec={COLUMN_FILTERS.sn} filter={filter} onFilter={onFilter} />
-                  <HeaderTh label="모평" sortKey="mp" className="w-[60px]" sort={sort} sortDir={sortDir} onSort={onSort} filterSpec={COLUMN_FILTERS.mp} filter={filter} onFilter={onFilter} />
-                  <HeaderTh label="학평" sortKey="hp" className="w-[60px]" sort={sort} sortDir={sortDir} onSort={onSort} filterSpec={COLUMN_FILTERS.hp} filter={filter} onFilter={onFilter} />
-                  <HeaderTh label="학년" sortKey="gradeTop" className="w-16" hint="주로 나온 학년" sort={sort} sortDir={sortDir} onSort={onSort} filterSpec={COLUMN_FILTERS.grade} filter={filter} onFilter={onFilter} />
-                  <HeaderTh label="수준" sortKey="tier" className="w-16" sort={sort} sortDir={sortDir} onSort={onSort} filterSpec={COLUMN_FILTERS.tier} filter={filter} onFilter={onFilter} />
-                  <HeaderTh label="난이도" sortKey="difficulty" className="w-[76px]" sort={sort} sortDir={sortDir} onSort={onSort} filterSpec={COLUMN_FILTERS.difficulty} filter={filter} onFilter={onFilter} />
-                  <HeaderTh label="추세" sortKey="trend" className="w-24" hint="예전 시험 대비 요즘 시험에서 얼마나 잦아졌는지" sort={sort} sortDir={sortDir} onSort={onSort} filterSpec={COLUMN_FILTERS.trend} filter={filter} onFilter={onFilter} />
+                  <HeaderTh label="빈도" sortKey="per10k" className="w-[104px]" hint="기출 지문 1만 단어마다 몇 번 나왔는지" sort={sort} sortDir={sortDir} onSort={onSort} filter={filter} onFilter={onFilter} />
+                  <HeaderTh label="함정" sortKey="trapRate" className={`w-14 ${COL_HIDE.trap}`} hint="학생이 뜻을 잘못 알기 쉬운 정도" sort={sort} sortDir={sortDir} onSort={onSort} filterSpec={COLUMN_FILTERS.trap} filter={filter} onFilter={onFilter} />
+                  <HeaderTh label="수능" sortKey="sn" className={`w-[56px] ${BOARD_COL_HIDE.sn}`} sort={sort} sortDir={sortDir} onSort={onSort} filterSpec={COLUMN_FILTERS.sn} filter={filter} onFilter={onFilter} />
+                  <HeaderTh label="모평" sortKey="mp" className={`w-[56px] ${COL_HIDE.mpHp}`} sort={sort} sortDir={sortDir} onSort={onSort} filterSpec={COLUMN_FILTERS.mp} filter={filter} onFilter={onFilter} />
+                  <HeaderTh label="학평" sortKey="hp" className={`w-[56px] ${COL_HIDE.mpHp}`} sort={sort} sortDir={sortDir} onSort={onSort} filterSpec={COLUMN_FILTERS.hp} filter={filter} onFilter={onFilter} />
+                  <HeaderTh label="학년" sortKey="gradeTop" className={`w-14 ${COL_HIDE.grade}`} hint="주로 나온 학년" sort={sort} sortDir={sortDir} onSort={onSort} filterSpec={COLUMN_FILTERS.grade} filter={filter} onFilter={onFilter} />
+                  <HeaderTh label="수준" sortKey="tier" className="w-14" sort={sort} sortDir={sortDir} onSort={onSort} filterSpec={COLUMN_FILTERS.tier} filter={filter} onFilter={onFilter} />
+                  <HeaderTh label="난이도" sortKey="difficulty" className={`w-[68px] ${COL_HIDE.diff}`} sort={sort} sortDir={sortDir} onSort={onSort} filterSpec={COLUMN_FILTERS.difficulty} filter={filter} onFilter={onFilter} />
+                  <HeaderTh label="추세" sortKey="trend" className={`w-[84px] ${COL_HIDE.trend}`} hint="예전 시험 대비 요즘 시험에서 얼마나 잦아졌는지" sort={sort} sortDir={sortDir} onSort={onSort} filterSpec={COLUMN_FILTERS.trend} filter={filter} onFilter={onFilter} />
                 </tr>
               </thead>
               <tbody>
@@ -319,7 +377,9 @@ export function SenseTable({
                           onClick={(e) => basketClick(e, i, senseItem(r))}
                         />
                       </td>
-                      <td className="whitespace-nowrap px-2 font-semibold text-slate-900">
+                      {/* table-fixed 라 폭이 고정 — 긴 표제어(take ownership of)는
+                          잘리므로 전체 문자열을 title 로 남긴다. */}
+                      <td className="truncate px-2 font-semibold text-slate-900" title={r.lemma}>
                         {r.lemma}
                         {r.lemmaSenseCount > 1 ? (
                           <span className="ml-1 text-[10px] font-medium text-blue-500">
@@ -330,7 +390,7 @@ export function SenseTable({
                       <td className="px-2">
                         <PosChip pos={r.pos} />
                       </td>
-                      <td className="max-w-[240px] px-2">
+                      <td className="px-2">
                         <div className="truncate text-slate-600" title={r.senseKo}>
                           {/* allSenses 필터에선 비대표 뜻 행이 섞인다 — 몇 번째 뜻인지 표기 */}
                           {r.senseOrder > 0 ? (
@@ -363,7 +423,7 @@ export function SenseTable({
                           <MiniBar value={r.per10k ?? 0} max={per10kMax} />
                         </div>
                       </td>
-                      <td className="px-2">
+                      <td className={`px-2 ${COL_HIDE.trap}`}>
                         {r.trapCount > 0 ? (
                           <span
                             className={`tabular-nums ${
@@ -381,25 +441,26 @@ export function SenseTable({
                           <span className="text-slate-300">—</span>
                         )}
                       </td>
-                      {/* 시행처 3종은 구조가 같다 — key 는 컬럼 이름으로 고정 */}
+                      {/* 시행처 3종은 구조가 같다 — key 는 컬럼 이름으로 고정.
+                          접힘 클래스는 헤더와 같은 BOARD_COL_HIDE 에서 가져온다. */}
                       {([["sn", r.sn], ["mp", r.mp], ["hp", r.hp]] as const).map(([k, v]) => (
                         <td
                           key={k}
-                          className={`px-2 text-right tabular-nums ${v === 0 ? "text-slate-300" : "text-slate-600"}`}
+                          className={`px-2 text-right tabular-nums ${BOARD_COL_HIDE[k]} ${v === 0 ? "text-slate-300" : "text-slate-600"}`}
                         >
                           {fmt(v)}
                         </td>
                       ))}
-                      <td className="whitespace-nowrap px-2 text-slate-500">
+                      <td className={`whitespace-nowrap px-2 text-slate-500 ${COL_HIDE.grade}`}>
                         {r.gradeTop ?? "—"}
                       </td>
                       <td className="px-2">
                         <TierChip tier={r.tier} />
                       </td>
-                      <td className="px-2">
+                      <td className={`px-2 ${COL_HIDE.diff}`}>
                         <DiffDots n={r.difficulty} />
                       </td>
-                      <td className="px-2">
+                      <td className={`px-2 ${COL_HIDE.trend}`}>
                         <TrendChip label={r.trendLabel} ratio={r.trendRatio} />
                       </td>
                     </tr>
@@ -407,7 +468,9 @@ export function SenseTable({
                 })}
                 {rows.length === 0 && !loading ? (
                   <tr>
-                    <td colSpan={13} className="py-20">
+                    {/* colSpan 은 접힘과 무관하게 최대 컬럼 수로 둔다 — 숨은 칸도
+                        테이블 열 수에는 남아 있어 모자라면 빈 칸이 생긴다. */}
+                    <td colSpan={scoped ? 14 : 13} className="py-20">
                       {/* sticky — 테이블 min-width 중앙이 아니라 보이는 영역 중앙에 */}
                       <div className="sticky left-0 max-w-[100vw] text-center">
                         <p className="text-[13px] font-medium text-slate-600">
