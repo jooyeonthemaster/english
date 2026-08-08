@@ -25,6 +25,7 @@ import { DiffDots, MiniBar, PosChip, TierChip, TrendChip, fmt, fmt1 } from "./wo
 import { ShiftTable } from "./shift-table";
 import { COLUMN_FILTERS, HeaderTh } from "./column-menu";
 import { BasketButton, TH, senseItem, shiftItem } from "./table-bits";
+import { Pagination } from "./pagination";
 import {
   WORDBOOK_SORT_LABELS,
   type WordbookBasketItem,
@@ -54,8 +55,11 @@ interface SenseTableProps {
   onToggleBasket: (item: WordbookBasketItem) => void;
   /** 멱등 적용(on=담기/off=빼기) — 범위·쓸어담기·모두 담기 공용. 토글 아님 */
   onApplyBasket: (items: WordbookBasketItem[], on: boolean) => void;
-  onLoadMore: () => void;
-  hasMore: boolean;
+  /** 페이지네이션 — 1-base. 상태는 셸이 소유하고 여기는 표시+콜백만. */
+  page: number;
+  pageSize: number;
+  onPage: (page: number) => void;
+  onPageSize: (size: number) => void;
   /** 비-append 질의마다 증가 — 스크롤을 원점으로 되돌리는 신호(셸 소유) */
   queryEpoch: number;
 }
@@ -136,8 +140,10 @@ export function SenseTable({
   basketSenseIds,
   onToggleBasket,
   onApplyBasket,
-  onLoadMore,
-  hasMore,
+  page,
+  pageSize,
+  onPage,
+  onPageSize,
   queryEpoch,
 }: SenseTableProps) {
   // MiniBar 기준값 — 현재 페이지 내 상대 비교(전역 최대는 롱테일이라 다 눌린다).
@@ -485,16 +491,6 @@ export function SenseTable({
                 ) : null}
               </tbody>
             </table>
-            {hasMore ? (
-              <button
-                type="button"
-                onClick={onLoadMore}
-                disabled={loading}
-                className="sticky left-0 h-10 w-full text-[12px] tabular-nums text-slate-500 hover:bg-slate-50 disabled:cursor-default disabled:hover:bg-white"
-              >
-                {loading ? "불러오는 중…" : `더 보기 (${rows.length}/${fmt(total)})`}
-              </button>
-            ) : null}
           </>
         ) : (
           <ShiftTable
@@ -511,6 +507,19 @@ export function SenseTable({
         )}
         </DragSelect>
       </div>
+      {/* 페이지네이션은 스크롤 영역 **밖**이다 — 표를 끝까지 내려도 항상 보인다.
+          의미 이동(shift) 모드는 발굴 결과 고정 목록이라 페이지가 없다. */}
+      {mode === "senses" ? (
+        <Pagination
+          page={page}
+          pageSize={pageSize}
+          total={total}
+          rowCount={rows.length}
+          loading={loading}
+          onPage={onPage}
+          onPageSize={onPageSize}
+        />
+      ) : null}
     </section>
   );
 }

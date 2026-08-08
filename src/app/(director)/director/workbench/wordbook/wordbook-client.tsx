@@ -45,6 +45,8 @@ import {
   type WordbookShiftRow,
   type WordbookSort,
   type WordbookSortDir,
+  WORDBOOK_PAGE_SIZE_DEFAULT,
+  WORDBOOK_PAGE_SIZES,
   WORDBOOK_SORT_DEFAULT_DIR,
 } from "./wordbook-types";
 
@@ -69,6 +71,11 @@ export function WordbookClient({
   const [q, setQ] = useState("");
   const [rows, setRows] = useState<WordbookSenseRow[]>(initialRows);
   const [total, setTotal] = useState(initialTotal);
+  /** 1-base. ref 는 디바운스 콜백이 스테일 값을 읽지 않게 하는 미러다. */
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState<number>(WORDBOOK_PAGE_SIZE_DEFAULT);
+  const pageRef = useRef(1);
+  const pageSizeRef = useRef<number>(WORDBOOK_PAGE_SIZE_DEFAULT);
   const [loading, setLoading] = useState(false);
   const [shiftRows, setShiftRows] = useState<WordbookShiftRow[]>([]);
   const [shiftLoading, setShiftLoading] = useState(false);
@@ -143,27 +150,34 @@ export function WordbookClient({
   /** 비-append 질의마다 증가 — 테이블이 스크롤을 원점으로 되돌리는 신호 */
   const [queryEpoch, setQueryEpoch] = useState(0);
 
+  /**
+   * 한 쪽을 가져와 **통째로 교체**한다(누적 append 없음).
+   * offset 은 (page-1)*size — 서버가 20,000 에서 클램프하므로 페이지 크기는
+   * 그 약수여야 한다(wordbook-types.WORDBOOK_PAGE_SIZES 주석).
+   * 페이지 이동도 스크롤 원점 복귀 대상이라 queryEpoch 를 항상 올린다.
+   */
   const fetchPage = useCallback(
     async (
       f: WordbookFilter,
       s: WordbookSort,
       d: WordbookSortDir,
-      offset: number,
-      append: boolean,
+      pageNo: number,
+      size: number,
     ) => {
       const seq = ++reqSeq.current;
       setLoading(true);
-      if (!append) setQueryEpoch((e) => e + 1);
+      setQueryEpoch((e) => e + 1);
       try {
-        const page = await listWordbookSenses({
+        const res = await listWordbookSenses({
           filter: f,
           sort: s,
           dir: d,
-          offset,
+          offset: (pageNo - 1) * size,
+          limit: size,
         });
         if (seq !== reqSeq.current) return;
-        setRows((prev) => (append ? [...prev, ...page.rows] : page.rows));
-        setTotal(page.total);
+        setRows(res.rows);
+        setTotal(res.total);
       } catch {
         if (seq === reqSeq.current) setNotice("목록을 불러오지 못했습니다.");
       } finally {
@@ -182,9 +196,13 @@ export function WordbookClient({
     lastFiredQ.current = qRef.current;
   }, []);
 
+  /** 조건이 바뀌면 **반드시 1쪽으로 돌아간다** — 7쪽을 보던 중 조건을 좁히면
+   *  결과가 3쪽뿐이라 빈 화면이 뜬다(서버는 범위 밖 offset 에 0행을 준다). */
   const runQuery = useCallback(
     (f: WordbookFilter, s: WordbookSort, d: WordbookSortDir) => {
-      void fetchPage({ ...f, q: qRef.current || undefined }, s, d, 0, false);
+      setPage(1);
+      pageRef.current = 1;
+      void fetchPage({ ...f, q: qRef.current || undefined }, s, d, 1, pageSizeRef.current);
     },
     [fetchPage],
   );
@@ -197,12 +215,14 @@ export function WordbookClient({
     if (qTimer.current) clearTimeout(qTimer.current);
     qTimer.current = setTimeout(() => {
       lastFiredQ.current = qRef.current;
+      setPage(1);
+      pageRef.current = 1;
       void fetchPage(
         { ...filterRef.current, q: qRef.current || undefined },
         sortRef.current,
         dirRef.current,
-        0,
-        false,
+        1,
+        pageSizeRef.current,
       );
     }, 250);
     return () => {
@@ -316,15 +336,48 @@ export function WordbookClient({
     [cancelQTimer, runQuery],
   );
 
-  const handleLoadMore = useCallback(() => {
-    void fetchPage(
-      { ...filterRef.current, q: qRef.current || undefined },
-      sortRef.current,
-      dirRef.current,
-      rows.length,
-      true,
-    );
-  }, [fetchPage, rows.length]);
+  const handlePage = useCallback(
+    (p: number) => {
+      cancelQTimer();
+      const next = Math.max(1, Math.trunc(p));
+      setPage(next);
+      pageRef.current = next;
+      void fetchPage(
+        { ...filterRef.current, q: qRef.current || undefined },
+        sortRef.current,
+        dirRef.current,
+        next,
+        pageSizeRef.current,
+      );
+    },
+    [cancelQTimer, fetchPage],
+  );
+
+  /**
+   * 쪽당 개수 변경 — 보고 있던 **첫 행을 그대로 붙잡는다**(1쪽으로 튕기지 않는다).
+   * 예: 80개씩 3쪽(161번째)에서 200개씩으로 바꾸면 1쪽(1~200)이 아니라
+   *     161번째가 든 1쪽이 나온다.
+   */
+  const handlePageSize = useCallback(
+    (size: number) => {
+      if (!(WORDBOOK_PAGE_SIZES as readonly number[]).includes(size)) return;
+      cancelQTimer();
+      const firstRow = (pageRef.current - 1) * pageSizeRef.current;
+      const next = Math.floor(firstRow / size) + 1;
+      setPageSize(size);
+      pageSizeRef.current = size;
+      setPage(next);
+      pageRef.current = next;
+      void fetchPage(
+        { ...filterRef.current, q: qRef.current || undefined },
+        sortRef.current,
+        dirRef.current,
+        next,
+        size,
+      );
+    },
+    [cancelQTimer, fetchPage],
+  );
 
   // ── 도시에 ─────────────────────────────────────────────────────────────────
   const openDossier = useCallback((lemmaId: string) => {
@@ -561,8 +614,10 @@ export function WordbookClient({
             basketSenseIds={basketSenseIds}
             onToggleBasket={toggleBasket}
             onApplyBasket={applyBasket}
-            onLoadMore={handleLoadMore}
-            hasMore={!shiftAxis && rows.length < total}
+            page={page}
+            pageSize={pageSize}
+            onPage={handlePage}
+            onPageSize={handlePageSize}
             queryEpoch={queryEpoch}
             />
           </div>

@@ -53,6 +53,20 @@ export interface WordbookBasketItem {
 /** 덱 spec senseIds 상한(decks.ts LIMIT_MAX)과 동일 — 초과 담기 차단. */
 export const BASKET_MAX = 500;
 
+// ── 페이지네이션 ─────────────────────────────────────────────────────────────
+//
+// ⚠️ 페이지 크기는 **서버 OFFSET_MAX(20,000)를 나누어떨어져야 한다.**
+//    (wordbook-explore.ts: offset 은 20,000 에서 침묵 클램프되고 total 도
+//     min(n, OFFSET_MAX + limit) 로 잘린다.)
+//    나누어떨어지지 않으면 마지막 페이지의 offset 이 상한을 넘어 클램프되고,
+//    직전 페이지와 **같은 행이 다시 나온다**. 실측: 150개씩이면 총계는 135쪽인데
+//    134쪽까지만 유효해 135쪽이 134쪽의 복사본이 된다.
+//    20,000 / 50=400 · 80=250 · 100=200 · 200=100 — 넷 다 정수다.
+export const WORDBOOK_PAGE_SIZES = [50, 80, 100, 200] as const;
+export const WORDBOOK_PAGE_SIZE_DEFAULT = 80;
+/** 서버 PAGE_SIZE_MAX 와 같아야 한다(초과 요청은 서버가 잘라 화면과 어긋난다). */
+export const WORDBOOK_PAGE_SIZE_MAX = 200;
+
 // ── 렌즈 ─────────────────────────────────────────────────────────────────────
 
 export type WordbookLens =
