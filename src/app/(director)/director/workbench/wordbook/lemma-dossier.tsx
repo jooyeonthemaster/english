@@ -13,10 +13,10 @@
 // ============================================================================
 
 import { useState, type ReactNode } from "react";
-import { Check, ChevronRight, Plus, X } from "lucide-react";
+import { AlertTriangle, Check, ChevronRight, Plus, X } from "lucide-react";
 import { VOCAB_TRAP_KIND_LABELS } from "@/lib/vocab-drill/display";
 import {
-  DiffDots, fmt, fmt1, HBarList, PosChip, posKo, SectionTitle, SegBar,
+  DiffDots, fmt, fmt1, HBarList, PosChip, posKo, SegBar,
   TierChip, tierKo, TrendChip, YearBars,
 } from "./wordbook-ui";
 import type {
@@ -101,12 +101,22 @@ export function LemmaDossier({
   );
 }
 
-/** 본문 섹션 공통 틀 — 좌우 px-3 끝선 정렬·헤어라인 리듬을 한 곳에서 강제. */
-function Sec({ title, hint, children }: { title: ReactNode; hint?: string; children: ReactNode }) {
+/**
+ * 본문 섹션 공통 틀 — 좌우 px-3 끝선 정렬을 한 곳에서 강제.
+ * 헤어라인만으로는 섹션 경계가 안 읽힌다(유저 피드백) — 제목을 옅은 배경
+ * 스트립으로 승격해 훑어 내릴 때 구획이 먼저 보이게 한다.
+ * tinted: 본문 바탕을 살짝 가라앉혀 안의 흰 카드(뜻 목록)가 도드라지게 한다.
+ */
+function Sec({
+  title, hint, tinted, children,
+}: { title: ReactNode; hint?: string; tinted?: boolean; children: ReactNode }) {
   return (
-    <section className="border-b border-slate-100 px-3 py-2.5">
-      <SectionTitle hint={hint}>{title}</SectionTitle>
-      {children}
+    <section className="border-b border-slate-200/80">
+      <div className="flex items-baseline justify-between gap-2 border-b border-slate-100 bg-slate-50/80 px-3 py-1.5">
+        <h3 className="text-[10.5px] font-bold tracking-wide text-slate-600">{title}</h3>
+        {hint ? <span className="truncate text-[10px] text-slate-400">{hint}</span> : null}
+      </div>
+      <div className={`px-3 py-2.5 ${tinted ? "bg-slate-50/60" : ""}`}>{children}</div>
     </section>
   );
 }
@@ -228,32 +238,10 @@ function DossierPane({
         </div>
       </div>
 
-      {/* ① 25개년 출현 — 코퍼스 전수 */}
-      {yearStats ? (
-        <Sec title="25개년 출현" hint="기출 전체 기준">
-          <YearBars data={yearStats.byYear} from={2003} to={2027} height={56} />
-          <div className="mt-2">
-            <SegBar parts={GRADE_PARTS.map((g) => ({ label: g.key, value: yearStats.byGrade[g.key] ?? 0, color: g.color }))} />
-          </div>
-        </Sec>
-      ) : null}
-
-      {/* ② 시행처 */}
-      {yearStats ? (
-        <Sec title="시험 종류">
-          <SegBar parts={BOARD_PARTS.map((b) => ({ label: b.label, value: yearStats.byBoard[b.key] ?? 0, color: b.color }))} />
-        </Sec>
-      ) : null}
-
-      {/* ③ 문항 유형 친화도 */}
-      {typeItems.length > 0 ? (
-        <Sec title="어떤 문제 유형에 잘 나오나">
-          <HBarList items={typeItems} maxItems={6} />
-        </Sec>
-      ) : null}
-
-      {/* ④ 뜻 목록 — 조회 캡(20) 초과 표제어는 절단 사실을 표기한다(take 47 등) */}
+      {/* ① 뜻 목록 — 단어장에 담는 실작업 대상이라 맨 위로 올린다(유저 피드백).
+          조회 캡(20) 초과 표제어는 절단 사실을 표기한다(take 47 등) */}
       <Sec
+        tinted
         title={
           lemma.senseCount > senses.length
             ? `뜻 ${senses.length}/${lemma.senseCount}개`
@@ -265,12 +253,36 @@ function DossierPane({
             출현이 많은 순으로 {senses.length}개까지 표시합니다.
           </p>
         ) : null}
-        {senses.map((s, i) => (
-          <div key={s.id} className={i > 0 ? "mt-2.5 border-t border-slate-100 pt-2.5" : undefined}>
-            <SenseCard sense={s} lemma={lemma} inBasket={basketSenseIds.has(s.id)} onToggleBasket={onToggleBasket} />
-          </div>
-        ))}
+        <div className="space-y-2">
+          {senses.map((s) => (
+            <SenseCard key={s.id} sense={s} lemma={lemma} inBasket={basketSenseIds.has(s.id)} onToggleBasket={onToggleBasket} />
+          ))}
+        </div>
       </Sec>
+
+      {/* ② 25개년 출현 — 코퍼스 전수 */}
+      {yearStats ? (
+        <Sec title="25개년 출현" hint="기출 전체 기준">
+          <YearBars data={yearStats.byYear} from={2003} to={2027} height={56} />
+          <div className="mt-2">
+            <SegBar parts={GRADE_PARTS.map((g) => ({ label: g.key, value: yearStats.byGrade[g.key] ?? 0, color: g.color }))} />
+          </div>
+        </Sec>
+      ) : null}
+
+      {/* ③ 시행처 */}
+      {yearStats ? (
+        <Sec title="시험 종류">
+          <SegBar parts={BOARD_PARTS.map((b) => ({ label: b.label, value: yearStats.byBoard[b.key] ?? 0, color: b.color }))} />
+        </Sec>
+      ) : null}
+
+      {/* ④ 문항 유형 친화도 */}
+      {typeItems.length > 0 ? (
+        <Sec title="어떤 문제 유형에 잘 나오나">
+          <HBarList items={typeItems} maxItems={6} />
+        </Sec>
+      ) : null}
 
       {/* ⑤ 연어 */}
       {lemma.collocations.length > 0 ? (
@@ -341,9 +353,10 @@ function SenseCard({
   const hiddenExamples = s.examples.length - 2;
   const hiddenTraps = Math.min(s.traps.length, 4) - 2;
   const toggleCls = "mt-0.5 text-[10.5px] font-medium text-blue-600 hover:underline";
+  const trapPct = Math.round(s.trapRate * 100);
 
   return (
-    <div>
+    <div className="rounded-lg border border-slate-200 bg-white p-2.5 shadow-[0_1px_2px_rgba(15,23,42,0.05)]">
       <div className="flex items-center gap-1.5">
         <span className="flex size-[18px] shrink-0 items-center justify-center rounded bg-slate-100 text-[10px] text-slate-500">
           #{s.senseOrder + 1}
@@ -383,11 +396,18 @@ function SenseCard({
         </div>
       ) : null}
 
+      {/* 함정 수치는 아래 「헷갈림 주의」 카드가 맡는다 — 노트가 안 내려온
+          뜻(뜻별 몫 절단 등)만 여기 폴백으로 남겨 정보 소실을 막는다 */}
       <div className="mt-1 text-[10.5px] tabular-nums text-slate-400">
-        출현 {fmt(s.occurrences)} · 예문 {fmt(s.exampleCount)} ·{" "}
-        <span className={s.trapRate >= 0.5 ? "text-rose-500" : undefined}>
-          함정 {s.trapCount}개{s.trapCount > 0 ? ` (${Math.round(s.trapRate * 100)}%)` : ""}
-        </span>
+        출현 {fmt(s.occurrences)} · 예문 {fmt(s.exampleCount)}
+        {s.trapCount > 0 && s.traps.length === 0 ? (
+          <span
+            className={s.trapRate >= 0.5 ? "text-rose-500" : undefined}
+            title={`기출에서 이 뜻으로 나온 문맥의 ${trapPct}%가 학생이 뜻을 잘못 읽기 쉬운 자리로 판정됐습니다.`}
+          >
+            {" "}· 잘못 읽기 쉬운 문맥 {trapPct}%
+          </span>
+        ) : null}
       </div>
 
       {/* 뜻별 미니 분포 — 예문 표본 기준(각주 참조) */}
@@ -413,6 +433,54 @@ function SenseCard({
         </div>
       ) : null}
 
+      {/* 헷갈림 주의 — 예문보다 위. 단어장 선별 판단에 먼저 필요한 정보라서다
+          (유저 피드백). %는 "잘못 읽기 쉬운 문맥 비율"임을 카드가 스스로 말한다 —
+          맨살 "함정 5개 (80%)" 표기는 해석 불가 판정을 받았다 */}
+      {shownTraps.length > 0 ? (
+        <div className="mt-1.5 overflow-hidden rounded-md border border-amber-200/80">
+          <div
+            className="flex items-center gap-1.5 border-b border-amber-100 bg-amber-50 px-2 py-1"
+            title={`기출에서 이 뜻으로 나온 문맥의 ${trapPct}%가 학생이 뜻을 잘못 읽기 쉬운 자리로 판정됐습니다. 아래 메모는 그 실제 오독 시나리오입니다.`}
+          >
+            <AlertTriangle className="size-3 shrink-0 text-amber-500" />
+            <span className="shrink-0 text-[10px] font-bold text-amber-800">헷갈림 주의</span>
+            {trapPct > 0 ? (
+              <>
+                <span
+                  className={`shrink-0 rounded px-1 py-px text-[9.5px] font-bold tabular-nums ${
+                    s.trapRate >= 0.5 ? "bg-rose-100 text-rose-700" : "bg-amber-100 text-amber-800"
+                  }`}
+                >
+                  {trapPct}%
+                </span>
+                <span className="min-w-0 flex-1 truncate text-right text-[9.5px] text-amber-700/70">
+                  잘못 읽기 쉬운 문맥 비율
+                </span>
+              </>
+            ) : null}
+          </div>
+          <div className="space-y-1 bg-amber-50/40 px-2 py-1.5">
+            {shownTraps.map((t, i) => (
+              <div key={i} className="flex items-start gap-1.5">
+                <span className="mt-px shrink-0 whitespace-nowrap rounded border border-amber-200 bg-white px-1 py-px text-[9.5px] font-medium text-amber-700">
+                  {VOCAB_TRAP_KIND_LABELS[t.kind] ?? t.kind}
+                </span>
+                <span className="break-keep text-[11px] text-slate-600">{t.note}</span>
+              </div>
+            ))}
+            {hiddenTraps > 0 ? (
+              <button
+                type="button"
+                onClick={() => setMoreTraps((v) => !v)}
+                className="text-[10.5px] font-medium text-amber-700 hover:underline"
+              >
+                {moreTraps ? "접기" : `${hiddenTraps}개 더 보기`}
+              </button>
+            ) : null}
+          </div>
+        </div>
+      ) : null}
+
       {shownExamples.map((e, i) => (
         <ExampleCard key={i} example={e} />
       ))}
@@ -428,24 +496,6 @@ function SenseCard({
           출현한 문장 전부가 아니라 대표 예문 {s.examples.length}개를 골라 보여
           드립니다.
         </p>
-      ) : null}
-
-      {shownTraps.length > 0 ? (
-        <div className="mt-1 space-y-1">
-          {shownTraps.map((t, i) => (
-            <div key={i} className="flex items-start gap-1.5">
-              <span className="mt-px shrink-0 whitespace-nowrap rounded bg-amber-50 px-1 py-px text-[9.5px] font-medium text-amber-700">
-                {VOCAB_TRAP_KIND_LABELS[t.kind] ?? t.kind}
-              </span>
-              <span className="break-keep text-[11px] text-slate-600">{t.note}</span>
-            </div>
-          ))}
-        </div>
-      ) : null}
-      {hiddenTraps > 0 ? (
-        <button type="button" onClick={() => setMoreTraps((v) => !v)} className={toggleCls}>
-          {moreTraps ? "함정 접기" : `함정 ${hiddenTraps}개 더 보기`}
-        </button>
       ) : null}
     </div>
   );
