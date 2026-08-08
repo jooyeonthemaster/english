@@ -13,7 +13,7 @@
 // ============================================================================
 
 import { useState, type ReactNode } from "react";
-import { AlertTriangle, Check, ChevronRight, Plus, X } from "lucide-react";
+import { AlertTriangle, Check, ChevronDown, ChevronRight, Plus, X } from "lucide-react";
 import { VOCAB_TRAP_KIND_LABELS } from "@/lib/vocab-drill/display";
 import {
   DiffDots, fmt, fmt1, HBarList, PosChip, posKo, SegBar,
@@ -341,6 +341,8 @@ function SenseCard({
   inBasket: boolean;
   onToggleBasket: (item: WordbookBasketItem) => void;
 }) {
+  // 카드 접힘 — 헤더 행만 상시 노출(유저 확정), 기본 접힘.
+  const [open, setOpen] = useState(false);
   const [moreExamples, setMoreExamples] = useState(false);
   const [moreTraps, setMoreTraps] = useState(false);
 
@@ -355,16 +357,46 @@ function SenseCard({
   const trapPct = Math.round(s.trapRate * 100);
 
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-2.5 shadow-[0_1px_2px_rgba(15,23,42,0.05)]">
-      <div className="flex items-center gap-1.5">
-        <span className="flex size-[18px] shrink-0 items-center justify-center rounded bg-slate-100 text-[10px] text-slate-500">
-          #{s.senseOrder + 1}
-        </span>
-        <span className="min-w-0 truncate text-[13px] font-semibold text-slate-800" title={s.senseKo}>
-          {s.senseKo}
-        </span>
-        <TierChip tier={s.tier} />
-        <DiffDots n={s.difficulty} />
+    <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.05)]">
+      {/* 헤더 행 — 담기 버튼이 button 중첩이 되면 안 되므로 좌측 묶음만 토글 버튼.
+          접힘 상태의 유일한 정보라 함정 %를 헤더에도 상시 노출한다(색 규약은
+          sense-table 함정 열과 동일: ≥50% rose / ≥25% amber / 그 외 slate) */}
+      <div className="flex items-center gap-1.5 pr-2">
+        <button
+          type="button"
+          aria-expanded={open}
+          title={open ? "접기" : "펼치기"}
+          onClick={() => setOpen((v) => !v)}
+          className="group flex min-w-0 flex-1 items-center gap-1.5 py-2 pl-2.5 text-left"
+        >
+          <span className="flex size-[18px] shrink-0 items-center justify-center rounded bg-slate-100 text-[10px] text-slate-500">
+            #{s.senseOrder + 1}
+          </span>
+          <span className="min-w-0 truncate text-[13px] font-semibold text-slate-800" title={s.senseKo}>
+            {s.senseKo}
+          </span>
+          <TierChip tier={s.tier} />
+          <DiffDots n={s.difficulty} />
+          <span className="ml-auto flex shrink-0 items-center gap-1.5">
+            {s.trapCount > 0 ? (
+              <span
+                className={`rounded px-1 py-px text-[9.5px] font-semibold tabular-nums ${
+                  s.trapRate >= 0.5
+                    ? "bg-rose-50 text-rose-600"
+                    : s.trapRate >= 0.25
+                      ? "bg-amber-50 text-amber-700"
+                      : "bg-slate-100 text-slate-500"
+                }`}
+                title={`잘못 읽기 쉬운 문맥 비율 ${trapPct}%`}
+              >
+                {trapPct}%
+              </span>
+            ) : null}
+            <ChevronDown
+              className={`size-3.5 text-slate-300 transition-transform duration-300 group-hover:text-slate-500 motion-reduce:transition-none ${open ? "" : "-rotate-90"}`}
+            />
+          </span>
+        </button>
         {/* 담기 버튼 — sense-table 과 동일 관용구(체크=담김/플러스=담기) */}
         <button
           type="button"
@@ -374,7 +406,7 @@ function SenseCard({
             senseId: s.id, lemmaId: lemma.id, lemma: lemma.lemma, pos: lemma.pos,
             senseKo: s.senseKo, tier: s.tier, difficulty: s.difficulty,
           })}
-          className={`ml-auto flex size-6 shrink-0 items-center justify-center rounded-full transition-colors ${
+          className={`flex size-6 shrink-0 items-center justify-center rounded-full transition-colors ${
             inBasket
               ? "bg-blue-600 text-white hover:bg-blue-700"
               : "border border-slate-200 text-slate-400 hover:bg-slate-50 hover:text-slate-600"
@@ -384,118 +416,136 @@ function SenseCard({
         </button>
       </div>
 
-      <div className="mt-0.5 line-clamp-2 text-[11.5px] text-slate-500" title={s.senseEn}>
-        {s.senseEn}
-      </div>
-
-      {s.senseKoCandidates.length >= 2 ? (
-        <div className="mt-0.5 text-[10.5px] tabular-nums text-slate-400">
-          <span className="font-medium">다른 번역</span>{" "}
-          {s.senseKoCandidates.map((c) => `${c.ko} ${c.n}`).join(" · ")}
-        </div>
-      ) : null}
-
-      {/* 함정 수치는 아래 「헷갈림 주의」 카드가 맡는다 — 노트가 안 내려온
-          뜻(뜻별 몫 절단 등)만 여기 폴백으로 남겨 정보 소실을 막는다 */}
-      <div className="mt-1 text-[10.5px] tabular-nums text-slate-400">
-        출현 {fmt(s.occurrences)} · 예문 {fmt(s.exampleCount)}
-        {s.trapCount > 0 && s.traps.length === 0 ? (
-          <span
-            className={s.trapRate >= 0.5 ? "text-rose-500" : undefined}
-            title={`기출에서 이 뜻으로 나온 문맥의 ${trapPct}%가 학생이 뜻을 잘못 읽기 쉬운 자리로 판정됐습니다.`}
-          >
-            {" "}· 잘못 읽기 쉬운 문맥 {trapPct}%
-          </span>
-        ) : null}
-      </div>
-
-      {/* 뜻별 미니 분포 — 예문 표본 기준(각주 참조) */}
-      {eraTotal > 0 || gradeTotal > 0 ? (
-        <div className="mt-1.5 grid grid-cols-2 gap-2">
-          <div>
-            {eraTotal > 0 ? (
-              <SegBar height={4} parts={[
-                { label: "예전(~2015)", value: s.era.early, color: "bg-slate-400" },
-                { label: "요즘(2016~)", value: s.era.late, color: "bg-blue-500" },
-              ]} />
-            ) : null}
-          </div>
-          <div>
-            {gradeTotal > 0 ? (
-              <SegBar height={4} parts={[
-                { label: "고1", value: s.byGrade.g1, color: "bg-sky-400" },
-                { label: "고2", value: s.byGrade.g2, color: "bg-blue-500" },
-                { label: "고3", value: s.byGrade.g3, color: "bg-indigo-600" },
-              ]} />
-            ) : null}
-          </div>
-        </div>
-      ) : null}
-
-      {/* 헷갈림 주의 — 예문보다 위. 단어장 선별 판단에 먼저 필요한 정보라서다
-          (유저 피드백). %는 "잘못 읽기 쉬운 문맥 비율"임을 카드가 스스로 말한다 —
-          맨살 "함정 5개 (80%)" 표기는 해석 불가 판정을 받았다 */}
-      {shownTraps.length > 0 ? (
-        <div className="mt-1.5 overflow-hidden rounded-md border border-amber-200/80">
+      {/* 본문 — passage-scope 와 동일한 0fr↔1fr 그리드 보간(height:auto 는
+          transition 이 안 걸린다) + 오파시티 페이드로 부드럽게 펼친다 */}
+      <div
+        className={`grid transition-[grid-template-rows] duration-300 ease-out motion-reduce:transition-none ${
+          open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+        }`}
+      >
+        <div className="min-h-0 overflow-hidden">
           <div
-            className="flex items-center gap-1.5 border-b border-amber-100 bg-amber-50 px-2 py-1"
-            title={`기출에서 이 뜻으로 나온 문맥의 ${trapPct}%가 학생이 뜻을 잘못 읽기 쉬운 자리로 판정됐습니다. 아래 메모는 그 실제 오독 시나리오입니다.`}
+            className={`px-2.5 pb-2.5 transition-opacity duration-300 motion-reduce:transition-none ${
+              open ? "opacity-100" : "opacity-0"
+            }`}
           >
-            <AlertTriangle className="size-3 shrink-0 text-amber-500" />
-            <span className="shrink-0 text-[10px] font-bold text-amber-800">헷갈림 주의</span>
-            {trapPct > 0 ? (
-              <>
-                <span
-                  className={`shrink-0 rounded px-1 py-px text-[9.5px] font-bold tabular-nums ${
-                    s.trapRate >= 0.5 ? "bg-rose-100 text-rose-700" : "bg-amber-100 text-amber-800"
-                  }`}
-                >
-                  {trapPct}%
-                </span>
-                <span className="min-w-0 flex-1 truncate text-right text-[9.5px] text-amber-700/70">
-                  잘못 읽기 쉬운 문맥 비율
-                </span>
-              </>
-            ) : null}
-          </div>
-          <div className="space-y-1 bg-amber-50/40 px-2 py-1.5">
-            {shownTraps.map((t, i) => (
-              <div key={i} className="flex items-start gap-1.5">
-                <span className="mt-px shrink-0 whitespace-nowrap rounded border border-amber-200 bg-white px-1 py-px text-[9.5px] font-medium text-amber-700">
-                  {VOCAB_TRAP_KIND_LABELS[t.kind] ?? t.kind}
-                </span>
-                <span className="break-keep text-[11px] text-slate-600">{t.note}</span>
+
+            <div className="line-clamp-2 text-[11.5px] text-slate-500" title={s.senseEn}>
+              {s.senseEn}
+            </div>
+
+            {s.senseKoCandidates.length >= 2 ? (
+              <div className="mt-0.5 text-[10.5px] tabular-nums text-slate-400">
+                <span className="font-medium">다른 번역</span>{" "}
+                {s.senseKoCandidates.map((c) => `${c.ko} ${c.n}`).join(" · ")}
               </div>
+            ) : null}
+
+            {/* 함정 수치는 아래 「헷갈림 주의」 카드가 맡는다 — 노트가 안 내려온
+                뜻(뜻별 몫 절단 등)만 여기 폴백으로 남겨 정보 소실을 막는다 */}
+            <div className="mt-1 text-[10.5px] tabular-nums text-slate-400">
+              출현 {fmt(s.occurrences)} · 예문 {fmt(s.exampleCount)}
+              {s.trapCount > 0 && s.traps.length === 0 ? (
+                <span
+                  className={s.trapRate >= 0.5 ? "text-rose-500" : undefined}
+                  title={`기출에서 이 뜻으로 나온 문맥의 ${trapPct}%가 학생이 뜻을 잘못 읽기 쉬운 자리로 판정됐습니다.`}
+                >
+                  {" "}· 잘못 읽기 쉬운 문맥 {trapPct}%
+                </span>
+              ) : null}
+            </div>
+
+            {/* 뜻별 미니 분포 — 예문 표본 기준(각주 참조) */}
+            {eraTotal > 0 || gradeTotal > 0 ? (
+              <div className="mt-1.5 grid grid-cols-2 gap-2">
+                <div>
+                  {eraTotal > 0 ? (
+                    <SegBar height={4} parts={[
+                      { label: "예전(~2015)", value: s.era.early, color: "bg-slate-400" },
+                      { label: "요즘(2016~)", value: s.era.late, color: "bg-blue-500" },
+                    ]} />
+                  ) : null}
+                </div>
+                <div>
+                  {gradeTotal > 0 ? (
+                    <SegBar height={4} parts={[
+                      { label: "고1", value: s.byGrade.g1, color: "bg-sky-400" },
+                      { label: "고2", value: s.byGrade.g2, color: "bg-blue-500" },
+                      { label: "고3", value: s.byGrade.g3, color: "bg-indigo-600" },
+                    ]} />
+                  ) : null}
+                </div>
+              </div>
+            ) : null}
+
+            {/* 헷갈림 주의 — 예문보다 위. 단어장 선별 판단에 먼저 필요한 정보라서다
+                (유저 피드백). %는 "잘못 읽기 쉬운 문맥 비율"임을 카드가 스스로 말한다 —
+                맨살 "함정 5개 (80%)" 표기는 해석 불가 판정을 받았다 */}
+            {shownTraps.length > 0 ? (
+              <div className="mt-1.5 overflow-hidden rounded-md border border-amber-200/80">
+                <div
+                  className="flex items-center gap-1.5 border-b border-amber-100 bg-amber-50 px-2 py-1"
+                  title={`기출에서 이 뜻으로 나온 문맥의 ${trapPct}%가 학생이 뜻을 잘못 읽기 쉬운 자리로 판정됐습니다. 아래 메모는 그 실제 오독 시나리오입니다.`}
+                >
+                  <AlertTriangle className="size-3 shrink-0 text-amber-500" />
+                  <span className="shrink-0 text-[10px] font-bold text-amber-800">헷갈림 주의</span>
+                  {trapPct > 0 ? (
+                    <>
+                      <span
+                        className={`shrink-0 rounded px-1 py-px text-[9.5px] font-bold tabular-nums ${
+                          s.trapRate >= 0.5 ? "bg-rose-100 text-rose-700" : "bg-amber-100 text-amber-800"
+                        }`}
+                      >
+                        {trapPct}%
+                      </span>
+                      <span className="min-w-0 flex-1 truncate text-right text-[9.5px] text-amber-700/70">
+                        잘못 읽기 쉬운 문맥 비율
+                      </span>
+                    </>
+                  ) : null}
+                </div>
+                <div className="space-y-1 bg-amber-50/40 px-2 py-1.5">
+                  {shownTraps.map((t, i) => (
+                    <div key={i} className="flex items-start gap-1.5">
+                      <span className="mt-px shrink-0 whitespace-nowrap rounded border border-amber-200 bg-white px-1 py-px text-[9.5px] font-medium text-amber-700">
+                        {VOCAB_TRAP_KIND_LABELS[t.kind] ?? t.kind}
+                      </span>
+                      <span className="break-keep text-[11px] text-slate-600">{t.note}</span>
+                    </div>
+                  ))}
+                  {hiddenTraps > 0 ? (
+                    <button
+                      type="button"
+                      onClick={() => setMoreTraps((v) => !v)}
+                      className="text-[10.5px] font-medium text-amber-700 hover:underline"
+                    >
+                      {moreTraps ? "접기" : `${hiddenTraps}개 더 보기`}
+                    </button>
+                  ) : null}
+                </div>
+              </div>
+            ) : null}
+
+            {shownExamples.map((e, i) => (
+              <ExampleCard key={i} example={e} />
             ))}
-            {hiddenTraps > 0 ? (
-              <button
-                type="button"
-                onClick={() => setMoreTraps((v) => !v)}
-                className="text-[10.5px] font-medium text-amber-700 hover:underline"
-              >
-                {moreTraps ? "접기" : `${hiddenTraps}개 더 보기`}
+            {hiddenExamples > 0 ? (
+              <button type="button" onClick={() => setMoreExamples((v) => !v)} className={toggleCls}>
+                {moreExamples ? "예문 접기" : `수집한 예문 ${s.examples.length}개 모두 보기`}
               </button>
             ) : null}
+            {/* "나온 지문 113개인데 예문이 왜 몇 개뿐?"에 대한 답 — 출현 전부를
+                문장으로 저장하지 않고 대표 예문만 수집한다는 사실을 명시한다 */}
+            {s.exampleCount > s.examples.length ? (
+              <p className="mt-1 text-[10px] text-slate-400 break-keep">
+                출현한 문장 전부가 아니라 대표 예문 {s.examples.length}개를 골라 보여
+                드립니다.
+              </p>
+            ) : null}
+
           </div>
         </div>
-      ) : null}
-
-      {shownExamples.map((e, i) => (
-        <ExampleCard key={i} example={e} />
-      ))}
-      {hiddenExamples > 0 ? (
-        <button type="button" onClick={() => setMoreExamples((v) => !v)} className={toggleCls}>
-          {moreExamples ? "예문 접기" : `수집한 예문 ${s.examples.length}개 모두 보기`}
-        </button>
-      ) : null}
-      {/* "나온 지문 113개인데 예문이 왜 몇 개뿐?"에 대한 답 — 출현 전부를
-          문장으로 저장하지 않고 대표 예문만 수집한다는 사실을 명시한다 */}
-      {s.exampleCount > s.examples.length ? (
-        <p className="mt-1 text-[10px] text-slate-400 break-keep">
-          출현한 문장 전부가 아니라 대표 예문 {s.examples.length}개를 골라 보여
-          드립니다.
-        </p>
-      ) : null}
+      </div>
     </div>
   );
 }
