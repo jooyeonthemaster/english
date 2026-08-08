@@ -238,8 +238,31 @@ function DossierPane({
         </div>
       </div>
 
-      {/* ① 뜻 목록 — 단어장에 담는 실작업 대상이라 맨 위로 올린다(유저 피드백).
-          조회 캡(20) 초과 표제어는 절단 사실을 표기한다(take 47 등) */}
+      {/* ① 25개년 출현 — 코퍼스 전수. 뜻 목록보다 위 고정(유저 확정) */}
+      {yearStats ? (
+        <Sec title="25개년 출현" hint="기출 전체 기준">
+          <YearBars data={yearStats.byYear} from={2003} to={2027} height={56} />
+          <div className="mt-2">
+            <SegBar parts={GRADE_PARTS.map((g) => ({ label: g.key, value: yearStats.byGrade[g.key] ?? 0, color: g.color }))} />
+          </div>
+        </Sec>
+      ) : null}
+
+      {/* ② 시행처 */}
+      {yearStats ? (
+        <Sec title="시험 종류">
+          <SegBar parts={BOARD_PARTS.map((b) => ({ label: b.label, value: yearStats.byBoard[b.key] ?? 0, color: b.color }))} />
+        </Sec>
+      ) : null}
+
+      {/* ③ 문항 유형 친화도 */}
+      {typeItems.length > 0 ? (
+        <Sec title="어떤 문제 유형에 잘 나오나">
+          <HBarList items={typeItems} maxItems={6} />
+        </Sec>
+      ) : null}
+
+      {/* ④ 뜻 목록 — 조회 캡(20) 초과 표제어는 절단 사실을 표기한다(take 47 등) */}
       <Sec
         tinted
         title={
@@ -259,30 +282,6 @@ function DossierPane({
           ))}
         </div>
       </Sec>
-
-      {/* ② 25개년 출현 — 코퍼스 전수 */}
-      {yearStats ? (
-        <Sec title="25개년 출현" hint="기출 전체 기준">
-          <YearBars data={yearStats.byYear} from={2003} to={2027} height={56} />
-          <div className="mt-2">
-            <SegBar parts={GRADE_PARTS.map((g) => ({ label: g.key, value: yearStats.byGrade[g.key] ?? 0, color: g.color }))} />
-          </div>
-        </Sec>
-      ) : null}
-
-      {/* ③ 시행처 */}
-      {yearStats ? (
-        <Sec title="시험 종류">
-          <SegBar parts={BOARD_PARTS.map((b) => ({ label: b.label, value: yearStats.byBoard[b.key] ?? 0, color: b.color }))} />
-        </Sec>
-      ) : null}
-
-      {/* ④ 문항 유형 친화도 */}
-      {typeItems.length > 0 ? (
-        <Sec title="어떤 문제 유형에 잘 나오나">
-          <HBarList items={typeItems} maxItems={6} />
-        </Sec>
-      ) : null}
 
       {/* ⑤ 연어 */}
       {lemma.collocations.length > 0 ? (
