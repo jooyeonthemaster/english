@@ -204,7 +204,11 @@ export function SenseTable({
   const removeTitle = "단어장에서 뺍니다 · 담긴 행에서 드래그하면 한꺼번에 해제";
 
   return (
-    <section className="flex min-w-0 flex-1 flex-col">
+    // ★ min-h-0 필수 — 이 섹션은 **열(column) 플렉스의 자식**이다(부모가 범위 바와
+    //   표를 세로로 쌓는다). flex 자식의 기본 min-height 는 auto 라, 이게 없으면
+    //   섹션이 부모 높이를 넘겨 자라고 아래 overflow-auto 가 잡을 높이를 잃는다
+    //   → 표 내부 스크롤이 통째로 죽는다(2026-08-08 실제 회귀).
+    <section className="flex min-h-0 min-w-0 flex-1 flex-col">
       {/* ── 툴바 ── */}
       <div className="flex h-9 shrink-0 items-center justify-between gap-2 border-b border-slate-200 px-3">
         <div className="flex min-w-0 items-center gap-2">
