@@ -8,6 +8,11 @@
 //   티어  basic slate / core blue / academic violet / advanced rose
 //   추세  급증·신규 rose / 증가 amber / 안정 slate / 감소·급감 sky
 //   시행처 수능 slate-900 / 모평 slate-500 / 학평 slate-300
+//   품사  9종 고유색(POS_CHIP) — 아래 형태 규약을 반드시 지킨다.
+//
+// ★ 칩 형태 문법: **채움 = 평가축(수준·추세), 외곽선 = 분류축(품사)**.
+//   품사를 채움 칩으로 바꾸면 같은 행의 TierChip(파랑 채움)·TrendChip 과
+//   한 덩어리로 읽혀 "품사도 등급인가"가 된다. 색만 입히고 형태는 건드리지 않는다.
 // ============================================================================
 
 import { VOCAB_POS_LABELS, VOCAB_TIER_LABELS } from "@/lib/vocab-drill/display";
@@ -49,9 +54,34 @@ export function TierChip({ tier }: { tier: string }) {
   );
 }
 
+/**
+ * 품사 9종 고유색 — 표제어는 (철자+품사)가 단위라 `like` 한 단어가 최대 6행으로
+ * 갈린다(코퍼스 실측: 철자 25,253개 / 표제어 27,011행). 같은 철자 행들을 색으로
+ * 먼저 갈라 읽게 하는 것이 이 칩의 유일한 목적이다.
+ *
+ * 배치 원칙 — 인접 색상환을 피해 표에서 세로로 훑을 때 구분되게:
+ *   내용어 4종(명·동·형·부)에 가장 또렷한 색, 구 3종(숙어·구동사·연어)은
+ *   violet→pink 한 가족(excludePhrase 로 함께 켜고 끄는 축이라 묶는다),
+ *   기능어 2종은 서로 다른 계열로 떨어뜨린다(전치사 teal / 접속사 slate) —
+ *   `like` 전치사·접속사가 뜻 표기까지 같아 색이 유일한 구분선이다.
+ */
+const POS_CHIP: Record<string, string> = {
+  noun: "border-indigo-200 text-indigo-600",
+  verb: "border-emerald-200 text-emerald-600",
+  adjective: "border-orange-200 text-orange-600",
+  adverb: "border-sky-200 text-sky-600",
+  preposition: "border-teal-200 text-teal-600",
+  conjunction: "border-slate-300 text-slate-500",
+  idiom: "border-violet-200 text-violet-600",
+  phrasal_verb: "border-fuchsia-200 text-fuchsia-600",
+  collocation: "border-pink-200 text-pink-600",
+};
+
 export function PosChip({ pos }: { pos: string }) {
   return (
-    <span className="inline-flex h-[18px] items-center rounded border border-slate-200 px-1.5 text-[10.5px] font-medium leading-none text-slate-500 whitespace-nowrap">
+    <span
+      className={`inline-flex h-[18px] items-center rounded border px-1.5 text-[10.5px] font-medium leading-none whitespace-nowrap ${POS_CHIP[pos] ?? "border-slate-200 text-slate-500"}`}
+    >
       {posKo(pos)}
     </span>
   );
