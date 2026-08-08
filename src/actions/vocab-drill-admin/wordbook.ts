@@ -154,20 +154,31 @@ export async function listWordbookShift(
 
 // ── 기출 범위 ────────────────────────────────────────────────────────────────
 
-/** 범위 요약 + 선택지 + 시험지 목록을 한 왕복으로 — 레일이 매 조작마다 부른다. */
+/**
+ * 범위 요약 + 선택지 — 범위 바가 조작마다 부른다.
+ * ⚠️ 시험지 목록은 **여기 넣지 않는다.** 접혀 있는 목록을 위해 매 조작마다
+ *    GROUP BY 를 한 번 더 도는 셈이었다(요약1 + 선택지5 + 시험지1 = 7질의).
+ *    목록은 펼칠 때만 listWordbookPassagePapers 로 따로 가져온다.
+ */
 export async function getWordbookPassageScope(scope: unknown): Promise<{
   summary: PassageScopeSummary;
   facets: PassageFacets;
-  papers: PassagePaper[];
 }> {
   await requireStaffAuth();
   const s = sanitizePassage(scope) ?? {};
-  const [summary, facets, papers] = await Promise.all([
+  const [summary, facets] = await Promise.all([
     getPassageScopeSummaryData(s),
     getPassageFacetsData(s),
-    listPassagePapersData(s),
   ]);
-  return { summary, facets, papers };
+  return { summary, facets };
+}
+
+/** 시험지 목록 — 「시험지 고르기」를 펼칠 때만. */
+export async function listWordbookPassagePapers(
+  scope: unknown,
+): Promise<PassagePaper[]> {
+  await requireStaffAuth();
+  return listPassagePapersData(sanitizePassage(scope) ?? {});
 }
 
 /** 지문 1개의 단어 — 지문 카드 펼치기(문장 순서). */

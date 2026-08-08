@@ -14,6 +14,7 @@ import { BookMarked, Search, ShoppingBasket, SlidersHorizontal } from "lucide-re
 import {
   getWordbookLemmaDossier,
   getWordbookPassageScope,
+  listWordbookPassagePapers,
   listWordbookSenses,
   listWordbookShift,
 } from "@/actions/vocab-drill-admin/wordbook";
@@ -87,7 +88,11 @@ export function WordbookClient({
   const [scopeFacets, setScopeFacets] = useState<PassageFacets | null>(null);
   const [scopePapers, setScopePapers] = useState<PassagePaper[]>([]);
   const [scopeLoading, setScopeLoading] = useState(false);
+  const [papersLoading, setPapersLoading] = useState(false);
   const scopeSeq = useRef(0);
+  const papersSeq = useRef(0);
+  /** 칩 연타 합치기 — 아래 handlePassageScope 주석 참조 */
+  const scopeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // ── 도시에·바스켓 상태 ─────────────────────────────────────────────────────
   const [selectedLemmaId, setSelectedLemmaId] = useState<string | null>(null);
@@ -239,13 +244,28 @@ export function WordbookClient({
         if (seq !== scopeSeq.current) return;
         setScopeSummary(d.summary);
         setScopeFacets(d.facets);
-        setScopePapers(d.papers);
       })
       .catch(() => {
         if (seq === scopeSeq.current) setNotice("기출 범위를 불러오지 못했습니다.");
       })
       .finally(() => {
         if (seq === scopeSeq.current) setScopeLoading(false);
+      });
+  }, []);
+
+  /** 시험지 목록 — 「시험지 고르기」를 펼칠 때만 가져온다. */
+  const fetchPapers = useCallback(() => {
+    const seq = ++papersSeq.current;
+    setPapersLoading(true);
+    listWordbookPassagePapers(filterRef.current.passage ?? {})
+      .then((rows) => {
+        if (seq === papersSeq.current) setScopePapers(rows);
+      })
+      .catch(() => {
+        if (seq === papersSeq.current) setNotice("시험지 목록을 불러오지 못했습니다.");
+      })
+      .finally(() => {
+        if (seq === papersSeq.current) setPapersLoading(false);
       });
   }, []);
 
@@ -304,6 +324,15 @@ export function WordbookClient({
    * 기출 범위 부분 갱신 — filter.passage 는 중첩 객체라 handleFilter 의 얕은
    * 병합으로는 축 하나를 바꿀 때 나머지가 통째로 날아간다. 전용 핸들러로 간다.
    */
+  /**
+   * 기출 범위 부분 갱신 — filter.passage 는 중첩 객체라 handleFilter 의 얕은
+   * 병합으로는 축 하나를 바꿀 때 나머지가 통째로 날아간다. 전용 핸들러로 간다.
+   *
+   * ★ 상태는 **즉시** 반영하고(칩이 곧바로 눌린 것처럼 보인다) 질의는 220ms
+   *   합쳐서 한 번만 보낸다. 범위 한 번 바꾸면 목록 1 + 요약 1 + 선택지 5 =
+   *   7개 질의가 나가는데, 칩을 네 번 연타하면 그게 28개가 된다. 마지막 상태
+   *   외에는 전부 버려질 결과다(reqSeq/scopeSeq 가드가 이미 폐기한다).
+   */
   const handlePassageScope = useCallback(
     (patch: Partial<WordbookPassageScope>) => {
       cancelQTimer();
@@ -311,10 +340,22 @@ export function WordbookClient({
       const next = { ...filterRef.current, passage };
       setFilter(next);
       filterRef.current = next;
-      runQuery(next, sortRef.current, dirRef.current);
-      fetchScope(passage);
+      if (scopeTimer.current) clearTimeout(scopeTimer.current);
+      scopeTimer.current = setTimeout(() => {
+        scopeTimer.current = null;
+        runQuery(filterRef.current, sortRef.current, dirRef.current);
+        fetchScope(filterRef.current.passage);
+      }, 220);
     },
     [cancelQTimer, runQuery, fetchScope],
+  );
+
+  // 언마운트 시 대기 중 타이머 정리 — 사라진 컴포넌트의 setState 를 막는다.
+  useEffect(
+    () => () => {
+      if (scopeTimer.current) clearTimeout(scopeTimer.current);
+    },
+    [],
   );
 
   const handleSort = useCallback(
@@ -595,6 +636,8 @@ export function WordbookClient({
                 facets={scopeFacets}
                 papers={scopePapers}
                 loading={scopeLoading}
+                papersLoading={papersLoading}
+                onPapersOpen={fetchPapers}
               />
             ) : null}
             <SenseTable
