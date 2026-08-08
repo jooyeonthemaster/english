@@ -5343,6 +5343,42 @@ model VocabDrillExample {
   @@map("vocab_drill_examples")
 }
 
+/// 지문↔뜻 전수 매핑 — 행의 단위는 **(지문 × 뜻) 유일쌍**이다.
+/// examples 와 목적이 다르다: examples 는 학생 카드용 예문이라 후보당 5개 상한
+/// (vocab-corpus-build.ts EXAMPLE_CAP)에 걸려 지문 어휘의 52.5% 만 남는다.
+/// 이 테이블은 상한 없이 raw 추출 전량(183,616쌍)을 들어 "이 기출에 나온 단어"
+/// 질문에 답한다. 지문 메타는 역정규화(지문 정본은 앱 번들 JSON 에만 있다).
+/// 장문(41-42)은 qFrom/qTo 구간으로 들고 범위 필터는 겹침 판정으로 쓴다.
+/// 적용 SQL: prisma/sql/vocab-drill-passage-words.sql (surgical, migrate 금지)
+model VocabDrillPassageWord {
+  id            String   @id // sha1(passageId|senseId)[0..15]
+  bundleVersion String
+  passageId     String // exam-passages soft-ref
+  senseId       String
+  lemmaId       String
+  surface       String // 그 지문에서의 실제 굴절형
+  sentenceIndex Int // 최초 출현 문장(0-base)
+  occurrences   Int      @default(1) // 이 지문 안에서의 출현 횟수
+  year          Int // 학년도 2003~2027
+  board         String // 대학수학능력시험|수능모의평가|학력평가
+  exam          String // 수능|6월|9월|3월|…|예비 (12종)
+  grade         String? // 고1|고2|고3
+  qFrom         Int // 문항번호 구간(실측 18~55)
+  qTo           Int
+  typeGroup     String? // 15종
+  examId        String // 시험지 식별자(283종)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([passageId, senseId])
+  @@index([year, board, senseId])
+  @@index([passageId])
+  @@index([senseId])
+  @@index([examId])
+  @@index([bundleVersion])
+  @@map("vocab_drill_passage_words")
+}
+
 /// 함정(trap) — sense 단위. note 는 **제출 후에만** 학생에게 노출한다.
 /// 적용 SQL: prisma/sql/vocab-drill-init.sql (surgical, migrate 금지)
 model VocabDrillTrap {

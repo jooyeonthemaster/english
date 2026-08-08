@@ -184,6 +184,9 @@ export function BasketDock({
     //   덱 풀도 같은 기준이어야 한다(적대검수: 미명시 시 전 뜻 풀에서 뽑혀
     //   100단어 덱이 표제어 20개의 뜻 홍수가 됐다).
     spec.allSenses = !!currentFilter.allSenses;
+    // 기출 범위 — 이걸 빠뜨리면 "2027 6월 모평 단어장"으로 저장한 덱이 조용히
+    // 전 코퍼스 덱이 된다(화면과 저장물이 갈리는 가장 비싼 종류의 결함).
+    if (currentFilter.passage) spec.passage = currentFilter.passage;
     return spec;
   }, [countB, currentFilter]);
 

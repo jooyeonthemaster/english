@@ -13,6 +13,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BookMarked, Search, ShoppingBasket, SlidersHorizontal } from "lucide-react";
 import {
   getWordbookLemmaDossier,
+  getWordbookPassageScope,
   listWordbookSenses,
   listWordbookShift,
 } from "@/actions/vocab-drill-admin/wordbook";
@@ -21,6 +22,7 @@ import {
   useResizablePanels,
 } from "@/components/layout/resizable-panels";
 import { FilterRail } from "./filter-rail";
+import { PassageScopeBar } from "./passage-scope";
 import { SenseTable } from "./sense-table";
 import { LemmaDossier } from "./lemma-dossier";
 import { BasketDock } from "./basket-dock";
@@ -32,9 +34,13 @@ import {
   WORDBOOK_LENSES,
   type WordbookBasketItem,
   type WordbookFilter,
+  type PassageFacets,
+  type PassagePaper,
+  type PassageScopeSummary,
   type WordbookLemmaDossier as Dossier,
   type WordbookLens,
   type WordbookOverview,
+  type WordbookPassageScope,
   type WordbookSenseRow,
   type WordbookShiftRow,
   type WordbookSort,
@@ -66,6 +72,15 @@ export function WordbookClient({
   const [loading, setLoading] = useState(false);
   const [shiftRows, setShiftRows] = useState<WordbookShiftRow[]>([]);
   const [shiftLoading, setShiftLoading] = useState(false);
+
+  // ── 기출 범위 상태 ─────────────────────────────────────────────────────────
+  // 범위 요약·선택지·시험지는 한 액션(getWordbookPassageScope)에서 같이 온다.
+  // 목록 질의와 **독립 카운터**로 가드한다(레일 조작이 잦아 경합이 실제로 난다).
+  const [scopeSummary, setScopeSummary] = useState<PassageScopeSummary | null>(null);
+  const [scopeFacets, setScopeFacets] = useState<PassageFacets | null>(null);
+  const [scopePapers, setScopePapers] = useState<PassagePaper[]>([]);
+  const [scopeLoading, setScopeLoading] = useState(false);
+  const scopeSeq = useRef(0);
 
   // ── 도시에·바스켓 상태 ─────────────────────────────────────────────────────
   const [selectedLemmaId, setSelectedLemmaId] = useState<string | null>(null);
@@ -195,6 +210,25 @@ export function WordbookClient({
     };
   }, [q, shiftAxis, fetchPage]);
 
+  /** 범위 요약·선택지·시험지 — 목록과 별개 왕복(둘의 지연이 다르다). */
+  const fetchScope = useCallback((passage: WordbookPassageScope | undefined) => {
+    const seq = ++scopeSeq.current;
+    setScopeLoading(true);
+    getWordbookPassageScope(passage ?? {})
+      .then((d) => {
+        if (seq !== scopeSeq.current) return;
+        setScopeSummary(d.summary);
+        setScopeFacets(d.facets);
+        setScopePapers(d.papers);
+      })
+      .catch(() => {
+        if (seq === scopeSeq.current) setNotice("기출 범위를 불러오지 못했습니다.");
+      })
+      .finally(() => {
+        if (seq === scopeSeq.current) setScopeLoading(false);
+      });
+  }, []);
+
   const handleLens = useCallback(
     (key: WordbookLens) => {
       cancelQTimer();
@@ -207,6 +241,10 @@ export function WordbookClient({
       sortRef.current = def.sort;
       dirRef.current = WORDBOOK_SORT_DEFAULT_DIR[def.sort];
       setRailMobileOpen(false);
+      // 기출 범위 렌즈로 들어오면 그 렌즈의 기본 범위로 요약·선택지를 채운다.
+      // 나갈 때는 굳이 비우지 않는다 — 되돌아왔을 때 직전 화면이 남아 있는 편이
+      // 낫고, 어차피 다음 조작에서 덮인다.
+      if (def.filter.passage) fetchScope(def.filter.passage);
       if (def.shiftAxis) {
         const seq = ++shiftSeq.current;
         setShiftLoading(true);
@@ -228,7 +266,7 @@ export function WordbookClient({
         runQuery(def.filter, def.sort, dirRef.current);
       }
     },
-    [cancelQTimer, runQuery],
+    [cancelQTimer, runQuery, fetchScope],
   );
 
   const handleFilter = useCallback(
@@ -240,6 +278,23 @@ export function WordbookClient({
       runQuery(next, sortRef.current, dirRef.current);
     },
     [cancelQTimer, runQuery],
+  );
+
+  /**
+   * 기출 범위 부분 갱신 — filter.passage 는 중첩 객체라 handleFilter 의 얕은
+   * 병합으로는 축 하나를 바꿀 때 나머지가 통째로 날아간다. 전용 핸들러로 간다.
+   */
+  const handlePassageScope = useCallback(
+    (patch: Partial<WordbookPassageScope>) => {
+      cancelQTimer();
+      const passage = { ...(filterRef.current.passage ?? {}), ...patch };
+      const next = { ...filterRef.current, passage };
+      setFilter(next);
+      filterRef.current = next;
+      runQuery(next, sortRef.current, dirRef.current);
+      fetchScope(passage);
+    },
+    [cancelQTimer, runQuery, fetchScope],
   );
 
   const handleSort = useCallback(
@@ -477,7 +532,19 @@ export function WordbookClient({
             expand={expand}
             className="hidden md:flex"
           />
-          <SenseTable
+          {/* 범위 바 + 표를 한 열로 — 표(section)가 flex-1 이라 남은 높이를 채운다 */}
+          <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+            {filter.passage && !shiftAxis ? (
+              <PassageScopeBar
+                scope={filter.passage}
+                onScope={handlePassageScope}
+                summary={scopeSummary}
+                facets={scopeFacets}
+                papers={scopePapers}
+                loading={scopeLoading}
+              />
+            ) : null}
+            <SenseTable
             mode={shiftAxis ? "shift" : "senses"}
             rows={rows}
             shiftRows={shiftRows}
@@ -497,7 +564,8 @@ export function WordbookClient({
             onLoadMore={handleLoadMore}
             hasMore={!shiftAxis && rows.length < total}
             queryEpoch={queryEpoch}
-          />
+            />
+          </div>
           <PanelHandle
             label="단어 분석"
             panelKey="dossier"

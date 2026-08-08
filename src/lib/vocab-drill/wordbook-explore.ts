@@ -15,6 +15,11 @@ import "server-only";
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { VOCAB_STOPWORDS } from "./constants";
+import {
+  hasPassageScope,
+  passageScopeHitsSql,
+  type WordbookPassageScope,
+} from "./wordbook-passages";
 
 // ── 계약 타입 ────────────────────────────────────────────────────────────────
 
@@ -41,6 +46,8 @@ export interface WordbookFilter {
   allSenses?: boolean;
   /** 함정률 하한(0~1) — 함정 렌즈. trapCount>0 동반 강제 */
   minTrapRate?: number;
+  /** 빈도 하한(per10k) — 덱 스펙(VocabDeckSpec.minPer10k)을 이 질의로 재현하려면 필요하다 */
+  minPer10k?: number;
   /** 시행처 렌즈 — 해당 시행처 출현 1회 이상 + 그 카운트 정렬 기본 */
   board?: WordbookBoard;
   /**
@@ -49,6 +56,11 @@ export interface WordbookFilter {
    * difficulty 2+ 로 태깅돼 빈출 상단을 다 차지한다.
    */
   excludeStopwords?: boolean;
+  /**
+   * 기출 범위 — "이 시험/이 지문에 실제로 나온 단어"로 모집단을 갈아끼운다.
+   * 정본은 wordbook-passages.ts. 켜지면 질의 골격이 바뀐다(집계 CTE 조인).
+   */
+  passage?: WordbookPassageScope;
 }
 
 export type WordbookSort =
@@ -64,7 +76,8 @@ export type WordbookSort =
   | "trend" // 추세 — trendRatio(예전 대비 요즘 배율) 수치 정렬
   | "sn" // 수능 출현 수
   | "mp" // 모평 출현 수
-  | "hp"; // 학평 출현 수
+  | "hp" // 학평 출현 수
+  | "scopeHits"; // 선택한 기출 범위 안에서 나온 지문 수(범위 활성 시에만 유효)
 
 export type WordbookSortDir = "asc" | "desc";
 
@@ -92,6 +105,12 @@ export interface WordbookSenseRow {
   sn: number;
   mp: number;
   hp: number;
+  /**
+   * 선택한 기출 범위 안에서 이 뜻이 나온 **지문 수**. 범위 미선택 시 null.
+   * sn/mp/hp(표제어 전체 출현, 철자 기준)와 척도가 다르다 — 이쪽은 뜻 기준이고
+   * 선택 범위 안으로 한정된 수치다.
+   */
+  scopeHits: number | null;
 }
 
 export interface WordbookPage {
@@ -128,11 +147,20 @@ const SORT_COLS: Record<
   sn: { expr: Prisma.sql`sn`, defaultDir: "desc" },
   mp: { expr: Prisma.sql`mp`, defaultDir: "desc" },
   hp: { expr: Prisma.sql`hp`, defaultDir: "desc" },
+  // h.n 은 범위 활성 시에만 존재하는 파생 컬럼이다 — orderSql 이 가드한다.
+  scopeHits: { expr: Prisma.sql`h.n`, defaultDir: "desc" },
 };
 
-function orderSql(sort: WordbookSort, dir?: WordbookSortDir): Prisma.Sql {
-  const col = Object.prototype.hasOwnProperty.call(SORT_COLS, sort)
-    ? SORT_COLS[sort]
+function orderSql(
+  sort: WordbookSort,
+  dir?: WordbookSortDir,
+  scoped = false,
+): Prisma.Sql {
+  // 범위를 끈 채 scopeHits 정렬이 남아 있으면 h.n 이 없어 질의가 깨진다.
+  // (렌즈를 바꿔도 정렬축은 유지되므로 실제로 도달하는 경로다 — 조용히 되돌린다.)
+  const key = sort === "scopeHits" && !scoped ? "per10k" : sort;
+  const col = Object.prototype.hasOwnProperty.call(SORT_COLS, key)
+    ? SORT_COLS[key]
     : SORT_COLS.per10k;
   const d = dir === "asc" || dir === "desc" ? dir : col.defaultDir;
   const dirSql = d === "asc" ? Prisma.sql`ASC` : Prisma.sql`DESC`;
@@ -149,7 +177,15 @@ function sanitizeQ(q: string): string {
 
 function buildWhere(f: WordbookFilter): Prisma.Sql {
   const conds: Prisma.Sql[] = [Prisma.sql`s."retiredAt" IS NULL`];
-  if (!f.allSenses) conds.push(Prisma.sql`s."senseOrder" = 0`);
+  // ★ 기출 범위가 걸리면 **대표 뜻 한정을 걷어낸다.**
+  //   지문에 실제로 실린 뜻이 곧 그 지문이 가르치는 뜻이기 때문이다. 실측:
+  //   전체 (지문×뜻) 185,567쌍 중 17.9%가 비대표 뜻이고, 하필 그 지문에서만
+  //   그 뜻으로 쓰인 것들이다(2027 6월 20번: raise 높이다·tell 지시하다·
+  //   ownership 주인의식·full 완전한·direction 지시·expect 기대하다 6개).
+  //   senseOrder=0 으로 자르면 raise 를 "기르다"로 내놓는 오답 화면이 된다.
+  if (!f.allSenses && !hasPassageScope(f.passage)) {
+    conds.push(Prisma.sql`s."senseOrder" = 0`);
+  }
   const q = f.q ? sanitizeQ(f.q) : "";
   if (q) conds.push(Prisma.sql`s.lemma LIKE ${q + "%"}`);
   if (f.posList?.length)
@@ -167,6 +203,9 @@ function buildWhere(f: WordbookFilter): Prisma.Sql {
     conds.push(
       Prisma.sql`s."trapRate" >= ${f.minTrapRate} AND s."trapCount" > 0`,
     );
+  }
+  if (typeof f.minPer10k === "number" && Number.isFinite(f.minPer10k)) {
+    conds.push(Prisma.sql`s."per10k" >= ${f.minPer10k}`);
   }
   // hasOwnProperty — "constructor" 류 프로토타입 키가 undefined 보간(질의 오류)으로
   // 새는 것을 막는다(?? 폴백은 truthy 상속 값에 무력하다).
@@ -211,6 +250,7 @@ interface RawSenseRow {
   sn: number;
   mp: number;
   hp: number;
+  scopeHits: number | null;
 }
 
 export async function listWordbookSensesData(input: {
@@ -220,11 +260,22 @@ export async function listWordbookSensesData(input: {
   offset: number;
   limit?: number;
 }): Promise<WordbookPage> {
-  const where = buildWhere(input.filter ?? {});
+  const filter = input.filter ?? {};
+  const where = buildWhere(filter);
+  // 기출 범위가 켜지면 모집단이 "코퍼스 전체"에서 "그 범위에 나온 뜻"으로 바뀐다.
+  // EXISTS 가 아니라 집계 서브쿼리를 **조인**하는 이유: 필터링과 "범위 안 출현
+  // 지문 수"(scopeHits)를 한 번의 스캔으로 같이 얻는다. EXISTS + 행별 스칼라
+  // 서브쿼리는 같은 인덱스를 두 번 판다.
+  const scoped = hasPassageScope(filter.passage);
+  const fromSql = scoped
+    ? Prisma.sql`${passageScopeHitsSql(filter.passage as WordbookPassageScope)} h
+      JOIN vocab_drill_senses s ON s.id = h."senseId"`
+    : Prisma.sql`vocab_drill_senses s`;
+  const hitsSql = scoped ? Prisma.sql`h.n` : Prisma.sql`NULL::int`;
   // orderSql 이 sort·dir 을 자체 whitelist 로 검증한다(프로토타입 키·비정상 값
   // 은 per10k/기본 방향 폴백). NaN 은 Math.max/min 클램프를 그대로 통과하므로
   // offset/limit 도 유한수 검사 후에만 쓴다.
-  const orderBy = orderSql(input.sort, input.dir);
+  const orderBy = orderSql(input.sort, input.dir, scoped);
   const rawLimit = Number(input.limit ?? WORDBOOK_PAGE_SIZE);
   const limit = Number.isFinite(rawLimit)
     ? Math.max(1, Math.min(PAGE_SIZE_MAX, Math.round(rawLimit)))
@@ -254,8 +305,9 @@ export async function listWordbookSensesData(input: {
         l."trendRatio"  AS "trendRatio",
         COALESCE((y."byBoard"->>${BOARD_JSON_KEY.수능})::int, 0) AS sn,
         COALESCE((y."byBoard"->>${BOARD_JSON_KEY.모평})::int, 0) AS mp,
-        COALESCE((y."byBoard"->>${BOARD_JSON_KEY.학평})::int, 0) AS hp
-      FROM vocab_drill_senses s
+        COALESCE((y."byBoard"->>${BOARD_JSON_KEY.학평})::int, 0) AS hp,
+        ${hitsSql} AS "scopeHits"
+      FROM ${fromSql}
       LEFT JOIN vocab_drill_lemmas l ON l.id = s."lemmaId"
       LEFT JOIN vocab_drill_lemma_year_stats y ON y."lemmaId" = s."lemmaId"
       WHERE ${where}
@@ -264,7 +316,7 @@ export async function listWordbookSensesData(input: {
     `),
     prisma.$queryRaw<{ n: number }[]>(Prisma.sql`
       SELECT COUNT(*)::int AS n
-      FROM vocab_drill_senses s
+      FROM ${fromSql}
       LEFT JOIN vocab_drill_lemma_year_stats y ON y."lemmaId" = s."lemmaId"
       WHERE ${where}
     `),
@@ -277,6 +329,7 @@ export async function listWordbookSensesData(input: {
       trapRate: Number(r.trapRate ?? 0),
       per10k: r.per10k === null ? null : Number(r.per10k),
       trendRatio: r.trendRatio === null ? null : Number(r.trendRatio),
+      scopeHits: r.scopeHits === null ? null : Number(r.scopeHits),
     })),
     // OFFSET_MAX 침묵 클램프가 「더 보기」 무한 중복으로 새지 않게 total 도 함께
     // 자른다 — 클라 hasMore(rows.length < total)가 상한에서 자연 종료된다.

@@ -196,6 +196,10 @@ export function SenseTable({
     );
   };
 
+  /** 기출 범위 활성 여부 — 「이 범위」 컬럼의 표시 조건. 행의 scopeHits 로
+   *  판정하지 않는다(질의 중 빈 rows 에서 컬럼이 깜빡인다). */
+  const scoped = !!filter.passage;
+
   const addTitle = "단어장에 담습니다 · 표를 드래그하면 한꺼번에";
   const removeTitle = "단어장에서 뺍니다 · 담긴 행에서 드래그하면 한꺼번에 해제";
 
@@ -262,7 +266,7 @@ export function SenseTable({
         >
         {mode === "senses" ? (
           <>
-            <table className="w-full min-w-[1000px] border-collapse text-[12.5px]">
+            <table className={`w-full border-collapse text-[12.5px] ${scoped ? "min-w-[1072px]" : "min-w-[1000px]"}`}>
               {/* 전 컬럼 정렬(재클릭 = 방향 반전) + 깔때기 필터(레일과 같은 상태).
                   z-20 — 마키 사각형(z-50)보다는 아래, 행 위 sticky 로만. */}
               <thead className="sticky top-0 z-10 bg-white shadow-[inset_0_-1px_0_theme(colors.slate.200)]">
@@ -273,6 +277,10 @@ export function SenseTable({
                   <HeaderTh label="단어" sortKey="lemma" sort={sort} sortDir={sortDir} onSort={onSort} filter={filter} onFilter={onFilter} />
                   <HeaderTh label="품사" sortKey="pos" className="w-[68px]" sort={sort} sortDir={sortDir} onSort={onSort} filterSpec={COLUMN_FILTERS.pos} filter={filter} onFilter={onFilter} />
                   <HeaderTh label="대표 뜻" sortKey="senseKo" sort={sort} sortDir={sortDir} onSort={onSort} filter={filter} onFilter={onFilter} />
+                  {/* 기출 범위가 걸렸을 때만 — 범위 밖에서는 의미 없는 수치다(전부 null) */}
+                  {scoped ? (
+                    <HeaderTh label="이 범위" sortKey="scopeHits" className="w-[72px]" hint="고른 기출 범위에서 이 단어가 나온 지문 수" sort={sort} sortDir={sortDir} onSort={onSort} filter={filter} onFilter={onFilter} />
+                  ) : null}
                   {/* 함정을 빈도 바로 옆에 — "얼마나 자주 × 얼마나 위험"이 덱 편성의
                       핵심 조합이라 첫 화면 폭 안에 같이 들어와야 한다(1680px 실측). */}
                   <HeaderTh label="빈도" sortKey="per10k" className="w-[112px]" hint="기출 지문 1만 단어마다 몇 번 나왔는지" sort={sort} sortDir={sortDir} onSort={onSort} filter={filter} onFilter={onFilter} />
@@ -329,6 +337,20 @@ export function SenseTable({
                           {r.senseKo}
                         </div>
                       </td>
+                      {scoped ? (
+                        <td className="px-2 text-right tabular-nums">
+                          {r.scopeHits ? (
+                            <span
+                              className="font-semibold text-blue-700"
+                              title={`고른 범위에서 지문 ${fmt(r.scopeHits)}개에 나왔습니다`}
+                            >
+                              {fmt(r.scopeHits)}
+                            </span>
+                          ) : (
+                            <span className="text-slate-300">—</span>
+                          )}
+                        </td>
+                      ) : null}
                       <td className="px-2">
                         <div className="flex items-center justify-end gap-1.5">
                           <span className="w-10 shrink-0 text-right tabular-nums text-slate-700">

@@ -13,7 +13,11 @@ import "server-only";
 import { prisma } from "@/lib/prisma";
 import type { VocabDrillSense } from "@prisma/client";
 import { VOCAB_STOPWORDS } from "./constants";
-import type { VocabDeckSpec } from "./payload";
+import { hasVocabPassageScope, type VocabDeckSpec } from "./payload";
+import {
+  listWordbookSensesData,
+  type WordbookFilter,
+} from "./wordbook-explore";
 
 // ── 활성 번들 ────────────────────────────────────────────────────────────────
 // 활성 번들은 DB 부분 유니크가 정확히 1개를 보장한다(init.sql:223-224).
@@ -89,10 +93,78 @@ export function deckLimit(spec: VocabDeckSpec): number {
   return Math.max(1, Math.min(DECK_MAX_LIMIT, raw));
 }
 
+// ── 기출 범위 덱 ─────────────────────────────────────────────────────────────
+//
+// 범위가 걸린 덱은 specWhere(Prisma where 객체)로 표현할 수 없다 —
+// vocab_drill_passage_words 는 relation-free 라 관계 필터가 없기 때문이다.
+// senseId 목록을 미리 뽑아 IN 으로 넣는 방법은 범위가 넓을 때 수만 개짜리
+// 파라미터가 된다.
+//
+// 그래서 **탐색 질의(listWordbookSensesData)를 그대로 재사용한다.** 그쪽이 이미
+// 범위(집계 CTE 조인)와 뜻 조건을 한 질의로 처리하고, 무엇보다 조건 해석이
+// 한 곳에만 있어 스튜디오 화면과 덱 풀이 갈릴 수 없다.
+// ⚠️ 아래 매핑에 필드를 하나 빠뜨리면 "화면과 다른 덱"이 조용히 만들어진다.
+//    VocabDeckSpec 에 축을 추가하면 여기도 같이 늘려라.
+
+function specToExploreFilter(spec: VocabDeckSpec): WordbookFilter {
+  return {
+    grades: spec.grades,
+    tiers: spec.tiers,
+    difficulties: spec.difficulties,
+    posList: spec.posList,
+    trendLabels: spec.trendLabels,
+    excludePhrase: spec.excludePhrase,
+    excludeStopwords: spec.excludeStopwords,
+    minPer10k: spec.minPer10k,
+    // 3상태 → 2상태: false(대표 뜻만)만 좁히고 undefined/true 는 전 뜻이다.
+    // (범위가 걸리면 buildWhere 가 senseOrder 조건 자체를 걷어낸다 — 지문에
+    //  실린 뜻이 이겨야 하므로. 스튜디오 표와 동일한 규칙이다.)
+    allSenses: spec.allSenses !== false,
+    passage: spec.passage,
+  };
+}
+
+/**
+ * 범위 덱의 senseId — **범위 안 출현 지문 수(scopeHits) 내림차순**으로 상한까지.
+ *
+ * ⚠️ 덱 표준 정렬(per10k)을 쓰면 안 된다. per10k 는 표제어에서 역정규화된 값이라
+ *    한 표제어의 모든 뜻이 **동점**이고, 범위 덱은 대표 뜻 한정이 풀려 있어서
+ *    다의어의 뜻들이 통째로 상단을 점거한다(실측: 2027 6월 모평 100단어 덱의
+ *    상위 10이 make·time×2·take×3·see×2 — 사실상 표제어 5개짜리 덱).
+ *    scopeHits 는 뜻 단위 실측이라 그 함정이 없다.
+ */
+async function resolveScopedSenseIds(spec: VocabDeckSpec): Promise<string[]> {
+  const page = await listWordbookSensesData({
+    filter: specToExploreFilter(spec),
+    sort: "scopeHits",
+    dir: "desc",
+    offset: 0,
+    limit: deckLimit(spec),
+  });
+  return page.rows.map((r) => r.senseId);
+}
+
 /** 덱 소속 sense — 빈도(per10k) 내림차순이 덱의 표준 정렬이다(Q1). */
+/** 범위 덱인가 — senseIds 명시 덱은 범위와 무관하게 목록이 이긴다. */
+function isScopedDeck(spec: VocabDeckSpec): boolean {
+  return !spec.senseIds?.length && hasVocabPassageScope(spec.passage);
+}
+
 export async function resolveDeckSenses(
   spec: VocabDeckSpec,
 ): Promise<VocabDrillSense[]> {
+  if (isScopedDeck(spec)) {
+    const ids = await resolveScopedSenseIds(spec);
+    if (!ids.length) return [];
+    const rows = await prisma.vocabDrillSense.findMany({
+      where: { id: { in: ids }, ...LIVE },
+    });
+    // findMany 는 IN 목록 순서를 보장하지 않는다 — 덱 표준 정렬을 복원한다.
+    const order = new Map(ids.map((id, i) => [id, i]));
+    return rows.sort(
+      (a, b) => (order.get(a.id) ?? 0) - (order.get(b.id) ?? 0),
+    );
+  }
   return prisma.vocabDrillSense.findMany({
     where: specWhere(spec),
     orderBy: [{ per10k: { sort: "desc", nulls: "last" } }, { id: "asc" }],
@@ -103,6 +175,7 @@ export async function resolveDeckSenses(
 export async function resolveDeckSenseIds(
   spec: VocabDeckSpec,
 ): Promise<string[]> {
+  if (isScopedDeck(spec)) return resolveScopedSenseIds(spec);
   const rows = await prisma.vocabDrillSense.findMany({
     where: specWhere(spec),
     orderBy: [{ per10k: { sort: "desc", nulls: "last" } }, { id: "asc" }],
@@ -113,6 +186,16 @@ export async function resolveDeckSenseIds(
 }
 
 export async function countDeckPool(spec: VocabDeckSpec): Promise<number> {
+  if (isScopedDeck(spec)) {
+    // 범위 덱의 풀 크기는 탐색 질의의 total 이 정본이다(화면 총계와 같은 수치).
+    const page = await listWordbookSensesData({
+      filter: specToExploreFilter(spec),
+      sort: "per10k",
+      offset: 0,
+      limit: 1,
+    });
+    return Math.min(page.total, deckLimit(spec));
+  }
   const n = await prisma.vocabDrillSense.count({ where: specWhere(spec) });
   return Math.min(n, deckLimit(spec));
 }

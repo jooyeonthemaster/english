@@ -12,7 +12,10 @@
 import { prisma } from "@/lib/prisma";
 import { requireStaffAuth } from "@/lib/auth";
 import { countDeckPool, resolveDeckSenses } from "@/lib/vocab-drill/content";
-import type { VocabDeckSpec } from "@/lib/vocab-drill/payload";
+import {
+  sanitizeVocabPassageScope,
+  type VocabDeckSpec,
+} from "@/lib/vocab-drill/payload";
 
 export interface VocabDeckActionResult<T = undefined> {
   success: boolean;
@@ -81,6 +84,9 @@ function sanitizeDeckSpec(input: unknown): VocabDeckSpec {
   // 3상태 보존 — undefined 는 키 자체를 만들지 않는다(구형 덱 의미 유지).
   if (typeof raw.allSenses === "boolean") spec.allSenses = raw.allSenses;
   if (raw.excludeStopwords === true) spec.excludeStopwords = true;
+  // 기출 범위 — 스튜디오 탐색 액션과 **같은 새니타이저**를 쓴다(정본 payload.ts).
+  const passage = sanitizeVocabPassageScope(raw.passage);
+  if (passage) spec.passage = passage;
   const senseIds = pickStrings(raw.senseIds, undefined, LIMIT_MAX);
   if (senseIds.length) spec.senseIds = senseIds;
   const limitRaw = Number(raw.limit);

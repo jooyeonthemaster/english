@@ -193,6 +193,32 @@ export interface VocabQueueResponse {
 }
 
 /** 덱 = 저장된 질의. spec 이 소속 sense 를 매번 파생한다(멤버십 테이블 없음). */
+/**
+ * 기출 범위 — "이 시험/이 지문에 실제로 나온 단어"로 모집단을 갈아끼우는 축.
+ * 정본 질의는 lib/vocab-drill/wordbook-passages.ts(server-only)지만, 타입은
+ * 덱 스펙에도 실리므로 순수 계약 파일인 여기에 둔다.
+ *
+ * ⚠️ `grades` 는 **그 시험이 치러진 학년**(고1 학평)이다. VocabDeckSpec.grades
+ *    (= sense.gradeTop, "이 단어가 주로 나오는 학년")와 다른 축이니 섞지 마라.
+ */
+export interface VocabPassageScope {
+  yearFrom?: number;
+  yearTo?: number;
+  /** 수능 | 모평 | 학평 (화면 라벨 — 질의 계층이 정본 표기로 바꾼다) */
+  boards?: string[];
+  /** 3월|4월|5월|6월|7월|8월|9월|10월|11월|12월|수능|예비 */
+  exams?: string[];
+  grades?: string[];
+  /** 문항번호 구간 — 장문(41-42)은 겹침 판정 */
+  qFrom?: number;
+  qTo?: number;
+  typeGroups?: string[];
+  /** 시험지 통째 */
+  examIds?: string[];
+  /** 개별 지문 — 주면 다른 축보다 우선 */
+  passageIds?: string[];
+}
+
 export interface VocabDeckSpec {
   grades?: string[]; // 고1 | 고2 | 고3 (gradeTop 매칭)
   tiers?: string[]; // basic | core | academic | advanced
@@ -216,7 +242,99 @@ export interface VocabDeckSpec {
    * (2026-08-04): 「고1 핵심 200」 상위가 to·a·have 뜻들로 도배됐다.
    */
   excludeStopwords?: boolean;
+  /**
+   * 기출 범위 — 걸리면 덱 풀이 "그 범위에 나온 뜻"으로 좁혀지고, 대표 뜻 한정이
+   * 자동 해제된다(지문에 실린 뜻이 그 지문이 가르치는 뜻이다 — content.ts 참조).
+   */
+  passage?: VocabPassageScope;
   limit?: number; // 기본 100 · 상한 500
+}
+
+const SCOPE_YEAR_MIN = 2003;
+const SCOPE_YEAR_MAX = 2027;
+const SCOPE_Q_MIN = 18;
+const SCOPE_Q_MAX = 55;
+/** id 배열 상한 — 무상한 배열이 그대로 IN 절이 되는 길을 막는다. */
+const SCOPE_IDS_MAX = 500;
+
+/** 코퍼스 실측 그대로 — 축이 늘면 여기부터 넓힌다. */
+export const VOCAB_PASSAGE_BOARDS = ["수능", "모평", "학평"];
+export const VOCAB_PASSAGE_EXAMS = [
+  "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월",
+  "수능", "예비",
+];
+export const VOCAB_PASSAGE_GRADES = ["고1", "고2", "고3"];
+export const VOCAB_PASSAGE_TYPE_GROUPS = [
+  "주장", "함축의미", "요지", "주제", "제목", "내용일치", "어법", "어휘",
+  "빈칸추론", "무관한문장", "글의순서", "문장삽입", "요약문", "장문", "지칭",
+];
+
+/**
+ * 기출 범위 새니타이즈 — 서버 액션(탐색·덱)이 **같은 함수**를 써야 한다.
+ * 둘이 갈리면 스튜디오에서 만든 범위가 덱 저장에서 조용히 다른 뜻이 된다.
+ */
+export function sanitizeVocabPassageScope(
+  input: unknown,
+): VocabPassageScope | undefined {
+  const r = (input && typeof input === "object" && !Array.isArray(input)
+    ? input
+    : null) as Record<string, unknown> | null;
+  if (!r) return undefined;
+
+  const int = (v: unknown, lo: number, hi: number): number | undefined =>
+    typeof v === "number" && Number.isFinite(v)
+      ? Math.min(hi, Math.max(lo, Math.trunc(v)))
+      : undefined;
+  const strs = (v: unknown, cap: number, allow?: string[]): string[] | undefined => {
+    if (!Array.isArray(v)) return undefined;
+    const out = [
+      ...new Set(
+        v.filter(
+          (x): x is string =>
+            typeof x === "string" && !!x && x.length <= 80 &&
+            (!allow || allow.includes(x)),
+        ),
+      ),
+    ].slice(0, cap);
+    return out.length ? out : undefined;
+  };
+
+  const s: VocabPassageScope = {};
+  s.yearFrom = int(r.yearFrom, SCOPE_YEAR_MIN, SCOPE_YEAR_MAX);
+  s.yearTo = int(r.yearTo, SCOPE_YEAR_MIN, SCOPE_YEAR_MAX);
+  // 뒤집힌 구간은 슬라이더를 교차시킨 것 — 버리지 말고 바로잡는다.
+  if (typeof s.yearFrom === "number" && typeof s.yearTo === "number" && s.yearFrom > s.yearTo) {
+    [s.yearFrom, s.yearTo] = [s.yearTo, s.yearFrom];
+  }
+  s.qFrom = int(r.qFrom, SCOPE_Q_MIN, SCOPE_Q_MAX);
+  s.qTo = int(r.qTo, SCOPE_Q_MIN, SCOPE_Q_MAX);
+  if (typeof s.qFrom === "number" && typeof s.qTo === "number" && s.qFrom > s.qTo) {
+    [s.qFrom, s.qTo] = [s.qTo, s.qFrom];
+  }
+  s.boards = strs(r.boards, 3, VOCAB_PASSAGE_BOARDS);
+  s.exams = strs(r.exams, 12, VOCAB_PASSAGE_EXAMS);
+  s.grades = strs(r.grades, 3, VOCAB_PASSAGE_GRADES);
+  s.typeGroups = strs(r.typeGroups, 15, VOCAB_PASSAGE_TYPE_GROUPS);
+  s.examIds = strs(r.examIds, SCOPE_IDS_MAX);
+  s.passageIds = strs(r.passageIds, SCOPE_IDS_MAX);
+  return hasVocabPassageScope(s) ? s : undefined;
+}
+
+/** 기출 범위가 실제로 걸려 있는가 — 빈 객체는 "제한 없음"이라 무시해야 한다. */
+export function hasVocabPassageScope(s?: VocabPassageScope | null): boolean {
+  if (!s) return false;
+  return (
+    typeof s.yearFrom === "number" ||
+    typeof s.yearTo === "number" ||
+    !!s.boards?.length ||
+    !!s.exams?.length ||
+    !!s.grades?.length ||
+    typeof s.qFrom === "number" ||
+    typeof s.qTo === "number" ||
+    !!s.typeGroups?.length ||
+    !!s.examIds?.length ||
+    !!s.passageIds?.length
+  );
 }
 
 /** 덱 단계 — 어법 CONCEPT→…→MASTERED 의 단어판 */

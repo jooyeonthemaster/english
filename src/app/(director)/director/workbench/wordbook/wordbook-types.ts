@@ -29,6 +29,15 @@ export type {
   WordbookLemmaDossier,
   WordbookShiftRow,
 } from "@/lib/vocab-drill/wordbook-dossier";
+export type {
+  PassageBoard,
+  PassageFacetOption,
+  PassageFacets,
+  PassagePaper,
+  PassageScopeSummary,
+  PassageWordRow,
+  WordbookPassageScope,
+} from "@/lib/vocab-drill/wordbook-passages";
 
 /** 바스켓 1행 — 담는 단위는 sense(뜻)다. 표시는 "lemma — senseKo". */
 export interface WordbookBasketItem {
@@ -50,6 +59,7 @@ export type WordbookLens =
   | "hot"
   | "all"
   | "sn"
+  | "passage"
   | "rising"
   | "trap"
   | "shift-era"
@@ -104,6 +114,20 @@ export const WORDBOOK_LENSES: readonly WordbookLensDef[] = [
     sort: "sn",
   },
   {
+    key: "passage",
+    label: "기출 회차로 찾기",
+    desc: "연도·시험을 골라 그 지문에 실제로 나온 단어만 봅니다",
+    // 기본은 최근 3년 — 전 범위(4,537지문)로 열면 첫 화면이 "코퍼스 전체"와
+    // 다를 게 없어 이 렌즈의 취지가 안 보인다. 넓히는 건 클릭 한 번이다.
+    filter: {
+      passage: { yearFrom: 2025, yearTo: 2027 },
+      excludeStopwords: true,
+    },
+    // 이 렌즈의 기본 정렬은 **범위 안 출현 지문 수**다. per10k(코퍼스 전체 빈도)로
+    // 두면 "그 범위에서 중요한 단어"가 아니라 "원래 흔한 단어"가 올라온다.
+    sort: "scopeHits",
+  },
+  {
     key: "rising",
     label: "요즘 뜨는 단어",
     desc: "최근 시험일수록 더 자주 나오는 단어입니다",
@@ -153,6 +177,7 @@ export const WORDBOOK_SORT_LABELS: Record<WordbookSort, string> = {
   sn: "수능 출현 순",
   mp: "모평 출현 순",
   hp: "학평 출현 순",
+  scopeHits: "고른 범위에 많이 나온 순",
 };
 
 /** 축별 첫 클릭 방향 — 서버(SORT_COLS.defaultDir)와 문자 일치해야 한다. */
@@ -170,4 +195,5 @@ export const WORDBOOK_SORT_DEFAULT_DIR: Record<WordbookSort, "asc" | "desc"> = {
   sn: "desc",
   mp: "desc",
   hp: "desc",
+  scopeHits: "desc",
 };

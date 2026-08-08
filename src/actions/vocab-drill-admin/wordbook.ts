@@ -29,6 +29,17 @@ import {
   type WordbookLemmaDossier,
   type WordbookShiftRow,
 } from "@/lib/vocab-drill/wordbook-dossier";
+import {
+  getPassageFacetsData,
+  getPassageScopeSummaryData,
+  listPassagePapersData,
+  listPassageWordsData,
+  type PassageFacets,
+  type PassagePaper,
+  type PassageScopeSummary,
+  type PassageWordRow,
+} from "@/lib/vocab-drill/wordbook-passages";
+import { sanitizeVocabPassageScope } from "@/lib/vocab-drill/payload";
 
 // ── filter 화이트리스트 ──────────────────────────────────────────────────────
 
@@ -44,8 +55,14 @@ const TRENDS = [
 const BOARDS: WordbookBoard[] = ["수능", "모평", "학평"];
 const SORTS: WordbookSort[] = [
   "per10k", "occurrences", "trapRate", "difficulty", "lemma", "senseKo",
-  "pos", "gradeTop", "tier", "trend", "sn", "mp", "hp",
+  "pos", "gradeTop", "tier", "trend", "sn", "mp", "hp", "scopeHits",
 ];
+
+/**
+ * 기출 범위 새니타이즈는 **payload.ts 가 정본**이다(덱 저장 액션과 같은 함수).
+ * 여기서 따로 구현하면 스튜디오에서 만든 범위와 저장된 덱의 범위가 갈린다.
+ */
+const sanitizePassage = sanitizeVocabPassageScope;
 
 function pick(v: unknown, allow: string[]): string[] | undefined {
   if (!Array.isArray(v)) return undefined;
@@ -91,6 +108,8 @@ function sanitizeFilter(raw: unknown): WordbookFilter {
   if (typeof r.board === "string" && (BOARDS as string[]).includes(r.board)) {
     f.board = r.board as WordbookBoard;
   }
+  const passage = sanitizePassage(r.passage);
+  if (passage) f.passage = passage;
   return f;
 }
 
@@ -131,4 +150,31 @@ export async function listWordbookShift(
 ): Promise<WordbookShiftRow[]> {
   await requireStaffAuth();
   return listWordbookShiftData(axis === "grade" ? "grade" : "era");
+}
+
+// ── 기출 범위 ────────────────────────────────────────────────────────────────
+
+/** 범위 요약 + 선택지 + 시험지 목록을 한 왕복으로 — 레일이 매 조작마다 부른다. */
+export async function getWordbookPassageScope(scope: unknown): Promise<{
+  summary: PassageScopeSummary;
+  facets: PassageFacets;
+  papers: PassagePaper[];
+}> {
+  await requireStaffAuth();
+  const s = sanitizePassage(scope) ?? {};
+  const [summary, facets, papers] = await Promise.all([
+    getPassageScopeSummaryData(s),
+    getPassageFacetsData(s),
+    listPassagePapersData(s),
+  ]);
+  return { summary, facets, papers };
+}
+
+/** 지문 1개의 단어 — 지문 카드 펼치기(문장 순서). */
+export async function listWordbookPassageWords(
+  passageId: string,
+): Promise<PassageWordRow[]> {
+  await requireStaffAuth();
+  if (typeof passageId !== "string" || passageId.length > 80) return [];
+  return listPassageWordsData(passageId);
 }
