@@ -40,9 +40,9 @@ export const KIND_ICON: Record<StudyAssignmentKind, typeof FileText> = {
 
 export const KIND_CHIP: Record<StudyAssignmentKind, { bg: string; fg: string }> = {
   EXAM: { bg: "var(--gd-blue-soft)", fg: "var(--gd-blue)" },
-  // STUDY_KIND_META(types.ts)의 WORKSHEET tone=slate 와 정합 — slate-100/slate-600
-  WORKSHEET: { bg: "#f1f5f9", fg: "#475569" },
-  QUESTIONS: { bg: "#eef2ff", fg: "#4338ca" },
+  // STUDY_KIND_META(types.ts)의 WORKSHEET tone=slate 와 정합
+  WORKSHEET: { bg: "var(--gd-neutral-soft)", fg: "var(--gd-ink-2)" },
+  QUESTIONS: { bg: "var(--gd-indigo-soft)", fg: "var(--gd-indigo)" },
   GRAMMAR: { bg: "var(--gd-good-soft)", fg: "var(--gd-good)" },
 };
 
@@ -150,7 +150,7 @@ export function DueAlertBanner({
     ? `기한이 지난 과제가 ${overdueCount}건 있습니다`
     : `오늘 마감 과제가 ${todayCount}건 있습니다`;
   const tone = rose
-    ? { background: "var(--gd-bad-soft)", borderColor: "#fecdd3", color: "var(--gd-bad)" }
+    ? { background: "var(--gd-bad-soft)", borderColor: "var(--gd-bad-line)", color: "var(--gd-bad)" }
     : { background: "var(--gd-blue-soft)", borderColor: "var(--gd-blue-line)", color: "var(--gd-blue)" };
   const inner = (
     <div
@@ -392,13 +392,10 @@ export function EmptyState({
 }) {
   const Icon = celebrate ? CircleCheck : ClipboardCheck;
   return (
-    <div className="gd-card flex flex-col items-center gap-3 px-5 py-10 text-center">
-      <Icon
-        className="h-8 w-8"
-        style={{ color: celebrate ? "var(--gd-good)" : "var(--gd-ink-3)" }}
-        strokeWidth={1.5}
-        aria-hidden
-      />
+    <div className="gd-empty flex flex-col items-center gap-3 px-5 py-10 text-center">
+      <span className="gd-empty-icon" data-tone={celebrate ? "good" : undefined}>
+        <Icon className="h-6 w-6" strokeWidth={1.75} aria-hidden />
+      </span>
       <p className="gd-t-sm" style={{ color: "var(--gd-ink-2)" }}>
         {message}
       </p>
@@ -430,18 +427,9 @@ export function Skeleton() {
       <span className="sr-only">과제를 불러오는 중입니다</span>
       {[0, 1, 2, 3].map((i) => (
         <div key={i} className="gd-card animate-pulse px-4 py-3.5" aria-hidden>
-          <div
-            className="h-4 w-20 rounded"
-            style={{ background: "var(--gd-line)" }}
-          />
-          <div
-            className="mt-2.5 h-5 w-3/4 rounded"
-            style={{ background: "var(--gd-line)" }}
-          />
-          <div
-            className="mt-2 h-3.5 w-1/2 rounded"
-            style={{ background: "var(--gd-line)", opacity: 0.7 }}
-          />
+          <div className="gd-skeleton h-4 w-20" />
+          <div className="gd-skeleton mt-2.5 h-5 w-3/4" />
+          <div className="gd-skeleton mt-2 h-3.5 w-1/2" style={{ opacity: 0.7 }} />
         </div>
       ))}
     </div>

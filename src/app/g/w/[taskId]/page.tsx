@@ -129,7 +129,7 @@ function ViewerFallback({
   message?: string;
 }) {
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col items-center justify-center gap-3 px-6 text-center">
+    <div className="gd-page flex min-h-dvh flex-col items-center justify-center gap-3 px-6 text-center">
       <span
         className="flex h-14 w-14 items-center justify-center rounded-full"
         style={{ background: "var(--gd-blue-soft)", color: "var(--gd-blue)" }}

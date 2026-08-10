@@ -30,8 +30,18 @@ const STATUS_META: Record<
   QGradeStatus,
   { label: string; fg: string; bg: string; border: string }
 > = {
-  CORRECT: { label: "정답", fg: "var(--gd-good)", bg: "var(--gd-good-soft)", border: "#a7f3d0" },
-  WRONG: { label: "오답", fg: "var(--gd-bad)", bg: "var(--gd-bad-soft)", border: "#fecdd3" },
+  CORRECT: {
+    label: "정답",
+    fg: "var(--gd-good)",
+    bg: "var(--gd-good-soft)",
+    border: "var(--gd-good-line)",
+  },
+  WRONG: {
+    label: "오답",
+    fg: "var(--gd-bad)",
+    bg: "var(--gd-bad-soft)",
+    border: "var(--gd-bad-line)",
+  },
   PARTIAL: {
     label: "부분 정답",
     fg: "var(--gd-blue)",
@@ -212,7 +222,7 @@ export function QResultScreen({
   return (
     <div
       className={cn(
-        "mx-auto flex w-full max-w-md flex-col justify-center gap-4 px-5 pt-8 pb-[max(2rem,env(safe-area-inset-bottom))]",
+        "gd-page flex flex-col justify-center gap-4 px-5 pt-8 pb-[max(2rem,env(safe-area-inset-bottom))]",
         embedded ? "flex-1" : "min-h-dvh",
       )}
     >
@@ -224,7 +234,7 @@ export function QResultScreen({
         {summary ? (
           <>
             <p
-              className="gd-mono mt-4 text-5xl font-bold"
+              className="gd-mono gd-t-4xl mt-4 font-bold"
               style={perfect ? { color: "var(--gd-good)" } : undefined}
             >
               {formatScore(scoreShown)}
@@ -372,7 +382,7 @@ export function QResultScreen({
             <div ref={openPanelRef} className="gd-hairline-t mt-3 pt-3">
               <div className="flex items-center gap-2">
                 <span
-                  className="gd-mono flex h-7 min-w-7 items-center justify-center rounded-full px-1.5 text-[13px] font-bold text-white"
+                  className="gd-mono gd-t-sm flex h-7 min-w-7 items-center justify-center rounded-full px-1.5 font-bold text-white"
                   style={{ background: "var(--gd-blue)" }}
                 >
                   {openEntry.orderNum}

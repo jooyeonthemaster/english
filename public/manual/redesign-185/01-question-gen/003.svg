@@ -18,7 +18,7 @@
 <rect x="84" y="118" width="245" height="52" rx="26" fill="#1f5df5"/>
 <text x="206.5" y="153" text-anchor="middle" font-size="24" font-weight="950" fill="#ffffff">방법 ① 직접 입력</text>
 <text x="84" y="232" font-size="40" font-weight="950" fill="#111827" letter-spacing="0">제목(선택)과 본문을 붙여넣고 「지문 추가」로 쌓습니다</text>
-<text x="1836" y="88" text-anchor="end" font-size="18" font-weight="850" fill="#718096">10 / 188</text>
+<text x="1836" y="88" text-anchor="end" font-size="18" font-weight="850" fill="#718096">10 / 196</text>
 <g>
 <text x="1290" y="92" font-size="15" font-weight="900" fill="#718096">지문 입력 3가지 방법 — 어느 쪽이든 결과는 하나</text>
 <path d="M 1492 123 C 1546 123, 1560 171, 1612 171" fill="none" stroke="#1f5df5" stroke-width="3"/>

@@ -6,7 +6,7 @@
 <rect width="1920" height="1080" fill="url(#skyGrad)"/>
 <rect x="0" y="0" width="1920" height="8" fill="#ffffff" opacity="0.35"/>
 <text x="96" y="108" font-size="30" font-weight="800" fill="#e7f2ff">⑤ 지문 기반 웹툰 · 기능 인트로</text>
-<text x="1824" y="108" text-anchor="end" font-size="22" font-weight="800" fill="#e7f2ff" opacity="0.9">총 14장</text>
+<text x="1824" y="108" text-anchor="end" font-size="22" font-weight="800" fill="#e7f2ff" opacity="0.9">총 15장</text>
 <text font-size="60" font-weight="900" fill="#ffffff"><tspan x="96" y="188">어려운 지문을 시각 자료로 바꿉니다</tspan></text>
 <text font-size="25" font-weight="600" fill="#e7f2ff"><tspan x="96" y="248">지문 하나를 한 장의 세로형 웹툰으로 그려 줍니다. 화풍·대사 언어를 고를 수 있습니다.</tspan></text>
 <rect x="96" y="372.0" width="660" height="102.8" rx="18" fill="#ffffff" filter="url(#introShadow)"/>

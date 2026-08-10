@@ -29,15 +29,6 @@ import {
 import { StatusWindow } from "@/components/study-os/status-window";
 
 /**
- * 셸 헤더 높이 — gd.css 의 `.gd-pin-banner { top: calc(3.8125rem + ...) }` 와
- * 짝을 이룬다(고정 배너가 헤더 바로 아래에 붙는 기준값).
- * ⚠ 이 값을 바꾸면 gd.css 의 3.8125rem 도 함께 바꿔야 배너가 헤더와 겹치지 않는다.
- * 2행(gd-label 16.5 + mt-0.5 2 + gd-t-md 22.5 + py-2.5 20 = 61px) 기준 —
- * 탭 전환 시 헤더 높이 점프를 막기 위한 고정값이다.
- */
-const SHELL_HEADER_H = "3.8125rem";
-
-/**
  * `match`: 활성 판정용 추가 경로 프리픽스.
  * 학습 탭은 트랙 4종(/g/track/*) 전체와 레거시 /g/train 에서 활성으로 본다.
  */
@@ -107,11 +98,12 @@ export function GShell({
 
   return (
     <div className="flex min-h-dvh flex-col">
-      {/* ── 상단 헤더 — 높이는 SHELL_HEADER_H 고정(gd.css .gd-pin-banner 와 짝) ── */}
+      {/* ── 상단 헤더 — 높이는 --gd-shell-h 고정(gd.css .gd-pin-banner 와 단일 원천,
+          탭 전환 시 헤더 높이 점프 방지) ── */}
       <header className="gd-shell-header">
         <div
-          className="mx-auto flex max-w-md items-center justify-between px-5 py-2.5"
-          style={{ minHeight: SHELL_HEADER_H }}
+          className="gd-page flex items-center justify-between px-5 py-2.5"
+          style={{ minHeight: "var(--gd-shell-h)" }}
         >
           <div className="min-w-0">
             <p className="gd-label truncate">SMOAT · {academyName}</p>
@@ -125,8 +117,7 @@ export function GShell({
             <button
               type="button"
               onClick={() => setStatusOpen(true)}
-              className="flex h-10 w-10 items-center justify-center rounded-full"
-              style={{ color: "var(--gd-ink-2)" }}
+              className="gd-iconbtn"
               aria-label="상태창 열기"
               aria-haspopup="dialog"
               aria-expanded={statusOpen}
@@ -136,8 +127,7 @@ export function GShell({
             <button
               type="button"
               onClick={() => setMenuOpen(true)}
-              className="-mr-2 flex h-10 w-10 items-center justify-center rounded-full"
-              style={{ color: "var(--gd-ink-2)" }}
+              className="gd-iconbtn -mr-2"
               aria-label="메뉴 열기"
               aria-haspopup="dialog"
               aria-expanded={menuOpen}
@@ -153,7 +143,7 @@ export function GShell({
 
       {/* ── 하단 탭바 ── */}
       <nav className="gd-tabbar gd-safe-b" aria-label="주 메뉴">
-        <div className="mx-auto grid max-w-md grid-cols-4">
+        <div className="gd-page grid grid-cols-4">
           {TABS.map((tab) => {
             const { href, label, icon: Icon } = tab;
             const active = isActive(tab);
@@ -203,7 +193,7 @@ export function GShell({
               <button
                 type="button"
                 onClick={closeMenu}
-                className="-mr-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
+                className="gd-iconbtn -mr-2"
                 style={{ color: "var(--gd-ink-3)" }}
                 aria-label="메뉴 닫기"
               >

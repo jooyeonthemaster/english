@@ -1,5 +1,7 @@
 /* ============================================================================
-   어법 드릴 (/g) — 스코프 디자인 시스템 "시험지 × 계기판"
+   어법 드릴 (/g) — 스코프 디자인 시스템 (워크벤치 형제 서피스 · 쿨톤 슬레이트+파랑)
+   - 팔레트는 강사용 워크벤치(docs/CARD-DESIGN-CONVENTION.md)와 같은 계열을 쓴다.
+     학생용 차별점(rem 타이포·44px 터치 타깃·탭바 셸·세리프 지문)은 유지.
    - 전역 body.smoat-large-ui 의 px 유틸 강제 확대를 피하기 위해 타이포는
      전부 rem 기반 .gd-* 클래스로만 다룬다 (rem 은 html 16px 기준 — body 20px
      오버라이드의 영향을 받지 않는다).
@@ -7,33 +9,52 @@
    ============================================================================ */
 
 .gd-app {
-  /* 팔레트 */
-  --gd-paper: #f6f5f1; /* 지면 */
+  /* 팔레트 — slate/blue 계열(워크벤치 정합) */
+  --gd-paper: #f4f6f9; /* 지면 — 워크벤치 페이지 bg */
   --gd-card: #ffffff;
-  --gd-line: #e5e3db; /* 헤어라인 */
-  --gd-line-strong: #d4d1c6;
-  --gd-ink: #16202e; /* 본문 잉크 */
-  --gd-ink-2: #5a6372;
-  --gd-ink-3: #98a0ad;
-  --gd-blue: #1d4ed8; /* 액션·진행 */
-  --gd-blue-soft: #eef2fe;
-  --gd-blue-line: #c7d4f8;
-  --gd-good: #047857; /* 정답 */
+  --gd-line: #e2e8f0; /* 헤어라인 — slate-200 */
+  --gd-line-strong: #cbd5e1; /* slate-300 */
+  --gd-ink: #0f172a; /* 본문 잉크 — slate-900 */
+  --gd-ink-2: #475569; /* slate-600 — 13px 본문 대비 확보(500은 부족) */
+  --gd-ink-3: #94a3b8; /* slate-400 — 메타 전용 */
+  --gd-blue: #2563eb; /* 액션·진행 — blue-600 */
+  --gd-blue-strong: #1d4ed8; /* hover/pressed — blue-700 */
+  --gd-blue-soft: #eff6ff; /* blue-50 */
+  --gd-blue-line: #bfdbfe; /* blue-200 */
+  --gd-good: #047857; /* 정답 — emerald-700 */
   --gd-good-soft: #ecfdf5;
-  --gd-bad: #be123c; /* 오답 */
+  --gd-good-line: #a7f3d0; /* emerald-200 — 소프트 테두리 */
+  --gd-bad: #be123c; /* 오답 — rose-700 */
   --gd-bad-soft: #fff1f2;
-  --gd-master: #0f766e; /* 마스터 배지 */
+  --gd-bad-line: #fecdd3; /* rose-200 — 소프트 테두리 */
+  --gd-master: #0f766e; /* 마스터 배지 — teal-700 */
+  --gd-flag: #7c3aed; /* 다시 보기 플래그 — violet-600 (파랑=응답 점과 구분) */
+  --gd-flag-soft: #f5f3ff;
+  --gd-flag-line: #c4b5fd;
+  --gd-indigo: #4338ca; /* 과제 종류 칩(QUESTIONS) */
+  --gd-indigo-soft: #eef2ff;
+  --gd-neutral-soft: #f1f5f9; /* slate-100 — 과제 종류 칩(WORKSHEET) 등 */
+  --gd-canvas: #e2e8f0; /* 문서 뷰어(A4) 배경 */
+  --gd-scrim: rgba(15, 23, 42, 0.88); /* 다크 힌트 필 */
+  --gd-shadow-hover:
+    0 4px 6px -1px rgba(15, 23, 42, 0.08),
+    0 2px 4px -2px rgba(15, 23, 42, 0.08); /* 워크벤치 hover 그림자 */
+  --gd-progress-breathe: linear-gradient(90deg, #93c5fd, #2563eb, #14b8a6);
+  --gd-shell-h: 3.8125rem; /* 셸 헤더 높이 — g-shell.tsx 와 .gd-pin-banner 의 단일 원천 */
 
-  /* 타이포 (rem — 전역 오버라이드 무풍지대) */
-  --gd-fs-3xs: 0.625rem; /* 10 */
-  --gd-fs-2xs: 0.6875rem; /* 11 */
-  --gd-fs-xs: 0.75rem; /* 12 */
+  /* 타이포 (rem — 전역 오버라이드 무풍지대)
+     소형 3단은 저시력 학생 가독을 위해 한 단계씩 상향(10/11/12 → 11/12/12.5).
+     xs 는 sm(13)과의 서열 유지를 위해 12.5 — 서브픽셀 렌더링 문제없음. */
+  --gd-fs-3xs: 0.6875rem; /* 11 */
+  --gd-fs-2xs: 0.75rem; /* 12 */
+  --gd-fs-xs: 0.78125rem; /* 12.5 */
   --gd-fs-sm: 0.8125rem; /* 13 */
   --gd-fs-base: 0.875rem; /* 14 */
   --gd-fs-md: 0.9375rem; /* 15 */
   --gd-fs-lg: 1.0625rem; /* 17 */
   --gd-fs-xl: 1.25rem; /* 20 */
   --gd-fs-2xl: 1.5rem; /* 24 */
+  --gd-fs-4xl: 3rem; /* 48 — 점수 표시 전용 */
 
   --gd-serif: Georgia, "Times New Roman", "Noto Serif", serif;
 
@@ -55,6 +76,10 @@
 .gd-t-lg { font-size: var(--gd-fs-lg); }
 .gd-t-xl { font-size: var(--gd-fs-xl); }
 .gd-t-2xl { font-size: var(--gd-fs-2xl); }
+.gd-t-4xl { font-size: var(--gd-fs-4xl); }
+/* 반응형 지문 크기 — 15px, 태블릿(768+)에서 17px. Tailwind 의 sm:gd-t-lg 는
+   커스텀 클래스라 변형이 생성되지 않는(죽는) 함정의 공식 대체물. */
+.gd-t-md-lg { font-size: var(--gd-fs-md); }
 
 /* 영어 지문 — 시험지 세리프 */
 .gd-en {
@@ -77,10 +102,49 @@
 .gd-card {
   background: var(--gd-card);
   border: 1px solid var(--gd-line);
-  border-radius: 0.875rem;
+  border-radius: 0.75rem; /* 워크벤치 rounded-xl */
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+/* 인터랙티브 카드 hover — 워크벤치 규율: 배경색 변화 없이 테두리+그림자만.
+   터치 기기 sticky hover 방지를 위해 실포인터에만 적용. */
+@media (hover: hover) {
+  a.gd-card:hover,
+  button.gd-card:hover {
+    border-color: var(--gd-line-strong);
+    box-shadow: var(--gd-shadow-hover);
+  }
 }
 .gd-hairline-t { border-top: 1px solid var(--gd-line); }
 .gd-hairline-b { border-bottom: 1px solid var(--gd-line); }
+
+/* 빈 상태 — 워크벤치 레시피(점선 테두리 + 틴트 아이콘 서클 + 단일 CTA) */
+.gd-empty {
+  border: 1.5px dashed var(--gd-line-strong);
+  border-radius: 1rem;
+  background: var(--gd-card);
+}
+.gd-empty-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gd-blue-soft);
+  color: var(--gd-blue);
+  box-shadow: inset 0 0 0 1px var(--gd-blue-line);
+}
+.gd-empty-icon[data-tone="good"] {
+  background: var(--gd-good-soft);
+  color: var(--gd-good);
+  box-shadow: inset 0 0 0 1px var(--gd-good-line);
+}
+
+/* 스켈레톤 블록 — animate-pulse 와 조합(reduced-motion 은 아래 블록이 무효화) */
+.gd-skeleton {
+  background: var(--gd-line);
+  border-radius: 0.375rem;
+}
 
 /* ── 버튼 ── */
 .gd-btn {
@@ -101,8 +165,16 @@
   background: var(--gd-blue);
   color: #fff;
 }
+.gd-btn-primary:active:not(:disabled) {
+  background: var(--gd-blue-strong);
+}
+@media (hover: hover) {
+  .gd-btn-primary:hover:not(:disabled) {
+    background: var(--gd-blue-strong);
+  }
+}
 .gd-btn-primary:disabled {
-  background: #c3c9d6;
+  background: #cbd5e1;
   color: #fff;
 }
 .gd-btn-ghost {
@@ -110,10 +182,25 @@
   border: 1px solid var(--gd-line-strong);
   color: var(--gd-ink-2);
 }
+.gd-btn-ghost:active { background: #f8fafc; }
 .gd-btn-quiet {
   background: transparent;
   color: var(--gd-ink-2);
 }
+
+/* 아이콘 버튼 — 헤더 셰브런·줌·햄버거 공용(44px 터치 타깃 단일 스펙) */
+.gd-iconbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 9999px;
+  color: var(--gd-ink-2);
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+.gd-iconbtn:disabled { opacity: 0.4; }
 
 /* ── 선택지(택일·밑줄 후보) ── */
 .gd-option {
@@ -215,13 +302,24 @@ button.gd-u {
   transition: width 400ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 .gd-meter[data-tone="good"] > span { background: var(--gd-good); }
+/* 불확정(로딩) 모드 — 워크벤치 breathing 그라디언트. 확정 진행바는 단색 유지. */
+.gd-meter[data-indeterminate="true"] > span {
+  width: 100%;
+  transform-origin: left center;
+  background: var(--gd-progress-breathe);
+  animation: gd-breathe 2.35s ease-in-out infinite;
+}
+@keyframes gd-breathe {
+  0%, 100% { transform: translateX(-8%) scaleX(0.82); opacity: 0.72; }
+  50% { transform: translateX(18%) scaleX(1.08); opacity: 1; }
+}
 
 /* ── 시트(하단) ── */
 .gd-sheet-backdrop {
   position: fixed;
   inset: 0;
   z-index: 40;
-  background: rgba(22, 32, 46, 0.42);
+  background: rgba(15, 23, 42, 0.45);
   animation: gd-fade-in 160ms ease;
 }
 .gd-sheet {
@@ -243,7 +341,7 @@ button.gd-u {
      내부 스크롤 영역(flex-1 + min-h-0)이 대신 줄어들어야 한다. */
   overflow: hidden;
   animation: gd-slide-up 220ms cubic-bezier(0.22, 1, 0.36, 1);
-  box-shadow: 0 -12px 40px rgba(22, 32, 46, 0.14);
+  box-shadow: 0 -12px 40px rgba(15, 23, 42, 0.14);
 }
 .gd-sheet-grip {
   width: 2.25rem;
@@ -270,16 +368,16 @@ button.gd-u {
 
 /* 판정 배너 */
 .gd-verdict {
-  border-radius: 0.875rem;
+  border-radius: 0.75rem;
   border: 1px solid;
   animation: gd-pop 200ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 .gd-verdict[data-tone="good"] {
-  border-color: #a7f3d0;
+  border-color: var(--gd-good-line);
   background: var(--gd-good-soft);
 }
 .gd-verdict[data-tone="bad"] {
-  border-color: #fecdd3;
+  border-color: var(--gd-bad-line);
   background: var(--gd-bad-soft);
 }
 
@@ -312,7 +410,7 @@ button.gd-u {
   position: sticky;
   top: 0;
   z-index: 30;
-  background: rgba(246, 245, 241, 0.92);
+  background: rgba(244, 246, 249, 0.92); /* --gd-paper 와 동일 값 — blur 이음새 방지 */
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--gd-line);
@@ -385,7 +483,7 @@ button.gd-u {
   background: var(--gd-card);
   border-left: 1px solid var(--gd-line);
   padding-top: env(safe-area-inset-top);
-  box-shadow: -12px 0 40px rgba(22, 32, 46, 0.16);
+  box-shadow: -12px 0 40px rgba(15, 23, 42, 0.16);
   animation: gd-slide-in-right 220ms cubic-bezier(0.22, 1, 0.36, 1);
   overflow: hidden;
 }
@@ -410,658 +508,102 @@ button.gd-u {
   background: var(--gd-blue-soft);
 }
 
-/* ── 상단 고정 배너(/g/tasks) — 셸 헤더(3.8125rem + safe-area) 바로 아래에
+/* ── 상단 고정 배너(/g/tasks) — 셸 헤더(--gd-shell-h + safe-area) 바로 아래에
    붙는다. 홈은 헤더 높이가 가변이라 일반 배치(이 클래스 미사용). ── */
 .gd-pin-banner {
   position: sticky;
-  top: calc(3.8125rem + env(safe-area-inset-top) + 0.5rem);
+  top: calc(var(--gd-shell-h) + env(safe-area-inset-top) + 0.5rem);
   z-index: 25;
 }
 
-/* ════════════════════════════════════════════════════════════════════════════
-   학습 OS 확장 (2026-07-15) — docs/study-os-spec.md §5
-   기존 토큰·유틸을 갈아엎지 않고 얹는다.
-   ════════════════════════════════════════════════════════════════════════════ */
-
 /* ── 컨테이너: 모바일 우선, 태블릿에서 확장 ──
    Tailwind 의 sm:/md: 변형은 .gd-* 커스텀 클래스에 붙지 않는다(생성되지 않음).
-   그래서 반응형은 여기 CSS 미디어쿼리로만 만든다. */
+   그래서 반응형은 여기 CSS 미디어쿼리로만 만든다.
+   폭은 변수 단일 원천 — 셸 헤더·탭바·본문·플레이어가 같은 값을 읽어
+   태블릿에서 좌우변이 어긋나지 않는다(과거 max-w-md 448 vs 704 불일치). */
+.gd-app {
+  --gd-page-w: 28rem; /* 448px — 탭 루트(셸 헤더·탭바 포함) */
+  --gd-player-w: 42rem; /* 672px — 몰입 플레이어(q·드릴·learn·x) */
+  --gd-page-wide-w: 42rem; /* 레슨 플레이어 */
+}
 .gd-page {
   width: 100%;
-  max-width: 28rem; /* 448px */
+  max-width: var(--gd-page-w);
   margin: 0 auto;
 }
 .gd-page-wide {
   width: 100%;
-  max-width: 42rem;
+  max-width: var(--gd-page-wide-w);
+  margin: 0 auto;
+}
+.gd-player {
+  width: 100%;
+  max-width: var(--gd-player-w);
   margin: 0 auto;
 }
 
-/* ── 레슨 블록 ── */
-.gd-block {
-  background: var(--gd-card);
-  border: 1px solid var(--gd-line);
-  border-radius: 1rem;
-  padding: 1rem;
-}
-.gd-block[data-tone="accent"] {
-  background: var(--gd-blue-soft);
-  border-color: var(--gd-blue-line);
-}
-.gd-block[data-tone="warn"] {
-  background: var(--gd-bad-soft);
-  border-color: #fecdd3;
-}
-.gd-block-head {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  height: 1.375rem;
-  padding: 0 0.5rem;
-  border-radius: 9999px;
-  background: var(--gd-paper);
-  border: 1px solid var(--gd-line);
-  font-size: var(--gd-fs-2xs);
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  color: var(--gd-ink-2);
-}
-.gd-block-head[data-tone="accent"] {
-  background: #fff;
-  border-color: var(--gd-blue-line);
-  color: var(--gd-blue);
-}
-.gd-block-head[data-tone="warn"] {
-  background: #fff;
-  border-color: #fecdd3;
-  color: var(--gd-bad);
+/* ── 중간 폭 (640~767px) — Android 태블릿 멀티윈도우(화면 분할 ½ ≈ 640) ·
+   iPad mini 세로(744) · 폴더블 펼침. 이 구간이 폰 폭(28rem)에 떨어지던 구멍을
+   유동 폭으로 메운다. 폰트·그리드 등 나머지 태블릿 처리는 768 단에서 시작. ── */
+@media (min-width: 640px) {
+  .gd-app { --gd-page-w: clamp(28rem, 88vw, 42rem); }
 }
 
-/* 레슨 본문 — 10~13px 저밀도 탈출. 본문은 15px 이상. */
-.gd-prose {
-  font-size: var(--gd-fs-md);
-  line-height: 1.65;
-  color: var(--gd-ink);
-  word-break: keep-all;
-}
-.gd-prose-2 {
-  font-size: var(--gd-fs-base);
-  line-height: 1.6;
-  color: var(--gd-ink-2);
-  word-break: keep-all;
-}
-
-/* ── 구문 필기(DIAGRAM) — 역할별 색. 라벨은 요소 바로 위에 붙인다(공간 근접성). ── */
-.gd-syn {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: flex-start;
-  vertical-align: baseline;
-  border-radius: 0.25rem;
-  padding: 0 0.125rem;
-  transition: background 160ms ease, color 160ms ease, opacity 160ms ease;
-}
-.gd-syn-label {
-  font-size: var(--gd-fs-3xs);
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  line-height: 1.1;
-  opacity: 0;
-  height: 0;
-  overflow: hidden;
-}
-/* 활성 레이어에 속한 토큰만 색과 라벨을 얻는다(동시 표시 금지 — 한 번에 한 레이어) */
-.gd-syn[data-on="true"] .gd-syn-label {
-  opacity: 1;
-  height: auto;
-}
-.gd-syn[data-on="false"] {
-  opacity: 0.42;
-}
-.gd-syn[data-role="S"][data-on="true"] { background: #e8efff; color: #1d4ed8; }
-.gd-syn[data-role="V"][data-on="true"] { background: #ffe9ee; color: #be123c; }
-.gd-syn[data-role="O"][data-on="true"],
-.gd-syn[data-role="C"][data-on="true"] { background: #e6f6ef; color: #047857; }
-.gd-syn[data-role="M"][data-on="true"] {
-  background: #f1f0eb;
-  color: var(--gd-ink-2);
-  border-bottom: 1.5px dashed var(--gd-line-strong);
-}
-.gd-syn[data-role="CONJ"][data-on="true"],
-.gd-syn[data-role="REL"][data-on="true"] { background: #efe9fb; color: #6d28d9; }
-.gd-syn[data-role="VERBAL"][data-on="true"] { background: #fff4e6; color: #92400e; }
-
-/* ── 단계 리빌(WORKED / ALGORITHM) ── */
-.gd-step {
-  display: flex;
-  gap: 0.625rem;
-  padding: 0.625rem 0;
-  border-top: 1px solid var(--gd-line);
-}
-.gd-step:first-child { border-top: none; }
-.gd-step-n {
-  flex: 0 0 auto;
-  width: 1.375rem;
-  height: 1.375rem;
-  border-radius: 9999px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--gd-fs-2xs);
-  font-weight: 700;
-  background: var(--gd-blue-soft);
-  color: var(--gd-blue);
-}
-.gd-step[data-locked="true"] { opacity: 0.35; }
-
-/* ── 칩 버튼 (ToolButton·타일·바구니 공통 어휘) ── */
-.gd-btn-chip {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.25rem;
-  min-height: 2.25rem;
-  padding: 0 0.75rem;
-  border-radius: 0.625rem;
-  border: 1px solid var(--gd-line-strong);
-  background: var(--gd-card);
-  color: var(--gd-ink-2);
-  font-size: var(--gd-fs-xs);
-  font-weight: 600;
-  transition: border-color 120ms ease, background 120ms ease;
-}
-.gd-btn-chip[data-active="true"] {
-  border-color: var(--gd-blue);
-  background: var(--gd-blue-soft);
-  color: var(--gd-blue);
-}
-.gd-btn-chip[data-state="correct"] {
-  border-color: var(--gd-good);
-  background: var(--gd-good-soft);
-  color: var(--gd-good);
-}
-.gd-btn-chip[data-state="wrong"] {
-  border-color: var(--gd-bad);
-  background: var(--gd-bad-soft);
-  color: var(--gd-bad);
-}
-
-/* 어절 타일(GENERATE) — 최소 44px 터치 타깃 */
-.gd-tile {
-  min-height: 2.75rem;
-  padding: 0 0.75rem;
-  border-radius: 0.625rem;
-  border: 1.5px solid var(--gd-line-strong);
-  background: var(--gd-card);
-  font-family: var(--gd-serif);
-  font-size: var(--gd-fs-md);
-  color: var(--gd-ink);
-}
-.gd-tile[data-used="true"] { opacity: 0.3; }
-
-/* 레슨 진행 세그먼트 바 */
-.gd-seg {
-  display: flex;
-  gap: 0.1875rem;
-  height: 0.25rem;
-}
-.gd-seg > i {
-  flex: 1;
-  border-radius: 9999px;
-  background: var(--gd-line);
-}
-.gd-seg > i[data-on="true"] { background: var(--gd-blue); }
-.gd-seg > i[data-on="done"] { background: var(--gd-good); }
-
-/* ── 포커스 링 — 시스템 전체에 0건이었다(키보드·스위치 접근성) ── */
-.gd-btn:focus-visible,
-.gd-btn-chip:focus-visible,
-.gd-option:focus-visible,
-.gd-tile:focus-visible,
-.gd-tab:focus-visible,
-.gd-menu-item:focus-visible,
-.gd-u:focus-visible {
-  outline: 2px solid var(--gd-blue);
-  outline-offset: 2px;
-}
-
-/* 모바일에서는 사이드레일을 숨긴다(정보는 헤더 진행바가 대신한다).
-   ⚠️ 이 선언은 반드시 아래 태블릿 미디어쿼리 **앞**에 있어야 한다 —
-   뒤에 두면 같은 특이도로 미디어쿼리를 이겨서 태블릿에서도 레일이 사라지고,
-   grid 의 두 번째 컬럼(15rem)만 빈 채 남아 본문이 좌측으로 쏠린다(실측 확인). */
-.gd-rail { display: none; }
-/* 목차 접기/펼치기 토글 — 모바일엔 레일이 없으므로 숨긴다(태블릿+에서만 노출). */
-.gd-rail-toggle { display: none; }
-
-/* ── 태블릿 (768px+) ── */
+/* ── 태블릿 (768px+) — 코어: 기본 폰트·컨테이너 폭·공용 2열 그리드 ──
+   실기기 CSS 폭이 연속 분포라 고정 단 대신 유동 clamp 를 쓴다:
+   · iPad 세로: 9th 768 · 10th/Air 820 · Pro11 834 · Pro12.9 1024
+   · Android 세로: Tab S6 Lite ~752 · A9+/S9/Pixel Tablet 800 · S9+ 876 ·
+     Xiaomi Pad 900 · S9 Ultra 924
+   · 가로: 1024~1480 (iPad 1024/1180/1366 · Android 1204/1280/1400/1440/1480)
+   → clamp(44rem, 82vw, 64rem): 768~858px 구간은 44rem 바닥(85%+),
+     이후 뷰포트의 82%를 따라가다 64rem(1024px)에서 상한 — 어느 기종에서도
+     여백이 25%를 크게 넘지 않는다. */
 @media (min-width: 768px) {
-  .gd-app { font-size: var(--gd-fs-md); }
-
-  .gd-page { max-width: 44rem; }
-  .gd-page-wide { max-width: 60rem; }
-
-  .gd-block { padding: 1.25rem 1.5rem; }
-  .gd-prose { font-size: var(--gd-fs-lg); line-height: 1.7; }
-  .gd-prose-2 { font-size: var(--gd-fs-md); }
-
-  /* 레슨 2컬럼 — 좌: 블록 본문 / 우: 진행·목차 사이드레일 */
-  .gd-lesson-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 15rem;
-    gap: 1.5rem;
-    align-items: start;
+  .gd-app {
+    font-size: var(--gd-fs-md);
+    --gd-page-w: clamp(44rem, 82vw, 64rem);
+    --gd-player-w: 46rem; /* 736px — .gd-en ~72ch 가독 상한(고정) */
+    --gd-page-wide-w: 60rem;
   }
-  .gd-rail { position: sticky; top: 1rem; display: block; }
 
-  /* 목차 토글 노출(헤더 버튼) */
-  .gd-rail-toggle { display: inline-flex; }
-
-  /* 레일 접힘 — 본문이 단일 컬럼으로 전폭을 쓰고, 레일은 숨는다.
-     (특이도상 위 .gd-lesson-grid / .gd-rail 규칙을 이긴다.) */
-  .gd-lesson-grid[data-rail="closed"] { grid-template-columns: minmax(0, 1fr); }
-  .gd-lesson-grid[data-rail="closed"] .gd-rail { display: none; }
+  .gd-t-md-lg { font-size: var(--gd-fs-lg); }
 
   /* 유닛맵·트랙 카드는 태블릿에서 2열 */
   .gd-grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.625rem; }
 }
 
-/* ════════════════════════════════════════════════════════════════════════════
-   v2 — 필기노트 · 게임 · 상태창 (docs/study-os-spec.md §11~§14)
-   렌더러 계약: 아래 클래스명은 lesson-blocks-notebook / -game-core /
-   -game-arena / status-window 가 참조하는 정본이다. 이름 변경 금지.
-   ════════════════════════════════════════════════════════════════════════════ */
-
-/* ── 필기노트(NOTEBOOK) — 문제집 여백 필기의 이식 ── */
-.gd-note {
-  position: relative;
-  padding-left: 0.875rem;
-  border-left: 3px solid var(--gd-blue-line);
-}
-.gd-note-entry {
-  position: relative;
-  padding: 0.625rem 0;
-  border-top: 1px dashed var(--gd-line);
-}
-.gd-note-entry:first-child { border-top: none; padding-top: 0; }
-.gd-note-num {
-  flex: 0 0 auto;
-  width: 1.25rem;
-  height: 1.25rem;
-  border-radius: 0.375rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--gd-fs-2xs);
-  font-weight: 800;
-  background: var(--gd-blue-soft);
-  color: var(--gd-blue);
-}
-.gd-note-pin {
-  display: inline-flex;
-  align-items: center;
-  height: 1.125rem;
-  padding: 0 0.375rem;
-  border-radius: 0.25rem;
-  font-size: var(--gd-fs-3xs);
-  font-weight: 800;
-  letter-spacing: 0.06em;
-}
-.gd-note-pin[data-pin="암기"] { background: var(--gd-blue-soft); color: var(--gd-blue); }
-.gd-note-pin[data-pin="주의"] { background: var(--gd-bad-soft); color: var(--gd-bad); }
-.gd-note-pin[data-pin="팁"] { background: var(--gd-good-soft); color: var(--gd-good); }
-
-/* ── 용어 첫 대면(CONCEPT_INTRO) ── */
-.gd-term {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 0.5rem;
-  font-size: var(--gd-fs-2xl);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: var(--gd-ink);
-}
-.gd-term-q {
-  border-left: 3px solid var(--gd-line-strong);
-  padding-left: 0.75rem;
-  color: var(--gd-ink-2);
-  font-style: normal;
+/* ── 대형 (1024px+) — 레슨(page-wide)만 한 단 더 ── */
+@media (min-width: 1024px) {
+  .gd-app { --gd-page-wide-w: 64rem; }
 }
 
-/* ── 정리표(TABLE) ── */
-.gd-ctable { width: 100%; border-collapse: collapse; }
-.gd-ctable th {
-  font-size: var(--gd-fs-2xs);
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--gd-ink-2);
-  background: var(--gd-paper);
-  padding: 0.5rem 0.625rem;
-  text-align: left;
-  border: 1px solid var(--gd-line);
-}
-.gd-ctable td {
-  font-size: var(--gd-fs-sm);
-  line-height: 1.55;
-  padding: 0.5rem 0.625rem;
-  border: 1px solid var(--gd-line);
-  vertical-align: top;
-  word-break: keep-all;
-}
-.gd-ctable tr[data-open="true"] td {
-  background: var(--gd-blue-soft);
-}
-.gd-ctable td:first-child { font-weight: 700; }
-
-/* ── 암기 카드(MNEMONIC) — 탭 리허설 카드 ── */
-.gd-mnemo-device {
-  border: 1.5px dashed var(--gd-blue-line);
-  background: var(--gd-blue-soft);
-  border-radius: 0.75rem;
-  padding: 0.75rem 0.875rem;
-  font-weight: 700;
-  color: var(--gd-blue);
-}
-.gd-recall {
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
-  width: 100%;
-  min-height: 2.75rem;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid var(--gd-line);
-  border-radius: 0.625rem;
-  background: var(--gd-card);
-  text-align: left;
-}
-.gd-recall[data-open="true"] { border-color: var(--gd-good); background: var(--gd-good-soft); }
-
-/* ── 게임 공통 셸 ── */
-.gd-game {
-  position: relative;
-  border: 1.5px solid var(--gd-blue-line);
-  background:
-    radial-gradient(circle at 100% 0%, rgba(29, 78, 216, 0.05), transparent 42%),
-    var(--gd-card);
-  border-radius: 1rem;
-  padding: 1rem;
-}
-.gd-game-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3125rem;
-  height: 1.375rem;
-  padding: 0 0.5625rem;
-  border-radius: 9999px;
-  background: var(--gd-blue);
-  color: #fff;
-  font-size: var(--gd-fs-2xs);
-  font-weight: 800;
-  letter-spacing: 0.05em;
-}
-/* 점수·콤보 HUD */
-.gd-hud {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: var(--gd-fs-xs);
-  font-weight: 700;
-  color: var(--gd-ink-2);
-}
-.gd-combo {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.125rem 0.5rem;
-  border-radius: 9999px;
-  background: var(--gd-blue-soft);
-  color: var(--gd-blue);
-  font-weight: 800;
-  animation: gd-pop 160ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-/* 타이머 바(SPEED_OX) — width 는 인라인 스타일, 여기선 전이만 */
-.gd-timer {
-  height: 0.375rem;
-  border-radius: 9999px;
-  background: var(--gd-line);
-  overflow: hidden;
-}
-.gd-timer > span {
-  display: block;
-  height: 100%;
-  border-radius: 9999px;
-  background: var(--gd-blue);
-  transition: width 120ms linear;
-}
-.gd-timer[data-urgent="true"] > span { background: var(--gd-bad); }
-
-/* 사냥 토큰(WORD_HUNT) */
-.gd-hunt-token {
-  display: inline-block;
-  border-radius: 0.375rem;
-  padding: 0.0625rem 0.1875rem;
-  margin: -0.0625rem 0;
-  font-weight: 500;
-  -webkit-tap-highlight-color: transparent;
-}
-.gd-hunt-token[data-state="hit"] {
-  background: var(--gd-good-soft);
-  color: var(--gd-good);
-  font-weight: 700;
-}
-.gd-hunt-token[data-state="miss"] {
-  background: var(--gd-bad-soft);
-  color: var(--gd-bad);
-  animation: gd-shake 240ms ease;
-}
-.gd-hunt-token[data-state="reveal"] {
-  outline: 1.5px dashed var(--gd-good);
-  outline-offset: 1px;
+/* ── 가로모드 폰(높이 ≤480px) — h-dvh 플레이어의 크롬 축소 ──
+   헤더·푸터 상단 여백을 줄이고 번호 점프 스트립을 숨겨(이전/다음·미터는 유지)
+   문항 본문에 세로 공간을 돌려준다. gd.css 가 유틸리티보다 뒤에 로드되어
+   같은 특이도의 pt-* 를 이긴다(검증된 캐스케이드). */
+@media (max-height: 480px) {
+  .gd-phead { padding-top: 0.375rem; }
+  .gd-pfoot { padding-top: 0.375rem; }
+  .gd-qstrip { display: none; }
 }
 
-/* 짝 카드(PAIR_MATCH) */
-.gd-match-card {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 3rem;
-  padding: 0.5rem 0.625rem;
-  border: 1.5px solid var(--gd-line);
-  border-radius: 0.75rem;
-  background: var(--gd-card);
-  font-size: var(--gd-fs-sm);
-  font-weight: 600;
-  text-align: center;
-  word-break: keep-all;
-  transition: border-color 100ms ease, background 100ms ease, opacity 160ms ease;
-}
-.gd-match-card[data-state="selected"] { border-color: var(--gd-blue); background: var(--gd-blue-soft); }
-.gd-match-card[data-state="matched"] {
-  border-color: var(--gd-good);
-  background: var(--gd-good-soft);
-  color: var(--gd-good);
-  opacity: 0.75;
-}
-.gd-match-card[data-state="wrong"] {
-  border-color: var(--gd-bad);
-  background: var(--gd-bad-soft);
-  animation: gd-shake 240ms ease;
-}
-
-/* 하트(BOSS 목숨) */
-.gd-hearts { display: inline-flex; gap: 0.25rem; }
-.gd-heart[data-lost="true"] { opacity: 0.22; transform: scale(0.9); }
-.gd-heart { transition: opacity 200ms ease, transform 200ms ease; }
-
-/* 보스 HP 바 */
-.gd-hp {
-  height: 0.5rem;
-  border-radius: 9999px;
-  background: var(--gd-line);
-  overflow: hidden;
-}
-.gd-hp > span {
-  display: block;
-  height: 100%;
-  border-radius: 9999px;
-  background: linear-gradient(90deg, var(--gd-bad), #f43f5e);
-  transition: width 420ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-.gd-boss-head {
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
-  padding: 0.625rem 0.75rem;
-  border-radius: 0.75rem;
-  background: #16202e;
-  color: #f2f5fa;
-}
-
-@keyframes gd-shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-3px); }
-  75% { transform: translateX(3px); }
-}
-.gd-shake { animation: gd-shake 240ms ease; }
-
-/* ── 상태창(STATUS WINDOW) — 시스템 패널 ── */
-.gd-sys-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 60;
-  background: rgba(8, 14, 24, 0.62);
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
-  animation: gd-fade-in 160ms ease;
-}
-.gd-sys {
-  position: fixed;
-  inset: 0;
-  z-index: 61;
-  margin: auto;
-  width: min(26rem, calc(100vw - 1.5rem));
-  height: min(85dvh, 46rem);
-  display: flex;
-  flex-direction: column;
-  border-radius: 1rem;
-  background: linear-gradient(168deg, #101d31 0%, #0b1523 100%);
-  border: 1px solid #2c4a77;
-  box-shadow:
-    0 0 0 3px rgba(16, 29, 49, 0.55),
-    inset 0 0 0 1px rgba(127, 178, 255, 0.14),
-    0 24px 80px rgba(4, 8, 16, 0.6);
-  color: #dbe7f7;
-  overflow: hidden;
-  animation: gd-sys-in 240ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-@keyframes gd-sys-in {
-  from { transform: translateY(14px) scale(0.985); opacity: 0; }
-  to { transform: translateY(0) scale(1); opacity: 1; }
-}
-.gd-sys-label {
-  font-size: var(--gd-fs-3xs);
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  color: #6f87ab;
-}
-.gd-sys-hairline { border-top: 1px solid rgba(127, 178, 255, 0.13); }
-.gd-sys-panel {
-  border: 1px solid rgba(127, 178, 255, 0.16);
-  background: rgba(16, 29, 49, 0.55);
-  border-radius: 0.75rem;
-}
-/* 스탯 바(렌즈·파트) */
-.gd-sys-bar {
-  height: 0.4375rem;
-  border-radius: 9999px;
-  background: rgba(127, 178, 255, 0.12);
-  overflow: hidden;
-}
-.gd-sys-bar > span {
-  display: block;
-  height: 100%;
-  border-radius: 9999px;
-  background: linear-gradient(90deg, #3b82f6, #7fb2ff);
-  transition: width 600ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-/* 칭호 배지 — 미획득은 실루엣 */
-.gd-sys-title-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  min-height: 2rem;
-  padding: 0.25rem 0.625rem;
-  border-radius: 0.625rem;
-  border: 1px solid rgba(127, 178, 255, 0.22);
-  background: rgba(127, 178, 255, 0.07);
-  font-size: var(--gd-fs-xs);
-  font-weight: 700;
-  color: #cfe0f6;
-  word-break: keep-all;
-}
-.gd-sys-title-badge[data-locked="true"] {
-  border-style: dashed;
-  color: #5d7290;
-  background: transparent;
-}
-.gd-sys-title-badge[data-active="true"] {
-  border-color: #7fb2ff;
-  background: rgba(59, 130, 246, 0.18);
-  color: #fff;
-}
-/* XP 게이지 */
-.gd-sys-xp {
-  height: 0.625rem;
-  border-radius: 9999px;
-  background: rgba(127, 178, 255, 0.12);
-  border: 1px solid rgba(127, 178, 255, 0.18);
-  overflow: hidden;
-}
-.gd-sys-xp > span {
-  display: block;
-  height: 100%;
-  background: linear-gradient(90deg, #2563eb, #60a5fa 60%, #93c5fd);
-  transition: width 700ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-/* 스탯 상승 연출(레슨 완료 화면) */
-@keyframes gd-statup {
-  0% { transform: translateY(6px); opacity: 0; }
-  100% { transform: translateY(0); opacity: 1; }
-}
-.gd-statup { animation: gd-statup 360ms cubic-bezier(0.22, 1, 0.36, 1) both; }
-.gd-statup[data-d="1"] { animation-delay: 120ms; }
-.gd-statup[data-d="2"] { animation-delay: 240ms; }
-.gd-statup[data-d="3"] { animation-delay: 360ms; }
-
-/* ── 모션 최소화 — OS 설정 존중(진입 애니메이션·전환·펄스 전부 무효) ── */
+/* ── 모션 최소화(코어) — OS 설정 존중. ⚠️ 각 파일이 자기 클래스만 무효화한다:
+   이 블록을 한 파일에 몰면 뒤에 로드되는 파일의 애니메이션 선언이
+   같은 특이도로 이겨버린다(캐스케이드). gd-study/gd-game 끝에도 같은 블록 존재. ── */
 @media (prefers-reduced-motion: reduce) {
   .gd-pop,
   .gd-verdict,
   .gd-sheet,
   .gd-sheet-backdrop,
   .gd-side-sheet,
-  .gd-sys,
-  .gd-sys-backdrop,
-  .gd-combo,
-  .gd-shake,
-  .gd-statup,
-  .gd-hunt-token[data-state="miss"],
-  .gd-match-card[data-state="wrong"] {
+  .gd-meter[data-indeterminate="true"] > span {
     animation: none;
   }
   .gd-meter > span,
   .gd-btn,
-  .gd-btn-chip,
   .gd-option,
   .gd-u,
-  .gd-chev,
-  .gd-syn,
-  .gd-timer > span,
-  .gd-hp > span,
-  .gd-heart,
-  .gd-match-card,
-  .gd-sys-bar > span,
-  .gd-sys-xp > span {
+  .gd-chev {
     transition: none;
   }
   .gd-btn:active {

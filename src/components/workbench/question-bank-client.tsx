@@ -49,7 +49,6 @@ import { QuestionBankCard } from "./question-bank-card";
 import { DragSelect } from "@/components/ui/drag-select";
 import { triggerHintGlowWithin } from "@/lib/hint-glow";
 import { AssignQuestionsAction } from "./question-bank-client/assign-questions-action";
-import { CreateExamDialog } from "./question-bank-client/create-exam-dialog";
 import { EditQuestionDialog } from "./question-bank-client/edit-question-dialog";
 import { GridToggle } from "./question-bank-client/grid-toggle";
 import {
@@ -439,9 +438,7 @@ export function QuestionBankClient({
   );
   const { selectedIds, setSelectedIds, toggleSelect, clearSelection } =
     useSelection(getDisplayedIds);
-  // Exam dialog
-  const [createExamOpen, setCreateExamOpen] = useState(false);
-  const [examTitle, setExamTitle] = useState("");
+  // Exam creation — 제목 팝업 없이 바로 편집기로 착륙하므로 진행 스피너 상태만 둔다.
   const [creatingExam, setCreatingExam] = useState(false);
 
   // Bulk delete
@@ -821,28 +818,33 @@ export function QuestionBankClient({
     }
   }
 
-  async function handleCreateExam() {
-    if (!examTitle.trim() || selectedIds.size === 0) return;
+  // "다음으로 (시험지 생성)" — 제목 입력 팝업 없이, 선택 문항을 담은 초안(DRAFT)
+  // 시험지를 즉시 만들고 시험지 편집기로 바로 착륙시킨다. 제목은 편집기에서
+  // 수정할 수 있는 날짜 기반 기본값을 자동 부여한다(빈 제목 방지).
+  async function handleCreateAndEdit() {
+    if (selectedIds.size === 0 || creatingExam) return;
     setCreatingExam(true);
     const questions = Array.from(selectedIds).map((id, idx) => ({
       questionId: id,
       orderNum: idx + 1,
       points: 1,
     }));
+    const now = new Date();
+    const pad = (n: number) => String(n).padStart(2, "0");
+    const autoTitle = `시험지 ${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
     const result = await createExam(academyId, {
-      title: examTitle.trim(),
+      title: autoTitle,
       type: "OFFLINE",
       totalPoints: questions.length,
       questions,
     });
     if (result.success) {
-      toast.success("시험지가 생성되었습니다.");
-      setCreateExamOpen(false);
-      router.push(`/director/exams/${result.id}`);
+      // 편집기로 이동 — 스피너를 유지한 채 넘어가도록 여기선 상태를 되돌리지 않는다.
+      router.push(`/director/workbench/exams/${result.id}/edit`);
     } else {
       toast.error(result.error || "시험지 생성 실패");
+      setCreatingExam(false);
     }
-    setCreatingExam(false);
   }
 
   const showingPendingOnly = filters.approved === false;
@@ -1198,8 +1200,7 @@ export function QuestionBankClient({
               triggerHintGlowWithin(cardZoneRef.current);
               return;
             }
-            setExamTitle("");
-            setCreateExamOpen(true);
+            void handleCreateAndEdit();
           }}
           className={
             "flex h-10 min-w-0 flex-[1_1_auto] items-center justify-center gap-1.5 overflow-hidden whitespace-nowrap rounded-md border px-2.5 text-[13px] font-bold text-white shadow-sm transition-colors md:h-12 md:min-w-0 md:basis-auto md:grow md:text-[14px] " +
@@ -1544,17 +1545,6 @@ export function QuestionBankClient({
       </div>
 
       {/* ─── Dialogs ─── */}
-
-      <CreateExamDialog
-        open={createExamOpen}
-        onOpenChange={setCreateExamOpen}
-        examTitle={examTitle}
-        setExamTitle={setExamTitle}
-        selectedCount={selectedIds.size}
-        selectedQuestionIds={Array.from(selectedIds)}
-        creating={creatingExam}
-        onCreate={handleCreateExam}
-      />
 
       <GenerateQuestionsDialog
         open={generateDialogOpen}

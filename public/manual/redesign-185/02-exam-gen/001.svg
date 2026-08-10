@@ -6,7 +6,7 @@
 <rect width="1920" height="1080" fill="url(#skyGrad)"/>
 <rect x="0" y="0" width="1920" height="8" fill="#ffffff" opacity="0.35"/>
 <text x="96" y="108" font-size="30" font-weight="800" fill="#e7f2ff">② 시험지 생성 · 기능 인트로</text>
-<text x="1824" y="108" text-anchor="end" font-size="22" font-weight="800" fill="#e7f2ff" opacity="0.9">총 20장</text>
+<text x="1824" y="108" text-anchor="end" font-size="22" font-weight="800" fill="#e7f2ff" opacity="0.9">총 22장</text>
 <text font-size="60" font-weight="900" fill="#ffffff"><tspan x="96" y="188">문제 은행이 배포용 시험지로 완성됩니다</tspan></text>
 <text font-size="25" font-weight="600" fill="#e7f2ff"><tspan x="96" y="248">문제 은행에서 문항을 골라 담고 용지·단 구성·디자인 템플릿을 적용해 시험지를 조판합니다.</tspan></text>
 <rect x="96" y="372.0" width="660" height="102.8" rx="18" fill="#ffffff" filter="url(#introShadow)"/>

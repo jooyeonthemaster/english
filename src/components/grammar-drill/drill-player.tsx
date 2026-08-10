@@ -13,11 +13,12 @@ import { useRouter } from "next/navigation";
 import {
   ArrowRight,
   BookOpen,
-  ChevronLeft,
   Lightbulb,
   MessageCircleQuestion,
   RotateCcw,
 } from "lucide-react";
+import { useKeyboardInset } from "@/hooks/use-keyboard-inset";
+import { BackBar } from "./back-bar";
 import type {
   ClientItem,
   DrillMode,
@@ -59,6 +60,8 @@ export function DrillPlayer({ params }: { params: DrillParams }) {
   const [sheet, setSheet] = useState<"none" | "concept" | "chat">("none");
   const [submitting, setSubmitting] = useState(false);
   const [testResult, setTestResult] = useState<{ score: number; passed: boolean } | null>(null);
+  // 서술형(written) 입력 시 가상 키보드 높이만큼 하단을 밀어 제출 바를 노출
+  const kbInset = useKeyboardInset();
   // 큐 로드·문항 전환 시마다 Date.now()로 재설정되므로 초기값은 0으로 둔다.
   const startRef = useRef(0);
   const mainRef = useRef<HTMLElement>(null);
@@ -233,37 +236,33 @@ export function DrillPlayer({ params }: { params: DrillParams }) {
   const correctSoFar = results.filter((r) => r.correct).length;
 
   return (
-    <div className="mx-auto flex h-dvh max-w-2xl flex-col">
+    <div
+      className="gd-player flex h-dvh flex-col"
+      style={kbInset ? { paddingBottom: kbInset } : undefined}
+    >
       {/* ── 헤더 ── */}
-      <header className="shrink-0 px-4 pt-[max(0.75rem,env(safe-area-inset-top))]">
-        <div className="flex h-10 items-center gap-2">
-          <button
-            type="button"
-            onClick={exit}
-            className="-ml-2 flex h-10 w-10 items-center justify-center rounded-full"
-            style={{ color: "var(--gd-ink-2)" }}
-            aria-label="나가기"
-          >
-            <ChevronLeft className="h-5 w-5" strokeWidth={2} />
-          </button>
-          <p className="gd-t-sm min-w-0 flex-1 truncate font-semibold">
-            {queue.title}
-          </p>
-          <p className="gd-t-xs shrink-0 font-semibold" style={{ color: "var(--gd-ink-2)" }}>
-            {/* 배정 모드: 큐는 배정 전체가 아니라 이번 세트만 담는다(엔진 QUEUE_SIZE 단위
-                발급). 페이로드의 assignmentRemaining 만으로는 전체 문항 수를 알 수 없어
-                누적 카운터 대신 "이번 세트" 라벨로 헤더 제목(전체)과 의미를 구분한다. */}
-            {params.mode === "assignment" ? (
-              <span className="gd-t-3xs mr-1 font-medium" style={{ color: "var(--gd-ink-3)" }}>
-                이번 세트
+      <header className="gd-phead shrink-0 px-4 pt-[max(0.75rem,env(safe-area-inset-top))]">
+        <BackBar
+          onBack={exit}
+          ariaLabel="나가기"
+          title={queue.title}
+          right={
+            <p className="gd-t-xs shrink-0 font-semibold" style={{ color: "var(--gd-ink-2)" }}>
+              {/* 배정 모드: 큐는 배정 전체가 아니라 이번 세트만 담는다(엔진 QUEUE_SIZE 단위
+                  발급). 페이로드의 assignmentRemaining 만으로는 전체 문항 수를 알 수 없어
+                  누적 카운터 대신 "이번 세트" 라벨로 헤더 제목(전체)과 의미를 구분한다. */}
+              {params.mode === "assignment" ? (
+                <span className="gd-t-3xs mr-1 font-medium" style={{ color: "var(--gd-ink-3)" }}>
+                  이번 세트
+                </span>
+              ) : null}
+              <span className="gd-mono">
+                {idx + 1}
+                <span style={{ color: "var(--gd-ink-3)" }}>/{queue.items.length}</span>
               </span>
-            ) : null}
-            <span className="gd-mono">
-              {idx + 1}
-              <span style={{ color: "var(--gd-ink-3)" }}>/{queue.items.length}</span>
-            </span>
-          </p>
-        </div>
+            </p>
+          }
+        />
         <div className="gd-meter mt-1">
           <span style={{ width: `${progress}%` }} />
         </div>
@@ -316,7 +315,10 @@ export function DrillPlayer({ params }: { params: DrillParams }) {
       </main>
 
       {/* ── 액션바 ── */}
-      <footer className="gd-hairline-t gd-safe-b shrink-0 bg-white px-4 pt-2.5">
+      <footer
+        className="gd-pfoot gd-hairline-t gd-safe-b shrink-0 px-4 pt-2.5"
+        style={{ background: "var(--gd-card)" }}
+      >
         <div className="mb-2 flex gap-2">
           {!verdict && (
             <ToolButton
@@ -416,7 +418,7 @@ function ToolButton({
   onClick: () => void;
   disabled?: boolean;
 }) {
-  // 시각(칩 h-9)은 유지하고 실제 터치 영역만 min-h-11(44px)로 확장한다.
+  // 시각(칩)은 공용 .gd-btn-chip 어휘를 쓰고, 실제 터치 영역만 min-h-11(44px)로 확장한다.
   return (
     <button
       type="button"
@@ -424,10 +426,7 @@ function ToolButton({
       disabled={disabled}
       className="flex min-h-11 items-center disabled:opacity-40"
     >
-      <span
-        className="gd-t-2xs flex h-9 items-center gap-1.5 rounded-lg border px-2.5 font-semibold"
-        style={{ borderColor: "var(--gd-line)", color: "var(--gd-ink-2)" }}
-      >
+      <span className="gd-btn-chip">
         {icon}
         {label}
       </span>
@@ -490,7 +489,7 @@ function Summary({
         {testResult ? (
           <>
             <p
-              className="gd-mono mt-4 text-5xl font-bold"
+              className="gd-mono gd-t-4xl mt-4 font-bold"
               style={{ color: testResult.passed ? "var(--gd-good)" : "var(--gd-ink)" }}
             >
               {testResult.score}
@@ -508,7 +507,7 @@ function Summary({
             </p>
           </>
         ) : (
-          <p className="gd-mono mt-4 text-5xl font-bold">
+          <p className="gd-mono gd-t-4xl mt-4 font-bold">
             {correct}
             <span className="gd-t-lg font-semibold" style={{ color: "var(--gd-ink-3)" }}>
               /{total}

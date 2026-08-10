@@ -163,7 +163,7 @@
     },
     {
       "file": "01-question-gen/017.svg",
-      "title": "① 문제 생성 — 유형별 세부 설정 패널(난이도·생성 플랜·정답 유형·보기/정답 개수)",
+      "title": "① 문제 생성 — 유형별 세부 설정 패널(난이도·정답 유형·보기/정답 개수)",
       "fno": "①",
       "fname": "문제 생성",
       "fslug": "01-question-gen"
@@ -408,7 +408,7 @@
     },
     {
       "file": "02-exam-gen/017.svg",
-      "title": "② 시험지 생성 — 시험지 카드 하단 액션(수정/인쇄/상세보기)",
+      "title": "② 시험지 생성 — 시험지 카드 하단 액션(수정/인쇄/과제 배포/상세보기)",
       "fno": "②",
       "fname": "시험지 생성",
       "fslug": "02-exam-gen"
@@ -429,6 +429,20 @@
     },
     {
       "file": "02-exam-gen/020.svg",
+      "title": "② 시험지 생성 — 태블릿 시험 배포 — 학생을 골라 링크·QR로 바로 배포",
+      "fno": "②",
+      "fname": "시험지 생성",
+      "fslug": "02-exam-gen"
+    },
+    {
+      "file": "02-exam-gen/021.svg",
+      "title": "② 시험지 생성 — 학생 응시 탭 — 응시 현황·과제 배포·AI 심층분석 보강(문항당 ◈1)",
+      "fno": "②",
+      "fname": "시험지 생성",
+      "fslug": "02-exam-gen"
+    },
+    {
+      "file": "02-exam-gen/022.svg",
       "title": "② 시험지 생성 — 팁 & 주의사항",
       "fno": "②",
       "fname": "시험지 생성",
@@ -779,6 +793,13 @@
     },
     {
       "file": "05-webtoon/014.svg",
+      "title": "⑤ 지문 기반 웹툰 — 기출 웹툰 다운로드 — 검수 완료 웹툰을 ◈3에 바로 받습니다",
+      "fno": "⑤",
+      "fname": "지문 기반 웹툰",
+      "fslug": "05-webtoon"
+    },
+    {
+      "file": "05-webtoon/015.svg",
       "title": "⑤ 지문 기반 웹툰 — 팁 & 주의사항",
       "fno": "⑤",
       "fname": "지문 기반 웹툰",
@@ -786,177 +807,177 @@
     },
     {
       "file": "06-exam-report/001.svg",
-      "title": "⑥ 시험 리포트 (BETA) — 기능 인트로",
+      "title": "⑥ 내신 시험 분석 (BETA) — 기능 인트로",
       "fno": "⑥",
-      "fname": "시험 리포트 (BETA)",
+      "fname": "내신 시험 분석 (BETA)",
       "fslug": "06-exam-report"
     },
     {
       "file": "06-exam-report/002.svg",
-      "title": "⑥ 시험 리포트 (BETA) — 학생 시험 리포트(BETA) 첫 화면 — 사용 순서 1·2·3",
+      "title": "⑥ 내신 시험 분석 (BETA) — 내신 시험 분석(BETA) 첫 화면 — 사용 순서 1·2·3",
       "fno": "⑥",
-      "fname": "시험 리포트 (BETA)",
+      "fname": "내신 시험 분석 (BETA)",
       "fslug": "06-exam-report"
     },
     {
       "file": "06-exam-report/003.svg",
-      "title": "⑥ 시험 리포트 (BETA) — 시험지 업로드됨(등록할 시험지 1페이지)",
+      "title": "⑥ 내신 시험 분석 (BETA) — 시험지 업로드됨(등록할 시험지 1페이지)",
       "fno": "⑥",
-      "fname": "시험 리포트 (BETA)",
+      "fname": "내신 시험 분석 (BETA)",
       "fslug": "06-exam-report"
     },
     {
       "file": "06-exam-report/004.svg",
-      "title": "⑥ 시험 리포트 (BETA) — 시험 정보 입력(깨끗한 원본), 분석 시작 클릭 직전",
+      "title": "⑥ 내신 시험 분석 (BETA) — 시험 정보 입력(깨끗한 원본), 분석 시작 클릭 직전",
       "fno": "⑥",
-      "fname": "시험 리포트 (BETA)",
+      "fname": "내신 시험 분석 (BETA)",
       "fslug": "06-exam-report"
     },
     {
       "file": "06-exam-report/005.svg",
-      "title": "⑥ 시험 리포트 (BETA) — 분석 현황 — 분석 중",
+      "title": "⑥ 내신 시험 분석 (BETA) — 분석 현황 — 분석 중",
       "fno": "⑥",
-      "fname": "시험 리포트 (BETA)",
+      "fname": "내신 시험 분석 (BETA)",
       "fslug": "06-exam-report"
     },
     {
       "file": "06-exam-report/006.svg",
-      "title": "⑥ 시험 리포트 (BETA) — 분석 완료 상태",
+      "title": "⑥ 내신 시험 분석 (BETA) — 분석 완료 상태",
       "fno": "⑥",
-      "fname": "시험 리포트 (BETA)",
+      "fname": "내신 시험 분석 (BETA)",
       "fslug": "06-exam-report"
     },
     {
       "file": "06-exam-report/007.svg",
-      "title": "⑥ 시험 리포트 (BETA) — 시험지 분석 상세(문항 목록)",
+      "title": "⑥ 내신 시험 분석 (BETA) — 문항 분석 — 채점 지도 표에서 정답·배점 검수",
       "fno": "⑥",
-      "fname": "시험 리포트 (BETA)",
+      "fname": "내신 시험 분석 (BETA)",
       "fslug": "06-exam-report"
     },
     {
       "file": "06-exam-report/008.svg",
-      "title": "⑥ 시험 리포트 (BETA) — 시험지 총평·난이도 프로필·유형 분포·함정 총평",
+      "title": "⑥ 내신 시험 분석 (BETA) — 시험지 총평·난이도 프로필·유형 분포·함정 총평",
       "fno": "⑥",
-      "fname": "시험 리포트 (BETA)",
+      "fname": "내신 시험 분석 (BETA)",
       "fslug": "06-exam-report"
     },
     {
       "file": "06-exam-report/009.svg",
-      "title": "⑥ 시험 리포트 (BETA) — 학생 관리 단계로 이동 클릭 직전",
+      "title": "⑥ 내신 시험 분석 (BETA) — 「다음으로 (학생 관리)」 클릭 직전 — 전 문항 검수 후 열립니다",
       "fno": "⑥",
-      "fname": "시험 리포트 (BETA)",
+      "fname": "내신 시험 분석 (BETA)",
       "fslug": "06-exam-report"
     },
     {
       "file": "06-exam-report/010.svg",
-      "title": "⑥ 시험 리포트 (BETA) — 학생 관리 단계 화면",
+      "title": "⑥ 내신 시험 분석 (BETA) — 학생 관리 단계 화면",
       "fno": "⑥",
-      "fname": "시험 리포트 (BETA)",
+      "fname": "내신 시험 분석 (BETA)",
       "fslug": "06-exam-report"
     },
     {
       "file": "06-exam-report/011.svg",
-      "title": "⑥ 시험 리포트 (BETA) — 학생 추가 모달",
+      "title": "⑥ 내신 시험 분석 (BETA) — 학생 추가 모달",
       "fno": "⑥",
-      "fname": "시험 리포트 (BETA)",
+      "fname": "내신 시험 분석 (BETA)",
       "fslug": "06-exam-report"
     },
     {
       "file": "06-exam-report/012.svg",
-      "title": "⑥ 시험 리포트 (BETA) — 학생 등록됨(답안 수집 방법)",
+      "title": "⑥ 내신 시험 분석 (BETA) — 학생 등록됨(답안 수집 방법)",
       "fno": "⑥",
-      "fname": "시험 리포트 (BETA)",
+      "fname": "내신 시험 분석 (BETA)",
       "fslug": "06-exam-report"
     },
     {
       "file": "06-exam-report/013.svg",
-      "title": "⑥ 시험 리포트 (BETA) — 학생 상세(채점 지도)",
+      "title": "⑥ 내신 시험 분석 (BETA) — 학생 워크스페이스 — 답안 수집→채점→분석→AI 리포트",
       "fno": "⑥",
-      "fname": "시험 리포트 (BETA)",
+      "fname": "내신 시험 분석 (BETA)",
       "fslug": "06-exam-report"
     },
     {
       "file": "06-exam-report/014.svg",
-      "title": "⑥ 시험 리포트 (BETA) — 학생 답안 링크 — 만든 링크를 학생에게 보내면 휴대폰으로 본인 답을 직접 입력합니다(정답·점수는 학생에게 안 보임)",
+      "title": "⑥ 내신 시험 분석 (BETA) — 학생 답안 링크 — 만든 링크를 학생에게 보내면 휴대폰으로 본인 답을 직접 입력합니다(정답·점수는 학생에게 안 보임)",
       "fno": "⑥",
-      "fname": "시험 리포트 (BETA)",
+      "fname": "내신 시험 분석 (BETA)",
       "fslug": "06-exam-report"
     },
     {
       "file": "06-exam-report/015.svg",
-      "title": "⑥ 시험 리포트 (BETA) — 정오표 — 문항별 선지 직접 입력",
+      "title": "⑥ 내신 시험 분석 (BETA) — 정오표 — 문항별 선지 직접 입력",
       "fno": "⑥",
-      "fname": "시험 리포트 (BETA)",
+      "fname": "내신 시험 분석 (BETA)",
       "fslug": "06-exam-report"
     },
     {
       "file": "06-exam-report/016.svg",
-      "title": "⑥ 시험 리포트 (BETA) — 학생답 입력·자동 정오 판정",
+      "title": "⑥ 내신 시험 분석 (BETA) — 학생답 입력·자동 정오 판정",
       "fno": "⑥",
-      "fname": "시험 리포트 (BETA)",
+      "fname": "내신 시험 분석 (BETA)",
       "fslug": "06-exam-report"
     },
     {
       "file": "06-exam-report/017.svg",
-      "title": "⑥ 시험 리포트 (BETA) — 점수 확정",
+      "title": "⑥ 내신 시험 분석 (BETA) — 점수 확정",
       "fno": "⑥",
-      "fname": "시험 리포트 (BETA)",
+      "fname": "내신 시험 분석 (BETA)",
       "fslug": "06-exam-report"
     },
     {
       "file": "06-exam-report/018.svg",
-      "title": "⑥ 시험 리포트 (BETA) — 리포트 탭",
+      "title": "⑥ 내신 시험 분석 (BETA) — AI 리포트 단계",
       "fno": "⑥",
-      "fname": "시험 리포트 (BETA)",
+      "fname": "내신 시험 분석 (BETA)",
       "fslug": "06-exam-report"
     },
     {
       "file": "06-exam-report/019.svg",
-      "title": "⑥ 시험 리포트 (BETA) — 상담 리포트 생성 클릭 직전 — ◈5",
+      "title": "⑥ 내신 시험 분석 (BETA) — 상담 리포트 생성 클릭 직전 — ◈5",
       "fno": "⑥",
-      "fname": "시험 리포트 (BETA)",
+      "fname": "내신 시험 분석 (BETA)",
       "fslug": "06-exam-report"
     },
     {
       "file": "06-exam-report/020.svg",
-      "title": "⑥ 시험 리포트 (BETA) — 리포트 생성 중",
+      "title": "⑥ 내신 시험 분석 (BETA) — 리포트 생성 중",
       "fno": "⑥",
-      "fname": "시험 리포트 (BETA)",
+      "fname": "내신 시험 분석 (BETA)",
       "fslug": "06-exam-report"
     },
     {
       "file": "06-exam-report/021.svg",
-      "title": "⑥ 시험 리포트 (BETA) — 학생 상담 리포트 완성(상단)",
+      "title": "⑥ 내신 시험 분석 (BETA) — 학생 상담 리포트 완성(상단)",
       "fno": "⑥",
-      "fname": "시험 리포트 (BETA)",
+      "fname": "내신 시험 분석 (BETA)",
       "fslug": "06-exam-report"
     },
     {
       "file": "06-exam-report/022.svg",
-      "title": "⑥ 시험 리포트 (BETA) — 상담 리포트 본문(유형 분석·함정 분석)",
+      "title": "⑥ 내신 시험 분석 (BETA) — 상담 리포트 본문(유형 분석·함정 분석)",
       "fno": "⑥",
-      "fname": "시험 리포트 (BETA)",
+      "fname": "내신 시험 분석 (BETA)",
       "fslug": "06-exam-report"
     },
     {
       "file": "06-exam-report/023.svg",
-      "title": "⑥ 시험 리포트 (BETA) — 리포트 PDF 저장(클릭 직전)",
+      "title": "⑥ 내신 시험 분석 (BETA) — 리포트 PDF 저장(클릭 직전)",
       "fno": "⑥",
-      "fname": "시험 리포트 (BETA)",
+      "fname": "내신 시험 분석 (BETA)",
       "fslug": "06-exam-report"
     },
     {
       "file": "06-exam-report/024.svg",
-      "title": "⑥ 시험 리포트 (BETA) — 리포트 관리 — 분석한 시험지·학생 리포트 목록",
+      "title": "⑥ 내신 시험 분석 (BETA) — 내신 리포트 관리 — 분석한 시험지·학생 리포트 목록",
       "fno": "⑥",
-      "fname": "시험 리포트 (BETA)",
+      "fname": "내신 시험 분석 (BETA)",
       "fslug": "06-exam-report"
     },
     {
       "file": "06-exam-report/025.svg",
-      "title": "⑥ 시험 리포트 (BETA) — 팁 & 주의사항",
+      "title": "⑥ 내신 시험 분석 (BETA) — 팁 & 주의사항",
       "fno": "⑥",
-      "fname": "시험 리포트 (BETA)",
+      "fname": "내신 시험 분석 (BETA)",
       "fslug": "06-exam-report"
     },
     {
@@ -996,7 +1017,7 @@
     },
     {
       "file": "07-credits/006.svg",
-      "title": "⑦ 크레딧 관리 — 카드 결제는 현재 준비중 — 선택 시 안내 토스트가 뜨며, 준비 완료 전까지는 무통장입금을 사용합니다",
+      "title": "⑦ 크레딧 관리 — 카드 결제 정식 오픈 — 「결제하기」를 누르면 PG 결제창으로 이어집니다",
       "fno": "⑦",
       "fname": "크레딧 관리",
       "fslug": "07-credits"
@@ -1241,7 +1262,7 @@
     },
     {
       "file": "10-helpcenter/014.svg",
-      "title": "⑩ 고객 센터 — 사용 매뉴얼 — 현재 준비 중이며, 공개되면 이 화면에서 문서를 열람합니다",
+      "title": "⑩ 고객 센터 — 사용 매뉴얼 — 목차별 슬라이드 매뉴얼을 이 화면에서 바로 열람합니다",
       "fno": "⑩",
       "fname": "고객 센터",
       "fslug": "10-helpcenter"
@@ -1310,6 +1331,41 @@
       "fslug": "11-settings"
     },
     {
+      "file": "12-students/001.svg",
+      "title": "⑫ 학생 관리 (BETA) — 기능 인트로",
+      "fno": "⑫",
+      "fname": "학생 관리 (BETA)",
+      "fslug": "12-students"
+    },
+    {
+      "file": "12-students/002.svg",
+      "title": "⑫ 학생 관리 (BETA) — 학생 목록 — 등록·반 편성·수납 현황, 학생 코드·앱 접속",
+      "fno": "⑫",
+      "fname": "학생 관리 (BETA)",
+      "fslug": "12-students"
+    },
+    {
+      "file": "12-students/003.svg",
+      "title": "⑫ 학생 관리 (BETA) — 과제 관리 — 배포한 과제의 마감·진행률 관리",
+      "fno": "⑫",
+      "fname": "학생 관리 (BETA)",
+      "fslug": "12-students"
+    },
+    {
+      "file": "12-students/004.svg",
+      "title": "⑫ 학생 관리 (BETA) — 어법 훈련 — 학생별 훈련 진행·취약 개념 모니터링",
+      "fno": "⑫",
+      "fname": "학생 관리 (BETA)",
+      "fslug": "12-students"
+    },
+    {
+      "file": "12-students/005.svg",
+      "title": "⑫ 학생 관리 (BETA) — 팁 & 주의사항",
+      "fno": "⑫",
+      "fname": "학생 관리 (BETA)",
+      "fslug": "12-students"
+    },
+    {
       "file": "99-quickguide/001.svg",
       "title": "빠른 가이드 — 핵심 4기능 플로우",
       "fno": "★",
@@ -1337,76 +1393,83 @@
       "name": "시험지 생성",
       "slug": "02-exam-gen",
       "start": 42,
-      "count": 20
+      "count": 22
     },
     {
       "no": "③",
       "name": "학습지 생성",
       "slug": "03-worksheet-gen",
-      "start": 62,
+      "start": 64,
       "count": 19
     },
     {
       "no": "④",
       "name": "자료 추출",
       "slug": "04-extraction",
-      "start": 81,
+      "start": 83,
       "count": 17
     },
     {
       "no": "⑤",
       "name": "지문 기반 웹툰",
       "slug": "05-webtoon",
-      "start": 98,
-      "count": 14
+      "start": 100,
+      "count": 15
     },
     {
       "no": "⑥",
-      "name": "시험 리포트 (BETA)",
+      "name": "내신 시험 분석 (BETA)",
       "slug": "06-exam-report",
-      "start": 112,
+      "start": 115,
       "count": 25
     },
     {
       "no": "⑦",
       "name": "크레딧 관리",
       "slug": "07-credits",
-      "start": 137,
+      "start": 140,
       "count": 14
     },
     {
       "no": "⑧",
       "name": "리워드",
       "slug": "08-rewards",
-      "start": 151,
+      "start": 154,
       "count": 6
     },
     {
       "no": "⑨",
       "name": "스모트 소식",
       "slug": "09-news",
-      "start": 157,
+      "start": 160,
       "count": 7
     },
     {
       "no": "⑩",
       "name": "고객 센터",
       "slug": "10-helpcenter",
-      "start": 164,
+      "start": 167,
       "count": 15
     },
     {
       "no": "⑪",
       "name": "설정",
       "slug": "11-settings",
-      "start": 179,
+      "start": 182,
       "count": 8
+    },
+    {
+      "no": "⑫",
+      "name": "학생 관리 (BETA)",
+      "slug": "12-students",
+      "start": 190,
+      "count": 5
     },
     {
       "no": "★",
       "name": "빠른 가이드",
       "slug": "99-quickguide",
-      "start": 187,
+      "start": 195,
       "count": 1
     }
   ]

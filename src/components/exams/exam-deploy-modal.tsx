@@ -68,10 +68,20 @@ export function ExamDeployModal({
   const [mode, setMode] = useState<ExamAssignMode>("TABLET");
 
   const refresh = useCallback(async (): Promise<boolean> => {
-    const [assignmentsRes, rosterRes] = await Promise.all([
-      getExamAssignments(examId),
-      getAssignableStudents({ examId }),
-    ]);
+    // 액션 호출 자체가 throw 될 수 있다(이동/재컴파일로 요청 중단, 네트워크 오류).
+    // 잡지 않으면 loadError 가 영영 안 서서 스켈레톤에 고착된다 — 에러 상태로
+    // 떨어뜨려 재시도 버튼을 보여준다.
+    let assignmentsRes: Awaited<ReturnType<typeof getExamAssignments>>;
+    let rosterRes: Awaited<ReturnType<typeof getAssignableStudents>>;
+    try {
+      [assignmentsRes, rosterRes] = await Promise.all([
+        getExamAssignments(examId),
+        getAssignableStudents({ examId }),
+      ]);
+    } catch {
+      setLoadError("배포 정보를 불러오지 못했습니다. 네트워크 상태를 확인하고 다시 시도해 주세요.");
+      return false;
+    }
     if (
       !assignmentsRes.success ||
       !assignmentsRes.data ||

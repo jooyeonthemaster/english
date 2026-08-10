@@ -357,7 +357,7 @@ export function HomeClient({
       {home.weakest.length > 0 && (
         <section className="mt-6">
           <p className="gd-label mb-2">지금 가장 약한 개념</p>
-          <div className="flex flex-col gap-2.5">
+          <div className="flex flex-col gap-2.5 md:grid md:grid-cols-2">
             {home.weakest.map((w) => (
               <Link
                 key={w.conceptId}

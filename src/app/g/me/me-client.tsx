@@ -67,11 +67,24 @@ export function MeClient() {
     );
   }
   if (!me) {
+    // 홈/과제와 동일한 스켈레톤 문법 — 계기판 + 14일 차트 + 숙달 지도 자리
     return (
-      <div className="flex min-h-[60dvh] items-center justify-center">
-        <p className="gd-t-sm" style={{ color: "var(--gd-ink-3)" }}>
-          불러오는 중…
-        </p>
+      <div className="gd-page animate-pulse px-5 pb-6 pt-5" role="status" aria-live="polite">
+        <span className="sr-only">기록을 불러오는 중입니다</span>
+        <div className="gd-skeleton h-7 w-24" aria-hidden />
+        <div className="gd-skeleton mt-2 h-3.5 w-48" aria-hidden />
+        <div className="gd-card mt-4 grid grid-cols-4 gap-3 p-4" aria-hidden>
+          {[0, 1, 2, 3].map((i) => (
+            <div key={i}>
+              <div className="gd-skeleton h-3 w-full" />
+              <div className="gd-skeleton mt-2 h-5 w-3/4" />
+            </div>
+          ))}
+        </div>
+        <div className="gd-skeleton mt-6 h-3.5 w-16" aria-hidden />
+        <div className="gd-card mt-2 h-[5.5rem]" aria-hidden />
+        <div className="gd-skeleton mt-6 h-3.5 w-24" aria-hidden />
+        <div className="gd-card mt-2 h-40" aria-hidden />
       </div>
     );
   }
@@ -113,7 +126,8 @@ export function MeClient() {
                 }}
                 title={`${d.day} · ${d.solved}문항`}
               />
-              <span className="gd-t-3xs" style={{ color: "var(--gd-ink-3)", fontSize: "0.5rem" }}>
+              {/* 14열이라 좁다 — 3xs(11px)로도 2자리 날짜가 들어간다(8px 인라인 축소 폐지) */}
+              <span className="gd-t-3xs" style={{ color: "var(--gd-ink-3)" }}>
                 {d.day.slice(3)}
               </span>
             </div>

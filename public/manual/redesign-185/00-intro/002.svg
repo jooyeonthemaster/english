@@ -15,7 +15,7 @@
   </filter>
 </defs><rect width="1920" height="1080" fill="#ffffff"/>
 <text x="84" y="88" font-size="28" font-weight="950" fill="#1f5df5">전체 목차</text>
-<text font-size="58" font-weight="950" fill="#111827" letter-spacing="0"><tspan x="84" y="164">11개 기능을 결과 중심으로 훑어봅니다</tspan></text>
+<text font-size="58" font-weight="950" fill="#111827" letter-spacing="0"><tspan x="84" y="164">12개 기능을 결과 중심으로 훑어봅니다</tspan></text>
 
 
 <rect x="84" y="286" width="410" height="126" rx="8" fill="#ffffff" stroke="#d9e2ef" filter="url(#cardShadow)"/>
@@ -26,7 +26,7 @@
 <rect x="551" y="314" width="48" height="48" rx="8" fill="#12b886"/>
 <text x="575" y="346" text-anchor="middle" font-size="23" font-weight="950" fill="#ffffff">②</text>
 <text x="619" y="333" font-size="27" font-weight="950" fill="#111827">시험지 생성</text>
-<text x="619" y="366" font-size="18" font-weight="800" fill="#718096">20장</text><rect x="970" y="286" width="410" height="126" rx="8" fill="#ffffff" stroke="#d9e2ef" filter="url(#cardShadow)"/>
+<text x="619" y="366" font-size="18" font-weight="800" fill="#718096">22장</text><rect x="970" y="286" width="410" height="126" rx="8" fill="#ffffff" stroke="#d9e2ef" filter="url(#cardShadow)"/>
 <rect x="994" y="314" width="48" height="48" rx="8" fill="#f59f00"/>
 <text x="1018" y="346" text-anchor="middle" font-size="23" font-weight="950" fill="#ffffff">③</text>
 <text x="1062" y="333" font-size="27" font-weight="950" fill="#111827">학습지 생성</text>
@@ -38,10 +38,10 @@
 <rect x="108" y="466" width="48" height="48" rx="8" fill="#0ca678"/>
 <text x="132" y="498" text-anchor="middle" font-size="23" font-weight="950" fill="#ffffff">⑤</text>
 <text x="176" y="485" font-size="27" font-weight="950" fill="#111827">지문 기반 웹툰</text>
-<text x="176" y="518" font-size="18" font-weight="800" fill="#718096">14장</text><rect x="527" y="438" width="410" height="126" rx="8" fill="#ffffff" stroke="#d9e2ef" filter="url(#cardShadow)"/>
+<text x="176" y="518" font-size="18" font-weight="800" fill="#718096">15장</text><rect x="527" y="438" width="410" height="126" rx="8" fill="#ffffff" stroke="#d9e2ef" filter="url(#cardShadow)"/>
 <rect x="551" y="466" width="48" height="48" rx="8" fill="#2f80ed"/>
 <text x="575" y="498" text-anchor="middle" font-size="23" font-weight="950" fill="#ffffff">⑥</text>
-<text x="619" y="485" font-size="27" font-weight="950" fill="#111827">시험 리포트 (BETA)</text>
+<text x="619" y="485" font-size="27" font-weight="950" fill="#111827">내신 시험 분석 (BETA)</text>
 <text x="619" y="518" font-size="18" font-weight="800" fill="#718096">25장</text><rect x="970" y="438" width="410" height="126" rx="8" fill="#ffffff" stroke="#d9e2ef" filter="url(#cardShadow)"/>
 <rect x="994" y="466" width="48" height="48" rx="8" fill="#e8595f"/>
 <text x="1018" y="498" text-anchor="middle" font-size="23" font-weight="950" fill="#ffffff">⑦</text>
@@ -63,6 +63,11 @@
 <text x="1018" y="650" text-anchor="middle" font-size="23" font-weight="950" fill="#ffffff">⑪</text>
 <text x="1062" y="637" font-size="27" font-weight="950" fill="#111827">설정</text>
 <text x="1062" y="670" font-size="18" font-weight="800" fill="#718096">8장</text>
+<rect x="1413" y="590" width="410" height="126" rx="8" fill="#ffffff" stroke="#d9e2ef" filter="url(#cardShadow)"/>
+<rect x="1437" y="618" width="48" height="48" rx="8" fill="#d6336c"/>
+<text x="1461" y="650" text-anchor="middle" font-size="23" font-weight="950" fill="#ffffff">⑫</text>
+<text x="1505" y="637" font-size="27" font-weight="950" fill="#111827">학생 관리 (BETA)</text>
+<text x="1505" y="670" font-size="18" font-weight="800" fill="#718096">5장</text>
 <rect x="84" y="894" width="1752" height="86" rx="8" fill="#f6f8fb" stroke="#d9e2ef" filter="none"/>
 <text x="112" y="928" font-size="23" font-weight="950" fill="#111827">읽는 순서</text>
 <text x="112" y="962" font-size="20" font-weight="750" fill="#718096">시작하기에서 공통 UI를 보고, 각 기능 인트로 → 실제 클릭 단계 → 팁 순서로 따라갑니다. 마지막 빠른 가이드에서 핵심 4기능을 다시 정리합니다.</text>
