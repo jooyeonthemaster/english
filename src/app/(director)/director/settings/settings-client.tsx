@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { SessionProvider } from "next-auth/react";
 import { User, SlidersHorizontal } from "lucide-react";
 import AccountTab from "./account-tab";
 import PreferencesTab from "./preferences-tab";
@@ -46,7 +47,16 @@ export default function SettingsClient() {
         })}
       </div>
 
-      {tab === "account" ? <AccountTab /> : <PreferencesTab />}
+      {/* 앱 전체에서 유일한 useSession 소비처(AccountTab.update) — 전역 루트가
+          아니라 여기서만 세션을 붙인다. 루트에 두면 학생·응시 표면까지
+          /api/auth/session 을 왕복한다(providers/session-provider.tsx 주석). */}
+      {tab === "account" ? (
+        <SessionProvider refetchOnWindowFocus={false}>
+          <AccountTab />
+        </SessionProvider>
+      ) : (
+        <PreferencesTab />
+      )}
     </div>
   );
 }

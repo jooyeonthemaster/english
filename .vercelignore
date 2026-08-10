@@ -62,6 +62,8 @@ BM_Report
 Paperlogy-1.000
 strategy-report
 ir-deck
+# 세미나 덱 — 별도 Vercel 프로젝트(smoat-seminar-deck)로 독립 배포. 메인 앱 빌드 미사용
+seminar-deck
 english-exam-passages
 sw-gen-page-initial.jpeg
 # AI수정 감사·재검증 평가결과(jsonl·리포트) — 앱 미사용, 배포 제외
@@ -77,3 +79,14 @@ scripts/_sc-leak-test.ts
 experiments
 # 모바일 앱 셸 — 웹 배포와 무관
 mobile
+
+# QA·세션 임시 산출물(26-08) — 앱 미사용, 배포 업로드 제외
+.tmp-*
+.tmp_*
+.qa-keep
+qbank
+B.txt
+C.txt
+D.txt
+_probe.txt
+s15-full.png

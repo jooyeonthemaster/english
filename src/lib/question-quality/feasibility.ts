@@ -30,17 +30,24 @@ export function preflightQuestionFeasibility(
   passage: string,
 ): PassageFeasibility {
   if (typeId === "SENTENCE_ORDER") {
-    const minSentences = SENTENCE_ORDER_MIN_PARAGRAPH_SENTENCES * 3;
+    // 26-07-27 완화(사용자 지시 · 실사용 신고): 종전 하한은 "단락마다 2문장"을
+    // 전제해 6문장·72단어를 요구했고, 5문장 지문이 **생성 시도조차 못 하고** 즉시
+    // 실패 카드로 떨어졌다. 그런데 물리적 최소는 주어진 글 1문장 + 단락 3개 ×
+    // 1문장 = **4문장**이다. "단락마다 2문장"은 품질 선호이지 기하학적 불가능이
+    // 아니므로, preflight(차감 전 기계적 불가 판정)의 몫이 아니라 프롬프트·게이트
+    // 소관이다. preflight 는 어떤 출력으로도 형식을 만들 수 없는 경우만 막는다.
+    const minSentences = 4;
     const sentences = countDisplaySentences(passage);
     if (sentences < minSentences) {
       return {
         ok: false,
         code: "sentence-order-paragraph-too-short",
-        error: `글의 순서 유형은 지문을 세 단락(A·B·C)으로 나눠야 하므로 최소 ${minSentences}문장 이상이 필요합니다. 현재 지문은 ${sentences}문장입니다. 더 긴 지문을 선택하거나 다른 유형을 사용해 주세요.`,
+        error: `글의 순서 유형은 주어진 글 1문장과 세 단락(A·B·C)으로 나눠야 하므로 최소 ${minSentences}문장 이상이 필요합니다. 현재 지문은 ${sentences}문장입니다. 더 긴 지문을 선택하거나 다른 유형을 사용해 주세요.`,
         detail: { sentences, minSentences },
       };
     }
-    const minWords = SENTENCE_ORDER_MIN_PARAGRAPH_WORDS * 3;
+    // 분량 하한도 같은 근거로 완화 — 단락당 12단어면 순서 판단이 성립한다.
+    const minWords = 40;
     const words = countWords(passage);
     if (words < minWords) {
       return {

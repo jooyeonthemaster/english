@@ -1,0 +1,26 @@
+[
+  {
+    "id": "cmron37yj000tj90alsg5z3w9",
+    "title": "2025학년도 6월 모평 영어 30번 · 어휘",
+    "academyId": "cmommhl7a0000mmekxmbqfefe",
+    "corpusId": "2025_06_5086961-q30",
+    "contentBefore": "Internalization depends on supports for autonomy. Contexts that use controlling strategies such as salient rewards and punishments or evaluative, self-esteem-hooking pressures are least likely to lead people to value activities as their own. This is not to say that controls don't work to produce behavior ― decades of operant psychology prove that they can. It is rather that the more salient the external control over a person's behavior, the more the person is likely to be merely externally regulated or introjected in his or her actions. Consequently, the person does not develop a value or investment in the behaviors, but instead remains dependent on external controls. Thus, parents who reward, force, or cajole their child to do homework are more likely to have a child who does so only when rewarded, cajoled, or forced. The salience of external controls drives the acquisition of self-responsibility. Alternatively, parents who supply reasons, show an emotional understanding of difficulties overcoming problems, and use a minimum of external incentives are more likely to cultivate a sense of willingness and value for work in their child.",
+    "fix": "\"drives\"→\"undermines\""
+  },
+  {
+    "id": "cmqw3rvj2000pjd09nbo1ydn4",
+    "title": "2025학년도 6월 모평 영어 30번 · 어휘",
+    "academyId": "cmqw2qc2y000ek0048idmy44m",
+    "corpusId": "2025_06_5086961-q30",
+    "contentBefore": "Internalization depends on supports for autonomy. Contexts that use controlling strategies such as salient rewards and punishments or evaluative, self-esteem-hooking pressures are least likely to lead people to value activities as their own. This is not to say that controls don't work to produce behavior ― decades of operant psychology prove that they can. It is rather that the more salient the external control over a person's behavior, the more the person is likely to be merely externally regulated or introjected in his or her actions. Consequently, the person does not develop a value or investment in the behaviors, but instead remains dependent on external controls. Thus, parents who reward, force, or cajole their child to do homework are more likely to have a child who does so only when rewarded, cajoled, or forced. The salience of external controls drives the acquisition of self-responsibility. Alternatively, parents who supply reasons, show an emotional understanding of difficulties overcoming problems, and use a minimum of external incentives are more likely to cultivate a sense of willingness and value for work in their child.",
+    "fix": "\"drives\"→\"undermines\""
+  },
+  {
+    "id": "cmr1rjx610001jf0ar20cxghg",
+    "title": "고3 11년 7월 22번",
+    "academyId": "cmr1qfng10005l104seqjmb70",
+    "corpusId": "ebsi_go3_20100708-q22",
+    "contentBefore": "Do you think the new or used vehicle you are purchasing is safe? Since the introduction of automotive crash-testing, the number of people killed and injured by motor vehicles has decreased in many countries. Obviously, it would be ideal to have no car crashes. However, car crashes are a reality and you want the best possible chance of survival. How are cars becoming safer? One of the reasons cars have been getting safer is that we can conduct a well-established crash test with test dummies. The dummy’s job is to simulate a human being while a crash, collecting data that would not be possible to collect from a human occupant. So far, they have provided invaluable data on how human bodies react in crashes and have contributed greatly to improved vehicle design.",
+    "fix": "\"while\"→\"during\""
+  }
+]

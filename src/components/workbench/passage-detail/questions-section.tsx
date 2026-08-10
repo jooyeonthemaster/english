@@ -19,9 +19,11 @@ import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-di
 import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
 import { renderFormatted } from "@/components/workbench/question-bank-card/render-formatted";
 import {
+  multiBlankOptionMatrix,
   optionDisplayTextForSubtype,
   circleGrammarLabelMentions,
 } from "@/components/exams/paper-builder/option-display";
+import { MultiBlankOptionGrid } from "@/components/exams/multi-blank-option-grid";
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
@@ -37,6 +39,8 @@ function readGenerationPlanFromStructuredData(value: unknown): QuestionGeneratio
 function PassageQuestionCard({ q, num }: { q: PassageDetailProps["passage"]["questions"][0]; num: number }) {
   const [showExplanation, setShowExplanation] = useState(false);
   const options = safeParseJSON<{ label: string; text: string }[]>(q.options, []);
+  // SENTENCE_INSERT(위치 마커→원문자)만 표시 변환 — 그 외 유형은 원문 유지.
+  // BLANK_INFERENCE 다중 빈칸 조합 선지는 (A)/(B) 컬럼 헤더 그리드로 렌더한다.
   const displayOptions =
     q.subType === "SENTENCE_INSERT"
       ? options.map((option, index) => ({
@@ -44,6 +48,8 @@ function PassageQuestionCard({ q, num }: { q: PassageDetailProps["passage"]["que
           text: optionDisplayTextForSubtype(q.subType, index, option.text),
         }))
       : options;
+  const multiBlankMatrix =
+    q.subType === "BLANK_INFERENCE" ? multiBlankOptionMatrix(options) : null;
   const correctAnswerLabels = parseCorrectAnswerLabels(q.correctAnswer);
   const rawTags = safeParseJSON<string[]>(q.tags, []);
   const generationPlan =
@@ -121,8 +127,41 @@ function PassageQuestionCard({ q, num }: { q: PassageDetailProps["passage"]["que
         </p>
       </div>
 
-      {/* Options (for multiple choice) */}
-      {displayOptions.length > 0 && (
+      {/* Options (for multiple choice) — 다중 빈칸 조합 선지는 컬럼 헤더 그리드 */}
+      {displayOptions.length > 0 && multiBlankMatrix && (
+        <div className="px-4 pb-3">
+          <MultiBlankOptionGrid
+            blankCount={multiBlankMatrix.blankCount}
+            className="px-3 py-1.5 text-[13px]"
+            headerCellClassName="text-slate-500"
+            rows={multiBlankMatrix.rows.map(({ option, values }, i) => {
+              const isCorrect =
+                correctAnswerLabels.has(normalizeAnswerLabel(option.label)) ||
+                correctAnswerLabels.has(String(i + 1)) ||
+                q.correctAnswer === option.text;
+              return {
+                key: i,
+                numberCell: (
+                  <span
+                    className={`w-5 h-5 rounded-full text-[11px] font-bold flex items-center justify-center ${
+                      isCorrect
+                        ? "bg-emerald-500 text-white"
+                        : "bg-slate-100 text-slate-500"
+                    }`}
+                  >
+                    {i + 1}
+                  </span>
+                ),
+                cells: values,
+                cellClassName: isCorrect
+                  ? "text-emerald-800 font-medium"
+                  : "text-slate-600",
+              };
+            })}
+          />
+        </div>
+      )}
+      {displayOptions.length > 0 && !multiBlankMatrix && (
         <div className="px-4 pb-3 space-y-1">
           {displayOptions.map((opt, i) => {
             const isCorrect =

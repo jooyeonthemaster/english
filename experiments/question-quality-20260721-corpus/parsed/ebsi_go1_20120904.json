@@ -1,0 +1,766 @@
+{
+ "examId": "ebsi_go1_20120904",
+ "source": "ebsi_go1_20120904_paper_201209041_eng_mun.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 대화를듣고여자의마지막말에대한남자의응답으로가장 , 적절한것을고르시오. I didn’t sleep well last night. ① I should submit it by this Friday. ② I’ll take Social Studies next semester. ③ My tea",
+   "choices": [
+    "I should submit it by this Friday.",
+    "I’ll take Social Studies next semester.",
+    "My teacher gives us a lot of assignments.",
+    "The exam will be at the end of the month.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 242
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를듣고남자의마지막말에대한여자의응답으로가장 , 적절한것을고르시오. An ① old table is always a good idea. You have an eye for antiques. ② This seat is only for seniors. ③ Today ④ ’s speci",
+   "choices": [
+    "old table is always a good idea.\nYou have an eye for antiques.",
+    "This seat is only for seniors.",
+    "Today",
+    "’s special is mushroom soup.\nThe gift shop is on the second floor.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 221
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 대화를듣고여자의마지막말에대한남자의응답으로가장 , 적절한것을고르시오. I ①’ll put myself on the waiting list. Yoga is very popular these days. ② It would be great if you join us. ③ The class",
+   "choices": [
+    "’ll put myself on the waiting list.\nYoga is very popular these days.",
+    "It would be great if you join us.",
+    "The class was fun and interesting.",
+    "I don’t know where the community center is.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 234
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 다음을듣고 여자가하는말의목적으로가장적절한것을 , 고르시오. 독감의원인과증상을설명하려고 ① 지역보건소이용방법을안내하려고 ② 심장병환자에게독감예방접종을권장하려고 ③ 정기적인예방접종의필요성을강조하려고 ④ 심장병예방을위한음식을소개하려고 ⑤",
+   "choices": [
+    "지역보건소이용방법을안내하려고",
+    "심장병환자에게독감예방접종을권장하려고",
+    "정기적인예방접종의필요성을강조하려고",
+    "심장병예방을위한음식을소개하려고",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 133
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를듣고남자가할일로가장적절한것을고르시오 , . 기차표예약하기 ① 대출도서반납하기 ② 시청민원실방문하기 ③ 친구에게책빌리기 ④ 도서대출카드만들기 ⑤",
+   "choices": [
+    "대출도서반납하기",
+    "시청민원실방문하기",
+    "친구에게책빌리기",
+    "도서대출카드만들기",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 86
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 다음을듣고 남자가하는말의주제로가장적절한것을 , 고르시오. 생활속에서전자파노출을줄이는방법 ① 실내에서식물을키우는것의장단점 ② 전자제품의적절한폐기절차 ③ 절전형전자제품구입의필요성 ④ 전자파가식물의성장에미치는영향 ⑤",
+   "choices": [
+    "실내에서식물을키우는것의장단점",
+    "전자제품의적절한폐기절차",
+    "절전형전자제품구입의필요성",
+    "전자파가식물의성장에미치는영향",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 121
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를듣고 두사람이하는말의주제로가장적절한것을 , 고르시오. their favorite baseball teams ① the conditions of good part-time jobs ② the unusual weather of last summer ③ leisure activit",
+   "choices": [
+    "the conditions of good part-time jobs",
+    "the unusual weather of last summer",
+    "leisure activities for the summer",
+    "job experiences during the summer",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 217
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 다음을듣고 피카소의조각작품을관람할수있는곳을 , 고르시오 점 . [3 ]",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 43
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 대화를듣고, 여자가자전거를조립할수없는이유를고르시오. 부품을잃어버려서 ① 조립설명서가없어서 ② 조립할도구가없어서 ③ 손에부상을입어서 ④ 급한약속이있어서 ⑤ 학년도 월고 전국연합학력평가문제지 2012 성명 수험번호 제3 교시 고1",
+   "choices": [
+    "조립설명서가없어서",
+    "조립할도구가없어서",
+    "손에부상을입어서",
+    "급한약속이있어서",
+    "학년도\n월고\n전국연합학력평가문제지\n2012\n성명\n수험번호\n제3 교시\n고1"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 130
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 대화를듣고두사람이제작할학교문집의디자인을고르시오 , . ① ② ③ ④ ⑤",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 44
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 대화를듣고여자가남자에게부탁한일로가장적절한것을 , 고르시오. 집에서아이돌보기 ① 고객상담자료정리하기 ② 유치원에서아이데려오기 ③ 아이의담임선생님과상담하기 ④ 아이의학교등록서류작성하기 ⑤",
+   "choices": [
+    "고객상담자료정리하기",
+    "유치원에서아이데려오기",
+    "아이의담임선생님과상담하기",
+    "아이의학교등록서류작성하기",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 107
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 다음표를보면서대화를듣고 두사람이채용할지원자를 , 고르시오. Applicant Major Work Experience Foreign Language Skills ① A Accounting 4 Years Spanish ② B Accounting 8 Years Spanish ③ C A",
+   "choices": [
+    "A\nAccounting\n4 Years\nSpanish",
+    "B\nAccounting\n8 Years\nSpanish",
+    "C\nAccounting\n10 Years\nFrench",
+    "D\nPsychology\n6 Years\nFrench",
+    "E\nPsychology\n13 Years\nSpanish"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 248
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를듣고여자가지불할금액을고르시오 , . $18 ① $20 ② $25 ③ $27 ④ $30 ⑤",
+   "choices": [
+    "$20",
+    "$25",
+    "$27",
+    "$30",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 57
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 에관한다음내용을듣고 The White Summer Festival , 일치하지않는것을고르시오. 월네번째토요일에열린다 . ① 전통의상퍼레이드가있다. ② 매해만명이넘는사람들이방문한다. ③ 수익금은해변환경개선사업에쓰인다. ④ 입장료와주차요금이무료이다. ⑤",
+   "choices": [
+    "전통의상퍼레이드가있다.",
+    "매해만명이넘는사람들이방문한다.",
+    "수익금은해변환경개선사업에쓰인다.",
+    "입장료와주차요금이무료이다.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 144
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 박물관에서제공하는생일파티에관한다음내용을듣고, 일치하지않는것을고르시오. 회원에게주어지는혜택이다. ① 세에서 세까지의아동을대상으로한다 . ② 최대두시간동안할수있다. ③ 케이크주문시추가비용이발생한다. ④ 적어도한달전에예약해야한다. ⑤",
+   "choices": [
+    "세에서\n세까지의아동을대상으로한다\n.",
+    "최대두시간동안할수있다.",
+    "케이크주문시추가비용이발생한다.",
+    "적어도한달전에예약해야한다.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 132
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 대화를듣고남자의마지막말에대한여자의응답으로가장 , 적절한것을고르시오. Woman: I usually buy toothpaste online. ① I found my mug under the table. ② It’s important to keep your house clean. ③",
+   "choices": [
+    "I found my mug under the table.",
+    "It’s important to keep your house clean.",
+    "You should teach your children to behave well.",
+    "",
+    "I got the tips from a housekeeping magazine."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 256
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 대화를듣고여자의마지막말에대한남자의응답으로가장 , 적절한것을고르시오. Man: Congratulations! I knew you’d win. ① Well, I’ll let you know if I find the right words. ② ③Cheer up! I’m sure it ",
+   "choices": [
+    "Well, I’ll let you know if I find the right words.",
+    "",
+    "Cheer up! I’m sure it wasn’t as bad as you thought.",
+    "It’s my pleasure to have a chance to interview you.\nI’m sorry you couldn’t get first prize for your speech.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 301
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 대화를듣고남자의마지막말에대한여자의응답으로가장 , 적절한것을고르시오. Woman: In that case, I’d like to cancel my order. ① Really?",
+   "choices": [
+    "Really? I can’t believe that it arrived so early!",
+    "Thanks a lot! That was exactly what I wanted.",
+    "Well, can you delay the delivery for a few days?",
+    "I’ll have enough time to deliver the product to you.",
+    "고1"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 303
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 대화를듣고여자의마지막말에대한남자의응답으로가장 , 적절한것을고르시오 점 . [3 ] Man: I’m glad you enjoyed it last night. ① Then, I’ll show you a video of it tomorrow. ② You should visit the ",
+   "choices": [
+    "Then, I’ll show you a video of it tomorrow.",
+    "You should visit the eye doctor right away.",
+    "I wish I had seen it with my own eyes, too.",
+    "It’ll be possible in seven years when the next one occurs.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 292
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 대화를듣고남자의마지막말에대한여자의응답으로가장 , 적절한것을고르시오 점 . [3 ] Woman: Your face resembles your father’s. ① I guess fashion really does repeat itself. ② You should have worn ",
+   "choices": [
+    "I guess fashion really does repeat itself.",
+    "You should have worn a polka-dot shirt.",
+    "It’s too bad that it’s already out of style.",
+    "Right. Actors spend a lot of money on their clothing.",
+    "다음을듣고물음에답하시오\n[21\n22]\n,\n.\n～"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 311
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 남자가하는말의목적으로가장적절한것은?",
+   "choices": [
+    "to introduce the features of the water park",
+    "to give tips for saving money at the water park",
+    "to inform customers of the health benefits of spas",
+    "to remind swimmers of safety rules in the water park",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 272
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음중 에대하여남자가언급한내용과 Fantastic World 일치하지않는것은?",
+   "choices": [
+    "성인들은물살이느린구역에서휴식을취할수있다.",
+    "구명조끼와튜브를대여해준다.",
+    "안전요원들이배치되어있다.",
+    "매주화요일은정기휴일이다.",
+    "이제듣기말하기문제가끝났습니다\n번부터는문제지의\n·\n. 23\n지시에따라답을하기바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 190
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음글의목적으로가장적절한것은?",
+   "choices": [
+    "예매한영화의관람시간을변경하려고",
+    "영화관람료에대해문의하려고",
+    "신용카드발급가능여부를확인하려고",
+    "직원의불친절한태도에대해항의하려고",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 628
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 밑줄친she[her]가가리키는대상이나머지넷과다른것은?",
+   "choices": [
+    "she said. But, the girl kept asking",
+    "her to read now.\nThen, the clever mother tore out a page of a magazine,\nwhich contained a picture of the world. Tearing it into pieces,",
+    "she asked her daughter to put the picture together and\nthen she would read her a story. A short time later, the\ndaughter completed the puzzle. Astonished, the mother asked\nher how",
+    "she managed to do it so quickly. Then, she\nexplained to",
+    "her that on the back of the page was a\npicture of a girl. “When I got the little girl together, the\nwhole world came together.”\n고1"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 744
+  },
+  {
+   "qNum": 25,
+   "kind": "vocab_underline",
+   "stem": "25. 다음글의밑줄친부분중문맥상낱말의쓰임이적절하지 , 않은것은 점 ?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "interconnected",
+    "②": "accurately",
+    "③": "reveals some interesting facts",
+    "④": "similar winds in another",
+    "⑤": "influence the amount of rainfall"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 852
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. 다음글에서필자가주장하는바로가장적절한것은?",
+   "choices": [
+    "외모로사람을판단하지마라.",
+    "은퇴이후의삶을미리준비해라.",
+    "자녀의경제교육에많은관심을가져라.",
+    "자신의상황에맞는투자방법을선택해라.",
+    "[27\n30]\n∼\n다음빈칸에들어갈말로가장적절한것을고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 799
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. Modern-day men tend to spend a lot of time and money on their . Today, global sales of male grooming products bring in billions of dollars a year, and the i",
+   "choices": [
+    "homes",
+    "relationships",
+    "healthcare",
+    "hobbies",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 703
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. What makes you yawn?",
+   "choices": [
+    "remove waste from our blood",
+    "protect our brain from overheating",
+    "react to a boring and dull situation",
+    "increase our resistance to cold weather",
+    "고1"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 907
+  },
+  {
+   "qNum": 29,
+   "kind": "mc",
+   "stem": "29. Why do some people choose to know the truth about their health, and others refuse?",
+   "choices": [
+    "have had serious health problems",
+    "keep their emotions stable",
+    "are educated in health or medicine",
+    "watch movies about serious diseases",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 976
+  },
+  {
+   "qNum": 30,
+   "kind": "mc",
+   "stem": "30. Races have first, second, and third prizes. This practice is the result of . In the early seventeenth century in Chester, England, the sheriff agreed to pro",
+   "choices": [
+    "a sheriff’s intention to win a horse race",
+    "the excessive competition in sports events",
+    "efforts to reduce the cost of making trophies",
+    "a silversmith’s inability to satisfy his customer",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 892
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. 다음글의주제로가장적절한것은?",
+   "choices": [
+    "the advantages of arts education",
+    "ways to promote critical thinking",
+    "the characteristics of successful artists",
+    "the significance of intelligence in problem-solving",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 974
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. 다음글의빈칸 에들어갈말로가장적절한것은 (A), (B) ?",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    "On the contrary\nOn the contrary\nFor example\nNevertheless\nNevertheless\n……\n……\n……\n……\n……\nIn addition\nOtherwise\nHowever\nTherefore\nSimilarly\n고1"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 897
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. 다음도표의내용과일치하지않는문장은?",
+   "choices": [
+    "In 2007, hybrid car sales in these three regions\nwere the strongest in the U.S.A. and the weakest in Europe.",
+    "However, the following year, hybrid car sales decreased\nslightly in the U.S.A. and increased slightly in the other\nregions.",
+    "Despite this, the sales rank of hybrid cars in these\nthree regions remained the same for both years.",
+    "In 2009,\nhybrid\ncars\nsuddenly\nincreased\nin\npopularity\nin\nAsia,\nsurpassing the U.S.A. in sales for the first time.",
+    "The\nfollowing year, hybrid car sales continued to increase in Asia,\nbut decreased in both the U.S.A. and Europe."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 704
+  },
+  {
+   "qNum": 34,
+   "kind": "grammar_underline",
+   "stem": "34. 다음글의밑줄친부분중어법상 , 틀린것은 점 ?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "how the naupaka flower got",
+    "②": "was opposed by both sets",
+    "③": "to prevent them from being",
+    "④": "staying near the beach",
+    "⑤": "which native people invented to"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 790
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 에관한다음글의내용과일치하지 Matthew Henson 않는것은?",
+   "choices": [
+    "에갈것을자원했다\nGreenland\n.",
+    "로부터썰매개훈련방법을배웠다\nPeary\n.",
+    "세번의시도끝에북극에도달했다.",
+    "년에그의전기가출판되었다\n1947\n.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 861
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. 다음글의요지로가장적절한것은?",
+   "choices": [
+    "보상과벌을적절하게활용해야한다.",
+    "하기싫은일부터먼저처리해야한다.",
+    "대가를기대하지말고선행을베풀어야한다.",
+    "타인에대한과도한배려가피해를줄수도있다.",
+    "고1"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 798
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. 다음글의제목으로가장적절한것은?",
+   "choices": [
+    "Sailing with the Help of Dolphins",
+    "Are Dolphins Really Our Friends?",
+    "Incredible Survival in the Stormy Sea",
+    "Shipwrecks: Destroyers of the Marine Environment",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 852
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. 다음글에서전체흐름과관계없는문장은?",
+   "choices": [
+    "It hides at least 30,000 nuts in up to 5,000 small\nplaces each year.",
+    "It is able to remember the location of\nabout 75 percent of its hiding places.",
+    "The bird uses its\npowerful bill to twist open cones of pine trees and remove\nthe\nnuts.",
+    "The\ninteresting\nquestion\nis\nwhether\nthe\nremaining 25 percent is actually forgotten or whether it is\ndeliberately not collected.",
+    "Interestingly, the birds seem\nto hide 25 percent more nuts than they normally need.\n캐나다산갈가마귀\n*Clark’s nutcracker:"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 677
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. 주어진글다음에이어질글의순서로가장적절한것은 점 ?",
+   "choices": [
+    "- (C) - (B)\n(B)",
+    "- (A) - (C)\n(B)",
+    "- (C) - (A)\n(C)",
+    "- (A) - (B)\n(C)",
+    "- (B) - (A)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 857
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 글의흐름으로보아주어진문장이들어가기에가장적절한 , 곳은?",
+   "choices": [
+    "was accused of being asleep on duty. (\n) He denied",
+    "the charge and kept pleading innocent. (\n) He offered",
+    "as proof of his innocence the fact that he had heard the\nbell in the clock tower of St. Paul’s Cathedral strike\nthirteen times at midnight. (\n) However, it was",
+    "discovered that the clock had, in fact, struck thirteen\ntimes at midnight on the very night he was supposed to\nhave fallen asleep on duty. (\n) The guard was, of",
+    "course, released, having been “saved by the bell.”\n고1\n다음글을읽고물음에답하시오\n[41\n43]\n,\n.\n∼\n(A)\nJonathan stretched his muscles. Each year, (a) he and\nhis friends participated in the diving contest at the\ncommunity pool. Divers from all over the city came to\nparticipate in the contest.\n(B)\nThey waited for the winner to be announced. All the\ndivers were shocked when the small boy’s name was\nannounced. The judge threw up his hands and said,\n“(b) His dive may not have been the cleanest, but it\nwas the riskiest by far. I gave points for his courage\nand\nfor\ntrying.”\nJonathan\nwalked\naway\nshaking\nhis\nhead, determined to do it differently next year.\n(C)\nAll\nthe\ndivers\ngot\nready\nto\nstart\ntheir\nroutines.\nJonathan performed (c) his dive and did well enough to\nmove on to the final round, where the diver could\nselect the dive of his or her choice. Thoughts of the\nfinal dive came into Jonathan’s mind. All the divers\ngathered around discussing who was left to compete.\n(D)\nJonathan noticed a small boy that had on an old\nswimsuit. (d) He laughed with his peers about how this\nboy managed to get into the final round. The boy was\nfirst, and he made his way up to the highest board.\nHe made his dive and then sat down. It was a clumsy\ndive without much style. Jonathan was next. (e) He\nperformed his dive perfectly."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2067
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 위글 에이어질내용을순서에맞게배열한것으로가장 (A) 적절한것은?",
+   "choices": [
+    "- (D) - (C)\n(C)",
+    "- (B) - (D)\n(C)",
+    "- (D) - (B)\n(D)",
+    "- (B) - (C)\n(D)",
+    "- (C) - (B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 129
+  },
+  {
+   "qNum": 42,
+   "kind": "mc",
+   "stem": "42. 밑줄친 중에서가리키는대상이나머지넷과 (a) (e) ～ 다른 것은?",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 79
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 위글의내용과일치하지않는것은?",
+   "choices": [
+    "작은소년이호명되었을때다이빙선수들은모두놀랐다.",
+    "결선에서다이빙선수들은지정된다이빙을수행했다.",
+    "작은소년은낡은수영복을입고있었다.",
+    "가장높은다이빙대에서작은소년이뛰어내렸다.",
+    "다음글을읽고물음에답하시오\n[44\n45]\n,\n.\n∼\nDr.\nRobert\nProvine,\nwho\nwrote\nan\narticle\non\nlaughter, believes humans laugh primarily because it\nserves as a kind of “social glue” that keeps people\nconnected\nto\none\nanother.\nWe\nlaugh\nwith\nothers\nbecause it makes us feel a bond with them and that\nbond in turn gives us a sense of trust and comfort.\nNo matter how hard we try, we are unable to make\nourselves laugh. Consequently, when we laugh, others\ncan\nbe\ncertain\nthat\nit\nis\nan\nhonest\nreaction,\nand\nhonesty\nis\nkey\nwhen\nbuilding\nand\nmaintaining\nfriendships.\nSince laughter is seen as a social cue that we send\nto others, it can also help explain why it spreads to\nothers. Studies have proven that when people see or\nhear something funny, they are 30 times more likely\nto laugh when they are with others than when they\nare alone. Wanting to be accepted by others is part of\nhuman nature. Nobody wants to feel left out, and\nis\na\nway\nto\nsignal\nto\nothers that you feel the way they do, which makes us\nfeel more bonded to one another. The brain realized\nthis a long time ago, and group laughter has occurred\never since."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1238
+  },
+  {
+   "qNum": 44,
+   "kind": "mc",
+   "stem": "44. 위글의제목으로가장적절한것은?",
+   "choices": [
+    "Honest Laughter vs. False Laughter",
+    "Making Others Laugh Leads to Popularity",
+    "Friends Who Laugh Together Stay Together",
+    "The More You Laugh, the Younger You Will Be",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 221
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 위글의빈칸에들어갈말로가장적절한것은 점 ?",
+   "choices": [
+    "mirroring others’ laughter",
+    "holding back your laughter",
+    "listening to others’ opinions",
+    "making eye contact while talking",
+    "* 확인사항\n◦답안지의해당란에필요한내용을정확히기입표기했는지확인\n(\n)\n하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 222
+  }
+ ],
+ "sourcePdf": "ebsi_go1_20120904_paper_201209041_eng_mun.pdf"
+}

@@ -1,0 +1,326 @@
+[
+  {
+    "groupId": "G032",
+    "examSig": "(미상)",
+    "questionType": "other",
+    "plantedText": "grows.Even",
+    "correctedText": "grows. Even",
+    "plantedExcerpt": "how big and dangerous the animal may become as it grows.Even relatively small animals",
+    "basis": "dual-convergence"
+  },
+  {
+    "groupId": "G012",
+    "examSig": "2023 6월 고1 모평 29번",
+    "questionType": "grammar",
+    "plantedText": "being",
+    "correctedText": "is",
+    "plantedExcerpt": "knows how to do things being likely to make him endure longer in problem-solving efforts",
+    "basis": "dual-convergence"
+  },
+  {
+    "groupId": "G012",
+    "examSig": "2023 6월 고1 모평 29번",
+    "questionType": "grammar",
+    "plantedText": "self-image Thinking",
+    "correctedText": "self-image. Thinking",
+    "plantedExcerpt": "to incorporate that information into his self-image Thinking of himself as a boy",
+    "basis": "dual-convergence"
+  },
+  {
+    "groupId": "G011",
+    "examSig": "2023 6월 고1 모평 30번",
+    "questionType": "vocab",
+    "plantedText": "increased",
+    "correctedText": "decreased",
+    "plantedExcerpt": "buying their bread from stores or bakeries, so consumer demand for yeast increased",
+    "basis": "dual-convergence"
+  },
+  {
+    "groupId": "G044",
+    "examSig": "2024 6월 고1 모평 29번",
+    "questionType": "grammar",
+    "plantedText": "what",
+    "correctedText": "that",
+    "plantedExcerpt": "and it was in farming villages what epidemic diseases first took root.",
+    "basis": "dual-convergence"
+  },
+  {
+    "groupId": "G015",
+    "examSig": "2024 6월 고1 모평 30번",
+    "questionType": "vocab",
+    "plantedText": "disappears",
+    "correctedText": "appears",
+    "plantedExcerpt": "act differently when temptation for immediate pleasure disappears.",
+    "basis": "dual-convergence"
+  },
+  {
+    "groupId": "G056",
+    "examSig": "2025 10월 고2 수능 29번",
+    "questionType": "grammar",
+    "plantedText": "give",
+    "correctedText": "giving",
+    "plantedExcerpt": "their genetic specifications change, sometimes give organisms new ways to exploit",
+    "basis": "dual-convergence"
+  },
+  {
+    "groupId": "G057",
+    "examSig": "2025 10월 고2 수능 30번",
+    "questionType": "vocab",
+    "plantedText": "rejecting",
+    "correctedText": "accepting",
+    "plantedExcerpt": "assign welfare responsibilities to the family, rejecting inequalities stemming from the existence of the family",
+    "basis": "dual-convergence"
+  },
+  {
+    "groupId": "G070",
+    "examSig": "2025 6월 고1 모평 29번",
+    "questionType": "grammar",
+    "plantedText": "having",
+    "correctedText": "have",
+    "plantedExcerpt": "Rather, experts having knowledge in a specific domain - such as chess, chemistry,",
+    "basis": "dual-convergence"
+  },
+  {
+    "groupId": "G071",
+    "examSig": "2025 6월 고1 모평 30번",
+    "questionType": "vocab",
+    "plantedText": "low",
+    "correctedText": "high",
+    "plantedExcerpt": "to live in neighborhoods where crime rates were already low; they could not afford",
+    "basis": "dual-convergence"
+  },
+  {
+    "groupId": "G062",
+    "examSig": "2025 6월 모평 41번",
+    "questionType": "vocab",
+    "plantedText": "coincide",
+    "correctedText": "conflict",
+    "plantedExcerpt": "your own 'code of behaviour' and how these may coincide, alongside recognizing",
+    "basis": "dual-convergence"
+  },
+  {
+    "groupId": "G045",
+    "examSig": "2025 9월 고1 모평 29번",
+    "questionType": "grammar",
+    "plantedText": "putting",
+    "correctedText": "put",
+    "plantedExcerpt": "If putting into an enclosure, they are likely to panic, and either die of shock",
+    "basis": "dual-convergence"
+  },
+  {
+    "groupId": "G046",
+    "examSig": "2025 9월 고1 모평 30번",
+    "questionType": "vocab",
+    "plantedText": "increased",
+    "correctedText": "decreased",
+    "plantedExcerpt": "combined with our increased physical interaction with the \"common folk,\" starts to create",
+    "basis": "dual-convergence"
+  },
+  {
+    "groupId": "G054",
+    "examSig": "2025 9월 고2 모평 29번",
+    "questionType": "grammar",
+    "plantedText": "depend",
+    "correctedText": "depends",
+    "plantedExcerpt": "Our choice of which differences to mark depend firstly on what we can observe",
+    "basis": "dual-convergence+web"
+  },
+  {
+    "groupId": "G055",
+    "examSig": "2025 9월 고2 모평 30번",
+    "questionType": "vocab",
+    "plantedText": "efficient",
+    "correctedText": "inefficient",
+    "plantedExcerpt": "Thus, the prescription for more empathy is often efficient in cases of conflict.",
+    "basis": "dual-convergence"
+  },
+  {
+    "groupId": "G017",
+    "examSig": "2026",
+    "questionType": "vocab",
+    "plantedText": "preserves",
+    "correctedText": "eliminates",
+    "plantedExcerpt": "at every stage selection favors some cells and preserves others",
+    "basis": "dual-convergence"
+  },
+  {
+    "groupId": "G065",
+    "examSig": "2026 3월 고1 수능 29번",
+    "questionType": "grammar",
+    "plantedText": "helps",
+    "correctedText": "help",
+    "plantedExcerpt": "you see displayed on a computer screen helps people create the conceptual model",
+    "basis": "dual-convergence"
+  },
+  {
+    "groupId": "G066",
+    "examSig": "2026 3월 고1 수능 30번",
+    "questionType": "vocab",
+    "plantedText": "same",
+    "correctedText": "opposite",
+    "plantedExcerpt": "however, the attitude and policies are just the same: walking is efficient",
+    "basis": "dual-convergence"
+  },
+  {
+    "groupId": "G072",
+    "examSig": "2026 3월 고2 수능 29번",
+    "questionType": "grammar",
+    "plantedText": "occurring",
+    "correctedText": "occurred",
+    "plantedExcerpt": "The development of a true piano factory occurring first in the United States, led by Jonas",
+    "basis": "dual-convergence"
+  },
+  {
+    "groupId": "G051",
+    "examSig": "2026 3월 고2 수능 30번",
+    "questionType": "vocab",
+    "plantedText": "facilitating",
+    "correctedText": "hindering",
+    "plantedExcerpt": "during the programme, potentially facilitating students' ability to adapt to diverse career paths",
+    "basis": "dual-convergence"
+  },
+  {
+    "groupId": "G063",
+    "examSig": "2026 3월 고3 수능 30번",
+    "questionType": "vocab",
+    "plantedText": "acknowledges",
+    "correctedText": "ignores",
+    "plantedExcerpt": "\"Lawn\" acknowledges the varieties of grass and all the nongrassy plants that are there.",
+    "basis": "dual-convergence+web"
+  },
+  {
+    "groupId": "G053",
+    "examSig": "2026 5월 고3 수능 29번",
+    "questionType": "grammar",
+    "plantedText": "chooses",
+    "correctedText": "to choose",
+    "plantedExcerpt": "allows them, if possible, depending on the job role, chooses their day-to-day work location.",
+    "basis": "dual-convergence"
+  },
+  {
+    "groupId": "G039",
+    "examSig": "2026 6월 고2 모평 29번",
+    "questionType": "grammar",
+    "plantedText": "producing",
+    "correctedText": "produced",
+    "plantedExcerpt": "offered no savings to recipients producing just as much customer response as did",
+    "basis": "dual-convergence"
+  },
+  {
+    "groupId": "G040",
+    "examSig": "2026 6월 고2 모평 30번",
+    "questionType": "vocab",
+    "plantedText": "more",
+    "correctedText": "less",
+    "plantedExcerpt": "forerunners - are more sensitive to price than to additional performance",
+    "basis": "dual-convergence"
+  },
+  {
+    "groupId": "G059",
+    "examSig": "2026 6월 모평 30번",
+    "questionType": "vocab",
+    "plantedText": "temporary",
+    "correctedText": "lasting",
+    "plantedExcerpt": "a unique voice that leaves a temporary impression on your audience.",
+    "basis": "dual-convergence"
+  },
+  {
+    "groupId": "G031",
+    "examSig": "2026 수능 30번",
+    "questionType": "vocab",
+    "plantedText": "abandon",
+    "correctedText": "gain",
+    "plantedExcerpt": "on the field or court as possible to abandon competitive advantages.",
+    "basis": "dual-convergence"
+  },
+  {
+    "groupId": "G033",
+    "examSig": "2026 수능 41번",
+    "questionType": "vocab",
+    "plantedText": "unlikely",
+    "correctedText": "likely",
+    "plantedExcerpt": "it is unlikely that displays of historic dress would be awkward imitations of the intentions",
+    "basis": "dual-convergence"
+  },
+  {
+    "groupId": "G025",
+    "examSig": "2027 6월 모평 30번",
+    "questionType": "vocab",
+    "plantedText": "thick",
+    "correctedText": "thin",
+    "plantedExcerpt": "what is left is the dialogue, known as the book or libretto, and it can be very thick",
+    "basis": "dual-convergence+web"
+  },
+  {
+    "groupId": "G027",
+    "examSig": "2027 6월 모평 41번",
+    "questionType": "vocab",
+    "plantedText": "obey",
+    "correctedText": "defy",
+    "plantedExcerpt": "why glass behaves the way it does. Glass seems to obey most molecular laws.",
+    "basis": "dual-convergence"
+  },
+  {
+    "groupId": "G052",
+    "examSig": "2018 3월 고1 29번",
+    "questionType": "grammar",
+    "plantedText": "lowering",
+    "correctedText": "lowered",
+    "plantedExcerpt": "attached it to a pole, and lowering it beneath the waves off the coast",
+    "basis": "dual-convergence"
+  },
+  {
+    "groupId": "G016",
+    "examSig": "2023 6월 고1 41-42번",
+    "questionType": "vocab",
+    "plantedText": "surpluses.With",
+    "correctedText": "surpluses. With",
+    "plantedExcerpt": "yields and provide ever larger surpluses.With improved technology and favorable",
+    "basis": "dual-convergence"
+  },
+  {
+    "groupId": "G078",
+    "examSig": "2002 고3 수능 29번",
+    "questionType": "grammar",
+    "plantedText": "came the lights on",
+    "correctedText": "the lights came on",
+    "plantedExcerpt": "Neither could my sister. All at once, came the lights on. An attendant was hurrying toward us.",
+    "basis": "dual-convergence"
+  },
+  {
+    "groupId": "G042",
+    "examSig": "수능 29번(지문 29)",
+    "questionType": "grammar",
+    "plantedText": "for less-than-first-place finish",
+    "correctedText": "for a less-than-first-place finish",
+    "plantedExcerpt": "expressions of disappointment or criticism for less-than-first-place finish, intrinsic",
+    "basis": "dual-convergence"
+  },
+  {
+    "groupId": "G029",
+    "examSig": "2026 29번(밑줄 함의)",
+    "questionType": "other",
+    "plantedText": "water. act.",
+    "correctedText": "water act.",
+    "plantedExcerpt": "Say you're pushing for a clean water. act. Even if what emerges isn't as well-funded",
+    "basis": "dual-convergence(adjudicated: same period removal, span phrasing differed)"
+  },
+  {
+    "groupId": "G013",
+    "examSig": "29번(해커스 수불패 8회)",
+    "questionType": "grammar",
+    "plantedText": "record them accurately",
+    "correctedText": "record accurately",
+    "plantedExcerpt": "many sounds are too quiet or unclear for equipment to record them accurately as they take place",
+    "basis": "dual-convergence(adjudicated: same them-deletion, span phrasing differed)"
+  },
+  {
+    "groupId": "G042",
+    "examSig": "수능 29번(지문 29)",
+    "questionType": "grammar",
+    "plantedText": "reduced. a",
+    "correctedText": "reduced.",
+    "plantedExcerpt": "intrinsic enjoyment in the activity may be reduced. a",
+    "basis": "dual-convergence(both notes: displaced-article stray token)"
+  }
+]

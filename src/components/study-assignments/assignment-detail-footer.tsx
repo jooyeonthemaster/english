@@ -9,19 +9,23 @@
 //    폼 값을 절대 덮지 않는다.
 //  - buildDuplicatePreset: 상세 → 컴포저 프리셋 매핑(복제 재배포). 원본 삭제
 //    등 복제 불가 사유는 토스트로 알리고 null 반환.
-//  - DetailActionsCluster: 뷰 전환 행 우측 — 복제해 새 과제·미완료 재배포·
-//    조용한 새로고침(자동 폴링 금지 — 수동 버튼만).
+//  - DetailActionsCluster: 뷰 전환 행 우측 — 복제해 새 과제·원클릭 재배포
+//    (빠르게 다시 보내기 + 컴포저에서 편집 2버튼, v3 design §D2-5)·조용한
+//    새로고침(자동 폴링 금지 — 수동 버튼만).
+//  - QuickResendButton: 마감일 확인 팝오버 내장 1콜 재배포 — 무확인 배포 금지
+//    (마감 퀵칩 선택 + 확정 버튼을 거쳐야 redeployStudyAssignment 호출).
 // ============================================================================
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   CalendarClock,
   CalendarDays,
   CopyPlus,
   Lock,
-  Redo2,
+  PenLine,
   RefreshCw,
   RotateCcw,
+  Send,
   Trash2,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -31,6 +35,8 @@ import {
   reopenStudyAssignment,
   updateStudyAssignment,
 } from "@/actions/study-assignments";
+// 배럴(index.ts)은 B-6 소유 밖 — 신설 액션만 모듈 직접 임포트(후속이 배럴 추가 가능)
+import { redeployStudyAssignment } from "@/actions/study-assignments/mutations";
 import type { ComposerPreset } from "./assignment-composer";
 import type {
   ExamAssignmentPayload,
@@ -38,6 +44,14 @@ import type {
   StudyAssignmentDetail,
   WorksheetAssignmentPayload,
 } from "@/lib/study-assignments/types";
+import {
+  CTA_LABELS,
+  DUE_QUICK_CHIP_LABELS,
+  RESEND_INCOMPLETE_COPY,
+  resendDuePreview,
+  resendIncompleteBody,
+  resendSuccessToast,
+} from "@/lib/wording/director-glossary";
 import { cn } from "@/lib/utils";
 
 /** 서울(UTC+9) 달력일 — date input 프리필용 "YYYY-MM-DD" */
@@ -71,6 +85,31 @@ function addDaysYmd(ymd: string, days: number): string {
 function ymdToKorean(ymd: string): string {
   const [, m, d] = ymd.split("-");
   return `${Number(m)}월 ${Number(d)}일`;
+}
+
+const WEEKDAY_KO = ["일", "월", "화", "수", "목", "금", "토"] as const;
+
+/** "YYYY-MM-DD" → 서울 요일 한 글자 — +09:00 고정 해석 후 9h 시프트(로컬 TZ 무관) */
+function ymdWeekdayKo(ymd: string): string {
+  const t = new Date(`${ymd}T00:00:00+09:00`).getTime();
+  if (Number.isNaN(t)) return "";
+  return WEEKDAY_KO[new Date(t + 9 * 3_600_000).getUTCDay()] ?? "";
+}
+
+/** "YYYY-MM-DD" → "7/25" — 재배포 팝오버 칩 병기용 */
+function ymdShort(ymd: string): string {
+  const [, m, d] = ymd.split("-");
+  if (!m || !d) return ymd;
+  return `${Number(m)}/${Number(d)}`;
+}
+
+/** 서울 오늘 기준 다가오는 해당 요일(0=일…6=토) ymd — 오늘이 그 요일이면 다음 주 */
+function upcomingWeekdayYmd(targetDow: number): string {
+  const today = seoulYmd(new Date().toISOString());
+  const t = new Date(`${today}T00:00:00+09:00`).getTime();
+  const dow = new Date(t + 9 * 3_600_000).getUTCDay();
+  const delta = ((targetDow - dow + 7) % 7) || 7;
+  return addDaysYmd(today, delta);
 }
 
 // ── 복제 재배포 — 상세 → 컴포저 프리셋 매핑 ─────────────────────────────────
@@ -129,17 +168,20 @@ export function buildDuplicatePreset(
   };
 }
 
-/** 뷰 전환 행 우측 액션 클러스터 — 복제·미완료 재배포·조용한 새로고침 */
+/** 뷰 전환 행 우측 액션 클러스터 — 복제·원클릭 재배포 2버튼·조용한 새로고침 */
 export function DetailActionsCluster({
   detail,
   onDuplicate,
+  onResent,
   refreshing,
   refreshedAt,
   onRefresh,
 }: {
   detail: StudyAssignmentDetail;
-  /** 미전달(학생 허브 경유)이면 복제 버튼 미렌더 — 보드(U3)만 배선 */
+  /** 미전달(학생 허브 경유)이면 복제·컴포저 편집 버튼 미렌더 — 보드(U3)만 배선 */
   onDuplicate?: (preset: ComposerPreset, studentIds: string[]) => void;
+  /** 원클릭 재배포 성공 후 — 부모 목록 재조회(선택 배선, 미배선 시 토스트만) */
+  onResent?: () => void;
   refreshing: boolean;
   /** "HH:mm" — 마지막 갱신 시각(첫 로드 포함) */
   refreshedAt: string | null;
@@ -163,32 +205,38 @@ export function DetailActionsCluster({
 
   return (
     <div className="flex flex-wrap items-center gap-1.5">
+      {onDuplicate && hasClassTarget ? (
+        <span className="hidden text-[11px] text-slate-400 md:inline">
+          반 대상은 학생별로 풀려 배정됩니다
+        </span>
+      ) : null}
       {onDuplicate ? (
-        <>
-          {hasClassTarget ? (
-            <span className="hidden text-[11px] text-slate-400 md:inline">
-              반 대상은 학생별로 풀려 배정됩니다
-            </span>
-          ) : null}
-          <button
-            type="button"
-            onClick={() => duplicate(detail.tasks.map((t) => t.studentId))}
-            className="inline-flex h-7 items-center gap-1 rounded-md border border-slate-200 bg-white px-2 text-[11.5px] font-semibold text-slate-600 transition-colors hover:bg-slate-50"
-          >
-            <CopyPlus className="size-3" aria-hidden />
-            복제해 새 과제
-          </button>
-          {pendingIds.length > 0 ? (
-            <button
-              type="button"
-              onClick={() => duplicate(pendingIds)}
-              className="inline-flex h-7 items-center gap-1 rounded-md border border-blue-200 bg-blue-50 px-2 text-[11.5px] font-semibold text-blue-700 transition-colors hover:bg-blue-100"
-            >
-              <Redo2 className="size-3" aria-hidden />
-              미완료 재배포 ({pendingIds.length}명)
-            </button>
-          ) : null}
-        </>
+        <button
+          type="button"
+          onClick={() => duplicate(detail.tasks.map((t) => t.studentId))}
+          className="inline-flex h-7 items-center gap-1 rounded-md border border-slate-200 bg-white px-2 text-[11.5px] font-semibold text-slate-600 transition-colors hover:bg-slate-50"
+        >
+          <CopyPlus className="size-3" aria-hidden />
+          복제해 새 과제
+        </button>
+      ) : null}
+      {/* 원클릭 재배포(D2-5) — 1콜 경로는 컴포저 무의존이라 허브 경유에서도 노출 */}
+      {pendingIds.length > 0 ? (
+        <QuickResendButton
+          assignmentId={detail.id}
+          pendingCount={pendingIds.length}
+          onResent={onResent}
+        />
+      ) : null}
+      {onDuplicate && pendingIds.length > 0 ? (
+        <button
+          type="button"
+          onClick={() => duplicate(pendingIds)}
+          className="inline-flex h-7 items-center gap-1 rounded-md border border-slate-200 bg-white px-2 text-[11.5px] font-semibold text-slate-600 transition-colors hover:bg-slate-50"
+        >
+          <PenLine className="size-3" aria-hidden />
+          {CTA_LABELS.RESEND_EDIT_IN_COMPOSER}
+        </button>
       ) : null}
       <button
         type="button"
@@ -205,6 +253,167 @@ export function DetailActionsCluster({
         )}
       </button>
     </div>
+  );
+}
+
+// ── 원클릭 재배포 — 마감일 확인 팝오버 (v3 design §D2-5) ─────────────────────
+
+/**
+ * [빠르게 다시 보내기] — 클릭 시 마감 확인 팝오버. 무확인 배포 금지:
+ * 마감 퀵칩(내일/금요일/일요일/마감 없음) 선택 + [과제 보내기] 확정을 거쳐야
+ * redeployStudyAssignment(onlyIncomplete) 1콜이 나간다. 대상·N 카운트의 정본은
+ * 서버(라이브 상태 재판정) — 성공 토스트 인원수는 서버 반환 taskCount 를 쓴다.
+ */
+function QuickResendButton({
+  assignmentId,
+  pendingCount,
+  onResent,
+}: {
+  assignmentId: string;
+  /** 클라이언트 기준 미완료 수 — 버튼 병기·팝오버 본문용(전송 대상은 서버가 재산출) */
+  pendingCount: number;
+  onResent?: () => void;
+}) {
+  const [open, setOpen] = useState(false);
+  /** undefined=미선택(확정 불가) · null=마감 없음 · "YYYY-MM-DD"=해당일 23:59 KST */
+  const [choice, setChoice] = useState<string | null | undefined>(undefined);
+  const [sending, setSending] = useState(false);
+  const rootRef = useRef<HTMLSpanElement>(null);
+
+  // 바깥 클릭 닫힘 — 전송 중에는 유지(중복 클릭 방지는 sending 가드)
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: PointerEvent) => {
+      if (rootRef.current && e.target instanceof Node && !rootRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("pointerdown", onDown);
+    return () => document.removeEventListener("pointerdown", onDown);
+  }, [open]);
+
+  // ESC 는 팝오버만 닫는다 — WideModal 의 document(버블) 리스너보다 먼저
+  // capture 로 삼킨다(ModalCloseGuardCard 와 동일 선례).
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      e.stopPropagation();
+      setOpen(false);
+    };
+    document.addEventListener("keydown", onKey, true);
+    return () => document.removeEventListener("keydown", onKey, true);
+  }, [open]);
+
+  // 마감 퀵칩 — 렌더마다 재계산(값싼 Date 연산 4회, 자정 넘김 세션 스테일 방지).
+  // 베이스 라벨은 글로서리 DUE_QUICK_CHIP_LABELS 정본(N-7 — 컴포저 칩과 공용),
+  // 날짜 병기는 여기 소관.
+  const tomorrow = addDaysYmd(seoulYmd(new Date().toISOString()), 1);
+  const friday = upcomingWeekdayYmd(5);
+  const sunday = upcomingWeekdayYmd(0);
+  const chips: { key: string; label: string; ymd: string | null }[] = [
+    { key: "tomorrow", label: `${DUE_QUICK_CHIP_LABELS.TOMORROW}(${ymdWeekdayKo(tomorrow)})`, ymd: tomorrow },
+    { key: "friday", label: `${DUE_QUICK_CHIP_LABELS.FRIDAY}(${ymdShort(friday)})`, ymd: friday },
+    { key: "sunday", label: `${DUE_QUICK_CHIP_LABELS.SUNDAY}(${ymdShort(sunday)})`, ymd: sunday },
+    { key: "none", label: DUE_QUICK_CHIP_LABELS.NO_DUE, ymd: null },
+  ];
+
+  const preview =
+    choice === undefined
+      ? RESEND_INCOMPLETE_COPY.PICK_DUE
+      : choice === null
+        ? RESEND_INCOMPLETE_COPY.NO_DUE_NOTE
+        : resendDuePreview(`${ymdShort(choice)}(${ymdWeekdayKo(choice)})`);
+
+  const send = async () => {
+    if (sending || choice === undefined) return;
+    setSending(true);
+    const dueAt = choice ? new Date(`${choice}T23:59:00+09:00`).toISOString() : null;
+    const res = await redeployStudyAssignment(assignmentId, {
+      dueAt,
+      onlyIncomplete: true,
+    });
+    if (res.success && res.data) {
+      toast.success(resendSuccessToast(res.data.taskCount));
+      setOpen(false);
+      onResent?.();
+    } else {
+      toast.error(res.error ?? RESEND_INCOMPLETE_COPY.FAIL);
+    }
+    setSending(false);
+  };
+
+  return (
+    <span ref={rootRef} className="relative inline-flex">
+      <button
+        type="button"
+        onClick={() => {
+          setChoice(undefined);
+          setOpen((v) => !v);
+        }}
+        aria-haspopup="dialog"
+        aria-expanded={open}
+        className="inline-flex h-7 items-center gap-1 rounded-md border border-blue-200 bg-blue-50 px-2 text-[11.5px] font-semibold text-blue-700 transition-colors hover:bg-blue-100"
+      >
+        <Send className="size-3" aria-hidden />
+        {CTA_LABELS.RESEND_QUICK} ({pendingCount}명)
+      </button>
+      {open ? (
+        <div
+          role="dialog"
+          aria-label={RESEND_INCOMPLETE_COPY.TITLE}
+          className="absolute right-0 top-[calc(100%+6px)] z-30 w-[300px] rounded-lg border border-slate-200 bg-white p-3.5 shadow-xl"
+        >
+          <p className="text-[12.5px] font-bold text-slate-800">
+            {RESEND_INCOMPLETE_COPY.TITLE}
+          </p>
+          <p className="mt-0.5 text-[12px] leading-relaxed text-slate-500">
+            {resendIncompleteBody(pendingCount)}
+          </p>
+          <div className="mt-2.5 flex flex-wrap gap-1.5">
+            {chips.map((chip) => {
+              const active = choice !== undefined && choice === chip.ymd;
+              return (
+                <button
+                  key={chip.key}
+                  type="button"
+                  onClick={() => setChoice(chip.ymd)}
+                  className={cn(
+                    "h-7 rounded-full border px-2.5 text-[11.5px] font-semibold transition-colors",
+                    active
+                      ? "border-blue-600 bg-blue-50 text-blue-700"
+                      : "border-slate-200 bg-white text-slate-500 hover:border-blue-200 hover:text-blue-700",
+                  )}
+                >
+                  {chip.label}
+                </button>
+              );
+            })}
+          </div>
+          <p className="mt-2 text-[11.5px] font-medium tabular-nums text-slate-400">
+            {preview}
+          </p>
+          <div className="mt-2.5 flex items-center justify-end gap-1.5">
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              className="h-7 rounded-md px-2.5 text-[11.5px] font-semibold text-slate-500 transition-colors hover:bg-slate-50"
+            >
+              {RESEND_INCOMPLETE_COPY.CANCEL}
+            </button>
+            {/* 확정 = 무확인 배포 금지의 관문 — 마감 미선택이면 비활성 */}
+            <button
+              type="button"
+              onClick={() => void send()}
+              disabled={sending || choice === undefined}
+              className="h-7 rounded-md bg-blue-600 px-3 text-[11.5px] font-semibold text-white transition-colors hover:bg-blue-700 disabled:opacity-50"
+            >
+              {sending ? RESEND_INCOMPLETE_COPY.SENDING : RESEND_INCOMPLETE_COPY.CONFIRM}
+            </button>
+          </div>
+        </div>
+      ) : null}
+    </span>
   );
 }
 
@@ -363,7 +572,7 @@ export function AssignmentDetailFooter({
               onClick={() => setDueDate("")}
               className="h-8 rounded-md border border-slate-200 bg-white px-2.5 text-[12px] font-medium text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-700"
             >
-              마감 없음
+              {DUE_QUICK_CHIP_LABELS.NO_DUE}
             </button>
           ) : null}
           {([1, 3, 7] as const).map((days) => (

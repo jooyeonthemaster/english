@@ -1,10 +1,8 @@
-// @ts-nocheck
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  AlertTriangle,
   Braces,
   CheckCircle2,
   ChevronRight,
@@ -16,13 +14,12 @@ import {
   Grid3x3,
   List as ListIcon,
   Loader2,
-  RotateCcw,
   Rows3,
   Sparkles,
   Trash2,
 } from "lucide-react";
 import { PearlIcon } from "@/components/icons/pearl-icon";
-import { EXAM_SEED_QUESTION_IDS_KEY } from "@/lib/exam-paper-seed";
+import { seedExamAndNavigate } from "./seed-exam-and-navigate";
 import { Checkbox } from "@/components/ui/checkbox";
 import { usePersistedState } from "@/hooks/use-persisted-state";
 import {
@@ -37,7 +34,6 @@ import {
 import { QuestionSetSection } from "@/components/workbench/question-set-section";
 import { dispatchGenerateTourMilestone } from "@/lib/generate-tour-demo";
 import { DragSelect } from "@/components/ui/drag-select";
-import { WorkbenchLoadingCard } from "@/components/workbench/workbench-loading-card";
 import {
   clearCardTextSelection,
   preventCardDoubleClickTextSelection,
@@ -45,22 +41,16 @@ import {
   shouldIgnoreCardSelectionClick,
   useDeferredCardSelectionClick,
 } from "@/components/workbench/shared/card-click";
-import {
-  type QueueItem,
-  buildQuestionText,
-  countWords,
-  typeLabel,
-} from "./generate-page-types";
+import { type QueueItem, buildQuestionText } from "./generate-page-types";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
+import { QueueStatusCard } from "./queue-status-card";
 import {
   getQuestionGenerationPlanFromTags,
-  getQuestionGenerationPlanConfig,
   mergeQuestionGenerationPlanTag,
   QUESTION_GENERATION_PLAN_TAGS,
   sanitizeAiModelDisclosureText,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
-import { getFriendlyQuestionGenerationError } from "@/lib/workbench-generation-errors";
 
 interface BottomQueueSectionProps {
   sessionQueue: QueueItem[];
@@ -705,15 +695,7 @@ export function BottomQueueSection({
   );
   const handleCreateExam = useCallback(() => {
     if (examSeedIds.length === 0) return;
-    try {
-      window.sessionStorage.setItem(
-        EXAM_SEED_QUESTION_IDS_KEY,
-        JSON.stringify(examSeedIds),
-      );
-    } catch {
-      // sessionStorage 실패해도 이동은 진행 (빈 빌더로 열림).
-    }
-    router.push("/director/workbench/exams/create");
+    seedExamAndNavigate(router, examSeedIds);
   }, [examSeedIds, router]);
 
   // Prune stale selections once items leave the selectable pool (e.g. deleted).
@@ -809,154 +791,56 @@ export function BottomQueueSection({
     void requestDelete(Array.from(selectedQuestionIds), "bulk");
   }, [requestDelete, selectedQuestionIds]);
 
-  function renderQueueStatusCard(item: QueueItem) {
-    const planConfig = getQuestionGenerationPlanConfig(
-      item.config.generationPlan || "STANDARD",
-    );
-
-    if (item.status === "generating") {
-      const requestedCount = Object.values(item.config.typeCounts).reduce(
-        (a, b) => a + b,
-        0,
-      );
-      return (
-        <WorkbenchLoadingCard
-          key={item.id}
-          title={item.passageTitle}
-          contentPreview={`${item.passageContent.slice(0, 200)}...`}
-          statusLabel="생성 중"
-          progressLabel={`AI가 ${requestedCount}문제를 생성 중입니다...`}
-          wordCount={countWords(item.passageContent)}
-          showCheckbox={false}
-          statusIcon={Loader2}
-          variant="analyzing"
-          fixedHeight
-          ariaLabel={`${item.passageTitle} - 문제 생성 중`}
-          planBadge={
-            // 모델 셀렉터가 꺼져 있어도 이미 PREMIUM으로 생성된 항목은 배지를 보인다.
-            FEATURE_FLAGS.SHOW_MODEL_SELECTOR ||
-            planConfig.id === "PREMIUM" ? (
-              <span
-                className={`shrink-0 inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-bold ${
-                  planConfig.id === "PREMIUM"
-                    ? "border-slate-200 bg-slate-50 text-slate-600"
-                    : "border-slate-200 bg-slate-50 text-slate-600"
-                }`}
-              >
-                {planConfig.id === "PREMIUM" ? (
-                  <Gem className="w-3 h-3" />
-                ) : (
-                  <PearlIcon className="w-3 h-3" />
-                )}
-                {planConfig.shortLabel}
-              </span>
-            ) : null
-          }
-        />
-      );
-    }
-
-    if (item.status === "error") {
-      const questionType = Object.keys(item.config.typeCounts).find(
-        (typeId) => Number(item.config.typeCounts[typeId]) > 0,
-      );
-      const errorDetail = getFriendlyQuestionGenerationError(
-        item.error,
-        questionType,
-      );
-      const requestedTypes = Object.entries(item.config.typeCounts)
-        .filter(([, count]) => Number(count) > 0)
-        .map(([typeId, count]) => `${typeLabel(typeId)} ${count}개`)
-        .join(", ");
-
-      return (
-        <div
-          key={item.id}
-          className="h-[340px] overflow-hidden rounded-xl border border-red-200 bg-red-50/30 p-4"
-        >
-          <div className="flex items-center gap-3">
-            <AlertTriangle className="w-5 h-5 text-red-500 shrink-0" />
-            <div className="min-w-0">
-              <div className="flex items-center gap-1.5 min-w-0">
-                <h4 className="text-[13px] font-bold text-slate-800 truncate">
-                  {item.passageTitle}
-                </h4>
-                {(FEATURE_FLAGS.SHOW_MODEL_SELECTOR ||
-                  planConfig.id === "PREMIUM") && (
-                  <span
-                    className={`shrink-0 inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-bold ${
-                      planConfig.id === "PREMIUM"
-                        ? "border-slate-200 bg-slate-50 text-slate-600"
-                        : "border-slate-200 bg-slate-50 text-slate-600"
-                    }`}
-                  >
-                    {planConfig.id === "PREMIUM" ? (
-                      <Gem className="w-3 h-3" />
-                    ) : (
-                      <PearlIcon className="w-3 h-3" />
-                    )}
-                    {planConfig.shortLabel}
-                  </span>
-                )}
-              </div>
-              <span className="text-[11px] text-red-500 font-medium">
-                생성 실패
-              </span>
-              {requestedTypes && (
-                <p className="mt-1 text-[11px] font-medium text-slate-500">
-                  {requestedTypes} · {item.config.difficulty}
-                </p>
-              )}
-              {errorDetail && (
-                <p className="mt-1 line-clamp-5 break-words text-[11px] leading-4 text-red-600">
-                  {errorDetail}
-                </p>
-              )}
-            </div>
-          </div>
-          {onRetryGeneration && (
-            <button
-              type="button"
-              onClick={() => onRetryGeneration(item)}
-              title="이 카드에 사용된 유형·난이도·조건 그대로 다시 생성합니다"
-              className="mt-3 inline-flex h-8 shrink-0 items-center gap-1.5 rounded-md border border-red-200 bg-white px-3 text-[11.5px] font-bold text-red-600 shadow-sm transition-colors hover:bg-red-50"
-            >
-              <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
-              같은 조건으로 다시 생성하기
-            </button>
-          )}
-        </div>
-      );
-    }
-
-    return null;
-  }
-
-  function renderSessionQuestionCard(card: SessionQuestionCard) {
-    const persistedId = card.persistedQuestionId;
+  // renderSessionQuestionCard + renderSavedQuestionCard 병합 — 공유 핸들러/
+  // QuestionCard 블록은 한 벌만 두고, 가변부만 옵션으로 받는다.
+  // - persistedId: 저장 정합 id. 세션 카드는 미저장이면 undefined(선택/검수/삭제
+  //   비활성 가드), 저장 카드는 항상 q.id.
+  // - source "session": 투어 강조/fresh 글로우 래퍼 + acknowledgeFreshCard,
+  //   상세는 setDetailQuestion 직행(마일스톤 디스패치 포함).
+  // - source "saved": recentlyViewed(상세 닫힘 반짝임) + openQuestionDetail
+  //   (lastViewed 추적) 경로.
+  function renderQuestionCard({
+    source,
+    cardKey,
+    question,
+    num,
+    persistedId,
+  }: {
+    source: "session" | "saved";
+    cardKey: string;
+    question: QuestionCardItem;
+    num: number;
+    persistedId?: string;
+  }) {
     const isSelected = persistedId
       ? selectedQuestionIds.has(persistedId)
       : false;
     const cardToggle = persistedId
       ? () => toggleQuestionSelection(persistedId)
       : undefined;
-    const tourHighlightIndex = tourHighlightedSessionQuestionIndex.get(
-      card.key,
-    );
+    const tourHighlightIndex =
+      source === "session"
+        ? tourHighlightedSessionQuestionIndex.get(cardKey)
+        : undefined;
     const isTourHighlighted = tourHighlightIndex !== undefined;
     const isFirstTourHighlighted = tourHighlightIndex === 0;
     // 방금 생성된 카드의 파란 글로우 — 클릭 전까지 표시(투어 강조와는 별개).
-    const isFreshGlow = !isTourHighlighted && !acknowledgedFreshKeys.has(card.key);
+    const isFreshGlow =
+      source === "session" &&
+      !isTourHighlighted &&
+      !acknowledgedFreshKeys.has(cardKey);
     const openDetail = () => {
       if (isFirstTourHighlighted) {
         dispatchGenerateTourMilestone("question-detail-opened");
       }
-      setDetailQuestion(card.question);
+      // 저장 카드는 방금 본 카드 반짝임을 위해 lastViewed 를 함께 기록한다.
+      if (source === "saved") openQuestionDetail(question);
+      else setDetailQuestion(question);
     };
 
     return (
       <div
-        key={card.key}
+        key={cardKey}
         data-generate-tour={
           isFirstTourHighlighted
             ? "generated-question-card-first"
@@ -965,7 +849,7 @@ export function BottomQueueSection({
               : undefined
         }
         onClick={(e) => {
-          acknowledgeFreshCard(card.key);
+          if (source === "session") acknowledgeFreshCard(cardKey);
           if (
             e.detail > 1 ||
             !cardToggle ||
@@ -975,35 +859,45 @@ export function BottomQueueSection({
           scheduleCardSelectionClick(cardToggle);
         }}
         onDoubleClick={(e) => {
-          acknowledgeFreshCard(card.key);
+          if (source === "session") acknowledgeFreshCard(cardKey);
           cancelPendingCardSelectionClick();
           clearCardTextSelection();
           if (shouldIgnoreCardDoubleClick(e)) return;
           openDetail();
         }}
         onMouseDown={preventCardDoubleClickTextSelection}
-        className={`h-full cursor-pointer rounded-xl transition-shadow ${
-          isTourHighlighted
-            ? "ring-2 ring-blue-400 ring-offset-2 ring-offset-white"
-            : isFreshGlow
-              ? "ring-2 ring-blue-400/70 shadow-[0_0_0_1px_rgba(37,99,235,0.45),0_0_26px_8px_rgba(37,99,235,0.30)] motion-safe:animate-pulse [&_[data-slot=card]]:!border-transparent [&_[data-slot=card]]:!shadow-none"
-              : ""
-        }`}
+        className={
+          source === "session"
+            ? `h-full cursor-pointer rounded-xl transition-shadow ${
+                isTourHighlighted
+                  ? "ring-2 ring-blue-400 ring-offset-2 ring-offset-white"
+                  : isFreshGlow
+                    ? "ring-2 ring-blue-400/70 shadow-[0_0_0_1px_rgba(37,99,235,0.45),0_0_26px_8px_rgba(37,99,235,0.30)] motion-safe:animate-pulse [&_[data-slot=card]]:!border-transparent [&_[data-slot=card]]:!shadow-none"
+                    : ""
+              }`
+            : "h-full cursor-pointer"
+        }
       >
         <QuestionCard
-          q={card.question}
-          num={card.number}
+          q={question}
+          num={num}
           readonly
           compact
           showReviewActions={Boolean(persistedId)}
           showHeaderActions={Boolean(persistedId)}
           selected={isSelected}
+          recentlyViewed={
+            source === "saved"
+              ? lastViewedQuestionId === question.id &&
+                openDetailQuestionId !== question.id
+              : undefined
+          }
           dragItemId={persistedId ?? null}
           onToggle={cardToggle}
           onDetail={openDetail}
           showDetailButton
           showDetailIconButton
-          detailExtra={renderCardDetailExtra?.(card.question)}
+          detailExtra={renderCardDetailExtra?.(question)}
           onApprove={
             !onApproveQuestion
               ? undefined
@@ -1020,60 +914,6 @@ export function BottomQueueSection({
               ? undefined
               : () => void requestDelete([persistedId as string], "single")
           }
-        />
-      </div>
-    );
-  }
-
-  function renderSavedQuestionCard(q: QuestionCardItem, index: number) {
-    const cardQuestion = withVisiblePlanTag(q);
-    const isSelected = selectedQuestionIds.has(q.id);
-    const cardToggle = () => toggleQuestionSelection(q.id);
-    return (
-      <div
-        key={q.id}
-        onClick={(e) => {
-          if (e.detail > 1 || shouldIgnoreCardSelectionClick(e)) return;
-          scheduleCardSelectionClick(cardToggle);
-        }}
-        onDoubleClick={(e) => {
-          cancelPendingCardSelectionClick();
-          clearCardTextSelection();
-          if (shouldIgnoreCardDoubleClick(e)) return;
-          openQuestionDetail(cardQuestion);
-        }}
-        onMouseDown={preventCardDoubleClickTextSelection}
-        className="h-full cursor-pointer"
-      >
-        <QuestionCard
-          q={cardQuestion}
-          num={index + 1}
-          readonly
-          compact
-          showReviewActions
-          showHeaderActions
-          selected={isSelected}
-          recentlyViewed={
-            lastViewedQuestionId === q.id && openDetailQuestionId !== q.id
-          }
-          dragItemId={q.id}
-          onToggle={cardToggle}
-          onDetail={() => openQuestionDetail(cardQuestion)}
-          showDetailButton
-          showDetailIconButton
-          detailExtra={renderCardDetailExtra?.(cardQuestion)}
-          onApprove={
-            !onApproveQuestion
-              ? undefined
-              : () => onApproveQuestion(cardQuestion.id)
-          }
-          onUnapprove={
-            !onUnapproveQuestion
-              ? undefined
-              : () => onUnapproveQuestion(cardQuestion.id)
-          }
-          onEdit={() => onEditQuestion(cardQuestion.id)}
-          onDelete={() => void requestDelete([cardQuestion.id], "single")}
         />
       </div>
     );
@@ -1166,7 +1006,7 @@ export function BottomQueueSection({
         </header>
         {isOpen && (
           <div className="p-3">
-            <DragSelect
+            <DragSelect deferCommit
               className={cardLayoutClassNames[cardLayoutMode]}
               value={selectedQuestionIds}
               onChange={setSelectedQuestionIds}
@@ -1396,18 +1236,39 @@ export function BottomQueueSection({
                 filters={questionSetFilters}
                 gridClassName={cardLayoutClassNames[cardLayoutMode]}
               />
-              <DragSelect
+              <DragSelect deferCommit
                 className={cardLayoutClassNames[cardLayoutMode]}
                 value={selectedQuestionIds}
                 onChange={setSelectedQuestionIds}
                 boundaryRef={marqueeBoundaryRef}
               >
                 {sessionFlatEntries.map((entry) =>
-                  entry.kind === "queue"
-                    ? renderQueueStatusCard(entry.item)
-                    : renderSessionQuestionCard(entry.card),
+                  entry.kind === "queue" ? (
+                    <QueueStatusCard
+                      key={entry.item.id}
+                      item={entry.item}
+                      onRetryGeneration={onRetryGeneration}
+                      showPremiumBadgeWhenFlagOff
+                    />
+                  ) : (
+                    renderQuestionCard({
+                      source: "session",
+                      cardKey: entry.card.key,
+                      question: entry.card.question,
+                      num: entry.card.number,
+                      persistedId: entry.card.persistedQuestionId,
+                    })
+                  ),
                 )}
-                {savedCardsForDisplay.map(renderSavedQuestionCard)}
+                {savedCardsForDisplay.map((q, index) =>
+                  renderQuestionCard({
+                    source: "saved",
+                    cardKey: q.id,
+                    question: withVisiblePlanTag(q),
+                    num: index + 1,
+                    persistedId: q.id,
+                  }),
+                )}
               </DragSelect>
             </div>
           )
@@ -1415,14 +1276,28 @@ export function BottomQueueSection({
           <div className="space-y-3">
             {visibleQueueCards.length > 0 && (
               <div className={cardLayoutClassNames[cardLayoutMode]}>
-                {visibleQueueCards.map(renderQueueStatusCard)}
+                {visibleQueueCards.map((item) => (
+                  <QueueStatusCard
+                    key={item.id}
+                    item={item}
+                    onRetryGeneration={onRetryGeneration}
+                    showPremiumBadgeWhenFlagOff
+                  />
+                ))}
               </div>
             )}
             {sessionGroups.map((group) =>
               renderPassageGroup({
                 group,
                 source: "session",
-                renderCard: (card) => renderSessionQuestionCard(card),
+                renderCard: (card) =>
+                  renderQuestionCard({
+                    source: "session",
+                    cardKey: card.key,
+                    question: card.question,
+                    num: card.number,
+                    persistedId: card.persistedQuestionId,
+                  }),
                 getSelectableIds: (cards) =>
                   cards
                     .filter((card) => card.persistedQuestionId)
@@ -1439,7 +1314,14 @@ export function BottomQueueSection({
               renderPassageGroup({
                 group,
                 source: "saved",
-                renderCard: (q, index) => renderSavedQuestionCard(q, index),
+                renderCard: (q, index) =>
+                  renderQuestionCard({
+                    source: "saved",
+                    cardKey: q.id,
+                    question: withVisiblePlanTag(q),
+                    num: index + 1,
+                    persistedId: q.id,
+                  }),
                 getSelectableIds: (qs) => qs.map((q) => q.id),
               }),
             )}

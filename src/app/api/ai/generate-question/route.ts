@@ -22,7 +22,7 @@ import { generateQuestionObject } from "@/lib/question-generation-llm";
 import {
   getQuestionGenerationCreditCost,
   normalizeQuestionGenerationPlan,
-  resolveUnifiedGenerationPlan,
+  resolveEffectiveGenerationPlan,
   withQuestionGenerationPlanMetadata,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
@@ -166,12 +166,9 @@ export async function POST(request: NextRequest) {
       rawTypeSettings,
       questionType,
     );
-    // 클라 요청 플랜 — 상품 단일화(W2-E) 이후 요금·라우팅에 미영향, 로깅 전용.
     const requestedGenerationPlan = normalizeQuestionGenerationPlan(rawGenerationPlan);
-    // 상품 단일화(W2-E): 품질 파이프라인·요금·문항 _generationPlan 스탬프는 유형이
-    // 결정한다. 클라 generationPlan / questionTypeSettings.generationPlan(과거 저장
-    // PREMIUM config 포함)은 무력화된다.
-    const generationPlan = resolveUnifiedGenerationPlan(questionType);
+    // 단일 상품(26-07-21): 결정 함수 단일 소스(fast/async/trigger 와 동일 규칙).
+    const generationPlan = resolveEffectiveGenerationPlan(rawGenerationPlan);
     const effectiveDifficulty = readQuestionTypeDifficultySetting(
       typeSettingsForType,
       difficulty || "INTERMEDIATE",
@@ -342,7 +339,15 @@ export async function POST(request: NextRequest) {
       );
       const questions = generationResult.questions.slice(0, requestedQuestionCount);
       const taggedQuestions = questions.map((question) =>
-        withQuestionGenerationPlanMetadata(question, generationPlan),
+        // 엔진의 문항별 스탬프(_generationPlan)를 우선한다 — KO 동결 등으로 실제
+        // 실행 레인이 요청 플랜과 다를 수 있다(fast/trigger 경로와 동일 규칙).
+        withQuestionGenerationPlanMetadata(
+          question,
+          normalizeQuestionGenerationPlan(
+            (question as { _generationPlan?: unknown })._generationPlan ??
+              generationPlan,
+          ),
+        ),
       );
 
       // 이 요청에서 발생한 모든 provider 호출(재시도·repair 포함)의 토큰을

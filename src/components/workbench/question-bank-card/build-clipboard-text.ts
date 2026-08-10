@@ -19,6 +19,7 @@ import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-di
 import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
 import {
   circleGrammarLabelMentions,
+  formatMultiBlankOptionText,
   optionDisplayTextForSubtype,
   shouldRenderOptionListForSubtype,
   grammarMarkerDisplayLabel,
@@ -285,7 +286,11 @@ function collectClipboardBlocks(
     const lines = options.map((opt, i) =>
       optionLine(
         opt.label,
-        optionDisplayTextForSubtype(q.subType, i, opt.text),
+        // 다중 빈칸(BLANK_INFERENCE) 조합 선지: 클립보드는 흐름 텍스트라 컬럼
+        // 정렬(HTML 그리드의 (A)/(B) 헤더 행)이 불가 — 인라인 라벨 근사가 실용적.
+        q.subType === "BLANK_INFERENCE"
+          ? formatMultiBlankOptionText(opt.text)
+          : optionDisplayTextForSubtype(q.subType, i, opt.text),
         q.subType,
       ),
     );

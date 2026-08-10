@@ -1,0 +1,764 @@
+{
+ "examId": "ebsi_go2_20161123",
+ "source": "ebsi_go2_20161123_paper_eng_mun_tQvAauNj.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ① Of course, let’s stay home. ② Sorry, but I don’t like seafood. ③ Yeah, I like it. Let’s go out now. ④ No pro",
+   "choices": [
+    "Of course, let’s stay home.",
+    "Sorry, but I don’t like seafood.",
+    "Yeah, I like it. Let’s go out now.",
+    "No problem. Let’s visit him later.",
+    "No. You don’t need a new camera."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 225
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ① Sure. The dentist is really nice. ② Cheer up. You’ll play the piano well. ③ Great. The price is quite reason",
+   "choices": [
+    "Sure. The dentist is really nice.",
+    "Cheer up. You’ll play the piano well.",
+    "Great. The price is quite reasonable to me.",
+    "I’m sorry. You can’t take drinks into the hall.",
+    "I’d love to, but I can’t change the dentist appointment."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 282
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을 듣고, 여자가 하는 말의 목적으로 가장 적절한 것을 고르시오. ① 시간 관리 방법을 조언하려고 ② 요리 기구 정리를 당부하려고 ③ 등록금 인상 이유를 설명하려고 ④ 쿠키 만들기 강좌를 홍보하려고 ⑤ 가족 행사의 필요성을 강조하려고",
+   "choices": [
+    "시간 관리 방법을 조언하려고",
+    "요리 기구 정리를 당부하려고",
+    "등록금 인상 이유를 설명하려고",
+    "쿠키 만들기 강좌를 홍보하려고",
+    "가족 행사의 필요성을 강조하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 136
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 두 사람이 하는 말의 주제로 가장 적절한 것을 고르시오. ① 연설 원고를 작성하는 방법 ② 면접 시 표정 관리의 중요성 ③ 영화 자막 작성 시 유의 사항 ④ 갈등 해결을 위한 대화의 필요성 ⑤ 바른 자세가 건강에 미치는 영향",
+   "choices": [
+    "연설 원고를 작성하는 방법",
+    "면접 시 표정 관리의 중요성",
+    "영화 자막 작성 시 유의 사항",
+    "갈등 해결을 위한 대화의 필요성",
+    "바른 자세가 건강에 미치는 영향"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 137
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 두 사람의 관계를 가장 잘 나타낸 것을 고르시오. ① 패션모델 – 잡지 기자 ② 영화배우 – 의상 디자이너 ③ 무대 연출가 – 음향 감독 ④ 아나운서 – 연예인 매니저 ⑤ 축제 진행자 – 지역 주민",
+   "choices": [
+    "패션모델 – 잡지 기자",
+    "영화배우 – 의상 디자이너",
+    "무대 연출가 – 음향 감독",
+    "아나운서 – 연예인 매니저",
+    "축제 진행자 – 지역 주민"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 122
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고르시오. ④ ① ② ③ ⑤",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 51
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 남자가 할 일로 가장 적절한 것을 고르시오. ① 케이크 주문하기 ② 예식장 예약하기 ③ 축하 카드 작성하기 ④ 사진 액자 구입하기 ⑤ 저녁 식사 준비하기",
+   "choices": [
+    "케이크 주문하기",
+    "예식장 예약하기",
+    "축하 카드 작성하기",
+    "사진 액자 구입하기",
+    "저녁 식사 준비하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 97
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, 여자가 Motor Show에 갈 수 없는 이유를 고르시오. ① 계절 학기 수강 신청을 해야 해서 ② 교통안전 캠페인에 참여해야 해서 ③ 운전면허 필기시험에 응시해야 해서 ④ 팀 프로젝트를 위한 준비를 해야 해서 ⑤ 자동차 디자인 세미나에 참가해야 해서",
+   "choices": [
+    "계절 학기 수강 신청을 해야 해서",
+    "교통안전 캠페인에 참여해야 해서",
+    "운전면허 필기시험에 응시해야 해서",
+    "팀 프로젝트를 위한 준비를 해야 해서",
+    "자동차 디자인 세미나에 참가해야 해서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 152
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 대화를 듣고, 남자가 지불할 금액을 고르시오. [3점] ① $180 ② $200 ③ $270 ④ $300 ⑤ $350",
+   "choices": [
+    "$180",
+    "$200",
+    "$270",
+    "$300",
+    "$350"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 69
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 대화를 듣고, Dream Marathon에 관해 두 사람이 언급하지 않은 것을 고르시오. ① 개최 목적 ② 개최 일자 ③ 등록 방법 ④ 참가 복장 ⑤ 출발 장소",
+   "choices": [
+    "개최 목적",
+    "개최 일자",
+    "등록 방법",
+    "참가 복장",
+    "출발 장소"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 95
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. Eastville Book Festival에 관한 다음 내용을 듣고, 일치하지 않는 것을 고르시오. ① Central Park에서 열린다. ② 유명 작가들과 대화할 수 있다. ③ 어린이들을 위한 서점이 있다. ④ 중고 서적을 사고팔 수 있는 시장이 있다. ⑤ 카페에서 다양한 음료",
+   "choices": [
+    "Central Park에서 열린다.",
+    "유명 작가들과 대화할 수 있다.",
+    "어린이들을 위한 서점이 있다.",
+    "중고 서적을 사고팔 수 있는 시장이 있다.",
+    "카페에서 다양한 음료를 무료로 제공한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 173
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 다음 표를 보면서 대화를 듣고, 두 사람이 구입할 신발을 고르시오. Shoes for Kids Shoes Color Size Decoration Price ① A Blue Sunflower $ 48 ② B Pink Rose $ 25 ③ C Pink Spider $ 28 ④ D Y",
+   "choices": [
+    "A\nBlue\nSunflower\n$ 48",
+    "B\nPink\nRose\n$ 25",
+    "C\nPink\nSpider\n$ 28",
+    "D\nYellow\nRose\n$ 25",
+    "E\nYellow\nSunflower\n$ 48"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 202
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. [3점] Man: ① Sure, you’ll perform better in your business. ② Okay, I won’t miss volunteering next time. ③ Well, you should buy traveler’s insurance. ④ Really?",
+   "choices": [
+    "Sure, you’ll perform better in your business.",
+    "Okay, I won’t miss volunteering next time.",
+    "Well, you should buy traveler’s insurance.",
+    "Really? I should have been on that flight.",
+    "Certainly, I’ll study fine art abroad."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 368
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. Woman: ① I have no idea how to play badminton. ② You just need the right clothes and shoes. ③ You can relieve",
+   "choices": [
+    "I have no idea how to play badminton.",
+    "You just need the right clothes and shoes.",
+    "You can relieve your stress by meditation.",
+    "You can bring your friends to swimming pool.",
+    "I think you need to hand in the math assignment."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 366
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Tony가 Grace에게 할 말로 가장 적절한 것을 고르시오. [3점] Tony: Grace, ① how about exchanging roles with me?",
+   "choices": [
+    "how about exchanging roles with me?",
+    "what’s the problem with the projector?",
+    "how’s it going with your computer class?",
+    "would you teach me to make visual slides?",
+    "could you help me make copies of the handouts?\n[16 ~ 17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 388
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 남자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "benefits of playing with toys for children",
+    "necessities of getting enough playing space",
+    "types of toys developing children’s creativity",
+    "impacts of musical toys on children’s character",
+    "ways of producing environmentally friendly toys"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 269
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 장난감이 아닌 것은?",
+   "choices": [
+    "퍼즐",
+    "블록",
+    "장난감 피아노",
+    "장난감 전화기",
+    "야구 장난감\n이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시에 따라 \n답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 109
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "협회 규약 수정을 요구하려고",
+    "회원 탈퇴 의사를 전달하려고",
+    "회의 일정 변경을 논의하려고",
+    "회원 추천 절차를 문의하려고",
+    "협회 운영 방식에 항의하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 711
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 드러난 ‘I’의 심경 변화로 가장 적절한 것은?",
+   "choices": [
+    "scared → annoyed",
+    "frustrated → envious",
+    "nervous → triumphant",
+    "delighted → disappointed",
+    "indifferent → excited"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 700
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "성공을 위해서 폭넓은 인맥 관리에 노력해야 한다.",
+    "구매 계획을 세워 효율적인 소비 생활을 해야 한다.",
+    "삶에서 진정으로 소중한 것을 제대로 인식해야 한다.",
+    "더불어 사는 삶을 위해 나눔 활동에 참여해야 한다.",
+    "부분적인 성과보다는 전체적인 결과를 중요시해야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1009
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Reservoir Effect: Unintended Change in Earth’s Rotation",
+    "Why Figure Skaters Spin Faster with Their Arms in",
+    "Factors Affecting the Location of Reservoirs",
+    "Eco-Friendly Water Holding Method",
+    "What Makes Earth Rotate Slower?"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1054
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "학생의 수행에 대해 지적보다 격려가 효과적이다.",
+    "평가 결과에 대한 적극적인 활용 방안 모색이 시급하다.",
+    "좋은 보고서 작성을 위해서는 전문가의 조언이 필요하다.",
+    "등급보다 서술적 피드백을 제공하는 것이 학생에게 더 유용하다.",
+    "교사와 학생 간의 높은 신뢰가 학생의 내적 동기를 더 강화한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1112
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "tips for being a successful poet",
+    "usefulness of poetry in our lives",
+    "misconceptions about reading poetry",
+    "difficulty of describing outside features",
+    "ways to convey ideas by poetic description"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1064
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 도표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "The sum of \nthe percentages of respondents preferring Internet Banking \nand Branches surpassed 50 percent in both years.",
+    "In 2013, \n39 percent of respondents named Internet Banking as their \nfavorite way of conducting their banking, while the \npreference dropped 8 percentage points in 2014.",
+    "However, \ncompared to 2013, the preference of Branches and ATMs \nincreased 3 percentage points respectively in 2014.",
+    "In \n2013, the preference of Mobile was less than 10 percent, but it \nreached the double digits in 2014.",
+    "In 2013 and 2014, both \nTelephone and Mail remained the same in preference at 7 percent."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 828
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. Gunnison Tunnel에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "서부 Colorado 일부 지역에 물을 대기 위해 설계되었다.",
+    "완공 당시 세계에서 가장 긴 관개 터널이었다.",
+    "공사 중 지반 붕괴로 인명 사고가 발생했다.",
+    "대통령이 첫 방류 스위치를 눌렀다.",
+    "현재 가동이 중단된 상태이다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1066
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. 2016 Carbon Monoxide(CO) Poster Contest에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "고등학생을 대상으로 한다.",
+    "참가자가 직접 신청서를 작성한다.",
+    "출품작은 우편으로 제출해야 한다.",
+    "모든 출품작은 웹 사이트에 게시된다.",
+    "주제 선택에는 제한이 없다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 901
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. Bognar Library에 관한 다음 안내문의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "다음 달에 개관한다.",
+    "대출 권수는 최대 5권이다.",
+    "국경일에는 휴관한다.",
+    "열람실 내에서는 전화 통화를 할 수 없다.",
+    "물을 포함한 음식물 반입이 금지된다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 894
+  },
+  {
+   "qNum": 28,
+   "kind": "grammar_underline",
+   "stem": "28. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "to which others’ attention is",
+    "②": "change into a sweatshirt with",
+    "③": "were sure the other students",
+    "④": "that the students changed sweatshirts",
+    "⑤": "provoking only"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 974
+  },
+  {
+   "qNum": 29,
+   "kind": "box_choice",
+   "stem": "29. (A),(B),(C)의 각 네모 안에서 문맥에 맞는 낱말로 가장 적절한 것은?",
+   "choices": [
+    "undermined …… benefits\n…… accelerate",
+    "undermined …… drawbacks …… accelerate",
+    "undermined …… benefits\n…… decelerate",
+    "upheld\n…… drawbacks …… decelerate",
+    "upheld\n…… drawbacks …… accelerate"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1238
+  },
+  {
+   "qNum": 30,
+   "kind": "mc",
+   "stem": "30. 밑줄 친 부분이 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [
+    "her. \nJane had never seen her before. Embarrassed at being seen in \nsuch an emotional mess,",
+    "she turned her head away and \nhoped to hurry past. But the woman moved directly in front of \nJane, waited until she looked up, and then smiled. Looking into",
+    "her eyes, the woman spoke in a quiet voice, “Whatever is \nwrong will pass. You’re going to be OK. Just hang on.”",
+    "She \nthen smiled again and walked away. Jane can’t explain the \nimpact of that moment, of the woman’s unexpected kindness \nand unconditional caring! The woman gave her the one thing",
+    "she’d lost completely: hope. Jane looked for her on campus \nto thank her but never saw her again.\n[31 ~ 33] 다음 빈칸에 들어갈 말로 가장 적절한 것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 897
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. Mathematical models of flocks of birds and schools of fish and swarms of insects that move in unison demonstrate the same point: there is no central control",
+   "choices": [
+    "warning call",
+    "social pressure",
+    "moral leadership",
+    "absolute authority",
+    "collective intelligence"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 864
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. The Neanderthals would have faced a problem when it was daylight: the light quality is much poorer at high latitudes and this would have meant that they cou",
+   "choices": [
+    "to get big enough to frighten animals",
+    "to move their habitats to lower latitudes",
+    "to increase the size of the visual processing system",
+    "to develop auditory sense rather than visual system",
+    "to focus our attention on what we perceive to be the threat"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1206
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. It’s possible to lie with numbers, even those that are accurate, because numbers rarely speak for themselves. They need to be interpreted by writers. And wr",
+   "choices": [
+    "be influenced by the data collection strategy",
+    "be cited as a cause for celebration or shame",
+    "be obtained from different experimental data",
+    "cause various social problems in many cases",
+    "trigger minimum wage protests across the U.S."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1139
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. 다음 글의 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "For example \n…… That is",
+    "However\n…… Instead",
+    "However\n…… Therefore",
+    "In other words …… As a result",
+    "In other words …… Nevertheless"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 960
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "On the other \nhand, the truth acquired through our own thinking is like the \nnatural limb; it alone really belongs to us.",
+    "On this rests the \ndistinction between the thinker and the mere scholar.",
+    "The \nintellectual gain of the thinker who thinks for himself is, \ntherefore, like a beautiful painting that vividly stands out with \nperfect harmony of colors.",
+    "Color in painting is a major \ninfluence on our emotions, and therefore plays a huge part in \nhow we appreciate art.",
+    "The intellectual acquisition of the \nmere scholar, on the other hand, is like a large palette full of \nbright colors but without harmony.\n[36 ~ 37] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 것을 \n고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 802
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. Twins provide a unique opportunity to study genes. Some pairs of twins are identical: they share the exact same genes in their DNA. (A) In the same way, sci",
+   "choices": [
+    "(A)-(C)-(B)",
+    "(B)-(A)-(C)",
+    "(B)-(C)-(A)",
+    "(C)-(A)-(B)",
+    "(C)-(B)-(A)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 962
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. For years business leaders and politicians have portrayed environmental protection and jobs as mutually exclusive. (A) Pollution control, protection of natu",
+   "choices": [
+    "(A)-(C)-(B)",
+    "(B)-(A)-(C)",
+    "(B)-(C)-(A)",
+    "(C)-(A)-(B)",
+    "(C)-(B)-(A)\n[38 ~ 39] 글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 적절한 \n곳을 고르시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38 ~ 39"
+    ]
+   },
+   "charLen": 1103
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. It is possible to obtain more natural-looking portraits when the camera shoots from the same level as the child’s eyeline instead of being tilted. The birth",
+   "choices": [
+    ") In \nmany ways, photographing a child is little different from \nphotographing any other person. (",
+    ") What makes it different, \nhowever, is the relative height between a young child and an \nadult. (",
+    ") Using the camera at your own head height works \nwell for photographing adults, but for children the camera will \nbe tilted downward. (",
+    ") You are looking down on the child, \nliterally and metaphorically, and the resulting picture can make \nthe child look smaller and less significant than most parents \nwould like. (",
+    ") For an eight year old, this might mean sitting \ndown when shooting; and for a crawling baby, the best \napproach may be to lie on the floor."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 928
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. When you were first learning to read, you may have studied specific facts about the sounds of letters. There are different kinds of knowledge. Some is domai",
+   "choices": [
+    ") \nSome knowledge, on the other hand, is general ― it applies to \nmany different situations. (",
+    ") For example, general knowledge \nabout how to read or write or use a computer is useful both in \nand out of school. (",
+    ") Of course, there is no absolute line \nbetween general and domain-specific knowledge. (",
+    ") At that \ntime, knowledge about letter sounds was specific to the domain \nof reading. (",
+    ") But now you can use both knowledge about \nsounds and the ability to read in more general ways."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 850
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "excessive\n……\nreliability",
+    "excessive\n……\npopularity",
+    "sufficient\n……\ninvestment",
+    "reasonable ……\nintegrity",
+    "reasonable ……\navailability\n[41 ~ 42] 다음 글을 읽고, 물음에 답하시오.\nAlthough organisms interact with their surroundings in \nmany ways, certain factors may be critical to a particular \nspecies’ success. A shortage or absence of this factor \nrestricts the success of the species; thus, it is known as a \nlimiting factor. Limiting factors can be quite different from \none species to another.\nThe limiting factor for many species of fish is the amount \nof dissolved oxygen in the water. In a swiftly flowing, \ntree-lined mountain stream, the level of dissolved oxygen is \nhigh and so provides a favorable environment for trout. As \nthe stream continues down the mountain, the steepness of \nthe slope decreases, which results in fewer rapids where the \nwater tumbles over rocks and becomes oxygenated. In \naddition, as the stream becomes wider, the canopy of trees \nover the stream usually is thinner, allowing more sunlight to \nreach the stream and warm the water. Warm water cannot \nhold as much dissolved oxygen as cool water. Therefore, \nslower-flowing, warm-water streams contain less oxygen \nthan rapidly moving, cool streams. Fish such as black bass \nand walleye are adapted to such areas, since they are able to \ntolerate lower oxygen concentrations and higher water \ntemperatures. Trout are not able to survive under such \nconditions and are not found in warm, less well-oxygenated \nwater. Thus, low levels of oxygen and high water temperatures \nare limiting factors for the                         of trout."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2910
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "What Determines Species’ Survival",
+    "Limiting Factors and Competition",
+    "Trout: Critically Endangered Species",
+    "Intriguing Cases of Animal Extinction",
+    "Key Factors to Keep Water Oxygenated"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 213
+  },
+  {
+   "qNum": 42,
+   "kind": "mc",
+   "stem": "42. 윗글의 빈칸에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "relationship",
+    "distribution",
+    "diversity",
+    "hierarchy",
+    "mutation\n[43 ~ 45] 다음 글을 읽고, 물음에 답하시오.\n(A)\n American gymnast Bart Conner was active in many sports as a \nchild, starting his gymnastics career at the age of ten and \nprogressing quickly to become the youngest member of the \nUnited States Olympic team at the Summer Games in Montreal. \n(a) He attended the University of Oklahoma and worked with \ngymnastics coach Paul Ziert. The coach’s critical opinion was that \nConner had a relative lack of flexibility and limited tumbling skills.\n(B)\n Afterwards, in an interview, Conner thanked his parents. \n“Come on Bart,” said the interviewer, “everyone thanks their \nparents when they win a gold medal.” But Conner told him that \nthis was different. (b) He said, “Every night before bed my \nparents would ask me what my success of the day was. When I \nwas injured, I knew I was going to make it back because I was a \nsuccess every day of my life.” Conner’s story tells us: When \npeople focus on what they are doing well, they do more things well. \n(C)\n People believed Conner would never make it back in time to \ncompete in the Olympics. He underwent surgery and intensive \nphysical therapy, in an attempt to regain fitness. With just one \nchance left to qualify, (c) he managed to squeeze into the Olympic \nteam. Conner underwent intense training to reclaim his competitive \nlevel. By enduring this training, Conner helped the US team to \nearn a gymnastics team gold. In (d) his favored parallel bars event \nhe scored a ‘perfect ten’ to win an individual gold medal as well.\n(D)\n Despite the coach’s negative perspective, Conner refused to accept \nsuch limitations that (e)he pointed out. Conner’s motivation \ncombined with his other physical abilities helped him to quickly \nadvance. Conner won the parallel bars event at the World \nChampionship with an original complex move called the ‘Conner Spin’ \nsince he was the first ever to do it. Nine months before his country \nhosted the Olympics in Los Angeles, Conner tore his bicep muscle."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2073
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B)-(D)-(C)",
+    "(C)-(B)-(D)",
+    "(C)-(D)-(B)",
+    "(D)-(B)-(C)",
+    "(D)-(C)-(B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 120
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a) ~ (e)중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 70
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글의 Bart Conner에 관한 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "Montreal 올림픽에서 미국 올림픽 팀의 최연소 선수였다.",
+    "유연성이 부족하다는 코치 Paul Ziert의 의견이 있었다.",
+    "인터뷰에서 자신이 속한 대표 팀의 동료에게 감사를 표했다.",
+    "건강을 되찾기 위해 수술과 집중적인 물리치료를 받았다.",
+    "자신의 이름을 딴 동작으로 세계 선수권 대회에서 우승했다.\n※ 확인 사항\n답안지의 해당란에 필요한 내용을 정확히 기입(표기)했는지 확인하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 263
+  }
+ ],
+ "sourcePdf": "ebsi_go2_20161123_paper_eng_mun_tQvAauNj.pdf"
+}

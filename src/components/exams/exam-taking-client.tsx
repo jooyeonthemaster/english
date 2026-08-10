@@ -1,13 +1,19 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef, useTransition, type ReactNode } from "react";
+import { Fragment, useState, useEffect, useCallback, useRef, useTransition, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { optionDisplayTextForSubtype } from "@/components/exams/paper-builder/option-display";
+import {
+  MULTI_BLANK_DISPLAY_SEPARATOR,
+  multiBlankHeaderLabels,
+  multiBlankOptionMatrix,
+  optionDisplayTextForSubtype,
+} from "@/components/exams/paper-builder/option-display";
+import { multiBlankGridTemplateColumns } from "@/components/exams/multi-blank-option-grid";
 import { confirmNative } from "@/lib/browser-confirm";
 import {
   ChevronLeft,
@@ -403,39 +409,126 @@ export function ExamTakingClient({ examData }: Props) {
             {(currentQ.type === "MULTIPLE_CHOICE" ||
               currentQ.type === "VOCAB") &&
             currentQ.options ? (
-              <RadioGroup
-                value={selectedAnswerValue}
-                onValueChange={(v) => setAnswer(currentQ.questionId, v)}
-                className="space-y-2"
-              >
-                {currentQ.options.map((opt, oi) => {
-                  const isSentenceInsert = currentQ.subType === "SENTENCE_INSERT";
-                  const optionValue = isSentenceInsert ? String(oi + 1) : opt.text;
-                  const optionText = isSentenceInsert
-                    ? optionDisplayTextForSubtype(currentQ.subType, oi, opt.text)
-                    : opt.text;
-
+              (() => {
+                const questionOptions = currentQ.options ?? [];
+                // 다중 빈칸(BLANK_INFERENCE) 조합 선지 — 실제 수능 컬럼 헤더 방식.
+                // 한 그리드 + subgrid 행으로 (A)/(B) 헤더와 각 선지의 값 컬럼을
+                // 정확히 정렬한다(선지 카드 박스·라디오 동작은 그대로 유지).
+                const multiBlank =
+                  currentQ.subType === "BLANK_INFERENCE"
+                    ? multiBlankOptionMatrix(questionOptions)
+                    : null;
+                if (multiBlank) {
                   return (
-                    <label
-                      key={oi}
-                      className={cn(
-                        "flex items-center gap-3 rounded-xl border-2 p-4 cursor-pointer transition-all",
-                        selectedAnswerValue === optionValue
-                          ? "border-[#3182F6] bg-blue-50/50"
-                          : "border-[#E5E8EB] hover:border-[#3182F6]/30 hover:bg-[#F7F8FA]"
-                      )}
+                    <RadioGroup
+                      value={selectedAnswerValue}
+                      onValueChange={(v) => setAnswer(currentQ.questionId, v)}
+                      className="grid gap-y-2"
+                      style={{
+                        gridTemplateColumns: multiBlankGridTemplateColumns(
+                          multiBlank.blankCount,
+                          2, // 선행 컬럼: [라디오][선지 번호]
+                        ),
+                        columnGap: "0.75rem",
+                      }}
                     >
-                      <RadioGroupItem value={optionValue} id={`opt-${oi}`} />
-                      <span className="text-sm font-medium text-[#8B95A1] shrink-0">
-                        {opt.label}
-                      </span>
-                      <span className="text-[15px] text-[#191F28]">
-                        {optionText}
-                      </span>
-                    </label>
+                      {/* 컬럼 헤더 행 — 선지 행과 같은 border-2+p-4 인셋(투명)으로 컬럼 정렬 */}
+                      <div
+                        className="grid items-center border-2 border-transparent px-4"
+                        style={{
+                          gridColumn: "1 / -1",
+                          gridTemplateColumns: "subgrid",
+                        }}
+                      >
+                        <span aria-hidden />
+                        <span aria-hidden />
+                        {multiBlankHeaderLabels(multiBlank.blankCount).map(
+                          (label, i) => (
+                            <Fragment key={label}>
+                              {i > 0 && <span aria-hidden />}
+                              <span className="text-center text-[13px] font-semibold text-[#4E5968]">
+                                {label}
+                              </span>
+                            </Fragment>
+                          ),
+                        )}
+                      </div>
+                      {multiBlank.rows.map(({ option, values }, oi) => {
+                        // 답 값(optionValue)은 저장 원문 유지 — 표시만 컬럼 분해.
+                        const optionValue = option.text;
+                        return (
+                          <label
+                            key={oi}
+                            className={cn(
+                              "grid items-center rounded-xl border-2 p-4 cursor-pointer transition-all",
+                              selectedAnswerValue === optionValue
+                                ? "border-[#3182F6] bg-blue-50/50"
+                                : "border-[#E5E8EB] hover:border-[#3182F6]/30 hover:bg-[#F7F8FA]"
+                            )}
+                            style={{
+                              gridColumn: "1 / -1",
+                              gridTemplateColumns: "subgrid",
+                            }}
+                          >
+                            <RadioGroupItem value={optionValue} id={`opt-${oi}`} />
+                            <span className="text-sm font-medium text-[#8B95A1]">
+                              {option.label}
+                            </span>
+                            {values.map((value, vi) => (
+                              <Fragment key={vi}>
+                                {vi > 0 && (
+                                  <span className="text-center text-[13px] text-[#8B95A1]">
+                                    {MULTI_BLANK_DISPLAY_SEPARATOR}
+                                  </span>
+                                )}
+                                <span className="text-[15px] text-[#191F28]">
+                                  {value}
+                                </span>
+                              </Fragment>
+                            ))}
+                          </label>
+                        );
+                      })}
+                    </RadioGroup>
                   );
-                })}
-              </RadioGroup>
+                }
+                return (
+                  <RadioGroup
+                    value={selectedAnswerValue}
+                    onValueChange={(v) => setAnswer(currentQ.questionId, v)}
+                    className="space-y-2"
+                  >
+                    {questionOptions.map((opt, oi) => {
+                      const isSentenceInsert = currentQ.subType === "SENTENCE_INSERT";
+                      // 답 값(optionValue)은 저장 원문 유지 — 표시 텍스트만 변환한다.
+                      const optionValue = isSentenceInsert ? String(oi + 1) : opt.text;
+                      const optionText = isSentenceInsert
+                        ? optionDisplayTextForSubtype(currentQ.subType, oi, opt.text)
+                        : opt.text;
+
+                      return (
+                        <label
+                          key={oi}
+                          className={cn(
+                            "flex items-center gap-3 rounded-xl border-2 p-4 cursor-pointer transition-all",
+                            selectedAnswerValue === optionValue
+                              ? "border-[#3182F6] bg-blue-50/50"
+                              : "border-[#E5E8EB] hover:border-[#3182F6]/30 hover:bg-[#F7F8FA]"
+                          )}
+                        >
+                          <RadioGroupItem value={optionValue} id={`opt-${oi}`} />
+                          <span className="text-sm font-medium text-[#8B95A1] shrink-0">
+                            {opt.label}
+                          </span>
+                          <span className="text-[15px] text-[#191F28]">
+                            {optionText}
+                          </span>
+                        </label>
+                      );
+                    })}
+                  </RadioGroup>
+                );
+              })()
             ) : isGrammarCorrection ? (
               <div className="space-y-3">
                 {grammarCorrectionLabels.map((label) => (

@@ -111,6 +111,8 @@ export default async function WorksheetEntryPage({
       dDay={dDay}
       stages={stages}
       masteryPct={ctx.summary.masteryPct}
+      // 정답률만 넘기면 히어로가 진도를 못 보여준다 — 표본·진도까지 통째로 넘긴다(2607 §3.4)
+      mastery={ctx.summary.mastery}
       doneCount={doneCount}
       taskDone={taskDone}
       requiredMode={ctx.config.required}

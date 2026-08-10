@@ -13,7 +13,7 @@ export default async function TutorMonitorIndexPage() {
   return (
     <div className="space-y-5">
       <div>
-        <p className="text-sm font-medium text-blue-600">학습 현황</p>
+        <p className="text-sm font-medium text-blue-600">실시간 모니터</p>
         <h1 className="mt-1 text-2xl font-bold text-slate-950">프로그램별 현황</h1>
       </div>
       <div className="grid gap-3">

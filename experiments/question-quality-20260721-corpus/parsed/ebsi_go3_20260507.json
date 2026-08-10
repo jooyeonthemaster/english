@@ -1,0 +1,764 @@
+{
+ "examId": "ebsi_go3_20260507",
+ "source": "ebsi_go3_20260507_paper_eng_mun_16N8SJ4S.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 다음을 듣고, 여자가 하는 말의 목적으로 가장 적절한 것을 고르시오. ①자전거를 지정된 구역에 주차할 것을 요청하려고 ②공원 내 단체 조깅 시 소음을 자제할 것을 부탁하려고 ③자전거 이용 시 안전 장비 착용의 중요성을 강조하려고 ④공원에서 자전거 이용 시 제한 속도 준수를 당부하려",
+   "choices": [
+    "자전거를 지정된 구역에 주차할 것을 요청하려고",
+    "공원 내 단체 조깅 시 소음을 자제할 것을 부탁하려고",
+    "자전거 이용 시 안전 장비 착용의 중요성을 강조하려고",
+    "공원에서 자전거 이용 시 제한 속도 준수를 당부하려고",
+    "공사로 인해 공원 산책로 이용이 임시 중단됨을 안내하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 195
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 남자의 의견으로 가장 적절한 것을 고르시오. ①속독보다는 정독이 글의 내용 이해에 효과적이다. ②배경지식에 의존한 독해는 글의 내용을 왜곡할 수 있다. ③독서는 새로운 어휘를 자연스럽게 익히는 데 도움이 된다. ④모르는 단어의 뜻을 매번 찾는 것은 글 전체의 이해를 ",
+   "choices": [
+    "속독보다는 정독이 글의 내용 이해에 효과적이다.",
+    "배경지식에 의존한 독해는 글의 내용을 왜곡할 수 있다.",
+    "독서는 새로운 어휘를 자연스럽게 익히는 데 도움이 된다.",
+    "모르는 단어의 뜻을 매번 찾는 것은 글 전체의 이해를 어렵게 한다.",
+    "요지를 정확히 전달하기 위해 맥락에 맞는 어휘 사용이 필요하다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 205
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을 듣고, 여자가 하는 말의 요지로 가장 적절한 것을 고르시오. ①시끄러운 음악은 불안감을 더욱 증가시킨다. ②개인의 성향은 음악에 대한 취향에서 드러난다. ③배경 음악은 사람들의 대화 방식에 영향을 미친다. ④작업 중 음악 감상은 사람들의 집중력을 떨어뜨린다. ⑤음악은 듣는 ",
+   "choices": [
+    "시끄러운 음악은 불안감을 더욱 증가시킨다.",
+    "개인의 성향은 음악에 대한 취향에서 드러난다.",
+    "배경 음악은 사람들의 대화 방식에 영향을 미친다.",
+    "작업 중 음악 감상은 사람들의 집중력을 떨어뜨린다.",
+    "음악은 듣는 사람에게 특정 경험과 기억을 상기시킨다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 183
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고르시오. ⑤ ④ ③ ② ①",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 51
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 남자가 할 일로 가장 적절한 것을 고르시오. ①악기 옮기기 ②마이크 충전하기 ③마실 물 가져오기 ④여분의 배터리 챙기기 ⑤행사 안내 방송 요청하기",
+   "choices": [
+    "악기 옮기기",
+    "마이크 충전하기",
+    "마실 물 가져오기",
+    "여분의 배터리 챙기기",
+    "행사 안내 방송 요청하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 93
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 여자가 지불할 금액을 고르시오. [3점] ①$27 ②$35 ③$36 ④$40 ⑤$45",
+   "choices": [
+    "$27",
+    "$35",
+    "$36",
+    "$40",
+    "$45"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 59
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 남자가 Standup Comedy Show에 갈 수 없는 이유를 고르시오. ①직장 동료 송별회가 있어서 ②대학원 야간 수업이 있어서 ③회사 프로젝트를 준비해야 해서 ④가족과 저녁 식사를 하기로 해서 ⑤스트레스로 인해 몸이 좋지 않아서",
+   "choices": [
+    "직장 동료 송별회가 있어서",
+    "대학원 야간 수업이 있어서",
+    "회사 프로젝트를 준비해야 해서",
+    "가족과 저녁 식사를 하기로 해서",
+    "스트레스로 인해 몸이 좋지 않아서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 142
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, Big Wave Surfing Class에 관해 언급되지 않은 것을 고르시오. ①장소 ②소요 시간 ③최대 수강 인원 ④수강료 ⑤등록 방법",
+   "choices": [
+    "장소",
+    "소요 시간",
+    "최대 수강 인원",
+    "수강료",
+    "등록 방법"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 88
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. Ironveil Castle Tour에 관한 다음 내용을 듣고, 일치하지 않는 것을 고르시오. ①오전 10시부터 투어가 있다. ②왕가의 정원에서부터 성탑까지 진행된다. ③가이드는 왕과 왕비에 대한 이야기를 들려준다. ④기념품으로 책갈피를 받게 된다. ⑤티켓은 현장 구매가 가능하다.",
+   "choices": [
+    "오전 10시부터 투어가 있다.",
+    "왕가의 정원에서부터 성탑까지 진행된다.",
+    "가이드는 왕과 왕비에 대한 이야기를 들려준다.",
+    "기념품으로 책갈피를 받게 된다.",
+    "티켓은 현장 구매가 가능하다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 162
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 다음 표를 보면서 대화를 듣고, 두 사람이 구입할 빨래 바구니를 고르시오. Laundry Baskets Product Size Material Price Handles ① A Small Wood $22 ◯ ② B Medium Plastic $28 ◯ ③ C Medium Stain",
+   "choices": [
+    "A\nSmall\nWood\n$22\n◯",
+    "B\nMedium\nPlastic\n$28\n◯",
+    "C\nMedium\nStainless Steel\n$33\n☓",
+    "D\nLarge\nStainless Steel\n$38\n◯",
+    "E\nLarge\nWood\n$42\n☓"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 230
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ①I think I’ll be done before lunch time. ②Let’s go over the slides together next week. ③It takes too long to ",
+   "choices": [
+    "I think I’ll be done before lunch time.",
+    "Let’s go over the slides together next week.",
+    "It takes too long to get a response from you.",
+    "I’ll start making my slides when you’re done.",
+    "You must memorize the script for the presentation."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 285
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ①I set the tables before everyone arrived. ②I wonder if we can change to the smaller room. ③I’m afraid they’v",
+   "choices": [
+    "I set the tables before everyone arrived.",
+    "I wonder if we can change to the smaller room.",
+    "I’m afraid they’ve arrived too late at the dinner.",
+    "I’ll call the restaurant to update the reservation.",
+    "I haven’t decided which restaurant to choose yet.\n2026학년도 5월 고3 전국연합학력평가 문제지\n제 3 교시                                                                                                                                                               1"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 493
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. Woman: ①Sure. You should rest to get over your fatigue. ②Of course. I can send you the schedule I made. ③Yes,",
+   "choices": [
+    "Sure. You should rest to get over your fatigue.",
+    "Of course. I can send you the schedule I made.",
+    "Yes, I’ll consider that the next time I plan a trip.",
+    "Good. I’d like to try a guided tour like the one you took.",
+    "Actually, we canceled most of our plans because of rain."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 329
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. [3점] Man: ①Look! People wrote positive reviews about my pizza. ②Don’t worry. There are so many pizza places a",
+   "choices": [
+    "Look! People wrote positive reviews about my pizza.",
+    "Don’t worry. There are so many pizza places around here.",
+    "Well, I always put photos of the restaurant in the reviews.",
+    "Oh, no. I shouldn’t have spent so much time on social media.",
+    "Great. That could let more people know about my restaurant."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 358
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Emily가 Ryan에게 할 말로 가장 적절한 것을 고르시오. [3점] Emily: ①We’d better close the booth before it gets too late. ②Let’s get some rest first and walk around in an hour. ③Why don’t we walk quickly to see as many booths as we can?",
+   "choices": [
+    "We’d better close the booth before it gets too late.",
+    "Let’s get some rest first and walk around in an hour.",
+    "Why don’t we walk quickly to see as many booths as we can?",
+    "We should come up with fun activities to attract more visitors.",
+    "How about choosing a few booths we like and enjoying them more?\n[16 ~ 17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 394
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 여자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "importance of colors in company logos",
+    "various ways to display emotion through colors",
+    "colorrelated expressions used in the economy",
+    "influence of product colors on economic outcomes",
+    "color preferences depending on cultural backgrounds"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 265
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 색깔이 아닌 것은?",
+   "choices": [
+    "red",
+    "blue",
+    "green",
+    "white",
+    "orange\n  이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시에 \n따라 답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 104
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "대회에서 탈락한 팀의 구제를 반대하려고",
+    "규정 위반 선수의 처분 결과를 확인하려고",
+    "자세한 선수 영입의 절차에 대해 문의하려고",
+    "대회 중 선수의 영입을 허용해 줄 것을 요청하려고",
+    "상대 팀의 부정 선수 기용에 관한 조사를 촉구하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 908
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 드러난 ‘Paul’의 심경 변화로 가장 적절한 것은?",
+   "choices": [
+    "excited\n→panicked",
+    "calm\n→curious",
+    "nervous →relieved",
+    "thrilled →indifferent",
+    "annoyed →surprised"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1042
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "자녀가 음식으로 스트레스를 해소하는 것을 방관해서는 안 된다.",
+    "자녀와의 갈등을 해결하기 위한 수단으로 간식을 이용하면 안 된다.",
+    "자녀의 바른 식습관 형성을 위해 다양한 음식을 먹어 보게 해야 한다.",
+    "자녀와의 정서적 유대를 강화하기 위해 함께 식사하는 시간을 가져야 한다.",
+    "자녀의 신체적, 정서적 필요를 돌보지 않고 먹을 것으로만 달래서는 안 된다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1138
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 밑줄 친 sees without scenes가 다음 글에서 의미하는 바로 가장 적절한 것은?",
+   "choices": [
+    "simplifies visual images with its advanced brain",
+    "interprets visual stimuli depending on other senses",
+    "senses an object with its eyes while lacking a visual image",
+    "predicts possible risks before any movement appears",
+    "perceives a visual image without capturing motions"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1469
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "도시는 사람들의 의도되지 않은 개별적 행위들이 모여 스스로 생성된다.",
+    "도시는 자체적으로 주민들의 모든 수요를 충족시킬 수 있어야 한다.",
+    "도시 계획 시 특정 집단의 경제적 의도가 반영되어서는 안 된다.",
+    "도시 계획 시 개인보다 공공의 이익을 고려하는 것이 중요하다.",
+    "도시의 발전 가능성은 도시 계획의 구체성에 따라 결정된다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1191
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "difficulty in explaining how an organism acts as it wants",
+    "absurdity of viewing an organism as subordinate to its genes",
+    "power of organisms to change the environment they belong to",
+    "influence of environment on organisms’ development of agency",
+    "validity of considering individual genes as competing each other"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1417
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Unequal Visual Attention to Animals and Plants",
+    "How to Improve the Finite Visual Processing Power",
+    "Animals Evolve to Stand Out, Plants Do the Opposite",
+    "Attentional Blink: Limits of Brain in Human Evolution",
+    "Why Humans Feel Less Interested in Moving Objects"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1344
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. 다음 도표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "In both \n2022 and 2023, Japan recorded the largest amount of streams, \nfollowed by the United States.",
+    "The United States and \nIndonesia recorded identical increases in the total amount of \nstreams from 2022 to 2023, each achieving an additional 2.6 \nbillion streams.",
+    "Indonesia ranked fourth in the total amount \nof streams among the selected countries in 2022 but moved up \nto third place in 2023, surpassing South Korea.",
+    "The total \namount of streams in South Korea reached 7.3 billion in 2023, \nwhich was more than twice that of the Philippines in the same \nyear.",
+    "Among the selected countries, Mexico was the only \ncountry that did not reach 3 billion in the total amount of \nstreams in 2022, but it exceeded 3 billion in 2023."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 921
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Alan Seeger에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "멕시코시티의 풍경이 작품들에 영향을 주었다.",
+    "하버드 대학에서 낭만주의 시인들에 의해 영감을 얻었다.",
+    "제1차 세계 대전이 발발하자 프랑스 군대에 자원병으로 입대했다.",
+    "전쟁 후에 I Have a Rendezvous with Death라는 시를 썼다.",
+    "사망 후에 프랑스군으로부터 Croix de Guerre를 수여받았다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1175
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. 2026 Space Exploration Exhibition에 관한 다음 안내문의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "2층 Kepler 홀에서 진행된다.",
+    "티켓으로 박물관의 전 구역을 이용할 수 있다.",
+    "실제 달 암석을 만져 볼 수 있다.",
+    "우주선 모형들 앞에서 사진을 찍을 수 있다.",
+    "모든 방문객들이 기념품으로 펜을 받는다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 914
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. Barkfield Pawlish Grooming Studio에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "토요일에는 영업하지 않는다.",
+    "귀 청소 서비스는 무료이다.",
+    "털 종류에 따라 추가 비용이 적용될 수 있다.",
+    "반려견 간식을 제공하지 않는다.",
+    "방문을 희망하는 당일에 예약할 수 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 800
+  },
+  {
+   "qNum": 29,
+   "kind": "grammar_underline",
+   "stem": "29. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "reported more difficulties in managing",
+    "②": "themselves in the organizational culture",
+    "③": "it difficult to work from",
+    "④": "where they can work from",
+    "⑤": "chooses their daytoday work location"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1096
+  },
+  {
+   "qNum": 30,
+   "kind": "vocab_underline",
+   "stem": "30. 다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "fewer defensive compounds into the",
+    "②": "struggled to understand why mothers",
+    "③": "cultivate a particular bacterial species",
+    "④": "defensive ring around the root",
+    "⑤": "accumulate pathogenic microbes"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1315
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. Orbweaving spiders often use distinct vibrational signals to defend their webs. When a rival approaches, the resident spider will rapidly shake its web, sen",
+   "choices": [
+    "secrecy",
+    "efficiency",
+    "dishonesty",
+    "randomness",
+    "subjectivity"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1056
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. According to British economist Lionel Robbins, whether goods and services are beneficial to human welfare or not, economics should study them if they satisf",
+   "choices": [
+    "economic crisis repeats itself",
+    "economics is neutral between ends",
+    "economics should be studied within ethics",
+    "every economist speaks for his or her wants",
+    "economics cannot escape from social systems"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1192
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. In some parts of India there are temples to Sitala, who is a goddess of skin diseases. Historically, people in these regions made offerings to Sitala in ord",
+   "choices": [
+    "the widened status gap within a society",
+    "the lives of those who would otherwise be saved",
+    "the group’s inherent potential to recover independently",
+    "the local practice which has been respected for generations",
+    "the religious authority that the community sought to preserve"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1371
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. What are the relations between social determinations and subjective aesthetic experience?",
+   "choices": [
+    "humans are wired to adopt similar patterns of behavior",
+    "innate ability asserts itself independent of class distinctions",
+    "each individual contributes to the formation of a social class",
+    "every experience is already conditioned by the world outside",
+    "writers display a higher degree of sensitivity to beauty than others"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1453
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "Examples are: offcuts from making \naluminium cans; cardboard boxes or clothing; trimmings from \nprepreparing vegetables; or wood or textile offcuts from making \nfurniture.",
+    "Such “waste” was in the past often sent for \ndisposal, but increasingly producers are recycling their internal \n“waste” to save money by turning unwanted trimmings or \noffcuts back into useable raw materials.",
+    "As a result, the \nmaterials that end up in our finished products represent a \nsurprisingly small amount of what we originally took from the \nearth.",
+    "To send such materials for disposal is not only poor \nfinancial practice by the producer, from an environmental \nperspective it is criminal.",
+    "These are goodquality, clean and \neasily collectable materials that just happen to be in the wrong \nform; so recycle or recover them!\n[36 ~ 37] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1148
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. The autonomy granted to the individual in terms of free speech can be both individual (understood purely from the speaker’s point of view) and relational in",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1096
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. The belief that vision is important to driving safely is the reason why measurements of visual capability are an integral part of the test for issuing a dri",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n[38 ~ 39] 글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 적절한 \n곳을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38 ~ 39"
+    ]
+   },
+   "charLen": 1238
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. For example, in English, words like ‘eleven’ and ‘twelve’ do not directly reflect the values that they stand for, 10＋1 and 10＋2. Mathematics can be consider",
+   "choices": [
+    ") Although mathematics can be considered a universal \nlanguage, there are distinct language and cultural differences in \nhow counting systems are used. (",
+    ") However, in Chinese, \nthe number system is very logical, with words that directly \nreflect the values that are used. (",
+    ") For example, the number \n20 in Chinese, ershí, literally translates as ‘twoten’. (",
+    ") But \nit is not only the linguistic representation of numbers that differs; \nthe counting systems used also differ. (",
+    ") Although the \ndecimal system predominates today, other counting systems have \nbeen developed over time, for example, the Mayan numeral \nsystem used a base 20 system.\n* decimal: 십진법의"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1201
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. Once you plug the holes in the hose, all the water goes then out the nozzle; in your brain, this is analogous to the synapses relaying the correct messages ",
+   "choices": [
+    ") To \nunderstand how this works, think of a leaky hose that has many \nholes in it. (",
+    ") Some of the water will go through the hose \nand out the nozzle, but a lot of it will leak out the holes. (",
+    ") \nThis is what your brain is like when you first start to learn \nsomething: the water running out the holes is all the erroneous \ninformation your brain is sending to your fingers, lips, etc. (",
+    ") \nThe brain accomplishes this through changing the structure of the \nsynapse to make it easier for the correct neurons to \ncommunicate. (",
+    ") A common phrase in neuroscience is \n“neurons that fire together wire together,” meaning neurons that \ncommunicate with each other often change their structure to \nmake that communication easier. [3점]\n* analogous: 유사한"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1140
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "content\n… blocked",
+    "bored\n… prompted",
+    "relaxed\n… sustained",
+    "annoyed\n… interrupted",
+    "refreshed\n… reinforced\n[41 ~ 42] 다음 글을 읽고, 물음에 답하시오.\nFlashback to 50,000 years ago on the Serengeti, and you \nare dragging an antelope back to the village. Let us just say it \nhas cost you, metabolically speaking, 2,000 calories to stalk, \nchase and bring down the antelope. When you get back to the \nvillage, you would clearly have to consume at least 2,000 \ncalories to recover your (a) expenditure. But there is no \nguarantee that you would successfully get an antelope the \nnext time out, so if you ONLY ate to your metabolic need, \nyou wouldn’t (b) survive very long. That is when the hedonic \npart of the brain, which governs the feeling of reward kicks \nin, driving you to eat (c) more. But how do you get past the \nmechanical difficulty of a stomach packed full with 2,000 \ncalories of meat? Your brain becomes more picky, it begins to \ndesire foods that are more calorically (d) dense and more \ncalorically available, which are going to be foods high in free \nsugars and fat. What foods are high in free sugars and fat? \nDesserts.\nYour dessert stomach is an evolutionary leftover from your \ndays in the Serengeti, to make sure that even when full, you \nwere still desiring the right types of foods to ensure you \nwere able to (e) restrict your caloric intake at every meal, \nbecause there was never a guarantee of when the next meal \nwould arrive. It kept us alive in regular feastfamine cycles, \nbut has become toxic for many of us in the feastfeast \nenvironment of today.\n* antelope: 영양  ** hedonic: 쾌락과 관련된  *** famine: 굶주림"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3001
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Ancient Diet: A Healthy Solution for Today’s World",
+    "Why Is the Feastfeast Diet Beneficial in Modern Life?",
+    "The Evolutionary Roots of the Human Dessert Stomach",
+    "How Pursuit of Pleasure Through Foods Worked Against Survival",
+    "Stress in Modern Life: Why We Desire Desserts More Than Ever"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 309
+  },
+  {
+   "qNum": 42,
+   "kind": "vocab_letter",
+   "stem": "42. 밑줄 친 (a)~(e) 중에서 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {
+    "a": "He ran across the",
+    "b": "he grabbed Larry’s racket",
+    "c": "I just need to",
+    "d": "his defeat",
+    "e": "my spare"
+   },
+   "bracketChoices": {},
+   "charLen": 1979
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) - (D) - (C)",
+    "(C) - (B) - (D)",
+    "(C) - (D) - (B)",
+    "(D) - (B) - (C)",
+    "(D) - (C) - (B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 135
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a)~(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 69
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글에 관한 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "Larry는 사이드라인에서 Matthew를 응원하고 있었다.",
+    "Larry의 라켓은 Matthew의 것보다 더 무거웠다.",
+    "상대는 미소를 지으며 Matthew에게 손을 내밀었다.",
+    "Matthew는 경기 중에 라켓 줄이 끊어진 적이 이전에 있었다.",
+    "심판은 Matthew가 고민하는 동안 잠시 중단을 선언했다.\n※ 확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)했는지 확인\n하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 249
+  }
+ ],
+ "sourcePdf": "ebsi_go3_20260507_paper_eng_mun_16N8SJ4S.pdf"
+}

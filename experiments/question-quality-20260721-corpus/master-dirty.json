@@ -1,0 +1,362 @@
+[
+  {
+    "id": "2027_06_5095396-q30",
+    "planted": "thick",
+    "original": "thin"
+  },
+  {
+    "id": "2027_06_5095396-q41-42",
+    "planted": "obey",
+    "original": "defy"
+  },
+  {
+    "id": "2026_06_5090182-q30",
+    "planted": "temporary",
+    "original": "lasting"
+  },
+  {
+    "id": "2026_06_5090182-q41-42",
+    "planted": "distinguishable",
+    "original": "indistinguishable"
+  },
+  {
+    "id": "2026_09_5091403-q30",
+    "planted": "insignificant",
+    "original": "significant"
+  },
+  {
+    "id": "2026_09_5091403-q41-42",
+    "planted": "less routine",
+    "original": "more routine"
+  },
+  {
+    "id": "2026_SN_5093799-q30",
+    "planted": "abandon",
+    "original": "gain"
+  },
+  {
+    "id": "2026_SN_5093799-q41-42",
+    "planted": "unlikely",
+    "original": "likely"
+  },
+  {
+    "id": "2025_06_5086961-q30",
+    "planted": "drives",
+    "original": "undermines"
+  },
+  {
+    "id": "2025_06_5086961-q41-42",
+    "planted": "coincide",
+    "original": "conflict"
+  },
+  {
+    "id": "2025_09_5087695-q30",
+    "planted": "rationality",
+    "original": "irrationality"
+  },
+  {
+    "id": "2025_09_5087695-q41-42",
+    "planted": "sensitive",
+    "original": "insensitive"
+  },
+  {
+    "id": "2025_SN_5089362-q30",
+    "planted": "stronger",
+    "original": "weaker"
+  },
+  {
+    "id": "2025_SN_5089362-q41-42",
+    "planted": "excludes",
+    "original": "requires"
+  },
+  {
+    "id": "2024_06_5084521-q41-42",
+    "planted": "block",
+    "original": "facilitate"
+  },
+  {
+    "id": "2024_09_5085155-q30",
+    "planted": "countered",
+    "original": "created"
+  },
+  {
+    "id": "2024_09_5085155-q41-42",
+    "planted": "challenging",
+    "original": "easy"
+  },
+  {
+    "id": "2024_SN_5086091-q30",
+    "planted": "low",
+    "original": "high"
+  },
+  {
+    "id": "2023_06_5076592-q30",
+    "planted": "accommodating",
+    "original": "managing"
+  },
+  {
+    "id": "2023_09_5077481-q30",
+    "planted": "diminished",
+    "original": "compounded"
+  },
+  {
+    "id": "2023_09_5077481-q41-42",
+    "planted": "rapidly",
+    "original": "gradually"
+  },
+  {
+    "id": "2023_SN_5080827-q30",
+    "planted": "maintain",
+    "original": "delay"
+  },
+  {
+    "id": "2023_SN_5080827-q41-42",
+    "planted": "relaxed",
+    "original": "stressed"
+  },
+  {
+    "id": "2022_06_5063572-q30",
+    "planted": "increase",
+    "original": "reduce"
+  },
+  {
+    "id": "2022_06_5063572-q41-42",
+    "planted": "easier",
+    "original": "harder"
+  },
+  {
+    "id": "2022_09_5064693-q30",
+    "planted": "seized",
+    "original": "missed"
+  },
+  {
+    "id": "2022_09_5064693-q41-42",
+    "planted": "different",
+    "original": "similar"
+  },
+  {
+    "id": "2022_SN_5070164-q30",
+    "planted": "benefits",
+    "original": "limits"
+  },
+  {
+    "id": "2021_06_5049916-q30",
+    "planted": "improbable",
+    "original": "possible"
+  },
+  {
+    "id": "2021_06_5049916-q41-42",
+    "planted": "decrease",
+    "original": "increase"
+  },
+  {
+    "id": "2021_09_5050886-q30",
+    "planted": "inappropriate",
+    "original": "appropriate"
+  },
+  {
+    "id": "2021_09_5050886-q41-42",
+    "planted": "close",
+    "original": "little"
+  },
+  {
+    "id": "2021_SN_5061633-q30",
+    "planted": "lacked",
+    "original": "had"
+  },
+  {
+    "id": "2021_SN_5061633-q41-42",
+    "planted": "complex",
+    "original": "simple"
+  },
+  {
+    "id": "2020_06_5037373-q30",
+    "planted": "forbid",
+    "original": "motivate"
+  },
+  {
+    "id": "2020_06_5037373-q41-42",
+    "planted": "promising",
+    "original": "dangerous"
+  },
+  {
+    "id": "2020_09_5038442-q30",
+    "planted": "optional",
+    "original": "essential"
+  },
+  {
+    "id": "2020_09_5038442-q41-42",
+    "planted": "extended",
+    "original": "limited"
+  },
+  {
+    "id": "2020_SN_5045859-q30",
+    "planted": "denying",
+    "original": "accepting"
+  },
+  {
+    "id": "2020_SN_5045859-q41-42",
+    "planted": "Uncertainty",
+    "original": "Understanding"
+  },
+  {
+    "id": "2019_06_5023285-q41-42",
+    "planted": "disregarded",
+    "original": "revered"
+  },
+  {
+    "id": "2019_09_5024244-q41-42",
+    "planted": "randomly",
+    "original": "selectively"
+  },
+  {
+    "id": "2019_SN_5031122-q41-42",
+    "planted": "promoted",
+    "original": "disrupted"
+  },
+  {
+    "id": "2018_SN_5019793-q29",
+    "planted": "found",
+    "original": "lost"
+  },
+  {
+    "id": "2016_09_5000516-q29",
+    "planted": "absence",
+    "original": "presence"
+  },
+  {
+    "id": "2015_09_3027897-q29",
+    "planted": "maximum",
+    "original": "minimum"
+  },
+  {
+    "id": "2014_YB_5006654_B-q28",
+    "planted": "insufficient",
+    "original": "sufficient"
+  },
+  {
+    "id": "2014_YB_5006654_A-q32",
+    "planted": "insufficient",
+    "original": "sufficient"
+  },
+  {
+    "id": "2014_09_3020142_A-q28",
+    "planted": "follow",
+    "original": "resist"
+  },
+  {
+    "id": "2014_09_3020142_B-q28",
+    "planted": "follow",
+    "original": "resist"
+  },
+  {
+    "id": "2014_SN_3022251_B-q28",
+    "planted": "evade",
+    "original": "assume"
+  },
+  {
+    "id": "2013_06_3008953-q32",
+    "planted": "reduce",
+    "original": "increase"
+  },
+  {
+    "id": "2013_09_3011547-q31",
+    "planted": "a cause",
+    "original": "a consequence"
+  },
+  {
+    "id": "2012_06_3001254-q33",
+    "planted": "flourished",
+    "original": "declined"
+  },
+  {
+    "id": "2012_09_3008944-q33",
+    "planted": "curable",
+    "original": "incurable"
+  },
+  {
+    "id": "2012_SN_3001002-q32",
+    "planted": "slower",
+    "original": "faster"
+  },
+  {
+    "id": "2011_06_3001235-q21",
+    "planted": "himself",
+    "original": "him"
+  },
+  {
+    "id": "2011_06_3001235-q31",
+    "planted": "unselfish",
+    "original": "selfish"
+  },
+  {
+    "id": "2011_09_3001251-q32",
+    "planted": "well",
+    "original": "badly"
+  },
+  {
+    "id": "2011_SN_3000996-q32",
+    "planted": "neglects",
+    "original": "enhances"
+  },
+  {
+    "id": "2008_06_3001212-q29",
+    "planted": "front",
+    "original": "rear"
+  },
+  {
+    "id": "2008_09_3001186-q29",
+    "planted": "increase",
+    "original": "decrease"
+  },
+  {
+    "id": "2007_06_3001177-q35",
+    "planted": "loosens",
+    "original": "stiffens"
+  },
+  {
+    "id": "2007_09_3001172-q28",
+    "planted": "characteristic",
+    "original": "momentary"
+  },
+  {
+    "id": "2006_09_3001166-q28",
+    "planted": "abundant",
+    "original": "scarce"
+  },
+  {
+    "id": "2006_SN_3000977-q30",
+    "planted": "enhance",
+    "original": "eliminate"
+  },
+  {
+    "id": "2024_SN_5086091-q41-42",
+    "planted": "running the risk of being misquoted",
+    "original": "avoiding the risk of being misquoted"
+  },
+  {
+    "id": "2022_SN_5070164-q41-42",
+    "planted": "abstract",
+    "original": "obvious"
+  },
+  {
+    "id": "2013_SN_3014708-q30",
+    "planted": "deny",
+    "original": "recognize"
+  },
+  {
+    "id": "2019_SN_5031122-q30",
+    "planted": "laboriously",
+    "original": "easily"
+  },
+  {
+    "id": "2008_06_3001212-q22",
+    "planted": "during",
+    "original": "for"
+  },
+  {
+    "id": "2008_09_3001186-q28",
+    "planted": "direct",
+    "original": "indirect"
+  }
+]

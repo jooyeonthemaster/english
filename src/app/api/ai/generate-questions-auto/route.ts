@@ -240,7 +240,15 @@ export async function POST(request: NextRequest) {
     }
 
     const taggedQuestions = allQuestions.map((question) =>
-      withQuestionGenerationPlanMetadata(question, generationPlan),
+      // 엔진의 문항별 스탬프(_generationPlan)를 우선한다 — KO 동결 등으로 실제
+      // 실행 레인이 요청 플랜과 다를 수 있다(fast/trigger 경로와 동일 규칙).
+      withQuestionGenerationPlanMetadata(
+        question,
+        normalizeQuestionGenerationPlan(
+          (question as { _generationPlan?: unknown })._generationPlan ??
+            generationPlan,
+        ),
+      ),
     );
 
     // 계획(Step 1) + 유형별 생성(Step 2)의 모든 AI 호출 토큰을 원가 기록.

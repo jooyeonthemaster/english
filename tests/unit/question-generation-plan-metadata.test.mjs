@@ -93,8 +93,8 @@ test("question generation plan metadata unifies pricing and preserves tags", () 
     const result = JSON.parse(raw);
 
     assert.equal(result.standardCost, 7);
-    // 상품 단일화(W2-E): 2x 프리미엄 멀티플라이어 폐지 — 플랜 무관 단일가.
-    assert.equal(result.premiumCost, 7);
+    // 이원 요금 v2(26-07-22 사용자 확정): PREMIUM = 2배 부활(O213 3.6 프리미엄).
+    assert.equal(result.premiumCost, 14);
     assert.deepEqual(result.premiumTags, ["프리미엄 생성", "빈칸 추론"]);
     assert.equal(result.premiumPlanFromTags, "PREMIUM");
     assert.equal(result.enrichedPlan, "PREMIUM");
@@ -112,8 +112,8 @@ test("question generation plan metadata unifies pricing and preserves tags", () 
     assert.equal(result.inheritedTypePlan, "STANDARD");
     assert.equal(result.mappedTypePlan, "PREMIUM");
     assert.equal(result.mappedTypeDifficulty, "KILLER");
-    // 상품 단일화(W2-E): 유형 설정이 PREMIUM 이어도 단가는 baseCost 단일가.
-    assert.equal(result.mappedTypeCreditCost, 7);
+    // 이원 요금 v2: 유형 설정이 PREMIUM 이면 유형별 단가도 2배를 따른다.
+    assert.equal(result.mappedTypeCreditCost, 14);
   } finally {
     rmSync(harnessPath, { force: true });
   }
@@ -128,12 +128,12 @@ test("premium generation plan is wired through generation and review surfaces", 
     [
       "src/app/api/ai/generate-question/route.ts",
       [
-        // 상품 단일화(W2-E): 플랜은 유형이 결정 — 클라 questionTypeSettings.
-        // generationPlan 을 읽던 readQuestionTypeGenerationPlanSetting 호출 폐지.
-        "resolveUnifiedGenerationPlan(questionType)",
+        // 단일 상품(26-07-21): 결정 함수 단일 소스. 저장 스탬프는 엔진의 문항별
+        // _generationPlan 을 우선한다(KO 동결 정합).
+        "resolveEffectiveGenerationPlan(",
         "readQuestionTypeDifficultySetting(",
         "getQuestionGenerationCreditCost(CREDIT_COSTS[operationType], generationPlan)",
-        "withQuestionGenerationPlanMetadata(question, generationPlan)",
+        "withQuestionGenerationPlanMetadata(",
       ],
     ],
     [
@@ -141,15 +141,16 @@ test("premium generation plan is wired through generation and review surfaces", 
       [
         "const generationPlan = normalizeQuestionGenerationPlan(rawGenerationPlan);",
         "getQuestionGenerationCreditCost(",
-        "withQuestionGenerationPlanMetadata(question, generationPlan)",
+        // 엔진의 문항별 스탬프 우선(KO 동결 정합) — 26-07-20.
+        "withQuestionGenerationPlanMetadata(",
+        "._generationPlan ??",
       ],
     ],
     [
       "src/app/api/workbench/ai-jobs/question-generation/fast/route.ts",
       [
-        "const effectiveGenerationPlan =",
-        // 상품 단일화(W2-E): 유형 기반 라우팅 — 클라 플랜 지정 무력화.
-        "resolveUnifiedGenerationPlan(config.questionType)",
+        // 단일 상품(26-07-21): 결정 함수 단일 소스.
+        "resolveEffectiveGenerationPlan(",
         "readQuestionTypeDifficultySetting(",
         "getQuestionGenerationCreditCost(",
         "mergeQuestionGenerationPlanTag(",
@@ -160,9 +161,8 @@ test("premium generation plan is wired through generation and review surfaces", 
     [
       "src/trigger/workbench-question-generation.ts",
       [
-        "const effectiveGenerationPlan =",
-        // 상품 단일화(W2-E): 유형 기반 라우팅 — 저장된 config 플랜 지정 무력화.
-        "resolveUnifiedGenerationPlan(config.questionType)",
+        // 단일 상품(26-07-21): 결정 함수 단일 소스.
+        "resolveEffectiveGenerationPlan(",
         "readQuestionTypeDifficultySetting(",
         "getQuestionGenerationCreditCost(",
         "mergeQuestionGenerationPlanTag(",
@@ -185,7 +185,10 @@ test("premium generation plan is wired through generation and review surfaces", 
       // 가드하지 않는다(서버측 읽기 로직은 아래 shared.ts 엔트리로 별도 가드).
       "src/app/(director)/director/workbench/generate/generation-config-panel-parts/type-numeric-detail.tsx",
       [
-        "questionTypeSettings[typeId]?.difficulty",
+        // @ts-nocheck 제거(2라운드)로 읽기가 형상 좁힘 캐스트를 경유하지만
+        // 의미는 동일: typeId 인덱싱 + ?.difficulty 옵셔널 읽기 + 패치 쓰기.
+        "questionTypeSettings[typeId]",
+        ")?.difficulty",
         "patchTypeSettings(typeId, { difficulty:",
       ],
     ],

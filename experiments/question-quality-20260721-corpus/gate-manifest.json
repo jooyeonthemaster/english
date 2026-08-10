@@ -1,0 +1,3111 @@
+{
+  "A": [
+    {
+      "shard": "A001",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "2027_06_5095396-q30",
+          "planted": "thick",
+          "corrected": "thin"
+        },
+        {
+          "r": "R2",
+          "id": "2027_06_5095396-q41-42",
+          "planted": "obey",
+          "corrected": "defy"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go1_20260324-q29",
+          "planted": "helps",
+          "corrected": "help"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go1_20260324-q30",
+          "planted": "the same",
+          "corrected": "the opposite"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go1_20260604-q29",
+          "planted": "having",
+          "corrected": "have"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go1_20260604-q30",
+          "planted": "confuse",
+          "corrected": "help"
+        }
+      ]
+    },
+    {
+      "shard": "A002",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go2_20260324-q29",
+          "planted": "occurring",
+          "corrected": "occurred"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go2_20260324-q30",
+          "planted": "facilitating",
+          "corrected": "limiting"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go2_20260604-q29",
+          "planted": "producing",
+          "corrected": "produced"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go2_20260604-q30",
+          "planted": "more sensitive to price than to additional performance",
+          "corrected": "less sensitive to price than to additional performance"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go3_20260324-q29",
+          "planted": "which",
+          "corrected": "in which"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go3_20260324-q30",
+          "planted": "acknowledges",
+          "corrected": "ignores"
+        }
+      ]
+    },
+    {
+      "shard": "A003",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go3_20260507-q29",
+          "planted": "chooses",
+          "corrected": "to choose"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go3_20260507-q30",
+          "planted": "accumulate",
+          "corrected": "exclude"
+        },
+        {
+          "r": "R3",
+          "id": "2026_06_5090182-q30",
+          "planted": "temporary",
+          "corrected": "lasting"
+        },
+        {
+          "r": "R4",
+          "id": "2026_06_5090182-q41-42",
+          "planted": "distinguishable",
+          "corrected": "indistinguishable"
+        },
+        {
+          "r": "R5",
+          "id": "2026_09_5091403-q30",
+          "planted": "insignificant",
+          "corrected": "significant"
+        },
+        {
+          "r": "R6",
+          "id": "2026_09_5091403-q41-42",
+          "planted": "less routine",
+          "corrected": "more routine"
+        }
+      ]
+    },
+    {
+      "shard": "A004",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "2026_SN_5093799-q30",
+          "planted": "abandon",
+          "corrected": "gain"
+        },
+        {
+          "r": "R2",
+          "id": "2026_SN_5093799-q41-42",
+          "planted": "unlikely",
+          "corrected": "likely"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go1_20250326-q30",
+          "planted": "uninterested",
+          "corrected": "interested"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go1_20250604-q29",
+          "planted": "having",
+          "corrected": "have"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go1_20250604-q30",
+          "planted": "low",
+          "corrected": "high"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go1_20250903-q29",
+          "planted": "putting",
+          "corrected": "put"
+        }
+      ]
+    },
+    {
+      "shard": "A005",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go1_20250903-q30",
+          "planted": "increased",
+          "corrected": "decreased"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go1_20251014-q30",
+          "planted": "beneficial",
+          "corrected": "harmful"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go2_20250326-q29",
+          "planted": "does",
+          "corrected": "do"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go2_20250326-q30",
+          "planted": "discouraged",
+          "corrected": "encouraged"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go2_20250604-q29",
+          "planted": "has",
+          "corrected": "have"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go2_20250903-q29",
+          "planted": "depend",
+          "corrected": "depends"
+        }
+      ]
+    },
+    {
+      "shard": "A006",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go2_20250903-q30",
+          "planted": "efficient",
+          "corrected": "inefficient"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go2_20251014-q29",
+          "planted": "give",
+          "corrected": "giving"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go2_20251014-q30",
+          "planted": "rejecting",
+          "corrected": "accepting"
+        },
+        {
+          "r": "R4",
+          "id": "2025_06_5086961-q30",
+          "planted": "drives",
+          "corrected": "undermines"
+        },
+        {
+          "r": "R5",
+          "id": "2025_06_5086961-q41-42",
+          "planted": "coincide",
+          "corrected": "conflict"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go3_20250710-q29",
+          "planted": "require",
+          "corrected": "required"
+        }
+      ]
+    },
+    {
+      "shard": "A007",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go3_20250710-q30",
+          "planted": "decreases",
+          "corrected": "increases"
+        },
+        {
+          "r": "R2",
+          "id": "2025_09_5087695-q30",
+          "planted": "rationality",
+          "corrected": "irrationality"
+        },
+        {
+          "r": "R3",
+          "id": "2025_09_5087695-q41-42",
+          "planted": "sensitive",
+          "corrected": "insensitive"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go3_20251014-q29",
+          "planted": "which",
+          "corrected": "by which"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go3_20251014-q30",
+          "planted": "forbidden",
+          "corrected": "obliged"
+        },
+        {
+          "r": "R6",
+          "id": "2025_SN_5089362-q30",
+          "planted": "stronger",
+          "corrected": "weaker"
+        }
+      ]
+    },
+    {
+      "shard": "A008",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "2025_SN_5089362-q41-42",
+          "planted": "excludes",
+          "corrected": "requires"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go1_20240328-q29",
+          "planted": "to count",
+          "corrected": "count"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go1_20240604-q29",
+          "planted": "what",
+          "corrected": "that"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go1_20240604-q30",
+          "planted": "disappears",
+          "corrected": "appears"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go1_20240904-q30",
+          "planted": "inefficient",
+          "corrected": "efficient"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go1_20241015-q29",
+          "planted": "what",
+          "corrected": "that"
+        }
+      ]
+    },
+    {
+      "shard": "A009",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go1_20241015-q30",
+          "planted": "less",
+          "corrected": "more"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go2_20240328-q29",
+          "planted": "using",
+          "corrected": "used"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go2_20240328-q30",
+          "planted": "cultivate",
+          "corrected": "thwart"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go2_20240604-q29",
+          "planted": "smiling",
+          "corrected": "smile"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go2_20240604-q30",
+          "planted": "accelerate",
+          "corrected": "slow"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go2_20240904-q30",
+          "planted": "reduced",
+          "corrected": "improved"
+        }
+      ]
+    },
+    {
+      "shard": "A010",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go2_20241015-q29",
+          "planted": "have given",
+          "corrected": "have been given"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go2_20241015-q30",
+          "planted": "least",
+          "corrected": "most"
+        },
+        {
+          "r": "R3",
+          "id": "2024_06_5084521-q41-42",
+          "planted": "block",
+          "corrected": "facilitate"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go3_20240711-q29",
+          "planted": "blooming",
+          "corrected": "bloom"
+        },
+        {
+          "r": "R5",
+          "id": "2024_09_5085155-q30",
+          "planted": "countered",
+          "corrected": "created"
+        },
+        {
+          "r": "R6",
+          "id": "2024_09_5085155-q41-42",
+          "planted": "challenging",
+          "corrected": "easy"
+        }
+      ]
+    },
+    {
+      "shard": "A011",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go3_20241015-q29",
+          "planted": "last",
+          "corrected": "lasting"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go3_20241015-q30",
+          "planted": "extends",
+          "corrected": "expires"
+        },
+        {
+          "r": "R3",
+          "id": "2024_SN_5086091-q30",
+          "planted": "low",
+          "corrected": "high"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go1_20230323-q29",
+          "planted": "are",
+          "corrected": "is"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go1_20230601-q29",
+          "planted": "being",
+          "corrected": "is"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go1_20230601-q30",
+          "planted": "increased",
+          "corrected": "decreased"
+        }
+      ]
+    },
+    {
+      "shard": "A012",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go1_20230906-q29",
+          "planted": "themselves",
+          "corrected": "them"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go1_20230906-q30",
+          "planted": "easy",
+          "corrected": "difficult"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go1_20231219-q29",
+          "planted": "lack",
+          "corrected": "lacking"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go1_20231219-q30",
+          "planted": "maintained",
+          "corrected": "replaced"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go2_20230323-q29",
+          "planted": "generating",
+          "corrected": "generate"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go2_20230323-q30",
+          "planted": "deny",
+          "corrected": "assume"
+        }
+      ]
+    },
+    {
+      "shard": "A013",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go2_20230601-q29",
+          "planted": "ask",
+          "corrected": "are asked"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go2_20230906-q29",
+          "planted": "reach",
+          "corrected": "to reach"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go2_20231219-q29",
+          "planted": "showed",
+          "corrected": "showing"
+        },
+        {
+          "r": "R4",
+          "id": "2023_06_5076592-q30",
+          "planted": "accommodating",
+          "corrected": "managing"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go3_20230711-q29",
+          "planted": "being",
+          "corrected": "are"
+        },
+        {
+          "r": "R6",
+          "id": "2023_09_5077481-q30",
+          "planted": "diminished",
+          "corrected": "compounded"
+        }
+      ]
+    },
+    {
+      "shard": "A014",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "2023_09_5077481-q41-42",
+          "planted": "rapidly",
+          "corrected": "gradually"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go3_20231012-q29",
+          "planted": "becoming",
+          "corrected": "became"
+        },
+        {
+          "r": "R3",
+          "id": "2023_SN_5080827-q30",
+          "planted": "maintain",
+          "corrected": "delay"
+        },
+        {
+          "r": "R4",
+          "id": "2023_SN_5080827-q41-42",
+          "planted": "relaxed",
+          "corrected": "stressed"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go1_20220324-q29",
+          "planted": "what",
+          "corrected": "that"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go1_20220324-q30",
+          "planted": "welcomed",
+          "corrected": "rejected"
+        }
+      ]
+    },
+    {
+      "shard": "A015",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go1_20220609-q29",
+          "planted": "dependently",
+          "corrected": "dependent"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go1_20221123-q29",
+          "planted": "are",
+          "corrected": "do"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go1_20221123-q30",
+          "planted": "faster",
+          "corrected": "more slowly"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go1_20220901-q29",
+          "planted": "has been outsourced",
+          "corrected": "have been outsourced"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go1_20220901-q30",
+          "planted": "less",
+          "corrected": "more"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go2_20220324-q29",
+          "planted": "risk",
+          "corrected": "risks"
+        }
+      ]
+    },
+    {
+      "shard": "A016",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go2_20220324-q30",
+          "planted": "corresponds with",
+          "corrected": "conflicts with"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go2_20221123-q29",
+          "planted": "are",
+          "corrected": "is"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go2_20220901-q29",
+          "planted": "fascinated",
+          "corrected": "fascinating"
+        },
+        {
+          "r": "R4",
+          "id": "2022_06_5063572-q30",
+          "planted": "increase",
+          "corrected": "reduce"
+        },
+        {
+          "r": "R5",
+          "id": "2022_06_5063572-q41-42",
+          "planted": "easier",
+          "corrected": "harder"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go3_20220706-q29",
+          "planted": "have taught",
+          "corrected": "taught"
+        }
+      ]
+    },
+    {
+      "shard": "A017",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "2022_09_5064693-q30",
+          "planted": "seized",
+          "corrected": "missed"
+        },
+        {
+          "r": "R2",
+          "id": "2022_09_5064693-q41-42",
+          "planted": "different",
+          "corrected": "similar"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go3_20221012-q30",
+          "planted": "rejected",
+          "corrected": "accepted"
+        },
+        {
+          "r": "R4",
+          "id": "2022_SN_5070164-q30",
+          "planted": "benefits",
+          "corrected": "limits"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go1_20210325-q29",
+          "planted": "are",
+          "corrected": "is"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go1_20210325-q30",
+          "planted": "increase",
+          "corrected": "decrease"
+        }
+      ]
+    },
+    {
+      "shard": "A018",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go1_20210831-q30",
+          "planted": "high",
+          "corrected": "low"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go1_20211124-q29",
+          "planted": "occurring",
+          "corrected": "occur"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go1_20211124-q30",
+          "planted": "capturing",
+          "corrected": "releasing"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go2_20210325-q29",
+          "planted": "which",
+          "corrected": "in which"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go2_20210325-q30",
+          "planted": "avoid",
+          "corrected": "maintain"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go2_20210603-q29",
+          "planted": "gives",
+          "corrected": "given"
+        }
+      ]
+    },
+    {
+      "shard": "A019",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go2_20210603-q30",
+          "planted": "unpredictable",
+          "corrected": "predictable"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go2_20210831-q29",
+          "planted": "has",
+          "corrected": "have"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go2_20211124-q29",
+          "planted": "creating",
+          "corrected": "create"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go2_20211124-q30",
+          "planted": "strengthens",
+          "corrected": "weakens"
+        },
+        {
+          "r": "R5",
+          "id": "2021_06_5049916-q30",
+          "planted": "improbable",
+          "corrected": "possible"
+        },
+        {
+          "r": "R6",
+          "id": "2021_06_5049916-q41-42",
+          "planted": "decrease",
+          "corrected": "increase"
+        }
+      ]
+    },
+    {
+      "shard": "A020",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go3_20210707-q29",
+          "planted": "believes",
+          "corrected": "believing"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go3_20210707-q30",
+          "planted": "outdated",
+          "corrected": "dominant"
+        },
+        {
+          "r": "R3",
+          "id": "2021_09_5050886-q30",
+          "planted": "inappropriate",
+          "corrected": "appropriate"
+        },
+        {
+          "r": "R4",
+          "id": "2021_09_5050886-q41-42",
+          "planted": "close",
+          "corrected": "little"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go3_20211012-q29",
+          "planted": "approached",
+          "corrected": "approaching"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go3_20211012-q30",
+          "planted": "increase",
+          "corrected": "reduce"
+        }
+      ]
+    },
+    {
+      "shard": "A021",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "2021_SN_5061633-q30",
+          "planted": "lacked",
+          "corrected": "had"
+        },
+        {
+          "r": "R2",
+          "id": "2021_SN_5061633-q41-42",
+          "planted": "complex",
+          "corrected": "simple"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go1_20200618-q29",
+          "planted": "arguing",
+          "corrected": "argues"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go1_20200916-q29",
+          "planted": "gave",
+          "corrected": "were given"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go1_20201118-q29",
+          "planted": "pleasantly",
+          "corrected": "pleasant"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go2_20200312-q29",
+          "planted": "tends",
+          "corrected": "tend"
+        }
+      ]
+    },
+    {
+      "shard": "A022",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go2_20200312-q30",
+          "planted": "disproved",
+          "corrected": "supported"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go2_20200618-q30",
+          "planted": "hard-earned",
+          "corrected": "easy"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go2_20200916-q29",
+          "planted": "to be",
+          "corrected": "is"
+        },
+        {
+          "r": "R4",
+          "id": "2020_06_5037373-q30",
+          "planted": "forbid",
+          "corrected": "motivate"
+        },
+        {
+          "r": "R5",
+          "id": "2020_06_5037373-q41-42",
+          "planted": "promising",
+          "corrected": "dangerous"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go3_20200722-q29",
+          "planted": "lacking",
+          "corrected": "lack"
+        }
+      ]
+    },
+    {
+      "shard": "A023",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go3_20200722-q30",
+          "planted": "overvalue",
+          "corrected": "undervalue"
+        },
+        {
+          "r": "R2",
+          "id": "2020_09_5038442-q30",
+          "planted": "optional",
+          "corrected": "essential"
+        },
+        {
+          "r": "R3",
+          "id": "2020_09_5038442-q41-42",
+          "planted": "extended",
+          "corrected": "limited"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go3_20201027-q29",
+          "planted": "promoting",
+          "corrected": "promote"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go3_20201027-q30",
+          "planted": "weakness",
+          "corrected": "strength"
+        },
+        {
+          "r": "R6",
+          "id": "2020_SN_5045859-q30",
+          "planted": "denying",
+          "corrected": "accepting"
+        }
+      ]
+    },
+    {
+      "shard": "A024",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "2020_SN_5045859-q41-42",
+          "planted": "Uncertainty",
+          "corrected": "Understanding"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go1_20190604-q29",
+          "planted": "do",
+          "corrected": "does"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go1_20190904-q29",
+          "planted": "ensure",
+          "corrected": "ensures"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go2_20190307-q28",
+          "planted": "its",
+          "corrected": "whose"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go2_20190604-q29",
+          "planted": "hiring",
+          "corrected": "hires"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go2_20190904-q29",
+          "planted": "which",
+          "corrected": "for which"
+        }
+      ]
+    },
+    {
+      "shard": "A025",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go2_20191120-q29",
+          "planted": "interested",
+          "corrected": "interesting"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go2_20191120-q30",
+          "planted": "is sacrificial",
+          "corrected": "are sacrificial"
+        },
+        {
+          "r": "R3",
+          "id": "2019_06_5023285-q41-42",
+          "planted": "disregarded",
+          "corrected": "revered"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go3_20190710-q28",
+          "planted": "leads",
+          "corrected": "lead"
+        },
+        {
+          "r": "R5",
+          "id": "2019_09_5024244-q41-42",
+          "planted": "randomly",
+          "corrected": "selectively"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go3_20191015-q29",
+          "planted": "sends",
+          "corrected": "sending"
+        }
+      ]
+    },
+    {
+      "shard": "A026",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go3_20191015-q30",
+          "planted": "problematic",
+          "corrected": "unproblematic"
+        },
+        {
+          "r": "R2",
+          "id": "2019_SN_5031122-q41-42",
+          "planted": "promoted",
+          "corrected": "disrupted"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go1_20180308-q30",
+          "planted": "comfort",
+          "corrected": "hurt"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go1_20180905-q28",
+          "planted": "seems",
+          "corrected": "seem"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go1_20180905-q29",
+          "planted": "similar",
+          "corrected": "different"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go1_20181121-q28",
+          "planted": "convenient",
+          "corrected": "conveniently"
+        }
+      ]
+    },
+    {
+      "shard": "A027",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go2_20180308-q28",
+          "planted": "has",
+          "corrected": "have"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go2_20180308-q29",
+          "planted": "reluctant",
+          "corrected": "willing"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go2_20180905-q28",
+          "planted": "filled",
+          "corrected": "filling"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go3_20180711-q28",
+          "planted": "which",
+          "corrected": "from which"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go3_20181016-q28",
+          "planted": "humiliated",
+          "corrected": "humiliating"
+        },
+        {
+          "r": "R6",
+          "id": "2018_SN_5019793-q29",
+          "planted": "found",
+          "corrected": "lost"
+        }
+      ]
+    },
+    {
+      "shard": "A028",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go1_20170309-q28",
+          "planted": "cutting",
+          "corrected": "cut"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go1_20170601-q28",
+          "planted": "mean",
+          "corrected": "means"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go1_20171122-q28",
+          "planted": "that",
+          "corrected": "what"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go2_20170309-q28",
+          "planted": "being",
+          "corrected": "be"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go2_20170601-q28",
+          "planted": "do",
+          "corrected": "are"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go2_20170601-q29",
+          "planted": "relieved",
+          "corrected": "frustrated"
+        }
+      ]
+    },
+    {
+      "shard": "A029",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go3_20170712-q28",
+          "planted": "relaxation",
+          "corrected": "vigilance"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go3_20170712-q29",
+          "planted": "having",
+          "corrected": "had"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go3_20171017-q28",
+          "planted": "which",
+          "corrected": "that"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go1_20160310-q28",
+          "planted": "what",
+          "corrected": "that"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go1_20160901-q28",
+          "planted": "become",
+          "corrected": "becomes"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go2_20160310-q28",
+          "planted": "what",
+          "corrected": "that"
+        }
+      ]
+    },
+    {
+      "shard": "A030",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go2_20160602-q28",
+          "planted": "collecting",
+          "corrected": "collect"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go2_20160901-q28",
+          "planted": "is",
+          "corrected": "does"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go2_20161123-q28",
+          "planted": "provoking",
+          "corrected": "provoked"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go3_20160706-q28",
+          "planted": "depending",
+          "corrected": "depends"
+        },
+        {
+          "r": "R5",
+          "id": "2016_09_5000516-q29",
+          "planted": "absence",
+          "corrected": "presence"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go3_20161011-q29",
+          "planted": "follow conventions",
+          "corrected": "break conventions"
+        }
+      ]
+    },
+    {
+      "shard": "A031",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go1_20150311-q28",
+          "planted": "what",
+          "corrected": "that"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go1_20150902-q29",
+          "planted": "realizing",
+          "corrected": "realized"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go1_20151117-q28",
+          "planted": "engaging",
+          "corrected": "engage"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go2_20150311_A-q28",
+          "planted": "leave",
+          "corrected": "leaving"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go2_20150604-q28",
+          "planted": "paid",
+          "corrected": "are paid"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go2_20150902-q28",
+          "planted": "knowing",
+          "corrected": "knows"
+        }
+      ]
+    },
+    {
+      "shard": "A032",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go3_20150709-q28",
+          "planted": "tending",
+          "corrected": "tend"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go3_20150709-q30",
+          "planted": "follows",
+          "corrected": "drives"
+        },
+        {
+          "r": "R3",
+          "id": "2015_09_3027897-q29",
+          "planted": "maximum",
+          "corrected": "minimum"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go3_20151013-q20",
+          "planted": "to be taken",
+          "corrected": "to take"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go1_20140312-q23",
+          "planted": "what",
+          "corrected": "that"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go1_20140312-q25",
+          "planted": "disrespect",
+          "corrected": "respect"
+        }
+      ]
+    },
+    {
+      "shard": "A033",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go1_20140612-q24",
+          "planted": "was included",
+          "corrected": "included"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go2_20140312-q23",
+          "planted": "form",
+          "corrected": "forms"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go2_20140312-q25",
+          "planted": "positive",
+          "corrected": "negative"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go2_20140612-q21",
+          "planted": "Cited",
+          "corrected": "Citing"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go2_20140903_A-q27",
+          "planted": "setting",
+          "corrected": "set"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go2_20141118_A-q27",
+          "planted": "which",
+          "corrected": "in which"
+        }
+      ]
+    },
+    {
+      "shard": "A034",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "2014_YB_5006654_B-q28",
+          "planted": "insufficient",
+          "corrected": "sufficient"
+        },
+        {
+          "r": "R2",
+          "id": "2014_YB_5006654_A-q32",
+          "planted": "insufficient",
+          "corrected": "sufficient"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go3_20140410-q24",
+          "planted": "dramatized",
+          "corrected": "dramatizing"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go3_20140710_A-q24",
+          "planted": "to be",
+          "corrected": "was"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go3_20140710_A-q25",
+          "planted": "tolerant",
+          "corrected": "intolerant"
+        },
+        {
+          "r": "R6",
+          "id": "2014_09_3020142_A-q28",
+          "planted": "follow",
+          "corrected": "resist"
+        }
+      ]
+    },
+    {
+      "shard": "A035",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "2014_09_3020142_B-q28",
+          "planted": "follow",
+          "corrected": "resist"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go3_20141007-q25",
+          "planted": "were",
+          "corrected": "was"
+        },
+        {
+          "r": "R3",
+          "id": "2014_SN_3022251_B-q28",
+          "planted": "evade",
+          "corrected": "assume"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go1_20130313_A-q27",
+          "planted": "which",
+          "corrected": "who"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go1_20130903-q27",
+          "planted": "are",
+          "corrected": "do"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go1_20131114-q28",
+          "planted": "avoid",
+          "corrected": "embrace"
+        }
+      ]
+    },
+    {
+      "shard": "A036",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go2_20130313_B-q27",
+          "planted": "whom",
+          "corrected": "which"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go2_20130313_B-q28",
+          "planted": "less",
+          "corrected": "more"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go2_20130313_A-q32",
+          "planted": "get",
+          "corrected": "avoid"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go2_20130605_B-q27",
+          "planted": "bringing",
+          "corrected": "brought"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go2_20130605_A-q32",
+          "planted": "prevent",
+          "corrected": "promote"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go2_20130903_B-q27",
+          "planted": "attaches",
+          "corrected": "attached"
+        }
+      ]
+    },
+    {
+      "shard": "A037",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go2_20130903_A-q32",
+          "planted": "uncertain",
+          "corrected": "certain"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go2_20131114-q27",
+          "planted": "what",
+          "corrected": "which"
+        },
+        {
+          "r": "R3",
+          "id": "2013_06_3008953-q32",
+          "planted": "reduce",
+          "corrected": "increase"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go3_20130712_B-q27",
+          "planted": "turning out",
+          "corrected": "turned out"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go3_20130712_A-q32",
+          "planted": "prosperous",
+          "corrected": "vulnerable"
+        },
+        {
+          "r": "R6",
+          "id": "2013_09_3011547-q31",
+          "planted": "a cause",
+          "corrected": "a consequence"
+        }
+      ]
+    },
+    {
+      "shard": "A038",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go3_20131008_B-q27",
+          "planted": "have",
+          "corrected": "has"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go1_20120314-q35",
+          "planted": "a bad spyware",
+          "corrected": "bad spyware"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go1_20120314-q36",
+          "planted": "blocking",
+          "corrected": "helping"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go1_20120607-q24",
+          "planted": "realized",
+          "corrected": "realize"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go1_20120904-q25",
+          "planted": "similar",
+          "corrected": "opposite"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go1_20120904-q34",
+          "planted": "staying",
+          "corrected": "stayed"
+        }
+      ]
+    },
+    {
+      "shard": "A039",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go1_20121114-q27",
+          "planted": "which",
+          "corrected": "in which"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go2_20120314-q26",
+          "planted": "situating",
+          "corrected": "situated"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go2_20120607_A-q24",
+          "planted": "must do",
+          "corrected": "must be done"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go2_20120607_B-q24",
+          "planted": "to learn",
+          "corrected": "learn"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go2_20120904_B-q24",
+          "planted": "allowing",
+          "corrected": "allow"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go2_20120904_B-q33",
+          "planted": "reduces",
+          "corrected": "increases"
+        }
+      ]
+    },
+    {
+      "shard": "A040",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go2_20121114_B-q27",
+          "planted": "that",
+          "corrected": "what"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go2_20121114_A-q32",
+          "planted": "efficient",
+          "corrected": "inefficient"
+        },
+        {
+          "r": "R3",
+          "id": "2012_06_3001254-q33",
+          "planted": "flourished",
+          "corrected": "declined"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go3_20120711-q20",
+          "planted": "speaking to",
+          "corrected": "spoken to"
+        },
+        {
+          "r": "R5",
+          "id": "2012_09_3008944-q33",
+          "planted": "curable",
+          "corrected": "incurable"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go3_20121009-q20",
+          "planted": "holding",
+          "corrected": "held"
+        }
+      ]
+    },
+    {
+      "shard": "A041",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go3_20121009-q35",
+          "planted": "exhaling",
+          "corrected": "inhaling"
+        },
+        {
+          "r": "R2",
+          "id": "2012_SN_3001002-q32",
+          "planted": "slower",
+          "corrected": "faster"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go1_20110310-q20",
+          "planted": "for their studying",
+          "corrected": "to study"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go1_20110310-q31",
+          "planted": "disagreed",
+          "corrected": "agreed"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go1_20110310-q32",
+          "planted": "uncommon",
+          "corrected": "ordinary"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go1_20110901-q32",
+          "planted": "behind",
+          "corrected": "ahead of"
+        }
+      ]
+    },
+    {
+      "shard": "A042",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go1_20111115-q20",
+          "planted": "what",
+          "corrected": "whether"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go1_20111115-q32",
+          "planted": "rationally",
+          "corrected": "emotionally"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go2_20110310-q20",
+          "planted": "would send",
+          "corrected": "would be sent"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go2_20110310-q31",
+          "planted": "stimulate",
+          "corrected": "accumulate"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go2_20110310-q32",
+          "planted": "permanent",
+          "corrected": "temporary"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go2_20110901-q21",
+          "planted": "being sung",
+          "corrected": "sung"
+        }
+      ]
+    },
+    {
+      "shard": "A043",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go2_20110901-q31",
+          "planted": "maintain",
+          "corrected": "change"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go2_20111115-q20",
+          "planted": "satisfied",
+          "corrected": "satisfying"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go2_20111115-q32",
+          "planted": "lower",
+          "corrected": "higher"
+        },
+        {
+          "r": "R4",
+          "id": "2011_06_3001235-q21",
+          "planted": "himself",
+          "corrected": "him"
+        },
+        {
+          "r": "R5",
+          "id": "2011_06_3001235-q31",
+          "planted": "unselfish",
+          "corrected": "selfish"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go3_20110713-q20",
+          "planted": "whose",
+          "corrected": "that"
+        }
+      ]
+    },
+    {
+      "shard": "A044",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "2011_09_3001251-q32",
+          "planted": "well",
+          "corrected": "badly"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go3_20111012-q21",
+          "planted": "competitively",
+          "corrected": "competitive"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go3_20111012-q29",
+          "planted": "changeable",
+          "corrected": "unchangeable"
+        },
+        {
+          "r": "R4",
+          "id": "2011_SN_3000996-q32",
+          "planted": "neglects",
+          "corrected": "enhances"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go1_20100310-q21",
+          "planted": "exact",
+          "corrected": "exactly"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go1_20100310-q22",
+          "planted": "that",
+          "corrected": "if"
+        }
+      ]
+    },
+    {
+      "shard": "A045",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go1_20100310-q31",
+          "planted": "attack",
+          "corrected": "attract"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go1_20100616-q22",
+          "planted": "what",
+          "corrected": "whom"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go1_20100916-q22",
+          "planted": "sharing",
+          "corrected": "shared"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go1_20101123-q21",
+          "planted": "becomes",
+          "corrected": "become"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go1_20101123-q22",
+          "planted": "is",
+          "corrected": "are"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go1_20101123-q30",
+          "planted": "shorter",
+          "corrected": "longer"
+        }
+      ]
+    },
+    {
+      "shard": "A046",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go2_20100311-q22",
+          "planted": "will not accept",
+          "corrected": "will not be accepted"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go2_20100311-q31",
+          "planted": "reproduce",
+          "corrected": "reduce"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go2_20100617-q22",
+          "planted": "made",
+          "corrected": "are made"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go2_20101124-q22",
+          "planted": "which",
+          "corrected": "in which"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go2_20101124-q30",
+          "planted": "up",
+          "corrected": "down"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go3_20100708-q22",
+          "planted": "while",
+          "corrected": "during"
+        }
+      ]
+    },
+    {
+      "shard": "A047",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go3_20101012-q20",
+          "planted": "which",
+          "corrected": "that"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go1_20090311-q22",
+          "planted": "received",
+          "corrected": "receiving"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go1_20090617-q22",
+          "planted": "are",
+          "corrected": "is"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go1_20090917-q20",
+          "planted": "to come",
+          "corrected": "come"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go1_20091118-q22",
+          "planted": "lately",
+          "corrected": "late"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go2_20090312-q22",
+          "planted": "their",
+          "corrected": "whose"
+        }
+      ]
+    },
+    {
+      "shard": "A048",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go2_20090618-q22",
+          "planted": "resulted",
+          "corrected": "resulting"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go2_20090918-q22",
+          "planted": "frustrating",
+          "corrected": "frustrated"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go2_20091117-q20",
+          "planted": "themselves",
+          "corrected": "itself"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go3_20091015-q20",
+          "planted": "defenselessly",
+          "corrected": "defenseless"
+        },
+        {
+          "r": "R5",
+          "id": "2009_SN_3000950-q21",
+          "planted": "an aggressive behavior",
+          "corrected": "aggressive behavior"
+        },
+        {
+          "r": "R6",
+          "id": "2008_06_3001212-q29",
+          "planted": "front",
+          "corrected": "rear"
+        }
+      ]
+    },
+    {
+      "shard": "A049",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "2008_09_3001186-q29",
+          "planted": "increase",
+          "corrected": "decrease"
+        },
+        {
+          "r": "R2",
+          "id": "2007_06_3001177-q35",
+          "planted": "loosens",
+          "corrected": "stiffens"
+        },
+        {
+          "r": "R3",
+          "id": "2007_09_3001172-q28",
+          "planted": "characteristic",
+          "corrected": "momentary"
+        },
+        {
+          "r": "R4",
+          "id": "ebsi_go1_20060601-q21",
+          "planted": "that",
+          "corrected": "which"
+        },
+        {
+          "r": "R5",
+          "id": "ebsi_go1_20061121-q22",
+          "planted": "frustrated",
+          "corrected": "frustrating"
+        },
+        {
+          "r": "R6",
+          "id": "ebsi_go1_20061121-q31",
+          "planted": "millions",
+          "corrected": "million"
+        }
+      ]
+    },
+    {
+      "shard": "A050",
+      "keys": [
+        {
+          "r": "R1",
+          "id": "ebsi_go1_20061121-q35",
+          "planted": "straightened",
+          "corrected": "bent"
+        },
+        {
+          "r": "R2",
+          "id": "ebsi_go2_20060310-q21",
+          "planted": "moving",
+          "corrected": "move"
+        },
+        {
+          "r": "R3",
+          "id": "ebsi_go2_20060602-q21",
+          "planted": "rapidly",
+          "corrected": "rapid"
+        },
+        {
+          "r": "R4",
+          "id": "2006_09_3001166-q28",
+          "planted": "abundant",
+          "corrected": "scarce"
+        },
+        {
+          "r": "R5",
+          "id": "2006_SN_3000977-q30",
+          "planted": "enhance",
+          "corrected": "eliminate"
+        }
+      ]
+    }
+  ],
+  "B": [
+    {
+      "shard": "B001",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "2027_06_5095396-q29"
+        },
+        {
+          "p": "P2",
+          "id": "2026_06_5090182-q29"
+        },
+        {
+          "p": "P3",
+          "id": "2026_SN_5093799-q29"
+        },
+        {
+          "p": "P4",
+          "id": "ebsi_go1_20251014-q29"
+        },
+        {
+          "p": "P5",
+          "id": "ebsi_go2_20250604-q30"
+        },
+        {
+          "p": "P6",
+          "id": "2025_06_5086961-q29"
+        }
+      ]
+    },
+    {
+      "shard": "B002",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "2025_SN_5089362-q29"
+        },
+        {
+          "p": "P2",
+          "id": "2024_06_5084521-q29"
+        },
+        {
+          "p": "P3",
+          "id": "2024_06_5084521-q30"
+        },
+        {
+          "p": "P4",
+          "id": "ebsi_go3_20240711-q30"
+        },
+        {
+          "p": "P5",
+          "id": "2024_09_5085155-q29"
+        },
+        {
+          "p": "P6",
+          "id": "2024_SN_5086091-q29"
+        }
+      ]
+    },
+    {
+      "shard": "B003",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "ebsi_go2_20231219-q30"
+        },
+        {
+          "p": "P2",
+          "id": "2023_06_5076592-q29"
+        },
+        {
+          "p": "P3",
+          "id": "2023_06_5076592-q41-42"
+        },
+        {
+          "p": "P4",
+          "id": "ebsi_go3_20230711-q30"
+        },
+        {
+          "p": "P5",
+          "id": "2023_09_5077481-q29"
+        },
+        {
+          "p": "P6",
+          "id": "2023_SN_5080827-q29"
+        }
+      ]
+    },
+    {
+      "shard": "B004",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "2022_06_5063572-q29"
+        },
+        {
+          "p": "P2",
+          "id": "ebsi_go3_20220706-q30"
+        },
+        {
+          "p": "P3",
+          "id": "2022_09_5064693-q29"
+        },
+        {
+          "p": "P4",
+          "id": "2022_SN_5070164-q29"
+        },
+        {
+          "p": "P5",
+          "id": "2021_06_5049916-q29"
+        },
+        {
+          "p": "P6",
+          "id": "2021_09_5050886-q29"
+        }
+      ]
+    },
+    {
+      "shard": "B005",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "2021_SN_5061633-q29"
+        },
+        {
+          "p": "P2",
+          "id": "ebsi_go1_20200618-q30"
+        },
+        {
+          "p": "P3",
+          "id": "ebsi_go1_20200916-q30"
+        },
+        {
+          "p": "P4",
+          "id": "ebsi_go1_20201118-q30"
+        },
+        {
+          "p": "P5",
+          "id": "ebsi_go2_20201118-q30"
+        },
+        {
+          "p": "P6",
+          "id": "2020_06_5037373-q29"
+        }
+      ]
+    },
+    {
+      "shard": "B006",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "2020_SN_5045859-q29"
+        },
+        {
+          "p": "P2",
+          "id": "ebsi_go1_20190307-q29"
+        },
+        {
+          "p": "P3",
+          "id": "ebsi_go1_20190604-q30"
+        },
+        {
+          "p": "P4",
+          "id": "ebsi_go1_20190904-q30"
+        },
+        {
+          "p": "P5",
+          "id": "ebsi_go1_20191120-q30"
+        },
+        {
+          "p": "P6",
+          "id": "ebsi_go2_20190604-q30"
+        }
+      ]
+    },
+    {
+      "shard": "B007",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "ebsi_go2_20190904-q30"
+        },
+        {
+          "p": "P2",
+          "id": "ebsi_go3_20190710-q29"
+        },
+        {
+          "p": "P3",
+          "id": "2019_09_5024244-q29"
+        },
+        {
+          "p": "P4",
+          "id": "2019_09_5024244-q30"
+        },
+        {
+          "p": "P5",
+          "id": "2019_SN_5031122-q43-44-45"
+        },
+        {
+          "p": "P6",
+          "id": "ebsi_go1_20180607-q29"
+        }
+      ]
+    },
+    {
+      "shard": "B008",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "ebsi_go1_20181121-q29"
+        },
+        {
+          "p": "P2",
+          "id": "ebsi_go2_20180607-q28"
+        },
+        {
+          "p": "P3",
+          "id": "2018_06_5013302-q28"
+        },
+        {
+          "p": "P4",
+          "id": "2018_06_5013302-q29"
+        },
+        {
+          "p": "P5",
+          "id": "ebsi_go3_20180711-q29"
+        },
+        {
+          "p": "P6",
+          "id": "2018_09_5014608-q28"
+        }
+      ]
+    },
+    {
+      "shard": "B009",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "2018_09_5014608-q29"
+        },
+        {
+          "p": "P2",
+          "id": "2018_SN_5019793-q28"
+        },
+        {
+          "p": "P3",
+          "id": "ebsi_go1_20170906-q29"
+        },
+        {
+          "p": "P4",
+          "id": "ebsi_go1_20171122-q29"
+        },
+        {
+          "p": "P5",
+          "id": "2017_06_5005813-q28"
+        },
+        {
+          "p": "P6",
+          "id": "2017_06_5005813-q29"
+        }
+      ]
+    },
+    {
+      "shard": "B010",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "2017_SN_5008710-q28"
+        },
+        {
+          "p": "P2",
+          "id": "2017_SN_5008710-q29"
+        },
+        {
+          "p": "P3",
+          "id": "ebsi_go1_20160310-q29"
+        },
+        {
+          "p": "P4",
+          "id": "ebsi_go1_20160602-q28"
+        },
+        {
+          "p": "P5",
+          "id": "ebsi_go1_20160602-q29"
+        },
+        {
+          "p": "P6",
+          "id": "ebsi_go1_20161123-q29"
+        }
+      ]
+    },
+    {
+      "shard": "B011",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "ebsi_go2_20160310-q29"
+        },
+        {
+          "p": "P2",
+          "id": "ebsi_go2_20160602-q29"
+        },
+        {
+          "p": "P3",
+          "id": "ebsi_go2_20160901-q29"
+        },
+        {
+          "p": "P4",
+          "id": "ebsi_go2_20161123-q29"
+        },
+        {
+          "p": "P5",
+          "id": "2016_06_3033341-q28"
+        },
+        {
+          "p": "P6",
+          "id": "2016_06_3033341-q29"
+        }
+      ]
+    },
+    {
+      "shard": "B012",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "ebsi_go3_20160706-q29"
+        },
+        {
+          "p": "P2",
+          "id": "2016_09_5000516-q28"
+        },
+        {
+          "p": "P3",
+          "id": "2016_SN_5001717-q28"
+        },
+        {
+          "p": "P4",
+          "id": "2016_SN_5001717-q29"
+        },
+        {
+          "p": "P5",
+          "id": "ebsi_go1_20150311-q30"
+        },
+        {
+          "p": "P6",
+          "id": "ebsi_go1_20150604-q29"
+        }
+      ]
+    },
+    {
+      "shard": "B013",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "ebsi_go1_20150902-q30"
+        },
+        {
+          "p": "P2",
+          "id": "ebsi_go2_20150311_A-q30"
+        },
+        {
+          "p": "P3",
+          "id": "ebsi_go2_20150902-q30"
+        },
+        {
+          "p": "P4",
+          "id": "ebsi_go2_20151117-q28"
+        },
+        {
+          "p": "P5",
+          "id": "ebsi_go2_20151117-q29"
+        },
+        {
+          "p": "P6",
+          "id": "ebsi_go3_20150409_A-q28"
+        }
+      ]
+    },
+    {
+      "shard": "B014",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "2015_06_3026346-q27"
+        },
+        {
+          "p": "P2",
+          "id": "2015_06_3026346-q28"
+        },
+        {
+          "p": "P3",
+          "id": "2015_09_3027897-q28"
+        },
+        {
+          "p": "P4",
+          "id": "2015_SN_3029607-q28"
+        },
+        {
+          "p": "P5",
+          "id": "2015_SN_3029607-q30"
+        },
+        {
+          "p": "P6",
+          "id": "ebsi_go1_20140312-q24"
+        }
+      ]
+    },
+    {
+      "shard": "B015",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "ebsi_go1_20140312-q26"
+        },
+        {
+          "p": "P2",
+          "id": "ebsi_go1_20140612-q25"
+        },
+        {
+          "p": "P3",
+          "id": "ebsi_go1_20140903-q28"
+        },
+        {
+          "p": "P4",
+          "id": "ebsi_go1_20141118-q27"
+        },
+        {
+          "p": "P5",
+          "id": "ebsi_go2_20140312-q24"
+        },
+        {
+          "p": "P6",
+          "id": "ebsi_go2_20141118_A-q28"
+        }
+      ]
+    },
+    {
+      "shard": "B016",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "2014_YB_5006654_B-q27"
+        },
+        {
+          "p": "P2",
+          "id": "2014_YB_5006654_A-q31"
+        },
+        {
+          "p": "P3",
+          "id": "2014_06_3018186_A-q27"
+        },
+        {
+          "p": "P4",
+          "id": "2014_06_3018186_B-q27"
+        },
+        {
+          "p": "P5",
+          "id": "2014_06_3018186_A-q28"
+        },
+        {
+          "p": "P6",
+          "id": "2014_06_3018186_B-q28"
+        }
+      ]
+    },
+    {
+      "shard": "B017",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "2014_09_3020142_A-q27"
+        },
+        {
+          "p": "P2",
+          "id": "2014_09_3020142_B-q27"
+        },
+        {
+          "p": "P3",
+          "id": "2014_SN_3022252_A-q27"
+        },
+        {
+          "p": "P4",
+          "id": "2014_SN_3022251_B-q27"
+        },
+        {
+          "p": "P5",
+          "id": "2014_SN_3022252_A-q28"
+        },
+        {
+          "p": "P6",
+          "id": "ebsi_go1_20131114-q27"
+        }
+      ]
+    },
+    {
+      "shard": "B018",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "ebsi_go2_20130903_A-q31"
+        },
+        {
+          "p": "P2",
+          "id": "ebsi_go2_20131114-q28"
+        },
+        {
+          "p": "P3",
+          "id": "2013_06_3008953-q20"
+        },
+        {
+          "p": "P4",
+          "id": "2013_06_3008953-q21"
+        },
+        {
+          "p": "P5",
+          "id": "2013_06_3008953-q31"
+        },
+        {
+          "p": "P6",
+          "id": "ebsi_go3_20130712_A-q31"
+        }
+      ]
+    },
+    {
+      "shard": "B019",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "2013_09_3011547-q20"
+        },
+        {
+          "p": "P2",
+          "id": "2013_09_3011547-q21"
+        },
+        {
+          "p": "P3",
+          "id": "2013_09_3011547-q32"
+        },
+        {
+          "p": "P4",
+          "id": "2013_SN_3014708-q20"
+        },
+        {
+          "p": "P5",
+          "id": "2013_SN_3014708-q21"
+        },
+        {
+          "p": "P6",
+          "id": "2013_SN_3014708-q31"
+        }
+      ]
+    },
+    {
+      "shard": "B020",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "ebsi_go1_20120314-q27"
+        },
+        {
+          "p": "P2",
+          "id": "ebsi_go1_20120607-q33"
+        },
+        {
+          "p": "P3",
+          "id": "ebsi_go1_20121114-q28"
+        },
+        {
+          "p": "P4",
+          "id": "ebsi_go2_20120314-q25"
+        },
+        {
+          "p": "P5",
+          "id": "ebsi_go2_20120314-q34"
+        },
+        {
+          "p": "P6",
+          "id": "2012_06_3001254-q20"
+        }
+      ]
+    },
+    {
+      "shard": "B021",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "2012_06_3001254-q21"
+        },
+        {
+          "p": "P2",
+          "id": "2012_06_3001254-q32"
+        },
+        {
+          "p": "P3",
+          "id": "ebsi_go3_20120711-q21"
+        },
+        {
+          "p": "P4",
+          "id": "ebsi_go3_20120711-q33"
+        },
+        {
+          "p": "P5",
+          "id": "2012_09_3008944-q20"
+        },
+        {
+          "p": "P6",
+          "id": "2012_09_3008944-q21"
+        }
+      ]
+    },
+    {
+      "shard": "B022",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "2012_09_3008944-q32"
+        },
+        {
+          "p": "P2",
+          "id": "2012_SN_3001002-q21"
+        },
+        {
+          "p": "P3",
+          "id": "2012_SN_3001002-q33"
+        },
+        {
+          "p": "P4",
+          "id": "ebsi_go1_20110901-q21"
+        },
+        {
+          "p": "P5",
+          "id": "ebsi_go1_20111115-q21"
+        },
+        {
+          "p": "P6",
+          "id": "ebsi_go2_20110901-q32"
+        }
+      ]
+    },
+    {
+      "shard": "B023",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "2011_06_3001235-q20"
+        },
+        {
+          "p": "P2",
+          "id": "2011_06_3001235-q32"
+        },
+        {
+          "p": "P3",
+          "id": "ebsi_go3_20110713-q21"
+        },
+        {
+          "p": "P4",
+          "id": "ebsi_go3_20110713-q31"
+        },
+        {
+          "p": "P5",
+          "id": "2011_09_3001251-q20"
+        },
+        {
+          "p": "P6",
+          "id": "2011_09_3001251-q21"
+        }
+      ]
+    },
+    {
+      "shard": "B024",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "2011_09_3001251-q31"
+        },
+        {
+          "p": "P2",
+          "id": "2011_SN_3000996-q20"
+        },
+        {
+          "p": "P3",
+          "id": "2011_SN_3000996-q21"
+        },
+        {
+          "p": "P4",
+          "id": "2011_SN_3000996-q31"
+        },
+        {
+          "p": "P5",
+          "id": "ebsi_go1_20100616-q21"
+        },
+        {
+          "p": "P6",
+          "id": "ebsi_go1_20100616-q29"
+        }
+      ]
+    },
+    {
+      "shard": "B025",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "ebsi_go1_20100916-q21"
+        },
+        {
+          "p": "P2",
+          "id": "2010_06_3001224-q20"
+        },
+        {
+          "p": "P3",
+          "id": "2010_06_3001224-q21"
+        },
+        {
+          "p": "P4",
+          "id": "2010_06_3001224-q28"
+        },
+        {
+          "p": "P5",
+          "id": "2010_09_3001242-q21"
+        },
+        {
+          "p": "P6",
+          "id": "2010_09_3001242-q22"
+        }
+      ]
+    },
+    {
+      "shard": "B026",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "2010_09_3001242-q29"
+        },
+        {
+          "p": "P2",
+          "id": "2010_SN_3000962-q21"
+        },
+        {
+          "p": "P3",
+          "id": "2010_SN_3000962-q22"
+        },
+        {
+          "p": "P4",
+          "id": "2010_SN_3000962-q31"
+        },
+        {
+          "p": "P5",
+          "id": "ebsi_go1_20090617-q21"
+        },
+        {
+          "p": "P6",
+          "id": "ebsi_go1_20090617-q28"
+        }
+      ]
+    },
+    {
+      "shard": "B027",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "ebsi_go1_20090917-q21"
+        },
+        {
+          "p": "P2",
+          "id": "ebsi_go1_20091118-q21"
+        },
+        {
+          "p": "P3",
+          "id": "ebsi_go1_20091118-q28"
+        },
+        {
+          "p": "P4",
+          "id": "ebsi_go2_20090618-q21"
+        },
+        {
+          "p": "P5",
+          "id": "ebsi_go2_20090618-q28"
+        },
+        {
+          "p": "P6",
+          "id": "ebsi_go2_20090918-q29"
+        }
+      ]
+    },
+    {
+      "shard": "B028",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "ebsi_go2_20091117-q21"
+        },
+        {
+          "p": "P2",
+          "id": "2009_06_3001198-q21"
+        },
+        {
+          "p": "P3",
+          "id": "2009_06_3001198-q22"
+        },
+        {
+          "p": "P4",
+          "id": "2009_06_3001198-q28"
+        },
+        {
+          "p": "P5",
+          "id": "2009_09_3001204-q20"
+        },
+        {
+          "p": "P6",
+          "id": "2009_09_3001204-q21"
+        }
+      ]
+    },
+    {
+      "shard": "B029",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "2009_09_3001204-q27"
+        },
+        {
+          "p": "P2",
+          "id": "2009_SN_3000950-q22"
+        },
+        {
+          "p": "P3",
+          "id": "2009_SN_3000950-q28"
+        },
+        {
+          "p": "P4",
+          "id": "2008_06_3001212-q21"
+        },
+        {
+          "p": "P5",
+          "id": "2008_09_3001186-q21"
+        },
+        {
+          "p": "P6",
+          "id": "2008_09_3001186-q22"
+        }
+      ]
+    },
+    {
+      "shard": "B030",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "2008_SN_3000991-q21"
+        },
+        {
+          "p": "P2",
+          "id": "2008_SN_3000991-q22"
+        },
+        {
+          "p": "P3",
+          "id": "2008_SN_3000991-q28"
+        },
+        {
+          "p": "P4",
+          "id": "2007_06_3001177-q21"
+        },
+        {
+          "p": "P5",
+          "id": "2007_06_3001177-q22"
+        },
+        {
+          "p": "P6",
+          "id": "2007_06_3001177-q34"
+        }
+      ]
+    },
+    {
+      "shard": "B031",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "2007_09_3001172-q21"
+        },
+        {
+          "p": "P2",
+          "id": "2007_09_3001172-q22"
+        },
+        {
+          "p": "P3",
+          "id": "2007_SN_3000983-q22"
+        },
+        {
+          "p": "P4",
+          "id": "2007_SN_3000983-q23"
+        },
+        {
+          "p": "P5",
+          "id": "2007_SN_3000983-q30"
+        },
+        {
+          "p": "P6",
+          "id": "ebsi_go1_20060309-q21"
+        }
+      ]
+    },
+    {
+      "shard": "B032",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "ebsi_go1_20060309-q31"
+        },
+        {
+          "p": "P2",
+          "id": "ebsi_go1_20061121-q23"
+        },
+        {
+          "p": "P3",
+          "id": "ebsi_go2_20060310-q31"
+        },
+        {
+          "p": "P4",
+          "id": "2006_06_3001159-q21"
+        },
+        {
+          "p": "P5",
+          "id": "2006_06_3001159-q22"
+        },
+        {
+          "p": "P6",
+          "id": "2006_06_3001159-q27"
+        }
+      ]
+    },
+    {
+      "shard": "B033",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "2006_09_3001166-q21"
+        },
+        {
+          "p": "P2",
+          "id": "2006_09_3001166-q22"
+        },
+        {
+          "p": "P3",
+          "id": "2006_09_3001166-q29"
+        },
+        {
+          "p": "P4",
+          "id": "2006_SN_3000977-q20"
+        },
+        {
+          "p": "P5",
+          "id": "2006_SN_3000977-q21"
+        },
+        {
+          "p": "P6",
+          "id": "2006_SN_3000977-q31"
+        }
+      ]
+    },
+    {
+      "shard": "B034",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "2005_YB_5006647-q29"
+        },
+        {
+          "p": "P2",
+          "id": "2005_YB_5006647-q30"
+        },
+        {
+          "p": "P3",
+          "id": "2005_YB_5006647-q36"
+        },
+        {
+          "p": "P4",
+          "id": "2005_06_3001149-q28"
+        },
+        {
+          "p": "P5",
+          "id": "2005_06_3001149-q29"
+        },
+        {
+          "p": "P6",
+          "id": "2005_06_3001149-q30"
+        }
+      ]
+    },
+    {
+      "shard": "B035",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "2005_09_3001156-q20"
+        },
+        {
+          "p": "P2",
+          "id": "2005_09_3001156-q29"
+        },
+        {
+          "p": "P3",
+          "id": "2005_09_3001156-q31"
+        },
+        {
+          "p": "P4",
+          "id": "2005_SN_3000969-q20"
+        },
+        {
+          "p": "P5",
+          "id": "2005_SN_3000969-q21"
+        },
+        {
+          "p": "P6",
+          "id": "2005_SN_3000969-q22"
+        }
+      ]
+    },
+    {
+      "shard": "B036",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "2005_SN_3000969-q23"
+        },
+        {
+          "p": "P2",
+          "id": "2005_SN_3000969-q24"
+        },
+        {
+          "p": "P3",
+          "id": "2004_06_3001194-q29"
+        },
+        {
+          "p": "P4",
+          "id": "2004_06_3001194-q30"
+        },
+        {
+          "p": "P5",
+          "id": "2004_09_3001221-q26"
+        },
+        {
+          "p": "P6",
+          "id": "2004_09_3001221-q28"
+        }
+      ]
+    },
+    {
+      "shard": "B037",
+      "keys": [
+        {
+          "p": "P1",
+          "id": "2004_09_3001221-q32"
+        },
+        {
+          "p": "P2",
+          "id": "2003_YB_3009745-q29"
+        },
+        {
+          "p": "P3",
+          "id": "2003_YB_3009745-q30"
+        }
+      ]
+    }
+  ]
+}

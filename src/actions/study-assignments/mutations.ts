@@ -10,8 +10,15 @@
 //    에서 보상 삭제(고아 훈련 차단). EXAM 은 기존 assignStudentsToExam(응시 링크·
 //    orderSnapshot·CAS 규율 전부 재사용) — 외부 액션이라 트랜잭션 밖 유지,
 //    GRAMMAR 는 GrammarDrillAssignment 행 생성(드릴 엔진이 소비).
-//  - 삭제 = 과제+태스크 삭제. GRAMMAR 브리지는 미완료 행만 함께 삭제(엔진 노출 제거),
-//    EXAM 브리지(ExamSubmission)는 보존 — 시험 배포 수명주기는 배포 모달 소관.
+//  - VOCAB 은 접합 방향이 어법과 반대(vocab_drill_assignments.taskId 가 태스크를
+//    아래→위로 가리킨다 — init.sql 3-5). 브리지가 태스크 id 를 필요로 하므로
+//    태스크·브리지를 같은 $transaction 안에서 생성한다 — 어법의 "선생성 후 보상
+//    삭제" 방식이 아니라 브리지 없는 태스크 창 자체가 없다.
+//    VOCAB 은 배포 전에 **완료 가능성**도 검증한다: 풀 0이면 거부, 문항 수가 풀보다
+//    크면 풀 크기로 클램프하고 그 사실을 data.notice 로 돌려준다(완료 불가 과제 차단).
+//  - 삭제 = 과제+태스크 삭제. GRAMMAR/VOCAB 브리지는 미완료 행만 함께 삭제(엔진
+//    노출 제거), EXAM 브리지(ExamSubmission)는 보존 — 시험 배포 수명주기는 배포
+//    모달 소관.
 // ============================================================================
 
 import { revalidatePath } from "next/cache";
@@ -20,15 +27,22 @@ import { requireStaffAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { assignStudentsToExam } from "@/actions/exams/assignments";
 import { countGrammarDrillPool } from "@/actions/grammar-drill-admin";
+import { assignmentPoolSize } from "@/lib/vocab-drill/engine";
+import { GRADED_ITEM_TYPES as VOCAB_GRADED_ITEM_TYPES } from "@/lib/vocab-drill/constants";
 import type {
   ExamAssignmentPayload,
   GrammarAssignmentPayload,
   QuestionsAssignmentPayload,
   StudyAssignmentKind,
   StudyTargetInput,
+  VocabAssignmentPayload,
   WorksheetAssignmentPayload,
 } from "@/lib/study-assignments/types";
-import { isStudyAssignmentKind } from "@/lib/study-assignments/types";
+import {
+  examPayloadDurationMin,
+  isStudyAssignmentKind,
+} from "@/lib/study-assignments/types";
+import { loadTaskLiveMap } from "@/lib/study-assignments/task-union";
 import {
   STUDY_ASSIGNMENT_PATHS,
   expandTargets,
@@ -41,6 +55,18 @@ export type { StudyActionResult } from "./_shared";
 function revalidateAll() {
   for (const p of STUDY_ASSIGNMENT_PATHS) revalidatePath(p, "layout");
 }
+
+/**
+ * VOCAB 브리지 spec 부피 상한 — 대상 학생 수 × senseIds 길이.
+ * vocab_drill_assignments.spec 은 학생 1명당 1행에 senseIds 전체가 **복제** 저장된다
+ * (큐가 브리지 spec 만 읽는 계약이라 참조로 대체할 수 없다). 500단어 × 200명 =
+ * 10만 셀이면 한 트랜잭션 안에서 수십 MB 를 쓰게 되므로, 그 전에 배포를 거부하고
+ * 나누어 보내게 한다(적대검수 2026-08-04).
+ */
+const MAX_VOCAB_BRIDGE_CELLS = 20_000;
+
+/** 원자쌍 트랜잭션 타임아웃 — VOCAB 은 태스크+브리지 대량 insert 가 같이 들어간다 */
+const ASSIGNMENT_TX_TIMEOUT_MS = 20_000;
 
 export interface CreateStudyAssignmentInput {
   kind: StudyAssignmentKind;
@@ -60,6 +86,7 @@ export interface CreateStudyAssignmentInput {
   };
   questions?: { questionIds: string[] };
   grammar?: GrammarAssignmentPayload;
+  vocab?: VocabAssignmentPayload;
 }
 
 export interface CreateStudyAssignmentData {
@@ -67,6 +94,12 @@ export interface CreateStudyAssignmentData {
   taskCount: number;
   /** EXAM: 재응시 불가 등으로 링크 재발급이 건너뛰어진 학생 수(태스크는 생성됨) */
   skippedCount: number;
+  /**
+   * 서버가 배포 스펙을 자동 조정한 경우의 안내(성공 응답) — 없으면 조정 없음.
+   * 현재는 VOCAB 문항 수 클램프에서만 채운다. 호출부는 성공 토스트에 덧붙이면 된다
+   * (조정 사실을 알리지 않으면 디렉터는 20문항을 보냈다고 믿는다).
+   */
+  notice?: string;
 }
 
 export async function createStudyAssignment(
@@ -103,11 +136,14 @@ export async function createStudyAssignment(
       | ExamAssignmentPayload
       | WorksheetAssignmentPayload
       | QuestionsAssignmentPayload
-      | GrammarAssignmentPayload;
+      | GrammarAssignmentPayload
+      | VocabAssignmentPayload;
     /** studentId → 브리지 id */
     const examSubmissionByStudent = new Map<string, string>();
     let grammarIdByStudent = new Map<string, string>();
     let skippedCount = 0;
+    /** 서버가 스펙을 자동 조정했을 때의 안내 문구(성공 응답에 실어 보낸다) */
+    let notice: string | undefined;
 
     if (input.kind === "EXAM") {
       if (!input.exam?.examId) {
@@ -194,8 +230,7 @@ export async function createStudyAssignment(
       }
       title = title || `문제 세트 ${questionIds.length}문항`;
       payload = { questionIds } satisfies QuestionsAssignmentPayload;
-    } else {
-      // GRAMMAR
+    } else if (input.kind === "GRAMMAR") {
       const spec = input.grammar;
       const count = Math.max(1, Math.min(100, Math.round(spec?.count ?? 0)));
       if (!spec || !count) {
@@ -237,6 +272,86 @@ export async function createStudyAssignment(
       });
       grammarIdByStudent = new Map(created.map((row) => [row.studentId, row.id]));
       createdGrammarBridgeIds.push(...created.map((row) => row.id));
+    } else {
+      // VOCAB — 브리지(vocab_drill_assignments.taskId)가 태스크 id 를 필요로
+      // 하므로 여기서는 검증·payload 정규화만 하고, 브리지 생성은 아래 원자쌍
+      // 트랜잭션 안에서 태스크와 함께 한다(브리지 없는 태스크 창 제거).
+      const spec = input.vocab;
+      const requestedCount = Math.max(1, Math.min(100, Math.round(spec?.count ?? 0)));
+      if (!spec || !requestedCount) {
+        return { success: false, error: "단어 훈련 구성을 확인해 주세요." };
+      }
+      const clean: VocabAssignmentPayload = {
+        count: requestedCount,
+        // deckIds 5개 상한 — 학생 큐(buildVocabQueue assignment 모드)의 slice(0,5)와 정합
+        ...(spec.deckIds?.length ? { deckIds: spec.deckIds.map(String).slice(0, 5) } : {}),
+        ...(spec.senseIds?.length
+          ? { senseIds: spec.senseIds.map(String).slice(0, 500) }
+          : {}),
+        ...(spec.tiers?.length ? { tiers: spec.tiers.map(String) } : {}),
+        ...(spec.difficulties?.length
+          ? {
+              difficulties: spec.difficulties
+                .map((d) => Number(d))
+                .filter((d) => d >= 1 && d <= 5),
+            }
+          : {}),
+        // 출제 유형 — 채점 유형 화이트리스트(FLASH 는 자기평가라 차단).
+        // 큐(buildVocabQueue assignment)가 이 목록을 선호 순환으로 소비한다.
+        ...(spec.itemTypes?.length
+          ? {
+              itemTypes: [
+                ...new Set(
+                  spec.itemTypes.filter((t) =>
+                    (VOCAB_GRADED_ITEM_TYPES as string[]).includes(t),
+                  ),
+                ),
+              ],
+            }
+          : {}),
+      };
+      if (clean.itemTypes && clean.itemTypes.length === 0) {
+        delete clean.itemTypes;
+      }
+      // 브리지 부피 가드 — senseIds 는 학생 1명당 1행에 통째로 복제 저장된다.
+      // 상한을 넘으면 트랜잭션이 타임아웃으로 무너지기 전에 명시적으로 거부한다.
+      const senseIdCount = clean.senseIds?.length ?? 0;
+      const bridgeCells = expanded.studentIds.length * senseIdCount;
+      if (bridgeCells > MAX_VOCAB_BRIDGE_CELLS) {
+        return {
+          success: false,
+          error:
+            `대상 학생 ${expanded.studentIds.length}명 × 지정 단어 ${senseIdCount}개는 한 번에 배포할 수 없습니다. ` +
+            `학생을 나누어 보내거나, 단어를 덱으로 묶어 덱을 배포해 주세요.`,
+        };
+      }
+
+      // 덱 소유 교차검증 — 남의 학원 덱 id 를 넣어 배포하는 경로를 먼저 끊는다.
+      if (clean.deckIds?.length) {
+        const owned = await prisma.vocabDrillDeck.count({
+          where: { id: { in: clean.deckIds }, academyId: staff.academyId },
+        });
+        if (owned === 0) {
+          return { success: false, error: "선택한 단어 덱을 찾을 수 없습니다." };
+        }
+      }
+
+      // ★ 완료 가능성 가드 — 풀 크기는 **실제로 서빙 가능한 서로 다른 sense 수**로
+      //   센다(engine.assignmentPoolSize = 큐 빌더·완료 판정과 같은 술어).
+      //   ① 0 이면 거부(영원히 완료 불가).
+      //   ② count > pool 이면 count 를 pool 로 클램프한다 — 클램프하지 않으면
+      //      학생이 풀을 다 풀어도 목표에 못 닿아 과제가 영구 미완료로 남는다
+      //      (senseIds 길이로 세던 구 가드는 은퇴 sense 까지 과대 계상했다).
+      const poolSize = await assignmentPoolSize(staff.academyId, clean);
+      if (poolSize === 0) {
+        return { success: false, error: "선택한 조건과 일치하는 단어가 없습니다." };
+      }
+      if (clean.count > poolSize) {
+        notice = `조건과 일치하는 단어가 ${poolSize}개뿐이어서 문항 수를 ${poolSize}개로 조정했습니다.`;
+        clean.count = poolSize;
+      }
+      title = title || `단어 훈련 ${clean.count}문항`;
+      payload = clean;
     }
 
     // assignment + tasks 는 인터랙티브 트랜잭션으로 원자화 — 태스크 없는 껍데기 과제나
@@ -244,6 +359,9 @@ export async function createStudyAssignment(
     // (assignStudentsToExam)는 자체 트랜잭션·revalidate 를 가진 외부 액션이라 트랜잭션
     // 밖 유지 — 여기서 실패해도 ExamSubmission 은 배포 모달 소관 산출물로 보존된다
     // (deleteStudyAssignment 의 EXAM 브리지 보존 계약과 동일한 방향).
+    // VOCAB 브리지는 이 트랜잭션 안에서 태스크와 함께 생성한다 — 접합 방향이
+    // 반대(브리지.taskId → 태스크)라 태스크 id 확보가 선행돼야 하고, 같은
+    // 트랜잭션이므로 실패 시 전부 롤백돼 보상 삭제가 필요 없다.
     const assignment = await prisma.$transaction(async (tx) => {
       const createdAssignment = await tx.studyAssignment.create({
         data: {
@@ -262,17 +380,44 @@ export async function createStudyAssignment(
         select: { id: true },
       });
 
-      await tx.studyAssignmentTask.createMany({
-        data: expanded.studentIds.map((studentId) => ({
-          academyId: staff.academyId,
-          assignmentId: createdAssignment.id,
-          studentId,
-          examSubmissionId: examSubmissionByStudent.get(studentId) ?? null,
-          grammarAssignmentId: grammarIdByStudent.get(studentId) ?? null,
-        })),
-      });
+      if (input.kind === "VOCAB") {
+        const createdTasks = await tx.studyAssignmentTask.createManyAndReturn({
+          data: expanded.studentIds.map((studentId) => ({
+            academyId: staff.academyId,
+            assignmentId: createdAssignment.id,
+            studentId,
+          })),
+          select: { id: true, studentId: true },
+        });
+        const note = input.instructions?.trim() || null;
+        await tx.vocabDrillAssignment.createMany({
+          data: createdTasks.map((task) => ({
+            academyId: staff.academyId,
+            studentId: task.studentId,
+            staffId: staff.id,
+            taskId: task.id,
+            assignmentId: createdAssignment.id,
+            title,
+            note,
+            spec: payload as unknown as Prisma.InputJsonValue,
+            status: "ASSIGNED",
+          })),
+        });
+      } else {
+        await tx.studyAssignmentTask.createMany({
+          data: expanded.studentIds.map((studentId) => ({
+            academyId: staff.academyId,
+            assignmentId: createdAssignment.id,
+            studentId,
+            examSubmissionId: examSubmissionByStudent.get(studentId) ?? null,
+            grammarAssignmentId: grammarIdByStudent.get(studentId) ?? null,
+          })),
+        });
+      }
       return createdAssignment;
-    });
+      // 타임아웃 명시 — 기본 5초는 VOCAB(태스크 N행 + 브리지 N행, spec 복제 포함)
+      // 대량 배포에서 부족하다. 다른 kind 는 더 짧게 끝나므로 상한 완화만 된다.
+    }, { timeout: ASSIGNMENT_TX_TIMEOUT_MS });
     assignmentCommitted = true;
 
     revalidateAll();
@@ -282,6 +427,7 @@ export async function createStudyAssignment(
         assignmentId: assignment.id,
         taskCount: expanded.studentIds.length,
         skippedCount,
+        ...(notice ? { notice } : {}),
       },
     };
   } catch (error) {
@@ -373,8 +519,9 @@ async function setAssignmentStatus(
 }
 
 /**
- * 과제 삭제 — 태스크 함께 삭제. GRAMMAR 브리지는 미완료(≠DONE) 행만 삭제해
- * 학생 앱 노출을 제거한다(완료 기록·시도 로그는 보존). EXAM 브리지는 보존.
+ * 과제 삭제 — 태스크 함께 삭제. GRAMMAR/VOCAB 브리지는 미완료(≠DONE) 행만
+ * 삭제해 학생 앱 노출을 제거한다(완료 기록·시도 로그는 보존). VOCAB 은 접합
+ * 방향이 반대라 taskId 로 지운다. EXAM 브리지는 보존.
  */
 export async function deleteStudyAssignment(assignmentId: string): Promise<StudyActionResult> {
   try {
@@ -384,11 +531,12 @@ export async function deleteStudyAssignment(assignmentId: string): Promise<Study
 
     const tasks = await prisma.studyAssignmentTask.findMany({
       where: { assignmentId: owned.id, academyId: staff.academyId },
-      select: { grammarAssignmentId: true },
+      select: { id: true, grammarAssignmentId: true },
     });
     const gaIds = tasks
       .map((t) => t.grammarAssignmentId)
       .filter((id): id is string => !!id);
+    const vocabTaskIds = owned.kind === "VOCAB" ? tasks.map((t) => t.id) : [];
 
     await prisma.$transaction([
       ...(gaIds.length
@@ -396,6 +544,17 @@ export async function deleteStudyAssignment(assignmentId: string): Promise<Study
             prisma.grammarDrillAssignment.deleteMany({
               where: {
                 id: { in: gaIds },
+                academyId: staff.academyId,
+                status: { not: "DONE" },
+              },
+            }),
+          ]
+        : []),
+      ...(vocabTaskIds.length
+        ? [
+            prisma.vocabDrillAssignment.deleteMany({
+              where: {
+                taskId: { in: vocabTaskIds },
                 academyId: staff.academyId,
                 status: { not: "DONE" },
               },
@@ -412,5 +571,141 @@ export async function deleteStudyAssignment(assignmentId: string): Promise<Study
     return { success: true };
   } catch (error) {
     return { success: false, error: toErrorMessage(error, "과제 삭제 중 오류가 발생했습니다.") };
+  }
+}
+
+// ── 원클릭 재배포 (v3 design §D2-5) ─────────────────────────────────────────
+
+export interface RedeployStudyAssignmentInput {
+  /** ISO — null = 마감 없음. 무확인 배포 금지는 클라이언트 팝오버(마감 확정) 소관 */
+  dueAt: string | null;
+  /** true = 라이브 상태(브리지 조인)가 완료(DONE)가 아닌 학생만 대상 */
+  onlyIncomplete: boolean;
+}
+
+/**
+ * 원본 과제와 같은 kind·refId·payload 로 새 과제를 만들어 다시 보낸다.
+ * 여기서는 대상 산출(미완료 필터·개별 학생으로 평탄화)만 하고, 검증·브리지·
+ * 원자쌍·보상 삭제는 전부 createStudyAssignment 직접 호출로 재사용한다
+ * (공통 헬퍼 추출 없는 최소침습 — 반 대상 스냅샷은 학생 개별로 풀린다).
+ * 제목은 「{원제} (재배포)」 — 연쇄 재배포로 접미가 쌓이지 않게 1회로 정규화.
+ */
+export async function redeployStudyAssignment(
+  assignmentId: string,
+  input: RedeployStudyAssignmentInput,
+): Promise<StudyActionResult<CreateStudyAssignmentData>> {
+  try {
+    const staff = await requireStaffAuth();
+    const original = await prisma.studyAssignment.findFirst({
+      where: { id: assignmentId, academyId: staff.academyId },
+      select: {
+        id: true,
+        kind: true,
+        refId: true,
+        payload: true,
+        title: true,
+        instructions: true,
+      },
+    });
+    if (!original) return { success: false, error: "과제를 찾을 수 없습니다." };
+    if (!isStudyAssignmentKind(original.kind)) {
+      return { success: false, error: "올바르지 않은 과제 종류입니다." };
+    }
+
+    // 대상 산출 — 저장 status 가 아니라 라이브 상태(loadTaskLiveMap 정본)로
+    // 미완료를 판정한다(EXAM·GRAMMAR 는 브리지가 진실원).
+    const tasks = await prisma.studyAssignmentTask.findMany({
+      where: { assignmentId: original.id, academyId: staff.academyId },
+      select: {
+        id: true,
+        studentId: true,
+        status: true,
+        startedAt: true,
+        completedAt: true,
+        examSubmissionId: true,
+        grammarAssignmentId: true,
+        result: true,
+      },
+    });
+    let targetTasks = tasks;
+    if (input.onlyIncomplete) {
+      const liveMap = await loadTaskLiveMap(staff.academyId, tasks);
+      targetTasks = tasks.filter(
+        (t) => (liveMap.get(t.id)?.liveStatus ?? "ASSIGNED") !== "DONE",
+      );
+    }
+    const studentIds = [...new Set(targetTasks.map((t) => t.studentId))];
+    if (studentIds.length === 0) {
+      return { success: false, error: "다시 보낼 학생이 없습니다." };
+    }
+
+    const title = `${original.title.replace(/\s*\(재배포\)\s*$/u, "")} (재배포)`;
+    const payload = (original.payload ?? {}) as Record<string, unknown>;
+    const base = {
+      title,
+      instructions: original.instructions ?? undefined,
+      dueAt: input.dueAt,
+      // availableFrom 미지정 = 즉시 시작(create 기본값)
+      targets: studentIds.map((id) => ({ type: "STUDENT" as const, id })),
+    };
+
+    if (original.kind === "EXAM") {
+      if (!original.refId) {
+        return { success: false, error: "원본 시험지가 삭제되어 다시 보낼 수 없습니다." };
+      }
+      return createStudyAssignment({
+        ...base,
+        kind: "EXAM",
+        exam: {
+          examId: original.refId,
+          mode: payload.mode === "OMR" ? "OMR" : "TABLET",
+          durationMin: examPayloadDurationMin(payload),
+        },
+      });
+    }
+    if (original.kind === "WORKSHEET") {
+      if (!original.refId) {
+        return { success: false, error: "원본 학습지가 삭제되어 다시 보낼 수 없습니다." };
+      }
+      const study = (payload as WorksheetAssignmentPayload).study;
+      return createStudyAssignment({
+        ...base,
+        kind: "WORKSHEET",
+        worksheet: {
+          passageReportId: original.refId,
+          ...(study ? { study } : {}),
+        },
+      });
+    }
+    if (original.kind === "QUESTIONS") {
+      const rawIds = (payload as Partial<QuestionsAssignmentPayload>).questionIds;
+      const questionIds = Array.isArray(rawIds)
+        ? rawIds.filter((id): id is string => typeof id === "string")
+        : [];
+      if (questionIds.length === 0) {
+        return { success: false, error: "문항 스냅샷이 비어 있어 다시 보낼 수 없습니다." };
+      }
+      return createStudyAssignment({
+        ...base,
+        kind: "QUESTIONS",
+        questions: { questionIds },
+      });
+    }
+    if (original.kind === "VOCAB") {
+      // VOCAB — spec payload 그대로(count·빈 풀 검증·브리지 원자 생성은 create 재수행)
+      return createStudyAssignment({
+        ...base,
+        kind: "VOCAB",
+        vocab: payload as unknown as VocabAssignmentPayload,
+      });
+    }
+    // GRAMMAR — spec payload 그대로(count·빈 풀 검증은 create 가 재수행)
+    return createStudyAssignment({
+      ...base,
+      kind: "GRAMMAR",
+      grammar: payload as unknown as GrammarAssignmentPayload,
+    });
+  } catch (error) {
+    return { success: false, error: toErrorMessage(error, "재배포 중 오류가 발생했습니다.") };
   }
 }

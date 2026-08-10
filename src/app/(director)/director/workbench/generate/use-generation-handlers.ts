@@ -30,7 +30,10 @@ import {
   normalizeQuestionGenerationPlan,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
-import { type QuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
+import {
+  getEffectiveQuestionTypeGenerationPlan,
+  type QuestionTypeGenerationSettings,
+} from "@/lib/question-type-generation-settings";
 import {
   clampTeacherPoints,
   type TeacherPoint,
@@ -230,6 +233,298 @@ export async function createFastQuestionGenerationJob({
   };
 }
 
+// ── md-stream (빈칸·어법 마크다운 원큐 스트리밍) ─────────────────────────────
+// 적격 요청은 md-stream 라우트로 보내 사고/본문 델타를 실시간 미리보기로 흘리고,
+// 부적격(서버 400 MD_STREAM_INELIGIBLE)·네트워크 선실패는 fast 로 폴백한다.
+// 서버가 적격성의 최종 권위다 — 클라 검사는 빠른 우회용 최소 집합만 본다.
+
+// 26-07-26 승차분 포함. 세부 설정 적격성은 서버가 최종 판정하고(범위 밖이면
+// 400 MD_STREAM_INELIGIBLE → fast 폴백), 여기서는 유형 집합만 본다.
+const MD_STREAM_TYPES = new Set([
+  // 정본
+  "BLANK_INFERENCE",
+  "GRAMMAR_ERROR",
+  // 1차 승차
+  "ANTONYM",
+  "VOCAB_CHOICE",
+  "GRAMMAR_CHOICE_COMBO",
+  "SENTENCE_ORDER",
+  // 2차 승차 — 선택형
+  "TITLE",
+  "TOPIC",
+  "MAIN_IDEA",
+  "TOPIC_MAIN_IDEA",
+  "IMPLIED_MEANING",
+  "REFERENCE",
+  "CONTENT_MATCH",
+  // 2차 승차 — 구조형
+  "SENTENCE_INSERT",
+  "IRRELEVANT",
+  "SUMMARY_COMPLETE_MC",
+  // 2차 승차 — 어휘
+  "SYNONYM",
+  "CONTEXT_MEANING",
+  "GRAMMAR_CORRECTION",
+  // 2차 승차 — 서술형
+  "CONDITIONAL_WRITING",
+  "SENTENCE_TRANSFORM",
+  "FILL_BLANK_KEY",
+  "SUMMARY_COMPLETE",
+  "SUMMARY_WRITING",
+  "WORD_ORDER",
+  "TOPIC_SENTENCE_WRITING",
+]);
+
+export interface MdStreamPreview {
+  phase: "thinking" | "generating";
+  startedAt: number;
+  outputStartedAt?: number;
+  tail: string;
+}
+
+class MdStreamIneligibleError extends Error {
+  constructor() {
+    super("md-stream ineligible");
+    this.name = "MdStreamIneligibleError";
+  }
+}
+
+export function isMdStreamEligible(
+  questionType?: string,
+  questionTypeSettings?: unknown,
+  generationPlan?: QuestionGenerationPlan,
+): boolean {
+  if (process.env.NEXT_PUBLIC_QGEN_MD_STREAM === "off") return false;
+  // 26-07-22 프리미엄 md 승차(O213): 빈칸·어법은 PREMIUM 도 같은 md 원큐 구조로
+  // 간다 — 차이는 서버가 플랜별 모델(PREMIUM_QGEN_MODEL_ID, 기본 flash3)을 갈아
+  // 끼우는 것뿐. 단일상품 모드에서는 resolveEffectiveGenerationPlan 이 STANDARD
+  // 로 클램프하므로 이 분기 자체가 무의미(무회귀).
+  void generationPlan;
+  if (!questionType || !MD_STREAM_TYPES.has(questionType)) return false;
+  // 26-07-23: 교사 지정 포인트(포인트 짚어주기)·부정-부정 포함, 빈칸 단일·어법
+  // 5·1 은 세부 설정 무관 전부 md 레인 적격(사용자 확정: "무조건 신형") — 세부
+  // 설정은 서버가 프롬프트 모드 블록·준수 게이트로 그대로 반영한다.
+  void questionTypeSettings;
+  return true;
+}
+
+async function createMdStreamQuestionGenerationJob({
+  passageId,
+  mode,
+  count,
+  questionType,
+  questionTypeSettings,
+  difficulty,
+  customPrompt,
+  generationPlan,
+  variantIndex,
+  variantCount,
+  clientTempId,
+  onPreview,
+  onServerAck,
+}: {
+  passageId: string;
+  mode: "MANUAL";
+  count: 1;
+  questionType?: string;
+  questionTypeSettings?: unknown;
+  difficulty: string;
+  customPrompt?: string;
+  generationPlan: QuestionGenerationPlan;
+  variantIndex?: number;
+  variantCount?: number;
+  clientTempId?: string;
+  onPreview?: (preview: MdStreamPreview) => void;
+  /** 서버 프레임을 하나라도 수신하면 호출 — 이후엔 절대 fast 폴백 금지(이중 과금 차단). */
+  onServerAck?: () => void;
+}) {
+  const res = await fetch(
+    "/api/workbench/ai-jobs/question-generation/md-stream",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        passageId,
+        mode,
+        count,
+        questionType,
+        questionTypeSettings,
+        difficulty,
+        customPrompt,
+        generationPlan,
+        variantIndex,
+        variantCount,
+        clientTempId,
+      }),
+      // 서버 무응답·저장단 hang 시 전역 동시성 슬롯이 무기한 점유되지 않게 상한.
+      signal: AbortSignal.timeout(320_000),
+    },
+  );
+  if (!res.ok || !res.body) {
+    const data = await res.json().catch(() => ({}));
+    if (data?.code === "MD_STREAM_INELIGIBLE") {
+      throw new MdStreamIneligibleError();
+    }
+    throw new Error(
+      data.details || data.error || "Question generation failed.",
+    );
+  }
+  const startedAt = Date.now();
+  let outputStartedAt: number | undefined;
+  let reasoningTail = "";
+  let contentTail = "";
+  let lastEmit = 0;
+  const emitPreview = (force = false) => {
+    if (!onPreview) return;
+    const now = Date.now();
+    if (!force && now - lastEmit < 120) return;
+    lastEmit = now;
+    onPreview({
+      phase: outputStartedAt ? "generating" : "thinking",
+      startedAt,
+      outputStartedAt,
+      tail: (outputStartedAt ? contentTail : reasoningTail).slice(-420),
+    });
+  };
+
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  let doneResult: Record<string, unknown> | null = null;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split("\n");
+    buffer = lines.pop() ?? "";
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed.startsWith("data:")) continue;
+      const payload = trimmed.slice(5).trim();
+      if (!payload || payload === "[DONE]") continue;
+      let event: Record<string, unknown>;
+      try {
+        event = JSON.parse(payload);
+      } catch {
+        continue;
+      }
+      // 어떤 프레임이든 수신 = 서버가 요청을 접수(과금 커밋 가능성) — 폴백 금지 신호.
+      onServerAck?.();
+      if (event.t === "meta") {
+        // 첫 델타 전에도 패널을 즉시 띄운다 — 사용자가 "사고 중 0s"부터 본다.
+        emitPreview(true);
+      } else if (event.t === "r" && typeof event.d === "string") {
+        reasoningTail = (reasoningTail + event.d).slice(-900);
+        emitPreview();
+      } else if (event.t === "c" && typeof event.d === "string") {
+        if (!outputStartedAt) outputStartedAt = Date.now();
+        contentTail = (contentTail + event.d).slice(-900);
+        emitPreview();
+      } else if (event.t === "retry") {
+        // 어법 한정 게이트 반려 재생성(26-07-22) — 패널을 사고 단계로 되감는다.
+        outputStartedAt = undefined;
+        contentTail = "";
+        reasoningTail = `기계 검사 반려 — 재설계 중…\n${String(event.reason ?? "")}`;
+        emitPreview(true);
+      } else if (event.t === "error") {
+        throw new Error(String(event.message ?? "Question generation failed."));
+      } else if (event.t === "done") {
+        doneResult = event;
+      }
+    }
+  }
+  if (!doneResult) {
+    // 서버는 이미 저장까지 완료했을 수 있다 — 세션 큐의 DB 폴링이 완료 카드를
+    // 복원하므로, 단정적 실패가 아니라 확인 안내로 표면화한다.
+    throw new Error(
+      "생성 스트림이 중간에 끊겼습니다. 완료 여부는 잠시 후 생성 목록에서 자동으로 반영됩니다.",
+    );
+  }
+  return doneResult as {
+    jobId: string;
+    status: "COMPLETED";
+    questions: any[];
+    questionIds?: string[];
+    createdAt?: string;
+    completedAt?: string;
+    debugTiming?: Record<string, number>;
+  };
+}
+
+/**
+ * 스마트 라우팅 — 적격이면 md-stream(실시간 미리보기), 아니면 기존 fast.
+ * 폴백 규칙: ①서버 부적격 400 ②첫 이벤트 수신 전 네트워크 실패(TypeError)만
+ * fast 로 넘어간다. 그 외 오류는 서버가 이미 잡 실패·환불 처리했으므로 그대로
+ * 표면화한다(이중 생성·이중 과금 방지).
+ */
+export async function createQuestionGenerationJobSmart(args: {
+  passageId: string;
+  mode: "MANUAL";
+  count: 1;
+  questionType?: string;
+  questionTypeSettings?: unknown;
+  difficulty: string;
+  customPrompt?: string;
+  generationPlan: QuestionGenerationPlan;
+  variantIndex?: number;
+  variantCount?: number;
+  clientTempId?: string;
+  onPreview?: (preview: MdStreamPreview) => void;
+}) {
+  if (
+    isMdStreamEligible(
+      args.questionType,
+      args.questionTypeSettings,
+      args.generationPlan,
+    )
+  ) {
+    // 이중 과금 차단(적대 검수 수렴 발견): 서버는 크레딧 차감 직후 meta 프레임을
+    // 보낸다 — "어떤 프레임이든" 받았다면 서버가 과금·생성을 진행 중일 수 있으므로
+    // 그 이후의 실패는 절대 fast 로 폴백하지 않는다. 폴백은 서버 미접수(프레임 0)
+    // 상태의 네트워크 선실패(TypeError)로만 한정한다.
+    let serverAcked = false;
+    try {
+      return await createMdStreamQuestionGenerationJob({
+        passageId: args.passageId,
+        mode: args.mode,
+        count: args.count,
+        questionType: args.questionType,
+        questionTypeSettings: args.questionTypeSettings,
+        difficulty: args.difficulty,
+        customPrompt: args.customPrompt,
+        generationPlan: args.generationPlan,
+        variantIndex: args.variantIndex,
+        variantCount: args.variantCount,
+        clientTempId: args.clientTempId,
+        onServerAck: () => {
+          serverAcked = true;
+        },
+        onPreview: args.onPreview,
+      });
+    } catch (err) {
+      const networkPrefail = err instanceof TypeError && !serverAcked;
+      if (!(err instanceof MdStreamIneligibleError) && !networkPrefail) {
+        throw err;
+      }
+      // fast 폴백으로 계속.
+    }
+  }
+  return createFastQuestionGenerationJob({
+    passageId: args.passageId,
+    mode: args.mode,
+    count: args.count,
+    questionType: args.questionType,
+    questionTypeSettings: args.questionTypeSettings,
+    difficulty: args.difficulty,
+    customPrompt: args.customPrompt,
+    generationPlan: args.generationPlan,
+    variantIndex: args.variantIndex,
+    variantCount: args.variantCount,
+    clientTempId: args.clientTempId,
+  });
+}
+
 export async function runWithConcurrency<T, R>(
   items: T[],
   limit: number,
@@ -405,7 +700,7 @@ export function useGenerationHandlers({
         units.map((unit) =>
           scheduleFastGeneration(async () => {
             try {
-              const result = await createFastQuestionGenerationJob({
+              const result = await createQuestionGenerationJobSmart({
                 passageId: unit.passage.id,
                 mode: "MANUAL",
                 count: 1,
@@ -417,6 +712,14 @@ export function useGenerationHandlers({
                 variantIndex: unit.variantIndex,
                 variantCount: unit.variantCount,
                 clientTempId: unit.tempId,
+                onPreview: (preview) =>
+                  setSessionQueue((prev) =>
+                    prev.map((item) =>
+                      item.id === unit.tempId
+                        ? { ...item, streamPreview: preview }
+                        : item,
+                    ),
+                  ),
               });
               const doneItem = {
                 ...buildOptimisticItem({
@@ -564,6 +867,15 @@ export function useGenerationHandlers({
             questionTypeSettings[typeId],
             teacherPointsByPassage?.[p.id]?.[typeId],
           );
+          // 유형별 플랜 오버라이드(이원 티어 복귀, 26-07-22): 서버는 요청
+          // 플랜만 진실원으로 삼고 유형별 저장 설정은 읽지 않으므로(좀비 설정
+          // 함정 차단 — fast 라우트 주석), 유닛 디스패치 시점에 유형별 지정을
+          // 요청 플랜으로 해석해 싣는다. 요금(2배)·모델 라우팅이 이 값을 따른다.
+          const unitGenerationPlan = getEffectiveQuestionTypeGenerationPlan(
+            questionTypeSettings,
+            typeId,
+            generationPlan,
+          );
           for (let index = 0; index < repeatCount; index += 1) {
             units.push({
               passage: p,
@@ -580,7 +892,7 @@ export function useGenerationHandlers({
                 difficulty,
                 prompt: customPrompt.trim(),
                 mode: genMode,
-                generationPlan,
+                generationPlan: unitGenerationPlan,
               },
             });
           }
@@ -751,7 +1063,7 @@ export function useGenerationHandlers({
       );
 
       try {
-        const result = await createFastQuestionGenerationJob({
+        const result = await createQuestionGenerationJobSmart({
           passageId: passage.id,
           mode: "MANUAL",
           count: 1,
@@ -765,6 +1077,12 @@ export function useGenerationHandlers({
           customPrompt: config.prompt?.trim() || undefined,
           generationPlan: plan,
           clientTempId: item.id,
+          onPreview: (preview) =>
+            setSessionQueue((prev) =>
+              prev.map((q) =>
+                q.id === item.id ? { ...q, streamPreview: preview } : q,
+              ),
+            ),
         });
         const doneItem: QueueItem = {
           ...buildOptimisticItem({

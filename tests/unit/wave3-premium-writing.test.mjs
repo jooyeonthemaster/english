@@ -165,7 +165,9 @@ test("W3-TIMEOUT-3: generateWithRetry/repair 가 forceJsonFallback 을 관통 �
   assert.match(repair, /forceJsonFallback\?: boolean/);
   assert.match(
     repair,
-    /\{\s*system,\s*deadlineAt,\s*forceJsonFallback,\s*researchStage:/,
+    // 26-07-20 이원 티어: repair 콜에 사고 강도(reasoningEffort·gemini opt-in)가
+    // 추가로 관통 전달된다 — forceJsonFallback 관통 계약은 그대로 유지.
+    /\{\s*system,\s*deadlineAt,\s*forceJsonFallback,\s*reasoningEffort,\s*applyReasoningEffortToGemini,\s*researchStage:/,
   );
 });
 

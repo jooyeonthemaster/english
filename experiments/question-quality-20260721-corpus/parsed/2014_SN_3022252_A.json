@@ -1,0 +1,773 @@
+{
+ "examId": "2014_SN_3022252_A",
+ "source": "afa3c5bbf74ab19f57defe88e1d1870d.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ① It’s time to go to bed. ② Let’s not buy this apartment. ③ Sleep is better than medicine. ④ The neighbors are",
+   "choices": [
+    "It’s time to go to bed.",
+    "Let’s not buy this apartment.",
+    "Sleep is better than medicine.",
+    "The neighbors are really noisy.",
+    "This new house has enough rooms."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 211
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ① Right. We need to get a new fridge. ② Oh! Then I’ll go buy some right now. ③ Sure. Let me show you how to co",
+   "choices": [
+    "Right. We need to get a new fridge.",
+    "Oh! Then I’ll go buy some right now.",
+    "Sure. Let me show you how to cook them.",
+    "Wow! This sandwich tastes really good.",
+    "Yeah. This is a good place for a picnic."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 254
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. [3점] ①No. You don’t have to pay the late fee. ②Right. I’ll pay now and get the book later. ③It’s my turn. So you have to wait until I’m done. ④Okay. I’ll put your name on it, so you’ll be the next. ⑤Why not?",
+   "choices": [
+    "No. You don’t have to pay the late fee.",
+    "Right. I’ll pay now and get the book later.",
+    "It’s my turn. So you have to wait until I’m done.",
+    "Okay. I’ll put your name on it, so you’ll be the next.",
+    "Why not? Wait here and I’ll go find the book for you."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 304
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 그림에서 Eva’s Bakery의 위치를 고르시오. ① ② ③ ④ ⑤",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 50
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 다음을 듣고, 남자가 하는 말의 목적으로 가장 적절한 것을 고르시오. ① 주차 관리 요원을 모집하려고 ② 요가 센터 개장을 홍보하려고 ③ 주차장 확장 공사를 안내하려고 ④ 체육 시설 안전 점검을 촉구하려고 ⑤ 새로운 요가 프로그램을 소개하려고",
+   "choices": [
+    "주차 관리 요원을 모집하려고",
+    "요가 센터 개장을 홍보하려고",
+    "주차장 확장 공사를 안내하려고",
+    "체육 시설 안전 점검을 촉구하려고",
+    "새로운 요가 프로그램을 소개하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 140
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 다음을 듣고, 여자가 하는 말의 주제로 가장 적절한 것을 고르시오. ① 배낚시 전 확인해야 할 안전 장비 ② 배낚시를 즐기는 다양한 방법 ③ 선상 화재의 주된 원인 ④ 연령에 따른 구명조끼의 종류 ⑤ 배낚시 도구의 효과적인 관리 요령",
+   "choices": [
+    "배낚시 전 확인해야 할 안전 장비",
+    "배낚시를 즐기는 다양한 방법",
+    "선상 화재의 주된 원인",
+    "연령에 따른 구명조끼의 종류",
+    "배낚시 도구의 효과적인 관리 요령"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 135
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 두 사람이 하는 말의 주제로 가장 적절한 것을 고르시오. ① 컴퓨터 구매 시 고려 사항 ② 컴퓨터 보안 프로그램의 필요성 ③ 컴퓨터 내부 먼지 제거의 중요성 ④ 컴퓨터 전용 청소 도구의 사용법 ⑤ 컴퓨터 사용 시간과 건강 간의 관계",
+   "choices": [
+    "컴퓨터 구매 시 고려 사항",
+    "컴퓨터 보안 프로그램의 필요성",
+    "컴퓨터 내부 먼지 제거의 중요성",
+    "컴퓨터 전용 청소 도구의 사용법",
+    "컴퓨터 사용 시간과 건강 간의 관계"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 142
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, 여자의 의견으로 가장 적절한 것을 고르시오. ① 장난감의 과도한 사용은 학습을 방해한다. ② 장난감의 위생 상태를 확인할 필요가 있다. ③ 장난감 총 사용 시 안전사고에 유의해야 한다. ④ 장난감 종류에 따라 연령 제한을 두어야 한다. ⑤ 장난감 총은 아이들에게 부정",
+   "choices": [
+    "장난감의 과도한 사용은 학습을 방해한다.",
+    "장난감의 위생 상태를 확인할 필요가 있다.",
+    "장난감 총 사용 시 안전사고에 유의해야 한다.",
+    "장난감 종류에 따라 연령 제한을 두어야 한다.",
+    "장난감 총은 아이들에게 부정적인 영향을 미친다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 172
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고르시오. 제3 교시 홀수형 홀수형",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 56
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 대화를 듣고, 두 사람의 관계를 가장 잘 나타낸 것을 고르시오. ① 서점 직원－고객 ② 연극 연출가－배우 ③ 동화 작가－독자 ④ 도서관 사서－학생 ⑤ 출판사 편집장－삽화가",
+   "choices": [
+    "서점 직원－고객",
+    "연극 연출가－배우",
+    "동화 작가－독자",
+    "도서관 사서－학생",
+    "출판사 편집장－삽화가"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 101
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 대화를 듣고, 여자가 남자를 위해 할 일로 가장 적절한 것을 고르시오. ① 수업 참관하기 ② 만화 그려 주기 ③ 팸플릿 복사하기 ④ 읽기 자료 찾아 주기 ⑤ 현장 학습 일정표 만들기",
+   "choices": [
+    "수업 참관하기",
+    "만화 그려 주기",
+    "팸플릿 복사하기",
+    "읽기 자료 찾아 주기",
+    "현장 학습 일정표 만들기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 107
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 대화를 듣고, 여자가 남자에게 부탁한 일로 가장 적절한 것을 고르시오. ① 점심 사 오기 ② 사진 가져오기 ③ 기사 작성하기 ④ 카메라 빌려 주기 ⑤ 전시회 준비하기",
+   "choices": [
+    "점심 사 오기",
+    "사진 가져오기",
+    "기사 작성하기",
+    "카메라 빌려 주기",
+    "전시회 준비하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 98
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 남자가 언급한 계약서상의 오류를 고르시오. ① 배송지 ② 제품명 ③ 제품 수량 ④ 보증 기간 ⑤ 배송 날짜",
+   "choices": [
+    "배송지",
+    "제품명",
+    "제품 수량",
+    "보증 기간",
+    "배송 날짜"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 72
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 남자가 head chef에 지원하지 못하는 이유를 고르시오. ① 다음 주에 근무를 시작해야 해서 ② 기숙사 생활을 해야 해서 ③ 호텔에서의 요리사 경력이 부족해서 ④ 요리 대회 수상 실적이 없어서 ⑤ 프랑스어를 못해서",
+   "choices": [
+    "다음 주에 근무를 시작해야 해서",
+    "기숙사 생활을 해야 해서",
+    "호텔에서의 요리사 경력이 부족해서",
+    "요리 대회 수상 실적이 없어서",
+    "프랑스어를 못해서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 135
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 대화를 듣고, 여자가 지불할 금액을 고르시오. [3점] ① $30 ② $36 ③ $40 ④ $50 ⑤ $54",
+   "choices": [
+    "$30",
+    "$36",
+    "$40",
+    "$50",
+    "$54"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 65
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. Amazing Art Lovers에 관한 다음 내용을 듣고, 일치하지 않는 것을 고르시오. ① 43년의 역사를 가진 동아리이다. ② 지난 10년 동안 지역 사회에서 자원 봉사를 해 왔다. ③ 일주일 전에, 공장 벽에 그림을 그려 달라고 요청받았다. ④ 전공에 관계없이 신입 회원을",
+   "choices": [
+    "43년의 역사를 가진 동아리이다.",
+    "지난 10년 동안 지역 사회에서 자원 봉사를 해 왔다.",
+    "일주일 전에, 공장 벽에 그림을 그려 달라고 요청받았다.",
+    "전공에 관계없이 신입 회원을 찾고 있다.",
+    "전화번호가 웹사이트에 게시되어 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 192
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 다음 표를 보면서 대화를 듣고, 두 사람이 선택한 제품을 고르시오. ① ② ③ ④ ⑤",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 53
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. Woman: ①Great! I’m sure I can find some books there. ②Oh, good! You can help me find the library. ③Sure. I fi",
+   "choices": [
+    "Great! I’m sure I can find some books there.",
+    "Oh, good! You can help me find the library.",
+    "Sure. I finished writing my biology paper.",
+    "I know. That’s why I like going to the zoo.",
+    "That’s okay. I already know how to get there."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 286
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. [3점] Man: ① You have to renew your driver’s license. ② I’ll let you take the midterm a second time. ③ Then yo",
+   "choices": [
+    "You have to renew your driver’s license.",
+    "I’ll let you take the midterm a second time.",
+    "Then you should easily pass the test this time.",
+    "I don’t think memorizing is the best way to study.",
+    "No wonder you’re curious about your test results."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 307
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 상황 설명을 듣고, Paul이 Jennifer에게 할 말로 가장 적절한 것을 고르시오. Paul: ① Would you fax me the document right away?",
+   "choices": [
+    "Would you fax me the document right away?",
+    "Will you copy the document for the meeting?",
+    "If you don’t hurry, you’ll miss your flight.",
+    "I have no choice but to visit your office.",
+    "Please check whether you got my fax.\n[21～22] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 310
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 여자가 하는 말의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "졸업식 행사 참석을 권유하려고",
+    "학교 축제 프로그램을 안내하려고",
+    "학생 송별회 준비 사항을 점검하려고",
+    "생일 파티 전문 업체를 홍보하려고",
+    "국제 영화제 개막식에 초청하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 132
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 언급된 물건이 아닌 것은?",
+   "choices": [
+    "리본",
+    "카드",
+    "풍선",
+    "케이크",
+    "카메라\n  이제 듣기․말하기 문제가 끝났습니다. 23번부터는 문제지의 \n지시에 따라 답을 하시기 바랍니다.\n홀수형"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 106
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "가맹점 운영의 장점을 홍보하려고",
+    "물고기 질병 예방법을 공지하려고",
+    "애완동물용 먹이 종류를 소개하려고",
+    "애완동물 동반 여행 수칙을 안내하려고",
+    "물고기 안전 배송 서비스를 광고하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 133
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "난관을 극복할 때 성취감이 생긴다.",
+    "항상 타인의 입장을 먼저 고려해야 한다.",
+    "자신이 원하지 않는 일은 거절할 필요가 있다.",
+    "자신의 의견을 고집하면 대인 관계가 악화된다.",
+    "제안을 승낙하기 전에는 그 의도를 파악해야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 868
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "컴퓨터 게임 중독의 심각성",
+    "직장 내 대인 관계의 중요성",
+    "집중력과 학습 능력 간의 관계",
+    "죄책감이 정신 건강에 미치는 영향",
+    "시간적 압박하에서의 휴식의 필요성"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 960
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "How to Deal with Allergies",
+    "Watch Out for Small Animals!",
+    "Animals: Human’s True Friends",
+    "Animals Attack Human Villages!",
+    "Why Are Wild Animals Endangered?\nGood news for pet shop owners!\nWe, ABLE Shipping, have developed the perfect \nsystem for shipping fish to your customers. We can \nship live fish across the nation, and the fish will do \njust fine. Are you wondering how we ensure each fish \nhas a safe journey? Here’s the secret. We pack each \none in an oxygen-inflated plastic bag with enough \nwater to keep the fish relaxed and comfortable. \nFurthermore, each bag is wrapped in a cushion and \nthen placed inside a shipping box. Your fish will \nenjoy the journey all the way to your customers’ front \ndoors. Call us at 1-800-456-4959 or e-mail us at \nfishlove@ableshipping.com, and you’ll see how it \nworks.\n홀수형"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1614
+  },
+  {
+   "qNum": 27,
+   "kind": "grammar_underline",
+   "stem": "27. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "supplied to us three months",
+    "②": "that you provide spare parts",
+    "③": "unfair",
+    "④": "to operate entirely",
+    "⑤": "pay for the labor component"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 746
+  },
+  {
+   "qNum": 28,
+   "kind": "box_choice",
+   "stem": "28. (A), (B), (C)의 각 네모 안에서 문맥에 맞는 낱말로 가장 적절한 것은?",
+   "choices": [
+    "frequently …… distractions …… increase",
+    "frequently …… attractions\n…… decrease",
+    "rarely\n…… distractions …… increase",
+    "rarely\n…… attractions\n…… decrease",
+    "rarely\n…… distractions …… decrease"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "frequently",
+     "rarely"
+    ],
+    "B": [
+     "attractions",
+     "distractions"
+    ],
+    "C": [
+     "decrease",
+     "increase"
+    ]
+   },
+   "charLen": 1103
+  },
+  {
+   "qNum": 29,
+   "kind": "mc",
+   "stem": "29. Modern Pottery Museum에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "방문객은 추가 비용 없이 접시나 컵을 만들 수 있다.",
+    "주말은 평일보다 관람 시간이 1시간 더 길다.",
+    "매주 월요일에 휴관한다.",
+    "12세 미만의 어린이는 입장료가 $5이다.",
+    "방문객은 주차 요금을 할인받을 수 있다.\nModern Pottery Museum\nThe Modern Pottery Museum exhibits collections of \nartistic ceramic works. It also offers information about \nthe history and development of modern pottery. Visitors \ncan make their own plates or cups for an additional fee. \nHours*\nWeekdays: 9:00 a.m. －6:00 p.m.\nWeekends: 9:00 a.m. －5:00 p.m.\n* The museum is closed on the first Monday of every \nmonth.\nFees\nGeneral Admission: $5\nChildren under 12: Free\nPottery Experience: $10\nParking\nA parking discount is available to museum visitors. To \nreceive the discount, visitors must have their parking \ntickets stamped at the visitor information desk.\n홀수형"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 802
+  },
+  {
+   "qNum": 30,
+   "kind": "mc",
+   "stem": "30. Nature Foundation 회원의 혜택에 관한 다음 안내문의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "일 년에 $50를 내면 모든 혜택을 누린다.",
+    "일 년 동안 월간 잡지 Nature World를 받는다.",
+    "재단 주최 행사에 관한 월간 뉴스레터를 받는다.",
+    "재단 발행 도서 구입 시 10%를 할인받는다.",
+    "국립공원 입장료를 할인받는다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 190
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. Harmony Youth Orchestra Auditions에 관한 다음 안내문의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "오디션 기간은 2013년 12월 16일부터 20일까지이다.",
+    "중․고등학생들이 지원할 수 있다.",
+    "11월 30일까지 지원서와 추천서를 제출해야 한다.",
+    "오디션 시간과 장소를 이메일로 받는다.",
+    "오디션의 최종 결과를 전화로 통지받는다.\nBECOME A MEMBER OF\nTHE NATURE FOUNDATION\nThe Nature Foundation is a world-wide organization \ndedicated to the preservation of our natural environment. \nHelp us by joining today, and enjoy all the benefits of \nmembership for only $50 per year.\nMembers receive:\n∙Our monthly magazine, Nature World, for one year.\n∙A weekly newsletter about upcoming events held by \nthe Foundation.\n∙Invitations to special lectures on natural history and \nenvironmental science.\nMembers also get:\n∙A 10% discount on books published by the \nFoundation.\n∙A 20% discount on our other magazines like \nNature Kids.\n∙Discounted admission to national parks.\nIf you have further questions about membership \nbenefits, please call us at 987-555-4567 or visit our \nwebsite at www.naturefoundation.org.\nHarmony Youth Orchestra Auditions\nFor the 2014 Season\nAudition Dates: December 16th-20th, 2013\nThe Harmony Youth Orchestra is for you if you wish to \nparticipate in great musical performances under \nHarmony’s conductor.\nYou must...\n∙currently be a middle or high school student.\n∙send in a completed audition application form and a \nrecommendation from your music teacher by \nNovember 30th.\n∙prepare to play a piece of your choice for the \naudition.\nYou will...\n∙receive an e-mail with your audition time and place \nabout 10 days before your audition day. \n∙be notified of the final results by e-mail about a week \nafter the audition.\nApplication forms can be downloaded from the \nHarmony Youth Orchestra website (www.hyo.org).\n홀수형"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1701
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. 다음 도표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "In these \ngroups, the volunteer rates ranged from 29% to 58%, and the \nCanadian average rate was 46%.",
+    "The average annual hours \nincreased with age except for the group aged between 25 and \n34, which volunteered an average of 133 hours.",
+    "The 15-24 \nage group showed the highest volunteer rate but the second \nfewest average annual hours.",
+    "The 35-44 age group had \nfewer average annual hours than the 45-54 age group, while \nthe 55-64 and 65-74 age groups showed the same average \nannual hours.",
+    "Despite their lowest rate of volunteering, \nseniors aged 75 and older gave more hours on average than \nany other age group.\n[33～35] 다음 빈칸에 들어갈 말로 가장 적절한 것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 791
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. In all cultures in which eye-gaze behavior has been studied, science confirms that those who are dominant have more in using it. In essence, these individua",
+   "choices": [
+    "anxiety",
+    "conflict",
+    "freedom",
+    "reluctance",
+    "responsibility"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 851
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. The importance of science has led people to think that ‘objectivity’ is the best way to see the world ― to see the facts without any feelings. However, from",
+   "choices": [
+    "richness of life",
+    "brutality of humans",
+    "size of the TV screen",
+    "incorrectness of a theory",
+    "criticism of scientific findings"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 834
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. Sometimes all the outcomes customers are trying to achieve in one area have a negative effect on other outcomes. This is very common when companies are busy",
+   "choices": [
+    "impact other product or service functions",
+    "delay the introduction of innovative products",
+    "induce other customers to make additional requests",
+    "bring about excessive competition among companies",
+    "discourage companies from listening to customers’ voices\n홀수형"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1217
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. 다음 글의 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "For example …… As a result",
+    "For example …… In contrast",
+    "Otherwise\n…… As a result",
+    "Meanwhile\n…… In contrast",
+    "Meanwhile\n…… Nevertheless"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 999
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. 주어진 글 다음에 이어질 글의 순서로 가장 적절한 것은?",
+   "choices": [
+    "(A) －(C) －(B)",
+    "(B) －(A) －(C)",
+    "(B) －(C) －(A)",
+    "(C) －(A) －(B)",
+    "(C) －(B) －(A)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 908
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "You can’t control which \nway the track (or in this case, life events) will take you.",
+    "When you’re at the bottom, you can see only what’s right \nin front of you, but when you get to the top, you can see the \nwhole picture a lot better.",
+    "When you’re starting out, accept \nhow you feel and try to enjoy the ride.",
+    "When you design an \namusement park for children, you should carefully consider \nthe location of the roller coaster.",
+    "When it’s over, you’ll see \nthat it was really cool ― even if you couldn’t see that when \nyou first started."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 721
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. 글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 적절한 곳은?",
+   "choices": [
+    ") The traffic was heavy, and it \nwas likely the blind man would get hit, as he was not crossing \nat a crosswalk. (",
+    ") Tom looked around and saw there was \nno one else to help, so he asked the blind man if he would like \nhelp crossing the street. (",
+    ") The blind man readily said \nyes, then latched onto Tom’s arm, and they began their walk \nacross the street avoiding speeding cars. (",
+    ") When Tom \nlooked back at the bus stop bench, he saw another man sitting \nnext to his book bag. (",
+    ") And when Tom got to the bus \nstop bench, the man said, “I saw what you were doing, so I \ndecided to sit here and watch your book bag.”\n* latch onto: ～에 달라붙다"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 892
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글에 드러난 필자의 심경으로 가장 적절한 것은?",
+   "choices": [
+    "bored",
+    "irritated",
+    "envious",
+    "indifferent",
+    "delighted\n홀수형\n[41～42] 다음 글을 읽고, 물음에 답하시오.\nIt is well known that some baseball parks are better for \nhitting home runs than others. It is not just the size of the \npark that matters. Other park conditions such as wind and \nhumidity also affect whether a ball sails over the fences, and \nplayers know this. So what happens when a player is moved \nto a team whose baseball park has better conditions for home \nruns than his current one ― say, 28 percent better? One \nanalysis found that the player hit 60 percent more home runs. \nWhy? The answer lies in how achievable you think the goal \nis. If you think you are likely to hit more home runs, you are \nmore likely to swing for the fences. But if you think your \nchance of hitting a home run is smaller, your brain will send \nyou signals to just try for a single to get on base.\nIn business and life, just as in baseball, our \ncan affect whether we swing for the fences or not. The \nbaseball research shows us that what matters is not the actual \ndistance to the fence but what our brains recognize that \ndistance to be. Consider your work and your current life. Do \nthe fences seem too far away to hit a home run? Simply \nadjust the fences so that it seems easier.\n* single: 1루타, 단타"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2055
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 위 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Move Your Fences Closer",
+    "Why Does Teamwork Matter?",
+    "Is Statistics Necessary in Sports?",
+    "Change Your Team for More Benefits",
+    "Better Park Conditions: Size vs. Wind"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 188
+  },
+  {
+   "qNum": 42,
+   "kind": "mc",
+   "stem": "42. 위 글의 빈칸에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "strengths",
+    "perceptions",
+    "incomes",
+    "sacrifices",
+    "appearances\n[43～45] 다음 글을 읽고, 물음에 답하시오.\n(A)\nMom once said that my grandmother came to America as a \npoor uneducated Greek immigrant at eighteen. My \ngrandmother wanted to go to school, but the harsh immigrant \nlife pushed (a) her to support her family. Though she never \nlearned to read in school, she knew many traditional stories \nfrom her home country. \n(B)\nOne day, when I saw my grandmother on the street by \nchance, I noticed that (b) she had difficulty in reading an \nEnglish sign. Right at that moment, it hit upon me to teach \nher to read English in return for all she had taught me. I \ntalked to my mom about it, and (c) she was delighted with \nmy plan. So my grandmother and I worked hard together \nusing books for beginners.\n(C)\nMy efforts were rewarded only a month later on the \nmorning of my eighteenth birthday. My grandmother \ndecorated a cake with “HAPPY BIRTHDAY BETTY.” I had \nonly taught her the basics of reading, but (d) she had written \nthese words all by herself. Touched by this simple message, I \nsaid, “It’s not just my birthday, Grandma. You stepped into \nthis country at eighteen. Now, you are stepping into another \nnew world. So it’s your birthday, too.”\n(D)\nMy grandmother liked to tell me these interesting stories at \nnight. I still remember a few stories in which the gods made \npromises with each other like humans. Those who broke their \npromises were punished. While listening to the stories, I \ndecided that I would not break any promises. The morals of \n(e) her stories taught me how I should live my life."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1635
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) －(C) －(D)",
+    "(B) －(D) －(C)",
+    "(C) －(B) －(D)",
+    "(D) －(B) －(C)",
+    "(D) －(C) －(B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 130
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a)～(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 75
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 위 글의 grandmother에 관한 내용과 일치하지 않는 것은?",
+   "choices": [
+    "18세에 그리스에서 미국으로 이민을 왔다.",
+    "학교에서 읽기를 배운 적이 없다.",
+    "필자와 초보자용 책으로 공부하였다.",
+    "필자의 생일 케이크에 축하 문구로 장식을 하였다.",
+    "필자에게 밤에 재미있는 이야기를 듣는 것을 좋아했다.\n* 확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)했는지 확인\n하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 215
+  }
+ ],
+ "sourcePdf": "afa3c5bbf74ab19f57defe88e1d1870d.pdf"
+}

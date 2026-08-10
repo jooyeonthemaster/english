@@ -1,0 +1,322 @@
+[
+  {
+    "sid": "C009",
+    "p": "P6",
+    "id": "ebsi_go1_20240328-q30",
+    "solver": "has enough time or ability→lacks the time or ability",
+    "verifier": "has enough time or ability→does not have enough time or ability",
+    "samePosition": true
+  },
+  {
+    "sid": "C010",
+    "p": "P3",
+    "id": "ebsi_go1_20240904-q29",
+    "solver": "which→where",
+    "verifier": "which→in which",
+    "samePosition": true
+  },
+  {
+    "sid": "C011",
+    "p": "P5",
+    "id": "ebsi_go2_20240904-q29",
+    "solver": "make→to make",
+    "verifier": "two make→two to make",
+    "samePosition": false
+  },
+  {
+    "sid": "C014",
+    "p": "P3",
+    "id": "2024_SN_5086091-q41-42",
+    "solver": "running the risk→avoiding the risk",
+    "verifier": "running→avoiding",
+    "samePosition": false
+  },
+  {
+    "sid": "C014",
+    "p": "P5",
+    "id": "ebsi_go1_20230323-q30",
+    "solver": "strengthened→destroyed",
+    "verifier": "strengthened→weakened",
+    "samePosition": true
+  },
+  {
+    "sid": "C016",
+    "p": "P3",
+    "id": "ebsi_go2_20230601-q30",
+    "solver": "poor→rich",
+    "verifier": "poor nations give→rich nations give",
+    "samePosition": false
+  },
+  {
+    "sid": "C018",
+    "p": "P4",
+    "id": "ebsi_go3_20231012-q30",
+    "solver": "resistant→receptive",
+    "verifier": "resistant→sensitive",
+    "samePosition": true
+  },
+  {
+    "sid": "C019",
+    "p": "P5",
+    "id": "ebsi_go1_20220609-q30",
+    "solver": "ignoring→envying",
+    "verifier": "ignoring→imitating",
+    "samePosition": true
+  },
+  {
+    "sid": "C020",
+    "p": "P6",
+    "id": "ebsi_go2_20220609-q30",
+    "solver": "less likely→more likely",
+    "verifier": "less→more",
+    "samePosition": false
+  },
+  {
+    "sid": "C021",
+    "p": "P2",
+    "id": "ebsi_go2_20221123-q30",
+    "solver": "reinforces→reduces",
+    "verifier": "reinforces→destroys",
+    "samePosition": true
+  },
+  {
+    "sid": "C021",
+    "p": "P4",
+    "id": "ebsi_go2_20220901-q30",
+    "solver": "scarce→excess",
+    "verifier": "scarce→surplus",
+    "samePosition": true
+  },
+  {
+    "sid": "C023",
+    "p": "P1",
+    "id": "ebsi_go3_20221012-q29",
+    "solver": "what referred to as→what was referred to as",
+    "verifier": "what referred to→what is referred to",
+    "samePosition": false
+  },
+  {
+    "sid": "C023",
+    "p": "P5",
+    "id": "2022_SN_5070164-q41-42",
+    "solver": "abstract→obvious",
+    "verifier": "abstract→simple",
+    "samePosition": true
+  },
+  {
+    "sid": "C024",
+    "p": "P2",
+    "id": "ebsi_go1_20210603-q29",
+    "solver": "are lowered→is lowered",
+    "verifier": "are→is",
+    "samePosition": false
+  },
+  {
+    "sid": "C024",
+    "p": "P3",
+    "id": "ebsi_go1_20210603-q30",
+    "solver": "prevent→absorb",
+    "verifier": "prevent→accommodate",
+    "samePosition": true
+  },
+  {
+    "sid": "C024",
+    "p": "P4",
+    "id": "ebsi_go1_20210831-q29",
+    "solver": "situation which→situation in which",
+    "verifier": "which→in which",
+    "samePosition": false
+  },
+  {
+    "sid": "C026",
+    "p": "P1",
+    "id": "ebsi_go2_20210831-q30",
+    "solver": "monocultures→biodiversity",
+    "verifier": "benefits→dangers",
+    "samePosition": false
+  },
+  {
+    "sid": "C030",
+    "p": "P3",
+    "id": "ebsi_go2_20200916-q30",
+    "solver": "hard→easy",
+    "verifier": "hard to believe→easier to believe",
+    "samePosition": false
+  },
+  {
+    "sid": "C036",
+    "p": "P3",
+    "id": "2019_SN_5031122-q29",
+    "solver": "their→its",
+    "verifier": "has→was",
+    "samePosition": false
+  },
+  {
+    "sid": "C038",
+    "p": "P4",
+    "id": "ebsi_go2_20180607-q29",
+    "solver": "improving→degrading",
+    "verifier": "improving→reducing",
+    "samePosition": true
+  },
+  {
+    "sid": "C038",
+    "p": "P6",
+    "id": "ebsi_go2_20181121-q28",
+    "solver": "them→whom",
+    "verifier": "many of them→many of whom",
+    "samePosition": false
+  },
+  {
+    "sid": "C043",
+    "p": "P6",
+    "id": "ebsi_go1_20161123-q28",
+    "solver": "use→using",
+    "verifier": "some of them use→some of them using",
+    "samePosition": false
+  },
+  {
+    "sid": "C047",
+    "p": "P4",
+    "id": "ebsi_go1_20150604-q30",
+    "solver": "more→some",
+    "verifier": "inherited→inherit",
+    "samePosition": false
+  },
+  {
+    "sid": "C049",
+    "p": "P5",
+    "id": "ebsi_go3_20150409_A-q30",
+    "solver": "defect→advantage",
+    "verifier": "defect→edge",
+    "samePosition": true
+  },
+  {
+    "sid": "C052",
+    "p": "P3",
+    "id": "ebsi_go1_20140903-q27",
+    "solver": "was→did",
+    "verifier": "than it was at first→than it did at first",
+    "samePosition": false
+  },
+  {
+    "sid": "C053",
+    "p": "P4",
+    "id": "ebsi_go2_20140612-q28",
+    "solver": "relieved→anxious",
+    "verifier": "relieved→expectant",
+    "samePosition": true
+  },
+  {
+    "sid": "C057",
+    "p": "P6",
+    "id": "ebsi_go1_20130903-q28",
+    "solver": "sufficient→limited",
+    "verifier": "sufficient→insufficient",
+    "samePosition": true
+  },
+  {
+    "sid": "C062",
+    "p": "P3",
+    "id": "2013_SN_3014708-q30",
+    "solver": "deny→recognize",
+    "verifier": "deny→realize",
+    "samePosition": true
+  },
+  {
+    "sid": "C064",
+    "p": "P5",
+    "id": "ebsi_go2_20120314-q35",
+    "solver": "antibiotics→antibodies",
+    "verifier": "slowly→quickly",
+    "samePosition": false
+  },
+  {
+    "sid": "C065",
+    "p": "P5",
+    "id": "ebsi_go2_20121114_B-q28",
+    "solver": "accepted→resisted",
+    "verifier": "accepted→rejected",
+    "samePosition": true
+  },
+  {
+    "sid": "C069",
+    "p": "P2",
+    "id": "ebsi_go1_20110310-q21",
+    "solver": "got off→get off",
+    "verifier": "got→get",
+    "samePosition": false
+  },
+  {
+    "sid": "C069",
+    "p": "P5",
+    "id": "ebsi_go1_20110901-q20",
+    "solver": "it lost→it was lost",
+    "verifier": "lost→was lost",
+    "samePosition": false
+  },
+  {
+    "sid": "C071",
+    "p": "P1",
+    "id": "ebsi_go2_20110310-q21",
+    "solver": "what→that",
+    "verifier": "is not true→are not true",
+    "samePosition": false
+  },
+  {
+    "sid": "C071",
+    "p": "P4",
+    "id": "ebsi_go2_20110901-q20",
+    "solver": "is developed→developed",
+    "verifier": "a system is developed→a system developed",
+    "samePosition": false
+  },
+  {
+    "sid": "C077",
+    "p": "P3",
+    "id": "ebsi_go2_20100311-q21",
+    "solver": "use it→use",
+    "verifier": "it→(삭제)",
+    "samePosition": false
+  },
+  {
+    "sid": "C078",
+    "p": "P3",
+    "id": "ebsi_go2_20101124-q21",
+    "solver": "was bounced back→bounced back",
+    "verifier": "blasting→being blasted",
+    "samePosition": false
+  },
+  {
+    "sid": "C080",
+    "p": "P2",
+    "id": "ebsi_go3_20101012-q32",
+    "solver": "accept→challenge",
+    "verifier": "accept→reject",
+    "samePosition": true
+  },
+  {
+    "sid": "C083",
+    "p": "P6",
+    "id": "ebsi_go2_20091117-q28",
+    "solver": "cultivate→circulate",
+    "verifier": "natural→mechanical",
+    "samePosition": false
+  },
+  {
+    "sid": "C084",
+    "p": "P4",
+    "id": "ebsi_go3_20090714-q22",
+    "solver": "that→for which",
+    "verifier": "that you can be thankful→that you can be thankful for",
+    "samePosition": false
+  },
+  {
+    "sid": "C089",
+    "p": "P3",
+    "id": "ebsi_go1_20060309-q20",
+    "solver": "is keeping→is kept",
+    "verifier": "keeping→kept",
+    "samePosition": false
+  }
+]

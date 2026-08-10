@@ -428,8 +428,34 @@ const worksheetWordOrderSchema = z.object({
   answer: z.string(),
 });
 
+// ─── EBS 브랜드 문구 정규화 (26-07-22 사용자 지시: EBS 언급 전면 제거) ─────────
+// 과거 생성 프롬프트의 EBS 페르소나/예시가 만들어 DB(report.pages)에 저장된
+// 제목·부제·미니타이틀을 파스 시점에 중립 문구로 치환한다. 편집기 로드(GET)·
+// 저장(PATCH)·학생/프린트/미리보기(preview-parse) 전 경로가 analysisReportSchema
+// 를 통과하므로, 기존 문서 표시와 재저장 모두 여기서 청소된다(렌더 컴포넌트
+// 치환·마이그레이션 스크립트 불필요). 신규 생성도 generation 스키마가 이 base
+// 를 extend 하므로 프롬프트 지시를 어겨도 저장 전에 걸린다(2차 방어선).
+const EBS_BRAND_REPLACEMENTS: ReadonlyArray<[RegExp, string]> = [
+  [/EBS[\s·]*수능특강[\s·]*변형/g, "유형별 변형 훈련"],
+  [/EBS[\s·]*워크북[\s·]*유형[\s·]*훈련/g, "유형별 워크북 훈련"],
+  [/EBS[\s·]*워크북/g, "유형별 워크북"],
+  [/EBS[\s·]*Workbook/gi, "Workbook Training"],
+  [/\bEBS\b[\s·]*/g, ""],
+];
+
+export function stripEbsBranding(value: string): string {
+  let out = value;
+  for (const [pattern, replacement] of EBS_BRAND_REPLACEMENTS) {
+    out = out.replace(pattern, replacement);
+  }
+  return out.replace(/[ \t]{2,}/g, " ").trim();
+}
+
 const worksheetWorkbookSetSchema = z.object({
-  title: z.string().default("EBS 워크북 유형 훈련"),
+  title: z
+    .string()
+    .default("유형별 워크북 훈련")
+    .transform((v) => stripEbsBranding(v) || "유형별 워크북 훈련"),
   topicGist: z.object({
     title: z.string().default("주제 / 요지"),
     topicTitle: z.string(),
@@ -465,7 +491,16 @@ export const learningWorksheetSectionSchema = z
   .object({
     kind: z.literal("learning-worksheet"),
     title: z.string().default("실전 학습지"),
-    note: z.string().optional(),
+    // note(부제)는 과거 EBS 페르소나가 "EBS 수능특강 변형 및…" 류를 생성해 DB에
+    // 남아 있다 — 파스 시점에 브랜드 문구를 청소한다(빈 결과는 부제 제거).
+    // transform 뒤 .optional() 순서 유지 — 반대로 두면 키가 필수로 추론된다.
+    note: z
+      .string()
+      .transform((v) => {
+        const cleaned = stripEbsBranding(v);
+        return cleaned ? cleaned : undefined;
+      })
+      .optional(),
     logicRows: z
       .array(
         z.object({
@@ -550,6 +585,28 @@ export const learningWorksheetSectionSchema = z
      *  하드코딩 라벨/영문 키커도 편집 가능하게, 스키마에 필드를 N개 추가하지 않고 한 맵으로 모은다. */
     titleOverrides: z
       .record(z.string(), z.object({ k: z.string().optional(), e: z.string().optional() }))
+      // 강사가 과거 저장한 "EBS Workbook" 류 키커/제목 오버라이드도 동일 정규화.
+      // transform 뒤 .optional() 순서 유지 — 반대로 두면 키가 필수로 추론된다.
+      // 브랜드 단독 문자열(예: "EBS")이 "" 로 붕괴하면 키를 제거해 기본 라벨로
+      // 폴백시킨다 — 원래부터 "" 였던 의도적 빈 오버라이드는 그대로 보존.
+      .transform((v) => {
+        const cleanOverride = (raw: string | undefined): string | undefined => {
+          if (raw === undefined) return undefined;
+          const cleaned = stripEbsBranding(raw);
+          if (cleaned === "" && raw.trim() !== "") return undefined;
+          return cleaned;
+        };
+        const out: Record<string, { k?: string; e?: string }> = {};
+        for (const [slot, entry] of Object.entries(v)) {
+          const k = cleanOverride(entry.k);
+          const e = cleanOverride(entry.e);
+          out[slot] = {
+            ...(k !== undefined ? { k } : {}),
+            ...(e !== undefined ? { e } : {}),
+          };
+        }
+        return out;
+      })
       .optional(),
   })
   .passthrough();
@@ -894,6 +951,16 @@ export const analysisReportSchema = z
      * 같은 섹션이 여러 헤더로 나와도 슬롯키로 구분. 번호(par-sec-no)는 자동 생성이라 편집 대상 아님.
      */
     sectionHeadings: z.record(z.string(), z.object({ ko: z.string().optional(), en: z.string().optional() })).optional(),
+    /**
+     * (편집기) 목차에서 꺼 둔 섹션 슬롯키 목록. 값은 sectionHeadings 와 같은 슬롯키
+     * (`${kind}${idSuffix}` — 예: "passage", "passage-anno", "summary",
+     * "learning-worksheet-logic", "vocabulary", "learning-worksheet").
+     * 여기 담긴 슬롯은 헤더와 본문이 통째로 flow 에서 빠지고, 남은 섹션 번호(01·02…)가
+     * 자동으로 다시 매겨진다. 섹션 인덱스가 아니라 슬롯키인 이유: 한 섹션이 두 슬롯으로
+     * 나오고(passage → 원문 / 필기 분석), 실전 학습지 생성이 sections 순서를 재배치한다.
+     * 없거나 손상되면 전부 표시(하위호환 — 기존 저장 데이터는 필드가 없으므로 무변화).
+     */
+    hiddenSections: z.array(z.string().max(64)).max(32).optional().catch(undefined),
     /** Vocabulary worksheet only mode. Keeps source data but renders only the word-test sheet. */
     vocabTestOnly: z.boolean().optional(),
     /** (편집기) 표지 다음에 '영어 원문만' 단독 페이지를 추가할지. 기본 off. */

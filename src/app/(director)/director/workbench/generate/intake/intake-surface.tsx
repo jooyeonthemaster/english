@@ -86,8 +86,16 @@ interface IntakeSurfaceProps {
   mobileStepTabs?: "sources" | "hidden";
   /** 모바일 스텝 플로우 — 하단 고정 바가 직접 입력의 시작 동작을 대신 호출. */
   pasteStartRef?: MutableRefObject<(() => void) | null>;
-  /** 직접 입력의 누적 지문 수·작업 상태 알림(하단 바 라벨용). */
-  onPasteStateChange?: (state: { count: number; busy: boolean }) => void;
+  /**
+   * 직접 입력의 누적 지문 수·작업 상태 알림(하단 바 라벨용).
+   * `fixedFooter` 는 그 탭이 하단 고정 액션 바를 렌더하는지 — AI 지문 생성
+   * 모드에서는 고정 바가 없어 false 다(호스트의 하단 여백 예약·스텝 네비 분기용).
+   */
+  onPasteStateChange?: (state: {
+    count: number;
+    busy: boolean;
+    fixedFooter?: boolean;
+  }) => void;
 }
 
 /**
@@ -121,8 +129,17 @@ export function IntakeSurface({
   // 오버레이(워크스페이스)가 떠 있을 땐 탭이 가리키는 내용이 그 아래 깔려
   // 있으므로, 탭을 누르면 먼저 오버레이를 닫아 해당 내용을 드러낸다.
   const dismissOverlay = () => onDismissOverlay?.();
+  const overlayActive = !!overlay;
   const pasteActive =
     showPasteTab && intakeView === "intake" && intakeTab === "paste";
+  // 이 화면에서 '직접 입력 탭이 실제로 눈에 보이는가'의 단일 판정.
+  // 탭의 active 표시와 MultiPassagePaste 의 boardVisible 이 **같은 값**을 써야
+  // 한다 — 갈라지면 탭은 꺼져 보이는데 보드는 자기가 보인다고 믿는 상태가 생기고,
+  // 그 순간 AI 지문 생성의 body 포털 모달이 다른 화면 위로 튀어나온다(step 19).
+  // 붙여넣기 표면은 비활성일 때도 hidden 으로 마운트를 유지하므로(아래 :240)
+  // "마운트됨 ≠ 보임"이다. 워크스페이스 오버레이(:265)는 본문을 통째로 덮으므로
+  // 탭 상태와 무관하게 보이지 않는 것으로 친다.
+  const pasteVisible = pasteActive && !overlayActive;
   const uploadActive =
     showUploadTab && intakeView === "intake" && intakeTab === "upload";
   const examActive =
@@ -144,7 +161,7 @@ export function IntakeSurface({
       >
         {showPasteTab ? (
           <Tab
-            active={pasteActive && !overlay}
+            active={pasteVisible}
             onClick={() => {
               dismissOverlay();
               setIntakeView("intake");
@@ -240,6 +257,10 @@ export function IntakeSurface({
               subjectScope={pasteSubjectScope}
               startRef={pasteStartRef}
               onDraftStateChange={onPasteStateChange}
+              // 탭 active 와 **같은 값**을 넘긴다. 이 표면은 비활성일 때 hidden
+              // 으로만 숨는데, AI 지문 생성 보드의 결과·검토 모달은 body 포털이라
+              // 조상의 display:none 이 통하지 않는다.
+              boardVisible={pasteVisible}
             />
           </div>
         ) : null}

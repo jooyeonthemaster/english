@@ -29,7 +29,8 @@ export function PageShell({
         className,
       )}
     >
-      <main className="mx-auto flex w-full min-w-0 max-w-[1600px] flex-col gap-4">
+      {/* 전폭 정본(스펙 §6) — max-w 캡 금지. 좌우 여백은 셸 패딩(px-4 sm:px-6 xl:px-8)이 담당. */}
+      <main className="flex w-full min-w-0 max-w-none flex-col gap-4">
         {children}
       </main>
     </div>

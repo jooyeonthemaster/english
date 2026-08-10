@@ -26,6 +26,7 @@ export const CREDIT_COSTS = {
   PASSAGE_RESTORATION: 1,      // Opt-in AI 복원 (문제화된 지문 → 원문 재구성) — flash-lite 전환으로 인하 (26-06-10)
   PASSAGE_TRANSFORM: 1,        // AI 지문 변형 — 구간(문장 재작성·앞 맥락 추가) flash-lite 경량 호출
   PASSAGE_VARIANT: 2,          // AI 지문 변형 — 전체(관련/상반 주제·난이도·길이)로 새 지문 한 편 생성
+  PASSAGE_AUTHORING: 2,        // AI 지문 생성 — 자료+지시로 새 지문 1편(N편이면 2N, 실패 편수만 부분 환불). 자료 판독은 무료
 
   // Webtoon
   WEBTOON_IMAGE: 5,            // 일반(STANDARD) — Gemini nano-banana-2 로 9:16 웹툰 이미지
@@ -60,11 +61,12 @@ export const OPERATION_LABELS: Record<OperationType, string> = {
   PASSAGE_RESTORATION: "AI 지문 복원",
   PASSAGE_TRANSFORM: "AI 지문 변형",
   PASSAGE_VARIANT: "AI 지문 변형 (전체)",
+  PASSAGE_AUTHORING: "AI 지문 생성",
   WEBTOON_IMAGE: "웹툰 이미지 생성 (일반)",
   WEBTOON_IMAGE_PREMIUM: "웹툰 이미지 생성 (프리미엄)",
   WEBTOON_EXAM_DOWNLOAD: "기출 웹툰 다운로드",
   EXAM_ANALYSIS: "시험지 문항 분석",
-  EXAM_STUDENT_REPORT: "학생 시험 리포트",
+  EXAM_STUDENT_REPORT: "학생 내신 리포트",
   EXAM_ANALYSIS_BOOST: "AI 심층분석 보강",
   EXAM_TREND_ANALYSIS: "AI 추세변화 분석",
 };

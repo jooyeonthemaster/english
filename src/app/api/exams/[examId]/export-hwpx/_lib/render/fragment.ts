@@ -35,6 +35,7 @@ import {
   renderQuestionBlock,
   type BuilderItemResolved,
 } from "./question";
+import { multiBlankOptionsHeaderBlock } from "./options";
 import {
   LINE_GAP_MARKER,
   type PassageStyle,
@@ -475,6 +476,17 @@ export function renderQuestionPart(
 
   // 4) 선지(이 단에 배정된 선지). originalIndex 로 라벨/표시.
   if (shouldRenderOptionListForSubtype(subType) && part.options.length > 0) {
+    // 다중 빈칸(BLANK_INFERENCE) 조합 선지: 첫 선지(①)가 배치된 단에만 (A)/(B)
+    // 컬럼 헤더 라인을 붙인다 — pagination 이 첫 선지 블록에 예약한 헤더 행
+    // (multiBlankOptionsHeaderHeight)과 위치·높이 1:1(미리보기 그리드와 동일 규칙).
+    if (part.options.some((entry) => entry.originalIndex === 0)) {
+      const multiBlankHeader = multiBlankOptionsHeaderBlock({
+        options: item.options ?? [],
+        subType,
+        compact,
+      });
+      if (multiBlankHeader) result.push(multiBlankHeader);
+    }
     for (const { option, originalIndex } of part.options) {
       const display = optionDisplayTextForSubtype(
         subType,

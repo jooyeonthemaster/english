@@ -190,9 +190,14 @@ export function usePassageLibrary({
       const cleaned = rows
         .map((r) => ({ title: r.title.trim(), content: r.content.trim() }))
         .filter((r) => r.content.length >= 20);
+      // ⚠️ 반드시 boolean 을 돌려준다. 직접 입력·AI 지문 생성 경로
+      // (multi-passage-paste.registerAuthoredRows)는 `ok !== false` 로 성공을
+      // 판정하므로, undefined 를 돌려주면 등록이 전부 실패해도 "지문 N편을
+      // 지문함에 넣었어요" 성공 토스트가 뜨고 결과 모달이 닫힌다(다른 두 호스트
+      // 구현은 이미 boolean 계약을 지킨다).
       if (cleaned.length === 0) {
         toast.error("지문이 너무 짧습니다. 최소 20자 이상 입력해주세요.");
-        return;
+        return false;
       }
       setPasteSaving(true);
       try {
@@ -208,7 +213,7 @@ export function usePassageLibrary({
         }
         if (createdIds.length === 0) {
           toast.error("지문 등록에 실패했습니다.");
-          return;
+          return false;
         }
         await loadPassages();
         setPassageSearch("");
@@ -221,8 +226,10 @@ export function usePassageLibrary({
             ? `${createdIds.length}개 지문이 등록되었습니다. ${pastedSuccessGuide}`
             : `${createdIds.length}/${cleaned.length}개 지문이 등록되었습니다. 일부는 실패했습니다.`,
         );
+        return true;
       } catch {
         toast.error("지문 등록 중 오류가 발생했습니다.");
+        return false;
       } finally {
         setPasteSaving(false);
       }

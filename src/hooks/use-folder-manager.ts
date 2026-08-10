@@ -43,6 +43,14 @@ interface UseFolderManagerOptions {
    * 처럼 별도 카운트 구조를 쓰는 화면은 끈 채로 둔다(직속 수치만 사용).
    */
   cumulativeCounts?: boolean;
+  /**
+   * N-10: 폴더 삭제 confirm 문구 오버라이드. 미지정 시 기존 범용 문구
+   * (「이 폴더를 삭제하시겠습니까? ({itemLabel}은(는) 삭제되지 않습니다)」) —
+   * 전 소비처 무회귀. 「폴더」 어휘가 맞지 않는 표면(반 편성 뷰 등)이 주입한다.
+   */
+  deleteConfirmMessage?: string;
+  /** N-10: 폴더 삭제 성공 토스트 오버라이드. 미지정 시 「폴더가 삭제되었습니다.」 */
+  deleteSuccessMessage?: string;
 }
 
 const UNDO_TOAST_DURATION = 8000;
@@ -68,6 +76,8 @@ export function useFolderManager({
   itemLabel,
   questionSetIdOf,
   cumulativeCounts = false,
+  deleteConfirmMessage,
+  deleteSuccessMessage,
 }: UseFolderManagerOptions) {
   // ─── State ───
   const [collections, setCollections] = useState<CollectionItem[]>(
@@ -272,9 +282,12 @@ export function useFolderManager({
 
   const handleDeleteFolder = useCallback(
     async (id: string) => {
+      // N-10: 반 편성 뷰 등 「폴더」 어휘가 맞지 않는 표면은 옵션으로 문구 주입 —
+      // 미지정이면 기존 문구 그대로(무회귀).
       if (
         !confirm(
-          `이 폴더를 삭제하시겠습니까? (${itemLabel}은(는) 삭제되지 않습니다)`,
+          deleteConfirmMessage ??
+            `이 폴더를 삭제하시겠습니까? (${itemLabel}은(는) 삭제되지 않습니다)`,
         )
       )
         return;
@@ -287,10 +300,10 @@ export function useFolderManager({
           return next;
         });
         if (activeFolder === id) setActiveFolder(null);
-        toast.success("폴더가 삭제되었습니다.");
+        toast.success(deleteSuccessMessage ?? "폴더가 삭제되었습니다.");
       }
     },
-    [actions, activeFolder, itemLabel],
+    [actions, activeFolder, itemLabel, deleteConfirmMessage, deleteSuccessMessage],
   );
 
   // ─── Membership handlers ───

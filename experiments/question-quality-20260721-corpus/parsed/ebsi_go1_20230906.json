@@ -1,0 +1,764 @@
+{
+ "examId": "ebsi_go1_20230906",
+ "source": "ebsi_go1_20230906_paper_eng_mun_351QN953.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 다음을 듣고, 남자가 하는 말의 목적으로 가장 적절한 것을 고르시오. ① 강당의 천장 수리 기간을 공지하려고 ② 콘서트 관람 규칙 준수를 요청하려고 ③ 학교 축제에서 공연할 동아리를 모집하려고 ④ 폭우에 대비한 교실 시설 관리를 당부하려고 ⑤ 학교 록 밴드 공연의 장소 변경을 안내",
+   "choices": [
+    "강당의 천장 수리 기간을 공지하려고",
+    "콘서트 관람 규칙 준수를 요청하려고",
+    "학교 축제에서 공연할 동아리를 모집하려고",
+    "폭우에 대비한 교실 시설 관리를 당부하려고",
+    "학교 록 밴드 공연의 장소 변경을 안내하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 175
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 여자의 의견으로 가장 적절한 것을 고르시오. ① 달리기를 할 때 적합한 신발을 신어야 한다. ② 운동을 한 후에 충분한 물을 섭취해야 한다. ③ 야외 활동 전에 일기예보를 확인하는 것이 좋다. ④ 달리기 전 스트레칭은 통증과 부상을 예방해 준다. ⑤ 초보자의 경우 달",
+   "choices": [
+    "달리기를 할 때 적합한 신발을 신어야 한다.",
+    "운동을 한 후에 충분한 물을 섭취해야 한다.",
+    "야외 활동 전에 일기예보를 확인하는 것이 좋다.",
+    "달리기 전 스트레칭은 통증과 부상을 예방해 준다.",
+    "초보자의 경우 달리는 거리를 점진적으로 늘려야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 192
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 대화를 듣고, 두 사람의 관계를 가장 잘 나타낸 것을 고르시오. ① 관객－영화감독 ② 연극 배우－시나리오 작가 ③ 잡지 기자－의상 디자이너 ④ 토크쇼 진행자－영화 평론가 ⑤ 배우 지망생－연기 학원 강사",
+   "choices": [
+    "관객－영화감독",
+    "연극 배우－시나리오 작가",
+    "잡지 기자－의상 디자이너",
+    "토크쇼 진행자－영화 평론가",
+    "배우 지망생－연기 학원 강사"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 122
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고르시오.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 42
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 여자가 할 일로 가장 적절한 것을 고르시오. ① 관객용 의자 배치하기 ② 마이크 음향 점검하기 ③ 공연 포스터 붙이기 ④ 무대 조명 설치하기 ⑤ 배터리 구매하기",
+   "choices": [
+    "관객용 의자 배치하기",
+    "마이크 음향 점검하기",
+    "공연 포스터 붙이기",
+    "무대 조명 설치하기",
+    "배터리 구매하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 107
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 남자가 지불할 금액을 고르시오. [3점] ① $37 ② $45 ③ $55 ④ $60 ⑤ $80",
+   "choices": [
+    "$37",
+    "$45",
+    "$55",
+    "$60",
+    "$80"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 66
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 여자가 스키 여행을 갈 수 없는 이유를 고르시오. ① 카페에서 일해야 해서 ② 숙소를 예약하지 못해서 ③ 역사 시험 공부를 해야 해서 ④ 수술받은 고양이를 돌봐야 해서 ⑤ 캐나다에 사는 친척을 방문해야 해서",
+   "choices": [
+    "카페에서 일해야 해서",
+    "숙소를 예약하지 못해서",
+    "역사 시험 공부를 해야 해서",
+    "수술받은 고양이를 돌봐야 해서",
+    "캐나다에 사는 친척을 방문해야 해서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 138
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, Street Photography Contest에 관해 언급되지 않은 것을 고르시오. ① 참가 대상 ② 주제 ③ 심사 기준 ④ 제출 마감일 ⑤ 우승 상품",
+   "choices": [
+    "참가 대상",
+    "주제",
+    "심사 기준",
+    "제출 마감일",
+    "우승 상품"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 102
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. Twin Stars Chocolate Day에 관한 다음 내용을 듣고, 일치하지 않는 것을 고르시오. ① 11월 12일 오후에 열린다. ② 초콜릿의 역사에 관한 강의가 진행된다. ③ 초콜릿 5개를 만든다. ④ 사전 등록 없이 참가할 수 있다. ⑤ 등록비에 재료비가 포함된다.",
+   "choices": [
+    "11월 12일 오후에 열린다.",
+    "초콜릿의 역사에 관한 강의가 진행된다.",
+    "초콜릿 5개를 만든다.",
+    "사전 등록 없이 참가할 수 있다.",
+    "등록비에 재료비가 포함된다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 170
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 다음 표를 보면서 대화를 듣고, 두 사람이 주문할 실내 사이클링 자전거를 고르시오. Indoor Cycling Bikes Model Price Color Foldable Customer Rating ① A $100 White × ★★★★ ② B $150 Black × ★★★ ③ ",
+   "choices": [
+    "A\n$100\nWhite\n×\n★★★★",
+    "B\n$150\nBlack\n×\n★★★",
+    "C\n$190\nBlack\n○\n★★★★",
+    "D\n$250\nBlack\n○\n★★★★★",
+    "E\n$320\nWhite\n×\n★★★★★"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 228
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ① Sure. I’ll send you a link to the website. ② It would look better in a different color. ③ Sorry. I forgot t",
+   "choices": [
+    "Sure. I’ll send you a link to the website.",
+    "It would look better in a different color.",
+    "Sorry. I forgot to bring your sweater.",
+    "You need your receipt to return it.",
+    "My brother bought it on sale, too."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 269
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ① Let’s take the leftovers home. ② I prefer fried chicken over pizza. ③ I don’t want to go out for lunch toda",
+   "choices": [
+    "Let’s take the leftovers home.",
+    "I prefer fried chicken over pizza.",
+    "I don’t want to go out for lunch today.",
+    "I’ll call the restaurant and check our order.",
+    "The letter was delivered to the wrong address.\n2023학년도 9월 고1 전국연합학력평가 문제지\n제3 교시\n고1"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 309
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. Man: ① You’re right. I won’t skip meals anymore. ② Thank you for the lunch you prepared for me. ③ You need to",
+   "choices": [
+    "You’re right. I won’t skip meals anymore.",
+    "Thank you for the lunch you prepared for me.",
+    "You need to check when the cafeteria is open.",
+    "Trust me. I can teach you good table manners.",
+    "No problem. We’ll finish the science project on time."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 364
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. [3점] Woman: ① No. It isn’t difficult for me to learn Spanish. ② I’m glad you finally passed the vocabulary te",
+   "choices": [
+    "No. It isn’t difficult for me to learn Spanish.",
+    "I’m glad you finally passed the vocabulary test.",
+    "Exactly. Learning a language starts with repetition.",
+    "It’s very helpful to use a dictionary while writing.",
+    "You should turn in your homework by this afternoon."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 390
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Brian이 Melissa에게 할 말로 가장 적절한 것을 고르시오. [3점] Brian: ① Let’s clean the classroom after art class. ② Did you remove the stickers from the board?",
+   "choices": [
+    "Let’s clean the classroom after art class.",
+    "Did you remove the stickers from the board?",
+    "Please turn off the heater when you leave the room.",
+    "When is the final date to sign up for the design class?",
+    "Will you design stickers that encourage energy saving?\n[16~17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 418
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 남자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "advantages of renting houses in cities",
+    "reasons tourists prefer visiting old cities",
+    "ways cities deal with overtourism problems",
+    "correlation between cities’ sizes and overtourism",
+    "how cities face their aging transportation systems"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 276
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 도시가 아닌 것은?",
+   "choices": [
+    "Barcelona",
+    "Amsterdam",
+    "London",
+    "Venice",
+    "Paris\n  이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시에 \n따라 답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 125
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "과학 박물관 내 시설 이용 제한을 안내하려고",
+    "화학 박람회 일정이 변경된 이유를 설명하려고",
+    "중학생을 위한 화학 실험 특별 강연을 부탁하려고",
+    "중학교 과학 수업용 실험 교재 집필을 의뢰하려고",
+    "화학 박람회에서 실험을 도울 대학생 추천을 요청하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 172
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 나타난 ‘I’의 심경 변화로 가장 적절한 것은?",
+   "choices": [
+    "joyful     →bored",
+    "confident →fearful",
+    "nervous →relieved",
+    "regretful\n→pleased",
+    "grateful  →annoyed"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 845
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "자녀를 타인과 비교하는 말을 삼가야 한다.",
+    "자녀에게 행동으로 삶의 모범을 보여야 한다.",
+    "칭찬을 통해 자녀의 바람직한 행동을 강화해야 한다.",
+    "훈육을 하기 전에 자녀 스스로 생각할 시간을 주어야 한다.",
+    "자녀가 새로운 것에 도전할 때 인내심을 가지고 지켜봐야 한다.\nDear Professor Sanchez,\n  My name is Ellis Wight, and I’m the director of the Alexandria \nScience Museum. We are holding a Chemistry Fair for local \nmiddle school students on Saturday, October 28. The goal of the \nfair is to encourage them to be interested in science through \nguided experiments. We are looking for college students who can \nhelp with the experiments during the event. I am contacting you \nto ask you to recommend some students from the chemistry \ndepartment at your college who you think are qualified for this \njob. With their help, I’m sure the participants will have a great \nexperience. I look forward to hearing from you soon.\nSincerely, \nEllis Wight\n고1"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1745
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 밑줄 친 fall silently in the woods가 다음 글에서 의미하는 바로 가장 적절한 것은?",
+   "choices": [
+    "fail to include the previous study",
+    "end up being considered completely false",
+    "become useless because they are not published",
+    "focus on communication to meet public demands",
+    "are published yet readers don’t understand them"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1109
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "협상 상대의 단점뿐 아니라 장점을 철저히 분석해야 한다.",
+    "의사소통 과정에서 서로의 의도를 확인하는 것이 바람직하다.",
+    "성공적인 협상을 위해 다양한 대안을 준비하는 것이 중요하다.",
+    "양측에 유리한 협상을 통해 상대와 좋은 관계를 유지해야 한다.",
+    "원만한 인간관계를 위해 상호독립성을 인정하는 것이 필요하다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1119
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "roles of culture in ethnic groups",
+    "contrastive aspects of cultural diversity",
+    "negative perspectives of national identity",
+    "factors of productivity differences across countries",
+    "policies to protect minorities and prevent discrimination"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1291
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Buildings Transform How We Live!",
+    "Why Do We Build More Than We Need?",
+    "Copying Ancient Buildings for Creativity",
+    "Was Life Better in Huntergatherer Times?",
+    "Innovate Your Farm with New Constructions\n고1"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1062
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. 다음 도표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "In each of the given years, \nthe 18-29 group had the highest percentage of people who \nsaid they used social media.",
+    "In 2015, the percentage of \npeople who reported using social media in the 30-49 group \nwas more than twice that in the 65 and older group.",
+    "The \npercentage of people who said they used social media in the \n50-64 group in 2021 was 22 percentage points higher than \nthat in 2015.",
+    "In 2021, except for the 65 and older group, \nmore than fourfifths of people in each age group reported \nusing social media.",
+    "Among all the age groups, only the \n18-29 group showed a decrease in the percentage of people \nwho reported using social media from 2015 to 2021."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 842
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Bill Evans에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "6세에 피아노 수업을 받기 시작했다.",
+    "Southeastern Louisiana 대학에서 학위를 취득했다.",
+    "군 복무 이후 뉴욕에서 작곡을 공부했다.",
+    "작곡가 George Russell을 고용했다.",
+    "1964년에 자신의 첫 번째 그래미상을 수상했다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1050
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. Silversmithing Class에 관한 다음 안내문의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "두 시간 동안 진행된다.",
+    "10월 1일부터 등록할 수 있다.",
+    "등록 인원은 6명으로 제한된다.",
+    "참가 연령에 제한이 없다.",
+    "수업 당일 취소 시 환불이 불가하다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 151
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. 2023 Ocean Awareness Film Contest에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "세 가지 주제 중 하나를 선택해야 한다.",
+    "중학생이 참가할 수 있다.",
+    "영상은 10분을 넘길 수 없다.",
+    "1인당 두 개까지 출품할 수 있다.",
+    "수상자는 웹사이트에 공지될 것이다.\n 2023 Ocean Awareness Film Contest\n  Join our 7th annual film contest and show your \nknowledge of marine conservation.\n□ Theme\n   Ocean Wildlife / Ocean Pollution \n   (Choose one of the above.)\n□ Guidelines\n   Participants: High school students\n   Submission deadline: September 22, 2023\n   The video must be between 10 and 15 minutes.\n   All entries must be uploaded to our website.\n   Only one entry per person\n□ Prizes\n  · 1st place: $100 · 2nd place: $70 · 3rd place: $50\n   (Winners will be announced on our website.)\nFor more information, please visit www.oceanawareFC.com.\nSilversmithing Class\n  Kingston Club is offering a fine jewelry making class. \nDon’t miss this great chance to make your own \njewelry!\nWhen & Where\n · Saturday, October 21, 2023 (2 p.m. to 4 p.m.)\n · Kingston Club studio\nRegistration\n · Available only online\n · Dates: October 1-14, 2023\n · Fee: $40 (This includes all tools and materials.)\n · Registration is limited to 6 people.\nNote\n · Participants must be at least 16 years old. \n · No refund for cancellation on the day of the class\n고1"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1241
+  },
+  {
+   "qNum": 29,
+   "kind": "grammar_underline",
+   "stem": "29. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "successfully than those on the",
+    "②": "being given advice on how",
+    "③": "have decades of knowledge and",
+    "④": "themselves how to run their",
+    "⑤": "how sport organizations should be"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1018
+  },
+  {
+   "qNum": 30,
+   "kind": "vocab_underline",
+   "stem": "30. 다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "familiar is taken away",
+    "②": "easy for them to imagine",
+    "③": "adjust to the new place",
+    "④": "respects their past as an",
+    "⑤": "transition"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1032
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. Many people are terrified to fly in airplanes. Often, this fear stems from a lack of control. The pilot is in control, not the passengers, and this lack of ",
+   "choices": [
+    "anxiety",
+    "boredom",
+    "confidence",
+    "satisfaction",
+    "responsibility"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 996
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. The famous primatologist Frans de Waal, of Emory University, says humans downplay similarities between us and other animals as a way of maintaining our spot",
+   "choices": [
+    "define human instincts",
+    "overestimate chimps’ intelligence",
+    "distance the other animals from us",
+    "identify animals’ negative emotions",
+    "correct our misconceptions about nature\n고1"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1274
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. A key to engagement and achievement is providing students with . My scholarly work and my teaching have been deeply influenced by the work of Rosalie Fink. ",
+   "choices": [
+    "examples from official textbooks",
+    "relevant texts they will be interested in",
+    "enough chances to exchange information",
+    "different genres for different age groups",
+    "early reading experience to develop logic skills"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1279
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. For many people, ability refers to intellectual competence, so they want everything they do to reflect how smart they are — writing a brilliant legal brief,",
+   "choices": [
+    "it is the sole determinant of one’s selfworth",
+    "you are distracted by others’ achievements",
+    "there is too much competition in one field",
+    "you ignore feedback about a performance",
+    "it is not accompanied by effort"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1132
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "While the pain itself is unpleasant, it is in \nfact acting as a protective mechanism for the foot.",
+    "That is, \nyou get used to the pain so the capacity with which you can \navoid pain decreases.",
+    "Within the brain, nerves will connect \nto the area that controls speech, so that you may well shout \n‘ouch’ or something rather less polite.",
+    "They will also \nconnect to motor nerves that travel back down the spinal cord, \nand to the muscles in your leg that now contract quickly to lift \nyour foot away from the painful object.",
+    "Sensory and motor \nnerves control almost all functions in the body — from the \nbeating of the heart to the movement of the gut, sweating and \njust about everything else.\n* spinal cord: 척수  ** gut: 장\n[36~37] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 것을 \n고르시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1075
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. Maybe you’ve heard this joke: “How do you eat an elephant?",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n고1"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1209
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. When you pluck a guitar string it moves back and forth hundreds of times every second. (A) The vibration of the wood creates more powerful waves in the air ",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n[38~39] 글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 \n적절한 곳을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38~39"
+    ]
+   },
+   "charLen": 1046
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. Other individuals prefer integrating work and family roles all day long. Boundaries between work and home are blurring as portable digital technology makes ",
+   "choices": [
+    ") Some people prefer to separate or segment roles so \nthat boundary crossings are minimized. (",
+    ") For example, \nthese people might keep separate email accounts for work \nand family and try to conduct work at the workplace and take \ncare of family matters only during breaks and nonwork time. \n(",
+    ") We’ve even noticed more of these “segmenters” \ncarrying two phones ― one for work and one for personal use. \n(",
+    ") Flexible schedules work well for these individuals because \nthey enable greater distinction between time at work and time in \nother roles. (",
+    ") This might entail constantly trading text \nmessages with children from the office, or monitoring emails at \nhome and on vacation, rather than returning to work to find \nhundreds of messages in their inbox. [3점]\n* entail: 수반하다"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1105
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. However, do not assume that a product is perfectly complementary, as customers may not be completely locked in to the product. A “complementary good” is a p",
+   "choices": [
+    ") For example, popcorn is a \ncomplementary good to a movie, while a travel pillow is a \ncomplementary good for a long plane journey. (",
+    ") When the \npopularity of one product increases, the sales of its \ncomplementary good also increase. (",
+    ") By producing goods \nthat complement other products that are already (or about to \nbe) popular, you can ensure a steady stream of demand for \nyour product. (",
+    ") Some products enjoy perfect complementary \nstatus — they have to be consumed together, such as a lamp \nand a lightbulb. (",
+    ") For example, although motorists may \nseem required to purchase gasoline to run their cars, they can \nswitch to electric cars."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 879
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "positively\n……\nchallenges",
+    "negatively\n……\nchallenges",
+    "indifferently\n……\nneglects",
+    "negatively\n……\nmeets",
+    "positively\n……\nmeets\n고1\n[41~42] 다음 글을 읽고, 물음에 답하시오.\n  Claims that local food production cut greenhouse gas \nemissions by reducing the burning of transportation fuel are \nusually not well founded. Transport is the source of only 11 \npercent of greenhouse gas emissions within the food sector, \nso reducing the distance that food travels after it leaves the \nfarm is far (a) less important than reducing wasteful energy \nuse on the farm. Food coming from a distance can actually be \nbetter for the (b) climate, depending on how it was grown. \nFor example, fieldgrown tomatoes shipped from Mexico in \nthe winter months will have a smaller carbon footprint than \n(c) local winter tomatoes grown in a greenhouse. In the \nUnited Kingdom, lamb meat that travels 11,000 miles from \nNew Zealand generates only onequarter the carbon emissions \nper pound compared to British lamb because farmers in the \nUnited Kingdom raise their animals on feed (which must be \nproduced using fossil fuels) rather than on clover pastureland.  \n   When food does travel, what matters most is not the   \n(d) distance traveled but the travel mode (surface versus air), \nand most of all the load size. Bulk loads of food can travel \nhalfway around the world by ocean freight with a smaller carbon \nfootprint, per pound delivered, than foods traveling just a short \ndistance but in much (e) larger loads. For example, 18wheelers \ncarry much larger loads than pickup trucks so they can move \nfood 100 times as far while burning only onethird as much gas \nper pound of food delivered.\n * freight: 화물 운송"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2841
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Shorten the Route, Cut the Cost",
+    "Is Local Food Always Better for the Earth?",
+    "Why Mass Production Ruins the Environment",
+    "New Technologies: What Matters in Agriculture",
+    "Reduce Food Waste for a Smaller Carbon Footprint"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 246
+  },
+  {
+   "qNum": 42,
+   "kind": "vocab_letter",
+   "stem": "42. 밑줄 친 (a)~(e) 중에서 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {
+    "a": "he put up a",
+    "b": "you consider me a",
+    "c": "I only did my",
+    "d": "his house every morning",
+    "e": "he saw a young"
+   },
+   "bracketChoices": {},
+   "charLen": 1589
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) - (D) - (C)",
+    "(C) - (B) - (D)",
+    "(C) - (D) - (B)",
+    "(D) - (B) - (C)",
+    "(D) - (C) - (B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 140
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a)~(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 74
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글에 관한 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "노인은 마을 중심부에 사원을 지었다.",
+    "젊은이가 사원을 나설 때 노인이 그를 불렀다.",
+    "젊은이는 노인의 제안에 놀랐다.",
+    "노인은 사원으로 통하는 길에 묻혀있던 벽돌을 파냈다.",
+    "공고를 보고 많은 사람들이 노인을 찾아갔다.\n* 확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)했는지 확인\n하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 207
+  }
+ ],
+ "sourcePdf": "ebsi_go1_20230906_paper_eng_mun_351QN953.pdf"
+}

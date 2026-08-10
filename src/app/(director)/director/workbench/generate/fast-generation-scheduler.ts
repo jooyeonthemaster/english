@@ -62,11 +62,6 @@ export function scheduleFastGeneration<T>(task: () => Promise<T>): Promise<T> {
   });
 }
 
-/** 현재 진행 중 + 대기 중인 fast 생성 작업 수(진행 표시용). */
-export function getInFlightFastGenerationCount(): number {
-  return activeCount + pending.length;
-}
-
 // 낙관적 큐 아이템 id(tempId) 의 배치 토큰. Date.now() 는 같은 ms 에 연속으로 시작한
 // 두 배치에서 충돌할 수 있어(특히 같은 지문+유형이 겹칠 때), 세션 단조 증가 카운터로
 // 배치마다 전역 유일한 토큰을 발급한다.

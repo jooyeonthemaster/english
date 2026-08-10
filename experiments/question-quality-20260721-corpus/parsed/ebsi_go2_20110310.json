@@ -1,0 +1,839 @@
+{
+ "examId": "ebsi_go2_20110310",
+ "source": "ebsi_go2_20110310_paper_201103102_eng_mun.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 대화를 듣고, 여자가 구입할 스탬프를 고르시오.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 30
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 남자의 심정으로 가장 적절한 것을 고르시오. [1점] ① bored ② excited ③ relieved ④ grateful ⑤ embarrassed",
+   "choices": [
+    "bored",
+    "excited",
+    "relieved",
+    "grateful",
+    "embarrassed"
+   ],
+   "point": 1,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 95
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을 듣고, 남자가 하는 말의 주제로 가장 적절한 것을 고르시오. ① IQ 테스트의 신뢰성 ② 낮잠의 긍정적인 효과 ③ 운동을 통한 근력 증진 ④ 낮잠과 노화의 상관관계 ⑤ 직장인의 수면 부족 원인",
+   "choices": [
+    "IQ 테스트의 신뢰성",
+    "낮잠의 긍정적인 효과",
+    "운동을 통한 근력 증진",
+    "낮잠과 노화의 상관관계",
+    "직장인의 수면 부족 원인"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 115
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 여자가 남자를 위해 할 일로 가장 적절한 것을 고르시오. ① 합창 안무 짜기 ② 피아노 반주하기 ③ 발성 훈련시키기 ④ 합창단 지휘하기 ⑤ 반주자 섭외하기",
+   "choices": [
+    "합창 안무 짜기",
+    "피아노 반주하기",
+    "발성 훈련시키기",
+    "합창단 지휘하기",
+    "반주자 섭외하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 100
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 두 사람이 초대장 구입비로 지출할 금액을 고르시오. ① $50 ② $100 ③ $150 ④ $200 ⑤ $250",
+   "choices": [
+    "$50",
+    "$100",
+    "$150",
+    "$200",
+    "$250"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 74
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 다음을 듣고, 여자가 하는 말의 목적으로 가장 적절한 것을 고르시오. ① 주차 협조를 요청하려고 ② 새 이웃 주민을 소개하려고 ③ 주차 요금 인상을 안내하려고 ④ 주차장 보수 공사를 공지하려고 ⑤ 출입구 사용 방법을 설명하려고",
+   "choices": [
+    "주차 협조를 요청하려고",
+    "새 이웃 주민을 소개하려고",
+    "주차 요금 인상을 안내하려고",
+    "주차장 보수 공사를 공지하려고",
+    "출입구 사용 방법을 설명하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 133
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 남자가 여자에게 부탁한 일로 가장 적절한 것을 고르시오. ① 선글라스 빌려주기 ② 발표 대신 하기 ③ 병원까지 태워 주기 ④ 슬라이드 제작하기 ⑤ 발표 자료 수정하기",
+   "choices": [
+    "선글라스 빌려주기",
+    "발표 대신 하기",
+    "병원까지 태워 주기",
+    "슬라이드 제작하기",
+    "발표 자료 수정하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 105
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, 두 사람이 대화하고 있는 장소로 가장 적절한 곳을 고르시오. ① 오디션 대기실 ② 나비 전시관 ③ 공연장 매표소 ④ 판사 집무실 ⑤ 운전면허 시험장",
+   "choices": [
+    "오디션 대기실",
+    "나비 전시관",
+    "공연장 매표소",
+    "판사 집무실",
+    "운전면허 시험장"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 95
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 대화를 듣고, 두 사람의 관계를 가장 잘 나타낸 것을 고르시오. ① 카메라맨 - 리포터 ② 소방관 - 제보자 ③ 운전기사 - 관광객 ④ 사회자 - 초대 손님 ⑤ 교통경찰 - 운전자",
+   "choices": [
+    "카메라맨 - 리포터",
+    "소방관 - 제보자",
+    "운전기사 - 관광객",
+    "사회자 - 초대 손님",
+    "교통경찰 - 운전자"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 104
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 대화를 듣고, 남자가 여자를 위해 할 일로 가장 적절한 것을 고르시오. ① 물고기 옮기기 ② 어항 가져오기 ③ 은행 다녀오기 ④ 주차 대신하기 ⑤ 새 어항 구입하기",
+   "choices": [
+    "물고기 옮기기",
+    "어항 가져오기",
+    "은행 다녀오기",
+    "주차 대신하기",
+    "새 어항 구입하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 97
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 다음 표를 보면서 대화를 듣고, 내용과 일치하지 않는 것을 고르시오. 외국어(영어) 영역 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 119
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 학교 축제에 대한 다음 내용을 듣고, 일치하지 않는 것을 고르시오. [3점] ① 이번 주 화요일 학교에서 열린다. ② 야외공연은 2시부터 4시까지 진행된다. ③ 학교 강당에서 6시에 주 공연이 시작된다. ④ 주 공연이 끝난 후 학생회 주관 벼룩시장이 열린다. ⑤ 벼룩시장의 수익금",
+   "choices": [
+    "이번 주 화요일 학교에서 열린다.",
+    "야외공연은 2시부터 4시까지 진행된다.",
+    "학교 강당에서 6시에 주 공연이 시작된다.",
+    "주 공연이 끝난 후 학생회 주관 벼룩시장이 열린다.",
+    "벼룩시장의 수익금 절반은 자선 단체에 기부된다."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 179
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 다음 그림의 상황에 가장 적절한 대화를 고르시오. ① ② ③ ④ ⑤",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 72
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. Woman: ① I think he’s on a diet. ② You’d better see a doctor. ③ I need to order some almonds. ④ Right. He should stop eating sweets. ⑤ Really?",
+   "choices": [
+    "I think he’s on a diet.",
+    "You’d better see a doctor.",
+    "I need to order some almonds.",
+    "Right. He should stop eating sweets.",
+    "Really? I’ll bake chocolate cookies, then."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 281
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. Man: ① My credit card expired a week ago. ② You should pay for the vacuum cleaner. ③ What time and where shall we make it?",
+   "choices": [
+    "My credit card expired a week ago.",
+    "You should pay for the vacuum cleaner.",
+    "What time and where shall we make it?",
+    "How can I get to the department store?",
+    "You can bring any government issued ID."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 312
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. [1점] Woman: ① How often do you go camping?",
+   "choices": [
+    "How often do you go camping?",
+    "Kimchi is my favorite Korean food.",
+    "Great. How can I register for that?",
+    "Sorry. Can I cancel my reservation?",
+    "Sure. The program is free of charge."
+   ],
+   "point": 1,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 297
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 다음 상황 설명을 듣고, Sara가 공항직원에게 할 말로 가장 적절한 것을 고르시오. Sara: ① Has anyone turned in a passport?",
+   "choices": [
+    "Has anyone turned in a passport?",
+    "I found this passport in the restroom.",
+    "Could you connect me to the airport?",
+    "I’d like to confirm my flight reservation.",
+    "What time is the next flight for Sydney?\n이제 듣기․ 말하기 문제는 다 끝났습니다. 18번부터는 \n문제지의 지시에 따라 답을 하기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 372
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "지속적인 기부를 요청하려고",
+    "무료 식사 행사에 초청하려고",
+    "탁아 시설 이용을 안내하려고",
+    "학교 행사에 학부모 참석을 부탁하려고",
+    "방과 후 활동에 대한 의견을 수렴하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 842
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 밑줄 친 She[she]가 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [
+    "she had \nsaid it quietly, but apparently not quietly enough. Mrs. Baker \nturned around. “Yes, Gabriella?” “Oh, I’m sorry. I was just ... \nShouldn’t the second equation read sixteen over pi?”",
+    "she \nsaid, embarrassed. “Sixteen over pi?” the teacher said in \nsurprise.",
+    "She took out a calculator and started punching in \nnumbers, saying “That’s quite impossible!” There was a brief \npause. Mrs. Baker said to the class, “",
+    "She’s right.” She \nturned back to the blackboard to revise her work. Then she \nlooked over her shoulder, smiled warmly at Gabriella, and \nadded, “How brilliant!”",
+    "She blushed, impressed by her \nteacher’s remark.\n외국어(영어) 영역\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 850
+  },
+  {
+   "qNum": 20,
+   "kind": "grammar_underline",
+   "stem": "20. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "helping people settle down there",
+    "②": "another planet their home",
+    "③": "Assumed to have a substantial",
+    "④": "impossible",
+    "⑤": "send from Earth"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 679
+  },
+  {
+   "qNum": 21,
+   "kind": "box_choice",
+   "stem": "21. (A), (B), (C)의 각 네모 안에서 어법에 맞는 표현으로 가장 적절한 것은?",
+   "choices": [
+    "is\n……\nthat\n……\nbrushing",
+    "is\n……\nwhat\n……\nto brush",
+    "are\n……\nwhat\n……\nbrushing",
+    "are\n……\nthat\n……\nbrushing",
+    "are\n……\nthat\n……\nto brush"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 932
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "But \nrather than adding more cars, Shenzhen Huashi Future \nParking Equipment is developing a massive “straddling bus.”",
+    "The bus will span two lanes and carry up to 1,200 people \nin a carriage raised 7 feet above the roadway.",
+    "Thus, it \nwill allow cars to pass underneath, and passengers on the \nnew bus should expect to feel above it all.",
+    "Beijing will \nbuild more subways and put more buses on roads to boost \npublic transportation.",
+    "If the company can get government \napproval for a trial project, test runs could begin by the end \nof 2011."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 740
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "학교와 지역사회간의 유대를 강화해야 한다.",
+    "다른 공동체의 우수한 정책을 적극 수용해야 한다.",
+    "지도자의 능력은 제도적으로 철저히 검증되어야 한다.",
+    "지역 자치를 위해 선거제도를 공정하게 개선해야 한다.",
+    "공동체의 발전을 위해 주인 의식을 가지고 참여해야 한다.\n[24 ～29] 다음 빈칸에 들어갈 말로 가장 적절한 것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 827
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. To the majority of people, Einstein’s theory is a . Their attitude towards Einstein is like that of Mark Twain towards the writer of a work on mathematics: ",
+   "choices": [
+    "useful discovery",
+    "concrete concept",
+    "clear explanation",
+    "complete mystery",
+    "common knowledge"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 757
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. We all cherish certain memories of our childhoods, like birthday parties and bike rides. But can you remember being born?",
+   "choices": [
+    "a lack of language skills",
+    "need for concentration",
+    "experiences in babyhood",
+    "a result of forgetfulness",
+    "an absence of intelligence\n외국어(영어) 영역\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 833
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. From a present perspective, we tend to believe that “artists’ individuality” is a universal thought. Thus we fail to imagine a place and period in which thi",
+   "choices": [
+    "ruin the reputation",
+    "illustrate the creativity",
+    "exclude the individuality",
+    "promote self˗expression",
+    "reflect the historical view"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 879
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. Each insurance plan is different when it comes to what’s covered and what’s not. Figuring out which one is right for you is a bit of a balancing act: You wa",
+   "choices": [
+    "be of no use to you",
+    "turn out to be cheaper",
+    "cover only a few elements",
+    "be for long ̵term patients only",
+    "cover a longer insurance period"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 817
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. The attitude that nothing is easier than to love has continued to be the prevalent idea about love in spite of overwhelming evidence to the contrary. There ",
+   "choices": [
+    "to accept their partner’s demands",
+    "to give up the act of loving others",
+    "to offer help to the broken ̵hearted",
+    "to examine the reasons for this failure",
+    "to keep the relationship with their partners"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 916
+  },
+  {
+   "qNum": 29,
+   "kind": "mc",
+   "stem": "29. There are many factors necessary to enjoy a happy life. Factors such as good health, consumer goods, friends, and so on. If you investigate these things clo",
+   "choices": [
+    "you cannot trust other people",
+    "you are independent of others",
+    "they cannot assure your happiness",
+    "all of these depend on other people",
+    "these factors can be provided with money"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 844
+  },
+  {
+   "qNum": 30,
+   "kind": "mc",
+   "stem": "30. 다음 글에 드러난 ‘I’의 심경 변화로 가장 적절한 것은?",
+   "choices": [
+    "excited → bored",
+    "curious → scared",
+    "nervous → satisfied",
+    "desperate → relieved",
+    "surprised → disappointed"
+   ],
+   "point": 1,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 733
+  },
+  {
+   "qNum": 31,
+   "kind": "box_choice",
+   "stem": "31. (A), (B), (C)의 각 네모 안에서 문맥에 맞는 낱말로 가장 적절한 것은?",
+   "choices": [
+    "accumulate\n‥‥‥\nvision\n ‥‥‥\nprescribed",
+    "accumulate\n‥‥‥\nvision\n ‥‥‥\nsubscribed",
+    "accumulate\n‥‥‥\nversion\n ‥‥‥\nsubscribed",
+    "stimulate\n‥‥‥\nvision\n ‥‥‥\nprescribed",
+    "stimulate\n‥‥‥\nversion\n ‥‥‥\nprescribed\n외국어(영어) 영역\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1058
+  },
+  {
+   "qNum": 32,
+   "kind": "vocab_underline",
+   "stem": "32. 다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "dependency among high school students",
+    "②": "unaware of how caffeine affects",
+    "③": "stimulant that causes increased heart",
+    "④": "permanent increase in energy and",
+    "⑤": "energized feeling quickly evaporates and"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 727
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. 다음 글의 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "In response\n‥‥‥\nFor example",
+    "In response\n‥‥‥\nNevertheless",
+    "Furthermore\n‥‥‥\nInstead",
+    "Furthermore\n‥‥‥\nNevertheless",
+    "As a result\n‥‥‥\nInstead\n[34～35] 다음 글의 주제로 가장 적절한 것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 968
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. Errold Reid of Mount Sinai School of Medicine in New York City and his colleagues studied piano players who had been playing for at least 10 years. Eleven o",
+   "choices": [
+    "자세교정을 위한 다양한 운동법",
+    "피아노 조기 교육의 장점과 단점",
+    "피아노곡 감상을 통한 통증 치료의 효과",
+    "현대 음악 교육에서 피아노 교육의 중요성",
+    "피아노 칠 때 사용되는 근육과 통증의 관계"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 808
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. Fast˗food chains are tempting children towards their products by sending direct mail to children under 12 years of age and offering them free meals for thei",
+   "choices": [
+    "side effects of selling personal information",
+    "relationship between commercials and sales",
+    "concerns about fast˗food chains’ marketing toward kids",
+    "importance of developing healthy foods for children",
+    "efforts of fast˗food restaurants for children’s health"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1085
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. Wat Xieng Thong에 대한 다음 글의 내용과 일치하는 것은?",
+   "choices": [
+    "Laos에서　황금으로 만들어진 가장　오래된 사원이다.",
+    "Luang Prabang　반도　중심에　위치하고　있다.",
+    "Lan Xang 왕조 황금기에 궁궐 건축 양식으로 지어졌다.",
+    "1975년까지 왕들로부터 후원을 받았다.",
+    "왕이 승려를 임명하던 장소이다.\n외국어(영어) 영역\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 950
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. Ben Schneider에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "부모님 중 한 분은 사회학 교수였다.",
+    "어렸을 때부터 목수 일에 대한 열정을 키웠다.",
+    "이십 대에 목수 일을 그만두고 배우로 활동했다.",
+    "2002년에　붕괴 직전의 아주 오래된 집을 구입했다.",
+    "넓은 주거 공간을 만들기 위해 손수 집을 수리했다. \n[38～39] 다음 글의 요지로 가장 적절한 것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 831
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. Trekking has been recently trendy. With more people becoming attracted to the activity, the demand for trails with convenient facilities is increasing. To b",
+   "choices": [
+    "지나친 트레킹은 관절에 무리를 줄 수 있다.",
+    "트레킹의 유행으로 자연환경이 훼손되고 있다.",
+    "트레킹 활성화를 위해 지방자치단체가 나서야 한다.",
+    "트레킹 코스의 개발에 필요한 재정을 확보해야 한다.",
+    "트레킹을 통해 건강하고 행복한 삶을 영위할 수 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 859
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. Researchers at Massachusetts General Hospital in Boston used magnetic resonance imaging(MRI) scans to measure the amygdalas of 58 people aged 19 to 83. As p",
+   "choices": [
+    "MRI 검사를 통해 뇌출혈을 예방할 수 있다.",
+    "표본 집단의 크기가 설문조사의 신뢰도를 결정한다.",
+    "뇌의 특정 부분의 크기와 사교성은 상관관계가 있다.",
+    "자원봉사는 인간관계를 넓힐 수 있는 좋은 기회이다.",
+    "정기적으로 만나는 사람들의 수가 사교성을 결정한다.\n[40～41] 다음 글의 제목으로 가장 적절한 것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 936
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. During every fall football season in the U. S., most parents and coaches focus on the safety of the players. But there’s growing evidence that they should t",
+   "choices": [
+    "Cheerleading Not Much to Cheer about",
+    "How to Avoid Accidents in Cheerleading",
+    "Cheerleading: Bringing Friends Together",
+    "Why Are Girls Crazy about Cheerleading?",
+    "Cheerleading: The Flower of American Sports"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 952
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. From the moment you touch down in Japan, if you do not speak Japanese, you will be faced with a world that is difficult to decode. Turn on a TV in a Tokyo hotel room, and you will get a lot of incomprehensible symbols. What can be done in this situation?",
+   "choices": [
+    "Translators: Still Imperfect Devices",
+    "Use of Translators in Science Fiction",
+    "Dangers Caused by Miscommunication",
+    "Helpful Translators: Friends of Tourists",
+    "Difficulties of Learning Foreign Languages\n외국어(영어) 영역\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 974
+  },
+  {
+   "qNum": 42,
+   "kind": "mc",
+   "stem": "42. 다음 도표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "All \ncategories except for the rate of girls’ obesity were at their \npeak in 2000 and are expected to decrease steadily through \n2020.",
+    "During the entire period, the rate of overweight \nboys is the highest of all, while that of obese girls is the \nlowest.",
+    "The gap between overweight boys and overweight \ngirls will get bigger from 2010 to 2015.",
+    "The rate of \nboys’ obesity was nearly three times as high as that of \ngirls’ obesity in 2000.",
+    "However, both rates are predicted \nto be similar by 2020."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 633
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 다음에 이어질 글의 순서로 가장 적절한 것은?",
+   "choices": [
+    "(A)―(C)―(B)",
+    "(B)―(A)―(C)",
+    "(B)―(C)―(A)",
+    "(C)―(A)―(B)",
+    "(C)―(B)―(A)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 829
+  },
+  {
+   "qNum": 44,
+   "kind": "mc",
+   "stem": "44. 글의 흐름으로 보아 주어진 문장이 들어가기에 가장 적절한 곳은?",
+   "choices": [
+    ") The mild temperatures we’re familiar with\noccur between ice ages. (",
+    ") It is thought that very slight \nchanges in the position of the Earth relative to the sun are \nbehind these shifts in climate. (",
+    ") Scientists say that we \ncan expect colder temperatures as the planet moves toward\nanother ice age. (",
+    ") Not only is the next ice age still \nthousands of years away, it’s possible that it might not arrive \nat all. (",
+    ") Global warming, caused by an increase in \ncarbon dioxide and other gases in the atmosphere, may \nprevent the next ice age from occurring."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 772
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A)와 (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "region\n‥‥‥\ndamage",
+    "accuracy\n‥‥‥\nintensity",
+    "accuracy\n‥‥‥\nuncertainty",
+    "frequency\n‥‥‥\ndamage",
+    "frequency\n‥‥‥\nuncertainty\n외국어(영어) 영역\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n[46∼47] 다음 글을 읽고, 물음에 답하시오.\n  A district mayor in the Japanese capital, Tokyo, is going \non an unusual leave for the birth of his newborn baby on \nSaturday. He will be the first local government leader ever \nto do so. Hironobu Narisawa, the mayor of the central \nBunkyo district, said he was aiming to change attitudes. \nJapanese workers are famously reluctant to take time off \nafter the birth of a child even though Japanese law allows \neither parent to have up to a year off. Mr. Narisawa’s \nannouncement has been front page news in Japan these days.  \n  No other local government leader, male or female, has \ntaken time off after the birth of a child. Nationwide, just \none in 100 fathers takes any paternity leave. None of the \nmale employees of Bunkyo district has done so. Mr. \nNarisawa, whose son was born in February, said he hoped \nhis              would help to change attitudes. However, \nMr. Narisawa will not be entirely switching off from work \nduring his two˗week leave. He is planning to remain in the \ndistrict in case of emergencies."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2211
+  },
+  {
+   "qNum": 46,
+   "kind": "mc",
+   "stem": "46. 위 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Efforts to Increase Birth Rate",
+    "Advantages of Paternity Leave",
+    "Poor Facilities in Childcare Center",
+    "Myths about Gender Roles in Japan",
+    "A Japanese Mayor’s Parental Leave"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 200
+  },
+  {
+   "qNum": 47,
+   "kind": "mc",
+   "stem": "47. 위 글의 빈칸에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "election",
+    "example",
+    "property",
+    "resignation",
+    "perfectionism\n[48∼50] 다음 글을 읽고, 물음에 답하시오.\n(A) Frank was on his way to the Aspen Music School. He \nhad heard wonderful stories about it and he was especially \nexcited to be studying with Mr. Stessin, an esteemed \nprofessor from the Juilliard School. After a few lessons \nwith \n(a) him, \nFrank \nknew \nthat \nhe \nwould \nnot \nbe \ndisappointed. The professor noticed every turn of each \nmusical phrase, and added his sense of humor to every \nlesson. \n(B) Only days later, Mr. Stessin was back in his studio, \nteaching! Initially shocked by his decision to stay, Frank \nsoon began to understand (b) him. He and his wife had \nbeen teaching at the Aspen Music School for many years \nand had built a strong sense of community with the \nfaculty and students. Furthermore, Frank realized (c) he \nfound comfort through his love of music and students. \nLeaving Aspen would have meant leaving behind his \nfondest memories of Nancy.\n(C) As Frank was preparing Beethoven’s Sonata for a \nmaster class, Mr. Stessin jokingly warned him, “Don’t play \nthis too well, Frank, or I’ll have nothing to say!” The \nmaster class went quite well, considering that it was his \nfirst performance of the sonata. A few days later, Frank \nmet Mr. Stessin’s wife, Nancy who was also on the Aspen \nfaculty. She said to (d) him, “That was a very nice \nBeethoven you played the other day.” He was touched by \nher thoughtful comment.\n(D) One day, as Frank was sitting down with his friends \nto have lunch, someone whispered to him, “Mrs. Stessin \npassed out!” He naturally assumed that she had fainted \nfrom the heart or something. That night, he could not \nsleep knowing that she was dead. He wondered how Mr. \nStessin could possibly cope with the terrible tragedy. \nSurely (e) he would be heading back to New York as soon \nas arrangements could be made."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1896
+  },
+  {
+   "qNum": 48,
+   "kind": "mc",
+   "stem": "48. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B)―(C)―(D)",
+    "(B)―(D)―(C)",
+    "(C)―(B)―(D)",
+    "(C)―(D)―(B)",
+    "(D)―(C)―(B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 120
+  },
+  {
+   "qNum": 49,
+   "kind": "vocab_letter",
+   "stem": "49. 밑줄 친 (a)～(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 75
+  },
+  {
+   "qNum": 50,
+   "kind": "mc",
+   "stem": "50. 주어진 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "Mr. Stessin은　존경받는　교수였다.",
+    "Frank는　Mr. Stessin의 수업에 만족했다.",
+    "Stessin 부부는　오랫동안　Aspen Music School에서　가르쳤다.",
+    "Mrs. Stessin은　Frank의 연주를 칭찬했다.",
+    "Mr. Stessin은　부인의 사망 소식을 듣고 정신을 잃었다.\n※ 확인 사항\n  문제지와 답안지의 해당란을 정확히 기입(표기)했는지 \n확인하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 248
+  }
+ ],
+ "sourcePdf": "ebsi_go2_20110310_paper_201103102_eng_mun.pdf"
+}

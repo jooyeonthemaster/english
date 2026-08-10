@@ -4,14 +4,17 @@ import { cn } from "@/lib/utils";
 
 import { PAPER_SIZE_SPECS, PREVIEW_PAGE_WIDTH, SUBTYPE_LABELS } from "../constants";
 import {
+  MULTI_BLANK_VALUE_SEPARATOR,
   formatInlineMarkersForSubtype,
   formatSentenceInsertPassageMarkers,
+  multiBlankOptionMatrix,
   optionDisplayLabel,
   optionDisplayTextForSubtype,
   optionOrdinalLabel,
   shouldRenderOptionListForSubtype,
   shouldUseGrammarOptionReference,
 } from "../option-display";
+import { MultiBlankOptionGrid } from "@/components/exams/multi-blank-option-grid";
 import {
   joinRenderedLinesForDisplay,
   resolvePaperItemPassageTitle,
@@ -1280,7 +1283,85 @@ export function A4PaperPage({
                                 compact ? "text-[10px]" : "text-[11px]",
                               )}
                             >
-                              {part.options.map(({ option, originalIndex }) => {
+                              {(() => {
+                                // 다중 빈칸(BLANK_INFERENCE) 조합 선지 — 실제 수능
+                                // 컬럼 헤더 그리드. 헤더 행은 첫 선지(①)가 배치된
+                                // 조각에만 그린다(pagination.ts 가 첫 선지 블록에
+                                // 헤더 높이를 더하는 것과 1:1 동기 — pagination-metrics
+                                // multiBlankOptionsHeaderHeight 참조).
+                                const multiBlank =
+                                  item.sourceQuestion.subType === "BLANK_INFERENCE"
+                                    ? multiBlankOptionMatrix(
+                                        part.options.map((entry) => entry.option),
+                                      )
+                                    : null;
+                                if (multiBlank) {
+                                  return (
+                                    <MultiBlankOptionGrid
+                                      blankCount={multiBlank.blankCount}
+                                      showHeader={part.options.some(
+                                        (entry) => entry.originalIndex === 0,
+                                      )}
+                                      headerCellClassName={cn(
+                                        "font-bold",
+                                        visual.optionNumberClass,
+                                      )}
+                                      numberCellClassName={cn(
+                                        "min-w-[18px] font-bold",
+                                        visual.optionNumberClass,
+                                      )}
+                                      rows={part.options.map(
+                                        ({ option, originalIndex }, rowIndex) => ({
+                                          key: `${item.localId}-${originalIndex}`,
+                                          numberCell: optionDisplayLabel(
+                                            item.sourceQuestion.subType,
+                                            originalIndex,
+                                            option.label,
+                                          ),
+                                          cells: multiBlank.rows[rowIndex].values.map(
+                                            (value, blankIndex) => (
+                                              <EditableText
+                                                key={blankIndex}
+                                                value={value}
+                                                onCommit={(nextValue) => {
+                                                  const nextValues = [
+                                                    ...multiBlank.rows[rowIndex].values,
+                                                  ];
+                                                  nextValues[blankIndex] =
+                                                    nextValue.trim();
+                                                  // 끝쪽 빈 패딩 칸은 저장 텍스트에 남기지 않는다
+                                                  while (
+                                                    nextValues.length > 2 &&
+                                                    nextValues[nextValues.length - 1] === ""
+                                                  ) {
+                                                    nextValues.pop();
+                                                  }
+                                                  const nextOptions = [...item.options];
+                                                  nextOptions[originalIndex] = {
+                                                    ...nextOptions[originalIndex],
+                                                    text: nextValues.join(
+                                                      MULTI_BLANK_VALUE_SEPARATOR,
+                                                    ),
+                                                  };
+                                                  onUpdateItem(item.localId, {
+                                                    options: nextOptions,
+                                                  });
+                                                }}
+                                                readOnly={readOnly || item.locked}
+                                              >
+                                                {renderFormattedInline(
+                                                  value,
+                                                  item.sourceQuestion.subType,
+                                                )}
+                                              </EditableText>
+                                            ),
+                                          ),
+                                        }),
+                                      )}
+                                    />
+                                  );
+                                }
+                                return part.options.map(({ option, originalIndex }) => {
                                 const useReferenceLabel = shouldUseGrammarOptionReference(
                                   item.sourceQuestion.subType,
                                 );
@@ -1348,7 +1429,8 @@ export function A4PaperPage({
                                     )}
                                   </div>
                                 );
-                              })}
+                                });
+                              })()}
                               {part.showObjectiveAnswer &&
                                 showAnswerSpace &&
                                 item.objectiveAnswerSlots > 0 &&

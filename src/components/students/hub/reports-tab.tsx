@@ -68,7 +68,7 @@ export function StudentReportsTab({ reports }: { reports: StudentExamReportRow[]
       <div className="flex flex-col items-center gap-2 rounded-lg border border-dashed border-slate-200 bg-slate-50/50 py-14">
         <FileBarChart className="size-8 text-slate-300" aria-hidden />
         <p className="text-[13.5px] font-medium text-slate-500">
-          이 학생의 시험 리포트가 아직 없습니다.
+          이 학생의 내신 리포트가 아직 없습니다.
         </p>
         <p className="max-w-md text-center text-[12px] leading-relaxed text-slate-400">
           내신 시험 분석에서 시험지를 분석하고 이 학생을 등록하면, 채점과 상담 리포트가

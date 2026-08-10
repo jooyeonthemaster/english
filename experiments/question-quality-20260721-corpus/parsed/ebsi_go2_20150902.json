@@ -1,0 +1,764 @@
+{
+ "examId": "ebsi_go2_20150902",
+ "source": "ebsi_go2_20150902_paper_vl7PDqqg_h2_eng_mun.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ① Can I get a bigger one?",
+   "choices": [
+    "Can I get a bigger one?",
+    "Let’s go and ask the clerk.",
+    "I don’t have enough money.",
+    "Thank you for visiting our shop.",
+    "No problem. I like it very much, too."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 223
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ① No problem. When can I visit you?",
+   "choices": [
+    "No problem. When can I visit you?",
+    "Okay, I’ll call the customer service center.",
+    "Sure, the repairman just fixed the computer.",
+    "Well, I don’t think we need a new computer.",
+    "Hey, why don’t we play computer games together?"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 287
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을 듣고, 여자가 하는 말의 목적으로 가장 적절한 것을 고르시오. ① 도서관 건의함 활용을 권장하려고 ② 도서관 임시 휴관 계획을 안내하려고 ③ 하계 독서 프로그램 일정을 공지하려고 ④ 새로운 도서 대출 시스템을 홍보하려고 ⑤ 도서관 시설 개선의 필요성을 설명하려고",
+   "choices": [
+    "도서관 건의함 활용을 권장하려고",
+    "도서관 임시 휴관 계획을 안내하려고",
+    "하계 독서 프로그램 일정을 공지하려고",
+    "새로운 도서 대출 시스템을 홍보하려고",
+    "도서관 시설 개선의 필요성을 설명하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 165
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 다음을 듣고, 남자가 하는 말의 주제로 가장 적절한 것을 고르시오. ① 불규칙한 식사의 문제점 ② 위생적인 육류 보관 방법 ③ 채식을 통한 단백질 섭취의 이점 ④ 단백질 부족이 건강에 미치는 영향 ⑤ 친환경 유기농 식품 소비의 필요성",
+   "choices": [
+    "불규칙한 식사의 문제점",
+    "위생적인 육류 보관 방법",
+    "채식을 통한 단백질 섭취의 이점",
+    "단백질 부족이 건강에 미치는 영향",
+    "친환경 유기농 식품 소비의 필요성"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 145
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 두 사람의 관계를 가장 잘 나타낸 것을 고르시오. ① 구조대원 - 등산객 ② 의사 - 환자 ③ 여행가이드 - 관광객 ④ 코치 - 운동선수 ⑤ 의료기 판매원 - 고객",
+   "choices": [
+    "구조대원 - 등산객",
+    "의사 - 환자",
+    "여행가이드 - 관광객",
+    "코치 - 운동선수",
+    "의료기 판매원 - 고객"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 109
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고르시오. ③ ② ① ⑤ ④",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 52
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 남자가 여자를 위해 할 일로 가장 적절한 것을 고르시오. ① to analyze the survey results ② to make the survey questions ③ to review her newspaper article ④ to fasten the surv",
+   "choices": [
+    "to analyze the survey results",
+    "to make the survey questions",
+    "to review her newspaper article",
+    "to fasten the survey sheets together",
+    "to print out the questionnaire sheets"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 230
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, 여자가 지난 주말에 자전거를 타지 못한 이유를 고르시오. ① 독감에 걸려서 ② 조카를 돌봐야 해서 ③ 날씨가 좋지 않아서 ④ 시험공부를 해야 해서 ⑤ 자원봉사 일정이 변경되어서",
+   "choices": [
+    "독감에 걸려서",
+    "조카를 돌봐야 해서",
+    "날씨가 좋지 않아서",
+    "시험공부를 해야 해서",
+    "자원봉사 일정이 변경되어서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 149
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 대화를 듣고, 여자가 지불할 금액을 고르시오. [3점] ① $35 ② $38 ③ $42 ④ $44 ⑤ $48",
+   "choices": [
+    "$35",
+    "$38",
+    "$42",
+    "$44",
+    "$48"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 64
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 대화를 듣고, 호텔 선택 시 고려해야 할 사항으로 두 사람이 언급하지 않은 것을 고르시오. ① 요금 ② 위치 ③ 부대시설 ④ 객실 크기 ⑤ 이용객 평가",
+   "choices": [
+    "요금",
+    "위치",
+    "부대시설",
+    "객실 크기",
+    "이용객 평가"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 96
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. Ontario Universities’ Fair에 관한 다음 내용을 듣고, 일치하지 않는 것을 고르시오. ① 21개 대학이 참여할 것이다. ② 9월 25일부터 3일간 개최된다. ③ 방문하려면 사전 등록을 해야 한다. ④ 대학생과 교수가 직접 상담을 해준다. ⑤ 캐나다에서 가장 큰",
+   "choices": [
+    "21개 대학이 참여할 것이다.",
+    "9월 25일부터 3일간 개최된다.",
+    "방문하려면 사전 등록을 해야 한다.",
+    "대학생과 교수가 직접 상담을 해준다.",
+    "캐나다에서 가장 큰 교육 박람회이다.\n고2"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 185
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 다음 표를 보면서 대화를 듣고, 두 사람이 선택할 회원 등급을 고르시오. Family Membership Benefits at the Duke Art Museum Level Annual fee Shop discount Monthly magazine Membersonly exhib",
+   "choices": [
+    "A\n$65\n15%\n×\n×",
+    "B\n$70\n10%\n○\n×",
+    "C\n$75\n10%\n×\n○",
+    "D\n$90\n10%\n○\n○",
+    "E\n$105\n15%\n○\n○"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 259
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. [3점] Man: ① Pretty much. The book was more detailed. ② It did. That’s why I prefer watching movies. ③ No. I d",
+   "choices": [
+    "Pretty much. The book was more detailed.",
+    "It did. That’s why I prefer watching movies.",
+    "No. I didn’t intend to make the ending like that.",
+    "Yes. Book reviews help us understand the book better.",
+    "I don’t know. I didn’t watch the ending of the movie."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 375
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. Woman: ① It’s hard at first, but you’ll get used to it. ② Then, how about exercising every morning?",
+   "choices": [
+    "It’s hard at first, but you’ll get used to it.",
+    "Then, how about exercising every morning?",
+    "You need a break after a longterm project.",
+    "Don’t worry about it. It’s none of your business.",
+    "You should’ve done your best to break the habit."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 359
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Anna가 Cathy에게 할 말로 가장 적절한 것을 고르시오. [3점] Anna: Cathy, ① I’m looking for a parttime job for you. ② I bet you’ll fail the course if you’re late again. ③ why don’t you ask the professor about the course?",
+   "choices": [
+    "I’m looking for a parttime job for you.",
+    "I bet you’ll fail the course if you’re late again.",
+    "why don’t you ask the professor about the course?",
+    "can you wake me up every morning from now on?",
+    "I don’t think working in the morning is a good idea.\n[16~17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 402
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 여자가 하는 말의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "to advertise a new talent show",
+    "to offer tips for choosing a charity",
+    "to encourage people to volunteer their skills",
+    "to promote a free talent development program",
+    "to introduce ways to earn money with one’s talent"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 260
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 재능이 아닌 것은?",
+   "choices": [
+    "컴퓨터 수리하기",
+    "비디오게임 하기",
+    "수학 문제 풀기",
+    "과자 굽기",
+    "문서 번역하기\n  이제 듣기·말하기 문제가 끝났습니다. 18번부터는 문제지의 \n지시에 따라 답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 132
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "시급한 상황일수록 원칙에 따라 행동하라.",
+    "집단의 성공을 위해 개인의 불편을 감수하라.",
+    "자신의 능력에 맞는 단기적 목표를 수립하라.",
+    "의사 결정 시 시간과 비용을 최우선으로 고려하라.",
+    "임시방편을 통해 현명한 선택을 할 시간을 확보하라."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 956
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 드러난 ‘She’의 심경으로 가장 적절한 것은?",
+   "choices": [
+    "delighted and excited",
+    "calm and relieved",
+    "envious and irritated",
+    "disappointed and angry",
+    "ashamed and embarrassed"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 838
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 밑줄 친 부분이 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [
+    "he could stay close enough to keep him in sight. He \nknew the kid couldn’t go at full speed forever.",
+    "He \nfollowed him for several blocks ― over fences, through \nshrubbery, \nweaving \nthrough \nbarking \ndogs \nand \nlawn \nsprinklers. Eventually Roy felt himself tiring. This kid is \namazing,",
+    "he thought. Maybe he’s practicing for the track \nteam. Once Roy thought he saw the boy glance over",
+    "his \nshoulder, as if he knew he was being pursued, but Roy \ncouldn’t be certain. The boy was still far ahead of him, and \nRoy was gulping like a beached trout. His shirt was soaked \nand sweat poured off",
+    "his forehead, stinging his eyes. \n* gulp: (숨을) 깊이[크게] 들이마시다\n고2"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 752
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "직원 대상 법률 상담 서비스를 소개하려고",
+    "다른 부서와의 긴밀한 정보 교류를 독려하려고",
+    "회사 기밀 유출에 대한 처벌 기준을 공지하려고",
+    "개인 정보 수집에 대한 전체 직원의 동의를 요청하려고",
+    "이전 직원 관련 정보 요청에 대한 대응 방법을 안내하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 819
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Don’t Be Anxious, Just Be Ready!",
+    "How Anxiety Helped Us to Survive",
+    "Living Simply in an Anxious World",
+    "Humans and Animals: Friends or Enemies?",
+    "Various Emotions: the Products of Evolution"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1115
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "ways of preserving written documents",
+    "human efforts to extend the memory capacity",
+    "reasons to be independent of smart technology",
+    "necessity of brain exercises for mental strength",
+    "rapid enhancement of the brain’s multitasking ability"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1153
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 도표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "In each age group, consumption of calories from \nsugar drinks is higher in males than females.",
+    "In both \ngenders, \nconsumption \nof \ncalories \nfrom \nsugar \ndrinks \nincreases until ages 1219 and then decreases with age.",
+    "Consumption of calories of males never falls below 70 \nkcal while that of females falls to 42 kcal in ages 60 and \nover.",
+    "The highest consumption of calories from sugar \ndrinks is more than four times as much as the lowest \nconsumption in each gender, respectively.",
+    "The gap \nbetween males’ and females’ consumption of calories from \nsugar drinks is the smallest among the group aged 25.\n고2"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 764
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. Brooks Stevens에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "여덟 살 때 병을 앓아 오른팔을 거의 쓸 수 없게 되었다.",
+    "모형 비행기와 보트를 만들도록 아버지의 권유를 받았다.",
+    "Cornell 대학에서 건축학을 전공하여 학위를 받았다.",
+    "상품 라벨을 다시 디자인하겠다고 회사 대표를 설득했다.",
+    "박물관을 세워서 자신이 디자인한 자동차를 전시했다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1138
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Sunrise Inn 이용에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "예약 확정을 위해 요금 전액을 미리 지불해야 한다.",
+    "숙박 연장을 원하면 오전 11시까지 문의해야 한다.",
+    "금고를 사용하려면 추가 비용을 지불해야 한다.",
+    "라운지에 있는 컴퓨터로 프로그램을 내려받아도 된다.",
+    "객실 청소는 매일 무료로 이루어진다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 198
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. Public Speaking Workshop에 관한 다음 안내문의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "PBS 학생의 참가비는 45달러이다.",
+    "참가자는 자신의 발표 녹화 영상을 받을 수 있다.",
+    "참가자는 요청 시 참가증을 받을 수 있다.",
+    "강연자는 15년이 넘는 교육 경력을 가지고 있다.",
+    "참가비는 워크숍 당일에 지불해야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 202
+  },
+  {
+   "qNum": 28,
+   "kind": "grammar_underline",
+   "stem": "28. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "expected seems like an obvious",
+    "②": "those of just about every",
+    "③": "fall from a tree",
+    "④": "that your car is not",
+    "⑤": "knowing that children this age"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2413
+  },
+  {
+   "qNum": 29,
+   "kind": "mc",
+   "stem": "29. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "칭찬은 아이가 운동을 더 좋아하게 만든다.",
+    "지나친 운동은 아이의 집중력을 저하시킨다.",
+    "아이와 대화할 때는 온전히 아이에게 집중해야 한다.",
+    "구체적인 예를 들어 경기 규칙을 설명하는 것이 좋다.",
+    "경기 중인 아이에게 설명을 하는 것은 효과적이지 않다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1009
+  },
+  {
+   "qNum": 30,
+   "kind": "box_choice",
+   "stem": "30. (A), (B), (C)의 각 네모 안에서 문맥에 맞는 낱말로 가장 적절한 것은?",
+   "choices": [
+    "reduced\n……\nfluid\n……\nvulnerable",
+    "reduced\n……\nsolid\n……\nimmune",
+    "reduced\n……\nfluid\n……\nimmune",
+    "increased\n……\nfluid\n……\nimmune",
+    "increased\n……\nsolid\n……\nvulnerable\n[31∼33] 다음 빈칸에 들어갈 말로 가장 적절한 것을 고르시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1216
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. John Wooden, the great UCLA basketball coach who produced 10 NCAA championship teams in 12 years during the 1960s and 1970s, perfectly exemplified the power",
+   "choices": [
+    "honesty",
+    "analysis",
+    "cooperation",
+    "consistency",
+    "encouragement"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 899
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. Although trust may require a meaningful relationship to satisfy its more demanding analysts, it need not . When A is a person and B is a bank, A may trust B",
+   "choices": [
+    "be permanent",
+    "require goodwill",
+    "rely on objectivity",
+    "demand any agreement",
+    "be in one’s best interest\n고2"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1027
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. What distinguishes recycling is not its importance, but rather the ease with which individuals can participate, and the visibility of actions taken to promo",
+   "choices": [
+    "reveals concealed profitable resources",
+    "is the last resort for garbage disposal",
+    "is where the immediate tasks are best illuminated",
+    "sheds light on the dark side of the energy industry",
+    "brings practical economic benefits to people in need"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1197
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. 다음 글의 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "Therefore\n……\nFor example",
+    "Therefore\n……\nInstead",
+    "Likewise\n……\nIn contrast",
+    "However\n……\nIn contrast",
+    "However\n……\nFor example"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1099
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "On the one hand, we expect our buildings to protect \nus from the weather: this is what they are for, after all.",
+    "And yet, faced with a prospective new home or place of \nwork, one of the first questions people ask is: how much \nnatural light is there?",
+    "The glass buildings that rise every \nday in a modern city are the engineering answer to these \nconflicting desires: to be at once sheltered from the wind, \nthe cold, and the rain, to be secure from intrusion and \nthieves, but not to live in darkness.",
+    "Although glass is an \naffordable building material, glass engineering is expensive, \ncausing the glass building market to be exclusive.",
+    "The \nlife we lead indoors, which for many of us is the vast \nmajority of our time, is made light and delightful by glass.\n[36~37] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 \n것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 900
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. The potential of access to a particular medium is shaped by the technological characteristics of the medium concerned. Access to TV sets and telephones is n",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n고2"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1138
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. In a crowded world, an unmanaged commons cannot possibly work. That is an important qualification. If the world is not crowded, a commons may in fact be the",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n[38~39] 글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 \n적절한 곳을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38~39"
+    ]
+   },
+   "charLen": 1193
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. In desperation, many Irish farmers resorted to cultivating wetlands or rocky hillsides. The Irish overreliance on potatoes was worsened by certain economic ",
+   "choices": [
+    ") The \ndevelopment of the British textile industry, for example, \nmade the traditional handicraft sector useless, destroying a \nkey mechanism for achieving food security for the Irish \nrural poor. (",
+    ") A second negative trend was falling real \nwages and rising rents, which gradually reduced the relative \nstandard of living of wagedependent Irish. (",
+    ") But this \nunproductive land left such farmers at a chronic risk of \nstarvation. (",
+    ") Another sign of Irish poverty was the \nincreased reliance of the poor on the “lumper” variety of \npotato, a watery, tasteless potato that nonetheless could \nproduce impressive yields even on substandard soil. (",
+    ") \nUnfortunately this potato proved particularly vulnerable to \nthe potato blight of 184552. \n* blight: (식물의) 마름병"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 966
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. The old idea of innate intelligence has had a major effect on this categorizing and labelling of children. In the last twenty years or so research on the br",
+   "choices": [
+    ") Some of our intelligence may \nindeed be inherited, but our life experience is now thought \nto have a profound effect upon intelligence. (",
+    ") Scientists \nhave suggested that intelligence changes and modifies as one \nprogresses through life. (",
+    ") This finding has not yet \nimpacted on schooling in any significant way. (",
+    ") When \nasked to describe a class they had met for the first time, \nsome teachers immediately divided the children into three \ngroups, the bright, the middleoftheroad and the “no \nhopers.” (",
+    ") It has contributed to many children growing \nup with the mistaken idea that they are not intelligent and \ncannot succeed in education."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 968
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A)와 (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "an individual\n……\nlarger",
+    "an individual\n……\nsimpler",
+    "the masses\n……\nbroader",
+    "the masses\n……\nfairer",
+    "a nation\n……\nclearer\n고2\n[41~42] 다음 글을 읽고, 물음에 답하시오.\n  Like few other institutions in American life, baseball, \nfootball, basketball, and hockey are a source of social glue \nand civic pride. From Yankee Stadium in New York to \nCandlestick Park in San Francisco, sports stadiums are the \ncathedrals of our civil religion, public spaces that gather \npeople from different walks of life in rituals of loss and hope. \n  But professional sports is not only a source of civic \nidentity. It is also a business. And in recent decades, the \nmoney in sports has been crowding out the community. It \nwould be an exaggeration to say that naming rights and \ncorporate sponsorships have ruined the experience of \nrooting for the home team. Still, changing the name of a \ncivic landmark changes its meaning. This is one reason \nwhy Detroit fans mourned when Tiger Stadium, named for \nthe team, gave way to Comerica Park, named for a bank.\n  When fans go to the ballpark or arena, they don’t go \nprimarily for the sake of a civic experience. They go to see \nDavid Ortiz hit a home run in the bottom of the ninth, or to \nsee Tom Brady throw a touchdown pass in the final seconds \nof the game. But the         character of the setting \nconveys a civic teaching ―that we are all in this together, \nthat for a few hours at least, we share a sense of place and \ncivic pride. As stadiums become less like landmarks and \nmore like billboards, the social bonds and civic sentiments \nthey inspire fade."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2804
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 위 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Landmarks Can Be Impressive Billboards!",
+    "Should Corporate Money Enter the Stadium?",
+    "Stadiums: Places of Both Harmony and Conflict",
+    "Professional Sports: Are They Really Fair for All?",
+    "Interesting Corporate Names Attracting New Customers"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 277
+  },
+  {
+   "qNum": 42,
+   "kind": "mc",
+   "stem": "42. 위 글의 빈칸에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "public",
+    "exotic",
+    "modern",
+    "creative",
+    "commercial\n[43~45] 다음 글을 읽고, 물음에 답하시오.\n(A)\n  In Mesa, I met a woman named Mazi, who shared her story. \nIn 1979, Mazi was living with her son and her mother in \nAjmer. Many dogs roamed the streets in Ajmer, and that \nsummer Mazi befriended one. Every day a little brown dog \ncame to her home, searching for food and shelter from the hot \nsun. Mazi looked forward to the visits, especially when (a) she \nnoticed the dog’s belly swelling with a litter of puppies. With \nthe monsoon season approaching, Mazi, like everyone else in \nAjmer, prepared for two to three months of intensified rainfall.\n(B)\n  And then, (b) she turned around and repeated the \nwhole exhausting effort in reverse: back to the door, \nthrough the house, and up to the roof, while holding the \ndog above the water. “I continue to be amazed at the \nenormous physical strength and strength of purpose that \nfilled me that day,” Mazi stressed, “especially since I \ndidn’t know how to swim! But, I loved that little dog. I \nwas so afraid (c) she would be swept away before I could \nreach her! Since then I have known: I have strength!”\n(C)\n  Strength emerged in the form of determination, and it \nrose within Mazi like the water rising around her. \nWithout hesitation, she worked her way down the stairs \nand through the house. Pushing through chesthigh water, \nhardly able to see in the darkness, Mazi finally reached \nthe front door. There, with a mixture of resolve and \nphysical strength, (d) she forced the door open and \npressed on through the floodwater to the wall. Despite \nthe pressure of the water, Mazi stood steadily and lifted \nthe dog from the wall. \n(D)\n  That summer, the rains were heavy. On July 19, when the \nwater reached flood proportions, Mazi, her son, and her mom \nclimbed the stairs of their onestory home to the rooftop. As \nthe sky darkened and the rain poured, they watched as cattle \nand furniture rushed by in a massive, muddy river. “Suddenly, \nI noticed a dog ―that dog ―standing dangerously on the wall \nsurrounding our house. It was as if my heart burst open,” \n(e) she said. “I had to save her.”"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2181
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) - (D) - (C)",
+    "(C) - (B) - (D)",
+    "(C) - (D) - (B)",
+    "(D) - (B) - (C)",
+    "(D) - (C) - (B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 147
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a)~(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 76
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 위 글의 Mazi에 관한 내용과 일치하지 않는 것은?",
+   "choices": [
+    "Ajmer에서 아들과 어머니와 함께 살았다.",
+    "집중호우에 대비했다.",
+    "어려서부터 수영을 잘 했다.",
+    "수압을 이겨내고 개를 들어올렸다.",
+    "홍수가 났을 때 지붕으로 대피했다.\n* 확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)했는지 확인\n하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 198
+  }
+ ],
+ "sourcePdf": "ebsi_go2_20150902_paper_vl7PDqqg_h2_eng_mun.pdf"
+}

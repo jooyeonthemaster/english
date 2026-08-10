@@ -3,6 +3,7 @@ import {
   buildGeminiCompactGenerationPrompt,
   buildGeminiCompactPlanningPrompt,
   buildQuestionGenerationPromptContract,
+  buildStandardLeanGenerationPrompt,
   buildTeacherPointsPromptBlock,
   buildTypeContractSectionBody,
   type StandardQuestionContractScope,
@@ -105,6 +106,12 @@ interface GenerationPromptInput {
    * AI 플랜 targetPoints 와 분리된 별도 블록으로, 지문 바로 다음에 주입된다.
    */
   teacherPoints?: readonly TeacherPointPayload[];
+  /**
+   * S3i 경량 생성 계약(26-07-21, O204 후속) — 스탠다드 빈칸·어법 표준 형상에서
+   * 대형 컴팩트 프롬프트 대신 실험 검증 경량 계약을 쓴다. 발동 판정(형상·플랜·
+   * env 킬스위치)은 호출자(run-question-generation)가 수행한다.
+   */
+  useStandardLeanContract?: boolean;
 }
 
 export function buildGenerationPrompt({
@@ -127,7 +134,25 @@ export function buildGenerationPrompt({
   finalChecklist,
   customPrompt,
   teacherPoints = [],
+  useStandardLeanContract = false,
 }: GenerationPromptInput): { system?: string; prompt: string } {
+  if (
+    useStandardLeanContract &&
+    generationPlan === "STANDARD" &&
+    (subType === "BLANK_INFERENCE" || subType === "GRAMMAR_ERROR")
+  ) {
+    return {
+      prompt: buildStandardLeanGenerationPrompt({
+        typeId: subType,
+        passageContent,
+        difficulty: diffLabel,
+        // typeSettings 프롬프트·다양성 회피 블록(호출자가 customPrompt 에 병합) —
+        // 경량 계약에서도 교사 설정·회피 목록은 살아 있어야 한다.
+        extraBlocks: customPrompt,
+        teacherPoints,
+      }),
+    };
+  }
   if (generationPlan === "STANDARD") {
     return {
       prompt: buildGeminiCompactGenerationPrompt({

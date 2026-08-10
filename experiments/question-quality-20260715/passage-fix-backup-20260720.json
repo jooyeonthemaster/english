@@ -1,0 +1,24 @@
+[
+  {
+    "id": "cmrs251gp000dja0apyfs37lt",
+    "title": "2026학년도 6월 모평 영어 41-42번 · 장문",
+    "contentBefore": "In technological design, an aspiration towards seamlessness aims to make the technological experience for humans blend seamlessly into our everyday lives. Essentially, this aspiration aims towards experiences where people are no longer aware of the technology, the interface or the differences between human-technology and human-human interaction. Considering the metaphor of seams in clothing, we can say that we aspire to seamless aesthetics by stitching the seams closely, pressing them flat and making sure they are hidden on the inside so that we wear clothing rather than pieces of fabric. When designers and engineers talk about technological seamlessness, they are often referring to ease of use and convenience. For example, in interface design, an aspiration towards seamlessness ensures the experience for the user flows and is not stressful or irritating. Most of us would have had experiences of poor interface designs or apps in workplaces that make things more complicated and irritating, and have longed for more seamless interfaces. Technological seamlessness can also include less visible screens in new technologies, or virtual reality technologies with a seamless technological design. The aim is to immerse the user experience such that the visual interaction might be described as inside the screen rather than a body interacting with a digital console or object as separate entities. Similarly, seamlessness in humanoid robotic design aims to make humanoids distinguishable from a human body.",
+    "fix": {
+      "id": "cmrs251gp000dja0apyfs37lt",
+      "from": "seamlessness in humanoid robotic design aims to make humanoids distinguishable from a human body",
+      "to": "seamlessness in humanoid robotic design aims to make humanoids indistinguishable from a human body",
+      "why": "2026학년도 6월 모평 42번(어휘) 정답 ⑤=(e) distinguishable — 인쇄본의 심긴 오답어. 원문 복원."
+    }
+  },
+  {
+    "id": "cmrs0c609000pks0al5760lii",
+    "title": "2026학년도 고3 3월 영어 29번 · 어법",
+    "contentBefore": "Darwin understood that since inheritance is conservative, it is in the nature of the organism to impose itself on the surroundings, producing many highly similar but variable offspring regardless of the nature of the conditions. He further recognized that these fundamental aspects of the nature of the organism imply reproductive overrun, with organisms routinely producing more offspring than there are resources to support them. The need to survive implies that the capacity for using necessary resources must complement the opportunity to use them. But needs and opportunity do not perfectly match. Inheritance produces the capacities for exploiting the surroundings, but in a way that is indifferent to the surroundings. Offspring cannot anticipate the nature of the conditions which they find themselves, much less alter themselves in ways that are suitable to any changes in those conditions. While it is true that organisms can express some amount of flexibility in their form and function in response to their immediate surroundings, these adjustments are minor compared to the constraints of inheritance. As a result, not every living thing can live everywhere.",
+    "fix": {
+      "id": "cmrs0c609000pks0al5760lii",
+      "from": "the nature of the conditions which they find themselves",
+      "to": "the nature of the conditions in which they find themselves",
+      "why": "2026년 3월 고3 학평 29번(어법) 정답 ④ which→in which — 인쇄본의 심긴 오류. 원문 복원."
+    }
+  }
+]

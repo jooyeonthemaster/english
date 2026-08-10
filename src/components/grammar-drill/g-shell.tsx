@@ -17,8 +17,10 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   BarChart3,
+  BookA,
   BookOpen,
   ClipboardList,
+  GraduationCap,
   House,
   LogOut,
   Menu,
@@ -26,6 +28,7 @@ import {
   Shield,
   X,
 } from "lucide-react";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { StatusWindow } from "@/components/study-os/status-window";
 
 /**
@@ -247,6 +250,35 @@ export function GShell({
                   </Link>
                 );
               })}
+              <Link
+                href="/g/vocab"
+                className="gd-menu-item"
+                data-active={
+                  pathname === "/g/vocab" || pathname.startsWith("/g/vocab/") ? "true" : undefined
+                }
+                aria-current={pathname === "/g/vocab" ? "page" : undefined}
+                onClick={closeMenu}
+              >
+                <BookA className="h-4.5 w-4.5 shrink-0" strokeWidth={1.75} />
+                취약 단어장
+              </Link>
+              {FEATURE_FLAGS.ENABLE_VOCAB_DRILL && (
+                <Link
+                  href="/g/track/vocab"
+                  className="gd-menu-item"
+                  data-active={
+                    pathname === "/g/track/vocab" ||
+                    pathname.startsWith("/g/track/vocab/")
+                      ? "true"
+                      : undefined
+                  }
+                  aria-current={pathname === "/g/track/vocab" ? "page" : undefined}
+                  onClick={closeMenu}
+                >
+                  <GraduationCap className="h-4.5 w-4.5 shrink-0" strokeWidth={1.75} />
+                  어휘 훈련
+                </Link>
+              )}
             </nav>
 
             <div className="gd-hairline-t gd-safe-b shrink-0 py-1">

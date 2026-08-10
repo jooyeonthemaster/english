@@ -227,3 +227,50 @@ export const ExtractionTaskListIcon = forwardRef<SVGSVGElement, LucideProps>(
 ) as LucideIcon;
 
 ExtractionTaskListIcon.displayName = "ExtractionTaskListIcon";
+
+/**
+ * 어법 훈련소 (v3 design §D5-1) — 출제 파이프라인 5번째 아이콘.
+ * 문서 패밀리(접힌 모서리) + 밑줄 어법 판별 모티프(밑줄 친 어구 + 체크).
+ */
+export const GrammarStudioIcon = forwardRef<SVGSVGElement, LucideProps>(
+  (
+    {
+      color = "currentColor",
+      size = 32,
+      strokeWidth = 1.9,
+      absoluteStrokeWidth,
+      children,
+      ...props
+    },
+    ref,
+  ) => {
+    const resolvedStrokeWidth = iconStroke(size, strokeWidth, absoluteStrokeWidth);
+
+    return (
+      <svg
+        ref={ref}
+        xmlns="http://www.w3.org/2000/svg"
+        width={size}
+        height={size}
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke={color}
+        strokeWidth={resolvedStrokeWidth}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+        {...props}
+      >
+        <path d="M5.2 3.5h9.2L19 8.1V20a1.5 1.5 0 0 1-1.5 1.5H6.7A1.5 1.5 0 0 1 5.2 20V5A1.5 1.5 0 0 1 6.7 3.5Z" />
+        <path d="M14.3 3.8v4.4h4.4" />
+        <path d="M8.7 11.3h6.8" />
+        <path d="M8.7 14.3h3.6" />
+        <path d="M8.7 16.4h3.6" />
+        <path d="m14.3 16 1.4 1.4 2.5-2.9" />
+        {children}
+      </svg>
+    );
+  },
+) as LucideIcon;
+
+GrammarStudioIcon.displayName = "GrammarStudioIcon";

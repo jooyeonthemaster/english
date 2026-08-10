@@ -1,0 +1,765 @@
+{
+ "examId": "2023_09_5077481",
+ "source": "4f7b44eb981a8794fc79c490f7b4c01e.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 다음을 듣고, 남자가 하는 말의 목적으로 가장 적절한 것을 고르시오. ①비상 시 대피 장소를 안내하려고 ②버스 출발 시간 변경을 공지하려고 ③차량 운행 중 안전벨트 착용을 당부하려고 ④버스 내 휴대 전화 통화 자제를 요청하려고 ⑤차량 내 무선 인터넷 연결 방법을 설명하려고",
+   "choices": [
+    "비상 시 대피 장소를 안내하려고",
+    "버스 출발 시간 변경을 공지하려고",
+    "차량 운행 중 안전벨트 착용을 당부하려고",
+    "버스 내 휴대 전화 통화 자제를 요청하려고",
+    "차량 내 무선 인터넷 연결 방법을 설명하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 157
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 여자의 의견으로 가장 적절한 것을 고르시오. ①라디오를 듣는 것은 행복감을 높여 준다. ②인터넷 발달은 라디오의 대중화에 기여한다. ③노년층을 위한 멀티미디어 교육이 필요하다. ④대화할 때는 상대방의 말을 경청하는 것이 중요하다. ⑤라디오 프로그램 편성 시 청취 연령",
+   "choices": [
+    "라디오를 듣는 것은 행복감을 높여 준다.",
+    "인터넷 발달은 라디오의 대중화에 기여한다.",
+    "노년층을 위한 멀티미디어 교육이 필요하다.",
+    "대화할 때는 상대방의 말을 경청하는 것이 중요하다.",
+    "라디오 프로그램 편성 시 청취 연령을 고려해야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 171
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 대화를 듣고, 두 사람의 관계를 가장 잘 나타낸 것을 고르시오. ①건축가－건물 주인 ②코딩 강사－수강생 ③영양사－과일 도매상 ④음식 평론가－요리사 ⑤홍보 회사 직원－과일 농장 주인",
+   "choices": [
+    "건축가－건물 주인",
+    "코딩 강사－수강생",
+    "영양사－과일 도매상",
+    "음식 평론가－요리사",
+    "홍보 회사 직원－과일 농장 주인"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 104
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고르시오.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 41
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 여자가 할 일로 가장 적절한 것을 고르시오. ①현수막 걸기 ②의자 배치하기 ③카메라 설치하기 ④디제이 일정 조율하기 ⑤마이크 상태 확인하기",
+   "choices": [
+    "현수막 걸기",
+    "의자 배치하기",
+    "카메라 설치하기",
+    "디제이 일정 조율하기",
+    "마이크 상태 확인하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 89
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 남자가 지불할 금액을 고르시오. [3점] ①$45 ②$54 ③$63 ④$65 ⑤$70",
+   "choices": [
+    "$45",
+    "$54",
+    "$63",
+    "$65",
+    "$70"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 59
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 여자가 밴드 오디션에 참가하지 않은 이유를 고르시오. ①기타에 문제가 생겨서 ②몸 상태가 좋지 않아서 ③졸업 시험을 치러야 해서 ④취업 면접 일정과 겹쳐서 ⑤가족 행사에 참여해야 해서",
+   "choices": [
+    "기타에 문제가 생겨서",
+    "몸 상태가 좋지 않아서",
+    "졸업 시험을 치러야 해서",
+    "취업 면접 일정과 겹쳐서",
+    "가족 행사에 참여해야 해서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 115
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, Kint Chocolate Museum에 관해 언급되지 않은 것을 고르시오. ①위치 ②개관 시간 ③입장료 ④선물 가게 ⑤휴관일",
+   "choices": [
+    "위치",
+    "개관 시간",
+    "입장료",
+    "선물 가게",
+    "휴관일"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 83
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. Endangered Animals Photo Exhibition에 관한 다음 내용을 듣고, 일치하지 않는 것을 고르시오. ①3주 동안 지속된다. ②멸종 위기 동물들의 사진 100장이 전시된다. ③사진 속 동물들이 멸종 위기에 처한 이유가 설명되어 있다. ④수익금 전액은 동물 보호 ",
+   "choices": [
+    "3주 동안 지속된다.",
+    "멸종 위기 동물들의 사진 100장이 전시된다.",
+    "사진 속 동물들이 멸종 위기에 처한 이유가 설명되어 있다.",
+    "수익금 전액은 동물 보호 센터에 기부될 것이다.",
+    "멸종 위기 동물 포스터를 무료로 제공할 것이다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 202
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 다음 표를 보면서 대화를 듣고, 두 사람이 주문할 기내 휴대용 가방을 고르시오. Carry-On Bags for Kids Model Price Height (inches) Color Material ① A $35 Red Plastic ② B $50 Blue Plastic ③ C ",
+   "choices": [
+    "A\n$35\nRed\nPlastic",
+    "B\n$50\nBlue\nPlastic",
+    "C\n$70\nPink\nFabric",
+    "D\n$95\nBlack\nFabric",
+    "E\n$110\nPurple\nAluminum"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 223
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ①Sorry. I broke the bottles by accident. ②Sure. Let’s remove the labels together. ③You shouldn’t. Your hands ",
+   "choices": [
+    "Sorry. I broke the bottles by accident.",
+    "Sure. Let’s remove the labels together.",
+    "You shouldn’t. Your hands are still dirty.",
+    "I agree. Recycled paper bags are cheaper.",
+    "No problem. I’m going to order some bottles."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 267
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ①Sounds wonderful! That fits our budget. ②Terrific! I’m glad we’re done with the project. ③Too bad. There’s n",
+   "choices": [
+    "Sounds wonderful! That fits our budget.",
+    "Terrific! I’m glad we’re done with the project.",
+    "Too bad. There’s no ticket available for your trip.",
+    "Okay. I’ll reschedule the meeting and let you know.",
+    "Thanks for offering. I’ll be happy to join your team.\n2023학년도 대학수학능력시험 9월 모의평가 문제지\n제3 교시"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 338
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. Woman: ①Of course. I accept the instructor position. ②Great. Let me sign up for the 8 p.m. class, then. ③Plea",
+   "choices": [
+    "Of course. I accept the instructor position.",
+    "Great. Let me sign up for the 8 p.m. class, then.",
+    "Please write your name down on the waiting list.",
+    "Thanks for the refund of my class registration fee.",
+    "Sounds exciting. Good luck on your ballet performance."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 315
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. [3점] Man: ①Thanks for telling me. I’ll call her and apologize. ②Good idea. Don’t forget to bring your tennis ",
+   "choices": [
+    "Thanks for telling me. I’ll call her and apologize.",
+    "Good idea. Don’t forget to bring your tennis shoes.",
+    "Not really. The match wasn’t as good as I expected.",
+    "Fine. Promise me you’ll do your best to win the match.",
+    "I understand. I’ll give you more time to finish the series."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 338
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Randy가 Angela에게 할 말로 가장 적절한 것을 고르시오. [3점] Randy: ①Why don’t you find members to form a drone racing club?",
+   "choices": [
+    "Why don’t you find members to form a drone racing club?",
+    "I think you should become friends with the transfer student.",
+    "Practice more if you want to participate in the next race.",
+    "Safety comes first when it comes to flying drones.",
+    "How about buying a drone of your own?\n[16～17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 364
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 여자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "positive effects of plants on insects",
+    "diverse purposes of plant communication",
+    "different methods for controlling toxic chemicals",
+    "key aspects of non-verbal human communication",
+    "important roles of plants in balancing the food chain"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 262
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 식물이 아닌 것은?",
+   "choices": [
+    "cotton plants",
+    "mustard plants",
+    "pine trees",
+    "tomato plants",
+    "walnut trees"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 91
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "지역 사회 홍보 대사로 활동해 줄 것을 제안하려고",
+    "이웃 도시와 예정된 친선 경기 취소를 통보하려고",
+    "지역 사회 출신 피겨 스케이팅 선수를 응원하려고",
+    "시청에서 주관하는 연례 자선 행사를 홍보하려고",
+    "피겨 스케이팅 경기장 건립을 위한 기부를 요청하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 804
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 드러난 Nathan의 심경 변화로 가장 적절한 것은?",
+   "choices": [
+    "sorrowful →relieved",
+    "frustrated →satisfied",
+    "worried\n→scared",
+    "curious\n→delighted",
+    "hopeful\n→disappointed"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 873
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "타 문화 사람들과 교류를 잘하려면 그 문화의 이면을 알아야 한다.",
+    "문화 배경이 다른 직원과 협업할 때 공정하게 업무를 나눠야 한다.",
+    "여러 문화에 대한 이해를 통해 공동체 의식을 길러야 한다.",
+    "원만한 대인 관계를 위해서는 서로의 공통점을 우선 파악해야 한다.",
+    "문화적 갈등을 줄이려면 구성원 간의 소통을 활성화해야 한다.\n  이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시에 \n따라 답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1180
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 밑줄 친 send us off into different far corners of the library가 다음 글에서 의미하는 바로 가장 적절한 것은?",
+   "choices": [
+    "lead us to music selected to suit our respective tastes",
+    "enable us to build connections with other listeners",
+    "encourage us to request frequent updates for algorithms",
+    "motivate us to search for talented but unknown musicians",
+    "make us ignore our preferences for particular music genres"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1378
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "분배 정의를 실현하려면 시민 단체의 역할이 필요하다.",
+    "사회적 합의는 민주적인 정책 수립의 선행 조건이다.",
+    "성실한 납세는 안정적인 정부 예산 확보의 기반이 된다.",
+    "경제학은 세법을 개정할 때 이론적 근거를 제공한다.",
+    "세법을 만들 때 도덕적 목표를 설정하는 것이 중요하다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1096
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "limitations of using empirical observations in farming",
+    "challenges in modernizing traditional farming equipment",
+    "necessity of prioritizing trialability in agricultural innovation",
+    "importance of making instinctive decisions in agriculture",
+    "ways to control unpredictable agricultural phenomena"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1449
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "How to Build a Successful Career in Music Criticism",
+    "Never the Same: The Value of Variation in Music Performance",
+    "The Importance of Personal Expression in Music Therapy",
+    "Keep Your Cool: Overcoming Stage Fright When Playing Music",
+    "What’s New in the Classical Music Industry?"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1376
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. 다음 도표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "Each of the four countries in the graph had \na higher capacity to generate renewable energy in 2020 than \nits respective capacity in 2011.",
+    "Germany’s capacity to generate \nrenewable energy in 2011 reached more than 50.0 gigawatts, \nwhich was also the case in 2020.",
+    "Among the countries \nabove, Spain ranked in second place in terms of renewable \nenergy generation capacity in 2011 and remained in second \nplace in 2020.",
+    "The renewable energy generation capacity \nof Italy in 2020 was lower than that of Spain in the same \nyear.",
+    "The renewable energy generation capacity of France \nwas higher than that of Italy in both 2011 and 2020.\n* decimal: 소수의"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 805
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Leon Festinger에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "러시아인 이민자 가정에서 태어났다.",
+    "사회 심리학자 Kurt Lewin에게 영향을 받았다.",
+    "Stanford University에서 사회 심리학 연구를 중단했다.",
+    "국제 학술 협력에 활발하게 참여했다.",
+    "1970년대 후반에 역사 분야로 관심을 돌렸다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 974
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. 2022 K-Tea Culture Program에 관한 다음 안내문의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "한국의 차 문화 역사에 관한 영상을 시청한다.",
+    "한국 전통 다도 시연을 본다.",
+    "쿠키와 함께 차를 맛본다.",
+    "참가비에는 전통 찻잔이 포함되어 있다.",
+    "예약은 방문 일주일 전까지 해야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 167
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. Career Day with a Big Data Expert에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "학부모도 참여할 수 있다.",
+    "참석 인원에 제한이 없다.",
+    "QR 코드를 스캔하여 신청서를 작성한다.",
+    "강연 중에 음료수를 마실 수 있다.",
+    "참석자 중 일부만 강연자의 책을 무료로 받는다.\n2022 K-Tea Culture Program\nEvergreen Tea Society invites you to the second annual \nK-Tea Culture Program! Come and enjoy a refreshing cup \nof tea and learn about traditional Korean tea culture.\nProgram Includes:\n1) Watching a short video about the history of Korean tea \nculture\n2) Observing a demonstration of a traditional Korean \ntea-ceremony (dado)\n3) Participating in the ceremony yourself\n4) Tasting a selection of teas along with cookies\nWhen: Saturday, September 24, 3:00 p.m.—5:00 p.m.\nWhere: Evergreen Culture Center\nParticipation Fee: $20 per person (traditional teacup included)\nReservations should be made online (www.egtsociety.or.kr)\nat least one day before your visit.\nCareer Day with a Big Data Expert\nMeet a Big Data expert from a leading IT company! Jill \nJohnson, famous data analyst and bestselling author, will be \nvisiting Sovenhill High School to give a lecture on careers \nrelated to Big Data.\nParticipation: \n󰠂Sovenhill High School students only\n󰠂Limited to 50 students\nWhen & Where:\n󰠂October 15, 10:00 a.m. to 11:30 a.m. \n󰠂Library\nRegistration: Scan the QR code to fill in \nthe application form.\nNote:\n󰠂Drinking beverages is not permitted during the lecture.\n󰠂The lecture will be followed by a Q&A session.\n󰠂All participants will receive a free copy of the lecturer’s \nbook."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1471
+  },
+  {
+   "qNum": 29,
+   "kind": "grammar_underline",
+   "stem": "29. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "be evaluated as right or",
+    "②": "Learn how to choose from",
+    "③": "have discussions with co-workers or",
+    "④": "that create dilemmas",
+    "⑤": "whether to ask for guidance"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1112
+  },
+  {
+   "qNum": 30,
+   "kind": "vocab_underline",
+   "stem": "30. 다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "qualifications",
+    "②": "preventing a kindergarten teacher from",
+    "③": "differentiate the two",
+    "④": "challenged by people whose experience",
+    "⑤": "diminished by the fact that"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1282
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. More than just having territories, animals also partition them. And this insight turned out to be particularly useful for zoo husbandry. An animal’s territo",
+   "choices": [
+    "an interest in close neighbors",
+    "a neat functional organization",
+    "a stock of emergency supplies",
+    "a distance from potential rivals",
+    "a strictly observed daily routine"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1018
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. Fans feel for feeling’s own sake. They make meanings beyond what seems to be on offer. They build identities and experiences, and make artistic creations of",
+   "choices": [
+    "is enhanced by collaborations between global stars",
+    "results from frequent personal contact with a star",
+    "deepens as fans age together with their idols",
+    "comes from being connected to other fans",
+    "is heightened by stars’ media appearances"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1182
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. There was nothing modern about the idea of men making women’s clothes ― we saw them doing it for centuries in the past. In the old days, however, the client",
+   "choices": [
+    "a profitable industry driving fast fashion",
+    "a widespread respect for marketing skills",
+    "a public institution preserving traditional designs",
+    "a modern connection between dress-design and art",
+    "an efficient system for producing affordable clothing"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1189
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. In trying to explain how different disciplines attempt to understand autobiographical memory the literary critic Daniel Albright said, “Psychology is a gard",
+   "choices": [
+    "venture a little more often into the wilderness",
+    "help them recall their most precious memories",
+    "better understand the challenges of parental duty",
+    "disregard the key characteristics of children’s fiction",
+    "standardize the paths of their psychological development"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1381
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "This ability is due to the activity of plant \nmeristems ― regions of undifferentiated tissue in roots and \nshoots that can, in response to specific cues, differentiate into \nnew tissues and organs.",
+    "If meristems are not damaged \nduring disasters, plants can recover and ultimately transform \nthe destroyed or barren environment.",
+    "You can see this \nphenomenon on a smaller scale when a tree struck by lightning \nforms new branches that grow from the old scar.",
+    "In the form \nof forests and grasslands, plants regulate the cycling of water \nand adjust the chemical composition of the atmosphere.",
+    "In \naddition to regeneration or resprouting of plants, disturbed \nareas can also recover through reseeding.\n* revitalization: 소생\n[36～37] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 \n것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1123
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. When two natural bodies of water stand at different levels, building a canal between them presents a complicated engineering problem. (A) Then the upper gat",
+   "choices": [
+    "(A) －(C) －(B)",
+    "(B) －(A) －(C)",
+    "(B) －(C) －(A)",
+    "(C) －(A) －(B)",
+    "(C) －(B) －(A)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1053
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. Culture operates in ways we can consciously consider and discuss but also in ways of which we are far less cognizant. (A) In some cases, however, we are far",
+   "choices": [
+    "(A) －(C) －(B)",
+    "(B) －(A) －(C)",
+    "(B) －(C) －(A)",
+    "(C) －(A) －(B)",
+    "(C) －(B) －(A)\n[38～39] 글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 \n적절한 곳을 고르시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38～39"
+    ]
+   },
+   "charLen": 1186
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. In particular, they define a group as two or more people who interact with, and exert mutual influences on, each other. In everyday life, we tend to see any",
+   "choices": [
+    ") However, social psychologists use this term \nmore precisely. (",
+    ") It is this sense of mutual interaction or \ninter-dependence for a common purpose which distinguishes \nthe members of a group from a mere aggregation of \nindividuals. (",
+    ") For example, as Kenneth Hodge observed, \na collection of people who happen to go for a swim after work \non the same day each week does not, strictly speaking, \nconstitute a group because these swimmers do not interact \nwith each other in a structured manner. (",
+    ") By contrast, \na squad of young competitive swimmers who train every morning \nbefore going to school is a group because they not only share \na common objective (training for competition) but also interact \nwith each other in formal ways (e.g., by warming up together \nbeforehand). (",
+    ") It is this sense of people coming together \nto achieve a common objective that defines a “team”.\n* exert: 발휘하다\n** aggregation: 집합"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1117
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. On top of the hurdles introduced in accessing his or her money, if a suspected fraud is detected, the account holder has to deal with the phone call asking ",
+   "choices": [
+    ") Make a service too burdensome, and the potential \ncustomer will go elsewhere. (",
+    ") This obstacle applies at \nseveral levels. (",
+    ") Passwords, double-key identification, \nand biometrics such as fingerprint-, iris-, and voice recognition \nare all ways of keeping the account details hidden from \npotential fraudsters, of keeping your data dark. (",
+    ") But they \nall inevitably add a burden to the use of the account. (",
+    ") This \nis all useful at some level ― indeed, it can be reassuring \nknowing that your bank is keeping alert to protect you ― but \nit becomes tiresome if too many such calls are received. [3점]\n* fraud: 사기"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1138
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "size ……coordinate",
+    "cost……systematize",
+    "size ……identify",
+    "cost……innovate",
+    "goal……investigate\n[41～42] 다음 글을 읽고, 물음에 답하시오.\nClimate change experts and environmental humanists alike \nagree that the climate crisis is, at its core, a crisis of the \nimagination and much of the popular imagination is shaped by \nfiction. In his 2016 book The Great Derangement, anthropologist \nand novelist Amitav Ghosh takes on this relationship between \nimagination and environmental management, arguing that \nhumans have failed to respond to climate change at least in part \nbecause fiction (a) fails to believably represent it. Ghosh \nexplains that climate change is largely absent from \ncontemporary fiction because the cyclones, floods, and other \ncatastrophes it brings to mind simply seem too “improbable” \nto belong in stories about everyday life. But climate change \ndoes not only reveal itself as a series of (b) extraordinary \nevents. In fact, as environmentalists and ecocritics from Rachel \nCarson to Rob Nixon have pointed out, environmental change \ncan be “imperceptible”; it proceeds (c) rapidly, only occasionally \nproducing “explosive and spectacular” events. Most climate \nchange impacts cannot be observed day-to-day, but they \nbecome (d) visible when we are confronted with their \naccumulated impacts.\nClimate change evades our imagination because it poses \nsignificant representational challenges. It cannot be observed \nin “human time,” which is why documentary filmmaker Jeff \nOrlowski, who tracks climate change effects on glaciers and \ncoral reefs, uses “before and after” photographs taken several \nmonths apart in the same place to (e) highlight changes that \noccurred gradually.\n* anthropologist: 인류학자\n** catastrophe: 큰 재해\n*** evade: 피하다"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3052
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Differing Attitudes Towards Current Climate Issues",
+    "Slow but Significant: The History of Ecological Movements",
+    "The Silence of Imagination in Representing Climate Change",
+    "Vivid Threats: Climate Disasters Spreading in Local Areas",
+    "The Rise and Fall of Environmentalism and Ecocriticism"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 309
+  },
+  {
+   "qNum": 42,
+   "kind": "vocab_letter",
+   "stem": "42. 밑줄 친 (a)～(e) 중에서 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {
+    "a": "Your dream’s finally come",
+    "b": "you always wanted to",
+    "c": "you’ve missed a notice",
+    "d": "I can’t believe I",
+    "e": "She grabbed Layla’s hand"
+   },
+   "bracketChoices": {},
+   "charLen": 2139
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) －(D) －(C)",
+    "(C) －(B) －(D)",
+    "(C) －(D) －(B)",
+    "(D) －(B) －(C)",
+    "(D) －(C) －(B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 125
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a)～(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 75
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글에 관한 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "Emilia와 Layla는 유럽 여행 중이었다.",
+    "Layla는 Emilia에게 Liverpool로 가자고 제안했다.",
+    "Emilia는 기차를 점심 식사 전에 타자고 말했다.",
+    "National Gallery에는 van Gogh의 Sunflowers가 없었다.",
+    "Emilia는 van Gogh의 Sunflowers를 좋아했다.\n* 확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)했는지 확인\n하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 257
+  }
+ ],
+ "sourcePdf": "4f7b44eb981a8794fc79c490f7b4c01e.pdf",
+ "fileName": "3교시_영어영역_문제지.pdf"
+}

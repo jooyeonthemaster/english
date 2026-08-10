@@ -3,12 +3,27 @@ export const PX_PER_MM = 96 / 25.4;
 /** A4 한 장의 픽셀 폭(210mm @96dpi) — 썸네일 scale 계산용. */
 export const REPORT_A4_WIDTH_PX = Math.round(210 * PX_PER_MM);
 
-// Matches the usable .par-sheet-body height after A4 padding, running header, and footer.
-export const PAGE_BODY_MM = 250;
+/**
+ * .par-sheet-body 의 가용 높이(mm) — **런타임 실측이 실패했을 때만 쓰는 폴백**.
+ *
+ * 실제 값은 pages.tsx 가 매 측정마다 .par-measure 안의 프로브 시트(실제 러닝헤더/푸터를
+ * 가진 빈 .par-sheet)에서 직접 잰다. 러닝헤더 높이가 로고 유무로 달라져 상수로 고정할 수
+ * 없기 때문이다 — 실측(Chromium 96dpi): 로고 없음 249.5~249.75mm / 로고 있음 244.9~245.1mm.
+ * 폴백은 '넘치는 쪽'보다 '덜 담는 쪽'이 안전하므로 로고 있는 경우를 기준으로 잡는다.
+ * (옛 값 250 은 최선 조건에서조차 과대라 매 페이지 최대 5.1mm 를 초과 배정했다.)
+ */
+export const PAGE_BODY_MM = 244.5;
+
+/**
+ * 실측 가용 높이에서 빼는 안전여유(mm). rect 측정의 서브픽셀·반올림 잔차와
+ * 페이지 경계에서 재계상되는 공유 테두리(0.15mm 수준)를 흡수한다.
+ */
+export const PAGE_SAFETY_MM = 0.8;
 
 export const BOX_PAD_MM = 9;
 
-export const ACTIVITY_PAD_MM = 6;
+/** .par-ws-block 의 상하 크롬 — padding 3mm×2 + border .3mm×2 = 6.6mm. */
+export const ACTIVITY_PAD_MM = 6.6;
 
 export const RUN_GAP_MM = 6;
 

@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 
 // ---------------------------------------------------------------------------
@@ -23,10 +22,9 @@ import {
   useState,
   type RefObject,
 } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import {
-  AlertTriangle,
   CheckCircle2,
   ChevronDown,
   ChevronUp,
@@ -34,13 +32,10 @@ import {
   Database,
   FileText,
   FolderX,
-  Gem,
   Loader2,
-  RotateCcw,
   Rows3,
   Trash2,
 } from "lucide-react";
-import { PearlIcon } from "@/components/icons/pearl-icon";
 
 import {
   getWorkbenchQuestions,
@@ -65,7 +60,7 @@ import {
 import { createExam } from "@/actions/exams";
 import { QuestionSetSection } from "@/components/workbench/question-set-section";
 import { getAcademyQuestionSetMemberMap } from "@/actions/question-sets";
-import { EXAM_SEED_QUESTION_IDS_KEY } from "@/lib/exam-paper-seed";
+import { seedExamAndNavigate } from "./seed-exam-and-navigate";
 
 import { confirmNative } from "@/lib/browser-confirm";
 import { DragSelect } from "@/components/ui/drag-select";
@@ -84,6 +79,7 @@ import {
 } from "@/components/workbench/shared/view-mode-cycle-button";
 import { QuestionBankCard } from "@/components/workbench/question-bank-card";
 import { PassageGroupedView } from "@/components/workbench/question-bank-passage-view";
+import { AssignQuestionsAction } from "@/components/workbench/question-bank-client/assign-questions-action";
 import { CreateExamDialog } from "@/components/workbench/question-bank-client/create-exam-dialog";
 import { EditQuestionDialog } from "@/components/workbench/question-bank-client/edit-question-dialog";
 import { GridToggle } from "@/components/workbench/question-bank-client/grid-toggle";
@@ -91,11 +87,10 @@ import { QuestionDetailDialog } from "@/components/workbench/question-bank-clien
 import { QuestionFiltersToolbar } from "@/components/workbench/question-bank-client/filters-toolbar";
 import { useQuestionEditor } from "@/components/workbench/question-bank-client/use-question-editor";
 
-import { WorkbenchLoadingCard } from "@/components/workbench/workbench-loading-card";
-import { FEATURE_FLAGS } from "@/lib/feature-flags";
-import { getQuestionGenerationPlanConfig } from "@/lib/question-generation-plans";
-import { getFriendlyQuestionGenerationError } from "@/lib/workbench-generation-errors";
-import { countWords, typeLabel, type QueueItem } from "./generate-page-types";
+import { VARIANT_COPY } from "@/lib/wording/director-glossary";
+
+import { type QueueItem } from "./generate-page-types";
+import { QueueStatusCard } from "./queue-status-card";
 
 // ---------------------------------------------------------------------------
 // Local filter shape (mirrors the filters QuestionBankClient receives, minus
@@ -112,6 +107,21 @@ interface LocalFilters {
   starred?: boolean;
   sort?: string;
   search?: string;
+}
+
+// LocalFilters 의 문자열 필터 키(숫자 page·불리언 approved/starred 제외) —
+// updateFilter/updateFilters 가 string key 로 인덱싱할 때 좁히는 데 쓴다.
+type LocalFilterTextKey = Exclude<keyof LocalFilters, "page" | "approved" | "starred">;
+
+// PassageGroupedView 의 onActivePassageChange 콜백이 넘겨주는 "현재 지문" 요약
+// 형상(question-bank-passage-view.tsx 프롭 타입과 동일 — 재수출되지 않아 재선언).
+interface ActivePassageContext {
+  id: string;
+  title: string;
+  visibleCount: number;
+  totalQuestionCount: number;
+  hasAnalysis: boolean;
+  isOpen: boolean;
 }
 
 const PAGE_SIZE = 20;
@@ -170,118 +180,6 @@ function useMeasuredHeight(enabled: boolean) {
   return [ref, height] as const;
 }
 
-// ── Live generation queue strip card (ported from BottomQueueSection) ──
-// Renders generating / error queue items at the very front of the bank list.
-function QueueStripCard({
-  item,
-  onRetryGeneration,
-}: {
-  item: QueueItem;
-  onRetryGeneration?: (item: QueueItem) => void | Promise<void>;
-}) {
-  const planConfig = getQuestionGenerationPlanConfig(
-    item.config.generationPlan || "STANDARD",
-  );
-
-  if (item.status === "generating") {
-    const requestedCount = Object.values(item.config.typeCounts).reduce(
-      (a: number, b: any) => a + Number(b),
-      0,
-    );
-    return (
-      <WorkbenchLoadingCard
-        title={item.passageTitle}
-        contentPreview={`${item.passageContent.slice(0, 200)}...`}
-        statusLabel="생성 중"
-        progressLabel={`AI가 ${requestedCount}문제를 생성 중입니다...`}
-        wordCount={countWords(item.passageContent)}
-        showCheckbox={false}
-        statusIcon={Loader2}
-        variant="analyzing"
-        fixedHeight
-        ariaLabel={`${item.passageTitle} - 문제 생성 중`}
-        planBadge={
-          FEATURE_FLAGS.SHOW_MODEL_SELECTOR ? (
-            <span className="shrink-0 inline-flex items-center gap-1 rounded-md border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[10px] font-bold text-slate-600">
-              {planConfig.id === "PREMIUM" ? (
-                <Gem className="w-3 h-3" />
-              ) : (
-                <PearlIcon className="w-3 h-3" />
-              )}
-              {planConfig.shortLabel}
-            </span>
-          ) : null
-        }
-      />
-    );
-  }
-
-  if (item.status === "error") {
-    const questionType = Object.keys(item.config.typeCounts).find(
-      (typeId) => Number(item.config.typeCounts[typeId]) > 0,
-    );
-    const errorDetail = getFriendlyQuestionGenerationError(
-      item.error,
-      questionType,
-    );
-    const requestedTypes = Object.entries(item.config.typeCounts)
-      .filter(([, count]) => Number(count) > 0)
-      .map(([typeId, count]) => `${typeLabel(typeId)} ${count}개`)
-      .join(", ");
-
-    return (
-      <div className="h-[340px] overflow-hidden rounded-xl border border-red-200 bg-red-50/30 p-4">
-        <div className="flex items-center gap-3">
-          <AlertTriangle className="w-5 h-5 text-red-500 shrink-0" />
-          <div className="min-w-0">
-            <div className="flex items-center gap-1.5 min-w-0">
-              <h4 className="text-[13px] font-bold text-slate-800 truncate">
-                {item.passageTitle}
-              </h4>
-              {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
-                <span className="shrink-0 inline-flex items-center gap-1 rounded-md border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[10px] font-bold text-slate-600">
-                  {planConfig.id === "PREMIUM" ? (
-                    <Gem className="w-3 h-3" />
-                  ) : (
-                    <PearlIcon className="w-3 h-3" />
-                  )}
-                  {planConfig.shortLabel}
-                </span>
-              )}
-            </div>
-            <span className="text-[11px] text-red-500 font-medium">
-              생성 실패
-            </span>
-            {requestedTypes && (
-              <p className="mt-1 text-[11px] font-medium text-slate-500">
-                {requestedTypes} · {item.config.difficulty}
-              </p>
-            )}
-            {errorDetail && (
-              <p className="mt-1 line-clamp-5 break-words text-[11px] leading-4 text-red-600">
-                {errorDetail}
-              </p>
-            )}
-          </div>
-        </div>
-        {onRetryGeneration && (
-          <button
-            type="button"
-            onClick={() => onRetryGeneration(item)}
-            title="이 카드에 사용된 유형·난이도·조건 그대로 다시 생성합니다"
-            className="mt-3 inline-flex h-8 shrink-0 items-center gap-1.5 rounded-md border border-red-200 bg-white px-3 text-[11.5px] font-bold text-red-600 shadow-sm transition-colors hover:bg-red-50"
-          >
-            <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
-            같은 조건으로 다시 생성하기
-          </button>
-        )}
-      </div>
-    );
-  }
-
-  return null;
-}
-
 // 방금 생성 완료된 문제의 파란 글로우 — passage-card-grid 의 fresh 글로우와 동일.
 const FRESH_QUESTION_GLOW_CLASS =
   "rounded-xl !ring-2 !ring-blue-400/60 !shadow-[0_0_0_1px_rgba(37,99,235,0.45),0_0_30px_10px_rgba(37,99,235,0.32)] motion-safe:animate-pulse [&_[data-slot=card]]:!border-blue-400";
@@ -293,6 +191,12 @@ interface EmbeddedQuestionBankProps {
    * 필터도 국어 그룹으로 바뀐다. 미전달 = 영어 기본(KO_* 문항 제외).
    */
   subjectScope?: "KOREAN";
+  /**
+   * 생성 결과 → 「과제 보내기」에서 미리 선택할 학생(2607 §8.5).
+   * 미전달이면 이 컴포넌트가 직접 `?student=`(오답 변형 딥링크)를 읽는다 —
+   * 상위가 명시로 넘긴 값이 항상 우선.
+   */
+  defaultStudentIds?: string[];
   // ── Live generation queue (ported from BottomQueueSection) ──
   sessionQueue?: QueueItem[];
   queueCounts?: { generating: number; done: number; error: number };
@@ -310,6 +214,7 @@ interface EmbeddedQuestionBankProps {
 export function EmbeddedQuestionBank({
   academyId,
   subjectScope,
+  defaultStudentIds,
   sessionQueue = [],
   queueCounts = { generating: 0, done: 0, error: 0 },
   queueFilter = "all",
@@ -319,6 +224,15 @@ export function EmbeddedQuestionBank({
   marqueeBoundaryRef,
 }: EmbeddedQuestionBankProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // 오답 변형 딥링크(`?student=`)로 들어온 학생 — 생성한 문항을 그 학생에게
+  // 바로 보내는 흐름의 프리셀렉트 값(2607 §8.5). 상위 prop 이 있으면 그것을 쓴다.
+  const assignStudentIds = useMemo(() => {
+    if (defaultStudentIds && defaultStudentIds.length > 0) return defaultStudentIds;
+    const studentId = searchParams.get("student");
+    return studentId ? [studentId] : undefined;
+  }, [defaultStudentIds, searchParams]);
 
   // 모바일에선 한 페이지 카드 수를 10개로 줄인다(서버 페이지 크기 자체를 변경).
   const isMobile = useIsMobile();
@@ -564,7 +478,9 @@ export function EmbeddedQuestionBank({
         next[key] =
           value === "true" ? true : value === "false" ? false : undefined;
       } else {
-        next[key] = normalize(value);
+        // 캐스트 사유: 툴바 계약(updateFilter)이 key 를 string 으로 넘기지만,
+        // approved/starred 분기 밖에서 실제 도달하는 키는 문자열 필터 키뿐이다.
+        next[key as LocalFilterTextKey] = normalize(value);
       }
       return next;
     });
@@ -587,7 +503,10 @@ export function EmbeddedQuestionBank({
           next[key] =
             value === "true" ? true : value === "false" ? false : undefined;
         } else {
-          next[key] = normalize(value);
+          // 캐스트 사유: 툴바 계약(updateFilters)이 Record<string, string> 을
+          // 넘기지만, view/collectionId/approved/starred 분기 밖에서 실제
+          // 도달하는 키는 문자열 필터 키뿐이다.
+          next[key as LocalFilterTextKey] = normalize(value);
         }
       }
       return next;
@@ -636,14 +555,13 @@ export function EmbeddedQuestionBank({
     return rawGroupedPassages
       .map((p) => ({
         ...p,
-        questions: p.questions.filter((q) => !removedIds.has(q.id)),
+        questions: p.questions.filter((q: { id: string }) => !removedIds.has(q.id)),
       }))
       .filter((p) => p.questions.length > 0);
   }, [rawGroupedPassages, removedIds]);
 
-  const [activePassageContext, setActivePassageContext] = useState<any | null>(
-    null,
-  );
+  const [activePassageContext, setActivePassageContext] =
+    useState<ActivePassageContext | null>(null);
   const [expandedPassageIds, setExpandedPassageIds] = useState<
     Record<string, boolean>
   >({});
@@ -859,7 +777,9 @@ export function EmbeddedQuestionBank({
     const result = await approveWorkbenchQuestion(id);
     if (result.success) {
       toast.success("검수완료");
-      setDetailQuestion((prev) =>
+      // 상세 문항 상태가 명시적 any(any | null)라 함수형 업데이트 파라미터가
+      // 문맥 타입을 못 받는다 — 이 갱신이 읽는 id·쓰는 approved 만 좁혀 명시.
+      setDetailQuestion((prev: { id: string; approved: boolean } | null) =>
         prev && prev.id === id ? { ...prev, approved: true } : prev,
       );
       refreshAfterMutation();
@@ -872,7 +792,9 @@ export function EmbeddedQuestionBank({
     const result = await unapproveWorkbenchQuestion(id);
     if (result.success) {
       toast.success("검수 취소됨");
-      setDetailQuestion((prev) =>
+      // 상세 문항 상태가 명시적 any(any | null)라 함수형 업데이트 파라미터가
+      // 문맥 타입을 못 받는다 — 이 갱신이 읽는 id·쓰는 approved 만 좁혀 명시.
+      setDetailQuestion((prev: { id: string; approved: boolean } | null) =>
         prev && prev.id === id ? { ...prev, approved: false } : prev,
       );
       refreshAfterMutation();
@@ -1399,15 +1321,7 @@ export function EmbeddedQuestionBank({
               return;
             }
             // 선택한 문제 id 를 sessionStorage 로 넘겨 빌더가 미리보기에 바로 올린다.
-            try {
-              window.sessionStorage.setItem(
-                EXAM_SEED_QUESTION_IDS_KEY,
-                JSON.stringify(ids),
-              );
-            } catch {
-              /* sessionStorage 실패해도 이동은 진행 (빈 빌더로 열림) */
-            }
-            router.push("/director/workbench/exams/create");
+            seedExamAndNavigate(router, ids);
           }}
           className={
             // 모바일: min-w-0 + basis-auto 로 좁으면 줄어들어 한 줄을 유지(요청대로
@@ -1422,6 +1336,22 @@ export function EmbeddedQuestionBank({
           <span className="md:hidden">시험지 생성</span>
           <span className="hidden md:inline">다음으로 (시험지 생성)</span>
         </button>
+
+        {/* 과제 보내기 — 시험지 생성 바로 옆. 갓 만든 문항을 다른 메뉴로 건너가지
+            않고 그 자리에서 학생에게 보내는 마지막 칸(2607 §8.5).
+            국어(KO_*)는 학생 앱 문항 플레이어 미검증이라 문제 은행과 동일하게
+            게이트한다(question-bank-client 와 같은 판정 — 무회귀). */}
+        {subjectScope !== "KOREAN" ? (
+          <AssignQuestionsAction
+            selectedIds={selectedIds}
+            onAssigned={clearSelection}
+            defaultStudentIds={assignStudentIds}
+            disabled={selectedIds.size === 0}
+            title={
+              selectedIds.size === 0 ? VARIANT_COPY.AFTER_GENERATE_HINT : undefined
+            }
+          />
+        ) : null}
       </div>
       {/* 모바일은 ml-auto 제거 — auto 마진이 free space를 먹어 좌측 flex-1(시험지
           생성 grow)이 못 자라던 문제를 풀어, 시험지 생성이 오른쪽까지 채워지고
@@ -1460,7 +1390,7 @@ export function EmbeddedQuestionBank({
             }`}
           >
             {queueStripItems.map((item) => (
-              <QueueStripCard
+              <QueueStatusCard
                 key={item.id}
                 item={item}
                 onRetryGeneration={onRetryGeneration}
@@ -1592,6 +1522,13 @@ export function EmbeddedQuestionBank({
               style={{ top: folderStickyHeight }}
             >
               {toolbarRow}
+              {/* 생성 → 과제 동선 안내 한 줄. 버튼 바로 아래에 상시 두어 높이가
+                  선택 상태에 따라 흔들리지 않게 한다(스티키 바 레이아웃 안정). */}
+              {subjectScope !== "KOREAN" ? (
+                <p className="mt-1.5 text-[12px] text-slate-500">
+                  {VARIANT_COPY.AFTER_GENERATE_HINT}
+                </p>
+              ) : null}
             </div>
 
             <div
@@ -1639,6 +1576,7 @@ export function EmbeddedQuestionBank({
                     />
                   </div>
                   <PassageGroupedView
+                    marqueeDeferCommit
                     passages={groupedPassages}
                     gridCols={gridCols}
                     viewSize={viewSize}
@@ -1683,7 +1621,7 @@ export function EmbeddedQuestionBank({
                   )}
                 </div>
               ) : (
-                <DragSelect
+                <DragSelect deferCommit
                   value={selectedIds}
                   onChange={setSelectedIds}
                   boundaryRef={marqueeBoundaryRef}

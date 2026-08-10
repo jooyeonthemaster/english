@@ -9,9 +9,14 @@
 // 등록 다이얼로그(단건/대량)는 기존 tutor 허브 자산을 임포트만으로 재사용.
 // 벌크 선택(Map<id,이름>)은 페이지·필터 전환에도 유지 — 선택 바(sticky)에서
 // 과제 배포(AssignmentComposer)·반 편성으로 이어진다.
+//
+// embedded 계약(v3 C-1): embedded=true 면 자체 PageShell·SectionCard 타이틀 계층
+// (헤더 액션 포함)을 렌더하지 않고 내용부(헤더리스 카드+다이얼로그)만 렌더한다
+// — 공통 셸(PageShell·페이지 헤더·뷰 스위처)은 C-2 (manage) layout 담당.
+// false/미지정이면 현행과 픽셀 동일(무회귀 — 기존 page.tsx 소비처 무변경).
 // ============================================================================
 
-import { useState, useTransition } from "react";
+import { type ReactNode, useState, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { SearchX, UserPlus, Users } from "lucide-react";
 import {
@@ -62,6 +67,7 @@ export function StudentsRosterClient({
   dir,
   isDirector,
   showBilling,
+  embedded = false,
 }: {
   academyId: string;
   studentsData: StudentsResult;
@@ -73,6 +79,8 @@ export function StudentsRosterClient({
   dir: RosterSortDir;
   isDirector: boolean;
   showBilling: boolean;
+  /** true: C-2 (manage) layout 셸에 얹히는 내용부 전용 렌더(상단 계약 주석 참조) */
+  embedded?: boolean;
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -211,14 +219,8 @@ export function StudentsRosterClient({
   );
 
   return (
-    <PageShell>
-      <SectionCard
-        icon={Users}
-        title="학생 관리"
-        description="원생 등록·반 편성·학습 현황을 한 곳에서 관리합니다."
-        actions={headerActions}
-        bodyClassName="p-0"
-      >
+    <RosterShell embedded={embedded}>
+      <RosterCard embedded={embedded} actions={headerActions}>
         {noStudentsAtAll ? (
           <div className="flex flex-col items-center gap-3 px-6 py-16">
             <span className="flex size-12 items-center justify-center rounded-full bg-blue-50 text-blue-600 ring-1 ring-blue-100">
@@ -229,7 +231,7 @@ export function StudentsRosterClient({
                 아직 등록된 학생이 없습니다
               </p>
               <p className="mt-1 text-[12.5px] text-slate-400">
-                학생을 등록하면 반 편성·과제 배포·학습 현황 관리를 시작할 수 있습니다.
+                학생을 등록하면 반 편성·과제 보내기·학습 기록 관리를 시작할 수 있습니다.
               </p>
             </div>
             <div className="flex items-center gap-2">
@@ -351,7 +353,7 @@ export function StudentsRosterClient({
             )}
           </>
         )}
-      </SectionCard>
+      </RosterCard>
 
 
       {/* 과제 배포 — 선택 학생 프리셀렉트(성공 토스트는 컴포저가 담당) */}
@@ -376,6 +378,50 @@ export function StudentsRosterClient({
         isDirector={isDirector}
       />
 
-    </PageShell>
+    </RosterShell>
+  );
+}
+
+// ── C-1 embedded 셸 분기 — 조건은 여기서만, 내용부는 위에서 단일 소스 ─────────────
+
+/** false: 현행 PageShell(픽셀 동일) / true: layout 셸 아래 형제 간격만 미러한 div */
+function RosterShell({
+  embedded,
+  children,
+}: {
+  embedded: boolean;
+  children: ReactNode;
+}) {
+  if (!embedded) return <PageShell>{children}</PageShell>;
+  return <div className="flex w-full min-w-0 flex-col gap-4">{children}</div>;
+}
+
+/** false: 현행 SectionCard(픽셀 동일) / true: 타이틀 계층 없는 동일 카드 프레임 */
+function RosterCard({
+  embedded,
+  actions,
+  children,
+}: {
+  embedded: boolean;
+  actions: ReactNode;
+  children: ReactNode;
+}) {
+  if (!embedded) {
+    return (
+      <SectionCard
+        icon={Users}
+        title="학생 관리"
+        description="원생 등록·반 편성·학습 기록을 한 곳에서 관리합니다."
+        actions={actions}
+        bodyClassName="p-0"
+      >
+        {children}
+      </SectionCard>
+    );
+  }
+  return (
+    <section className="flex min-w-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+      <div className="min-w-0 p-0">{children}</div>
+    </section>
   );
 }

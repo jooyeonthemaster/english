@@ -76,6 +76,12 @@ wrongOptionExplanations requirements:
 - Use concise Korean, preferably 1-2 sentences per wrong option.
 - For Korean visible options, especially REFERENCE/TOPIC_MAIN_IDEA/MAIN_IDEA/CONTENT_MATCH, name the visible Korean option text first. Do not start the explanation only with the English source phrase; English passage terms may be used as evidence after the Korean option is identified.
 
+해설 품질 계약 (위반 시 반려 — O201 S3i 실측: 이 계약 주입이 스탠다드 콘텐츠성 F 0 의 축):
+- E1. 해설의 구조 분석(선행사·절 경계·수식 관계·품사 판정)은 실제 문장을 재파싱한 결과와 정확히 일치해야 한다 — 틀린 근거로 맞는 결론을 내는 것도 결함이다.
+- E2. 해설이 인용하는 영어 표현은 지문·선지·고친 형태에 실재하는 것만 쓴다(존재하지 않는 단어·창작 표현 인용 금지).
+- E3. 해설이 지문 두 표현의 관계를 서술할 때는 그 관계가 실제 문장에서 성립하는 짝인지 확인한다(다른 문장의 표현을 붙여 쓰지 마라).
+- E4. 한국어는 표준어만: 존재하지 않는 단어(오타·비어) 금지, 조사·어미 정확히, 합니다체 통일.
+
 Type-specific checks:`;
 
 interface ContractTypeSegment {
@@ -266,6 +272,70 @@ const GEMINI_COMPACT_MARKING_RUBRIC = [
   "- surroundingText must be an exact source slice containing the selected expression and must follow the current type schema's stated length range. For GRAMMAR_ERROR, normally use 40-120 characters and preserve the full long-distance dependency (true subject to verb, antecedent to relative clause, semantic subject to participle, or first parallel item to target), even when that requires more than 80 characters. Do not apply this grammar exception to other types.",
   "- Do not generate full-passage display fields such as passageWithBlank, passageWithMarkers, passageWithUnderline, or passageWithNumbers. The server reconstructs them.",
 ].join("\n");
+
+// ── S3i 경량 생성 계약 (26-07-21, O201 스펙 완전 이식 — O204 후속) ────────────
+// 스탠다드 빈칸·어법의 생성 프롬프트를 실험이 검증한 경량 계약으로 교체한다.
+// 근거: S3i 확정 수치(콘텐츠 F 0/46·38원·중앙 63s)는 이 경량 계약으로 측정된
+// 것인데, 프로덕션 이식이 기존 대형 컴팩트 프롬프트를 유지한 채 검증층만 얹어
+// 시간·원가가 2배로 부풀었다(실사용 실측 125~170s — O204). 필드 형상·값 규칙은
+// strict 구조화 출력의 스키마 describe 가 전달하므로 프롬프트는 내용 규칙만
+// 담는다. 결정형 게이트·검수리 콜이 위반을 잡는다(경량 계약의 안전망).
+// 킬스위치: env STANDARD_LEAN_CONTRACT=off → 기존 컴팩트 프롬프트 복귀.
+
+const LEAN_EXPLANATION_CONTRACT = `해설 품질 계약(위반 시 반려):
+- 해설의 구조 분석(선행사·절 경계·수식 관계·품사 판정)은 실제 문장을 재파싱한 결과와 정확히 일치해야 합니다 — 틀린 근거로 맞는 결론을 내는 것도 결함입니다.
+- 해설이 인용하는 영어 표현은 지문·선지·고친 형태에 실재하는 것만 씁니다(창작 표현 인용 금지).
+- 두 표현의 관계를 서술할 때는 실제 그 문장에서 성립하는 짝인지 확인합니다.
+- 한국어는 표준어만: 존재하지 않는 단어(오타·비어) 금지, 합니다체 통일.`;
+
+const LEAN_BLANK_RULES = `절대 규칙(위반 시 반려):
+1. originalExpression 은 지문에 축자로 존재해야 하며, 문장 전체를 삼키면 안 됩니다(구·절 단위 — 호스트 문장의 대부분을 차지하는 스팬 금지).
+2. 빈칸 직후에 빈칸 내용에 문법적으로 의존하는 잔여 구문을 남기지 마십시오 — ", nor …", ", which …" 가 빈칸 바로 뒤에 오게 뚫는 것 금지.
+3. 선지 5개 전부 빈칸 자리에 문법적으로 정확히 들어가야 합니다(품사·절/구 형태 통일).
+4. 정답 선지는 원문 표현의 표면 어휘를 재사용하지 않는 추상적 패러프레이즈. 오답 4개는 서로 다른 함정 기제(극성 반전·과확장·과협소·인과 역전·절반-진실)로, 본문 소재를 재활용해 매력도를 높이십시오.
+5. 표적은 논지 핵심 — 주변 단서만으로 즉답되지 않고 글 전체 논리 종합이 필요한 자리.`;
+
+const LEAN_GRAMMAR_RULES = `절대 규칙(위반 시 반려):
+1. 서로 다른 문장에서 스키마가 요구하는 개수의 밑줄 후보를 고르십시오. expression 은 전부 지문 축자이고, 정답 자리에만 errorExpression(어법상 틀린 오형)을 심습니다 — 오형은 실존하는 영어 어형만.
+2. 변형 포인트는 구조 판단형(정동사/준동사·관계사·분사 태·병렬·도치) — 인접 수일치·품사 표면 치환 같은 뻔한 포인트 회피.
+3. 오답 밑줄도 각각 판단 근거가 뚜렷한 어법 자리(장식 필러 금지). 정답과 같은 pointCode 를 오답에 반복하지 마십시오.
+4. 해설의 구조 분석은 실제 문장 구조와 정확히 일치해야 합니다(선행사·절 경계·수식 관계 오귀속 금지).`;
+
+export interface StandardLeanGenerationPromptInput {
+  typeId: "BLANK_INFERENCE" | "GRAMMAR_ERROR";
+  passageContent: string;
+  difficulty: string;
+  /** typeSettings 프롬프트·다양성 회피 블록 등 호출자가 합성한 부가 블록(없으면 ""). */
+  extraBlocks?: string;
+  teacherPoints?: readonly TeacherPointPayload[];
+}
+
+export function buildStandardLeanGenerationPrompt({
+  typeId,
+  passageContent,
+  difficulty,
+  extraBlocks,
+  teacherPoints = [],
+}: StandardLeanGenerationPromptInput): string {
+  const kind = typeId === "BLANK_INFERENCE" ? "'빈칸 추론'" : "'어법(밑줄 중 틀린 것)'";
+  const rules = typeId === "BLANK_INFERENCE" ? LEAN_BLANK_RULES : LEAN_GRAMMAR_RULES;
+  const difficultyRubric =
+    GEMINI_COMPACT_DIFFICULTY_RUBRIC[difficulty] ??
+    GEMINI_COMPACT_DIFFICULTY_RUBRIC.INTERMEDIATE;
+  const teacherPointsBlock = buildTeacherPointsPromptBlock(teacherPoints);
+  return [
+    `당신은 수능 영어 킬러 문항 출제 전문가입니다. 아래 지문으로 ${kind} ${difficulty} 문항 1개를 완제품으로 만드십시오. 각 필드의 작성 규칙은 출력 스키마의 필드 설명을 정확히 따르고, 지문 전체 복사 필드(passageWithBlank·passageWithMarkers 등)는 출력하지 마십시오(서버가 재조립).`,
+    rules,
+    LEAN_EXPLANATION_CONTRACT,
+    `난이도 기준:\n${difficultyRubric}`,
+    `## 지문\n${passageContent}`,
+    teacherPointsBlock,
+    extraBlocks?.trim() ? extraBlocks.trim() : "",
+    `정확히 1문항. JSON 만 출력하십시오.`,
+  ]
+    .filter(Boolean)
+    .join("\n\n");
+}
 
 export function buildGeminiCompactPlanningPrompt({
   schoolType = "",

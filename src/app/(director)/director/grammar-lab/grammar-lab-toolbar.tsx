@@ -11,6 +11,7 @@ import { type ReactNode } from "react";
 import { Download, ListFilter, Search } from "lucide-react";
 
 import type { GrammarLabStudentRow } from "@/actions/grammar-drill-admin";
+import { CTA_LABELS, METRIC_LABELS } from "@/lib/wording/director-glossary";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
@@ -79,9 +80,9 @@ function exportCsv(rows: GrammarLabStudentRow[]) {
     "정답률(%)",
     "마스터 유닛",
     "진입 유닛",
-    "취약 개념",
-    "취약 개념 숙달도",
-    "미완료 배정",
+    `${METRIC_LABELS.WEAK} 개념`,
+    `${METRIC_LABELS.WEAK} 개념 ${METRIC_LABELS.MASTERY}`,
+    METRIC_LABELS.INCOMPLETE_TASKS,
     "최근 학습",
   ];
   const lines = rows.map((s) => [
@@ -171,7 +172,7 @@ export function GrammarLabToolbar({
             onClick={onAssignSelected}
             className="inline-flex h-7 items-center rounded-md bg-blue-600 px-2.5 text-[12px] font-semibold text-white transition-colors hover:bg-blue-700"
           >
-            어법 과제 만들기
+            {CTA_LABELS.SEND_GRAMMAR_TASK}
           </button>
           <button
             type="button"

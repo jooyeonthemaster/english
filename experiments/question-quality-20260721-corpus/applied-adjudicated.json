@@ -1,0 +1,221 @@
+{
+  "planned": [
+    {
+      "id": "ebsi_go1_20240328-q30",
+      "votes": "2/3",
+      "planted": "has enough time or ability",
+      "original": "does not have enough time or ability"
+    },
+    {
+      "id": "ebsi_go1_20240904-q29",
+      "votes": "2/3",
+      "planted": "which",
+      "original": "where"
+    },
+    {
+      "id": "ebsi_go2_20240904-q29",
+      "votes": "3/3",
+      "planted": "a century or two make the change",
+      "original": "a century or two to make the change"
+    },
+    {
+      "id": "2024_SN_5086091-q41-42",
+      "votes": "3/3",
+      "planted": "running the risk of being misquoted",
+      "original": "avoiding the risk of being misquoted"
+    },
+    {
+      "id": "ebsi_go3_20231012-q30",
+      "votes": "3/3",
+      "planted": "resistant",
+      "original": "receptive"
+    },
+    {
+      "id": "ebsi_go1_20220609-q30",
+      "votes": "3/3",
+      "planted": "ignoring",
+      "original": "envying"
+    },
+    {
+      "id": "ebsi_go2_20220609-q30",
+      "votes": "3/3",
+      "planted": "less likely",
+      "original": "more likely"
+    },
+    {
+      "id": "ebsi_go2_20221123-q30",
+      "votes": "3/3",
+      "planted": "reinforces",
+      "original": "destroys"
+    },
+    {
+      "id": "ebsi_go2_20220901-q30",
+      "votes": "2/3",
+      "planted": "scarce",
+      "original": "excess"
+    },
+    {
+      "id": "ebsi_go3_20221012-q29",
+      "votes": "3/3",
+      "planted": "what referred to as",
+      "original": "what was referred to as"
+    },
+    {
+      "id": "2022_SN_5070164-q41-42",
+      "votes": "3/3",
+      "planted": "abstract",
+      "original": "obvious"
+    },
+    {
+      "id": "ebsi_go1_20210603-q29",
+      "votes": "3/3",
+      "planted": "are lowered",
+      "original": "is lowered"
+    },
+    {
+      "id": "ebsi_go1_20210603-q30",
+      "votes": "3/3",
+      "planted": "prevent",
+      "original": "accommodate"
+    },
+    {
+      "id": "ebsi_go2_20210831-q30",
+      "votes": "3/3",
+      "planted": "benefits",
+      "original": "dangers"
+    },
+    {
+      "id": "ebsi_go2_20180607-q29",
+      "votes": "3/3",
+      "planted": "improving",
+      "original": "degrading"
+    },
+    {
+      "id": "ebsi_go2_20181121-q28",
+      "votes": "2/3",
+      "planted": "many of them had not responded",
+      "original": "many of whom had not responded"
+    },
+    {
+      "id": "ebsi_go1_20161123-q28",
+      "votes": "2/3",
+      "planted": "some of them use less than 1.3 gallons",
+      "original": "some of them using less than 1.3 gallons"
+    },
+    {
+      "id": "ebsi_go3_20150409_A-q30",
+      "votes": "3/3",
+      "planted": "defect",
+      "original": "advantage"
+    },
+    {
+      "id": "ebsi_go2_20140612-q28",
+      "votes": "3/3",
+      "planted": "relieved",
+      "original": "expectant"
+    },
+    {
+      "id": "ebsi_go1_20130903-q28",
+      "votes": "3/3",
+      "planted": "sufficient",
+      "original": "insufficient"
+    },
+    {
+      "id": "2013_SN_3014708-q30",
+      "votes": "2/3",
+      "planted": "deny",
+      "original": "recognize"
+    },
+    {
+      "id": "ebsi_go2_20121114_B-q28",
+      "votes": "2/3",
+      "planted": "accepted",
+      "original": "resisted"
+    },
+    {
+      "id": "ebsi_go1_20110310-q21",
+      "votes": "3/3",
+      "planted": "got off",
+      "original": "get off"
+    },
+    {
+      "id": "ebsi_go1_20110901-q20",
+      "votes": "3/3",
+      "planted": "it lost",
+      "original": "it was lost"
+    },
+    {
+      "id": "ebsi_go2_20110310-q21",
+      "votes": "2/3",
+      "planted": "The truth is what",
+      "original": "The truth is that"
+    },
+    {
+      "id": "ebsi_go2_20110901-q20",
+      "votes": "2/3",
+      "planted": "a system is developed by Northwestern University",
+      "original": "a system developed by Northwestern University"
+    },
+    {
+      "id": "ebsi_go2_20100311-q21",
+      "votes": "2/3",
+      "planted": "some people still use it to describe",
+      "original": "some people still use to describe"
+    },
+    {
+      "id": "ebsi_go3_20101012-q32",
+      "votes": "3/3",
+      "planted": "accept",
+      "original": "challenge"
+    },
+    {
+      "id": "ebsi_go2_20091117-q28",
+      "votes": "2/3",
+      "planted": "cultivate",
+      "original": "circulate"
+    },
+    {
+      "id": "ebsi_go3_20090714-q22",
+      "votes": "2/3",
+      "planted": "that you can be thankful",
+      "original": "that you can be thankful for"
+    },
+    {
+      "id": "ebsi_go1_20060309-q20",
+      "votes": "2/3",
+      "planted": "is keeping",
+      "original": "is kept"
+    },
+    {
+      "id": "2019_SN_5031122-q30",
+      "votes": "2/3",
+      "planted": "laboriously",
+      "original": "easily"
+    },
+    {
+      "id": "ebsi_go1_20100916-q31",
+      "votes": "3/3",
+      "planted": "tax cut",
+      "original": "tax cuts"
+    },
+    {
+      "id": "2008_06_3001212-q22",
+      "votes": "3/3",
+      "planted": "during",
+      "original": "for"
+    },
+    {
+      "id": "2008_09_3001186-q28",
+      "votes": "3/3",
+      "planted": "direct",
+      "original": "indirect"
+    }
+  ],
+  "skipped": [
+    {
+      "id": "ebsi_go1_20140903-q27",
+      "why": "no-safe-anchor (excerpt=1)",
+      "planted": "was"
+    }
+  ]
+}

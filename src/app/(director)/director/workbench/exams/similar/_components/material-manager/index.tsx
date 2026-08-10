@@ -1625,7 +1625,7 @@ function EmbeddedJobCardGrid({
           표시할 자료가 없습니다.
         </div>
       ) : (
-        <DragSelect
+        <DragSelect deferCommit
           className="grid grid-cols-3 items-stretch gap-2.5"
           value={marqueeSelectedTaskIds}
           onChange={onMarqueeChange}

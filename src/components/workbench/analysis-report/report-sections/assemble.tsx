@@ -2,12 +2,29 @@ import { circledNo } from "@/lib/passage-report/analysis-report/design-tokens";
 import { type ActivityBlock, type AnalysisReport, type AnalysisSection, type ReportMeta } from "@/lib/passage-report/analysis-report/schema";
 import { type CoverEdit, CoverSheet } from "../cover-templates";
 import { type ActivityAction, ActivityAnswerNode } from "../custom-activity-renders";
-import type { CustomEdit, FlowItem, MetaEdit, SectionEdit, SectionFlowOptions, WrapKind } from "./types";
+import type { CustomEdit, FlowItem, MetaEdit, PassageStudyNotes, SectionEdit, SectionFlowOptions, WrapKind } from "./types";
 import { Field } from "./editable-field";
 import { SectionHead } from "./table";
 import { WorksheetLogicMapBlock } from "./worksheet";
 import { customBlockFlowItems } from "./custom-block";
+import type { SectionFlowCache } from "./flow-cache";
+import { hiddenSectionKeys, reportSectionSlots } from "./section-slots";
 import { sectionFlowItems } from "./section-flow";
+import { collectPassageStudyNotes } from "./study-notes";
+
+/** study 노트 memo 슬롯키 — 섹션 슬롯키(`sec:`/`logic:`/`cb:` 접두)와 겹치지 않는다. */
+const STUDY_SLOT = "study";
+
+/**
+ * 슬롯 렌더 옵션(slot.flow)을 캐시 키 조각으로 편다 — 키 이름과 값을 함께 넣어
+ * 옵션이 추가/제거돼도(길이·이름이 달라져) 자동으로 miss 가 되게 한다.
+ * 값이 원시가 아니면 참조 비교가 되므로 최악이라도 '영구 miss(= 지금과 동일 비용)'로 안전하게 실패한다.
+ */
+function flowOptionKeyParts(opts: Partial<SectionFlowOptions>): unknown[] {
+  const out: unknown[] = [];
+  for (const key of (Object.keys(opts) as (keyof SectionFlowOptions)[]).sort()) out.push(key, opts[key]);
+  return out;
+}
 
 function titleItems(report: AnalysisReport, med?: MetaEdit): FlowItem[] {
   const m = report.meta;
@@ -70,7 +87,10 @@ function coverItems(report: AnalysisReport, ced?: CoverEdit): FlowItem[] {
 /** 학습 활동 정답 — 문서 말미 별도 페이지로 모은다 (activityAnswerKeyPage !== false 일 때). */
 function activityAnswerItems(report: AnalysisReport): FlowItem[] {
   if (report.activityAnswerKeyPage === false) return [];
-  const acts = (report.customBlocks ?? []).filter((b): b is ActivityBlock => b.kind === "activity");
+  // 숨긴 활동 블록은 정답도 함께 빠진다 — 활동을 꺼도 '학습 활동 정답'만 유령으로 남던 결함 봉합.
+  const acts = (report.customBlocks ?? []).filter(
+    (b): b is ActivityBlock => b.kind === "activity" && !report.blockMeta?.[b.id]?.hidden,
+  );
   if (acts.length === 0) return [];
   const items: FlowItem[] = [
     {
@@ -103,6 +123,13 @@ function activityAnswerItems(report: AnalysisReport): FlowItem[] {
 export function reportFlowItems(
   report: AnalysisReport,
   edit?: { med?: MetaEdit; sectionEdit?: (i: number) => SectionEdit; setCustom?: CustomEdit; insertTextAfter?: (anchorId: string) => void; ced?: CoverEdit; onActivity?: (id: string, action: ActivityAction) => void; onSectionHeading?: (key: string, patch: { ko?: string; en?: string }) => void },
+  /**
+   * 섹션 단위 flow 캐시(선택). 주면 손대지 않은 섹션의 FlowItem[] 를 **참조까지 그대로** 재사용해
+   * React 가 그 서브트리를 bailout 하게 한다. **넘기지 않으면 캐시 이전과 100% 동일 동작**이므로
+   * 읽기전용 소비자(AnalysisReportDocument · dev 하네스 · 랜딩 데모 · 미리보기 모달)와
+   * setReport 업데이터 안의 진단 호출들은 무수정으로 안전하다.
+   */
+  cache?: SectionFlowCache,
 ): FlowItem[] {
   // 섹션 헤더(par-sec-head) ko/en 인라인 편집 — 슬롯키(kind+suffix)로 오버라이드 저장. (번호는 자동·고정)
   const headOverride = (key: string, fallbackKo?: string, fallbackEn?: string) => {
@@ -122,153 +149,102 @@ export function reportFlowItems(
     : [...coverItems(report, edit?.ced), ...titleItems(report, edit?.med), ...englishOnlyPageItems(report)];
 
   const findIdx = (k: AnalysisSection["kind"]) => report.sections.findIndex((s) => s.kind === k);
-  const passageIdx = findIdx("passage");
 
-  // ── 새 보고서 구성 (passage 존재 시): 원문+해석 → 도식 → 요약 → 논리 → 필기 캔버스 → 어휘 → 학습지 ──
-  if (!vocabTestOnly && passageIdx >= 0) {
-    const summaryIdx = findIdx("summary");
-    const vocabIdx = findIdx("vocabulary");
-    const lwIdx = report.sections.findIndex((s) => s.kind === "learning-worksheet");
-    const lwSection = lwIdx >= 0 && report.sections[lwIdx].kind === "learning-worksheet" ? report.sections[lwIdx] : undefined;
-    const lwHasLogic = !!lwSection && lwSection.logicRows.length > 0;
-    // 06 실전 학습지(워크북/추론) 콘텐츠 유무 — 기본 분석은 logicRows 만 든 learning-worksheet 를
-    // 만들므로, 실제 워크북/추론이 생성됐을 때만 '실전 학습지' 섹션(#7)을 렌더한다.
-    const lwHasWorkbook = !!lwSection && (
-      !!lwSection.workbookSet ||
-      !!lwSection.inferenceSet ||
-      !!lwSection.cloze ||
-      !!lwSection.practice ||
-      !!lwSection.drills
-    );
+  /** 이번 패스에서 실제로 쓴 캐시 슬롯키 — 끝에서 sweep 에 넘겨 죽은 슬롯을 정리한다. */
+  const usedSlots: string[] = [];
 
-    let no = 0;
-    const head = (
-      si: number,
-      kind: AnalysisSection["kind"],
-      idSuffix: string,
-      labelKo: string | undefined,
-      labelEn: string | undefined,
-      breakBefore: boolean,
-      keepWithPrev?: boolean,
-    ) => {
-      items.push({
-        id: `s${si}-head${idSuffix}`,
-        sectionIndex: si,
-        kind,
-        no,
-        wrap: "secheader",
-        node: <SectionHead no={no} kind={kind} {...headOverride(`${kind}${idSuffix}`, labelKo, labelEn)} />,
-        breakBefore,
-        keepWithPrev,
-      });
-    };
-    const emit = (si: number, opts: Partial<SectionFlowOptions>) => {
-      const sed = edit?.sectionEdit ? edit.sectionEdit(si) : undefined;
-      items.push(
-        ...sectionFlowItems(report.sections[si], si, no, sed, {
-          allSections: report.sections,
-          sectionEdit: edit?.sectionEdit,
-          passageLayout: report.passageLayout,
-          ...opts,
-        }),
-      );
-    };
-
-    // 1) 원문 + 문장별 해석 (필기 없음) — 영어 원문 페이지가 켜졌으면 새 페이지에서 시작
-    no += 1;
-    head(passageIdx, "passage", "", "원문 · 문장별 해석", "Original Passage & Translation", !!report.englishOnlyPage);
-    emit(passageIdx, { passageRenderMode: "clean" });
-
-    // 2) 한눈에 보는 지문 구조 (도식) — 섹션 삭제됨(사용자 요청): 렌더링하지 않음
-
-    // 3) 핵심 요약
-    if (summaryIdx >= 0) {
-      no += 1;
-      head(summaryIdx, "summary", "", undefined, undefined, false);
-      emit(summaryIdx, {});
+  // ── 지문 study 노트: 1회 계산해 clean/annotated 두 패스가 공유 ───────────────
+  // 예전에는 같은 지문을 두 번 emit 하면서 collectPassageStudyNotes 를 두 번 돌렸고
+  // 그중 clean 패스분은 통째로 버려졌다. 이제 clean 은 아예 study 를 요구하지 않고(passage-flow),
+  // annotated/legacy 만 아래 주입분을 쓴다.
+  // ⚠️ 계산은 **지연**시킨다 — 지문 슬롯이 목차에서 꺼져 있으면 한 번도 계산하지 않는다.
+  const studySi = findIdx("passage");
+  const studySection = studySi >= 0 ? report.sections[studySi] : undefined;
+  let studyValue: PassageStudyNotes | undefined;
+  let studyReady = false;
+  const getStudy = (): PassageStudyNotes | undefined => {
+    if (studyReady) return studyValue;
+    studyReady = true;
+    if (!studySection || studySection.kind !== "passage") return undefined;
+    const sentences = studySection.sentences;
+    const build = (): PassageStudyNotes => collectPassageStudyNotes(report.sections, sentences);
+    if (!cache) {
+      studyValue = build();
+      return studyValue;
     }
+    // 키: 지문 섹션 + (study 가 실제로 읽는) 노트 섹션들의 인덱스·참조.
+    // 인덱스까지 넣는 이유 — 노트 ref 에 sectionIndex 가 박히므로 섹션 순서가 바뀌면 결과가 달라진다.
+    // 요약/도식 등 study 가 읽지 않는 섹션의 수정으로는 무효화되지 않는다.
+    const key: unknown[] = [studySection];
+    report.sections.forEach((sec, i) => {
+      if (sec.kind === "grammar" || sec.kind === "exam-focus" || sec.kind === "vocabulary" || sec.kind === "parsing" || sec.kind === "learning-worksheet") {
+        key.push(i, sec);
+      }
+    });
+    usedSlots.push(STUDY_SLOT);
+    studyValue = cache.memo(STUDY_SLOT, key, build);
+    return studyValue;
+  };
 
-    // 4) 지문 논리 구조 분석 (Logic Map) — 메인 분석(call #1)의 learning-worksheet.logicRows 표.
-    //    structure-map(도식)은 더 이상 생성·렌더하지 않는다.
-    if (lwHasLogic && lwSection) {
-      no += 1;
-      // 핵심 요약(#2)과 같은 페이지에 이어 붙인다 (섹션마다 새 페이지 강제 분할 면제).
-      head(lwIdx, "learning-worksheet", "-logic", "지문 논리 구조 분석", "Logic Map", false, true);
-      const lwEdit = edit?.sectionEdit?.(lwIdx);
-      items.push({
-        id: `s${lwIdx}-logic-promoted`,
-        sectionIndex: lwIdx,
-        kind: "learning-worksheet",
-        no,
-        wrap: "note",
-        node: <WorksheetLogicMapBlock section={lwSection} editable={!!lwEdit} onPatch={(patch) => lwEdit?.commit({ ...lwSection, ...patch })} />,
-      });
-    }
-
-    // 5) 필기 분석 캔버스 (어법·구문·출제 인라인) — 새 페이지에서 시작
-    no += 1;
-    head(passageIdx, "passage", "-anno", "필기 분석 · 어법과 구문", "Annotated Reading", true);
-    emit(passageIdx, { passageRenderMode: "annotated" });
-
-    // 6) 핵심 어휘 (단어 시험 원천)
-    if (vocabIdx >= 0) {
-      no += 1;
-      head(vocabIdx, "vocabulary", "", undefined, undefined, false);
-      emit(vocabIdx, {});
-    }
-
-    // 7) 실전 학습지 (06) — 워크북/추론이 생성됐을 때만. (논리표는 4번에서 별도 표시 → 여기선 제외)
-    if (lwIdx >= 0 && lwHasWorkbook) {
-      no += 1;
-      head(lwIdx, "learning-worksheet", "", undefined, undefined, false);
-      emit(lwIdx, { skipWorksheetLogic: true });
-    }
-
-    for (const cb of report.customBlocks ?? []) items.push(...customBlockFlowItems(cb, edit?.setCustom, edit?.insertTextAfter, edit?.onActivity, report.blockMeta));
-    items.push(...activityAnswerItems(report));
-    return items;
-  }
-
-  // ── 폴백: passage 없음 또는 vocabTestOnly — 기존 자연 순서 ──
-  const inlineStudyNotes = !vocabTestOnly && report.sections.some((section) => section.kind === "passage");
-  const summaryIndex = report.sections.findIndex((section) => section.kind === "summary");
-  const promotedLogicIndex = summaryIndex >= 0
-    ? report.sections.findIndex((section) => section.kind === "learning-worksheet" && section.logicRows.length > 0)
-    : -1;
+  // ── 섹션 헤더 슬롯 순회 ────────────────────────────────────────────────────
+  // 슬롯 목록(순서·라벨·breakBefore·논리표 승격)의 단일 진실원은 section-slots.ts 다.
+  // 목차 UI 가 같은 목록을 읽으므로 '보이는 목차'와 '조판되는 문서'가 어긋날 수 없다.
+  // 꺼진 슬롯(report.hiddenSections)은 헤더와 본문이 통째로 빠지고 번호도 소비하지 않아
+  // 남은 섹션이 01·02·03 으로 자동 재배열된다(하류 필터로는 번호에 구멍이 남는다).
+  const hidden = hiddenSectionKeys(report);
   let no = 0;
-  report.sections.forEach((section, si) => {
-    if (section.kind === "self-check") return;
-    // 한눈에 보는 지문 구조(도식) 섹션 삭제됨(사용자 요청) — 폴백 경로에서도 제외
-    if (section.kind === "structure-map") return;
-    if (vocabTestOnly && section.kind !== "vocabulary") return;
-    if (inlineStudyNotes && (section.kind === "grammar" || section.kind === "exam-focus" || section.kind === "parsing")) return;
-    no += 1;
-    // 섹션 헤더도 독립 블록(드래그/이동 가능)
-    if (!vocabTestOnly) {
-      items.push({
-        id: `s${si}-head`,
-        sectionIndex: si,
-        kind: section.kind,
-        no,
-        wrap: "secheader",
-        node: <SectionHead no={no} kind={section.kind} {...headOverride(section.kind)} />,
+  const emit = (si: number, opts: Partial<SectionFlowOptions>, slotKey: string) => {
+    const section = report.sections[si];
+    // study 를 실제로 읽는 경로인가 — clean 패스는 절대 읽지 않는다(passage-flow 조기반환).
+    const usesStudy = section?.kind === "passage" && opts.passageRenderMode !== "clean";
+    const sectionStudy = usesStudy && si === studySi ? getStudy() : undefined;
+    const build = (): FlowItem[] => {
+      const sed = edit?.sectionEdit ? edit.sectionEdit(si) : undefined;
+      return sectionFlowItems(section, si, no, sed, {
+        allSections: report.sections,
+        sectionEdit: edit?.sectionEdit,
+        passageLayout: report.passageLayout,
+        study: sectionStudy,
+        ...opts,
       });
+    };
+    if (!cache) {
+      items.push(...build());
+      return;
     }
-    const sed = edit?.sectionEdit ? edit.sectionEdit(si) : undefined;
-    items.push(...sectionFlowItems(section, si, no, sed, {
-      vocabTestOnly,
-      allSections: report.sections,
-      sectionEdit: edit?.sectionEdit,
-      skipWorksheetLogic: si === promotedLogicIndex,
-      passageLayout: report.passageLayout,
-    }));
-    if (!vocabTestOnly && si === summaryIndex && promotedLogicIndex >= 0) {
-      const worksheet = report.sections[promotedLogicIndex];
-      if (worksheet?.kind === "learning-worksheet") {
-        const worksheetEdit = edit?.sectionEdit?.(promotedLogicIndex);
-        items.push({
-          id: `s${promotedLogicIndex}-logic-promoted`,
-          sectionIndex: promotedLogicIndex,
+    usedSlots.push(slotKey);
+    items.push(
+      ...cache.get(
+        slotKey,
+        [
+          // 섹션 본체 · 위치 · 표시 번호(번호가 바뀌면 SectionHead 밖의 FlowItem.no 도 바뀐다)
+          section,
+          si,
+          no,
+          // 편집 콜백 번들(참조가 바뀌면 노드 안의 onCommit 들도 다시 만들어야 한다)
+          edit?.sectionEdit,
+          // report 전역 중 이 경로로 실제 내려가는 값
+          report.passageLayout,
+          sectionStudy,
+          // 주입 study 가 없는 지문 섹션(문서에 지문이 둘 이상)은 flow 가 allSections 로 직접 계산한다.
+          usesStudy && !sectionStudy ? report.sections : null,
+          // 슬롯 렌더 옵션 전체(passageRenderMode / vocabTestOnly / skipWorksheetLogic …)
+          ...flowOptionKeyParts(opts),
+        ],
+        build,
+      ),
+    );
+  };
+  /** 논리표 승격 블록 — 핵심 요약 뒤(폴백) 또는 '지문 논리 구조 분석' 헤더 뒤(신형). */
+  const pushPromotedLogic = (si: number) => {
+    const worksheet = report.sections[si];
+    if (worksheet?.kind !== "learning-worksheet") return;
+    const build = (): FlowItem[] => {
+      const worksheetEdit = edit?.sectionEdit?.(si);
+      return [
+        {
+          id: `s${si}-logic-promoted`,
+          sectionIndex: si,
           kind: "learning-worksheet",
           no,
           wrap: "note",
@@ -279,15 +255,92 @@ export function reportFlowItems(
               onPatch={(patch) => worksheetEdit?.commit({ ...worksheet, ...patch })}
             />
           ),
-        });
+        },
+      ];
+    };
+    if (!cache) {
+      items.push(...build());
+      return;
+    }
+    const slotKey = `logic:${si}`;
+    usedSlots.push(slotKey);
+    items.push(...cache.get(slotKey, [worksheet, si, no, edit?.sectionEdit], build));
+  };
+
+  // '영어 원문만' 단독 페이지는 그 뒤 첫 섹션 헤더의 breakBefore 로 페이지가 닫힌다.
+  // 그 breakBefore 를 지문 슬롯이 들고 있는데(section-slots), 목차에서 지문을 꺼 버리면
+  // 함께 사라져 영어 원문 페이지에 다음 섹션이 그대로 이어 붙는다. 그래서 '지문'이 아니라
+  // **처음 보이는 섹션 헤더**가 분할을 책임지게 한다(packFlow 는 첫 헤더에 강제 분할을 면제한다).
+  const needsEnglishOnlyBreak = !!report.englishOnlyPage && items.some((it) => it.id.startsWith("english-only-"));
+  let firstVisibleHead = true;
+  for (const slot of reportSectionSlots(report)) {
+    if (hidden.has(slot.key)) continue;
+    no += 1;
+    // 섹션 헤더도 독립 블록(드래그/이동 가능). 단어 시험지 전용 모드는 헤더 없이 본문만.
+    if (!slot.headless) {
+      items.push({
+        id: slot.headId,
+        sectionIndex: slot.si,
+        kind: slot.kind,
+        no,
+        wrap: "secheader",
+        node: <SectionHead no={no} kind={slot.kind} {...headOverride(slot.key, slot.labelKo, slot.labelEn)} />,
+        breakBefore: slot.breakBefore || (firstVisibleHead && needsEnglishOnlyBreak),
+        keepWithPrev: slot.keepWithPrev,
+      });
+      firstVisibleHead = false;
+    }
+    // 지문 논리 구조 분석(신형) — 섹션 flow 대신 논리표 블록 하나만 붙는다.
+    if (slot.promotedLogic) {
+      pushPromotedLogic(slot.si);
+      continue;
+    }
+    // 슬롯키 = `sec:{섹션인덱스}:{슬롯키}` — 같은 섹션을 clean/annotated 두 번 emit 하므로
+    // 인덱스만으로는 충돌한다(slot.key 가 "passage" / "passage-anno" 로 갈라준다).
+    emit(slot.si, slot.flow, `sec:${slot.si}:${slot.key}`);
+    // 폴백 경로 — 핵심 요약 뒤에 학습지 논리표를 승격 배치(원 위치는 skipWorksheetLogic).
+    if (slot.appendPromotedLogicSi >= 0) pushPromotedLogic(slot.appendPromotedLogicSi);
+  }
+
+  // 단어 시험지는 vocabulary 섹션 flow 안에서 만들어진다. 목차에서 '핵심 어휘'(단어장)를 꺼도
+  // 켜 둔 단어 시험지는 남긴다 — 서로 다른 스위치이기 때문(vocabTestOnly 게이트 재사용:
+  // 학습표는 죽이고 시험지만 헤더 없이 낸다). mode==="study" 면 게이트가 시험지를 강제로
+  // 켜버리므로 반드시 아래 가드를 유지할 것.
+  if (!vocabTestOnly) {
+    const vocabIdx = findIdx("vocabulary");
+    if (vocabIdx >= 0 && hidden.has("vocabulary")) {
+      const vs = report.sections[vocabIdx];
+      if (vs.kind === "vocabulary" && (vs.vocabTestMode ?? "study") !== "study") {
+        emit(vocabIdx, { vocabTestOnly: true }, `sec:${vocabIdx}:vocabulary@test-only`);
       }
     }
-  });
+  }
+
   if (!vocabTestOnly) {
     for (const cb of report.customBlocks ?? []) {
-      items.push(...customBlockFlowItems(cb, edit?.setCustom, edit?.insertTextAfter, edit?.onActivity, report.blockMeta));
+      const build = (): FlowItem[] => customBlockFlowItems(cb, edit?.setCustom, edit?.insertTextAfter, edit?.onActivity, report.blockMeta);
+      if (!cache) {
+        items.push(...build());
+        continue;
+      }
+      const slotKey = `cb:${cb.id}`;
+      usedSlots.push(slotKey);
+      // customBlockFlowItems 가 지금 blockMeta 에서 읽는 값은 `[cb.id].breakBefore` 하나뿐이지만
+      // (활동 블록 첫 항목의 강제 페이지 분할), 앞으로 자기 블록 메타를 더 읽어도 안전하도록
+      // **그 블록의 메타 객체 전체**를 키에 넣는다. setBlockMeta 는 손대지 않은 블록의 메타
+      // 참조를 보존하므로(editor-mutations.ts) 다른 블록의 서식 변경으로는 무효화되지 않는다.
+      items.push(
+        ...cache.get(
+          slotKey,
+          [cb, edit?.setCustom, edit?.insertTextAfter, edit?.onActivity, report.blockMeta?.[cb.id]],
+          build,
+        ),
+      );
     }
     items.push(...activityAnswerItems(report));
   }
+  // 이번 패스에 안 쓰인 슬롯 제거 — 섹션 삭제·목차 끄기·undo/redo 반복 시 죽은 슬롯이
+  // 수십~수백 개의 React 엘리먼트를 붙잡은 채 쌓이는 것을 막는다. (return 지점은 여기 하나뿐)
+  cache?.sweep(usedSlots);
   return items;
 }

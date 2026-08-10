@@ -47,6 +47,14 @@ export interface RunGrammarSolverGateInput {
   /** Exact provider-returned candidate that the rendered solver item derives from. */
   researchParentCandidate?: Record<string, unknown>;
   generationPlan: QuestionGenerationPlan;
+  /**
+   * 플랜→모델 매핑 오버라이드 — 이원 티어(26-07-20)에서 문제생성 STANDARD 매핑이
+   * 생성 모델(flash3)과 같아졌으므로, 솔버가 생성기와 같은 모델로 풀면
+   * 자기검증이 된다(O199: 외부 검수리 > 셀프검증). 호출자가 생성 모델과 다른
+   * 검증 모델(광역 표준 — 6라운드 실측은 3.5-flash 기준, 26-07-22 부터
+   * 3.6-flash)을 명시해 독립성을 유지한다.
+   */
+  modelId?: string;
   deadlineAt?: number;
   onModelUsage?: (result: GrammarSolverUsageResult) => void;
 }
@@ -93,6 +101,7 @@ export async function runGrammarSolverGate(
       schema: GRAMMAR_SOLVER_SCHEMA,
       prompt: buildGrammarSolverPrompt(input.question),
       generationPlan: input.generationPlan,
+      modelId: input.modelId,
       logPrefix: "GRAMMAR-SOLVER",
       maxTokens: 2_048,
       deadlineAt: input.deadlineAt,

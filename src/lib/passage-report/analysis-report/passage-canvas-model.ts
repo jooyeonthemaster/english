@@ -297,8 +297,73 @@ function estimateHeights(
   return Math.max(staffMm, railMm) + koMm + footMm + 5;
 }
 
-/** 한 문장 → 캔버스 플랜. measureCharsPerLine 등은 보수적. */
+// ─── 플랜 메모(모듈 LRU) ─────────────────────────────────────────────────────
+/**
+ * `buildSentenceCanvasPlan` 은 **순수함수**다 — 입력(en/ko/seed/notes/vocabRanges) 외의 상태에
+ * 의존하지 않고(난수·시간·전역 없음), 같은 입력이면 항상 같은 플랜을 만든다. 그래서 결과를
+ * 모듈 LRU 에 담아 재사용해도 의미가 바뀌지 않는다.
+ *
+ * 이득: 보고서가 바뀔 때마다 문서 전체 JSX 를 다시 조립하는데, 대부분의 문장은 입력이 그대로다.
+ * 히트하면 (a) 플랜 계산이 사라지고 (b) **플랜 객체 참조가 유지**되어 필기 캔버스의
+ * useLayoutEffect(연결선 실측)가 재실행되지 않는다. undo/redo·패널 토글에서 특히 크다.
+ *
+ * ⚠️ 반환된 플랜은 **여러 호출이 공유**한다. 절대 제자리 변경하지 말 것(현재 소비자는 모두 읽기 전용:
+ *    passage-flow.tsx / sentence-canvas.tsx / planSentenceSplit — 전부 map/filter 로 새 배열만 만든다).
+ */
+const PLAN_CACHE_MAX = 512;
+const planCache = new Map<string, SentenceCanvasPlan>();
+/** 키 구분자 — 본문에 나올 수 없는 제어문자. 가변 길이 배열은 길이도 함께 넣어 경계 모호성을 없앤다. */
+const PLAN_KEY_SEP = String.fromCharCode(1);
+
+function planCacheKey(
+  en: string,
+  ko: string,
+  seedChunks: ChunkSeed[] | undefined,
+  notes: CanvasNoteInput[],
+  vocabRanges: { start: number; end: number }[],
+): string {
+  const parts: string[] = [en, ko, String(seedChunks ? seedChunks.length : -1)];
+  for (const s of seedChunks ?? []) parts.push(s.text ?? "", s.gloss ?? "", s.role ?? "", s.emphasis ?? "");
+  parts.push(String(notes.length));
+  for (const n of notes) {
+    parts.push(
+      n.key, n.kind, n.anchorText ?? "", n.band ?? "", String(n.priority ?? ""), n.role ?? "",
+      String(n.lines.length), ...n.lines,
+      n.trap ?? "", n.example ?? "", n.exampleWrong ?? "", n.exampleCorrect ?? "",
+    );
+  }
+  parts.push(String(vocabRanges.length));
+  for (const r of vocabRanges) parts.push(`${r.start}:${r.end}`);
+  return parts.join(PLAN_KEY_SEP);
+}
+
+/** 한 문장 → 캔버스 플랜. 같은 입력이면 캐시된(참조까지 동일한) 플랜을 돌려준다. */
 export function buildSentenceCanvasPlan(
+  en: string,
+  ko: string,
+  seedChunks: ChunkSeed[] | undefined,
+  notes: CanvasNoteInput[],
+  vocabRanges: { start: number; end: number }[],
+): SentenceCanvasPlan {
+  const key = planCacheKey(en, ko, seedChunks, notes, vocabRanges);
+  const hit = planCache.get(key);
+  if (hit) {
+    // 최근 사용으로 승격(Map 은 삽입 순서 유지 → 맨 앞이 가장 오래된 항목).
+    planCache.delete(key);
+    planCache.set(key, hit);
+    return hit;
+  }
+  const plan = computeSentenceCanvasPlan(en, ko, seedChunks, notes, vocabRanges);
+  planCache.set(key, plan);
+  if (planCache.size > PLAN_CACHE_MAX) {
+    const oldest = planCache.keys().next();
+    if (!oldest.done) planCache.delete(oldest.value);
+  }
+  return plan;
+}
+
+/** measureCharsPerLine 등은 보수적. (순수 계산 본체 — 캐시 없이 매번 새 플랜) */
+function computeSentenceCanvasPlan(
   en: string,
   ko: string,
   seedChunks: ChunkSeed[] | undefined,

@@ -18,7 +18,8 @@ import { getQuestionGenerationPlanFromTags, sanitizeAiModelDisclosureText } from
 import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
 import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
 import { clearCardTextSelection, preventCardDoubleClickTextSelection, shouldIgnoreCardClick, shouldIgnoreCardDoubleClick, shouldIgnoreCardSelectionClick, useDeferredCardSelectionClick } from "./shared/card-click";
-import { optionDisplayTextForSubtype, shouldRenderOptionListForSubtype } from "@/components/exams/paper-builder/option-display";
+import { multiBlankOptionMatrix, optionDisplayTextForSubtype, shouldRenderOptionListForSubtype } from "@/components/exams/paper-builder/option-display";
+import { MultiBlankOptionGrid } from "@/components/exams/multi-blank-option-grid";
 import { DIFFICULTY_CONFIG, STRUCTURED_RENDERER_SOURCE_PASSAGE_TYPES, SUBTYPE_LABELS, TYPE_LABELS } from "./question-card-constants";
 import type { QuestionCardProps } from "./question-card-types";
 import { detectPassageMarking, formatOption, normalizeAnswerLabel, parseCorrectAnswerLabels, parseJSON, readGenerationPlanFromStructuredData, structuredQuestionTextForCard } from "./question-card-helpers";
@@ -524,11 +525,54 @@ export function QuestionCard({
                     ? compactCorrect.slice(0, MAX_COMPACT_OPTIONS)
                     : allEntries;
                   const hiddenCount = options.length - visibleEntries.length;
+                  // 다중 빈칸(BLANK_INFERENCE) 조합 선지 — (A)/(B) 컬럼 헤더 그리드
+                  // (실제 수능 형식). compact 정답-만 보기에서도 같은 형식 유지.
+                  const multiBlank =
+                    sub === "BLANK_INFERENCE"
+                      ? multiBlankOptionMatrix(visibleEntries.map((e) => e.opt))
+                      : null;
+                  if (multiBlank) {
+                    return (
+                      <div
+                        className={`space-y-1 pl-1 ${compact ? "text-[11px]" : ""}`}
+                      >
+                        <MultiBlankOptionGrid
+                          blankCount={multiBlank.blankCount}
+                          className={`px-2 ${compact ? "text-[11px]" : "text-[12px]"}`}
+                          headerCellClassName="text-slate-500"
+                          rows={visibleEntries.map(({ opt, idx, isCorrect }, row) => ({
+                            key: `${opt.label}-${idx}`,
+                            numberCell: (
+                              <span
+                                className={`text-[13px] font-bold tabular-nums ${isCorrect ? "text-slate-600" : "text-slate-400"}`}
+                              >
+                                {
+                                  formatOption(opt.label, opt.text, idx, passageMarking)
+                                    .displayLabel
+                                }
+                                .
+                              </span>
+                            ),
+                            cells: multiBlank.rows[row].values,
+                            cellClassName: isCorrect
+                              ? "text-slate-800 font-medium"
+                              : "text-slate-600",
+                          }))}
+                        />
+                        {compactFixed && hiddenCount > 0 && (
+                          <span className="text-[10px] text-slate-400 pl-2">
+                            외 {hiddenCount}개 선택지
+                          </span>
+                        )}
+                      </div>
+                    );
+                  }
                   return (
                     <div
                       className={`space-y-1 pl-1 ${compact ? "text-[11px]" : ""}`}
                     >
                       {visibleEntries.map(({ opt, idx, isCorrect }) => {
+                        // SENTENCE_INSERT(위치 마커→원문자)만 표시 변환 — 그 외 원문 유지.
                         const optionText =
                           sub === "SENTENCE_INSERT"
                             ? optionDisplayTextForSubtype(sub, idx, opt.text)

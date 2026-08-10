@@ -9,11 +9,31 @@
 // 학생 상세 과제 탭에서 오고, ?student={id} 딥링크(학생별 필터)와 함께
 // router.replace 로 URL 을 동기화한다. 학생/반 대상 필터는 서버 재조회
 // (listStudyAssignments({studentId|classId})), 종류·상태·검색·정렬은 클라 처리.
+//
+// embedded 계약(v3 C-1): embedded=true 면 자체 PageShell·SectionCard 타이틀 계층
+// (「새 과제」 헤더 액션 포함)을 렌더하지 않고 내용부(헤더리스 카드+모달)만 렌더
+// 한다 — 공통 셸(PageShell·페이지 헤더·뷰 스위처)은 C-2 (manage) layout 담당.
+// URL 동기화·딥링크(?open=·?student=)는 embedded 여부와 무관하게 동일 동작.
+// false/미지정이면 현행과 픽셀 동일(무회귀 — 기존 page.tsx 소비처 무변경).
+//
+// 2607 §5.2 B 필터 재설계:
+//  - 필터 팝오버는 w-[320px] p-0 · 헤더(「필터」+「초기화」)/「상태」/「대상」 3단.
+//    대상 패널은 인라인(A6) — 팝오버 안 absolute 드롭다운(중첩 팝오버) 금지.
+//  - 대상을 고르면 팝오버를 닫는다(controlled open) — 결과를 즉시 보게.
+//  - 활성 필터는 툴바에 제거 가능한 칩으로 상시 노출한다. 구 UI 의 파란 점은
+//    aria-hidden 이라 화면·보조기술 어디에도 "무엇이 걸렸는지"가 없었다.
 // ============================================================================
 
-import { useCallback, useEffect, useMemo, useState, useTransition } from "react";
+import {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useTransition,
+} from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { ClipboardList, ListFilter, Plus, Search } from "lucide-react";
+import { ClipboardList, ListFilter, Plus, Search, X } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { listStudyAssignments } from "@/actions/study-assignments";
 import { PageShell, SectionCard } from "@/components/layout/page-frame";
@@ -26,6 +46,11 @@ import type {
   StudyAssignmentListRow,
 } from "@/lib/study-assignments/types";
 import { STUDY_KIND_META } from "@/lib/study-assignments/types";
+import {
+  CTA_LABELS,
+  FILTER_COPY,
+  TASK_STATUS_LABELS,
+} from "@/lib/wording/director-glossary";
 import { cn } from "@/lib/utils";
 import { AssignmentsCalendar, seoulDateKey } from "./assignments-calendar";
 import { AssignmentDetailModal } from "./assignment-detail-modal";
@@ -35,6 +60,7 @@ import {
   CHIP_IDLE,
   compareBoardRows,
   isActionNeeded,
+  selectedDateLabel,
   type BoardSortKey,
 } from "./assignment-list-card";
 import {
@@ -55,10 +81,12 @@ const KIND_FILTERS: { key: KindFilter; label: string }[] = [
   { key: "GRAMMAR", label: STUDY_KIND_META.GRAMMAR.label },
 ];
 
+// 라벨은 glossary 단일 소스 — 「기한 지남」은 KPI 타일·카드 배지·목록 헤더가 쓰는
+// 것과 같은 상수를 재사용해야 같은 술어가 표면마다 다른 단어로 굳지 않는다.
 const STATUS_FILTERS: { key: StatusFilter; label: string }[] = [
   { key: "ALL", label: "전체" },
-  { key: "ACTIVE", label: "진행 중" },
-  { key: "OVERDUE", label: "기한 지남" },
+  { key: "ACTIVE", label: TASK_STATUS_LABELS.IN_PROGRESS },
+  { key: "OVERDUE", label: TASK_STATUS_LABELS.OVERDUE },
   { key: "CLOSED", label: "종료" },
 ];
 
@@ -72,12 +100,54 @@ function matchesSelectedDate(r: StudyAssignmentListRow, date: string): boolean {
   return r.dueAt ? seoulDateKey(r.dueAt) === date : seoulDateKey(r.availableFrom) === date;
 }
 
+// 선택 날짜 라벨은 ./assignment-list-card 의 selectedDateLabel 하나만 쓴다 —
+// 여기에 같은 이름의 구현이 한 벌 더 있어 한쪽만 고치면 두 칩 문구가 갈라졌다.
+
+/**
+ * 활성 필터 칩 — 무엇이 걸려 있는지 툴바에서 항상 읽히게 한다(2607 §5.2 B).
+ * 구 UI 는 아이콘 위 파란 점(aria-hidden) 하나뿐이라 화면에도 보조기술에도
+ * 필터 내용이 없었다. kit FilterChip 관용(h-7 rounded-full px-2.5 text-[12.5px])을
+ * 따르되 클릭 = 그 축만 해제(X 아이콘으로 해제 가능함을 알린다).
+ */
+function ActiveFilterChip({
+  scope,
+  label,
+  tone = "blue",
+  onRemove,
+}: {
+  /** 축 이름(「상태」·「학생」…). 날짜처럼 라벨만으로 자명하면 생략한다 */
+  scope?: string;
+  label: string;
+  /** 기한 지남만 rose — 상태 칩의 유일한 예외를 칩에서도 그대로 미러 */
+  tone?: "blue" | "rose";
+  onRemove: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onRemove}
+      aria-label={`${scope ? `${scope} ` : ""}${label} 필터 해제`}
+      className={cn(
+        "inline-flex h-7 max-w-[15rem] shrink-0 items-center gap-1 rounded-full border px-2.5 text-[12.5px] font-medium transition-colors",
+        tone === "rose"
+          ? "border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100"
+          : "border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100",
+      )}
+    >
+      {scope ? <span className="shrink-0 opacity-70">{scope}</span> : null}
+      <span className="truncate">{label}</span>
+      <X className="size-3 shrink-0" aria-hidden />
+    </button>
+  );
+}
+
 export function AssignmentsBoardClient({
   initialMonth,
   initialMonthRows,
   initialRows,
   openAssignmentId,
   initialStudentId,
+  embedded = false,
 }: {
   /** 서울 기준 이번 달 — "YYYY-MM" */
   initialMonth: string;
@@ -89,6 +159,8 @@ export function AssignmentsBoardClient({
   openAssignmentId: string | null;
   /** ?student= 딥링크 — 학생별 필터(이름은 클라에서 로스터 로드 후 해석) */
   initialStudentId: string | null;
+  /** true: C-2 (manage) layout 셸에 얹히는 내용부 전용 렌더(상단 계약 주석 참조) */
+  embedded?: boolean;
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -106,6 +178,8 @@ export function AssignmentsBoardClient({
     initialStudentId ? { type: "STUDENT", id: initialStudentId, name: "" } : null,
   );
   const [query, setQuery] = useState("");
+  /** 필터 팝오버 controlled — 대상 선택 직후 닫아 결과를 즉시 보게 한다(§5.2 B) */
+  const [filterOpen, setFilterOpen] = useState(false);
   const [sortKey, setSortKey] = useState<BoardSortKey>("recent");
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [detailId, setDetailId] = useState<string | null>(openAssignmentId);
@@ -205,6 +279,41 @@ export function AssignmentsBoardClient({
     [detailId, reloadWithFilter, syncUrl, targetFilter],
   );
 
+  /**
+   * 팝오버 안의 대상 선택 래퍼 — 대상이 실제로 바뀐 경우에만 팝오버를 닫는다.
+   * 해제(null)와 딥링크 이름 해석(같은 id 재통지)은 열어 둔 채로 둬야 사용자가
+   * 방금 연 패널이 제멋대로 닫히지 않는다.
+   */
+  const handleTargetChange = useCallback(
+    (next: BoardTargetFilter | null) => {
+      const changed =
+        !!next && (!targetFilter || targetFilter.type !== next.type || targetFilter.id !== next.id);
+      applyTargetFilter(next);
+      if (changed) setFilterOpen(false);
+    },
+    [applyTargetFilter, targetFilter],
+  );
+
+  /**
+   * 팝오버 헤더 「초기화」 — 팝오버가 실제로 보여 주는 축(상태·대상)만 되돌린다.
+   * 구 구현은 팝오버 밖의 종류 칩·검색·선택 날짜까지 조용히 풀어, 열어 보면
+   * 아무것도 안 걸린 것처럼 보이는데 누르면 결과가 통째로 바뀌었다.
+   */
+  const resetPopoverFilters = useCallback(() => {
+    setStatusFilter("ALL");
+    // 이미 null 이면 applyTargetFilter 가 불필요한 재조회를 일으키므로 건너뛴다
+    if (targetFilter) applyTargetFilter(null);
+  }, [applyTargetFilter, targetFilter]);
+
+  /** 툴바 「모두 지우기」 — 전 축(종류·상태·대상·검색·선택 날짜) 초기화 */
+  const resetAllFilters = useCallback(() => {
+    setKindFilter("ALL");
+    setStatusFilter("ALL");
+    setQuery("");
+    setSelectedDate(null);
+    if (targetFilter) applyTargetFilter(null);
+  }, [applyTargetFilter, targetFilter]);
+
   const changeMonth = useCallback(
     (next: string) => {
       setMonth(next);
@@ -290,7 +399,7 @@ export function AssignmentsBoardClient({
     [rowsByMonth, month, matchesFilters],
   );
 
-  // 핀 파티션 후 그룹 내 정렬(플랜 합의) — "조치 필요" 핀은 날짜 필터 없는
+  // 핀 파티션 후 그룹 내 정렬(플랜 합의) — 「기한 지남」 핀은 날짜 필터 없는
   // 기본 뷰에서만. 날짜 선택 시에는 그 날짜 과제를 단일 그룹으로 정렬만 한다.
   const { pinnedRows, restRows } = useMemo(() => {
     const base = selectedDate
@@ -311,6 +420,7 @@ export function AssignmentsBoardClient({
       WORKSHEET: 0,
       QUESTIONS: 0,
       GRAMMAR: 0,
+      VOCAB: 0,
     };
     for (const r of listRows) counts[r.kind] += 1;
     return counts;
@@ -318,25 +428,33 @@ export function AssignmentsBoardClient({
 
   // 대상 필터가 걸려 있으면 결과 0건이어도 필터 UI 가 있는 일반 뷰를 유지한다
   const showGlobalEmpty = listRows.length === 0 && targetFilter === null;
+
+  const trimmedQuery = query.trim();
+  /** 팝오버 안에 든 축(상태·대상) — 파란 점과 트리거 aria-label 이 같은 판정을 공유 */
+  const popoverFilterActive = statusFilter !== "ALL" || targetFilter !== null;
+  const filterTriggerLabel = popoverFilterActive
+    ? `${FILTER_COPY.TITLE} · 적용됨`
+    : FILTER_COPY.TITLE;
+  /** 툴바 「모두 지우기」 노출 판정 — 종류 칩·검색·선택 날짜까지 포함한 전 축 */
+  const anyFilterActive =
+    popoverFilterActive || kindFilter !== "ALL" || trimmedQuery !== "" || selectedDate !== null;
   const now = new Date();
   const todayKey = seoulDateKey(now);
 
   return (
-    <PageShell>
-      <SectionCard
-        icon={ClipboardList}
-        title="과제 관리"
-        description="배포한 시험·학습지·문제·어법 훈련 과제의 마감과 진행을 한눈에 관리합니다."
+    <BoardShell embedded={embedded}>
+      <BoardCard
+        embedded={embedded}
         actions={
           <button
             type="button"
             onClick={() => openComposer(null)}
             className="inline-flex h-8 items-center gap-1.5 rounded-md bg-blue-600 px-3 text-[12.5px] font-semibold text-white transition-colors hover:bg-blue-700"
           >
-            <Plus className="size-3.5" aria-hidden />새 과제
+            <Plus className="size-3.5" aria-hidden />
+            {CTA_LABELS.NEW_TASK}
           </button>
         }
-        bodyClassName="p-4 sm:p-5"
       >
         {/* KPI 스트립 — 타일 클릭 = 필터/정렬 적용 */}
         {listRows.length > 0 ? (
@@ -360,7 +478,9 @@ export function AssignmentsBoardClient({
           />
         ) : null}
 
-        {/* 필터 바 — 종류 탭(좌) + 우측 끝 고정 [필터·검색] 아이콘 팝오버 (어드민 공용 규약) */}
+        {/* 필터 바 — 종류 탭(좌) + 활성 필터 칩(중) + 우측 끝 고정 [필터·검색]
+            아이콘 팝오버 (어드민 공용 규약). 활성 칩은 팝오버를 열지 않고도
+            무엇이 걸렸는지 읽히게 하는 정본 표시다(2607 §5.2 B) */}
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pb-4">
           <div className="flex flex-wrap items-center gap-1.5">
             {KIND_FILTERS.map((f) => (
@@ -382,53 +502,132 @@ export function AssignmentsBoardClient({
             ))}
           </div>
 
+          {/* 활성 필터 칩 — 좁은 화면에서는 이 줄이 접힌다(가로 넘침 금지).
+              전 축 초기화(「모두 지우기」)는 팝오버가 아니라 이 줄 끝에 둔다 —
+              칩으로 보이는 것만 지운다는 관계가 화면에서 그대로 읽힌다 */}
+          {anyFilterActive ? (
+            <div
+              className="flex min-w-0 flex-wrap items-center gap-1.5"
+              role="group"
+              aria-label="적용된 필터"
+            >
+              {statusFilter !== "ALL" ? (
+                <ActiveFilterChip
+                  scope={FILTER_COPY.STATUS}
+                  label={STATUS_FILTERS.find((f) => f.key === statusFilter)?.label ?? statusFilter}
+                  tone={statusFilter === "OVERDUE" ? "rose" : "blue"}
+                  onRemove={() => setStatusFilter("ALL")}
+                />
+              ) : null}
+              {targetFilter ? (
+                <ActiveFilterChip
+                  scope={
+                    targetFilter.type === "STUDENT" ? FILTER_COPY.STUDENT : FILTER_COPY.CLASS
+                  }
+                  // 딥링크(?student=) 직후엔 이름이 아직 ""— 아래 해석기 인스턴스가 채운다
+                  label={targetFilter.name || FILTER_COPY.LOADING}
+                  onRemove={() => applyTargetFilter(null)}
+                />
+              ) : null}
+              {trimmedQuery !== "" ? (
+                <ActiveFilterChip
+                  scope="검색"
+                  label={`"${trimmedQuery}"`}
+                  onRemove={() => setQuery("")}
+                />
+              ) : null}
+              {selectedDate ? (
+                // 축(마감·시작)은 목록 헤더 캡션이 밝힌다 — 칩에는 날짜만
+                <ActiveFilterChip
+                  scope="날짜"
+                  label={selectedDateLabel(selectedDate)}
+                  onRemove={() => setSelectedDate(null)}
+                />
+              ) : null}
+              <button
+                type="button"
+                onClick={resetAllFilters}
+                className="h-7 shrink-0 rounded-md px-2 text-[12.5px] font-semibold text-slate-500 transition-colors hover:bg-slate-50 hover:text-blue-700"
+              >
+                모두 지우기
+              </button>
+            </div>
+          ) : null}
+
           <div className="ml-auto flex items-center gap-1.5">
-            <Popover>
+            <Popover open={filterOpen} onOpenChange={setFilterOpen}>
               <PopoverTrigger
-                title="필터"
-                aria-label="필터"
+                title={filterTriggerLabel}
+                aria-label={filterTriggerLabel}
                 className="relative flex size-7 shrink-0 items-center justify-center rounded-md border border-input bg-transparent shadow-xs transition-[color,box-shadow] outline-none hover:bg-slate-50 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
               >
                 <ListFilter className="size-3.5 shrink-0" />
-                {statusFilter !== "ALL" || targetFilter !== null ? (
+                {popoverFilterActive ? (
                   <span
                     aria-hidden="true"
                     className="absolute top-1 right-1 inline-block size-1.5 rounded-full bg-blue-500"
                   />
                 ) : null}
               </PopoverTrigger>
-              <PopoverContent align="end" className="w-64 p-3">
-                <div className="flex flex-col gap-3">
-                  <div className="flex flex-col gap-1.5">
-                    <span className="text-[11px] font-medium text-slate-600">상태</span>
-                    <div className="flex flex-wrap gap-1.5">
-                      {STATUS_FILTERS.map((f) => (
-                        <button
-                          key={f.key}
-                          type="button"
-                          onClick={() => setStatusFilter(f.key)}
-                          aria-pressed={statusFilter === f.key}
-                          className={cn(
-                            "h-7 rounded-md border px-2.5 text-[12px] font-semibold transition-colors",
-                            statusFilter === f.key
-                              ? f.key === "OVERDUE"
-                                ? CHIP_ACTIVE_ROSE
-                                : CHIP_ACTIVE
-                              : CHIP_IDLE,
-                          )}
-                        >
-                          {f.label}
-                        </button>
-                      ))}
-                    </div>
+              {/* p-0 + 섹션별 px-3 py-2.5 — 대상 패널(A6 인라인)이 320px 안에서
+                  잘리지 않게 좌우 여백을 섹션이 직접 갖는다 */}
+              <PopoverContent align="end" className="w-[320px] p-0">
+                <div className="flex items-center justify-between gap-2 border-b border-slate-100 px-3 py-2.5">
+                  <span className="text-[13px] font-semibold text-slate-700">
+                    {FILTER_COPY.TITLE}
+                  </span>
+                  {popoverFilterActive ? (
+                    <button
+                      type="button"
+                      onClick={resetPopoverFilters}
+                      className="h-7 rounded-md px-2 text-[12px] font-semibold text-slate-500 transition-colors hover:bg-slate-50 hover:text-blue-700"
+                    >
+                      {FILTER_COPY.RESET}
+                    </button>
+                  ) : null}
+                </div>
+
+                <div className="flex flex-col gap-1.5 px-3 py-2.5">
+                  <span className="text-[12px] font-medium text-slate-500">
+                    {FILTER_COPY.STATUS}
+                  </span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {STATUS_FILTERS.map((f) => (
+                      <button
+                        key={f.key}
+                        type="button"
+                        // 대상 선택과 같은 규칙으로 닫는다 — 같은 320px 패널 안에서
+                        // 위 칩은 남고 아래 리스트는 닫히던 이중 규칙을 없앤다
+                        onClick={() => {
+                          setStatusFilter(f.key);
+                          setFilterOpen(false);
+                        }}
+                        aria-pressed={statusFilter === f.key}
+                        className={cn(
+                          "h-7 rounded-md border px-2.5 text-[12px] font-semibold transition-colors",
+                          statusFilter === f.key
+                            ? f.key === "OVERDUE"
+                              ? CHIP_ACTIVE_ROSE
+                              : CHIP_ACTIVE
+                            : CHIP_IDLE,
+                        )}
+                      >
+                        {f.label}
+                      </button>
+                    ))}
                   </div>
-                  <div className="flex flex-col gap-1.5">
-                    <span className="text-[11px] font-medium text-slate-600">대상</span>
-                    <AssignmentsTargetFilter
-                      value={targetFilter}
-                      onChange={applyTargetFilter}
-                    />
-                  </div>
+                </div>
+
+                <div className="border-t border-slate-100" />
+
+                <div className="flex flex-col gap-1.5 px-3 py-2.5">
+                  <span className="text-[12px] font-medium text-slate-500">
+                    {FILTER_COPY.TARGET}
+                  </span>
+                  <AssignmentsTargetFilter
+                    value={targetFilter}
+                    onChange={handleTargetChange}
+                  />
                 </div>
               </PopoverContent>
             </Popover>
@@ -449,7 +648,8 @@ export function AssignmentsBoardClient({
               </PopoverTrigger>
               <PopoverContent align="end" className="w-60 p-3">
                 <div className="flex flex-col gap-1.5">
-                  <span className="text-[11px] font-medium text-slate-600">검색</span>
+                  {/* 캡션 하한 12px — 새 필터 팝오버 섹션 캡션과 톤을 맞춘다 */}
+                  <span className="text-[12px] font-medium text-slate-500">검색</span>
                   <div className="relative">
                     <Search
                       className="pointer-events-none absolute left-2 top-1/2 size-3.5 -translate-y-1/2 text-slate-400"
@@ -471,6 +671,17 @@ export function AssignmentsBoardClient({
           </div>
         </div>
 
+        {/* 딥링크(?student=) 이름 해석기 — 대상 이름은 AssignmentsTargetFilter 의
+            로스터 로드 이펙트만 알고, 그 컴포넌트는 팝오버가 열려 있을 때만
+            마운트된다(Radix Portal). 툴바 활성 칩이 이름을 항상 보여야 하므로
+            이름이 빈 동안에만 화면 밖 인스턴스 하나로 해석을 돌린다 —
+            해석되면 즉시 언마운트되어 로스터 조회는 그대로 1회다. */}
+        {targetFilter && targetFilter.name === "" && !filterOpen ? (
+          <div className="hidden" aria-hidden>
+            <AssignmentsTargetFilter value={targetFilter} onChange={applyTargetFilter} />
+          </div>
+        ) : null}
+
         {showGlobalEmpty ? (
           /* 빈 상태 — 아직 과제 0건(대상 필터 없음) */
           <div className="flex flex-col items-center gap-2 rounded-lg border border-dashed border-slate-200 bg-slate-50/50 py-16">
@@ -486,11 +697,14 @@ export function AssignmentsBoardClient({
               onClick={() => openComposer(null)}
               className="mt-2 inline-flex h-9 items-center gap-1.5 rounded-md bg-blue-600 px-4 text-[13px] font-semibold text-white transition-colors hover:bg-blue-700"
             >
-              <Plus className="size-4" aria-hidden />새 과제
+              <Plus className="size-4" aria-hidden />
+              {CTA_LABELS.NEW_TASK}
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] xl:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
+          // 캘린더를 넓게(좌우 동등 폭) + 좌우 컬럼 높이 고정으로 아래 끝선 정렬 —
+          // 목록은 컬럼 안에서 내부 스크롤한다(spec §6 섹션 높이 정합).
+          <div className="grid grid-cols-1 items-start gap-4 lg:h-[660px] lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-stretch xl:h-[700px]">
             {/* 좌: 월 캘린더 */}
             <AssignmentsCalendar
               month={month}
@@ -510,13 +724,12 @@ export function AssignmentsBoardClient({
               selectedDate={selectedDate}
               sortKey={sortKey}
               onChangeSort={changeSort}
-              onClearDate={() => setSelectedDate(null)}
               onCreateForDate={(date) => openComposer(null, undefined, date)}
               onOpen={openDetail}
             />
           </div>
         )}
-      </SectionCard>
+      </BoardCard>
 
       <AssignmentComposer
         open={composerOpen}
@@ -537,6 +750,50 @@ export function AssignmentsBoardClient({
         // 스프레드 패턴. 시그니처는 플랜에서 U3·U4 사전 합의 완료.
         {...{ onDuplicate: handleDuplicate }}
       />
-    </PageShell>
+    </BoardShell>
+  );
+}
+
+// ── C-1 embedded 셸 분기 — 조건은 여기서만, 내용부는 위에서 단일 소스 ─────────────
+
+/** false: 현행 PageShell(픽셀 동일) / true: layout 셸 아래 형제 간격만 미러한 div */
+function BoardShell({
+  embedded,
+  children,
+}: {
+  embedded: boolean;
+  children: ReactNode;
+}) {
+  if (!embedded) return <PageShell>{children}</PageShell>;
+  return <div className="flex w-full min-w-0 flex-col gap-4">{children}</div>;
+}
+
+/** false: 현행 SectionCard(픽셀 동일) / true: 타이틀 계층 없는 동일 카드 프레임 */
+function BoardCard({
+  embedded,
+  actions,
+  children,
+}: {
+  embedded: boolean;
+  actions: ReactNode;
+  children: ReactNode;
+}) {
+  if (!embedded) {
+    return (
+      <SectionCard
+        icon={ClipboardList}
+        title="과제 관리"
+        description="배포한 시험·학습지·문제·어법 훈련 과제의 마감과 진행을 한눈에 관리합니다."
+        actions={actions}
+        bodyClassName="p-4 sm:p-5"
+      >
+        {children}
+      </SectionCard>
+    );
+  }
+  return (
+    <section className="flex min-w-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+      <div className="min-w-0 p-4 sm:p-5">{children}</div>
+    </section>
   );
 }

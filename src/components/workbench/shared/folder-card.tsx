@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 
 import { useState, useRef, useEffect } from "react";
@@ -154,7 +153,10 @@ export function FolderCard({
               title={count.tooltip}
               className="text-[11px] text-slate-400 mt-0.5"
             >
-              {count.display}개 {itemCountLabel}
+              {/* 학생 폴더(반)는 「N명」 — folder-chip N-9 단위 계약 미러(2차 중재 부기) */}
+              {itemCountLabel === "학생"
+                ? `${count.display}명`
+                : `${count.display}개 ${itemCountLabel}`}
               {count.note ? (
                 <span
                   className={`ml-1 font-semibold ${

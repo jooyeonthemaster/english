@@ -129,7 +129,8 @@ export type LlmTextFn = (args: {
   attempt: number; // 0-based
 }) => Promise<LlmTextResult>;
 
-const defaultLlmText: LlmTextFn = async ({ prompt, label, maxTokens, timeoutMs }) => {
+/** 비스트리밍 기본 호출 — 스트리밍 구현(stream-llm.ts)의 폴백으로도 쓴다. */
+export const defaultLlmText: LlmTextFn = async ({ prompt, label, maxTokens, timeoutMs }) => {
   const res = await generateQuestionText({
     prompt,
     generationPlan: "STANDARD",
@@ -142,6 +143,13 @@ const defaultLlmText: LlmTextFn = async ({ prompt, label, maxTokens, timeoutMs }
     thinkingBudget: 0,
     timeoutMs,
     temperature: label === "draft" ? 0.1 : 0.15,
+    // 26-07-25: 사고 high 를 이 경로에도 건다. 401e3fae("학습지·실전 학습지 사고
+    // high 고정")가 generate.ts 만 바꾸고 여기(회복형 경로의 실제 LLM 호출부)를
+    // 빠뜨려, 지문 큐 기본값(use-passage-queue fast:true)으로 들어온 분석 본체가
+    // 전역 env(OPENROUTER_GEMINI_REASONING_EFFORT=low)로 떨어지고 있었다.
+    // 그 위에 얹히는 실전 학습지만 high 인 비대칭 상태였다.
+    reasoningEffort: "high",
+    applyReasoningEffortToGemini: true,
   });
   return { text: res.text, usage: res.usage, modelId: res.modelId, provider: res.provider };
 };

@@ -1,0 +1,1467 @@
+[
+  {
+    "groupId": "G001",
+    "examSig": "(미상)",
+    "signals": [
+      "마커잔존"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G001.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmpne97ry0001l204lxnmope1"
+    ],
+    "hasMarkerCopy": true
+  },
+  {
+    "groupId": "G019",
+    "examSig": "(미상)",
+    "signals": [
+      "마커잔존"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G019.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmpr2uw9g000xi804dtxfqpyg"
+    ],
+    "hasMarkerCopy": true
+  },
+  {
+    "groupId": "G032",
+    "examSig": "(미상)",
+    "signals": [
+      "마커잔존"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G032.md",
+    "copyCount": 5,
+    "variantCount": 4,
+    "anchorExpanded": [
+      "cmpmt9cfn0015i704epva2zlx(\"지문 23\")",
+      "cmq7sexp00003lg04jxfzbolb(\"If your wish is to have an exo\")",
+      "cmq7srhou0003jf04awm1qtwy(\"If your wish is to have an exo\")",
+      "cmqb5tm6a0007jk04bn4x7b25(\"If your wish is to have an exo\")"
+    ],
+    "memberIds": [
+      "cmq7t0h6w0003jy049nf9bswy",
+      "cmpmt9cfn0015i704epva2zlx",
+      "cmq7sexp00003lg04jxfzbolb",
+      "cmq7srhou0003jf04awm1qtwy",
+      "cmqb5tm6a0007jk04bn4x7b25"
+    ],
+    "hasMarkerCopy": true
+  },
+  {
+    "groupId": "G043",
+    "examSig": "(미상)",
+    "signals": [
+      "마커잔존"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G043.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmqi4j8h10007jx04qt41icfr"
+    ],
+    "hasMarkerCopy": true
+  },
+  {
+    "groupId": "G012",
+    "examSig": "2023 6월 고1 모평 29번",
+    "signals": [
+      "title번호",
+      "tag어법"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G012.md",
+    "copyCount": 3,
+    "variantCount": 2,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmpiiz4yr0001l504dy29bt2g",
+      "cmqxhk50f004ll504ttrye5mc",
+      "cmr20o1060005kw043vpeyn6n"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G011",
+    "examSig": "2023 6월 고1 모평 30번",
+    "signals": [
+      "title번호",
+      "tag어휘"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G011.md",
+    "copyCount": 4,
+    "variantCount": 3,
+    "anchorExpanded": [
+      "cmqx47dfr000pjp04fj6yz7sd(\"올포전국 12강-7\")"
+    ],
+    "memberIds": [
+      "cmpiiz4hs0001l504rdxslqcw",
+      "cmqxhk50m004pl5044jggyxw4",
+      "cmr20ohl00009kw04dnuahq9v",
+      "cmqx47dfr000pjp04fj6yz7sd"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G044",
+    "examSig": "2024 6월 고1 모평 29번",
+    "signals": [
+      "title번호",
+      "tag어법"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G044.md",
+    "copyCount": 3,
+    "variantCount": 2,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmqjp6cja000dju04he6ulcbl",
+      "cmqxhk4xf002pl504kgrff1cg",
+      "cmr2cybe30001jv04e32qqlh5"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G015",
+    "examSig": "2024 6월 고1 모평 30번",
+    "signals": [
+      "tag어휘",
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G015.md",
+    "copyCount": 4,
+    "variantCount": 2,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmqjp9luv0001jd0awgux4jek",
+      "cmqxhk4xm002tl504lyao6u3i",
+      "cmr2cytlm0001jb0aj7r2pzz3",
+      "cmr32stnt003ojx04etrr65nc"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G056",
+    "examSig": "2025 10월 고2 수능 29번",
+    "signals": [
+      "tag어법",
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G056.md",
+    "copyCount": 2,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmqqu802f000ll204pnpgn1zq",
+      "cmqs4vnu60001i904b4dqtkuf"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G057",
+    "examSig": "2025 10월 고2 수능 30번",
+    "signals": [
+      "tag어휘",
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G057.md",
+    "copyCount": 2,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmqqu802u000pl204w4b3bi2t",
+      "cmqs4vnui0005i9048avulxcr"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G070",
+    "examSig": "2025 6월 고1 모평 29번",
+    "signals": [
+      "tag어법",
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G070.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmqxhk4tw000tl504ifdgmrwt"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G071",
+    "examSig": "2025 6월 고1 모평 30번",
+    "signals": [
+      "tag어휘",
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G071.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmqxhk4u3000xl504nvyaam53"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G058",
+    "examSig": "2025 6월 모평 29번",
+    "signals": [
+      "tag어법",
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G058.md",
+    "copyCount": 3,
+    "variantCount": 2,
+    "anchorExpanded": [
+      "cmqb79ur80003jm04zbzyg6w8(\"What makes practicing retrieva\")"
+    ],
+    "memberIds": [
+      "cmqw3rvij000ljd09ndvkuh4o",
+      "cmron37y1000pj90arrwbxp1r",
+      "cmqb79ur80003jm04zbzyg6w8"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G061",
+    "examSig": "2025 6월 모평 30번",
+    "signals": [
+      "tag어휘",
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G061.md",
+    "copyCount": 2,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmqw3rvj2000pjd09nbo1ydn4",
+      "cmron37yj000tj90alsg5z3w9"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G062",
+    "examSig": "2025 6월 모평 41번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G062.md",
+    "copyCount": 2,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmqw3rvn9001tjd09za73j38y",
+      "cmron383f0021j90ak9xid270"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G045",
+    "examSig": "2025 9월 고1 모평 29번",
+    "signals": [
+      "tag어법",
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G045.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmrm6d0pu000tl304q9is3z4c"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G046",
+    "examSig": "2025 9월 고1 모평 30번",
+    "signals": [
+      "tag어휘",
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G046.md",
+    "copyCount": 2,
+    "variantCount": 2,
+    "anchorExpanded": [
+      "cmqx47cbv0001jp04xqeue2ei(\"올포전국 12강-1\")"
+    ],
+    "memberIds": [
+      "cmrm6d0q4000xl304mf9m4p60",
+      "cmqx47cbv0001jp04xqeue2ei"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G054",
+    "examSig": "2025 9월 고2 모평 29번",
+    "signals": [
+      "tag어법",
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G054.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmqqqb6xa000pju04e0fo0i7m"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G055",
+    "examSig": "2025 9월 고2 모평 30번",
+    "signals": [
+      "tag어휘",
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G055.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmqqqb6xm000tju04etmpa71h"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G008",
+    "examSig": "2026",
+    "signals": [
+      "마커잔존",
+      "발문잔재"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G008.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmpcq19yl0001jz04tv513rx8"
+    ],
+    "hasMarkerCopy": true
+  },
+  {
+    "groupId": "G017",
+    "examSig": "2026",
+    "signals": [
+      "마커잔존"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G017.md",
+    "copyCount": 10,
+    "variantCount": 4,
+    "anchorExpanded": [
+      "cmp9w6ayk000dv3lcbm7gvhsi(\"지문 34\")",
+      "cmpaqf9a4000fl2042odbrdj0(\"지문 7\")",
+      "cmpaqf9ey0013l204nnoouqbe(\"지문 7\")",
+      "cmpci166c0001ko0bpx7gnjku(\"Development of the human body \")",
+      "cmpqvdzht0001mmu80piqom02(\"Development of the human body \")",
+      "cmpr580mr000lmmogu86qkqjr(\"Development of the human body \")"
+    ],
+    "memberIds": [
+      "cmppqbcjp0004v30ozd54axc3",
+      "cmp9w6ayk000dv3lcbm7gvhsi",
+      "cmpaqf9a4000fl2042odbrdj0",
+      "cmpaqf9ey0013l204nnoouqbe",
+      "cmpci166c0001ko0bpx7gnjku",
+      "cmpqvdzht0001mmu80piqom02",
+      "cmpr580mr000lmmogu86qkqjr",
+      "cmpcavlwr001djv04old0huvg",
+      "cmru6pmff0010l104uhcdkr32",
+      "cmru6xica000djv04ap1tsdoc"
+    ],
+    "hasMarkerCopy": true,
+    "closureAdded": [
+      "cmpcavlwr001djv04old0huvg",
+      "cmru6pmff0010l104uhcdkr32",
+      "cmru6xica000djv04ap1tsdoc"
+    ]
+  },
+  {
+    "groupId": "G028",
+    "examSig": "2026",
+    "signals": [
+      "발문잔재"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G028.md",
+    "copyCount": 2,
+    "variantCount": 2,
+    "anchorExpanded": [
+      "cmq5hc1u3000fmmsgd1dr5yp5(\"밑줄 친 write an essay on a blank\")"
+    ],
+    "memberIds": [
+      "cmq50ieyp003qmmm80156v11j",
+      "cmq5hc1u3000fmmsgd1dr5yp5"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G029",
+    "examSig": "2026 29번(밑줄 함의)",
+    "signals": [
+      "발문잔재"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G029.md",
+    "copyCount": 19,
+    "variantCount": 3,
+    "anchorExpanded": [
+      "cmp42en0c000ev37gfh0ld9fb(\"지문 29\")",
+      "cmp9w6bfd000fv3lcse4wslhl(\"지문 29\")",
+      "cmpaqf97v0005l204xjjvssdr(\"지문 2\")",
+      "cmpaqf9bs000nl204r3hbtjh0(\"지문 2\")",
+      "cmpbek9pk005hmmaghnup37f6(\"Everyone's heard the expressio\")",
+      "cmpcavlns000bjv045biib625(\"지문 29\")",
+      "cmpcbffho0001ko0bne5xk5ok(\"Everyone's heard the expressio\")",
+      "cmpczyrsu000emmfkzbyivz87(\"Everyone's heard the expressio\")",
+      "cmpfp3ljs0003l204ism8q7yo(\"Everyone's heard the expressio\")",
+      "cmpfuux2r0001k50403893yvo(\"Everyone's heard the expressio\")",
+      "cmpfuwyy30015mm2sx8ovpl7l(\"Everyone's heard the expressio\")",
+      "cmpgf2dvi0003jr04lq8ww7ai(\"Everyone's heard the expressio\")",
+      "cmpnjz5jg0003kr0bs4hfmlg3(\"Everyone's heard the expressio\")",
+      "cmpnw504x0001l404wj540ks1(\"Everyone's heard the expressio\")",
+      "cmpnw8t2x0003lb04sxbehw3a(\"Everyone's heard the expressio\")",
+      "cmpnwu8ha00b7mmykbw336xdx(\"Everyone's heard the expressio\")",
+      "cmpnwuwrc00bhmmykwk6mal6v(\"Everyone's heard the expressio\")",
+      "cmppiwrbo0001mmf8ooqwjw29(\"Everyone's heard the expressio\")"
+    ],
+    "memberIds": [
+      "cmq50ifck003smmm8dtl6gcbg",
+      "cmp42en0c000ev37gfh0ld9fb",
+      "cmp9w6bfd000fv3lcse4wslhl",
+      "cmpaqf97v0005l204xjjvssdr",
+      "cmpaqf9bs000nl204r3hbtjh0",
+      "cmpbek9pk005hmmaghnup37f6",
+      "cmpcavlns000bjv045biib625",
+      "cmpcbffho0001ko0bne5xk5ok",
+      "cmpczyrsu000emmfkzbyivz87",
+      "cmpfp3ljs0003l204ism8q7yo",
+      "cmpfuux2r0001k50403893yvo",
+      "cmpfuwyy30015mm2sx8ovpl7l",
+      "cmpgf2dvi0003jr04lq8ww7ai",
+      "cmpnjz5jg0003kr0bs4hfmlg3",
+      "cmpnw504x0001l404wj540ks1",
+      "cmpnw8t2x0003lb04sxbehw3a",
+      "cmpnwu8ha00b7mmykbw336xdx",
+      "cmpnwuwrc00bhmmykwk6mal6v",
+      "cmppiwrbo0001mmf8ooqwjw29"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G003",
+    "examSig": "2026 30번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G003.md",
+    "copyCount": 21,
+    "variantCount": 1,
+    "anchorExpanded": [
+      "cmp8fa0o70001jd0bcrcifom9(\"A common but incorrect assumpt\")",
+      "cmpaqf98b0007l204lvi6vpcp(\"지문 3\")",
+      "cmpaqf9c6000pl204n1rgtn34(\"지문 3\")",
+      "cmpcb04di0001jx04x7j3ntdb(\"A common but incorrect assumpt\")",
+      "cmpcb0f6n0001jl0brh826v7i(\"A common but incorrect assumpt\")",
+      "cmpcbfh8c0003ko0b5srv7wg0(\"A common but incorrect assumpt\")",
+      "cmpcbt2390001mmwsxzms2zdn(\"A common but incorrect assumpt\")",
+      "cmpcbu6bq0001j50bpfp00mfo(\"A common but incorrect assumpt\")",
+      "cmpcbucjc0001j80b4ouglfwr(\"A common but incorrect assumpt\")",
+      "cmpcbymf90001mmboo3f1o88e(\"A common but incorrect assumpt\")",
+      "cmpcxd0n60001l404wa030jfy(\"A common but incorrect assumpt\")",
+      "cmpfp2v96000bl80403b9jp3z(\"A common but incorrect assumpt\")",
+      "cmpgf2e6f0005jr04uzk0exvn(\"A common but incorrect assumpt\")",
+      "cmpnw7e8c0001jv04yi1aq7ei(\"A common but incorrect assumpt\")",
+      "cmpnw8t9a0005lb04taf09gsb(\"A common but incorrect assumpt\")",
+      "cmpnwuxeh00bjmmykef9b25gs(\"A common but incorrect assumpt\")",
+      "cmppjc0dr0009mmf8569u9dj8(\"A common but incorrect assumpt\")",
+      "cmpr561z00007mmog0vq82jkg(\"A common but incorrect assumpt\")",
+      "cmpwwl8g7000wmmpglzk3tezi(\"sdfsdfsdf\")"
+    ],
+    "memberIds": [
+      "cmp9w69qp0007v3lcz2vc52xu",
+      "cmpcavlvn0017jv046gc9tbhr",
+      "cmp8fa0o70001jd0bcrcifom9",
+      "cmpaqf98b0007l204lvi6vpcp",
+      "cmpaqf9c6000pl204n1rgtn34",
+      "cmpcb04di0001jx04x7j3ntdb",
+      "cmpcb0f6n0001jl0brh826v7i",
+      "cmpcbfh8c0003ko0b5srv7wg0",
+      "cmpcbt2390001mmwsxzms2zdn",
+      "cmpcbu6bq0001j50bpfp00mfo",
+      "cmpcbucjc0001j80b4ouglfwr",
+      "cmpcbymf90001mmboo3f1o88e",
+      "cmpcxd0n60001l404wa030jfy",
+      "cmpfp2v96000bl80403b9jp3z",
+      "cmpgf2e6f0005jr04uzk0exvn",
+      "cmpnw7e8c0001jv04yi1aq7ei",
+      "cmpnw8t9a0005lb04taf09gsb",
+      "cmpnwuxeh00bjmmykef9b25gs",
+      "cmppjc0dr0009mmf8569u9dj8",
+      "cmpr561z00007mmog0vq82jkg",
+      "cmpwwl8g7000wmmpglzk3tezi"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G065",
+    "examSig": "2026 3월 고1 수능 29번",
+    "signals": [
+      "tag어법",
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G065.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmqwl2ogh002dkq0a3sib5l7j"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G066",
+    "examSig": "2026 3월 고1 수능 30번",
+    "signals": [
+      "tag어휘",
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G066.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmqwl2ogw002hkq0azsbphmfq"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G072",
+    "examSig": "2026 3월 고2 수능 29번",
+    "signals": [
+      "tag어법",
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G072.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmqv05opa0001l40444nfm8fw"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G051",
+    "examSig": "2026 3월 고2 수능 30번",
+    "signals": [
+      "title번호",
+      "tag어휘"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G051.md",
+    "copyCount": 2,
+    "variantCount": 2,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmqv05opl0005l404fwbe4bjh",
+      "cmr1utf690009l504315d31wt"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G068",
+    "examSig": "2026 3월 고3 수능 29번",
+    "signals": [
+      "tag어법",
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G068.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmrs0c609000pks0al5760lii"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G063",
+    "examSig": "2026 3월 고3 수능 30번",
+    "signals": [
+      "tag어휘",
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G063.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmrs0c60p000tks0a3gth7d0s"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G053",
+    "examSig": "2026 5월 고3 수능 29번",
+    "signals": [
+      "tag어법",
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G053.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmromggds0005js04zb6ho4hw"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G026",
+    "examSig": "2026 6월 고1 모평 29번",
+    "signals": [
+      "title번호",
+      "마커잔존",
+      "발문잔재",
+      "tag어법"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G026.md",
+    "copyCount": 8,
+    "variantCount": 3,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmq0pakbe0003la04ywbzulqg",
+      "cmqevxfv80001k204urgr8zx9",
+      "cmqs6s0v5000pl504n4vhat23",
+      "cmqw47hsl000lkv04mj927xdi",
+      "cmqw5rdvz000hkz0497d4yfpr",
+      "cmrbhdeqp000tjo04u255jnfv",
+      "cmrnq6jrj000pkk0a4bsy1ze0",
+      "cmru74mvm000pl404jg7shgxj"
+    ],
+    "hasMarkerCopy": true
+  },
+  {
+    "groupId": "G064",
+    "examSig": "2026 6월 고1 모평 30번",
+    "signals": [
+      "title번호",
+      "tag어법",
+      "마커잔존",
+      "발문잔재",
+      "tag어휘"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G064.md",
+    "copyCount": 9,
+    "variantCount": 3,
+    "anchorExpanded": [
+      "cmqi5s22v000jl504clukc0cv(\"지문 5\")"
+    ],
+    "memberIds": [
+      "cmq0pcwyn0005la043zb93vsg",
+      "cmqs6s0vh000tl504yakwv5ol",
+      "cmqw47hsv000pkv04h5ef5n7p",
+      "cmqw5re0u000lkz046g9q0ip8",
+      "cmrbhdeqx000xjo04cq2o4dot",
+      "cmrnq6jrx000tkk0atpkympzo",
+      "cmru2joa10001ju041r9ulfvk",
+      "cmru74mvv000tl4045unpd3bx",
+      "cmqi5s22v000jl504clukc0cv"
+    ],
+    "hasMarkerCopy": true
+  },
+  {
+    "groupId": "G039",
+    "examSig": "2026 6월 고2 모평 29번",
+    "signals": [
+      "title번호",
+      "tag어법"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G039.md",
+    "copyCount": 6,
+    "variantCount": 3,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmqckmicd0009jz043z67xlbq",
+      "cmql3lde10001i90besqbmozq",
+      "cmqsz1mf4000pl704nzralr0p",
+      "cmqv6rwet0001ja09gp2ohnkx",
+      "cmqxiycow001thy0aetvwy9dz",
+      "cmqxl4bmm000hjp04mc5p810d"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G040",
+    "examSig": "2026 6월 고2 모평 30번",
+    "signals": [
+      "title번호",
+      "tag어휘"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G040.md",
+    "copyCount": 6,
+    "variantCount": 3,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmqcks6ze0001jj040hyr1mxt",
+      "cmql3qgc10001kz04v2gq9kzq",
+      "cmqsz1mfi000tl704d7zqv2ej",
+      "cmqv6u0bq0001ji09e5llmcom",
+      "cmqxbeaq90005ie049ryo0vba",
+      "cmqxiycgu000lhy0apnc4724k"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G060",
+    "examSig": "2026 6월 모평 29번",
+    "signals": [
+      "tag어법",
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G060.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmqs4reou000xkx0b9fkbq6xz"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G059",
+    "examSig": "2026 6월 모평 30번",
+    "signals": [
+      "tag어휘",
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G059.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmqs4reoj000tkx0brk6afc7s"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G067",
+    "examSig": "2026 6월 모평 41번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G067.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmrs251gp000dja0apyfs37lt"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G030",
+    "examSig": "2026 수능 29번",
+    "signals": [
+      "tag어법",
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G030.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmr8z79he006gmm0sr8zux1b2"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G031",
+    "examSig": "2026 수능 30번",
+    "signals": [
+      "tag어휘",
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G031.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmr8z79p8006kmm0swat4yw2v"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G033",
+    "examSig": "2026 수능 41번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G033.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmr8z7c3h007smm0s9gfw34jf"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G024",
+    "examSig": "2027 6월 모평 29번",
+    "signals": [
+      "tag어법",
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G024.md",
+    "copyCount": 6,
+    "variantCount": 1,
+    "anchorExpanded": [
+      "cmq586n6400219qwghaaji548(\"지문 1\")"
+    ],
+    "memberIds": [
+      "cmqwl2o8w0009kq0a8lusssab",
+      "cmr3bliru0022mmf0qeppto36",
+      "cmrbbc29r000pld04vbw9v2ti",
+      "cmrn206wy000tl404ng2n4hh6",
+      "cmrq60z26000pkx0a2c8n0784",
+      "cmq586n6400219qwghaaji548"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G025",
+    "examSig": "2027 6월 모평 30번",
+    "signals": [
+      "tag어휘",
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G025.md",
+    "copyCount": 7,
+    "variantCount": 2,
+    "anchorExpanded": [
+      "cmq2ed3hr0005jr04zobmdeph(\"Classical works by playwrights\")"
+    ],
+    "memberIds": [
+      "cmqwl2o9b000dkq0alcunagwp",
+      "cmr3blizr0026mmf0j7tzly2p",
+      "cmrbbc2a2000tld04kf8msqvr",
+      "cmrn206xb000xl404cw25fojv",
+      "cmrq60z2k000tkx0apqnw5ldd",
+      "cmq2ed3hr0005jr04zobmdeph",
+      "cmq98facv000s9qzhbenqjrxq"
+    ],
+    "hasMarkerCopy": false,
+    "closureAdded": [
+      "cmq98facv000s9qzhbenqjrxq"
+    ]
+  },
+  {
+    "groupId": "G027",
+    "examSig": "2027 6월 모평 41번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G027.md",
+    "copyCount": 6,
+    "variantCount": 2,
+    "anchorExpanded": [
+      "cmq2eggat0001l30biz6oe4ne(\"The structure of glass is, fra\")"
+    ],
+    "memberIds": [
+      "cmqwl2od9001hkq0aw30w4ulh",
+      "cmr3bllej003emmf0f1dptmn9",
+      "cmrbbc2dh0021ld04pm9pf6by",
+      "cmrn2071h0025l404sfpy9mox",
+      "cmrq60z6o0021kx0a5fssg145",
+      "cmq2eggat0001l30biz6oe4ne"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G013",
+    "examSig": "29번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G013.md",
+    "copyCount": 4,
+    "variantCount": 1,
+    "anchorExpanded": [
+      "cmpmnhc8t0003la047o5twnuh(\"지문 9\")"
+    ],
+    "memberIds": [
+      "cmpmq0rmj0005js044ry7lqwq",
+      "cmpmq0ryo0009js04c9bspguo",
+      "cmpmq0t0x0007l8049kd3furp",
+      "cmpmnhc8t0003la047o5twnuh"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G006",
+    "examSig": "29번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G006.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmquogrx3000djj0437a5zi9j"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G034",
+    "examSig": "29번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G034.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmqb4m1g40009l204gsm64j2x"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G035",
+    "examSig": "29번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G035.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmqb4p4cv0005lh04bu17g9vf"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G048",
+    "examSig": "29번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G048.md",
+    "copyCount": 2,
+    "variantCount": 1,
+    "anchorExpanded": [
+      "cmpr313uw0001ji0agz9x7ddq(\"What deeply affected so many B\")"
+    ],
+    "memberIds": [
+      "cmqmmlde00003ge0a90ajel80",
+      "cmpr313uw0001ji0agz9x7ddq"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G049",
+    "examSig": "29번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G049.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmqmmkr0i0001lh042a180w3z"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G050",
+    "examSig": "29번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G050.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmqmml2ns0001ge0amhbpgey0"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G073",
+    "examSig": "29번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G073.md",
+    "copyCount": 2,
+    "variantCount": 2,
+    "anchorExpanded": [
+      "cmqyzpnek0001km0advo3y8jw(\"수특영독7-8\")"
+    ],
+    "memberIds": [
+      "cmqy2nfaw001fk204w30bart2",
+      "cmqyzpnek0001km0advo3y8jw"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G079",
+    "examSig": "29번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G079.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmr0e7gh5001hl104ic8ewsdg"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G007",
+    "examSig": "30번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G007.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmquogs2m000hjj04kh8724dl"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G014",
+    "examSig": "30번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G014.md",
+    "copyCount": 2,
+    "variantCount": 2,
+    "anchorExpanded": [
+      "cmpmnhcc5000fla041nhzfph2(\"지문 10\")"
+    ],
+    "memberIds": [
+      "cmpmq0tw30007jv040i8lwh61",
+      "cmpmnhcc5000fla041nhzfph2"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G036",
+    "examSig": "30번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G036.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmqb4sd2v0009jv0473noqchb"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G037",
+    "examSig": "30번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G037.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmqb4v8200001jk04gcrhe93f"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G038",
+    "examSig": "30번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G038.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmqb4z5ae000dl204xp3suoi3"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G074",
+    "examSig": "30번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G074.md",
+    "copyCount": 2,
+    "variantCount": 1,
+    "anchorExpanded": [
+      "cmqyzqkh70001kp0abz58fgkc(\"수특영독7-9\")"
+    ],
+    "memberIds": [
+      "cmqy2nfbd001hk204bfo6kkcs",
+      "cmqyzqkh70001kp0abz58fgkc"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G080",
+    "examSig": "30번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G080.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmr0e7ghj001jl104y48dxh20"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G052",
+    "examSig": "3월 고1 29번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G052.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmr1reuqa0001hw0a676ih4uk"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G077",
+    "examSig": "3월 고1 41번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G077.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmr1s7uft000ukw041seu7ovp"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G009",
+    "examSig": "41번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G009.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmquogtmb001pjj04hlabiu1w"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G021",
+    "examSig": "41번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G021.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmr334pda0005js04z8t3ah5m"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G075",
+    "examSig": "41번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G075.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmqz7l7nw0015l2046d8uah7e"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G010",
+    "examSig": "42번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G010.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmquogtr7001tjj04w7ukpo54"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G047",
+    "examSig": "42번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G047.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmqz7l7ut0019l204al2ni9zq"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G069",
+    "examSig": "6월 30번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G069.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmqxd7naw002jjp04wizkaiqn"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G076",
+    "examSig": "6월 30번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G076.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmr1s3msr000fjo04pyjmulbt"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G023",
+    "examSig": "6월 41번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G023.md",
+    "copyCount": 2,
+    "variantCount": 2,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmqw5rfls0005l604zs89y3p9",
+      "cmr37ba4a0001j90b26b4ust1"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G016",
+    "examSig": "6월 고1 41번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G016.md",
+    "copyCount": 3,
+    "variantCount": 2,
+    "anchorExpanded": [
+      "cmpr4gbb0000bl404tu0zwmm6(\"Early hunter-gatherer societie\")"
+    ],
+    "memberIds": [
+      "cmpwrtddy0001l204yqwp5zqr",
+      "cmr20udkg0009jv04uq63wyn8",
+      "cmpr4gbb0000bl404tu0zwmm6"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G020",
+    "examSig": "6월 고1 41번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G020.md",
+    "copyCount": 2,
+    "variantCount": 2,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmr2eb1rl0005l604ez14537z",
+      "cmr334p6j0001js044lo33o4o"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G005",
+    "examSig": "6월 고2 29번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G005.md",
+    "copyCount": 6,
+    "variantCount": 3,
+    "anchorExpanded": [
+      "cmpdixz510005jp047qcgwhl6(\"지문 5\")",
+      "cmpdj32ju0009js04ruw5yldy(\"In art, there are a number of \")",
+      "cmq6n65es000dl20486h7wcaf(\"In art, there are a number of \")"
+    ],
+    "memberIds": [
+      "cmpru9xnl0001jm04cee4zqh4",
+      "cmpwu35r00003kw04dgcve6um",
+      "cmqafflhy0005js049ja1v066",
+      "cmpdixz510005jp047qcgwhl6",
+      "cmpdj32ju0009js04ruw5yldy",
+      "cmq6n65es000dl20486h7wcaf"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G022",
+    "examSig": "6월 고2 30번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G022.md",
+    "copyCount": 5,
+    "variantCount": 2,
+    "anchorExpanded": [
+      "cmpdiynz10001js04qctuk801(\"지문 6\")",
+      "cmpdj32r1000bjs04npfk7c8z(\"Low oil prices are a good thin\")",
+      "cmq6n6hdl0005jp04yg9zq14h(\"Low oil prices are a good thin\")"
+    ],
+    "memberIds": [
+      "cmpwu3jqc0001js04sexlxntk",
+      "cmqafjr8v0001l8042mcxv7va",
+      "cmpdiynz10001js04qctuk801",
+      "cmpdj32r1000bjs04npfk7c8z",
+      "cmq6n6hdl0005jp04yg9zq14h"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G002",
+    "examSig": "고1",
+    "signals": [
+      "마커잔존"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G002.md",
+    "copyCount": 2,
+    "variantCount": 2,
+    "anchorExpanded": [
+      "cmpr7xftn0013mm3cad44usfx(\"To understand memory, imagine \")"
+    ],
+    "memberIds": [
+      "cmpr6wbbt0002mm3coikj9suy",
+      "cmpr7xftn0013mm3cad44usfx"
+    ],
+    "hasMarkerCopy": true
+  },
+  {
+    "groupId": "G078",
+    "examSig": "고3 수능 29번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G078.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmr1s2s57000djx04ccobzjlb"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G018",
+    "examSig": "모의고사 30번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G018.md",
+    "copyCount": 1,
+    "variantCount": 1,
+    "anchorExpanded": [],
+    "memberIds": [
+      "cmpqt059e001h9q01byii99j0"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G042",
+    "examSig": "수능 29번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G042.md",
+    "copyCount": 4,
+    "variantCount": 2,
+    "anchorExpanded": [
+      "cmqjo71xu0003jv04ko7s9e0g(\"수능스타트12강실전5\")",
+      "cmqqxh96z0005ge0b30hhfb4n(\"수능스타트12강-실전5\")",
+      "cmr0i7yoj0001l504ilshc8d8(\"수능스타트12강-실전5\")"
+    ],
+    "memberIds": [
+      "cmqf2l0f000dxv3i0gaix74dc",
+      "cmqjo71xu0003jv04ko7s9e0g",
+      "cmqqxh96z0005ge0b30hhfb4n",
+      "cmr0i7yoj0001l504ilshc8d8"
+    ],
+    "hasMarkerCopy": false
+  },
+  {
+    "groupId": "G041",
+    "examSig": "수능 30번",
+    "signals": [
+      "title번호"
+    ],
+    "packetPath": "experiments/question-quality-20260715/db-audit/campaign-20260721/packets/G041.md",
+    "copyCount": 4,
+    "variantCount": 2,
+    "anchorExpanded": [
+      "cmqjo92zn000bl204d3icymxi(\"수능스타트12강실전6\")",
+      "cmqqxjgeo0001jv04646g2afb(\"수능스타트12강-실전6\")",
+      "cmr0icgl60001jy04dqnb9dyl(\"수능스타트12강-실전6\")"
+    ],
+    "memberIds": [
+      "cmqf2l0tg00dzv3i0x8l1he7l",
+      "cmqjo92zn000bl204d3icymxi",
+      "cmqqxjgeo0001jv04646g2afb",
+      "cmr0icgl60001jy04dqnb9dyl"
+    ],
+    "hasMarkerCopy": false
+  }
+]

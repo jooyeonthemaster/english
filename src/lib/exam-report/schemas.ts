@@ -57,8 +57,29 @@ export function normalizeChoiceToken(value: unknown): string | undefined {
   const m = raw.match(/[1-5]/);
   return m ? m[0] : undefined;
 }
+/**
+ * 복수 선택을 보존하는 정규화 — `"2, 5"` · `["②","⑤"]` · `"(B), (E)"` → `"2, 5"`.
+ *
+ * 단일 토큰용 normalizeChoiceToken 은 `raw.match(/[1-5]/)` 로 **첫 숫자만** 뽑아,
+ * 복수 정답 문항에서 학생의 두 번째 선택이 파스 단계에서 조용히 잘려 나갔다
+ * (2026-07-26 실측: DB `"2, 5"` → API 응답 `"2"`). 저장 규약은 원래부터
+ * 「복수는 ", " join」(internal-analysis.buildChosenChoice)이므로, 파서가 그 규약을
+ * 지키도록 고친다. 채점 판정용 단일 토큰 의미가 필요한 곳은 normalizeChoiceToken 을
+ * 계속 쓴다(의미가 다른 두 함수를 분리해 둔 이유).
+ */
+export function normalizeChoiceTokens(value: unknown): string | undefined {
+  if (value == null) return undefined;
+  const raw = String(value).trim();
+  if (raw.length === 0) return undefined;
+  const parts = (Array.isArray(value) ? value : raw.split(/[,、·/]+/))
+    .map((p) => normalizeChoiceToken(p))
+    .filter((t): t is string => !!t);
+  if (parts.length === 0) return undefined;
+  return [...new Set(parts)].join(", ");
+}
+
 const flexibleChoice = z.preprocess(
-  (value) => normalizeChoiceToken(value),
+  (value) => normalizeChoiceTokens(value),
   z.string().optional(),
 );
 

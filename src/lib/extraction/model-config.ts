@@ -45,11 +45,12 @@ const OCR: ExtractionAiModelConfig = {
   model: OCR_MODEL,
 };
 
-// passage-restoration 전용 모델 — 기본 flash-lite (env 로 오버라이드 가능).
-// 검증 근거: scripts/test-restoration-lite.ts 그라운드트루스 22케이스 5라운드에서
-// gemini-3.1-flash-lite 가 전 게이트(복원문·검수근거·정직성) 통과
-// (3.5-flash 는 16/22 — JSON 파손·요약 잔존·한글 미제거·180s 행 재현),
-// 지연 4.9s→1.9s, 건당 비용 $0.0103→$0.0017 (26-06-10 측정).
+// passage-restoration 전용 모델 — 기본 gemini-3.5-flash-lite (env
+// OPENROUTER_RESTORATION_MODEL 로 오버라이드). 26-07-27 유저 지시로 3.1-flash-lite
+// 에서 상향 — 크롭 복원에서 3.1 이 JSON 키 자유작명(rawText→ocrText)으로 전건
+// EMPTY_OUTPUT DEAD 나던 장애의 모델 축 대응(스키마 강제는 crop-native 참조).
+// (구 검증 이력: 26-06-10 scripts/test-restoration-lite.ts 22케이스에서 3.1-flash-lite
+// 전 게이트 통과 — 텍스트 경로 기준이며 크롭 멀티모달 경로엔 해당 없음이 판명.)
 const RESTORATION_MODEL =
   ATLAS_RESTORATION_MODEL_ID;
 

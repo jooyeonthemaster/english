@@ -47,6 +47,13 @@ export function toStudentTaskCard(r: UnifiedTaskRecord, now: Date): StudentTaskC
         r.status !== "DONE" && r.grammarAssignmentId
           ? `/g/drill?mode=assignment&assignmentId=${r.grammarAssignmentId}`
           : null;
+    } else if (r.kind === "VOCAB") {
+      // 학생 큐 API 가 받는 assignmentId 는 vocabDrillAssignment.id(브리지) —
+      // task id 아님(브리지 미존재 폴백은 진입 없음).
+      actionHref =
+        r.status !== "DONE" && r.vocabAssignmentId
+          ? `/g/vocab-drill?mode=assignment&assignmentId=${r.vocabAssignmentId}`
+          : null;
     }
   }
 
@@ -77,7 +84,11 @@ export function toStudentTaskCard(r: UnifiedTaskRecord, now: Date): StudentTaskC
       r.kind === "QUESTIONS" && r.progress.done === 0
         ? `${r.progress.total}문항`
         : `${r.progress.done}/${r.progress.total} 문항`;
-  } else if (r.kind === "GRAMMAR" && r.progress && r.status === "DONE") {
+  } else if (
+    (r.kind === "GRAMMAR" || r.kind === "VOCAB") &&
+    r.progress &&
+    r.status === "DONE"
+  ) {
     progressText = `${r.progress.total}문항 완료`;
   }
 

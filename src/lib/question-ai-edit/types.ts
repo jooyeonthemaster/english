@@ -13,7 +13,7 @@ import type { DiffEntry } from "./detailed-diff";
 
 /** 수정에 사용할 모델 식별자 — model-config.ts 의 후보 풀과 1:1. */
 export type EditModelId =
-  | "google/gemini-3.5-flash"
+  | "google/gemini-3.6-flash"
   | "google/gemini-3.1-flash-lite"
   | "anthropic/claude-sonnet-5";
 

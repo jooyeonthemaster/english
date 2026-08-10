@@ -1385,6 +1385,7 @@ export function QuestionBankClient({
                     </div>
                   ) : null}
                 <PassageGroupedView
+                  marqueeDeferCommit
                   passages={groupedPassages}
                   gridCols={gridCols}
                   viewSize={viewSize}
@@ -1439,7 +1440,7 @@ export function QuestionBankClient({
                 // 국어 문제 은행(flat) — 1페이지에서 지문 세트 카드를 일반 카드와
                 // createdAt 최신순으로 섞어 노출(임베디드 문제은행과 동일 패턴).
                 <>
-                  <DragSelect
+                  <DragSelect deferCommit
                     value={selectedIds}
                     onChange={setSelectedIds}
                     className={`grid gap-3 ${
@@ -1483,7 +1484,7 @@ export function QuestionBankClient({
                 </>
               ) : (
                 <>
-                  <DragSelect
+                  <DragSelect deferCommit
                     value={selectedIds}
                     onChange={setSelectedIds}
                     className={`grid gap-3 ${

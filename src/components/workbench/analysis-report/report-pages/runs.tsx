@@ -4,7 +4,7 @@ import { Fragment, type MouseEvent as ReactMouseEvent, type ReactNode } from "re
 import type { BlockMeta } from "@/lib/passage-report/analysis-report/schema";
 import { Arrow, BOX_LIST_WRAPS, type FlowItem, TABLE_WRAPS, tableHeadRow, type WrapKind } from "../report-sections";
 import type { ColCtx, ReportEdit } from "./types";
-import { editIdOf } from "./items";
+import { editIdOf, orderIdOf } from "./items";
 import { BlockShell, LiShell, MapItemShell, RowShell } from "./shells";
 // ─── runs 렌더 (연속 같은 그룹 → 박스/표/도식 병합) ───────────────────────────
 export function RunsView({
@@ -24,11 +24,18 @@ export function RunsView({
   let i = 0;
   while (i < items.length) {
     const it = items[i];
-    const merge = TABLE_WRAPS.has(it.wrap) || BOX_LIST_WRAPS.has(it.wrap) || it.wrap === "map" || it.wrap === "vocab-grid" || it.wrap === "reading" || it.wrap === "activity";
+    const merge = TABLE_WRAPS.has(it.wrap) || BOX_LIST_WRAPS.has(it.wrap) || it.wrap === "map" || it.wrap === "vocab-grid" || it.wrap === "reading" || it.wrap === "activity" || it.wrap === "ws-list";
     const run: FlowItem[] = [it];
     if (merge) {
       let j = i + 1;
-      while (j < items.length && items[j].wrap === it.wrap && items[j].sectionIndex === it.sectionIndex) {
+      while (
+        j < items.length &&
+        items[j].wrap === it.wrap &&
+        items[j].sectionIndex === it.sectionIndex &&
+        // ws-list 는 그룹(orderId=옛 통짜 블록 id) 단위로만 한 박스로 병합 —
+        // 연속한 다른 소단원(빈칸→연습 등)이 한 박스로 붙는 것을 막는다.
+        (it.wrap !== "ws-list" || orderIdOf(items[j]) === orderIdOf(it))
+      ) {
         run.push(items[j]);
         j++;
       }
@@ -56,7 +63,11 @@ export function RunBlock({
   cols?: ColCtx;
   measure?: boolean;
 }) {
+  // 상호작용 chrome(그립·삭제·리사이즈·열 드래그) — 측정 클론에서는 렌더하지 않는다.
   const editable = !!edit && !measure;
+  // 레이아웃 chrome(표 왼쪽 6mm 핸들 열) — 이건 내용 열 폭을 3.45% 깎으므로 측정 클론에도
+  // '빈 칸으로' 반드시 렌더해야 측정 높이가 실제 페이지와 일치한다(푸터 침범의 지배적 원인).
+  const chromeLayout = !!edit;
   // 표 머리글·카드 사이 여백 등 '빈 영역' 클릭도 이 묶음의 첫 블록 선택으로 이어지게 —
   // 단어장 아무 곳을 눌러도 우측 패널에 열 표시·레이아웃 토글이 뜬다.
   // (행/카드(data-mid) 위 클릭은 각자 자기 블록을 선택하므로 건드리지 않는다.)
@@ -100,6 +111,29 @@ export function RunBlock({
     );
   }
 
+  if (wrap === "ws-list") {
+    // 실전 학습지 소단원 조각 병합 — 페이지 경계에서 조각 단위로 나뉘고, 각 페이지가
+    // 자기 몫의 par-ws-block 박스를 새로 연다(activity-run 과 동일 의미론).
+    // 옛 통짜 블록 id 에 저장된 minHeight 는 조각마다 반복 적용되면 시각이 깨지므로
+    // 제거하고 나머지 메타(fontScale·정렬 등)만 승계한다.
+    return (
+      <div className="par-runblock par-ws-block par-ws-run" onMouseDown={selectRunArea}>
+        {run.map((it) => {
+          const meta = blockMeta?.[editIdOf(it)] ?? blockMeta?.[it.id];
+          return (
+            <BlockShell
+              key={it.id}
+              it={it}
+              edit={edit}
+              meta={meta ? { ...meta, minHeight: undefined } : undefined}
+              measure={measure}
+            />
+          );
+        })}
+      </div>
+    );
+  }
+
   if (TABLE_WRAPS.has(wrap)) {
     const isVocabTestRun = wrap === "vocab" && run.every((it) => it.id.includes("-vtest-row"));
     const group = wrap === "grammar" ? "grammar" : wrap === "exam" ? "exam" : "vocab";
@@ -119,10 +153,10 @@ export function RunBlock({
           data-table-group={group}
           style={overrides ? { tableLayout: "fixed" } : undefined}
         >
-          <thead>{tableHeadRow(wrap, editable, run[0]?.hiddenCols, resize)}</thead>
+          <thead>{tableHeadRow(wrap, chromeLayout, run[0]?.hiddenCols, resize)}</thead>
           <tbody>
             {run.map((it) => (
-              <RowShell key={it.id} it={it} edit={edit} meta={blockMeta?.[editIdOf(it)] ?? blockMeta?.[it.id]} measure={measure} />
+              <RowShell key={it.id} it={it} edit={edit} meta={blockMeta?.[editIdOf(it)] ?? blockMeta?.[it.id]} measure={measure} handleCell={chromeLayout} />
             ))}
           </tbody>
         </table>

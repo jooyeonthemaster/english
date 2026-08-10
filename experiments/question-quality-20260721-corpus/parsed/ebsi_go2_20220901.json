@@ -1,0 +1,764 @@
+{
+ "examId": "ebsi_go2_20220901",
+ "source": "ebsi_go2_20220901_paper_eng_mun_5463VJ77.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 다음을 듣고, 여자가 하는 말의 목적으로 가장 적절한 것을 고르시오. ① 설문조사 참여를 독려하려고 ② 설문조사 결과를 공유하려고 ③ 설문조사 기간 변경을 공지하려고 ④ 학교 홈페이지 가입을 요청하려고 ⑤ 학교 홈페이지 점검 시간을 안내하려고",
+   "choices": [
+    "설문조사 참여를 독려하려고",
+    "설문조사 결과를 공유하려고",
+    "설문조사 기간 변경을 공지하려고",
+    "학교 홈페이지 가입을 요청하려고",
+    "학교 홈페이지 점검 시간을 안내하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 150
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 남자의 의견으로 가장 적절한 것을 고르시오. ① 논쟁은 더 나은 결정을 위한 기회가 된다. ② 의사 결정에 있어서 전원의 합의가 필수적이다. ③ 고민이 있을 때는 전문가에게 조언을 구해야 한다. ④ 리더로서 팀원들과 수평적 관계를 유지하는 것이 중요하다. ⑤ 팀 프로",
+   "choices": [
+    "논쟁은 더 나은 결정을 위한 기회가 된다.",
+    "의사 결정에 있어서 전원의 합의가 필수적이다.",
+    "고민이 있을 때는 전문가에게 조언을 구해야 한다.",
+    "리더로서 팀원들과 수평적 관계를 유지하는 것이 중요하다.",
+    "팀 프로젝트의 성공을 위해서는 리더의 결단력이 필요하다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 198
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 대화를 듣고, 두 사람의 관계를 가장 잘 나타낸 것을 고르시오. ① 학생- 문화 인류학 교수 ② 미술관 관장- 건축가 ③ 여행 작가- 삽화가 ④ 신문 기자- 전시 기획자 ⑤ 구호 활동가- 후원자",
+   "choices": [
+    "학생- 문화 인류학 교수",
+    "미술관 관장- 건축가",
+    "여행 작가- 삽화가",
+    "신문 기자- 전시 기획자",
+    "구호 활동가- 후원자"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 135
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고르시오.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 42
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 남자가 할 일로 가장 적절한 것을 고르시오. ① 포스터 인쇄하기 ② MC 선발하기 ③ 무대 설치하기 ④ 졸업생에게 전화하기 ⑤ 댄스팀 스케줄 정하기",
+   "choices": [
+    "포스터 인쇄하기",
+    "MC 선발하기",
+    "무대 설치하기",
+    "졸업생에게 전화하기",
+    "댄스팀 스케줄 정하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 101
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 여자가 지불할 금액을 고르시오. [3점] ① $13 ② $14 ③ $15 ④ $16 ⑤ $17",
+   "choices": [
+    "$13",
+    "$14",
+    "$15",
+    "$16",
+    "$17"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 66
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 남자가 락 페스티벌에 가지 않는 이유를 고르시오. ① 밴드 연습을 해야 해서 ② 결혼식에 참석해야 해서 ③ 할인 티켓이 매진되어서 ④ 선물 살 돈을 모아야 해서 ⑤ 라인업이 마음에 들지 않아서",
+   "choices": [
+    "밴드 연습을 해야 해서",
+    "결혼식에 참석해야 해서",
+    "할인 티켓이 매진되어서",
+    "선물 살 돈을 모아야 해서",
+    "라인업이 마음에 들지 않아서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 129
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, Nova’s Guide to the Stars에 관해 언급되지 않은 것을 고르시오. ① 장소 ② 참가 비용 ③ 활동 내용 ④ 운영 기간 ⑤ 신청 방법",
+   "choices": [
+    "장소",
+    "참가 비용",
+    "활동 내용",
+    "운영 기간",
+    "신청 방법"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 106
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 2022 London Public Library Event에 관한 다음 내용을 듣고, 일치하지 않는 것을 고르시오. ① 작가를 초청한다. ② 10월 27일에 열린다. ③ 현장 접수가 가능하다. ④ 참여 가능 인원은 최대 50명이다. ⑤ 질문을 이메일로 미리 보낼 수 있다.",
+   "choices": [
+    "작가를 초청한다.",
+    "10월 27일에 열린다.",
+    "현장 접수가 가능하다.",
+    "참여 가능 인원은 최대 50명이다.",
+    "질문을 이메일로 미리 보낼 수 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 167
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 다음 표를 보면서 대화를 듣고, 남자가 구입할 휴대용 접이식 의자를 고르시오. Portable Folding Chair Model Weight (kg) Color Number of Cup Holders Carry Bag ① A 3.2 white ○ ② B 2.3 white ○ ③",
+   "choices": [
+    "A\n3.2\nwhite\n○",
+    "B\n2.3\nwhite\n○",
+    "C\n2.1\ngray\n○",
+    "D\n1.8\ngray\n×",
+    "E\n1.6\nblack\n×"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 207
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ① The person sitting behind me kept kicking my seat. ② You should have called the staff to help you. ③ I was ",
+   "choices": [
+    "The person sitting behind me kept kicking my seat.",
+    "You should have called the staff to help you.",
+    "I was so into it that it went by so fast.",
+    "I’m sorry you couldn’t enjoy it.",
+    "I can’t wait to see the movie."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 275
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ① No way. We need the international program. ② Don’t worry. I can exchange my book with yours. ③ Not bad. Tha",
+   "choices": [
+    "No way. We need the international program.",
+    "Don’t worry. I can exchange my book with yours.",
+    "Not bad. That’s a good example of a topic sentence.",
+    "I understand. I was really nervous during the presentation.",
+    "Okay. Let’s find one that is easy and interesting to talk about.\n2022학년도 9월 고2 전국연합학력평가 문제지  \n제3 교시\n고2"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 379
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. [3점] Man: ① I’m sorry. I can give you a 10% discount, instead. ② Yes, please. I hope the new speaker works. ③",
+   "choices": [
+    "I’m sorry. I can give you a 10% discount, instead.",
+    "Yes, please. I hope the new speaker works.",
+    "That’s okay. But you’ll need the receipt.",
+    "Never mind. I just got a full refund.",
+    "Thanks. But I fixed it already."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 344
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. [3점] Woman: ① It’s nothing. I’m glad I could help. ② Excuse me. But I’m afraid I can’t repair it. ③ I’m sorry",
+   "choices": [
+    "It’s nothing. I’m glad I could help.",
+    "Excuse me. But I’m afraid I can’t repair it.",
+    "I’m sorry. I missed an important phone call.",
+    "Sure. I can help you to make an appointment.",
+    "You’re right. We should not waste our resources."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 357
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Amelia가 엄마에게 할 말로 가장 적절한 것을 고르시오. Amelia: ① Do you have any good ideas regarding the presentation?",
+   "choices": [
+    "Do you have any good ideas regarding the presentation?",
+    "Why don’t you take Anna home before it gets too late?",
+    "I think we can finish the rest of the work tomorrow.",
+    "Could you please pick me up at Anna’s house?",
+    "Tell me if you want to hang out with Anna.\n[16~17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 414
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 남자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "ways to encourage people to become vegetarians",
+    "health risks associated with a poorly planned diet",
+    "the various reasons why people become vegetarians",
+    "the recommended daily amount of essential nutrients",
+    "food sources for vegetarians to prevent nutrient deficiency"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 309
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 영양소가 아닌 것은?",
+   "choices": [
+    "protein",
+    "omega‐3",
+    "calcium",
+    "iron",
+    "vitamin B12\n  이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시에 \n따라 답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 129
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "잡지 기삿거리를 제보하려고",
+    "구독 기간 변경을 신청하려고",
+    "구독료 인상에 대해 항의하려고",
+    "잡지의 큰 글자판이 있는지 문의하려고",
+    "잡지 기사 내용에 대한 정정을 요구하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 764
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 나타난 ‘I’의 심경 변화로 가장 적절한 것은?",
+   "choices": [
+    "relieved\n→scared",
+    "nervous →delighted",
+    "bored\n→confident",
+    "satisfied →depressed",
+    "confused →ashamed"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1072
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "나를 위한 시간의 중요성을 인식해야 한다.",
+    "자신의 잘못을 성찰하는 자세를 가져야 한다.",
+    "어려운 일이라고 해서 처음부터 회피해서는 안 된다.",
+    "사회의 건강과 행복을 위하여 타인과 연대해야 한다.",
+    "급변하는 사회에서 가치 판단을 신속하게 할 수 있어야 한다.\n고2"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 912
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 밑줄 친 the innocent messenger who falls before a firing line이 다음 글에서 의미하는 바로 가장 적절한 것은?",
+   "choices": [
+    "the employee being criticized for being silent",
+    "the peacemaker who pursues non‐violent solutions",
+    "the negotiator who looks for a mutual understanding",
+    "the subordinate who wants to get attention from the boss",
+    "the person who gets the blame for reporting unpleasant news"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1413
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "자녀의 행동 변화를 위해 부모의 즉각적인 반응이 필요하다.",
+    "부모의 내적 성장을 통한 평정심 유지가 양육에 중요하다.",
+    "부모는 자녀가 감정을 다스릴 수 있게 도와주어야 한다.",
+    "부모와 자녀는 건설적인 의견을 나눌 수 있어야 한다.",
+    "바람직한 양육은 자녀에게 모범을 보이는 것이다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1224
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "how to get an adequate amount of sleep",
+    "the role that sleep plays in the learning process",
+    "a new method of stimulating engagement in learning",
+    "an effective way to keep your mind alert and active",
+    "the side effects of certain medications on brain function"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1076
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Public Healthcare: A Co‐Star, Not a Supporting Actor",
+    "The Historical Development of Medicine and Surgery",
+    "Clinical Care Controversies: What You Don’t Know",
+    "The Massive Similarities Between Different Mythologies",
+    "Initiatives Opening up Health Innovation Around the World\n고2"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1530
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. 다음 도표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "The Road transportation \nsector, which took up 48.6%, was the greatest oil \ndemanding sector in the OECD member states.",
+    "The \npercentage of oil demand in the Petrochemicals sector was \none‐third that of the Road transportation sector.",
+    "The \ndifference in oil demand between the Other industry sector \nand the Petrochemicals sector was smaller than the \ndifference in oil demand between the Aviation sector and \nthe Electricity generation sector.",
+    "The oil demand in the \nResidential, commercial and agricultural sector took up 9.8% \nof all oil demand in the OECD, which was the fourth largest \namong all the sectors.",
+    "The percentage of oil demand in \nthe Marine bunkers sector was twice that of the oil demand \nin the Rail & domestic waterways sector."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 868
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Carl‐Gustaf Rossby에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "Stockholm에서 성장하면서 전통적인 교육을 받았다.",
+    "University of Stockholm에서 수리 물리학 학위를 받았다.",
+    "1925년에 장학금을 받았다.",
+    "polar front theory를 지지했다.",
+    "University of Stockholm에 마련된 직책을 거절했다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1273
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. The Colchester Zoo Charity Race에 관한 다음 안내문의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "2시간 동안 진행된다.",
+    "등록비에는 음식과 음료가 포함된다.",
+    "코스 길이는 10km이다.",
+    "모든 참가자는 메달을 받는다.",
+    "행사 티셔츠는 동물원에서 구입할 수 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 800
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. 7‐Day Story Writing Competition에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "17세 미만 누구나 참여할 수 있다.",
+    "참가자들은 동일한 주제에 대하여 글을 쓴다.",
+    "참가자들은 12가지 문학 장르 중 하나를 선택할 수 있다.",
+    "1인당 출품작을 최대 3편까지 제출할 수 있다.",
+    "결승 진출자 전원에게 상금이 수여된다.\n고2"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 963
+  },
+  {
+   "qNum": 29,
+   "kind": "grammar_underline",
+   "stem": "29. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "that they are agents of",
+    "②": "readily perceive the consequence of",
+    "③": "assure that infants will orient",
+    "④": "fascinated",
+    "⑤": "where infants can easily notice"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1139
+  },
+  {
+   "qNum": 30,
+   "kind": "vocab_underline",
+   "stem": "30. 다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "mastery over the particular activity",
+    "②": "trade his or her output",
+    "③": "scarce food for clothing",
+    "④": "necessary to farm for one’s",
+    "⑤": "limited by the extent of"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1147
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. It is not the peasant’s goal to produce the highest possible time‐averaged crop yield, averaged over many years. If your time‐averaged yield is marvelously ",
+   "choices": [
+    "land leveling",
+    "weed trimming",
+    "field scattering",
+    "organic farming",
+    "soil fertilization"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1092
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. There are several reasons why support may not be effective. One possible reason is that receiving help could be a blow to self‐esteem. A recent study by Chr",
+   "choices": [
+    "make you feel bad about yourself",
+    "improve your ability to deal with challenges",
+    "be seen as a way of asking for another favor",
+    "trick you into thinking that you were successful",
+    "discourage the person trying to model your behavior\n고2"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1317
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. As well as making sense of events through narratives, historians in the ancient world established the tradition of history as a(n) . The history writing of ",
+   "choices": [
+    "source of moral lessons and reflections",
+    "record of the rise and fall of empires",
+    "war against violence and oppression",
+    "means of mediating conflict",
+    "integral part of innovation"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1029
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. Psychologist Christopher Bryan finds that when we , people evaluate choices differently. His team was able to cut cheating in half: instead of “Please don’t",
+   "choices": [
+    "ignore what experts say",
+    "keep a close eye on the situation",
+    "shift our emphasis from behavior to character",
+    "focus on appealing to emotion rather than reason",
+    "place more importance on the individual instead of the group"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1325
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "When you raise your viewpoint up like a \nflag, people know where to find you; it becomes a rallying \npoint.",
+    "Displaying your perspective lets prospective (and \ncurrent) customers know that you don’t just sell your \nproducts or services.",
+    "The best marketing is never just \nabout selling a product or service, but about taking a stand —\nshowing an audience why they should believe in what you’re \nmarketing enough to want it at any cost, simply because they \nagree with what you’re doing.",
+    "If you want to retain your \nexisting customers, you need to create ways that a customer \ncan feel like another member of the team, participating in the \nprocess of product development.",
+    "Products can be changed \nor adjusted if they aren’t functioning, but rallying points align \nwith the values and meaning behind what you do.\n                        * beacon: 횃불  ** rallying point: 집합 지점\n[36~37] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 것을 \n고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1090
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. If DNA were the only thing that mattered, there would be no particular reason to build meaningful social programs to pour good experiences into children and",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n고2"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1006
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. One benefit of reasons and arguments is that they can foster humility. If two people disagree without arguing, all they do is yell at each other. No progres",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n[38~39] 글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 \n적절한 곳을 고르시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38~39"
+    ]
+   },
+   "charLen": 1194
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. However, the capacity to produce skin pigments is inherited. Adaptation involves changes in a population, with characteristics that are passed from one gene",
+   "choices": [
+    ") For example, if you spend the summer outside, you \nmay acclimate to the sunlight: your skin will increase its \nconcentration of dark pigments that protect you from the \nsun. (",
+    ") This is a temporary change, and you won’t pass \nthe temporary change on to future generations. (",
+    ") For \npopulations living in intensely sunny environments, individuals \nwith a good ability to produce skin pigments are more likely \nto thrive, or to survive, than people with a poor ability to \nproduce pigments, and that trait becomes increasingly common \nin subsequent generations. (",
+    ") If you look around, you can \nfind countless examples of adaptation. (",
+    ") The distinctive \nlong neck of a giraffe, for example, developed as individuals \nthat happened to have longer necks had an advantage in \nfeeding on the leaves of tall trees. [3점]\n* pigment: 색소"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1141
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. This inequality produces the necessary conditions for the operation of a huge, global‐scale engine that takes on heat in the tropics and gives it off in the",
+   "choices": [
+    ") Averaged over the course of the year, \nthe tropics and latitudes up to about 40° receive more total \nheat than they lose by radiation. (",
+    ") Latitudes above 40° \nreceive less total heat than they lose by radiation. (",
+    ") \nIts working fluid is the atmosphere, especially the moisture \nit contains. (",
+    ") Air is heated over the warm earth of the \ntropics, expands, rises, and flows away both northward and \nsouthward at high altitudes, cooling as it goes. (",
+    ") It \ndescends and flows toward the equator again from more \nnortherly and southerly latitudes.\n* latitude: 위도"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 935
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "permanently\n…… manipulated",
+    "temporarily\n……\nmisinformed",
+    "momentarily\n……\nadvocated",
+    "ultimately\n……\nunderestimated",
+    "consistently\n……\nanalyzed\n고2\n[41~42] 다음 글을 읽고, 물음에 답하시오.\n  The driver of FOMO (the fear of missing out) is the \nsocial pressure to be at the right place with the right \npeople, whether it’s from a sense of duty or just trying to \nget ahead, we feel (a) obligated to attend certain events \nfor work, for family and for friends. This pressure from \nsociety combined with FOMO can wear us down. According \nto a recent survey, 70 percent of employees admit that \nwhen they take a vacation, they still don’t (b) disconnect \nfrom work. Our digital habits, which include constantly \nchecking emails, and social media timelines, have become \nso firmly established, it is nearly impossible to simply \nenjoy the moment, along with the people with whom we \nare sharing these moments.\n  JOMO (the joy of missing out) is the emotionally \nintelligent antidote to FOMO and is essentially about being \npresent and being (c) content with where you are at in \nlife. You do not need to compare your life to others but \ninstead, practice tuning out the background noise of the \n“shoulds” and “wants” and learn to let go of worrying \nwhether you are doing something wrong. JOMO allows us \nto live life in the slow lane, to appreciate human \nconnections, to be (d) intentional with our time, to \npractice saying “no,” to give ourselves “tech‐free breaks,” \nand to give ourselves permission to acknowledge where \nwe are and to feel emotions. Instead of constantly trying \nto keep up with the rest of society, JOMO allows us to be \nwho we are in the present moment. When you (e) activate \nthat competitive and anxious space in your brain, you have \nso much more time, energy, and emotion to conquer your \ntrue priorities.\n* antidote: 해독제"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3293
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Missing Out Has Its Benefits",
+    "JOMO: Another Form of Self‐Deception",
+    "How to Catch up with Digital Technology",
+    "Being Isolated from Others Makes You Lonely",
+    "Using Social Media Wisely: The Dos and Don’ts"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 240
+  },
+  {
+   "qNum": 42,
+   "kind": "vocab_letter",
+   "stem": "42. 밑줄 친 (a)~(e) 중에서 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {
+    "a": "he heard about a",
+    "b": "that man was green",
+    "c": "He asked the servants",
+    "d": "his fortune",
+    "e": "he should concentrate only"
+   },
+   "bracketChoices": {},
+   "charLen": 1762
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) - (D) - (C)",
+    "(C) - (B) - (D)",
+    "(C) - (D) - (B)",
+    "(D) - (B) - (C)",
+    "(D) - (C) - (B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 166
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a)~(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 77
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글에 관한 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "부자는 눈 통증으로 여러 명의 의사에게 치료받았다.",
+    "수도사는 붉은 옷을 입고 부자를 다시 찾아갔다.",
+    "하인들은 녹색 안경을 구입했다.",
+    "부자는 수도사의 처방이 이상하다고 생각했다.",
+    "부자는 주변을 모두 녹색으로 칠하게 했다.\n* 확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)했는지 확인\n하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 220
+  }
+ ],
+ "sourcePdf": "ebsi_go2_20220901_paper_eng_mun_5463VJ77.pdf"
+}

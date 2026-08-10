@@ -1,0 +1,122 @@
+[
+ {
+  "mode": "answer-only",
+  "p": 1,
+  "rep": 1,
+  "sec": 87,
+  "rsn": 5752,
+  "rawViol": [],
+  "snapFixed": 0,
+  "postSnapViol": []
+ },
+ {
+  "mode": "full",
+  "p": 1,
+  "rep": 3,
+  "sec": 125,
+  "rsn": 7920,
+  "rawViol": [],
+  "snapFixed": 0,
+  "postSnapViol": []
+ },
+ {
+  "mode": "full",
+  "p": 1,
+  "rep": 1,
+  "sec": 135,
+  "rsn": 7330,
+  "rawViol": [],
+  "snapFixed": 0,
+  "postSnapViol": []
+ },
+ {
+  "mode": "full",
+  "p": 1,
+  "rep": 2,
+  "sec": 158,
+  "rsn": 9190,
+  "rawViol": [],
+  "snapFixed": 0,
+  "postSnapViol": []
+ },
+ {
+  "mode": "answer-only",
+  "p": 1,
+  "rep": 2,
+  "sec": 95,
+  "rsn": 5400,
+  "rawViol": [],
+  "snapFixed": 0,
+  "postSnapViol": []
+ },
+ {
+  "mode": "full",
+  "p": 12,
+  "rep": 2,
+  "sec": 90,
+  "rsn": 5645,
+  "rawViol": [],
+  "snapFixed": 0,
+  "postSnapViol": []
+ },
+ {
+  "mode": "full",
+  "p": 12,
+  "rep": 1,
+  "sec": 162,
+  "rsn": 9419,
+  "rawViol": [],
+  "snapFixed": 0,
+  "postSnapViol": []
+ },
+ {
+  "mode": "full",
+  "p": 12,
+  "rep": 3,
+  "sec": 120,
+  "rsn": 6258,
+  "rawViol": [],
+  "snapFixed": 0,
+  "postSnapViol": []
+ },
+ {
+  "mode": "answer-only",
+  "p": 1,
+  "rep": 3,
+  "sec": 213,
+  "rsn": 11490,
+  "rawViol": [],
+  "snapFixed": 0,
+  "postSnapViol": []
+ },
+ {
+  "mode": "answer-only",
+  "p": 12,
+  "rep": 1,
+  "sec": 166,
+  "rsn": 9080,
+  "rawViol": [],
+  "snapFixed": 0,
+  "postSnapViol": []
+ },
+ {
+  "mode": "answer-only",
+  "p": 12,
+  "rep": 2,
+  "sec": 137,
+  "rsn": 7731,
+  "rawViol": [],
+  "snapFixed": 0,
+  "postSnapViol": []
+ },
+ {
+  "mode": "answer-only",
+  "p": 12,
+  "rep": 3,
+  "sec": 181,
+  "rsn": 9992,
+  "rawViol": [],
+  "snapFixed": 0,
+  "postSnapViol": []
+ }
+]

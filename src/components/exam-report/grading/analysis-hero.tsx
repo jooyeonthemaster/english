@@ -12,6 +12,7 @@ import { AlertTriangle, CalendarClock, CheckCircle2, Timer } from "lucide-react"
 
 import { cn, formatDateTime } from "@/lib/utils";
 import { computeScoreSummary, round2 } from "@/lib/exam-report/grading";
+import { scoreText } from "@/components/students/hub/analytics/kit";
 import type { ExamStudentDetail } from "../ui-contracts";
 import { STATUS_STYLE } from "./grading-shared";
 
@@ -35,6 +36,7 @@ export function HeroCard({
   isInternal,
   summary,
   graded,
+  totalQuestions,
   gradingConfirmed,
   onGoVerdict,
 }: {
@@ -43,6 +45,11 @@ export function HeroCard({
   isInternal: boolean;
   summary: ReturnType<typeof computeScoreSummary>;
   graded: number;
+  /**
+   * 시험지 전체 문항 수(미채점 포함). 정답률(분모=채점분)과 점수(분모=전 문항 배점)가
+   * 서로 다른 분모를 쓰므로, 두 수를 나란히 놓으려면 분모가 화면에 있어야 한다.
+   */
+  totalQuestions: number;
   gradingConfirmed: boolean;
   onGoVerdict: () => void;
 }) {
@@ -59,9 +66,12 @@ export function HeroCard({
 
   // 정답률(문항 기준). 점수 비율은 큰 숫자(점수/만점)로 병기.
   const accuracy = graded > 0 ? summary.correctCount / graded : null;
-  const scoreText =
+  const scoreValueText =
     summary.totalScore != null ? String(round2(summary.totalScore)) : "—";
   const maxText = summary.maxScore != null ? String(round2(summary.maxScore)) : null;
+  // 채점이 남았으면 두 수(정답률·점수)는 잠정치다. 5문항 중 2문항만 채점하고 둘 다
+  // 정답이면 「정답률 100% + 2/5점」이 동시에 뜬다 — 분모와 잠정 배지로 못 박는다.
+  const gradingPending = totalQuestions > 0 && graded < totalQuestions;
 
   return (
     <section className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
@@ -166,13 +176,18 @@ export function HeroCard({
               점수
             </span>
             <p className="text-[32px] font-extrabold leading-tight tabular-nums text-slate-900">
-              {scoreText}
+              {scoreValueText}
               {maxText && (
                 <span className="ml-1 text-[15px] font-semibold text-slate-400">
                   / {maxText}
                 </span>
               )}
             </p>
+            {gradingPending && (
+              <span className="mt-1 inline-flex items-center whitespace-nowrap rounded-md border border-slate-200 bg-slate-50 px-2 py-0.5 text-[11px] font-bold text-slate-500">
+                채점 진행 중 · 잠정
+              </span>
+            )}
             <div className="mt-1.5 flex items-center gap-2.5 text-[11.5px] font-semibold tabular-nums">
               <StatDot status="CORRECT" n={summary.correctCount} />
               <StatDot status="WRONG" n={summary.wrongCount} />
@@ -180,7 +195,14 @@ export function HeroCard({
               <StatDot status="UNKNOWN" n={summary.unknownCount} />
             </div>
           </div>
-          <AccuracyRing accuracy={accuracy} />
+          {/* 링(정답률)의 분모는 '채점된 문항'이고 좌측 점수의 분모는 '전 문항 배점'이다.
+              두 수가 나란히 놓이므로 링 아래에 분모를 명시한다. */}
+          <div className="flex flex-col items-center gap-1">
+            <AccuracyRing accuracy={accuracy} />
+            <span className="whitespace-nowrap text-[11px] font-semibold tabular-nums text-slate-400">
+              채점 {graded}/{totalQuestions}문항
+            </span>
+          </div>
         </div>
       </div>
     </section>
@@ -219,23 +241,37 @@ function TimeStat({
   );
 }
 
+/**
+ * 정오 분포 1칸. 색만으로 구분하면 색각 이상 사용자와 보조기술에는 「2 3 0 0」으로만
+ * 읽힌다 — 기호(STATUS_STYLE.symbol)를 함께 찍고 title·aria-label 로 이름을 남긴다.
+ */
 function StatDot({ status, n }: { status: keyof typeof STATUS_STYLE; n: number }) {
   const style = STATUS_STYLE[status];
   return (
-    <span className="inline-flex items-center gap-1">
-      <span className={cn("h-1.5 w-1.5 rounded-full", style.dot)} />
+    <span
+      className="inline-flex items-center gap-1"
+      title={`${style.label} ${n}문항`}
+      aria-label={`${style.label} ${n}문항`}
+    >
+      <span className={cn("text-[11px] font-bold leading-none", style.text)} aria-hidden>
+        {style.symbol}
+      </span>
       <span className={cn("font-bold", style.text)}>{n}</span>
     </span>
   );
 }
 
-/** 정답률 링 게이지(SVG) — track slate-100 / progress blue-600. */
+/** 정답률 링 게이지(SVG) — track slate-100 / progress 는 값 기반 톤(scoreText). */
 function AccuracyRing({ accuracy }: { accuracy: number | null }) {
   const size = 92;
   const stroke = 9;
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
   const ratio = accuracy == null ? 0 : Math.max(0, Math.min(1, accuracy));
+  // 같은 40% 가 리포트에선 파랑, 응시 모달에선 빨강이던 편차를 없앤다 — 모달의
+  // AccuracyRing 과 동일하게 kit.scoreText 임계(<50 rose / <80 blue / ≥80 emerald)를
+  // currentColor 로 흘려보낸다. 미채점(accuracy=null)은 중립 슬레이트.
+  const toneClass = accuracy == null ? "text-slate-300" : scoreText(ratio * 100);
   return (
     <div className="relative" style={{ width: size, height: size }}>
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} aria-hidden>
@@ -252,7 +288,8 @@ function AccuracyRing({ accuracy }: { accuracy: number | null }) {
           cy={size / 2}
           r={r}
           fill="none"
-          className="stroke-blue-600"
+          stroke="currentColor"
+          className={toneClass}
           strokeWidth={stroke}
           strokeLinecap="round"
           strokeDasharray={c}
@@ -261,10 +298,15 @@ function AccuracyRing({ accuracy }: { accuracy: number | null }) {
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-[17px] font-extrabold leading-none tabular-nums text-slate-900">
+        <span
+          className={cn(
+            "text-[17px] font-extrabold leading-none tabular-nums",
+            accuracy == null ? "text-slate-400" : toneClass,
+          )}
+        >
           {pctText(accuracy)}
         </span>
-        <span className="mt-0.5 text-[9.5px] font-bold uppercase tracking-wide text-slate-400">
+        <span className="mt-0.5 text-[10px] font-bold uppercase tracking-wide text-slate-400">
           정답률
         </span>
       </div>

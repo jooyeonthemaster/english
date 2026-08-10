@@ -1,0 +1,857 @@
+{
+ "examId": "ebsi_go1_20100310",
+ "source": "ebsi_go1_20100310_paper_20100310_eng_mun.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 대화를듣고남자가구입할사진액자를고르시오 점 , . [1 ] ① ② ③ ④ ⑤",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 45
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를듣고여자의심정으로가장적절한것을고르시오 , . bored ① thankful ② upset ③ relaxed ④ satisfied ⑤",
+   "choices": [
+    "thankful",
+    "upset",
+    "relaxed",
+    "satisfied",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 80
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을듣고무엇에관한설명인지고르시오 , . 피로 ① 부상 ② 안정 ③ 갈증 ④ 노화 ⑤",
+   "choices": [
+    "부상",
+    "안정",
+    "갈증",
+    "노화",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 51
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를듣고남자가할일로가장적절한것을고르시오 , . 학교식당주간메뉴게시하기 ① 식사하는학생들사진찍기 ② 급식에관해설문조사하기 ③ 학교신문인쇄맡기기 ④ 친구와함께식사하기 ⑤",
+   "choices": [
+    "식사하는학생들사진찍기",
+    "급식에관해설문조사하기",
+    "학교신문인쇄맡기기",
+    "친구와함께식사하기",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 97
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를듣고남자가지불할총금액을고르시오 , . $20 ① $24 ② $27 ③ $30 ④ $33 ⑤",
+   "choices": [
+    "$24",
+    "$27",
+    "$30",
+    "$33",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 57
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 다음을듣고 남자가하는말의목적으로가장적절한것을 , 고르시오. 체육관시설이용을장려하려고 ① 동아리작품전시회를홍보하려고 ② 학교홈페이지이용을권장하려고 ③ 교복착용규정에관해설명하려고 ④ 교복선정을위한투표를안내하려고 ⑤",
+   "choices": [
+    "동아리작품전시회를홍보하려고",
+    "학교홈페이지이용을권장하려고",
+    "교복착용규정에관해설명하려고",
+    "교복선정을위한투표를안내하려고",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 121
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를듣고 여자가남자에게부탁한일로가장적절한것을 , 고르시오. to pack a suitcase for her ① to buy a cookbook for her ② to go to Paris instead of her ③ to visit Mr. Kim in the hospital ④",
+   "choices": [
+    "to buy a cookbook for her",
+    "to go to Paris instead of her",
+    "to visit Mr. Kim in the hospital",
+    "to make French food for her party",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 197
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를듣고두사람이대화하고있는장소로가장적절한곳을 , 고르시오. 병원입원실 ① 병원접수처 ② 학교보건실 ③ 놀이공원매표소 ④ 놀이공원의무실 ⑤",
+   "choices": [
+    "병원접수처",
+    "학교보건실",
+    "놀이공원매표소",
+    "놀이공원의무실",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 81
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 대화를듣고두사람의관계로가장적절한것을고르시오 , . 배우 감독 - ① 독자 작가 - ② 관객 가수 - ③ 학생 사서교사 - ④ 고객 서점주인 - ⑤",
+   "choices": [
+    "독자\n작가\n-",
+    "관객\n가수\n-",
+    "학생\n사서교사\n-",
+    "고객\n서점주인\n-",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 85
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 대화를듣고여자가지금할일로가장적절한것을고르시오 , . 공원청소하기 ① 연극연습하기 ② 요양원방문하기 ③ 학급환경미화하기 ④ 봉사활동소감문쓰기 ⑤",
+   "choices": [
+    "연극연습하기",
+    "요양원방문하기",
+    "학급환경미화하기",
+    "봉사활동소감문쓰기",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 84
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 다음표를보면서대화를듣고대화의내용과일치하지 , 않는 것을고르시오. ① ② ③ ④ ⑤ 학년도 월고 전국연합학력평가문제지 2010 제 교시 ( ) 성명 수험번호 ( ) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    "학년도\n월고\n전국연합학력평가문제지\n2010\n제\n교시\n(\n)\n성명\n수험번호\n(\n)\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 159
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 종이박물관에관한다음내용을듣고 일치하지 , 않는것을 고르시오. 년에처음개관하였다 1990 . ① 작년에새건물로이사하였다. ② 종이에관한많은책을소장하고있다. ③ 무료로종이를만들어보는프로그램이있다. ④ 기념품가게에서종이로만든제품을판매한다. ⑤",
+   "choices": [
+    "작년에새건물로이사하였다.",
+    "종이에관한많은책을소장하고있다.",
+    "무료로종이를만들어보는프로그램이있다.",
+    "기념품가게에서종이로만든제품을판매한다.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 137
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 다음그림의상황에가장적절한대화를고르시오. ① ② ③ ④ ⑤",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 36
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를듣고남자의마지막말에대한여자의응답으로가장 , 적절한것을고르시오. Woman: Oh, you were lucky you didn’t get hurt. ① Right. My mother came running to me. ② I didn’t know life on the farm",
+   "choices": [
+    "Right. My mother came running to me.",
+    "I didn’t know life on the farm is so boring.",
+    "My old friends used to visit my home.",
+    "It’s a pity you haven’t been to the farm.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 261
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 대화를듣고여자의마지막말에대한남자의응답으로가장 , 적절한것을고르시오. Man: Thank you for your advice. ① Why don’t you join us then?",
+   "choices": [
+    "Why don’t you join us then?",
+    "Of course. I’m sure you win.",
+    "Isn’t it dangerous to travel alone?",
+    "Sorry, but I don’t like soccer that much.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 219
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 대화를듣고남자의마지막말에대한여자의응답으로가장 , 적절한것을고르시오. Woman: Could you?",
+   "choices": [
+    "There is nothing interesting on TV.",
+    "I’m sorry, but it’s too late to talk about it.",
+    "To be honest, I don’t like chicken that much.",
+    "You just tell me. I could make anything for you.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 274
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 다음상황설명을듣고 가 에게할말로가장적절 , Judy Alice 한것을고르시오 점 . [3 ] Judy: Alice, that’s what friends are for. ① let me help you with packing. ② I hope I can move to another",
+   "choices": [
+    "let me help you with packing.",
+    "I hope I can move to another city.",
+    "don’t forget to send e-mails to me.",
+    "just be yourself, and everybody will like you.",
+    "이제듣기․ 말하기문제는다끝났습니다\n번부터는\n. 18\n문제지의지시에따라답을하기바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 304
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 밑줄친This[this]가가리키는것으로가장적절한것은 점 ?",
+   "choices": [
+    "용서",
+    "기부",
+    "편지",
+    "상속",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 519
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 밑줄친he가가리키는대상이나머지넷과다른것은?",
+   "choices": [
+    "he only ‘speaks’ Polish!\nThe workers at an animal center were worried that Kent\nwas deaf, until they knew",
+    "he had lived with a family from\nPoland. So they learned some basic commands, like ‘sit’ and\n‘come here’ in Polish and Kent responded straight away.\nFour months later,",
+    "he now understands in English and\nPolish, and is looking for a new home. One of the workers\nat the animal center said",
+    "he was pleased to have found\nout what was wrong. He also said anyone who wants to\nadopt\nKent\ndoesn’t\nhave to speak Polish,\nas",
+    "he\nnow\nunderstands enough English commands too.\n*\n입양하다\nadopt:\n(\n)\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 765
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음글의목적으로가장적절한것은?",
+   "choices": [
+    "기자생활의어려움을호소하려고",
+    "배역을얻지못한것을위로하려고",
+    "훌륭한연극공연에대해칭찬하려고",
+    "좋은글을쓰는법에관해조언하려고",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 660
+  },
+  {
+   "qNum": 21,
+   "kind": "box_choice",
+   "stem": "21. 의각네모안에서어법에맞는표현으로가장 (A), (B), (C) 적절한것은?",
+   "choices": [
+    "……… called\n……… help\nexact",
+    "……… calling ……… helps\nexactly",
+    "……… called\n……… helps\nexactly",
+    "……… calling ……… help\nexactly",
+    "……… called\n……… help"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 805
+  },
+  {
+   "qNum": 22,
+   "kind": "grammar_underline",
+   "stem": "22. 다음글의밑줄친부분중어법상 , 틀린것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "joined the company baseball team",
+    "②": "few mistakes",
+    "③": "hearing someone shouting",
+    "④": "that they knew who was",
+    "⑤": "to know that I’m your"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 601
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음글에서전체흐름과관계없는문장은?",
+   "choices": [
+    "When you read by moonlight or under\nthe covers,\nyou tend to squint\nto focus on letters.",
+    "Sometimes, this gives you a headache, makes you tired, or\ncauses pain in the muscles around your eyes and your vision\nseems\nless\nclear.",
+    "However,\nyou\nwon’t\nsuffer\nany\nlong-term eye damage.",
+    "Direct lighting helps people stay\nmore focused while reading books.",
+    "A good night’s rest\nwill help your tired eyes work properly again.\n*\n눈을가늘게뜨고보다\nsquint:\n[24 ~\n다음글의빈칸에들어갈말로가장적절한것을\n28]\n고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 577
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. A recent study shows that kids who watch a lot of TV are more likely to be than those who do not. Can you guess why?",
+   "choices": [
+    "violent",
+    "diligent",
+    "humorous",
+    "overweight",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 496
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. Deciding whether your child is bright, and how and when to give them right kind of attention, requires careful observation. For this, it can be very helpful",
+   "choices": [
+    "praise them",
+    "write a letter",
+    "play together",
+    "read them stories",
+    "(\n)\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 756
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Now, more than ever, good job opportunities are opening up for the person who speaks well before a group. Even though you do not intend to become a lawyer, ",
+   "choices": [
+    "hide your feelings",
+    "stand up and speak out",
+    "develop your creativity",
+    "listen to others carefully",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 661
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. I believe that a person can find truth in life by . For example, I know a carpenter who has devoted himself to his work for years. He has got great skills a",
+   "choices": [
+    "meeting people in other fields",
+    "reading as many books as possible",
+    "learning from his elders’ experiences",
+    "focusing on one thing and mastering it",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 764
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. What makes a good walk?",
+   "choices": [
+    "done as fast as possible",
+    "taken regularly if possible",
+    "a pleasant experience to our senses",
+    "done considering our physical condition",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 720
+  },
+  {
+   "qNum": 29,
+   "kind": "mc",
+   "stem": "29. 다음글의상황에나타난분위기로가장적절한것은 점 ?",
+   "choices": [
+    "평화롭다",
+    "활기차다",
+    "쓸쓸하다",
+    "단조롭다",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 625
+  },
+  {
+   "qNum": 30,
+   "kind": "vocab_underline",
+   "stem": "30. 다음그림에대한글의내용중밑줄친낱말의쓰임이적절 , 하지않은것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "beside the stack",
+    "②": "single coin hard with your",
+    "③": "top coin will fly out",
+    "④": "the rest will stay neatly",
+    "⑤": "stay that way"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 804
+  },
+  {
+   "qNum": 31,
+   "kind": "box_choice",
+   "stem": "31. 의각네모안에서문맥에맞는낱말로가장적 (A), (B), (C) 절한것은?",
+   "choices": [
+    "……… avoiding ……… attack\nprediction",
+    "……… visiting\n……… attract\nprotection",
+    "……… avoiding ……… attract\nprotection",
+    "……… visiting\n……… attack\nprotection",
+    "……… avoiding ……… attack"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 896
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. 다음글의빈칸 에들어갈말로가장적절한것은 (A), (B) ?",
+   "choices": [
+    "………\nIn other words\nHowever",
+    "………\nIn contrast\nFor example",
+    "………\nIn addition\nAs a result",
+    "………\nIn addition\nAs a result",
+    "………\nIn other words\n[33 ~\n다음글의주제로가장적절한것을고르시오\n34]\n."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 802
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. Before picking out a souvenir to take home, consider how it was made and where it came from. If animal products such as animal bone or skin were used to mak",
+   "choices": [
+    "여행기념품구매시유념할사항",
+    "멸종위기야생동물보호의필요성",
+    "공예품판매를통한여행지홍보효과",
+    "기념품제작시디자인다양화의필요성",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 562
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. Collecting can open new worlds for children. Collecting stamps, for example, shows them cultures or historical events of a country. Plant or animal specimen",
+   "choices": [
+    "why children like collecting",
+    "importance of leisure activities",
+    "where to keep your collections",
+    "educational effects of collecting",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 797
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음도표의내용과일치하지않는문장은?",
+   "choices": [
+    "In the entire age group,\nthe percentage of women who volunteered was higher than\nthat of men who did.",
+    "People in age group 25 to 34 were\nthe least likely to volunteer of all the age groups.",
+    "Women\nover 65 showed the highest rate of volunteer activities.",
+    "Men and women in age group 15 to 24 participated in\nvolunteer activities at the same rate.",
+    "The rate of men\nwho volunteered in age group 55 to 64 was twice as high as\nthat of men who did in age group 25 to 34.\n(\n)\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 643
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. 에관한다음글의내용과일치하는것은 Susan B. Anthony ?",
+   "choices": [
+    "고향에서평생동안아이들을가르쳤다.",
+    "처음부터많은사람들이그녀의생각에동조하였다.",
+    "법에저촉되는투표를하여체포된적이있다.",
+    "죽기전에여성의투표권이실현되는것을보았다.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 785
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. 에관한다음글의내용과일치하지 kurinji 않는것은?",
+   "choices": [
+    "인도남부의특정지역에서식한다.",
+    "년에한번꽃을피운다\n.",
+    "사원의이름을따서명명되었다.",
+    "낮의길이의변화를감지한다.",
+    "[38 ~\n다음글의요지로가장적절한것을고르시오\n39]\n."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 707
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. We have an idea of how things should be done and what is possible and impossible. These ideas make up the box we live in, and this box limits our possibilit",
+   "choices": [
+    "한사회의문화유산은잘보존되어야한다.",
+    "사회구성원은서로협력하여야한다.",
+    "서로다른가치는갈등을유발한다.",
+    "일상의소중함을깨달아야한다.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 707
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. We like to help our neighbors when they are in trouble. But sometimes people get in each other’s way, and create confusion by trying to give help and advice",
+   "choices": [
+    "세살버릇여든까지간다.",
+    "아니땐굴뚝에연기나랴.",
+    "돌다리도두들겨보고건너라.",
+    "사공이많으면배가산으로간다.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 596
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 글의흐름으로보아 주어진문장이들어가기에가장적절한 , 곳은?",
+   "choices": [
+    ") Sometimes all you\nneed to do is suggest interesting ideas. (",
+    ") The students\nwill carry them out if they find the ideas interesting enough.\n(",
+    ") For example, you can ask your students,\nIs yawning\n㾵\ncontagious\nwith\ndogs?\n(\n㾶",
+    ")\nFirst,\nthey\nwatch\na\ndog\nclosely for 15 minutes and count the number of yawns. (",
+    ")\nThen they yawn repeatedly in front of the dog for another\n15 minutes and count the yawns of the dog again.\n*\n전염성이있는\ncontagious:\n(\n)\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n[41 ~\n다음글의제목으로가장적절한것을고르시오\n42]\n."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 736
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. Many schools in the country have already closed their doors because of the decreased number of students. School buildings, once bloomed with children with p",
+   "choices": [
+    "Schools in Many Economic Difficulties",
+    "Closed Schools Reborn as a Cultural Center",
+    "People Leaving Their Home for Jobs",
+    "Difficulties of People in the Country",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 833
+  },
+  {
+   "qNum": 42,
+   "kind": "mc",
+   "stem": "42. Do you know what contribution Korea has made to Christmas Day?",
+   "choices": [
+    "Korea Imports the Christmas Trees",
+    "Korea: Birthplace of the Christmas Tree",
+    "Christmas Tree Businesses Earn Money",
+    "Korea: A Good Place for Plants to Grow",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 844
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진글다음에이어질글의순서로가장적절한것은?",
+   "choices": [
+    "(B)-(A)-(C)",
+    "(B)-(C)-(A)",
+    "(C)-(A)-(B)",
+    "(C)-(B)-(A)",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 633
+  },
+  {
+   "qNum": 44,
+   "kind": "mc",
+   "stem": "44. 다음글에서필자가주장하는바로가장적절한것은?",
+   "choices": [
+    "자신의감정에충실하라.",
+    "끝까지희망을잃지마라.",
+    "끊임없는변화를시도하라.",
+    "문제를객관적으로인식하라.",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 625
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 다음글의내용을한문장으로요약하고자한다빈칸 와 . (A) 에들어갈말로가장적절한것은 (B) ?",
+   "choices": [
+    "………\namount\ncontainer size",
+    "………\nprice\nsweet smell",
+    "amount\n………\nsweet smell",
+    "price\n………\ncolor",
+    "taste\n………\n(\n)\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n[46 ~\n다음글을읽고\n물음에답하시오\n48]\n,\n.\n(A) “How come Grandma’s last name is not on Dad’s\npapers?” I asked my mom one day when I was 8 or 9\nyears old. Her last name never showed up anywhere in my\nfamily record. “All I see is Brown, but her name is Smith!”\nMy mom answered, “Well, it is because she isn’t his birth\nmother.”\n(B) She gave attention to the other kids she cared for and\ntreated\nthem\nno\ndifferently\nfrom\nher\nown\nchildren.\nMy\ngrandmother’s\ncompletely changed my dad’s\nlife. Without her, he might have dropped out of school and\nsurely would have had a terrible life.\n(C) After learning all this, my grandmother invited my\ndad to live with her family. My father refused at first, but\neventually she persuaded him to live with her family for\nseveral years. He was not the only kid she was taking care\nof. She had four of her own kids and other foster kids.\n(D) I was very shocked by Mom’s reply. I had known my\ngrandmother since birth. In fact, whenever I saw her I\nthought my dad looked like her. The woman I’d known as\nGrandma was actually my father’s high school teacher. She\nnoticed that he was an intelligent student but received low\ngrades, so she tried to find out why he was not doing well.\nShe found out that my father’s parents died when he was\n15.\n*\n위탁아동\nfoster kid:"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2128
+  },
+  {
+   "qNum": 46,
+   "kind": "mc",
+   "stem": "46. 위글 에이어질내용을순서에맞게배열한것으로가장 (A) 적절한것은?",
+   "choices": [
+    "(C)-(B)-(D)",
+    "(C)-(D)-(B)",
+    "(D)-(B)-(C)",
+    "(D)-(C)-(B)",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 109
+  },
+  {
+   "qNum": 47,
+   "kind": "mc",
+   "stem": "47. 위글의빈칸에들어갈말로가장적절한것은?",
+   "choices": [
+    "humor",
+    "honesty",
+    "ambition",
+    "generosity",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 74
+  },
+  {
+   "qNum": 48,
+   "kind": "mc",
+   "stem": "48. 위글의밑줄친Grandma에관한내용과일치하지않는것은?",
+   "choices": [
+    "친자녀들외에다른아이들도돌봐주었다.",
+    "필자의아버지를설득하여함께살았다.",
+    "필자가태어나기전에이미돌아가셨다.",
+    "필자의아버지가다니던학교의교사였다.",
+    "[49 ~\n다음글을읽고\n물음에답하시오\n50]\n,\n.\nScientists in Canada did an interesting experiment with\njewelweeds, pretty flowers that grow in wet, shady spots.\nThey planted the flowers in pots with either siblings or\nstrangers. Sibling plants were grown from seeds that came\nfrom the same mother plant. Stranger plants were grown\nfrom seeds from different mother plants.\nWhen jewelweeds were planted in pots with strangers,\nthe plants grew more leaves than when they were planted\nalone. This response shows that plants are competing with\nstrangers for sunlight, because a plant with more leaves can\nreceive more light. Jewelweeds normally grow in the shade,\nwhere sunlight is not enough, so they have to compete for\nsunshine.\nWhen jewelweeds were planted with siblings, they grew a\nfew more branches than when they were alone — but they\ndid not start growing lots of extra leaves. This behavior\nshows the plants are more likely to share resources, rather\nthan compete.\nThe plants showed this response only when they shared\nsoil. When strangers were planted in different pots, they\ndid not grow more leaves. This difference shows that the\nplants must use their roots to recognize sibling plants.\n*\n형제자매의\nsibling:\n,\n(\n)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1333
+  },
+  {
+   "qNum": 49,
+   "kind": "mc",
+   "stem": "49. 위글의제목으로가장적절한것은?",
+   "choices": [
+    "A Flower Which Knows Its Family",
+    "How Jewelweed Got Its Name",
+    "Flowers Living in Wet Areas",
+    "How to Store Plant Seeds",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 178
+  },
+  {
+   "qNum": 50,
+   "kind": "mc",
+   "stem": "50. 위글의밑줄친this response가의미하는바로가장적절한 것은 점 ?",
+   "choices": [
+    "뿌리의크기에따라달라지는개화기간의변화",
+    "토양성분에따른꽃의크기의변화",
+    "수분공급에따른성장속도의차이",
+    "햇빛의양에따른개화시기의차이",
+    "※ 확인사항\n문제지와답안지의해당란을정확히기입표기했는지\n(\n)\n확인하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 184
+  }
+ ],
+ "sourcePdf": "ebsi_go1_20100310_paper_20100310_eng_mun.pdf"
+}

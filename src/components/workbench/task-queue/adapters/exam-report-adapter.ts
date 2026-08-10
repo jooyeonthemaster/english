@@ -87,7 +87,7 @@ function buildDescription(
   if (job.errorMessage) return job.errorMessage;
   if (apiDomain === "EXAM_REPORT") {
     return job.status === "COMPLETED"
-      ? "문항 분석 결과가 시험 리포트에 저장되었습니다."
+      ? "문항 분석 결과가 리포트 관리에 저장되었습니다."
       : "AI가 시험지를 문항 단위로 분석하고 있습니다.";
   }
   return job.status === "COMPLETED"

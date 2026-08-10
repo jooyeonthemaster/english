@@ -32,6 +32,8 @@ import {
   DIFFICULTY_CONFIG,
   TYPE_SUBTYPE_MAP,
 } from "@/components/workbench/question-type-filter";
+import { multiBlankOptionMatrix } from "@/components/exams/paper-builder/option-display";
+import { MultiBlankOptionGrid } from "@/components/exams/multi-blank-option-grid";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -222,37 +224,76 @@ function QuestionCard({ q, num }: { q: QuestionItem; num: number }) {
         {q.questionText}
       </div>
 
-      {/* Options (expanded) */}
-      {expanded && options.length > 0 && (
-        <div className="space-y-1 mt-3 pl-1">
-          {options.map((opt) => {
-            const isCorrect = opt.label === q.correctAnswer;
+      {/* Options (expanded) — 다중 빈칸 조합 선지는 (A)/(B) 컬럼 헤더 그리드 */}
+      {expanded &&
+        options.length > 0 &&
+        (() => {
+          const multiBlank =
+            q.subType === "BLANK_INFERENCE" ? multiBlankOptionMatrix(options) : null;
+          if (multiBlank) {
             return (
-              <div
-                key={opt.label}
-                className={cn(
-                  "flex items-start gap-2 text-[12px] rounded px-2 py-1",
-                  isCorrect
-                    ? "bg-emerald-50 text-emerald-800 font-medium"
-                    : "text-slate-600",
-                )}
-              >
-                <span
-                  className={cn(
-                    "shrink-0 w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center",
-                    isCorrect
-                      ? "bg-emerald-500 text-white"
-                      : "bg-slate-200 text-slate-500",
-                  )}
-                >
-                  {opt.label}
-                </span>
-                <span className="pt-0.5">{opt.text}</span>
+              <div className="mt-3 pl-1">
+                <MultiBlankOptionGrid
+                  blankCount={multiBlank.blankCount}
+                  className="px-2 py-1 text-[12px]"
+                  headerCellClassName="text-slate-500"
+                  rows={multiBlank.rows.map(({ option, values }, i) => {
+                    const isCorrect = option.label === q.correctAnswer;
+                    return {
+                      key: option.label || i,
+                      numberCell: (
+                        <span
+                          className={cn(
+                            "w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center",
+                            isCorrect
+                              ? "bg-emerald-500 text-white"
+                              : "bg-slate-200 text-slate-500",
+                          )}
+                        >
+                          {option.label}
+                        </span>
+                      ),
+                      cells: values,
+                      cellClassName: isCorrect
+                        ? "text-emerald-800 font-medium"
+                        : "text-slate-600",
+                    };
+                  })}
+                />
               </div>
             );
-          })}
-        </div>
-      )}
+          }
+          return (
+            <div className="space-y-1 mt-3 pl-1">
+              {options.map((opt) => {
+                const isCorrect = opt.label === q.correctAnswer;
+                return (
+                  <div
+                    key={opt.label}
+                    className={cn(
+                      "flex items-start gap-2 text-[12px] rounded px-2 py-1",
+                      isCorrect
+                        ? "bg-emerald-50 text-emerald-800 font-medium"
+                        : "text-slate-600",
+                    )}
+                  >
+                    <span
+                      className={cn(
+                        "shrink-0 w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center",
+                        isCorrect
+                          ? "bg-emerald-500 text-white"
+                          : "bg-slate-200 text-slate-500",
+                      )}
+                    >
+                      {opt.label}
+                    </span>
+                    <span className="pt-0.5">{opt.text}</span>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })()}
 
       {/* Non-MC answer */}
       {expanded && options.length === 0 && q.correctAnswer && (

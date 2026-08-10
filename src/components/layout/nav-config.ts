@@ -1,7 +1,6 @@
 import {
   LayoutDashboard,
   ClipboardCheck,
-  FileText,
   CreditCard,
   BarChart3,
   Wallet,
@@ -16,6 +15,8 @@ import {
   Settings,
   Palette,
   BookOpenText,
+  // BookMarked — 「단어장 생성」 메뉴 임시 숨김(26-08-05)으로 미사용. 복구 시 함께 해제.
+  // BookMarked,
   Activity,
   LifeBuoy,
   Users,
@@ -28,10 +29,18 @@ import {
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import {
   ExamPaperGenerationIcon,
+  GrammarStudioIcon,
   MaterialExtractionIcon,
   PassageAnalysisIcon,
   QuestionGenerationIcon,
 } from "@/components/icons/workflow-icons";
+// 노출 라벨 단일 소스(D6) — 학생 관리 children 은 (manage) 셸 스위처와
+// 문자 일치(MANAGE_VIEW_LABELS 공용), 어법 훈련소는 D5-1 3분법 STUDIO.
+import {
+  GRAMMAR_STUDIO_NAV_LABELS,
+  GRAMMAR_SURFACE_NAMES,
+  MANAGE_VIEW_LABELS,
+} from "@/lib/wording/director-glossary";
 
 export interface NavChild {
   label: string;
@@ -61,7 +70,10 @@ export interface NavGroup {
 
 export const COMING_SOON_FEATURE_BY_PATH: Record<string, { feature: string; label: string }> = {
   attendance: { feature: "attendance", label: "출결 관리" },
-  assignments: { feature: "assignments", label: "과제 관리" },
+  // assignments 엔트리는 26-07-21 v3 D4-1 로 삭제 — 실기능 「과제 달력」
+  // (/students/assignments)과의 이중 노출 해소. maybe-coming-soon.tsx 는 이
+  // 맵의 첫 세그먼트 조회 소비라 엔트리 삭제만으로 오버레이도 함께 소멸하며,
+  // /students/assignments 는 세그먼트가 "students"라 애초 충돌 없음(무접촉).
   billing: { feature: "billing", label: "수납 관리" },
   finance: { feature: "finance", label: "재무 관리" },
   salaries: { feature: "salaries", label: "급여 관리" },
@@ -229,6 +241,41 @@ export function getNavGroups(
             { label: "학습지 관리", href: `${basePath}/workbench/passages` },
           ],
         },
+        // 단어장 생성 — 기출 단어 코퍼스 탐색·분석 → 덱 구성 → 학생 전송
+        // 워크스테이션(/workbench/wordbook). 「학습지 생성」 직후 자리.
+        // 26-08-05 유저 지시로 좌측 메뉴에서만 임시 숨김 — 라우트·페이지·기능은
+        // 전부 살아 있다(URL 직행 가능). 복구: 아래 블록 주석 해제 + BookMarked
+        // import 복원.
+        // ...(FEATURE_FLAGS.ENABLE_VOCAB_DRILL
+        //   ? [
+        //       {
+        //         label: "단어장 생성",
+        //         icon: BookMarked,
+        //         href: `${basePath}/workbench/wordbook`,
+        //       },
+        //     ]
+        //   : []),
+        // 26-07-21 v3 D5-1: 어법 훈련소 — 합성지문 AI 생성 허브(제작 축).
+        // 「학습지 생성」 직후 5번째 NavItem(nav-ia 확정 자리).
+        // ENABLE_GRAMMAR_STUDIO(기본 false) 다크런칭 — off 시 nav 미노출
+        // (라우트도 /director redirect, D-1). children 「생성 기록」은
+        // D-2(생성 뷰) 랜딩 전이라 실경로 부재 — 「유닛 둘러보기」 1개만
+        // 배선(라벨 GRAMMAR_STUDIO_NAV_LABELS.HISTORY 선등재, 후속 D-2).
+        ...(FEATURE_FLAGS.ENABLE_GRAMMAR_STUDIO
+          ? [
+              {
+                label: GRAMMAR_SURFACE_NAMES.STUDIO,
+                icon: GrammarStudioIcon,
+                href: `${basePath}/workbench/grammar-studio`,
+                children: [
+                  {
+                    label: GRAMMAR_STUDIO_NAV_LABELS.BROWSE_UNITS,
+                    href: `${basePath}/workbench/grammar-studio`,
+                  },
+                ],
+              },
+            ]
+          : []),
         {
           label: "자료 추출",
           icon: MaterialExtractionIcon,
@@ -283,11 +330,22 @@ export function getNavGroups(
                 directorOnly: true,
                 beta: true,
                 children: [
-                  { label: "학생 목록", href: `${basePath}/students` },
-                  { label: "과제 관리", href: `${basePath}/students/assignments` },
-                  // 26-07-10 모바일 어법 학습 툴(/g) — 학생별 드릴 현황 대시보드.
+                  // 26-07-21 v3 D4-1: (manage) 4뷰 children — 라벨은 셸 뷰
+                  // 스위처(students-manage-shell)와 MANAGE_VIEW_LABELS 로
+                  // 문자 일치(단일 소스 import — 리터럴 재표기 금지).
+                  { label: MANAGE_VIEW_LABELS.roster, href: `${basePath}/students` },
+                  { label: MANAGE_VIEW_LABELS.classes, href: `${basePath}/students/classes` },
+                  // 구 「과제 관리」 개칭(과제 달력) — URL 불변(딥링크 3곳 무접촉).
+                  { label: MANAGE_VIEW_LABELS.assignments, href: `${basePath}/students/assignments` },
+                  // 구 「어법 훈련」(/grammar-lab) 개칭·이관 — grammar-lab 은
+                  // redirect 잔존(C-2 확인). 드릴 플래그 게이트는 기존 유지.
                   ...(FEATURE_FLAGS.ENABLE_GRAMMAR_DRILL
-                    ? [{ label: "어법 훈련", href: `${basePath}/grammar-lab` }]
+                    ? [{ label: MANAGE_VIEW_LABELS.grammar, href: `${basePath}/students/grammar` }]
+                    : []),
+                  // 단어 훈련 — 어법과 동일 관용구(플래그 3중 일치: nav children ·
+                  // 페이지 게이트 · (manage) 셸 스위처).
+                  ...(FEATURE_FLAGS.ENABLE_VOCAB_DRILL
+                    ? [{ label: MANAGE_VIEW_LABELS.vocab, href: `${basePath}/students/vocab` }]
                     : []),
                   // exam-report 라우트 자체는 이동하지 않음(revalidatePath 리스크)
                   // — nav 계층·라벨만 재편(구 "리포트 생성" → "내신 시험 분석").
@@ -316,7 +374,7 @@ export function getNavGroups(
         // },
         // { label: "배포 관리", icon: Send, href: `${basePath}/tutor/distributions`, directorOnly: true, beta: true },
         ...(showResults
-          ? [{ label: "학습 현황", icon: Activity, href: `${basePath}/tutor/monitor`, directorOnly: true }]
+          ? [{ label: "실시간 모니터", icon: Activity, href: `${basePath}/tutor/monitor`, directorOnly: true }]
           : []),
         { label: "스모트 소식", icon: Megaphone, href: `${basePath}/notices` },
       ],
@@ -354,7 +412,8 @@ export function getNavGroups(
       comingSoon: true,
       items: [
         { label: "출결 관리", icon: ClipboardCheck, href: `${basePath}/attendance`, comingSoon: true, feature: "attendance" },
-        { label: "과제 관리", icon: FileText, href: `${basePath}/assignments`, comingSoon: true, feature: "assignments" },
+        // 「과제 관리」(/assignments) 스텁은 26-07-21 v3 D4-1 로 삭제 —
+        // 실기능 「과제 달력」(/students/assignments)과의 이중 노출 해소.
         { label: "수납 관리", icon: CreditCard, href: `${basePath}/billing`, comingSoon: true, feature: "billing", directorOnly: true },
         { label: "재무 관리", icon: BarChart3, href: `${basePath}/finance`, comingSoon: true, feature: "finance", directorOnly: true },
         { label: "급여 관리", icon: Wallet, href: `${basePath}/salaries`, comingSoon: true, feature: "salaries", directorOnly: true },

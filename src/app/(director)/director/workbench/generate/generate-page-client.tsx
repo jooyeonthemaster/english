@@ -1,41 +1,28 @@
-// @ts-nocheck
 "use client";
 
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import { CheckCircle2, ChevronDown, Loader2, ShoppingBasket, SquarePen, X, XCircle } from "lucide-react";
-import { TeacherPointsPassage } from "@/components/workbench/teacher-points-passage";
 import { QuestionReviewModal } from "@/components/workbench/question-review-modal";
 import { PassageAnalysisModal } from "@/components/workbench/passage-analysis-modal";
-import { PassageContentModal } from "@/components/workbench/passage-content-modal";
 import {
-  QuestionCard,
-  ReviewStatusStamp,
-  type QuestionCardItem,
-} from "@/components/workbench/question-card";
+  PassageContentModal,
+  type PassageContentModalPassage,
+} from "@/components/workbench/passage-content-modal";
+import { type QuestionCardItem } from "@/components/workbench/question-card";
 import { getCustomPrompts } from "@/actions/custom-prompts";
-import {
-  addPassagesToCollection,
-  approveWorkbenchQuestion,
-  bulkApproveWorkbenchQuestions,
-  bulkDeleteWorkbenchPassages,
-  bulkDeleteWorkbenchQuestions,
-  createPassageCollection,
-  updatePassageCollection,
-  deleteWorkbenchQuestion,
-  removePassagesFromCollection,
-  unapproveWorkbenchQuestion,
-} from "@/actions/workbench";
 import {
   type PassageItem,
   type PassageCollectionItem,
   type FilterOptions,
   type PassageAnalysisStatusFilter,
-  questionSignature,
   type PassageSortOrder,
 } from "./generate-page-types";
 import { PassageCardGrid } from "./passage-card-grid";
+import { usePassageCollections } from "./use-passage-collections";
+import { usePassageIntake } from "./use-passage-intake";
+import { useExtractionReview } from "./use-extraction-review";
+import { useQuestionReviewActions } from "./use-question-review-actions";
 import { isDraftPseudoId } from "@/lib/extraction/draft-passage-id";
 import { resolveSelectionToPassageIds } from "@/lib/extraction/resolve-draft-selection";
 import {
@@ -44,22 +31,8 @@ import {
   type IntakeTab,
 } from "./intake/intake-surface";
 import { GenerateUploadPanel } from "./intake/generate-upload-panel";
-import type { PastedPassageInput } from "./intake/multi-passage-paste";
-import {
-  mergeKoKindIntoTags,
-  koKindToTag,
-  readKoKindFromTags,
-} from "@/lib/korean/core/passage-meta";
-import {
-  KO_SET_CHARGE_ATTEMPTS,
-  resolveKoSetPreset,
-  resolveKoSetSlots,
-} from "@/lib/korean/sets/presets";
 import { ExamPassageLibrary } from "@/components/workbench/exam-passage-library";
 import { KoreanExamPassageLibrary } from "@/components/workbench/korean-exam-passage-library";
-import type { KoExamPick } from "@/components/workbench/korean-exam-passage-library/use-korean-exam-passage-library";
-import { triggerHintGlowWithin } from "@/lib/hint-glow";
-import type { ExamPassagePick } from "@/lib/exam-passages/types";
 import { useGenerateExtraction } from "./intake/use-generate-extraction";
 import { ExtractionLoadingCards } from "./intake/extraction-loading-cards";
 import { ExtractionDetailModal } from "./intake/extraction-detail-modal";
@@ -67,36 +40,28 @@ import { useTaskQueue } from "@/components/workbench/task-queue/context";
 import { countPassageSentences } from "@/lib/passage-sentence-utils";
 import { GenerationConfigPanel } from "./generation-config-panel";
 import { EmbeddedQuestionBank } from "./embedded-question-bank";
-import {
-  buildOptimisticItem,
-  useGenerationHandlers,
-} from "./use-generation-handlers";
+import { useGenerationHandlers } from "./use-generation-handlers";
+import { useKoreanSetGeneration } from "./use-korean-set-generation";
+import { useRowSettingsPanel } from "./use-row-settings-panel";
+import { usePointPicker } from "./use-point-picker";
+import { useMobileStepFlow } from "./use-mobile-step-flow";
 import { useGenerationSessionQueue } from "./generation-session-store";
 import { EditQuestionDialog } from "@/components/workbench/question-bank-client/edit-question-dialog";
 import { useQuestionEditor } from "@/components/workbench/question-bank-client/use-question-editor";
-import {
-  getQuestionGenerationCreditCost,
-  type QuestionGenerationPlan,
-} from "@/lib/question-generation-plans";
+import { type QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import {
   getDefaultQuestionTypeGenerationSettings,
-  readSentenceInsertSlotCountSetting,
   type QuestionTypeGenerationSettings,
 } from "@/lib/question-type-generation-settings";
 import { WorkflowPageTitle } from "@/components/workbench/workflow-page-title";
 import {
   MobileStepHeader,
   MobileStepNav,
-  useIsMobileViewport,
 } from "@/components/workbench/mobile-step-flow";
 import { QuestionGenerationIcon } from "@/components/icons/workflow-icons";
 import { WorkspaceShell } from "./workspace-shell";
 import {
   countWords,
-  diffQuestionTypeSettings,
-  effectiveRowContent,
-  isOverrideEmpty,
-  overrideHasTypeCounts,
   rowNeedsVariant,
   type RowOverride,
 } from "./workspace/workspace-types";
@@ -105,14 +70,23 @@ import { useWorkspaceGeneration } from "./workspace/use-workspace-generation";
 import { PassageWorkspace } from "./workspace/passage-workspace";
 import { PassageGenerateModal } from "./workspace/passage-generate-modal";
 import {
-  PassagePointPicker,
-  type PointSuggestState,
-} from "./workspace/passage-point-picker";
+  VariantContextStrip,
+  VariantSeedMissingStrip,
+} from "./workspace/variant-context-strip";
+import { VariantSourceModal } from "./workspace/variant-source-modal";
+// 오답 → 변형 생성 딥링크 수신 (docs/student-hub-uiux-2607-spec.md §8.4).
+// 시드·프롬프트·파싱 규칙은 전부 공유 모듈이 소유한다 — 여기서는 소비만 한다.
 import {
-  resolvePointPickerMeta,
-  type TeacherPoint,
-} from "./generation-config-panel-parts/point-picker-config";
-import { QUESTION_TYPE_UI } from "@/lib/question-type-ui";
+  buildVariantPrompt,
+  clearVariantSeed,
+  parseTypeCounts,
+  parseVariantDifficulty,
+  readVariantSeed,
+  variantTypeCounts,
+  type VariantSeed,
+  type VariantSeedQuestion,
+} from "@/lib/question-variant";
+import { type TeacherPoint } from "./generation-config-panel-parts/point-picker-config";
 import { LearningGenerationIndicator } from "@/components/workbench/learning-generation-indicator";
 import { useLearningGenerationTasks } from "@/lib/learning-generation-tracker";
 import {
@@ -128,75 +102,18 @@ import {
   dispatchGenerateTourMilestone,
   openGenerateTour,
 } from "@/lib/generate-tour-demo";
-
-// 튜토리얼(문제 생성 투어) 임시 비활성화 — 미완성 기능이라 배포에서 숨긴다.
-// 재활성화: 아래 값을 true 로 바꾸면 "튜토리얼" 버튼과 투어 오버레이가 다시 노출된다.
-const GENERATE_TUTORIAL_ENABLED = false;
-
-// ─── Helpers ─────────────────────────────────────────────
-
-const REVIEW_ACTION_TIMEOUT_MS = 30_000;
-
-// ── 모바일 스텝 플로우 (<lg 전용) ──
-// 한 화면 = 한 기능: 지문 입력 → 내 지문함 → 워크스페이스 → 문제 확인.
-// PC(≥lg)는 기존 통합 레이아웃 그대로 — 숨김은 전부 max-lg: 클래스라서
-// 데스크톱 DOM/동작에는 영향이 없다.
-type MobileStep = "input" | "library" | "workspace" | "results";
-const MOBILE_FLOW_STEPS = [
-  { key: "input", label: "지문 입력" },
-  { key: "library", label: "내 지문함" },
-  { key: "workspace", label: "워크스페이스" },
-  { key: "results", label: "문제 확인" },
-] as const;
-
-/** Build a passage title from the first non-empty line of pasted content. */
-function derivePastedTitle(content: string): string {
-  const firstLine = (
-    content.split(/\r?\n/).find((l) => l.trim().length > 0) || content
-  ).trim();
-  const words = firstLine.split(/\s+/).filter(Boolean).slice(0, 8).join(" ");
-  const base = words || "직접 입력 지문";
-  return base.length > 60 ? base.slice(0, 60) + "…" : base;
-}
-
-/**
- * djb2 — "포인트 짚어주기" 지문 본문 신선도 검증용 경량 해시(암호학적 강도
- * 불필요, point-suggest 라우트의 캐시 해시와 같은 규칙). 포인트를 지정하던
- * 시점의 본문과 달라졌는지(오프셋·축자 신뢰 불가)를 판정한다.
- */
-function hashPassageText(content: string): string {
-  let h = 5381;
-  for (let i = 0; i < content.length; i += 1) {
-    h = ((h * 33) ^ content.charCodeAt(i)) >>> 0;
-  }
-  return `${content.length}:${h.toString(16)}`;
-}
-
-function isAbortError(error: unknown) {
-  return (
-    (typeof DOMException !== "undefined" && error instanceof DOMException) ||
-    (typeof error === "object" &&
-      error !== null &&
-      "name" in error &&
-      (error as { name?: string }).name === "AbortError")
-  );
-}
-
-async function fetchReviewAction(input: RequestInfo | URL, init: RequestInit) {
-  const controller = new AbortController();
-  const timeout = window.setTimeout(
-    () => controller.abort(),
-    REVIEW_ACTION_TIMEOUT_MS,
-  );
-  try {
-    return await fetch(input, { ...init, signal: controller.signal });
-  } finally {
-    window.clearTimeout(timeout);
-  }
-}
-
-const UNDO_TOAST_DURATION = 8000;
-const SAVED_QUESTIONS_DONE_REFRESH_DELAY_MS = 1500;
+import {
+  GENERATE_TUTORIAL_ENABLED,
+  MOBILE_FLOW_STEPS,
+  SAVED_QUESTIONS_DONE_REFRESH_DELAY_MS,
+  derivePastedTitle,
+  type MobileStep,
+} from "./generate-page-client-lib";
+import {
+  LoadingAnalysisOverlay,
+  QuestionDetailModal,
+} from "./generate-page-modals";
+import { LibraryCart, WorkspaceCart } from "./generate-mobile-carts";
 
 // ─── Component ───────────────────────────────────────────
 
@@ -281,6 +198,78 @@ export function GeneratePageClient({
     })(),
   );
 
+  // ── 오답 기반 변형 딥링크 (spec §8.4) ──
+  // 위 passageIds/mode/step 과 같은 관용 — 마운트 시 1회만 캡처한다. 이후
+  // searchParams 가 바뀌어도(모바일 스텝 pushState, variant 해제 replaceState)
+  // 프리필이 되살아나지 않아야 한다.
+  /** `types=SUBTYPE:n,…` → 유형별 생성 개수. 카탈로그 밖 유형은 파서가 버린다. */
+  const initialTypeCountsRef = useRef<Record<string, number>>(
+    parseTypeCounts(searchParams.get("types")),
+  );
+  /**
+   * `difficulty=BASIC|INTERMEDIATE|KILLER`.
+   * 캐스트 사유: parseVariantDifficulty 는 이 세 값 또는 null 만 돌려주지만
+   * 반환 타입이 string|null 이라 RowOverride.difficulty 로 바로 못 넣는다.
+   */
+  const initialDifficultyRef = useRef<
+    "BASIC" | "INTERMEDIATE" | "KILLER" | null
+  >(
+    parseVariantDifficulty(searchParams.get("difficulty")) as
+      | "BASIC"
+      | "INTERMEDIATE"
+      | "KILLER"
+      | null,
+  );
+  /** `variant=<seedId>` — sessionStorage 리치 시드 키(원본 문항·학생 답·정답) */
+  const initialVariantIdRef = useRef<string | null>(searchParams.get("variant"));
+  // `student=<id>`(생성 후 「과제 보내기」 프리셀렉트)는 여기서 붙들지 않는다 —
+  // 실제 소비처인 결과 패널(embedded-question-bank)이 searchParams 에서 직접
+  // 읽는다(§8.5). 예전엔 여기서 파싱해 data-variant-student 속성으로 흘렸으나
+  // 그 속성을 읽는 코드가 0건이라 오해만 남기는 죽은 배선이었다.
+  /**
+   * `from=<내부 절대경로>` — 돌아가기 링크.
+   * `//evil.com` 은 브라우저가 프로토콜 상대 URL 로 읽어 외부로 나간다 —
+   * 오픈 리다이렉트를 막으려면 단일 슬래시로 시작하는 경로만 받아야 한다.
+   */
+  const initialFromRef = useRef<string | null>(
+    (() => {
+      const raw = searchParams.get("from");
+      return raw && raw.startsWith("/") && !raw.startsWith("//") ? raw : null;
+    })(),
+  );
+  /**
+   * 유형·난이도 프리필을 기다리는 지문 id — loadPassages 는 localId 를 돌려주지
+   * 않으므로(행 생성이 setRows 안에서 일어난다) 행이 실제로 담긴 뒤 rows 에서
+   * 찾아 setOverride 한다. 적용하면 null 로 비워 1회만 돌게 한다.
+   */
+  const pendingVariantPassageIdsRef = useRef<string[] | null>(null);
+  /** 복원한 리치 시드 — 컨텍스트 스트립의 근거이자 프롬프트 프리필의 원천 */
+  const [variantSeed, setVariantSeed] = useState<VariantSeed | null>(null);
+  /**
+   * 같은 시드의 동기 참조본. 아래 유형·난이도 프리필 이펙트는 rows 가 채워진
+   * 뒤(다음 렌더)에 도는데, state 로만 들고 있으면 그 시점에 아직 반영 전일 수
+   * 있어 프롬프트를 놓친다. 렌더와 무관한 소비는 ref 로 읽는다.
+   */
+  const variantSeedRef = useRef<VariantSeed | null>(null);
+  /**
+   * `?variant=` 는 있는데 sessionStorage 시드가 사라진 상태(새 탭·새로고침·
+   * 오래된 시드 청소). 무음으로 넘기면 사용자는 오답 변형을 만드는 줄 알고
+   * 평범한 신규 문항에 크레딧을 쓴다 — 축약 배너로 화면에 남긴다(§8.4).
+   */
+  const [variantSeedMissing, setVariantSeedMissing] = useState(false);
+  /**
+   * 「학생 오답 원본」 모달 — 지문 행 버튼이 넘긴 그 행의 오답 문항들.
+   * null 이면 닫힘. 시드가 살아 있을 때만 열 수 있다(원본 근거가 있어야 연다).
+   */
+  const [variantSourceView, setVariantSourceView] = useState<
+    VariantSeedQuestion[] | null
+  >(null);
+  /**
+   * 딥링크가 각 행 override 에 심어 둔 변형 지시문 — localId → prompt.
+   * 「연결 해제」 때 '사용자가 손대지 않은 것만' 되돌리기 위한 대조본이다.
+   */
+  const variantPromptRowsRef = useRef<Map<string, string>>(new Map());
+
   // ── Passage data ──
   const [passages, setPassages] = useState<PassageItem[]>([]);
   const [filterOptions, setFilterOptions] = useState<FilterOptions>({
@@ -303,11 +292,6 @@ export function GeneratePageClient({
   const [recentExtractionPassageIds, setRecentExtractionPassageIds] = useState<
     string[]
   >([]);
-  const [reviewActionPassageIds, setReviewActionPassageIds] = useState<
-    Set<string>
-  >(() => new Set());
-  const [reviewBulkActionRunning, setReviewBulkActionRunning] = useState(false);
-
   // ── Collections ──
   const [collections, setCollections] = useState<PassageCollectionItem[]>([]);
   const [selectedCollectionId, setSelectedCollectionId] = useState<string>("");
@@ -321,23 +305,26 @@ export function GeneratePageClient({
       : "intake",
   );
   const [intakeTab, setIntakeTab] = useState<IntakeTab>("paste");
-  // 모바일(<lg) 현재 스텝 — PC 렌더링에는 관여하지 않는다.
-  const [mobileStep, setMobileStep] = useState<MobileStep>(
-    initialMobileStepRef.current ??
-      (initialPassageIdsRef.current.length > 0 ? "library" : "input"),
-  );
   // 직접 입력 보드 연동 — 하단 고정 바의 '다음'이 등록(다음으로 내 지문함)
   // 버튼을 대신한다. ref 로 시작 동작을, 콜백으로 누적 수·작업 상태를 받는다.
   const pasteStartRef = useRef<(() => void) | null>(null);
-  const [pasteBoard, setPasteBoard] = useState({ count: 0, busy: false });
+  // fixedFooter: 직접 입력 탭이 하단 고정 바를 실제로 띄우는지. AI 지문 생성
+  // 모드에서는 텍스트 보드가 display:none 아래로 들어가 고정 바가 사라지므로
+  // false 로 온다 — 이걸 무시하면 140px 빈 띠가 남고 스텝 네비까지 숨겨진다.
+  const [pasteBoard, setPasteBoard] = useState({
+    count: 0,
+    busy: false,
+    fixedFooter: true,
+  });
   const handlePasteBoardState = useCallback(
-    (state: { count: number; busy: boolean }) => setPasteBoard(state),
+    (state: { count: number; busy: boolean; fixedFooter?: boolean }) =>
+      setPasteBoard({
+        count: state.count,
+        busy: state.busy,
+        fixedFooter: state.fixedFooter ?? true,
+      }),
     [],
   );
-  const [pasteSaving, setPasteSaving] = useState(false);
-  const [passageBulkAction, setPassageBulkAction] = useState<
-    "move" | "remove" | "delete" | null
-  >(null);
 
   // ── Search/filter state ──
   const [passageSearch, setPassageSearch] = useState("");
@@ -431,31 +418,16 @@ export function GeneratePageClient({
   // 워크스페이스가 '내 지문함'을 덮어 표시되는지 여부. true면 가운데 컬럼이
   // 내 지문함 대신 워크스페이스로 교체된다 (왼쪽 패널 모달 방식 폐기).
   const [workspaceOpen, setWorkspaceOpen] = useState(false);
-  // 지문별 '문제 생성' 모달의 대상 행. 우측 사이드 설정 컬럼을 폐기하고, 각
-  // 지문 카드의 '문제 생성' 버튼으로 이 지문만의 유형·난이도를 설정하는 모달을
-  // 연다 — "어떤 지문의 설정인지" 혼동을 없애는 재설계의 핵심.
-  const [activeRowId, setActiveRowId] = useState<string | null>(null);
-  const [genModalOpen, setGenModalOpen] = useState(false);
 
   // ── "포인트 짚어주기" (point-picker-design.md §2) ──
   // 지문 스코프의 교사 지정 출제 포인트 — passageId → typeId → TeacherPoint[].
   // 지문 간 누출을 막기 위해 반드시 passageId 로 스코프하고, 본문이 바뀌면
-  // (아래 해시 불일치 effect) 그 지문의 포인트를 통째로 무효화한다.
+  // (해시 불일치 effect — use-point-picker.tsx) 그 지문의 포인트를 통째로
+  // 무효화한다. 이 상태만 본체에 남는 이유: 아래 useGenerationHandlers/
+  // useWorkspaceGeneration 이 픽커 훅(usePointPicker)보다 먼저 소비한다.
   const [teacherPointsByPassage, setTeacherPointsByPassage] = useState<
     Record<string, Record<string, TeacherPoint[]>>
   >({});
-  // passageId → 포인트를 지정하던 시점의 본문 해시(hashPassageText).
-  const teacherPointsHashRef = useRef<Record<string, string>>({});
-  // 생성 모달 안에서 열린 픽커 대상 — null 이면 기존 설정 콘솔 단독(1컬럼).
-  const [pickerOpen, setPickerOpen] = useState<{
-    passageId: string;
-    typeId: string;
-  } | null>(null);
-  // 픽커의 AI 제안 채널 — (passageId, typeId) 스코프. 픽커를 열거나 전환할
-  // 때마다 idle 로 리셋하고, 낡은 응답은 시퀀스 가드로 폐기한다(실패 비차단).
-  const [pointSuggestState, setPointSuggestState] =
-    useState<PointSuggestState>({ status: "idle" });
-  const pointSuggestSeqRef = useRef(0);
 
   // ── Analysis detail modal ──
   const [analysisModalPassage, setAnalysisModalPassage] = useState<any>(null);
@@ -477,41 +449,10 @@ export function GeneratePageClient({
     setDetailPassage(passage);
     setLastViewedPassageId(passage.id);
   }, []);
-  const [deletingDetailId, setDeletingDetailId] = useState<string | null>(null);
 
   // ── Saved questions from DB (persists across page visits) ──
   const [savedQuestions, setSavedQuestions] = useState<QuestionCardItem[]>([]);
   const [loadingSavedQuestions, setLoadingSavedQuestions] = useState(true);
-
-  // ── Deleted-question tombstones ──
-  // The 현재 세션 cards are derived from AI jobs that re-poll every 5s, and the
-  // job's questionIds survive even after we delete the underlying Question rows.
-  // We keep a client-side tombstone set so deleted questions stay hidden in this
-  // session instead of flickering back in on the next poll.
-  const [deletedQuestionIds, setDeletedQuestionIds] = useState<Set<string>>(
-    () => new Set(),
-  );
-  // Companion signature tombstones — a session card may resolve to its saved row
-  // by signature (legacy jobs without aligned questionIds) rather than by id, so
-  // the id set alone can't always hide it after deletion.
-  const [deletedQuestionSignatures, setDeletedQuestionSignatures] = useState<
-    Set<string>
-  >(() => new Set());
-  const [deletingQuestions, setDeletingQuestions] = useState(false);
-
-  // Signature of a saved question, matching the session-queue card signature so
-  // a deleted question can be tombstoned by signature as well as by id.
-  const savedQuestionSig = useCallback(
-    (q: QuestionCardItem) =>
-      questionSignature({
-        passageId: q.passage?.id,
-        subType: q.subType,
-        questionText: q.questionText,
-        correctAnswer: q.correctAnswer,
-        options: q.options,
-      }),
-    [],
-  );
 
   // 지문별 "이미 생성된" 문제 수(실시간). 하단 생성/검수 결과(savedQuestions)는
   // 생성 완료 시 갱신되므로, 이를 지문 id 로 집계해 지문 카드의 서버 _count(페이지
@@ -539,41 +480,25 @@ export function GeneratePageClient({
     return map;
   }, [savedQuestions]);
 
+  /**
+   * 오답 시드를 지문별로 묶은 맵 — 지문 행이 「학생 오답 원본」 버튼을 띄울지
+   * 판단하는 근거. 시드가 없으면 빈 맵이라 버튼도 뜨지 않는다(죽은 버튼 금지).
+   */
+  const variantSourcesByPassage = useMemo(() => {
+    const map = new Map<string, VariantSeedQuestion[]>();
+    for (const q of variantSeed?.questions ?? []) {
+      if (!q.passageId) continue;
+      const list = map.get(q.passageId);
+      if (list) list.push(q);
+      else map.set(q.passageId, [q]);
+    }
+    return map;
+  }, [variantSeed]);
+
   // ── Question detail modal ──
   const [detailQuestion, setDetailQuestion] = useState<QuestionCardItem | null>(
     null,
   );
-  // 로컬에서 문제를 삭제 처리(tombstone) — 5초 세션-큐 폴링이 되살리지 못하게
-  // id/시그니처로 숨기고, 저장 목록·상세 모달에서도 제거한다. 실제 삭제와,
-  // "이미 삭제된 좀비 문제"를 검수하려다 실패한 경우 모두 같은 정리 경로를 쓴다.
-  const markQuestionDeletedLocally = useCallback(
-    (deletedId: string) => {
-      let deletedSig: string | null = null;
-      setSavedQuestions((prev) => {
-        const target = prev.find((q) => q.id === deletedId);
-        if (target) deletedSig = savedQuestionSig(target);
-        return prev.filter((q) => q.id !== deletedId);
-      });
-      setDeletedQuestionIds((prev) => {
-        if (prev.has(deletedId)) return prev;
-        const next = new Set(prev);
-        next.add(deletedId);
-        return next;
-      });
-      if (deletedSig) {
-        setDeletedQuestionSignatures((prev) => {
-          if (prev.has(deletedSig as string)) return prev;
-          const next = new Set(prev);
-          next.add(deletedSig as string);
-          return next;
-        });
-      }
-      setDetailQuestion((prev) => (prev?.id === deletedId ? null : prev));
-    },
-    [savedQuestionSig],
-  );
-
-  const editor = useQuestionEditor(markQuestionDeletedLocally);
 
   // ── Computed ──
   const totalQuestions = useMemo(
@@ -730,82 +655,62 @@ export function GeneratePageClient({
     void loadPassages();
   }, [loadPassages]);
 
-  // 특정 지문만 다시 받아 기존 배열에 제자리 병합한다. loadPassages 와 달리
-  // 로딩 상태를 켜지 않아 그리드 전체가 "새로고침"되는 느낌 없이 해당 카드만
-  // 분석 완료 모습으로 바뀐다. 목록에 없는 지문은 건드리지 않는다.
-  const patchPassages = useCallback(
-    async (passageIds: string[]) => {
-      if (passageIds.length === 0) return;
-      try {
-        const params = new URLSearchParams({
-          academyId,
-          passageIds: passageIds.join(","),
-          // 목록과 같은 과목 스코프로 조회 — 국어 라우트에서 국어 지문 patch 가
-          // 기본(영어) 스코프에 걸러지지 않게 한다.
-          ...(subjectScope === "KOREAN" ? { scope: "KOREAN" } : {}),
-        });
-        const response = await fetch(`/api/passages/list?${params}`);
-        const data = await response.json();
-        const fetched: PassageItem[] = data.passages || [];
-        if (fetched.length === 0) return;
-        const byId = new Map(fetched.map((p) => [p.id, p]));
-        setPassages((prev) => prev.map((p) => byId.get(p.id) ?? p));
-      } catch {
-        /* ignore — 다음 전체 로드에서 따라잡는다 */
-      }
-    },
-    [academyId],
-  );
+  // 컬렉션(폴더)·지문 벌크 조작 + patchPassages — use-passage-collections.ts 로 추출.
+  const {
+    patchPassages,
+    passageBulkAction,
+    deletingDetailId,
+    handleCreatePassageCollection,
+    handleRenamePassageCollection,
+    handleRemovePassagesFromFolder,
+    handleCopySelectedPassagesToCollection,
+    handleMovePassagesToCollection,
+    handleMoveSelectedPassagesToCollection,
+    handleCopyPassagesToCollection,
+    handleRemoveSelectedPassagesFromCollection,
+    handleDeleteSelectedPassages,
+    handleDeleteDetailPassage,
+  } = usePassageCollections({
+    academyId,
+    subjectScope,
+    loadPassages,
+    passages,
+    setPassages,
+    collections,
+    setCollections,
+    selectedIds,
+    setSelectedIds,
+    selectedCollectionId,
+    selectedPassage,
+    setSelectedPassage,
+    setAnalysisData,
+    setDetailPassage,
+  });
 
-  const patchExtractionReviewState = useCallback(
-    (
-      updates: Array<{
-        passageId: string;
-        draft: PassageItem["extractionReviewDraft"];
-      }>,
-    ) => {
-      if (updates.length === 0) return;
-      const byPassageId = new Map(
-        updates.map((update) => [update.passageId, update.draft]),
-      );
-      const applyReviewState = <
-        T extends {
-          id?: string;
-          extractionReviewDraft?: PassageItem["extractionReviewDraft"];
-        } | null,
-      >(
-        current: T,
-      ): T =>
-        current?.id && byPassageId.has(current.id)
-          ? {
-              ...current,
-              extractionReviewDraft: byPassageId.get(current.id) ?? null,
-            }
-          : current;
-
-      setPassages((prev) =>
-        prev.map((passage) =>
-          byPassageId.has(passage.id)
-            ? {
-                ...passage,
-                extractionReviewDraft: byPassageId.get(passage.id) ?? null,
-              }
-            : passage,
-        ),
-      );
-      setDetailPassage((prev) => applyReviewState(prev));
-      setContentModalPassage((prev) => applyReviewState(prev));
-      setAnalysisModalPassage((prev) => applyReviewState(prev));
-    },
-    [],
-  );
+  // 추출 검수 토글·일괄 검수완료 클러스터 — use-extraction-review.ts 로 추출.
+  const {
+    reviewActionPassageIds,
+    reviewBulkActionRunning,
+    handleToggleExtractionReview,
+    handleBulkCompleteExtractionReview,
+  } = useExtractionReview({
+    patchPassages,
+    setPassages,
+    setSelectedIds,
+    setDetailPassage,
+    setContentModalPassage,
+    setAnalysisModalPassage,
+  });
 
   // 백그라운드 학습자료 생성(서버 분석 잡) 폴링. 잡이 끝나면 해당 지문만
   // 제자리 패치해 새로고침 느낌 없이 카드가 "분석 완료" 모습(배지·글로우)으로
   // 바뀐다.
   const analysisActivityJobs = usePassageAnalysisActivity({
     onSettled: useCallback(
-      (completedPassageIds, failedPassageIds) => {
+      // 타입 주석 사유: useCallback 래핑이 옵션 객체의 문맥 타입(onSettled
+      // 시그니처)을 파라미터까지 전달하지 못한다(noImplicitAny) — 훅 선언
+      // (PassageAnalysisActivityOptions.onSettled)과 동일 타입을 명시.
+      (completedPassageIds: string[], failedPassageIds: string[]) => {
         const settled = [...completedPassageIds, ...failedPassageIds];
         if (settled.length === 0) return;
         void patchPassages(settled);
@@ -900,621 +805,6 @@ export function GeneratePageClient({
     [learningBulkActionRunning],
   );
 
-  const handleCreatePassageCollection = useCallback(
-    async (name: string, parentId?: string | null) => {
-      const trimmed = name.trim();
-      if (!trimmed) return null;
-
-      const result = await createPassageCollection({
-        name: trimmed,
-        parentId: parentId || undefined,
-        // 국어 생성 페이지에서 만든 폴더는 subject=KOREAN 으로 저장 — 미전달이면
-        // subject null(영어 간주)로 저장돼 영어 지문 관리에 나타나고 정작 국어
-        // 목록에서는 사라진다(passage-list-client·question-bank-client 와 동일 패턴).
-        ...(subjectScope === "KOREAN" ? { subject: "KOREAN" as const } : {}),
-      });
-      if (!result.success) {
-        toast.error(result.error || "폴더 생성 실패");
-        return null;
-      }
-
-      const created: PassageCollectionItem = {
-        id: result.id,
-        parentId: parentId || null,
-        name: trimmed,
-        _count: { items: 0 },
-      };
-      setCollections((prev) =>
-        [...prev.filter((collection) => collection.id !== result.id), created]
-          .slice()
-          .sort((a, b) => a.name.localeCompare(b.name, "ko")),
-      );
-      toast.success(`"${trimmed}" 폴더를 만들었습니다.`);
-      void loadPassages();
-      return result.id;
-    },
-    [loadPassages, subjectScope],
-  );
-
-  const handleRenamePassageCollection = useCallback(
-    async (collectionId: string, name: string) => {
-      const trimmed = name.trim();
-      if (!trimmed) return;
-      // 낙관적 갱신 후 서버 반영(실패 시 토스트). 폴더 카운트/멤버십엔 영향 없음.
-      setCollections((prev) =>
-        prev
-          .map((c) => (c.id === collectionId ? { ...c, name: trimmed } : c))
-          .slice()
-          .sort((a, b) => a.name.localeCompare(b.name, "ko")),
-      );
-      const result = await updatePassageCollection(collectionId, {
-        name: trimmed,
-      });
-      if (!result?.success) {
-        toast.error(result?.error || "폴더 이름 변경 실패");
-        void loadPassages();
-      }
-    },
-    [loadPassages],
-  );
-
-  // 상위(↑) 버튼이 "전체 지문"(루트)일 때 카드를 떨어뜨리면 현재 폴더에서 빼낸다.
-  const handleRemovePassagesFromFolder = useCallback(
-    async (passageIds: string[], collectionId: string) => {
-      const ids = Array.from(new Set(passageIds)).filter(
-        (id) => !isDraftPseudoId(id),
-      );
-      if (ids.length === 0 || !collectionId || passageBulkAction) return;
-      setPassageBulkAction("move");
-      try {
-        const result = await removePassagesFromCollection(collectionId, ids);
-        if (!result.success) {
-          toast.error(result.error || "폴더에서 빼기 실패");
-          return;
-        }
-        toast.success(`${ids.length}개 지문을 폴더에서 뺐습니다.`);
-        void loadPassages();
-      } finally {
-        setPassageBulkAction(null);
-      }
-    },
-    [passageBulkAction, loadPassages],
-  );
-
-  const handleCopySelectedPassagesToCollection = useCallback(
-    async (collectionId: string) => {
-      const ids = [...selectedIds].filter((id) => !isDraftPseudoId(id));
-      if (ids.length === 0 || passageBulkAction) return;
-      setPassageBulkAction("move");
-      try {
-        const selectedPassages = passages.filter((passage) =>
-          selectedIds.has(passage.id),
-        );
-        const idsToAdd = ids.filter(
-          (id) =>
-            !selectedPassages
-              .find((passage) => passage.id === id)
-              ?.collectionItems?.some(
-                (item) => item.collectionId === collectionId,
-              ),
-        );
-        if (idsToAdd.length === 0) {
-          toast.info("이미 이 폴더에 들어있는 지문입니다.");
-          return;
-        }
-
-        const result = await addPassagesToCollection(collectionId, idsToAdd);
-        if (!result.success) {
-          toast.error(result.error || "폴더에 복사하지 못했습니다.");
-          return;
-        }
-
-        const folderName =
-          collections.find((collection) => collection.id === collectionId)
-            ?.name || "폴더";
-        const countLabel =
-          idsToAdd.length > 1 ? `${idsToAdd.length}개 지문이` : "지문이";
-
-        const undoFolderCopy = async () => {
-          setPassageBulkAction("move");
-          try {
-            const undoResult = await removePassagesFromCollection(
-              collectionId,
-              idsToAdd,
-            );
-            if (!undoResult.success) {
-              toast.error(
-                undoResult.error || "폴더 복사를 실행 취소하지 못했습니다.",
-              );
-              return;
-            }
-            await loadPassages();
-            toast.success("폴더 복사를 실행 취소했습니다.");
-          } catch (err) {
-            toast.error(
-              err instanceof Error
-                ? err.message
-                : "폴더 복사를 실행 취소하지 못했습니다.",
-            );
-          } finally {
-            setPassageBulkAction(null);
-          }
-        };
-
-        // 선택한 것 중 이미 이 폴더에 있어 새로 담지 않은(중복 제외) 개수.
-        const skippedCopy = ids.length - idsToAdd.length;
-        const skippedCopySuffix =
-          skippedCopy > 0 ? ` · 이미 들어있던 ${skippedCopy}개 제외` : "";
-        toast.success(
-          `${countLabel} "${folderName}"에 복사되었습니다${skippedCopySuffix}`,
-          {
-            duration: UNDO_TOAST_DURATION,
-            action: {
-              label: "실행 취소",
-              onClick: () => void undoFolderCopy(),
-            },
-          },
-        );
-        setSelectedIds(new Set());
-        await loadPassages();
-      } catch (err) {
-        toast.error(
-          err instanceof Error ? err.message : "폴더에 복사하지 못했습니다.",
-        );
-      } finally {
-        setPassageBulkAction(null);
-      }
-    },
-    [collections, loadPassages, passageBulkAction, passages, selectedIds],
-  );
-
-  const handleMovePassagesToCollection = useCallback(
-    async (
-      passageIds: string[],
-      collectionId: string,
-      keepFolderIds: string[] = [],
-    ) => {
-      const ids = Array.from(new Set(passageIds)).filter(
-        (id) => !isDraftPseudoId(id),
-      );
-      if (ids.length === 0 || passageBulkAction) return;
-      setPassageBulkAction("move");
-      try {
-        const idSet = new Set(ids);
-        const keepSet = new Set(keepFolderIds);
-        const selectedPassages = passages.filter((passage) =>
-          idSet.has(passage.id),
-        );
-        const previousMembership = new Map<string, string[]>();
-        for (const passage of selectedPassages) {
-          for (const item of passage.collectionItems ?? []) {
-            const list = previousMembership.get(item.collectionId) ?? [];
-            list.push(passage.id);
-            previousMembership.set(item.collectionId, list);
-          }
-        }
-        // Keep the item in folders the user ticked — only remove from the rest.
-        const sourceCollectionIds = [...previousMembership.keys()].filter(
-          (id) => id !== collectionId && !keepSet.has(id),
-        );
-        const targetExistingIds = new Set(
-          previousMembership.get(collectionId) ?? [],
-        );
-        const idsToAdd = ids.filter((id) => !targetExistingIds.has(id));
-        const hasFolderChanges =
-          idsToAdd.length > 0 || sourceCollectionIds.length > 0;
-
-        if (!hasFolderChanges) {
-          toast.info("이미 이 폴더에 들어있는 지문입니다.");
-          return;
-        }
-
-        const removeResults = await Promise.all(
-          sourceCollectionIds.map((sourceId) =>
-            removePassagesFromCollection(
-              sourceId,
-              previousMembership.get(sourceId) ?? [],
-            ),
-          ),
-        );
-        const failedRemove = removeResults.find((result) => !result.success);
-        if (failedRemove) {
-          toast.error(
-            failedRemove.error || "폴더 이동 중 일부 제거에 실패했습니다.",
-          );
-          return;
-        }
-
-        if (idsToAdd.length > 0) {
-          const addResult = await addPassagesToCollection(
-            collectionId,
-            idsToAdd,
-          );
-          if (!addResult.success) {
-            toast.error(addResult.error || "폴더로 이동하지 못했습니다.");
-            return;
-          }
-        }
-
-        const folderName =
-          collections.find((collection) => collection.id === collectionId)
-            ?.name || "폴더";
-        const countLabel = ids.length > 1 ? `${ids.length}개 지문이` : "지문이";
-
-        const undoFolderMove = async () => {
-          setPassageBulkAction("move");
-          try {
-            const undoResults = await Promise.all([
-              ...(idsToAdd.length > 0
-                ? [removePassagesFromCollection(collectionId, idsToAdd)]
-                : []),
-              ...sourceCollectionIds.map((sourceId) =>
-                addPassagesToCollection(
-                  sourceId,
-                  previousMembership.get(sourceId) ?? [],
-                ),
-              ),
-            ]);
-            const failedUndo = undoResults.find((result) => !result.success);
-            if (failedUndo) {
-              toast.error(
-                failedUndo.error || "폴더 이동을 실행 취소하지 못했습니다.",
-              );
-              return;
-            }
-
-            await loadPassages();
-            toast.success("폴더 이동을 실행 취소했습니다.");
-          } catch (err) {
-            toast.error(
-              err instanceof Error
-                ? err.message
-                : "폴더 이동을 실행 취소하지 못했습니다.",
-            );
-          } finally {
-            setPassageBulkAction(null);
-          }
-        };
-
-        // 끌어온 것 중 이미 이 폴더에 있어 새로 담지 않은(중복 제외) 개수.
-        const skippedMove = ids.length - idsToAdd.length;
-        const skippedMoveSuffix =
-          skippedMove > 0 ? ` · 이미 들어있던 ${skippedMove}개 제외` : "";
-        toast.success(
-          `${countLabel} "${folderName}"(으)로 이동되었습니다${skippedMoveSuffix}`,
-          {
-            duration: UNDO_TOAST_DURATION,
-            action: {
-              label: "실행 취소",
-              onClick: () => void undoFolderMove(),
-            },
-          },
-        );
-        setPassages((prev) =>
-          prev.map((passage) => {
-            if (!idSet.has(passage.id)) return passage;
-            const collectionItems = (passage.collectionItems ?? []).filter(
-              (item) => !sourceCollectionIds.includes(item.collectionId),
-            );
-            if (
-              !collectionItems.some(
-                (item) => item.collectionId === collectionId,
-              )
-            ) {
-              collectionItems.push({ collectionId });
-            }
-            return { ...passage, collectionItems };
-          }),
-        );
-        setCollections((prev) =>
-          prev.map((collection) => {
-            const removed = sourceCollectionIds.includes(collection.id)
-              ? (previousMembership
-                  .get(collection.id)
-                  ?.filter((id) => idSet.has(id)).length ?? 0)
-              : 0;
-            const added = collection.id === collectionId ? idsToAdd.length : 0;
-            if (removed === 0 && added === 0) return collection;
-            return {
-              ...collection,
-              _count: {
-                ...collection._count,
-                items: Math.max(0, collection._count.items - removed + added),
-              },
-            };
-          }),
-        );
-        setSelectedIds((prev) => {
-          if (!ids.some((id) => prev.has(id))) return prev;
-          return new Set([...prev].filter((id) => !idSet.has(id)));
-        });
-        dispatchGenerateTourMilestone("passage-folder-drop-completed");
-        void loadPassages();
-      } catch (err) {
-        toast.error(
-          err instanceof Error ? err.message : "폴더로 이동하지 못했습니다.",
-        );
-      } finally {
-        setPassageBulkAction(null);
-      }
-    },
-    [collections, loadPassages, passageBulkAction, passages],
-  );
-
-  const handleMoveSelectedPassagesToCollection = useCallback(
-    async (collectionId: string) => {
-      await handleMovePassagesToCollection([...selectedIds], collectionId);
-    },
-    [handleMovePassagesToCollection, selectedIds],
-  );
-
-  // Copy (add to target, keep in current folders) by explicit ids — powers the
-  // 복사 option of the drag chooser. Mirrors the move handler's optimistic
-  // updates but only adds (never removes from sources).
-  const handleCopyPassagesToCollection = useCallback(
-    async (passageIds: string[], collectionId: string) => {
-      const ids = Array.from(new Set(passageIds)).filter(
-        (id) => !isDraftPseudoId(id),
-      );
-      if (ids.length === 0 || passageBulkAction) return;
-      setPassageBulkAction("move");
-      try {
-        const idSet = new Set(ids);
-        const targetPassages = passages.filter((passage) =>
-          idSet.has(passage.id),
-        );
-        const idsToAdd = ids.filter(
-          (id) =>
-            !targetPassages
-              .find((passage) => passage.id === id)
-              ?.collectionItems?.some(
-                (item) => item.collectionId === collectionId,
-              ),
-        );
-        if (idsToAdd.length === 0) {
-          toast.info("이미 이 폴더에 들어있는 지문입니다.");
-          return;
-        }
-        const addResult = await addPassagesToCollection(collectionId, idsToAdd);
-        if (!addResult.success) {
-          toast.error(addResult.error || "폴더에 복사하지 못했습니다.");
-          return;
-        }
-        const folderName =
-          collections.find((collection) => collection.id === collectionId)
-            ?.name || "폴더";
-        const countLabel =
-          idsToAdd.length > 1 ? `${idsToAdd.length}개 지문이` : "지문이";
-        const undoFolderCopy = async () => {
-          setPassageBulkAction("move");
-          try {
-            const undo = await removePassagesFromCollection(
-              collectionId,
-              idsToAdd,
-            );
-            if (!undo.success) {
-              toast.error(undo.error || "폴더 복사를 실행 취소하지 못했습니다.");
-              return;
-            }
-            await loadPassages();
-            toast.success("폴더 복사를 실행 취소했습니다.");
-          } catch (err) {
-            toast.error(
-              err instanceof Error
-                ? err.message
-                : "폴더 복사를 실행 취소하지 못했습니다.",
-            );
-          } finally {
-            setPassageBulkAction(null);
-          }
-        };
-        // 끌어온 것 중 이미 이 폴더에 있어 새로 담지 않은(중복 제외) 개수.
-        const skippedCopy = ids.length - idsToAdd.length;
-        const skippedCopySuffix =
-          skippedCopy > 0 ? ` · 이미 들어있던 ${skippedCopy}개 제외` : "";
-        toast.success(
-          `${countLabel} "${folderName}"에 복사되었습니다${skippedCopySuffix}`,
-          {
-            duration: UNDO_TOAST_DURATION,
-            action: { label: "실행 취소", onClick: () => void undoFolderCopy() },
-          },
-        );
-        setPassages((prev) =>
-          prev.map((passage) => {
-            if (!idSet.has(passage.id)) return passage;
-            const collectionItems = passage.collectionItems ?? [];
-            if (
-              collectionItems.some((item) => item.collectionId === collectionId)
-            ) {
-              return passage;
-            }
-            return {
-              ...passage,
-              collectionItems: [...collectionItems, { collectionId }],
-            };
-          }),
-        );
-        setCollections((prev) =>
-          prev.map((collection) =>
-            collection.id === collectionId
-              ? {
-                  ...collection,
-                  _count: {
-                    ...collection._count,
-                    items: collection._count.items + idsToAdd.length,
-                  },
-                }
-              : collection,
-          ),
-        );
-        setSelectedIds((prev) => {
-          if (!ids.some((id) => prev.has(id))) return prev;
-          return new Set([...prev].filter((id) => !idSet.has(id)));
-        });
-        void loadPassages();
-      } catch (err) {
-        toast.error(
-          err instanceof Error ? err.message : "폴더에 복사하지 못했습니다.",
-        );
-      } finally {
-        setPassageBulkAction(null);
-      }
-    },
-    [collections, loadPassages, passageBulkAction, passages],
-  );
-
-  const handleRemoveSelectedPassagesFromCollection = useCallback(async () => {
-    const ids = [...selectedIds].filter((id) => !isDraftPseudoId(id));
-    const collectionId = selectedCollectionId;
-    if (!collectionId || ids.length === 0 || passageBulkAction) return;
-
-    setPassageBulkAction("remove");
-    try {
-      const idSet = new Set(ids);
-      const idsToRemove = passages
-        .filter(
-          (passage) =>
-            idSet.has(passage.id) &&
-            passage.collectionItems?.some(
-              (item) => item.collectionId === collectionId,
-            ),
-        )
-        .map((passage) => passage.id);
-
-      if (idsToRemove.length === 0) {
-        toast.info("이 폴더에서 제거할 지문이 없습니다.");
-        return;
-      }
-
-      const result = await removePassagesFromCollection(
-        collectionId,
-        idsToRemove,
-      );
-      if (!result.success) {
-        toast.error(result.error || "폴더에서 삭제하지 못했습니다.");
-        return;
-      }
-
-      const undoFolderRemove = async () => {
-        setPassageBulkAction("remove");
-        try {
-          const undoResult = await addPassagesToCollection(
-            collectionId,
-            idsToRemove,
-          );
-          if (!undoResult.success) {
-            toast.error(
-              undoResult.error || "폴더 삭제를 실행 취소하지 못했습니다.",
-            );
-            return;
-          }
-          await loadPassages();
-          toast.success("폴더 삭제를 실행 취소했습니다.");
-        } catch (err) {
-          toast.error(
-            err instanceof Error
-              ? err.message
-              : "폴더 삭제를 실행 취소하지 못했습니다.",
-          );
-        } finally {
-          setPassageBulkAction(null);
-        }
-      };
-
-      toast.success(`${idsToRemove.length}개 지문을 폴더에서 삭제했습니다.`, {
-        duration: UNDO_TOAST_DURATION,
-        action: {
-          label: "실행 취소",
-          onClick: () => void undoFolderRemove(),
-        },
-      });
-      setSelectedIds(new Set());
-      await loadPassages();
-    } catch (err) {
-      toast.error(
-        err instanceof Error ? err.message : "폴더에서 삭제하지 못했습니다.",
-      );
-    } finally {
-      setPassageBulkAction(null);
-    }
-  }, [
-    loadPassages,
-    passageBulkAction,
-    passages,
-    selectedCollectionId,
-    selectedIds,
-  ]);
-
-  const handleDeleteSelectedPassages = useCallback(async () => {
-    const ids = [...selectedIds].filter((id) => !isDraftPseudoId(id));
-    if (ids.length === 0 || passageBulkAction) return;
-    if (!window.confirm(`${ids.length}개 지문을 삭제하시겠습니까?`)) return;
-
-    setPassageBulkAction("delete");
-    try {
-      const result = await bulkDeleteWorkbenchPassages(ids);
-      if (!result.success) {
-        toast.error(result.error || "삭제에 실패했습니다.");
-        return;
-      }
-      if (result.deleted === 0) {
-        toast.error("삭제된 지문이 없습니다.");
-      } else if (result.deleted === result.requested) {
-        toast.success(`${result.deleted}개 지문을 삭제했습니다.`);
-      } else {
-        toast.warning(
-          `${result.deleted}개 삭제됨, ${result.requested - result.deleted}개 누락`,
-        );
-      }
-
-      setPassages((prev) =>
-        prev.filter((passage) => !ids.includes(passage.id)),
-      );
-      setSelectedIds(new Set());
-      if (selectedPassage && ids.includes(selectedPassage.id)) {
-        setSelectedPassage(null);
-        setAnalysisData(null);
-      }
-      await loadPassages();
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "삭제에 실패했습니다.");
-    } finally {
-      setPassageBulkAction(null);
-    }
-  }, [loadPassages, passageBulkAction, selectedIds, selectedPassage]);
-
-  // 상세 모달에서 단일 지문 삭제 — 확인 후 삭제하고 목록·모달을 정리한다.
-  const handleDeleteDetailPassage = useCallback(
-    async (passage: PassageItem) => {
-      if (deletingDetailId) return;
-      if (!window.confirm("이 지문을 삭제하시겠습니까?")) return;
-
-      setDeletingDetailId(passage.id);
-      try {
-        const result = await bulkDeleteWorkbenchPassages([passage.id]);
-        if (!result.success || result.deleted === 0) {
-          toast.error(result.error || "삭제에 실패했습니다.");
-          return;
-        }
-        toast.success("지문이 삭제되었습니다.");
-        setPassages((prev) => prev.filter((p) => p.id !== passage.id));
-        setSelectedIds((prev) => {
-          if (!prev.has(passage.id)) return prev;
-          const next = new Set(prev);
-          next.delete(passage.id);
-          return next;
-        });
-        setDetailPassage(null);
-        await loadPassages();
-      } catch (err) {
-        toast.error(err instanceof Error ? err.message : "삭제에 실패했습니다.");
-      } finally {
-        setDeletingDetailId(null);
-      }
-    },
-    [deletingDetailId, loadPassages],
-  );
-
   // ── Apply deep-link pre-selection once passages are loaded ──
   // Runs once — filters the incoming ?passageIds= against the academy-scoped
   // list so stale / cross-academy ids can't bleed through a shared URL.
@@ -1530,6 +820,10 @@ export function GeneratePageClient({
       // 첫 로드가 끝났는데 라이브러리가 비어 있으면 딥링크 id 는 유효할 수
       // 없다 — 시드된 원시 선택만 정리하고 종결한다. (보류 상태로 남기면
       // 이후 붙여넣기 자동 선택을 아래 setSelectedIds 와이프가 지워버린다.)
+      // 무음 실패 금지(spec §8.4): 화면에는 아무 일도 안 일어난 것처럼 보인다.
+      toast.error(
+        `링크로 받은 지문 ${ids.length}개를 담지 못했어요. 지문함이 비어 있습니다.`,
+      );
       setSelectedIds(new Set());
       prefillAppliedRef.current = true;
       return;
@@ -1543,10 +837,19 @@ export function GeneratePageClient({
         .map((id) => passages.find((p) => p.id === id))
         .filter(Boolean);
       workspaceApi.loadPassages(validPassages as PassageItem[]);
+      // 담긴 행에 ?types/?difficulty 를 얹을 대상 — rows 에 반영된 뒤 아래
+      // 프리필 이펙트가 setOverride 한다(loadPassages 는 localId 를 안 준다).
+      pendingVariantPassageIdsRef.current = validIds;
       toast.success(
         validIds.length === ids.length
           ? `지문 ${validIds.length}개를 워크스페이스에 담았어요.`
           : `지문 ${validIds.length}/${ids.length}개를 워크스페이스에 담았어요.`,
+      );
+    } else {
+      // 딥링크 id 가 전부 이 학원 지문함에 없다 — 삭제됐거나 다른 학원 URL.
+      // 조용히 빈 화면을 보여주지 않고 사유를 알린다(spec §8.4).
+      toast.error(
+        `링크로 받은 지문 ${ids.length}개를 지문함에서 찾지 못했어요. 삭제됐거나 다른 학원의 지문일 수 있어요.`,
       );
     }
     // 시드된 원시 선택을 정리 — 검증 전 id(다른 학원/삭제된 지문)가 선택
@@ -1555,6 +858,128 @@ export function GeneratePageClient({
     setSelectedIds(new Set());
     prefillAppliedRef.current = true;
   }, [loadingPassages, passages, workspaceApi]);
+
+  // ── 변형 시드 복원 + 생성 지시문 프리필 (spec §8.4) ──
+  // sessionStorage 는 서버에 없다 — useState 초기화 함수로 읽으면 하이드레이션이
+  // 어긋나므로 마운트 후 1회만 복원한다.
+  useEffect(() => {
+    const seed = readVariantSeed(initialVariantIdRef.current);
+    if (!seed) {
+      // 무음 실패 금지(§8.4) — variant 파라미터로 들어왔는데 시드만 없는
+      // 경우다. 지문·유형·난이도는 URL 로 복원돼 화면은 '정상'으로 보이므로,
+      // 사유를 알리고 폴백 배너로 상태를 화면에 남긴다.
+      if (initialVariantIdRef.current) {
+        toast.error(
+          "변형 기록을 불러오지 못했어요. 지문·유형만 복원했습니다(원본 오답 정보 없음).",
+        );
+        setVariantSeedMissing(true);
+      }
+      return;
+    }
+    variantSeedRef.current = seed;
+    setVariantSeed(seed);
+    // 지시문은 전역 「추가 요청사항」이 아니라 **행 override 의 customPrompt** 로
+    // 싣는다(RowOverride.customPrompt 는 실재하고, use-workspace-generation 이
+    // `row.override?.customPrompt ?? prompt` 로 행 우선 배선을 마쳤다).
+    // 전역 하나로 합치면 유형이 다른 지문끼리 지시가 섞이고, 이후 사용자가 새로
+    // 담은 무관한 지문의 생성에도 그대로 실린다(2607 §8.4). 실제 주입은 아래
+    // 유형·난이도 프리필 이펙트가 행마다 수행한다.
+  }, []);
+
+  // ── 담긴 행에 유형·난이도 프리필 (spec §8.4) ──
+  // 위 딥링크 이펙트가 loadPassages 로 담은 행들이 rows 에 나타나면 그때 덮는다.
+  // 기존 override 를 통째로 갈아치우지 않고 필요한 키만 얹어, 이후 사용자가
+  // 모달에서 고친 값이 이 이펙트에 되돌려지지 않게 한 번만 돌린다.
+  useEffect(() => {
+    const pending = pendingVariantPassageIdsRef.current;
+    if (!pending || pending.length === 0) return;
+    const counts = initialTypeCountsRef.current;
+    const nextDifficulty = initialDifficultyRef.current;
+    const seed = variantSeedRef.current;
+    if (Object.keys(counts).length === 0 && !nextDifficulty && !seed) {
+      pendingVariantPassageIdsRef.current = null;
+      return;
+    }
+    const wanted = new Set(pending);
+    const targets = workspaceApi.rows.filter((r) => wanted.has(r.passageId));
+    // 아직 setRows 가 반영되기 전 — 다음 렌더에서 다시 시도한다.
+    if (targets.length === 0) return;
+    for (const row of targets) {
+      // 명시 타입 — `??` 폴백 리터럴에는 customPrompt 가 없어 union 으로
+      // 추론되면 아래 base.customPrompt 접근이 타입 오류가 난다.
+      const base: RowOverride = row.override ?? {
+        mode: "manual",
+        typeCounts: {},
+        difficulty: null,
+      };
+      // 이 행(지문)에서 나온 원본 오답만 추린다. URL 의 `types` 는 여러 지문의
+      // 합계라, 그대로 모든 행에 얹으면 지문 수만큼 생성량이 곱해진다.
+      // 시드가 있으면 지문별로 정확히 나눠 실어 그 곱셈을 없앤다.
+      const rowSeedQuestions = seed
+        ? seed.questions.filter((q) => q.passageId === row.passageId)
+        : [];
+      const rowCounts =
+        rowSeedQuestions.length > 0 ? variantTypeCounts(rowSeedQuestions) : {};
+      const effCounts =
+        Object.keys(rowCounts).length > 0
+          ? rowCounts
+          : Object.keys(counts).length > 0
+            ? { ...counts }
+            : base.typeCounts;
+      // 이 행에 걸린 유형의 지시문만 합친다 — 유형이 여러 개면 그 유형들만.
+      // (전역 프롬프트로 합치면 무관한 유형의 지시가 섞인다 — §8.4)
+      const rowPrompt = seed
+        ? [...new Set(rowSeedQuestions.map((q) => q.subType))]
+            .map((subType) => buildVariantPrompt(seed, subType))
+            .filter(Boolean)
+            .join("\n\n")
+        : "";
+      if (rowPrompt) variantPromptRowsRef.current.set(row.localId, rowPrompt);
+      workspaceApi.setOverride(row.localId, {
+        ...base,
+        // 유형을 URL 로 받았으면 그 유형만 담는다(원본이 겨눈 유형이 정본).
+        typeCounts: effCounts,
+        difficulty: nextDifficulty ?? base.difficulty,
+        // 사용자가 이미 손댄 지시문이 있으면 덮지 않는다.
+        customPrompt: rowPrompt || base.customPrompt || null,
+      });
+    }
+    pendingVariantPassageIdsRef.current = null;
+  }, [workspaceApi]);
+
+  /**
+   * 스트립 「연결 해제」 — 시드 상태를 비우고 sessionStorage 도 지운 뒤 URL 의
+   * variant 파라미터를 제거한다(새로고침으로 되살아나지 않게).
+   *
+   * 담긴 지문·유형은 사용자의 작업물이므로 남긴다. 다만 **딥링크가 자동으로 심은
+   * 변형 지시문**은 사용자가 쓴 글이 아니다 — 해제 후에도 남으면 스트립이 사라져
+   * 근거는 안 보이는데 보이지 않는 지시문만 계속 생성에 실린다('해제'가 약속한
+   * 것과 정반대). 그래서 우리가 심은 값 그대로인 행만 골라 되돌린다.
+   */
+  const handleClearVariantSeed = useCallback(() => {
+    clearVariantSeed(initialVariantIdRef.current);
+    variantSeedRef.current = null;
+    setVariantSeed(null);
+    setVariantSeedMissing(false);
+    const planted = variantPromptRowsRef.current;
+    if (planted.size > 0) {
+      for (const row of workspaceApi.rows) {
+        const mine = planted.get(row.localId);
+        // 사용자가 손댄 지시문은 보존 — 심은 값과 같을 때만 비운다.
+        if (!mine || !row.override || row.override.customPrompt !== mine) continue;
+        workspaceApi.setOverride(row.localId, {
+          ...row.override,
+          customPrompt: null,
+        });
+      }
+      planted.clear();
+    }
+    // 이 파일·모바일 스텝 훅의 관용 그대로 — router 왕복 없이 네이티브 history.
+    const url = new URL(window.location.href);
+    if (!url.searchParams.has("variant")) return;
+    url.searchParams.delete("variant");
+    window.history.replaceState(null, "", url.toString());
+  }, [workspaceApi]);
 
   // ── Load saved questions from DB ──
   const loadSavedQuestions = useCallback(async () => {
@@ -1681,497 +1106,31 @@ export function GeneratePageClient({
     setSelectedIds(new Set());
   }, []);
 
-  // Persist N pasted passages (1번·2번·N) as real Passages (academy-scoped,
-  // "직접 입력") AND register each as 추출된 자료, then select them all so the
-  // user can generate right away. Loops the proven single-passage action so the
-  // shared SourceMaterial/ExtractionJob lineage stays identical; passageOrder is
-  // assigned sequentially per academy by the action. They show up in 추출된 자료
-  // 관리 / 학습지 생성 / 분석된 학습지 관리 lists immediately.
-  const handleCreatePastedPassages = useCallback(
-    async (rows: PastedPassageInput[]) => {
-      const cleaned = rows
-        .map((r) => ({
-          title: r.title.trim(),
-          content: r.content.trim(),
-          // 국어 직접입력(opt-in) — 과목·갈래를 서버 액션까지 동봉한다.
-          subject: r.subject,
-          koKind: r.koKind,
-        }))
-        .filter((r) => r.content.length >= 20);
-      if (cleaned.length === 0) {
-        toast.error("지문이 너무 짧습니다. 최소 20자 이상 입력해주세요.");
-        return false;
-      }
-      setPasteSaving(true);
-      try {
-        const { createDirectInputPassageMaterial } =
-          await import("@/actions/workbench");
-        const createdIds: string[] = [];
-        // Sequential (not parallel): the action assigns passageOrder = last+1,
-        // so concurrent calls could collide on the (jobId, passageOrder) unique.
-        for (const r of cleaned) {
-          const title = r.title || derivePastedTitle(r.content);
-          const result = await createDirectInputPassageMaterial({
-            title,
-            content: r.content,
-            // 국어 지문 — 과목별 버킷 + Passage.subject 저장 + 갈래 태그(KO_KIND:*).
-            // 영어(미지정)는 파라미터 자체를 보내지 않아 기존 경로 그대로.
-            ...(r.subject === "KOREAN"
-              ? {
-                  subject: "KOREAN" as const,
-                  ...(r.koKind
-                    ? { tags: mergeKoKindIntoTags([], r.koKind) }
-                    : {}),
-                }
-              : {}),
-          });
-          if (result?.success && result.id) createdIds.push(result.id);
-        }
-        if (createdIds.length === 0) {
-          toast.error("지문 등록에 실패했습니다.");
-          return false;
-        }
-
-        // Refetch the academy passage list in place so the new passages become
-        // canonical PassageItems (no full reload), then reset filters that would
-        // hide freshly pasted (미분석) cards, select all of them, and flip to the
-        // library so the user sees them land.
-        await loadPassages();
-        setPassageSearch("");
-        setSelectedCollectionId("");
-        setAnalysisStatusFilter("all");
-        setSelectedIds(new Set(createdIds));
-        setIntakeView("library");
-        toast.success(
-          createdIds.length === cleaned.length
-            ? `${createdIds.length}개 지문이 등록되었습니다. 유형·난이도를 설정해 문제를 생성하세요.`
-            : `${createdIds.length}/${cleaned.length}개 지문이 등록되었습니다. 일부는 실패했습니다.`,
-        );
-        return true;
-      } catch {
-        toast.error("지문 등록 중 오류가 발생했습니다.");
-        return false;
-      } finally {
-        setPasteSaving(false);
-      }
-    },
-    [loadPassages],
-  );
-
-  // ── 수능·모평 기출 지문 → 내 지문함 일괄 등록 ──
-  // 기출 브라우저에서 고른 지문(picks)을 id 만 서버로 보내 등록(본문은 서버가
-  // 코퍼스에서 해석). 직접 입력과 같은 후처리: 목록 재조회 → 새 지문 선택 → 내
-  // 지문함으로 전환. 멱등(이미 등록분은 서버가 건너뜀).
-  const [examImporting, setExamImporting] = useState(false);
-  const handleImportExamPassages = useCallback(
-    async (picks: ExamPassagePick[]) => {
-      if (!picks || picks.length === 0) return false;
-      setExamImporting(true);
-      try {
-        const { importExamPassages } = await import("@/actions/workbench");
-        const result = await importExamPassages(picks.map((p) => p.id));
-        if (!result.success) {
-          toast.error(result.error || "기출 지문 등록에 실패했습니다.");
-          return false;
-        }
-        const created = result.createdIds;
-        const skipped = result.skippedExamIds.length;
-
-        await loadPassages();
-        setPassageSearch("");
-        setSelectedCollectionId("");
-        setAnalysisStatusFilter("all");
-
-        if (created.length > 0) {
-          setSelectedIds(new Set(created));
-          setIntakeView("library");
-          toast.success(
-            skipped > 0
-              ? `기출 지문 ${created.length}개를 내 지문함에 담았어요. (이미 등록된 ${skipped}개 제외) 유형·난이도를 설정해 문제를 생성하세요.`
-              : `기출 지문 ${created.length}개를 내 지문함에 담았어요. 유형·난이도를 설정해 문제를 생성하세요.`,
-          );
-        } else if (skipped > 0) {
-          setIntakeView("library");
-          toast.info("선택한 기출 지문은 이미 내 지문함에 있어요.");
-        }
-        return true;
-      } catch {
-        toast.error("기출 지문 등록 중 오류가 발생했습니다.");
-        return false;
-      } finally {
-        setExamImporting(false);
-      }
-    },
-    [loadPassages],
-  );
-
-  // ── 국어 기출 지문 → 내 지문함(subject=KOREAN) 일괄 등록 ──
-  // 영어 handleImportExamPassages 의 국어 대칭. 국어 코퍼스 id 를 국어 전용 액션으로
-  // 보내 Passage(subject=KOREAN)+KO_KIND 태그로 등록한다. 후처리는 동일.
-  const handleImportKoreanExamPassages = useCallback(
-    async (picks: KoExamPick[]) => {
-      if (!picks || picks.length === 0) return false;
-      setExamImporting(true);
-      try {
-        const { importKoreanExamPassages } = await import("@/actions/workbench");
-        const result = await importKoreanExamPassages(picks.map((p) => p.id));
-        if (!result.success) {
-          toast.error(result.error || "기출 지문 등록에 실패했습니다.");
-          return false;
-        }
-        const created = result.createdIds;
-        const skipped = result.skippedExamIds.length;
-
-        await loadPassages();
-        setPassageSearch("");
-        setSelectedCollectionId("");
-        setAnalysisStatusFilter("all");
-
-        if (created.length > 0) {
-          setSelectedIds(new Set(created));
-          setIntakeView("library");
-          toast.success(
-            skipped > 0
-              ? `기출 지문 ${created.length}개를 내 지문함에 담았어요. (이미 등록된 ${skipped}개 제외) 유형·난이도를 설정해 문제를 생성하세요.`
-              : `기출 지문 ${created.length}개를 내 지문함에 담았어요. 유형·난이도를 설정해 문제를 생성하세요.`,
-          );
-        } else if (skipped > 0) {
-          setIntakeView("library");
-          toast.info("선택한 기출 지문은 이미 내 지문함에 있어요.");
-        }
-        return true;
-      } catch {
-        toast.error("기출 지문 등록 중 오류가 발생했습니다.");
-        return false;
-      } finally {
-        setExamImporting(false);
-      }
-    },
-    [loadPassages],
-  );
-
-  // ── Image/PDF extraction completion → drafts promoted to Passages ──
-  // Refetch the list in place so the new passages appear as cards, drop the
-  // job's loading cards (after the real ones are loaded → seamless), flip to the
-  // library, and offer "전체 선택" (opt-in, not auto — avoids a huge batch).
-  const clearExtractionPendingRef = useRef<(jobId: string) => void>(() => {});
-  const handleExtractionPromoted = useCallback(
-    ({
-      passageIds,
-      jobId,
-      partial,
-      expectedCount,
-      resolvedCount,
-      complete,
-    }: {
-      passageIds: string[];
-      jobId: string;
-      partial: boolean;
-      expectedCount: number;
-      resolvedCount: number;
-      complete: boolean;
-    }) => {
-      // 알림·화면 전환은 즉시 — 목록 재조회(RTT)를 기다리지 않는다. 추출 중
-      // 로딩 카드 제거만 실제 카드가 로드된 뒤(then)로 미뤄 깜빡임을 막는다.
-      setPassageSearch("");
-      setSelectedCollectionId("");
-      setAnalysisStatusFilter("all");
-      setIntakeView("library");
-      if (passageIds.length > 0) {
-        setFreshAnalysisPassageIds((prev) => {
-          const next = new Set(prev);
-          passageIds.forEach((id) => next.add(id));
-          return next;
-        });
-        // 새 배치를 앞에 두고, 배치 안에서는 추출 순서를 유지한다.
-        setRecentExtractionPassageIds((prev) => [
-          ...passageIds,
-          ...prev.filter((id) => !passageIds.includes(id)),
-        ]);
-        dispatchGenerateTourMilestone("file-extraction-completed");
-      }
-
-      if (passageIds.length === 0) {
-        toast.message(
-          partial
-            ? "일부 페이지만 추출됐어요. 작업 큐에서 확인하세요."
-            : "추출은 끝났지만 등록할 지문이 없습니다.",
-        );
-      } else if (!complete) {
-        const missing = Math.max(1, expectedCount - resolvedCount);
-        toast.warning(
-          `추출된 지문 ${resolvedCount}/${expectedCount}개만 등록됐습니다. 남은 ${missing}개는 작업 큐 또는 자료 관리에서 확인해주세요.`,
-          {
-            action: {
-              label: "등록된 지문 선택",
-              onClick: () => setSelectedIds(new Set(passageIds)),
-            },
-            duration: 14000,
-          },
-        );
-      } else {
-        toast.success(
-          `추출된 ${passageIds.length}개 지문이 ‘내 지문’에 추가됐어요. 문제를 생성할 지문을 선택하세요.`,
-          {
-            action: {
-              label: "전체 선택",
-              onClick: () => setSelectedIds(new Set(passageIds)),
-            },
-            duration: 12000,
-          },
-        );
-      }
-
-      void loadPassages().then(() => {
-        if (complete) {
-          clearExtractionPendingRef.current(jobId);
-        }
-      });
-    },
-    [loadPassages],
-  );
-
-  const acknowledgeFreshAnalysisPassage = useCallback((passageId: string) => {
-    setFreshAnalysisPassageIds((prev) => {
-      if (!prev.has(passageId)) return prev;
-      const next = new Set(prev);
-      next.delete(passageId);
-      return next;
-    });
-    setFreshLearningPassageIds((prev) => {
-      if (!prev.has(passageId)) return prev;
-      const next = new Set(prev);
-      next.delete(passageId);
-      return next;
-    });
-  }, []);
-
-  const handleInlinePassageAnalyzed = useCallback(
-    async (passageId: string) => {
-      await patchPassages([passageId]);
-      setFreshLearningPassageIds((prev) => {
-        const next = new Set(prev);
-        next.add(passageId);
-        return next;
-      });
-    },
-    [patchPassages],
-  );
-
-  const handleToggleExtractionReview = useCallback(
-    async (passage: PassageItem) => {
-      const draft = passage.extractionReviewDraft;
-      if (!draft) return;
-
-      const isReviewed = draft.reviewStatus === "COMMITTED";
-
-      setReviewActionPassageIds((prev) => {
-        const next = new Set(prev);
-        next.add(passage.id);
-        return next;
-      });
-
-      try {
-        if (isReviewed) {
-          // 검수취소는 비파괴적으로 — 지문(Passage)은 문제생성 목록에 그대로
-          // 두고 검수 상태만 REVIEWED 로 되돌린다(점 초록→빨강).
-          const res = await fetchReviewAction(
-            `/api/extraction/m1-passages/${draft.id}/uncommit`,
-            {
-              method: "POST",
-              credentials: "include",
-            },
-          );
-          const data = await res.json().catch(() => ({}));
-          if (!res.ok) {
-            throw new Error(data?.error ?? "검수를 취소하지 못했습니다.");
-          }
-          const reviewedAt = new Date().toISOString();
-          patchExtractionReviewState([
-            {
-              passageId: passage.id,
-              draft: {
-                ...draft,
-                reviewStatus: "REVIEWED",
-                confirmedAt: null,
-                updatedAt: reviewedAt,
-              },
-            },
-          ]);
-          toast.success("검수완료를 취소했습니다.");
-        } else {
-          const res = await fetchReviewAction(
-            "/api/extraction/m1-passages/promote",
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              credentials: "include",
-              // 사용자가 '검수완료'로 표시 — 명시적으로 검수완료 처리.
-              body: JSON.stringify({ draftIds: [draft.id], markReviewed: true }),
-            },
-          );
-          const data = await res.json().catch(() => ({}));
-          if (!res.ok) {
-            throw new Error(data?.error ?? "검수완료로 표시하지 못했습니다.");
-          }
-          const promoted = data?.summary?.promoted ?? 0;
-          const skipped = data?.summary?.skipped ?? 0;
-          if (promoted + skipped <= 0) {
-            throw new Error("검수 처리에 실패했습니다.");
-          }
-          const reviewedAt = new Date().toISOString();
-          patchExtractionReviewState([
-            {
-              passageId: passage.id,
-              draft: {
-                ...draft,
-                reviewStatus: "COMMITTED",
-                confirmedAt: reviewedAt,
-                updatedAt: reviewedAt,
-              },
-            },
-          ]);
-          toast.success("검수완료로 표시했습니다.");
-          void patchPassages([passage.id]);
-        }
-      } catch (err) {
-        toast.error(
-          isAbortError(err)
-            ? "검수 처리 응답이 지연되고 있습니다. 잠시 후 다시 시도해주세요."
-            : err instanceof Error
-              ? err.message
-              : "검수 상태를 변경하지 못했습니다.",
-        );
-      } finally {
-        setReviewActionPassageIds((prev) => {
-          if (!prev.has(passage.id)) return prev;
-          const next = new Set(prev);
-          next.delete(passage.id);
-          return next;
-        });
-      }
-    },
-    [patchExtractionReviewState, patchPassages],
-  );
-
-  const handleBulkCompleteExtractionReview = useCallback(
-    async (targetPassages: PassageItem[]) => {
-      if (reviewBulkActionRunning) return;
-
-      const reviewDraftPassages = targetPassages.filter(
-        (passage) => passage.extractionReviewDraft,
-      );
-      const pendingPassages = reviewDraftPassages.filter(
-        (passage) =>
-          passage.extractionReviewDraft?.reviewStatus !== "COMMITTED",
-      );
-      const alreadyCommittedCount =
-        reviewDraftPassages.length - pendingPassages.length;
-
-      if (pendingPassages.length === 0) {
-        window.alert(
-          alreadyCommittedCount > 0
-            ? `선택한 ${alreadyCommittedCount}개 자료가 이미 모두 검수완료되어 있습니다.`
-            : "선택한 지문 중 검수할 추출 자료가 없습니다.",
-        );
-        return;
-      }
-
-      const ok =
-        alreadyCommittedCount > 0
-          ? window.confirm(
-              `선택한 ${reviewDraftPassages.length}개 중 ${alreadyCommittedCount}개는 이미 검수완료되어 있습니다.\n` +
-                `검수 필요한 ${pendingPassages.length}개만 검수완료 처리할까요?`,
-            )
-          : window.confirm(
-              `선택한 ${pendingPassages.length}개 지문을 검수완료로 표시할까요?`,
-            );
-      if (!ok) return;
-
-      const draftIds = pendingPassages
-        .map((passage) => passage.extractionReviewDraft?.id)
-        .filter((id): id is string => Boolean(id));
-      if (draftIds.length === 0) return;
-
-      setReviewBulkActionRunning(true);
-      setReviewActionPassageIds((prev) => {
-        const next = new Set(prev);
-        pendingPassages.forEach((passage) => next.add(passage.id));
-        return next;
-      });
-
-      try {
-        const res = await fetchReviewAction(
-          "/api/extraction/m1-passages/promote",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            // 사용자가 '검수완료'로 일괄 표시 — 명시적으로 검수완료 처리.
-            body: JSON.stringify({ draftIds, markReviewed: true }),
-          },
-        );
-        const data = await res.json().catch(() => ({}));
-        if (!res.ok) {
-          throw new Error(data?.error ?? "검수완료 처리에 실패했습니다.");
-        }
-
-        const promoted = data?.summary?.promoted ?? 0;
-        const skipped = data?.summary?.skipped ?? 0;
-        const failed = data?.summary?.failed ?? 0;
-        if (promoted + skipped <= 0) {
-          throw new Error("검수완료 처리에 실패했습니다.");
-        }
-
-        const reviewedAt = new Date().toISOString();
-        patchExtractionReviewState(
-          pendingPassages.map((passage) => ({
-            passageId: passage.id,
-            draft: passage.extractionReviewDraft
-              ? {
-                  ...passage.extractionReviewDraft,
-                  reviewStatus: "COMMITTED",
-                  confirmedAt: reviewedAt,
-                  updatedAt: reviewedAt,
-                }
-              : null,
-          })),
-        );
-        setSelectedIds((prev) => {
-          const next = new Set(prev);
-          pendingPassages.forEach((passage) => next.delete(passage.id));
-          return next;
-        });
-        dispatchGenerateTourMilestone("passage-review-completed");
-        void patchPassages(pendingPassages.map((passage) => passage.id));
-        if (failed > 0) {
-          toast.warning(
-            `${promoted}개 검수완료, ${skipped + failed}개 건너뜀/실패`,
-          );
-        } else {
-          toast.success(
-            `${promoted + skipped}개 지문을 검수완료로 표시했습니다.`,
-          );
-        }
-      } catch (err) {
-        toast.error(
-          isAbortError(err)
-            ? "검수완료 응답이 지연되고 있습니다. 잠시 후 다시 시도해주세요."
-            : err instanceof Error
-              ? err.message
-              : "검수완료 처리에 실패했습니다.",
-        );
-      } finally {
-        setReviewBulkActionRunning(false);
-        setReviewActionPassageIds((prev) => {
-          const next = new Set(prev);
-          pendingPassages.forEach((passage) => next.delete(passage.id));
-          return next;
-        });
-      }
-    },
-    [patchExtractionReviewState, patchPassages, reviewBulkActionRunning],
-  );
+  // 지문 등록/가져오기(직접 입력·기출 가져오기·추출 승격 후처리·신규 글로우
+  // 확인/인라인 분석 반영) — use-passage-intake.ts 로 추출.
+  const {
+    pasteSaving,
+    handleCreatePastedPassages,
+    examImporting,
+    handleImportExamPassages,
+    handleImportKoreanExamPassages,
+    clearExtractionPendingRef,
+    handleExtractionPromoted,
+    acknowledgeFreshAnalysisPassage,
+    handleInlinePassageAnalyzed,
+  } = usePassageIntake({
+    loadPassages,
+    patchPassages,
+    derivePastedTitle,
+    setPassageSearch,
+    setSelectedCollectionId,
+    setAnalysisStatusFilter,
+    setSelectedIds,
+    setIntakeView,
+    setFreshAnalysisPassageIds,
+    setFreshLearningPassageIds,
+    setRecentExtractionPassageIds,
+  });
 
   const {
     beginJob: beginExtractionJob,
@@ -2247,181 +1206,19 @@ export function GeneratePageClient({
     [passages],
   );
 
-  const applyReviewState = useCallback(
-    (questionIds: string[], approved: boolean) => {
-      if (questionIds.length === 0) return;
-      const set = new Set(questionIds);
-      setSavedQuestions((prev) =>
-        prev.map((q) => (set.has(q.id) ? { ...q, approved } : q)),
-      );
-      setDetailQuestion((prev) =>
-        prev && set.has(prev.id) ? { ...prev, approved } : prev,
-      );
-      setSessionQueue((prev) =>
-        prev.map((item) => {
-          if (!item.questionIds?.some((id) => id && set.has(id))) return item;
-          const questions = item.questions.map((q, qi) => {
-            const id = item.questionIds?.[qi];
-            return id && set.has(id) ? { ...q, approved } : q;
-          });
-          return {
-            ...item,
-            questions,
-            status: questions.every((q) => q.approved)
-              ? "reviewed"
-              : item.status === "reviewed"
-                ? "done"
-                : item.status,
-          };
-        }),
-      );
-    },
-    [setSessionQueue],
-  );
+  // 문항 검수 액션 클러스터 — use-question-review-actions.ts 로 추출.
+  const {
+    markQuestionDeletedLocally,
+    handleApproveQuestion,
+    handleUnapproveQuestion,
+  } = useQuestionReviewActions({
+    setSavedQuestions,
+    setDetailQuestion,
+    setSessionQueue,
+    loadSavedQuestions,
+  });
 
-  // 서버가 "문제를 찾을 수 없습니다"로 거절하면, 그 문제는 이미 삭제된 좀비다
-  // (세션 큐 폴링 직전에 지워졌거나 다른 기기에서 삭제됨). 로컬에서 카드를
-  // 정리하고 목록을 새로고침해, 같은 좀비를 다시 검수하려는 일을 막는다.
-  const isMissingQuestionError = (error?: string) =>
-    typeof error === "string" && error.includes("찾을 수 없");
-
-  const handleApproveQuestion = useCallback(
-    async (questionId: string) => {
-      const result = await approveWorkbenchQuestion(questionId);
-      if (!result.success) {
-        if (isMissingQuestionError(result.error)) {
-          markQuestionDeletedLocally(questionId);
-          loadSavedQuestions();
-          toast.error("이미 삭제된 문제예요. 목록에서 정리했어요.");
-        } else {
-          toast.error(result.error || "검수완료 처리에 실패했습니다.");
-        }
-        return;
-      }
-      applyReviewState([questionId], true);
-      toast.success("검수완료 처리됐습니다.");
-      loadSavedQuestions();
-    },
-    [loadSavedQuestions, applyReviewState, markQuestionDeletedLocally],
-  );
-
-  const handleUnapproveQuestion = useCallback(
-    async (questionId: string) => {
-      const result = await unapproveWorkbenchQuestion(questionId);
-      if (!result.success) {
-        if (isMissingQuestionError(result.error)) {
-          markQuestionDeletedLocally(questionId);
-          loadSavedQuestions();
-          toast.error("이미 삭제된 문제예요. 목록에서 정리했어요.");
-        } else {
-          toast.error(result.error || "검수취소 처리에 실패했습니다.");
-        }
-        return;
-      }
-      applyReviewState([questionId], false);
-      toast.success("검수취소 처리됐습니다.");
-      loadSavedQuestions();
-    },
-    [loadSavedQuestions, applyReviewState, markQuestionDeletedLocally],
-  );
-
-  const handleDeleteQuestion = useCallback(
-    async (questionId: string) => {
-      if (!questionId) return;
-      if (!confirm("이 문제를 삭제하시겠습니까?")) return;
-      const result = await deleteWorkbenchQuestion(questionId);
-      if (!result.success) {
-        toast.error(result.error || "삭제에 실패했습니다.");
-        return;
-      }
-      setSavedQuestions((prev) => prev.filter((q) => q.id !== questionId));
-      setDetailQuestion((prev) => (prev?.id === questionId ? null : prev));
-      toast.success("삭제됐습니다.");
-      loadSavedQuestions();
-    },
-    [loadSavedQuestions],
-  );
-
-  const handleBatchApproveQuestions = useCallback(
-    async (questionIds: string[]) => {
-      if (questionIds.length === 0) return;
-      const result = await bulkApproveWorkbenchQuestions(questionIds);
-      if (result.success && result.approvedIds.length > 0) {
-        const failed = Math.max(0, result.requested - result.approved);
-        applyReviewState(result.approvedIds, true);
-        toast.success(
-          `${result.approved}개 문제가 검수완료 처리됐습니다.${failed > 0 ? ` (${failed}개 건너뜀)` : ""}`,
-        );
-        loadSavedQuestions();
-      } else if (!result.success) {
-        toast.error(result.error || "일괄 검수완료 처리에 실패했습니다.");
-      }
-    },
-    [applyReviewState, loadSavedQuestions],
-  );
-
-  const handleBatchDeleteQuestions = useCallback(
-    async (questionIds: string[]): Promise<boolean> => {
-      // Confirmation is handled by the in-app AlertDialog in BottomQueueSection
-      // before this runs — no native window.confirm here.
-      const ids = [...new Set(questionIds)].filter(Boolean);
-      if (ids.length === 0 || deletingQuestions) return false;
-
-      setDeletingQuestions(true);
-      try {
-        const result = await bulkDeleteWorkbenchQuestions(ids);
-        if (!result.success) {
-          toast.error(result.error || "문제 삭제에 실패했습니다.");
-          return false;
-        }
-
-        // Tombstone ONLY the rows the server actually deleted — never the full
-        // request. On a partial delete (cross-academy / already-gone ids) the
-        // survivors must stay visible, and loadSavedQuestions() reconciles them.
-        const deletedIds = result.deletedIds ?? [];
-        const deletedSet = new Set(deletedIds);
-        const deletedSigs = savedQuestions
-          .filter((q) => deletedSet.has(q.id))
-          .map(savedQuestionSig);
-        setDeletedQuestionIds((prev) => {
-          const next = new Set(prev);
-          deletedIds.forEach((id) => next.add(id));
-          return next;
-        });
-        if (deletedSigs.length > 0) {
-          setDeletedQuestionSignatures((prev) => {
-            const next = new Set(prev);
-            deletedSigs.forEach((sig) => next.add(sig));
-            return next;
-          });
-        }
-        setSavedQuestions((prev) => prev.filter((q) => !deletedSet.has(q.id)));
-        setDetailQuestion((prev) =>
-          prev && deletedSet.has(prev.id) ? null : prev,
-        );
-
-        if (result.deleted === 0) {
-          toast.error("삭제된 문제가 없습니다.");
-        } else if (result.deleted === result.requested) {
-          toast.success(`${result.deleted}개 문제를 삭제했습니다.`);
-        } else {
-          toast.warning(
-            `${result.deleted}개 삭제됨, ${result.requested - result.deleted}개 누락`,
-          );
-        }
-        loadSavedQuestions();
-        return true;
-      } catch (err) {
-        toast.error(
-          err instanceof Error ? err.message : "문제 삭제에 실패했습니다.",
-        );
-        return false;
-      } finally {
-        setDeletingQuestions(false);
-      }
-    },
-    [deletingQuestions, loadSavedQuestions, savedQuestions, savedQuestionSig],
-  );
+  const editor = useQuestionEditor(markQuestionDeletedLocally);
 
   // ── 워크스페이스 불러오기 ──
   const handleLoadSelectedToWorkspace = useCallback(async () => {
@@ -2447,7 +1244,9 @@ export function GeneratePageClient({
             ? { ...p, id: realId, source: null, extractionReviewDraft: null }
             : p;
         })
-        .filter(Boolean);
+        // 타입가드: filter(Boolean) 은 null 을 못 좁힌다 — 술어로 명시
+        // (Boolean 판정 동일, 런타임 무변경).
+        .filter((p): p is PassageItem => Boolean(p));
       if (failedCount > 0) {
         toast.warning(`${failedCount}개 자료는 지문으로 준비하지 못해 제외했어요.`);
       }
@@ -2552,345 +1351,98 @@ export function GeneratePageClient({
       new Set(
         workspaceApi.rows
           .flatMap((r) => [r.passageId, r.variantOfId])
-          .filter(Boolean),
+          // 타입가드: filter(Boolean) 은 undefined 를 못 좁힌다 — 술어로
+          // 명시(Boolean 판정 동일, 런타임 무변경). Set<string> 보장.
+          .filter((id): id is string => Boolean(id)),
       ),
     [workspaceApi.rows],
   );
 
-  // ── 모바일 스텝 플로우: 전환 + URL(?step=) 동기화 ──
-  const isMobileViewport = useIsMobileViewport();
+  // ── 모바일 스텝 플로우: 전환 + URL(?step=) 동기화 + 하단 이전/다음 바 모델
+  // — use-mobile-step-flow.ts 훅으로 추출(스텝 상태·popstate·인테이크 동기 포함).
+  const {
+    isMobileViewport,
+    mobileStep,
+    goToMobileStep,
+    mobilePrev,
+    mobileNext,
+    mobileNextHint,
+    boardFixedFooterActive,
+    workspacePending,
+  } = useMobileStepFlow({
+    initialMobileStepRef,
+    initialPassageIdsRef,
+    setWorkspaceOpen,
+    setIntakeView,
+    workspaceVisible,
+    workspaceActive,
+    intakeView,
+    intakeTab,
+    pasteBoard,
+    pasteStartRef,
+    selectedIds,
+    handleLoadSelectedToWorkspace,
+    workspaceApi,
+    workspaceRowStats,
+    handleWorkspaceGenerate,
+    queueCounts,
+  });
   // 워크스페이스 스텝 하단 고정 '담긴 유형' 장바구니 펼침 상태(모바일).
   const [workspaceCartOpen, setWorkspaceCartOpen] = useState(false);
   // 내 지문함(library) 스텝 하단 고정 '담긴 지문'(선택한 지문) 장바구니 펼침 상태(모바일).
   const [libraryCartOpen, setLibraryCartOpen] = useState(false);
 
-  // 스텝이 가리키는 인테이크 상태를 함께 맞춘다. results 는 하단 결과
-  // 섹션만 보여주므로 인테이크 상태를 건드리지 않는다(뒤로가면 그대로 복귀).
-  const applyMobileStep = useCallback((step: MobileStep) => {
-    setMobileStep(step);
-    if (step === "input") {
-      setWorkspaceOpen(false);
-      setIntakeView("intake");
-    } else if (step === "library") {
-      setWorkspaceOpen(false);
-      setIntakeView("library");
-    } else if (step === "workspace") {
-      setWorkspaceOpen(true);
-    }
-  }, []);
-
-  const pushMobileStepUrl = useCallback((step: MobileStep) => {
-    const url = new URL(window.location.href);
-    if (url.searchParams.get("step") === step) return;
-    url.searchParams.set("step", step);
-    // router.push 대신 네이티브 pushState — 서버 리페치 없이 히스토리만
-    // 쌓아 브라우저 뒤로가기가 '이전 단계'로 동작하게 한다.
-    window.history.pushState(null, "", url.toString());
-  }, []);
-
-  const goToMobileStep = useCallback(
-    (step: MobileStep) => {
-      applyMobileStep(step);
-      pushMobileStepUrl(step);
-      window.scrollTo({ top: 0 });
-    },
-    [applyMobileStep, pushMobileStepUrl],
-  );
-
-  // 브라우저 뒤로/앞으로 — URL 의 step 을 그대로 적용.
-  useEffect(() => {
-    if (!isMobileViewport) return;
-    const onPop = () => {
-      const raw = new URLSearchParams(window.location.search).get("step");
-      const step: MobileStep =
-        raw === "library" || raw === "workspace" || raw === "results"
-          ? raw
-          : "input";
-      applyMobileStep(step);
-      window.scrollTo({ top: 0 });
-    };
-    window.addEventListener("popstate", onPop);
-    return () => window.removeEventListener("popstate", onPop);
-  }, [isMobileViewport, applyMobileStep]);
-
-  // 기존 UI 동작('다음으로' CTA, 워크스페이스 자동 열림/닫힘 등)이
-  // intakeView/workspaceOpen 을 바꾸면 스텝을 뒤따라 맞춘다 — 스텝을 모르는
-  // 기존 핸들러를 하나도 고치지 않기 위한 단방향 동기화. results 에서는
-  // 인테이크 상태가 화면 밖(숨김)이므로 동기화하지 않는다.
-  useEffect(() => {
-    if (!isMobileViewport) return;
-    if (mobileStep === "results") return;
-    const derived: MobileStep = workspaceVisible
-      ? "workspace"
-      : intakeView === "library"
-        ? "library"
-        : "input";
-    if (derived !== mobileStep) {
-      setMobileStep(derived);
-      pushMobileStepUrl(derived);
-      window.scrollTo({ top: 0 });
-    }
-  }, [
-    isMobileViewport,
-    workspaceVisible,
-    intakeView,
-    mobileStep,
-    pushMobileStepUrl,
-  ]);
-
   // ── 지문별 개별 설정 (워크스페이스) ───────────────────────────────
-  // 워크스페이스 행을 클릭하면 우측 '유형·생성 설정'이 그 지문만 편집한다.
-  // 편집 대상 행이 있으면(editingRow) 난이도·유형 개수·유형별 세부옵션을
-  // 행 오버라이드로 읽고/쓰며(전체 설정값을 시드로 fork), 생성 모드·프롬프트
-  // 등은 그대로 전체 공통값을 쓴다. 행이 없으면 기존처럼 전체 설정을 편집.
-  const activeRow =
-    workspaceVisible && activeRowId
-      ? (workspaceApi.rows.find((r) => r.localId === activeRowId) ?? null)
-      : null;
-  const editingRow = activeRow !== null;
-  // 설정 패널 헤더에 카드와 똑같은 ① 번호 배지를 비추기 위한 인덱스
-  // (왼쪽 선택 지문 ↔ 오른쪽 설정의 정체성 일치 신호).
-  const activeRowIndex = activeRow
-    ? workspaceApi.rows.findIndex((r) => r.localId === activeRow.localId)
-    : -1;
-
-  // 워크스페이스가 사라지면 개별 설정 선택을 해제하고 생성 모달도 닫는다.
-  useEffect(() => {
-    if (!workspaceVisible) {
-      if (activeRowId !== null) setActiveRowId(null);
-      if (genModalOpen) setGenModalOpen(false);
-    }
-  }, [workspaceVisible, activeRowId, genModalOpen]);
-
-  // 지문 카드 본문 클릭 → 그 지문을 선택(설정 대상)으로 바인딩 (선택 링 표시).
-  const selectRow = useCallback((localId: string) => {
-    setActiveRowId(localId);
-  }, []);
-
-  // 카드의 '문제 생성' 버튼/설정 배지 클릭 → 이 지문을 선택하고 생성 모달을 연다.
-  const handleSetActiveRow = useCallback(
-    (localId: string) => {
-      selectRow(localId);
-      setGenModalOpen(true);
-    },
-    [selectRow],
-  );
-
-  // 모달을 닫는다 — 선택(링)은 유지하지 않고 해제해 깔끔하게 비운다.
-  const closeGenModal = useCallback(() => {
-    setGenModalOpen(false);
-    setActiveRowId(null);
-  }, []);
-
-  // 이 지문 하나로 생성 — 생성을 시작(fire-and-forget)하고 모달을 닫는다.
-  const handleGenerateActiveRow = useCallback(() => {
-    if (!activeRowId) return;
-    // 생성은 시작 시점에 행 설정을 동기적으로 캡처하므로(setOverride 는 불변
-    // 업데이트라 캡처된 참조에 영향 없음), 호출 직후 이 지문의 유형 지정을
-    // 비워 초기화해도 안전하다. 난이도·유형별 세부 설정은 보존한다.
-    void handleWorkspaceGenerate(activeRowId);
-    const row = workspaceApi.rows.find((r) => r.localId === activeRowId);
-    if (row?.override && overrideHasTypeCounts(row.override)) {
-      const next = { ...row.override, typeCounts: {} };
-      workspaceApi.setOverride(
-        activeRowId,
-        isOverrideEmpty(next) ? null : next,
-      );
-    }
-    closeGenModal();
-  }, [activeRowId, handleWorkspaceGenerate, closeGenModal, workspaceApi]);
-
-  // 활성 행의 오버라이드를 부분 수정한다. 결과가 전체 설정과 같아지면(빈
-  // 오버라이드) null 로 저장해 '전체 설정 따름'으로 되돌린다.
-  const writeActiveOverride = useCallback(
-    (updater: (base: RowOverride) => RowOverride) => {
-      if (!activeRowId) return;
-      const row = workspaceApi.rows.find((r) => r.localId === activeRowId);
-      const base: RowOverride = row?.override
-        ? { ...row.override }
-        : { typeCounts: {}, difficulty: null };
-      const next = updater(base);
-      workspaceApi.setOverride(
-        activeRowId,
-        isOverrideEmpty(next) ? null : next,
-      );
-    },
-    [activeRowId, workspaceApi],
-  );
-
-  // 우측 패널에 넘길 '유효 설정' — 편집 중이면 행 오버라이드(없으면 전체
-  // 설정 시드), 아니면 전체 설정. 세터는 편집 중이면 오버라이드에 쓴다.
-  const panelDifficulty = editingRow
-    ? (activeRow.override?.difficulty ?? difficulty)
-    : difficulty;
-  const panelSetDifficulty = editingRow
-    ? (v: "BASIC" | "INTERMEDIATE" | "KILLER") =>
-        writeActiveOverride((o) => ({ ...o, difficulty: v }))
-    : setDifficulty;
-
-  // 개별 설정 중인 행은 '빈 슬레이트'에서 시작한다 — 지정하지 않은 지문은
-  // 0개(생성 제외)이므로, 전체 설정 유형을 시드로 채우지 않는다(채우면 화면엔
-  // 보이는데 실제로는 생성/합산되지 않아 어긋난다). 행에 이미 개별 지정이
-  // 있으면 그 값을 보여준다.
-  const panelTypeCounts = editingRow
-    ? overrideHasTypeCounts(activeRow.override)
-      ? activeRow.override!.typeCounts
-      : {}
-    : typeCounts;
-  const panelSetTypeCount = editingRow
-    ? (id: string, count: number) =>
-        writeActiveOverride((o) => {
-          const seed = overrideHasTypeCounts(o) ? o.typeCounts : {};
-          const nextCounts = { ...seed };
-          if (count <= 0) delete nextCounts[id];
-          else nextCounts[id] = count;
-          return { ...o, typeCounts: nextCounts };
-        })
-    : setTypeCount;
-  // 패널은 setTypeCounts 를 값/업데이터 함수 양쪽으로 호출한다(정렬·증감 등).
-  // 업데이터에는 '현재 행 typeCounts'(개별 지정 없으면 빈 슬레이트)를 넘긴다.
-  const panelSetTypeCounts = editingRow
-    ? (
-        v:
-          | Record<string, number>
-          | ((prev: Record<string, number>) => Record<string, number>),
-      ) =>
-        writeActiveOverride((o) => {
-          const seed = overrideHasTypeCounts(o) ? o.typeCounts : {};
-          const next = typeof v === "function" ? v(seed) : v;
-          return { ...o, typeCounts: next };
-        })
-    : setTypeCounts;
-  const panelTotalQuestions = editingRow
-    ? Object.values(panelTypeCounts).reduce((a, b) => a + b, 0)
-    : totalQuestions;
-
-  const panelQuestionTypeSettings = editingRow
-    ? { ...questionTypeSettings, ...(activeRow.override?.questionTypeSettings ?? {}) }
-    : questionTypeSettings;
-  const panelSetQuestionTypeSettings = editingRow
-    ? (
-        v:
-          | QuestionTypeGenerationSettings
-          | ((
-              prev: QuestionTypeGenerationSettings,
-            ) => QuestionTypeGenerationSettings),
-      ) =>
-        writeActiveOverride((o) => {
-          const merged = {
-            ...questionTypeSettings,
-            ...(o.questionTypeSettings ?? {}),
-          };
-          const nextFull = typeof v === "function" ? v(merged) : v;
-          return {
-            ...o,
-            questionTypeSettings: diffQuestionTypeSettings(
-              nextFull,
-              questionTypeSettings,
-            ),
-          };
-        })
-    : setQuestionTypeSettings;
-
-  // 생성 모드(자동/유형지정/장문세트)와 생성 플랜(일반/프리미엄)도 개별 설정
-  // 대상이다 — 행 편집 중이면 그 행 오버라이드에 쓰고/읽고(없으면 전체 설정을
-  // 시드로), 아니면 전체 공통 설정을 그대로 쓴다.
-  const panelGenMode = editingRow
-    ? (activeRow.override?.mode ?? genMode)
-    : genMode;
-  const panelSetGenMode = editingRow
-    ? (m: "manual" | "set") =>
-        writeActiveOverride((o) => ({ ...o, mode: m }))
-    : setGenMode;
-  const panelGenerationPlan = editingRow
-    ? (activeRow.override?.generationPlan ?? generationPlan)
-    : generationPlan;
-  const panelSetGenerationPlan = editingRow
-    ? (p: "STANDARD" | "PREMIUM") =>
-        writeActiveOverride((o) => ({ ...o, generationPlan: p }))
-    : setGenerationPlan;
-  // 세트 프리셋 선택도 지문별로 저장한다(자동/유형지정과 동일 원리). 편집 중인
-  // 행의 override.setPresetId/difficulty 를 controlled 값으로 넘기고, 변경 시 그 행에 쓴다.
-  const panelSetPresetId = editingRow
-    ? (activeRow.override?.setPresetId ?? null)
-    : undefined;
-  const panelSetPresetCounts = editingRow
-    ? (activeRow.override?.setPresetCounts ??
-        (activeRow.override?.setPresetId ? { [activeRow.override.setPresetId]: 1 } : {}))
-    : undefined;
-  const panelOnSetPresetChange = editingRow
-    ? (presetId: string | null) =>
-        writeActiveOverride((o) => {
-          const nextCounts = { ...(o.setPresetCounts ?? {}) };
-          if (presetId) {
-            nextCounts[presetId] = Math.max(1, Number(nextCounts[presetId] ?? 1));
-          }
-          return {
-            ...o,
-            mode: "set",
-            setPresetId: presetId ?? undefined,
-            setPresetCounts: presetId ? nextCounts : {},
-            // 프리셋이 바뀌면 멤버 인덱스가 달라지므로 legacy 멤버 오버라이드는 리셋한다.
-            setMemberOverrides:
-              presetId === o.setPresetId ? o.setMemberOverrides : undefined,
-          };
-        })
-    : undefined;
-  const panelOnSetPresetCountsChange = editingRow
-    ? (next: Record<string, number>) =>
-        writeActiveOverride((o) => {
-          const first =
-            Object.entries(next).find(([, count]) => Number(count) > 0)?.[0] ??
-            undefined;
-          return {
-            ...o,
-            mode: "set",
-            setPresetId: first,
-            setPresetCounts: next,
-          };
-        })
-    : undefined;
-  // 세트 멤버별 난이도·세부설정도 지문별로 저장한다(프리셋 멤버 순서 평행 배열).
-  const panelSetMemberOverrides = editingRow
-    ? (activeRow.override?.setMemberOverrides ?? [])
-    : undefined;
-  const panelSetMemberOverridesByPreset = editingRow
-    ? (activeRow.override?.setMemberOverridesByPreset ??
-        (activeRow.override?.setPresetId && activeRow.override?.setMemberOverrides
-          ? { [activeRow.override.setPresetId]: activeRow.override.setMemberOverrides }
-          : {}))
-    : undefined;
-  const panelOnSetMemberOverridesChange = editingRow
-    ? (
-        next: Array<{
-          difficulty?: "BASIC" | "INTERMEDIATE" | "KILLER";
-          generationPlan?: "STANDARD" | "PREMIUM";
-          typeSettings?: Record<string, unknown>;
-        }>,
-      ) =>
-        writeActiveOverride((o) => ({
-          ...o,
-          mode: "set",
-          setMemberOverrides: next,
-        }))
-    : undefined;
-  const panelOnSetMemberOverridesByPresetChange = editingRow
-    ? (
-        next: Record<
-          string,
-          Array<{
-            difficulty?: "BASIC" | "INTERMEDIATE" | "KILLER";
-            generationPlan?: "STANDARD" | "PREMIUM";
-            typeSettings?: Record<string, unknown>;
-          }>
-        >,
-      ) =>
-        writeActiveOverride((o) => ({
-          ...o,
-          mode: "set",
-          setMemberOverridesByPreset: next,
-        }))
-    : undefined;
+  // activeRow/editingRow 파생 + 행 선택·생성 모달 핸들러 + 우측 패널 '유효
+  // 설정'(panel*) fork — use-row-settings-panel.ts 훅으로 추출.
+  const {
+    activeRowId,
+    setActiveRowId,
+    genModalOpen,
+    activeRow,
+    editingRow,
+    activeRowIndex,
+    selectRow,
+    handleSetActiveRow,
+    closeGenModal,
+    handleGenerateActiveRow,
+    panelDifficulty,
+    panelSetDifficulty,
+    panelTypeCounts,
+    panelSetTypeCount,
+    panelSetTypeCounts,
+    panelTotalQuestions,
+    panelQuestionTypeSettings,
+    panelSetQuestionTypeSettings,
+    panelGenMode,
+    panelSetGenMode,
+    panelGenerationPlan,
+    panelSetGenerationPlan,
+    panelSetPresetId,
+    panelSetPresetCounts,
+    panelOnSetPresetChange,
+    panelOnSetPresetCountsChange,
+    panelSetMemberOverrides,
+    panelSetMemberOverridesByPreset,
+    panelOnSetMemberOverridesChange,
+    panelOnSetMemberOverridesByPresetChange,
+  } = useRowSettingsPanel({
+    workspaceApi,
+    workspaceVisible,
+    handleWorkspaceGenerate,
+    difficulty,
+    setDifficulty,
+    typeCounts,
+    setTypeCount,
+    setTypeCounts,
+    totalQuestions,
+    questionTypeSettings,
+    setQuestionTypeSettings,
+    genMode,
+    setGenMode,
+    generationPlan,
+    setGenerationPlan,
+  });
 
   // ── Can generate? ──
   const canGenerate = selectedIds.size > 0 && totalQuestions > 0;
@@ -2917,6 +1469,30 @@ export function GeneratePageClient({
 
   const workspacePane = (
     <div className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden">
+      {/* 오답 기반 변형 컨텍스트 — 지문 행들 위, 워크스페이스가 열려 있을 때만.
+          "왜 이 지문이 여기 담겼는지"의 근거를 화면에서 잃지 않게 한다(§8.4).
+          시드가 유실됐으면(variantSeedMissing) 같은 자리에 축약 배너를 세워
+          '무엇이 복원됐고 무엇이 없는지'를 남긴다 — 무음으로 넘기지 않는다.
+          (기존 data-variant-* 속성은 읽는 코드가 0건인 죽은 표식이라 제거하고,
+           from 은 스트립의 「돌아가기」 링크 prop 으로 실제 동선에 연결했다.) */}
+      {variantSeed ? (
+        <div className="shrink-0 pb-2">
+          <VariantContextStrip
+            seed={variantSeed}
+            backHref={initialFromRef.current}
+            onClear={handleClearVariantSeed}
+          />
+        </div>
+      ) : variantSeedMissing ? (
+        <div className="shrink-0 pb-2">
+          <VariantSeedMissingStrip
+            typeCounts={initialTypeCountsRef.current}
+            difficulty={initialDifficultyRef.current}
+            backHref={initialFromRef.current}
+            onClear={handleClearVariantSeed}
+          />
+        </div>
+      ) : null}
       <div className="min-h-0 flex-1">
         <PassageWorkspace
           api={workspaceApi}
@@ -2925,6 +1501,8 @@ export function GeneratePageClient({
           questionCountByPassage={questionCountByPassage}
           questionsByPassage={questionsByPassage}
           onOpenQuestionDetail={(q) => setDetailQuestion(q)}
+          variantSourcesByPassage={variantSourcesByPassage}
+          onOpenVariantSources={setVariantSourceView}
           globalDifficulty={difficulty}
           globalGenerationPlan={generationPlan}
           setModeActive={genMode === "set"}
@@ -3091,297 +1669,19 @@ export function GeneratePageClient({
   const activeRowStats = activeRowId
     ? workspaceRowStats.get(activeRowId)
     : undefined;
-  // 지문별 생성 모달에 넘길 지문 과목 — "KOREAN" 이면 패널이 국어 유형 그룹만
-  // 연다(영어·null 은 기존 그대로). 변형본 행이라 방금 저장된 passageId 가 아직
-  // 목록에 없으면 원본(variantOfId)의 과목으로 폴백한다. 국어 라우트
-  // (subjectScope="KOREAN")에서는 지문 lookup 이 실패해도 무조건 KOREAN —
-  // 어떤 경우에도 국어 화면에 영어 유형 패널이 열리지 않는다.
-  const activeRowSubject = useMemo(() => {
-    if (subjectScope === "KOREAN") return "KOREAN";
-    if (!activeRow) return null;
-    const byId = new Map(passages.map((p) => [p.id, p]));
-    return (
-      byId.get(activeRow.passageId)?.subject ??
-      (activeRow.variantOfId
-        ? byId.get(activeRow.variantOfId)?.subject
-        : null) ??
-      null
-    );
-  }, [activeRow, passages, subjectScope]);
-
-  // ── 국어 세트 생성 (KO 전용 라우트) ─────────────────────────────────────
-  // 국어 지문의 '세트 생성' 모드는 영어 장문 세트 파이프라인을 타지 않고
-  // /api/workbench/ai-jobs/korean-question-set 을 직접 호출한다. 큐 UX(낙관적
-  // 카드 → 완료 시 카드 제거 + 하단 지문 세트 섹션 갱신)는 영어 세트와 동일.
-  const [koSetGenerating, setKoSetGenerating] = useState(false);
-  // 편집 중 지문의 유효 본문(범위·수정 반영) — KO 세트 분량 게이트 판정용.
-  const activeRowKoContent = activeRow ? effectiveRowContent(activeRow) : "";
-  // 지문 갈래(KO_KIND 태그) — 변형본 행이면 원본 태그로 폴백.
-  const activeRowKoKind = useMemo(() => {
-    if (!activeRow) return null;
-    const byId = new Map(passages.map((p) => [p.id, p]));
-    const passage =
-      byId.get(activeRow.passageId) ??
-      (activeRow.variantOfId ? byId.get(activeRow.variantOfId) : undefined);
-    return passage ? readKoKindFromTags(passage.tags) : null;
-  }, [activeRow, passages]);
-  // 이 모달이 KO 세트 생성 모드인지 — 국어 지문 + 개별 모드(set).
-  const koSetMode =
-    activeRowSubject === "KOREAN" && editingRow && panelGenMode === "set";
-  // 모달 푸터 CTA 의 문항 수·크레딧 — 라우트 선차감식(멤버 수 × 단가 ×
-  // KO_SET_CHARGE_ATTEMPTS)을 그대로 미러해 표기와 실제 차감이 일치한다.
-  const koSetStats = useMemo(() => {
-    if (!koSetMode || !activeRow) return { questions: 0, creditCost: 0 };
-    const unit = getQuestionGenerationCreditCost(
-      CREDIT_COSTS.QUESTION_GEN_SINGLE,
-      activeRow.override?.generationPlan ?? generationPlan,
-    );
-    // 행 오버라이드에서 직접 읽는다 — panelSetPresetCounts 는 렌더마다 새
-    // 객체가 될 수 있어(조건식) memo 의존성으로 부적합.
-    const presetCounts =
-      activeRow.override?.setPresetCounts ??
-      (activeRow.override?.setPresetId
-        ? { [activeRow.override.setPresetId]: 1 }
-        : {});
-    let questions = 0;
-    let creditCost = 0;
-    for (const [presetId, raw] of Object.entries(presetCounts)) {
-      const count = Math.max(0, Math.floor(Number(raw) || 0));
-      if (count <= 0) continue;
-      const preset = resolveKoSetPreset(presetId);
-      if (!preset) continue;
-      const resolution = resolveKoSetSlots(preset, activeRowKoKind);
-      if (!resolution.ok) continue;
-      questions += resolution.members.length * count;
-      creditCost +=
-        resolution.members.length * unit * KO_SET_CHARGE_ATTEMPTS * count;
-    }
-    return { questions, creditCost };
-  }, [koSetMode, activeRow, generationPlan, activeRowKoKind]);
-
-  // KO 세트 생성 실행 — 변형본 저장(필요 시) → 낙관적 카드 → KO 라우트 순차 호출.
-  const handleGenerateKoSet = useCallback(async () => {
-    const row = activeRow;
-    if (!row || koSetGenerating) return;
-    // CTA 표기(koSetStats)와 동일한 소스 — setPresetCounts 가 비어 있으면
-    // legacy 단일 선택(setPresetId)을 1세트로 간주한다.
-    const rawCounts =
-      row.override?.setPresetCounts ??
-      (row.override?.setPresetId ? { [row.override.setPresetId]: 1 } : {});
-    const counts = Object.entries(rawCounts)
-      .map(([id, c]) => [id, Math.max(0, Math.floor(Number(c) || 0))] as const)
-      .filter(([, c]) => c > 0);
-    if (counts.length === 0) {
-      toast.error("세트 프리셋을 선택하세요.");
-      return;
-    }
-    setKoSetGenerating(true);
-    try {
-      const content = effectiveRowContent(row);
-      if (content.trim().length < 20) {
-        toast.error("본문이 너무 짧아 세트를 생성할 수 없습니다.");
-        return;
-      }
-
-      // 1) 편집·범위 지정된 행은 먼저 변형본 지문으로 저장한다(문제-지문 연결
-      //    정합 — 영어 워크스페이스 생성과 동일 원리, subject 는 원본에서 승계).
-      let passageId = row.passageId;
-      let title = row.title;
-      if (rowNeedsVariant(row)) {
-        const base = row.title.replace(/\s*\(변형(?:\s*\d+)?\)\s*$/, "").trim();
-        const taken = new Set(
-          passages
-            .filter((p) => p.title.startsWith(`${base} (변형`))
-            .map((p) => p.title),
-        );
-        let variantTitle = `${base} (변형)`;
-        for (let n = 2; taken.has(variantTitle); n += 1) {
-          variantTitle = `${base} (변형 ${n})`;
-        }
-        const { createDirectInputPassageMaterial } = await import(
-          "@/actions/workbench"
-        );
-        const saved = await createDirectInputPassageMaterial({
-          title: variantTitle,
-          content,
-          sourcePassageId: row.variantOfId ?? row.passageId,
-          // [KOSET-4] 갈래 태그 승계 — 액션의 태그 병합은 data.tags 가 비어 있으면
-          // 원본 tags 를 승계하지 않아 변형본이 KO_KIND 태그 없이 저장되고, 서버
-          // 라우트가 kind=null 로 슬롯을 해석해 UI 표기(activeRowKoKind 기반)와
-          // 어긋난다. UI 가 판정한 갈래를 명시 전달해 원본 tags 승계+갈래 태그를
-          // 함께 기록한다(subject 는 액션이 원본에서 KOREAN 을 이미 승계).
-          ...(activeRowKoKind ? { tags: [koKindToTag(activeRowKoKind)] } : {}),
-          subject: "KOREAN" as const,
-        });
-        if (!saved?.success || !saved.id) {
-          toast.error(
-            `"${row.title}" 변형본 저장에 실패해 세트 생성을 중단했습니다.` +
-              (saved && "error" in saved && saved.error
-                ? ` (${saved.error})`
-                : ""),
-          );
-          return;
-        }
-        workspaceApi.rebindToVariant(row.localId, {
-          passageId: saved.id,
-          title: variantTitle,
-          content,
-          variantOfId: row.variantOfId ?? row.passageId,
-        });
-        passageId = saved.id;
-        title = variantTitle;
-        toast.success(
-          "편집된 지문이 변형본으로 저장됐습니다. (내 지문에서 확인)",
-        );
-        void loadPassages();
-      }
-
-      // 2) 생성 유닛 구성 — 세트 1개당 낙관적 큐 카드 1장(영어 세트와 동일).
-      const koDifficulty = row.override?.difficulty ?? "INTERMEDIATE";
-      const koPlan = row.override?.generationPlan ?? generationPlan;
-      const prompt = customPrompt.trim();
-      const runToken = `${Date.now().toString(36)}${Math.random()
-        .toString(36)
-        .slice(2, 8)}`;
-      const jobs = counts.flatMap(([presetId, count]) => {
-        const preset = resolveKoSetPreset(presetId);
-        if (!preset) return [];
-        const resolution = resolveKoSetSlots(preset, activeRowKoKind);
-        const typeCountsForConfig: Record<string, number> = {};
-        if (resolution.ok) {
-          for (const m of resolution.members) {
-            typeCountsForConfig[m.typeId] =
-              (typeCountsForConfig[m.typeId] ?? 0) + 1;
-          }
-        }
-        return Array.from({ length: count }, (_, copyIndex) => ({
-          presetId,
-          label: preset.label,
-          tempId: `koset:${passageId}:${presetId}:${runToken}:${copyIndex}`,
-          config: {
-            typeCounts: typeCountsForConfig,
-            questionTypeSettings: {},
-            difficulty: koDifficulty,
-            prompt,
-            mode: "manual" as const,
-            generationPlan: koPlan,
-          },
-        }));
-      });
-      if (jobs.length === 0) {
-        toast.error("세트 프리셋을 선택하세요.");
-        return;
-      }
-      const original =
-        passages.find((p) => p.id === row.passageId) ??
-        passages.find((p) => p.id === row.variantOfId);
-      const passageLike = {
-        id: passageId,
-        title,
-        content,
-        grade: original?.grade ?? null,
-        semester: original?.semester ?? null,
-        unit: original?.unit ?? null,
-        publisher: original?.publisher ?? null,
-        difficulty: original?.difficulty ?? null,
-        school: original?.school ?? null,
-      } as PassageItem;
-      const batchCreatedAt = new Date().toISOString();
-      setSessionQueue((prev) => [
-        ...jobs.map((job) =>
-          buildOptimisticItem({
-            jobId: job.tempId,
-            passage: passageLike,
-            analysisData: null,
-            config: job.config,
-            progressKey: "set",
-            createdAt: batchCreatedAt,
-          }),
-        ),
-        ...prev,
-      ]);
-      taskQueue.triggerRefresh();
-
-      // 3) 실행 (fire-and-forget) — 완료 시 카드 제거 + 목록/세트 섹션 갱신.
-      void (async () => {
-        let createdSets = 0;
-        let createdQuestions = 0;
-        for (const job of jobs) {
-          try {
-            const res = await fetch(
-              "/api/workbench/ai-jobs/korean-question-set",
-              {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
-                body: JSON.stringify({
-                  passageId,
-                  presetId: job.presetId,
-                  difficulty: koDifficulty,
-                  generationPlan: koPlan,
-                  customPrompt: prompt || undefined,
-                }),
-              },
-            );
-            const data = await res.json().catch(() => ({}));
-            if (!res.ok) {
-              throw new Error(data?.error || "국어 세트 생성에 실패했습니다.");
-            }
-            createdSets += 1;
-            createdQuestions += Array.isArray(data.questionIds)
-              ? data.questionIds.length
-              : 0;
-            if (data.status === "DEGRADED") {
-              toast.warning(
-                `"${job.label}" 세트가 생성됐지만 검수가 필요합니다.`,
-              );
-            }
-            // 생성중 카드 제거 → 하단 '지문 세트' 묶음 카드가 대신 보인다.
-            setSessionQueue((prev) => prev.filter((q) => q.id !== job.tempId));
-          } catch (err) {
-            const msg =
-              err instanceof Error ? err.message : "국어 세트 생성 실패";
-            toast.error(`"${title}" ${msg}`);
-            setSessionQueue((prev) =>
-              prev.map((q) =>
-                q.id === job.tempId
-                  ? {
-                      ...q,
-                      status: "error" as const,
-                      progress: { set: "error" as const },
-                      error: msg,
-                    }
-                  : q,
-              ),
-            );
-          }
-        }
-        taskQueue.triggerRefresh();
-        notifyCreditsChanged();
-        if (createdSets > 0) {
-          void loadSavedQuestions();
-          setSetRefreshNonce((n) => n + 1); // 하단 지문 세트 섹션 자동 갱신
-          toast.success(
-            `${createdSets}개 세트 · ${createdQuestions}문항이 생성됐습니다.`,
-          );
-        }
-      })().catch((err) => {
-        // 개별 실패는 위 try/catch 가 처리 — 여기는 예기치 못한 상위 오류만.
-        console.error("[ko-set-generate] background batch error", err);
-      });
-    } catch (err) {
-      toast.error(
-        err instanceof Error
-          ? err.message
-          : "국어 세트 생성 준비 중 오류가 발생했습니다.",
-      );
-    } finally {
-      setKoSetGenerating(false);
-    }
-  }, [
-    activeRow,
-    koSetGenerating,
+  const {
+    activeRowSubject,
+    activeRowKoContent,
     activeRowKoKind,
+    koSetMode,
+    koSetStats,
+    koSetGenerating,
+    handleGenerateKoSetActiveRow,
+  } = useKoreanSetGeneration({
+    subjectScope,
+    activeRow,
+    editingRow,
+    panelGenMode,
     passages,
     generationPlan,
     customPrompt,
@@ -3390,234 +1690,30 @@ export function GeneratePageClient({
     loadSavedQuestions,
     setSessionQueue,
     taskQueue,
-  ]);
+    closeGenModal,
+    setSetRefreshNonce,
+  });
 
-  // KO 세트 모드의 모달 CTA — 생성을 시작(fire-and-forget)하고 모달을 닫는다.
-  const handleGenerateKoSetActiveRow = useCallback(() => {
-    void handleGenerateKoSet();
-    closeGenModal();
-  }, [handleGenerateKoSet, closeGenModal]);
-
-  // ── "포인트 짚어주기" 배선 (point-picker-design.md §1·§2·§5) ──
-  // 본문이 지정 시점 해시와 어긋난 지문의 포인트를 무효화한다(1줄 안내). 워크
-  // 스페이스에서 내려갔거나 변형본으로 재바인딩된 지문의 포인트는 조용히 정리
-  // 한다 — 어느 쪽이든 낡은 오프셋·축자를 생성에 실어 보내지 않는다.
-  useEffect(() => {
-    const staleIds: string[] = [];
-    const staleTitles: string[] = [];
-    for (const passageId of Object.keys(teacherPointsByPassage)) {
-      const row = workspaceApi.rows.find((r) => r.passageId === passageId);
-      if (
-        row &&
-        hashPassageText(row.content) === teacherPointsHashRef.current[passageId]
-      ) {
-        continue;
-      }
-      staleIds.push(passageId);
-      if (row) staleTitles.push(row.title);
-    }
-    if (staleIds.length === 0) return;
-    setTeacherPointsByPassage((prev) => {
-      const next = { ...prev };
-      for (const id of staleIds) delete next[id];
-      return next;
-    });
-    for (const id of staleIds) delete teacherPointsHashRef.current[id];
-    for (const title of staleTitles) {
-      toast.info(
-        `"${title}" 본문이 수정되어 지정한 출제 포인트가 초기화됐습니다.`,
-      );
-    }
-  }, [workspaceApi.rows, teacherPointsByPassage]);
-
-  // 모달이 닫히면(어느 경로로든) 픽커도 닫는다 — 다음엔 설정 콘솔부터 연다.
-  useEffect(() => {
-    if (!genModalOpen && pickerOpen) setPickerOpen(null);
-  }, [genModalOpen, pickerOpen]);
-
-  // 유형 세부설정의 진입 행(type-numeric-detail)이 호출 — 활성 지문 스코프로
-  // 픽커를 연다. 스코프가 바뀌므로 AI 제안 채널도 idle 로 갈아끼운다.
-  const handleOpenPointPicker = (typeId: string) => {
-    if (!activeRow) return;
-    pointSuggestSeqRef.current += 1; // 이전 스코프의 늦은 응답 폐기
-    setPointSuggestState({ status: "idle" });
-    setPickerOpen({ passageId: activeRow.passageId, typeId });
-  };
-
-  // 픽커 닫기(설정 콘솔 복귀) — '선택 완료' 버튼과 모달 Esc 사다리 1단 공용.
-  const closePointPicker = () => {
-    pointSuggestSeqRef.current += 1;
-    setPickerOpen(null);
-  };
-
-  // 렌더 가드 — 픽커 대상과 활성 행이 어긋나면(행 전환·변형 재바인딩 직후)
-  // 렌더하지 않는다. 미등재 유형(메타 없음)도 방어적으로 걸러낸다.
-  const pickerTarget =
-    pickerOpen && activeRow && pickerOpen.passageId === activeRow.passageId
-      ? pickerOpen
-      : null;
-  const pickerMeta = pickerTarget
-    ? resolvePointPickerMeta(
-        pickerTarget.typeId,
-        panelQuestionTypeSettings[pickerTarget.typeId],
-      )
-    : undefined;
-
-  // '선택 완료' 완료 닫기 — Esc(취소, closePointPicker)와 달리 "포인트만 찍고
-  // 문항 수 0"인 헛수고 상태를 차단한다: 이 유형 문항 수가 0이면 1로 올리고,
-  // 어떤 유형에 문항이 잡혔는지 해당 유형 타일을 힌트 글로우로 안내한다.
-  // (SENTENCE_INSERT 는 패널의 짧은 지문 게이트와 같은 조건이면 올리지 않는다.)
-  const completePointPicker = () => {
-    const target = pickerTarget;
-    closePointPicker();
-    if (!target) return;
-    if ((panelTypeCounts[target.typeId] ?? 0) > 0) return;
-    if (target.typeId === "SENTENCE_INSERT" && activeRow) {
-      const requiredSentences =
-        readSentenceInsertSlotCountSetting(
-          panelQuestionTypeSettings.SENTENCE_INSERT,
-        ) + 1;
-      const sentenceCount = countPassageSentences(activeRow.content);
-      if (sentenceCount > 0 && sentenceCount < requiredSentences) return;
-    }
-    panelSetTypeCount(target.typeId, 1);
-    // 픽커 닫힘·카운트 반영이 커밋된 뒤 해당 유형 타일만 글로우한다.
-    window.setTimeout(() => {
-      triggerHintGlowWithin(
-        document.body,
-        `[data-question-type-id="${target.typeId}"]`,
-      );
-    }, 120);
-  };
-
-  // ScanSearch 버튼 명시 호출 — POST /api/workbench/point-suggest (크레딧 0).
-  // 실패는 완전 비차단(픽커가 안내만 표시, 수동 선택 계속). 시퀀스 가드로
-  // 픽커 전환 뒤 도착한 낡은 응답을 폐기한다.
-  const handleRequestPointSuggest = () => {
-    if (!pickerTarget || !pickerMeta) return;
-    if (pointSuggestState.status === "loading") return;
-    const { passageId, typeId } = pickerTarget;
-    const seq = (pointSuggestSeqRef.current += 1);
-    setPointSuggestState({ status: "loading" });
-    void (async () => {
-      try {
-        const res = await fetch("/api/workbench/point-suggest", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({
-            passageId,
-            questionType: typeId,
-            unit: pickerMeta.unit,
-            // 후보는 항상 라우트 상한(8개)까지 받아 교사가 고르게 한다 —
-            // 반영 상한(maxPoints)은 픽커가 승격 시점에 따로 강제한다.
-            maxPoints: 8,
-          }),
-        });
-        const data = await res.json().catch(() => ({}));
-        if (pointSuggestSeqRef.current !== seq) return; // 픽커 전환 — 폐기
-        if (!res.ok) {
-          throw new Error(
-            typeof data?.error === "string" && data.error
-              ? data.error
-              : "AI 포인트 제안에 실패했습니다.",
-          );
-        }
-        setPointSuggestState({
-          status: "done",
-          suggestions: Array.isArray(data?.suggestions)
-            ? data.suggestions
-            : [],
-          cached: data?.cached === true,
-        });
-      } catch (err) {
-        if (pointSuggestSeqRef.current !== seq) return;
-        setPointSuggestState({
-          status: "error",
-          message:
-            err instanceof Error && err.message
-              ? err.message
-              : "AI 포인트 제안에 실패했습니다.",
-        });
-      }
-    })();
-  };
-
-  // 픽커 onChange — 반환값은 이미 start 정렬 + 축자 검증 완료(픽커 계약).
-  // 지정 시점의 본문 해시를 함께 기록해 위 무효화 effect 의 기준으로 삼는다.
-  const handleTeacherPointsChange = (next: TeacherPoint[]) => {
-    if (!pickerTarget || !activeRow) return;
-    const { passageId, typeId } = pickerTarget;
-    teacherPointsHashRef.current[passageId] = hashPassageText(
-      activeRow.content,
-    );
-    setTeacherPointsByPassage((prev) => {
-      const forPassage = { ...(prev[passageId] ?? {}) };
-      if (next.length === 0) delete forPassage[typeId];
-      else forPassage[typeId] = next;
-      if (Object.keys(forPassage).length === 0) {
-        const rest = { ...prev };
-        delete rest[passageId];
-        return rest;
-      }
-      return { ...prev, [passageId]: forPassage };
-    });
-  };
-
-  // 활성 지문의 유형별 포인트 수 — 유형 타일 "포인트 N" 배지(패널)와 푸터
-  // '포인트 N개 반영' 칩(모달)에 쓴다.
-  const activeRowTeacherPoints = activeRow
-    ? (teacherPointsByPassage[activeRow.passageId] ?? {})
-    : {};
-  const activeRowPointCounts: Record<string, number> = Object.fromEntries(
-    Object.entries(activeRowTeacherPoints).map(([typeId, points]) => [
-      typeId,
-      points.length,
-    ]),
-  );
-  const activeRowPointTotal = Object.values(activeRowPointCounts).reduce(
-    (a, b) => a + b,
-    0,
-  );
-  // 푸터 '포인트 N개 반영' 칩 — 포인트는 있는데 문항 수가 0인 유형이 있으면
-  // '문항 수를 지정하세요' 보조 문구를 붙이고, 클릭 시 그 유형(없으면 첫 포인트
-  // 유형)의 픽커로 재진입시킨다("포인트만 찍고 문항 수 0" 헛수고의 복구 동선).
-  const pointTypeIds = Object.keys(activeRowPointCounts);
-  const zeroCountPointTypeIds = pointTypeIds.filter(
-    (typeId) => (panelTypeCounts[typeId] ?? 0) === 0,
-  );
-  const handlePointChipClick = () => {
-    const targetTypeId = zeroCountPointTypeIds[0] ?? pointTypeIds[0];
-    if (targetTypeId) handleOpenPointPicker(targetTypeId);
-  };
-
-  // 모달 좌컬럼 지문 무대 — key 리마운트로 지문/유형 전환 시 픽커 내부 제스처
-  // 상태를 초기화한다(suggestState 는 handleOpenPointPicker 가 함께 리셋).
-  const pointPickerNode =
-    pickerTarget && pickerMeta && activeRow ? (
-      <PassagePointPicker
-        key={`${pickerTarget.passageId}:${pickerTarget.typeId}`}
-        passageId={pickerTarget.passageId}
-        passageText={activeRow.content}
-        typeId={pickerTarget.typeId}
-        typeLabel={
-          QUESTION_TYPE_UI[pickerTarget.typeId]?.label ?? pickerTarget.typeId
-        }
-        meta={pickerMeta}
-        points={
-          teacherPointsByPassage[pickerTarget.passageId]?.[
-            pickerTarget.typeId
-          ] ?? []
-        }
-        onChange={handleTeacherPointsChange}
-        maxPoints={pickerMeta.maxPoints}
-        // '선택 완료' = 완료 닫기(문항 수 0이면 1로 보정) — Esc 취소 닫기
-        // (onPickerClose=closePointPicker)와 의미를 분리한다.
-        onClose={completePointPicker}
-        suggestState={pointSuggestState}
-        onRequestSuggest={handleRequestPointSuggest}
-      />
-    ) : null;
+  // ── "포인트 짚어주기" 배선 — use-point-picker.tsx 로 추출 ──
+  // 픽커 상태·staleness 무효화·핸들러·pointPickerNode JSX 클러스터.
+  const {
+    handleOpenPointPicker,
+    closePointPicker,
+    activeRowPointCounts,
+    activeRowPointTotal,
+    zeroCountPointTypeIds,
+    handlePointChipClick,
+    pointPickerNode,
+  } = usePointPicker({
+    workspaceApi,
+    teacherPointsByPassage,
+    setTeacherPointsByPassage,
+    genModalOpen,
+    activeRow,
+    panelQuestionTypeSettings,
+    panelTypeCounts,
+    panelSetTypeCount,
+  });
 
   const genModal =
     genModalOpen && activeRow ? (
@@ -3720,321 +1816,27 @@ export function GeneratePageClient({
       </PassageGenerateModal>
     ) : null;
 
-  // ── 모바일 하단 이전/다음 바 구성 ──
-  const mobilePrev =
-    mobileStep === "input"
-      ? null
-      : {
-          label: "이전",
-          onClick: () =>
-            goToMobileStep(
-              mobileStep === "library"
-                ? "input"
-                : mobileStep === "workspace"
-                  ? "library"
-                  : workspaceActive
-                    ? "workspace"
-                    : "library",
-            ),
-        };
-  // 워크스페이스 스텝: 이번 세션에 생성(중/완료/오류)된 문제가 하나라도 있어야
-  // '문제 확인'이 의미 있다. 없으면 하단 CTA 를 비활성으로 눌러 '다음으로(유형선택)'
-  // 으로 먼저 생성하도록 유도한다(결과로의 이동 자체는 상단 스텝 헤더 4번 탭으로
-  // 언제든 가능 — 자유 이동은 막지 않는다).
-  const hasSessionQuestions =
-    queueCounts.done > 0 ||
-    queueCounts.generating > 0 ||
-    queueCounts.error > 0;
-  // 담긴 지문 중 '유형이 설정된'(=생성 대기) 지문 수·문제 수 — 모바일 '문제 확인'
-  // 버튼이 담긴 전 지문을 일괄 생성할지, 결과만 볼지 판단하는 데 쓴다.
-  const workspacePending = (() => {
-    let rows = 0;
-    let questions = 0;
-    for (const row of workspaceApi.rows) {
-      const st = workspaceRowStats.get(row.localId);
-      if (st && st.questions > 0) {
-        rows += 1;
-        questions += st.questions;
-      }
-    }
-    return { rows, questions };
-  })();
-  const mobileNext = (() => {
-    if (mobileStep === "input") {
-      // 직접 입력 탭에 등록할 지문이 쌓여 있으면 '다음' = 등록하고 내 지문함
-      // (콘텐츠 안의 '다음으로 (내 지문함)' 버튼을 하단 바로 옮긴 것 — 등록
-      // 성공 시 intakeView 가 library 로 바뀌며 스텝이 자동으로 넘어간다).
-      if (intakeTab === "paste" && intakeView === "intake" && pasteBoard.count > 0)
-        return {
-          label: pasteBoard.busy
-            ? "등록 중…"
-            : `다음으로 (내 지문함) · 지문 ${pasteBoard.count}개`,
-          onClick: () => pasteStartRef.current?.(),
-          disabled: pasteBoard.busy,
-        };
-      return {
-        label: "내 지문함으로",
-        onClick: () => goToMobileStep("library"),
-      };
-    }
-    if (mobileStep === "library") {
-      // 선택한 지문이 있으면 '다음'이 곧 워크스페이스 담기 — PC 의
-      // '편집(워크스페이스로)' 버튼과 같은 핸들러를 쓴다. 담기 성공 시
-      // workspaceOpen 이 켜지고 동기화 효과가 스텝을 넘긴다.
-      if (selectedIds.size > 0)
-        return {
-          label: `선택 ${selectedIds.size}개 워크스페이스로`,
-          onClick: () => void handleLoadSelectedToWorkspace(),
-        };
-      if (workspaceActive)
-        return {
-          label: "워크스페이스로",
-          onClick: () => goToMobileStep("workspace"),
-        };
-      // 비활 사유 = 선택 0개 → 눌러도 막지 말고 지문 카드들을 글로우해 선택을 유도.
-      return {
-        label: "워크스페이스로",
-        disabled: true,
-        onDisabledHint: () =>
-          triggerHintGlowWithin(document.body, "[data-drag-item-id]", {
-            max: 24,
-            // 대상이 화면 밖일 수 있으니 하단 고정 바에 가리지 않게 가운데로 스크롤.
-            scrollBlock: "center",
-          }),
-      };
-    }
-    if (mobileStep === "workspace") {
-      const totalWorkspaceRows = workspaceApi.rows.length;
-      // ① 담긴 지문 중 하나라도 유형이 있으면 → 생성 준비 단계. 단 '모든' 담긴
-      //    지문이 각각 유형을 담아야 활성(사용자 요청). 활성 시 담긴 전 지문을 한 번에
-      //    일괄 생성한 뒤 각 typeCounts 를 비우고(재생성 방지) 결과 스텝으로 이동한다.
-      if (workspacePending.rows > 0) {
-        if (workspacePending.rows === totalWorkspaceRows)
-          return {
-            label: `${workspacePending.rows}개 지문 문제 생성 (${workspacePending.questions}문제)`,
-            onClick: () => {
-              void handleWorkspaceGenerate();
-              workspaceApi.rows.forEach((row) => {
-                if (row.override && overrideHasTypeCounts(row.override)) {
-                  const next = { ...row.override, typeCounts: {} };
-                  workspaceApi.setOverride(
-                    row.localId,
-                    isOverrideEmpty(next) ? null : next,
-                  );
-                }
-              });
-              goToMobileStep("results");
-            },
-          };
-        // 일부 지문만 유형을 담음 → 비활성. 눌러도 막지 말고 지문 행들을 글로우해
-        // 남은 지문에도 유형을 담도록 유도한다.
-        const remaining = totalWorkspaceRows - workspacePending.rows;
-        return {
-          label: `${remaining}개 지문에 유형을 더 담아주세요`,
-          disabled: true,
-          onDisabledHint: () =>
-            triggerHintGlowWithin(
-              document.body,
-              '[data-generate-tour="row-generate-button"]',
-              { scrollBlock: "center" },
-            ),
-        };
-      }
-      // ② 담긴 유형은 없지만 이미 생성물이 있으면 → 결과 보기.
-      if (hasSessionQuestions)
-        return {
-          label: queueCounts.generating > 0 ? "문제 확인 (생성 중)" : "문제 확인",
-          onClick: () => goToMobileStep("results"),
-        };
-      // ③ 아무 지문도 유형 설정이 안 됐고 생성물도 없음 → 비활성. 눌러도 막지 말고
-      //    지문별 '유형선택하고 지문 담기' 버튼들을 글로우해 유형 담기를 유도한다.
-      return {
-        label: "문제 확인",
-        disabled: true,
-        onDisabledHint: () =>
-          triggerHintGlowWithin(
-            document.body,
-            '[data-generate-tour="row-generate-button"]',
-            // 생성 버튼이 긴 지문 아래·고정 바 뒤에 가려질 수 있으니 가운데로 스크롤.
-            { scrollBlock: "center" },
-          ),
-      };
-    }
-    return null;
-  })();
-  const mobileNextHint =
-    mobileStep === "library" && selectedIds.size === 0 && !workspaceActive
-      ? "지문 카드를 선택하면 워크스페이스로 보낼 수 있어요"
-      : // 워크스페이스 안내는 하단 '담긴 유형' 장바구니 바가 대신하므로 힌트 생략.
-        undefined;
-
-  // 파일업로드·직접입력·기출 탭(지문 입력 스텝)에서는 각 보드가 자체 하단 고정
-  // 액션 바(담긴 지문 + 추출/등록/담기 버튼)를 렌더하므로, 중복되는 공용 스텝 네비를
-  // 숨기고 그 높이만큼 아래 여백을 예약한다(고정 바에 콘텐츠가 가리지 않게).
-  const boardFixedFooterActive =
-    mobileStep === "input" &&
-    intakeView === "intake" &&
-    (intakeTab === "upload" || intakeTab === "paste" || intakeTab === "exam");
-
-  // ── 워크스페이스 하단 고정 '담긴 유형' 장바구니 (모바일) ──
-  // 지문마다 유형을 담으면(모달 '유형 담기') 여기 모여, 펼치면 목록·빼기.
-  // 담긴 유형이 곧 일괄 생성 대상 — 바로 아래 '문제 생성' 버튼이 전부 생성한다.
-  const workspaceConfiguredRows = workspaceApi.rows
-    .map((row) => {
-      const st = workspaceRowStats.get(row.localId);
-      return {
-        localId: row.localId,
-        title: row.title,
-        questions: st?.questions ?? 0,
-      };
-    })
-    .filter((r) => r.questions > 0);
-  const clearRowTypes = (localId: string) => {
-    const row = workspaceApi.rows.find((r) => r.localId === localId);
-    if (!row?.override) return;
-    const next = { ...row.override, typeCounts: {} };
-    workspaceApi.setOverride(localId, isOverrideEmpty(next) ? null : next);
-  };
+  // ── 모바일 하단 고정 장바구니 2종 — generate-mobile-carts.tsx 로 추출 ──
   const workspaceCart = (
-    <>
-      {workspaceCartOpen && workspaceConfiguredRows.length > 0 ? (
-        <div className="flex max-h-[38vh] min-h-0 flex-col border-b border-slate-100 bg-slate-50/70">
-          <div className="min-h-0 flex-1 overflow-y-auto p-2">
-            {workspaceConfiguredRows.map((r, i) => (
-              <div
-                key={r.localId}
-                className="mb-1.5 flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-2.5 py-2 last:mb-0"
-              >
-                <span className="inline-flex size-5 shrink-0 items-center justify-center rounded bg-blue-600 text-[10.5px] font-bold text-white">
-                  {i + 1}
-                </span>
-                <span className="min-w-0 flex-1 truncate text-[12px] font-medium text-slate-700">
-                  {r.title?.trim() || "제목 없는 지문"}
-                </span>
-                <span className="shrink-0 rounded bg-blue-50 px-1.5 py-0.5 text-[10.5px] font-bold text-blue-600">
-                  {r.questions}문제
-                </span>
-                <button
-                  type="button"
-                  onClick={() => clearRowTypes(r.localId)}
-                  aria-label="담은 유형 빼기"
-                  className="shrink-0 rounded-md p-1 text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600"
-                >
-                  <X className="size-3.5" aria-hidden="true" />
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-      ) : null}
-      <button
-        type="button"
-        onClick={() => setWorkspaceCartOpen((open) => !open)}
-        aria-expanded={workspaceCartOpen}
-        aria-label={workspaceCartOpen ? "담긴 유형 목록 접기" : "담긴 유형 목록 펼치기"}
-        className="flex w-full shrink-0 items-center gap-2.5 border-b border-slate-100 bg-white px-3 py-2 text-left"
-      >
-        <span className="relative inline-flex size-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
-          <ShoppingBasket className="size-5" aria-hidden="true" />
-          {workspacePending.rows > 0 ? (
-            <span className="absolute -right-1.5 -top-1.5 inline-flex min-w-[18px] items-center justify-center rounded-full bg-blue-600 px-1 text-[10px] font-extrabold leading-none text-white ring-2 ring-white">
-              {workspacePending.rows}
-            </span>
-          ) : null}
-        </span>
-        <span className="flex min-w-0 flex-1 flex-col">
-          <span className="text-[12.5px] font-bold text-slate-900">
-            담긴 유형 {workspacePending.rows}지문
-            {workspacePending.questions > 0
-              ? ` · ${workspacePending.questions}문제`
-              : ""}
-          </span>
-          <span className="truncate text-[10.5px] text-slate-400">
-            {workspacePending.rows > 0
-              ? "탭하여 담긴 지문 유형 보기·빼기"
-              : "지문마다 ‘유형 담기’로 담으면 여기 모여요"}
-          </span>
-        </span>
-        <ChevronDown
-          className={
-            "size-4 shrink-0 text-slate-400 transition-transform" +
-            (workspaceCartOpen ? " rotate-180" : "")
-          }
-          aria-hidden="true"
-        />
-      </button>
-    </>
+    <WorkspaceCart
+      workspaceCartOpen={workspaceCartOpen}
+      setWorkspaceCartOpen={setWorkspaceCartOpen}
+      workspacePending={workspacePending}
+      workspaceApi={workspaceApi}
+      workspaceRowStats={workspaceRowStats}
+    />
   );
 
-  // ── 내 지문함(library) 하단 고정 '담긴 지문'(선택한 지문) 장바구니 (모바일) ──
-  // 내 지문함에서 체크한 지문들이 여기 모여, 펼치면 목록·빼기. 바로 아래 '워크스페이스로'
-  // 버튼이 담긴 지문을 워크스페이스로 보낸다(워크스페이스 장바구니와 동형).
   const librarySelectedPassages = passages.filter((p) =>
     selectedIds.has(p.id),
   );
   const libraryCart = (
-    <>
-      {libraryCartOpen && librarySelectedPassages.length > 0 ? (
-        <div className="flex max-h-[38vh] min-h-0 flex-col border-b border-slate-100 bg-slate-50/70">
-          <div className="min-h-0 flex-1 overflow-y-auto p-2">
-            {librarySelectedPassages.map((p, i) => (
-              <div
-                key={p.id}
-                className="mb-1.5 flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-2.5 py-2 last:mb-0"
-              >
-                <span className="inline-flex size-5 shrink-0 items-center justify-center rounded bg-blue-600 text-[10.5px] font-bold text-white">
-                  {i + 1}
-                </span>
-                <span className="min-w-0 flex-1 truncate text-[12px] font-medium text-slate-700">
-                  {p.title?.trim() || "제목 없는 지문"}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => toggleCheckbox(p.id)}
-                  aria-label="선택에서 빼기"
-                  className="shrink-0 rounded-md p-1 text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600"
-                >
-                  <X className="size-3.5" aria-hidden="true" />
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-      ) : null}
-      <button
-        type="button"
-        onClick={() => setLibraryCartOpen((open) => !open)}
-        aria-expanded={libraryCartOpen}
-        aria-label={libraryCartOpen ? "담긴 지문 목록 접기" : "담긴 지문 목록 펼치기"}
-        className="flex w-full shrink-0 items-center gap-2.5 border-b border-slate-100 bg-white px-3 py-2 text-left"
-      >
-        <span className="relative inline-flex size-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
-          <ShoppingBasket className="size-5" aria-hidden="true" />
-          {librarySelectedPassages.length > 0 ? (
-            <span className="absolute -right-1.5 -top-1.5 inline-flex min-w-[18px] items-center justify-center rounded-full bg-blue-600 px-1 text-[10px] font-extrabold leading-none text-white ring-2 ring-white">
-              {librarySelectedPassages.length}
-            </span>
-          ) : null}
-        </span>
-        <span className="flex min-w-0 flex-1 flex-col">
-          <span className="text-[12.5px] font-bold text-slate-900">
-            담긴 지문 {librarySelectedPassages.length}개
-          </span>
-          <span className="truncate text-[10.5px] text-slate-400">
-            {librarySelectedPassages.length > 0
-              ? "탭하여 담긴 지문 보기·빼기"
-              : "지문 카드를 선택하면 여기 모여요"}
-          </span>
-        </span>
-        <ChevronDown
-          className={
-            "size-4 shrink-0 text-slate-400 transition-transform" +
-            (libraryCartOpen ? " rotate-180" : "")
-          }
-          aria-hidden="true"
-        />
-      </button>
-    </>
+    <LibraryCart
+      libraryCartOpen={libraryCartOpen}
+      setLibraryCartOpen={setLibraryCartOpen}
+      librarySelectedPassages={librarySelectedPassages}
+      toggleCheckbox={toggleCheckbox}
+    />
   );
 
   return (
@@ -4202,108 +2004,24 @@ export function GeneratePageClient({
       )}
 
       {/* ─── Question Detail Modal ─── */}
-      {detailQuestion && (
-        <div className="fixed inset-0 z-50 flex items-stretch justify-center">
-          <div
-            className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"
-            onClick={() => setDetailQuestion(null)}
-          />
-          <div
-            data-generate-tour="question-detail-modal"
-            className="relative z-10 w-full max-w-[1200px] mx-4 my-4 bg-white rounded-2xl border border-slate-200 shadow-2xl flex flex-col overflow-hidden"
-          >
-            {/* Header */}
-            <div className="flex items-center justify-between gap-3 px-6 py-3 border-b border-slate-200 shrink-0">
-              <div className="flex min-w-0 items-center gap-2.5">
-                <h2 className="text-[15px] font-bold text-slate-800">
-                  문제 상세
-                </h2>
-              </div>
-              <div className="flex shrink-0 items-center gap-2">
-                {detailQuestion.approved ? (
-                  <button
-                    type="button"
-                    onClick={() => handleUnapproveQuestion(detailQuestion.id)}
-                    title="검수취소"
-                    aria-label="검수취소"
-                    className="inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 shadow-none transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
-                  >
-                    <XCircle className="h-3.5 w-3.5" />
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => handleApproveQuestion(detailQuestion.id)}
-                    title="검수완료"
-                    aria-label="검수완료"
-                    className="inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 shadow-none transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
-                  >
-                    <CheckCircle2 className="h-3.5 w-3.5" />
-                  </button>
-                )}
-                {/* 수정하기 — 검수완료 버튼 오른쪽. 상세를 닫고 편집기를 연다. */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    const id = detailQuestion.id;
-                    setDetailQuestion(null);
-                    editor.openEditor(id);
-                  }}
-                  title="수정하기"
-                  aria-label="수정하기"
-                  className="inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 shadow-none transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
-                >
-                  <SquarePen className="h-3.5 w-3.5" />
-                </button>
-                <button
-                  onClick={() => setDetailQuestion(null)}
-                  className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
-                  aria-label="닫기"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              </div>
-            </div>
-            {/* Content: 2 columns */}
-            <div className="flex-1 overflow-hidden grid grid-cols-2">
-              {/* Left: Passage — 포인트 짚어주기 문항이면 칩 레일 + 하이라이트
-                  재현(공용 TeacherPointsPassage — 문제은행 상세와 동일 표시). */}
-              <div className="border-r border-slate-200 overflow-y-auto">
-                {detailQuestion.passage ? (
-                  <div className="px-6 py-5">
-                    <TeacherPointsPassage
-                      content={detailQuestion.passage.content}
-                      question={detailQuestion}
-                      bodyClassName="whitespace-pre-wrap font-mono text-sm leading-[2] text-slate-800"
-                    />
-                  </div>
-                ) : (
-                  <div className="flex items-center justify-center h-full text-slate-400 text-sm">
-                    지문 없음
-                  </div>
-                )}
-              </div>
-              {/* Right: Question */}
-              <div className="relative overflow-hidden">
-                <div className="h-full overflow-y-auto px-6 py-5">
-                  <QuestionCard
-                    q={detailQuestion}
-                    num={1}
-                    readonly
-                    hideReviewStatusStamp
-                  />
-                </div>
-                {/* 검수 도장 — 이 팝업 전용으로 우측 문제 박스 우측 상단에 고정 + 확대.
-                    공용 ReviewStatusStamp는 그대로 두고 transform scale로만 키운다. */}
-                <ReviewStatusStamp
-                  approved={detailQuestion.approved}
-                  className="absolute right-9 top-9 z-10 origin-top-right scale-125"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <QuestionDetailModal
+        detailQuestion={detailQuestion}
+        setDetailQuestion={setDetailQuestion}
+        handleApproveQuestion={handleApproveQuestion}
+        handleUnapproveQuestion={handleUnapproveQuestion}
+        editor={editor}
+      />
+
+      {/* ─── 학생 오답 원본 (오답 기반 변형 전용) ───
+          지문 행의 「학생 오답 원본」 버튼이 연다. 문제 은행과 같은 카드 UI 로
+          원본을 보여주고 그 위에 학생 답 → 정답 대조 바를 얹는다. */}
+      <VariantSourceModal
+        open={variantSourceView !== null}
+        sources={variantSourceView ?? []}
+        studentName={variantSeed?.studentName}
+        examTitle={variantSeed?.examTitle}
+        onClose={() => setVariantSourceView(null)}
+      />
 
       <EditQuestionDialog
         open={editor.editDialogOpen}
@@ -4349,7 +2067,17 @@ export function GeneratePageClient({
           !!contentModalPassage &&
           reviewActionPassageIds.has(contentModalPassage.id)
         }
-        onToggleExtractionReview={handleToggleExtractionReview}
+        // 캐스트 사유: 이 모달의 passage 는 본체가 PassageItem(계열)만 넣으므로
+        // (contentModalPassage 상태·setContentModalPassage 주입 경로 전부),
+        // 콜백이 되받는 인자는 런타임상 PassageItem 이다. 훅 시그니처
+        // ((passage: PassageItem) => Promise<void>)는 구조적 최소형
+        // PassageContentModalPassage 파라미터와 반변(contravariance) 방향이
+        // 어긋나(publisher·difficulty 부재) 직접 캐스트가 불가 — unknown 경유.
+        onToggleExtractionReview={
+          handleToggleExtractionReview as unknown as (
+            passage: PassageContentModalPassage,
+          ) => void
+        }
       />
 
       {/* ─── 추출/입력 지문 "전체 보기" — 복원 근거 + 추출 이미지 상세 모달 ─── */}
@@ -4375,16 +2103,7 @@ export function GeneratePageClient({
       <LearningGenerationIndicator analysisJobs={analysisActivityJobs} />
 
       {/* Loading overlay for analysis modal fetch */}
-      {loadingAnalysisModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-[1px]">
-          <div className="bg-white rounded-xl px-6 py-4 shadow-xl flex items-center gap-3">
-            <Loader2 className="w-5 h-5 animate-spin text-blue-600" />
-            <span className="text-[13px] text-slate-700 font-medium">
-              학습지 생성 데이터 로딩 중...
-            </span>
-          </div>
-        </div>
-      )}
+      <LoadingAnalysisOverlay loadingAnalysisModal={loadingAnalysisModal} />
     </div>
   );
 }

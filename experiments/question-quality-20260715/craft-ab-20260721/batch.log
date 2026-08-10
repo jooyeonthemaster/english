@@ -1,0 +1,834 @@
+craft-ab tasks: 174 (probe=false) | budget $28
+[CRAFT-C-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 15376ms
+[CRAFT-A-gen] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 40989ms
+[CRAFT-A-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 51968ms
+[CRAFT-C-gen-retry] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 37805ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 10389ms
+[1/174] C×flash3 p1 blank OK 64s $0.028 | spent=$0.11
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 37774ms
+[2/174] A×grok p1 blank OK 79s $0.036 | spent=$0.12
+[CRAFT-C-gen] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 106141ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 54918ms
+[3/174] A×pro31 p1 blank OK 107s $0.088 | spent=$0.21
+[CRAFT-C-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 58817ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 32516ms
+[4/174] C×grok p1 blank OK 139s $0.055 | spent=$0.32
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 23187ms
+[5/174] C×pro31 p1 blank OK 82s $0.074 | spent=$0.36
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 25518ms
+[6/174] A×pro31 p1 grammar FAIL(grammar-killer-generic-answer-point) 58s $0.070 | spent=$0.40
+[CRAFT-B-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 99693ms
+[7/174] B×pro31 p1 grammar OK 100s $0.141 | spent=$0.56
+[CRAFT-B-gen] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen] Retry attempt 1 via STANDARD plan...
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 69045ms
+[8/174] A×grok p1 grammar OK 187s $0.108 | spent=$0.60
+[CRAFT-C-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 36797ms
+[CRAFT-C-gen] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen] Retry attempt 1 via STANDARD plan...
+[CRAFT-C-gen-retry] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 54360ms
+[CRAFT-C-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 94881ms
+[CRAFT-B-gen] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen] Retry attempt 2 via STANDARD plan...
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 65412ms
+[9/174] C×flash3 p1 grammar FAIL(grammar-killer-generic-answer-point) 157s $0.073 | spent=$0.81
+[CRAFT-C-gen] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen] Retry attempt 2 via STANDARD plan...
+[CRAFT-C-gen-retry] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 51021ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 37554ms
+[10/174] C×pro31 p1 grammar FAIL(grammar-killer-generic-answer-point) 183s $0.214 | spent=$0.89
+[CRAFT-A-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 27039ms
+[CRAFT-A-gen] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 94165ms
+[CRAFT-B-gen] Attempt 2 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-A-gen-retry] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 29283ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 10943ms
+[11/174] A×grok p3 blank OK 105s $0.050 | spent=$0.95
+[CRAFT-C-gen] Attempt 2 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen]   providerError: cause0{name=TimeoutError; code=23}
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 26972ms
+[12/174] A×flash3 p3 blank FAIL(TRAILING_DEPENDENT|blank-killer-polarity-shortcut) 83s $0.028 | spent=$0.96
+[CRAFT-A-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 50294ms
+[CRAFT-B-gen-retry] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen-retry] Retry attempt 1 via STANDARD plan...
+[CRAFT-A-gen-retry] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 63748ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 11826ms
+[13/174] A×pro31 p3 blank OK 126s $0.139 | spent=$1.10
+[CRAFT-B-gen] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 101429ms
+[14/174] B×grok p3 blank OK 101s $0.043 | spent=$1.15
+[CRAFT-C-gen-retry] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen-retry] Retry attempt 1 via STANDARD plan...
+[CRAFT-B-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 31146ms
+[CRAFT-B-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 52105ms
+[CRAFT-B-gen-retry] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 36799ms
+[15/174] B×flash3 p3 blank FAIL(blank-killer-polarity-shortcut) 68s $0.027 | spent=$1.23
+[CRAFT-B-gen-retry] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen-retry] Retry attempt 2 via STANDARD plan...
+[CRAFT-B-gen-retry] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 61696ms
+[16/174] B×pro31 p3 blank FAIL(blank-killer-polarity-shortcut) 114s $0.129 | spent=$1.30
+[CRAFT-C-gen-retry] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen-retry] Retry attempt 2 via STANDARD plan...
+[CRAFT-C-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 28390ms
+[CRAFT-C-gen] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 109550ms
+[CRAFT-C-gen-retry] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 43420ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 23341ms
+[17/174] C×flash3 p3 blank FAIL(blank-killer-polarity-shortcut) 95s $0.036 | spent=$1.38
+[CRAFT-B-gen-retry] Attempt 2 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[18/174] B×grok p1 grammar FAIL(GEN_FAILED) 720s $0.000 | spent=$1.38
+[CRAFT-C-gen-retry] Attempt 2 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[19/174] C×grok p1 grammar FAIL(GEN_FAILED) 720s $0.000 | spent=$1.38
+[CRAFT-C-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 55969ms
+[CRAFT-C-gen-retry] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen-retry] Retry attempt 1 via STANDARD plan...
+[CRAFT-C-gen-retry] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 60622ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 37480ms
+[20/174] C×pro31 p3 blank FAIL(blank-killer-polarity-shortcut) 154s $0.159 | spent=$1.63
+[REVIEW-REPAIR] Attempt 0 failed via STANDARD plan: No object generated: could not parse the response.
+[REVIEW-REPAIR]   providerError: cause0{name=AI_NoObjectGeneratedError; text={ "verdict": "FIXED", "defectsFound": [ "설계 항목인 errorDesign 필드가 데이터} <- cause1{name=AI_JSONParseError; text={ "verdict": "FIXED", "defectsFound": [ "설계 항목인 errorDesign 필드가 데이터} <- cause2{name=SyntaxError}
+[REVIEW-REPAIR]   finishReason: other
+[REVIEW-REPAIR]   usage: {"inputTokens":0,"inputTokenDetails":{"noCacheTokens":0,"cacheReadTokens":0},"outputTokens":0,"outputTokenDetails":{"textTokens":0,"reasoningTokens":0},"totalTokens":0,"raw":{"prompt_tokens":0,"completion_tokens":0,"total_tokens":0,"prompt_tokens_details":{"cached_tokens":0},"completion_tokens_detai
+[REVIEW-REPAIR]   rawText: {
+  "verdict": "FIXED",
+  "defectsFound": [
+    "설계 항목인 errorDesign 필드가 데이터
+[REVIEW-REPAIR] Retry attempt 1 via STANDARD plan...
+[REVIEW-REPAIR] Attempt 0 failed via STANDARD plan: Invalid JSON response
+[REVIEW-REPAIR]   providerError: cause0{name=AI_APICallError; status=200; responseBody= {"error":{"message":"error code: 520\n","code":502}}} <- cause1{name=AI_TypeValidationError} <- cause2{name=ZodError}
+[REVIEW-REPAIR] Retry attempt 1 via STANDARD plan...
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 1 succeeded in 34126ms
+[21/174] A×grok p3 grammar OK 182s $0.076 | spent=$1.70
+[CRAFT-C-gen-retry] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen-retry] Retry attempt 2 via STANDARD plan...
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 31399ms
+[22/174] A×pro31 p3 grammar FAIL(grammar-perception-complement-toggle|grammar-noun-clause-pronoun-mislabel) 60s $0.066 | spent=$1.71
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 1 succeeded in 60379ms
+[23/174] A×flash3 p3 grammar FAIL(ANSWER_NOT_MUTATED|grammar-decoy-filler-span) 178s $0.059 | spent=$1.74
+[CRAFT-B-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 41887ms
+[CRAFT-B-gen-retry] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 33413ms
+[24/174] B×flash3 p3 grammar FAIL(grammar-killer-generic-answer-point) 75s $0.032 | spent=$1.77
+[CRAFT-C-gen-retry] STANDARD x-ai/grok-4.5 attempt 2 succeeded in 90720ms
+[CRAFT-B-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 86242ms
+[CRAFT-B-gen] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen] Retry attempt 1 via STANDARD plan...
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 24500ms
+[25/174] C×grok p3 blank OK 465s $0.079 | spent=$1.92
+[CRAFT-C-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 75817ms
+[CRAFT-C-gen] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen] Retry attempt 1 via STANDARD plan...
+[CRAFT-B-gen-retry] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 110021ms
+[26/174] B×pro31 p3 grammar FAIL(grammar-shallow-participle-adjective-answer|grammar-explanation-lint) 196s $0.271 | spent=$2.12
+[CRAFT-B-gen] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen] Retry attempt 2 via STANDARD plan...
+[CRAFT-C-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 24180ms
+[CRAFT-C-gen-retry] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 43964ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 40767ms
+[27/174] C×flash3 p3 grammar FAIL(grammar-too-basic-decoys) 161s $0.076 | spent=$2.17
+[CRAFT-C-gen-retry] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 79375ms
+[CRAFT-C-gen] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen] Retry attempt 2 via STANDARD plan...
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 26032ms
+[28/174] C×pro31 p3 grammar FAIL(grammar-perception-complement-toggle) 130s $0.131 | spent=$2.29
+[CRAFT-B-gen] STANDARD x-ai/grok-4.5 attempt 2 succeeded in 119744ms
+[CRAFT-A-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 15373ms
+[CRAFT-A-gen-retry] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 29927ms
+[CRAFT-A-gen] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-A-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-A-gen] Retry attempt 1 via STANDARD plan...
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 21211ms
+[29/174] A×flash3 p6 blank FAIL(blank-weak-distractors) 67s $0.023 | spent=$2.36
+[CRAFT-A-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 10288ms
+[CRAFT-C-gen] Attempt 2 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-A-gen-retry] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 42540ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 8949ms
+[30/174] A×pro31 p6 blank FAIL(explanation-quoted-token-missing) 62s $0.066 | spent=$2.43
+[CRAFT-B-gen-retry] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen-retry] Retry attempt 1 via STANDARD plan...
+[CRAFT-A-gen] STANDARD x-ai/grok-4.5 attempt 1 succeeded in 94410ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 19978ms
+[31/174] A×grok p6 blank OK 234s $0.039 | spent=$2.47
+[CRAFT-C-gen-retry] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 88084ms
+[CRAFT-B-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 31557ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 35824ms
+[32/174] C×grok p3 grammar FAIL(grammar-killer-generic-answer-point) 484s $0.057 | spent=$2.53
+[CRAFT-B-gen] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 118555ms
+[CRAFT-B-gen-retry] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 44841ms
+[33/174] B×flash3 p6 blank FAIL(explanation-quoted-token-missing) 76s $0.029 | spent=$2.60
+[CRAFT-B-gen-retry] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen-retry] Retry attempt 2 via STANDARD plan...
+[CRAFT-B-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 54583ms
+[CRAFT-B-gen-retry] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 74269ms
+[34/174] B×pro31 p6 blank FAIL(blank-killer-polarity-shortcut) 129s $0.156 | spent=$2.76
+[CRAFT-B-gen-retry] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen-retry] Retry attempt 1 via STANDARD plan...
+[CRAFT-C-gen] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen] Retry attempt 1 via STANDARD plan...
+[CRAFT-B-gen-retry] Attempt 2 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[35/174] B×grok p3 grammar FAIL(explanation-quoted-token-missing|grammar-obvious-adjacent-sv-agreement) 720s $0.052 | spent=$2.76
+[CRAFT-C-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 40393ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 37801ms
+[36/174] C×flash3 p6 blank OK 78s $0.033 | spent=$2.79
+[CRAFT-C-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 74607ms
+[CRAFT-C-gen] STANDARD x-ai/grok-4.5 attempt 1 succeeded in 111601ms
+[CRAFT-B-gen-retry] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen-retry] Retry attempt 2 via STANDARD plan...
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 22321ms
+[37/174] C×grok p6 blank OK 254s $0.044 | spent=$2.94
+[CRAFT-C-gen-retry] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 87945ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 22465ms
+[38/174] C×pro31 p6 blank OK 185s $0.207 | spent=$3.10
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 34615ms
+[39/174] A×flash3 p6 grammar FAIL(grammar-killer-generic-answer-point|grammar-pointcode-span-mismatch) 66s $0.031 | spent=$3.15
+[CRAFT-B-gen-retry] Attempt 2 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[40/174] B×grok p6 blank FAIL(explanation-foreign-script) 479s $0.050 | spent=$3.20
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 66056ms
+[41/174] A×grok p6 grammar FAIL(duplicate-option-text|grammar-obvious-adjacent-sv-agreement|grammar-killer-thin-answer) 189s $0.101 | spent=$3.25
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 34864ms
+[42/174] A×pro31 p6 grammar OK 91s $0.095 | spent=$3.27
+[CRAFT-B-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 46091ms
+[CRAFT-B-gen] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen] Retry attempt 1 via STANDARD plan...
+[CRAFT-B-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 77261ms
+[CRAFT-B-gen-retry] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 74859ms
+[43/174] B×flash3 p6 grammar FAIL(grammar-killer-generic-answer-point|grammar-pointcode-span-mismatch) 121s $0.048 | spent=$3.42
+[CRAFT-C-gen] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen] Retry attempt 1 via STANDARD plan...
+[CRAFT-C-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 48370ms
+[CRAFT-B-gen] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen] Retry attempt 2 via STANDARD plan...
+[CRAFT-B-gen-retry] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen-retry] Retry attempt 1 via STANDARD plan...
+[CRAFT-C-gen-retry] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 60772ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 14689ms
+[44/174] C×flash3 p6 grammar FAIL(grammar-correction-form-exposed|grammar-killer-generic-answer-point) 124s $0.054 | spent=$3.47
+[CRAFT-C-gen] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen] Retry attempt 2 via STANDARD plan...
+[CRAFT-B-gen-retry] STANDARD google/gemini-3.1-pro-preview attempt 1 succeeded in 85421ms
+[45/174] B×pro31 p6 grammar FAIL(grammar-pointcode-span-mismatch) 283s $0.216 | spent=$3.59
+[CRAFT-C-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 61757ms
+[CRAFT-B-gen] Attempt 2 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen-retry] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 58423ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 23032ms
+[46/174] C×pro31 p6 grammar FAIL(grammar-killer-generic-answer-point|grammar-pointcode-span-mismatch) 143s $0.157 | spent=$3.74
+[CRAFT-A-gen] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 99852ms
+[CRAFT-C-gen] Attempt 2 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-A-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 15537ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 17264ms
+[47/174] A×grok p9 blank OK 117s $0.049 | spent=$3.80
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 34783ms
+[48/174] A×flash3 p9 blank OK 50s $0.020 | spent=$3.81
+[CRAFT-B-gen-retry] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen-retry] Retry attempt 1 via STANDARD plan...
+[CRAFT-A-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 36137ms
+[CRAFT-A-gen-retry] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 49182ms
+[CRAFT-C-gen-retry] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen-retry] Retry attempt 1 via STANDARD plan...
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 28974ms
+[49/174] A×pro31 p9 blank FAIL(blank-killer-span-too-wide) 114s $0.105 | spent=$3.92
+[CRAFT-B-gen] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 101537ms
+[CRAFT-B-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 16563ms
+[50/174] B×flash3 p9 blank OK 17s $0.008 | spent=$3.97
+[CRAFT-B-gen-retry] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen-retry] Retry attempt 2 via STANDARD plan...
+[CRAFT-B-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 44960ms
+[CRAFT-C-gen-retry] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen-retry] Retry attempt 2 via STANDARD plan...
+[CRAFT-B-gen-retry] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 53913ms
+[51/174] B×pro31 p9 blank FAIL(blank-killer-span-too-wide) 99s $0.106 | spent=$4.08
+[CRAFT-B-gen-retry] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen-retry] Retry attempt 1 via STANDARD plan...
+[CRAFT-B-gen-retry] Attempt 2 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[52/174] B×grok p6 grammar FAIL(GEN_FAILED) 720s $0.000 | spent=$4.08
+[CRAFT-C-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 17727ms
+[CRAFT-C-gen-retry] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 34074ms
+[CRAFT-C-gen-retry] Attempt 2 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[53/174] C×grok p6 grammar FAIL(GEN_FAILED) 720s $0.000 | spent=$4.10
+[CRAFT-C-gen] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 116465ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 37948ms
+[54/174] C×flash3 p9 blank OK 90s $0.038 | spent=$4.16
+[CRAFT-B-gen-retry] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen-retry] Retry attempt 2 via STANDARD plan...
+[CRAFT-C-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 48126ms
+[CRAFT-C-gen-retry] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 58986ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 12785ms
+[55/174] C×pro31 p9 blank FAIL(blank-killer-span-too-wide) 120s $0.130 | spent=$4.33
+[CRAFT-C-gen-retry] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen-retry] Retry attempt 1 via STANDARD plan...
+[CRAFT-B-gen-retry] Attempt 2 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[56/174] B×grok p9 blank FAIL(blank-killer-span-too-wide) 462s $0.043 | spent=$4.34
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 31178ms
+[57/174] A×flash3 p9 grammar FAIL(grammar-killer-answer-point-repeated|grammar-obvious-adverb-adjective|grammar-killer-overd) 83s $0.042 | spent=$4.45
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 58452ms
+[58/174] A×grok p9 grammar OK 215s $0.108 | spent=$4.48
+[CRAFT-C-gen-retry] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen-retry] Retry attempt 2 via STANDARD plan...
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 57243ms
+[59/174] A×pro31 p9 grammar FAIL(grammar-obvious-adjacent-sv-agreement|grammar-killer-thin-answer|grammar-noun-clause-prono) 105s $0.071 | spent=$4.51
+[CRAFT-B-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 36969ms
+[CRAFT-B-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 45445ms
+[CRAFT-B-gen-retry] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 44834ms
+[60/174] B×flash3 p9 grammar FAIL(grammar-killer-generic-answer-point|grammar-too-basic-decoys) 82s $0.033 | spent=$4.59
+[CRAFT-B-gen] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen] Retry attempt 1 via STANDARD plan...
+[CRAFT-C-gen-retry] Attempt 2 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen-retry] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 84304ms
+[61/174] B×pro31 p9 grammar FAIL(grammar-obvious-adjacent-sv-agreement) 130s $0.172 | spent=$4.71
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 35604ms
+[62/174] C×grok p9 blank FAIL(blank-killer-giveaway-distractors|blank-killer-span-too-wide) 512s $0.057 | spent=$4.73
+[CRAFT-C-gen] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 102658ms
+[CRAFT-C-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 41922ms
+[CRAFT-B-gen] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen] Retry attempt 2 via STANDARD plan...
+[CRAFT-C-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 55835ms
+[CRAFT-C-gen-retry] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 46304ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 52593ms
+[63/174] C×flash3 p9 grammar FAIL(grammar-killer-generic-answer-point|grammar-too-basic-decoys) 141s $0.059 | spent=$4.89
+[CRAFT-C-gen-retry] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 62985ms
+[CRAFT-C-gen-retry] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen-retry] Retry attempt 1 via STANDARD plan...
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 23209ms
+[64/174] C×pro31 p9 grammar FAIL(grammar-killer-generic-answer-point) 142s $0.158 | spent=$4.98
+[CRAFT-B-gen] Attempt 2 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-A-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 27381ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 11114ms
+[65/174] A×flash3 p11 blank OK 39s $0.016 | spent=$5.00
+[CRAFT-A-gen] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 66440ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 30324ms
+[66/174] A×grok p11 blank OK 97s $0.042 | spent=$5.04
+[CRAFT-A-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 35396ms
+[CRAFT-C-gen-retry] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen-retry] Retry attempt 2 via STANDARD plan...
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 39041ms
+[67/174] A×pro31 p11 blank OK 74s $0.047 | spent=$5.09
+[CRAFT-B-gen-retry] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen-retry] Retry attempt 1 via STANDARD plan...
+[CRAFT-B-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 33209ms
+[68/174] B×flash3 p11 blank OK 33s $0.011 | spent=$5.10
+[CRAFT-B-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 11480ms
+[69/174] B×pro31 p11 blank OK 11s $0.016 | spent=$5.12
+[CRAFT-B-gen] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 89724ms
+[CRAFT-C-gen-retry] Attempt 2 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen-retry] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen-retry] Retry attempt 2 via STANDARD plan...
+[CRAFT-C-gen] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 106654ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 36477ms
+[70/174] C×grok p9 grammar FAIL(grammar-too-basic-decoys) 499s $0.052 | spent=$5.21
+[CRAFT-B-gen-retry] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 111014ms
+[71/174] B×grok p11 blank OK 201s $0.083 | spent=$5.25
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 16611ms
+[72/174] C×grok p11 blank OK 123s $0.048 | spent=$5.26
+[CRAFT-C-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 17133ms
+[CRAFT-C-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 45346ms
+[CRAFT-C-gen-retry] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 36968ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 10972ms
+[73/174] C×pro31 p11 blank OK 56s $0.056 | spent=$5.35
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 11873ms
+[74/174] C×flash3 p11 blank OK 66s $0.028 | spent=$5.36
+[CRAFT-B-gen-retry] STANDARD x-ai/grok-4.5 attempt 2 succeeded in 114122ms
+[75/174] B×grok p9 grammar FAIL(grammar-too-basic-decoys) 714s $0.044 | spent=$5.49
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 67806ms
+[76/174] A×flash3 p11 grammar FAIL() 107s $0.058 | spent=$5.57
+[CRAFT-B-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 56130ms
+[CRAFT-B-gen] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen] Retry attempt 1 via STANDARD plan...
+[CRAFT-B-gen-retry] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 45416ms
+[77/174] B×flash3 p11 grammar FAIL(grammar-killer-generic-answer-point) 102s $0.046 | spent=$5.66
+[CRAFT-B-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 13036ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 97045ms
+[78/174] A×grok p11 grammar OK 299s $0.174 | spent=$5.73
+[CRAFT-B-gen-retry] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 32295ms
+[79/174] B×pro31 p11 grammar FAIL(grammar-pointcode-span-mismatch) 45s $0.055 | spent=$5.76
+[CRAFT-B-gen] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen] Retry attempt 2 via STANDARD plan...
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 47570ms
+[80/174] A×pro31 p11 grammar FAIL(grammar-pointcode-span-mismatch) 310s $0.061 | spent=$5.78
+[CRAFT-C-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 61823ms
+[CRAFT-C-gen-retry] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 52376ms
+[CRAFT-C-gen] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen] Retry attempt 1 via STANDARD plan...
+[CRAFT-B-gen] STANDARD x-ai/grok-4.5 attempt 2 succeeded in 113631ms
+[CRAFT-C-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 96830ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 50276ms
+[81/174] C×flash3 p11 grammar FAIL(grammar-killer-generic-answer-point) 164s $0.074 | spent=$6.04
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 36416ms
+[82/174] C×pro31 p11 grammar OK 133s $0.147 | spent=$6.06
+[CRAFT-A-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 17930ms
+[CRAFT-C-gen] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen] Retry attempt 2 via STANDARD plan...
+[CRAFT-A-gen] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 85146ms
+[CRAFT-A-gen-retry] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 43740ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 9910ms
+[83/174] A×flash3 p12 blank FAIL(blank-weak-distractors) 72s $0.032 | spent=$6.13
+[CRAFT-B-gen-retry] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen-retry] Retry attempt 1 via STANDARD plan...
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 41043ms
+[84/174] A×grok p12 blank OK 126s $0.054 | spent=$6.14
+[CRAFT-A-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 50424ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 12927ms
+[85/174] A×pro31 p12 blank OK 63s $0.068 | spent=$6.21
+[CRAFT-C-gen] Attempt 2 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 36086ms
+[CRAFT-B-gen-retry] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen-retry] Retry attempt 2 via STANDARD plan...
+[CRAFT-B-gen] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 106269ms
+[86/174] B×grok p12 blank OK 106s $0.042 | spent=$6.27
+[CRAFT-B-gen-retry] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 39739ms
+[87/174] B×flash3 p12 blank FAIL(blank-killer-giveaway-distractors) 76s $0.028 | spent=$6.28
+[CRAFT-B-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 45090ms
+[88/174] B×pro31 p12 blank OK 45s $0.049 | spent=$6.33
+[CRAFT-C-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 14415ms
+[CRAFT-C-gen-retry] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen-retry] Retry attempt 1 via STANDARD plan...
+[CRAFT-C-gen] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 93143ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 51204ms
+[89/174] C×flash3 p12 blank OK 66s $0.035 | spent=$6.41
+[CRAFT-B-gen-retry] Attempt 2 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[90/174] B×grok p11 grammar FAIL(grammar-explanation-lint) 714s $0.054 | spent=$6.41
+[CRAFT-C-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 63649ms
+[CRAFT-C-gen-retry] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen-retry] Retry attempt 2 via STANDARD plan...
+[CRAFT-C-gen-retry] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 102048ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 30940ms
+[91/174] C×grok p12 blank FAIL(explanation-foreign-script) 226s $0.094 | spent=$6.60
+[CRAFT-C-gen-retry] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 73242ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 32016ms
+[92/174] A×grok p12 grammar FAIL(grammar-obvious-adjacent-sv-agreement) 138s $0.084 | spent=$6.72
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 37040ms
+[93/174] C×pro31 p12 blank OK 174s $0.186 | spent=$6.78
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 48734ms
+[94/174] A×flash3 p12 grammar OK 69s $0.037 | spent=$6.82
+[CRAFT-C-gen-retry] Attempt 2 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[95/174] C×grok p11 grammar FAIL(GEN_FAILED) 720s $0.000 | spent=$6.83
+[CRAFT-B-gen] Attempt 0 failed via STANDARD plan: Invalid JSON response
+[CRAFT-B-gen]   providerError: cause0{name=AI_APICallError; status=200; responseBody= {"error":{"message":"error code: 520\n","code":502}}} <- cause1{name=AI_TypeValidationError} <- cause2{name=ZodError}
+[CRAFT-B-gen] Retry attempt 1 via STANDARD plan...
+[CRAFT-B-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 47912ms
+[CRAFT-B-gen] STANDARD google/gemini-3-flash-preview attempt 1 succeeded in 51410ms
+[CRAFT-B-gen] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen] Retry attempt 1 via STANDARD plan...
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 71384ms
+[96/174] A×pro31 p12 grammar OK 178s $0.161 | spent=$7.01
+[CRAFT-B-gen-retry] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 61427ms
+[97/174] B×pro31 p12 grammar FAIL(grammar-killer-generic-answer-point|grammar-too-basic-decoys) 109s $0.134 | spent=$7.08
+[CRAFT-B-gen-retry] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 40537ms
+[98/174] B×flash3 p12 grammar FAIL(grammar-killer-generic-answer-point) 134s $0.041 | spent=$7.10
+[CRAFT-C-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 45910ms
+[CRAFT-C-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 69221ms
+[CRAFT-B-gen] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen] Retry attempt 2 via STANDARD plan...
+[CRAFT-C-gen-retry] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 44782ms
+[CRAFT-C-gen] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen] Retry attempt 1 via STANDARD plan...
+[CRAFT-C-gen-retry] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 56651ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 46167ms
+[99/174] C×pro31 p12 grammar FAIL(grammar-killer-generic-answer-point|grammar-too-basic-decoys) 137s $0.131 | spent=$7.29
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 46933ms
+[100/174] C×flash3 p12 grammar FAIL(grammar-killer-generic-answer-point|grammar-too-basic-decoys) 173s $0.079 | spent=$7.31
+[CRAFT-A-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 33174ms
+[CRAFT-B-gen] Attempt 2 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-A-gen] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 85339ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 31672ms
+[101/174] A×flash3 p13 blank OK 65s $0.025 | spent=$7.37
+[CRAFT-C-gen] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen] Retry attempt 2 via STANDARD plan...
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 19017ms
+[102/174] A×grok p13 blank OK 104s $0.043 | spent=$7.38
+[CRAFT-A-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 40641ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 27033ms
+[103/174] A×pro31 p13 blank OK 68s $0.051 | spent=$7.43
+[CRAFT-B-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 14149ms
+[CRAFT-B-gen-retry] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen-retry] Retry attempt 1 via STANDARD plan...
+[CRAFT-B-gen-retry] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 26945ms
+[104/174] B×flash3 p13 blank OK 41s $0.017 | spent=$7.44
+[CRAFT-C-gen] Attempt 2 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 110714ms
+[CRAFT-B-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 65869ms
+[CRAFT-B-gen-retry] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen-retry] Retry attempt 2 via STANDARD plan...
+[CRAFT-B-gen-retry] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 51912ms
+[105/174] B×pro31 p13 blank FAIL(blank-killer-polarity-shortcut) 118s $0.141 | spent=$7.63
+[CRAFT-B-gen-retry] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 117641ms
+[106/174] B×grok p13 blank OK 228s $0.092 | spent=$7.68
+[CRAFT-C-gen-retry] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen-retry] Retry attempt 1 via STANDARD plan...
+[CRAFT-C-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 34041ms
+[CRAFT-C-gen] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 91417ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 60646ms
+[107/174] C×flash3 p13 blank OK 95s $0.041 | spent=$7.76
+[CRAFT-B-gen-retry] Attempt 2 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[108/174] B×grok p12 grammar FAIL(GEN_FAILED) 720s $0.000 | spent=$7.76
+[CRAFT-C-gen-retry] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen-retry] Retry attempt 2 via STANDARD plan...
+[CRAFT-C-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 58050ms
+[CRAFT-C-gen-retry] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 87429ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 8190ms
+[109/174] C×grok p13 blank OK 187s $0.074 | spent=$7.90
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 32461ms
+[110/174] C×pro31 p13 blank OK 91s $0.082 | spent=$7.91
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 39207ms
+[111/174] A×grok p13 grammar FAIL(grammar-killer-generic-answer-point) 130s $0.075 | spent=$8.00
+[CRAFT-C-gen-retry] Attempt 2 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[112/174] C×grok p12 grammar FAIL(GEN_FAILED) 720s $0.000 | spent=$8.02
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 82884ms
+[113/174] A×flash3 p13 grammar FAIL(grammar-killer-overdrilled-answer|grammar-decoy-filler-span|grammar-pointcode-span-mismatc) 107s $0.057 | spent=$8.11
+[CRAFT-B-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 46627ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 65491ms
+[114/174] A×pro31 p13 grammar OK 130s $0.124 | spent=$8.15
+[CRAFT-B-gen] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 111782ms
+[115/174] B×grok p13 grammar OK 112s $0.048 | spent=$8.20
+[CRAFT-B-gen-retry] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 65514ms
+[116/174] B×flash3 p13 grammar FAIL(grammar-weak-filler-decoys) 112s $0.049 | spent=$8.23
+[CRAFT-C-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 13303ms
+[CRAFT-C-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 39509ms
+[CRAFT-C-gen-retry] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 16333ms
+[CRAFT-B-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 107961ms
+[CRAFT-B-gen-retry] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 12207ms
+[117/174] B×pro31 p13 grammar FAIL(grammar-killer-generic-answer-point) 120s $0.172 | spent=$8.47
+[CRAFT-C-gen-retry] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 35397ms
+[CRAFT-C-gen] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen] Retry attempt 1 via STANDARD plan...
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 64982ms
+[118/174] C×pro31 p13 grammar FAIL(grammar-shallow-nearby-passive-decoy) 95s $0.079 | spent=$8.51
+[CRAFT-A-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 30555ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 67710ms
+[119/174] C×flash3 p13 grammar FAIL(grammar-killer-generic-answer-point) 143s $0.060 | spent=$8.55
+[CRAFT-A-gen] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 86172ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 19383ms
+[120/174] A×flash3 p17 blank OK 50s $0.020 | spent=$8.60
+[CRAFT-A-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 22800ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 24858ms
+[121/174] A×grok p17 blank OK 111s $0.048 | spent=$8.62
+[CRAFT-B-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 32311ms
+[122/174] B×flash3 p17 blank OK 32s $0.011 | spent=$8.63
+[CRAFT-C-gen] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen] Retry attempt 2 via STANDARD plan...
+[CRAFT-B-gen] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 74287ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 69987ms
+[123/174] A×pro31 p17 blank OK 93s $0.050 | spent=$8.72
+[CRAFT-B-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 39187ms
+[CRAFT-B-gen-retry] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 49760ms
+[124/174] B×pro31 p17 blank OK 89s $0.099 | spent=$8.81
+[CRAFT-C-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 18848ms
+[CRAFT-C-gen] Attempt 2 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 107866ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 33095ms
+[125/174] C×flash3 p17 blank OK 52s $0.020 | spent=$8.88
+[CRAFT-B-gen-retry] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 118425ms
+[126/174] B×grok p17 blank OK 193s $0.100 | spent=$8.93
+[CRAFT-C-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 57647ms
+[CRAFT-C-gen-retry] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 103637ms
+[CRAFT-C-gen-retry] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen-retry] Retry attempt 1 via STANDARD plan...
+[CRAFT-C-gen-retry] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 60695ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 56970ms
+[127/174] A×grok p17 grammar FAIL(grammar-killer-generic-answer-point) 154s $0.088 | spent=$9.21
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 41104ms
+[128/174] C×pro31 p17 blank OK 159s $0.159 | spent=$9.23
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 64602ms
+[129/174] C×grok p17 blank OK 276s $0.123 | spent=$9.27
+[CRAFT-C-gen-retry] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen-retry] Retry attempt 2 via STANDARD plan...
+[CRAFT-B-gen] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 99341ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 84205ms
+[130/174] A×flash3 p17 grammar FAIL(grammar-killer-generic-answer-point) 110s $0.052 | spent=$9.44
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 75687ms
+[131/174] A×pro31 p17 grammar FAIL(grammar-killer-overdrilled-answer) 130s $0.115 | spent=$9.48
+[CRAFT-B-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 35868ms
+[CRAFT-B-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 45984ms
+[CRAFT-C-gen-retry] Attempt 2 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[132/174] C×grok p13 grammar FAIL(GEN_FAILED) 720s $0.000 | spent=$9.55
+[CRAFT-B-gen-retry] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 52814ms
+[133/174] B×flash3 p17 grammar OK 89s $0.037 | spent=$9.58
+[CRAFT-B-gen-retry] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen-retry] Retry attempt 1 via STANDARD plan...
+[CRAFT-B-gen-retry] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 51059ms
+[134/174] B×pro31 p17 grammar FAIL(grammar-explanation-lint) 97s $0.124 | spent=$9.64
+[CRAFT-C-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 30159ms
+[CRAFT-C-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 14663ms
+[CRAFT-C-gen-retry] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 38222ms
+[CRAFT-C-gen] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 89403ms
+[CRAFT-C-gen-retry] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 52327ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 35289ms
+[135/174] C×flash3 p17 grammar FAIL(grammar-killer-generic-answer-point) 104s $0.035 | spent=$9.81
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 18676ms
+[136/174] C×pro31 p17 grammar FAIL(grammar-killer-generic-answer-point) 86s $0.099 | spent=$9.82
+[CRAFT-A-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 15542ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 7726ms
+[137/174] A×flash3 p19 blank OK 23s $0.012 | spent=$9.83
+[CRAFT-B-gen-retry] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen-retry] Retry attempt 2 via STANDARD plan...
+[CRAFT-A-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 48221ms
+[CRAFT-A-gen] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 85258ms
+[CRAFT-C-gen-retry] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen-retry] Retry attempt 1 via STANDARD plan...
+[CRAFT-A-gen-retry] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 41274ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 8436ms
+[138/174] A×pro31 p19 blank OK 98s $0.106 | spent=$9.98
+[CRAFT-B-gen-retry] Attempt 2 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[139/174] B×grok p17 grammar FAIL(grammar-killer-generic-answer-point|grammar-pointcode-span-mismatch|grammar-explanation-li) 459s $0.060 | spent=$9.98
+[CRAFT-B-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 31821ms
+[CRAFT-A-gen-retry] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-A-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-A-gen-retry] Retry attempt 1 via STANDARD plan...
+[CRAFT-C-gen-retry] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen-retry] Retry attempt 2 via STANDARD plan...
+[CRAFT-B-gen-retry] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 30654ms
+[140/174] B×flash3 p19 blank FAIL(blank-weak-distractors) 62s $0.020 | spent=$10.00
+[CRAFT-B-gen] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen] Retry attempt 1 via STANDARD plan...
+[CRAFT-B-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 48461ms
+[CRAFT-A-gen-retry] STANDARD x-ai/grok-4.5 attempt 1 succeeded in 89239ms
+[CRAFT-B-gen-retry] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 51172ms
+[141/174] B×pro31 p19 blank FAIL(blank-weak-distractors|blank-killer-polarity-shortcut) 100s $0.118 | spent=$10.15
+[CRAFT-C-gen-retry] Attempt 2 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 56907ms
+[142/174] A×grok p19 blank FAIL(blank-killer-polarity-shortcut) 351s $0.109 | spent=$10.18
+[CRAFT-B-gen] STANDARD x-ai/grok-4.5 attempt 1 succeeded in 107373ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 40607ms
+[143/174] C×grok p17 grammar FAIL(grammar-obvious-adjacent-sv-agreement) 490s $0.055 | spent=$10.25
+[CRAFT-C-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 40235ms
+[CRAFT-C-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 34867ms
+[CRAFT-C-gen-retry] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 33094ms
+[CRAFT-C-gen] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen] Retry attempt 1 via STANDARD plan...
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 36186ms
+[144/174] C×flash3 p19 blank OK 110s $0.042 | spent=$10.32
+[CRAFT-C-gen-retry] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 49011ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 11881ms
+[145/174] C×pro31 p19 blank OK 96s $0.099 | spent=$10.39
+[CRAFT-B-gen-retry] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen-retry] Retry attempt 1 via STANDARD plan...
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 47366ms
+[146/174] A×flash3 p19 grammar FAIL(grammar-perception-complement-toggle) 68s $0.030 | spent=$10.46
+[CRAFT-C-gen] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen] Retry attempt 2 via STANDARD plan...
+[CRAFT-B-gen-retry] STANDARD x-ai/grok-4.5 attempt 1 succeeded in 106327ms
+[147/174] B×grok p19 blank OK 454s $0.094 | spent=$10.58
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 38798ms
+[148/174] A×pro31 p19 grammar FAIL(grammar-shallow-participle-adjective-answer|grammar-killer-generic-answer-point|grammar-to) 75s $0.083 | spent=$10.62
+[REVIEW-REPAIR] Attempt 0 failed via STANDARD plan: Invalid JSON response
+[REVIEW-REPAIR]   providerError: cause0{name=AI_APICallError; status=200; responseBody= {"error":{"message":"error code: 520\n","code":502}}} <- cause1{name=AI_TypeValidationError} <- cause2{name=ZodError}
+[REVIEW-REPAIR] Retry attempt 1 via STANDARD plan...
+[CRAFT-C-gen] STANDARD x-ai/grok-4.5 attempt 2 succeeded in 81979ms
+[CRAFT-B-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 32694ms
+[CRAFT-B-gen] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 82536ms
+[CRAFT-B-gen-retry] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 31210ms
+[149/174] B×flash3 p19 grammar FAIL(grammar-killer-generic-answer-point|grammar-too-basic-decoys) 64s $0.024 | spent=$10.74
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 1 succeeded in 65695ms
+[150/174] A×grok p19 grammar FAIL(grammar-killer-generic-answer-point) 244s $0.104 | spent=$10.77
+[CRAFT-B-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 50438ms
+[CRAFT-C-gen-retry] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen-retry] Retry attempt 1 via STANDARD plan...
+[CRAFT-B-gen-retry] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 50098ms
+[151/174] B×pro31 p19 grammar FAIL(explanation-quoted-token-missing|grammar-killer-generic-answer-point|grammar-explanation-l) 101s $0.124 | spent=$10.90
+[CRAFT-C-gen] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 77808ms
+[CRAFT-B-gen-retry] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen-retry] Retry attempt 1 via STANDARD plan...
+[CRAFT-C-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 30131ms
+[CRAFT-C-gen-retry] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 48690ms
+[CRAFT-C-gen-retry] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen-retry] Retry attempt 2 via STANDARD plan...
+[CRAFT-C-gen-retry] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen-retry] Retry attempt 1 via STANDARD plan...
+[CRAFT-B-gen-retry] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen-retry] Retry attempt 2 via STANDARD plan...
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 64915ms
+[152/174] C×flash3 p19 grammar FAIL(grammar-killer-generic-answer-point|grammar-too-basic-decoys) 144s $0.059 | spent=$10.99
+[CRAFT-C-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 56874ms
+[CRAFT-C-gen-retry] STANDARD x-ai/grok-4.5 attempt 2 succeeded in 117471ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 10740ms
+[153/174] C×grok p19 blank FAIL(blank-killer-giveaway-distractors) 690s $0.092 | spent=$11.11
+[CRAFT-C-gen-retry] STANDARD x-ai/grok-4.5 attempt 1 succeeded in 115768ms
+[CRAFT-B-gen-retry] Attempt 2 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[154/174] B×grok p19 grammar FAIL(grammar-shallow-participle-adjective-answer|grammar-killer-generic-answer-point|grammar-to) 443s $0.054 | spent=$11.16
+[CRAFT-C-gen-retry] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 60206ms
+[CRAFT-A-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 30402ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 66515ms
+[155/174] C×grok p19 grammar FAIL(grammar-shallow-participle-adjective-answer|grammar-killer-generic-answer-point) 380s $0.118 | spent=$11.28
+[CRAFT-A-gen-retry] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 35227ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 11301ms
+[156/174] A×flash3 p20 blank OK 77s $0.028 | spent=$11.30
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 66090ms
+[157/174] C×pro31 p19 grammar FAIL(grammar-shallow-participle-adjective-answer|grammar-killer-generic-answer-point) 183s $0.184 | spent=$11.33
+[CRAFT-A-gen] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 109017ms
+[CRAFT-A-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 42775ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 12563ms
+[158/174] A×pro31 p20 blank OK 55s $0.055 | spent=$11.43
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 29558ms
+[159/174] A×grok p20 blank OK 139s $0.050 | spent=$11.44
+[CRAFT-B-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 55222ms
+[CRAFT-B-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 53429ms
+[160/174] B×pro31 p20 blank OK 53s $0.064 | spent=$11.53
+[CRAFT-B-gen-retry] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 29628ms
+[161/174] B×flash3 p20 blank FAIL(blank-weak-distractors) 85s $0.033 | spent=$11.54
+[CRAFT-B-gen] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen] Retry attempt 1 via STANDARD plan...
+[CRAFT-C-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 50483ms
+[CRAFT-C-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 51803ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 8642ms
+[162/174] C×pro31 p20 blank OK 60s $0.067 | spent=$11.62
+[CRAFT-C-gen] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen] Retry attempt 1 via STANDARD plan...
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 45387ms
+[163/174] C×flash3 p20 blank OK 96s $0.041 | spent=$11.66
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 2325ms
+[164/174] A×flash3 p20 grammar OK 40s $0.024 | spent=$11.68
+[CRAFT-B-gen] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen] Retry attempt 2 via STANDARD plan...
+[CRAFT-C-gen] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen] Retry attempt 2 via STANDARD plan...
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 58345ms
+[165/174] A×pro31 p20 grammar FAIL(grammar-too-basic-decoys|grammar-weak-filler-decoys) 114s $0.105 | spent=$11.84
+[CRAFT-B-gen] Attempt 2 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen]   providerError: cause0{name=TimeoutError; code=23}
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 79950ms
+[166/174] A×grok p20 grammar OK 236s $0.113 | spent=$11.89
+[CRAFT-C-gen] Attempt 2 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 46056ms
+[CRAFT-B-gen] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen] Retry attempt 1 via STANDARD plan...
+[CRAFT-B-gen-retry] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 34174ms
+[167/174] B×flash3 p20 grammar FAIL(grammar-killer-generic-answer-point) 80s $0.033 | spent=$11.92
+[CRAFT-B-gen-retry] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen-retry] Retry attempt 1 via STANDARD plan...
+[CRAFT-B-gen] Attempt 1 failed via STANDARD plan: No object generated: the model did not return a response.
+[CRAFT-B-gen]   providerError: cause0{name=AI_NoObjectGeneratedError}
+[CRAFT-B-gen]   finishReason: stop
+[CRAFT-B-gen]   usage: {"inputTokens":3434,"inputTokenDetails":{"noCacheTokens":3306,"cacheReadTokens":128},"outputTokens":1672,"outputTokenDetails":{"textTokens":1,"reasoningTokens":1671},"totalTokens":5106,"raw":{"prompt_tokens":3434,"completion_tokens":1672,"total_tokens":5106,"prompt_tokens_details":{"cached_tokens":1
+[CRAFT-B-gen] Retry attempt 2 via STANDARD plan...
+[CRAFT-B-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 22538ms
+[168/174] B×pro31 p20 grammar OK 23s $0.017 | spent=$11.94
+[CRAFT-C-gen-retry] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-C-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-C-gen-retry] Retry attempt 1 via STANDARD plan...
+[CRAFT-B-gen] STANDARD x-ai/grok-4.5 attempt 2 succeeded in 104119ms
+[CRAFT-C-gen] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 104803ms
+[CRAFT-B-gen-retry] Attempt 1 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen-retry] Retry attempt 2 via STANDARD plan...
+[CRAFT-C-gen-retry] STANDARD x-ai/grok-4.5 attempt 1 succeeded in 117296ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 26484ms
+[169/174] C×grok p20 blank OK 624s $0.049 | spent=$12.08
+[CRAFT-C-gen-retry] STANDARD x-ai/grok-4.5 attempt 0 succeeded in 94323ms
+[CRAFT-B-gen-retry] Attempt 0 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[CRAFT-B-gen-retry] Retry attempt 1 via STANDARD plan...
+[CRAFT-C-gen] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 44317ms
+[CRAFT-B-gen-retry] Attempt 2 failed via STANDARD plan: The operation was aborted due to timeout
+[CRAFT-B-gen-retry]   providerError: cause0{name=TimeoutError; code=23}
+[170/174] B×grok p20 blank FAIL(GEN_FAILED) 720s $0.000 | spent=$12.14
+[CRAFT-C-gen-retry] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 15302ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 49770ms
+[171/174] C×grok p20 grammar FAIL(grammar-killer-generic-answer-point) 249s $0.113 | spent=$12.17
+[CRAFT-C-gen] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 25655ms
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 19571ms
+[172/174] C×flash3 p20 grammar FAIL(grammar-killer-thin-answer) 79s $0.038 | spent=$12.21
+[CRAFT-C-gen-retry] STANDARD google/gemini-3.1-pro-preview attempt 0 succeeded in 50793ms
+[CRAFT-B-gen-retry] STANDARD x-ai/grok-4.5 attempt 1 succeeded in 108370ms
+[173/174] B×grok p20 grammar FAIL(grammar-killer-generic-answer-point) 476s $0.093 | spent=$12.31
+[REVIEW-REPAIR] STANDARD google/gemini-3-flash-preview attempt 0 succeeded in 54156ms
+[174/174] C×pro31 p20 grammar FAIL(grammar-killer-generic-answer-point) 131s $0.107 | spent=$12.34
+CRAFT-AB DONE in 138.1min, spent=$12.34

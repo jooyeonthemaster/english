@@ -25,7 +25,7 @@ import {
   getQuestionGenerationCreditCost,
   mergeQuestionGenerationPlanTag,
   normalizeQuestionGenerationPlan,
-  resolveUnifiedGenerationPlan,
+  resolveEffectiveGenerationPlan,
 } from "@/lib/question-generation-plans";
 import { saveGeneratedQuestionsForJob } from "@/lib/question-generation-persistence";
 import { prisma } from "@/lib/prisma";
@@ -264,16 +264,14 @@ export async function POST(req: NextRequest) {
 
   const config = {
     ...parsed.data,
-    // 클라이언트가 보낸 플랜 — 상품 단일화(W2-E) 이후 요금·라우팅에는 쓰지 않고
-    // 로깅/감사(job.config.requestedGenerationPlan)용으로만 보존한다(정규화만 유지).
     generationPlan: normalizeQuestionGenerationPlan(parsed.data.generationPlan),
   };
-  // 상품 단일화(W2-E): 품질 파이프라인·요금은 유형이 결정한다. 클라 generationPlan /
-  // questionTypeSettings.generationPlan(과거 저장 PREMIUM config 포함)은 무력화된다.
-  const effectiveGenerationPlan =
-    config.mode === "MANUAL" && config.questionType
-      ? resolveUnifiedGenerationPlan(config.questionType)
-      : config.generationPlan;
+  // 단일 상품(26-07-21 사용자 결정): 전 요청 일반 레인 — 결정 함수 단일 소스
+  // (resolveEffectiveGenerationPlan: 정규화 + 단일 상품 클램프, env 로 이원 복귀).
+  // 유형별 저장 설정의 generationPlan 은 서버 미소비(좀비 설정 함정 차단).
+  const effectiveGenerationPlan = resolveEffectiveGenerationPlan(
+    config.generationPlan,
+  );
   const effectiveDifficulty =
     config.mode === "MANUAL" && config.questionType
       ? readQuestionTypeDifficultySetting(
@@ -394,7 +392,8 @@ export async function POST(req: NextRequest) {
         difficulty: effectiveDifficulty,
         customPrompt: config.customPrompt ?? "",
         generationPlan: effectiveGenerationPlan,
-        // 클라 요청 플랜(무력화됨) — 감사/로깅 전용, 요금·라우팅에 미영향.
+        // 클라 요청 플랜 원본(정규화 전 감사 추적용) — 이원 티어에서는 요청 플랜이
+        // 곧 라우팅 플랜이다(effectiveGenerationPlan 과 동일).
         requestedGenerationPlan: config.generationPlan,
         fastPath: true,
         clientTempId: config.clientTempId ?? null,
@@ -664,22 +663,32 @@ export async function POST(req: NextRequest) {
     // 해설 사실검증 async 분리(O153): 생성·저장은 이미 끝났고, 인라인에서 defer 한
     // E-gate 를 워커가 임계경로 밖에서 이어받는다. Trigger 장애가 이미 저장된 생성
     // 응답을 실패시키지 않도록 .catch 로 삼킨다(문항은 PENDING 으로 남아 재실행 가능).
-    await tasks
-      .trigger(
-        "workbench-explanation-verify",
-        {
-          questionIds: createdQuestionIds,
-          passageId: passage.id,
-          academyId: job.academyId,
-          // 워커의 검증비 원장 행을 생성 잡에 조인하기 위한 식별자(O190 결함② 배선).
-          jobId: job.id,
-        },
-        {
-          idempotencyKey: `explanation-verify:${job.id}`,
-          concurrencyKey: academyConcurrencyKey(staff.academyId),
-        },
-      )
-      .catch((e) => console.warn("[fast-question] verify enqueue failed", e));
+    // 이원 티어(26-07-20): STANDARD 는 E-gate 기본 off(인라인 통합 검수리가 대체)라
+    // PENDING 스탬프가 없다 — PENDING 문항이 하나라도 있을 때만 워커를 인큐해
+    // 스탠다드 배치의 무의미한 워커 기동(이중 검증 비용)을 차단한다.
+    const hasPendingExplanationVerify = questionsForDisplay.some(
+      (question) =>
+        (question as Record<string, unknown>)._explanationVerifyStatus ===
+        "PENDING",
+    );
+    if (hasPendingExplanationVerify) {
+      await tasks
+        .trigger(
+          "workbench-explanation-verify",
+          {
+            questionIds: createdQuestionIds,
+            passageId: passage.id,
+            academyId: job.academyId,
+            // 워커의 검증비 원장 행을 생성 잡에 조인하기 위한 식별자(O190 결함② 배선).
+            jobId: job.id,
+          },
+          {
+            idempotencyKey: `explanation-verify:${job.id}`,
+            concurrencyKey: academyConcurrencyKey(staff.academyId),
+          },
+        )
+        .catch((e) => console.warn("[fast-question] verify enqueue failed", e));
+    }
 
     return NextResponse.json({
       jobId: job.id,

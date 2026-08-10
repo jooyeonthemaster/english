@@ -48,6 +48,11 @@ export interface QueuedPassage {
   status: QueuedPassageStatus;
   analysisData: PassageAnalysisData | null;
   error: string | null;
+  /**
+   * 생성 중 실시간 미리보기(SSE) — 로딩 카드에서만 채워지고 완료·실패와 함께
+   * 지워진다. 고정 높이 패널로 렌더하므로 값이 자라도 카드가 밀리지 않는다.
+   */
+  streamPreview?: AnalysisStreamPreview;
   promptConfig: AnalysisPromptConfig;
   createdAt: Date;
   schoolName?: string;
@@ -272,8 +277,24 @@ function mergeQueueItems(
   jobQueue: QueuedPassage[],
 ): QueuedPassage[] {
   // 같은 지문(passage.id)에 대해 AI 작업이 여러 건 존재할 수 있어 jobQueue 안에
-  // 동일 id 가 중복될 수 있다. Map 은 마지막 항목만 남기므로 id 당 한 건만 유지된다.
-  const jobById = new Map(jobQueue.map((item) => [item.id, item]));
+  // 동일 id 가 중복될 수 있다. 어느 것을 채택할지가 중요하다:
+  // 폴링 API(/api/workbench/ai-jobs?view=passage-list)는 createdAt desc 로 주므로
+  // 배열 앞이 최신이다. 예전 `new Map(jobQueue.map(...))` 은 뒤 항목이 앞을 덮어
+  // **가장 오래된 잡**을 채택했다 — 이미 분석한 지문을 재생성하면 과거 COMPLETED
+  // 잡이 이겨 status 가 done 으로 굳고, 진행중 필터에서 빠져 로딩 카드 자체가
+  // 사라졌다(26-07-25 실사고). 진행중을 우선하고, 동률이면 첫 등장(=최신)을 남긴다.
+  const isActiveStatus = (s: QueuedPassageStatus) => s === "pending" || s === "analyzing";
+  const jobById = new Map<string, QueuedPassage>();
+  for (const item of jobQueue) {
+    const prev = jobById.get(item.id);
+    if (!prev) {
+      jobById.set(item.id, item);
+      continue;
+    }
+    if (!isActiveStatus(prev.status) && isActiveStatus(item.status)) {
+      jobById.set(item.id, item);
+    }
+  }
   const seen = new Set<string>();
   const merged: QueuedPassage[] = [];
 
@@ -553,14 +574,40 @@ function safeParseTags(raw: string): string[] | undefined {
   }
 }
 
+/**
+ * 분석 스트림 미리보기 프레임 — 문제 생성(md-stream)의 StreamPreviewPane 과
+ * 동일한 모양이라 같은 컴포넌트로 렌더한다.
+ */
+export interface AnalysisStreamPreview {
+  phase: "thinking" | "generating";
+  startedAt: number;
+  outputStartedAt?: number;
+  tail: string;
+  /** 현재 생성 단계 한글 라벨 — "전체 초안" / "어휘" / "실전 워크북" 등 */
+  stage?: string;
+  /**
+   * 델타마다 증가하는 단조 카운터. 상위 발행 시그니처가 "내용이 바뀌었다"를
+   * 값 비교 없이 감지하는 용도 — tail 은 420자에서 포화하므로 길이로는 부족하다.
+   */
+  tick: number;
+  /** 마지막 델타 수신 시각(ms) — 폴링 재부착 시 좀비 미리보기 판별용. */
+  lastDeltaAt: number;
+}
+
 async function startPassageAnalysisJob(
   passageId: string,
   promptConfig: AnalysisPromptConfig,
-  options: { fast?: boolean } = { fast: true },
+  options: {
+    fast?: boolean;
+    onPreview?: (preview: AnalysisStreamPreview) => void;
+  } = { fast: true },
 ): Promise<PassageAnalysisJobResponse> {
   const endpoint = options.fast
     ? "/api/workbench/ai-jobs/passage-analysis/fast"
     : "/api/workbench/ai-jobs/passage-analysis";
+  // fast 레인 + 미리보기 구독자가 있을 때만 SSE 를 켠다. 서버는 stream 플래그가
+  // 없으면 기존 JSON 응답을 그대로 낸다(무회귀).
+  const wantStream = options.fast === true && typeof options.onPreview === "function";
   const res = await fetch(endpoint, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -573,13 +620,134 @@ async function startPassageAnalysisJob(
       generationPlan: promptConfig.generationPlan,
       analysisTone: promptConfig.analysisTone,
       includeWorksheet: promptConfig.includeWorksheet === true,
+      ...(wantStream ? { stream: true } : {}),
     }),
   });
-  const data = (await res.json().catch(() => ({}))) as PassageAnalysisJobResponse;
-  if (!res.ok || data.error) {
-    throw new Error(data.details || data.error || "Failed to start passage analysis job.");
+
+  if (!wantStream || !res.body || !res.headers.get("content-type")?.includes("event-stream")) {
+    // 비스트리밍 응답(기존 경로 또는 가드 단계에서의 조기 JSON 반환)
+    const data = (await res.json().catch(() => ({}))) as PassageAnalysisJobResponse;
+    if (!res.ok || data.error) {
+      throw new Error(data.details || data.error || "Failed to start passage analysis job.");
+    }
+    return data;
   }
-  return data;
+
+  return consumeAnalysisStream(res.body, options.onPreview!);
+}
+
+/** SSE 본문을 읽어 미리보기를 흘리고, 마지막 done 프레임을 결과로 돌려준다. */
+async function consumeAnalysisStream(
+  body: ReadableStream<Uint8Array>,
+  onPreview: (preview: AnalysisStreamPreview) => void,
+): Promise<PassageAnalysisJobResponse> {
+  const startedAt = Date.now();
+  let outputStartedAt: number | undefined;
+  let reasoningTail = "";
+  let contentTail = "";
+  let stage: string | undefined;
+  let lastEmit = 0;
+  let tick = 0;
+
+  const emitPreview = (force = false) => {
+    const now = Date.now();
+    if (!force && now - lastEmit < 120) return;
+    lastEmit = now;
+    tick += 1;
+    onPreview({
+      phase: outputStartedAt ? "generating" : "thinking",
+      startedAt,
+      outputStartedAt,
+      tail: (outputStartedAt ? contentTail : reasoningTail).slice(-420),
+      stage,
+      tick,
+      lastDeltaAt: now,
+    });
+  };
+
+  const reader = body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  let done: PassageAnalysisJobResponse | null = null;
+
+  for (;;) {
+    const chunk = await reader.read();
+    if (chunk.done) break;
+    buffer += decoder.decode(chunk.value, { stream: true });
+    const lines = buffer.split("\n");
+    buffer = lines.pop() ?? "";
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed.startsWith("data:")) continue;
+      const payload = trimmed.slice(5).trim();
+      if (!payload || payload === "[DONE]") continue;
+      let event: Record<string, unknown>;
+      try {
+        event = JSON.parse(payload);
+      } catch {
+        continue;
+      }
+      if (event.t === "phase" && typeof event.label === "string") {
+        // 단계가 바뀌면 패널을 사고 단계로 되감는다 — 다음 콜의 사고 시간을 다시 센다.
+        stage = event.label;
+        outputStartedAt = undefined;
+        contentTail = "";
+        reasoningTail = "";
+        emitPreview(true);
+      } else if (event.t === "r" && typeof event.d === "string") {
+        reasoningTail = (reasoningTail + event.d).slice(-900);
+        emitPreview();
+      } else if (event.t === "c" && typeof event.d === "string") {
+        if (!outputStartedAt) outputStartedAt = Date.now();
+        contentTail = (contentTail + event.d).slice(-900);
+        emitPreview();
+      } else if (event.t === "error") {
+        const err = event as { error?: string; details?: string };
+        throw new Error(err.details || err.error || "Failed to start passage analysis job.");
+      } else if (event.t === "done") {
+        done = event as unknown as PassageAnalysisJobResponse;
+      }
+    }
+  }
+
+  if (!done) {
+    // 서버는 저장까지 끝냈을 수 있다 — 잡 폴링이 완료 카드를 복원하므로
+    // 단정적 실패가 아니라 확인 안내로 표면화한다(md-stream 과 동일 문구 계약).
+    throw new Error(
+      "분석 스트림이 중간에 끊겼습니다. 완료 여부는 잠시 후 목록에서 자동으로 반영됩니다.",
+    );
+  }
+  if (done.error) {
+    throw new Error(done.details || done.error);
+  }
+  return done;
+}
+
+/** 미리보기 프레임을 두 큐(local/job)에 동시에 반영한다. */
+function makePreviewSink(
+  passageId: string,
+  setLocal: Dispatch<SetStateAction<QueuedPassage[]>>,
+  setJob: Dispatch<SetStateAction<QueuedPassage[]>>,
+) {
+  return (preview: AnalysisStreamPreview) => {
+    // 델타가 흐른다 = 서버가 실제로 생성 중이다. 폴링이 PROCESSING 을 확인하기
+    // 전이라도 카드를 "분석 중"으로 올려 라벨과 실제 상태를 일치시킨다.
+    const apply = (item: QueuedPassage): QueuedPassage => ({
+      ...item,
+      status: item.status === "pending" ? "analyzing" : item.status,
+      streamPreview: preview,
+    });
+    updateQueueItem(setLocal, passageId, apply);
+    updateQueueItem(setJob, passageId, apply);
+  };
+}
+
+/** 완료·실패 시 미리보기를 걷어낸다 — 결과 카드에 잔상이 남지 않게. */
+function clearPreview(item: QueuedPassage): QueuedPassage {
+  if (!item.streamPreview) return item;
+  const next = { ...item };
+  delete next.streamPreview;
+  return next;
 }
 
 export function usePassageQueue(
@@ -637,7 +805,29 @@ export function usePassageQueue(
           const data = (await res.json()) as { jobs?: AiJobRow[] };
           if (signal.aborted) return null;
           const jobs = data.jobs ?? [];
-          setJobQueue(jobs.map(queueItemFromJob).filter(Boolean) as QueuedPassage[]);
+          // 폴링은 DB 잡 행에서 항목을 새로 만든다 — 그대로 갈아끼우면 진행 중인
+          // 스트리밍 미리보기가 5초마다 사라진다. 직전 항목의 preview 를 이어붙인다.
+          setJobQueue((prev) => {
+            const previewById = new Map(
+              prev.filter((p) => p.streamPreview).map((p) => [p.id, p.streamPreview!]),
+            );
+            return (jobs.map(queueItemFromJob).filter(Boolean) as QueuedPassage[]).map(
+              (item) => {
+                const kept = previewById.get(item.id);
+                // 완료·실패로 넘어간 항목은 미리보기를 들고 가지 않는다.
+                // 델타가 15초 이상 끊긴 것도 버린다 — SSE 가 죽었는데(HMR·dev 재시작·
+                // 게이트웨이 절단) 초 카운터만 계속 올라가는 좀비 패널 방지.
+                if (
+                  !kept ||
+                  Date.now() - kept.lastDeltaAt > 15_000 ||
+                  (item.status !== "pending" && item.status !== "analyzing")
+                ) {
+                  return item;
+                }
+                return { ...item, streamPreview: kept };
+              },
+            );
+          });
           // Signature: status per job → fast while an analysis runs, idle after.
           return jobs.map((j) => `${j.id}:${j.status}`).join("|");
         } catch {
@@ -674,19 +864,27 @@ export function usePassageQueue(
 
       if (!runAnalysisNow) return;
 
-      void startPassageAnalysisJob(passage.id, normalizedPromptConfig)
+      void startPassageAnalysisJob(passage.id, normalizedPromptConfig, {
+        fast: true,
+        onPreview: makePreviewSink(passage.id, setLocalQueue, setJobQueue),
+      })
         .then((response) => {
           updateQueueItem(setLocalQueue, passage.id, (item) =>
-            applyAnalysisJobResponse(item, response),
+            applyAnalysisJobResponse(clearPreview(item), response),
           );
           updateQueueItem(setJobQueue, passage.id, (item) =>
-            applyAnalysisJobResponse(item, response),
+            applyAnalysisJobResponse(clearPreview(item), response),
           );
           notifyJobsChanged();
         })
         .catch((err) => {
           updateQueueItem(setLocalQueue, passage.id, (item) =>
-            applyAnalysisJobError(item, err),
+            applyAnalysisJobError(clearPreview(item), err),
+          );
+          // jobQueue 사본도 함께 정리 — 병합이 job 을 뒤에 전개하므로 여기 남은
+          // 죽은 미리보기·analyzing 상태가 화면에서 이긴다(좀비 카드).
+          updateQueueItem(setJobQueue, passage.id, (item) =>
+            applyAnalysisJobError(clearPreview(item), err),
           );
           notifyJobsChanged();
         });
@@ -722,21 +920,24 @@ export function usePassageQueue(
         ANALYSIS_FAST_BATCH_CONCURRENCY,
         async ({ passage, promptConfig }) => {
           try {
-            const response = await startPassageAnalysisJob(
-              passage.id,
-              promptConfig,
-            );
+            const response = await startPassageAnalysisJob(passage.id, promptConfig, {
+              fast: true,
+              onPreview: makePreviewSink(passage.id, setLocalQueue, setJobQueue),
+            });
             updateQueueItem(setLocalQueue, passage.id, (item) =>
-              applyAnalysisJobResponse(item, response),
+              applyAnalysisJobResponse(clearPreview(item), response),
             );
             updateQueueItem(setJobQueue, passage.id, (item) =>
-              applyAnalysisJobResponse(item, response),
+              applyAnalysisJobResponse(clearPreview(item), response),
             );
             notifyJobsChanged();
             return response;
           } catch (err) {
             updateQueueItem(setLocalQueue, passage.id, (item) =>
-              applyAnalysisJobError(item, err),
+              applyAnalysisJobError(clearPreview(item), err),
+            );
+            updateQueueItem(setJobQueue, passage.id, (item) =>
+              applyAnalysisJobError(clearPreview(item), err),
             );
             notifyJobsChanged();
             throw err;
@@ -784,19 +985,25 @@ export function usePassageQueue(
             : p,
         ),
       );
-      void startPassageAnalysisJob(passageId, target.promptConfig)
+      void startPassageAnalysisJob(passageId, target.promptConfig, {
+        fast: true,
+        onPreview: makePreviewSink(passageId, setLocalQueue, setJobQueue),
+      })
         .then((response) => {
           updateQueueItem(setLocalQueue, passageId, (item) =>
-            applyAnalysisJobResponse(item, response),
+            applyAnalysisJobResponse(clearPreview(item), response),
           );
           updateQueueItem(setJobQueue, passageId, (item) =>
-            applyAnalysisJobResponse(item, response),
+            applyAnalysisJobResponse(clearPreview(item), response),
           );
           notifyJobsChanged();
         })
         .catch((err) => {
           updateQueueItem(setLocalQueue, passageId, (item) =>
-            applyAnalysisJobError(item, err),
+            applyAnalysisJobError(clearPreview(item), err),
+          );
+          updateQueueItem(setJobQueue, passageId, (item) =>
+            applyAnalysisJobError(clearPreview(item), err),
           );
           notifyJobsChanged();
         });

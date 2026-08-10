@@ -6,10 +6,11 @@
 // question-review-modal 의 프레임 패턴(fixed inset-0 + 백드롭 블러 + 라운드
 // 컨테이너 + 고정 헤더/푸터 + 본문 스크롤)을 컴포넌트화. 배포 위저드·상세
 // 뷰 등 큰 작업창은 전부 이 셸을 쓴다. ESC/백드롭 닫기 + body 스크롤락 +
-// 포털 내장.
+// 포털 내장 + 포커스 트랩/복원(2026-07-25 추가 — 트랩이 없어 Tab 이 배경
+// 사이드바·푸터로 새어 나가고, 닫아도 포커스가 트리거로 돌아오지 않았다).
 // ============================================================================
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
@@ -41,17 +42,68 @@ export function WideModal({
   bodyClassName?: string;
   disableBackdropClose?: boolean;
 }) {
+  const panelRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+    // 열기 전 포커스를 기억했다가 닫을 때 되돌린다 — 없으면 키보드 사용자가
+    // 모달을 닫은 뒤 문서 처음부터 다시 Tab 해 내려와야 한다.
+    const restoreTo = document.activeElement as HTMLElement | null;
+
+    /** 패널 안에서 실제로 포커스를 받을 수 있는 요소 */
+    const focusables = (): HTMLElement[] => {
+      const root = panelRef.current;
+      if (!root) return [];
+      return [
+        ...root.querySelectorAll<HTMLElement>(
+          'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])',
+        ),
+      ].filter((el) => el.offsetParent !== null || el === document.activeElement);
     };
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+      // 포커스 트랩 — 없으면 화면엔 모달이 떠 있는데 Tab 이 뒤에 깔린
+      // 사이드바·푸터 링크로 새어 보이지 않는 곳을 조작하게 된다.
+      if (e.key !== "Tab") return;
+      const root = panelRef.current;
+      if (!root) return;
+      const items = focusables();
+      if (items.length === 0) {
+        e.preventDefault();
+        root.focus();
+        return;
+      }
+      const first = items[0];
+      const last = items[items.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+      if (!root.contains(active)) {
+        e.preventDefault();
+        (e.shiftKey ? last : first).focus();
+        return;
+      }
+      if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      } else if (e.shiftKey && active === first) {
+        e.preventDefault();
+        last.focus();
+      }
+    };
+
     document.addEventListener("keydown", onKey);
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    // 초기 포커스는 패널 자체 — 스크린리더가 dialog 라벨을 읽고 시작한다.
+    const raf = requestAnimationFrame(() => panelRef.current?.focus());
     return () => {
+      cancelAnimationFrame(raf);
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = prev;
+      restoreTo?.focus?.();
     };
   }, [open, onClose]);
 
@@ -59,18 +111,23 @@ export function WideModal({
 
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6">
+      {/* 백드롭 — 헤더 닫기 버튼과 접근성 이름이 겹치지 않게 보조기술에서 숨긴다
+          (닫기 수단은 헤더 버튼과 ESC 가 정본) */}
       <button
         type="button"
-        aria-label="닫기"
+        aria-hidden="true"
         className="absolute inset-0 cursor-default bg-black/40 backdrop-blur-[2px]"
         onClick={disableBackdropClose ? undefined : onClose}
         tabIndex={-1}
       />
       <div
+        ref={panelRef}
         role="dialog"
         aria-modal="true"
         aria-label={title}
+        tabIndex={-1}
         className={cn(
+          "outline-none",
           "relative flex max-h-[calc(100dvh-1.5rem)] w-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl sm:max-h-[calc(100dvh-3rem)]",
           maxWidthClassName,
         )}

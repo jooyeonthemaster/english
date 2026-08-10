@@ -790,7 +790,7 @@ export function QuestionTrashClient({
                 </p>
               </div>
             ) : (
-              <DragSelect
+              <DragSelect deferCommit
                 value={selectedIds}
                 onChange={setSelectedIds}
                 className={`grid gap-3 ${

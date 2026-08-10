@@ -10,9 +10,14 @@
       "Read(//c/Users/jooye/Desktop/2026project/nara/src/components/students/**)",
       "Read(//c/Users/jooye/Desktop/2026project/nara/src/components/layout/**)",
       "Read(//c/Users/jooye/Desktop/2026project/nara/src/types/**)",
-      "Read(//c/Users/jooye/Desktop/2026project/nara/**)"
+      "Read(//c/Users/jooye/Desktop/2026project/nara/**)",
+      "Bash(exit 1)",
+      "Bash(mkdir -p run16)",
+      "Bash(rm -rf run16/*)",
+      "Bash(node -e ' *)"
     ]
   },
+  "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
     "supabase"
   ],
@@ -26,6 +31,5 @@
         "sbp_85a5c55e5bc41a8ceaa0db7697f4c06e2bea1a13"
       ]
     }
-  },
-  "enableAllProjectMcpServers": true
+  }
 }

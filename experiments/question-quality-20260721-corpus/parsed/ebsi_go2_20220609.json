@@ -1,0 +1,764 @@
+{
+ "examId": "ebsi_go2_20220609",
+ "source": "ebsi_go2_20220609_paper_eng_mun_ZR4A715D.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 다음을 듣고, 남자가 하는 말의 목적으로 가장 적절한 것을 고르시오. ① 교내 밴드 공연을 홍보하려고 ② 교장 선생님의 퇴임을 축하하려고 ③ 변경된 음악 수업 장소를 안내하려고 ④ 지역 오케스트라의 단원을 모집하려고 ⑤ 새로운 음악 선생님의 부임을 알리려고",
+   "choices": [
+    "교내 밴드 공연을 홍보하려고",
+    "교장 선생님의 퇴임을 축하하려고",
+    "변경된 음악 수업 장소를 안내하려고",
+    "지역 오케스트라의 단원을 모집하려고",
+    "새로운 음악 선생님의 부임을 알리려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 149
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 여자의 의견으로 가장 적절한 것을 고르시오. ① 반복적인 학습을 통해 시험에서의 실수를 줄일 수 있다. ② 적당량의 초콜릿 섭취는 불안감 완화에 도움이 된다. ③ 단 음식을 많이 먹으면 호르몬의 균형이 깨진다. ④ 초콜릿의 효능에 대한 과학적 연구가 필요하다. ⑤ 의",
+   "choices": [
+    "반복적인 학습을 통해 시험에서의 실수를 줄일 수 있다.",
+    "적당량의 초콜릿 섭취는 불안감 완화에 도움이 된다.",
+    "단 음식을 많이 먹으면 호르몬의 균형이 깨진다.",
+    "초콜릿의 효능에 대한 과학적 연구가 필요하다.",
+    "의약품 남용에 대한 규제를 강화해야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 183
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 대화를 듣고, 두 사람의 관계를 가장 잘 나타낸 것을 고르시오. ① 여행사 직원 – 여행객 ② 헤어 디자이너 – 고객 ③ 가구 제작자 – 의뢰인 ④ 화가 – 모델 ⑤ 영화감독 – 배우",
+   "choices": [
+    "여행사 직원 – 여행객",
+    "헤어 디자이너 – 고객",
+    "가구 제작자 – 의뢰인",
+    "화가 – 모델",
+    "영화감독 – 배우"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 108
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고르시오. ① ③ ④ ⑤ ②",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 51
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 남자가 할 일로 가장 적절한 것을 고르시오. ① 날씨 확인하기 ② 렌트카 예약하기 ③ 호텔 방 변경하기 ④ 비행기표 예매하기 ⑤ 할인 쿠폰 다운받기",
+   "choices": [
+    "날씨 확인하기",
+    "렌트카 예약하기",
+    "호텔 방 변경하기",
+    "비행기표 예매하기",
+    "할인 쿠폰 다운받기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 96
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 여자가 지불할 금액을 고르시오. [3점] ① $30 ② $35 ③ $40 ④ $45 ⑤ $50",
+   "choices": [
+    "$30",
+    "$35",
+    "$40",
+    "$45",
+    "$50"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 84
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 여자가 벼룩시장에 갈 수 없는 이유를 고르시오. ① 결혼식에서 피아노를 연주해야 해서 ② 빵집에서 아르바이트를 해야 해서 ③ 티셔츠를 교환하러 가야 해서 ④ 건강 검진을 받아야 해서 ⑤ 과제를 제출해야 해서",
+   "choices": [
+    "결혼식에서 피아노를 연주해야 해서",
+    "빵집에서 아르바이트를 해야 해서",
+    "티셔츠를 교환하러 가야 해서",
+    "건강 검진을 받아야 해서",
+    "과제를 제출해야 해서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 128
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, Brantown Community Picnic에 관해 언급되지 않은 것을 고르시오. ① 일시 ② 장소 ③ 참가비 ④ 증정품 ⑤ 신청 방법",
+   "choices": [
+    "일시",
+    "장소",
+    "참가비",
+    "증정품",
+    "신청 방법"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 89
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. Space Science Camp에 관한 다음 내용을 듣고, 일치하지 않는 것을 고르시오. ① 8월 21일부터 8월 23일까지 진행된다. ② 우주 여행에 관한 특별 강연이 있다. ③ 참가자에게는 별을 관측할 기회가 있다. ④ 예약 페이지는 캠프 3주 전에 열린다. ⑤ 참가비는 1인",
+   "choices": [
+    "8월 21일부터 8월 23일까지 진행된다.",
+    "우주 여행에 관한 특별 강연이 있다.",
+    "참가자에게는 별을 관측할 기회가 있다.",
+    "예약 페이지는 캠프 3주 전에 열린다.",
+    "참가비는 1인당 50달러이다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 171
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 다음 표를 보면서 대화를 듣고, 두 사람이 구매할 식기세척기를 고르시오. Dishwashers Model Price Color Type Warranty Period ① A $650 black portable 6 months ② B $680 black builtin 6 months",
+   "choices": [
+    "A\n$650\nblack\nportable\n6 months",
+    "B\n$680\nblack\nbuiltin\n6 months",
+    "C\n$720\nwhite\nportable\n1 year",
+    "D\n$760\nsilver\nbuiltin\n1 year",
+    "E\n$850\nsilver\nbuiltin\n2 years"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 260
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ① It’s important to grow a lot of plants for the Earth. ② You need to water them once every three days. ③ Too",
+   "choices": [
+    "It’s important to grow a lot of plants for the Earth.",
+    "You need to water them once every three days.",
+    "Too much sunlight can be bad for the plants.",
+    "I’d better save water for the environment.",
+    "We should drink one liter of water a day."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 292
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ① Sorry. I’ve already made a reservation at that restaurant. ② Oh, no. I must find another place as soon as p",
+   "choices": [
+    "Sorry. I’ve already made a reservation at that restaurant.",
+    "Oh, no. I must find another place as soon as possible.",
+    "Great. Let’s have the phone fixed right now.",
+    "No way! It is too far away to go there.",
+    "Thanks. I’ll definitely go to your party.\n2022학년도 6월 고2 전국연합학력평가 문제지            1\n제3 교시\n2                  영어영역              \n고2\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 454
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. [3점] ① Don’t worry. I’ve already ordered it. ② You’re right. I’ll take care of it tomorrow. ③ My fault! I wro",
+   "choices": [
+    "Don’t worry. I’ve already ordered it.",
+    "You’re right. I’ll take care of it tomorrow.",
+    "My fault! I wrote the wrong address on it.",
+    "I’m sorry. I’ll wake you up early next time.",
+    "Sure. You’d better return the borrowed item now."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 287
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. [3점] ① Okay. Then, I need to hurry up and register. ② Sorry. You can only register for it in person. ③ Thank ",
+   "choices": [
+    "Okay. Then, I need to hurry up and register.",
+    "Sorry. You can only register for it in person.",
+    "Thank you. I recommended them to my friend.",
+    "No worries. You can get over your fear of water.",
+    "Fantastic! The swimming instructor is professional."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 304
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Amy가 Jerry에게 할 말로 가장 적절 한 것을 고르시오. Amy: ① I think you can get them done by today. ② Do you know any way to get there in time?",
+   "choices": [
+    "I think you can get them done by today.",
+    "Do you know any way to get there in time?",
+    "Would you pick up my son from kindergarten for me?",
+    "I can’t wait to see you at the kindergarten talent show.",
+    "You need not bring anything to the housewarming party.\n[16~17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 393
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 남자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "misunderstandings about recycled products",
+    "processes and outputs of recycling",
+    "issues caused by waste pollution",
+    "the history of recycling systems",
+    "tips for reducing trash"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 206
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 소재가 아닌 것은?",
+   "choices": [
+    "paper",
+    "metals",
+    "fabrics",
+    "glass",
+    "plastics\n이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시에 \n따라 답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 116
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "도서관의 운영 시간 연장을 제안하려고",
+    "봉사 활동 시간이 변경된 것을 안내하려고",
+    "독서 토론 수업에 참여할 아동을 모집하려고",
+    "봉사 활동에 참여하지 못하게 된 것을 사과하려고",
+    "책 읽어 주기 자원봉사에 참여해 줄 것을 요청하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 827
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 드러난 ‘I’의 심경 변화로 가장 적절한 것은?",
+   "choices": [
+    "terrified → relieved",
+    "hopeful → nervous",
+    "confident → anxious",
+    "annoyed → grateful",
+    "disappointed → thrilled"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 758
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "원만한 인간관계를 위하여 사고의 유연성을 길러야 한다.",
+    "성공에 도움을 준 사람들에게 감사하는 마음을 가져야 한다.",
+    "자신의 분야에서 성공하기 위해서는 경험의 폭을 넓혀야 한다.",
+    "원하는 직업을 갖기 위해서는 다른 사람의 조언을 경청해야 한다.",
+    "타인의 시선을 의식하지 않고 부단히 새로운 일에 도전해야 한다.\n고2               영어영역                  3\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1093
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 밑줄 친 ‘give away the house’가 다음 글에서 의미하는 바로 가장 적절한 것은?",
+   "choices": [
+    "risk the company’s profitability",
+    "overlook a competitor’s strengths",
+    "hurt the reputation of the company",
+    "generate more customer complaints",
+    "abandon customeroriented marketing"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1198
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "자녀의 특성에 맞는 개별화된 양육이 필요하다.",
+    "식물을 키우는 것이 자녀의 창의성 발달에 도움이 된다.",
+    "정서적 교감은 자녀의 바람직한 인격 형성에 필수적이다.",
+    "자녀에게 타인을 존중하는 태도를 가르치는 것이 중요하다.",
+    "전문가에 의해 검증된 양육 방식을 따르는 것이 바람직하다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1021
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "considerations in learning foreign languages",
+    "people’s inclination towards unpredictability",
+    "hidden devices to make a movie plot unexpected",
+    "positive effects of routine on human brain function",
+    "danger of predicting the future based on the present"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1118
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Buildings Do Talk in Their Own Ways!",
+    "Design of Buildings Starts from Nature",
+    "Language of Buildings: Too Vague to Grasp",
+    "Which Is More Important, Safety or Beauty?",
+    "How Do Architects Attach Emotions to Buildings?\n4                  영어영역              \n고2\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1260
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. 다음 도표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "In all five countries, travel and tourism’s contribution to \nGDP in 2020 decreased compared to the previous year.",
+    "Both in 2019 and in 2020, the U.S. showed the largest \ncontribution of travel and tourism to GDP among the five \ncountries, followed by China.",
+    "In China, travel and tourism’s \ncontribution to GDP in 2020 was less than a third that in \n2019.",
+    "In 2019, Germany showed a larger contribution of \ntravel and tourism to GDP than Japan, whereas the reverse \nwas true in 2020.",
+    "In 2020, the UK was the only country \nwhere the contribution of travel and tourism to GDP was \nless than $200 billion."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 822
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. monarch butterfly에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "날개의 바깥 가장자리에 흰 점이 있다.",
+    "뒷날개는 앞날개보다 색이 더 밝다.",
+    "알은 약 3일에서 5일 후에 부화한다.",
+    "북부 주의 추운 겨울 기온에 잘 버틴다.",
+    "4천 킬로미터 넘게 날 수 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 927
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. 2022 Korean Speech Contest에 관한 다음 안내문의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "한국에서 지내는 동안의 경험을 주제로 한다.",
+    "영상 제출 마감일은 9월 5일이다.",
+    "1등에게는 상금과 한국 전통 인형이 주어진다.",
+    "영상 도입부에 이름이 언급되어야 한다.",
+    "이메일로 영상 파일을 보내야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 696
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. EZ Portable Photo Printer 사용에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "LED 표시기의 흰색은 충전 중임을 나타낸다.",
+    "전원 버튼을 한 번 누르면 전원이 꺼진다.",
+    "배터리가 완전히 충전되는 데 2시간 이상 걸린다.",
+    "무선 연결을 위해 앱을 다운로드해야 한다.",
+    "인화지를 로고가 위로 향하도록 넣어야 한다.\n고2               영어영역                  5\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 878
+  },
+  {
+   "qNum": 29,
+   "kind": "grammar_underline",
+   "stem": "29. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "to differentiate between",
+    "②": "which are positive and thus",
+    "③": "needs to be addressed",
+    "④": "much less suffering to try",
+    "⑤": "was the previous widespread attitude"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1033
+  },
+  {
+   "qNum": 30,
+   "kind": "vocab_underline",
+   "stem": "30. 다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "paradox",
+    "②": "distracted",
+    "③": "passive occupation",
+    "④": "flexibility to handle new situations",
+    "⑤": "less likely to have a"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1055
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. Followers can be defined by their position as subordinates or by their behavior of going along with leaders’ wishes. But followers also have power to lead. ",
+   "choices": [
+    "rigid",
+    "unfair",
+    "fluid",
+    "stable",
+    "apparent"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1063
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. Color is an interpretation of wavelengths, one that only exists internally. And it gets stranger, because the wavelengths we’re talking about involve only w",
+   "choices": [
+    "hindered by other wavelengths",
+    "derived from our imagination",
+    "perceived through all senses",
+    "filtered by our stereotypes",
+    "limited by our biology\n6                  영어영역              \n고2\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1091
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. What is unusual about journalism as a profession is . In theory, practitioners in the classic professions, like medicine or the clergy, contain the means of",
+   "choices": [
+    "its lack of independence",
+    "the constant search for truth",
+    "the disregard of public opinion",
+    "its balance of income and faith",
+    "its overconfidence in its social influence"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1091
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. In most of the world, capitalism and free markets are accepted today as constituting the best system for allocating economic resources and encouraging econo",
+   "choices": [
+    "markets are rarely left entirely free",
+    "governments are reluctant to intervene",
+    "supply and demand are not always balanced",
+    "economic inequality continues to get worse",
+    "competition does not guarantee the maximum profit"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1136
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "If you keep that money in the bank for \na year, during which inflation is 100 percent, you’ve still got \n$100.",
+    "Only now, if you take it out and put it in your \nwallet, you’ll only be able to purchase half the goods you \ncould have bought a year ago.",
+    "In other words, if inflation \nincreases faster than the amount of interest you are earning, \nthis will decrease the purchasing power of your investments \nover time.",
+    "It would be very useful to know in advance \nwhat would happen to your firm’s total revenue if you \nincreased your product’s price.",
+    "That’s why we differentiate \nbetween nominal value and real value.\n* accrue: 생기다  ** nominal: 명목의, 액면(상)의\n[36~37] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 \n것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 994
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. Touch receptors are spread over all parts of the body, but they are not spread evenly. Most of the touch receptors are found in your fingertips, tongue, and",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n고2               영어영역                  7\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1148
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. One interesting feature of network markets is that “history matters.” A famous example is the QWERTY keyboard used with your computer. (A) Replacing the QWE",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n[38~39] 글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 \n적절한 곳을 고르시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38~39"
+    ]
+   },
+   "charLen": 1074
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. This temperature is of the surface of the star, the part of the star which is emitting the light that can be seen. One way of measuring temperature occurs i",
+   "choices": [
+    ") The color of a glowing object is \nrelated to its temperature: as the temperature rises, the \nobject is first red and then orange, and finally it gets white, \nthe “hottest” color. (",
+    ") The relation between temperature \nand the color of a glowing object is useful to astronomers. \n(",
+    ") The color of stars is related to their temperature, \nand since people cannot as yet travel the great distances to \nthe stars and measure their temperature in a more precise \nway, astronomers rely on their color. (",
+    ") The interior of \nthe star is at a much higher temperature, though it is \nconcealed. (",
+    ") But the information obtained from the \ncolor of the star is still useful. [3점]"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 932
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. But by the 1970s, psychologists realized there was no such thing as a general “creativity quotient.” The holy grail of the first wave of creativity research",
+   "choices": [
+    ") \nA person’s creativity score should tell us his or her creative \npotential in any field of endeavor, just like an IQ score is \nnot limited to physics, math, or literature. (",
+    ") Creative \npeople aren’t creative in a general, universal way; they’re \ncreative in a specific sphere of activity, a particular domain. \n(",
+    ") We don’t expect a creative scientist to also be a \ngifted painter. (",
+    ") A creative violinist may not be a \ncreative conductor, and a creative conductor may not be \nvery good at composing new works. (",
+    ") Psychologists \nnow know that creativity is domain specific.\n* quotient: 지수  ** holy grail: 궁극적 목표"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 905
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "confident\n…… keep",
+    "skeptical\n…… eliminate",
+    "arrogant\n…… express",
+    "critical\n…… keep",
+    "stubborn\n…… eliminate\n8                  영어영역              \n고2\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n[41~42] 다음 글을 읽고, 물음에 답하시오.\nCommon sense suggests that discussion with others who \nexpress different opinions should produce more moderate \nattitudes for everyone in the group. Surprisingly, this is \nnot always the case. In group polarization, a period of \ndiscussion pushes group members to take more extreme \npositions in the direction that they were already inclined to \nprefer. Group polarization does not (a) reverse the direction \nof attitudes, but rather accentuates the attitudes held at the \nbeginning. Two pressures appear to push individuals to take \nmore extreme positions following a group discussion. First, \nconformity and desire for affiliation contribute to group \npolarization. If the majority of a group is leaning in a \nparticular direction, what could be a better way of fitting in \nthan (b) agreeing with that majority, and maybe even taking \nits argument one step farther? There is also a tendency for \nlikeminded people to affiliate with one another, which can \nprovide (c) reinforcement for existing opinions, increase \npeople’s confidence in those opinions, lead to the discovery \nof new reasons for those opinions and counterarguments to \nopposing views, and reduce exposure to conflicting ideas. \nSecond, exposure to discussion on a topic introduces new \nreasons for (d) changing an attitude. If you are already \nopposed to gun control and you listen to additional \narguments supporting your position, you might end up more \n(e) opposed than you were originally.\n* accentuate: 강화하다  ** affiliation: 소속"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3042
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Have More Companions and Perform Better!",
+    "Group Competition: Not Necessarily Harmful",
+    "Exposure to New Ideas Weakens Group Identity",
+    "Sharing Ideas: The Surest Way to Foster Creativity",
+    "Black Gets Darker, White Gets Brighter in Group Discussion"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 273
+  },
+  {
+   "qNum": 42,
+   "kind": "vocab_letter",
+   "stem": "42. 밑줄 친 (a) ~ (e) 중에서 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {
+    "a": "his son and was",
+    "b": "his seat as tightly",
+    "c": "him",
+    "d": "I have never met",
+    "e": "him to make sure"
+   },
+   "bracketChoices": {},
+   "charLen": 1857
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) - (D) - (C)",
+    "(C) - (B) - (D)",
+    "(C) - (D) - (B)",
+    "(D) - (B) - (C)",
+    "(D) - (C) - (B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 142
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a) ～(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 77
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글에 관한 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "사업가는 중년 여성과 소년 사이에 앉았다.",
+    "비행기가 오르락내리락하자 사람들은 긴장했다.",
+    "소년은 색칠 공부 책과 크레용을 가방에 넣었다.",
+    "소년은 자신의 아버지가 조종사라고 말했다.",
+    "조종사는 사람들에게 안전벨트를 매고 침착하라고 말했다.\n＊확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)했는지 확인\n하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 216
+  }
+ ],
+ "sourcePdf": "ebsi_go2_20220609_paper_eng_mun_ZR4A715D.pdf"
+}

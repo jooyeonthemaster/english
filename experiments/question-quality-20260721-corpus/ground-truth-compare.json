@@ -1,0 +1,632 @@
+[
+  {
+    "id": "2005_06_3001149-q19",
+    "type": "어휘",
+    "gt": "cross→angry",
+    "mine": "?",
+    "verdict": "MISS"
+  },
+  {
+    "id": "2005_09_3001156-q20",
+    "type": "어휘",
+    "gt": "captains / engagement→masters of ships / battle",
+    "mine": "CLEAN 판정",
+    "verdict": "MISS"
+  },
+  {
+    "id": "2005_YB_5006647-q36",
+    "type": "어휘",
+    "gt": "directions→instructions",
+    "mine": "CLEAN 판정",
+    "verdict": "MISS"
+  },
+  {
+    "id": "2006_09_3001166-q28",
+    "type": "어휘",
+    "gt": "abundant→scarce",
+    "mine": "abundant→scarce",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2006_SN_3000977-q30",
+    "type": "어휘",
+    "gt": "enhance→lose/eliminate",
+    "mine": "enhance→eliminate",
+    "verdict": "WORD_DIFF"
+  },
+  {
+    "id": "2006_SN_3000977-q31",
+    "type": "어휘",
+    "gt": "particles/contaminating/comments→principles / concentrating / commands",
+    "mine": "CLEAN 판정",
+    "verdict": "MISS"
+  },
+  {
+    "id": "2007_06_3001177-q35",
+    "type": "어휘",
+    "gt": "loosens→stiffens",
+    "mine": "loosens→stiffens",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2008_06_3001212-q29",
+    "type": "어휘",
+    "gt": "front→rear",
+    "mine": "front→rear",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2008_09_3001186-q29",
+    "type": "어휘",
+    "gt": "increase→decrease",
+    "mine": "increase→decrease",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2010_09_3001242-q29",
+    "type": "어휘",
+    "gt": "least / benefit / spending→least / benefit / spending",
+    "mine": "CLEAN 판정",
+    "verdict": "MISS"
+  },
+  {
+    "id": "2011_06_3001235-q31",
+    "type": "어휘",
+    "gt": "unselfish→selfish",
+    "mine": "unselfish→selfish",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2011_06_3001235-q32",
+    "type": "어휘",
+    "gt": "beneficial / increased / wealth→disastrous / reduced / poverty",
+    "mine": "CLEAN 판정",
+    "verdict": "MISS"
+  },
+  {
+    "id": "2011_09_3001251-q31",
+    "type": "어휘",
+    "gt": "(A)vulnerable/immune (B)dense/deficient (C)greedily/moderately→(A)vulnerable (B)dense (C)moderately",
+    "mine": "CLEAN 판정",
+    "verdict": "MISS"
+  },
+  {
+    "id": "2011_09_3001251-q32",
+    "type": "어휘",
+    "gt": "well→poorly",
+    "mine": "well→badly",
+    "verdict": "WORD_DIFF"
+  },
+  {
+    "id": "2011_SN_3000996-q31",
+    "type": "어휘",
+    "gt": "attain / Optimal / intricate→attain / Optimal / intricate",
+    "mine": "CLEAN 판정",
+    "verdict": "MISS"
+  },
+  {
+    "id": "2011_SN_3000996-q32",
+    "type": "어휘",
+    "gt": "neglects→enhances",
+    "mine": "neglects→enhances",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2012_06_3001254-q32",
+    "type": "어휘",
+    "gt": "complaints / slowed / solved (box choices)→complaints / slowed / solved",
+    "mine": "CLEAN 판정",
+    "verdict": "MISS"
+  },
+  {
+    "id": "2012_06_3001254-q33",
+    "type": "어휘",
+    "gt": "flourished→declined",
+    "mine": "flourished→declined",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2012_09_3008944-q32",
+    "type": "어휘",
+    "gt": "Altruism / share / unintentional→undefined",
+    "mine": "CLEAN 판정",
+    "verdict": "MISS"
+  },
+  {
+    "id": "2012_09_3008944-q33",
+    "type": "어휘",
+    "gt": "curable→incurable",
+    "mine": "curable→incurable",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2012_SN_3001002-q32",
+    "type": "어휘",
+    "gt": "slower→faster",
+    "mine": "slower→faster",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2013_06_3008953-q32",
+    "type": "어휘",
+    "gt": "reduce→increase",
+    "mine": "reduce→increase",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2013_09_3011547-q31",
+    "type": "어휘",
+    "gt": "cause→result",
+    "mine": "a cause→a consequence",
+    "verdict": "POS_DIFF"
+  },
+  {
+    "id": "2013_SN_3014708-q30",
+    "type": "어휘",
+    "gt": "deny→recognize",
+    "mine": "deny→recognize",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2014_06_3018186_A-q28",
+    "type": "어휘",
+    "gt": "false / dependence / abundant→false / dependence / abundant",
+    "mine": "CLEAN 판정",
+    "verdict": "MISS"
+  },
+  {
+    "id": "2014_06_3018186_B-q28",
+    "type": "어휘",
+    "gt": "false / dependence / abundant→false / dependence / abundant",
+    "mine": "CLEAN 판정",
+    "verdict": "MISS"
+  },
+  {
+    "id": "2014_09_3020142_A-q28",
+    "type": "어휘",
+    "gt": "follow→ignore",
+    "mine": "follow→resist",
+    "verdict": "WORD_DIFF"
+  },
+  {
+    "id": "2014_09_3020142_B-q28",
+    "type": "어휘",
+    "gt": "follow→ignore",
+    "mine": "follow→resist",
+    "verdict": "WORD_DIFF"
+  },
+  {
+    "id": "2014_SN_3022251_B-q28",
+    "type": "어휘",
+    "gt": "evade→assume",
+    "mine": "evade→assume",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2014_SN_3022252_A-q28",
+    "type": "어휘",
+    "gt": "frequently / attractions / decrease→rarely / distractions / increase",
+    "mine": "CLEAN 판정",
+    "verdict": "MISS"
+  },
+  {
+    "id": "2014_YB_5006654_A-q32",
+    "type": "어휘",
+    "gt": "insufficient→sufficient",
+    "mine": "insufficient→sufficient",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2014_YB_5006654_B-q28",
+    "type": "어휘",
+    "gt": "insufficient→sufficient",
+    "mine": "insufficient→sufficient",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2015_06_3026346-q28",
+    "type": "어휘",
+    "gt": "increasing / regulate / signed→increasing / regulate / signed",
+    "mine": "CLEAN 판정",
+    "verdict": "MISS"
+  },
+  {
+    "id": "2015_09_3027897-q29",
+    "type": "어휘",
+    "gt": "maximum→minimum",
+    "mine": "maximum→minimum",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2015_SN_3029607-q30",
+    "type": "어휘",
+    "gt": "fuses / precision / underlies→fuses / precision / underlies",
+    "mine": "CLEAN 판정",
+    "verdict": "MISS"
+  },
+  {
+    "id": "2016_06_3033341-q29",
+    "type": "어휘",
+    "gt": "solitary / abundant / overwhelm→solitary / abundant / overwhelm",
+    "mine": "CLEAN 판정",
+    "verdict": "MISS"
+  },
+  {
+    "id": "2016_09_5000516-q29",
+    "type": "어휘",
+    "gt": "absence→presence",
+    "mine": "absence→presence",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2016_SN_5001717-q29",
+    "type": "어휘",
+    "gt": "accommodation / supported / cooperating→destruction / lacked / competing",
+    "mine": "CLEAN 판정",
+    "verdict": "MISS"
+  },
+  {
+    "id": "2017_06_5005813-q29",
+    "type": "어휘",
+    "gt": "preset / intentionally / variation→self-selected / automatically / consistency",
+    "mine": "CLEAN 판정",
+    "verdict": "MISS"
+  },
+  {
+    "id": "2017_SN_5008710-q29",
+    "type": "어휘",
+    "gt": "lost / allows / never→lost / allows / never",
+    "mine": "CLEAN 판정",
+    "verdict": "MISS"
+  },
+  {
+    "id": "2018_06_5013302-q29",
+    "type": "어휘",
+    "gt": "rationalizing / mental / early→undefined",
+    "mine": "CLEAN 판정",
+    "verdict": "MISS"
+  },
+  {
+    "id": "2018_09_5014608-q29",
+    "type": "어휘",
+    "gt": "disappointed / real / inseparable→satisfied / artistic / free",
+    "mine": "CLEAN 판정",
+    "verdict": "MISS"
+  },
+  {
+    "id": "2018_SN_5019793-q29",
+    "type": "어휘",
+    "gt": "found→lost",
+    "mine": "found→lost",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2019_09_5024244-q30",
+    "type": "어휘",
+    "gt": "available / predicting / necessary→available / predicting / necessary",
+    "mine": "CLEAN 판정",
+    "verdict": "MISS"
+  },
+  {
+    "id": "2019_09_5024244-q41-42",
+    "type": "장문(41-42)",
+    "gt": "randomly→selectively",
+    "mine": "randomly→selectively",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2019_SN_5031122-q30",
+    "type": "어휘",
+    "gt": "laboriously→easily",
+    "mine": "laboriously→easily",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2019_SN_5031122-q41-42",
+    "type": "장문(41-42)",
+    "gt": "promoted→disrupted",
+    "mine": "promoted→disrupted",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2020_06_5037373-q30",
+    "type": "어휘",
+    "gt": "forbid→prompt",
+    "mine": "forbid→motivate",
+    "verdict": "WORD_DIFF"
+  },
+  {
+    "id": "2020_06_5037373-q41-42",
+    "type": "장문(41-42)",
+    "gt": "promising→dangerous",
+    "mine": "promising→dangerous",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2020_09_5038442-q30",
+    "type": "어휘",
+    "gt": "optional→essential",
+    "mine": "optional→essential",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2020_09_5038442-q41-42",
+    "type": "장문(41-42)",
+    "gt": "extended→limited",
+    "mine": "extended→limited",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2020_SN_5045859-q30",
+    "type": "어휘",
+    "gt": "denying→accepting",
+    "mine": "denying→accepting",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2020_SN_5045859-q41-42",
+    "type": "장문(41-42)",
+    "gt": "Uncertainty→Certainty",
+    "mine": "Uncertainty→Understanding",
+    "verdict": "WORD_DIFF"
+  },
+  {
+    "id": "2021_06_5049916-q30",
+    "type": "어휘",
+    "gt": "improbable→possible",
+    "mine": "improbable→possible",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2021_06_5049916-q41-42",
+    "type": "장문(41-42)",
+    "gt": "decrease→increase",
+    "mine": "decrease→increase",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2021_09_5050886-q30",
+    "type": "어휘",
+    "gt": "inappropriate→appropriate",
+    "mine": "inappropriate→appropriate",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2021_09_5050886-q41-42",
+    "type": "장문(41-42)",
+    "gt": "close→little",
+    "mine": "close→little",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2021_SN_5061633-q30",
+    "type": "어휘",
+    "gt": "lacked→had",
+    "mine": "lacked→had",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2021_SN_5061633-q41-42",
+    "type": "장문(41-42)",
+    "gt": "complex→simple",
+    "mine": "complex→simple",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2022_06_5063572-q30",
+    "type": "어휘",
+    "gt": "increase→reduce",
+    "mine": "increase→reduce",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2022_06_5063572-q41-42",
+    "type": "장문(41-42)",
+    "gt": "easier→harder",
+    "mine": "easier→harder",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2022_09_5064693-q30",
+    "type": "어휘",
+    "gt": "seized→lost",
+    "mine": "seized→missed",
+    "verdict": "WORD_DIFF"
+  },
+  {
+    "id": "2022_09_5064693-q41-42",
+    "type": "장문(41-42)",
+    "gt": "different→similar",
+    "mine": "different→similar",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2022_SN_5070164-q30",
+    "type": "어휘",
+    "gt": "benefits→drawbacks",
+    "mine": "benefits→limits",
+    "verdict": "WORD_DIFF"
+  },
+  {
+    "id": "2022_SN_5070164-q41-42",
+    "type": "장문(41-42)",
+    "gt": "unorganized→organized",
+    "mine": "abstract→obvious",
+    "verdict": "POS_DIFF"
+  },
+  {
+    "id": "2023_06_5076592-q30",
+    "type": "어휘",
+    "gt": "accommodating→managing",
+    "mine": "accommodating→managing",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2023_06_5076592-q41-42",
+    "type": "장문(41-42)",
+    "gt": "accurate→inaccurate",
+    "mine": "CLEAN 판정",
+    "verdict": "MISS"
+  },
+  {
+    "id": "2023_09_5077481-q30",
+    "type": "어휘",
+    "gt": "diminished→intensified",
+    "mine": "diminished→compounded",
+    "verdict": "WORD_DIFF"
+  },
+  {
+    "id": "2023_09_5077481-q41-42",
+    "type": "장문(41-42)",
+    "gt": "rapidly→slowly",
+    "mine": "rapidly→gradually",
+    "verdict": "WORD_DIFF"
+  },
+  {
+    "id": "2023_SN_5080827-q30",
+    "type": "어휘",
+    "gt": "maintain→delay",
+    "mine": "maintain→delay",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2023_SN_5080827-q41-42",
+    "type": "장문(41-42)",
+    "gt": "relaxed→rushed",
+    "mine": "relaxed→stressed",
+    "verdict": "WORD_DIFF"
+  },
+  {
+    "id": "2024_06_5084521-q41-42",
+    "type": "장문(41-42)",
+    "gt": "block→ease",
+    "mine": "block→facilitate",
+    "verdict": "WORD_DIFF"
+  },
+  {
+    "id": "2024_09_5085155-q30",
+    "type": "어휘",
+    "gt": "countered→created",
+    "mine": "countered→created",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2024_09_5085155-q41-42",
+    "type": "장문(41-42)",
+    "gt": "challenging→easy",
+    "mine": "challenging→easy",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2024_SN_5086091-q30",
+    "type": "어휘",
+    "gt": "low→high",
+    "mine": "low→high",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2024_SN_5086091-q41-42",
+    "type": "장문(41-42)",
+    "gt": "running→avoiding",
+    "mine": "running the risk of being misquoted→avoiding the risk of being misquoted",
+    "verdict": "POS_DIFF"
+  },
+  {
+    "id": "2025_06_5086961-q30",
+    "type": "어휘",
+    "gt": "drives→undermines",
+    "mine": "drives→undermines",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2025_06_5086961-q41-42",
+    "type": "장문(41-42)",
+    "gt": "coincide→conflict",
+    "mine": "coincide→conflict",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2025_09_5087695-q30",
+    "type": "어휘",
+    "gt": "rationality→irrationality",
+    "mine": "rationality→irrationality",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2025_09_5087695-q41-42",
+    "type": "장문(41-42)",
+    "gt": "sensitive→insensitive",
+    "mine": "sensitive→insensitive",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2025_SN_5089362-q30",
+    "type": "어휘",
+    "gt": "stronger→weaker",
+    "mine": "stronger→weaker",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2025_SN_5089362-q41-42",
+    "type": "장문(41-42)",
+    "gt": "excludes→involves",
+    "mine": "excludes→requires",
+    "verdict": "WORD_DIFF"
+  },
+  {
+    "id": "2026_06_5090182-q30",
+    "type": "어휘",
+    "gt": "temporary→lasting",
+    "mine": "temporary→lasting",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2026_06_5090182-q41-42",
+    "type": "장문(41-42)",
+    "gt": "distinguishable→indistinguishable",
+    "mine": "distinguishable→indistinguishable",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2026_09_5091403-q30",
+    "type": "어휘",
+    "gt": "insignificant→significant",
+    "mine": "insignificant→significant",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2026_09_5091403-q41-42",
+    "type": "장문(41-42)",
+    "gt": "less→more",
+    "mine": "less routine→more routine",
+    "verdict": "POS_DIFF"
+  },
+  {
+    "id": "2026_SN_5093799-q30",
+    "type": "어휘",
+    "gt": "abandon→gain",
+    "mine": "abandon→gain",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2026_SN_5093799-q41-42",
+    "type": "장문(41-42)",
+    "gt": "unlikely→likely",
+    "mine": "unlikely→likely",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2027_06_5095396-q30",
+    "type": "어휘",
+    "gt": "thick→thin",
+    "mine": "thick→thin",
+    "verdict": "AGREE"
+  },
+  {
+    "id": "2027_06_5095396-q41-42",
+    "type": "장문(41-42)",
+    "gt": "obey→defy",
+    "mine": "obey→defy",
+    "verdict": "AGREE"
+  }
+]

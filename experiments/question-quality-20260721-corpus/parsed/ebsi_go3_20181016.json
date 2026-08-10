@@ -1,0 +1,764 @@
+{
+ "examId": "ebsi_go3_20181016",
+ "source": "ebsi_go3_20181016_paper_eng_mun_j2fBUA51_10.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ① That sounds good for a change. ② That was a great romance movie. ③ Isn’t it expensive to watch a movie?",
+   "choices": [
+    "That sounds good for a change.",
+    "That was a great romance movie.",
+    "Isn’t it expensive to watch a movie?",
+    "I have a meeting tonight, so I can’t come.",
+    "As you know, I don’t like watching movies."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 248
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ① I’m proud of him. It’s a great accomplishment. ② That’s true. He won’t come to the meeting. ③ Too bad. Then ",
+   "choices": [
+    "I’m proud of him. It’s a great accomplishment.",
+    "That’s true. He won’t come to the meeting.",
+    "Too bad. Then the flight will be delayed.",
+    "Not at all. Flying is safer than driving.",
+    "Of course. I’ll text you about it."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 270
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을 듣고, 남자가 하는 말의 목적으로 가장 적절한 것을 고 르시오. ① 도서관의 디지털 자료 사용을 권장하려고 ② 도서관 자원봉사자 모집 계획을 알리려고 ③ 학교 전산망 시설 공사 일정을 공지하려고 ④ 디지털 콘텐츠 개발의 필요성을 강조하려고 ⑤ 자료 검색용 컴퓨터 이용 방법을",
+   "choices": [
+    "도서관의 디지털 자료 사용을 권장하려고",
+    "도서관 자원봉사자 모집 계획을 알리려고",
+    "학교 전산망 시설 공사 일정을 공지하려고",
+    "디지털 콘텐츠 개발의 필요성을 강조하려고",
+    "자료 검색용 컴퓨터 이용 방법을 안내하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 167
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 남자의 의견으로 가장 적절한 것을 고르시오. ① 놀이를 통해 갈등 해결 능력을 기를 수 있다. ② 칭찬과 격려가 자녀의 행동 교정에 효과적이다. ③ 부모는 자녀에게 사과의 중요성을 가르쳐야 한다. ④ 가정 내 규율은 부모와 자녀가 함께 정해야 한다. ⑤ 자녀를 훈육할",
+   "choices": [
+    "놀이를 통해 갈등 해결 능력을 기를 수 있다.",
+    "칭찬과 격려가 자녀의 행동 교정에 효과적이다.",
+    "부모는 자녀에게 사과의 중요성을 가르쳐야 한다.",
+    "가정 내 규율은 부모와 자녀가 함께 정해야 한다.",
+    "자녀를 훈육할 때 일관성을 유지하는 것이 중요하다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 182
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 두 사람의 관계를 가장 잘 나타낸 것을 고르시오. ① 요리 강사- 수강생 ② 영양 교사- 학생회장 ③ 방송 기자- 통계 분석가 ④ 여론 조사 전문가- 의뢰인 ⑤ 식품 위생 감시원- 음식점 주인",
+   "choices": [
+    "요리 강사- 수강생",
+    "영양 교사- 학생회장",
+    "방송 기자- 통계 분석가",
+    "여론 조사 전문가- 의뢰인",
+    "식품 위생 감시원- 음식점 주인"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 120
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고 르시오. ① ③ ④ ⑤ ②",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 52
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 남자가 Mark를 위해 할 일로 가장 적절한 것을 고르시오. ① 숙소 알아보기 ② 기차표 구매하기 ③ 손님방 청소하기 ④ 구직 면접 주선하기 ⑤ 호텔 예약 취소하기",
+   "choices": [
+    "숙소 알아보기",
+    "기차표 구매하기",
+    "손님방 청소하기",
+    "구직 면접 주선하기",
+    "호텔 예약 취소하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 104
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, 여자가 오늘 프로젝터를 사용하지 못하는 이유를 고르시오. ① 부품이 고장 나서 ② 연결 케이블이 없어서 ③ 컴퓨터실이 정전되어서 ④ 친구로부터 돌려받지 못해서 ⑤ 프레젠테이션 장소가 너무 좁아서",
+   "choices": [
+    "부품이 고장 나서",
+    "연결 케이블이 없어서",
+    "컴퓨터실이 정전되어서",
+    "친구로부터 돌려받지 못해서",
+    "프레젠테이션 장소가 너무 좁아서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 121
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 대화를 듣고, 여자가 지불할 금액을 고르시오. [3점] ① $85 ② $100 ③ $105 ④ $130 ⑤ $135",
+   "choices": [
+    "$85",
+    "$100",
+    "$105",
+    "$130",
+    "$135"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 68
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 대화를 듣고, 과학 프로젝트에 관해 언급되지 않은 것을 고르 시오. ① 연구 주제 ② 팀원 수 ③ 평가 기준 ④ 발표 날짜 ⑤ 사용 가능한 소프트웨어",
+   "choices": [
+    "연구 주제",
+    "팀원 수",
+    "평가 기준",
+    "발표 날짜",
+    "사용 가능한 소프트웨어"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 88
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. Tapas Cooking Class에 관한 다음 내용을 듣고, 일치하지 않는 것을 고르시오. ① 11월 15일부터 3일 동안 진행된다. ② 식료품 시장을 방문하는 일정이 포함되어 있다. ③ 다양한 올리브유를 맛볼 기회가 있다. ④ 수강료와 별도로 재료비를 내야 한다. ⑤ 수강 인",
+   "choices": [
+    "11월 15일부터 3일 동안 진행된다.",
+    "식료품 시장을 방문하는 일정이 포함되어 있다.",
+    "다양한 올리브유를 맛볼 기회가 있다.",
+    "수강료와 별도로 재료비를 내야 한다.",
+    "수강 인원은 10명 이내로 제한된다.\n2018학년도 10월 고3 전국연합학력평가 문제지\n제3 교시\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 276
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 다음 표를 보면서 대화를 듣고, 두 사람이 주문할 토스터 오 븐을 고르시오. Top 5 Toaster Ovens Model Capacity (slices) Digital Controls Color Price ① A ○ Black $69 ② B ○ Silver $59 ③ C × S",
+   "choices": [
+    "A\n○\nBlack\n$69",
+    "B\n○\nSilver\n$59",
+    "C\n×\nSilver\n$49",
+    "D\n○\nWhite\n$48",
+    "E\n×\nWhite\n$38"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 203
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. [3점] Man: ① I think it’s too far from our school. ② Right. Let’s put off the competition. ③ We don’t rent out",
+   "choices": [
+    "I think it’s too far from our school.",
+    "Right. Let’s put off the competition.",
+    "We don’t rent out our school auditorium.",
+    "Okay. Let’s hold the competition on campus.",
+    "I already did. The hall is available that day."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 331
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. [3점] Woman: ① Thanks. It’s lovely of you to make chocolate for me. ② Yes. Just put it in a bowl and heat it i",
+   "choices": [
+    "Thanks. It’s lovely of you to make chocolate for me.",
+    "Yes. Just put it in a bowl and heat it in hot water.",
+    "No. Your recipe was okay, but I made a mistake.",
+    "You did an excellent job making this chocolate.",
+    "That’s fine. I can make chocolate on my own."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 370
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Melanie가 Jake에게 할 말로 가장 적 절한 것을 고르시오. Melanie: ① You’ll even be fined if you don’t wear one. ② Sure. Biking is timeefficient for a short trip.",
+   "choices": [
+    "You’ll even be fined if you don’t wear one.",
+    "Sure. Biking is timeefficient for a short trip.",
+    "Preparation is important. Let’s check our lists.",
+    "You should adjust the helmet so that it fits you.",
+    "It’ll be a longdistance ride. A helmet is a must. \n[16 ~ 17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 377
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 여자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "effects of colors on household energy use",
+    "roles of colors in inspiring creative ideas",
+    "relationship between colors and moods",
+    "using vivid colors for home decoration",
+    "preferred colors for home appliances"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 239
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 색상이 아닌 것은?",
+   "choices": [
+    "black",
+    "white",
+    "purple",
+    "blue",
+    "orange\n이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시\n에 따라 답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 110
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "직원의 사직을 만류하려고",
+    "불편을 겪은 고객에게 사과하려고",
+    "갑작스러운 인사이동을 해명하려고",
+    "회사의 인원 감축 계획을 알리려고",
+    "부서 내 업무 조정 내용을 설명하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 788
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 드러난 ‘I’의 심경 변화로 가장 적절한 것은?",
+   "choices": [
+    "hopeful\n→delighted",
+    "worried →grateful",
+    "terrified →relieved",
+    "excited →disappointed",
+    "nervous →sympathetic"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 854
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "사고의 폭을 넓히려면 다양한 사람들과 교류하라.",
+    "친구의 단점을 지적하기보다 장점을 찾아 칭찬하라.",
+    "인기 있는 사람이 되려면 먼저 자신의 인격을 기르라.",
+    "처음 만난 사람에게 지나치게 개인적인 질문을 삼가라.",
+    "친구를 사귀려면 내면의 모습에 주목하여 꾸준히 노력하라.\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 995
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "과학의 권위는 이론의 검증과 적용을 통해 확립된다.",
+    "철학의 추론 기법은 다양한 과학 연구에 응용될 수 있다.",
+    "과학 탐구의 방향은 공동체의 정치적인 지향을 반영한다.",
+    "기존의 지식에서 새로운 아이디어의 실마리를 찾을 수 있다.",
+    "민주적 환경에서 과학은 타당한 지식을 형성하는 데 기여한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1084
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "efforts to control pests using natural enemies",
+    "untapped potential of insects as a food source",
+    "cultural reasons for people’s dislike for insects",
+    "prejudices against insects based on their appearance",
+    "various roles of insects in supporting the ecosystem"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1335
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Chemicals as a Blessing in Disguise",
+    "Under Undetectable Attack by Chemicals",
+    "Brain Chemicals: Traces of Human Evolution",
+    "Chemical Signals: Brain’s Communication Tools",
+    "Beyond Biological Evolution to Chemical Evolution"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1186
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "For each measured \nyear, the total new investment in renewable energy \ntechnology was more than 220 billion U.S. dollars from 2010 \nand on, with its peak at 267.3 billion in 2014.",
+    "Among the \nsix sectors, solar power recorded the biggest difference in \nnew yearly investment between 2006 and 2016, followed by \nwind power.",
+    "As for hydropower, newly invested money in \n2016 was less than half the amount in 2006.",
+    "Biofuels had \nthe second most investment among the six sectors in 2006; \nit had the least investment in 2016.",
+    "New investment in \ngeothermal power remained between 1 billion and 3 billion \ndollars each measured year; ocean energy attracted less than \n1 billion dollars each measured year.\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 939
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. Eudora Alice Welty에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "Wisconsin 대학에서 영문학을 공부했다.",
+    "고향의 지역 라디오 방송국에서 일자리를 구했다.",
+    "첫 단편 소설 출판 후 작품이 정기적으로 잡지에 실렸다.",
+    "희곡을 출판하여 1973년에 Pulitzer상을 받았다.",
+    "Jackson에 있는 자택은 박물관으로 개방되어 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1150
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. 2018 Kinetic Derby Day에 관한 다음 안내문의 내용과 일치 하지 않는 것은?",
+   "choices": [
+    "퍼레이드가 경주보다 먼저 시작된다.",
+    "모든 차에 모터 사용이 허용되지 않는다.",
+    "모든 차는 안전 점검을 통과해야 한다.",
+    "경주 참가자는 모두 헬멧을 착용해야 한다.",
+    "퍼레이드 참가비는 1인당 10달러이다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 781
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. Grantshire Charity Yard Sale에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "11월에 매주 토요일 오전에 진행된다.",
+    "판매자 등록은 10월 21일에 시작된다.",
+    "판매자는 등록비 10달러를 내야 한다.",
+    "등록비는 지역 노인 복지 회관에 전액 기부된다.",
+    "기부 물품에 대한 픽업 서비스는 유료로 제공된다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 819
+  },
+  {
+   "qNum": 28,
+   "kind": "grammar_underline",
+   "stem": "28. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "freely than ever before",
+    "②": "where an extensive trail of",
+    "③": "beginning with childhood that will",
+    "④": "humiliated",
+    "⑤": "it harder to engage in"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1029
+  },
+  {
+   "qNum": 29,
+   "kind": "mc",
+   "stem": "29. 다음 글에서 밑줄 친 We picked a bad year to have a good year가 의미하는 바로 가장 적절한 것은?",
+   "choices": [
+    "We are disappointed with our personal records.",
+    "For the strike, we are sacrificing a great season.",
+    "Rather than going on strike, we want to negotiate.",
+    "We consider the strike as an act of poor sportsmanship.",
+    "We admit there are different attitudes toward the strike."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1145
+  },
+  {
+   "qNum": 30,
+   "kind": "mc",
+   "stem": "30. 밑줄 친 부분이 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [
+    "her from \nacross the table. Chloe winked back.",
+    "She took a sip of \nthe sweet tea and waited for her grandmother to make the \nfirst move.",
+    "She carefully mirrored her grandmother’s \nactions and started with a small, delicate sandwich. It was \ngood. She ate it up and selected another. After a time, all \nthe sandwiches were eaten up and Chloe boldly chose the \nbiscuitlooking thing before her grandmother. “Aren’t the \nscones lovely, dear?” asked her grandmother, as",
+    "she \nspread cream and jam on hers. Scones, was that what they \nwere called? Chloe had already started to eat hers without \nthe cream and jam; in fact, it was mostly all in",
+    "her mouth \nalready.\n[31 ~ 34] 다음 빈칸에 들어갈 말로 가장 적절한 것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1016
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. One of the most satisfactory aspects of using essential oils medicinally and cosmetically is that they enter and leave the body with great efficiency, leavi",
+   "choices": [
+    "moodenhancing ability",
+    "flexibility of medicinal use",
+    "condensed nutritional value",
+    "stability at room temperature",
+    "complex composition of aromas"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1182
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. Political acts vary in terms of contribution. At one extreme, within limits, votes have equal weight. We are each allowed only one per election contest. But",
+   "choices": [
+    "the volume of activity can be multiplied",
+    "social changes occur as a consequence",
+    "individual creativity is permissible",
+    "activities are backed up by votes",
+    "basic human rights are respected\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1194
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. Morality often expresses itself as a duty to perform an action that advances the interests of another, to the harm of one’s own. However, moral actions usua",
+   "choices": [
+    "despite the absence of shared morality",
+    "through the pursuit of personal liberation",
+    "in terms of the financial benefits of agents",
+    "thanks to one’s compliance with the moral law",
+    "at the cost of collective interests of the society"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1228
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. The dictionary of course is not the last word on the definition of bravery. Philosophers have also advanced explanations of this elusive concept, as have so",
+   "choices": [
+    "identify their true motives in participating in the study",
+    "gain trust from them before we ask personal questions",
+    "take into account their reluctance to reveal their opinions",
+    "categorize them by gender, nationality, and other social \nclasses",
+    "ask them to personally weigh in on the topics being \nstudied"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1330
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "Coating items with \nbittertasting material will eventually keep most dogs from \nchewing on them, but the key word is eventually because \nthe taste buds that sense bitterness are located on the \nrearmost third of the tongue.",
+    "Therefore, a quick lick or \nfast gulp will not register the bitter taste.",
+    "Rather, only \nprolonged chewing will let the bitterness work its way back \nto where it can be tasted.",
+    "The arrangement of taste buds \nin dogs is somewhat similar to that in humans, with minor \nvariations.",
+    "Then the dog must also learn to associate the \nbitter taste with the particular object for the avoidance to be \nlearned.\n[36 ~ 37] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 \n것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 977
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. That ice can flow is contrary to everyday experience. An ice cube from the freezer placed on a table does not flow, it just sits there and melts. (A) This i",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1055
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. Imagine that you are dining with some people you have just met. You reach for the saltshaker, but suddenly one of the other guests, let’s call him Joe, look",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n[38 ~ 39] 글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 \n적절한 곳을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38 ~ 39"
+    ]
+   },
+   "charLen": 1183
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. Aside from heat, magma also exchanges chemical components with the surrounding rock, modifying both the composition of the magma and the surrounding rock. F",
+   "choices": [
+    ") The chemical composition of magma \ndoes not remain constant over time but varies in response \nto variations in the environment in which it is located. (",
+    ") \nIn contact with colder rocks, magma loses heat. (",
+    ") This \nchange in temperature causes certain minerals to begin to \ncrystallize, \ndepriving \nthe \nmagma \nof \nthose \nchemical \ncomponents that are involved in the formation of the \ncrystals while at the same time enriching the magma with \nother components that are not involved in the formation of \nthe crystals. (",
+    ") Portions of rock can be incorporated into \nthe magma, becoming molten or remaining as solid fragments \nwithin it. (",
+    ") In response to variations in chemical \ncomposition, temperature and most of all pressure, volatile \nsubstances contained in the magma like water or carbon \ndioxide can be released to form gas bubbles, producing great \nchanges in the properties of the magma and in many cases \nleading to an eruption.\n* volatile: 휘발성의"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1198
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. This belief in the persistence of Roman law throughout European history was not unique to Goethe or the nineteenth century in which he lived. Rome left an e",
+   "choices": [
+    ") There is a \nsaying attributed to Goethe according to which Roman law \nwas like a diving duck. (",
+    ") It could be swimming on the \nsurface or diving deep in the water, but whether you saw it \nor not, it was always there. (",
+    ") It is currently shared by \nmost historians, who usually begin the story of the \ndevelopment of law in Europe with Roman law. (",
+    ") Of \ncourse, Romans were not the first people to have a \nnormative system, and, like all other societies, they \nconstantly \nborrowed \nfrom \nneighboring \nsocieties, \nmost \nparticularly from the Hellenistic world. (",
+    ") It is also clear \nthat Roman law evolved dramatically over time, continuously \nadapting to new circumstances and challenges.\n* bequest: 유산"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1010
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "boosts\n······\nmature",
+    "boosts\n······\nisolated",
+    "slumps\n······\neducated",
+    "fluctuations\n······\nconnected",
+    "fluctuations\n······\ncompetitive\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n[41 ~ 42] 다음 글을 읽고, 물음에 답하시오.\nA \nfundamental \ntrait \nof \nhuman \nnature \nis \nits \nincredible capacity for adaptation. In the realm of \nhuman (a) psychology, research has long noted the \nessential trait of adapting to life’s events, whether happy \nor \ntragic. \nWhatever \nthe \nhardship \na \nperson \nmay \nexperience, the indicators of satisfaction quickly return \nto their initial levels.\nA person seems to get used to everything, which is \nboth reassuring and depressing. Thus across time and \nspace, the percentages of happy and unhappy people are \nremarkably (b) unstable. This is obviously mainly due to \nhumans’ astonishing capacity of adaptation and imitation. \nAny wealth or any progress is relative, and quickly \ndissolves in a comparison with others. When millionaires \nare asked about the size of the fortune necessary to \nmake them feel ‘truly at ease’, they all respond in the \nsame way, whatever the level of income they have \nalready attained: they need double what they already \npossess! The heart of the problem is that people do not \n(c) anticipate their own capacity to adapt. They think \nthat they might be happy if they were given (a little) \nmore and then they would be satisfied, but they are \nnot. The rise in income to come always makes one \ndream, although once it is achieved, this rise is never \n(d) sufficient. For people compare their future income to \ntheir current aspirations, without taking into account the \ninevitable evolution of the aspirations. This is the \nprincipal key to the (e) vain quest for happiness."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2904
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Aspire, and You Will Achieve",
+    "Millionaires: Dreamers or Realists?",
+    "Humans: Too Adaptive to Feel Happier",
+    "Too Busy to Appreciate Life’s Goods?",
+    "Why Delaying Happiness Pays Off"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 205
+  },
+  {
+   "qNum": 42,
+   "kind": "vocab_letter",
+   "stem": "42. 밑줄 친 (a)~(e) 중에서 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {
+    "a": "I am afraid someday",
+    "b": "me",
+    "c": "her handbag",
+    "d": "She eyed me sternly",
+    "e": "her lap"
+   },
+   "bracketChoices": {},
+   "charLen": 1965
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) - (D) - (C)",
+    "(C) - (B) - (D)",
+    "(C) - (D) - (B)",
+    "(D) - (B) - (C)",
+    "(D) - (C) - (B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 140
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a)∼(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 75
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글의 ‘I’에 관한 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "식탁에서 아버지의 접시에 커피를 쏟았다.",
+    "목사의 어머니로부터 옆에 앉으라는 권유를 받았다.",
+    "턱받이를 하느니 그냥 집에 있겠다고 엄마에게 말했다.",
+    "물건의 너비를 설명하려 팔을 양쪽으로 펼쳤다.",
+    "대화 도중 음식을 흘려 목사의 어머니에게 꾸중을 들었다.\n※ 확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)\n했는지 확인하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 230
+  }
+ ],
+ "sourcePdf": "ebsi_go3_20181016_paper_eng_mun_j2fBUA51_10.pdf"
+}

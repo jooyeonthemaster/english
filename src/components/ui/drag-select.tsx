@@ -48,8 +48,12 @@ interface DragSelectProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> {
   /** 현재 선택된 id 집합 */
   value: Set<string>;
-  /** 새 선택 집합으로 갱신 */
-  onChange: (next: Set<string>) => void;
+  /**
+   * 새 선택 집합으로 갱신. meta 는 deferCommit 릴리스 커밋에서만 실린다 —
+   * "remove"(선택된 카드에서 시작한 해제 드래그)일 때 next 는 value−히트다.
+   * 기존 소비처는 인자 하나만 받아도 타입·동작 모두 무변화.
+   */
+  onChange: (next: Set<string>, meta?: { deferMode: "add" | "remove" }) => void;
   /** true 면 마키 선택 비활성화 */
   disabled?: boolean;
   /**
@@ -71,8 +75,21 @@ interface DragSelectProps
    * 폼 입력, 링크, label, contenteditable, data-drag-select-ignore 는 계속 제외한다.
    */
   allowCardDescendantDragStart?: boolean;
+  /**
+   * true 면 드래그 중에는 onChange 를 부르지 않고(리액트 무접촉), 걸친 카드에
+   * 인라인 배경 틴트만 직접 칠한 뒤 **마우스를 놓는 순간 한 번만** onChange 를
+   * 부른다. 히트마다 onChange→상태 갱신→목록 전체 리렌더가 도는 페이지에서
+   * 마키가 뻑뻑해지는 것을 끊는다(단어장 스튜디오 실측 2026-08-05: 드래그 중
+   * 평균 16.7ms·잰크 0). 선택 카운터 등 라이브 피드백은 릴리스 시점에 갱신된다.
+   */
+  deferCommit?: boolean;
   children: React.ReactNode;
 }
+
+/** deferCommit 드래그 중 히트 틴트 — blue-100/55(선택 확정색보다 살짝 진하게). */
+const DEFER_HIT_TINT = "rgb(219 234 254 / 0.55)";
+/** 해제 드래그(선택된 카드에서 시작) 틴트 — rose-100/60, "빠질 예정" 신호. */
+const DEFER_REMOVE_TINT = "rgb(254 226 226 / 0.6)";
 
 const EDGE_ZONE = 56; // px — 이 가장자리 안으로 들어오면 자동 스크롤
 const MAX_SCROLL_SPEED = 22; // px/frame
@@ -210,6 +227,7 @@ export function DragSelect({
   boundaryRef,
   itemScopeRef,
   allowCardDescendantDragStart = false,
+  deferCommit = false,
   className,
   style,
   children,
@@ -300,6 +318,15 @@ export function DragSelect({
       let lastSent = value;
       const enteredOrder = new Map<string, number>();
       let nextEnteredIndex = 0;
+      // deferCommit — 드래그 중 리액트 무접촉. 걸친 카드는 인라인 틴트로만
+      // 표시하고(이전 인라인 배경을 보관·복원), 릴리스에서 한 번만 커밋한다.
+      // 시작점이 이미 선택된 카드면 **해제 드래그**다 — 걸친 선택 카드를 뺀다
+      // (선택된 걸 다시 드래그하면 해제 — 유저 요청 2026-08-05).
+      let deferredNext: Set<string> | null = null;
+      const paintedEls = new Map<string, { el: HTMLElement; prev: string }>();
+      const startCardId = card?.getAttribute("data-drag-item-id") ?? null;
+      const removeMode =
+        deferCommit && startCardId !== null && value.has(startCardId);
 
       // 자동 스크롤: 시작점을 "콘텐츠 기준"으로 고정해, 스크롤되면 선택 박스가 늘어난다.
       // 스크롤 대상은 "카드가 들어있는" 스크롤 컨테이너다. DragSelect 가 스크롤 영역을
@@ -348,6 +375,7 @@ export function DragSelect({
           domIndex: number;
           entryProgress: number;
         }> = [];
+        const hitEls = new Map<string, HTMLElement>();
         const items = root.querySelectorAll<HTMLElement>("[data-drag-item-id]");
         items.forEach((el, domIndex) => {
           const r = el.getBoundingClientRect();
@@ -356,6 +384,7 @@ export function DragSelect({
           if (hit) {
             const id = el.getAttribute("data-drag-item-id");
             if (!id) return;
+            if (deferCommit) hitEls.set(id, el);
             hitItems.push({
               id,
               domIndex,
@@ -390,7 +419,35 @@ export function DragSelect({
           )
           .forEach((item) => next.add(item.id));
 
-        if (!setsEqual(next, lastSent)) {
+        if (deferCommit) {
+          // 리액트 무접촉 — 커밋은 릴리스에서.
+          if (removeMode) {
+            // 해제 드래그: 최종 집합 = 기존 선택 − 걸친 카드. 틴트는 "빠질
+            // 예정"인 선택 카드에만(rose) — 미선택 카드는 대상이 아니다.
+            const remaining = new Set(value);
+            for (const id of hitEls.keys()) remaining.delete(id);
+            deferredNext = remaining;
+          } else {
+            deferredNext = next;
+          }
+          for (const [id, entry] of paintedEls) {
+            if (!hitEls.has(id)) {
+              entry.el.style.backgroundColor = entry.prev;
+              paintedEls.delete(id);
+            }
+          }
+          for (const [id, el] of hitEls) {
+            if (paintedEls.has(id)) continue;
+            // 담기 모드: 미선택 카드만 파란 틴트(선택 카드는 자기 스타일 유지)
+            // 해제 모드: 선택 카드만 붉은 틴트
+            if (removeMode ? value.has(id) : !value.has(id)) {
+              paintedEls.set(id, { el, prev: el.style.backgroundColor });
+              el.style.backgroundColor = removeMode
+                ? DEFER_REMOVE_TINT
+                : DEFER_HIT_TINT;
+            }
+          }
+        } else if (!setsEqual(next, lastSent)) {
           lastSent = next;
           onChange(next);
         }
@@ -431,6 +488,11 @@ export function DragSelect({
         if (rafId) cancelAnimationFrame(rafId);
         rafId = 0;
         document.body.style.userSelect = previousBodyUserSelect;
+        // deferCommit 틴트 원복 — 커밋 리렌더는 인라인 배경을 지우지 않는다.
+        for (const entry of paintedEls.values()) {
+          entry.el.style.backgroundColor = entry.prev;
+        }
+        paintedEls.clear();
         setRect(null);
       }
 
@@ -456,6 +518,7 @@ export function DragSelect({
       }
 
       function handleUp() {
+        const finalSet = deferredNext;
         cleanup();
         if (active) {
           // 마키 직후 브라우저가 발생시키는 click이 카드 선택을 토글하지 않도록
@@ -469,6 +532,11 @@ export function DragSelect({
             () => window.removeEventListener("click", swallow, true),
             0,
           );
+        }
+        // deferCommit — 드래그가 실제로 있었을 때만, 릴리스에서 1회 커밋.
+        if (deferCommit && active && finalSet && !setsEqual(finalSet, lastSent)) {
+          lastSent = finalSet;
+          onChange(finalSet, { deferMode: removeMode ? "remove" : "add" });
         }
       }
 
@@ -484,6 +552,7 @@ export function DragSelect({
       itemScopeRef,
       ctxBoundaryRef,
       allowCardDescendantDragStart,
+      deferCommit,
     ],
   );
 

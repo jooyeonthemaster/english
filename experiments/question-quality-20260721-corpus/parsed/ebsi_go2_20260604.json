@@ -1,0 +1,764 @@
+{
+ "examId": "ebsi_go2_20260604",
+ "source": "ebsi_go2_20260604_paper_eng_1_mun_XR3H2NW8.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 다음을 듣고, 여자가 하는 말의 목적으로 가장 적절한 것을 고르시오. ① 보건실 이용 방법을 설명하려고 ② 학교 급식 도우미를 모집하려고 ③ 급식 만족도 조사 참여를 독려하려고 ④ 학교 웹사이트 주소 변경을 알려주려고 ⑤ 학교 구내식당 운영 중단 계획을 공지하려고",
+   "choices": [
+    "보건실 이용 방법을 설명하려고",
+    "학교 급식 도우미를 모집하려고",
+    "급식 만족도 조사 참여를 독려하려고",
+    "학교 웹사이트 주소 변경을 알려주려고",
+    "학교 구내식당 운영 중단 계획을 공지하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 152
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 남자의 의견으로 가장 적절한 것을 고르시오. ① 꾸준한 복습은 좋은 학습 습관 형성에 필수적이다. ② 친구와 함께 공부하는 것은 학습 동기를 높여 준다. ③ 스스로 문제를 만들어 보는 것은 학습에 도움이 된다. ④ 약간의 소음 속에서의 학습은 집중력을 길러줄 수 있다",
+   "choices": [
+    "꾸준한 복습은 좋은 학습 습관 형성에 필수적이다.",
+    "친구와 함께 공부하는 것은 학습 동기를 높여 준다.",
+    "스스로 문제를 만들어 보는 것은 학습에 도움이 된다.",
+    "약간의 소음 속에서의 학습은 집중력을 길러줄 수 있다.",
+    "다양한 문제를 푸는 것은 문제 해결력 향상에 효과적이다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 197
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을 듣고, 여자가 하는 말의 요지로 가장 적절한 것을 고르시오. ① 컴퓨터 화면을 오래 볼 때는 규칙적인 눈의 휴식이 필요하다. ② 컴퓨터 사용 후 가벼운 스트레칭은 자세 교정에 도움을 준다. ③ 눈의 건조 증상을 막으려면 실내 습도를 조절하는 것이 좋다. ④ 컴퓨터 화면과 눈",
+   "choices": [
+    "컴퓨터 화면을 오래 볼 때는 규칙적인 눈의 휴식이 필요하다.",
+    "컴퓨터 사용 후 가벼운 스트레칭은 자세 교정에 도움을 준다.",
+    "눈의 건조 증상을 막으려면 실내 습도를 조절하는 것이 좋다.",
+    "컴퓨터 화면과 눈의 거리를 적절히 유지하는 것이 중요하다.",
+    "숙면을 위해 취침 전 전자기기 사용을 자제해야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 216
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고르시오. ⑤ ① ③ ② ④",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 51
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 남자가 할 일로 가장 적절한 것을 고르시오. ①의자 배치하기 ② 포스터 부착하기 ③강당 청소하기 ④마이크 교체하기 ⑤유인물 출력하기",
+   "choices": [
+    "의자 배치하기",
+    "포스터 부착하기",
+    "강당 청소하기",
+    "마이크 교체하기",
+    "유인물 출력하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 85
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 남자가 지불할 금액을 고르시오. ①$36 ②$45 ③$50 ④$54 ⑤$60",
+   "choices": [
+    "$36",
+    "$45",
+    "$50",
+    "$54",
+    "$60"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 55
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 여자가 Sun Beach Cleanup Event에 가지 않은 이유를 고르시오. ① 감기에 걸려서 ② 조별 발표가 있어서 ③ 동아리 면접을 봐야 해서 ④ 밀린 과제를 끝내야 해서 ⑤ 삼촌과 점심 식사가 있어서",
+   "choices": [
+    "감기에 걸려서",
+    "조별 발표가 있어서",
+    "동아리 면접을 봐야 해서",
+    "밀린 과제를 끝내야 해서",
+    "삼촌과 점심 식사가 있어서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 129
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, Stonefield Drawing Picnic에 관해 언급되지 않은 것을 고르시오. ①장소 ②날짜 ③준비물 ④참가비 ⑤기념품",
+   "choices": [
+    "장소",
+    "날짜",
+    "준비물",
+    "참가비",
+    "기념품"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 82
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 2026 Future Innovation Expo에 관한 다음 내용을 듣고, 일치 하지 않는 것을 고르시오. ① 10월 3일부터 5일까지 개최된다. ② 올해의 주제는 미래 교통수단이다. ③ 첫날 오전 11시에 강연이 진행된다. ④ 자율주행차를 타볼 수 있다. ⑤ 티켓은 현장에서 구",
+   "choices": [
+    "10월 3일부터 5일까지 개최된다.",
+    "올해의 주제는 미래 교통수단이다.",
+    "첫날 오전 11시에 강연이 진행된다.",
+    "자율주행차를 타볼 수 있다.",
+    "티켓은 현장에서 구매할 수 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 170
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 다음 표를 보면서 대화를 듣고, 남자가 주문할 컴퓨터 마우스를 고르시오. Model Price Color Connection Type Silent Click ① A $28 pink wired × ② B $32 white wired ○ ③ C $35 black wireless × ",
+   "choices": [
+    "A\n$28\npink\nwired\n×",
+    "B\n$32\nwhite\nwired\n○",
+    "C\n$35\nblack\nwireless\n×",
+    "D\n$38\npink\nwireless\n○",
+    "E\n$45\nblack\nwireless\n○\nComputer Mice"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 225
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ① I usually buy my skateboards online. ② Skateboards are too expensive these days. ③ You should’ve gotten som",
+   "choices": [
+    "I usually buy my skateboards online.",
+    "Skateboards are too expensive these days.",
+    "You should’ve gotten some tips before buying it.",
+    "You can borrow my new board if you like it so much.",
+    "I couldn’t ride it anymore because it broke completely."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 298
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. [3점] ① I agree. It might be a good way to motivate me to run. ② Great idea. That’s the best running route I’v",
+   "choices": [
+    "I agree. It might be a good way to motivate me to run.",
+    "Great idea. That’s the best running route I’ve taken.",
+    "Right. You should definitely try running a marathon.",
+    "I’m sorry. I’ve already finished running for today.",
+    "Don’t worry. I’ll keep you motivated every day.\n2026학년도 6월 고2 전국연합학력평가 문제지            1\n제3 교시\n2                  영어영역              \n고2\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 480
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. [3점] Woman: ① Great idea! Then I can try it first without buying anything. ② My pleasure. I don’t need my old",
+   "choices": [
+    "Great idea! Then I can try it first without buying anything.",
+    "My pleasure. I don’t need my old camping gear anymore.",
+    "You’re right. Thanks to you, I enjoyed this camping trip a lot.",
+    "Too bad. If I were you, I would find a better campsite.",
+    "I don’t think so. You should’ve booked it in advance."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 415
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. Man: ① Sorry. You should’ve prepared the handouts earlier. ② Great. Then I won’t have to worry about printing",
+   "choices": [
+    "Sorry. You should’ve prepared the handouts earlier.",
+    "Great. Then I won’t have to worry about printing.",
+    "No thanks. I’ve already checked the data.",
+    "That’s odd. My printer is working fine today.",
+    "Good for you. The presentation turned out great."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 361
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Ethan이 Chloe에게 할 말로 가장 적절한 것을 고르시오. [3점] Ethan: ①Let me send you last year’s film through email. ②Let’s have students email their videos directly to us. ③How about using an online platform to edit the videos?",
+   "choices": [
+    "Let me send you last year’s film through email.",
+    "Let’s have students email their videos directly to us.",
+    "How about using an online platform to edit the videos?",
+    "You should make a shared folder before collecting the videos.",
+    "Why don’t we share our ideas with council members online?\n[16~17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 429
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 남자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "how colors affect the performance of athletes",
+    "various colors used in sports brand marketing",
+    "role of colors in sports team logo design",
+    "why sports fans prefer certain team colors",
+    "historical roots of color usage in team uniforms"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 265
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 색깔이 아닌 것은?",
+   "choices": [
+    "red",
+    "blue",
+    "purple",
+    "green",
+    "black\n이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시에 \n따라 답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 105
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "환경 보호 캠페인을 홍보하려고",
+    "과학 경진대회 수상자를 발표하려고",
+    "변경된 실험 안전 규칙을 공지하려고",
+    "과학 박람회 참가 신청을 독려하려고",
+    "과학 동아리 신규 부원을 모집하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 774
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 드러난 Luna의 심경 변화로 가장 적절한 것은?",
+   "choices": [
+    "confused →satisfied",
+    "excited →indifferent",
+    "jealous\n→regretful",
+    "bored\n→grateful",
+    "hopeful\n→nervous"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 766
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "성공 가능성이 가장 높은 프로젝트에 집중해야 한다.",
+    "개인의 뛰어난 업무 성과에 대해 충분히 보상해야 한다.",
+    "팀을 구성할 때는 부분뿐만 아니라 전체를 고려해야 한다.",
+    "리더는 개개인이 능력을 발휘하도록 팀을 이끌어야 한다.",
+    "팀의 성과를 위해 비효율적인 회의 방식을 개선해야 한다.\n고2               영어영역                  3\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1254
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 밑줄 친 a wise bit of selfrestraint on your genes’ part가 다음 글에서 의미하는 바로 가장 적절한 것은?",
+   "choices": [
+    "evolution’s clever limiting of how realistic your imagination is",
+    "visible evidence of human failure to evolve into logical beings",
+    "an unnecessary constraint on what you are able to envision",
+    "a smart genetic strategy to help you ignore real hunger",
+    "an ingenious way your brain categorizes mental images"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1361
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "비합리적 결정이 반복되면 조직이 실패할 확률이 높아진다.",
+    "우리는 낮은 확률 사건의 발생 가능성을 과대평가한다.",
+    "행운에만 의존하는 것은 개인의 내적 성장을 저해한다.",
+    "우리는 단순한 사건을 복잡하게 해석하는 경향이 있다.",
+    "다양한 가능성을 고려하면 최선의 의사 결정을 내릴 수 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1118
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "significance of marketing strategies for multinational firms",
+    "current conflicts caused by globalized financial markets",
+    "economic advantages of a common currency system",
+    "necessity for strict regulation of cash transactions",
+    "various reasons for undertaking risk in investment"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1156
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Imagination Brings Us Closer to Understanding the Universe",
+    "How Long Does It Take for Stars to Burn Out in Space?",
+    "Life Beyond Earth: The Search for Unidentified Species",
+    "Starlight as a Window into the History of the Universe",
+    "Why Stars in the Sky Look Like They’re Moving\n4                  영어영역              \n고2\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1318
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. 다음 도표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "North America \nwas the only region where the proportions of people over 65 \nand under 15 were identical, both standing at 18%.",
+    "In \nEurope, the proportion of people over 65 exceeded the \nproportion of those under 15 by 4 percentage points.",
+    "In \nOceania, the proportion of people under 15 was higher than \nthat in Europe, whereas the reverse was true for the \nproportion of people over 65.",
+    "The gap between the \nproportions of the selected age groups in Central Asia was \nsmaller than that in Oceania.",
+    "Compared to the other \nregions, SubSaharan Africa showed the greatest proportion \nof people under 15."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 911
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Jacob Lawrence에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "1917년에 Atlantic City에서 태어났다.",
+    "그림에 밝은 색채를 사용했다.",
+    "2차 세계대전 동안 그림 그리기를 중단했다.",
+    "Washington 대학교에서 16년 동안 가르쳤다.",
+    "Harvard 대학교로부터 명예 학위를 받았다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 961
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. Hopon Hopoff City Tour에 관한 다음 안내문의 내용과 일치 하지 않는 것은?",
+   "choices": [
+    "15개의 정류장에서 버스를 타거나 내릴 수 있다.",
+    "버스에서 무료 와이파이를 쓸 수 있다.",
+    "하루 동안 무제한 탑승이 가능하다.",
+    "오디오 가이드는 네 가지 언어로 제공된다.",
+    "투어 티켓을 제시하면 박물관에서 할인을 받을 수 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 724
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. Oneday Glass Art Workshop에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "오후 시간대에 진행된다.",
+    "성인은 참여할 수 없다.",
+    "최대 10명까지 참여 가능하다.",
+    "1인당 50달러이다.",
+    "당일에 자신의 작품을 가져갈 수 있다.\n고2               영어영역                  5\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 753
+  },
+  {
+   "qNum": 29,
+   "kind": "grammar_underline",
+   "stem": "29. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "offered to civilization by the",
+    "②": "producing just as much customer",
+    "③": "that we expect discount coupons",
+    "④": "do we expect them to",
+    "⑤": "potentially more important"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1167
+  },
+  {
+   "qNum": 30,
+   "kind": "vocab_underline",
+   "stem": "30. 다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "demand",
+    "②": "high",
+    "③": "more sensitive to price than",
+    "④": "lowering their price significantly whatsoever",
+    "⑤": "reinforces a customer’s confidence in"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1245
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. One easily underappreciated feature of a city street or square is its “futureproof” nature. The ancient medieval squares in places like Marrakesh and Siena ",
+   "choices": [
+    "evolving uses",
+    "social connections",
+    "limited functions",
+    "architectural innovation",
+    "collaborative work"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1147
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. The genomics revolution made it possible to see just how impactful touch is to plants on a deeper level. Peering at the genes of Arabidopsis thaliana, a wee",
+   "choices": [
+    "impact their lifespan",
+    "inhibit their growth",
+    "lift their reproduction rate",
+    "hinder their defense capability",
+    "increase their maximum height\n6                  영어영역              \n고2\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1077
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. Evolution will come to a standstill until something in the conditions changes: the onset of an ice age, a change in the average rainfall of the area, a shif",
+   "choices": [
+    "occurs regardless of local temperature trend",
+    "constantly tracks the changing environment",
+    "finds ways to bring nature into balance",
+    "makes species compete with one another",
+    "gradually threatens the survival of hairy animals"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1159
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. The high price of land in metropolitan areas has implications for the efficient employment of resources. For example, in New York City, as in many large cities, sidewalk vending carts sell everything from hot dogs to ice cream. Why are these carts so popular, with over 3,000 in New York City alone?",
+   "choices": [
+    "depend less on public sidewalks as their business expands",
+    "negotiate ingredient prices with suppliers to cut costs",
+    "devise new products to outcompete other vendors",
+    "promote their business to attract potential customers",
+    "substitute public sidewalks for costly commercial space"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1284
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "It is a mental process as \nwell, largely based on the elements within and about the \nwork we can identify and categorize.",
+    "As we look and \nthink, we may be given clues about what the work means by \nwhere it is, when it was made, what culture it came from, \nwho created it, or why it was made.",
+    "We should strive to \nunderstand a work of art as we see it, without being \ninfluenced by the background of the work, its creator, or its \nhistorical context.",
+    "Any information we can gather helps us \nunderstand the work’s context, that is, for what historical, \nsocial, personal, political, or scientific reasons the work of \nart was made.",
+    "And then, using all the contextual \ninformation we have gathered, we interpret the work of art’s \ncontent to discover what it means or symbolizes.\n[36~37] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 \n것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1004
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. For most animals the struggle to survive takes up all their time. Finding food and drink, keeping warm and clean, avoiding predators, migrating and reproduc",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n고2               영어영역                  7\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1340
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. Think about a time when you were startled. Did you come to a sudden stop, freeze all your movements, and hold your breath as you scanned the environment for a threat?",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A) \n[38~39] 글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 \n적절한 곳을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38~39"
+    ]
+   },
+   "charLen": 1162
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. The next step in this problematic process would be having diminished emotional responses to violence, which could also interfere with the ability to recogni",
+   "choices": [
+    ") Because \nthere \nhave \nbeen \nlongstanding concerns about the impact of violent video \ngames on youth, much research has been conducted over the \nlast couple of decades on the topic. (",
+    ") While measuring \nand documenting the impact of video game violence, \nscientists have formulated credible explanations of how video \ngaming could affect empathy. (",
+    ") Part of a normal, \nhealthy reaction to witnessing violent events is to feel \nnegative emotions, and to experience physiological arousal \nthat is connected to fear or disgust. (",
+    ") With repeated \nexposure to violent events — such as what might happen \nwhen a person plays violent video games — this normal \nreaction might become blunted, a phenomenon known as \ndesensitization. (",
+    ") A significant body of work shows an \nassociation between extensive violent video gaming and \nreduced empathy in people.\n* arousal: 각성"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1183
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. Making a real difference with social problems is hard enough; to succeed, it has to follow from an authentic, companywide commitment to the purpose. Realisi",
+   "choices": [
+    ") Their marketers are using social purpose to \nboost the brand’s reputation, rather than embracing the \npurpose \nitself. (",
+    ") Otherwise \nthe \nmission \nis \njust \nwindowdressing, or what we call “purposewashing” ― similar \nto greenwashing, where purposedriven activities serve \nmainly for publicity purposes. (",
+    ") We end up with what \nAnand Giridhardas describes in Winners Take All : “social \npurpose that just furthers the charade of elites disrupting the \nold order without giving much back”. (",
+    ") Purposewashing \nbrands \ngain \none \nof \nthe \nbenefits \nof \nsocial \npurpose, \ndifferentiation, but only for a short while. (",
+    ") They lose \nout on positioning for future markets, and they might even \nmake employees feel worse about working for them.　[3점]\n* charade: 뻔한 속임수"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1048
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "unpredictable\n…… repeat",
+    "unpredictable\n…… disobey",
+    "anticipated\n…… maintain",
+    "anticipated\n…… break",
+    "established\n…… embody\n8                  영어영역              \n고2\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n[41~42] 다음 글을 읽고, 물음에 답하시오.\nThe major consumer of oil is transport. But consider \nwhat has happened over the last 30 years or so to the \ntechnology involved in producing the internal combustion \nengine. Because oil is expensive, car engines today are far \nmore (a) efficient in their consumption of fuel (and far \nless polluting) than they were in 1972. The cars that Asia \nbuys tomorrow will certainly not be anything like those \nAmericans use today. Americans will not buy today’s cars \ntomorrow either. In fact, if the price of oil does rise much \nfurther then fuel cell technology (which produces energy \nfrom water!) will (b) receive yet another momentum. The \nbig car multinationals have already produced the prototype \nmotors ― they are currently racing to try and get prices \ndown and engine performances up. Their future profits \ndepend upon it.\nImagine now if there is a breakthrough in fuel cell \ntechnology. What would happen to oil prices? They would \nfall dramatically ― signalling much less demand than supply\n― and oil companies and OPEC oil producers would stand \nto (c) lose much income. The fact that this threat is real \nis driving the producers to look for (d) alternative sources \nof income. The ‘oil majors’ have diversified and are now \nmore energy companies than oil companies these days and \nthe OPEC countries are urgently attempting to (e) exclude \nother industries.\n* combustion: 연소"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2773
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Oil Under Threat: Innovation Reshapes the Energy Landscape",
+    "Suppliers’ Strategies Overwhelmed by Consumer Power",
+    "Lost Compass in the Jungle of Energy Competition",
+    "Competition for Efficiency Harms Product Quality",
+    "Common Cycle: How Oil Prices Go Up and Down"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 286
+  },
+  {
+   "qNum": 42,
+   "kind": "vocab_letter",
+   "stem": "42. 밑줄 친 (a) ~ (e) 중에서 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {
+    "a": "her plants",
+    "b": "her teacher announced that",
+    "c": "she had a warm",
+    "d": "She walked closer and",
+    "e": "She wrote"
+   },
+   "bracketChoices": {},
+   "charLen": 2023
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) - (D) - (C)",
+    "(C) - (B) - (D)",
+    "(C) - (D) - (B)",
+    "(D) - (B) - (C)",
+    "(D) - (C) - (B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 137
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a) ～(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 72
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글에 관한 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "Anna는 편지에 꽃 그림을 넣었다.",
+    "Pike 부인은 Anna를 따뜻하게 맞이하였다.",
+    "Pike 부인은 Anna에게 집에 가져갈 허브를 주었다.",
+    "Anna가 심은 로즈마리는 창가에서 자랐다.",
+    "Anna는 상자에서 딸기민트 잼을 발견하지 못했다.\n＊확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)했는지 확인\n하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 214
+  }
+ ],
+ "sourcePdf": "ebsi_go2_20260604_paper_eng_1_mun_XR3H2NW8.pdf"
+}

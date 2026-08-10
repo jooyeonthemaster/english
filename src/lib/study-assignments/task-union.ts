@@ -6,6 +6,8 @@
 //   - 과제 브리지 없이 직접 배포된 ExamSubmission(구 태블릿 배포 모달 경로)
 //   - 과제 브리지 없이 직접 생성된 GrammarDrillAssignment(구 학습 배정 경로)
 // 브리지 id 로 dedupe 하므로 이중 표시가 없다. 라이브 상태 규칙은 ./status.ts.
+// VOCAB 브리지는 접합 방향이 반대(vocab_drill_assignments.taskId → 태스크,
+// init.sql 3-5) — taskId in 역조인으로 상태·진행을 붙인다(고아 승격 없음).
 // ============================================================================
 
 import "server-only";
@@ -16,6 +18,7 @@ import type {
   GrammarAssignmentPayload,
   StudyAssignmentKind,
   StudyTaskStatus,
+  VocabAssignmentPayload,
 } from "./types";
 import { examPayloadDurationMin, isStudyAssignmentKind } from "./types";
 import { resolveExamLiveStatus, resolveGrammarLiveStatus } from "./status";
@@ -53,7 +56,10 @@ export interface UnifiedTaskRecord {
   examGraded: boolean;
   // GRAMMAR 브리지
   grammarAssignmentId: string | null;
-  /** {done,total} — GRAMMAR 진행 캐시 */
+  /** VOCAB 브리지 id — 접합 방향이 반대(vocab_drill_assignments.taskId → 태스크).
+   *  학생 큐 API(/api/vocab-drill/queue)가 받는 assignmentId 가 이 값이다. */
+  vocabAssignmentId: string | null;
+  /** {done,total} — GRAMMAR/VOCAB 진행 캐시 */
   progress: { done: number; total: number } | null;
   /** 점수 캐시 — EXAM(GRADED)·QUESTIONS(제출 후) */
   score: {
@@ -87,6 +93,11 @@ function questionsResultPercent(result: unknown): number | null {
 
 function grammarPayloadCount(payload: unknown): number {
   const spec = (payload ?? {}) as Partial<GrammarAssignmentPayload>;
+  return typeof spec.count === "number" && spec.count > 0 ? spec.count : 0;
+}
+
+function vocabPayloadCount(payload: unknown): number {
+  const spec = (payload ?? {}) as Partial<VocabAssignmentPayload>;
   return typeof spec.count === "number" && spec.count > 0 ? spec.count : 0;
 }
 
@@ -191,6 +202,27 @@ export async function loadStudentUnifiedTasks(
     attemptCounts.map((row) => [row.assignmentId ?? "", row._count._all]),
   );
 
+  // ── VOCAB 브리지 — 접합 방향이 반대(브리지.taskId → 태스크)라 taskId in 조회 ──
+  const taskIds = tasks.map((t) => t.id);
+  const vocabRows = taskIds.length
+    ? await prisma.vocabDrillAssignment.findMany({
+        where: { studentId, academyId, taskId: { in: taskIds } },
+      })
+    : [];
+  const vocabByTask = new Map(vocabRows.map((v) => [v.taskId ?? "", v]));
+  // VOCAB 진행 — 배정 귀속 시도 수(assignmentId 별, 어법 attemptCounts 선례)
+  const vaIds = vocabRows.map((v) => v.id);
+  const vocabAttemptCounts = vaIds.length
+    ? await prisma.vocabDrillAttempt.groupBy({
+        by: ["assignmentId"],
+        where: { studentId, assignmentId: { in: vaIds } },
+        _count: { _all: true },
+      })
+    : [];
+  const attemptCountByVa = new Map(
+    vocabAttemptCounts.map((row) => [row.assignmentId ?? "", row._count._all]),
+  );
+
   const records: UnifiedTaskRecord[] = [];
 
   for (const task of tasks) {
@@ -225,6 +257,7 @@ export async function loadStudentUnifiedTasks(
       examDuration: null,
       examGraded: false,
       grammarAssignmentId: task.grammarAssignmentId,
+      vocabAssignmentId: null,
       progress: null,
       score: null,
     };
@@ -269,6 +302,20 @@ export async function loadStudentUnifiedTasks(
         // DONE 카드 정답 수 — resultSummary({total,correct}) 파싱(loadTaskLiveMap 선례)
         if (ga.status === "DONE") base.score = grammarResultScore(ga.resultSummary);
       }
+    } else if (kind === "VOCAB") {
+      // 브리지 미존재(생성 경합·파손)는 태스크 행 status 그대로 — 대기 안전 폴백
+      const va = vocabByTask.get(task.id);
+      if (va) {
+        base.vocabAssignmentId = va.id;
+        // 상태 어휘(ASSIGNED|IN_PROGRESS|DONE)가 어법 브리지와 동일 계약
+        base.status = resolveGrammarLiveStatus(va.status);
+        base.startedAt = va.startedAt;
+        base.completedAt = va.completedAt;
+        const total = vocabPayloadCount(va.spec);
+        const done = Math.min(attemptCountByVa.get(va.id) ?? 0, total || Infinity);
+        base.progress = { done: Number.isFinite(done) ? done : 0, total };
+        if (va.status === "DONE") base.score = grammarResultScore(va.resultSummary);
+      }
     } else if (kind === "QUESTIONS") {
       base.score = questionsResultScore(task.result);
       const payload = (assignment.payload ?? {}) as { questionIds?: string[] };
@@ -312,6 +359,7 @@ export async function loadStudentUnifiedTasks(
       examDuration: sub.exam.duration ?? null,
       examGraded: sub.status === "GRADED",
       grammarAssignmentId: null,
+      vocabAssignmentId: null,
       progress: null,
       score:
         sub.status === "GRADED" && brief
@@ -360,6 +408,7 @@ export async function loadStudentUnifiedTasks(
       examDuration: null,
       examGraded: false,
       grammarAssignmentId: ga.id,
+      vocabAssignmentId: null,
       progress: { done: Number.isFinite(done) ? done : 0, total },
       // DONE 카드 정답 수 — 브리지(ASSIGNMENT) 분기와 동일 계약
       score: ga.status === "DONE" ? grammarResultScore(ga.resultSummary) : null,
@@ -403,8 +452,9 @@ interface MinimalTaskRow {
 }
 
 /**
- * 여러 태스크의 라이브 상태를 브리지 2쿼리로 배치 계산.
- * EXAM→ExamSubmission, GRAMMAR→GrammarDrillAssignment 조인, 나머지는 행 자체.
+ * 여러 태스크의 라이브 상태를 브리지 3쿼리로 배치 계산.
+ * EXAM→ExamSubmission, GRAMMAR→GrammarDrillAssignment 조인, VOCAB 은 접합
+ * 방향이 반대라 vocab_drill_assignments.taskId in 역조인, 나머지는 행 자체.
  */
 export async function loadTaskLiveMap(
   academyId: string,
@@ -416,8 +466,9 @@ export async function loadTaskLiveMap(
   const gaIds = tasks
     .map((t) => t.grammarAssignmentId)
     .filter((id): id is string => !!id);
+  const taskIds = tasks.map((t) => t.id);
 
-  const [subs, gas] = await Promise.all([
+  const [subs, gas, vas] = await Promise.all([
     subIds.length
       ? prisma.examSubmission.findMany({
           where: { id: { in: subIds }, exam: { academyId } },
@@ -445,9 +496,23 @@ export async function loadTaskLiveMap(
           },
         })
       : Promise.resolve([]),
+    taskIds.length
+      ? prisma.vocabDrillAssignment.findMany({
+          where: { taskId: { in: taskIds }, academyId },
+          select: {
+            id: true,
+            taskId: true,
+            status: true,
+            startedAt: true,
+            completedAt: true,
+            resultSummary: true,
+          },
+        })
+      : Promise.resolve([]),
   ]);
   const subById = new Map(subs.map((s) => [s.id, s]));
   const gaById = new Map(gas.map((g) => [g.id, g]));
+  const vaByTask = new Map(vas.map((v) => [v.taskId ?? "", v]));
 
   const map = new Map<string, TaskLiveEntry>();
   for (const t of tasks) {
@@ -485,7 +550,21 @@ export async function loadTaskLiveMap(
         }
       }
     }
-    if (!sub && !ga) {
+    // VOCAB 브리지(역방향 taskId 조인) — resultSummary 계약은 어법과 동형
+    const va = vaByTask.get(t.id);
+    if (va) {
+      live = resolveGrammarLiveStatus(va.status);
+      startedAt = va.startedAt;
+      completedAt = va.completedAt;
+      const rs = (va.resultSummary ?? null) as { total?: number; correct?: number } | null;
+      if (va.status === "DONE" && rs && typeof rs.total === "number") {
+        scoreText = `${rs.correct ?? 0} / ${rs.total} 정답`;
+        if (rs.total > 0) {
+          scorePercent = Math.round(((rs.correct ?? 0) / rs.total) * 1000) / 10;
+        }
+      }
+    }
+    if (!sub && !ga && !va) {
       const qScore = questionsResultScore(t.result);
       if (qScore && qScore.earned !== null) {
         scoreText = `${qScore.earned}점${qScore.max !== null ? ` / ${qScore.max}점` : ""}`;

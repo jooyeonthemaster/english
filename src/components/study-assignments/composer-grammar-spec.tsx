@@ -1,30 +1,68 @@
 "use client";
 
-// 과제 컴포저 — GRAMMAR(어법 훈련) 스펙 빌더.
-// 유닛/개념/유형/난이도 칩 + 문항 수. 취약 개념 프리셋(전달 시) 원클릭 채움.
+// 과제 컴포저 — GRAMMAR(어법 훈련) 스펙 빌더 (v3 design §D3-4).
+// 유닛/개념/유형/난이도 칩 + 문항 수. 보충 필요 개념(전달 시)은 이유 행
+// 리스트(개별 체크 토글 + 모두 적용)로 노출한다 — 점수 단독 노출 금지(R10),
+// scoreExplain 근거 병기. 유닛 칩 옆 [문항 보기]로 유닛 실물 브라우저
+// (unit-browser-modal)에 현재 스펙을 프리필해 진입한다.
 // 스펙 변경 300ms 디바운스로 countGrammarDrillPool 라이브 집계 — 0매치/부족을
 // 배포 전에 그 자리에서 보여주고, 예시 문항은 GrammarItemModal 로 실물 확인.
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ChevronLeft, ChevronRight, Eye } from "lucide-react";
+import { ChevronLeft, ChevronRight, Eye, Search } from "lucide-react";
 import {
   countGrammarDrillPool,
   type GrammarPoolCount,
 } from "@/actions/grammar-drill-admin";
-import { GrammarItemModal } from "@/components/students/hub/grammar-item-modal";
+import { GrammarItemModal } from "@/components/grammar-drill/grammar-item-modal";
+import { UnitBrowserModal } from "@/components/grammar-drill/unit-browser-modal";
+import {
+  MetricBar,
+  MetricHelpTip,
+  scoreText,
+} from "@/components/students/hub/analytics/kit";
 import {
   CONCEPT_SKELETON_BY_ID,
   GRAMMAR_UNITS,
 } from "@/lib/grammar-drill/curriculum";
 import { GRAMMAR_TYPE_LABEL } from "@/lib/grammar-drill/display";
 import type { GrammarAssignmentPayload } from "@/lib/study-assignments/types";
+import {
+  CTA_LABELS,
+  METRIC_HELP,
+  METRIC_LABELS,
+  WEAK_CONCEPTS_PANEL,
+  scoreExplain,
+} from "@/lib/wording/director-glossary";
 import { cn } from "@/lib/utils";
 
+/**
+ * 보충 필요 개념 추천 항목 — weakness.ts WeakConceptEntry 의 구조적 부분집합
+ * (Entry 를 그대로 흘려보낼 수 있게 유지한다 — A-2·A-4 배선 계약).
+ * attempts·wrongCount 는 D3-4 additive: 이유 행 「N회 시도 중 M회 오답」의
+ * 근거. 없으면 점수만 표기한다.
+ */
 export interface WeakConceptPreset {
   conceptId: string;
   title: string;
+  /** 숙달도(0~100, 반올림) */
   score: number;
+  attempts?: number;
+  wrongCount?: number;
+  /** WeakConceptEntry.wrong 동의 필드(구조 정합) — wrongCount 우선 */
+  wrong?: number;
+}
+
+/** 이유 행 설명 — scoreExplain(R10) 산출, 근거 없으면 점수만(과잉 주장 금지) */
+function presetExplain(w: WeakConceptPreset): string {
+  const attempts = w.attempts ?? 0;
+  const wrong = w.wrongCount ?? w.wrong;
+  if (attempts > 0 && wrong != null) {
+    return scoreExplain({ score: w.score, attempts, wrong });
+  }
+  if (attempts > 0) return `${METRIC_LABELS.MASTERY} ${w.score}점 · ${attempts}회 시도`;
+  return `${METRIC_LABELS.MASTERY} ${w.score}점`;
 }
 
 const DIFFICULTY_LABEL: Record<number, string> = {
@@ -58,8 +96,11 @@ export function ComposerGrammarPanel({
       <div className="shrink-0 border-b border-slate-100 px-4 py-2">
         <p className="text-[12px] font-semibold text-slate-500">
           출제 범위 구성
+          {/* 「보충 필요 우선 자동 편성」 카피 근거: B-4에서 engine buildQueue 의
+              assignment 큐가 학생별 숙달도 취약 가중을 반영 완료 — 실동작과 일치.
+              노출 어휘는 「보충 필요」 대체(M-6 — 코드 식별자 weak 는 유지) */}
           <span className="ml-1.5 font-normal text-slate-400">
-            — 선택한 조건으로 학생마다 취약 우선 문항이 자동 편성됩니다
+            — 선택한 조건으로 학생마다 보충 필요 우선 문항이 자동 편성됩니다
           </span>
         </p>
       </div>
@@ -87,15 +128,20 @@ export function ComposerGrammarSpec({
     t: [...(spec.itemTypes ?? [])].sort(),
     d: [...(spec.difficulties ?? [])].sort((a, b) => a - b),
   });
-  const [pool, setPool] = useState<GrammarPoolCount | null>(null);
-  const [poolLoading, setPoolLoading] = useState(true);
+  // 결과에 요청 키를 함께 저장 — 로딩은 「키 불일치」로 파생한다(효과 내 동기
+  // setState 회피). 이전 pool 은 로딩 중에도 유지돼 배지가 opacity 톤으로 남는다.
+  const [poolResult, setPoolResult] = useState<{
+    key: string;
+    pool: GrammarPoolCount | null;
+  } | null>(null);
   const seqRef = useRef(0);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewIdx, setPreviewIdx] = useState(0);
+  const [browserOpen, setBrowserOpen] = useState(false);
 
   useEffect(() => {
+    // seq 가드 — 늦게 도착한 이전 응답이 최신 키를 덮어쓰지 못하게 한다
     const seq = ++seqRef.current;
-    setPoolLoading(true);
     const timer = setTimeout(() => {
       const f = JSON.parse(filterKey) as {
         u: string[];
@@ -111,22 +157,23 @@ export function ComposerGrammarSpec({
       })
         .then((res) => {
           if (seqRef.current !== seq) return;
-          setPool(res);
+          setPoolResult({ key: filterKey, pool: res });
           setPreviewIdx(0);
-          setPoolLoading(false);
         })
         .catch(() => {
           if (seqRef.current !== seq) return;
-          setPool(null);
-          setPoolLoading(false);
+          setPoolResult({ key: filterKey, pool: null });
         });
     }, 300);
     return () => clearTimeout(timer);
   }, [filterKey]);
 
+  const poolLoading = poolResult === null || poolResult.key !== filterKey;
+  const pool = poolResult?.pool ?? null;
+
   // 예시 모달이 열려 있을 때 ESC 는 캡처 단계에서 가로채 예시만 닫는다 —
   // 그대로 두면 컴포저(WideModal)의 document 리스너까지 닿아 작성 중인
-  // 과제 폼 전체가 닫힌다.
+  // 과제 폼 전체가 닫힌다. (유닛 브라우저는 자체 캡처 가드 내장 — 여기선 불요)
   useEffect(() => {
     if (!previewOpen) return;
     const onKey = (e: KeyboardEvent) => {
@@ -155,60 +202,103 @@ export function ComposerGrammarSpec({
   };
 
   const selectedUnits = new Set(spec.unitIds ?? []);
-  // 개념 칩은 선택한 유닛 범위(미선택 시 전체가 아니라 취약 프리셋만 노출해 밀도 관리)
+  const selectedConcepts = new Set(spec.conceptIds ?? []);
+  // 개념 칩은 선택한 유닛 범위(미선택 시 전체가 아니라 추천 개념만 노출해 밀도 관리)
   const conceptChoices = GRAMMAR_UNITS.filter(
     (u) => selectedUnits.size === 0 || selectedUnits.has(u.id),
   );
 
   return (
     <div className="flex flex-col gap-4">
+      {/* ── 보충이 필요한 개념 — 이유 행 리스트(개별 토글 = conceptIds 반영) ── */}
       {weakConcepts && weakConcepts.length > 0 ? (
         <div className="rounded-lg border border-slate-200 bg-slate-50/60 p-3">
-          <div className="flex items-center justify-between gap-2">
-            <p className="text-[12px] font-semibold text-slate-600">
-              취약 개념 프리셋 — 숙달도가 낮은 개념으로 바로 구성합니다
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <p className="flex min-w-0 items-center gap-1 text-[12px] font-semibold text-slate-600">
+              <span className="truncate">{WEAK_CONCEPTS_PANEL.HEADER}</span>
+              <MetricHelpTip text={METRIC_HELP.MASTERY} />
             </p>
             <button
               type="button"
               onClick={() =>
                 onChange({
                   ...spec,
+                  // 유닛 필터가 추천 개념을 교집합 밖으로 밀어내지 않게 비운다
                   unitIds: [],
                   conceptIds: weakConcepts.map((w) => w.conceptId),
                 })
               }
-              className="shrink-0 rounded-md border border-blue-200 bg-white px-2.5 py-1 text-[12px] font-semibold text-blue-700 transition-colors hover:bg-blue-50"
+              className="shrink-0 rounded-md border border-blue-200 bg-white px-2.5 py-1 text-[12px] font-semibold text-blue-700 transition-colors hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
             >
-              프리셋 적용
+              {WEAK_CONCEPTS_PANEL.APPLY_ALL}
             </button>
           </div>
-          <div className="mt-2 flex flex-wrap gap-1.5">
-            {weakConcepts.map((w) => (
-              <span
-                key={w.conceptId}
-                className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-2 py-0.5 text-[11px] font-medium text-slate-600"
-              >
-                {w.title}
-                <span className="rounded-full bg-rose-50 px-1.5 text-[10px] font-semibold tabular-nums text-rose-600">
-                  {w.score}점
-                </span>
-              </span>
-            ))}
+          <div className="mt-2 flex max-h-52 flex-col overflow-y-auto pr-1">
+            {weakConcepts.map((w) => {
+              const checked = selectedConcepts.has(w.conceptId);
+              return (
+                <label
+                  key={w.conceptId}
+                  className="flex cursor-pointer items-start gap-2.5 rounded-md px-1.5 py-1.5 transition-colors hover:bg-white"
+                >
+                  <input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={() => toggle("conceptIds", w.conceptId)}
+                    aria-label={`${w.title} 개념 포함`}
+                    className="mt-1 size-3.5 shrink-0 accent-blue-600"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <MetricBar
+                      label={
+                        <span className="block truncate" title={w.title}>
+                          {w.title}
+                        </span>
+                      }
+                      labelClassName="w-[120px]"
+                      value={w.score}
+                      aside={
+                        <span className={cn("text-[13px] font-bold", scoreText(w.score))}>
+                          {w.score}점
+                        </span>
+                      }
+                    />
+                    <p className="mt-0.5 truncate text-[11.5px] text-slate-400">
+                      {presetExplain(w)}
+                    </p>
+                  </div>
+                </label>
+              );
+            })}
           </div>
         </div>
       ) : null}
 
       <div>
-        <p className="mb-1.5 text-[12px] font-semibold text-slate-500">
-          유닛 <span className="font-normal text-slate-400">(미선택 = 전체)</span>
-        </p>
+        <div className="mb-1.5 flex flex-wrap items-center justify-between gap-2">
+          <p className="text-[12px] font-semibold text-slate-500">
+            유닛 <span className="font-normal text-slate-400">(미선택 = 전체)</span>
+          </p>
+          {/* 유닛 실물 브라우징 — 현재 스펙 프리필로 진입(D3-4 ③) */}
+          <button
+            type="button"
+            onClick={() => setBrowserOpen(true)}
+            className="inline-flex shrink-0 items-center gap-1 rounded-md border border-slate-200 bg-white px-2 py-0.5 text-[11px] font-semibold text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
+          >
+            <Search className="size-3" aria-hidden />
+            {CTA_LABELS.VIEW_UNIT_ITEMS}
+          </button>
+        </div>
         <div className="grid grid-cols-2 gap-1.5">
           {GRAMMAR_UNITS.map((u) => (
             <button
               key={u.id}
               type="button"
               onClick={() => toggle("unitIds", u.id)}
-              className={cn(chipClass(selectedUnits.has(u.id)), "w-full truncate text-left")}
+              className={cn(
+                chipClass(selectedUnits.has(u.id)),
+                "w-full min-w-0 truncate text-left",
+              )}
               title={u.subtitle}
             >
               {u.order}. {u.title}
@@ -225,14 +315,14 @@ export function ComposerGrammarSpec({
           <div className="flex max-h-40 flex-col gap-2 overflow-y-auto pr-1">
             {conceptChoices.map((u) => (
               <div key={u.id} className="flex flex-wrap items-center gap-1.5">
-                <span className="w-20 shrink-0 text-[11px] font-medium text-slate-400">
+                <span className="w-20 shrink-0 truncate text-[11px] font-medium text-slate-400">
                   {u.title}
                 </span>
                 {u.conceptIds.map((cid) => (
                   <ConceptChip
                     key={cid}
                     conceptId={cid}
-                    active={(spec.conceptIds ?? []).includes(cid)}
+                    active={selectedConcepts.has(cid)}
                     onToggle={() => toggle("conceptIds", cid)}
                   />
                 ))}
@@ -344,7 +434,20 @@ export function ComposerGrammarSpec({
         </div>
       </div>
 
-      {/* 예시 문항 실물 확인 — 기존 강사 뷰 모달 재사용(itemId 자가로드) */}
+      {/* 유닛 실물 브라우저 — 현재 스펙 프리필(열림 1회 반영). 학생 컨텍스트
+          없음(컴포저는 다인 배포) — studentId 는 허브·훈련소(D-1) 경로 전용 */}
+      <UnitBrowserModal
+        open={browserOpen}
+        onClose={() => setBrowserOpen(false)}
+        initialSpec={{
+          unitIds: spec.unitIds,
+          conceptIds: spec.conceptIds,
+          itemTypes: spec.itemTypes,
+          difficulties: spec.difficulties,
+        }}
+      />
+
+      {/* 예시 문항 실물 확인 — 강사 뷰 모달 재사용(itemId 자가로드, 정본 경로) */}
       <GrammarItemModal
         itemId={samples[clampedIdx] ?? null}
         attempt={null}
@@ -466,7 +569,7 @@ function ConceptChip({
     <button
       type="button"
       onClick={onToggle}
-      className={cn(chipClass(active), "max-w-[220px] truncate")}
+      className={cn(chipClass(active), "min-w-0 max-w-[220px] truncate")}
       title={skeleton?.oneLiner ?? conceptId}
     >
       {skeleton?.title ?? conceptId}

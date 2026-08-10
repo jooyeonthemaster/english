@@ -7,6 +7,8 @@
 // "무엇이 준비되는가 / 지금 대신 할 것"을 반드시 안내한다(죽은 링크 금지).
 // ============================================================================
 
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
+
 export type TrackId = "grammar" | "listening" | "vocab" | "school";
 export type TrackStatus = "LIVE" | "PREPARING";
 
@@ -54,23 +56,32 @@ export const STUDY_TRACKS: StudyTrack[] = [
       insteadHref: "/g/track/grammar",
     },
   },
-  {
-    id: "vocab",
-    name: "어휘",
-    tagline: "외운 단어가 문장 속에서 살아나게",
-    status: "PREPARING",
-    href: "/g/track/vocab",
-    icon: "BookA",
-    preparing: {
-      what: [
-        "학년·교재별 어휘장과 자동 단어 시험",
-        "간격 반복(라이트너) 기반 복습 큐",
-        "지문 속 문맥 의미 확인 문항",
-      ],
-      insteadLabel: "어법 훈련 이어서 하기",
-      insteadHref: "/g/track/grammar",
-    },
-  },
+  FEATURE_FLAGS.ENABLE_VOCAB_DRILL
+    ? {
+        id: "vocab",
+        name: "어휘",
+        tagline: "외운 단어가 문장 속에서 살아나게",
+        status: "LIVE",
+        href: "/g/track/vocab",
+        icon: "BookA",
+      }
+    : {
+        id: "vocab",
+        name: "어휘",
+        tagline: "외운 단어가 문장 속에서 살아나게",
+        status: "PREPARING",
+        href: "/g/track/vocab",
+        icon: "BookA",
+        preparing: {
+          what: [
+            "학년·교재별 어휘장과 자동 단어 시험",
+            "간격 반복(라이트너) 기반 복습 큐",
+            "지문 속 문맥 의미 확인 문항",
+          ],
+          insteadLabel: "어법 훈련 이어서 하기",
+          insteadHref: "/g/track/grammar",
+        },
+      },
   {
     id: "school",
     name: "내신",

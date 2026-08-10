@@ -1,0 +1,765 @@
+{
+ "examId": "2017_09_5007019",
+ "source": "0b127b948ed1b807b86464e78818c385.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ① Good idea. Let’s do it this Friday. ② Sorry. I had to leave early yesterday. ③ No. The team meeting was canc",
+   "choices": [
+    "Good idea. Let’s do it this Friday.",
+    "Sorry. I had to leave early yesterday.",
+    "No. The team meeting was canceled.",
+    "Thanks. We had a great time at the party.",
+    "Sure. We must hire him for our company."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 253
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ① Instead, you need to learn sign language. ② Actually, I didn’t read that news article. ③ Well, let’s plan a ",
+   "choices": [
+    "Instead, you need to learn sign language.",
+    "Actually, I didn’t read that news article.",
+    "Well, let’s plan a field trip with them.",
+    "Yeah, we had enough parking spaces.",
+    "Then, I’ll get him to sign your book."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 261
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을 듣고, 남자가 하는 말의 목적으로 가장 적절한 것을 고르시오. ① 우체국 이전을 안내하려고 ② 동호회 가입을 권유하려고 ③ 여행 상품 정보를 제공하려고 ④ 이사 업체 직원을 모집하려고 ⑤ 동영상 제작 방법을 설명하려고",
+   "choices": [
+    "우체국 이전을 안내하려고",
+    "동호회 가입을 권유하려고",
+    "여행 상품 정보를 제공하려고",
+    "이사 업체 직원을 모집하려고",
+    "동영상 제작 방법을 설명하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 130
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 두 사람이 하는 말의 주제로 가장 적절한 것을 고르시오. ① 대기 오염의 원인 ② 기차 여행의 장점 ③ 교통 체증의 심각성 ④ 휴가 계획의 필요성 ⑤ 안전 운전의 중요성",
+   "choices": [
+    "대기 오염의 원인",
+    "기차 여행의 장점",
+    "교통 체증의 심각성",
+    "휴가 계획의 필요성",
+    "안전 운전의 중요성"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 108
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 두 사람의 관계를 가장 잘 나타낸 것을 고르시오. ① 초청 강사－행사 진행자 ② 호텔 투숙객－호텔 직원 ③ 보험 가입 고객－보험 설계사 ④ 봉사 활동 희망자－도서관 직원 ⑤ 도서 박람회 관람객－신문 기자",
+   "choices": [
+    "초청 강사－행사 진행자",
+    "호텔 투숙객－호텔 직원",
+    "보험 가입 고객－보험 설계사",
+    "봉사 활동 희망자－도서관 직원",
+    "도서 박람회 관람객－신문 기자"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 126
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고르시오.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 42
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 남자가 할 일로 가장 적절한 것을 고르시오. ① 장소 정하기 ② 의자 나르기 ③ 재료 구매하기 ④ 메뉴 결정하기 ⑤ 전단 복사하기",
+   "choices": [
+    "장소 정하기",
+    "의자 나르기",
+    "재료 구매하기",
+    "메뉴 결정하기",
+    "전단 복사하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 84
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, 여자가 Ben Tyler 콘서트에 갈 수 없는 이유를 고르시오. ① 부모님과 저녁 식사를 해야 해서 ② 가족 파티를 준비해야 해서 ③ 팀 프로젝트를 끝내야 해서 ④ 수업을 들으러 가야 해서 ⑤ 동생을 돌봐야 해서",
+   "choices": [
+    "부모님과 저녁 식사를 해야 해서",
+    "가족 파티를 준비해야 해서",
+    "팀 프로젝트를 끝내야 해서",
+    "수업을 들으러 가야 해서",
+    "동생을 돌봐야 해서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 131
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 대화를 듣고, 여자가 지불할 금액을 고르시오. [3점] ① $54 ② $63 ③ $70 ④ $81 ⑤ $90",
+   "choices": [
+    "$54",
+    "$63",
+    "$70",
+    "$81",
+    "$90"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 64
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 대화를 듣고, Eugene Kim에 관해 언급되지 않은 것을 고르시오. ① 출생지 ② 수상작 제목 ③ 집필한 책의 수 ④ 집필 장소 ⑤ 나이",
+   "choices": [
+    "출생지",
+    "수상작 제목",
+    "집필한 책의 수",
+    "집필 장소",
+    "나이"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 83
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. Science Quiz Olympics에 관한 다음 내용을 듣고, 일치하지 않는 것을 고르시오. ① 매년 열리는 행사이다. ② 9월 23일 금요일에 개최된다. ③ 모든 참가자는 티셔츠를 받는다. ④ 참가하려면 신청서를 작성해야 한다. ⑤ 행사 당일에 참가 신청이 가능하다. 201",
+   "choices": [
+    "매년 열리는 행사이다.",
+    "9월 23일 금요일에 개최된다.",
+    "모든 참가자는 티셔츠를 받는다.",
+    "참가하려면 신청서를 작성해야 한다.",
+    "행사 당일에 참가 신청이 가능하다.\n2017학년도 대학수학능력시험 9월 모의평가 문제지\n제3 교시"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 193
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 다음 표를 보면서 대화를 듣고, 두 사람이 구입할 세발자전거를 고르시오. Kids’ Tricycles for Sale Model Frame Warranty Helmet Included Price ① A Plastic 1 year × $65 ② B Steel 1 year ○ $75",
+   "choices": [
+    "A\nPlastic\n1 year\n×\n$65",
+    "B\nSteel\n1 year\n○\n$75",
+    "C\nSteel\n2 years\n×\n$75",
+    "D\nSteel\n3 years\n×\n$85",
+    "E\nAluminum\n3 years\n○\n$105"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 240
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. [3점] Man: ① Of course, it is. It’ll be good for your future career. ② Certainly. You’re scheduled to meet my ",
+   "choices": [
+    "Of course, it is. It’ll be good for your future career.",
+    "Certainly. You’re scheduled to meet my assistant.",
+    "I don’t think so. You can’t use the center for free.",
+    "No way. You don’t want to work with children.",
+    "Yes. It’s necessary to quit my part-time job."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 323
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. [3점] Woman: ① Sorry. I don’t have the same interests as you. ② Thank you. It’ll help me make new friends. ③ A",
+   "choices": [
+    "Sorry. I don’t have the same interests as you.",
+    "Thank you. It’ll help me make new friends.",
+    "Absolutely. I’ll give you some advice.",
+    "No thanks. I don’t like to play sports.",
+    "Well done. It was a wonderful game."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 280
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Jenny가 Daniel에게 할 말로 가장 적절한 것을 고르시오. Jenny: ① Why don’t you move to the dormitory?",
+   "choices": [
+    "Why don’t you move to the dormitory?",
+    "You’d better find a quiet place to study.",
+    "You should major in computer engineering.",
+    "How about taking a summer course together?",
+    "You need to follow the rules in the dormitory.\n[16～17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 310
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 여자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "benefits of cooking at home",
+    "lives of great chefs in history",
+    "tips for cooking with leftover food",
+    "children’s snacks made from grains",
+    "food products invented accidentally"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 206
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 음식이 아닌 것은?",
+   "choices": [
+    "corn flakes",
+    "potato chips",
+    "ice cream cones",
+    "onion rings",
+    "chocolate chip cookies"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 105
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "야구와 관련된 새로운 사업을 제안하려고",
+    "야구 경기 관람권 구매 대행을 요청하려고",
+    "아들 생일 파티를 위한 장소 예약을 취소하려고",
+    "주말 가족 여행 일정 변경이 가능한지 문의하려고",
+    "야구 경기 관람 여행에 아들의 추가 등록을 부탁하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 859
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 드러난 ‘Amy’의 심경 변화로 가장 적절한 것은?",
+   "choices": [
+    "relaxed\n→ frustrated",
+    "satisfied → ashamed",
+    "bored\n→ exhausted",
+    "excited\n→ frightened",
+    "depressed → comforted"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 873
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "자녀의 활동에 동참하여 유대감을 강화하라.",
+    "자녀가 글을 통해 마음을 표현하도록 가르치라.",
+    "자녀가 부모의 사랑을 느낄 수 있도록 행동하라.",
+    "자녀에게 대화를 통해 자연스럽게 감정을 표현하라.",
+    "자녀의 인지 능력 향상을 위해 글쓰기 교육을 하라.\n  이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시에 \n따라 답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1056
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "아동문학 번역에서는 아동의 특성에 기반을 둔 창의성이 요구된다.",
+    "아동문학 속 다양한 의성어는 아동의 창의성 발달에 도움이 된다.",
+    "아동문학 번역가는 아동의 태도를 긍정적으로 변화시키는 데 기여한다.",
+    "아동문학가는 아동의 성장 과정을 구체적으로 표현할 수 있어야 한다.",
+    "아동문학은 아동 언어 발달에 도움이 되는 다양한 요소들을 담고 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1187
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "fear’s negative roles in cases of chaos",
+    "effective strategies for maintaining stability",
+    "fear and its dual functions in terms of change",
+    "the necessities of reducing a fear of the unknown",
+    "ways of confronting fear to overcome difficulties in life"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1159
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "What Makes a Strategic Vision Successful?",
+    "Why Is Creating a Vision Statement Difficult?",
+    "Building a Future: Innovative Leadership Training",
+    "Effective Decision-Making Processes in Organizations",
+    "Motivating Employees through Organizational Development"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1281
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 도표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "In the setting of “On \npublic transportation,” the younger groups are more accepting \nthan the older ones regarding cellphone use.",
+    "“When walking \ndown the street” is the setting in which people aged 30-49 are \nmore permissive towards cellphone use than the other age \ngroups.",
+    "As for “At restaurants,” 50% of the 18-29 year olds \nanswer that it is acceptable to use cellphones while 26% of those \n65 and older say the same.",
+    "Only 4% of people in each of the \ntwo age groups, 30-49 and 50-64, agree that cellphone use is \nacceptable in the setting of “At movie theaters or other quiet \nplaces.”",
+    "In the same setting, less than 10% of people in each \nage group answer that it is acceptable to use cellphones."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 894
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. !Kung San에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "남부 아프리카 Kalahari 사막에 산다.",
+    "이름 속 “!K”는 병에서 코르크 마개를 뽑을 때 나는 소리와 유사하다.",
+    "1986년에 전체 인구가 약 15,000명이었다.",
+    "Botswana의 Dobe 지역에서는 25개의 그룹으로 나뉘어 있었다.",
+    "Dobe 지역에서 식량은 부족했지만 여가 시간은 많았다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 999
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. 다음 안내문의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "스포츠센터 개장일은 11월 30일이다.",
+    "응모작 제출은 웹사이트에서 진행된다.",
+    "최상위 응모작 세 개가 온라인 투표 대상이 된다.",
+    "투표는 두 달 동안 웹사이트에서 진행된다.",
+    "우승 상품은 스포츠센터 1년 회원권이다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 157
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. Fashion Career Discovery Day에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "전문 디자이너들과의 인터뷰는 포함되어 있지 않다.",
+    "11월 5일부터 이틀간 진행된다.",
+    "티켓 가격에 점심과 기념품이 포함된다.",
+    "10명부터 단체 할인이 적용된다.",
+    "예약하지 않아도 참가할 수 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 172
+  },
+  {
+   "qNum": 28,
+   "kind": "box_choice",
+   "stem": "28. (A), (B), (C)의 각 네모 안에서 어법에 맞는 표현으로 가장 적절한 것은?",
+   "choices": [
+    "unhurried\n…… in which …… ended",
+    "unhurried\n…… which\n…… ending",
+    "unhurriedly …… which\n…… ended",
+    "unhurriedly …… which\n…… ending",
+    "unhurriedly …… in which …… ended\nName Our Sports Center!\nThe grand opening of our brand-new sports \ncenter is on November 30th, but we still don’t \nhave a name! Please take this opportunity to be part of \nWatford Community history, and help us name it!\nEntry Submission\n∙September 1st—30th on our website (www.watfordcc.org)\nThe three best entries will be selected by the Watford \nvolunteer group and will be made available online for \nvoting to decide the winner.\nVote\n∙October 15th—31st on our website\nWinner Announcement\n∙November 3rd on our website\n∙Prize: a one-year sports center membership\nWe’re looking for the most dynamic and fun names, \nso get your entries in now!\nWatford Community Council \nFashion Career Discovery Day\nExperience our Fashion Career Discovery Day and unlock \npathways to a fulfilling career in fashion! Your day will \ninclude interviews with professional designers, as well as the \nopportunity to watch a fashion show.\nDate: Saturday, November 5, 2016\nTime: 10 a.m.—4 p.m. \nLocation: Pavilion Fashion Plaza\n716 East Livera Street\nTicket Price: $20 per person (lunch and souvenir included)\nA minimum of 15 participants is necessary for group \nbookings to receive a 10% discount.\nReservations are required and must be made on our website \n(www.pfp2016.org) by 6 p.m., Thursday, November 3, 2016. \nPlease email us at fashioncdd@pfp2016.org for further \ninformation."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2559
+  },
+  {
+   "qNum": 29,
+   "kind": "box_choice",
+   "stem": "29. (A), (B), (C)의 각 네모 안에서 문맥에 맞는 낱말로 가장 적절한 것은?",
+   "choices": [
+    "concentrated …… blended\n…… resistant",
+    "concentrated …… subdivided …… responsive",
+    "concentrated …… subdivided …… resistant",
+    "limited\n…… subdivided …… resistant",
+    "limited\n…… blended\n…… responsive"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1391
+  },
+  {
+   "qNum": 30,
+   "kind": "mc",
+   "stem": "30. 밑줄 친 부분이 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [
+    "He had \nbeen invited by one company to spend a month there and \nhad been assigned an office and a research assistant. Harumi \nagreed on a Monday to present a business plan the following \nFriday. On Tuesday, the computers in the company crashed, \nand the research assistant called in sick with a severe case of \nthe flu. Still, Harumi pushed forward and presented",
+    "his \nplan on Friday. He began his presentation, “I’m sorry that",
+    "I am not well prepared. This meeting may not be a good \nuse of your time.” He then went into a clear, interesting \npresentation. After the meeting, one of the American executives \nsaid, “",
+    "I don’t know why you had to apologize. Everyone \nknows about the computer crash and your assistant’s illness.” \nHarumi responded that he thought that the apology would be \na good introduction to",
+    "his presentation.\n[31～34] 다음 빈칸에 들어갈 말로 가장 적절한 것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1071
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. A sleeping mother has the ability to identify the particular cry of her own baby. This is one of the bonding factors that has been forgotten because of the ",
+   "choices": [
+    "affection",
+    "creativity",
+    "sociability",
+    "intolerance",
+    "sensitivity"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 810
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. When people try to control situations that are essentially uncontrollable, they are inclined to experience high levels of stress. Thus, suggesting that they",
+   "choices": [
+    "but to yield to the situations within their control",
+    "but to disregard immune response when stressed",
+    "but to recognize when further control is impossible",
+    "and to fight against uncontrollable situations persistently",
+    "and to try harder to conquer uncontrollable stressful situations"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1138
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. A good deal of the information stored in working memory is encoded in an auditory form, especially when the information is language based. For example, in a",
+   "choices": [
+    "how the letters were visually represented",
+    "how the letters sounded than how they looked",
+    "how the length of the letter sequence was recognized",
+    "how the letters were ordered than how they were pronounced",
+    "how often the letters appeared than how long they were shown"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1154
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. Even if it is correct to say that we express and represent our thoughts in language, it may be a big mistake to suppose that there are structural similariti",
+   "choices": [
+    "the thought itself has such a structure",
+    "linguistic analysis of a thought is unlikely",
+    "the language in mind lacks a logical structure",
+    "a thought and its verbal expression are distinct",
+    "the sentence structurally differs from the thought"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1402
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "Governments, for \nexample, can and often do employ awareness campaigns \namong the resident population to promote a welcoming attitude \ntowards visitors, in order to foster a positive market image.",
+    "However, because such campaigns depend on widespread \nsocial engineering, and because their effects can be \ncounteracted by random acts of violence, positive outcomes \ncannot be guaranteed.",
+    "Most governments in developing \ncountries encourage international tourism because tourists \nfrom wealthy countries usually spend more.",
+    "Furthermore, \nit is the behaviour of some tourists, and the structure and \ndevelopment of tourism itself, that often generate negative \nattitudes within the host community.",
+    "This implies that major \nstructural changes to tourism itself, rather than awareness \ncampaigns, may be required to foster a welcoming attitude. \n[36～37] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 \n것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1090
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. Psychologists Dember and Earl suggested that the motivation for exploration had its roots in a curiosity drive. (A) This is very important for understanding",
+   "choices": [
+    "(A) －(C) －(B)",
+    "(B) －(A) －(C)",
+    "(B) －(C) －(A)",
+    "(C) －(A) －(B)",
+    "(C) －(B) －(A)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1068
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. The hunters, armed only with primitive weapons, were no real match for an angry mammoth. Many were probably killed or severely injured in the close encounte",
+   "choices": [
+    "(A) — (C) — (B)",
+    "(B) — (A) — (C)",
+    "(B) — (C) — (A)",
+    "(C) — (A) — (B)",
+    "(C) — (B) — (A)\n[38～39] 글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 \n적절한 곳을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38～39"
+    ]
+   },
+   "charLen": 1105
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. Even so, research confirms the finding that nonverbal cues are more credible than verbal cues, especially when verbal and nonverbal cues conflict. Researche",
+   "choices": [
+    ") Most disagree as to whether nonverbal cues \nare essential to the perception of sarcasm or the emotion that \nprompts it. (",
+    ") Also, nonverbal cues are better indicators \nof speaker intent. (",
+    ") As the nature of sarcasm implies a \ncontradiction between intent and message, nonverbal cues \nmay “leak” and reveal the speaker’s true mood as they do \nin deception. (",
+    ") Ostensibly, sarcasm is the opposite of \ndeception in that a sarcastic speaker typically intends the \nreceiver to recognize the sarcastic intent; whereas, in deception \nthe speaker typically intends that the receiver not recognize \nthe deceptive intent. (",
+    ") Thus, when communicators are \nattempting to determine if a speaker is sarcastic, they compare \nthe verbal and nonverbal message and if the two are in \nopposition, communicators may conclude that the speaker is \nbeing sarcastic.\n* sarcasm: 비꼼   ** ostensibly: 표면상"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1109
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. This dynamic can be illustrated with the example of parents who place equal value on convenience and concern for the environment. Our total set of values an",
+   "choices": [
+    ") The way that we behave in \na given situation is often influenced by how important one \nvalue is to us relative to others. (",
+    ") For instance, deciding \nwhether to spend Saturday afternoon relaxing with your family \nor exercising will be determined by the relative importance \nthat you place on family versus health. (",
+    ") You feel value \nconflict when you do something that is consistent with one \nvalue but inconsistent with another equally important value. \n(",
+    ") They may experience value conflict if they buy \ndisposable diapers for their babies. (",
+    ") Consumers facing \nsuch decisions consider not only the product’s immediate \nconsumption outcomes but also the product’s general effect \non society, including how the manufacturer behaves (e.g., \ntoward the environment).\n* diaper: 기저귀"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1018
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "successive\n…… unique",
+    "successive\n…… valuable",
+    "controlled\n…… valuable",
+    "incidental\n…… influential",
+    "incidental\n…… unique\n[41～42] 다음 글을 읽고, 물음에 답하시오.\nThree composers attended a show at the Café Concert des \nAmbassadeurs. There they heard performances of a song written \nby one of them and a sketch written by the other two. After the \nperformance, the three refused to pay their bill, telling the owner \nof the café: ‘You use the products of our labour without paying \nus for it. So there’s no reason why we should pay for your \nservice’. The case went to court, and the composers won on \nappeal. The decision extended an existing law on theatrical \nperformances to all musical works and all public performance \nof those works. This decision created a new category of legal \nright ― the performing right ― and with it a new economic \nrelationship between music user and copyright owner. \nAs a result of the decision, these composers and others \nincluding music publishers founded a society to enforce and \nadminister their performing rights. In doing so, they \nestablished the principle and practice of the collective \nadministration of rights, based on the fact that ― with the \npossible \nexception \nof \nopera \nperformances ― it \nwas \nimpossible for a single composer or publisher to monitor \nevery use of his or her work by singers, bands, promoters or, \nin the twentieth century, broadcasters. \n, the new \nsociety was entrusted with the task of monitoring music use, \nissuing licences to music users, negotiating fees, collecting \nfees and finally distributing the money raised to the \ncomposers and songwriters whose works were adding value \nto other people’s businesses."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2874
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "the cultural significance of musical performance",
+    "strategies for creating public interest through music",
+    "the rise of performing rights in music and its effects",
+    "performing arts for the public and their artistic value",
+    "the influence of the new society on increasing licence fees"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 302
+  },
+  {
+   "qNum": 42,
+   "kind": "mc",
+   "stem": "42. 윗글의 빈칸에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "Accordingly",
+    "Nevertheless",
+    "Otherwise",
+    "Conversely",
+    "Similarly\n[43～45] 다음 글을 읽고, 물음에 답하시오.\nWhat interested me the most about the new house was the \nstable in the backyard, in which my father let me make a \nsmall space for a pony. I believed that it meant that I would \nget a pony for Christmas. (a) He also said, “Lennie, someday \nyou’ll have a pony of your own.” However, “some day” is a \npain to a boy who lives in and knows only “now.”\nMeanwhile my father took me to a pony fair and let me try \nsome ponies, but (b) he always found some fault with them, \nleaving me in despair. When Christmas was at hand, I had \nabandoned all hope of getting one. Instead, I hung up the \nbiggest stocking I had. Waking up at 7 a.m., my little sisters \nand I raced for the fireplace downstairs. While my sisters \nwere delighted to find their stockings filled with presents, \nmine was empty. I went out into the yard and wept all by \nmyself. \nAfter an hour, my frustration reached its climax, when I saw \na man riding a pony with a brand-new saddle. When he looked \nat our door, he just passed by, which caused me to break into a \nflood of tears. Then, he said, “Kid, do you know a boy named \nLennie Steffens?” “That’s me,” I replied in tears. He said, \n“I’ve been looking all over for your house. Why don’t you put \nyour house number where it can be seen?” He went on saying, \n“I should have been here at 7. Your father told me to bring the \npony here and leave (c) him for you.”\nI’d never seen anything so beautiful as my pony. And finally, \nI rode off into the fields. Thrilled by riding, I began to feast my \neyes on the world around me. The trees seemed to be taking on \nsmiling faces and the birds seemed to be singing to congratulate \nme on getting my new friend. When I returned home, my father \nasked, “Why did you come back so soon?” With a smile on my \nface, I answered (d) him, “I didn’t want to make him feel tired. \nIt’s his first day with me.” (e) He laughed and wiped away the \ntear stains from my face ― his heartfelt gesture of apology for \nsuch a long-delayed present. Bursting with happiness, I spent \nthe rest of the day brushing my pony in the stable.\n* stable: 마구간"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2206
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 윗글의 마지막 단락에 나타난 분위기로 가장 적절한 것은?",
+   "choices": [
+    "witty and humorous",
+    "joyful and heartwarming",
+    "gloomy and hopeless",
+    "mysterious and adventurous",
+    "desperate and discouraging"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 158
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a) ～(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 75
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글의 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "아버지는 Lennie에게 조랑말을 위한 공간을 마련하도록 하였다.",
+    "아버지는 Lennie를 조랑말 시장에 데리고 갔다.",
+    "Lennie의 여동생들은 크리스마스 선물을 받지 못했다.",
+    "Lennie는 조랑말을 예정보다 늦게 받았다.",
+    "Lennie는 마구간에서 조랑말을 솔질해 주었다.\n* 확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)했는지 확인\n하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 230
+  }
+ ],
+ "sourcePdf": "0b127b948ed1b807b86464e78818c385.pdf",
+ "fileName": "영어_문제지.pdf"
+}

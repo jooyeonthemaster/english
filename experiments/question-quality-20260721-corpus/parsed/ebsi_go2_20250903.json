@@ -1,0 +1,764 @@
+{
+ "examId": "ebsi_go2_20250903",
+ "source": "ebsi_go2_20250903_paper_eng_1_mun_97CFC6XF_1.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 다음을 듣고, 여자가 하는 말의 목적으로 가장 적절한 것을 고르시오. ① 걷기 프로그램 시간 변경을 안내하려고 ② 방과 후 프로그램 신청을 독려하려고 ③ 산책로 출입 금지 시간을 공지하려고 ④ 점심 식사 시간 준수를 당부하려고 ⑤ 새로 개설한 동아리를 홍보하려고",
+   "choices": [
+    "걷기 프로그램 시간 변경을 안내하려고",
+    "방과 후 프로그램 신청을 독려하려고",
+    "산책로 출입 금지 시간을 공지하려고",
+    "점심 식사 시간 준수를 당부하려고",
+    "새로 개설한 동아리를 홍보하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 151
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 남자의 의견으로 가장 적절한 것을 고르시오. ① 냉장고 문을 자주 여닫으면 전기가 낭비된다. ② 과도한 육류 섭취는 영양 불균형의 원인이 된다. ③ 한 번 해동한 음식은 다시 냉동하지 않는 것이 좋다. ④ 음식을 밀폐해서 보관하면 세균 증식을 억제할 수 있다. ⑤ 오",
+   "choices": [
+    "냉장고 문을 자주 여닫으면 전기가 낭비된다.",
+    "과도한 육류 섭취는 영양 불균형의 원인이 된다.",
+    "한 번 해동한 음식은 다시 냉동하지 않는 것이 좋다.",
+    "음식을 밀폐해서 보관하면 세균 증식을 억제할 수 있다.",
+    "오랫동안 냉동 보관한 음식을 먹는 것은 해로울 수 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 191
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을 듣고, 남자가 하는 말의 요지로 가장 적절한 것을 고르시오. ① 무선 이어폰의 장시간 사용은 청력에 부정적인 영향을 미친다. ② 무선 이어폰은 주변 소음을 차단하여 집중력을 높일 수 있다. ③ 보행 중 무선 이어폰 사용은 심각한 사고를 유발할 수 있다. ④ 자전거를 탈 때 ",
+   "choices": [
+    "무선 이어폰의 장시간 사용은 청력에 부정적인 영향을 미친다.",
+    "무선 이어폰은 주변 소음을 차단하여 집중력을 높일 수 있다.",
+    "보행 중 무선 이어폰 사용은 심각한 사고를 유발할 수 있다.",
+    "자전거를 탈 때 보행자를 배려하는 습관이 필요하다.",
+    "운동을 하면서 음악을 들으면 운동 효과가 커진다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 211
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고르시오.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 41
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 여자가 할 일로 가장 적절한 것을 고르시오. ① 이메일 보내기 ② 선물 구매하기 ③ 팸플릿 인쇄하기 ④ 행사 장소 정하기 ⑤ 배경 음악 고르기",
+   "choices": [
+    "이메일 보내기",
+    "선물 구매하기",
+    "팸플릿 인쇄하기",
+    "행사 장소 정하기",
+    "배경 음악 고르기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 95
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 남자가 지불할 금액을 고르시오. [3점] ① $108 ② $120 ③ $135 ④ $150 ⑤ $162",
+   "choices": [
+    "$108",
+    "$120",
+    "$135",
+    "$150",
+    "$162"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 69
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 여자가 특강에 참석할 수 없는 이유를 고르시오. ① 발표 자료를 만들어야 해서 ② 배구 경기에 참가해야 해서 ③ 물리학 과제를 해야 해서 ④ 아르바이트가 있어서 ⑤ 무릎을 다쳐서",
+   "choices": [
+    "발표 자료를 만들어야 해서",
+    "배구 경기에 참가해야 해서",
+    "물리학 과제를 해야 해서",
+    "아르바이트가 있어서",
+    "무릎을 다쳐서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 111
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, Historical Costume Parade에 관해 언급되지 않은 것을 고르시오. ① 장소 ② 목적 ③ 날짜 ④ 참가 비용 ⑤ 등록 방법",
+   "choices": [
+    "장소",
+    "목적",
+    "날짜",
+    "참가 비용",
+    "등록 방법"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 90
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 2025 Brain Competition에 관한 다음 내용을 듣고, 일치하지 않는 것을 고르시오. ① 고등학생을 대상으로 한다. ② 3시간 동안 진행된다. ③ 두 번째 라운드에서 구술시험을 본다. ④ 전자기기를 사용할 수 있다. ⑤ 우승자는 상금을 받는다.",
+   "choices": [
+    "고등학생을 대상으로 한다.",
+    "3시간 동안 진행된다.",
+    "두 번째 라운드에서 구술시험을 본다.",
+    "전자기기를 사용할 수 있다.",
+    "우승자는 상금을 받는다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 148
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 다음 표를 보면서 대화를 듣고, 두 사람이 주문할 스마트 어항을 고르시오. Smart Fish Tank Model Price Tank Volume Function Frame Color ① A $109 13L Smart Heating System White ② B $129 15L ",
+   "choices": [
+    "A\n$109\n13L\nSmart Heating System\nWhite",
+    "B\n$129\n15L\nAutomatic Feeder\nBlack",
+    "C\n$149\n20L\nAutomatic Feeder\nWhite",
+    "D\n$179\n23L\nSmart Heating System\nSilver",
+    "E\n$219\n26L\nAutomatic Feeder\nSilver"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 300
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ① Sure. We can bake them together at my place. ② Good. Share these cookies with your friends. ③ Sorry. I have",
+   "choices": [
+    "Sure. We can bake them together at my place.",
+    "Good. Share these cookies with your friends.",
+    "Sorry. I haven’t prepared presents for you.",
+    "Okay. I won’t burn my cookies next time.",
+    "No. She’ll be too busy to help you."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 273
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ① You’re right. The construction is now complete. ② I see. I’ll take the subway tomorrow instead. ③ No way. I",
+   "choices": [
+    "You’re right. The construction is now complete.",
+    "I see. I’ll take the subway tomorrow instead.",
+    "No way. I’ve just missed the bus to school.",
+    "No problem. I can drive you to work.",
+    "Of course. I’ll come home early.\n2025학년도 9월 고2 전국연합학력평가 문제지\n제3 교시\n고2"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 306
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. [3점] Man: ① Okay. I’ll let you know if I find any. ② Right. I have to finish my experiment. ③ No thanks. I al",
+   "choices": [
+    "Okay. I’ll let you know if I find any.",
+    "Right. I have to finish my experiment.",
+    "No thanks. I already used some earlier.",
+    "Not really. I don’t need any special effects.",
+    "Never mind. I’ll take care of it after your show."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 340
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. [3점] Woman: ① Sorry. I don’t have any large sizes left. ② Great. Let’s register for the tournament. ③ Thank y",
+   "choices": [
+    "Sorry. I don’t have any large sizes left.",
+    "Great. Let’s register for the tournament.",
+    "Thank you. I hope I can change the size.",
+    "Excellent. I’d like to buy that uniform, too.",
+    "Don’t worry. I’m sure you’ll win the matches."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 342
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Jack이 Emma에게 할 말로 가장 적절한 것을 고르시오. Jack: ① I wonder how I could decorate my booth. ② Please donate your items for the flea market. ③ You should always be kind to your customers. ④ Who will participate in the charity event with us?",
+   "choices": [
+    "I wonder how I could decorate my booth.",
+    "Please donate your items for the flea market.",
+    "You should always be kind to your customers.",
+    "Who will participate in the charity event with us?",
+    "Can you tell me what items sell well at flea markets?\n[16~17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 385
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 여자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "animals that can cause damage to buildings",
+    "various functions of structures built by animals",
+    "construction skills that humans can learn from animals",
+    "effective ways for animals to escape from danger",
+    "creative hunting strategies of different animals"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 284
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 동물이 아닌 것은?",
+   "choices": [
+    "beavers",
+    "ants",
+    "spiders",
+    "bees",
+    "birds\n  이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시에 \n따라 답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 113
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "학교 운동장 사용 허가를 요청하려고",
+    "학교 행사의 진행 요원 모집을 안내하려고",
+    "지역 축제에 따른 도로 통제를 공지하려고",
+    "드론 사용 중 안전 규칙 준수를 당부하려고",
+    "행사에서 발생한 쓰레기 처리를 부탁하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 937
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 드러난 Amina의 심경 변화로 가장 적절한 것은?",
+   "choices": [
+    "jealous →grateful",
+    "curious\n→delighted",
+    "proud\n→ashamed",
+    "indifferent →regretful",
+    "hopeful →disappointed"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 937
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "기다림에 대한 관점을 전환하여 도약의 기회로 삼아야 한다.",
+    "자기 성찰을 위해 명상하는 시간을 충분히 확보해야 한다.",
+    "자신의 시간이 소중한 만큼 타인의 시간도 존중해야 한다.",
+    "계획 수립 시 일정 사이에 낭비되는 시간을 줄여야 한다.",
+    "업무 효율 향상을 위해 팀원 간 화합을 도모해야 한다.\n고2"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1141
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 밑줄 친 swimming alongside the boat가 다음 글에서 의미하는 바로 가장 적절한 것은?",
+   "choices": [
+    "reluctant to empathize with other members in its group",
+    "potentially able to be proven to possess mirror neurons",
+    "learning effective swimming skills with the help of others",
+    "constantly trying to hide from animals that have mirror neurons",
+    "cautious about potential conflict over resources with other species"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1222
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "기술은 인간을 대체하면서도 인력 수요를 늘린다.",
+    "신기술 도입은 노동자에게 적응의 부담을 안겨 준다.",
+    "자동화 시대에는 창의적 역량의 중요성이 더 커진다.",
+    "기술 격차는 노동 시장에서 새로운 불평등을 초래한다.",
+    "노동 시장 문제는 역사적 사례를 기반으로 해결할 수 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1092
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "economic benefits of using renewable energy",
+    "environmental issues from solar panel installation",
+    "reasons why placing solar panels in space is impractical",
+    "ways to cope with the challenges caused by space debris",
+    "efficient solutions for reducing the cost of space exploration"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1117
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Drawing Distinct Lines: Is It Appropriate?",
+    "Stick to Your Ideas, Listen to Your Heart",
+    "What Should Be Done to Improve IQ Testing?",
+    "Accepting Differences: How to Live in Harmony",
+    "Myths and Truths about Human Cognitive Abilities\n고2"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1162
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. 다음 도표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "Overall, the percentage of \nrespondents who used cash exceeded 60% in three out of \nthe four countries.",
+    "The percentage of respondents who \nused credit or debit cards in Germany was the same as that \nin India, at 56%.",
+    "The percentage of respondents who used \ncredit or debit cards in the United States was more than \ndouble that in China.",
+    "The percentage of respondents who \nused mobile devices in Germany was 3 percentage points \nlower than that in the United States.",
+    "Among the four \ncountries, \nChina \nrecorded \nthe \nhighest \npercentage \nof \nrespondents who used mobile devices, followed by India.\n* debit card: 직불 카드"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 838
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Barry Commoner에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "유대인 이민자의 아들이었다.",
+    "Harvard University에서 박사 학위를 받았다.",
+    "Missouri로 이주한 후 해군에서 복무했다.",
+    "핵무기 실험을 반대한 것으로 널리 알려졌다.",
+    "1980년에 Citizens Party를 설립했다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1075
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. Hikes for Rides에 관한 다음 안내문의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "모든 수익금은 새로운 트램 설치에 사용될 것이다.",
+    "현장에서 등록할 수 없다.",
+    "8세 이하 아이들은 참가비가 무료이다.",
+    "10km 코스가 가장 먼저 시작한다.",
+    "반려동물은 허용되지 않는다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 800
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. Paper Bridge Building Contest에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "9월 18일에 개최된다.",
+    "중학생만 참가할 수 있다.",
+    "테이프는 제공되지 않는다.",
+    "다리 길이는 30cm 이상이어야 한다.",
+    "2등은 300달러의 상금을 받는다.\n고2"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 762
+  },
+  {
+   "qNum": 29,
+   "kind": "grammar_underline",
+   "stem": "29. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "them",
+    "②": "depend firstly on what we",
+    "③": "observable",
+    "④": "for whom seasonal changes were",
+    "⑤": "filtered through tradition"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 987
+  },
+  {
+   "qNum": 30,
+   "kind": "vocab_underline",
+   "stem": "30. 다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "worse",
+    "②": "resist empathizing with outgroups",
+    "③": "efficient in cases of conflict",
+    "④": "unable to accurately empathize with",
+    "⑤": "pursuit of social harmony"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1260
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. Paradoxically, it’s that makes us feel most alive. Think of events that shake you out of your everyday routine: maybe attending a family wedding, making a b",
+   "choices": [
+    "failure",
+    "uncertainty",
+    "repetition",
+    "dependence",
+    "vulnerability"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 908
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. A great strength of the market mechanism is that there are incentives for individuals . This stands in contrast to many strategic situations ― for example, ",
+   "choices": [
+    "to take advantage of political situations",
+    "to endure hardships until prices go down",
+    "to contribute to the price stabilization of items",
+    "to avoid competition by using negotiation skills",
+    "to reveal their knowledge through their behavior\n고2"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1227
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. Dictionary definitions are constantly revised to keep up with our changing uses and knowledge. In Roman times, “addicts” were people who were unable to pay ",
+   "choices": [
+    "has the power to build trust among people",
+    "makes crosscultural communication difficult",
+    "is getting simpler generation after generation",
+    "needs to be learned over a long period of time",
+    "is an everchanging reflection of human invention"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1428
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. The term “anchoring” was introduced by Roland Barthes who observed that text is often used next to images (his focus was on photographs) to confine meaning.",
+   "choices": [
+    "the reader avoids some and receives others",
+    "the textual cues are disregarded by the audience",
+    "the emotional impact of the text is completely erased",
+    "the viewer focuses on the artistic quality of the image",
+    "the image and the accompanying text work in isolation"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1265
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "This bending of spacetime leads to phenomena \nsuch as ‘gravitational lensing’ where the light of distant stars \nappears to be in different locations when they pass by a large \nmass like the Sun.",
+    "We don’t normally see this lensing \nbecause stars aren’t visible during the day when the Sun is \nout, but a solar eclipse in 1919 allowed scientists to observe \nwhat the Sun’s gravity was doing to the light from distant \nstars.",
+    "The stars around the Sun appeared to have moved \nfrom their normal positions in the night sky.",
+    "Despite the \nconsistent efforts to confirm the precise orbit of planets \nwithin our solar system, observational schedules were often \ndisrupted by local weather phenomena.",
+    "The shift was much \nlarger than Newton’s theory predicted, but exactly in the \npositions predicted by Einstein’s theory.\n* solar eclipse: 일식\n[36~37] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 \n것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1039
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. We’re naturally wired to organize the world into a hierarchy. We do this to help make sense of the world, maintain our beliefs, and generally feel better. (",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n고2"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1038
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. Once a nail is hammered in, it is friction that holds it in place. Friction is the force that arises when two surfaces are sliding, or trying to slide, agai",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n[38~39] 글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 \n적절한 곳을 고르시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38~39"
+    ]
+   },
+   "charLen": 1012
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. Normally, people buy things because they want to use them, such as wheat to make bread and petrol to run the car. The traditional bank manager in the 1950s ",
+   "choices": [
+    ") They wanted to get rich quick and blow their \nmoney on fast cars and expensive champagne. (",
+    ") They \nmade their money through what’s called ‘speculation’. (",
+    ") \nBut when people speculate, they buy things even when they \nhave no interest in using them. (",
+    ") They might buy a \nload of wheat simply because they think that its price is \ngoing to rise when a drought is predicted in wheatgrowing \nareas. (",
+    ") If their guess is right, they later sell the \nwheat for a profit.\n* pillar: 기둥\n** speculation: 투기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 933
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. There are very few materials as good: metal foils can hold a crease, but control of the crease is somewhat more difficult. Paper’s mechanical properties len",
+   "choices": [
+    ") The cellulose fibers of which it is made \ncan be partially snapped in the area of maximum bend, \nallowing a permanent crease to form, while sufficient fibers \nremain undamaged for the material not to crack and fall \napart. (",
+    ") Indeed, in this state it pretty much maintains \nits ability to resist being pulled apart, but it can also be \ntorn easily and accurately along the crease if a point of \nweakness ― a small, initial tear ― is opened up. (",
+    ") This \nwinning combination of mechanical properties allows it to \nassume the shape of any object through creasing and \nfolding ― hence the art of origami. (",
+    ") Plastic sheeting \ndoesn’t tend to hold a crease at all, unless it is very soft, \nin which case it lacks the rigidity required of a good \nwrapping material. (",
+    ") So it is its ability to hold a \ncrease while remaining stiff that makes paper uniquely \nsuited to this purpose. [3점]\n* crease: 주름\n** origami: 종이접기\n*** rigidity: 단단함"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1142
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "raise\n…… deceived",
+    "collect\n…… detected",
+    "collect\n…… distracted",
+    "abandon …… awakened",
+    "abandon …… chased\n고2\n[41~42] 다음 글을 읽고, 물음에 답하시오.\nMany animals pursue a mixed strategy of accumulating \nboth body fat and food, which leads one to ask, “What are \nthe relative advantages and disadvantages of these two forms \nof energy storage?” Maximum fat deposition (a) increases \nwith body mass whereas maximum food storage is not \nconstrained by body size. This means that animals, especially \nsmall animals, can accumulate much greater energy reserves \nin the form of stored food than they can in the form of body \nfat. Further, stored food is more (b) economical than body \nfat because fat contributes to body mass, and metabolic \nrate increases with body mass. In other words, there is \na metabolic expense to maintaining fat. Excessive fat \naccumulations may also have a (c) negative effect on an \nanimal’s ability to avoid predators. And, if maintaining a \nhigh body temperature is advantageous, animals might be \nexpected to accumulate more energy in the form of a \nfood store than as body fat. On the other hand, stored \nfood may rot over time, may be removed by robbers, or \nmay simply be lost. Many animals must expend energy \nmanaging and protecting their food stores. Eating food \nand converting it to fat (d) intensifies these types of \nlosses and the energetic costs of managing stored food. \nA large accumulation of body fat adds to an animal’s \nfasting capacity, especially large animals, permitting some \nanimals to enter prolonged dormancy in the relative \nsecurity of a hibernaculum. Thus, both fat accumulation \nand food storage have some decided (e) advantages.\n* dormancy: 휴면 상태\n** hibernaculum: 동면 장소"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2844
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "The Body Sizes of Animals: Is Bigger Better?",
+    "Fat Storage and Its Impact on Body Temperature",
+    "Energy Reserves: The Role of Fat in Animal Sleep",
+    "How Animals Convert Food into Body Fat for Survival",
+    "Animal Energy Storage: Why Inside and Why Outside?"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 278
+  },
+  {
+   "qNum": 42,
+   "kind": "vocab_letter",
+   "stem": "42. 밑줄 친 (a)~(e) 중에서 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {
+    "a": "he shared his plan",
+    "b": "him was enough to",
+    "c": "he was of his",
+    "d": "He beamed with excitement",
+    "e": "he noticed the envelope"
+   },
+   "bracketChoices": {},
+   "charLen": 1956
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) - (D) - (C)",
+    "(C) - (B) - (D)",
+    "(C) - (D) - (B)",
+    "(D) - (B) - (C)",
+    "(D) - (C) - (B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 160
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a)~(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 75
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글에 관한 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "Collin은 지난 수년 동안 용돈을 모았다.",
+    "Collin의 아버지는 빨간색 차를 구입했다.",
+    "Collin의 아버지는 Collin에게 선물을 사주기로 결심했다.",
+    "상자 안에는 야구공이 들어 있었다.",
+    "Collin은 학교에 다녀온 후 봉투를 탁자 위에 두었다.\n* 확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)했는지 확인\n하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 228
+  }
+ ],
+ "sourcePdf": "ebsi_go2_20250903_paper_eng_1_mun_97CFC6XF_1.pdf"
+}

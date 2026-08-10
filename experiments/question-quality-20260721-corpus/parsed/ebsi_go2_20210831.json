@@ -1,0 +1,764 @@
+{
+ "examId": "ebsi_go2_20210831",
+ "source": "ebsi_go2_20210831_paper_eng_mun_M44YC59H.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 다음을 듣고, 남자가 하는 말의 목적으로 가장 적절한 것을 고르시오. ① 학교 급식 일정 변경을 알리려고 ② 학교 식당 이용 시 주의 사항을 안내하려고 ③ 학교 급식 설문 조사 기간 연장을 공지하려고 ④ 설문 조사로 선정된 학교 급식 메뉴를 소개하려고 ⑤ 학교 급식 개선을 위한 토",
+   "choices": [
+    "학교 급식 일정 변경을 알리려고",
+    "학교 식당 이용 시 주의 사항을 안내하려고",
+    "학교 급식 설문 조사 기간 연장을 공지하려고",
+    "설문 조사로 선정된 학교 급식 메뉴를 소개하려고",
+    "학교 급식 개선을 위한 토론회 참석을 요청하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 200
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 여자의 의견으로 가장 적절한 것을 고르시오. ① 꾸준한 독서는 집중력 향상에 효과적이다. ② 학생의 연령에 맞는 도서 추천이 중요하다. ③ 소설을 읽는 것은 공감 능력 향상에 도움이 된다. ④ 학생의 흥미를 유발할 수 있는 독서 교육이 필요하다. ⑤ 창의적인 글쓰기를",
+   "choices": [
+    "꾸준한 독서는 집중력 향상에 효과적이다.",
+    "학생의 연령에 맞는 도서 추천이 중요하다.",
+    "소설을 읽는 것은 공감 능력 향상에 도움이 된다.",
+    "학생의 흥미를 유발할 수 있는 독서 교육이 필요하다.",
+    "창의적인 글쓰기를 위해 다양한 주제의 소설을 읽어야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 185
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 대화를 듣고, 두 사람의 관계를 가장 잘 나타낸 것을 고르시오. ① 호텔 직원 – 투숙객 ② 음반 제작자 – 밴드 연주자 ③ 유치원 교사 – 학부모 ④ 파티 플래너 – 의뢰인 ⑤ 레크리에이션 강사 - 수강생",
+   "choices": [
+    "호텔 직원 – 투숙객",
+    "음반 제작자 – 밴드 연주자",
+    "유치원 교사 – 학부모",
+    "파티 플래너 – 의뢰인",
+    "레크리에이션 강사 - 수강생"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 125
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고르시오.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 45
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 여자가 남자에게 부탁한 일로 가장 적절한 것을 고르시오. ① 에어컨 수리 요청하기 ② 야구 경기 티켓 구매하기 ③ 주문한 음식 찾아오기 ④ 박물관 투어 취소하기 ⑤ 식사 장소 예약하기",
+   "choices": [
+    "에어컨 수리 요청하기",
+    "야구 경기 티켓 구매하기",
+    "주문한 음식 찾아오기",
+    "박물관 투어 취소하기",
+    "식사 장소 예약하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 115
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 여자가 지불할 금액을 고르시오. ① $36 ② $40 ③ $45 ④ $50 ⑤ $63",
+   "choices": [
+    "$36",
+    "$40",
+    "$45",
+    "$50",
+    "$63"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 59
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 남자가 도서관에 갈 수 없는 이유를 고르시오. ① 독서 토론을 위해 책을 읽어야 해서 ② 학생회 회의에 참석해야 해서 ③ 병원 진료를 받아야 해서 ④ 동아리 면접을 준비해야 해서 ⑤ 말하기 대회 대본을 작성해야 해서",
+   "choices": [
+    "독서 토론을 위해 책을 읽어야 해서",
+    "학생회 회의에 참석해야 해서",
+    "병원 진료를 받아야 해서",
+    "동아리 면접을 준비해야 해서",
+    "말하기 대회 대본을 작성해야 해서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 135
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, Electronics Fair에 관해 언급되지 않은 것을 고르시오. ①프로그램 ②장소 ③종료일 ④참가 업체 ⑤티켓 가격",
+   "choices": [
+    "프로그램",
+    "장소",
+    "종료일",
+    "참가 업체",
+    "티켓 가격"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 83
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. Jump and Grow Together에 관한 다음 내용을 듣고, 일치하지 않는 것을 고르시오. ① 신입생 11명으로 팀을 구성해야 한다. ② 각 팀은 세 번의 점프 기회를 갖는다. ③ 10월 첫 번째 토요일에 열린다. ④ 학교 체육관에서 개최된다. ⑤ 행사 당일에 참가 신청이 ",
+   "choices": [
+    "신입생 11명으로 팀을 구성해야 한다.",
+    "각 팀은 세 번의 점프 기회를 갖는다.",
+    "10월 첫 번째 토요일에 열린다.",
+    "학교 체육관에서 개최된다.",
+    "행사 당일에 참가 신청이 가능하다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 171
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 다음 표를 보면서 대화를 듣고, 여자가 구입할 Monitor Stand를 고르시오. Monitor Stand Model Price Material Storage Drawer USB Ports ① A $ 20 Plastic ○ ② B $ 23 Metal × ③ C $ 25 Meta",
+   "choices": [
+    "A\n$ 20 \nPlastic\n○",
+    "B\n$ 23 \nMetal\n×",
+    "C\n$ 25 \nMetal\n×",
+    "D\n$ 28\nMetal\n○",
+    "E\n$ 35\nPlastic\n○"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 211
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ① Too bad. When did you break your watch?",
+   "choices": [
+    "Too bad. When did you break your watch?",
+    "Sorry. I couldn’t join the meeting yesterday.",
+    "Exactly. Should we go back to work right now?",
+    "Thanks. It was a good opportunity to learn more.",
+    "Sure. Why don’t we go out to get some fresh air?"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 297
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ① We don’t always need a car to travel. ② That’s why I practiced a lot this time. ③ I’m glad you didn’t get s",
+   "choices": [
+    "We don’t always need a car to travel.",
+    "That’s why I practiced a lot this time.",
+    "I’m glad you didn’t get stuck in traffic.",
+    "Make sure to arrive on time for your test.",
+    "I forgot my identification card for the test. \n2021학년도 9월 고2 전국연합학력평가 문제지  \n제3 교시\n고2"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 312
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. [3점] Woman: ① No thanks. I can make my own infographics. ② Of course. I’ll send it to you right away. ③ Sorry",
+   "choices": [
+    "No thanks. I can make my own infographics.",
+    "Of course. I’ll send it to you right away.",
+    "Sorry. I forgot to download it yesterday.",
+    "I see. You mean the shorter, the better.",
+    "Okay. I’ll put the graph onto this page."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 337
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. [3점] Man: ① You should have taken more pictures at the top. ② I would have regretted it if I’d missed this vi",
+   "choices": [
+    "You should have taken more pictures at the top.",
+    "I would have regretted it if I’d missed this view.",
+    "The trail is flat enough to hike without equipment.",
+    "The original plan is important, but safety comes first.",
+    "I’ve done this hike before, so I know it isn’t dangerous."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 391
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Amanda가 Natalie에게 할 말로 가장 적절한 것을 고르시오. [3점] Amanda: ① It’s dangerous to use headphones while riding a scooter. ② I think you should check your",
+   "choices": [
+    "It’s dangerous to use headphones while riding a scooter.",
+    "I think you should check your scooter regularly.",
+    "Walking to school is better for your health.",
+    "A license is required to ride an electric scooter.",
+    "Turning up music might distract you from studying.\n[16~17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 416
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 남자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "animals’ abilities to count",
+    "reasons for animals’ migrating",
+    "hunting habits of wild animals",
+    "necessity of protecting animal rights",
+    "ways to conserve endangered animals"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 207
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 동물이 아닌 것은?",
+   "choices": [
+    "wolves",
+    "frogs",
+    "chickens",
+    "snakes",
+    "desert ants\n  이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시에 \n따라 답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 123
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "수리로 인한 강당 폐쇄를 안내하려고",
+    "캠퍼스 투어 프로그램 일정을 조정하려고",
+    "강당 사용을 위한 신청 방법을 공지하려고",
+    "강당 신축을 위한 기금 모금 행사를 홍보하려고",
+    "집짓기 행사에 참여할 자원 봉사자를 모집하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 965
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 드러난 Evan의 심경으로 가장 적절한 것은?",
+   "choices": [
+    "shocked and worried",
+    "excited and pleased",
+    "grateful and relieved",
+    "bored and indifferent",
+    "jealous and envious"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 934
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "학생의 참여가 활발한 수업 방법을 개발해야 한다.",
+    "학생에게 성공적인 협동을 위한 기술을 가르쳐야 한다.",
+    "학생의 의견을 존중하는 학교 분위기를 조성해야 한다.",
+    "학생의 전인적 발달을 위해 체육활동을 강화해야 한다.",
+    "정보를 올바르게 선별하도록 미디어 교육을 실시해야 한다. \n고2"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1261
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 밑줄 친 bringing together contradictory characteristics가 다음 글에서 의미하는 바로 가장 적절한 것은?",
+   "choices": [
+    "establishing shortterm and longterm goals",
+    "performing both challenging and easy tasks",
+    "adopting temporary and permanent solutions",
+    "utilizing aspects of both experts and rookies",
+    "considering processes and results simultaneously"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1151
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "도시 재생을 위한 공공정책은 건설보다 사람에 중점을 두어야 한다.",
+    "대중 교통 이용이 편리하도록 도시 교통 체계를 구축해야 한다.",
+    "사회기반시설 확충을 통해 지역 경제를 활성화해야 한다.",
+    "에너지를 절감할 수 있는 친환경 건물을 설계해야 한다.",
+    "문화유산 보존을 우선하는 도시 계획을 수립해야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1129
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "benefits of recreational ocean fishing",
+    "ways to maintain marine biodiversity",
+    "potential value of the ocean for ecotourism",
+    "contribution of ocean farming to food supply",
+    "human influence on the spread of invasive species"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1285
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Living Public Art Grows from a Landfill",
+    "Why Does Art Fade Away in Urban Areas?",
+    "New York: Skyscraper Capital of the World",
+    "Art Narrows the Gap Between the Old and Young",
+    "How City Expansion Could Affect Food Production \n고2"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1335
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. 다음 도표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "For the \ntwoyear period of 2018 to 2019, the overall total number \nof visitors to Deoksugung Palace was larger than that to \nChanggyeonggung Palace.",
+    "While the total number of \nvisitors to Changgyeonggung Palace decreased from 2018 to \n2019, the total number of visitors to Deoksugung Palace \nincreased during the same period.",
+    "During both 2018 and \n2019, the two palaces had more Korean visitors than \nforeign visitors.",
+    "In 2018, the number of Korean visitors \nto Deoksugung Palace was less than half the number of \nKorean visitors to  Changgyeonggung Palace.",
+    "In 2019, the \nnumber of Korean visitors to Changgyeonggung Palace was \nmore than 10 times the number of foreign visitors."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1152
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Patricia Bath에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "뉴욕 시의 Harlem 지역에서 성장했다.",
+    "1968년에 의과 대학을 졸업했다.",
+    "의과 대학에서 학생을 가르쳤다.",
+    "1976년에 AiPB를 단독으로 설립했다.",
+    "의료 장비 특허를 받았다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1064
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. Bright Future Walkathon에 관한 다음 안내문의 내용과 일치 하지 않는 것은?",
+   "choices": [
+    "오전 9시에 시작한다.",
+    "모든 등록비는 기부될 것이다.",
+    "B 코스는 15세 이상 참가자가 선택할 수 있다.",
+    "코스를 완주한 참가자는 티셔츠를 받는다.",
+    "취소 시 환불이 가능하다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 742
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. South High School Reunion에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "오후 7시부터 오후 11시까지 진행된다.",
+    "11월 1일 이후에 티켓 환불이 가능하다.",
+    "퀴즈 쇼 챔피언은 영화 티켓 두 장을 받는다.",
+    "정해진 복장 규정은 없다.",
+    "친구는 네 명까지 초대할 수 있다.\n고2"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 892
+  },
+  {
+   "qNum": 29,
+   "kind": "grammar_underline",
+   "stem": "29. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "consisting almost entirely of water",
+    "②": "to survive in the cold",
+    "③": "that is available expends a",
+    "④": "it",
+    "⑤": "has excellent visual capabilities"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 942
+  },
+  {
+   "qNum": 30,
+   "kind": "vocab_underline",
+   "stem": "30. 다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "vulnerable to starvation and agricultural",
+    "②": "primarily on potatoes and milk",
+    "③": "benefits that monocultures of plants",
+    "④": "ensure the longevity of those",
+    "⑤": "balance must be struck between"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1233
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. works as a general mechanism for the mind, in many ways and across many different areas of life. For example, Brian Wansink, author of Mindless Eating, show",
+   "choices": [
+    "Originality",
+    "Relativity",
+    "Visualization",
+    "Imitation",
+    "Forgetfulness"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 907
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. Philosophical activity is based on the . The philosopher’s thirst for knowledge is shown through attempts to find better answers to questions even if those ",
+   "choices": [
+    "recognition of ignorance",
+    "emphasis on selfassurance",
+    "conformity to established values",
+    "achievements of ancient thinkers",
+    "comprehension of natural phenomena\n고2"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1281
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. The most powerful emotional experiences are those that bring joy, inspiration, and the kind of love that makes suffering bearable. These emotional experienc",
+   "choices": [
+    "your biological treasure map to joy",
+    "your hidden key to lasting friendships",
+    "a mirror showing your unique personality",
+    "a facilitator for communication with others",
+    "a barrier to looking back to your joyful childhood"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1209
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. Deepfried foods are tastier than bland foods, and children and adults develop a taste for such foods. Fatty foods cause the brain to release oxytocin, a pow",
+   "choices": [
+    "actually be our body’s attempt to stay healthy",
+    "ultimately lead to harm to the ecosystem",
+    "dramatically reduce our overall appetite",
+    "simply be the result of a modern lifestyle",
+    "partly strengthen our preference for fresh food"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1278
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "Because of this, \nnurses play a crucial role in interdisciplinary communication.",
+    "They have a mediating role between the various groups \nof professionals and the patient and carer.",
+    "Mental \nhealthcare professionals are legally bound to protect the \nprivacy of their patients, so they may be, rather than \nunwilling, unable to talk about care needs.",
+    "This involves \ntranslating communication between groups into language that \nis acceptable and comprehensible to people who have \ndifferent ways of understanding mental health problems.",
+    "This is a highly sensitive and skilled task, requiring a \nhigh level of attention to alternative views and a high level \nof understanding of communication. \n[36~37] 주어진 글 다음에 이어질 글의 순서로 가장 \n적절한 것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1058
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. When trying to sustain an independent ethos, cultures face a problem of critical mass. No single individual, acting on his or her own, can produce an ethos.",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n고2"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1130
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. Heat is lost at the surface, so the more surface area you have relative to volume, the harder you must work to stay warm. That means that little creatures h",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n[38~39] 글의 흐름으로 보아, 주어진 문장이 들어가기에 \n가장 적절한 곳을 고르시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38~39"
+    ]
+   },
+   "charLen": 1244
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. It is possible to argue, for example, that, today, the influence of books is vastly overshadowed by that of television. Interest in ideology in children’s l",
+   "choices": [
+    ") Perhaps more than any other texts, they \nreflect society as it wishes to be, as it wishes to be seen, \nand as it unconsciously reveals itself to be, at least to \nwriters. (",
+    ") Clearly, literature is not the only socialising \nagent in the life of children, even among the media. (",
+    ") \nThere is, however, a considerable degree of interaction \nbetween the two media. (",
+    ") Many socalled children’s \nliterary classics are televised, and the resultant new book \neditions strongly suggest that viewing can encourage \nsubsequent reading. (",
+    ") Similarly, some television series \nfor children are published in book form. \n* resultant: 그 결과로 생긴"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 964
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. There isn’t really a way for us to pick up smaller pieces of debris such as bits of paint and metal. The United Nations asks that all companies remove their",
+   "choices": [
+    ") To tackle this problem, \nseveral companies around the world have come up with \nnovel solutions. (",
+    ") These include removing dead \nsatellites from orbit and dragging them back into the \natmosphere, where they will burn up. (",
+    ") Ways we \ncould do this include using a harpoon to grab a satellite, \ncatching it in a huge net, using magnets to grab it, or even \nfiring lasers to heat up the satellite, increasing its \natmospheric drag so that it falls out of orbit. (",
+    ") \nHowever, these methods are only useful for large satellites \norbiting Earth. (",
+    ") We just have to wait for them to \nnaturally reenter Earth’s atmosphere. [3점]\n* harpoon: 작살"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 967
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "uncomfortable\n……\ncompetitive mood",
+    "cooperative\n……\nshared rhythm",
+    "distracted\n……\nshared rhythm",
+    "attentive\n……\ncompetitive mood",
+    "indifferent\n……\ndisturbing pattern\n고2\n[41~42] 다음 글을 읽고, 물음에 답하시오. \nIn this day and age, it is difficult to imagine our lives \nwithout email. But how often do we consider the \nenvironmental impact of these virtual messages? At first \nglance, digital messages appear to (a) save resources. \nUnlike traditional letters, no paper or stamps are \nneeded; nothing has to be packaged or transported. \nMany of us tend to assume that using email requires \nlittle more than the electricity used to power our \ncomputers. It’s easy to (b) overlook the invisible energy \nusage involved in running the network ― particularly \nwhen it comes to sending and storing data. \nEvery single email in every single inbox in the world \nis stored on a server. The incredible quantity of data \nrequires huge server farms ― gigantic centres with \nmillions \nof \ncomputers \nwhich \nstore \nand \ntransmit \ninformation. \nThese \nservers \nconsume \n(c) minimum \namounts of energy, 24 hours a day, and require \ncountless litres of water, or air conditioning systems, \nfor cooling. The more messages we send, receive and \nstore, the (d) more servers are needed ― which means \nmore energy consumed, and more carbon emissions. \nClearly, sending and receiving electronic messages in an \nenvironmentally conscious manner is by no means \nenough to stop climate change. But with a few careful, \nmindful changes, (e) unnecessary CO2 emissions can \neasily be avoided."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2783
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Recycling Makes Your Life Even Better",
+    "Eco-friendly Use of Email Saves the Earth",
+    "Traditional Letters: The Bridge Between Us",
+    "Email Servers: Records of Past and Present",
+    "Technicians Looking for Alternative Energy"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 247
+  },
+  {
+   "qNum": 42,
+   "kind": "vocab_letter",
+   "stem": "42. 밑줄 친 (a)~(e) 중에서 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {
+    "a": "her professional lessons to",
+    "b": "She completed her studies",
+    "c": "she was lost in",
+    "d": "her to a ballet",
+    "e": "She was happy and"
+   },
+   "bracketChoices": {},
+   "charLen": 2124
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) - (D) - (C)",
+    "(C) - (B) - (D)",
+    "(C) - (D) - (B)",
+    "(D) - (B) - (C)",
+    "(D) - (C) - (B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 147
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a)~(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 95
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글에 관한 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "엄마는 Melanie가 발레리나의 열정을 가지고 춤추는 것을 보았다.",
+    "Melanie는 학생들에게 스텝을 가르쳤다.",
+    "Melanie는 세계적으로 유명한 발레 댄서이다.",
+    "Melanie는 지역 댄스 학원에 엄마와 동행했다.",
+    "Mr. Edler는 Melanie의 춤에 관심을 보였다.\n* 확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)했는지 확인\n하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 241
+  }
+ ],
+ "sourcePdf": "ebsi_go2_20210831_paper_eng_mun_M44YC59H.pdf"
+}

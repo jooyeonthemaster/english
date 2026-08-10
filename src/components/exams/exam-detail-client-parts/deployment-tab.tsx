@@ -8,7 +8,8 @@
 //  (a) 상단 액션 바 — "과제 배포"(AssignmentComposer, U5) + "배포 링크 관리"
 //      (ExamDeployModal, V1 — 개별 링크·QR 자기등록 관리) + AI 심층분석 보강
 //  (b) 할당 학생 테이블(AssignmentTable)
-//  (c) 채점 검토 드로어(ReviewDrawer — NEEDS_REVIEW 해소·대리입력·재채점)
+//  (c) 시험 상세 모달(SubmissionDetailModal — 문항 검토·NEEDS_REVIEW 해소·
+//      대리입력·재채점. 구 ReviewDrawer 를 와이드 모달로 교체, 2607 §7.3)
 //  (d) GRADED "리포트 만들기" — exam-report 허브 폴백(개별 딥링크 id 미노출)
 //  (e) 빈 상태 — 안내 + 배포 관리 CTA
 // 레거시 "응시 현황" 탭(SHOW_USER_RESULTS 게이트)과 완전히 독립 — 무회귀.
@@ -28,7 +29,7 @@ import {
 } from "@/actions/exams/assignments";
 import { AssignmentTable } from "./deployment-tab-parts/assignment-table";
 import { AnalysisBoostButton } from "./deployment-tab-parts/boost-button";
-import { ReviewDrawer } from "./deployment-tab-parts/review-drawer";
+import { SubmissionDetailModal } from "./deployment-tab-parts/submission-detail-modal";
 
 interface DeploymentTabProps {
   examId: string;
@@ -211,8 +212,8 @@ export function DeploymentTab({
         }}
       />
 
-      {/* 채점 검토 드로어 */}
-      <ReviewDrawer
+      {/* 시험 상세 모달 — 문항 타일·원본·해설·채점 관리 */}
+      <SubmissionDetailModal
         submissionId={reviewId}
         onClose={() => setReviewId(null)}
         onMutated={() => void load()}

@@ -1,0 +1,839 @@
+{
+ "examId": "ebsi_go1_20061121",
+ "source": "ebsi_go1_20061121_paper_20061121_eng_mun.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 대화를 듣고, Julie를 고르시오. ① ② ③ ④ ⑤",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 94
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 남자의 심경 변화로 가장 적절한 것을 고르시오. ① ③ ⑤ sad excited satisfied → → → cheerful proud upset ② ④ hopeful lonely → → bored depressed",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 134
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을 듣고, 무엇에 관한 설명인지 고르시오. [3점] ① 이름의 기원 ② 이름을 짓는 방법 ③ 옷과 이름의 연관성 ④ 이름을 기억하는 방법 ⑤ 옷을 멋지게 입는 방법",
+   "choices": [
+    "이름의 기원",
+    "이름을 짓는 방법",
+    "옷과 이름의 연관성",
+    "이름을 기억하는 방법",
+    "옷을 멋지게 입는 방법"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 97
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 남자가 여자를 위해 할 일을 고르시오. ① 표를 사준다. ② 집에 데려다준다. ③ 음료수를 사준다. ④ 자리를 바꿔준다. ⑤ 안내책자를 가져다준다.",
+   "choices": [
+    "표를 사준다.",
+    "집에 데려다준다.",
+    "음료수를 사준다.",
+    "자리를 바꿔준다.",
+    "안내책자를 가져다준다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 103
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 남자가 구입할 물건에 해당하지 않는 것을 고르시오. ① milk ② apples ③ noodles ④ tomato sauce ⑤ orange juice",
+   "choices": [
+    "milk",
+    "apples",
+    "noodles",
+    "tomato sauce",
+    "orange juice"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 98
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 다음을 듣고, 남자가 하는 말의 목적으로 가장 적절한 것을 고르시오. ① 칭찬 ② 위로 ③ 광고 ④ 사과 ⑤ 축하",
+   "choices": [
+    "칭찬",
+    "위로",
+    "광고",
+    "사과",
+    "축하"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 74
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 남자가 지불한 금액을 고르시오. ① $6 ② $10 ③ $15 ④ $44 ⑤ $56",
+   "choices": [
+    "$6",
+    "$10",
+    "$15",
+    "$44",
+    "$56"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 60
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, 두 사람이 대화하고 있는 장소를 고르시오. ① 공원 ② 공항 ③ 택시 안 ④ 버스 안 ⑤ 비행기 안",
+   "choices": [
+    "공원",
+    "공항",
+    "택시 안",
+    "버스 안",
+    "비행기 안"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 70
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 대화를 듣고, 부모가 Peter에게 시키려고 하는 일을 고르시오. ① 집안 청소하기 ② 할머니 방문하기 ③ 강아지 보살피기 ④ Sandra 배웅하기 ⑤ 우체국 다녀오기",
+   "choices": [
+    "집안 청소하기",
+    "할머니 방문하기",
+    "강아지 보살피기",
+    "Sandra 배웅하기",
+    "우체국 다녀오기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 97
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 대화를 듣고, 두 사람의 관계로 가장 적절한 것을 고르시오. ①father - daughter ②doctor - patient ③lawyer - client ④teacher - student ⑤repairman - customer",
+   "choices": [
+    "father\n-  daughter",
+    "doctor\n-  patient",
+    "lawyer\n-  client",
+    "teacher\n-  student",
+    "repairman -  customer"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 141
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 대화를 듣고, 남자가 어제 하지 않은 일을 고르시오. ① ② ③ ④ ⑤ 외국어(영어) 영역",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    "외국어(영어) 영역"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 56
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 대화를 듣고, 이번 가을에 유행하게 될 블라우스의 장식이 아닌 것을 고르시오. ① 브로치 ② 구슬 ③ 리본 ④ 꽃 ⑤ 레이스",
+   "choices": [
+    "브로치",
+    "구슬",
+    "리본",
+    "꽃",
+    "레이스"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 78
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 그림의 상황에 가장 적절한 대화를 고르시오. [1점] ① ② ③ ④ ⑤",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "point": 1,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 77
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. Woman: ______________________________________________ ① Around two hours a day. ② Yes. I’ll try it again. Tha",
+   "choices": [
+    "Around two hours a day.",
+    "Yes. I’ll try it again. Thanks.",
+    "I’ll give you another homework.",
+    "Thanks but steak is really tough.",
+    "I’ve always wanted to be on your show."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 280
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. Man: Oh! Does it?",
+   "choices": [
+    "No, thanks. I’m full.",
+    "I’m tired of hamburger.",
+    "We’d better make haste.",
+    "I should’ve joined this field trip.",
+    "Count on me. I’ll buy you a museum ticket."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 266
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 대화를 듣고, 아들의 마지막 말에 대한 엄마의 응답으로 가장 적절한 것을 고르시오. Mom: ① You really hate that singer. ② Let me give you a rain check. ③ Music has been changed a lot. ④ Let’s d",
+   "choices": [
+    "You really hate that singer.",
+    "Let me give you a rain check.",
+    "Music has been changed a lot.",
+    "Let’s decide after asking your father.",
+    "That sounds good. I need it until Friday."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 287
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 다음을 듣고, Brian이 Shane에게 할 말로 가장 적절한 것을 고르시오. Brian: Shane! ① That sounds like fun! ② Cheer up! You can make it again. ③ I don’t like muscular men like you. ④",
+   "choices": [
+    "That sounds like fun!",
+    "Cheer up! You can make it again.",
+    "I don’t like muscular men like you.",
+    "Congratulations! You won the race.",
+    "You made a wonderful Korean dinner. \n  이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시에 \n따라 답을 하기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 327
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 밑줄 친 it이 가리키는 것으로 가장 적절한 것은?",
+   "choices": [
+    "유전학",
+    "심리학",
+    "생태학",
+    "물리학",
+    "사회학"
+   ],
+   "point": 1,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 537
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에서 설명하고 있는 것으로 가장 적절한 것은?",
+   "choices": [
+    "등반 요령",
+    "절전 방법",
+    "낙뢰 대처 요령",
+    "차량 관리 방법",
+    "화재 예방 방법\n외국어(영어) 영역"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 672
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 글의 분위기로 가장 적절한 것은?",
+   "choices": [
+    "흥겨운",
+    "황량한",
+    "긴급한",
+    "평화로운",
+    "익살스러운"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 551
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "남을 먼저 배려하자.",
+    "치밀한 계획을 세우자.",
+    "전문적 식견을 갖추자.",
+    "순수한 마음을 갖도록 하자.",
+    "자신에 대한 기대치를 높이자."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 719
+  },
+  {
+   "qNum": 22,
+   "kind": "grammar_underline",
+   "stem": "22. 밑줄 친 부분의 어법상 쓰임이 바르지 않은 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "are the answering machine and",
+    "②": "telling them to leave a",
+    "③": "consider the lack of an",
+    "④": "to leave a message",
+    "⑤": "frustrated to people who want"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 653
+  },
+  {
+   "qNum": 23,
+   "kind": "box_choice",
+   "stem": "23. (A), (B), (C)의 네모 안에서 어법에 맞는 표현을 골라 짝지은 것으로 가장 적절한 것은?",
+   "choices": [
+    "who\n ‥‥\ncorrection  ‥‥ keep",
+    "who\n ‥‥\ncorrecting  ‥‥ keeps",
+    "who\n ‥‥\ncorrecting  ‥‥ keep",
+    "whom  ‥‥\ncorrecting  ‥‥ keeps",
+    "whom  ‥‥\ncorrection  ‥‥ keep"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 825
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 도표의 내용에 대한 설명으로 바르지 않은 것은?",
+   "choices": [
+    "Q1-2004 shows the lowest percentage growth.",
+    "The second highest percentage growth is Q2-2005.",
+    "Q3-2004 shows the greatest percentage growth in web \nsales by quarter.",
+    "The percentage growth of Q2-2005 is twice as much as \nthat of Q4-2004.",
+    "The percentage growth of Q3-2004 is slightly more than \nthat of Q2-2005.\n외국어(영어) 영역"
+   ],
+   "point": 1,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 371
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. Richard의 심경 변화를 가장 잘 나타낸 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 814
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Because of rapidly growing economies in the developing world and continued growth among the industrialized nations, global energy use is climbing. As a resu",
+   "choices": [
+    "saving energy",
+    "using global energy",
+    "reducing air pollution",
+    "developing energy sources",
+    "increasing energy supplies"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 719
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. The fashion of Western footwear has evolved as a reflection of of the period in which it was worn. Social status influenced the fashion of footwear just as ",
+   "choices": [
+    "positive belief",
+    "social class",
+    "artistic beauty",
+    "simple expression",
+    "impressive fashion"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 760
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. For Americans seeking a dining adventure and for immigrants seeking their native cuisine, ethnic dining is the answer. The most widespread of the ethnic cui",
+   "choices": [
+    "the food chain",
+    "the hot potato",
+    "a rolling stone",
+    "a piece of cake",
+    "the tip of the iceberg"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 746
+  },
+  {
+   "qNum": 29,
+   "kind": "mc",
+   "stem": "29. Another method of telling other people that space belongs to you is . Books, papers, and other personal belongings are scattered around the site to make it ",
+   "choices": [
+    "to use your personal markers",
+    "to try to stop your conversation",
+    "to spend money to your neighbor",
+    "to give your good first impression",
+    "to reduce your personal belongings"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 815
+  },
+  {
+   "qNum": 30,
+   "kind": "mc",
+   "stem": "30. 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "잡지구독 광고",
+    "배달지연 항의",
+    "가격인상 통보",
+    "요금납부 독촉",
+    "여행상품 소개\n외국어(영어) 영역"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 85
+  },
+  {
+   "qNum": 31,
+   "kind": "box_choice",
+   "stem": "31. (A), (B), (C)의 네모 안에서 문맥에 맞는 어휘를 골라 짝지은 것으로 가장 적절한 것은?",
+   "choices": [
+    "distinct\n‥‥\nreserve\n‥‥\nfigure",
+    "distinct\n‥‥\nobserve\n‥‥\nfade",
+    "extinct\n‥‥\nobserve \n‥‥\nfade",
+    "extinct\n‥‥\nreserve \n‥‥\nfade",
+    "extinct\n‥‥\nobserve \n‥‥\nfigure"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 755
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. 글의 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "Most retail businesses have Web sites \nwhere prospective customers browse among the company’s \nmerchandise, finding pictures and prices of the products \navailable.",
+    "To order something on the Web, a customer \nfills in an order form with his name, address, credit card \ninformation, and a list of the products to be purchased.",
+    "The customer’s account is charged, and the merchandise \nis delivered to his door.",
+    "Using the Web, one can look into \nthe library.",
+    "Many companies without retail stores have set \nup shop on the Web, and the number of such companies is \ngrowing rapidly."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 675
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. 글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 적절한 곳은?",
+   "choices": [
+    ") Last year, the number of international \ntravellers topped 803 million and the numbers continue to \nrise. (",
+    ") Even terrorist attacks in Turkey and the Middle \nEast and the Indian Ocean tsunami caused rates to fall only \nbriefly. (",
+    ") Fear of natural or man-made dangers does not \nseem to reduce the desire to travel. (",
+    ") Softer borders \nbetween countries in the EU have boosted crossings by car, \nbus, and train. (",
+    ") One airline company recently offered \nround-trip tickets from London to Brest, in France, for less \nthan two dollars."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 717
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A)와 (B)에 들어갈 말을 바르게 짝지은 것은?",
+   "choices": [
+    "like\n‥‥\n love",
+    "like\n‥‥\n works",
+    "enjoy\n‥‥\n diseases",
+    "dislike\n‥‥\n stress",
+    "dislike\n‥‥\n wealth"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 921
+  },
+  {
+   "qNum": 35,
+   "kind": "vocab_underline",
+   "stem": "35. 다음 그림을 설명한 글에서, 밑줄 친 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "left leg",
+    "②": "horizontal to the ground",
+    "③": "bent at a right angle",
+    "④": "above the knee",
+    "⑤": "straightened right elbow and right"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 582
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. Crying is a way for the baby to get what it wants and, as adults, this behavior is still continued by some women. Women’s tear hormones are more active than",
+   "choices": [
+    "Crying in Public",
+    "Emotional Responses",
+    "What the Sign of Trust Is",
+    "Why Women Cry More Than Men",
+    "When We Need Protective Parents"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 725
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. Benjamin Franklin did many things during his long life. But not many people know he was also a swimmer. He swam in the ocean near Boston, Massachusetts. The",
+   "choices": [
+    "The Invention of Kites",
+    "The Weather and Sports",
+    "The Origin of Scuba Diving",
+    "A Wetsuit for All Purposes",
+    "A Swimmer and Sports Inventor"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 840
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. Stephanie의 직업으로 가장 적절한 것은?",
+   "choices": [
+    "배우",
+    "화가",
+    "분장사",
+    "마술사",
+    "만화가"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 696
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. 학교를 선택할 때에 고려할 사항으로 언급되지 않은 것은?",
+   "choices": [
+    "합격 가능성",
+    "학교 시설",
+    "학교 위치",
+    "프로그램 평판",
+    "전공 개설 여부"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 560
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. Peter에 대한 설명 중, 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "소설가의 아들이었다.",
+    "섬에서 여름을 보내며 자랐다.",
+    "Harvard에서 학위를 받았다.",
+    "Jared Coffin House에 취직했다.",
+    "바다에 대한 사랑이 있었다.\n[41~42] 다음 글의 주제로 가장 적절한 것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 835
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. People are interacting on the international stage for both work and business purposes and it is often the case that intercultural misunderstandings lead to ",
+   "choices": [
+    "the purpose of education",
+    "the characteristics of culture",
+    "the process of mutual agreement",
+    "the importance of traditional culture",
+    "the necessity of intercultural awareness\n외국어(영어) 영역"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 762
+  },
+  {
+   "qNum": 42,
+   "kind": "mc",
+   "stem": "42. Clearly, the concept of health has changed in recent years. Young people no longer view health as an absence of illness, that is not being sick, but rather ",
+   "choices": [
+    "내적 아름다움의 가치",
+    "현대인의 식생활 변화",
+    "운동에 대한 현대인의 생각",
+    "젊은이의 건강에 대한 인식 변화",
+    "건강한 삶을 위한 운동의 필요성"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 604
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 글의 내용이 시사하는 바로 가장 적절한 것은?",
+   "choices": [
+    "Old habits die hard.",
+    "Barking dogs seldom bite.",
+    "Necessity is the mother of invention.",
+    "You can’t teach an old dog new tricks.",
+    "If at first you don’t succeed, try, try again."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 737
+  },
+  {
+   "qNum": 44,
+   "kind": "mc",
+   "stem": "44. 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "필기를 충실히 하자.",
+    "충분한 휴식을 취하자.",
+    "시험에서 좋은 결과를 얻자.",
+    "학습시간을 효율적으로 활용하자.",
+    "독서에 더 많은 시간을 할애하자."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 675
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 주어진 글 다음에 이어질 글의 순서로 가장 적절한 것은?",
+   "choices": [
+    "(A) - (B) - (C)",
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 637
+  },
+  {
+   "qNum": 46,
+   "kind": "mc",
+   "stem": "46. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것끼리 짝지은 것은?",
+   "choices": [
+    "at best\n‥‥\n  in contrast",
+    "in fact \n‥‥\n  in brief",
+    "in fact\n‥‥\n  in contrast",
+    "for example\n‥‥\n  in brief",
+    "for example \n‥‥\n  in addition\n외국어(영어) 영역\n[47~48] 다음 글을 읽고 물음에 답하시오.\n  Michael is a first-year student at a high school. During \nthe first few weeks of class he is asked to participate in a \nvariety of activities, each of ⓐwhich takes away from his \nstudy time. When given the choice between going to the \nmovies and reading a chapter of Social Studies, Michael \nalmost always picks the movies. He tells ⓑhimself “I’ll catch \nup later.” He doesn’t realize that each time he makes such \na choice, he will suffer from the consequences in due time. \nAs the term continues, the consequences begin to appear. \nHe completes a Philosophy paper an hour before class, but \ncan’t get it ⓒprinted in time. The consequences become \nmore and more serious. As the term comes to a close, \nMichael is rushing to start research papers, to complete \nassigned readings, and to prepare for final exams. He has \ntrouble sleeping. He feels overwhelmed by the amount of \nwork he needs to complete. Tension causes him ⓓeating \npoorly. He blanks out on his Chemistry final. Michael’s \ngrades for the term are lower than he had expected when \nhe started the term, and they are much lower than his \nmiddle school grades. A similar chain of events occurs the \nnext term. Thinking he can’t handle high school life, Michael \nbecomes ⓔdepressed and considers leaving school."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2102
+  },
+  {
+   "qNum": 47,
+   "kind": "grammar_underline",
+   "stem": "47. 위 글에서 밑줄 친 부분의 어법상 쓰임이 바르지 않은 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 63
+  },
+  {
+   "qNum": 48,
+   "kind": "mc",
+   "stem": "48. 위 글의 내용을 아래와 같이 구조화할 때, 빈칸 (A)와 (B)에 들어갈 말을 바르게 짝지은 것은?",
+   "choices": [
+    "Wrong Choice\n‥‥\nViolence",
+    "Putting Things Off\n‥‥\nViolence",
+    "Putting Things Off\n‥‥\nDepression",
+    "Lack of Attention\n‥‥\nTension",
+    "Lack of Attention\n‥‥\nDepression\n[49~50] 다음 글을 읽고 물음에 답하시오.\n  Natasha spent weeks working on an oil painting. She \napplied layers of color, then waited for the paint to dry \nbefore adding more layers of color. Under her brush, a \npeaceful woodland scene slowly grew. Finally she put the \nlast touches of paint on the canvas and set down her \nbrush.\n  While Natasha put the finishing touches on her painting, \nher brother Andrew sat in front of a computer screen. \nUsing his computer’s painting tools, he chose line widths \nand brush strokes. He selected colors and shades. With \nmovements and clicks of Andrew’s mouse, a stormy ocean \nscene quickly grew. With a tap of his finger, Andrew sent \nthe image to his printer.\n  “What do you think, Mom?” Natasha proudly presented \nher painting to her mother.\n  “How about my artwork, Mom?” Andrew held up the \ncolor printout of his creation.\n  “My painting took weeks!” said Natasha. “His took just a \ncouple of hours. You can’t call that art!”\n  “I think you are both terrific artists,” their mother said \ndiplomatically. “It doesn’t matter how long it took or what \ntools you used. You’ve both expressed your emotions and \nyour ideas in your work, and that’s what makes it art.”"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1501
+  },
+  {
+   "qNum": 49,
+   "kind": "mc",
+   "stem": "49. 위 글에서 Natasha와 Andrew 남매의 어머니를 가장 잘 묘사한 말은?",
+   "choices": [
+    "wise",
+    "careless",
+    "impatient",
+    "ambitious",
+    "hot-tempered"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 106
+  },
+  {
+   "qNum": 50,
+   "kind": "mc",
+   "stem": "50. 위 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "경험이 훌륭한 작품의 바탕이 된다.",
+    "모방도 예술의 중요한 요소가 될 수 있다.",
+    "훌륭한 작품은 항상 시대성을 반영하고 있다.",
+    "작품을 완성하는 데는 꾸준한 노력이 필요하다.",
+    "작품에는 자신의 감정과 생각을 표현하는 것이 중요하다.\n ※ 확인사항\n ○ 문제지와 답안지의 해당란을 정확히 기입(표기)\n    했는지 확인하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 212
+  }
+ ],
+ "sourcePdf": "ebsi_go1_20061121_paper_20061121_eng_mun.pdf"
+}

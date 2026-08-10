@@ -1,0 +1,818 @@
+{
+ "examId": "2005_SN_3000969",
+ "source": "98f9989c18b62594b444ca1dbf7fcb2a.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 대화를듣고, 여자가가장좋아하는연을고르시오. [1점] ① ② ③ ④ ⑤",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "point": 1,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 42
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를듣고, 여자의심정으로가장적절한것을고르시오. ①pleased ②sad ③indifferent ④frustrated ⑤angry",
+   "choices": [
+    "pleased",
+    "sad",
+    "indifferent",
+    "frustrated",
+    "angry"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 76
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을듣고, 여자가설명하는대상으로가장적절한것을 고르시오. ①도장 ②바둑돌 ③동전 ④젓가락 ⑤주사위",
+   "choices": [
+    "도장",
+    "바둑돌",
+    "동전",
+    "젓가락",
+    "주사위"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 58
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를듣고, 여자가전화를걸어확인한사항이아닌것을 고르시오. ①전등끄기 ②물고기먹이주기 ③수도잠그기 ④화초물주기 ⑤가스밸브잠그기",
+   "choices": [
+    "전등끄기",
+    "물고기먹이주기",
+    "수도잠그기",
+    "화초물주기",
+    "가스밸브잠그기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 73
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를듣고, 두사람이이번주말에하기로한일을고르시오. ①나무심기 ②양로원방문하기 ③집수리하기 ④소방서일손돕기 ⑤강변청소하기",
+   "choices": [
+    "나무심기",
+    "양로원방문하기",
+    "집수리하기",
+    "소방서일손돕기",
+    "강변청소하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 70
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 다음을듣고, 남자의조언으로가장적절한것을고르시오. ①전국일주여행을하라. ②농촌봉사활동에참여하라. ③학교공부에매진하라. ④건강을위해운동하라. ⑤가족과함께친지를방문하라.",
+   "choices": [
+    "전국일주여행을하라.",
+    "농촌봉사활동에참여하라.",
+    "학교공부에매진하라.",
+    "건강을위해운동하라.",
+    "가족과함께친지를방문하라."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 95
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를듣고, 남자가받을거스름돈이얼마인지고르시오. ①$1.00 ②$1.50 ③$2.00 ④$2.50 ⑤$3.00",
+   "choices": [
+    "$1.00",
+    "$1.50",
+    "$2.00",
+    "$2.50",
+    "$3.00"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 65
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 다음을듣고, 두사람의역할을짝지은것으로가장적절한 것을고르시오. BILL J OANNE ①researcher -- -- - singer ②entertainer -- -- - researcher ③singer -- -- - master of ceremonies ④fund-raiser -",
+   "choices": [
+    "researcher\n-- -- -\nsinger",
+    "entertainer\n-- -- -\nresearcher",
+    "singer\n-- -- -\nmaster of ceremonies",
+    "fund-raiser\n-- -- -\nentertainer",
+    "master of ceremonies\n-- -- -\nfund-raiser"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 221
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 대화를듣고, 두사람이현위치에서산정상에도달하는데 예상되는시간과거리가바르게짝지어진것을고르시오. [3점] 시간 거리 ①about 1 hour - -- -- about 500 meters ②about 1 hour - -- -- about 1,000 meters ③about 2 hours ",
+   "choices": [
+    "about 1 hour\n- -- --\nabout\n500 meters",
+    "about 1 hour\n- -- --\nabout 1,000 meters",
+    "about 2 hours\n- -- --\nabout 1,000 meters",
+    "about 2 hours\n- -- --\nabout 1,500 meters",
+    "about 3 hours\n- -- --\nabout 1,500 meters"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 271
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 대화를듣고, 남자가여자에게부탁하는일로가장적절한 것을고르시오. ①근무날짜바꾸기 ②낚시함께가기 ③숙제도와주기 ④운전가르쳐주기 ⑤독서클럽참가하기",
+   "choices": [
+    "근무날짜바꾸기",
+    "낚시함께가기",
+    "숙제도와주기",
+    "운전가르쳐주기",
+    "독서클럽참가하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 82
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 다음여행일정표를보면서대화를듣고, 남자가휴가를 떠날요일을고르시오. ① ② ③ ④ ⑤ SUN MON TUE WED THUR FRI SAT 3 Days Dep. 5 Days Dep. Dep. 7 Days Dep. Dep. * Dep.: Departure 2005학년도대학수학능력시험문제",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    "SUN\nMON\nTUE\nWED THUR\nFRI\nSAT\n3 Days\nDep.\n5 Days\nDep.\nDep.\n7 Days\nDep.\nDep.\n* Dep.: Departure\n2005학년도대학수학능력시험문제지\n외국어(영어) 영역\n제3교시\n홀수형\n성명\n수험번호"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 190
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 대화를듣고, 남자가한말의내용과일치하지않는것을 고르시오. ①처음에는뉴욕만방문하기로했다. ②보스턴에서역사적명소를방문했다. ③뉴욕에서박물관을구경했다. ④보스턴에서연극을관람했다. ⑤보스턴보다뉴욕을선호한다.",
+   "choices": [
+    "처음에는뉴욕만방문하기로했다.",
+    "보스턴에서역사적명소를방문했다.",
+    "뉴욕에서박물관을구경했다.",
+    "보스턴에서연극을관람했다.",
+    "보스턴보다뉴욕을선호한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 115
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 다음그림의상황에가장적절한대화를고르시오. ① ② ③ ④ ⑤",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 36
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를듣고, 여자의마지막말에대한남자의응답으로 가장적절한것을고르시오. Man: ①The restaurant is under construction. ②I can t answer any more questions. ③The class was great! Thanks for the b",
+   "choices": [
+    "The restaurant is under construction.",
+    "I can t answer any more questions.",
+    "The class was great! Thanks for the book.",
+    "I really appreciate your cooperation.",
+    "I haven t seen you for ages."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 234
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 대화를듣고, 남자의마지막말에대한여자의응답으로 가장적절한것을고르시오. Woman: ①Okay, I ll check it out. ②She can t do that. ③You don t have to apologize. ④I m fine, thank you. ⑤I didn t lik",
+   "choices": [
+    "Okay, I ll check it out.",
+    "She can t do that.",
+    "You don t have to apologize.",
+    "I m fine, thank you.",
+    "I didn t like it, either."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 174
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 대화를듣고, 여자의마지막말에대한남자의응답으로 가장적절한것을고르시오. Man: ①Do you have some time?",
+   "choices": [
+    "Do you have some time?",
+    "Let s get together next week.",
+    "This is much easier than I thought!",
+    "You re a very good customer.",
+    "I think you re in trouble."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 197
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 다음을듣고, 젊은이가제과점여주인에게한말로가장 적절한것을고르시오. Young man: Madam, ①your kindness will not be forgotten. ②thank you. Please have a sample. ③would you happen to know the time?",
+   "choices": [
+    "your kindness will not be forgotten.",
+    "thank you. Please have a sample.",
+    "would you happen to know the time?",
+    "thank you for being a good student.",
+    "could you show me how to make bread?\n이제듣기·말하기문제는끝났습니다. 18번부터는문\n제의지시에따라답을하기바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 284
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음글에서I 로의인화된것으로가장적절한것은?",
+   "choices": [
+    "digital camera",
+    "vacuum cleaner",
+    "rechargeable battery",
+    "cassette tape",
+    "computer diskette"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 657
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음글에서밑줄친this의의미로가장적절한것은?",
+   "choices": [
+    "인터뷰에실패한것",
+    "사진을찍는것",
+    "운전면허를갱신하는것",
+    "유명인사를만나는것",
+    "나이보다어려보이는것\n외국어(영어) 영역\n홀수형\n[20∼21] (A), (B), (C) 각네모안에서어법에맞는표현을골라,\n짝지은것을고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 740
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. (A) Situating / Situated at an elevation of 1,350m, the city of Kathmandu, which looks out on the sparkling Himalayas, enjoys a warm climate year-round that",
+   "choices": [
+    "write them down\n-- -\ndisturb\n- --\nspecifically",
+    "write them down\n-- -\nbe disturbed\n- --\nspecifically",
+    "write them down\n-- -\nbe disturbed\n- --\nspecific",
+    "write down them\n-- -\ndisturb\n- --\nspecifically",
+    "write down them\n-- -\nbe disturbed\n- --\nspecific"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1429
+  },
+  {
+   "qNum": 22,
+   "kind": "grammar_underline",
+   "stem": "22. 다음글에서밑줄친부분중, 어법상틀린것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "alike being wrapped in a",
+    "②": "brilliantly in the night sky",
+    "③": "as though you are sailing",
+    "④": "insignificant",
+    "⑤": "with a smile on your"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 532
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. Like all other industries, the rose business must (A) adopt / adapt to changing conditions in the marketplace. In the past, a florist shop was most likely a",
+   "choices": [
+    "adopt\n-- -- -\nsupply\n-- -- -\neconomic",
+    "adopt\n-- -- -\ndemand\n-- -- -\neconomics",
+    "adopt\n-- -- -\nsupply\n-- -- -\neconomics",
+    "adapt\n-- -- -\ndemand\n-- -- -\neconomic",
+    "adapt\n-- -- -\nsupply\n-- -- -\neconomic"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 822
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. I have been asked to (A) assist / resist in creating a committee to improve the Sunshine Charity. We are trying to form a strong committee, and I have been ",
+   "choices": [
+    "assist\n- -- --\nobjective\n-- -- -\nsit",
+    "assist\n- -- --\nobjection\n-- -- -\nsit",
+    "assist\n- -- --\nobjective\n-- -- -\nseat",
+    "resist\n- -- --\nobjection\n-- -- -\nseat",
+    "resist\n- -- --\nobjective\n-- -- -\nseat"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 691
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. 다음글을쓴목적으로가장적절한것은?",
+   "choices": [
+    "to advertise",
+    "to recommend",
+    "to reject",
+    "to warn",
+    "to thank\n외국어(영어) 영역\n홀수형\n[26∼29] 다음글을읽고, 빈칸에들어갈말로가장적절한것\n을고르시오."
+   ],
+   "point": 1,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 609
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Since it manufactured its first car in 1955, Korea has grown to be the sixth largest automobile producer in the world. It is expected to be among the world ",
+   "choices": [
+    "in spite of",
+    "contrary to",
+    "owing to",
+    "regardless of",
+    "in addition to"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 525
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. Mathematics definitely influenced Renaissance art. Renaissance art was different from the art in the Middle Ages in many ways. Prior to the Renaissance, obj",
+   "choices": [
+    "with accuracy",
+    "in a tradition",
+    "without reality",
+    "in abstraction",
+    "with symbols"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 804
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. The number of foreigners interested in the Korean language has increased dramatically over the past few years because of the success of Korean firms oversea",
+   "choices": [
+    "provide some enthusiastic technical support",
+    "open new opportunities for its modern art",
+    "remain one of the most scientific languages",
+    "contribute to the return of its ancient culture",
+    "become popular in the international community"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 920
+  },
+  {
+   "qNum": 29,
+   "kind": "mc",
+   "stem": "29. A long time ago, a dissatisfied horse asked the gods for longer, thinner legs, a neck like a swan, and a saddle that would grow upon him. Right away, the me",
+   "choices": [
+    "admire the beauty of a swan",
+    "be satisfied with what you have",
+    "make all your wishes at one time",
+    "behave as mercifully as the gods",
+    "help the camel s dream come true\n[30∼31] 다음글의주제로가장적절한것을고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 733
+  },
+  {
+   "qNum": 30,
+   "kind": "mc",
+   "stem": "30. Ever since the coming of television, there has been a rumor that the novel is dying, if not already dead. Indeed, print-oriented novelists seem doomed to di",
+   "choices": [
+    "ways of training painters",
+    "simplicity of appreciating paintings",
+    "techniques of removing dirt",
+    "maintaining the original painter s intent",
+    "distinguishing the original from the fake\n외국어(영어) 영역\n홀수형"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1473
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. 다음글의내용과일치하는것은?",
+   "choices": [
+    "14세기이탈리아에등장한시계는매일30분정도빨랐다.",
+    "Galileo와Pascal은정확한시간을알리는시계를완성했다.",
+    "추시계는이탈리아에서처음으로개발되었다.",
+    "Huygens의시계는물리학실험에사용되었다.",
+    "Harrison이개발한시계는항해중에사용할수없었다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 947
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. 다음은어느국가의CO2 배출현황에관한도표이다. 도표의 내용과일치하지않는것은?",
+   "choices": [
+    "CO2\nemissions\nfrom\ncommercial\nand\nresidential\nheating account for 12% of all CO2 emissions.",
+    "Two-thirds of CO2 emissions arise from transportation\nand industry.",
+    "The\npercentage\nof\nCO2\nemissions\nis\ngreater\nfrom\npower utilities than from transportation.",
+    "CO2 emissions from residential heating are equal to\none-fifth of those from power utilities.",
+    "Most CO2 comes from power utilities, industry, and\ntransportation; much less comes from commercial and\nresidential heating."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 518
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. Gonzales에관한설명중, 다음글의내용과일치하지않는 것은?",
+   "choices": [
+    "Los Angeles에서이발사로성공했다.",
+    "독서에대한Marysville 주민들의열망을느꼈다.",
+    "이발관손님들에게독서기회를제공했다.",
+    "이발관을처분하고도서관을열었다.",
+    "2003년에Livingstone 상을수상했다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 816
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 주어진글다음에이어질글의순서로가장적절한것은?",
+   "choices": [
+    "(A) - (B) - (C)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n외국어(영어) 영역\n홀수형\n[36∼37] 다음글의내용을한문장으로요약하고자한다. 빈칸\n(A)와(B)에들어갈말로가장적절한것끼리짝지은것은?"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 981
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. [1점] You may have had this experience. A person calls you on the telephone. Apparently assuming you will recognize her voice, she does not provide any verbal content which would help you identify her. For example, you pick up the phone and say, Hello, and the voice on the other end says, Hi, how are you doing?",
+   "choices": [
+    "memory\n-- -- -\nunderstanding",
+    "emotion\n-- -- -\npersuading",
+    "voice\n-- -- -\nidentifying",
+    "appearance\n-- -- -\nrecognizing",
+    "volume\n-- -- -\navoiding"
+   ],
+   "point": 1,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 865
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. [3점] The adult forgets the troubles of his youth. Comparing the remembered carefree past with his immediate problems, the mature man thinks that troubles be",
+   "choices": [
+    "compared\n- -- --\nignored",
+    "forgotten\n- -- --\nsucceeded",
+    "wished\n- -- --\naccomplished",
+    "repaired\n- -- --\ntaken care of",
+    "remembered\n- -- --\nlooked forward to"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 919
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. 다음글이묘사하는분위기로가장적절한것은?",
+   "choices": [
+    "funny",
+    "scary",
+    "busy",
+    "sad",
+    "romantic\n[39∼40] 다음글의요지로가장적절한것을고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 636
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. How much one can earn is important, of course, but there are other equally important considerations, neglect of which may produce frustration in later years",
+   "choices": [
+    "성공하기위해서는성실한자세가필요하다.",
+    "일의즐거움에서얻는행복이중요하다.",
+    "개인의이익보다전체의이익이우선한다.",
+    "성공하면그에상응하는보상이뒤따른다.",
+    "승진을위해서는철저한자기관리가필요하다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 605
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. Even our most highly educated guesses often go disastrously wrong. Albert Einstein remarked, There is no chance that nuclear energy will ever be obtainable. Why is predicting the future so difficult?",
+   "choices": [
+    "인간은미래를예측할수있는능력을가지고있다.",
+    "현재는미래를예측할수있는기준이다.",
+    "미래를예측할수있는선각자가필요하다.",
+    "현재에대한잘못된진단은큰불행을초래할수있다.",
+    "미래에는정보수집을위한치열한경쟁이예상된다.\n외국어(영어) 영역\n홀수형"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 850
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 글의흐름으로보아, 주어진문장이들어가기에가장적절한곳은?",
+   "choices": [
+    ") But there\nare other diseases that our bodies cannot successfully resist\non their own. (",
+    ") In order to prevent such diseases, it\nis advised that\neveryone over the age of twenty-five\nshould have a regular physical examination. (",
+    ") During\na regular examination a doctor checks weight, vision and\nhearing problems, blood pressure, and so on. (",
+    ") The\ninformation\nfrom\nboth\ncheck-ups\nand\ntests\nprovides\nimportant\ninsight\ninto\nthe\npatient s\noverall\nphysical\ncondition.\n(",
+    ")\nHence,\nthe\ntime\nspent\non\nregular\nexaminations is a sensible investment in good health.\n[42∼43] 다음글의제목으로가장적절한것을고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 843
+  },
+  {
+   "qNum": 42,
+   "kind": "mc",
+   "stem": "42. Moles are dark spots on human skin. They can vary in color from light to dark brown or black. Almost everyone has at least one mole. According to ancient su",
+   "choices": [
+    "Removal of Moles",
+    "What a Mole Tells",
+    "Origin of Fortunetelling",
+    "Moles: The Skin s Enemy",
+    "Character and Superstition"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 665
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. Michelangelo looked at a block of marble and saw a man. Elffers looks at a lemon and sees a pig. Growing up in Holland, he was taught to clear his plate; pl",
+   "choices": [
+    "Fun with Food",
+    "Cooking with Lemons",
+    "Humor in Japanese Food",
+    "Halloween Eating Tips",
+    "Shopping for Health Food"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 808
+  },
+  {
+   "qNum": 44,
+   "kind": "mc",
+   "stem": "44. 다음글에나타난he 의심경으로가장적절한것은?",
+   "choices": [
+    "guilty",
+    "threatened",
+    "alarmed",
+    "envious",
+    "comfortable\n[45∼46] 다음글을읽고, 물음에답하시오.\nThe\nclaim\nthat\nwe\nhave\nrecently\nentered\nthe\ninformation age is misleading. Flooded by (a) cellphones,\nthe Internet, and television, we incorrectly imagine that\nour\nancestors inhabited an\ninnocent world where the\nnews did not travel far beyond (b) the village. It may\nnot be valid to assume that the media make our time\ndistinct from the past, because we know relatively little\nabout how information was shared in the past.\nIn\nfact,\nthe\nOlympics\ncelebrate\nthe\nmemory\nof\n(c) the\nGreek\nsoldier\nwho\nbrought\nthe\nnews\nof\nthe\nAthenian victory over the Persians. Most of us could\ncome up with many other examples — (d) message drums,\nsmoke\nsignals,\nchurch\nbells,\nship\nflags.\nBut\ntheir\nprimitiveness would only confirm our sense that we live\nin a fundamentally\ndifferent world, one of constant,\ninstant access to information.\nAll ages have had a means of sharing information .\nWhat makes our time distinct is not the density of the\ndata we take in. It is the technology that does the\ntransmitting. Thanks to (e) satellites, we can find out\ninstantly about events that occur on the other side of the\nworld. It usually took five weeks for Benjamin Franklin\nin Paris to receive a letter sent from Philadelphia. But\nthe news was still new and surprising to people there."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1848
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 위글의요지로가장적절한것은?",
+   "choices": [
+    "The value of information depends on speed.",
+    "We are entering a new age of information.",
+    "Even old information can benefit all of us.",
+    "Every age is in fact an age of information.",
+    "We are flooded by incorrect information."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 238
+  },
+  {
+   "qNum": 46,
+   "kind": "vocab_letter",
+   "stem": "46. (a)∼(e) 중, 밑줄친a means of sharing information에 해당하지않는것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1345
+  },
+  {
+   "qNum": 47,
+   "kind": "mc",
+   "stem": "47. 위글의요지로가장적절한것은?",
+   "choices": [
+    "오페라가수의성공은연기력에좌우된다.",
+    "오페라는정신을수양하는데많은도움이된다.",
+    "오페라는감상할수록깊은맛을느낄수있다.",
+    "오페라가수는큰시련을겪어야성공한다.",
+    "오페라는여러요소가결합된종합예술이다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 123
+  },
+  {
+   "qNum": 48,
+   "kind": "mc",
+   "stem": "48. 위글의빈칸(A), (B), (C)에들어갈말을짝지은것중 가장적절한것은?",
+   "choices": [
+    "define\n- -- --\nintroduction\n-- -- -\nterrible",
+    "refine\n- -- --\nintroduction\n-- -- -\nimpressive",
+    "define\n- -- --\nsolution\n-- -- -\nimpressive",
+    "refine\n- -- --\nsolution\n-- -- -\nterrible",
+    "define\n- -- --\nsolution\n-- -- -\nterrible\n[49∼50] 다음글을읽고, 물음에답하시오.\n(A)\nThat spring, I was taken to my first big-league game.\nJust as we approached the exit after the game, I caught\nsight of Willie Mays. He was standing near the gate not\nten feet away from me. I rushed to him and said,\nMr.\nMays, could I please have your autograph?\nHe said,\nSure, kid. You got a pencil?\nI didn t have one in my\npocket. The great Willie Mays stood there watching in\nsilence. He just shrugged and said,\nSorry, kid.\nAnd then\nhe walked out of the ballpark into the night. I didn t want\nto cry, but tears started falling down my cheeks, and there\nwas nothing I could do to stop them.\n(B)\nI was eight years old. At that moment in my life,\nnothing was more important to me than baseball. My\nteam was the New York Giants, and I followed the\ndoings of those men in the black-and-orange caps with all\nthe devotion of a true believer. Even now, remembering\nthat team, which no longer exists, I can recite the names\nof nearly every baseball player on the team. But none\nwas greater, and none more perfect than Willie Mays.\n(C)\nAfter that night, I started carrying a pencil with me\nwherever I went. It became a habit of mine never to\nleave the house without making sure I had a pencil in my\npocket. It s not that I had any particular plans for that\npencil, but I didn t want to be unprepared. I had been\ncaught empty-handed once, and I wasn t about to let it\nhappen again. If nothing else, the years have taught me\nthis: If there s a pencil in your pocket, there s a good\nchance that one day you ll feel tempted to start using it."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1836
+  },
+  {
+   "qNum": 49,
+   "kind": "mc",
+   "stem": "49. 위의(A), (B), (C)를이어하나의글로구성할때, 가장 적절한순서는?",
+   "choices": [
+    "(A) - (B) - (C)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 129
+  },
+  {
+   "qNum": 50,
+   "kind": "mc",
+   "stem": "50. 위글에서a pencil이시사하는것으로가장적절한것은?",
+   "choices": [
+    "문학적재능",
+    "학업에대한열망",
+    "건전한정신",
+    "좋은운동기구",
+    "미래에대한준비\n외국어(영어) 영역\n* 확인사항\n답안지의해당란에필요한내용을정확히기입(표기)했는지확인\n하시오.\n홀수형"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 128
+  }
+ ],
+ "sourcePdf": "98f9989c18b62594b444ca1dbf7fcb2a.pdf",
+ "fileName": "2005외국어.pdf"
+}

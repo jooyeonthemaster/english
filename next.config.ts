@@ -39,6 +39,46 @@ const nextConfig: NextConfig = {
         destination: "/director/korean/generate",
         permanent: false,
       },
+      // ── v3 대개편(2026-07-21) 레거시 경로 흡수 — 전부 같은 React #310 우회 ──
+      // 구 튜터 허브 → 학생 관리 (26-07-11 IA 재편의 페이지 redirect 를 config 로 승격.
+      // exact 매칭 — /director/tutor/monitor 등 하위 라우트 무영향)
+      {
+        source: "/director/tutor",
+        destination: "/director/students",
+        permanent: false,
+      },
+      // 구 어법 훈련(grammar-lab) 목록 → 학생 관리 [어법 현황] 뷰 (v3 §D4-1)
+      {
+        source: "/director/grammar-lab",
+        destination: "/director/students/grammar",
+        permanent: false,
+      },
+      // 구 grammar-lab 학생 상세 → 학생 허브 어법 탭 (백링크 호환)
+      {
+        source: "/director/grammar-lab/:studentId",
+        destination: "/director/students/:studentId?tab=grammar",
+        permanent: false,
+      },
+      // 구 Coming Soon 과제 관리 스텁(/director/assignments) — v3 nav 재편으로
+      // 오버레이 엔트리가 삭제돼 무게이트 노출되던 레거시 라우트를 과제 달력으로
+      // 흡수(exact — /director/assignments/[assignmentId] 구 상세는 기능 보존 무접촉).
+      {
+        source: "/director/assignments",
+        destination: "/director/students/assignments",
+        permanent: false,
+      },
+      // 어법 훈련소 다크런칭 게이트 — 플래그 off 면 라우팅 레이어에서 차단
+      // (페이지 내 redirect() 폴백은 React #310 을 밟으므로 config 가 정본)
+      // 판정식은 feature-flags.ts publicBooleanFlag 와 동일하게 대소문자 무시.
+      ...((process.env.NEXT_PUBLIC_ENABLE_GRAMMAR_STUDIO ?? "").toLowerCase() === "true"
+        ? []
+        : [
+            {
+              source: "/director/workbench/grammar-studio",
+              destination: "/director",
+              permanent: false,
+            },
+          ]),
     ];
   },
 

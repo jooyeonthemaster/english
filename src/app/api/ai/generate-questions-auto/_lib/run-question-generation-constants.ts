@@ -434,6 +434,12 @@ export const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "irrelevant-marking-sentence-desync",
   "blank-span-full-sentence",
   "blank-span-clause-carve",
+  // O201 S3i 이식 게이트 — 문장삼킴 비율(결정형 F급, relaxed 에서도 차단).
+  // blank-trailing-dependent 는 선행사 중의성(문장 관계절 정문 케이스)으로 경고
+  // 강등, explanation-quoted-token-missing 은 인용 관행 오탐면(교정문 인용 등)이
+  // 남아 strict 전용 차단(relaxed 에서는 경고 강등 출하 — LLM 검수리가 백스톱).
+  // 리뷰 실측 판정 26-07-20.
+  "blank-span-sentence-swallow",
 ]);
 
 // KO(국어) blocking 코드 전부 등록 — 미등록 error 는 relaxed 폴백에서 warning 으로

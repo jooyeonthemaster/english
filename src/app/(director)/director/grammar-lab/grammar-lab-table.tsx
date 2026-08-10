@@ -22,6 +22,7 @@ import {
   CONCEPT_SKELETON_BY_ID,
   GRAMMAR_UNITS,
 } from "@/lib/grammar-drill/curriculum";
+import { METRIC_LABELS } from "@/lib/wording/director-glossary";
 import { cn, formatRelativeTime } from "@/lib/utils";
 import {
   LessonCell,
@@ -214,8 +215,8 @@ export function GrammarLabTable({
             >
               개념 학습
             </th>
-            <th className="px-4 py-2.5 font-medium">취약 개념</th>
-            <SortableTh label="미완료 배정" k="assignments" sortKey={sortKey} sortDir={sortDir} onSortChange={onSortChange} />
+            <th className="px-4 py-2.5 font-medium">{METRIC_LABELS.WEAK} 개념</th>
+            <SortableTh label={METRIC_LABELS.INCOMPLETE_TASKS} k="assignments" sortKey={sortKey} sortDir={sortDir} onSortChange={onSortChange} />
             <SortableTh label="최근 학습" k="recent" sortKey={sortKey} sortDir={sortDir} onSortChange={onSortChange} />
             <th className="w-9 px-2 py-2.5" />
           </tr>

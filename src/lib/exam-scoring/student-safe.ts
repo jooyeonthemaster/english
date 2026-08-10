@@ -73,7 +73,7 @@ export function stripStudentMetaTags(text: string): string {
 
 // ── 산출 타입 ────────────────────────────────────────────────────────────────
 
-/** SUMMARY_COMPLETE_MC 선지의 빈칸별 값 — 선지 자체가 학생 노출물(정답 표시는 없음) */
+/** 조합 선지(SUMMARY_COMPLETE_MC·BLANK_INFERENCE 다중 빈칸)의 빈칸별 값 — 선지 자체가 학생 노출물(정답 표시는 없음) */
 export interface StudentSafeOptionBlankValue {
   label: string; // "(A)"
   value: string;
@@ -82,7 +82,7 @@ export interface StudentSafeOptionBlankValue {
 export interface StudentSafeOption {
   label: string;
   text: string;
-  /** SUMMARY_COMPLETE_MC 전용 — (A)(B)… 빈칸별 선지 값 */
+  /** SUMMARY_COMPLETE_MC · BLANK_INFERENCE 다중 빈칸 전용 — (A)(B)… 빈칸별 선지 값 */
   blankValues?: StudentSafeOptionBlankValue[];
 }
 

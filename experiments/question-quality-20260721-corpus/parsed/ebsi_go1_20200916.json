@@ -1,0 +1,764 @@
+{
+ "examId": "ebsi_go1_20200916",
+ "source": "ebsi_go1_20200916_paper_eng_mun_F4HUEQQ3.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ① Really?",
+   "choices": [
+    "Really? I should have seen her.",
+    "No way. I’m going to miss you a lot.",
+    "No. I didn’t go to the bookstore that day.",
+    "I’m sorry. I’m not interested in her writing.",
+    "Yes. I can’t believe I’m going to see her in person."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 282
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ① Good idea! I’ll look for some videos online. ② Great! Teach me how to make a video clip. ③ Wow! You’re good ",
+   "choices": [
+    "Good idea! I’ll look for some videos online.",
+    "Great! Teach me how to make a video clip.",
+    "Wow! You’re good at controlling the drone.",
+    "Okay. Let’s go buy a new drone together.",
+    "Right. I should read the instructions."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 281
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을 듣고, 여자가 하는 말의 목적으로 가장 적절한 것을 고르시오. ① 놀이공원의 개장을 홍보하려고 ② 어린이 뮤지컬 배우를 모집하려고 ③ 뮤지컬 시상식 일정을 공지하려고 ④ 어린이 안전사고 예방을 당부하려고 ⑤ 어린이 뮤지컬 특별 공연을 안내하려고",
+   "choices": [
+    "놀이공원의 개장을 홍보하려고",
+    "어린이 뮤지컬 배우를 모집하려고",
+    "뮤지컬 시상식 일정을 공지하려고",
+    "어린이 안전사고 예방을 당부하려고",
+    "어린이 뮤지컬 특별 공연을 안내하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 157
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 두 사람이 하는 말의 주제로 가장 적절한 것을 고르시오. ① 코딩 학습의 이점 ② 코딩 시 주의할 점 ③ 코딩 기술이 필요한 직업 ④ 조기 코딩 교육의 문제점 ⑤ 코딩 초보자를 위한 학습법",
+   "choices": [
+    "코딩 학습의 이점",
+    "코딩 시 주의할 점",
+    "코딩 기술이 필요한 직업",
+    "조기 코딩 교육의 문제점",
+    "코딩 초보자를 위한 학습법"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 130
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 두 사람의 관계를 가장 잘 나타낸 것을 고르시오. ① 출판사 직원 - 번역가 ② 여행 가이드 - 관광객 ③ 도서관 사서 - 학생 ④ 서점 직원 - 고객 ⑤ 잡지 기자 - 배우",
+   "choices": [
+    "출판사 직원 - 번역가",
+    "여행 가이드 - 관광객",
+    "도서관 사서 - 학생",
+    "서점 직원 - 고객",
+    "잡지 기자 - 배우"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 122
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고르시오.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 43
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 여자가 할 일로 가장 적절한 것을 고르시오. ① Tom에게 전화하기 ② 화학 과제 제출하기 ③ 인터뷰 사진 촬영하기 ④ Cindy와 발표 준비하기 ⑤ 인터뷰 질문지 작성하기",
+   "choices": [
+    "Tom에게 전화하기",
+    "화학 과제 제출하기",
+    "인터뷰 사진 촬영하기",
+    "Cindy와 발표 준비하기",
+    "인터뷰 질문지 작성하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 118
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, 남자가 Winter Sports Camp에 참가할 수 없는 이유를 고르시오. ① 다른 캠프 일정과 겹쳐서 ② 발목 통증이 낫지 않아서 ③ 가족 여행이 예정되어 있어서 ④ 과학 보고서를 제출하지 못해서 ⑤ 전국 과학 대회 참가를 준비해야 해서",
+   "choices": [
+    "다른 캠프 일정과 겹쳐서",
+    "발목 통증이 낫지 않아서",
+    "가족 여행이 예정되어 있어서",
+    "과학 보고서를 제출하지 못해서",
+    "전국 과학 대회 참가를 준비해야 해서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 158
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 대화를 듣고, 여자가 지불할 금액을 고르시오. [3점] ① $40 ② $45 ③ $50 ④ $56 ⑤ $63",
+   "choices": [
+    "$40",
+    "$45",
+    "$50",
+    "$56",
+    "$63"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 81
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 대화를 듣고, MindUp Program에 관해 언급되지 않은 것을 고르시오. ① 목적 ② 특별 강연 ③ 개최 장소 ④ 시작 시간 ⑤ 입장료",
+   "choices": [
+    "목적",
+    "특별 강연",
+    "개최 장소",
+    "시작 시간",
+    "입장료"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 93
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. Plata Tea Festival에 관한 다음 내용을 듣고, 일치하지 않는 것을 고르시오. ① 시청에서 개최되는 행사이다. ② 20개가 넘는 차 회사가 참여할 것이다. ③ 전문가로부터 차 예절을 배울 수 있다. ④ 5세 미만 어린이의 입장료는 무료이다. ⑤ 예약을 해야만 참가할 ",
+   "choices": [
+    "시청에서 개최되는 행사이다.",
+    "20개가 넘는 차 회사가 참여할 것이다.",
+    "전문가로부터 차 예절을 배울 수 있다.",
+    "5세 미만 어린이의 입장료는 무료이다.",
+    "예약을 해야만 참가할 수 있다. \n2020학년도 9월 고1 전국연합학력평가 문제지\n제3 교시\n고1"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 214
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 다음 표를 보면서 대화를 듣고, 여자가 구입할 휴대용 선풍기를 고르시오. Handheld Fans Model Price Battery Run Time Fan Speed Level Foldable ① A $20 6 hours × ② B $23 9 hours × ③ C $25 9 h",
+   "choices": [
+    "A\n$20\n6 hours\n×",
+    "B\n$23\n9 hours\n×",
+    "C\n$25\n9 hours\n○",
+    "D\n$28\n12 hours\n○",
+    "E\n$33\n12 hours\n○"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 208
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. [3점] Man: ① Your sister had difficulty booking them. ② I’m sure the construction will be done soon. ③ The com",
+   "choices": [
+    "Your sister had difficulty booking them.",
+    "I’m sure the construction will be done soon.",
+    "The community center will be available tomorrow.",
+    "I hope I can reserve a court to continue practicing.",
+    "I don’t think they’ll allow us to practice in the gym."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 378
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. [3점] Woman: ① Sure. Write as many activities as possible. ② Of course. The more specific, the better. ③ Thank",
+   "choices": [
+    "Sure. Write as many activities as possible.",
+    "Of course. The more specific, the better.",
+    "Thanks. But I’ll do it my way this time.",
+    "Great. You’ve finally made it to college.",
+    "That’s right. First come, first served."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 344
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Cathy가 Brian에게 할 말로 가장 적절한 것을 고르시오. Cathy: ① Let me show you how to play better. ② You should practice more after school. ③ Will you come to the concert with me?",
+   "choices": [
+    "Let me show you how to play better.",
+    "You should practice more after school.",
+    "Will you come to the concert with me?",
+    "You need to follow the doctor’s instructions.",
+    "Why don’t you try yoga for your back pain?\n [16~17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 363
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 여자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "benefits of using LEDs",
+    "how the LED was invented",
+    "misunderstandings about LEDs",
+    "competition in the LED market",
+    "ways to advance LED technology"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 187
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 물건이 아닌 것은?",
+   "choices": [
+    "lamps",
+    "clocks",
+    "a television",
+    "traffic lights",
+    "a computer keyboard\n  이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시에 따라 \n답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 146
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "고장 난 악기의 수리를 의뢰하려고",
+    "학부모 공개 수업 참석을 권장하려고",
+    "음악 수업을 위한 악기 기부를 요청하려고",
+    "추가로 개설된 음악 수업 신청을 독려하려고",
+    "지역 주민을 위한 자선 음악 행사를 홍보하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 819
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 드러난 Salva의 심경 변화로 가장 적절한 것은?",
+   "choices": [
+    "nervous  → relieved",
+    "indifferent → excited",
+    "worried  → disappointed",
+    "satisfied  → frustrated",
+    "confident → embarrassed"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 842
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "매사에 최선을 다하는 태도를 가져야 한다.",
+    "목표는 자신의 생각보다 높게 설정해야 한다.",
+    "변화하는 상황에 따라 목표를 수정해야 한다.",
+    "과거의 실패를 되돌아보는 습관을 길러야 한다.",
+    "목표 달성을 위해 계획을 구체적으로 세워야 한다.\n고1"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 898
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 밑줄 친 have that same scenario가 다음 글에서 의미하는 바로 가장 적절한 것은?",
+   "choices": [
+    "have frequent trouble updating programs",
+    "cannot afford new technology due to costs",
+    "spend a lot of money repairing their cell phones",
+    "are driven to change their still usable cell phones",
+    "are disappointed with newly launched phone models"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1139
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "문화 다양성에 대한 체계적 연구가 필요하다.",
+    "개인의 문화적 경험이 학습에 영향을 끼친다.",
+    "인간의 뇌 구조는 학습을 통해 복잡하게 진화했다.",
+    "원만한 대인관계 형성은 건강한 성장의 토대가 된다.",
+    "학습 발달 단계에 적합한 자극을 제공하는 것이 좋다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 980
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "necessity of trying out creative ideas",
+    "roles of play in children’s development",
+    "contrasts between human and animal play",
+    "effects of children’s physical abilities on play",
+    "children’s needs at various developmental stages"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1068
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "What Makes Robots Smarter?",
+    "Is AI Really a Threat to Your Job?",
+    "Watch Out! AI Can Read Your Mind",
+    "Future Jobs: Less Work, More Gains",
+    "Ongoing Challenges for AI Development\n고1"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 991
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. 다음 도표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "The global final energy \nconsumption for indoor cooling was over three times larger in \n2016 than in 1990.",
+    "It was the United States that had the \nlargest final energy consumption, which amounted to 616 TWh.",
+    "The combined amount of the final energy consumption of the \nEuropean Union, the Middle East, and Japan was less than the \namount of China’s final energy consumption.",
+    "The difference in \namount between India’s and South Korea’s final energy \nconsumption was more than 60 TWh.",
+    "Indonesia’s final energy \nconsumption was the smallest among the countries/regions \nabove, totaling 25 TWh."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 721
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Jessie Redmon Fauset에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "Cornell University를 졸업한 최초의 흑인 여성이었다.",
+    "Washington, D.C.의 공립학교에서 프랑스어를 가르쳤다.",
+    "편집자보다는 소설가로서 더 유명하다.",
+    "흑인 소녀의 이야기를 다룬 소설을 썼다.",
+    "Philadelphia에서 심장병으로 사망했다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 951
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. Greenville Community Cleanup Day에 관한 다음 안내문의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "매년 열리는 청소 행사이다.",
+    "참가자들은 청소를 하기 위해 버스를 타고 이동할 것이다.",
+    "10세 미만의 어린이는 성인과 동행해야 한다.",
+    "안전 조끼와 장갑은 제공되지 않을 것이다.",
+    "모든 참가자들은 티셔츠와 간식을 무료로 받을 것이다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 916
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. Springfield High School Book Fair에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "행사 기간 동안 매일 4시간씩 진행된다.",
+    "학교 강당에서 개최된다.",
+    "책 표지 디자인 대회 참가자 전원에게 상품권이 증정될 것이다.",
+    "폐막식에서 올해의 베스트셀러 작가를 만날 기회가 제공된다.",
+    "현장에서 자원봉사 등록이 가능하다.\n고1"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 782
+  },
+  {
+   "qNum": 29,
+   "kind": "grammar_underline",
+   "stem": "29. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "how visual input can override",
+    "②": "difficult to correctly identify fruitflavoured",
+    "③": "is the experience of wine",
+    "④": "gave white wine coloured with",
+    "⑤": "that the white wine Chardonnay"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 843
+  },
+  {
+   "qNum": 30,
+   "kind": "box_choice",
+   "stem": "30. (A), (B), (C)의 각 네모 안에서 문맥에 맞는 낱말로 가장 적절한 것은?",
+   "choices": [
+    "creating\n……\nharmony\n……\nprevent",
+    "creating\n……\ntension\n……\ngenerate",
+    "creating\n……\ntension\n……\nprevent",
+    "forgiving\n……\ntension\n……\nprevent",
+    "forgiving\n……\nharmony\n……\ngenerate\n[31~34] 다음 빈칸에 들어갈 말로 가장 적절한 것을 고르시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1149
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. As the tenth anniversary of the terrorist attacks of September 11, 2001, approached, 9/11related media stories peaked in the days immediately surrounding th",
+   "choices": [
+    "accuracy",
+    "tone",
+    "amount",
+    "source",
+    "type"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1146
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. Here’s the unpleasant truth: we are all biased. Every human being is affected by unconscious biases that lead us to make incorrect assumptions about other p",
+   "choices": [
+    "necessary survival skill",
+    "origin of imagination",
+    "undesirable mental capacity",
+    "barrier to relationships",
+    "challenge to moral judgment\n고1"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 884
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. In Dutch bicycle culture, it is common to have a passenger on the backseat. So as to follow the rider’s movements, the person on the backseat needs to hold ",
+   "choices": [
+    "warn other people of danger",
+    "stop the rider from speeding",
+    "mirror the rider’s every move",
+    "relieve the rider’s emotional anxiety",
+    "monitor the road conditions carefully"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 813
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. We’re often told that newborns and infants are comforted by rocking because this motion is similar to what they experienced in the womb, and that they must ",
+   "choices": [
+    "acquire a fondness for motion",
+    "want consistent feeding",
+    "dislike severe rocking",
+    "remember the tastes of food",
+    "form a bond with their mothers"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1013
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "Our challenge isn’t that we’re running \nout of energy.",
+    "It’s that we have been focused on the wrong \nsource ― the small, finite one that we’re using up.",
+    "Indeed, all the \ncoal, natural gas, and oil we use today is just solar energy from \nmillions of years ago, a very tiny part of which was preserved deep \nunderground.",
+    "Our efforts to develop technologies that use fossil \nfuels have shown meaningful results.",
+    "Our challenge, and our \nopportunity, is to learn to efficiently and cheaply use the much more \nabundant source that is the new energy striking our planet each day \nfrom the sun. \n[36~37] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 것을 \n고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 902
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. We make decisions based on what we think we know. It wasn’t too long ago that the majority of people believed the world was flat. (A) It wasn’t until that m",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n고1"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 905
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. Mirrors and other smooth, shiny surfaces reflect light. We see reflections from such surfaces because the rays of light form an image on the retina of our e",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n[38~39] 글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 \n적절한 곳을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38~39"
+    ]
+   },
+   "charLen": 966
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. The few times that they do occur, it is the possessor who tries to make someone leave the circle. Reciprocity can be explored in captivity by handing one ch",
+   "choices": [
+    ") The \nowner will be center stage, with a group of others around him \nor her, soon to be followed by newly formed groups around \nthose who obtained a sizable share, until all food has been \ndistributed. (",
+    ") Beggars may complain and cry, but \naggressive conflicts are rare. (",
+    ") She will hit them over their \nhead with her branch or bark at them in a highpitched voice until \nthey leave her alone. (",
+    ") Whatever their rank, possessors \ncontrol the food flow. (",
+    ") Once chimpanzees enter \nreciprocity mode, their social rank no longer matters. [3점]\n* reciprocity: 호혜주의, 상호의 이익"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 847
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. However, we live in a society where gender roles and boundaries are not as strict as in prior generations. Gender research shows a complex relationship betw",
+   "choices": [
+    ") Some research suggests \nthat women from Western cultures tend to be more caring than \nmen. (",
+    ") This tendency may result from socialization \nprocesses in which women are encouraged to care for their \nfamilies and men are encouraged to be successful in competitive \nwork environments. (",
+    ") There is significant variability in \nassertiveness and cooperation among women, as well as among \nmen. (",
+    ") Although conflict resolution experts should be \nable to recognize cultural and gender differences, they should \nalso be aware of withingroup variations and the risks of \nstereotyping. (",
+    ") Culture and gender may affect the way \npeople perceive, interpret, and respond to conflict; however, we \nmust be careful to avoid overgeneralizations and to consider \nindividual differences."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 979
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "culturally\n……\nsimilarity",
+    "culturally\n……\nbalance",
+    "socially\n……\ndifference",
+    "incorrectly\n……\nconnection",
+    "incorrectly\n……\ncontrast \n고1\n[41~42] 다음 글을 읽고, 물음에 답하시오.\nA bedroom temperature of around 65 degrees Fahrenheit \n(18.3°C) is ideal for the sleep of most people, assuming \nstandard bedding and clothing. This (a) surprises many, as it \nsounds just a little too cold for comfort. Of course, that specific \ntemperature will vary depending on the individual in question \nand their gender and age. But like calorie recommendations, \nit’s a good target for the average human being. Most of us \nset bedroom temperatures higher than are ideal for good sleep \nand this likely contributes to (b) lower quantity and quality \nof sleep than you are otherwise capable of getting. Lower than \n55 degrees Fahrenheit can be harmful rather than helpful to \nsleep, unless warm bedding or nightclothes are used. However, \nmost of us fall into the (c) opposite category of setting a \ncontrolled bedroom temperature that is too high: 70 or 72 \ndegrees. Sleep clinicians treating patients who can’t sleep at \nnight will often ask about room temperature, and will advise \npatients to (d) raise their current thermostat setpoint by 3 \nto 5 degrees from that which they currently use. \nAnyone disbelieving of the influence of temperature on sleep \ncan explore some related experiments on this topic. Scientists \nhave, for example, gently warmed the feet or the body of rats \nto encourage blood to rise to the surface of the skin and release \nheat, thereby decreasing core body temperature. The rats fell \nasleep far (e) faster than was otherwise normal.\n* thermostat: 온도 조절 장치"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2769
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Signs of Sleep Problems",
+    "Stay Cool for Better Sleep",
+    "Turn Up the Heat in Your Room",
+    "How to Correct Bad Sleeping Posture",
+    "A Key to Quality Sleep: Clean Bedding"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 189
+  },
+  {
+   "qNum": 42,
+   "kind": "vocab_letter",
+   "stem": "42. 밑줄 친 (a)～(e) 중에서 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {
+    "a": "He asked his older",
+    "b": "He replied that he’d",
+    "c": "the young man kept",
+    "d": "his voice",
+    "e": "the man in the"
+   },
+   "bracketChoices": {},
+   "charLen": 2020
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) - (D) - (C)",
+    "(C) - (B) - (D)",
+    "(C) - (D) - (B)",
+    "(D) - (B) - (C)",
+    "(D) - (C) - (B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 160
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a)∼(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 96
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글에 관한 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "쌍둥이 형제는 아버지의 가게를 물려받았다.",
+    "카운터 위에 놓여진 20달러 지폐가 없어졌다.",
+    "손님은 20년 만에 가게에 다시 방문했다.",
+    "쌍둥이 형제의 가게 중앙에 벽이 세워졌다.",
+    "쌍둥이 형제는 끝까지 화해하지 못했다.\n* 확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)했는지 확인\n하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 206
+  }
+ ],
+ "sourcePdf": "ebsi_go1_20200916_paper_eng_mun_F4HUEQQ3.pdf"
+}

@@ -1,0 +1,245 @@
+[
+  {
+    "corpusId": "ebsi_go1_20230601-q29",
+    "type": "어법",
+    "flag": true,
+    "recon": "grammar_error",
+    "fix": "being → is",
+    "corpusHasPlanted": true,
+    "sim": 1
+  },
+  {
+    "corpusId": "ebsi_go1_20230601-q30",
+    "type": "어휘",
+    "flag": true,
+    "recon": "vocab_error",
+    "fix": "increased → decreased",
+    "corpusHasPlanted": true,
+    "sim": 1
+  },
+  {
+    "corpusId": "ebsi_go1_20240604-q29",
+    "type": "어법",
+    "flag": true,
+    "recon": "grammar_error",
+    "fix": "what → that",
+    "corpusHasPlanted": true,
+    "sim": 1
+  },
+  {
+    "corpusId": "ebsi_go1_20240604-q30",
+    "type": "어휘",
+    "flag": true,
+    "recon": "vocab_error",
+    "fix": "disappears → appears",
+    "corpusHasPlanted": true,
+    "sim": 1
+  },
+  {
+    "corpusId": "ebsi_go2_20251014-q29",
+    "type": "어법",
+    "flag": true,
+    "recon": "grammar_error",
+    "fix": "give → giving",
+    "corpusHasPlanted": true,
+    "sim": 1
+  },
+  {
+    "corpusId": "ebsi_go2_20251014-q30",
+    "type": "어휘",
+    "flag": true,
+    "recon": "vocab_error",
+    "fix": "rejecting → accepting",
+    "corpusHasPlanted": true,
+    "sim": 1
+  },
+  {
+    "corpusId": "ebsi_go1_20250604-q29",
+    "type": "어법",
+    "flag": true,
+    "recon": "grammar_error",
+    "fix": "having → have",
+    "corpusHasPlanted": true,
+    "sim": 1
+  },
+  {
+    "corpusId": "ebsi_go1_20250604-q30",
+    "type": "어휘",
+    "flag": true,
+    "recon": "vocab_error",
+    "fix": "low → high",
+    "corpusHasPlanted": true,
+    "sim": 1
+  },
+  {
+    "corpusId": "2025_06_5086961-q41-42",
+    "type": "장문(41-42)",
+    "flag": true,
+    "recon": "vocab_error",
+    "fix": "coincide → conflict",
+    "corpusHasPlanted": true,
+    "sim": 1
+  },
+  {
+    "corpusId": "ebsi_go1_20250903-q29",
+    "type": "어법",
+    "flag": true,
+    "recon": "grammar_error",
+    "fix": "putting → put",
+    "corpusHasPlanted": true,
+    "sim": 1
+  },
+  {
+    "corpusId": "ebsi_go1_20250903-q30",
+    "type": "어휘",
+    "flag": true,
+    "recon": "vocab_error",
+    "fix": "increased → decreased",
+    "corpusHasPlanted": true,
+    "sim": 1
+  },
+  {
+    "corpusId": "ebsi_go2_20250903-q29",
+    "type": "어법",
+    "flag": true,
+    "recon": "grammar_error",
+    "fix": "depend → depends",
+    "corpusHasPlanted": true,
+    "sim": 1
+  },
+  {
+    "corpusId": "ebsi_go2_20250903-q30",
+    "type": "어휘",
+    "flag": true,
+    "recon": "vocab_error",
+    "fix": "efficient → inefficient",
+    "corpusHasPlanted": true,
+    "sim": 1
+  },
+  {
+    "corpusId": "ebsi_go1_20260324-q29",
+    "type": "어법",
+    "flag": true,
+    "recon": "grammar_error",
+    "fix": "helps → help",
+    "corpusHasPlanted": true,
+    "sim": 1
+  },
+  {
+    "corpusId": "ebsi_go1_20260324-q30",
+    "type": "어휘",
+    "flag": true,
+    "recon": "vocab_error",
+    "fix": "same → opposite",
+    "corpusHasPlanted": true,
+    "sim": 1
+  },
+  {
+    "corpusId": "ebsi_go2_20260324-q29",
+    "type": "어법",
+    "flag": true,
+    "recon": "grammar_error",
+    "fix": "occurring → occurred",
+    "corpusHasPlanted": true,
+    "sim": 1
+  },
+  {
+    "corpusId": "ebsi_go2_20260324-q30",
+    "type": "어휘",
+    "flag": true,
+    "recon": "vocab_error",
+    "fix": "facilitating → hindering",
+    "corpusHasPlanted": true,
+    "sim": 1
+  },
+  {
+    "corpusId": "ebsi_go3_20260324-q30",
+    "type": "어휘",
+    "flag": true,
+    "recon": "vocab_error",
+    "fix": "acknowledges → ignores",
+    "corpusHasPlanted": true,
+    "sim": 1
+  },
+  {
+    "corpusId": "ebsi_go3_20260507-q29",
+    "type": "어법",
+    "flag": true,
+    "recon": "grammar_error",
+    "fix": "chooses → to choose",
+    "corpusHasPlanted": true,
+    "sim": 1
+  },
+  {
+    "corpusId": "ebsi_go2_20260604-q29",
+    "type": "어법",
+    "flag": true,
+    "recon": "grammar_error",
+    "fix": "producing → produced",
+    "corpusHasPlanted": true,
+    "sim": 1
+  },
+  {
+    "corpusId": "ebsi_go2_20260604-q30",
+    "type": "어휘",
+    "flag": true,
+    "recon": "vocab_error",
+    "fix": "more → less",
+    "corpusHasPlanted": true,
+    "sim": 1
+  },
+  {
+    "corpusId": "2026_06_5090182-q30",
+    "type": "어휘",
+    "flag": true,
+    "recon": "vocab_error",
+    "fix": "temporary → lasting",
+    "corpusHasPlanted": true,
+    "sim": 1
+  },
+  {
+    "corpusId": "2026_SN_5093799-q30",
+    "type": "어휘",
+    "flag": true,
+    "recon": "vocab_error",
+    "fix": "abandon → gain",
+    "corpusHasPlanted": true,
+    "sim": 1
+  },
+  {
+    "corpusId": "2026_SN_5093799-q41-42",
+    "type": "장문(41-42)",
+    "flag": true,
+    "recon": "vocab_error",
+    "fix": "unlikely → likely",
+    "corpusHasPlanted": true,
+    "sim": 1
+  },
+  {
+    "corpusId": "2027_06_5095396-q30",
+    "type": "어휘",
+    "flag": true,
+    "recon": "vocab_error",
+    "fix": "thick → thin",
+    "corpusHasPlanted": true,
+    "sim": 1
+  },
+  {
+    "corpusId": "2027_06_5095396-q41-42",
+    "type": "장문(41-42)",
+    "flag": true,
+    "recon": "vocab_error",
+    "fix": "obey → defy",
+    "corpusHasPlanted": true,
+    "sim": 1
+  },
+  {
+    "corpusId": "ebsi_go2_20240328-q36",
+    "type": "글의순서",
+    "flag": false,
+    "recon": "order",
+    "fix": "preserves → eliminates",
+    "corpusHasPlanted": false,
+    "sim": 0.96
+  }
+]

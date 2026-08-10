@@ -22,6 +22,11 @@ export async function generateWithRetry(
     deadlineAt?: number;
     /** strict 구조화 출력을 생략하고 프롬프트 인라인 JSON 모드로 생성 (Wave-3 SW/TSW PREMIUM) */
     forceJsonFallback?: boolean;
+    /** 플랜→모델 매핑 대신 이 모델로 호출 (KO 경로의 레거시 모델 보존용 — 이원 티어 개편에서 KO 는 flash3 통일 범위 밖). */
+    modelId?: string;
+    /** 콜 단위 사고 강도 — S3i 계약(flash3@high). gemini 는 applyReasoningEffortToGemini 와 함께 써야 실린다. */
+    reasoningEffort?: string;
+    applyReasoningEffortToGemini?: boolean;
     researchStage?: QuestionGenerationResearchStage;
   },
 ) {
@@ -29,6 +34,7 @@ export async function generateWithRetry(
     schema,
     prompt,
     generationPlan,
+    modelId: opts?.modelId,
     logPrefix: "AUTO-GEN",
     maxRetries,
     maxTokens,
@@ -36,6 +42,8 @@ export async function generateWithRetry(
     timeoutMs: opts?.timeoutMs,
     deadlineAt: opts?.deadlineAt,
     forceJsonFallback: opts?.forceJsonFallback,
+    reasoningEffort: opts?.reasoningEffort,
+    applyReasoningEffortToGemini: opts?.applyReasoningEffortToGemini,
     researchStage: opts?.researchStage,
   });
   onUsage?.(result);

@@ -106,7 +106,8 @@ function localCanRecover(raw: string): boolean {
   }
 }
 
-const defaultLlmText: KoLlmTextFn = async ({ prompt, label, maxTokens, timeoutMs }) => {
+/** 비스트리밍 기본 호출(국어) — 스트리밍 구현의 폴백으로도 쓴다. */
+export const koDefaultLlmText: KoLlmTextFn = async ({ prompt, label, maxTokens, timeoutMs }) => {
   const res = await generateQuestionText({
     prompt,
     generationPlan: "STANDARD",
@@ -314,7 +315,7 @@ export async function generateKoAnalysisReportResilient(
   const maxRounds = opts.maxRounds ?? 3;
   const perCallTimeoutMs = opts.perCallTimeoutMs ?? 60_000;
   const deadlineAt = opts.deadlineAt ?? startedAt + 240_000;
-  const baseLlm = opts.llmText ?? defaultLlmText;
+  const baseLlm = opts.llmText ?? koDefaultLlmText;
   const usages: KoResilientResult["usages"] = [];
   const llmText: KoLlmTextFn = async (args) => {
     const r = await baseLlm(args);

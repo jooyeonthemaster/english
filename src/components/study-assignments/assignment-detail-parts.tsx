@@ -60,9 +60,9 @@ function taskPill(status: StudyTaskStatus, overdue: boolean) {
 
 export function MetaTile({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <div className="flex min-w-0 flex-col gap-1 rounded-lg border border-slate-200 bg-white px-3 py-2.5">
-      <span className="text-[11px] font-medium text-slate-400">{label}</span>
-      <div className="min-w-0 text-[13px] font-semibold text-slate-800">{children}</div>
+    <div className="flex min-w-0 flex-col gap-1 rounded-lg border border-slate-200 bg-white px-3.5 py-3">
+      <span className="text-[12px] font-medium text-slate-400">{label}</span>
+      <div className="min-w-0 text-[14px] font-semibold text-slate-800">{children}</div>
     </div>
   );
 }
@@ -93,7 +93,7 @@ export function GrammarSpecSummary({ payload }: { payload: unknown }) {
       <p className="mb-3 text-[12px] font-semibold text-slate-500">
         출제 범위
         <span className="ml-1.5 font-normal text-slate-400">
-          — 이 조건에서 학생마다 취약 우선 문항이 자동 편성됩니다
+          — 이 조건에서 학생마다 보충 필요 우선 문항이 자동 편성됩니다
         </span>
       </p>
       <dl className="flex flex-col gap-2.5">

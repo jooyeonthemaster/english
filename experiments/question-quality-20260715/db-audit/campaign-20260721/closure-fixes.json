@@ -1,0 +1,20 @@
+[
+  {
+    "groupId": "G017",
+    "examSig": "2026",
+    "questionType": "vocab",
+    "plantedText": "preserves",
+    "correctedText": "eliminates",
+    "plantedExcerpt": "at every stage selection favors some cells and preserves others",
+    "basis": "dual-convergence"
+  },
+  {
+    "groupId": "G025",
+    "examSig": "2027 6월 모평 30번",
+    "questionType": "vocab",
+    "plantedText": "thick",
+    "correctedText": "thin",
+    "plantedExcerpt": "what is left is the dialogue, known as the book or libretto, and it can be very thick",
+    "basis": "dual-convergence+web"
+  }
+]

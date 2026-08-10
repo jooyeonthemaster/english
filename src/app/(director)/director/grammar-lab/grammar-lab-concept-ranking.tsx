@@ -1,9 +1,10 @@
 "use client";
 
 // ============================================================================
-// 학원 취약 개념 TOP 8 — 개념 축 학원 전체 랭킹(시도 3회 이상 학생의 숙달
-// 평균 낮은순). 행별 '보강 과제'는 해당 개념 20문항 프리셋 + 취약 학생
-// (숙달 60점 미만) 프리셀렉트로 과제 컴포저를 연다 — 컴포저는 소비만.
+// 학원 보충 필요 개념 TOP 8 — 개념 축 학원 전체 랭킹. 시도 3회 이상 학생의
+// 평균 숙달도 60점 미만(METRIC_HELP.WEAK 정의와 동일 컷 — M-7 정직화) 개념만
+// 낮은 순으로 노출한다. 행별 「과제 보내기」는 해당 개념 20문항 프리셋 +
+// 보충 필요 학생(숙달도 60점 미만) 프리셀렉트로 과제 컴포저를 연다.
 //
 // 숙달도(정답률)만으로는 안 보이는 신호를 겹쳐 읽는다: 개념 레슨에서 학생이
 // 스스로 "자신 없음"을 고른 수(getAcademyLessonInsights). 숙달 점수가 멀쩡한데
@@ -23,8 +24,12 @@ import {
   AssignmentComposer,
   type ComposerPreset,
 } from "@/components/study-assignments/assignment-composer";
+import { CTA_LABELS, METRIC_LABELS } from "@/lib/wording/director-glossary";
 import { cn } from "@/lib/utils";
 import { useAcademyLessonInsights } from "./grammar-lab-lesson-insights";
+
+/** 「보충 필요」 컷(M-7 정직화) — METRIC_HELP.WEAK 가 약속하는 60점 미만과 동일 축 */
+const WEAK_MASTERY_CUTOFF = 60;
 
 function masteryBarClass(score: number): string {
   if (score < 50) return "bg-rose-500";
@@ -185,6 +190,13 @@ export function GrammarLabConceptRanking({
   }, [insights]);
 
   const hasLessonData = Boolean(insights && insights.startedLessons > 0);
+
+  // M-7 정직화(택1: 60 미만 컷 채택) — 제목이 「보충 필요」(=숙달도 60점 미만,
+  // METRIC_HELP.WEAK 정의)를 주장하므로 60점 이상 개념은 목록에서 제외한다.
+  // M-1(허브 취약 프리셋) 확정 판정과 동일 축 — 부제 완화안은 제목의 주장과
+  // 내용이 계속 어긋나므로 기각.
+  const weakRanking = ranking.filter((r) => r.avgMastery < WEAK_MASTERY_CUTOFF);
+
   if (ranking.length === 0 && !hasLessonData) return null;
 
   const openAssign = (row: AcademyConceptRankingRow) =>
@@ -200,37 +212,47 @@ export function GrammarLabConceptRanking({
     <>
       <SectionCard
         icon={Target}
-        title="학원 취약 개념 TOP 8"
-        description="시도 3회 이상 학생의 개념 숙달 평균이 낮은 순서입니다. 보강 과제는 숙달 60점 미만 학생을 미리 선택해 엽니다."
+        title={`학원 ${METRIC_LABELS.WEAK} 개념 TOP 8`}
+        description={`시도 3회 이상 학생의 평균 ${METRIC_LABELS.MASTERY}가 ${WEAK_MASTERY_CUTOFF}점 미만인 개념을 낮은 순으로 보여줍니다. ${CTA_LABELS.SEND_TASK}는 ${METRIC_LABELS.MASTERY} ${WEAK_MASTERY_CUTOFF}점 미만 학생을 미리 선택해 엽니다.`}
         bodyClassName="p-0"
       >
         {insights && hasLessonData ? (
           <LessonSignalStrip insights={insights} />
         ) : null}
 
-        {ranking.length === 0 ? (
+        {weakRanking.length === 0 ? (
           <div className="px-4 py-8 text-center">
-            <p className="break-keep text-[13px] text-slate-500">
-              아직 숙달 랭킹을 낼 만한 드릴 기록이 없습니다. 개념 레슨은
-              시작됐으니, 드릴 과제를 배정해 판별 훈련으로 이어 주십시오.
-            </p>
-            <button
-              type="button"
-              onClick={() =>
-                setAssign({
-                  preset: { kind: "GRAMMAR", grammarSpec: { count: 20 } },
-                  studentIds: [],
-                })
-              }
-              className="mt-3 inline-flex h-8 items-center gap-1.5 rounded-md border border-blue-200 bg-blue-50 px-3 text-[12px] font-semibold text-blue-700 transition-colors hover:bg-blue-100"
-            >
-              <NotebookPen className="size-3.5" strokeWidth={1.75} aria-hidden />
-              어법 드릴 과제 만들기
-            </button>
+            {ranking.length > 0 ? (
+              // 드릴 기록은 있으나 60점 미만 개념이 없는 상태 — 정직 안내(컷 결과)
+              <p className="break-keep text-[13px] text-slate-500">
+                평균 {METRIC_LABELS.MASTERY} {WEAK_MASTERY_CUTOFF}점 미만 개념이
+                없습니다. {METRIC_LABELS.WEAK} 개념이 생기면 여기에 나타납니다.
+              </p>
+            ) : (
+              <>
+                <p className="break-keep text-[13px] text-slate-500">
+                  아직 숙달 랭킹을 낼 만한 드릴 기록이 없습니다. 개념 레슨은
+                  시작됐으니, 드릴 과제를 보내 판별 훈련으로 이어 주십시오.
+                </p>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setAssign({
+                      preset: { kind: "GRAMMAR", grammarSpec: { count: 20 } },
+                      studentIds: [],
+                    })
+                  }
+                  className="mt-3 inline-flex h-8 items-center gap-1.5 rounded-md border border-blue-200 bg-blue-50 px-3 text-[12px] font-semibold text-blue-700 transition-colors hover:bg-blue-100"
+                >
+                  <NotebookPen className="size-3.5" strokeWidth={1.75} aria-hidden />
+                  {CTA_LABELS.SEND_GRAMMAR_TASK}
+                </button>
+              </>
+            )}
           </div>
         ) : (
           <ul className="divide-y divide-slate-50">
-            {ranking.map((row, idx) => {
+            {weakRanking.map((row, idx) => {
               const lowConfidence = lessonByConcept.get(row.conceptId) ?? null;
               return (
                 <li
@@ -253,7 +275,7 @@ export function GrammarLabConceptRanking({
                         {row.title}
                       </p>
                       <p className="shrink-0 text-[12px] tabular-nums text-slate-500">
-                        평균 숙달{" "}
+                        평균 {METRIC_LABELS.MASTERY}{" "}
                         <span
                           className={cn(
                             "font-bold",
@@ -277,7 +299,7 @@ export function GrammarLabConceptRanking({
                         />
                       </div>
                       <span className="whitespace-nowrap text-[11px] tabular-nums text-slate-400">
-                        취약 {row.weakStudentIds.length}명 · 학습{" "}
+                        {METRIC_LABELS.WEAK} {row.weakStudentIds.length}명 · 학습{" "}
                         {row.studentCount}명
                       </span>
                       {/* 레슨 신호 — 숙달 점수와 독립. 이해도 응답이 없으면 노출하지 않는다. */}
@@ -301,7 +323,7 @@ export function GrammarLabConceptRanking({
                     onClick={() => openAssign(row)}
                     className="inline-flex h-7 shrink-0 items-center rounded-md border border-blue-200 bg-blue-50 px-2.5 text-[12px] font-semibold text-blue-700 transition-colors hover:bg-blue-100"
                   >
-                    보강 과제
+                    {CTA_LABELS.SEND_TASK}
                   </button>
                 </li>
               );

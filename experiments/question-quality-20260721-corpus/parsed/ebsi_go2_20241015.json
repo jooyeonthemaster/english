@@ -1,0 +1,764 @@
+{
+ "examId": "ebsi_go2_20241015",
+ "source": "ebsi_go2_20241015_paper_eng_1_mun_7198AL2W.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 다음을 듣고, 남자가 하는 말의 목적으로 가장 적절한 것을 고르시오. ①승강기 점검 일정을 공지하려고 ②승강기 대신 계단 이용을 권장하려고 ③교내 질서 유지 봉사자를 모집하려고 ④올바른 계단 이용 수칙을 설명하려고 ⑤승강기 고장 시 대처 방법을 안내하려고",
+   "choices": [
+    "승강기 점검 일정을 공지하려고",
+    "승강기 대신 계단 이용을 권장하려고",
+    "교내 질서 유지 봉사자를 모집하려고",
+    "올바른 계단 이용 수칙을 설명하려고",
+    "승강기 고장 시 대처 방법을 안내하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 146
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 여자의 의견으로 가장 적절한 것을 고르시오. ①칫솔질을 너무 세게 하는 것은 치아를 손상시킬 수 있다. ②칫솔을 사용한 후에는 세워서 보관하는 것이 위생적이다. ③치아를 희고 밝게 관리하려면 식후 바로 양치질을 해야 한다. ④이의 시린 증상을 완화하기 위해 차가운 음",
+   "choices": [
+    "칫솔질을 너무 세게 하는 것은 치아를 손상시킬 수 있다.",
+    "칫솔을 사용한 후에는 세워서 보관하는 것이 위생적이다.",
+    "치아를 희고 밝게 관리하려면 식후 바로 양치질을 해야 한다.",
+    "이의 시린 증상을 완화하기 위해 차가운 음식을 피해야 한다.",
+    "구강 건강을 유지하려면 주기적으로 치과 진료를 받아야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 206
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을 듣고, 여자가 하는 말의 요지로 가장 적절한 것을 고르시오. ①월급의 일정 비율을 정기적으로 투자하는 것이 좋다. ②이익을 얻기 위해 어느 정도의 위험은 감수해야 한다. ③돈을 분산하여 투자하면 투자의 위험을 낮출 수 있다. ④투자 결정 시 타인의 의견에 휩쓸리는 것은 위험",
+   "choices": [
+    "월급의 일정 비율을 정기적으로 투자하는 것이 좋다.",
+    "이익을 얻기 위해 어느 정도의 위험은 감수해야 한다.",
+    "돈을 분산하여 투자하면 투자의 위험을 낮출 수 있다.",
+    "투자 결정 시 타인의 의견에 휩쓸리는 것은 위험하다.",
+    "투자할 기업을 고를 때 성장 가능성을 고려해야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 195
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고르시오. ⑤ ④ ③ ② ①",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 51
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 남자가 할 일로 가장 적절한 것을 고르시오. ①의자 가져오기 ②토론 주제 정하기 ③문자 메시지 보내기 ④참가자 명단 만들기 ⑤마이크 작동 여부 확인하기",
+   "choices": [
+    "의자 가져오기",
+    "토론 주제 정하기",
+    "문자 메시지 보내기",
+    "참가자 명단 만들기",
+    "마이크 작동 여부 확인하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 96
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 여자가 지불할 금액을 고르시오. [3점] ①$65 ②$70 ③$75 ④$85 ⑤$90",
+   "choices": [
+    "$65",
+    "$70",
+    "$75",
+    "$85",
+    "$90"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 59
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 남자가 Noopy 팝업 스토어에 갈 수 없는 이유를 고르시오. ①도서관에 가야 해서 ②점심 약속이 있어서 ③남동생을 돌보아야 해서 ④문학 에세이를 써야 해서 ⑤학교 잡지를 편집해야 해서",
+   "choices": [
+    "도서관에 가야 해서",
+    "점심 약속이 있어서",
+    "남동생을 돌보아야 해서",
+    "문학 에세이를 써야 해서",
+    "학교 잡지를 편집해야 해서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 115
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, Make Your Own Emoji 행사에 관해 언급되지 않은 것을 고르시오. ①날짜 ②장소 ③강사 ④소요 시간 ⑤등록 방법",
+   "choices": [
+    "날짜",
+    "장소",
+    "강사",
+    "소요 시간",
+    "등록 방법"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 82
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 2024 Silent Disco에 관한 다음 내용을 듣고, 일치하지 않는 것을 고르시오. ①시청 광장에서 열릴 것이다. ②방문객들은 무선 헤드셋을 받을 것이다. ③세 시간 동안 진행될 것이다. ④모든 연령대가 참여할 수 있다. ⑤티켓은 온라인으로만 구매할 수 있다.",
+   "choices": [
+    "시청 광장에서 열릴 것이다.",
+    "방문객들은 무선 헤드셋을 받을 것이다.",
+    "세 시간 동안 진행될 것이다.",
+    "모든 연령대가 참여할 수 있다.",
+    "티켓은 온라인으로만 구매할 수 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 153
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 다음 표를 보면서 대화를 듣고, 두 사람이 주문할 키보드 손목 받침대를 고르시오. Keyboard Wrist Rest Model Color Material Free Gift Price ① A Purple Cotton Sticker $10 ② B Blue Memory foam Mo",
+   "choices": [
+    "A\nPurple\nCotton\nSticker\n$10",
+    "B\nBlue\nMemory foam\nMouse pad\n$12",
+    "C\nWhite\nSilicone\nMouse pad\n$17",
+    "D\nBrown\nLeather\nMouse pad\n$22",
+    "E\nSilver\nAluminum\nSticker\n$27"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 270
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ①Absolutely. Vintage clothes are not my thing. ②Sure. I want to check out the store this week. ③I agree. My j",
+   "choices": [
+    "Absolutely. Vintage clothes are not my thing.",
+    "Sure. I want to check out the store this week.",
+    "I agree. My jacket really needs to get cleaned.",
+    "Same here. I prefer shopping online for clothes.",
+    "No, thanks. I’ve never heard of that school before."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 299
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ①That’s a shame. You should’ve checked the weather. ②That’s a nice idea. We should go hiking again soon. ③I t",
+   "choices": [
+    "That’s a shame. You should’ve checked the weather.",
+    "That’s a nice idea. We should go hiking again soon.",
+    "I totally agree. I twisted my ankle on the way up.",
+    "Let me see. It takes one hour to climb to the top.",
+    "Chin up. You cannot be successful all the time.\n2024학년도 10월 고2 전국연합학력평가 문제지\n제 3 교시                                                                                                                                                                1"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 506
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. [3점] Man: ①Wait. The runner at the front is falling behind. ②Good for you. You can always come run with us. ③",
+   "choices": [
+    "Wait. The runner at the front is falling behind.",
+    "Good for you. You can always come run with us.",
+    "Terrible. I don’t like being sweaty under the sun.",
+    "Fantastic. Please count me in for the next meetup.",
+    "Exactly. You should always push beyond your limits."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 318
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. Woman: ①Awesome. Let me see how well you play. ②Okay. Thank you for coming to cheer me up. ③I’m so sorry. I’l",
+   "choices": [
+    "Awesome. Let me see how well you play.",
+    "Okay. Thank you for coming to cheer me up.",
+    "I’m so sorry. I’ll support you wherever I am.",
+    "Never mind. You don’t need to attend the game.",
+    "Apologies. I don’t like watching basketball much."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 290
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Emily가 Mr. Garcia에게 할 말로 가장 적절한 것을 고르시오. [3점] Emily: ①I’d like you to replace my suitcase with a new one. ②Could you give me a refund for the plane ticket?",
+   "choices": [
+    "I’d like you to replace my suitcase with a new one.",
+    "Could you give me a refund for the plane ticket?",
+    "Will you see if my suitcase has been damaged?",
+    "Can I receive money for my broken suitcase?",
+    "Please help me with checking my baggage in.\n[16 ~ 17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 341
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 여자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "reasons why kids these days lack important social skills",
+    "how kids can develop diverse social skills through play",
+    "developmental stages of basic social skills in children",
+    "different social skills found among various cultures",
+    "social skills needed for parents to raise their kids"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 309
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 사회적 기술이 아닌 것은?",
+   "choices": [
+    "language",
+    "self-control",
+    "responsibility",
+    "empathy",
+    "apology\n  이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시에 \n따라 답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 133
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "인턴사원의 추가 채용 계획을 알리려고",
+    "임금 인상에 대해 논의할 일정을 문의하려고",
+    "현재 담당하고 있는 업무의 조정을 건의하려고",
+    "인턴십 프로그램을 위한 추가 예산을 요청하려고",
+    "직원 연수에 할당된 예산의 변경에 이의를 제기하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 892
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 드러난 Katie의 심경 변화로 가장 적절한 것은?",
+   "choices": [
+    "confused →relieved",
+    "sorry →fulfilled",
+    "rewarded →stirred",
+    "indifferent →annoyed",
+    "nervous →exhausted"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1024
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "비판적 사고를 통한 의사 결정 능력이 수학적 맥락에서 함양되어야 한다.",
+    "객관적 사고를 위해 사회 현상을 수학적 관점에서 바라볼 수 있어야 한다.",
+    "수학 수업의 과제는 실생활의 제반 문제를 해결하는 것과 연관되어야 한다.",
+    "의사 결정 시 정량적인 방법에 치중해 정성적인 부분을 간과해서는 안 된다.",
+    "수학적 사고력을 기르기 위해서는 범교과적인 학습 기회가 제공되어야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1204
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 밑줄 친 Popping a pill cannot make you a better person이 다음 글에서 의미하는 바로 가장 적절한 것은?",
+   "choices": [
+    "Impulsive deeds rather than habitual actions can damage reputation.",
+    "Insincere goodwill does not impress others regardless of frequency.",
+    "Material rewards can be a shortcut to make someone a good person.",
+    "Good traits come from established behavior, not from a single action.",
+    "Virtue cannot be acquired by habits as someone’s character is inborn."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1376
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "각기 다른 실험으로부터 도출된 결괏값은 모두 유의미하다.",
+    "정밀한 측정을 위해 가능한 한 많은 이론을 고려하는 것이 좋다.",
+    "검증된 공식들을 적용하기 전에 측량 단위를 정하는 것이 중요하다.",
+    "측정은 이미 정립된 이론들을 토대로 값을 구하는 과정이다.",
+    "관찰자와 물체의 거리가 멀수록 측정 과정이 복잡해진다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1208
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "interplay of multiple emotions that hinder homeostasis",
+    "disruption of pleasure’s beneficial functioning due to pain",
+    "counteraction of pleasure and pain in maintaining stability",
+    "overflow of opposite feelings that induces emotional unrest",
+    "ignorance of necessity of other feelings than pain and pleasure"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1411
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "The More One Needs, the More One Wants",
+    "What You Are Using Represents Who You Are",
+    "Dash to the New: Genuine Necessity vs. Steered Desire",
+    "Why It Pays to Know the Way of Upgrading Digital Devices",
+    "Manipulative Techniques Keeping Us Away From Other Brands"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1295
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. 다음 도표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "The shares of all five categories are \nexpected to increase by 2027 respectively, while not surpassing \n50%.",
+    "Based on the selected categories, consumer electronics \nis anticipated to show the biggest gap in the share of online sales \nbetween 2023 and 2027.",
+    "DIY and furniture showed the same \nshare of online sales with 29% in 2023 but the share of DIY \nonline sales is estimated to exceed that of furniture online sales \nby 2027.",
+    "The share of beauty care online sales was lower than \n20% by 2 percentage points in 2023, but is estimated to be \nhigher than 20% in 2027.",
+    "In 2023, food showed the lowest \nshare of online sales among the categories, but that share is \nprojected to more than double by 2027."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 881
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Helen Suzman에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "유대인 이민자 부모 밑에서 태어났다.",
+    "대학에서 경제사 강사로 일하던 중 인종 관계 연구소에 들어갔다.",
+    "1953년부터 은퇴 전까지 동일한 하나의 정당에서 활동했다.",
+    "남아프리카 공화국의 새 헌법의 작성에 영향을 주었다.",
+    "사망 전까지 인권과 민주주의를 적극적으로 대변했다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1226
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. Bigwave Beach Earthing Challenge에 관한 다음 안내문의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "등록은 웹사이트에서만 가능하다.",
+    "참가자는 QR 코드를 보여 주어야 한다.",
+    "해변을 걷기 전에 맨발 걷기에 대한 강의가 있다.",
+    "걷기 후 집결지에서 손목 밴드와 기념품이 수여된다.",
+    "발을 씻도록 허용된 구역이 지정되어 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 938
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. Fashion Styling Consultation에 관한 다음 안내문의 내용과 일치 하는 것은?",
+   "choices": [
+    "정해진 순서대로 부스를 방문해야 한다.",
+    "모든 상담 부스에 전문 상담가가 있다.",
+    "체형에 맞는 옷을 찾아보는 부스가 있다.",
+    "전 구역에서 사진 촬영이 금지되어 있다.",
+    "참가자 전원에게 특별한 선물을 준다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 841
+  },
+  {
+   "qNum": 29,
+   "kind": "grammar_underline",
+   "stem": "29. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "to associate one place with",
+    "②": "easy as possible for the",
+    "③": "it",
+    "④": "starts to prefer the place",
+    "⑤": "given morphine"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1201
+  },
+  {
+   "qNum": 30,
+   "kind": "vocab_underline",
+   "stem": "30. 다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "defined",
+    "②": "reluctant to breed at other",
+    "③": "shrinks",
+    "④": "least of the sudden breeding",
+    "⑤": "successive broods through a marathon"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1173
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. One factor that may hinder creativity is unawareness of the resources required in each activity in students’ learning. Often students are unable to identify",
+   "choices": [
+    "persistence",
+    "diversity",
+    "distribution",
+    "integration",
+    "preparation"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1107
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. All translators feel some pressure from the community of readers for whom they are doing their work. And all translators arrive at their interpretations in ",
+   "choices": [
+    "every translation is a crowd translation",
+    "translation is born because of uncertainty",
+    "appeal of a translation is in the ear of audience",
+    "all good translations start with blank page",
+    "text and audience imprison translators"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1213
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. Some people argue that there is a single, logically consistent concept known as reading that can be neatly set apart from everything else people do with books. Is reading really that simple?",
+   "choices": [
+    "an active process that encourages flexible thinking",
+    "a loosely related set of behaviors that belong together",
+    "an acquired skill and not something that one is born with",
+    "a collection of activities in which many other opinions interact",
+    "a safe territory to relieve a sense of separation from the world"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1378
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. Weber’s law concerns the perception of difference between two stimuli. It suggests that we might not be able to detect a 1-mm difference when we are looking",
+   "choices": [
+    "if their measurement units are not clearly determined",
+    "as long as both rely on human measurement and judgment",
+    "as the researcher’s observation method has any little variation",
+    "when those samples are larger or stronger levels of the stimuli",
+    "where they belong to thoroughly different categories of stimuli"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1343
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "Traffic jams, overcrowding, and overuse lessen the benefits of \nthe common resource for everyone ― the tragedy of the \ncommons!",
+    "If the new resource cannot be expanded or provided \nwith additional space, it becomes a problem, and you cannot solve \nthe problem on your own, in isolation from your fellow drivers or \nwalkers or competing users.",
+    "The total activity on this new \nresource keeps increasing, and so does individual activity; but if \nthe dynamic of common use and overuse continues too long, both \nbegin to fall after a peak, leading to a crash.",
+    "Likewise, common \nresource such as knowledge and information is infinite one whose \nrelative value decreases as the number of users increases, but \nwill not be totally consumed though overused.",
+    "What makes the \n“tragedy of commons” tragic is the crash dynamic ― the \ndestruction or degeneration of the common resource’s ability to \nregenerate itself.\n[36 ~ 37] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 것을 \n고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1242
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. Theoretically, our brain would have the capacity to store all experiences throughout life, reaching the quality of a DVD. However, this theoretical capacity",
+   "choices": [
+    "(A) ― (C) ― (B)",
+    "(B) ― (A) ― (C)",
+    "(B) ― (C) ― (A)",
+    "(C) ― (A) ― (B)",
+    "(C) ― (B) ― (A)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1242
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. Where scientific research is concerned, explanatory tales are expected to adhere closely to experimental data and to illuminate the regular and predictable ",
+   "choices": [
+    "(A) ― (C) ― (B)",
+    "(B) ― (A) ― (C)",
+    "(B) ― (C) ― (A)",
+    "(C) ― (A) ― (B)",
+    "(C) ― (B) ― (A)\n[38 ~ 39] 글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 \n적절한 곳을 고르시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38 ~ 39"
+    ]
+   },
+   "charLen": 1375
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. But on the other hand, literature has historically been seen as dangerous: it promotes the questioning of authority and social arrangements. We encounter co",
+   "choices": [
+    ") Theorists have maintained that literature encourages \nsolitary reading and reflection as the way to engage with the \nworld and thus counters the social and political activities that \nmight produce social change. (",
+    ") At best it encourages \ndetachment or appreciation of complexity, and at worst passivity \nand acceptance of what is. (",
+    ") Plato banned poets from his \nideal republic because they could only do harm, and novels have \nlong been credited with making people dissatisfied with their \nlives and eager for something new. (",
+    ") By promoting \nidentification across divisions of class, gender, and race, books \nmay promote a fellowship that discourages struggle; but they \nmay also produce a keen sense of injustice that makes \nprogressive struggles possible. (",
+    ") Historically, works of \nliterature are credited with producing change: Uncle Tom’s Cabin, \na best-seller in its day, helped create a revulsion against slavery \nthat made possible the American Civil War. [3점]\n* revulsion: 혐오감"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1221
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. Moreover, since society is not a natural phenomenon and there is no natural force bringing people together, what will bring them together as a society is no",
+   "choices": [
+    ") Hence, the only place where morality and moral liberty \nwill begin to find an application begins in a place where a \nsovereign power, namely the state, emerges. (",
+    ") Hobbes thus \ndescribes the state of nature as a circumstance in which man’s life \nis “solitary, poor, nasty, brutish and short”. (",
+    ") It means when \npeople live without a general power to control them all, they are \nindeed in a state of war. (",
+    ") In other words, Hobbes, who \naccepted that human beings are not social and political beings in \nthe state of nature, believes that without the power human beings \nin the state of nature are “antisocial and rational based on their \nselfishness”. (",
+    ") It is, rather, mutual fear of men’s present and \nfuture that assembles them, since the cause of fear is a common \ndrive among people in the state of nature. \n* brutish: 잔인한"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1181
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "greater …… knowledge",
+    "faded\n…… recognition",
+    "intense …… indifference",
+    "diminished …… experience",
+    "softer\n…… feeling\n[41 ~ 42] 다음 글을 읽고, 물음에 답하시오.\nIn each round of genome copying in our body, there is still \nabout a 70 percent chance that at least one pair of \nchromosomes will have an error. With each round of genome \ncopying, errors (a) accumulate. This is similar to alterations in \nmedieval books. Each time a copy was made by hand, some \nchanges were introduced accidentally; as changes stacked up, \nthe copies may have acquired meanings at (b) variance with \nthe original. Similarly, genomes that have undergone more \ncopying processes will have gathered more mistakes. To make \nthings worse, mutations may damage genes responsible for \nerror checking and repair of genomes, further (c) accelerating \nthe introduction of mutations.\nMost genome mutations do not have any noticeable effects. \nIt is just like changing the i for a y in “kingdom” would not \n(d) guarantee the word’s readability. But sometimes a \nmutation to a human gene results in, for example, an eye \nwhose iris is of two different colors. Similarly, almost \neveryone has birthmarks, which are due to mutations that \noccurred as our body’s cells multiplied to form skin. If \nmutations are changes to the genome of one particular cell, \nhow can a patch of cells in an iris or a whole patch of skin, \nconsisting \nof \nmany \nindividual \ncells, \nbe \naffected \nsimultaneously? The answer lies in the cell lineage, the \ndevelopmental history of a tissue from particular cells \nthrough to their fully differentiated state. If the mutation \noccurred early on in the lineage of the developing iris, then all \ncells in that patch have (e) inherited that change.\n* chromosome: 염색체  ** iris: 홍채"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3084
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "The Later Mutations Are Introduced, the More Radical Changes Occur",
+    "Why It Is Impossible for Our Body to Copy Genomes Perfectly",
+    "Survival of Wrong Cells: The Cause of Irresolvable Diseases",
+    "Our Genes, Surprisingly Incompetent at Self-Correction",
+    "What Happens When Genomic Mutations Pile Up?"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 316
+  },
+  {
+   "qNum": 42,
+   "kind": "vocab_letter",
+   "stem": "42. 밑줄 친 (a)~(e) 중에서 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {
+    "a": "you",
+    "b": "he successfully handed in",
+    "c": "him",
+    "d": "his dad",
+    "e": "I can fix this"
+   },
+   "bracketChoices": {},
+   "charLen": 1798
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) ― (D) ― (C)",
+    "(C) ― (B) ― (D)",
+    "(C) ― (D) ― (B)",
+    "(D) ― (B) ― (C)",
+    "(D) ― (C) ― (B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 140
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a)~(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 69
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글에 관한 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "Max는 평소와 똑같은 방식으로 아침을 시작했다.",
+    "Max는 야구 레슨에 예정대로 참여하겠다고 말했다.",
+    "Max는 학교를 마친 후 걱정하며 집으로 돌아왔다.",
+    "Jeremy는 걱정하며 Max를 따라갔다.",
+    "Jeremy는 문제를 논리적으로 처리해 보라고 말했다.\n※ 확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)했는지 확인\n하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 222
+  }
+ ],
+ "sourcePdf": "ebsi_go2_20241015_paper_eng_1_mun_7198AL2W.pdf"
+}

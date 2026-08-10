@@ -1,0 +1,766 @@
+{
+ "examId": "ebsi_go1_20160310",
+ "source": "ebsi_go1_20160310_paper_eng_mun_HFnwpGR8.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ① Sure. I hope you like it. ② No thanks. I’m already full. ③ Yes. You can tell me how you cooked it. ④ Sorry, ",
+   "choices": [
+    "Sure. I hope you like it.",
+    "No thanks. I’m already full.",
+    "Yes. You can tell me how you cooked it.",
+    "Sorry, but the apple pies are all sold out.",
+    "Yes. I know a good restaurant around here."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 245
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ① I couldn’t finish it in time. ② I knew you would make it. ③ I think I’ll get a good grade. ④ I heard the tes",
+   "choices": [
+    "I couldn’t finish it in time.",
+    "I knew you would make it.",
+    "I think I’ll get a good grade.",
+    "I heard the test was postponed.",
+    "I’m sure you’ll do better next time."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 217
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을 듣고, 여자가 하는 말의 목적으로 가장 적절한 것을 고 르시오. ① 수영장 안전 수칙을 안내하려고 ② 실내 수영장 개장을 홍보하려고 ③ 야외 수영장 임시 폐쇄를 알리려고 ④ 음식물의 수영장 반입 금지를 알리려고 ⑤ 호텔 외부 유리창 청소 일정을 안내하려고",
+   "choices": [
+    "수영장 안전 수칙을 안내하려고",
+    "실내 수영장 개장을 홍보하려고",
+    "야외 수영장 임시 폐쇄를 알리려고",
+    "음식물의 수영장 반입 금지를 알리려고",
+    "호텔 외부 유리창 청소 일정을 안내하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 150
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 남자의 의견으로 가장 적절한 것을 고르시오. ① 대중교통을 많이 이용해야 한다. ② 운전면허 시험 제도를 개선해야 한다. ③ 과속 운전에 대한 단속을 강화해야 한다. ④ 장거리 운전 시 충분한 휴식을 취해야 한다. ⑤ 운전 시 앞차와의 안전거리를 유지해야 한다.",
+   "choices": [
+    "대중교통을 많이 이용해야 한다.",
+    "운전면허 시험 제도를 개선해야 한다.",
+    "과속 운전에 대한 단속을 강화해야 한다.",
+    "장거리 운전 시 충분한 휴식을 취해야 한다.",
+    "운전 시 앞차와의 안전거리를 유지해야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 164
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 두 사람의 관계를 가장 잘 나타낸 것을 고르시오. ① 호텔 직원- 투숙객 ② 매표소 직원- 공원 방문객 ③ 동물 사육사- 관람객 ④ 보험회사 직원- 고객 ⑤ 버스 기사- 관광객",
+   "choices": [
+    "호텔 직원- 투숙객",
+    "매표소 직원- 공원 방문객",
+    "동물 사육사- 관람객",
+    "보험회사 직원- 고객",
+    "버스 기사- 관광객"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 111
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고 르시오. ① ② ③ ④ ⑤",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 52
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 남자가 여자에게 부탁한 일로 가장 적절한 것을 고르시오. ① 여행 계획서 보내 주기 ② 여행 장비 주문하기 ③ 비행기 표 예약하기 ④ 여행 일정 조정하기 ⑤ 여행사 소개하기",
+   "choices": [
+    "여행 계획서 보내 주기",
+    "여행 장비 주문하기",
+    "비행기 표 예약하기",
+    "여행 일정 조정하기",
+    "여행사 소개하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 109
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, 남자가 밤에 잠을 잘 수 없는 이유를 고르시오. ① 자기 전에 음식을 먹어서 ② 할 일이 너무 많아서 ③ 낮잠을 많이 자서 ④ 위층에서 소음이 나서 ⑤ 고민이 많아서",
+   "choices": [
+    "자기 전에 음식을 먹어서",
+    "할 일이 너무 많아서",
+    "낮잠을 많이 자서",
+    "위층에서 소음이 나서",
+    "고민이 많아서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 105
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 대화를 듣고, 여자가 지불할 금액을 고르시오. ① $45 ② $50 ③ $54 ④ $55 ⑤ $59",
+   "choices": [
+    "$45",
+    "$50",
+    "$54",
+    "$55",
+    "$59"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 60
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 대화를 듣고, 구입할 냉장고에 관해 두 사람이 언급하지 않은 것을 고르시오. ① 색상 ② 보증 기간 ③ 용량 ④ 가격 ⑤ 배송료",
+   "choices": [
+    "색상",
+    "보증 기간",
+    "용량",
+    "가격",
+    "배송료"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 77
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. Coffee Expo 2016에 관한 다음 내용을 듣고, 일치하지 않는 것을 고르시오. [3점] ① 일주일간 개최된다. ② 커피 관련 제품이 전시된다. ③ 200개가 넘는 기업이 참여한다. ④ 세계 바리스타 대회도 열린다. ⑤ 13세 이하의 입장료는 10달러이다. ━━━━━━━━",
+   "choices": [
+    "일주일간 개최된다.",
+    "커피 관련 제품이 전시된다.",
+    "200개가 넘는 기업이 참여한다.",
+    "세계 바리스타 대회도 열린다.",
+    "13세 이하의 입장료는 10달러이다.\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 218
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 다음 표를 보면서 대화를 듣고, 여자가 신청할 수영 강좌를 고르시오. Dolphin Swimming Center Lesson Time Days Level ① A 7-8 a.m. Mon, Wed, Fri Beginner ② B 7-8 a.m. Tues, Thurs Intermedi",
+   "choices": [
+    "A\n7-8 a.m.\nMon, Wed, Fri\nBeginner",
+    "B\n7-8 a.m.\nTues, Thurs\nIntermediate",
+    "C\n8-9 a.m.\nMon, Wed, Fri\nBeginner",
+    "D\n8-9 a.m.\nTues, Thurs\nIntermediate",
+    "E\n8-9 a.m.\nMon, Wed, Fri\nIntermediate"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 281
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. [3점] Woman: ① Yes. I recommend a larger one. ② No. I don’t mind how small it is. ③ Yes. I’ve already paid for",
+   "choices": [
+    "Yes. I　recommend a larger one.",
+    "No. I don’t mind how small it is.",
+    "Yes. I’ve already paid for the room.",
+    "No. I think I have to cancel my reservation.",
+    "No. I’m afraid I’ll have to try somewhere else."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 319
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. [3점] Man: ① Don’t worry. It was just a dream. ② That’s right. I like monster movies. ③ Try hard, and you’ll a",
+   "choices": [
+    "Don’t worry. It was just a dream.",
+    "That’s right. I like monster movies.",
+    "Try hard, and you’ll achieve your dream.",
+    "Okay. I’ll wake you up tomorrow morning.",
+    "That’s strange. Nothing happened to me today."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 325
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Jisu가 담임 선생님에게 할 말로 가장 적절한 것을 고르시오. Jisu: ① Could I take the test in the school nurse’s room?",
+   "choices": [
+    "Could I take the test in the school nurse’s room?",
+    "Could you tell me when the test finishes?",
+    "Could you give me some cough medicine?",
+    "Could I hand in my answer sheet now?",
+    "Could you please call a doctor for me?\n[16 ~ 17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 360
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 남자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "why we should use oils for body care",
+    "how scented candles affect feelings",
+    "how smells affect flavors of food",
+    "why people prefer sweet scents",
+    "how to make scented candles"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 207
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 향이 아닌 것은?",
+   "choices": [
+    "lavender",
+    "vanilla",
+    "rosemary",
+    "peppermint",
+    "jasmine\n이제 듣기ㆍ말하기 문제가 끝났습니다. 18번부터는 문제지\n의 지시에 따라 답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 128
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "자연재해의 위험성을 경고하려고",
+    "재난 사고 시 대처 요령을 안내하려고",
+    "재난 피해자를 위한 기부를 요청하려고",
+    "자원봉사 활동의 일정 변경을 공지하려고",
+    "재난 피해자를 도운 것에 대해 감사하려고\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 800
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 드러난 ‘I’의 심경으로 가장 적절한 것은?",
+   "choices": [
+    "frightened",
+    "delighted",
+    "depressed",
+    "jealous",
+    "relieved"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 658
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "글을 쓰기 전에 주변을 정돈해야 한다.",
+    "시각적으로 실감 나게 글을 써야 한다.",
+    "일상생활에서 글의 소재를 찾아야 한다.",
+    "글의 내용과 어울리는 그림을 제시해야 한다.",
+    "마음속에 있는 것을 진솔하게 글에 담아야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 669
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "애완동물에게는 적절한 운동이 필요하다.",
+    "애완동물도 다양한 감정을 느낄 수 있다.",
+    "애완동물의 개별적 특성을 존중해야 한다.",
+    "자신의 상황에 맞는 애완동물을 선택해야 한다.",
+    "훈련을 통해 애완동물의 행동을 교정할 수 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 751
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "necessity of saving energy",
+    "dark sides of hydroelectric dams",
+    "types of hydroelectric power plants",
+    "popularity of renewable power sources",
+    "importance of protecting the environment"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 919
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Be a Role Model to Your Children",
+    "Hunger: The Best Sauce for Children",
+    "Table Manners: Are They Important?",
+    "Good Nutrition: Children’s Brain Power",
+    "Teach Children Food Independence\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1019
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 도표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "China was at the top of the list \nwith a total of 165 billion dollars.",
+    "The United States of \nAmerica (USA), the world’s second largest spender, spent \nmore than twice as much as Russia on international tourism.",
+    "Germany, which spent 20 billion dollars less than the \nUSA, took third place.",
+    "The United Kingdom (UK) spent \n58 billion dollars, which was less than half of the amount \nspent by the USA.",
+    "Of the five spenders, Russia spent the \nsmallest amount of money on international tourism."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 652
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. Green Chef Cooking Contest에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "일요일 오전에 개최된다.",
+    "우승자에게 요리 기구를 준다.",
+    "온라인으로 등록할 수 없다.",
+    "출품할 요리를 미리 만들어 와야 한다.",
+    "무료로 시식과 심사에 참여할 수 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 655
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Family Movie Night에 관한 다음 안내문의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "Bluebird 초등학교 체육관에서 진행된다.",
+    "팝콘을 무료로 제공한다.",
+    "피자와 음료를 판매한다.",
+    "학생은 부모나 보호자의 동행이 필요하다.",
+    "영화 관람자에게 담요를 제공한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 571
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. Kaspar Fürstenau에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "독일의 플루트 연주자이자 작곡가였다.",
+    "고아가 된 후 Anton Romberg의 보살핌을 받았다.",
+    "15세에 군악대에서 연주했다.",
+    "1811년에 Chamber Orchestra of Oldenburg의 일원이 되었다.",
+    "아들과 함께 유럽의 주요 도시에서 공연했다.\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 895
+  },
+  {
+   "qNum": 28,
+   "kind": "grammar_underline",
+   "stem": "28. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "do",
+    "②": "occurs through trial and error",
+    "③": "what you make your mistakes",
+    "④": "to manage your money",
+    "⑤": "is taught at school"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 624
+  },
+  {
+   "qNum": 29,
+   "kind": "box_choice",
+   "stem": "29. (A), (B), (C)의 각 네모 안에서 문맥에 맞는 낱말로 가장 적 절한 것은?",
+   "choices": [
+    "tied\n……\ndisappear\n……\nbothering",
+    "tied\n……\ndisappear\n……\npleasing",
+    "tied\n……\nappear\n……\nbothering",
+    "unrelated\n……\ndisappear\n……\npleasing",
+    "unrelated\n……\nappear\n……\npleasing"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 907
+  },
+  {
+   "qNum": 30,
+   "kind": "mc",
+   "stem": "30. 밑줄 친 부분이 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [
+    "She is pretty tired\n― it’s been a tough day! ― and she wants her bottle. She \nlooks at it as her mother, Sophie, feeds",
+    "her and gets \nmore and more frustrated. Eventually, she turns away from \nher mother’s spoonfuls, arches her back, turns around in her \nhigh chair, and vocalizes as if",
+    "she is about to cry. Sophie \nis clueless about what Angela wants. When Sophie happens \nto look at the table for another reason,",
+    "she notices the \nbottle on it. “That’s what you want,” she says, and gives \nAngela",
+    "her bottle. Success at last!\n* arch: (몸을) 아치 모양으로 구부리다\n[31 ~ 33] 다음 빈칸에 들어갈 말로 가장 적절한 것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 729
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. Recently on a flight to Asia, I met Debbie, who was warmly greeted by all of the flight attendants and was even welcomed aboard the plane by the pilot. Amaz",
+   "choices": [
+    "courageous",
+    "loyal",
+    "complaining",
+    "dangerous",
+    "temporary"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 805
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. Some of the most extensive research on the subject of success was conducted by George and Alec Gallup. They interviewed people acknowledged as successful in",
+   "choices": [
+    "take a risk",
+    "make plans ahead",
+    "get rid of bad habits",
+    "work long, hard hours",
+    "respect others’ opinions \n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 920
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. When you’re eager to get your slice of the pie, why would you be interested in giving a hand to other people so that they can get their piece?",
+   "choices": [
+    "opened a new shop",
+    "helped his neighbor",
+    "joined the big event",
+    "kept his recipe secret",
+    "learned from his failure"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 894
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. 다음 글의 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "However\n……\nThus",
+    "However\n……\nSimilarly",
+    "Therefore\n……\nFor example",
+    "Therefore\n……\nSimilarly",
+    "Moreover\n……\nFor example\n[35 ~ 36] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 \n것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 899
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. Maybe you have watched the sun as it was setting in the sky. Sometimes it looks as though it is on fire, especially when it is shining through the clouds. (",
+   "choices": [
+    "(A) －(C) －(B)",
+    "(B) －(A) －(C)",
+    "(B) －(C) －(A)",
+    "(C) －(A) －(B)",
+    "(C) －(B) －(A)"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 656
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. I did a television show once with Louis Armstrong. All of a sudden, as Louis was playing, a fly landed on his nose. (A) They didn’t want to let their laught",
+   "choices": [
+    "(A) －(C) －(B)",
+    "(B) －(A) －(C)",
+    "(B) －(C) －(A)",
+    "(C) －(A) －(B)",
+    "(C) －(B) －(A)\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n[37 ~ 38] 글의 흐름으로 보아, 주어진 문장이 들어가기에 가\n장 적절한 곳을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 795
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. According to him, however, entertainers who are alive are not included. Most dictionaries list names of famous people. ( ①) The editors must make difficult ",
+   "choices": [
+    ") The \neditors must make difficult decisions about whom to include \nand whom to exclude. (",
+    ") Webster’s New World \nDictionary, for example, includes Audrey Hepburn but leaves \nout Spencer Tracy. (",
+    ") It lists Bing Crosby, not Bob \nHope; Willie Mays, not Micky Mantle. (",
+    ") Executive \neditor Michael Agnes explains that names are chosen based \non their frequency of use and their usefulness to the reader. \n(",
+    ") For that very reason, Elton John and Paul McCartney \naren’t in the dictionary, but both Marilyn Monroe and Elvis \nPresley, who died decades ago, are."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 689
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. But there will be times in your life when there is no one around to stand up and cheer you on. It’s great to have people in your life who believe in you and",
+   "choices": [
+    ") They are truly interested in what \nyou are trying to achieve and support you in all of your \ngoals and efforts. (",
+    ") Each of us needs people in our \nlives who encourage us so that we can feel confident in our \ncapabilities and move forward toward our goals. (",
+    ") When \nthis happens, don’t get depressed. (",
+    ") Instead, become \nyour own cheerleader. (",
+    ") Give yourself a motivational \npep talk because nobody knows your strengths and talents \nbetter than you and no one can motivate you better than \nyou. \n* pep talk: 격려의 말"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 704
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "So, the virtual water of these two pounds of wheat is \n265 gallons.",
+    "Virtual water is also present in dairy \nproducts, soups, beverages, and liquid medicines.",
+    "However, \nit is necessary to drink as much water as possible to stay \nhealthy.",
+    "Every day, humans consume lots of virtual water \nand the content of virtual water varies according to \nproducts.",
+    "For instance, to produce two pounds of meat \nrequires about 5 to 10 times as much water as to produce \ntwo pounds of vegetables.\n* virtual water: 공산품ㆍ농축산물의 제조ㆍ재배에 드는 물"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 729
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A)와 (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "ignore\n……\nshare",
+    "help\n……\nhide",
+    "ignore\n……\ndefend",
+    "understand\n……\nhide",
+    "help\n……\nshare\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n[41 ~ 42] 다음 글을 읽고, 물음에 답하시오.\nFood is one of the most important tools you can use \nas a manager. Having a full stomach makes people feel \nsatisfied and happier. Eating together gives employees \ntime to make connections with each other. Providing an \noccasional snack or paying for a lunch now and then can \nhelp your employees feel appreciated and make the \noffice feel more welcoming. These do not need to be \nelaborate setups. If you have a small budget, you’re not \ngoing to want to buy lunch at a restaurant for your \nentire group. Bringing in some cookies once in a while is \nenough; you can also encourage employees to bring in \nfood themselves.\nThe key to using food effectively is for it not to \nbecome a            event. If everyone knows you bring \ndonuts to the Friday morning meeting, it becomes an \nexpectation and not a surprise. To create goodwill, the \nfood must appear to be unexpected. It is also a good \nidea to praise employees who bring food in without \nbeing asked; this creates an atmosphere of sharing.\n* elaborate: 공들인"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2007
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Offer Food for Better Relationships",
+    "Eat Out but Consider Your Budget",
+    "Eat More Lunch but Less Dinner",
+    "Take a Break Not to Be Tired",
+    "Don’t Eat During Work Hours"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 193
+  },
+  {
+   "qNum": 42,
+   "kind": "mc",
+   "stem": "42. 윗글의 빈칸에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "surprising",
+    "humorous",
+    "comfortable",
+    "random",
+    "planned\n[43 ~ 45] 다음 글을 읽고, 물음에 답하시오. \n(A) \nFamilies don’t grow strong unless parents invest \nprecious time in them. In New Man, Gary Oliver writes \nabout a difficult decision made by professional baseball \nplayer Tim Burke concerning his family. From the time \nTim can first remember, his dream was to be a \nprofessional baseball player. Through years of hard work \n(a) he achieved that goal.\n(B) \nWhen Tim left the stadium for the last time, a \nreporter stopped him. And then (b) he asked why he \nwas retiring. “Baseball is going to do just fine without \nme,” he said to the reporter. “It’s not going to miss a \nbeat. But I’m the only father my children have and I’m \nthe only husband my wife has. And they need me a lot \nmore than baseball does.”\n(C) \nWhile he was a successful pitcher for the Montreal \nExpos, (c) he and his wife wanted to start a family but \ndiscovered that they were unable to have children. After \nmuch thought, they decided to adopt four specialneeds \ninternational children. This led to one of the most \ndifficult decisions of Tim’s life.\n(D) \nHe discovered that his life on the road conflicted with \nhis ability to be a quality husband and dad. Over time, it \nbecame clear that (d) he couldn’t do a good job at both. \nAfter more thought, he made what many considered an \nunbelievable \ndecision: \n(e) he \ndecided \nto \ngive \nup \nprofessional baseball."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1461
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) －(D) －(C)",
+    "(C) －(B) －(D)",
+    "(C) －(D) －(B)",
+    "(D) －(B) －(C)",
+    "(D) －(C) －(B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 130
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a)～(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 75
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글의 Tim Burke에 관한 내용과 일치하지 않는 것은?",
+   "choices": [
+    "열심히 노력하여 프로 야구 선수가 되었다.",
+    "마지막 경기 후에 기자로부터 질문을 받았다.",
+    "Montreal Expos 팀의 투수였다.",
+    "네 명의 아이를 입양하기로 했다.",
+    "가정을 위해 프로 야구를 계속하기로 했다. \n※ 확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)\n했는지 확인하시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 221
+  }
+ ],
+ "sourcePdf": "ebsi_go1_20160310_paper_eng_mun_HFnwpGR8.pdf"
+}

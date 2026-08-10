@@ -220,7 +220,9 @@ export function WholePassageVariantPreviewPanel({
   const blocked = busy || disabled;
   const variantWords = wordCount(variantText);
   return (
-    <div className="overflow-hidden rounded-lg border border-blue-200 bg-blue-50/40 shadow-sm">
+    // shrink-0: flex 컬럼 본문에서 이 패널이 눌려 overflow-hidden 에 액션 버튼이
+    // 잘리는 것을 막는다(형제 패널 Paraphrase/Prepend 과 동일). 길면 본문이 스크롤.
+    <div className="shrink-0 overflow-hidden rounded-lg border border-blue-200 bg-blue-50/40 shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-blue-100 bg-white/70 px-3 py-2">
         <p className="text-[12px] font-bold text-blue-800">
           AI 변형 지문 — <span className="text-blue-600">{label}</span>{" "}
@@ -245,7 +247,7 @@ export function WholePassageVariantPreviewPanel({
             placeholder="변형본 제목"
           />
         </label>
-        <div className="max-h-56 overflow-y-auto whitespace-pre-wrap rounded-md border border-slate-200 bg-white px-3 py-2 text-[13px] leading-relaxed text-slate-700">
+        <div className="max-h-72 overflow-y-auto whitespace-pre-wrap rounded-md border border-slate-200 bg-white px-3 py-2 text-[13px] leading-relaxed text-slate-700">
           {variantText}
         </div>
         {summary ? (

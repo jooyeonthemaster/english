@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import { QUESTION_TYPE_GROUPS } from "@/lib/question-type-ui";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import type { QuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
@@ -109,6 +107,17 @@ export interface QueueItem {
   questions: any[];
   questionIds?: string[];
   error?: string;
+  /**
+   * md-stream 실시간 미리보기 — 빈칸·어법 스트리밍 생성 중 fast temp 카드에서만
+   * 채워지고, 완료(done 교체)와 함께 자연 소멸한다. 렌더는 고정 높이 패널이라
+   * 값이 아무리 자라도 카드 레이아웃을 밀지 않는다(CLS 0).
+   */
+  streamPreview?: {
+    phase: "thinking" | "generating";
+    startedAt: number;
+    outputStartedAt?: number;
+    tail: string;
+  };
   config: {
     typeCounts: Record<string, number>;
     difficulty: string;

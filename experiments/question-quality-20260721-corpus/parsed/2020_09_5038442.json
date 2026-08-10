@@ -1,0 +1,765 @@
+{
+ "examId": "2020_09_5038442",
+ "source": "91c10e0c7df16f84a32cd96beb2120fe.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ①Yes. The field trip was very exciting. ②Really?",
+   "choices": [
+    "Yes. The field trip was very exciting.",
+    "Really? I’ll go there tomorrow then.",
+    "Certainly. We’re very close friends.",
+    "Sorry. I was so busy last week.",
+    "Great! It’s going to be sunny."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 232
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ① Good idea. I’ll fix the fire alarm then. ② Thank you. That would be really helpful. ③ Never mind. I had brea",
+   "choices": [
+    "Good idea. I’ll fix the fire alarm then.",
+    "Thank you. That would be really helpful.",
+    "Never mind. I had breakfast this morning.",
+    "Don’t worry. Let’s start exercising tomorrow.",
+    "I disagree. You can go to the train station by bus."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 284
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을 듣고, 여자가 하는 말의 목적으로 가장 적절한 것을 고르시오. ①졸업식 식순을 알려주려고 ②졸업 작품 전시회를 홍보하려고 ③사진 강좌 수강생을 모집하려고 ④학교 도서관 이용 방법을 안내하려고 ⑤졸업 사진 촬영 장소 변경을 공지하려고",
+   "choices": [
+    "졸업식 식순을 알려주려고",
+    "졸업 작품 전시회를 홍보하려고",
+    "사진 강좌 수강생을 모집하려고",
+    "학교 도서관 이용 방법을 안내하려고",
+    "졸업 사진 촬영 장소 변경을 공지하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 139
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 남자의 의견으로 가장 적절한 것을 고르시오. ①직접 만든 생일 선물이 감동을 준다. ②생일 파티는 간소하게 하는 것이 바람직하다. ③친구에게 주는 생일 선물로는 책이 유용하다. ④받고 싶은 생일 선물의 목록을 만드는 것이 좋다. ⑤생일 축하는 생일 전에 미리 하는 것",
+   "choices": [
+    "직접 만든 생일 선물이 감동을 준다.",
+    "생일 파티는 간소하게 하는 것이 바람직하다.",
+    "친구에게 주는 생일 선물로는 책이 유용하다.",
+    "받고 싶은 생일 선물의 목록을 만드는 것이 좋다.",
+    "생일 축하는 생일 전에 미리 하는 것이 의미가 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 172
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 두 사람의 관계를 가장 잘 나타낸 것을 고르시오. ① 의사－환자 보호자 ② 담임교사－학부모 ③ 보험사 직원－고객 ④ 축구 감독－신문 기자 ⑤ 물리치료사－육상 선수",
+   "choices": [
+    "의사－환자 보호자",
+    "담임교사－학부모",
+    "보험사 직원－고객",
+    "축구 감독－신문 기자",
+    "물리치료사－육상 선수"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 103
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고르시오.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 42
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 여자가 할 일로 가장 적절한 것을 고르시오. ① 블로그에 여행 계획 올리기 ② 방수 재킷 구입하기 ③ 샌드위치 만들기 ④ 낚싯대 장만하기 ⑤ 예약 확인하기",
+   "choices": [
+    "블로그에 여행 계획 올리기",
+    "방수 재킷 구입하기",
+    "샌드위치 만들기",
+    "낚싯대 장만하기",
+    "예약 확인하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 99
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, 남자가 영화를 보러 갈 수 없는 이유를 고르시오. ① 도서관에서 일을 해야 해서 ② 역사 시험 준비를 해야 해서 ③ 친구 생일 파티에 가야 해서 ④ 야구 경기를 보러 가야 해서 ⑤ 로봇 쇼에 참가해야 해서",
+   "choices": [
+    "도서관에서 일을 해야 해서",
+    "역사 시험 준비를 해야 해서",
+    "친구 생일 파티에 가야 해서",
+    "야구 경기를 보러 가야 해서",
+    "로봇 쇼에 참가해야 해서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 128
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 대화를 듣고, 여자가 지불할 금액을 고르시오. [3점] ① $12 ② $19 ③ $21 ④ $22 ⑤ $24",
+   "choices": [
+    "$12",
+    "$19",
+    "$21",
+    "$22",
+    "$24"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 64
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 대화를 듣고, 남자의 결혼식에 관해 언급되지 않은 것을 고르시오. ① 날짜 ② 장소 ③ 식사 메뉴 ④ 초대 인원 ⑤ 특별 이벤트",
+   "choices": [
+    "날짜",
+    "장소",
+    "식사 메뉴",
+    "초대 인원",
+    "특별 이벤트"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 77
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. The International Air Show에 관한 다음 내용을 듣고, 일치 하지 않는 것을 고르시오. ① 10개국이 참가할 것이다. ② 비행 공연 전에 사인 행사가 있을 것이다. ③ 방문객은 전시된 비행기 안에 들어갈 수 있다. ④ 8세 이하 어린이는 무료로 입장한다. ⑤ ",
+   "choices": [
+    "10개국이 참가할 것이다.",
+    "비행 공연 전에 사인 행사가 있을 것이다.",
+    "방문객은 전시된 비행기 안에 들어갈 수 있다.",
+    "8세 이하 어린이는 무료로 입장한다.",
+    "무료 셔틀버스를 운행할 것이다.\n2020학년도 대학수학능력시험 9월 모의평가 문제지\n제3 교시"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 213
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 다음 표를 보면서 대화를 듣고, 여자가 구입할 스피커를 고르시오. ① ② ③ ④ ⑤",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 51
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. [3점] Woman: ① Don’t worry. I know that you’re very busy. ② That makes sense. I’ll focus on practicing the flu",
+   "choices": [
+    "Don’t worry. I know that you’re very busy.",
+    "That makes sense. I’ll focus on practicing the flute.",
+    "Definitely. I can help you become a great journalist.",
+    "That’s too bad. I’m sure you’ll get elected next time.",
+    "You’re right. I think I should leave the school orchestra."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 340
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. Man: ① No problem. I’ll inform my students about the quiz. ② Yes. I can’t wait to go to Thailand for my vacat",
+   "choices": [
+    "No problem. I’ll inform my students about the quiz.",
+    "Yes. I can’t wait to go to Thailand for my vacation.",
+    "Sure. I’ll try to find my pictures of Thai holidays.",
+    "Of course. I’m sure you’re a very good cook.",
+    "Yeah. I bought an airline ticket for you."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 313
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Ms. Green이 Steven에게 할 말로 가장 적절한 것을 고르시오. [3점] Ms. Green: ①You’d better remove your personal information from the website. ②You should make sur",
+   "choices": [
+    "You’d better remove your personal information from the website.",
+    "You should make sure the information you find online is correct.",
+    "I think it’s important to meet the deadline of the presentation.",
+    "I’m worried that our presentation topic is inappropriate.",
+    "I’ll explain how to connect to the Internet in the office.\n[16～17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 418
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 여자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "foods that fight against colds",
+    "preparing delicious cold foods",
+    "effective foods for losing weight",
+    "growing organic vegetables at home",
+    "bacteria that help the immune system"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 207
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 음식이 아닌 것은?",
+   "choices": [
+    "ginger",
+    "mushrooms",
+    "spinach",
+    "yogurt",
+    "garlic"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 68
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "일시적으로 통제되는 등반 구간을 공지하려고",
+    "암벽 등반의 긍정적인 효과에 대해 설명하려고",
+    "암벽 등반을 위한 장비 대여에 대해 알려주려고",
+    "암벽 등반 클럽의 회비 납부 방법을 통보하려고",
+    "암벽 등반에 필요한 안전 교육 일정을 안내하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 834
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 드러난 Rachel의 심경 변화로 가장 적절한 것은?",
+   "choices": [
+    "bored\n→delighted",
+    "confident\n→nervous",
+    "pleased →upset",
+    "frightened →relieved",
+    "calm\n→annoyed"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 785
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "직장 상사와 동료에게 부정적인 피드백을 삼가야 한다.",
+    "실수를 반복하지 않으려면 모든 피드백을 수용해야 한다.",
+    "효과적인 피드백 전달 방식에 관한 직원 교육이 필요하다.",
+    "업무의 효율성을 높이려면 피드백을 신속하게 주고받아야 한다.",
+    "부정적인 피드백에 불쾌해하지 말고 문제 해결에 향후 힘써야 한다.\nModel\nPrice\nWeight\nBattery Life\nDesign\nA\n$30\n0.7 kg\n6 hours\nFabric\nB\n$40\n0.5 kg\n10 hours\nFabric\nC\n$50\n0.8 kg\n9 hours\nAluminum\nD\n$55\n1.4 kg\n10 hours\nFabric\nE\n$65\n1.2 kg\n12 hours\nAluminum\nPortable Speakers\n  이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시에 \n따라 답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1257
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 밑줄 친 a cage model이 다음 글에서 의미하는 바로 가장 적절한 것은?",
+   "choices": [
+    "preserving a past culture in its original form for consumption",
+    "restoring local cultural heritages that have long been neglected",
+    "limiting public access to prehistoric sites for conservation",
+    "confining tourism research to authentic cultural traditions",
+    "maintaining a budget for cultural policies and regulations"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1446
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "유전학자들의 편견과 낙관주의는 유전학의 발전을 저해한다.",
+    "성격이 낙천적인 사람들은 유전의 영향을 덜 받는 경향이 있다.",
+    "대중 매체는 건강에 관한 유전학의 성과를 부정확하게 전달한다.",
+    "유전학은 대중 매체를 통해 이해할 수 있는 학문이 아니다.",
+    "유전학의 발전으로 건강에 관한 지식이 대중화되었다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1275
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "lasting significance of library collections even in the digital age",
+    "changing roles of local libraries and their effects on society",
+    "growing needs for analyzing a large volume of library data",
+    "online services as a key to the success of research libraries",
+    "rare book collectors’ contributions to a library’s reputation"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1302
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Aged Mind in Concert with Aged Body: An Unfailing Truth",
+    "No Change from Past to Present: Social Images of Old Age",
+    "No Country for Old Men: Age Discrimination Intensified",
+    "What Makes the Elderly Decline: Being Left Out Socially",
+    "Not Disabled But Differently Abled: New Faces of Old Age"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1349
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. 다음 도표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "While 44% of the respondents said people \nshould be allowed to fly drones in public parks, 25% said \npeople should not be allowed to do so.",
+    "When asked if \npeople should be allowed to fly drones on beaches, 35% of the \nrespondents said it should be allowed and 32% said it should \nnot.",
+    "More than half of the respondents said people should \nnot be allowed to fly drones near people’s homes.",
+    "Less \nthan 10% of the respondents said people should be allowed to \nfly drones near people’s homes.",
+    "For each of the three \nlocations, the proportion of the respondents who chose “It \ndepends” is above 30%."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1017
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Carl Stokes에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "어린아이였을 때 아버지가 돌아가셨다.",
+    "1962년에 법률 회사를 설립했다.",
+    "재출마한 Cleveland 시장 선거에서 패배했다.",
+    "정계 은퇴 후 TV 뉴스 앵커가 되었다.",
+    "Seychelles 공화국에 미국 대사로 임명되었다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 899
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. Glend High School’s Family Dinner & Dance에 관한 다음 안내문의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "9월 7일에 세 시간 동안 진행된다.",
+    "학생은 자기 가족을 네 명까지 초대할 수 있다.",
+    "입장권은 학생회 사무실에서 사전에 구매해야 한다.",
+    "참가자의 옷차림에 제약이 없다.",
+    "가족사진을 찍어 줄 사진사가 현장에 있을 것이다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 869
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. 2019 Astronomy & Night Sky Observations에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "밤하늘 관찰 후 특강이 있을 것이다.",
+    "강의실 좌석은 30개로 한정되어 있다.",
+    "밤하늘 관찰은 주차장에서 한다.",
+    "12세 이하 어린이의 프로그램 참가비는 반값이다.",
+    "겨울옷은 가져올 필요가 없다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 769
+  },
+  {
+   "qNum": 29,
+   "kind": "grammar_underline",
+   "stem": "29. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "to repeat it as gossip",
+    "②": "turn the fact that he",
+    "③": "himself",
+    "④": "actualizing itself only at the",
+    "⑤": "whose"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1000
+  },
+  {
+   "qNum": 30,
+   "kind": "vocab_underline",
+   "stem": "30. 다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "challenges to evolving populations",
+    "②": "enabled the horse to gallop",
+    "③": "advantage to a horse unless",
+    "④": "attack",
+    "⑤": "optional for understanding evolution and"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1277
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. When you begin to tell a story again that you have retold many times, what you retrieve from memory is the index to the story itself. That index can be embe",
+   "choices": [
+    "identical",
+    "beneficial",
+    "alien",
+    "prior",
+    "neutral"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 949
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. With population growth slowing, the strongest force increasing demand for more agricultural production will be rising incomes, which are desired by practica",
+   "choices": [
+    "displace plant-based foods in people’s diets",
+    "demand eco-friendly processing systems",
+    "cause several nutritional imbalances",
+    "indicate the consumers’ higher social status",
+    "play an important role in population growth"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1256
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. If one looks at the Oxford definition, one gets the sense that post-truth is not so much a claim that truth does not exist as that facts are subordinate to ",
+   "choices": [
+    "to hold back our mixed feelings",
+    "that balances our views on politics",
+    "that leads us to give way to others in need",
+    "to carry the constant value of absolute truth",
+    "that is more important to us than the truth itself"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1141
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. The debates between social and cultural anthropologists concern not the differences between the concepts but the analytical priority: which should come first, the social chicken or the cultural egg?",
+   "choices": [
+    "in relation to its cultural origin",
+    "in isolation from its own context",
+    "regardless of personal preferences",
+    "without considering its economic roots",
+    "on the basis of British-American relations"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1344
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "We need to relieve our conscious minds so \nwe can solve new problems as they come up.",
+    "Once we’ve \nsolved the puzzle of how to ballroom dance, for example, we \ncan do it by habit, and so be mentally freed to focus on a \nconversation while dancing instead.",
+    "But try to talk when \nfirst learning to dance the tango, and it’s a disaster ― we need \nour conscious attention to focus on the steps.",
+    "Tango \nmusicians bring different genres of music together to attract a \nmore diverse audience from varying backgrounds.",
+    "Imagine \nhow little we’d accomplish if we had to focus consciously on \nevery behavior ― e.g., on where to place our feet for each step \nwe take.\n[36～37] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 \n것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 934
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. A sovereign state is usually defined as one whose citizens are free to determine their own affairs without interference from any agency beyond its territori",
+   "choices": [
+    "(A) －(C) －(B)",
+    "(B) －(A) －(C)",
+    "(B) －(C) －(A)",
+    "(C) －(A) －(B)",
+    "(C) －(B) －(A)"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1114
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. Because a main goal of science is to discover lawful relationships, science assumes that what is being investigated is lawful. For example, the chemist assu",
+   "choices": [
+    "(A) －(C) －(B)",
+    "(B) －(A) －(C)",
+    "(B) －(C) －(A)",
+    "(C) －(A) －(B)",
+    "(C) －(B) －(A)\n[38～39] 글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 \n적절한 곳을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38～39"
+    ]
+   },
+   "charLen": 1421
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. The field of international politics is, however, dominated by states and other powerful actors (such as multinational corporations) that have priorities oth",
+   "choices": [
+    ") \nHowever, we cannot understand the gap between human-rights \nideals and the real world of human-rights violations by \nsympathy or by legal analysis. (",
+    ") Rather, it requires \ninvestigation by the various social sciences of the causes of \nsocial conflict and political oppression, and of the interaction \nbetween national and international politics. (",
+    ") The UN \nintroduced the concept of human rights into international law \nand politics. (",
+    ") It is a leading feature of the human-rights \nfield that the governments of the world proclaim human rights \nbut have a highly variable record of implementing them. (",
+    ") \nWe must understand why this is so.\n* oppression: 억압"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1142
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. So, there was a social pressure for art to come up with some vocation that both distinguished it from science and, at the same time, made it equal in statur",
+   "choices": [
+    ") But by the nineteenth \ncentury, any comparison between the scientist and the artist \nwas bound to make the artist look like a poor relation in terms \nof making discoveries about the world or holding a mirror up to \nnature. (",
+    ") Here, science clearly had the edge. (",
+    ") The \nnotion that art specialized in the expression of the emotions \nwas particularly attractive in this light. (",
+    ") It rendered unto \nscience its own ― the exploration of the objective world ― while \nsaving something comparably important for art to do ― to \nexplore the inner world of feeling. (",
+    ") If science held the \nmirror up to nature, art turned a mirror at the self and its \nexperiences. [3점]\n* vocation: 소명  ** stature: 수준  *** render: 주다"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1067
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "fixed\n…… share",
+    "trapped\n…… activate",
+    "standardized\n…… control",
+    "localized …… share",
+    "underestimated …… activate\n[41～42] 다음 글을 읽고, 물음에 답하시오.\nMuch of our knowledge of the biology of the oceans is \nderived from “blind” sampling. We use instruments to measure \nbulk properties of the environment, such as salinity and \ntemperature, and we use bottle or net samples to (a) extract \nknowledge about the organisms living in the ocean. This kind \nof approach has contributed important knowledge but has also \ninfluenced the way we view marine life. It leads us to focus on \nabundances, production rates, and distribution patterns. Such a \nperspective is very (b) relevant in the context of the ocean as a \nresource for fisheries. It is also helpful in developing an \nunderstanding of biogeochemical issues such as ocean carbon \nfluxes. But on its own, this approach is (c) insufficient, even \nfor those purposes. The kind of intuition that we develop \nabout marine life is, of course, influenced by the way we \n(d) observe it. Because the ocean is inaccessible to us and most \nplanktonic organisms are microscopic, our intuition is elementary \ncompared, for example, to the intuitive understanding we have \nabout (macroscopic) terrestrial life. Our understanding of the \nbiology of planktonic organisms is still based mainly on \nexaminations of (dead) individuals, field samples, and \nincubation experiments, and even our sampling may be \nseverely biased toward those organisms that are not destroyed \nby our harsh sampling methods. Similarly, experimental \nobservations are (e) extended to those organisms that we can \ncollect live and keep and cultivate in the laboratory. \n * salinity: 염도  ** flux: 흐름  *** terrestrial: 육지의"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3055
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "The Blind Spot in the Research of Ocean Biology",
+    "The Ocean under the Microscope: A Breakthrough",
+    "What Ocean Research Needs: Pattern Recognition",
+    "Intuition vs. Experiment: Issues in Ocean Biology",
+    "Plankton Destroyed, Oceans Endangered"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 264
+  },
+  {
+   "qNum": 42,
+   "kind": "vocab_letter",
+   "stem": "42. 밑줄 친 (a)～(e) 중에서 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {
+    "a": "her life for her",
+    "b": "She called yesterday and",
+    "c": "You deserve this and",
+    "d": "I have ever had",
+    "e": "you"
+   },
+   "bracketChoices": {},
+   "charLen": 2057
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) －(D) －(C)",
+    "(C) －(B) －(D)",
+    "(C) －(D) －(B)",
+    "(D) －(B) －(C)",
+    "(D) －(C) －(B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 125
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a)～(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 75
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글에 관한 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "Nancy와 Carol은 에펠탑에서 석양을 바라보았다.",
+    "Carol은 Nancy에게 꽃다발을 직접 전달했다.",
+    "레스토랑의 직원들은 모두 예의 바르고 친절했다.",
+    "Carol은 Nancy를 위해 깜짝 선물을 다양하게 준비했다.",
+    "Nancy와 Carol은 예약한 저녁 식사 시간에 늦었다.\n* 확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)했는지 확인\n하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 245
+  }
+ ],
+ "sourcePdf": "91c10e0c7df16f84a32cd96beb2120fe.pdf",
+ "fileName": "3교시_영어_문제지.pdf"
+}

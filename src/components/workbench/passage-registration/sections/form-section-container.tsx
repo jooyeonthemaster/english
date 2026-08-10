@@ -109,6 +109,8 @@ interface FormSectionContainerProps {
     rows: PastedPassageInput[],
   ) => boolean | void | Promise<boolean | void>;
   pasteSaving: boolean;
+  /** 국어 라우트면 "KOREAN" — 영어 전용 직접입력 모드(AI 복원·AI 생성)를 막는다. */
+  pasteSubjectScope?: "KOREAN";
 
   // ── 모바일 스텝 플로우(<lg 전용) — PC 무영향 ──
   mobileStepTabs?: "sources" | "hidden";
@@ -191,6 +193,7 @@ export function FormSectionContainer(p: FormSectionContainerProps) {
       workspaceActive={p.workspaceActive}
       onSubmitPastedRows={p.onSubmitPastedRows}
       pasteSaving={p.pasteSaving}
+      pasteSubjectScope={p.pasteSubjectScope}
       mobileStepTabs={p.mobileStepTabs}
       pasteStartRef={p.pasteStartRef}
       onPasteStateChange={p.onPasteStateChange}

@@ -1,0 +1,764 @@
+{
+ "examId": "ebsi_go2_20190904",
+ "source": "ebsi_go2_20190904_paper_eng_mun_4951ECAS2_10.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ① Sorry. I have plans tonight. ② I always buy tickets online. ③ You can do better next time. ④ You must have w",
+   "choices": [
+    "Sorry. I have plans tonight.",
+    "I always buy tickets online.",
+    "You can do better next time.",
+    "You must have watched it a lot.",
+    "Actually, I wouldn’t recommend it."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 229
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ① That’s okay. You can deliver it tomorrow. ② Why don’t you call the delivery person?",
+   "choices": [
+    "That’s okay. You can deliver it tomorrow.",
+    "Why don’t you call the delivery person?",
+    "Don’t worry. I’ll return it for you.",
+    "Can you help me with packing?",
+    "Let’s open the package now."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 251
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을 듣고, 남자가 하는 말의 목적으로 가장 적절한 것을 고르시오. ① 사이버폭력 예방 교육일정을 공지하려고 ② 학생들에게 학교 홈페이지 가입을 독려하려고 ③ 학교 공식 소셜 미디어 페이지 개설을 알리려고 ④ 학교 홈페이지 디자인 개선에 대한 의견을 공모하려고 ⑤ 소셜 미디어 사",
+   "choices": [
+    "사이버폭력 예방 교육일정을 공지하려고",
+    "학생들에게 학교 홈페이지 가입을 독려하려고",
+    "학교 공식 소셜 미디어 페이지 개설을 알리려고",
+    "학교 홈페이지 디자인 개선에 대한 의견을 공모하려고",
+    "소셜 미디어 사용 시 개인 정보 보호 방법을 안내하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 194
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 여자의 의견으로 가장 적절한 것을 고르시오. ①청중의 특성에 맞는 연설 주제의 선택이 필요하다. ② 시각 자료의 활용은 청중의 집중을 유도할 수 있다. ③ 연설자의 목소리 톤은 연설의 내용에 따라 달라야 한다. ④ 대본을 보지 않고 연설하는 것은 설득력을 높일 수 있",
+   "choices": [
+    "청중의 특성에 맞는 연설 주제의 선택이 필요하다.",
+    "시각 자료의 활용은 청중의 집중을 유도할 수 있다.",
+    "연설자의 목소리 톤은 연설의 내용에 따라 달라야 한다.",
+    "대본을 보지 않고 연설하는 것은 설득력을 높일 수 있다.",
+    "연설 연습 시 녹화를 활용하면 전달력 향상에 도움이 된다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 209
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 두 사람의 관계를 가장 잘 나타낸 것을 고르시오. ① 학생- 사서교사 ② 독자- 소설가 ③ 출판사 편집자- 삽화가 ④ 관객- 무용가 ⑤ 시나리오 작가- 영화감독",
+   "choices": [
+    "학생- 사서교사",
+    "독자- 소설가",
+    "출판사 편집자- 삽화가",
+    "관객- 무용가",
+    "시나리오 작가- 영화감독"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 116
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고르시오.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 43
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 남자가 여자에게 부탁한 일로 가장 적절한 것을 고르시오. ① 책 구입하기 ② 번역본 검토하기 ③ 책 포장하기 ④ 이메일 보내기 ⑤ 번역 앱 추천하기",
+   "choices": [
+    "책 구입하기",
+    "번역본 검토하기",
+    "책 포장하기",
+    "이메일 보내기",
+    "번역 앱 추천하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 105
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, 여자가 개를 키울 수 없는 이유를 고르시오. ① 낮에 개를 돌볼 사람이 없어서 ② 부모님이 허락하지 않아서 ③ 개를 키울 마당이 없어서 ④ 동생이 개를 무서워해서 ⑤ 개 알레르기가 있어서",
+   "choices": [
+    "낮에 개를 돌볼 사람이 없어서",
+    "부모님이 허락하지 않아서",
+    "개를 키울 마당이 없어서",
+    "동생이 개를 무서워해서",
+    "개 알레르기가 있어서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 126
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 대화를 듣고, 남자가 지불할 금액을 고르시오. [3점] ① $11 ② $13 ③ $15 ④ $18 ⑤ $21",
+   "choices": [
+    "$11",
+    "$13",
+    "$15",
+    "$18",
+    "$21"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 91
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 대화를 듣고, World Food Festival에 관해 언급되지 않은 것을 고르시오. ① 개최 장소 ② 개최 일시 ③ 프로그램 종류 ④ 반입 금지 물품 ⑤ 주차 요금",
+   "choices": [
+    "개최 장소",
+    "개최 일시",
+    "프로그램 종류",
+    "반입 금지 물품",
+    "주차 요금"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 113
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. Arusha National Park Tour에 관한 다음 내용을 듣고, 일치하지 않는 것을 고르시오. ① 1일 투어 프로그램이다. ② 호수와 산의 풍경을 즐길 수 있다. ③ 다양한 야생 동물을 볼 수 있다. ④ 승차 장소와 하차 장소가 다르다. ⑤ 종료 시간은 날씨에 따라 달라",
+   "choices": [
+    "1일 투어 프로그램이다.",
+    "호수와 산의 풍경을 즐길 수 있다.",
+    "다양한 야생 동물을 볼 수 있다.",
+    "승차 장소와 하차 장소가 다르다.",
+    "종료 시간은 날씨에 따라 달라질 수 있다.\n2019학년도 9월 고2 전국연합학력평가 문제지  \n제3 교시\n고2"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 235
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 다음 표를 보면서 대화를 듣고, 두 사람이 구매할 Air Fryer를 고르시오. Air Fryer Model Price Automatic Switch Off Capacity (liters) Warranty ① A $59 × 1 year ② B $68 ○ 1 year ③ C $84",
+   "choices": [
+    "A\n$59\n×\n1 year",
+    "B\n$68\n○\n1 year",
+    "C\n$84\n○\n1 year",
+    "D\n$95\n○\n2 years",
+    "E\n$109\n×\n2 years"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 211
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. Man: ① I hope you’ll get better. ② I’m afraid I failed the exam. ③ Sometimes stress can be helpful. ④ Sure. I",
+   "choices": [
+    "I hope you’ll get better.",
+    "I’m afraid I failed the exam.",
+    "Sometimes stress can be helpful.",
+    "Sure. I’ll buy you some chocolate.",
+    "Okay. I’ll exercise when I’m stressed."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 296
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. [3점] Woman: ① Don’t worry. It’ll only filter out the ads. ② Be careful. Don’t trust online ads too much. ③You",
+   "choices": [
+    "Don’t worry. It’ll only filter out the ads.",
+    "Be careful. Don’t trust online ads too much.",
+    "You’re right. I’ll consider using the program.",
+    "That can put your private information at risk.",
+    "Downloading the program will slow your computer."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 365
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Eve가 Tom에게 할 말로 가장 적절한 것을 고르시오. [3점] Eve: ① You should find a job related to your field of study. ② How about getting help from a career counselor?",
+   "choices": [
+    "You should find a job related to your field of study.",
+    "How about getting help from a career counselor?",
+    "Do some research before choosing your major.",
+    "If I were you, I’d focus on studying history.",
+    "Why don’t you apply for an internship?\n[16~17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 397
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 여자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "useful tips to finding parking spaces in cities quickly",
+    "efforts in Europe to handle air pollution from traffic",
+    "impacts of greenhouse gases on the environment",
+    "causes of traffic jams in European capital cities",
+    "various renewable energy sources in Europe"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 300
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 나라가 아닌 것은?",
+   "choices": [
+    "Denmark",
+    "France",
+    "Belgium",
+    "Switzerland",
+    "Germany \n  이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시에 \n따라 답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 129
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "영화제 참가 방법을 문의하려고",
+    "공원 주변 차량 통제를 건의하려고",
+    "공원에서의 촬영 허가를 요청하려고",
+    "영상 편집 강좌 이수 여부를 확인하려고",
+    "촬영으로 인한 불편 사항에 대해 항의하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 906
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 드러난 Sadie의 심경으로 가장 적절한 것은?",
+   "choices": [
+    "anxious and afraid",
+    "calm and relieved",
+    "outraged and furious",
+    "jealous and envious",
+    "bored and indifferent"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1072
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "미성년자의 전동 스쿠터 사용을 금지해야 한다.",
+    "전동 스쿠터 충전 시설을 더 많이 설치해야 한다.",
+    "학생을 위한 대중교통 할인 제도를 정비해야 한다.",
+    "캠퍼스 간 이동을 위한 셔틀버스 서비스를 도입해야 한다.",
+    "대학 내 전동 스쿠터 이용에 대한 규정 강화를 검토해야 한다.\n고2"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1043
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 밑줄 친 the omnivore’s paradox가 다음 글에서 의미하는 바로 가장 적절한 것은?",
+   "choices": [
+    "irony of wanting but disliking nutritious food",
+    "conflict between vegetarians and meat eaters",
+    "sacrificing quality of food for quantity of food",
+    "difficulty in judging whether something is edible",
+    "need to be both flexible and cautious about foods"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1125
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "인터뷰 방식에 대한 충분한 사전 협의가 필요하다.",
+    "인터뷰 질문은 내용이 중복되지 않는 것이 바람직하다.",
+    "녹음보다 선별적 필기가 더 효율적인 인터뷰 기록방식이다.",
+    "인터뷰 대상에 대한 기자의 객관적 시각이 중요하다.",
+    "녹음 전 인터뷰 대상의 긴장을 풀어주는 것이 좋다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1087
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "side effects of antimonopoly laws",
+    "ways to protect intellectual property",
+    "requirements for applying for a patent",
+    "patent law abuse that hinders innovation",
+    "resources needed for technological innovation"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1155
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Glory in the Past, Ugliness in the Present",
+    "Doubt: What Leads to Unexpected Findings",
+    "Formulas in Math Solve Problems in Other Areas",
+    "Unknown Geniuses Achieving the Greatest Things",
+    "Unsolved Math Problems Passed to Future Generations\n고2"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1253
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. 다음 표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "The total amount of \ninstalled capacity of renewable energy technologies was on \nthe rise during the given period.",
+    "While the percentage of \nhydropower energy steadily decreased from 2014 to 2017, \nthe technologies of both onshore wind and solar energy took \nincreasing shares during the same period.",
+    "The percentage \nof solar energy in particular shows the sharpest increase \nrate among the given renewable energy technologies from \n10.0 percent in 2014 to 17.6 percent in 2017.",
+    "Still, \nhowever, the combined share of onshore wind and solar \nenergy was less than a third of the total amount of installed \ncapacity during each of the four years.",
+    "The category of \nOthers accounted for less than 10 percent of the total \namount of installed capacity every year during the given \nperiod."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1293
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Cleveland Amory에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "Lucy의 도움을 받아 처음으로 강아지를 갖게 되었다.",
+    "대학 졸업 후 The Saturday Evening Post 의 편집자가 되었다.",
+    "동물에 대한 애정을 바탕으로 베스트셀러 책을 썼다.",
+    "1998년에 The Fund for Animals를 설립했다.",
+    "학대 받은 동물들을 위한 보호구역을 만들었다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1236
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. Alabama Coastal Cleanup에 관한 다음 안내문의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "매월 두 번째 토요일에 열린다.",
+    "원하는 참가 장소를 선택할 수 있다.",
+    "16세 미만 자원봉사자는 어른과 동행해야 한다.",
+    "마실 물이 제공된다.",
+    "행사 당일에 등록이 가능하다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 176
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. Mini Beam Projector 사용에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "전원표시기의 녹색은 대기 상태임을 나타낸다.",
+    "전원 버튼을 한 번 누르면 전원이 꺼진다.",
+    "조이스틱을 위아래로 움직여 음량을 조절한다.",
+    "포커스 링을 돌려서 이미지의 초점을 맞춘다.",
+    "USB 장치에 있는 데이터를 삭제할 수 있다.\n  Looking for a way to give back to the community while \nconnecting with nature? Join us on the 2nd Saturday of \nevery month to reduce ocean pollution in Alabama.\nWhere & When\n  View our list of cleanup locations and choose the \nlocation you want.\n∙Alabama Port: 9 a.m. to 11 a.m.\n∙Gaillard Island: 2 p.m. to 4 p.m.\nVolunteer Checklist\n∙Open to all ages (Volunteers under 16 must be \naccompanied by an adult.)\n∙Things to bring: a hat, gloves, and a reusable water \nbottle (Drinking water will be provided.)\n∙Registration will close two days before the event.\n For more information, please visit cleanup2save.org.\nMini Beam Projector\n- Instructions -\nLED Power Indicator\n∙Red: Power standby state\n∙Green: Projector on and \noperating\nHow to Operate\n∙In standby mode, press \nthe power button once to \nturn the projector on. \n∙Press the power button \ntwice to turn the projector off.\n∙Adjust the volume level by moving the joystick left or \nright.\n∙Adjust the focus of the image by rotating the focus \nring. \nConnecting a USB Device\n  Connect a USB device to the USB port of the \nprojector to enjoy your content files. You cannot write \ndata to or delete data from the USB device.\n고2"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1382
+  },
+  {
+   "qNum": 29,
+   "kind": "grammar_underline",
+   "stem": "29. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "unique in the sense that",
+    "②": "which there were no precedents",
+    "③": "was used for navigation and",
+    "④": "tame animals and thus control",
+    "⑤": "creating the virtually unlimited amounts"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1039
+  },
+  {
+   "qNum": 30,
+   "kind": "vocab_underline",
+   "stem": "30. 다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "defense of the idea that",
+    "②": "controlled what could be published",
+    "③": "insulted a powerful aristocrat",
+    "④": "supported the kind of religious",
+    "⑤": "off the title page"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1190
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. Children develop the capacity for solitude in the presence of an attentive other. Consider the silences that fall when you take a young boy on a quiet walk ",
+   "choices": [
+    "Hardship",
+    "Attachment",
+    "Creativity",
+    "Compliment",
+    "Responsibility"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 840
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. Much of the spread of fake news occurs through . A 2016 study from Columbia University in New York City and Inria, a French technology institute, found that",
+   "choices": [
+    "political campaigns",
+    "irrational censorship",
+    "irresponsible sharing",
+    "overheated marketing",
+    "statistics manipulation \n고2"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1051
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. New technology tends to come from new ventures ― startups. From the Founding Fathers in politics to the Royal Society in science to Fairchild Semiconductor’",
+   "choices": [
+    "stay small enough so that you actually can",
+    "give yourself challenges as often as possible",
+    "outperform rival businesses in other countries",
+    "employ the efficient system of big enterprises",
+    "control the organization with consistent policies"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1254
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. If you want to use the inclined plane to help you move an object (and who wouldn’t?",
+   "choices": [
+    "more distance in stairs is traded for less force",
+    "a ladder should be positioned at a steep angle",
+    "the distance needs to be measured precisely",
+    "an object’s weight has to be reduced",
+    "slopes are often preferred to stairs"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1120
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "In 1847, British train companies \nput their heads together and agreed that henceforth all train \ntimetables would be adjusted to Greenwich Observatory time, \nrather than the local times of Liverpool, Manchester, or \nGlasgow.",
+    "More and more institutions followed the lead of \nthe train companies.",
+    "Railways faced infrastructurerelated \nchallenges such as those related to stations, tracks, and other \nfacilities.",
+    "Finally, in 1880, the British government took the \nunprecedented step of legislating that all timetables in Britain \nmust follow Greenwich.",
+    "For the first time in history, a \ncountry adopted a national time and obliged its population to \nlive according to an artificial clock rather than local ones or \nsunrisetosunset cycles. \n* nuisance: 골칫거리\n[36~37] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 것을 \n고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1108
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. You know that forks don’t fly off to the Moon and that neither apples nor anything else on Earth cause the Sun to crash down on us. (A) The Earth has more m",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n고2"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1057
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. Testing strategies relating to direct assessment of content knowledge still have their value in an inquirydriven classroom. (A) For these reasons, we need a",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n[38~39] 글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 \n적절한 곳을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38~39"
+    ]
+   },
+   "charLen": 1213
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. In much the same way, an array of technological, political, economic, cultural, and linguistic factors can exist and create a similar kind of pull or drag o",
+   "choices": [
+    ") This \nframework, however, can be misleading ― especially if we \nextend the metaphor. (",
+    ") As anyone who has crossed an \nice rink can confirm, just because the surface of the rink \nappears flat and open does not necessarily mean that \nsurface is smooth or even. (",
+    ") Rather, such surfaces \ntend to be covered by a wide array of dips and cracks and \nbumps that create a certain degree of pull or drag or \nfriction on any object moving across it. (",
+    ") They affect \nhow smoothly or directly information can move from point \nto point in global cyberspace. (",
+    ") Thus, while the earth \nmight appear to be increasingly flat from the perspective of \ninternational online communication, it is far from frictionless."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1116
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. Attitudes and values, however, are subjective to begin with, and therefore they are easily altered to fit our everchanging circumstances and goals. In physi",
+   "choices": [
+    ") Thus, \nthe same task can be viewed as boring one moment and \nengaging \nthe \nnext. (",
+    ") Divorce, \nunemployment, \nand \ncancer can seem devastating to one person but be perceived \nas an opportunity for growth by another person, depending \non whether or not the person is married, employed, and \nhealthy. (",
+    ") It is not only beliefs, attitudes, and values that \nare subjective. (",
+    ") Our brains comfortably change our \nperceptions of the physical world to suit our needs. (",
+    ") We \nwill never see the same event and stimuli in exactly the same \nway at different times. [3점]\n* inertial frame of reference: 관성좌표계"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1045
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "evaluate ……\ncare",
+    "regulate ……\ncare",
+    "accept\n……\nsearch",
+    "induce\n……\nsearch",
+    "display\n……\nspeak \n고2\n[41~42] 다음 글을 읽고, 물음에 답하시오.\nIt is not uncommon to hear talk about how lucky we \nare to live in this age of scientific and medical \nadvancement where antibiotics and vaccinations keep us \nliving longer, while our poor ancient ancestors were \nlucky to live past the age of 35. Well, this is not quite \ntrue. At best, it (a) oversimplifies a complex issue, and \nat worst, it is an obvious misrepresentation of statistics. \nDid ancient humans really just drop dead as they were \nentering their prime, or did some live long enough to see \na wrinkle on their face? It would appear that as time went \non, conditions (b) improved and so did the length of \npeople’s lives. But it is not so simple.\nWhat is commonly known as “average life expectancy” \nis \ntechnically \n“life \nexpectancy \nat \nbirth.” \nBut \nlife \nexpectancy at birth is an (c) unhelpful statistic if the \ngoal is to compare the health and longevity of adults. \nThat is because a major determinant of life expectancy \nat birth is the child mortality rate which, in our ancient \npast, was extremely high, and this skews the life \nexpectancy rate dramatically (d) upward. If we look again \nat the estimated maximum life expectancy for prehistoric \nhumans, which is 35 years, we can see that this does \nnot mean that the average person living at this time \ndied at the age of 35. Rather, it means that for every \nchild that died in (e) infancy, another person might have \nlived to be 70. The life expectancy statistic is, \ntherefore, a deeply flawed way to think about the quality \nof life of our ancient ancestors.\n* skew: 왜곡하다"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2862
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "How Can We Reduce Child Mortality Rate?",
+    "Staying Active: The Key to a Healthy Life",
+    "Statistical Errors Can Undermine Research Ethics",
+    "Average Life Expectancy Gains in Developing Countries",
+    "Life Expectancy Myth: Were Our Ancestors’ Lives Shorter?"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 283
+  },
+  {
+   "qNum": 42,
+   "kind": "vocab_letter",
+   "stem": "42. 밑줄 친 (a)~(e) 중에서 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {
+    "a": "him yelling at the",
+    "b": "his chest",
+    "c": "he knew his partner",
+    "d": "he could see a",
+    "e": "him and rushed out"
+   },
+   "bracketChoices": {},
+   "charLen": 1997
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) - (D) - (C)",
+    "(C) - (B) - (D)",
+    "(C) - (D) - (B)",
+    "(D) - (B) - (C)",
+    "(D) - (C) - (B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 166
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a)~(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 97
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글에 관한 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "불이 건물 전체로 퍼지고 있었다.",
+    "Kris와 엄마는 소방서에 방문했다.",
+    "Jacob은 동료와 함께 5층으로 올라갔다.",
+    "소년은 불이 붙지 않은 바닥에 누워 있었다.",
+    "Jacob은 소년을 발견한 즉시 생사를 확인했다.\n* 확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)했는지 확인\n하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 215
+  }
+ ],
+ "sourcePdf": "ebsi_go2_20190904_paper_eng_mun_4951ECAS2_10.pdf"
+}

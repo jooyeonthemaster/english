@@ -1,0 +1,764 @@
+{
+ "examId": "ebsi_go2_20231219",
+ "source": "ebsi_go2_20231219_paper_eng_mun_5Q3AY6AM.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 다음을 듣고, 남자가 하는 말의 목적으로 가장 적절한 것을 고르시오. ①모터쇼 임시 주차장 운영을 안내하려고 ②방송국 방문 등록 방법을 설명하려고 ③모터쇼 입장 시간 변경을 알려주려고 ④공영 주차장 요금 인상을 공지하려고 ⑤라디오 행사 지원 팀을 모집하려고",
+   "choices": [
+    "모터쇼 임시 주차장 운영을 안내하려고",
+    "방송국 방문 등록 방법을 설명하려고",
+    "모터쇼 입장 시간 변경을 알려주려고",
+    "공영 주차장 요금 인상을 공지하려고",
+    "라디오 행사 지원 팀을 모집하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 147
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 여자의 의견으로 가장 적절한 것을 고르시오. ①충분한 영양 섭취를 위해 다양한 과일을 먹어야 한다. ②식사 전에 과일을 먹는 것이 건강에 도움이 된다. ③과일을 먹기 전에 껍질을 깨끗이 씻어야 한다. ④규칙적인 생활 습관이 체중 관리에 중요하다. ⑤늦은 밤중에 먹는 ",
+   "choices": [
+    "충분한 영양 섭취를 위해 다양한 과일을 먹어야 한다.",
+    "식사 전에 과일을 먹는 것이 건강에 도움이 된다.",
+    "과일을 먹기 전에 껍질을 깨끗이 씻어야 한다.",
+    "규칙적인 생활 습관이 체중 관리에 중요하다.",
+    "늦은 밤중에 먹는 음식은 숙면을 방해한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 174
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을 듣고, 남자가 하는 말의 요지로 가장 적절한 것을 고르시오. ①환경 교육 프로그램에 적극적으로 참여해야 한다. ②쉽게 분해될 수 있는 플라스틱 제품 개발이 필요하다. ③플라스틱 쓰레기를 줄이기 위해 텀블러를 가지고 다녀야 한다. ④플라스틱병 재활용률을 높이려는 새로운 정책이",
+   "choices": [
+    "환경 교육 프로그램에 적극적으로 참여해야 한다.",
+    "쉽게 분해될 수 있는 플라스틱 제품 개발이 필요하다.",
+    "플라스틱 쓰레기를 줄이기 위해 텀블러를 가지고 다녀야 한다.",
+    "플라스틱병 재활용률을 높이려는 새로운 정책이 요구된다.",
+    "텀블러 구매 시 유해 성분 포함 여부를 확인해야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 199
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고르시오. ⑤ ③ ④ ② ①",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 51
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 여자가 할 일로 가장 적절한 것을 고르시오. ①과학실 촬영하기 ②영상에 자막 넣기 ③홍보 문구 만들기 ④선생님 인터뷰하기 ⑤배경 음악 선택하기",
+   "choices": [
+    "과학실 촬영하기",
+    "영상에 자막 넣기",
+    "홍보 문구 만들기",
+    "선생님 인터뷰하기",
+    "배경 음악 선택하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 91
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 남자가 지불할 금액을 고르시오. [3점] ①$45 ②$60 ③$65 ④$75 ⑤$90",
+   "choices": [
+    "$45",
+    "$60",
+    "$65",
+    "$75",
+    "$90"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 59
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 여자가 기타 동호회에 참석하지 못한 이유를 고르시오. ①기타에 문제가 생겨서 ②늦게까지 일해야 해서 ③손가락에 통증이 있어서 ④프로젝트에 참여해야 해서 ⑤새 연주법을 익히지 못해서",
+   "choices": [
+    "기타에 문제가 생겨서",
+    "늦게까지 일해야 해서",
+    "손가락에 통증이 있어서",
+    "프로젝트에 참여해야 해서",
+    "새 연주법을 익히지 못해서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 112
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, 2023 Laser Light Show에 관해 언급되지 않은 것을 고르시오. ①주제 ②기간 ③장소 ④예매 방법 ⑤입장료",
+   "choices": [
+    "주제",
+    "기간",
+    "장소",
+    "예매 방법",
+    "입장료"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 79
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. Highville Fashion Pop-up Stores에 관한 다음 내용을 듣고, 일치하지 않는 것을 고르시오. ①12월 29일부터 3일 동안 진행될 것이다. ②5층에서 열릴 것이다. ③장갑과 니트 모자를 포함한 패션 상품을 구매할 수 있다. ④전 상품에 대해 60퍼센트 할인을 ",
+   "choices": [
+    "12월 29일부터 3일 동안 진행될 것이다.",
+    "5층에서 열릴 것이다.",
+    "장갑과 니트 모자를 포함한 패션 상품을 구매할 수 있다.",
+    "전 상품에 대해 60퍼센트 할인을 제공할 것이다.",
+    "모든 구매 고객에게 무료 커피 쿠폰을 줄 것이다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 199
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 다음 표를 보면서 대화를 듣고, 남자가 구매할 하이킹 스틱을 고르시오. Hiking Sticks Model Price Material Foldable Color ① A $37 Bamboo × Brown ② B $39 Aluminum ○ Blue ③ C $43 Carbon Fibe",
+   "choices": [
+    "A\n$37\nBamboo\n×\nBrown",
+    "B\n$39\nAluminum\n○\nBlue",
+    "C\n$43\nCarbon Fiber\n×\nBlack",
+    "D\n$47\nAluminum\n○\nBrown",
+    "E\n$52\nCarbon Fiber\n○\nBlue"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 224
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ①Don’t worry. You can’t miss the auditorium. ②Good idea. I’ll go check if it’s available. ③Right. I want to s",
+   "choices": [
+    "Don’t worry. You can’t miss the auditorium.",
+    "Good idea. I’ll go check if it’s available.",
+    "Right. I want to sign up for your class.",
+    "No problem. I can change my recipe.",
+    "Yes. You’ll win the contest next time."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 261
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ①Not really. I’m still working on my report. ②Sorry. I can’t issue you a library card now. ③Great! I’m going ",
+   "choices": [
+    "Not really. I’m still working on my report.",
+    "Sorry. I can’t issue you a library card now.",
+    "Great! I’m going to download and try it out.",
+    "Absolutely! I’ll return your books tomorrow.",
+    "I agree. I should read different kinds of books.\n2023학년도 11월 고2 전국연합학력평가 문제지\n제 3 교시                                                                                                                                                                1"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 481
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. [3점] Man: ①Of course. I’ll post them after you’re done. ②Why not?",
+   "choices": [
+    "Of course. I’ll post them after you’re done.",
+    "Why not? I should search for online reviews.",
+    "Okay. I want to buy some pictures on auction.",
+    "I see. I can buy a bigger closet for your room.",
+    "No. I couldn’t find anyone who wanted to buy them."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 303
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. Woman: ①No wonder. She needs to practice more. ②Sorry to hear that. I hope she gets well soon. ③It’s no big d",
+   "choices": [
+    "No wonder. She needs to practice more.",
+    "Sorry to hear that. I hope she gets well soon.",
+    "It’s no big deal. I’ll give her advice on the facilities.",
+    "What a shame! I should’ve gone to the concert with you.",
+    "True. You’d better stay in the hospital a couple more days."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 325
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Ms. Parker가 Eric에게 할 말로 가장 적절한 것을 고르시오. [3점] Ms. Parker: ①You should check the nutrition facts label before consumption. ②You’d better drink more water to improve concentration. ③You need to use meditation to ease students’ worries. ④How about separating water bottles for recycling?",
+   "choices": [
+    "You should check the nutrition facts label before consumption.",
+    "You’d better drink more water to improve concentration.",
+    "You need to use meditation to ease students’ worries.",
+    "How about separating water bottles for recycling?",
+    "Why don’t you plan a schedule when you study?\n[16 ~ 17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 380
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 여자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "how to conveniently use airport facilities",
+    "ways to get through airport security faster",
+    "futuristic airports designed by famous architects",
+    "airports named after well-known people in the world",
+    "guides for domestic-to-international airport transfer"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 278
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 도시가 아닌 것은?",
+   "choices": [
+    "Chicago",
+    "Nairobi",
+    "Paris",
+    "Jakarta",
+    "Buenos Aires\n  이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시에 \n따라 답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 119
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "체육관의 바닥 교체 공사를 요구하려고",
+    "농구 코트의 운영 시간 제한을 요청하려고",
+    "문화 센터 시설의 대관 날짜를 변경하려고",
+    "건강 증진 프로그램 신청 방법을 문의하려고",
+    "지역 내 체육 시설의 증설 가능 여부를 확인하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 821
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 드러난 Chaske의 심경 변화로 가장 적절한 것은?",
+   "choices": [
+    "nervous → doubtful",
+    "horrified → relieved",
+    "disappointed → curious",
+    "ashamed → frightened",
+    "bored → delighted"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 919
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "토양의 질을 개선하기 위해 친환경 농법의 연구와 개발이 필요하다.",
+    "세계 인구의 증가에 대응하기 위해 농산물 품종의 다양화가 필요하다.",
+    "기후 변화에 대한 지속 가능한 대책은 경제적 관점에서 고려되어야 한다.",
+    "다른 산업 분야와의 공동 연구를 통해 상품성을 가진 농작물을 개발해야 한다.",
+    "농업이 직면한 문제 해결 및 식량과 농산물의 지속적 생산을 위한 방안이 필요하다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1162
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 밑줄 친 be more than just sugar on the tongue이 다음 글에서 의미하는 바로 가장 적절한 것은?",
+   "choices": [
+    "play a role in relieving psychological anxiety",
+    "enlighten us about the absoluteness of beauty",
+    "conceal the artist’s cultural and ethnic traditions",
+    "embrace a variety of experiences beyond pleasure",
+    "distort the viewers’ accurate understanding of history"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1369
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "공공 시계는 서양 사회의 경제적 진보에 영향을 미쳤다.",
+    "서양에서 생산된 시계는 세계적으로 정교함을 인정받았다.",
+    "서양의 시계는 교역을 통해 전파되어 세계적으로 대중화되었다.",
+    "기계 시계의 발명은 다른 측량 장비들의 개발에 도움을 주었다.",
+    "중세 시대의 시계 발명은 자연법칙을 이해하는 데 큰 전환점이 되었다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1274
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "persuasive power of peer behavior",
+    "methods to help consumers shop less",
+    "innovative ways to reduce waste in retail",
+    "hidden nature of human beings to support materialism",
+    "importance of a store layout based on customer needs"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1460
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "The Importance of Protecting Human Dignity",
+    "Robots Can’t Surpass Human Beings in Nursing Jobs",
+    "Why Robots for Vulnerable People Should Look Like Robots",
+    "Can Robots Learn Ethical Behavior Through Human Interaction?",
+    "Healthcare Robots: Opening the Era of Online Medical Checkups"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1437
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. 다음 도표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "In total, \nwhile 51% of the respondents said targeted ads were intrusive, 27% \nsaid they were interesting.",
+    "The percentage of respondents who \nbelieved that targeted ads were interesting was the highest in the \nage group of 18 to 24.",
+    "The percentage of respondents aged 25 to \n34 who said that targeted ads were intrusive was the same as that \nof respondents aged 45 to 54 who said the same.",
+    "Among all age \ngroups, the gap between respondents who said targeted ads were \ninteresting and those who believed them to be intrusive was the \nlargest in the 35-to-44 age group.",
+    "The age group of 55 and \nabove was the only group where the percentage of respondents who \nbelieved targeted ads were intrusive was more than 50%."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 868
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Maggie L. Walker에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "아프리카계 미국인을 위해 설립된 학교에 다녔다.",
+    "졸업 후 자신이 공부했던 학교에서 교사로 일했다.",
+    "인종 차별로 인해 은행 금융법 공부를 시작할 수 없었다.",
+    "자선 단체와 대중 간의 소통을 장려하고자 신문사를 설립했다.",
+    "그녀가 설립한 은행은 대공황에서 살아남아 다른 은행들과 합병했다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1205
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. 2024 Youth Tennis Camp에 관한 다음 안내문의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "자격을 가진 테니스 선수가 지도한다.",
+    "금요일에는 강습이 없다.",
+    "등록비에는 점심 식사가 포함된다.",
+    "강습 당일 취소 시 환불받을 수 있다.",
+    "참가자들은 테니스 장비를 가져와야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 866
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. Cherrywood High School’s T-shirt Design Contest에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "교사들이 수상 디자인을 선정할 예정이다.",
+    "수상자 발표일은 제출 마감일 다음 날이다.",
+    "출품작은 학생회실에 제출해야 한다.",
+    "종이에 자신의 학번과 이름을 써야 한다.",
+    "사용 가능한 색상 수에 제한이 없다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 838
+  },
+  {
+   "qNum": 29,
+   "kind": "grammar_underline",
+   "stem": "29. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "themselves",
+    "②": "found in the gut",
+    "③": "cause toxic and inflammatory reactions",
+    "④": "that have been resolved in",
+    "⑤": "showed that"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1136
+  },
+  {
+   "qNum": 30,
+   "kind": "vocab_underline",
+   "stem": "30. 다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "justify doing so",
+    "②": "protect individuals from being photographed",
+    "③": "reconsideration of privacy brought about",
+    "④": "consent to being seen",
+    "⑤": "more harm to the community"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1247
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. Coincidence that is statistically impossible seems to us like an irrational event, and some define it as a miracle. But, as Montaigne has said, “the origin ",
+   "choices": [
+    "ignorance",
+    "flexibility",
+    "excellence",
+    "satisfaction",
+    "exaggeration"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1038
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. Information encountered after an event can influence subsequent remembering. External information can easily integrate into a witness’s memory, especially i",
+   "choices": [
+    "this new information will be rejected",
+    "people will deny the experience of forgetting",
+    "interference between conflicting data will occur",
+    "the unconscious will be involved in the recall process",
+    "a recent event will last longer in memory than a distant one"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1551
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. Correlations are powerful because the insights they offer are relatively clear. These insights are often covered up when we bring causality back into the pi",
+   "choices": [
+    "stay away from simply accepting the data as they are",
+    "point out every phenomenon in light of cause and effect",
+    "apply a psychological approach to color preferences",
+    "admit that correlations are within the framework of causality",
+    "hold off from trying to explain the reason behind the correlations"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1419
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. Most mice in the wild are eaten or die before their life span of two years is over. They die from external causes, such as disease, starvation, or predators",
+   "choices": [
+    "the distance that migrating species can travel for their survival",
+    "the average time that this animal species can survive in the wild",
+    "the amount of energy that members of the species expend in a day",
+    "the extent to which this species is able to protect its source of food",
+    "the maximum size of the habitat in which it and its neighbors coexist"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1294
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "This means that moral \nexcellence will be broadly set early in our lives, which is why the \nquestion of how early to teach it is so important.",
+    "Freud \nsuggested that we don’t change our personality much after age \nfive or thereabouts, but as in many other things, Freud was \nwrong.",
+    "A person of moral excellence cannot help doing good ―\nit is as natural as the change of seasons or the rotation of the \nplanets.",
+    "Recent psychological research shows that personality \ntraits stabilize around age thirty in both men and women and \nregardless of ethnicity as the human brain continues to develop, \nboth neuroanatomically and in terms of cognitive skills, until the \nmid-twenties.",
+    "The advantage of this new understanding is \nthat we can be a bit more optimistic than Aristotle and Freud \nabout being able to teach moral excellence.\n* neuroanatomically: 신경 해부학적으로\n[36 ~ 37] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 것을 \n고르시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1114
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. The size of a species is not accidental. It’s a fine-tuned interaction between a species and the world it inhabits. Over large periods of time, size fluctua",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1122
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. For a long time, random sampling was a good shortcut. It made analysis of large data problems possible in the pre-digital era. (A) There is no need to focus",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n[38 ~ 39] 글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 적절한 \n곳을 고르시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38 ~ 39"
+    ]
+   },
+   "charLen": 1252
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. We must reexamine this stereotype, however, as it doesn’t always hold true. Introverted leaders do have to overcome the strong cultural presumption that ext",
+   "choices": [
+    ") Although the population splits into almost equal \nparts between introverts and extroverts, more than 96 percent \nof managers and executives are extroverted. (",
+    ") In a study \ndone in 2006, 65 percent of senior corporate executives viewed \nintroversion as a barrier to leadership. (",
+    ") Regent \nUniversity found that a desire to be of service to others and to \nempower them to grow, which is more common among \nintroverts than extroverts, is a key factor in becoming a leader \nand retaining leadership. (",
+    ") So-called servant leadership, \ndating back to ancient philosophical literature, adheres to the \nbelief that a company’s goals are best achieved by helping \nworkers or customers achieve their goals. (",
+    ") Such leaders \ndo not seek attention but rather want to shine a light on others’ \nwins and achievements; servant leadership requires humility, but \nthat humility ultimately pays off.\n* humility: 겸손"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1109
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. However, contrary to the trend of the past several decades, in many new situations that are occurring today, allowing for imprecision― for messiness―may be ",
+   "choices": [
+    ") Just half a century later, in the 1920s, the \ndiscoveries of quantum mechanics forever destroyed the dream \nof comprehensive and perfect measurement. (",
+    ") And yet, \noutside a relatively small circle of physicists, the mindset of \nhumankind’s drive to flawlessly measure continued among \nengineers and scientists. (",
+    ") In the world of business it even \nexpanded, as the precision-oriented sciences of mathematics and \nstatistics began to influence all areas of commerce. (",
+    ") As a \ntradeoff for relaxing the standards of allowable errors, one can \nget a hold of much more data. (",
+    ") It isn’t just that “more is \nbetter than some,” but that, in fact, sometimes “more is greater \nthan better.”"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1096
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "generosity …… benefit",
+    "hostility …… support",
+    "generosity …… humiliation",
+    "hostility …… hospitality",
+    "tolerance\n…… dishonor\n[41 ~ 42] 다음 글을 읽고, 물음에 답하시오.\nIn Western society, many music performance settings make \na clear distinction between performers and audience \nmembers: the performers are the “doers” and those in the \naudience take a decidedly passive role. The performance \nspace itself may further (a) reinforce the distinction with a \nphysical separation between the stage and audience seating. \nPerhaps because this distinction is so common, audiences \nseem to greatly value opportunities to have special “access” \nto performers that affords understanding about performers’ \nstyle of music. Some performing musicians have won great \napproval by regularly (b) incorporating “audience participation” \ninto their concerts. Whether by leading a sing-along activity \nor teaching a rhythm to be clapped at certain points, including \naudience members in the music making can (c) boost the \nlevel of engagement and enjoyment for all involved. \nPerformers \nwho \nare \nuncomfortable \nleading \naudience \nparticipation can still connect with the audience simply by \ngiving a special glimpse of the performer (d) perspective. It is \nquite common in classical music to provide audiences with \nprogram notes. Typically, this text in a program gives \nbackground information about pieces of music being performed \nand perhaps biographical information about historically significant \ncomposers. What may be of more interest to audience members \nis background information about the very performers who are \nonstage, including an explanation of why they have chosen the \nmusic they are presenting. Such insight can make audience \nmembers feel (e) distant to the musicians onstage, both \nmetaphorically and emotionally. This connection will likely \nenhance the expressive and communicative experience."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3194
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Bridge the Divide and Get the Audience Involved",
+    "Musical Composition Reflects the Musician’s Experience",
+    "Why a Performer’s Style Changes with Each Performance",
+    "Understanding Performers on Stage: An Audience’s Responsibility",
+    "The Effect of Theater Facilities on the Success of a Performance"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 315
+  },
+  {
+   "qNum": 42,
+   "kind": "vocab_letter",
+   "stem": "42. 밑줄 친 (a)~(e) 중에서 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {
+    "a": "He opened it to",
+    "b": "your invitation",
+    "c": "you have anything to",
+    "d": "I will do even",
+    "e": "his hand in the"
+   },
+   "bracketChoices": {},
+   "charLen": 1938
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) - (C) - (D)",
+    "(C) - (B) - (D)",
+    "(C) - (D) - (B)",
+    "(D) - (B) - (C)",
+    "(D) - (C) - (B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 135
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a)~(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 74
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글에 관한 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "Robert와 James는 40년간 나란히 농사를 지었다.",
+    "Robert는 떠나려는 목수에게 더 머무르라고 말했다.",
+    "James는 불도저로 초원에 샛강을 만들었다.",
+    "Robert는 목수가 필요로 하는 재료들을 준비해 주었다.",
+    "목수는 샛강에 다리 대신 울타리를 설치했다.\n※ 확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)했는지 확인\n하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 229
+  }
+ ],
+ "sourcePdf": "ebsi_go2_20231219_paper_eng_mun_5Q3AY6AM.pdf"
+}

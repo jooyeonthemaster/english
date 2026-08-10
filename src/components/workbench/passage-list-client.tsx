@@ -1277,7 +1277,7 @@ export function PassageListClient({
                           </span>
                         </header>
                         <div className="p-3">
-                          <DragSelect
+                          <DragSelect deferCommit
                             className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-3"
                             value={selection.selectedIds}
                             onChange={selection.setSelectedIds}
@@ -1361,7 +1361,7 @@ export function PassageListClient({
                   </div>
                   )
                 ) : gridCols === "list" ? (
-                  <DragSelect
+                  <DragSelect deferCommit
                     className="space-y-1.5"
                     value={selection.selectedIds}
                     onChange={selection.setSelectedIds}
@@ -1378,7 +1378,7 @@ export function PassageListClient({
                     ))}
                   </DragSelect>
                 ) : (
-                  <DragSelect
+                  <DragSelect deferCommit
                     className={
                       gridCols === "grid2"
                         ? "grid grid-cols-1 gap-3 sm:grid-cols-2"

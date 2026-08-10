@@ -31,5 +31,5 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules", "scripts", "remotion", "manual-slides", "mobile", "src/app/_old_admin", "src/app/_old_student", "experiments", "reviews", ".tmp-webtoon-qa", "tmp"]
+  "exclude": ["node_modules", "scripts", "remotion", "manual-slides", "mobile", "src/app/_old_admin", "src/app/_old_student", "experiments", "reviews", ".tmp-webtoon-qa", "tmp", "qbank"]
 }

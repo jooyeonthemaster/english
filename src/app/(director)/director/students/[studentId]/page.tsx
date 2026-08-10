@@ -5,6 +5,8 @@ import { listStudentExamReports } from "@/actions/students/exam-reports";
 import { listStudentStudyTasks } from "@/actions/study-assignments";
 import { getGrammarLabStudentDetail } from "@/actions/grammar-drill-admin";
 import { StudentHubClient } from "@/components/students/hub/student-hub-client";
+import { aggregateStudentExamHistory } from "@/lib/exam-scoring/trend";
+import { summarize } from "@/lib/exam-scoring/summarize";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 
 interface PageProps {
@@ -24,15 +26,19 @@ export default async function StudentDetailPage({ params, searchParams }: PagePr
   const { studentId } = await params;
   const { tab } = await searchParams;
 
-  const [student, stats, grammarDetail, tasksRes, reportsRes] = await Promise.all([
-    getStudent(studentId),
-    getStudentStats(studentId),
-    FEATURE_FLAGS.ENABLE_GRAMMAR_DRILL
-      ? getGrammarLabStudentDetail(studentId)
-      : Promise.resolve(null),
-    listStudentStudyTasks(studentId),
-    listStudentExamReports(studentId),
-  ]);
+  const [student, stats, grammarDetail, tasksRes, reportsRes, examSittings] =
+    await Promise.all([
+      getStudent(studentId),
+      getStudentStats(studentId),
+      FEATURE_FLAGS.ENABLE_GRAMMAR_DRILL
+        ? getGrammarLabStudentDetail(studentId)
+        : Promise.resolve(null),
+      listStudentStudyTasks(studentId),
+      listStudentExamReports(studentId),
+      // M-10 — 헤더 「평균 점수율」 퀵스탯을 시험 탭과 동일 모집단으로:
+      // INTERNAL+EXTERNAL 통합 시계열(trend.ts 정본) → summarize(lib 정본) 1콜
+      aggregateStudentExamHistory(studentId, staff.academyId),
+    ]);
 
   if (!student) notFound();
 
@@ -65,6 +71,10 @@ export default async function StudentDetailPage({ params, searchParams }: PagePr
     schoolId: student.schoolId ?? null,
   };
 
+  // 헤더 「평균 점수율」 퀵스탯 — 시험 탭과 동일 모집단·동일 요약기(M-10).
+  // 구 stats.averageScore(examSubmissions, SHOW_USER_RESULTS 게이트) 축 폐기.
+  const examSummary = summarize(examSittings);
+
   const hubStats = {
     attendanceRate: stats.attendanceRate ?? 0,
     streak: stats.streak ?? 0,
@@ -75,9 +85,8 @@ export default async function StudentDetailPage({ params, searchParams }: PagePr
         status: a.status,
       }),
     ),
-    // 평균 시험 점수 퀵스탯 — SHOW_USER_RESULTS OFF 면 응시 0건으로 "—" 표시
-    averageScore: stats.averageScore ?? 0,
-    examCount: (stats.examSubmissions ?? []).length,
+    examAvgScorePct: examSummary.avgScorePct,
+    examSittings: examSummary.totalSittings,
   };
 
   return (

@@ -1,0 +1,756 @@
+{
+ "examId": "ebsi_go3_20240711",
+ "source": "ebsi_go3_20240711_paper_eng_1_mun_E37P4JAZ.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 다음을 듣고, 남자가 하는 말의 목적으로 가장 적절한 것을 고르시오. ① 교내 방송 모니터단 선정 결과를 발표하려고 ② 교내 방송을 위한 사연 제출을 요청하려고 ③ 방송부의 소셜미디어 계정을 알리려고 ④ 교내 선행상 수상자를 공지하려고 ⑤ 방송부원 모집을 홍보하려고",
+   "choices": [
+    "교내 방송 모니터단 선정 결과를 발표하려고",
+    "교내 방송을 위한 사연 제출을 요청하려고",
+    "방송부의 소셜미디어 계정을 알리려고",
+    "교내 선행상 수상자를 공지하려고",
+    "방송부원 모집을 홍보하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 163
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 남자의 의견으로 가장 적절한 것을 고르시오. ① 다양한 해조류 간식을 개발해야 한다. ② 건강을 위해 균형 잡힌 영양 섭취가 중요하다. ③ 기후 변화가 해양 생태계에 영향을 미칠 수 있다. ④ 농작물 경작 시 비료와 농약 사용을 자제해야 한다. ⑤ 해조류를 재배하는 ",
+   "choices": [
+    "다양한 해조류 간식을 개발해야 한다.",
+    "건강을 위해 균형 잡힌 영양 섭취가 중요하다.",
+    "기후 변화가 해양 생태계에 영향을 미칠 수 있다.",
+    "농작물 경작 시 비료와 농약 사용을 자제해야 한다.",
+    "해조류를 재배하는 것은 지구 환경 보호에 도움이 된다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 195
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을 듣고, 여자가 하는 말의 요지로 가장 적절한 것을 고르시오. ① 공기 정화 장치 설치를 의무화해야 한다. ② 규칙적인 환기는 건강에 도움을 줄 수 있다. ③ 면역력 증진을 위해 알맞은 습도 유지가 중요하다. ④ 적절한 실내 온도 유지는 에너지 절약에 필수적이다. ⑤ 30초 ",
+   "choices": [
+    "공기 정화 장치 설치를 의무화해야 한다.",
+    "규칙적인 환기는 건강에 도움을 줄 수 있다.",
+    "면역력 증진을 위해 알맞은 습도 유지가 중요하다.",
+    "적절한 실내 온도 유지는 에너지 절약에 필수적이다.",
+    "30초 손 씻기를 통해 호흡기 질환을 예방할 수 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 197
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고르시오.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 41
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 여자가 할 일로 가장 적절한 것을 고르시오. ① 썰매 구입하기 ② 숙소 예약 확인하기 ③ 지도 다운로드 하기 ④ 식료품 주문하기 ⑤ 타이어 공기압 점검하기",
+   "choices": [
+    "썰매 구입하기",
+    "숙소 예약 확인하기",
+    "지도 다운로드 하기",
+    "식료품 주문하기",
+    "타이어 공기압 점검하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 104
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 남자가 지불할 금액을 고르시오. [3점] ① $170 ② $192 ③ $200 ④ $220 ⑤ $240",
+   "choices": [
+    "$170",
+    "$192",
+    "$200",
+    "$220",
+    "$240"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 71
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 여자가 전자책 구독을 해지한 이유를 고르시오. ① 신작 업데이트가 자주 이루어지지 않아서 ② 가족 공유 요금제가 종료되어서 ③ 구독료가 인상되어서 ④ 오래된 희귀 만화책이 없어서 ⑤ 독서를 위한 여가 시간이 줄어들어서",
+   "choices": [
+    "신작 업데이트가 자주 이루어지지 않아서",
+    "가족 공유 요금제가 종료되어서",
+    "구독료가 인상되어서",
+    "오래된 희귀 만화책이 없어서",
+    "독서를 위한 여가 시간이 줄어들어서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 143
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, London Afternoon Tea Bus Tour에 관해 언급되지 않은 것을 고르시오. ① 투어 장소 ② 소요 시간 ③ 참가비 ④ 탑승 장소 ⑤ 이용 후기",
+   "choices": [
+    "투어 장소",
+    "소요 시간",
+    "참가비",
+    "탑승 장소",
+    "이용 후기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 105
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. Surf Camp Australia에 관한 다음 내용을 듣고, 일치하지 않는 것을 고르시오. ① 각각의 서핑 코스는 3일 동안 진행된다. ② 한 번에 최대 100명을 수용할 수 있다. ③ 음식을 제공한다. ④ 수강자의 서핑 수준에 따라 비용이 다르다. ⑤ 홈페이지를 통해서 예약할 ",
+   "choices": [
+    "각각의 서핑 코스는 3일 동안 진행된다.",
+    "한 번에 최대 100명을 수용할 수 있다.",
+    "음식을 제공한다.",
+    "수강자의 서핑 수준에 따라 비용이 다르다.",
+    "홈페이지를 통해서 예약할 수 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 177
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 다음 표를 보면서 대화를 듣고, 남자가 주문할 Standing Desk를 고르시오.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 52
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ① These lenses go well with your skin tone. ② I’ve already had black ones, so I’ll get another color. ③ I’m n",
+   "choices": [
+    "These lenses go well with your skin tone.",
+    "I’ve already had black ones, so I’ll get another color.",
+    "I’m not sure where to buy my glasses around my house.",
+    "Go see a doctor if your eyesight is getting worse.",
+    "Rectangular ones would look good on your face."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 324
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ① Okay. I’ll take my medicine regularly. ② No worries. I’ll take out the recycling myself. ③ I see. I’ll drop",
+   "choices": [
+    "A\n$249\n115 cm\n×",
+    "B\n$289\n121 cm\n○",
+    "C\n$369\n127 cm\n○",
+    "D\n$439\n123 cm\n×",
+    "E\n$529\n128 cm\n×\n고3"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 511
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. [3점] Man: ① I’ll wake up early so I don’t miss the bus. ② Just tell them when you need the newspaper. ③ I’ll ",
+   "choices": [
+    "I’ll wake up early so I don’t miss the bus.",
+    "Just tell them when you need the newspaper.",
+    "I’ll let them know the deadline for the assignment.",
+    "I forgot to put the newspaper back after reading it.",
+    "I’ll explain why there should be a bus stop in front of our school."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 398
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. Woman: ① After you record yourself, it provides instant feedback. ② There’re no available language courses at this time. ③ Feel free to learn new languages in my class. ④ Why don’t you try learning something else?",
+   "choices": [
+    "After you record yourself, it provides instant feedback.",
+    "There’re no available language courses at this time.",
+    "Feel free to learn new languages in my class.",
+    "Why don’t you try learning something else?",
+    "Let’s start by creating your new app."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 373
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Eric이 Anna에게 할 말로 가장 적절한 것을 고르시오. [3점] Eric: ① You should avoid overwatering the plant. ② Growing plants can help keep the air cleaner. ③ I recommend growing plants to lift your spirits up. ④ Why don’t you provide your plant with more nutrients?",
+   "choices": [
+    "You should avoid overwatering the plant.",
+    "Growing plants can help keep the air cleaner.",
+    "I recommend growing plants to lift your spirits up.",
+    "Why don’t you provide your plant with more nutrients?",
+    "Our science club needs an interesting topic for our project.\n[16~17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 421
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 여자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "animalrelated festivals from around the world",
+    "different perspectives on the status of animals",
+    "economic benefits of hosting local festivals",
+    "policies aiming to promote animal rights",
+    "jobs satisfying the needs of pet owners"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 270
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 나라가 아닌 것은?",
+   "choices": [
+    "India",
+    "Thailand",
+    "Canada",
+    "Spain",
+    "France"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 68
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "유연 근무제 실시 계획을 안내하려고",
+    "직장 내 갈등 조정 기구 신설을 홍보하려고",
+    "유연 근무제의 만족도 조사 참여를 독려하려고",
+    "부서별 유연 근무 신청 승인 결과를 통보하려고",
+    "교통량 감소를 위한 대중교통 이용을 장려하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 854
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 드러난 Joshua의 심경 변화로 가장 적절한 것은?",
+   "choices": [
+    "isolated →optimistic",
+    "curious  → bored",
+    "anxious →thrilled",
+    "terrified → relieved",
+    "pleased →discouraged"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1069
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "작가로 성공하려면 계속해서 출간해야 한다.",
+    "좋은 글을 쓰려면 먼저 글을 많이 읽어야 한다.",
+    "자신의 경험을 글쓰기 소재로 적극 활용해야 한다.",
+    "책을 홍보하기 위해 다양한 마케팅 수단을 마련해야 한다.",
+    "작가별 전시에서 벗어나 새로운 도서 전시 방식을 시도해야 한다.\n  이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시에 \n따라 답을 하시기 바랍니다.\n고3"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1187
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 밑줄 친 the breadcrumbs of the conversation이 다음 글에서 의미하는 바로 가장 적절한 것은?",
+   "choices": [
+    "roundabout hints revealing the speaker’s intention",
+    "opening words to make the topic more interesting",
+    "part of the conversation that distracts the listeners",
+    "characteristics that are unique to the actors themselves",
+    "unexpected reactions of the audience to the performance"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1518
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "직원들의 성과에 대한 다양한 평가 기준이 필요하다.",
+    "성공적인 관리자는 실패로부터 교훈을 이끌어 낸다.",
+    "직원 간의 목표 공유가 조직을 결속하는 데 효과적이다.",
+    "조직 문화의 혁신적 변화를 위해서는 관리자의 경험에 의한 \n직관이 중요하다.",
+    "조직 행동 이해에서 관리자가 과학적 접근법을 활용하지 않으\n면 잘못된 판단을 할 수 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1317
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "risks of hasty decisionmaking during natural disasters",
+    "reasons for governmental concern about aging populations",
+    "significance of studying the comprehensive history of policy making",
+    "different approaches of governments depending on the nature \nof the problem",
+    "advantages of anticipatory problemsolving in dealing with \nsocial problems"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1463
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Marginalized Yesterday, Privileged Today",
+    "How DamageBased Research Can Backfire",
+    "Research: An Endless Journey to the Truth",
+    "Different Era, Different Education for Minority Youth",
+    "The Growth of Diversity Among Younger Generations \n고3"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1568
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. 다음 도표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "Dairy milk had the largest \nenvironmental footprint of both greenhouse gas emissions \nand freshwater use.",
+    "Rice milk used more than ten times \nthe amount of fresh water that soy milk did.",
+    "Oat milk \nranked fourth in both environmental footprint categories.",
+    "In the category of greenhouse gas emissions, the gap \nbetween soy milk and oat milk was less than the gap \nbetween oat milk and almond milk.",
+    "Among plantbased \nmilks, \nalmond milk consumed the \nlargest amount of \nfreshwater, yet emitted the least amount of greenhouse gas."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 770
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. John Carew Eccles에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "12세까지 홈스쿨링을 받았다.",
+    "Melbourne High School에서 과학과 수학을 공부했다.",
+    "Sir Charles Sherrington의 연구 조교였다.",
+    "1963년에 노벨 생리·의학상을 단독으로 수상했다.",
+    "은퇴하고 Switzerland로 이주했다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1156
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. Dolphin Tours에 관한 다음 안내문의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "각 투어는 2시간이 소요된다.",
+    "11세 이하의 어린이는 무료로 참가할 수 있다.",
+    "해양 생물학자가 돌고래 관찰을 안내한다.",
+    "일부 활동은 예약 없이 참여할 수 있다.",
+    "어린이는 부모나 보호자를 동반해야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 820
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. 2024 Celton Math Night에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "오후 5시에 종료된다.",
+    "각 팀은 3명의 학생으로 구성되어야 한다.",
+    "계산기 반입이 허용되지 않는다.",
+    "가장 먼저 활동지를 완성하는 팀이 상을 받는다.",
+    "7월 26일까지 등록해야 한다. \n고3"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 838
+  },
+  {
+   "qNum": 29,
+   "kind": "grammar_underline",
+   "stem": "29. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "are the ones who stand",
+    "②": "where people will land from",
+    "③": "to learn",
+    "④": "traveled",
+    "⑤": "blooming late"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1002
+  },
+  {
+   "qNum": 30,
+   "kind": "vocab_underline",
+   "stem": "30. 다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "less interested in taking actions",
+    "②": "impatient the more disconnected they",
+    "③": "disassociation between their image of",
+    "④": "abandon immediate benefits",
+    "⑤": "farsighted decision making can be"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1466
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. Motivation doesn’t have to be accidental. For example, you don’t have to wait for hours until a certain song that picks up your spirits comes on the radio. ",
+   "choices": [
+    "isolating",
+    "denying",
+    "programming",
+    "silencing",
+    "questioning"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1028
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. We are than we are of visual ones. We notice and dislike breaks in audio, defects in audio, and static in audio. A bit less so for things on the visual side",
+   "choices": [
+    "less aware of the sound techniques in film",
+    "less forgiving of technical sound mistakes",
+    "more forgetful of auditory experiences",
+    "less desirous of sound effects",
+    "more in need of hearing aids\n고3"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1142
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. Businesses are realizing that the way they operate and the impact they have on the environment greatly impacts their ability to maintain customers. Transiti",
+   "choices": [
+    "returning much of their profits back to society",
+    "producing userfriendly items to meet customers’ needs",
+    "maintaining products rather than on making new products",
+    "creating a new demand at the expense of the environment",
+    "encouraging consumers to express their opinions frequently"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1546
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. The term Mother Tree comes from forestry. It has been clear for centuries that tree parents play such an important role in raising their offspring that they",
+   "choices": [
+    "One can pleasantly cool down under the shade of large trees",
+    "The trees manage to extend their roots towards the water source",
+    "The attempts to outgrow neighboring seedlings are likely to succeed",
+    "Mother trees provide shade to accelerate the growth of their offspring",
+    "The slow pace of life gently imposed by the mother tree is no accident"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1496
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "The “personalization” that \nis promised on every front — in the domains of search, \nshopping, health, news, advertising, learning, music, and \nentertainment ― depends on ever more refined algorithmic \nconstructions of individuality.",
+    "As it becomes more difficult \nto produce our digital selves as unique individuals, we are \nincreasingly being produced as unique individuals from the \noutside.",
+    "When AI algorithms learn more about our \nidentities, it becomes essential to safeguard this information \nand ensure that individuals have control and consent over \nthe data collected about them.",
+    "Individuality is redefined \nfrom a cultural practice and reflexive project to an \nalgorithmic process.",
+    "Our unique selfhood is no longer \nsomething for which we are wholly responsible; it is \nalgorithmically guaranteed.\n[36~37] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 \n것을 고르시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1121
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. Technocracy can be thought to influence technological decisionmaking in one of two ways. (A) This is because policymakers work within the constraints set by",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n고3"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1096
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. Land use change can be good or bad for the climate. Plants use photosynthesis to convert carbon dioxide from the air and water to carbohydrates. (A) In thos",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n[38~39] 글의 흐름으로 보아, 주어진 문장이 들어가기에 \n가장 적절한 곳을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38~39"
+    ]
+   },
+   "charLen": 1274
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. Following this pathway, we act altruistically when we feel empathy for a person and can truly imagine a situation from their perspective. Prosocial behavior",
+   "choices": [
+    ") One pathway, the egoistic pathway, is largely \nselffocused: we provide help if the rewards to us outweigh \nthe costs. (",
+    ") This pathway is the one that is operating \nif we hand a homeless person a dollar to make ourselves \nfeel better. (",
+    ") Doing so costs us very little — only a \ndollar — and the reward of doing so — avoiding the guilt we’d \nfeel \nfrom \nsimply \nwalking \nby — is \ngreater. (",
+    ") But \naccording to Batson’s hypothesis, there is another pathway, \nwhich is otherfocused — it’s motivated by a genuine desire \nto help the other person, even if we incur a cost for doing \nso. (",
+    ") This ability to see the world from someone \nelse’s perspective can lead us to help, even if there are \nconsiderable costs."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1055
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. Without the anchor of intrinsic motivation however, even a small bump in the road may reset you back; we may go back to eating meat in February when the soc",
+   "choices": [
+    ") However, when \nprocesses police us but fail to truly influence us, we do not \ncontinue with the behaviours after the processes are \nremoved. (",
+    ") This is passive engagement rather than \nownership. (",
+    ") A better way in which we can be \nexternally supported to take action is by having friends who \nencourage us. (",
+    ") You may not be sold on going vegan, \nbut yet give veganism a try at the start of the year because \nsome of your friends suggest you do it together. (",
+    ") \nResonance helps us connect to our internal motivation to \nchange rather than being ‘pushed’ from the outside, and in \nturn helps us form a habit, where our selfconcept makes a \nshift from ‘someone who does not like cycling’ to ‘someone \nwho cycles’.\n* resonance: 울림, 의의"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1190
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "perceive\n…… corresponding",
+    "describe   ……  postponed",
+    "manipulate …… transactional",
+    "regulate  \n……  intimate",
+    "develop    ……  lasting \n고3\n[41~42] 다음 글을 읽고, 물음에 답하시오. \n  We have seen a clear rise in something called \n‘shrinkflation’. A basket of products is measured for \ninflation by price, not by volume or weight. If the \nproducts shrink in size but the price stays the same, \ntechnically no price (a) increase has occurred. But people \naren’t stupid, they know what that means. You can see \nthis in everything from the reduced amount of cereal in a \nbox to smallersized chocolate bars. You can see it in the \nform of everlarger apertures in toothpaste tubes and \npowders of various sorts. The purpose of these changes \nis to make the consumer use up the product (b) faster \nand to pay more per weight. Toilet paper and paper \ntowel rolls have everlarger tube centres and everfewer \nsheets, while the price remains the same. There are     \n(c) fewer potato crisps in the bag and cookies in the box. \nBottles of liquids such as perfumes have everlarger \ndimples on the bottom that displace the product and   \n(d) prevent the illusion of more inside than there is. \nShrinkflation \nis \nnot \nrestricted \nto \nretail \nproducts. \nApartments are shrinking, too. Micro apartments are \nsmaller than anything we lived in before but cost more \nper square foot. Shrinkflation is a signal that tells us that \ncompanies are facing higher costs. It is a signal that \nprice pressures are starting to (e) build.\n                   * aperture: 입구  ** dimple: 움푹 들어간 곳"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3162
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Small Sizes Win Consumers Over in the Era of Shrinkflation",
+    "Hidden Inflation: Paying the Same for Shrunken Goods",
+    "Business Marketing Strategy: Stand Out, Don’t Shrink",
+    "Innovative Changes in SmallerSized Daily Products",
+    "Buy One, Get One Free: How Companies Attract You"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 309
+  },
+  {
+   "qNum": 42,
+   "kind": "vocab_letter",
+   "stem": "42. 밑줄 친 (a)～(e) 중에서 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {
+    "c": "him",
+    "d": "him into hiding",
+    "e": "his"
+   },
+   "bracketChoices": {},
+   "charLen": 2031
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) -(D) -(C)",
+    "(C) -(B) -(D)",
+    "(C) -(D) -(B)",
+    "(D) -(B) -(C)",
+    "(D) -(C) -(B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 136
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a)~(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 76
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글에 관한 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "몽구스 한 마리가 배를 타고 Duluth로 왔다.",
+    "Mr. Magoo는 사형을 선고받았다.",
+    "Mr. Magoo는 수많은 편지와 카드를 받았다.",
+    "10,000명이 넘는 시민들이 No Noose for the Mongoose  \n캠페인을 지지했다.",
+    "Mr. Magoo의 미국 망명이 허가되지 않았다.\n* 확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)했는지 확인\n하시오.\n  On the northwestern coastline of Lake Superior is the \ncity of Duluth, the westernmost port for transatlantic cargo \nships. A lot of cargo comes into Duluth: coal, iron ore, \ngrain, clothing and, in November 1962, a mongoose from \nIndia. The merchant seamen had enjoyed his company on \nthe long journey and had sat drinking tea with him, but \nthey decided he deserved a life on dry land so they \npresented (a) him as a gift to the city’s Lake Superior \nZoo. Lloyd Hackl, the director of the zoo, was delighted \nand named (b) his new mongoose Mr. Magoo. His fate \ntook an unexpected turn when, labeled an invasive species, \nfederal agents sentenced him to death."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 925
+  }
+ ],
+ "sourcePdf": "ebsi_go3_20240711_paper_eng_1_mun_E37P4JAZ.pdf"
+}

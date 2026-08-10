@@ -41,6 +41,8 @@ export interface QuestionBrief {
   id: string;
   number: number | null;
   type: string;
+  /** 표시 변환용(예: BLANK_INFERENCE 다중 빈칸 선지의 (A)/(B) 라벨) */
+  subType: string | null;
   questionText: string;
   options: Array<{ label: string; text: string }> | null;
   correctAnswer: string;
@@ -74,6 +76,7 @@ async function fetchPassageQuestions(
     select: {
       id: true,
       type: true,
+      subType: true,
       questionNumber: true,
       questionText: true,
       options: true,
@@ -85,6 +88,7 @@ async function fetchPassageQuestions(
     id: q.id,
     number: q.questionNumber,
     type: q.type,
+    subType: q.subType,
     questionText: q.questionText,
     options: parseOptions(q.options),
     correctAnswer: q.correctAnswer,

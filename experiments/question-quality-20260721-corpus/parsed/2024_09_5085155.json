@@ -1,0 +1,765 @@
+{
+ "examId": "2024_09_5085155",
+ "source": "59c8b2f202f30c56fdd1cc1931188bad.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 다음을 듣고, 여자가 하는 말의 목적으로 가장 적절한 것을 고르시오. ①멸종 위기 동물을 소개하려고 ②동물원 관람 예절을 안내하려고 ③어린이 동물 캠프를 홍보하려고 ④신입 동물 훈련사를 모집하려고 ⑤야생 동물 보호를 독려하려고",
+   "choices": [
+    "멸종 위기 동물을 소개하려고",
+    "동물원 관람 예절을 안내하려고",
+    "어린이 동물 캠프를 홍보하려고",
+    "신입 동물 훈련사를 모집하려고",
+    "야생 동물 보호를 독려하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 131
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 남자의 의견으로 가장 적절한 것을 고르시오. ①점심시간에 운동하는 것은 활력과 집중력을 높인다. ②개인의 건강 상태에 따라 운동 강도를 조절해야 한다. ③부상 방지를 위해 올바른 자세로 운동하는 것이 중요하다. ④규칙적인 운동은 정서 안정에 도움을 줄 수 있다. ⑤과",
+   "choices": [
+    "점심시간에 운동하는 것은 활력과 집중력을 높인다.",
+    "개인의 건강 상태에 따라 운동 강도를 조절해야 한다.",
+    "부상 방지를 위해 올바른 자세로 운동하는 것이 중요하다.",
+    "규칙적인 운동은 정서 안정에 도움을 줄 수 있다.",
+    "과도한 아침 운동은 업무에 방해가 될 수 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 186
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을 듣고, 여자가 하는 말의 요지로 가장 적절한 것을 고르시오. ①정기적인 학습 상담은 학습 능률을 높여 줄 수 있다. ②메모하는 것은 과제를 관리하는 데 효율적인 방법이다. ③자신만의 암기법을 활용하면 성적을 향상시킬 수 있다. ④두뇌의 균형적인 발달은 메모하는 습관으로 촉진",
+   "choices": [
+    "정기적인 학습 상담은 학습 능률을 높여 줄 수 있다.",
+    "메모하는 것은 과제를 관리하는 데 효율적인 방법이다.",
+    "자신만의 암기법을 활용하면 성적을 향상시킬 수 있다.",
+    "두뇌의 균형적인 발달은 메모하는 습관으로 촉진된다.",
+    "실천 가능한 계획 수립이 과제 해결의 출발점이다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 194
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고르시오.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 41
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 여자가 할 일로 가장 적절한 것을 고르시오. ①간식 준비하기 ②유인물 출력하기 ③학교 체육관 예약하기 ④강사에게 연락하기 ⑤배너 배송 일정 확인하기",
+   "choices": [
+    "간식 준비하기",
+    "유인물 출력하기",
+    "학교 체육관 예약하기",
+    "강사에게 연락하기",
+    "배너 배송 일정 확인하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 95
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 남자가 지불할 금액을 고르시오. [3점] ①$60 ②$63 ③$70 ④$75 ⑤$80",
+   "choices": [
+    "$60",
+    "$63",
+    "$70",
+    "$75",
+    "$80"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 59
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 여자가 콘서트에 갈 수 없는 이유를 고르시오. ①콘서트 티켓을 예매하지 못해서 ②과학 토론 대회에 참가해야 해서 ③아르바이트 대체 근무자를 찾지 못해서 ④부모님과 함께 여행을 가야 해서 ⑤축구 경기에 출전해야 해서",
+   "choices": [
+    "콘서트 티켓을 예매하지 못해서",
+    "과학 토론 대회에 참가해야 해서",
+    "아르바이트 대체 근무자를 찾지 못해서",
+    "부모님과 함께 여행을 가야 해서",
+    "축구 경기에 출전해야 해서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 131
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, Raven Elliott의 책 사인회에 관해 언급되지 않은 것을 고르시오. ①날짜 ②장소 ③시작 시간 ④기념품 ⑤신청 방법",
+   "choices": [
+    "날짜",
+    "장소",
+    "시작 시간",
+    "기념품",
+    "신청 방법"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 81
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. Grandhill Park Cleanup 행사에 관한 다음 내용을 듣고, 일치 하지 않는 것을 고르시오. ①9월 30일에 열릴 것이다. ②참가자들은 둘이서 짝을 이루어 쓰레기를 주울 것이다. ③유명 인사들이 참가할 것이다. ④모든 참가자들은 에코백을 받을 것이다. ⑤참가자들은 쓰레",
+   "choices": [
+    "9월 30일에 열릴 것이다.",
+    "참가자들은 둘이서 짝을 이루어 쓰레기를 주울 것이다.",
+    "유명 인사들이 참가할 것이다.",
+    "모든 참가자들은 에코백을 받을 것이다.",
+    "참가자들은 쓰레기봉투와 장갑을 가져와야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 178
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 다음 표를 보면서 대화를 듣고, 여자가 수강할 스포츠 프로그램을 고르시오. After-school Sports Programs Program Sport Grade Day Equipment provided ① A Volleyball All Monday ◯ ② B Baseball A",
+   "choices": [
+    "A\nVolleyball\nAll\nMonday\n◯",
+    "B\nBaseball\nAll\nTuesday\n◯",
+    "C\nSoccer\n3rd\nWednesday\n☓",
+    "D\nBadminton\n1st & 2nd\nThursday\n☓",
+    "E\nTable tennis\n2nd & 3rd\nFriday\n◯"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 273
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ①Why don’t you download the app first?",
+   "choices": [
+    "Why don’t you download the app first?",
+    "I agree! We can open a new pizza place.",
+    "Really? I wonder why they don’t deliver.",
+    "That’s great! Can you order the pizza now?",
+    "Okay. I’ll attend the meeting in person then."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 265
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ①That’s a good idea. You’d better take it. ②Sorry, but you’re not allowed to go outside. ③Cheer up. We’ll tak",
+   "choices": [
+    "That’s a good idea. You’d better take it.",
+    "Sorry, but you’re not allowed to go outside.",
+    "Cheer up. We’ll take a trip to the mountains.",
+    "That’s true. We saw a shooting star last night.",
+    "Don’t worry. I can give you a ride to your school.\n2024학년도 대학수학능력시험 9월 모의평가 문제지\n제3 교시"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 324
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. Woman: ①Excellent! I’ll see you at 7 p.m. on Sunday. ②I’d appreciate it if you could do that for me. ③Why not?",
+   "choices": [
+    "Excellent! I’ll see you at 7 p.m. on Sunday.",
+    "I’d appreciate it if you could do that for me.",
+    "Why not? I want to pick them up right now.",
+    "Please remember to fix the zipper on time.",
+    "Well done! The repaired pants fit me well."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 285
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. Man: ①I know what you mean. You can stay home. ②Absolutely. I would never go barefoot walking. ③Sounds good t",
+   "choices": [
+    "I know what you mean. You can stay home.",
+    "Absolutely. I would never go barefoot walking.",
+    "Sounds good to me. Let’s try it this weekend!",
+    "It’s my fault. I should’ve booked the event earlier.",
+    "I had a nice time there. You should do it."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 292
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Jack이 Amy에게 할 말로 가장 적절한 것을 고르시오. [3점] Jack: ①No problem. We can reschedule our meeting. ②Don’t be upset. I’ll record the interview for you. ③Calm down. Did you call the computer service center?",
+   "choices": [
+    "No problem. We can reschedule our meeting.",
+    "Don’t be upset. I’ll record the interview for you.",
+    "Calm down. Did you call the computer service center?",
+    "I see. We can exchange your laptop for a new one.",
+    "No way. Are you done editing the video clips?\n[16～17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 337
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 여자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "survival strategies of endangered animals",
+    "impacts of environmental changes on animals’ diet",
+    "methods animals adopt to make up for lack of sleep",
+    "hunting patterns used by animals in the wild",
+    "factors that affect animals’ sleep patterns"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 271
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 동물이 아닌 것은?",
+   "choices": [
+    "elephants",
+    "bats",
+    "sheep",
+    "lions",
+    "flamingos"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 61
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "교통안전 봉사 참여를 요청하려고",
+    "자원봉사 교육 일정을 공지하려고",
+    "학교 시설 공사에 대한 양해를 구하려고",
+    "학교 앞 도로 공사의 필요성을 설명하려고",
+    "등·하교 차량 안전 수칙 준수를 당부하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 853
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 드러난 Nancy의 심경 변화로 가장 적절한 것은?",
+   "choices": [
+    "disappointed →excited",
+    "relieved →anxious",
+    "surprised\n→annoyed",
+    "ashamed →grateful",
+    "indifferent\n→amazed"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 798
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "적성을 파악하기 위해서는 자신 있는 일을 다양하게 시도해야 한다.",
+    "자신감을 키우기 위해 낯설고 두려운 일에 도전하는 용기를 가져야 한다.",
+    "어려운 일을 자신 있게 수행하기 위해 사전에 계획을 철저히 세워야 한다.",
+    "과도한 자신감을 갖기보다는 자신의 약점을 객관적으로 분석해야 한다.",
+    "자신의 경험과 지식을 바탕으로 당면한 문제에 자신 있게 대처해야 한다. \n  이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시에 \n따라 답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1240
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 밑줄 친 “The best is the enemy of the good.”이 다음 글에서 의미하는 바로 가장 적절한 것은?",
+   "choices": [
+    "Pursuing perfection at work causes conflicts among team members.",
+    "Raising work quality only to prove oneself is not desirable.",
+    "Inviting overqualified specialists to a project leads to bad ends.",
+    "Responding to the changing needs of clients is unnecessary.",
+    "Acquiring a range of skills for a project does not ensure success."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1442
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "이민자 고유의 정체성을 유지할 권리에 대한 공동체의 인식이 필요하다.",
+    "이민자의 적응을 돕기 위해 그들의 요구를 반영한 정책 수립이 중요하다.",
+    "이민자는 미래 사회의 긍정적 변화에 핵심적 역할을 수행할 수 있다.",
+    "다문화 사회의 안정을 위해서는 국제적 차원의 지속적인 협력이 요구된다.",
+    "문화적 동화는 장기적이고 체계적인 과정을 통해 점진적으로 이루어진다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1229
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "features of music playlists appealing to international audiences",
+    "influence of advertisers on radio audiences’ musical preferences",
+    "difficulties of increasing audience size in radio music programmes",
+    "necessity of satisfying listeners’ diverse needs in the radio business",
+    "outcome of music radio businesses’ attempts to attract large audiences"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1453
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Web-based Journalism: Lasting Longer and Contextually Wider",
+    "With the Latest Content, Online News Beats Daily Newspapers!",
+    "How Online Media Journalists Reveal Hidden Stories Behind News",
+    "Let’s Begin a Journey to the Past with Printed Newspapers!",
+    "Present and Future of Journalism in the Web World"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1308
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. 다음 표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "Among the five groups, Asians \nexhibited the highest college enrollment rate with more than \n50% in each year listed in the table.",
+    "Whites were the \nsecond highest in terms of the college enrollment rate among \nall the groups in all three years, while the rate dropped below \n40% in 2021.",
+    "The college enrollment rates of both Blacks \nand Hispanics were higher than 35% but lower than 40% in \n2011 and in 2021.",
+    "Among the years displayed in the table, \n2016 was the only year when the college enrollment rate of \nHispanics was higher than that of Blacks.",
+    "In each year, \nAmerican Indians/Alaska Natives showed the lowest college \nenrollment rate."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 818
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Charles Rosen에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "어려서부터 피아노에 재능을 보였다.",
+    "프랑스 문학으로 박사 학위를 받았다.",
+    "유명 작곡가들로부터 그들의 작품 연주를 요청받았다.",
+    "The Classical Style이 처음으로 출판되고 다음 해에 상을 받았다.",
+    "피아니스트 활동을 중단하고 글쓰기에 매진하였다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1155
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. Brushwood National Park Tour Program에 관한 다음 안내문의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "자원봉사 안내자가 동행한다.",
+    "주말에 진행된다.",
+    "QR 코드를 스캔하여 신청한다.",
+    "각 참가자에게 물이 한 병씩 제공될 것이다.",
+    "날씨에 따라 취소될 수 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 161
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. WGHS Geography Photo Contest에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "처음으로 개최되는 대회이다.",
+    "출품 사진 주제에 제한이 없다.",
+    "100 MB 크기의 파일을 제출할 수 있다.",
+    "투표는 일주일간 실시된다.",
+    "학생들이 선정한 사진들이 전시될 것이다. \nWGHS Geography Photo Contest\nThe event you’ve been waiting for all this year is finally \nhere! Please join Wood Gate High School’s 10th annual \nGeography Photo Contest.\nGuidelines\n󰠂Participants should use the theme of the “Beauty of \nRivers Crossing Our City.”\n󰠂Submissions are limited to one photo per person.\n󰠂Files should not be larger than 50 MB.\nSchedule\nWhen\nWhere\nSubmission October 2－October 8\nEmail: \ngeography@woodgate.edu\nVoting\nOctober 11－October 13\nSchool Website:\nhttps://www.woodgate.edu\nExhibition October 16－October 20\nMain Lobby\nNote\n󰠂The top 10 photos selected by students will be exhibited.\n※ For more information, visit the geography teacher’s room.\nBrushwood National Park Tour Program \nWalking in nature is a great way to stay fit and healthy. \nEnjoy free park walks with our volunteer guides, while \nappreciating the beautiful sights and sounds of the forest. \nDetails\n∙Open on weekdays from March to November\n∙Easy walk along the path for one hour (3km)\n∙Groups of 15 to 20 per guide\nRegistration\n∙Scan the QR code to sign up for the tour. \nNote\n∙A bottle of water will be provided to each participant.\n∙Children under 12 must be accompanied by an adult.\n∙Tours may be canceled due to weather conditions.\n※ If you have any questions, please email us at \nbrushwoodtour@parks.org."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1466
+  },
+  {
+   "qNum": 29,
+   "kind": "grammar_underline",
+   "stem": "29. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "do your best under pressure",
+    "②": "it into something that is",
+    "③": "realizing that it is your",
+    "④": "that the stress response gives",
+    "⑤": "to go on your first"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 915
+  },
+  {
+   "qNum": 30,
+   "kind": "vocab_underline",
+   "stem": "30. 다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "particular geographic region",
+    "②": "increased the availability of these",
+    "③": "added to the fact that",
+    "④": "countered a disconnect between consumers",
+    "⑤": "reconnects the company and the"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1254
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. In the post-World War II years after 1945, unparalleled economic growth fueled a building boom and a massive migration from the central cities to the new su",
+   "choices": [
+    "downfall",
+    "uniformity",
+    "restoration",
+    "privatization",
+    "customization"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1008
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. Many people create and share pictures and videos on the Internet. The difficulty is finding what you want. Typically, people want to search using words (rat",
+   "choices": [
+    "a set of words that allow users to identify an individual object",
+    "a comprehensive description of what is happening in an image",
+    "a reliable resource for categorizing information by pictures",
+    "a primary means of organizing a sequential order of words",
+    "a useful filter for sorting similar but not identical images"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1113
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. An invention or discovery that is too far ahead of its time is worthless; no one can follow. Ideally, an innovation opens up only the next step from what is",
+   "choices": [
+    "caught up to modern problems",
+    "raised even more questions",
+    "addressed past and current topics alike",
+    "were only one step away",
+    "regained acceptance of the public"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1259
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. Prior to photography, . While painters have always lifted particular places out of their ‘dwelling’ and transported them elsewhere, paintings were time-cons",
+   "choices": [
+    "paintings alone connected with nature",
+    "painting was the major form of art",
+    "art held up a mirror to the world",
+    "desire for travel was not strong",
+    "places did not travel well"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1435
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "These \nfactors include manager reliance on face-to-face management \npractices, lack of telecommuting training within an organization, \nmisperceptions of and discomfort with flexible workplace \nprograms, and a lack of information about the effects of \ntelecommuting on an organization’s bottom line.",
+    "Despite \nthese limitations, at the beginning of the 21st century, a new \n“anytime, anywhere” work culture is emerging.",
+    "Care must \nbe taken to select employees whose personal and working \ncharacteristics are best suited for telecommuting.",
+    "Continuing \nadvances in information technology, the expansion of a global \nworkforce, and increased desire to balance work and family are \nonly three of the many factors that will gradually reduce the \ncurrent barriers to telecommuting as a dominant workforce \ndevelopment.",
+    "With implications for organizational cost \nsavings, especially with regard to lower facility costs, increased \nemployee flexibility, and productivity, telecommuting is \nincreasingly of interest to many organizations. \n* telecommute: (컴퓨터로) 집에서 근무하다\n[36～37] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 \n것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1317
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. The intuitive ability to classify and generalize is undoubtedly a useful feature of life and research, but it carries a high cost, such as in our tendency t",
+   "choices": [
+    "(A) －(C) －(B)",
+    "(B) －(A) －(C)",
+    "(B) －(C) －(A)",
+    "(C) －(A) －(B)",
+    "(C) －(B) －(A)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1194
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. Plants show finely tuned adaptive responses when nutrients are limiting. Gardeners may recognize yellow leaves as a sign of poor nutrition and the need for ",
+   "choices": [
+    "(A) －(C) －(B)",
+    "(B) －(A) －(C)",
+    "(B) －(C) －(A)",
+    "(C) －(A) －(B)",
+    "(C) －(B) －(A)\n[38～39] 글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 \n적절한 곳을 고르시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38～39"
+    ]
+   },
+   "charLen": 1342
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. Because the manipulation of digitally converted sounds meant the reprogramming of binary information, editing operations could be performed with millisecond",
+   "choices": [
+    ") One \ncould, in other words, twist and bend sounds toward \nsomething new without sacrificing the original version. (",
+    ") \nThis “undo” ability made mistakes considerably less momentous, \nsparking the creative process and encouraging a generally \nmore experimental mindset. (",
+    ") In addition, digitally converted \nsounds could be manipulated simply by programming digital \nmessages rather than using physical tools, simplifying the \nediting process significantly. (",
+    ") For example, while editing \nonce involved razor blades to physically cut and splice \naudiotapes, it now involved the cursor and mouse-click of the \ncomputer-based sequencer program, which was obviously less \ntime consuming. (",
+    ") This microlevel access at once made \nit easier to conceal any traces of manipulations (such as \njoining tracks in silent spots) and introduced new possibilities \nfor manipulating sounds in audible and experimental ways.\n* binary: 2진법의\n** splice: 합쳐 잇다"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1354
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. In the case of specialists such as art critics, a deeper familiarity with materials and techniques is often useful in reaching an informed judgement about a",
+   "choices": [
+    ") All that is required is a general sense of a significant \ndifference between working with paints and working with an \nimaging application. (",
+    ") This sense might involve a basic \nfamiliarity with paints and paintbrushes as well as a basic \nfamiliarity with how we use computers, perhaps including how \nwe use consumer imaging apps. (",
+    ") This is because every \nkind of artistic material or tool comes with its own challenges \nand affordances for artistic creation. (",
+    ") Critics are often \ninterested in the ways artists exploit different kinds of materials \nand tools for particular artistic effect. (",
+    ") They are also \ninterested in the success of an artist’s attempt ― embodied in \nthe artwork itself ― to push the limits of what can be achieved \nwith certain materials and tools. [3점] \n* affordance: 행위유발성\n** exploit: 활용하다"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1175
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "insignificant ……delay",
+    "insufficient……enrich",
+    "concrete\n……enhance",
+    "outdated\n……improve",
+    "limited\n……disturb\n[41～42] 다음 글을 읽고, 물음에 답하시오.\nOne reason we think we forget most of what we learned in \nschool is that we underestimate what we actually remember. \nOther times, we know we remember something, but we don’t \nrecognize that we learned it in school. Knowing where and \nwhen you learned something is usually called context \ninformation, and context is handled by (a) different memory \nprocesses than memory for the content. Thus, it’s quite \npossible to retain content without remembering the context. \nFor example, if someone mentions a movie and you think \nto yourself that you heard it was terrible but can’t remember \n(b) where you heard that, you’re recalling the content, but \nyou’ve lost the context. Context information is frequently \n(c) easier to forget than content, and it’s the source of a variety \nof memory illusions. For instance, people are (d) unconvinced \nby a persuasive argument if it’s written by someone who is not \nvery credible (e.g., someone with a clear financial interest in \nthe topic). But in time, readers’ attitudes, on average, change \nin the direction of the persuasive argument. Why? Because \nreaders are likely to remember the content of the argument but \nforget the source ― someone who is not credible. If remembering \nthe source of knowledge is difficult, you can see how it would \nbe (e) challenging to conclude you don’t remember much \nfrom school.\n* illusion: 착각"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2914
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Learned Nothing in School?: How Memory Tricks You",
+    "Why We Forget Selectively: Credibility of Content",
+    "The Constant Battle Between Content and Context",
+    "How Students Can Learn More and Better in School",
+    "Shift Your Focus from Who to What for Memory Building"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 280
+  },
+  {
+   "qNum": 42,
+   "kind": "vocab_letter",
+   "stem": "42. 밑줄 친 (a)～(e) 중에서 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {
+    "a": "You’ve been stressed for",
+    "b": "he called to his",
+    "c": "You must be as",
+    "d": "I know just the",
+    "e": "he added protective gear"
+   },
+   "bracketChoices": {},
+   "charLen": 2030
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) －(D) －(C)",
+    "(C) －(B) －(D)",
+    "(C) －(D) －(B)",
+    "(D) －(B) －(C)",
+    "(D) －(C) －(B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 125
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a)～(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 70
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글에 관한 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "Sean은 친구 Alex에게 어려움을 토로했다.",
+    "Toby가 큰 연못으로 달려갔다.",
+    "밤이 되자 바람이 잦아들었다.",
+    "Sean은 산을 내려오며 기쁨을 느꼈다.",
+    "Sean은 Vincent Mountain 하이킹에 대해 읽은 적이 있다.\n* 확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)했는지 확인\n하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 208
+  }
+ ],
+ "sourcePdf": "59c8b2f202f30c56fdd1cc1931188bad.pdf",
+ "fileName": "영어영역_문제지.pdf"
+}

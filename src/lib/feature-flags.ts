@@ -141,6 +141,27 @@ export const FEATURE_FLAGS = {
     process.env.NEXT_PUBLIC_ENABLE_GRAMMAR_DRILL,
     true,
   ),
+
+  /**
+   * v3 어법 훈련소(/director/workbench/grammar-studio): 유닛 문항 브라우징 +
+   * 합성지문 AI 생성 허브. 기본 false 다크런칭(v3 design §D5-1) —
+   * 생성 P1 실측(b01 10문항·솔버 통과율) 확인 후 on.
+   */
+  ENABLE_GRAMMAR_STUDIO: publicBooleanFlag(
+    process.env.NEXT_PUBLIC_ENABLE_GRAMMAR_STUDIO,
+    false,
+  ),
+
+  /**
+   * 26-08 단어 훈련(어휘 트랙 /g/track/vocab): 기출 단어 코퍼스(표제어 27,011 ·
+   * sense 35,341) 기반 학생 어휘 드릴. 콘텐츠 DB 적재 완료로 기본 ON —
+   * NEXT_PUBLIC_ENABLE_VOCAB_DRILL=false 로 내리면 트랙이 PREPARING 으로
+   * 돌아가고 코드 경로는 그대로 남는다.
+   */
+  ENABLE_VOCAB_DRILL: publicBooleanFlag(
+    process.env.NEXT_PUBLIC_ENABLE_VOCAB_DRILL,
+    true,
+  ),
 } as const;
 
 export type FeatureFlag = keyof typeof FEATURE_FLAGS;

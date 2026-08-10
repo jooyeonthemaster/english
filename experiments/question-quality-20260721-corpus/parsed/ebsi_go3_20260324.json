@@ -1,0 +1,770 @@
+{
+ "examId": "ebsi_go3_20260324",
+ "source": "ebsi_go3_20260324_paper_eng_mun_9374KX91.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 다음을 듣고, 남자가 하는 말의 목적으로 가장 적절한 것을 고 르시오. ① 체육관 이용 지침 준수를 당부하려고 ② 체육관 운영 시간 변경을 공지하려고 ③ 새로운 운동 기구 사용법을 설명하려고 ④ 운동 목적에 맞는 의류 착용을 권장하려고 ⑤ 체육관 불편 사항 접수 방법을 안내하려고",
+   "choices": [
+    "체육관 이용 지침 준수를 당부하려고",
+    "체육관 운영 시간 변경을 공지하려고",
+    "새로운 운동 기구 사용법을 설명하려고",
+    "운동 목적에 맞는 의류 착용을 권장하려고",
+    "체육관 불편 사항 접수 방법을 안내하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 160
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 여자의 의견으로 가장 적절한 것을 고르시오. ① 교과서의 세부 내용까지 꼼꼼히 공부해야 한다. ② 복습을 빨리할수록 내용이 기억에 오래 남는다. ③ 수업 중 이해가 되지 않으면 적극적으로 질문해야 한다. ④ 과목별로 다른 공책을 사용하는 것이 효과적이다. ⑤ 핵심 내",
+   "choices": [
+    "교과서의 세부 내용까지 꼼꼼히 공부해야 한다.",
+    "복습을 빨리할수록 내용이 기억에 오래 남는다.",
+    "수업 중 이해가 되지 않으면 적극적으로 질문해야 한다.",
+    "과목별로 다른 공책을 사용하는 것이 효과적이다.",
+    "핵심 내용만 선택적으로 필기하는 것이 더 좋다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 183
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을 듣고, 남자가 하는 말의 요지로 가장 적절한 것을 고르시오. ① 공상은 창의적이고 혁신적인 사고로 이어질 수 있다. ② 과학 지식이 뒷받침되어야 창의적인 발명이 가능하다. ③ 집중력을 높이려면 주의를 분산시키는 요소를 줄여야 한다. ④ 공상이 습관이 되면 그것을 스스로 멈추",
+   "choices": [
+    "공상은 창의적이고 혁신적인 사고로 이어질 수 있다.",
+    "과학 지식이 뒷받침되어야 창의적인 발명이 가능하다.",
+    "집중력을 높이려면 주의를 분산시키는 요소를 줄여야 한다.",
+    "공상이 습관이 되면 그것을 스스로 멈추기가 어려워진다.",
+    "공상과 현실의 차이가 클수록 실망감이 커진다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 198
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고르시오. ① ② ③ ④ ⑤",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 51
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 여자가 할 일로 가장 적절한 것을 고르시오. ① 추가 배터리 준비하기 ② 현수막 설치하기 ③ 비디오카메라 가져오기 ④ 방문객 좌석 준비하기 ⑤ 퀴즈 우승자 상품 주문하기",
+   "choices": [
+    "추가 배터리 준비하기",
+    "현수막 설치하기",
+    "비디오카메라 가져오기",
+    "방문객 좌석 준비하기",
+    "퀴즈 우승자 상품 주문하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 106
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 남자가 지불할 금액을 고르시오. [3점] ① $210 ② $220 ③ $270 ④ $290 ⑤ $300",
+   "choices": [
+    "$210",
+    "$220",
+    "$270",
+    "$290",
+    "$300"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 69
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 여자가 보드게임을 하러 갈 수 없는 이유를 고르 시오. ① 아르바이트를 해야 해서 ② 보고서를 마무리해야 해서 ③ 건강 검진이 예약되어 있어서 ④ 다른 친구의 집들이에 가야 해서 ⑤ 수리 기사의 방문이 예정되어 있어서",
+   "choices": [
+    "아르바이트를 해야 해서",
+    "보고서를 마무리해야 해서",
+    "건강 검진이 예약되어 있어서",
+    "다른 친구의 집들이에 가야 해서",
+    "수리 기사의 방문이 예정되어 있어서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 133
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, Night Sea Concert에 관해 언급되지 않은 것을 고르시오. ① 장소 ② 연주자 ③ 일시 ④ 주차 정보 ⑤ 티켓 가격",
+   "choices": [
+    "장소",
+    "연주자",
+    "일시",
+    "주차 정보",
+    "티켓 가격"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 83
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 2026 Public Speaking Workshop에 관한 다음 내용을 듣고, 일 치하지 않는 것을 고르시오. ① 5월부터 6월까지 주말마다 진행된다. ② 발표 기술에 관한 특강을 포함한다. ③ 참가비는 무료이다. ④ 모든 참가자는 일대일 피드백을 받는다. ⑤ 마지막 날에 각 참",
+   "choices": [
+    "5월부터 6월까지 주말마다 진행된다.",
+    "발표 기술에 관한 특강을 포함한다.",
+    "참가비는 무료이다.",
+    "모든 참가자는 일대일 피드백을 받는다.",
+    "마지막 날에 각 참가자는 무대에서 짧은 연설을 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 180
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 다음 표를 보면서 대화를 듣고, 여자가 구입할 여행용 목베개 를 고르시오. Neck Pillows for Traveling Model Price Cover Material Customer Ratings Color ① A $31 Cotton ★★★★☆ Gray ② B $35 Cot",
+   "choices": [
+    "A\n$31\nCotton\n★★★★☆\nGray",
+    "B\n$35\nCotton\n★★★★★\nWhite",
+    "C\n$47\nSilk\n★★★☆☆\nBlack",
+    "D\n$49\nLinen\n★★★☆☆\nNavy",
+    "E\n$56\nLinen\n★★★★☆\nPink"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 252
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. [3점] ① Hmm. You’re not allowed to charge any electronic device. ② Of course. Those seats are on the third flo",
+   "choices": [
+    "Hmm. You’re not allowed to charge any electronic device.",
+    "Of course. Those seats are on the third floor.",
+    "Don’t worry. I’m almost done with my report.",
+    "Okay. In that case, let’s find somewhere quiet.",
+    "You’re right. I should bring my charger wherever I go."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 319
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ① Alright. I’ll just use the professionalgrade camera I have. ② I didn’t know that. Then I’ll definitely give",
+   "choices": [
+    "Alright. I’ll just use the professionalgrade camera I have.",
+    "I didn’t know that. Then I’ll definitely give it a go.",
+    "Not at all. I don’t have time to take photos.",
+    "I’m sorry. The contest is for professionals only.",
+    "Hurry. You should submit your photos by tomorrow.\n2026학년도 3월 고3 전국연합학력평가 문제지\n제3 교시\n고3"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 359
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. Woman: ① No problem. I downloaded the same app as you. ② Wow. I’m glad that they’ll begin a delivery service.",
+   "choices": [
+    "No problem. I downloaded the same app as you.",
+    "Wow. I’m glad that they’ll begin a delivery service.",
+    "My goodness! You missed the notification from the app.",
+    "Thanks. I truly enjoyed the authentic Mexican dishes.",
+    "Exactly. Let’s join the waitlist through the app."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 380
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. Man: ① I agree. Buying a new bag is much cheaper. ② Oops! I threw away my old jeans yesterday. ③ Yes, please. I hope my bag comes out great. ④ No thanks. I don’t need any more jeans right now. ⑤ Guess what?",
+   "choices": [
+    "I agree. Buying a new bag is much cheaper.",
+    "Oops! I threw away my old jeans yesterday.",
+    "Yes, please. I hope my bag comes out great.",
+    "No thanks. I don’t need any more jeans right now.",
+    "Guess what? I’ve made this upcycled bag all by myself."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 356
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Sophia가 James에게 할 말로 가장 적 절한 것을 고르시오. [3점] Sophia: ① I’d rather stick to our current marketing plan. ② Why don’t we collaborate with a famous character?",
+   "choices": [
+    "I’d rather stick to our current marketing plan.",
+    "Why don’t we collaborate with a famous character?",
+    "We should strengthen teamwork within the company.",
+    "I doubt characterbranded products would be appealing.",
+    "How about creating a new flavor for the global market?\n[16 ∼17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 413
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 여자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "reasons artificial materials are losing popularity",
+    "new technologies that help create artificial materials",
+    "the various artificial alternatives to natural materials",
+    "the preference for natural materials to artificial ones",
+    "the environmental problems caused by artificial materials"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 316
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 재료가 아닌 것은?",
+   "choices": [
+    "silk",
+    "leather",
+    "diamond",
+    "wood",
+    "rubber\n이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시\n에 따라 답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 112
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "칼럼의 휴재를 공지하려고",
+    "잡지의 정기 구독 혜택을 안내하려고",
+    "잡지에 대한 독자 의견을 조사하려고",
+    "건강 칼럼의 신설을 홍보하려고",
+    "칼럼 작가를 모집하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 705
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 드러난 ‘I’의 심경 변화로 가장 적절한 것은?",
+   "choices": [
+    "isolated → welcomed",
+    "joyful → embarrassed",
+    "thrilled → disappointed",
+    "anxious → indifferent",
+    "relieved → sorrowful"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 850
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "과학이 인간의 활동이라는 점을 지식 추구의 기반으로 봐야 한다.",
+    "과학적 진리에 도달하려면 인간 활동의 한계를 극복해야 한다.",
+    "지식 탐구를 위해서는 과학적 사실 그 자체에 집중해야 한다.",
+    "객관적 연구를 위해 연구자의 개인적 가치관을 배제해야 한다.",
+    "인간 행위를 합리화하려는 목적으로 과학을 이용하지 말아야 한다.\n고3"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1096
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 밑줄 친 become “researchers” just like everyone else가 다 음 글에서 의미하는 바로 가장 적절한 것은?",
+   "choices": [
+    "reproduce the signature style of master composers \nfaithfully",
+    "admit that the quality of artistic output is not subject to \ntemporal factors",
+    "embrace the prevailing focus on technically demonstrable \nnovelty and formal progress",
+    "question the impact that music has on maintaining \naesthetic standards and cultural identities",
+    "distinguish the fundamental independence musicians have \non their craft from the principles of science"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1661
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "의문문의 형태로 요청할 경우 의미 전달이 약해질 수 있다.",
+    "타인의 요구에 대하여 진심으로 공감하는 자세가 필요하다.",
+    "공신력 있는 자료에 근거한 답변이 더 신뢰를 얻는다.",
+    "정확한 의도 전달에는 간결한 형태의 질문이 효과적이다.",
+    "질문이 내포한 문제를 해결할 수 있는 답변이 좋은 답이다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1336
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "need for ongoing learning at the workplace in the age of AI",
+    "rise of ethical concerns regarding AIdriven job automation",
+    "significance of soft skills in resolving workplace conflicts",
+    "risk of relying on AI as a tool for retraining employees",
+    "limitation of adopting AI systems in workforce planning"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1512
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Translation’s True Calling: Restoring Vitality of the Unfamiliar",
+    "Is Refining the Original Tone Always Better for Accessibility?",
+    "How Literary Guides Deprive Readers of Art’s True Rawness",
+    "The Role of Translation in Distributing Regional Literature",
+    "Overcoming Native Strangeness for Successful Translation\n고3"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1402
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. 다음 도표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "For using social networks to share \npictures and updates, the percentage of Gen X was 50%, \nwhich was the highest among the three generations.",
+    "When \nit comes to using social networks to get inspired, the \npercentage of Gen Z was more than twice the percentage of \nGen X, with Gen X showing the lowest figure among the \nthree generations.",
+    "Regarding the category of using social \nnetworks to get news conveniently, the percentage of all \nthree generations was over 20%.",
+    "For using social networks \nto follow celebrities, the percentage of Millennials was higher \nthan that of Gen X, reporting exactly twice the percentage of \nGen X.",
+    "The percentage of Millennials using social networks \nto expand their professional network was 18%, which was \nthe highest among the three generations."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1059
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Douglass Houghton에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "Rensselaer Scientific School에서 학위를 받았다.",
+    "Detroit에서 인기 있는 과학 강연자가 되었다.",
+    "1831년에 면허를 취득했다.",
+    "Michigan 최초의 주(州) 지질학자로 임명되었다.",
+    "친구들의 조언을 듣고 시장직을 거절했다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1136
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. River Breeze Campsite에 관한 다음 안내문의 내용과 일치하 지 않는 것은?",
+   "choices": [
+    "피크닉 구역은 오전 11시부터 운영한다.",
+    "7세 이하의 피크닉 구역 요금은 무료이다.",
+    "텐트 대여료는 1박당 20달러이다.",
+    "오후 10시에 캠프장 조명이 꺼진다.",
+    "캠프장 상공에서 드론 비행이 허용된다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 718
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. Chopstick Bridge Building Contest에 관한 다음 안내문의 내 용과 일치하는 것은?",
+   "choices": [
+    "최소 4명으로 구성된 팀으로 등록해야 한다.",
+    "3월 31일부터 신청할 수 있다.",
+    "시상식은 오후 2시에 열린다.",
+    "추가 재료의 사용이 허용된다.",
+    "상위 세 팀은 상품을 받을 것이다.\n고3"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 708
+  },
+  {
+   "qNum": 29,
+   "kind": "grammar_underline",
+   "stem": "29. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "producing many highly similar but",
+    "②": "imply reproductive overrun",
+    "③": "them",
+    "④": "which they find themselves",
+    "⑤": "minor compared to the constraints"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1268
+  },
+  {
+   "qNum": 30,
+   "kind": "vocab_underline",
+   "stem": "30. 다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "differences",
+    "②": "acknowledges the varieties of grass",
+    "③": "alike",
+    "④": "ignored",
+    "⑤": "cocategorized with all its fellows"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1246
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. “Art without commerce is a hobby.” These words, spoken with much authority to senior fine arts majors, are the kind that those who create art are unable to ignore. We worry about this idea that if we are not engaged in commerce, then we are not professional; and if we are not professional, can we even call ourselves artists?",
+   "choices": [
+    "universal",
+    "individualist",
+    "romantic",
+    "collective",
+    "capitalist"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1226
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. We cannot make sense of the facts of the past unless they are embedded in stories, and stories, of necessity, are not neutral collections of facts. Stories ",
+   "choices": [
+    "an ability to appropriate history for one’s own ends",
+    "not just facts about the past but history as a discipline",
+    "informal methods to record overlooked historical moments",
+    "disciplinary measures to maintain cultural particularity",
+    "a firm moral sense when reflecting on the past\n고3"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1309
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. All architectural structures are forms of spatial choreography that guides action; space facilitates or prohibits, encourages or prevents, invites or inhibi",
+   "choices": [
+    "an instrument to pass down cultural mindsets of its time",
+    "a spatial logic made independent from nonprofessional opinions",
+    "an extension of human bodily and mental actions and capabilities",
+    "an architectural expression of the designer’s aesthetic preference",
+    "a structure whose outward appearance masks its function"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1438
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. Think of the totality of your interactions where behavioral and interactional data is recorded and collected. All of those traces represent a kind of resour",
+   "choices": [
+    "conceal your digital traces",
+    "correct one’s misconception",
+    "characterize your social location",
+    "define what has exchange values",
+    "represent widespread social trends"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1255
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "To think and \nreason about things is the primary function of the human \nmind as has been noted by all philosophers since Descartes.",
+    "It is because of this capacity to think and weigh the pros \nand cons of actions that human beings can plan for their \nfuture and make sufficient effort to achieve their chosen \ngoals in life.",
+    "In other words, obsessing over advantages \nonly and fixating on benefits lead human beings to make \nwrong choices.",
+    "Besides, human beings make free choices \nin all given situations, except where they are constrained to \nact.",
+    "Thus freedom is a basic feature of human life which \ndistinguishes humans from other animals.\n[36 ~ 37] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 것\n을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 993
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. Daniel Dennett argues that one benefit of having moral considerations in our conceptual repertoire is that they can serve as conversationstoppers: their val",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n고3"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1254
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. When the concept of expansion gets mentioned, it is difficult to resist the urge to picture the Universe with a finite and growing boundary. Our natural ins",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n[38 ~ 39] 글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 \n적절한 곳을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38 ~ 39"
+    ]
+   },
+   "charLen": 1292
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. According to McNeil and Duncan, gesture is different from language in that it does not present the speaker with such choices. Scholars have demonstrated tha",
+   "choices": [
+    ") For example, in \ndescribing an event, one must decide if the event has been \ncompleted or is ongoing if the language being spoken at that \nmoment has a verbal affix for each meaning and one or the \nother must be chosen. (",
+    ") This kind of choice is \ncharacteristic of language as a semiotic system. (",
+    ") \nInstead, it offers a kind of glue, which helps unite linguistic \nelements in a larger semiotic expression, which, as a whole, \nshares important characteristics with the represented objects. \n(",
+    ") In this view, speech and gesture are not redundant \nnor is one a “translation” of the other. (",
+    ") Rather, the \nminimal processing unit for the expression of thought is a \ncombination of the two: it is “imagisticcategorial” in nature.\n* affix: 접사  ** semiotic: 기호의"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1346
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. Nonetheless, for most outsiders even completely transparent practices do not lift the veil behind which such forms of knowledge are hidden —without the rele",
+   "choices": [
+    ") A newcomer learns \nfrom experts and is socialized into the common practices of the \nrelevant \nepistemic \ncommunity. \n(",
+    ") \nOften \nthere \nare \nadmittance processes, combined with tests of a candidate’s \nabilities. (",
+    ") In the premodern era, epistemic communities \nwere often kept secret, with strict tests of loyalty for new \nmembers, not least because of fears that specialized knowledge \nwould fall into the “wrong hands.” (",
+    ") Some traces of these \nolder practices may still be present today, but on the whole, \nthe ideal has shifted to openness among the members of \nepistemic communities, and also, to some extent, toward \noutsiders. (",
+    ") Other, more active strategies are needed to \nmake certain forms of knowledge as “accessible” as is \nrealistically possible. [3점]\n* transparent: 투명한  ** epistemic: 지식의"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1278
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "coordinate\n·······\nobjective",
+    "coordinate\n·······\nfavorable",
+    "organize\n·······\ninconsistent",
+    "disassociate\n·······\npositive",
+    "disassociate\n·······\nindefinite\n고3\n[41 ~ 42] 다음 글을 읽고, 물음에 답하시오.\nWriting of a commentary by Lenin on Leo Tolstoy, the \ncritic Pierre Macherey agrees with Lenin’s claim that \nTolstoy’s work holds up a mirror to the Russian revolution \nof 1905. Yet this mirroring, Macherey argues, is a \ncomplex affair, by no means a (a) direct reflection of the \nworld as it stands. If literary works are in some sense \nmirrors, they are mirrors marked by flaws and blind spots. \nIn fact, they are as significant for what they don’t reflect\n— for their exclusions and distortions — as for what they \ndo. There are things which do not and cannot (b) figure in \nthe mirror — in the case of Tolstoy, certain contradictions \nin society of which he could not be conscious. Even so, \nthe mirror makes us aware of these (c) absences, which \nthus become faintly present. It is as though it allows us \nto see more clearly what isn’t there. There is also no \nreason to assume that what we see in the mirror must \nform a coherent whole. On the contrary, it may be in \npieces and discordant. ‘The mirror is doubtless defective; \nthe outlines will sometimes be disturbed; the reflection \nfaint or confused’, remarks George Eliot in Adam Bede, \n(d) praising the kind of naive realism which holds that art \n(or mirrors) always tell it like it is. A mirror offers us a \nversion of reality, but it does so from a viewpoint which \ncannot be captured in the mirror itself. And because this \nviewpoint is (e) invisible to us, we might be tempted to \ntake it as beyond question.\n* coherent: 일관된  ** discordant: 조화를 이루지 못하는\n*** defective: 불완전한"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3343
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "The Significance of What Literary Mirrors Fail to Show",
+    "Literature: A Tool for Writers to Deliver Their View",
+    "Why Are We Fascinated by Twists in Literature?",
+    "The Power of Literature to Reflect Reality As It Stands",
+    "What Makes a Classic: All Elements Working in Harmony"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 299
+  },
+  {
+   "qNum": 42,
+   "kind": "vocab_letter",
+   "stem": "42. 밑줄 친 (a)~(e) 중에서 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {
+    "a": "she needed a heart",
+    "b": "her heart was failing",
+    "c": "she could really help",
+    "d": "she would really like",
+    "e": "her stay in the"
+   },
+   "bracketChoices": {},
+   "charLen": 2229
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) - (D) - (C)",
+    "(C) - (B) - (D)",
+    "(C) - (D) - (B)",
+    "(D) - (B) - (C)",
+    "(D) - (C) - (B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 140
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a)~(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 74
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글에 관한 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "Cora의 고향은 Appalachia라는 마을이다.",
+    "의사들은 소녀가 병원 가까이에 머무르길 원했다.",
+    "소녀의 집은 병원에서 네 시간 거리에 있었다.",
+    "Cora는 비스킷을 직접 만들었다.",
+    "Cora는 추가 매트리스를 준비했다.\n* 확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)\n했는지 확인하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 209
+  }
+ ],
+ "sourcePdf": "ebsi_go3_20260324_paper_eng_mun_9374KX91.pdf"
+}

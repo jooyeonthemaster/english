@@ -3,6 +3,7 @@
 import {
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type CSSProperties,
@@ -15,6 +16,10 @@ import {
   ChevronUp,
   GripVertical,
 } from "lucide-react";
+import {
+  WorkspaceBodyContext,
+  type WorkspaceBodyExpansion,
+} from "./workspace-body-context";
 
 /**
  * Resizable / collapsible two-pane workspace shell that mirrors the
@@ -38,6 +43,34 @@ const BODY_STORAGE_KEY = "smoat:generate:body-height";
 const BODY_MIN = 460;
 const BODY_DEFAULT = 600;
 const BODY_MAX = 1300;
+/**
+ * 자동 확장분(WorkspaceBodyContext 로 요청받는다). **두 표면이 같은 값을 쓴다.**
+ *  · 지문 행 "비교 모드"(AI 변형 미리보기 열림) — 새 지문과 원문을 동시에 본다.
+ *  · 조판대(AI로 지문 만들기) — 조판 결과 밴드가 생겼을 때.
+ *
+ * 왜 +300 인가 — 조판대 기준 실측(본문 600px · PC 2단 · lg):
+ *   좌 컬럼 스크롤 뷰포트
+ *     = 600 − 우측 패널 테두리 2 − IntakeSurface 탭 행 44(sm:h-11)
+ *       − 출력방식 행 63(pt8+pb8+말풍선[1+4+36+4+1]+hairline 1)
+ *       − 조판대 마스트헤드 56(h-14) − 컬럼 헤더 36(h-9) − p-4 32
+ *     = **367px**
+ *   결과 1건 최소 콘텐츠(빈 발주 밴드 + 완료 밴드 1개, 편 제목 3줄)
+ *     = 발주 밴드 165(textarea min-h 120 + hairline 1 + 툴바 pt8+h-9 36)
+ *       + space-y-6 24
+ *       + 결과 섹션 230(머리 24.5 + 밴드 205.5)
+ *     = **419px**  → 기본 높이에서 이미 **52px 이 잘린다**.
+ *   자료 1행(41) · 막힌 사유 줄(27.5)까지 붙는 실사용 상태면 487px = 120px 잘림.
+ *   +300 이면 뷰포트가 667px 이 되어 419~487px 이 통째로 들어온다(밴드 2개부터는
+ *   좌 컬럼 스크롤이 받는다 — 세 번째 스크롤을 만들지 않는다는 조판대 계약).
+ */
+const BODY_AUTO_EXPAND = 300;
+/**
+ * 자동 확장의 상한 — 늘어난 본문은 **한 화면(100dvh)** 을 넘지 않는다. 넘겨 봐야
+ * 한눈에 들어오지 않고 페이지 스크롤만 길어진다.
+ * ⚠️ 사용자가 손으로 끈 높이는 이 상한보다 커도 **절대 줄이지 않는다** — 적용식의
+ *   max(bodyHeight, …) 가 그것을 보증한다. 자동 조절이 수동 조작을 이기면 안 된다.
+ */
+const BODY_EXPAND_VIEWPORT_CAP = "100dvh";
 
 const BODY_COLLAPSED_STORAGE_KEY = "smoat:generate:body-collapsed";
 
@@ -133,6 +166,48 @@ export function WorkspaceShell({
   const [bodyHeight, setBodyHeight] = useState<number>(readStoredBodyHeight);
   const [collapsed, setCollapsed] = useState<boolean>(readStoredCollapsed);
   const leftPaneVisible = leftActive && leftPaneOpen;
+  // 본문 세로 드래그 중에는 height 트랜지션을 꺼서 손을 즉시 따라오게 한다.
+  const [bodyDragging, setBodyDragging] = useState(false);
+  // "비교 모드" 확장을 요청한 지문 행 id 집합 — 하나라도 있으면 본문을 늘린다.
+  const [expandIds, setExpandIds] = useState<Set<string>>(() => new Set());
+  const bodyExpansion = useMemo<WorkspaceBodyExpansion>(
+    () => ({
+      requestExpand: (id: string) =>
+        setExpandIds((prev) => {
+          if (prev.has(id)) return prev;
+          const next = new Set(prev);
+          next.add(id);
+          return next;
+        }),
+      releaseExpand: (id: string) =>
+        setExpandIds((prev) => {
+          if (!prev.has(id)) return prev;
+          const next = new Set(prev);
+          next.delete(id);
+          return next;
+        }),
+    }),
+    [],
+  );
+  // 사용자가 저장한 기본 높이 + (확장 요청이 있으면) 확장분.
+  // **절대 높이를 덮어쓰지 않고 델타만 얹는 모델**이다 — 그래서 사용자가 손으로 끈
+  // 값은 언제나 그대로 남고(확장은 늘 그보다 크다), 요청이 풀리면 정확히 그 값으로
+  // 되돌아온다. "자동 조절이 수동 조작과 싸우지 않는다"가 구조적으로 보장되는 지점.
+  const expandActive = expandIds.size > 0;
+  const expandedBodyHeight = bodyHeight + (expandActive ? BODY_AUTO_EXPAND : 0);
+  /**
+   * 실제로 적용할 높이. --ws-body-h 도 **같은 값**을 노출해 카드 높이 캡
+   * (calc(--ws-body-h - 130px))까지 함께 늘어난다.
+   *  · 확장 요청 없음 → 사용자 값 px 그대로(기존 동작 무회귀).
+   *  · 세로 드래그 중 → 뷰포트 상한을 **끈다**. 상한이 걸린 채로 끌면 포인터를
+   *    내려도 높이가 상한에 붙박여 손을 따라오지 않는다(드래그 ↔ 자동확장 충돌).
+   *    놓는 순간 상한이 다시 걸리고, 그때는 transition 이 살아 있어(bodyDragging
+   *    이 false 로 돌아간다) 450ms 로 부드럽게 정리된다.
+   */
+  const bodyHeightCss =
+    !expandActive || bodyDragging
+      ? `${expandedBodyHeight}px`
+      : `min(${expandedBodyHeight}px, max(${bodyHeight}px, ${BODY_EXPAND_VIEWPORT_CAP}))`;
 
   const updateCollapsed = useCallback((next: boolean) => {
     setCollapsed(next);
@@ -238,6 +313,7 @@ export function WorkspaceShell({
       const startY = e.clientY;
       const startHeight = bodyHeight;
       let latest = startHeight;
+      setBodyDragging(true);
       document.body.style.cursor = "row-resize";
       document.body.style.userSelect = "none";
       const onMove = (ev: PointerEvent) => {
@@ -248,6 +324,7 @@ export function WorkspaceShell({
         setBodyHeight(latest);
       };
       const onUp = () => {
+        setBodyDragging(false);
         document.body.style.cursor = "";
         document.body.style.userSelect = "";
         window.removeEventListener("pointermove", onMove);
@@ -274,6 +351,7 @@ export function WorkspaceShell({
   }, []);
 
   return (
+    <WorkspaceBodyContext.Provider value={bodyExpansion}>
     <section className="flex min-w-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
       <div
         className={
@@ -311,11 +389,17 @@ export function WorkspaceShell({
           className="flex w-full min-w-0 max-w-full flex-col gap-2 overflow-hidden max-lg:!h-auto lg:flex-row lg:gap-0"
           style={
             {
-              height: `${bodyHeight}px`,
+              height: bodyHeightCss,
+              // 자동 확장/축소는 부드럽게 애니메이션한다. 단, 세로 드래그
+              // 리사이즈 중에는 트랜지션을 꺼 손을 즉시 따라오게 한다.
+              transition: bodyDragging
+                ? "none"
+                : "height 450ms cubic-bezier(0.22, 1, 0.36, 1)",
               // 워크스페이스 본문(고정) 높이를 자손에게 노출 — 지문 카드가 이 값에
               // 맞춰 스스로 높이를 바운드해, 본문이 길어도 카드 안에서 스크롤되고
-              // 하단 '문제 생성' 버튼이 항상 보이게 한다.
-              "--ws-body-h": `${bodyHeight}px`,
+              // 하단 '문제 생성' 버튼이 항상 보이게 한다. 확장 중이면 확장분 포함
+              // (min()/max() 식이 그대로 실린다 — calc() 안에서 정상 평가된다).
+              "--ws-body-h": bodyHeightCss,
             } as CSSProperties
           }
         >
@@ -415,5 +499,6 @@ export function WorkspaceShell({
       </div>
       </div>
     </section>
+    </WorkspaceBodyContext.Provider>
   );
 }

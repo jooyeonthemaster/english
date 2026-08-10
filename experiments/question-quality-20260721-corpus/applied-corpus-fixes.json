@@ -1,0 +1,2039 @@
+[
+  {
+    "id": "2027_06_5095396-q30",
+    "how": "excerpt-anchored",
+    "planted": "thick",
+    "original": "thin",
+    "reason": "뮤지컬 대본은 노래·춤 비중이 커 대사를 빼면 남는 분량이 적다는 논지이므로 thick은 정면 모순이다."
+  },
+  {
+    "id": "2027_06_5095396-q41-42",
+    "how": "excerpt-anchored",
+    "planted": "obey",
+    "original": "defy",
+    "reason": "유리는 분자 구조가 무질서하고 과학자들도 그 거동을 설명하지 못한다는 논지이므로 분자 법칙을 '따른다'는 정반대다."
+  },
+  {
+    "id": "ebsi_go1_20260324-q29",
+    "how": "excerpt-anchored",
+    "planted": "helps",
+    "original": "help",
+    "reason": "주어가 The files, folders, and icons(복수)이므로 단수 동사 helps는 수 일치 위반이다."
+  },
+  {
+    "id": "ebsi_go1_20260324-q30",
+    "how": "excerpt-anchored",
+    "planted": "the same",
+    "original": "the opposite",
+    "reason": "however로 개도국(걷기=피할 수 없는 부담)과 대비되는 선진국 인식(걷기=효율적·건강)을 제시하므로 same은 논지 모순이다."
+  },
+  {
+    "id": "ebsi_go1_20260604-q29",
+    "how": "excerpt-anchored",
+    "planted": "having",
+    "original": "have",
+    "reason": "주절에 정동사가 없어 분사 having은 성립하지 않으므로 정동사 have가 와야 한다."
+  },
+  {
+    "id": "ebsi_go1_20260604-q30",
+    "how": "excerpt-anchored",
+    "planted": "confuse",
+    "original": "help",
+    "reason": "뷰파인더의 효용을 나열하는 문맥이므로 '혼란시킨다'는 논지와 정면 모순이며 '돕는다'가 원형이다."
+  },
+  {
+    "id": "ebsi_go2_20260324-q29",
+    "how": "excerpt-anchored",
+    "planted": "occurring",
+    "original": "occurred",
+    "reason": "주절에 정동사가 없어 분사형은 문장을 성립시키지 못하므로 정동사 occurred가 되어야 한다."
+  },
+  {
+    "id": "ebsi_go2_20260324-q30",
+    "how": "excerpt-anchored",
+    "planted": "facilitating",
+    "original": "limiting",
+    "reason": "지식 폭이 제한된다는 앞 절의 결과이므로 적응 능력을 '촉진'이 아니라 '제한'해야 논지가 일관된다."
+  },
+  {
+    "id": "ebsi_go2_20260604-q29",
+    "how": "excerpt-anchored",
+    "planted": "producing",
+    "original": "produced",
+    "reason": "주어 Mailed-out coupons에 대한 정동사가 없어 분사가 아닌 produced가 필요하다."
+  },
+  {
+    "id": "ebsi_go2_20260604-q30",
+    "how": "excerpt-anchored",
+    "planted": "more sensitive to price than to additional performance",
+    "original": "less sensitive to price than to additional performance",
+    "reason": "뒤이어 '주머니가 두둑하고 신제품에 많이 지불할 준비가 되어 있다'고 하므로 가격에 덜 민감해야 한다."
+  },
+  {
+    "id": "ebsi_go3_20260324-q29",
+    "how": "excerpt-anchored",
+    "planted": "which",
+    "original": "in which",
+    "reason": "find themselves 뒤에 장소 보어가 필요한 완전한 절이므로 목적격 관계대명사가 아닌 전치사+관계대명사가 와야 한다."
+  },
+  {
+    "id": "ebsi_go3_20260324-q30",
+    "how": "excerpt-anchored",
+    "planted": "acknowledges",
+    "original": "ignores",
+    "reason": "논지가 '범주화는 개별성을 지운다'인데 '인정한다'는 앞 문장 'leave out their differences'·'co-categorizes'와 정면 모순이므로 ignores가 원형이다."
+  },
+  {
+    "id": "ebsi_go3_20260507-q29",
+    "how": "excerpt-anchored",
+    "planted": "chooses",
+    "original": "to choose",
+    "reason": "allow는 목적격보어로 to부정사를 취하므로 정동사 chooses는 문법 위반이다."
+  },
+  {
+    "id": "ebsi_go3_20260507-q30",
+    "how": "excerpt-anchored",
+    "planted": "accumulate",
+    "original": "exclude",
+    "reason": "바로 앞에서 근권 미생물이 병원균을 물리치는 방어막을 만든다고 했으므로 병원균을 '축적한다'는 정면 모순이며 배제한다가 맞다."
+  },
+  {
+    "id": "2026_06_5090182-q30",
+    "how": "excerpt-anchored",
+    "planted": "temporary",
+    "original": "lasting",
+    "reason": "글 전체가 기억에 남고 구별되는 목소리(memorable and distinct)를 기르라는 논지이므로 '일시적 인상'은 정면 모순이다."
+  },
+  {
+    "id": "2026_06_5090182-q41-42",
+    "how": "excerpt-anchored",
+    "planted": "distinguishable",
+    "original": "indistinguishable",
+    "reason": "seamlessness는 기술과 인간의 경계를 感지할 수 없게 만드는 것이므로 인간 신체와 '구별 가능하게'는 논지 정면 모순이다."
+  },
+  {
+    "id": "2026_09_5091403-q30",
+    "how": "excerpt-anchored",
+    "planted": "insignificant",
+    "original": "significant",
+    "reason": "soft-path 공학은 강의 변동성을 생태적으로 중요한 것으로 전제한다는 마지막 문장과 정면 모순된다."
+  },
+  {
+    "id": "2026_09_5091403-q41-42",
+    "how": "excerpt-anchored",
+    "planted": "less routine",
+    "original": "more routine",
+    "reason": "복잡·모호한 메시지에 rich media를, 일상적(routine) 메시지에 lean media를 쓴다는 논지와 반대다(회의시간 변경 이메일 예시)."
+  },
+  {
+    "id": "2026_SN_5093799-q30",
+    "how": "excerpt-anchored",
+    "planted": "abandon",
+    "original": "gain",
+    "reason": "승리를 우선해 반칙을 숨기고 넘어가려 한다는 문맥상 경쟁 우위를 '얻으려'는 것이므로 abandon은 논지 정면 모순이다."
+  },
+  {
+    "id": "2026_SN_5093799-q41-42",
+    "how": "excerpt-anchored",
+    "planted": "unlikely",
+    "original": "likely",
+    "reason": "미술 자료의 정보가 없다면 복식 전시는 어색한 모방이 될 '가능성이 크다'는 것이 글의 논지이므로 unlikely는 모순이다."
+  },
+  {
+    "id": "ebsi_go1_20250326-q30",
+    "how": "excerpt-anchored",
+    "planted": "uninterested",
+    "original": "interested",
+    "reason": "앞서 \"가장 좋아할 만한 소비자를 식별한다\"는 논지와 정면 모순 — 관심 있는(interested) 소비자의 위치를 알아야 한다."
+  },
+  {
+    "id": "ebsi_go1_20250604-q29",
+    "how": "excerpt-anchored",
+    "planted": "having",
+    "original": "have",
+    "reason": "주어 experts에 대응하는 정동사 자리이며 뒤의 and are not generalists와 병렬되므로 have여야 한다."
+  },
+  {
+    "id": "ebsi_go1_20250604-q30",
+    "how": "excerpt-anchored",
+    "planted": "low",
+    "original": "high",
+    "reason": "이민자가 범죄 원인이 아니라 이미 범죄율이 높은 동네로 밀려났다는 반박 논지와 정면 모순된다."
+  },
+  {
+    "id": "ebsi_go1_20250903-q29",
+    "how": "excerpt-anchored",
+    "planted": "putting",
+    "original": "put",
+    "reason": "주어(they)가 우리에 넣어지는 대상이므로 분사구문은 수동의 과거분사 put이어야 한다."
+  },
+  {
+    "id": "ebsi_go1_20250903-q30",
+    "how": "excerpt-anchored",
+    "planted": "increased",
+    "original": "decreased",
+    "reason": "울타리를 높이고 사람을 멀리한다는 앞 문장 및 결과인 단절(disconnection)과 모순 — 접촉은 감소해야 한다."
+  },
+  {
+    "id": "ebsi_go1_20251014-q30",
+    "how": "excerpt-anchored",
+    "planted": "beneficial",
+    "original": "harmful",
+    "reason": "윤리적 가치 중시 맥락에서 자금이 쓰이지 않기를 바라는 대상은 '유익한' 관행이 아니라 '해로운/비윤리적' 관행이므로 논지에 정면 모순된다."
+  },
+  {
+    "id": "ebsi_go2_20250326-q29",
+    "how": "excerpt-anchored",
+    "planted": "does",
+    "original": "do",
+    "reason": "주어가 the ceremonies and rituals(복수)이므로 삽입구 뒤 동사는 do가 되어야 한다."
+  },
+  {
+    "id": "ebsi_go2_20250326-q30",
+    "how": "excerpt-anchored",
+    "planted": "discouraged",
+    "original": "encouraged",
+    "reason": "설탕업계 자금으로 지방을 문제 삼아 설탕에서 눈을 돌린 결과 비만·당뇨의 원인으로 지목되는 설탕 소비가 '늘도록' 부추긴 것이므로 discouraged는 논지 모순이다."
+  },
+  {
+    "id": "ebsi_go2_20250604-q29",
+    "how": "excerpt-anchored",
+    "planted": "has",
+    "original": "have",
+    "reason": "주어 The forms or objects가 복수이므로 동사는 have여야 한다."
+  },
+  {
+    "id": "ebsi_go2_20250903-q29",
+    "how": "excerpt-anchored",
+    "planted": "depend",
+    "original": "depends",
+    "reason": "주어의 핵이 단수 Our choice이므로 동사는 depends가 되어야 한다."
+  },
+  {
+    "id": "ebsi_go2_20250903-q30",
+    "how": "excerpt-anchored",
+    "planted": "efficient",
+    "original": "inefficient",
+    "reason": "비판자들은 공감이 갈등을 악화시킨다고 주장하므로 갈등 상황에서 공감 처방은 '비효율적(inefficient)'이어야 논지와 맞는다."
+  },
+  {
+    "id": "ebsi_go2_20251014-q29",
+    "how": "excerpt-anchored",
+    "planted": "give",
+    "original": "giving",
+    "reason": "주절 정동사는 change이므로 뒤에 접속사 없이 이어지는 자리는 분사구문 giving이어야 한다."
+  },
+  {
+    "id": "ebsi_go2_20251014-q30",
+    "how": "excerpt-anchored",
+    "planted": "rejecting",
+    "original": "accepting",
+    "reason": "유교 문화는 사회적 불평등이 생기더라도 가족의 가치를 포기하지 않는다고 했으므로 그 불평등을 '수용(accepting)'해야 한다."
+  },
+  {
+    "id": "2025_06_5086961-q30",
+    "how": "excerpt-anchored",
+    "planted": "drives",
+    "original": "undermines",
+    "reason": "외적 통제가 두드러질수록 내면화가 안 되고 외부 통제에 의존하게 된다는 논지이므로 자기책임 획득을 '저해한다'가 맞다."
+  },
+  {
+    "id": "2025_06_5086961-q41-42",
+    "how": "excerpt-anchored",
+    "planted": "coincide",
+    "original": "conflict",
+    "reason": "윤리 원칙이 개인 간에도 개인 내에서도 다양하다는 논지이므로 자신의 행동 규범을 이루는 요인들이 '충돌할' 수 있음을 이해해야 한다."
+  },
+  {
+    "id": "ebsi_go3_20250710-q29",
+    "how": "excerpt-anchored",
+    "planted": "require",
+    "original": "required",
+    "reason": "명사 the amounts를 뒤에서 수식하는 자리이므로 정동사 require가 아니라 과거분사 required가 와야 한다."
+  },
+  {
+    "id": "ebsi_go3_20250710-q30",
+    "how": "excerpt-anchored",
+    "planted": "decreases",
+    "original": "increases",
+    "reason": "무의식의 힘이 약해지지 않는다는 앞 문장 논지상, 논리적으로 결정한다는 착각은 무의식의 영향력을 오히려 키운다고 해야 한다."
+  },
+  {
+    "id": "2025_09_5087695-q30",
+    "how": "excerpt-anchored",
+    "planted": "rationality",
+    "original": "irrationality",
+    "reason": "글 전체가 인간 사고의 '예측 가능한 비합리성'과 편향을 다루므로 이해해야 할 대상은 내재된 비합리성이다."
+  },
+  {
+    "id": "2025_09_5087695-q41-42",
+    "how": "excerpt-anchored",
+    "planted": "sensitive",
+    "original": "insensitive",
+    "reason": "파도 소리에 익숙해져 더 이상 듣지 못한다는 비유와 병렬되므로 말의 홍수에 무감각해졌다고 해야 한다."
+  },
+  {
+    "id": "ebsi_go3_20251014-q29",
+    "how": "excerpt-anchored",
+    "planted": "which",
+    "original": "by which",
+    "reason": "뒤 절이 완전한 문장이므로 관계대명사 which 단독이 아니라 전치사를 동반한 by(through) which가 필요하다."
+  },
+  {
+    "id": "ebsi_go3_20251014-q30",
+    "how": "excerpt-anchored",
+    "planted": "forbidden",
+    "original": "obliged",
+    "reason": "앞은 '공개 제한' 사례이고 뒤이어 제약사 부작용 공시·식품 영양표시 등 '공개 의무(l'obligation d'information)' 사례가 이어지므로 reverse는 '공개가 금지된다'가 아니라 '공개가 의무화된다'여야 한다."
+  },
+  {
+    "id": "2025_SN_5089362-q30",
+    "how": "excerpt-anchored",
+    "planted": "stronger",
+    "original": "weaker",
+    "reason": "바로 다음 문장이 이 정서 상태의 결과로 'lower task motivation'과 협력적 결과 선호를 든다는 점에서 죄책감이 동기·수행을 '더 강하게' 만든다는 서술은 논지와 정면 모순이다."
+  },
+  {
+    "id": "2025_SN_5089362-q41-42",
+    "how": "excerpt-anchored",
+    "planted": "excludes",
+    "original": "requires",
+    "reason": "글 전체가 정밀·강력한 인간 손 파지 능력이 석기 제작을 가능하게 했다는 논지이므로 석기 제작이 강한 파지·회전·타격을 '배제한다'가 아니라 '요구한다'여야 한다."
+  },
+  {
+    "id": "ebsi_go1_20240328-q29",
+    "how": "excerpt-anchored",
+    "planted": "to count",
+    "original": "count",
+    "reason": "주어 Those who ...의 술어 find와 and로 병렬되는 자리이므로 to부정사가 아니라 정동사 count가 와야 한다."
+  },
+  {
+    "id": "ebsi_go1_20240604-q29",
+    "how": "excerpt-anchored",
+    "planted": "what",
+    "original": "that",
+    "reason": "it-cleft 강조구문에서 강조 대상이 부사구(in farming villages)이므로 관계사 what이 아닌 that이어야 한다."
+  },
+  {
+    "id": "ebsi_go1_20240604-q30",
+    "how": "excerpt-anchored",
+    "planted": "disappears",
+    "original": "appears",
+    "reason": "의지박약은 즉각적 쾌락의 유혹이 '나타날' 때 결심과 다르게 행동하는 것이므로 disappears는 논지와 정면 모순이다."
+  },
+  {
+    "id": "ebsi_go1_20240904-q30",
+    "how": "excerpt-anchored",
+    "planted": "inefficient",
+    "original": "efficient",
+    "reason": "배송 차량이 도시를 더 친환경적으로 만드는 필수 요소라는 논지이므로 승용차 여러 대보다 '더 효율적인' 운송수단이어야 한다."
+  },
+  {
+    "id": "ebsi_go1_20241015-q29",
+    "how": "excerpt-anchored",
+    "planted": "what",
+    "original": "that",
+    "reason": "뒤 절이 완전하므로 선행사 없는 관계대명사 what이 아니라 보어절을 이끄는 접속사 that이어야 한다."
+  },
+  {
+    "id": "ebsi_go1_20241015-q30",
+    "how": "excerpt-anchored",
+    "planted": "less",
+    "original": "more",
+    "reason": "인지 용량이 부족해 계산을 분산한다는 논지상 '용량을 초과하는 더 많은 정보를 담는 대신'이 되어야 하므로 less는 모순이다."
+  },
+  {
+    "id": "ebsi_go2_20240328-q29",
+    "how": "excerpt-anchored",
+    "planted": "using",
+    "original": "used",
+    "reason": "분사구문의 의미상 주어(this technique)가 사용되는 대상이므로 능동 using이 아니라 수동 used여야 한다."
+  },
+  {
+    "id": "ebsi_go2_20240328-q30",
+    "how": "excerpt-anchored",
+    "planted": "cultivate",
+    "original": "thwart",
+    "reason": "Whereas ~ beneficial과 대조되고 뒤에 청소년이 부모에게서 멀어진다는 결과가 오므로 자율성 추구를 '길러준다'가 아니라 '좌절시킨다'여야 논지가 성립한다."
+  },
+  {
+    "id": "ebsi_go2_20240604-q29",
+    "how": "excerpt-anchored",
+    "planted": "smiling",
+    "original": "smile",
+    "reason": "when절 안에서 앞의 동사 look과 or로 병렬되는 자리이므로 정동사 smile이어야 한다."
+  },
+  {
+    "id": "ebsi_go2_20240604-q30",
+    "how": "excerpt-anchored",
+    "planted": "accelerate",
+    "original": "slow",
+    "reason": "덜 긍정적인 경험을 끼워 넣으면 적응이 '방해된다(disrupts)'는 다음 문장과 정면 모순되므로 가속이 아니라 지연이어야 한다."
+  },
+  {
+    "id": "ebsi_go2_20240904-q30",
+    "how": "excerpt-anchored",
+    "planted": "reduced",
+    "original": "improved",
+    "reason": "도구로 단백질·지방 섭취가 늘어 에너지가 증가했다는 앞 논지와 반대로 '식단이 줄었다'는 모순이므로 improved여야 한다."
+  },
+  {
+    "id": "ebsi_go2_20241015-q29",
+    "how": "excerpt-anchored",
+    "planted": "have given",
+    "original": "have been given",
+    "reason": "쥐가 모르핀을 '투여받는' 대상이므로 수동태 have been given이어야 하며, 능동 have given은 목적어 관계상 문법 위반이다."
+  },
+  {
+    "id": "ebsi_go2_20241015-q30",
+    "how": "excerpt-anchored",
+    "planted": "least",
+    "original": "most",
+    "reason": "비가 온 지 며칠 내 번식을 시작한다는 것은 갑작스러운 번식 기회를 최대한 활용하는 것이므로 least는 논지와 정면 모순이다."
+  },
+  {
+    "id": "2024_06_5084521-q41-42",
+    "how": "excerpt-anchored",
+    "planted": "block",
+    "original": "facilitate",
+    "reason": "협상 가능한 쟁점이 추가로 발견되면 통합적 합의로 임금 쟁점 해결이 촉진되므로 block은 통합협상 논지와 정면 모순이다."
+  },
+  {
+    "id": "ebsi_go3_20240711-q29",
+    "how": "excerpt-anchored",
+    "planted": "blooming",
+    "original": "bloom",
+    "reason": "관계대명사 who의 동사 ascend와 and로 병렬되는 자리이므로 정동사 bloom이어야 하며 분사 blooming은 문법 위반이다."
+  },
+  {
+    "id": "2024_09_5085155-q30",
+    "how": "excerpt-anchored",
+    "planted": "countered",
+    "original": "created",
+    "reason": "섬유가 더 이상 place-bound가 아니게 되어 단절·이해 상실·경시가 '생겨났다'는 흐름이므로 '막았다(countered)'는 논지와 정면 모순이다."
+  },
+  {
+    "id": "2024_09_5085155-q41-42",
+    "how": "excerpt-anchored",
+    "planted": "challenging",
+    "original": "easy",
+    "reason": "출처(맥락) 기억이 어렵기 때문에 '학교에서 배운 게 별로 없다'고 잘못 결론짓기 쉽다는 논지이므로 challenging은 반대다."
+  },
+  {
+    "id": "ebsi_go3_20241015-q29",
+    "how": "excerpt-anchored",
+    "planted": "last",
+    "original": "lasting",
+    "reason": "이미 전치사 for의 목적어 구조 안이라 정동사가 올 수 없고 hibernations를 수식하는 분사 lasting이어야 한다."
+  },
+  {
+    "id": "ebsi_go3_20241015-q30",
+    "how": "excerpt-anchored",
+    "planted": "extends",
+    "original": "expires",
+    "reason": "however 이후 관용이 사라지고 성견 취급을 받는다는 전개이므로 면허가 '연장된다'는 논지와 정면 모순이며 '만료된다'가 맞다."
+  },
+  {
+    "id": "2024_SN_5086091-q30",
+    "how": "excerpt-anchored",
+    "planted": "low",
+    "original": "high",
+    "reason": "비디오게임이 필수품이 아니므로 판매자가 조심할 것은 '낮은' 값이 아니라 '높은' 값을 부르는 일이다."
+  },
+  {
+    "id": "ebsi_go1_20230323-q29",
+    "how": "excerpt-anchored",
+    "planted": "are",
+    "original": "is",
+    "reason": "주어가 단수 A general strategy이므로 동사는 is여야 한다."
+  },
+  {
+    "id": "ebsi_go1_20230601-q29",
+    "how": "excerpt-anchored",
+    "planted": "being",
+    "original": "is",
+    "reason": "주어 Thinking of himself...에 대한 정동사 자리이므로 분사 being이 아니라 is여야 한다."
+  },
+  {
+    "id": "ebsi_go1_20230601-q30",
+    "how": "excerpt-anchored",
+    "planted": "increased",
+    "original": "decreased",
+    "reason": "사람들이 빵을 사 먹게 되어 이스트 수요가 줄었기에 새 마케팅 전략이 필요했다는 논지와 정면 모순된다."
+  },
+  {
+    "id": "ebsi_go1_20230906-q29",
+    "how": "excerpt-anchored",
+    "planted": "themselves",
+    "original": "them",
+    "reason": "telling의 목적어는 주어(fans and community members)가 아니라 임원들이므로 재귀대명사가 아닌 them이어야 한다."
+  },
+  {
+    "id": "ebsi_go1_20230906-q30",
+    "how": "excerpt-anchored",
+    "planted": "easy",
+    "original": "difficult",
+    "reason": "이해가 문자적(literal) 수준이라는 진술은 새 집을 미리 상상하기 '어렵다'는 결론으로 이어져야 하므로 논지와 모순된다."
+  },
+  {
+    "id": "ebsi_go1_20231219-q29",
+    "how": "excerpt-anchored",
+    "planted": "lack",
+    "original": "lacking",
+    "reason": "이미 is라는 정동사가 있는 절에 또 다른 정동사 lack이 접속사 없이 놓여 명사 process를 수식하는 분사 lacking이어야 한다."
+  },
+  {
+    "id": "ebsi_go1_20231219-q30",
+    "how": "excerpt-anchored",
+    "planted": "maintained",
+    "original": "replaced",
+    "reason": "미니멀리즘이 감정을 해치지 않는다는 논지이므로 슬픔이 유지되는 것이 아니라 명료함의 기쁨으로 대체되어야 한다."
+  },
+  {
+    "id": "ebsi_go2_20230323-q29",
+    "how": "excerpt-anchored",
+    "planted": "generating",
+    "original": "generate",
+    "reason": "and로 연결된 독립절의 정동사 자리인데 분사형이 쓰여 주절에 동사가 없다."
+  },
+  {
+    "id": "ebsi_go2_20230323-q30",
+    "how": "excerpt-anchored",
+    "planted": "deny",
+    "original": "assume",
+    "reason": "통계 모형이 '안정된 조건을 가정하기 때문에' 신규 사건을 반영 못 한다는 논리라 deny는 정면 모순이다."
+  },
+  {
+    "id": "ebsi_go2_20230601-q29",
+    "how": "excerpt-anchored",
+    "planted": "ask",
+    "original": "are asked",
+    "reason": "subjects는 질문을 받는 대상이므로 능동 ask가 아니라 수동 are asked여야 한다."
+  },
+  {
+    "id": "ebsi_go2_20230906-q29",
+    "how": "excerpt-anchored",
+    "planted": "reach",
+    "original": "to reach",
+    "reason": "정동사 travelled 뒤에 접속사 없이 동사원형 reach가 올 수 없어 목적 부정사 to reach여야 한다."
+  },
+  {
+    "id": "ebsi_go2_20231219-q29",
+    "how": "excerpt-anchored",
+    "planted": "showed",
+    "original": "showing",
+    "reason": "with 분사구문에서 studies가 show의 능동 주체이므로 과거형/과거분사 showed가 아니라 showing이어야 한다."
+  },
+  {
+    "id": "2023_06_5076592-q30",
+    "how": "excerpt-anchored",
+    "planted": "accommodating",
+    "original": "managing",
+    "reason": "글의 논지는 자동차 수요를 수용(accommodate)하지 말고 관리(manage)해야 한다는 것인데, 통행료·규제를 통한 억제책을 '수용하는 접근'이라 부르는 것은 정면 모순이다."
+  },
+  {
+    "id": "ebsi_go3_20230711-q29",
+    "how": "excerpt-anchored",
+    "planted": "being",
+    "original": "are",
+    "reason": "why가 이끄는 명사절에 정동사가 필요한 자리인데 분사 being이 쓰여 절에 술어동사가 없다."
+  },
+  {
+    "id": "2023_09_5077481-q30",
+    "how": "excerpt-anchored",
+    "planted": "diminished",
+    "original": "compounded",
+    "reason": "과학자와 비전문가가 동등한 신뢰를 받는다는 사실은 좌절을 '가중'시키는 것이므로 diminished는 논지와 정면 모순이다."
+  },
+  {
+    "id": "2023_09_5077481-q41-42",
+    "how": "excerpt-anchored",
+    "planted": "rapidly",
+    "original": "gradually",
+    "reason": "'감지 불가능(imperceptible)'하고 폭발적 사건은 '가끔만' 일어난다는 서술과 rapidly는 정면 모순이며 뒤의 occurred gradually와도 충돌한다."
+  },
+  {
+    "id": "ebsi_go3_20231012-q29",
+    "how": "excerpt-anchored",
+    "planted": "becoming",
+    "original": "became",
+    "reason": "And so the professor (who ~ ) 가 주어인 주절에 정동사가 없어 becoming은 문법 위반, became가 되어야 한다."
+  },
+  {
+    "id": "2023_SN_5080827-q30",
+    "how": "excerpt-anchored",
+    "planted": "maintain",
+    "original": "delay",
+    "reason": "컴퓨터가 별세계로 데려간다는 믿음이 길수록 삶과의 자연스러운 융합은 '지연'되는 것이므로 maintain은 논지와 모순이다."
+  },
+  {
+    "id": "2023_SN_5080827-q41-42",
+    "how": "excerpt-anchored",
+    "planted": "relaxed",
+    "original": "stressed",
+    "reason": "체크리스트는 사람이 이완돼 있을 때가 아니라 스트레스·피로 상태에서 중요한 단계를 놓치지 않게 해준다는 논지이므로 relaxed는 정면 모순이다."
+  },
+  {
+    "id": "ebsi_go1_20220324-q29",
+    "how": "excerpt-anchored",
+    "planted": "what",
+    "original": "that",
+    "reason": "선행사 tendency를 수식하는 주격 관계대명사 자리이므로 선행사를 포함하는 what은 쓸 수 없고 that(which)이어야 한다."
+  },
+  {
+    "id": "ebsi_go1_20220324-q30",
+    "how": "excerpt-anchored",
+    "planted": "welcomed",
+    "original": "rejected",
+    "reason": "거절 요법(rejection therapy)은 일부러 거절당해 내성을 기르는 것이므로 welcomed는 논지와 정면 모순이다."
+  },
+  {
+    "id": "ebsi_go1_20220609-q29",
+    "how": "excerpt-anchored",
+    "planted": "dependently",
+    "original": "dependent",
+    "reason": "make + 목적어 + 목적격보어 구조로 형용사가 와야 하므로 부사 dependently는 문법 위반이다."
+  },
+  {
+    "id": "ebsi_go1_20221123-q29",
+    "how": "excerpt-anchored",
+    "planted": "are",
+    "original": "do",
+    "reason": "비교 대상이 일반동사 know이므로 대동사는 be동사 are가 아니라 do여야 한다."
+  },
+  {
+    "id": "ebsi_go1_20221123-q30",
+    "how": "excerpt-anchored",
+    "planted": "faster",
+    "original": "more slowly",
+    "reason": "뿌리 옥신은 생장을 억제하고 아래쪽에 축적되어 발달을 방해하므로 아래쪽이 더 느리게 자라야 뿌리가 아래로 굽는다는 결론과 맞는다."
+  },
+  {
+    "id": "ebsi_go1_20220901-q29",
+    "how": "excerpt-anchored",
+    "planted": "has been outsourced",
+    "original": "have been outsourced",
+    "reason": "주어가 many of the tasks(복수)이므로 동사는 have been이어야 한다."
+  },
+  {
+    "id": "ebsi_go1_20220901-q30",
+    "how": "excerpt-anchored",
+    "planted": "less",
+    "original": "more",
+    "reason": "허브가 몸을 낫게 하는 지능을 가진다면 허브가 인체보다 '더' 지적이라는 믿기 힘든 결론이 되어야 논지가 성립한다."
+  },
+  {
+    "id": "ebsi_go2_20220324-q29",
+    "how": "excerpt-anchored",
+    "planted": "risk",
+    "original": "risks",
+    "reason": "주어가 동명사구 comparing ourselves...이므로 단수 동사 risks가 되어야 한다."
+  },
+  {
+    "id": "ebsi_go2_20220324-q30",
+    "how": "excerpt-anchored",
+    "planted": "corresponds with",
+    "original": "conflicts with",
+    "reason": "패러다임을 의심 없이 수용한다는 논지상, 패러다임과 '어긋나는' 결과가 나올 때 자기 실험 기법을 탓한다고 해야 모순이 없다."
+  },
+  {
+    "id": "ebsi_go2_20221123-q29",
+    "how": "excerpt-anchored",
+    "planted": "are",
+    "original": "is",
+    "reason": "관계절의 선행사가 단수 대명사 성격의 'very little'(불가산 market demand)이므로 복수동사 are가 아니라 is여야 한다."
+  },
+  {
+    "id": "ebsi_go2_20220901-q29",
+    "how": "excerpt-anchored",
+    "planted": "fascinated",
+    "original": "fascinating",
+    "reason": "find의 목적격보어가 목적어(ways)의 성질을 서술하므로 감정을 유발하는 현재분사 fascinating이 맞고 과거분사 fascinated는 문법 위반이다."
+  },
+  {
+    "id": "2022_06_5063572-q30",
+    "how": "excerpt-anchored",
+    "planted": "increase",
+    "original": "reduce",
+    "reason": "과거·전통에 대한 강한 애착이 변화 저항으로 이어진다는 부정적 영향 문단이므로 효율성·생산성·시장 대응 필요성을 '증가'시킨다는 것은 논지 모순이다."
+  },
+  {
+    "id": "2022_06_5063572-q41-42",
+    "how": "excerpt-anchored",
+    "planted": "easier",
+    "original": "harder",
+    "reason": "바로 뒤 문장이 이 모호함을 \"변화에 적응할 수 있는 강점\"으로 재해석하므로, 한계 설정은 더 '어려워'져야 논지가 성립한다."
+  },
+  {
+    "id": "ebsi_go3_20220706-q29",
+    "how": "excerpt-anchored",
+    "planted": "have taught",
+    "original": "taught",
+    "reason": "subjects는 가르쳐지는 대상이므로 능동 정동사 have taught가 아니라 명사를 수식하는 과거분사 taught여야 한다."
+  },
+  {
+    "id": "2022_09_5064693-q30",
+    "how": "excerpt-anchored",
+    "planted": "seized",
+    "original": "missed",
+    "reason": "팔리지 않은 좌석·화물 용량은 회수 불가한 손실이므로 기회는 '포착'된 것이 아니라 '상실'된 것이다."
+  },
+  {
+    "id": "2022_09_5064693-q41-42",
+    "how": "excerpt-anchored",
+    "planted": "different",
+    "original": "similar",
+    "reason": "두 집단을 동질화해 교란변수를 제거하라는 글 전체 논지상 식단은 '달라야'가 아니라 '유사해야' 한다."
+  },
+  {
+    "id": "ebsi_go3_20221012-q30",
+    "how": "excerpt-anchored",
+    "planted": "rejected",
+    "original": "accepted",
+    "reason": "바로 뒤에 방송사가 오케스트라·밴드·가수를 고용하려 애썼다고 하고 녹음 사용이 덜 매력적이었다는 이유가 붙으므로 조합 요구를 '수용'했다가 맞다."
+  },
+  {
+    "id": "2022_SN_5070164-q30",
+    "how": "excerpt-anchored",
+    "planted": "benefits",
+    "original": "limits",
+    "reason": "유기농법의 제약을 열거하는 단락(질소 공급 제한·잡초 방제 곤란)이므로 거름·콩과작물 대량 사용에는 '한계'가 있다가 논지에 맞다."
+  },
+  {
+    "id": "ebsi_go1_20210325-q29",
+    "how": "excerpt-anchored",
+    "planted": "are",
+    "original": "is",
+    "reason": "주어가 동명사구 Finding different ways로 단수이므로 동사는 is여야 한다."
+  },
+  {
+    "id": "ebsi_go1_20210325-q30",
+    "how": "excerpt-anchored",
+    "planted": "increase",
+    "original": "decrease",
+    "reason": "지문 전체가 조명 가격의 급락(dropped to almost nothing)이 세상을 바꿨다는 논지이므로 '가격 상승'은 정면 모순이다."
+  },
+  {
+    "id": "ebsi_go1_20210831-q30",
+    "how": "excerpt-anchored",
+    "planted": "high",
+    "original": "low",
+    "reason": "바로 뒤 because절이 어차피 다 못 먹고 남으면 상한다는 이유를 대므로 비용은 '낮다'가 되어야 논리가 성립한다."
+  },
+  {
+    "id": "ebsi_go1_20211124-q29",
+    "how": "excerpt-anchored",
+    "planted": "occurring",
+    "original": "occur",
+    "reason": "주절의 정동사 자리인데 분사 occurring이 쓰여 동사가 없는 비문이 된다."
+  },
+  {
+    "id": "ebsi_go1_20211124-q30",
+    "how": "excerpt-anchored",
+    "planted": "capturing",
+    "original": "releasing",
+    "reason": "보호 사육 후 야생 복귀라는 논지상 스스로를 지킬 능력이 갖춰진 뒤에는 '방류(releasing)'해야 하는데 '포획(capturing)'은 정면 모순이다."
+  },
+  {
+    "id": "ebsi_go2_20210325-q29",
+    "how": "excerpt-anchored",
+    "planted": "which",
+    "original": "in which",
+    "reason": "뒤 절이 완전한 문장이므로 관계대명사 which가 아니라 '전치사+관계대명사(in which)'가 필요하다."
+  },
+  {
+    "id": "ebsi_go2_20210325-q30",
+    "how": "excerpt-anchored",
+    "planted": "avoid",
+    "original": "maintain",
+    "reason": "카메라를 창문으로 보는 '창문 효과'를 유지하려고 고정 카메라를 쓴다는 흐름이므로 avoid는 논지와 반대다."
+  },
+  {
+    "id": "ebsi_go2_20210603-q29",
+    "how": "excerpt-anchored",
+    "planted": "gives",
+    "original": "given",
+    "reason": "rats를 수식하는 분사 자리이며 쥐는 먹이를 '받는' 대상이므로 능동 정동사 gives가 아니라 과거분사 given이어야 한다."
+  },
+  {
+    "id": "ebsi_go2_20210603-q30",
+    "how": "excerpt-anchored",
+    "planted": "unpredictable",
+    "original": "predictable",
+    "reason": "명시적으로 이름 붙이면 문제를 의식하게 된다는 결론과 달리 '예측 불가능한 현실'은 논지를 정면으로 뒤집는다."
+  },
+  {
+    "id": "ebsi_go2_20210831-q29",
+    "how": "excerpt-anchored",
+    "planted": "has",
+    "original": "have",
+    "reason": "주어가 복수 Some predators이므로 단수 동사 has는 수일치 위반이다."
+  },
+  {
+    "id": "ebsi_go2_20211124-q29",
+    "how": "excerpt-anchored",
+    "planted": "creating",
+    "original": "create",
+    "reason": "주어 Differences에 대한 정동사가 없는 문장이므로 분사 creating이 아니라 정동사 create여야 한다."
+  },
+  {
+    "id": "ebsi_go2_20211124-q30",
+    "how": "excerpt-anchored",
+    "planted": "strengthens",
+    "original": "weakens",
+    "reason": "주요 기억을 방해하는 사소한 내용을 담당하는 영역은 억제·약화되어야 세부가 사라지고 핵심이 선명해진다는 뒤 문장과 이어지므로 '강화한다'는 논지와 정면 모순이다."
+  },
+  {
+    "id": "2021_06_5049916-q30",
+    "how": "excerpt-anchored",
+    "planted": "improbable",
+    "original": "possible",
+    "reason": "청킹 덕분에 수천 음표를 암보할 수 있다는 논지이므로, 그 놀라운 기억은 음악적 '과정'을 기억함으로써 가능해지는 것이지 불가능해지는 것이 아니다."
+  },
+  {
+    "id": "2021_06_5049916-q41-42",
+    "how": "excerpt-anchored",
+    "planted": "decrease",
+    "original": "increase",
+    "reason": "그 작물이 연중 수확되며 물을 과도하게 쓰고 물권을 사들인다는 뒤 내용은 재배 '증가'가 전통적 배분을 무력화했다는 흐름이라야 성립한다."
+  },
+  {
+    "id": "ebsi_go3_20210707-q29",
+    "how": "excerpt-anchored",
+    "planted": "believes",
+    "original": "believing",
+    "reason": "전치사 with의 「with+목적어+분사」 구문 자리이므로 정동사 believes가 올 수 없고 분사 believing이어야 한다."
+  },
+  {
+    "id": "ebsi_go3_20210707-q30",
+    "how": "excerpt-anchored",
+    "planted": "outdated",
+    "original": "dominant",
+    "reason": "내륙 운송이 매우 제한적이었다는 논지상 해상·하천 운송이 전산업시대의 '지배적' 수단이었다는 결론이어야 하므로 outdated는 정면 모순이다."
+  },
+  {
+    "id": "2021_09_5050886-q30",
+    "how": "excerpt-anchored",
+    "planted": "inappropriate",
+    "original": "appropriate",
+    "reason": "감시 과정이 부적절한 생각을 감지하면 그것을 '적절한' 생각으로 대체하도록 촉구해야 논리가 성립한다."
+  },
+  {
+    "id": "2021_09_5050886-q41-42",
+    "how": "excerpt-anchored",
+    "planted": "close",
+    "original": "little",
+    "reason": "조악하게 쓰인 글에서는 독자가 파악한 의미가 저자의 원래 의도와 '거의 일치하지 않는다'는 것이 논지이므로 close는 정면 모순이다."
+  },
+  {
+    "id": "ebsi_go3_20211012-q29",
+    "how": "excerpt-anchored",
+    "planted": "approached",
+    "original": "approaching",
+    "reason": "something을 뒤에서 수식하며 목적어 a local art form을 취하는 자리이므로 과거분사 approached가 아니라 현재분사 approaching이어야 한다."
+  },
+  {
+    "id": "ebsi_go3_20211012-q30",
+    "how": "excerpt-anchored",
+    "planted": "increase",
+    "original": "reduce",
+    "reason": "조정(coordination) 문단의 논지상 남들이 주차위반 딱지를 안 내면 사면 압력이 생겨 내가 낼 유인은 줄어들어야 하므로 increase는 정면 모순이다."
+  },
+  {
+    "id": "2021_SN_5061633-q30",
+    "how": "excerpt-anchored",
+    "planted": "lacked",
+    "original": "had",
+    "reason": "편승 효과(bias) 패턴이 깨진 계기는 기대치가 아닌 실측값을 보고할 용기를 '가진' 사람이 나왔기 때문이므로 lacked는 논지와 모순된다."
+  },
+  {
+    "id": "2021_SN_5061633-q41-42",
+    "how": "excerpt-anchored",
+    "planted": "complex",
+    "original": "simple",
+    "reason": "개미의 복잡한 궤적은 내부 복잡성이 아니라 단순 규칙과 해변 환경의 상호작용에서 나온다는 것이 요지이므로 very complex rules는 정면 모순이다."
+  },
+  {
+    "id": "ebsi_go1_20200618-q29",
+    "how": "excerpt-anchored",
+    "planted": "arguing",
+    "original": "argues",
+    "reason": "주어 Judith Rich Harris에 대한 정동사가 없어 분사 arguing은 성립하지 않고 정동사 argues가 와야 한다."
+  },
+  {
+    "id": "ebsi_go1_20200916-q29",
+    "how": "excerpt-anchored",
+    "planted": "gave",
+    "original": "were given",
+    "reason": "주어 they(학생들)는 와인을 받은 쪽이므로 능동 gave가 아니라 수동 were given이 되어야 하며, 현재 문장은 gave의 목적어 구조상 의미·태가 어긋난다."
+  },
+  {
+    "id": "ebsi_go1_20201118-q29",
+    "how": "excerpt-anchored",
+    "planted": "pleasantly",
+    "original": "pleasant",
+    "reason": "seem은 보어로 형용사를 취하는 2형식 동사이므로 부사 pleasantly는 문법 위반이고 pleasant가 와야 한다."
+  },
+  {
+    "id": "ebsi_go2_20200312-q29",
+    "how": "excerpt-anchored",
+    "planted": "tends",
+    "original": "tend",
+    "reason": "주어가 복수 crashes이므로 단수 동사 tends는 수일치 위반이며 tend가 되어야 한다."
+  },
+  {
+    "id": "ebsi_go2_20200312-q30",
+    "how": "excerpt-anchored",
+    "planted": "disproved",
+    "original": "supported",
+    "reason": "이어지는 물 순환 설명은 눈에 보이지 않는 입자의 존재를 뒷받침하는 근거이므로 '반증했다'는 논지와 정면 모순된다."
+  },
+  {
+    "id": "ebsi_go2_20200618-q30",
+    "how": "excerpt-anchored",
+    "planted": "hard-earned",
+    "original": "easy",
+    "reason": "운(luck)이 작용하는 갑작스러운 이득은 정의상 '쉽게 얻은(easy)' 것이므로, 노력으로 얻었다는 'hard-earned'는 앞 문장의 '진짜 성공은 노력으로 와야 한다'는 논지와 정면 모순된다."
+  },
+  {
+    "id": "ebsi_go2_20200916-q29",
+    "how": "excerpt-anchored",
+    "planted": "to be",
+    "original": "is",
+    "reason": "주절의 정동사 자리에 to부정사가 와서 문장에 본동사가 없으므로 is여야 한다."
+  },
+  {
+    "id": "2020_06_5037373-q30",
+    "how": "excerpt-anchored",
+    "planted": "forbid",
+    "original": "motivate",
+    "reason": "불신이 자기성찰의 유인이 되어 신뢰받을 만하게 행동하게 만든다는 논지이므로 '금지하다'는 정면 모순이며 '동기를 부여하다'여야 한다."
+  },
+  {
+    "id": "2020_06_5037373-q41-42",
+    "how": "excerpt-anchored",
+    "planted": "promising",
+    "original": "dangerous",
+    "reason": "since절이 '전체주의 폭력의 정당화로 이어졌다'는 부정적 근거를 제시하므로 'promising(유망한)'은 논지와 정면 모순이며 'dangerous'여야 한다."
+  },
+  {
+    "id": "ebsi_go3_20200722-q29",
+    "how": "excerpt-anchored",
+    "planted": "lacking",
+    "original": "lack",
+    "reason": "that절의 주어 'our closest cousins'에 대한 정동사 자리이므로 분사 lacking이 아니라 lack이어야 한다."
+  },
+  {
+    "id": "ebsi_go3_20200722-q30",
+    "how": "excerpt-anchored",
+    "planted": "overvalue",
+    "original": "undervalue",
+    "reason": "뒤이어 '재생산 비용이 대체로 공유된다'며 개별 가구가 타인에게 미치는 영향을 과소평가한다는 논지이므로 overvalue는 정면 모순이다."
+  },
+  {
+    "id": "2020_09_5038442-q30",
+    "how": "excerpt-anchored",
+    "planted": "optional",
+    "original": "essential",
+    "reason": "글 전체가 생물 간 상호작용이 진화 이해에 결정적임을 논증하므로 'optional(선택적)'은 결론과 정면 모순되며 essential이어야 한다."
+  },
+  {
+    "id": "2020_09_5038442-q41-42",
+    "how": "excerpt-anchored",
+    "planted": "extended",
+    "original": "limited",
+    "reason": "앞 문장의 '표본이 심하게 편향된다'는 한계 논지와 Similarly로 연결되므로 관찰이 채집·배양 가능한 생물로 '제한된다(limited)'여야 한다."
+  },
+  {
+    "id": "ebsi_go3_20201027-q29",
+    "how": "excerpt-anchored",
+    "planted": "promoting",
+    "original": "promote",
+    "reason": "주격 관계대명사 that 절에는 정동사가 와야 하는데 분사 promoting이 쓰여 문장에 동사가 없다."
+  },
+  {
+    "id": "ebsi_go3_20201027-q30",
+    "how": "excerpt-anchored",
+    "planted": "weakness",
+    "original": "strength",
+    "reason": "개인주의 문화는 개인의 자유·표현을 중시하고 일탈 허용 폭이 넓다고 했으므로 튀는 것은 약점이 아니라 강점으로 여겨져야 한다."
+  },
+  {
+    "id": "2020_SN_5045859-q30",
+    "how": "excerpt-anchored",
+    "planted": "denying",
+    "original": "accepting",
+    "reason": "나머지 하나만 남았을 때 그것을 성급히 '받아들이기' 전에 숨은 선택지를 검토하라는 논지이므로 denying은 정면 모순이다."
+  },
+  {
+    "id": "2020_SN_5045859-q41-42",
+    "how": "excerpt-anchored",
+    "planted": "Uncertainty",
+    "original": "Understanding",
+    "reason": "학생의 개념 재구성과 토론·사고를 통해 지식 이해가 형성된다는 문장이므로 '불확실성'이 아니라 '이해'여야 한다."
+  },
+  {
+    "id": "ebsi_go1_20190604-q29",
+    "how": "excerpt-anchored",
+    "planted": "do",
+    "original": "does",
+    "reason": "주어가 단수 Artificial light이므로 삽입절(which ... contains) 뒤 정동사는 does여야 한다."
+  },
+  {
+    "id": "ebsi_go1_20190904-q29",
+    "how": "excerpt-anchored",
+    "planted": "ensure",
+    "original": "ensures",
+    "reason": "주어가 단수 This way이므로 동사는 ensures여야 한다(older discoveries는 전치사구 내부)."
+  },
+  {
+    "id": "ebsi_go2_20190604-q29",
+    "how": "excerpt-anchored",
+    "planted": "hiring",
+    "original": "hires",
+    "reason": "when절의 주어 the doctor에 대한 정동사 specializes와 and로 병렬되어야 하므로 분사 hiring이 아니라 hires여야 한다."
+  },
+  {
+    "id": "ebsi_go2_20190904-q29",
+    "how": "excerpt-anchored",
+    "planted": "which",
+    "original": "for which",
+    "reason": "뒤 절(there were no precedents)이 완전한 문장이므로 관계대명사 which 단독은 불가하고 전치사를 동반한 for which여야 한다."
+  },
+  {
+    "id": "ebsi_go2_20191120-q29",
+    "how": "excerpt-anchored",
+    "planted": "interested",
+    "original": "interesting",
+    "reason": "find의 목적격보어가 사물 목적어 them(특수 효과)의 성질을 서술하므로 감정을 느끼는 주체에 쓰는 interested가 아니라 interesting이어야 한다."
+  },
+  {
+    "id": "2019_06_5023285-q41-42",
+    "how": "excerpt-anchored",
+    "planted": "disregarded",
+    "original": "revered",
+    "reason": "지문은 1900년대 청중이 고전 명작을 숭배해 신곡을 그 기준으로 판단했다고 했으므로 '무시했다'는 논지와 정면 모순이다."
+  },
+  {
+    "id": "ebsi_go3_20190710-q28",
+    "how": "excerpt-anchored",
+    "planted": "leads",
+    "original": "lead",
+    "reason": "it-cleft 강조 대상이 복수 명사 beliefs이므로 관계사절 동사는 lead여야 한다."
+  },
+  {
+    "id": "2019_09_5024244-q41-42",
+    "how": "excerpt-anchored",
+    "planted": "randomly",
+    "original": "selectively",
+    "reason": "협상의 '전술'로 상대 이야기를 끌어오는 행위이자 지문 전체가 기억의 선택적 편집을 논하므로 '무작위로'는 논지와 모순된다."
+  },
+  {
+    "id": "ebsi_go3_20191015-q29",
+    "how": "excerpt-anchored",
+    "planted": "sends",
+    "original": "sending",
+    "reason": "한 절에 정동사 sends와 uses가 중복되어 주어를 수식하는 현재분사 sending이 되어야 한다."
+  },
+  {
+    "id": "ebsi_go3_20191015-q30",
+    "how": "excerpt-anchored",
+    "planted": "problematic",
+    "original": "unproblematic",
+    "reason": "의식이 고양되기 전까지는 혐오적 농담을 '문제없다'고 여긴다는 논지여야 하므로 problematic은 정면 모순이다."
+  },
+  {
+    "id": "2019_SN_5031122-q41-42",
+    "how": "excerpt-anchored",
+    "planted": "promoted",
+    "original": "disrupted",
+    "reason": "제멋대로 결근하는 것은 작업을 '방해'하므로 이를 피하려 일괄 휴가기를 두었다는 문맥에 promoted는 반대다."
+  },
+  {
+    "id": "ebsi_go1_20180308-q30",
+    "how": "excerpt-anchored",
+    "planted": "comfort",
+    "original": "hurt",
+    "reason": "글 전체가 \"절대 거짓말하지 말라\"는 정직 옹호 논지이므로 선의의 거짓말이 진실보다 사람을 더 \"위로한다\"는 결론은 논지와 정면 모순이며 hurt가 되어야 한다."
+  },
+  {
+    "id": "ebsi_go1_20180905-q28",
+    "how": "excerpt-anchored",
+    "planted": "seems",
+    "original": "seem",
+    "reason": "주어가 복수명사 Memories(of 이하는 수식어)이므로 단수동사 seems는 수일치 위반이다."
+  },
+  {
+    "id": "ebsi_go1_20180905-q29",
+    "how": "excerpt-anchored",
+    "planted": "similar",
+    "original": "different",
+    "reason": "복합적 사건 사슬의 모든 사건이 결과에 기여한다는 앞 문장 논지상, 그중 하나만 일어나지 않아도 결과는 달라져야 하므로 similar는 모순이다."
+  },
+  {
+    "id": "ebsi_go1_20181121-q28",
+    "how": "excerpt-anchored",
+    "planted": "convenient",
+    "original": "conveniently",
+    "reason": "동사 allows를 수식하는 자리이므로 형용사 convenient가 아니라 부사 conveniently가 와야 한다."
+  },
+  {
+    "id": "ebsi_go2_20180308-q28",
+    "how": "excerpt-anchored",
+    "planted": "has",
+    "original": "have",
+    "reason": "주어가 복수 대명사 others이므로 단수 동사 has가 아니라 have여야 한다."
+  },
+  {
+    "id": "ebsi_go2_20180308-q29",
+    "how": "excerpt-anchored",
+    "planted": "reluctant",
+    "original": "willing",
+    "reason": "자기노출이 잘 받아들여지고 상호 반응을 얻으면 더 많이 드러내게 된다는 점진적 증가 논지와 정면 모순된다."
+  },
+  {
+    "id": "ebsi_go2_20180905-q28",
+    "how": "excerpt-anchored",
+    "planted": "filled",
+    "original": "filling",
+    "reason": "고양이가 공간을 채우는 능동 관계이므로 과거분사 filled가 아닌 현재분사 filling이어야 한다."
+  },
+  {
+    "id": "ebsi_go3_20180711-q28",
+    "how": "excerpt-anchored",
+    "planted": "which",
+    "original": "from which",
+    "reason": "관계절 'we are to make the decisions'에 빈자리가 없어 목적격 which가 성립하지 않으며 '~로부터 결정을 내리다'라는 전치사 from이 필요하다(전치사+관계대명사)."
+  },
+  {
+    "id": "ebsi_go3_20181016-q28",
+    "how": "excerpt-anchored",
+    "planted": "humiliated",
+    "original": "humiliating",
+    "reason": "주어 This data는 굴욕을 주는 쪽이므로 수동 분사 humiliated가 아니라 현재분사 humiliating이어야 한다."
+  },
+  {
+    "id": "2018_SN_5019793-q29",
+    "how": "excerpt-anchored",
+    "planted": "found",
+    "original": "lost",
+    "reason": "보물사냥 업체 소속 고고학자의 주장은 '지식이 손실되지 않는다'는 것이어야 뒤의 On the contrary 반박(수십 년 필요)과 논리가 맞는다."
+  },
+  {
+    "id": "ebsi_go1_20170309-q28",
+    "how": "excerpt-anchored",
+    "planted": "cutting",
+    "original": "cut",
+    "reason": "주절의 정동사가 없는 명령문 자리이므로 분사 cutting이 아니라 동사원형 cut이어야 한다."
+  },
+  {
+    "id": "ebsi_go1_20170601-q28",
+    "how": "excerpt-anchored",
+    "planted": "mean",
+    "original": "means",
+    "reason": "주어가 동명사구 Accepting...로 단수이므로 동사는 means여야 한다."
+  },
+  {
+    "id": "ebsi_go2_20170309-q28",
+    "how": "excerpt-anchored",
+    "planted": "being",
+    "original": "be",
+    "reason": "not only A but (also) B 병렬에서 조동사 must에 걸리는 원형동사 자리이므로 being이 아니라 be여야 한다."
+  },
+  {
+    "id": "ebsi_go2_20170601-q28",
+    "how": "excerpt-anchored",
+    "planted": "do",
+    "original": "are",
+    "reason": "as ~ as 비교구문의 대동사가 앞의 be동사(are)를 받아야 하므로 do가 아니라 are가 옳다."
+  },
+  {
+    "id": "ebsi_go2_20170601-q29",
+    "how": "excerpt-anchored",
+    "planted": "relieved",
+    "original": "frustrated",
+    "reason": "선택지가 많을수록 우울·불만이 커진다는 지문 논지와 '더 안도한다'는 표현이 정면 모순된다."
+  },
+  {
+    "id": "ebsi_go3_20170712-q28",
+    "how": "excerpt-anchored",
+    "planted": "relaxation",
+    "original": "vigilance",
+    "reason": "무리가 커지면 개체가 줄이는 것은 '경계(vigilance)' 시간이며(뒤 문장의 '항상 누군가 망을 본다'가 근거), '휴식'은 지문 논지와 무관·모순이다."
+  },
+  {
+    "id": "ebsi_go3_20170712-q29",
+    "how": "excerpt-anchored",
+    "planted": "having",
+    "original": "had",
+    "reason": "While절에 이어지는 주절의 정동사 자리이므로 분사 having이 아니라 정동사 had여야 한다."
+  },
+  {
+    "id": "ebsi_go3_20171017-q28",
+    "how": "excerpt-anchored",
+    "planted": "which",
+    "original": "that",
+    "reason": "be assured 뒤의 완전한 절을 이끄는 접속사 자리라 관계대명사 which가 아니라 that이어야 한다."
+  },
+  {
+    "id": "ebsi_go1_20160310-q28",
+    "how": "excerpt-anchored",
+    "planted": "what",
+    "original": "that",
+    "reason": "가주어 It ~ 진주어 명사절 구조로 뒤 절이 완전하므로 관계대명사 what이 아니라 접속사 that이 와야 한다."
+  },
+  {
+    "id": "ebsi_go2_20160310-q28",
+    "how": "excerpt-anchored",
+    "planted": "what",
+    "original": "that",
+    "reason": "뒤에 완전한 절이 오고 it이 가주어이므로 명사절 접속사는 what이 아니라 that이어야 한다."
+  },
+  {
+    "id": "ebsi_go2_20160602-q28",
+    "how": "excerpt-anchored",
+    "planted": "collecting",
+    "original": "collect",
+    "reason": "조동사 must에 걸린 document와 and로 병렬되므로 원형 collect여야 한다."
+  },
+  {
+    "id": "ebsi_go2_20160901-q28",
+    "how": "excerpt-anchored",
+    "planted": "is",
+    "original": "does",
+    "reason": "앞의 일반동사 cleans를 대신하는 대동사 자리이므로 is가 아니라 does여야 한다."
+  },
+  {
+    "id": "ebsi_go2_20161123-q28",
+    "how": "excerpt-anchored",
+    "planted": "provoking",
+    "original": "provoked",
+    "reason": "주어 even noticeable clothes에 대한 정동사가 없어 분사 provoking은 문장 성립 불가, provoked가 되어야 한다."
+  },
+  {
+    "id": "ebsi_go3_20160706-q28",
+    "how": "excerpt-anchored",
+    "planted": "depending",
+    "original": "depends",
+    "reason": "주어 the use of vibrations에 정동사가 없어 분사 depending은 불가하고 depends여야 한다."
+  },
+  {
+    "id": "2016_09_5000516-q29",
+    "how": "excerpt-anchored",
+    "planted": "absence",
+    "original": "presence",
+    "reason": "캐나다인은 변호사 동석 회의를 먼저 제안했으므로 변호사의 '부재'가 아니라 '입회(presence)'를 협상 성사를 촉진하는 것으로 여겼다는 것이 논지다."
+  },
+  {
+    "id": "ebsi_go3_20161011-q29",
+    "how": "excerpt-anchored",
+    "planted": "follow conventions",
+    "original": "break conventions",
+    "reason": "상투적 인사(관습)를 버리고 모험적인 질문을 시도하라는 글이므로 관습을 '따르라'는 것은 논지 정면 모순이다."
+  },
+  {
+    "id": "ebsi_go1_20150311-q28",
+    "how": "excerpt-anchored",
+    "planted": "what",
+    "original": "that",
+    "reason": "be동사 뒤 보어절이 완전한 문장이므로 선행 명사 없는 what이 아니라 접속사 that이어야 한다."
+  },
+  {
+    "id": "ebsi_go1_20150902-q29",
+    "how": "excerpt-anchored",
+    "planted": "realizing",
+    "original": "realized",
+    "reason": "주어 Galileo에 대한 정동사가 필요한 자리인데 분사가 쓰여 문장에 술어가 없다."
+  },
+  {
+    "id": "ebsi_go1_20151117-q28",
+    "how": "excerpt-anchored",
+    "planted": "engaging",
+    "original": "engage",
+    "reason": "문장에 정동사가 없어 분사 engaging이 주절 술어 자리를 차지하고 있으므로 정동사 engage가 되어야 한다."
+  },
+  {
+    "id": "ebsi_go2_20150311_A-q28",
+    "how": "excerpt-anchored",
+    "planted": "leave",
+    "original": "leaving",
+    "reason": "이미 정동사 eat가 있는 절에 접속사 없이 또 다른 정동사 leave가 놓였으므로 분사구문 leaving이어야 한다."
+  },
+  {
+    "id": "ebsi_go2_20150604-q28",
+    "how": "excerpt-anchored",
+    "planted": "paid",
+    "original": "are paid",
+    "reason": "교사는 수당을 '지급받는' 대상이므로 관계절 동사가 능동 paid가 아니라 수동 are paid여야 한다."
+  },
+  {
+    "id": "ebsi_go2_20150902-q28",
+    "how": "excerpt-anchored",
+    "planted": "knowing",
+    "original": "knows",
+    "reason": "주어 anyone에 대한 주절 정동사가 없어 분사 knowing이 아니라 정동사 knows가 되어야 한다."
+  },
+  {
+    "id": "ebsi_go3_20150709-q28",
+    "how": "excerpt-anchored",
+    "planted": "tending",
+    "original": "tend",
+    "reason": "주어 many small mammals의 정동사 자리인데 분사 tending이 와서 문장에 본동사가 없다."
+  },
+  {
+    "id": "ebsi_go3_20150709-q30",
+    "how": "excerpt-anchored",
+    "planted": "follows",
+    "original": "drives",
+    "reason": "호오(감정)가 믿음을 결정한다는 논지인데 감정이 믿음을 '따른다'고 해 인과가 뒤집힌다."
+  },
+  {
+    "id": "2015_09_3027897-q29",
+    "how": "excerpt-anchored",
+    "planted": "maximum",
+    "original": "minimum",
+    "reason": "운영비를 충당하려면 받아야 하는 하한선이므로 임대료가 그 아래로 안 내려간다는 문맥과 maximum은 정면 모순된다."
+  },
+  {
+    "id": "ebsi_go3_20151013-q20",
+    "how": "excerpt-anchored",
+    "planted": "to be taken",
+    "original": "to take",
+    "reason": "the actions가 need to take의 목적어로 선행사화된 구조라 수동 to be taken이면 목적어가 중복돼 비문이다."
+  },
+  {
+    "id": "ebsi_go1_20140312-q23",
+    "how": "excerpt-anchored",
+    "planted": "what",
+    "original": "that",
+    "reason": "선행사 another job이 있는 주격 관계대명사 자리이므로 선행사를 포함하는 what은 쓸 수 없고 that(which)이어야 한다."
+  },
+  {
+    "id": "ebsi_go1_20140312-q25",
+    "how": "excerpt-anchored",
+    "planted": "disrespect",
+    "original": "respect",
+    "reason": "상대 언어로 소통하려는 노력이 좋은 매너로 빛난다는 논지이므로 '무례함(disrespect)'은 정면 모순이고 respect여야 한다."
+  },
+  {
+    "id": "ebsi_go1_20140612-q24",
+    "how": "excerpt-anchored",
+    "planted": "was included",
+    "original": "included",
+    "reason": "목록(list)이 항목들을 '포함하는' 능동 관계이므로 목적어를 취하는 능동태 included여야 하며, 수동태 was included는 뒤의 목적어들과 충돌한다."
+  },
+  {
+    "id": "ebsi_go2_20140312-q23",
+    "how": "excerpt-anchored",
+    "planted": "form",
+    "original": "forms",
+    "reason": "주어는 단수 The skin이고 around her eyes는 수식어구이므로 동사는 forms여야 한다."
+  },
+  {
+    "id": "ebsi_go2_20140312-q25",
+    "how": "excerpt-anchored",
+    "planted": "positive",
+    "original": "negative",
+    "reason": "고객이 칭찬을 했는데 화를 냈다는 것은 뒤에 이어지는 '포드가 낫다'는 비판 예시·말싸움 전개와 정면 모순이므로 negative(비하하는) 발언이어야 한다."
+  },
+  {
+    "id": "ebsi_go2_20140612-q21",
+    "how": "excerpt-anchored",
+    "planted": "Cited",
+    "original": "Citing",
+    "reason": "주어 Welch가 능동적으로 '필요성을 언급하며' 하는 분사구문이므로 과거분사 Cited가 아니라 현재분사 Citing이어야 한다."
+  },
+  {
+    "id": "ebsi_go2_20140903_A-q27",
+    "how": "excerpt-anchored",
+    "planted": "setting",
+    "original": "set",
+    "reason": "the complexity, its ability, its importance가 and로 연결된 복수 주어의 정동사 자리이므로 분사 setting이 아니라 set이어야 한다."
+  },
+  {
+    "id": "ebsi_go2_20141118_A-q27",
+    "how": "excerpt-anchored",
+    "planted": "which",
+    "original": "in which",
+    "reason": "뒤 절이 목적어를 갖춘 완전한 문장이므로 관계대명사 which가 아니라 전치사+관계대명사 in which(=where)여야 한다."
+  },
+  {
+    "id": "2014_YB_5006654_B-q28",
+    "how": "excerpt-anchored",
+    "planted": "insufficient",
+    "original": "sufficient",
+    "reason": "앞 문장 \"The desert is both harsh and generous\"와 뒤의 흙 건축 예시가 사막이 충분한 재료를 제공한다는 논지이므로 insufficient는 정면 모순이다."
+  },
+  {
+    "id": "2014_YB_5006654_A-q32",
+    "how": "excerpt-anchored",
+    "planted": "insufficient",
+    "original": "sufficient",
+    "reason": "사막이 harsh하면서도 generous하다는 대조 구조와 흙 건축 재료 제공이라는 뒤 내용에 비추어 insufficient는 논지와 정반대다."
+  },
+  {
+    "id": "ebsi_go3_20140410-q24",
+    "how": "excerpt-anchored",
+    "planted": "dramatized",
+    "original": "dramatizing",
+    "reason": "접속사 없이 콤마로 이어진 자리이므로 정동사 dramatized는 쓸 수 없고 분사구문 dramatizing이어야 한다."
+  },
+  {
+    "id": "ebsi_go3_20140710_A-q24",
+    "how": "excerpt-anchored",
+    "planted": "to be",
+    "original": "was",
+    "reason": "that절의 주어 the carbon dioxide level에 대한 정동사가 필요한 자리인데 to부정사가 놓여 절이 성립하지 않는다."
+  },
+  {
+    "id": "ebsi_go3_20140710_A-q25",
+    "how": "excerpt-anchored",
+    "planted": "tolerant",
+    "original": "intolerant",
+    "reason": "같은 종에게 관대하다면 사육 번식이 어려울 이유가 없어 뒤따르는 breeding ... very difficult와 정면 모순된다."
+  },
+  {
+    "id": "2014_09_3020142_A-q28",
+    "how": "excerpt-anchored",
+    "planted": "follow",
+    "original": "resist",
+    "reason": "옷 선택이 부적절함을 이해하지 못하는 아이들이라는 앞 문장과 '조언을 따른다'는 정면 모순이며, 뒤의 '그런 아이들에겐 경험이 최고의 교사' 및 샌들 고집 사례와도 어긋난다."
+  },
+  {
+    "id": "2014_09_3020142_B-q28",
+    "how": "excerpt-anchored",
+    "planted": "follow",
+    "original": "resist",
+    "reason": "조언을 거부하는 아이들이라야 뒤따르는 '경험이 최고의 교사'와 샌들 고집 일화가 성립하므로 follow는 논지 모순이다."
+  },
+  {
+    "id": "ebsi_go3_20141007-q25",
+    "how": "excerpt-anchored",
+    "planted": "were",
+    "original": "was",
+    "reason": "주어가 단수 the area이므로 복수 동사 were는 수일치 위반이다."
+  },
+  {
+    "id": "2014_SN_3022251_B-q28",
+    "how": "excerpt-anchored",
+    "planted": "evade",
+    "original": "assume",
+    "reason": "인간 관리 하에서 두꺼운 종피가 불필요해진 이유는 농부가 보관 책임을 '떠맡기' 때문이므로 evade는 논지와 정면 모순이다."
+  },
+  {
+    "id": "ebsi_go1_20130313_A-q27",
+    "how": "excerpt-anchored",
+    "planted": "which",
+    "original": "who",
+    "reason": "선행사가 사람(artist)이므로 관계대명사 which는 문법 위반이며 who여야 한다."
+  },
+  {
+    "id": "ebsi_go1_20130903-q27",
+    "how": "excerpt-anchored",
+    "planted": "are",
+    "original": "do",
+    "reason": "비교 대상이 일반동사 make이므로 대동사는 do여야 하며 be동사 are는 문법 위반이다."
+  },
+  {
+    "id": "ebsi_go1_20131114-q28",
+    "how": "excerpt-anchored",
+    "planted": "avoid",
+    "original": "embrace",
+    "reason": "영감을 주는 리더가 긍정적 직원을 길러낸다는 논지상 어려운 과제를 '피하는' 것이 아니라 '기꺼이 맞서는' 직원이어야 하므로 정면 모순이다."
+  },
+  {
+    "id": "ebsi_go2_20130313_B-q27",
+    "how": "excerpt-anchored",
+    "planted": "whom",
+    "original": "which",
+    "reason": "관계사가 가리키는 선행사는 학생이 아니라 오랜 연구로 '얻은' 권위(a position of professional authority)이므로 사람 목적격 whom은 쓸 수 없다."
+  },
+  {
+    "id": "ebsi_go2_20130313_B-q28",
+    "how": "excerpt-anchored",
+    "planted": "less",
+    "original": "more",
+    "reason": "뒤 문장이 레모네이드를 반복해 마시는 것이 더 해롭다고 하므로 자원을 자주 얻을수록 산을 '더 많이' 만들어야 논지가 성립한다."
+  },
+  {
+    "id": "ebsi_go2_20130313_A-q32",
+    "how": "excerpt-anchored",
+    "planted": "get",
+    "original": "avoid",
+    "reason": "한 단계씩 올라가 며칠 쉬며 몸을 적응시키는 것은 고산병을 '피하는' 방법이므로 get은 논지와 정면 모순이다."
+  },
+  {
+    "id": "ebsi_go2_20130605_B-q27",
+    "how": "excerpt-anchored",
+    "planted": "bringing",
+    "original": "brought",
+    "reason": "부(wealth)는 이탈리아로 '되가져와진' 대상이므로 능동 현재분사가 아니라 과거분사 brought로 수식해야 한다."
+  },
+  {
+    "id": "ebsi_go2_20130605_A-q32",
+    "how": "excerpt-anchored",
+    "planted": "prevent",
+    "original": "promote",
+    "reason": "F를 피드백으로 보면 학습 전략을 바꿔 성공을 '촉진'한다는 논지이므로 '막는다(prevent)'는 정면 모순이다."
+  },
+  {
+    "id": "ebsi_go2_20130903_B-q27",
+    "how": "excerpt-anchored",
+    "planted": "attaches",
+    "original": "attached",
+    "reason": "이미 pulling이 본동사구이므로 wire를 수식하는 자리에는 정동사 attaches가 올 수 없고 과거분사 attached여야 한다."
+  },
+  {
+    "id": "ebsi_go2_20130903_A-q32",
+    "how": "excerpt-anchored",
+    "planted": "uncertain",
+    "original": "certain",
+    "reason": "운영비를 따로 후원받아 기부금 전액이 수혜자에게 간다는 투명성 논지이므로 기부자는 '확신'해야 하며 uncertain은 뒤 문장(더 많은 기부를 낳는다)과 모순이다."
+  },
+  {
+    "id": "ebsi_go2_20131114-q27",
+    "how": "excerpt-anchored",
+    "planted": "what",
+    "original": "which",
+    "reason": "선행사 misinterpretation을 받는 주격 관계대명사 자리이므로 선행사를 포함하는 what은 쓸 수 없고 which여야 한다."
+  },
+  {
+    "id": "2013_06_3008953-q32",
+    "how": "excerpt-anchored",
+    "planted": "reduce",
+    "original": "increase",
+    "reason": "기아 국가를 먹여 살리려면 화학 투입재가 식량 생산을 '늘려야' 하므로 reduce는 논지와 정면 모순이다."
+  },
+  {
+    "id": "ebsi_go3_20130712_B-q27",
+    "how": "excerpt-anchored",
+    "planted": "turning out",
+    "original": "turned out",
+    "reason": "주어 The most common activity에 대한 정동사가 필요한 자리인데 분사 turning out이 놓여 문장에 정동사가 없다."
+  },
+  {
+    "id": "ebsi_go3_20130712_A-q32",
+    "how": "excerpt-anchored",
+    "planted": "prosperous",
+    "original": "vulnerable",
+    "reason": "보호벽이 세계 기준에 못 미치는 기업을 더 이상 지켜주지 못한다는 논지이므로 '더 번영하게'가 아니라 '더 취약하게' 만든다가 맞다."
+  },
+  {
+    "id": "2013_09_3011547-q31",
+    "how": "excerpt-anchored",
+    "planted": "a cause",
+    "original": "a consequence",
+    "reason": "와인은 여유로운 식사 소멸의 '희생자'이며 변화의 표적이 아니라고 했으므로, 소비 감소는 빠른 생활양식 등장의 원인이 아니라 결과다."
+  },
+  {
+    "id": "ebsi_go3_20131008_B-q27",
+    "how": "excerpt-anchored",
+    "planted": "have",
+    "original": "has",
+    "reason": "Only 부사구 도치문의 주어 food는 불가산 단수이므로 조동사는 have가 아니라 has여야 한다."
+  },
+  {
+    "id": "ebsi_go1_20120314-q35",
+    "how": "excerpt-anchored",
+    "planted": "a bad spyware",
+    "original": "bad spyware",
+    "reason": "spyware는 불가산명사라 부정관사 a와 결합할 수 없어 유일한 명백한 문법 위반 지점이다."
+  },
+  {
+    "id": "ebsi_go1_20120314-q36",
+    "how": "excerpt-anchored",
+    "planted": "blocking",
+    "original": "helping",
+    "reason": "서로 밧줄로 묶어 힘을 빌린다는 논지상 '서로를 막아서(blocking)'는 정면 모순이며 '서로 도우며(helping)'여야 한다."
+  },
+  {
+    "id": "ebsi_go1_20120607-q24",
+    "how": "excerpt-anchored",
+    "planted": "realized",
+    "original": "realize",
+    "reason": "allowed Greg to have ~ and (to) realize 로 to부정사 병렬이어야 하므로 정동사 realized는 문법 위반이다."
+  },
+  {
+    "id": "ebsi_go1_20120904-q25",
+    "how": "excerpt-anchored",
+    "planted": "similar",
+    "original": "opposite",
+    "reason": "뒤이어 한쪽의 몹시 찬 북풍이 다른 쪽의 비정상적으로 따뜻한 남풍과 짝지어진다고 했으므로 'similar'는 논지와 모순이고 'opposite'여야 한다."
+  },
+  {
+    "id": "ebsi_go1_20120904-q34",
+    "how": "excerpt-anchored",
+    "planted": "staying",
+    "original": "stayed",
+    "reason": "and로 연결된 등위절의 정동사 자리이므로 분사 staying이 아니라 stayed여야 한다."
+  },
+  {
+    "id": "ebsi_go1_20121114-q27",
+    "how": "excerpt-anchored",
+    "planted": "which",
+    "original": "in which",
+    "reason": "뒤 절이 수동태로 완전하여 목적격 관계대명사 which가 들어갈 자리가 없고 전치사+관계대명사(in which/where)여야 한다."
+  },
+  {
+    "id": "ebsi_go2_20120314-q26",
+    "how": "excerpt-anchored",
+    "planted": "situating",
+    "original": "situated",
+    "reason": "섬은 스스로 '위치시키는' 주체가 아니라 위치되어 있는 대상이므로 수동의 과거분사 situated가 와야 한다."
+  },
+  {
+    "id": "ebsi_go2_20120607_A-q24",
+    "how": "excerpt-anchored",
+    "planted": "must do",
+    "original": "must be done",
+    "reason": "주어 it(설거지)은 행위의 대상이므로 능동 must do가 아니라 수동 must be done이어야 한다."
+  },
+  {
+    "id": "ebsi_go2_20120607_B-q24",
+    "how": "excerpt-anchored",
+    "planted": "to learn",
+    "original": "learn",
+    "reason": "as절의 주어 drivers에 대응하는 정동사가 필요한 자리인데 to부정사가 놓여 절이 성립하지 않는다."
+  },
+  {
+    "id": "ebsi_go2_20120904_B-q24",
+    "how": "excerpt-anchored",
+    "planted": "allowing",
+    "original": "allow",
+    "reason": "주어 only a handful of these advancements의 정동사가 없어 분사 allowing이 아니라 정동사 allow여야 한다."
+  },
+  {
+    "id": "ebsi_go2_20120904_B-q33",
+    "how": "excerpt-anchored",
+    "planted": "reduces",
+    "original": "increases",
+    "reason": "두 언어로 병행 집필하면 작성·유지 부담이 늘어난다는 문맥(유지 문제 강조)과 정면 모순된다."
+  },
+  {
+    "id": "ebsi_go2_20121114_B-q27",
+    "how": "excerpt-anchored",
+    "planted": "that",
+    "original": "what",
+    "reason": "prompted의 목적어이면서 called의 목적어가 비어 있는 자리이므로 선행사를 포함한 관계대명사 what이 필요하다."
+  },
+  {
+    "id": "ebsi_go2_20121114_A-q32",
+    "how": "excerpt-anchored",
+    "planted": "efficient",
+    "original": "inefficient",
+    "reason": "뒤이어 한 사람이 혼자 하면 하루 한 개도 힘든 반면 분업하면 48,000개를 만든다고 대비하므로, 수공업 방식은 '비효율적'이어야 논지가 성립한다."
+  },
+  {
+    "id": "2012_06_3001254-q33",
+    "how": "excerpt-anchored",
+    "planted": "flourished",
+    "original": "declined",
+    "reason": "Despite 양보와 '대가들 대부분을 처형했다'는 뒤 내용상 보카토르는 번성이 아니라 쇠퇴(거의 소멸)해야 한다."
+  },
+  {
+    "id": "ebsi_go3_20120711-q20",
+    "how": "excerpt-anchored",
+    "planted": "speaking to",
+    "original": "spoken to",
+    "reason": "생략된 주어 girls는 말을 '거는' 쪽이 아니라 '걸림을 받는' 쪽이므로 unless (they were) spoken to의 수동 과거분사가 맞다."
+  },
+  {
+    "id": "2012_09_3008944-q33",
+    "how": "excerpt-anchored",
+    "planted": "curable",
+    "original": "incurable",
+    "reason": "운명에 체념하지 않고 회복의 희망을 파는 돌팔이에게 달려간다는 서술은 의학이 '불치(incurable)'라 선고했을 때만 성립하므로 curable은 논지 정면 모순이다."
+  },
+  {
+    "id": "ebsi_go3_20121009-q20",
+    "how": "excerpt-anchored",
+    "planted": "holding",
+    "original": "held",
+    "reason": "부대상황 with + 목적어(a vacuum cleaner) 뒤에는 목적어가 '잡히는' 수동 관계이므로 현재분사 holding이 아니라 과거분사 held가 와야 한다."
+  },
+  {
+    "id": "ebsi_go3_20121009-q35",
+    "how": "excerpt-anchored",
+    "planted": "exhaling",
+    "original": "inhaling",
+    "reason": "뒤 문장에서 손수건으로 의자의 먼지를 '빨아냈다(draw out)'고 하므로 흡입(inhaling)이어야 하며 exhaling은 흡입식 진공청소기 착안이라는 논지와 정면 모순된다."
+  },
+  {
+    "id": "2012_SN_3001002-q32",
+    "how": "excerpt-anchored",
+    "planted": "slower",
+    "original": "faster",
+    "reason": "기존 방식 사용자가 경쟁할 수 없었다는 결과가 성립하려면 새 영법이 더 빨라야 하므로 slower는 논지와 정면 모순이다."
+  },
+  {
+    "id": "ebsi_go1_20110310-q31",
+    "how": "excerpt-anchored",
+    "planted": "disagreed",
+    "original": "agreed",
+    "reason": "간디가 단식을 중단한 것은 지도자들이 평화에 '합의'했기 때문이므로 disagreed는 논지와 정면 모순이며 disagree는 to부정사 보어도 취하지 않는다."
+  },
+  {
+    "id": "ebsi_go1_20110310-q32",
+    "how": "excerpt-anchored",
+    "planted": "uncommon",
+    "original": "ordinary",
+    "reason": "뒤의 except that they have excellent skills와 완벽할 필요가 없다는 논지상 '뛰어난 기술만 빼면 평범한 사람'이어야 하므로 uncommon은 모순이다."
+  },
+  {
+    "id": "ebsi_go1_20110901-q32",
+    "how": "excerpt-anchored",
+    "planted": "behind",
+    "original": "ahead of",
+    "reason": "또래보다 훨씬 일찍 말하고 책을 통째로 외웠다는 앞 내용과 정면 모순이므로 '앞서 있었다'가 되어야 한다."
+  },
+  {
+    "id": "ebsi_go1_20111115-q20",
+    "how": "excerpt-anchored",
+    "planted": "what",
+    "original": "whether",
+    "reason": "'~인지 아닌지'의 or not과 호응하는 명사절 접속사는 whether이며, like의 목적어 them이 이미 있어 what은 문법 위반이다."
+  },
+  {
+    "id": "ebsi_go1_20111115-q32",
+    "how": "excerpt-anchored",
+    "planted": "rationally",
+    "original": "emotionally",
+    "reason": "'~하기보다 생각한 뒤 차분히 말하라'는 대비 구조상 배격 대상은 감정적 반응이어야 하므로 rationally는 논지 모순이다."
+  },
+  {
+    "id": "ebsi_go2_20110310-q20",
+    "how": "excerpt-anchored",
+    "planted": "would send",
+    "original": "would be sent",
+    "reason": "주어 supplies는 보내지는 대상이므로 능동 send는 태 위반이고 수동 be sent가 되어야 한다."
+  },
+  {
+    "id": "ebsi_go2_20110310-q31",
+    "how": "excerpt-anchored",
+    "planted": "stimulate",
+    "original": "accumulate",
+    "reason": "타동사 stimulate가 목적어 없이 자동사처럼 쓰여 성립하지 않으며, 축적되어 해를 끼친다는 문맥상 accumulate가 원형이다."
+  },
+  {
+    "id": "ebsi_go2_20110310-q32",
+    "how": "excerpt-anchored",
+    "planted": "permanent",
+    "original": "temporary",
+    "reason": "바로 뒤 문장에서 이 에너지 느낌이 금방 사라진다(quickly evaporates)고 하므로 permanent는 논지 정면 모순이다."
+  },
+  {
+    "id": "ebsi_go2_20110901-q31",
+    "how": "excerpt-anchored",
+    "planted": "maintain",
+    "original": "change",
+    "reason": "문제 행동을 학습 기회로 삼아 개선하도록 돕는다는 논지이므로 그 행동을 유지한다(maintain)는 정면 모순이다."
+  },
+  {
+    "id": "ebsi_go2_20111115-q20",
+    "how": "excerpt-anchored",
+    "planted": "satisfied",
+    "original": "satisfying",
+    "reason": "시간의 선물이 '만족을 주는' 주체이므로 과거분사 satisfied가 아니라 현재분사 satisfying이 보어로 와야 한다."
+  },
+  {
+    "id": "ebsi_go2_20111115-q32",
+    "how": "excerpt-anchored",
+    "planted": "lower",
+    "original": "higher",
+    "reason": "개인화가 직원·고용주 모두에게 이롭고 충성도를 높인다는 논지와 '낮은 직무만족도'는 정면 모순된다."
+  },
+  {
+    "id": "2011_06_3001235-q21",
+    "how": "excerpt-anchored",
+    "planted": "himself",
+    "original": "him",
+    "reason": "to부정사구의 의미상 주어는 villagers인데 목적어는 손님을 가리키므로 재귀대명사 himself가 아니라 him이어야 한다."
+  },
+  {
+    "id": "2011_06_3001235-q31",
+    "how": "excerpt-anchored",
+    "planted": "unselfish",
+    "original": "selfish",
+    "reason": "Scott는 울타리를 없애려 했으므로 이웃의 자연 조망을 좁히는 행위는 '이기적'이라고 봐야 하며 unselfish는 논지와 모순된다."
+  },
+  {
+    "id": "ebsi_go3_20110713-q20",
+    "how": "excerpt-anchored",
+    "planted": "whose",
+    "original": "that",
+    "reason": "소유격 관계대명사 whose 뒤에 명사 없이 동사 prey가 바로 와서 주격 관계대명사 that(which)이어야 한다."
+  },
+  {
+    "id": "2011_09_3001251-q32",
+    "how": "excerpt-anchored",
+    "planted": "well",
+    "original": "badly",
+    "reason": "공유된 전제에 의존하기 때문에 농담은 잘 전달되지 '않는다'는 것이 논지이며 뒤 문장(번역 불가·멍한 반응)과도 모순된다."
+  },
+  {
+    "id": "ebsi_go3_20111012-q21",
+    "how": "excerpt-anchored",
+    "planted": "competitively",
+    "original": "competitive",
+    "reason": "make + 목적어(workers) + 목적격보어 자리이므로 부사가 아니라 형용사 competitive가 와야 한다."
+  },
+  {
+    "id": "ebsi_go3_20111012-q29",
+    "how": "excerpt-anchored",
+    "planted": "changeable",
+    "original": "unchangeable",
+    "reason": "선사시대 수렵채집 집단도 150명에서 분리됐다는 예시는 이 수치가 역사 내내 '변하지 않았다'는 주장을 뒷받침하므로 changeable은 논지 정면 모순이다."
+  },
+  {
+    "id": "2011_SN_3000996-q32",
+    "how": "excerpt-anchored",
+    "planted": "neglects",
+    "original": "enhances",
+    "reason": "카메라를 통해 오히려 현재를 진짜로 보라는 결론이므로 경험을 '소홀히 한다'는 정반대이며 enhances여야 한다."
+  },
+  {
+    "id": "ebsi_go1_20100310-q21",
+    "how": "excerpt-anchored",
+    "planted": "exact",
+    "original": "exactly",
+    "reason": "형용사 alike를 수식하므로 형용사 exact가 아니라 부사 exactly가 와야 한다."
+  },
+  {
+    "id": "ebsi_go1_20100310-q22",
+    "how": "excerpt-anchored",
+    "planted": "that",
+    "original": "if",
+    "reason": "ask는 that절이 아니라 간접의문(if/whether)절을 목적어로 취하므로 that은 문법 위반이다."
+  },
+  {
+    "id": "ebsi_go1_20100310-q31",
+    "how": "excerpt-anchored",
+    "planted": "attack",
+    "original": "attract",
+    "reason": "곤충에 물리지 않게 하라는 글이므로 밝은 색 옷은 곤충을 '유인한다(attract)'여야 논지가 성립한다."
+  },
+  {
+    "id": "ebsi_go1_20100616-q22",
+    "how": "excerpt-anchored",
+    "planted": "what",
+    "original": "whom",
+    "reason": "선행사 followers가 있고 trained의 목적어 자리이므로 관계대명사 whom(that)이 와야 하며 선행사를 포함하는 what은 쓸 수 없다."
+  },
+  {
+    "id": "ebsi_go1_20100916-q22",
+    "how": "excerpt-anchored",
+    "planted": "sharing",
+    "original": "shared",
+    "reason": "주어가 정보·지식이므로 protected, controlled와 병렬을 이루는 수동 분사 shared가 와야 한다."
+  },
+  {
+    "id": "ebsi_go1_20101123-q22",
+    "how": "excerpt-anchored",
+    "planted": "is",
+    "original": "are",
+    "reason": "주어가 복수 명사 the milestones이므로 단수 동사 is는 수일치 위반, are가 옳다."
+  },
+  {
+    "id": "ebsi_go1_20101123-q30",
+    "how": "excerpt-anchored",
+    "planted": "shorter",
+    "original": "longer",
+    "reason": "동굴 다이버는 노출 보호(exposure protection)가 더 필요하다는 문맥이므로 잠수복이 더 짧다는 서술은 논지와 정면 모순된다."
+  },
+  {
+    "id": "ebsi_go2_20100311-q22",
+    "how": "excerpt-anchored",
+    "planted": "will not accept",
+    "original": "will not be accepted",
+    "reason": "주어 This attitude는 받아들여지는 대상이므로 능동 accept가 아니라 수동태 be accepted여야 한다."
+  },
+  {
+    "id": "ebsi_go2_20100311-q31",
+    "how": "excerpt-anchored",
+    "planted": "reproduce",
+    "original": "reduce",
+    "reason": "질병 예방을 돕는 손 세정 제품이라는 논지상 세균을 '번식시킨다'는 서술은 정면 모순이며 세균을 줄인다가 맞다."
+  },
+  {
+    "id": "ebsi_go2_20100617-q22",
+    "how": "excerpt-anchored",
+    "planted": "made",
+    "original": "are made",
+    "reason": "주절에 정동사가 없어 문장이 성립하지 않으므로 'are made'가 되어야 한다."
+  },
+  {
+    "id": "ebsi_go2_20101124-q22",
+    "how": "excerpt-anchored",
+    "planted": "which",
+    "original": "in which",
+    "reason": "뒤 절이 완전한 문장이라 관계대명사 which가 아니라 'in which(=where)'가 필요하다."
+  },
+  {
+    "id": "ebsi_go2_20101124-q30",
+    "how": "excerpt-anchored",
+    "planted": "up",
+    "original": "down",
+    "reason": "마방진 작성법에서 칸이 막히면 아래로 한 칸 내려가야 3×3 결과(8 1 6 / 3 5 7 / 4 9 2)가 나오므로 up은 논지 모순이다."
+  },
+  {
+    "id": "ebsi_go3_20100708-q22",
+    "how": "excerpt-anchored",
+    "planted": "while",
+    "original": "during",
+    "reason": "while은 접속사라 절을 이끌어야 하는데 명사구 a crash가 뒤따르므로 전치사 during이 필요하다."
+  },
+  {
+    "id": "ebsi_go3_20101012-q20",
+    "how": "excerpt-anchored",
+    "planted": "which",
+    "original": "that",
+    "reason": "명사 likelihood 뒤의 동격절은 완전한 절을 이끄는 접속사 that이어야 하며, 관계대명사 which는 뒤 절이 완전하므로 쓸 수 없다."
+  },
+  {
+    "id": "ebsi_go1_20090311-q22",
+    "how": "excerpt-anchored",
+    "planted": "received",
+    "original": "receiving",
+    "reason": "전치사구 after 뒤 finishing과 병렬이므로 동명사 receiving이어야 하는데 과거동사 received가 쓰여 구조가 깨진다."
+  },
+  {
+    "id": "ebsi_go1_20090617-q22",
+    "how": "excerpt-anchored",
+    "planted": "are",
+    "original": "is",
+    "reason": "주어가 단수 One(of ~ reasons)이므로 동사는 is여야 하는데 are로 되어 있어 수일치 위반이다."
+  },
+  {
+    "id": "ebsi_go1_20090917-q20",
+    "how": "excerpt-anchored",
+    "planted": "to come",
+    "original": "come",
+    "reason": "사역동사 make는 목적격보어로 원형부정사를 취하므로 to come이 아니라 come이어야 한다."
+  },
+  {
+    "id": "ebsi_go1_20091118-q22",
+    "how": "excerpt-anchored",
+    "planted": "lately",
+    "original": "late",
+    "reason": "'be동사 보어 자리이며 '조금 늦게 도착한다'는 뜻이므로 '최근에'를 뜻하는 부사 lately가 아니라 형용사/부사 late가 와야 한다."
+  },
+  {
+    "id": "ebsi_go2_20090312-q22",
+    "how": "excerpt-anchored",
+    "planted": "their",
+    "original": "whose",
+    "reason": "선행사(violinists and pianists)를 받아 names를 수식하는 관계절을 이끌어야 하므로 대명사 their가 아니라 소유격 관계대명사 whose가 필요하다."
+  },
+  {
+    "id": "ebsi_go2_20090618-q22",
+    "how": "excerpt-anchored",
+    "planted": "resulted",
+    "original": "resulting",
+    "reason": "접속사 없이 이어지는 자리이므로 정동사 resulted가 아니라 앞 절 전체를 받는 분사구문 resulting이어야 한다."
+  },
+  {
+    "id": "ebsi_go2_20090918-q22",
+    "how": "excerpt-anchored",
+    "planted": "frustrating",
+    "original": "frustrated",
+    "reason": "주어(she)가 좌절감을 '느끼는' 대상이므로 grew 뒤에는 능동 현재분사가 아니라 과거분사 frustrated가 와야 한다."
+  },
+  {
+    "id": "ebsi_go2_20091117-q20",
+    "how": "excerpt-anchored",
+    "planted": "themselves",
+    "original": "itself",
+    "reason": "주어가 단수 any e-commerce enterprise이므로 재귀대명사는 itself여야 한다."
+  },
+  {
+    "id": "ebsi_go3_20091015-q20",
+    "how": "excerpt-anchored",
+    "planted": "defenselessly",
+    "original": "defenseless",
+    "reason": "make + 목적어(soil) + 목적격보어 자리이므로 부사가 아니라 형용사 defenseless가 와야 한다."
+  },
+  {
+    "id": "2008_06_3001212-q29",
+    "how": "excerpt-anchored",
+    "planted": "front",
+    "original": "rear",
+    "reason": "seat tube·chain stays·seat stays로 이루어지는 것은 앞쪽이 아니라 뒤쪽 삼각형이며, 앞 문장의 main triangle과 짝을 이루는 것은 rear triangle이다."
+  },
+  {
+    "id": "2008_09_3001186-q29",
+    "how": "excerpt-anchored",
+    "planted": "increase",
+    "original": "decrease",
+    "reason": "다리를 수평으로 뻗으면 무게중심이 (몸 안에서) 위로 올라가므로 머리 꼭대기와 무게중심 사이 거리는 줄어들어야 하는데, 'increase'는 앞 문장의 'moves upward' 및 머리 높이가 일정하다는 논지와 정면 모순된다."
+  },
+  {
+    "id": "2007_06_3001177-q35",
+    "how": "excerpt-anchored",
+    "planted": "loosens",
+    "original": "stiffens",
+    "reason": "앞뒤에서 패드는 충격 시 굳어(stiffen) 분자가 결합하고 힘을 분산한다고 하므로 '느슨해진다(loosens)'는 정면 모순이다."
+  },
+  {
+    "id": "2007_09_3001172-q28",
+    "how": "excerpt-anchored",
+    "planted": "characteristic",
+    "original": "momentary",
+    "reason": "인상주의는 대상의 고정적·전형적(characteristic) 모습이 아니라 햇빛 변화 같은 순간적(momentary) 인상을 포착한다는 뒤 문장과 모순된다."
+  },
+  {
+    "id": "ebsi_go1_20060601-q21",
+    "how": "excerpt-anchored",
+    "planted": "that",
+    "original": "which",
+    "reason": "콤마 뒤 계속적 용법의 관계대명사 자리에는 that을 쓸 수 없으므로 which여야 한다."
+  },
+  {
+    "id": "ebsi_go1_20061121-q22",
+    "how": "excerpt-anchored",
+    "planted": "frustrated",
+    "original": "frustrating",
+    "reason": "주어 It(voice mail)이 감정을 유발하는 주체이므로 과거분사 frustrated가 아니라 현재분사 frustrating이어야 한다."
+  },
+  {
+    "id": "ebsi_go1_20061121-q31",
+    "how": "excerpt-anchored",
+    "planted": "millions",
+    "original": "million",
+    "reason": "수사와 함께 쓰인 million은 복수형을 쓰지 않으므로 65 million years가 되어야 한다."
+  },
+  {
+    "id": "ebsi_go1_20061121-q35",
+    "how": "excerpt-anchored",
+    "planted": "straightened",
+    "original": "bent",
+    "reason": "앞에서 'bring your bent right arm forward'라고 팔을 굽히라고 했으므로 팔꿈치는 편(straightened) 상태가 아니라 굽힌(bent) 상태여야 해 논지와 정면 모순된다."
+  },
+  {
+    "id": "ebsi_go2_20060310-q21",
+    "how": "excerpt-anchored",
+    "planted": "moving",
+    "original": "move",
+    "reason": "whereas 앞 주절에 정동사가 없어 분사 moving이 아니라 정동사 move가 와야 한다."
+  },
+  {
+    "id": "ebsi_go2_20060602-q21",
+    "how": "excerpt-anchored",
+    "planted": "rapidly",
+    "original": "rapid",
+    "reason": "감각동사 sound는 보어로 형용사를 취하므로 부사 rapidly는 문법 위반이며 rapid가 되어야 한다."
+  },
+  {
+    "id": "2006_09_3001166-q28",
+    "how": "excerpt-anchored",
+    "planted": "abundant",
+    "original": "scarce",
+    "reason": "지문 논지는 값싼 석유의 종말·신규 유전 고갈이므로 석유가 '풍부해진다'는 것은 정면 모순이며, 새 기술을 찾을 압박이 생기는 이유는 석유가 희소해지기 때문이다."
+  },
+  {
+    "id": "2006_SN_3000977-q30",
+    "how": "excerpt-anchored",
+    "planted": "enhance",
+    "original": "eliminate",
+    "reason": "바로 뒤 'hence the lack of detail in the eyes and mouth'가 미세 정보의 소실을 가리키므로 '강화한다'는 결과절과 정면 모순이며 '제거한다'여야 한다."
+  }
+]

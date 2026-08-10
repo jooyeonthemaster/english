@@ -10,6 +10,11 @@ export interface QuestionGenerationPlanConfig {
   creditMultiplier: number;
 }
 
+// 이원 티어 v2(26-07-22, O213 벤치 확정): 차이는 "모델"이다 — STANDARD =
+// flash3, PREMIUM = env PREMIUM_QGEN_MODEL_ID(3.6-flash 예정, 블라인드 정면비교
+// 8/10 1위·A 8/10). 빈칸·어법은 두 티어가 같은 md 원큐 구조에서 모델만 갈리고,
+// 그 외 유형 PREMIUM 은 기존 풀 파이프라인(어법 사다리·E-gate 검수리)을 탄다.
+// 요금(사용자 확정): PREMIUM = 2배 — getQuestionGenerationCreditCost 와 동기.
 export const QUESTION_GENERATION_PLANS: Record<
   QuestionGenerationPlan,
   QuestionGenerationPlanConfig
@@ -18,14 +23,14 @@ export const QUESTION_GENERATION_PLANS: Record<
     id: "STANDARD",
     label: "일반 문제 생성",
     shortLabel: "일반",
-    description: "빠른 속도 · 기본 품질",
+    description: "빠른 속도 · AI 검수 1회",
     creditMultiplier: 1,
   },
   PREMIUM: {
     id: "PREMIUM",
     label: "프리미엄 문제 생성",
     shortLabel: "프리미엄",
-    description: "정밀 검수 · 고난도 품질",
+    description: "상위 모델 · 정밀 검수 파이프라인",
     creditMultiplier: 2,
   },
 };
@@ -108,50 +113,44 @@ export function getQuestionGenerationPlanConfig(
   return QUESTION_GENERATION_PLANS[plan];
 }
 
-// ── 상품 단일화 서버 코어 (W2-E) ──────────────────────────────────────────────
-// 상품에서 일반/프리미엄 구분이 폐지된다. 서버가 최종 권위다: 클라이언트가 보낸
-// generationPlan / questionTypeSettings.generationPlan(과거 저장된 PREMIUM config
-// 포함)은 더 이상 요금·품질 파이프라인을 결정하지 않으며, 품질 라우팅은 오직 문항
-// 유형이 결정한다. 아래 유형 표가 단일 진실이다.
-//
-// PREMIUM 파이프라인 대상 = 어법(GRAMMAR_ERROR) · 빈칸추론(BLANK_INFERENCE) ·
-// 대의파악 계열(TITLE·TOPIC·MAIN_IDEA·TOPIC_MAIN_IDEA) · 함축(IMPLIED_MEANING) ·
-// 내용일치(CONTENT_MATCH). 그 외 전부 STANDARD.
-// E-gate(getExplanationVerifyGateMode)가 PREMIUM=enforce 로 자연 정합된다
-// (어법·빈칸이 이 표에서 PREMIUM 이므로 그대로 enforce 레인에 실린다).
-const UNIFIED_PREMIUM_SUBTYPES: ReadonlySet<string> = new Set([
-  "GRAMMAR_ERROR",
-  "BLANK_INFERENCE",
-  "TITLE",
-  "TOPIC",
-  "MAIN_IDEA",
-  "TOPIC_MAIN_IDEA",
-  "IMPLIED_MEANING",
-  "CONTENT_MATCH",
-]);
+// ── 단일 상품 서버 코어 (26-07-21 사용자 결정) ───────────────────────────────
+// 프리미엄 판매 중단 — 전 요청이 일반(STANDARD) 레인으로 간다: 빈칸=경량 생성+
+// 통합 검수리 1콜, 어법 KILLER=사다리 3단계+검수리, 그 외=생성+검수리. 백그라운드
+// 재검증 체인(E-gate verify→repair→re-verify)은 휴면(STANDARD 기본 off + PENDING
+// 미발생 → 워커 미인큐). 프리미엄 파이프라인 코드는 보존 — env
+// QUESTION_GENERATION_SINGLE_TIER=off 로 이원 티어 즉시 복귀 가능.
 
-/**
- * 상품 단일화 클램프의 단일 진실 함수 — 문항 유형(subType)만으로 생성 플랜을
- * 결정한다. 클라이언트가 보낸 플랜 지정은 절대 참조하지 않는다. 서버 진입점의
- * effectiveGenerationPlan 계산을 이 함수로 대체한다.
- */
-export function resolveUnifiedGenerationPlan(
-  subType: string | null | undefined,
-): QuestionGenerationPlan {
-  return subType && UNIFIED_PREMIUM_SUBTYPES.has(subType) ? "PREMIUM" : "STANDARD";
+/** 단일 상품 모드(기본 on). env QUESTION_GENERATION_SINGLE_TIER=off 로 이원 티어 복귀. */
+export function isQuestionGenerationSingleTier(): boolean {
+  return (
+    process.env.QUESTION_GENERATION_SINGLE_TIER?.trim().toLowerCase() !== "off"
+  );
 }
 
 /**
- * 상품 단일화(W2-E): 플랜별 2x 멀티플라이어를 폐지했다. 플랜과 무관하게 단일가
- * (기존 STANDARD 가격 = baseCost)를 청구한다. `plan` 파라미터는 호출부 시그니처
- * 호환·로깅을 위해 남겨두되 요금 계산에는 절대 쓰지 않는다.
+ * 진입점 공용 최종 플랜 결정 — 정규화 후 단일 상품 모드면 STANDARD 로 접는다.
+ * (fast/async/trigger/단건 4진입점의 유일한 결정 함수 — 규칙 중복 금지.)
+ */
+export function resolveEffectiveGenerationPlan(
+  requested: unknown,
+): QuestionGenerationPlan {
+  const normalized = normalizeQuestionGenerationPlan(requested);
+  return isQuestionGenerationSingleTier() ? "STANDARD" : normalized;
+}
+
+/**
+ * 티어별 요금(26-07-22 사용자 확정): PREMIUM = 2배. 단일상품(W2-E) 때 폐지했던
+ * 멀티플라이어를 이원 티어 복귀(O213, 3.6-flash 프리미엄)와 함께 부활 —
+ * QUESTION_GENERATION_PLANS 의 creditMultiplier 표와 반드시 동기 유지.
+ * plan 미전달 호출부(플랜 개념 없는 기능)는 STANDARD 단가로 계산된다.
  */
 export function getQuestionGenerationCreditCost(
   baseCost: number,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- 시그니처 호환용: 다수 호출부가 plan 을 위치 인자로 넘긴다. 요금은 플랜 무관 단일가라 값은 쓰지 않는다.
   plan?: QuestionGenerationPlan,
 ): number {
-  return baseCost;
+  return plan === "PREMIUM"
+    ? baseCost * QUESTION_GENERATION_PLANS.PREMIUM.creditMultiplier
+    : baseCost;
 }
 
 export function getQuestionGenerationPlanTag(plan: QuestionGenerationPlan): string {

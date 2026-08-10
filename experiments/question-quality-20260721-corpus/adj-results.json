@@ -1,0 +1,569 @@
+{
+  "total": 55,
+  "defectCount": 40,
+  "cleanCount": 12,
+  "unresolvedCount": 3,
+  "defect": [
+    {
+      "sid": "D001",
+      "p": "P1",
+      "id": "ebsi_go1_20240328-q30",
+      "decision": "DEFECT",
+      "plantedText": "has enough time or ability",
+      "correctedText": "does not have enough time or ability",
+      "plantedExcerpt": "a motorist simply has enough time or ability to appreciate design details",
+      "rationale": "바로 앞 절이 운전자는 'a much more limited ability to process details'라고 못박고, 뒤 문장은 'On the other hand, pedestrian travel... allows for the appreciation of environmental detail'로 대조된다. 따라서 ",
+      "votes": "2/3"
+    },
+    {
+      "sid": "D001",
+      "p": "P2",
+      "id": "ebsi_go1_20240904-q29",
+      "decision": "DEFECT",
+      "plantedText": "which",
+      "correctedText": "where",
+      "plantedExcerpt": "Organic structures are more horizontal in nature, which decision making is less centralized",
+      "rationale": "관계대명사 which 뒤에 'decision making is less centralized and spread'라는 완전한 절이 이어져 which가 담당할 주어·목적어 자리가 없다. 명백한 문법 위반이며 장소·상황을 받는 관계부사 where(또는 in which)가 필요하다. 정답 선지 5번(마지막 밑줄)과 위치도 일치",
+      "votes": "2/3"
+    },
+    {
+      "sid": "D001",
+      "p": "P3",
+      "id": "ebsi_go2_20240904-q29",
+      "decision": "DEFECT",
+      "plantedText": "a century or two make the change",
+      "correctedText": "a century or two to make the change",
+      "plantedExcerpt": "Unfortunately we do not have a century or two make the change.",
+      "rationale": "'have + 명사구(a century or two)' 뒤에 원형 make가 바로 붙어 두 개의 정동사/무연결 구조가 되어 비문이다. 명사 수식 부정사 to make여야 '변화를 이루는 데 쓸 한두 세기'라는 의미가 성립한다. 어법에서 to 생략은 허용되지 않는 명백한 위반.",
+      "votes": "3/3"
+    },
+    {
+      "sid": "D001",
+      "p": "P4",
+      "id": "2024_SN_5086091-q41-42",
+      "decision": "DEFECT",
+      "plantedText": "running the risk of being misquoted",
+      "correctedText": "avoiding the risk of being misquoted",
+      "plantedExcerpt": "thereby preserving more time for their science and running the risk of being misquoted",
+      "rationale": "마지막 문장의 주체는 '기자와의 대화를 계속 거부하는 과학자'다. 거부의 결과로 얻는 것은 연구 시간 확보와 오인용 위험 회피이므로, 앞의 preserving과 병렬된 분사는 avoiding이어야 한다. 앞 단락에서 '언론과 말하는 것(Speaking with members of the media)이 it runs the",
+      "votes": "3/3"
+    },
+    {
+      "sid": "D002",
+      "p": "P1",
+      "id": "ebsi_go3_20231012-q30",
+      "decision": "DEFECT",
+      "plantedText": "resistant",
+      "correctedText": "receptive",
+      "plantedExcerpt": "Many musicians were resistant to the limitations and benefits of technology",
+      "rationale": "지문 전체 논지는 음악가들이 녹음 기술의 제약에 '맞춰' 소리를 바꾸고(alter the sound to accommodate), 녹음 파라미터를 중심으로 작품을 빚었으며(molded their works around recording parameters), 결국 무대에서도 3분 길이를 지켰다는 순응·수용 서사다. 'we",
+      "votes": "3/3"
+    },
+    {
+      "sid": "D002",
+      "p": "P2",
+      "id": "ebsi_go1_20220609-q30",
+      "decision": "DEFECT",
+      "plantedText": "ignoring",
+      "correctedText": "envying",
+      "plantedExcerpt": "we end up ignoring how other people live. Then, we can only see the greener grass",
+      "rationale": "다음 문장 'Then, we can only see the greener grass - ours is never good enough'는 남의 삶이 더 좋아 보인다는 선망을 명시한다. 남이 사는 방식을 '무시한다(ignoring)'면 greener grass를 볼 수조차 없으므로 인과가 정면 붕괴. 또한 앞부분(다른 사람",
+      "votes": "3/3"
+    },
+    {
+      "sid": "D002",
+      "p": "P3",
+      "id": "ebsi_go2_20220609-q30",
+      "decision": "DEFECT",
+      "plantedText": "less likely",
+      "correctedText": "more likely",
+      "plantedExcerpt": "the human operator gives up oversight, the system is less likely to have a serious accident",
+      "rationale": "지문은 스마트 기술 의존의 '역설'을 설명한다 — 기술이 좋아질수록 인간이 집중을 잃고 시스템을 방치하며, 예기치 못한 상황에서 드러나는 인간의 유연성이 바로 가치라는 전개다. 기계는 공동 목표를 위해 협업하는 존재가 아니라 도구일 뿐이라는 직전 문장은 감독 포기의 위험을 강조하는 전제이므로, So로 이어지는 결론이 '사",
+      "votes": "3/3"
+    },
+    {
+      "sid": "D002",
+      "p": "P4",
+      "id": "ebsi_go2_20221123-q30",
+      "decision": "DEFECT",
+      "plantedText": "reinforces",
+      "correctedText": "destroys",
+      "plantedExcerpt": "This pattern of coloration, or countershading, reinforces the visual impression of shape",
+      "rationale": "앞에서 '위에서 오는 빛이 만드는 명암이 물체에 입체감을 주어 관찰자가 형태를 식별하게 한다'고 규정한 뒤, 카운터셰이딩은 등이 어둡고 배가 밝아 그 명암을 상쇄해 단색으로 보이게 만든다고 서술한다. 즉 형태의 시각적 인상을 '없애는' 장치인데 reinforces(강화한다)는 바로 다음 문장 'It allows the a",
+      "votes": "3/3"
+    },
+    {
+      "sid": "D002",
+      "p": "P5",
+      "id": "ebsi_go2_20220901-q30",
+      "decision": "DEFECT",
+      "plantedText": "scarce",
+      "correctedText": "excess",
+      "plantedExcerpt": "a market outlet to exchange that scarce food for clothing, shelter, and so forth",
+      "rationale": "같은 문장 앞부분이 'to produce more food than a household needs'로 가계 필요를 초과하는 생산량을 명시하므로, 그 지시대명사 that이 받는 식량은 정의상 잉여다. scarce(부족한)는 선행 어구와 축자적으로 모순되며, 교환할 잉여가 있어야 분업이 성립한다는 스미스 논지도 무너뜨린다.",
+      "votes": "2/3"
+    },
+    {
+      "sid": "D002",
+      "p": "P6",
+      "id": "ebsi_go3_20221012-q29",
+      "decision": "DEFECT",
+      "plantedText": "what referred to as",
+      "correctedText": "what was referred to as",
+      "plantedExcerpt": "leadership studies were grounded in what referred to as the \"great man\" theory",
+      "rationale": "관계대명사 what이 종속절의 주어 역할을 하는데, refer to A as B는 능동일 때 'A를 B라고 부르다'로 행위자 주어를 요구한다. 여기서 what은 '불리는 대상'이므로 능동 referred가 오면 주어 없이 목적어 A까지 사라진 비문이 된다. 따라서 수동태 be referred to as가 유일한 문법적 복",
+      "votes": "3/3"
+    },
+    {
+      "sid": "D003",
+      "p": "P1",
+      "id": "2022_SN_5070164-q41-42",
+      "decision": "DEFECT",
+      "plantedText": "abstract",
+      "correctedText": "obvious",
+      "plantedExcerpt": "Such a grouping may seem too abstract to be called a classification",
+      "rationale": "뒤따르는 절 'but this is only because you have already mastered the word'가 이유를 제시한다. 단어를 이미 완전히 익혔기 때문에 그 분류가 '너무 당연해서(obvious)' 분류라고 부를 것도 없어 보이는 것이지, '너무 추상적'으로 보이는 것이 아니다. 숙달은 친숙함·자명",
+      "votes": "3/3"
+    },
+    {
+      "sid": "D003",
+      "p": "P2",
+      "id": "ebsi_go1_20210603-q29",
+      "decision": "DEFECT",
+      "plantedText": "are lowered",
+      "correctedText": "is lowered",
+      "plantedExcerpt": "the skin between the eyebrow and upper eyelid are lowered slightly with true enjoyment",
+      "rationale": "주어는 단수 명사 the skin이고 between the eyebrow and upper eyelid는 전치사구 수식어일 뿐이다. 복수처럼 보이는 eyelid/eyebrow는 전치사의 목적어라 수일치 대상이 될 수 없으므로 are는 명백한 수일치 위반. 지문 마지막 밑줄(5번) 위치와도 일치한다. 문법이 원형을 is l",
+      "votes": "3/3"
+    },
+    {
+      "sid": "D003",
+      "p": "P3",
+      "id": "ebsi_go1_20210603-q30",
+      "decision": "DEFECT",
+      "plantedText": "prevent",
+      "correctedText": "accommodate",
+      "plantedExcerpt": "This allows the river to prevent variations in water level and speed.",
+      "rationale": "글 전체 논지는 '자연 하천의 복잡한 형태가 기능에 필수적'이며, 직강화(tidy geometry)가 기능적 수용력(functional capacity)을 파괴해 홍수 재앙을 부른다는 것이다. 굽이·범람원·습지가 만드는 복잡한 하안은 수위와 유속의 '변동을 수용·흡수'하게 해 주는 것이지 변동 자체를 '막는' 것이 아니다",
+      "votes": "3/3"
+    },
+    {
+      "sid": "D003",
+      "p": "P5",
+      "id": "ebsi_go2_20210831-q30",
+      "decision": "DEFECT",
+      "plantedText": "benefits",
+      "correctedText": "dangers",
+      "plantedExcerpt": "recognize the potential benefits that monocultures of plants can introduce",
+      "rationale": "앞부분에서 소수 품종 의존이 기근(아일랜드 감자 기근)을 부른다고 명시했고, 뒤에서는 당장 쓸모없어 보이는 씨앗까지 심어 생물다양성을 유지하라고 말한다. 따라서 단일재배(monocultures)는 경계 대상이지 이득의 원천이 아니다. 'allow for biodiversity'와 'recognize the potentia",
+      "votes": "3/3"
+    },
+    {
+      "sid": "D003",
+      "p": "P6",
+      "id": "ebsi_go2_20200916-q30",
+      "decision": "DEFECT",
+      "plantedText": "hard to believe",
+      "correctedText": "easy to believe",
+      "plantedExcerpt": "If a rumor of a miracle gets written down in a book, the rumor becomes hard to believe",
+      "rationale": "글의 흐름은 '기록되면 신빙성이 올라가고, 오래되면 전통으로 불리며 더욱 믿게 된다(people believe it all the more)'는 신뢰 상승의 단계적 서술이다. especially if the book is ancient가 뒤 문장의 '오래될수록 더 믿는다'와 직결되므로 기록·고서화는 믿기 쉬워지는 방향이어",
+      "votes": "2/3"
+    },
+    {
+      "sid": "D004",
+      "p": "P2",
+      "id": "ebsi_go2_20180607-q29",
+      "decision": "DEFECT",
+      "plantedText": "improving",
+      "correctedText": "degrading",
+      "plantedExcerpt": "will tend to make similar errors in their testimony, improving the total value",
+      "rationale": "글의 논지는 증인 간 상호 영향이 정보의 가치를 떨어뜨리므로 독립성을 지켜야 한다는 것이다. 경험을 교환한 증인들이 유사한 오류를 범하면 제공 정보의 총가치는 낮아진다. improving은 논지 정면 모순이므로 degrading으로 복원한다.",
+      "votes": "3/3"
+    },
+    {
+      "sid": "D004",
+      "p": "P3",
+      "id": "ebsi_go2_20181121-q28",
+      "decision": "DEFECT",
+      "plantedText": "many of them had not responded",
+      "correctedText": "many of whom had not responded",
+      "plantedExcerpt": "treating chronic-pain patients, many of them had not responded well",
+      "rationale": "접속사 없이 두 정형절이 콤마로 연결된 comma splice다. 선행사 chronic-pain patients를 받아 절을 연결하려면 관계대명사 whom이 필요하다(many of whom). 명백한 문법 위반.",
+      "votes": "2/3"
+    },
+    {
+      "sid": "D004",
+      "p": "P4",
+      "id": "ebsi_go1_20161123-q28",
+      "decision": "DEFECT",
+      "plantedText": "some of them use less than 1.3 gallons",
+      "correctedText": "some of them using less than 1.3 gallons",
+      "plantedExcerpt": "toilets are on the U.S. market today, some of them use less than 1.3 gallons",
+      "rationale": "More than 35 models ... are on the U.S. market today, some of them use ... 는 접속사 없는 두 정형절 연결(comma splice)이다. 독립분사구문 some of them using 이 문법이 결정하는 원형이며(또는 some of which use) 정답 선지 ",
+      "votes": "2/3"
+    },
+    {
+      "sid": "D004",
+      "p": "P5",
+      "id": "ebsi_go1_20150604-q30",
+      "decision": "DEFECT",
+      "plantedText": "What you inherited and live with",
+      "correctedText": "What you inherit and live with",
+      "plantedExcerpt": "What you inherited and live with will become the inheritance of future generations.",
+      "rationale": "관계절에서 두 동사가 주어 you를 공유하며 등위접속되는데, 시간 부사어 없이 과거 inherited와 현재 live를 병렬시킨 것은 병치·시제 일관성 위반이다. 문장이 진술하는 바는 세대 간 일반적 진리이므로 현재형 inherit이 원형이며 정답 선지 5(마지막 밑줄) 위치와도 일치한다. we will still hav",
+      "votes": "2/3"
+    },
+    {
+      "sid": "D004",
+      "p": "P6",
+      "id": "ebsi_go3_20150409_A-q30",
+      "decision": "DEFECT",
+      "plantedText": "defect",
+      "correctedText": "advantage",
+      "plantedExcerpt": "the dark clothing has the defect because it keeps you cooler when you're in the shade",
+      "rationale": "글은 더운 지역 사람들이 어두운 옷을 입는 이유를 설명하며, 어두운 옷이 체열 복사에 유리하고 뜨거운 기후의 사람은 그늘에 머물므로 더 시원하다고 결론짓는다. 따라서 어두운 옷은 결점이 아니라 이점을 갖는다. defect는 논지 정면 모순이므로 advantage로 복원한다(has the edge도 동의).",
+      "votes": "3/3"
+    },
+    {
+      "sid": "D005",
+      "p": "P1",
+      "id": "ebsi_go1_20140903-q27",
+      "decision": "DEFECT",
+      "plantedText": "was",
+      "correctedText": "did",
+      "plantedExcerpt": "would the toast mean less than it was at first, before you knew it was written",
+      "rationale": "비교절의 대동사 문제. 주절 술어가 일반동사 mean(would the toast mean less...)이므로 than절의 대용 동사는 be동사가 아니라 do형이어야 한다. 'than it was at first'는 계사 생략 구조를 요구하는데 선행 술어에 형용사·명사 보어가 없어 성립하지 않는다. 시제는 과거 대조(a",
+      "votes": "3/3"
+    },
+    {
+      "sid": "D005",
+      "p": "P2",
+      "id": "ebsi_go2_20140612-q28",
+      "decision": "DEFECT",
+      "plantedText": "relieved",
+      "correctedText": "expectant",
+      "plantedExcerpt": "We not only like to wait, feeling relieved, but we appreciate what we wait for.",
+      "rationale": "지문 전체 논지는 서스펜스(기다림의 긴장·기대)가 흥미를 높인다는 것이다. 앞서 'We like to keep guessing as to the outcome', 'increases our expectation'로 기대감을 명시했고, 결론 문장은 '기다리는 것 자체를 좋아한다'는 요지다. 기다리는 동안 'relieved(",
+      "votes": "3/3"
+    },
+    {
+      "sid": "D005",
+      "p": "P3",
+      "id": "ebsi_go1_20130903-q28",
+      "decision": "DEFECT",
+      "plantedText": "sufficient",
+      "correctedText": "insufficient",
+      "plantedExcerpt": "We have sufficient foresight into the future.",
+      "rationale": "해당 문장은 '인간은 완벽한 의사결정자가 아니다'를 뒷받침하는 결함 나열의 일부다. 앞뒤로 '정보가 원하는 것보다 적다', '최선 대신 충분히 좋은 것을 받아들인다', '감정이 판단에 영향을 준다'가 이어지고, 뒤에서 'despite all these limitations'로 이 문장들을 한계로 총칭한다. '충분한 예견력",
+      "votes": "3/3"
+    },
+    {
+      "sid": "D005",
+      "p": "P4",
+      "id": "2013_SN_3014708-q30",
+      "decision": "DEFECT",
+      "plantedText": "deny",
+      "correctedText": "recognize",
+      "plantedExcerpt": "Empathetic distress occurs when people deny that their actions have caused harm",
+      "rationale": "죄책감의 동기적 기반이 공감적 고통이고, 그 결과 '보상하려는 마음이 생긴다(Motivated by feelings of guilt, they are inclined to make amends)'로 이어진다. 자기 행위가 해를 끼쳤음을 '부인할' 때는 공감적 고통도 보상 동기도 발생할 수 없으므로 인과 사슬이 붕괴한다. ",
+      "votes": "2/3"
+    },
+    {
+      "sid": "D005",
+      "p": "P5",
+      "id": "ebsi_go2_20120314-q35",
+      "decision": "DEFECT",
+      "plantedText": "antibiotics",
+      "correctedText": "antibodies",
+      "plantedExcerpt": "The vaccine NicVax stimulates the immune system to make antibiotics",
+      "rationale": "면역계가 만들어내는 것은 항체(antibodies)이지 항생제(antibiotics)가 아니다. 백신이 자극해 니코틴의 뇌 진입을 막는 물질은 정의상 항체이므로 명백한 어휘·사실 위반이며, 지문 마지막 문장이라 정답 선지 5의 위치와 일치한다. (참고: 앞부분 'Addiction can come slowly' 역시 바로 ",
+      "votes": "3/3"
+    },
+    {
+      "sid": "D005",
+      "p": "P6",
+      "id": "ebsi_go2_20121114_B-q28",
+      "decision": "DEFECT",
+      "plantedText": "accepted",
+      "correctedText": "resisted",
+      "plantedExcerpt": "In pseudoscience, doubts and tests for possible wrongness are firmly accepted.",
+      "rationale": "직전 문장에서 유사과학의 특징은 '증거와 오류 검증 수단(a test for wrongness)의 결여'라고 명시했다. 그런데 마지막 문장에서 의심과 오류 검증이 '확고히 수용된다(firmly accepted)'면 앞 문장과 정면 모순이다. 유사과학은 그것들을 '완강히 배격/저항한다'는 결론이어야 하므로 resisted(",
+      "votes": "2/3"
+    },
+    {
+      "sid": "D006",
+      "p": "P1",
+      "id": "ebsi_go1_20110310-q21",
+      "decision": "DEFECT",
+      "plantedText": "got off",
+      "correctedText": "get off",
+      "plantedExcerpt": "I enjoyed the ride home and watched my fellow passengers got off at their stops.",
+      "rationale": "지각동사 watch + 목적어 뒤에는 원형부정사(또는 -ing)만 온다. 'watched ... passengers got off'는 과거형 정동사가 목적격보어 자리에 온 명백한 문법 위반이며 다른 접속사도 없다. 원형 get off가 최소수정 복원형이고, 정답 1번(지문 앞부분)과 위치도 일치한다.",
+      "votes": "3/3"
+    },
+    {
+      "sid": "D006",
+      "p": "P2",
+      "id": "ebsi_go1_20110901-q20",
+      "decision": "DEFECT",
+      "plantedText": "it lost",
+      "correctedText": "it was lost",
+      "plantedExcerpt": "and stone, and it lost for over 1,500 years before its accidental rediscovery",
+      "rationale": "주어 it(=Pompeii)은 '잃어버려진' 대상이므로 수동태가 필수다. lose는 타동사인데 목적어가 없어 능동 'it lost for over 1,500 years'는 성립 불가. was lost가 유일 복원형이며 앞 문장 was destroyed and buried와 태가 일치한다. 정답 3번 위치(지문 중반)와도 ",
+      "votes": "3/3"
+    },
+    {
+      "sid": "D006",
+      "p": "P3",
+      "id": "ebsi_go2_20110310-q21",
+      "decision": "DEFECT",
+      "plantedText": "The truth is what",
+      "correctedText": "The truth is that",
+      "plantedExcerpt": "The truth is what most people only brush their teeth for 30 to 45 seconds",
+      "rationale": "관계대명사 what은 뒤에 불완전한 절(간극)이 와야 한다. 그러나 'most people only brush their teeth for 30 to 45 seconds'는 주어·타동사·목적어가 모두 채워진 완전한 절이므로 what은 결코 성립하지 않고, 보어절 접속사 that이 유일 복원형이다(what→that은 전형적",
+      "votes": "2/3"
+    },
+    {
+      "sid": "D006",
+      "p": "P4",
+      "id": "ebsi_go2_20110901-q20",
+      "decision": "DEFECT",
+      "plantedText": "a system is developed by Northwestern University",
+      "correctedText": "a system developed by Northwestern University",
+      "plantedExcerpt": "News At Seven, a system is developed by Northwestern University that",
+      "rationale": "'a system ...'은 News At Seven과 동격인 명사구이고 뒤의 that절(that automatically creates a virtual news show)이 그 명사구를 수식한다. 정동사 is가 들어가면 접속사 없이 정동사가 중복되고 동격 구조가 무너진다. 과거분사 developed의 후치수식이 유일한",
+      "votes": "2/3"
+    },
+    {
+      "sid": "D006",
+      "p": "P5",
+      "id": "ebsi_go2_20100311-q21",
+      "decision": "DEFECT",
+      "plantedText": "some people still use it to describe",
+      "correctedText": "some people still use to describe",
+      "plantedExcerpt": "an old-fashioned term that some people still use it to describe a physical educator",
+      "rationale": "관계대명사 that이 이미 use의 목적어(선행사 term) 역할을 하므로 절 안에 또 it이 오면 이중 목적어 비문이 된다. 대명사 it 삭제가 유일하고 최소한의 복원이며, 바로 뒤 대구 'some people still use the word \"gym\" to describe...'가 목적어 자리 구조를 확증한다. 정답",
+      "votes": "2/3"
+    },
+    {
+      "sid": "D007",
+      "p": "P1",
+      "id": "ebsi_go3_20101012-q32",
+      "decision": "DEFECT",
+      "plantedText": "accept",
+      "correctedText": "challenge",
+      "plantedExcerpt": "women began to accept these myths, proving that they belonged in sports",
+      "rationale": "글 전체는 여성이 스포츠에서 완전한 수용을 얻기까지 힘든 길이었고, 19세기 후반부터 상황이 바뀌기 시작했다는 논지다. 바로 앞 문장에서 '여성은 약한 성이라 경쟁의 압박을 감당 못 한다'는 통념(myths)이 참여를 막았다고 했는데, 이어서 여성이 그 통념을 '받아들이기 시작했다(accept)'면서 동시에 '자신들이 스",
+      "votes": "3/3"
+    },
+    {
+      "sid": "D007",
+      "p": "P2",
+      "id": "ebsi_go2_20091117-q28",
+      "decision": "DEFECT",
+      "plantedText": "cultivate",
+      "correctedText": "circulate",
+      "plantedExcerpt": "the heart was simply a natural pump to cultivate the nourishment of the blood",
+      "rationale": "'to cultivate the nourishment of the blood to nerves and muscles'는 성립 불가. 목적어 뒤 전치사 to(→nerves and muscles)는 이동·전달 동사를 요구하는데 cultivate는 to 방향 논항을 취하지 않는다. 펌프(pump)의 기능 서술이므로 circul",
+      "votes": "2/3"
+    },
+    {
+      "sid": "D007",
+      "p": "P3",
+      "id": "ebsi_go3_20090714-q22",
+      "decision": "DEFECT",
+      "plantedText": "that you can be thankful",
+      "correctedText": "that you can be thankful for",
+      "plantedExcerpt": "find something special about each day that you can be thankful.",
+      "rationale": "be thankful은 감사의 대상을 for로 받는다(be thankful for something). 관계사절 'that you can be thankful'에는 선행사 something을 받아줄 자리가 비어 있지 않아 절이 완결되지 않는 명백한 문법 위반이다. 전치사 for를 복원하면 something ... that",
+      "votes": "2/3"
+    },
+    {
+      "sid": "D007",
+      "p": "P4",
+      "id": "ebsi_go1_20060309-q20",
+      "decision": "DEFECT",
+      "plantedText": "is keeping",
+      "correctedText": "is kept",
+      "plantedExcerpt": "Paper also is keeping separate. The plastic, metal, and paper are taken",
+      "rationale": "주어 Paper는 keep의 행위자가 아니라 대상이므로 능동 진행형 is keeping은 문법 위반이다. 앞뒤 문장이 'have to put', 'are taken'으로 분리·수거되는 처리 대상을 서술하는 수동 구문이므로 is kept separate가 원형이다.",
+      "votes": "2/3"
+    },
+    {
+      "sid": "D008",
+      "p": "P2",
+      "id": "2019_SN_5031122-q30",
+      "decision": "DEFECT",
+      "plantedText": "laboriously",
+      "correctedText": "easily",
+      "plantedExcerpt": "Once the laboriously overtaken and killed prey had been hauled aboard",
+      "rationale": "지문 논지는 '헤엄치는 순록은 uniquely vulnerable → 배로 수면을 미끄러져 가면 enormous hunting advantage'다. 그 이점의 귀결인 사냥 장면을 'laboriously(힘들게) 따라잡아 죽인'이라 하면 바로 앞 문장의 이점 논지와 정면 모순된다. 또 뒤 문장이 '사체 운반은 배가 육로보",
+      "votes": "2/3"
+    },
+    {
+      "sid": "D008",
+      "p": "P4",
+      "id": "ebsi_go2_20121114_A-q31",
+      "decision": "DEFECT",
+      "plantedText": "from the machine",
+      "correctedText": "from itself",
+      "plantedExcerpt": "leaves a record on the card that makes it \"used,\" and then spits it out from the machine",
+      "rationale": "해당 문장의 주어가 The machine이고 지문 전체에 기계는 하나뿐인데, 같은 절 안에서 주어와 동일 지시체를 명사구 'the machine'으로 반복했다. 영어에서 동일 절 내 주어와 공지시하는 자리는 재귀대명사를 요구하며(명사구 반복은 별개의 다른 기계를 가리키게 되어 지시 모순), 이는 고2 어법에서 전형적으로 ",
+      "votes": "2/3"
+    },
+    {
+      "sid": "D009",
+      "p": "P1",
+      "id": "ebsi_go1_20100916-q31",
+      "decision": "DEFECT",
+      "plantedText": "tax cut",
+      "correctedText": "tax cuts",
+      "plantedExcerpt": "Under the law, companies may get tax cut and sell the drugs without competition",
+      "rationale": "정답 선지 5는 문단 마지막에서 두 번째 문장(Under the law…)에 해당한다. 그 자리의 'may get tax cut'은 가산명사 tax cut이 한정사도 복수형도 없이 단독으로 쓰인 명백한 문법 위반이다. 병렬(may get … and sell)·기간 표현 for seven years는 모두 정상이므로 위반 ",
+      "votes": "3/3"
+    },
+    {
+      "sid": "D009",
+      "p": "P5",
+      "id": "2008_06_3001212-q22",
+      "decision": "DEFECT",
+      "plantedText": "during",
+      "correctedText": "for",
+      "plantedExcerpt": "you will always relax during one full evening. You will work better",
+      "rationale": "정답 선지 4가 걸리는 문장(Promise yourself that…)에서 relax의 지속 기간을 나타내는 'one full evening'은 수량 표현이 붙은 기간이므로 전치사 for가 요구된다. during은 특정 기간 '안의 어느 시점'을 뜻해 '저녁 내내 쉰다'는 지속 의미와 충돌하는 전형적 for/during ",
+      "votes": "3/3"
+    },
+    {
+      "sid": "D010",
+      "p": "P1",
+      "id": "2008_09_3001186-q28",
+      "decision": "DEFECT",
+      "plantedText": "direct",
+      "correctedText": "indirect",
+      "plantedExcerpt": "And eventually this will have a direct effect on the life of man, too.",
+      "rationale": "밑줄 후보를 지문 순서대로 세면 extinct / reproduce / upset / direct / considering 로 네 번째가 direct에 걸린다. 논리 구조가 결정적이다: 고래 소멸 → 바다의 먹이사슬 전체가 교란됨 → '그리하여 결국(eventually)' 인간의 삶에 영향. 즉 영향은 바다 생태 사슬이라",
+      "votes": "3/3"
+    }
+  ],
+  "clean": [
+    {
+      "sid": "D004",
+      "p": "P1",
+      "id": "2019_SN_5031122-q29",
+      "decision": "CLEAN",
+      "votes": "clean 3/3"
+    },
+    {
+      "sid": "D006",
+      "p": "P6",
+      "id": "ebsi_go2_20101124-q21",
+      "decision": "CLEAN",
+      "votes": "clean 2/3"
+    },
+    {
+      "sid": "D007",
+      "p": "P5",
+      "id": "2026_09_5091403-q29",
+      "decision": "CLEAN",
+      "votes": "clean 3/3"
+    },
+    {
+      "sid": "D007",
+      "p": "P6",
+      "id": "2025_09_5087695-q29",
+      "decision": "CLEAN",
+      "votes": "clean 3/3"
+    },
+    {
+      "sid": "D008",
+      "p": "P1",
+      "id": "2020_09_5038442-q29",
+      "decision": "CLEAN",
+      "votes": "clean 3/3"
+    },
+    {
+      "sid": "D008",
+      "p": "P3",
+      "id": "ebsi_go1_20151117-q29",
+      "decision": "CLEAN",
+      "votes": "clean 3/3"
+    },
+    {
+      "sid": "D008",
+      "p": "P5",
+      "id": "2012_SN_3001002-q20",
+      "decision": "CLEAN",
+      "votes": "clean 3/3"
+    },
+    {
+      "sid": "D008",
+      "p": "P6",
+      "id": "ebsi_go1_20110901-q31",
+      "decision": "CLEAN",
+      "votes": "clean 3/3"
+    },
+    {
+      "sid": "D009",
+      "p": "P2",
+      "id": "ebsi_go2_20100617-q21",
+      "decision": "CLEAN",
+      "votes": "clean 3/3"
+    },
+    {
+      "sid": "D009",
+      "p": "P3",
+      "id": "ebsi_go2_20100617-q31",
+      "decision": "CLEAN",
+      "votes": "clean 3/3"
+    },
+    {
+      "sid": "D009",
+      "p": "P4",
+      "id": "ebsi_go1_20090917-q28",
+      "decision": "CLEAN",
+      "votes": "clean 3/3"
+    },
+    {
+      "sid": "D009",
+      "p": "P6",
+      "id": "2008_06_3001212-q28",
+      "decision": "CLEAN",
+      "votes": "clean 3/3"
+    }
+  ],
+  "unresolved": [
+    {
+      "sid": "D001",
+      "p": "P5",
+      "id": "ebsi_go1_20230323-q30",
+      "decision": "UNRESOLVED",
+      "options": [
+        "strengthened→destroyed",
+        "strengthened the view that production would create its own demand→destroyed the view that production would create its own demand",
+        "strengthened→weakened"
+      ]
+    },
+    {
+      "sid": "D001",
+      "p": "P6",
+      "id": "ebsi_go2_20230601-q30",
+      "decision": "UNRESOLVED",
+      "options": [
+        "poor nations give to their farmers→rich nations give to their farmers",
+        "the huge subsidies that poor nations give to their farmers→the huge subsidies that rich nations give to their farmers",
+        "poor nations→rich nations"
+      ]
+    },
+    {
+      "sid": "D003",
+      "p": "P4",
+      "id": "ebsi_go1_20210831-q29",
+      "decision": "UNRESOLVED",
+      "options": [
+        "which→in which",
+        "a situation which a firm finds that→a situation in which a firm finds that",
+        "a situation which a firm finds→a situation in which a firm finds"
+      ]
+    }
+  ]
+}

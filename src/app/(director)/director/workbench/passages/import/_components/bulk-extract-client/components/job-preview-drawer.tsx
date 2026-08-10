@@ -671,7 +671,7 @@ export function JobPreviewDrawer({
                   추출된 자료가 없습니다.
                 </p>
               ) : (
-                <DragSelect
+                <DragSelect deferCommit
                   className="grid grid-cols-1 gap-2"
                   value={visibleCheckedIds}
                   onChange={handleMarqueeChange}

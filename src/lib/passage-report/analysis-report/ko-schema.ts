@@ -292,6 +292,8 @@ export const koAnalysisReportSchema = z
     blockOrder: z.array(z.string()).optional(),
     tableColWidths: z.record(z.string(), z.record(z.string(), z.number())).optional(),
     sectionHeadings: z.record(z.string(), z.object({ ko: z.string().optional(), en: z.string().optional() })).optional(),
+    /** (편집기) 목차에서 꺼 둔 섹션 슬롯키 목록 — 영어 스키마 hiddenSections 미러. */
+    hiddenSections: z.array(z.string().max(64)).max(32).optional().catch(undefined),
     customBlocks: z.array(customBlockSchema).max(80).optional().catch(undefined),
     activityAnswerKeyPage: z.boolean().optional(),
     cover: coverSchema.optional().catch(undefined),

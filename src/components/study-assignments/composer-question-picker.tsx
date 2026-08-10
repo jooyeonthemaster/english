@@ -11,7 +11,8 @@
 // ============================================================================
 
 import { useEffect, useMemo, useState } from "react";
-import { Search } from "lucide-react";
+import Link from "next/link";
+import { Search, X } from "lucide-react";
 import { toast } from "sonner";
 import {
   listAssignableQuestions,
@@ -22,6 +23,7 @@ import {
   SUBTYPE_LABELS,
   TYPE_LABELS,
 } from "@/components/workbench/question-card-constants";
+import { EMPTY_STATES } from "@/lib/wording/director-glossary";
 import { cn } from "@/lib/utils";
 import {
   PickerBreadcrumb,
@@ -51,16 +53,27 @@ function rowTypeLabel(row: AssignableQuestionRow): string {
 export function ComposerQuestionPicker({
   selectedIds,
   onChange,
+  initialSubTypes,
 }: {
   /** 선택 순서 유지 배열 — payload.questionIds 스냅샷이 이 순서로 저장된다 */
   selectedIds: string[];
   onChange: (ids: string[]) => void;
+  /**
+   * 유형(subType) 프리필터 초기값 — 취약 유형 CTA 진입용(D2-2).
+   * 마운트 시 1회만 적용되고, 헤더 안내 칩에서 원클릭 해제할 수 있다.
+   * 미전달/빈 배열이면 기존 무프리필터 동작과 완전히 동일하다.
+   */
+  initialSubTypes?: string[];
 }) {
   const [data, setData] = useState<AssignableQuestionPickerData | null>(null);
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState("");
   const [folderId, setFolderId] = useState<string | null>(null);
   const [selectedOnly, setSelectedOnly] = useState(false);
+  // 유형 프리필터 — 초기값만 prop 에서 받고 이후엔 로컬 상태(해제 = 빈 배열)
+  const [subTypeFilter, setSubTypeFilter] = useState<string[]>(() =>
+    Array.from(new Set((initialSubTypes ?? []).map((v) => v.trim()).filter(Boolean))),
+  );
 
   useEffect(() => {
     let alive = true;
@@ -78,8 +91,23 @@ export function ComposerQuestionPicker({
   }, []);
 
   const selectedSet = useMemo(() => new Set(selectedIds), [selectedIds]);
-  const folders = data?.folders ?? [];
+  const folders = useMemo(() => data?.folders ?? [], [data]);
   const allRows = useMemo(() => data?.rows ?? [], [data]);
+
+  // 프리필터 활성 시 뱅크 스냅샷을 유형으로 먼저 좁힌다(비활성 = allRows 그대로).
+  // 「선택만 보기」는 이미 고른 문항이 가려지지 않도록 allRows 기준을 유지한다.
+  const prefilterActive = subTypeFilter.length > 0;
+  const bankRows = useMemo(() => {
+    if (!prefilterActive) return allRows;
+    const set = new Set(subTypeFilter);
+    return allRows.filter((r) => r.subType != null && set.has(r.subType));
+  }, [allRows, prefilterActive, subTypeFilter]);
+  // 프리필터 유형이 뱅크 스냅샷 전체에 0건 — 폴더 어디를 가도 없다는 뜻
+  const prefilterBankEmpty = prefilterActive && !loading && bankRows.length === 0;
+  const prefilterLabel = useMemo(
+    () => subTypeFilter.map((code) => SUBTYPE_LABELS[code] ?? code).join(" · "),
+    [subTypeFilter],
+  );
 
   const searching = query.trim().length > 0;
   // 선택만 보기 = 폴더 무시하고 "내가 고른 것들" 전체(검색은 그 안에서 동작)
@@ -87,8 +115,8 @@ export function ComposerQuestionPicker({
     let base = selectedOnly
       ? allRows.filter((r) => selectedSet.has(r.id))
       : searching || !folderId
-        ? allRows
-        : allRows.filter((r) => r.folderIds.includes(folderId));
+        ? bankRows
+        : bankRows.filter((r) => r.folderIds.includes(folderId));
     if (searching) {
       const q = query.trim().toLowerCase();
       base = base.filter(
@@ -99,12 +127,16 @@ export function ComposerQuestionPicker({
       );
     }
     return base;
-  }, [allRows, selectedOnly, selectedSet, searching, query, folderId]);
+  }, [allRows, bankRows, selectedOnly, selectedSet, searching, query, folderId]);
 
-  const counts = useMemo(() => folderDirectCounts(allRows), [allRows]);
+  // 폴더 개수도 프리필터 반영(비활성이면 bankRows === allRows — 기존과 동일)
+  const counts = useMemo(() => folderDirectCounts(bankRows), [bankRows]);
   const childFolders = useMemo(
-    () => (searching || selectedOnly ? [] : folderChildren(folders, folderId)),
-    [folders, folderId, searching, selectedOnly],
+    () =>
+      searching || selectedOnly || prefilterBankEmpty
+        ? []
+        : folderChildren(folders, folderId),
+    [folders, folderId, searching, selectedOnly, prefilterBankEmpty],
   );
 
   const toggle = (id: string) => {
@@ -113,7 +145,7 @@ export function ComposerQuestionPicker({
       return;
     }
     if (selectedIds.length >= MAX_QUESTION_SELECT) {
-      toast.error(`과제 배포는 한 번에 최대 ${MAX_QUESTION_SELECT}문항까지 선택할 수 있습니다.`);
+      toast.error(`한 번에 최대 ${MAX_QUESTION_SELECT}문항까지 보낼 수 있습니다.`);
       return;
     }
     onChange([...selectedIds, id]);
@@ -173,6 +205,24 @@ export function ComposerQuestionPicker({
           </button>
         </div>
       </div>
+      {prefilterActive ? (
+        // 취약 유형 진입 안내 칩 — 칩 전체가 버튼(원클릭 해제)
+        <div className="flex flex-wrap items-center gap-1.5">
+          <button
+            type="button"
+            onClick={() => setSubTypeFilter([])}
+            title="클릭하면 유형 필터가 해제됩니다"
+            aria-label={`유형 필터 해제 — ${prefilterLabel}`}
+            className="group inline-flex min-w-0 items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50/60 px-2.5 py-1 text-[11.5px] font-semibold text-blue-700 transition-colors hover:border-slate-300 hover:bg-white hover:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
+          >
+            <span className="truncate">유형: {prefilterLabel}</span>
+            <span className="shrink-0 font-normal text-blue-400 transition-colors group-hover:text-slate-400">
+              — 해제 가능
+            </span>
+            <X className="size-3 shrink-0" aria-hidden />
+          </button>
+        </div>
+      ) : null}
       <div className="relative">
         <Search
           className="absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-slate-400"
@@ -210,15 +260,30 @@ export function ComposerQuestionPicker({
               unitLabel="문항"
             />
             {rows.length === 0 ? (
-              <p className="p-5 text-center text-[12.5px] text-slate-400">
-                {selectedOnly
-                  ? "선택한 문항이 없습니다."
-                  : searching
-                    ? "검색 결과가 없습니다."
-                    : folderId
-                      ? "이 폴더에 문제가 없습니다."
-                      : "배포할 수 있는 문제가 없습니다. 문제 뱅크에서 먼저 만들어 주세요."}
-              </p>
+              !selectedOnly && prefilterBankEmpty ? (
+                // 프리필터 유형이 뱅크에 0건 — 워딩은 글로서리 정본(D2-2·D6-3)
+                <div className="flex flex-col items-center gap-2.5 p-5 text-center">
+                  <p className="text-[12.5px] text-slate-400">
+                    {EMPTY_STATES.QUESTION_PREFILTER_EMPTY.message}
+                  </p>
+                  <Link
+                    href="/director/workbench/questions/generate"
+                    className="rounded-md border border-blue-200 bg-blue-50/60 px-2.5 py-1 text-[11.5px] font-semibold text-blue-700 transition-colors hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
+                  >
+                    {EMPTY_STATES.QUESTION_PREFILTER_EMPTY.ctaLabel}
+                  </Link>
+                </div>
+              ) : (
+                <p className="p-5 text-center text-[12.5px] text-slate-400">
+                  {selectedOnly
+                    ? "선택한 문항이 없습니다."
+                    : searching
+                      ? "검색 결과가 없습니다."
+                      : folderId
+                        ? "이 폴더에 문제가 없습니다."
+                        : "배포할 수 있는 문제가 없습니다. 문제은행에서 먼저 만들어 주세요."}
+                </p>
+              )
             ) : (
               <ul className="divide-y divide-slate-50">
                 {rows.map((r) => {

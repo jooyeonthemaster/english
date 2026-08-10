@@ -37,11 +37,14 @@ export function HomeClient({
   studentId,
   home,
   tasks,
+  vocabProgress,
 }: {
   /** "새 결과" localStorage 키 스코프 — 공용 태블릿 학생 전환 오점등 방지 */
   studentId: string;
   home: HomePayload;
   tasks: StudentTaskCard[];
+  /** 어휘 트랙 카드 진행 요약 — 플래그 off·조회 실패면 null/undefined */
+  vocabProgress?: { pct: number; done: number; total: number; nextLabel: string } | null;
 }) {
   const router = useRouter();
   const now = useMinuteNow();
@@ -329,7 +332,12 @@ export function HomeClient({
         <p className="gd-label mb-2">학습 트랙</p>
         <div className="grid grid-cols-2 gap-2.5">
           {STUDY_TRACKS.map((t) => (
-            <TrackCard key={t.id} track={t} grammar={home.grammar} />
+            <TrackCard
+              key={t.id}
+              track={t}
+              grammar={home.grammar}
+              progress={t.id === "vocab" ? vocabProgress ?? undefined : undefined}
+            />
           ))}
         </div>
       </section>

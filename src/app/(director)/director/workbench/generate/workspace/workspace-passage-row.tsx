@@ -1,12 +1,14 @@
 "use client";
 
 import {
+  Fragment,
   useCallback,
   useEffect,
   useLayoutEffect,
   useMemo,
   useRef,
   useState,
+  type ReactNode,
 } from "react";
 import { useIsMobile } from "@/hooks/use-is-mobile";
 import {
@@ -16,11 +18,11 @@ import {
   ChevronUp,
   CircleAlert,
   Cpu,
+  FileSearch,
   FileText,
   Gem,
   Loader2,
   Minus,
-  MousePointer2,
   PenLine,
   Plus,
   Redo2,
@@ -37,7 +39,11 @@ import {
 import { PearlIcon } from "@/components/icons/pearl-icon";
 import { toast } from "sonner";
 
-import { Textarea } from "@/components/ui/textarea";
+import {
+  diffEditSpans,
+  formatRemoved,
+  type EditSpan,
+} from "@/lib/passage-edit-diff";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
 import { resolvePreset } from "@/lib/question-sets/presets";
 import { CreditCostChip } from "@/components/credits/credit-cost-chip";
@@ -67,12 +73,10 @@ import {
   type VariantAction,
 } from "./whole-passage-variant-controls";
 import { RowHistoryPopover } from "./row-history-popover";
-import {
-  WorkspaceSelectStage,
-  type StageAnchor,
-  type StageSelection,
-} from "./workspace-select-stage";
+import { VARIANT_COPY } from "@/lib/wording/director-glossary";
+import { tokenizePassage } from "@/lib/passage-point-tokenizer";
 import type { QueueItem } from "../generate-page-types";
+import { useWorkspaceBodyExpansion } from "../workspace-body-context";
 import type { QuestionCardItem } from "@/components/workbench/question-card";
 import { DIFFICULTY_CONFIG } from "@/components/workbench/question-card";
 import {
@@ -91,6 +95,11 @@ import {
 // AI가 추가/변형한 구간은 textarea 뒤 백드롭 레이어로 하이라이트한다.
 // ============================================================================
 
+// 선택 prop 의 기본값 — **모듈 상수여야 한다.** 기본값 자리에 `[]` 리터럴을 쓰면
+// 렌더마다 새 배열이 되어 RowHistoryPopover 의 메모이제이션이 매번 깨진다.
+const EMPTY_QUEUE: QueueItem[] = [];
+const EMPTY_QUESTIONS: QuestionCardItem[] = [];
+
 /** 변형 선택 하한 — 단어 클릭 선택을 허용한다(서버 passage-transform 과 동일). */
 const MIN_PARAPHRASE_CHARS = 2;
 const MIN_RANGE_CHARS = 40;
@@ -99,9 +108,6 @@ const PREPEND_COUNT_KEY = "smoat:generate:prepend-sentence-count";
 const DRAG_COACH_KEY = "smoat:generate:drag-coach-dismissed";
 /** 앞 맥락 추가 모션 코치 — 한 번 사용하면 다시 보지 않는다. */
 const PREPEND_COACH_KEY = "smoat:generate:prepend-coach-dismissed";
-/** 코치 1사이클 길이 — CSS keyframes 의 duration 과 반드시 일치해야 한다. */
-const DRAG_COACH_CYCLE_MS = 4_400;
-const PREPEND_COACH_CYCLE_MS = 5_400;
 
 function readCoachDismissed(key: string): boolean {
   if (typeof window === "undefined") return true;
@@ -127,6 +133,51 @@ interface SelectionState {
   start: number;
   end: number;
   text: string;
+}
+
+/** 선택 액션 팝오버 배치용 — 편집 영역(패딩 박스) 기준 px 좌표. */
+interface SelectionAnchor {
+  x: number;
+  topY: number;
+  bottomY: number;
+  contentW: number;
+  contentH: number;
+}
+
+/**
+ * 백드롭 레이어 한 장을 그리는 조각들. textarea 와 글자 폭이 1px 도 달라지면
+ * 줄바꿈이 어긋나 색이 엉뚱한 곳에 칠해지므로, 본문에 없는 것(문장 번호·지운
+ * 원문 칩)은 반드시 폭 0 요소 안에 절대배치로 띄운다.
+ */
+type DiffSeg =
+  | { kind: "text"; text: string }
+  | { kind: "change"; text: string; removed?: string; from: number }
+  | { kind: "delete"; removed?: string; from: number };
+
+/** 편집 흔적(editSpans)을 백드롭 조각으로 변환한다. */
+function buildDiffSegments(content: string, spans: EditSpan[]): DiffSeg[] {
+  if (spans.length === 0) return [{ kind: "text", text: content }];
+  const out: DiffSeg[] = [];
+  let pos = 0;
+  for (const s of [...spans].sort((a, b) => a.from - b.from || a.to - b.to)) {
+    const from = Math.max(pos, Math.min(s.from, content.length));
+    const to = Math.max(from, Math.min(s.to, content.length));
+    if (from > pos) out.push({ kind: "text", text: content.slice(pos, from) });
+    if (s.kind === "delete") {
+      out.push({ kind: "delete", removed: s.removed, from: s.from });
+      pos = Math.max(pos, from);
+      continue;
+    }
+    out.push({
+      kind: "change",
+      text: content.slice(from, to),
+      removed: s.removed,
+      from: s.from,
+    });
+    pos = Math.max(pos, to);
+  }
+  if (pos < content.length) out.push({ kind: "text", text: content.slice(pos) });
+  return out;
 }
 
 type PreviewState =
@@ -233,13 +284,20 @@ interface WorkspacePassageRowProps {
   onToggleCollapsed: () => void;
   onRemove: () => void;
   /** 이 지문(원본+변형)의 진행 큐 — 문제 히스토리 팝오버용. */
-  sessionQueue: QueueItem[];
+  sessionQueue?: QueueItem[];
   /** 이 지문으로 저장된 문제 수 — 히스토리 팝오버 표시용. */
-  savedQuestionCount: number;
+  savedQuestionCount?: number;
   /** 이 지문(원본+변형)으로 저장된 문제 목록 — 히스토리 팝오버에 실제 표시. */
-  questions: QuestionCardItem[];
+  questions?: QuestionCardItem[];
   /** 히스토리 팝오버의 문제 행 클릭 시 '문제 상세' 모달을 연다. */
   onOpenQuestionDetail?: (q: QuestionCardItem) => void;
+  /**
+   * 「오답 기반 변형」으로 담긴 지문이면, 이 행에 걸린 학생 오답 문항 수.
+   * 0 이면 버튼을 렌더하지 않는다(무관한 지문에 죽은 버튼을 두지 않는다).
+   */
+  variantSourceCount?: number;
+  /** 오답 원본 보기 — 이 행의 오답 문항을 카드 UI 모달로 연다. */
+  onOpenVariantSources?: () => void;
   /**
    * 전체 변형본을 새 Passage 로 저장하고 워크스페이스에 새 행으로 추가한다.
    * 성공하면 true 를 반환 — 행은 그때 미리보기를 닫는다.
@@ -260,11 +318,38 @@ interface WorkspacePassageRowProps {
   /** 다른 지문이 설정 대상으로 선택돼 있어, 이 행은 흐리게(스포트라이트 밖). */
   dimmed?: boolean;
   /** 행 본문 클릭 → 이 지문을 선택(설정 대상)으로 바인딩 (모달은 열지 않음). */
-  onSetActive: () => void;
+  onSetActive?: () => void;
   /** '문제 생성' / 설정 배지 클릭 → 이 지문의 문제 생성 모달을 연다. */
-  onOpenSettings: () => void;
+  onOpenSettings?: () => void;
   /** 이 지문이 현재 설정으로 만들어낼 문제 수·크레딧 (푸터 버튼 라벨용). */
   genStats?: { questions: number; creditCost: number };
+
+  // ── 워크스페이스 밖에 그대로 끼워 넣기 (AI 지문 생성 결과 카드) ────────────
+  //
+  // 이 세 prop 을 넘기지 않으면 이 파일의 동작은 **한 픽셀도 바뀌지 않는다**.
+  // 워크스페이스는 지금까지와 완전히 같은 경로를 탄다(회귀 표면 0).
+  //
+  // 왜 이 컴포넌트를 복제하지 않고 옵트인을 붙였나: 편집기 본체(선택 무대 ·
+  // 하이라이트 백드롭 4겹 · 앞 맥락 삽입 바 · undo/redo · 편집 흔적 diff ·
+  // 모션 코치)는 1,000줄이 넘고 좌표 계산이 서로 물려 있다. 한 벌 더 만들면
+  // 두 편집기가 서서히 갈라지고, 그때 "왜 생성 카드에서만 하이라이트가 밀리지"
+  // 같은 버그가 남는다. 갈라질 수 없게 하는 것이 이 옵트인의 목적이다.
+  /**
+   * 워크스페이스 전용 장치를 숨긴다 — 설정 테더 탭 · 난이도/생성플랜 뱃지 ·
+   * 생성 이력 팝오버 · 워크스페이스 제거(X) · 카드 높이 캡(--ws-body-h).
+   * AI 도구(복원 · 변형 · 앞 맥락 · 문장 재작성)와 편집기는 **그대로 남는다.**
+   */
+  embedded?: boolean;
+  /**
+   * 푸터('문제 생성') 자리에 대신 그릴 것. embedded 일 때만 쓰인다.
+   * 넘기지 않으면 푸터 자체가 없다(생성 카드는 자기 행동 줄을 따로 갖는다).
+   */
+  footer?: ReactNode;
+  /**
+   * 넘기면 헤더 제목이 입력칸이 된다. 워크스페이스에서는 제목이 지문함의 값이라
+   * 읽기 전용이지만, 생성 결과는 아직 저장 전이라 여기서 고치는 게 유일한 자리다.
+   */
+  onChangeTitle?: (title: string) => void;
 }
 
 export function WorkspacePassageRow({
@@ -274,10 +359,12 @@ export function WorkspacePassageRow({
   globalDifficulty,
   globalGenerationPlan,
   disabled,
-  sessionQueue,
-  savedQuestionCount,
-  questions,
+  sessionQueue = EMPTY_QUEUE,
+  savedQuestionCount = 0,
+  questions = EMPTY_QUESTIONS,
   onOpenQuestionDetail,
+  variantSourceCount = 0,
+  onOpenVariantSources,
   onChangeContent,
   onPushHistory,
   onApplyAi,
@@ -295,6 +382,9 @@ export function WorkspacePassageRow({
   onSetActive,
   onOpenSettings,
   genStats,
+  embedded = false,
+  footer,
+  onChangeTitle,
 }: WorkspacePassageRowProps) {
   // 모바일에선 본문 편집 폰트를 3px 줄인다(13→10px). textarea·하이라이트 백드롭이
   // 같은 값을 공유해야 줄바꿈이 어긋나지 않으므로 한 style 로 모든 레이어에 적용.
@@ -305,15 +395,45 @@ export function WorkspacePassageRow({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
   const rangeBackdropRef = useRef<HTMLDivElement>(null);
+  const diffBackdropRef = useRef<HTMLDivElement>(null);
+  const measureMirrorRef = useRef<HTMLDivElement>(null);
+  const hoverBackdropRef = useRef<HTMLDivElement>(null);
+  const editListRef = useRef<HTMLDivElement>(null);
+  const editChipRef = useRef<HTMLButtonElement>(null);
   // 에디터 영역 래퍼 — 선택 무대/textarea 어느 쪽이 떠 있든 하이라이트 히트
   // 테스트·툴팁 좌표의 공통 기준이 된다.
   const editorAreaRef = useRef<HTMLDivElement>(null);
   // 본문 편집 모드 — 기본은 '선택 무대'(포인트 짚어주기 제스처). 직접 타이핑은
   // 도구 바의 '직접 편집' 토글로 textarea 를 연다.
-  const [editMode, setEditMode] = useState(false);
+  // 편집 흔적 — 타이핑할 때마다 실시간으로 다시 계산한다(별도 '편집 완료' 없음).
+  // 기준(baseRef)은 "내 손으로 고치기 직전의 본문" — AI 변형·복원·undo 처럼
+  // 밖에서 본문이 바뀌면 그 값으로 기준을 갈아 끼우고 표시를 비운다.
+  const [editSpans, setEditSpans] = useState<EditSpan[]>([]);
+  // 아래 '고친 자리' 목록에서 고른 항목 — 본문의 그 표시를 잠깐 강조한다.
+  const [focusedSpan, setFocusedSpan] = useState<number | null>(null);
+  // 본문의 붉은 표시에 커서를 올렸을 때 뜨는 설명 — 표시만으로는 무엇이
+  // 지워졌는지 알 수 없으므로, 그 자리에서 바로 읽히게 한다.
+  const [editTip, setEditTip] = useState<{
+    left: number;
+    top: number;
+    removed: string;
+    added: string;
+  } | null>(null);
+  const [editListOpen, setEditListOpen] = useState(false);
+  // 패널은 카드(overflow-hidden) 밖으로 나가야 잘리지 않는다 — 칩 위치를 재서
+  // fixed 로 띄운다. 스크롤/리사이즈되면 좌표가 낡으므로 닫는다.
+  const [panelPos, setPanelPos] = useState<{
+    left: number;
+    top?: number;
+    bottom?: number;
+    width: number;
+    flip: boolean;
+  } | null>(null);
+  const baseRef = useRef(row.content);
+  const selfEditRef = useRef<string | null>(null);
   const [selection, setSelection] = useState<SelectionState | null>(null);
-  // 선택 무대의 액션 팝오버 앵커 — 무대 콘텐츠(스크롤 내용) 기준 좌표.
-  const [stageAnchor, setStageAnchor] = useState<StageAnchor | null>(null);
+  // 선택 액션 팝오버 앵커 — 편집 영역(editorAreaRef) 기준 px 좌표.
+  const [stageAnchor, setStageAnchor] = useState<SelectionAnchor | null>(null);
   const [busy, setBusy] = useState<
     "paraphrase" | "prepend" | "restore" | "variant" | null
   >(null);
@@ -325,6 +445,11 @@ export function WorkspacePassageRow({
   const [variantAdding, setVariantAdding] = useState(false);
   // "다시 생성" 회피 목록 — 같은 변형 액션에 대한 직전 결과들.
   const variantAvoidRef = useRef<string[]>([]);
+  // AI 변형 미리보기 패널(앞문단·전체변형·문장변형) 래퍼 — 한 번에 하나만 뜨므로
+  // 마운트된 패널에 ref 가 붙는다. 새로 열리면 부드럽게 시야로 끌어온다.
+  const previewPanelRef = useRef<HTMLDivElement>(null);
+  // 비교 모드 본문 확장 — 미리보기가 열리면 워크스페이스 본문을 아래로 늘린다.
+  const { requestExpand, releaseExpand } = useWorkspaceBodyExpansion();
   // 변형 문장 위에 커서를 올리면 원문을 보여주는 툴팁 (에디터 컨테이너 기준 좌표).
   const [originalTip, setOriginalTip] = useState<{
     left: number;
@@ -496,6 +621,59 @@ export function WorkspacePassageRow({
     () => buildHighlightSegments(row.content, row.highlights),
     [row.content, row.highlights],
   );
+  const diffSegments = useMemo(
+    () => buildDiffSegments(row.content, editSpans),
+    [row.content, editSpans],
+  );
+  // ── 단어·문장 블럭 제스처 ────────────────────────────────────────────────
+  // 본문이 textarea 라 캐럿은 네이티브지만, 선택 감각은 예전 '선택 무대' 그대로
+  // 유지한다: hover = 단어 틴트 · 클릭 = 단어 · 더블클릭 = 문장 · 드래그 = 단어
+  // 경계 스냅. 마우스 좌표 → 문자 오프셋은 caretPositionFromPoint 로 얻는다.
+  const tokenized = useMemo(() => tokenizePassage(row.content), [row.content]);
+  const allTokens = useMemo(
+    () => tokenized.sentences.flatMap((s) => s.tokens),
+    [tokenized],
+  );
+  const tokenAt = useCallback(
+    (off: number) => allTokens.find((t) => off >= t.start && off < t.end) ?? null,
+    [allTokens],
+  );
+  const sentenceAt = useCallback(
+    (off: number) =>
+      tokenized.sentences.find((s) => off >= s.start && off <= s.end) ?? null,
+    [tokenized],
+  );
+  /** 드래그 구간을 단어 경계로 넓힌다(무대의 스냅과 동일). */
+  const snapToWords = useCallback(
+    (start: number, end: number) => {
+      const a = allTokens.find((t) => start < t.end && start >= t.start);
+      const b = allTokens.find((t) => end - 1 < t.end && end - 1 >= t.start);
+      return { start: a ? Math.min(a.start, start) : start, end: b ? Math.max(b.end, end) : end };
+    },
+    [allTokens],
+  );
+
+  /** 마우스 좌표 → 본문 문자 오프셋 (textarea 내부). */
+  const offsetFromPoint = useCallback((x: number, y: number): number | null => {
+    const el = textareaRef.current;
+    if (!el) return null;
+    const doc = document as Document & {
+      caretPositionFromPoint?: (
+        x: number,
+        y: number,
+      ) => { offsetNode: Node; offset: number } | null;
+    };
+    const pos = doc.caretPositionFromPoint?.(x, y);
+    if (!pos || pos.offsetNode !== el) return null;
+    return Math.max(0, Math.min(pos.offset, el.value.length));
+  }, []);
+
+  // hover 틴트 — 단어가 바뀔 때만 재렌더된다(마우스 이동마다가 아니라).
+  const [hoverTok, setHoverTok] = useState<{ start: number; end: number } | null>(
+    null,
+  );
+  const dragRef = useRef<{ x: number; y: number; moved: boolean } | null>(null);
+  const skipClickRef = useRef(false);
   const hasPrependHl = row.highlights.some((h) => h.kind === "prepend");
   const hasParaphraseHl = row.highlights.some((h) => h.kind === "paraphrase");
 
@@ -589,7 +767,13 @@ export function WorkspacePassageRow({
     // 은 아니다 — 폭을 textarea 의 clientWidth 로 강제해 줄바꿈 지점을 일치시킨다.
     // (이 폭이 어긋나면 하이라이트가 몇 줄씩 밀려 엉뚱한 곳에 칠해진다.)
     const width = `${el.clientWidth}px`;
-    for (const bd of [backdropRef.current, rangeBackdropRef.current]) {
+    for (const bd of [
+      backdropRef.current,
+      rangeBackdropRef.current,
+      diffBackdropRef.current,
+      measureMirrorRef.current,
+      hoverBackdropRef.current,
+    ]) {
       if (!bd) continue;
       bd.style.width = width;
       bd.scrollTop = el.scrollTop;
@@ -598,7 +782,15 @@ export function WorkspacePassageRow({
   }, []);
   useEffect(() => {
     syncBackdropScroll();
-  }, [row.content, row.highlights, row.range, editMode, syncBackdropScroll]);
+  }, [
+    row.content,
+    row.highlights,
+    row.range,
+    editSpans,
+    hoverTok,
+    selection,
+    syncBackdropScroll,
+  ]);
   // 컨테이너 리사이즈 시에도 백드롭 폭·스크롤을 재동기화한다.
   useEffect(() => {
     const el = textareaRef.current;
@@ -606,7 +798,7 @@ export function WorkspacePassageRow({
     const ro = new ResizeObserver(() => syncBackdropScroll());
     ro.observe(el);
     return () => ro.disconnect();
-  }, [editMode, syncBackdropScroll]);
+  }, [syncBackdropScroll]);
 
   // 생성 시 변형본으로 리바인드되면(passageId 교체) 본문이 외부에서 바뀐다 —
   // 이전 본문 기준의 선택/미리보기 오프셋은 무효이므로 즉시 폐기한다.
@@ -619,61 +811,45 @@ export function WorkspacePassageRow({
     variantAvoidRef.current = [];
   }, [row.passageId]);
 
-  // ── 드래그 모션 코치 (첫 행) — 마운트 후 판정해 하이드레이션 안전.
-  //    5사이클 후 자동 정지(세션 한정) → 이어서 앞 맥락 코치가 시작된다.
-  const [dragCoachVisible, setDragCoachVisible] = useState(false);
+  // 미리보기가 열리면 (1) 워크스페이스 본문을 아래로 부드럽게 확장해 원문·변형본이
+  // 동시에 보이게 하고, (2) 확장 애니메이션이 끝난 뒤 그 패널을 시야로 끌어온다.
+  // 닫히거나 언마운트되면 확장을 해제해 원래 높이로 되돌린다.
+  useEffect(() => {
+    if (!preview && !variantPreview) return;
+    requestExpand(row.localId);
+    // 본문 height 트랜지션(450ms)이 끝난 뒤 스크롤해야 패널이 최종 위치로 온다.
+    const t = window.setTimeout(() => {
+      previewPanelRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
+    }, 480);
+    return () => {
+      window.clearTimeout(t);
+      releaseExpand(row.localId);
+    };
+  }, [preview, variantPreview, row.localId, requestExpand, releaseExpand]);
+
+  // ── 사용법 힌트 — 예전에는 본문 위에 모션 오버레이로 시연했지만, 지문을
+  //    가리는 게 가장 큰 불편이라 푸터 한 줄(이미 있는 줄)로 옮겼다. 본문은
+  //    1px 도 가리지 않고, ✕(이번만 닫기)와 '다시 보지 않기'(영구)를 모두 준다.
+  const [coachVisible, setCoachVisible] = useState(false);
   useEffect(() => {
     if (!dragCoach || readCoachDismissed(DRAG_COACH_KEY)) return;
-    setDragCoachVisible(true);
-    const stopTimer = window.setTimeout(
-      () => setDragCoachVisible(false),
-      DRAG_COACH_CYCLE_MS * 5 + 200,
-    );
-    return () => window.clearTimeout(stopTimer);
+    setCoachVisible(true);
   }, [dragCoach]);
   const dismissDragCoach = useCallback((persist: boolean) => {
-    setDragCoachVisible(false);
+    setCoachVisible(false);
     if (!persist) return;
     try {
       window.localStorage.setItem(DRAG_COACH_KEY, "1");
-    } catch {
-      /* ignore */
-    }
-  }, []);
-
-  // ── 앞 맥락 추가 모션 코치 — 드래그 코치가 완전히 끝난 뒤 1.2초 쉬고
-  //    시작한다 (동시 재생 금지). 시작 지연 타이머 + cleanup 으로 마운트
-  //    레이스(드래그 코치가 켜지기 직전 상태를 읽는 문제)를 차단.
-  const [prependCoachVisible, setPrependCoachVisible] = useState(false);
-  useEffect(() => {
-    if (
-      !dragCoach ||
-      dragCoachVisible ||
-      readCoachDismissed(PREPEND_COACH_KEY)
-    ) {
-      setPrependCoachVisible(false);
-      return;
-    }
-    const startTimer = window.setTimeout(
-      () => setPrependCoachVisible(true),
-      1_200,
-    );
-    const stopTimer = window.setTimeout(
-      () => setPrependCoachVisible(false),
-      1_200 + PREPEND_COACH_CYCLE_MS * 3 + 200,
-    );
-    return () => {
-      window.clearTimeout(startTimer);
-      window.clearTimeout(stopTimer);
-    };
-  }, [dragCoach, dragCoachVisible]);
-  const dismissPrependCoach = useCallback(() => {
-    setPrependCoachVisible(false);
-    try {
       window.localStorage.setItem(PREPEND_COACH_KEY, "1");
     } catch {
       /* ignore */
     }
+  }, []);
+  const dismissPrependCoach = useCallback(() => {
+    setCoachVisible(false);
   }, []);
 
   // 타이핑 버스트 타이머 정리.
@@ -697,33 +873,327 @@ export function WorkspacePassageRow({
     setStageAnchor(null);
   }, []);
 
-  // ── 선택 무대 커밋 — 문장 클릭/단어 스냅 드래그 결과 (포인트 픽커 제스처) ──
-  const handleStageSelect = useCallback(
-    (sel: StageSelection | null, anchor: StageAnchor | null) => {
-      // 변형 미리보기/생성 중에는 에디터가 잠겨 있으므로 선택 액션도 막는다.
-      if (preview || variantPreview || busy) return;
-      if (sel && sel.end - sel.start >= MIN_PARAPHRASE_CHARS) {
-        setSelection(sel);
-        setStageAnchor(anchor);
-        dispatchGenerateTourMilestone("workspace-text-selected");
-        // 직접 드래그/클릭에 성공했다 — 코치는 임무 완료, 영구 종료.
-        dismissDragCoach(true);
-      } else {
-        clearSelection();
-      }
+  // ── 선택 = textarea 의 네이티브 선택 ────────────────────────────────────
+  // 본문은 언제나 편집 가능한 하나의 표면이므로, 별도 '선택 무대' 없이 브라우저
+  // 선택(드래그·더블클릭 단어·트리플클릭 문단)을 그대로 쓴다. 팝오버 위치는
+  // 같은 메트릭의 측정용 미러에 선택 구간을 <mark> 로 그려 재 본다.
+  const selMarkRef = useRef<HTMLElement | null>(null);
+  const measureSelectionAnchor = useCallback((): SelectionAnchor | null => {
+    const wrap = editorAreaRef.current;
+    const mk = selMarkRef.current;
+    if (!wrap || !mk) return null;
+    const rects = mk.getClientRects();
+    const first = rects[0];
+    const last = rects[rects.length - 1];
+    if (!first || !last) return null;
+    const w = wrap.getBoundingClientRect();
+    const sameLine = Math.abs(first.top - last.top) < 4;
+    return {
+      x: (sameLine ? (first.left + last.right) / 2 : last.right) - w.left,
+      topY: first.top - w.top,
+      bottomY: last.bottom - w.top,
+      contentW: wrap.clientWidth,
+      contentH: wrap.clientHeight,
+    };
+  }, []);
+
+  const readSelection = useCallback(() => {
+    if (preview || variantPreview || busy || disabled) return;
+    const el = textareaRef.current;
+    if (!el) return;
+    const start = el.selectionStart ?? 0;
+    const end = el.selectionEnd ?? 0;
+    if (end - start >= MIN_PARAPHRASE_CHARS) {
+      setSelection({ start, end, text: row.content.slice(start, end) });
+      dispatchGenerateTourMilestone("workspace-text-selected");
+      // 직접 드래그/더블클릭에 성공했다 — 코치는 임무 완료, 영구 종료.
+      dismissDragCoach(true);
+    } else {
+      clearSelection();
+    }
+  }, [
+    preview,
+    variantPreview,
+    busy,
+    disabled,
+    row.content,
+    dismissDragCoach,
+    clearSelection,
+  ]);
+
+  // 선택 미러가 그려진 뒤에 앵커를 잰다(렌더 → 폭·스크롤 동기화 → 측정).
+  useEffect(() => {
+    if (!selection) return;
+    syncBackdropScroll();
+    setStageAnchor(measureSelectionAnchor());
+  }, [selection, measureSelectionAnchor, syncBackdropScroll, row.content]);
+
+  const selectRange = useCallback(
+    (start: number, end: number) => {
+      const el = textareaRef.current;
+      if (!el) return;
+      el.focus();
+      el.setSelectionRange(start, end);
+      readSelection();
     },
-    [preview, variantPreview, busy, dismissDragCoach, clearSelection],
+    [readSelection],
+  );
+
+  /** hover — 커서 밑 단어를 틴트로 알려준다(단어가 바뀔 때만 재렌더). */
+  const handleEditorHover = useCallback(
+    (e: React.MouseEvent) => {
+      handleEditorMouseMove(e);
+      if (editorLocked || disabled) return;
+      const off = offsetFromPoint(e.clientX, e.clientY);
+      // 붉은 편집 표시 위인가? — 그 자리에서 무엇이 사라졌는지 알려준다.
+      const area = editorAreaRef.current;
+      const hit =
+        off === null
+          ? undefined
+          : editSpans.find((sp) =>
+              sp.kind === "delete"
+                ? Math.abs(off - sp.from) <= 1
+                : off >= sp.from && off <= sp.to,
+            );
+      if (hit && area) {
+        const ar = area.getBoundingClientRect();
+        // 툴팁 높이 대략치 — 아래로 넘칠 것 같으면 커서 위로 뒤집는다.
+        // (마지막 줄에서 상자 밖으로 삐져나가던 문제)
+        const TIP_H = 74;
+        const y = e.clientY - ar.top;
+        const top =
+          y + 16 + TIP_H > ar.height ? Math.max(4, y - TIP_H - 8) : y + 16;
+        setEditTip({
+          left: Math.max(6, Math.min(e.clientX - ar.left - 20, ar.width - 260)),
+          top,
+          removed: formatRemoved(hit.removed, 140) ?? "",
+          added:
+            hit.kind === "change" ? row.content.slice(hit.from, hit.to) : "",
+        });
+      } else if (editTip) {
+        setEditTip(null);
+      }
+      const tok = off === null ? null : tokenAt(off);
+      setHoverTok((prev) => {
+        if (!tok) return prev === null ? prev : null;
+        if (prev && prev.start === tok.start && prev.end === tok.end) return prev;
+        return { start: tok.start, end: tok.end };
+      });
+    },
+    [
+      handleEditorMouseMove,
+      editorLocked,
+      disabled,
+      offsetFromPoint,
+      editSpans,
+      editTip,
+      row.content,
+      tokenAt,
+    ],
+  );
+
+  /** 드래그 판정 시작 — 움직였으면 클릭(단어 선택)이 아니라 구간 선택이다. */
+  const handleEditorPointerDown = useCallback((e: React.PointerEvent) => {
+    dragRef.current = { x: e.clientX, y: e.clientY, moved: false };
+    skipClickRef.current = false;
+  }, []);
+
+  const handleEditorPointerUp = useCallback(
+    (e: React.PointerEvent) => {
+      const d = dragRef.current;
+      dragRef.current = null;
+      if (!d) return;
+      if (Math.hypot(e.clientX - d.x, e.clientY - d.y) < 4) return;
+      // 드래그 = 단어 경계로 스냅한 구간 선택.
+      skipClickRef.current = true;
+      const el = textareaRef.current;
+      if (!el) return;
+      const start = el.selectionStart ?? 0;
+      const end = el.selectionEnd ?? 0;
+      if (end <= start) return;
+      const snapped = snapToWords(start, end);
+      selectRange(snapped.start, snapped.end);
+    },
+    [snapToWords, selectRange],
+  );
+
+  /** 클릭 = 그 단어 전체 선택. 이미 선택된 단어를 다시 누르면 캐럿으로 —
+   *  글자 하나만 고치고 싶을 때 빠져나갈 구멍이다.
+   *  빨간 편집 표시 위를 누르면 아래 '고친 자리' 목록의 그 항목을 짚어 준다. */
+  const handleEditorClick = useCallback(
+    (e: React.MouseEvent) => {
+      if (skipClickRef.current || e.detail >= 2) return;
+      if (editorLocked || disabled) return;
+      const off = offsetFromPoint(e.clientX, e.clientY);
+      if (off === null) return;
+      // 편집 표시를 눌렀나? (삭제는 폭이 0이라 좌우 1글자 여유)
+      const hit = editSpans.find((s) =>
+        s.kind === "delete"
+          ? Math.abs(off - s.from) <= 1
+          : off >= s.from && off <= s.to,
+      );
+      setFocusedSpan(hit ? hit.from : null);
+      const tok = tokenAt(off);
+      if (!tok) return;
+      if (selection && selection.start === tok.start && selection.end === tok.end) {
+        // 같은 단어 재클릭 = 캐럿 놓기(해제).
+        selectRange(off, off);
+        return;
+      }
+      selectRange(tok.start, tok.end);
+    },
+    [
+      editorLocked,
+      disabled,
+      offsetFromPoint,
+      editSpans,
+      tokenAt,
+      selection,
+      selectRange,
+    ],
+  );
+
+  /** 더블클릭 = 문장 전체 선택(무대와 동일). */
+  const handleEditorDoubleClick = useCallback(
+    (e: React.MouseEvent) => {
+      if (editorLocked || disabled) return;
+      const off = offsetFromPoint(e.clientX, e.clientY);
+      if (off === null) return;
+      const sent = sentenceAt(off);
+      if (!sent) return;
+      e.preventDefault();
+      selectRange(sent.start, sent.end);
+    },
+    [editorLocked, disabled, offsetFromPoint, sentenceAt, selectRange],
   );
 
   // Esc = 선택 해제 (팝오버 닫기).
   useEffect(() => {
     if (!selection) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") clearSelection();
+      if (e.key === "Escape") {
+        clearSelection();
+        setEditListOpen(false);
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [selection, clearSelection]);
+
+  // 바깥 클릭 = 선택 액션 팝오버·고친자리 패널 닫기. 팝오버가 계속 떠 있으면
+  // 다른 지문을 만질 때마다 시야를 가린다. 팝오버/패널 자기 자신 위의 클릭은
+  // 버튼이 눌리기 전에 선택이 사라지지 않도록 예외로 둔다.
+  useEffect(() => {
+    if (!selection && !editListOpen) return;
+    const onDown = (e: PointerEvent) => {
+      const t = e.target as Node | null;
+      if (!t) return;
+      if (editListRef.current?.contains(t)) return;
+      if (t instanceof Element && t.closest("[data-wss-pop]")) return;
+      if (editorAreaRef.current?.contains(t)) {
+        // 본문 안쪽 클릭은 textarea 의 onSelect 가 알아서 정리한다.
+        setEditListOpen(false);
+        return;
+      }
+      clearSelection();
+      setEditListOpen(false);
+    };
+    document.addEventListener("pointerdown", onDown);
+    return () => document.removeEventListener("pointerdown", onDown);
+  }, [selection, editListOpen, clearSelection]);
+
+  // ── 편집 흔적 실시간 계산 ────────────────────────────────────────────────
+  // 타이핑 한 글자마다 기준 본문과 비교한다(별도 '편집 완료' 없음). 밖에서
+  // 본문이 바뀌면(AI 변형·복원·undo·행 리바인드) 기준을 그 값으로 갈아 끼우고
+  // 표시를 비운다 — 낡은 오프셋으로 엉뚱한 곳이 붉게 남는 걸 막는다.
+  useEffect(() => {
+    if (selfEditRef.current === row.content) return;
+    baseRef.current = row.content;
+    setEditSpans([]);
+    setFocusedSpan(null);
+  }, [row.content]);
+
+  /** 본문 편집 — undo 버스트 묶기 + 실시간 diff 갱신을 한곳에서 처리한다. */
+  const applyEdit = useCallback(
+    (next: string) => {
+      if (next === row.content) return;
+      if (row.range) toast.info("본문이 수정되어 출제 범위가 해제됐습니다.");
+      // 연속 타이핑은 버스트 1개 = undo 1단계로 묶는다.
+      if (typingTimerRef.current === null) {
+        onPushHistory();
+      } else {
+        window.clearTimeout(typingTimerRef.current);
+      }
+      typingTimerRef.current = window.setTimeout(() => {
+        typingTimerRef.current = null;
+      }, TYPING_BURST_MS);
+      selfEditRef.current = next;
+      onChangeContent(next);
+      setEditSpans(diffEditSpans(baseRef.current, next));
+      setFocusedSpan(null);
+    },
+    [row.content, row.range, onPushHistory, onChangeContent],
+  );
+
+  const toggleEditList = useCallback(() => {
+    if (editListOpen) {
+      setEditListOpen(false);
+      return;
+    }
+    const chip = editChipRef.current;
+    if (!chip) return;
+    const c = chip.getBoundingClientRect();
+    // 칩 바로 아래로 펼친다(카드가 overflow-hidden 이라 fixed 로 띄워야 잘리지
+    // 않는다). 아래 공간이 부족하면 위로 뒤집는다.
+    const width = Math.min(420, window.innerWidth - 24);
+    const left = Math.max(12, Math.min(c.left - 4, window.innerWidth - width - 12));
+    const roomBelow = window.innerHeight - c.bottom - 16;
+    if (roomBelow >= 140) {
+      setPanelPos({ left, top: c.bottom + 6, width, flip: false });
+    } else {
+      setPanelPos({
+        left,
+        bottom: Math.max(12, window.innerHeight - c.top + 6),
+        width,
+        flip: true,
+      });
+    }
+    setEditListOpen(true);
+  }, [editListOpen]);
+
+  // 스크롤·리사이즈 시 좌표가 어긋나므로 닫는다(잘못된 자리에 떠 있는 것보다 낫다).
+  useEffect(() => {
+    if (!editListOpen) return;
+    const close = () => setEditListOpen(false);
+    window.addEventListener("scroll", close, true);
+    window.addEventListener("resize", close);
+    return () => {
+      window.removeEventListener("scroll", close, true);
+      window.removeEventListener("resize", close);
+    };
+  }, [editListOpen]);
+
+  /** 이 자리만 원래대로 — 지운 원문을 되살리고 바꾼 글자를 걷어낸다. */
+  const restoreSpan = useCallback(
+    (s: EditSpan) => {
+      if (!s.removed) return;
+      const cur = row.content;
+      const from = Math.max(0, Math.min(s.from, cur.length));
+      const to = Math.max(from, Math.min(s.to, cur.length));
+      applyEdit(cur.slice(0, from) + s.removed + cur.slice(to));
+      setFocusedSpan(null);
+    },
+    [row.content, applyEdit],
+  );
+
+  /** 편집 표시만 지우고 기준을 현재 본문으로 리셋한다(본문은 그대로). */
+  const clearEditMarks = useCallback(() => {
+    baseRef.current = row.content;
+    selfEditRef.current = row.content;
+    setEditSpans([]);
+    setFocusedSpan(null);
+    setEditListOpen(false);
+  }, [row.content]);
 
   // ── AI 문장 변형 ──
   const runParaphrase = useCallback(
@@ -1040,7 +1510,7 @@ export function WorkspacePassageRow({
   // ── 선택 액션 팝오버 — 선택 무대 콘텐츠 좌표(stageAnchor)에 배치되어 본문과
   // 함께 스크롤된다. 무대가 selectionPopover prop 으로 받아 내부에 렌더한다.
   const stagePopover =
-    !editMode &&
+    
     selection &&
     stageAnchor &&
     !preview &&
@@ -1121,13 +1591,20 @@ export function WorkspacePassageRow({
     // (setActive 는 멱등 — 같은 값이면 React 가 리렌더를 건너뛴다.)
     <div
       onClick={onSetActive}
-      style={{
-        // 카드 높이를 워크스페이스 본문 높이(--ws-body-h, WorkspaceShell이 노출)에
-        // 맞춰 캡한다 — 지문이 길어도 본문(textarea)이 카드 안에서 스크롤되고,
-        // 하단 '문제 생성' 버튼은 스크롤 없이 항상 보인다. -130px = 본문 안의
-        // 인테이크 탭(44)·워크스페이스 헤더(44)·그리드 패딩(24)·여유 분.
-        maxHeight: "calc(var(--ws-body-h, 600px) - 130px)",
-      }}
+      style={
+        // 워크스페이스 밖(embedded)에서는 캡을 걸지 않는다 — --ws-body-h 는
+        // WorkspaceShell 만 노출하므로 그 밖에서는 폴백 600px 이 그대로 먹어
+        // 카드가 470px 에서 잘린다(생성 결과 카드는 세로로 흐르는 문서다).
+        embedded
+          ? undefined
+          : {
+              // 카드 높이를 워크스페이스 본문 높이(--ws-body-h, WorkspaceShell이 노출)에
+              // 맞춰 캡한다 — 지문이 길어도 본문(textarea)이 카드 안에서 스크롤되고,
+              // 하단 '문제 생성' 버튼은 스크롤 없이 항상 보인다. -130px = 본문 안의
+              // 인테이크 탭(44)·워크스페이스 헤더(44)·그리드 패딩(24)·여유 분.
+              maxHeight: "calc(var(--ws-body-h, 600px) - 130px)",
+            }
+      }
       className={
         "relative flex h-full flex-col overflow-hidden rounded-lg border bg-white shadow-sm transition-[box-shadow,opacity,border-color] " +
         (active
@@ -1142,7 +1619,7 @@ export function WorkspacePassageRow({
           오른쪽 설정 패널의 좌측 스파인(◀)과 색·방향으로 이어지며 "이 카드의
           설정이 저기"라는 연결을 만든다. 접힌 카드는 헤더 우측 버튼과 겹치므로
           펼친 상태에서만 노출. */}
-      {active && !row.collapsed ? (
+      {active && !row.collapsed && !embedded ? (
         <span
           aria-hidden="true"
           className="pointer-events-none absolute right-0 top-1/2 z-10 flex h-8 w-[18px] -translate-y-1/2 items-center justify-center rounded-l-full bg-blue-600 text-white shadow-sm"
@@ -1164,31 +1641,59 @@ export function WorkspacePassageRow({
           {/* 다중 선택 체크박스 — 헤더의 전체선택·일괄 삭제 대상이 된다.
               카드의 '설정 대상 선택'(active, 굵은 보라 테두리로 표시)과는
               별개 개념이라, 클릭이 카드 선택(onSetActive)으로 전파되지 않게 막는다. */}
-          <button
-            type="button"
-            role="checkbox"
-            aria-checked={selected}
-            aria-label="이 지문 선택 (일괄 삭제용)"
-            onClick={(e) => {
-              e.stopPropagation();
-              onToggleSelected?.();
-            }}
-            title="선택 — 헤더 휴지통으로 선택한 지문을 한 번에 제거"
-            className={
-              "flex h-[18px] w-[18px] shrink-0 cursor-pointer items-center justify-center rounded-[5px] border transition-colors " +
-              (selected
-                ? "border-blue-600 bg-blue-600 text-white"
-                : "border-slate-300 bg-white text-transparent hover:border-blue-400")
-            }
-          >
-            <Check className="h-3 w-3" strokeWidth={3} aria-hidden="true" />
-          </button>
+          {/* embedded 에서는 토글이 없으면 아예 그리지 않는다 — 워크스페이스는
+              기존대로 항상 그린다(핸들러가 없어도 렌더되던 동작 보존). */}
+          {!embedded || onToggleSelected ? (
+            <button
+              type="button"
+              role="checkbox"
+              aria-checked={selected}
+              aria-label={
+                embedded
+                  ? "이 지문 선택 (여러 편 한 번에 지문함에 넣기)"
+                  : "이 지문 선택 (일괄 삭제용)"
+              }
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleSelected?.();
+              }}
+              title={
+                embedded
+                  ? "선택 — 위 '선택한 편 넣기'로 여러 편을 한 번에 지문함에 넣습니다"
+                  : "선택 — 헤더 휴지통으로 선택한 지문을 한 번에 제거"
+              }
+              className={
+                "flex h-[18px] w-[18px] shrink-0 cursor-pointer items-center justify-center rounded-[5px] border transition-colors " +
+                (selected
+                  ? "border-blue-600 bg-blue-600 text-white"
+                  : "border-slate-300 bg-white text-transparent hover:border-blue-400")
+              }
+            >
+              <Check className="h-3 w-3" strokeWidth={3} aria-hidden="true" />
+            </button>
+          ) : null}
           <span className="flex h-[22px] min-w-[22px] shrink-0 items-center justify-center rounded-md bg-blue-600 px-1 text-[11px] font-bold leading-none text-white tabular-nums">
             {index + 1}
           </span>
-          <span className="min-w-[72px] shrink truncate text-[12.5px] font-semibold text-slate-700">
-            {row.title}
-          </span>
+          {/* 제목 — 워크스페이스에서는 지문함이 소유한 값이라 읽기 전용이고,
+              생성 결과는 아직 저장 전이라 여기가 고칠 수 있는 유일한 자리다.
+              (구 '고치기' 모달이 갖고 있던 기능을 카드로 옮긴 것.) */}
+          {onChangeTitle ? (
+            <input
+              value={row.title}
+              onChange={(e) => onChangeTitle(e.target.value)}
+              onClick={(e) => e.stopPropagation()}
+              spellCheck={false}
+              placeholder="지문 제목"
+              aria-label="지문 제목"
+              title="제목 — 지문함에 이 이름으로 저장됩니다"
+              className="min-w-[72px] shrink rounded-md border border-transparent bg-transparent px-1 py-0.5 text-[12.5px] font-semibold text-slate-700 outline-none transition-colors hover:border-slate-200 focus:border-blue-300 focus:bg-white focus:ring-2 focus:ring-blue-100"
+            />
+          ) : (
+            <span className="min-w-[72px] shrink truncate text-[12.5px] font-semibold text-slate-700">
+              {row.title}
+            </span>
+          )}
           {row.variantOfId ? (
             <span
               className="shrink-0 rounded-sm bg-blue-600 px-1.5 py-0.5 text-[10px] font-bold leading-none text-white"
@@ -1206,10 +1711,13 @@ export function WorkspacePassageRow({
             </span>
           ) : null}
           {/* 상태 배지 — 생성 플랜 / 난이도 / 유형 을 제목 옆(왼쪽)에 모은다.
-              (단어 수는 입력창 우하단 푸터로 이동) */}
+              (단어 수는 입력창 우하단 푸터로 이동)
+              ⚠️ 둘 다 **문제 생성 설정**의 표시다. 생성 결과 카드(embedded)에는
+                 아직 그 설정이 존재하지 않으므로(지문함 등록 전) 그리지 않는다 —
+                 값이 없는데 기본값을 그리면 화면이 거짓말을 한다. */}
           {/* 난이도 뱃지 — 문제카드와 동일한 디자인(색상 pill)·순서(난이도 먼저).
               기본=파랑, 중급=노랑(amber), 킬러=빨강. 항상 노출한다. */}
-          {(() => {
+          {embedded ? null : (() => {
             const custom = !!row.override?.difficulty;
             const diff =
               DIFFICULTY_CONFIG[row.override?.difficulty ?? globalDifficulty];
@@ -1228,7 +1736,7 @@ export function WorkspacePassageRow({
             );
           })()}
           {/* 생성 플랜 뱃지 — 문제카드와 동일한 디자인(일반=회색+아이콘, 프리미엄=보라). */}
-          {(() => {
+          {embedded ? null : (() => {
             const custom = !!row.override?.generationPlan;
             const isPremium =
               (row.override?.generationPlan ?? globalGenerationPlan) ===
@@ -1262,16 +1770,38 @@ export function WorkspacePassageRow({
           )}
         </div>
 
-        <span className="h-4 w-px shrink-0 bg-slate-200" aria-hidden="true" />
-        <RowHistoryPopover
-          passageIds={[row.passageId, row.variantOfId].filter(
-            (v): v is string => !!v,
-          )}
-          sessionQueue={sessionQueue}
-          savedQuestionCount={savedQuestionCount}
-          questions={questions}
-          onOpenDetail={onOpenQuestionDetail}
-        />
+        {embedded ? null : (
+          <span className="h-4 w-px shrink-0 bg-slate-200" aria-hidden="true" />
+        )}
+        {/* 오답 기반 변형으로 담긴 지문 — 학생이 실제로 틀린 원본 문항을
+            문제 은행과 같은 카드 UI 로 연다. 생성 이력(과거 산출물) 옆에
+            나란히 둬서 「원본 ↔ 결과」를 한 자리에서 오갈 수 있게 한다. */}
+        {variantSourceCount > 0 && onOpenVariantSources ? (
+          <button
+            type="button"
+            onClick={onOpenVariantSources}
+            title={`${VARIANT_COPY.SOURCE_BUTTON} — 이 지문에서 틀린 문항 ${variantSourceCount}개`}
+            className="flex h-7 shrink-0 items-center gap-1 rounded-md px-1.5 text-[11px] font-semibold text-rose-600 transition-colors hover:bg-rose-50 hover:text-rose-700"
+          >
+            <FileSearch className="h-4 w-4" aria-hidden="true" />
+            <span className="text-[10.5px] font-bold tabular-nums">
+              {variantSourceCount}
+            </span>
+          </button>
+        ) : null}
+        {/* 생성 이력 — 저장된 Passage id 로 조회한다. 생성 결과 카드는 등록 전이라
+            id 자체가 없어(빈 문자열) 언제나 빈 팝오버가 된다 → 그리지 않는다. */}
+        {embedded ? null : (
+          <RowHistoryPopover
+            passageIds={[row.passageId, row.variantOfId].filter(
+              (v): v is string => !!v,
+            )}
+            sessionQueue={sessionQueue}
+            savedQuestionCount={savedQuestionCount}
+            questions={questions}
+            onOpenDetail={onOpenQuestionDetail}
+          />
+        )}
         <button
           type="button"
           onClick={onToggleCollapsed}
@@ -1284,15 +1814,19 @@ export function WorkspacePassageRow({
             <ChevronUp className="h-4 w-4" aria-hidden="true" />
           )}
         </button>
-        <button
-          type="button"
-          onClick={onRemove}
-          disabled={disabled}
-          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-red-50 hover:text-red-500 disabled:opacity-40"
-          title="워크스페이스에서 제거 (지문은 삭제되지 않음)"
-        >
-          <X className="h-4 w-4" aria-hidden="true" />
-        </button>
+        {/* 워크스페이스에서 제거 — 생성 결과 카드에는 "제거할 워크스페이스"가
+            없다(그 카드를 지우는 건 실행 밴드의 일이다). */}
+        {embedded ? null : (
+          <button
+            type="button"
+            onClick={onRemove}
+            disabled={disabled}
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-red-50 hover:text-red-500 disabled:opacity-40"
+            title="워크스페이스에서 제거 (지문은 삭제되지 않음)"
+          >
+            <X className="h-4 w-4" aria-hidden="true" />
+          </button>
+        )}
       </div>
 
       {!row.collapsed ? (
@@ -1349,65 +1883,43 @@ export function WorkspacePassageRow({
               </span>
             ) : null}
             <span className="min-w-0 flex-1" aria-hidden="true" />
-            {/* 본문 편집 모드 토글 — 기본은 선택 무대(클릭·드래그 선택),
-                타이핑 수정이 필요할 때만 textarea 를 연다. */}
-            <button
-              type="button"
-              onClick={() => {
-                clearSelection();
-                setEditMode((m) => !m);
-              }}
-              disabled={editorLocked || disabled}
-              title={
-                editMode
-                  ? "편집을 마치고 선택 모드(클릭·드래그로 문장 선택)로 돌아갑니다"
-                  : "본문을 직접 타이핑으로 수정합니다"
-              }
-              className={
-                "flex h-7 shrink-0 items-center gap-1 rounded-md border px-2 text-[11px] font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-50 " +
-                (editMode
-                  ? "border-blue-300 bg-blue-50 text-blue-700 hover:bg-blue-100"
-                  : "border-slate-200 bg-white text-slate-600 hover:border-blue-300 hover:text-blue-700")
-              }
-            >
-              {editMode ? (
-                <Check className="h-3.5 w-3.5" aria-hidden="true" />
-              ) : (
-                <PenLine className="h-3.5 w-3.5" aria-hidden="true" />
-              )}
-              {editMode ? "편집 완료" : "직접 편집"}
-            </button>
+            {/* 본문은 언제나 바로 수정 가능하다 — 별도 '직접 편집' 토글 없음.
+                고친 자리는 타이핑하는 즉시 붉게 표시된다. */}
           </div>
 
           {/* ── 앞 문단 미리보기 ── */}
           {preview?.kind === "prepend" ? (
-            <PrependPreviewPanel
-              paragraph={preview.text}
-              firstSentence={firstSentence.split(/\s+/).slice(0, 8).join(" ")}
-              note={preview.note}
-              busy={busy !== null}
-              disabled={disabled}
-              onApply={handleApplyPreview}
-              onRegenerate={handleRegenerate}
-              onCancel={handleCancelPreview}
-            />
+            <div ref={previewPanelRef} className="shrink-0">
+              <PrependPreviewPanel
+                paragraph={preview.text}
+                firstSentence={firstSentence.split(/\s+/).slice(0, 8).join(" ")}
+                note={preview.note}
+                busy={busy !== null}
+                disabled={disabled}
+                onApply={handleApplyPreview}
+                onRegenerate={handleRegenerate}
+                onCancel={handleCancelPreview}
+              />
+            </div>
           ) : null}
 
           {/* ── 전체 변형(새 지문) 미리보기 ── */}
           {variantPreview ? (
-            <WholePassageVariantPreviewPanel
-              label={variantPreview.label}
-              variantText={variantPreview.text}
-              sourceWords={words}
-              title={variantPreview.title}
-              summary={variantPreview.summary}
-              busy={busy === "variant" || variantAdding}
-              disabled={disabled}
-              onTitleChange={setVariantTitle}
-              onApply={handleAddVariantClick}
-              onRegenerate={handleRegenerateVariant}
-              onCancel={handleCancelVariant}
-            />
+            <div ref={previewPanelRef} className="shrink-0">
+              <WholePassageVariantPreviewPanel
+                label={variantPreview.label}
+                variantText={variantPreview.text}
+                sourceWords={words}
+                title={variantPreview.title}
+                summary={variantPreview.summary}
+                busy={busy === "variant" || variantAdding}
+                disabled={disabled}
+                onTitleChange={setVariantTitle}
+                onApply={handleAddVariantClick}
+                onRegenerate={handleRegenerateVariant}
+                onCancel={handleCancelVariant}
+              />
+            </div>
           ) : null}
 
           {/* ── 본문 에디터 (앞 맥락 삽입 바 + 하이라이트 백드롭) ── */}
@@ -1495,110 +2007,21 @@ export function WorkspacePassageRow({
                 aria-hidden="true"
               />
 
-              {/* ── 앞 맥락 모션 코치 — ① 커서가 본문에서 올라와 바를 클릭
-                  ② 바로 아래에 'AI 앞 문단' 고스트 패널이 펼쳐지며 쉬머
-                  라인이 생성되는 결과까지 시연 (3회 후 자동 정지) ── */}
-              {prependCoachVisible && !locked ? (
-                <div
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-0 z-[2]"
-                >
-                  <div className="ws-prepcoach-wash absolute inset-0 bg-blue-400/20 opacity-0" />
-                  <span className="ws-prepcoach-ring absolute left-[96px] top-1/2 h-7 w-7 rounded-full border-2 border-blue-500/70 opacity-0" />
-                  <MousePointer2 className="ws-prepcoach-cursor absolute left-[96px] top-[7px] h-4 w-4 text-blue-700 opacity-0 drop-shadow-sm" />
-                  {/* 클릭 결과로 삽입되는 고스트 문단 */}
-                  <div className="ws-prepcoach-ghost absolute inset-x-2 top-full mt-1.5 origin-top rounded-md border border-blue-200 bg-white opacity-0 shadow-lg shadow-blue-100/70">
-                    <div className="flex items-center gap-1.5 px-3 pt-2">
-                      <span className="rounded-sm bg-blue-600 px-1 py-px text-[9px] font-bold leading-none text-white">
-                        AI
-                      </span>
-                      <span className="text-[10.5px] font-bold text-blue-600">
-                        이어지는 앞 문단이 이 자리에 생성돼요
-                      </span>
-                    </div>
-                    <div className="space-y-[7px] px-3 pb-3 pt-2">
-                      <div className="ws-prepcoach-line h-[9px] w-[94%] rounded-sm" />
-                      <div className="ws-prepcoach-line h-[9px] w-[88%] rounded-sm" />
-                      <div className="ws-prepcoach-line h-[9px] w-[61%] rounded-sm" />
-                    </div>
-                  </div>
-                  <style>{`
-                    @keyframes ws-prepcoach-cursor {
-                      0% { transform: translate(170px, 62px) scale(1); opacity: 0; }
-                      7% { transform: translate(170px, 62px) scale(1); opacity: 1; }
-                      24% { transform: translate(0, 0) scale(1); opacity: 1; }
-                      28% { transform: translate(0, 0) scale(0.78); opacity: 1; }
-                      33% { transform: translate(0, 0) scale(1); opacity: 1; }
-                      46% { transform: translate(0, 0) scale(1); opacity: 1; }
-                      56%, 100% { transform: translate(0, 0) scale(1); opacity: 0; }
-                    }
-                    @keyframes ws-prepcoach-ring {
-                      0%, 25% { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
-                      30% { opacity: 0.9; transform: translate(-50%, -50%) scale(0.55); }
-                      44%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(1.7); }
-                    }
-                    @keyframes ws-prepcoach-wash {
-                      0%, 24% { opacity: 0; }
-                      30% { opacity: 1; }
-                      48%, 100% { opacity: 0; }
-                    }
-                    @keyframes ws-prepcoach-ghost {
-                      0%, 30% { opacity: 0; transform: scaleY(0.35); }
-                      37% { opacity: 1; transform: scaleY(0.55); }
-                      48% { opacity: 1; transform: scaleY(1); }
-                      86% { opacity: 1; transform: scaleY(1); }
-                      96%, 100% { opacity: 0; transform: scaleY(1); }
-                    }
-                    @keyframes ws-prepcoach-line {
-                      0% { background-position: 130% 0; }
-                      100% { background-position: -70% 0; }
-                    }
-                    .ws-prepcoach-cursor { animation: ws-prepcoach-cursor 5.4s ease-in-out 3; }
-                    .ws-prepcoach-ring { animation: ws-prepcoach-ring 5.4s ease-in-out 3; }
-                    .ws-prepcoach-wash { animation: ws-prepcoach-wash 5.4s ease-in-out 3; }
-                    .ws-prepcoach-ghost { animation: ws-prepcoach-ghost 5.4s ease-in-out 3; }
-                    .ws-prepcoach-line {
-                      background: linear-gradient(90deg, #dbeafe 25%, #93c5fd 50%, #dbeafe 75%);
-                      background-size: 200% 100%;
-                      animation: ws-prepcoach-line 1.4s linear infinite;
-                    }
-                  `}</style>
-                </div>
-              ) : null}
             </div>
 
             <div
               ref={editorAreaRef}
               className="relative flex min-h-0 flex-1 flex-col"
             >
-              {!editMode ? (
-                /* ── 선택 무대(기본) — 포인트 짚어주기와 동일한 제스처:
-                    단어 hover 틴트 · 클릭 = 문장 · 드래그 = 단어 스냅 구간.
-                    하이라이트·출제 범위는 실제 글자 위에 인라인으로 칠해져
-                    백드롭 줄바꿈 어긋남이 원천적으로 없다. */
-                <WorkspaceSelectStage
-                  content={row.content}
-                  highlights={row.highlights}
-                  range={row.range}
-                  locked={editorLocked || disabled}
-                  fontSize={String(editorTextStyle.fontSize)}
-                  selection={selection}
-                  onSelect={handleStageSelect}
-                  onMouseMove={handleEditorMouseMove}
-                  onMouseLeave={() => {
-                    setOriginalTip(null);
-                    scheduleHlHide();
-                  }}
-                  onScroll={() => {
-                    setOriginalTip(null);
-                    setHlMenu(null);
-                  }}
-                  selectionPopover={stagePopover}
-                />
-              ) : null}
-              {/* 출제 범위 백드롭 — 지정된 구간을 형광펜처럼 칠한다.
-                  AI 하이라이트 백드롭과 같은 메트릭의 별도 레이어. */}
-              {editMode && row.range ? (
+              {/* ── 백드롭 레이어 (뒤 → 앞) ─────────────────────────────
+                  전부 textarea 와 같은 메트릭(py-2 pl-3 pr-16 · editorTextStyle)
+                  으로 깔린다. 글자는 투명, 색만 칠한다. 본문에 없는 것(문장
+                  번호·지운 원문)은 폭 0 앵커 안에 절대배치로 띄워 줄바꿈에
+                  영향을 주지 않는다 — 1px 이라도 밀리면 색이 엉뚱한 글자에
+                  칠해진다. */}
+
+              {/* 출제 범위 */}
+              {row.range ? (
                 <div
                   ref={rangeBackdropRef}
                   aria-hidden="true"
@@ -1613,10 +2036,7 @@ export function WorkspacePassageRow({
                   </span>
                   <mark
                     data-hl-kind="range"
-                    data-hl-start={Math.min(
-                      row.range.start,
-                      row.content.length,
-                    )}
+                    data-hl-start={Math.min(row.range.start, row.content.length)}
                     data-hl-end={Math.min(row.range.end, row.content.length)}
                     className="rounded-[2px] bg-amber-100 text-transparent"
                   >
@@ -1626,15 +2046,13 @@ export function WorkspacePassageRow({
                     )}
                   </mark>
                   <span>
-                    {row.content.slice(
-                      Math.min(row.range.end, row.content.length),
-                    )}
+                    {row.content.slice(Math.min(row.range.end, row.content.length))}
                   </span>
                 </div>
               ) : null}
-              {/* 하이라이트 백드롭 — textarea 와 동일 메트릭(px-3 py-2,
-                  13px/relaxed)으로 뒤에 깔린다. 글자는 투명, 배경만 칠한다. */}
-              {editMode && row.highlights.length > 0 ? (
+
+              {/* AI 하이라이트(앞 맥락 · 문장 변형) */}
+              {row.highlights.length > 0 ? (
                 <div
                   ref={backdropRef}
                   aria-hidden="true"
@@ -1674,48 +2092,203 @@ export function WorkspacePassageRow({
                   })()}
                 </div>
               ) : null}
-              {editMode ? (
-                <Textarea
-                  ref={textareaRef}
-                  value={row.content}
-                  autoFocus
-                  onChange={(e) => {
-                    if (row.range) {
-                      toast.info("본문이 수정되어 출제 범위가 해제됐습니다.");
-                    }
-                    // 연속 타이핑은 버스트 1개 = undo 1단계로 묶는다.
-                    if (typingTimerRef.current === null) {
-                      onPushHistory();
-                    } else {
-                      window.clearTimeout(typingTimerRef.current);
-                    }
-                    typingTimerRef.current = window.setTimeout(() => {
-                      typingTimerRef.current = null;
-                    }, TYPING_BURST_MS);
-                    onChangeContent(e.target.value);
-                    clearSelection();
-                  }}
-                  onScroll={() => {
-                    syncBackdropScroll();
-                    setOriginalTip(null);
-                    setHlMenu(null);
-                  }}
-                  onMouseMove={handleEditorMouseMove}
-                  onMouseLeave={() => {
-                    setOriginalTip(null);
-                    scheduleHlHide();
-                  }}
-                  readOnly={editorLocked}
-                  disabled={disabled}
-                  spellCheck={false}
+
+              {/* 커서 밑 단어 틴트 — 무대의 '단어 블럭' 감각.
+                  레이어는 항상 마운트해 둔다: 조건부로 붙였다 떼면 폭·스크롤
+                  동기화(syncBackdropScroll)를 못 받은 상태로 한 프레임 그려져
+                  틴트가 엉뚱한 줄에 찍힌다. */}
+              <div
+                ref={hoverBackdropRef}
+                aria-hidden="true"
+                style={editorTextStyle}
+                className="pointer-events-none absolute inset-0 overflow-hidden whitespace-pre-wrap break-words py-2 pl-3 pr-16 text-transparent"
+              >
+                {hoverTok ? (
+                  <>
+                    <span>{row.content.slice(0, hoverTok.start)}</span>
+                    <mark className="wsr-hover text-transparent">
+                      {row.content.slice(hoverTok.start, hoverTok.end)}
+                    </mark>
+                  </>
+                ) : null}
+              </div>
+
+              {/* 내가 고친 자리 — 타이핑하는 즉시 갱신된다. 바뀐 글자는 붉은
+                  형광펜, 지운 자리는 빨간 쐐기 + 지운 원문 칩. */}
+              {editSpans.length > 0 ? (
+                <div
+                  ref={diffBackdropRef}
+                  aria-hidden="true"
                   style={editorTextStyle}
-                  className={
-                    "relative h-full min-h-0 flex-1 resize-none rounded-none border-0 bg-transparent py-2 pl-3 pr-16 shadow-none focus-visible:ring-0 " +
-                    (editorLocked ? "text-slate-500" : "")
-                  }
-                  placeholder="지문 본문"
-                />
+                  className="pointer-events-none absolute inset-0 overflow-hidden whitespace-pre-wrap break-words py-2 pl-3 pr-16 text-transparent"
+                >
+                  {diffSegments.map((seg, i) => {
+                    if (seg.kind === "text")
+                      return <span key={i}>{seg.text}</span>;
+                    // 본문 위에는 '자리 표시'만 둔다. 지운 원문 같은 추가 텍스트를
+                    // 여기 띄우면 본문을 가리고 백드롭 경계에 잘린다 — 내용은
+                    // 아래 '고친 자리' 목록이 맡는다.
+                    if (seg.kind === "delete")
+                      return (
+                        <span
+                          key={i}
+                          className={
+                            "wsr-anchor wsr-del" +
+                            (focusedSpan === seg.from ? " wsr-focus" : "")
+                          }
+                        />
+                      );
+                    return (
+                      <mark
+                        key={i}
+                        className={
+                          "wsr-diff rounded-[2px] text-transparent" +
+                          (focusedSpan === seg.from ? " wsr-focus" : "")
+                        }
+                      >
+                        {seg.text}
+                      </mark>
+                    );
+                  })}
+                </div>
               ) : null}
+
+              {/* 선택 측정용 미러 — 팝오버 앵커를 재기 위한 보이지 않는 레이어 */}
+              {selection ? (
+                <div
+                  ref={measureMirrorRef}
+                  aria-hidden="true"
+                  style={editorTextStyle}
+                  className="pointer-events-none invisible absolute inset-0 overflow-hidden whitespace-pre-wrap break-words py-2 pl-3 pr-16"
+                >
+                  <span>{row.content.slice(0, selection.start)}</span>
+                  <mark ref={selMarkRef}>
+                    {row.content.slice(selection.start, selection.end)}
+                  </mark>
+                </div>
+              ) : null}
+
+              {/* 본문 — 언제나 편집 가능한 단일 표면.
+                  주의: shadcn <Textarea> 를 쓰면 안 된다 — 기본 클래스의
+                  text-base 가 body.smoat-large-ui 의
+                  ":where(.text-base) { font-size: 20.5px !important }" 에 걸려
+                  인라인 13px 을 이긴다(!important > 인라인). 그러면 본문만
+                  1.58배로 커지고 백드롭이 전부 어긋난다. */}
+              <textarea
+                ref={textareaRef}
+                value={row.content}
+                onChange={(e) => applyEdit(e.target.value)}
+                onSelect={readSelection}
+                onScroll={() => {
+                  syncBackdropScroll();
+                  setOriginalTip(null);
+                  setHlMenu(null);
+                  if (selection) setStageAnchor(measureSelectionAnchor());
+                }}
+                onMouseMove={handleEditorHover}
+                onMouseLeave={() => {
+                  setOriginalTip(null);
+                  scheduleHlHide();
+                  setHoverTok(null);
+                  setEditTip(null);
+                }}
+                onPointerDown={handleEditorPointerDown}
+                onPointerUp={handleEditorPointerUp}
+                onClick={handleEditorClick}
+                onDoubleClick={handleEditorDoubleClick}
+                readOnly={editorLocked}
+                disabled={disabled}
+                spellCheck={false}
+                style={editorTextStyle}
+                className={
+                  // field-sizing-content 는 유지해야 한다 — 카드가 grid 자동
+                  // 행(내용 기반 높이)이라, 빠지면 상자가 기본 2줄로 찌그러진다.
+                  "relative flex field-sizing-content h-full min-h-0 w-full flex-1 resize-none border-0 bg-transparent py-2 pl-3 pr-16 outline-none placeholder:text-slate-400 " +
+                  (editorLocked ? "text-slate-500" : "text-slate-800")
+                }
+                placeholder="지문 본문"
+              />
+              {/* 붉은 편집 표시 설명 — 표시 위에 커서를 올리면 그 자리에서
+                  무엇이 사라졌는지 바로 읽힌다(본문 레이아웃 영향 없음). */}
+              {editTip && (editTip.removed || editTip.added) ? (
+                <div
+                  aria-hidden="true"
+                  style={{ left: editTip.left, top: editTip.top }}
+                  className="pointer-events-none absolute z-[7] w-max max-w-[260px] rounded-lg border border-red-200 bg-white px-2.5 py-1.5 text-[11px] leading-snug shadow-lg shadow-red-100/70 duration-100 animate-in fade-in"
+                >
+                  <div className="mb-0.5 flex items-center gap-1 text-[9.5px] font-bold text-red-500">
+                    <PenLine className="h-2.5 w-2.5" aria-hidden="true" />
+                    {editTip.added ? "여기를 고쳤어요" : "여기서 지웠어요"}
+                  </div>
+                  {editTip.removed ? (
+                    <div className="line-clamp-3 text-slate-400 line-through decoration-red-300">
+                      {editTip.removed}
+                    </div>
+                  ) : null}
+                  {editTip.added ? (
+                    <div className="line-clamp-2 font-medium text-slate-700">
+                      {editTip.added.length > 140
+                        ? `${editTip.added.slice(0, 140)}…`
+                        : editTip.added}
+                    </div>
+                  ) : null}
+                </div>
+              ) : null}
+
+              {stagePopover}
+
+              <style jsx global>{`
+                /* 폭 0 앵커 — 안쪽 요소를 절대배치로 띄워 본문 줄바꿈을 건드리지
+                   않는다(백드롭 ↔ textarea 정렬 보존). */
+                .wsr-anchor {
+                  position: relative;
+                  display: inline-block;
+                  width: 0;
+                  height: 0;
+                  overflow: visible;
+                  vertical-align: baseline;
+                }
+                /* 지운 자리 — 폭이 0이라 칠할 글자가 없다. 빨간 대괄호 빈칸
+                   [ ] 으로 "여기 있던 게 빠졌다"를 글자처럼 보여준다.
+                   세로 기준은 반드시 bottom(베이스라인) — 앵커가 height:0 이라
+                   top 으로 잡으면 막대가 베이스라인 아래로 흘러내려 줄 끝이나
+                   아랫줄에 떠 있는 것처럼 보인다(이전 버그). */
+                .wsr-del::before {
+                  content: "";
+                  position: absolute;
+                  left: -2.5px;
+                  bottom: -0.18em;
+                  width: 5px;
+                  height: 0.95em;
+                  box-sizing: border-box;
+                  border: 1px solid #ef4444;
+                  border-radius: 1.5px;
+                  /* 폭 5px — 단어 사이 공백(13px 기준 약 3.5px) 안에 거의 들어가
+                     앞뒤 글자를 덮지 않는다. 이보다 넓히면 반드시 글자 위로
+                     올라탄다(절대배치라 자리를 못 만든다). 속은 비워 둔다. */
+                  background: transparent;
+                }
+                /* 고친 자리 — 옅은 형광펜 + 빨간 밑줄 */
+                mark.wsr-diff {
+                  background-color: #fee2e2;
+                  box-shadow: inset 0 -2px 0 0 #f87171;
+                }
+                /* 아래 목록에서 고른 항목의 자리를 잠깐 진하게 */
+                mark.wsr-diff.wsr-focus {
+                  background-color: #fca5a5;
+                  box-shadow: inset 0 -2px 0 0 #dc2626;
+                }
+                .wsr-del.wsr-focus::before {
+                  border-color: #b91c1c;
+                  background: rgba(254, 202, 202, 0.7);
+                }
+                /* 단어 hover 틴트 — 선택 무대의 블럭 감각을 그대로 옮겼다.
+                   백드롭에 칠하므로 textarea 의 캐럿·타이핑을 방해하지 않는다. */
+                mark.wsr-hover {
+                  background-color: #dbeafe;
+                  border-radius: 6px;
+                }
+              `}</style>
 
               {/* ── undo / redo — 입력창 우상단에 떠 있는 컨트롤. 본문은 pr-16
                   으로 우측 거터를 비워 글자가 줄바꿈돼 버튼에 가려지지 않는다. ── */}
@@ -1739,6 +2312,118 @@ export function WorkspacePassageRow({
                   <Redo2 className="h-3.5 w-3.5" aria-hidden="true" />
                 </button>
               </div>
+
+              {/* 고친 자리 패널 — absolute 오버레이라 본문 높이를 건드리지 않는다.
+                  지운 원문을 본문 위에 겹쳐 띄우면 글자를 가리고 백드롭 경계에
+                  잘리므로, 내용은 전부 여기서 읽는다. */}
+              {editListOpen && editSpans.length > 0 && panelPos ? (
+                <div
+                  ref={editListRef}
+                  style={{
+                    left: panelPos.left,
+                    top: panelPos.top,
+                    bottom: panelPos.bottom,
+                    width: panelPos.width,
+                  }}
+                  className={
+                    "fixed z-50 flex max-h-[min(300px,52vh)] flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-2xl shadow-slate-400/25 duration-200 ease-out animate-in fade-in " +
+                    (panelPos.flip ? "slide-in-from-bottom-2" : "slide-in-from-top-2")
+                  }
+                >
+                  <div className="flex shrink-0 items-center gap-2 border-b border-slate-100 px-3 py-2">
+                    <span className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-red-50">
+                      <PenLine
+                        className="h-2.5 w-2.5 text-red-500"
+                        aria-hidden="true"
+                      />
+                    </span>
+                    <span className="text-[12px] font-bold tracking-tight text-slate-800">
+                      내가 고친 자리
+                    </span>
+                    <span className="rounded-full bg-slate-100 px-1.5 text-[10.5px] font-bold tabular-nums text-slate-500">
+                      {editSpans.length}
+                    </span>
+                    <span className="min-w-0 flex-1" aria-hidden="true" />
+                    <button
+                      type="button"
+                      onClick={clearEditMarks}
+                      title="본문은 그대로 두고 표시만 지웁니다"
+                      className="rounded px-1.5 py-0.5 text-[10.5px] font-medium text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+                    >
+                      표시 지우기
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setEditListOpen(false)}
+                      aria-label="닫기"
+                      className="flex h-5 w-5 items-center justify-center rounded text-slate-300 transition-colors hover:bg-slate-100 hover:text-slate-600"
+                    >
+                      <X className="h-3 w-3" aria-hidden="true" />
+                    </button>
+                  </div>
+                  <ul className="min-h-0 flex-1 divide-y divide-slate-100 overflow-y-auto overscroll-contain">
+                    {editSpans.map((s, i) => {
+                      const added =
+                        s.kind === "change" ? row.content.slice(s.from, s.to) : "";
+                      const removed = formatRemoved(s.removed, 220);
+                      const isDelete = !added;
+                      return (
+                        <li
+                          key={`${s.from}:${s.to}:${i}`}
+                          className={
+                            "group relative flex items-start gap-2.5 py-2 pl-3 pr-2 transition-colors hover:bg-slate-50 " +
+                            (focusedSpan === s.from ? "bg-blue-50/60" : "")
+                          }
+                        >
+                          <span
+                            className={
+                              "mt-[1px] shrink-0 rounded px-1.5 py-[3px] text-[9.5px] font-bold leading-none " +
+                              (isDelete
+                                ? "bg-red-50 text-red-500"
+                                : "bg-amber-50 text-amber-600")
+                            }
+                          >
+                            {isDelete ? "지움" : "바꿈"}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setFocusedSpan(s.from);
+                              selectRange(s.from, s.to);
+                            }}
+                            title="본문에서 이 자리로 이동"
+                            className="min-w-0 flex-1 space-y-0.5 text-left"
+                          >
+                            {removed ? (
+                              <span className="line-clamp-2 text-[11.5px] leading-[1.5] text-slate-400 line-through decoration-red-300 decoration-1">
+                                {removed}
+                              </span>
+                            ) : null}
+                            {added ? (
+                              <span className="line-clamp-2 text-[11.5px] font-medium leading-[1.5] text-slate-700">
+                                {added.length > 220
+                                  ? `${added.slice(0, 220)}…`
+                                  : added}
+                              </span>
+                            ) : null}
+                          </button>
+                          {s.removed ? (
+                            <button
+                              type="button"
+                              onClick={() => restoreSpan(s)}
+                              title="이 자리를 원래대로 되돌리기"
+                              className="mt-[1px] flex h-[22px] shrink-0 items-center gap-1 rounded-md border border-transparent px-1.5 text-[10.5px] font-bold text-slate-400 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600"
+                            >
+                              <RotateCcw className="h-3 w-3" aria-hidden="true" />
+                              복구
+                            </button>
+                          ) : null}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              ) : null}
 
               {/* ── 변형 문장 원문 툴팁 — 하늘색 하이라이트 위에 커서를
                   올리면 변형 전 문장을 보여준다 ── */}
@@ -1801,67 +2486,57 @@ export function WorkspacePassageRow({
                 </div>
               ) : null}
 
-              {/* ── 드래그 모션 코치 — 고스트 커서가 첫 줄을 쓸며 선택
-                  하이라이트가 자라나는 루프. 실제 드래그/편집 시 영구 종료. ── */}
-              {dragCoachVisible && !editMode && !editorLocked && !disabled ? (
-                <div
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-x-0 top-0 z-[2]"
-                >
-                  <div className="relative mx-3 mt-2 h-[21px]">
-                    <div className="ws-dragcoach-band absolute left-0 top-0 h-full rounded-[3px] bg-blue-500/25 ring-1 ring-inset ring-blue-400/30" />
-                    <MousePointer2
-                      className="ws-dragcoach-cursor absolute top-[3px] h-4 w-4 text-blue-700 drop-shadow-sm"
-                      aria-hidden="true"
-                    />
-                  </div>
-                  <div className="ws-dragcoach-chip pointer-events-auto mx-3 mt-1.5 inline-flex items-center gap-1.5 rounded-md border border-blue-300 bg-white py-1 pl-2.5 pr-1 text-[11.5px] font-bold text-blue-700 shadow-md shadow-blue-100/70">
-                    <TextCursorInput
-                      className="h-3.5 w-3.5 shrink-0"
-                      aria-hidden="true"
-                    />
-                    이렇게 문장을 드래그해 보세요 — 변형·범위 지정 메뉴가 떠요
-                    <button
-                      type="button"
-                      onClick={() => dismissDragCoach(true)}
-                      className="ml-0.5 flex h-5 w-5 items-center justify-center rounded text-blue-300 transition-colors hover:bg-blue-50 hover:text-blue-600"
-                      title="알겠어요 — 다시 보지 않기"
-                    >
-                      <X className="h-3 w-3" aria-hidden="true" />
-                    </button>
-                  </div>
-                  <style>{`
-                    @keyframes ws-dragcoach-band {
-                      0%, 8% { width: 0; opacity: 0; }
-                      12% { width: 0; opacity: 1; }
-                      46% { width: 58%; opacity: 1; }
-                      86% { width: 58%; opacity: 1; }
-                      96%, 100% { width: 58%; opacity: 0; }
-                    }
-                    @keyframes ws-dragcoach-cursor {
-                      0%, 8% { left: 0; opacity: 0; }
-                      12% { left: 0; opacity: 1; }
-                      46% { left: 58%; opacity: 1; }
-                      86% { left: 58%; opacity: 1; }
-                      96%, 100% { left: 58%; opacity: 0; }
-                    }
-                    @keyframes ws-dragcoach-chip {
-                      0%, 44% { opacity: 0; transform: translateY(3px); }
-                      52% { opacity: 1; transform: translateY(0); }
-                      90% { opacity: 1; }
-                      98%, 100% { opacity: 0; }
-                    }
-                    .ws-dragcoach-band { animation: ws-dragcoach-band 4.4s ease-in-out infinite; }
-                    .ws-dragcoach-cursor { animation: ws-dragcoach-cursor 4.4s ease-in-out infinite; }
-                    .ws-dragcoach-chip { animation: ws-dragcoach-chip 4.4s ease-in-out infinite; }
-                  `}</style>
-                </div>
-              ) : null}
-
             </div>
 
-            {/* 단어 수 — 입력창 우하단 푸터(본문 아래라 텍스트와 겹치지 않음) */}
-            <div className="flex justify-end border-t border-slate-100 px-2.5 py-1 text-[10.5px] tabular-nums text-slate-400">
+            {/* 단어 수 — 입력창 우하단 푸터(본문 아래라 텍스트와 겹치지 않음).
+                '고친 자리' 칩도 여기 얹는다: 이미 있는 줄이라 지문 영역이 1px도
+                줄지 않고, 본문 우측 거터(pr-16)를 넓히지 않아 줄바꿈도 그대로다. */}
+            <div className="flex items-center gap-2 border-t border-slate-100 px-2.5 py-1 text-[10.5px] tabular-nums text-slate-400">
+              {editSpans.length > 0 ? (
+                <button
+                  ref={editChipRef}
+                  type="button"
+                  onClick={toggleEditList}
+                  title="내가 고친 자리 보기 — 무엇이 지워지고 바뀌었는지"
+                  className={
+                    "flex items-center gap-1 rounded px-1 py-px font-bold transition-colors " +
+                    (editListOpen
+                      ? "bg-red-500 text-white"
+                      : "text-red-500 hover:bg-red-50")
+                  }
+                >
+                  <PenLine className="h-3 w-3" aria-hidden="true" />
+                  고친 자리 {editSpans.length}
+                </button>
+              ) : null}
+              {coachVisible && !editorLocked && !disabled ? (
+                <span className="flex min-w-0 items-center gap-1 text-slate-400">
+                  <TextCursorInput
+                    className="h-3 w-3 shrink-0 text-blue-400"
+                    aria-hidden="true"
+                  />
+                  <span className="truncate">
+                    문장을 드래그하면 변형·범위 지정 메뉴가 떠요
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => dismissDragCoach(true)}
+                    className="shrink-0 rounded px-1 font-medium text-slate-400 underline decoration-dotted underline-offset-2 transition-colors hover:text-slate-700"
+                  >
+                    다시 보지 않기
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => dismissDragCoach(false)}
+                    aria-label="이번만 닫기"
+                    title="이번만 닫기"
+                    className="flex h-4 w-4 shrink-0 items-center justify-center rounded text-slate-300 transition-colors hover:bg-slate-100 hover:text-slate-600"
+                  >
+                    <X className="h-2.5 w-2.5" aria-hidden="true" />
+                  </button>
+                </span>
+              ) : null}
+              <span className="min-w-0 flex-1" aria-hidden="true" />
               {words} words
             </div>
           </div>
@@ -1897,10 +2572,13 @@ export function WorkspacePassageRow({
                 </span>
               ) : null}
               <span className="min-w-0 flex-1" aria-hidden="true" />
-              {row.highlights.length > 0 ? (
+              {row.highlights.length > 0 || editSpans.length > 0 ? (
                 <button
                   type="button"
-                  onClick={onClearHighlights}
+                  onClick={() => {
+                    clearEditMarks();
+                    if (row.highlights.length > 0) onClearHighlights();
+                  }}
                   className="shrink-0 transition-colors hover:text-slate-600"
                   title="색 표시만 지웁니다 (본문은 그대로)"
                 >
@@ -1919,23 +2597,34 @@ export function WorkspacePassageRow({
 
           {/* ── 문장 변형 미리보기 ── */}
           {preview?.kind === "paraphrase" ? (
-            <ParaphrasePreviewPanel
-              original={preview.original}
-              rewritten={preview.text}
-              note={preview.note}
-              busy={busy !== null}
-              disabled={disabled}
-              onApply={handleApplyPreview}
-              onRegenerate={handleRegenerate}
-              onCancel={handleCancelPreview}
-            />
+            <div ref={previewPanelRef} className="shrink-0">
+              <ParaphrasePreviewPanel
+                original={preview.original}
+                rewritten={preview.text}
+                note={preview.note}
+                busy={busy !== null}
+                disabled={disabled}
+                onApply={handleApplyPreview}
+                onRegenerate={handleRegenerate}
+                onCancel={handleCancelPreview}
+              />
+            </div>
           ) : null}
         </div>
       ) : null}
 
       {/* ── 푸터: 이 지문 '문제 생성' (항상 표시 — 접혀 있어도 보임) ──
           클릭하면 이 지문 전용 문제 생성 모달이 열려 유형·난이도를 설정하고
-          이 지문 하나로 바로 생성한다. "지문 = 자기 설정"을 명확히 하는 핵심 CTA. */}
+          이 지문 하나로 바로 생성한다. "지문 = 자기 설정"을 명확히 하는 핵심 CTA.
+          embedded 에서는 이 CTA 가 성립하지 않는다(등록 전 지문에는 문제 생성
+          설정이 없다) — 호출부가 넘긴 footer 로 대체하고, 안 넘기면 푸터가 없다. */}
+      {embedded ? (
+        footer ? (
+          <div className="mt-auto border-t border-slate-100 bg-slate-50/50 p-2">
+            {footer}
+          </div>
+        ) : null
+      ) : (
       <div className="mt-auto border-t border-slate-100 bg-slate-50/50 p-2">
         <button
           type="button"
@@ -1982,6 +2671,7 @@ export function WorkspacePassageRow({
           )}
         </button>
       </div>
+      )}
 
       {/* AI 복원 첫 사용 안내 — intake 붙여넣기와 동일 다이얼로그/저장 키 */}
       <RestoreIntroDialog

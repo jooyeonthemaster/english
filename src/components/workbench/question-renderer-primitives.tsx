@@ -9,6 +9,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { getCircledNumber, getCircledNumbers } from "@/lib/question-postprocess/types";
+import { multiBlankOptionMatrix } from "@/components/exams/paper-builder/option-display";
+import { MultiBlankOptionGrid } from "@/components/exams/multi-blank-option-grid";
 import {
   BlockChangeContext,
   SelectableBlock,
@@ -333,11 +335,11 @@ export function renderPassageFormatted(
         );
       }
     } else if (match[2]) {
-      // Circled number -> badge
+      // Circled number -> bold blue marker (no background badge)
       parts.push(
         <span
           key={key++}
-          className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 text-blue-700 text-[10px] font-bold mx-0.5"
+          className="font-extrabold text-blue-600 text-[18px] mx-1 relative -top-[1px]"
         >
           {match[2]}
         </span>
@@ -392,7 +394,7 @@ export function renderWithMarkers(text: string): React.ReactNode {
     parts.push(
       <span
         key={key++}
-        className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 text-blue-700 text-[10px] font-bold mx-0.5"
+        className="font-extrabold text-blue-600 text-[18px] mx-1 relative -top-[1px]"
       >
         {match[1] || circledNumberFromLetter(match[2])}
       </span>
@@ -468,12 +470,60 @@ export function OptionList({
   options,
   correctAnswer,
   correctAnswers,
+  subType,
 }: {
   options: Array<{ label: string; text: string }>;
   correctAnswer: string;
   correctAnswers?: string[];
+  /** BLANK_INFERENCE 전달 시 다중 빈칸 조합 선지를 (A)/(B) 컬럼 헤더 그리드로 렌더 */
+  subType?: string | null;
 }) {
   const correctLabels = getCorrectAnswerLabels(correctAnswer, correctAnswers);
+
+  // 다중 빈칸(BLANK_INFERENCE) 조합 선지 — 실제 수능 컬럼 헤더 방식.
+  // 선지 전체를 하나의 SelectableBlock 으로 감싼다(그리드 셀은 한 그리드의 직접
+  // 자식이어야 정렬되므로 선지별 래퍼를 둘 수 없다 — 수정 대상 지정은 목록 단위).
+  const multiBlank =
+    subType === "BLANK_INFERENCE" ? multiBlankOptionMatrix(options) : null;
+  if (multiBlank) {
+    return (
+      <SelectableBlock
+        blockId="options"
+        label="선지"
+        field="options"
+        excerpt={blockExcerpt(options.map((opt) => opt.text).join(" / "))}
+        className="px-1 py-0.5"
+      >
+        <MultiBlankOptionGrid
+          blankCount={multiBlank.blankCount}
+          className="pl-1 text-[13px]"
+          headerCellClassName="text-slate-500"
+          rows={multiBlank.rows.map(({ option, values }, i) => {
+            const isCorrect = correctLabels.has(normalizeAnswerLabel(option.label));
+            return {
+              key: i,
+              numberCell: (
+                <span
+                  className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                    isCorrect
+                      ? "bg-blue-600 text-white"
+                      : "bg-slate-100 text-slate-400"
+                  }`}
+                >
+                  {optionBadgeDisplay(option.label)}
+                </span>
+              ),
+              cells: values,
+              cellClassName: isCorrect
+                ? "text-blue-700 font-semibold"
+                : "text-slate-600",
+            };
+          })}
+        />
+      </SelectableBlock>
+    );
+  }
+
   return (
     <div className="space-y-1.5 pl-1">
       {options.map((opt, i) => {

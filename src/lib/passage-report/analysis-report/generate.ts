@@ -1,4 +1,28 @@
 import { generateQuestionText } from "@/lib/question-generation-llm";
+import {
+  analysisPhaseLabel,
+  streamAnalysisText,
+  type AnalysisStreamEvent,
+} from "./stream-llm";
+
+/** 실전 학습지 콜의 스트리밍 훅 — 단계 라벨과 프레임 싱크. */
+type WorksheetStreamHook = {
+  emit: (event: AnalysisStreamEvent) => void;
+  label: string;
+};
+
+/**
+ * 학습지 텍스트 콜의 공통 반환 계약 — 비스트리밍(generateQuestionText)과
+ * 스트리밍(streamAnalysisText) 두 구현이 모두 만족한다. 스트리밍 실패 시
+ * 자기 자신을 비스트리밍으로 재호출하므로 명시 타입이 없으면 추론이 순환한다.
+ */
+type WorksheetTextResult = {
+  text: string;
+  usage?: unknown;
+  provider?: string;
+  modelId?: string;
+  durationMs: number;
+};
 import { stripWorksheetContentFields } from "./worksheet-core-gate";
 
 import {
@@ -17,6 +41,12 @@ import {
   type LearningWorksheetSection,
   type ReportThemeId,
 } from "./schema";
+import {
+  MIN_ANTONYM_COVERAGE,
+  normalizeVocabularyRows,
+  remapVocabExcludedKeys,
+  vocabRowKey,
+} from "./vocab-normalize";
 import {
   clozePassageCoverageIssues,
   consolidateWordOrders,
@@ -75,6 +105,24 @@ function normalizeAndAuditSections(sections: AnalysisReport["sections"]): void {
     if (sec.kind === "exam-focus") {
       for (const row of sec.rows) row.type = canonicalExamType(row.type);
     }
+    if (sec.kind === "vocabulary") {
+      // 관계어(동의어·반의어) 결정론 정규화 — 이 경로(PRIME 수동 생성·Trigger 잡)는
+      // section-coerce 를 거치지 않으므로 회복형과 같은 규칙을 여기서 적용한다.
+      // (순수·멱등 — vocab-normalize.ts 가 단일 진실원)
+      const rawRows = sec.rows as unknown as Record<string, unknown>[];
+      const beforeKeys = rawRows.map((row) => vocabRowKey(row));
+      const norm = normalizeVocabularyRows(rawRows);
+      sec.rows = norm.rows as unknown as typeof sec.rows;
+      // synonyms 가 바뀌면 편집기의 '시험지에서 제외' 키가 어긋난다 — 재매핑.
+      const remapped = remapVocabExcludedKeys(beforeKeys, norm.rows, sec.vocabTestExcludedKeys);
+      if (remapped) sec.vocabTestExcludedKeys = remapped;
+      // 커버리지는 계측만 한다(저장 차단 없음). 프롬프트 하한은 70%.
+      if (norm.stats.rows >= 10 && norm.stats.antCoverage < MIN_ANTONYM_COVERAGE) {
+        console.warn(
+          `[REPORT] vocabulary 반의어 커버리지 낮음: ${Math.round(norm.stats.antCoverage * 100)}% (${norm.stats.rows}행)`,
+        );
+      }
+    }
   }
   const g = sections.find((s) => s.kind === "grammar");
   if (g?.kind === "grammar") {
@@ -111,8 +159,12 @@ export async function generateAnalysisReportCore(
     responseFormat: "json_object",
     isRecoverableJsonText: canRecover,
     thinkingBudget: 0,
-    timeoutMs: 110_000,
+    // 26-07-22 학습지 3.6-flash 사고 high 전환 — 사고 시간만큼 1콜이 길어져
+    // 110s→140s (재시도 1회 포함 최악 280s < 호출 라우트 300s 벽).
+    timeoutMs: 140_000,
     temperature: 0.1,
+    reasoningEffort: "high",
+    applyReasoningEffortToGemini: true,
   });
   const primaryUsage: AnalysisReportUsage = {
     usage: result.usage,
@@ -285,6 +337,8 @@ export async function generateLearningWorksheetResilient(
     /** 테스트 전용 유닛 주입(기본=실제 생성기). 오케스트레이션을 결정론으로 검증할 때만 쓴다. */
     _genWorkbook?: () => Promise<{ ok: boolean; section?: LearningWorksheetSection; usage?: AnalysisReportUsage }>;
     _genInference?: () => Promise<{ ok: boolean; inferenceSet?: LearningWorksheetInferenceSet; usage?: AnalysisReportUsage }>;
+    /** 지정 시 게이트웨이 SSE 를 직접 읽어 사고/본문 델타를 흘린다(로딩 카드 미리보기). */
+    stream?: { emit: (event: AnalysisStreamEvent) => void };
   },
 ): Promise<ResilientWorksheetResult> {
   const deadlineAt = opts?.deadlineAt;
@@ -301,10 +355,24 @@ export async function generateLearningWorksheetResilient(
   let rounds = 0;
 
   const genWorkbook =
-    opts?._genWorkbook ?? (() => generateLearningWorksheetCore(input, report, deadlineAt));
+    opts?._genWorkbook ??
+    (() =>
+      generateLearningWorksheetCore(
+        input,
+        report,
+        deadlineAt,
+        opts?.stream ? { emit: opts.stream.emit, label: "workbook" } : undefined,
+      ));
   const genInference =
     opts?._genInference ??
-    (() => generateLearningWorksheetInference(input, report, workbookSection ?? baseSection, deadlineAt));
+    (() =>
+      generateLearningWorksheetInference(
+        input,
+        report,
+        workbookSection ?? baseSection,
+        deadlineAt,
+        opts?.stream ? { emit: opts.stream.emit, label: "inference" } : undefined,
+      ));
 
   for (; rounds < maxRounds; rounds += 1) {
     if (deadlineAt && Date.now() >= deadlineAt) break;
@@ -375,6 +443,7 @@ async function generateLearningWorksheetCore(
   input: GenerateAnalysisReportInput,
   report: AnalysisReport,
   deadlineAt?: number,
+  stream?: WorksheetStreamHook,
 ): Promise<GenerateLearningWorksheetCoreResult> {
   const basePrompt = buildLearningWorksheetPrompt(input, report);
   let lastFailure = "";
@@ -388,6 +457,7 @@ async function generateLearningWorksheetCore(
       qualityAttempt === 0 ? basePrompt : buildRepairPrompt(basePrompt, lastFailure),
       qualityAttempt === 0 ? "REPORT_WORKSHEET_CORE" : "REPORT_WORKSHEET_CORE_REPAIR",
       deadlineAt,
+      stream,
     ).catch((error: unknown) => {
       lastFailure = `모델 호출 실패: ${error instanceof Error ? error.message : String(error)}`;
       return null;
@@ -442,6 +512,7 @@ async function generateLearningWorksheetInference(
   report: AnalysisReport,
   worksheet: LearningWorksheetSection,
   deadlineAt?: number,
+  stream?: WorksheetStreamHook,
 ): Promise<GenerateLearningWorksheetInferenceResult> {
   const basePrompt = buildLearningWorksheetInferencePrompt(input, report, worksheet);
   let lastFailure = "";
@@ -455,6 +526,7 @@ async function generateLearningWorksheetInference(
       qualityAttempt === 0 ? basePrompt : buildRepairPrompt(basePrompt, lastFailure),
       qualityAttempt === 0 ? "REPORT_WORKSHEET_INFERENCE" : "REPORT_WORKSHEET_INFERENCE_REPAIR",
       deadlineAt,
+      stream,
     ).catch((error: unknown) => {
       lastFailure = `모델 호출 실패: ${error instanceof Error ? error.message : String(error)}`;
       return null;
@@ -517,9 +589,33 @@ ${lastFailure}
 이번 출력은 누락 없이 수정해서 JSON 객체 하나만 다시 생성하세요.`;
 }
 
-function runWorksheetTextGeneration(prompt: string, logPrefix: string, deadlineAt?: number) {
-  // 데드라인이 있으면 호출 abort 를 남은 예산으로 좁힌다(없으면 기존 120s — 무회귀).
-  const timeoutMs = deadlineAt ? Math.max(1_000, Math.min(120_000, deadlineAt - Date.now())) : 120_000;
+function runWorksheetTextGeneration(
+  prompt: string,
+  logPrefix: string,
+  deadlineAt?: number,
+  stream?: WorksheetStreamHook,
+): Promise<WorksheetTextResult> {
+  // 데드라인이 있으면 호출 abort 를 남은 예산으로 좁힌다. 26-07-22 실전 학습지
+  // 3.6-flash 사고 high 전환으로 무데드라인 기본·상한을 120s→140s 상향
+  // (워크북+추론 2콜 최악 280s < 워크시트 라우트 300s 벽, deadlineAt 은 계속 존중).
+  const timeoutMs = deadlineAt ? Math.max(1_000, Math.min(140_000, deadlineAt - Date.now())) : 140_000;
+  if (stream) {
+    // 스트리밍 요청(지문 큐 미리보기) — 실패하면 아래 비스트리밍 경로로 폴백한다.
+    stream.emit({ t: "phase", label: analysisPhaseLabel(stream.label) });
+    return streamAnalysisText({
+      prompt,
+      maxTokens: 14000,
+      timeoutMs,
+      temperature: 0.12,
+      emit: stream.emit,
+    }).catch((error: unknown) => {
+      console.warn(
+        `[analysis-stream] ${logPrefix} 스트리밍 실패 — 비스트리밍 폴백`,
+        error instanceof Error ? error.message : error,
+      );
+      return runWorksheetTextGeneration(prompt, logPrefix, deadlineAt);
+    });
+  }
   return generateQuestionText({
     prompt,
     generationPlan: "STANDARD",
@@ -532,14 +628,16 @@ function runWorksheetTextGeneration(prompt: string, logPrefix: string, deadlineA
     thinkingBudget: 0,
     timeoutMs,
     temperature: 0.12,
+    reasoningEffort: "high",
+    applyReasoningEffortToGemini: true,
   });
 }
 
-function toAnalysisReportUsage(result: Awaited<ReturnType<typeof generateQuestionText>>): AnalysisReportUsage {
+function toAnalysisReportUsage(result: WorksheetTextResult): AnalysisReportUsage {
   return {
     usage: result.usage,
-    provider: result.provider,
-    modelId: result.modelId,
+    provider: result.provider ?? "",
+    modelId: result.modelId ?? "",
     durationMs: result.durationMs,
   };
 }

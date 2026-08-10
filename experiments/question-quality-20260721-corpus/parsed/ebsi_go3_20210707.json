@@ -1,0 +1,764 @@
+{
+ "examId": "ebsi_go3_20210707",
+ "source": "ebsi_go3_20210707_paper_eng_mun_1SHKJJ6G.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 다음을 듣고, 남자가 하는 말의 목적으로 가장 적절한 것을 고르시오. ① 학교 정원 관리 봉사자를 모집하려고 ② 식물원 체험 학습 일정을 공지하려고 ③ 봉사 활동 확인서 신청 방법을 안내하려고 ④ 학교 정원에 심을 모종 기부를 부탁하려고 ⑤ 정원의 잡초를 제거하는 요령을 설명하려고",
+   "choices": [
+    "학교 정원 관리 봉사자를 모집하려고",
+    "식물원 체험 학습 일정을 공지하려고",
+    "봉사 활동 확인서 신청 방법을 안내하려고",
+    "학교 정원에 심을 모종 기부를 부탁하려고",
+    "정원의 잡초를 제거하는 요령을 설명하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 174
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 여자의 의견으로 가장 적절한 것을 고르시오. ① 자신의 체력 수준에 맞게 운동 계획을 세우는 것이 좋다. ② 과도한 운동은 심리적 불안정을 초래할 수 있다. ③ 운동 일지 작성이 체력 관리에 도움이 된다. ④ 근력 운동과 유산소 운동을 병행하는 것이 유익하다. ⑤ 운",
+   "choices": [
+    "자신의 체력 수준에 맞게 운동 계획을 세우는 것이 좋다.",
+    "과도한 운동은 심리적 불안정을 초래할 수 있다.",
+    "운동 일지 작성이 체력 관리에 도움이 된다.",
+    "근력 운동과 유산소 운동을 병행하는 것이 유익하다.",
+    "운동 중 부상 예방을 위해 적절한 장비를 착용해야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 204
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 대화를 듣고, 두 사람의 관계를 가장 잘 나타낸 것을 고르시오. ① 기자 － 농업 연구원 ② 콜센터 직원 － 고객 ③ 방송 연출가 － 작가 ④ 홈 쇼핑 쇼 호스트 － 농부 ⑤ 식료품 가게 직원 － 조리사",
+   "choices": [
+    "기자 － 농업 연구원",
+    "콜센터 직원 － 고객",
+    "방송 연출가 － 작가",
+    "홈 쇼핑 쇼 호스트 － 농부",
+    "식료품 가게 직원 － 조리사"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 125
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고르시오.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 42
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 남자가 여자를 위해 할 일로 가장 적절한 것을 고르시오. ① 이미지 검색하기 ② 발표 대본 검토하기 ③ 면접 예상 질문 만들기 ④ 포트폴리오 우편 발송하기 ⑤ 발표 연습 영상 촬영하기",
+   "choices": [
+    "이미지 검색하기",
+    "발표 대본 검토하기",
+    "면접 예상 질문 만들기",
+    "포트폴리오 우편 발송하기",
+    "발표 연습 영상 촬영하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 122
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 여자가 지불할 금액을 고르시오. ① $30 ② $32 ③ $35 ④ $39 ⑤ $40",
+   "choices": [
+    "$30",
+    "$32",
+    "$35",
+    "$39",
+    "$40"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 68
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 남자가 연구 주제를 변경한 이유를 고르시오. ① 관련 데이터를 찾기 어려워서 ② 지도 교수를 구하지 못해서 ③ 희망하는 진로가 바뀌어서 ④ 연구 지원금을 확보하지 못해서 ⑤ 다른 학생과 연구 주제가 겹쳐서",
+   "choices": [
+    "관련 데이터를 찾기 어려워서",
+    "지도 교수를 구하지 못해서",
+    "희망하는 진로가 바뀌어서",
+    "연구 지원금을 확보하지 못해서",
+    "다른 학생과 연구 주제가 겹쳐서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 136
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, Mobile Throwing Championship에 관해 언급되지 않은 것을 고르시오. ① 최초 개최 연도 ② 개최 목적 ③ 참가비 ④ 우승 상품 ⑤ 심사 기준",
+   "choices": [
+    "최초 개최 연도",
+    "개최 목적",
+    "참가비",
+    "우승 상품",
+    "심사 기준"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 129
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 다음 표를 보면서 대화를 듣고, 두 사람이 주문할 휴대용 사진 인화기를 고르시오. Portable Photo Printers Model Price Power Bluetooth Connection Free Photo Paper (sheets) ① A $139 plug-in ☓ ② B",
+   "choices": [
+    "A\n$139\nplug-in\n☓",
+    "B\n$149\nbuilt-in battery\n◯",
+    "C\n$169\nbuilt-in battery\n◯",
+    "D\n$189\nbuilt-in battery\n☓",
+    "E\n$219\nplug-in\n◯"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 267
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 2021 International Violin Making Competition에 관한 다음 내용을 듣고, 일치하지 않는 것을 고르시오. ① 참가 신청서에 바이올린 사진을 첨부하여 제출해야 한다. ② 5월 1일까지 등록하면 등록비가 할인된다. ③ 바이올린을 우편으로 제출할 수 있",
+   "choices": [
+    "참가 신청서에 바이올린 사진을 첨부하여 제출해야 한다.",
+    "5월 1일까지 등록하면 등록비가 할인된다.",
+    "바이올린을 우편으로 제출할 수 있다.",
+    "유명 바이올린 연주자가 심사 위원에 포함된다.",
+    "우승자는 10,000유로를 받는다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 229
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ① Why don’t you put off visiting the doctor?",
+   "choices": [
+    "Why don’t you put off visiting the doctor?",
+    "Let’s ask David if we can reschedule.",
+    "How about inviting David to our club?",
+    "I’ll go to the bookstore without you both.",
+    "We should find a place for today’s meeting."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 279
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ① No worries. I’ve already got your file. ② Right. There’s no assignment today. ③ Sorry. Your file has been d",
+   "choices": [
+    "No worries. I’ve already got your file.",
+    "Right. There’s no assignment today.",
+    "Sorry. Your file has been deleted.",
+    "Yes. You can send it to me by email.",
+    "Sure. Try downloading it from our website.\n2021학년도 7월 고3 전국연합학력평가 문제지\n제3 교시\n고3"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 300
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. [3점] Woman: ① I’ll find out who directed them for you. ② I’ll give you a list of his best films then. ③ That’",
+   "choices": [
+    "I’ll find out who directed them for you.",
+    "I’ll give you a list of his best films then.",
+    "That’s why I prefer watching popular movies.",
+    "They didn’t leave a lasting impression on me.",
+    "You shouldn’t worry about getting bad reviews."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 365
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. [3점] Man: ① I see. I’ll take a break more often to increase concentration. ② Okay. I should avoid playing gam",
+   "choices": [
+    "I see. I’ll take a break more often to increase concentration.",
+    "Okay. I should avoid playing games during study breaks.",
+    "Certainly. You’ll enjoy playing mobile games, too.",
+    "All right. I’d rather study alone to prepare for my exam.",
+    "Interesting. I thought mobile games do more harm than good."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 427
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Nancy가 Jake에게 할 말로 가장 적절한 것을 고르시오. [3점] Nancy: ① We’d rather stay with our original design. ② Why don’t we design the poster by ourselves?",
+   "choices": [
+    "We’d rather stay with our original design.",
+    "Why don’t we design the poster by ourselves?",
+    "Don’t forget to apply for the contest this time.",
+    "How about going outdoors to take photos for a change?",
+    "We should ask your friends if it’s okay to use their photo.\n[16~17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 419
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 여자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "natural materials traditionally used for skincare",
+    "how to store natural skincare products properly",
+    "differences in the cultural perception of skincare",
+    "ways to prevent skin troubles caused by facial masks",
+    "examples of natural substances with harmful properties"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 307
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 나라가 아닌 것은?",
+   "choices": [
+    "India",
+    "Iran",
+    "Poland",
+    "China",
+    "Greece \n  이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시에 \n따라 답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 118
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "공연 관람권 가격 인상률에 이의를 제기하려고",
+    "지역 주민을 위한 공연장 건립을 제안하려고",
+    "자선 연극 공연 개최에 감사하려고",
+    "공연 관람료의 단체 할인 가능 여부를 문의하려고",
+    "공연 취소로 입은 손실에 대해 보상을 요구하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 949
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 드러난 Tavil의 심경으로 가장 적절한 것은?",
+   "choices": [
+    "bored and lonely",
+    "relieved and hopeful",
+    "thrilled and joyful",
+    "terrified and desperate",
+    "touched and grateful"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 823
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "원하는 바를 긍정문으로 생각하고 말하라.",
+    "창의력 향상을 위해 상상하는 연습을 하라.",
+    "일상 대화 시 명령조의 말투를 사용하지 마라.",
+    "자신이 하고 싶지 않은 일을 남에게 시키지 마라.",
+    "기대했던 결과가 바로 나오지 않더라도 포기하지 마라. \n고3"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1042
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 밑줄 친 innovation is a delicate and vulnerable flower, easily crushed underfoot이 다음 글에서 의미하는 바로 가장 적절한 것은?",
+   "choices": [
+    "Innovation comes from the need for solving deficiency.",
+    "Innovative people are usually very sensitive to criticism.",
+    "Innovation is often faced with disapproval and opposition.",
+    "A single misstep in planning could ruin innovation entirely.",
+    "Innovative ideas need a series of revision and refinement."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1211
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "친환경 농법이 자연에 해로운 경우도 있다.",
+    "식량 생산 증가가 인구 증가로 이어지지는 않는다.",
+    "생물 다양성이 높아지면서 생태계의 생산성도 높아졌다.",
+    "대규모 경작보다 소규모 경작이 농업 생산성에 유리하다.",
+    "농업 혁신이 식량 생산량을 늘리면서도 자연 훼손을 억제했다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1118
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "efforts to utilise volunteering as a business strategy",
+    "mistaken view of identifying volunteering with labour",
+    "obstacles to our understanding of the capitalist system",
+    "governmental endeavours to involve volunteers in public service",
+    "lack of appreciation for the economic significance of volunteering"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1479
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Customers May Not Know What’s Best for Them",
+    "Customer Silence Is Not Golden for Your Business",
+    "Dos and Don’ts of Processing Customer Complaints",
+    "Customer Service Improvement: No Laughing Matter",
+    "Empathy: A Key to Collecting Meaningful Consumer Feedback\n고3"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1281
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. 다음 도표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "Between 2016 and 2018, Norway held the highest \nsales volume of electric vehicles among these countries, but it \nwas outperformed by Germany in 2019.",
+    "The United \nKingdom ranked second in sales volume of electric vehicles \namong the five countries in 2016, but from 2017 to 2019 it \nranked third.",
+    "Germany’s sales volume rose between 2016 \nand 2019, and its sales volume in 2019 was more than five \ntimes that in 2016.",
+    "Despite its continual sales volume \nincrease since 2016, France recorded the lowest sales volume \namong these countries in 2019.",
+    "The Netherlands did not \nrecord a continuously increasing sales volume between 2016 \nand 2019, with a drop in 2017 compared to the previous year."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 848
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Waldemar Haffkine에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "Pasteur Institute에서 일한 적이 있다.",
+    "콜레라 백신을 자기 자신에게 시험했다.",
+    "Calcutta로 가서 자신의 백신을 소개했다.",
+    "은퇴 후 의학 저널에 글을 기고하지 않았다.",
+    "생애 마지막 2년 동안 스위스에 머물렀다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1296
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. 2021 Multicultural Festival에 관한 다음 안내문의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "수익금 전액은 지역 자선 단체에 기부될 것이다.",
+    "오후 시간대에 진행된다.",
+    "둘째 날에 전통 의상 패션쇼가 열린다.",
+    "주차 요금은 하루에 5달러이다.",
+    "날씨 상황에 따라 일부 행사가 취소될 수 있다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 863
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. The 5th Avila Yoga Summer Camp에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "참가자 연령에 제한이 있다.",
+    "저녁식사 비용은 참가비에 포함되어 있지 않다.",
+    "5명부터 단체 할인이 적용된다.",
+    "초급자를 위한 수업이 20개 있다.",
+    "참가자는 요가 매트를 가져와야 한다. \n고3"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 733
+  },
+  {
+   "qNum": 29,
+   "kind": "grammar_underline",
+   "stem": "29. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "selectively expose themselves to news",
+    "②": "avoid information that challenges those",
+    "③": "expressed counter to their own",
+    "④": "that consistently confirms their own",
+    "⑤": "believes they are correct and"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1092
+  },
+  {
+   "qNum": 30,
+   "kind": "vocab_underline",
+   "stem": "30. 다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "quantity of freight transported between",
+    "②": "modern container ship",
+    "③": "slow",
+    "④": "limited",
+    "⑤": "outdated modes of the preindustrial"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1321
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. Relatively undeveloped languages have no single word for plants. The lack of a term doesn’t mean they don’t perceive differences, and it doesn’t mean they d",
+   "choices": [
+    "category",
+    "history",
+    "mood",
+    "frequency",
+    "preference"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 984
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. Psychologists and neuroscientists warn that when we rely on technology to perform tasks such as navigation for us, as we become immersed instead in an abstr",
+   "choices": [
+    "we analyze information too thoroughly",
+    "our awareness of our physical environment fades",
+    "our knowledge of the real world is not shared with others",
+    "our ability to emotionally connect to others is lost",
+    "unskilled manual labor is not appreciated\n고3"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1164
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. The conventional view of what the state should do to foster innovation is simple: it just needs to get out of the way. At best, governments merely facilitat",
+   "choices": [
+    "involve the private sector in shaping economic policies",
+    "directly attempt to create and shape markets",
+    "regulate companies under any circumstances",
+    "take market failures into consideration",
+    "let the private sector drive innovation"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1273
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. The designer in the Age of Algorithms poses a threat to American jurisprudence because the algorithm is only as good as . The person designing the algorithm",
+   "choices": [
+    "the amount of data that the public can access",
+    "its capacity to teach itself to reach the best decisions",
+    "its potential to create a lasting profit for the algorithm users",
+    "the functionality of the hardware the designing company operates",
+    "the designer’s understanding of the intended use of the algorithm"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1429
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "For this reason, \nthe parenting experience isn’t one of parent versus child but \nof parent with child.",
+    "The road to wholeness sits in our \nchildren’s lap, and all we need do is take a seat.",
+    "As our \nchildren show us our way back to our own essence, they \nbecome our greatest awakeners.",
+    "This means that how \nmuch we pay attention to awakening our children’s minds \ncan make a difference in their lives.",
+    "If we fail to hold \ntheir hand and follow their lead as they guide us through \nthe gateway of increased consciousness, we lose the chance \nto walk toward our own enlightenment.\n[36~37] 주어진 글 다음에 이어질 글의 순서로 가장 \n적절한 것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 823
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. Regression fallacy is a mistake of causal reasoning due to the failure to consider how things fluctuate randomly, typically around some average condition. I",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n고3"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1177
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. There was a moment in research history when scientists wondered if the measure of choice ― total minutes of sleep ― was the wrong way of looking at the ques",
+   "choices": [
+    "(A) - (C) - (B)",
+    "(B) - (A) - (C)",
+    "(B) - (C) - (A)",
+    "(C) - (A) - (B)",
+    "(C) - (B) - (A)\n[38~39] 글의 흐름으로 보아, 주어진 문장이 들어가기에 \n가장 적절한 곳을 고르시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38~39"
+    ]
+   },
+   "charLen": 1360
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. Actually, it does, but there is more room for the moisture to be absorbed in these less densely packed areas before it shows. Why does the skin on the extremities wrinkle after a bath?",
+   "choices": [
+    ") The skin on the fingers, palms, toes, and \nsoles wrinkles only after it is soaked with water. (",
+    ") \nThe stratum corneum — the thick, dead, rough layer of the \nskin that protects us from the environment and that makes \nthe skin on our hands and feet tougher and thicker than that \non our stomachs or faces — expands when it soaks up water. \n(",
+    ") This expansion causes the wrinkling effect. (",
+    ") So \nwhy doesn’t the skin on other parts of the body also \nwrinkle when soaked? (",
+    ") One doctor we contacted said \nthat soldiers whose feet are submerged in wet boots for a \nlong period will exhibit wrinkling all over the covered area.  \n* extremities: 손발  ** submerge: (물에) 잠그다"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1023
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. This doesn’t happen when you encounter this action in isolation (‘The man threw the ball’). Whenever you perform a specific action (say, throwing a ball) yo",
+   "choices": [
+    ") \nInterestingly, whenever you imagine yourself performing this \nsame action, your brain fires off in almost the same pattern. \n(",
+    ") This is why mental rehearsal is such a prominent \ntechnique in sports training: the brain doesn’t draw a strict \ndistinction between the real and the imagined. (",
+    ") Here’s \nthe best bit: whenever you hear a story about a person \nperforming this same action (throwing a ball) your brain will \nfire off in almost the same pattern. (",
+    ") But as soon as \nit’s embedded within a narrative your brain will respond \nlargely as though you were performing the action. (",
+    ") \nThis means we do not simply listen to stories ― we \nexperience stories."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 886
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "escalated\n……  favored",
+    "stabilized \n……  replaced",
+    "increased\n……  devalued",
+    "declined\n……  alienated",
+    "diminished\n……  standardized\n고3\n[41~42] 다음 글을 읽고, 물음에 답하시오. \n  There is something about a printed photograph or \nnewspaper headline that makes the event it describes \nmore real than in any other form of news reporting. \nPerhaps this is because there is an undeniable reality to \nthe newspaper itself: it is a real material object. That \n(a) authenticity rubs off on the news. It can be pointed \nto, underlined, cut out, pinned on notice boards, stuck in \na scrapbook, or archived in libraries. The news \nbecomes an artifact, (b) frozen in time; the event may \nbe long gone, but it lives on as an indisputable fact \nbecause of its material presence ― even if it is untrue.\n  In contrast, news websites seem shortlived. Although they \ntoo are archived, there is no unique physical component to \npoint to as (c) evidence of the information they convey. For \nthis reason, there is a sense in which they can be more \neasily manipulated, and that history itself could be altered. \nAt the same time, it is precisely this immediacy and \n(d) rigidity of content that makes the digital media so \nexciting. The news website is in tune with an age that \nsees history as much less monolithic than previous eras \nonce did. Digital news websites are potentially much more \n(e) democratic, too, for while a physical newspaper requires \nhuge printing presses and a distribution network linking \ntrains, planes, trucks, shops, and ultimately newspaper \nsellers, in the digital world a single person can communicate \nwith the whole world with the aid of a single computer and \nwithout requiring a single tree to be cut down.\n                                            * archive: 보관하다"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2916
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "How Has Digital Media Pushed Out Printed Media?",
+    "Is Media Doing Good or Harm in Our Modern Society?",
+    "Realism in Media Is Not Necessarily Based on Real Facts",
+    "Digital World: Where Any of Us Can Create and Deliver News",
+    "Material Presence: What Differentiates Printed and Digital Media"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 323
+  },
+  {
+   "qNum": 42,
+   "kind": "vocab_letter",
+   "stem": "42. 밑줄 친 (a)～(e) 중에서 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {
+    "a": "his lifetime",
+    "b": "his award at the",
+    "c": "he is a man",
+    "d": "His memory will forever",
+    "e": "he fought to play"
+   },
+   "bracketChoices": {},
+   "charLen": 2379
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) - (D) - (C)",
+    "(C) - (B) - (D)",
+    "(C) - (D) - (B)",
+    "(D) - (B) - (C)",
+    "(D) - (C) - (B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 156
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a)~(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 76
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글에 관한 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "1967년에 Sayers와 Piccolo는 같은 팀 동료였다.",
+    "Sayers와 Piccolo는 원정 경기 때 같은 방을 썼다.",
+    "Sayers와 Piccolo는 뉴욕에서 열리는 행사에 함께 참석하려 했다.",
+    "Piccolo는 Sayers가 상을 받기 전 세상을 떠났다.",
+    "Piccolo는 암 투병 중 우울증을 겪었다. \n* 확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)했는지 확인\n하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 272
+  }
+ ],
+ "sourcePdf": "ebsi_go3_20210707_paper_eng_mun_1SHKJJ6G.pdf"
+}

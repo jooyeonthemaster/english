@@ -10,7 +10,14 @@ export const ATLAS_CLOUD_PROVIDER = "atlascloud" as const;
 
 const ATLAS_DEFAULT_BASE_URL = "https://openrouter.ai/api/v1";
 const GEMINI_FLASH_LITE_MODEL = "google/gemini-3.1-flash-lite";
-const GEMINI_FLASH_MODEL = "google/gemini-3.5-flash";
+// 26-07-27 유저 지시: "AI로 원문 복원"(크롭 복원·passage-restoration)은 3.5-flash-lite
+// 로 상향. 3.1-flash-lite 가 크롭 복원 JSON 키를 자유작명(rawText→ocrText)해 전건
+// EMPTY_OUTPUT 으로 죽던 장애의 모델 축 대응(스키마 강제는 crop-native 에서 별도).
+// 롤백은 env OPENROUTER_RESTORATION_MODEL=google/gemini-3.1-flash-lite.
+const GEMINI_FLASH_LITE_35_MODEL = "google/gemini-3.5-flash-lite";
+// 26-07-22 유저 지시: 광역 표준 모델 3.5-flash → 3.6-flash 전면 전환 (O213 벤치:
+// 3.6-flash 품질 압승). 롤백은 env OPENROUTER_STANDARD_MODEL=google/gemini-3.5-flash.
+const GEMINI_FLASH_MODEL = "google/gemini-3.6-flash";
 const CLAUDE_SONNET_MODEL = "anthropic/claude-sonnet-5";
 
 function readEnv(name: string): string | undefined {
@@ -40,7 +47,12 @@ export function normalizeAtlasModelId(modelId: string | undefined | null): strin
     return GEMINI_FLASH_LITE_MODEL;
   }
 
+  // 명시적 3.5-flash 핀(env 롤백용)은 기본값(3.6-flash)으로 흡수하지 않고 그대로 둔다.
   if (lower === "gemini-3.5-flash" || lower === "google/gemini-3.5-flash") {
+    return "google/gemini-3.5-flash";
+  }
+
+  if (lower === "gemini-3.6-flash" || lower === "google/gemini-3.6-flash") {
     return GEMINI_FLASH_MODEL;
   }
 
@@ -214,17 +226,34 @@ export const ATLAS_PREMIUM_MODEL_ID = resolveAtlasModel(
 );
 
 /**
- * 문제 생성(question generation) 전용 PREMIUM 모델 — 26-07-14 유저 확정 교체:
- * anthropic/claude-sonnet-5 → google/gemini-3.1-pro-preview. preview 만료/롤백에
- * 대비해 env PREMIUM_QGEN_MODEL_ID 로 오버라이드한다(어법 사다리의
- * GRAMMAR_PREMIUM_MODEL_ID 와 동일 패턴 — 그쪽은 자체 env·자체 modelId 라 별개).
+ * 문제 생성(question generation) 전용 PREMIUM 모델 — 26-07-20 차세대 이원 티어
+ * 전환(캠페인 O197~O201 3중 재현 확증): gemini-3.1-pro-preview → google/
+ * gemini-3-flash-preview. 프리미엄 풀 파이프라인(생성+E-gate 풀계약)을 flash3 로
+ * 돌렸을 때 실질 F 2.2%·77~81원·~100s 로 현행 grok(F 8%·105~158원·어법 데드라인
+ * 클램프)을 전면 대체한다. preview 만료/롤백에 대비해 env PREMIUM_QGEN_MODEL_ID
+ * 로 오버라이드한다(어법 사다리의 GRAMMAR_PREMIUM_MODEL_ID 와 동일 패턴 — 그쪽은
+ * 자체 env·자체 modelId 라 별개).
  * 다른 PREMIUM 소비자(exam-report·question-ai-edit·similar-exam-generation·
  * 지문분석 generateQuestionText 경로)는 ATLAS_PREMIUM_MODEL_ID(Claude)를 그대로
  * 쓴다 — 이 상수는 generateQuestionObject 의 PREMIUM 플랜 매핑 전용이다.
  */
 export const ATLAS_PREMIUM_QGEN_MODEL_ID = resolveAtlasModel(
   ["PREMIUM_QGEN_MODEL_ID"],
-  "google/gemini-3.1-pro-preview",
+  "google/gemini-3-flash-preview",
+);
+
+/**
+ * 문제 생성 전용 STANDARD 모델 (26-07-20 차세대 이원 티어, O201 S3i 확정 스펙:
+ * flash3 2콜(생성+통합 검수리)+결정형 게이트 = 콘텐츠성 F 0/46·38원·63s).
+ * ⚠️ ATLAS_STANDARD_MODEL_ID(OPENROUTER_STANDARD_MODEL)를 그대로 뒤집지 않는
+ * 이유: 그 상수는 튜터·웹툰 detect/review·지문분석·exam-report 등 문제 생성이
+ * 아닌 광역 소비자가 공유하는 노브라 방사 피해가 크다. 문제 생성의 STANDARD
+ * 플랜 매핑(QUESTION_GENERATION_MODEL_CONFIGS)만 이 상수를 쓴다.
+ * env STANDARD_QGEN_MODEL_ID 로 오버라이드(롤백: google/gemini-3.5-flash).
+ */
+export const ATLAS_STANDARD_QGEN_MODEL_ID = resolveAtlasModel(
+  ["STANDARD_QGEN_MODEL_ID"],
+  "google/gemini-3-flash-preview",
 );
 
 export const ATLAS_OCR_MODEL_ID = resolveAtlasModel(
@@ -234,7 +263,7 @@ export const ATLAS_OCR_MODEL_ID = resolveAtlasModel(
 
 export const ATLAS_RESTORATION_MODEL_ID = resolveAtlasModel(
   ["ATLASCLOUD_RESTORATION_MODEL", "OPENROUTER_RESTORATION_MODEL", "GEMINI_RESTORATION_MODEL"],
-  ATLAS_FREE_MODEL_ID,
+  GEMINI_FLASH_LITE_35_MODEL,
 );
 
 export const ATLAS_TRANSFORM_MODEL_ID = resolveAtlasModel(
@@ -245,6 +274,15 @@ export const ATLAS_TRANSFORM_MODEL_ID = resolveAtlasModel(
 export const ATLAS_VARIANT_MODEL_ID = resolveAtlasModel(
   ["ATLASCLOUD_VARIANT_MODEL", "OPENROUTER_VARIANT_MODEL", "GEMINI_VARIANT_MODEL"],
   ATLAS_FREE_MODEL_ID,
+);
+
+// AI 지문 생성 전용 모델. 변형(flash-lite)과 달리 3.6-flash 로 한 단계 올린다 —
+// 여기선 입력이 "어법 교재·단어장·외부 지문" 같은 잡다한 자료 묶음이고, 그걸
+// 읽어 새 지문을 처음부터 써야 해서 지시 준수·장문 일관성이 품질을 좌우한다
+// (O213 벤치: 3.6-flash 가 3.5-flash 대비 품질 압승 — 광역 표준값과 동일 근거).
+export const ATLAS_AUTHORING_MODEL_ID = resolveAtlasModel(
+  ["OPENROUTER_AUTHORING_MODEL", "PASSAGE_AUTHORING_MODEL"],
+  GEMINI_FLASH_MODEL,
 );
 
 export const ATLAS_TUTOR_MODEL_ID = resolveAtlasModel(

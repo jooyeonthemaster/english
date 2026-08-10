@@ -411,7 +411,7 @@ export const LANDING_ANALYSIS_REPORT: AnalysisReport = {
       },
       questions: [],
       workbookSet: {
-        title: "EBS 워크북 유형 훈련",
+        title: "유형별 워크북 훈련",
         topicGist: {
           title: "주제 / 요지",
           topicTitle: "A Love Too Large for One Dollar and Eighty-Seven Cents",

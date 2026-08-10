@@ -421,7 +421,7 @@ export function DraftGrid({
                     dragIds={groupIds}
                     onRenameSourceMaterial={onRenameSourceMaterial}
                   >
-                    <DragSelect
+                    <DragSelect deferCommit
                       className={`grid gap-3 ${
                         gridCols === "list" ? COL_CLASS.list : "grid-cols-1"
                       }`}
@@ -458,7 +458,7 @@ export function DraftGrid({
         ) : (
           (() => {
             const flatGrid = (
-              <DragSelect
+              <DragSelect deferCommit
                 className={`grid gap-3 pb-2 ${COL_CLASS[gridCols]}`}
                 value={checkedIds}
                 onChange={setCheckedIds}

@@ -12,6 +12,7 @@ import {
   normalizeQuestionGenerationPlan,
   sanitizeAiModelDisclosureText,
 } from "@/lib/question-generation-plans";
+import { StreamPreviewPane } from "@/app/(director)/director/workbench/generate/stream-preview-pane";
 import { useLearningGenerationItems } from "./learning-generation-context";
 
 type PassageListClientProps = ComponentProps<typeof PassageListClient>;
@@ -105,6 +106,14 @@ export function LearningListWithQueue(
                 spinIcon={analyzing}
                 showCheckbox={false}
                 planBadge={<PlanBadge plan={item.promptConfig.generationPlan} />}
+                // 실시간 생성 미리보기 — 문제 생성(md-stream)의 로딩 카드와 동일한
+                // 패널. 이 카드가 사용자가 실제로 보는 표면이라 여기 없으면
+                // 스트리밍이 "안 되는" 것처럼 보인다(26-07-25 실사고).
+                metaSlot={
+                  item.streamPreview ? (
+                    <StreamPreviewPane preview={item.streamPreview} />
+                  ) : undefined
+                }
               />
             );
           })}

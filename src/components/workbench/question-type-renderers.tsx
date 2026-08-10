@@ -61,6 +61,7 @@ import { formatVocabChoiceCorrectAnswer } from "@/lib/question-answer-display";
 import {
   formatInlineMarkersForSubtype,
   shouldRenderOptionListForSubtype,
+  stripAntonymOptionLabel,
   grammarMarkerDisplayLabel,
   circleGrammarLabelMentions,
   circleGrammarWrongOptionExplanations,
@@ -96,11 +97,17 @@ function SourcePassageBlock({
 }
 
 export function BlankInferenceRenderer({ q }: { q: BlankInferenceQuestion }) {
+  // 다중 빈칸(빈칸 2~3개) 조합 선지는 OptionList 가 (A)/(B)/(C) 컬럼 헤더
+  // 그리드로 렌더한다(저장 text 불변 — multiBlankOptionMatrix 공용 판정).
   return (
     <>
       <Direction text={q.direction} />
       <PassageBlock>{renderBlanks(q.passageWithBlank)}</PassageBlock>
-      <OptionList options={q.options} correctAnswer={q.correctAnswer} />
+      <OptionList
+        options={q.options}
+        correctAnswer={q.correctAnswer}
+        subType="BLANK_INFERENCE"
+      />
       <AnswerRevealSection>
         <AnswerLine answer={q.correctAnswer} />
         <ExplanationSection explanation={q.explanation} keyPoints={q.keyPoints} wrongOptionExplanations={q.wrongOptionExplanations} />
@@ -803,11 +810,18 @@ export function SynonymRenderer({ q }: { q: SynonymQuestion }) {
 }
 
 export function AntonymRenderer({ q }: { q: AntonymQuestion }) {
+  // 지문 밑줄 라벨은 수능 표준 ①~⑤ 로 표시하고(내부 저장 축은 (A)~(J) 유지),
+  // 선지 텍스트에 남은 "(A)" 접두는 벗긴다 — 선지 번호는 OptionList 가 붙인다.
+  const passage = formatInlineMarkersForSubtype(q.passageWithMarkers, "ANTONYM");
+  const options = q.options.map((opt) => ({
+    ...opt,
+    text: stripAntonymOptionLabel(opt.text),
+  }));
   return (
     <>
       <Direction text={q.direction} />
-      <PassageBlock>{renderPassageFormatted(q.passageWithMarkers)}</PassageBlock>
-      <OptionList options={q.options} correctAnswer={q.correctAnswer} />
+      <PassageBlock>{renderPassageFormatted(passage)}</PassageBlock>
+      <OptionList options={options} correctAnswer={q.correctAnswer} />
       <AnswerRevealSection>
         {q.markedWords && (
           <div className="rounded-lg bg-slate-50 border border-slate-200 p-3">
@@ -818,7 +832,9 @@ export function AntonymRenderer({ q }: { q: AntonymQuestion }) {
                   key={i}
                   className={`text-[12px] flex items-center gap-2 ${mw.isIncorrectPair ? "text-red-700" : ""}`}
                 >
-                  <span className="font-bold text-blue-600 w-6">{mw.label}</span>
+                  <span className="font-bold text-blue-600 w-6">
+                    {grammarMarkerDisplayLabel(mw.label)}
+                  </span>
                   <span className="text-slate-700">{mw.word}</span>
                   <span className="text-slate-400">--</span>
                   <span className={mw.isIncorrectPair ? "line-through" : "text-slate-700"}>{mw.antonym}</span>

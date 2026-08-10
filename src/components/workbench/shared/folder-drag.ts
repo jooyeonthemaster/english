@@ -28,9 +28,29 @@ export function folderDropCanDrop(
 }
 
 /**
+ * 범용 페이로드 id 추출 — `<type>Id` / `<type>Ids` 관례의 성문화(v3 D4-3).
+ * 다중 배열 키(`${idKey}s`, 예: studentIds)가 채워져 있으면 배열을, 없으면
+ * 단일 키(`idKey`) 값을 돌려준다. **신규 도메인은 특례 분기 없이 이 헬퍼만
+ * 쓴다** — 새 도메인 추가 = types.ts DragItemType 유니온 1줄 + FolderActions
+ * 5종 액션 파일 1개 + draggable payload 1곳(`{<type>Id, <type>Ids, type}`).
+ */
+export function folderDropItemIds(
+  data: Record<string, unknown>,
+  idKey: string,
+): string | string[] {
+  const plural = data[`${idKey}s`];
+  if (Array.isArray(plural) && plural.length > 0) return plural as string[];
+  return data[idKey] as string;
+}
+
+/**
  * 드롭된 드래그 페이로드에서 대상 아이템 id(들)를 꺼낸다. 다중(`draft-bulk`)이면
  * 배열(`draftIds`), 그 외엔 단일 키(`dragItemIdKey`) 값. 반환을 그대로 hook의
  * handleDragToFolder(string | string[])에 넘길 수 있다.
+ *
+ * questionIds/draftIds 특례 분기는 기존 도메인 페이로드의 역사적 계약이라 존치.
+ * 그 외 도메인은 말미의 범용 헬퍼(folderDropItemIds)로 위임된다 — 기존 도메인
+ * (passage/exam)은 복수형 키가 없거나 [자기 id] 단건이라 동작 변화가 없다.
  */
 export function folderDropItemId(
   data: Record<string, unknown>,
@@ -43,5 +63,5 @@ export function folderDropItemId(
   if (data.type === "draft-bulk" && Array.isArray(data.draftIds)) {
     return data.draftIds as string[];
   }
-  return data[dragItemIdKey] as string;
+  return folderDropItemIds(data, dragItemIdKey);
 }

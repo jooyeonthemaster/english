@@ -1,7 +1,7 @@
 "use client";
 
 // 학생 상세 허브 — 개요 탭 (재구축, 타입드).
-// 좌: 기본 정보·특이사항(인라인 편집)·접속 코드 / 우: 다가오는 과제·학습 리듬·
+// 좌: 기본 정보·특이사항(인라인 편집)·접속 코드 / 우: 진행 중 과제·학습 리듬·
 // 어법 스냅샷·최근 출결.
 
 import { useState, useTransition } from "react";
@@ -15,6 +15,7 @@ import type { StudentStudyTaskRow } from "@/lib/study-assignments/types";
 import { STUDY_KIND_META } from "@/lib/study-assignments/types";
 import { dDayLabel, seoulDayDiff } from "@/lib/study-assignments/status";
 import type { WeakConceptPreset } from "@/components/study-assignments/composer-grammar-spec";
+import { METRIC_LABELS } from "@/lib/wording/director-glossary";
 import { cn } from "@/lib/utils";
 import { OverviewActivityCard } from "./overview-activity-card";
 
@@ -34,9 +35,13 @@ export interface StudentHubStats {
   attendanceRate: number;
   recentAttendances: { id: string; date: string; status: string }[];
   streak: number;
-  /** 채점 완료 응시 평균 점수 — 응시 0건이면 표시 "—" */
-  averageScore: number;
-  examCount: number;
+  /**
+   * 평균 점수율(%) — 시험 탭과 동일 모집단(aggregateStudentExamHistory→
+   * summarize, M-10)의 확정 점수 평균. 확정 0건이면 null → 헤더 타일 "—".
+   */
+  examAvgScorePct: number | null;
+  /** 통합 응시 수(INTERNAL+EXTERNAL) — 0이면 헤더 타일 sub 미표기 */
+  examSittings: number;
 }
 
 export interface GrammarSnapshot {
@@ -192,8 +197,11 @@ export function StudentOverviewTab({
 
       {/* ── 우측 ── */}
       <div className="flex min-w-0 flex-col gap-4">
+        {/* N-22 — 모집단이 미완료 전체(기한 지남 포함)라 「다가오는」은 자기모순.
+            제목을 「진행 중 과제」로 완화(빈 상태 문구 「진행 중인 과제가
+            없습니다」와도 정합) — 행 분리안은 신설 섹션·신규 어휘 반경이 커 기각 */}
         <Card
-          title="다가오는 과제"
+          title="진행 중 과제"
           action={{ label: "과제 전체", onClick: () => onGoTab("tasks") }}
         >
           {pending.length === 0 ? (
@@ -292,7 +300,10 @@ export function StudentOverviewTab({
               </div>
               {grammar.weak.length > 0 ? (
                 <div>
-                  <p className="mb-1 text-[11px] font-semibold text-slate-400">취약 개념</p>
+                  {/* 「취약」 강사 노출 대체어(D6-1) — METRIC_LABELS.WEAK 소비 */}
+                  <p className="mb-1 text-[11px] font-semibold text-slate-400">
+                    {METRIC_LABELS.WEAK} 개념
+                  </p>
                   <div className="flex flex-wrap gap-1.5">
                     {grammar.weak.map((w) => (
                       <span

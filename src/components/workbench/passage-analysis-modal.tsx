@@ -5,6 +5,7 @@ import {
   X,
   FileText,
   CheckCircle2,
+  Copy,
   Loader2,
   Trash2,
   RefreshCw,
@@ -249,7 +250,11 @@ export function PassageAnalysisModal({
   useEffect(() => {
     if (!open) return;
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") closeGuard.requestClose();
+      if (e.key !== "Escape") return;
+      // 편집기가 띄운 중첩 다이얼로그('다른 이름으로 저장' 등)가 열려 있으면
+      // Esc 는 그쪽 몫이다 — 여기서 모달 닫기 가드까지 트리거하면 안 된다.
+      if (document.querySelector('[data-slot="dialog-content"]')) return;
+      closeGuard.requestClose();
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
@@ -560,11 +565,23 @@ export function PassageAnalysisModal({
                       <span aria-hidden="true" className="mx-0.5 h-5 w-px shrink-0 self-center bg-slate-200" />
                     </>
                   ) : null}
+                  {/* 저장 + 캐럿(다른 이름으로 저장). 사본 저장 중에도 스피너가 돌게
+                      savingAs 를 saving 에 합류시킨다 — 이중 제출도 함께 막힌다.
+                      다이얼로그·POST·토스트는 편집기가 소유하므로 여기선 콜백만 연결. */}
                   <SaveButton
                     onClick={editorToolbar.save}
-                    saving={editorToolbar.saving}
+                    saving={editorToolbar.saving || editorToolbar.savingAs}
                     disabled={!editorToolbar.dirty}
                     iconOnly
+                    title="저장"
+                    secondaryActions={[
+                      {
+                        label: "다른 이름으로 저장",
+                        icon: <Copy className="h-3.5 w-3.5" />,
+                        onClick: editorToolbar.requestSaveAs,
+                        disabled: editorToolbar.savingAs,
+                      },
+                    ]}
                   />
                   <button
                     type="button"

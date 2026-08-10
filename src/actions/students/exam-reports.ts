@@ -132,6 +132,6 @@ export async function listStudentExamReports(
     };
   } catch (error) {
     console.error("[students] listStudentExamReports", error);
-    return { success: false, error: "시험 리포트 조회에 실패했습니다." };
+    return { success: false, error: "내신 리포트 조회에 실패했습니다." };
   }
 }

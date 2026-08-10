@@ -9,10 +9,10 @@ import { findVocabularyInlineMatches } from "./vocabulary";
 export function passageSectionFlow(section: Extract<AnalysisSection, { kind: "passage" }>, ctx: SectionFlowCtx): void {
   const { si, editable, commit, push, options } = ctx;
 const s = section;
-      const study = collectPassageStudyNotes(options?.allSections ?? [s], s.sentences);
-      const keywords = (s.keywords ?? []).filter((k) => k.trim().length > 1);
-
       // ── 깔끔한 원문 + 해석 (필기 없음) ──
+      // ⚠️ study/keywords 계산보다 **위**에 둔다. clean 패스는 둘 다 한 번도 읽지 않는다
+      //    (keywords={[]} 로 고정, vocabNotes 미사용). 예전에는 이 위에서 매번
+      //    collectPassageStudyNotes 를 돌려 결과를 통째로 버렸다(= reportFlowItems 비용의 31%).
       if (options?.passageRenderMode === "clean") {
         // 클린 모드: 핵심 어휘 밑줄/범례를 표시하지 않는다 (원문은 깔끔하게 유지).
         s.sentences.forEach((sentence, sentenceIndex) => {
@@ -34,6 +34,12 @@ const s = section;
         });
         return;
       }
+
+      // 여기서부터(HLC 캔버스 / legacy 스택 카드)만 study 가 필요하다.
+      // options.study = assemble 이 1회 계산해 주입한 값(clean/annotated 공유 + 섹션 캐시 키).
+      // 주입이 없으면(읽기전용 소비자·지문이 둘 이상인 문서) 기존과 동일하게 직접 계산한다.
+      const study = options?.study ?? collectPassageStudyNotes(options?.allSections ?? [s], s.sentences);
+      const keywords = (s.keywords ?? []).filter((k) => k.trim().length > 1);
 
       // ── 신규 필기 캔버스 (HLC) ──
       if ((options?.passageLayout ?? "hlc") !== "legacy") {

@@ -1,0 +1,747 @@
+{
+ "examId": "2026_09_5091403",
+ "source": "6cd1db25e370c6613afcb21e086eead5.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 다음을 듣고, 여자가 하는 말의 목적으로 가장 적절한 것을 고르시오. ①스마트 워치 특별 할인 행사를 안내하려고 ②스마트 워치 수리 신청 절차를 알려주려고 ③사은품 증정 행사 당첨자를 발표하려고 ④스마트 워치 사용 방법을 소개하려고 ⑤신상품 출시 연기를 공지하려고",
+   "choices": [
+    "스마트 워치 특별 할인 행사를 안내하려고",
+    "스마트 워치 수리 신청 절차를 알려주려고",
+    "사은품 증정 행사 당첨자를 발표하려고",
+    "스마트 워치 사용 방법을 소개하려고",
+    "신상품 출시 연기를 공지하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 152
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 남자의 의견으로 가장 적절한 것을 고르시오. ①규칙적인 달리기로 일상생활에서 스트레스를 줄일 수 있다. ②달리면서 빠른 박자의 음악을 들으면 더 오래 달릴 수 있다. ③다양한 장르의 음악 듣기로 건강한 삶을 유지할 수 있다. ④공공장소에서는 음악을 이어폰으로 들어야 ",
+   "choices": [
+    "규칙적인 달리기로 일상생활에서 스트레스를 줄일 수 있다.",
+    "달리면서 빠른 박자의 음악을 들으면 더 오래 달릴 수 있다.",
+    "다양한 장르의 음악 듣기로 건강한 삶을 유지할 수 있다.",
+    "공공장소에서는 음악을 이어폰으로 들어야 한다.",
+    "달리기를 지속하기 위해 목표 설정을 해야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 192
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을 듣고, 여자가 하는 말의 요지로 가장 적절한 것을 고르시오. ①패션은 자신의 가치관을 표현하는 수단이다. ②대화할 때 상대방의 표정에 집중하는 것이 필요하다. ③상대방의 패션에 대해 좋은 점을 말하면 대화를 시작하기 좋다. ④대화는 서로에 대한 고정 관념을 해소하는 데 효과",
+   "choices": [
+    "패션은 자신의 가치관을 표현하는 수단이다.",
+    "대화할 때 상대방의 표정에 집중하는 것이 필요하다.",
+    "상대방의 패션에 대해 좋은 점을 말하면 대화를 시작하기 좋다.",
+    "대화는 서로에 대한 고정 관념을 해소하는 데 효과적이다.",
+    "기술 혁신은 패션의 변화에 중요한 영향을 미친다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 194
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고르시오.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 41
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 남자가 할 일로 가장 적절한 것을 고르시오. ①호텔 예약 확인하기 ②배 탑승권 구매하기 ③고객 요청 사항 정리하기 ④현지 관광 가이드 연락하기 ⑤선물 주문하기",
+   "choices": [
+    "호텔 예약 확인하기",
+    "배 탑승권 구매하기",
+    "고객 요청 사항 정리하기",
+    "현지 관광 가이드 연락하기",
+    "선물 주문하기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 100
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 여자가 지불할 금액을 고르시오. ①$55 ②$60 ③$70 ④$75 ⑤$80",
+   "choices": [
+    "$55",
+    "$60",
+    "$70",
+    "$75",
+    "$80"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 54
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 남자가 Fly Your Paper Airplane Competition에 참가할 수 없는 이유를 고르시오. ①콘서트에 가야 해서 ②축구 경기를 해야 해서 ③봉사 활동에 참여해야 해서 ④생물학 보고서를 끝내야 해서 ⑤커뮤니티 센터 특강을 들어야 해서",
+   "choices": [
+    "콘서트에 가야 해서",
+    "축구 경기를 해야 해서",
+    "봉사 활동에 참여해야 해서",
+    "생물학 보고서를 끝내야 해서",
+    "커뮤니티 센터 특강을 들어야 해서"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 151
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, Bookscape Outdoor Library 행사에 관해 언급되지 않은 것을 고르시오. ①목적 ②장소 ③대여 물품 ④참가비 ⑤신청 방법",
+   "choices": [
+    "목적",
+    "장소",
+    "대여 물품",
+    "참가비",
+    "신청 방법"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 89
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. Evergreen Garden Festival에 관한 다음 내용을 듣고, 일치하지 않는 것을 고르시오. ①9월 13일에 시작할 것이다. ②Rubyflower Park에서 열릴 것이다. ③정원들 중 세 개는 지역 시민들이 설계하였다. ④정원을 가꾸는 도구를 판매하는 시장이 있을 것이",
+   "choices": [
+    "9월 13일에 시작할 것이다.",
+    "Rubyflower Park에서 열릴 것이다.",
+    "정원들 중 세 개는 지역 시민들이 설계하였다.",
+    "정원을 가꾸는 도구를 판매하는 시장이 있을 것이다.",
+    "비가 오면 취소될 것이다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 180
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 다음 표를 보면서 대화를 듣고, 여자가 구입할 스포츠 가방을 고르시오. Sports Bags Model Price Size Number of Pockets Water-resistant ① A $40 Small ☓ ② B $45 Medium ☓ ③ C $50 Large ◯ ④ D ",
+   "choices": [
+    "A\n$40\nSmall\n☓",
+    "B\n$45\nMedium\n☓",
+    "C\n$50\nLarge\n◯",
+    "D\n$55\nMedium\n◯",
+    "E\n$65\nLarge\n◯"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 192
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. [3점] ①You should’ve come here last month. ②Sure. You can’t have any food after 9 p.m. ③There’s no available s",
+   "choices": [
+    "You should’ve come here last month.",
+    "Sure. You can’t have any food after 9 p.m.",
+    "There’s no available spot for your checkup.",
+    "Yes. I’ll let you know the checkup result soon.",
+    "I see. Stopping eating after 6 p.m. is a good habit."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 286
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ①Okay. I’ll be at the airport when you arrive. ②Of course. My car will be fixed by then. ③All right. Let’s go",
+   "choices": [
+    "Okay. I’ll be at the airport when you arrive.",
+    "Of course. My car will be fixed by then.",
+    "All right. Let’s go on a trip together.",
+    "Never mind. My flight has been canceled.",
+    "I know. I wish I could find a new coffee table.\n2026학년도 대학수학능력시험 9월 모의평가 문제지\n제3 교시"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 308
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. Woman: ①No problem. I’ve found better postings for you. ②That’s too bad. I’ll help you to upload the video. ③",
+   "choices": [
+    "No problem. I’ve found better postings for you.",
+    "That’s too bad. I’ll help you to upload the video.",
+    "I agree. It’s good to subscribe to many channels.",
+    "Good idea. You should check your subscribers daily.",
+    "Thanks for your advice. I guess I’d better post more often."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 325
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. [3점] Man: ①Why not?",
+   "choices": [
+    "Why not? You can change your schedule.",
+    "For sure. I’d rather buy a new bicycle today.",
+    "Oh, really? I’m going to remove the bike right now.",
+    "Remember you should always watch out for fires.",
+    "Sorry to hear that the fire drill was canceled."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 300
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Jake가 Rachel에게 할 말로 가장 적절한 것을 고르시오. [3점] Jake: ①You need to buy a new phone for your grandmother. ②Why don’t you follow the recipes when cooking them?",
+   "choices": [
+    "You need to buy a new phone for your grandmother.",
+    "Why don’t you follow the recipes when cooking them?",
+    "Let’s add some new photos of dishes to your recipe book.",
+    "Consider publishing a book of your grandmother’s recipes.",
+    "How about taking pictures of them to keep on your phone?\n[16～17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 371
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 남자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "how the human body changed over time",
+    "comparison of human and animal bodies",
+    "why balance is important for the human body",
+    "relationship between human body shape and health",
+    "role of nutrients in the development of the human body"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 257
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 신체 부위가 아닌 것은?",
+   "choices": [
+    "jaws",
+    "necks",
+    "hands",
+    "legs",
+    "heels"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 55
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "여름 프로그램 참여 동기를 조사하려고",
+    "여름 프로그램 장소 변경을 알리려고",
+    "새로운 여름 프로그램을 홍보하려고",
+    "여름 프로그램 강사를 섭외하려고",
+    "여름 프로그램 취소를 통보하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 816
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 드러난 Sierra의 심경 변화로 가장 적절한 것은?",
+   "choices": [
+    "angry\n→calm",
+    "frustrated →bored",
+    "nervous →delighted",
+    "relieved\n→surprised",
+    "thrilled →panicked"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 741
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "생산성 향상을 위해 기업은 직원 윤리 교육을 주기적으로 시행해야 한다.",
+    "기업은 행동 수칙에 대한 명확한 규정을 마련하여 직원을 교육해야 한다.",
+    "직원의 비윤리적 행위 예방을 위해 기업은 상벌 규정을 정비해야 한다.",
+    "근무 성과에 따른 보상을 통해 기업은 우수 직원의 이탈을 막아야 한다.",
+    "기업은 직원에 대한 공정한 평가를 위해 동료 평가를 실시해야 한다.\n  이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시에 \n따라 답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1078
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 밑줄 친 come back home again이 다음 글에서 의미하는 바로 가장 적절한 것은?",
+   "choices": [
+    "identified tonal differences within the same octave",
+    "returned to the original note with an identical frequency",
+    "reached a note named the same but with a different pitch",
+    "restored musical sensitivity by adapting to various octaves",
+    "constructed frequency patterns from notes with the same name"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1474
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "소셜 미디어를 통한 관계망의 확장은 중요한 사회적 자본이 된다.",
+    "사회적 규범과 가치를 공유하는 것이 인간관계 형성의 기반이다.",
+    "뉴 미디어의 등장은 사회적 자본 형성의 방식을 변화시킨다.",
+    "다양한 인적 자본 구축은 소셜 미디어 활동에 필수적이다.",
+    "사회적 경험은 인격 함양과 세계관 확장에 도움이 된다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1111
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "role of personal memories in different types of life storytelling",
+    "advantages of documenting evidence-based family histories",
+    "influence of the source types on the quality of life narratives",
+    "similarity of data sources in describing a person’s life",
+    "crucial conditions for the success of life narrators"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1452
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "How to Gain Religious and Social Benefits from Monastery Life",
+    "Why the Middle Ages Demanded Religious Figures Be Isolated",
+    "The Grace of Solitude: Detached from but Attached to Society",
+    "No Sacrificial Leaders, No Flowering of Civilization",
+    "Mystery of Power: The Politics of Peace and Solitude"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1440
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. 다음 도표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "Of all the above categories, \npeople from each age group tended to read online reviews the \nmost, by percentage, before buying electronics.",
+    "The age \ngroup least likely to read online reviews before buying a car \nwas the 18—34 age group.",
+    "The percentage of people in the \n35—54 age group using online reviews before making purchases \nof household appliances was more than twice that of people in \nthe same age group using online reviews before purchasing \nclothes.",
+    "For people who read online reviews before purchasing \nhousehold appliances, the percentage of people aged 35—54 \nwas higher than that of those aged 18—34 and lower than that \nof those aged 55+.",
+    "The percentage of people reading online \nreviews before buying clothes was less than 30% for each of \nthe three age groups."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 961
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Claude Shannon에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "어렸을 때 전기기기에 관심이 있었다.",
+    "스물한 살에 전기공학 석사과정을 시작했다.",
+    "제2차 세계대전 때 독일 로켓의 파괴에 도움이 되는 기계를 발명했다.",
+    "스스로 학습할 수 있는 기계를 1950년에 만들었다.",
+    "MIT에서 20년 이상 교수로 재직 후 1958년에 퇴임했다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1150
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. Wabut Jungle Yoga에 관한 다음 안내문의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "많은 여행자들이 매년 다시 참여한다.",
+    "정글에서의 조류 관찰이 포함된다.",
+    "방갈로 안에 개인 화장실이 있다.",
+    "신청서를 온라인으로 작성해야 한다.",
+    "교통편이 공항에서 요가 센터까지 제공된다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 812
+  },
+  {
+   "qNum": 28,
+   "kind": "mc",
+   "stem": "28. Under the Sea Mascot Contest에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "심사 기간은 9월 15일부터 10월 15일까지이다.",
+    "2등은 두 명 선발된다.",
+    "참가비가 있다.",
+    "각 참가자는 마스코트 디자인을 두 개 이상 제출해야 한다.",
+    "평가 기준에서 창의성이 가장 높은 비중을 차지한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 818
+  },
+  {
+   "qNum": 29,
+   "kind": "grammar_underline",
+   "stem": "29. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "referred to as",
+    "②": "which honeys from various sources",
+    "③": "strong",
+    "④": "feel the need to guarantee",
+    "⑤": "its mild flavour and taste"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1067
+  },
+  {
+   "qNum": 30,
+   "kind": "vocab_underline",
+   "stem": "30. 다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": 3,
+   "markers": {
+    "①": "remove the tree and restore",
+    "②": "permanently in the landscape",
+    "③": "create a superhighway that removes",
+    "④": "modesty with respect to what",
+    "⑤": "insignificant until proven otherwise"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1241
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. We know that animals have evolved a variety of patterns to manipulate the perceptions of their predators to afford themselves a modicum of safety. Greater B",
+   "choices": [
+    "genetic variations",
+    "perceptual biases",
+    "vocal attractiveness",
+    "decorating skills",
+    "locational advantages"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1039
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. Although empathy is widely praised by scholars and public figures, not everyone is an empathy booster. Critics of empathy argue that empathy will not save u",
+   "choices": [
+    "underestimates the invisible conflicts possible within a group",
+    "is triggered by the need for solutions to emotional conflicts",
+    "is often counterproductive in cases of conflict",
+    "functions as a facilitator in the resolution of social disharmony",
+    "raises questions about negative attitudes toward social disharmony"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1486
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. Compared to other ecosystems, forests are relatively diverse, but this should not necessarily be . Wetlands, meadows, and grasslands have a unique biota too",
+   "choices": [
+    "grounds for investigating the value of forest expansion",
+    "a basis for extending institutional aid to entire ecosystems",
+    "taken as the reason for introducing exotic species to an ecosystem",
+    "accepted as evidence for increasing ecological enrichment",
+    "a justification for converting nonforests into forests"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1411
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. When gathering the preferences of multiple agents into one collective choice, it is easily seen that certain cases . For example, if there are two alternati",
+   "choices": [
+    "call for randomization or other means of tiebreaking",
+    "demonstrate how impartial selection could be invalidated",
+    "necessitate deterministic systems of selecting voters blindly",
+    "rely upon neutral agents to establish clear selection guidelines",
+    "require understanding of the unpredictability inherent in democracy"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1435
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "Having a \ndiverse network of mentors is important for dominant and \nminority group members alike.",
+    "Minority group members \nneed diverse mentors so that they can gain insight into what it \nmeans to be employed by a particular organization or in a \nparticular field or profession.",
+    "Majority workers benefit by \nhaving a network of diverse mentors because it increases their \nunderstanding and sensitivity to the unique realities of diverse \nworkers and their own identity, and perhaps even their own \nforms of privilege.",
+    "Mentoring has been typically required and \npraised as an essential component in the personal development of \nemployers.",
+    "The ultimate goal of these mentoring opportunities \nis to have individuals be more informed, identified, and engaged \nin their work and in their organization.\n* privilege: 특권\n[36～37] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 \n것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1131
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. Traditionally, when teachers teach writing, they assign topics for students to write on; perhaps they do a bit of brainstorming about the topic during a pre",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1154
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. Perhaps at some point you have seen some mathematical writing and not understood it. (A) The complicated notations that might spring to mind ― all those str",
+   "choices": [],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "B": [
+     "38～39"
+    ]
+   },
+   "charLen": 1094
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. As winter approaches, the length of the day shortens, the temperature drops, and plants, including trees, can detect this change. It is worth pointing out t",
+   "choices": [
+    ") It would risk \ndamage from strong winter winds and would lose more water \nfrom its leaves than it could draw up from the frozen ground. \n(",
+    ") If it didn’t blow over, it would die of thirst. (",
+    ") It \nsignals to them that it is time to lose their leaves. (",
+    ") First, \nhowever, trees carefully suck all of the useful nutrients out of \nthe leaves and then, with surgical precision, block up that \npathway into the leaves. (",
+    ") That blocked pathway at the \nbase of the leaf stem creates a weakness and, in the wind, the \nleaves snap off and fall to the ground.\n* senescence: 노화"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1008
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. The problem of survival lies at the root of many of the historian’s problems, for what has survived may not necessarily be more significant than what has no",
+   "choices": [
+    ") Our picture of any period of history is \nderived from a multitude of sources, such as the paintings, \nliterature, deeds, buildings and other artefacts that have survived. \n(",
+    ") The Egyptian pyramids have survived thousands of \nyears, but historical significance is not just a question of \ndurability. (",
+    ") These buildings were part of a rich and \ndiverse culture, much of which has been lost. (",
+    ") They are \nhistorical facts, but facts by themselves, even such massive \nfacts as the pyramids, are just the first stage in any historical \nstudy, and until they have been evaluated, placed in context \nand interpreted, they tell us little. (",
+    ") Different historians \nmay place different values on the same facts, and the discovery \nof new evidence may modify or change existing theories and \ninterpretations. [3점]"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1250
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "resurface ……simplification",
+    "endure ……degradation",
+    "fade\n……variation",
+    "feature……transformation",
+    "disappear……fossilization\n[41～42] 다음 글을 읽고, 물음에 답하시오.\nWhile social presence has evolved through many iterations \nsince its first development within the context of the landline \ntelephone, the perception or feeling of being connected with \nthe other person within the context of the conversation has \npersisted. Some research has explored specific technologies \nand the extent to which their characteristics lead to a feeling \nof social presence. For example, some researchers have \nstudied the “richness” of the media, or the (a) number of \ncues available to convey social presence. A telephone call, \nwhich provides for audio cues and immediate feedback, is \npotentially (b) richer than an email, which provides only textual \ncues and no immediate feedback. Videoconferencing would \nbe considered richer than the phone because of the addition \nof (c) visual cues, making it closer to replicating a perceived \ngold standard of face-to-face, in-person social presence. \nResearchers have suggested that successful managers \nwould choose rich media for confusing or ambiguous messages \nand lean or less rich media for messages that were (d) less \nroutine in nature. For example, if you wanted to discuss a \ncomplicated client agreement, it would be best to choose \na (e) face-to-face meeting. In contrast, if you were going to \ninform your team about a change in meeting time from 3:00 \nto 3:30, you might send out a generic email to everyone. \nThese different channels of communication were considered \nby researchers as a type of container that the message comes \nin. To be a good communicator, you need to choose the right \ncontainer.\n* iteration: 반복\n** generic: 일반적인"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 3108
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Which Channel Is What Matters in Successful Communication",
+    "Cutting-edge Containers for Effective Social Communication",
+    "Immediate Feedback: A Royal Road to Successful Management",
+    "How Has Social Presence Evolved with Social Channels?",
+    "The Richer, the Better! Top Priority in Container Choice"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 315
+  },
+  {
+   "qNum": 42,
+   "kind": "vocab_letter",
+   "stem": "42. 밑줄 친 (a)～(e) 중에서 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {
+    "a": "you want to go",
+    "b": "He knew this was",
+    "c": "your favorite player",
+    "d": "his attention",
+    "e": "He tightly held the"
+   },
+   "bracketChoices": {},
+   "charLen": 2089
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 140
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a)～(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 70
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글에 관한 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "Mike의 아빠는 평소보다 일찍 집에 왔다.",
+    "Mike가 가장 좋아하는 팀은 홈런을 치지 못했다.",
+    "경기장이 Arrows 셔츠를 입은 사람들로 가득했다.",
+    "Chavez가 친 공은 관중석으로 날아갔다.",
+    "Arrows가 득점할 때마다 Mike와 아빠는 하이파이브를 했다.\n* 확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)했는지 확인\n하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 227
+  }
+ ],
+ "sourcePdf": "6cd1db25e370c6613afcb21e086eead5.pdf",
+ "fileName": "영어영역_문제지.pdf"
+}

@@ -1,0 +1,765 @@
+{
+ "examId": "2017_06_5005813",
+ "source": "259ffec72724d5fc25c99cec7c747be9.pdf",
+ "questions": [
+  {
+   "qNum": 1,
+   "kind": "mc",
+   "stem": "1. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. ①Actually, Mom’s not here. ②Yes, he’s coming home soon. ③Right. I won’t go to the party. ④No, we didn’t order ",
+   "choices": [
+    "Actually, Mom’s not here.",
+    "Yes, he’s coming home soon.",
+    "Right. I won’t go to the party.",
+    "No, we didn’t order the gift yet.",
+    "Great. Let’s buy one at the store."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 211
+  },
+  {
+   "qNum": 2,
+   "kind": "mc",
+   "stem": "2. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. ①Okay. I’ll never be late for class again. ②Right. You’ve got lots of time to finish. ③Really?",
+   "choices": [
+    "Okay. I’ll never be late for class again.",
+    "Right. You’ve got lots of time to finish.",
+    "Really? I’d better get started right away.",
+    "What? I’ve already written up the report.",
+    "I see. I hope you can finish yours by tomorrow."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 273
+  },
+  {
+   "qNum": 3,
+   "kind": "mc",
+   "stem": "3. 다음을 듣고, 남자가 하는 말의 목적으로 가장 적절한 것을 고르시오. ①학생회장 선거를 홍보하려고 ②교통 봉사 참여를 독려하려고 ③무단 횡단 자제를 당부하려고 ④안전 교육 일정을 안내하려고 ⑤주차 문제 해결을 촉구하려고",
+   "choices": [
+    "학생회장 선거를 홍보하려고",
+    "교통 봉사 참여를 독려하려고",
+    "무단 횡단 자제를 당부하려고",
+    "안전 교육 일정을 안내하려고",
+    "주차 문제 해결을 촉구하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 127
+  },
+  {
+   "qNum": 4,
+   "kind": "mc",
+   "stem": "4. 대화를 듣고, 두 사람이 하는 말의 주제로 가장 적절한 것을 고르시오. ①점심시간 중 여가 활동의 장점 ②직장 동료들과 잘 지내는 방법 ③스트레스 해소와 건강과의 관계 ④독서가 정신 건강에 미치는 효과 ⑤밴드 공연 시 악기 구성의 중요성",
+   "choices": [
+    "점심시간 중 여가 활동의 장점",
+    "직장 동료들과 잘 지내는 방법",
+    "스트레스 해소와 건강과의 관계",
+    "독서가 정신 건강에 미치는 효과",
+    "밴드 공연 시 악기 구성의 중요성"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 137
+  },
+  {
+   "qNum": 5,
+   "kind": "mc",
+   "stem": "5. 대화를 듣고, 두 사람의 관계를 가장 잘 나타낸 것을 고르시오. ①아나운서－리포터 ②출판업자－소설가 ③신문 편집자－만화가 ④잡지 기자－문학 비평가 ⑤영화 제작자－시나리오 작가",
+   "choices": [
+    "아나운서－리포터",
+    "출판업자－소설가",
+    "신문 편집자－만화가",
+    "잡지 기자－문학 비평가",
+    "영화 제작자－시나리오 작가"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 101
+  },
+  {
+   "qNum": 6,
+   "kind": "mc",
+   "stem": "6. 대화를 듣고, 그림에서 대화의 내용과 일치하지 않는 것을 고르시오.",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 42
+  },
+  {
+   "qNum": 7,
+   "kind": "mc",
+   "stem": "7. 대화를 듣고, 여자가 남자에게 부탁한 일로 가장 적절한 것을 고르시오. ① 예약 날짜 변경하기 ② 할인 쿠폰 출력하기 ③ 레스토랑 예약하기 ④ 기념사진 촬영하기 ⑤ 저녁상 차리기",
+   "choices": [
+    "예약 날짜 변경하기",
+    "할인 쿠폰 출력하기",
+    "레스토랑 예약하기",
+    "기념사진 촬영하기",
+    "저녁상 차리기"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 104
+  },
+  {
+   "qNum": 8,
+   "kind": "mc",
+   "stem": "8. 대화를 듣고, 남자가 조퇴하려는 이유를 고르시오. ① 운전면허 시험에 응시하려고 ② 동생을 집에 데려다 주려고 ③ 부모님 댁을 방문하려고 ④ 병원 진료를 받으려고 ⑤ 워크숍에 참석하려고",
+   "choices": [
+    "운전면허 시험에 응시하려고",
+    "동생을 집에 데려다 주려고",
+    "부모님 댁을 방문하려고",
+    "병원 진료를 받으려고",
+    "워크숍에 참석하려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 107
+  },
+  {
+   "qNum": 9,
+   "kind": "mc",
+   "stem": "9. 대화를 듣고, 여자가 지불할 금액을 고르시오. ① $270 ② $290 ③ $300 ④ $320 ⑤ $360",
+   "choices": [
+    "$270",
+    "$290",
+    "$300",
+    "$320",
+    "$360"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 64
+  },
+  {
+   "qNum": 10,
+   "kind": "mc",
+   "stem": "10. 대화를 듣고, Sunrise Korean Folk Village 관광에 관해 두 사람이 언급하지 않은 것을 고르시오. [3점] ① 체험 활동 내용 ② 참가 비용 ③ 식사 포함 여부 ④ 참가 인원수 ⑤ 소요 시간",
+   "choices": [
+    "체험 활동 내용",
+    "참가 비용",
+    "식사 포함 여부",
+    "참가 인원수",
+    "소요 시간"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 123
+  },
+  {
+   "qNum": 11,
+   "kind": "mc",
+   "stem": "11. Pine Tree Family Park에 관한 다음 내용을 듣고, 일치하지 않는 것을 고르시오. ①Evergreen 호숫가에 위치하고 있다. ②두 달 전에 새롭게 단장했다. ③1인당 입장료를 인하했다. ④셔틀버스를 30분마다 운행한다. ⑤공원 크기를 늘렸다. 2017학년도 대학수",
+   "choices": [
+    "Evergreen 호숫가에 위치하고 있다.",
+    "두 달 전에 새롭게 단장했다.",
+    "1인당 입장료를 인하했다.",
+    "셔틀버스를 30분마다 운행한다.",
+    "공원 크기를 늘렸다.\n2017학년도 대학수학능력시험 6월 모의평가 문제지\n제3 교시"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 185
+  },
+  {
+   "qNum": 12,
+   "kind": "mc",
+   "stem": "12. 다음 표를 보면서 대화를 듣고, 남자가 구입할 침낭을 고르시오. ① ② ③ ④ ⑤",
+   "choices": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 50
+  },
+  {
+   "qNum": 13,
+   "kind": "mc",
+   "stem": "13. 대화를 듣고, 남자의 마지막 말에 대한 여자의 응답으로 가장 적절한 것을 고르시오. Woman: ①Cheer up! You’ll do better next time. ②Sure. Let’s go to the rock concert together. ③I agree. The adv",
+   "choices": [
+    "Cheer up! You’ll do better next time.",
+    "Sure. Let’s go to the rock concert together.",
+    "I agree. The advanced level is right for you.",
+    "You’re doing a good job. We’re almost there.",
+    "Come on! Once you see it, you’ll want to try it."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 287
+  },
+  {
+   "qNum": 14,
+   "kind": "mc",
+   "stem": "14. 대화를 듣고, 여자의 마지막 말에 대한 남자의 응답으로 가장 적절한 것을 고르시오. [3점] Man: ①Right. We can’t ignore complaints about the staff. ②Of course. Air conditioners will be very expensive. ③Yeah, but it’s important to keep our students happy. ④Then, I’ll teach you how to use the computer program. ⑤Really?",
+   "choices": [
+    "Right. We can’t ignore complaints about the staff.",
+    "Of course. Air conditioners will be very expensive.",
+    "Yeah, but it’s important to keep our students happy.",
+    "Then, I’ll teach you how to use the computer program.",
+    "Really? Sorry to hear the computer classes will be closed."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 336
+  },
+  {
+   "qNum": 15,
+   "kind": "mc",
+   "stem": "15. 다음 상황 설명을 듣고, Mike가 Susan에게 할 말로 가장 적절한 것을 고르시오. [3점] Mike: ①I had a great time shopping at the market. ②I wouldn’t change my mind if I were you. ③You can r",
+   "choices": [
+    "I had a great time shopping at the market.",
+    "I wouldn’t change my mind if I were you.",
+    "You can repair your camera at the department store.",
+    "You should go to the department store this weekend.",
+    "I wish I had gone to the electronics market with you.\n[16～17] 다음을 듣고, 물음에 답하시오."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 338
+  },
+  {
+   "qNum": 16,
+   "kind": "mc",
+   "stem": "16. 여자가 하는 말의 주제로 가장 적절한 것은?",
+   "choices": [
+    "effects and uses of colors",
+    "functions and uses of shapes",
+    "ways of constructing buildings",
+    "types and purposes of buildings",
+    "color preferences and personalities"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 189
+  },
+  {
+   "qNum": 17,
+   "kind": "mc",
+   "stem": "17. 언급된 장소가 아닌 것은?",
+   "choices": [
+    "은행",
+    "호텔",
+    "병원",
+    "학교",
+    "사무실"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 45
+  },
+  {
+   "qNum": 18,
+   "kind": "mc",
+   "stem": "18. 다음 글의 목적으로 가장 적절한 것은?",
+   "choices": [
+    "자원 봉사 참가를 취소하려고",
+    "CD를 보내 줄 수 있는지 문의하려고",
+    "신청서에 기입한 주소를 수정하려고",
+    "양서류 생태 조사 일정을 확인하려고",
+    "오리엔테이션에 참석할 수 없음을 알리려고"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 779
+  },
+  {
+   "qNum": 19,
+   "kind": "mc",
+   "stem": "19. 다음 글에 드러난 ‘she’의 심경 변화로 가장 적절한 것은?",
+   "choices": [
+    "terrified\n→ relieved",
+    "delighted → frustrated",
+    "scared\n→ annoyed",
+    "bored\n→ excited",
+    "disappointed → exhausted"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 922
+  },
+  {
+   "qNum": 20,
+   "kind": "mc",
+   "stem": "20. 다음 글에서 필자가 주장하는 바로 가장 적절한 것은?",
+   "choices": [
+    "상대방에 대한 자신의 인식에 오류가 없는지 점검하라.",
+    "정신적 스트레스가 심할 때는 타인과의 만남을 피하라.",
+    "처음 만나는 사람에게 좋은 인상을 주도록 노력하라.",
+    "상대방의 심리를 파악하고 자신의 감정을 표현하라.",
+    "언어적 행동과 비언어적 행동을 일치시켜라.\n  이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시에 \n따라 답을 하시기 바랍니다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1123
+  },
+  {
+   "qNum": 21,
+   "kind": "mc",
+   "stem": "21. 다음 글의 요지로 가장 적절한 것은?",
+   "choices": [
+    "긍정적인 감정은 더 많은 공감을 불러일으킨다.",
+    "사람과 동물은 모방하는 능력에서 차이를 보인다.",
+    "타인과 공감하는 능력을 잘 사용하려면 학습이 필요하다.",
+    "얼굴 표정은 상대방의 감정을 파악하는 중요한 단서이다.",
+    "인간이 타인과 공감하는 정도는 신경계에 의해 결정된다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 942
+  },
+  {
+   "qNum": 22,
+   "kind": "mc",
+   "stem": "22. 다음 글의 주제로 가장 적절한 것은?",
+   "choices": [
+    "the use of a new story in understanding an old story",
+    "the limits of our memory capacity in recalling stories",
+    "the influence of new stories on challenging our beliefs",
+    "the most efficient strategy to improve storytelling skills",
+    "the role of our existing beliefs in comprehending a new story"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1189
+  },
+  {
+   "qNum": 23,
+   "kind": "mc",
+   "stem": "23. 다음 글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "A War at Hand Between Plants in Savannas",
+    "A Rivalry for Wetter Soils among Savanna Trees",
+    "Are Savannas a Hidden Treasure of Bio-Diversity?",
+    "Cyclic Dominance of Trees over Grasses in Savannas",
+    "Strange Companions: Savanna Plants Confuse Ecologists"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1249
+  },
+  {
+   "qNum": 24,
+   "kind": "mc",
+   "stem": "24. 다음 도표의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "The United States recorded 9.65 \nmillion barrels of daily oil production in 2010, the greatest \ndaily oil production among the countries shown on the graph.",
+    "Canada had the second largest daily oil production followed \nby Mexico and Brazil, with Venezuela recording the lowest \namong the five countries in 2010.",
+    "As for proven oil reserves, \nhowever, Venezuela recorded the largest amount among these \ncountries in 2011, possessing 211.2 billion barrels, followed by \nCanada with 175.2 billion barrels.",
+    "In 2011, the sum of the \nproven oil reserves of the United States, Mexico, and Brazil \nwas greater than those of Venezuela.",
+    "Brazil had larger \nproven oil reserves than Mexico in 2011, but the daily oil \nproduction of Brazil was lower than that of Mexico in 2010.\n* proven oil reserves: 확인된 석유 매장량"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 968
+  },
+  {
+   "qNum": 25,
+   "kind": "mc",
+   "stem": "25. Sequoyah에 관한 다음 글의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "1770년경 Taskigi에서 태어났다.",
+    "어린 시절에 영어를 읽고 쓰는 법을 배웠다.",
+    "Cherokee 사람들을 위한 문자 체계의 필요성을 깨달았다.",
+    "업적을 인정받아 1824년에 메달을 받았다.",
+    "1843년에 지금의 Texas에서 세상을 떠났다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1095
+  },
+  {
+   "qNum": 26,
+   "kind": "mc",
+   "stem": "26. Kingston Badminton Program에 관한 다음 안내문의 내용과 일치하지 않는 것은?",
+   "choices": [
+    "일주일에 3일씩 4주 동안 운영된다.",
+    "오후 6시에는 15세 이상을 대상으로 진행된다.",
+    "개인용 사물함을 이용하려면 추가 비용이 든다.",
+    "등록 마감일은 6월 10일이다.",
+    "배드민턴 라켓과 셔틀콕을 제공한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 177
+  },
+  {
+   "qNum": 27,
+   "kind": "mc",
+   "stem": "27. 16th Springvale Book Festival에 관한 다음 안내문의 내용과 일치하는 것은?",
+   "choices": [
+    "6월 4일부터 5일간 개최된다.",
+    "작가들의 강연이 오전에 예정되어 있다.",
+    "행사장에서 구매한 책에 한정하여 작가들이 사인을 해 준다.",
+    "웹 사이트에서 행사 정보 앱(app)을 내려 받을 수 있다.",
+    "일부 프로그램의 경우 입장료를 지불해야 한다."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 198
+  },
+  {
+   "qNum": 28,
+   "kind": "grammar_underline",
+   "stem": "28. 다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {
+    "①": "are likely to be biological",
+    "②": "smooth",
+    "③": "its wings that flying was",
+    "④": "finding varies from animal to",
+    "⑤": "what might be expected from"
+   },
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2478
+  },
+  {
+   "qNum": 29,
+   "kind": "box_choice",
+   "stem": "29. (A), (B), (C)의 각 네모 안에서 문맥에 맞는 낱말로 가장 적절한 것은?",
+   "choices": [
+    "preset\n…… intentionally\n…… consistency",
+    "preset\n…… automatically …… variation",
+    "self-selected …… intentionally\n…… variation",
+    "self-selected …… intentionally\n…… consistency",
+    "self-selected …… automatically …… consistency"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1404
+  },
+  {
+   "qNum": 30,
+   "kind": "mc",
+   "stem": "30. 밑줄 친 부분이 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [
+    "he \ntraveled to London to buy a copy of the book. Unfortunately, \nnone of the main London bookstores had a copy. Then, on his \nway home, waiting for an underground train at Leicester \nSquare tube station, he saw a discarded book lying on the seat \nnext to",
+    "him. It was a copy of The Girl from Petrovka. As if \nthat was not coincidence enough, more was to follow. Later, \nwhen",
+    "he had a chance to meet the author, Hopkins told him \nabout this strange occurrence. Feifer was interested. He said to",
+    "him that in November 1971 he had lent a friend a copy of \nthe book—a unique copy in which he had made notes on \nturning the British English into American English for the \npublication of an American version—but his friend had lost \nthe copy in London. A quick check of the copy Hopkins had \nfound showed that it was the very same copy that",
+    "his friend \nhad mislaid.\n[31～34] 다음 빈칸에 들어갈 말로 가장 적절한 것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1100
+  },
+  {
+   "qNum": 31,
+   "kind": "mc",
+   "stem": "31. Once a hand or gripper has been directed to an object by reaching, it can be grasped. Grasping requires that fingers hold an object securely. A secure grip ",
+   "choices": [
+    "distance",
+    "efficiency",
+    "mobility",
+    "direction",
+    "stability"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 935
+  },
+  {
+   "qNum": 32,
+   "kind": "mc",
+   "stem": "32. What story could be harsher than that of the Great Auk, the large black-and-white seabird that in northern oceans took the ecological place of a penguin?",
+   "choices": [
+    "lacked the benefits of the old",
+    "denied other colonies easy access",
+    "faced unexpected natural disasters",
+    "caused conflicts among the refugees",
+    "had a similar disadvantage to the last island"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1250
+  },
+  {
+   "qNum": 33,
+   "kind": "mc",
+   "stem": "33. It is not hard to see that a strong economy, where opportunities are plentiful and jobs go begging, . Biased employers may still dislike hiring members of o",
+   "choices": [
+    "allows employees to earn more income",
+    "helps break down social barriers",
+    "simplifies the hiring process",
+    "increases wage discrimination",
+    "improves the productivity of a company"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1044
+  },
+  {
+   "qNum": 34,
+   "kind": "mc",
+   "stem": "34. One remarkable aspect of aboriginal culture is the concept of “totemism,” where the tribal member at birth assumes the soul and identity of a part of nature",
+   "choices": [
+    "themselves as incompatible with nature and her riches",
+    "their mythology as a primary motive toward individualism",
+    "their identity as being self-contained from surrounding nature",
+    "their relationship to the environment as a single harmonious \ncontinuum",
+    "their communal rituals as a gateway to distancing themselves \nfrom their origins"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1296
+  },
+  {
+   "qNum": 35,
+   "kind": "mc",
+   "stem": "35. 다음 글에서 전체 흐름과 관계 없는 문장은?",
+   "choices": [
+    "In most situations, they’ll \nstick to their decision.",
+    "When a formal occasion comes \nalong, however, such as a family wedding or a funeral, they \nare likely to cave in to norms that they find overwhelming.",
+    "The increasing social pressure discourages us from \nfulfilling the social norms and committing ourselves to shared \nsocial conventions of behaviour.",
+    "Almost all of us follow \nthe guidelines for what is “appropriate” for our roles.",
+    "Few \nof us are bothered by such restrictions, for our socialization is \nso thorough that we usually want to do what our roles indicate \nis appropriate.\n[36～37] 주어진 글 다음에 이어질 글의 순서로 가장 적절한 \n것을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 937
+  },
+  {
+   "qNum": 36,
+   "kind": "mc",
+   "stem": "36. The ancient Greeks sought to improve memory through brain training methods such as memory palaces and the method of loci. At the same time, they and the Egy",
+   "choices": [
+    "(A) －(C) －(B)",
+    "(B) －(A) －(C)",
+    "(B) －(C) －(A)",
+    "(C) －(A) －(B)",
+    "(C) －(B) －(A)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1156
+  },
+  {
+   "qNum": 37,
+   "kind": "mc",
+   "stem": "37. Imitation seems to be a key to the transmission of valuable practices among nonhumans. The most famous example is that of the macaque monkeys on the island ",
+   "choices": [
+    "(A) －(C) －(B)",
+    "(B) －(A) －(C)",
+    "(B) －(C) －(A)",
+    "(C) －(A) －(B)",
+    "(C) －(B) －(A)\n[38～39] 글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 \n적절한 곳을 고르시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {
+    "A": [
+     "38～39"
+    ]
+   },
+   "charLen": 1084
+  },
+  {
+   "qNum": 38,
+   "kind": "mc",
+   "stem": "38. That is why people experience jet lag when traveling across time zones. In humans, body clocks are responsible for daily changes in blood pressure, body tem",
+   "choices": [
+    ") These biological \nrhythms, which we experience as internal time, are probably \nolder than sleep, developed over the course of millions of years \nof evolution. (",
+    ") They facilitate physiological and \nbehavioral changes on a roughly twenty-four-hour cycle no \nmatter what is happening outside, whether a cold front moves \nin or clouds block the light of the sun. (",
+    ") Their internal \nclocks continue to run in accordance with the place they left \nbehind, not the one to which they have come, and it can take \nsome time to realign the two. (",
+    ") The most remarkable thing \nis that our internal body clocks can be readjusted by \nenvironmental cues. (",
+    ") We may get jet lag for a few days \nwhen we ask our body clocks to adapt to a vastly different \nschedule of day and night cycles on the other side of the Earth, \nbut they can do it. [3점]\n* facilitate: 쉽게 하다\n** realign: 재조정하다"
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 1115
+  },
+  {
+   "qNum": 39,
+   "kind": "mc",
+   "stem": "39. For example, the first step in servicing or installing equipment is talking with the clients to understand how they used the equipment. The customer service",
+   "choices": [
+    ") To the service representatives, learning to sell was a \nvery different game from what they had been playing. (",
+    ") \nBut it turned out they already knew a lot more about sales \nthan they thought. (",
+    ") The same is true in selling. (",
+    ") \nThe salesperson first has to learn about the customer’s needs. \n(",
+    ") The service representatives also had a great deal of \nproduct knowledge and hands-on experience, which is \nobviously important in sales."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 840
+  },
+  {
+   "qNum": 40,
+   "kind": "mc",
+   "stem": "40. 다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "objectively …… weaken",
+    "objectively …… support",
+    "accurately …… clarify",
+    "selectively …… strengthen",
+    "selectively …… disprove\n[41～42] 다음 글을 읽고, 물음에 답하시오.\nThe idea of protecting intellectual activity and creation has \ndeep roots. The ancient Greeks used an awards system to \n(A)\n design achievements, which performed some of \nthe same functions as the modern patent system. Their \npottery, sculptures, and other manufactured goods had \nsymbols on them to note the tradesmen who created them, \nwhich are the predecessors of modern trademarks. Similar \nmarks and symbols functioning as trademarks have been \nfound on Chinese pottery, possibly dating as far back as \n2698 BCE, and in many other ancient societies, including the \nEgyptians, the Assyrians, and the Vedic civilization.\nThe concept of intellectual property continued to develop \nduring the Roman period. The Roman Empire had an \nincredible variety of trademarks. Roman potters alone used \napproximately 6,000 trademarks. Additionally, Roman \nauthors had a sense that their intellectual creations were \n(B)\n, as they complained about the exploitation of \nthose creations. Their sense of injustice was probably \nheightened by the fact that there were laws and traditions in \nplace that supported their belief that only they could exploit \ntheir creations. Roman authors could, in fact, make money \nfrom the copying and publishing of their works because the \nvalue of their intellectual creations was recognized."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2716
+  },
+  {
+   "qNum": 41,
+   "kind": "mc",
+   "stem": "41. 윗글의 제목으로 가장 적절한 것은?",
+   "choices": [
+    "Early Development of Intellectual Property Protection",
+    "History of Roman Intellectual Property Law",
+    "How the Romans Protected Their Properties",
+    "Increasing Demand to Protect Ancient Artifacts",
+    "Why Trademarks Were Exploited in Early Civilizations"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 273
+  },
+  {
+   "qNum": 42,
+   "kind": "mc",
+   "stem": "42. 윗글의 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?",
+   "choices": [
+    "recognize …… valuable",
+    "recognize …… outdated",
+    "honor\n…… ignorable",
+    "suspend\n…… imitable",
+    "suspend\n…… significant\n[43～45] 다음 글을 읽고, 물음에 답하시오.\n(A)\nRichard was watching people on the street through the \nwindow. Skirts were bouncing lightly and pants were \ndancing delightedly in the seasonable weather as the spring \nbreeze chased them playfully. Some seemed excited, walking \nlike racing cars between passersby. He had ordered two \nblack coffees, one for himself and one for his friend, Julie. \nShe was running late, but the service was fast. The hot \ncoffees were promptly placed in front of (a) him.\n(B)\nHanding a spray can of cream over to Richard, the waiter \nsaid, “Add it now if you want.” Richard couldn’t help asking \nhim why. (b) The blue-shirted man answered, “Actually, \nhotter coffee loses energy faster than coffee cooled slightly \nby the addition of cream.” “Really? Is that so?” The waiter \nkindly smiled and said, “Yeah, I just learned it when I took a \nclass about coffee.” He also taught (c) his customer how to \nmake shapes with the cream. Richard paid close attention to \nhis explanation.\n(C)\nLooking at the coffees, Richard remembered that Julie \nliked whipped cream on top of her hot coffee. He was \nwondering if it was better to put the cream on now, or wait \ntill she arrived. “Since the cream is cold, it’ll cool down the \ncoffee faster,” he reasoned. Beep! It was a text message from \nher. “I’ll be there in 5 minutes. Please put some cream on my \ncoffee.” He was startled, because she seemed to know \nwhat he was thinking about. (d) Richard called over a \nwaiter wearing a blue shirt and asked him for whipped cream.\n(D)\nRichard thanked the waiter. Following his instructions, \nRichard made a flower with the cream. He tried to be as \nprecise as he could. No sooner had he completed his \nmasterpiece, Julie stepped into the cafe. As she sat down, she \nsaw her coffee. “Wow, look at that! A white flower in the cup! \nIt looks so beautiful, Richard! It’s too lovely to drink,” his \nfriend said. “Try it,” (e) the happy man urged her. She tasted \nit. “This coffee is absolutely delicious, too!” Talking and \nlaughing over coffee, they enjoyed the fabulous spring day."
+   ],
+   "point": 3,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 2240
+  },
+  {
+   "qNum": 43,
+   "kind": "mc",
+   "stem": "43. 주어진 글 (A)에 이어질 내용을 순서에 맞게 배열한 것으로 가장 적절한 것은?",
+   "choices": [
+    "(B) －(D) －(C)",
+    "(C) －(B) －(D)",
+    "(C) －(D) －(B)",
+    "(D) －(B) －(C)",
+    "(D) －(C) －(B)"
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 130
+  },
+  {
+   "qNum": 44,
+   "kind": "vocab_letter",
+   "stem": "44. 밑줄 친 (a)∼(e) 중에서 가리키는 대상이 나머지 넷과 다른 것은?",
+   "choices": [],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 75
+  },
+  {
+   "qNum": 45,
+   "kind": "mc",
+   "stem": "45. 윗글의 Richard에 관한 내용으로 적절하지 않은 것은?",
+   "choices": [
+    "어느 봄날 카페에서 길거리의 사람들을 바라보았다.",
+    "자신과 Julie를 위해 뜨거운 커피를 두 잔 주문했다.",
+    "커피와 크림에 대해 웨이터와 대화를 나누었다.",
+    "크림을 넣을지 알아보기 위해 Julie에게 문자를 보냈다.",
+    "Julie가 마실 커피 위에 꽃 모양을 만들었다.\n* 확인 사항\n◦답안지의 해당란에 필요한 내용을 정확히 기입(표기)했는지 확인\n하시오."
+   ],
+   "point": null,
+   "markers": {},
+   "letterMarkers": {},
+   "bracketChoices": {},
+   "charLen": 237
+  }
+ ],
+ "sourcePdf": "259ffec72724d5fc25c99cec7c747be9.pdf",
+ "fileName": "영어_문제지.pdf"
+}

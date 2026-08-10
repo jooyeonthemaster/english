@@ -1,0 +1,890 @@
+[
+ {
+  "examId": "ebsi_go1_20150902",
+  "qNum": 29,
+  "marker": "④",
+  "from": "realizing",
+  "to": "realized",
+  "source": "ebsi_go1_20150902_sol_tKjtvzt0_h1_eng_hsj.pdf"
+ },
+ {
+  "examId": "ebsi_go1_20160901",
+  "qNum": 28,
+  "marker": "⑤",
+  "from": "become",
+  "to": "becomes",
+  "source": "ebsi_go1_20160901_sol_eng_hsj_X3cf3edn.pdf"
+ },
+ {
+  "examId": "ebsi_go1_20170906",
+  "qNum": 26,
+  "marker": "④",
+  "from": "allowing",
+  "to": "allowed",
+  "source": "ebsi_go1_20170906_sol_eng_hsj_j7gC2DWp.pdf"
+ },
+ {
+  "examId": "ebsi_go1_20180905",
+  "qNum": 28,
+  "marker": "③",
+  "from": "seems",
+  "to": "seem",
+  "source": "ebsi_go1_20180905_sol_eng_hsj_Q1DuTrNk_12_1.pdf"
+ },
+ {
+  "examId": "ebsi_go1_20190904",
+  "qNum": 29,
+  "marker": "④",
+  "from": "ensure",
+  "to": "ensures",
+  "source": "ebsi_go1_20190904_sol_eng_hsj_2J3929K3_10.pdf"
+ },
+ {
+  "examId": "ebsi_go1_20200916",
+  "qNum": 29,
+  "marker": "④",
+  "from": "gave",
+  "to": "were given",
+  "source": "ebsi_go1_20200916_sol_eng_hsj_2NF33P85.pdf"
+ },
+ {
+  "examId": "ebsi_go1_20210325",
+  "qNum": 30,
+  "marker": "③",
+  "from": "increase",
+  "to": "drop",
+  "source": "ebsi_go1_20210325_sol_eng_hsj_I17TMYR2.pdf"
+ },
+ {
+  "examId": "ebsi_go1_20210603",
+  "qNum": 29,
+  "marker": "⑤",
+  "from": "are",
+  "to": "is",
+  "source": "ebsi_go1_20210603_sol_eng_hsj_71G6S6OC.pdf"
+ },
+ {
+  "examId": "ebsi_go1_20210603",
+  "qNum": 30,
+  "marker": "③",
+  "from": "prevent",
+  "to": "accommodate",
+  "source": "ebsi_go1_20210603_sol_eng_hsj_71G6S6OC.pdf"
+ },
+ {
+  "examId": "ebsi_go1_20210831",
+  "qNum": 29,
+  "marker": "②",
+  "from": "which",
+  "to": "in which",
+  "source": "ebsi_go1_20210831_sol_eng_hsj_AX6SAY91.pdf"
+ },
+ {
+  "examId": "ebsi_go1_20220609",
+  "qNum": 29,
+  "marker": "④",
+  "from": "dependently",
+  "to": "dependent",
+  "source": "ebsi_go1_20220609_sol_eng_hsj_LNGPY2ZP.pdf"
+ },
+ {
+  "examId": "ebsi_go1_20220901",
+  "qNum": 29,
+  "marker": "③",
+  "from": "has",
+  "to": "have",
+  "source": "ebsi_go1_20220901_sol_eng_hsj_6741G5H9.pdf"
+ },
+ {
+  "examId": "ebsi_go1_20230323",
+  "qNum": 29,
+  "marker": "⑤",
+  "from": "are",
+  "to": "is",
+  "source": "ebsi_go1_20230323_sol_eng_hsj_73325KVC.pdf"
+ },
+ {
+  "examId": "ebsi_go1_20230323",
+  "qNum": 30,
+  "marker": "④",
+  "from": "strengthened",
+  "to": "destroyed",
+  "source": "ebsi_go1_20230323_sol_eng_hsj_73325KVC.pdf"
+ },
+ {
+  "examId": "ebsi_go1_20230323",
+  "qNum": 42,
+  "marker": "c",
+  "from": "unusual",
+  "to": "conventional",
+  "source": "ebsi_go1_20230323_sol_eng_hsj_73325KVC.pdf"
+ },
+ {
+  "examId": "ebsi_go1_20230601",
+  "qNum": 29,
+  "marker": "④",
+  "from": "being",
+  "to": "is",
+  "source": "ebsi_go1_20230601_sol_eng_hsj_27VF6PEA.pdf"
+ },
+ {
+  "examId": "ebsi_go1_20230906",
+  "qNum": 29,
+  "marker": "④",
+  "from": "themselves",
+  "to": "them",
+  "source": "ebsi_go1_20230906_sol_eng_hsj_9J6H1A61_2.pdf"
+ },
+ {
+  "examId": "ebsi_go1_20240328",
+  "qNum": 30,
+  "marker": "③",
+  "from": "enough",
+  "to": "little",
+  "source": "ebsi_go1_20240328_sol_eng_hsj_PZN598V5.pdf"
+ },
+ {
+  "examId": "ebsi_go1_20240328",
+  "qNum": 42,
+  "marker": "d",
+  "from": "similar",
+  "to": "different",
+  "source": "ebsi_go1_20240328_sol_eng_hsj_PZN598V5.pdf"
+ },
+ {
+  "examId": "ebsi_go1_20240604",
+  "qNum": 29,
+  "marker": "③",
+  "from": "what",
+  "to": "that",
+  "source": "ebsi_go1_20240604_sol_eng_hsj_Q99QR69A.pdf"
+ },
+ {
+  "examId": "ebsi_go1_20240904",
+  "qNum": 29,
+  "marker": "⑤",
+  "from": "which",
+  "to": "where",
+  "source": "ebsi_go1_20240904_sol_eng_1_hsj_Z4UM882U.pdf"
+ },
+ {
+  "examId": "ebsi_go1_20250326",
+  "qNum": 42,
+  "marker": "b",
+  "from": "include",
+  "to": "eliminate",
+  "source": "ebsi_go1_20250326_sol_eng_hsj_JKB7PQGE.pdf"
+ },
+ {
+  "examId": "ebsi_go1_20250604",
+  "qNum": 29,
+  "marker": "③",
+  "from": "having",
+  "to": "have",
+  "source": "ebsi_go1_20250604_sol_eng_1_hsj_1877Z5O8.pdf"
+ },
+ {
+  "examId": "ebsi_go1_20250903",
+  "qNum": 29,
+  "marker": "②",
+  "from": "putting",
+  "to": "put",
+  "source": "ebsi_go1_20250903_sol_eng_1_hsj_BX43Q98E.pdf"
+ },
+ {
+  "examId": "ebsi_go1_20260324",
+  "qNum": 29,
+  "marker": "②",
+  "from": "helps",
+  "to": "help",
+  "source": "ebsi_go1_20260324_sol_eng_hsj_94R7TI4R.pdf"
+ },
+ {
+  "examId": "ebsi_go1_20260324",
+  "qNum": 30,
+  "marker": "③",
+  "from": "same",
+  "to": "opposite",
+  "source": "ebsi_go1_20260324_sol_eng_hsj_94R7TI4R.pdf"
+ },
+ {
+  "examId": "ebsi_go1_20260324",
+  "qNum": 42,
+  "marker": "⑤",
+  "from": "feed",
+  "to": "resist",
+  "source": "ebsi_go1_20260324_sol_eng_hsj_94R7TI4R.pdf"
+ },
+ {
+  "examId": "ebsi_go1_20260604",
+  "qNum": 29,
+  "marker": "④",
+  "from": "having",
+  "to": "have",
+  "source": "ebsi_go1_20260604_sol_eng_1_hsj_A2GFZA25.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20190904",
+  "qNum": 29,
+  "marker": "②",
+  "from": "which",
+  "to": "for which",
+  "source": "ebsi_go2_20190904_sol_eng_hsj_86J8T4KY_10.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20190904",
+  "qNum": 30,
+  "marker": "④",
+  "from": "supported",
+  "to": "undermined",
+  "source": "ebsi_go2_20190904_sol_eng_hsj_86J8T4KY_10.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20190904",
+  "qNum": 40,
+  "marker": "④",
+  "from": "upward",
+  "to": "downward",
+  "source": "ebsi_go2_20190904_sol_eng_hsj_86J8T4KY_10.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20200312",
+  "qNum": 30,
+  "marker": "③",
+  "from": "disproved",
+  "to": "reinforced",
+  "source": "ebsi_go2_20200312_sol_eng_hsj_1GKB4679.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20200312",
+  "qNum": 42,
+  "marker": "b",
+  "from": "shorter",
+  "to": "longer",
+  "source": "ebsi_go2_20200312_sol_eng_hsj_1GKB4679.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20200618",
+  "qNum": 29,
+  "marker": "⑤",
+  "from": "that",
+  "to": "what",
+  "source": "ebsi_go2_20200618_sol_eng_hsj_6Q891Q37.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20200916",
+  "qNum": 29,
+  "marker": "③",
+  "from": "to be",
+  "to": "is",
+  "source": "ebsi_go2_20200916_sol_eng_hsj_MREOLP11.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20200916",
+  "qNum": 30,
+  "marker": "②",
+  "from": "believe",
+  "to": "challenge",
+  "source": "ebsi_go2_20200916_sol_eng_hsj_MREOLP11.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20200916",
+  "qNum": 40,
+  "marker": "④",
+  "from": "rejected",
+  "to": "submitted",
+  "source": "ebsi_go2_20200916_sol_eng_hsj_MREOLP11.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20210325",
+  "qNum": 30,
+  "marker": "②",
+  "from": "avoid",
+  "to": "produce",
+  "source": "ebsi_go2_20210325_sol_eng_hsj_556883W8.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20210325",
+  "qNum": 42,
+  "marker": "e",
+  "from": "relieve",
+  "to": "compound",
+  "source": "ebsi_go2_20210325_sol_eng_hsj_556883W8.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20210603",
+  "qNum": 29,
+  "marker": "⑤",
+  "from": "gives",
+  "to": "given",
+  "source": "ebsi_go2_20210603_sol_eng_hsj_O8S6L7MU.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20210831",
+  "qNum": 29,
+  "marker": "⑤",
+  "from": "has",
+  "to": "have",
+  "source": "ebsi_go2_20210831_sol_eng_hsj_NK8S5L43.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20210831",
+  "qNum": 30,
+  "marker": "③",
+  "from": "benefits",
+  "to": "drawbacks",
+  "source": "ebsi_go2_20210831_sol_eng_hsj_NK8S5L43.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20210831",
+  "qNum": 40,
+  "marker": "③",
+  "from": "minimum",
+  "to": "massive",
+  "source": "ebsi_go2_20210831_sol_eng_hsj_NK8S5L43.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20220609",
+  "qNum": 29,
+  "marker": "⑤",
+  "from": "was",
+  "to": "did",
+  "source": "ebsi_go2_20220609_sol_eng_hsj_F48U4Q83.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20220901",
+  "qNum": 29,
+  "marker": "④",
+  "from": "fascinated",
+  "to": "fascinating",
+  "source": "ebsi_go2_20220901_sol_eng_hsj_A15A8P29.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20220901",
+  "qNum": 30,
+  "marker": "③",
+  "from": "scarce",
+  "to": "excess",
+  "source": "ebsi_go2_20220901_sol_eng_hsj_A15A8P29.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20220901",
+  "qNum": 40,
+  "marker": "⑤",
+  "from": "activate",
+  "to": "free up",
+  "source": "ebsi_go2_20220901_sol_eng_hsj_A15A8P29.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20230323",
+  "qNum": 29,
+  "marker": "⑤",
+  "from": "generating",
+  "to": "generate",
+  "source": "ebsi_go2_20230323_sol_eng_hsj_8U98P372.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20230323",
+  "qNum": 30,
+  "marker": "③",
+  "from": "deny",
+  "to": "assume",
+  "source": "ebsi_go2_20230323_sol_eng_hsj_8U98P372.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20230323",
+  "qNum": 42,
+  "marker": "c",
+  "from": "group",
+  "to": "individual",
+  "source": "ebsi_go2_20230323_sol_eng_hsj_8U98P372.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20230601",
+  "qNum": 29,
+  "marker": "④",
+  "from": "ask",
+  "to": "are asked",
+  "source": "ebsi_go2_20230601_sol_eng_hsj_URLOM87Q.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20230906",
+  "qNum": 29,
+  "marker": "②",
+  "from": "reach",
+  "to": "to reach",
+  "source": "ebsi_go2_20230906_sol_eng_hsj_C1212ISD_1.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20230906",
+  "qNum": 30,
+  "marker": "④",
+  "from": "insensitive",
+  "to": "sensitive",
+  "source": "ebsi_go2_20230906_sol_eng_hsj_C1212ISD_1.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20230906",
+  "qNum": 40,
+  "marker": "⑤",
+  "from": "unnoticeable",
+  "to": "striking",
+  "source": "ebsi_go2_20230906_sol_eng_hsj_C1212ISD_1.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20240328",
+  "qNum": 29,
+  "marker": "④",
+  "from": "using",
+  "to": "used",
+  "source": "ebsi_go2_20240328_sol_eng_hsj_LQEQ1NU6.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20240328",
+  "qNum": 30,
+  "marker": "③",
+  "from": "cultivate",
+  "to": "intrude on",
+  "source": "ebsi_go2_20240328_sol_eng_hsj_LQEQ1NU6.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20240328",
+  "qNum": 42,
+  "marker": "d",
+  "from": "contradicts",
+  "to": "supports",
+  "source": "ebsi_go2_20240328_sol_eng_hsj_LQEQ1NU6.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20240604",
+  "qNum": 29,
+  "marker": "⑤",
+  "from": "smiling",
+  "to": "smile",
+  "source": "ebsi_go2_20240604_sol_eng_hsj_DX156RF3.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20240904",
+  "qNum": 29,
+  "marker": "④",
+  "from": "make",
+  "to": "to make",
+  "source": "ebsi_go2_20240904_sol_eng_1_hsj_V63922RI_1.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20240904",
+  "qNum": 30,
+  "marker": "⑤",
+  "from": "reduced",
+  "to": "expanded",
+  "source": "ebsi_go2_20240904_sol_eng_1_hsj_V63922RI_1.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20240904",
+  "qNum": 40,
+  "marker": "④",
+  "from": "unreasonable",
+  "to": "reasonable",
+  "source": "ebsi_go2_20240904_sol_eng_1_hsj_V63922RI_1.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20250326",
+  "qNum": 29,
+  "marker": "④",
+  "from": "does",
+  "to": "do",
+  "source": "ebsi_go2_20250326_sol_eng_hsj_5I8JDWQ4_2.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20250326",
+  "qNum": 30,
+  "marker": "④",
+  "from": "discouraged",
+  "to": "fostered",
+  "source": "ebsi_go2_20250326_sol_eng_hsj_5I8JDWQ4_2.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20250326",
+  "qNum": 42,
+  "marker": "d",
+  "from": "willing",
+  "to": "loath",
+  "source": "ebsi_go2_20250326_sol_eng_hsj_5I8JDWQ4_2.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20250604",
+  "qNum": 29,
+  "marker": "②",
+  "from": "has",
+  "to": "have",
+  "source": "ebsi_go2_20250604_sol_eng_1_hsj_418JD51F.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20250903",
+  "qNum": 29,
+  "marker": "②",
+  "from": "depend",
+  "to": "depends",
+  "source": "ebsi_go2_20250903_sol_eng_1_hsj_875LD859.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20250903",
+  "qNum": 30,
+  "marker": "③",
+  "from": "efficient",
+  "to": "counterproductive",
+  "source": "ebsi_go2_20250903_sol_eng_1_hsj_875LD859.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20250903",
+  "qNum": 40,
+  "marker": "④",
+  "from": "intensifies",
+  "to": "avoids",
+  "source": "ebsi_go2_20250903_sol_eng_1_hsj_875LD859.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20260324",
+  "qNum": 29,
+  "marker": "④",
+  "from": "occurring",
+  "to": "occurred",
+  "source": "ebsi_go2_20260324_sol_eng_hsj_8IAZP9Z5.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20260324",
+  "qNum": 30,
+  "marker": "③",
+  "from": "facilitating",
+  "to": "hindering",
+  "source": "ebsi_go2_20260324_sol_eng_hsj_8IAZP9Z5.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20260324",
+  "qNum": 42,
+  "marker": "e",
+  "from": "intensifying",
+  "to": "overcoming",
+  "source": "ebsi_go2_20260324_sol_eng_hsj_8IAZP9Z5.pdf"
+ },
+ {
+  "examId": "ebsi_go2_20260604",
+  "qNum": 29,
+  "marker": "②",
+  "from": "producing",
+  "to": "produced",
+  "source": "ebsi_go2_20260604_sol_eng_1_hsj_4T4G1683.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20060311",
+  "qNum": 21,
+  "marker": "④",
+  "from": "are counting",
+  "to": "are counted",
+  "source": "ebsi_go3_20060311_sol_20060311_eng_hsj.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20060311",
+  "qNum": 34,
+  "marker": "⑤",
+  "from": "Sleeplessness",
+  "to": "Sleepiness",
+  "source": "ebsi_go3_20060311_sol_20060311_eng_hsj.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20070316",
+  "qNum": 22,
+  "marker": "④",
+  "from": "to catch",
+  "to": "to catching",
+  "source": "ebsi_go3_20070316_sol_20070316_eng_hsj.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20081016",
+  "qNum": 22,
+  "marker": "⑤",
+  "from": "taken",
+  "to": "taking",
+  "source": "ebsi_go3_20081016_sol_20081016_eng_hsj.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20081016",
+  "qNum": 29,
+  "marker": "⑤",
+  "from": "scattered",
+  "to": "piled",
+  "source": "ebsi_go3_20081016_sol_20081016_eng_hsj.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20091015",
+  "qNum": 20,
+  "marker": "④",
+  "from": "defenselessly",
+  "to": "defenseless",
+  "source": "ebsi_go3_20091015_sol_20091015_eng_hsj.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20091015",
+  "qNum": 30,
+  "marker": "④",
+  "from": "straight",
+  "to": "parallel",
+  "source": "ebsi_go3_20091015_sol_20091015_eng_hsj.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20150709",
+  "qNum": 28,
+  "marker": "②",
+  "from": "tending",
+  "to": "tend",
+  "source": "ebsi_go3_20150709_sol_ix4A2Dre_eng_hsj.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20150709",
+  "qNum": 30,
+  "marker": "④",
+  "from": "follows",
+  "to": "drives",
+  "source": "ebsi_go3_20150709_sol_ix4A2Dre_eng_hsj.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20160706",
+  "qNum": 28,
+  "marker": "③",
+  "from": "depending",
+  "to": "depends",
+  "source": "ebsi_go3_20160706_sol_eng_hsj_SnRMWuLn.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20170712",
+  "qNum": 28,
+  "marker": "④",
+  "from": "relaxation",
+  "to": "vigilance",
+  "source": "ebsi_go3_20170712_sol_eng_hsj_7cfJiY9Z.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20170712",
+  "qNum": 29,
+  "marker": "④",
+  "from": "having",
+  "to": "had",
+  "source": "ebsi_go3_20170712_sol_eng_hsj_7cfJiY9Z.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20180711",
+  "qNum": 28,
+  "marker": "③",
+  "from": "which",
+  "to": "from which",
+  "source": "ebsi_go3_20180711_sol_eng_hsj_wGzADBJW_10.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20190710",
+  "qNum": 28,
+  "marker": "③",
+  "from": "leads",
+  "to": "lead",
+  "source": "ebsi_go3_20190710_sol_eng_hsj_C9U93T7N_10.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20200722",
+  "qNum": 29,
+  "marker": "④",
+  "from": "lacking",
+  "to": "lack",
+  "source": "ebsi_go3_20200722_sol_eng_hsj_2O2O6LFO.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20210707",
+  "qNum": 29,
+  "marker": "⑤",
+  "from": "believes",
+  "to": "believing",
+  "source": "ebsi_go3_20210707_sol_eng_hsj_54TWP26Y.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20220706",
+  "qNum": 29,
+  "marker": "③",
+  "from": "have taught",
+  "to": "taught",
+  "source": "ebsi_go3_20220706_sol_eng_hsj_5HNP14A6.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20230323",
+  "qNum": 30,
+  "marker": "②",
+  "from": "rise",
+  "to": "drop",
+  "source": "ebsi_go3_20230323_sol_eng_hsj_Q7724W1J.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20230323",
+  "qNum": 42,
+  "marker": "d",
+  "from": "useless",
+  "to": "useful",
+  "source": "ebsi_go3_20230323_sol_eng_hsj_Q7724W1J.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20230711",
+  "qNum": 29,
+  "marker": "④",
+  "from": "being",
+  "to": "are",
+  "source": "ebsi_go3_20230711_sol_eng_hsj_A84473C5.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20231012",
+  "qNum": 29,
+  "marker": "⑤",
+  "from": "becoming",
+  "to": "became",
+  "source": "ebsi_go3_20231012_sol_eng_hsj_M95KNA9J.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20231012",
+  "qNum": 30,
+  "marker": "④",
+  "from": "resistant",
+  "to": "receptive",
+  "source": "ebsi_go3_20231012_sol_eng_hsj_M95KNA9J.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20231012",
+  "qNum": 42,
+  "marker": "c",
+  "from": "invisible",
+  "to": "visible",
+  "source": "ebsi_go3_20231012_sol_eng_hsj_M95KNA9J.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20240328",
+  "qNum": 29,
+  "marker": "④",
+  "from": "which",
+  "to": "into which",
+  "source": "ebsi_go3_20240328_sol_eng_hsj_3AK79UG6.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20240328",
+  "qNum": 30,
+  "marker": "③",
+  "from": "invalid",
+  "to": "privileged",
+  "source": "ebsi_go3_20240328_sol_eng_hsj_3AK79UG6.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20240328",
+  "qNum": 42,
+  "marker": "d",
+  "from": "relieve",
+  "to": "fuel",
+  "source": "ebsi_go3_20240328_sol_eng_hsj_3AK79UG6.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20240711",
+  "qNum": 29,
+  "marker": "⑤",
+  "from": "blooming",
+  "to": "bloom",
+  "source": "ebsi_go3_20240711_sol_eng_1_hsj_89D7I7RL.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20241015",
+  "qNum": 29,
+  "marker": "②",
+  "from": "last",
+  "to": "lasting",
+  "source": "ebsi_go3_20241015_sol_eng_1_hsj_G47J6RU2.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20250326",
+  "qNum": 29,
+  "marker": "③",
+  "from": "draw",
+  "to": "draws",
+  "source": "ebsi_go3_20250326_sol_eng_hsj_WIR8GP5N.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20250326",
+  "qNum": 30,
+  "marker": "⑤",
+  "from": "devotion",
+  "to": "threat",
+  "source": "ebsi_go3_20250326_sol_eng_hsj_WIR8GP5N.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20250326",
+  "qNum": 42,
+  "marker": "④",
+  "from": "refuse",
+  "to": "prefer",
+  "source": "ebsi_go3_20250326_sol_eng_hsj_WIR8GP5N.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20250710",
+  "qNum": 29,
+  "marker": "⑤",
+  "from": "require",
+  "to": "required",
+  "source": "ebsi_go3_20250710_sol_eng_1_hsj_7GURW85A_2.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20251014",
+  "qNum": 29,
+  "marker": "②",
+  "from": "which",
+  "to": "through which",
+  "source": "ebsi_go3_20251014_sol_eng_1_hsj_2Q85S79Z.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20260324",
+  "qNum": 29,
+  "marker": "④",
+  "from": "which",
+  "to": "in which",
+  "source": "ebsi_go3_20260324_sol_eng_hsj_29D21S43.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20260324",
+  "qNum": 30,
+  "marker": "②",
+  "from": "acknowledges",
+  "to": "neglects",
+  "source": "ebsi_go3_20260324_sol_eng_hsj_29D21S43.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20260324",
+  "qNum": 42,
+  "marker": "d",
+  "from": "praising",
+  "to": "reproaching",
+  "source": "ebsi_go3_20260324_sol_eng_hsj_29D21S43.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20260708",
+  "qNum": 29,
+  "marker": "⑤",
+  "from": "those",
+  "to": "that",
+  "source": "ebsi_go3_20260708_sol_eng_hsj_1T4E89N4.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20260708",
+  "qNum": 30,
+  "marker": "③",
+  "from": "much",
+  "to": "little",
+  "source": "ebsi_go3_20260708_sol_eng_hsj_1T4E89N4.pdf"
+ },
+ {
+  "examId": "ebsi_go3_20260708",
+  "qNum": 40,
+  "marker": "⑤",
+  "from": "legalize",
+  "to": "outlaw",
+  "source": "ebsi_go3_20260708_sol_eng_hsj_1T4E89N4.pdf"
+ }
+]

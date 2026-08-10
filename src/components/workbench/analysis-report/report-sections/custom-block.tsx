@@ -1,6 +1,7 @@
 import { type CSSProperties, type PointerEvent as ReactPointerEvent } from "react";
 import { type ActivityBlock, type CustomBlock, type ImageBlock } from "@/lib/passage-report/analysis-report/schema";
 import { type ActivityAction, ActivityPagePartNode, type ActivityTextRenderer } from "../custom-activity-renders";
+import { PAGE_BODY_MM } from "../report-pages/constants";
 import type { CustomEdit, FlowItem } from "./types";
 import { Field } from "./editable-field";
 
@@ -23,8 +24,12 @@ function CustomTextNode({
   );
 }
 
-/** 페이지 본문 최대 높이(mm) — 세로로 긴 웹툰이 한 페이지를 넘지 않게 폭 상한을 잡는다. */
-const IMG_MAX_HEIGHT_MM = 248;
+/**
+ * 페이지 본문 최대 높이(mm) — 세로로 긴 웹툰이 한 페이지를 넘지 않게 폭 상한을 잡는다.
+ * 옛 하드코딩 248 은 실제 가용(로고 있는 헤더 기준 244.9mm)을 넘어 이미지 블록이
+ * 확정적으로 러닝 푸터를 뚫었다 → 페이지 예산 상수를 그대로 쓴다(단일 진실원).
+ */
+const IMG_MAX_HEIGHT_MM = PAGE_BODY_MM;
 /** 본문 폭(mm) — A4 210 - 좌우 여백 18×2. widthPct(%) 의 기준이자 모서리 리사이즈 환산 기준. */
 const IMG_CONTENT_WIDTH_MM = 174;
 

@@ -10,6 +10,7 @@ import {
   type AnalysisSection,
 } from "./schema";
 import type { SectionKind } from "./section-prompts";
+import { MIN_ANTONYM_COVERAGE, normalizeVocabularySection } from "./vocab-normalize";
 
 /**
  * 섹션 단위 결정론적 정규화(coercion) + 검증.
@@ -134,7 +135,7 @@ export function coerceSection(kind: SectionKind, raw: unknown): unknown {
     }
 
     case "vocabulary": {
-      obj.rows = asArray(obj.rows)
+      const rows = asArray(obj.rows)
         .map((r) => {
           if (!r || typeof r !== "object") return null;
           const row = r as Record<string, unknown>;
@@ -142,9 +143,27 @@ export function coerceSection(kind: SectionKind, raw: unknown): unknown {
           const difficulty = clampInt(row.difficulty, 1, 5);
           return { ...row, ...(difficulty !== undefined ? { difficulty } : {}) };
         })
-        .filter(Boolean)
+        .filter((r): r is Record<string, unknown> => r !== null)
         .slice(0, CAP.vocabRows);
-      return obj;
+      // 관계어(동의어·반의어) 결정론 정규화 — 상한 2개, 없음="—", 교차관계 충돌 해소.
+      // 프롬프트가 지켜지지 않아도 저장 JSON 자체를 고쳐 표/인쇄/학생앱이 같은 값을 본다.
+      // ❗정규화는 값만 다듬는다 — 행을 떨어뜨리거나 섹션을 탈락시키지 않는다(멱등).
+      const norm = normalizeVocabularySection({ ...obj, rows });
+      if (norm.stats.conflictsDropped > 0 || norm.stats.synTruncated > 0 || norm.stats.antTruncated > 0) {
+        console.warn(
+          `[COERCE] vocab 관계어 정규화: 충돌제거 ${norm.stats.conflictsDropped}, ` +
+            `동의어절단 ${norm.stats.synTruncated}행, 반의어절단 ${norm.stats.antTruncated}행, ` +
+            `반의어공백 ${norm.stats.antFilledDash}/${norm.stats.rows}행`,
+        );
+      }
+      // 커버리지 계측만 — 미달이어도 섹션을 탈락시키지 않는다(재개·최종 재조립에서
+      // vocabulary 가 통째로 사라지고 섹션 예산을 태운다). 프롬프트 하한은 70%.
+      if (norm.stats.rows >= 10 && norm.stats.antCoverage < MIN_ANTONYM_COVERAGE) {
+        console.warn(
+          `[COERCE] vocab 반의어 커버리지 낮음: ${Math.round(norm.stats.antCoverage * 100)}% (${norm.stats.rows}행)`,
+        );
+      }
+      return norm.section;
     }
 
     case "parsing": {

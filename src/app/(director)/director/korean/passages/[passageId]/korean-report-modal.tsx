@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { BookOpenCheck, Printer, X } from "lucide-react";
+import { BookOpenCheck, Copy, Printer, X } from "lucide-react";
 
 import {
   AnalysisReportEditor,
@@ -45,7 +45,11 @@ export function KoreanReportModal({
   // Esc 로 닫기 (미저장 가드 경유)
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") requestClose();
+      if (e.key !== "Escape") return;
+      // 편집기가 띄운 중첩 다이얼로그('다른 이름으로 저장' 등)가 열려 있으면
+      // Esc 는 그쪽 몫 — 여기서 모달 닫기 가드까지 트리거하면 안 된다.
+      if (document.querySelector('[data-slot="dialog-content"]')) return;
+      requestClose();
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
@@ -86,10 +90,20 @@ export function KoreanReportModal({
           <div className="flex shrink-0 items-center gap-2">
             {editorToolbar ? (
               <>
+                {/* 저장 + 캐럿(다른 이름으로 저장) — 영어 모달과 동일 계약.
+                    이 헤더는 폭에 여유가 있어 라벨형(iconOnly 아님)을 유지한다. */}
                 <SaveButton
                   onClick={editorToolbar.save}
-                  saving={editorToolbar.saving}
+                  saving={editorToolbar.saving || editorToolbar.savingAs}
                   disabled={!editorToolbar.dirty}
+                  secondaryActions={[
+                    {
+                      label: "다른 이름으로 저장",
+                      icon: <Copy className="h-3.5 w-3.5" />,
+                      onClick: editorToolbar.requestSaveAs,
+                      disabled: editorToolbar.savingAs,
+                    },
+                  ]}
                 />
                 <button
                   type="button"

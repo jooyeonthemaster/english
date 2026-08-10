@@ -6,6 +6,7 @@ import {
   ATLAS_PREMIUM_MODEL_ID,
   ATLAS_PREMIUM_QGEN_MODEL_ID,
   ATLAS_STANDARD_MODEL_ID,
+  ATLAS_STANDARD_QGEN_MODEL_ID,
   AtlasTransientResponseError,
   atlasChatModel,
   atlasUsageWithCost,
@@ -29,7 +30,18 @@ import {
 
 type QuestionGenerationProvider = typeof ATLAS_CLOUD_PROVIDER;
 
+// 26-07-20 이원 티어: STANDARD 문제생성이 flash3 사고 high 로 바뀌며 무거운
+// 유형(순서 등 큰 계약 tail)의 1콜이 60s 를 넘는 실측(스모크: 60s 타임아웃 2회
+// 재시도로 207s 낭비) — 기본 120s 로 상향. deadlineAt(fast 270s)이 computeAbortMs
+// 로 계속 상한을 조이므로 함수 강제종료 위험은 없다. env 로 조정 가능.
 const STANDARD_QUESTION_TIMEOUT_MS = readNumberEnv(
+  "GEMINI_QUESTION_TIMEOUT_MS",
+  120_000,
+);
+// 텍스트 경로(지문분석·passage-report)는 사고 high 상향의 범위 밖 — 기존 60s
+// 기본을 유지한다(120s 를 공유하면 deadlineAt 없는 텍스트 라우트가 플랫폼
+// 타임아웃까지 매달린다). env 는 동일 키로 양쪽을 함께 조정한다.
+const TEXT_STANDARD_QUESTION_TIMEOUT_MS = readNumberEnv(
   "GEMINI_QUESTION_TIMEOUT_MS",
   60_000,
 );
@@ -39,11 +51,15 @@ const PREMIUM_QUESTION_TIMEOUT_MS = readNumberEnv(
 );
 
 // 문제 생성(구조화 출력 = generateQuestionObject) 플랜→모델 매핑.
-// PREMIUM 은 26-07-14 유저 확정으로 claude-sonnet-5 → gemini-3.1-pro-preview 전면
-// 교체(env PREMIUM_QGEN_MODEL_ID 오버라이드 — preview 만료 대비). 이 함수의
-// 호출자는 전원 문제 생성 파이프라인이다(AUTO-GEN/AUTO-GEN-PLAN/SINGLE-GEN·
-// KO-SOLVER·GRAMMAR-SOLVER). 문제 생성이 아닌 PREMIUM 소비자는 텍스트 경로
-// (generateQuestionText: ANALYSIS 지문분석·LEARNING-GEN 학습문제)뿐이라 아래
+// 26-07-20 차세대 이원 티어(캠페인 O197~O201): 두 플랜 모두 문제생성 전용 상수
+// (기본 google/gemini-3-flash-preview)로 통일 — 티어 차이는 모델이 아니라
+// 파이프라인 무게(STANDARD=생성+통합 검수리 2콜, PREMIUM=풀 파이프라인+E-gate)다.
+// STANDARD 는 광역 공유 노브(ATLAS_STANDARD_MODEL_ID)에서 분리한
+// ATLAS_STANDARD_QGEN_MODEL_ID 를 쓴다 — 튜터·웹툰·지문분석 등 비생성 소비자와
+// KO(국어) 경로는 기존 모델을 유지해야 하기 때문(KO 는 호출부 modelId 오버라이드).
+// 이 함수의 호출자는 전원 문제 생성 파이프라인이다(AUTO-GEN/AUTO-GEN-PLAN/
+// SINGLE-GEN·KO-SOLVER·GRAMMAR-SOLVER). 문제 생성이 아닌 PREMIUM 소비자는 텍스트
+// 경로(generateQuestionText: ANALYSIS 지문분석·LEARNING-GEN 학습문제)뿐이라 아래
 // TEXT_GENERATION_MODEL_CONFIGS 로 분리해 기존 Claude 를 불변 유지한다.
 const QUESTION_GENERATION_MODEL_CONFIGS: Record<
   QuestionGenerationPlan,
@@ -51,7 +67,7 @@ const QUESTION_GENERATION_MODEL_CONFIGS: Record<
 > = {
   STANDARD: {
     provider: ATLAS_CLOUD_PROVIDER,
-    modelId: ATLAS_STANDARD_MODEL_ID,
+    modelId: ATLAS_STANDARD_QGEN_MODEL_ID,
     timeoutMs: STANDARD_QUESTION_TIMEOUT_MS,
   },
   PREMIUM: {
@@ -70,7 +86,14 @@ const TEXT_GENERATION_MODEL_CONFIGS: Record<
   QuestionGenerationPlan,
   { provider: QuestionGenerationProvider; modelId: string; timeoutMs: number }
 > = {
-  STANDARD: QUESTION_GENERATION_MODEL_CONFIGS.STANDARD,
+  // 텍스트 경로 STANDARD(지문분석·passage-report 계열)는 문제생성 flash3 통일의
+  // 범위 밖 — 광역 표준 모델(26-07-22 부터 기본 gemini-3.6-flash)·기존 60s
+  // 타임아웃을 유지한다(학습지 계열 호출자는 timeoutMs 를 자체 상향).
+  STANDARD: {
+    provider: ATLAS_CLOUD_PROVIDER,
+    modelId: ATLAS_STANDARD_MODEL_ID,
+    timeoutMs: TEXT_STANDARD_QUESTION_TIMEOUT_MS,
+  },
   PREMIUM: {
     provider: ATLAS_CLOUD_PROVIDER,
     modelId: ATLAS_PREMIUM_MODEL_ID,
@@ -124,17 +147,25 @@ function claudeQgenReasoningOptions(modelId: string): {
 // 키를 스프레드한 뒤 `reasoning_effort: compatibleOptions.reasoningEffort` 로
 // 덮어써 undefined 가 되므로 반드시 camelCase 를 쓴다.)
 //   - gemini: atlasReasoningRequestFor 가 reasoning 을 자체 제어(기본 none)하므로
-//     제외 — 여기서 실으면 요청 바이트가 바뀐다(계약: gemini 경로 불변).
+//     기본 제외 — 여기서 실으면 요청 바이트가 바뀐다(계약: gemini 경로 불변).
+//     단 applyToGemini opt-in(26-07-20 이원 티어, O201 S3i 계약: flash3 사고
+//     high 를 콜 단위로 고정)일 때만 gemini 에도 싣는다 — wire 의 reasoning_effort
+//     가 atlasReasoningRequestFor 의 requestedEffort 로 소비되어 {reasoning:
+//     {enabled:true, effort, exclude:true}} 가 된다(전역 env
+//     OPENROUTER_GEMINI_REASONING_EFFORT 를 건드리지 않는 콜 단위 경로).
+//     opt-in 하지 않은 기존 gemini 콜은 계속 바이트 동일.
 //   - claude: claudeQgenReasoningOptions 가 이미 reasoning 을 싣는다 — 이중 지정
 //     방지로 제외.
 //   - 미지정(undefined/빈값): {} 반환 → 기존 호출과 바이트 동일.
 function explicitReasoningEffortOptions(
   modelId: string,
   reasoningEffort: string | undefined,
+  applyToGemini = false,
 ): { providerOptions?: Record<string, Record<string, JSONValue>> } {
   const effort = reasoningEffort?.trim();
   if (!effort) return {};
-  if (isAtlasGeminiModel(modelId) || isAtlasClaudeModel(modelId)) return {};
+  if (isAtlasGeminiModel(modelId) && !applyToGemini) return {};
+  if (isAtlasClaudeModel(modelId)) return {};
   return {
     providerOptions: { [ATLAS_CLOUD_PROVIDER]: { reasoningEffort: effort } },
   };
@@ -171,10 +202,19 @@ interface GenerateQuestionObjectArgs<T> {
    * 명시적 reasoning effort(예: "high"). 지정 시 providerOptions 로 실려 atlas-ai
    * 의 transformRequestBody 가 소비한다 — E-gate(해설 사실검증) 검증·수리 콜이
    * grok 에 high 추론을 명시 전달하는 전용 경로(범용 env
-   * OPENROUTER_REASONING_EFFORT 에 의존하지 않는다). gemini·claude 는 각자 자체
-   * reasoning 제어가 있어 대상에서 제외 — 미지정 시 기존과 바이트 동일하다.
+   * OPENROUTER_REASONING_EFFORT 에 의존하지 않는다). claude 는 자체 reasoning
+   * 제어가 있어 항상 제외, gemini 는 applyReasoningEffortToGemini opt-in 시에만
+   * 적용 — opt-in 없는 기존 콜은 바이트 동일하다.
    */
   reasoningEffort?: string;
+  /**
+   * 26-07-20 이원 티어(O201 S3i 계약): reasoningEffort 를 gemini 모델에도 콜
+   * 단위로 싣는다(wire: {reasoning:{enabled:true, effort, exclude:true}}).
+   * flash3 생성·검수리 콜이 전역 env(OPENROUTER_GEMINI_REASONING_EFFORT — 전
+   * gemini 소비자 공용)를 건드리지 않고 사고 강도를 고정하는 유일한 경로다.
+   * 기본 false = 기존 gemini 콜 바이트 불변.
+   */
+  applyReasoningEffortToGemini?: boolean;
   /** Opt-in research stage semantic; ignored byte-for-byte when no runtime is active. */
   researchStage?: QuestionGenerationResearchStage;
 }
@@ -194,6 +234,14 @@ interface GenerateQuestionTextArgs {
   thinkingBudget?: number;
   timeoutMs?: number;
   temperature?: number;
+  /** GenerateQuestionObjectArgs.reasoningEffort 와 동일 계약 — 콜 단위 사고 강도. */
+  reasoningEffort?: string;
+  /**
+   * GenerateQuestionObjectArgs.applyReasoningEffortToGemini 와 동일 계약 —
+   * true 일 때만 gemini 모델에 reasoningEffort 를 싣는다(기본 false = 기존 콜
+   * 바이트 불변). 26-07-22 학습지·실전 학습지 3.6-flash 사고 high 전환용 배선.
+   */
+  applyReasoningEffortToGemini?: boolean;
 }
 
 export interface GenerateQuestionObjectResult<T> {
@@ -358,6 +406,7 @@ async function generateQuestionObjectImpl<T>({
   deadlineAt,
   forceJsonFallback = false,
   reasoningEffort,
+  applyReasoningEffortToGemini = false,
   researchStage,
 }: GenerateQuestionObjectArgs<T>): Promise<GenerateQuestionObjectResult<T>> {
   // 연구 전용 출력 한도 하한 오버라이드 (O175 후속: 추론 high 스윕에서 reasoning
@@ -441,6 +490,7 @@ async function generateQuestionObjectImpl<T>({
         sdkMaxRetries: effectiveSdkMaxRetries,
         allowStructuredRepair,
         reasoningEffort,
+        applyReasoningEffortToGemini,
       });
       if (fallback) {
         console.log(
@@ -476,7 +526,11 @@ async function generateQuestionObjectImpl<T>({
         maxRetries: effectiveSdkMaxRetries,
         maxOutputTokens: maxTokens,
         ...claudeQgenReasoningOptions(config.modelId),
-        ...explicitReasoningEffortOptions(config.modelId, reasoningEffort),
+        ...explicitReasoningEffortOptions(
+          config.modelId,
+          reasoningEffort,
+          applyReasoningEffortToGemini,
+        ),
         abortSignal: AbortSignal.timeout(
           computeAbortMs(timeoutMs ?? config.timeoutMs),
         ),
@@ -577,6 +631,7 @@ async function generateQuestionObjectImpl<T>({
           sdkMaxRetries: effectiveSdkMaxRetries,
           allowStructuredRepair,
           reasoningEffort,
+          applyReasoningEffortToGemini,
         });
         if (fallback) return fallback;
         // 폴백 실패는 잘림·타임아웃 등 비결정 요인 — 남은 attempt 가 있으면
@@ -796,6 +851,7 @@ async function generateObjectViaJsonFallbackImpl<T>({
   sdkMaxRetries,
   allowStructuredRepair,
   reasoningEffort,
+  applyReasoningEffortToGemini = false,
 }: {
   schema: z.ZodType<T>;
   prompt: string;
@@ -811,6 +867,7 @@ async function generateObjectViaJsonFallbackImpl<T>({
   sdkMaxRetries: number;
   allowStructuredRepair: boolean;
   reasoningEffort?: string;
+  applyReasoningEffortToGemini?: boolean;
 }): Promise<GenerateQuestionObjectResult<T> | null> {
   if (abortMs <= 1_000) return null;
   // zod v4 → JSON Schema 인라인. 변환 불가 스키마(z.custom 류)면 텍스트 없이
@@ -842,7 +899,11 @@ async function generateObjectViaJsonFallbackImpl<T>({
       // claudeQgenReasoningOptions 로 기본 비활성 — 잘림·지연의 근본 차단.)
       maxOutputTokens: 32_000,
       ...claudeQgenReasoningOptions(modelId),
-      ...explicitReasoningEffortOptions(modelId, reasoningEffort),
+      ...explicitReasoningEffortOptions(
+        modelId,
+        reasoningEffort,
+        applyReasoningEffortToGemini,
+      ),
       abortSignal: AbortSignal.timeout(abortMs),
       ...(system
         ? {
@@ -1038,6 +1099,8 @@ export async function generateQuestionText({
   thinkingBudget,
   timeoutMs,
   temperature = 0.35,
+  reasoningEffort,
+  applyReasoningEffortToGemini = false,
 }: GenerateQuestionTextArgs): Promise<GenerateQuestionTextResult> {
   const planConfig = getTextGenerationModelConfig(generationPlan);
   const config = modelIdOverride
@@ -1076,6 +1139,11 @@ export async function generateQuestionText({
         maxOutputTokens: omitMaxTokens ? undefined : maxTokens,
         temperature,
         ...claudeQgenReasoningOptions(config.modelId),
+        ...explicitReasoningEffortOptions(
+          config.modelId,
+          reasoningEffort,
+          applyReasoningEffortToGemini,
+        ),
         abortSignal: AbortSignal.timeout(timeoutMs ?? config.timeoutMs),
         ...(responseFormat === "json_object" ? { output: Output.json() } : {}),
       });

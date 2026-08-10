@@ -18,6 +18,7 @@ import {
 import { toast } from "sonner";
 import { openStudentAppSession, updateStudentStatus } from "@/actions/students";
 import { StatusPill, type PillTone } from "@/components/layout/page-frame";
+import { CTA_LABELS } from "@/lib/wording/director-glossary";
 import { cn, formatRelativeTime } from "@/lib/utils";
 
 export interface StudentHubHeaderData {
@@ -132,11 +133,11 @@ export function StudentHubHeader({
 
   return (
     <section className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
-      <div className="flex flex-col gap-4 px-4 py-4 sm:px-5">
+      <div className="flex flex-col gap-4 px-5 py-5 sm:px-6">
         <div className="flex items-center justify-between gap-3">
           <Link
             href="/director/students"
-            className="inline-flex items-center gap-1.5 text-[12.5px] font-medium text-slate-400 transition-colors hover:text-slate-600"
+            className="inline-flex items-center gap-1.5 text-[13px] font-medium text-slate-400 transition-colors hover:text-slate-600"
           >
             <ArrowLeft className="size-3.5" aria-hidden />
             학생 목록
@@ -148,7 +149,7 @@ export function StudentHubHeader({
                 value={student.status}
                 disabled={pending}
                 onChange={(e) => changeStatus(e.target.value)}
-                className="h-8 rounded-md border border-slate-200 bg-white px-2 text-[12px] font-medium text-slate-600 outline-none focus:border-blue-400 disabled:opacity-50"
+                className="h-9 rounded-md border border-slate-200 bg-white px-2.5 text-[13px] font-medium text-slate-600 outline-none focus:border-blue-400 disabled:opacity-50"
                 aria-label="학생 상태 변경"
               >
                 {Object.entries(STATUS_META).map(([value, meta]) => (
@@ -161,9 +162,9 @@ export function StudentHubHeader({
             <button
               type="button"
               onClick={() => onGoTab("consult")}
-              className="inline-flex h-8 items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 text-[12.5px] font-semibold text-slate-600 transition-colors hover:bg-slate-50"
+              className="inline-flex h-9 items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3.5 text-[13px] font-semibold text-slate-600 transition-colors hover:bg-slate-50"
             >
-              <MessageSquarePlus className="size-3.5" aria-hidden />
+              <MessageSquarePlus className="size-4" aria-hidden />
               상담 기록
             </button>
             {student.status === "ACTIVE" ? (
@@ -172,33 +173,33 @@ export function StudentHubHeader({
                 disabled={appOpening}
                 onClick={openStudentApp}
                 title={`${student.name} 학생 계정으로 모바일 학습 앱을 새 탭에서 엽니다`}
-                className="inline-flex h-8 items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 text-[12.5px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-50"
+                className="inline-flex h-9 items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3.5 text-[13px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-50"
               >
-                <ExternalLink className="size-3.5" aria-hidden />
+                <ExternalLink className="size-4" aria-hidden />
                 {appOpening ? "여는 중…" : "학생 앱 열기"}
               </button>
             ) : null}
             <button
               type="button"
               onClick={onOpenComposer}
-              className="inline-flex h-8 items-center gap-1.5 rounded-md bg-blue-600 px-3 text-[12.5px] font-semibold text-white transition-colors hover:bg-blue-700"
+              className="inline-flex h-9 items-center gap-1.5 rounded-md bg-blue-600 px-3.5 text-[13px] font-semibold text-white transition-colors hover:bg-blue-700"
             >
-              <ClipboardList className="size-3.5" aria-hidden />
-              과제 배포
+              <ClipboardList className="size-4" aria-hidden />
+              {CTA_LABELS.SEND_TASK}
             </button>
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-4">
+        <div className="flex flex-wrap items-center gap-5">
           <div
-            className="flex size-14 shrink-0 items-center justify-center rounded-full bg-blue-50 text-lg font-bold text-blue-600 ring-1 ring-blue-100"
+            className="flex size-16 shrink-0 items-center justify-center rounded-full bg-blue-50 text-xl font-bold text-blue-600 ring-1 ring-blue-100"
             aria-hidden
           >
             {student.name.slice(0, 1)}
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-xl font-bold text-slate-900">{student.name}</h1>
+              <h1 className="text-2xl font-bold text-slate-900">{student.name}</h1>
               <StatusPill tone={statusMeta.tone}>{statusMeta.label}</StatusPill>
               <span
                 className="select-all rounded bg-slate-50 px-2 py-0.5 font-mono text-[11px] font-medium text-slate-500 ring-1 ring-slate-100"
@@ -207,9 +208,9 @@ export function StudentHubHeader({
                 {student.studentCode}
               </span>
             </div>
-            <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[12.5px] text-slate-500">
+            <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13.5px] text-slate-500">
               <span className="inline-flex items-center gap-1">
-                <School className="size-3.5 text-slate-300" aria-hidden />
+                <School className="size-4 text-slate-300" aria-hidden />
                 {student.schoolName ?? "학교 미등록"} · {student.grade}학년
               </span>
               {student.phone ? (
@@ -219,7 +220,7 @@ export function StudentHubHeader({
                   title="탭하면 전화번호를 복사합니다"
                   className="inline-flex items-center gap-1 rounded transition-colors hover:text-blue-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
                 >
-                  <Phone className="size-3.5 text-slate-300" aria-hidden />
+                  <Phone className="size-4 text-slate-300" aria-hidden />
                   {formatPhone(student.phone)}
                 </button>
               ) : null}
@@ -231,7 +232,7 @@ export function StudentHubHeader({
                   )}
                 >
                   <Activity
-                    className={cn("size-3.5", staleActivity ? "text-rose-400" : "text-slate-300")}
+                    className={cn("size-4", staleActivity ? "text-rose-400" : "text-slate-300")}
                     aria-hidden
                   />
                   마지막 학습 {formatRelativeTime(lastActivityAt)}
@@ -261,10 +262,10 @@ export function StudentHubHeader({
         {quickStats.map((s) => {
           const inner = (
             <>
-              <span className="truncate text-[11px] font-medium text-slate-400">{s.label}</span>
+              <span className="truncate text-[12px] font-medium text-slate-400">{s.label}</span>
               <span
                 className={cn(
-                  "truncate text-[15px] font-bold tabular-nums",
+                  "truncate text-2xl font-bold tabular-nums",
                   s.tone === "emerald"
                     ? "text-emerald-600"
                     : s.tone === "rose"
@@ -277,7 +278,7 @@ export function StudentHubHeader({
                 {s.value}
               </span>
               {s.sub ? (
-                <span className="truncate text-[10.5px] tabular-nums text-slate-300">{s.sub}</span>
+                <span className="truncate text-[12px] tabular-nums text-slate-300">{s.sub}</span>
               ) : null}
             </>
           );
@@ -286,12 +287,12 @@ export function StudentHubHeader({
               key={s.label}
               type="button"
               onClick={s.onSelect}
-              className="flex flex-col gap-0.5 px-4 py-2.5 text-left transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-400"
+              className="flex flex-col gap-1 px-5 py-4 text-left transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-400"
             >
               {inner}
             </button>
           ) : (
-            <div key={s.label} className="flex flex-col gap-0.5 px-4 py-2.5">
+            <div key={s.label} className="flex flex-col gap-1 px-5 py-4">
               {inner}
             </div>
           );

@@ -1,0 +1,62 @@
+{
+  "packet-01": {
+    "A": "google/gemini-3-flash-preview",
+    "B": "google/gemini-3.5-flash-lite",
+    "C": "google/gemini-3.6-flash",
+    "type": "BLANK_INFERENCE"
+  },
+  "packet-02": {
+    "A": "google/gemini-3.6-flash",
+    "B": "google/gemini-3-flash-preview",
+    "C": "google/gemini-3.5-flash-lite",
+    "type": "GRAMMAR_ERROR"
+  },
+  "packet-03": {
+    "A": "google/gemini-3.6-flash",
+    "B": "google/gemini-3-flash-preview",
+    "C": "google/gemini-3.5-flash-lite",
+    "type": "BLANK_INFERENCE"
+  },
+  "packet-04": {
+    "A": "google/gemini-3.6-flash",
+    "B": "google/gemini-3-flash-preview",
+    "C": "google/gemini-3.5-flash-lite",
+    "type": "GRAMMAR_ERROR"
+  },
+  "packet-05": {
+    "A": "google/gemini-3.5-flash-lite",
+    "B": "google/gemini-3-flash-preview",
+    "C": "google/gemini-3.6-flash",
+    "type": "BLANK_INFERENCE"
+  },
+  "packet-06": {
+    "A": "google/gemini-3.6-flash",
+    "B": "google/gemini-3.5-flash-lite",
+    "C": "google/gemini-3-flash-preview",
+    "type": "GRAMMAR_ERROR"
+  },
+  "packet-07": {
+    "A": "google/gemini-3-flash-preview",
+    "B": "google/gemini-3.5-flash-lite",
+    "C": "google/gemini-3.6-flash",
+    "type": "BLANK_INFERENCE"
+  },
+  "packet-08": {
+    "A": "google/gemini-3-flash-preview",
+    "B": "google/gemini-3.5-flash-lite",
+    "C": "google/gemini-3.6-flash",
+    "type": "BLANK_INFERENCE"
+  },
+  "packet-09": {
+    "A": "google/gemini-3-flash-preview",
+    "B": "google/gemini-3.6-flash",
+    "C": "google/gemini-3.5-flash-lite",
+    "type": "GRAMMAR_ERROR"
+  },
+  "packet-10": {
+    "A": "google/gemini-3.6-flash",
+    "B": "google/gemini-3.5-flash-lite",
+    "C": "google/gemini-3-flash-preview",
+    "type": "GRAMMAR_ERROR"
+  }
+}
