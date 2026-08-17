@@ -188,3 +188,13 @@ scripts/vocab-drill-qa/.cookie
 
 # 코퍼스 원본·중간 산출물(655MB) — 리포에 넣지 않는다. 재생성은 scripts/vocab-* 로.
 experiments/
+
+# 사내 업무관리 MCP 서버 소스 — 이 앱과 별개 프로그램이라 리포에 넣지 않는다.
+/neander-erp-mcp-team/
+
+# 편집기 개인 설정
+/.vscode/
+
+# 임시 QA 스크립트(작업 중 산출물). scripts/tmp-* 중 커밋된 것들이 이미 있어
+# 포괄 패턴 대신 이 파일만 지정한다.
+/scripts/tmp-gd-qa.ts

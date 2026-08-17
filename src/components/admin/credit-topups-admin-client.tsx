@@ -36,6 +36,13 @@ import {
   formatDate,
 } from "@/components/admin/credit-promotion-editor";
 import { cn } from "@/lib/utils";
+import { resolveCompletedDisplay, isManualGrantTopUp } from "@/lib/credit-topup-status";
+import {
+  ManualCompleteModal,
+  type ManualCompletePayload,
+  type ManualGrantCandidate,
+  type DuplicateNotificationCandidate,
+} from "@/components/admin/credit-topups-admin-parts/manual-complete-modal";
 import {
   getTransactionTypeLabel,
   getOperationTypeLabel,
@@ -132,6 +139,10 @@ type AdminCreditActivity = {
 };
 
 type AdminTopUpDetail = AdminTopUp & {
+  /** 수동 충전 완료 처리 가능 여부(미지급 + 대기 상태) */
+  canManualComplete?: boolean;
+  manualGrantCandidates?: ManualGrantCandidate[];
+  duplicateNotificationCandidates?: DuplicateNotificationCandidate[];
   webhookEvents: AdminWebhookEvent[];
   relatedCreditTransactions: AdminRelatedCreditTransaction[];
   academyCreditActivity: AdminCreditActivity[];
@@ -218,6 +229,7 @@ function getTopUpStatusDisplay(topUp: {
   paymentMethod: string | null;
   status: string;
   createdAt: Date | string;
+  customData?: unknown;
 }): { label: string; style: string } {
   const expired =
     topUp.paymentMethod === "BANK_TRANSFER" &&
@@ -227,10 +239,12 @@ function getTopUpStatusDisplay(topUp: {
   if (expired) {
     return { label: "시간 초과", style: "bg-gray-100 text-gray-500" };
   }
-  return {
-    label: STATUS_LABELS[topUp.status] ?? topUp.status,
-    style: STATUS_STYLES[topUp.status] ?? "bg-gray-100 text-gray-600",
-  };
+  return resolveCompletedDisplay({
+    status: topUp.status,
+    manualGrant: isManualGrantTopUp(topUp.customData),
+    fallbackLabel: STATUS_LABELS[topUp.status] ?? topUp.status,
+    fallbackStyle: STATUS_STYLES[topUp.status] ?? "bg-gray-100 text-gray-600",
+  });
 }
 
 function formatOrderNo(id: string): string {
@@ -389,6 +403,8 @@ export function CreditTopUpsAdminClient({
   const [syncing, setSyncing] = useState(false);
   const [cancelling, setCancelling] = useState(false);
   const [closingVirtualAccount, setClosingVirtualAccount] = useState(false);
+  const [showManualComplete, setShowManualComplete] = useState(false);
+  const [manualCompleting, setManualCompleting] = useState(false);
   const [actionMessage, setActionMessage] = useState<{
     type: "success" | "error" | "info";
     text: string;
@@ -581,6 +597,42 @@ export function CreditTopUpsAdminClient({
       });
     } finally {
       setCancelling(false);
+    }
+  }
+
+  // 시스템 밖에서 이미 지급한 건을 주문에 반영한다. 크레딧은 추가 지급하지 않는다.
+  async function manualCompleteSelectedTopUp(payload: ManualCompletePayload) {
+    if (!selectedTopUpId) return;
+    setManualCompleting(true);
+    setActionMessage({ type: "info", text: "수동 충전 완료 처리 중입니다." });
+    try {
+      const res = await fetch(
+        `/api/admin/credits/top-ups/${selectedTopUpId}/manual-complete`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        },
+      );
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error ?? "수동 완료 처리에 실패했습니다.");
+      }
+      setSelectedTopUp(data.topUp);
+      setShowManualComplete(false);
+      setActionMessage({
+        type: "success",
+        text: "수동 충전 완료로 처리했습니다. 고객 화면과 매출 집계에 반영됩니다.",
+      });
+      refresh();
+    } catch (err) {
+      setActionMessage({
+        type: "error",
+        text:
+          err instanceof Error ? err.message : "수동 완료 처리에 실패했습니다.",
+      });
+    } finally {
+      setManualCompleting(false);
     }
   }
 
@@ -1153,6 +1205,8 @@ export function CreditTopUpsAdminClient({
             refundAccountNumber={refundAccountNumber}
             refundHolderName={refundHolderName}
             refundHolderPhoneNumber={refundHolderPhoneNumber}
+            manualCompleting={manualCompleting}
+            onOpenManualComplete={() => setShowManualComplete(true)}
             onSync={syncSelectedTopUp}
             onOpenCancelForm={() => setShowCancelForm(true)}
             onCloseCancelForm={() => setShowCancelForm(false)}
@@ -1166,10 +1220,39 @@ export function CreditTopUpsAdminClient({
           />
         </DialogContent>
       </Dialog>
+      <ManualCompleteModal
+        open={showManualComplete}
+        submitting={manualCompleting}
+        topUp={
+          selectedTopUp
+            ? {
+                id: selectedTopUp.id,
+                price: selectedTopUp.price,
+                creditAmount: selectedTopUp.creditAmount,
+                academyName: selectedTopUp.academy.name,
+                depositorName: readDepositorName(selectedTopUp.customData),
+                createdAt: selectedTopUp.createdAt,
+              }
+            : null
+        }
+        candidates={selectedTopUp?.manualGrantCandidates ?? []}
+        duplicates={selectedTopUp?.duplicateNotificationCandidates ?? []}
+        onSubmit={manualCompleteSelectedTopUp}
+        onClose={() => setShowManualComplete(false)}
+      />
       </>
       )}
     </div>
   );
+}
+
+/** 무통장입금 주문의 customData 에 저장된 입금자명. */
+function readDepositorName(customData: unknown): string | null {
+  if (customData && typeof customData === "object" && !Array.isArray(customData)) {
+    const v = (customData as Record<string, unknown>).depositorName;
+    if (typeof v === "string" && v) return v;
+  }
+  return null;
 }
 
 function ReviewReadinessStrip() {
@@ -1208,12 +1291,14 @@ function TopUpDetailPanel({
   syncing,
   cancelling,
   closingVirtualAccount,
+  manualCompleting,
   showCancelForm,
   cancelReason,
   refundBank,
   refundAccountNumber,
   refundHolderName,
   refundHolderPhoneNumber,
+  onOpenManualComplete,
   onSync,
   onOpenCancelForm,
   onCloseCancelForm,
@@ -1230,12 +1315,14 @@ function TopUpDetailPanel({
   syncing: boolean;
   cancelling: boolean;
   closingVirtualAccount: boolean;
+  manualCompleting: boolean;
   showCancelForm: boolean;
   cancelReason: string;
   refundBank: string;
   refundAccountNumber: string;
   refundHolderName: string;
   refundHolderPhoneNumber: string;
+  onOpenManualComplete: () => void;
   onSync: () => void;
   onOpenCancelForm: () => void;
   onCloseCancelForm: () => void;
@@ -1249,6 +1336,8 @@ function TopUpDetailPanel({
 }) {
   const canSync = Boolean(topUp?.paymentId);
   const canCancel = topUp?.status === "COMPLETED";
+  // 서버가 판정한다(미지급 + 입금대기/결제대기). 필드가 없는 옛 응답은 보수적으로 숨김.
+  const canManualComplete = Boolean(topUp?.canManualComplete);
   const canCloseVirtualAccount =
     topUp?.status === "WAITING_FOR_DEPOSIT" &&
     topUp.paymentMethod === "VIRTUAL_ACCOUNT";
@@ -1283,6 +1372,17 @@ function TopUpDetailPanel({
           <div className="flex items-center gap-2">
             {topUp && (
             <div className="flex flex-wrap items-center gap-2">
+              {canManualComplete && (
+                <button
+                  type="button"
+                  onClick={onOpenManualComplete}
+                  disabled={manualCompleting || syncing || cancelling}
+                  className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-teal-200 bg-teal-50 px-2.5 text-[12px] font-semibold text-teal-700 shadow-sm transition hover:border-teal-300 hover:bg-teal-100 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <ShieldCheck className="size-3.5" strokeWidth={2} />
+                  수동 충전 완료
+                </button>
+              )}
               <button
               type="button"
               onClick={onSync}

@@ -1,4 +1,8 @@
 import { prisma } from "@/lib/prisma";
+import {
+  findDuplicateNotificationCandidates,
+  findManualGrantTransactionCandidates,
+} from "@/lib/manual-topup-complete";
 
 /** 결제 상세 모달의 "학원 크레딧 사용 로그" 한 페이지 크기. */
 export const ACADEMY_ACTIVITY_PAGE_SIZE = 20;
@@ -163,8 +167,32 @@ export async function getAdminCreditTopUpDetail(topUpId: string) {
     }),
   ]);
 
+  // 수동 충전 완료 처리가 가능한 주문(미지급 상태)일 때만, 모달이 쓸 연결 후보를 같이 싣는다.
+  //  - manualGrantCandidates: "이미 지급한" 크레딧 거래 후보(보통 관리자 ADJUSTMENT)
+  //  - duplicateNotificationCandidates: 같은 입금을 매출에 또 넣고 있는 MANUAL_GRANT 알림
+  const canManualComplete =
+    !topUp.creditTransactionId &&
+    (topUp.status === "WAITING_FOR_DEPOSIT" || topUp.status === "PENDING");
+
+  const [manualGrantCandidates, duplicateNotificationCandidates] =
+    canManualComplete
+      ? await Promise.all([
+          findManualGrantTransactionCandidates({
+            academyId: topUp.academyId,
+            around: topUp.createdAt,
+          }),
+          findDuplicateNotificationCandidates({
+            price: topUp.price,
+            around: topUp.createdAt,
+          }),
+        ])
+      : [[], []];
+
   return {
     ...topUp,
+    canManualComplete,
+    manualGrantCandidates,
+    duplicateNotificationCandidates,
     relatedCreditTransactions,
     academyCreditActivity: activityPage.items,
     academyActivityTotal: activityPage.total,
@@ -177,12 +205,19 @@ export async function getAdminCreditTopUpDetail(topUpId: string) {
 }
 
 export async function getAdminCreditTopUpStats() {
+  const todayStart = new Date(new Date().setHours(0, 0, 0, 0));
   const [today, pendingCount, completedAgg, failedCount] = await Promise.all([
+    // "오늘 결제"는 매출이므로 실제로 완료된 건만 센다. 상태 필터가 없으면 결제 대기·
+    // 입금 확인 실패처럼 한 푼도 들어오지 않은 주문까지 전액 매출로 잡힌다.
+    // 기간 기준은 원가분석(operations-cost)과 동일하게 paidAt ?? completedAt 을 쓴다.
+    // 주문 생성일(createdAt)로 잡으면 어제 주문·오늘 입금 건이 두 화면에서 어긋난다.
     prisma.creditTopUp.aggregate({
       where: {
-        createdAt: {
-          gte: new Date(new Date().setHours(0, 0, 0, 0)),
-        },
+        status: "COMPLETED",
+        OR: [
+          { paidAt: { gte: todayStart } },
+          { paidAt: null, completedAt: { gte: todayStart } },
+        ],
       },
       _sum: { price: true, creditAmount: true },
       _count: true,

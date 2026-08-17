@@ -356,8 +356,11 @@ export async function grantBankDepositTopUp(
         throw new BankDepositError("PRODUCT_NOT_FOUND", "Top-up order not found.");
       }
 
-      // Idempotency: already credited → return current balance, no double-grant.
-      if (topUp.status === "COMPLETED" && topUp.creditTransactionId) {
+      // Idempotency: already completed → return current balance, no double-grant.
+      // creditTransactionId 유무를 따지지 않는다. 관리자가 시스템 밖에서 지급한 뒤
+      // "수동 충전 완료"로 정리한 주문은 COMPLETED 이면서 creditTransactionId 가
+      // 비어 있을 수 있는데, 그걸 다시 지급하면 이중지급이 된다.
+      if (topUp.status === "COMPLETED") {
         const balance = await tx.creditBalance.findUnique({
           where: { academyId: topUp.academyId },
           select: { balance: true },

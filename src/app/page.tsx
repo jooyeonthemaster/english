@@ -30,9 +30,10 @@ export default async function RootPage() {
     getPublicGroupSeminars(),
   ]);
   // 모집중(신청 가능)인 공개 세미나가 있으면 랜딩 상단에 프로모 배너로 노출.
+  // 행사일이 지난 세미나(eventPassed)는 status가 OPEN이어도 노출하지 않는다.
   const featuredSeminar =
     publicSeminars.find((s) => s.registrationOpen) ??
-    publicSeminars.find((s) => s.status === "OPEN") ??
+    publicSeminars.find((s) => s.status === "OPEN" && !s.eventPassed) ??
     null;
   return (
     <main

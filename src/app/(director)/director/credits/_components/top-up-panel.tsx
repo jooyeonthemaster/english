@@ -2,6 +2,7 @@
 
 import { OPERATION_LABELS } from "@/lib/credit-costs";
 import type { OperationType } from "@/lib/credit-costs";
+import { resolveCompletedDisplay } from "@/lib/credit-topup-status";
 import { cn } from "@/lib/utils";
 import { Banknote, Check, CheckCircle2, ChevronDown, Clock, Coins, Copy, CreditCard, Flame, Landmark, MessageSquare, ReceiptText, Sparkles, Smartphone, WalletCards } from "lucide-react";
 import { OPERATION_COLORS, OPERATION_ICONS } from "./credit-overview";
@@ -39,6 +40,8 @@ export interface CreditTopUp {
   paidAt: string | null;
   depositorName?: string | null;
   confirmStartedAt?: string | null;
+  /** 관리자가 시스템 밖에서 지급한 뒤 완료 처리한 건 → "수동 충전 완료"로 표시 */
+  manualGrant?: boolean;
 }
 
 /** 주문 id에서 표시용 주문번호(끝 8자리, 대문자)를 만든다. */
@@ -244,10 +247,13 @@ function getTopUpDisplayStatus(topUp: CreditTopUp): {
   if (expired) {
     return { label: "시간 초과", style: "bg-gray-100 text-gray-500" };
   }
-  return {
-    label: TOP_UP_STATUS_LABELS[topUp.status] ?? topUp.status,
-    style: TOP_UP_STATUS_STYLES[topUp.status] ?? "bg-gray-100 text-gray-600",
-  };
+  return resolveCompletedDisplay({
+    status: topUp.status,
+    manualGrant: Boolean(topUp.manualGrant),
+    fallbackLabel: TOP_UP_STATUS_LABELS[topUp.status] ?? topUp.status,
+    fallbackStyle:
+      TOP_UP_STATUS_STYLES[topUp.status] ?? "bg-gray-100 text-gray-600",
+  });
 }
 
 interface ProductDeal {
