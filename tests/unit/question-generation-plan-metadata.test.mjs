@@ -123,6 +123,19 @@ function source(relPath) {
   return readFileSync(path.join(repoRoot, relPath), "utf8");
 }
 
+/**
+ * 소스 가드는 "호출 형태(배선)"를 지키는 것이지 포매팅을 지키는 게 아니다.
+ * prettier 가 인자를 줄바꿈하면
+ *   patchTypeSettings(typeId, { difficulty: ... })
+ * 가
+ *   patchTypeSettings(typeId, {\n    difficulty: ...
+ * 로 바뀌어 리터럴 대조가 깨진다. 의미는 그대로인데 가드만 실패하므로,
+ * 양쪽의 연속 공백을 한 칸으로 접어서 비교한다.
+ */
+function collapseWhitespace(text) {
+  return text.replace(/\s+/g, " ");
+}
+
 test("premium generation plan is wired through generation and review surfaces", () => {
   const expectations = [
     [
@@ -243,10 +256,10 @@ test("premium generation plan is wired through generation and review surfaces", 
   ];
 
   for (const [relPath, needles] of expectations) {
-    const text = source(relPath);
+    const text = collapseWhitespace(source(relPath));
     for (const needle of needles) {
       assert.ok(
-        text.includes(needle),
+        text.includes(collapseWhitespace(needle)),
         `${relPath} should include ${JSON.stringify(needle)}`,
       );
     }
