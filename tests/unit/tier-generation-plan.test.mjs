@@ -1,6 +1,9 @@
 // 이원 티어 서버 코어 (26-07-20, 캠페인 O197~O201) 검증.
 // (a) 티어 결정: 사용자 요청 플랜 존중 + 유형별 저장 설정 우선 (W2-E 유형 클램프 폐기)
-// (b) 요금: 티어 무관 단일가 유지 (가격 차등은 사용자 결정 대기)
+// (b) 요금: 모드별 실효 청구액 — 단일 상품은 단일가, 이원 티어는 PREMIUM 2배
+//     (26-07-22 사용자 확정). 요금 함수 자체는 모드와 무관하게 PREMIUM=2배이고,
+//     단일 상품 모드에서 2배가 안 걷히는 이유는 리졸버가 PREMIUM 을 STANDARD 로
+//     접기 때문이다. 그래서 "리졸버 + 요금 함수" 합성으로 검증한다.
 // (c) 배선 회귀 가드: 엔진·진입점·검수리 훅·E-gate 기본값·모델 기본값.
 import test from "node:test";
 import assert from "node:assert/strict";
@@ -37,10 +40,21 @@ const { CREDIT_COSTS } = creditCostsMod;
 const { resolveEffectiveGenerationPlan } = plans;
 const resolveEntry = (requested) => resolveEffectiveGenerationPlan(requested);
 
+const base = CREDIT_COSTS.QUESTION_GEN_SINGLE;
+// 사용자가 실제로 물게 되는 금액 = 요금함수(리졸버가 확정한 유효 플랜).
+const chargedFor = (requested) =>
+  getQuestionGenerationCreditCost(base, resolveEntry(requested));
+
 delete process.env.QUESTION_GENERATION_SINGLE_TIER;
 const singleTierPremiumFolded = resolveEntry("PREMIUM");
+const singleTierChargedPremium = chargedFor("PREMIUM");
+const singleTierChargedStandard = chargedFor("STANDARD");
+
 process.env.QUESTION_GENERATION_SINGLE_TIER = "off";
 const dualTierPremiumHonored = resolveEntry("PREMIUM");
+const dualTierChargedPremium = chargedFor("PREMIUM");
+const dualTierChargedStandard = chargedFor("STANDARD");
+
 delete process.env.QUESTION_GENERATION_SINGLE_TIER;
 
 const out = {
@@ -58,18 +72,23 @@ const out = {
   // 어떤 유형이든 동일 규칙 — 유형→플랜 강제표는 존재하지 않는다.
   hasLegacyClampExport: typeof plans.resolveUnifiedGenerationPlan,
 
-  // (b) 요금 단일가.
-  baseSingle: CREDIT_COSTS.QUESTION_GEN_SINGLE,
-  costStandard: getQuestionGenerationCreditCost(CREDIT_COSTS.QUESTION_GEN_SINGLE, "STANDARD"),
-  costPremium: getQuestionGenerationCreditCost(CREDIT_COSTS.QUESTION_GEN_SINGLE, "PREMIUM"),
-  // 표시 멀티플라이어도 단일가와 일치(1) — "2x 표시 vs 단일가 실제" 불일치 방지.
+  // (b) 모드별 실효 청구액.
+  baseSingle: base,
+  singleTierChargedPremium,
+  singleTierChargedStandard,
+  dualTierChargedPremium,
+  dualTierChargedStandard,
+  // 요금 함수 자체의 값(모드 무관) — 표시 멀티플라이어와의 정합 확인용.
+  costStandard: getQuestionGenerationCreditCost(base, "STANDARD"),
+  costPremium: getQuestionGenerationCreditCost(base, "PREMIUM"),
+  // 화면에 "2x"로 표시하면 실제로도 2배가 걷혀야 한다 — 표시/실제 불일치 방지.
   multStandard: QUESTION_GENERATION_PLANS.STANDARD.creditMultiplier,
   multPremium: QUESTION_GENERATION_PLANS.PREMIUM.creditMultiplier,
 };
 console.log(JSON.stringify(out));
 `;
 
-test("tier plan resolution honors user choice + per-type override, single price", () => {
+test("tier plan resolution honors user choice + per-type override, mode-aware pricing", () => {
   const tmpDir = path.join(repoRoot, "tests", ".tmp");
   mkdirSync(tmpDir, { recursive: true });
   const harnessPath = path.join(tmpDir, ".tier-generation-plan-harness.mts");
@@ -92,11 +111,22 @@ test("tier plan resolution honors user choice + per-type override, single price"
     // W2-E 유형 클램프는 폐기됐다 — export 자체가 없어야 한다.
     assert.equal(r.hasLegacyClampExport, "undefined");
 
-    // (b) 단일가 + 표시 멀티플라이어 정합.
-    assert.equal(r.costStandard, r.baseSingle);
-    assert.equal(r.costPremium, r.baseSingle);
+    // (b-1) 단일 상품 모드: 프리미엄을 요청해도 STANDARD 로 접히므로 단일가.
+    assert.equal(r.singleTierChargedStandard, r.baseSingle);
+    assert.equal(r.singleTierChargedPremium, r.baseSingle);
+
+    // (b-2) 이원 티어 모드(env off): PREMIUM 2배 — 26-07-22 사용자 확정.
+    // 프리미엄은 더 좋은 모델 + 풀 파이프라인(어법 사다리·E-gate enforce)을 타므로
+    // 원가가 더 든다. 이 값을 1배로 되돌리려면 요금 정책 결정이 선행돼야 한다.
+    assert.equal(r.dualTierChargedStandard, r.baseSingle);
+    assert.equal(r.dualTierChargedPremium, r.baseSingle * 2);
+
+    // (b-3) 표시 멀티플라이어 ↔ 실제 요금 정합: 화면에 2x 로 표시하면 실제로도
+    // 2배가 걷혀야 한다(표시/실제 불일치가 과금 신뢰를 깨는 지점).
     assert.equal(r.multStandard, 1);
-    assert.equal(r.multPremium, 1);
+    assert.equal(r.multPremium, 2);
+    assert.equal(r.costStandard, r.baseSingle * r.multStandard);
+    assert.equal(r.costPremium, r.baseSingle * r.multPremium);
   } finally {
     rmSync(harnessPath, { force: true });
   }
