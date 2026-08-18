@@ -6,6 +6,7 @@ import type { OperationType } from "@/lib/credit-costs";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { cn } from "@/lib/utils";
 import { AlertCircle, ArrowDownRight, ArrowUpRight, CheckCircle2, Coins, Filter, Gift, RefreshCw } from "lucide-react";
+import { CardLimitNotice } from "@/components/credits/card-limit-notice";
 import {
   Dialog,
   DialogContent,
@@ -336,6 +337,13 @@ export default function CreditsPage() {
               {paymentMessage?.type === "error" ? paymentMessage.text : ""}
             </DialogDescription>
           </DialogHeader>
+          {paymentMessage?.type === "error" &&
+            paymentMessage.cardLimitAmount !== undefined && (
+              <CardLimitNotice
+                amount={paymentMessage.cardLimitAmount}
+                variant="dialog"
+              />
+            )}
           <DialogFooter>
             <button
               type="button"

@@ -53,6 +53,11 @@ export function useCreditsController() {
   const [paymentMessage, setPaymentMessage] = useState<{
     type: "success" | "error" | "info";
     text: string;
+    /**
+     * 카드 결제가 실패했을 때 그 시도 금액. 환금성 업종 한도로 막힌 건지
+     * 안내하기 위해 실패 모달이 읽는다(카드 결제 실패일 때만 채운다).
+     */
+    cardLimitAmount?: number;
   } | null>(null);
   const [subscriptionMessage, setSubscriptionMessage] = useState<{
     type: "success" | "error" | "info";
@@ -279,6 +284,11 @@ export function useCreditsController() {
       }
       setPayingCredits(product.creditAmount);
       setPaymentMessage(null);
+      // 카드 결제 실패 시 "이 금액이 카드사 한도를 넘었는지" 안내하기 위한 기준액.
+      // 쿠폰·프로모가 붙으면 서버가 확정한 실제 청구액으로 교체한다.
+      let attemptedAmount = product.price;
+      const cardLimitInfo = () =>
+        payMethod === "CARD" ? { cardLimitAmount: attemptedAmount } : {};
       try {
         const prepareRes = await fetch("/api/credits/top-ups/prepare", {
           method: "POST",
@@ -293,6 +303,13 @@ export function useCreditsController() {
         const prepared = await prepareRes.json();
         if (!prepareRes.ok) {
           throw new Error(prepared.error ?? "결제 준비에 실패했습니다.");
+        }
+
+        const preparedAmount =
+          prepared.paymentRequest?.totalAmount ??
+          prepared.paymentRequest?.amount;
+        if (typeof preparedAmount === "number" && preparedAmount > 0) {
+          attemptedAmount = preparedAmount;
         }
 
         if (isDanalLegacyPaymentRequest(prepared.paymentRequest)) {
@@ -313,6 +330,7 @@ export function useCreditsController() {
           setPaymentMessage({
             type: "error",
             text: payment.message ?? "결제가 완료되지 않았습니다.",
+            ...cardLimitInfo(),
           });
           await fetchTopUps();
           return;
@@ -326,6 +344,7 @@ export function useCreditsController() {
             err instanceof Error
               ? err.message
               : "결제 요청 중 오류가 발생했습니다.",
+          ...cardLimitInfo(),
         });
       } finally {
         setPayingCredits(null);

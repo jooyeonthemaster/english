@@ -3,6 +3,7 @@
 import { OPERATION_LABELS } from "@/lib/credit-costs";
 import type { OperationType } from "@/lib/credit-costs";
 import { resolveCompletedDisplay } from "@/lib/credit-topup-status";
+import { CardLimitNotice } from "@/components/credits/card-limit-notice";
 import { cn } from "@/lib/utils";
 import { Banknote, Check, CheckCircle2, ChevronDown, Clock, Coins, Copy, CreditCard, Flame, Landmark, MessageSquare, ReceiptText, Sparkles, Smartphone, WalletCards } from "lucide-react";
 import { OPERATION_COLORS, OPERATION_ICONS } from "./credit-overview";
@@ -779,6 +780,10 @@ export function TopUpMethodDialog({
             </div>
           )}
         </div>
+
+        {payMethod === "CARD" && product && (
+          <CardLimitNotice amount={product.price} className="mt-3" />
+        )}
 
         <DialogFooter>
           <button
