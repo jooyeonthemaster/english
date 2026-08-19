@@ -59,6 +59,9 @@ export const PUBLIC_ROUTES: PublicRoute[] = [
     lastModified: a.updatedAt,
   })),
 
+  // 학교별 내신 허브. 개별 학교 URL 은 DB 기반이라 sitemap.ts 에서 조회해 덧붙인다.
+  { path: "/schools", changeFrequency: "weekly", priority: 0.8 },
+
   // 전환/상품
   { path: "/register", changeFrequency: "monthly", priority: 0.8 },
   { path: "/credits/products", changeFrequency: "weekly", priority: 0.6 },

@@ -5773,3 +5773,75 @@ model GroupSeminarRegistration {
   @@index([depositStatus, depositAmount, createdAt]) // 보증금 자동매칭 쿼리
   @@map("group_seminar_registrations")
 }
+
+/// 학교별 SEO 페이지(공개). 「XX고 영어 내신 출제 경향」 롱테일 유입용.
+///
+/// ⚠️ 테넌트 격리 — 이 모델은 `School`(academyId 스코프 고객 데이터)과 **무관**하다.
+///    공개 학교 명단은 NEIS 오픈API 로 별도 수집하며, 학원 고객 데이터를 여기 넣지 않는다.
+/// ⚠️ 저작권 — 기출 지문·문항 원문은 어떤 필드에도 저장하지 않는다(대법원 2021다272001).
+///    샘플 문항은 전량 창작만 허용(articles-content 의 ArticleSample 규약 승계).
+model SchoolSeoPage {
+  id     String @id @default(cuid())
+  /// URL 1단: 시·도 한글(서울/경기/충남…). 로마자 금지 — NEIS 영문표기 붕괴.
+  sido   String
+  /// URL 2단: 학교 축약 한글(평택고). 강사 검색 토큰과 일치시킨다.
+  slug   String
+
+  officialName String
+  region       String
+  schoolType   String?
+  homepage     String?
+  /// NEIS 표준학교코드. URL 에 넣지 않고 내부 식별·중복방지에만 쓴다.
+  neisCode     String?
+
+  metaTitle       String
+  metaDescription String @db.Text
+  h1              String
+  /// 대표 교과서 출판사 — /textbooks 아티클과 상호링크하는 조인 키.
+  publisher       String?
+  /// 이 페이지가 노리는 검색어. 배열 검색으로 갭 분석에 쓴다.
+  keywords        String[]
+
+  /// 본문 블록(JSON) — 조회 경로가 아니므로 스칼라로 승격하지 않는다.
+  intro           Json
+  sections        Json
+  charts          Json
+  comparisonTable Json?
+  timeline        Json
+  checklist       Json
+  faq             Json
+  textbooks       String[]
+  related         Json?
+
+  ctaTitle String?
+  ctaBody  String? @db.Text
+
+  /// 자료 충실도 — 발행 우선순위 정렬 키. 풍부 | 보통 | 희박
+  richness    String  @default("보통")
+  /// 학교 공시를 근거로 한 차트 비율(0~100). 품질 게이트 지표.
+  citedRatio  Int     @default(0)
+  /// DRAFT | PUBLISHED | RETIRED. sitemap·RSS 는 PUBLISHED 만 읽는다.
+  status      String  @default("DRAFT")
+
+  sourcesUsed String[]
+  notes       String[]
+  /// 생성 배치 식별자(워크플로 runId). 문제 발생 시 배치 단위 회수용.
+  sourceRunId String?
+
+  publishedAt DateTime?
+  updatedAt   DateTime  @updatedAt
+  createdAt   DateTime  @default(now())
+
+  /// URL 유일성 — 동명이교는 sido 로 갈린다(광문고 서울·경기, 세화고 서울·경북·제주).
+  @@unique([sido, slug])
+  @@unique([neisCode])
+  /// sitemap·허브 목록: 발행분을 최신순으로.
+  @@index([status, publishedAt])
+  /// 시도 인덱스 페이지: /schools/[sido]
+  @@index([sido, status])
+  /// /textbooks 상호링크: 같은 출판사 학교 모으기.
+  @@index([publisher, status])
+  /// 발행 우선순위 큐: 자료 풍부한 것부터.
+  @@index([status, richness])
+  @@map("school_seo_pages")
+}
