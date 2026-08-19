@@ -23,7 +23,7 @@ import {
   findNewExtremeCue,
   findPrescriptiveGiveawayCue,
 } from "@/lib/question-quality/validators/irrelevant";
-import { normalizeWs } from "./parser";
+import { normalizeWs, reconstructionEq } from "./parser";
 import {
   collectIrrelevantMarks,
   comparableIrrelevantSentence,
@@ -179,7 +179,7 @@ export function gateMdIrrelevant(
   // 마커 밖 무단 편집 · 비정답 슬롯 변형 · 원문 문장 유실을 한 번에 잡는다.
   if (q.answer && answerIndex >= 0) {
     const rebuilt = reconstructIrrelevantPassage(q.numberedPassage, q.answer);
-    if (normalizeWs(rebuilt) !== normalizeWs(passage)) {
+    if (!reconstructionEq(rebuilt, passage)) {
       v.push(
         "지문 재구성 불일치 — 무관 문장을 들어낸 번호지문이 원 지문과 다름(마커 밖 텍스트를 고쳤거나 원문 문장을 지웠거나 표시 문장을 변형함)",
       );

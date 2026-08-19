@@ -24,6 +24,7 @@ import {
 } from "@/lib/korean/sets/presets";
 import {
   getQuestionGenerationCreditCost,
+  planForDifficulty,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
@@ -115,10 +116,11 @@ export function useKoreanSetGeneration({
   // KO_SET_CHARGE_ATTEMPTS)을 그대로 미러해 표기와 실제 차감이 일치한다.
   const koSetStats = useMemo(() => {
     if (!koSetMode || !activeRow) return { questions: 0, creditCost: 0 };
-    const unit = getQuestionGenerationCreditCost(
-      CREDIT_COSTS.QUESTION_GEN_SINGLE,
-      activeRow.override?.generationPlan ?? generationPlan,
-    );
+    // 26-08-18 난이도 기반 티어: 플랜 대신 멤버 난이도(프리셋 슬롯 → 세트 기본 =
+    // 행 override 난이도, 없으면 INTERMEDIATE — 아래 koDifficulty 와 동일)가
+    // KILLER 인 멤버만 2배. korean-question-set 라우트 과금과 같은 우선순위
+    // (클라이언트는 memberOverrides 를 보내지 않는다).
+    const setDifficulty = activeRow.override?.difficulty ?? "INTERMEDIATE";
     // 행 오버라이드에서 직접 읽는다 — panelSetPresetCounts 는 렌더마다 새
     // 객체가 될 수 있어(조건식) memo 의존성으로 부적합.
     const presetCounts =
@@ -136,11 +138,19 @@ export function useKoreanSetGeneration({
       const resolution = resolveKoSetSlots(preset, activeRowKoKind);
       if (!resolution.ok) continue;
       questions += resolution.members.length * count;
-      creditCost +=
-        resolution.members.length * unit * KO_SET_CHARGE_ATTEMPTS * count;
+      const membersCost = resolution.members.reduce(
+        (sum, m) =>
+          sum +
+          getQuestionGenerationCreditCost(
+            CREDIT_COSTS.QUESTION_GEN_SINGLE,
+            planForDifficulty(m.difficulty ?? setDifficulty),
+          ),
+        0,
+      );
+      creditCost += membersCost * KO_SET_CHARGE_ATTEMPTS * count;
     }
     return { questions, creditCost };
-  }, [koSetMode, activeRow, generationPlan, activeRowKoKind]);
+  }, [koSetMode, activeRow, activeRowKoKind]);
 
   // KO 세트 생성 실행 — 변형본 저장(필요 시) → 낙관적 카드 → KO 라우트 순차 호출.
   const handleGenerateKoSet = useCallback(async () => {

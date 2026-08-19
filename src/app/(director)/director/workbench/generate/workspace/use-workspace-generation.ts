@@ -12,10 +12,11 @@ import { toast } from "sonner";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
 import {
   getQuestionGenerationCreditCost,
+  planForDifficulty,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
 import {
-  readQuestionTypeGenerationPlanSetting,
+  readQuestionTypeDifficultySetting,
   type QuestionTypeGenerationSettings,
 } from "@/lib/question-type-generation-settings";
 import type { PassageItem, QueueItem } from "../generate-page-types";
@@ -128,6 +129,8 @@ function computeRowGenStats(
     generationPlan: QuestionGenerationPlan;
     questionTypeSettings: QuestionTypeGenerationSettings;
     globalQuestionCount: number;
+    /** 전체 설정 난이도 — 행 override.difficulty 가 없을 때의 폴백. */
+    difficulty: "BASIC" | "INTERMEDIATE" | "KILLER";
   },
 ): { questions: number; creditCost: number } {
   const globalCfg = {
@@ -136,9 +139,11 @@ function computeRowGenStats(
   };
   const questions = rowQuestionCount(row, globalCfg);
   const mode = effectiveRowMode(row.override, ctx.genMode);
-  const plan = row.override?.generationPlan ?? ctx.generationPlan;
-  // 수동(유형 지정)은 유형마다 플랜이 다를 수 있어, 유형별 배수를 이미 적용한
-  // 비용을 따로 누적한다(rowFinal). set 도 멤버별 플랜이 가능해 rowFinal 에 직접 더한다.
+  // 26-08-18 난이도 기반 티어: 플랜(generationPlan)은 견적에 쓰지 않는다 — 유형별/
+  // 멤버별 실효 난이도가 KILLER 면 2배(planForDifficulty), 서버 과금 규칙과 동일.
+  const rowDifficulty = row.override?.difficulty ?? ctx.difficulty;
+  // 수동(유형 지정)은 유형마다 난이도가 다를 수 있어, 유형별 배수를 이미 적용한
+  // 비용을 따로 누적한다(rowFinal). set 도 멤버별 난이도가 가능해 rowFinal 에 직접 더한다.
   let rowFinal = 0;
   if (mode === "manual") {
     if (overrideHasTypeCounts(row.override)) {
@@ -147,12 +152,16 @@ function computeRowGenStats(
         const unit = VOCAB_GENERATION_TYPE_IDS.has(typeId)
           ? CREDIT_COSTS.QUESTION_GEN_VOCAB
           : CREDIT_COSTS.QUESTION_GEN_SINGLE;
-        const typePlan = readQuestionTypeGenerationPlanSetting(
+        // fast 라우트와 동일: 유형별 설정 difficulty → 행/전체 난이도 폴백.
+        const typeDifficulty = readQuestionTypeDifficultySetting(
           row.override?.questionTypeSettings?.[typeId] ??
             ctx.questionTypeSettings[typeId],
-          plan,
+          rowDifficulty,
         );
-        rowFinal += getQuestionGenerationCreditCost(unit * n, typePlan);
+        rowFinal += getQuestionGenerationCreditCost(
+          unit * n,
+          planForDifficulty(typeDifficulty),
+        );
       }
     }
   } else if (mode === "set") {
@@ -165,17 +174,23 @@ function computeRowGenStats(
           ? row.override?.setMemberOverrides
           : undefined) ??
         [];
+      // 26-08-18 난이도 기반 티어: 세트 잡의 기본 난이도는 행 override(없으면
+      // INTERMEDIATE — 아래 setJobs 조립과 동일). 멤버 우선순위는 question-set
+      // 라우트 과금과 같다: 오버라이드 → 프리셋 멤버 → 세트 기본.
+      const setDifficulty = row.override?.difficulty ?? "INTERMEDIATE";
       for (let copy = 0; copy < count; copy += 1) {
         for (let index = 0; index < preset.members.length; index += 1) {
           const m = preset.members[index];
           const unit = VOCAB_GENERATION_TYPE_IDS.has(m.typeId)
             ? CREDIT_COSTS.QUESTION_GEN_VOCAB
             : CREDIT_COSTS.QUESTION_GEN_SINGLE;
-          const memberPlan =
-            overrides[index]?.generationPlan ?? m.generationPlan ?? plan;
+          const memberDifficulty =
+            overrides[index]?.difficulty ?? m.difficulty ?? setDifficulty;
           rowFinal +=
-            getQuestionGenerationCreditCost(unit, memberPlan) *
-            QUESTION_SET_SAFETY_MAX_ATTEMPTS;
+            getQuestionGenerationCreditCost(
+              unit,
+              planForDifficulty(memberDifficulty),
+            ) * QUESTION_SET_SAFETY_MAX_ATTEMPTS;
         }
       }
     }
@@ -268,6 +283,8 @@ export function useWorkspaceGeneration({
       ? Object.values(typeCounts).reduce((a, b) => a + b, 0)
       : 0;
 
+  // 선택-only 지문(내 지문 체크) 1개당 크레딧 — 26-08-18 난이도 기반 티어: 유형별
+  // 실효 난이도(유형 설정 → 전체 난이도)가 KILLER 면 2배를 여기서 이미 적용한다.
   const globalBaseCredit = useMemo(() => {
     if (genMode !== "manual") return 0;
     return Object.entries(typeCounts).reduce((sum, [typeId, n]) => {
@@ -275,9 +292,19 @@ export function useWorkspaceGeneration({
       const unit = VOCAB_GENERATION_TYPE_IDS.has(typeId)
         ? CREDIT_COSTS.QUESTION_GEN_VOCAB
         : CREDIT_COSTS.QUESTION_GEN_SINGLE;
-      return sum + unit * n;
+      const typeDifficulty = readQuestionTypeDifficultySetting(
+        questionTypeSettings[typeId],
+        difficulty,
+      );
+      return (
+        sum +
+        getQuestionGenerationCreditCost(
+          unit * n,
+          planForDifficulty(typeDifficulty),
+        )
+      );
     }, 0);
-  }, [genMode, typeCounts]);
+  }, [genMode, typeCounts, questionTypeSettings, difficulty]);
 
   // 지문별(행별) 생성 통계 — 카드 푸터의 '문제 생성' 버튼과 모달 CTA 가 같은
   // 숫자를 쓰도록 집계와 동일 로직(computeRowGenStats)으로 미리 계산해 맵으로 둔다.
@@ -291,6 +318,7 @@ export function useWorkspaceGeneration({
           generationPlan,
           questionTypeSettings,
           globalQuestionCount,
+          difficulty,
         }),
       );
     }
@@ -301,12 +329,13 @@ export function useWorkspaceGeneration({
     generationPlan,
     questionTypeSettings,
     globalQuestionCount,
+    difficulty,
   ]);
 
   const summary: WorkspaceGenerationSummary = useMemo(() => {
     let totalQuestions = 0;
-    // 크레딧은 행마다 자신의 플랜(일반/프리미엄) 배수를 곱해 합산한다 —
-    // 개별 지문이 서로 다른 플랜을 가질 수 있기 때문.
+    // 크레딧은 행마다 자신의 난이도 티어(KILLER=2배) 배수를 곱해 합산한다 —
+    // 개별 지문/유형이 서로 다른 난이도를 가질 수 있기 때문(26-08-18 난이도 기반 티어).
     let creditCost = 0;
     let variantCount = 0;
     for (const row of api.rows) {
@@ -320,10 +349,9 @@ export function useWorkspaceGeneration({
         ? 0
         : selectedOnlyPassages.length;
     totalQuestions += actionableSelectedOnlyCount * globalQuestionCount;
-    creditCost += getQuestionGenerationCreditCost(
-      actionableSelectedOnlyCount * globalBaseCredit,
-      generationPlan,
-    );
+    // 26-08-18 난이도 기반 티어: globalBaseCredit 이 유형별 KILLER 2배를 이미
+    // 반영하므로 플랜 배수를 다시 곱하지 않는다.
+    creditCost += actionableSelectedOnlyCount * globalBaseCredit;
     return {
       rowCount: api.rows.length,
       selectedOnlyCount: actionableSelectedOnlyCount,
@@ -339,7 +367,6 @@ export function useWorkspaceGeneration({
     globalQuestionCount,
     globalBaseCredit,
     selectedOnlyPassages.length,
-    generationPlan,
   ]);
 
   // targetLocalId 가 주어지면 그 지문 한 개만 생성한다(지문별 '문제 생성' 모달).
@@ -607,13 +634,12 @@ export function useWorkspaceGeneration({
               rowTypeSettings?.[typeId] ?? questionTypeSettings[typeId],
               rowTeacherPoints,
             );
-            // 유형별 생성 플랜(일반/프리미엄)을 우선 반영 — 글로벌 셀렉터 제거 후
-            // 플랜은 유형별 설정에서만 지정된다. 서버도 questionTypeSettings 의
-            // generationPlan 을 effectiveGenerationPlan 으로 해석하므로,
-            // 낙관적 카드 뱃지/페이로드를 여기에 일치시킨다.
-            const effTypePlan = readQuestionTypeGenerationPlanSetting(
-              effSettings,
-              effPlan,
+            // 26-08-18 난이도 기반 티어: 유형별 generationPlan 승격 폐지 — 서버
+            // (fast/md-stream: readQuestionTypeDifficultySetting(유형 설정, 요청
+            // difficulty) → resolveEffectiveGenerationPlan)와 같은 규칙으로 유형
+            // 실효 난이도에서 티어를 유도해 낙관적 카드 뱃지/페이로드를 청구와 맞춘다.
+            const effTypePlan = planForDifficulty(
+              readQuestionTypeDifficultySetting(effSettings, effDifficulty),
             );
             for (let i = 0; i < repeat; i += 1) {
               if (rowLocalId) attemptedLocalIds.add(rowLocalId);
@@ -698,6 +724,8 @@ export function useWorkspaceGeneration({
               config: unit.config,
               progressKey: unit.progressKey,
               createdAt: batchCreatedAt,
+              // 전역 동시성 대기 — 슬롯을 잡는 순간(onStart) 해제된다.
+              queued: true,
             }),
           ),
           ...setJobs.map((job) =>
@@ -791,6 +819,7 @@ export function useWorkspaceGeneration({
                       q.id === unit.tempId
                         ? {
                             ...q,
+                            queued: false,
                             status: "error" as const,
                             progress: { [unit.progressKey]: "error" as const },
                             error: message,
@@ -800,7 +829,14 @@ export function useWorkspaceGeneration({
                   );
                   throw err;
                 }
-              }),
+              },
+              // 슬롯 확보 = 실제 생성 시작 — 「대기 중」 표식을 내린다.
+              () =>
+                setSessionQueue((prev) =>
+                  prev.map((q) =>
+                    q.id === unit.tempId ? { ...q, queued: false } : q,
+                  ),
+                )),
             ),
           );
           success += results.filter((r) => r.status === "fulfilled").length;

@@ -204,14 +204,14 @@ check("빈칸3 파싱: 각 blankValues 3", mb3.options.length === 5 && mb3.optio
 // 2. 어법 N마커·K정답
 // ───────────────────────────────────────────────────────────────────────────
 const GR_PASSAGE =
-  "The researchers who study urban wildlife have discovered that many species adapt quickly to city environments. " +
-  "Raccoons, for example, have learned to open containers that were designed to keep them out. " +
+  "The researchers who study urban wildlife in crowded cities have discovered that many species adapt quickly to city environments. " +
+  "Raccoons, for example, have learned to open containers and boxes that were designed to keep them out. " +
   "What surprises scientists most is the speed at which these behaviors spread through populations. " +
   "Young animals watch their mothers closely and imitate the techniques that prove successful. " +
   "As cities grow, the animals living in them will continue to develop skills that their rural cousins never need.";
 
 const GR72_TEXT = `밑줄지문:
-The researchers [[A:who study]] urban wildlife [[B:has discovered]] that many species adapt quickly to city environments. Raccoons, for example, have learned [[C:to open]] containers that [[D:were designed]] to keep them out. What surprises scientists most is the speed [[E:which]] these behaviors spread through populations. Young animals [[F:watch]] their mothers closely and imitate the techniques that prove successful. As cities grow, the animals [[G:living]] in them will continue to develop skills that their rural cousins never need.
+The researchers [[A:who study]] urban wildlife in crowded cities [[B:has discovered]] that many species adapt quickly to city environments. Raccoons, for example, have learned [[C:to open]] containers and boxes that [[D:were designed]] to keep them out. What surprises scientists most is the speed [[E:which]] these behaviors spread through populations. Young animals [[F:watch]] their mothers closely and imitate the techniques that prove successful. As cities grow, the animals [[G:living]] in them will continue to develop skills that their rural cousins never need.
 
 원형·포인트:
 (A) who study | b
@@ -311,7 +311,7 @@ check("어법7·2 파싱: 오답 5(비정답 라벨만)", gr72.wrong.length === 
 
 // 어법 5·1 구형식 회귀
 const GR51_TEXT = `밑줄지문:
-The researchers [[A:who study]] urban wildlife [[B:have discovered]] that many species adapt quickly to city environments. Raccoons, for example, have learned [[C:opening]] containers that [[D:were designed]] to keep them out. What surprises scientists most is the speed at which these behaviors spread through populations. Young animals [[E:watch]] their mothers closely and imitate the techniques that prove successful. As cities grow, the animals living in them will continue to develop skills that their rural cousins never need.
+The researchers [[A:who study]] urban wildlife in crowded cities [[B:have discovered]] that many species adapt quickly to city environments. Raccoons, for example, have learned [[C:opening]] containers and boxes that [[D:were designed]] to keep them out. What surprises scientists most is the speed at which these behaviors spread through populations. Young animals [[E:watch]] their mothers closely and imitate the techniques that prove successful. As cities grow, the animals living in them will continue to develop skills that their rural cousins never need.
 
 원형·포인트:
 (A) who study | b
@@ -349,7 +349,7 @@ check(
 
 // 어법 K=N (5·5) — 오답 섹션 생략 허용
 const GR55_TEXT = `밑줄지문:
-The researchers [[A:which study]] urban wildlife [[B:has discovered]] that many species adapt quickly to city environments. Raccoons, for example, have learned [[C:opening]] containers that [[D:designing]] to keep them out. What surprises scientists most is the speed at which these behaviors spread through populations. Young animals [[E:watches]] their mothers closely and imitate the techniques that prove successful. As cities grow, the animals living in them will continue to develop skills that their rural cousins never need.
+The researchers [[A:which study]] urban wildlife in crowded cities [[B:has discovered]] that many species adapt quickly to city environments. Raccoons, for example, have learned [[C:opening]] containers and boxes that [[D:designing]] to keep them out. What surprises scientists most is the speed at which these behaviors spread through populations. Young animals [[E:watches]] their mothers closely and imitate the techniques that prove successful. As cities grow, the animals living in them will continue to develop skills that their rural cousins never need.
 
 원형·포인트:
 (A) who study | b

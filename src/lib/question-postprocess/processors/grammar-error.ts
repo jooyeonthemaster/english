@@ -558,9 +558,18 @@ function normalizeGrammarExplanationSurfaceOrder(
     if (explanationMentionsSurfaceBeforeCorrection(text, markedExpression.label, surface, correction)) {
       continue;
     }
-    // 학생에게 보이는 해설의 첫머리이므로 한국어로 삽입한다. "…로 고쳐야 한다"는
-    // sanitize 의 변형-서사 절삭('야' 어미 제외 규칙)과 충돌하지 않는 안전 문형.
-    prefixes.push(`${markedExpression.label} "${surface}"는 어법상 틀린 표현이며 "${correction}"로 고쳐야 한다.`);
+    // 학생에게 보이는 해설의 첫머리이므로 한국어로 삽입한다. "…로 고쳐야 합니다"는
+    // sanitize 의 변형-서사 절삭('야' 어미 제외 규칙)과 충돌하지 않는 안전 문형이고,
+    // 본문 합쇼체와 문체를 통일한다(26-08-18 해라체 혼재 수정 — O223 A축).
+    // 26-08-19(O227): 라벨은 학생 표기(①~⑤)로 박는다 — 워크벤치 렌더러는
+    // circleGrammarLabelMentions 로 변환하지만, 해설을 원문 그대로 노출하는
+    // 다른 표면(인쇄·학생 앱)에서 "(B)" 잔재가 보이던 계통의 원천 봉합.
+    const circledLabel = (() => {
+      const key = normalizeGrammarKey(markedExpression.label);
+      const i = GRAMMAR_KEYS.indexOf(key as (typeof GRAMMAR_KEYS)[number]);
+      return i >= 0 ? GRAMMAR_CIRCLED_NUMBERS[i] : markedExpression.label;
+    })();
+    prefixes.push(`${circledLabel} "${surface}"는 어법상 틀린 표현이며 "${correction}"로 고쳐야 합니다.`);
   }
 
   if (prefixes.length === 0) return value;

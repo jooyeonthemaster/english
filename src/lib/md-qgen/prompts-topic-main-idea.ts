@@ -231,10 +231,11 @@ function gistExplanationBlock(
     polarity === "NEGATIVE"
       ? `해설: <딱 2문장 — 근거문장이 무엇을 말하는지, 그리고 정답 선지가 왜 그 논지에 비추어 ${kind}로 부적절한지. 합니다체`
       : `해설: <딱 2문장 — 근거문장이 무엇을 말하는지, 그리고 정답이 왜 글 전체를 대표하는지. 합니다체`;
+  // 26-08-18 O225 해설 다이어트
   const wrongLine =
     polarity === "NEGATIVE"
       ? `${labels[0]} <이 선지가 왜 ${kind}로 타당한지(= 왜 정답이 아닌지) 지문 근거로 1문장> (정답 번호는 제외하고 ${wrongCount}개만)`
-      : `${labels[0]} <기제이름 — 왜 매력적이고 왜 탈락인지 1문장> (정답 번호는 제외하고 ${wrongCount}개만)`;
+      : `${labels[0]} <왜 탈락인지 1문장 — 매력 이유·기제 이름 서술 금지> (정답 번호는 제외하고 ${wrongCount}개만)`;
   if (mode === "answer-only") {
     return `${head}
 ${explanationLine}. 오답 해설은 쓰지 마라>`;

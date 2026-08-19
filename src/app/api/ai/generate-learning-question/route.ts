@@ -11,6 +11,7 @@ import {
   getQuestionGenerationCreditCost,
   mergeQuestionGenerationPlanTag,
   normalizeQuestionGenerationPlan,
+  resolveEffectiveGenerationPlan,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
 
@@ -198,7 +199,9 @@ export async function POST(request: NextRequest) {
       counts: Record<string, number>;
       generationPlan?: unknown;
     };
-    const generationPlan = normalizeQuestionGenerationPlan(rawGenerationPlan);
+    // 26-08-18 난이도 기반 티어: 학습 문항은 난이도 개념이 없어 STANDARD 1배 고정
+    // (결정 함수 단일 소스 — 요청 플랜 무시).
+    const generationPlan = resolveEffectiveGenerationPlan(rawGenerationPlan, undefined);
     const creditCost = getQuestionGenerationCreditCost(
       CREDIT_COSTS.LEARNING_QUESTION_GEN,
       generationPlan,

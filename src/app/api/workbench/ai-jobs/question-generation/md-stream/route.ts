@@ -44,6 +44,8 @@ import {
   resolveQuestionTypeGenerationSettings,
 } from "@/lib/question-type-generation-settings";
 import {
+  buildBlankMdSharedSelfcheck,
+  buildGrammarMdSharedSelfcheck,
   buildMdBlankPrompt,
   buildMdGrammarPrompt,
   buildMdMultiBlankPrompt,
@@ -67,7 +69,42 @@ import {
   adaptMdMultiBlankToAiQuestion,
 } from "@/lib/md-qgen/adapter";
 import { getMdLane, MD_LANE_SUBTYPES } from "@/lib/md-qgen/lane-registry";
+import {
+  GrammarKillerV2DisplayFilter,
+  buildGrammarKillerV2Prompt,
+  isGrammarKillerV2Enabled,
+  processGrammarKillerV2Quotes,
+  stripGrammarKillerV2Plan,
+} from "@/lib/md-qgen/grammar-killer-v2";
+import { getLunaExt, getLunaExtForSelfcheck } from "@/lib/md-qgen/luna-ext-registry";
 import type { MdLaneContext, MdLaneParsed } from "@/lib/md-qgen/lane-types";
+import {
+  adaptLunaBlankJson,
+  adaptLunaGrammarJson,
+  adaptLunaGrammarJsonNK,
+  adaptLunaMultiBlankJson,
+  buildLunaGrammarJsonSchemaNK,
+  buildLunaGrammarSelfcheckNK,
+  buildLunaMultiBlankJsonSchema,
+  buildLunaMultiBlankSelfcheck,
+  isLunaQgenEligible,
+  renumberGrammarByAppearance,
+  LUNA_BLANK_JSON_SCHEMA,
+  LUNA_BLANK_SELFCHECK,
+  LUNA_GRAMMAR_JSON_SCHEMA,
+  LUNA_GRAMMAR_SELFCHECK,
+  LUNA_QGEN_MAX_TOKENS,
+  LUNA_QGEN_MODEL_ID,
+  LUNA_QGEN_SYSTEM_MESSAGE,
+} from "@/lib/md-qgen/luna-lane";
+import {
+  LUNA_BLANK_BRIDGE_SPECS,
+  LUNA_GRAMMAR_BRIDGE_SPECS,
+  LUNA_GRAMMAR_NK_BRIDGE_SPECS,
+  LUNA_MULTIBLANK_BRIDGE_SPECS,
+  LunaJsonMdBridge,
+  type LunaBridgeFieldSpec,
+} from "@/lib/md-qgen/luna-stream-bridge";
 import { TYPE_LABELS } from "@/app/api/ai/generate-questions-auto/_lib/constants";
 
 // ============================================================================
@@ -129,6 +166,11 @@ interface StreamCallResult {
   inputTokens: number;
   outputTokens: number;
   durationMs: number;
+  /** 업스트림 finish_reason(26-08-18 O223 A축) — "length"면 출력 예산 절단.
+   * 종전에는 미캡처라 절단이 "JSON 파싱 실패"로 위장돼 원인 진단이 불가했다. */
+  finishReason: string | null;
+  /** 스트림 중 도착한 error 청크(있으면 앞 300자) — 502 빈응답 계통 포렌식. */
+  errorChunk: string | null;
 }
 
 function sseEncode(payload: Record<string, unknown>): Uint8Array {
@@ -169,42 +211,78 @@ async function recordCostSafely(input: {
   }
 }
 
-/** OpenRouter 직접 스트림 1콜 — 사고/본문 델타를 emit 으로 흘리고 최종 usage 를 회수. */
+/** OpenRouter 직접 스트림 1콜 — 사고/본문 델타를 emit 으로 흘리고 최종 usage 를 회수.
+ * luna 옵션(O217 시공): json_schema strict + system 형식계약 + OpenAI 공급자 고정 +
+ * JSON→md 점진 렌더 브릿지(본문 델타를 md 동형 텍스트로 변환해 방류 — 클라 계약
+ * 무변경). 파싱·게이트는 원본 JSON 누적본(text)으로 별도 수행한다. */
 async function streamOnce(args: {
   prompt: string;
   modelId: string;
   timeoutMs: number;
   emit: (payload: Record<string, unknown>) => void;
+  luna?: {
+    jsonSchema: { name: string; strict: boolean; schema: unknown };
+    bridgeSpecs: LunaBridgeFieldSpec[];
+    /** 유형별 출력 예산(미지정이면 LUNA_QGEN_MAX_TOKENS). */
+    maxTokens?: number;
+  };
+  /** 어법 KILLER v2(26-08-17): 표시 델타를 필터(설계메모 은닉·인용 절단) 경유로
+   * 방류한다 — 파싱용 내부 누적 text 는 원문 그대로 유지. 콜마다 새 인스턴스. */
+  displayFilter?: GrammarKillerV2DisplayFilter;
 }): Promise<StreamCallResult> {
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) throw new Error("OPENROUTER_API_KEY missing");
   const startedAt = Date.now();
+  const body: Record<string, unknown> = {
+    model: args.modelId,
+    messages: args.luna
+      ? [
+          { role: "system", content: LUNA_QGEN_SYSTEM_MESSAGE },
+          { role: "user", content: args.prompt },
+        ]
+      : [{ role: "user", content: args.prompt }],
+    // 사고+출력이 상한을 공유한다 — 6k 절단 실측(O208 계열) 후 14k.
+    // luna 도 14k 기본: 20k 는 사고가 10k+ 로 팽창해 시간 2배(O217 프로브).
+    // 단 지문 전체를 재작성하는 유형은 14k 로 절단되므로 ext 가 상한을 올린다.
+    max_tokens: args.luna
+      ? args.luna.maxTokens ?? LUNA_QGEN_MAX_TOKENS
+      : 14_000,
+    stream: true,
+    usage: { include: true },
+    reasoning: { enabled: true, effort: "high", exclude: false },
+  };
+  if (args.luna) {
+    body.response_format = { type: "json_schema", json_schema: args.luna.jsonSchema };
+    // Azure 폴백 ~10배 이중가격 차단(O214) — OpenAI 직접 서빙만.
+    body.provider = { order: ["openai"], allow_fallbacks: false };
+  }
   const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      model: args.modelId,
-      messages: [{ role: "user", content: args.prompt }],
-      // 사고+출력이 상한을 공유한다 — 6k 절단 실측(O208 계열) 후 14k.
-      max_tokens: 14_000,
-      stream: true,
-      usage: { include: true },
-      reasoning: { enabled: true, effort: "high", exclude: false },
-    }),
+    body: JSON.stringify(body),
     signal: AbortSignal.timeout(Math.max(10_000, args.timeoutMs)),
   });
   if (!res.ok || !res.body) {
     const detail = await res.text().catch(() => "");
     throw new Error(`generation upstream ${res.status}: ${detail.slice(0, 200)}`);
   }
+  // 표시 전용 브릿지 — 예외는 표시만 포기(생성·파싱은 계속).
+  let bridge: LunaJsonMdBridge | null = args.luna
+    ? new LunaJsonMdBridge(args.luna.bridgeSpecs, (delta) =>
+        args.emit({ t: "c", d: sanitizeAiModelDisclosureText(delta) }),
+      )
+    : null;
   const reader = res.body.getReader();
   const decoder = new TextDecoder();
   let buffer = "";
   let text = "";
   let reasoningChars = 0;
+  let provider: string | null = null;
+  let finishReason: string | null = null;
+  let errorChunk: string | null = null;
   let usage: {
     cost?: number;
     prompt_tokens?: number;
@@ -223,7 +301,12 @@ async function streamOnce(args: {
       if (payload === "[DONE]") continue;
       try {
         const j = JSON.parse(payload);
-        const delta = j.choices?.[0]?.delta ?? {};
+        if (typeof j.provider === "string" && !provider) provider = j.provider;
+        if (j.error && !errorChunk)
+          errorChunk = JSON.stringify(j.error).slice(0, 300);
+        const choice = j.choices?.[0];
+        if (choice?.finish_reason) finishReason = String(choice.finish_reason);
+        const delta = choice?.delta ?? {};
         const reasoningDelta: string =
           delta.reasoning ?? delta.reasoning_content ?? "";
         if (reasoningDelta) {
@@ -235,7 +318,24 @@ async function streamOnce(args: {
         const contentDelta: string = delta.content ?? "";
         if (contentDelta) {
           text += contentDelta;
-          args.emit({ t: "c", d: sanitizeAiModelDisclosureText(contentDelta) });
+          if (bridge) {
+            try {
+              bridge.push(contentDelta);
+            } catch (bridgeErr) {
+              console.warn("[md-stream] luna bridge failed — 표시 중단", bridgeErr);
+              bridge = null;
+            }
+          } else if (args.displayFilter) {
+            // v2 표시 필터 — 예외는 표시만 포기(생성·파싱은 계속, 브릿지와 동일 정책).
+            try {
+              args.displayFilter.push(contentDelta);
+            } catch (filterErr) {
+              console.warn("[md-stream] killer-v2 display filter failed", filterErr);
+              args.displayFilter = undefined;
+            }
+          } else if (!args.luna) {
+            args.emit({ t: "c", d: sanitizeAiModelDisclosureText(contentDelta) });
+          }
         }
         if (j.usage) usage = j.usage;
       } catch {
@@ -243,8 +343,27 @@ async function streamOnce(args: {
       }
     }
   }
+  try {
+    args.displayFilter?.flush();
+  } catch {
+    /* 표시 전용 — 무시 */
+  }
   if (!text.trim()) {
-    throw new Error("모델이 본문 출력을 내지 않았습니다.");
+    // 계통 표식(EMPTY_BODY) — 호출부가 전송 계층 재시도로 흡수한다. 26-08-14
+    // 캠페인 실측: 이 계통은 luna 462행 중 16행(3.5%)이고 gemini 는 0행이라
+    // 모델 고유 결함이며, 재시도 없이 두면 그대로 잡 실패·환불이 된다.
+    // finish=length 는 사고가 예산 전량을 잠식한 절단(O223 스모크 실측:
+    // reasoning 14000/14000·본문 0) — 원인 표식을 붙여 포렌식을 살린다.
+    throw new Error(
+      `EMPTY_BODY: 모델이 본문 출력을 내지 않았습니다.${
+        finishReason ? ` (finish=${finishReason})` : ""
+      }${errorChunk ? ` (error=${errorChunk.slice(0, 120)})` : ""}`,
+    );
+  }
+  // 원가 가드(O214 공급자 이중가격) — allow_fallbacks:false 라 이론상 불발이지만
+  // 계측은 남긴다.
+  if (args.luna && provider && provider !== "OpenAI") {
+    console.warn(`[md-stream] luna provider drift: ${provider}`);
   }
   return {
     text,
@@ -254,6 +373,8 @@ async function streamOnce(args: {
     inputTokens: usage?.prompt_tokens ?? 0,
     outputTokens: usage?.completion_tokens ?? 0,
     durationMs: Date.now() - startedAt,
+    finishReason,
+    errorChunk,
   };
 }
 
@@ -351,6 +472,8 @@ function parseAndGate(
   teacherPoints: TeacherPointPayload[],
   // 형식 파라미터(26-07-23 스펙 v1) — 기본 5·1·단일이면 종전 동작과 동일.
   counts: { blankCount: number; markerCount: number; answerCount: number },
+  // 어법 KILLER v2(26-08-17): 설계메모 절단 + 인용 앵커 검증·절단.
+  opts?: { grammarKillerV2?: boolean },
 ): { question: MdAnyQuestion; gateIssues: string[]; corrections: string[] } {
   if (subType === "BLANK_INFERENCE") {
     if (counts.blankCount >= 2) {
@@ -382,9 +505,23 @@ function parseAndGate(
       corrections: snapped.corrections,
     };
   }
-  let q = parseMdGrammar(text);
+  let q = parseMdGrammar(
+    opts?.grammarKillerV2 ? stripGrammarKillerV2Plan(text) : text,
+  );
+  // 라벨 등장순 재번호(26-08-14, O217 R3): gemini 도 밑줄 라벨을 등장순과 다르게
+  // 붙이는 결함이 실측됐다(paired 20지문 중 2건 — 인쇄본 형식 파손). 0원 결정형
+  // 재정렬로 양 레인 공통 봉합한다(marks·answer·fixes·wrong 동기 치환).
+  q = renumberGrammarByAppearance(q).question;
   const snapped = autoSnapGrammarMarks(q, passage);
   q = snapped.question;
+  // v2 인용 앵커(26-08-17, O221·O222): 해설·오답의 원문「…」 인용을 검증하고
+  // 표시·저장용 분석부만 남긴다 — 위반은 게이트 사유로 병합돼 재생성이 흡수.
+  const quoteIssues: string[] = [];
+  if (opts?.grammarKillerV2) {
+    const processed = processGrammarKillerV2Quotes(q, passage);
+    q = processed.question;
+    quoteIssues.push(...processed.issues);
+  }
   return {
     question: q,
     gateIssues: [
@@ -394,6 +531,7 @@ function parseAndGate(
         markerCount: counts.markerCount,
         answerCount: counts.answerCount,
       }),
+      ...quoteIssues,
       ...teacherPointComplianceIssues(q, teacherPoints),
     ],
     corrections: snapped.corrections,
@@ -500,13 +638,12 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // 26-08-18 난이도 기반 티어: KILLER → PREMIUM(3.7·2배), 그 외 → STANDARD(luna).
+  // 요청 generationPlan 은 무시된다(question-generation-plans.ts 참조).
   const effectiveGenerationPlan = resolveEffectiveGenerationPlan(
     config.generationPlan,
+    effectiveDifficulty,
   );
-  // 26-07-22 프리미엄 md 승차(O213 벤치 근거): 빈칸·어법 PREMIUM 도 동일한 md
-  // 원큐 구조로 처리한다 — 차이는 모델뿐(아래 modelId 플랜 분기). 이원 티어
-  // 복귀(QUESTION_GENERATION_SINGLE_TIER=off) 전에는 resolveEffectiveGenerationPlan
-  // 이 STANDARD 로 클램프하므로 현행 동작 무변경.
 
   const passage = await prisma.passage.findFirst({
     where: { id: config.passageId, academyId: staff.academyId },
@@ -595,17 +732,56 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  // 플랜별 모델 분기 — 구조(프롬프트·파서·게이트·원큐/어법 재생성 정책)는 동일,
-  // 모델만 다르다. PREMIUM 은 env PREMIUM_QGEN_MODEL_ID(예: gemini-3.6-flash)로
-  // 지정하며 미설정 시 코드 기본(flash3)이라 사실상 STANDARD 와 동일 동작.
-  const modelId =
-    effectiveGenerationPlan === "PREMIUM"
-      ? ATLAS_PREMIUM_QGEN_MODEL_ID
-      : ATLAS_STANDARD_QGEN_MODEL_ID;
+  // ── luna 레인 (26-08-14, O217 확증런 근거) ──────────────────────────────────
+  // 26-08-19 전 라인업 3.7 통일(사용자 결정, O226 벤치 귀결):
+  //   KILLER   → 3.7-flash(어법 5·1 은 v2 프롬프트+인용 게이트) + 요금 2배
+  //   그 외    → 3.7-flash(STANDARD 기본값) — gemini md 경로 + 공용/ext 검산
+  // luna 레인(정본 2유형 + luna-ext 22유형)은 코드 전량 보존하되 **옵트인**
+  // (env QGEN_LUNA_LANE=on 일 때만 활성 — isLunaQgenEligible·getLunaExt 가 판정).
+  // 근거(O226, INT paired 20지문×4유형): 3.7 이 paired 50:25 우세·원가 동급
+  // (₩11.6 vs 12.2)·속도 2.3배·luna 지칭 사고 팽창 잡실패 4/20. 어법 INT 의
+  // 3.7 해설 사실 오류 계통은 공용 검산의 오답 해설 사실 규칙으로 봉합(동일 커밋).
+  //
+  // 26-08-18 난이도 기반 티어(O223 캠페인 귀결): 플랜 상품 폐지 — effective
+  // GenerationPlan 은 난이도가 유도한다(KILLER → PREMIUM = 요금 2배).
+  // 비상 복귀: env QGEN_DIFFICULTY_TIER=off (요청 플랜·단일상품 클램프 종전 규칙).
+  const isPremiumPlan = effectiveGenerationPlan === "PREMIUM";
+  const lunaExt = mdLane && !isPremiumPlan ? getLunaExt(subType) : null;
+  const lunaLane =
+    !isPremiumPlan &&
+    (isLunaQgenEligible({
+      subType,
+      blankCount,
+      markerCount,
+      answerCount,
+      hasMdLane: Boolean(mdLane),
+    }) ||
+      lunaExt !== null);
   const mdDifficulty: MdDifficulty =
     effectiveDifficulty === "BASIC" || effectiveDifficulty === "INTERMEDIATE"
       ? effectiveDifficulty
       : "KILLER";
+  // 모델 분기 — 구조(프롬프트·파서·게이트·재생성 정책)는 동일, 모델만 다르다.
+  // 기본형상(26-08-19): luna 레인 off → KILLER 는 PREMIUM_QGEN(3.7), 그 외는
+  // STANDARD_QGEN(코드 기본 3.7 — 프로덕션 env 핀 갱신 필요). luna 는 옵트인.
+  const modelId = lunaLane
+    ? LUNA_QGEN_MODEL_ID
+    : isPremiumPlan || mdDifficulty === "KILLER"
+      ? ATLAS_PREMIUM_QGEN_MODEL_ID
+      : ATLAS_STANDARD_QGEN_MODEL_ID;
+
+  // ── 어법 KILLER v2 (26-08-17 시공, O219~O222 벤치 확정 형상) ──────────────
+  // gemini(비-luna) 어법 표준형(5·1) × KILLER 만 신형 프롬프트+인용 앵커+게이트로
+  // 간다. BASIC/INTERMEDIATE·비표준(N·K)·luna 레인은 종전 그대로.
+  // 킬스위치 QGEN_GRAMMAR_KILLER_V2=off.
+  const grammarKillerV2 =
+    !lunaLane &&
+    !mdLane &&
+    subType === "GRAMMAR_ERROR" &&
+    markerCount === 5 &&
+    answerCount === 1 &&
+    mdDifficulty === "KILLER" &&
+    isGrammarKillerV2Enabled();
 
   // 교사 지정 포인트(포인트 짚어주기) — fast 동일 계약으로 읽는다. 있으면
   // 프롬프트 강제 블록 + 결정론 준수 게이트가 함께 작동한다.
@@ -750,7 +926,11 @@ export async function POST(req: NextRequest) {
               blankParaphrase ? "PARAPHRASE" : "SOURCE_EXACT",
             )
           : buildMdBlankPrompt(passage.content, "full", mdDifficulty)
-        : buildMdGrammarPrompt(passage.content, "full", mdDifficulty, {
+        : grammarKillerV2
+          ? // 어법 KILLER v2 — 실물 해부+자리 카탈로그+설계메모+인용 앵커가 종전
+            // base+포인트 가이드+공용 검산을 통째로 대체한다(O220~O222 실측).
+            buildGrammarKillerV2Prompt(passage.content)
+          : buildMdGrammarPrompt(passage.content, "full", mdDifficulty, {
             // 어법 비표준(26-07-23 스펙 v1) — 기본 5·1이면 기존 프롬프트와 바이트 동일.
             markerCount,
             answerCount,
@@ -816,8 +996,19 @@ export async function POST(req: NextRequest) {
         const guidance = buildBlankPointGuidance({ pointFocus: true });
         if (guidance) extras.push(guidance);
       }
-    } else if (grammarPointFocus) {
-      const guidance = buildGrammarPointGuidance({ pointFocus: true });
+    } else if (grammarPointFocus && !grammarKillerV2) {
+      // 26-08-17 P0(해부 F1-9·PG-2 확정): 난이도·모드·정답 수를 넘긴다. 종전엔
+      // 미전달이라 KILLER 문항에도 '중' 프로필("수식어를 한 번 걷어내야 보이는
+      // 구조")이 주입되고 KILLER 정답 격("한눈 비문 금지")·KILLER 디코이 규율
+      // ("한눈에 옳음이 보이는 자리는 함정 가치 없음")은 빠졌다 — 두 플랜 공통.
+      // v2 레인은 이 블록을 넣지 않는다 — 규칙 목록 제거가 A+B 2→16 도약의
+      // 요인이었다(O220 lean vs base 실측).
+      const guidance = buildGrammarPointGuidance({
+        pointFocus: true,
+        requestedDifficulty: effectiveDifficulty,
+        mode: "judgment",
+        answerCount,
+      });
       if (guidance) extras.push(guidance);
     }
     // 교사 지정 블록은 fast 레인과 같은 공유 계약을 그대로 쓴다 — 블록 자체가
@@ -828,9 +1019,74 @@ export async function POST(req: NextRequest) {
     if (config.customPrompt?.trim()) {
       extras.push(`## 교사 추가 지시\n${config.customPrompt.trim()}`);
     }
-    if (feedback) {
+    // luna 검산 블록(O217) — 어법 F 30%→5.3% 소멸의 주역. 항상 말미(반려 피드백
+    // 직전)에 두어 GPT-5 계열 "사고 중 형식 유실" 결함(O216 리서치)을 상쇄한다.
+    // 형식별 분기(26-08-14 확장): 표준형은 검증된 상수, 비표준·다중은 동적 빌더,
+    // 레인 유형은 자기 ext 가 게이트 반려 조건을 전사한 검산 블록을 낸다.
+    if (lunaLane && laneCtx && lunaExt) {
+      extras.push(lunaExt.buildSelfcheck(laneCtx));
+    } else if (!lunaLane && laneCtx && mdLane) {
+      // 26-08-18 난이도 기반 티어: 레인 유형 KILLER 는 gemini md 로 가는데 종전엔
+      // 검산 블록이 0 이었다(luna-ext 검산이 luna 경로에만 붙음 — 인벤토리 격차).
+      // ext 검산은 "0원 게이트 반려 조건 + 기출 형식 + 사다리" 라 모델 무관이므로
+      // gemini 경로에도 그대로 붙인다(레지스트리 등록 유형만 — 미등록이면 종전대로).
+      const extForSelfcheck = getLunaExtForSelfcheck(subType);
+      if (extForSelfcheck) extras.push(extForSelfcheck.buildSelfcheck(laneCtx));
+    } else if (lunaLane) {
       extras.push(
-        `[반려 재생성] 직전 출력이 기계 검사에서 반려되었다: ${feedback}. 위반을 전부 해소하고 같은 요구사항으로 완제품을 다시 설계하라.`,
+        subType === "GRAMMAR_ERROR"
+          ? markerCount === 5 && answerCount === 1
+            ? LUNA_GRAMMAR_SELFCHECK
+            : buildLunaGrammarSelfcheckNK(markerCount, answerCount)
+          : blankCount >= 2
+            ? buildLunaMultiBlankSelfcheck(blankCount === 3 ? 3 : 2)
+            : LUNA_BLANK_SELFCHECK,
+      );
+    } else if (subType === "GRAMMAR_ERROR" && !grammarKillerV2) {
+      // 26-08-17 P0: gemini md 어법 경로에도 모델 무관 검산(위치 분산·단어 단위·
+      // 해설 사실성·문체)을 붙인다 — luna 블록이 이미 포함하는 절이라 lunaLane 에는
+      // 중복 주입하지 않고, v2 레인은 자체 규칙(설계 절차·인용 앵커)이 대체한다.
+      extras.push(buildGrammarMdSharedSelfcheck(markerCount));
+    } else if (subType === "BLANK_INFERENCE") {
+      // O223 A축: gemini(프리미엄) 빈칸 경로는 검산 블록이 전무했다 — 해설
+      // 사실성·완성문 검산·문체가 luna 검산에만 있어 프리미엄 빈칸이 무방비.
+      // 모델 무관 절만 담은 공용 블록을 주입한다(luna 는 자기 블록 유지).
+      extras.push(buildBlankMdSharedSelfcheck());
+    }
+    if (feedback) {
+      // 누설·정답 시비 계열 반려는 **지문 원문이 그 표현을 이미 포함**해서 난다 —
+      // 지문은 수정 금지라 같은 자리·같은 후보쌍을 고집하면 반드시 재반려된다.
+      // (26-08-11 RCA: 재생성이 같은 strictly|strict 쌍을 다시 골라 확정 실패·환불.
+      //  일반 지시 "위반을 해소하라"만으로는 모델이 표적 교체까지 도달하지 못했다.)
+      const needsRelocation = /누설|정답 시비|네모 밖|밑줄 밖|그대로 남아/.test(
+        feedback,
+      );
+      // 인접 반려(26-08-14 실사용 신고)는 양보 방향을 명시한다 — 제약 과적으로
+      // 재생성이 같은 배치를 반복하는 RCA 계통(26-08-11) 예방: 위치 분산이 포인트
+      // 다양성보다 우선임을 알려 실제 탈출구(코드 2회 허용)를 열어 준다.
+      const needsSpread = /인접/.test(feedback);
+      const needsNarrow = /구·절/.test(feedback);
+      // v2 인용 게이트 반려(26-08-17): 인용이 축자가 아니거나 위치 서술이 어순과
+      // 다르다는 뜻 — 재복사·사실 서술로 탈출구를 명시한다.
+      const needsQuote = /인용|바로 앞/.test(feedback);
+      extras.push(
+        `[반려 재생성] 직전 출력이 기계 검사에서 반려되었다: ${feedback}. 위반을 전부 해소하고 같은 요구사항으로 완제품을 다시 설계하라.${
+          needsRelocation
+            ? " 누설·정답 시비 사유는 지문 원문이 그 표현을 이미 포함하고 있다는 뜻이다 — 같은 자리·같은 후보쌍으로는 절대 해소되지 않으니, 지적된 표적을 버리고 **다른 문장의 다른 포인트로 교체**해 설계하라(지문 본문 수정은 금지)."
+            : ""
+        }${
+          needsSpread
+            ? " 인접 사유는 밑줄 배치 문제다 — 붙어 있는 두 밑줄 중 하나를 지문의 떨어진 다른 부분의 확정적 포인트로 옮겨라. 포인트 다양성(코드 종류)을 줄이는 한이 있어도 위치 분산이 우선이다(같은 코드 2회까지 허용)."
+            : ""
+        }${
+          needsNarrow
+            ? " 구·절 사유는 밑줄 범위 문제다 — 포인트를 교체할 필요 없이, 판정을 결정짓는 핵심 단어 1개(불가피하면 2단어)로 밑줄을 좁혀 다시 그어라."
+            : ""
+        }${
+          needsQuote
+            ? " 인용·바로 앞 사유는 해설이 지문을 그대로 베끼지 않았거나 위치 서술이 실제 어순과 다르다는 뜻이다 — 해당 밑줄 주변을 지문(해설은 화면 표시 형태)에서 다시 찾아 한 글자도 바꾸지 말고 복사하고, 인용에 보이는 사실만 서술하라."
+            : ""
+        }`,
       );
     }
     return extras.length > 0 ? `${base}\n\n${extras.join("\n\n")}` : base;
@@ -926,29 +1182,209 @@ export async function POST(req: NextRequest) {
                 difficulty: effectiveDifficulty,
                 fastPath: true,
                 mdStream: true,
+                lunaLane,
                 durationMs: result.durationMs,
+                // O223 A축: 절단(length) 포렌식 — 원장에서 예산 결함과 품질
+                // 결함을 구분할 수 있게 한다.
+                finishReason: result.finishReason,
               },
             });
           };
-          let call = await streamOnce({
-            prompt: buildPrompt(null),
-            modelId,
-            timeoutMs: Math.min(240_000, budgetMs()),
-            emit,
-          });
+          // luna 레인 콜 옵션 — json_schema·표시 브릿지 스펙(형식별 4분기).
+          // 표준형(어법 5·1, 단일 빈칸)은 O217 검증 상수, 비표준·다중은 동적 빌더.
+          const lunaGrammarStandard = markerCount === 5 && answerCount === 1;
+          const lunaOpts = !lunaLane
+            ? undefined
+            : laneCtx && lunaExt
+              ? {
+                  jsonSchema: lunaExt.buildJsonSchema(laneCtx) as unknown as {
+                    name: string;
+                    strict: boolean;
+                    schema: unknown;
+                  },
+                  bridgeSpecs: lunaExt.bridgeSpecs,
+                  maxTokens: lunaExt.maxTokens,
+                }
+              : subType === "GRAMMAR_ERROR"
+              ? lunaGrammarStandard
+                ? {
+                    jsonSchema: LUNA_GRAMMAR_JSON_SCHEMA as unknown as {
+                      name: string;
+                      strict: boolean;
+                      schema: unknown;
+                    },
+                    bridgeSpecs: LUNA_GRAMMAR_BRIDGE_SPECS,
+                  }
+                : {
+                    jsonSchema: buildLunaGrammarJsonSchemaNK(
+                      markerCount,
+                      answerCount,
+                    ) as unknown as { name: string; strict: boolean; schema: unknown },
+                    bridgeSpecs: LUNA_GRAMMAR_NK_BRIDGE_SPECS,
+                  }
+              : blankCount >= 2
+                ? {
+                    jsonSchema: buildLunaMultiBlankJsonSchema(
+                      blankCount === 3 ? 3 : 2,
+                    ) as unknown as { name: string; strict: boolean; schema: unknown },
+                    bridgeSpecs: LUNA_MULTIBLANK_BRIDGE_SPECS,
+                  }
+                : {
+                    jsonSchema: LUNA_BLANK_JSON_SCHEMA as unknown as {
+                      name: string;
+                      strict: boolean;
+                      schema: unknown;
+                    },
+                    bridgeSpecs: LUNA_BLANK_BRIDGE_SPECS,
+                  };
+          // luna JSON 출력 → Md*Question 어댑트 + 결정형 코어스(재번호·마커 삽입)
+          // → 기존 스냅·게이트·교사 준수 게이트 그대로. JSON 절단 등 파싱 실패는
+          // 게이트 이슈로 변환해 기존 재생성 정책이 흡수하게 한다.
+          const lunaParseAndGate = (text: string): MdLaneParsed => {
+            try {
+              // 레인 유형: ext 가 JSON→레인 동형 산출물로 어댑트하고 레인의 스냅·
+              // 게이트를 그대로 태운다(어댑터·후처리는 아래 공통 경로).
+              if (laneCtx && lunaExt) return lunaExt.parseAndGate(text, laneCtx);
+              if (subType === "GRAMMAR_ERROR") {
+                // 표준(5·1)과 비표준(N·K)은 JSON 계약이 다르다(answer/fix 단수 vs
+                // answers/fixes 배열) — 어댑터만 갈리고 스냅·게이트는 동일 경로.
+                const adapted = lunaGrammarStandard
+                  ? adaptLunaGrammarJson(text)
+                  : adaptLunaGrammarJsonNK(text);
+                const snapped = autoSnapGrammarMarks(adapted.question, passage.content);
+                return {
+                  question: snapped.question,
+                  gateIssues: [
+                    ...adapted.issues,
+                    ...gateMdQuestion(snapped.question, passage.content, {
+                      markerCount,
+                      answerCount,
+                    }),
+                    ...teacherPointComplianceIssues(snapped.question, teacherPoints),
+                  ],
+                  corrections: [
+                    ...snapped.corrections,
+                    ...(adapted.renumbered ? ["luna: 라벨 등장순 재번호"] : []),
+                    ...adapted.markerInserted.map((l) => `luna: ${l} 마커 자동삽입`),
+                  ],
+                };
+              }
+              if (blankCount >= 2) {
+                // 다중 빈칸 — 전용 게이트에 설정 실값(blankCount)을 강제해 파싱
+                // 개수 드리프트를 반려(레거시 경로와 동일 계약) + 교사 준수 게이트.
+                // O223 A축: 레거시·단일 luna 경로에만 있던 축자 스냅(0원 보정)이
+                // 이 경로에만 빠져 같은 반려 계통이 재생성 콜을 소모하던 누락 봉합.
+                const adapted = adaptLunaMultiBlankJson(text);
+                const snapped = autoSnapMultiBlankExpressions(
+                  adapted.question,
+                  passage.content,
+                );
+                return {
+                  question: snapped.question,
+                  gateIssues: [
+                    ...gateMdMultiBlank(snapped.question, passage.content, {
+                      blankCount,
+                    }),
+                    ...teacherPointComplianceIssues(snapped.question, teacherPoints),
+                  ],
+                  corrections: snapped.corrections,
+                };
+              }
+              const adapted = adaptLunaBlankJson(text);
+              const snapped = autoSnapBlankExpression(adapted.question, passage.content);
+              return {
+                question: snapped.question,
+                gateIssues: [
+                  ...gateMdQuestion(snapped.question, passage.content),
+                  ...teacherPointComplianceIssues(snapped.question, teacherPoints),
+                ],
+                corrections: snapped.corrections,
+              };
+            } catch (parseErr) {
+              return {
+                question: null as unknown as MdAnyQuestion,
+                gateIssues: [
+                  `luna JSON 파싱 실패: ${
+                    parseErr instanceof Error ? parseErr.message : String(parseErr)
+                  }`,
+                ],
+                corrections: [],
+              };
+            }
+          };
+          // 전송 계층 재시도(26-08-14) — 게이트 재생성과 별개 층이다. luna 는
+          // 본문 델타를 한 자도 안 보내고 스트림을 닫는 계통(EMPTY_BODY)이
+          // 3.5% 실측되며(gemini 0%), 이 계통은 게이트 이슈가 아니라 예외라
+          // 재생성 정책이 못 잡고 곧장 실패·환불이 된다. 예산이 남아 있을 때만
+          // 1회 재전송한다.
+          // v2 표시 필터 팩토리 — 콜(시도)마다 새 인스턴스(줄 상태기계 초기화).
+          const makeDisplayFilter = () =>
+            grammarKillerV2
+              ? new GrammarKillerV2DisplayFilter((textOut) =>
+                  emit({ t: "c", d: sanitizeAiModelDisclosureText(textOut) }),
+                )
+              : undefined;
+          const streamWithTransportRetry = async (prompt: string) => {
+            try {
+              return await streamOnce({
+                prompt,
+                modelId,
+                timeoutMs: Math.min(240_000, budgetMs()),
+                emit,
+                luna: lunaOpts,
+                displayFilter: makeDisplayFilter(),
+              });
+            } catch (err) {
+              const message = err instanceof Error ? err.message : String(err);
+              if (!message.startsWith("EMPTY_BODY") || budgetMs() < 60_000) throw err;
+              console.warn("[md-stream] EMPTY_BODY — 전송 재시도 1회");
+              emit({ t: "retry", reason: "빈 응답 — 다시 생성합니다" });
+              return streamOnce({
+                prompt,
+                modelId,
+                timeoutMs: Math.min(240_000, budgetMs()),
+                emit,
+                luna: lunaOpts,
+                displayFilter: makeDisplayFilter(),
+              });
+            }
+          };
+          // O223 A축: finish=length(사고가 max_tokens 잠식) 절단이 "파싱 실패"로
+          // 위장되던 계통에 원인 표식을 붙인다 — 포렌식·원장에서 예산 결함과
+          // 품질 결함을 구분 가능하게.
+          const withTruncationHint = (
+            p: MdLaneParsed,
+            c: StreamCallResult,
+          ): MdLaneParsed =>
+            c.finishReason === "length" && p.gateIssues.length > 0
+              ? {
+                  ...p,
+                  gateIssues: p.gateIssues.map((i) =>
+                    i.includes("파싱 실패")
+                      ? `${i} [finish=length: 출력 예산 절단]`
+                      : i,
+                  ),
+                }
+              : p;
+          let call = await streamWithTransportRetry(buildPrompt(null));
           callResults.push(call);
           await recordGenerationCost(0, call);
           const formatCounts = { blankCount, markerCount, answerCount };
-          let parsedMd: MdLaneParsed =
-            laneCtx && mdLane
-              ? mdLane.parseAndGate(call.text, laneCtx)
-              : parseAndGate(
-                  subType,
-                  call.text,
-                  passage.content,
-                  teacherPoints,
-                  formatCounts,
-                );
+          let parsedMd: MdLaneParsed = withTruncationHint(
+            lunaLane
+              ? lunaParseAndGate(call.text)
+              : laneCtx && mdLane
+                ? mdLane.parseAndGate(call.text, laneCtx)
+                : parseAndGate(
+                    subType,
+                    call.text,
+                    passage.content,
+                    teacherPoints,
+                    formatCounts,
+                    { grammarKillerV2 },
+                  ),
+            call,
+          );
           let firstGateIssues: string[] | null = null;
           // 재생성 적격: 어법(기존 정책 유지) + 다중 빈칸(위 정책 주석 근거).
           // 26-07-27 정책 개정(사용자 확정 · 세미나 실측 근거): 단일 빈칸도
@@ -976,24 +1412,26 @@ export async function POST(req: NextRequest) {
               t: "retry",
               reason: parsedMd.gateIssues.join(", ").slice(0, 200),
             });
-            const retryCall = await streamOnce({
-              prompt: buildPrompt(parsedMd.gateIssues.join(", ")),
-              modelId,
-              timeoutMs: Math.min(240_000, budgetMs()),
-              emit,
-            });
+            const retryCall = await streamWithTransportRetry(
+              buildPrompt(parsedMd.gateIssues.join(", ")),
+            );
             callResults.push(retryCall);
             await recordGenerationCost(1, retryCall);
-            const retryParsed: MdLaneParsed =
-              laneCtx && mdLane
-                ? mdLane.parseAndGate(retryCall.text, laneCtx)
-                : parseAndGate(
-                    subType,
-                    retryCall.text,
-                    passage.content,
-                    teacherPoints,
-                    formatCounts,
-                  );
+            const retryParsed: MdLaneParsed = withTruncationHint(
+              lunaLane
+                ? lunaParseAndGate(retryCall.text)
+                : laneCtx && mdLane
+                  ? mdLane.parseAndGate(retryCall.text, laneCtx)
+                  : parseAndGate(
+                      subType,
+                      retryCall.text,
+                      passage.content,
+                      teacherPoints,
+                      formatCounts,
+                      { grammarKillerV2 },
+                    ),
+              retryCall,
+            );
             // 재생성이 더 나빠지지 않았을 때만 채택 — 남은 반려는 아래 공통
             // 반려 블록이 실패·환불 처리한다(재재생성 없음).
             if (retryParsed.gateIssues.length <= parsedMd.gateIssues.length) {
@@ -1018,6 +1456,8 @@ export async function POST(req: NextRequest) {
                 data: {
                   result: {
                     mdStream: true,
+                    lunaLane,
+                    grammarKillerV2,
                     // 형식 메타(26-07-23 스펙 v1) — 실패 계통을 형식별로 추적.
                     mdFormat: (laneCtx && mdLane
                       ? mdLane.mdFormat(laneCtx)
@@ -1039,6 +1479,11 @@ export async function POST(req: NextRequest) {
                     // FAILED 잡의 result 는 UI 미소비 — 사용자 표면 노출 없음.
                     mdRawText: call.text.slice(0, 8000),
                     mdRawLength: call.text.length,
+                    // O223 A축: 콜별 finish_reason — length 면 예산 절단 계통.
+                    // errorChunk 는 미드스트림 에러(레이트리밋·모더레이션 등)가
+                    // EMPTY_BODY/절단으로 위장되던 계통의 원인 텍스트 보존.
+                    finishReasons: callResults.map((c) => c.finishReason),
+                    errorChunks: callResults.map((c) => c.errorChunk),
                   },
                 },
               })
@@ -1166,6 +1611,8 @@ export async function POST(req: NextRequest) {
                   debugTiming,
                   fastPath: true,
                   mdStream: true,
+                  lunaLane,
+                  grammarKillerV2,
                   // 형식 메타(26-07-23 스펙 v1) — 신형식(다중 빈칸·어법 비표준)
                   // 산출물의 형식별 계측·포렌식용.
                   mdFormat:
@@ -1203,8 +1650,14 @@ export async function POST(req: NextRequest) {
           });
           finish();
         } catch (err) {
-          const rawMessage =
-            err instanceof Error ? err.message : "Question generation failed.";
+          // 내부 계통 표식(EMPTY_BODY:)은 사용자 표면에 내지 않는다 — 재시도까지
+          // 소진하고 도달한 경우이므로 일시 장애 문구로 흡수시킨다.
+          const rawMessage = (
+            err instanceof Error ? err.message : "Question generation failed."
+          ).replace(
+            /^EMPTY_BODY:\s*/,
+            "일시적인 AI 서비스 문제로 생성에 실패했어요(빈 응답). ",
+          );
           // 내부 오류 원문(스택·업스트림 상세)은 서버 로그에만 — 사용자 표면·DB 는
           // fast 와 동일하게 새니타이즈한다.
           console.error("[md-stream] generation failed", rawMessage);

@@ -9,6 +9,7 @@ import { Gem, Minus, Plus } from "lucide-react";
 import { PearlIcon } from "@/components/icons/pearl-icon";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import {
+  planForDifficulty,
   QUESTION_GENERATION_PLANS,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
@@ -63,6 +64,10 @@ const DIFFICULTIES: { value: Difficulty; label: string; on: string }[] = [
   { value: "INTERMEDIATE", label: "중급", on: "bg-amber-50 text-amber-700" },
   { value: "KILLER", label: "킬러", on: "bg-red-50 text-red-700" },
 ];
+
+// 26-08-18 난이도 기반 티어: 멤버별 '생성 플랜' 피커 폐지 — 난이도가 티어를 결정한다
+// (KILLER=2배, 서버가 요청 generationPlan 을 무시). 렌더 코드는 보존하고 이 상수로만 끈다.
+const MEMBER_PLAN_PICKER_ENABLED = false as boolean;
 
 interface NumberSettingSpec {
   key: string;
@@ -264,7 +269,8 @@ export function SetMemberSettingsEditor({
   };
 
   const renderPlan = () => {
-    if (!FEATURE_FLAGS.SHOW_MODEL_SELECTOR) return null;
+    // 26-08-18 난이도 기반 티어: 플랜 피커 렌더 제거(코드 보존).
+    if (!MEMBER_PLAN_PICKER_ENABLED || !FEATURE_FLAGS.SHOW_MODEL_SELECTOR) return null;
     const selectedPlan = override?.generationPlan ?? inheritedGenerationPlan;
     return (
       <div className="border-b border-slate-100 pb-3">
@@ -322,6 +328,9 @@ export function SetMemberSettingsEditor({
         {DIFFICULTIES.map((d) => {
           const selectedDifficulty = override?.difficulty ?? inheritedDifficulty;
           const active = selectedDifficulty === d.value;
+          // 26-08-18 난이도 기반 티어: 난이도가 티어를 결정 — 배수 >1(킬러=2x)만 뱃지.
+          const tierMultiplier =
+            QUESTION_GENERATION_PLANS[planForDifficulty(d.value)].creditMultiplier;
           return (
             <button
               key={d.value}
@@ -332,11 +341,25 @@ export function SetMemberSettingsEditor({
                   difficulty: active ? undefined : d.value,
                 })
               }
-              className={`rounded px-2 py-1 text-[10px] font-bold transition-colors ${
+              className={`inline-flex items-center gap-1 rounded px-2 py-1 text-[10px] font-bold transition-colors ${
                 active ? d.on : "text-slate-400 hover:text-slate-600"
               }`}
+              title={
+                tierMultiplier > 1
+                  ? `${d.label} 난이도는 크레딧 ${tierMultiplier}배(상위 모델·정밀 검수)`
+                  : undefined
+              }
             >
               {d.label}
+              {tierMultiplier > 1 ? (
+                <span
+                  className={`text-[9px] font-bold tabular-nums ${
+                    active ? "text-red-600" : "text-slate-400"
+                  }`}
+                >
+                  {tierMultiplier}x
+                </span>
+              ) : null}
             </button>
           );
         })}
@@ -655,8 +678,9 @@ export function SetMemberSettingsEditor({
       ) : null}
       {!numericContent ? (
         <p className="border-t border-slate-100 pt-3 text-[10px] leading-snug text-slate-400">
-          {typeLabel} 유형은 숫자 세부 설정이 없습니다. 생성 플랜, 난이도,
-          언어만 조정할 수 있어요.
+          {/* 26-08-18 난이도 기반 티어: 플랜 문구 제거 */}
+          {typeLabel} 유형은 숫자 세부 설정이 없습니다. 난이도, 언어만 조정할
+          수 있어요.
         </p>
       ) : null}
     </div>

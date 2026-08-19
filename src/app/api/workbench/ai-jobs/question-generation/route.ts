@@ -96,11 +96,6 @@ export async function POST(req: NextRequest) {
   const generationPlan = normalizeQuestionGenerationPlan(
     parsed.data.generationPlan,
   );
-  // 단일 상품(26-07-21): 결정 함수 단일 소스 — 정규화 + 단일 상품 클램프.
-  // 이 값이 job.generationPlan 컬럼·config 에 저장되고 trigger 워커가 그대로 소비.
-  const effectiveGenerationPlan = resolveEffectiveGenerationPlan(
-    parsed.data.generationPlan,
-  );
   const effectiveDifficulty =
     parsed.data.mode === "MANUAL" && parsed.data.questionType
       ? readQuestionTypeDifficultySetting(
@@ -108,6 +103,12 @@ export async function POST(req: NextRequest) {
           parsed.data.difficulty,
         )
       : readQuestionTypeDifficultySetting(undefined, parsed.data.difficulty);
+  // 26-08-18 난이도 기반 티어(결정 함수 단일 소스): KILLER → PREMIUM 2배.
+  // 이 값이 job.generationPlan 컬럼·config 에 저장되고 trigger 워커가 그대로 소비.
+  const effectiveGenerationPlan = resolveEffectiveGenerationPlan(
+    parsed.data.generationPlan,
+    effectiveDifficulty,
+  );
 
   // ── SHIP-FIRST 사전 적합성 게이트: 기계적 불가(예: SENTENCE_ORDER 문장수 부족)만
   // 잡 생성·트리거 전에 거른다. 출제 포인트 품질 판단이 아니라 형식 불가능만 차단. ──

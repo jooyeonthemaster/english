@@ -19,6 +19,7 @@ import { generateQuestionObject } from "@/lib/question-generation-llm";
 import {
   getQuestionGenerationCreditCost,
   normalizeQuestionGenerationPlan,
+  resolveEffectiveGenerationPlan,
   withQuestionGenerationPlanMetadata,
 } from "@/lib/question-generation-plans";
 
@@ -52,7 +53,8 @@ export async function POST(request: NextRequest) {
       customPrompt?: string;
       generationPlan?: unknown;
     };
-    const generationPlan = normalizeQuestionGenerationPlan(rawGenerationPlan);
+    // 26-08-18 난이도 기반 티어: KILLER 배치는 2배(결정 함수 단일 소스).
+    const generationPlan = resolveEffectiveGenerationPlan(rawGenerationPlan, difficulty);
     // 자동 출제는 문제 1개당 단가 — 생성할 문제 수만큼 청구.
     const creditCost = getQuestionGenerationCreditCost(
       CREDIT_COSTS.AUTO_GEN_BATCH * Math.max(1, Math.floor(Number(count) || 1)),

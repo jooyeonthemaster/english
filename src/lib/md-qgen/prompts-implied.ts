@@ -15,7 +15,7 @@
 import { findImpliedMeaningCandidates } from "@/lib/question-quality/candidate-blocks/implied";
 import { rotateByVariantIndex } from "@/lib/question-quality/candidate-blocks/shared";
 import { countWordBoundaryMatches } from "./parser";
-import type { MdDifficulty, MdExplanationMode } from "./prompts";
+import { KILLER_ANTI_SHORTCUT_CHECK, type MdDifficulty, type MdExplanationMode } from "./prompts";
 
 /** 선지 라벨 축 — 최대 8지선다(generic optionCount 상한)까지 원문자. */
 export const IMPLIED_MD_CIRCLED = [
@@ -87,7 +87,9 @@ const IMPLIED_TARGET_BY_DIFFICULTY: Record<MdDifficulty, string> = {
   (3) **비유·은유·압축 이미지** — 지문에 은유가 있으면 무조건 그것이 1순위다.
 - 정답 근거는 **서로 다른 문장 2개 이상에 흩어져** 있어야 한다. 종합해야만 풀리는 자리를 골라라.
 - 🚫 바로 다음(또는 바로 앞) 문장이 밑줄을 거의 그대로 풀어 주는 자리는 금지 — "that is / in other words / this means" 로 이어지는 자리가 대표적이다. 그런 자리는 함축이 아니라 독해 확인이 된다.
-- 🚫 **문자 그대로의 사실 서술 금지**(실측 최다 결함): "played a comparable role", "exceeded all others" 처럼 사실을 직접 진술하는 구는 표면과 이면이 같아 함축이 성립하지 않는다.`,
+- 🚫 **문자 그대로의 사실 서술 금지**(실측 최다 결함): "played a comparable role", "exceeded all others" 처럼 사실을 직접 진술하는 구는 표면과 이면이 같아 함축이 성립하지 않는다.
+- 🚫 **관용구의 사전적 사용 금지**(26-08-19 상한 재채점 실측): "laying the groundwork" 처럼 관용구가 사전 의미 그대로 쓰인 자리는 해석 부담이 0이라 함축이 성립하지 않는다. 은유를 고르되 **그 지시체가 문맥의 대조·부정 구문을 읽어야만 확정되는** 자리(예: "arguments in a vacuum" — 진공에 결여된 것이 무엇인지는 뒤의 대조를 읽어야 안다)가 진짜 급소다.
+- 🚫 **같은 문장 내 정답 제공 금지**: 밑줄 문장의 나머지 부분이 정답 선지의 전반부·후반부를 축자로 제공하면 그 자리는 밑줄 문장 하나로 즉답된다 — 병렬·동격으로 이어진 구가 정답을 등치해 주는 자리를 피하라.`,
 };
 
 /**
@@ -133,9 +135,10 @@ function impliedExplanationBlock(
   if (mode === "answer-only") {
     return `${head}. 오답 해설은 쓰지 마라>`;
   }
+  // 26-08-18 O225 해설 다이어트
   return `${head}>
 오답:
-${labels[0]} <기제이름 — 왜 매력적이고 왜 탈락인지 1문장> (정답 번호는 제외하고 오답 ${wrongCount}개만)
+${labels[0]} <왜 탈락인지 1문장 — 매력 이유·기제 이름 서술 금지> (정답 번호는 제외하고 오답 ${wrongCount}개만)
 ...`;
 }
 
@@ -144,6 +147,11 @@ ${labels[0]} <기제이름 — 왜 매력적이고 왜 탈락인지 1문장> (�
  * 출력 계약(parser-implied.ts 와 1:1): `밑줄:` 한 줄 + 원문자 선지 N줄 +
  * `정답:` + `해설:` + `오답:`. **지문을 재출력시키지 않는다** — 이 유형은 지문을
  * 변형하지 않으므로 지문 재구성 계약 자체가 없고, 출력 토큰도 그만큼 짧다.
+ *
+ * 26-08-18 O225 원가 진단: 자기검산 블록을 7불릿→3줄로 압축. 종전(한 글자씩 대조·
+ * 등장 횟수 세기·단어 수 세기·오답별 서면 근거·기제 겹침)은 luna-ext/implied-meaning
+ * 검산과 완전 중복이라 모델이 같은 루프를 두 번 돌렸다(함축 사고 10.6k = 타 유형
+ * 2배). ext 검산은 luna·gemini KILLER 양 경로에 붙으므로 base 는 핵심만 남긴다.
  */
 export function buildMdImpliedPrompt(
   passage: string,
@@ -201,6 +209,9 @@ ${fewshotBlock}## 이 유형의 정체 — 어휘 문제가 아니다
 - 지문에 **두 번 이상 등장하는 표현은 표적으로 쓰지 마라** — 밑줄 자리가 유일하게 확정되지 않는다.
 
 ${IMPLIED_TARGET_BY_DIFFICULTY[difficulty]}
+${difficulty === "KILLER" ? `
+${KILLER_ANTI_SHORTCUT_CHECK}
+` : ""}
 
 ${impliedDecoySection(wrongCount)}
 
@@ -216,14 +227,10 @@ ${optionLanguageRule}${multiAnswerRule}
 - 선지끼리 같은 뜻을 다르게 쓴 중복 금지 — 두 선지가 같은 말이면 그 문항은 무효다.
 - 정답은 정확히 ${answerCount}개다. "이것도 정답 아니냐"고 시비 걸릴 선지가 하나라도 있으면 그 선지를 다시 써라.
 
-## 출력 전 자기검산 (사고 안에서 수행, 출력하지 마라)
-- ⭐ **리트머스 검사**: 밑줄의 표면 의미(직역)와 정답의 함축 의미를 각각 한 문장으로 적어 보라. 두 문장이 사실상 같은 진술이면 표면-이면 간극이 0이므로 **그 밑줄은 탈락**이다 — 표적을 다시 골라라. 간극은 "직역만으로는 안 보이는 필자의 판단·인과·가치 평가"가 정답에 더해질 때만 성립한다.
-- 밑줄 표현을 지문에서 찾아 **한 글자씩 대조**하라 — 한 글자라도 다르면 기계 검사가 반려한다. 지문에 몇 번 등장하는지도 세어라(1회여야 한다).
-- 밑줄 단어 수를 세어라 — ${IMPLIED_MD_TARGET_MAX_WORDS}단어를 넘으면 반려된다.
-- 각 오답이 왜 틀렸는지 지문 근거로 한 줄씩 답해보라 — 근거를 못 대는 오답은 재설계.
-- 기제가 겹치는 오답이 없는지 확인하라.
-- 오답 목록에 정답 번호를 절대 포함하지 마라.
-- 해설은 한국어만 쓴다(영단어를 한국어 문장의 어휘로 섞지 마라 — 지문 표현 인용만 허용).
+## 출력 전 자기검산 (사고 안에서 1회만 수행, 출력하지 마라)
+- ⭐ **리트머스 검사**: 밑줄의 표면 의미(직역)와 정답의 함축 의미가 사실상 같은 진술이면 표면-이면 간극이 0이므로 **그 밑줄은 탈락**이다. 간극은 "직역만으로는 안 보이는 필자의 판단·인과·가치 평가"가 정답에 더해질 때만 성립한다.
+- 밑줄 표현은 지문 축자·1회 등장·${IMPLIED_MD_TARGET_MAX_WORDS}단어 이내(기계 검사 반려 조건).
+- 오답 목록에 정답 번호를 절대 포함하지 마라. 해설은 한국어만 쓴다(지문 표현 인용만 허용).
 
 ## 출력 형식 (마크다운 — 이 형식 그대로, 다른 말 붙이지 마라)
 밑줄: <지문에서 밑줄 칠 표현 — 지문 축자 그대로, ${IMPLIED_MD_TARGET_MAX_WORDS}단어 이내, 개행 없이 한 줄. 따옴표·별표로 감싸지 마라.>

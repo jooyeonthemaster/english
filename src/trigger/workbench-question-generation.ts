@@ -184,11 +184,6 @@ export const workbenchQuestionGenerationTask = task({
     }
     const passage = job.passage;
     const config = parseConfig(job.config, job.generationPlan);
-    // 단일 상품(26-07-21): 결정 함수 단일 소스 — 잡 저장 플랜을 정규화 + 단일
-    // 상품 클램프(fast/async/단건 진입점과 동일 규칙, 구버전 잡 재실행도 안전).
-    const effectiveGenerationPlan = resolveEffectiveGenerationPlan(
-      config.generationPlan,
-    );
     const effectiveDifficulty =
       config.mode === "MANUAL" && config.questionType
         ? readQuestionTypeDifficultySetting(
@@ -196,6 +191,12 @@ export const workbenchQuestionGenerationTask = task({
             config.difficulty,
           )
         : readQuestionTypeDifficultySetting(undefined, config.difficulty);
+    // 26-08-18 난이도 기반 티어(결정 함수 단일 소스 — fast/async/단건 진입점과
+    // 동일 규칙, 구버전 잡 재실행도 안전): KILLER → PREMIUM 2배.
+    const effectiveGenerationPlan = resolveEffectiveGenerationPlan(
+      config.generationPlan,
+      effectiveDifficulty,
+    );
 
     // ── SHIP-FIRST 사전 적합성 백스톱: 기계적 불가만 차감 전에 거른다(재시도 0).
     // sync/async 라우트가 이미 거르지만 직접 트리거·구버전 잡 방어용. 차감 전이라 환불 불필요. ──

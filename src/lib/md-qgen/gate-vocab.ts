@@ -15,7 +15,7 @@
 //   에서만** 정답 축 동기 검사를 돌린다.
 // ============================================================================
 
-import { normalizeWs, countWordBoundaryMatches } from "./parser";
+import { normalizeWs, countWordBoundaryMatches, reconstructionEq } from "./parser";
 import { findVocabSubstitutionSeamIssues } from "@/lib/question-quality/validators/vocab/substitution-seam";
 import { sourceWordVisibleOutsideMarkers } from "@/lib/question-quality/validators/vocab";
 import { VOCAB_MD_AXIS_CODES, VOCAB_MD_LABELS } from "./prompts-vocab";
@@ -72,8 +72,9 @@ export function gateMdVocab(
     v.push(`원형·판단축 라벨 순서 오류 — ${expected.join("")} 필요`);
   }
 
-  // #2 지문 재구성 대조 — 마커 밖 무단 편집과 원형 오기를 한 번에 잡는 최강 게이트.
-  const reconstructionOk = normalizeWs(reconstructVocabPassage(q)) === pn;
+  // #2 지문 재구성 대조 — 마커 밖 무단 편집과 원형 오기를 한 번에 잡는 최강 게이트
+  // (말미 종결부호만 관용 — reconstructionEq 주석의 26-08-11 RCA).
+  const reconstructionOk = reconstructionEq(reconstructVocabPassage(q), passage);
   if (!reconstructionOk) {
     v.push("지문 재구성 불일치 — 마커 밖 텍스트가 원문과 다르거나 원형이 지문 축자가 아님");
   }

@@ -236,10 +236,16 @@ export const ATLAS_PREMIUM_MODEL_ID = resolveAtlasModel(
  * 다른 PREMIUM 소비자(exam-report·question-ai-edit·similar-exam-generation·
  * 지문분석 generateQuestionText 경로)는 ATLAS_PREMIUM_MODEL_ID(Claude)를 그대로
  * 쓴다 — 이 상수는 generateQuestionObject 의 PREMIUM 플랜 매핑 전용이다.
+ *
+ * 26-08-17 코드 기본값 flash3 → google/gemini-3.7-flash (사용자 결정): 이원 티어
+ * 재분리에서 PREMIUM = 종전 3.6-flash 프리미엄 파이프라인(O213) 그대로 + 모델만
+ * 3.7-flash(3.6 대비 리스트가 절반, 문장삽입 벤치 수율 동일). STANDARD 는 md
+ * 레인의 luna 가 맡는다. 프로덕션은 env PREMIUM_QGEN_MODEL_ID 가 핀이라 코드
+ * 기본값만으론 무효 — 배포 시 Vercel env 도 3.7 로 함께 갱신해야 한다.
  */
 export const ATLAS_PREMIUM_QGEN_MODEL_ID = resolveAtlasModel(
   ["PREMIUM_QGEN_MODEL_ID"],
-  "google/gemini-3-flash-preview",
+  "google/gemini-3.7-flash",
 );
 
 /**
@@ -251,9 +257,12 @@ export const ATLAS_PREMIUM_QGEN_MODEL_ID = resolveAtlasModel(
  * 플랜 매핑(QUESTION_GENERATION_MODEL_CONFIGS)만 이 상수를 쓴다.
  * env STANDARD_QGEN_MODEL_ID 로 오버라이드(롤백: google/gemini-3.5-flash).
  */
+// 26-08-19 전 라인업 3.7 통일(사용자 결정, O226 벤치 근거): STANDARD 도 3.7-flash.
+// INT paired 50:25·원가 동급(₩11.6 vs 12.2)·속도 2.3배·luna 지칭 잡실패 4/20.
+// ⚠ 프로덕션은 env STANDARD_QGEN_MODEL_ID 핀이 이기므로 배포 시 env 도 갱신할 것.
 export const ATLAS_STANDARD_QGEN_MODEL_ID = resolveAtlasModel(
   ["STANDARD_QGEN_MODEL_ID"],
-  "google/gemini-3-flash-preview",
+  "google/gemini-3.7-flash",
 );
 
 export const ATLAS_OCR_MODEL_ID = resolveAtlasModel(

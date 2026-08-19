@@ -23,7 +23,7 @@ import {
   sentenceInsertHasCohesiveCue,
   sentenceInsertSentenceSimilarity,
 } from "@/lib/question-quality/validators/sentence-insert";
-import { normalizeWs } from "./parser";
+import { normalizeWs, reconstructionEq } from "./parser";
 import {
   INSERT_CIRCLED,
   computeInsertLayout,
@@ -328,7 +328,7 @@ export function gateMdSentenceInsert(
     // 복원된다"는 증명이므로 축자 여부가 이미 확정돼 있다. 이때 분할기 단위(source)와
     // 글자가 다른 것은 splitIntoSentences 의 왕복 손실(닫는 따옴표를 다음 단위 선두로
     // 흘림)일 뿐이라, 발화하면 축자 완벽 출력을 거짓 반려한다.
-    if (layout.matchingGaps.length === 0 && normalizeWs(source) !== normalizeWs(q.given)) {
+    if (layout.matchingGaps.length === 0 && !reconstructionEq(source, q.given)) {
       v.push(
         `삽입문장이 지문 축자가 아님 — 번호지문에서 빠진 원문은 '${trunc(source)}' 이다`,
       );

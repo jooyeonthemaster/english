@@ -22,7 +22,7 @@
 //   있는 실패 모드 하나를 통째로 제거한 것이다.
 // ============================================================================
 
-import type { MdDifficulty, MdExplanationMode } from "./prompts";
+import { KILLER_ANTI_SHORTCUT_CHECK, type MdDifficulty, type MdExplanationMode } from "./prompts";
 
 /** 선지 라벨 축 — 원문자. 최종 저장 라벨("1"~"N")은 어댑터가 파생한다. */
 export const TOPIC_MD_CIRCLED = [
@@ -228,10 +228,11 @@ function topicExplanationBlock(
     return `${answerLine}
 해설: <${explanationCore}. 오답 해설은 쓰지 마라>`;
   }
+  // 26-08-18 O225 해설 다이어트
   const wrongCore =
     polarity === "NEGATIVE"
       ? `<이 선지가 이 글의 주제로 왜 타당한지 지문 근거로 1문장>`
-      : `<기제 이름 — 이 선지를 고르는 학생이 글의 어느 지점에서 멈췄는지, 그리고 왜 주제가 아닌지 1문장>`;
+      : `<왜 주제로 탈락인지 1문장 — 매력 이유·기제 이름·학생 심리 서술 금지>`;
   return `${answerLine}
 해설: <${explanationCore}>
 오답:
@@ -303,6 +304,9 @@ ${fewshotBlock}## 주제란 무엇인가 — 여기서 문항의 격이 갈린�
 - 지문은 **한 글자도 바꾸지 않는다**. 지문을 다시 출력하지도 마라. 네가 만드는 것은 선지 ${optionCount}개와 해설뿐이다.
 
 ${TOPIC_TARGET_BY_DIFFICULTY[difficulty]}
+${difficulty === "KILLER" ? `
+${KILLER_ANTI_SHORTCUT_CHECK}
+` : ""}
 
 ${polarityBridge(polarity, difficulty)}${distractorSection(polarity, wrongCount, answerCount)}
 

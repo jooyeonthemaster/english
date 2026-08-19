@@ -63,6 +63,54 @@ export function contextAround(
   return text.trim();
 }
 
+/**
+ * contextAround 의 어법 마커용 변종 — **왼쪽 문맥에 표적과 같은 표면형이 남지
+ * 않게** 창 시작을 민다.
+ *
+ * 26-08-19 실측(O226 벤치, 34번 지문 "You know that smell that hangs…"):
+ * 모델(luna·3.7 둘 다)은 두 번째 that(관계사)에 정확히 마커를 찍었는데, 창에
+ * 첫 번째 that(지시형용사)이 함께 담기자 후처리의 창 내 탐색
+ * (findWithSurroundingContext → findInSlice = 창 내 첫 출현)이 마커를 앞
+ * that 으로 옮겨 양팔 공통 F 가 났다. 창 내 첫 출현 = 표적이 되도록 왼쪽
+ * 중복을 결정형으로 제거한다(오른쪽 중복은 첫 출현 탐색에 무해).
+ */
+export function contextAroundUnique(
+  passage: string,
+  index: number,
+  length: number,
+  pad = 45,
+): string {
+  let start = Math.max(0, index - pad);
+  const end = Math.min(passage.length, index + length + pad);
+  const surface = passage.slice(index, index + length);
+  const escaped = surface.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  try {
+    const re = new RegExp(`\\b${escaped}\\b`, "gi");
+    for (;;) {
+      const left = passage.slice(start, index);
+      re.lastIndex = 0;
+      const m = re.exec(left);
+      if (!m) break;
+      start = start + m.index + m[0].length;
+      while (start < index && /\s/.test(passage[start])) start += 1;
+    }
+  } catch {
+    /* 정규식 실패 시 기존 창 유지 */
+  }
+  let text = passage.slice(start, end);
+  // 단어 중간 절단 방지 — contextAround 와 동일 규칙(왼쪽은 중복 제거 시작점이
+  // 이미 단어 경계이므로 start 를 민 경우 건드리지 않는다).
+  if (start > 0 && start === Math.max(0, index - pad)) {
+    const firstSpace = text.indexOf(" ");
+    if (firstSpace > 0 && firstSpace < 20) text = text.slice(firstSpace + 1);
+  }
+  if (end < passage.length) {
+    const lastSpace = text.lastIndexOf(" ");
+    if (lastSpace > text.length - 20 && lastSpace > 0) text = text.slice(0, lastSpace);
+  }
+  return text.trim();
+}
+
 /** md 라벨 표기 정규화 — 파서가 "A"/"(A)" 어느 쪽을 주든 AI 스키마 "(A)" 형으로. */
 export function parenLabel(label: string): string {
   return label.startsWith("(") ? label : `(${label})`;
@@ -288,7 +336,10 @@ export function adaptMdGrammarToAiQuestion(
     }
     const surroundingText =
       index >= 0
-        ? contextAround(contextSource, index, m.original.length)
+        ? // 어법 마커는 짧은 단어(that·is·it)라 같은 표면형이 창에 2회 담기면
+          // 후처리 창 내 첫-출현 탐색이 마커를 옮긴다 — 왼쪽 중복 제거 창 사용
+          // (26-08-19 34번 양팔 F 의 결정형 봉합).
+          contextAroundUnique(contextSource, index, m.original.length)
         : m.original;
     return {
       label: m.label,

@@ -18,9 +18,10 @@ import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { PearlIcon } from "@/components/icons/pearl-icon";
 import {
   getQuestionGenerationCreditCost,
+  planForDifficulty,
   QUESTION_GENERATION_PLANS,
 } from "@/lib/question-generation-plans";
-import { ANTONYM_PAIR_COUNT_MAX, ANTONYM_PAIR_COUNT_MIN, BLANK_INFERENCE_BLANK_COUNT_MAX, BLANK_INFERENCE_BLANK_COUNT_MIN, CONTENT_MATCH_ANSWER_COUNT_MIN, CONTENT_MATCH_OPTION_COUNT_MAX, CONTENT_MATCH_OPTION_COUNT_MIN, GENERIC_OPTION_COUNT_MAX, GENERIC_OPTION_COUNT_MIN, GRAMMAR_ANSWER_COUNT_MIN, GRAMMAR_CORRECTION_ERROR_COUNT_MAX, GRAMMAR_CORRECTION_ERROR_COUNT_MIN, GRAMMAR_MARKER_COUNT_MAX, GRAMMAR_MARKER_COUNT_MIN, IRRELEVANT_SLOT_COUNT_MAX, IRRELEVANT_SLOT_COUNT_MIN, SENTENCE_INSERT_SLOT_COUNT_MAX, SENTENCE_INSERT_SLOT_COUNT_MIN, SUMMARY_COMPLETE_BLANK_COUNT_MAX, SUMMARY_COMPLETE_BLANK_COUNT_MIN, SUMMARY_COMPLETE_MC_BLANK_COUNT_MAX, SUMMARY_COMPLETE_MC_BLANK_COUNT_MIN, SUMMARY_WRITING_BLANK_COUNT_DEFAULT, SUMMARY_WRITING_BLANK_COUNT_MAX, SUMMARY_WRITING_BLANK_COUNT_MIN, SUMMARY_WRITING_DISTRACTOR_COUNT_DEFAULT, SUMMARY_WRITING_DISTRACTOR_COUNT_MAX, SUMMARY_WRITING_DISTRACTOR_COUNT_MIN, SUMMARY_WRITING_TARGET_WORDS_DEFAULT, SUMMARY_WRITING_TARGET_WORDS_MAX, SUMMARY_WRITING_TARGET_WORDS_MIN, TOPIC_SENTENCE_WRITING_BLANK_COUNT_MAX, TOPIC_SENTENCE_WRITING_BLANK_COUNT_MIN, TOPIC_SENTENCE_WRITING_DISTRACTOR_COUNT_MAX, TOPIC_SENTENCE_WRITING_DISTRACTOR_COUNT_MIN, VOCAB_CHOICE_ANSWER_COUNT_MIN, VOCAB_CHOICE_MARKER_COUNT_MAX, VOCAB_CHOICE_MARKER_COUNT_MIN, getQuestionLanguageToggleScope, readQuestionTypeGenerationPlanSetting, resolveTopicSentenceWritingSettings, supportsGistAnswerPolarity } from "@/lib/question-type-generation-settings";
+import { ANTONYM_PAIR_COUNT_MAX, ANTONYM_PAIR_COUNT_MIN, BLANK_INFERENCE_BLANK_COUNT_MAX, BLANK_INFERENCE_BLANK_COUNT_MIN, CONTENT_MATCH_ANSWER_COUNT_MIN, CONTENT_MATCH_OPTION_COUNT_MAX, CONTENT_MATCH_OPTION_COUNT_MIN, GENERIC_OPTION_COUNT_MAX, GENERIC_OPTION_COUNT_MIN, GRAMMAR_ANSWER_COUNT_MIN, GRAMMAR_CORRECTION_ERROR_COUNT_MAX, GRAMMAR_CORRECTION_ERROR_COUNT_MIN, GRAMMAR_MARKER_COUNT_MAX, GRAMMAR_MARKER_COUNT_MIN, IRRELEVANT_SLOT_COUNT_MAX, IRRELEVANT_SLOT_COUNT_MIN, SENTENCE_INSERT_SLOT_COUNT_MAX, SENTENCE_INSERT_SLOT_COUNT_MIN, SUMMARY_COMPLETE_BLANK_COUNT_MAX, SUMMARY_COMPLETE_BLANK_COUNT_MIN, SUMMARY_COMPLETE_MC_BLANK_COUNT_MAX, SUMMARY_COMPLETE_MC_BLANK_COUNT_MIN, SUMMARY_WRITING_BLANK_COUNT_DEFAULT, SUMMARY_WRITING_BLANK_COUNT_MAX, SUMMARY_WRITING_BLANK_COUNT_MIN, SUMMARY_WRITING_DISTRACTOR_COUNT_DEFAULT, SUMMARY_WRITING_DISTRACTOR_COUNT_MAX, SUMMARY_WRITING_DISTRACTOR_COUNT_MIN, SUMMARY_WRITING_TARGET_WORDS_DEFAULT, SUMMARY_WRITING_TARGET_WORDS_MAX, SUMMARY_WRITING_TARGET_WORDS_MIN, TOPIC_SENTENCE_WRITING_BLANK_COUNT_MAX, TOPIC_SENTENCE_WRITING_BLANK_COUNT_MIN, TOPIC_SENTENCE_WRITING_DISTRACTOR_COUNT_MAX, TOPIC_SENTENCE_WRITING_DISTRACTOR_COUNT_MIN, VOCAB_CHOICE_ANSWER_COUNT_MIN, VOCAB_CHOICE_MARKER_COUNT_MAX, VOCAB_CHOICE_MARKER_COUNT_MIN, getQuestionLanguageToggleScope, readQuestionTypeDifficultySetting, readQuestionTypeGenerationPlanSetting, resolveTopicSentenceWritingSettings, supportsGistAnswerPolarity } from "@/lib/question-type-generation-settings";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import type {
   BlankInferenceGenerationSettings,
@@ -50,6 +51,11 @@ type PanelSetMemberOverride = {
   generationPlan?: QuestionGenerationPlan;
   typeSettings?: Record<string, unknown>;
 };
+
+// 26-08-18 난이도 기반 티어: 유형별 '생성 플랜' 피커 폐지 — 난이도가 티어를 결정한다
+// (KILLER=2배, resolveEffectiveGenerationPlan 이 요청 generationPlan 을 무시). 렌더
+// 코드는 보존하고 이 상수로만 끈다(레거시 저장값·타입 호환).
+const TYPE_PLAN_PICKER_ENABLED = false as boolean;
 
 export function renderAntonymDetail({ antonymPairCount, setAntonymPairCount }: {
   antonymPairCount: number;
@@ -1586,6 +1592,9 @@ export function renderPerTypeDifficultyImpl({ typeId, difficulty, patchTypeSetti
         <div className="mt-1 lg:mt-1.5 flex h-8 rounded-lg bg-slate-100 p-0.5">
           {DIFFICULTY_TONES.map((d) => {
             const isActive = effective === d.value;
+            // 26-08-18 난이도 기반 티어: 난이도가 티어를 결정 — 배수 >1(킬러=2x)만 뱃지.
+            const tierMultiplier =
+              QUESTION_GENERATION_PLANS[planForDifficulty(d.value)].creditMultiplier;
             return (
               <button
                 key={d.value}
@@ -1608,12 +1617,26 @@ export function renderPerTypeDifficultyImpl({ typeId, difficulty, patchTypeSetti
                     : "font-semibold text-slate-500 hover:text-slate-700"
                 }`}
                 aria-pressed={isActive}
+                title={
+                  tierMultiplier > 1
+                    ? `${d.label} 난이도는 크레딧 ${tierMultiplier}배(상위 모델·정밀 검수)`
+                    : undefined
+                }
               >
                 <span
                   className={`h-1.5 w-1.5 rounded-full ${d.dot}`}
                   aria-hidden="true"
                 />
                 {d.label}
+                {tierMultiplier > 1 ? (
+                  <span
+                    className={`text-[10px] font-bold tabular-nums ${
+                      isActive ? "text-red-600" : "text-slate-400"
+                    }`}
+                  >
+                    {tierMultiplier}x
+                  </span>
+                ) : null}
               </button>
             );
           })}
@@ -1693,7 +1716,8 @@ export function renderTypeDetailContentImpl({ typeId, generationPlan, getTypeOpt
     );
     return (
       <div className="space-y-1.5 lg:space-y-3">
-        {FEATURE_FLAGS.SHOW_MODEL_SELECTOR ? (
+        {/* 26-08-18 난이도 기반 티어: 플랜 피커 폐지(난이도가 티어를 결정 — 서버가 요청 플랜을 무시). 코드는 보존, 렌더만 끈다. */}
+        {TYPE_PLAN_PICKER_ENABLED && FEATURE_FLAGS.SHOW_MODEL_SELECTOR ? (
           <div
             className={
               numericContent
@@ -1926,10 +1950,14 @@ export function renderWorkspaceGenerateButton({ onWorkspaceGenerate, workspaceCr
   );
 }
 
-export function renderLibraryGenerateButton({ canGenerate, generationPlan, handleBatchGenerate, selectedIds, totalQuestions, typeCounts }: {
+export function renderLibraryGenerateButton({ canGenerate, difficulty, handleBatchGenerate, questionTypeSettings, selectedIds, totalQuestions, typeCounts }: {
   canGenerate: boolean;
-  generationPlan: QuestionGenerationPlan;
+  /** 전체 설정 난이도 — 유형별 설정에 difficulty 가 없을 때의 폴백. */
+  difficulty: PanelDifficulty;
+  /** 레거시 시그니처 유지용(호출부 호환) — 26-08-18 난이도 기반 티어 이후 견적 계산에 쓰지 않는다. */
+  generationPlan?: QuestionGenerationPlan;
   handleBatchGenerate: () => void;
+  questionTypeSettings: QuestionTypeGenerationSettings;
   selectedIds: Set<string>;
   totalQuestions: number;
   typeCounts: Record<string, number>;
@@ -1938,19 +1966,27 @@ export function renderLibraryGenerateButton({ canGenerate, generationPlan, handl
 <div className="px-4 py-3 border-t border-slate-100 bg-white shrink-0">
           {(() => {
             // 크레딧 비용 계산 — 유형 지정(MANUAL) 전용.
-            const baseCreditCost =
+            // 26-08-18 난이도 기반 티어: 유형별 실효 난이도(유형 설정 → 전체 난이도)가
+            // KILLER 인 유형만 2배(planForDifficulty) — fast 라우트 과금과 동일 규칙.
+            const creditCost =
               selectedIds.size *
               Object.entries(typeCounts).reduce((sum, [typeId, value]) => {
                 if (value <= 0) return sum;
                 const unitCost = VOCAB_GENERATION_TYPE_IDS.has(typeId)
                   ? CREDIT_COSTS.QUESTION_GEN_VOCAB
                   : CREDIT_COSTS.QUESTION_GEN_SINGLE;
-                return sum + unitCost * value;
+                const typeDifficulty = readQuestionTypeDifficultySetting(
+                  questionTypeSettings[typeId],
+                  difficulty,
+                );
+                return (
+                  sum +
+                  getQuestionGenerationCreditCost(
+                    unitCost * value,
+                    planForDifficulty(typeDifficulty),
+                  )
+                );
               }, 0);
-            const creditCost = getQuestionGenerationCreditCost(
-              baseCreditCost,
-              generationPlan,
-            );
             return (
               <>
                 <Button

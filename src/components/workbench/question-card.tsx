@@ -12,9 +12,10 @@ import { CardDetailIconButton } from "@/components/ui/card-detail-icon-button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { formatDate } from "@/lib/utils";
 import { StructuredQuestionRenderer } from "@/components/workbench/question-renderers";
+import { ExplanationDefaultOpenContext } from "@/components/workbench/question-renderer-primitives";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { QUESTION_TYPE_META } from "@/lib/question-schemas";
-import { getQuestionGenerationPlanFromTags, sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
+import { getQuestionGenerationPlanFromTags, planForDifficulty, QUESTION_GENERATION_PLANS, sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
 import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
 import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
 import { clearCardTextSelection, preventCardDoubleClickTextSelection, shouldIgnoreCardClick, shouldIgnoreCardDoubleClick, shouldIgnoreCardSelectionClick, useDeferredCardSelectionClick } from "./shared/card-click";
@@ -67,10 +68,11 @@ export function QuestionCard({
   answerReveal,
   suppressPassageBlock = false,
   passageDefaultOpen = false,
+  explanationDefaultOpen = false,
 }: QuestionCardProps) {
   const resolvedDragItemId = dragItemId === undefined ? q.id : dragItemId;
   const [passageOpen, setPassageOpen] = useState(passageDefaultOpen);
-  const [explanationOpen, setExplanationOpen] = useState(false);
+  const [explanationOpen, setExplanationOpen] = useState(explanationDefaultOpen);
   const [compactExpanded, setCompactExpanded] = useState(false);
   const router = useRouter();
   const {
@@ -109,10 +111,14 @@ export function QuestionCard({
   const generationPlan =
     getQuestionGenerationPlanFromTags(tags) ??
     readGenerationPlanFromStructuredData(q.structuredData);
-  // 생성 플랜(일반/프리미엄) 태그 — 프리미엄은 보라(프리미엄 톤), 일반은 슬레이트.
+  // 생성 플랜(일반/킬러) 태그 — 킬러 티어는 보라, 일반은 슬레이트.
   // 카드 헤더(콤팩트·비콤팩트 공통)에 노출한다. (일반=PearlIcon)
+  // 26-08-18 난이도 기반 티어: 난이도 뱃지가 이미 같은 티어를 말하면(KILLER↔킬러) 이중 표기라 숨긴다.
+  const diffConfig = DIFFICULTY_CONFIG[q.difficulty];
+  const planBadgeRedundant =
+    !!diffConfig && planForDifficulty(q.difficulty) === generationPlan;
   const planBadge =
-    FEATURE_FLAGS.SHOW_MODEL_SELECTOR && generationPlan ? (
+    FEATURE_FLAGS.SHOW_MODEL_SELECTOR && generationPlan && !planBadgeRedundant ? (
       <Badge
         variant="outline"
         className={`shrink-0 gap-1 text-[10px] font-bold ${
@@ -126,11 +132,10 @@ export function QuestionCard({
         ) : (
           <PearlIcon className="h-3 w-3" />
         )}
-        {generationPlan === "PREMIUM" ? "프리미엄" : "일반"}
+        {QUESTION_GENERATION_PLANS[generationPlan].shortLabel}
       </Badge>
     ) : null;
-  const diffConfig = DIFFICULTY_CONFIG[q.difficulty];
-  // 난이도 배지 — 일반/프리미엄(planBadge)과 동일한 pill 디자인.
+  // 난이도 배지 — 일반/킬러(planBadge)과 동일한 pill 디자인.
   // 기본=파랑, 중급=노랑(amber), 킬러=빨강으로 색상 구분. plan 배지 왼쪽에 배치한다.
   const difficultyBadge = diffConfig ? (
     <Badge
@@ -442,13 +447,18 @@ export function QuestionCard({
                   )}
                 </div>
               )}
-              <StructuredQuestionRenderer
-                question={structuredData}
-                index={num - 1}
-                hideHeader
-                sourcePassageContent={q.passage?.content}
-                answerRevealMode={answerReveal ?? (compact ? "show-all" : "default")}
-              />
+              {/* explanationDefaultOpen 은 구조화 렌더러 내부 ExplanationSection 까지
+                  Context 로 전달(§3.9v2.3 D3 — prop 체인이 깊어 통로만 뚫는다).
+                  기본 false Provider 부재 시 기존 전 호스트 동작 불변. */}
+              <ExplanationDefaultOpenContext.Provider value={explanationDefaultOpen}>
+                <StructuredQuestionRenderer
+                  question={structuredData}
+                  index={num - 1}
+                  hideHeader
+                  sourcePassageContent={q.passage?.content}
+                  answerRevealMode={answerReveal ?? (compact ? "show-all" : "default")}
+                />
+              </ExplanationDefaultOpenContext.Provider>
             </>
           ) : (
             <>

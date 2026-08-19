@@ -266,12 +266,6 @@ export async function POST(req: NextRequest) {
     ...parsed.data,
     generationPlan: normalizeQuestionGenerationPlan(parsed.data.generationPlan),
   };
-  // 단일 상품(26-07-21 사용자 결정): 전 요청 일반 레인 — 결정 함수 단일 소스
-  // (resolveEffectiveGenerationPlan: 정규화 + 단일 상품 클램프, env 로 이원 복귀).
-  // 유형별 저장 설정의 generationPlan 은 서버 미소비(좀비 설정 함정 차단).
-  const effectiveGenerationPlan = resolveEffectiveGenerationPlan(
-    config.generationPlan,
-  );
   const effectiveDifficulty =
     config.mode === "MANUAL" && config.questionType
       ? readQuestionTypeDifficultySetting(
@@ -279,6 +273,13 @@ export async function POST(req: NextRequest) {
           config.difficulty,
         )
       : readQuestionTypeDifficultySetting(undefined, config.difficulty);
+  // 26-08-18 난이도 기반 티어: KILLER → PREMIUM(2배·프리미엄 파이프라인), 그 외
+  // STANDARD — 결정 함수 단일 소스(resolveEffectiveGenerationPlan). 요청
+  // generationPlan·유형별 저장 설정의 generationPlan 은 서버 미소비(좀비 차단).
+  const effectiveGenerationPlan = resolveEffectiveGenerationPlan(
+    config.generationPlan,
+    effectiveDifficulty,
+  );
 
   if (config.mode === "MANUAL" && !config.questionType) {
     return NextResponse.json(
