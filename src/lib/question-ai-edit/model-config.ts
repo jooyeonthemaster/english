@@ -9,6 +9,7 @@ import {
 import type { EditModelId } from "./types";
 
 export const EDIT_MODEL_IDS = [
+  "google/gemini-3.7-flash",
   "google/gemini-3.6-flash",
   "google/gemini-3.1-flash-lite",
   "anthropic/claude-sonnet-5",

@@ -230,9 +230,9 @@ test("dual-tier pipeline is wired at the engine, entry points, and gates", () =>
   );
   assert.ok(
     egateSrc.includes(
-      'DEFAULT_EXPLANATION_VERIFY_MODEL_ID = "google/gemini-3-flash-preview"',
+      'DEFAULT_EXPLANATION_VERIFY_MODEL_ID = "google/gemini-3.7-flash"',
     ),
-    "E-gate verifier default model must be flash3 (O196/O197)",
+    "E-gate verifier default model must be gemini-3.7-flash (26-08-20 unification)",
   );
 
   // 모델 기본값(26-08-19 전 라인업 3.7 통일, O226): PREMIUM(=KILLER 티어)과

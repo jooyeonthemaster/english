@@ -136,7 +136,8 @@ export function getExplanationVerifyGateMode(
 // → ~수원(flash3). gemini 는 사고를 콜 단위 opt-in(applyReasoningEffortToGemini)
 // 으로 싣는다. env 로 개별 오버라이드(EXPLANATION_VERIFY_MODEL_ID /
 // _REPAIR_MODEL_ID — grok 롤백 경로 유지).
-const DEFAULT_EXPLANATION_VERIFY_MODEL_ID = "google/gemini-3-flash-preview";
+// 26-08-20 영어 제미나이 전 경로 3.7 통일 — 검증기도 flash3 → 3.7-flash.
+const DEFAULT_EXPLANATION_VERIFY_MODEL_ID = "google/gemini-3.7-flash";
 
 function resolveVerifierModelId(): string {
   const raw = process.env.EXPLANATION_VERIFY_MODEL_ID?.trim();

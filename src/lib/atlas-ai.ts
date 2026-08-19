@@ -15,9 +15,11 @@ const GEMINI_FLASH_LITE_MODEL = "google/gemini-3.1-flash-lite";
 // EMPTY_OUTPUT 으로 죽던 장애의 모델 축 대응(스키마 강제는 crop-native 에서 별도).
 // 롤백은 env OPENROUTER_RESTORATION_MODEL=google/gemini-3.1-flash-lite.
 const GEMINI_FLASH_LITE_35_MODEL = "google/gemini-3.5-flash-lite";
-// 26-07-22 유저 지시: 광역 표준 모델 3.5-flash → 3.6-flash 전면 전환 (O213 벤치:
-// 3.6-flash 품질 압승). 롤백은 env OPENROUTER_STANDARD_MODEL=google/gemini-3.5-flash.
-const GEMINI_FLASH_MODEL = "google/gemini-3.6-flash";
+// 26-07-22 유저 지시: 광역 표준 모델 3.5-flash → 3.6-flash 전면 전환 (O213 벤치).
+// 26-08-20 유저 지시: 영어 쪽 제미나이 전 경로 3.7-flash 통일(문제생성 O226 실측
+// 연장 — 리스트가 3.6 의 절반·속도 동급) — 광역 표준(튜터·웹툰·지문분석·학습지·
+// exam-report REPORT·grammar-drill 등)도 3.7. 롤백: env OPENROUTER_STANDARD_MODEL.
+const GEMINI_FLASH_MODEL = "google/gemini-3.7-flash";
 const CLAUDE_SONNET_MODEL = "anthropic/claude-sonnet-5";
 
 function readEnv(name: string): string | undefined {
@@ -52,7 +54,12 @@ export function normalizeAtlasModelId(modelId: string | undefined | null): strin
     return "google/gemini-3.5-flash";
   }
 
+  // 명시적 3.6-flash 핀(env 롤백용)은 기본값(3.7)으로 흡수하지 않고 그대로 둔다.
   if (lower === "gemini-3.6-flash" || lower === "google/gemini-3.6-flash") {
+    return "google/gemini-3.6-flash";
+  }
+
+  if (lower === "gemini-3.7-flash" || lower === "google/gemini-3.7-flash") {
     return GEMINI_FLASH_MODEL;
   }
 
@@ -199,7 +206,11 @@ export const ATLAS_FREE_MODEL_ID = resolveAtlasModel(
     "ATLASCLOUD_GEMINI_FLASH_LITE_MODEL",
     "GEMINI_LITE_MODEL",
   ],
-  GEMINI_FLASH_LITE_MODEL,
+  // 26-08-20 유저 지시: lite 계열도 3.7-flash 통일(OCR·변형·transform 승계).
+  // 롤백: env OPENROUTER_FREE_MODEL=google/gemini-3.1-flash-lite (명시 핀은
+  // normalize 가 lite 로 보존한다). ⚠ 변형(인터랙티브 6모드)·대량 OCR 은 lite
+  // 대비 지연·원가 상승 — 회귀 시 개별 env(GEMINI_VARIANT_MODEL 등) 롤백.
+  "google/gemini-3.7-flash",
 );
 
 export const ATLAS_STANDARD_MODEL_ID = resolveAtlasModel(
@@ -272,7 +283,9 @@ export const ATLAS_OCR_MODEL_ID = resolveAtlasModel(
 
 export const ATLAS_RESTORATION_MODEL_ID = resolveAtlasModel(
   ["ATLASCLOUD_RESTORATION_MODEL", "OPENROUTER_RESTORATION_MODEL", "GEMINI_RESTORATION_MODEL"],
-  GEMINI_FLASH_LITE_35_MODEL,
+  // 26-08-20 유저 지시: 복원도 3.7-flash (json_schema 강제는 crop-native 에 유지
+  // — 26-07-27 장애의 핵심 수리는 스키마 축이었다). 롤백: env OPENROUTER_RESTORATION_MODEL.
+  "google/gemini-3.7-flash",
 );
 
 export const ATLAS_TRANSFORM_MODEL_ID = resolveAtlasModel(
