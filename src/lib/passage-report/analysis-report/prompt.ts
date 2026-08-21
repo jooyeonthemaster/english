@@ -59,10 +59,11 @@ export function buildAnalysisReportPrompt(input: BuildAnalysisReportPromptInput)
 - 반드시 **JSON 객체 하나만** 출력한다. 마크다운 코드펜스(\`\`\`)나 설명 문장을 절대 붙이지 마라.
 - 최상위 키는 정확히 두 개: "meta", "sections".
 - "meta"는 보고서 제목/내부 저장/검색 보조용 데이터일 뿐이며, 본문에 별도의 분류·소재·난이도·풀이시간 메타 표 섹션을 만들기 위한 데이터가 아니다. 학생용 보고서 본문 구성은 오직 "sections"로만 설계한다.
-- "sections" 는 아래 7개 섹션을 모두 포함한다 (kind 값 고정):
-  1) passage  2) learning-worksheet (logicRows 표만)  3) summary  4) grammar  5) exam-focus  6) vocabulary  7) parsing
+- "sections" 는 아래 6개 섹션을 모두 포함한다 (kind 값 고정):
+  1) passage  2) summary  3) grammar  4) exam-focus  5) vocabulary  6) parsing
 - ❗ self-check(학습 점검) 섹션은 **생성하지 마라.** (제거됨)
-- ❗ structure-map(구조 도식) 섹션은 **생성하지 마라.** (제거됨 — 논리 구조는 2번 learning-worksheet 의 logicRows 표로만 표현한다)
+- ❗ structure-map(구조 도식) 섹션은 **생성하지 마라.** (제거됨)
+- ❗ learning-worksheet(지문 논리 구조 분석 / logicRows 표) 섹션은 **생성하지 마라.** (제거됨 — 글의 흐름은 summary 와 exam-focus 로만 다룬다)
 - 학원 자료의 신뢰성이 생명이다. 문법 해설·정답·구문 분석은 **정확**해야 한다. 추측성/오류 금지.
 - **필드 누락 절대 금지**: 각 명세의 모든 필드를 빠짐없이 채운다. 특히 exam-focus 의 모든 row 는 type·asks·strategy 3개를 전부 채운다. 값이 애매하면 빈 문자열이 아니라 가장 합당한 내용을 생성하라.
 
@@ -96,20 +97,10 @@ export function buildAnalysisReportPrompt(input: BuildAnalysisReportPromptInput)
 - keywords: 글의 핵심 흐름을 잡아주는 주제어·반복어·대조어 **6~10개** (반드시 원문 표현 그대로 — 본문에서 밑줄 강조됨). 학생이 이 단어들만 따라가도 글의 맥이 잡히게.
 - **모든 문장에 ko 해석을 반드시 채운다** (1페이지에서 원문과 한글 해석이 문장별로 함께 보여야 함 — 누락 절대 금지). 해석은 학생이 바로 이해할 수 있게 자연스럽고 쉽게.
 
-## 2. learning-worksheet — 지문 논리 구조 분석 (문장별 기능표만)
-{ "kind":"learning-worksheet",
-  "title":"지문 논리 구조 분석",
-  "logicRows":[ { "sentenceNo":문장번호, "functionLabel":"그 문장의 글 속 기능(짧은 명사구)", "keyPoint":"그 문장이 글에서 하는 핵심 내용·역할을 한국어 한 줄로" } ] }
-- logicRows 는 **5~8개**. 글의 흐름을 따라 주요 문장마다 기능을 "주제 제시 / 통념 제시 / 통념 반박 / 양보 / 역접 / 인과 / 비유 / 결론"처럼 독해·시험에 도움이 되게 잡아라.
-- functionLabel = 그 문장의 글 속 역할(짧게), keyPoint = 그 문장이 글에서 무엇을 하는지 한국어 한 줄(구체적으로).
-- sentenceNo 는 passage.sentences[].n 과 정확히 일치시켜라.
-- ❗ **도식/다이어그램(intro·columns·steps·coreDistinction·conclusion·logicFlow 등)은 절대 만들지 마라.** 이 섹션은 오직 logicRows 표만 채운다.
-- ❗ 여기서는 workbookSet·cloze·practice·drills·inferenceSet 등 **다른 학습지 필드를 만들지 마라.** (그건 별도 '실전 학습지' 생성 단계에서 만든다.) logicRows 만 출력한다.
-
-## 3. summary — 핵심 요약 + 영문 주제문
+## 2. summary — 핵심 요약 + 영문 주제문
 { "kind":"summary", "sentences":["핵심 요약 한국어 2~4문장"], "thesisEn":"지문 전체를 한 문장으로 압축한 영어 주제문" }
 
-## 4. grammar — 어법 핵심 포인트 (표) [우리 객관식 어법 문제 출제 기준과 동일]
+## 3. grammar — 어법 핵심 포인트 (표) [우리 객관식 어법 문제 출제 기준과 동일]
 { "kind":"grammar", "note":"※ ⚠ 는 시험에서 학생이 자주 틀리는 함정",
   "rows":[ { "sentenceNo":문장번호, "excerpt":"해당 자리가 든 실제 원문 구절", "pointCode":"a~m 중 하나", "point":"(코드) 분류 — 표현", "explanation":"정의→이유→비교→적용 4단계 쉬운 해설", "trap":"⚠ 함정/오답 형태", "example":"그 함정(틀린 형태)을 그대로 담은 짧은 영어 예문 1문장", "exampleWrong":"예문 속 틀린 토큰", "exampleCorrect":"그 자리의 정답 토큰",
              "layout":{ "anchorText":"원문 구절", "band":"interline", "priority":2, "lines":["짧은 줄1","짧은 줄2"] } } ] }
@@ -136,7 +127,7 @@ export function buildAnalysisReportPrompt(input: BuildAnalysisReportPromptInput)
 - ❗ **example·exampleWrong·exampleCorrect 3종은 모든 row 에 반드시 채운다(생략 금지)** — 이 셋이 어법 OX·택1·고치기 학습 활동의 재료다. example = 시험이 파는 '함정(틀린 형태)'을 그대로 담은 짧은 영어 예문 1문장(8~14단어). 정답이 아니라 **틀린 형태가 들어간 문장**을 쓴다. exampleWrong=그 틀린 토큰, exampleCorrect=정답 토큰. 예) point가 "(c) 분사 능/수동(struggling)"이면 example:"I saw a boy struggled with the box.", exampleWrong:"struggled", exampleCorrect:"struggling".
 - ❗ **틀린 형태(exampleWrong)는 정답형(exampleCorrect)의 어간을 유지한 채 형태만 바꾼다 — 품사 변경 금지**(동사↔명사, 형용사↔명사 X). 그래야 학생이 "형태 판단"을 훈련한다. 예: strengthen→strengthens(수일치), which→what(관계사), producing→to produce(준동사). **exampleWrong 은 반드시 example 문장 안에 글자 그대로 존재해야 하고, exampleWrong ≠ exampleCorrect 여야 한다.**
 
-## 5. exam-focus — 유형별 출제 포인트 (표) [우리 객관식 출제 경향과 동일]
+## 4. exam-focus — 유형별 출제 포인트 (표) [우리 객관식 출제 경향과 동일]
 { "kind":"exam-focus",
   "rows":[ { "sentenceNo":문장번호, "type":"유형", "asks":"무엇을 묻는가(쉽게)", "logicLocation":"이 지문 어디에 + 왜 걸리는지", "strategy":"위치·예상답·함정을 짚는 구체적 대비법",
              "layout":{ "anchorText":"이 유형이 걸리는 원문 구절(있으면)", "band":"rail", "priority":2, "lines":["짧은 줄1","짧은 줄2"] } } ] }
@@ -155,10 +146,10 @@ export function buildAnalysisReportPrompt(input: BuildAnalysisReportPromptInput)
 - ❗ **asks·strategy 도 노베이스 학생용 4단계**(무엇을 묻나 → 어디를 보나 → 정답 패턴 → 함정 피하는 법). 추상론 금지, 이 지문의 실제 문장·표현으로. 예) asks:"빈칸에 들어갈 핵심 개념어를 물어봐요.", strategy:"④ 'not opposites but ___' 가 1순위예요. not A but B(A가 아니라 B다) 구조라, 앞의 opposites(반대)와 대비되는 '협력' 개념을 논리로 추론해야 해요. 비슷하지만 대조 논리에 안 맞는 말이 함정이에요."
 - sentenceNo는 이 출제 포인트가 가장 직접적으로 걸리는 본문 문장 번호. 주제·제목처럼 글 전체 유형도 결정적 근거 문장 하나를 골라 연결.
 
-## 6. vocabulary — 핵심 어휘 (표) [단어 테스트 원천]
+## 5. vocabulary — 핵심 어휘 (표) [단어 테스트 원천]
 { "kind":"vocabulary",
   "rows":[ { "headword":"표제어", "pronunciation":"한글 발음", "meaning":"본문 의미 뜻", "tier":"test", "difficulty":3, "synonyms":"reduce, lessen", "antonyms":"increase, raise" } ] }
-- 어휘는 **최대한 풍부하게 25~35개**. 단, 쉬운 단어를 채워 넣어 개수만 늘리지 말고, 학생이 실제로 외우거나 시험에서 변형될 만한 중상 난도 표현을 중심으로 추출하라.
+- 어휘는 **14~20개 엄선**(26-08-22 사용자 확정 — 과다 추출 금지). 쉬운 단어·주변부 단어를 채워 넣어 개수를 늘리지 말고, 학생이 실제로 외우거나 시험에서 변형될 만한 중상 난도 표현만 추출하라. 20개를 넘기지 마라.
 - 각 headword는 반드시 지문에 실제 등장한 단어·구·연어이거나 그 명확한 기본형이어야 한다. 보고서 UI가 문장별로 headword를 원문과 자동 매칭하므로, 본문에 없는 관련어·상위어·막연한 동의어를 headword로 만들지 말라.
 - headword는 단일 단어보다 **학습 가치가 높은 표현 단위**를 우선한다: 연어(collocation), 숙어, 구동사, 추상명사구, 논리 전환 표현, 비유 표현. 예: "important" 하나보다 "play a crucial role", "memory retrieval", "not A but B"처럼 시험에서 살아나는 덩어리가 낫다.
 - tier는 반드시 채운다. 내부 값은 "core" | "test" | "challenge" 중 하나로 쓰며, 단어시험 기본 후보를 고르는 데만 사용된다.
@@ -170,7 +161,7 @@ export function buildAnalysisReportPrompt(input: BuildAnalysisReportPromptInput)
 - ❗ **품사(pos)는 넣지 마라.** 대신 **pronunciation 에 한글 발음**을 적는다 (예: reduced → "리듀스드", archive → "아카이브", melatonin → "멜라토닌"). 숙어/구는 통째로 한글 발음.
 - ❗ **synonyms(동의어)는 모든 row 에 채우되 개수는 정확히 1~2개다. 3개 이상은 금지한다**(표가 넘치고, 앱 연결 문제의 정답 후보가 흐려진다). **영어 단어를 쉼표로 구분**해 적되, 그 단어가 **본문에서 쓰인 의미(meaning)와 같은 결**의 어휘여야 한다(다의어는 본문 의미 기준). 학생이 본문 문장에 그대로 바꿔 넣어도 자연스러운 수준의 흔한 단어로 고른다.
 - ❗ **맨 앞 항목이 학생 앱의 "동의어·반의어 연결" 문제에 그대로 출제된다.** 그러니 **가장 정확한 것을 1순위로 맨 앞에** 두어라(둘째는 보조). 본문 문장에 바꿔 넣었을 때 어색해지는 단어를 맨 앞에 두지 마라.
-- ❗ **antonyms(반의어)는 전체 row 의 70% 이상에 실제 값이 들어가야 한다.** 예를 들어 30행이면 **최소 21행**에 반의어가 있어야 하고, "—" 는 **최대 9행**까지만 허용한다. 개수는 동의어와 같이 **정확히 1~2개**.
+- ❗ **antonyms(반의어)는 전체 row 의 70% 이상에 실제 값이 들어가야 한다.** 예를 들어 18행이면 **최소 13행**에 반의어가 있어야 하고, "—" 는 **최대 5행**까지만 허용한다. 개수는 동의어와 같이 **정확히 1~2개**.
 - ❗ **반의어로 인정하는 것은 아래 셋이다. 사전적 반대말만 고집하지 마라.**
   · ①**어휘적 반의어** — 사전적으로 반대인 짝. increase↔decrease, presence↔absence, reveal↔conceal.
   · ②**정도·극성 반의어** — 세기·평가·빈도의 반대편. significant↔trivial, immediately↔gradually, satisfied↔discontented.
@@ -180,7 +171,7 @@ export function buildAnalysisReportPrompt(input: BuildAnalysisReportPromptInput)
 - ❗ **한 단어가 여러 표제어의 동의어·반의어로 겹치지 않게 하라.** 어떤 단어가 A 의 동의어이면서 동시에 B 의 반의어이면 연결 문제의 정답이 둘이 되어 문항이 깨진다. 겹치면 다른 단어로 바꿔라.
 - ❗ **출력 직전 자기검증(필수 3단계):** ① antonyms 가 "—" 인 행을 세어라 — 전체의 30% 를 넘으면, 그중 위 ①②③ 중 하나로 반대말을 세울 수 있는 행을 다시 채워 30% 이하로 내려라. ② synonyms·antonyms 에 항목이 3개 이상인 행이 있으면 **가장 정확한 2개만** 남기고 지워라. ③ 모든 행의 동의어·반의어를 한 목록으로 모아 같은 단어가 두 번 이상 나오는지 확인하고, 나오면 한쪽을 다른 단어로 바꿔라.
 
-## 7. parsing — 구문 분석 (파스 트리)
+## 6. parsing — 구문 분석 (파스 트리)
 { "kind":"parsing",
   "items":[ { "sentenceNo":번호, "en":"분석 대상 문장 원문", "parts":[ {"label":"[주절]/[관계절] 등","text":"분석 내용"} ], "translation":"→ 해석",
               "layout":{ "anchorText":"이 구문이 걸리는 원문 구절", "band":"underchunk", "priority":2 } } ] }
@@ -232,9 +223,6 @@ export function buildLearningWorksheetPrompt(input: BuildAnalysisReportPromptInp
   "kind": "learning-worksheet",
   "title": "실전 학습지",
   "note": "선택",
-  "logicRows": [
-    { "sentenceNo": 1, "functionLabel": "주제 제시", "keyPoint": "한국어로 핵심 기능과 내용" }
-  ],
   "cloze": {
     "title": "핵심어구 빈칸 + 한국어 해석",
     "items": [
@@ -300,7 +288,6 @@ export function buildLearningWorksheetPrompt(input: BuildAnalysisReportPromptInp
 }
 
 # 세부 품질 기준
-- logicRows: 5~8개. 문장별 기능을 "주제 제시 / 오해 교정 / 양보 / 역접 / 비유 결론"처럼 시험에 도움이 되게 잡으세요.
 - cloze/practice: 8~14개 빈칸. 빈칸은 핵심어구, 연결 논리, 비유 핵심, 함축 표현 위주로 고르세요. 관사/전치사 하나처럼 학습 효과가 약한 빈칸은 피하고, 빈칸 앞뒤 문맥만으로 복원 훈련이 되게 만드세요. wordBank는 스크램블 단어 목록으로 쓰일 수 있게 정답 어구를 모두 포함하세요.
 - drills: PDF 워크북처럼 어법 선택 2~4개와 주요문장 단어배열 영작 1~2개를 가능하면 생성하세요. 지문에 억지로 만들기 어려우면 줄여도 됩니다. 단순 철자, 대소문자, 의미 차이가 거의 없는 선택지는 금지합니다.
 - workbookSet: 반드시 생성하세요. 첨부 워크북처럼 ① 주제/요지 ② 어법 선택 ③ 어휘 선택 ④ 어휘 빈칸 완성 ⑤ 주요문장 단어배열 영작을 한 세트로 구성합니다.
@@ -343,6 +330,87 @@ ${input.passageContent}
 위 조건에 맞춰 수능추론 문제를 제외한 learning-worksheet 섹션 JSON 객체 하나만 출력하세요.`;
 }
 
+// ─── 워크북 3분할 서브프롬프트 (26-08-13 luna 전환 · A/B 정본 부록 E) ─────────────
+// 메가프롬프트(buildLearningWorksheetPrompt)가 전체 지문 재작성 3회를 한 콜에 몰아
+// luna 에서 느리고(114~196s) 정밀 제약(topicGist 3필드·wordOrders 재조립)에 미끄러지던
+// 것을, 재작성 부하 기준 3분할(어법/어휘2종/프레임)로 병렬화한다 — 실측 75~108s·전
+// 게이트 1라운드 2/2. 규칙 텍스트는 메가프롬프트와 같은 기준을 파트별로 옮긴 것이며,
+// 진단으로 확정된 검산 규칙 2종이 추가돼 있다. 메가프롬프트는 mono 롤백 경로로 잔존.
+
+export interface WorkbookPartPrompts {
+  grammar: string;
+  vocab: string;
+  frame: string;
+}
+
+export function buildWorkbookPartPrompts(
+  input: BuildAnalysisReportPromptInput,
+  report: AnalysisReport,
+): WorkbookPartPrompts {
+  const level = levelHint(input.schoolType, input.grade);
+  const compactReport = compactReportContext(report);
+  const header = `당신은 고품질 내신/수능 영어 유형별 워크북 학습지를 만드는 교재 편집자입니다.
+대상 학습 수준: ${level}. 모든 해설은 한국어, 영어 원문/문항은 영어로.
+- 모든 문항은 "정답이 맞는 이유"와 "오답이 틀린 이유"가 원문 특정 표현, 논리 흐름, 문장 구조로 설명 가능해야 합니다. 배경지식·추측으로만 풀리는 문항은 금지합니다.
+- 해설은 답 번호를 말하는 수준이 아니라 "원문 어느 표현 때문에 맞고, 오답은 어느 지점에서 벗어나는지"를 짧고 날카롭게 씁니다. '어색하다' 같은 해설은 금지합니다.
+- ❗특정 교재·출판사·방송사 브랜드명(EBS, 수능특강 등)을 어디에도 쓰지 마세요.
+- 출력은 반드시 JSON 객체 하나입니다. JSON 밖에 어떤 설명도 붙이지 마세요.
+
+# 이미 생성된 PRIME 분석 요약
+${JSON.stringify(compactReport, null, 2)}
+
+# 원문 지문
+"""
+${input.passageContent}
+"""`;
+
+  const grammar = `${header}
+
+# 생성할 것 — 어법 선택 1파트만
+{ "grammarSelection": {
+    "title": "어법 선택",
+    "passage": "… the award (1) [described / describing] as …",
+    "choices": [ { "no": 1, "options": ["described", "describing"], "answer": "described", "explanation": "…" } ] } }
+- ❗passage 는 **원문의 모든 문장을 순서대로 한 문장도 빠짐없이 그대로 포함**해야 합니다(요약·생략·문장 합치기 금지). 그 본문 위에서 어법 포인트 4~8곳만 [A / B] 형식 선택지로 바꾸고 번호를 붙입니다. 원문 문장이 하나라도 빠지면 실패입니다.
+- ❗options 는 본문 [A / B] 의 두 실제 표기 그대로 쓰고, **answer 는 그 options 배열 안의 정답 표기를 글자 그대로 복사**합니다(번호·알파벳 라벨 금지). 옵션 안에 대괄호 '['·']' 금지.
+- 어법 선택지의 정답 위치는 반드시 섞으세요. 모든 정답이 첫 번째 선택지에 오면 실패입니다. 최소 2개 이상은 두 번째 선택지가 정답이 되게 하세요.
+- 어법 포인트는 다음 중 지문에 자연스럽게 있는 것만 고릅니다: 수동/능동, 준동사(분사·to부정사·동명사), 관계사/동격 that, 주어-동사 수일치, 병렬구조, 형용사/부사, 대명사 지시, 접속사/전치사, 시제/완료, 비교급/강조. 단어 뜻만 알면 풀리는 문제는 만들지 마세요.
+- 어법 오답은 실제 문법적으로 왜 틀리는지 설명 가능해야 합니다. 단순 철자·대소문자·의미 차이가 거의 없는 선택지는 금지합니다.
+${buildGrammarNineFrameGuide("worksheet")}`;
+
+  const vocab = `${header}
+
+# 생성할 것 — 어휘 2파트만
+{ "vocabularySelection": { "title": "어휘 선택", "passage": "…", "choices": [ { "no": 1, "options": ["preserved", "reconstructed"], "answer": "reconstructed", "explanation": "…" } ] },
+  "vocabularyCloze": { "title": "어휘 빈칸 완성", "passage": "…", "blanks": [ { "no": 1, "answer": "performance", "meaning": "수행, 성과", "clue": "문맥상 실력 향상 결과를 가리킴" } ] } }
+- ❗vocabularySelection.passage 와 vocabularyCloze.passage 각각 **원문의 모든 문장을 순서대로 한 문장도 빠짐없이 그대로 포함**해야 합니다(요약·생략·문장 합치기·바꿔쓰기 금지). 원문 문장이 하나라도 빠지면 실패입니다.
+- vocabularySelection: 어휘 포인트 4~8곳만 [단어A / 단어B] 형식 선택지+번호. ❗**어휘 선택은 어법 선택과 완전히 다릅니다 — 오직 '뜻(문맥)'으로만 정답이 갈려야 합니다.** options 는 정확히 2개, 두 선택지는 반드시 품사·굴절·태·수가 동일한 서로 다른 어휘(lemma)여야 합니다. 같은 단어의 형태 변이(put/be put, that/what, faced/facing, 단수/복수, 능동/수동, 원급/비교급)는 절대 금지 — 그것은 어법 선택입니다. 두 선택지를 서로 바꿔 넣어도 문법적으로는 둘 다 성립하고 오직 뜻으로만 한쪽이 정답이어야 합니다.
+- 어휘 선택의 정답은 같은 문장 또는 인접 문장의 **문맥 단서**(대조 but/however/rather, 인과 because/so/thus, 예시·나열, 정의 재진술, 부정 재진술 중 최소 1개)로 **유일하게** 확정되어야 합니다. 둘 다 말이 되는 중립적 자리는 만들지 마세요.
+- 어휘 오답은 정답과 의미상 명확히 반대되거나 다른 결론을 낳는 관계여야 합니다: ① 반의어 ② 같은 의미장의 혼동 근접어 ③ 평가 극성이 반대인 평가어. 유의어처럼 둘 다 통하는 쌍, 철자만 다른 쌍, 뜻 차이가 거의 없는 쌍은 금지합니다.
+- not·never·hardly·far from·rather than 같은 부정·반전 문맥에는 극성 반전 함정을 세트당 최소 1개 넣고, 해설에 "부정어 __ 때문에 극성이 반전된다"를 명시하세요.
+- 대상 어휘는 내용어(명사·동사·형용사·부사)의 의미 핵만 고릅니다. 기능어·고유명사·숫자·연도·자명한 주변어·형태로 갈리는 후보 금지. 정답은 원문에 실제로 있는 단어로, options 두 단어는 본문 [A / B] 표기·순서와 일치, 옵션 안 대괄호 금지.
+- 어휘 선택지의 정답 위치는 반드시 섞으세요 — 최소 2개는 두 번째 선택지가 정답.
+- 어휘 선택 해설: (1) 정답을 강제하는 문맥 단서를 원문 표현 인용으로 지목하고 (2) 오답이 왜 문맥과 모순되는지 의미 관계를 밝히세요. 문법 규칙으로 오답을 설명하면 실격입니다.
+- vocabularyCloze: 핵심 어휘 8~16개만 번호 빈칸 "(1) __________" 으로 바꿉니다. blanks 에 정답·뜻·문맥 단서. 대상은 주제어·논리 전환어·평가어·비유 핵심어·콜로케이션(고유명사/숫자/유추 불가 주변어 금지). "[answer]①" 처럼 정답을 본문에 노출하면 실패입니다.`;
+
+  const frame = `${header}
+
+# 생성할 것 — 학습지 프레임 파트(지문 재작성 없음. 어법·어휘 선택은 별도 호출에서 만드니 여기서 만들지 마세요)
+{ "title": "실전 학습지", "note": "선택",
+  "cloze": { "title": "핵심어구 빈칸 + 한국어 해석", "items": [ { "no": 1, "sentenceNo": 2, "text": "원문 일부에 (1) ________________________ 빈칸을 넣은 문장", "translation": "자연스러운 한국어 해석", "answers": ["critical thinking"] } ], "wordBank": ["critical thinking"] },
+  "practice": { "title": "빈칸 연습", "items": [ { "no": 1, "sentenceNo": 2, "text": "해석 없이 같은 빈칸 문장", "answers": ["critical thinking"] } ], "wordBank": ["critical thinking"] },
+  "drills": { "grammarChoices": [ { "no": 1, "sentenceNo": 2, "text": "Students [recognize / recognizing] the pattern.", "choices": ["recognize", "recognizing"], "answer": "recognize", "explanation": "…" } ], "wordOrders": [] },
+  "topicGist": { "title": "주제 / 요지", "topicTitle": "지문 핵심을 압축한 영어 제목", "gist": "글쓴이의 최종 주장이 드러나는 한국어 한 문장" },
+  "wordOrders": [ { "no": 1, "korean": "주요문장의 한국어 해석", "chunks": ["scrambled", "word", "chunks"], "answer": "원문 문장 그대로" } ] }
+- cloze/practice: 8~14개 빈칸. 핵심어구·연결 논리·비유 핵심·함축 표현 위주(관사/전치사 하나짜리 금지). 빈칸 앞뒤 문맥만으로 복원 훈련이 되게. wordBank 는 정답 어구를 모두 포함하세요.
+- drills: 어법 선택 2~4개와, drills.wordOrders 는 빈 배열로 두세요(단어배열은 아래 wordOrders 에만).
+- ❗topicGist 는 **title("주제 / 요지" 고정)·topicTitle·gist 3개 필드 전부 필수**입니다. **topicTitle 누락이 가장 흔한 실패입니다** — 출력 직전에 세 키가 모두 있는지 검산하세요. title 과 topicTitle 은 서로 다른 별개 필드입니다(합치면 실패). topicTitle 은 영어 제목형으로 지문 중심 대비/반박/인과를 담고, gist 는 소재 소개가 아니라 글쓴이의 최종 주장이 드러나야 합니다.
+- wordOrders: 지문 핵심 문장 1~3개. ❗검산(흔한 실패): answer 는 원문에서 고른 **완전한 문장 그대로**(8단어 이상), chunks 는 그 answer 를 **4~8조각**으로 자른 것(3조각 이하 실패) — **chunks 를 올바른 순서로 공백 연결하면 answer 와 글자·구두점까지 정확히 일치**해야 합니다. 출력 전에 직접 이어붙여 검산하세요(단어 누락·추가·바꿔쓰기 실패). chunks 는 반드시 정답 순서와 다르게 뒤섞고, 정답 문장을 앞에서부터 그대로 자른 배열은 실패입니다.
+- 학생에게 보이는 필드에 정답·해설을 직접 노출하지 마세요. wordBank 의 노출 순서는 정답 순서와 달라야 합니다.`;
+
+  return { grammar, vocab, frame };
+}
+
 export function buildLearningWorksheetInferencePrompt(
   input: BuildAnalysisReportPromptInput,
   report: AnalysisReport,
@@ -352,7 +420,6 @@ export function buildLearningWorksheetInferencePrompt(
   const compactReport = compactReportContext(report);
   const worksheetContext = {
     title: worksheet.title,
-    logicRows: worksheet.logicRows,
     workbookTopic: worksheet.workbookSet?.topicGist,
     workbookGrammarCount: worksheet.workbookSet?.grammarSelection.choices.length ?? 0,
     workbookVocabSelectCount: worksheet.workbookSet?.vocabularySelection?.choices.length ?? 0,
@@ -408,6 +475,7 @@ export function buildLearningWorksheetInferencePrompt(
 - 선택지는 5지선다이며 label은 "①"~"⑤"입니다. 정답만 길거나 노골적으로 원문을 베끼지 않게, 선택지 길이와 문체를 평행하게 맞추세요.
 - 5문항 전체의 정답 번호는 반드시 분산하세요. 모든 정답이 ①이거나 같은 번호로 몰리면 실패입니다. ①~⑤ 중 최소 3개 이상의 번호가 정답으로 쓰이게 하세요.
 - distractors는 정답을 제외한 4개 오답을 모두 분석합니다. 각 오답에는 반대 방향, 범위 왜곡, 부분 일치, 근거 없음, 원인-결과 전도, 핵심어 왜곡 중 하나를 붙이고 구체 근거를 씁니다.
+- **explanation·distractors[].reason 에서 선지를 지칭할 때는 반드시 원문자(①~⑤)만 사용하세요.** "3번", "세 번째 선택지" 같은 평숫자·서수 표기는 금지합니다(서버가 정답 위치를 재배치할 때 원문자만 자동 재매핑됩니다). 정답 번호 단정("~이므로 ③이 정답입니다")을 쓸 때 그 번호는 반드시 answerLabel 과 같아야 합니다.
 
 # 유형별 품질 기준
 - Q1 주제 추론: 정답은 글 전체 논지를 포괄하되 지나치게 넓거나 세부 예시에 치우치지 않아야 합니다. 오답에는 세부 예시 확대, 반대 주장, 원인/결과 전도, 일부 표현만 맞는 선택지를 넣으세요.
