@@ -87,6 +87,14 @@ function patchParsingNote(note: ParsingNoteRef, sectionEdit: ((i: number) => Sec
   });
 }
 
+/** 함정(trap) 텍스트의 선행 ⚠ 제거 — 프롬프트가 "⚠ 시험에선…"으로 시작하게 지시하는데
+ *  렌더 표면(par-list-trap·par-rail-card-trap·par-read-note-trap)마다 CSS ::before 가
+ *  ⚠/「함정 」 접두를 또 붙여 "⚠ ⚠"·"함정 ⚠" 이중 표기가 되던 결함(마커 감사 M3, 26-08-22).
+ *  아이콘은 CSS 가 단일 소유하고, 데이터의 ⚠ 는 표시 직전에 벗긴다(저장값 무접촉). */
+export function stripTrapIcon(t: string | undefined | null): string {
+  return (t ?? "").replace(/^[\s⚠️]+/u, "").trim();
+}
+
 export function ReadLogicNote({ note, editable, sectionEdit }: { note: LogicNoteRef; editable: boolean; sectionEdit?: (i: number) => SectionEdit }) {
   return (
     <div className="par-read-note par-read-note-logic">
@@ -140,7 +148,7 @@ export function ReadGrammarNote({ note, editable, sectionEdit }: { note: Grammar
           as="span"
           className="par-read-note-trap"
           editable={editable}
-          value={note.row.trap ?? ""}
+          value={stripTrapIcon(note.row.trap)}
           placeholder="(함정 포인트)"
           onCommit={(v) => patchGrammarNote(note, sectionEdit, { trap: v })}
         />
@@ -293,7 +301,7 @@ export function ReadGrammarNotePart({
           as="span"
           className="par-read-note-trap"
           editable={editable}
-          value={note.row.trap ?? ""}
+          value={stripTrapIcon(note.row.trap)}
           placeholder="(함정 포인트)"
           onCommit={(v) => patchGrammarNote(note, sectionEdit, { trap: v })}
         />

@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import type { CanvasNoteRef, ConnectorPath, PassageSection, SectionEdit, VocabularyNoteRef } from "./types";
 import { DelBtn, Field, handleEditableKeyDown } from "./editable-field";
 import { AnnotatedReadingField, joinReadingSentenceParts, readEditableTextIgnoringAnnotations, renderAnnotatedReadingText } from "./annotated-reading";
-import { ReadLogicNote, collectPassageStudyNotes, patchExamNote, patchGrammarNote, patchLogicNote, splitStudyNoteText } from "./study-notes";
+import { ReadLogicNote, collectPassageStudyNotes, patchExamNote, patchGrammarNote, patchLogicNote, splitStudyNoteText, stripTrapIcon } from "./study-notes";
 
 // ══════════════════════════════════════════════════════════════════════════════
 // 01 원문 — 필기 캔버스 (HLC). 문장 1개 = 원자 블록. 직독직해 청크 + 줄사이 필기 + 여백 레일.
@@ -24,10 +24,11 @@ const ANNO_COLOR: Record<CanvasNoteKind, string> = {
 /** 필기 분석(05) 색상 범례 — 어법/구문/출제/논리 색이 무엇을 뜻하는지 안내. */
 export function AnnotatedColorLegend() {
   // 구문(parsing)은 필기 캔버스에서 제외했으므로 범례에서도 뺀다.
+  // 논리(logic)도 제외 — buildCanvasNotesForSentence 가 logic 을 생산하지 않아(':114 주석')
+  // 이 섹션에 금색 필기가 실물로 등장할 경로가 없다. 실물 없는 범례 항목은 유령이다(마커 감사 M3).
   const items: [CanvasNoteKind, string][] = [
     ["grammar", "어법 포인트"],
     ["exam", "출제 포인트"],
-    ["logic", "논리 흐름"],
   ];
   return (
     <div className="par-anno-legend">
@@ -37,6 +38,8 @@ export function AnnotatedColorLegend() {
           {label}
         </span>
       ))}
+      {/* 분할 문장 이어짐 글리프 안내 — 범례 없는 '+' 가 수식 기호로 오독되던 것(마커 감사) */}
+      <span className="par-anno-legend-hint">앞 문장 이어짐</span>
     </div>
   );
 }
@@ -70,7 +73,8 @@ export function buildCanvasNotesForSentence(
       priority: layout?.priority,
       role: n.row.point,
       lines: noteBodyLines(layout?.lines, n.row.explanation),
-      trap: n.row.trap?.trim() || undefined,
+      // 선행 ⚠ 제거 — 아이콘은 CSS ::before(par-list-trap 등)가 단일 소유(마커 감사 M3)
+      trap: stripTrapIcon(n.row.trap) || undefined,
       example: n.row.example?.trim() || undefined,
       exampleWrong: n.row.exampleWrong?.trim() || undefined,
       exampleCorrect: n.row.exampleCorrect?.trim() || undefined,
@@ -431,19 +435,20 @@ export function AnnotatedSentenceCanvas({
   const isSideKind = (n: PlacedNote) => n.kind === "exam" || n.kind === "logic";
   const listNotes = [...allNotes.filter((n) => n.kind === "grammar"), ...allNotes.filter((n) => isSideKind(n) && n.band !== "rail")];
   const sideNotes = allNotes.filter((n) => isSideKind(n) && n.band === "rail");
-  // 연번은 **앵커(연결선·청크 뱃지)가 있는 행만** — 무앵커 행에 번호를 주면 본문에 대응
-  // 뱃지가 없는 헛참조가 된다(검수 V1). 무앵커 행은 종류색 점 뱃지로 표기.
+  // 연번은 **앵커(연결선)가 있는 행만** — 무앵커 행에 번호를 주면 본문에 대응 없는
+  // 헛참조가 된다(검수 V1). 무앵커 행은 종류색 점 뱃지로 표기.
   const numByKey = new Map<string, number>();
   let listSeq = 0;
   listNotes.forEach((n) => {
     if (n.anchorRange) numByKey.set(n.key, ++listSeq);
   });
-  const chunkBadges = new Map<number, { num: number; color: string }[]>();
+  // 앵커된 청크 표시는 색 밑줄(is-anchored)로만 — 뜻 줄의 번호 원(par-canvas-lk)은
+  // 같은 링크의 3중 표기(밑줄+연결 화살표+목록 인용에 더해)라 제거했다(R4-d, 26-08-22
+  // 유저 확정: 문장 번호 ①②와 혼동되고 캔버스마다 1부터 재시작해 정체불명 원으로 보임).
+  const anchorColorByChunk = new Map<number, string>();
   listNotes.forEach((n) => {
     if (!n.anchorRange) return;
-    const arr = chunkBadges.get(n.chunkIndex) ?? [];
-    arr.push({ num: numByKey.get(n.key) ?? 0, color: ANNO_COLOR[n.kind] });
-    chunkBadges.set(n.chunkIndex, arr);
+    if (!anchorColorByChunk.has(n.chunkIndex)) anchorColorByChunk.set(n.chunkIndex, ANNO_COLOR[n.kind]);
   });
 
   // 이 캔버스의 렌더 결과(= 아래 effect 가 실측할 DOM)를 결정하는 값 전부의 안정 서명.
@@ -572,12 +577,11 @@ export function AnnotatedSentenceCanvas({
             let renderedAny = false;
             let numberPlaced = false;
             return plan.chunks.map((chunk, i) => {
-              const badges = chunkBadges.get(i);
-              const isAnchored = !!badges?.length;
-              const cellColor = badges?.[0]?.color;
+              const cellColor = anchorColorByChunk.get(i);
+              const isAnchored = anchorColorByChunk.has(i);
               const newEnFor = (v: string) => plan.chunks.map((c, j) => (j === i ? v : c.text)).join("");
-              // 완전 빈 청크(텍스트·뜻·역할·배지 전무)는 건너뛴다 — 구분 '/' 이중 표기의 원인.
-              const isEmpty = !chunk.text.trim() && !chunk.gloss && !chunk.role && !badges;
+              // 완전 빈 청크(텍스트·뜻·역할 전무)는 건너뛴다 — 구분 '/' 이중 표기의 원인.
+              const isEmpty = !chunk.text.trim() && !chunk.gloss && !chunk.role;
               if (isEmpty && !enEditable) return null;
               const sep = renderedAny ? (
                 <span className="par-canvas-sep" aria-hidden>
@@ -599,13 +603,8 @@ export function AnnotatedSentenceCanvas({
                   >
                     {/* 뜻 줄은 항상 렌더(없으면 공백 패드) — staff 의 baseline 정렬이 전 청크에서
                         같은 줄(뜻 줄)을 기준으로 잡혀 en 텍스트가 하나의 기준선에 정렬된다. */}
-                    <span className={cn("par-canvas-gloss", !chunk.gloss && !badges && "par-canvas-gloss-pad")}>
-                      {chunk.gloss ?? (badges ? "" : " ")}
-                      {badges?.map((bd) => (
-                        <span key={bd.num} className="par-canvas-lk" style={{ "--anno-c": bd.color } as CSSProperties}>
-                          {bd.num}
-                        </span>
-                      ))}
+                    <span className={cn("par-canvas-gloss", !chunk.gloss && "par-canvas-gloss-pad")}>
+                      {chunk.gloss ?? " "}
                     </span>
                     <CanvasChunkEnglish editable={enEditable} value={chunk.text} onCommit={(v) => onCommitEn?.(newEnFor(v))} highlights={keywords} vocabNotes={vocabNotes} prefix={prefix} />
                     {chunk.role ? <span className="par-canvas-role">{chunk.role}</span> : null}

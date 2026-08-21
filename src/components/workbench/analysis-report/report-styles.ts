@@ -196,6 +196,10 @@ export const ANALYSIS_REPORT_CSS = `
   font-weight: 800; color: var(--anno-c);
   padding-bottom: .2mm; border-bottom: .5mm solid var(--anno-c);
 }
+/* (마커 감사 M1/M2) 범례 없는 글리프 안내 — 분할 문장의 '+' 이어짐 표식.
+   물리 지문 등에서 수식 기호로 오독될 여지가 있어 은은한 안내 하나만 붙인다. */
+.par-anno-legend-hint { color: var(--text-muted); font-weight: 600; }
+.par-anno-legend-hint::before { content: "+"; font-weight: 900; margin-right: .8mm; color: #64748b; }
 
 /* ── 박스(틴트) — 상하 크롬은 BOX_PAD_MM=6 과 동기(padding 2.6×2 + border .6 = 5.8 ≤ 6) ── */
 .par-box { background: var(--tint); border: .3mm solid var(--tint-border); border-radius: 1.5mm; padding: 2.6mm 3.2mm; }
@@ -1561,9 +1565,8 @@ export const ANALYSIS_REPORT_CSS = `
   margin-bottom: .5mm; padding-bottom: .4mm; border-bottom: .2mm dotted var(--anno-c, #2563a8);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-/* R4: 여는 인용부호만 — 닫는 ❞ 는 1줄 클램프에서 말줄임과 함께 잘려 카드마다 표기가
-   갈라진다(검수 C2). 여는 부호 하나로 전 카드 표기를 통일. */
-.par-rail-card-src::before { content: "❝ "; font-style: normal; opacity: .7; }
+/* (마커 감사 M3) 인용부호 제거 — 닫는 ❞ 는 클램프에 잘려 항상 짝이 깨졌고, 이탤릭+점선
+   밑줄+색이 이미 "원문 인용"을 3중으로 신호한다. 부호 없이 서체·밑줄만으로 표기. */
 .par-canvas-fn-src { font-family: var(--font-en); font-style: italic; font-weight: 700; color: var(--anno-c, #475569); }
 /* R4: 역할 라벨·본문 줄을 인라인 흐름으로 — 카드당 세로 1줄 이상 절약(밀도 = 백지 띠 방지) */
 .par-rail-card-role { display: inline; color: var(--anno-c, #2563a8); font-weight: 900; font-size: calc(8pt * var(--par-fs, 1)); margin-right: .5mm; }
@@ -1624,12 +1627,8 @@ export const ANALYSIS_REPORT_CSS = `
   margin-bottom: .4mm; white-space: nowrap;
   position: relative; z-index: 3; background: #fff; align-self: flex-start;
 }
-/* 밑줄↔설명 연결 번호 뱃지 (뜻 줄에) */
-.par-canvas-v3 .par-canvas-lk {
-  display: inline-flex; align-items: center; justify-content: center; width: 3mm; height: 3mm;
-  margin-left: .8mm; border-radius: 50%; background: var(--anno-c, #2563a8); color: #fff;
-  font-family: var(--font-ko); font-size: calc(5.6pt * var(--par-fs, 1)); font-weight: 800; vertical-align: middle;
-}
+/* (R4-d, 26-08-22) 뜻 줄 번호 원(par-canvas-lk) 제거 — 밑줄+연결 화살표+목록 인용의
+   3중 표기였고 문장 번호 ①②와 혼동됐다(유저 확정). 앵커 표시는 아래 is-anchored 밑줄이 담당. */
 /* 모든 청크 영어에 동일한 밑줄 자리(투명) 확보 → 밑줄 유무로 글자가 밀리지 않음 */
 .par-canvas-v3 .par-canvas-en { padding-bottom: .2mm; border-bottom: .45mm solid transparent; text-decoration: none; }
 .par-canvas-v3 .par-canvas-chunk.is-anchored .par-canvas-en { text-decoration: none; border-bottom-color: var(--anno-c, #94a3b8); }
@@ -1654,7 +1653,9 @@ export const ANALYSIS_REPORT_CSS = `
 .par-list-note { position: relative; padding-left: 4.8mm; font-size: calc(7.8pt * var(--par-fs, 1)); line-height: 1.36; color: #26323f; }
 .par-list-badge {
   position: absolute; left: 0; top: .4mm; display: inline-flex; align-items: center; justify-content: center;
-  width: 3.2mm; height: 3.2mm; border-radius: 50%; background: var(--anno-c, #2563a8); color: #fff;
+  /* (마커 감사 M1/M3) 원형 → 모서리 둥근 사각 태그 — 문장 번호 원(①·par-canvas-no)과
+     같은 "원+숫자" 계열이라 새 문장 번호로 오독되던 혼동을 형태로 분리. */
+  width: 3.2mm; height: 3.2mm; border-radius: .7mm; background: var(--anno-c, #2563a8); color: #fff;
   font-weight: 800; font-size: calc(5.6pt * var(--par-fs, 1));
 }
 .par-list-body { display: block; }
@@ -1804,7 +1805,8 @@ export const ANALYSIS_REPORT_CSS = `
   font-weight: 900; font-size: calc(7.6pt * var(--fon-fs, 1)); letter-spacing: .06em;
   color: #b91c1c; margin-bottom: .8mm;
 }
-.fon-sec-k::before { content: "⚑ "; }
+/* (마커 감사 M3) ⚑ → ⚠ — 문서 전체의 "함정 = ⚠" 관례와 통일(⚑는 범례 없는 유일 깃발이었다) */
+.fon-sec-k::before { content: "⚠ "; }
 .fon-trap-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
 .fon-trap-table td {
   border: .3mm solid #e2e8f0; padding: .7mm 1.6mm;
