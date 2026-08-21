@@ -30,7 +30,7 @@ import {
   parseMdContentMatch,
   type MdContentMatchQuestion,
 } from "./parser-content-match";
-import { gateMdContentMatch } from "./gate-content-match";
+import { contentMatchGateAdvisories, gateMdContentMatch } from "./gate-content-match";
 import { adaptMdContentMatchToAiQuestion } from "./adapter-content-match";
 import type { MdLane, MdLaneContext, MdLaneParsed } from "./lane-types";
 
@@ -120,15 +120,24 @@ export const CONTENT_MATCH_MD_LANE: MdLane = {
     const parsed = parseMdContentMatch(text);
     const snapped = autoSnapContentMatchEvidence(parsed, ctx.passage);
     const q = snapped.question;
+    const gateOptions = {
+      optionCount: optionCountOf(ctx),
+      answerCount: answerCountOf(ctx),
+      optionLanguage: optionLanguageOf(ctx),
+      teacherPoints: ctx.teacherPoints,
+    };
+    const gateIssues = gateMdContentMatch(q, ctx.passage, gateOptions);
     return {
       question: q,
-      gateIssues: gateMdContentMatch(q, ctx.passage, {
-        optionCount: optionCountOf(ctx),
-        answerCount: answerCountOf(ctx),
-        optionLanguage: optionLanguageOf(ctx),
-        teacherPoints: ctx.teacherPoints,
-      }),
-      corrections: snapped.corrections,
+      gateIssues,
+      // #5 길이 편중은 26-08-22 기출 실측(191문항 중 3건 발화·2023 수능 본시험
+      // 포함)으로 비차단 강등 — 반려가 아니라 잡 result.mdCorrections 포렌식으로만
+      // 남긴다. 이미 반려된 문항에는 붙이지 않는다(lane-summary-mc 와 동일 규칙 —
+      // 재생성 피드백 옆에 놓이면 소음이다).
+      corrections: [
+        ...snapped.corrections,
+        ...(gateIssues.length === 0 ? contentMatchGateAdvisories(q, gateOptions) : []),
+      ],
     };
   },
 

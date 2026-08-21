@@ -6,7 +6,7 @@
 // 인라인 마커 · `정답:` 한 줄 · `해설:` · `오답:`. 정답의 유일 진실원은 `정답:` 줄이고
 // 자리 진실원은 번호지문의 마커다 — 줄마다 "이 자리가 정답인가"를 다시 받는 칸은 없다(철칙 1).
 import { autoSnapInsertGiven, computeInsertLayout, parseMdSentenceInsert, splitInsertMarkers, stripInsertMarks, type MdInsertQuestion } from "../src/lib/md-qgen/parser-sentence-insert";
-import { gateMdSentenceInsert, type GateMdSentenceInsertOptions } from "../src/lib/md-qgen/gate-sentence-insert";
+import { gateMdSentenceInsert, sentenceInsertGateAdvisories, type GateMdSentenceInsertOptions } from "../src/lib/md-qgen/gate-sentence-insert";
 import { adaptMdSentenceInsertToAiQuestion } from "../src/lib/md-qgen/adapter-sentence-insert";
 import { SENTENCE_INSERT_MD_LANE } from "../src/lib/md-qgen/lane-sentence-insert";
 import { buildMdSentenceInsertPrompt } from "../src/lib/md-qgen/prompts-sentence-insert";
@@ -93,6 +93,11 @@ function gateOf(text: string, options?: GateMdSentenceInsertOptions): string[] {
   const q = autoSnapInsertGiven(parseMdSentenceInsert(text), PASSAGE).question;
   return gateMdSentenceInsert(q, PASSAGE, { slotCount: 5, ...options });
 }
+/** 강등분(비차단 권고) 채널 — 레인은 게이트 클린일 때 corrections 로 싣는다. */
+function advisoriesOf(text: string, options?: GateMdSentenceInsertOptions): string[] {
+  const q = autoSnapInsertGiven(parseMdSentenceInsert(text), PASSAGE).question;
+  return sentenceInsertGateAdvisories(q, PASSAGE, { slotCount: 5, ...options });
+}
 /** 게이트 반려 단언 — 실패 시 실제 진단 전문을 보여준다. */
 function rejects(name: string, text: string, needle: string, options?: GateMdSentenceInsertOptions) {
   const issues = gateOf(text, options);
@@ -141,12 +146,18 @@ rejects("★ 게이트: 지문 무단 편집 → 재구성 불일치", GOOD.repl
 rejects("★ 게이트: 삽입문장을 지어내면 축자 반려", fixture({ given: "But this warming arrives with an invoice that nobody ever signs." }), "삽입문장이 지문 축자가 아님");
 // 두 문장을 한꺼번에 빼낸 경우 — 재구성은 성립하지만 완결된 한 문장이 아니다.
 rejects("★ 게이트: 두 문장 동시 추출 → 완결된 한 문장이 아님", fixture({ given: `${S[3]} ${S[4]}`, numbered: numberedOf(S.filter((_, i) => i !== 3 && i !== 4), [0, 1, 2, 3, 4]), answer: "③", wrongLabels: ["①", "②", "④", "⑤"] }), "완결된 한 문장이 아님");
-// 첫 문장 추출 — 후처리 하드 실패 선반영. 이 문장은 응집 단서도 없어 함께 잡힌다.
+// 첫 문장 추출 — 후처리 하드 실패 선반영. 이 픽스처의 given(S[0])은 응집 단서도 없다.
 const FIRST_OUT = fixture({ given: S[0], numbered: numberedOf(S.slice(1), [0, 1, 2, 3, 4]) });
 rejects("★ 게이트: 지문 첫 문장 추출 반려", FIRST_OUT, "첫 문장은 뺄 수 없다");
-rejects("게이트: 응집 단서 없는 주어진 문장 반려", FIRST_OUT, "응집 단서");
+// 26-08-22 강등(기출 296문항 실측): 응집 단서 부재는 기출 16.2%(수능 4개년 포함)가
+// 걸리는 개방 현상, 정답 양끝 자리는 기출 ①∪⑤ 27.0%(수능 22.6%) — 차단 자격이
+// 없어 계산은 유지한 채 비차단 권고(sentenceInsertGateAdvisories)로 채널만 이동.
+check("강등: 응집 단서 부재는 더 이상 차단하지 않는다", !gateOf(FIRST_OUT).some((i) => i.includes("응집 단서")), gateOf(FIRST_OUT).join(" / "));
+check("강등: 응집 단서 부재가 비차단 권고로 발화", advisoriesOf(FIRST_OUT).some((i) => i.includes("응집 단서")), advisoriesOf(FIRST_OUT).join(" / ") || "(권고 없음)");
 rejects("★ 게이트: 정답이 복원 자리와 다르면 반려", GOOD.replace("정답: ②", "정답: ④"), "정답 불일치");
-rejects("게이트: 정답이 양끝 자리면 반려", fixture({ given: S[1], numbered: numberedOf(S.filter((_, i) => i !== 1), [0, 1, 2, 3, 4]), answer: "①", wrongLabels: ["②", "③", "④", "⑤"] }), "양끝 자리");
+const EDGE = fixture({ given: S[1], numbered: numberedOf(S.filter((_, i) => i !== 1), [0, 1, 2, 3, 4]), answer: "①", wrongLabels: ["②", "③", "④", "⑤"] });
+check("강등: 정답 양끝 자리는 게이트 클린(기출 ⑤ 25.7%)", gateOf(EDGE).length === 0, gateOf(EDGE).join(" / "));
+check("강등: 정답 양끝 자리가 비차단 권고로 발화", advisoriesOf(EDGE).some((i) => i.includes("양끝 자리")), advisoriesOf(EDGE).join(" / ") || "(권고 없음)");
 rejects("게이트: 마커가 문장 한가운데", fixture({ numbered: NUMBERED.replace(" [[3]]", "").replace("pruning contracts,", "pruning contracts, [[3]]") }), "문장 경계가 아님");
 rejects("게이트: 마커가 지문 맨 앞", fixture({ numbered: `[[1]] ${NUMBERED.replace(" [[1]]", "")}` }), "지문 맨 앞");
 rejects("게이트: 두 마커가 붙어 사이에 문장이 없음", fixture({ numbered: `${DISPLAY[0]} [[1]] [[2]] ${DISPLAY[1]} ${DISPLAY[2]} [[3]] ${DISPLAY[3]} [[4]] ${DISPLAY[4]} [[5]] ${DISPLAY.slice(5).join(" ")}` }), "사이에 문장이 없음");
@@ -338,6 +349,7 @@ function ctxOf(overrides: Partial<MdLaneContext> = {}): MdLaneContext {
   check("레인: qualityArgs 에 slotCount·언어 실값", SENTENCE_INSERT_MD_LANE.qualityArgs(ctxOf()).sentenceInsertSlotCount === 5 && SENTENCE_INSERT_MD_LANE.qualityArgs(ctxOf()).stemLanguage === "ko");
   check("레인: mdFormat 포렌식 메타", JSON.stringify(SENTENCE_INSERT_MD_LANE.mdFormat(ctxOf({ resolved: { sentenceInsertSlotCount: 7, sentenceInsertParaphrasePrefix: true } }))) === JSON.stringify({ slotCount: 7, paraphrasePrefix: true, pointFocus: false }));
   check("레인: pointFocus 설정이면 응집장치 가이드 블록 주입(꺼짐이면 없음)", SENTENCE_INSERT_MD_LANE.buildExtras(ctxOf({ resolved: { sentenceInsertSlotCount: 5, sentenceInsertPointFocus: true } })).some((b) => b.includes("출제 포인트 가이드")) && SENTENCE_INSERT_MD_LANE.buildExtras(ctxOf()).length === 0);
+  check("레인: 강등분 권고가 corrections 로 실림(클린+양끝) · 무권고 클린은 빈 배열", SENTENCE_INSERT_MD_LANE.parseAndGate(EDGE, ctxOf()).corrections.some((c) => c.includes("양끝 자리")) && SENTENCE_INSERT_MD_LANE.parseAndGate(GOOD, ctxOf()).corrections.length === 0, SENTENCE_INSERT_MD_LANE.parseAndGate(EDGE, ctxOf()).corrections.join(" / ") || "(권고 없음)");
   check("레인: 교사 지정 문장을 빼내지 않으면 반려 · 빼내면 통과", SENTENCE_INSERT_MD_LANE.parseAndGate(GOOD, ctxOf({ teacherPoints: points(S[6]) })).gateIssues.some((i) => i.includes("교사 지정 문장")) && SENTENCE_INSERT_MD_LANE.parseAndGate(GOOD, ctxOf({ teacherPoints: points(GIVEN) })).gateIssues.length === 0);
 }
 

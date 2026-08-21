@@ -3,18 +3,17 @@
 // parser-sentence-insert.ts 에서 분리(파일 500줄 규약). 의존 방향은
 // 이 파일 → parser-sentence-insert 단방향이다.
 //
-// 이 유형의 fast 레인은 "서버가 유사도로 추정해 뒤늦게 봉합"하는 구조였다
-// (processSentenceInsert 의 findSourceSentenceToOmit 0.72 임계 · 정답 재키잉 ·
-//  answer-leak 가드). md 는 그 추정을 **결정형 대조**로 바꾼다 —
-//   번호지문에서 마커를 걷어내고 정답 자리에 삽입문장을 되돌리면 원 지문과 동일.
+// fast 레인의 유사도 추정 봉합(findSourceSentenceToOmit·재키잉)을 md 는 **결정형
+// 대조**로 바꾼다 — 마커를 걷어내고 정답 자리에 삽입문장을 되돌리면 원 지문과 동일.
 // 이 한 검사가 지어낸 문장·무단 편집·정답 오지정을 한꺼번에 잡는다.
 //
 // ⚠ 후처리(processSentenceInsert)는 **하드 실패**하는 분기가 여럿이라(첫 문장 추출·
 //   정답 자리 마커 부재·정답 누출) 게이트에서 못 막으면 어댑터 이후 단계에서 잡이
 //   죽는다. 그 세 분기를 전부 여기서 선반영해 재생성 기회를 준다.
-// ⚠ fast 검증기(validators/sentence-insert.ts)의 error 코드 중 결정형인 것
-//   (neutral-given · answer-desync · omitted-source-visible)도 게이트로 승격 이식했다 —
-//   md 라우트는 검증기 결과를 차단하지 않고 기록만 하기 때문이다.
+// ⚠ fast 검증기의 결정형 error 코드 중 answer-desync 계열은 차단 이식 유지.
+//   neutral-given(응집 단서)·omitted-source-visible(0.72 누출)·edge-answer 는
+//   26-08-22 기출 296문항 실측으로 **비차단 강등**(sentenceInsertGateAdvisories,
+//   기출 오반려 39.9%→0.3%의 본체) — 본문 각 자리 주석에 실측 수치.
 // ============================================================================
 
 import { countDisplaySentences, countWords } from "@/lib/question-quality/core";
@@ -34,15 +33,20 @@ import {
 } from "./parser-sentence-insert";
 
 // ── 정답 누출 판정축 ─────────────────────────────────────────────────────────
-// 후처리(processors/sentence-insert.ts)와 fast 검증기(validators/sentence-insert.ts)는
-// 같은 이름의 검사를 **서로 다른 유사도 함수**로 한다(스톱워드 목록·토큰 최소길이가
-// 다르다). 게이트가 한쪽 함수로 다른 쪽 임계(0.85)만 베끼면 "게이트 클린 → 후처리
-// 하드 실패" 밴드가 생긴다 — 라우트의 1회 재생성은 gateIssues 에만 걸려 있으므로 그
-// 실패에는 재생성이 없고, 모델 콜 1회를 소진한 채 '후처리 실패:…' 로 잡이 죽는다.
-// 실측 쌍: validators 0.750 / 후처리 0.857(≥0.85 하드 실패).
-// → 두 함수를 모두 계산해 **큰 값**을 쓰고, 임계는 두 하류(후처리 answer-leak 0.85 ·
-//   validators omitted-source-visible 0.72) 중 낮은 쪽으로 내려 항상 보수적이 되게 한다.
-const GIVEN_LEAK_THRESHOLD = 0.72;
+// md 라우트에서 **하드 실패**하는 하류는 후처리(GIVEN_SENTENCE_LEAK_THRESHOLD 0.85,
+// processors/sentence-insert.ts:11·:93)뿐 — 재생성은 gateIssues 에만 걸려 있어 후처리
+// 실패는 재시도 없이 잡이 죽는다. validators 축(0.72)은 md 에서 기록 전용.
+// 26-08-22 수술(기출 296문항): 종전 차단(두 축 max ≥0.72)은 정상 기출 5건(1.7%,
+// 축 값 0.750×2/0.800×2/1.000) 오반려 → 차단을 후처리 하드 실패의 **정확한 거울**
+// (같은 축·임계 0.85·표면=표시면)로 좁혀 5→1건(0.3%). 잔존 1건(ebsi_go2_20200916-q38:
+// 'The tires.' 내용어 1개 → min-분모 퇴화로 후처리 축 1.000)은 공유 후처리가 어차피
+// 죽이는 문항 — 통과시키면 "재생성 0회 잡 사망"으로 더 나빠진다. 감사의 내용어≥2
+// 가드도 같은 이유로 기각(후처리는 공유 파일·소유권 밖이라 가드 미동기화 시
+// "게이트 클린 → 후처리 사망" 밴드 부활). 0.72≤max축<0.85 대역(기출 4건 전부)은
+// 비차단 권고 강등(sentenceInsertGateAdvisories).
+const GIVEN_LEAK_ADVISORY_THRESHOLD = 0.72;
+/** processors/sentence-insert.ts:11 GIVEN_SENTENCE_LEAK_THRESHOLD 등가 — 값이 어긋나면 밴드가 생긴다. */
+const POSTPROCESS_LEAK_HARD_FAIL = 0.85;
 
 /** processors/sentence-insert.ts 의 stop 목록(:322-349) 등가 복제. */
 const POSTPROCESS_STOP_WORDS = new Set([
@@ -71,9 +75,8 @@ function postProcessContentTokens(value: string): string[] {
 }
 
 /**
- * processors/sentence-insert.ts 의 sentenceSimilarityScore(:275-292) 등가 복제.
- * 레이어 규칙상 후처리 내부 함수를 import 할 수 없으므로(export 도 안 돼 있다)
- * 계산을 그대로 옮겨 **후처리와 같은 축**으로 판정한다.
+ * processors/sentence-insert.ts 의 sentenceSimilarityScore(:275-292) 등가 복제 —
+ * 레이어 규칙상 import 불가(비export)라 계산을 옮겨 **후처리와 같은 축**으로 판정.
  */
 function postProcessSentenceSimilarity(a: string, b: string): number {
   const na = postProcessNormalize(a);
@@ -101,9 +104,8 @@ function insertLeakSimilarity(a: string, b: string): number {
     postProcessSentenceSimilarity(a, b),
   );
 }
-/** 변형본 분량 허용 대역 — 같은 문장을 다시 쓰는 것이므로 좁게 잡는다. */
+/** 변형본 분량 허용 대역(좁게) · 보존해야 할 축자 꼬리 비중(계약의 기계 판정축). */
 const VARIANT_WORD_RATIO: [number, number] = [0.6, 1.6];
-/** 변형본이 보존해야 할 축자 꼬리 비중(앞부분만 재진술한다는 계약의 기계 판정축). */
 const VARIANT_TAIL_RATIO = 0.25;
 
 // 응집 단서 두 축 — 변형본이 "자리를 결정하는 단서"를 지웠는지 판정한다.
@@ -182,21 +184,21 @@ function givenVariantIssues(q: MdInsertQuestion, passage: string): string[] {
   //   강제하므로 문장 '전체'를 보면 그 축자 꼬리가 검사를 대신 통과시킨다 — 관계대명사
   //   `that` 하나가 지시어 축과 응집 축을 동시에 만족시켜, 자리를 고정하던 `this cooling`
   //   이 통째로 사라진 변형본도 클린이 됐다(실측). 그게 이 설정이 막으려던 바로 그 결함이다.
+  // 26-08-22 수술: "변형본에 단서가 하나도 없음" **절대** 검사는 #6과 같은 술어·같은
+  // 표시면이라 함께 비차단 강등(sentenceInsertGateAdvisories). 아래 **상대** 검사
+  // (축자 앞부분에 실재한 단서를 변형이 지움)는 유지 — 원문에 있던 단서의 보존만
+  // 요구하므로 무단서 기출 패턴(16.2%)과 충돌하지 않는다.
   const srcPrefix = srcTokens.slice(0, Math.max(0, srcTokens.length - kept)).join(" ");
   const varPrefix = varTokens.slice(0, Math.max(0, varTokens.length - kept)).join(" ");
-  if (!sentenceInsertHasCohesiveCue(variant)) {
-    v.push(`${key}에 응집 단서(지시어·대명사·연결사)가 하나도 없음 — 자리를 결정하는 단서를 지우지 마라`);
-  } else {
-    if (INSERT_ANAPHORA_RE.test(srcPrefix) && !INSERT_ANAPHORA_RE.test(varPrefix)) {
-      v.push(
-        `${key}에서 앞 내용을 되받는 지시어·대명사가 사라짐 — 같은 선행어를 가리키는 지시어를 반드시 남겨라(축자 앞부분 '${trunc(srcPrefix, 40)}')`,
-      );
-    }
-    if (INSERT_CONNECTIVE_RE.test(srcPrefix) && !INSERT_CONNECTIVE_RE.test(varPrefix)) {
-      v.push(
-        `${key}에서 논리 방향을 지시하던 연결사가 사라짐 — 표현은 바꾸되 같은 방향의 연결사를 남겨라(축자 앞부분 '${trunc(srcPrefix, 40)}')`,
-      );
-    }
+  if (INSERT_ANAPHORA_RE.test(srcPrefix) && !INSERT_ANAPHORA_RE.test(varPrefix)) {
+    v.push(
+      `${key}에서 앞 내용을 되받는 지시어·대명사가 사라짐 — 같은 선행어를 가리키는 지시어를 반드시 남겨라(축자 앞부분 '${trunc(srcPrefix, 40)}')`,
+    );
+  }
+  if (INSERT_CONNECTIVE_RE.test(srcPrefix) && !INSERT_CONNECTIVE_RE.test(varPrefix)) {
+    v.push(
+      `${key}에서 논리 방향을 지시하던 연결사가 사라짐 — 표현은 바꾸되 같은 방향의 연결사를 남겨라(축자 앞부분 '${trunc(srcPrefix, 40)}')`,
+    );
   }
   // 지문의 다른 구간을 옮겨 적은 경우(재진술이 아니라 복사).
   const foldedPassage = foldForInsertMatch(passage);
@@ -264,19 +266,15 @@ export function gateMdSentenceInsert(
   if (!q.numberedPassage) return ["번호지문 누락"];
 
   const layout = computeInsertLayout(q, passage);
-  // 지문 길이 하한 — 한 문장을 빼내고 나면 자리는 (문장 수 − 1)개뿐이다.
-  // 클라이언트가 같은 식(slotCount + 1)으로 유형 선택 자체를 막지만(짧은 지문이
-  // 프로덕션 1위 실패 원인이었다), 서버에서도 "재생성으로 탈출 불가능한 반려"임을
-  // 한 줄로 못 박아 포렌식이 원인을 바로 가리키게 한다.
+  // 지문 길이 하한 — 한 문장을 빼내면 자리는 (문장 수 − 1)개. 클라이언트도 같은
+  // 식으로 막지만, 서버에서 "재생성 탈출 불가 반려"임을 못 박아 포렌식을 돕는다.
   if (layout.sentences.length < slotCount + 1) {
     return [
       `지문이 ${layout.sentences.length}문장뿐 — 자리 ${slotCount}개를 만들려면 ${slotCount + 1}문장 이상이어야 한다(지문이 짧아 이 유형이 성립하지 않는다)`,
     ];
   }
-  // 자리 범위 밖 마커([[9]]·[[0]]·[[10]]) — 파서는 전부 수집하고(철칙 3) 게이트가
-  // 자리를 지목한다(철칙 5). 파서가 조용히 버리면 리터럴이 잔여 지문에 그대로 남아
-  // '지문 무단 편집'으로 오진되고, 재생성 프롬프트가 '지문을 고쳐 쓰지 마라'는 엉뚱한
-  // 지시를 줘 두 번째 콜도 같은 실패로 끝난다(실측).
+  // 자리 범위 밖 마커([[9]]·[[0]]) — 파서는 전부 수집(철칙 3), 게이트가 자리를
+  // 지목(철칙 5). 조용히 버리면 리터럴 잔존이 '지문 무단 편집'으로 오진된다(실측).
   const outOfRange = layout.marks.filter((m) => m.num < 1 || m.num > slotCount);
   const rangeNote =
     outOfRange.length > 0
@@ -324,10 +322,8 @@ export function gateMdSentenceInsert(
     }
   } else {
     const source = layout.sentences[layout.omittedIndex];
-    // matchingGaps 가 비어 있지 않다는 것은 "삽입문장을 되돌리면 원 지문이 글자 그대로
-    // 복원된다"는 증명이므로 축자 여부가 이미 확정돼 있다. 이때 분할기 단위(source)와
-    // 글자가 다른 것은 splitIntoSentences 의 왕복 손실(닫는 따옴표를 다음 단위 선두로
-    // 흘림)일 뿐이라, 발화하면 축자 완벽 출력을 거짓 반려한다.
+    // matchingGaps 비공백 = "되돌리면 원 지문 축자 복원" 증명이라 축자성 확정 —
+    // 이때 분할기 단위와의 글자 차는 왕복 손실일 뿐, 발화하면 거짓 반려다.
     if (layout.matchingGaps.length === 0 && !reconstructionEq(source, q.given)) {
       v.push(
         `삽입문장이 지문 축자가 아님 — 번호지문에서 빠진 원문은 '${trunc(source)}' 이다`,
@@ -366,30 +362,23 @@ export function gateMdSentenceInsert(
           .join("·")} 인데 정답은 ${q.answer} 로 표시됨`,
       );
     }
-  } else if (answerOrdinal === 0 || answerOrdinal === layout.marks.length - 1) {
-    // 양끝 자리는 한쪽 고리만 보면 풀려 변별력이 죽는다(fast 는 warning, md 는 승격).
-    v.push(
-      `정답이 양끝 자리(${q.answer}) — 가운데 자리(${INSERT_CIRCLED.slice(1, slotCount - 1)})가 되도록 빼낼 문장을 다시 골라라`,
-    );
   }
-
-  // #6 주어진 문장의 응집 단서 — 없으면 어느 자리에도 들어가 복수정답이 된다.
+  // (구 #5 뒷단) 정답 양끝 자리 차단은 26-08-22 기출 실측으로 **비차단 강등**
+  // (sentenceInsertGateAdvisories) — 기출 정답 ⑤ 25.7%·① 1.4%, 수능 본시험
+  // 7/31=22.6%(전부 ⑤). ①만 좁혀도 4건(1.4%) 오반려라 0% 불가. fast 도 warning.
+  // (구 #6) 응집 단서 사전 매칭 부재 차단도 강등 — 기출 given 16.2%(48/296, 수능
+  // 4개년 포함)가 사전 무매칭, 확장 사전으로도 8.8% 잔존(어휘 응집은 개방 현상).
   const displayedGiven = paraphrase && q.givenVariant ? q.givenVariant : q.given;
-  if (displayedGiven && !sentenceInsertHasCohesiveCue(displayedGiven)) {
-    v.push(
-      "주어진 문장에 응집 단서(지시어·대명사·연결사)가 없음 — 자리가 유일하게 결정되지 않는다(복수정답)",
-    );
-  }
 
-  // #7 정답 누출 — 삽입문장과 거의 같은 문장이 표시 지문에 남아 있으면 자리가 노출된다
-  // (후처리 GIVEN_SENTENCE_LEAK_THRESHOLD 하드 실패 · validators
-  //  sentence-insert-omitted-source-visible 동시 선반영).
-  // 두 하류가 보는 **표면이 다르다**: 후처리는 학생 표시면(givenSentence = 변형본)을,
-  // validators 는 축자(omittedSourceSentence)를 대조한다. 둘 다 여기서 막는다.
-  const leakSurfaces = [...new Set([displayedGiven, q.given].filter(Boolean))];
-  if (leakSurfaces.length > 0 && layout.displaySentences.length > 0) {
+  // #7 정답 누출 — 후처리 하드 실패(0.85)의 **정확한 거울만** 차단: 같은 축·같은
+  // 임계·같은 표면(후처리 givenSentence = 표시면). 여기서 못 막으면 재생성 없이
+  // 잡이 죽는다. 약한 유사(0.72~0.85·validators 축 단독)는 권고 강등(상단 주석).
+  if (displayedGiven && layout.displaySentences.length > 0) {
     for (const sentence of layout.displaySentences) {
-      if (leakSurfaces.some((s) => insertLeakSimilarity(s, sentence) >= GIVEN_LEAK_THRESHOLD)) {
+      if (
+        postProcessSentenceSimilarity(displayedGiven, sentence) >=
+        POSTPROCESS_LEAK_HARD_FAIL
+      ) {
         v.push(
           `주어진 문장과 거의 같은 문장이 번호지문에 남아 있음: '${trunc(sentence)}' — 정답 자리가 그대로 노출된다`,
         );
@@ -445,4 +434,66 @@ export function gateMdSentenceInsert(
   }
 
   return v;
+}
+
+/**
+ * **비차단 권고** — 반려하지 않고 잡 result 의 corrections 포렌식으로만 남긴다
+ * (gate-summary-mc.ts summaryMcGateAdvisories 선례 동형). 26-08-22 기출 296문항
+ * 실측 강등분: edge-answer(기출 양끝 정답 27.0%·수능 22.6%) · no-cohesive-cue
+ * (기출 16.2% 사전 무매칭) · leak 의심 대역(max축 ≥0.72 & 후처리 0.85 미만, 기출
+ * 4건). 계산은 차단 시절 그대로, 채널만 바꿨다. 이미 반려된 문항에는 호출 불필요.
+ */
+export function sentenceInsertGateAdvisories(
+  q: MdInsertQuestion,
+  passage: string,
+  options?: GateMdSentenceInsertOptions,
+): string[] {
+  const paraphrase = options?.paraphrasePrefix === true;
+  const slotCount = Math.min(
+    INSERT_CIRCLED.length,
+    Math.max(1, Math.round(Number(options?.slotCount ?? 5)) || 5),
+  );
+  const out: string[] = [];
+  if (!q.given || !q.numberedPassage) return out;
+  const layout = computeInsertLayout(q, passage);
+  const displayedGiven = paraphrase && q.givenVariant ? q.givenVariant : q.given;
+
+  // 정답 양끝 자리 — 변별력 권고(기출 ⑤가 최빈 3위 라벨이라 차단 자격 없음).
+  const answerOrdinal = insertMarkerOrdinal(q.answer);
+  if (
+    layout.marks.length === slotCount &&
+    answerOrdinal >= 0 &&
+    answerOrdinal < layout.marks.length &&
+    (answerOrdinal === 0 || answerOrdinal === layout.marks.length - 1)
+  ) {
+    out.push(
+      `참고(비차단): 정답이 양끝 자리(${q.answer}) — 가운데 자리(${INSERT_CIRCLED.slice(1, slotCount - 1)})가 변별력에 유리하다`,
+    );
+  }
+
+  // 응집 단서 사전 무매칭 — 어휘 반복·의미 연결 응집일 수 있어 확인 권고만 한다.
+  if (displayedGiven && !sentenceInsertHasCohesiveCue(displayedGiven)) {
+    out.push(
+      "참고(비차단): 주어진 문장에 사전 매칭되는 응집 단서(지시어·대명사·연결사)가 없음 — 어휘 반복·의미 연결로 자리가 유일하게 결정되는지 확인하라",
+    );
+  }
+
+  // 정답 누출 의심 대역 — 차단(후처리 거울 0.85)에 못 미치는 두 축 max ≥0.72.
+  // 두 하류가 보는 표면이 다르므로(후처리=표시면·validators=축자) 둘 다 훑는다.
+  const leakSurfaces = [...new Set([displayedGiven, q.given].filter(Boolean))];
+  if (leakSurfaces.length > 0 && layout.displaySentences.length > 0) {
+    for (const sentence of layout.displaySentences) {
+      if (
+        leakSurfaces.some(
+          (s) => insertLeakSimilarity(s, sentence) >= GIVEN_LEAK_ADVISORY_THRESHOLD,
+        )
+      ) {
+        out.push(
+          `참고(비차단): 주어진 문장과 비슷한 문장이 번호지문에 남아 있음: '${trunc(sentence)}' — 정답 자리 노출 의심(어휘사슬이면 정상)`,
+        );
+        break;
+      }
+    }
+  }
+  return out;
 }

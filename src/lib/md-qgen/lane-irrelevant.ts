@@ -28,7 +28,7 @@ import {
   parseMdIrrelevant,
   type MdIrrelevantQuestion,
 } from "./parser-irrelevant";
-import { gateMdIrrelevant } from "./gate-irrelevant";
+import { gateMdIrrelevant, irrelevantGateAdvisories } from "./gate-irrelevant";
 import { adaptMdIrrelevantToAiQuestion } from "./adapter-irrelevant";
 import type { MdLane, MdLaneContext, MdLaneParsed } from "./lane-types";
 
@@ -190,16 +190,28 @@ export const IRRELEVANT_MD_LANE: MdLane = {
       };
     }
     const teacher = teacherPointIssues(q, ctx);
+    const gateOptions = {
+      slotCount: slotCountOf(ctx),
+      difficulty: ctx.difficulty,
+    };
+    const gateIssues = [
+      ...gateMdIrrelevant(q, ctx.passage, gateOptions),
+      ...teacher.issues,
+    ];
     return {
       question: q,
-      gateIssues: [
-        ...gateMdIrrelevant(q, ctx.passage, {
-          slotCount: slotCountOf(ctx),
-          difficulty: ctx.difficulty,
-        }),
-        ...teacher.issues,
+      gateIssues,
+      // 비차단 권고(26-08-22 기출 실측으로 차단에서 강등된 삽입문 휴리스틱 계열)
+      // 는 반려가 아니라 잡 result.mdCorrections 포렌식으로만 남긴다
+      // (lane-summary-mc.ts:120-128 선례). 이미 반려된 문항에는 붙이지 않는다 —
+      // 재생성 피드백 옆에 놓이면 소음이다.
+      corrections: [
+        ...snapped.corrections,
+        ...teacher.notes,
+        ...(gateIssues.length === 0
+          ? irrelevantGateAdvisories(q, ctx.passage, gateOptions)
+          : []),
       ],
-      corrections: [...snapped.corrections, ...teacher.notes],
     };
   },
 

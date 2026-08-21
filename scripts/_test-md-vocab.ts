@@ -7,7 +7,7 @@ import {
   autoSnapVocabMarks, buildVocabRenderedPassage, collectVocabMarks,
   parseMdVocab, reconstructVocabPassage, type MdVocabQuestion,
 } from "../src/lib/md-qgen/parser-vocab";
-import { gateMdVocab } from "../src/lib/md-qgen/gate-vocab";
+import { gateMdVocab, vocabGateAdvisories } from "../src/lib/md-qgen/gate-vocab";
 import { adaptMdVocabToAiQuestion } from "../src/lib/md-qgen/adapter-vocab";
 import { VOCAB_CHOICE_MD_LANE } from "../src/lib/md-qgen/lane-vocab";
 import { buildMdVocabPrompt } from "../src/lib/md-qgen/prompts-vocab";
@@ -159,7 +159,8 @@ const REJECT: [string, string, string, GateOpts?][] = [
   ["#7 비정답 변형은 스냅 경유해도 결국 반려", GOOD.replace("[[c:scarce]]", "[[c:limited]]"), "지문 재구성 불일치"],
   ["#8 변형 모드인데 비정답이 원문 그대로", buildMd(swap(FX5V, "d", { shown: "postpone" })), "표시어가 원문 그대로", { synonymVariants: true }],
   ["#9 변형 모드 정답 누출(비정답 표시어 = 정답 원형)", buildMd(swap(FX5V, "e", { shown: "mitigate" })), "정답 노출", { synonymVariants: true }],
-  ["#10 원형이 지문에 2회 등장", buildMd(swap(FX5, "e", { original: "tree", shown: "tree" })), "회 등장"],
+  // #10-a 비정답 자리 다중 등장(구 반려 픽스처)은 26-08-22 기출 실측(2018 6월
+  // 평가원 mental x5 정상 기출 오반려)으로 비차단 권고 강등 — 루프 아래 별도 단언.
   ["#11 라벨이 지문 등장순이 아님", buildMd([F("b", "mitigate", "intensify", "v", true), F("a", "lowers", "lowers", "v"), ...FX5.slice(2)]), "지문 등장순"],
   ["#12 해설 누락", GOOD.replace(/^해설:.*$/m, "해설:"), "해설 누락"],
   ["#13 오답해설 개수", GOOD.replace(/^\(e\) 이 자리는.*$/m, ""), "오답해설"],
@@ -179,6 +180,19 @@ const REJECT: [string, string, string, GateOpts?][] = [
 for (const [name, text, expect, o] of REJECT) {
   const issues = gateOf(text, o);
   check(`게이트 반려 ${name}`, issues.some((i) => i.includes(expect)), issues.join(" / ") || "반려 없음");
+}
+
+// #10-a 신계약(26-08-22): 비정답 자리 원형 다중 등장은 차단 침묵 + 비차단 권고.
+{
+  const md10 = buildMd(swap(FX5, "e", { original: "tree", shown: "tree" }));
+  const q10 = snapOf(md10).question;
+  const blocked10 = gateMdVocab(q10, PASSAGE, { markerCount: 5, answerCount: 1 });
+  const adv10 = vocabGateAdvisories(q10, PASSAGE);
+  check(
+    "#10-a 비정답 자리 다중 등장 — 차단 침묵 + 권고 발화(26-08-22 강등)",
+    !blocked10.some((m) => m.includes("회 등장")) && adv10.some((m) => m.includes("회 등장")),
+    [...blocked10, "|권고:", ...adv10].join(" / "),
+  );
 }
 check("게이트 반려 #14 오답해설에 정답 라벨 포함",
   gateMdVocab(

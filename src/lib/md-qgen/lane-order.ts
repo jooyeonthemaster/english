@@ -30,7 +30,7 @@ import {
   parseMdSentenceOrder,
   type MdOrderQuestion,
 } from "./parser-order";
-import { gateMdSentenceOrder } from "./gate-order";
+import { gateMdSentenceOrder, orderGateAdvisories } from "./gate-order";
 import { adaptMdSentenceOrderToAiQuestion } from "./adapter-order";
 import type { MdLane, MdLaneContext, MdLaneParsed } from "./lane-types";
 
@@ -136,15 +136,21 @@ export const SENTENCE_ORDER_MD_LANE: MdLane = {
     const parsed = parseMdSentenceOrder(text);
     const snapped = autoSnapOrderChunks(parsed, ctx.passage);
     const q = snapped.question;
+    const gateOptions = { prefixVariationCount: prefixVariationOf(ctx) };
+    const gateIssues = [
+      ...gateMdSentenceOrder(q, ctx.passage, gateOptions),
+      ...teacherPointIssues(q, ctx),
+    ];
     return {
       question: q,
-      gateIssues: [
-        ...gateMdSentenceOrder(q, ctx.passage, {
-          prefixVariationCount: prefixVariationOf(ctx),
-        }),
-        ...teacherPointIssues(q, ctx),
+      gateIssues,
+      // 비차단 권고(#10 공짜 소거·#4 문장수 — 26-08-22 기출 실측 강등분)는 반려가
+      // 아니라 잡 result.mdCorrections 포렌식으로만 남긴다. 이미 반려된 문항에는
+      // 붙이지 않는다(lane-summary-mc 와 동일 규약 — 재생성 피드백 옆에선 소음이다).
+      corrections: [
+        ...snapped.corrections,
+        ...(gateIssues.length === 0 ? orderGateAdvisories(q, ctx.passage, gateOptions) : []),
       ],
-      corrections: snapped.corrections,
     };
   },
 

@@ -26,7 +26,10 @@ import {
   parseMdSentenceInsert,
   type MdInsertQuestion,
 } from "./parser-sentence-insert";
-import { gateMdSentenceInsert } from "./gate-sentence-insert";
+import {
+  gateMdSentenceInsert,
+  sentenceInsertGateAdvisories,
+} from "./gate-sentence-insert";
 import { adaptMdSentenceInsertToAiQuestion } from "./adapter-sentence-insert";
 import type { MdLane, MdLaneContext, MdLaneParsed } from "./lane-types";
 
@@ -140,16 +143,26 @@ export const SENTENCE_INSERT_MD_LANE: MdLane = {
     const parsed = parseMdSentenceInsert(text);
     const snapped = autoSnapInsertGiven(parsed, ctx.passage);
     const q = snapped.question;
+    const gateOptions = {
+      slotCount: slotCountOf(ctx),
+      paraphrasePrefix: paraphrasePrefixOf(ctx),
+    };
+    const gateIssues = [
+      ...gateMdSentenceInsert(q, ctx.passage, gateOptions),
+      ...teacherPointIssues(q, ctx),
+    ];
     return {
       question: q,
-      gateIssues: [
-        ...gateMdSentenceInsert(q, ctx.passage, {
-          slotCount: slotCountOf(ctx),
-          paraphrasePrefix: paraphrasePrefixOf(ctx),
-        }),
-        ...teacherPointIssues(q, ctx),
+      gateIssues,
+      // 26-08-22 강등분(edge-answer·no-cohesive-cue·leak 0.72~0.85 대역)은 반려가
+      // 아니라 잡 result 포렌식으로만 남긴다(lane-summary-mc 선례 동형). 이미
+      // 반려된 문항에는 붙이지 않는다 — 재생성 피드백 옆에 놓이면 소음이다.
+      corrections: [
+        ...snapped.corrections,
+        ...(gateIssues.length === 0
+          ? sentenceInsertGateAdvisories(q, ctx.passage, gateOptions)
+          : []),
       ],
-      corrections: snapped.corrections,
     };
   },
 

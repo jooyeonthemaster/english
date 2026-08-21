@@ -76,6 +76,11 @@ import {
   processGrammarKillerV2Quotes,
   stripGrammarKillerV2Plan,
 } from "@/lib/md-qgen/grammar-killer-v2";
+import { gateGrammarKillerDeadDecoys } from "@/lib/md-qgen/gate-grammar-killer-decoys";
+import { gateBlankKillerOptions } from "@/lib/md-qgen/gate-blank-killer-options";
+import { gateGrammarKillerOverdrilledAnswer } from "@/lib/md-qgen/gate-grammar-killer-overdrilled";
+import { gateGrammarKillerDecoyDepth } from "@/lib/md-qgen/gate-grammar-killer-decoy-depth";
+import { gateGrammarKillerAnswerSite } from "@/lib/md-qgen/gate-grammar-killer-answer-site";
 import { getLunaExt, getLunaExtForSelfcheck } from "@/lib/md-qgen/luna-ext-registry";
 import type { MdLaneContext, MdLaneParsed } from "@/lib/md-qgen/lane-types";
 import {
@@ -473,7 +478,9 @@ function parseAndGate(
   // 형식 파라미터(26-07-23 스펙 v1) — 기본 5·1·단일이면 종전 동작과 동일.
   counts: { blankCount: number; markerCount: number; answerCount: number },
   // 어법 KILLER v2(26-08-17): 설계메모 절단 + 인용 앵커 검증·절단.
-  opts?: { grammarKillerV2?: boolean },
+  // requestedDifficulty(26-08-21): 판단깊이 게이트는 KILLER 에서만 발화하는
+  // 자기게이트라 요청 난이도를 받아야 한다(미전달 시 항상 통과).
+  opts?: { grammarKillerV2?: boolean; requestedDifficulty?: string },
 ): { question: MdAnyQuestion; gateIssues: string[]; corrections: string[] } {
   if (subType === "BLANK_INFERENCE") {
     if (counts.blankCount >= 2) {
@@ -500,6 +507,10 @@ function parseAndGate(
       question: q,
       gateIssues: [
         ...gateMdQuestion(q, passage),
+        // 대입 파손 선지 집행(26-08-21) — 빈칸 문장이 이미 이유를 말하는데 선지도
+        // 이유를 말하면 학생이 지문을 안 읽고 소거한다. 수능·평가원 224문항 실측
+        // 충돌 0건. 킬스위치 QGEN_BLANK_KILLER_OPTION_GATE=off.
+        ...gateBlankKillerOptions(q, passage),
         ...teacherPointComplianceIssues(q, teacherPoints),
       ],
       corrections: snapped.corrections,
@@ -521,6 +532,31 @@ function parseAndGate(
     const processed = processGrammarKillerV2Quotes(q, passage);
     q = processed.question;
     quoteIssues.push(...processed.issues);
+    // 죽은 미끼 집행(26-08-21) — v2 프롬프트 3단계가 이미 실격시킨 자리(관사 옆·
+    // 지시대상 붙은 대명사·by -ing·조동사 사이 부사)를 결정론으로 확인한다.
+    // 임계 2는 실기출 156문항에서 "2개 이상 = 0건" 실측에서 왔고, 같은 코퍼스
+    // 오반려율 0.0%. 킬스위치 QGEN_GRAMMAR_KILLER_DECOY_GATE=off.
+    quoteIssues.push(...gateGrammarKillerDeadDecoys(q));
+    // 과훈련 정답 사전(26-08-21) — be/have + 보고동사(found·said·believed…) + to 관용은
+    // "be found to 는 수동" 한 줄 암기로 끝나 문장 구조를 전혀 읽지 않는 자리다.
+    // core 모드 기출 156건 오반려 0.0%. 킬스위치 QGEN_GRAMMAR_KILLER_OVERDRILL_GATE=off.
+    quoteIssues.push(
+      ...gateGrammarKillerOverdrilledAnswer(q, {
+        requestedDifficulty: opts?.requestedDifficulty,
+      }),
+    );
+    // 미끼 판단깊이(26-08-21) — 미끼 4개가 전부 공식 자리(사역동사+원형·계사+보어·
+    // what 절·축약 분사)면 판단이 분기하지 않아 실질 선택지가 1개로 붕괴한다.
+    // 실측: 같은 지문 산출물이 살아있는 선택지 1.00/5(실기출 중앙 2.00)까지 떨어졌다.
+    // 기출 156건 오반려 0.0%. 킬스위치 QGEN_GRAMMAR_KILLER_DECOY_DEPTH_GATE=off.
+    quoteIssues.push(
+      ...gateGrammarKillerDecoyDepth(q, opts?.requestedDifficulty),
+    );
+    // 정답 자리(26-08-22) — 정답이 첫 밑줄 + 접속사/전치사류면 단서가 인접해
+    // 즉시 판정되고, 읽기 순서상 최초 자리라 나머지 검토가 전멸한다(A/B 실측:
+    // 미끼 생존 0.00 vs 기출 0.79). 「①+접속사류」 복합 조건만 반려 — 기출
+    // 156건 오반려 0.0%. 킬스위치 QGEN_GRAMMAR_KILLER_ANSWER_SITE_GATE=off.
+    quoteIssues.push(...gateGrammarKillerAnswerSite(q));
   }
   return {
     question: q,
@@ -1381,7 +1417,7 @@ export async function POST(req: NextRequest) {
                     passage.content,
                     teacherPoints,
                     formatCounts,
-                    { grammarKillerV2 },
+                    { grammarKillerV2, requestedDifficulty: mdDifficulty },
                   ),
             call,
           );
@@ -1428,7 +1464,7 @@ export async function POST(req: NextRequest) {
                       passage.content,
                       teacherPoints,
                       formatCounts,
-                      { grammarKillerV2 },
+                      { grammarKillerV2, requestedDifficulty: mdDifficulty },
                     ),
               retryCall,
             );

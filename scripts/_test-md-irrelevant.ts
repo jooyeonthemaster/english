@@ -15,7 +15,7 @@ import {
   reconstructIrrelevantPassage,
   stripIrrelevantMarks,
 } from "../src/lib/md-qgen/parser-irrelevant";
-import { gateMdIrrelevant, METHODOLOGY_DRIFT_PATTERNS } from "../src/lib/md-qgen/gate-irrelevant";
+import { gateMdIrrelevant, irrelevantGateAdvisories, METHODOLOGY_DRIFT_PATTERNS } from "../src/lib/md-qgen/gate-irrelevant";
 import { adaptMdIrrelevantToAiQuestion } from "../src/lib/md-qgen/adapter-irrelevant";
 import {
   checkIrrelevantMdPassageFeasibility,
@@ -133,6 +133,13 @@ function gateOf(text: string, slotCount = 5, difficulty: "BASIC" | "INTERMEDIATE
   return gateMdIrrelevant(q, PASSAGE, { slotCount, difficulty });
 }
 
+// 26-08-22 강등 검증용 — 비차단 권고 채널을 같은 입력으로 읽는다(기출 오반려
+// 48.7% 실측으로 차단→권고 강등된 검사들의 신계약 단언에 사용).
+function advOf(text: string, slotCount = 5, difficulty: "BASIC" | "INTERMEDIATE" | "KILLER" = "KILLER"): string[] {
+  const q = autoSnapIrrelevantSlots(parseMdIrrelevant(text), PASSAGE).question;
+  return irrelevantGateAdvisories(q, PASSAGE, { slotCount, difficulty });
+}
+
 // ───────────────────────────────────────────────────────────────────────────
 // 1. 정상 경로
 // ───────────────────────────────────────────────────────────────────────────
@@ -207,9 +214,10 @@ check(
 for (const [label, name] of [["①", "첫"], ["⑤", "마지막"]] as const) {
   const shifted = mdOf({ answer: label });
   check(
-    `게이트: 정답이 ${name} 번호면 반려`,
-    gateOf(shifted).some((i) => i.includes("첫/마지막 번호")),
-    gateOf(shifted).join(" / "),
+    `게이트: 정답이 ${name} 번호면 비차단 권고(26-08-22 기출 ①⑤ 실존 각 0.6%로 강등)`,
+    advOf(shifted).some((i) => i.includes("첫/마지막 번호")) &&
+      !gateOf(shifted).some((i) => i.includes("첫/마지막 번호")),
+    [...advOf(shifted), "|차단:", ...gateOf(shifted)].join(" / "),
   );
 }
 check(
@@ -298,12 +306,16 @@ check(
   gateOf(mdOf({ intruder: SENTENCES[6] })).join(" / "),
 );
 check(
-  "게이트: 삽입 문장이 역접어로 시작하면 반려(난이도 무관)",
-  gateOf(mdOf({ intruder: `However, ${INTRUDER.slice(4)}` }), 5, "BASIC").some((i) => i.includes("역접 연결어로 시작")),
+  "게이트: 삽입 문장이 역접어로 시작하면 비차단 권고(26-08-22 기출 3/154 실존으로 강등, 난이도 무관)",
+  advOf(mdOf({ intruder: `However, ${INTRUDER.slice(4)}` }), 5, "BASIC").some((i) => i.includes("역접 연결어로 시작")) &&
+    !gateOf(mdOf({ intruder: `However, ${INTRUDER.slice(4)}` }), 5, "BASIC").some((i) => i.includes("역접 연결어로 시작")),
 );
 check(
-  "게이트: 삽입 문장이 지문과 내용어를 안 나누면 반려",
-  gateOf(
+  "게이트: 삽입 문장이 지문과 내용어를 안 나누면 비차단 권고(26-08-22 기출 관측 최소 0으로 강등)",
+  advOf(
+    mdOf({ intruder: "Baroque violin makers seasoned their spruce for decades before carving any belly plate." }),
+  ).some((i) => i.includes("내용어를 거의 공유하지 않음")) &&
+  !gateOf(
     mdOf({ intruder: "Baroque violin makers seasoned their spruce for decades before carving any belly plate." }),
   ).some((i) => i.includes("내용어를 거의 공유하지 않음")),
   gateOf(mdOf({ intruder: "Baroque violin makers seasoned their spruce for decades before carving any belly plate." })).join(" / "),
@@ -344,11 +356,16 @@ const KILLER_TELLS: [string, string, string][] = [
 ];
 for (const [name, intruder, needle] of KILLER_TELLS) {
   const md = mdOf({ intruder });
-  check(`게이트(KILLER): ${name} 반려`, gateOf(md, 5, "KILLER").some((i) => i.includes(needle)), gateOf(md, 5, "KILLER").join(" / "));
   check(
-    `게이트(BASIC): ${name} 는 KILLER 전용이라 침묵(프로덕션 검증기와 동일 조건)`,
-    !gateOf(md, 5, "BASIC").some((i) => i.includes(needle)),
-    gateOf(md, 5, "BASIC").join(" / "),
+    `게이트(KILLER): ${name} 는 비차단 권고(26-08-22 수능 본시험 실존 단서로 강등)`,
+    advOf(md, 5, "KILLER").some((i) => i.includes(needle)) &&
+      !gateOf(md, 5, "KILLER").some((i) => i.includes(needle)),
+    [...advOf(md, 5, "KILLER"), "|차단:", ...gateOf(md, 5, "KILLER")].join(" / "),
+  );
+  check(
+    `게이트(BASIC): ${name} 는 KILLER 전용이라 권고도 침묵(프로덕션 검증기와 동일 조건)`,
+    !advOf(md, 5, "BASIC").some((i) => i.includes(needle)),
+    advOf(md, 5, "BASIC").join(" / "),
   );
 }
 {
@@ -359,11 +376,14 @@ for (const [name, intruder, needle] of KILLER_TELLS) {
   const alien =
     "Tidal turbines anchored offshore convert predictable lunar currents into baseload electricity for coastal grids.";
   check(
-    "게이트(KILLER): 지문과 어휘가 정말 겹치지 않으면 여전히 반려",
-    gateOf(mdOf({ intruder: alien }), 5, "KILLER").some(
+    "게이트(KILLER): 지문과 어휘가 정말 겹치지 않아도 비차단 권고(26-08-22 기출 ratio min 0.00으로 강등)",
+    advOf(mdOf({ intruder: alien }), 5, "KILLER").some(
       (i) => i.includes("새 어휘가 너무 많음") || i.includes("내용어를 거의 공유하지 않음"),
-    ),
-    gateOf(mdOf({ intruder: alien }), 5, "KILLER").join(" / "),
+    ) &&
+      !gateOf(mdOf({ intruder: alien }), 5, "KILLER").some(
+        (i) => i.includes("새 어휘가 너무 많음") || i.includes("내용어를 거의 공유하지 않음"),
+      ),
+    advOf(mdOf({ intruder: alien }), 5, "KILLER").join(" / "),
   );
   const anchored =
     "The informant carried a rumour about lacquered cabinets, silk banners, porcelain jars, brass hinges and lantern glass.";
@@ -840,29 +860,28 @@ check(
     abbrPassage.includes(ABBR[3]) && q.slots[1].text === ABBR[3],
     q.slots[1]?.text,
   );
+  // 26-08-22 스플리터 근원 수리(passage-sentence-utils: 종결부호 뒤 소문자 비경계
+  // + 호칭·라틴 약어 목록) 후 신계약 — 약어 문장은 애초에 오분할되지 않으므로
+  // 반려 자체가 사라져야 한다. 종전 단언(반려 문구 품질)은 결함 방어의 기록이었고,
+  // 지금 단언(무반려)은 근원 수리의 실증이다.
   check(
-    "회귀(지적1): 반려 문구가 약어·소수점 마침표를 진짜 원인 후보로 적고 행동을 지시한다",
-    issues.some(
-      (i) =>
-        i.includes("2번") &&
-        i.includes("약어·소수점 마침표") &&
-        i.includes("다른 문장을 골라라"),
-    ),
-    issues.join(" / "),
+    "회귀(지적1→수리): 약어 마침표 문장 슬롯이 경계 검사에 걸리지 않는다(스플리터 수리 실증)",
+    !issues.some((i) => i.includes("2번") && i.includes("경계")),
+    issues.join(" / ") || "클린",
   );
   check(
-    "회귀(지적1): 삽입 슬롯에는 '다른 문장을 골라라' 대신 다시 쓰라고 지시한다",
-    gateOf(mdOf({ intruder: `The ornament, e.g. Dr. Halley's crest, marked the authority of an informant on each finished sheet.` }))
-      .some((i) => i.includes("3번이 문장 하나가 아님") && i.includes("다시 써라")),
-    gateOf(mdOf({ intruder: `The ornament, e.g. Dr. Halley's crest, marked the authority of an informant on each finished sheet.` })).join(" / "),
+    "회귀(지적1→수리): e.g./Dr. 를 품은 삽입문이 단일문장 검사를 통과한다(스플리터 수리 실증)",
+    !gateOf(mdOf({ intruder: `The ornament, e.g. Dr. Halley's crest, marked the authority of an informant on each finished sheet.` }))
+      .some((i) => i.includes("문장 하나가 아님")),
+    gateOf(mdOf({ intruder: `The ornament, e.g. Dr. Halley's crest, marked the authority of an informant on each finished sheet.` })).join(" / ") || "클린",
   );
   // 반려가 옳다는 근거 — 통과시켰다면 후처리가 이 슬롯을 "When two accounts
   // disagreed, Dr." 로 잘라 학생 표면에 내보낸다.
   const adapt = adaptMdIrrelevantToAiQuestion(q, abbrPassage, "KILLER");
   const pp = postProcessQuestion("IRRELEVANT", abbrPassage, (adapt.aiQuestion ?? {}) as never);
   check(
-    "회귀(지적1): 반려 근거 — 통과시켰다면 후처리가 그 슬롯을 잘라 버린다",
-    ((pp.data?.sentences as string[]) ?? [])[1] !== ABBR[3],
+    "회귀(지적1→수리): 후처리가 약어 문장 슬롯을 온전히 보존한다(게이트·후처리 동축 수리 실증)",
+    ((pp.data?.sentences as string[]) ?? [])[1] === ABBR[3],
     String(((pp.data?.sentences as string[]) ?? [])[1]),
   );
 }
@@ -885,16 +904,16 @@ check(
   const q = autoSnapIrrelevantSlots(parseMdIrrelevant(mdOf({ numbered })), decPassage).question;
   const issues = gateMdIrrelevant(q, decPassage, { slotCount: 5, difficulty: "KILLER" });
   check(
-    "회귀(지적3): 소수점 문장 슬롯이 축자 + 재구성 통과인데도 경계 어긋남으로 반려",
+    "회귀(지적3→수리): 소수점 문장 슬롯이 경계 검사를 통과한다(스플리터 무손실 재작성 실증)",
     decPassage.includes(DEC[4]) &&
-      issues.some((i) => i.includes("4번") && i.includes("지문 문장 경계와 어긋남")),
-    issues.join(" / "),
+      !issues.some((i) => i.includes("4번") && i.includes("지문 문장 경계와 어긋남")),
+    issues.join(" / ") || "클린",
   );
   const adapt = adaptMdIrrelevantToAiQuestion(q, decPassage, "KILLER");
   const pp = postProcessQuestion("IRRELEVANT", decPassage, (adapt.aiQuestion ?? {}) as never);
   check(
-    "회귀(지적3): 반려 근거 — 통과시켰다면 지문 일부가 학생 표면에서 사라진다",
-    !String(pp.data?.passageWithNumbers ?? "").includes("That decision was announced on fewer than 3"),
+    "회귀(지적3→수리): 소수점 문장이 학생 표면에 온전히 실린다(표면 무손상 실증)",
+    String(pp.data?.passageWithNumbers ?? "").includes("That decision was announced on fewer than 3"),
     String(pp.data?.passageWithNumbers ?? "").slice(0, 80),
   );
   // 포함 매칭으로 되돌아가는 회귀 방지 — 조각을 '포함'만 해도 통과하면 안 된다.
@@ -936,16 +955,17 @@ check(
     ["measuring 리드(미복제 패턴)", "Measuring the authority of an informant across the ornament of each finished sheet occupied later collectors.", "methodology gerund lead"],
   ];
   for (const [name, intruder, label] of DRIFT_TELLS) {
-    const issues = gateOf(mdOf({ intruder }), 5, "KILLER");
+    const issues = advOf(mdOf({ intruder }), 5, "KILLER");
     check(
-      `회귀(지적4·KILLER): ${name} 를 게이트가 잡는다`,
-      issues.some((i) => i.includes("방법론·측정·도구") && i.includes(label)),
+      `회귀(지적4·KILLER): ${name} 를 권고 채널이 잡는다(26-08-22 차단→권고 강등)`,
+      issues.some((i) => i.includes("방법론·측정·도구") && i.includes(label)) &&
+        !gateOf(mdOf({ intruder }), 5, "KILLER").some((i) => i.includes("방법론·측정·도구")),
       issues.join(" / "),
     );
     check(
-      `회귀(지적4·BASIC): ${name} 는 KILLER 전용이라 침묵(프로덕션 조건 동기)`,
-      !gateOf(mdOf({ intruder }), 5, "BASIC").some((i) => i.includes("방법론·측정·도구")),
-      gateOf(mdOf({ intruder }), 5, "BASIC").join(" / "),
+      `회귀(지적4·BASIC): ${name} 는 KILLER 전용이라 권고도 침묵(프로덕션 조건 동기)`,
+      !advOf(mdOf({ intruder }), 5, "BASIC").some((i) => i.includes("방법론·측정·도구")),
+      advOf(mdOf({ intruder }), 5, "BASIC").join(" / "),
     );
   }
 }

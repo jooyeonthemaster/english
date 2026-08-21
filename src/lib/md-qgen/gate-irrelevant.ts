@@ -8,6 +8,16 @@
 // 프로덕션 검증기(validators/irrelevant.ts)가 error 로 판정하는 축을 md 단계로
 // 앞당겨 이식했다 — md 레인은 validateQuestionQuality 결과를 차단하지 않고 기록만
 // 하므로, 여기서 안 잡으면 결함 문항이 그대로 저장된다.
+//
+// 26-08-22 기출 전수 실측(수능·평가원·학평 154문항, scripts/_tmp-irrelevant-fp.ts)
+// 으로 삽입문 휴리스틱 계열을 재배선했다 — 종전 게이트는 KILLER 설정에서 기출을
+// 48.7%(수능 본시험만 52.9%) 차단 오반려했다. 캠페인 배선 기준(기출 오반려 0%만
+// 차단 자격, playbook §0)에 따라 어휘 정박·역접 시작·KILLER 단서 6종·KILLER
+// 겹침 비율·정답 끝번호는 **비차단 권고**(irrelevantGateAdvisories)로 강등하고
+// (계산 유지·채널만 변경, gate-summary-mc.ts 선례), 길이비는 임계를 기출 관측
+// 밖(0.30~2.0)으로 확장했다. 슬롯 형식(문장 하나·경계 일치) 계열은
+// 후처리(processIrrelevant)가 같은 스플리터로 슬롯을 스냅하는 파이프라인 보호라
+// 차단 유지(감사 결론 — 완화하면 잘린 선지가 출하된다).
 // ============================================================================
 
 import {
@@ -36,7 +46,10 @@ import type { MdDifficulty } from "./prompts";
 export interface MdIrrelevantGateOptions {
   /** 번호 슬롯 수(5~10) — resolved.irrelevantSlotCount */
   slotCount?: number;
-  /** KILLER 전용 노출 단서 검사 분기(프로덕션 검증기와 동일 조건) */
+  /**
+   * KILLER 전용 노출 단서 분기 — 26-08-22 강등 이후 **차단 게이트는 이 값을 읽지
+   * 않는다**(KILLER 단서 계열 전부 비차단). irrelevantGateAdvisories 전용.
+   */
   difficulty?: MdDifficulty;
   /** answer-only 모드면 오답해설 개수 검사를 끈다 */
   requireWrong?: boolean;
@@ -81,6 +94,15 @@ export const METHODOLOGY_DRIFT_PATTERNS: Array<[string, RegExp]> = [
 
 /** 해설 산문의 번호 지칭 — 실측 최다 결함(해설이 다른 번호를 부르면 문항 무효). */
 const CIRCLED_IN_PROSE_RE = /[①-⑳]/;
+
+/**
+ * 삽입문/표시문장 평균 길이비 차단 임계.
+ * 임계 확장(26-08-22 기출 전수 실측 154문항): 종전 0.45~1.8 은 기출 3건(1.9%)을
+ * 오반려했다. 기출 길이비 분포 min 0.35 · p5 0.54 · p50 0.84 · max 1.95 —
+ * 관측 최소·최대 밖(0.30~2.0)으로 물리면 이 코퍼스 오반려 0%(배선 기준 §0).
+ */
+const INSERTED_LENGTH_RATIO_MIN = 0.3;
+const INSERTED_LENGTH_RATIO_MAX = 2.0;
 
 function findMethodologyDrift(sentence: string, passage: string): string | null {
   const hit = METHODOLOGY_DRIFT_PATTERNS.find(
@@ -132,7 +154,6 @@ export function gateMdIrrelevant(
   options?: MdIrrelevantGateOptions,
 ): string[] {
   const slotCount = options?.slotCount ?? q.slots.length;
-  const difficulty = options?.difficulty ?? "KILLER";
   const requireWrong = options?.requireWrong !== false;
   const v: string[] = [];
 
@@ -168,11 +189,11 @@ export function gateMdIrrelevant(
     v.push("정답 누락 — 무관 문장의 번호를 `정답:` 줄에 적어라");
   } else if (answerIndex < 0) {
     v.push(`정답 번호(${q.answer})가 번호 문장에 없음`);
-  } else if (answerIndex === 0 || answerIndex === slotCount - 1) {
-    v.push(
-      `정답이 첫/마지막 번호(${q.answer}번) — 무관 문장은 가운데 번호(2~${slotCount - 1})에 넣어라`,
-    );
   }
+  // 정답=첫/마지막 번호는 **비차단**(irrelevantGateAdvisories) — 26-08-22 기출
+  // 실측에서 ① 1건(0.6%)·⑤ 1건(0.6%)이 실존한다(플레이북 §3 의 ①⑤ 합 1.2% 와
+  // 정합). 0% FP 임계가 없으므로 차단 자격이 없고, 라벨 분포(③④ 92.8%)는
+  // 프롬프트 레버로 유지한다.
 
   // ── #4 ★ 지문 재구성 대조 — 이 유형 최강 방어선 ──────────────────────────
   // 무관 문장을 들어내고 마커를 걷어낸 결과가 원 지문과 완전히 일치해야 한다.
@@ -192,6 +213,12 @@ export function gateMdIrrelevant(
   // 풀 항목과 완전히 같지 않은 슬롯은 축자여도 학생 표면에서 잘리거나 사라진다.
   // 슬롯 하나에 메시지 하나만 남긴다(재생성 피드백이 중복 문구로 흐려지지 않게):
   //   문장 하나로 안 잘림 → #5 문구 / 잘리긴 하는데 풀과 불일치 → #6 경계 문구.
+  // 26-08-22 기출 실측에서 이 계열(not-single 7 + boundary 5 = 12문항/153,
+  // 7.8% · 수능 본시험 0건)이 걸리는 원인은 기출이 아니라 splitPassageSentences
+  // 의 약어·소수점 오분할('In the U.S. …'·'e.g.,'·'2.1 billion' 실측)이다.
+  // 그래도 **차단 유지** — 후처리(processIrrelevant)가 같은 스플리터로 슬롯을
+  // 스냅하므로 완화하면 잘린 선지가 그대로 출하된다(감사 결론). 근본 수정은
+  // 스플리터의 약어·소수점 처리(이 파일 소관 밖) 후 재측정.
   const passageSentences = splitPassageSentences(passage, { includeShort: true });
   const seen = new Set<string>();
   const used = new Set<number>();
@@ -257,10 +284,13 @@ export function gateMdIrrelevant(
     }
   }
 
-  // ── #8 삽입 문장 검사 ────────────────────────────────────────────────────
+  // ── #8 삽입 문장 검사(차단 잔존분: 신규성·길이비) — 어휘 정박·역접 시작·
+  //    KILLER 단서·겹침 비율 계열은 26-08-22 기출 실측(차단 오반려 48.7%)으로
+  //    비차단 강등(irrelevantGateAdvisories). 인접 앵커는 후처리 렌더 위치
+  //    보호(설계=표면 계약)라 차단 유지 — 기출 투입 실측 발화 0건.
   const inserted = answerIndex >= 0 ? q.slots[answerIndex].text : "";
   if (inserted) {
-    v.push(...gateInsertedSentence(inserted, passage, sourceTexts, difficulty));
+    v.push(...gateInsertedSentence(inserted, passage, sourceTexts));
 
     // 인접 앵커 — 무관 문장 바로 앞 문장도 표시 문장이어야 후처리 렌더가 설계와
     // 같은 자리에 문장을 끼운다(buildSpreadMarkedPassage 는 "직전 슬롯의 원문
@@ -313,25 +343,71 @@ export function gateMdIrrelevant(
 }
 
 /**
- * 삽입 문장(정답 자리) 전용 검사 — 프로덕션 validators/irrelevant.ts 의 error 축을
- * md 단계로 앞당긴 것. KILLER 전용 검사는 프로덕션과 **동일 조건**으로 건다
- * (md 만 엄격해지면 fast 와 판정이 갈려 포렌식이 오염된다).
+ * 삽입 문장(정답 자리) 전용 **차단** 검사 — 26-08-22 기출 전수 실측(154문항) 후
+ * 차단으로 남은 축은 신규성·길이비 둘뿐이다. 어휘 정박·역접 시작·KILLER 겹침
+ * 비율·KILLER 단서 계열은 기출 오반려 0% 임계가 존재하지 않아(관측 최소가 0
+ * 이거나 단서 자체가 수능 본시험의 정상 패턴) 전부 비차단 권고
+ * (insertedSentenceAdvisories)로 강등했다 — 계산은 유지한 채 채널만 바꿨다
+ * (조용한 삭제 금지, gate-summary-mc.ts 선례).
  */
 function gateInsertedSentence(
+  inserted: string,
+  passage: string,
+  sourceTexts: string[],
+): string[] {
+  const v: string[] = [];
+
+  // 삽입문 신규성 — 지문에 이미 있는 문장이면 "무관 문장"이 아니다.
+  // 프로덕션 irrelevant-answer-from-source 와 **같은 판정 함수**를 쓴다.
+  // (26-08-22 기출 154문항 투입 실측 발화 0건 — 차단 유지.)
+  if (containsComparableSentence(passage, inserted)) {
+    v.push(
+      "정답 자리 문장이 지문에 이미 있는 문장임 — 무관 문장은 네가 새로 쓴 문장이어야 한다",
+    );
+  }
+
+  // 문체 정합 — 길이가 튀면 읽기 전에 들킨다. 임계는 26-08-22 기출 실측 분포
+  // 밖으로 확장한 값(INSERTED_LENGTH_RATIO_* 주석) — 이 코퍼스 오반려 0%.
+  const avgSourceLength =
+    sourceTexts.reduce((sum, t) => sum + t.length, 0) / Math.max(1, sourceTexts.length);
+  if (
+    avgSourceLength > 0 &&
+    (inserted.length < avgSourceLength * INSERTED_LENGTH_RATIO_MIN ||
+      inserted.length > avgSourceLength * INSERTED_LENGTH_RATIO_MAX)
+  ) {
+    v.push(
+      `무관 문장 길이가 주변 문장과 어긋남(${inserted.length}자 · 표시문장 평균 ${Math.round(avgSourceLength)}자) — 길이·문체를 맞춰라`,
+    );
+  }
+
+  return v;
+}
+
+/**
+ * 삽입 문장 **비차단** 권고 — 26-08-22 기출 전수 실측(수능·평가원·학평 154문항,
+ * 종전 KILLER 차단 오반려 48.7%)으로 차단에서 강등한 축. 검사 로직은 그대로 두고
+ * 채널만 바꿨다(gate-summary-mc.ts 의 summaryMcGateAdvisories 선례).
+ *  · 어휘 정박(지문<2 ∨ 표시문장<1): 46/154(29.9%) 오반려 — 기출 passageOverlap
+ *    min 0·p50 2·max 14 / sourceOverlap min 0·p50 2·max 7. 관측 최소가 0 이라
+ *    0% FP 임계 자체가 없다(임계를 0 으로 내리면 검사 소멸). 기출 무관 문장은
+ *    정의상 다른 얘기라 어휘를 안 나누는 것이 정상 패턴이다.
+ *  · 역접 시작: 3/154(1.9%) — 2012 수능 'Instead'·2010 수능 'However' 실존.
+ *  · KILLER 겹침 비율(<0.10): 42/154(27.3%) — 기출 ratio min 0.00·p5 0.00·
+ *    p50 0.15·max 0.54, 수능 본시험 다수 포함. 26-07-27 에 0.25→0.10 으로
+ *    완화했으나 기출 4분의 1이 여전히 걸렸다.
+ *  · KILLER 단서 6종(조언 5·새 무대 5·반론 5·극단어 2·방법론 1·처방 1 =
+ *    발화 19건/문항 17건 내외): 2026 수능(advice)·2025 수능(external
+ *    'restaurants')·2012 수능('instead')·2010 수능('however') 등 본시험이 실제로
+ *    이 단서를 쓴다 — "노골적 단서 = 불량" 가설이 기출과 다른 구조를 강제하는
+ *    사례(playbook §0 의 반복 사고 유형).
+ */
+function insertedSentenceAdvisories(
   inserted: string,
   passage: string,
   sourceTexts: string[],
   difficulty: MdDifficulty,
 ): string[] {
   const v: string[] = [];
-
-  // 삽입문 신규성 — 지문에 이미 있는 문장이면 "무관 문장"이 아니다.
-  // 프로덕션 irrelevant-answer-from-source 와 **같은 판정 함수**를 쓴다.
-  if (containsComparableSentence(passage, inserted)) {
-    v.push(
-      "정답 자리 문장이 지문에 이미 있는 문장임 — 무관 문장은 네가 새로 쓴 문장이어야 한다",
-    );
-  }
 
   // 어휘 정박 — 지문·주변 문장과 내용어를 거의 안 나누면 훑기만으로 들킨다.
   const insertedTokens = contentTokens(inserted);
@@ -340,29 +416,13 @@ function gateInsertedSentence(
     contentTokens(sourceTexts.join(" ")),
   );
   const passageOverlap = countTokenOverlap(insertedTokens, contentTokens(passage));
-  // 임계 완화(26-07-27 실사용 과잉차단 실측): 표시문장 겹침 2개 요구는 과했다.
-  // 무관 문장은 정의상 **다른 얘기**라 주변 문장과 내용어가 많이 겹칠 수 없다.
-  // 지문 전체와의 정박(2개)은 유지하고, 표시문장 겹침은 1개로 낮춘다 — 0개면
-  // 정말 아무 관계 없는 문장이라 훑기로 들키는 게 맞다.
   if (passageOverlap < 2 || sourceOverlap < 1) {
     v.push(
       `무관 문장이 지문과 내용어를 거의 공유하지 않음(지문 ${passageOverlap}개·표시문장 ${sourceOverlap}개, 지문 2개·표시문장 1개 이상 필요) — 주변 문장의 단어를 재사용해 표면을 위장하라`,
     );
   }
 
-  // 문체 정합 — 길이가 튀면 읽기 전에 들킨다.
-  const avgSourceLength =
-    sourceTexts.reduce((sum, t) => sum + t.length, 0) / Math.max(1, sourceTexts.length);
-  if (
-    avgSourceLength > 0 &&
-    (inserted.length < avgSourceLength * 0.45 || inserted.length > avgSourceLength * 1.8)
-  ) {
-    v.push(
-      `무관 문장 길이가 주변 문장과 어긋남(${inserted.length}자 · 표시문장 평균 ${Math.round(avgSourceLength)}자) — 길이·문체를 맞춰라`,
-    );
-  }
-
-  // 역접 시작 — 난이도 무관 실측 fatal("However + 반대 주장"은 훑기로 뚫린다).
+  // 역접 시작 — 기출 3/154(1.9%)가 실제로 이렇게 시작한다(위 강등 근거).
   if (/^\s*(?:however|yet|instead|in\s+contrast|on\s+the\s+contrary|conversely|nevertheless|nonetheless)\b/i.test(inserted)) {
     v.push(
       "무관 문장이 역접 연결어로 시작함 — 훑어읽기만으로 들킨다. 같은 방향인 척하는 문장으로 다시 써라",
@@ -371,10 +431,6 @@ function gateInsertedSentence(
 
   if (difficulty !== "KILLER") return v;
 
-  // 임계 완화(26-07-27 실사용 과잉차단 실측): 0.25 는 도달 불가에 가까웠다 —
-  // 실제 모델 산출이 0.04·0.13 으로 **두 번 다** 반려되고 문항이 죽었다.
-  // 무관 문장은 주변과 소재만 공유하고 논지는 어긋나야 하므로 어휘 겹침이 본질적으로
-  // 낮다. 훑기로 들키는 수준(겹침 거의 0)만 막고 나머지는 프롬프트 공예에 맡긴다.
   const ratio = sourceOverlap / Math.max(1, insertedTokens.size);
   if (ratio < 0.1) {
     v.push(
@@ -408,4 +464,46 @@ function gateInsertedSentence(
   }
 
   return v;
+}
+
+/**
+ * **비차단 권고** — 게이트가 반려하지 않고 잡 result(corrections 포렌식)에만
+ * 남기는 항목. 26-08-22 기출 전수 실측(종전 KILLER 차단 오반려 48.7% → 강등 후
+ * 잔존 차단은 스플리터 경계 보호 slot-* 계열뿐)으로 차단에서 내렸다. 반려하면
+ * 재생성 1회 후 크레딧 환불이라, 기출조차 지키지 않는 표면 취향에 그 예산을
+ * 쓰지 않는다(gate-summary-mc.ts 의 summaryMcGateAdvisories 와 같은 원칙).
+ *
+ * gateMdIrrelevant 가 이미 반려한 문항에는 호출할 필요가 없다(레인이 순서 보장).
+ */
+export function irrelevantGateAdvisories(
+  q: MdIrrelevantQuestion,
+  passage: string,
+  options?: MdIrrelevantGateOptions,
+): string[] {
+  const slotCount = options?.slotCount ?? q.slots.length;
+  const difficulty = options?.difficulty ?? "KILLER";
+  if (!q.answer) return [];
+  const answerIndex = q.slots.findIndex((s) => s.label === q.answer);
+  if (answerIndex < 0) return [];
+  const out: string[] = [];
+
+  // 정답=첫/마지막 번호 — 기출 ① 1건(0.6%)·⑤ 1건(0.6%) 실존(26-08-22 실측,
+  // 플레이북 §3 ①⑤ 합 1.2% 정합) → 차단 자격 없음. 분포는 프롬프트 레버 소관.
+  if (answerIndex === 0 || answerIndex === slotCount - 1) {
+    out.push(
+      `정답이 첫/마지막 번호(${q.answer}번) — 무관 문장은 가운데 번호(2~${slotCount - 1})에 넣어라`,
+    );
+  }
+
+  const inserted = q.slots[answerIndex].text;
+  if (inserted) {
+    // 게이트 본체와 같은 축 — 정답 슬롯을 뺀, 텍스트 있는 슬롯 전부(등장순).
+    const sourceTexts = q.slots
+      .filter((s) => s.label !== q.answer && s.text)
+      .map((s) => s.text);
+    out.push(
+      ...insertedSentenceAdvisories(inserted, passage, sourceTexts, difficulty),
+    );
+  }
+  return out.map((m) => `참고(비차단): ${m}`);
 }

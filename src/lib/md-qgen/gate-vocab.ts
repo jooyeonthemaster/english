@@ -119,13 +119,20 @@ export function gateMdVocab(
       }
     }
 
-    // #10-a 위치 유일성 — 밑줄 자리 확정. 대조 축은 #2 재구성과 같은 정규화 축이다
+    // #10-a 원형 등장 횟수 — 대조 축은 #2 재구성과 같은 정규화 축이다
     // (원시 문자열로 세면 곱슬따옴표·en대시 차이만으로 여기서만 오반려된다).
+    // 다중 등장(>1) 차단은 26-08-22 기출 실측으로 **정답 자리 한정** — 수능·평가원·
+    // 학평 어휘 30문항 재구성 90자리의 등장 분포 {1회:89, 5회:1}에서, 유일한 다중
+    // 등장 자리(2018 6월 평가원 'mental'×5)가 비정답일 때도 전 자리 차단이 그 기출을
+    // 전 변형 반려했다(문항 오반려 3.3%·평가원 5.6% → 한정 후 0%). md 레인은 마커가
+    // 지문 인라인([[a:단어]])이라 "자리 모호" 논거가 성립하지 않고, 원문이 그대로
+    // 표시되는 비정답 자리에는 "정답 누설" 논거도 해당 없다 — 비정답 자리 분은
+    // vocabGateAdvisories 의 비차단 권고로 강등(계산 유지, 채널만 변경).
     const occurrences = countWordBoundaryMatches(pn, normalizeWs(m.original));
     if (occurrences === 0) {
       v.push(`${m.label} 원형이 지문에 축자로 없음(단어 경계 기준): '${m.original}'`);
-    } else if (occurrences > 1) {
-      v.push(`${m.label} 원형 '${m.original}' 이 지문에 ${occurrences}회 등장 — 밑줄 자리가 모호하고 정답이 누설된다`);
+    } else if (isAnswer && occurrences > 1) {
+      v.push(`${m.label} 정답 원형 '${m.original}' 이 지문에 ${occurrences}회 등장 — 오용어로 바꿔도 원단어가 지문 다른 곳에 그대로 남아 정답이 누설된다`);
     } else if (isAnswer && sourceWordVisibleOutsideMarkers(renderedPassage, m.original)) {
       // #10-b 누설 축은 **대소문자 무시**다. 위 카운트는 대소문자를 구분해 문두 대문자
       // 잔존("Shade … casts shade")을 통과시키지만 fast 검증기는 이를 error 로 잡는다.
@@ -262,4 +269,39 @@ export function gateMdVocab(
   }
 
   return v;
+}
+
+/**
+ * **비차단 권고** — 게이트가 반려하지 않고 잡 result 에만 남기는 항목
+ * (gate-summary-mc.ts summaryMcGateAdvisories 선례 동형).
+ *
+ * #10-a 원형 다중 등장의 **비정답 자리** 분이 여기로 온다 — 26-08-22 기출 실측
+ * (수능·평가원·학평 어휘 30문항 재구성 90자리, 등장 분포 {1회:89, 5회:1})에서
+ * 유일한 다중 등장 자리(2018 6월 평가원 'mental'×5)가 비정답 자리인데도 전 자리
+ * 차단이 그 기출을 전 변형 반려했다(문항 오반려 3.3%·평가원 5.6%). md 레인은
+ * 마커가 지문 인라인이라 "자리 모호" 논거가 성립하지 않고, 원문이 그대로 표시되는
+ * 비정답 자리에는 "정답 누설" 논거도 해당 없다 — 캠페인 배선 기준(기출 오반려 0%
+ * 만 차단 자격, 플레이북 §0)에 따라 강등한다. 정답 자리 다중 등장(오용어로 바꿔도
+ * 원단어가 지문에 남는 진짜 누설)은 gateMdVocab #10-a 에 차단으로 남아 있다.
+ *
+ * gateMdVocab 이 이미 반려한 문항에는 호출할 필요가 없다(레인이 순서 보장).
+ */
+export function vocabGateAdvisories(
+  q: MdVocabQuestion,
+  passage: string,
+): string[] {
+  const pn = normalizeWs(passage);
+  const answerSet = new Set(q.answers);
+  const out: string[] = [];
+  for (const m of q.marks) {
+    if (!m.original || answerSet.has(m.label)) continue;
+    // 차단 분기와 동일 축(단어 경계·정규화) — 계산은 유지, 채널만 비차단.
+    const occurrences = countWordBoundaryMatches(pn, normalizeWs(m.original));
+    if (occurrences > 1) {
+      out.push(
+        `참고(비차단): ${m.label} 원형 '${m.original}' 이 지문에 ${occurrences}회 등장 — 비정답 자리라 정답 누설이 아니고 인라인 마커가 자리를 확정하므로 차단하지 않음(기출 관측 최대 5회)`,
+      );
+    }
+  }
+  return out;
 }
