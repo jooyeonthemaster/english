@@ -384,7 +384,10 @@ export function checkTeacherPointCompliance(
     return { ok: missing.length === 0, missing };
   }
   const extract = COMPLIANCE_SURFACES[typeId];
-  if (!extract) return { ok: true, missing: [] }; // soft(요지/주제/제목) 등
+  // soft(요지/주제/제목) 등 — 단 MAIN_IDEA(요지)는 md 레인이 별도 결정형 집행을
+  // 한다(gate-main-idea.ts #10: `근거:` 줄이 지정 문장과 겹쳐야 통과). 이 함수
+  // 기준으로 soft 라고 해서 md 경로까지 무검사인 것은 아니다(26-08-22 과녁 검증).
+  if (!extract) return { ok: true, missing: [] };
   const surfaces = extract(question);
   if (surfaces.length === 0) return { ok: true, missing: [] }; // 판정 불가
   const missing = points.filter(

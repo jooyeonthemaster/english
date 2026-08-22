@@ -277,11 +277,19 @@ export function gateMdMainIdea(
   // (선지·해설에 논지가 반영됐는지는 의미 판단이라 결정형 검사 불가 — 그 부분은
   //  fast 와 동일하게 프롬프트 전담이고, 여기서는 '어느 문장을 근거로 삼았나'라는
   //  결정형 사실만 본다. 레인이 같은 요구를 프롬프트 블록으로 먼저 못박는다.)
-  const teacherPoints = (options?.teacherPoints ?? []).map((p) => foldKey(p)).filter(Boolean);
+  const teacherPointsRaw = (options?.teacherPoints ?? []).filter(Boolean);
+  const teacherPoints = teacherPointsRaw.map((p) => foldKey(p)).filter(Boolean);
   if (teacherPoints.length > 0 && evidenceNorm) {
     const e = foldKey(q.evidence);
     if (!teacherPoints.some((p) => e.includes(p) || p.includes(e))) {
-      v.push("교사 지정 근거 문장이 `근거:` 줄에 반영되지 않음");
+      // 누락 포인트 원문을 명시한다(26-08-22 과녁 검증 — hard 유형들은 전부 원문을
+      // 인용하는데 이 메시지만 고정 문구라 재생성 피드백 정보가 비어 있었다).
+      const cited = teacherPointsRaw
+        .map((p) => `'${p.slice(0, 60)}'`)
+        .join(" · ");
+      v.push(
+        `교사 지정 근거 문장이 \`근거:\` 줄에 반영되지 않음 — 지정 문장 ${cited} 중 하나를 근거로 삼아라`,
+      );
     }
   }
 
