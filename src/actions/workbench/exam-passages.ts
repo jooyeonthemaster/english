@@ -55,6 +55,11 @@ export interface ImportExamPassagesResult {
   createdIds: string[];
   /** 이미 등록돼 건너뛴 기출 지문 id. */
   skippedExamIds: string[];
+  /**
+   * 이번 요청분 중 이미 지문함에 있던 것들의 기존 Passage id — 클래스 자동
+   * 담기(§3.8.3)가 신규·기존을 함께 담기 위한 additive 필드(구 소비처는 무시).
+   */
+  existingIds?: string[];
 }
 
 export async function importExamPassages(
@@ -89,11 +94,13 @@ export async function importExamPassages(
     }
 
     // 2) 멱등 — 이미 등록된 기출(tags 에 kice:<id>) 조회 후 제외.
+    //    examId → 기존 Passage id 맵도 함께 만든다(클래스 자동 담기 §3.8.3).
     const existing = await prisma.passage.findMany({
       where: { academyId, tags: { contains: KICE_TAG_PREFIX } },
-      select: { tags: true },
+      select: { id: true, tags: true },
     });
     const alreadyImported = new Set<string>();
+    const passageIdByExamId = new Map<string, string>();
     for (const row of existing) {
       if (!row.tags) continue;
       try {
@@ -101,7 +108,11 @@ export async function importExamPassages(
         if (Array.isArray(parsed)) {
           for (const t of parsed) {
             if (typeof t === "string" && t.startsWith(KICE_TAG_PREFIX)) {
-              alreadyImported.add(t.slice(KICE_TAG_PREFIX.length));
+              const examId = t.slice(KICE_TAG_PREFIX.length);
+              alreadyImported.add(examId);
+              if (!passageIdByExamId.has(examId)) {
+                passageIdByExamId.set(examId, row.id);
+              }
             }
           }
         }
@@ -119,12 +130,32 @@ export async function importExamPassages(
     const skippedExamIds = records
       .filter((r) => alreadyImported.has(r.id))
       .map((r) => r.id);
+    const existingIds = Array.from(
+      new Set(
+        skippedExamIds
+          .map((examId) => passageIdByExamId.get(examId))
+          .filter((v): v is string => Boolean(v)),
+      ),
+    );
+
+    // 재담기 정책(2026-08-11 사용자 지시): 이미 담긴 기출을 다시 담으면 중복
+    // 생성 없이 「담은 날짜」만 최신화한다 — 지문함의 표시 날짜·최신순 정렬
+    // 정본이 createdAt 이므로(use-passage-library 정렬 계약) createdAt 을 지금
+    // 시각으로 올려 목록 맨 앞으로 끌어올린다. 연결(클래스·생성물·분석)은
+    // 전부 그대로 유지된다.
+    if (existingIds.length > 0) {
+      await prisma.passage.updateMany({
+        where: { id: { in: existingIds }, academyId },
+        data: { createdAt: new Date() },
+      });
+    }
 
     if (toCreate.length === 0) {
       return {
         success: true,
         createdIds: [],
         skippedExamIds,
+        existingIds,
       };
     }
 
@@ -255,7 +286,7 @@ export async function importExamPassages(
     revalidatePath("/director/workbench/passages");
     revalidatePath("/director/workbench/questions/generate");
 
-    return { success: true, createdIds, skippedExamIds };
+    return { success: true, createdIds, skippedExamIds, existingIds };
   } catch (err) {
     console.error("[importExamPassages] failed", err);
     return {
@@ -267,5 +298,56 @@ export async function importExamPassages(
       createdIds: [],
       skippedExamIds: [],
     };
+  }
+}
+
+/**
+ * 학원에 이미 담긴 기출 examId 전량 — 기출 브라우저 「담음/담김」 배지용(§3.8.3 개정).
+ * importExamPassages 의 멱등 판정과 동일한 tags(kice:<examId>) 스캔을 공유한다.
+ * 실패는 빈 목록으로 조용히 강등(배지는 보조 신호 — 브라우저 동작을 막지 않는다).
+ *
+ * `entries`(2026-08-15 개정)는 examId ↔ 그 기출로 만들어진 지문함 지문 id 의 대응이다.
+ * 「담음」이 학원 전역 판정이라 **클래스를 고른 상태에서도 그 클래스에 없는 기출까지
+ * 담긴 것처럼 보이던 결함**(사용자 보고)을 고치려면 호스트가 클래스 등록 집합
+ * (passageId)과 교집합을 내야 하는데, examId 만으로는 그 교집합을 낼 수 없다.
+ * 한 기출이 지문함에 두 번 이상 들어가 있을 수 있으므로 대응은 1:N 이다.
+ */
+export async function listImportedExamIds(): Promise<{
+  success: boolean;
+  examIds: string[];
+  entries: { examId: string; passageId: string }[];
+}> {
+  try {
+    const staff = await requireAuth();
+    const rows = await prisma.passage.findMany({
+      where: {
+        academyId: staff.academyId,
+        tags: { contains: KICE_TAG_PREFIX },
+      },
+      select: { id: true, tags: true },
+    });
+    const examIds = new Set<string>();
+    const entries: { examId: string; passageId: string }[] = [];
+    for (const row of rows) {
+      if (!row.tags) continue;
+      try {
+        const parsed = JSON.parse(row.tags);
+        if (Array.isArray(parsed)) {
+          for (const t of parsed) {
+            if (typeof t === "string" && t.startsWith(KICE_TAG_PREFIX)) {
+              const examId = t.slice(KICE_TAG_PREFIX.length);
+              examIds.add(examId);
+              entries.push({ examId, passageId: row.id });
+            }
+          }
+        }
+      } catch {
+        /* 비정상 tags 는 무시 */
+      }
+    }
+    return { success: true, examIds: Array.from(examIds), entries };
+  } catch (err) {
+    console.error("[listImportedExamIds] failed", err);
+    return { success: false, examIds: [], entries: [] };
   }
 }

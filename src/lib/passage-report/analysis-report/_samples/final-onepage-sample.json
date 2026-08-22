@@ -1,0 +1,306 @@
+{
+  "schemaVersion": 1,
+  "brand": "SMOAT ENGLISH LAB",
+  "themeId": "black-white",
+  "meta": {
+    "eyebrow": "FINAL ONE-PAGE · 시험 직전 족집게",
+    "titleKo": "도시 성장의 동심원 모델 한계와 실제 확장 기제",
+    "titleEn": "Limitations of Concentric Urban Models",
+    "category": "수능 영어 / 학평 대비",
+    "theme": "도시계획 / 인구지리학",
+    "difficulty": 4,
+    "difficultyNote": "수능 3점 / 고2 학평 최상위 난이도 지문",
+    "solveTime": "2분 30초",
+    "examTypes": "빈칸추론·어법·문장삽입·주제·함축의미"
+  },
+  "sections": [
+    {
+      "kind": "final-onepage",
+      "topic": "동심원 확장 모델의 한계와 실제 장소 이점에 따른 도시 발전의 복잡성",
+      "oneLiner": "도시는 도표의 기하학적 동심원이 아닌, 개별 장소의 이점과 실제 관찰에 기반하여 불균등하게 성장한다.",
+      "sentences": [
+        {
+          "n": 1,
+          "en": "The idea that cities simply grow outward from a fixed center, absorbing surrounding land in neat concentric rings, has shaped urban planning for more than a century.",
+          "marks": [
+            {
+              "anchor": "has shaped",
+              "style": "circle",
+              "color": "red",
+              "label": "주어 The idea 수일치"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "n": 2,
+          "en": "Planners who accepted this model assumed that congestion at the core was an unavoidable price of growth, and that the only meaningful intervention was to widen roads and extend transit lines ever farther into the periphery.",
+          "marks": [
+            {
+              "anchor": "this model",
+              "style": "circle",
+              "color": "blue",
+              "label": "S1 구정보 지시"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "n": 3,
+          "en": "Recent research on urban morphology, however, tells a far more complicated story.",
+          "marks": [
+            {
+              "anchor": "however",
+              "style": "circle",
+              "color": "blue",
+              "label": "역접 전환점"
+            }
+          ],
+          "note": "이 문장 위치가 문장삽입 최선호 자리",
+          "tags": [
+            {
+              "type": "삽입단서",
+              "text": "통념(동심원 모델)을 깨는 반박이 시작되는 지점, 삽입/순서 절단선"
+            }
+          ]
+        },
+        {
+          "n": 4,
+          "en": "When historians traced the actual growth of dozens of cities across three continents, they found that urban expansion rarely proceeds evenly in all directions.",
+          "marks": [
+            {
+              "anchor": "rarely proceeds evenly",
+              "style": "box",
+              "color": "pink",
+              "label": "빈칸 함정 구간"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "n": 5,
+          "en": "Instead, growth follows corridors of opportunity: a river that supports trade, a rail line that shortens a commute, or even a single institution, such as a university, whose presence raises the value of adjacent neighborhoods.",
+          "marks": [
+            {
+              "anchor": "Instead",
+              "style": "circle",
+              "color": "blue",
+              "label": "대조 연결사"
+            },
+            {
+              "anchor": "whose",
+              "style": "circle",
+              "color": "red",
+              "label": "소유격 관대 자리"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "n": 6,
+          "en": "What appears from a distance to be a smooth ring of development is, on closer inspection, a patchwork of competing centers, each with its own history and its own gravitational pull.",
+          "marks": [
+            {
+              "anchor": "a patchwork of competing centers",
+              "style": "highlight",
+              "color": "pink",
+              "label": "실제 도시의 모습"
+            }
+          ],
+          "note": "통념(smooth ring) vs 실제(patchwork) 대조",
+          "tags": [
+            {
+              "type": "빈칸대비",
+              "text": "smooth ring(통념)과 대조되는 '경쟁하는 중심지들의 모자이크(실제)' 빈칸 1순위"
+            }
+          ]
+        },
+        {
+          "n": 7,
+          "en": "This finding matters because policies built on the concentric model consistently misallocate resources.",
+          "marks": [
+            {
+              "anchor": "This finding",
+              "style": "circle",
+              "color": "blue",
+              "label": "앞 내용 받음"
+            },
+            {
+              "anchor": "misallocate",
+              "style": "underline",
+              "color": "green",
+              "label": "어휘 어긋남 주의"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "n": 8,
+          "en": "If planners assume that demand radiates uniformly from downtown, they will invest in infrastructure where the model predicts growth rather than where growth is actually occurring.",
+          "marks": [
+            {
+              "anchor": "radiates uniformly",
+              "style": "wavy",
+              "color": "red",
+              "label": "잘못된 전제어휘"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "n": 9,
+          "en": "In one well-documented case, a metropolitan government spent two decades extending highways toward its western suburbs while the majority of new jobs and housing quietly accumulated in the northeast, along an aging freight corridor that the official maps had dismissed as industrial wasteland.",
+          "marks": [
+            {
+              "anchor": "dismissed",
+              "style": "circle",
+              "color": "red",
+              "label": "과거완료 had p.p."
+            }
+          ],
+          "note": "구체적 사례: 서부 도로 확장 vs 실제 동북부 성장",
+          "tags": []
+        },
+        {
+          "n": 10,
+          "en": "The lesson is not that models are useless, but that a model can become a substitute for observation.",
+          "marks": [
+            {
+              "anchor": "a substitute for observation",
+              "style": "box",
+              "color": "purple",
+              "label": "핵심 결론/서술형"
+            }
+          ],
+          "note": "not A but B 결론 구문. 관찰의 대체물이 되는 모델 경계",
+          "tags": [
+            {
+              "type": "서술형대비",
+              "text": "not A but B 구조의 B 핵심구어. 조건부 영작 및 주제 빈칸 출제 1순위"
+            }
+          ]
+        },
+        {
+          "n": 11,
+          "en": "Cities are shaped less by geometry than by the accumulated decisions of households and firms responding to particular advantages of particular places.",
+          "marks": [
+            {
+              "anchor": "less by geometry than by",
+              "style": "highlight",
+              "color": "pink",
+              "label": "주제 구문"
+            }
+          ],
+          "tags": [
+            {
+              "type": "주제·제목",
+              "text": "기하학적 모델이 아니라 개별 장소의 이점에 대한 관찰과 선택이 도시를 형성함"
+            }
+          ]
+        },
+        {
+          "n": 12,
+          "en": "Planners who mistake the elegance of a diagram for the truth of a city will keep solving problems that the city does not have, while the problems it does have deepen unattended in places their maps have taught them not to see.",
+          "marks": [
+            {
+              "anchor": "mistake the elegance of a diagram",
+              "style": "wavy",
+              "color": "red",
+              "label": "오판의 원인"
+            },
+            {
+              "anchor": "deepen unattended",
+              "style": "circle",
+              "color": "red",
+              "label": "형용사 보어 수식"
+            }
+          ],
+          "note": "도표의 명쾌함만 쫓는 도시 계획가의 오류 경고",
+          "tags": [
+            {
+              "type": "함축대비",
+              "text": "지도(모델)가 보지 못하게 만든 문제를 방치하여 도시 문제를 악화시킨다는 요지"
+            }
+          ]
+        }
+      ],
+      "flowNotes": [
+        {
+          "afterSentence": 3,
+          "label": "전환",
+          "text": "통념(동심원 동질 확장) 제시 후 그러나(however)를 통해 실제 복잡한 성장 양상으로 전환."
+        },
+        {
+          "afterSentence": 6,
+          "label": "대조",
+          "text": "단순 동심원(smooth ring)과 실제 모자이크 구조(patchwork) 대조 완성."
+        },
+        {
+          "afterSentence": 9,
+          "label": "사례",
+          "text": "잘못된 동심원 모델 적용 사례(서부 도로 투자 vs 동북부 실제 성장) 구체적 제시."
+        },
+        {
+          "afterSentence": 10,
+          "label": "결론",
+          "text": "사례를 통한 최종 교훈 도출: 모델이 실체 관찰을 대체해서는 안 됨."
+        }
+      ],
+      "traps": [
+        {
+          "type": "빈칸추론",
+          "point": "⑩ 결론 'not A but B'의 B 자리 (a substitute for observation)",
+          "trap": "observation 대신 abstraction, diagram 등 지문의 통념 어휘를 넣은 오답"
+        },
+        {
+          "type": "어법",
+          "point": "⑤ 관계대명사 자리 (whose presence)",
+          "trap": "소유격 관계대명사 whose 대신 which나 where를 제시하여 구조 착각 유도"
+        },
+        {
+          "type": "문장삽입",
+          "point": "③ 역접 문장 (Recent research on urban morphology, however...)",
+          "trap": "통념(①-②)과 반박 사례(④ 이하) 사이의 이음매를 놓치게 만드는 선지"
+        },
+        {
+          "type": "주제",
+          "point": "⑪ 결론부 주제문 (Cities are shaped less by geometry...)",
+          "trap": "도시 계획에서 기하학적 모델의 효율성을 강조하는 방향 반대 선지"
+        },
+        {
+          "type": "함축의미",
+          "point": "⑫ 밑줄 함축 (mistake the elegance of a diagram for the truth...)",
+          "trap": "직역에 의존하여 '도표를 예쁘게 그리지 못하는 무능함'으로 왜곡한 오답"
+        }
+      ],
+      "mustKnow": [
+        {
+          "term": "concentric",
+          "meaning": "동심원의"
+        },
+        {
+          "term": "morphology",
+          "meaning": "형태학, 형태"
+        },
+        {
+          "term": "corridor",
+          "meaning": "회랑, 주요 통로"
+        },
+        {
+          "term": "misallocate",
+          "meaning": "잘못 배분하다"
+        },
+        {
+          "term": "substitute",
+          "meaning": "대체물"
+        },
+        {
+          "term": "unattended",
+          "meaning": "방치된, 돌보지 않는"
+        }
+      ],
+      "koFull": "도시가 고정된 중심지로부터 바깥쪽으로 정돈된 동심원을 이루며 단지 확장된다는 생각은 1세기 넘게 도시 계획을 형성해 왔다. 이 모델을 받아들인 계획가들은 도심의 혼잡이 성장의 피할 수 없는 대가이며, 유일하게 의미 있는 개입은 도로를 넓히고 대중교통 노선을 외곽으로 더 멀리 연장하는 것뿐이라고 가정했다. 그러나 도시 형태학에 대한 최근 연구는 훨씬 더 복잡한 이야기를 전한다. 역사학자들이 3개 대륙의 수십 개 도시의 실제 성장을 추적했을 때, 그들은 도시 확장이 모든 방향으로 균등하게 진행되는 경우가 드물다는 것을 발견했다. 대신, 성장은 기회의 회랑을 따른다. 즉 무역을 지원하는 강, 통근 시간을 단축하는 철도 노선, 또는 존재만으로 인근 지역의 가치를 올리는 대학과 같은 단일 기관 등이다. 먼 발치에서 매끄러운 개발의 고리로 보이는 것은 가까이서 조사해 보면 각자의 역사와 끌어당기는 힘을 지닌 경쟁하는 중심지들의 모자이크이다. 동심원 모델에 기반한 정책이 자원을 지속적으로 잘못 배분하기 때문에 이 발견은 중요하다. 만약 계획가들이 수요가 도심에서 균일하게 방사형으로 퍼져나간다고 가정한다면, 그들은 성장이 실제로 일어나는 곳이 아니라 모델이 성장을 예측하는 곳에 인프라를 투자할 것이다. 잘 기록된 한 사례에서, 수도권 정부는 서부 외곽으로 고속도로를 연장하는 데 20년을 소비한 반면, 대부분의 새 일자리와 주택은 공식 지도에서 산업 폐기지로 치부했던 오래된 화물 통로를 따라 동북쪽에 조용히 축적되었다. 교훈은 모델이 유용하지 않다는 것이 아니라, 모델이 관찰을 대체하는 것이 될 수 있다는 점이다. 도시는 기하학에 의해서가 아니라 특정 장소의 특정 이점에 반응하는 가구와 기업의 누적된 결정에 의해 형성된다. 도표의 명쾌함을 도시의 진실로 착각하는 도시 계획가들은 도시가 가지고 있지도 않은 문제를 계속 해결하려 할 것이며, 반면에 도시가 실제로 가지고 있는 문제들은 지도가 그들에게 보지 말라고 가르친 장소에서 방치된 채 깊어질 것이다.",
+      "finalTip": "빈칸은 ⑩ substitute for observation, 어법은 ⑤ whose. 역접 연결사 ③ however 문장 삽입 위치 체크하고 들어가라!"
+    }
+  ]
+}

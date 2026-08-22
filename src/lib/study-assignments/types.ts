@@ -62,11 +62,19 @@ export interface WorksheetAssignmentPayload {
    * 부재(기배포 과제) = { mode: "standard", required: false } 로 해석:
    * 스터디는 제공하되 완료는 기존 "다 확인했습니다" 유지(무회귀).
    * 해석은 resolveStudyConfig(@/lib/worksheet-study/types)가 정본.
+   * stages = 스테이지 화이트리스트(클래스 스튜디오 모듈 배포, class-studio-spec §7) —
+   * 부재 시 프리셋 전체(현행 동작).
    */
   study?: {
     mode: "off" | "light" | "standard" | "intense";
     required: boolean;
+    stages?: string[];
   };
+  /**
+   * 클래스 스튜디오 배포 스탬프(class-studio-spec §6) — 클래스·지문 기준 역조회용.
+   * 스튜디오 외 소비처는 이 필드를 무시한다(additive).
+   */
+  studio?: { classId: string; passageId: string; modules: string[] };
 }
 
 export interface QuestionsAssignmentPayload {

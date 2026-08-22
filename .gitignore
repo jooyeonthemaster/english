@@ -188,3 +188,72 @@ scripts/vocab-drill-qa/.cookie
 
 # 코퍼스 원본·중간 산출물(655MB) — 리포에 넣지 않는다. 재생성은 scripts/vocab-* 로.
 experiments/
+
+# ── 코퍼스 파이프라인 보존 예외 (2026-08-20) ────────────────────────────────
+# 위 `experiments/` 규칙은 유지한다(655MB 코퍼스 산출물은 계속 제외).
+# 다만 아래 두 디렉토리는 EBSi 영어 2,905지문·국어 1,402지문의 **유일한 재현 수단이자
+# 확정 결함 RC-1~RC-4c / KO-1·KO-2 의 유일한 증거**이며, 원본이 C:/tmp 임시 경로에 있어
+# 디스크 정리 한 번이면 영구 소실된다. 따라서 리포에 보존한다(합계 약 34 MB).
+# 주의: 부모 디렉토리가 제외된 상태에서는 `!experiments/<dir>/` 단독 부정이 **무효**다
+#       (git: "It is not possible to re-include a file if a parent directory is excluded").
+#       그래서 부모 재포함 → 자식 재배제 → 화이트리스트 3단 구성이 필요하다.
+!experiments/
+experiments/*
+!experiments/ebsi-corpus-20260622/
+!experiments/ko-corpus-20260710/
+
+# ── 코퍼스 수리 도구 크래시 잔해 (2026-08-20, 렌즈 R3) ─────────────────────────
+# apply/rollback 도구가 원자적 쓰기를 위해 남기는 스테이징 파일. 정상 종료 시
+# 사라지지만 크래시 시 src/ 안에 남아 배포 단위를 오염시킨다. 절대 커밋 금지.
+*.h1tmp-*
+*.h1rbtmp-*
+.tmp-corpus-rca/final/staging/
+
+# ── 코퍼스 RCA 작업 디렉토리 (2026-08-20, 감독 결정 2) ─────────────────────────
+# 383MB 규모의 스크래치(샌드박스 사본·PDF·OCR·중간 JSON·하네스 로그)다.
+# `git add -A` 한 번이면 통째로 리포에 들어간다 — 실제로 이번 캠페인 중 여러 번
+# 그 직전까지 갔다. 증거 보존은 experiments/ebsi-corpus-20260622/ 와
+# experiments/ko-corpus-20260710/ 화이트리스트가 담당하므로 충돌하지 않는다.
+# (위 experiments 3단 화이트리스트보다 뒤에 오지만 경로가 겹치지 않아 무해하다.)
+.tmp-corpus-rca/
+
+# ── 하네스 스크래치 · 루트 잔해 (2026-08-22) ─────────────────────────────────
+# `.tmp-*` 는 세션별 QA 하네스 작업판이다(Playwright 샷·PDF·중간 JSON·로그).
+# ⚠ 그중 `.tmp-studio-qa/cookie.txt` 는 **살아 있는 인증 세션 토큰**이다 —
+#   `git add -A` 한 번이면 관리자 세션이 히스토리에 박힌다. 이번 커밋 직전에
+#   실제로 그 직전까지 갔다. 패턴으로 영구 차단한다.
+#   (하네스 재생성법은 memory/ 의 각 캠페인 노트에 있다 — 리포에 둘 필요가 없다.)
+.tmp-*/
+.tmp_*
+.qa-keep/
+
+# 루트에 떨어진 일회성 산출물(프로브 덤프·광고 시안·스크린샷). 소스가 아니다.
+/B.txt
+/C.txt
+/D.txt
+/_probe.txt
+/nv.html
+/pw.html
+/otx.json
+/*.png
+
+# ── 로컬 워크스루 스크래치 (2026-08-22) ─────────────────────────────────────
+# ⚠ 이 리포는 **PUBLIC** 이다(gh repo view → jooyeonthemaster/english PUBLIC).
+#   `scripts/_walkthrough-*.ts` 는 실계정 리터럴(STAFF/DIRECTOR id + 개인 이메일)과
+#   그 계정을 정조준한 **세션 쿠키 위조 절차**(authjs.session-token encode)를 담은
+#   localhost QA 스크래치다. 공개 히스토리에 박히면 브랜치 삭제로는 못 지우고
+#   history rewrite 가 필요하다 — 프로덕션 가치가 0 이므로 아예 넣지 않는다.
+scripts/_walkthrough-*.ts
+
+# ── ⛔ 위 experiments/ 화이트리스트 무효화 (2026-08-22) ───────────────────────
+# 위 3단 화이트리스트(2026-08-20)는 「원본이 C:/tmp 라 소실 위험」을 근거로 코퍼스
+# 830건을 리포에 보존하기로 했다. 그 논거는 지금도 유효하지만 **전제 하나가 빠져 있었다**:
+#   이 리포는 PUBLIC 이다 — `gh repo view` → jooyeonthemaster/english / visibility PUBLIC.
+# EBSi 영어 2,905지문 · 국어 1,402지문의 **타사 기출 원문**을 공개 저장소에 올리는 것은
+# ① 저작권 노출이고 ② 공개 git 히스토리라 브랜치 삭제로 못 지운다(history rewrite 필요).
+# 반면 제외는 이 블록 삭제 한 번으로 되돌아간다 — 비대칭이 명백하므로 제외를 택한다.
+#
+# ⚠ 로컬 사본은 그대로 있다: d:/Desktop/2026project/nara/experiments/ (약 34MB, 830건).
+#   원격 보존이 필요하면 **private 저장소**나 별도 백업으로 옮겨라. 공개 푸시는 답이 아니다.
+#   되돌리려면 이 블록만 지우면 위 화이트리스트가 다시 산다.
+experiments/*

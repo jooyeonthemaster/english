@@ -77,6 +77,9 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
   const [sidebarScrolling, setSidebarScrolling] = useState(false);
   const [mounted, setMounted] = useState(false);
   const suppressSidebarHandleClickRef = React.useRef(false);
+  // 드래그 고속 경로 앵커 — 리사이즈 중에는 이 <aside> 의 style.width 에 직접
+  // 쓴다(매 pointermove 의 setState 는 셸 트리 전체를 프레임마다 리렌더).
+  const sidebarAsideRef = React.useRef<HTMLElement | null>(null);
   const sidebarScrollTimeoutRef = React.useRef<ReturnType<typeof window.setTimeout> | null>(null);
   // 마키(영역 드래그)의 기본 시작 영역 = 사이드바를 제외한 본문(<main>). 컨텍스트로
   // 내려, 페이지별 배선 없이 어느 페이지에서든 본문 어디서나 드래그를 시작하게 한다.
@@ -157,8 +160,31 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
       const startWidth = sidebarWidth;
       const previousCursor = document.body.style.cursor;
       const previousUserSelect = document.body.style.userSelect;
+      const previousPointerEvents = document.body.style.pointerEvents;
       let didDrag = false;
       let latestWidth = startWidth;
+
+      // 포인터 캡처 — 커서가 얇은 핸들을 벗어나도 이벤트가 끊기지 않고, 아래의
+      // body pointer-events:none 과 조합해도 move 가 계속 들어온다.
+      const handleEl = event.currentTarget as HTMLElement;
+      try {
+        handleEl.setPointerCapture(event.pointerId);
+      } catch {
+        /* 캡처 미지원 브라우저는 window 리스너로 폴백 */
+      }
+
+      // 드래그 고속 경로(resizable-panels 와 동일 계약) — 매 pointermove 의
+      // setState 는 셸 트리(네비 그룹 수십 개 + 헤더)를 프레임마다 통째로
+      // 리렌더시킨다. 앵커(<aside>)가 있으면 이동 중에는 style.width 에 rAF
+      // 코얼레싱으로 직접 쓰고, 놓을 때 한 번만 setState 로 커밋한다. 앵커가
+      // 없으면 종전 setState 경로 그대로(무회귀).
+      let rafId: number | null = null;
+      const flush = () => {
+        rafId = null;
+        if (sidebarAsideRef.current) {
+          sidebarAsideRef.current.style.width = `${latestWidth}px`;
+        }
+      };
 
       const handlePointerMove = (moveEvent: PointerEvent) => {
         const deltaX = moveEvent.clientX - startX;
@@ -168,24 +194,41 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
           suppressSidebarHandleClickRef.current = true;
           document.body.style.cursor = "col-resize";
           document.body.style.userSelect = "none";
+          // 드래그 중 hover 스타일 재평가 차단 — 폭이 프레임마다 바뀌면 커서
+          // 아래 요소가 계속 바뀐다(캡처 덕에 move 수신에는 영향 없다).
+          document.body.style.pointerEvents = "none";
         }
 
         moveEvent.preventDefault();
         latestWidth = clampSidebarWidth(startWidth + deltaX);
-        setSidebarWidth(latestWidth);
+        if (sidebarAsideRef.current) {
+          if (rafId === null) rafId = window.requestAnimationFrame(flush);
+        } else {
+          setSidebarWidth(latestWidth);
+        }
       };
 
       const finish = () => {
         window.removeEventListener("pointermove", handlePointerMove);
         window.removeEventListener("pointerup", finish);
         window.removeEventListener("pointercancel", finish);
+        if (rafId !== null) window.cancelAnimationFrame(rafId);
         if (didDrag) {
+          flush();
+          // 커밋 1회 — 드래그 내내 리렌더 0회.
+          setSidebarWidth(latestWidth);
           document.body.style.cursor = previousCursor;
           document.body.style.userSelect = previousUserSelect;
+          document.body.style.pointerEvents = previousPointerEvents;
           localStorage.setItem(SIDEBAR_WIDTH_STORAGE_KEY, String(latestWidth));
           window.setTimeout(() => {
             suppressSidebarHandleClickRef.current = false;
           }, 0);
+        }
+        try {
+          handleEl.releasePointerCapture(event.pointerId);
+        } catch {
+          /* ignore */
         }
       };
 
@@ -428,6 +471,7 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
             }
           >
           <aside
+            ref={sidebarAsideRef}
             className="flex h-full shrink-0 flex-col transition-[width] duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
             style={{
               width: displayCollapsed ? SIDEBAR_COLLAPSED_WIDTH : sidebarWidth,
@@ -581,7 +625,11 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
         </div>
 
         {/* ─── Main area ─── */}
+        {/* data-review-drawer-inset: 검수 드로어 리사이즈 고속 경로 앵커 —
+            드래그 중 marginRight 를 React 를 거치지 않고 직접 기록한다
+            (job-preview-drawer beginDrawerResize 참조). 렌더 결과 불변. */}
         <div
+          data-review-drawer-inset
           className="flex-1 flex flex-col min-w-0 transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
           style={drawerOpen && drawerWidth > 0 ? { marginRight: drawerWidth } : undefined}
         >

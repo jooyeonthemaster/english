@@ -12,6 +12,12 @@ type Props = {
    * 미전달(영어 기본)이면 기존 렌더와 동일 — 무회귀.
    */
   koMode?: boolean;
+  /**
+   * 파이널 원페이지 편집 컨텍스트 — 부제를 파이널 문맥(전면 시트 뒤 별지 추가)으로 바꾸고
+   * 헤더 아래에 1줄 안내 스트립을 얹는다. 카탈로그·웹툰·단어시험지 슬롯 구성은 그대로.
+   * 미전달(기본 학습지)이면 기존 렌더와 동일 — 무회귀.
+   */
+  finalContext?: boolean;
   collapsed: boolean;
   onToggleCollapsed: () => void;
   activityWidth: number;
@@ -28,11 +34,14 @@ type Props = {
   onPickActivity: ComponentProps<typeof ActivityPalettePanel>["onPick"];
   activityCounts: ComponentProps<typeof ActivityPalettePanel>["activityCounts"];
   onToggleOffKind: ComponentProps<typeof ActivityPalettePanel>["onToggleOffKind"];
+  /** 활동별 데이터 가용성 — 팔레트 패널로 그대로 전달(ok:false 카드 비활성 + 사유). */
+  availability?: ComponentProps<typeof ActivityPalettePanel>["availability"];
   vocabTestSlot: ReactNode;
 };
 
 export function ActivityPaletteRail({
   koMode = false,
+  finalContext = false,
   collapsed,
   onToggleCollapsed,
   activityWidth,
@@ -48,17 +57,23 @@ export function ActivityPaletteRail({
   onPickActivity,
   activityCounts,
   onToggleOffKind,
+  availability,
   vocabTestSlot,
 }: Props) {
   // 국어(PRIME_KO) 편집기: 웹툰 삽입만 남으므로 패널 라벨을 콘텐츠 삽입 문맥으로.
   const panelTitle = koMode ? "콘텐츠 삽입 패널" : "학습 활동 패널";
   const panelSubtitle = koMode
     ? "웹툰 이미지 블록 추가"
-    : "지문으로 즉석 생성 · AI 없음";
+    : finalContext
+      ? "전면 시트 뒤 페이지로 추가 · AI 없음"
+      : "지문으로 즉석 생성 · AI 없음";
   return (
     <>
+      {/* data-panel-key: usePanelWidths 드래그 고속 경로 앵커 — 컨테이너·aside 둘 다
+          activityWidth 를 쓰므로 드래그 중 style.width 를 둘 다 직접 기록한다. */}
       <div
         aria-hidden={collapsed}
+        data-panel-key="activity"
         className="no-print flex h-full min-h-0 shrink-0 overflow-hidden"
         style={{
           width: collapsed ? 0 : activityWidth,
@@ -66,6 +81,7 @@ export function ActivityPaletteRail({
         }}
       >
         <aside
+          data-panel-key="activity"
           style={{ width: activityWidth }}
           className="flex h-full min-h-0 shrink-0 flex-col overflow-hidden border-r border-slate-200 bg-white"
         >
@@ -75,6 +91,14 @@ export function ActivityPaletteRail({
               <p className="truncate text-[10.5px] font-semibold text-slate-400">{panelSubtitle}</p>
             </div>
           </div>
+          {/* 파이널 문맥 안내 — 본편 1장 불변·추가물은 뒤 별지 계약을 1줄로 고지
+              (부제·패널 인트로와의 3중첩 방지 — 인트로는 hideIntro 로 함께 제거). */}
+          {finalContext ? (
+            <p className="shrink-0 border-b border-slate-100 bg-slate-50/60 px-3.5 py-2 text-[11px] leading-relaxed text-slate-500">
+              본편 1장 유지 · 추가한 활동·웹툰은{" "}
+              <b className="font-semibold text-slate-600">2페이지부터 별지</b>로 붙어요
+            </p>
+          ) : null}
           {/* ── 최상단 고정 강조 슬롯: 단어 시험지 ──────────────────────────
               이 카드는 팔레트 '카탈로그 항목'이 아니라 문서 전역 스위치라, 아래
               스크롤 영역(dir=rtl div) 바깥의 shrink-0 밴드에 둔다 — 팔레트를
@@ -123,6 +147,10 @@ export function ActivityPaletteRail({
                 onPick={onPickActivity}
                 activityCounts={activityCounts}
                 onToggleOffKind={onToggleOffKind}
+                availability={availability}
+                // 파이널: 헤더 부제+안내 스트립이 같은 내용(즉석 생성·AI 없음·별지)을 이미
+                // 고지 — 패널 인트로 중복 제거. 기본 문서(false)는 기존 렌더와 동일.
+                hideIntro={finalContext}
               />
             )}
             </div>

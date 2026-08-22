@@ -11,7 +11,10 @@ import { AlertTriangle, Gem, Loader2, RotateCcw } from "lucide-react";
 import { PearlIcon } from "@/components/icons/pearl-icon";
 import { WorkbenchLoadingCard } from "@/components/workbench/workbench-loading-card";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
-import { getQuestionGenerationPlanConfig } from "@/lib/question-generation-plans";
+import {
+  getQuestionGenerationPlanConfig,
+  planForDifficulty,
+} from "@/lib/question-generation-plans";
 import { getFriendlyQuestionGenerationError } from "@/lib/workbench-generation-errors";
 import { readQuestionTypeDifficultySetting } from "@/lib/question-type-generation-settings";
 import { countWords, typeLabel, type QueueItem } from "./generate-page-types";
@@ -30,8 +33,21 @@ export function QueueStatusCard({
    *  EmbeddedQuestionBank 는 끈다(기존 두 사본의 유일한 실동작 차이). */
   showPremiumBadgeWhenFlagOff?: boolean;
 }) {
+  // 26-08-18 난이도 기반 티어: 요청 generationPlan 은 서버가 무시 — 유형별 실효
+  // 난이도(유형 설정 우선, 없으면 배치 난이도)에 KILLER 가 하나라도 있으면 킬러 티어.
   const planConfig = getQuestionGenerationPlanConfig(
-    item.config.generationPlan || "STANDARD",
+    Object.entries(item.config.typeCounts).some(
+      ([typeId, count]) =>
+        Number(count) > 0 &&
+        planForDifficulty(
+          readQuestionTypeDifficultySetting(
+            item.config.questionTypeSettings?.[typeId],
+            item.config.difficulty,
+          ),
+        ) === "PREMIUM",
+    )
+      ? "PREMIUM"
+      : "STANDARD",
   );
   const planBadgeVisible =
     FEATURE_FLAGS.SHOW_MODEL_SELECTOR ||
@@ -50,8 +66,15 @@ export function QueueStatusCard({
           // 마운트돼도 지문 프리뷰 줄수가 변하지 않아 카드 중단부 리플로우가 없다.
           `${item.passageContent.slice(0, 120)}...`
         }
-        statusLabel="생성 중"
-        progressLabel={`AI가 ${requestedCount}문제를 생성 중입니다...`}
+        statusLabel={item.queued ? "대기 중" : "생성 중"}
+        progressLabel={
+          // 전역 동시성(≤5) 대기분은 「대기 중」으로 말한다 — 시작도 안 한 작업을
+          // 「생성 중」으로 적으면, 실제로 다 끝난 뒤에도 안 사라지는 카드와 구분되지
+          // 않아 "큐가 안 없어진다"는 인상만 남는다(26-08-18).
+          item.queued
+            ? `앞선 생성이 끝나면 바로 시작합니다 (${requestedCount}문제 대기)`
+            : `AI가 ${requestedCount}문제를 생성 중입니다...`
+        }
         wordCount={countWords(item.passageContent)}
         showCheckbox={false}
         statusIcon={Loader2}

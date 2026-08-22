@@ -289,27 +289,65 @@ export function BuilderPropertiesPanel({
     const startHeight = questionPreviewHeight;
     const previousCursor = document.body.style.cursor;
     const previousUserSelect = document.body.style.userSelect;
+    const previousPointerEvents = document.body.style.pointerEvents;
 
     document.body.style.cursor = "ns-resize";
     document.body.style.userSelect = "none";
+    // 드래그 중 hover 스타일 재평가 차단 — 포인터 캡처 덕에 move 수신은 유지된다.
+    document.body.style.pointerEvents = "none";
+
+    // 포인터 캡처 — 커서가 얇은 핸들을 벗어나도 드래그가 끊기지 않는다.
+    const handleEl = event.currentTarget;
+    const pointerId = event.pointerId;
+    try {
+      handleEl.setPointerCapture(pointerId);
+    } catch {
+      // 캡처 미지원 브라우저는 window 리스너로 폴백
+    }
+
+    // 드래그 고속 경로 — 매 pointermove 의 setState 는 편집 패널 전체(문항
+    // textarea·스텝퍼·섹션 목록)를 프레임마다 리렌더시킨다. 높이는 textarea
+    // 한 곳(style.height)으로만 흐르므로 questionPreviewBodyRef 에 rAF
+    // 코얼레싱으로 직접 쓰고, 놓을 때 한 번만 setState 로 커밋한다.
+    // ref 미부착이면 종전 setState 경로 폴백(무회귀).
+    let latest = startHeight;
+    let rafId: number | null = null;
+    const flush = () => {
+      rafId = null;
+      const body = questionPreviewBodyRef.current;
+      if (body) body.style.height = `${latest}px`;
+    };
 
     const handlePointerMove = (moveEvent: PointerEvent) => {
       moveEvent.preventDefault();
-      setQuestionPreviewHeight(
-        clampInt(
-          startHeight + moveEvent.clientY - startY,
-          QUESTION_PREVIEW_HEIGHT_MIN,
-          questionPreviewMaxHeight,
-        ),
+      latest = clampInt(
+        startHeight + moveEvent.clientY - startY,
+        QUESTION_PREVIEW_HEIGHT_MIN,
+        questionPreviewMaxHeight,
       );
+      if (questionPreviewBodyRef.current) {
+        if (rafId === null) rafId = requestAnimationFrame(flush);
+      } else {
+        setQuestionPreviewHeight(latest);
+      }
     };
 
     const finishResize = () => {
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("pointerup", finishResize);
       window.removeEventListener("pointercancel", finishResize);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      flush();
+      // 커밋 1회 — localStorage 영속은 questionPreviewHeight effect 가 1회 수행.
+      setQuestionPreviewHeight(latest);
       document.body.style.cursor = previousCursor;
       document.body.style.userSelect = previousUserSelect;
+      document.body.style.pointerEvents = previousPointerEvents;
+      try {
+        handleEl.releasePointerCapture(pointerId);
+      } catch {
+        // ignore
+      }
     };
 
     window.addEventListener("pointermove", handlePointerMove, { passive: false });

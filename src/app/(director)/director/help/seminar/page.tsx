@@ -15,7 +15,10 @@ export const dynamic = "force-dynamic";
 
 export default async function SeminarPage() {
   const staff = await getStaffSession();
-  if (!staff) redirect("/login");
+  // 랜딩(1:1 세미나 혜택 섹션)에서 바로 들어온 비로그인 방문자가 로그인 후
+  // 신청 폼으로 되돌아오도록 callbackUrl 을 실어 보낸다.
+  if (!staff)
+    redirect(`/login?callbackUrl=${encodeURIComponent("/director/help/seminar")}`);
 
   // 이번 주(일요일 시작) 전체 신청 건수 — 히어로의 "남은 상담 슬롯" 표시용
   const weekStart = new Date();

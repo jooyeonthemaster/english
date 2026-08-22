@@ -20,7 +20,7 @@
     "build:manual": "tsx scripts/build-manual.ts",
     "build:slides": "tsx manual-slides/build-slides.ts",
     "capture:slides": "tsx manual-slides/capture/server.ts",
-    "test:unit": "node --test tests/unit",
+    "test:unit": "node scripts/run-unit-tests.mjs",
     "trigger:dev": "trigger dev",
     "trigger:deploy": "trigger deploy",
     "remotion:preview": "remotion studio remotion/index.ts",

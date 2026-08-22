@@ -13,6 +13,7 @@ import {
 import { passageAnalysisSchema } from "@/lib/passage-analysis-schema";
 import {
   DEFAULT_ANALYSIS_TONE,
+  isPartialAnalysisData,
   normalizeAnalysisTone,
   type AnalysisTone,
 } from "@/lib/passage-analysis-options";
@@ -49,6 +50,9 @@ function shouldUseCachedAnalysis(
   requestedPlan: QuestionGenerationPlan,
   requestedTone: AnalysisTone,
 ): boolean {
+  // 섹션 종량제 부분 분석(스펙 §3.4.1-7)이 만든 7종 미만 파생 캐시는 "완료"가 아니다 —
+  // 3벌 복제본 공통 가드(검수 M2). 마커 없는 기존 데이터는 아래 판정 그대로.
+  if (isPartialAnalysisData(cached)) return false;
   const cachedPlan = getAnalysisGenerationPlan(cached);
   const cachedTone = getAnalysisTone(cached);
   if (cachedTone && cachedTone !== requestedTone) return false;

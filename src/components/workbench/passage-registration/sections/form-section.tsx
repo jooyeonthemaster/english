@@ -26,6 +26,7 @@ import { PassageAnalysisIcon } from "@/components/icons/workflow-icons";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import type { AnalysisTone } from "@/lib/passage-analysis-options";
 import type { DraftCollectionItem, SavedPrompt } from "../types";
+import type { LearningSheetVariant } from "../learning-sheet-preview-modal";
 import type { PassageInputRow } from "../passage-input/types";
 import { PassageInputStack } from "../passage-input/passage-input-stack";
 
@@ -126,6 +127,9 @@ interface FormSectionProps {
   /** 학습지 구성(기본/실전) 제어 리프트 — 하단 고정 바 '생성하기'용. */
   includeWorksheet?: boolean;
   setIncludeWorksheet?: (v: boolean) => void;
+  /** 학습지 구성 3상품(기본/실전/파이널) 리프트 — includeWorksheet 확장(우선). */
+  sheetVariant?: LearningSheetVariant;
+  setSheetVariant?: (v: LearningSheetVariant) => void;
 
   // Metadata + Prompt — vestigial (not rendered by FormSection). Optional so
   // reuse paths (웹툰 생성) can omit them; the 학습지 container still passes them.
@@ -201,28 +205,71 @@ export function FormSection(props: FormSectionProps) {
       const startY = e.clientY;
       const startHeight = formHeight;
       let latest = startHeight;
+      const prevCursor = document.body.style.cursor;
+      const prevSelect = document.body.style.userSelect;
+      const prevPointerEvents = document.body.style.pointerEvents;
       document.body.style.cursor = "row-resize";
       document.body.style.userSelect = "none";
+      // 드래그 중 hover 스타일 재평가 차단 — 높이가 프레임마다 바뀌면 커서 아래
+      // 요소가 계속 바뀐다(캡처 덕에 move 수신에는 영향 없다).
+      document.body.style.pointerEvents = "none";
+
+      // 포인터 캡처 — 커서가 얇은 핸들을 벗어나도 드래그가 끊기지 않는다.
+      const handleEl = e.currentTarget as HTMLElement;
+      try {
+        handleEl.setPointerCapture(e.pointerId);
+      } catch {
+        /* 캡처 미지원 브라우저는 window 리스너로 폴백 */
+      }
+
+      // 드래그 고속 경로 — 매 무브 setFormHeight 는 FormSection 전체(업로드
+      // 드롭존·자료함 카드 그리드·지문 스택이 전부 이 렌더의 인라인 element)를
+      // 프레임마다 리렌더시킨다. 이동 중에는 boundary 요소의 style.height 에
+      // rAF 코얼레싱으로 직접 쓰고, 놓을 때 한 번만 setState 로 커밋한다.
+      // 앵커가 없으면 종전 setState 경로 폴백(무회귀).
+      let rafId: number | null = null;
+      const flush = () => {
+        rafId = null;
+        if (materialBoundaryRef.current) {
+          materialBoundaryRef.current.style.height = `${latest}px`;
+        }
+      };
       const onMove = (ev: PointerEvent) => {
         latest = Math.min(
           FORM_PANE_MAX,
           Math.max(FORM_PANE_MIN, startHeight + (ev.clientY - startY)),
         );
-        setFormHeight(latest);
+        if (materialBoundaryRef.current) {
+          if (rafId === null) rafId = requestAnimationFrame(flush);
+        } else {
+          setFormHeight(latest);
+        }
       };
       const onUp = () => {
-        document.body.style.cursor = "";
-        document.body.style.userSelect = "";
         window.removeEventListener("pointermove", onMove);
         window.removeEventListener("pointerup", onUp);
+        window.removeEventListener("pointercancel", onUp);
+        if (rafId !== null) cancelAnimationFrame(rafId);
+        flush();
+        // 커밋은 여기서 한 번 — 드래그 내내 리렌더 0회.
+        setFormHeight(latest);
         try {
           window.localStorage.setItem(FORM_PANE_STORAGE_KEY, String(latest));
+        } catch {
+          /* ignore */
+        }
+        document.body.style.cursor = prevCursor;
+        document.body.style.userSelect = prevSelect;
+        document.body.style.pointerEvents = prevPointerEvents;
+        try {
+          handleEl.releasePointerCapture(e.pointerId);
         } catch {
           /* ignore */
         }
       };
       window.addEventListener("pointermove", onMove);
       window.addEventListener("pointerup", onUp);
+      window.addEventListener("pointercancel", onUp);
     },
     [formHeight],
   );
@@ -357,6 +404,8 @@ export function FormSection(props: FormSectionProps) {
                             onAddVariant={props.onAddVariant}
                             includeWorksheet={props.includeWorksheet}
                             onIncludeWorksheetChange={props.setIncludeWorksheet}
+                            sheetVariant={props.sheetVariant}
+                            onSheetVariantChange={props.setSheetVariant}
                           />
                         </div>
                       ) : null))

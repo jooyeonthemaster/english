@@ -17,6 +17,7 @@ import {
   BookOpenText,
   // BookMarked — 「단어장 생성」 메뉴 임시 숨김(26-08-05)으로 미사용. 복구 시 함께 해제.
   // BookMarked,
+  School,
   Activity,
   LifeBuoy,
   Users,
@@ -241,6 +242,18 @@ export function getNavGroups(
             { label: "학습지 관리", href: `${basePath}/workbench/passages` },
           ],
         },
+        // 26-08-09 클래스 스튜디오 — 클래스 중심 학습지 생성·모바일 배포 통합
+        // 테스트 표면(docs/class-studio-spec.md §2). 「학습지 생성」 직후 자리.
+        // ENABLE_CLASS_STUDIO(기본 true) — off 시 nav·라우트 동시 차단.
+        ...(FEATURE_FLAGS.ENABLE_CLASS_STUDIO
+          ? [
+              {
+                label: "클래스 스튜디오",
+                icon: School,
+                href: `${basePath}/studio`,
+              },
+            ]
+          : []),
         // 단어장 생성 — 기출 단어 코퍼스 탐색·분석 → 덱 구성 → 학생 전송
         // 워크스테이션(/workbench/wordbook). 「학습지 생성」 직후 자리.
         // 26-08-05 유저 지시로 좌측 메뉴에서만 임시 숨김 — 라우트·페이지·기능은

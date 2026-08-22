@@ -81,6 +81,7 @@ import {
   type ClipboardEvent,
   type DragEvent,
   type KeyboardEvent,
+  type ReactNode,
   type RefObject,
 } from "react";
 import { toast } from "sonner";
@@ -192,6 +193,21 @@ export interface AuthoringComposerProps {
    * 열려 있으면 body 포털이라 다른 화면을 덮고 스크롤까지 잠근다. 미전달이면 true.
    */
   visible?: boolean;
+  /**
+   * 간소 모드(§3.9v2.8 D10)의 툴바 확장 슬롯 — pasteHint 가 서던 자리에 보드가
+   * 조립한 분량·편수 팝오버 버튼을 내려보낸다(authoring-simplified-controls.tsx).
+   * **컴포저는 스펙 상태를 모른다** — spec/count 는 보드 소유이고, 여기로는 완성된
+   * ReactNode 만 들어온다(여기에 상태를 들이는 순간 소유권이 두 쪽 난다).
+   * 미전달이면 아무것도 그리지 않아 기존 호스트와 바이트 동일이다.
+   */
+  toolbarExtras?: ReactNode;
+  /**
+   * 붙여넣기 안내(pasteHint) 숨김 — 간소 모드에서 그 자리를 toolbarExtras 가
+   * 차지한다. ⚠️ **3,600자 잔여 카운터는 이 값과 무관하게 보존된다**(상한 90%
+   * 게이트는 기능이지 장식이 아니다) — 아래 겸업 자리 렌더 분기 참조.
+   * 미전달(false)이면 기존 span 그대로 — 바이트 동일.
+   */
+  hidePasteHint?: boolean;
 }
 
 export function AuthoringComposer({
@@ -214,6 +230,8 @@ export function AuthoringComposer({
   boxRef,
   onDraggingChange,
   visible = true,
+  toolbarExtras = null,
+  hidePasteHint = false,
 }: AuthoringComposerProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState(false);
@@ -453,6 +471,10 @@ export function AuthoringComposer({
               "block max-h-[40vh] min-h-[120px] w-full resize-y bg-transparent py-3",
               "text-slate-800 outline-none placeholder:text-slate-500",
               "disabled:cursor-not-allowed disabled:opacity-60",
+              // 간소 모드(hidePasteHint — §3.9v2.8 D10)는 미리보기 조판을 걷어내
+              // 발주 칸이 화면의 주역이다 — 최소 높이를 240px 로 올린다(twMerge 가
+              // 위 min-h-[120px] 를 대체). 기본 모드는 null 이라 종전과 바이트 동일.
+              hidePasteHint ? "min-h-[240px]" : null,
             )}
           />
         </div>
@@ -503,11 +525,16 @@ export function AuthoringComposer({
             }
           />
 
-          {/* 붙여넣기 안내 — 상자를 새로 만들지 않는다. 툴바에 남는 폭이 있을 때만
-              한 줄로 얹고, 좁으면 사라진다. ml-auto 로 오른쪽에 밀지 않는다:
-              CTA 가 툴바를 떠난 지금 오른쪽 끝에 12px 회색 글자만 홀로 뜨면
-              밴드의 단일 좌측 기준선(x=16) 밖으로 나간 고아 조각이 된다.
+          {/* 간소 모드(§3.9v2.8 D10)의 분량·편수 팝오버 버튼 — pasteHint 자리의
+              상속자다. 기본 모드에서는 null 이라 아무것도 그리지 않는다(바이트 동일). */}
+          {toolbarExtras}
 
+          {/* 겸업 자리 — 잔여 카운터(3,600자부터) / 붙여넣기 안내. 상자를 새로
+              만들지 않고, ml-auto 로 오른쪽에 밀지 않는다: CTA 가 툴바를 떠난 지금
+              오른쪽 끝에 12px 회색 글자만 홀로 뜨면 밴드의 단일 좌측 기준선(x=16)
+              밖으로 나간 고아 조각이 된다.
+
+              [기본 모드] 남는 폭이 있을 때만 얹고, 좁으면 사라진다(@max-[400px]).
               400px 임계 근거(코드에서 읽은 값으로 계산):
                 자료 붙이기 = 한글 5자×13 + 공백 4 + 아이콘(size-3.5)14 + gap-1 4
                               + px-3 24 = 111
@@ -518,12 +545,30 @@ export function AuthoringComposer({
               (글리프 폭 근거는 glossary INSTRUCTION_EXAMPLES 의 "한 줄 예산" 주석과
                같은 기준이다 — 한글 글리프 ≈ 폰트 크기, 공백 ≈ 1/3.)
               ⚠️ 종전 540px 은 이 줄 오른쪽에 CTA(183px)가 있던 시절의 값이다.
-                 CTA 를 툴바에서 뺐으므로 그 폭도 함께 빠졌다. */}
-          <span className={cn(DESK.meta, "text-slate-500 @max-[400px]:hidden")}>
-            {instruction.length >= INSTRUCTION_COUNTER_AT
-              ? AUTHORING_COPY.COMPOSER.remaining(Math.max(0, remaining))
-              : AUTHORING_COPY.COMPOSER.pasteHint}
-          </span>
+                 CTA 를 툴바에서 뺐으므로 그 폭도 함께 빠졌다.
+
+              [간소 모드(hidePasteHint)] 한 줄 예산 자체를 폐기한다 — 툴바가
+              자료 붙이기 111 + 예시 68 + 분량 버튼 ≈136 + 편수 버튼 ≈91 + gap-2
+              세 칸 24 ≈ 430px 라, 호스트 하한(380px 패널 → 밴드 348px)에서 이미
+              flex-wrap 두 줄이 정상 상태다. 그래서 안내(pasteHint·장식)는 아예
+              걷어내고, 잔여 카운터(기능 정보 — 상한 90%에 닿은 사람이 지금 필요한
+              숫자)만 남기되 **숨기지 않는다**: @max-[400px]:hidden 을 얹으면 컨트롤
+              두 개가 폭을 먹는 이 모드에서 카운터가 사실상 상시 실종된다. 좁으면
+              flex-wrap 이 자기 줄로 접는다 — 12px 한 줄이 늘어나는 쪽이 상한 초과를
+              모른 채 서버 zod 에 튕기는 쪽보다 싸다. */}
+          {hidePasteHint ? (
+            instruction.length >= INSTRUCTION_COUNTER_AT ? (
+              <span className={cn(DESK.meta, "text-slate-500")}>
+                {AUTHORING_COPY.COMPOSER.remaining(Math.max(0, remaining))}
+              </span>
+            ) : null
+          ) : (
+            <span className={cn(DESK.meta, "text-slate-500 @max-[400px]:hidden")}>
+              {instruction.length >= INSTRUCTION_COUNTER_AT
+                ? AUTHORING_COPY.COMPOSER.remaining(Math.max(0, remaining))
+                : AUTHORING_COPY.COMPOSER.pasteHint}
+            </span>
+          )}
         </div>
 
         {/* ⑤ 실행 층 — **경고 → 주 CTA → 사유**가 한 덩어리로 밴드 바닥에 선다.

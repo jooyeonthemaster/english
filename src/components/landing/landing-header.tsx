@@ -7,10 +7,10 @@ import { ArrowRight, LogIn } from "lucide-react";
 import { LoginModal } from "./login-modal";
 import { BrandIcon } from "@/components/brand/brand-mark";
 
-// 페이지 스크롤 순서(히어로 → 세미나 → Step 1~6 → 샘플)와 동일하게 유지한다.
+// 페이지 스크롤 순서(히어로 → 1:1 세미나 혜택 → Step 1~6 → 샘플)와 동일하게 유지한다.
 const NAV_ITEMS: ReadonlyArray<{ href: string; label: string }> = [
-  { href: "/seminar", label: "단체 세미나" },
-  { href: "#section-question", label: "25유형 출제" },
+  { href: "#section-onboarding", label: "1:1 세미나" },
+  { href: "#section-question", label: "24유형 출제" },
   { href: "#section-annotation", label: "학습지 생성" },
   { href: "#section-exam", label: "시험지" },
   { href: "#section-intake", label: "자료 추출" },

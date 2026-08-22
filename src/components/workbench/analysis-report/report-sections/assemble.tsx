@@ -4,8 +4,8 @@ import { type CoverEdit, CoverSheet } from "../cover-templates";
 import { type ActivityAction, ActivityAnswerNode } from "../custom-activity-renders";
 import type { CustomEdit, FlowItem, MetaEdit, PassageStudyNotes, SectionEdit, SectionFlowOptions, WrapKind } from "./types";
 import { Field } from "./editable-field";
+import { FinalOnepageSheet } from "./final-onepage-flow";
 import { SectionHead } from "./table";
-import { WorksheetLogicMapBlock } from "./worksheet";
 import { customBlockFlowItems } from "./custom-block";
 import type { SectionFlowCache } from "./flow-cache";
 import { hiddenSectionKeys, reportSectionSlots } from "./section-slots";
@@ -39,7 +39,8 @@ function titleItems(report: AnalysisReport, med?: MetaEdit): FlowItem[] {
       wrap: "title",
       node: (
         <header className="par-title">
-          <Field as="div" className="par-eyebrow" editable={editable} value={m.eyebrow ?? ""} onCommit={(v) => patch({ eyebrow: v })} />
+          {/* 아이브로우("PRIME PASSAGE ANALYSIS · 심층 지문 분석") 제거 — 유저 확정(2026-08-11).
+              meta.eyebrow 데이터는 보존(표지 템플릿은 계속 사용), 본문 타이틀 블록에서만 미표기. */}
           <Field as="h1" className="par-title-ko" editable={editable} value={m.titleKo} onCommit={(v) => patch({ titleKo: v })} />
           <Field as="div" className="par-title-en" editable={editable} value={m.titleEn} onCommit={(v) => patch({ titleEn: v })} />
         </header>
@@ -144,9 +145,16 @@ export function reportFlowItems(
     };
   };
   const vocabTestOnly = !!report.vocabTestOnly;
+  // 원페이지 파이널 문서 — 자체 헤더를 내장한 전면 시트 1장이 문서의 전부라
+  // 표준 타이틀 블록·영어원문 페이지는 만들지 않는다(표지는 사용자가 켜면 그대로 동작).
+  const finalOnly = report.sections.some((s) => s.kind === "final-onepage");
   const items: FlowItem[] = vocabTestOnly
     ? []
-    : [...coverItems(report, edit?.ced), ...titleItems(report, edit?.med), ...englishOnlyPageItems(report)];
+    : [
+        ...coverItems(report, edit?.ced),
+        ...(finalOnly ? [] : titleItems(report, edit?.med)),
+        ...(finalOnly ? [] : englishOnlyPageItems(report)),
+      ];
 
   const findIdx = (k: AnalysisSection["kind"]) => report.sections.findIndex((s) => s.kind === k);
 
@@ -235,24 +243,27 @@ export function reportFlowItems(
       ),
     );
   };
-  /** 논리표 승격 블록 — 핵심 요약 뒤(폴백) 또는 '지문 논리 구조 분석' 헤더 뒤(신형). */
-  const pushPromotedLogic = (si: number) => {
-    const worksheet = report.sections[si];
-    if (worksheet?.kind !== "learning-worksheet") return;
+  /** 원페이지 파이널 — 전면 시트(wrap:"cover") 1개만 붙인다(headless 슬롯). */
+  const pushFinalOnepage = (si: number) => {
+    const section = report.sections[si];
+    if (section?.kind !== "final-onepage") return;
     const build = (): FlowItem[] => {
-      const worksheetEdit = edit?.sectionEdit?.(si);
+      const sed = edit?.sectionEdit?.(si);
       return [
         {
-          id: `s${si}-logic-promoted`,
+          id: `s${si}-final-onepage`,
           sectionIndex: si,
-          kind: "learning-worksheet",
+          kind: "final-onepage",
           no,
-          wrap: "note",
+          wrap: "cover",
           node: (
-            <WorksheetLogicMapBlock
-              section={worksheet}
-              editable={!!worksheetEdit}
-              onPatch={(patch) => worksheetEdit?.commit({ ...worksheet, ...patch })}
+            <FinalOnepageSheet
+              section={section}
+              meta={report.meta}
+              brand={report.brand}
+              editable={!!sed}
+              onPatch={(patch) => sed?.commit({ ...section, ...patch })}
+              onMetaPatch={edit?.med ? (p) => edit.med!.commit({ ...report.meta, ...p }) : undefined}
             />
           ),
         },
@@ -262,9 +273,11 @@ export function reportFlowItems(
       items.push(...build());
       return;
     }
-    const slotKey = `logic:${si}`;
+    const slotKey = `final:${si}`;
     usedSlots.push(slotKey);
-    items.push(...cache.get(slotKey, [worksheet, si, no, edit?.sectionEdit], build));
+    items.push(
+      ...cache.get(slotKey, [section, si, report.meta, report.brand, edit?.sectionEdit, edit?.med], build),
+    );
   };
 
   // '영어 원문만' 단독 페이지는 그 뒤 첫 섹션 헤더의 breakBefore 로 페이지가 닫힌다.
@@ -287,19 +300,18 @@ export function reportFlowItems(
         node: <SectionHead no={no} kind={slot.kind} {...headOverride(slot.key, slot.labelKo, slot.labelEn)} />,
         breakBefore: slot.breakBefore || (firstVisibleHead && needsEnglishOnlyBreak),
         keepWithPrev: slot.keepWithPrev,
+        splitWithPrev: slot.splitWithPrev,
       });
       firstVisibleHead = false;
     }
-    // 지문 논리 구조 분석(신형) — 섹션 flow 대신 논리표 블록 하나만 붙는다.
-    if (slot.promotedLogic) {
-      pushPromotedLogic(slot.si);
+    // 원페이지 파이널 — 섹션 flow 대신 전면 시트 블록 하나만 붙는다.
+    if (slot.finalOnepage) {
+      pushFinalOnepage(slot.si);
       continue;
     }
     // 슬롯키 = `sec:{섹션인덱스}:{슬롯키}` — 같은 섹션을 clean/annotated 두 번 emit 하므로
     // 인덱스만으로는 충돌한다(slot.key 가 "passage" / "passage-anno" 로 갈라준다).
     emit(slot.si, slot.flow, `sec:${slot.si}:${slot.key}`);
-    // 폴백 경로 — 핵심 요약 뒤에 학습지 논리표를 승격 배치(원 위치는 skipWorksheetLogic).
-    if (slot.appendPromotedLogicSi >= 0) pushPromotedLogic(slot.appendPromotedLogicSi);
   }
 
   // 단어 시험지는 vocabulary 섹션 flow 안에서 만들어진다. 목차에서 '핵심 어휘'(단어장)를 꺼도

@@ -6,6 +6,8 @@ import { ReportPages } from "./report-pages";
 
 interface Props {
   report: AnalysisReport;
+  /** 미리보기 호스트(목록 카드 등)에서 true — 인쇄 제외(.par-print-exclude). ReportPages 참고. */
+  printExclude?: boolean;
 }
 
 /**
@@ -13,6 +15,6 @@ interface Props {
  * 보기/편집은 동일한 ReportPages 렌더러를 공유한다 (edit 미지정 = 읽기 전용,
  * 기존과 100% 동일한 DOM·스타일). 편집 모드는 AnalysisReportEditor 참고.
  */
-export function AnalysisReportDocument({ report }: Props) {
-  return <ReportPages report={report} />;
+export function AnalysisReportDocument({ report, printExclude }: Props) {
+  return <ReportPages report={report} printExclude={printExclude} />;
 }

@@ -53,6 +53,24 @@ export interface WordbookBasketItem {
 /** 덱 spec senseIds 상한(decks.ts LIMIT_MAX)과 동일 — 초과 담기 차단. */
 export const BASKET_MAX = 500;
 
+/**
+ * 교재(시리즈) 발송 프리셋 — 「학생에게 보내기」 슬라이드가 교재 모드로 열릴 때의
+ * 재료(스펙 §11). 교재 카드·위저드 성공 화면·셸이 같은 형상을 주고받는다.
+ */
+export interface WordbookPresetSeries {
+  seriesKey: string;
+  /** 교재 원제(단계 접미 없는 이름) */
+  title: string;
+  unitCount: number;
+  totalWords: number;
+  /** 단계 크기 = 하루 학습량 */
+  wordsPerDay: number;
+  /** 학습 요일 집합(0=일~6=토) — 정본 산식은 wordbook-plan-types */
+  studyDays: number[];
+  /** 위저드 스텝4 캘린더에서 고른 시작일 — 보내기 화면의 초기값(과거면 무시) */
+  startDate?: string;
+}
+
 // ── 페이지네이션 ─────────────────────────────────────────────────────────────
 //
 // ⚠️ 페이지 크기는 **서버 OFFSET_MAX(20,000)를 나누어떨어져야 한다.**

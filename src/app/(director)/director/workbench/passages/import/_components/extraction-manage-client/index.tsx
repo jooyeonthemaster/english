@@ -349,6 +349,11 @@ export function ExtractionManageClient({
       return next;
     });
   }, []);
+  // 성능 계약(use-folder-window-height 동형): 드래그 중 setState 금지 — 매
+  // pointermove 의 setJobRowHeight 는 ExtractionManageClient 전체(작업 카드 행
+  // + 드래프트 카드 그리드 + 폴더 트리)를 프레임마다 리렌더시켰다. 이동 중에는
+  // [data-job-row-window] 의 style.height 에 rAF 코얼레싱으로 직접 쓰고,
+  // 놓을 때 한 번만 setState + 영속. 앵커를 못 찾으면 종전 경로 폴백.
   const beginJobRowResize = useCallback(
     (e: React.PointerEvent) => {
       e.preventDefault();
@@ -356,20 +361,69 @@ export function ExtractionManageClient({
       const startY = e.clientY;
       const startHeight = jobRowHeight;
       let latest = startHeight;
+
+      // 포인터 캡처 — 커서가 얇은 바를 벗어나도 드래그가 끊기지 않는다.
+      const handle = e.currentTarget as HTMLElement;
+      try {
+        handle.setPointerCapture(e.pointerId);
+      } catch {
+        /* 캡처 미지원 브라우저는 window 리스너로 폴백 */
+      }
+
+      // 드래그 대상 창 실체 — 핸들에서 가장 가까운 조상 범위 안의
+      // [data-job-row-window] (핸들 래퍼와 창은 형제 → 한 단계 위에서 잡힘).
+      let windowEl: HTMLElement | null = null;
+      for (
+        let scope: HTMLElement | null = handle.parentElement;
+        scope && !windowEl;
+        scope = scope.parentElement
+      ) {
+        windowEl = scope.querySelector<HTMLElement>("[data-job-row-window]");
+      }
+
+      const prevCursor = document.body.style.cursor;
+      const prevSelect = document.body.style.userSelect;
+      const prevPointerEvents = document.body.style.pointerEvents;
       document.body.style.cursor = "row-resize";
       document.body.style.userSelect = "none";
+      // 드래그 중 hover 스타일 재평가 차단(캡처 덕에 move 수신은 유지).
+      document.body.style.pointerEvents = "none";
+
+      // rAF 코얼레싱 — 스타일 기록은 프레임당 1회.
+      let rafId: number | null = null;
+      const flush = () => {
+        rafId = null;
+        if (windowEl) windowEl.style.height = `${latest}px`;
+      };
+
       const onMove = (ev: PointerEvent) => {
         latest = Math.min(
           JOB_ROW_MAX,
           Math.max(JOB_ROW_MIN, startHeight + (ev.clientY - startY)),
         );
-        setJobRowHeight(latest);
+        if (windowEl) {
+          if (rafId === null) rafId = requestAnimationFrame(flush);
+        } else {
+          // 폴백(레거시) — 창 요소를 못 찾으면 종전대로 상태 갱신
+          setJobRowHeight(latest);
+        }
       };
       const onUp = () => {
-        document.body.style.cursor = "";
-        document.body.style.userSelect = "";
+        document.body.style.cursor = prevCursor;
+        document.body.style.userSelect = prevSelect;
+        document.body.style.pointerEvents = prevPointerEvents;
         window.removeEventListener("pointermove", onMove);
         window.removeEventListener("pointerup", onUp);
+        window.removeEventListener("pointercancel", onUp);
+        if (rafId !== null) cancelAnimationFrame(rafId);
+        if (windowEl) windowEl.style.height = `${latest}px`;
+        // 커밋은 여기서 한 번 — 드래그 내내 리렌더 0회.
+        setJobRowHeight(latest);
+        try {
+          handle.releasePointerCapture(e.pointerId);
+        } catch {
+          /* ignore */
+        }
         try {
           window.localStorage.setItem(JOB_ROW_HEIGHT_KEY, String(latest));
         } catch {
@@ -378,6 +432,7 @@ export function ExtractionManageClient({
       };
       window.addEventListener("pointermove", onMove);
       window.addEventListener("pointerup", onUp);
+      window.addEventListener("pointercancel", onUp);
     },
     [jobRowHeight],
   );
@@ -623,16 +678,41 @@ export function ExtractionManageClient({
 
   const handleTaskMarqueeChange = useCallback(
     (nextTaskIds: Set<string>) => {
-      // DragSelect 가 넘기는 next 는 "이번 선택의 전체 집합"이다(새 드래그=교체,
-      // Shift=추가). 각 task 의 draft id 들로 펼쳐 draft 선택집합을 만든다.
-      const nextDraftIds = new Set<string>();
+      // DragSelect 의 next 는 언제나 "최종 집합 전체"다(2026-08-20 개편: 담기
+      // 드래그면 value∪히트, 해제 드래그면 value−히트).
+      //
+      // 【그대로 펼쳐 교체하면 안 되는 이유 — 재발 금지】 여기 value 는
+      // checkedTaskIds 즉 "draft 가 **전부** 선택된 작업"만 남는 손실 투영이다.
+      // 그래서 nextTaskIds 를 펼쳐 setSelectedIds 로 통째 갈아끼우면, 왕복에서
+      // 살아남지 못하는 선택이 조용히 사라진다:
+      //   · 검수 드로어(JobReviewModal)에서 낱개로 고른 draft — 그 작업은
+      //     "전부 선택"이 아니라 checkedTaskIds 에 없다
+      //   · job 이 없는 draft — draftIdsByJobId 자체가 건너뛴다
+      // 마키는 더하기만 해야 한다는 새 계약을 이 표면만 어기게 된다.
+      // 그래서 task 공간의 **변화분**만 draft 선택집합에 반영한다.
+      const added: string[] = [];
+      const removed: string[] = [];
       for (const taskId of nextTaskIds) {
-        const ids = draftIdsByJobId.get(taskId);
-        if (ids) for (const id of ids) nextDraftIds.add(id);
+        if (!checkedTaskIds.has(taskId)) added.push(taskId);
       }
-      setSelectedIds(nextDraftIds);
+      for (const taskId of checkedTaskIds) {
+        if (!nextTaskIds.has(taskId)) removed.push(taskId);
+      }
+      if (added.length === 0 && removed.length === 0) return;
+      setSelectedIds((prev) => {
+        const next = new Set(prev);
+        for (const taskId of added) {
+          const ids = draftIdsByJobId.get(taskId);
+          if (ids) for (const id of ids) next.add(id);
+        }
+        for (const taskId of removed) {
+          const ids = draftIdsByJobId.get(taskId);
+          if (ids) for (const id of ids) next.delete(id);
+        }
+        return next;
+      });
     },
-    [draftIdsByJobId, setSelectedIds],
+    [checkedTaskIds, draftIdsByJobId, setSelectedIds],
   );
 
   // Dropping a task card onto a folder should move every draft inside that
@@ -1153,6 +1233,7 @@ export function ExtractionManageClient({
                 {!jobRowCollapsed ? (
                   <>
                     <div
+                      data-job-row-window
                       className="overflow-y-auto px-4 py-1.5"
                       style={{ height: jobRowHeight }}
                     >

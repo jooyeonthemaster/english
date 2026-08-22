@@ -32,6 +32,32 @@ export function normalizeAnalysisTone(value: unknown): AnalysisTone {
     : DEFAULT_ANALYSIS_TONE;
 }
 
+/** 분석 리포트 전체 섹션 수 — module-sections.FULL_ANALYSIS_SECTIONS 와 동수(단위 테스트가 잠금). */
+const FULL_ANALYSIS_SECTION_COUNT = 6;
+
+/**
+ * 폐지된 섹션 kind — 마커 계수에서 제외한다(26-08-21 '지문 논리 구조 분석' 폐지).
+ * 폐지 전 저장된 `_partialSections` 는 이 kind 를 포함한 채로 남아 있어, 그대로 세면
+ * "6개 중 learning-worksheet 1개 + 실제 5개"인 부분 데이터가 완료로 오판된다.
+ */
+const RETIRED_SECTION_KINDS: ReadonlySet<string> = new Set(["learning-worksheet"]);
+
+/**
+ * 부분 분석 마커(§3.4.1-7) 판정 — 섹션 종량제가 만든 파생 analysisData 는
+ * `_partialSections`(보유 kind 목록)를 갖는다. 6종 미만이면 "완료 캐시"가 아니다.
+ *
+ * shouldUseCachedAnalysis 는 3벌 복제본(fast 라우트 · trigger 태스크 · 레거시 라우트)이
+ * 있다 — 반드시 셋 다 이 헬퍼를 첫 판정으로 호출한다(검수 M2: 1벌만 고치면 나머지
+ * 표면이 부분 데이터를 완료 캐시로 서빙한다). 마커 없는 기존 데이터는 항상 false(무회귀).
+ */
+export function isPartialAnalysisData(cached: unknown): boolean {
+  if (!cached || typeof cached !== "object") return false;
+  const partialSections = (cached as Record<string, unknown>)._partialSections;
+  if (!Array.isArray(partialSections)) return false;
+  const live = partialSections.filter((k) => typeof k === "string" && !RETIRED_SECTION_KINDS.has(k));
+  return live.length < FULL_ANALYSIS_SECTION_COUNT;
+}
+
 export function getAnalysisTonePrompt(tone: AnalysisTone): string {
   switch (tone) {
     case "friendly":

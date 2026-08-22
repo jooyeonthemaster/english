@@ -1,0 +1,236 @@
+<section class="slide slide--dark" id="s05"
+  data-title="THE LINE" data-kr="여덟 개를 하나로"
+  data-zone="문제" data-zone-en="PROBLEM"
+  data-part="PART 1 — 기능 브리핑"
+  data-in="흩어진 여덟 개의 일"
+  data-out="하나의 라인"
+  data-note="오늘의 전체 지도">
+
+  <div class="pad s05-wrap">
+
+    <!-- ── 헤드 ── -->
+    <div class="s05-head">
+      <div class="kicker" data-step="0" data-fx="none">SMOAT가 하는 일</div>
+
+      <h1 class="s05-title" data-step="0">
+        <span class="l1">여덟 개를</span>
+        <span class="l2"><em>한 줄로</em> 잇습니다.</span>
+      </h1>
+
+      <p class="s05-lead" data-step="0" data-fx="none">
+        공정을 없애는 게 아니라, 공정 사이의 <b>옮겨 담는 일</b>을 없앱니다.<br>
+        앞 공정의 결과가 다음 공정의 재료로 그대로 넘어갑니다.
+      </p>
+    </div>
+
+    <!-- ── 8공정 라인 ── -->
+    <div class="s05-line">
+
+      <!-- 구간 라벨 -->
+      <div class="s05-zones" data-step="1" data-fx="none">
+        <div class="zn"><span>투입</span></div>
+        <div class="zn"><span>생성</span></div>
+        <div class="zn zn--2"><span>산출</span></div>
+        <div class="zn"><span>배포</span></div>
+        <div class="zn"><span>회수</span></div>
+        <div class="zn"><span>분석</span></div>
+        <div class="zn zn--end"><span>순환</span></div>
+      </div>
+
+      <!-- 레일 + 노드 -->
+      <svg class="s05-svg" data-step="1" data-fx="none" viewBox="0 0 1728 310" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="s05track" gradientUnits="userSpaceOnUse" x1="108" y1="0" x2="1620" y2="0">
+            <stop offset="0%"   stop-color="#3B82F6" stop-opacity=".38"/>
+            <stop offset="52%"  stop-color="#3B82F6" stop-opacity=".92"/>
+            <stop offset="100%" stop-color="#10B981" stop-opacity=".92"/>
+          </linearGradient>
+          <linearGradient id="s05ramp" gradientUnits="userSpaceOnUse" x1="108" y1="0" x2="1620" y2="0">
+            <stop offset="0%"   stop-color="#3B82F6"/>
+            <stop offset="58%"  stop-color="#3B82F6"/>
+            <stop offset="100%" stop-color="#10B981"/>
+          </linearGradient>
+        </defs>
+
+        <!-- 트랙 -->
+        <line x1="108" y1="72" x2="1620" y2="72" stroke="url(#s05track)" stroke-width="2.5"/>
+
+        <!-- 구간 경계 눈금 -->
+        <g stroke="#8892A6" stroke-opacity=".34" stroke-width="1">
+          <line x1="216"  y1="63" x2="216"  y2="81"/>
+          <line x1="432"  y1="63" x2="432"  y2="81"/>
+          <line x1="864"  y1="63" x2="864"  y2="81"/>
+          <line x1="1080" y1="63" x2="1080" y2="81"/>
+          <line x1="1296" y1="63" x2="1296" y2="81"/>
+          <line x1="1512" y1="63" x2="1512" y2="81"/>
+        </g>
+
+        <!-- 노드 → 텍스트 인출선 -->
+        <g stroke="#8892A6" stroke-opacity=".2" stroke-width="1">
+          <line x1="108"  y1="84" x2="108"  y2="94"/>
+          <line x1="324"  y1="84" x2="324"  y2="94"/>
+          <line x1="540"  y1="84" x2="540"  y2="94"/>
+          <line x1="756"  y1="84" x2="756"  y2="94"/>
+          <line x1="972"  y1="84" x2="972"  y2="94"/>
+          <line x1="1188" y1="84" x2="1188" y2="94"/>
+          <line x1="1404" y1="84" x2="1404" y2="94"/>
+          <line x1="1620" y1="84" x2="1620" y2="94"/>
+        </g>
+
+        <!-- 노드 -->
+        <g class="pips" fill="#080C16" stroke="url(#s05ramp)" stroke-width="2.5">
+          <circle cx="108"  cy="72" r="7"/>
+          <circle cx="324"  cy="72" r="7"/>
+          <circle cx="540"  cy="72" r="7"/>
+          <circle cx="756"  cy="72" r="7"/>
+          <circle cx="972"  cy="72" r="7"/>
+          <circle cx="1188" cy="72" r="7"/>
+          <circle cx="1404" cy="72" r="7"/>
+          <circle cx="1620" cy="72" r="7"/>
+        </g>
+
+        <!-- 흐르는 재료 -->
+        <circle r="4.5" fill="#BFDBFE" opacity=".95">
+          <animate attributeName="cx" values="108;1620" dur="3.8s" repeatCount="indefinite"/>
+          <animate attributeName="cy" values="72;72"    dur="3.8s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.05;.9;1" dur="3.8s" repeatCount="indefinite"/>
+        </circle>
+      </svg>
+
+      <!-- 공정 텍스트 -->
+      <div class="s05-stations" data-step="1" data-fx="none">
+        <div class="stn"><i>ST 01</i><b>지문 투입</b><s>교과서 사진 · PDF ·<br>직접 붙여넣기</s></div>
+        <div class="stn"><i>ST 02</i><b>문항 생성</b><s>25유형 · 객관식 + 서술형</s></div>
+        <div class="stn"><i>ST 03</i><b>시험지</b><s>워드 · 한글 · PDF + 해설지</s></div>
+        <div class="stn"><i>ST 04</i><b>학습지</b><s>심층 분석 학습지 · 웹툰</s></div>
+        <div class="stn"><i>ST 05</i><b>배포</b><s>학생 모바일 · 태블릿</s></div>
+        <div class="stn"><i>ST 06</i><b>풀이</b><s>무엇을 골랐는지까지</s></div>
+        <div class="stn"><i>ST 07</i><b>리포트</b><s>유형별 취약점</s></div>
+        <div class="stn"><i>ST 08</i><b>처방</b><s>취약 유형으로 다음 과제</s></div>
+      </div>
+
+      <!-- 회귀 루프 -->
+      <svg class="s05-arc" data-step="2" data-fx="none" viewBox="0 0 1728 310" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <marker id="s05arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+            <path d="M0,0 L10,5 L0,10 Z" fill="#10B981"/>
+          </marker>
+        </defs>
+        <path class="loop-path"
+              d="M1620,72 H1690 Q1722,72 1722,104 V246 Q1722,278 1690,278 H38 Q6,278 6,246 V104 Q6,72 38,72 H98"
+              fill="none" stroke="#10B981" stroke-width="1.8" stroke-dasharray="6 8"
+              marker-end="url(#s05arrow)" opacity=".62"/>
+      </svg>
+
+      <div class="s05-loop" data-step="2" data-fx="none">
+        <span class="lk">↺</span>ST 08의 출구가 ST 01의 입구입니다. <b>이게 오늘 이야기의 전부입니다.</b>
+      </div>
+
+    </div>
+
+    <div class="src-line">"10시간을 10분으로 단축해드립니다" — SMOAT 소개 문구</div>
+
+  </div>
+
+<style>
+#s05 .s05-wrap { display: flex; flex-direction: column; }
+
+/* ── 헤드 ── */
+#s05 .s05-head { flex: none; padding-top: 8px; }
+#s05 .kicker { margin-bottom: 24px; }
+
+#s05 .s05-title {
+  font-family: var(--f-display); font-weight: 800;
+  font-size: 92px; line-height: 1.09; letter-spacing: -.032em;
+  display: flex; flex-direction: column;
+}
+#s05 .s05-title .l1 { color: var(--txt-1); }
+#s05 .s05-title .l2 { color: var(--white); }
+#s05 .s05-title em { font-style: normal; color: var(--blue); position: relative; z-index: 1; }
+#s05 .s05-title em::after {
+  content: ''; position: absolute; left: -2px; right: -2px; bottom: 4px; height: 10px;
+  background: rgba(59,130,246,.30); border-radius: 2px; z-index: -1;
+}
+
+#s05 .s05-lead {
+  margin-top: 26px; font-size: 22px; line-height: 1.62; color: var(--grey); max-width: 1120px;
+}
+#s05 .s05-lead b { color: var(--white); font-weight: 600; }
+
+/* ── 라인 블록 ── */
+#s05 .s05-line { position: relative; flex: 0 0 310px; height: 310px; margin: auto 0; }
+#s05 .s05-svg,
+#s05 .s05-arc { position: absolute; inset: 0; width: 100%; height: 310px; pointer-events: none; }
+
+/* 구간 라벨 */
+#s05 .s05-zones {
+  position: absolute; top: 0; left: 0; right: 0; height: 46px;
+  display: grid; grid-template-columns: repeat(8, 1fr);
+}
+#s05 .zn { position: relative; text-align: center; }
+#s05 .zn--2 { grid-column: span 2; }
+#s05 .zn span {
+  display: inline-block; font-family: var(--f-mono); font-weight: 600;
+  font-size: 11.5px; letter-spacing: .2em; padding-left: .2em; color: var(--grey);
+}
+#s05 .zn::after {
+  content: ''; position: absolute; left: 24px; right: 24px; bottom: 0; height: 10px;
+  border: 1px solid rgba(136,146,166,.26); border-bottom: 0; border-radius: 3px 3px 0 0;
+}
+#s05 .zn--end span { color: var(--emerald); }
+#s05 .zn--end::after { border-color: rgba(16,185,129,.34); }
+
+/* 노드 팝 */
+#s05 .s05-svg.on .pips circle {
+  transform-box: fill-box; transform-origin: 50% 50%;
+  animation: s05-pop .44s var(--ease-snap) backwards;
+}
+#s05 .s05-svg.on .pips circle:nth-child(1) { animation-delay: .04s; }
+#s05 .s05-svg.on .pips circle:nth-child(2) { animation-delay: .11s; }
+#s05 .s05-svg.on .pips circle:nth-child(3) { animation-delay: .18s; }
+#s05 .s05-svg.on .pips circle:nth-child(4) { animation-delay: .25s; }
+#s05 .s05-svg.on .pips circle:nth-child(5) { animation-delay: .32s; }
+#s05 .s05-svg.on .pips circle:nth-child(6) { animation-delay: .39s; }
+#s05 .s05-svg.on .pips circle:nth-child(7) { animation-delay: .46s; }
+#s05 .s05-svg.on .pips circle:nth-child(8) { animation-delay: .53s; }
+@keyframes s05-pop { from { transform: scale(.14); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+/* 공정 텍스트 */
+#s05 .s05-stations {
+  position: absolute; top: 46px; left: 0; right: 0;
+  display: grid; grid-template-columns: repeat(8, 1fr);
+}
+#s05 .stn { padding: 52px 18px 0; text-align: center; }
+#s05 .stn i {
+  display: block; font-style: normal; font-family: var(--f-mono); font-weight: 600;
+  font-size: 12px; line-height: 1.2; letter-spacing: .18em; color: var(--blue); opacity: .85;
+}
+#s05 .stn b {
+  display: block; margin-top: 9px; font-family: var(--f-display); font-weight: 700;
+  font-size: 26px; line-height: 1.2; letter-spacing: -.014em; color: var(--white);
+}
+#s05 .stn s {
+  display: block; margin-top: 8px; text-decoration: none;
+  font-size: 13.5px; line-height: 1.5; color: var(--grey); opacity: .8;
+  transition: opacity .2s var(--ease-snap);
+}
+#s05 .stn:hover s { opacity: 1; }
+#s05 .stn:nth-child(7) i,
+#s05 .stn:nth-child(8) i { color: var(--emerald); }
+
+/* 회귀 루프 */
+#s05 .s05-arc.on .loop-path { animation: s05-dash 1.9s linear infinite; }
+@keyframes s05-dash { from { stroke-dashoffset: 28; } to { stroke-dashoffset: 0; } }
+
+#s05 .s05-loop {
+  position: absolute; top: 261px; left: 50%; transform: translateX(-50%);
+  display: inline-flex; align-items: baseline; gap: 12px;
+  padding: 6px 26px; border-radius: 8px; background: var(--ink);
+  font-family: var(--f-mono); font-size: 15px; line-height: 1.4; letter-spacing: .02em;
+  color: var(--emerald); white-space: nowrap;
+}
+#s05 .s05-loop.on { transform: translateX(-50%); }
+#s05 .s05-loop .lk { font-size: 16px; opacity: .9; }
+#s05 .s05-loop b { color: var(--white); font-weight: 600; }
+</style>
+</section>

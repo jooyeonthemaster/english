@@ -536,8 +536,9 @@ export function PassageAnalysisModal({
               {/* PRIME 편집기 저장·인쇄 — 편집기 툴바에서 이 헤더로 끌어올림. */}
               {editorToolbar ? (
                 <>
-                  {/* 실전 학습지 생성 — 저장 버튼 왼쪽. 가느다란 구분선으로 '생성' 과 '저장' 을 기능적으로 분리. */}
-                  {!editorToolbar.worksheetHasContent ? (
+                  {/* 실전 학습지 생성 — 저장 버튼 왼쪽. 가느다란 구분선으로 '생성' 과 '저장' 을 기능적으로 분리.
+                      KO·파이널 원페이지 문서는 미지원(worksheetSupported=false) — undefined(구 상태)는 지원으로 본다. */}
+                  {editorToolbar.worksheetSupported !== false && !editorToolbar.worksheetHasContent ? (
                     <>
                       <button
                         type="button"

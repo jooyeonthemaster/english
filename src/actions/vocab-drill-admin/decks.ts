@@ -13,6 +13,7 @@ import { prisma } from "@/lib/prisma";
 import { requireStaffAuth } from "@/lib/auth";
 import { countDeckPool, resolveDeckSenses } from "@/lib/vocab-drill/content";
 import {
+  sanitizeVocabDeckSeries,
   sanitizeVocabPassageScope,
   type VocabDeckSpec,
 } from "@/lib/vocab-drill/payload";
@@ -87,6 +88,10 @@ function sanitizeDeckSpec(input: unknown): VocabDeckSpec {
   // 기출 범위 — 스튜디오 탐색 액션과 **같은 새니타이저**를 쓴다(정본 payload.ts).
   const passage = sanitizeVocabPassageScope(raw.passage);
   if (passage) spec.passage = passage;
+  // 교재(시리즈) 표식 — 풀 해석과 무관한 메타지만, 여기서 떨어뜨리면
+  // listVocabDecks 왕복 한 번에 그룹핑·배포 예약 정보가 전부 증발한다.
+  const series = sanitizeVocabDeckSeries(raw.series);
+  if (series) spec.series = series;
   const senseIds = pickStrings(raw.senseIds, undefined, LIMIT_MAX);
   if (senseIds.length) spec.senseIds = senseIds;
   const limitRaw = Number(raw.limit);
@@ -112,11 +117,22 @@ export interface VocabDeckRow {
   subtitle: string | null;
   scope: string;
   status: string;
+  /** ⚠️ senseIds 는 제외된 사본이다(페이로드 절감) — 개수는 senseIdCount 로 */
   spec: VocabDeckSpec;
+  /** spec.senseIds 의 길이(목록에서 배열 자체는 빼고 개수만 전달) */
+  senseIdCount: number;
   senseCountCache: number;
   orderIndex: number;
   createdAt: string;
 }
+
+/**
+ * 목록 상한 — 교재(시리즈) 하나가 단계 덱 최대 60개로 팬아웃되므로 100은 위험하다.
+ * 위저드 산출 덱은 orderIndex 1000+ 라 정렬 꼬리에 몰려 **제일 먼저 잘리고**,
+ * 그러면 ARCHIVED 구간이 통째로 사라져 「되살리기」가 불가능해진다
+ * (2026-08-04 에 고친 "보관이 비가역이었다" 결함의 재발 — 적대검수 2026-08-10).
+ */
+const DECK_LIST_TAKE = 1500;
 
 export async function listVocabDecks(): Promise<VocabDeckRow[]> {
   const staff = await requireStaffAuth();
@@ -124,20 +140,29 @@ export async function listVocabDecks(): Promise<VocabDeckRow[]> {
     where: { academyId: staff.academyId },
     // "ACTIVE" < "ARCHIVED" — 활성이 먼저, 그 안에서 표시 순서.
     orderBy: [{ status: "asc" }, { orderIndex: "asc" }, { createdAt: "asc" }],
-    take: 100,
+    take: DECK_LIST_TAKE,
   });
-  return rows.map((d) => ({
-    id: d.id,
-    slug: d.slug,
-    title: d.title,
-    subtitle: d.subtitle,
-    scope: d.scope,
-    status: d.status,
-    spec: sanitizeDeckSpec(d.spec),
-    senseCountCache: d.senseCountCache,
-    orderIndex: d.orderIndex,
-    createdAt: d.createdAt.toISOString(),
-  }));
+  return rows.map((d) => {
+    const spec = sanitizeDeckSpec(d.spec);
+    // ★ senseIds 는 목록 응답에서 뺀다 — 단계 덱 하나에 최대 500개, 교재 한 권이면
+    //   수천 개 문자열이 클라이언트로 넘어간다. 화면이 쓰는 건 "지정 N개" 뿐이라
+    //   개수만 남긴다(소비처: students/vocab specSummary).
+    const senseIdCount = spec.senseIds?.length ?? 0;
+    if (spec.senseIds) delete spec.senseIds;
+    return {
+      id: d.id,
+      slug: d.slug,
+      title: d.title,
+      subtitle: d.subtitle,
+      scope: d.scope,
+      status: d.status,
+      spec,
+      senseIdCount,
+      senseCountCache: d.senseCountCache,
+      orderIndex: d.orderIndex,
+      createdAt: d.createdAt.toISOString(),
+    };
+  });
 }
 
 // ── 생성 ─────────────────────────────────────────────────────────────────────

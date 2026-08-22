@@ -57,6 +57,7 @@ import type {
   PassageRegistrationProps,
   SavedPrompt,
 } from "./passage-registration/types";
+import type { LearningSheetVariant } from "./passage-registration/learning-sheet-preview-modal";
 import { usePassageFormState } from "./passage-registration/use-passage-form-state";
 import { usePassageLibrary } from "./passage-registration/use-passage-library";
 import {
@@ -230,14 +231,51 @@ export function PassageRegistrationClient({
     [rows],
   );
 
-  // ── 학습지 구성(기본/실전 포함) — 하단 고정 바의 '생성하기'가 이 값을 써야
+  // ── 학습지 구성(기본/실전/파이널) — 하단 고정 바의 '생성하기'가 이 값을 써야
   //    하므로 워크스페이스 스택에서 이 컴포넌트로 끌어올린다(PC 는 스택 내부
   //    푸터가 같은 값을 그대로 쓴다 — 같은 저장 키 공유). ──
-  const [includeWorksheet, setIncludeWorksheet] = usePersistedState<boolean>(
+  // 정본은 신규 variant 키이고, 구 boolean 키(include-worksheet)는 다른 소비처
+  // 무회귀를 위해 계속 동기 기록한다(스택 내부 로컬 상태와 같은 키 공유 규약).
+  const [sheetVariant, setSheetVariantState] =
+    usePersistedState<LearningSheetVariant>(
+      "smoat:passages-create:sheet-variant",
+      "basic",
+      (v): v is LearningSheetVariant =>
+        v === "basic" || v === "practice" || v === "final",
+    );
+  const [, setLegacyIncludeWorksheet] = usePersistedState<boolean>(
     "smoat:passages-create:include-worksheet",
     false,
     (v): v is boolean => typeof v === "boolean",
   );
+  // 구 boolean 키 → 신규 variant 키 1회 마이그레이션(신규 키가 이미 있으면 무시).
+  useEffect(() => {
+    try {
+      if (
+        window.localStorage.getItem("smoat:passages-create:sheet-variant") !== null
+      ) {
+        return;
+      }
+      const legacy = window.localStorage.getItem(
+        "smoat:passages-create:include-worksheet",
+      );
+      if (legacy !== null && JSON.parse(legacy) === true) {
+        setSheetVariantState("practice");
+      }
+    } catch {
+      /* 저장소 접근 불가 시 기본값(basic) 유지 */
+    }
+    // 마운트 1회 — 저장 키는 컴포넌트 수명 동안 불변.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const setSheetVariant = useCallback(
+    (v: LearningSheetVariant) => {
+      setSheetVariantState(v);
+      setLegacyIncludeWorksheet(v === "practice");
+    },
+    [setSheetVariantState, setLegacyIncludeWorksheet],
+  );
+  const includeWorksheet = sheetVariant === "practice";
 
   // ── 모바일 스텝 플로우 상태 ──
   const searchParams = useSearchParams();
@@ -771,9 +809,11 @@ export function PassageRegistrationClient({
   const handleAnalyzeRows = useCallback(
     async (
       plan: QuestionGenerationPlan,
-      options?: { includeWorksheet?: boolean },
+      options?: { includeWorksheet?: boolean; finalOnepage?: boolean },
     ) => {
-      const includeWorksheet = options?.includeWorksheet === true;
+      // 파이널 원페이지는 실전 학습지와 조합 금지(스펙 §1) — final 이면 워크시트 강제 해제.
+      const finalOnepage = options?.finalOnepage === true;
+      const includeWorksheet = options?.includeWorksheet === true && !finalOnepage;
       const current = rowsRef.current;
       const valid = current.filter(
         (r) => r.content.trim().length >= MIN_CONTENT_CHARS,
@@ -878,6 +918,8 @@ export function PassageRegistrationClient({
                 generationPlan: plan,
                 analysisTone,
                 includeWorksheet,
+                // 파이널 원페이지 — true 일 때만 키 존재(부재 스프레드 = 기존 경로 무회귀).
+                ...(finalOnepage ? { finalOnepage: true } : {}),
               },
             };
 
@@ -1052,6 +1094,8 @@ export function PassageRegistrationClient({
       rows.filter((r) => r.content.trim().length >= MIN_CONTENT_CHARS).length,
     [rows],
   );
+  // 파이널 원페이지(◈5)는 지문당 기본가와 동일 단가라 includeWorksheet=false
+  // 경로의 계산식이 그대로 성립한다(스펙 §1 가격 정본).
   const learningCreditTotal =
     getPassageAnalysisCreditCost({ includeWorksheet }) *
     Math.max(1, validRowCount);
@@ -1114,10 +1158,14 @@ export function PassageRegistrationClient({
         return {
           label: bulkAnalyzing
             ? "생성 시작 중…"
-            : `학습지 ${validRowCount}개 생성 (${learningCreditTotal.toLocaleString("ko-KR")} 크레딧)`,
+            : // 하단 바 라벨도 선택한 상품(variant)을 반영한다 — 파이널만 명칭 교체.
+              `${sheetVariant === "final" ? "파이널 원페이지" : "학습지"} ${validRowCount}개 생성 (${learningCreditTotal.toLocaleString("ko-KR")} 크레딧)`,
           disabled: bulkAnalyzing,
           onClick: () => {
-            void handleAnalyzeRows("STANDARD", { includeWorksheet });
+            void handleAnalyzeRows("STANDARD", {
+              includeWorksheet,
+              ...(sheetVariant === "final" ? { finalOnepage: true } : {}),
+            });
             goToMobileStep("results");
           },
         };
@@ -1387,7 +1435,11 @@ export function PassageRegistrationClient({
             pasteSubjectScope={subjectScope}
             mobileStepTabs={mobileStep === "input" ? "sources" : "hidden"}
             includeWorksheet={includeWorksheet}
-            setIncludeWorksheet={setIncludeWorksheet}
+            // 구 boolean 리프트는 하위호환용으로 유지 — sheetVariant 가 우선이라
+            // 스택은 variant 콜백만 부른다(이 함수는 레거시 경로 안전망).
+            setIncludeWorksheet={(v) => setSheetVariant(v ? "practice" : "basic")}
+            sheetVariant={sheetVariant}
+            setSheetVariant={setSheetVariant}
             libraryLabel="내 지문함"
             examBrowser={
               subjectScope === "KOREAN" ? (

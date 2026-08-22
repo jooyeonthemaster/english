@@ -19,6 +19,7 @@ import {
 } from "@/lib/platform-api-costs";
 import {
   DEFAULT_ANALYSIS_TONE,
+  isPartialAnalysisData,
   normalizeAnalysisTone,
   type AnalysisTone,
 } from "@/lib/passage-analysis-options";
@@ -38,6 +39,7 @@ import {
   generateAnalysisReportCore,
   generateLearningWorksheet,
 } from "@/lib/passage-report/analysis-report/generate";
+import { generateFinalOnepageReport } from "@/lib/passage-report/analysis-report/final-onepage";
 import {
   buildKoPromptInputFromPassage,
   isKoreanPassage,
@@ -58,6 +60,8 @@ interface AnalysisJobConfig {
   forcePrimeReport?: boolean;
   /** true 면 기본 분석에 이어 실전 학습지(06)까지 한 번에 생성·병합한다 (+5크레딧). */
   includeWorksheet?: boolean;
+  /** true 면 기본 분석 대신 파이널 원페이지(A4 1장 족집게)만 생성한다 (◈5, final-onepage-spec §2). */
+  finalOnepage?: boolean;
 }
 
 function getAnalysisGenerationPlan(value: unknown): QuestionGenerationPlan | null {
@@ -77,6 +81,9 @@ function shouldUseCachedAnalysis(
   requestedPlan: QuestionGenerationPlan,
   requestedTone: AnalysisTone,
 ): boolean {
+  // 섹션 종량제 부분 분석(스펙 §3.4.1-7)이 만든 7종 미만 파생 캐시는 "완료"가 아니다 —
+  // 3벌 복제본 공통 가드(검수 M2). 마커 없는 기존 데이터는 아래 판정 그대로.
+  if (isPartialAnalysisData(cached)) return false;
   const cachedPlan = getAnalysisGenerationPlan(cached);
   const cachedTone = getAnalysisTone(cached);
   if (cachedTone && cachedTone !== requestedTone) return false;
@@ -100,6 +107,7 @@ function parseConfig(value: unknown): AnalysisJobConfig {
     analysisTone: normalizeAnalysisTone(raw.analysisTone),
     forcePrimeReport: raw.forcePrimeReport === true,
     includeWorksheet: raw.includeWorksheet === true,
+    finalOnepage: raw.finalOnepage === true,
   };
 }
 
@@ -116,7 +124,10 @@ export const workbenchPassageAnalysisTask = task({
     factor: 2,
     randomize: true,
   },
-  maxDuration: 300,
+  // 600s: 파이널 원페이지가 luna(xhigh, 102~130s/시도)로 전환되며 수리 2차까지
+  // 온전히 돌 벽이 필요해 300→600 으로 증액(트리거 전역 상한 900s 안). 표준·KO
+  // 분기는 자체 데드라인(≈240s)으로 self-abort 하므로 행동 불변 — 벽만 높아진다.
+  maxDuration: 600,
   async run(payload: Input, { ctx }) {
     const { jobId } = payload;
     const now = new Date();
@@ -215,7 +226,7 @@ export const workbenchPassageAnalysisTask = task({
           { input: 0, output: 0, costUsd: 0 },
         );
         if (koTokens.input > 0 || koTokens.output > 0) {
-          const koModelId = koResult.usages.find((u) => u.modelId)?.modelId ?? "gemini-3.6-flash";
+          const koModelId = koResult.usages.find((u) => u.modelId)?.modelId ?? "gemini-3.7-flash";
           await recordPlatformApiUsageCost({
             sourceKey: `workbench_ai_job:${jobId}:analysis`,
             sourceType: "WORKBENCH_AI_JOB",
@@ -292,8 +303,184 @@ export const workbenchPassageAnalysisTask = task({
       }
     }
 
+    // ── 파이널 원페이지 게이트: final 잡은 전용 생성기·PRIME_FINAL 마커로만 처리 ──
+    // fast 라우트와 동일 규칙 — 캐시 단락 없음(항상 신선 생성)·PassageAnalysis 파생
+    // 미기록(스펙 F2)·실패 시 전액 환불. 자기완결 블록 — 아래 영어 경로는 무변경.
+    // 국어 지문은 위 PRIME_KO 게이트가 선점한다(fast 라우트는 그 조합을 400 으로 차단 —
+    // 큐 레인에 흘러든 국어+final 은 기존 KO 분석으로 처리되는 보수적 강등).
+    if (config.finalOnepage === true) {
+      const finalCreditCost = getPassageAnalysisCreditCost({ includeWorksheet: false });
+      let finalCreditTxId: string | null = null;
+      try {
+        const creditStartedAt = Date.now();
+        const credit = await ensureWorkbenchAiJobCharged({
+          jobId,
+          academyId: job.academyId,
+          staffId: job.createdById,
+          operationType: "PASSAGE_ANALYSIS",
+          metadata: { passageId: job.passage.id, generationPlan, finalOnepage: true, creditCost: finalCreditCost },
+          creditCost: finalCreditCost,
+        });
+        creditMs = Date.now() - creditStartedAt;
+        finalCreditTxId = credit.transactionId;
+
+        // 필기 주석·강사 지시 병합 — 기존 영어 경로와 동일 규칙.
+        const persistedAnns = await loadPersistedAnnotations(job.passage.id);
+        const annotationPrompt =
+          persistedAnns.length > 0 ? buildAnalysisPrompt("", persistedAnns) : "";
+        const mergedPrompt = [annotationPrompt, config.customPrompt]
+          .filter((v) => typeof v === "string" && v.trim().length > 0)
+          .join("\n\n");
+        // brand = 학원명 — 구식 생성 라우트(prime/[passageId] POST)와 동일 규약. 없으면 생성기 기본값.
+        const academy = await prisma.academy.findUnique({
+          where: { id: job.academyId },
+          select: { name: true },
+        });
+
+        generationStartedAt = Date.now();
+        const finalResult = await generateFinalOnepageReport(
+          {
+            passageContent: job.passage.content,
+            schoolType: (job.passage.school?.type as "MIDDLE" | "HIGH" | undefined) ?? null,
+            grade: job.passage.grade,
+            customPrompt: mergedPrompt || undefined,
+            ...(academy?.name ? { brand: academy.name } : {}),
+          },
+          // 태스크 벽(600s) 안에서 self-abort — luna 2회 시도(각 ≤200s)가 온전히 돌
+          // 여유를 두고 60s 를 마감(업서트·원가 기록·환불) 몫으로 남긴다.
+          { deadlineAt: Date.now() + 540_000 },
+        );
+        generationMs = Date.now() - generationStartedAt;
+
+        // LLM 토큰·실측 원가 기록(플랫폼 원가 추적 — fast 경로와 parity, 성공 시에만 usage 존재).
+        if (finalResult.ok) {
+          const finalTokens = readAiUsageTokens(finalResult.usage.usage);
+          const finalCost = readAiUsageCost(finalResult.usage.usage);
+          if (finalTokens.inputTokens > 0 || finalTokens.outputTokens > 0) {
+            const finalModelId = finalResult.usage.modelId || "gemini-3.7-flash";
+            await recordPlatformApiUsageCost({
+              sourceKey: `workbench_ai_job:${jobId}:final-onepage`,
+              sourceType: "WORKBENCH_AI_JOB",
+              sourceId: jobId,
+              sourceDetail: "PASSAGE_ANALYSIS_FINAL",
+              academyId: job.academyId,
+              provider: providerFromModel(finalModelId),
+              model: finalModelId,
+              operationType: "PASSAGE_ANALYSIS",
+              unitType: "TOKENS",
+              inputTokens: finalTokens.inputTokens,
+              outputTokens: finalTokens.outputTokens,
+              recordedCostUsd: finalCost.costUsd,
+              usageAt: new Date(),
+              metadata: { passageId: job.passage.id, generationPlan, finalOnepage: true, durationMs: finalResult.usage.durationMs },
+            });
+          }
+        }
+        if (!finalResult.ok) {
+          throw new Error(`PRIME_FINAL 생성 실패: ${finalResult.error}`);
+        }
+
+        // PRIME_FINAL 행 upsert(스펙 F3) — 기존 PRIME upsert 패턴(findFirst→update/create) 복제.
+        const finalReport = finalResult.report;
+        const persistenceStartedAt = Date.now();
+        const existingFinal = await prisma.passageReport.findFirst({
+          where: { passageId: job.passage.id, academyId: job.academyId, generationPlan: "PRIME_FINAL", deletedAt: null },
+          select: { id: true },
+        });
+        const finalRowData = {
+          title: finalReport.meta.titleKo,
+          status: "PUBLISHED",
+          pages: finalReport as never,
+          theme: { themeId: finalReport.themeId } as never,
+          templateId: "prime-final",
+          generationPlan: "PRIME_FINAL",
+          lastEditedById: job.createdById,
+          lastEditedAt: new Date(),
+        };
+        if (existingFinal) {
+          await prisma.passageReport.update({ where: { id: existingFinal.id }, data: { ...finalRowData, version: { increment: 1 } } });
+        } else {
+          await prisma.passageReport.create({ data: { academyId: job.academyId, passageId: job.passage.id, createdById: job.createdById, ...finalRowData } });
+        }
+        persistenceMs = Date.now() - persistenceStartedAt;
+
+        const debugTiming = {
+          queueWaitMs: now.getTime() - job.createdAt.getTime(),
+          creditMs,
+          generationMs,
+          persistenceMs,
+          totalRunMs: Date.now() - taskStartedAt,
+          cached: false,
+          fastPath: false,
+        };
+        await prisma.workbenchAiJob.update({
+          where: { id: jobId },
+          data: {
+            status: "COMPLETED",
+            successCount: 1,
+            failedCount: 0,
+            resultCount: 1,
+            result: { cached: false, passageId: job.passage.id, generationPlan, finalOnepage: true, debugTiming, fastPath: false },
+            completedAt: new Date(),
+          },
+        });
+        logger.info("PRIME_FINAL passage analysis completed", { jobId, passageId: job.passage.id });
+        return { success: true as const, passageId: job.passage.id };
+      } catch (finalErr) {
+        if (generationStartedAt !== null && generationMs === 0) {
+          generationMs = Date.now() - generationStartedAt;
+        }
+        if (finalErr instanceof InsufficientCreditsError) {
+          await prisma.workbenchAiJob.update({
+            where: { id: jobId },
+            data: {
+              status: "FAILED",
+              failedCount: 1,
+              errorMessage: `Insufficient credits: have ${finalErr.currentBalance}, need ${finalErr.requiredCredits}`,
+              completedAt: new Date(),
+            },
+          });
+          return { error: "INSUFFICIENT_CREDITS" as const };
+        }
+        if (finalCreditTxId) {
+          await refundCredits(
+            job.academyId,
+            "PASSAGE_ANALYSIS",
+            finalCreditTxId,
+            "PRIME_FINAL passage analysis failed",
+            finalCreditCost,
+          ).catch((refundErr) => {
+            logger.error("PRIME_FINAL refund failed", { jobId, error: String(refundErr) });
+          });
+        }
+        await prisma.workbenchAiJob.update({
+          where: { id: jobId },
+          data: {
+            status: "FAILED",
+            failedCount: 1,
+            errorMessage: `파이널 원페이지 생성 실패: ${String(finalErr).slice(0, 300)}`,
+            completedAt: new Date(),
+          },
+        });
+        return { error: "FINAL_ONEPAGE_FAILED" as const };
+      }
+    }
+
     // 실전 학습지 포함 요청은 캐시 단락을 타지 않는다 (fast 라우트와 동일 규칙).
-    if (!config.forcePrimeReport && !config.includeWorksheet && job.passage.analysis && job.passage.analysis.contentHash === currentHash) {
+    // ⚠ PRIME 리포트 존재도 필수 조건이다 — fast 라우트와 **같은 술어**를 쓴다
+    //    (§3.10.19 E19-11). 산출물(PassageReport PRIME)이 없는데 파생 캐시만 보고
+    //    단락하면 학습지가 영원히 생기지 않는다(실측 확정). 구 workaround 인
+    //    forcePrimeReport 플래그는 그대로 두되, 이제 그 플래그 없이도 옳게 동작한다.
+    const primeReportExists =
+      (await prisma.passageReport.count({
+        where: {
+          passageId: job.passage.id,
+          academyId: job.academyId,
+          generationPlan: "PRIME",
+          deletedAt: null,
+        },
+      })) > 0;
+    if (!config.forcePrimeReport && !config.includeWorksheet && primeReportExists && job.passage.analysis && job.passage.analysis.contentHash === currentHash) {
       const cachedAnalysis = JSON.parse(job.passage.analysis.analysisData);
       if (shouldUseCachedAnalysis(cachedAnalysis, generationPlan, analysisTone)) {
         const debugTiming = {

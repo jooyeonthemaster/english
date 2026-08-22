@@ -99,6 +99,12 @@ export const SEMINAR_TIME_SLOTS: readonly string[] = [
 /** 1:1 세미나 주간 상담 슬롯 정원 — 히어로의 "남은 상담 슬롯" 표시에 사용 */
 export const SEMINAR_WEEKLY_CAPACITY = 10;
 
+/**
+ * 1:1 세미나 신청 원장님께 무료로 지급하는 크레딧(랜딩 안내 · 신청 폼 공통 문구).
+ * 지급은 자동화돼 있지 않다 — 세미나 진행 후 관리자가 크레딧을 수동 지급한다.
+ */
+export const SEMINAR_ONBOARDING_FREE_CREDITS = 300;
+
 export const SEMINAR_TOPICS: readonly string[] = [
   "문제 생성",
   "시험지 생성",

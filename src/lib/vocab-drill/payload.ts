@@ -219,6 +219,38 @@ export interface VocabPassageScope {
   passageIds?: string[];
 }
 
+/**
+ * 교재(시리즈) 표식 — 단어장 만들기 위저드 산출 덱에만 존재한다.
+ * 같은 key 를 공유하는 덱들이 한 교재의 단계(1..total)다.
+ *
+ * ⚠️ 학생 트랙 허브 목록(lib/vocab-drill/decks.ts listActiveDecks)은 이 표식이
+ * 있는 덱을 숨긴다 — 40단계 교재 하나가 학생 홈을 도배하지 않도록. 학생은
+ * 시차 배포된 과제로만 단계 덱을 만난다.
+ */
+export interface VocabDeckSeriesMeta {
+  /** 교재 식별자 — 위저드가 생성, 전 단계 덱 공유 */
+  key: string;
+  /** 교재 이름 — 덱 title(`교재 · N단계`)과 별개로 원제 보존 */
+  title: string;
+  /** 1-base 단계 번호 */
+  index: number;
+  total: number;
+  /** 추천 커리큘럼 key (직접 설계면 없음) */
+  curriculum?: string;
+  /**
+   * 학습 주기 — 전 단계 덱에 같은 사본. 표시·발송 리듬의 정본.
+   * studyDays(0=일~6=토 요일 집합)가 신형 정본이고, daysPerWeek 는 그 길이
+   * (구형 덱 호환·표시용). 구형(주5/7만 저장) 덱은 새니타이저가 요일 집합으로
+   * 승격시킨다 — 산식 정본은 wordbook-plan-types.normalizeStudyDays 와 동형.
+   */
+  schedule?: {
+    wordsPerDay: number;
+    daysPerWeek: number;
+    studyDays: number[];
+    totalDays: number;
+  };
+}
+
 export interface VocabDeckSpec {
   grades?: string[]; // 고1 | 고2 | 고3 (gradeTop 매칭)
   tiers?: string[]; // basic | core | academic | advanced
@@ -248,6 +280,8 @@ export interface VocabDeckSpec {
    */
   passage?: VocabPassageScope;
   limit?: number; // 기본 100 · 상한 500
+  /** 교재(시리즈) 소속 표식 — 위저드 산출 덱에만. 풀 해석에는 관여하지 않는다 */
+  series?: VocabDeckSeriesMeta;
 }
 
 const SCOPE_YEAR_MIN = 2003;
@@ -335,6 +369,82 @@ export function hasVocabPassageScope(s?: VocabPassageScope | null): boolean {
     !!s.examIds?.length ||
     !!s.passageIds?.length
   );
+}
+
+/** 시리즈 상한 — 위저드·새니타이저·서버 검증이 같은 수를 본다.
+ *  (2026-08-10: 60→120 — 2,000단어·월수금 118단계가 정상 사용이라 60이 낮았다.
+ *   plan-types PLAN_UNITS_MAX 와 반드시 같은 값 유지.) */
+export const SERIES_UNITS_MAX = 120;
+export const SERIES_WORDS_PER_DAY_MIN = 5;
+export const SERIES_WORDS_PER_DAY_MAX = 100;
+export const SERIES_TOTAL_WORDS_MAX = 2500;
+
+/**
+ * 시리즈 표식 화이트리스트 — sanitizeDeckSpec(actions/decks.ts)이 spec.series 에
+ * 그대로 태운다. 형상이 조금이라도 어긋나면 표식 전체를 버린다(반쪽 표식이
+ * 그룹핑·배포 예약을 오염시키는 것보다 "일반 덱 취급"이 안전하다).
+ */
+export function sanitizeVocabDeckSeries(
+  input: unknown,
+): VocabDeckSeriesMeta | undefined {
+  const r = (input && typeof input === "object" && !Array.isArray(input)
+    ? input
+    : null) as Record<string, unknown> | null;
+  if (!r) return undefined;
+  const int = (v: unknown, lo: number, hi: number): number | undefined =>
+    typeof v === "number" && Number.isFinite(v) && Math.trunc(v) === v && v >= lo && v <= hi
+      ? v
+      : undefined;
+  const key = typeof r.key === "string" ? r.key.trim().slice(0, 40) : "";
+  const title = typeof r.title === "string" ? r.title.trim().slice(0, 80) : "";
+  const index = int(r.index, 1, SERIES_UNITS_MAX);
+  const total = int(r.total, 1, SERIES_UNITS_MAX);
+  if (!key || !title || index === undefined || total === undefined || index > total) {
+    return undefined;
+  }
+  const meta: VocabDeckSeriesMeta = { key, title, index, total };
+  if (typeof r.curriculum === "string" && r.curriculum.trim()) {
+    meta.curriculum = r.curriculum.trim().slice(0, 40);
+  }
+  const s = (r.schedule && typeof r.schedule === "object" && !Array.isArray(r.schedule)
+    ? r.schedule
+    : null) as Record<string, unknown> | null;
+  if (s) {
+    const wordsPerDay = int(s.wordsPerDay, SERIES_WORDS_PER_DAY_MIN, SERIES_WORDS_PER_DAY_MAX);
+    const totalDays = int(s.totalDays, 1, 120);
+    // 신형: studyDays(요일 집합) / 구형: daysPerWeek 5|7 — 어느 쪽이든 요일
+    // 집합으로 승격해 저장한다(plan-types.normalizeStudyDays 와 같은 규칙.
+    // 여기서 직접 구현하는 이유: plan-types 가 이 파일을 임포트하므로 역방향
+    // 값 임포트는 순환이 된다).
+    let studyDays: number[] | undefined;
+    if (Array.isArray(s.studyDays)) {
+      const arr = [
+        ...new Set(
+          s.studyDays.filter(
+            (d): d is number =>
+              typeof d === "number" && Number.isInteger(d) && d >= 0 && d <= 6,
+          ),
+        ),
+      ].sort((a, b) => a - b);
+      if (arr.length >= 1 && arr.length <= 7) studyDays = arr;
+    }
+    if (!studyDays) {
+      const legacy = int(s.daysPerWeek, 1, 7);
+      if (legacy !== undefined) {
+        studyDays = legacy === 7 ? [0, 1, 2, 3, 4, 5, 6] : [1, 2, 3, 4, 5];
+      }
+    }
+    // 온전할 때만 싣는다 — 반쪽 스케줄은 발송 리듬을 틀리게 만든다.
+    if (wordsPerDay !== undefined && totalDays !== undefined && studyDays) {
+      meta.schedule = {
+        wordsPerDay,
+        daysPerWeek: studyDays.length,
+        studyDays,
+        totalDays,
+      };
+    }
+  }
+  return meta;
 }
 
 /** 덱 단계 — 어법 CONCEPT→…→MASTERED 의 단어판 */

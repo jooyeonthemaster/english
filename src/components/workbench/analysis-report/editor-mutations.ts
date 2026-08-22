@@ -371,6 +371,52 @@ export function setVocabularyTierFilter(
   return setSection(report, sectionIndex, { ...sec, vocabTierFilter: filter });
 }
 
+// ─── 파이널 원페이지 — 단어 시험지 승격 주입 (E23) ──────────────────────────
+/**
+ * 소스(같은 지문의 기본 리포트)의 vocabulary 섹션을 파이널 문서에 승격 주입한다.
+ * 계약:
+ *  · 파이널 문서의 슬롯 경로(section-slots.ts — final-onepage 조기 반환)는 주입 섹션에
+ *    슬롯을 만들지 않는다. 지면 출력은 assemble 의 「숨긴 단어장 + 켜진 시험지」 특례
+ *    emit(hidden.has("vocabulary"))이 유일한 경로라서, hiddenSections "vocabulary" 등록
+ *    (슬롯키 = `${kind}${idSuffix}`, hiddenSectionKeys 실물과 동일 형식)이 필수다 —
+ *    시험지 페이지만 나오고 학습용 단어장 표는 나오지 않는다(의도된 동작).
+ *  · 소스 불변 — rows 와 배열 필드까지 딥카피해 이후 편집이 소스 리포트를 오염시키지 않는다.
+ *  · 이미 vocabulary 섹션이 있거나 소스에 어휘가 없으면 원본 그대로 반환(멱등·히스토리 무오염).
+ */
+export function injectVocabTestSection(
+  report: AnalysisReport,
+  source: AnalysisReport | null | undefined,
+): AnalysisReport {
+  if (report.sections.some((s) => s.kind === "vocabulary")) return report;
+  const src = source?.sections.find((s) => s.kind === "vocabulary");
+  if (src?.kind !== "vocabulary" || src.rows.length === 0) return report;
+  const injected: AnalysisSection = {
+    ...src,
+    rows: src.rows.map((row) => ({ ...row })),
+    hiddenCols: src.hiddenCols ? [...src.hiddenCols] : undefined,
+    vocabTestExcludedKeys: src.vocabTestExcludedKeys ? [...src.vocabTestExcludedKeys] : undefined,
+    vocabTierFilter: src.vocabTierFilter ? [...src.vocabTierFilter] : undefined,
+    vocabTestMode: "hide-meaning",
+  };
+  const withSection = { ...report, sections: [...report.sections, injected] };
+  return setSectionHidden(withSection, "vocabulary", true);
+}
+
+/**
+ * 파이널 문서의 주입 vocabulary 섹션 제거(단어 시험지 끄기) — 파이널의 vocabulary 는
+ * 정의상 전부 주입본이다. deleteSection 이 layout/blockMeta/blockOrder id 시프트와
+ * hiddenSections("vocabulary"·"vocabulary-…") 키 정리까지 담당하므로 그대로 위임한다.
+ * vocabulary 가 없으면 원본 그대로 반환(멱등).
+ */
+export function removeInjectedVocabSection(report: AnalysisReport): AnalysisReport {
+  let next = report;
+  for (;;) {
+    const idx = next.sections.findIndex((s) => s.kind === "vocabulary");
+    if (idx < 0) return next;
+    next = deleteSection(next, idx);
+  }
+}
+
 // ─── 배열 행 추가용 빈 템플릿 ────────────────────────────────────────────────
 export function blankVocabRow() {
   return { headword: "", pronunciation: "", meaning: "", tier: "test" as const, difficulty: 3, synonyms: "" };

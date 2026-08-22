@@ -12,6 +12,7 @@ import {
 } from "react";
 import { useIsMobile } from "@/hooks/use-is-mobile";
 import {
+  BookOpen,
   Check,
   ChevronDown,
   ChevronRight,
@@ -79,6 +80,10 @@ import type { QueueItem } from "../generate-page-types";
 import { useWorkspaceBodyExpansion } from "../workspace-body-context";
 import type { QuestionCardItem } from "@/components/workbench/question-card";
 import { DIFFICULTY_CONFIG } from "@/components/workbench/question-card";
+import {
+  planForDifficulty,
+  QUESTION_GENERATION_PLANS,
+} from "@/lib/question-generation-plans";
 import {
   defaultVariantTitle,
   variantModeLabel,
@@ -323,6 +328,10 @@ interface WorkspacePassageRowProps {
   onOpenSettings?: () => void;
   /** 이 지문이 현재 설정으로 만들어낼 문제 수·크레딧 (푸터 버튼 라벨용). */
   genStats?: { questions: number; creditCost: number };
+  /** 학습 워크북 생성 — 존재하면 푸터가 2버튼 스택으로 바뀐다 (스튜디오 전용) */
+  onOpenWorkbook?: () => void;
+  /** 2버튼 모드에서 기존 버튼(실전 문제)의 라벨 오버라이드 */
+  generateLabel?: string;
 
   // ── 워크스페이스 밖에 그대로 끼워 넣기 (AI 지문 생성 결과 카드) ────────────
   //
@@ -357,7 +366,7 @@ export function WorkspacePassageRow({
   row,
   dragCoach = false,
   globalDifficulty,
-  globalGenerationPlan,
+  // globalGenerationPlan: 26-08-18 난이도 기반 티어 — 뱃지는 난이도에서 유도, prop 은 호환용 유지.
   disabled,
   sessionQueue = EMPTY_QUEUE,
   savedQuestionCount = 0,
@@ -382,6 +391,8 @@ export function WorkspacePassageRow({
   onSetActive,
   onOpenSettings,
   genStats,
+  onOpenWorkbook,
+  generateLabel,
   embedded = false,
   footer,
   onChangeTitle,
@@ -1627,10 +1638,15 @@ export function WorkspacePassageRow({
           <ChevronRight className="h-4 w-4" aria-hidden="true" />
         </span>
       ) : null}
-      {/* ── 헤더 (40px 고정 — 모든 컨트롤 h-7, 아이콘 h-4) ── */}
+      {/* ── 헤더 (40px 고정 — 모든 컨트롤 h-7, 아이콘 h-4) ──
+          2버튼 모드(onOpenWorkbook)에서는 제목이 2줄로 흐를 수 있어 고정
+          높이 대신 min-h + flex-wrap — 우측 이력·접기·X 클러스터는 폭이
+          부족하면 다음 줄로 낙하한다. 부재 시 기존 h-10 문자 그대로. */}
       <div
         className={
-          "flex h-10 items-center gap-2 pl-2.5 pr-1.5 " +
+          (onOpenWorkbook
+            ? "flex min-h-10 flex-wrap items-center gap-2 py-1 pl-2.5 pr-1.5 "
+            : "flex h-10 items-center gap-2 pl-2.5 pr-1.5 ") +
           (row.collapsed ? "" : "border-b border-slate-100")
         }
       >
@@ -1689,6 +1705,12 @@ export function WorkspacePassageRow({
               title="제목 — 지문함에 이 이름으로 저장됩니다"
               className="min-w-[72px] shrink rounded-md border border-transparent bg-transparent px-1 py-0.5 text-[12.5px] font-semibold text-slate-700 outline-none transition-colors hover:border-slate-200 focus:border-blue-300 focus:bg-white focus:ring-2 focus:ring-blue-100"
             />
+          ) : onOpenWorkbook ? (
+            /* 2버튼 모드(스튜디오) — 좁은 중앙 열에서 제목 절단 금지:
+               truncate 대신 2줄까지 줄바꿈을 허용한다(line-clamp-2). */
+            <span className="line-clamp-2 min-w-0 flex-1 break-keep text-[12.5px] font-semibold leading-snug text-slate-700">
+              {row.title}
+            </span>
           ) : (
             <span className="min-w-[72px] shrink truncate text-[12.5px] font-semibold text-slate-700">
               {row.title}
@@ -1735,19 +1757,25 @@ export function WorkspacePassageRow({
               </span>
             );
           })()}
-          {/* 생성 플랜 뱃지 — 문제카드와 동일한 디자인(일반=회색+아이콘, 프리미엄=보라). */}
-          {embedded ? null : (() => {
-            const custom = !!row.override?.generationPlan;
-            const isPremium =
-              (row.override?.generationPlan ?? globalGenerationPlan) ===
-              "PREMIUM";
+          {/* 생성 플랜 뱃지 — 문제카드와 동일한 디자인(일반=회색+아이콘, 킬러=보라).
+              26-08-18 난이도 기반 티어: 플랜은 난이도가 결정(요청 generationPlan 은 서버가
+              무시) — 위 난이도 뱃지가 있으면 이중 표기라 숨기고, 없을 때만 난이도에서 유도해 그린다. */}
+          {embedded ||
+          DIFFICULTY_CONFIG[row.override?.difficulty ?? globalDifficulty]
+            ? null
+            : (() => {
+            const custom = !!row.override?.difficulty;
+            const effectivePlan = planForDifficulty(
+              row.override?.difficulty ?? globalDifficulty,
+            );
+            const isPremium = effectivePlan === "PREMIUM";
             const PlanIcon = isPremium ? Gem : PearlIcon;
             return (
               <span
                 title={
                   custom
-                    ? "이 지문에 지정된 생성 플랜"
-                    : "전체 공통 생성 플랜 (기본값) — 지문별 설정에서 따로 지정 가능"
+                    ? "이 지문에 지정된 난이도가 정한 생성 티어"
+                    : "전체 공통 난이도(기본값)가 정한 생성 티어 — 지문별 설정에서 난이도로 지정"
                 }
                 className={
                   "flex h-7 shrink-0 items-center gap-1 rounded-md border px-1.5 text-[10px] font-bold " +
@@ -1757,7 +1785,7 @@ export function WorkspacePassageRow({
                 }
               >
                 <PlanIcon className="h-3 w-3 shrink-0" aria-hidden="true" />
-                {isPremium ? "프리미엄" : "일반"}
+                {QUESTION_GENERATION_PLANS[effectivePlan].shortLabel}
               </span>
             );
           })()}
@@ -1766,7 +1794,13 @@ export function WorkspacePassageRow({
               {collapsedPreview}
             </span>
           ) : (
-            <span className="min-w-0 flex-1" aria-hidden="true" />
+            /* 스페이서 — 2버튼 모드(onOpenWorkbook)에서는 제목 span(flex-1)과
+               자유 폭을 반분해 제목이 조기 절단되므로 레이아웃에서 제거한다
+               (2026-08-11 재검증 실측: 제목 116px vs 스페이서 116px). */
+            <span
+              className={onOpenWorkbook ? "hidden" : "min-w-0 flex-1"}
+              aria-hidden="true"
+            />
           )}
         </div>
 
@@ -2208,6 +2242,18 @@ export function WorkspacePassageRow({
                 }
                 placeholder="지문 본문"
               />
+              {onOpenWorkbook ? (
+                /* 본문 스크롤 바닥 페이드 (2버튼 모드 한정) — 카드 높이 캡으로
+                   마지막 줄 글리프가 반토막으로 잘릴 때 클립 경계를 부드럽게
+                   가린다. pointer-events-none 이라 스크롤·선택을 막지 않는다. */
+                <div
+                  aria-hidden="true"
+                  className={
+                    "pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-5 bg-gradient-to-t to-transparent " +
+                    (editorLocked ? "from-slate-50" : "from-white")
+                  }
+                />
+              ) : null}
               {/* 붉은 편집 표시 설명 — 표시 위에 커서를 올리면 그 자리에서
                   무엇이 사라졌는지 바로 읽힌다(본문 레이아웃 영향 없음). */}
               {editTip && (editTip.removed || editTip.added) ? (
@@ -2291,14 +2337,19 @@ export function WorkspacePassageRow({
               `}</style>
 
               {/* ── undo / redo — 입력창 우상단에 떠 있는 컨트롤. 본문은 pr-16
-                  으로 우측 거터를 비워 글자가 줄바꿈돼 버튼에 가려지지 않는다. ── */}
+                  으로 우측 거터를 비워 글자가 줄바꿈돼 버튼에 가려지지 않는다.
+                  2버튼 모드(좁은 중앙 열)는 필을 한 단계 줄여 pr-16 거터와
+                  글리프 사이 여백을 확보한다 — 부재 시 기존 문자 그대로. ── */}
               <div className="absolute right-1.5 top-1.5 z-[4] flex items-center gap-0.5 rounded-md border border-slate-200 bg-white/90 p-0.5 shadow-sm">
                 <button
                   type="button"
                   onClick={handleUndo}
                   disabled={locked || row.past.length === 0}
                   title="되돌리기 — 직전 편집·AI 적용을 취소합니다"
-                  className="flex h-6 w-6 items-center justify-center rounded text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 disabled:cursor-not-allowed disabled:opacity-35"
+                  className={
+                    (onOpenWorkbook ? "flex h-5 w-5" : "flex h-6 w-6") +
+                    " items-center justify-center rounded text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 disabled:cursor-not-allowed disabled:opacity-35"
+                  }
                 >
                   <Undo2 className="h-3.5 w-3.5" aria-hidden="true" />
                 </button>
@@ -2307,7 +2358,10 @@ export function WorkspacePassageRow({
                   onClick={handleRedo}
                   disabled={locked || row.future.length === 0}
                   title="다시 실행 — 되돌린 편집을 다시 적용합니다"
-                  className="flex h-6 w-6 items-center justify-center rounded text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 disabled:cursor-not-allowed disabled:opacity-35"
+                  className={
+                    (onOpenWorkbook ? "flex h-5 w-5" : "flex h-6 w-6") +
+                    " items-center justify-center rounded text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 disabled:cursor-not-allowed disabled:opacity-35"
+                  }
                 >
                   <Redo2 className="h-3.5 w-3.5" aria-hidden="true" />
                 </button>
@@ -2510,13 +2564,21 @@ export function WorkspacePassageRow({
                 </button>
               ) : null}
               {coachVisible && !editorLocked && !disabled ? (
-                <span className="flex min-w-0 items-center gap-1 text-slate-400">
+                <span
+                  className={
+                    // 2버튼 모드(스튜디오)는 힌트가 남는 폭을 다 쓰고 자연
+                    // 말줄임되도록 flex-1 — 부재 시 기존 문자 그대로.
+                    onOpenWorkbook
+                      ? "flex min-w-0 flex-1 items-center gap-1 text-slate-400"
+                      : "flex min-w-0 items-center gap-1 text-slate-400"
+                  }
+                >
                   <TextCursorInput
                     className="h-3 w-3 shrink-0 text-blue-400"
                     aria-hidden="true"
                   />
                   <span className="truncate">
-                    문장을 드래그하면 변형·범위 지정 메뉴가 떠요
+                    문장을 드래그하면 변형·범위 지정 메뉴가 뜹니다
                   </span>
                   <button
                     type="button"
@@ -2537,7 +2599,15 @@ export function WorkspacePassageRow({
                 </span>
               ) : null}
               <span className="min-w-0 flex-1" aria-hidden="true" />
-              {words} words
+              {onOpenWorkbook ? (
+                /* 좁은 열에서 "155\nwords" 로 꺾이던 익명 텍스트 노드를
+                   한 덩어리로 고정 — 부재 시 기존 텍스트 노드 그대로. */
+                <span className="shrink-0 whitespace-nowrap">
+                  {words} words
+                </span>
+              ) : (
+                <>{words} words</>
+              )}
             </div>
           </div>
 
@@ -2624,6 +2694,65 @@ export function WorkspacePassageRow({
             {footer}
           </div>
         ) : null
+      ) : onOpenWorkbook ? (
+        /* ── 2버튼 가로 배치 (스튜디오 전용 — onOpenWorkbook 이 있을 때만) ──
+           [학습 워크북 생성][실전 문제 생성] 양옆 동열·동색(둘 다 primary 파랑 —
+           흰 바탕 보조 버튼은 가독성이 나빠 26-08-12 사용자 지시로 폐기).
+           두 버튼 모두 stopPropagation — 행 루트 onClick(onSetActive) 버블을
+           끊는다: 워크북 버튼이 설정 대상(activeRowId)을 세울 이유가 없다.
+           이 prop 을 넘기지 않는 문제생성 페이지는 아래 기존 단일 버튼 블록을
+           문자 그대로 탄다. */
+        <div className="mt-auto grid grid-cols-2 gap-1.5 border-t border-slate-100 bg-slate-50/50 p-2">
+          <button
+            type="button"
+            disabled={disabled}
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpenWorkbook?.();
+            }}
+            title="기본 학습지·파이널 원페이지를 만듭니다"
+            className="flex h-10 min-w-0 items-center justify-center gap-1.5 rounded-lg bg-blue-600 px-2 text-[13px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <BookOpen className="h-4 w-4 shrink-0" aria-hidden="true" />
+            {/* §3.10.19 E19-8 개명 — 같은 모달(WorkbookGenerateModal)을 여는
+                버튼이라 이름이 갈리면 안 된다. 이 행은 §3.10.18 E18-a 로 스튜디오
+                에서 헤드리스가 됐지만 onOpenWorkbook 이 살아 있는 한 표면화 가능
+                하므로 문구를 함께 맞춘다(문구 스윕은 전 표면 대상). */}
+            <span className="whitespace-nowrap">학습지 생성</span>
+          </button>
+          <button
+            type="button"
+            disabled={disabled}
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpenSettings?.();
+            }}
+            data-generate-tour="row-generate-button"
+            title={
+              genStats && genStats.questions > 0
+                ? "이 지문의 유형·난이도를 설정하고 문제를 생성합니다"
+                : "이 지문의 유형을 선택하고 문제를 생성합니다"
+            }
+            className="flex h-10 min-w-0 items-center justify-center gap-1.5 rounded-lg bg-blue-600 px-2 text-[13px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <Cpu className="h-4 w-4 shrink-0" aria-hidden="true" />
+            <span className="whitespace-nowrap">{generateLabel ?? "실전 문제 생성"}</span>
+            {genStats && genStats.questions > 0 ? (
+              <>
+                {/* 문항 수·크레딧 칩 — primary 파랑 바탕이라 bg-white/20 관용구 */}
+                <span className="shrink-0 rounded-md bg-white/20 px-1.5 py-0.5 text-[11px] font-bold tabular-nums">
+                  {genStats.questions}문제
+                </span>
+                {genStats.creditCost > 0 ? (
+                  <CreditCostChip
+                    amount={genStats.creditCost}
+                    className="shrink-0 rounded-md bg-white/20 px-1.5 py-0.5 text-[10.5px] text-white"
+                  />
+                ) : null}
+              </>
+            ) : null}
+          </button>
+        </div>
       ) : (
       <div className="mt-auto border-t border-slate-100 bg-slate-50/50 p-2">
         <button

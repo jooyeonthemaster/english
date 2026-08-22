@@ -23,7 +23,8 @@ import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { cn, formatDate } from "@/lib/utils";
 import {
   getQuestionGenerationPlanFromTags,
-  QUESTION_GENERATION_PLAN_TAGS,
+  planForDifficulty,
+  QUESTION_GENERATION_PLANS,
   sanitizeAiModelDisclosureText,
 } from "@/lib/question-generation-plans";
 import {
@@ -131,7 +132,10 @@ function QuestionCard({ q, num }: { q: QuestionItem; num: number }) {
             {diffConfig.label}
           </Badge>
         )}
-        {generationPlan && (generationPlan === "PREMIUM" || FEATURE_FLAGS.SHOW_MODEL_SELECTOR) && (
+        {/* 26-08-18 난이도 기반 티어: 난이도 뱃지가 같은 티어를 말하면 이중 표기라 숨김. */}
+        {generationPlan &&
+          !(diffConfig && planForDifficulty(q.difficulty) === generationPlan) &&
+          (generationPlan === "PREMIUM" || FEATURE_FLAGS.SHOW_MODEL_SELECTOR) && (
           <Badge
             variant="outline"
             className={cn(
@@ -146,7 +150,7 @@ function QuestionCard({ q, num }: { q: QuestionItem; num: number }) {
             ) : (
               <PearlIcon className="w-3 h-3" />
             )}
-            {QUESTION_GENERATION_PLAN_TAGS[generationPlan]}
+            {QUESTION_GENERATION_PLANS[generationPlan].shortLabel}
           </Badge>
         )}
         {q.aiGenerated && (

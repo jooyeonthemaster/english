@@ -104,6 +104,10 @@ export function WebtoonPickerModal({
   onPick: (pick: WebtoonPick) => void;
 }) {
   const [view, setView] = useState<View>("generate");
+  // 사용자가 탭을 직접 만졌는지 — 초기 로드 완료 콜백의 자동 탭 선택(:224)이 로딩 중의
+  // 수동 탭 전환을 되엎는 레이스 봉인(실측: 보관함 클릭 직후 로드가 끝나며 생성 탭으로
+  // 강제 복귀). 생성 발사·완료 토스트의 setView 는 의도된 항행이라 게이트 밖.
+  const viewTouchedRef = useRef(false);
   const [items, setItems] = useState<WebtoonListItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -157,6 +161,9 @@ export function WebtoonPickerModal({
   }, [scopeParam]);
 
   // 모달이 열릴 때: 완료 목록을 불러오고, 완료본이 있으면 보관함을, 없으면 생성 탭을 연다.
+  // 재마운트 후 진행 소실 → 중복 생성 차감 방지(E23 검수): 진행 중(PENDING/GENERATING)
+  // 웹툰을 병행 조회해 tracking 에 되살린다 — 진행분이 안 보이면 같은 지문을 다시
+  // 생성해 크레딧이 이중 차감되기 때문. 실패해도 완료 목록 로드는 그대로(보조 조회).
   useEffect(() => {
     if (!open) return;
     let alive = true;
@@ -164,10 +171,21 @@ export function WebtoonPickerModal({
     setError(null);
     void (async () => {
       try {
-        const res = await fetch(
-          `/api/webtoons/list?status=COMPLETED&limit=100${scopeParam}`,
-          { credentials: "include", cache: "no-store" },
-        );
+        const [res, activeItems] = await Promise.all([
+          fetch(`/api/webtoons/list?status=COMPLETED&limit=100${scopeParam}`, {
+            credentials: "include",
+            cache: "no-store",
+          }),
+          fetch(`/api/webtoons/list?status=active&limit=50${scopeParam}`, {
+            credentials: "include",
+            cache: "no-store",
+          })
+            .then((r) => r.json())
+            .then((d: { ok?: boolean; items?: WebtoonListItem[] }) =>
+              d?.ok && Array.isArray(d.items) ? d.items : [],
+            )
+            .catch(() => [] as WebtoonListItem[]),
+        ]);
         const data = (await res.json().catch(() => ({}))) as {
           ok?: boolean;
           items?: WebtoonListItem[];
@@ -178,10 +196,37 @@ export function WebtoonPickerModal({
         }
         const list = data.items.filter((it) => pickWebtoonUrl(it));
         setItems(list);
+
+        // 이 지문의 진행 행을 tracking 으로 시드 — 기존 placeholder/폴링 기계가
+        // 그대로 이어받는다. handleGenerate 가 이미 넣은 id 와 겹칠 수 있으므로
+        // id 중복 시드는 막는다(같은 행이 placeholder 로 두 번 뜨는 것 방지).
+        const mineActive = (
+          passageId
+            ? activeItems.filter((it) => it.passageId === passageId)
+            : activeItems
+        ).filter(
+          (it) => it.status === "PENDING" || it.status === "GENERATING",
+        );
+        if (mineActive.length > 0) {
+          setTracking((prev) => {
+            const seen = new Set(prev.map((t) => t.id));
+            const seeded = mineActive
+              .filter((it) => !seen.has(it.id))
+              .map((it) => ({
+                id: it.id,
+                status: it.status as TrackedItem["status"],
+                passageTitle: it.passage?.title ?? "웹툰",
+              }));
+            return seeded.length > 0 ? [...seeded, ...prev] : prev;
+          });
+        }
+
+        // 진행분이 있으면 placeholder 가 보이는 보관함을 먼저 연다(진행 사실 인지 우선).
+        // 단 로딩 중 사용자가 탭을 직접 골랐으면 그 선택이 이긴다(자동 선택은 초기값일 뿐).
         const mine = passageId
           ? list.some((it) => it.passageId === passageId)
           : list.length > 0;
-        setView(mine ? "gallery" : "generate");
+        if (!viewTouchedRef.current) setView(mineActive.length > 0 || mine ? "gallery" : "generate");
       } catch (err) {
         if (alive)
           setError(
@@ -410,7 +455,8 @@ export function WebtoonPickerModal({
   if (!open) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-[90] flex items-center justify-center p-4">
+    // no-print: body 포털이라 par-root 형제 가지치기의 보호를 받지 못한다 — 인쇄 방어는 여기서 직접.
+    <div className="no-print fixed inset-0 z-[90] flex items-center justify-center p-4">
       <div
         className="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px]"
         onClick={onClose}
@@ -452,7 +498,10 @@ export function WebtoonPickerModal({
           <div className="flex h-9 rounded-lg bg-slate-100 p-0.5">
             <button
               type="button"
-              onClick={() => setView("generate")}
+              onClick={() => {
+                viewTouchedRef.current = true;
+                setView("generate");
+              }}
               className={`flex items-center gap-1.5 rounded-[6px] px-3 text-[12.5px] transition-all duration-150 ${
                 view === "generate"
                   ? "bg-white font-bold text-blue-700 shadow-sm"
@@ -464,7 +513,10 @@ export function WebtoonPickerModal({
             </button>
             <button
               type="button"
-              onClick={() => setView("gallery")}
+              onClick={() => {
+                viewTouchedRef.current = true;
+                setView("gallery");
+              }}
               className={`flex items-center gap-1.5 rounded-[6px] px-3 text-[12.5px] transition-all duration-150 ${
                 view === "gallery"
                   ? "bg-white font-bold text-blue-700 shadow-sm"
@@ -579,7 +631,10 @@ export function WebtoonPickerModal({
                 </p>
                 <button
                   type="button"
-                  onClick={() => setView("generate")}
+                  onClick={() => {
+                viewTouchedRef.current = true;
+                setView("generate");
+              }}
                   className="mt-1 inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-[12px] font-bold text-white hover:bg-blue-700"
                 >
                   <Wand2 className="h-3.5 w-3.5" />

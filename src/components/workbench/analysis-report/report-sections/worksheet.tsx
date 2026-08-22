@@ -357,7 +357,8 @@ export function worksheetAnswerKeySubsections(
     wrap(
       "drill-grammar",
       <div className="par-ws-answer-subsection">
-        <div className="par-ws-drill-label">어법 선택</div>
+        {/* 워크북 어법(Grammar Choice) 정답과 제목이 겹쳐 대응 섹션을 구분 못 하던 결함(R2) — 출처 병기 */}
+        <div className="par-ws-drill-label">어법 선택 · Workbook Drills</div>
         <table className="par-ws-key-table">
           <tbody>
             {drillGrammarChoices.map((item) => (
@@ -377,7 +378,7 @@ export function worksheetAnswerKeySubsections(
     wrap(
       "workbook-grammar",
       <div className="par-ws-answer-subsection">
-        <div className="par-ws-drill-label">{workbook.grammarSelection.title}</div>
+        <div className="par-ws-drill-label">{workbook.grammarSelection.title} · Grammar Choice</div>
         <table className="par-ws-key-table">
           <tbody>
             {workbook.grammarSelection.choices.map((choice) => (
@@ -464,51 +465,3 @@ export function worksheetAnswerKeySubsections(
   return subs;
 }
 
-export function WorksheetLogicMapBlock({
-  section,
-  editable,
-  onPatch,
-}: {
-  section: LearningWorksheetSection;
-  editable: boolean;
-  onPatch: (patch: Partial<LearningWorksheetSection>) => void;
-}) {
-  if (!section.logicRows.length) return null;
-  return (
-    <div className="par-ws-block par-ws-logic-promoted">
-      <WorksheetMiniTitle {...miniHeadProps(section, onPatch, editable, "ws-logic", "지문 논리 구조 분석", "Logic Map")} />
-      <table className="par-ws-logic">
-        <thead>
-          <tr>
-            <EditableSectionLabel section={section} onPatch={onPatch} editable={editable} slot="ws-logic-col-sentence" defaultText="문장" as="th" />
-            <EditableSectionLabel section={section} onPatch={onPatch} editable={editable} slot="ws-logic-col-function" defaultText="기능" as="th" />
-            <EditableSectionLabel section={section} onPatch={onPatch} editable={editable} slot="ws-logic-col-keypoint" defaultText="핵심 내용" as="th" />
-          </tr>
-        </thead>
-        <tbody>
-          {section.logicRows.map((row, i) => (
-            <tr key={i}>
-              <td>{row.sentenceNo ? `S${row.sentenceNo}` : "-"}</td>
-              <td>
-                <Field
-                  as="span"
-                  editable={editable}
-                  value={row.functionLabel}
-                  onCommit={(v) => onPatch({ logicRows: section.logicRows.map((item, j) => (i === j ? { ...item, functionLabel: v } : item)) })}
-                />
-              </td>
-              <td>
-                <Field
-                  as="span"
-                  editable={editable}
-                  value={row.keyPoint}
-                  onCommit={(v) => onPatch({ logicRows: section.logicRows.map((item, j) => (i === j ? { ...item, keyPoint: v } : item)) })}
-                />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}

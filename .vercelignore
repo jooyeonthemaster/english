@@ -90,3 +90,7 @@ C.txt
 D.txt
 _probe.txt
 s15-full.png
+
+# 코퍼스 수리 도구 크래시 잔해 — 배포 업로드에서 제외(렌즈 R3, 2026-08-20)
+*.h1tmp-*
+*.h1rbtmp-*

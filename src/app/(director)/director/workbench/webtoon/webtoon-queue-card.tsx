@@ -389,19 +389,52 @@ export function PreviewModal({
       const startY = event.clientY;
       const startTop = ctrlPos.top;
       const startRight = ctrlPos.right;
+      // 드래그 중에는 컨트롤 DOM(그립 span 의 부모 = top/right 를 소유한 루트)에
+      // rAF 코얼레싱으로 직접 쓰고, 놓을 때 한 번만 상태로 확정한다. mousemove
+      // 마다 setCtrlPos 하면 모달 전체(헤더 버튼·이미지·줌 컨트롤)가 프레임마다
+      // 리렌더되고, img 의 인라인 ref 콜백이 렌더마다 detach/attach 를 반복한다.
+      const ctrlEl = event.currentTarget.parentElement as HTMLElement | null;
+      const prevCursor = document.body.style.cursor;
+      const prevSelect = document.body.style.userSelect;
+      const prevPointerEvents = document.body.style.pointerEvents;
       document.body.style.cursor = "grabbing";
       document.body.style.userSelect = "none";
+      // 드래그 중 hover 스타일 재평가 차단(모달 아래 카드들) — 리스너가
+      // document 소속이라 move 수신에는 영향 없다.
+      document.body.style.pointerEvents = "none";
+      let latest = { top: startTop, right: startRight };
+      let rafId: number | null = null;
+      const flush = () => {
+        rafId = null;
+        if (ctrlEl) {
+          ctrlEl.style.top = `${latest.top}px`;
+          ctrlEl.style.right = `${latest.right}px`;
+        }
+      };
       const move = (e: MouseEvent) => {
-        setCtrlPos({
+        latest = {
           top: Math.max(0, startTop + (e.clientY - startY)),
           right: Math.max(0, startRight - (e.clientX - startX)),
-        });
+        };
+        if (ctrlEl) {
+          if (rafId === null) rafId = requestAnimationFrame(flush);
+        } else {
+          // 컨트롤 DOM 을 못 찾으면(구조 변경 등) 종전 setState 경로로 폴백.
+          setCtrlPos(latest);
+        }
       };
       const up = () => {
         document.removeEventListener("mousemove", move);
         document.removeEventListener("mouseup", up);
-        document.body.style.cursor = "";
-        document.body.style.userSelect = "";
+        if (rafId !== null) cancelAnimationFrame(rafId);
+        flush();
+        document.body.style.cursor = prevCursor;
+        document.body.style.userSelect = prevSelect;
+        document.body.style.pointerEvents = prevPointerEvents;
+        // 최종 위치를 상태로 확정 — 이후 리렌더가 같은 값을 다시 쓴다.
+        setCtrlPos((prev) =>
+          prev.top === latest.top && prev.right === latest.right ? prev : latest,
+        );
       };
       document.addEventListener("mousemove", move);
       document.addEventListener("mouseup", up);

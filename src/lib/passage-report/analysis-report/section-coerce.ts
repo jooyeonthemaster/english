@@ -6,7 +6,6 @@ import {
   examFocusSectionSchema,
   vocabularySectionSchema,
   parsingSectionSchema,
-  learningWorksheetSectionSchema,
   type AnalysisSection,
 } from "./schema";
 import type { SectionKind } from "./section-prompts";
@@ -26,7 +25,6 @@ import { MIN_ANTONYM_COVERAGE, normalizeVocabularySection } from "./vocab-normal
 
 export const SECTION_SCHEMA: Record<SectionKind, z.ZodType<AnalysisSection>> = {
   passage: passageSectionSchema as unknown as z.ZodType<AnalysisSection>,
-  "learning-worksheet": learningWorksheetSectionSchema as unknown as z.ZodType<AnalysisSection>,
   summary: summarySectionSchema as unknown as z.ZodType<AnalysisSection>,
   grammar: grammarSectionSchema as unknown as z.ZodType<AnalysisSection>,
   "exam-focus": examFocusSectionSchema as unknown as z.ZodType<AnalysisSection>,
@@ -43,7 +41,6 @@ const CAP = {
   examRows: 10,
   vocabRows: 40,
   parsingItems: 8,
-  logicRows: 12,
   summarySentences: 5,
 } as const;
 
@@ -80,7 +77,18 @@ export function coerceSection(kind: SectionKind, raw: unknown): unknown {
           if (n === undefined || !nonEmpty(row.en) || typeof row.ko !== "string") return null;
           const chunks = asArray(row.chunks)
             .filter((c) => c && typeof c === "object" && nonEmpty((c as Record<string, unknown>).text))
-            .slice(0, CAP.chunks);
+            .slice(0, CAP.chunks)
+            // emphasis 는 enum("core"|"normal") 밖 값을 접어서 살린다 — luna 실측(26-08-12,
+            // 3런 중 2런)에서 자유값이 나와 passage 섹션 전체가 재생성 대상이 되던 것을
+            // "거부 대신 고쳐서 살린다" 원칙대로 필드 드롭으로 구제(모델 불문 방어).
+            .map((c) => {
+              const chunk = c as Record<string, unknown>;
+              if (chunk.emphasis !== undefined && chunk.emphasis !== "core" && chunk.emphasis !== "normal") {
+                const { emphasis: _drop, ...rest } = chunk;
+                return rest;
+              }
+              return chunk;
+            });
           return { ...row, n, en: str(row.en), ko: str(row.ko), ...(chunks.length ? { chunks } : { chunks: undefined }) };
         })
         .filter(Boolean);
@@ -181,26 +189,6 @@ export function coerceSection(kind: SectionKind, raw: unknown): unknown {
         .filter(Boolean)
         .slice(0, CAP.parsingItems);
       return obj;
-    }
-
-    case "learning-worksheet": {
-      // 기본 분석의 learning-worksheet 은 logicRows 표 전용 — 다른 워크시트 콘텐츠는 버린다.
-      const logicRows = asArray(obj.logicRows)
-        .map((r) => {
-          if (!r || typeof r !== "object") return null;
-          const row = r as Record<string, unknown>;
-          if (!nonEmpty(row.functionLabel) || !nonEmpty(row.keyPoint)) return null;
-          const sentenceNo = clampInt(row.sentenceNo, 1, 60);
-          return { ...row, ...(sentenceNo !== undefined ? { sentenceNo } : {}) };
-        })
-        .filter(Boolean)
-        .slice(0, CAP.logicRows);
-      return {
-        kind: "learning-worksheet",
-        title: nonEmpty(obj.title) ? obj.title : "지문 논리 구조 분석",
-        logicRows,
-        hiddenAnswers: false,
-      };
     }
 
     default:

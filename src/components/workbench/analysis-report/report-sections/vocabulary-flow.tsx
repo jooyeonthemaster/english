@@ -11,7 +11,8 @@ const s = section;
       const h = new Set(s.hiddenCols ?? []);
       const upd = (i: number, p: Partial<(typeof s.rows)[number]>) => commit({ ...s, rows: s.rows.map((r, j) => (j === i ? { ...r, ...p } : r)) });
       const delRow = (i: number) => commit({ ...s, rows: s.rows.filter((_, j) => j !== i) });
-      if (!options?.vocabTestOnly && (s.vocabStudyLayout ?? "table") === "two-column") {
+      // 학습 단어장 기본 레이아웃 = 2열 카드(compact-spec §5) — properties-panel 의 기본값과 동기.
+      if (!options?.vocabTestOnly && (s.vocabStudyLayout ?? "two-column") === "two-column") {
         // 단어장 2열 카드 — 난이도 필터를 통과한 행을 순서대로 2개씩 짝지어 한 행(grid row)으로.
         const visible = s.rows
           .map((row, index) => ({ row, index }))

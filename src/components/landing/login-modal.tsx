@@ -79,7 +79,7 @@ export function LoginModal({ open, onClose }: LoginModalProps) {
       sessionStorage.setItem(special.welcomeStorageKey, "true");
     }
     onClose();
-    router.push(role === "DIRECTOR" ? "/director/workbench/questions/generate" : "/teacher");
+    router.push(role === "DIRECTOR" ? "/director/studio" : "/teacher");
     router.refresh();
   }
 

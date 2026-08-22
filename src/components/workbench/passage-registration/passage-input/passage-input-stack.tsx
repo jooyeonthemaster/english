@@ -48,7 +48,7 @@ interface PassageInputStackProps {
   /** Persist + analyze every valid row (each carries its own annotations). */
   onAnalyze: (
     plan: QuestionGenerationPlan,
-    options: { includeWorksheet: boolean },
+    options: { includeWorksheet: boolean; finalOnepage?: boolean },
   ) => void;
   /**
    * '지문 추가' 클릭 동작. 주어지면 내 지문함으로 돌아가 지문을 골라 담는다
@@ -70,6 +70,13 @@ interface PassageInputStackProps {
    */
   includeWorksheet?: boolean;
   onIncludeWorksheetChange?: (v: boolean) => void;
+  /**
+   * 학습지 구성 3상품(기본/실전/파이널) 리프트 — 구 boolean 리프트의 확장.
+   * sheetVariant 가 오면 includeWorksheet 보다 우선하며, 변경 통지도
+   * onSheetVariantChange 한쪽으로만 나간다(구 prop 는 하위호환 유지).
+   */
+  sheetVariant?: LearningSheetVariant;
+  onSheetVariantChange?: (v: LearningSheetVariant) => void;
 }
 
 /**
@@ -89,6 +96,8 @@ export function PassageInputStack({
   onAddVariant,
   includeWorksheet: includeWorksheetProp,
   onIncludeWorksheetChange,
+  sheetVariant: sheetVariantProp,
+  onSheetVariantChange,
 }: PassageInputStackProps) {
   // 지문 입력 행 영역 — '생성하기'가 비활(유효 지문 0개)일 때 눌리면 이 안의
   // 행 카드들을 글로우해 "지문을 먼저 입력하세요"를 유도한다.
@@ -161,30 +170,80 @@ export function PassageInputStack({
   const primaryAnalysisPlan: QuestionGenerationPlan = "STANDARD";
   const primaryUnitCost = PASSAGE_ANALYSIS_BASE_CREDIT_COST;
 
-  // ── 학습지 구성 선택 — 기본 vs 실전 학습지 포함 (선택은 브라우저에 기억) ──
+  // ── 학습지 구성 선택 — 기본/실전 포함/파이널 원페이지 (선택은 브라우저에 기억) ──
   // 부모가 제어 값을 넘기면(모바일 스텝 플로우) 그것을 쓰고, 아니면 내부에
   // 로컬 저장한다. 두 경로 모두 같은 저장 키를 공유해 값이 어긋나지 않는다.
-  const [localIncludeWorksheet, setLocalIncludeWorksheet] =
-    usePersistedState<boolean>(
-      "smoat:passages-create:include-worksheet",
-      false,
-      (v): v is boolean => typeof v === "boolean",
+  // 정본은 신규 variant 키이며, 구 boolean 키(include-worksheet)는 다른 소비처
+  // 무회귀를 위해 계속 동기 기록한다.
+  // 구 boolean 키는 쓰기 전용(동기 기록)으로만 쓴다 — 읽기 정본은 variant 키.
+  const [, setLocalIncludeWorksheet] = usePersistedState<boolean>(
+    "smoat:passages-create:include-worksheet",
+    false,
+    (v): v is boolean => typeof v === "boolean",
+  );
+  const [localVariant, setLocalVariant] =
+    usePersistedState<LearningSheetVariant>(
+      "smoat:passages-create:sheet-variant",
+      "basic",
+      (v): v is LearningSheetVariant =>
+        v === "basic" || v === "practice" || v === "final",
     );
-  const includeWorksheet = includeWorksheetProp ?? localIncludeWorksheet;
-  const setIncludeWorksheet = (v: boolean) => {
-    setLocalIncludeWorksheet(v);
-    onIncludeWorksheetChange?.(v);
+  // 구 boolean 키 → 신규 variant 키 1회 마이그레이션 — 신규 키가 이미 있으면
+  // 그 값이 정본이고, 없을 때만 구 키 true 를 practice 로 시드한다(false→basic 은
+  // 초기값과 같아 별도 기록 불필요).
+  useEffect(() => {
+    try {
+      if (
+        window.localStorage.getItem("smoat:passages-create:sheet-variant") !== null
+      ) {
+        return;
+      }
+      const legacy = window.localStorage.getItem(
+        "smoat:passages-create:include-worksheet",
+      );
+      if (legacy !== null && JSON.parse(legacy) === true) {
+        setLocalVariant("practice");
+      }
+    } catch {
+      /* 저장소 접근 불가 시 기본값(basic) 유지 */
+    }
+    // 마운트 1회 — 저장 키는 컴포넌트 수명 동안 불변.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  // variant 리프트가 오면 그것이 정본, 없으면 구 boolean 리프트를 variant 로
+  // 해석(하위호환), 둘 다 없으면 로컬 저장값.
+  const sheetVariant: LearningSheetVariant =
+    sheetVariantProp ??
+    (includeWorksheetProp !== undefined
+      ? includeWorksheetProp
+        ? "practice"
+        : "basic"
+      : localVariant);
+  const includeWorksheet = sheetVariant === "practice";
+  const setSheetVariant = (v: LearningSheetVariant) => {
+    setLocalVariant(v);
+    // 구 boolean 키 동기 기록 — include-worksheet 소비처(모바일 하단 바 등) 무회귀.
+    setLocalIncludeWorksheet(v === "practice");
+    // variant-인지 부모에게는 variant 만 통지한다 — 구 콜백까지 함께 부르면
+    // final 이 boolean(false)으로 강등되어 부모 상태를 덮을 수 있다.
+    if (onSheetVariantChange) onSheetVariantChange(v);
+    else onIncludeWorksheetChange?.(v === "practice");
   };
   const [previewVariant, setPreviewVariant] =
     useState<LearningSheetVariant | null>(null);
 
   const worksheetUnitCost = PASSAGE_ANALYSIS_WORKSHEET_EXTRA_CREDIT_COST;
   const n = validRows.length;
+  // 파이널 원페이지는 지문당 기본가(◈5)와 동일 단가라 includeWorksheet=false
+  // 경로의 계산식이 그대로 성립한다(스펙 §1 가격 정본).
   const selectedUnitCost = getPassageAnalysisCreditCost({ includeWorksheet });
   const primaryTotal = selectedUnitCost * Math.max(1, n);
-  const selectedSheetLabel = includeWorksheet
-    ? "실전 학습지 포함"
-    : "기본 학습지";
+  const selectedSheetLabel =
+    sheetVariant === "final"
+      ? "파이널 원페이지"
+      : sheetVariant === "practice"
+        ? "실전 학습지 포함"
+        : "기본 학습지";
 
   const countChip =
     n > 1 ? (
@@ -380,7 +439,7 @@ export function PassageInputStack({
           </span>
           <button
             type="button"
-            onClick={() => setPreviewVariant(includeWorksheet ? "practice" : "basic")}
+            onClick={() => setPreviewVariant(sheetVariant)}
             className="flex items-center gap-1 text-[11.5px] font-bold text-blue-600 transition-colors hover:text-blue-700 hover:underline"
           >
             <Eye className="size-3.5" />
@@ -396,17 +455,24 @@ export function PassageInputStack({
             [
               {
                 id: "basic" as const,
-                selected: !includeWorksheet,
+                selected: sheetVariant === "basic",
                 title: "기본 학습지",
-                desc: "원문 필기 캔버스 · 논리 구조 · 요약 · 어법 · 출제 포인트 · 어휘 · 구문 분석",
+                desc: "원문 필기 캔버스 · 요약 · 어법 · 출제 포인트 · 어휘 · 구문 분석",
                 unit: primaryUnitCost,
               },
               {
                 id: "practice" as const,
-                selected: includeWorksheet,
+                selected: sheetVariant === "practice",
                 title: "실전 학습지 포함",
                 desc: "기본 구성 + 어법 선택 워크북 · 어휘 빈칸 · 배열 영작 + 수능형 추론 5문항",
                 unit: primaryUnitCost + worksheetUnitCost,
+              },
+              {
+                id: "final" as const,
+                selected: sheetVariant === "final",
+                title: "파이널 원페이지",
+                desc: "시험 직전 족집게 · 손필기 원문 분석 · 유형별 출제 포인트·함정 · A4 딱 1장",
+                unit: primaryUnitCost,
               },
             ]
           ).map((option) => (
@@ -415,18 +481,21 @@ export function PassageInputStack({
               role="radio"
               aria-checked={option.selected}
               tabIndex={0}
-              onClick={() => !saving && setIncludeWorksheet(option.id === "practice")}
+              onClick={() => !saving && setSheetVariant(option.id)}
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {
                   e.preventDefault();
-                  if (!saving) setIncludeWorksheet(option.id === "practice");
+                  if (!saving) setSheetVariant(option.id);
                 }
               }}
               className={`group flex cursor-pointer flex-col gap-1 rounded-xl border px-3 py-2.5 transition-all ${
                 option.selected
                   ? "border-blue-400 bg-blue-50/60 ring-1 ring-blue-200"
                   : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/60"
-              } ${saving ? "pointer-events-none opacity-60" : ""}`}
+              } ${saving ? "pointer-events-none opacity-60" : ""}${
+                // 3번째 카드(파이널)는 설명이 길어 2열 그리드에서 전폭을 쓴다.
+                option.id === "final" ? " sm:col-span-2" : ""
+              }`}
             >
               <div className="flex items-center gap-1.5">
                 <span
@@ -479,7 +548,12 @@ export function PassageInputStack({
               triggerHintGlowWithin(rowsZoneRef.current, ":scope > div");
               return;
             }
-            onAnalyze(primaryAnalysisPlan, { includeWorksheet });
+            // final 선택 시 includeWorksheet=false 강제(조합 금지 — 스펙 §1),
+            // finalOnepage 는 true 일 때만 키 존재(부재 스프레드 무회귀).
+            onAnalyze(primaryAnalysisPlan, {
+              includeWorksheet,
+              ...(sheetVariant === "final" ? { finalOnepage: true } : {}),
+            });
           }}
           className={
             "h-10 w-full rounded-lg px-3 text-[13px] font-extrabold " +
@@ -510,7 +584,7 @@ export function PassageInputStack({
         basicUnitCost={primaryUnitCost}
         onClose={() => setPreviewVariant(null)}
         onApplyVariant={(variant) => {
-          setIncludeWorksheet(variant === "practice");
+          setSheetVariant(variant);
           setPreviewVariant(null);
         }}
       />

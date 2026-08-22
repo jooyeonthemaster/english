@@ -1,0 +1,173 @@
+<section class="slide slide--dark" id="s14"
+  data-title="PIVOT" data-kr="여기서 끝나면"
+  data-zone="전환" data-zone-en="PIVOT"
+  data-part="PART 1 — 기능 브리핑"
+  data-in="완성된 자료"
+  data-out="…아직 아무것도 돌아오지 않음"
+  data-note="여기서부터가 진짜">
+
+  <div class="pad s14-wrap">
+
+    <!-- ── 라인이 멈춘 자리 ── -->
+    <div class="s14-rail" data-step="0" data-fx="none">
+      <svg class="s14-svg" viewBox="0 0 1728 20" width="1728" height="20" aria-hidden="true">
+        <defs>
+          <linearGradient id="s14run" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="856" y2="0">
+            <stop offset="0%"   stop-color="#3B82F6" stop-opacity=".06"/>
+            <stop offset="68%"  stop-color="#3B82F6" stop-opacity=".70"/>
+            <stop offset="100%" stop-color="#3B82F6" stop-opacity=".95"/>
+          </linearGradient>
+          <linearGradient id="s14void" gradientUnits="userSpaceOnUse" x1="880" y1="0" x2="1728" y2="0">
+            <stop offset="0%"   stop-color="#8892A6" stop-opacity=".40"/>
+            <stop offset="100%" stop-color="#8892A6" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+
+        <line x1="0" y1="10" x2="856" y2="10" stroke="url(#s14run)" stroke-width="2"/>
+        <circle cx="196" cy="10" r="3" fill="#3B82F6" opacity=".42"/>
+        <circle cx="420" cy="10" r="3" fill="#3B82F6" opacity=".60"/>
+        <circle cx="644" cy="10" r="3" fill="#3B82F6" opacity=".80"/>
+
+        <circle r="4" fill="#BFDBFE" opacity="0">
+          <animate attributeName="cx" values="0;856;856" keyTimes="0;.62;1" dur="4.2s" repeatCount="indefinite"/>
+          <animate attributeName="cy" values="10;10;10" dur="4.2s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;.07;.62;.76;1" dur="4.2s" repeatCount="indefinite"/>
+        </circle>
+
+        <rect x="862" y="1" width="3" height="18" fill="#3B82F6"/>
+        <circle cx="863.5" cy="10" r="7" fill="none" stroke="#3B82F6" stroke-width="1.4" opacity=".45"/>
+
+        <line x1="880" y1="10" x2="1728" y2="10" stroke="url(#s14void)" stroke-width="2" stroke-dasharray="4 10"/>
+      </svg>
+    </div>
+
+    <div class="s14-stack">
+
+      <!-- ── 헤드 ── -->
+      <div class="s14-head">
+        <div class="s14-kick" data-step="0" data-fx="none">
+          <span class="kicker">잠깐, 여기서 멈추면</span>
+        </div>
+
+        <h1 class="s14-h1" data-step="0">
+          <span class="l1">여기까지는</span>
+          <span class="l2">전부 '만드는' 이야기였습니다.</span>
+        </h1>
+
+        <p class="s14-lead" data-step="0" data-fx="none">
+          그런데 만든 자료가 종이로만 나가면, 그 다음이 안 보입니다.
+        </p>
+      </div>
+
+      <!-- ── 세 개의 빈칸 ── -->
+      <div class="s14-qs">
+        <div class="qcard" data-step="1">
+          <span class="qm mono">?</span>
+          <div class="qtx">
+            <b>누가 풀었나</b>
+            <span>프린트를 나눠줬지만 몇 명이 풀었는지 모릅니다</span>
+          </div>
+        </div>
+        <div class="qcard" data-step="1">
+          <span class="qm mono">?</span>
+          <div class="qtx">
+            <b>어디서 틀렸나</b>
+            <span>채점은 했지만 왜 틀렸는지는 학생만 압니다</span>
+          </div>
+        </div>
+        <div class="qcard" data-step="1">
+          <span class="qm mono">?</span>
+          <div class="qtx">
+            <b>다음엔 뭘 줘야 하나</b>
+            <span>감으로 다음 자료를 만듭니다</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 전환 ── -->
+      <div class="s14-turnwrap" data-step="2" data-fx="none">
+        <div class="s14-turn">
+          <p class="t1">그래서 라인은 여기서 끝나지 않습니다.</p>
+          <p class="t2">만든 자료를 학생에게 보내고, 다시 돌려받는 데까지가 <em>SMOAT</em>입니다.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+<style>
+#s14 .s14-wrap { display: flex; flex-direction: column; }
+
+/* ── 멈춘 라인 ── */
+/* HUD 레일(y=64)과 시각적으로 겹쳐 이중 레일로 읽히지 않도록 아래로 내린다 */
+#s14 .s14-rail { flex: none; height: 20px; line-height: 0; margin-top: 68px; opacity: .72; }
+#s14 .s14-svg { display: block; width: 1728px; height: 20px; }
+
+/* ── 중앙 스택 ── */
+#s14 .s14-stack {
+  flex: 1; display: flex; flex-direction: column; justify-content: center;
+}
+
+/* ── 헤드 ── */
+#s14 .s14-head { text-align: center; }
+#s14 .s14-kick { line-height: 1; }
+
+#s14 .s14-h1 {
+  margin-top: 30px;
+  font-family: var(--f-display); font-weight: 800;
+  font-size: 88px; line-height: 1.14; letter-spacing: -.032em;
+}
+#s14 .s14-h1 .l1 { display: block; color: var(--grey); }
+#s14 .s14-h1 .l2 { display: block; color: var(--white); }
+
+#s14 .s14-lead {
+  margin-top: 28px; font-size: 22px; line-height: 1.62; color: #93A0B5;
+}
+
+/* ── 세 개의 빈칸 ── */
+#s14 .s14-qs {
+  margin-top: 88px;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+}
+#s14 .qcard {
+  display: flex; align-items: center; gap: 22px;
+  padding: 30px; border-radius: 14px;
+  background: rgba(16,23,37,.34);
+  border: 1px dashed rgba(136,146,166,.30);
+}
+#s14 .qcard:nth-child(2) { transition-delay: .09s; }
+#s14 .qcard:nth-child(3) { transition-delay: .18s; }
+
+#s14 .qcard .qm {
+  flex: none; width: 52px; text-align: center;
+  font-size: 60px; font-weight: 600; line-height: 1;
+  color: var(--txt-4);
+}
+#s14 .qcard .qtx { min-width: 0; }
+#s14 .qcard .qtx b {
+  display: block;
+  font-family: var(--f-display); font-weight: 700; font-size: 28px;
+  line-height: 1.28; letter-spacing: -.018em; color: var(--white);
+}
+#s14 .qcard .qtx span {
+  display: block; margin-top: 10px;
+  font-size: 15px; line-height: 1.55; color: #6E7A90;
+}
+
+/* ── 전환 ── */
+#s14 .s14-turnwrap { margin-top: 72px; text-align: center; }
+#s14 .s14-turn {
+  display: inline-block; text-align: left;
+  padding: 4px 0 4px 30px;
+  border-left: 3px solid var(--blue);
+  background: linear-gradient(90deg, rgba(59,130,246,.10), rgba(59,130,246,0) 78%);
+}
+#s14 .s14-turn p {
+  font-family: var(--f-display); font-weight: 700;
+  font-size: 28px; line-height: 1.5; letter-spacing: -.018em;
+}
+#s14 .s14-turn .t1 { color: #E8EDF7; }
+#s14 .s14-turn .t2 { color: var(--white); }
+#s14 .s14-turn em { font-style: normal; color: var(--blue); }
+</style>
+</section>

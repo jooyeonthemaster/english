@@ -143,7 +143,33 @@ export function readStoredThumbnailsCollapsed(): boolean {
 export function clampPanelWidths(
   widths: PanelWidths,
   containerWidth: number,
+  opts?: { hideLeft?: boolean },
 ): PanelWidths {
+  if (opts?.hideLeft) {
+    // hideQuestionLibrary 임베드(§3.10.17-d v2.3): 좌측 패널·좌측 핸들이 존재
+    // 하지 않으므로 예산은 우측 핸들 1개뿐이다 — 종전 산식은 유령 좌측 몫
+    // (최소 280px)+핸들 48px 를 예약해 우측 드래그 범위를 과도하게 조였다.
+    // left 는 저장값 그대로 통과(렌더가 0px 로 지워 표시 무관 — 여기서
+    // 클램프하면 공유 저장값 오염만 남는다).
+    const availableWidth = Math.max(
+      0,
+      containerWidth - PANEL_TOGGLE_HANDLE_WIDTH,
+    );
+    const maxSideWidth = Math.max(0, availableWidth - PANEL_MIN_CENTER);
+    return {
+      left: Math.round(widths.left),
+      right: Math.round(
+        clampNumber(
+          widths.right,
+          PANEL_LIMITS.right.min,
+          Math.max(
+            PANEL_LIMITS.right.min,
+            Math.min(PANEL_LIMITS.right.max, maxSideWidth),
+          ),
+        ),
+      ),
+    };
+  }
   const availableWidth = Math.max(
     0,
     containerWidth - PANEL_TOGGLE_HANDLE_WIDTH * 2,

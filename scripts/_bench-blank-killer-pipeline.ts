@@ -22,17 +22,25 @@ const PASSAGES = (argVal("--passages") ?? "").split(/[\s,]+/).filter(Boolean);
 const CONC = Number(argVal("--concurrency") ?? "8");
 const G37 = "google/gemini-3.7-flash";
 
-async function call(prompt: string): Promise<{ text: string; ms: number; costUsd: number; finish: string | null }> {
+async function call(prompt: string, luna?: { system: string; jsonSchema: unknown }): Promise<{ text: string; ms: number; costUsd: number; finish: string | null }> {
   const key = process.env.OPENROUTER_API_KEY!;
   const t0 = Date.now();
+  const body: Record<string, unknown> = {
+    model: luna ? "openai/gpt-5.6-luna" : G37,
+    messages: luna
+      ? [{ role: "system", content: luna.system }, { role: "user", content: prompt }]
+      : [{ role: "user", content: prompt }],
+    max_tokens: 14_000, stream: true, usage: { include: true },
+    reasoning: { enabled: true, effort: "high", exclude: false },
+  };
+  if (luna) {
+    body.response_format = { type: "json_schema", json_schema: luna.jsonSchema };
+    body.provider = { order: ["openai"], allow_fallbacks: false };
+  }
   const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
     method: "POST",
     headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      model: G37, messages: [{ role: "user", content: prompt }],
-      max_tokens: 14_000, stream: true, usage: { include: true },
-      reasoning: { enabled: true, effort: "high", exclude: false },
-    }),
+    body: JSON.stringify(body),
     signal: AbortSignal.timeout(240_000),
   });
   if (!res.ok || !res.body) throw new Error(`upstream ${res.status}`);
@@ -80,6 +88,7 @@ async function main() {
   const { adaptMdBlankToAiQuestion } = await import("../src/lib/md-qgen/adapter");
   const { postProcessQuestion } = await import("../src/lib/question-postprocess");
   const { shuffleQuestionOptionsForDiversity } = await import("../src/lib/question-diversity");
+  const lunaMod = await import("../src/lib/md-qgen/luna-lane");
 
   const passages = await prisma.passage.findMany({ where: { id: { in: PASSAGES } }, select: { id: true, title: true, content: true } });
   console.log(`passages=${passages.length} arms=${ARMS.join(",")}`);
@@ -123,6 +132,122 @@ async function main() {
           );
           calls.push(build);
           finalText = build.text;
+        } else if (arm === "precomp") {
+          // O231: 결정형 자리 사전계산 주입 — 단일콜(r1 + 후보 블록). 자기검열이
+          // 아니라 입력 제약(교사 포인트 기전 동형)이라 "개입→새 결함" 계통 밖.
+          const { analyzeBlankSlots, buildBlankSlotBlock } = await import("../src/lib/md-qgen/blank-slot-precompute");
+          const block = buildBlankSlotBlock(analyzeBlankSlots(p.content));
+          row.slotBlock = block.slice(0, 1200);
+          const g = await call(`${basePrompt(p.content)}${block ? `${String.fromCharCode(10)}${String.fromCharCode(10)}${block}` : ""}`);
+          calls.push(g);
+          finalText = g.text;
+        } else if (arm === "xtour3") {
+          // 교차 토너먼트(26-08-20, 사용자 제안 "3.7+luna 조합"): 모델 다양성으로
+          // 독립 설계 2안을 만들고, 심판은 **선택만** 한다(수정 금지 — "개입→새 결함"
+          // 패턴 원천 차단. 어젯밤 6접근 전패의 공통 사인은 재작성 개입이었다).
+          const g = await call(basePrompt(p.content));
+          calls.push(g);
+          const l = await call(
+            `${basePrompt(p.content)}
+
+(JSON 스키마 형식으로만 응답하라)`,
+            { system: lunaMod.LUNA_QGEN_SYSTEM_MESSAGE, jsonSchema: lunaMod.LUNA_BLANK_JSON_SCHEMA },
+          );
+          calls.push(l);
+          const gq = parseGate(g.text, p.content);
+          let lq: { q: unknown; issues: string[] };
+          try {
+            const ad = lunaMod.adaptLunaBlankJson(l.text);
+            const { autoSnapBlankExpression: snap, gateMdQuestion: gate } = await import("../src/lib/md-qgen/parser");
+            const sn = snap(ad.question, p.content);
+            lq = { q: sn.question, issues: gate(sn.question, p.content) };
+          } catch (e) { lq = { q: null, issues: [String(e)] }; }
+          row.gemIssues = gq.issues; row.lunaIssues = lq.issues;
+          const gMd = gq.q ? renderMd(gq.q as never) : "(게이트 반려)";
+          const lMd = lq.q ? renderMd(lq.q as never) : "(게이트 반려)";
+          const judge = await call(
+            `너는 수능 빈칸 킬러 문항 심판이다. 같은 지문으로 만든 두 문항 중 **더 킬러다운 무결 문항 하나를 고르기만** 하라(수정 금지).
+
+## 지문
+${p.content}
+
+## 문항 A
+${gMd}
+
+## 문항 B
+${lMd}
+
+## 판정 기준(순서대로)
+1. 유효성: 정답 유일·다섯 선지 완성문 문법·해설 사실·누설 — 결함 있는 쪽 즉시 탈락.
+2. 지름길: 인접 문장 에코 / 정답만 유일한 극성 / 지문 고빈도어 재사용 / 선지 형태 튐 — 지름길이 적은 쪽.
+3. 유혹 오답 2개+ 와 문장 결합 요구가 더 깊은 쪽.
+
+## 출력(딱 한 줄)
+선택: A 또는 선택: B`,
+          );
+          calls.push(judge);
+          const pick = /선택\s*[:：]\s*B/.test(judge.text) ? "B" : "A";
+          row.pick = pick === "B" ? "luna" : "g37";
+          finalText = pick === "B" ? "" : g.text;
+          if (pick === "B") {
+            // luna 선택 시 luna 산출물을 표준 md 로 재렌더해 동일 파이프 통과
+            finalText = lq.q ? renderMd(lq.q as never) : l.text;
+          }
+        } else if (arm === "xsolve3") {
+          // 교차 솔버(26-08-20): 3.7 생성 → **luna 가 학생으로 실풀이·자백**(다른
+          // 모델 = 다른 맹점) → 3.7 표적 수술. solver3 과 동일 구조, 솔버만 교차.
+          const first = await call(basePrompt(p.content));
+          calls.push(first);
+          const g1 = parseGate(first.text, p.content);
+          const stem1 = g1.q ? ((g1.q as never as { passageWithBlank?: string }).passageWithBlank ?? "") : "";
+          const opts1 = g1.q ? (g1.q as never as { options: Array<{ label: string; text: string }> }).options.map((o) => `${o.label} ${o.text}`).join("\n") : "";
+          const SOLVE_SCHEMA = { name: "blank_solve", strict: true, schema: { type: "object", additionalProperties: false, required: ["picked", "pathHops", "shortcuts", "secondsFeel", "wouldShakeTop1pct"], properties: { picked: { type: "string" }, pathHops: { type: "string", description: "실제로 읽은 문장들과 결합 순서" }, shortcuts: { type: "array", items: { type: "string", enum: ["adjacent-echo", "polarity-unique", "keyword-match", "form-oddity", "none"] } }, secondsFeel: { type: "number" }, wouldShakeTop1pct: { type: "boolean" } } } };
+          const solve = await call(
+            `너는 수능 영어 1등급 컷 학생이다. 실전처럼 이 빈칸 문제를 풀어라. 정답은 모른다. 어떤 지름길을 써먹었는지 솔직히 자백하라(adjacent-echo=빈칸 앞뒤 문장이 답을 말해줌 / polarity-unique=답만 극성이 유일 / keyword-match=지문 키워드가 답에 그대로 / form-oddity=선지 형태가 튐 / none=진짜 결합 추론).
+
+${stem1}
+
+${opts1}`,
+            { system: "형식 지시는 JSON 스키마를 따르고, 문항은 실전처럼 풀어라.", jsonSchema: SOLVE_SCHEMA },
+          );
+          calls.push(solve);
+          row.solverTrace = solve.text.slice(0, 2000);
+          const itemMd1 = g1.q ? renderMd(g1.q as never) : first.text.slice(0, 3000);
+          const surgeon = await call(
+            `너는 수능 빈칸 문항 외과의다. 아래 문항을 **다른 모델의 실제 학생 솔버**가 풀었고 자백 기록이 있다.
+
+## 지문
+${p.content}
+
+## 문항
+${itemMd1}
+
+## 솔버 자백(JSON)
+${solve.text.slice(0, 2000)}
+
+## 수술 규칙
+- shortcuts 에 adjacent-echo 가 있으면: 빈칸을 재진술 없는 다른 기능절로 옮겨 재설계(빈칸원문은 주어+술어 절 전체 또는 완전한 구 — 세미콜론·접속사 뒤 주어 없는 시작 금지, 다섯 완성문 낭독 검사).
+- polarity-unique/keyword-match/form-oddity 만 있으면: **자리 유지**, 선지만 재설계(같은 극성 근접 오답 2개+, 키워드는 오답으로, 형태 균질).
+- none 이고 wouldShakeTop1pct=true 면: 원안 그대로 출력.
+
+## 출력 형식(이 형식만)
+빈칸원문: <지문 축자 그대로>
+
+① <선지>
+② <선지>
+③ <선지>
+④ <선지>
+⑤ <선지>
+
+정답: <①~⑤ 하나>
+해설: <1~2문장, 합니다체>
+오답:
+① <왜 탈락인지 1문장> (정답 번호 제외 4개)
+...`,
+          );
+          calls.push(surgeon);
+          finalText = surgeon.text;
+          row.firstPassIssues = g1.issues;
         } else if (arm === "solver3") {
           // O229-b(26-08-19 밤): 솔버-인-더-루프 — 지름길을 상상시키지 않고 실제로
           // 푸는 걸 관찰해 뚫린 지점만 수술한다(패널에서 솔버가 최정확 신호였던

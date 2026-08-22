@@ -4,7 +4,10 @@ import { getStaffSession } from "@/lib/auth";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
 import { deductCredits, refundCredits, InsufficientCreditsError } from "@/lib/credits";
 import { generateAnalysisReportCore } from "@/lib/passage-report/analysis-report/generate";
-import { analysisReportSchema } from "@/lib/passage-report/analysis-report/schema";
+import {
+  analysisReportSchema,
+  isFinalOnepageReportShape,
+} from "@/lib/passage-report/analysis-report/schema";
 import {
   buildKoPromptInputFromPassage,
   isKoreanPassage,
@@ -19,6 +22,8 @@ import { prisma } from "@/lib/prisma";
 export const maxDuration = 300;
 
 const PRIME_MARKER = "PRIME";
+/** 파이널 원페이지 행 마커(final-onepage-spec F3) — 기본 PRIME 행과 지문당 각 1행 공존. */
+const FINAL_MARKER = "PRIME_FINAL";
 
 /** KO 게이트 판정용 — subject 만 가볍게 읽는다 (영어 경로 무변경). */
 async function loadPassageSubject(passageId: string, academyId: string) {
@@ -32,7 +37,7 @@ async function loadPassageSubject(passageId: string, academyId: string) {
  * GET — 기존 PRIME 분석 보고서 조회 (있으면 모달이 바로 렌더)
  */
 export async function GET(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ passageId: string }> },
 ) {
   const staff = await getStaffSession();
@@ -40,9 +45,12 @@ export async function GET(
   const { passageId } = await params;
 
   // PRIME_KO 게이트 — 국어 지문은 KO 마커·KO 스키마로만 로드(영어 보고서와 혼재 차단).
+  // ?variant=final 이면 파이널 원페이지(PRIME_FINAL) 행을 조회(final-onepage-spec §2) —
+  // 국어는 final 미지원이라 variant 를 무시하고 기존 동작 그대로. 무파라미터 = 기존 그대로.
   const subjectRow = await loadPassageSubject(passageId, staff.academyId);
   const korean = isKoreanPassage(subjectRow);
-  const marker = korean ? KO_PRIME_REPORT_MARKER : PRIME_MARKER;
+  const wantsFinal = !korean && req.nextUrl.searchParams.get("variant") === "final";
+  const marker = korean ? KO_PRIME_REPORT_MARKER : wantsFinal ? FINAL_MARKER : PRIME_MARKER;
 
   const row = await prisma.passageReport.findFirst({
     where: { passageId, academyId: staff.academyId, generationPlan: marker, deletedAt: null },
@@ -77,7 +85,6 @@ export async function PATCH(
   // PRIME_KO 게이트 — 국어 보고서는 KO 스키마로 검증·KO 마커 행에만 저장.
   const subjectRow = await loadPassageSubject(passageId, staff.academyId);
   const korean = isKoreanPassage(subjectRow);
-  const marker = korean ? KO_PRIME_REPORT_MARKER : PRIME_MARKER;
 
   const rawReport = (body as { report?: unknown })?.report;
   const parsed = korean ? koAnalysisReportSchema.safeParse(rawReport) : analysisReportSchema.safeParse(rawReport);
@@ -88,6 +95,15 @@ export async function PATCH(
     );
   }
   const report = parsed.data;
+
+  // final 자기감지(final-onepage-spec §2) — 제출된 report 에 final-onepage 섹션이 있으면
+  // PRIME_FINAL 행에 저장한다(행 부재 시 아래 404). 편집기 PATCH URL 은 기본 문서와 동일 —
+  // 문서 모양만으로 저장 행을 가른다. 국어·기본 문서는 기존 경로 그대로.
+  const marker = korean
+    ? KO_PRIME_REPORT_MARKER
+    : isFinalOnepageReportShape(report)
+      ? FINAL_MARKER
+      : PRIME_MARKER;
 
   const existing = await prisma.passageReport.findFirst({
     where: { passageId, academyId: staff.academyId, generationPlan: marker, deletedAt: null },

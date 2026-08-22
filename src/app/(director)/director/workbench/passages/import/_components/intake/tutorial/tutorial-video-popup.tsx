@@ -87,6 +87,11 @@ export function TutorialVideoPopup({
     };
   }, [onHidePermanently]);
 
+  // 성능 계약: 드래그 중 setState 금지 — 매 pointermove 의 setPopupWidth 는
+  // 팝업 셸을 프레임마다 리렌더시켰다. 이동 중에는 popupRef 의 style.width 에
+  // rAF 코얼레싱으로 직접 쓰고(렌더식 Math.min(latest, responsiveMaxWidth) 를
+  // 드래그 시작 시점 값으로 동일 적용), 놓을 때 한 번만 setState + 영속.
+  // 앵커(popupRef) 미발견 시 종전 setState 경로 폴백.
   const beginResize = useCallback(
     (event: ReactPointerEvent<HTMLButtonElement>) => {
       if (event.pointerType === "mouse" && event.button !== 0) return;
@@ -103,9 +108,34 @@ export function TutorialVideoPopup({
         Math.min(MAX_POPUP_W, (parentRect?.width ?? window.innerWidth) - 16),
       );
       let latest = clampPopupWidth(startW, maxW);
+      // 렌더가 적용하는 반응형 상한 — 드래그 동안은 시작 시점 값으로 고정
+      // (오버레이 크기는 드래그 중 변하지 않는다). 커밋 렌더가 최종 보정.
+      const responsiveMaxAtStart = responsiveMaxWidth;
 
+      // 포인터 캡처 — 커서가 작은 그립을 벗어나도 드래그가 끊기지 않는다.
+      const handleEl = event.currentTarget as HTMLElement;
+      try {
+        handleEl.setPointerCapture(event.pointerId);
+      } catch {
+        /* 캡처 미지원 브라우저는 window 리스너로 폴백 */
+      }
+
+      const prevCursor = document.body.style.cursor;
+      const prevSelect = document.body.style.userSelect;
+      const prevPointerEvents = document.body.style.pointerEvents;
       document.body.style.cursor = "nwse-resize";
       document.body.style.userSelect = "none";
+      // 드래그 중 hover 스타일 재평가 차단(캡처 덕에 move 수신은 유지).
+      document.body.style.pointerEvents = "none";
+
+      // rAF 코얼레싱 — 스타일 기록은 프레임당 1회.
+      let rafId: number | null = null;
+      const flush = () => {
+        rafId = null;
+        if (popupRef.current) {
+          popupRef.current.style.width = `${Math.min(latest, responsiveMaxAtStart)}px`;
+        }
+      };
 
       const move = (e: PointerEvent) => {
         e.preventDefault();
@@ -113,14 +143,29 @@ export function TutorialVideoPopup({
         const dy = e.clientY - startY;
         const delta = Math.abs(dx) >= Math.abs(dy) ? dx : dy * 1.35;
         latest = clampPopupWidth(startW + delta, maxW);
-        setPopupWidth(latest);
+        if (popupRef.current) {
+          if (rafId === null) rafId = requestAnimationFrame(flush);
+        } else {
+          // 폴백(레거시) — 앵커를 못 찾으면 종전대로 상태 갱신
+          setPopupWidth(latest);
+        }
       };
       const finish = () => {
         window.removeEventListener("pointermove", move);
         window.removeEventListener("pointerup", finish);
         window.removeEventListener("pointercancel", finish);
-        document.body.style.cursor = "";
-        document.body.style.userSelect = "";
+        if (rafId !== null) cancelAnimationFrame(rafId);
+        flush();
+        // 커밋은 여기서 한 번 — 드래그 내내 리렌더 0회.
+        setPopupWidth(latest);
+        document.body.style.cursor = prevCursor;
+        document.body.style.userSelect = prevSelect;
+        document.body.style.pointerEvents = prevPointerEvents;
+        try {
+          handleEl.releasePointerCapture(event.pointerId);
+        } catch {
+          /* ignore */
+        }
         try {
           window.localStorage.setItem(POPUP_W_KEY, String(latest));
         } catch {
@@ -132,7 +177,7 @@ export function TutorialVideoPopup({
       window.addEventListener("pointerup", finish, { once: true });
       window.addEventListener("pointercancel", finish, { once: true });
     },
-    [popupWidth],
+    [popupWidth, responsiveMaxWidth],
   );
 
   const effectivePopupWidth = Math.min(popupWidth, responsiveMaxWidth);

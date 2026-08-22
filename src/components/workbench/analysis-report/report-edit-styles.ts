@@ -2,6 +2,10 @@
  * PRIME 분석 보고서 — 편집 모드 전용 CSS.
  * 전부 .par-root-edit 하위로 스코프 → 보기/인쇄 렌더(.par-root)엔 영향 없음.
  * 인쇄 시 편집 chrome 은 모두 숨겨 깨끗한 A4 가 나온다.
+ *
+ * 파일 끝에 임베드 전용 블록(.are-shell[data-embed-narrow] — 스펙 §3.10.21 E21-4)이 하나 더 있다.
+ * 이 문자열은 편집기 인스턴스마다 인라인 <style> 로 주입되므로(AnalysisReportEditor.tsx:1927)
+ * **비스코프 전역 규칙 신설 금지** — 같은 페이지의 다른 편집기 인스턴스까지 오염된다.
  */
 export const ANALYSIS_REPORT_EDIT_CSS = `
 /* 에디터는 자체 미리보기 줌(transform: scale)을 쓴다. 뷰 모드용 모바일 축소
@@ -27,6 +31,10 @@ export const ANALYSIS_REPORT_EDIT_CSS = `
   transition: background-color .12s, box-shadow .12s;
   white-space: pre-wrap;
 }
+/* 파이널 원페이지 마크 라벨(앵커 위 손글씨)은 편집 모드에서도 한 줄 유지 —
+   위 pre-wrap 이 절대배치 라벨을 '앵커 단어 폭'에서 줄바꿈시켜 두 줄로 깨뜨린다
+   (라벨의 폭 상한 = 포지셔닝 조상인 .fon-mk 앵커 스팬. 실측: "주제어 (가변성)" 2줄 사고). */
+.par-root-edit .fon-mklabel .par-edit-field { white-space: nowrap; }
 .par-root-edit .par-edit-field:hover { background: rgba(59,130,246,.10); }
 .par-root-edit .par-edit-field:focus {
   background: rgba(59,130,246,.16);
@@ -111,6 +119,75 @@ export const ANALYSIS_REPORT_EDIT_CSS = `
 }
 .par-root-edit .par-activity-run .par-wrap-activity.par-dragover-after {
   box-shadow: inset 0 -2px 0 rgba(37,99,235,.45);
+}
+
+/* ── [E27] 점프 글로우 (.par-jump-glow) — 스펙 §4 R3-3 ────────────────────────
+   조판 목차/추가 오토스크롤이 도착지를 1회 반짝여 「어디로 갔는지」를 알려 준다.
+   부착/글로우 해제는 JS 가 imperative 로 한다(remove → void offsetWidth → add,
+   animationend/animationcancel 에서 self-remove — src/lib/hint-glow.ts 패턴).
+   React state 를 경유하지 않으므로 edit 객체가 재생성되지 않고 전 페이지 리렌더가 없다.
+
+   ★ 클래스명은 par-jump-glow 로 고정 — 편집기(U5)와 행동 게이트
+     (.tmp-worksheet-compose/probe-e27.mjs G3b 가 animationstart 의 className 을 본다)가
+     이 문자열로 계약돼 있다. 기존 smoat-hint-glow 를 재사용하면 안 된다: 그 클래스는
+     아래 @media print 리셋 대상이 아니라 인쇄 중 재생되면 지면에 그대로 찍힌다.
+
+   ★ **그리는 속성은 outline 과 box-shadow 둘로 제한**한다. 이 파일의 print 리셋이 끄는 것이
+     정확히 그 둘(+ 아래에서 추가한 animation)이라, background/filter/::after 로 그리면
+     A4 인쇄물에 파란 테두리가 남는다. 다른 속성으로 «예쁘게» 고치고 싶어지면 리셋 줄을
+     먼저 넓혀라.
+
+   ★ 선택자를 .par-eline 으로 좁히지 않은 이유: 스크롤 대상 노드 탐색이
+     [data-paper-item-id] → [data-mid] 2단 폴백이라 chrome 이 없는 컨텍스트(측정 클론
+     제외)에서도 잡힐 수 있다. 좁히면 「클래스는 붙었는데 애니메이션이 안 도는」 무음 실패가
+     되고 게이트만 빨개진다.
+
+   ★ @keyframes 는 스코프가 없다(CSS 사양). 이 문자열이 편집기 인스턴스마다 주입되므로
+     같은 이름의 정의가 N개 생기지만 **내용이 완전히 동일**해 마지막 정의가 이겨도 결과가
+     같다 — 파일 머리주석의 「비스코프 전역 규칙 금지」에 걸리지 않는 유일한 예외 형태다.
+     대신 이름을 절대 인스턴스별로 갈지 마라(그 순간 진짜 오염이 된다). */
+@keyframes par-jump-glow {
+  0%   { outline: 2px solid rgba(37,99,235,0);   outline-offset: 2px; box-shadow: 0 0 0 0 rgba(37,99,235,0); }
+  22%  { outline: 2px solid rgba(37,99,235,.85); outline-offset: 3px; box-shadow: 0 0 0 4px rgba(37,99,235,.28), 0 0 18px 6px rgba(37,99,235,.22); }
+  62%  { outline: 2px solid rgba(37,99,235,.55); outline-offset: 3px; box-shadow: 0 0 0 3px rgba(37,99,235,.18), 0 0 14px 4px rgba(37,99,235,.14); }
+  100% { outline: 2px solid rgba(37,99,235,0);   outline-offset: 2px; box-shadow: 0 0 0 0 rgba(37,99,235,0); }
+}
+/* 표 행(tr)은 outline 이 렌더되지 않는다 — inset box-shadow 로 갈아끼운 변형.
+   (같은 이유로 위 :102 tr.par-eline.is-active 규칙이 존재한다. 그 어휘를 그대로 따른다.) */
+@keyframes par-jump-glow-inset {
+  0%   { box-shadow: inset 0 0 0 0 rgba(37,99,235,0); }
+  22%  { box-shadow: inset 0 0 0 2.5px rgba(37,99,235,.85); }
+  62%  { box-shadow: inset 0 0 0 2px rgba(37,99,235,.5); }
+  100% { box-shadow: inset 0 0 0 0 rgba(37,99,235,0); }
+}
+.par-root-edit .par-jump-glow {
+  animation: par-jump-glow 1.6s ease-out;
+  /* 글로우 링이 이웃 블록에 덮이지 않도록만 올린다. .par-eline 은 이미 relative 라 무변화. */
+  position: relative;
+  z-index: 2;
+}
+.par-root-edit tr.par-jump-glow {
+  animation-name: par-jump-glow-inset;
+  /* tr 에 relative/z-index 를 남기면 브라우저별로 표 배경 페인트 순서가 흔들린다 — 되돌린다. */
+  position: static;
+  z-index: auto;
+}
+/* 모션 민감 사용자: 깜빡임 없이 «어디인지»만 알린다. 정적 outline 1개(= 애니메이션 0회)라
+   G3b(animationstart 1건)는 이 분기에서 발화하지 않는다 — 게이트는 기본 설정에서 돈다. */
+@media (prefers-reduced-motion: reduce) {
+  .par-root-edit .par-jump-glow {
+    animation: none;
+    outline: 2px solid rgba(37,99,235,.75);
+    outline-offset: 3px;
+  }
+  .par-root-edit tr.par-jump-glow {
+    /* ★ animation 을 여기서 한 번 더 꺼야 한다 — 위 tr 규칙의 animation-name 은
+       (0,2,1) 로 바로 위 .par-jump-glow (0,2,0) 보다 특이성이 높아, 이 줄이 없으면
+       모션 축소 설정에서도 tr 만 계속 깜빡인다. */
+    animation: none;
+    outline: none;
+    box-shadow: inset 0 0 0 2px rgba(37,99,235,.75);
+  }
 }
 
 /* 드래그 핸들 ⠿ — 줄 왼쪽 여백에 hover 시 표시 */
@@ -239,7 +316,17 @@ body.par-img-resizing { user-select: none !important; }
 @media print {
   .par-edit-chrome, .par-egrip2, .par-eblock-del, .par-edit-hcell, .par-eresize, .par-page-controls, .par-cov-logo-resize { display: none !important; }
   .par-root-edit .par-edit-field { background: none !important; box-shadow: none !important; }
-  .par-root-edit .par-eline, .par-root-edit .par-eline:hover, .par-root-edit .par-eline.is-active { outline: none !important; box-shadow: none !important; }
+  /* [E27] 선택자에 .par-jump-glow, 선언에 animation 을 함께 넣는다.
+     ① 글로우는 .par-eline 이 아닌 노드에도 붙을 수 있어(2단 폴백 탐색) 기존 3개 선택자만으론
+        새지 않는다는 보장이 없다.
+     ② 이 리셋은 지금까지 outline/box-shadow 두 **속성**만 껐다 — 글로우가 재생 중인 1.6초 사이에
+        Ctrl+P 를 누르면 애니메이션이 그 둘을 계속 그려 A4 에 파란 테두리가 찍힌다.
+        animation: none !important 가 그 창을 닫는다(다른 par-eline 애니메이션은 존재하지 않아
+        비조판 인쇄물은 바이트 동일). */
+  .par-root-edit .par-eline, .par-root-edit .par-eline:hover,
+  .par-root-edit .par-eline.is-active, .par-root-edit .par-jump-glow {
+    outline: none !important; box-shadow: none !important; animation: none !important;
+  }
   .par-root-edit .par-edit-empty::before { content: "" !important; }
   .par-root-edit .is-resizing { outline: none !important; }
   .par-root-edit .par-spacer-fill::before { content: "" !important; border: none !important; }
@@ -247,4 +334,46 @@ body.par-img-resizing { user-select: none !important; }
   .par-root-edit .par-sheet-wrap { margin: 0 !important; }
   .par-root-edit { padding-top: 0 !important; }
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   임베드 좁은 폭 — 상단 툴바 축약 (스펙 §3.10.21 E21-4)
+
+   왜: editor-top-bar.tsx 는 라벨 노출을 Tailwind sm: (= 뷰포트 640px) 유틸로만
+   가른다. 학습지 조판 표면처럼 「뷰포트는 넓은데 컨테이너만 좁은」 배치에서는 그 게이트가
+   전부 통과해 장문 라벨("정답지·해설지 포함"·"실전 학습지 생성 + 크레딧 칩"·"저장 필요")이
+   그대로 남고, 툴바가 컨테이너를 가로로 넘긴다 — E21-4 가 지목한 유일한 미해결 지점.
+   컨테이너 폭 판정은 JS(표면의 ResizeObserver)가 하고 셸 루트에 data-embed-narrow 를
+   붙여 준다(U7·U12). 여기서는 그 훅을 받아 뷰포트 축 유틸을 컨테이너 축으로 덮어쓴다.
+
+   ★ 반드시 .are-shell[data-embed-narrow] 스코프 안에서만 쓴다.
+     이 CSS 문자열은 편집기 인스턴스마다 인라인 <style> 로 주입되므로
+     (AnalysisReportEditor.tsx:1927) 비스코프 전역 규칙을 신설하면 같은 페이지에 공존하는
+     다른 편집기 인스턴스·독립 라우트(지문 스튜디오/학습지 생성 모달)까지 오염된다.
+   ★ 특이성 근거: .are-shell[data-embed-narrow] .are-tb-* 는 (0,3,0) 이라
+     Tailwind 의 sm:inline / sm:hidden 유틸(0,1,0)을 미디어쿼리 안이든 밖이든 이긴다
+     (미디어쿼리는 특이성을 올리지 않는다). 따라서 !important 없이도 확정적으로 덮인다.
+   ★ data-embed-narrow 가 없으면 이 블록의 모든 선택자가 하나도 매칭되지 않으므로
+     기존 렌더는 바이트 동일하다(마킹 클래스는 스타일 없는 순수 훅). */
+.are-shell[data-embed-narrow] .are-tb-row {
+  flex-wrap: nowrap;
+  min-width: 0;
+  overflow: hidden;
+  /* 간격만 축소 — 색·구조는 손대지 않는다. (root gap-3 → 6px, px-4 → 8px) */
+  gap: 6px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+/* 좌/우 컨트롤 묶음(gap-2)도 같이 조인다. 직계 div 2개가 그 묶음이다. */
+.are-shell[data-embed-narrow] .are-tb-row > div { min-width: 0; gap: 4px; }
+/* 아이콘 버튼(h-8 w-8)은 shrink-0 이 없어 좁아지면 찌그러진다 — 정사각 유지. */
+.are-shell[data-embed-narrow] .are-tb-row button { flex-shrink: 0; }
+/* 장문 라벨은 숨기고(아이콘만), <sm 용 짧은 라벨을 대신 살린다.
+   짧은 라벨은 sm:hidden 이라 넓은 뷰포트에서 함께 죽어 있으므로 되살리지 않으면
+   토글 버튼이 라벨 0개(스위치 알약만)로 남는다 — 모바일과 같은 모습으로 수렴시킨다. */
+.are-shell[data-embed-narrow] .are-tb-label { display: none; }
+.are-shell[data-embed-narrow] .are-tb-label-compact { display: inline; }
+/* 오류 문구(truncate, max-w-260px)는 유일하게 폭이 유동적인 요소라 좁은 폭에서
+   컨트롤을 밀어낸다 — 잘라서 보이되 자리를 덜 먹게 한다(문구 자체는 title 없이도
+   truncate 로 이미 말줄임). */
+.are-shell[data-embed-narrow] .are-tb-msg { max-width: 7rem; }
 `;

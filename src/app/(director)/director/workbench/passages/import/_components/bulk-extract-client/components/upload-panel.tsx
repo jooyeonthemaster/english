@@ -236,26 +236,72 @@ export function UploadPanel({
     }
   };
 
+  // 성능 계약(resizable-panels 동형): 드래그 중 setState 금지 — 매 pointermove
+  // 의 setState 는 UploadPanel 서브트리 전체를 프레임마다 리렌더시켰다. 이동
+  // 중에는 [data-file-guide-panel] 의 style.width 에 rAF 코얼레싱으로 직접
+  // 쓰고, 놓을 때 한 번만 setState + 영속. 앵커를 못 찾으면 종전 경로 폴백.
   const beginFileGuideResize = useCallback(
     (event: ReactPointerEvent<HTMLButtonElement>) => {
       if (event.pointerType === "mouse" && event.button !== 0) return;
       event.preventDefault();
       const startX = event.clientX;
       const startW = fileGuideWidth;
+
+      // 포인터 캡처 — 커서가 얇은 핸들을 벗어나도 드래그가 끊기지 않는다.
+      const handle = event.currentTarget as HTMLElement;
+      try {
+        handle.setPointerCapture(event.pointerId);
+      } catch {
+        /* 캡처 미지원 브라우저는 window 리스너로 폴백 */
+      }
+
+      // 드래그 대상 — 핸들과 aside 는 같은 부모(flex row)의 형제.
+      const panelEl =
+        handle.parentElement?.querySelector<HTMLElement>(
+          "[data-file-guide-panel]",
+        ) ?? null;
+
+      const prevCursor = document.body.style.cursor;
+      const prevSelect = document.body.style.userSelect;
+      const prevPointerEvents = document.body.style.pointerEvents;
       document.body.style.cursor = "col-resize";
       document.body.style.userSelect = "none";
+      // 드래그 중 hover 스타일 재평가 차단(캡처 덕에 move 수신은 유지).
+      document.body.style.pointerEvents = "none";
+
       let latest = startW;
+      // rAF 코얼레싱 — 스타일 기록은 프레임당 1회.
+      let rafId: number | null = null;
+      const flush = () => {
+        rafId = null;
+        if (panelEl) panelEl.style.width = `${latest}px`;
+      };
       const move = (e: PointerEvent) => {
         e.preventDefault();
         latest = clampFileGuideW(startW - (e.clientX - startX));
-        setFileGuideWidth(latest);
+        if (panelEl) {
+          if (rafId === null) rafId = requestAnimationFrame(flush);
+        } else {
+          // 폴백(레거시) — 앵커를 못 찾으면 종전대로 상태 갱신
+          setFileGuideWidth(latest);
+        }
       };
       const finish = () => {
         window.removeEventListener("pointermove", move);
         window.removeEventListener("pointerup", finish);
         window.removeEventListener("pointercancel", finish);
-        document.body.style.cursor = "";
-        document.body.style.userSelect = "";
+        if (rafId !== null) cancelAnimationFrame(rafId);
+        if (panelEl) panelEl.style.width = `${latest}px`;
+        // 커밋은 여기서 한 번 — 드래그 내내 리렌더 0회.
+        setFileGuideWidth(latest);
+        document.body.style.cursor = prevCursor;
+        document.body.style.userSelect = prevSelect;
+        document.body.style.pointerEvents = prevPointerEvents;
+        try {
+          handle.releasePointerCapture(event.pointerId);
+        } catch {
+          /* ignore */
+        }
         try {
           window.localStorage.setItem(FILE_EMPTY_GUIDE_W_KEY, String(latest));
         } catch {
@@ -706,6 +752,7 @@ export function UploadPanel({
 
               {/* ── 우: 추출될 지문(빈 상태 가이드) — 텍스트 모드 누적 패널과 동일 ── */}
               <aside
+                data-file-guide-panel
                 style={{ width: fileGuideWidth }}
                 className="flex min-h-0 flex-col bg-white max-lg:!w-full lg:shrink-0"
               >

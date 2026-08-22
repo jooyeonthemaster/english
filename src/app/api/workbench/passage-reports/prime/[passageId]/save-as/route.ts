@@ -6,6 +6,7 @@ import { isKoreanPassage, KO_PRIME_REPORT_MARKER } from "@/lib/passage-report/an
 import { koAnalysisReportSchema, type KoAnalysisReport } from "@/lib/passage-report/analysis-report/ko-schema";
 import {
   analysisReportSchema,
+  isFinalOnepageReportShape,
   type AnalysisReport,
   type ReportCover,
 } from "@/lib/passage-report/analysis-report/schema";
@@ -17,6 +18,8 @@ export const maxDuration = 60;
 
 /** 영어 PRIME 마커 — 형제 라우트(prime/[passageId]/route.ts)와 동일 리터럴. */
 const PRIME_MARKER = "PRIME";
+/** 파이널 원페이지 행 마커(final-onepage-spec F3) — 형제 라우트와 동일 리터럴. */
+const FINAL_MARKER = "PRIME_FINAL";
 
 /** 주석(PassageNote) 복제 상한 — 트랜잭션 비대화 방지. */
 const MAX_NOTES = 500;
@@ -127,7 +130,16 @@ export async function POST(
 
   // PRIME_KO 게이트 — 국어 지문은 KO 마커·KO 스키마로만 복제(영어 경로 오염 차단).
   const korean = isKoreanPassage(source);
-  const marker = korean ? KO_PRIME_REPORT_MARKER : PRIME_MARKER;
+  // final 자기감지(final-onepage-spec §2) — 편집기가 보낸 report 가 final 형이거나
+  // ?variant=final 이면 복제 소스를 PRIME_FINAL 행으로 바꾼다. 복제본 자체의 의미론
+  // (지문+보고서 신규 생성, generationPlan = 소스 마커)은 기존 그대로. 국어는 기존 경로.
+  const wantsFinal =
+    !korean &&
+    (req.nextUrl.searchParams.get("variant") === "final" ||
+      isFinalOnepageReportShape(
+        rawReport as { sections?: Array<{ kind?: string }> } | null | undefined,
+      ));
+  const marker = korean ? KO_PRIME_REPORT_MARKER : wantsFinal ? FINAL_MARKER : PRIME_MARKER;
 
   // ── 2) 원본 보고서 (GET/PATCH 와 동일한 선택 규약) ────────────────────────
   const sourceReport = await prisma.passageReport.findFirst({
@@ -266,7 +278,8 @@ export async function POST(
           status: sourceReport.status,
           pages: report as never, // AnalysisReport JSON 전체를 pages(Json)에 저장
           theme: { themeId: report.themeId } as never,
-          templateId: sourceReport.templateId ?? (korean ? "prime-ko" : "prime"),
+          templateId:
+            sourceReport.templateId ?? (korean ? "prime-ko" : wantsFinal ? "prime-final" : "prime"),
           generationPlan: marker,
           sourcedFromAnalysisId: newAnalysisId,
           contentHash: null,

@@ -14,26 +14,18 @@ import { LandingHeader } from "@/components/landing/landing-header";
 import { LandingSnap } from "@/components/landing/landing-snap";
 import { ScrollToTopButton } from "@/components/landing/scroll-to-top-button";
 import { ScrollProgress } from "@/components/landing/scroll-progress";
-import { Reveal } from "@/components/landing/shared/reveal";
 import { LandingBannerStrip } from "@/components/landing/landing-banner-strip";
 import { LandingPopup } from "@/components/landing/landing-popup";
-import { SeminarPromoSection } from "@/components/landing/seminar-promo-section";
+import { OnboardingOfferSection } from "@/components/landing/onboarding-offer-section";
 import { JsonLd } from "@/components/seo/json-ld";
 import { softwareApplicationSchema } from "@/lib/seo/structured-data";
 import { getActiveLandingBanner, getActiveLandingPopups } from "@/lib/platform-settings";
-import { getPublicGroupSeminars } from "@/actions/public-seminar";
 
 export default async function RootPage() {
-  const [landingBanner, landingPopups, publicSeminars] = await Promise.all([
+  const [landingBanner, landingPopups] = await Promise.all([
     getActiveLandingBanner(),
     getActiveLandingPopups(),
-    getPublicGroupSeminars(),
   ]);
-  // 모집중(신청 가능)인 공개 세미나가 있으면 랜딩 상단에 프로모 배너로 노출.
-  const featuredSeminar =
-    publicSeminars.find((s) => s.registrationOpen) ??
-    publicSeminars.find((s) => s.status === "OPEN") ??
-    null;
   return (
     <main
       data-landing-page
@@ -49,17 +41,9 @@ export default async function RootPage() {
       <div data-snap className="lg:snap-start">
         <HeroScene />
       </div>
-      {featuredSeminar && (
-        <div
-          data-snap
-          data-landing-feature
-          className="w-full lg:snap-start lg:flex lg:min-h-[100svh] lg:flex-col lg:justify-center lg:pt-24 lg:pb-8"
-        >
-          <Reveal amount={0.2} y={40} className="w-full">
-            <SeminarPromoSection seminar={featuredSeminar} />
-          </Reveal>
-        </div>
-      )}
+      <div data-snap data-landing-feature className="w-full lg:snap-start">
+        <OnboardingOfferSection />
+      </div>
       {landingPopups.length > 0 && <LandingPopup popups={landingPopups} />}
       <div id="section-question" data-snap data-landing-feature className="w-full lg:snap-start">
         <QuestionBurstScene />

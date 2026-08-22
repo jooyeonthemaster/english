@@ -493,6 +493,37 @@
   }
 }
 
+/* 클래스 스튜디오 — 생성 완료 → 조판 유도 펄스(feature-flags §M 26-08-22).
+   배경·크기 불변, 그림자 링만 퍼진다(레이아웃 시프트 0). strong 은 활성(파란)
+   조판 버튼·뷰 필, soft 는 비활 버튼·안내 카드용 은은판. */
+@keyframes studio-compose-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.55); }
+  70% { box-shadow: 0 0 0 8px rgba(37, 99, 235, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+}
+@keyframes studio-compose-pulse-soft {
+  0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.3); }
+  70% { box-shadow: 0 0 0 7px rgba(37, 99, 235, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+}
+.studio-pulse {
+  position: relative;
+  z-index: 1;
+  animation: studio-compose-pulse 1.6s ease-out infinite;
+}
+.studio-pulse-soft {
+  position: relative;
+  z-index: 1;
+  animation: studio-compose-pulse-soft 2.2s ease-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .studio-pulse,
+  .studio-pulse-soft {
+    animation: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35);
+  }
+}
+
 /* 프로모션 적용 상품 카드: 초록 테두리가 천천히 숨쉬듯 빛난다. 목록 컨테이너가
    overflow-hidden 이라 바깥 글로우는 가장자리에서 잘리므로 안쪽 링(항상 보임) +
    바깥 글로우(안쪽 방향은 보임)를 함께 준다. */
@@ -620,6 +651,219 @@
 @keyframes card-recently-viewed-flash {
   0% { background-color: rgb(226 232 240); }
   100% { background-color: rgb(255 255 255); }
+}
+
+/* 지문관리 행 인라인 지문 수정기 펼침(docs/class-studio-spec.md §3.10.18 E18-h).
+   높이 auto 를 애니메이션하는 정본 관용구 = grid-template-rows 0fr→1fr 보간.
+   확장 노드는 펼친 행에서만 **마운트**되므로(미확장 행 렌더 비용 0) 여는 쪽은
+   CSS transition 이 아니라 이 mount 애니메이션이 담당한다. 자식은 반드시
+   min-h-0 + overflow-hidden 이어야 0fr 구간에서 내용이 삐져나오지 않는다. */
+@keyframes studio-row-editor-open {
+  from {
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.studio-row-editor-open {
+  display: grid;
+  grid-template-rows: 1fr;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .studio-row-editor-open {
+    animation: studio-row-editor-open 260ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+}
+
+/* 클래스 스튜디오 도시에 큐 스트립(§3.10.11-c v2) — 생성 중 행 위를 흰 시광이
+   주기적으로 쓸고 지나가 "지금 돌고 있다"를 말한다. 행 컨테이너는 relative
+   overflow-hidden 전제, 이 요소는 pointer-events 없는 오버레이 1장. */
+@keyframes studio-strip-sheen {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(250%); }
+}
+.studio-strip-sheen {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 40%;
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.75) 50%,
+    transparent 100%
+  );
+  animation: studio-strip-sheen 2.4s ease-in-out infinite;
+  pointer-events: none;
+}
+/* 방금 생성된 문항 행(§3.10.11-e v2) — 은은한 파란 글로우가 계속 돌아
+   "최근에 만든 것"을 목록에서 구분한다(강한 플래시 아님 — 상시 표식). */
+@keyframes studio-fresh-glow {
+  0%, 100% {
+    box-shadow:
+      0 0 0 1px rgba(37, 99, 235, 0.16),
+      0 0 8px 1px rgba(37, 99, 235, 0.08);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px rgba(37, 99, 235, 0.34),
+      0 0 12px 3px rgba(37, 99, 235, 0.22);
+  }
+}
+.studio-fresh-glow {
+  animation: studio-fresh-glow 2.6s ease-in-out infinite;
+}
+
+/* ============================================================================
+   지문 행/카드 「생성 중」 활동 테두리 — 계약: src/lib/passage-activity.ts
+   "이 지문에 대해 무언가 생성되고 있다"를 **테두리 하나**로 말한다(도시에 큐
+   스트립 .studio-strip-sheen 의 행 버전 — 톤·속도를 같은 어휘로 맞췄다).
+
+   ── 왜 .learning-generating-glow(conic 회전)를 재사용하지 않나 ──────────────
+   그 쪽은 @property 각도(--smoat-spin-glow-angle)를 애니메이션해 **매 프레임
+   그라디언트를 다시 칠한다**. 지문관리 목록은 가상화 없는 단일 리스트(수백 행 —
+   passage-list-row.tsx 의 871ms 커밋 실측)라 동시 진행 행이 늘수록 리페인트가
+   선형으로 붙는다. 여기서는 마스크 링을 **정적**으로 두고 그 안의 자식 하나만
+   transform 으로 흘려 합성기 전용(리페인트 0)으로 만든다.
+
+   ── 구조 ─────────────────────────────────────────────────────────────────
+   링 요소(마스크 xor 로 테두리 밴드만 남김) > ::after 혜성(가로 스윕).
+   · 링은 부모의 **padding box** 를 채우므로 행 자신의 1px 테두리 *안쪽*에 붙는다
+     (행 루트의 overflow-hidden 클립 경계와 정확히 같은 사각형).
+   · border-radius: inherit — 행(rounded-lg)·카드(rounded-xl) 어디에 붙여도 맞는다.
+     그래서 호스트별 반경 하드코딩이 없다(learning-generating-glow 는 0.75rem 고정
+     이라 rounded-lg 행에 쓰면 모서리가 어긋난다 — 재사용 못 한 두 번째 이유).
+   · overflow:hidden 필수 — mask-repeat 기본값(repeat)이라 밴드 밖으로 나간
+     혜성이 타일링된 마스크에 다시 걸려 보이는 것을 막는다.
+   · 색은 --pa-track/--pa-comet **두 변수로만** 결정된다. 호스트가 톤을 바꾸려면
+     이 두 개만 덮어쓰면 되고, 종류별 분기는 CSS 가 아니라 호출부의
+     data-activity-kind 로 갈린다.
+   ============================================================================ */
+@keyframes passage-activity-sweep {
+  0% {
+    transform: translateX(-115%);
+  }
+  100% {
+    transform: translateX(320%);
+  }
+}
+
+.passage-activity-ring {
+  /* 기본 톤 = 진행 파랑(큐 스트립 blue-500/blue-100 과 같은 계열) */
+  --pa-track: rgba(37, 99, 235, 0.5);
+  --pa-comet: rgba(96, 165, 250, 1);
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  border-radius: inherit;
+  padding: 2px; /* = 링 두께(26-08-21: 1.5px 는 흰 배경에서 안 읽혔다) */
+  overflow: hidden;
+  background: var(--pa-track);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+/* 혜성 — 링의 padding box(=border box) 전체 높이를 덮는 세로 띠가 가로로
+   흐른다. 마스크가 밴드만 남기므로 결과적으로 위/아래 변을 동시에 훑고
+   좌/우 변은 지나갈 때 번쩍인다. transform 만 움직이므로 합성기 전용. */
+.passage-activity-ring::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 46%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--pa-comet) 50%,
+    transparent 100%
+  );
+  will-change: transform;
+  animation: passage-activity-sweep 2.2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+/* 실전 문제(문항 생성)는 살짝 인디고로 — 학습지(파랑)와 한 목록에서 나란히
+   돌 때 무엇이 도는지 색으로도 갈린다. 두 변수만 덮어쓴다. */
+.passage-activity-ring[data-activity-kind="questions"] {
+  --pa-track: rgba(79, 70, 229, 0.5);
+  --pa-comet: rgba(129, 140, 248, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .passage-activity-ring::after {
+    animation: none;
+    /* 정지 폴백: 밴드 전체를 은은하게 채워 "표식은 남기되 움직이지 않는다" */
+    width: 100%;
+    background: var(--pa-comet);
+    opacity: 0.45;
+  }
+}
+
+/* ── 외곽 헤일로(26-08-21) ────────────────────────────────────────────────
+   링은 카드 **안쪽** 밴드라, 흰 패널 위 흰 카드에서는 "돌고 있다"가 잘 안
+   읽힌다(사용자 실측). 링은 그대로 두고 카드 **바깥으로 번지는 빛**을 하나
+   더 얹는다 — 링(합성기 전용 스윕) + 헤일로(정지 대비 호흡) 2단.
+
+   ⚠ 여기만 box-shadow 를 애니메이션한다. 붙는 자리를 **도시에 아코디언 카드**
+   (동시 표시 수십 장)로 한정했기 때문이다 — 위 주석의 "수백 행 리페인트 선형
+   증가" 회피 계약은 그대로다. 목록형 호스트에는 링만 간다.
+   호스트 요건: 자기 자신의 overflow-hidden 은 자기 box-shadow 를 자르지 않지만
+   **스크롤 컨테이너**는 자른다 — 목록 좌우 여백(px-3)이 번짐의 상한이다. */
+@keyframes passage-activity-halo {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 1.5px rgba(var(--pa-halo), 0.38),
+      0 0 10px 1px rgba(var(--pa-halo), 0.2);
+  }
+  50% {
+    box-shadow:
+      0 0 0 2.5px rgba(var(--pa-halo), 0.6),
+      0 0 18px 4px rgba(var(--pa-halo), 0.34);
+  }
+}
+.passage-activity-halo {
+  /* rgb 3원소만 담는다 — 키프레임이 알파를 갈아끼우기 때문(rgba 통값이면
+     같은 키프레임을 알파별로 복제해야 한다). 톤 축은 링과 동일. */
+  --pa-halo: 37, 99, 235;
+  animation: passage-activity-halo 2.2s ease-in-out infinite;
+}
+.passage-activity-halo[data-activity-kind="questions"] {
+  --pa-halo: 79, 70, 229;
+}
+@media (prefers-reduced-motion: reduce) {
+  .passage-activity-halo {
+    animation: none;
+    box-shadow:
+      0 0 0 2px rgba(var(--pa-halo), 0.5),
+      0 0 12px 2px rgba(var(--pa-halo), 0.24);
+  }
+}
+
+/* 활동 라벨 — 행 메타줄에 붙는 소형 자구. 점(...)만 애니메이션한다(1.6s 4스텝
+   이라 리페인트 부담이 사실상 없음). 키프레임은 기존 smoat-loading-dots 재사용.
+   width 고정: 점 개수에 따라 라벨 전체가 좌우로 흔들리는 것을 막는다. */
+.passage-activity-label::after {
+  content: "";
+  display: inline-block;
+  width: 0.85em;
+  text-align: left;
+  animation: smoat-loading-dots 1.6s steps(1, end) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .passage-activity-label::after {
+    animation: none;
+    content: "…";
+  }
 }
 
 /* 지문 내용에 방금 추가된 블록 강조: 파란 링이 한 번 퍼지며 배경이 살짝 파랗게

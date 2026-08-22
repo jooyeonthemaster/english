@@ -162,6 +162,29 @@ export const FEATURE_FLAGS = {
     process.env.NEXT_PUBLIC_ENABLE_VOCAB_DRILL,
     true,
   ),
+
+  /**
+   * 26-08-09 클래스 스튜디오(/director/studio): 클래스 중심 학습지 생성·모바일
+   * 배포 통합 테스트 표면(docs/class-studio-spec.md). 기본 ON(베타 배지 노출) —
+   * NEXT_PUBLIC_ENABLE_CLASS_STUDIO=false 로 내리면 nav·라우트 동시 차단.
+   */
+  ENABLE_CLASS_STUDIO: publicBooleanFlag(
+    process.env.NEXT_PUBLIC_ENABLE_CLASS_STUDIO,
+    true,
+  ),
+
+  /**
+   * 26-08-22 클래스 스튜디오 모바일 학습 임시 숨김: 스튜디오 UI 의 모바일 배포
+   * (실행대·행·픽바·도시에 CTA·지문 스튜디오 배포 바)·학생앱 초대장·결과 탭·
+   * 코치마크 deploy/invite 스텝을 **UI 에서만** 숨긴다. 서버 액션·라우트·데이터
+   * 무접촉 — 기존 배포분과 학생앱(/g)은 그대로 동작한다. 숨김 상태에서는 실행
+   * 동선이 조판([학습지 조판]/[시험지 조판]) 단독형으로 재구성된다.
+   * 복구: NEXT_PUBLIC_SHOW_STUDIO_MOBILE_LEARNING=true (기본 false).
+   */
+  SHOW_STUDIO_MOBILE_LEARNING: publicBooleanFlag(
+    process.env.NEXT_PUBLIC_SHOW_STUDIO_MOBILE_LEARNING,
+    false,
+  ),
 } as const;
 
 export type FeatureFlag = keyof typeof FEATURE_FLAGS;

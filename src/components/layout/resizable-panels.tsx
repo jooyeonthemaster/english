@@ -173,7 +173,45 @@ export function useResizablePanels({
         elementRef.current?.getBoundingClientRect().width ?? 0;
       const prevCursor = document.body.style.cursor;
       const prevSelect = document.body.style.userSelect;
+      const prevPointerEvents = document.body.style.pointerEvents;
       let didDrag = false;
+
+      // 포인터 캡처 — 커서가 얇은 핸들을 벗어나도 이벤트가 끊기지 않고,
+      // 아래의 body pointer-events:none 과 조합해도 move 가 계속 들어온다.
+      const handleEl = event.currentTarget as HTMLElement;
+      try {
+        handleEl.setPointerCapture(event.pointerId);
+      } catch {
+        /* 캡처 미지원 브라우저는 window 리스너로 폴백 */
+      }
+
+      // ── 드래그 고속 경로 (2026-08-11 — "핸들이 전역에서 버벅" 실사용 지적) ──
+      // 매 pointermove 의 setState 는 소비 화면 전체(워크벤치는 카드 수백 장)를
+      // 프레임마다 리렌더시킨다. 컨테이너 안에 `[data-panel-key]` 앵커가 있으면
+      // 드래그 중에는 그 요소들의 style.width 에 rAF 코얼레싱으로 직접 쓰고,
+      // 놓을 때 한 번만 setState 로 커밋한다(리렌더 0회). 앵커가 없는 기존
+      // 소비처는 종전 setState 경로 그대로(무회귀). 접힌 패널은 언마운트라
+      // 앵커가 없을 수 있다 — 드래그 대상 패널의 앵커만 있으면 고속 경로.
+      const panelEls: Record<string, HTMLElement> = {};
+      if (elementRef.current) {
+        for (const p of panelsRef.current) {
+          const found = elementRef.current.querySelector<HTMLElement>(
+            `[data-panel-key="${p.key}"]`,
+          );
+          if (found) panelEls[p.key] = found;
+        }
+      }
+      const fastPath = Boolean(panelEls[key]);
+      let latestWidths: Record<string, number> | null = null;
+      let rafId: number | null = null;
+      const flush = () => {
+        // 다음 무브가 새 프레임을 잡을 수 있게 먼저 해제한다.
+        rafId = null;
+        if (!latestWidths) return;
+        for (const [k, el] of Object.entries(panelEls)) {
+          if (latestWidths[k] !== undefined) el.style.width = `${latestWidths[k]}px`;
+        }
+      };
 
       const onMove = (move: globalThis.PointerEvent) => {
         const deltaX = move.clientX - startX;
@@ -183,24 +221,49 @@ export function useResizablePanels({
           suppressClickRef.current = true;
           document.body.style.cursor = "col-resize";
           document.body.style.userSelect = "none";
+          // 드래그 중 hover 스타일 재평가 차단 — 폭이 프레임마다 바뀌면 커서
+          // 아래 요소가 계속 바뀌어 카드 수백 장의 hover 인밸리데이션이
+          // 레이아웃 스래시에 얹힌다. 캡처 덕에 move 수신에는 영향 없다.
+          document.body.style.pointerEvents = "none";
         }
         move.preventDefault();
         const next = {
           ...startWidths,
           [key]: startWidths[key] + deltaX * spec.sign,
         };
-        setState((cur) => ({
-          ...cur,
-          widths: clampAll(next, panelsRef.current, containerWidth, minCenter),
-        }));
+        const clamped = clampAll(
+          next,
+          panelsRef.current,
+          containerWidth,
+          minCenter,
+        );
+        if (fastPath) {
+          latestWidths = clamped;
+          if (rafId === null) rafId = requestAnimationFrame(flush);
+        } else {
+          setState((cur) => ({ ...cur, widths: clamped }));
+        }
       };
       const finish = () => {
         window.removeEventListener("pointermove", onMove);
         window.removeEventListener("pointerup", finish);
         window.removeEventListener("pointercancel", finish);
+        if (rafId !== null) cancelAnimationFrame(rafId);
+        if (fastPath && latestWidths) {
+          flush();
+          // 커밋 1회 — 저장·클램프 규칙은 종전과 동일.
+          const committed = latestWidths;
+          setState((cur) => ({ ...cur, widths: { ...cur.widths, ...committed } }));
+        }
         if (didDrag) {
           document.body.style.cursor = prevCursor;
           document.body.style.userSelect = prevSelect;
+          document.body.style.pointerEvents = prevPointerEvents;
+        }
+        try {
+          handleEl.releasePointerCapture(event.pointerId);
+        } catch {
+          /* ignore */
         }
       };
       window.addEventListener("pointermove", onMove, { passive: false });

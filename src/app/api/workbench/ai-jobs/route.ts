@@ -63,6 +63,17 @@ export async function GET(req: NextRequest) {
     ? Math.min(Math.max(Math.floor(limitParam), 1), 100)
     : 50;
   const view = req.nextUrl.searchParams.get("view");
+  // `?ids=a,b,c` — targeted projection for the session queue's completion
+  // reconciliation (generation-session-store): when the cheap summary poll says
+  // "this job finished" the client needs exactly those rows in full, not the
+  // newest N. Academy scoping still comes from the `where` below, so this can
+  // only narrow the result set, never widen it. Capped so it stays a cheap read.
+  const idFilter = (req.nextUrl.searchParams.get("ids") ?? "")
+    .split(",")
+    .map((id) => id.trim())
+    .filter(Boolean)
+    .slice(0, 20);
+  const idWhere = idFilter.length > 0 ? { id: { in: idFilter } } : {};
 
   // `?view=passage-list` — the 학습지 생성 지문 목록 poll (usePassageQueue). It needs
   // each passage's CONTENT (for word count, preview, and the inline 지문 토글) plus
@@ -176,10 +187,11 @@ export async function GET(req: NextRequest) {
       academyId: staff.academyId,
       deletedAt: null,
       ...(domain ? { domain } : {}),
+      ...idWhere,
     },
     include: { passage: { include: passageInclude } },
     orderBy: { createdAt: "desc" },
-    take: limit,
+    take: idFilter.length > 0 ? idFilter.length : limit,
   });
 
   // ── 좀비 카드 방지: 삭제된 문제(dangling questionId)를 result에서 정리 ──

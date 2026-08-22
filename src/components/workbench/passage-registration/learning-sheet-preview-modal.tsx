@@ -15,7 +15,7 @@ import {
 } from "@/lib/passage-report/analysis-report/study-activities";
 import { stripWorksheetContentFields } from "@/lib/passage-report/analysis-report/worksheet-core-gate";
 
-export type LearningSheetVariant = "basic" | "practice";
+export type LearningSheetVariant = "basic" | "practice" | "final";
 
 /** 모달 내부 뷰 — 생성 구성 2종 + 생성 후 무료로 추가하는 학습 활동 카탈로그. */
 type PreviewView = LearningSheetVariant | "activities";
@@ -30,8 +30,18 @@ const SECTION_LABELS: Record<string, string> = {
   vocabulary: "어휘 정리",
   parsing: "구문 분석 (직독직해)",
   "self-check": "셀프 체크",
-  "learning-worksheet": "문장별 논리 구조 표",
+  "learning-worksheet": "실전 학습지",
+  "final-onepage": "파이널 원페이지",
 };
+
+/** 파이널 원페이지(A4 1장)에 담기는 구성 — 좌측 목차 아래 안내용. */
+const FINAL_ONEPAGE_ITEMS: string[] = [
+  "손필기 원문 분석 (마크·라벨·필기)",
+  "유형별 출제 포인트 태그",
+  "출제자의 함정 총정리",
+  "필수 어휘 각주 · 전문 해석",
+  "파이널 팁 한 줄",
+];
 
 /** 실전 학습지(06)에 추가되는 콘텐츠 — 워크시트 섹션의 실제 필드 존재 여부로 표시. */
 const WORKSHEET_ITEMS: { key: string; label: string }[] = [
@@ -113,6 +123,7 @@ export function LearningSheetPreviewModal({
 }: LearningSheetPreviewModalProps) {
   const [view, setView] = useState<PreviewView>(initialVariant);
   const [sample, setSample] = useState<AnalysisReport | null>(null);
+  const [finalSample, setFinalSample] = useState<AnalysisReport | null>(null);
   const [loadError, setLoadError] = useState(false);
 
   useEffect(() => {
@@ -129,9 +140,13 @@ export function LearningSheetPreviewModal({
       // 프리뷰가 비므로, KO 모양이면 ko 스키마로 분기하는 공용 게이트를 쓴다
       // (영어 샘플/보고서 경로는 기존 파싱과 동일 — 무회귀).
       import("@/lib/passage-report/analysis-report/preview-parse"),
+      // 파이널 원페이지 픽스처 — 스키마 정본 타입의 TS 모듈이라 파싱 없이 그대로
+      // 실제 렌더러(ReportPages)에 태운다.
+      import("@/lib/passage-report/analysis-report/final-onepage-fixture"),
     ])
-      .then(([json, previewParse]) => {
+      .then(([json, previewParse, finalFixture]) => {
         if (cancelled) return;
+        setFinalSample(finalFixture.FINAL_ONEPAGE_FIXTURE);
         const parsed = previewParse.parseAnalysisReportForPreview(
           json.default ?? json,
         );
@@ -163,7 +178,12 @@ export function LearningSheetPreviewModal({
     } as AnalysisReport;
   }, [practiceReport]);
 
-  const activeReport = view === "practice" ? practiceReport : basicReport;
+  const activeReport =
+    view === "practice"
+      ? practiceReport
+      : view === "final"
+        ? finalSample
+        : basicReport;
 
   const worksheetSection = useMemo(() => {
     const section = practiceReport?.sections.find(
@@ -219,6 +239,7 @@ export function LearningSheetPreviewModal({
               [
                 { id: "basic" as const, label: "기본 학습지", chip: `◈${basicUnitCost}` },
                 { id: "practice" as const, label: "실전 학습지 포함", chip: `◈${practiceUnitCost}` },
+                { id: "final" as const, label: "파이널 원페이지", chip: `◈${basicUnitCost}` },
                 { id: "activities" as const, label: `학습 활동 ${enabledActivityCount}종`, chip: "무료" },
               ]
             ).map((tab) => (
@@ -382,6 +403,20 @@ export function LearningSheetPreviewModal({
               );
             })}
 
+            {/* 파이널 탭: A4 딱 1장에 담기는 구성을 목차 아래에 펼쳐 보여준다 */}
+            {view === "final" ? (
+              <div className="mb-1 ml-7 flex flex-col gap-1">
+                {FINAL_ONEPAGE_ITEMS.map((item) => (
+                  <div key={item} className="flex items-center gap-1.5">
+                    <CheckCircle2 className="size-3 shrink-0 text-blue-500" />
+                    <span className="text-[11.5px] font-medium text-blue-700">
+                      {item}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+
             {/* 기본 탭: 실전 학습지에서 무엇이 더 생기는지 흐리게 보여주고 탭 전환 유도 */}
             {view === "basic" ? (
               <div className="mt-2 rounded-lg border border-dashed border-slate-200 bg-white/70 px-3 py-2.5">
@@ -405,7 +440,9 @@ export function LearningSheetPreviewModal({
               </div>
             ) : null}
 
-            {/* 생성 후 무료로 더하는 학습 활동 군단 — 카탈로그 탭으로 안내 */}
+            {/* 생성 후 무료로 더하는 학습 활동 군단 — 카탈로그 탭으로 안내.
+                파이널 원페이지는 A4 1장 고정 문서라 활동 추가 대상이 아니므로 숨긴다. */}
+            {view !== "final" ? (
             <button
               type="button"
               onClick={() => setView("activities")}
@@ -421,6 +458,7 @@ export function LearningSheetPreviewModal({
               </span>
               <span className="shrink-0 text-[12px] font-bold text-blue-400">→</span>
             </button>
+            ) : null}
           </aside>
 
           <div className="min-h-0 flex-1 overflow-y-auto bg-slate-200/60 px-4 py-5">
@@ -463,7 +501,9 @@ export function LearningSheetPreviewModal({
               <p className="text-[12px] font-medium text-slate-500">
                 {view === "practice"
                   ? "기본 구성에 어법 워크북·빈칸·배열 영작과 수능형 추론 문항까지 더한 구성입니다."
-                  : "원문 필기 캔버스부터 구문 분석까지, 수업에 바로 쓰는 기본 구성입니다."}
+                  : view === "final"
+                    ? "시험 직전 족집게 — 손필기 원문 분석과 유형별 출제 포인트·함정을 A4 딱 1장에 담습니다."
+                    : "원문 필기 캔버스부터 구문 분석까지, 수업에 바로 쓰는 기본 구성입니다."}
                 <span className="ml-1.5 font-bold tabular-nums text-slate-700">
                   지문당 ◈{activeUnitCost}
                 </span>

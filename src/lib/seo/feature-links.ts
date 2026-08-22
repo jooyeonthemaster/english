@@ -8,7 +8,7 @@ export const FEATURE_LINKS: ReadonlyArray<RelatedLink> = [
   {
     href: "/features/ai-question-generation",
     label: "AI 영어 문제 생성",
-    description: "지문 하나로 25유형 문항 자동 출제",
+    description: "지문 하나로 24유형 문항 자동 출제",
   },
   {
     href: "/features/exam-builder",

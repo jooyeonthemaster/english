@@ -9,6 +9,7 @@ import type { AnalysisReport, ActivityKind } from "@/lib/passage-report/analysis
 import {
   ACTIVITY_CATALOG,
   activityPreviewLine,
+  type ActivityAvailability,
   type ActivityCatalogEntry,
 } from "@/lib/passage-report/analysis-report/study-activities";
 
@@ -40,6 +41,8 @@ export function ActivityPalettePanel({
   columns = 1,
   activityCounts,
   onToggleOffKind,
+  availability,
+  hideIntro = false,
 }: {
   report: AnalysisReport;
   onPick: (kind: ActivityKind) => void;
@@ -48,6 +51,16 @@ export function ActivityPalettePanel({
   activityCounts?: Partial<Record<ActivityKind, number>>;
   /** ON 스위치/카드 클릭 — 그 유형의 활동 블록을 문서에서 전부 제거. */
   onToggleOffKind?: (kind: ActivityKind) => void;
+  /**
+   * 활동별 데이터 가용성(activityAvailabilityByKind 결과) — ok:false 카드는 비활성 +
+   * 사유 노출로 「켤 수 있는데 빈 블록이 나오는」 경로를 차단한다. 미전달 시 기존 렌더와 동일.
+   */
+  availability?: Partial<Record<ActivityKind, ActivityAvailability>>;
+  /**
+   * true 면 상단 인트로 문단 미렌더 — 파이널 레일처럼 호스트 헤더가 같은 안내(즉석 생성·
+   * AI 없음)를 이미 하는 문맥에서 중복 고지를 없앤다. 미전달(기본)이면 기존 렌더와 동일.
+   */
+  hideIntro?: boolean;
 }) {
   const byCategory = groupedCatalog();
   // 섹션 여닫힘 — 편집 패널 PanelSection 과 동일한 셰브론 토글. 기본 펼침.
@@ -62,10 +75,12 @@ export function ActivityPalettePanel({
 
   return (
     <div className="space-y-3">
-      <p className="rounded-md border border-slate-100 bg-white px-2.5 py-2 text-[11px] leading-relaxed text-slate-500">
-        추출된 지문 데이터로 즉석 생성 · <b className="font-semibold text-slate-600">AI 없음</b> · 무제한 다시 섞기.
-        카드를 누르면 문서에 추가되고 바로 설정이 열려요.
-      </p>
+      {hideIntro ? null : (
+        <p className="rounded-md border border-slate-100 bg-white px-2.5 py-2 text-[11px] leading-relaxed text-slate-500">
+          추출된 지문 데이터로 즉석 생성 · <b className="font-semibold text-slate-600">AI 없음</b> · 무제한 다시 섞기.
+          카드를 누르면 문서에 추가되고 바로 설정이 열려요.
+        </p>
+      )}
       {byCategory.map((group) => {
         const collapsed = collapsedSections.has(group.cat);
         return (
@@ -90,6 +105,7 @@ export function ActivityPalettePanel({
                       onPick={onPick}
                       count={activityCounts?.[entry.kind] ?? 0}
                       onToggleOff={onToggleOffKind}
+                      availability={availability}
                     />
                   ))}
                 </div>
@@ -103,6 +119,7 @@ export function ActivityPalettePanel({
                       onPick={onPick}
                       count={activityCounts?.[entry.kind] ?? 0}
                       onToggleOff={onToggleOffKind}
+                      availability={availability}
                       grouped
                     />
                   ))}
@@ -239,6 +256,7 @@ function ActivityTile({
   onPick,
   count = 0,
   onToggleOff,
+  availability,
   grouped = false,
 }: {
   report: AnalysisReport;
@@ -246,12 +264,23 @@ function ActivityTile({
   onPick: (kind: ActivityKind) => void;
   count?: number;
   onToggleOff?: (kind: ActivityKind) => void;
+  /** 활동별 데이터 가용성 — ok:false 면 카드 비활성 + 사유 노출. 미전달 시 기존 렌더와 동일. */
+  availability?: Partial<Record<ActivityKind, ActivityAvailability>>;
   /** 묶음(섹션 카드) 안의 행으로 렌더 — 개별 테두리 없이 구분선으로만 나뉜다. */
   grouped?: boolean;
 }) {
-  const preview = activityPreviewLine(report, entry.kind);
-  const disabled = !entry.enabled;
+  // 데이터 기반 비활성(ok:false) — 정적 카탈로그 비활성(entry.enabled)과 같은 disabled 경로를
+  // 재사용하되, 배지·미리보기에는 「곧 추가」 대신 데이터 부재 사유를 노출한다.
+  const avail = availability?.[entry.kind];
+  const blockedReason =
+    entry.enabled && avail?.ok === false
+      ? avail.reason ?? "이 문서 데이터로는 만들 수 없습니다."
+      : null;
+  const preview = blockedReason ?? activityPreviewLine(report, entry.kind);
   const added = count > 0;
+  // blockedReason(데이터 비활성)은 「추가」만 막는다 — 이미 추가된(added) 유형은 문서의
+  // 기존 블록을 팔레트에서 끌 수 있어야 하므로 끄기는 항상 허용(ON 스위치 유지 렌더).
+  const disabled = !entry.enabled || (blockedReason !== null && !added);
 
   // 단순 온/오프 토글 — 카드를 누르면 켜고(추가) 끈다(전부 제거).
   const toggle = () => {
@@ -298,7 +327,9 @@ function ActivityTile({
       <div className="flex items-center justify-between gap-2">
         <span className="text-[12.5px] font-bold text-slate-800">{entry.labelKo}</span>
         {disabled ? (
-          <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[9.5px] font-semibold text-slate-400">곧 추가</span>
+          <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[9.5px] font-semibold text-slate-400">
+            {blockedReason ? "데이터 없음" : "곧 추가"}
+          </span>
         ) : (
           <ActivityToggleSwitch
             on={added}
@@ -310,10 +341,14 @@ function ActivityTile({
           />
         )}
       </div>
-      <p className="text-[11px] leading-snug text-slate-500">{entry.description}</p>
+      {/* 부정 진술 1회 원칙 — blockedReason 카드는 긍정 홍보문(description)을 숨기고
+          「잠김」 라벨 + 사유 1문장만 남긴다(부정 3중첩 방지). */}
+      {blockedReason === null ? (
+        <p className="text-[11px] leading-snug text-slate-500">{entry.description}</p>
+      ) : null}
       <div className="mt-0.5 rounded-md border border-slate-100 bg-slate-50/80 px-2 py-1.5">
         <span className="text-[9px] font-semibold uppercase tracking-wider text-slate-400">
-          {added ? "켜짐 — 다시 누르면 꺼져요" : "미리보기"}
+          {blockedReason ? "잠김" : added ? "켜짐 — 다시 누르면 꺼져요" : "미리보기"}
         </span>
         <p className="mt-0.5 line-clamp-2 text-[11px] leading-snug text-slate-700">{preview}</p>
       </div>

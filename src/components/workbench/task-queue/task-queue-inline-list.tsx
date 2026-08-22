@@ -165,20 +165,58 @@ export function TaskQueueInlineList({
       const startY = e.clientY;
       const startHeight = bodyHeight;
       let latest = startHeight;
+      const prevCursor = document.body.style.cursor;
+      const prevSelect = document.body.style.userSelect;
+      const prevPointerEvents = document.body.style.pointerEvents;
+      // 포인터 캡처 — 손가락/커서가 얇은 바를 벗어나도 이 요소가 계속 이벤트를
+      // 받아 드래그가 끊기지 않는다. 터치에서 특히 중요.
+      const handle = e.currentTarget as HTMLElement;
+      try {
+        handle.setPointerCapture(e.pointerId);
+      } catch {
+        /* 캡처 미지원 브라우저는 window 리스너로 폴백 */
+      }
       document.body.style.cursor = "row-resize";
       document.body.style.userSelect = "none";
+      // 드래그 중 hover 스타일 재평가 차단 — 높이가 바뀌면 커서 아래 카드가
+      // 계속 바뀐다(캡처 덕에 move 수신은 유지).
+      document.body.style.pointerEvents = "none";
+      // 드래그 고속 경로 — 이동 중에는 본문(bodyRef)의 style.height 에 rAF
+      // 코얼레싱으로 직접 쓰고, 놓을 때 한 번만 setState + 영속한다(매 move
+      // setState 는 카드 전체를 프레임마다 리렌더). 앵커가 없으면 종전 경로.
+      let rafId: number | null = null;
+      const flush = () => {
+        rafId = null;
+        if (bodyRef.current) bodyRef.current.style.height = `${latest}px`;
+      };
       const onMove = (ev: PointerEvent) => {
         latest = Math.min(
           maxHeight,
           Math.max(minHeight, startHeight + (ev.clientY - startY)),
         );
-        setBodyHeight(latest);
+        if (bodyRef.current) {
+          if (rafId === null) rafId = requestAnimationFrame(flush);
+        } else {
+          setBodyHeight(latest);
+        }
       };
       const onUp = () => {
-        document.body.style.cursor = "";
-        document.body.style.userSelect = "";
+        document.body.style.cursor = prevCursor;
+        document.body.style.userSelect = prevSelect;
+        document.body.style.pointerEvents = prevPointerEvents;
         window.removeEventListener("pointermove", onMove);
         window.removeEventListener("pointerup", onUp);
+        // 터치 제스처가 OS 에 의해 취소될 때(pointercancel)도 동일하게 정리.
+        window.removeEventListener("pointercancel", onUp);
+        if (rafId !== null) cancelAnimationFrame(rafId);
+        flush();
+        // 커밋은 여기서 한 번 — 드래그 내내 리렌더 0회.
+        setBodyHeight(latest);
+        try {
+          handle.releasePointerCapture(e.pointerId);
+        } catch {
+          /* ignore */
+        }
         try {
           window.localStorage.setItem(heightKey, String(latest));
         } catch {
@@ -187,6 +225,7 @@ export function TaskQueueInlineList({
       };
       window.addEventListener("pointermove", onMove);
       window.addEventListener("pointerup", onUp);
+      window.addEventListener("pointercancel", onUp);
     },
     [bodyHeight, heightKey, maxHeight, minHeight],
   );

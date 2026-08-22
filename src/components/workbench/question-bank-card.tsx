@@ -71,6 +71,8 @@ import { MultiBlankOptionGrid } from "@/components/exams/multi-blank-option-grid
 import {
   sanitizeAiModelDisclosureText,
   getQuestionGenerationPlanFromTags,
+  planForDifficulty,
+  QUESTION_GENERATION_PLANS,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
@@ -377,9 +379,13 @@ export function QuestionBankCard({
       ? ((q.structuredData as { _generationNotice?: string })
           ._generationNotice as string)
       : "";
-  // 프리미엄은 항상, 일반은 플래그(SHOW_MODEL_SELECTOR) ON일 때 노출 — 코드베이스 공통 게이트.
+  // 킬러 티어는 항상, 일반은 플래그(SHOW_MODEL_SELECTOR) ON일 때 노출 — 코드베이스 공통 게이트.
+  // 26-08-18 난이도 기반 티어: 난이도 뱃지가 이미 같은 티어를 말하면(KILLER↔킬러) 이중 표기라 숨긴다.
+  const planBadgeRedundant =
+    !!diffConfig && planForDifficulty(q.difficulty) === generationPlan;
   const planBadge =
     generationPlan &&
+    !planBadgeRedundant &&
     (generationPlan === "PREMIUM" || FEATURE_FLAGS.SHOW_MODEL_SELECTOR) ? (
       <Badge
         variant="outline"
@@ -394,10 +400,10 @@ export function QuestionBankCard({
         ) : (
           <PearlIcon className="h-3 w-3" />
         )}
-        {generationPlan === "PREMIUM" ? "프리미엄" : "일반"}
+        {QUESTION_GENERATION_PLANS[generationPlan].shortLabel}
       </Badge>
     ) : null;
-  // 난이도 배지 — 일반/프리미엄(planBadge)과 동일한 pill 디자인.
+  // 난이도 배지 — 일반/킬러(planBadge)과 동일한 pill 디자인.
   // 기본=파랑, 중급=노랑(amber), 킬러=빨강. plan 배지 왼쪽에 배치한다.
   const difficultyBadge = diffConfig ? (
     <Badge

@@ -248,7 +248,7 @@ export default function ResourcesPage() {
                   이 양식을 채우는 문제는 스모트가 만듭니다
                 </p>
                 <p className="mt-1.5 text-[13px] leading-6 text-slate-400">
-                  지문만 붙여넣으면 내신·수능 19유형 문항과 해설이 생성되고, 이
+                  지문만 붙여넣으면 내신·수능 24유형 문항과 해설이 생성되고, 이
                   양식 없이도 완성된 Word·한글 시험지가 바로 내려받아집니다.
                 </p>
               </div>

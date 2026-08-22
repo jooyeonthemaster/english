@@ -1,1 +1,1044 @@
-{"schemaVersion":1,"brand":"ENGLISH READING LAB","themeId":"veritas-navy","passageLayout":"hlc","meta":{"eyebrow":"PRIME PASSAGE ANALYSIS · 심층 지문 분석","titleKo":"잠의 숨겨진 가치: 뇌의 청소와 몸의 회복","titleEn":"The Hidden Value of Sleep: Brain Cleaning and Body Restoration","category":"비문학 · 설명문","theme":"의학 · 수면 과학","difficulty":3,"difficultyNote":"고2 수준","solveTime":"2분 30초","examTypes":"주제·제목·어법·어휘·빈칸추론"},"sections":[{"kind":"passage","sentences":[{"n":1,"en":"Sleep is one of the most important activities for human health, yet it is often the first thing people sacrifice.","ko":"잠은 인간의 건강을 위해 가장 중요한 활동 중 하나이지만, 그것은 흔히 사람들이 가장 먼저 희생하는 것입니다.","chunks":[{"text":"Sleep is ","role":"주어+동사"},{"text":"one of the most important activities ","role":"보어(가장 중요한 활동 중 하나)","emphasis":"core"},{"text":"for human health, ","role":"전치사구(인간 건강을 위한)"},{"text":"yet it is often the first thing ","role":"등위접속사+주어+동사+보어(하지만 그것은 흔히 첫 번째 것이다)"},{"text":"people sacrifice.","role":"관계절(사람들이 희생하는)"}]},{"n":2,"en":"During sleep, the brain processes the memories formed during the day and clears away waste products that have built up.","ko":"잠을 자는 동안, 뇌는 낮 동안 형성된 기억을 처리하고 쌓인 노폐물을 제거해요.","chunks":[{"text":"During sleep, ","role":"시간 전치사구(잠을 자는 동안)"},{"text":"the brain processes the memories ","role":"주어+첫 번째 동사+목적어(뇌는 기억을 처리한다)","emphasis":"core"},{"text":"formed during the day ","role":"분사구(낮 동안 형성된)"},{"text":"and clears away waste products ","role":"두 번째 동사+목적어(그리고 노폐물을 제거한다)","emphasis":"core"},{"text":"that have built up.","role":"관계절(쌓여 온)"}]},{"n":3,"en":"Scientists have discovered that people who consistently get less than seven hours of sleep are far more likely to develop serious health problems than those who sleep enough.","ko":"과학자들은 지속적으로 7시간보다 적게 잠을 자는 사람들이 충분히 자는 사람들보다 심각한 건강 문제를 겪을 가능성이 훨씬 더 높다는 것을 발견했어요.","chunks":[{"text":"Scientists have discovered ","role":"주어+현재완료 동사(과학자들은 발견해 왔다)"},{"text":"that people ","role":"접속사 that절의 주어(사람들이 ~라는 것을)"},{"text":"who consistently get less than seven hours of sleep ","role":"관계절(지속적으로 7시간 미만으로 자는)"},{"text":"are far more likely to develop ","role":"that절의 동사+보어(발생시킬 가능성이 훨씬 더 높다)","emphasis":"core"},{"text":"serious health problems ","role":"목적어(심각한 건강 문제를)"},{"text":"than those who sleep enough.","role":"비교 대상(충분히 자는 사람들보다)"}]},{"n":4,"en":"The stages of sleep, including REM and deep sleep, each serve different functions: REM sleep is essential for regulating emotion, while deep sleep helps repair muscles and strengthen the immune system.","ko":"렘(REM) 수면과 깊은 수면을 포함한 수면의 단계들은 각각 다른 기능을 수행해요. 렘수면은 감정을 조절하는 데 필수적인 반면, 깊은 수면은 근육을 회복하고 면역 체계를 강화하는 데 도움을 줍니다.","chunks":[{"text":"The stages of sleep, ","role":"주어(수면의 단계들은)"},{"text":"including REM and deep sleep, ","role":"전치사구(렘수면과 깊은 수면을 포함하여)"},{"text":"each serve different functions: ","role":"부사+동사+목적어(각각 다른 기능을 수행한다)","emphasis":"core"},{"text":"REM sleep is essential ","role":"주어+동사+보어(렘수면은 필수적이다)"},{"text":"for regulating emotion, ","role":"전치사구(감정을 조절하는 데)"},{"text":"while deep sleep helps repair muscles ","role":"대조 접속사절(반면 깊은 수면은 근육 회복을 돕는다)"},{"text":"and strengthen the immune system.","role":"병렬 동사원형(그리고 면역 체계를 강화하는 것을)"}]},{"n":5,"en":"Despite knowing all this, many people continue to trade sleep for work or entertainment, a choice whose long-term costs are easy to ignore but hard to escape.","ko":"이 모든 것을 알고 있음에도 불구하고, 많은 사람들은 일이나 유흥을 위해 계속해서 잠을 맞바꾸는데, 이는 장기적인 대가를 무시하기는 쉽지만 피하기는 어려운 선택이에요.","chunks":[{"text":"Despite knowing all this, ","role":"전치사구(이 모든 것을 알고 있음에도)"},{"text":"many people continue ","role":"주어+동사(많은 사람들은 계속한다)"},{"text":"to trade sleep for work or entertainment, ","role":"목적어(일이나 유흥을 위해 잠을 맞바꾸는 것을)","emphasis":"core"},{"text":"a choice ","role":"동격 명사(선택인)"},{"text":"whose long-term costs are easy to ignore ","role":"소유격 관계절(그것의 장기적 대가는 무시하기 쉽다)"},{"text":"but hard to escape.","role":"병렬 보어(하지만 피하기는 어렵다)"}]}],"keywords":["Sleep","processes the memories","clears away waste products","REM sleep","deep sleep","regulating emotion","repair muscles","strengthen the immune system","trade sleep for work","long-term costs"]},{"kind":"structure-map","note":"※ 수면 부족의 위험성과 수면 단계별 핵심 회복 기능을 대조하여 보여주는 구조예요.","variant":"compare","intro":{"eyebrow":"INTRODUCTION","label":"현대인의 수면 경시 경향 (sacrificing sleep)"},"branchLabel":"수면의 두 가지 핵심 단계와 역할","columns":[{"titleEn":"REM Sleep","titleKo":"렘 수면","bullets":["정신적 회복 (mental recovery)","감정 조절에 필수적 (essential for regulating emotion)","기억의 가공 및 정리 (processing memories)"],"footer":"감정과 기억의 뇌 정화 단계"},{"titleEn":"Deep Sleep","titleKo":"깊은 수면","bullets":["신체적 회복 (physical recovery)","근육 회복 지원 (helps repair muscles)","면역 체계 강화 (strengthen the immune system)"],"footer":"신체 조직과 면역의 복구 단계"}],"coreDistinction":{"eyebrow":"CORE PRINCIPLE","label":"수면의 장기적 가치 (long-term costs) vs 일시적 유흥 (entertainment)","detail":"잠을 줄여 일이나 유흥을 얻는 것은 당장은 쉬워 보여도 나중에 큰 건강 비용을 치르게 돼요."},"conclusion":{"eyebrow":"CONCLUSION","text":"수면은 단순한 휴식이 아니라 뇌와 몸을 복구하는 필수 과정이므로 희생해서는 안 돼요."},"logicFlow":"수면 희생 경향 ▶ 수면 중 뇌의 노폐물 청소 ▶ 수면 단계별 역할(REM: 감정 조절 / Deep: 신체 복구) ▶ 수면 부족의 장기적 대가 경고"},{"kind":"summary","sentences":["많은 사람들이 일과 유흥을 위해 잠을 가장 먼저 희생하지만, 수면은 건강 유지에 절대적으로 필요한 활동이에요.","잠을 자는 동안 뇌는 기억을 정리하고 노폐물을 청소하며, 렘수면은 감정을 조절하고 깊은 수면은 신체와 면역력을 회복시켜 줍니다.","따라서 수면을 줄이는 선택은 당장 무시하기 쉬울지 몰라도 결국에는 피할 수 없는 심각한 장기적 대가를 치르게 만듭니다."],"thesisEn":"Although people often sacrifice sleep for daily demands, sleep is a vital restorative process where REM and deep sleep perform essential mental and physical repairs, making its deprivation a costly choice in the long run."},{"kind":"grammar","note":"※ ⚠ 는 시험에서 학생이 자주 틀리는 함정이에요.","rows":[{"sentenceNo":2,"excerpt":"memories formed during the day","pointCode":"c","point":"(c) 분사 능/수동 — formed","explanation":"이 자리는 memories(기억)를 꾸며주는 분사(동사를 형용사처럼 바꾼 형태예요)의 모양을 고르는 자리예요. 기억은 스스로 형성하는 것이 아니라 낮 동안 '형성되는(수동)' 대상이므로, 수동의 뜻을 가진 과거분사(동사를 '~된·당한' 뜻으로 바꾼 형태)인 formed를 써야 해요. forming을 쓰면 기억이 무언가를 직접 형성한다는 능동의 뜻이 되어 어색해요.","trap":"⚠ 시험에선 이 자리를 forming으로 슬쩍 바꿔서 출제해요. 꾸밈을 받는 memories와의 수동 관계를 파악하지 못하면 낚이기 쉬워요.","layout":{"anchorText":"formed","band":"interline","priority":1,"lines":["꾸밈받는 memories는","형성되는 대상이므로","수동의 p.p. formed가 맞아요"]}},{"sentenceNo":2,"excerpt":"processes the memories ... and clears away","pointCode":"i","point":"(i) 병렬 — processes 와 clears","explanation":"이 자리는 and 뒤의 동사 모양을 맞추는 병렬(and 앞뒤를 똑같은 모양으로 맞추는 거예요) 자리예요. 주어인 the brain(단수)에 걸리는 첫 번째 동사가 processes(단수동사)이므로, and 뒤의 동사도 clears(단수동사)로 모양을 똑같이 맞춰야 해요. clear원형이나 clearing으로 쓰면 짝이 맞지 않아 틀려요.","trap":"⚠ 시험에선 clears를 clear나 clearing으로 바꿔서 내요. 앞에 있는 memories나 day를 주어로 착각하게 만들려는 함정이에요.","layout":{"anchorText":"clears away","band":"interline","priority":2,"lines":["주어인 the brain에 걸리는","두 번째 동사 자리예요","processes와 병렬 수일치!"]}},{"sentenceNo":3,"excerpt":"people who consistently get less than seven hours of sleep are","pointCode":"d","point":"(d) 수일치 — are","explanation":"이 자리는 주어와 동사의 수일치(주어가 단수면 단수동사, 복수면 복수동사로 맞추는 거예요)를 묻는 자리예요. 진짜 주어는 관계대명사(앞 명사를 뒤 문장이 꾸밀 때 잇는 who)절의 꾸밈을 받는 people(복수명사)이에요. 따라서 동사 자리에 단수동사 is가 아니라 복수동사 are를 써야 해요. 바로 앞에 sleep(단수)이 있어서 헷갈리기 쉬우니 주의해야 해요.","trap":"⚠ 시험에선 바로 앞의 sleep을 주어로 착각하도록 유도하여 is로 바꿔 출제해요. 진짜 주어인 people을 찾아야 해요.","layout":{"anchorText":"are","band":"interline","priority":1,"lines":["진짜 주어는 복수인 people!","바로 앞 sleep에 속아","is를 고르면 안 돼요"]}},{"sentenceNo":4,"excerpt":"helps repair muscles and strengthen","pointCode":"i","point":"(i) 병렬 — repair 와 strengthen","explanation":"이 자리는 and 앞뒤의 모양을 맞추는 병렬 구조를 묻는 자리예요. help 동사는 뒤에 목적어로 to부정사(동사 앞에 to를 붙인 형태)나 to가 생략된 동사원형(동사의 기본 형태)을 둘 다 취할 수 있어요. 여기서는 repair(동사원형)와 and 뒤의 strengthen(동사원형)이 짝을 이루고 있어요. 따라서 strengthening이나 strengthened로 쓰면 안 돼요.","trap":"⚠ 시험에선 strengthen을 strengthening으로 바꾸어 출제해요. help의 목적어 자리에 걸리는 병렬임을 놓치면 틀리기 쉬워요.","layout":{"anchorText":"strengthen","band":"interline","priority":2,"lines":["helps 뒤에 걸리는","두 번째 동사원형 목적어예요","repair와 병렬 구조!"]}},{"sentenceNo":5,"excerpt":"a choice whose long-term costs are","pointCode":"b","point":"(b) 관계사 — 소유격 관계대명사 whose","explanation":"이 자리는 선행사(꾸밈을 받는 앞 명사)인 a choice와 뒤의 명사 long-term costs의 소유 관계('그 선택의 장기적 대가')를 연결해 주는 소유격 관계대명사 자리예요. 소유격 관계대명사 뒤에는 명사로 시작하는 완전한 구조의 절(주어와 동사가 들어간 덩어리)이 와요. 이 자리에 which나 that을 쓰면 뒤 문장 구조와 의미가 성립하지 않아 틀려요.","trap":"⚠ 시험에선 whose 자리에 which나 that을 넣어 출제해요. 뒤에 명사 주어가 바로 나오는 완전한 형태이므로 소유격이 들어가야 해요.","layout":{"anchorText":"whose","band":"interline","priority":1,"lines":["선행사 a choice의 대가라는","소유 관계이므로","whose가 들어가야 해요"]}}]},{"kind":"exam-focus","rows":[{"sentenceNo":5,"type":"빈칸추론","asks":"글의 핵심 메시지인 '수면 부족의 대가'를 비유적으로 표현한 빈칸을 추론하는 문제예요.","strategy":"잠을 줄여서 일이나 공부를 더 하는 것은 당장 눈앞의 이득처럼 보이지만, 결국 나중에 건강 악화라는 큰 대가를 치르게 된다는 흐름이에요. 따라서 빈칸에는 '장기적인 대가(long-term costs)' 또는 '부정적 영향(negative consequences)'이 들어가야 해요. 당장의 이익(short-term benefits) 같은 반대 개념의 선지를 피하는 것이 핵심이에요.","logicLocation":"⑤ 'a choice whose ___ are easy to ignore but hard to escape' — 잠을 줄이는 선택이 가져오는 장기적인 부정적 결과를 추론해야 해요.","layout":{"anchorText":"long-term costs","band":"rail","priority":1,"lines":["★빈칸추론 대비★","잠을 희생한 대가는","나중에 반드시 치른다는","핵심 어휘 자리예요"]}},{"sentenceNo":4,"type":"주제","asks":"지문 전체가 설명하는 수면의 필수적인 기능과 중요성을 파악하는 문제예요.","strategy":"수면은 단순한 휴식이 아니라 뇌의 노폐물을 청소하고(②), 감정을 조절하며(④), 신체와 면역을 복구하는(④) 필수적인 과정이라는 점을 종합해야 해요. '수면의 다양한 회복 기능과 그 중요성(The essential restorative functions of sleep and its importance)'이 정답이 돼요. 단순히 '수면 부족의 원인'이나 '수면 단계의 종류'처럼 지엽적인 선지는 오답으로 지워야 해요.","logicLocation":"④ 'The stages of sleep... each serve different functions' — 수면의 각 단계가 몸과 정신을 회복시키는 구체적 역할을 설명하는 핵심 문장이에요.","layout":{"anchorText":"different functions","band":"rail","priority":2,"lines":["★주제/제목 단서★","수면의 다양한 기능과","건강 유지의 필수성을","종합하는 선지를 고르세요"]}},{"sentenceNo":5,"type":"문장삽입","asks":"수면의 과학적 기능 설명이 끝나고, 현실적인 인간의 행동을 비판하는 전환점 문장의 위치를 찾는 문제예요.","strategy":"④번 문장에서 REM 수면과 깊은 수면의 엄청난 혜택들을 나열한 직후에, '이 모든 것을 알고 있음에도 불구하고(Despite knowing all this)'라며 사람들이 여전히 잠을 희생한다는 내용이 나와야 논리적 흐름이 자연스러워요. 'all this'가 가리키는 구체적 내용이 바로 앞 문장에 있어야 하므로, ⑤번 문장은 반드시 ④번 뒤에 들어가야만 해요.","logicLocation":"⑤ 'Despite knowing all this...' — 앞 문장(④)에서 언급한 수면의 놀라운 기능들을 'all this'로 받아주며 역접으로 이어지는 자리예요.","layout":{"anchorText":"Despite knowing all this","band":"rail","priority":1,"lines":["★문장삽입 단서★","all this가 가리키는 것은","앞 문장의 REM/deep sleep의","이로운 기능들이에요"]}},{"sentenceNo":5,"type":"요약","asks":"수면의 필수적인 역할과 이를 무시했을 때의 결과를 한 문장으로 요약하는 문제예요.","strategy":"요약문 예시: '수면은 신체와 정신을 (A)회복시키는(restore) 필수적인 과정임에도 불구하고, 많은 이들이 당장의 편의를 위해 이를 희생하여 결국 (B)피할 수 없는(unavoidable) 장기적 손상을 입는다.' 와 같은 구조로 출제돼요. (A)에는 복구/회복(recovery/restoration), (B)에는 피할 수 없는/해로운(inevitable/detrimental) 계열의 단어가 짝을 이루어 정답이 됩니다.","logicLocation":"지문 전체 — 수면의 신체적·정신적 회복 기능(④)과 수면 부족이 초래하는 장기적 위험성(⑤)을 결합해야 해요.","layout":{"anchorText":"trade sleep for","band":"rail","priority":2,"lines":["★요약문 완성★","수면의 (A)회복 기능과","수면 부족의 (B)피할 수 없는","대가를 대조하는 요약문 대비"]}}]},{"kind":"vocabulary","rows":[{"headword":"sacrifice","pronunciation":"새크리파이스","meaning":"희생하다","synonyms":"give up, surrender"},{"headword":"process","pronunciation":"프로세스","meaning":"처리하다, 가공하다","synonyms":"handle, deal with"},{"headword":"clear away","pronunciation":"클리어 어웨이","meaning":"제거하다, 치우다","synonyms":"remove, eliminate"},{"headword":"waste product","pronunciation":"웨이스트 프로덕트","meaning":"노폐물, 쓰레기","synonyms":"byproduct, debris"},{"headword":"build up","pronunciation":"빌드 업","meaning":"쌓이다, 축적되다","synonyms":"accumulate, gather"},{"headword":"consistently","pronunciation":"컨시스턴틀리","meaning":"지속적으로, 일관되게","synonyms":"constantly, regularly"},{"headword":"be likely to","pronunciation":"비 라이클리 투","meaning":"~할 가능성이 있다","synonyms":"tend to, be prone to"},{"headword":"develop","pronunciation":"디벨롭","meaning":"(병 등이) 생기다, 발달하다","synonyms":"contract, acquire"},{"headword":"stage","pronunciation":"스테이지","meaning":"단계","synonyms":"phase, step"},{"headword":"essential","pronunciation":"이센셜","meaning":"필수적인","synonyms":"crucial, vital, necessary"},{"headword":"regulate","pronunciation":"레귤레이트","meaning":"조절하다, 통제하다","synonyms":"control, adjust"},{"headword":"repair","pronunciation":"리페어","meaning":"회복하다, 수리하다","synonyms":"restore, mend"},{"headword":"strengthen","pronunciation":"스트렝슨","meaning":"강화하다","synonyms":"reinforce, boost"},{"headword":"immune system","pronunciation":"이뮨 시스템","meaning":"면역 체계","synonyms":"body defense mechanism"},{"headword":"trade A for B","pronunciation":"트레이드 A 포 B","meaning":"A를 B와 맞바꾸다","synonyms":"exchange A for B"},{"headword":"entertainment","pronunciation":"엔터테인먼트","meaning":"유흥, 오락","synonyms":"amusement, recreation"},{"headword":"long-term","pronunciation":"롱텀","meaning":"장기적인","synonyms":"extended, lasting"},{"headword":"cost","pronunciation":"코스트","meaning":"대가가 따르다, 비용, 대가","synonyms":"expense, penalty"},{"headword":"ignore","pronunciation":"이그노어","meaning":"무시하다","synonyms":"neglect, overlook"},{"headword":"escape","pronunciation":"이스케이프","meaning":"피하다, 탈출하다","synonyms":"avoid, evade"}]},{"kind":"parsing","items":[{"sentenceNo":3,"en":"Scientists have discovered that people who consistently get less than seven hours of sleep are far more likely to develop serious health problems than those who sleep enough.","parts":[{"label":"[주절 주어+동사]","text":"Scientists(주어) + have discovered(현재완료 동사)"},{"label":"[목적어 접속사절]","text":"that(명사절 접속사) + people(that절의 주어) ~ are(that절의 동사) ~"},{"label":"[관계대명사절]","text":"who consistently get less than seven hours of sleep (주어 people을 꾸며주는 관계절)"},{"label":"[비교급 수식]","text":"are far(비교급 강조 부사) + more likely to develop(더 발생시키기 쉽다) ~ than those(사람들보다)"},{"label":"[관계대명사절 2]","text":"who sleep enough (대명사 those를 꾸며주는 관계절)"}],"translation":"→ 과학자들은 [지속적으로 7시간보다 적게 잠을 자는] 사람들이 [충분히 자는] 사람들보다 심각한 건강 문제를 겪을 가능성이 훨씬 더 높다는 것을 발견해 왔어요.","layout":{"anchorText":"Scientists have discovered","band":"underchunk","priority":1}},{"sentenceNo":5,"en":"Despite knowing all this, many people continue to trade sleep for work or entertainment, a choice whose long-term costs are easy to ignore but hard to escape.","parts":[{"label":"[전치사구]","text":"Despite(전치사) + knowing(동명사 목적어) + all this(knowing의 목적어)"},{"label":"[주절 주어+동사]","text":"many people(주어) + continue(동사) + to trade sleep for work or entertainment(continue의 목적어)"},{"label":"[동격 명사구]","text":", a choice (앞 문장 전체의 내용을 부연 설명하는 동격 명사)"},{"label":"[소유격 관계대명사절]","text":"whose(소유격 관계사) + long-term costs(관계절의 주어) + are(동사) + easy to ignore but hard to escape(보어 병렬)"}],"translation":"→ 이 모든 것을 알고 있음에도 불구하고, 많은 사람들은 일이나 유흥을 위해 계속해서 잠을 맞바꾸는데, 이는 [그것의 장기적인 대가는 무시하기 쉽지만 피하기는 어려운] 선택이에요.","layout":{"anchorText":"Despite knowing all this","band":"underchunk","priority":1}}]}]}
+{
+  "schemaVersion": 1,
+  "brand": "SMOAT ENGLISH LAB",
+  "themeId": "black-white",
+  "passageLayout": "hlc",
+  "meta": {
+    "eyebrow": "PRIME PASSAGE ANALYSIS · 심층 지문 분석",
+    "titleKo": "동심원은 도시를 설명하지 못한다",
+    "titleEn": "Why Cities Grow Along Corridors, Not Concentric Rings",
+    "category": "비문학 · 설명문",
+    "theme": "도시 성장의 비균등성과 현실 관찰에 기반한 도시 계획",
+    "difficulty": 4,
+    "difficultyNote": "(수능 3점)",
+    "solveTime": "3분 30초",
+    "examTypes": "주제·빈칸추론·요약"
+  },
+  "sections": [
+    {
+      "kind": "passage",
+      "sentences": [
+        {
+          "n": 1,
+          "en": "The idea that cities simply grow outward from a fixed center, absorbing surrounding land in neat concentric rings, has shaped urban planning for more than a century.",
+          "ko": "도시가 고정된 중심에서 바깥쪽으로 단순하게 자라나고, 주변 땅을 깔끔한 동심원 모양의 고리로 흡수한다는 생각이 한 세기 넘게 도시 계획에 영향을 주어 왔어요.",
+          "chunks": [
+            {
+              "text": "The idea that cities simply grow outward from a fixed center, absorbing surrounding land in neat concentric rings, ",
+              "gloss": "도시가 고정된 중심에서 바깥으로 자라나 주변 땅을 흡수한다는 생각은",
+              "role": "주어(누가·무엇이)",
+              "emphasis": "core"
+            },
+            {
+              "text": "has shaped ",
+              "gloss": "영향을 주어 왔어요",
+              "role": "동사(무엇을 하는지)",
+              "emphasis": "core"
+            },
+            {
+              "text": "urban planning ",
+              "gloss": "도시 계획에",
+              "role": "영향을 받은 대상(동작이 향하는 곳)",
+              "emphasis": "core"
+            },
+            {
+              "text": "for more than a century.",
+              "gloss": "한 세기 넘게",
+              "role": "기간(얼마 동안인지)",
+              "emphasis": "core"
+            }
+          ]
+        },
+        {
+          "n": 2,
+          "en": "Planners who accepted this model assumed that congestion at the core was an unavoidable price of growth, and that the only meaningful intervention was to widen roads and extend transit lines ever farther into the periphery.",
+          "ko": "이 모델을 받아들인 계획가들은 중심부의 교통 혼잡이 성장에 따르는 피할 수 없는 대가라고 생각했어요. 그리고 의미 있는 유일한 개입은 도로를 넓히고 대중교통 노선을 주변부 안쪽으로 점점 더 멀리 연장하는 것이라고 생각했어요.",
+          "chunks": [
+            {
+              "text": "Planners who accepted this model ",
+              "gloss": "이 모델을 받아들인 계획가들은",
+              "role": "주어(누가·무엇이)",
+              "emphasis": "core"
+            },
+            {
+              "text": "assumed that congestion at the core was an unavoidable price of growth, ",
+              "gloss": "중심부의 혼잡이 성장의 피할 수 없는 대가라고 생각했어요",
+              "role": "첫 번째 내용(생각한 내용)",
+              "emphasis": "core"
+            },
+            {
+              "text": "and that the only meaningful intervention ",
+              "gloss": "그리고 의미 있는 유일한 개입은",
+              "role": "두 번째 내용의 주어(누가·무엇이)",
+              "emphasis": "core"
+            },
+            {
+              "text": "was to widen roads and extend transit lines ",
+              "gloss": "도로를 넓히고 대중교통 노선을 연장하는 것이었어요",
+              "role": "두 번째 내용의 동사와 행동",
+              "emphasis": "core"
+            },
+            {
+              "text": "ever farther into the periphery.",
+              "gloss": "주변부 안쪽으로 점점 더 멀리",
+              "role": "방향(어디로 향하는지)",
+              "emphasis": "core"
+            }
+          ]
+        },
+        {
+          "n": 3,
+          "en": "Recent research on urban morphology, however, tells a far more complicated story.",
+          "ko": "하지만 도시 형태에 관한 최근 연구는 훨씬 더 복잡한 이야기를 들려줘요.",
+          "chunks": [
+            {
+              "text": "Recent research on urban morphology, ",
+              "gloss": "도시 형태에 관한 최근 연구는",
+              "role": "주어(누가·무엇이)",
+              "emphasis": "core"
+            },
+            {
+              "text": "however, ",
+              "gloss": "하지만",
+              "role": "대조(반대 내용을 보여 줌)",
+              "emphasis": "core"
+            },
+            {
+              "text": "tells a far more complicated story.",
+              "gloss": "훨씬 더 복잡한 이야기를 들려줘요",
+              "role": "동사와 대상(행동과 그 대상)",
+              "emphasis": "core"
+            }
+          ]
+        },
+        {
+          "n": 4,
+          "en": "When historians traced the actual growth of dozens of cities across three continents, they found that urban expansion rarely proceeds evenly in all directions.",
+          "ko": "역사가들이 세 대륙에 걸친 수십 개 도시의 실제 성장을 추적했을 때, 도시의 확장은 모든 방향으로 고르게 진행되는 경우가 드물다는 사실을 발견했어요.",
+          "chunks": [
+            {
+              "text": "When historians traced the actual growth of dozens of cities across three continents, ",
+              "gloss": "역사가들이 세 대륙의 수십 개 도시가 실제로 성장한 모습을 추적했을 때",
+              "role": "시간(언제인지)"
+            },
+            {
+              "text": "they found ",
+              "gloss": "그들은 발견했어요",
+              "role": "주어(누가·무엇이)와 동사(무엇을 하는지)",
+              "emphasis": "core"
+            },
+            {
+              "text": "that urban expansion rarely proceeds evenly in all directions.",
+              "gloss": "도시 확장이 모든 방향으로 고르게 진행되는 경우는 드물다는 내용을",
+              "role": "발견한 내용",
+              "emphasis": "core"
+            }
+          ]
+        },
+        {
+          "n": 5,
+          "en": "Instead, growth follows corridors of opportunity: a river that supports trade, a rail line that shortens a commute, or even a single institution, such as a university, whose presence raises the value of adjacent neighborhoods.",
+          "ko": "대신 성장은 기회의 통로를 따라가요. 무역을 돕는 강, 통근 시간을 줄이는 철도, 또는 그 존재만으로 주변 지역의 가치를 높이는 대학 같은 단 하나의 기관이 그런 통로가 될 수 있어요.",
+          "chunks": [
+            {
+              "text": "Instead, growth follows corridors of opportunity: ",
+              "gloss": "대신 성장은 기회의 통로를 따라가요",
+              "role": "대조와 핵심 내용",
+              "emphasis": "core"
+            },
+            {
+              "text": "a river that supports trade, ",
+              "gloss": "무역을 돕는 강",
+              "role": "예시(구체적인 보기)",
+              "emphasis": "core"
+            },
+            {
+              "text": "a rail line that shortens a commute, ",
+              "gloss": "통근 시간을 줄이는 철도",
+              "role": "예시(구체적인 보기)",
+              "emphasis": "core"
+            },
+            {
+              "text": "or even a single institution, such as a university, ",
+              "gloss": "또는 대학 같은 단 하나의 기관",
+              "role": "예시(구체적인 보기)",
+              "emphasis": "core"
+            },
+            {
+              "text": "whose presence raises the value of adjacent neighborhoods.",
+              "gloss": "그 기관의 존재가 주변 지역의 가치를 높여요",
+              "role": "앞의 기관을 설명하는 말",
+              "emphasis": "core"
+            }
+          ]
+        },
+        {
+          "n": 6,
+          "en": "What appears from a distance to be a smooth ring of development is, on closer inspection, a patchwork of competing centers, each with its own history and its own gravitational pull.",
+          "ko": "멀리서 보면 개발이 매끄러운 고리처럼 보이는 것이, 자세히 살펴보면 각각 고유한 역사와 고유한 끌어당기는 힘을 가진 경쟁하는 중심지들이 모인 조각보예요.",
+          "chunks": [
+            {
+              "text": "What appears from a distance to be a smooth ring of development ",
+              "gloss": "멀리서 보면 개발의 매끄러운 고리처럼 보이는 것은",
+              "role": "주어(누가·무엇이)",
+              "emphasis": "core"
+            },
+            {
+              "text": "is, ",
+              "gloss": "이에요",
+              "role": "동사(무엇을 말하는지)",
+              "emphasis": "core"
+            },
+            {
+              "text": "on closer inspection, ",
+              "gloss": "자세히 살펴보면",
+              "role": "관점(어떻게 살펴보는지)"
+            },
+            {
+              "text": "a patchwork of competing centers, ",
+              "gloss": "경쟁하는 중심지들이 모인 조각보",
+              "role": "주어를 설명하는 말",
+              "emphasis": "core"
+            },
+            {
+              "text": "each with its own history and its own gravitational pull.",
+              "gloss": "각각 고유한 역사와 끌어당기는 힘을 가진",
+              "role": "보충 설명(앞말을 덧붙여 설명함)",
+              "emphasis": "core"
+            }
+          ]
+        },
+        {
+          "n": 7,
+          "en": "This finding matters because policies built on the concentric model consistently misallocate resources.",
+          "ko": "이 발견이 중요한 이유는 동심원 모델에 기반한 정책이 계속해서 자원을 잘못 배분하기 때문이에요.",
+          "chunks": [
+            {
+              "text": "This finding ",
+              "gloss": "이 발견은",
+              "role": "주어(누가·무엇이)",
+              "emphasis": "core"
+            },
+            {
+              "text": "matters ",
+              "gloss": "중요해요",
+              "role": "동사(어떤 상태인지)",
+              "emphasis": "core"
+            },
+            {
+              "text": "because policies built on the concentric model consistently misallocate resources.",
+              "gloss": "동심원 모델에 기반한 정책이 계속 자원을 잘못 배분하기 때문이에요",
+              "role": "이유(왜 그런지)",
+              "emphasis": "core"
+            }
+          ]
+        },
+        {
+          "n": 8,
+          "en": "If planners assume that demand radiates uniformly from downtown, they will invest in infrastructure where the model predicts growth rather than where growth is actually occurring.",
+          "ko": "계획가들이 수요가 도심에서 모든 방향으로 똑같이 퍼져 나간다고 가정하면, 모델이 성장을 예측하는 곳에 기반 시설을 투자하고 실제로 성장이 일어나고 있는 곳에는 투자하지 않을 거예요.",
+          "chunks": [
+            {
+              "text": "If planners assume that demand radiates uniformly from downtown, ",
+              "gloss": "계획가들이 수요가 도심에서 모든 방향으로 똑같이 퍼진다고 가정하면",
+              "role": "조건(어떤 경우인지)",
+              "emphasis": "core"
+            },
+            {
+              "text": "they will invest in infrastructure ",
+              "gloss": "그들은 기반 시설에 투자할 거예요",
+              "role": "주어와 핵심 행동",
+              "emphasis": "core"
+            },
+            {
+              "text": "where the model predicts growth ",
+              "gloss": "모델이 성장을 예측하는 곳에",
+              "role": "장소(어디에 하는지)",
+              "emphasis": "core"
+            },
+            {
+              "text": "rather than where growth is actually occurring.",
+              "gloss": "실제로 성장이 일어나는 곳이 아니라",
+              "role": "대조(어디와 비교하는지)",
+              "emphasis": "core"
+            }
+          ]
+        },
+        {
+          "n": 9,
+          "en": "In one well-documented case, a metropolitan government spent two decades extending highways toward its western suburbs while the majority of new jobs and housing quietly accumulated in the northeast, along an aging freight corridor that the official maps had dismissed as industrial wasteland.",
+          "ko": "잘 기록된 한 사례에서, 한 대도시 정부는 20년 동안 서부 교외를 향해 고속도로를 계속 확장했어요. 반면 새 일자리와 주택의 대부분은 공식 지도에서 산업 황무지로 치부했던 낡아 가는 화물 운송 통로를 따라 북동부에 조용히 모여들었어요.",
+          "chunks": [
+            {
+              "text": "In one well-documented case, ",
+              "gloss": "잘 기록된 한 사례에서",
+              "role": "사례를 제시하는 말"
+            },
+            {
+              "text": "a metropolitan government spent two decades extending highways toward its western suburbs ",
+              "gloss": "한 대도시 정부는 20년 동안 서부 교외를 향해 고속도로를 확장했어요",
+              "role": "주어와 핵심 행동",
+              "emphasis": "core"
+            },
+            {
+              "text": "while the majority of new jobs and housing quietly accumulated in the northeast, ",
+              "gloss": "반면 새 일자리와 주택의 대부분은 북동부에 조용히 모여들었어요",
+              "role": "반대 상황(서로 다른 일을 보여 줌)",
+              "emphasis": "core"
+            },
+            {
+              "text": "along an aging freight corridor ",
+              "gloss": "낡아 가는 화물 운송 통로를 따라",
+              "role": "장소(어디에서인지)",
+              "emphasis": "core"
+            },
+            {
+              "text": "that the official maps had dismissed as industrial wasteland.",
+              "gloss": "공식 지도들이 산업 황무지라고 무시했던",
+              "role": "앞의 통로를 설명하는 말",
+              "emphasis": "core"
+            }
+          ]
+        },
+        {
+          "n": 10,
+          "en": "The lesson is not that models are useless, but that a model can become a substitute for observation.",
+          "ko": "교훈은 모델이 쓸모없다는 것이 아니라, 모델이 관찰을 대신하는 것이 될 수 있다는 거예요.",
+          "chunks": [
+            {
+              "text": "The lesson ",
+              "gloss": "교훈은",
+              "role": "주어(누가·무엇이)",
+              "emphasis": "core"
+            },
+            {
+              "text": "is not that models are useless, ",
+              "gloss": "모델이 쓸모없다는 것은 아니에요",
+              "role": "첫 번째 내용(아니라고 한 내용)",
+              "emphasis": "core"
+            },
+            {
+              "text": "but that a model can become a substitute for observation.",
+              "gloss": "하지만 모델이 관찰을 대신하는 것이 될 수 있다는 거예요",
+              "role": "두 번째 내용(진짜 교훈)",
+              "emphasis": "core"
+            }
+          ]
+        },
+        {
+          "n": 11,
+          "en": "Cities are shaped less by geometry than by the accumulated decisions of households and firms responding to particular advantages of particular places.",
+          "ko": "도시는 기하학보다는 특정 장소의 특정한 이점에 반응하는 가구와 기업의 결정이 쌓인 결과에 더 크게 좌우돼요.",
+          "chunks": [
+            {
+              "text": "Cities are shaped ",
+              "gloss": "도시는 형성돼요",
+              "role": "주어와 수동 행동(영향을 받아 이루어짐)",
+              "emphasis": "core"
+            },
+            {
+              "text": "less by geometry than by the accumulated decisions of households and firms ",
+              "gloss": "기하학보다는 가구와 기업의 누적된 결정에 의해 더 크게",
+              "role": "비교(무엇의 영향이 더 큰지)",
+              "emphasis": "core"
+            },
+            {
+              "text": "responding to particular advantages of particular places.",
+              "gloss": "특정 장소의 특정한 이점에 반응하는",
+              "role": "앞의 가구와 기업을 설명하는 말",
+              "emphasis": "core"
+            }
+          ]
+        },
+        {
+          "n": 12,
+          "en": "Planners who mistake the elegance of a diagram for the truth of a city will keep solving problems that the city does not have, while the problems it does have deepen unattended in places their maps have taught them not to see.",
+          "ko": "도표의 우아함을 도시의 진실로 착각하는 계획가들은 그 도시에 없는 문제를 계속 해결하려 할 거예요. 반면 그 도시에 실제로 있는 문제들은 그들의 지도가 보지 않도록 만든 장소에서 방치된 채 더 깊어져요.",
+          "chunks": [
+            {
+              "text": "Planners who mistake the elegance of a diagram for the truth of a city ",
+              "gloss": "도표의 우아함을 도시의 진실로 착각하는 계획가들은",
+              "role": "주어(누가·무엇이)",
+              "emphasis": "core"
+            },
+            {
+              "text": "will keep solving problems that the city does not have, ",
+              "gloss": "그 도시에 없는 문제를 계속 해결하려 할 거예요",
+              "role": "핵심 행동과 대상",
+              "emphasis": "core"
+            },
+            {
+              "text": "while the problems it does have deepen unattended ",
+              "gloss": "반면 그 도시에 실제로 있는 문제들은 방치된 채 더 깊어져요",
+              "role": "반대 상황(서로 다른 결과를 보여 줌)",
+              "emphasis": "core"
+            },
+            {
+              "text": "in places their maps have taught them not to see.",
+              "gloss": "그들의 지도가 보지 않도록 만든 장소에서",
+              "role": "장소와 보충 설명",
+              "emphasis": "core"
+            }
+          ]
+        }
+      ],
+      "keywords": [
+        "fixed center",
+        "concentric rings",
+        "urban planning",
+        "urban morphology",
+        "corridors of opportunity",
+        "competing centers",
+        "concentric model",
+        "misallocate resources",
+        "substitute for observation",
+        "accumulated decisions"
+      ]
+    },
+    {
+      "kind": "learning-worksheet",
+      "title": "지문 논리 구조 분석",
+      "logicRows": [
+        {
+          "sentenceNo": 1,
+          "functionLabel": "기존 통념 제시",
+          "keyPoint": "도시는 고정된 중심에서 바깥쪽으로 동그란 고리를 이루며 자란다는 생각이 오랫동안 도시 계획의 기준이 되어 왔다고 말해요."
+        },
+        {
+          "sentenceNo": 2,
+          "functionLabel": "통념의 정책적 결과",
+          "keyPoint": "이 통념을 믿은 계획자들은 중심부의 혼잡을 성장에 따르는 피할 수 없는 대가로 보고, 외곽까지 도로와 교통망을 넓히는 방법만 중요하다고 여겼어요."
+        },
+        {
+          "sentenceNo": 3,
+          "functionLabel": "반박의 전환",
+          "keyPoint": "하지만 최근 도시의 형태를 연구한 결과는 도시 성장의 실제 모습이 기존 생각보다 훨씬 복잡하다고 알리며 글의 방향을 바꿔요."
+        },
+        {
+          "sentenceNo": 4,
+          "functionLabel": "반박 근거 제시",
+          "keyPoint": "여러 대륙의 도시들을 조사한 역사학자들은 도시가 모든 방향으로 고르게 커지는 경우가 드물다는 사실을 발견했어요."
+        },
+        {
+          "sentenceNo": 5,
+          "functionLabel": "대안 원리 설명",
+          "keyPoint": "도시의 성장은 모든 방향으로 퍼지는 것이 아니라 무역을 돕는 강, 통근을 짧게 하는 철도, 주변 지역의 가치를 높이는 대학 같은 기회의 통로를 따라 일어나요."
+        },
+        {
+          "sentenceNo": 7,
+          "functionLabel": "정책 문제 제시",
+          "keyPoint": "따라서 동그란 고리 모형을 바탕으로 만든 정책은 실제 성장 지역이 아닌 곳에 자원을 배분하는 잘못을 반복해요."
+        },
+        {
+          "sentenceNo": 9,
+          "functionLabel": "구체적 사례 제시",
+          "keyPoint": "실제로 한 대도시 정부는 서쪽 교외에 고속도로를 늘렸지만, 일자리와 주택은 공식 지도가 버린 동북쪽의 오래된 화물 철도 주변에 몰렸어요."
+        },
+        {
+          "sentenceNo": 12,
+          "functionLabel": "최종 결론",
+          "keyPoint": "도시의 그림을 실제 도시보다 더 믿는 계획자들은 존재하지 않는 문제를 해결하려 하면서, 지도에서 보이지 않게 된 진짜 문제는 방치하게 돼요."
+        }
+      ],
+      "questions": [],
+      "hiddenAnswers": false
+    },
+    {
+      "kind": "summary",
+      "sentences": [
+        "이 글은 도시가 하나의 중심에서 바깥쪽으로 둥근 고리처럼 고르게 커진다는 오래된 생각이 실제 도시 성장과 다르다고 설명해요.",
+        "실제 성장은 강, 철도, 대학처럼 특정 지역의 가치를 높이는 기회를 따라 이루어지고, 그 결과 도시는 여러 중심이 이어진 복잡한 모습으로 발전해요.",
+        "따라서 이런 단순한 모형만 믿고 정책을 세우면 필요한 곳에 자원을 쓰지 못하므로, 계획가는 도식보다 실제 관찰과 지역별 상황을 우선해야 해요."
+      ],
+      "thesisEn": "Urban growth does not spread uniformly in neat rings from a central core but follows local opportunities and creates multiple centers, so planners must test their models against actual patterns instead of allowing elegant diagrams to replace observation."
+    },
+    {
+      "kind": "grammar",
+      "note": "※ ⚠ 는 시험에서 자주 틀리는 함정",
+      "rows": [
+        {
+          "sentenceNo": 1,
+          "excerpt": "The idea that cities simply grow outward from a fixed center, absorbing surrounding land in neat concentric rings, has shaped",
+          "pointCode": "d",
+          "point": "(d) 수일치(주어 단수면 단수동사) — idea ... has shaped",
+          "explanation": "① 먼저 수일치(주어 단수면 단수동사를 쓰는 것) 자리를 찾아요. 주어(행동이나 상태의 중심이 되는 말)와 동사(행동이나 상태를 나타내는 말)의 수를 맞추는 자리예요. 단수(하나를 나타내는 형태)와 복수(둘 이상을 나타내는 형태)를 구별해야 해요. ② 이 문장의 중심 주어는 idea 한 개예요. 뒤의 that cities simply grow outward ... rings는 절(주어와 동사가 든 덩어리)이라서 idea의 내용을 설명할 뿐, 중심 주어가 아니에요. ③ cities가 바로 앞에 보여도 cities는 그 절 안의 주어예요. 따라서 복수 동사 have를 쓰면 안 돼요. ④ 중심 주어 idea에 맞는 단수 동사는 has이고, 원문 정답은 has shaped예요.",
+          "trap": "⚠ 시험에선 cities가 바로 앞에 보여서 have를 고르기 쉬워요. 하지만 have는 복수 주어에 맞는 형태이고, 이 자리의 중심 주어 idea는 하나라서 have는 틀려요.",
+          "example": "The idea that neighborhoods expand outward have shaped modern planning for decades.",
+          "exampleWrong": "have",
+          "exampleCorrect": "has",
+          "layout": {
+            "anchorText": "idea ... has shaped",
+            "band": "interline",
+            "priority": 2,
+            "lines": [
+              "중심 주어는 idea예요",
+              "하나라서 has가 와요"
+            ]
+          }
+        },
+        {
+          "sentenceNo": 4,
+          "excerpt": "they found that urban expansion rarely proceeds evenly in all directions.",
+          "pointCode": "f",
+          "point": "(f) 형용사/부사(명사나 동사 등을 꾸미는 말) — proceeds evenly",
+          "explanation": "① 먼저 형용사/부사(명사를 꾸미는 말과 동사 등을 꾸미는 말) 중 무엇을 고르는지 봐요. ② evenly는 도시 확장이 어떤 방식으로 진행되는지를 설명하므로 동사 proceeds를 꾸며야 해요. 그래서 부사 형태가 필요해요. ③ even은 '심지어'처럼 뜻을 더하거나 '평평한' 상태를 나타낼 수 있지만, 여기서 필요한 '고르게'라는 뜻을 정확하게 나타내지 못해요. ④ 따라서 '모든 방향으로 고르게 진행되다'라는 뜻의 evenly가 정답이에요.",
+          "trap": "⚠ 시험에선 even을 넣어도 문장 뜻이 대략 통하는 것처럼 보여서 헷갈리기 쉬워요. 하지만 proceeds의 진행 방식을 꾸미는 자리라서 형용사 rapid가 아니라 부사 rapidly처럼, 이 문장에서는 evenly가 필요해요.",
+          "example": "Urban growth expands rapid along major transportation corridors.",
+          "exampleWrong": "rapid",
+          "exampleCorrect": "rapidly",
+          "layout": {
+            "anchorText": "expansion rarely proceeds evenly",
+            "band": "interline",
+            "priority": 2,
+            "lines": [
+              "proceeds를 꾸미는 자리예요",
+              "부사 evenly가 필요해요"
+            ]
+          }
+        },
+        {
+          "sentenceNo": 5,
+          "excerpt": "a single institution, such as a university, whose presence raises the value of adjacent neighborhoods.",
+          "pointCode": "b",
+          "point": "(b) 관계사(앞 명사를 뒤 문장이 꾸밀 때 잇는 말) — whose presence raises",
+          "explanation": "① 관계대명사(앞 명사를 뒤 문장이 꾸밀 때 잇는 who/which/that) 자리는 앞 명사와 뒤 내용을 연결해요. 이 자리에서는 소유를 나타내는 whose를 고르는지 확인해야 해요. ② whose의 선행사(꾸밈 받는 앞 명사)는 institution이에요. whose presence는 '그 기관의 존재'라는 뜻이므로 자연스러워요. ③ which는 사물 자체를 가리킬 수 있지만, 뒤에 바로 presence를 붙여 소유를 나타낼 수 없어요. who는 보통 사람을 가리키므로 institution과도 맞지 않아요. ④ 따라서 institution을 이어 주면서 '그 기관의'라는 뜻을 만드는 whose presence raises가 정답이에요.",
+          "trap": "⚠ 시험에선 institution이 사물이므로 which를 고르기 쉬워요. 하지만 이 자리에서는 사물 자체가 아니라 institution이 가진 presence를 나타내므로 which가 아니라 whose가 와야 해요.",
+          "example": "A museum, which presence attracts tourists, changes nearby neighborhoods.",
+          "exampleWrong": "which",
+          "exampleCorrect": "whose",
+          "layout": {
+            "anchorText": "institution ... whose presence",
+            "band": "interline",
+            "priority": 2,
+            "lines": [
+              "institution이 가진 presence예요",
+              "소유를 나타내서 whose를 써요"
+            ]
+          }
+        },
+        {
+          "sentenceNo": 6,
+          "excerpt": "a patchwork of competing centers, each with its own history and its own gravitational pull.",
+          "pointCode": "c",
+          "point": "(c) 분사 능/수동(명사를 꾸미며 스스로 하는지 당하는지를 나타내는 형태) — competing centers",
+          "explanation": "① 분사(동사를 형용사처럼 바꾼 형태예요) 자리에서는 명사가 어떤 행동을 하는지, 또는 어떤 행동을 당했는지를 골라요. 현재분사/-ing(동사를 '~하는' 뜻으로)는 명사가 스스로 하는 행동을 나타내고, 과거분사/p.p.(동사를 '~된·당한' 뜻으로)는 명사가 당한 상태를 나타내요. ② 여기의 centers는 서로 경쟁하는 중심지들이므로 centers가 직접 compete하는 관계예요. ③ competed는 과거형과 같은 모양이지만, 명사 centers 앞에 놓이면 과거분사/p.p.처럼 읽혀 '경쟁된 중심지'라는 어색한 뜻이 돼요. ④ 따라서 스스로 경쟁하는 중심지라는 뜻의 competing centers가 정답이에요.",
+          "trap": "⚠ 시험에선 competed가 과거형처럼 보여서 선택하기 쉬워요. 하지만 centers가 경쟁을 당하는 것이 아니라 직접 경쟁하는 주체이므로, 수동 의미의 competed가 아니라 능동 의미의 competing을 써야 해요.",
+          "example": "The report described competed centers attracting workers across the region.",
+          "exampleWrong": "competed",
+          "exampleCorrect": "competing",
+          "layout": {
+            "anchorText": "patchwork of competing centers",
+            "band": "interline",
+            "priority": 2,
+            "lines": [
+              "centers가 직접 경쟁해요",
+              "능동 의미의 competing이에요"
+            ]
+          }
+        },
+        {
+          "sentenceNo": 11,
+          "excerpt": "Cities are shaped less by geometry than by the accumulated decisions of households and firms responding to particular advantages of particular places.",
+          "pointCode": "e",
+          "point": "(e) 능·수동태(주어가 행동하는지 당하는지) — Cities are shaped",
+          "explanation": "① 먼저 Cities가 shaped라는 행동을 직접 하는지, 아니면 그 행동을 받는지 확인해요. 능동태(주어가 행동하는 형태)는 주어가 행동하고, 수동태(주어가 행동을 당하는 형태)는 주어가 행동을 받아요. ② 이 문장에서 도시는 households and firms의 결정에 의해 만들어지는 대상이에요. 따라서 도시는 행동을 하는 쪽이 아니라 당하는 쪽이에요. ③ shaped는 과거분사/p.p.(동사를 '~된·당한' 뜻으로)이고, be동사(are처럼 상태나 수동태를 만드는 동사)와 함께 수동태를 만들어요. shape만 쓰면 도시가 무언가를 만든다는 능동 의미가 돼요. ④ 따라서 Cities are shaped가 문맥과 문법에 모두 맞아요.",
+          "trap": "⚠ 시험에선 Cities가 문장 맨 앞에 있어서 shape를 고르기 쉬워요. 하지만 도시는 households and firms의 결정에 의해 만들어지므로, 능동형 shape가 아니라 수동형 are shaped를 써야 해요.",
+          "example": "Urban neighborhoods shape by households and firms over many years.",
+          "exampleWrong": "shape",
+          "exampleCorrect": "are shaped",
+          "layout": {
+            "anchorText": "Cities are shaped",
+            "band": "interline",
+            "priority": 2,
+            "lines": [
+              "도시는 결정을 받아요",
+              "수동태 are shaped예요"
+            ]
+          }
+        },
+        {
+          "sentenceNo": 11,
+          "excerpt": "Cities are shaped less by geometry than by the accumulated decisions of households and firms responding to particular advantages of particular places.",
+          "pointCode": "m",
+          "point": "(m) 비교구문(둘 이상의 정도를 견주는 표현) — less by A than by B",
+          "explanation": "① 비교구문(둘 이상의 정도를 견주는 표현)에서 less A than B는 A의 정도가 B보다 작다는 뜻으로 두 대상을 비교해요. ② 이 문장에서는 도시가 geometry의 영향은 덜 받고, households and firms의 누적된 결정에 더 크게 영향을 받아요. 그래서 less by geometry와 than by the accumulated decisions가 한 쌍을 이뤄요. ③ as는 같은 정도를 비교할 때 보통 as ... as로 짝을 이루므로 less 뒤에 바로 쓰면 이 구조가 깨져요. ④ 따라서 less by geometry than by the accumulated decisions가 정답이에요.",
+          "trap": "⚠ 시험에선 less와 as가 모두 비교에 쓰인다는 점 때문에 as를 고르기 쉬워요. 하지만 이 문장은 같음을 비교하는 as ... as가 아니라 정도가 더 작음을 나타내는 less ... than 구조라서 as는 틀려요.",
+          "example": "Cities are shaped less by geometry as by local decisions.",
+          "exampleWrong": "as",
+          "exampleCorrect": "than",
+          "layout": {
+            "anchorText": "less by geometry than by",
+            "band": "interline",
+            "priority": 2,
+            "lines": [
+              "less A와 than B가 한 쌍이에요",
+              "as가 아니라 than이에요"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "kind": "exam-focus",
+      "rows": [
+        {
+          "sentenceNo": 10,
+          "type": "빈칸추론",
+          "asks": "이 유형은 문장 10의 결론 자리에 들어갈 내용을 물어요. 먼저 문장 10의 “not that models are useless, but that”를 찾아요. 앞 문장 7~9의 정책 실패를 한데 모으면, 정답은 모델(도시의 성장 방식을 설명하는 틀)이 실제 관찰(현실을 직접 살펴보는 일)을 대신할 때 문제가 생긴다는 내용이에요. “모델은 쓸모없다”라는 선택지는 not that 뒤의 내용과 반대라서 피해야 해요.",
+          "strategy": "① not that 뒤의 “models are useless”를 먼저 약한 결론으로 지워요. ② but that 뒤의 “a model can become a substitute for observation”을 정답의 중심으로 잡아요. ③ 예상 답은 “모델이 관찰을 대신하면 실제 성장과 어긋난 정책을 만들 수 있다”예요. ④ “모델을 사용하면 안 된다”나 “도시는 모든 방향으로 똑같이 자란다”를 고르면 안 돼요. 전자는 문장 10의 not that과 맞지 않고, 후자는 문장 4의 “rarely proceeds evenly in all directions”와 반대예요.",
+          "logicLocation": "문장 10의 “The lesson is not that models are useless, but that a model can become a substitute for observation.”에 걸려요. “not that A, but that B”는 A가 아니라 B가 핵심이라는 대조(서로 반대되는 내용을 나란히 놓는 방식)를 만들어요. 문장 7~9의 “misallocate resources”, “where growth is actually occurring”, “official maps had dismissed”가 B의 근거가 돼요. 여기서 자원 배분(돈과 시설을 필요한 곳에 나누는 일)이 잘못된 이유는 모델이 실제 상황을 대신했기 때문이에요.",
+          "layout": {
+            "anchorText": "not that models are useless, but that",
+            "band": "rail",
+            "priority": 2,
+            "lines": [
+              "문장 10의 “not that models are useless”를 먼저 확인해요.",
+              "“but that a model can become a substitute for observation”이 실제 결론이에요."
+            ]
+          }
+        },
+        {
+          "sentenceNo": 3,
+          "type": "주제",
+          "asks": "이 유형은 글 전체가 무엇을 말하는지 물어요. 문장 1~2의 “fixed center”와 “concentric rings”로 기존 설명을 찾고, 문장 3의 “however” 뒤 문장 4~6과 7~12를 읽어요. 정답은 도시가 동심원(같은 중심에서 퍼지는 원)처럼 고르게 자란다는 생각의 한계와, 실제 장소의 이점에 따른 성장 및 관찰에 근거한 계획의 필요성을 함께 담아야 해요. 서쪽 고속도로 사례만 고르거나 모델을 모두 버리자는 선택지는 글 전체보다 좁거나 강해서 틀려요.",
+          "strategy": "① 처음 두 문장을 기존 모델에 대한 설명으로 묶어요. ② “however” 뒤의 실제 조사와 “Instead” 뒤의 “corridors of opportunity”를 새로운 핵심으로 잡아요. ③ 문장 7~12의 정책 실패와 “substitute for observation”까지 포함한 답을 예상해요. ④ “도시에는 고속도로가 필요하다”처럼 문장 9의 한 사례만 고르거나, “models are useless”처럼 문장 10이 직접 부정한 답을 피해야 해요.",
+          "logicLocation": "문장 1~2의 “fixed center”, “concentric rings”, “widen roads”가 옛 생각을 보여줘요. 문장 3의 “however” 뒤에서 문장 4~6은 실제 성장의 불규칙성과 “corridors of opportunity”를 보여줘요. 문장 7~12는 이런 차이가 “misallocate resources”와 관찰 부족으로 이어진다고 설명해요. 문장 11의 “particular advantages of particular places”는 도시가 실제 장소의 이점에 따라 만들어진다는 글의 중심을 다시 말해요.",
+          "layout": {
+            "anchorText": "fixed center / concentric rings / corridors of opportunity",
+            "band": "rail",
+            "priority": 2,
+            "lines": [
+              "문장 1~2에서 기존 도시 성장 모델을 확인해요.",
+              "문장 5와 문장 11에서 실제 성장 원인을 확인해요."
+            ]
+          }
+        },
+        {
+          "sentenceNo": 1,
+          "type": "제목",
+          "asks": "이 유형은 글 전체를 한 줄로 붙잡는 제목을 물어요. 먼저 문장 1의 “concentric rings”와 문장 6의 “patchwork of competing centers”를 비교해요. 정답은 기존 동심원 모델의 한계와 실제 도시가 여러 기회 경로와 중심을 따라 자란다는 점을 함께 보여주는 짧은 제목이어야 해요. “western suburbs”나 “aging freight corridor”만 담은 제목은 문장 9의 한 사례만 보여줘서 부족해요.",
+          "strategy": "① 문장 1의 기존 그림과 문장 6의 실제 그림을 나란히 놓아요. ② 문장 5의 “corridors of opportunity”와 문장 10의 “observation”을 더해요. ③ 예상 제목은 “동심원 모델의 한계와 관찰로 본 도시 성장”처럼 두 내용을 함께 담아요. ④ 도시의 서쪽·북동쪽 사례만 담은 제목이나 모델을 완전히 버리자는 제목은 글의 중심에서 벗어나므로 고르면 안 돼요.",
+          "logicLocation": "문장 1의 “grow outward from a fixed center”와 문장 6의 “a patchwork of competing centers”가 제목의 두 핵심 축이에요. 문장 5의 “corridors of opportunity”는 실제 성장 방향을 더 자세히 보여줘요. 문장 10의 “models are useless”는 글의 뜻이 아니므로 모델 전체를 공격하는 제목은 걸러야 해요.",
+          "layout": {
+            "anchorText": "grow outward from a fixed center / patchwork of competing centers",
+            "band": "rail",
+            "priority": 2,
+            "lines": [
+              "문장 1의 한 중심 모델과 문장 6의 여러 중심을 비교해요.",
+              "제목은 한 사례보다 두 관점을 함께 담아야 해요."
+            ]
+          }
+        },
+        {
+          "sentenceNo": 3,
+          "type": "순서",
+          "asks": "이 유형은 섞인 문장을 글의 자연스러운 순서로 놓는 문제예요. 먼저 문장 1~2의 모델 소개를 찾고, 문장 3의 “however”와 문장 5의 “Instead”로 내용의 방향이 바뀌는 자리를 확인해요. 그다음 문장 7의 “This finding”이 문장 4~6의 발견을 받아야 하고, 문장 9가 문장 8의 “If planners assume” 뒤 사례가 되어야 해요. “This finding”을 실제 발견보다 먼저 놓거나 “The lesson”을 근거 사례보다 먼저 놓으면 안 돼요.",
+          "strategy": "① 고정 묶음은 1→2→3으로 잡아요. ② 조사와 설명은 4→5→6으로 이어요. ③ 발견의 결과와 실제 사례는 7→8→9로 이어요. ④ 결론은 10→11→12로 놓아요. 특히 “however”는 앞 내용을 뒤집고, “Instead”는 문장 4의 “rarely proceeds evenly in all directions”를 바로잡으며, “This finding”은 바로 앞의 실제 조사 결과를 가리켜요. 따라서 3→4→5, 6→7, 8→9, 9→10의 연결을 먼저 찾으면 함정 선택지를 빠르게 지울 수 있어요.",
+          "logicLocation": "문장 3의 “however”는 문장 1~2의 “accepted this model” 뒤에 와야 해요. 문장 4의 “When historians traced”가 조사 결과를 열고, 문장 5의 “Instead”가 그 결과를 다시 설명해요. 문장 6의 “What appears” 뒤에 문장 7의 “This finding matters”가 와요. 문장 8의 “If planners assume” 뒤에 문장 9의 “In one well-documented case”가 와요. 문장 10의 “The lesson”은 사례 뒤에 나오는 정리예요.",
+          "layout": {
+            "anchorText": "however / Instead / This finding / The lesson",
+            "band": "rail",
+            "priority": 2,
+            "lines": [
+              "“however” 뒤에는 기존 모델과 다른 조사 결과가 나와요.",
+              "“This finding”은 문장 4~6의 내용을 받은 뒤에 와야 해요."
+            ]
+          }
+        },
+        {
+          "sentenceNo": 12,
+          "type": "함축의미",
+          "asks": "이 유형은 문장 12의 표현이 실제로 뜻하는 바를 물어요. 먼저 “mistake the elegance of a diagram for the truth of a city”와 “maps have taught them not to see”를 찾고, 문장 9의 “official maps had dismissed”와 연결해요. 정답은 지도가 눈을 가린다는 뜻이 아니라, 계획 담당자들이 모델을 너무 믿어 실제 문제가 있는 장소를 놓친다는 뜻이에요. 도시 지도를 없애야 한다는 답이나 단순히 도시가 아름답다는 답은 피해야 해요.",
+          "strategy": "① “not see”를 눈의 기능 문제로 읽지 말고 문장 9의 “official maps had dismissed”와 연결해요. ② “the problems it does have”는 도시가 실제로 가진 문제를 뜻하고, “unattended”는 돌보지 않은 채 남는다는 뜻으로 읽어요. ③ 예상 답은 계획 담당자들이 모델이 무시한 장소의 일자리와 주거 문제를 놓쳐서 그 문제가 더 깊어진다는 내용이에요. ④ “모델은 언제나 정확하다”나 “모든 문제를 해결했다”는 답은 문장 10~12의 내용과 반대라서 고르면 안 돼요.",
+          "logicLocation": "문장 12의 “the problems it does have deepen unattended”와 “places their maps have taught them not to see”가 핵심이에요. 문장 9에서 “official maps had dismissed”한 “an aging freight corridor”에 “new jobs and housing”이 쌓였어요. 그래서 문장 12는 지도가 실제 장소를 문자 그대로 못 보게 한다는 뜻이 아니라, 잘못된 모델이 관심과 자원을 다른 곳으로 돌린다는 뜻을 함축(글에 직접 쓰지 않았지만 앞뒤 문장의 흐름으로 알 수 있는 뜻)해요.",
+          "layout": {
+            "anchorText": "maps have taught them not to see",
+            "band": "rail",
+            "priority": 2,
+            "lines": [
+              "“not see”는 실제 장소를 정책 대상에서 빼 놓는다는 뜻이에요.",
+              "문장 9의 “official maps had dismissed”와 연결해서 읽어요."
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "kind": "vocabulary",
+      "rows": [
+        {
+          "headword": "fixed",
+          "pronunciation": "픽스트",
+          "meaning": "본문에서는 도시가 바깥으로 퍼져 나갈 때 기준이 되는 중심이 움직이지 않고 정해져 있다는 뜻으로 써요.",
+          "tier": "core",
+          "difficulty": 2,
+          "synonyms": "stationary, immovable",
+          "antonyms": "mobile, changeable"
+        },
+        {
+          "headword": "absorb",
+          "pronunciation": "업조브",
+          "meaning": "본문에서는 도시가 주변 땅을 자기 영역 안으로 흡수하거나 편입한다는 뜻으로 써요.",
+          "tier": "test",
+          "difficulty": 3,
+          "synonyms": "take in, soak up",
+          "antonyms": "release, give off"
+        },
+        {
+          "headword": "concentric rings",
+          "pronunciation": "컨센트릭 링즈",
+          "meaning": "본문에서는 하나의 중심을 함께 가지며 겹겹이 퍼지는 동심원 모양의 띠를 말해요.",
+          "tier": "challenge",
+          "difficulty": 4,
+          "synonyms": "centered circles, nested circles",
+          "antonyms": "—"
+        },
+        {
+          "headword": "unavoidable",
+          "pronunciation": "언어보이더블",
+          "meaning": "본문에서는 성장 때문에 중심부가 혼잡해지는 일이 피할 수 없다는 뜻으로 써요.",
+          "tier": "test",
+          "difficulty": 3,
+          "synonyms": "inevitable, inescapable",
+          "antonyms": "avoidable"
+        },
+        {
+          "headword": "meaningful",
+          "pronunciation": "미닝풀",
+          "meaning": "본문에서는 도시에 실제로 중요한 변화를 일으킬 만한 개입이라는 뜻으로 써요.",
+          "tier": "test",
+          "difficulty": 3,
+          "synonyms": "significant, consequential",
+          "antonyms": "trivial, pointless"
+        },
+        {
+          "headword": "intervention",
+          "pronunciation": "인터벤션",
+          "meaning": "본문에서는 도시 문제를 해결하려고 정부나 계획가가 직접 개입하는 조치를 말해요.",
+          "tier": "challenge",
+          "difficulty": 4,
+          "synonyms": "interference, involvement",
+          "antonyms": "inaction, noninterference"
+        },
+        {
+          "headword": "widen",
+          "pronunciation": "와이든",
+          "meaning": "본문에서는 도로를 더 넓게 만들다는 뜻으로 써요.",
+          "tier": "core",
+          "difficulty": 2,
+          "synonyms": "broaden, enlarge",
+          "antonyms": "narrow"
+        },
+        {
+          "headword": "periphery",
+          "pronunciation": "퍼리퍼리",
+          "meaning": "본문에서는 도시의 중심에서 멀리 떨어진 외곽 지역을 말해요.",
+          "tier": "test",
+          "difficulty": 3,
+          "synonyms": "outskirts, fringe",
+          "antonyms": "center, interior"
+        },
+        {
+          "headword": "urban morphology",
+          "pronunciation": "어번 몰폴러지",
+          "meaning": "본문에서는 도시가 어떤 형태와 구조로 이루어지고 변화하는지를 살피는 연구 분야를 말해요.",
+          "tier": "test",
+          "difficulty": 5,
+          "synonyms": "city structure, urban form",
+          "antonyms": "—"
+        },
+        {
+          "headword": "trace",
+          "pronunciation": "트레이스",
+          "meaning": "본문에서는 여러 도시가 실제로 어떻게 성장했는지 따라가며 조사한다는 뜻으로 써요.",
+          "tier": "test",
+          "difficulty": 3,
+          "synonyms": "track, follow",
+          "antonyms": "lose track of"
+        },
+        {
+          "headword": "proceed",
+          "pronunciation": "프로시드",
+          "meaning": "본문에서는 도시의 확장이 특정한 방향으로 계속 진행된다는 뜻으로 써요.",
+          "tier": "test",
+          "difficulty": 3,
+          "synonyms": "advance, continue",
+          "antonyms": "stop, halt"
+        },
+        {
+          "headword": "rarely",
+          "pronunciation": "레얼리",
+          "meaning": "본문에서는 도시의 확장이 모든 방향으로 고르게 일어나는 경우가 거의 없다는 뜻으로 써요.",
+          "tier": "core",
+          "difficulty": 2,
+          "synonyms": "seldom, infrequently",
+          "antonyms": "frequently, commonly"
+        },
+        {
+          "headword": "evenly",
+          "pronunciation": "이븐리",
+          "meaning": "본문에서는 도시가 모든 방향으로 비슷한 정도로 고르게 확장된다는 뜻으로 써요.",
+          "tier": "test",
+          "difficulty": 3,
+          "synonyms": "uniformly, regularly",
+          "antonyms": "unevenly, irregularly"
+        },
+        {
+          "headword": "corridor of opportunity",
+          "pronunciation": "코리더 오브 아퍼튜너티",
+          "meaning": "본문에서는 강이나 철도처럼 성장과 이동의 기회를 만들어 주는 특정한 통로를 말해요.",
+          "tier": "challenge",
+          "difficulty": 4,
+          "synonyms": "growth corridor, development route",
+          "antonyms": "—"
+        },
+        {
+          "headword": "support trade",
+          "pronunciation": "서포트 트레이드",
+          "meaning": "본문에서는 강이 물건을 운반하고 사고파는 활동을 가능하게 하거나 도와준다는 뜻으로 써요.",
+          "tier": "test",
+          "difficulty": 3,
+          "synonyms": "facilitate commerce, sustain business",
+          "antonyms": "obstruct commerce, hinder business"
+        },
+        {
+          "headword": "adjacent",
+          "pronunciation": "어제이슨트",
+          "meaning": "본문에서는 특정 기관이나 지역에 바로 붙어 있거나 가까이 있는 동네를 가리켜요.",
+          "tier": "core",
+          "difficulty": 2,
+          "synonyms": "neighboring, nearby",
+          "antonyms": "distant, remote"
+        },
+        {
+          "headword": "patchwork",
+          "pronunciation": "패치워크",
+          "meaning": "본문에서는 하나의 매끈한 모양이 아니라 여러 중심지가 조각처럼 섞여 있는 모습을 비유해요.",
+          "tier": "challenge",
+          "difficulty": 4,
+          "synonyms": "mosaic, mixture",
+          "antonyms": "uniformity, consistency"
+        },
+        {
+          "headword": "competing centers",
+          "pronunciation": "컴피팅 센터즈",
+          "meaning": "본문에서는 서로 다른 역사와 영향력을 가지면서 도시 안에서 경쟁하는 여러 중심지를 말해요.",
+          "tier": "challenge",
+          "difficulty": 4,
+          "synonyms": "rival hubs, contending centers",
+          "antonyms": "—"
+        },
+        {
+          "headword": "gravitational pull",
+          "pronunciation": "그래비테이셔널 풀",
+          "meaning": "본문에서는 특정 중심지가 주변 지역과 사람을 끌어당기는 영향력을 비유해요.",
+          "tier": "challenge",
+          "difficulty": 5,
+          "synonyms": "attraction, drawing power",
+          "antonyms": "repulsion, detachment"
+        },
+        {
+          "headword": "misallocate resources",
+          "pronunciation": "미스앨러케이트 리소시즈",
+          "meaning": "본문에서는 자원을 실제 성장 지역이 아니라 잘못된 곳에 배분한다는 뜻으로 써요.",
+          "tier": "test",
+          "difficulty": 4,
+          "synonyms": "assign wrongly, distribute improperly",
+          "antonyms": "allocate properly"
+        },
+        {
+          "headword": "infrastructure",
+          "pronunciation": "인프러스트럭처",
+          "meaning": "본문에서는 도로와 철도처럼 도시의 활동을 뒷받침하는 사회 기반 시설을 말해요.",
+          "tier": "test",
+          "difficulty": 3,
+          "synonyms": "public works, basic facilities",
+          "antonyms": "—"
+        },
+        {
+          "headword": "accumulate",
+          "pronunciation": "어큐뮬레이트",
+          "meaning": "본문에서는 일자리와 주택이 한 지역에 점점 모인다는 뜻으로 써요.",
+          "tier": "test",
+          "difficulty": 3,
+          "synonyms": "amass, build up",
+          "antonyms": "disperse, scatter"
+        },
+        {
+          "headword": "aging",
+          "pronunciation": "에이징",
+          "meaning": "본문에서는 화물 철도 통로가 오래되어 점점 낡아 가고 있다는 뜻으로 써요.",
+          "tier": "core",
+          "difficulty": 2,
+          "synonyms": "deteriorating, old",
+          "antonyms": "modern, new"
+        },
+        {
+          "headword": "dismiss as",
+          "pronunciation": "디스미스 애즈",
+          "meaning": "본문에서는 어떤 지역을 가치가 없다고 여기고 무시하거나 치부한다는 뜻으로 써요.",
+          "tier": "challenge",
+          "difficulty": 4,
+          "synonyms": "reject as, write off as",
+          "antonyms": "accept as, recognize as valuable"
+        },
+        {
+          "headword": "industrial wasteland",
+          "pronunciation": "인더스트리얼 웨이스트랜드",
+          "meaning": "본문에서는 공식 지도에서 아무런 가치가 없는 낡은 산업 지역처럼 취급된 곳을 말해요.",
+          "tier": "challenge",
+          "difficulty": 5,
+          "synonyms": "barren industrial area, derelict zone",
+          "antonyms": "—"
+        },
+        {
+          "headword": "substitute for",
+          "pronunciation": "서브스티튜트 포어",
+          "meaning": "본문에서는 관찰을 대신하는 것으로 모델이 사용된다는 뜻으로 써요.",
+          "tier": "test",
+          "difficulty": 4,
+          "synonyms": "replacement, alternative",
+          "antonyms": "original"
+        },
+        {
+          "headword": "observation",
+          "pronunciation": "옵저베이션",
+          "meaning": "본문에서는 모델의 예상이 아니라 도시에서 실제로 일어나는 일을 직접 살펴보는 것을 말해요.",
+          "tier": "test",
+          "difficulty": 3,
+          "synonyms": "monitoring, watching",
+          "antonyms": "—"
+        },
+        {
+          "headword": "particular",
+          "pronunciation": "퍼티큘러",
+          "meaning": "본문에서는 모든 장소에 공통된 것이 아니라 특정한 장소에만 해당하는 이점을 가리켜요.",
+          "tier": "test",
+          "difficulty": 3,
+          "synonyms": "specific, individual",
+          "antonyms": "general, universal"
+        },
+        {
+          "headword": "mistake A for B",
+          "pronunciation": "미스테이크 에이 포어 비",
+          "meaning": "본문에서는 도시 그림의 우아함을 도시의 실제 진실로 잘못 여긴다는 뜻으로 써요.",
+          "tier": "challenge",
+          "difficulty": 4,
+          "synonyms": "confuse A with B, misidentify A as B",
+          "antonyms": "distinguish A from B, tell A apart from B"
+        },
+        {
+          "headword": "elegance",
+          "pronunciation": "엘리건스",
+          "meaning": "본문에서는 도시를 설명하는 도표가 보기 좋고 단순하게 정리된 아름다움을 말해요.",
+          "tier": "challenge",
+          "difficulty": 4,
+          "synonyms": "grace, refinement",
+          "antonyms": "clumsiness, awkwardness"
+        },
+        {
+          "headword": "unattended",
+          "pronunciation": "언어텐디드",
+          "meaning": "본문에서는 도시가 실제로 가진 문제가 아무도 제대로 돌보거나 해결하지 않은 채 방치되어 있다는 뜻으로 써요.",
+          "tier": "test",
+          "difficulty": 3,
+          "synonyms": "neglected, ignored",
+          "antonyms": "addressed, attended to"
+        }
+      ]
+    },
+    {
+      "kind": "parsing",
+      "items": [
+        {
+          "sentenceNo": 2,
+          "en": "Planners who accepted this model assumed that congestion at the core was an unavoidable price of growth, and that the only meaningful intervention was to widen roads and extend transit lines ever farther into the periphery.",
+          "parts": [
+            {
+              "label": "[주절의 주어 + 관계절]",
+              "text": "절(주어와 동사가 든 덩어리) 전체의 중심인 주절(문장 전체의 중심이 되는 절)의 중심 주어는 Planners예요. 관계절(앞 명사를 뒤에서 꾸미는 절)인 who accepted this model에서 관계대명사(앞 명사를 뒤 문장이 꾸밀 때 잇는 who/which/that) who가 선행사(꾸밈 받는 앞 명사) Planners를 대신해요. 그래서 who accepted this model은 ‘이 모형을 받아들인’이라는 뜻으로 Planners를 꾸며요."
+            },
+            {
+              "label": "[주절의 동사]",
+              "text": "주절의 핵심 동사(행동이나 상태를 나타내는 말)는 assumed예요. assumed 뒤에 계획가들이 무엇을 가정했는지 보여 주는 that으로 시작하는 두 덩어리가 이어져요. 여기서 that은 접속사(절과 절을 이어 주는 말)로 쓰였어요."
+            },
+            {
+              "label": "[첫 번째 that 덩어리]",
+              "text": "that congestion at the core was an unavoidable price of growth는 첫 번째 that절(that 뒤에 주어와 동사가 이어져 앞 동사의 내용을 설명하는 덩어리)이에요. congestion at the core가 중심부의 혼잡을 나타내고, was 뒤의 an unavoidable price of growth가 그 혼잡을 ‘성장에 따라 피할 수 없이 치러야 하는 대가’라고 설명해요. 따라서 계획가들이 중심부의 혼잡을 성장의 불가피한 비용으로 보았다는 뜻이에요."
+            },
+            {
+              "label": "[두 번째 that 덩어리 + 병렬]",
+              "text": "두 번째 that the only meaningful intervention was to widen roads and extend transit lines ever farther into the periphery도 assumed가 가정한 내용을 보여 줘요. 첫 번째 that 덩어리와 두 번째 that 덩어리는 and로 연결된 병렬(and/or 앞뒤를 똑같은 모양으로 맞추는 거예요) 구조예요. to widen에서 to부정사(동사 앞에 to를 붙인 형태)가 시작되고, widen roads와 extend transit lines는 and로 나란히 연결되어 ‘도로를 넓히고 교통 노선을 연장하는 것’이라는 같은 역할을 해요. to는 widen 앞에 한 번만 쓰였지만 extend에도 의미가 이어져요."
+            }
+          ],
+          "translation": "→ 이 모형을 받아들인 계획가들은 중심부의 혼잡이 성장에 따라 피할 수 없이 치러야 하는 대가라고 가정했어요. 그리고 유일하게 의미 있는 개입은 도로를 넓히고 교통 노선을 주변부 안쪽으로 계속 더 멀리 연장하는 것이라고 가정했어요.",
+          "layout": {
+            "anchorText": "Planners who accepted this model assumed that congestion at the core was an unavoidable price of growth, and that the only meaningful intervention was to widen roads and extend transit lines ever farther into the periphery.",
+            "band": "underchunk",
+            "priority": 2
+          }
+        },
+        {
+          "sentenceNo": 9,
+          "en": "In one well-documented case, a metropolitan government spent two decades extending highways toward its western suburbs while the majority of new jobs and housing quietly accumulated in the northeast, along an aging freight corridor that the official maps had dismissed as industrial wasteland.",
+          "parts": [
+            {
+              "label": "[문장 앞 배경 + 주절]",
+              "text": "In one well-documented case는 ‘한 가지 잘 기록된 사례에서’라는 문장 앞 배경 표현이에요. 주절(문장 전체의 중심이 되는 절)의 중심 대상은 a metropolitan government이고, 핵심 동사는 spent예요. spent two decades extending highways에서 extending은 동사를 -ing로 만들어 명사처럼 쓰는 동명사(동사를 -ing로 만들어 명사처럼 쓰는 형태)처럼 쓰여, 20년이라는 기간 동안 무엇을 했는지 보여 줘요."
+            },
+            {
+              "label": "[spent 뒤의 활동 내용]",
+              "text": "spent two decades extending highways toward its western suburbs는 ‘서쪽 교외를 향해 고속도로를 연장하는 데 20년을 보냈다’는 구조예요. toward its western suburbs는 extending highways에 붙어 고속도로를 어느 방향으로 연장했는지 설명해요. 따라서 주절의 앞부분은 한 대도시 정부가 서쪽 교외 쪽으로 고속도로를 연장하는 데 20년을 썼다는 뜻이에요."
+            },
+            {
+              "label": "[while로 이어진 대조 덩어리]",
+              "text": "while the majority of new jobs and housing quietly accumulated in the northeast는 while이 이끄는 덩어리예요. while은 앞의 상황과 동시에 일어난 다른 상황을 보여 주면서 ‘그동안’ 또는 ‘반면에’라는 뜻을 더해요. the majority of new jobs and housing는 새로 생긴 일자리와 주택의 대부분을 뜻하고, accumulated가 그것들이 실제로 북동부에 쌓였다는 움직임을 나타내요."
+            },
+            {
+              "label": "[장소 표현 + 관계절]",
+              "text": "along an aging freight corridor는 일자리와 주택이 쌓인 장소를 덧붙여 설명해요. aging은 corridor 앞에서 ‘점점 낡아 가는’이라는 뜻으로 corridor를 꾸며요. 뒤의 that the official maps had dismissed as industrial wasteland에서 관계대명사(앞 명사를 뒤 문장이 꾸밀 때 잇는 who/which/that) that의 선행사(꾸밈 받는 앞 명사)는 corridor예요. 원래 뜻은 ‘공식 지도들이 그 회랑을 산업 황무지라고 치부했어요’이고, dismissed는 had 뒤에 와서 공식 지도들이 이미 그렇게 판단해 놓았다는 이전 일을 나타내요."
+            },
+            {
+              "label": "[dismiss A as B 구조]",
+              "text": "that이 대신하는 대상은 dismissed의 목적어(동작의 대상을 나타내는 말)인 corridor예요. industrial wasteland는 목적격보어(목적어 뒤에서 그 목적어를 설명하는 말) 역할을 하며, corridor를 ‘산업 황무지’로 보았다는 뜻을 완성해요. had dismissed의 had + dismissed는 완료 표현(기준 시점보다 먼저 끝난 일을 나타내는 표현)이므로, 공식 지도가 그 지역을 이미 산업 황무지로 치부했다는 의미가 돼요."
+            }
+          ],
+          "translation": "→ 한 가지 잘 기록된 사례에서, 한 대도시 정부는 서쪽 교외를 향해 고속도로를 연장하는 데 20년을 썼어요. 반면 새로 생긴 일자리와 주택의 대부분은 공식 지도들이 산업 황무지라고 치부했던 낡아 가는 화물 운송 회랑을 따라 북동부에 조용히 모였어요.",
+          "layout": {
+            "anchorText": "a metropolitan government spent two decades extending highways toward its western suburbs while the majority of new jobs and housing quietly accumulated in the northeast, along an aging freight corridor that the official maps had dismissed as industrial wasteland",
+            "band": "underchunk",
+            "priority": 2
+          }
+        },
+        {
+          "sentenceNo": 12,
+          "en": "Planners who mistake the elegance of a diagram for the truth of a city will keep solving problems that the city does not have, while the problems it does have deepen unattended in places their maps have taught them not to see.",
+          "parts": [
+            {
+              "label": "[주절의 주어 + 관계절]",
+              "text": "주절(문장 전체의 중심이 되는 절)의 중심 주어는 Planners예요. who mistake the elegance of a diagram for the truth of a city는 관계절(앞 명사를 뒤에서 꾸미는 절)이고, 관계대명사 who가 선행사(꾸밈 받는 앞 명사) Planners를 받아요. mistake A for B는 ‘A를 B로 잘못 여기다’라는 표현이므로, 계획가들이 도표의 우아함을 도시의 진실로 착각한다는 뜻이에요."
+            },
+            {
+              "label": "[주절의 동사 + 관계절]",
+              "text": "will은 조동사(can/will/must처럼 동사를 돕는 말)로, 여기서는 계획가들이 앞으로도 계속 그렇게 할 것이라고 예상해요. will keep solving에서 keep solving은 ‘계속 해결하려 하다’라는 뜻이에요. solving 뒤의 problems가 해결하려는 대상이고, problems that the city does not have에서 that은 관계대명사로 problems를 뒤에서 꾸며요. that 뒤의 the city does not have는 도시가 그 문제들을 가지고 있지 않다는 뜻이에요."
+            },
+            {
+              "label": "[while 뒤의 대조 구조]",
+              "text": "while the problems it does have는 앞의 will keep solving과 대비되는 덩어리예요. the problems it does have는 the problems (that) it does have에서 관계대명사 that이 생략된 형태예요. it은 city를 가리키고, does have의 does는 have 앞에서 ‘실제로 가지고 있는’이라는 점을 강조해요. 따라서 ‘도시가 실제로 가지고 있는 문제들’이라고 읽어요."
+            },
+            {
+              "label": "[동사와 장소 관계절]",
+              "text": "deepen unattended에서 deepen은 문제들이 점점 더 심각해진다는 뜻이고, unattended는 아무도 돌보지 않는 상태로 방치된다는 뜻이에요. in places their maps have taught them not to see에서 places 뒤에는 관계대명사 that이 생략되어 있어요. 원래 구조는 places that their maps have taught them not to see이고, their maps가 them에게 그 장소들을 보지 않도록 가르쳤다는 뜻이에요. not to see는 to부정사(동사 앞에 to를 붙인 형태)의 부정형이며, see의 대상인 places가 앞에 나가 관계대명사 자리를 만들었어요."
+            }
+          ],
+          "translation": "→ 도표의 우아함을 도시의 진실로 착각하는 계획가들은 도시가 실제로 가지고 있지도 않은 문제를 계속 해결하려 할 거예요. 반면 도시가 실제로 가지고 있는 문제들은 그들의 지도가 보지 않도록 가르친 장소에서 방치된 채 점점 더 심각해질 거예요.",
+          "layout": {
+            "anchorText": "Planners who mistake the elegance of a diagram for the truth of a city will keep solving problems that the city does not have, while the problems it does have deepen unattended in places their maps have taught them not to see.",
+            "band": "underchunk",
+            "priority": 2
+          }
+        }
+      ]
+    }
+  ]
+}

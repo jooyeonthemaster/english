@@ -854,6 +854,51 @@ export async function renamePassage(
 }
 
 /**
+ * 지문 제목+본문만 변경 — 지문관리 행 인라인 지문 수정기의 「저장」
+ * (docs/class-studio-spec.md §3.10.18 E18-d).
+ *
+ * ⚠ updateWorkbenchPassage 를 쓰면 안 된다: 그쪽은 `schoolId` 를
+ *   `data.schoolId && data.schoolId !== "NONE" ? data.schoolId : null` 로 계산해
+ *   **미전달 시 null 을 실제로 기록**한다(undefined 가 아니라 null 이라 Prisma 가
+ *   무시하지 않는다) — 본문만 고치려다 학교 연결이 지워진다. renamePassage 가
+ *   같은 이유로 분리돼 있고, 이 함수는 그 관용구의 본문 판이다.
+ *
+ * academyId 스코프 updateMany 라 타 학원 지문은 count 0 으로 떨어진다.
+ */
+export async function updatePassageBody(
+  passageId: string,
+  data: { content: string; title?: string },
+): Promise<ActionResult> {
+  const staff = await requireAuth();
+  const content = data.content.trim();
+  // title 은 **선택**이다. 인라인 지문 수정기는 본문만 고치고 제목은 행의
+  // 연필(renamePassage)이 소유한다 — 여기서 제목을 함께 보내면, 편집기를 열어
+  // 둔 채 행에서 제목을 바꿨을 때 저장이 그 개명을 되돌려버린다(스테일 덮어쓰기).
+  const title = data.title?.trim();
+  if (data.title !== undefined && !title) {
+    return { success: false as const, error: "제목을 입력하세요." };
+  }
+  if (content.length < 20) {
+    return { success: false as const, error: "본문이 너무 짧습니다. (최소 20자)" };
+  }
+  try {
+    const result = await prisma.passage.updateMany({
+      where: { id: passageId, academyId: staff.academyId },
+      data: title ? { title, content } : { content },
+    });
+    if (result.count === 0) {
+      return { success: false as const, error: "지문을 찾을 수 없습니다." };
+    }
+    revalidatePath("/director/workbench/passages");
+    revalidatePath("/director/workbench/passages/create");
+    return { success: true as const };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "지문 수정 실패";
+    return { success: false as const, error: message };
+  }
+}
+
+/**
  * 선택한 학습지 일괄 검수완료/검수취소 — 목록 툴바의 "검수완료" 버튼.
  */
 export async function bulkSetPassageReviewed(

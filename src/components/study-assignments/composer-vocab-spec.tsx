@@ -8,6 +8,12 @@
 // 배지 톤 규약: rose = 0매치(배포 거부), amber = 풀 부족(서버가 문항 수를 풀
 // 크기로 클램프해 배포는 된다), slate = 정상. 라이브 집계와 배포 가드가 같은
 // 술어(engine.assignmentPoolSize)를 쓰므로 배지가 약속한 N 이 곧 실제 문항 수다.
+//
+// ⚠️ 덱 목록에서 **교재(시리즈) 단계 덱은 제외**한다 — 단어장 만들기 위저드가
+// 만든 교재 한 권은 단계 덱 최대 60개로 팬아웃되므로, 그대로 노출하면
+// 「교재 · 1단계」…「교재 · 60단계」가 이 선택 목록을 도배한다. 교재는 전용
+// 예약 배포 경로(series-deploy)로 나가므로 여기서는 보이면 안 된다
+// (적대검수 2026-08-10 — 학생 허브 listActiveDecks 의 series 제외와 같은 규약).
 
 import { useEffect, useRef, useState } from "react";
 import { listVocabDecks } from "@/actions/vocab-drill-admin/decks";
@@ -52,6 +58,21 @@ interface DeckOption {
   senseCount: number | null;
 }
 
+/**
+ * 교재(시리즈) 단계 덱 판별 — `spec.series.key` 가 비어 있지 않은 문자열이면
+ * 확실히 교재 소속이다(서버 sanitizeVocabDeckSeries 가 빈 key 를 통과시키지
+ * 않으므로, 이 조건이 곧 "표식이 온전하다"와 같다).
+ * 형상이 조금이라도 어긋나면 false — 오탐으로 멀쩡한 일반 덱을 숨기는 쪽이
+ * 교재 몇 개가 섞여 보이는 것보다 나쁘다(이 파일의 방어적 파싱 관용구).
+ */
+function isSeriesDeck(spec: unknown): boolean {
+  if (!spec || typeof spec !== "object" || Array.isArray(spec)) return false;
+  const series = (spec as { series?: unknown }).series;
+  if (!series || typeof series !== "object" || Array.isArray(series)) return false;
+  const key = (series as { key?: unknown }).key;
+  return typeof key === "string" && key.trim().length > 0;
+}
+
 function normalizeDecks(res: unknown): DeckOption[] {
   const list = Array.isArray(res)
     ? res
@@ -65,6 +86,8 @@ function normalizeDecks(res: unknown): DeckOption[] {
     if (typeof r.id !== "string" || typeof r.title !== "string") continue;
     // 보관(ARCHIVED) 덱은 신규 배포 선택지에서 제외 — status 필드 부재는 통과
     if (typeof r.status === "string" && r.status !== "ACTIVE") continue;
+    // 교재 단계 덱 제외 — 전용 예약 배포 경로로만 나간다(파일 머리말 참조)
+    if (isSeriesDeck(r.spec)) continue;
     out.push({
       id: r.id,
       title: r.title,

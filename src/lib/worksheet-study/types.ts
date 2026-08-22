@@ -16,6 +16,41 @@ export interface WorksheetStudyConfig {
   mode: StudyMode;
   /** true = 필수 스테이지 완료가 과제 완료 조건 (false 면 기존 "다 확인했습니다" 유지) */
   required: boolean;
+  /**
+   * 배포에 포함할 스테이지 화이트리스트 — 클래스 스튜디오 "모듈 단위 배포"용
+   * (docs/class-studio-spec.md §7). 부재/빈 배열 = 프리셋 전체(현행 동작과 완전 동일).
+   * 순서는 의미 없다(프리셋 순서가 학습 순서) — 필터로만 쓰인다.
+   */
+  stages?: StudyStageId[];
+}
+
+/** 스테이지 id 전수 — StudyStageId 유니온과 반드시 일치(런타임 검증·파스용 단일 정본). */
+export const STUDY_STAGE_IDS = [
+  "reading",
+  "vocab-flash",
+  "vocab-quiz",
+  "vocab-match",
+  "chunk",
+  "grammar",
+  "cloze",
+  "order",
+  "translation",
+  "reproduction",
+  "exam",
+] as const satisfies readonly StudyStageId[];
+
+const STAGE_ID_SET: ReadonlySet<string> = new Set(STUDY_STAGE_IDS);
+
+/** stages 원시값 파스 — 유효 id 만, 중복 제거, 빈 결과는 undefined(=프리셋 전체). */
+export function sanitizeStudyStages(raw: unknown): StudyStageId[] | undefined {
+  if (!Array.isArray(raw)) return undefined;
+  const out: StudyStageId[] = [];
+  for (const v of raw) {
+    if (typeof v === "string" && STAGE_ID_SET.has(v) && !out.includes(v as StudyStageId)) {
+      out.push(v as StudyStageId);
+    }
+  }
+  return out.length > 0 ? out : undefined;
 }
 
 /**
@@ -27,13 +62,38 @@ export function resolveStudyConfig(payload: unknown): WorksheetStudyConfig {
   if (!payload || typeof payload !== "object" || Array.isArray(payload)) return fallback;
   const raw = (payload as { study?: unknown }).study;
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) return fallback;
-  const { mode, required } = raw as { mode?: unknown; required?: unknown };
+  const { mode, required, stages } = raw as {
+    mode?: unknown;
+    required?: unknown;
+    stages?: unknown;
+  };
   const validMode: StudyMode =
     mode === "off" || mode === "light" || mode === "standard" || mode === "intense"
       ? mode
       : "standard";
-  return { mode: validMode, required: required === true };
+  const validStages = sanitizeStudyStages(stages);
+  return {
+    mode: validMode,
+    required: required === true,
+    ...(validStages ? { stages: validStages } : {}),
+  };
 }
+
+// ── 어휘 시험 코퍼스 오답 자산 (docs/class-studio-spec.md §9) ────────────────
+// 서버(vocab-assets.ts)가 기출 단어 코퍼스에서 사전 질의해 컴파일러에 주입한다.
+// 컴파일러는 순수 유지 — 배열 순서는 서버가 결정론적으로 정렬해 보낸다.
+
+export interface VocabDistractorAsset {
+  /** 단어→뜻 방향 한국어 오답 후보 — 품사 정합·동의어 배제·결정론 정렬 완료 */
+  koDistractors: string[];
+  /** 뜻→단어 방향 영어 표제어 오답 후보 — 문항팩 검증분(동의어·어간공유 사전 배제)+혼동어 */
+  enDistractors: string[];
+  /** 정답과 동치인 한국어 표기 전부(같은 철자 전 sense) — 오답 풀에서 반드시 배제 */
+  bannedKo: string[];
+}
+
+/** key = 표제어 normLite(소문자·공백 축약) */
+export type VocabAssetMap = Record<string, VocabDistractorAsset>;
 
 // ── 스테이지 ────────────────────────────────────────────────────────────────
 
@@ -89,6 +149,11 @@ export interface StudyPlan {
   totalItems: number;
   /** 표제어 → 뜻 — 결과 리포트 취약 단어장용 (vocabulary 섹션에서 파생) */
   vocabMeanings: Record<string, string>;
+  /**
+   * 배포 시 명시된 스테이지 화이트리스트(정렬본) — 부재 = 프리셋 전체 배포.
+   * planIsViable 완화 판정(명시 배포는 채점 스테이지 ≥1)에 쓰인다 (class-studio-spec §7).
+   */
+  stageFilter?: StudyStageId[];
 }
 
 // ── 아이템 (discriminated union — 렌더러 계약) ──────────────────────────────

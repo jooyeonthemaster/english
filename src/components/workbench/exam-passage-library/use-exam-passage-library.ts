@@ -319,6 +319,23 @@ export function useExamPassageLibrary() {
 
   const clearSelection = useCallback(() => setSelectedIds(new Set()), []);
 
+  // 마키(드래그) 선택 커밋 — DragSelect(deferCommit)가 릴리스에서 최종 집합을
+  // 통째로 넘긴다. toggleSelect 와 달리 "한 건씩"이 아니라 집합 교체라, 상한은
+  // 여기서 한 번에 자른다(삽입 순서 = 마키 진입 순서라 앞에서부터 남긴다).
+  const applyDragSelection = useCallback((next: Set<string>) => {
+    if (next.size <= EXAM_MAX_IDS) {
+      setSelectedIds(next);
+      return;
+    }
+    const capped = new Set<string>();
+    for (const id of next) {
+      if (capped.size >= EXAM_MAX_IDS) break;
+      capped.add(id);
+    }
+    toast.info(`한 번에 최대 ${EXAM_MAX_IDS}개까지 담을 수 있어요.`);
+    setSelectedIds(capped);
+  }, []);
+
   // 담긴(선택된) 지문 레코드 — 하단 장바구니 목록 표시용. 선택은 보이는 카드/
   // 시험지 단위로만 이뤄져 그 레코드가 recordCache 에 캐시돼 있으므로 여기서
   // 되살린다. (미캐시분은 건너뜀 — collectSelectedPicks 가 나중에 채운다.)
@@ -533,6 +550,7 @@ export function useExamPassageLibrary() {
     pageAllSelected,
     toggleSelectPage,
     clearSelection,
+    applyDragSelection,
     selectedRecords,
     collectSelectedPicks,
     // 시험지 단위 선택

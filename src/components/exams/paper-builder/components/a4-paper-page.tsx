@@ -480,6 +480,11 @@ function ImageBlock({
   const figureRef = React.useRef<HTMLElement>(null);
   const widthPct = Math.max(20, Math.min(100, item.imageWidth || 70));
 
+  // 성능 계약(2026-08-11 전역 핸들 수술): 매 pointermove 의 onUpdateItem 은
+  // paperItems 변경 = 시험지 전체 재페이지네이션 + 미리보기·썸네일 전 페이지
+  // 재조판을 프레임마다 유발했다. 드래그 중에는 폭을 소유한 [data-img-box]
+  // span 에 rAF 코얼레싱으로 직접 쓰고, 놓을 때 onUpdateItem 1회로 커밋한다.
+  // 앵커를 못 찾으면 종전 매-move 경로 폴백(무회귀).
   const handleResizeStart = (event: React.PointerEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
@@ -489,24 +494,73 @@ function ImageBlock({
     if (figureWidth <= 0) return;
     const startX = event.clientX;
     const startPct = widthPct;
+    let latest = startPct;
+
+    // 포인터 캡처 — 얇은 핸들을 벗어나도 드래그가 끊기지 않는다.
+    const handleEl = event.currentTarget as HTMLElement;
+    try {
+      handleEl.setPointerCapture(event.pointerId);
+    } catch {
+      /* 캡처 미지원 브라우저는 window 리스너로 폴백 */
+    }
+
+    const boxEl = figure.querySelector<HTMLElement>("[data-img-box]");
+
+    const prevCursor = document.body.style.cursor;
+    const prevUserSelect = document.body.style.userSelect;
+    const prevPointerEvents = document.body.style.pointerEvents;
+    document.body.style.cursor = "ew-resize";
+    document.body.style.userSelect = "none";
+    // 드래그 중 hover 스타일 재평가 차단 — 캡처 덕에 move 수신은 유지된다.
+    document.body.style.pointerEvents = "none";
+
+    let rafId: number | null = null;
+    const flush = () => {
+      rafId = null;
+      if (boxEl) boxEl.style.width = `${latest}%`;
+    };
 
     const handleMove = (moveEvent: PointerEvent) => {
       const deltaPct = ((moveEvent.clientX - startX) / figureWidth) * 100;
       const next = Math.max(20, Math.min(100, Math.round(startPct + deltaPct)));
-      onUpdateItem(item.localId, { imageWidth: next });
+      latest = next;
+      if (boxEl) {
+        if (rafId === null) rafId = requestAnimationFrame(flush);
+      } else {
+        onUpdateItem(item.localId, { imageWidth: next });
+      }
     };
     const handleUp = () => {
       window.removeEventListener("pointermove", handleMove);
       window.removeEventListener("pointerup", handleUp);
+      window.removeEventListener("pointercancel", handleUp);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      if (boxEl) {
+        flush();
+        // 커밋 1회 — 값이 그대로면 재페이지네이션을 건드리지 않는다.
+        if (latest !== startPct) {
+          onUpdateItem(item.localId, { imageWidth: latest });
+        }
+      }
+      document.body.style.cursor = prevCursor;
+      document.body.style.userSelect = prevUserSelect;
+      document.body.style.pointerEvents = prevPointerEvents;
+      try {
+        handleEl.releasePointerCapture(event.pointerId);
+      } catch {
+        /* ignore */
+      }
     };
     window.addEventListener("pointermove", handleMove);
     window.addEventListener("pointerup", handleUp);
+    window.addEventListener("pointercancel", handleUp);
   };
 
   return (
     <figure ref={figureRef} className={cn(blockAlignClass(item))}>
       {item.imageDataUrl ? (
         <span
+          data-img-box
           className="relative inline-block align-top"
           style={{ width: `${widthPct}%`, maxWidth: "100%" }}
         >

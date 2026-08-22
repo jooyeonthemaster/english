@@ -21,8 +21,17 @@ import { useMarqueeBoundary } from "@/components/layout/marquee-boundary-context
  *     → "영역 선택 우선" 모드에서는 카드가 선택된 상태일 때만 네이티브 드래그를 허용해
  *       미선택 카드 위에서도 마키가 동작하도록 한다(카드 컴포넌트 쪽에서 처리).
  *   - 카드의 일부분이라도 드래그 영역에 겹치면 선택된 것으로 간주한다.
- *   - Shift / Ctrl / Cmd 를 누른 채 드래그하면 기존 선택에 더한다(추가 선택).
- *     그냥 드래그하면 영역에 걸친 카드들로 새로 선택한다.
+ *   - **누적이 기본이다(2026-08-20 개편).** 새 드래그는 기존 선택을 지우지 않고
+ *     걸친 카드를 더한다. 떨어져 있는 카드들을 여러 번에 나눠 고를 수 있다.
+ *     · 개편 전: 수식어 없는 드래그 = 교체(두 번째 드래그가 첫 선택을 지움).
+ *     · Shift / Ctrl / Cmd = 강제 담기. 누적이 기본이라 평소엔 기본과 같지만,
+ *       아래 해제 드래그를 눌러 이기는 역할이 남는다.
+ *   - **해제 드래그**: `deferCommit` 표면에서 **이미 선택된 카드 위에서** 드래그를
+ *     시작하면 걸친 카드가 선택에서 빠진다(최종 집합 = `value − 걸친 카드`).
+ *     마키로 선택을 줄이는 유일한 경로다. 그 밖의 표면은 목록의 「선택 해제」·
+ *     헤더 체크박스로 비운다.
+ *     · Alt 는 쓰지 않는다 — 폴더 드롭의 복사 단축키와 충돌한다
+ *       (shared/folder-drag.ts `isCopyDragModifier`). 상세는 removeMode 주석 참조.
  *
  * 시작 영역을 카드 그리드보다 넓히려면, DragSelect 의 className 에 `min-h-full` 등을
  * 주고 그 안에 실제 그리드를 자식으로 넣으면 된다(빈 여백에서도 시작 가능).
@@ -49,8 +58,10 @@ interface DragSelectProps
   /** 현재 선택된 id 집합 */
   value: Set<string>;
   /**
-   * 새 선택 집합으로 갱신. meta 는 deferCommit 릴리스 커밋에서만 실린다 —
-   * "remove"(선택된 카드에서 시작한 해제 드래그)일 때 next 는 value−히트다.
+   * 새 선택 집합으로 갱신. next 는 언제나 **최종 집합 전체**다(델타가 아니다).
+   * 2026-08-20 개편 이후 담기 드래그의 next 는 언제나 value 의 상위집합이고,
+   * 해제 드래그의 next 는 value 의 부분집합이다 — 한 제스처가 둘을 섞지 않는다.
+   * meta 는 deferCommit 릴리스 커밋에서만 실린다("remove" = 해제 드래그).
    * 기존 소비처는 인자 하나만 받아도 타입·동작 모두 무변화.
    */
   onChange: (next: Set<string>, meta?: { deferMode: "add" | "remove" }) => void;
@@ -235,6 +246,11 @@ export function DragSelect({
 }: DragSelectProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [rect, setRect] = useState<Rect | null>(null);
+  // 드래그 중에도 "지금" 선택집합을 읽기 위한 창구. base/remaining 은 mousedown
+  // 스냅샷이라, 드래그 도중 외부(프룬 이펙트·벌크 액션 등)에서 빠진 id 를 커밋이
+  // 되살릴 수 있다 — 그 팬텀을 걷어내는 데만 쓴다(:추적 로직 recompute 참조).
+  const valueRef = useRef(value);
+  valueRef.current = value;
   // AdminShell 이 내려준 기본 경계(사이드바 제외 본문)는 itemScopeRef 만 넘긴 특수
   // 케이스(예: 드로어가 열려 있고, 시작은 본문 어디서든 허용하되 선택 대상은 드로어
   // 카드로 제한할 때)에만 쓴다. 일반 목록은 자기 컨테이너 안에서만 마키를 시작한다.
@@ -312,21 +328,53 @@ export function DragSelect({
 
       const startX = e.clientX;
       const startY = e.clientY;
-      const additive = e.shiftKey || e.metaKey || e.ctrlKey;
-      const base = additive ? new Set(value) : new Set<string>();
+      // 【누적이 기본 — 유저 지시 2026-08-20】
+      // 새 드래그는 기존 선택을 덮어쓰지 않는다. 예전엔 수식어 없는 드래그가
+      // base 를 빈 집합으로 두어 "교체"였고, 한 화면에서 떨어져 있는 카드들을
+      // 여러 번에 나눠 고르는 것이 불가능했다(두 번째 드래그가 첫 선택을 지움).
+      // 이제 base 는 항상 현재 선택이다.
+      const base = new Set(value);
+      // shift/ctrl/cmd = **강제 담기**. 종전엔 "추가"라는 뜻이었고 누적이 기본이 된
+      // 지금은 기본과 같지만, 선택된 카드에서 시작하는 해제 드래그를 눌러 이기는
+      // 역할이 남는다(선택 덩어리를 그 위에서부터 넓히고 싶을 때의 유일한 수단).
+      const forceAdd = e.shiftKey || e.metaKey || e.ctrlKey;
       let active = false;
       let lastSent = value;
       const enteredOrder = new Map<string, number>();
       let nextEnteredIndex = 0;
+      // 【팬텀 부활 방지】 base/remaining 은 mousedown 스냅샷이라, 드래그 도중
+      // 바깥에서 선택이 빠지면(생성 큐의 프룬 이펙트, 벌크 액션 완료 등) 커밋이
+      // 그 id 를 되살린다 — 이미 사라진 항목이 "N개 선택"과 벌크 액션 페이로드에
+      // 실린다. 누적이 기본이 되면서 새로 생긴 실패 모드다(예전엔 base 가 비어
+      // 있어 커밋이 집합을 줄이기만 했다). 그래서 "관측된 선택집합에서 사라졌고
+      // 이번 마키가 건드린 적도 없는" id 만 골라 커밋에서 뺀다. 마키가 스스로
+      // 넣고 뺀 id(enteredOrder 에 있는 것)는 대상이 아니다 — 그건 사용자 의도다.
+      const externallyRemoved = new Set<string>();
+      let observedValue = value;
       // deferCommit — 드래그 중 리액트 무접촉. 걸친 카드는 인라인 틴트로만
       // 표시하고(이전 인라인 배경을 보관·복원), 릴리스에서 한 번만 커밋한다.
-      // 시작점이 이미 선택된 카드면 **해제 드래그**다 — 걸친 선택 카드를 뺀다
-      // (선택된 걸 다시 드래그하면 해제 — 유저 요청 2026-08-05).
       let deferredNext: Set<string> | null = null;
       const paintedEls = new Map<string, { el: HTMLElement; prev: string }>();
       const startCardId = card?.getAttribute("data-drag-item-id") ?? null;
+      // 【해제 드래그】 이미 선택된 카드에서 시작하면 걸친 카드를 선택에서 뺀다
+      // (유저 요청 2026-08-05). 누적이 기본이 된 뒤로는 이것이 마키로 빼는 유일한
+      // 경로다. shift/ctrl/cmd 로 눌러 이길 수 있다.
+      //
+      // 【Alt 를 쓰지 않는 이유 — 재발 금지】 "Alt = 해제" 는 폴더 드롭의 복사
+      // 단축키와 정면 충돌한다(shared/folder-drag.ts:10 isCopyDragModifier 가
+      // altKey||ctrlKey 를 복사로 판정하고, 그 FolderSection 들이 바로 이 마키
+      // 패널들 안에 있다). Alt 로 마키를 켜주려면 draggable 게이트(:blocksMarqueeStart)
+      // 까지 뚫어야 하는데, 그러면 카드 핸들에서 시작하는 폴더 복사-드래그가 죽는다.
+      //
+      // 【deferCommit 한정인 이유】 라이브 모드까지 넓히면 id 공간이 다른 표면이
+      // 깨진다 — 시험지 빌더의 세트 카드는 data-drag-item-id="set:<id>" 인데
+      // value 에는 펼쳐진 문항 id 만 있어(exam-builder-question-set-section.tsx),
+      // "value − 히트" 가 세트에 대해 조용히 no-op 이 된다(부분 해제 = 무증상 결함).
       const removeMode =
-        deferCommit && startCardId !== null && value.has(startCardId);
+        !forceAdd &&
+        deferCommit &&
+        startCardId !== null &&
+        value.has(startCardId);
 
       // 자동 스크롤: 시작점을 "콘텐츠 기준"으로 고정해, 스크롤되면 선택 박스가 늘어난다.
       // 스크롤 대상은 "카드가 들어있는" 스크롤 컨테이너다. DragSelect 가 스크롤 영역을
@@ -350,6 +398,19 @@ export function DragSelect({
       const anchorY = () => startY - (readScroll() - startScroll);
 
       function recompute() {
+        // 관측된 선택집합이 실제로 바뀐 프레임에서만 외부 제거를 집계한다.
+        // (우리가 방금 emit 한 결과가 반영된 것도 여기로 들어오지만, 그건 추가이거나
+        //  enteredOrder 에 있는 id 의 제거라 아래 필터에서 걸러진다.)
+        const liveValue = valueRef.current;
+        if (liveValue !== observedValue) {
+          for (const id of observedValue) {
+            if (!liveValue.has(id) && !enteredOrder.has(id)) {
+              externallyRemoved.add(id);
+            }
+          }
+          observedValue = liveValue;
+        }
+
         const ay = anchorY();
         const x1 = Math.min(startX, lastClientX);
         const y1 = Math.min(ay, lastClientY);
@@ -419,17 +480,27 @@ export function DragSelect({
           )
           .forEach((item) => next.add(item.id));
 
+        // 이번 프레임의 최종 집합.
+        //  · 담기 드래그: base(=기존 선택) ∪ 걸친 카드  → next 그대로
+        //  · 해제 드래그: 기존 선택 − 걸친 카드
+        let resolved = next;
+        if (removeMode) {
+          const remaining = new Set(value);
+          for (const item of hitItems) remaining.delete(item.id);
+          resolved = remaining;
+        }
+        // 드래그 도중 바깥에서 빠진 id 는 되살리지 않는다(위 externallyRemoved 주석).
+        // 단 지금 마키에 걸려 있는 id 는 사용자가 다시 고른 것이므로 남긴다.
+        if (externallyRemoved.size > 0) {
+          if (resolved === next) resolved = new Set(next);
+          for (const id of externallyRemoved) {
+            if (!hitItems.some((item) => item.id === id)) resolved.delete(id);
+          }
+        }
+
         if (deferCommit) {
           // 리액트 무접촉 — 커밋은 릴리스에서.
-          if (removeMode) {
-            // 해제 드래그: 최종 집합 = 기존 선택 − 걸친 카드. 틴트는 "빠질
-            // 예정"인 선택 카드에만(rose) — 미선택 카드는 대상이 아니다.
-            const remaining = new Set(value);
-            for (const id of hitEls.keys()) remaining.delete(id);
-            deferredNext = remaining;
-          } else {
-            deferredNext = next;
-          }
+          deferredNext = resolved;
           for (const [id, entry] of paintedEls) {
             if (!hitEls.has(id)) {
               entry.el.style.backgroundColor = entry.prev;
@@ -447,9 +518,9 @@ export function DragSelect({
                 : DEFER_HIT_TINT;
             }
           }
-        } else if (!setsEqual(next, lastSent)) {
-          lastSent = next;
-          onChange(next);
+        } else if (!setsEqual(resolved, lastSent)) {
+          lastSent = resolved;
+          onChange(resolved);
         }
       }
 

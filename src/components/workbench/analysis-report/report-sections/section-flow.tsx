@@ -56,6 +56,10 @@ export function sectionFlowItems(
     case "learning-worksheet":
       worksheetSectionFlow(section, ctx);
       break;
+    case "final-onepage":
+      // 원페이지 파이널은 assemble.pushFinalOnepage 가 전면 시트로 직접 조립한다
+      // (섹션 flow 미경유 — meta·brand 컨텍스트 필요). 여기 도달하면 no-op.
+      break;
     case "self-check":
       break;
   }
@@ -156,16 +160,7 @@ const s = section;
 function summarySectionFlow(section: Extract<AnalysisSection, { kind: "summary" }>, ctx: SectionFlowCtx): void {
   const { editable, commit, push } = ctx;
 const s = section;
-      s.sentences.forEach((t, i) => {
-        push(
-          "summary",
-          `sum${i}`,
-          <>
-            <Field as="span" className="par-edit-grow" editable={editable} value={t} onCommit={(v) => commit({ ...s, sentences: s.sentences.map((x, j) => (j === i ? v : x)) })} />
-            {editable ? <DelBtn onClick={() => commit({ ...s, sentences: s.sentences.filter((_, j) => j !== i) })} /> : null}
-          </>,
-        );
-      });
+      // 한글 요약 문장(s.sentences)은 미표기 — 데이터는 보존, ONE-LINE THESIS만 노출
       push(
         "thesis",
         "thesis",

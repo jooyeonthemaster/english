@@ -170,6 +170,7 @@ export function IntakeUploadPanel({
 
         {/* 우 — 레일: 헤더 / 본문(가이드 또는 시험 정보) / CTA 3분할 */}
         <aside
+          data-rail-panel
           style={{ width: railWidth }}
           className="flex min-h-0 flex-col bg-white max-lg:!w-full lg:shrink-0"
         >

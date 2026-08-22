@@ -56,11 +56,37 @@ export interface FlowItem {
   /** 섹션 헤더의 '섹션마다 새 페이지' 강제 분할을 면제 — 앞 섹션과 같은 페이지에 이어 붙인다.
    *  (예: 지문 논리 구조 분석을 핵심 요약과 같은 페이지에 두기) */
   keepWithPrev?: boolean;
+  /** keepWithPrev 헤더의 **그룹 원자성 면제**(spec §1 v6) — 이 섹션은 조각(문장)들이
+   *  페이지 경계에서 나뉘어도 되는 흐름 섹션이라, "그룹 전체가 들어가야 붙인다"를 요구하지
+   *  않고 **헤더 + 첫 조각**만 들어가면 앞 페이지에 붙여 나머지를 다음 장으로 흘려보낸다.
+   *  (예: 「원문 · 문장별 해석」이 핵심 요약 아래 빈 공간을 남기고 통째로 밀리던 결함) */
+  splitWithPrev?: boolean;
   /** Page-splittable fragments can keep one logical block id for ordering/editing. */
   orderId?: string;
   editId?: string;
   showGrip?: boolean;
   resizable?: boolean;
+  /**
+   * [E27] 이 **논리 블록(orderId 그룹)** 을 페이지 경계에서 쪼개지 않는다 —
+   * 잔여 공간에 그룹 전체가 안 들어가면 그룹째 다음 페이지로 내린다
+   * (`report-pages/items.ts` packFlow 의 `atomicBreak`).
+   *
+   * 왜 `wrap` 이 아니라 **아이템 필드 옵트인**인가: 실전 학습지 소단원 조각과 조판 문항
+   * 조각이 **같은 `wrap: "ws-list"`** 를 공유한다(위 ws-list 주석 26-07-22 참조).
+   * wrap 으로 원자성을 걸면 그때 고친 「섹션 첫 페이지가 헤더만 남고 통째로 빔」이
+   * 그대로 재발한다 — 학습지 조각의 분할은 **의도된 수정**이고 문항 조각의 분할만 결함이다.
+   *
+   * 그룹이 **빈 페이지 하나에도 안 들어가면** 원자성을 포기하고 기존 흐름 분할로 강등한다
+   * (= 무한 빈 페이지가 원리적으로 불가능). 미부여(undefined)면 packFlow 산출 바이트 동일.
+   */
+  atomic?: boolean;
+  /**
+   * [E27] 이 그룹은 **바로 다음 `atomic` 그룹**과 한 페이지에 있어야 한다.
+   * 용도는 문항 세트의 「공유 지문 → 첫 멤버 문항」 결합 하나다(둘이 갈리면 지문만 있는
+   * 페이지가 생긴다). 전진 상한은 **다음 그룹 1개**로 고정한다 — 상한이 없으면 시뮬레이션이
+   * orderId 경계를 계속 넘어 문항 묶음 전체를 한 덩어리로 계산한다.
+   */
+  keepWithNextGroup?: boolean;
 }
 
 // ─── 부분 글자 크기(폰트 런) — 블록 메타에 범위로 저장, 평문 값은 불변 ───────────
@@ -93,7 +119,6 @@ export type SectionFlowOptions = {
   vocabTestOnly?: boolean;
   allSections?: AnalysisSection[];
   sectionEdit?: (i: number) => SectionEdit;
-  skipWorksheetLogic?: boolean;
   /** 01 원문 렌더 모드. "legacy" 면 구 스택 카드, 그 외(기본)면 신규 필기 캔버스. */
   passageLayout?: "hlc" | "legacy";
   /** passage 섹션 렌더 뷰. "clean"=원문+해석만, "annotated"=필기 캔버스(기본). */

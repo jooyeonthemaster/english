@@ -123,20 +123,51 @@ export function useDemoZoom(baseWidth?: number, baseHeight?: number) {
     const startMouseY = event.clientY;
     const startTop = controlsPos.top;
     const startRight = controlsPos.right;
+    // 드래그 고속 경로 앵커 — 그립(span)의 부모가 PreviewZoomControls 루트
+    // (style top/right 를 그리는 요소)다. 이동 중에는 여기에 rAF 코얼레싱으로
+    // 직접 쓰고, 놓을 때 한 번만 setState 로 커밋한다(매 mousemove setState 는
+    // 데모 문서 프리뷰 전체를 프레임마다 리렌더). 앵커가 없으면 종전 setState
+    // 경로 폴백(무회귀).
+    const ctrlEl = event.currentTarget.parentElement as HTMLElement | null;
+    const prevCursor = document.body.style.cursor;
+    const prevSelect = document.body.style.userSelect;
+    const prevPointerEvents = document.body.style.pointerEvents;
     document.body.style.cursor = "grabbing";
     document.body.style.userSelect = "none";
+    // 드래그 중 hover 스타일 재평가 차단 — document 리스너라 move 수신은 유지.
+    document.body.style.pointerEvents = "none";
+
+    let latest = { top: startTop, right: startRight };
+    let rafId: number | null = null;
+    const flush = () => {
+      rafId = null;
+      if (ctrlEl) {
+        ctrlEl.style.top = `${latest.top}px`;
+        ctrlEl.style.right = `${latest.right}px`;
+      }
+    };
 
     const handleMove = (moveEvent: MouseEvent) => {
-      setControlsPos({
+      latest = {
         top: Math.max(0, startTop + (moveEvent.clientY - startMouseY)),
         right: Math.max(0, startRight - (moveEvent.clientX - startMouseX)),
-      });
+      };
+      if (ctrlEl) {
+        if (rafId === null) rafId = requestAnimationFrame(flush);
+      } else {
+        setControlsPos(latest);
+      }
     };
     const handleUp = () => {
       document.removeEventListener("mousemove", handleMove);
       document.removeEventListener("mouseup", handleUp);
-      document.body.style.cursor = "";
-      document.body.style.userSelect = "";
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      flush();
+      // 커밋 1회 — 드래그 내내 리렌더 0회.
+      setControlsPos(latest);
+      document.body.style.cursor = prevCursor;
+      document.body.style.userSelect = prevSelect;
+      document.body.style.pointerEvents = prevPointerEvents;
     };
 
     document.addEventListener("mousemove", handleMove);

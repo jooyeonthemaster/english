@@ -30,9 +30,11 @@ function posLabel(pos: string): string {
   return VOCAB_POS_LABELS[pos] ?? pos;
 }
 
-function specSummary(spec: VocabDeckSpec): string {
+function specSummary(spec: VocabDeckSpec, senseIdCount = 0): string {
   const parts: string[] = [];
-  if (spec.senseIds?.length) parts.push(`지정 ${spec.senseIds.length}개`);
+  // 목록 응답은 senseIds 배열을 싣지 않는다(페이로드 절감) — 개수는 행이 따로 준다.
+  const picked = spec.senseIds?.length ?? senseIdCount;
+  if (picked) parts.push(`지정 ${picked}개`);
   if (spec.grades?.length) parts.push(spec.grades.join("·"));
   if (spec.tiers?.length) parts.push(spec.tiers.map((t) => VOCAB_TIER_LABELS[t] ?? t).join("·"));
   if (spec.difficulties?.length) parts.push(`난이도 ${[...spec.difficulties].sort().join("·")}`);
@@ -285,7 +287,7 @@ function DeckRow({
         </p>
         <p className="mt-0.5 truncate text-[11.5px] text-slate-400">
           {deck.subtitle ? `${deck.subtitle} · ` : ""}
-          {specSummary(deck.spec)}
+          {specSummary(deck.spec, deck.senseIdCount)}
         </p>
       </div>
       {onArchive ? (

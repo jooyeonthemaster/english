@@ -1,0 +1,421 @@
+<section class="slide slide--dark" id="s25"
+  data-title="CREDIT" data-kr="300크레딧 실습"
+  data-zone="정리" data-zone-en="WRAP"
+  data-part="PART 2 — 300크레딧 실습"
+  data-in="쿠폰 코드"
+  data-out="크레딧 300"
+  data-note="PART 2 시작">
+
+  <div class="pad s25-wrap">
+
+    <div class="s25-cols">
+
+      <!-- ── 좌: 카피 + 등록 3단계 ── -->
+      <div class="s25-copy">
+        <div class="kicker" data-step="0" data-fx="none">PART 2 · 오늘의 실습</div>
+
+        <h1 class="s25-h" data-step="0">
+          <em>300크레딧</em>,<br>
+          지금 넣어드립니다.
+        </h1>
+
+        <p class="s25-lead" data-step="0" data-fx="none">
+          2부는 보는 시간이 아니라 만드는 시간입니다.<br>
+          쿠폰부터 등록하고 시작하겠습니다.
+        </p>
+
+        <ol class="s25-steps">
+          <li data-step="1" data-fx="left">
+            <span class="sn">①</span>
+            <span class="sb">
+              <b>smoat.co.kr 로그인</b>
+              <i>강사 계정으로 접속</i>
+            </span>
+          </li>
+          <li data-step="1" data-fx="left">
+            <span class="sn">②</span>
+            <span class="sb">
+              <b>쿠폰 등록 화면 열기</b>
+              <i class="mono">smoat.co.kr/coupon/register</i>
+            </span>
+          </li>
+          <li data-step="1" data-fx="left">
+            <span class="sn">③</span>
+            <span class="sb">
+              <b>코드 입력 후 [쿠폰 등록]</b>
+              <i>입력 예시 : <span class="mono">ABCD2345</span></i>
+            </span>
+          </li>
+        </ol>
+      </div>
+
+      <!-- ── 중앙: 쿠폰 등록 시뮬레이션 (제품 UI 재현) ── -->
+      <div class="s25-mock" data-step="0" data-fx="scale" data-noadvance>
+        <div class="win">
+          <div class="win-bar">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="url">smoat.co.kr/coupon/register</span>
+          </div>
+
+          <div class="win-scr">
+            <div class="cpn" id="s25-cpn">
+
+              <div class="cpn-hd">
+                <svg class="ico-tk" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M3 8.6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v.9a2.6 2.6 0 0 0 0 5.1v.9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-.9a2.6 2.6 0 0 0 0-5.1z"
+                        fill="none" stroke="#3182F6" stroke-width="1.6"/>
+                  <path d="M14.6 6.6v10.8" stroke="#3182F6" stroke-width="1.6" stroke-dasharray="2 2.6"/>
+                </svg>
+                <span class="cpn-t">쿠폰 등록</span>
+              </div>
+
+              <div class="cpn-bd">
+
+                <!-- 입력 폼 -->
+                <div class="pane pane--form" id="s25-form">
+                  <span class="lb">쿠폰 코드</span>
+                  <div class="fld" id="s25-fld"><span class="ph" id="s25-val">예: ABCD2345</span></div>
+                </div>
+
+                <!-- 로딩 -->
+                <div class="pane pane--load" id="s25-load" hidden>
+                  <svg class="spin" viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="12" r="9.2" fill="none" stroke="#E5E8EB" stroke-width="2.8"/>
+                    <path d="M12 2.8a9.2 9.2 0 0 1 9.2 9.2" fill="none" stroke="#3182F6" stroke-width="2.8" stroke-linecap="round"/>
+                  </svg>
+                  <p class="ld-t">쿠폰을 등록하는 중이에요…</p>
+                </div>
+
+                <!-- 성공 -->
+                <div class="pane pane--ok" id="s25-ok" hidden>
+                  <div class="ok-box">
+                    <span class="ok-ico">
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M5.2 12.6 L9.9 17.3 L18.8 7.4" fill="none" stroke="#059669"
+                              stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </span>
+                    <p class="ok-t">크레딧이 지급되었습니다</p>
+                    <div class="ok-chip"><span class="k">지급</span><span class="v tnum">+300</span></div>
+                    <p class="ok-bal tnum">현재 잔액 300 크레딧</p>
+                  </div>
+                </div>
+
+                <button class="cpn-btn" id="s25-btn" type="button">쿠폰 등록</button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="s25-cap"><span class="mono">SMOAT 쿠폰 등록 화면</span> — 버튼을 눌러보세요</div>
+      </div>
+
+      <!-- ── 우: 환산표 ── -->
+      <div class="s25-conv" data-step="2" data-fx="right">
+        <div class="cv-hd">
+          <span class="cv-t">300크레딧으로 할 수 있는 것</span>
+          <span class="cv-s mono">공개 단가 기준</span>
+        </div>
+
+        <ul class="cv-rows">
+          <li>
+            <span class="n">문항 생성</span>
+            <span class="u mono tnum">2크레딧/문항</span>
+            <span class="ar mono">→</span>
+            <span class="q tnum">150<i>문항</i></span>
+            <span class="sub mono tnum">(어휘 3종은 1크레딧 → 300문항)</span>
+          </li>
+          <li>
+            <span class="n">학습지</span>
+            <span class="u mono tnum">5크레딧/편</span>
+            <span class="ar mono">→</span>
+            <span class="q tnum">60<i>편</i></span>
+          </li>
+          <li>
+            <span class="n">지문 웹툰</span>
+            <span class="u mono tnum">5크레딧/장</span>
+            <span class="ar mono">→</span>
+            <span class="q tnum">60<i>장</i></span>
+          </li>
+          <li>
+            <span class="n">학생 리포트</span>
+            <span class="u mono tnum">5크레딧/명</span>
+            <span class="ar mono">→</span>
+            <span class="q tnum">60<i>명</i></span>
+          </li>
+          <li class="free">
+            <span class="n">OCR 텍스트 추출</span>
+            <span class="u"></span>
+            <span class="ar mono">→</span>
+            <span class="q">무료<i>(차감 없음)</i></span>
+          </li>
+          <li class="free">
+            <span class="n">배포 · 응시 · 자동 채점</span>
+            <span class="u"></span>
+            <span class="ar mono">→</span>
+            <span class="q">무료<i>(차감 없음)</i></span>
+          </li>
+          <li class="free">
+            <span class="n">어법 드릴</span>
+            <span class="u"></span>
+            <span class="ar mono">→</span>
+            <span class="q">무료<i>(차감 없음)</i></span>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- ── 하단 ── -->
+    <div class="s25-foot" data-step="3" data-fx="none">
+      <div class="fchip fchip--warn">
+        <span class="fk mono">주의</span>
+        <span class="fv">보유 크레딧은 하나의 소멸일을 공유합니다.</span>
+      </div>
+      <div class="fchip fchip--next">
+        <span class="fk mono">다음</span>
+        <span class="fv">등록이 끝나신 분은 오늘 가져오신 지문을 바로 올려보세요. 옆에서 도와드립니다.</span>
+      </div>
+    </div>
+
+  </div>
+
+<style>
+#s25 .s25-wrap { display: flex; flex-direction: column; }
+#s25 .s25-cols {
+  flex: 1; min-height: 0;
+  display: grid; grid-template-columns: 560px 520px 1fr; gap: 48px;
+  /* 세 열은 같은 윗선에서 시작한다(=104px). 한 열만 center 로 두면 끝선이 무너진다. */
+  align-items: start;
+  /* 블록 전체를 세로 중앙에 — 위아래 여백을 균등하게 */
+  align-content: center;
+}
+
+/* ── 좌: 카피 ── */
+#s25 .s25-copy { margin-top: 8px; }
+#s25 .s25-h {
+  margin-top: 24px;
+  font-family: var(--f-display); font-weight: 800; font-size: 62px; line-height: 1.14;
+  letter-spacing: -.03em; color: var(--white);
+}
+#s25 .s25-h em { font-style: normal; color: var(--blue); position: relative; z-index: 1; }
+#s25 .s25-h em::after {
+  content: ''; position: absolute; left: -2px; right: -2px; bottom: 3px; height: 8px;
+  background: rgba(59,130,246,.30); border-radius: 2px; z-index: -1;
+}
+#s25 .s25-lead { margin-top: 24px; font-size: 18px; line-height: 1.68; color: #93A0B5; }
+
+#s25 .s25-steps { list-style: none; margin-top: 44px; display: flex; flex-direction: column; gap: 12px; }
+#s25 .s25-steps li {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 15px 18px; border-radius: 12px;
+  background: rgba(16,23,37,.78); border: 1px solid var(--ink-3); border-left: 3px solid var(--blue);
+}
+#s25 .s25-steps .sn {
+  flex: none; font-family: var(--f-body); font-size: 18px; font-weight: 600;
+  color: var(--blue); line-height: 1.35;
+}
+#s25 .s25-steps .sb { display: block; min-width: 0; }
+#s25 .s25-steps b { display: block; font-size: 18px; font-weight: 700; color: var(--white); line-height: 1.35; }
+#s25 .s25-steps i { display: block; font-style: normal; margin-top: 5px; font-size: 14.5px; color: #7E8AA0; }
+#s25 .s25-steps i .mono { color: var(--blue-light); letter-spacing: .02em; }
+
+/* ── 중앙: 제품 UI 목업 ── */
+/* margin-top 8 = 좌열 padding-top / 우열 margin-top 과 같은 기준선.
+   align-self: center 를 쓰면 이 열만 아래로 내려가 윗선이 109px 어긋난다 (2026-07-26 정렬 감사) */
+#s25 .s25-mock { margin-top: 8px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+#s25 .win {
+  width: 520px; height: 579px; border-radius: 16px; overflow: hidden;
+  background: #fff; border: 1px solid #2A3346;
+  box-shadow: 0 38px 82px rgba(0,0,0,.58), inset 0 0 0 1px rgba(255,255,255,.05);
+}
+#s25 .win-bar {
+  height: 44px; display: flex; align-items: center; gap: 7px; padding: 0 16px;
+  background: #EEF1F4; border-bottom: 1px solid #E5E8EB;
+}
+#s25 .win-bar .dot { width: 9px; height: 9px; border-radius: 50%; background: #D1D5DB; flex: none; }
+#s25 .win-bar .url {
+  margin-left: 12px; flex: 1; height: 26px; display: flex; align-items: center;
+  padding: 0 12px; border-radius: 7px; background: #fff; border: 1px solid #E5E8EB;
+  font-family: var(--f-mono); font-size: 11.5px; color: #4E5968; letter-spacing: .01em;
+}
+
+#s25 .win-scr {
+  height: 535px; background: #F7F8FA; padding: 40px 40px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+#s25 .cpn {
+  width: 100%; background: #fff; border: 1px solid #E5E8EB; border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(25,31,40,.09); overflow: hidden;
+  font-family: var(--f-body); color: #191F28;
+}
+#s25 .cpn-hd {
+  display: flex; align-items: center; gap: 9px; padding: 17px 22px;
+  border-bottom: 1px solid #E5E8EB;
+}
+#s25 .ico-tk { width: 19px; height: 19px; flex: none; }
+#s25 .cpn-t { font-size: 17px; font-weight: 700; color: #191F28; }
+
+#s25 .cpn-bd { padding: 22px; }
+#s25 .pane { min-height: 118px; }
+#s25 .pane[hidden] { display: none; }
+
+#s25 .pane--form .lb { display: block; font-size: 12.5px; font-weight: 600; color: #8B95A1; }
+#s25 .fld {
+  margin-top: 9px; height: 48px; display: flex; align-items: center; padding: 0 14px;
+  border: 1px solid #E5E8EB; border-radius: 12px; background: #fff;
+  font-family: var(--f-mono); font-size: 15px; letter-spacing: .16em;
+}
+#s25 .fld .ph { color: #B0B8C1; }
+#s25 .fld .ph.filled { color: #191F28; font-weight: 600; }
+
+#s25 .pane--load { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
+#s25 .spin { width: 28px; height: 28px; animation: s25-spin .9s linear infinite; }
+@keyframes s25-spin { to { transform: rotate(360deg); } }
+#s25 .ld-t { font-size: 14.5px; font-weight: 600; color: #4E5968; }
+
+#s25 .pane--ok { display: flex; align-items: center; justify-content: center; }
+#s25 .ok-box {
+  width: 100%; text-align: center; padding: 18px 16px;
+  border: 1px solid #A7F3D0; border-radius: 14px; background: #ECFDF5;
+}
+#s25 .ok-ico {
+  width: 40px; height: 40px; margin: 0 auto 10px; border-radius: 50%; background: #D1FAE5;
+  display: flex; align-items: center; justify-content: center;
+}
+#s25 .ok-ico svg { width: 22px; height: 22px; }
+#s25 .ok-t { font-size: 16px; font-weight: 700; color: #191F28; }
+#s25 .ok-chip {
+  margin-top: 12px; display: inline-flex; align-items: baseline; gap: 9px;
+  padding: 8px 16px; border-radius: 12px; background: #fff; box-shadow: 0 2px 8px rgba(25,31,40,.07);
+}
+#s25 .ok-chip .k { font-size: 12.5px; color: #8B95A1; }
+#s25 .ok-chip .v { font-size: 21px; font-weight: 800; color: #059669; letter-spacing: -.01em; }
+#s25 .ok-bal { margin-top: 11px; font-size: 12.5px; color: #8B95A1; }
+
+#s25 .cpn-btn {
+  margin-top: 18px; width: 100%; height: 48px; border: 0; border-radius: 12px; cursor: pointer;
+  background: #3182F6; color: #fff; font-family: var(--f-body); font-size: 15px; font-weight: 700;
+  transition: background .15s;
+}
+#s25 .cpn-btn:hover { background: #1B64DA; }
+#s25 .cpn-btn.busy { background: #B8CDF0; cursor: default; }
+#s25 .cpn-btn.done { background: #10B981; }
+#s25 .cpn-btn.done:hover { background: #059669; }
+
+#s25 .s25-cap { font-family: var(--f-body); font-size: 12.5px; color: var(--txt-4); }
+#s25 .s25-cap .mono { font-family: var(--f-mono); letter-spacing: .08em; color: var(--blue); }
+
+/* ── 우: 환산표 ── */
+#s25 .s25-conv {
+  margin-top: 8px;
+  /* 세 열 공통 아랫선 = 579px. 좌열(헤드+리드+3스텝)의 자연 높이에 목업 창과 이 카드를 맞췄다.
+     .win / .win-scr 높이와 한 몸이다 — 하나 바꾸면 셋 다 바꿔라. 검증: node scripts/align.mjs 25 */
+  height: 579px;
+  display: flex; flex-direction: column;
+  background: var(--ink-2); border: 1px solid var(--ink-3); border-radius: var(--r-lg);
+  padding: 22px 24px 16px; box-shadow: var(--sh-card);
+}
+#s25 .cv-hd {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+  padding-bottom: 14px; border-bottom: 1px solid var(--ink-3);
+}
+#s25 .cv-t { font-family: var(--f-display); font-weight: 700; font-size: 18px; color: var(--white); letter-spacing: -.012em; }
+#s25 .cv-s { font-size: 11px; letter-spacing: .14em; color: var(--txt-4); flex: none; }
+
+/* 카드가 560px 고정이므로 남는 높이를 행 사이로 균등 분배한다.
+   (안 하면 카드 아래쪽에만 빈 공간이 뭉쳐 아래가 비어 보인다) */
+#s25 .cv-rows { list-style: none; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+#s25 .cv-rows li {
+  display: grid; grid-template-columns: 1fr 132px 26px 108px; align-items: center; gap: 8px;
+  padding: 15px 0; border-bottom: 1px solid rgba(27,37,55,.7);
+}
+#s25 .cv-rows li:last-child,
+#s25 .cv-rows li:nth-last-child(2) { border-bottom: 0; }
+#s25 .cv-rows .n { font-size: 15.5px; font-weight: 600; color: #C8D1E0; }
+#s25 .cv-rows .u { font-size: 13.5px; color: #7E8AA0; text-align: right; letter-spacing: -.01em; }
+#s25 .cv-rows .sub {
+  grid-column: 1 / -1; font-size: 12px; color: #7E8AA0;
+  text-align: right; letter-spacing: -.01em;
+}
+#s25 .cv-rows .ar { font-size: 13px; color: var(--ink-4); text-align: center; }
+#s25 .cv-rows .q {
+  text-align: right; font-family: var(--f-display); font-weight: 800; font-size: 22px;
+  color: var(--blue); letter-spacing: -.02em; line-height: 1.1;
+}
+#s25 .cv-rows .q i {
+  font-style: normal; font-family: var(--f-body); font-weight: 600; font-size: 13.5px;
+  color: #8CA9DE; margin-left: 3px;
+}
+#s25 .cv-rows li.free { border-top: 1px solid var(--ink-3); }
+#s25 .cv-rows li.free .q { color: var(--emerald); font-size: 20px; }
+#s25 .cv-rows li.free .q i { display: block; margin: 4px 0 0; font-size: 11.5px; color: #6E8C82; }
+
+/* ── 하단 ── */
+#s25 .s25-foot { display: flex; gap: 16px; margin-top: 28px; }
+#s25 .fchip {
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 20px; border-radius: 12px;
+  background: rgba(16,23,37,.72); border: 1px solid var(--ink-3);
+}
+#s25 .fchip .fk { font-size: 10.5px; letter-spacing: .18em; flex: none; }
+#s25 .fchip .fv { font-size: 15px; color: #A9B4C6; }
+#s25 .fchip--warn { border-color: rgba(245,158,11,.34); background: rgba(245,158,11,.08); }
+#s25 .fchip--warn .fk { color: var(--amber); }
+#s25 .fchip--next { flex: 1; border-color: rgba(59,130,246,.34); background: rgba(59,130,246,.09); }
+#s25 .fchip--next .fk { color: var(--blue); }
+#s25 .fchip--next .fv { color: #D3DEEE; }
+</style>
+
+<script>
+(() => {
+  const sec = document.getElementById('s25');
+  if (!sec) return;
+
+  const btn  = sec.querySelector('#s25-btn');
+  const form = sec.querySelector('#s25-form');
+  const load = sec.querySelector('#s25-load');
+  const ok   = sec.querySelector('#s25-ok');
+  const val  = sec.querySelector('#s25-val');
+  if (!btn || !form || !load || !ok || !val) return;
+
+  let timer = null;
+  let state = 'idle';
+
+  const reset = () => {
+    if (timer) { clearTimeout(timer); timer = null; }
+    state = 'idle';
+    form.hidden = false; load.hidden = true; ok.hidden = true;
+    val.textContent = '예: ABCD2345';
+    val.classList.remove('filled');
+    btn.textContent = '쿠폰 등록';
+    btn.classList.remove('busy', 'done');
+  };
+
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (state === 'busy') return;
+    if (state === 'done') { reset(); return; }
+
+    state = 'busy';
+    val.textContent = 'ABCD2345';
+    val.classList.add('filled');
+    form.hidden = true; ok.hidden = true; load.hidden = false;
+    btn.classList.add('busy');
+
+    timer = setTimeout(() => {
+      timer = null;
+      state = 'done';
+      load.hidden = true; ok.hidden = false;
+      btn.classList.remove('busy');
+      btn.classList.add('done');
+      btn.textContent = '다시';
+    }, 600);
+  });
+
+  sec.addEventListener('slide:enter', reset);
+})();
+</script>
+</section>

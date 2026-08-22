@@ -12,6 +12,7 @@ import type {
   PassageSortOrder,
 } from "./generate-page-types";
 import type { QuestionCardItem } from "@/components/workbench/question-card";
+import type { PassageActivityMap } from "@/lib/passage-activity";
 
 export type ParsedAnalysisSummary = {
   vocabulary?: unknown[];
@@ -61,6 +62,50 @@ export interface PassageCardGridProps {
   // Collection
   selectedCollectionId: string;
   setSelectedCollectionId: (v: string) => void;
+  // 브레드크럼 루트 라벨(폴더 헤더 "○○ · 전체 지문"의 ○○). 호스트 화면의
+  // 실제 문맥에 맞춰 주입한다(예: 클래스 스튜디오 "내 지문함"). 미전달 =
+  // 기본 "학습지 관리" — 기존 호스트 픽셀 불변.
+  breadcrumbRootLabel?: string;
+  // 폴더 칩 창을 접힌 채로 시작(additive) — 세로 공간이 귀한 임베드(클래스
+  // 스튜디오)용. 미전달 = false(기존 호스트 픽셀 불변). 펼치기는 한 클릭.
+  initialFolderCollapsed?: boolean;
+  // 컴팩트 카드(additive) — 데스크톱 카드 300→260px·본문 미리보기 5→3줄.
+  // 1080p 실사용 창(높이 ~930)에서도 카드 2행이 통으로 보이게 하는 임베드용.
+  // 미전달 = false(기존 호스트 픽셀 불변).
+  compactCards?: boolean;
+  // 가로 행 목록(additive) — true 면 뷰포트 불문 카드 그리드 대신 전폭 가로 행
+  // 리스트로 렌더한다(본문 미리보기 없음·제목 무절단·가변 높이 — 클래스
+  // 스튜디오 임베드용, 스펙 §3.8.4). 미전달 = false(기존 호스트 픽셀 불변).
+  listRows?: boolean;
+  // 「담김」 배지(additive — 클래스 스튜디오 §3.10.4) — **listRows 모드에서만**
+  // 이 집합에 든 지문의 행 제목 옆에 소형 「담김」 배지를 붙여 클래스 등록
+  // 상태를 표시한다. 미전달 = 렌더 경로 완전 불변(기존 호스트 픽셀 불변).
+  classBadgePassageIds?: ReadonlySet<string>;
+  // 모바일 페이지네이션 resetKey 에 덧붙는 호스트 토큰(additive) — 값이 바뀌면
+  // 모바일 페이지가 1로 되돌아간다(클래스 스튜디오 스코프 세그먼트 전환 등,
+  // §3.10.4). 미전달 = resetKey 문자열이 기존과 동일(기존 호스트 무회귀).
+  mobilePageResetToken?: string;
+  // ── 행 인라인 지문 수정(additive — 클래스 스튜디오 §3.10.18 E18-f) ──────────
+  // 아래 3종은 **listRows 모드에서만** 소비되며, 셋 다 미전달이면 렌더 결과가
+  // 기존과 바이트 동일하다(문제 생성·지문 등록·문항은행·유사 문제·튜터 빌더 등
+  // 다른 호스트 전부 무회귀). 스튜디오만 이 3종을 넘긴다.
+  //
+  // 행 우측 아이콘 버튼의 정체. "detail"(기본) = 기존 Maximize2 「상세보기」 →
+  // openPassageCard(분석/원문 모달). "edit" = PencilLine 「지문 수정」 →
+  // onEditPassageInline(행 아래 인라인 편집기 토글, 모달 없음).
+  // ⚠ 공유 컴포넌트 CardDetailIconButton 의 기본값은 22개 파일이 쓰므로 절대
+  //   바꾸지 않는다 — 호출부에서 icon/title/aria-label 만 오버라이드한다.
+  rowPrimaryAction?: "detail" | "edit";
+  // rowPrimaryAction==="edit" 일 때 행 버튼·더블클릭·Enter 가 부르는 핸들러.
+  // (edit 모드에서 상세 모달과 인라인 편집이 공존하면 같은 행이 두 의미를
+  //  갖는 거짓말이 되므로, 세 진입점 전부를 이 핸들러로 재바인딩한다.)
+  onEditPassageInline?: (passage: PassageItem) => void;
+  // 행 **바로 아래**(행 div 의 형제)에 그릴 확장 노드. 반환 null = 미확장.
+  // ⚠ 행 안이 아니라 형제로 그리는 이유는 §3.10.18 E18-g 참조 — 행 루트의
+  //   overflow-hidden(팝오버 잘림)·flex-wrap(전폭 자식 붕괴)·data-drag-item-id
+  //   (마키 히트 사각형 부풀림)·onClick 선택 토글 4종 때문이다.
+  //   호출부는 반드시 참조 안정(useCallback)으로 넘긴다.
+  renderRowExpansion?: (passage: PassageItem) => ReactNode;
 
   // Selection
   selectedIds: Set<string>;
@@ -115,6 +160,12 @@ export interface PassageCardGridProps {
 
   // 지문별 생성된 문제 목록. 지문 카드 하단의 "생성된 문제" 요약 토글에 쓴다.
   questionsByPassage?: Map<string, QuestionCardItem[]>;
+
+  // 문항 이력 지연 로더(additive) — 전달되면 questionsByPassage 에 목록이 없는
+  // 행/카드도 서버 집계(p._count.questions) > 0 이면 「생성된 문제」 토글을
+  // 그리고, 팝오버 최초 오픈 시 이 로더로 목록을 지연 조회한다.
+  // ⚠ 참조 안정 전제 — memo(PassageListRow) 의 prop 으로 내려간다.
+  onLazyLoadQuestions?: (passageId: string) => Promise<QuestionCardItem[]>;
   // 전달되면 "생성된 문제" 목록의 문제 행 클릭 시 페이지 이동 대신
   // 인페이지 문제 상세 팝업을 연다.
   onOpenQuestionDetail?: (q: QuestionCardItem) => void;
@@ -122,6 +173,19 @@ export interface PassageCardGridProps {
   // 학습지 생성(다른 화면)에서 학습자료가 백그라운드로 생성 중인 지문 id.
   // 카드 테두리에 초록 글로우가 빙글 도는 모션을 띄운다.
   learningGeneratingPassageIds?: Set<string>;
+  // 지문별 「생성 중」 활동 표식(additive — 계약: @/lib/passage-activity).
+  // 든 지문의 행/카드 테두리 안쪽에 파란 링이 흐르고, listRows 행은 메타줄에
+  // 무엇이 도는지 소형 라벨을 얹는다. 미전달 = 렌더 경로 완전 불변.
+  //
+  // learningGeneratingPassageIds 와의 관계: **같은 의미의 두 채널**이다(저쪽은
+  // 지문등록 화면의 초록 conic 글로우, 이쪽은 호스트가 라벨까지 정하는 범용
+  // 표식). 한 행에 둘 다 걸리면 기존 채널이 이긴다 — 선주민 우선이고, 두 모션이
+  // 겹치면 테두리가 두 겹으로 도는 것처럼 보이기 때문. 새 호스트는 이쪽을 쓴다.
+  //
+  // ⚠ 맵 자체도, 그 안의 값 객체도 **참조 안정**이어야 한다: 값은 memo
+  //   (PassageListRow)의 비교 대상이라 폴링 틱마다 새 객체가 오면 목록 전체가
+  //   다시 그려진다. 조립부는 passageActivitySignature 로 시그니처 메모를 걸 것.
+  rowActivity?: PassageActivityMap;
   // 방금 학습자료 생성(분석)이 완료된 지문 id — 초록 글로우(클릭 시 해제).
   // 추출 완료(freshAnalysisPassageIds)의 파란 글로우와 색으로 구분된다.
   learningCompletedPassageIds?: Set<string>;
@@ -138,6 +202,10 @@ export interface PassageCardGridProps {
   onBulkGenerateLearning?: (passages: PassageItem[]) => void;
   learningBulkActionRunning?: boolean;
   learningCreditCostPerPassage?: number;
+  // 툴바 일괄 생성 버튼의 라벨. 호스트 화면의 산출물 어휘에 맞춰 주입한다
+  // (예: 클래스 스튜디오 "학습 만들기"). 미전달 = 기본 "학습자료 생성" —
+  // 기존 호스트 픽셀 불변.
+  bulkGenerateLabel?: string;
 
   // 선택한 지문을 워크스페이스로 보낸다 (학습자료 생성 버튼 오른쪽).
   onEditSelected?: () => void;
@@ -162,4 +230,17 @@ export interface PassageCardGridProps {
   onToggleExtractionReview?: (passage: PassageItem) => void;
   // 검수 토글 처리 중인 지문 id (점에 로딩 표시).
   reviewActionPassageIds?: Set<string>;
+  // 행별 검수 토글 숨김(additive — 클래스 스튜디오 §3.10.15). onToggleExtractionReview
+  // 미전달만으론 disabled 회색 버튼이 잔존하므로 렌더 자체를 게이트한다. 미검수
+  // 붉은 테두리도 함께 끈다(해제 수단 없는 경고색만 남기지 않기 위함).
+  // 미전달 = false(기존 호스트 픽셀 불변).
+  hideReviewToggle?: boolean;
+  // 툴바 우측 필터 팝오버+검색 토글(과 인라인 검색 입력 행) 숨김(additive —
+  // §3.10.15 필터/검색 2쌍 중복 해소). 살아남는 쌍은 폴더 헤더의 정렬+검색
+  // 팝오버 하나뿐이다. 미전달 = false(기존 호스트 픽셀 불변).
+  hideToolbarFilterSearch?: boolean;
+  // 전체선택 체크박스를 폴더 브레드크럼 행에 인라인하고 툴바 행을 접는다
+  // (additive — §3.10.17-c: 벌크·필터가 전부 꺼진 호스트에서 체크박스 하나가
+  // 가로 행을 독점하는 고아 행 수복). 미전달 = false(기존 호스트 픽셀 불변).
+  inlineSelectAllInHeader?: boolean;
 }

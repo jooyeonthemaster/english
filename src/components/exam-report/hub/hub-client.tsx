@@ -85,39 +85,87 @@ export function HubClient() {
   // 인테이크 프레임 접기 + 높이 드래그 조절(form-section 미러).
   const [formCollapsed, setFormCollapsed] = useState(false);
   const [paneHeight, setPaneHeight] = useState<number>(readStoredPaneHeight);
+  // 드래그 시작 높이는 ref 로 읽는다 — 핸들러 정체성을 커밋마다 갈지 않는다.
+  const paneHeightRef = useRef(paneHeight);
+  paneHeightRef.current = paneHeight;
+  // 드래그 대상 프레임 실체 — 드래그 중에는 이 요소의 style.height 에 직접 쓴다.
+  const paneElRef = useRef<HTMLDivElement | null>(null);
 
-  const beginPaneResize = useCallback(
-    (e: React.PointerEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const startY = e.clientY;
-      const startHeight = paneHeight;
-      let latest = startHeight;
-      document.body.style.cursor = "row-resize";
-      document.body.style.userSelect = "none";
-      const onMove = (ev: PointerEvent) => {
-        latest = Math.min(
-          PANE_MAX,
-          Math.max(PANE_MIN, startHeight + (ev.clientY - startY)),
-        );
+  // 성능 계약(use-folder-window-height 동형): 드래그 중에는 React 를 거치지
+  // 않는다 — 매 pointermove 의 setState 는 HubClient 전체(인테이크 패널 +
+  // 분석 현황 보드)를 프레임마다 리렌더시킨다. 이동 중에는 프레임 요소의
+  // style.height 에 rAF 코얼레싱으로 직접 쓰고, 놓을 때 한 번만 커밋+영속한다.
+  // 앵커를 못 찾으면 종전 setState 경로로 폴백(무회귀).
+  const beginPaneResize = useCallback((e: React.PointerEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const startY = e.clientY;
+    const startHeight = paneHeightRef.current;
+    let latest = startHeight;
+
+    // 포인터 캡처 — 커서가 얇은 핸들을 벗어나도 드래그가 끊기지 않는다.
+    const handle = e.currentTarget as HTMLElement;
+    try {
+      handle.setPointerCapture(e.pointerId);
+    } catch {
+      /* 캡처 미지원 브라우저는 window 리스너로 폴백 */
+    }
+
+    const paneEl = paneElRef.current;
+    const prevCursor = document.body.style.cursor;
+    const prevSelect = document.body.style.userSelect;
+    const prevPointerEvents = document.body.style.pointerEvents;
+    document.body.style.cursor = "row-resize";
+    document.body.style.userSelect = "none";
+    // 드래그 중 hover 스타일 재평가 차단 — 높이가 바뀌면 아래 보드 카드가
+    // 밀리며 커서 아래 요소가 계속 바뀐다(캡처 덕에 move 수신은 유지).
+    document.body.style.pointerEvents = "none";
+
+    // rAF 코얼레싱 — 고주사율 포인터가 프레임당 여러 번 발화해도 기록은 1회.
+    let rafId: number | null = null;
+    const flush = () => {
+      rafId = null;
+      if (paneEl) paneEl.style.height = `${latest}px`;
+    };
+
+    const onMove = (ev: PointerEvent) => {
+      latest = Math.min(
+        PANE_MAX,
+        Math.max(PANE_MIN, startHeight + (ev.clientY - startY)),
+      );
+      if (paneEl) {
+        if (rafId === null) rafId = requestAnimationFrame(flush);
+      } else {
+        // 폴백 — 앵커를 못 찾으면 종전대로 상태 갱신.
         setPaneHeight(latest);
-      };
-      const onUp = () => {
-        document.body.style.cursor = "";
-        document.body.style.userSelect = "";
-        window.removeEventListener("pointermove", onMove);
-        window.removeEventListener("pointerup", onUp);
-        try {
-          window.localStorage.setItem(PANE_STORAGE_KEY, String(latest));
-        } catch {
-          /* ignore */
-        }
-      };
-      window.addEventListener("pointermove", onMove);
-      window.addEventListener("pointerup", onUp);
-    },
-    [paneHeight],
-  );
+      }
+    };
+    const onUp = () => {
+      document.body.style.cursor = prevCursor;
+      document.body.style.userSelect = prevSelect;
+      document.body.style.pointerEvents = prevPointerEvents;
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("pointercancel", onUp);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      if (paneEl) paneEl.style.height = `${latest}px`;
+      // 커밋은 여기서 한 번 — 드래그 내내 리렌더 0회.
+      setPaneHeight(latest);
+      try {
+        handle.releasePointerCapture(e.pointerId);
+      } catch {
+        /* ignore */
+      }
+      try {
+        window.localStorage.setItem(PANE_STORAGE_KEY, String(latest));
+      } catch {
+        /* ignore */
+      }
+    };
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onUp);
+    window.addEventListener("pointercancel", onUp);
+  }, []);
 
   const resetPaneHeight = useCallback(() => {
     setPaneHeight(PANE_DEFAULT);
@@ -237,6 +285,7 @@ export function HubClient() {
             <>
               <div className="px-4 pt-4 pb-3">
                 <div
+                  ref={paneElRef}
                   className="flex w-full min-w-0 max-w-full flex-col overflow-hidden rounded-md border border-slate-200"
                   style={{ height: `${paneHeight}px` }}
                 >

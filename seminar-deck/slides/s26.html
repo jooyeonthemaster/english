@@ -1,0 +1,151 @@
+<section class="slide slide--dark" id="s26"
+  data-title="NEXT" data-kr="시연으로"
+  data-zone="정리" data-zone-en="WRAP"
+  data-part="NEXT — 라이브 시연"
+  data-in="오늘의 지도"
+  data-out="라이브 시연"
+  data-note="PART 1 → 시연">
+
+  <!-- 배경 라인 모티프 (s01 어휘) — 라인이 여기까지 왔다 -->
+  <div class="s26-rail" aria-hidden="true">
+    <span class="trk"></span>
+    <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+  </div>
+  <div class="s26-end" data-step="1" data-fx="none" aria-hidden="true">
+    <span class="dot"></span>
+  </div>
+
+  <div class="pad s26-wrap">
+
+    <!-- 상단 -->
+    <div class="s26-head">
+      <div class="kicker" data-step="0" data-fx="none">PART 1 끝</div>
+
+      <h1 class="s26-h1" data-step="0">
+        <span class="l1">여기까지가</span>
+        <span class="l2">지도였습니다.</span>
+      </h1>
+
+      <p class="s26-lead" data-step="0" data-fx="none">
+        이제 실제 화면에서, 방금 본 순서 그대로 하나씩 보여드리겠습니다.
+      </p>
+    </div>
+
+    <!-- 닫는 문구 -->
+    <div class="s26-close">
+      <div class="pre" data-step="1" data-fx="none">그러면 이제,</div>
+      <div class="big" data-step="1"><em>직접 시연</em>하는 시간을 갖겠습니다.</div>
+    </div>
+
+    <!-- 하단 안내 -->
+    <div class="s26-foot">
+      <ul class="s26-notes" data-step="2" data-fx="left">
+        <li><span class="b">·</span><span>지금부터 약 50분, 실제 사이트에서 ST 01부터 ST 08까지 순서대로 진행합니다</span></li>
+        <li><span class="b">·</span><span>중간에 궁금한 건 그때그때 물어봐 주세요 — 그게 더 빠릅니다</span></li>
+        <li><span class="b">·</span><span>이어서 2부에서는 300크레딧으로 직접 만들어보시겠습니다</span></li>
+      </ul>
+
+      <div class="s26-url" data-step="2" data-fx="none">smoat.co.kr</div>
+    </div>
+
+  </div>
+
+<style>
+#s26 .s26-wrap { display: flex; flex-direction: column; }
+
+/* ── 상단 ── */
+#s26 .s26-head { padding-top: 8px; }
+#s26 .kicker { margin-bottom: 26px; }
+
+#s26 .s26-h1 {
+  font-family: var(--f-display); font-weight: 800;
+  font-size: 64px; line-height: 1.12; letter-spacing: -.028em;
+  display: flex; flex-direction: column;
+}
+#s26 .s26-h1 .l1 { color: #8892A6; }
+#s26 .s26-h1 .l2 { color: #E8EDF7; }
+
+#s26 .s26-lead {
+  margin-top: 24px; max-width: 1100px;
+  font-size: 22px; line-height: 1.6; color: #97A3B8;
+}
+
+/* ── 닫는 문구 (이 장표의 유일한 후킹) ── */
+#s26 .s26-close { margin-top: 132px; }
+#s26 .s26-close .pre {
+  font-size: 22px; line-height: 1.5; letter-spacing: .02em; color: var(--grey);
+}
+#s26 .s26-close .big {
+  margin-top: 20px;
+  font-family: var(--f-display); font-weight: 800;
+  font-size: 104px; line-height: 1.14; letter-spacing: -.032em;
+  color: var(--white);
+}
+#s26 .s26-close .big em {
+  font-style: normal; color: var(--blue); position: relative; z-index: 1;
+}
+#s26 .s26-close .big em::after {
+  content: ''; position: absolute; left: -3px; right: -3px; bottom: 8px; height: 10px;
+  background: rgba(59,130,246,.28); border-radius: 2px; z-index: -1;
+}
+
+/* ── 하단 안내 ── */
+#s26 .s26-foot { margin-top: auto; padding-bottom: 8px; }
+#s26 .s26-notes { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+#s26 .s26-notes li {
+  display: flex; align-items: baseline; gap: 12px;
+  font-family: var(--f-mono); font-size: 15px; line-height: 1.5;
+  letter-spacing: .01em; color: #8892A6;
+}
+#s26 .s26-notes li .b { flex: none; color: var(--blue); }
+
+#s26 .s26-url {
+  margin-top: 44px; text-align: right;
+  font-family: var(--f-latin); font-weight: 800; text-transform: none;
+  font-size: 64px; line-height: 1.05; letter-spacing: -.02em;
+  color: var(--txt-4);
+}
+
+/* ── 배경 라인 (opacity .12) ── */
+#s26 .s26-rail {
+  position: absolute; left: 0; right: 96px; top: 704px; height: 24px;
+  opacity: .12; pointer-events: none;
+}
+#s26 .s26-rail .trk {
+  position: absolute; left: 0; right: 0; top: 11px; height: 2px;
+  background: linear-gradient(90deg, rgba(59,130,246,0) 0%, rgba(59,130,246,.5) 24%, var(--blue) 100%);
+}
+#s26 .s26-rail i {
+  position: absolute; top: 6px; width: 12px; height: 12px; margin-left: -6px;
+  border-radius: 50%; background: var(--ink); border: 2px solid var(--blue);
+}
+#s26 .s26-rail i:nth-of-type(1) { left: 12.5%; }
+#s26 .s26-rail i:nth-of-type(2) { left: 25%; }
+#s26 .s26-rail i:nth-of-type(3) { left: 37.5%; }
+#s26 .s26-rail i:nth-of-type(4) { left: 50%; }
+#s26 .s26-rail i:nth-of-type(5) { left: 62.5%; }
+#s26 .s26-rail i:nth-of-type(6) { left: 75%; }
+#s26 .s26-rail i:nth-of-type(7) { left: 87.5%; }
+
+/* 마지막 노드만 점등 — 라인이 여기까지 왔다 */
+#s26 .s26-end {
+  position: absolute; right: 96px; top: 704px; width: 0; height: 24px;
+  pointer-events: none;
+}
+#s26 .s26-end .dot {
+  position: absolute; left: 0; top: 12px; transform: translate(-50%, -50%);
+  width: 16px; height: 16px; border-radius: 50%; background: var(--emerald);
+  box-shadow: 0 0 0 6px rgba(16,185,129,.16), 0 0 26px rgba(16,185,129,.7);
+}
+#s26 .s26-end .dot::after {
+  content: ''; position: absolute; inset: -10px; border-radius: 50%;
+  border: 1px solid rgba(16,185,129,.5);
+  animation: s26-ring 2.8s var(--ease-line) infinite;
+}
+@keyframes s26-ring {
+  0%   { transform: scale(.5); opacity: 0; }
+  22%  { opacity: .8; }
+  100% { transform: scale(1.55); opacity: 0; }
+}
+</style>
+</section>

@@ -144,8 +144,10 @@ const passageHtml = renderFlow({ kind: "ko-passage", text: passage });
 check("ko-passage keeps verse line breaks", passageHtml.includes("마당 끝 겨울 우물은\\n얼음장"));
 
 // ── 4) 영어 섹션 렌더 무회귀 ──
+// 압축 조판 대개편(26-08): 한글 요약 문장(sentences)은 데이터만 보존하고 미표기,
+// ONE-LINE THESIS 만 노출한다(section-flow summarySectionFlow 주석 참조). 그 계약 기준.
 const enSummaryHtml = renderFlow({ kind: "summary", sentences: ["요약 문장이에요."], thesisEn: "One line thesis." });
-check("english summary flow unchanged", enSummaryHtml.includes("One line thesis.") && enSummaryHtml.includes("요약 문장이에요."));
+check("english summary flow unchanged", enSummaryHtml.includes("One line thesis.") && !enSummaryHtml.includes("요약 문장이에요."));
 
 process.stdout.write(JSON.stringify({ passed, failed: failures.length, failures }));
 `;

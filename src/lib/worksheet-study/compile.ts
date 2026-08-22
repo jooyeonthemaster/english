@@ -36,6 +36,7 @@ import {
   type StudyPlan,
   type StudyStage,
   type StudyStageId,
+  type VocabAssetMap,
 } from "./types";
 
 // ── 결정론 인프라 (study-activities.ts 와 동일 알고리즘 — 미수출이라 지역 복제) ──
@@ -169,6 +170,8 @@ type BuildCtx = {
   ctx: GenContext;
   caps: StudyPresetCaps;
   seedKey: number;
+  /** 코퍼스 오답 자산(서버 주입, 선택) — key = normLite(headword). 부재 시 현행 폴백. */
+  vocabAssets?: VocabAssetMap;
 };
 
 function stageSeed(seedKey: number, stageId: string): number {
@@ -226,22 +229,120 @@ function buildVocabFlash(b: BuildCtx): StudyItem[] {
   }));
 }
 
-/** MC 오답 후보 3개 — 같은 학습지의 다른 rows 에서 seeded 선택(중복·정답 동치 제거). */
-function pickDistractors(
-  pool: string[],
-  answer: string,
-  rng: () => number,
-): string[] | null {
-  const seen = new Set<string>([normLite(answer)]);
-  const cand: string[] = [];
-  for (const p of seededShuffle(pool, rng)) {
-    const key = normLite(p);
-    if (!p.trim() || seen.has(key)) continue;
-    seen.add(key);
-    cand.push(p.trim());
-    if (cand.length === 3) break;
-  }
-  return cand.length === 3 ? cand : null;
+// ── 어휘 시험 오답 가드 (class-studio-spec.md §9 — 한국어 형태 규칙은
+//    scripts/vocab-item-assets/dossier.mjs 의 normKo·formSig·DA_MATTERS 를 참조한
+//    경량 이식본. 코퍼스 조회는 서버 vocab-assets.ts 소관 — 이 파일은 순수 유지) ──
+
+/** 한국어 표기 비교 키 — 괄호 주석·물결·공백 제거. */
+function normKo(s: string): string {
+  return s
+    .replace(/\([^)]*\)/g, "")
+    .replace(/[~〜∼]/g, "")
+    .replace(/[\s·]/g, "")
+    .trim();
+}
+
+/** 뜻 문자열 → 대안 표기 토큰 ("반박하다, 맞서다" → ["반박하다","맞서다"]). */
+function koTokens(s: string): string[] {
+  return s
+    .split(/[,;/·]/)
+    .map((t) => normKo(t))
+    .filter((t) => t.length > 0);
+}
+
+/**
+ * 한국어 뜻 형태 시그니처(대분류) — 오답은 정답과 같은 모양을 "선호"한다.
+ * 하드 필터가 아니라 우선순위 재배열에만 쓴다(명사 '~다' 우연(바다) 풀 고갈 함정 회피).
+ */
+function koFormSig(s: string): string {
+  const t = koTokens(s)[0] ?? normKo(s);
+  if (/(하다|되다|시키다|거리다|내다|이다|지다|다)$/.test(t)) return "V";
+  if (/(적인|스러운|로운|다운|적)$/.test(t)) return "A";
+  if (/(히|하게|게|으로|로)$/.test(t)) return "D";
+  return "N";
+}
+
+/** 영어 표제어 정규화(알파벳만) — 어간공유 가드용. */
+function enStem(s: string): string {
+  return normLite(s).replace(/[^a-z]/g, "");
+}
+
+/**
+ * 어간공유 가드 — importance/important 처럼 앞 5자를 공유하는 파생어는
+ * 뜻이 겹쳐 복수정답이 되기 쉬우므로 오답으로 쓰지 않는다(문항팩 캠페인 규칙).
+ */
+function stemShareLite(a: string, b: string): boolean {
+  const x = enStem(a);
+  const y = enStem(b);
+  if (x.length < 4 || y.length < 4) return false;
+  const n = Math.min(x.length, y.length, 5);
+  return x.slice(0, n) === y.slice(0, n);
+}
+
+interface DistractorPickOpts {
+  /** 코퍼스 우선 후보(서버 주입 — 이미 검증·결정론 정렬) */
+  primary: readonly string[];
+  /** 같은 학습지 폴백 풀(현행 동작) */
+  fallback: readonly string[];
+  answer: string;
+  /** 정규화 토큰 금지 목록 — 정답 동치·동의어 표기 */
+  bannedTokens: ReadonlySet<string>;
+  /** 후보 문자열 → 비교 키(dedupe·banned 대조용 토큰들) */
+  tokensOf: (s: string) => string[];
+  /**
+   * 추가 거부 가드(어간공유 등) — true 면 배제. **폴백 티어에만** 적용한다:
+   * 코퍼스 자산(primary)은 이미 어간공유·동의어를 사전 배제한 검증분이고,
+   * even→event 같은 순수 혼동어(뜻 무관)를 앞 5자 공유만으로 죽이면 고가치
+   * 오답이 사라진다(적대검수 2026-08-09 — 폴백 규칙과 정합, spec §9 2단계).
+   */
+  reject?: (cand: string) => boolean;
+  /** 형태 시그니처 선호 — 폴백 풀을 같은 모양 우선으로 재배열 */
+  preferSig?: string;
+  sigOf?: (s: string) => string;
+  rng: () => number;
+}
+
+/**
+ * MC 오답 3개 선택 — 우선순위: ① 코퍼스 자산 ② 같은 모양 폴백 ③ 나머지 폴백.
+ * 각 계층 안에서 seeded 셔플(결정론). 3개 미만이면 null(아이템 스킵 — 엉터리 보기 금지).
+ */
+function pickDistractorsSmart(opts: DistractorPickOpts): string[] | null {
+  const { tokensOf, bannedTokens, reject, rng } = opts;
+  const seen = new Set<string>(tokensOf(opts.answer));
+  const picked: string[] = [];
+
+  const tiers: readonly string[][] = [
+    seededShuffle(opts.primary, rng),
+    ...(opts.preferSig && opts.sigOf
+      ? [
+          seededShuffle(
+            opts.fallback.filter((c) => opts.sigOf!(c) === opts.preferSig),
+            rng,
+          ),
+          seededShuffle(
+            opts.fallback.filter((c) => opts.sigOf!(c) !== opts.preferSig),
+            rng,
+          ),
+        ]
+      : [seededShuffle(opts.fallback, rng)]),
+  ];
+
+  tiers.forEach((tier, tierIndex) => {
+    if (picked.length === 3) return;
+    const isPrimary = tierIndex === 0; // primary = 코퍼스 자산 — reject 면제
+    for (const cand of tier) {
+      if (picked.length === 3) break;
+      const trimmed = cand.trim();
+      if (!trimmed) continue;
+      const toks = tokensOf(trimmed);
+      if (toks.length === 0) continue;
+      if (toks.some((t) => seen.has(t) || bannedTokens.has(t))) continue;
+      if (!isPrimary && reject && reject(trimmed)) continue;
+      for (const t of toks) seen.add(t);
+      picked.push(trimmed);
+    }
+  });
+  return picked.length === 3 ? picked : null;
 }
 
 function mcFromParts(
@@ -269,15 +370,33 @@ function mcFromParts(
   } as StudyItem;
 }
 
+/** 영어 동의어 문자열 토큰 ("search, retrieve" → ["search","retrieve"] normLite). */
+function enListTokens(s: string | undefined): string[] {
+  if (!s) return [];
+  return s
+    .split(/[,;/·]/)
+    .map((t) => normLite(t))
+    .filter((t) => t.length > 0 && t !== "—" && t !== "-" && t !== "–");
+}
+
 function buildVocabQuiz(b: BuildCtx): StudyItem[] {
   const seed = stageSeed(b.seedKey, "vocab-quiz");
   const rng = mulberry32(seed);
-  const rows = seededShuffle(
-    b.ctx.vocab.filter((v) => v.headword.trim() && v.meaning.trim()),
-    rng,
-  ).slice(0, b.caps.vocabQuiz);
-  const meanings = b.ctx.vocab.map((v) => v.meaning);
-  const headwords = b.ctx.vocab.map((v) => v.headword);
+  const all = b.ctx.vocab.filter((v) => v.headword.trim() && v.meaning.trim());
+  const rows = seededShuffle(all, rng).slice(0, b.caps.vocabQuiz);
+
+  // 같은 학습지 동의어 링크 — A.synonyms 에 B 표제어가 오르면(또는 역방향)
+  // 서로의 뜻·표제어를 오답으로 쓰지 않는다(복수정답 차단, class-studio-spec §9).
+  const synTokens = all.map((v) => new Set(enListTokens(v.synonyms)));
+  const linkedOf = (v: GenVocab, vi: number): GenVocab[] => {
+    const head = normLite(v.headword);
+    return all.filter(
+      (w, wi) =>
+        wi !== vi &&
+        (synTokens[vi].has(normLite(w.headword)) || synTokens[wi].has(head)),
+    );
+  };
+
   const items: StudyItem[] = [];
   rows.forEach((v, i) => {
     if (b.caps.vocabTypingChallenge && v.tier === "challenge") {
@@ -293,17 +412,46 @@ function buildVocabQuiz(b: BuildCtx): StudyItem[] {
       });
       return;
     }
+    const vi = all.indexOf(v);
+    const linked = linkedOf(v, vi);
+    const asset = b.vocabAssets?.[normLite(v.headword)];
+
     if (i % 2 === 0) {
-      // 단어 → 뜻
-      const d = pickDistractors(meanings, v.meaning, rng);
+      // 단어 → 뜻: 코퍼스 한국어 오답 우선, 폴백은 같은 학습지 다른 뜻(형태 정합 선호)
+      const bannedTokens = new Set<string>([
+        ...(asset?.bannedKo ?? []).flatMap(koTokens),
+        ...linked.flatMap((w) => koTokens(w.meaning)),
+      ]);
+      const d = pickDistractorsSmart({
+        primary: asset?.koDistractors ?? [],
+        fallback: all.filter((w) => w !== v).map((w) => w.meaning),
+        answer: v.meaning,
+        bannedTokens,
+        tokensOf: koTokens,
+        preferSig: koFormSig(v.meaning),
+        sigOf: koFormSig,
+        rng,
+      });
       if (!d) return;
       items.push({
         ...mcFromParts(`vocab-quiz:mc:${i + 1}`, "vocab", v.headword, true, v.meaning, d, rng),
         wordKey: v.headword,
       });
     } else {
-      // 뜻 → 단어
-      const d = pickDistractors(headwords, v.headword, rng);
+      // 뜻 → 단어: 문항팩·혼동어 오답 우선, 어간공유(파생어) 배제
+      const bannedTokens = new Set<string>([
+        ...enListTokens(v.synonyms),
+        ...linked.map((w) => normLite(w.headword)),
+      ]);
+      const d = pickDistractorsSmart({
+        primary: asset?.enDistractors ?? [],
+        fallback: all.filter((w) => w !== v).map((w) => w.headword),
+        answer: v.headword,
+        bannedTokens,
+        tokensOf: (s) => [normLite(s)],
+        reject: (cand) => stemShareLite(cand, v.headword),
+        rng,
+      });
       if (!d) return;
       items.push({
         ...mcFromParts(`vocab-quiz:mc:${i + 1}`, "vocab", v.meaning, false, v.headword, d, rng),
@@ -1004,6 +1152,13 @@ export interface CompileInput {
   mode: Exclude<StudyMode, "off">;
   taskId: string;
   reportTitle: string;
+  /**
+   * 스테이지 화이트리스트(클래스 스튜디오 모듈 배포 — class-studio-spec §7).
+   * 부재/빈 배열 = 프리셋 전체(현행과 완전 동일 — planHash 도 불변).
+   */
+  stages?: StudyStageId[];
+  /** 코퍼스 어휘 오답 자산(서버 주입 — vocab-assets.ts). planHash 에 미포함. */
+  vocabAssets?: VocabAssetMap;
 }
 
 export function compileStudyPlan(input: CompileInput): StudyPlan {
@@ -1011,7 +1166,20 @@ export function compileStudyPlan(input: CompileInput): StudyPlan {
   const preset = STUDY_PRESETS[mode];
   const seedKey = hashString(taskId);
   const ctx = extractGenContext(report);
-  const b: BuildCtx = { report, ctx, caps: preset.caps, seedKey };
+  const b: BuildCtx = {
+    report,
+    ctx,
+    caps: preset.caps,
+    seedKey,
+    vocabAssets: input.vocabAssets,
+  };
+
+  // 화이트리스트 정규화(정렬본) — 필터 전용, 순서는 프리셋이 정본.
+  const stageFilter =
+    input.stages && input.stages.length > 0
+      ? ([...new Set(input.stages)].sort() as StudyStageId[])
+      : undefined;
+  const filterSet = stageFilter ? new Set<StudyStageId>(stageFilter) : null;
 
   const stages: StudyStage[] = [];
   // 누적 상한(PLAN_ITEM_CAP) 집행 — 프리셋 순서가 학습 순서이므로 남는 예산만큼만
@@ -1019,6 +1187,7 @@ export function compileStudyPlan(input: CompileInput): StudyPlan {
   let budget = PLAN_ITEM_CAP;
   for (const id of preset.stages) {
     if (budget <= 0) break;
+    if (filterSet && !filterSet.has(id)) continue;
     const items = STAGE_BUILDERS[id](b).slice(0, Math.min(STAGE_ITEM_CAP, budget));
     if (items.length === 0) continue;
     budget -= items.length;
@@ -1035,8 +1204,14 @@ export function compileStudyPlan(input: CompileInput): StudyPlan {
   }
 
   const totalItems = stages.reduce((acc, s) => acc + s.items.length, 0);
+  // 화이트리스트 부재 시 해시 입력이 기존과 동일해야 한다(기배포 과제 planHash 불변).
   const contentSig = fnv1a(
-    JSON.stringify(report.sections) + "|" + mode + "|" + String(seedKey),
+    JSON.stringify(report.sections) +
+      "|" +
+      mode +
+      "|" +
+      String(seedKey) +
+      (stageFilter ? "|stages:" + stageFilter.join(",") : ""),
   );
 
   // 취약 단어장(리포트)용 표제어 → 뜻 맵 — 스테이지 구성과 무관하게 항상 제공
@@ -1055,10 +1230,16 @@ export function compileStudyPlan(input: CompileInput): StudyPlan {
     stages,
     totalItems,
     vocabMeanings,
+    ...(stageFilter ? { stageFilter } : {}),
   };
 }
 
-/** 스터디 모드 성립 여부 — 채점 스테이지 2개 이상 (spec §8.1 분기 3). */
+/**
+ * 스터디 모드 성립 여부 — 채점 스테이지 2개 이상 (spec §8.1 분기 3).
+ * 화이트리스트 명시 배포(모듈 단위)는 1개면 성립 — "단어만 배포"가 뷰어 폴백으로
+ * 떨어지지 않게 한다(class-studio-spec §7). 화이트리스트 부재 시 현행 규칙 유지.
+ */
 export function planIsViable(plan: StudyPlan): boolean {
-  return plan.stages.filter((s) => s.graded).length >= 2;
+  const minGraded = plan.stageFilter && plan.stageFilter.length > 0 ? 1 : 2;
+  return plan.stages.filter((s) => s.graded).length >= minGraded;
 }

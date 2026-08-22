@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Fragment,
   useCallback,
   useEffect,
   useMemo,
@@ -31,6 +32,7 @@ import {
   FilePen,
   GraduationCap,
   Layers,
+  PencilLine,
 } from "lucide-react";
 import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import { Badge } from "@/components/ui/badge";
@@ -57,6 +59,11 @@ import { triggerHintGlow } from "@/lib/hint-glow";
 import { DragHandle } from "@/components/ui/drag-handle";
 import { PassageQuestionsSummary } from "./passage-questions-summary";
 import { PassageReportsSummary } from "./passage-reports-summary";
+import { PassageListRow } from "./passage-list-row";
+import {
+  PassageActivityLabel,
+  PassageActivityRing,
+} from "@/components/workbench/passage-activity-ring";
 import { PassageFilterPopover } from "./passage-filter-popover";
 import { PassageSortSearchPopover } from "./passage-sort-search-popover";
 import { dispatchGenerateTourMilestone } from "@/lib/generate-tour-demo";
@@ -89,10 +96,29 @@ import { Pagination } from "@/components/workbench/shared/pagination";
 const MOBILE_ROW_CLASS =
   "group relative flex flex-row items-center gap-2.5 overflow-hidden rounded-lg border bg-white px-3 py-2.5 transition-all duration-200 cursor-pointer active:bg-slate-50";
 const DESKTOP_CARD_CLASS =
-  "group relative flex h-[300px] flex-col overflow-hidden rounded-xl border bg-white p-4 transition-all duration-200 hover:shadow-md cursor-pointer";
+  // [content-visibility:auto]: 화면 밖 카드는 레이아웃·페인트를 통째로 건너뛴다 —
+  // 지문 수백 장에서 패널 리사이즈·스크롤의 reflow 비용이 "보이는 카드 수"로
+  // 줄어든다(2026-08-11 전역 핸들 버벅임 수술 2탄). 고정 높이(h-[300px])라
+  // contain-intrinsic-size 로 스크롤바 추정도 정확 — 가시 상태 픽셀은 불변.
+  "group relative flex h-[300px] flex-col overflow-hidden rounded-xl border bg-white p-4 transition-all duration-200 hover:shadow-md cursor-pointer [content-visibility:auto] [contain-intrinsic-size:auto_300px]";
+// 컴팩트 카드(compactCards prop) — 1080p 실사용 창에서 카드 2행이 통으로 보이는
+// 높이 예산(260×2+gap ≤ 그리드 창). 본문 미리보기는 3줄로 줄어든다(아래 clamp).
+const COMPACT_CARD_CLASS =
+  "group relative flex h-[260px] flex-col overflow-hidden rounded-xl border bg-white p-4 transition-all duration-200 hover:shadow-md cursor-pointer [content-visibility:auto] [contain-intrinsic-size:auto_260px]";
+// 가로 행(listRows prop) — 데스크톱에서도 쓰는 전폭 리스트 행. 제목이 길면
+// break-keep 으로 줄바꿈하는 가변 높이라 content-visibility 고정 높이 클래스
+// (h-300/260·contain-intrinsic-size)는 쓰지 않는다(스크롤바 추정 어긋남 방지).
+// flex-wrap: 좁은 열에서 우측 그룹(이력·배지·액션)이 통째로 제목 아래 줄로
+// 낙하한다 — 제목 압착·세로 래핑 방지(제목 블록 min-w-[220px] 와 한 쌍).
+const LIST_ROW_CLASS =
+  "group relative flex flex-row flex-wrap items-center gap-2.5 overflow-hidden rounded-lg border bg-white px-3 py-2 transition-all duration-200 hover:border-slate-300 hover:shadow-sm cursor-pointer";
 
 // ─── Component ───────────────────────────────────────
 
+// ⚠ memo(PassageCardGrid) 는 **실측으로 기각**됐다(2026-08-15): 릴리스 커밋이
+//   303ms → 455ms 로 되레 나빠지고 렌더 수도 2 → 4 로 늘었다. 호스트가 넘기는
+//   props 중 매 렌더 새 참조인 것이 남아 있어 비교는 항상 실패하는데 비교 비용만
+//   추가되기 때문이다. 성능은 **행 단위 memo(passage-list-row.tsx)** 가 담당한다.
 export function PassageCardGrid({
   passages,
   filteredPassages,
@@ -116,6 +142,18 @@ export function PassageCardGrid({
   activeFilterCount,
   selectedCollectionId,
   setSelectedCollectionId,
+  // 호스트별 라벨 주입(additive) — 기본값 = 기존 문구라 기존 호스트 픽셀 불변.
+  breadcrumbRootLabel = "학습지 관리",
+  initialFolderCollapsed = false,
+  compactCards = false,
+  listRows = false,
+  classBadgePassageIds,
+  mobilePageResetToken,
+  // 행 인라인 지문 수정(additive — §3.10.18 E18-f). 셋 다 미전달이면 아래
+  // 렌더 경로는 기존과 바이트 동일하다(타 호스트 무회귀).
+  rowPrimaryAction = "detail",
+  onEditPassageInline,
+  renderRowExpansion,
   selectedIds,
   setSelectedIds,
   toggleCheckbox,
@@ -137,9 +175,11 @@ export function PassageCardGrid({
   selectionActionText,
   selectionActionDisabled,
   questionsByPassage,
+  onLazyLoadQuestions,
   onOpenQuestionDetail,
   learningGeneratingPassageIds,
   learningCompletedPassageIds,
+  rowActivity,
   loadingCards,
   freshAnalysisPassageIds,
   onFreshAnalysisAcknowledged,
@@ -148,6 +188,7 @@ export function PassageCardGrid({
   onBulkGenerateLearning,
   learningBulkActionRunning = false,
   learningCreditCostPerPassage = 0,
+  bulkGenerateLabel = "학습자료 생성",
   onEditSelected,
   workspacePassageIds,
   workspaceActive = false,
@@ -158,6 +199,9 @@ export function PassageCardGrid({
   openPassageDetailId,
   onToggleExtractionReview,
   reviewActionPassageIds,
+  hideReviewToggle = false,
+  hideToolbarFilterSearch = false,
+  inlineSelectAllInHeader = false,
 }: PassageCardGridProps) {
   const [showSearch, setShowSearch] = useState(() => passageSearch.length > 0);
 
@@ -170,7 +214,10 @@ export function PassageCardGrid({
     totalPages: mobileTotalPages,
     visibleItems: visiblePassages,
   } = useMobilePagination(filteredPassages, {
-    resetKey: `${selectedCollectionId}|${passageSearch}|${filterSchool}|${filterGrade}|${filterSemester}|${analysisStatusFilter}|${passageSortOrder}`,
+    // 호스트 토큰(additive) — 미전달이면 문자열이 기존과 바이트 동일(무회귀).
+    resetKey:
+      `${selectedCollectionId}|${passageSearch}|${filterSchool}|${filterGrade}|${filterSemester}|${analysisStatusFilter}|${passageSortOrder}` +
+      (mobilePageResetToken ? `|${mobilePageResetToken}` : ""),
   });
   const {
     folderWindowHeight,
@@ -178,7 +225,7 @@ export function PassageCardGrid({
     setFolderWindowCollapsed,
     beginFolderWindowResize,
     resetFolderWindowHeight,
-  } = useFolderWindowHeight();
+  } = useFolderWindowHeight(initialFolderCollapsed);
   const [draggingPassageIds, setDraggingPassageIds] = useState<string[]>([]);
   const [dropTargetCollectionId, setDropTargetCollectionId] = useState<
     string | null
@@ -565,6 +612,41 @@ export function PassageCardGrid({
     }
   };
 
+  /**
+   * 행의 1차 액션(§3.10.18 E18-f) — "detail"(기본)이면 상세 모달, "edit"이면
+   * 인라인 편집 토글. 버튼·더블클릭·Enter 세 진입점이 **전부** 이 함수를 지나야
+   * 한다 — 하나라도 openPassageCard 로 남으면 같은 행이 두 의미를 갖는다.
+   */
+  // ⚠ useCallback 필수 — memo(PassageListRow) 의 prop 이다. 평범한 함수로 두면
+  //   렌더마다 새 참조가 되어 508행 memo 가 통째로 무력화된다(마키 렉 수술).
+  //   filteredPassages 는 목록이 실제로 바뀔 때만 갱신되므로 안정적이다.
+  // openPassageCard·filteredPassages 는 렌더마다 새 참조라 deps 에 넣을 수 없다
+  // (넣으면 이 콜백이 매 렌더 새로 만들어져 memo 가 죽는다) — ref 미러로 호출
+  // 시점에 최신본을 읽는다. 클릭 핸들러에서만 불리므로 커밋 후 값이면 충분하다.
+  const rowActionRef = useRef({
+    rowPrimaryAction,
+    onEditPassageInline,
+    filteredPassages,
+    openPassageCard,
+  });
+  useEffect(() => {
+    rowActionRef.current = {
+      rowPrimaryAction,
+      onEditPassageInline,
+      filteredPassages,
+      openPassageCard,
+    };
+  });
+  const runRowPrimaryAction = useCallback((id: string) => {
+    const cur = rowActionRef.current;
+    if (cur.rowPrimaryAction === "edit" && cur.onEditPassageInline) {
+      const passage = cur.filteredPassages.find((item) => item.id === id);
+      if (passage) cur.onEditPassageInline(passage);
+      return;
+    }
+    void cur.openPassageCard(id);
+  }, []);
+
   const handleCardKeyDown = (
     id: string,
     event: React.KeyboardEvent<HTMLDivElement>,
@@ -576,7 +658,7 @@ export function PassageCardGrid({
     }
     if (event.key !== "Enter") return;
     event.preventDefault();
-    void openPassageCard(id);
+    runRowPrimaryAction(id);
   };
 
   const handlePassageCardClick = (
@@ -594,13 +676,23 @@ export function PassageCardGrid({
     cancelPendingCardSelectionClick();
     clearCardTextSelection();
     if (shouldIgnoreCardDoubleClick(event)) return;
-    void openPassageCard(id);
+    runRowPrimaryAction(id);
   };
 
-  const getDragPassageIds = useCallback(
-    (id: string) => (selectedIds.has(id) ? [...selectedIds] : [id]),
-    [selectedIds],
-  );
+  // ⚠ 참조 안정 필수(2026-08-15 마키 렉 실측 수술): 이 콜백이 selectedIds 를
+  //   deps 로 물면, 아래 draggable 등록 effect 가 **선택이 바뀔 때마다** 전
+  //   행(실측 508행)의 draggable() 을 해제하고 다시 등록한다. 마키 드래그를
+  //   놓는 순간 그 비용이 커밋 롱태스크에 통째로 실려 화면이 굳었다.
+  //   선택은 ref 미러에서 **호출 시점**에 읽는다 — 드래그 시작 시점의 최신
+  //   선택을 쓰는 것이라 의미론도 오히려 정확하다.
+  const selectedIdsRef = useRef(selectedIds);
+  useEffect(() => {
+    selectedIdsRef.current = selectedIds;
+  }, [selectedIds]);
+  const getDragPassageIds = useCallback((id: string) => {
+    const sel = selectedIdsRef.current;
+    return sel.has(id) ? [...sel] : [id];
+  }, []);
 
   useEffect(() => {
     if (!onMovePassagesToCollection || passageBulkAction !== null) return;
@@ -958,12 +1050,31 @@ export function PassageCardGrid({
       {/* ─── 지문 폴더 (탐색/필터 전용) ─── */}
       <div className="shrink-0 border-b border-slate-100">
         <div className="flex min-w-0 items-center gap-2 px-5 pt-3 pb-1.5">
+          {/* §3.10.17-c — 전체선택을 브레드크럼 행에 인라인(고아 행 폐기 호스트) */}
+          {inlineSelectAllInHeader ? (
+            <input
+              ref={selectAllCheckboxRef}
+              type="checkbox"
+              checked={allVisibleSelected}
+              onChange={() =>
+                allVisibleSelected ? deselectAll() : selectAll()
+              }
+              disabled={filteredPassages.length === 0}
+              title={
+                allVisibleSelected
+                  ? "선택 해제"
+                  : `${filteredPassages.length}개 전체 선택`
+              }
+              aria-label={allVisibleSelected ? "선택 해제" : "전체 선택"}
+              className="size-4 shrink-0 cursor-pointer rounded border-slate-300 text-blue-600 focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+            />
+          ) : null}
           <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-blue-50 text-blue-600">
             <FolderOpen className="h-3.5 w-3.5" />
           </span>
           <div className="flex min-w-0 flex-1 items-center gap-1.5">
             <span className="shrink-0 truncate text-[12px] font-medium text-slate-400">
-              학습지 관리 ·
+              {breadcrumbRootLabel} ·
             </span>
             <button
               type="button"
@@ -1036,6 +1147,9 @@ export function PassageCardGrid({
             <div
               style={{ height: `${folderWindowHeight}px` }}
               data-generate-tour="library-folder-window"
+              // 드래그 리사이즈 고속 경로 앵커 — use-folder-window-height 가 드래그
+              // 중 이 요소의 style.height 에 직접 쓴다(리렌더 0회, 커밋은 놓을 때 1회).
+              data-folder-window
               className="min-h-0 overflow-y-auto bg-slate-50/70 px-2 py-2.5 lg:px-5"
             >
               <div className="flex flex-wrap items-center gap-2.5">
@@ -1160,29 +1274,38 @@ export function PassageCardGrid({
       </div>
 
       {/* Search & filter bar — @container: 패널 폭에 따라 일괄 액션 버튼이
-          라벨→아이콘만으로 단계적으로 줄어든다 (뷰포트가 아닌 패널 기준). */}
+          라벨→아이콘만으로 단계적으로 줄어든다 (뷰포트가 아닌 패널 기준).
+          inlineSelectAllInHeader(§3.10.17-c): 벌크 액션·필터가 전부 꺼진
+          호스트에선 체크박스 하나가 행을 독점한다 — 행째 숨기고 체크박스는
+          폴더 브레드크럼 행에 인라인(아래). 기본 = 기존 픽셀 불변. */}
       <div
-        className="@container px-5 py-3 border-b border-slate-100 shrink-0"
+        className={
+          inlineSelectAllInHeader
+            ? "hidden"
+            : "@container px-5 py-3 border-b border-slate-100 shrink-0"
+        }
         data-generate-tour="library-toolbar"
       >
         <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
           <div className="flex min-h-9 shrink-0 items-center gap-x-1.5 gap-y-1.5 py-1 pl-2 pr-0 transition-colors">
-            <input
-              ref={selectAllCheckboxRef}
-              type="checkbox"
-              checked={allVisibleSelected}
-              onChange={() =>
-                allVisibleSelected ? deselectAll() : selectAll()
-              }
-              disabled={filteredPassages.length === 0}
-              title={
-                allVisibleSelected
-                  ? "선택 해제"
-                  : `${filteredPassages.length}개 전체 선택`
-              }
-              aria-label={allVisibleSelected ? "선택 해제" : "전체 선택"}
-              className="size-4 cursor-pointer rounded border-slate-300 text-blue-600 focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
-            />
+            {inlineSelectAllInHeader ? null : (
+              <input
+                ref={selectAllCheckboxRef}
+                type="checkbox"
+                checked={allVisibleSelected}
+                onChange={() =>
+                  allVisibleSelected ? deselectAll() : selectAll()
+                }
+                disabled={filteredPassages.length === 0}
+                title={
+                  allVisibleSelected
+                    ? "선택 해제"
+                    : `${filteredPassages.length}개 전체 선택`
+                }
+                aria-label={allVisibleSelected ? "선택 해제" : "전체 선택"}
+                className="size-4 cursor-pointer rounded border-slate-300 text-blue-600 focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+              />
+            )}
             {/* '워크스페이스에서 지문 편집 / 추가' 버튼은 내 지문함 하단의
                 가로 전체 보라색 버튼으로 내렸다 (목록 아래 큰 액션 바). */}
             {canManageSelectedPassages ? (
@@ -1276,7 +1399,7 @@ export function PassageCardGrid({
                         aria-hidden="true"
                       />
                     )}
-                    <span className="@max-[30rem]:hidden">학습자료 생성</span>
+                    <span className="@max-[30rem]:hidden">{bulkGenerateLabel}</span>
                     {selectedLearningTargets.length > 0 ? (
                       <CreditCostChip
                         amount={learningBulkCreditCost}
@@ -1328,6 +1451,10 @@ export function PassageCardGrid({
               </div>
             ) : null}
           </div>
+          {/* 필터 팝오버+검색 토글 — 폴더 헤더의 정렬+검색 팝오버와 역할이
+              겹치는 호스트(클래스 스튜디오)는 hideToolbarFilterSearch 로 쌍째
+              끈다(§3.10.15). 기본 = 렌더(기존 호스트 픽셀 불변). */}
+          {hideToolbarFilterSearch ? null : (
           <div className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2">
             <PassageFilterPopover
               activeFilterCount={activeFilterCount}
@@ -1363,9 +1490,10 @@ export function PassageCardGrid({
               ) : null}
             </button>
           </div>
+          )}
         </div>
 
-        {showSearch && (
+        {!hideToolbarFilterSearch && showSearch && (
           <div className="mt-1.5 border-t border-slate-100 pt-2">
             <div className="relative">
               <Search className="absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-slate-400" />
@@ -1424,17 +1552,27 @@ export function PassageCardGrid({
           >
             <div
               className={
+                // listRows(가로 행 목록)는 뷰포트 불문 전폭 1열 행 리스트.
                 // 모바일은 한 줄짜리 리스트 행이므로 항상 1열(태블릿 세로·폰 가로에서
                 // 260px 다열로 구겨지지 않게). 데스크톱은 기존 auto-fill 카드 그리드.
-                isMobile
-                  ? "grid grid-cols-1 gap-2"
-                  : "grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-2 lg:gap-3"
+                listRows
+                  ? "grid grid-cols-1 gap-1.5"
+                  : isMobile
+                    ? "grid grid-cols-1 gap-2"
+                    : "grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-2 lg:gap-3"
               }
             >
               {visiblePassages.map((p, cardIndex) => {
                 // Parse analysis
+                // ⚠ mainIdea 는 **데스크톱 카드 분기에서만** 쓰인다(아래 :2066).
+                //   listRows·모바일 행에서는 소비처가 없는데도 행마다
+                //   JSON.parse(analysisData) 를 돌리고 있었다 — analysisData 는
+                //   지문 1건당 수~수십 KB 짜리 분석 JSON 이라, 508행 목록에서
+                //   **매 렌더 508회 파싱**이 커밋 롱태스크의 주범이었다
+                //   (2026-08-15 마키 렉 실측 수술). 소비 분기에서만 판다.
+                const needsAnalysisSummary = !listRows && !isMobile;
                 let aData: ParsedAnalysisSummary | null = null;
-                if (p.analysis?.analysisData) {
+                if (needsAnalysisSummary && p.analysis?.analysisData) {
                   try {
                     aData =
                       typeof p.analysis.analysisData === "string"
@@ -1448,6 +1586,13 @@ export function PassageCardGrid({
                 const hasAnalysis = !!p.analysis;
                 const isLearningGenerating =
                   learningGeneratingPassageIds?.has(p.id) ?? false;
+                // 「생성 중」 활동 표식(additive) — 기존 초록 글로우 채널이 이
+                // 행에 이미 걸려 있으면 양보한다(테두리가 두 겹으로 도는 것을
+                // 막는 선주민 우선 규칙 — passage-card-grid-types.ts 주석).
+                // `?? null`: rowActivity 미전달 호스트에서도 값이 안정 원시값이라
+                // memo(PassageListRow) 비교가 항상 통과한다(undefined 진동 없음).
+                const activity =
+                  (isLearningGenerating ? null : rowActivity?.get(p.id)) ?? null;
                 const isLearningGlow =
                   !isLearningGenerating && learningGlowPassageIds.has(p.id);
                 const isGlowing =
@@ -1470,10 +1615,24 @@ export function PassageCardGrid({
                 const reviewStampLabel = isReviewCommitted
                   ? "검수완료"
                   : "검수필요";
+                // 행 아래 확장 노드(§3.10.18 E18-g) — 미전달·null 이면 아래
+                // Fragment 는 행 div 하나만 낳아 기존 트리와 동일하다.
+                const rowExpansion = renderRowExpansion
+                  ? renderRowExpansion(p)
+                  : null;
+                // 「생성된 문제」 토글 재료(카드 분기용 — listRows 분기는
+                // PassageListRow 가 내부에서 같은 규칙으로 계산한다).
+                // lazy 호스트(onLazyLoadQuestions)는 프리로드 목록이 없어도
+                // 서버 집계(_count)로 토글을 그린다. 미전달 호스트는 0 고정.
+                const cardQuestions = questionsByPassage?.get(p.id) ?? [];
+                const lazyQuestionCount =
+                  onLazyLoadQuestions && cardQuestions.length === 0
+                    ? (p._count?.questions ?? 0)
+                    : 0;
 
                 return (
+                  <Fragment key={p.id}>
                   <div
-                    key={p.id}
                     data-drag-item-id={p.id}
                     data-generate-tour={
                       p.id === firstLearningResultPassageId
@@ -1488,15 +1647,32 @@ export function PassageCardGrid({
                     }}
                     role="button"
                     tabIndex={0}
-                    aria-label={`${p.title} 상세 보기`}
+                    // listRows 행 클릭 = 선택 토글(상세는 더블클릭·우측 버튼) —
+                    // aria 도 토글 의미로. 카드·모바일 행은 기존 문구 불변.
+                    aria-label={
+                      listRows ? `${p.title} 선택` : `${p.title} 상세 보기`
+                    }
                     onMouseDown={preventCardDoubleClickTextSelection}
                     onClick={(e) => handlePassageCardClick(p.id, e)}
                     onDoubleClick={(e) => handlePassageCardDoubleClick(p.id, e)}
                     onKeyDown={(e) => handleCardKeyDown(p.id, e)}
-                    className={`${isMobile ? MOBILE_ROW_CLASS : DESKTOP_CARD_CLASS} ${
+                    className={`${
+                      listRows
+                        ? // 선택 배경 하이라이트는 listRows 전용(additive) —
+                          // 링·보더 토큰은 아래 isChecked 분기(기존 카드 선택
+                          // 토큰)를 그대로 계승한다.
+                          LIST_ROW_CLASS + (isChecked ? " bg-blue-50/40" : "")
+                        : isMobile
+                          ? MOBILE_ROW_CLASS
+                          : compactCards
+                            ? COMPACT_CARD_CLASS
+                            : DESKTOP_CARD_CLASS
+                    } ${
                       isChecked
                         ? "border-blue-400 ring-2 ring-blue-300/30"
-                        : hasReviewDraft && !isReviewCommitted
+                        : // 토글을 숨긴 호스트에선 붉은 경고 테두리도 함께 끈다 —
+                          // 해제 수단 없는 경고색만 남기지 않기 위함(§3.10.15).
+                          hasReviewDraft && !isReviewCommitted && !hideReviewToggle
                           ? "border-red-200/80 shadow-[0_0_0_1px_rgba(252,165,165,0.35),0_0_18px_rgba(248,113,113,0.12)] hover:border-red-300/80"
                           : hasAnalysis
                             ? "border-slate-200"
@@ -1529,7 +1705,47 @@ export function PassageCardGrid({
                         className="pointer-events-none absolute inset-y-0 left-0 z-10 w-1 bg-blue-500"
                       />
                     ) : null}
-                    {isMobile ? (
+                    {/* 「생성 중」 활동 테두리 — 행 루트 **직속** 오버레이.
+                        루트가 relative + overflow-hidden 이라(LIST_ROW_CLASS·
+                        *_CARD_CLASS 전부) 링이 테두리 안쪽에 정확히 붙고,
+                        border-radius: inherit 로 행/카드 반경을 그대로 따른다.
+                        pointer-events 없음 — 행 클릭·마키 드래그 무영향. */}
+                    {activity ? (
+                      <PassageActivityRing kind={activity.kind} />
+                    ) : null}
+                    {listRows ? (
+                      /* ── 가로 행(listRows) ── 드래그 핸들 · 체크박스 · 제목
+                          (무절단)+등록 일시 · 생성 이력 클러스터 · 검수/상세 액션.
+                          본문 미리보기는 렌더하지 않는다(§3.8.4).
+                          ⚠ 본문은 **memo 경계**(passage-list-row.tsx)로 뽑혀 있다 —
+                          선택이 바뀔 때 508행 전부의 JSX 를 다시 만들던 것이
+                          마키 릴리스 871ms 정지의 실측 원인이었다. 여기에 다시
+                          인라인으로 펼치거나, 아래 prop 중 하나라도 렌더마다 새
+                          참조로 넘기면 그 수술이 조용히 원상복구된다. */
+                      <PassageListRow
+                        p={p}
+                        isChecked={isChecked}
+                        isLearningGenerating={isLearningGenerating}
+                        activity={activity}
+                        expanded={rowExpansion !== null}
+                        passageBulkAction={passageBulkAction ?? null}
+                        hideReviewToggle={hideReviewToggle}
+                        rowPrimaryAction={rowPrimaryAction}
+                        classBadgePassageIds={classBadgePassageIds}
+                        questionsByPassage={questionsByPassage}
+                        onLazyLoadQuestions={onLazyLoadQuestions}
+                        reviewActionPassageIds={reviewActionPassageIds}
+                        passageHandleRefs={passageHandleRefs}
+                        toggleCheckbox={toggleCheckbox}
+                        scheduleCardSelectionClick={scheduleCardSelectionClick}
+                        handleOpenAnalysisModal={handleOpenAnalysisModal}
+                        runRowPrimaryAction={runRowPrimaryAction}
+                        onOpenQuestionDetail={onOpenQuestionDetail}
+                        onPassageRenamed={onPassageRenamed}
+                        onToggleExtractionReview={onToggleExtractionReview}
+                        onEditPassageInline={onEditPassageInline}
+                      />
+                    ) : isMobile ? (
                       /* ── 모바일 리스트 행 ── 체크박스 · 제목/메타/1줄 미리보기 · 상세 */
                       <>
                         <button
@@ -1555,6 +1771,12 @@ export function PassageCardGrid({
                                 생성중
                               </span>
                             ) : null}
+                            {/* 활동 라벨 — 링만으로는 "무엇이" 도는지 말할 수
+                                없다. 3레이아웃(행·모바일·카드) 전부에 두어야
+                                rowActivity 계약이 레이아웃마다 반쪽이 되지 않는다. */}
+                            {activity ? (
+                              <PassageActivityLabel activity={activity} />
+                            ) : null}
                           </div>
                           <div className="mt-0.5 flex min-w-0 items-center gap-1.5">
                             {(() => {
@@ -1573,7 +1795,7 @@ export function PassageCardGrid({
                           </div>
                         </div>
                         <div className="flex shrink-0 items-center gap-1.5">
-                          {hasReviewDraft
+                          {hasReviewDraft && !hideReviewToggle
                             ? (() => {
                                 const reviewBusy =
                                   reviewActionPassageIds?.has(p.id) ?? false;
@@ -1708,6 +1930,10 @@ export function PassageCardGrid({
                                 학습자료 생성중
                               </span>
                             )}
+                            {/* 활동 라벨(카드 레이아웃) — 위 모바일 행 주석 참조 */}
+                            {activity ? (
+                              <PassageActivityLabel activity={activity} />
+                            ) : null}
                           </div>
                         </div>
                       </div>
@@ -1717,8 +1943,15 @@ export function PassageCardGrid({
                         상관없이 카드 높이가 일관되게 보이도록 flex-1 로 늘린다. */}
                     <div className="mt-1.5 min-h-0 flex-1 overflow-hidden lg:mt-2.5">
                       {/* 모바일에선 본문 미리보기를 2줄로 잘라 카드를 더 컴팩트하게.
-                          (PC는 flex-1 로 남는 공간을 채우던 기존 동작 그대로). */}
-                      <p className="text-[11px] text-slate-500 leading-relaxed line-clamp-2 lg:line-clamp-none">
+                          비-compact(기존 호스트) 경로는 무회귀 계약상 lg:line-clamp-none
+                          유지 — 「…」 표식 복원(line-clamp-5)은 additive 게이트 밖의
+                          픽셀 변경이라 원복했다(적대검수 R-2). 개선은 compactCards
+                          경로(lg:line-clamp-3)에만 적용한다. */}
+                      <p
+                        className={`text-[11px] text-slate-500 leading-relaxed line-clamp-2 ${
+                          compactCards ? "lg:line-clamp-3" : "lg:line-clamp-none"
+                        }`}
+                      >
                         {p.content}
                       </p>
                     </div>
@@ -1783,8 +2016,16 @@ export function PassageCardGrid({
                     {/* 생성된 문제 · 학습자료 토글 — 카드 가로 전체 폭으로 한 줄 위 */}
                     <div className="w-full">
                       <PassageQuestionsSummary
-                        questions={questionsByPassage?.get(p.id) ?? []}
+                        questions={cardQuestions}
                         onOpenQuestion={onOpenQuestionDetail}
+                        fallbackCount={
+                          lazyQuestionCount > 0 ? lazyQuestionCount : undefined
+                        }
+                        loadQuestions={
+                          lazyQuestionCount > 0 && onLazyLoadQuestions
+                            ? () => onLazyLoadQuestions(p.id)
+                            : undefined
+                        }
                       />
                       <PassageReportsSummary
                         passageId={p.id}
@@ -1795,7 +2036,7 @@ export function PassageCardGrid({
 
                     {/* 카드 맨 아래 액션 줄: 검수(완료/취소) · 상세보기 */}
                     <div className="mt-2 flex items-end gap-1.5 lg:mt-3">
-                      {hasReviewDraft
+                      {hasReviewDraft && !hideReviewToggle
                         ? (() => {
                             const reviewBusy =
                               reviewActionPassageIds?.has(p.id) ?? false;
@@ -1853,6 +2094,47 @@ export function PassageCardGrid({
                     </>
                     )}
                   </div>
+                  {/* ── 행 인라인 확장(§3.10.18 E18-g) — 행 div 의 **형제**다.
+                      행 안에 넣지 않는 이유 4가지: ① 행 루트 overflow-hidden 이
+                      에디터 팝오버를 자른다 ② 행 루트 flex-wrap items-center 가
+                      전폭 자식을 래핑 아이템으로 만든다 ③ 행 루트의
+                      data-drag-item-id 히트 사각형이 에디터 높이만큼 부풀어
+                      무관한 마키 드래그가 이 행을 선택한다 ④ 행 루트 onClick=
+                      선택 토글·onDoubleClick=상세·onMouseDown=더블클릭
+                      preventDefault 가 타이핑을 망가뜨린다.
+                      그럼에도 무시 속성·전파 차단을 전부 건다(이중 방어). */}
+                  {rowExpansion ? (
+                    <div
+                      id={`row-editor-${p.id}`}
+                      data-card-click-ignore="true"
+                      data-drag-select-ignore="true"
+                      onClick={(e) => e.stopPropagation()}
+                      onMouseDown={(e) => e.stopPropagation()}
+                      onDoubleClick={(e) => e.stopPropagation()}
+                      // Esc = 이 편집기 닫기(모달 관용구 승계). 편집기 안의
+                      // textarea 에서도 동작하도록 버블 단계에서 받는다.
+                      onKeyDown={(e) => {
+                        if (e.key !== "Escape") return;
+                        e.stopPropagation();
+                        onEditPassageInline?.(p);
+                      }}
+                      // 목록 하단 행에서 펼치면 편집기가 화면 밖에서 열린다 —
+                      // 마운트 시 시야로 끌어온다(§3.10.18 E18-h "부드럽게").
+                      ref={(el) => {
+                        if (!el) return;
+                        el.scrollIntoView({
+                          block: "nearest",
+                          behavior: "smooth",
+                        });
+                      }}
+                      className="studio-row-editor-open"
+                    >
+                      <div className="min-h-0 overflow-hidden">
+                        {rowExpansion}
+                      </div>
+                    </div>
+                  ) : null}
+                  </Fragment>
                 );
               })}
             </div>

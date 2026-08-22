@@ -19,6 +19,7 @@ import { useEffect } from "react";
 
 import { REPORT_THEMES } from "@/lib/passage-report/analysis-report/design-tokens";
 import {
+  isFinalOnepageReportShape,
   NUMBERED_SECTION_LABELS,
   reportThemeIdSchema,
   type ActivityBlock,
@@ -56,6 +57,28 @@ const ADD_LABEL: Partial<Record<string, string>> = {
   summary: "요약문",
 };
 
+// [E23] 설정 섹션 자동 스크롤은 반드시 **패널 자체 스크롤러** 기준 상대 스크롤로.
+// scrollIntoView 는 스크롤 가능한 조상을 전부 타고 올라가 window 까지 하이재킹한다
+// (실측: 조판 임베드에서 페이지가 285px 스크롤돼 상단바 소실·푸터 26% 노출, 복구 없음).
+// block:"nearest" 완화 금지 — 문서도 함께 움직인다. 조상 탐색 자체를 끊는 것이 정본
+// (AnalysisReportEditor 의 scrollToBlock 관용구와 동형: scrollTop + elRect.top - scrollerRect.top - 여백).
+function scrollPanelToAnchor(el: HTMLElement) {
+  let scroller: HTMLElement | null = el.parentElement;
+  while (scroller) {
+    const overflowY = window.getComputedStyle(scroller).overflowY;
+    if (overflowY === "auto" || overflowY === "scroll") break;
+    scroller = scroller.parentElement;
+  }
+  // 스크롤러(패널 aside 내부 overflow-y-auto)가 없으면 아무것도 하지 않는다 — window 스크롤 금지.
+  if (!scroller) return;
+  const scrollerRect = scroller.getBoundingClientRect();
+  const elRect = el.getBoundingClientRect();
+  scroller.scrollTo({
+    top: Math.max(0, scroller.scrollTop + elRect.top - scrollerRect.top - 10),
+    behavior: "smooth",
+  });
+}
+
 export function PropertiesPanel({
   report,
   active,
@@ -65,6 +88,7 @@ export function PropertiesPanel({
   activityActive,
   activityActivateNonce,
   onActivateActivity,
+  activitySentenceCount,
   activePos,
   total,
   fontScale,
@@ -96,6 +120,7 @@ export function PropertiesPanel({
   onToggleEnglishPage,
   onBrand,
   settingsOpen,
+  storageNamespace,
 }: {
   report: AnalysisReport;
   active: ItemDescriptor | null;
@@ -106,6 +131,8 @@ export function PropertiesPanel({
   /** 팔레트에서 활동을 (재)활성화한 횟수 — 접힌 설정 섹션을 다시 펼치는 신호. */
   activityActivateNonce: number;
   onActivateActivity: () => void;
+  /** 파이널 문서는 passage 섹션이 없어 0 이 되므로 편집기가 활동 생성 소스 기준 문장 수를 내려준다(E23). */
+  activitySentenceCount?: number;
   activePos: number;
   total: number;
   fontScale: number;
@@ -138,6 +165,13 @@ export function PropertiesPanel({
   onScrollToBlock: (id: string) => void;
   onDeleteCustom: (id: string) => void;
   onDeleteSection: (sectionIndex: number) => void;
+  /**
+   * [E21-3] 임베드 localStorage 네임스페이스(AnalysisReportEditor 의 `storageNs`).
+   * 섹션 순서/접힘 2키를 조판 표면과 독립 라우트가 공유하지 않도록 아래 `SortablePanelStack`
+   * **두 곳 모두**에 흘린다(한 곳만 넘기면 설정 탭/편집 탭이 서로 다른 키를 쓴다).
+   * 미전달이면 현행 상수 키 → 독립 라우트 동작 불변.
+   */
+  storageNamespace?: string;
 }) {
   // 블록을 선택하면 '블록 편집' 카드가 화면 위쪽으로 자연스레 스크롤되어 도구가 최대한 보이게.
   const activeId = active?.id ?? null;
@@ -145,7 +179,7 @@ export function PropertiesPanel({
     if (!activeId) return;
     const el = document.getElementById("panel-block-edit");
     if (!el) return;
-    const raf = requestAnimationFrame(() => el.scrollIntoView({ block: "start", behavior: "smooth" }));
+    const raf = requestAnimationFrame(() => scrollPanelToAnchor(el));
     return () => cancelAnimationFrame(raf);
   }, [activeId]);
   // '단어 시험지' 카드를 누르면(누를 때마다) 그 설정 섹션이 보이도록 패널을 스크롤.
@@ -153,7 +187,7 @@ export function PropertiesPanel({
     if (!vocabTestFocused) return;
     const el = document.getElementById("panel-vocab-test-edit");
     if (!el) return;
-    const raf = requestAnimationFrame(() => el.scrollIntoView({ block: "start", behavior: "smooth" }));
+    const raf = requestAnimationFrame(() => scrollPanelToAnchor(el));
     return () => cancelAnimationFrame(raf);
   }, [vocabTestFocused, vocabTestActivateNonce]);
   const align = activeMeta.align ?? "left";
@@ -237,7 +271,7 @@ export function PropertiesPanel({
 
   if (settingsOpen) {
     return (
-      <SortablePanelStack>
+      <SortablePanelStack ns={storageNamespace}>
         {coverPanel}
         {englishPagePanel}
         {logoPanel}
@@ -278,6 +312,7 @@ export function PropertiesPanel({
       onActivateActivity={onActivateActivity}
       vocabTestActive={vocabTestActive}
       vocabTestActivateNonce={vocabTestActivateNonce}
+      ns={storageNamespace}
     >
       {isCover ? (
         <PanelSection sectionId="cover-edit" title="표지 편집">
@@ -473,7 +508,8 @@ export function PropertiesPanel({
                   { layout: "table", label: "1열 표", icon: Rows3 },
                   { layout: "two-column", label: "2열 카드", icon: LayoutGrid },
                 ] as const).map(({ layout, label, icon: Icon }) => {
-                  const selected = (activeSection.vocabStudyLayout ?? "table") === layout;
+                  // 기본값 two-column — vocabulary-flow.tsx 의 렌더 기본값과 반드시 동기.
+                  const selected = (activeSection.vocabStudyLayout ?? "two-column") === layout;
                   return (
                     <button
                       key={layout}
@@ -642,7 +678,7 @@ export function PropertiesPanel({
         <PanelSection sectionId="activity-edit" title={`${activityBlockLabel(activityBlock)} 설정`}>
           <ActivityOptions
             block={activityBlock}
-            sentenceCount={passageSentenceCount}
+            sentenceCount={activitySentenceCount ?? passageSentenceCount}
             answerKeyPageOn={report.activityAnswerKeyPage !== false}
             onActivity={onActivity}
           />
@@ -669,6 +705,9 @@ export function PropertiesPanel({
                       vocabMode={mode}
                       vocabTestLayout={vocabTestBlock.vocabTestLayout ?? "table"}
                       vocabTestOnly={!!report.vocabTestOnly}
+                      // [E23] 파이널 문서에서 vocabTestOnly 는 본편 시트·활동·웹툰 전부 소멸
+                      // (section-slots :87 조기 return + assemble :373 게이트 = I3 위반 경로)이라 토글 진입을 차단.
+                      hideVocabTestOnly={isFinalOnepageReportShape(report)}
                       excludedVocabTestCount={vocabTestBlock.vocabTestExcludedKeys?.length ?? 0}
                       vocabTierFilter={vocabTestBlock.vocabTierFilter}
                       onVocabTestMode={onVocabTestMode}

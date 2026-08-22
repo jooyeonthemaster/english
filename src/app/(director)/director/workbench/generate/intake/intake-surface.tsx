@@ -1,6 +1,11 @@
 "use client";
 
-import { type MutableRefObject, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  type MutableRefObject,
+  type ReactNode,
+} from "react";
 import {
   ChevronRight,
   ClipboardPaste,
@@ -40,6 +45,33 @@ interface IntakeSurfaceProps {
    * (웹툰·유사문항 등) UI 픽셀 동일(무회귀).
    */
   pasteSubjectScope?: "KOREAN";
+  /**
+   * 좁은 컨테이너 임베드(클래스 스튜디오 워크벤치)용 — 직접 입력 보드에 세로
+   * 적층을 강제한다(MultiPassagePaste stackedBoard 패스스루). 부재 = 기존 동작.
+   */
+  stackedPasteBoard?: boolean;
+  /**
+   * 고정 높이 임베드(클래스 스튜디오)용 — 직접 입력 보드 콘텐츠 열을 내부
+   * 스크롤 컨테이너로 전환한다(MultiPassagePaste scrollBody 패스스루). 부재 =
+   * 기존 동작 바이트 동일.
+   */
+  scrollPasteBoard?: boolean;
+  /**
+   * 직접 입력 빈 상태의 「사용 순서」 가이드 박스 숨김 — MultiPassagePaste
+   * hideEmptyGuide 패스스루(§3.9v2.8 D9, 클래스 스튜디오 한정). 부재 =
+   * 기존 동작 바이트 동일.
+   */
+  hideEmptyGuide?: boolean;
+  /**
+   * 직접 입력 시작 CTA 라벨 — MultiPassagePaste startLabel 패스스루(클래스
+   * 스튜디오 「지문관리」 개칭 §3.10.14). 부재 = 기존 문자 그대로(무회귀).
+   */
+  pasteStartLabel?: string;
+  /**
+   * AI 지문 생성 간소화 모드 — MultiPassagePaste simplifiedAuthoring
+   * 패스스루(§3.9v2.8 D10, 클래스 스튜디오 한정). 부재 = 기존 동작 바이트 동일.
+   */
+  simplifiedAuthoring?: boolean;
   /**
    * 파일업로드(이미지·PDF 추출) 탭 노출 여부. 기본 true(기존 동작). 국어
    * 라우트는 false — 추출 파이프라인은 영어 전용이라 국어 화면에서 숨긴다.
@@ -96,6 +128,13 @@ interface IntakeSurfaceProps {
     busy: boolean;
     fixedFooter?: boolean;
   }) => void;
+  /**
+   * 탭 스트립(브레드크럼 행) 전체를 렌더하지 않는다 — 클래스 스튜디오
+   * 워크벤치가 자체 소스 스위처(studio/workbench/source-switcher.tsx)로
+   * 전환 UI 를 대신할 때만 true(§3.8.2). 본문 슬롯·hidden 유지 마운트·
+   * 오버레이·pasteVisible 판정은 그대로다. 기본 false = 기존 호스트 바이트 동일.
+   */
+  hideTabBar?: boolean;
 }
 
 /**
@@ -114,6 +153,11 @@ export function IntakeSurface({
   onSubmitPastedRows,
   pasteSaving,
   pasteSubjectScope,
+  stackedPasteBoard = false,
+  scrollPasteBoard = false,
+  hideEmptyGuide = false,
+  pasteStartLabel,
+  simplifiedAuthoring = false,
   showUploadTab = true,
   showPasteTab = true,
   suppressTutorial = false,
@@ -125,6 +169,7 @@ export function IntakeSurface({
   mobileStepTabs,
   pasteStartRef,
   onPasteStateChange,
+  hideTabBar = false,
 }: IntakeSurfaceProps) {
   // 오버레이(워크스페이스)가 떠 있을 땐 탭이 가리키는 내용이 그 아래 깔려
   // 있으므로, 탭을 누르면 먼저 오버레이를 닫아 해당 내용을 드러낸다.
@@ -148,11 +193,49 @@ export function IntakeSurface({
   // 모바일 스텝 플로우: <lg 에서만 탭을 숨긴다 — PC 는 클래스가 무효라 그대로.
   const hideNavTabsOnMobile = mobileStepTabs != null ? "max-lg:hidden" : "";
 
+  // ── 좁은 열 임베드에서 탭 스트립이 가로 스크롤로 넘칠 때 활성 탭이 화면
+  // 밖으로 사라지는 문제(클래스 스튜디오 중앙 열 실측) — 마운트·활성 변경 시
+  // 활성 탭을 nearest 로 끌어온다. 넘치지 않는 기존 호스트에서는 스크롤할 게
+  // 없어 no-op 이다(픽셀 불변).
+  const tabRowRef = useRef<HTMLDivElement>(null);
+  const activeTabKey = overlayActive
+    ? "workspace"
+    : libraryActive
+      ? "library"
+      : examActive
+        ? "exam"
+        : uploadActive
+          ? "upload"
+          : pasteVisible
+            ? "paste"
+            : "none";
+  useEffect(() => {
+    // 스트립 자체를 렌더하지 않는 호스트(hideTabBar)에서는 끌어올 탭이 없다.
+    if (hideTabBar) return;
+    const row = tabRowRef.current;
+    if (!row) return;
+    // ⚠ scrollIntoView 금지 — 문서까지 포함한 모든 스크롤 조상을 움직여, 탭이
+    // 넘치지 않는 기존 호스트에서도 메인 스크롤을 탭 행으로 끌어올리는 수직
+    // 하이재킹이 된다(적대검수 R-1 실측). 스트립 내부 가로 스크롤만 직접 계산.
+    if (row.scrollWidth <= row.clientWidth) return;
+    const el = row.querySelector<HTMLElement>('[data-intake-tab-active="true"]');
+    if (!el) return;
+    const left = el.offsetLeft;
+    const right = left + el.offsetWidth;
+    if (left < row.scrollLeft) row.scrollLeft = left;
+    else if (right > row.scrollLeft + row.clientWidth)
+      row.scrollLeft = right - row.clientWidth;
+  }, [activeTabKey, hideTabBar]);
+
   return (
     <div className="flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden bg-white">
       {/* 탭 행 — 파일 경로(브레드크럼)처럼:
-          직접 입력 · 파일업로드  ›  내 지문함  ›  워크스페이스 */}
+          직접 입력 · 파일업로드  ›  내 지문함  ›  워크스페이스
+          hideTabBar(스튜디오 소스 스위처 대체) 시 행 전체를 렌더하지 않는다 —
+          본문 슬롯·오버레이·pasteVisible 판정은 아래에서 그대로 유지된다. */}
+      {hideTabBar ? null : (
       <div
+        ref={tabRowRef}
         className={
           "flex min-h-11 shrink-0 flex-wrap items-center gap-1.5 overflow-visible border-b border-slate-100 px-3 py-1.5 sm:h-11 sm:flex-nowrap sm:overflow-x-auto sm:py-0" +
           (mobileStepTabs === "hidden" ? " max-lg:hidden" : "")
@@ -200,32 +283,46 @@ export function IntakeSurface({
             tourKey="intake-exam"
           />
         ) : null}
-        <BreadcrumbSep className={hideNavTabsOnMobile} />
-        <Tab
-          active={libraryActive && !overlay}
-          onClick={() => {
-            dismissOverlay();
-            setIntakeView("library");
-          }}
-          icon={<FolderOpen className="h-3.5 w-3.5" />}
-          label={`${libraryLabel} ${libraryCount > 0 ? `(${libraryCount})` : ""}`.trim()}
-          tourKey="intake-library"
-          className={hideNavTabsOnMobile}
-        />
+        {/* 구분자 「›」는 다음 탭과 한 덩어리(shrink-0)로 묶는다 — 탭 행이
+            줄바꿈·클리핑될 때 구분자만 고립 렌더되지 않는다. gap 은 부모 탭
+            행과 같은 1.5 라 넘치지 않는 호스트에서는 픽셀 동일. */}
+        <span
+          className={
+            "flex shrink-0 items-center gap-1.5" +
+            (hideNavTabsOnMobile ? " " + hideNavTabsOnMobile : "")
+          }
+        >
+          <BreadcrumbSep />
+          <Tab
+            active={libraryActive && !overlay}
+            onClick={() => {
+              dismissOverlay();
+              setIntakeView("library");
+            }}
+            icon={<FolderOpen className="h-3.5 w-3.5" />}
+            label={`${libraryLabel} ${libraryCount > 0 ? `(${libraryCount})` : ""}`.trim()}
+            tourKey="intake-library"
+          />
+        </span>
         {onReopenWorkspace ? (
-          <>
-            <BreadcrumbSep className={hideNavTabsOnMobile} />
+          <span
+            className={
+              "flex shrink-0 items-center gap-1.5" +
+              (hideNavTabsOnMobile ? " " + hideNavTabsOnMobile : "")
+            }
+          >
+            <BreadcrumbSep />
             <Tab
               active={!!overlay}
               title="워크스페이스 열기"
               onClick={() => onReopenWorkspace()}
               icon={<FilePen className="h-3.5 w-3.5" />}
               label="워크스페이스"
-              className={hideNavTabsOnMobile}
             />
-          </>
+          </span>
         ) : null}
       </div>
+      )}
 
       {/* 모바일(<lg) 최소 높이는 워크스페이스 오버레이가 떠 있을 때만 확보 —
           오버레이는 absolute 라 자기 높이를 못 만드므로 이 컨테이너가 바닥을
@@ -255,6 +352,11 @@ export function IntakeSurface({
               saving={pasteSaving ?? false}
               suppressTutorial={suppressTutorial}
               subjectScope={pasteSubjectScope}
+              stackedBoard={stackedPasteBoard}
+              scrollBody={scrollPasteBoard}
+              hideEmptyGuide={hideEmptyGuide}
+              simplifiedAuthoring={simplifiedAuthoring}
+              startLabel={pasteStartLabel}
               startRef={pasteStartRef}
               onDraftStateChange={onPasteStateChange}
               // 탭 active 와 **같은 값**을 넘긴다. 이 표면은 비활성일 때 hidden
@@ -320,6 +422,8 @@ function Tab({
       disabled={disabled}
       title={title}
       data-generate-tour={tourKey}
+      // 탭 스트립 오버플로 시 활성 탭 scrollIntoView 대상 지정(IntakeSurface).
+      data-intake-tab-active={active ? "true" : undefined}
       className={
         "inline-flex h-8 max-w-full shrink-0 items-center gap-1.5 rounded-md border px-3 text-[12.5px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-slate-300 " +
         (active

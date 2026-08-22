@@ -15,9 +15,9 @@ import { relatedFeatures } from "@/lib/seo/feature-links";
 const PATH = "/features/ai-question-generation";
 
 export const metadata = buildMetadata({
-  title: "AI 영어 문제 생성 — 내신·수능 25유형 자동 출제",
+  title: "AI 영어 문제 생성 — 내신·수능 24유형 자동 출제",
   description:
-    "지문 하나로 빈칸·어법·순서·함축 의미·요약·서술형까지 내신·수능 25유형 영어 변형문제를 자동 생성하는 SMOAT.",
+    "지문 하나로 빈칸·어법·순서·함축 의미·요약·서술형까지 내신·수능 24유형 영어 변형문제를 자동 생성하는 SMOAT.",
   path: PATH,
   keywords: [
     "AI 영어 문제 생성",
@@ -35,9 +35,9 @@ export const metadata = buildMetadata({
 
 const CONTENT: FeaturePageContent = {
   eyebrow: "AI 영어 문제 생성",
-  h1: "AI 영어 문제 생성 — 수능·내신·EBS·모의고사 25유형 자동 출제",
+  h1: "AI 영어 문제 생성 — 수능·내신·EBS·모의고사 24유형 자동 출제",
   subhead:
-    "지문 하나만 넣으면 빈칸·어법·순서·삽입·요지·서술형까지, 내신·수능 25유형 변형문제가 1초 만에 만들어집니다. 강사가 마킹한 출제 포인트를 그대로 반영해 실제 시험에 직결되는 고퀄 문항을 생성합니다.",
+    "지문 하나만 넣으면 빈칸·어법·순서·삽입·요지·서술형까지, 내신·수능 24유형 변형문제가 1초 만에 만들어집니다. 강사가 마킹한 출제 포인트를 그대로 반영해 실제 시험에 직결되는 고퀄 문항을 생성합니다.",
   heroHighlight: "문항 제작 10시간을 10분으로 줄입니다",
   heroImage: {
     src: "/features/shots/ai-question-generation/hero.png",
@@ -50,7 +50,7 @@ const CONTENT: FeaturePageContent = {
     { value: "3", unit: "가지", label: "지문 입력 방법" },
   ],
   heroBullets: [
-    "객관식·서술형·어휘 25유형 전 영역 자동 생성",
+    "객관식·서술형·어휘 24유형 전 영역 자동 생성",
     "단순 무작위 변형이 아닌 '출제 포인트' 기반",
     "지문당 다문항 1초 생성, 문항별 난이도 지정",
     "정답·상세 해설지 동시 생성",
@@ -73,7 +73,7 @@ const CONTENT: FeaturePageContent = {
       ],
     },
     {
-      title: "내신·수능 25유형 전 영역을 한 번에",
+      title: "내신·수능 24유형 전 영역을 한 번에",
       image: {
         src: "/features/shots/ai-question-generation/s2.png",
         alt: "25개 문항 유형 선택 화면",
@@ -119,7 +119,7 @@ const CONTENT: FeaturePageContent = {
     {
       question: "정말 1초 만에 영어 문제가 생성되나요?",
       answer:
-        "지문을 넣고 유형을 고르면 25유형 문항이 즉시 생성됩니다. 분석부터 문항 생성, 정답·해설 작성까지 자동으로 이뤄지며, 만든 문항은 그대로 Word 시험지로 내려받을 수 있습니다.",
+        "지문을 넣고 유형을 고르면 24유형 문항이 즉시 생성됩니다. 분석부터 문항 생성, 정답·해설 작성까지 자동으로 이뤄지며, 만든 문항은 그대로 Word 시험지로 내려받을 수 있습니다.",
     },
     {
       question: "어떤 유형의 영어 문제를 만들 수 있나요?",
@@ -139,7 +139,7 @@ const CONTENT: FeaturePageContent = {
   ],
   ctaTitle: "영어 문제 만들기, 오늘 30분을 5분으로",
   ctaBody:
-    "지문 분석부터 25유형 출제, Word·한글 시험지·해설지까지 — SMOAT 하나로 끝냅니다. 지금 사용해 보세요.",
+    "지문 분석부터 24유형 출제, Word·한글 시험지·해설지까지 — SMOAT 하나로 끝냅니다. 지금 사용해 보세요.",
   related: relatedFeatures(PATH),
 };
 

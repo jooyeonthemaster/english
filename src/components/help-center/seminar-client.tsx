@@ -10,7 +10,11 @@ import {
   cancelSeminarRequest,
   type SeminarRequestView,
 } from "@/actions/help-center";
-import { SEMINAR_STATUSES, statusOf } from "@/lib/help-center";
+import {
+  SEMINAR_ONBOARDING_FREE_CREDITS,
+  SEMINAR_STATUSES,
+  statusOf,
+} from "@/lib/help-center";
 import { formatDateTime } from "@/lib/utils";
 import { toast } from "sonner";
 import {
@@ -649,8 +653,11 @@ export function SeminarClient({
                 <div className="mt-2.5 flex items-center gap-3 rounded-xl border border-blue-100 bg-blue-50/60 px-3.5 py-2.5">
                   <Gift className="size-5 shrink-0 text-blue-500" />
                   <p className="break-keep text-[13px] font-medium text-slate-600">
-                    1:1 맞춤 상담을 통해 우리 학원에 최적화된 스모트 활용 전략을
-                    찾아보세요.
+                    <span className="font-bold text-blue-600">
+                      {SEMINAR_ONBOARDING_FREE_CREDITS} 크레딧 무료 지급
+                    </span>{" "}
+                    — 온라인으로 사용 방법을 안내해 드리고, 세미나 진행 후 학원
+                    계정으로 크레딧을 드립니다.
                   </p>
                 </div>
               </div>

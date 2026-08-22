@@ -9,7 +9,7 @@
 // 우 레일 폭 조절 훅/핸들(text-input-board) · 풀폭 CTA(StartButton).
 // ============================================================================
 
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import type { PointerEvent as ReactPointerEvent, ReactNode } from "react";
 import {
   ChevronDown,
@@ -360,27 +360,80 @@ export function useRailWidth() {
     const n = raw ? parseInt(raw, 10) : NaN;
     return Number.isNaN(n) ? RAIL_W_DEFAULT : clampRailW(n);
   });
+  // 드래그 시작 폭은 ref 로 읽는다 — 핸들러 정체성을 커밋마다 갈지 않는다.
+  const railWidthRef = useRef(railWidth);
+  railWidthRef.current = railWidth;
+
+  // 성능 계약(resizable-panels startResize 동형): 드래그 중에는 React 를 거치지
+  // 않는다 — 매 pointermove 의 setState 는 IntakeUploadPanel 전체(페이지 작업대
+  // 썸네일 그리드 + 우 레일 폼)를 프레임마다 리렌더시킨다. 이동 중에는
+  // [data-rail-panel] 요소의 style.width 에 rAF 코얼레싱으로 직접 쓰고, 놓을 때
+  // 한 번만 커밋+영속한다. 앵커를 못 찾으면 종전 setState 경로로 폴백(무회귀).
   const beginRailResize = useCallback(
     (event: ReactPointerEvent<HTMLButtonElement>) => {
       if (event.pointerType === "mouse" && event.button !== 0) return;
       event.preventDefault();
       const startX = event.clientX;
-      const startW = railWidth;
+      const startW = railWidthRef.current;
+
+      // 포인터 캡처 — 커서가 얇은 핸들을 벗어나도 드래그가 끊기지 않는다.
+      const handle = event.currentTarget as HTMLElement;
+      try {
+        handle.setPointerCapture(event.pointerId);
+      } catch {
+        /* 캡처 미지원 브라우저는 window 리스너로 폴백 */
+      }
+
+      // 드래그 대상 레일 실체 — 핸들 형제의 [data-rail-panel].
+      const railEl =
+        handle.parentElement?.querySelector<HTMLElement>("[data-rail-panel]") ??
+        (handle.nextElementSibling instanceof HTMLElement
+          ? handle.nextElementSibling
+          : null);
+
+      const prevCursor = document.body.style.cursor;
+      const prevSelect = document.body.style.userSelect;
+      const prevPointerEvents = document.body.style.pointerEvents;
       document.body.style.cursor = "col-resize";
       document.body.style.userSelect = "none";
+      // 드래그 중 hover 스타일 재평가 차단 — 레일 폭이 바뀌면 좌 작업대가
+      // 밀리며 커서 아래 요소가 계속 바뀐다(캡처 덕에 move 수신은 유지).
+      document.body.style.pointerEvents = "none";
+
       let latest = startW;
+      // rAF 코얼레싱 — 고주사율 포인터가 프레임당 여러 번 발화해도 기록은 1회.
+      let rafId: number | null = null;
+      const flush = () => {
+        rafId = null;
+        if (railEl) railEl.style.width = `${latest}px`;
+      };
       const move = (e: PointerEvent) => {
         e.preventDefault();
         // 왼쪽으로 끌면 우측 고정 레일이 넓어진다.
         latest = clampRailW(startW - (e.clientX - startX));
-        setRailWidth(latest);
+        if (railEl) {
+          if (rafId === null) rafId = requestAnimationFrame(flush);
+        } else {
+          // 폴백 — 앵커를 못 찾으면 종전대로 상태 갱신.
+          setRailWidth(latest);
+        }
       };
       const finish = () => {
         window.removeEventListener("pointermove", move);
         window.removeEventListener("pointerup", finish);
         window.removeEventListener("pointercancel", finish);
-        document.body.style.cursor = "";
-        document.body.style.userSelect = "";
+        if (rafId !== null) cancelAnimationFrame(rafId);
+        if (railEl) railEl.style.width = `${latest}px`;
+        // 커밋은 여기서 한 번 — 드래그 내내 리렌더 0회.
+        setRailWidth(latest);
+        document.body.style.cursor = prevCursor;
+        document.body.style.userSelect = prevSelect;
+        document.body.style.pointerEvents = prevPointerEvents;
+        try {
+          handle.releasePointerCapture(event.pointerId);
+        } catch {
+          /* ignore */
+        }
         try {
           window.localStorage.setItem(RAIL_W_KEY, String(latest));
         } catch {
@@ -391,7 +444,7 @@ export function useRailWidth() {
       window.addEventListener("pointerup", finish, { once: true });
       window.addEventListener("pointercancel", finish, { once: true });
     },
-    [railWidth],
+    [],
   );
   return { railWidth, beginRailResize };
 }

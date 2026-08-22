@@ -1,0 +1,286 @@
+<section class="slide slide--paper" id="s10"
+  data-title="ST 03" data-kr="시험지"
+  data-zone="산출" data-zone-en="OUTPUT"
+  data-part="PART 1 — 기능 브리핑"
+  data-in="생성된 문항"
+  data-out="A4 조판된 시험지"
+  data-note="미리보기 = 출력물">
+
+  <div class="pad s10-wrap">
+
+    <!-- ── 좌: 카피 ── -->
+    <div class="s10-copy">
+
+      <div class="st-badge" data-step="0" data-fx="none">
+        <span class="num">ST 03</span><span class="nm">PAPER</span>
+      </div>
+
+      <h2 class="s10-h" data-step="0">
+        웹에서 <em>바로 편집하는</em><br>
+        시험지.
+      </h2>
+
+      <p class="s10-lead" data-step="0" data-fx="none">
+        문항을 담으면 A4 지면에 그대로 얹힙니다.<br>
+        여백도, 배점도, 순서도 화면에서 조정합니다.
+      </p>
+
+      <ul class="s10-feats">
+        <li data-step="1" data-fx="left"><i>실제 지면 직접 편집</i><b>A4 2단 레이아웃</b></li>
+        <li data-step="1" data-fx="left"><i>문항 구성</i><b>담은 순서대로 자동 배치</b></li>
+        <li data-step="1" data-fx="left"><i>자동 조판 시스템</i><b>웹 미리보기와 1:1 완성형 조판</b></li>
+        <li data-step="1" data-fx="left"><i>정답 및 해설지 동시 생성</i><b>학생용·강사용 해설지 분리 생성</b></li>
+      </ul>
+
+      <blockquote class="s10-quote" data-step="2" data-fx="left">
+        <span class="qk">지면 헤더 — 실물 그대로</span>
+        <b>2027학년도 대학수학능력시험 대비 실전 모의고사 문제지</b>
+        <i>영어 영역 · 제 3 교시 · 독해형</i>
+        <p>“본 모의고사는 듣기(1번~17번)를 제외한 독해(18번~45번) 28문항으로 구성되어 있습니다.”</p>
+      </blockquote>
+
+      <p class="s10-hook" data-step="3" data-fx="none">
+        화면에서 보이는 그 지면이 <em>그대로 파일로 나갑니다.</em>
+      </p>
+
+    </div>
+
+    <!-- ── 우: A4 시험지 실물 + 콜아웃 ── -->
+    <div class="s10-stage" data-noadvance>
+
+      <div class="s10-paper" data-step="0" data-fx="scale">
+        <img src="assets/img/sample-mock-exam-thumb.png" alt="SMOAT로 조판된 A4 시험지 1페이지">
+      </div>
+      <div class="s10-cap" data-step="0" data-fx="none">
+        <span class="mono">A4 · 210 × 297mm</span> 실제 생성물 · 시험지 1페이지
+      </div>
+
+      <!-- 콜아웃 레이어 -->
+      <div class="s10-callouts" data-step="4" data-fx="none" id="s10-callouts">
+
+        <span class="s10-box" data-c="1" style="left:278px; top:132px; width:258px; height:34px;"></span>
+        <span class="s10-box" data-c="2" style="left:10px;  top:130px; width:520px; height:618px;"></span>
+        <span class="s10-box" data-c="3" style="left:240px; top:764px; width:62px;  height:24px;"></span>
+
+        <!-- 지시선·마커는 지면(x 0~540) 바깥 여백(x 541~579)에서만 그린다. 지면 글자를 덮지 않는다. -->
+        <svg class="s10-lines" viewBox="0 0 852 884" aria-hidden="true">
+          <g class="ln" data-c="1">
+            <path class="halo" d="M561 124 V168"/><path class="wire" d="M561 124 V168"/>
+            <path class="tick" d="M545 124 H561 M545 168 H561"/>
+          </g>
+          <g class="ln" data-c="2">
+            <path class="halo" d="M561 130 V748"/><path class="wire" d="M561 130 V748"/>
+            <path class="tick" d="M545 130 H561 M545 748 H561"/>
+          </g>
+          <g class="ln" data-c="3">
+            <path class="halo" d="M561 753 V797"/><path class="wire" d="M561 753 V797"/>
+            <path class="tick" d="M545 753 H561 M545 797 H561"/>
+          </g>
+        </svg>
+
+        <button class="s10-mk" type="button" data-c="1" style="left:561px; top:146px;">1</button>
+        <button class="s10-mk" type="button" data-c="2" style="left:561px; top:434px;">2</button>
+        <button class="s10-mk" type="button" data-c="3" style="left:561px; top:775px;">3</button>
+
+        <div class="s10-cl" data-c="1" style="top:146px;">
+          <b><span class="cn">1</span>문항</b>
+          <span>번호와 발문, 선지 ①~⑤ 까지 지면 규격 그대로.</span>
+        </div>
+        <div class="s10-cl" data-c="2" style="top:434px;">
+          <b><span class="cn">2</span>2단 조판</b>
+          <span>A4 2단 레이아웃. 문항이 좌·우 칸을 따라 흐릅니다.</span>
+        </div>
+        <div class="s10-cl" data-c="3" style="top:775px;">
+          <b><span class="cn">3</span>페이지 번호</b>
+          <span>쪽 번호와 하단 안내까지 조판 결과에 맞춰 들어갑니다.</span>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+<style>
+#s10 .s10-wrap { display: grid; grid-template-columns: 820px 852px; gap: 56px; }
+
+/* ══ 좌: 카피 ══ */
+#s10 .s10-copy { display: flex; flex-direction: column; align-items: flex-start; padding-top: 6px; }
+
+#s10 .s10-h {
+  font-family: var(--f-display); font-weight: 800; font-size: 62px; line-height: 1.14;
+  letter-spacing: -.028em; color: var(--g900); margin-top: 24px;
+}
+#s10 .s10-h em { font-style: normal; color: var(--blue-deep); }
+
+#s10 .s10-lead { margin-top: 22px; font-size: 19px; line-height: 1.66; color: var(--g600); }
+
+/* 기능 칩 4 */
+#s10 .s10-feats {
+  list-style: none; margin-top: 40px; width: 100%;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+}
+#s10 .s10-feats li {
+  background: var(--white); border: 1px solid var(--g200);
+  border-left: 3px solid var(--blue); border-radius: 12px;
+  padding: 15px 18px 16px; box-shadow: 0 6px 18px rgba(17,24,39,.055);
+}
+#s10 .s10-feats i {
+  display: block; font-style: normal; font-family: var(--f-mono);
+  font-size: 12px; font-weight: 600; letter-spacing: .14em; color: var(--blue-deep);
+}
+#s10 .s10-feats b {
+  display: block; margin-top: 8px; font-size: 17.5px; font-weight: 700;
+  line-height: 1.36; color: var(--g900);
+}
+
+/* 지면 헤더 인용 */
+#s10 .s10-quote {
+  margin-top: 34px; width: 100%; padding: 18px 22px 20px;
+  background: var(--paper-2); border-left: 3px solid var(--g400); border-radius: 0 12px 12px 0;
+}
+#s10 .s10-quote .qk {
+  display: block; font-family: var(--f-mono); font-size: 11.5px; letter-spacing: .16em;
+  color: var(--g500); margin-bottom: 10px;
+}
+#s10 .s10-quote b { display: block; font-size: 17.5px; font-weight: 700; color: var(--g900); line-height: 1.4; }
+#s10 .s10-quote i {
+  display: block; margin-top: 6px; font-style: normal; font-family: var(--f-mono);
+  font-size: 13.5px; letter-spacing: .04em; color: var(--g600);
+}
+#s10 .s10-quote p { margin-top: 10px; font-size: 14.5px; line-height: 1.6; color: var(--g600); }
+
+/* 후킹 1개 */
+#s10 .s10-hook { margin-top: 30px; width: 100%; font-size: 20px; line-height: 1.5; color: var(--g700); }
+#s10 .s10-hook em {
+  font-style: normal; font-weight: 700; color: var(--g900);
+  background-image: linear-gradient(transparent 58%, rgba(59,130,246,.30) 58%);
+  padding: 0 2px;
+}
+
+/* ══ 우: 지면 + 콜아웃 ══ */
+#s10 .s10-stage { position: relative; height: 884px; }
+
+#s10 .s10-paper {
+  position: absolute; left: 0; top: 34px; width: 540px; height: 765px;
+  background: var(--white); border-radius: 3px; box-shadow: var(--sh-paper);
+  overflow: hidden;
+}
+#s10 .s10-paper::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  box-shadow: inset 0 0 0 1px rgba(17,24,39,.10);
+}
+#s10 .s10-paper img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+#s10 .s10-cap {
+  position: absolute; left: 0; top: 812px; width: 540px; text-align: center;
+  font-size: 13px; color: var(--g500);
+}
+#s10 .s10-cap .mono {
+  font-size: 11px; letter-spacing: .14em; color: var(--blue-deep); margin-right: 8px;
+}
+
+/* 콜아웃 레이어 */
+#s10 .s10-callouts { position: absolute; inset: 0; pointer-events: none; }
+
+#s10 .s10-lines { position: absolute; inset: 0; width: 852px; height: 884px; pointer-events: none; z-index: 1; }
+#s10 .s10-lines .halo { stroke: var(--paper); stroke-width: 5; fill: none; opacity: .8; }
+#s10 .s10-lines .wire {
+  stroke: var(--blue-deep); stroke-width: 1.2; fill: none;
+  stroke-dasharray: 4 4; opacity: .6; transition: opacity .18s, stroke-dasharray .18s;
+}
+#s10 .s10-lines .tick { stroke: var(--blue-deep); stroke-width: 1.2; fill: none; opacity: .6; transition: opacity .18s; }
+#s10 .s10-lines .ln.on .wire { stroke-dasharray: none; opacity: 1; stroke-width: 1.6; }
+#s10 .s10-lines .ln.on .tick { opacity: 1; stroke-width: 1.6; }
+
+/* 마커는 지면 오른쪽 여백(x 541~579)에 고정 — 펄스 링까지 지면 위로 넘어가지 않는 치수 */
+#s10 .s10-mk {
+  position: absolute; width: 32px; height: 32px; margin: -16px 0 0 -16px;
+  border-radius: 50%; border: 2px solid var(--white); background: var(--blue-deep);
+  color: var(--white); font-family: var(--f-mono); font-size: 14px; font-weight: 600;
+  line-height: 1; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; pointer-events: auto; z-index: 4;
+  box-shadow: 0 4px 14px rgba(37,99,235,.42);
+  transition: transform .16s var(--ease-snap), box-shadow .16s;
+}
+#s10 .s10-mk::before {
+  content: ''; position: absolute; inset: -4px; border-radius: 50%;
+  border: 1.5px solid rgba(37,99,235,.5); animation: s10-ping 2.4s var(--ease-line) infinite;
+}
+@keyframes s10-ping {
+  0%   { transform: scale(.88); opacity: .9; }
+  70%  { transform: scale(1.05); opacity: 0; }
+  100% { transform: scale(1.05); opacity: 0; }
+}
+#s10 .s10-mk:hover { transform: scale(1.1); }
+#s10 .s10-mk.on {
+  transform: scale(1.14); box-shadow: 0 6px 20px rgba(37,99,235,.55);
+}
+#s10 .s10-mk.on::before { animation: none; opacity: 0; }
+
+#s10 .s10-box {
+  position: absolute; border: 2px dashed var(--blue-deep); border-radius: 6px;
+  background: rgba(59,130,246,.10); opacity: 0; z-index: 2;
+  transition: opacity .18s var(--ease-snap); pointer-events: none;
+}
+#s10 .s10-box.on { opacity: 1; }
+
+#s10 .s10-cl {
+  position: absolute; left: 580px; width: 272px; transform: translateY(-50%);
+  background: var(--white); border: 1px solid var(--g200); border-radius: 12px;
+  padding: 13px 16px 14px; box-shadow: 0 6px 18px rgba(17,24,39,.06);
+  cursor: pointer; pointer-events: auto; z-index: 3;
+  transition: border-color .18s, box-shadow .18s, background .18s;
+}
+#s10 .s10-cl b {
+  display: flex; align-items: center; gap: 9px;
+  font-size: 17px; font-weight: 700; color: var(--g900); line-height: 1.2;
+}
+#s10 .s10-cl .cn {
+  flex: none; width: 20px; height: 20px; border-radius: 50%;
+  background: var(--blue-sub); color: var(--blue-deep);
+  font-family: var(--f-mono); font-size: 11px; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .18s, color .18s;
+}
+#s10 .s10-cl span:not(.cn) {
+  display: block; margin-top: 7px; font-size: 14px; line-height: 1.5; color: var(--g600);
+}
+#s10 .s10-cl:hover { border-color: var(--blue-light); }
+#s10 .s10-cl.on {
+  border-color: var(--blue-deep); background: var(--blue-sub);
+  box-shadow: 0 8px 24px rgba(37,99,235,.18);
+}
+#s10 .s10-cl.on .cn { background: var(--blue-deep); color: var(--white); }
+#s10 .s10-cl.on span:not(.cn) { color: var(--g700); }
+</style>
+
+<script>
+(() => {
+  const sec = document.getElementById('s10');
+  if (!sec) return;
+  const layer = sec.querySelector('#s10-callouts');
+  if (!layer) return;
+
+  const all = [...layer.querySelectorAll('.s10-mk, .s10-cl, .s10-box, .ln')];
+  let active = 0;
+
+  const paint = () => {
+    all.forEach((el) => {
+      const c = +(el.dataset.c || 0);
+      el.classList.toggle('on', c === active && active !== 0);
+    });
+  };
+
+  const pick = (c) => (e) => {
+    e.stopPropagation();
+    active = (active === c) ? 0 : c;
+    paint();
+  };
+
+  layer.querySelectorAll('.s10-mk').forEach((b) => b.addEventListener('click', pick(+b.dataset.c)));
+  layer.querySelectorAll('.s10-cl').forEach((b) => b.addEventListener('click', pick(+b.dataset.c)));
+
+  sec.addEventListener('slide:enter', () => { active = 0; paint(); });
+})();
+</script>
+</section>

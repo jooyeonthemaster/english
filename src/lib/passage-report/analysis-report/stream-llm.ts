@@ -38,6 +38,7 @@ export interface StreamingLlmOptions {
 
 const SECTION_LABEL: Record<string, string> = {
   draft: "전체 초안",
+  meta: "표제 정보",
   passage: "지문",
   summary: "요약",
   grammar: "어법",
@@ -71,6 +72,8 @@ export function analysisPhaseLabel(label: string): string {
 export async function streamAnalysisText(args: {
   prompt: string;
   modelId?: string;
+  /** 콜 단위 사고 강도 — 미지정 시 기존값 "high"(무회귀). 26-08-12 luna 전환 배선. */
+  reasoningEffort?: string;
   maxTokens: number;
   timeoutMs: number;
   temperature: number;
@@ -95,8 +98,8 @@ export async function streamAnalysisText(args: {
       stream: true,
       usage: { include: true },
       // exclude:false — 사고 델타를 받아야 "사고 중" 패널을 그린다.
-      // 학습지 생성은 사고 high 계약(401e3fae)이라 effort 도 high 로 맞춘다.
-      reasoning: { enabled: true, effort: "high", exclude: false },
+      // 기본 effort 는 사고 high 계약(401e3fae) 그대로 — 콜 단위 오버라이드만 허용.
+      reasoning: { enabled: true, effort: args.reasoningEffort ?? "high", exclude: false },
     }),
     signal: AbortSignal.timeout(Math.max(10_000, args.timeoutMs)),
   });

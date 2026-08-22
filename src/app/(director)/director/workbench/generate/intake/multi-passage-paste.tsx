@@ -84,6 +84,38 @@ interface MultiPassagePasteProps {
    * 화면 위로 튀어나오는 것을 막는 유일한 신호다. 미전달 = true(단독 호스트).
    */
   boardVisible?: boolean;
+  /**
+   * 좁은 컨테이너 임베드(클래스 스튜디오 워크벤치)용 — TextInputBoard 에 세로
+   * 적층을 강제한다(text-input-board stacked 계약 참조). 부재 = 기존 레이아웃.
+   */
+  stackedBoard?: boolean;
+  /**
+   * 스튜디오 고정 높이 체인 임베드용 — 보드 콘텐츠 열을 내부 스크롤 컨테이너
+   * (overflow-y-auto)로 바꾼다. 고정 높이 아래에서 flex 분배가 보드를 눌러
+   * [지문 추가] 소실·textarea 반토막·가이드 카드 클립이 났던 자리(2026-08-11
+   * 시각 검수 A2). 열을 블록 스크롤 컨테이너로 바꾸면 자식 래퍼들의
+   * flex-1/min-h-0 이 비활성화돼 보드가 자연 높이로 조판되고, 넘치는 만큼
+   * 스크롤로 하단 요소에 도달한다. 말미 pb-16 은 스튜디오 스티키 CTA 높이만큼의
+   * 여백 — 마지막 콘텐츠가 CTA 에 가리지 않게 한다. 부재 시(기본 false) 기존
+   * 클래스와 바이트 동일(무회귀) — 생성 페이지(높이 무제약)는 픽셀 불변.
+   */
+  scrollBody?: boolean;
+  /**
+   * 빈 상태 「사용 순서」 가이드 박스 숨김 — TextInputBoard hideEmptyGuide
+   * 패스스루(§3.9v2.8 D9, 스튜디오 호스트 한정). 부재 = 기존 가이드 그대로.
+   */
+  hideEmptyGuide?: boolean;
+  /**
+   * AI 지문 생성 간소화 모드 — AuthoringBoard `simplified` 패스스루
+   * (§3.9v2.8 D10, 스튜디오 호스트 한정): 스펙 레일·미리보기 없이 분량·편수만
+   * 노출하는 슬림 보드. 부재 시(기본 false) 기존 전체 보드 바이트 동일.
+   */
+  simplifiedAuthoring?: boolean;
+  /**
+   * 시작 CTA 의 목적지 라벨 — 스튜디오 「지문관리」 개칭(§3.10.14) 패스스루
+   * (verbatim·restored 양쪽 시작 버튼 공용). 미전달 = 기존 문자 그대로.
+   */
+  startLabel?: string;
   /** 모바일 스텝 플로우 — 하단 고정 바에서 시작 동작을 대신 호출. */
   startRef?: MutableRefObject<(() => void) | null>;
   /** 누적 지문 수·작업 상태 변화 알림(하단 바 라벨용). */
@@ -161,6 +193,11 @@ export function MultiPassagePaste({
   suppressTutorial = false,
   subjectScope,
   boardVisible = true,
+  stackedBoard = false,
+  scrollBody = false,
+  hideEmptyGuide = false,
+  simplifiedAuthoring = false,
+  startLabel = "다음으로 (내 지문함)",
   startRef,
   onDraftStateChange,
 }: MultiPassagePasteProps) {
@@ -233,6 +270,9 @@ export function MultiPassagePaste({
       value={effectiveOutputMode}
       koreanFixed={koreanFixed}
       disabled={busy}
+      // 좁은 열 임베드: sm: 뷰포트 분기 대신 flex-wrap 세로 적층 — 「AI로 지문
+      // 생성」 가격 뱃지까지 항상 보인다(2026-08-10 스튜디오 x=1059 하드클립 실측).
+      stacked={stackedBoard}
       onSelect={selectOutputMode}
     />
   );
@@ -272,7 +312,15 @@ export function MultiPassagePaste({
             안쪽 세그먼트의 활성 표시(blue 계열)가 배경과 같은 색군이라 '무엇이
             켜져 있는지'가 사실상 보이지 않았다 — 이 기능의 진입 스위치라 그
             대비가 최우선이다. */}
-        <div className="relative w-full rounded-lg border border-slate-200 bg-white px-2 py-1 shadow-sm sm:w-fit">
+        <div
+          className={
+            // stacked 임베드: sm:w-fit 은 뷰포트 기준이라 좁은 열에서 오판 —
+            // 전폭을 유지해 안쪽 세그먼트가 flex-wrap 으로 접힐 자리를 준다.
+            stackedBoard
+              ? "relative w-full rounded-lg border border-slate-200 bg-white px-2 py-1 shadow-sm"
+              : "relative w-full rounded-lg border border-slate-200 bg-white px-2 py-1 shadow-sm sm:w-fit"
+          }
+        >
           {/* 말풍선 꼬리 — 브레드크럼 첫 항목 '직접 입력' 탭 중앙 아래에서 삐져나오게. */}
           <span
             aria-hidden="true"
@@ -292,7 +340,14 @@ export function MultiPassagePaste({
       </div>
 
       <div
-        className="flex min-h-0 flex-1 flex-col"
+        className={
+          // scrollBody(스튜디오): 블록 스크롤 컨테이너 — 자식 래퍼의
+          // flex-1/min-h-0 이 비활성화돼 보드가 자연 높이로 조판되고, 높이
+          // 제약분은 이 열의 스크롤로 흡수된다. pb-16 은 스티키 CTA 여백.
+          scrollBody
+            ? "min-h-0 flex-1 overflow-y-auto pb-16"
+            : "flex min-h-0 flex-1 flex-col"
+        }
         data-generate-tour="paste-board"
       >
         {/* 텍스트 보드는 authoring 중에도 마운트를 유지한다(숨김만) — 쌓아둔
@@ -306,6 +361,8 @@ export function MultiPassagePaste({
             busy={busy}
             outputMode={effectiveTextMode}
             suppressTutorial={suppressTutorial}
+            stacked={stackedBoard}
+            hideEmptyGuide={hideEmptyGuide}
             onStart={async (passages) => {
               const rows = passages.map((passage) => ({
                 title: passage.title ?? "",
@@ -341,18 +398,20 @@ export function MultiPassagePaste({
               }
             }}
             reviewLabel={
-              effectiveTextMode === "restored" ? "복원할 지문" : "등록할 지문"
+              // 카운터 명칭은 모바일 장바구니 바·파일업로드와 「담긴 지문」으로
+              // 통일 — 복원 모드만 "무엇이 일어나는지"를 남기는 기존 분기 유지.
+              effectiveTextMode === "restored" ? "복원할 지문" : "담긴 지문"
             }
             emptyTitle={
               effectiveTextMode === "restored"
-                ? "문제·선지 텍스트를 붙여넣고 지문을 쌓아요"
-                : "텍스트를 붙여넣고 지문을 쌓아요"
+                ? "문제·선지 텍스트를 붙여넣고 지문을 쌓습니다"
+                : "텍스트를 붙여넣고 지문을 쌓습니다"
             }
             guideStartLabel={
               effectiveTextMode === "restored" ? "복원 후 등록" : "등록하고 선택"
             }
-            startLabel="다음으로 (내 지문함)"
-            restoredStartLabel="다음으로 (내 지문함)"
+            startLabel={startLabel}
+            restoredStartLabel={startLabel}
             busyLabel={restoring ? "복원 중" : "등록 중"}
             startRef={startRef}
             onDraftStateChange={emitDraftState}
@@ -388,6 +447,9 @@ export function MultiPassagePaste({
               koreanFixed={koreanFixed}
               visible={authoringActive && boardVisible}
               onRegisterRows={registerAuthoredRows}
+              // 스튜디오 간소화 모드(§3.9v2.8 D10) — simplified prop 은 UH 유닛이
+              // 병렬 추가 중(이름 확정 계약 simplified?: boolean).
+              simplified={simplifiedAuthoring}
             />
           </div>
         ) : null}

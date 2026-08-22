@@ -17,6 +17,12 @@ import { DEFAULT_LENS } from "./wordbook-types";
 // ============================================================================
 
 export const dynamic = "force-dynamic";
+/**
+ * 이 페이지의 서버 액션은 대량 쓰기를 한다 — 교재 생성(단계 덱 최대 60개)과
+ * 예약 배포(단계 × 학생 3층 쓰기). 기본 실행시간 상한으로는 중간에 끊긴다.
+ * (배포는 DEPLOY_CHUNK 로 쪼개 이어받지만, 한 청크도 학생 수에 비례해 무겁다.)
+ */
+export const maxDuration = 300;
 
 export default async function WordbookStudioPage() {
   if (!FEATURE_FLAGS.ENABLE_VOCAB_DRILL) redirect("/director");

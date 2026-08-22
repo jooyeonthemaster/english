@@ -1,0 +1,161 @@
+<section class="slide slide--dark" id="s01"
+  data-title="OPEN" data-kr="라인 개통"
+  data-zone="개막" data-zone-en="OPENING"
+  data-part="OPENING — 오늘의 안내"
+  data-in="영어 지문 1장"
+  data-out="내신 대비 전 과정"
+  data-note="SMOAT SEMINAR">
+
+  <div class="pad s01-wrap">
+
+    <div class="s01-head">
+      <div class="kicker" data-step="0" data-fx="none">SMOAT SEMINAR · 영어 강사 내신 대비 올인원</div>
+
+      <h1 class="s01-title" data-step="0">
+        <span class="l1">지문 한 장을 올리면</span>
+        <span class="l2">끝까지 <em>흐릅니다</em>.</span>
+      </h1>
+
+      <p class="s01-lead" data-step="0" data-fx="none">
+        문항 출제부터 시험지 조판, 학습지, 학생 배포, 그리고 누가 어디서 틀렸는지까지 —<br>
+        따로 놀던 여덟 개의 일을 <b>하나의 라인</b>으로 잇습니다.
+      </p>
+    </div>
+
+    <!-- ── 라인 다이어그램 ── -->
+    <div class="s01-line" data-step="1" data-fx="none">
+      <svg class="s01-svg" viewBox="0 0 1728 250" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="s01track" gradientUnits="userSpaceOnUse" x1="108" y1="0" x2="1620" y2="0">
+            <stop offset="0%"   stop-color="#3B82F6" stop-opacity=".35"/>
+            <stop offset="55%"  stop-color="#3B82F6" stop-opacity=".9"/>
+            <stop offset="100%" stop-color="#10B981" stop-opacity=".9"/>
+          </linearGradient>
+          <marker id="s01arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+            <path d="M0,0 L10,5 L0,10 Z" fill="#10B981"/>
+          </marker>
+        </defs>
+        <line x1="108" y1="46" x2="1620" y2="46" stroke="url(#s01track)" stroke-width="2.5"/>
+        <circle r="5" fill="#BFDBFE" opacity=".95">
+          <animate attributeName="cx" values="108;1620" dur="3.4s" repeatCount="indefinite"/>
+          <animate attributeName="cy" values="46;46" dur="3.4s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.06;.9;1" dur="3.4s" repeatCount="indefinite"/>
+        </circle>
+        <path d="M1620,46 C1712,46 1728,192 1620,192 L108,192 C8,192 22,62 101,49"
+              fill="none" stroke="#10B981" stroke-width="1.8" stroke-dasharray="6 8"
+              marker-end="url(#s01arrow)" opacity=".55"/>
+      </svg>
+
+      <div class="s01-stations">
+        <div class="stn"><i>ST 01</i><b>지문 투입</b><s>교과서 · 부교재 · 모의고사</s></div>
+        <div class="stn"><i>ST 02</i><b>문항 생성</b><s>객관식 + 서술형</s></div>
+        <div class="stn"><i>ST 03</i><b>시험지</b><s>워드 · 한컴 · PDF</s></div>
+        <div class="stn"><i>ST 04</i><b>학습지</b><s>심층 분석 학습지 · 웹툰</s></div>
+        <div class="stn"><i>ST 05</i><b>배포</b><s>모바일 · 태블릿</s></div>
+        <div class="stn"><i>ST 06</i><b>풀이</b><s>자동 수집</s></div>
+        <div class="stn"><i>ST 07</i><b>리포트</b><s>어디서 어떻게 틀렸나</s></div>
+        <div class="stn"><i>ST 08</i><b>처방</b><s>취약 유형으로 다음 과제</s></div>
+      </div>
+
+      <div class="s01-loop">↺ 취약점은 다시 <b>01 지문 투입</b>으로 — 라인은 닫히지 않습니다</div>
+    </div>
+
+    <!-- ── 세미나 메타 ── -->
+    <div class="s01-meta" data-step="2" data-fx="none">
+      <div class="mchip"><span class="mk">RUNTIME</span><span class="mv">2시간</span></div>
+      <div class="mchip"><span class="mk">PART 1 · 60분</span><span class="mv">기능 브리핑 &amp; 라이브 시연</span></div>
+      <div class="mchip"><span class="mk">PART 2 · 60분</span><span class="mv">직접 만들어보는 실습</span></div>
+      <div class="mchip mchip--hot"><span class="mk">오늘 참가자 전원</span><span class="mv">300크레딧</span></div>
+    </div>
+
+  </div>
+
+<style>
+#s01 .s01-wrap { display: flex; flex-direction: column; }
+
+#s01 .s01-head { padding-top: 18px; }
+#s01 .kicker { margin-bottom: 24px; }
+
+#s01 .s01-title {
+  font-family: var(--f-display); font-weight: 800;
+  font-size: 102px; line-height: 1.1; letter-spacing: -.035em;
+  display: flex; flex-direction: column;
+}
+#s01 .s01-title .l1 { color: #E8EDF7; }
+#s01 .s01-title .l2 { color: var(--white); }
+#s01 .s01-title em {
+  font-style: normal; color: var(--blue); position: relative; z-index: 1;
+}
+#s01 .s01-title em::after {
+  content: ''; position: absolute; left: -2px; right: -2px; bottom: 2px; height: 9px;
+  background: rgba(59,130,246,.30); border-radius: 2px; z-index: -1;
+}
+
+#s01 .s01-lead {
+  margin-top: 26px; font-size: 22px; line-height: 1.68; color: #97A3B8; max-width: 1060px;
+}
+#s01 .s01-lead b { color: var(--white); font-weight: 600; }
+
+/* 라인 */
+#s01 .s01-line { position: relative; margin: auto 0; height: 250px; }
+#s01 .s01-svg { position: absolute; inset: 0; width: 100%; height: 250px; }
+
+#s01 .s01-stations {
+  position: absolute; top: 0; left: 0; right: 0; height: 130px;
+  display: grid; grid-template-columns: repeat(8, 1fr);
+}
+#s01 .stn { position: relative; padding: 74px 10px 0; text-align: center; }
+#s01 .stn::before {
+  content: ''; position: absolute; top: 39px; left: 50%; margin-left: -7px;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--ink); border: 2.5px solid var(--blue);
+  box-shadow: 0 0 0 5px rgba(59,130,246,.14);
+  animation: s01-pop .5s var(--ease-snap) backwards;
+}
+#s01 .stn:nth-child(1)::before { animation-delay: .05s; }
+#s01 .stn:nth-child(2)::before { animation-delay: .17s; }
+#s01 .stn:nth-child(3)::before { animation-delay: .29s; }
+#s01 .stn:nth-child(4)::before { animation-delay: .41s; }
+#s01 .stn:nth-child(5)::before { animation-delay: .53s; }
+#s01 .stn:nth-child(6)::before { animation-delay: .65s; }
+#s01 .stn:nth-child(7)::before { animation-delay: .77s; }
+#s01 .stn:nth-child(8)::before { background: var(--emerald); border-color: var(--emerald); box-shadow: 0 0 0 5px rgba(16,185,129,.16); animation-delay: .89s; }
+@keyframes s01-pop { from { transform: scale(.1); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+#s01 .stn i {
+  display: block; font-family: var(--f-mono); font-style: normal; font-size: 11px;
+  letter-spacing: .2em; color: var(--blue); opacity: .8;
+}
+#s01 .stn b {
+  display: block; font-family: var(--f-display); font-weight: 700; font-size: 23px;
+  color: var(--white); margin-top: 7px; letter-spacing: -.012em;
+}
+#s01 .stn s {
+  display: block; text-decoration: none; font-size: 13px; color: #6E7A90; margin-top: 6px;
+}
+#s01 .stn:nth-child(8) i { color: var(--emerald); }
+
+#s01 .s01-loop {
+  position: absolute; left: 50%; transform: translateX(-50%); top: 178px;
+  font-family: var(--f-mono); font-size: 12.5px; letter-spacing: .08em; color: var(--emerald);
+  background: var(--ink); padding: 0 22px; white-space: nowrap;
+}
+#s01 .s01-loop b { color: var(--emerald); font-weight: 600; }
+
+/* 메타 */
+#s01 .s01-meta { display: flex; gap: 12px; padding-bottom: 10px; }
+#s01 .mchip {
+  display: flex; align-items: baseline; gap: 12px;
+  padding: 14px 22px; border-radius: 12px;
+  background: rgba(16,23,37,.72); border: 1px solid var(--ink-3);
+}
+#s01 .mchip .mk { font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .18em; color: var(--grey); }
+#s01 .mchip .mv { font-size: 17px; font-weight: 600; color: var(--white); }
+#s01 .mchip--hot {
+  margin-left: auto; background: rgba(59,130,246,.14); border-color: rgba(59,130,246,.48);
+  box-shadow: 0 0 34px rgba(59,130,246,.2);
+}
+#s01 .mchip--hot .mk { color: var(--blue-light); }
+#s01 .mchip--hot .mv { color: var(--blue-light); font-family: var(--f-display); font-weight: 800; font-size: 22px; }
+</style>
+</section>

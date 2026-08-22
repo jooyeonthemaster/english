@@ -7,6 +7,7 @@ import { generateLearningWorksheet } from "@/lib/passage-report/analysis-report/
 import { isKoreanPassage } from "@/lib/passage-report/analysis-report/ko-entry";
 import { analysisReportSchema, type AnalysisReport } from "@/lib/passage-report/analysis-report/schema";
 import { prisma } from "@/lib/prisma";
+import { cleanupStaleWorkbenchAiJobs } from "@/lib/workbench-ai-job-stale-cleanup";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -35,6 +36,7 @@ export async function POST(
     select: {
       id: true,
       academyId: true,
+      title: true,
       content: true,
       grade: true,
       subject: true,
@@ -69,6 +71,31 @@ export async function POST(
   }
   const baseReport: AnalysisReport = parsedReport.data;
 
+  // ── 잡 수명주기(검수 M3) — 동기 실행이라 잡이 없으면 진행 상태가 서버 어디에도 없어,
+  // 생성 중 새로고침·타 스태프 화면에서 버튼이 재활성돼 5크레딧 이중 차감 창이 열린다.
+  // 지문당 활성 1잡 검사로 부분 분석(fast 라우트)과도 상호 배제된다(스펙 §3.4 특례 ③).
+  await cleanupStaleWorkbenchAiJobs({
+    academyId: staff.academyId,
+    domain: "PASSAGE_ANALYSIS",
+    passageId: passage.id,
+  });
+  const active = await prisma.workbenchAiJob.findFirst({
+    where: {
+      academyId: staff.academyId,
+      domain: "PASSAGE_ANALYSIS",
+      passageId: passage.id,
+      status: { in: ["PENDING", "PROCESSING"] },
+      deletedAt: null,
+    },
+    select: { id: true },
+  });
+  if (active) {
+    return NextResponse.json(
+      { error: "이미 진행 중인 생성이 있습니다. 완료된 뒤 다시 시도해 주세요." },
+      { status: 409 },
+    );
+  }
+
   const cost = CREDIT_COSTS.PASSAGE_ANALYSIS;
   let tx: { transactionId: string };
   try {
@@ -89,6 +116,28 @@ export async function POST(
     throw err;
   }
 
+  // 과금 직후·생성(수 분) 직전에 잡을 연다 — config.includeWorksheet 는
+  // getStudioPassageDetail 의 실전 생성 중 판정(worksheetJobActive)이 읽는 키다.
+  const job = await prisma.workbenchAiJob.create({
+    data: {
+      academyId: staff.academyId,
+      createdById: staff.id,
+      domain: "PASSAGE_ANALYSIS",
+      status: "PROCESSING",
+      title: passage.title,
+      passageId: passage.id,
+      mode: "FULL",
+      requestedCount: 1,
+      startedAt: new Date(),
+      config: { includeWorksheet: true, worksheetOnly: true },
+    },
+  });
+  const closeJob = async (data: Record<string, unknown>) => {
+    await prisma.workbenchAiJob
+      .update({ where: { id: job.id }, data: { ...data, completedAt: new Date() } })
+      .catch((e) => console.error("worksheet job close failed", e));
+  };
+
   let worksheet;
   try {
     worksheet = await generateLearningWorksheet(
@@ -101,11 +150,13 @@ export async function POST(
     );
   } catch (e) {
     await refundCredits(staff.academyId, "PASSAGE_ANALYSIS", tx.transactionId, "실전 학습지 생성 예외", cost);
+    await closeJob({ status: "FAILED", failedCount: 1, errorMessage: String(e).slice(0, 300) });
     return NextResponse.json({ error: `생성 중 오류: ${String(e).slice(0, 200)}` }, { status: 500 });
   }
 
   if (!worksheet.ok) {
     await refundCredits(staff.academyId, "PASSAGE_ANALYSIS", tx.transactionId, "실전 학습지 생성 실패", cost);
+    await closeJob({ status: "FAILED", failedCount: 1, errorMessage: worksheet.error.slice(0, 300) });
     return NextResponse.json({ error: `실전 학습지 생성 실패: ${worksheet.error}` }, { status: 502 });
   }
 
@@ -127,6 +178,13 @@ export async function POST(
       version: { increment: 1 },
     },
     select: { id: true },
+  });
+
+  await closeJob({
+    status: "COMPLETED",
+    successCount: 1,
+    resultCount: 1,
+    result: { worksheetOnly: true, reportId: updated.id },
   });
 
   return NextResponse.json({ report: mergedReport, reportId: updated.id });

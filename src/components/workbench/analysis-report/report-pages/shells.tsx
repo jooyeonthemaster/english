@@ -211,8 +211,16 @@ export function RowShell({ it, edit, meta, measure, handleCell }: { it: FlowItem
   const editId = editIdOf(it);
   return (
     <tr data-mid={it.id} style={blockStyleOf(meta)} {...cp} className={(cp.className as string) ?? ""}>
+      {/* 그립만 `it.showGrip !== false` 로 게이트한다 — 핸들 **열(td)** 자체는 레이아웃 요소라
+          (위 주석: 6mm 열이 내용 열을 3.45% 좁힌다) 조건과 무관하게 계속 렌더해야 measure
+          클론과 실제 페이지의 표 기하가 일치한다. 열은 남기고 아이콘만 뺀다.
+          왜: 형제 셸 4곳(`:189,190` LiShell · `:235,236` BlockShell · `:275,276` MapItemShell)은
+          전부 이 게이트를 갖고 있는데 RowShell 만 빠져 있었다. 학습지 조판(E21)에서 부착
+          (읽기전용) 문서의 표 행 — grammar/exam-focus/vocabulary, 즉 부착 콘텐츠의 대부분 —
+          에만 그립이 남아 드래그로 `onReorder` 가 발화하고, 외래 접미 id 가 **활성 문서**
+          blockOrder 에 splice 된다(`editor-mutations.ts:201 reorderIds`). */}
       {handleCell ? (
-        <td className="par-edit-hcell">{edit && !measure ? <Grip edit={edit} id={editId} /> : null}</td>
+        <td className="par-edit-hcell">{edit && !measure && it.showGrip !== false ? <Grip edit={edit} id={editId} /> : null}</td>
       ) : null}
       <BlockFontProvider
         blockId={editId}

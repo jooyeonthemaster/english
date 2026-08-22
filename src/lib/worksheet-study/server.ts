@@ -16,7 +16,8 @@ import { parseAnalysisReportForPreview } from "@/lib/passage-report/analysis-rep
 import { prisma } from "@/lib/prisma";
 import { isTaskLocked } from "@/lib/study-assignments/status";
 import type { OwnedStudentTask } from "@/lib/study-assignments/student-runtime";
-import { compileStudyPlan, planIsViable } from "./compile";
+import { planIsViable } from "./compile";
+import { compileServerStudyPlan } from "./plan-server";
 import { accumulateWeakness, computeMasteryPct, computeStudyMastery } from "./grade";
 import type {
   StudyEventsRequest,
@@ -143,11 +144,12 @@ export async function loadStudyContext(
     if (report && report.generationPlan === PRIME_REPORT_MARKER) {
       const parsed = parseAnalysisReportForPreview(report.pages);
       if (parsed) {
-        const compiled = compileStudyPlan({
+        const compiled = await compileServerStudyPlan({
           report: parsed,
           mode: config.mode,
           taskId: task.taskId,
           reportTitle: report.title,
+          stages: config.stages,
         });
         if (planIsViable(compiled)) plan = compiled;
       }

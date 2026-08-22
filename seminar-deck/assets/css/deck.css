@@ -1,0 +1,402 @@
+/* ============================================================
+   SMOAT LINE — deck engine + LINE chrome + primitives
+   ============================================================ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; background: #04060C; overflow: hidden; }
+body {
+  font-family: var(--f-body);
+  -webkit-font-smoothing: antialiased;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  text-rendering: optimizeLegibility;
+}
+
+/* ---------- stage (절대좌표 센터링 — place-items 트랩 회피) ---------- */
+#viewport { position: fixed; inset: 0; background: #04060C; overflow: hidden; }
+#stage {
+  position: absolute; left: 50%; top: 50%;
+  margin-left: -960px; margin-top: -540px;
+  width: 1920px; height: 1080px;
+  background: var(--ink); color: var(--paper);
+  transform-origin: center center; overflow: hidden;
+}
+
+/* ---------- 청사진 그리드 (라인의 바닥) ---------- */
+#grid-bg {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgba(59,130,246,.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(59,130,246,.055) 1px, transparent 1px),
+    linear-gradient(to right, rgba(136,146,166,.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(136,146,166,.035) 1px, transparent 1px);
+  background-size: 192px 192px, 192px 192px, 48px 48px, 48px 48px;
+  transition: opacity .4s var(--ease-snap);
+}
+#stage.paper-mode #grid-bg { opacity: .35; }
+#glow-bg {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(760px 520px at 14% 8%, rgba(59,130,246,.16), transparent 62%),
+    radial-gradient(680px 480px at 88% 94%, rgba(99,102,241,.13), transparent 62%);
+  transition: opacity .4s var(--ease-snap);
+}
+#stage.paper-mode #glow-bg { opacity: 0; }
+
+/* ---------- slides ---------- */
+.slide { position: absolute; inset: 0; display: none; overflow: hidden; z-index: 1; }
+.slide.active { display: block; }
+.slide--dark  { background: transparent; color: var(--paper); }
+.slide--paper { background: var(--paper); color: var(--g900); }
+.slide--paper::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background-image: linear-gradient(to bottom, rgba(17,24,39,.028) 1px, transparent 1px);
+  background-size: 100% 32px; opacity: .8;
+}
+
+/* 안전영역 헬퍼 */
+.pad { position: absolute; inset: var(--safe-t) var(--safe-x) var(--safe-b); }
+
+/* ---------- steps ---------- */
+[data-step] {
+  opacity: 0; transform: translateY(22px);
+  transition: opacity .38s var(--ease-snap), transform .38s var(--ease-snap);
+}
+[data-step].on { opacity: 1; transform: none; }
+[data-step][data-fx="left"]  { transform: translateX(-28px); }
+[data-step][data-fx="right"] { transform: translateX(28px); }
+[data-step][data-fx="scale"] { transform: scale(.93); }
+[data-step][data-fx="none"]  { transform: none; }
+[data-step].on[data-fx]      { transform: none; }
+
+/* ============================================================
+   HUD — LINE RAIL (상단)
+   ============================================================ */
+#hud { position: absolute; inset: 0; pointer-events: none; z-index: 900; }
+
+#hud-top {
+  position: absolute; top: 0; left: 0; right: 0; height: 96px;
+  padding: 0 40px; display: flex; flex-direction: column; justify-content: center; gap: 10px;
+}
+#hud-row {
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: var(--f-mono); font-size: 12.5px; letter-spacing: .14em;
+}
+#hud-brand { display: flex; align-items: center; gap: 14px; }
+#hud-brand .mark {
+  font-family: var(--f-latin); font-weight: 900; font-size: 15px; letter-spacing: .06em;
+  color: var(--blue); text-transform: uppercase;
+}
+#hud-brand .mark i { font-style: normal; color: var(--paper); opacity: .55; margin-left: 7px; font-weight: 700; letter-spacing: .18em; font-size: 11px; }
+#hud-st { color: var(--paper); font-weight: 600; opacity: .92; }
+#hud-st b { color: var(--blue); font-weight: 600; }
+#hud-zone {
+  padding: 3px 9px; border: 1px solid rgba(136,146,166,.36); border-radius: 4px;
+  color: var(--grey); font-size: 11px; letter-spacing: .16em;
+}
+#hud-right { display: flex; align-items: center; gap: 16px; color: var(--grey); }
+#hud-live { display: flex; align-items: center; gap: 8px; color: var(--paper); }
+#hud-live .dot {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--emerald);
+  box-shadow: 0 0 10px rgba(16,185,129,.9); animation: pulse-dot 1.6s ease-in-out infinite;
+}
+@keyframes pulse-dot { 0%,100% { opacity: 1; } 50% { opacity: .25; } }
+#hud-part { font-size: 11.5px; letter-spacing: .1em; }
+#hud-tc { color: var(--paper); font-variant-numeric: tabular-nums; opacity: .8; }
+
+/* --- rail --- */
+#rail { display: flex; align-items: center; gap: 0; height: 18px; }
+#rail .node {
+  position: relative; flex: 1 1 0; height: 18px; display: flex; align-items: center;
+  pointer-events: auto; cursor: pointer;
+}
+#rail .node::after {
+  content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 2px; margin-top: -1px;
+  background: rgba(136,146,166,.22); transition: background .3s var(--ease-line);
+}
+#rail .node.done::after { background: rgba(59,130,246,.55); }
+#rail .node .pip {
+  position: relative; z-index: 2; width: 7px; height: 7px; border-radius: 50%;
+  background: var(--ink); border: 1.5px solid rgba(136,146,166,.5);
+  transition: all .3s var(--ease-line);
+}
+#rail .node.done .pip { background: var(--blue); border-color: var(--blue); }
+#rail .node.here .pip {
+  width: 13px; height: 13px; background: var(--blue); border-color: var(--white);
+  box-shadow: 0 0 0 4px rgba(59,130,246,.24), 0 0 16px rgba(59,130,246,.85);
+}
+#rail .node.zstart { margin-left: 13px; }
+#rail .node.zstart::before {
+  content: ''; position: absolute; left: -9px; top: 1px; bottom: 1px; width: 1px;
+  background: rgba(136,146,166,.34);
+}
+#rail .node .tip {
+  position: absolute; top: 22px; left: -6px; white-space: nowrap;
+  font-family: var(--f-mono); font-size: 10px; letter-spacing: .1em; color: var(--blue-light);
+  background: rgba(8,12,22,.94); border: 1px solid var(--ink-4); padding: 4px 8px; border-radius: 4px;
+  opacity: 0; transform: translateY(-4px); transition: all .14s; pointer-events: none; z-index: 20;
+}
+#rail .node:hover .tip { opacity: 1; transform: none; }
+
+/* paper 모드 HUD 반전 */
+#stage.paper-mode #hud-st,
+#stage.paper-mode #hud-tc,
+#stage.paper-mode #hud-live { color: var(--g900); }
+#stage.paper-mode #hud-brand .mark i { color: var(--g700); opacity: .7; }
+#stage.paper-mode #hud-right,
+#stage.paper-mode #hud-zone { color: var(--g600); }
+#stage.paper-mode #hud-zone { border-color: rgba(17,24,39,.22); }
+#stage.paper-mode #rail .node::after { background: rgba(17,24,39,.16); }
+#stage.paper-mode #rail .node.done::after { background: rgba(37,99,235,.45); }
+#stage.paper-mode #rail .node .pip { background: var(--paper); border-color: rgba(17,24,39,.32); }
+#stage.paper-mode #rail .node.done .pip { background: var(--blue-deep); border-color: var(--blue-deep); }
+#stage.paper-mode #rail .node.here .pip { border-color: var(--white); }
+
+/* ============================================================
+   MATERIAL READOUT (하단) — 무엇이 들어와 무엇이 나가는가
+   ============================================================ */
+#readout {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 56px; z-index: 901;
+  display: flex; align-items: center; padding: 0 40px; gap: 22px;
+  background: linear-gradient(to top, rgba(8,12,22,.97), rgba(8,12,22,.72));
+  border-top: 1px solid var(--ink-3); font-family: var(--f-mono);
+  transition: background .35s var(--ease-snap), border-color .35s var(--ease-snap);
+}
+#stage.paper-mode #readout {
+  background: linear-gradient(to top, rgba(237,234,226,.98), rgba(247,245,240,.86));
+  border-top-color: rgba(17,24,39,.14);
+}
+#readout .side { display: flex; align-items: center; gap: 10px; font-size: 13px; letter-spacing: .04em; min-width: 0; }
+#readout .lab {
+  font-size: 10px; letter-spacing: .2em; font-weight: 700; padding: 3px 8px; border-radius: 4px;
+  flex: none;
+}
+#readout .lab--in  { color: var(--blue); background: rgba(59,130,246,.14); border: 1px solid rgba(59,130,246,.34); }
+#readout .lab--out { color: var(--emerald); background: rgba(16,185,129,.13); border: 1px solid rgba(16,185,129,.32); }
+#readout .val { color: var(--paper); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#stage.paper-mode #readout .val { color: var(--g900); }
+#readout .flow { flex: 1; position: relative; height: 2px; background: rgba(136,146,166,.2); overflow: hidden; border-radius: 2px; }
+#stage.paper-mode #readout .flow { background: rgba(17,24,39,.12); }
+#readout .flow::after {
+  content: ''; position: absolute; top: 0; left: -32%; width: 32%; height: 100%;
+  background: linear-gradient(90deg, transparent, var(--blue), transparent);
+  animation: flow-run 2.6s linear infinite;
+}
+@keyframes flow-run { to { left: 100%; } }
+#readout .note {
+  flex: none; font-size: 10.5px; letter-spacing: .16em; color: var(--grey);
+  padding-left: 22px; border-left: 1px solid var(--ink-3);
+}
+#stage.paper-mode #readout .note { color: var(--g500); border-left-color: rgba(17,24,39,.14); }
+
+/* ============================================================
+   전환 시그니처 — 컨베이어 어드밴스
+   ============================================================ */
+#sweep { position: absolute; inset: 0; z-index: 940; pointer-events: none; opacity: 0; }
+#sweep.go { animation: sweep-go .34s var(--ease-line) 1; }
+#sweep::before {
+  content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: 26%;
+  background: linear-gradient(90deg, transparent, rgba(59,130,246,.16) 45%, rgba(191,219,254,.30) 60%, transparent);
+}
+@keyframes sweep-go {
+  0%   { opacity: 1; transform: translateX(-30%); }
+  100% { opacity: 0; transform: translateX(130%); }
+}
+#gridflash {
+  position: absolute; inset: 0; z-index: 939; pointer-events: none; opacity: 0;
+  background-image:
+    linear-gradient(to right, rgba(59,130,246,.22) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(59,130,246,.22) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+#gridflash.go { animation: gf .42s var(--ease-line) 1; }
+@keyframes gf { 0% { opacity: .9; } 100% { opacity: 0; } }
+
+/* 공정 배지 플래시 */
+#osd {
+  position: absolute; top: 118px; right: 40px; z-index: 950; opacity: 0;
+  font-family: var(--f-mono); font-size: 15px; letter-spacing: .22em; font-weight: 600;
+  color: var(--blue-light); background: rgba(8,12,22,.9); border: 1px solid rgba(59,130,246,.4);
+  border-radius: 6px; padding: 8px 16px;
+}
+#osd.show { animation: osd-in 1.15s var(--ease-snap) forwards; }
+@keyframes osd-in {
+  0% { opacity: 0; transform: translateX(14px); }
+  14% { opacity: 1; transform: none; }
+  72% { opacity: 1; }
+  100% { opacity: 0; }
+}
+#stage.paper-mode #osd { background: rgba(247,245,240,.94); color: var(--blue-deep); }
+
+/* ============================================================
+   LINE MAP — 오버뷰(공정도). 격자가 아니라 흐름도다.
+   ============================================================ */
+#linemap {
+  position: absolute; inset: 0; z-index: 970; display: none;
+  background: #060911; padding: 58px 84px 52px; color: var(--paper);
+  overflow: hidden;
+}
+#linemap::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .5;
+  background-image:
+    linear-gradient(to right, rgba(59,130,246,.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(59,130,246,.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+#linemap.open { display: block; }
+#linemap h2 {
+  font-family: var(--f-mono); font-size: 12px; letter-spacing: .3em; color: var(--blue);
+  margin-bottom: 4px; position: relative;
+}
+#linemap .sub { font-family: var(--f-body); font-size: 13px; color: var(--grey); margin-bottom: 18px; position: relative; }
+#linemap .zones { display: flex; flex-direction: column; gap: 8px; position: relative; }
+#linemap .zrow { display: flex; align-items: stretch; gap: 16px; }
+#linemap .zlab {
+  flex: none; width: 128px; display: flex; flex-direction: column; justify-content: center;
+  border-left: 2px solid var(--blue); padding-left: 12px;
+}
+#linemap .zlab .zn { font-family: var(--f-display); font-weight: 800; font-size: 18px; letter-spacing: -.01em; }
+#linemap .zlab .zd { font-family: var(--f-mono); font-size: 9.5px; letter-spacing: .16em; color: var(--grey); margin-top: 3px; }
+#linemap .zcells { display: flex; gap: 8px; flex: 1; align-items: stretch; }
+#linemap .cell {
+  flex: 1 1 0; min-width: 0; background: var(--ink-2); border: 1px solid var(--ink-3);
+  border-radius: 10px; padding: 9px 12px; cursor: pointer; position: relative;
+  transition: transform .13s var(--ease-snap), border-color .13s, background .13s;
+}
+#linemap .cell:hover { transform: translateY(-3px); border-color: var(--blue); background: #16203a; }
+#linemap .cell.here { border-color: var(--blue); background: rgba(59,130,246,.16); box-shadow: var(--sh-glow); }
+#linemap .cell .n {
+  font-family: var(--f-mono); font-size: 9.5px; letter-spacing: .16em; color: var(--blue-light); opacity: .85;
+}
+#linemap .cell .t {
+  font-family: var(--f-display); font-weight: 700; font-size: 14.5px; margin-top: 4px; line-height: 1.2;
+}
+#linemap .cell .k {
+  font-size: 10.5px; color: var(--grey); margin-top: 2px; line-height: 1.3;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+#linemap .zcells .arrow {
+  flex: none; align-self: center; color: var(--ink-4); font-family: var(--f-mono); font-size: 13px;
+}
+#linemap .loop {
+  margin-top: 14px; position: relative; display: flex; align-items: center; gap: 14px;
+  font-family: var(--f-mono); font-size: 11.5px; letter-spacing: .14em; color: var(--emerald);
+}
+#linemap .loop .bar { flex: 1; height: 1px; background: linear-gradient(90deg, var(--emerald), rgba(16,185,129,.12)); }
+#linemap .hint {
+  position: absolute; right: 84px; bottom: 26px; font-family: var(--f-mono);
+  font-size: 10.5px; letter-spacing: .16em; color: var(--grey-d);
+}
+
+/* ============================================================
+   PRIMITIVES — 라인 어휘
+   ============================================================ */
+.kicker {
+  display: inline-flex; align-items: center; gap: 11px;
+  font-family: var(--f-mono); font-size: 12.5px; letter-spacing: .22em; font-weight: 600;
+  color: var(--blue);
+}
+.kicker::before { content: ''; width: 22px; height: 2px; background: var(--blue); flex: none; }
+.slide--paper .kicker { color: var(--blue-deep); }
+.slide--paper .kicker::before { background: var(--blue-deep); }
+
+.h1 { font-family: var(--f-display); font-weight: 800; font-size: 92px; line-height: 1.06; letter-spacing: -.026em; }
+.h2 { font-family: var(--f-display); font-weight: 800; font-size: 68px; line-height: 1.1;  letter-spacing: -.022em; }
+.h3 { font-family: var(--f-display); font-weight: 700; font-size: 42px; line-height: 1.2;  letter-spacing: -.016em; }
+.h4 { font-family: var(--f-display); font-weight: 700; font-size: 28px; line-height: 1.3;  letter-spacing: -.012em; }
+.lead { font-size: 22px; line-height: 1.62; color: var(--grey); font-weight: 400; }
+.slide--paper .lead { color: var(--g600); }
+.body { font-size: 17px; line-height: 1.7; }
+
+.hl { color: var(--blue); }
+.hl-em { color: var(--emerald); }
+.hl-am { color: var(--amber); }
+.hl-rd { color: var(--red); }
+
+/* 형광 마커 — 후킹 문구용 (장표당 1개 원칙) */
+.mark-hl {
+  display: inline; background-image: linear-gradient(transparent 58%, rgba(59,130,246,.30) 58%);
+  padding: 0 2px;
+}
+.mark-solid {
+  display: inline-block; background: var(--blue); color: var(--white);
+  padding: 2px 14px 5px; border-radius: 6px; box-shadow: 0 6px 20px rgba(59,130,246,.36);
+}
+
+.card {
+  background: var(--ink-2); border: 1px solid var(--ink-3); border-radius: var(--r-lg);
+  padding: 26px; box-shadow: var(--sh-card);
+}
+.slide--paper .card { background: var(--white); border-color: var(--g200); box-shadow: 0 8px 24px rgba(17,24,39,.07); }
+.card--line { background: transparent; box-shadow: none; }
+.card--blue { border-color: rgba(59,130,246,.4); background: rgba(59,130,246,.09); }
+
+.tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--f-mono); font-size: 11px; letter-spacing: .12em; font-weight: 600;
+  padding: 5px 11px; border-radius: 999px; border: 1px solid currentColor;
+}
+.tag--fill { background: var(--blue); color: var(--white); border-color: var(--blue); }
+.tag--em { color: var(--emerald); background: rgba(16,185,129,.12); border-color: rgba(16,185,129,.38); }
+.tag--am { color: var(--amber); background: rgba(245,158,11,.12); border-color: rgba(245,158,11,.38); }
+.tag--rd { color: var(--red);   background: rgba(239,68,68,.12);  border-color: rgba(239,68,68,.38); }
+
+.stat__n {
+  font-family: var(--f-display); font-weight: 900; line-height: .9; letter-spacing: -.03em;
+  font-variant-numeric: tabular-nums;
+}
+.stat__l { font-family: var(--f-mono); font-size: 12px; letter-spacing: .16em; color: var(--grey); margin-top: 12px; }
+.slide--paper .stat__l { color: var(--g500); }
+
+.src-line {
+  position: absolute; right: var(--safe-x); bottom: 22px;
+  font-family: var(--f-mono); font-size: 10px; letter-spacing: .06em;
+  color: var(--grey-d); text-align: right; line-height: 1.7; z-index: 5;
+}
+.slide--paper .src-line { color: var(--g400); }
+
+/* 공정 번호 배지 */
+.st-badge {
+  display: inline-flex; align-items: baseline; gap: 9px;
+  font-family: var(--f-mono); font-weight: 600;
+  padding: 7px 14px; border-radius: 8px;
+  background: rgba(59,130,246,.13); border: 1px solid rgba(59,130,246,.36); color: var(--blue-light);
+}
+.st-badge .num { font-size: 20px; letter-spacing: .04em; }
+.st-badge .nm { font-size: 11.5px; letter-spacing: .2em; opacity: .8; }
+.slide--paper .st-badge { background: var(--blue-sub); border-color: var(--blue-light); color: var(--blue-deep); }
+
+/* ---------- 디바이스 목업 ---------- */
+.tablet {
+  position: relative; width: 900px; height: 640px; background: #0B0F18;
+  border-radius: 30px; border: 3px solid #232B3B; padding: 16px 16px;
+  box-shadow: 0 40px 90px rgba(0,0,0,.6), inset 0 0 0 6px #05070C;
+}
+.tablet__cam { position: absolute; top: 15px; left: 50%; transform: translateX(-50%); width: 7px; height: 7px; border-radius: 50%; background: #1c2436; }
+.tablet__scr { position: absolute; inset: 16px; border-radius: 16px; overflow: hidden; background: #fff; }
+
+.phone {
+  position: relative; width: 340px; height: 700px; background: #05070C;
+  border-radius: 44px; border: 3px solid #232B3B;
+  box-shadow: 0 32px 70px rgba(0,0,0,.55), inset 0 0 0 6px #0A0E16;
+}
+.phone__notch { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); width: 104px; height: 26px; background: #05070C; border-radius: 16px; z-index: 30; }
+.phone__scr { position: absolute; inset: 9px; border-radius: 36px; overflow: hidden; background: #fff; }
+
+/* 종이 산출물 시트 */
+.sheet {
+  background: var(--white); border-radius: 3px; box-shadow: var(--sh-paper);
+  color: var(--g900); position: relative;
+}
+.sheet--a4 { width: 520px; height: 735px; }
+
+/* 스크롤 가능 영역 (내비 억제 대상) */
+.scrollable { overflow-y: auto; scrollbar-width: thin; }
+.scrollable::-webkit-scrollbar { width: 5px; }
+.scrollable::-webkit-scrollbar-thumb { background: rgba(136,146,166,.35); border-radius: 3px; }
+
+/* util */
+.mono { font-family: var(--f-mono); }
+.latin { font-family: var(--f-latin); text-transform: uppercase; letter-spacing: .06em; }
+.dim { opacity: .58; }
+.tnum { font-variant-numeric: tabular-nums; }
+.nowrap { white-space: nowrap; }

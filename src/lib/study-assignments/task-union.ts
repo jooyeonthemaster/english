@@ -415,6 +415,26 @@ export async function loadStudentUnifiedTasks(
     });
   }
 
+  // ── 먼 미래 예약분 접기 (VOCAB 교재 시차 배포 대응) ────────────────────────
+  // 단어 교재는 단계마다 과제 1개를 시차 예약하므로(최대 60단계) 배포 즉시
+  // 학생 목록에 열리지도 않은 잠금 카드가 수십 장 쌓인다. 아직 열리지 않았고
+  // 열릴 날이 한참 남은 VOCAB 카드는 감춘다 — 학생이 지금 할 수 있는 일과
+  // 곧 열릴 것만 남긴다(그 날이 되면 자연히 나타난다).
+  // 다른 종류(시험·학습지 등)는 예정 공지의 의미가 있어 건드리지 않는다.
+  const VOCAB_UPCOMING_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
+  const horizon = Date.now() + VOCAB_UPCOMING_WINDOW_MS;
+  const visible = records.filter(
+    (r) =>
+      !(
+        r.kind === "VOCAB" &&
+        r.status !== "DONE" &&
+        r.availableFrom instanceof Date &&
+        r.availableFrom.getTime() > horizon
+      ),
+  );
+  records.length = 0;
+  records.push(...visible);
+
   // 기본 정렬 — 미완료(마감 임박) 우선, 완료는 뒤로.
   const weight = (s: StudyTaskStatus) => (s === "DONE" ? 1 : 0);
   records.sort((a, b) => {

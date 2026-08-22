@@ -19,10 +19,10 @@ import { cn } from "@/lib/utils";
 import {
   isPanelSectionId,
   normalizePanelSectionOrder,
-  PANEL_SECTION_COLLAPSED_STORAGE_KEY,
-  PANEL_SECTION_ORDER_STORAGE_KEY,
   readStoredCollapsedPanelSections,
   readStoredPanelSectionOrder,
+  writeStoredCollapsedPanelSections,
+  writeStoredPanelSectionOrder,
   type PanelSectionId,
 } from "./editor-storage";
 
@@ -121,6 +121,7 @@ export function SortablePanelStack({
   onActivateActivity,
   vocabTestActive = false,
   vocabTestActivateNonce = 0,
+  ns,
 }: {
   children: ReactNode;
   blockSelected?: boolean;
@@ -131,6 +132,12 @@ export function SortablePanelStack({
   vocabTestActive?: boolean;
   /** '단어 시험지' 카드를 누를 때마다 증가 — 이미 활성이어도 접힌 섹션을 다시 펼친다. */
   vocabTestActivateNonce?: number;
+  /**
+   * [E21-3] localStorage 네임스페이스. 미전달(undefined)이면 `reportEditorPanelSectionKeys`
+   * (editor-storage.ts:155-167)가 현행 상수 키를 그대로 반환하므로 독립 라우트는 **바이트 동일**.
+   * 조판 임베드(sheet-compose-surface.tsx 의 `storageNamespace`)에서만 키가 갈라진다.
+   */
+  ns?: string;
 }) {
   // activity-edit / vocab-test-edit 접힘은 영속(localStorage)하지 않고 전용 상태로 — 활성화될 때마다 항상 펼침으로 시작.
   const [activityEditCollapsed, setActivityEditCollapsed] = useState(false);
@@ -141,30 +148,29 @@ export function SortablePanelStack({
   useEffect(() => {
     if (vocabTestActive) setVocabTestEditCollapsed(false);
   }, [vocabTestActive, vocabTestActivateNonce]);
-  const [sectionOrder, setSectionOrder] = useState<PanelSectionId[]>(
-    readStoredPanelSectionOrder,
+  // [E21-3] ns 를 lazy initializer 로 **직접** 넘기면 React 가 인자 없이 호출해 ns 가 유실된다
+  // (editor-storage.ts:169-171 주석과 동일한 함정) → 반드시 화살표로 감싸 인자를 명시한다.
+  const [sectionOrder, setSectionOrder] = useState<PanelSectionId[]>(() =>
+    readStoredPanelSectionOrder(ns),
   );
-  const [collapsedSectionIds, setCollapsedSectionIds] = useState<PanelSectionId[]>(
-    readStoredCollapsedPanelSections,
+  const [collapsedSectionIds, setCollapsedSectionIds] = useState<PanelSectionId[]>(() =>
+    readStoredCollapsedPanelSections(ns),
   );
   const [draggingSectionId, setDraggingSectionId] = useState<PanelSectionId | null>(null);
   const [dragOverSectionId, setDragOverSectionId] = useState<PanelSectionId | null>(null);
 
+  // [E21-3] 인라인 setItem(ns-무관 상수 키) → ns 접근자로 교체. 이 두 줄이 미배선이라
+  // 조판 임베드에서 접은 카드(예: 표지·디자인 템플릿)가 전역 키를 덮어써 독립 라우트까지
+  // 접힌 채로 떴다(실측 `.tmp-worksheet-compose/_audit-l4-ls-leak2.mjs`:
+  // T0 collapsed=["logo"] → 임베드 셸 내부 헤더만 클릭 → T2 ["logo","cover","theme"],
+  // 같은 시점 sheetCompose 섹션 ns 키는 0개).
   useEffect(() => {
-    try {
-      window.localStorage.setItem(PANEL_SECTION_ORDER_STORAGE_KEY, JSON.stringify(sectionOrder));
-    } catch {
-      // Convenience setting only.
-    }
-  }, [sectionOrder]);
+    writeStoredPanelSectionOrder(sectionOrder, ns);
+  }, [sectionOrder, ns]);
 
   useEffect(() => {
-    try {
-      window.localStorage.setItem(PANEL_SECTION_COLLAPSED_STORAGE_KEY, JSON.stringify(collapsedSectionIds));
-    } catch {
-      // Convenience setting only.
-    }
-  }, [collapsedSectionIds]);
+    writeStoredCollapsedPanelSections(collapsedSectionIds, ns);
+  }, [collapsedSectionIds, ns]);
 
   const togglePanelSection = useCallback(
     (id: PanelSectionId) => {

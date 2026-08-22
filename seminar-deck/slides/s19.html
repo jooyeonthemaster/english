@@ -1,0 +1,597 @@
+<section class="slide slide--dark" id="s19"
+  data-title="ST 08" data-kr="라인이 닫힌다"
+  data-zone="순환" data-zone-en="LOOP"
+  data-part="PART 1 — 기능 브리핑"
+  data-in="취약점 리포트"
+  data-out="그 학생을 위한 다음 과제"
+  data-note="↺ ST 01로">
+
+  <div class="pad s19-wrap">
+
+    <!-- ── 상단 카피 ── -->
+    <header class="s19-head">
+      <div class="s19-hl">
+        <div class="kicker" data-step="0" data-fx="none">ST 08 · LOOP</div>
+        <h1 class="s19-h" data-step="0">
+          <span class="l1">취약점이</span>
+          <span class="l2"><em>다음 과제가</em> 됩니다.</span>
+        </h1>
+      </div>
+      <p class="s19-lead" data-step="0" data-fx="none">
+        리포트에서 취약 유형을 누르면, 그 유형으로 다시 출제됩니다.<br>
+        여기가 라인이 한 바퀴 도는 지점입니다.
+      </p>
+    </header>
+
+    <div class="s19-main">
+
+      <!-- ── 좌: 3단 처방 흐름 (실제 강사 웹 동선 재현) ── -->
+      <div class="s19-flow" data-step="1" data-fx="none" data-noadvance>
+
+        <div class="s19-steps">
+
+          <!-- ① 취약 셀 클릭 -->
+          <div class="fp fp--on" id="s19-fp1">
+            <div class="fp-cap"><i>①</i>취약 셀 클릭</div>
+            <div class="fp-mock fp-mock--fill">
+              <div class="wb hm" id="s19-hm">
+
+                <div class="hm-hd">
+                  <svg class="hm-ic" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" aria-hidden="true">
+                    <rect x="3" y="3" width="7" height="7" rx="1.6"/><rect x="14" y="3" width="7" height="7" rx="1.6"/>
+                    <rect x="14" y="14" width="7" height="7" rx="1.6"/><rect x="3" y="14" width="7" height="7" rx="1.6"/>
+                  </svg>
+                  <b>유형별 정답률</b>
+                  <span class="hm-i">i</span>
+                </div>
+
+                <div class="hm-tb">
+                  <span class="hm-note">전체 회차 합산</span>
+                  <span class="hm-lg">
+                    <i class="sq none"></i>기록 없음
+                    <em>낮음</em>
+                    <i class="sq g1"></i><i class="sq g2"></i><i class="sq g3"></i><i class="sq g4"></i><i class="sq g5"></i>
+                    <em>높음</em>
+                  </span>
+                </div>
+
+                <div class="hm-bd">
+                  <div class="hm-row hm-row--hd"><span class="hm-t"></span><span class="hm-c">합산</span></div>
+                  <div class="hm-row"><span class="hm-t">내용 일치</span><span class="hm-cell v100">100%</span></div>
+                  <div class="hm-row"><span class="hm-t">주제 추론</span><span class="hm-cell v100">100%</span></div>
+                  <div class="hm-row"><span class="hm-t">순서 배열</span><span class="hm-cell v100">100%</span></div>
+                  <div class="hm-row"><span class="hm-t">제목 추론</span><span class="hm-cell v67">67%</span></div>
+                  <div class="hm-row"><span class="hm-t">어법</span><span class="hm-cell v67">67%</span></div>
+                  <div class="hm-row hm-row--weak">
+                    <span class="hm-t">빈칸 추론</span>
+                    <button class="hm-cell v50 weak" id="s19-cell" type="button">50%</button>
+                    <svg class="s19-cur" viewBox="0 0 24 30" aria-hidden="true">
+                      <path d="M3 2 L3 24 L9 18.5 L13 27.5 L17 25.5 L13 17 L21 17 Z"
+                            fill="#ffffff" stroke="#0F172A" stroke-width="1.6" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <div class="fp-desc">유형별 정답률 히트맵에서 <b>빈칸 추론</b> 셀을 누른다</div>
+          </div>
+
+          <div class="fa" id="s19-a1"><span class="mono">▸</span></div>
+
+          <!-- ② 이 범위로 과제 보내기 -->
+          <div class="fp" id="s19-fp2">
+            <div class="fp-cap"><i>②</i>이 범위로 과제 보내기</div>
+            <div class="fp-mock">
+              <div class="fp-ph" id="s19-ph2"><span class="mono">①</span> 셀을 누르면 열립니다</div>
+              <div class="wb cmp" id="s19-pop" hidden>
+
+                <div class="cmp-hd">
+                  <svg class="cmp-ic" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" aria-hidden="true">
+                    <rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/><path d="M15 4v16"/>
+                  </svg>
+                  <b>과제 컴포저</b>
+                  <span class="cmp-tag mono">3패널 위저드</span>
+                </div>
+
+                <div class="cmp-rg">
+                  <span class="rg-l">범위</span>
+                  <span class="rg-v">빈칸 추론</span>
+                  <span class="rg-m">정답률 50% (2/4) · 전체 회차 합산</span>
+                </div>
+
+                <div class="cmp-wz">
+                  <div class="wz on"><i>1</i><span class="bar"></span><span class="bar s"></span></div>
+                  <div class="wz"><i>2</i><span class="bar"></span><span class="bar s"></span></div>
+                  <div class="wz"><i>3</i><span class="bar"></span><span class="bar s"></span></div>
+                </div>
+
+                <div class="cmp-ft">
+                  <button class="cta" id="s19-cta" type="button">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M22 2 11 13"/><path d="M22 2 15 22 11 13 2 9 22 2Z"/>
+                    </svg>
+                    <span id="s19-ctat">이 범위로 과제 보내기</span>
+                  </button>
+                </div>
+
+                <svg class="s19-cur s19-cur--b" viewBox="0 0 24 30" aria-hidden="true">
+                  <path d="M3 2 L3 24 L9 18.5 L13 27.5 L17 25.5 L13 17 L21 17 Z"
+                        fill="#ffffff" stroke="#0F172A" stroke-width="1.6" stroke-linejoin="round"/>
+                </svg>
+
+              </div>
+            </div>
+            <div class="fp-desc">그 범위 그대로 과제 컴포저가 열린다 <span class="mut">(3패널 위저드)</span></div>
+          </div>
+
+          <div class="fa" id="s19-a2"><span class="mono">▸</span></div>
+
+          <!-- ③ 배포 완료 -->
+          <div class="fp" id="s19-fp3">
+            <div class="fp-cap"><i>③</i>배포 완료</div>
+            <div class="fp-mock">
+              <div class="fp-ph" id="s19-ph3"><span class="mono">②</span> 버튼을 누르면 배포됩니다</div>
+              <div class="sent" id="s19-sent" hidden>
+                <span class="tick">✓</span>
+                <b>12명에게 과제를 보냈습니다</b>
+                <span class="meta">7/26(토) 23:59 마감 · D-2</span>
+              </div>
+            </div>
+            <div class="fp-desc">그 학생을 위한 <b>다음 과제</b>가 나갑니다</div>
+          </div>
+
+        </div>
+
+        <div class="s19-quote">
+          <p class="qt">“출제와 이어지는 보완 학습 — 취약 유형으로 변형문제 바로 재출제”<span class="src">— SMOAT 소개 문구</span></p>
+          <span class="s19-try"><span class="mono">TRY</span> 취약 셀을 눌러 배포까지 직접 이어보세요</span>
+        </div>
+
+      </div>
+
+      <!-- ── 우: 3주 계획 ── -->
+      <aside class="s19-plan" data-step="2" data-fx="right">
+        <div class="pl-hd">
+          <span class="pl-t">3주 계획</span>
+          <span class="pl-s">리포트가 함께 내놓는 것</span>
+        </div>
+        <ol class="pl-list">
+          <li>
+            <i class="pl-w mono">1주차</i>
+            <p>빈칸 추론 3단 루틴 장착 — 단서 먼저, 선지는 마지막</p>
+          </li>
+          <li>
+            <i class="pl-w mono">2주차</i>
+            <p>어법 검산 루틴 + 서술자의 어조 읽기</p>
+          </li>
+          <li class="pl-last">
+            <i class="pl-w mono">3주차</i>
+            <p>실전 모의 2회로 마무리 재점검</p>
+          </li>
+        </ol>
+      </aside>
+
+    </div>
+
+    <!-- ── 하단 전폭: 루프 선언 ── -->
+    <div class="s19-loopband" data-step="3" data-fx="none">
+
+      <svg class="s19-arc" viewBox="0 0 1728 186" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <marker id="s19arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+            <path d="M0,0 L10,5 L0,10 Z" fill="#10B981"/>
+          </marker>
+        </defs>
+        <path class="loop-path"
+              d="M1623,97 C1694,97 1714,117 1714,141 C1714,164 1690,173 1652,173 L176,173 C104,173 66,164 66,132 L66,101"
+              fill="none" stroke="#10B981" stroke-width="1.8" stroke-dasharray="7 9"
+              marker-end="url(#s19arrow)" opacity=".62"/>
+      </svg>
+
+      <div class="lb-node lb-in"><i>ST 01</i><b>지문 투입</b></div>
+      <div class="lb-node lb-out"><i>ST 08</i><b>처방</b></div>
+
+      <div class="lb-tx">
+        <b><em>ST 08</em>의 출구가 <em>ST 01</em>의 입구입니다.</b>
+        <span>한 번 돌 때마다 학생의 약한 곳이 좁아집니다.</span>
+      </div>
+
+      <span class="lb-cyc mono">↺</span>
+
+    </div>
+
+  </div>
+
+<style>
+#s19 .s19-wrap { display: flex; flex-direction: column; }
+#s19 [hidden] { display: none !important; }
+
+/* ── 상단 카피 ── */
+#s19 .s19-head { flex: none; display: flex; align-items: flex-end; justify-content: space-between; gap: 64px; }
+#s19 .s19-hl { min-width: 0; }
+#s19 .kicker { margin-bottom: 18px; }
+#s19 .s19-h {
+  font-family: var(--f-display); font-weight: 800;
+  font-size: 58px; line-height: 1.16; letter-spacing: -.03em;
+  display: flex; flex-direction: column;
+}
+#s19 .s19-h .l1 { color: #E8EDF7; }
+#s19 .s19-h .l2 { color: var(--white); }
+#s19 .s19-h em { font-style: normal; color: var(--blue); position: relative; z-index: 1; }
+#s19 .s19-h em::after {
+  content: ''; position: absolute; left: -2px; right: -2px; bottom: 3px; height: 9px;
+  background: rgba(59,130,246,.30); border-radius: 2px; z-index: -1;
+}
+#s19 .s19-lead {
+  flex: none; width: 620px; padding-bottom: 8px;
+  font-size: 19.5px; line-height: 1.62; color: #93A0B5;
+}
+
+/* ── 본문 2열 ── */
+#s19 .s19-main {
+  flex: 1; min-height: 0; margin-top: 30px;
+  display: grid; grid-template-columns: 1248px 1fr; gap: 40px;
+}
+
+/* ══ 좌: 3단 처방 흐름 ══ */
+#s19 .s19-flow { min-width: 0; display: flex; flex-direction: column; }
+#s19 .s19-steps {
+  flex: 1; min-height: 0;
+  display: grid; grid-template-columns: 386px 45px 386px 45px 386px; align-items: stretch;
+}
+#s19 .fp { min-width: 0; display: flex; flex-direction: column; }
+#s19 .fp-cap {
+  flex: none; display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+  font-size: 15px; font-weight: 600; color: #6E7A90; transition: color .25s var(--ease-snap);
+}
+#s19 .fp-cap i {
+  flex: none; font-style: normal; font-family: var(--f-mono); font-size: 12.5px;
+  width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--grey); background: rgba(136,146,166,.10); border: 1px solid rgba(136,146,166,.34);
+  transition: all .25s var(--ease-snap);
+}
+#s19 .fp.fp--on .fp-cap { color: var(--white); }
+#s19 .fp.fp--on .fp-cap i {
+  color: var(--blue-light); background: rgba(59,130,246,.16); border-color: rgba(59,130,246,.5);
+}
+#s19 .fp-mock { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
+#s19 .fp-mock--fill { align-items: stretch; }
+#s19 .fp-desc { flex: none; margin-top: 12px; font-size: 14px; line-height: 1.5; color: #78849B; }
+#s19 .fp-desc b { color: var(--blue-light); font-weight: 600; }
+#s19 .fp-desc .mut { color: #5A6273; }
+
+/* 흐름 화살표 */
+#s19 .fa { display: flex; align-items: center; justify-content: center; padding-bottom: 20px; }
+#s19 .fa span { font-size: 21px; color: var(--ink-4); transition: color .28s var(--ease-snap), transform .28s var(--ease-snap); }
+#s19 .fa.on span { color: var(--blue); transform: translateX(3px); }
+
+/* ══ 강사 웹(워크벤치) 목업 — 부록 C-2 팔레트 ══ */
+#s19 .wb {
+  font-family: var(--f-body); color: #0F172A; background: #fff;
+  border: 1px solid #E2E8F0; border-radius: 8px; overflow: hidden;
+  box-shadow: 0 26px 58px rgba(2,6,23,.5);
+}
+
+/* 유형별 정답률 카드 */
+#s19 .hm { width: 100%; display: flex; flex-direction: column; }
+#s19 .hm-hd {
+  flex: none; display: flex; align-items: center; gap: 9px;
+  padding: 11px 15px; background: rgba(248,250,252,.7); border-bottom: 1px solid #F1F5F9;
+}
+#s19 .hm-ic { width: 17px; height: 17px; flex: none; }
+#s19 .hm-hd b { font-size: 15.5px; font-weight: 600; color: #334155; }
+#s19 .hm-i {
+  margin-left: auto; flex: none; width: 17px; height: 17px; border-radius: 50%;
+  border: 1.5px solid #CBD5E1; color: #94A3B8; font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; line-height: 1;
+}
+#s19 .hm-tb {
+  flex: none; display: flex; align-items: center; gap: 10px;
+  padding: 8px 15px; border-bottom: 1px solid #F1F5F9;
+}
+#s19 .hm-note { font-family: var(--f-mono); font-size: 11.5px; color: #94A3B8; }
+#s19 .hm-lg { margin-left: auto; display: flex; align-items: center; gap: 5px; font-size: 11.5px; color: #94A3B8; }
+#s19 .hm-lg em { font-style: normal; }
+#s19 .hm-lg .sq { width: 11px; height: 11px; border-radius: 3px; flex: none; }
+#s19 .hm-lg .none { background: #F1F5F9; }
+#s19 .hm-lg .g1 { background: #FB7185; }
+#s19 .hm-lg .g2 { background: #FECDD3; }
+#s19 .hm-lg .g3 { background: #A7F3D0; }
+#s19 .hm-lg .g4 { background: #34D399; }
+#s19 .hm-lg .g5 { background: #059669; }
+
+#s19 .hm-bd { flex: 1; min-height: 0; padding: 12px 15px 14px; display: flex; flex-direction: column; gap: 4px; }
+#s19 .hm-row { position: relative; display: flex; align-items: center; gap: 14px; }
+#s19 .hm-t {
+  width: 196px; flex: none; display: flex; align-items: center; gap: 8px;
+  font-size: 15px; color: #475569;
+}
+#s19 .hm-c, #s19 .hm-cell {
+  width: 140px; flex: none; height: 32px; border-radius: 5px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--f-body); font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums;
+}
+#s19 .hm-row--hd .hm-c {
+  height: 20px; font-family: var(--f-mono); font-size: 12.5px; font-weight: 500; color: #94A3B8;
+}
+/* 히트 5단(80/60/40/20) — emerald-600 / emerald-400 / emerald-200 / rose-200 / rose-400 */
+#s19 .hm-cell.v100 { background: #059669; color: #fff; }
+#s19 .hm-cell.v67  { background: #34D399; color: #fff; }
+#s19 .hm-cell.v50  { background: #A7F3D0; color: #064E3B; }
+#s19 .hm-cell.weak { border: 0; cursor: pointer; animation: s19-ring 2s ease-out infinite; }
+@keyframes s19-ring {
+  0%   { box-shadow: 0 0 0 0 rgba(37,99,235,.5); }
+  70%  { box-shadow: 0 0 0 13px rgba(37,99,235,0); }
+  100% { box-shadow: 0 0 0 0 rgba(37,99,235,0); }
+}
+#s19 .hm.picked .hm-cell.weak { animation: none; box-shadow: 0 0 0 2px #2563EB; }
+
+/* 커서 */
+#s19 .s19-cur {
+  position: absolute; width: 24px; height: 30px; pointer-events: none;
+  right: 14px; top: 18px;
+  filter: drop-shadow(0 3px 5px rgba(2,6,23,.4));
+  animation: s19-tap 2s ease-in-out infinite;
+}
+@keyframes s19-tap { 0%, 100% { transform: none; } 50% { transform: translate(-5px, -5px); } }
+#s19 .hm.picked .hm-row--weak .s19-cur { display: none; }
+#s19 .s19-cur--b { left: 154px; bottom: 6px; right: auto; top: auto; }
+
+/* 과제 컴포저 카드 (② 패널) */
+#s19 .cmp {
+  position: relative; width: 332px; display: flex; flex-direction: column;
+  box-shadow: 0 20px 46px rgba(2,6,23,.55);
+  animation: s19-pop .18s var(--ease-snap);
+}
+@keyframes s19-pop { from { transform: scale(.96); opacity: 0; } to { transform: none; opacity: 1; } }
+#s19 .cmp-hd {
+  flex: none; display: flex; align-items: center; gap: 9px;
+  padding: 11px 15px; background: rgba(248,250,252,.7); border-bottom: 1px solid #F1F5F9;
+}
+#s19 .cmp-ic { width: 17px; height: 17px; flex: none; }
+#s19 .cmp-hd b { font-size: 15.5px; font-weight: 600; color: #334155; }
+#s19 .cmp-tag {
+  margin-left: auto; flex: none; font-size: 10.5px; letter-spacing: .02em; color: #94A3B8;
+  background: #F1F5F9; border-radius: 4px; padding: 3px 7px;
+}
+#s19 .cmp-rg {
+  flex: none; display: flex; align-items: center; flex-wrap: wrap; gap: 8px;
+  padding: 12px 15px 13px; border-bottom: 1px solid #F1F5F9;
+}
+#s19 .cmp-rg .rg-l { font-size: 12.5px; color: #94A3B8; }
+#s19 .cmp-rg .rg-v {
+  font-size: 14.5px; font-weight: 600; color: #1D4ED8;
+  background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 5px; padding: 3px 9px;
+}
+#s19 .cmp-rg .rg-m {
+  width: 100%; font-size: 12.5px; color: #94A3B8; font-variant-numeric: tabular-nums;
+}
+#s19 .cmp-wz {
+  flex: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+  padding: 13px 15px 15px;
+}
+#s19 .wz {
+  height: 62px; padding: 8px; border-radius: 6px;
+  border: 1px solid #E2E8F0; background: #F8FAFC;
+  display: flex; flex-direction: column; gap: 5px;
+}
+#s19 .wz i {
+  flex: none; font-style: normal; font-family: var(--f-mono); font-size: 11px; font-weight: 600;
+  width: 17px; height: 17px; border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  color: #94A3B8; background: #E2E8F0;
+}
+#s19 .wz .bar { height: 5px; border-radius: 3px; background: #E2E8F0; }
+#s19 .wz .bar:nth-of-type(1) { margin-top: auto; }
+#s19 .wz .bar.s { width: 62%; }
+#s19 .wz.on { border-color: #93B4F7; background: #EFF6FF; }
+#s19 .wz.on i { color: #fff; background: #2563EB; }
+#s19 .wz.on .bar { background: #BFDBFE; }
+
+#s19 .cmp-ft { flex: none; padding: 0 15px 16px; }
+#s19 .cmp .cta {
+  width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 38px; padding: 0 16px; border: 0; border-radius: 7px;
+  background: #2563EB; color: #fff; cursor: pointer;
+  font-family: var(--f-body); font-size: 14.5px; font-weight: 600;
+  transition: background .14s;
+}
+#s19 .cmp .cta:hover { background: #1D4ED8; }
+#s19 .cmp .cta.busy { background: #93B4F7; }
+#s19 .cmp .cta svg { width: 16px; height: 16px; flex: none; }
+
+/* 배포 완료 배너 */
+#s19 .sent {
+  width: 312px; padding: 24px 20px 22px; text-align: center;
+  background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: 12px;
+  box-shadow: 0 20px 46px rgba(2,6,23,.45);
+  animation: s19-pop .18s var(--ease-snap);
+}
+#s19 .sent .tick {
+  width: 46px; height: 46px; margin: 0 auto 14px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: #047857; color: #fff; font-size: 22px; font-weight: 700;
+}
+#s19 .sent b { display: block; font-size: 18px; font-weight: 700; color: #065F46; line-height: 1.4; }
+#s19 .sent .meta {
+  display: block; margin-top: 9px; font-family: var(--f-mono);
+  font-size: 13px; color: #059669; letter-spacing: .01em;
+}
+
+/* 인용 + TRY */
+#s19 .s19-quote { flex: none; margin-top: 16px; display: flex; align-items: center; gap: 20px; }
+#s19 .s19-quote .qt { font-size: 15px; line-height: 1.5; color: #78849B; }
+#s19 .s19-quote .src { margin-left: 10px; font-family: var(--f-mono); font-size: 12px; color: #5A6273; }
+#s19 .s19-try {
+  margin-left: auto; flex: none; display: inline-flex; align-items: center; gap: 10px;
+  padding: 9px 18px; border-radius: 999px; font-size: 14.5px; color: var(--blue-light);
+  background: rgba(59,130,246,.12); border: 1px solid rgba(59,130,246,.42);
+}
+#s19 .s19-try .mono { font-size: 11px; letter-spacing: .18em; color: var(--blue); }
+
+/* ══ 우: 3주 계획 ══ */
+#s19 .s19-plan {
+  min-width: 0; display: flex; flex-direction: column;
+  padding: 28px 28px 22px; border-radius: 16px;
+  background: rgba(16,23,37,.84); border: 1px solid var(--ink-3); border-top: 2px solid var(--blue);
+  box-shadow: var(--sh-card);
+}
+#s19 .pl-hd { flex: none; padding-bottom: 20px; border-bottom: 1px solid var(--ink-3); }
+#s19 .pl-t {
+  display: block; font-family: var(--f-display); font-weight: 800;
+  font-size: 28px; letter-spacing: -.02em; color: var(--white);
+}
+#s19 .pl-s { display: block; margin-top: 8px; font-size: 14.5px; color: #78849B; }
+
+#s19 .pl-list {
+  list-style: none; flex: 1; min-height: 0; padding-top: 10px;
+  display: flex; flex-direction: column; justify-content: space-around;
+}
+#s19 .pl-list li { position: relative; padding: 12px 0 12px 34px; }
+#s19 .pl-list li::before {
+  content: ''; position: absolute; left: 0; top: 19px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--ink); border: 2.5px solid var(--blue);
+  box-shadow: 0 0 0 4px rgba(59,130,246,.12);
+}
+#s19 .pl-list li::after {
+  content: ''; position: absolute; left: 5.5px; top: 37px; bottom: -14px; width: 1px;
+  background: rgba(59,130,246,.28);
+}
+#s19 .pl-list li.pl-last::before { border-color: var(--emerald); box-shadow: 0 0 0 4px rgba(16,185,129,.14); }
+#s19 .pl-list li.pl-last::after { display: none; }
+#s19 .pl-w {
+  display: block; font-style: normal; font-size: 13px; font-weight: 600;
+  letter-spacing: .16em; color: var(--blue);
+}
+#s19 .pl-list li.pl-last .pl-w { color: var(--emerald); }
+#s19 .pl-list li p { margin-top: 9px; font-size: 19px; line-height: 1.5; color: #E8EDF7; }
+
+/* ══ 하단: 루프 선언 ══ */
+#s19 .s19-loopband { flex: none; position: relative; height: 186px; margin-top: 26px; }
+#s19 .s19-arc { position: absolute; inset: 0; width: 100%; height: 186px; pointer-events: none; }
+#s19 .s19-loopband.on .loop-path { animation: s19-dash 1.6s linear infinite; }
+@keyframes s19-dash { from { stroke-dashoffset: 32; } to { stroke-dashoffset: 0; } }
+
+#s19 .lb-node {
+  position: absolute; top: 26px; width: 210px; padding: 11px 0 13px;
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  border-radius: 12px; background: rgba(16,23,37,.92); border: 1px solid var(--ink-3);
+  box-shadow: 0 14px 30px rgba(0,0,0,.34);
+}
+#s19 .lb-node i {
+  font-style: normal; font-family: var(--f-mono); font-weight: 600;
+  font-size: 11.5px; letter-spacing: .2em;
+}
+#s19 .lb-node b {
+  font-family: var(--f-display); font-weight: 700; font-size: 21px;
+  letter-spacing: -.014em; color: var(--white);
+}
+#s19 .lb-in { left: 0; border-top: 2px solid var(--blue); }
+#s19 .lb-in i { color: var(--blue); }
+#s19 .lb-out { right: 0; border-top: 2px solid var(--emerald); }
+#s19 .lb-out i { color: var(--emerald); }
+
+#s19 .lb-tx {
+  position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+  width: 1100px; text-align: center;
+}
+#s19 .lb-tx b {
+  display: block; font-family: var(--f-display); font-weight: 800;
+  font-size: 42px; line-height: 1.24; letter-spacing: -.026em; color: var(--white);
+}
+#s19 .lb-tx b em { font-style: normal; color: var(--emerald); }
+#s19 .lb-tx span { display: block; margin-top: 12px; font-size: 21px; line-height: 1.5; color: #93A0B5; }
+
+#s19 .lb-cyc {
+  position: absolute; left: 50%; transform: translateX(-50%); top: 152px;
+  padding: 0 16px; background: var(--ink); color: var(--emerald);
+  font-size: 17px; line-height: 24px;
+}
+
+/* 대기 플레이스홀더 — 클릭 전 상태 */
+#s19 .fp-ph {
+  display: flex; align-items: center; justify-content: center; gap: 9px;
+  min-height: 148px; border-radius: 12px;
+  border: 1px dashed rgba(136,146,166,.34); background: rgba(16,23,37,.36);
+  font-size: 14px; color: var(--txt-4); text-align: center; padding: 0 18px;
+}
+#s19 .fp-ph .mono { color: var(--blue); }
+</style>
+
+<script>
+(() => {
+  const sec = document.getElementById('s19');
+  if (!sec) return;
+  const q = (s) => sec.querySelector(s);
+
+  const hm   = q('#s19-hm');
+  const cell = q('#s19-cell');
+  const cmp  = q('#s19-pop');
+  const cta  = q('#s19-cta');
+  const ctat = q('#s19-ctat');
+  const sent = q('#s19-sent');
+  const LABEL = '이 범위로 과제 보내기';
+
+  const ph2 = q('#s19-ph2');
+  const ph3 = q('#s19-ph3');
+  const a1  = q('#s19-a1');
+  const a2  = q('#s19-a2');
+  const fp2 = q('#s19-fp2');
+  const fp3 = q('#s19-fp3');
+
+  let timer = null;
+  const replay = (el) => { el.style.animation = 'none'; void el.offsetWidth; el.style.animation = ''; };
+
+  const rest = () => {
+    if (timer) { clearTimeout(timer); timer = null; }
+    hm.classList.remove('picked');
+    ctat.textContent = LABEL; cta.classList.remove('busy');
+    cmp.hidden = true;  ph2.hidden = false; a1.classList.remove('on'); fp2.classList.remove('fp--on');
+    sent.hidden = true; ph3.hidden = false; a2.classList.remove('on'); fp3.classList.remove('fp--on');
+  };
+
+  const openCmp = () => {
+    hm.classList.add('picked');
+    ph2.hidden = true; cmp.hidden = false;
+    a1.classList.add('on'); fp2.classList.add('fp--on');
+    replay(cmp);
+  };
+
+  const deliver = () => {
+    ph3.hidden = true; sent.hidden = false;
+    a2.classList.add('on'); fp3.classList.add('fp--on');
+    replay(sent);
+  };
+
+  cell.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (timer) { clearTimeout(timer); timer = null; }
+    ctat.textContent = LABEL; cta.classList.remove('busy');
+    if (cmp.hidden) openCmp(); else rest();
+  });
+
+  cta.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (timer) return;
+    ctat.textContent = '보내는 중…';
+    cta.classList.add('busy');
+    timer = setTimeout(() => {
+      timer = null;
+      ctat.textContent = LABEL; cta.classList.remove('busy');
+      deliver();
+    }, 440);
+  });
+
+  /* 최종 스텝(=캡처·미클릭 상황)에서는 흐름을 자동 완주시켜 화면이 비지 않게 한다 */
+  const autoAt = (st) => { if (st >= 3) { openCmp(); deliver(); } };
+  sec.addEventListener('slide:step', (e) => autoAt(e.detail.step));
+  sec.addEventListener('slide:enter', (e) => { rest(); autoAt(e.detail ? e.detail.step : 0); });
+
+  rest();
+})();
+</script>
+</section>

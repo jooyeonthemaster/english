@@ -15,3 +15,28 @@
 /package.json text eol=lf
 /package-lock.json text eol=lf
 /experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/** text eol=lf
+
+# ── 기출 코퍼스 EOL 고정 (2026-08-20, 렌즈 R3) ────────────────────────────────
+# 왜: 이 리포는 core.autocrlf=true 다. 코퍼스 facets.json 은 인덱스가 LF 인데
+#     워크트리 사본은 LF(영어)/CRLF(국어)로 갈라져 있었고, 속성이 없으면
+#     `git checkout -- src/data/exam-passages/` 한 번에 영어 facets.json 이
+#     CRLF 로 재기록되어 md5 가 갈린다. 실측(git checkout-index 시뮬레이션):
+#       src/data/exam-passages/facets.json
+#         worktree ffe6eb3d1ab4d12fa25b7d1bb7669512
+#         checkout 33479e14a172033b948ec02fa459e791   ← 줄바꿈만으로 달라짐
+#     passages.json/problems.json 은 개행이 0개(단일행 JSON)라 영향이 없지만,
+#     장래에 pretty-print 되는 순간 같은 함정에 빠지므로 함께 고정한다.
+#
+# 왜 `-text`(binary) 가 아니라 `text eol=lf` 인가:
+#     `-text` 로 두면 git 이 autocrlf 비교를 끊어버려, 지금 CRLF 로 놓인
+#     src/data/exam-passages-korean/facets.json 이 즉시 "modified" 로 뜬다
+#     (인덱스는 LF). 배포 단위에 줄바꿈만 다른 유령 diff 를 넣는 셈이다.
+#     `text eol=lf` 는 체크아웃을 LF 로 못박으면서 비교도 정규화하므로
+#     현재 `git status` 를 바꾸지 않는다.
+src/data/exam-passages/*.json text eol=lf
+src/data/exam-passages-korean/*.json text eol=lf
+
+# 코퍼스 무결성 회귀 게이트의 기준선/불변식 — sha256 핀을 쓰므로 EOL 고정 필수.
+tests/unit/fixtures/exam-corpus-known-issues.json text eol=lf
+tests/unit/exam-corpus-invariants.mjs text eol=lf
+tests/unit/exam-corpus-integrity.test.mjs text eol=lf

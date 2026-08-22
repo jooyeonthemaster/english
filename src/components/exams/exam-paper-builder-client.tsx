@@ -65,7 +65,7 @@ import { EXAM_SEED_QUESTION_IDS_KEY } from "@/lib/exam-paper-seed";
 import { BUILDER_DRAFT_AUTOSAVE_DELAY_MS, BUILDER_HEADER_AUTO_HIDE_DELAY_MS, BUILDER_HEADER_HIDE_ZONE_PX, LEFT_PANEL_COLLAPSED_STORAGE_KEY, PANEL_DRAG_THRESHOLD, PANEL_MIN_CENTER, PANEL_TOGGLE_HANDLE_WIDTH, PANEL_WIDTH_STORAGE_KEY, PREVIEW_PAGE_GAP, RIGHT_PANEL_COLLAPSED_STORAGE_KEY, THUMBNAILS_COLLAPSED_STORAGE_KEY, THUMBNAILS_WIDTH_STORAGE_KEY } from "./exam-paper-builder-client-parts/builder-constants";
 import type { BuilderPanelTab, ExamPaperBuilderClientProps, PanelResizeSide, PanelWidths, SaveDraftOptions } from "./exam-paper-builder-client-parts/builder-types";
 import { asAutoPointTotal, buildDefaultSaveAsTitle, clampPanelWidths, clampThumbnailsWidth, formatBuilderDraftUpdatedAt, getQuestionDropInsertion, hasMeaningfulBuilderDraft, readStoredLeftPanelCollapsed, readStoredPanelWidths, readStoredRightPanelCollapsed, readStoredThumbnailsCollapsed, readStoredThumbnailsWidth, samePanelWidths } from "./exam-paper-builder-client-parts/builder-helpers";
-import { PageThumbnails } from "./exam-paper-builder-client-parts/page-thumbnails";
+import { PageThumbnails, thumbMetrics } from "./exam-paper-builder-client-parts/page-thumbnails";
 
 function toBuilderQuestionSetRender(
   set: QuestionSetForRender,
@@ -106,6 +106,16 @@ export function ExamPaperBuilderClient({
   schools,
   initialExam = null,
   subjectScope,
+  shellClassName,
+  onSavedExam,
+  draftScope,
+  initialClassId,
+  onDirtyChange,
+  initialLeftCollapsed,
+  initialRightCollapsed,
+  syncQuestionIds,
+  hideQuestionLibrary,
+  hideBuilderHeader,
 }: ExamPaperBuilderClientProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -136,8 +146,8 @@ export function ExamPaperBuilderClient({
     [isEditingExistingExam],
   );
   const builderDraftKey = useMemo(
-    () => getExamPaperBuilderDraftKey(academyId),
-    [academyId],
+    () => getExamPaperBuilderDraftKey(academyId, draftScope),
+    [academyId, draftScope],
   );
   const previousQuestionItemsCountRef = useRef(initialPaperQuestionCount);
 
@@ -151,6 +161,11 @@ export function ExamPaperBuilderClient({
   const [dirty, setDirty] = useState(false);
   // 전체 페이지형 편집기 — 미저장 변경 시 브라우저 이탈(탭 닫기/새로고침) 경고.
   useBeforeUnloadWarning(dirty);
+  // beforeunload 는 인앱 언마운트(오버레이 닫기)를 못 막는다 — 임베드 호스트가
+  // 자체 닫기 가드를 세울 수 있게 dirty 변화를 밖으로 알린다(마운트 직후 1회 포함).
+  useEffect(() => {
+    onDirtyChange?.(dirty);
+  }, [dirty, onDirtyChange]);
   const [search, setSearch] = useState("");
   const [difficulty, setDifficulty] = useState("ALL");
   const [selectedSubTypes, setSelectedSubTypes] = useState<string[]>([]);
@@ -225,7 +240,9 @@ export function ExamPaperBuilderClient({
   const [examDate, setExamDate] = useState(
     formatExamDate(initialExam?.examDate ?? null),
   );
-  const [classId, setClassId] = useState(initialExam?.class?.id || "");
+  const [classId, setClassId] = useState(
+    initialExam?.class?.id || initialClassId || "",
+  );
   const [schoolId, setSchoolId] = useState(initialExam?.school?.id || "");
   const [grade, setGrade] = useState(
     initialExam?.grade == null ? "" : String(initialExam.grade),
@@ -343,11 +360,17 @@ export function ExamPaperBuilderClient({
   const [panelWidths, setPanelWidths] = useState<PanelWidths>(
     readStoredPanelWidths,
   );
-  const [rightPanelCollapsed, setRightPanelCollapsed] = useState(
-    readStoredRightPanelCollapsed,
+  // initialRightCollapsed(§3.10.17, additive) — 좁은 임베드(스튜디오 우측
+  // 패널)에서 편집 패널을 접고 시작. 좌측과 같은 저장 우회 계약.
+  const [rightPanelCollapsed, setRightPanelCollapsed] = useState<boolean>(
+    () => initialRightCollapsed ?? readStoredRightPanelCollapsed(),
   );
-  const [leftPanelCollapsed, setLeftPanelCollapsed] = useState(
-    readStoredLeftPanelCollapsed,
+  // initialLeftCollapsed(§3.10.17-a, additive): 임베드 호스트가 초기 접힘을
+  // 강제한다(스튜디오 = 평면 리스트가 라이브러리 역할 — 접고 시작). 이때는
+  // 저장 키 공유 오염을 막기 위해 영속도 끈다(아래 persist 가드). 미전달 =
+  // 기존 localStorage 복원 그대로.
+  const [leftPanelCollapsed, setLeftPanelCollapsed] = useState<boolean>(
+    () => initialLeftCollapsed ?? readStoredLeftPanelCollapsed(),
   );
   // 모바일(<lg) 전용 2단계 흐름: 1) 문제 선택 ↔ 2) 미리보기·저장. 데스크톱은 영향 없음.
   const [mobileStep, setMobileStep] = useState<"select" | "preview">("select");
@@ -387,7 +410,10 @@ export function ExamPaperBuilderClient({
   // 요청한다. 둘 중 하나라도 닫히면 요청을 풀어 사이드바가 (사용자가 수동으로 닫지
   // 않았던 한) 다시 열리게 한다. 페이지를 벗어나면 요청을 해제한다.
   const { setCollapseRequested: setSidebarCollapseRequested } = useSidebarFocus();
-  const bothBuilderPanelsOpen = !leftPanelCollapsed && !rightPanelCollapsed;
+  // hideQuestionLibrary 임베드는 좌측이 존재하지 않으므로 "동시 열림"이 성립
+  // 불가 — 저장된 leftPanelCollapsed=false 가 사이드바를 오접게 두지 않는다.
+  const bothBuilderPanelsOpen =
+    !hideQuestionLibrary && !leftPanelCollapsed && !rightPanelCollapsed;
   useEffect(() => {
     setSidebarCollapseRequested(bothBuilderPanelsOpen);
   }, [bothBuilderPanelsOpen, setSidebarCollapseRequested]);
@@ -576,10 +602,13 @@ export function ExamPaperBuilderClient({
 
   const [setMemberMap, setSetMemberMap] = useState<Record<string, string>>({});
   useEffect(() => {
+    // 소비처는 folders.questionSetIdOf 하나뿐(폴더 배지) — 라이브러리 미렌더
+    // 임베드에서는 학원 전역 질의만 남는 사표라 건너뛴다(§3.10.17-e (m)).
+    if (hideQuestionLibrary) return;
     getAcademyQuestionSetMemberMap()
       .then(setSetMemberMap)
       .catch(() => {});
-  }, []);
+  }, [hideQuestionLibrary]);
 
   const folders = useFolderManager({
     initialCollections: initialFolderCollections,
@@ -601,6 +630,10 @@ export function ExamPaperBuilderClient({
   // 20문항 기반 멤버십 대신 학원 전체 문제 컬렉션·멤버십을 마운트 시 한 번
   // 하이드레이트한다(폴더 탐색은 서버 collectionId 필터라 영향 없음).
   useEffect(() => {
+    // 폴더 UI 가 렌더되지 않는 임베드에서는 학원 전역 질의 2건이 통째로
+    // 사표다 — 소비처(folders.setCollections/setMembership)가 전부
+    // QuestionLibraryPanel 서브트리 안이다(§3.10.17-e (m)).
+    if (hideQuestionLibrary) return;
     let cancelled = false;
     void (async () => {
       try {
@@ -629,7 +662,7 @@ export function ExamPaperBuilderClient({
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [academyId, subjectScope]);
+  }, [academyId, subjectScope, hideQuestionLibrary]);
 
   // 모바일(<lg)에선 한 페이지에 10개만 보이도록 서버 조회 limit 을 낮춘다(데스크톱은
   // 기존 BUILDER_PAGE_SIZE 그대로 → PC 무변경). 마운트 후 승격되므로 최초 100개 →
@@ -682,6 +715,10 @@ export function ExamPaperBuilderClient({
   const listMountedRef = useRef(false);
   const listSigRef = useRef(listFilterSig);
   useEffect(() => {
+    // 라이브러리 미렌더 임베드(§3.10.17-e (m))는 이 목록의 소비처가 없다 —
+    // 그런데 isMobile 승격 등으로 listFilterSig 가 바뀌면 학원 전량 스캔이
+    // 조용히 되살아나 경량 재료의 이익을 통째로 상쇄한다(비용 감사 적발).
+    if (hideQuestionLibrary) return;
     if (!listMountedRef.current) {
       listMountedRef.current = true;
       listSigRef.current = listFilterSig;
@@ -712,7 +749,7 @@ export function ExamPaperBuilderClient({
     };
     // listFilterSig 가 필터 변화를 대표하므로 개별 필터 deps 는 생략한다.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [academyId, page, listFilterSig, listRefreshKey]);
+  }, [academyId, page, listFilterSig, listRefreshKey, hideQuestionLibrary]);
 
   const paperQuestionCounts = useMemo(
     () => {
@@ -813,6 +850,10 @@ export function ExamPaperBuilderClient({
   // 로 중복 점프하지 않도록 ref 로 가드한다.
   const lastGlowJumpRef = useRef<string | null>(null);
   useEffect(() => {
+    // 라이브러리가 없으면 점프할 목적지 자체가 없다 — 임베드에서 이 이펙트를
+    // 살려두면 pageQuestions 가 항상 비어 미리보기 블록 클릭마다 학원 전량
+    // 스캔(getExamPaperBuilderQuestionPageOf)이 100% 발사된다(비용 감사 적발).
+    if (hideQuestionLibrary) return;
     if (!activeQuestionId) {
       lastGlowJumpRef.current = null;
       return;
@@ -1123,9 +1164,41 @@ export function ExamPaperBuilderClient({
     for (const item of targets) removeItem(item.localId);
   }, [paperItems, questionById, removeItem]);
 
+  // ── 외부 선택 라이브 동기화(§3.10.17, additive) — 임베드 호스트(클래스
+  // 스튜디오)가 넘기는 체크 집합의 **증분만** 반영한다(dead-reckoning: 직전
+  // 동기 집합과의 diff — 시험지 현재 내용과 비교하면 빌더 내부 삭제·편집을
+  // 되돌리는 싸움이 난다). 체크 = 즉시 조판, 해제 = 즉시 제거. 첫 실행은
+  // 전체 추가(초기 시드 역할 — sessionStorage 시드 불필요). 미전달 = 무동작.
+  // 콜백은 ref 미러로 호출(identity 가 paperItems 마다 변해 diff 가 무의미
+  // 재실행되는 것을 차단 — 미러 effect 가 sync effect 보다 먼저 선언돼 같은
+  // 커밋에서 최신 참조가 보장된다).
+  const addQuestionIdsToPaperRef = useRef(addQuestionIdsToPaper);
+  const removeQuestionIdFromPaperRef = useRef(removeQuestionIdFromPaper);
+  useEffect(() => {
+    addQuestionIdsToPaperRef.current = addQuestionIdsToPaper;
+    removeQuestionIdFromPaperRef.current = removeQuestionIdFromPaper;
+  }, [addQuestionIdsToPaper, removeQuestionIdFromPaper]);
+  const lastSyncIdsRef = useRef<string[] | null>(null);
+  useEffect(() => {
+    if (!syncQuestionIds) return;
+    const prev = new Set(lastSyncIdsRef.current ?? []);
+    const next = new Set(syncQuestionIds);
+    const toAdd = syncQuestionIds.filter((id) => !prev.has(id));
+    const toRemove = [...prev].filter((id) => !next.has(id));
+    lastSyncIdsRef.current = [...syncQuestionIds];
+    if (toAdd.length > 0) void addQuestionIdsToPaperRef.current(toAdd);
+    for (const id of toRemove) removeQuestionIdFromPaperRef.current(id);
+  }, [syncQuestionIds]);
+
   // 문제 생성 결과에서 '시험지 생성'으로 넘어오면, 그 문제들을 미리보기(시험지)에
-  // 바로 올린다. seed id 는 sessionStorage 로 전달되고 1회 소비 후 비운다.
+  // 올린다. seed id 는 sessionStorage 로 전달되고 1회 소비 후 비운다.
+  // 2단 분리(시드-초안 경합 수복): 회수는 마운트 즉시(1회), **적용은 IndexedDB
+  // 초안 판정 해소 후** — 즉시 적용하면 초안 복구 배너와 경합해 복구 클릭이
+  // 방금 고른 시드 문항을 무통보 소실시키거나(시드 선착) 초안 위 비결정
+  // append(시드 후착)가 됐다. 게이트 후에는 순서가 결정적이다: 복구 채택 시
+  // 초안 → 시드 append, 삭제 시 시드만. 편집 모드는 초안 기제가 없어 즉시.
   const seededFromGenerateRef = useRef(false);
+  const pendingSeedIdsRef = useRef<string[] | null>(null);
   useEffect(() => {
     if (seededFromGenerateRef.current) return;
     seededFromGenerateRef.current = true;
@@ -1135,14 +1208,29 @@ export function ExamPaperBuilderClient({
       window.sessionStorage.removeItem(EXAM_SEED_QUESTION_IDS_KEY);
       const ids = JSON.parse(raw);
       if (Array.isArray(ids) && ids.length > 0) {
-        void addQuestionIdsToPaper(
-          ids.filter((value): value is string => typeof value === "string"),
+        const clean = ids.filter(
+          (value): value is string => typeof value === "string",
         );
+        if (clean.length > 0) pendingSeedIdsRef.current = clean;
       }
     } catch {
       // 잘못된 seed 값은 무시한다.
     }
-  }, [addQuestionIdsToPaper]);
+  }, []);
+  useEffect(() => {
+    const ids = pendingSeedIdsRef.current;
+    if (!ids) return;
+    if (!isEditingExistingExam && (!draftStorageReady || pendingBuilderDraft)) {
+      return; // 초안 판정(로드/배너 응답) 대기 — 해소 시 deps 로 재진입
+    }
+    pendingSeedIdsRef.current = null;
+    void addQuestionIdsToPaper(ids);
+  }, [
+    addQuestionIdsToPaper,
+    draftStorageReady,
+    isEditingExistingExam,
+    pendingBuilderDraft,
+  ]);
 
   const togglePaperQuestionSelection = useCallback((id: string) => {
     if (selectedPaperQuestionIds.has(id)) {
@@ -1679,10 +1767,16 @@ export function ExamPaperBuilderClient({
     });
     return () => window.cancelAnimationFrame(raf);
   }, [pendingScrollItemId, paperItems, previewScrollerRef, scrollPreviewToItem]);
-  // 토글 핸들은 접힘 여부와 무관하게 항상 표시한다.
-  const leftColumnWidth = leftPanelCollapsed ? 0 : panelWidths.left;
+  // 토글 핸들은 접힘 여부와 무관하게 항상 표시한다 — 단 hideQuestionLibrary
+  // 임베드(§3.10.17-d v2.3)는 좌측 라이브러리 존재 자체가 없으므로 핸들
+  // 컬럼(24px)까지 0 으로 지운다(컬럼 수 5는 유지 — 자식 슬롯 정렬 계약).
+  const leftColumnWidth =
+    hideQuestionLibrary || leftPanelCollapsed ? 0 : panelWidths.left;
   const rightColumnWidth = rightPanelCollapsed ? 0 : panelWidths.right;
-  const builderGridColumns = `${leftColumnWidth}px ${PANEL_TOGGLE_HANDLE_WIDTH}px minmax(${PANEL_MIN_CENTER}px,1fr) ${PANEL_TOGGLE_HANDLE_WIDTH}px ${rightColumnWidth}px`;
+  const leftHandleColumnWidth = hideQuestionLibrary
+    ? 0
+    : PANEL_TOGGLE_HANDLE_WIDTH;
+  const builderGridColumns = `${leftColumnWidth}px ${leftHandleColumnWidth}px minmax(${PANEL_MIN_CENTER}px,1fr) ${PANEL_TOGGLE_HANDLE_WIDTH}px ${rightColumnWidth}px`;
 
   useEffect(() => {
     const element = previewScrollerRef.current;
@@ -1789,7 +1883,17 @@ export function ExamPaperBuilderClient({
     return () => scroller.removeEventListener("scroll", handleScroll);
   }, [paperPages.length, previewScrollerRef]);
 
+  // 임베드 레이아웃 강제 모드 — 공유 localStorage 레이아웃 키(패널 폭·썸네일)
+  // 영속을 전부 우회한다(접힘 키 계약의 확장, 검수 확정 결함). 임베드의 좁은
+  // 컨테이너에서 마운트 즉시 도는 ResizeObserver 클램프가 독립 라우트
+  // (/director/workbench/exams/create)의 시작 폭을 최소치로 덮어쓰는 것을 막는다.
+  const bypassLayoutPersistence =
+    initialLeftCollapsed !== undefined ||
+    initialRightCollapsed !== undefined ||
+    Boolean(hideQuestionLibrary);
+
   useEffect(() => {
+    if (bypassLayoutPersistence) return;
     try {
       window.localStorage.setItem(
         PANEL_WIDTH_STORAGE_KEY,
@@ -1798,9 +1902,11 @@ export function ExamPaperBuilderClient({
     } catch {
       // Ignore storage failures; resizing still works for the current session.
     }
-  }, [panelWidths]);
+  }, [bypassLayoutPersistence, panelWidths]);
 
   useEffect(() => {
+    // 임베드 초기 강제 모드에선 영속하지 않는다(좌측 패널과 동일 계약).
+    if (initialRightCollapsed !== undefined) return;
     try {
       window.localStorage.setItem(
         RIGHT_PANEL_COLLAPSED_STORAGE_KEY,
@@ -1809,9 +1915,12 @@ export function ExamPaperBuilderClient({
     } catch {
       // Ignore storage failures; the drawer still works for the current session.
     }
-  }, [rightPanelCollapsed]);
+  }, [initialRightCollapsed, rightPanelCollapsed]);
 
   useEffect(() => {
+    // 임베드 초기 강제 모드에선 영속하지 않는다 — 공유 localStorage 키가
+    // 독립 라우트(/director/exams/create)의 시작 상태를 오염시키지 않게.
+    if (initialLeftCollapsed !== undefined) return;
     try {
       window.localStorage.setItem(
         LEFT_PANEL_COLLAPSED_STORAGE_KEY,
@@ -1820,9 +1929,10 @@ export function ExamPaperBuilderClient({
     } catch {
       // Ignore storage failures; the drawer still works for the current session.
     }
-  }, [leftPanelCollapsed]);
+  }, [initialLeftCollapsed, leftPanelCollapsed]);
 
   useEffect(() => {
+    if (bypassLayoutPersistence) return;
     try {
       window.localStorage.setItem(
         THUMBNAILS_WIDTH_STORAGE_KEY,
@@ -1831,9 +1941,10 @@ export function ExamPaperBuilderClient({
     } catch {
       // Thumbnail width is a convenience preference.
     }
-  }, [thumbnailsWidth]);
+  }, [bypassLayoutPersistence, thumbnailsWidth]);
 
   useEffect(() => {
+    if (bypassLayoutPersistence) return;
     try {
       window.localStorage.setItem(
         THUMBNAILS_COLLAPSED_STORAGE_KEY,
@@ -1842,7 +1953,7 @@ export function ExamPaperBuilderClient({
     } catch {
       // Ignore storage failures; the list still works for the current session.
     }
-  }, [thumbnailsCollapsed]);
+  }, [bypassLayoutPersistence, thumbnailsCollapsed]);
 
   useEffect(() => {
     const element = builderGridRef.current;
@@ -1850,15 +1961,22 @@ export function ExamPaperBuilderClient({
 
     const observer = new ResizeObserver((entries) => {
       const width = entries[0]?.contentRect.width ?? element.clientWidth;
+      // 폭 0 = 숨겨진 서브트리(display:none — xl 미만 aside, 접힌 패널, 숨김
+      // 탭). 그대로 클램프하면 좌우 폭이 하한으로 눌리고 clamp 는 상한만
+      // 풀어주므로 **다시 보여도 원복되지 않는 편도 고착**이 된다(비용 감사
+      // 적발 잠복 결함 — resizable-panels 가 같은 함정을 경고한 바 있다).
+      if (width <= 0) return;
       setPanelWidths((current) => {
-        const next = clampPanelWidths(current, width);
+        const next = clampPanelWidths(current, width, {
+          hideLeft: hideQuestionLibrary,
+        });
         return samePanelWidths(current, next) ? current : next;
       });
     });
 
     observer.observe(element);
     return () => observer.disconnect();
-  }, []);
+  }, [hideQuestionLibrary]);
 
   // 핸들 클릭: 패널 여닫기 토글. 직전에 드래그(폭 조절)한 경우엔 토글하지 않는다.
   function togglePanelCollapsed(side: PanelResizeSide) {
@@ -1874,6 +1992,13 @@ export function ExamPaperBuilderClient({
   }
 
   // 핸들 드래그: 임계값을 넘겨 움직이면 폭을 조절한다(열려 있을 때만 사용).
+  //
+  // 성능 계약(2026-08-11 전역 핸들 수술 — resizable-panels.startResize 동형):
+  // 매 pointermove 의 setPanelWidths 는 빌더 전체(문제 라이브러리 + A4 미리보기
+  // 전 페이지 + 편집 패널)를 프레임마다 리렌더시켰다. 폭은 그리드 CSS 변수로만
+  // 소비되므로, 드래그 중에는 rAF 코얼레싱으로 --exam-builder-grid-columns 에
+  // 직접 쓰고 놓을 때 setPanelWidths 1회로 커밋한다(localStorage 영속은 기존
+  // effect 담당). 컨테이너를 못 찾으면 종전 setState 경로 폴백(무회귀).
   function handlePanelResizePointerDown(
     event: ReactPointerEvent<HTMLButtonElement>,
     side: PanelResizeSide,
@@ -1889,7 +2014,33 @@ export function ExamPaperBuilderClient({
     const containerWidth = container?.getBoundingClientRect().width ?? 0;
     const previousCursor = document.body.style.cursor;
     const previousUserSelect = document.body.style.userSelect;
+    const previousPointerEvents = document.body.style.pointerEvents;
     let didDrag = false;
+
+    // 포인터 캡처 — 커서가 얇은 핸들을 벗어나도 이벤트가 끊기지 않고, 아래의
+    // body pointer-events:none 과 조합해도 move 가 계속 들어온다.
+    const handleEl = event.currentTarget as HTMLElement;
+    try {
+      handleEl.setPointerCapture(event.pointerId);
+    } catch {
+      /* 캡처 미지원 브라우저는 window 리스너로 폴백 */
+    }
+
+    let latestWidths: PanelWidths | null = null;
+    let rafId: number | null = null;
+    const flush = () => {
+      // 다음 무브가 새 프레임을 잡을 수 있게 먼저 해제한다.
+      rafId = null;
+      if (!container || !latestWidths) return;
+      // 렌더의 builderGridColumns 템플릿과 동일한 문자열 — 어긋나면 커밋 시 튄다.
+      const left =
+        hideQuestionLibrary || leftPanelCollapsed ? 0 : latestWidths.left;
+      const right = rightPanelCollapsed ? 0 : latestWidths.right;
+      container.style.setProperty(
+        "--exam-builder-grid-columns",
+        `${left}px ${hideQuestionLibrary ? 0 : PANEL_TOGGLE_HANDLE_WIDTH}px minmax(${PANEL_MIN_CENTER}px,1fr) ${PANEL_TOGGLE_HANDLE_WIDTH}px ${right}px`,
+      );
+    };
 
     const handlePointerMove = (moveEvent: PointerEvent) => {
       const deltaX = moveEvent.clientX - startX;
@@ -1900,22 +2051,45 @@ export function ExamPaperBuilderClient({
         suppressHandleClickRef.current = true;
         document.body.style.cursor = "col-resize";
         document.body.style.userSelect = "none";
+        // 드래그 중 hover 스타일 재평가 차단 — 폭이 프레임마다 바뀌면 커서 아래
+        // 요소가 계속 바뀌어 카드 수백 장의 hover 인밸리데이션이 얹힌다.
+        document.body.style.pointerEvents = "none";
       }
       moveEvent.preventDefault();
       const nextWidths =
         side === "left"
           ? { ...startWidths, left: startWidths.left + deltaX }
           : { ...startWidths, right: startWidths.right - deltaX };
-      setPanelWidths(clampPanelWidths(nextWidths, containerWidth));
+      const clamped = clampPanelWidths(nextWidths, containerWidth, {
+        hideLeft: hideQuestionLibrary,
+      });
+      if (container) {
+        latestWidths = clamped;
+        if (rafId === null) rafId = requestAnimationFrame(flush);
+      } else {
+        setPanelWidths(clamped);
+      }
     };
 
     const finish = () => {
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("pointerup", finish);
       window.removeEventListener("pointercancel", finish);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      if (container && latestWidths) {
+        flush();
+        // 커밋 1회 — 이후 리렌더가 같은 값의 CSS 변수를 다시 쓰므로 튐이 없다.
+        setPanelWidths(latestWidths);
+      }
       if (didDrag) {
         document.body.style.cursor = previousCursor;
         document.body.style.userSelect = previousUserSelect;
+        document.body.style.pointerEvents = previousPointerEvents;
+      }
+      try {
+        handleEl.releasePointerCapture(event.pointerId);
+      } catch {
+        /* ignore */
       }
     };
 
@@ -1927,6 +2101,13 @@ export function ExamPaperBuilderClient({
   }
 
   // 페이지 썸네일 드래그바: 좌우로 끌어 패널(썸네일) 폭을 조절한다.
+  //
+  // 성능 계약(2026-08-11 전역 핸들 수술): 매 pointermove 의 setThumbnailsWidth 는
+  // 전 페이지 썸네일(실폭 794px 조판 후 scale) 재조판 + 빌더 전체 리렌더를
+  // 프레임마다 유발했다. 드래그 중에는 레일과 각 썸네일 프레임/스케일 요소에
+  // thumbMetrics(렌더와 같은 식)로 rAF 코얼레싱 직접 기록하고, 놓을 때
+  // setThumbnailsWidth 1회 커밋(localStorage 영속은 기존 effect 담당). 앵커를
+  // 못 찾으면 종전 setState 경로 폴백(무회귀).
   function handleThumbnailsResizePointerDown(
     event: ReactPointerEvent<HTMLDivElement>,
   ) {
@@ -1935,23 +2116,81 @@ export function ExamPaperBuilderClient({
     event.preventDefault();
     const startX = event.clientX;
     const startWidth = thumbnailsWidth;
+    let latest = startWidth;
     const previousCursor = document.body.style.cursor;
     const previousUserSelect = document.body.style.userSelect;
+    const previousPointerEvents = document.body.style.pointerEvents;
+
+    // 포인터 캡처 — 커서가 얇은 바를 벗어나도 드래그가 끊기지 않는다.
+    const handleEl = event.currentTarget as HTMLElement;
+    try {
+      handleEl.setPointerCapture(event.pointerId);
+    } catch {
+      /* 캡처 미지원 브라우저는 window 리스너로 폴백 */
+    }
+
+    // 드래그 대상 앵커 — 썸네일 레일과 그 안의 프레임/스케일 요소들. 드래그 중
+    // setState 가 없으므로 요소 목록은 시작 시점 수집으로 충분하다.
+    const railEl =
+      builderGridRef.current?.querySelector<HTMLElement>("[data-thumb-rail]") ??
+      null;
+    const frameEls = railEl
+      ? Array.from(railEl.querySelectorAll<HTMLElement>("[data-thumb-frame]"))
+      : [];
+    const scaleEls = railEl
+      ? Array.from(railEl.querySelectorAll<HTMLElement>("[data-thumb-scale]"))
+      : [];
 
     document.body.style.cursor = "col-resize";
     document.body.style.userSelect = "none";
+    // 드래그 중 hover 스타일 재평가 차단 — 캡처 덕에 move 수신에는 영향 없다.
+    document.body.style.pointerEvents = "none";
+
+    // rAF 코얼레싱 — 고주사율 포인터가 프레임당 여러 번 발화해도 기록은 1회.
+    let rafId: number | null = null;
+    const flush = () => {
+      rafId = null;
+      if (!railEl) return;
+      railEl.style.width = `${latest}px`;
+      const metrics = thumbMetrics(latest, paperSize);
+      for (const frame of frameEls) {
+        frame.style.width = `${metrics.thumbnailWidth}px`;
+        frame.style.height = `${metrics.thumbnailHeight}px`;
+      }
+      for (const scale of scaleEls) {
+        scale.style.transform = `scale(${metrics.thumbnailScale})`;
+      }
+    };
 
     const handlePointerMove = (moveEvent: PointerEvent) => {
       moveEvent.preventDefault();
-      setThumbnailsWidth(clampThumbnailsWidth(startWidth + moveEvent.clientX - startX));
+      latest = clampThumbnailsWidth(startWidth + moveEvent.clientX - startX);
+      if (railEl) {
+        if (rafId === null) rafId = requestAnimationFrame(flush);
+      } else {
+        // 폴백(레거시 마크업) — 앵커를 못 찾으면 종전대로 상태 갱신.
+        setThumbnailsWidth(latest);
+      }
     };
 
     const finish = () => {
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("pointerup", finish);
       window.removeEventListener("pointercancel", finish);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      if (railEl) {
+        flush();
+        // 커밋 1회 — 드래그 내내 리렌더 0회.
+        setThumbnailsWidth(latest);
+      }
       document.body.style.cursor = previousCursor;
       document.body.style.userSelect = previousUserSelect;
+      document.body.style.pointerEvents = previousPointerEvents;
+      try {
+        handleEl.releasePointerCapture(event.pointerId);
+      } catch {
+        /* ignore */
+      }
     };
 
     window.addEventListener("pointermove", handlePointerMove, {
@@ -2101,6 +2340,12 @@ export function ExamPaperBuilderClient({
 
   function goToEditAfterFreshSave(examId: string) {
     if (isEditingExistingExam) return;
+    // 임베드 호스트(스튜디오 오버레이)는 라우팅 이탈 대신 콜백 — 컴포넌트가 살아
+    // 있으므로 위의 리마운트 손실이 없고, 이후 저장은 savedExamId 로 UPDATE 된다.
+    if (onSavedExam) {
+      onSavedExam(examId);
+      return;
+    }
     router.replace(`${examEditBase}/${examId}/edit`);
   }
 
@@ -2144,6 +2389,12 @@ export function ExamPaperBuilderClient({
       if (!newExamId) return;
 
       setSaveAsOpen(false);
+      // 임베드 호스트는 새 시험지로 갈아탄 채 오버레이를 유지한다(savedExamId 는
+      // saveDraft 가 이미 newExamId 로 바꿔 후속 저장이 새 시험지 UPDATE 로 흐름).
+      if (onSavedExam) {
+        onSavedExam(newExamId);
+        return;
+      }
       router.replace(`${examEditBase}/${newExamId}/edit`);
     });
   }
@@ -2333,56 +2584,66 @@ export function ExamPaperBuilderClient({
         // p-4 를 상쇄해 풀블리드로. → 셸이 뷰포트를 넘치지 않아 페이지 스크롤이 사라지고
         // 하단 shrink-0 푸터(장바구니/다음 버튼)가 화면 바닥에 고정된다.
         // 데스크톱(md:)은 기존 -m-6 / h-[100dvh] 그대로.
-        "relative -m-4 flex h-[calc(100dvh-3.5rem)] min-h-0 flex-col overflow-hidden md:-m-6 md:h-[100dvh]",
+        // 임베드 호스트는 shellClassName 으로 레이아웃 전체를 갈아끼운다(뷰포트
+        // 고정이 오버레이 컨테이너와 충돌) — bg 분기는 아래에서 항상 유지.
+        shellClassName ??
+          "relative -m-4 flex h-[calc(100dvh-3.5rem)] min-h-0 flex-col overflow-hidden md:-m-6 md:h-[100dvh]",
         // 기존 시험지 '수정' 모드는 새로 만드는 화면과 헷갈리지 않도록 배경을
         // 살짝 어둡게 한다 (미리보기 종이 자체는 흰색 그대로).
         isEditingExistingExam ? "bg-slate-200" : "bg-[#F4F6F9]",
       )}
     >
-      <div
-        aria-hidden={!headerVisible}
-        className={cn(
-          // 모바일(<lg)에선 자동 숨김 헤더를 아예 렌더하지 않는다 — 잠깐 보였다 사라지는
-          // 플래시 방지 + 상단 앱바와 중복 제거. 데스크톱(lg 이상)만 노출(자동 숨김 동작 유지).
-          "no-print hidden shrink-0 overflow-hidden border-b bg-white px-5 transition-[max-height,padding,opacity,transform,border-color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] lg:block",
-          headerVisible
-            ? "max-h-20 translate-y-0 border-slate-200/80 py-3 opacity-100"
-            : "pointer-events-none max-h-0 -translate-y-3 border-transparent py-0 opacity-0",
-        )}
-      >
-        <div
-          className={cn(
-            "transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
-            headerVisible ? "translate-y-0" : "-translate-y-2",
-          )}
-        >
-          <WorkflowPageTitle
-            icon={ExamPaperGenerationIcon}
-            title={isEditingExistingExam ? "시험지 수정" : "시험지 생성"}
-            description={
-              isEditingExistingExam
-                ? "저장된 시험지를 불러와 용지 구성과 문항 배치를 다시 편집합니다."
-                : "문제 은행에서 문제를 고르고 용지 미리보기에서 편집해 시험지를 저장합니다."
-            }
+      {/* 임베드(hideBuilderHeader)는 호스트가 자체 헤더를 가지므로 내부 자동
+          숨김 헤더 + 「헤더 보기」 삼각 토글을 통째 생략(§3.10.17-e (i) —
+          숨김 후 남는 좌상단 돌기가 사용자 지적 대상이었다). */}
+      {hideBuilderHeader ? null : (
+        <>
+          <div
+            aria-hidden={!headerVisible}
+            className={cn(
+              // 모바일(<lg)에선 자동 숨김 헤더를 아예 렌더하지 않는다 — 잠깐 보였다 사라지는
+              // 플래시 방지 + 상단 앱바와 중복 제거. 데스크톱(lg 이상)만 노출(자동 숨김 동작 유지).
+              "no-print hidden shrink-0 overflow-hidden border-b bg-white px-5 transition-[max-height,padding,opacity,transform,border-color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] lg:block",
+              headerVisible
+                ? "max-h-20 translate-y-0 border-slate-200/80 py-3 opacity-100"
+                : "pointer-events-none max-h-0 -translate-y-3 border-transparent py-0 opacity-0",
+            )}
+          >
+            <div
+              className={cn(
+                "transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
+                headerVisible ? "translate-y-0" : "-translate-y-2",
+              )}
+            >
+              <WorkflowPageTitle
+                icon={ExamPaperGenerationIcon}
+                title={isEditingExistingExam ? "시험지 수정" : "시험지 생성"}
+                description={
+                  isEditingExistingExam
+                    ? "저장된 시험지를 불러와 용지 구성과 문항 배치를 다시 편집합니다."
+                    : "문제 은행에서 문제를 고르고 용지 미리보기에서 편집해 시험지를 저장합니다."
+                }
+              />
+            </div>
+          </div>
+          <button
+            type="button"
+            onMouseEnter={() => setHeaderVisible(true)}
+            onFocus={() => setHeaderVisible(true)}
+            onClick={() => setHeaderVisible(true)}
+            title="헤더 보기"
+            aria-label="헤더 보기"
+            className={cn(
+              // 모바일(<lg)에선 '헤더 보기' 삼각형을 숨긴다 — 터치엔 mousemove 자동숨김이
+              // 무의미하고 상단 앱바와 중복이라 불필요. 데스크톱(lg 이상)은 그대로 노출.
+              "no-print hidden lg:block absolute left-0 top-0 z-40 h-4 w-4 bg-slate-900/10 shadow-[2px_2px_8px_rgba(15,23,42,0.12)] backdrop-blur-sm transition-[opacity,transform,background-color] duration-300 ease-out [clip-path:polygon(0_0,100%_0,0_100%)] hover:bg-blue-500/20 focus:bg-blue-500/20 focus:outline-none focus:ring-2 focus:ring-blue-200",
+              headerVisible
+                ? "pointer-events-none -translate-x-1 -translate-y-1 opacity-0"
+                : "translate-x-0 translate-y-0 opacity-100",
+            )}
           />
-        </div>
-      </div>
-      <button
-        type="button"
-        onMouseEnter={() => setHeaderVisible(true)}
-        onFocus={() => setHeaderVisible(true)}
-        onClick={() => setHeaderVisible(true)}
-        title="헤더 보기"
-        aria-label="헤더 보기"
-        className={cn(
-          // 모바일(<lg)에선 '헤더 보기' 삼각형을 숨긴다 — 터치엔 mousemove 자동숨김이
-          // 무의미하고 상단 앱바와 중복이라 불필요. 데스크톱(lg 이상)은 그대로 노출.
-          "no-print hidden lg:block absolute left-0 top-0 z-40 h-4 w-4 bg-slate-900/10 shadow-[2px_2px_8px_rgba(15,23,42,0.12)] backdrop-blur-sm transition-[opacity,transform,background-color] duration-300 ease-out [clip-path:polygon(0_0,100%_0,0_100%)] hover:bg-blue-500/20 focus:bg-blue-500/20 focus:outline-none focus:ring-2 focus:ring-blue-200",
-          headerVisible
-            ? "pointer-events-none -translate-x-1 -translate-y-1 opacity-0"
-            : "translate-x-0 translate-y-0 opacity-100",
-        )}
-      />
+        </>
+      )}
       {/* 모바일 전용 진행 스텝 — 문제 생성 페이지와 동일한 공용 스텝 헤더(번호 원형+연결선).
           선택 개수는 아래 하단 고정 '담긴 문제' 장바구니가 대신 보여준다. */}
       <div className="no-print shrink-0 border-b border-slate-200 bg-white px-2 py-2 lg:hidden">
@@ -2408,8 +2669,9 @@ export function ExamPaperBuilderClient({
           } as CSSProperties
         }
       >
-        {leftPanelCollapsed ? (
-          // 접혀도 그리드 1번 컬럼 자리를 채워 나머지 컬럼이 밀리지 않게 한다.
+        {hideQuestionLibrary || leftPanelCollapsed ? (
+          // 접혀도(또는 라이브러리 제거 임베드) 그리드 1번 컬럼 자리를 채워
+          // 나머지 컬럼이 밀리지 않게 한다.
           <div aria-hidden className="min-w-0 overflow-hidden" />
         ) : (
           <div
@@ -2465,7 +2727,12 @@ export function ExamPaperBuilderClient({
           </div>
         )}
 
-        {leftPanelCollapsed ? (
+        {hideQuestionLibrary ? (
+          // §3.10.17-d v2.3: 스튜디오 인-플로우 조판은 중앙 평면 리스트가
+          // 라이브러리 역할이라 문제관리 여닫이 핸들 자체가 소음(사용자 판정
+          // "이녀석은 필요가 없어"). 0px 컬럼 자리만 남긴다(5컬럼 정렬 계약).
+          <div aria-hidden className="hidden lg:block" />
+        ) : leftPanelCollapsed ? (
           <button
             type="button"
             onClick={() => setLeftPanelCollapsed(false)}

@@ -9,7 +9,8 @@ import { formatDate } from "@/lib/utils";
 import {
   getQuestionGenerationPlanFromTags,
   getDisplayQuestionTags,
-  QUESTION_GENERATION_PLAN_TAGS,
+  planForDifficulty,
+  QUESTION_GENERATION_PLANS,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
 import type { PassageDetailProps } from "./types";
@@ -86,7 +87,10 @@ function PassageQuestionCard({ q, num }: { q: PassageDetailProps["passage"]["que
           <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded border ${Q_DIFF[q.difficulty]?.cls || "bg-slate-100 text-slate-500"}`}>
             {Q_DIFF[q.difficulty]?.label || q.difficulty}
           </span>
-          {generationPlan && (generationPlan === "PREMIUM" || FEATURE_FLAGS.SHOW_MODEL_SELECTOR) && (
+          {/* 26-08-18 난이도 기반 티어: 난이도 뱃지(항상 노출)가 같은 티어를 말하면 이중 표기라 숨김. */}
+          {generationPlan &&
+            planForDifficulty(q.difficulty) !== generationPlan &&
+            (generationPlan === "PREMIUM" || FEATURE_FLAGS.SHOW_MODEL_SELECTOR) && (
             <span
               className={`inline-flex items-center gap-1 text-[10px] font-bold px-1.5 py-0.5 rounded border ${
                 generationPlan === "PREMIUM"
@@ -99,7 +103,7 @@ function PassageQuestionCard({ q, num }: { q: PassageDetailProps["passage"]["que
               ) : (
                 <PearlIcon className="w-3 h-3" />
               )}
-              {QUESTION_GENERATION_PLAN_TAGS[generationPlan]}
+              {QUESTION_GENERATION_PLANS[generationPlan].shortLabel}
             </span>
           )}
           {q.approved && (

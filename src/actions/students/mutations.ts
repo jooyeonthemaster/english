@@ -68,6 +68,12 @@ export async function createStudent(
     if (academyId === "__CURRENT__") {
       academyId = staff.academyId;
     }
+    // Tenancy guard — a caller may only create students in their own academy.
+    // bulkCreateStudents has this check; the single-create path was missing it
+    // (cross-tenant write hole surfaced by class-studio adversarial review 2026-08-09).
+    if (academyId !== staff.academyId) {
+      return { success: false, error: "권한이 없습니다." };
+    }
 
     // Generate unique student code (+ lookup HMAC / hash for tutor login)
     const { code, lookupHmac, hash } = await generateUniqueStudentCode(academyId);

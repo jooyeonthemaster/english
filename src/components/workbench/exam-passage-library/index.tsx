@@ -12,6 +12,7 @@ import {
 import { toast } from "sonner";
 
 import { triggerHintGlowWithin } from "@/lib/hint-glow";
+import { DragSelect } from "@/components/ui/drag-select";
 import { Pagination } from "@/components/workbench/shared/pagination";
 import type { ExamPassage, ExamPassagePick } from "@/lib/exam-passages/types";
 import type {
@@ -21,7 +22,7 @@ import type {
 import { useExamPassageLibrary } from "./use-exam-passage-library";
 import { ExamFilterBar } from "./exam-filter-bar";
 import { ExamPassageCard } from "./exam-passage-card";
-import { ExamPaperCard } from "./exam-paper-card";
+import { ExamPaperCard, ExamPaperCompactRow } from "./exam-paper-card";
 import { ExamPassagePreviewModal } from "./exam-passage-preview-modal";
 import { ExamPassageWebtoonModal } from "./exam-passage-webtoon-modal";
 
@@ -44,6 +45,39 @@ export interface ExamPassageLibraryProps {
    * 이때 호스트는 공용 스텝 네비를 숨겨야 중복되지 않는다. PC 는 영향 없음.
    */
   mobileFixedFooter?: boolean;
+  /**
+   * 좁은 컨테이너 임베드(클래스 스튜디오 중앙 열)용 — 필터 바의 lg 뷰포트
+   * 한 줄 강제를 끄고 facet 행 → 검색·토글 행 줄바꿈을 허용한다
+   * (ExamFilterBar.narrowHost 패스스루). 부재 = 기존 동작(무회귀).
+   */
+  narrowHost?: boolean;
+  /**
+   * 콤팩트 브라우저(클래스 스튜디오 중앙 열) — 시험지 카드 그리드를 전폭
+   * 세로 행 리스트(썸네일·시험지 체크박스 없음, 행 클릭 = 1클릭 드릴인)로,
+   * 지문 카드를 본문 미리보기 없는 배지 전용 행으로 바꾼다. narrowHost 와는
+   * 독립 축(동시 적용 가능). 부재 = 기존 4개 호스트 동작 그대로(무회귀).
+   */
+  compactBrowser?: boolean;
+  /**
+   * 이미 **현재 스코프**에 담긴 examId 집합(additive — 담김 배지, 2026-08-11 지시).
+   * 부재 = 배지 미표시(기존 호스트 무회귀). 참조 안정은 호스트 책임.
+   * 스코프가 클래스면 호스트가 클래스 등록분만 넣는다(§3.8.3 v2).
+   */
+  importedExamIds?: ReadonlySet<string>;
+  /**
+   * 지문함에는 있으나 **현재 스코프(클래스)에는 없는** examId 집합
+   * (2026-08-15 결함 수정 — "클래스에 안 담았는데 담음으로 보인다").
+   * importedExamIds 와 교집합이 없어야 한다(호스트 책임). 부재 = 기존 2상태.
+   */
+  libraryOnlyExamIds?: ReadonlySet<string>;
+  /** 담김 판정 스코프 이름(클래스명) — 배지 자구·툴팁에 쓰인다. */
+  importScopeLabel?: string;
+  /**
+   * 지문 목록에 마키(드래그 영역) 선택을 켠다(additive — 2026-08-15 지시).
+   * DragSelect deferCommit 계약 그대로: 드래그 중 리액트 무접촉(인라인 틴트),
+   * 릴리스에서 1회 커밋. 부재 = 기존 4개 호스트 동작 그대로(무회귀).
+   */
+  enableDragSelect?: boolean;
 }
 
 /**
@@ -57,6 +91,12 @@ export function ExamPassageLibrary({
   busy = false,
   mobileFixedFooter = false,
   enableWebtoonDownloads = false,
+  narrowHost = false,
+  compactBrowser = false,
+  importedExamIds,
+  libraryOnlyExamIds,
+  importScopeLabel,
+  enableDragSelect = false,
 }: ExamPassageLibraryProps) {
   const api = useExamPassageLibrary();
   const [preview, setPreview] = useState<ExamPassage | null>(null);
@@ -140,7 +180,13 @@ export function ExamPassageLibrary({
 
   return (
     <div className="flex h-full min-h-0 w-full flex-col overflow-hidden bg-white">
-      <ExamFilterBar api={api} />
+      {/* compact 시험지 목록(미드릴인)은 행 체크박스가 없으므로 전체선택을 숨긴다
+          — 전체 선택은 드릴인·검색 평면(지문 행)에서만(§3.8.3). */}
+      <ExamFilterBar
+        api={api}
+        narrowHost={narrowHost}
+        hideSelectAll={compactBrowser && !api.browsingProblems}
+      />
 
       {/* 본문 — 스크롤 영역 */}
       <div
@@ -152,6 +198,17 @@ export function ExamPassageLibrary({
         }
       >
         {api.loading ? (
+          compactBrowser ? (
+            // 콤팩트 행 리스트 스켈레톤 — 카드 대신 h-11 행 결로 자리 잡기.
+            <div className="divide-y divide-slate-100">
+              {Array.from({ length: 10 }).map((_, i) => (
+                <div key={i} className="flex h-11 items-center gap-2 px-2.5">
+                  <div className="h-4 w-12 shrink-0 animate-pulse rounded bg-slate-100" />
+                  <div className="h-4 min-w-0 flex-1 animate-pulse rounded bg-slate-100" />
+                </div>
+              ))}
+            </div>
+          ) : (
           <div className="grid grid-cols-1 gap-2.5 sm:[grid-template-columns:repeat(auto-fill,minmax(340px,1fr))]">
             {Array.from({ length: 6 }).map((_, i) => (
               <div
@@ -160,6 +217,7 @@ export function ExamPassageLibrary({
               />
             ))}
           </div>
+          )
         ) : api.error ? (
           <div className="flex h-full flex-col items-center justify-center gap-2 text-center">
             <p className="text-[13px] font-semibold text-slate-600">
@@ -193,11 +251,21 @@ export function ExamPassageLibrary({
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-1 gap-2.5 sm:[grid-template-columns:repeat(auto-fill,minmax(340px,1fr))]">
-                {api.items.map((p) => (
+              {/* compactBrowser 면 카드 그리드 대신 전폭 배지 행 리스트(드릴인·검색 평면 공통).
+                  enableDragSelect 면 같은 컨테이너를 DragSelect 로 바꿔 마키 선택을
+                  켠다 — 클래스 명은 그대로라 레이아웃은 픽셀 동일. */}
+              {(() => {
+                const listClassName = compactBrowser
+                  ? "divide-y divide-slate-100"
+                  : "grid grid-cols-1 gap-2.5 sm:[grid-template-columns:repeat(auto-fill,minmax(340px,1fr))]";
+                const cards = api.items.map((p) => (
                   <ExamPassageCard
                     key={p.id}
                     passage={p}
+                    compact={compactBrowser}
+                    imported={importedExamIds?.has(p.id) ?? false}
+                    inLibraryOnly={libraryOnlyExamIds?.has(p.id) ?? false}
+                    importScopeLabel={importScopeLabel}
                     selected={api.isSelected(p.id)}
                     onToggle={api.toggleSelect}
                     onPreview={setPreview}
@@ -206,8 +274,20 @@ export function ExamPassageLibrary({
                       enableWebtoonDownloads ? setWebtoonPreview : undefined
                     }
                   />
-                ))}
-              </div>
+                ));
+                return enableDragSelect ? (
+                  <DragSelect
+                    deferCommit
+                    value={api.selectedIds}
+                    onChange={api.applyDragSelection}
+                    className={listClassName}
+                  >
+                    {cards}
+                  </DragSelect>
+                ) : (
+                  <div className={listClassName}>{cards}</div>
+                );
+              })()}
               <Pagination
                 page={api.page}
                 totalPages={api.totalPages}
@@ -236,6 +316,25 @@ export function ExamPassageLibrary({
               ) : null}
             </p>
           </div>
+        ) : compactBrowser ? (
+          // 콤팩트 시험지 행 리스트 — 썸네일·체크박스 없이 제목 행만, 클릭 = 1클릭 드릴인.
+          // 전체 선택은 드릴인 후 필터바 전체선택으로(시험지 단위 담기는 compact 미제공).
+          <>
+            <div className="divide-y divide-slate-100">
+              {api.papers.map((paper) => (
+                <ExamPaperCompactRow
+                  key={paper.examId}
+                  paper={paper}
+                  onOpen={(p) => api.drillIntoPaper(p.examId, p.title)}
+                />
+              ))}
+            </div>
+            <Pagination
+              page={api.page}
+              totalPages={api.totalPages}
+              onGoToPage={handleGoToPage}
+            />
+          </>
         ) : (
           <>
             <div className="grid grid-cols-1 gap-2.5 sm:[grid-template-columns:repeat(auto-fill,minmax(340px,1fr))]">
@@ -388,7 +487,8 @@ export function ExamPassageLibrary({
           {working
             ? "담는 중…"
             : api.selectedCount > 0
-              ? `${pickLabel} (${api.selectedCount})`
+              ? // 카운트 표기 정본 「라벨 · 지문 N개」 — 인테이크 담기 CTA 공통 포맷.
+                `${pickLabel} · 지문 ${api.selectedCount}개`
               : pickLabel}
         </button>
       </div>
@@ -398,6 +498,9 @@ export function ExamPassageLibrary({
         selected={preview ? api.isSelected(preview.id) : false}
         onToggleSelect={api.toggleSelect}
         onClose={() => setPreview(null)}
+        // 담기 CTA 와 같은 라벨(§3.10.14 개칭 패스스루) — 실호스트 4곳 전부
+        // pickLabel 을 명시 전달하므로 기본값 경로는 실 UI 에 없다.
+        pickLabel={pickLabel}
       />
       <ExamPassageWebtoonModal
         passage={webtoonPreview}

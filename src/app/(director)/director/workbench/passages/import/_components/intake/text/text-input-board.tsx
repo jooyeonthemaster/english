@@ -83,6 +83,20 @@ export interface TextInputBoardProps {
    * 하단 스텝 네비를 숨겨야 함. 기본 false(자료추출 등은 기존 패널 그대로).
    */
   mobileFixedFooter?: boolean;
+  /**
+   * 좁은 컨테이너 임베드(클래스 스튜디오 워크벤치 중앙 열)용 — 뷰포트가 lg 이상
+   * 이어도 좌우 분할(lg:flex-row) 대신 세로 적층을 강제한다. 미디어쿼리는
+   * 뷰포트만 보므로, 넓은 화면의 좁은 열에 그대로 임베드하면 입력 패널이
+   * 글자 단위로 부서진다(2026-08-10 실측). 부재 시 기존 클래스와 바이트 동일(무회귀).
+   */
+  stacked?: boolean;
+  /**
+   * 빈 상태의 「사용 순서」 가이드 박스를 숨긴다(클래스 스튜디오 인테이크
+   * 간소화 — §3.9v2.8 D9). 스튜디오 중앙 열은 폭이 좁아 3단 가이드가 시각
+   * 소음이라, 대신 muted 한 줄 안내만 둔다. 부재 시(기본 false) 기존 가이드
+   * 박스 그대로 — 다른 호스트(추출·복원 등) 바이트 동일(무회귀).
+   */
+  hideEmptyGuide?: boolean;
 }
 
 /** 본문 앞부분 미리보기(제목이 없을 때 카드 라벨로 사용). */
@@ -117,7 +131,7 @@ export function TextInputBoard({
   onStart,
   outputMode,
   reviewLabel = "추출될 지문",
-  emptyTitle = "텍스트를 붙여넣고 지문을 쌓아요",
+  emptyTitle = "텍스트를 붙여넣고 지문을 쌓습니다",
   guideStartLabel = "추출 시작",
   startLabel = "다음으로 (내 지문함)",
   restoredStartLabel = "다음으로 (내 지문함)",
@@ -126,6 +140,8 @@ export function TextInputBoard({
   startRef,
   onDraftStateChange,
   mobileFixedFooter = false,
+  stacked = false,
+  hideEmptyGuide = false,
 }: TextInputBoardProps) {
   const [draftTitle, setDraftTitle] = useState("");
   const [draftText, setDraftText] = useState("");
@@ -140,6 +156,8 @@ export function TextInputBoard({
   // 입력칸(본문 미입력) / 누적 목록(한도 초과 시 줄이라고).
   const inputBoxRef = useRef<HTMLDivElement>(null);
   const reviewListRef = useRef<HTMLDivElement>(null);
+  // 우측 누적 패널(aside) 실체 — 드래그 리사이즈 고속 경로가 style.width 를 직접 쓴다.
+  const reviewAsideRef = useRef<HTMLElement>(null);
   const [textTutorialClosed, setTextTutorialClosed] = useState(false);
   const [textTutorialHidden, setTextTutorialHidden] = useState(() => {
     if (typeof window === "undefined") return false;
@@ -162,23 +180,64 @@ export function TextInputBoard({
       event.preventDefault();
       const startX = event.clientX;
       const startW = reviewWidth;
+      const prevCursor = document.body.style.cursor;
+      const prevSelect = document.body.style.userSelect;
+      const prevPointerEvents = document.body.style.pointerEvents;
       document.body.style.cursor = "col-resize";
       document.body.style.userSelect = "none";
+      // 드래그 중 hover 스타일 재평가 차단 — 폭이 프레임마다 바뀌면 커서 아래
+      // 요소가 계속 바뀐다(캡처 덕에 move 수신에는 영향 없다).
+      document.body.style.pointerEvents = "none";
       let latest = startW;
+
+      // 포인터 캡처 — 커서가 얇은 핸들을 벗어나도 드래그가 끊기지 않는다.
+      const handleEl = event.currentTarget as HTMLElement;
+      try {
+        handleEl.setPointerCapture(event.pointerId);
+      } catch {
+        /* 캡처 미지원 브라우저는 window 리스너로 폴백 */
+      }
+
+      // 드래그 고속 경로 — 매 무브 setReviewWidth 는 보드 전체(좌 입력 보드 +
+      // 누적 지문 블록 수십 장)를 프레임마다 리렌더시킨다. 이동 중에는 aside 의
+      // style.width 에 rAF 코얼레싱으로 직접 쓰고, 놓을 때 한 번만 setState 로
+      // 커밋한다. 앵커가 없으면 종전 setState 경로 폴백(무회귀).
+      let rafId: number | null = null;
+      const flush = () => {
+        rafId = null;
+        if (reviewAsideRef.current) {
+          reviewAsideRef.current.style.width = `${latest}px`;
+        }
+      };
       const move = (e: PointerEvent) => {
         e.preventDefault();
         // 왼쪽으로 끌면 누적 패널이 넓어진다(오른쪽 고정 패널).
         latest = clampReviewW(startW - (e.clientX - startX));
-        setReviewWidth(latest);
+        if (reviewAsideRef.current) {
+          if (rafId === null) rafId = requestAnimationFrame(flush);
+        } else {
+          setReviewWidth(latest);
+        }
       };
       const finish = () => {
         window.removeEventListener("pointermove", move);
         window.removeEventListener("pointerup", finish);
         window.removeEventListener("pointercancel", finish);
-        document.body.style.cursor = "";
-        document.body.style.userSelect = "";
+        if (rafId !== null) cancelAnimationFrame(rafId);
+        flush();
+        // 커밋은 여기서 한 번 — 드래그 내내 리렌더 0회.
+        setReviewWidth(latest);
+        // 저장해 둔 이전 값 복원 — 빈 문자열 대입은 남의 잠금까지 지운다.
+        document.body.style.cursor = prevCursor;
+        document.body.style.userSelect = prevSelect;
+        document.body.style.pointerEvents = prevPointerEvents;
         try {
           window.localStorage.setItem(REVIEW_W_KEY, String(latest));
+        } catch {
+          /* ignore */
+        }
+        try {
+          handleEl.releasePointerCapture(event.pointerId);
         } catch {
           /* ignore */
         }
@@ -428,7 +487,12 @@ export function TextInputBoard({
 
   return (
     <>
-      <div className="flex min-h-0 flex-1 flex-col overflow-hidden lg:flex-row">
+      <div
+        className={
+          "flex min-h-0 flex-1 flex-col overflow-hidden" +
+          (stacked ? "" : " lg:flex-row")
+        }
+      >
         {/* ── 좌: 입력창 (제목 + 본문 + 지문 추가) ───────────────────────── */}
         <div className="relative flex min-h-0 min-w-0 flex-1 flex-col border-b border-slate-100 p-2 lg:border-b-0 lg:p-3.5">
           {textTutorialPopup}
@@ -469,6 +533,9 @@ export function TextInputBoard({
                 // 모바일(<lg)은 '지문 추가' 버튼까지 한 화면에 들어오도록 본문을
                 // 화면에 맞는 고정 높이로 둔다(스크롤 없이). PC(lg)는 flex-1로 채운다.
                 "min-h-0 flex-1 resize-none rounded-md border-2 bg-white px-3 py-3 text-[13px] leading-6 text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50 max-lg:h-[26vh] max-lg:!min-h-[128px] max-lg:!flex-none lg:leading-7 lg:px-4 " +
+                // stacked 임베드: lg 이상에서도 입력을 고정 높이로 접어 아래
+                // 누적 목록이 남는 세로 공간을 갖게 한다(max-lg 표현과 동형).
+                (stacked ? "!h-[220px] !min-h-[128px] !flex-none " : "") +
                 // 비어 있으면 파란 테두리로 입력을 유도, 내용이 있으면 회색.
                 (draftText
                   ? "border-slate-200 focus:border-blue-400"
@@ -512,7 +579,10 @@ export function TextInputBoard({
           onPointerDown={beginReviewResize}
           title="드래그하여 누적 패널 폭 조절"
           aria-label="누적 패널 폭 조절"
-          className="group/rhandle no-print hidden h-full min-h-0 w-3 shrink-0 cursor-col-resize touch-none select-none flex-col items-center justify-center gap-1 border-l border-slate-100 bg-slate-50 py-1 text-[10.5px] font-semibold text-slate-400 transition-colors hover:bg-sky-50 hover:text-sky-600 active:bg-sky-100 lg:flex"
+          className={
+            "group/rhandle no-print hidden h-full min-h-0 w-3 shrink-0 cursor-col-resize touch-none select-none flex-col items-center justify-center gap-1 border-l border-slate-100 bg-slate-50 py-1 text-[10.5px] font-semibold text-slate-400 transition-colors hover:bg-sky-50 hover:text-sky-600 active:bg-sky-100" +
+            (stacked ? "" : " lg:flex")
+          }
         >
           <GripVertical
             className="size-3 opacity-50 transition-opacity group-hover/rhandle:opacity-80"
@@ -523,8 +593,12 @@ export function TextInputBoard({
 
         {/* ── 우: 추출될 지문 누적 ──────────────────────────────────────── */}
         <aside
+          ref={reviewAsideRef}
           style={{ width: reviewWidth }}
-          className="flex min-h-0 flex-col bg-white max-lg:!w-full lg:shrink-0"
+          className={
+            "flex min-h-0 flex-col bg-white max-lg:!w-full" +
+            (stacked ? " !w-full min-h-0 flex-1" : " lg:shrink-0")
+          }
         >
           {/* 모바일: '담긴 지문' 장바구니 바 + 시작 버튼을 하단 고정(파일업로드와
               통일). 목록은 cartOpen일 때 위로 펼침. PC(lg)는 contents로 투명
@@ -569,6 +643,13 @@ export function TextInputBoard({
 
           <div className="smoat-text-review-scroll min-h-0 flex-1 overflow-y-auto bg-slate-50/40 p-2.5">
             {passages.length === 0 ? (
+              hideEmptyGuide ? (
+                // 간소화 임베드(스튜디오): 가이드 박스 대신 muted 한 줄 —
+                // 세로·가로 중앙에 두어 빈 패널이 허전하지도 시끄럽지도 않게.
+                <p className="flex h-full items-center justify-center text-center text-[12px] text-slate-400">
+                  붙여넣은 지문이 여기에 쌓입니다
+                </p>
+              ) : (
               <div className="smoat-text-empty-guide mx-auto flex w-full max-w-[640px] flex-col rounded-lg border border-slate-200 bg-slate-50/80 p-4">
                 <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
                   <div className="inline-flex w-fit items-center gap-1.5 rounded-md bg-blue-600 px-2 py-1 text-[11px] font-bold text-white">
@@ -601,6 +682,7 @@ export function TextInputBoard({
                   ))}
                 </ol>
               </div>
+              )
             ) : (
               <div ref={reviewListRef} className="space-y-2">
                 {passages.map((p, idx) => {
@@ -928,7 +1010,9 @@ function StartButton({
         <>
           <PlayCircle className="mr-2 size-5" aria-hidden="true" />
           {label}
-          {count > 0 ? ` (지문 ${count}개)` : ""}
+          {/* 카운트 표기 정본 「· 지문 N개」 상시 — 업로드 CTA 와 단일 포맷
+              (2026-08-11 재검증 V2, 구 「(지문 N개)」 count>0 한정 폐기) */}
+          {` · 지문 ${count}개`}
         </>
       )}
     </button>

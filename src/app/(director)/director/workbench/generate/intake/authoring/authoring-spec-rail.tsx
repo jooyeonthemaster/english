@@ -120,6 +120,9 @@ export function AuthoringSpecRail({ summary, children }: AuthoringSpecRailProps)
   // 드래그가 이미 돌고 있는지. 두 번째 pointerdown 이 경쟁 핸들러를 하나 더 달면
   // 먼저 끝난 쪽이 body 스타일을 복구해 버려 나머지 하나가 영영 남는다.
   const activeRef = useRef(false);
+  // 드래그 고속 경로의 대상 — 폭(--rail-w)을 소유한 aside. 드래그 중에는 이
+  // 요소의 CSS 변수에 직접 쓰고, 놓을 때 한 번만 setWidth 로 커밋한다.
+  const railRef = useRef<HTMLElement | null>(null);
 
   const beginResize = useCallback(
     (event: ReactPointerEvent<HTMLButtonElement>) => {
@@ -133,14 +136,46 @@ export function AuthoringSpecRail({ summary, children }: AuthoringSpecRailProps)
       // 걸어 둔 커서·선택 잠금이 조용히 사라진다. 원래 값을 돌려준다.
       const prevCursor = document.body.style.cursor;
       const prevSelect = document.body.style.userSelect;
+      const prevPointerEvents = document.body.style.pointerEvents;
       document.body.style.cursor = "col-resize";
       document.body.style.userSelect = "none";
+      // 드래그 중 hover 스타일 재평가 차단 — 폭이 프레임마다 바뀌면 커서 아래
+      // 요소가 계속 바뀐다(아래 포인터 캡처 덕에 move 수신은 유지).
+      document.body.style.pointerEvents = "none";
+
+      // 포인터 캡처 — 커서가 얇은 핸들을 벗어나도 이벤트가 끊기지 않는다.
+      const handleEl = event.currentTarget as HTMLElement;
+      try {
+        handleEl.setPointerCapture(event.pointerId);
+      } catch {
+        /* 캡처 미지원 브라우저는 window 리스너로 폴백 */
+      }
+
+      // 드래그 고속 경로 — 매 pointermove 의 setState 는 레일 껍데기+헤더를
+      // 프레임마다 리렌더시킨다. 드래그 중에는 aside 의 --rail-w 변수에 rAF
+      // 코얼레싱으로 직접 쓰고(렌더의 style 형식과 동일 → max-w-[38cqi] 상한
+      // 계약 그대로), 놓을 때 한 번만 커밋한다. 레일 요소를 못 찾으면 종전
+      // setState 경로로 폴백(무회귀).
+      const railEl = railRef.current;
       let latest = startW;
+      let rafId: number | null = null;
+      const flush = () => {
+        // 다음 무브가 새 프레임을 잡을 수 있게 먼저 해제한다.
+        rafId = null;
+        if (!railEl) return;
+        railEl.style.setProperty("--rail-w", `${latest}px`);
+        // 접근성 — 드래그 중에도 separator 의 현재값이 실제 폭을 따라간다.
+        handleEl.setAttribute("aria-valuenow", String(latest));
+      };
       const move = (e: PointerEvent) => {
         e.preventDefault();
         // 왼쪽으로 끌수록 넓어진다(오른쪽에 고정된 패널이므로).
         latest = clampW(startW - (e.clientX - startX));
-        setWidth(latest);
+        if (railEl) {
+          if (rafId === null) rafId = requestAnimationFrame(flush);
+        } else {
+          setWidth(latest);
+        }
       };
       const finish = () => {
         if (!activeRef.current) return;
@@ -149,8 +184,20 @@ export function AuthoringSpecRail({ summary, children }: AuthoringSpecRailProps)
         window.removeEventListener("pointerup", finish);
         window.removeEventListener("pointercancel", finish);
         window.removeEventListener("blur", finish);
+        if (rafId !== null) cancelAnimationFrame(rafId);
+        if (railEl) {
+          flush();
+          // 커밋 1회 — 드래그 내내 리렌더 0회.
+          setWidth(latest);
+        }
         document.body.style.cursor = prevCursor;
         document.body.style.userSelect = prevSelect;
+        document.body.style.pointerEvents = prevPointerEvents;
+        try {
+          handleEl.releasePointerCapture(event.pointerId);
+        } catch {
+          /* ignore */
+        }
         storeWidth(latest);
       };
       window.addEventListener("pointermove", move, { passive: false });
@@ -170,6 +217,7 @@ export function AuthoringSpecRail({ summary, children }: AuthoringSpecRailProps)
       activeRef.current = false;
       document.body.style.cursor = "";
       document.body.style.userSelect = "";
+      document.body.style.pointerEvents = "";
     },
     [],
   );
@@ -220,6 +268,7 @@ export function AuthoringSpecRail({ summary, children }: AuthoringSpecRailProps)
       </button>
 
       <aside
+        ref={railRef}
         // 폭은 인라인 style 이 아니라 **CSS 변수**로 넘긴다. style={{width}} 로 두면
         // 인라인 선언이 클래스보다 강해서, 좁은 폭(<720cqi)에서 보드가 레일을
         // 발주 밴드 아래로 쌓을 때 w-full 로 펼 방법이 !important 밖에 없어진다.

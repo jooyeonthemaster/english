@@ -1,0 +1,171 @@
+<!-- 표지. 파일명이 s00 인 이유: build.mjs 가 파일명 정렬로 조립하므로 s00 이 자동으로 1번이 된다.
+     기존 s01~s26 을 +1 로 밀면 파일당 수십~백여 개 스코프 식별자를 전부 바꿔야 해 사고 위험이 크다. -->
+<section class="slide slide--dark" id="s00"
+  data-title="TITLE" data-kr="표지"
+  data-zone="개막" data-zone-en="OPENING"
+  data-part="1차 세미나"
+  data-in="오늘 이 자리"
+  data-out="영어 내신 종합 솔루션"
+  data-note="라인 개통 전">
+
+  <div class="pad s00-wrap">
+
+    <div class="s00-stack">
+
+      <!-- 브랜드 락업 — 라인이 마크 뒤로 지나가되 중앙에서 끊긴다 -->
+      <div class="s00-brand" data-step="0">
+        <span class="s00-axis" aria-hidden="true">
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          <b class="run"></b>
+        </span>
+        <span class="s00-mk">
+          <img src="assets/img/smoat-mark.png" alt="SMOAT" width="1024" height="1024">
+        </span>
+      </div>
+
+      <div class="s00-wm latin" data-step="0">SMOAT</div>
+
+      <h1 class="s00-h" data-step="0">영어 내신 종합 솔루션</h1>
+
+      <div class="s00-ed" data-step="0">
+        <span class="r"></span>
+        <span class="t">1차 세미나</span>
+        <span class="r"></span>
+      </div>
+
+      <div class="s00-foot" data-step="0">영어 강사 내신 대비 올인원</div>
+
+    </div>
+
+  </div>
+
+<style>
+/* stretch 여야 .s00-brand 가 .pad 전폭(1728)을 갖고, 그 위의 라인이 -96px 씩 넘쳐
+   화면 1920 을 완전히 관통한다. center 로 두면 라인이 제목 너비에만 걸린다. */
+#s00 .s00-wrap { display: flex; flex-direction: column; align-items: stretch; justify-content: center; }
+#s00 .s00-stack { display: flex; flex-direction: column; align-items: center; }
+
+/* ── 브랜드 ── */
+#s00 .s00-brand {
+  position: relative; align-self: stretch;
+  display: flex; align-items: center; justify-content: center;
+  height: 184px;
+}
+
+/* 라인: 화면 좌우로 흘려보내되(.pad 밖 -96px) 중앙은 비워 마크가 그 자리에 선다 */
+#s00 .s00-axis {
+  position: absolute; left: -96px; right: -96px; top: 50%; height: 1px; margin-top: -.5px;
+  /* 화면 끝까지 흘려보낸다 — 짧게 끊기면 라인이 아니라 밑줄로 읽힌다 */
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(59,130,246,.26) 7%,
+    rgba(59,130,246,.60) 28%,
+    rgba(59,130,246,.78) 42%,
+    transparent 45.5%,
+    transparent 54.5%,
+    rgba(59,130,246,.78) 58%,
+    rgba(59,130,246,.60) 72%,
+    rgba(59,130,246,.26) 93%,
+    transparent 100%);
+}
+/* 라인 위 노드 — 상단 레일의 어휘를 표지에 미리 심는다 */
+#s00 .s00-axis i {
+  position: absolute; top: 50%; width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px;
+  border-radius: 50%; background: var(--ink);
+  border: 1.5px solid rgba(59,130,246,.62);
+}
+#s00 .s00-axis i:nth-of-type(1) { left: 14%; opacity: .30; }
+#s00 .s00-axis i:nth-of-type(2) { left: 23%; opacity: .48; }
+#s00 .s00-axis i:nth-of-type(3) { left: 32%; opacity: .68; }
+#s00 .s00-axis i:nth-of-type(4) { left: 41%; opacity: .90; }
+#s00 .s00-axis i:nth-of-type(5) { left: 59%; opacity: .90; }
+#s00 .s00-axis i:nth-of-type(6) { left: 68%; opacity: .68; }
+#s00 .s00-axis i:nth-of-type(7) { left: 77%; opacity: .48; }
+#s00 .s00-axis i:nth-of-type(8) { left: 86%; opacity: .30; }
+
+/* 라인을 타고 흐르는 빛 — 개통 직전의 신호 */
+#s00 .s00-axis .run {
+  position: absolute; top: 50%; width: 6px; height: 6px; margin: -3px 0 0 -3px;
+  border-radius: 50%; background: var(--blue-light);
+  box-shadow: 0 0 12px 2px rgba(59,130,246,.85);
+  animation: s00-run 5.2s var(--ease-line) infinite;
+}
+@keyframes s00-run {
+  0%   { left: 8%;  opacity: 0; }
+  8%   { opacity: 1; }
+  42%  { left: 44%; opacity: 1; }
+  50%  { left: 50%; opacity: 0; }
+  58%  { left: 56%; opacity: 1; }
+  92%  { left: 92%; opacity: 1; }
+  100% { left: 94%; opacity: 0; }
+}
+
+#s00 .s00-mk {
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+/* 마크 뒤 발광 — 라인이 끊긴 자리를 빛이 메운다 */
+#s00 .s00-mk::before {
+  content: ''; position: absolute; left: 50%; top: 50%;
+  width: 520px; height: 520px; margin: -260px 0 0 -260px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(59,130,246,.26) 0%, rgba(59,130,246,.09) 40%, transparent 68%);
+  pointer-events: none;
+}
+#s00 .s00-mk img {
+  position: relative; display: block;
+  width: 184px; height: 184px;
+  filter: drop-shadow(0 0 34px rgba(59,130,246,.5));
+}
+
+/* ── 워드마크 ── */
+#s00 .s00-wm {
+  margin-top: 30px;
+  font-family: var(--f-latin); font-weight: 900;
+  font-size: 34px; line-height: 1; letter-spacing: .34em;
+  /* letter-spacing 은 마지막 글자 뒤에도 붙는다 — 그만큼 왼쪽으로 당겨 광학 중심을 맞춘다 */
+  text-indent: .34em;
+  color: var(--blue);
+}
+
+/* ── 타이틀 ── */
+#s00 .s00-h {
+  margin-top: 44px;
+  font-family: var(--f-display); font-weight: 800;
+  font-size: 100px; line-height: 1.12; letter-spacing: -.032em;
+  color: var(--white); text-align: center;
+}
+
+/* ── 회차 ── */
+/* 한글은 자간을 크게 주면 어절이 끊겨 읽힌다 — .3em 은 "세 미 나" 로 보였다. .14em 까지만. */
+#s00 .s00-ed {
+  margin-top: 38px;
+  display: flex; align-items: center; gap: 24px;
+}
+#s00 .s00-ed .r {
+  width: 96px; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(136,146,166,.55));
+}
+#s00 .s00-ed .r:last-child {
+  background: linear-gradient(90deg, rgba(136,146,166,.55), transparent);
+}
+#s00 .s00-ed .t {
+  font-family: var(--f-body); font-weight: 500;
+  font-size: 21px; letter-spacing: .14em; text-indent: .14em;
+  color: var(--txt-2); white-space: nowrap;
+}
+
+/* 스택 안에 둔다 — 바닥에 절대배치하면 구성에서 떨어져 고아처럼 읽혔다 */
+#s00 .s00-foot {
+  margin-top: 64px; text-align: center;
+  font-family: var(--f-mono); font-size: 13.5px; letter-spacing: .24em; text-indent: .24em;
+  color: var(--txt-4);
+}
+
+/* ── 등장: 위에서 아래로 순차 ── */
+#s00 .s00-brand { transition-delay: 0ms; }
+#s00 .s00-wm    { transition-delay: 90ms; }
+#s00 .s00-h     { transition-delay: 180ms; }
+#s00 .s00-ed    { transition-delay: 290ms; }
+#s00 .s00-foot  { transition-delay: 400ms; }
+</style>
+</section>

@@ -521,16 +521,41 @@ export function ExtractionManageClient({
 
   const handleTaskMarqueeChange = useCallback(
     (nextTaskIds: Set<string>) => {
-      // DragSelect 가 넘기는 next 는 "이번 선택의 전체 집합"이다(새 드래그=교체,
-      // Shift=추가). 각 task 의 draft id 들로 펼쳐 draft 선택집합을 만든다.
-      const nextDraftIds = new Set<string>();
+      // DragSelect 의 next 는 언제나 "최종 집합 전체"다(2026-08-20 개편: 담기
+      // 드래그면 value∪히트, 해제 드래그면 value−히트).
+      //
+      // 【그대로 펼쳐 교체하면 안 되는 이유 — 재발 금지】 여기 value 는
+      // checkedTaskIds 즉 "draft 가 **전부** 선택된 작업"만 남는 손실 투영이다.
+      // 그래서 nextTaskIds 를 펼쳐 setSelectedIds 로 통째 갈아끼우면, 왕복에서
+      // 살아남지 못하는 선택이 조용히 사라진다:
+      //   · 검수 드로어(JobReviewModal)에서 낱개로 고른 draft — 그 작업은
+      //     "전부 선택"이 아니라 checkedTaskIds 에 없다
+      //   · job 이 없는 draft — draftIdsByJobId 자체가 건너뛴다
+      // 마키는 더하기만 해야 한다는 새 계약을 이 표면만 어기게 된다.
+      // 그래서 task 공간의 **변화분**만 draft 선택집합에 반영한다.
+      const added: string[] = [];
+      const removed: string[] = [];
       for (const taskId of nextTaskIds) {
-        const ids = draftIdsByJobId.get(taskId);
-        if (ids) for (const id of ids) nextDraftIds.add(id);
+        if (!checkedTaskIds.has(taskId)) added.push(taskId);
       }
-      setSelectedIds(nextDraftIds);
+      for (const taskId of checkedTaskIds) {
+        if (!nextTaskIds.has(taskId)) removed.push(taskId);
+      }
+      if (added.length === 0 && removed.length === 0) return;
+      setSelectedIds((prev) => {
+        const next = new Set(prev);
+        for (const taskId of added) {
+          const ids = draftIdsByJobId.get(taskId);
+          if (ids) for (const id of ids) next.add(id);
+        }
+        for (const taskId of removed) {
+          const ids = draftIdsByJobId.get(taskId);
+          if (ids) for (const id of ids) next.delete(id);
+        }
+        return next;
+      });
     },
-    [draftIdsByJobId, setSelectedIds],
+    [checkedTaskIds, draftIdsByJobId, setSelectedIds],
   );
 
   // Dropping a task card onto a folder should move every draft inside that

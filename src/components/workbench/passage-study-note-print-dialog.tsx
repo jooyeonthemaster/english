@@ -164,6 +164,10 @@ export function PassageStudyNotePrintDialog({
     document.addEventListener("mouseup", onUp);
   }, []);
 
+  // 드래그 시작 위치를 ref 로 읽어 핸들러 정체성을 고정한다(deps []) — 예전에는
+  // deps 가 [controlsPos] 라 드래그 한 번마다 핸들러가 새로 만들어졌다.
+  const controlsPosRef = useRef(controlsPos);
+  controlsPosRef.current = controlsPos;
   const handleControlsDragStart = useCallback(
     (e: React.MouseEvent<HTMLSpanElement>) => {
       if (e.button !== 0) return;
@@ -171,27 +175,56 @@ export function PassageStudyNotePrintDialog({
       e.stopPropagation();
       const startMouseX = e.clientX;
       const startMouseY = e.clientY;
-      const startTop = controlsPos.top;
-      const startRight = controlsPos.right;
+      const { top: startTop, right: startRight } = controlsPosRef.current;
+      // 드래그 중에는 컨트롤 DOM(그립 span 의 부모 = FloatingZoomControls 루트)에
+      // rAF 코얼레싱으로 직접 쓰고, 놓을 때 딱 한 번만 상태로 확정한다 — 매
+      // mousemove setState 는 다이얼로그 전체(전 페이지 StudyNotePageFrame +
+      // EditingPanel)를 프레임마다 재조판시켰다(AnalysisReportEditor 줌 컨트롤과
+      // 동형 수술).
+      const controlsEl = e.currentTarget.parentElement as HTMLElement | null;
+      const prevCursor = document.body.style.cursor;
+      const prevUserSelect = document.body.style.userSelect;
       document.body.style.cursor = "grabbing";
       document.body.style.userSelect = "none";
 
+      let next = { top: startTop, right: startRight };
+      let rafId: number | null = null;
+      const flush = () => {
+        rafId = null;
+        if (controlsEl) {
+          controlsEl.style.top = `${next.top}px`;
+          controlsEl.style.right = `${next.right}px`;
+        }
+      };
+
       const onMove = (ev: MouseEvent) => {
-        setControlsPos({
+        next = {
           top: Math.max(0, startTop + (ev.clientY - startMouseY)),
           right: Math.max(0, startRight - (ev.clientX - startMouseX)),
-        });
+        };
+        if (controlsEl) {
+          if (rafId === null) rafId = requestAnimationFrame(flush);
+        } else {
+          // 컨트롤 DOM 을 못 찾는 경우(구조 변경 등)에는 예전 경로로 안전 복귀.
+          setControlsPos(next);
+        }
       };
       const onUp = () => {
         document.removeEventListener("mousemove", onMove);
         document.removeEventListener("mouseup", onUp);
-        document.body.style.cursor = "";
-        document.body.style.userSelect = "";
+        if (rafId !== null) cancelAnimationFrame(rafId);
+        flush();
+        document.body.style.cursor = prevCursor;
+        document.body.style.userSelect = prevUserSelect;
+        // 최종 위치를 상태로 확정 — 이후 리렌더가 같은 값을 다시 쓰므로 튐이 없다.
+        setControlsPos((prev) =>
+          prev.top === next.top && prev.right === next.right ? prev : next,
+        );
       };
       document.addEventListener("mousemove", onMove);
       document.addEventListener("mouseup", onUp);
     },
-    [controlsPos],
+    [],
   );
 
   if (!open) return null;

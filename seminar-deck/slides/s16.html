@@ -1,0 +1,409 @@
+<section class="slide slide--dark" id="s16"
+  data-title="ST 06" data-kr="학생이 푼다"
+  data-zone="학습" data-zone-en="STUDY"
+  data-part="PART 1 — 기능 브리핑"
+  data-in="배포된 과제"
+  data-out="학생 답안 · 선택한 오답까지"
+  data-note="직접 눌러보세요">
+
+  <div class="pad s16-wrap">
+
+    <!-- 좌: 카피 -->
+    <div class="s16-copy">
+      <div class="st-badge" data-step="0" data-fx="none">
+        <span class="num">ST 06</span><span class="nm">SOLVE</span>
+      </div>
+
+      <h2 class="s16-h" data-step="0">
+        종이는 가방에서 사라지지만,<br>
+        <em>태블릿은 기록을 남깁니다.</em>
+      </h2>
+
+      <p class="s16-lead" data-step="0" data-fx="none">
+        선생님이 배포한 그 시험지가, 학생 손에서는 이렇게 열립니다.<br>
+        문항 번호를 눌러 이동하고, 헷갈리면 표시해 두고, 남은 문항을 보며 풉니다.
+      </p>
+
+      <ul class="s16-pts">
+        <li data-step="1" data-fx="left">
+          <b>모바일 · 태블릿 모두 최적화</b>
+          <span>지금은 웹으로 바로 접속. 전용 앱 출시 준비 중입니다.</span>
+        </li>
+        <li data-step="2" data-fx="left">
+          <b>맞았는지만이 아니라 <i>무엇을 골랐는지</i></b>
+          <span>선택한 오답 번호가 그대로 선생님 화면에 올라갑니다.</span>
+        </li>
+        <li data-step="3" data-fx="left">
+          <b>제출 즉시 채점 · 해설 공개</b>
+          <span>객관식은 자동 채점, 서술형은 선생님 피드백란으로.</span>
+        </li>
+      </ul>
+
+      <div class="s16-cta" data-step="4" data-fx="none">
+        <span class="mono">TRY</span> 오른쪽 화면의 선지를 직접 골라 <b>제출</b>까지 눌러보세요.
+      </div>
+    </div>
+
+    <!-- 우: 태블릿 목업 — 실제 학생 앱 /g 문항 플레이어 재현 -->
+    <div class="s16-device" data-step="0" data-fx="scale" data-noadvance>
+      <div class="tablet">
+        <div class="tablet__cam"></div>
+        <div class="tablet__scr">
+          <div class="gd" id="s16-app">
+
+            <!-- 헤더 -->
+            <header class="gd-hd">
+              <span class="gd-back">‹</span>
+              <span class="gd-ttl">
+                <b>SMOAT · 3월 학력평가 대비 모의고사</b>
+                <i id="s16-count">응답 14/20</i>
+              </span>
+              <span class="gd-meter"><span class="gd-meter-fill" id="s16-meter"></span></span>
+            </header>
+
+            <!-- 본문 -->
+            <main class="gd-main scrollable" id="s16-main">
+              <div class="gd-card">
+                <div class="gd-qhead">
+                  <span class="gd-qno">18</span>
+                  <span class="gd-qpt">4점</span>
+                  <span class="gd-qtype">빈칸 추론</span>
+                  <button class="gd-flag" id="s16-flag" type="button">다시 보기</button>
+                </div>
+
+                <p class="gd-dir">다음 빈칸에 들어갈 말로 가장 적절한 것을 고르시오.</p>
+
+                <p class="gd-passage">Three times Della counted it. And the next day would be Christmas. There was clearly nothing to do but flop down on the shabby little couch and howl. So Della did it. Which instigates the moral reflection that life is made up of <span class="gd-blank">________</span>, with sniffles predominating.</p>
+
+                <p class="gd-hint" id="s16-hint">아래에서 답을 선택합니다</p>
+
+                <div class="gd-opts" id="s16-opts">
+                  <button class="gd-option" type="button" data-v="1"><i>①</i><span>endless celebrations and grand feasts</span></button>
+                  <button class="gd-option" type="button" data-v="2"><i>②</i><span>sobs, sniffles, and smiles</span></button>
+                  <button class="gd-option" type="button" data-v="3"><i>③</i><span>hard work and steady rewards</span></button>
+                  <button class="gd-option" type="button" data-v="4"><i>④</i><span>wealth, comfort, and leisure</span></button>
+                  <button class="gd-option" type="button" data-v="5"><i>⑤</i><span>silence, patience, and prayer</span></button>
+                </div>
+              </div>
+
+              <!-- 채점 결과 -->
+              <div class="gd-card gd-res" id="s16-res" hidden>
+                <div class="gd-res-top">
+                  <span class="gd-verdict" id="s16-verdict">오답</span>
+                  <span class="gd-res-no">18번</span>
+                  <span class="gd-res-pt" id="s16-respt">0 / 4점</span>
+                </div>
+                <div class="gd-res-rows">
+                  <div class="gd-res-row"><span class="k">내 답</span><span class="v mine" id="s16-mine">③</span></div>
+                  <div class="gd-res-row"><span class="k">정답</span><span class="v ans">②</span></div>
+                </div>
+                <div class="gd-res-exp">
+                  <span class="k">해설</span>
+                  <p>델라가 돈을 세고 흐느끼는 장면 뒤에 이어지는 ‘인생에 대한 성찰’은 흐느낌(sobs)·훌쩍임(sniffles)·미소(smiles)로 인생이 이루어져 있다는 것입니다. 빈칸 뒤의 ‘with sniffles predominating(그중 훌쩍임이 우세하다)’이 결정적 단서입니다.</p>
+                </div>
+              </div>
+              <div class="gd-fade"></div>
+            </main>
+
+            <!-- 하단바 -->
+            <footer class="gd-ft">
+              <div class="gd-strip">
+                <span class="n done">13</span><span class="n done">14</span>
+                <span class="n done">15</span><span class="n">16</span>
+                <span class="n done flag">17</span><span class="n cur" id="s16-n18">18</span>
+                <span class="n">19</span><span class="n">20</span>
+              </div>
+              <div class="gd-actions">
+                <button class="gd-btn ghost" type="button">이전</button>
+                <button class="gd-btn primary" id="s16-submit" type="button">제출하기</button>
+              </div>
+            </footer>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="s16-caption"><span class="mono">SMOAT 학습</span> — 실제 학생 앱 화면 그대로</div>
+    </div>
+
+  </div>
+
+<style>
+#s16 .s16-wrap { display: grid; grid-template-columns: 790px 1fr; gap: 80px; align-items: center; }
+
+/* ── 좌: 카피 ── */
+#s16 .s16-copy { padding-top: 4px; }
+#s16 .s16-h {
+  font-family: var(--f-display); font-weight: 800; font-size: 60px; line-height: 1.18;
+  letter-spacing: -.028em; color: var(--white); margin-top: 26px;
+}
+#s16 .s16-h em { font-style: normal; color: var(--blue); }
+#s16 .s16-lead { margin-top: 22px; font-size: 19px; line-height: 1.68; color: #93A0B5; }
+
+#s16 .s16-pts { list-style: none; margin-top: 38px; display: flex; flex-direction: column; gap: 14px; }
+#s16 .s16-pts li {
+  padding: 16px 20px; border-radius: 12px;
+  background: rgba(16,23,37,.78); border: 1px solid var(--ink-3);
+  border-left: 3px solid var(--blue);
+}
+#s16 .s16-pts b { display: block; font-size: 18px; font-weight: 700; color: var(--white); }
+#s16 .s16-pts b i { font-style: normal; color: var(--amber); }
+#s16 .s16-pts span { display: block; margin-top: 5px; font-size: 14.5px; color: #7E8AA0; line-height: 1.5; }
+
+#s16 .s16-cta {
+  margin-top: 30px; display: inline-flex; align-items: center; gap: 10px;
+  padding: 12px 20px; border-radius: 999px; font-size: 15px; color: var(--blue-light);
+  background: rgba(59,130,246,.12); border: 1px solid rgba(59,130,246,.42);
+}
+#s16 .s16-cta .mono { font-size: 11px; letter-spacing: .18em; color: var(--blue); }
+#s16 .s16-cta b { color: var(--white); font-weight: 700; }
+
+/* ── 우: 디바이스 ── */
+#s16 .s16-device { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+#s16 .tablet { width: 664px; height: 846px; border-radius: 34px; }
+#s16 .tablet__scr { border-radius: 20px; background: #f6f5f1; }
+#s16 .s16-caption { font-family: var(--f-mono); font-size: 11.5px; letter-spacing: .1em; color: var(--txt-4); }
+#s16 .s16-caption .mono { color: var(--blue); }
+
+/* ══ 학생 앱 /g — 디자인 시스템 "시험지 × 계기판" (gd.css 실측 토큰) ══ */
+#s16 .gd {
+  --gd-paper:#f6f5f1; --gd-card:#ffffff; --gd-line:#e5e3db; --gd-line-strong:#d4d1c6;
+  --gd-ink:#16202e; --gd-ink-2:#5a6372; --gd-ink-3:#98a0ad;
+  --gd-blue:#1d4ed8; --gd-blue-soft:#eef2fe; --gd-blue-line:#c7d4f8;
+  --gd-good:#047857; --gd-good-soft:#ecfdf5; --gd-bad:#be123c; --gd-bad-soft:#fff1f2;
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  background: var(--gd-paper); color: var(--gd-ink); font-family: var(--f-body);
+}
+
+/* 헤더 */
+#s16 .gd-hd {
+  flex: none; position: relative; display: flex; align-items: center; gap: 12px;
+  height: 74px; padding: 0 20px; background: rgba(246,245,241,.94);
+  border-bottom: 1px solid var(--gd-line);
+}
+#s16 .gd-back {
+  width: 40px; height: 40px; flex: none; display: flex; align-items: center; justify-content: center;
+  font-size: 24px; color: var(--gd-ink-2); border-radius: 10px;
+}
+#s16 .gd-ttl { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+#s16 .gd-ttl b {
+  font-size: 16px; font-weight: 700; color: var(--gd-ink);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+#s16 .gd-ttl i { font-style: normal; font-family: var(--f-mono); font-size: 12.5px; color: var(--gd-ink-3); }
+#s16 .gd-meter {
+  position: absolute; left: 0; right: 0; bottom: -1px; height: 4px;
+  background: var(--gd-line); border-radius: 999px; overflow: hidden;
+}
+#s16 .gd-meter-fill {
+  display: block; height: 100%; width: 70%; background: var(--gd-blue); border-radius: 999px;
+  transition: width .4s cubic-bezier(.22,1,.36,1), background .25s;
+}
+
+/* 본문 */
+#s16 .gd-main { flex: 1; position: relative; padding: 14px 20px 6px; overflow-y: auto; }
+#s16 .gd-card {
+  background: var(--gd-card); border: 1px solid var(--gd-line); border-radius: 14px;
+  padding: 16px 18px 16px; margin-bottom: 12px;
+}
+#s16 .gd-qhead { display: flex; align-items: center; gap: 10px; }
+#s16 .gd-qno {
+  height: 34px; min-width: 34px; padding: 0 6px; border-radius: 999px;
+  background: var(--gd-blue); color: #fff; font-weight: 700; font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+}
+#s16 .gd-qpt { font-family: var(--f-mono); font-size: 12.5px; color: var(--gd-ink-3); }
+#s16 .gd-qtype {
+  font-size: 12.5px; font-weight: 600; color: var(--gd-blue);
+  background: var(--gd-blue-soft); border: 1px solid var(--gd-blue-line);
+  padding: 4px 10px; border-radius: 999px;
+}
+#s16 .gd-flag {
+  margin-left: auto; cursor: pointer; font-family: var(--f-body);
+  font-size: 12.5px; font-weight: 600; color: var(--gd-ink-3);
+  background: #fff; border: 1px solid var(--gd-line); border-radius: 999px; padding: 7px 14px;
+  transition: all .14s;
+}
+#s16 .gd-flag.on { color: #7c3aed; border-color: #c4b5fd; background: #f5f3ff; }
+
+#s16 .gd-dir { margin-top: 14px; font-size: 16px; font-weight: 600; color: var(--gd-ink); line-height: 1.5; }
+#s16 .gd-passage {
+  margin-top: 12px; padding: 13px 15px; border-radius: 12px;
+  background: var(--gd-paper); border: 1px solid var(--gd-line);
+  font-family: Georgia, 'Times New Roman', 'Noto Serif KR', serif;
+  font-size: 15.5px; line-height: 1.68; letter-spacing: .001em; color: var(--gd-ink);
+  word-break: normal;
+}
+#s16 .gd-passage .gd-blank { color: var(--gd-blue); font-weight: 700; letter-spacing: .06em; }
+
+#s16 .gd-hint { margin-top: 11px; font-size: 12.5px; color: var(--gd-ink-3); }
+
+#s16 .gd-opts { margin-top: 8px; display: flex; flex-direction: column; gap: 7px; }
+#s16 .gd-option {
+  display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
+  min-height: 46px; padding: 10px 15px; border-radius: 12px;
+  border: 1.5px solid var(--gd-line); background: #fff; cursor: pointer;
+  font-family: var(--f-body); transition: border-color .14s, background .14s, opacity .14s;
+}
+#s16 .gd-option i {
+  font-style: normal; font-size: 18px; font-weight: 600; color: var(--gd-ink-2);
+  flex: none; width: 22px; text-align: center;
+}
+#s16 .gd-option span {
+  font-family: Georgia, 'Times New Roman', serif; font-size: 15.5px; color: var(--gd-ink);
+  word-break: normal; line-height: 1.45;
+}
+#s16 .gd-option[data-state="selected"] { border-color: var(--gd-blue); background: var(--gd-blue-soft); }
+#s16 .gd-option[data-state="selected"] i { color: var(--gd-blue); }
+#s16 .gd-option[data-state="correct"] { border-color: var(--gd-good); background: var(--gd-good-soft); }
+#s16 .gd-option[data-state="correct"] i { color: var(--gd-good); }
+#s16 .gd-option[data-state="wrong"] { border-color: var(--gd-bad); background: var(--gd-bad-soft); }
+#s16 .gd-option[data-state="wrong"] i { color: var(--gd-bad); }
+#s16 .gd-option[data-state="dim"] { opacity: .55; }
+#s16 .gd-opts.locked .gd-option { pointer-events: none; }
+
+/* 결과 카드 */
+#s16 .gd-res { animation: s16-pop .2s cubic-bezier(.22,1,.36,1); }
+@keyframes s16-pop { from { transform: scale(.94); opacity: 0; } to { transform: none; opacity: 1; } }
+#s16 .gd-res-top { display: flex; align-items: center; gap: 11px; }
+#s16 .gd-verdict {
+  font-size: 13px; font-weight: 700; padding: 6px 14px; border-radius: 999px;
+  color: var(--gd-bad); background: var(--gd-bad-soft); border: 1px solid #fecdd3;
+}
+#s16 .gd-verdict.ok { color: var(--gd-good); background: var(--gd-good-soft); border-color: #a7f3d0; }
+#s16 .gd-res-no { font-size: 14.5px; font-weight: 600; color: var(--gd-ink); }
+#s16 .gd-res-pt { margin-left: auto; font-family: var(--f-mono); font-size: 13px; color: var(--gd-ink-3); }
+#s16 .gd-res-rows { margin-top: 14px; display: flex; gap: 32px; }
+#s16 .gd-res-row { display: flex; align-items: baseline; gap: 10px; }
+#s16 .gd-res-row .k { font-size: 13px; color: var(--gd-ink-3); }
+#s16 .gd-res-row .v { font-size: 20px; font-weight: 700; }
+#s16 .gd-res-row .v.mine { color: var(--gd-bad); }
+#s16 .gd-res-row .v.mine::after {
+  content: '✕'; margin-left: 8px; font-size: 13px; font-weight: 700;
+  vertical-align: 2px; color: var(--gd-bad);
+}
+#s16 .gd-res-row .v.mine.ok { color: var(--gd-ink); }
+#s16 .gd-res-row .v.mine.ok::after { content: '✓'; color: var(--gd-good); }
+#s16 .gd-res-row .v.ans { color: var(--gd-good); }
+#s16 .gd-res-exp {
+  margin-top: 15px; padding: 14px 15px; border-radius: 12px;
+  background: var(--gd-paper); border: 1px solid var(--gd-line);
+}
+#s16 .gd-res-exp .k { display: block; font-size: 12.5px; color: var(--gd-ink-3); margin-bottom: 6px; }
+#s16 .gd-res-exp p { font-size: 14.5px; line-height: 1.66; color: var(--gd-ink-2); }
+
+#s16 .gd-fade {
+  position: sticky; bottom: 0; height: 24px; margin-top: -24px;
+  background: linear-gradient(to top, var(--gd-paper), rgba(246,245,241,0)); pointer-events: none;
+}
+
+/* 하단바 */
+#s16 .gd-ft {
+  flex: none; padding: 12px 20px 16px; background: rgba(255,255,255,.96);
+  border-top: 1px solid var(--gd-line);
+}
+#s16 .gd-strip { display: flex; gap: 6px; margin-bottom: 12px; }
+#s16 .gd-strip .n {
+  position: relative; flex: 1; height: 40px; border-radius: 10px;
+  border: 1px solid var(--gd-line); background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--f-mono); font-size: 13px; color: var(--gd-ink-3);
+}
+#s16 .gd-strip .n.done { color: var(--gd-ink-2); }
+#s16 .gd-strip .n.done::after {
+  content: ''; position: absolute; bottom: 5px; left: 50%; margin-left: -2px;
+  width: 4px; height: 4px; border-radius: 50%; background: var(--gd-blue);
+}
+#s16 .gd-strip .n.flag::before {
+  content: ''; position: absolute; top: 5px; right: 5px;
+  width: 4px; height: 4px; border-radius: 50%; background: #8b5cf6;
+}
+#s16 .gd-strip .n.cur { border-color: var(--gd-blue); background: var(--gd-blue-soft); color: var(--gd-blue); font-weight: 700; }
+#s16 .gd-actions { display: flex; gap: 10px; }
+#s16 .gd-btn {
+  min-height: 48px; border-radius: 12px; font-family: var(--f-body);
+  font-size: 15px; font-weight: 600; cursor: pointer; transition: all .14s;
+}
+#s16 .gd-btn.ghost { flex: 1; border: 1px solid var(--gd-line); background: #fff; color: var(--gd-ink-2); }
+#s16 .gd-btn.primary { flex: 1.4; border: 0; background: var(--gd-blue); color: #fff; }
+#s16 .gd-btn.primary:hover { background: #1e40af; }
+#s16 .gd-btn.primary.done { background: var(--gd-good); }
+</style>
+
+<script>
+(() => {
+  const sec = document.getElementById('s16');
+  if (!sec) return;
+  const q = (s) => sec.querySelector(s);
+  const opts   = [...sec.querySelectorAll('#s16-opts .gd-option')];
+  const wrap   = q('#s16-opts');
+  const submit = q('#s16-submit');
+  const res    = q('#s16-res');
+  const verdict= q('#s16-verdict');
+  const respt  = q('#s16-respt');
+  const mine   = q('#s16-mine');
+  const count  = q('#s16-count');
+  const meter  = q('#s16-meter');
+  const hint   = q('#s16-hint');
+  const flag   = q('#s16-flag');
+  const main   = q('#s16-main');
+  const MARKS = ['①', '②', '③', '④', '⑤'];
+  const ANSWER = 2;
+  let picked = 0, graded = false;
+
+  const reset = () => {
+    picked = 0; graded = false;
+    opts.forEach((o) => o.removeAttribute('data-state'));
+    wrap.classList.remove('locked');
+    res.hidden = true;
+    hint.textContent = '아래에서 답을 선택합니다';
+    count.textContent = '응답 14/20';
+    meter.style.width = '70%';
+    submit.textContent = '제출하기'; submit.classList.remove('done');
+    flag.classList.remove('on');
+    if (main) main.scrollTop = 0;
+  };
+
+  opts.forEach((o) => o.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (graded) return;
+    picked = +o.dataset.v;
+    opts.forEach((x) => x.setAttribute('data-state', x === o ? 'selected' : ''));
+    opts.forEach((x) => { if (!x.dataset.state) x.removeAttribute('data-state'); });
+    hint.textContent = '답을 골랐습니다. 제출하면 바로 채점됩니다.';
+    count.textContent = '응답 15/20';
+    meter.style.width = '75%';
+  }));
+
+  flag.addEventListener('click', (e) => { e.stopPropagation(); if (!graded) flag.classList.toggle('on'); });
+
+  submit.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (graded) { reset(); return; }
+    if (!picked) picked = 3;               // 미선택이면 대표 오답 시나리오로 시연
+    const ok = picked === ANSWER;
+    opts.forEach((x) => {
+      const v = +x.dataset.v;
+      if (v === ANSWER) x.setAttribute('data-state', 'correct');
+      else if (v === picked) x.setAttribute('data-state', 'wrong');
+      else x.setAttribute('data-state', 'dim');
+    });
+    wrap.classList.add('locked');
+    verdict.textContent = ok ? '정답' : '오답';
+    verdict.classList.toggle('ok', ok);
+    respt.textContent = ok ? '4 / 4점' : '0 / 4점';
+    mine.textContent = MARKS[picked - 1];
+    mine.classList.toggle('ok', ok);
+    res.hidden = false;
+    hint.textContent = '채점되었습니다.';
+    count.textContent = '응답 15/20';
+    meter.style.width = '75%';
+    graded = true;
+    submit.textContent = '다시 풀어보기'; submit.classList.add('done');
+    requestAnimationFrame(() => { if (main) main.scrollTop = main.scrollHeight; });
+  });
+
+  sec.addEventListener('slide:enter', reset);
+})();
+</script>
+</section>

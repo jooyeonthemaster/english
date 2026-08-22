@@ -1,4 +1,10 @@
+import { createHash } from "node:crypto";
+
 import { generateQuestionText } from "@/lib/question-generation-llm";
+import {
+  generateAnalysisReportResilient,
+  worksheetCoreEngine,
+} from "./resilient-generate";
 import {
   analysisPhaseLabel,
   streamAnalysisText,
@@ -29,6 +35,7 @@ import {
   buildAnalysisReportPrompt,
   buildLearningWorksheetInferencePrompt,
   buildLearningWorksheetPrompt,
+  buildWorkbookPartPrompts,
   type BuildAnalysisReportPromptInput,
 } from "./prompt";
 import {
@@ -81,6 +88,58 @@ export interface AnalysisReportUsage {
 export type GenerateAnalysisReportResult =
   | { ok: true; report: AnalysisReport; raw: string; usage: AnalysisReportUsage }
   | { ok: false; error: string; raw: string; parsed?: unknown };
+
+/** 모델 실험용 오버라이드(스모크 하네스 전용, 26-08-12 luna A/B) — 미지정 시 기존
+ *  경로와 바이트 동일. 프로덕션 호출부는 이 옵션을 넘기지 않는다. */
+export type WorksheetModelOverrides = {
+  modelId?: string;
+  reasoningEffort?: string;
+  maxTokens?: number;
+  timeoutMs?: number;
+};
+
+// ─── 실전 학습지(워크북·수능추론) 유닛별 모델 — 26-08-12~13 실측 확정 ─────────────
+// · 추론(수능추론 5문항): luna 전환 — 순통과 2/2(45~69s)·블라인드 패널 출제 논리 우세.
+// · 워크북: **split 엔진(3분할 병렬)로 luna 전환(26-08-13, A/B 정본 부록 E)** —
+//   메가콜 luna 는 1차 게이트 탈락 2/3(topicGist 누락·wordOrders 재조립)이었으나,
+//   어법/어휘2종/프레임 분할+검산 규칙으로 75~108s·전 게이트 1라운드 2/2 실측.
+// 롤백/실험 env:
+//   WORKSHEET_WORKBOOK_ENGINE=mono → 구 메가콜(모델은 WORKSHEET_WORKBOOK_MODEL,
+//     빈값=플랜 기본 gemini — 26-08-12 검증 상태 그대로 복원).
+//   WORKSHEET_WORKBOOK_MODEL / WORKSHEET_INFERENCE_MODEL / WORKSHEET_UNITS_REASONING_EFFORT.
+const WORKSHEET_WORKBOOK_ENGINE =
+  process.env.WORKSHEET_WORKBOOK_ENGINE?.trim() === "mono" ? "mono" : "split";
+const WORKSHEET_WORKBOOK_MODEL = process.env.WORKSHEET_WORKBOOK_MODEL?.trim() || "";
+const WORKSHEET_INFERENCE_MODEL =
+  process.env.WORKSHEET_INFERENCE_MODEL?.trim() || "openai/gpt-5.6-luna";
+const WORKSHEET_UNITS_REASONING_EFFORT =
+  process.env.WORKSHEET_UNITS_REASONING_EFFORT?.trim() || "high";
+// maxTokens 기본 26k: luna 사고 토큰 몫 + gemini 에도 절단 방어(코어 20k 절단 4/4 실측
+// 과 같은 계열의 예방). 콜 상한은 luna 만 200s(워크북 꼬리 134s 실측), 그 외 기존 140s.
+const WORKSHEET_UNITS_MAX_TOKENS = 26_000;
+// 분할 파트별 상한(사고 여유 포함) — 어휘는 지문 재작성 2회라 가장 큼. 실측 프로브 값.
+const WORKBOOK_PART_MAX_TOKENS = { grammar: 16_000, vocab: 20_000, frame: 16_000 } as const;
+type WorkbookPartKey = keyof typeof WORKBOOK_PART_MAX_TOKENS;
+
+/** 유닛별 기본 모델/사고량/예산 해석 — 명시 오버라이드(스모크 A/B)가 필드 단위로 이긴다. */
+function resolveUnitOverrides(
+  unit: "workbook" | "inference",
+  o?: WorksheetModelOverrides,
+): WorksheetModelOverrides {
+  const defaultModel =
+    unit === "workbook"
+      ? WORKSHEET_WORKBOOK_MODEL ||
+        (WORKSHEET_WORKBOOK_ENGINE === "split" ? "openai/gpt-5.6-luna" : "")
+      : WORKSHEET_INFERENCE_MODEL;
+  const modelId = o?.modelId ?? (defaultModel || undefined);
+  const isLuna = (modelId ?? "").includes("luna");
+  return {
+    ...(modelId ? { modelId } : {}),
+    reasoningEffort: o?.reasoningEffort ?? WORKSHEET_UNITS_REASONING_EFFORT,
+    maxTokens: o?.maxTokens ?? WORKSHEET_UNITS_MAX_TOKENS,
+    timeoutMs: o?.timeoutMs ?? (isLuna ? 200_000 : 140_000),
+  };
+}
 
 const ALLOWED_EXAM_TYPES = ["빈칸추론", "주제", "제목", "순서", "문장삽입", "함축의미", "지칭", "요약"];
 
@@ -140,30 +199,93 @@ function normalizeAndAuditSections(sections: AnalysisReport["sections"]): void {
   }
 }
 
+/** 모놀리식 소비자(트리거 워커·prime 수동재생성) → 회복형 parallel 엔진 어댑터.
+ *  기존 반환 계약(ok:false = 실패·환불)을 지키기 위해, 회복형이 폴백/누락으로 마감한
+ *  결과는 실패로 번역한다(불완전 보고서를 성공으로 인도하지 않는다 — 무회귀). */
+async function generateAnalysisReportCoreViaParallel(
+  input: GenerateAnalysisReportInput,
+): Promise<GenerateAnalysisReportResult> {
+  const contentHash = createHash("sha256").update(input.passageContent).digest("hex");
+  const startedAt = Date.now();
+  const r = await generateAnalysisReportResilient(input, {
+    contentHash,
+    engine: "parallel",
+    brand: input.brand,
+    docNo: input.docNo,
+    themeId: input.themeId,
+    // 모놀리식 소비자의 벽: 트리거 워커 600s·prime 수동재생성 300s — 보수적으로 240s.
+    deadlineAt: startedAt + 240_000,
+  });
+  if (!r.completeness.complete || r.completeness.fallback.length > 0) {
+    const detail = Object.entries(r.checkpoint.errors)
+      .slice(0, 4)
+      .map(([k, e]) => `${k}: ${String(e).slice(0, 120)}`)
+      .join(" | ");
+    return {
+      ok: false,
+      error: `병렬 코어 섹션 미완 — 누락 [${r.completeness.missing.join(",")}] 폴백 [${r.completeness.fallback.join(",")}]${detail ? ` — ${detail}` : ""}`,
+      raw: "",
+    };
+  }
+  const tokens = r.usages.reduce(
+    (acc, u) => {
+      const t = readUsageTokens(u.usage);
+      acc.inputTokens += t.inputTokens;
+      acc.outputTokens += t.outputTokens;
+      return acc;
+    },
+    { inputTokens: 0, outputTokens: 0 },
+  );
+  const first = r.usages.find((u) => u.modelId);
+  return {
+    ok: true,
+    report: r.report,
+    raw: JSON.stringify(r.report),
+    usage: {
+      usage: { ...tokens, calls: r.usages },
+      provider: first?.provider ?? "OPENROUTER",
+      modelId: first?.modelId ?? "",
+      durationMs: r.timing.totalMs,
+    },
+  };
+}
+
 /** 메인 보고서(passage~parsing)만 생성 — 학습지(워크북) 호출 없이 빠른 품질 검증용. */
 export async function generateAnalysisReportCore(
   input: GenerateAnalysisReportInput,
+  overrides?: WorksheetModelOverrides,
 ): Promise<
   | { ok: true; report: AnalysisReport; raw: string; usage: AnalysisReportUsage }
   | { ok: false; error: string; raw: string; parsed?: unknown }
 > {
+  // 26-08-12 luna 전환: 명시 오버라이드(스모크 A/B 전용)가 없으면 회복형 parallel
+  // 엔진에 위임한다 — 트리거 워커·prime 수동재생성 등 모놀리식 소비자 전원이 콜사이트
+  // 변경 없이 luna 병렬 생성(97~124s·$0.035, 5렌즈 품질 4:1 우세)을 받는다.
+  // 아래 모놀리식 1콜은 WORKSHEET_CORE_ENGINE=draft 롤백·A/B 실험 경로로만 남는다.
+  if (!overrides && worksheetCoreEngine() === "parallel") {
+    return generateAnalysisReportCoreViaParallel(input);
+  }
+
   const prompt = buildAnalysisReportPrompt(input);
 
   const result = await generateQuestionText({
     prompt,
     generationPlan: "STANDARD",
+    ...(overrides?.modelId ? { modelId: overrides.modelId } : {}),
     logPrefix: "REPORT",
     maxRetries: 1,
-    maxTokens: 20000,
+    // 20k→30k(26-08-12): 장문+사고 high 조합에서 20k 절단으로 4/4 실패 실측(JSON 미완).
+    // 30k 는 완성 케이스 비용을 늘리지 않는 상한 증액이다(절단만 방지).
+    maxTokens: overrides?.maxTokens ?? 30000,
     omitMaxTokens: false, // 8섹션 대형 보고서 — 명시적 토큰 예산으로 끝부분(정답키) 절단 방지
     responseFormat: "json_object",
     isRecoverableJsonText: canRecover,
     thinkingBudget: 0,
     // 26-07-22 학습지 3.6-flash 사고 high 전환 — 사고 시간만큼 1콜이 길어져
     // 110s→140s (재시도 1회 포함 최악 280s < 호출 라우트 300s 벽).
-    timeoutMs: 140_000,
+    timeoutMs: overrides?.timeoutMs ?? 140_000,
     temperature: 0.1,
-    reasoningEffort: "high",
+    reasoningEffort: overrides?.reasoningEffort ?? "high",
     applyReasoningEffortToGemini: true,
   });
   const primaryUsage: AnalysisReportUsage = {
@@ -195,8 +317,9 @@ export async function generateAnalysisReportCore(
 
   normalizeAndAuditSections(validation.data.sections);
 
-  // 기본 분석의 learning-worksheet 는 logicRows 표 전용 — 모델이 프롬프트 금지를
-  // 어기고 실전 학습지 콘텐츠를 끼워 넣어도 여기서 결정론적으로 제거한다.
+  // 기본 분석은 learning-worksheet 섹션을 아예 만들지 않는다(26-08-21 '지문 논리 구조
+  // 분석' 폐지). 모델이 프롬프트 금지를 어기고 실전 학습지 콘텐츠를 끼워 넣어도 여기서
+  // 결정론적으로 제거한다.
   // (미리보기의 "기본 학습지" 뷰와 같은 함수를 공유 — worksheet-core-gate.ts)
   const coreSections = stripWorksheetContentFields(validation.data.sections);
 
@@ -249,12 +372,12 @@ export type GenerateLearningWorksheetResult =
 export async function generateLearningWorksheet(
   input: GenerateAnalysisReportInput,
   report: AnalysisReport,
-  opts?: { deadlineAt?: number },
+  opts?: { deadlineAt?: number } & WorksheetModelOverrides,
 ): Promise<GenerateLearningWorksheetResult> {
-  const core = await generateLearningWorksheetCore(input, report, opts?.deadlineAt);
+  const core = await generateLearningWorksheetCore(input, report, opts?.deadlineAt, undefined, opts);
   if (!core.ok) return core;
 
-  const inference = await generateLearningWorksheetInference(input, report, core.section, opts?.deadlineAt);
+  const inference = await generateLearningWorksheetInference(input, report, core.section, opts?.deadlineAt, undefined, opts);
   if (!inference.ok) {
     return {
       ok: false,
@@ -326,7 +449,7 @@ export interface ResilientWorksheetResult {
  *   - 완성된 유닛은 건너뛰고, 데드라인 안에서 끝까지 시도한다.
  *   - 최종 조립은 **관대한 base 스키마**(learningWorksheetSectionSchema)로 검증 — 부분만 돼도
  *     항상 유효·렌더 가능한 섹션을 반환한다(절대 throw·fail 하지 않음). 둘 다 실패하면 코어
- *     분석의 logicRows-only 학습지(이미 유효)로 폴백.
+ *     분석의 기존 학습지 섹션(있으면)으로 폴백.
  */
 export async function generateLearningWorksheetResilient(
   input: GenerateAnalysisReportInput,
@@ -347,7 +470,7 @@ export async function generateLearningWorksheetResilient(
   const baseSection: LearningWorksheetSection =
     baseLW && baseLW.kind === "learning-worksheet"
       ? baseLW
-      : ({ kind: "learning-worksheet", title: "지문 논리 구조 분석", logicRows: [], hiddenAnswers: false } as unknown as LearningWorksheetSection);
+      : ({ kind: "learning-worksheet", title: "실전 학습지", logicRows: [], questions: [], hiddenAnswers: false } as LearningWorksheetSection);
 
   let workbookSection: LearningWorksheetSection | null = null;
   let inferenceSet: LearningWorksheetInferenceSet | null = null;
@@ -373,10 +496,31 @@ export async function generateLearningWorksheetResilient(
         deadlineAt,
         opts?.stream ? { emit: opts.stream.emit, label: "inference" } : undefined,
       ));
+  // 병렬 웨이브용 — 디커플링 컨텍스트(코어 logicRows) 고정 + 비스트리밍(워크북 델타와
+  // 인터리브 방지). 이미 지원되던 "워크북 실패 시 추론이 logicRows 로 생성" 모드와 동일 계약.
+  const genInferenceDecoupled =
+    opts?._genInference ??
+    (() => generateLearningWorksheetInference(input, report, baseSection, deadlineAt, undefined));
+  // 26-08-12 luna 전환: 두 유닛이 모두 없으면 동시 생성 — luna(콜당 70~125s)의 직렬
+  // 합계가 fast 라우트 잔여 예산을 넘던 것을 max(워크북, 추론)로 붕괴. 끄기: env=off.
+  const unitsParallel = process.env.WORKSHEET_UNITS_PARALLEL?.trim() !== "off";
 
   for (; rounds < maxRounds; rounds += 1) {
     if (deadlineAt && Date.now() >= deadlineAt) break;
     if (workbookSection && inferenceSet) break;
+
+    if (!workbookSection && !inferenceSet && unitsParallel) {
+      const [c, inf] = await Promise.all([genWorkbook(), genInferenceDecoupled()]);
+      if (c.ok && c.section) {
+        workbookSection = c.section;
+        if (c.usage) usages.push(c.usage);
+      }
+      if (inf.ok && inf.inferenceSet) {
+        inferenceSet = inf.inferenceSet;
+        if (inf.usage) usages.push(inf.usage);
+      }
+      continue;
+    }
 
     // 유닛 1: 워크북(어법선택·어휘빈칸·배열·주제요지)
     if (!workbookSection) {
@@ -415,8 +559,8 @@ export async function generateLearningWorksheetResilient(
     console.warn(`[RESILIENT_WORKSHEET] 품질 경고(완성 우선, 비차단): ${qualityIssues.slice(0, 6).join(" | ")}`);
   }
 
-  // 유효한 섹션만 반환한다. combined 가 base 스키마를 못 통과하면(예: baseLW 도 없고 두 유닛도
-  // 실패해 logicRows 가 비어 min(3) 위반) 코어의 유효한 logicRows 섹션으로, 그것도 없으면 null —
+  // 유효한 섹션만 반환한다. combined 가 base 스키마를 못 통과하면 코어 섹션으로,
+  // 그것도 없으면 null —
   // 무효 섹션을 보고서에 끼워 넣어 저장 로더(analysisReportSchema)가 통째로 깨지는 것을 막는다.
   const v = learningWorksheetSectionSchema.safeParse(combined);
   let section: LearningWorksheetSection | null;
@@ -439,12 +583,191 @@ type GenerateLearningWorksheetInferenceResult =
   | { ok: true; inferenceSet: LearningWorksheetInferenceSet; raw: string; usage: AnalysisReportUsage }
   | { ok: false; error: string; raw: string; parsed?: unknown };
 
-async function generateLearningWorksheetCore(
+/** 워크북 3분할 병렬 생성기(26-08-13 luna 전환 — A/B 정본 부록 E).
+ *  어법(지문 재작성1)/어휘 2종(재작성2)/프레임(재작성 없음) 3콜 병렬 → 조립 →
+ *  기존 결정론 게이트 전량 통과 검증 → 게이트 이슈를 책임 파트로 라우팅해 해당
+ *  서브콜만 수리 1라운드. 실측 75~108s·전 게이트 1라운드 2/2 (메가콜 114~196s 대비). */
+async function generateLearningWorksheetCoreSplit(
   input: GenerateAnalysisReportInput,
   report: AnalysisReport,
   deadlineAt?: number,
   stream?: WorksheetStreamHook,
 ): Promise<GenerateLearningWorksheetCoreResult> {
+  const prompts = buildWorkbookPartPrompts(input, report);
+  const unit = resolveUnitOverrides("workbook", undefined);
+  const originalSentences = passageSentencesOf(report);
+  // 파트 병렬이라 델타 스트림은 걸 수 없다(인터리브) — 단계 라벨만 흘린다.
+  stream?.emit({ t: "phase", label: analysisPhaseLabel("workbook") });
+  const usages: AnalysisReportUsage[] = [];
+
+  const callPart = async (
+    key: WorkbookPartKey,
+    priorError?: string,
+  ): Promise<{ ok: boolean; parsed?: Record<string, unknown>; error?: string }> => {
+    const remaining = deadlineAt ? deadlineAt - Date.now() : Number.POSITIVE_INFINITY;
+    if (remaining <= 1_000) return { ok: false, error: "deadline" };
+    const base = prompts[key === "grammar" ? "grammar" : key === "vocab" ? "vocab" : "frame"];
+    try {
+      const r = await generateQuestionText({
+        prompt: priorError ? buildRepairPrompt(base, priorError) : base,
+        generationPlan: "STANDARD",
+        ...(unit.modelId ? { modelId: unit.modelId } : {}),
+        logPrefix: `REPORT_WORKBOOK_${key.toUpperCase()}${priorError ? "_REPAIR" : ""}`,
+        maxRetries: 0,
+        maxTokens: WORKBOOK_PART_MAX_TOKENS[key],
+        omitMaxTokens: false,
+        responseFormat: "json_object",
+        isRecoverableJsonText: canRecover,
+        thinkingBudget: 0,
+        timeoutMs: Math.max(1_000, Math.min(unit.timeoutMs ?? 200_000, remaining)),
+        temperature: 0.12,
+        reasoningEffort: unit.reasoningEffort ?? "high",
+        applyReasoningEffortToGemini: true,
+      });
+      usages.push(toAnalysisReportUsage(r));
+      return { ok: true, parsed: JSON.parse(extractJson(r.text)) as Record<string, unknown> };
+    } catch (e) {
+      return { ok: false, error: `모델 호출 실패: ${e instanceof Error ? e.message : String(e)}` };
+    }
+  };
+
+  const assemble = (
+    g: Record<string, unknown>,
+    v: Record<string, unknown>,
+    f: Record<string, unknown>,
+  ): Record<string, unknown> => ({
+    kind: "learning-worksheet",
+    title: (typeof f.title === "string" && f.title) || "실전 학습지",
+    ...(f.note ? { note: f.note } : {}),
+    logicRows: f.logicRows ?? [],
+    cloze: f.cloze,
+    practice: f.practice,
+    drills: f.drills,
+    workbookSet: {
+      title: "유형별 워크북 훈련",
+      topicGist: f.topicGist,
+      grammarSelection: g.grammarSelection,
+      vocabularySelection: v.vocabularySelection,
+      vocabularyCloze: v.vocabularyCloze,
+      wordOrders: f.wordOrders ?? [],
+    },
+    questions: [],
+    hiddenAnswers: false,
+    hiddenClozeTranslations: false,
+  });
+
+  const parts: Record<WorkbookPartKey, Record<string, unknown> | null> = {
+    grammar: null,
+    vocab: null,
+    frame: null,
+  };
+  const callErrors: Partial<Record<WorkbookPartKey, string>> = {};
+  const keys: WorkbookPartKey[] = ["grammar", "vocab", "frame"];
+  const first = await Promise.all(keys.map((k) => callPart(k)));
+  keys.forEach((k, i) => {
+    if (first[i].ok && first[i].parsed) parts[k] = first[i].parsed ?? null;
+    else callErrors[k] = first[i].error;
+  });
+
+  const validateAssembled = (): {
+    ok: boolean;
+    issues: string[];
+    candidate?: Record<string, unknown>;
+    data?: LearningWorksheetSection;
+  } => {
+    const missing = keys.filter((k) => !parts[k]);
+    if (missing.length > 0) {
+      return { ok: false, issues: missing.map((k) => `${k} 파트 호출 실패: ${callErrors[k] ?? "?"}`) };
+    }
+    const candidate = assemble(parts.grammar!, parts.vocab!, parts.frame!);
+    const v = learningWorksheetCoreGenerationSectionSchema.safeParse(candidate);
+    if (!v.success) {
+      return {
+        ok: false,
+        issues: v.error.issues.slice(0, 8).map((i) => `스키마 ${i.path.join(".")}: ${i.message}`),
+        candidate,
+      };
+    }
+    normalizeWorkbookTestSurface(v.data, originalSentences);
+    const issues = validateWorkbookQuality(v.data, originalSentences);
+    return { ok: issues.length === 0, issues, candidate, data: v.data };
+  };
+
+  let verdict = validateAssembled();
+  if (!verdict.ok) {
+    // 게이트 이슈 → 책임 파트 라우팅(해당 서브콜만 수리 — 프레임 수리 실측 52s).
+    const routed: Record<WorkbookPartKey, string[]> = { grammar: [], vocab: [], frame: [] };
+    for (const issue of verdict.issues) {
+      if (/어법 선택|Grammar selection|grammarSelection/i.test(issue)) routed.grammar.push(issue);
+      else if (/어휘|vocabular/i.test(issue)) routed.vocab.push(issue);
+      else routed.frame.push(issue);
+    }
+    for (const k of keys) if (!parts[k] && routed[k].length === 0) routed[k].push(callErrors[k] ?? "재생성 필요");
+    console.warn(
+      `[REPORT_WORKBOOK_SPLIT] 1라운드 게이트 ${verdict.issues.length}건 — 수리 라우팅 grammar:${routed.grammar.length} vocab:${routed.vocab.length} frame:${routed.frame.length}`,
+    );
+    const repairs = await Promise.all(
+      keys.map((k) => (routed[k].length ? callPart(k, routed[k].join(" | ")) : Promise.resolve(null))),
+    );
+    keys.forEach((k, i) => {
+      const r = repairs[i];
+      if (r?.ok && r.parsed) parts[k] = r.parsed;
+    });
+    verdict = validateAssembled();
+  }
+
+  if (!verdict.ok || !verdict.data) {
+    return {
+      ok: false,
+      error: `워크북(3분할) 품질 검증 실패: ${verdict.issues.slice(0, 10).join(" | ")}`,
+      raw: JSON.stringify(verdict.candidate ?? parts),
+      parsed: verdict.data ?? verdict.candidate,
+    };
+  }
+
+  const tokens = usages.reduce(
+    (acc, u) => {
+      const t = readUsageTokens(u.usage);
+      acc.inputTokens += t.inputTokens;
+      acc.outputTokens += t.outputTokens;
+      return acc;
+    },
+    { inputTokens: 0, outputTokens: 0 },
+  );
+  return {
+    ok: true,
+    section: verdict.data,
+    raw: JSON.stringify(verdict.data),
+    usage: {
+      usage: {
+        ...tokens,
+        calls: usages.map((u, i) => ({ phase: `workbook-part-${i}`, usage: u.usage, modelId: u.modelId, durationMs: u.durationMs })),
+      },
+      provider: usages[0]?.provider ?? "",
+      modelId: usages[0]?.modelId ?? "",
+      durationMs: usages.reduce((s, u) => Math.max(s, u.durationMs), 0),
+    },
+  };
+}
+
+async function generateLearningWorksheetCore(
+  input: GenerateAnalysisReportInput,
+  report: AnalysisReport,
+  deadlineAt?: number,
+  stream?: WorksheetStreamHook,
+  overrides?: WorksheetModelOverrides,
+): Promise<GenerateLearningWorksheetCoreResult> {
+  // 26-08-13 luna 전환: 명시 모델 오버라이드(스모크 A/B 전용)가 없으면 3분할 병렬 엔진.
+  // ❗overrides 인자는 호출부(generateLearningWorksheet)가 opts({deadlineAt})를 그대로
+  // 넘기므로 객체 존재가 아니라 **모델 필드 존재**로 판정한다(deadlineAt만 있으면 split).
+  // 메가콜은 WORKSHEET_WORKBOOK_ENGINE=mono 롤백·A/B 실험 경로로만 남는다.
+  const hasModelOverrides = Boolean(
+    overrides &&
+      (overrides.modelId || overrides.reasoningEffort || overrides.maxTokens || overrides.timeoutMs),
+  );
+  if (!hasModelOverrides && WORKSHEET_WORKBOOK_ENGINE === "split") {
+    return generateLearningWorksheetCoreSplit(input, report, deadlineAt, stream);
+  }
   const basePrompt = buildLearningWorksheetPrompt(input, report);
   let lastFailure = "";
   let lastRaw = "";
@@ -458,6 +781,7 @@ async function generateLearningWorksheetCore(
       qualityAttempt === 0 ? "REPORT_WORKSHEET_CORE" : "REPORT_WORKSHEET_CORE_REPAIR",
       deadlineAt,
       stream,
+      resolveUnitOverrides("workbook", overrides),
     ).catch((error: unknown) => {
       lastFailure = `모델 호출 실패: ${error instanceof Error ? error.message : String(error)}`;
       return null;
@@ -484,6 +808,9 @@ async function generateLearningWorksheetCore(
     const validation = learningWorksheetCoreGenerationSectionSchema.safeParse(parsed);
     if (!validation.success) {
       lastFailure = `스키마 검증 실패: ${validation.error.issues.slice(0, 8).map((i) => `${i.path.join(".")}: ${i.message}`).join(" | ")}`;
+      // 탈락 사유를 로그로 남긴다 — 모델별 실패 양상 진단(26-08-12 luna 워크북 조사에서
+      // 사유가 어디에도 안 남아 장님 상태였던 것의 재발 방지).
+      console.warn(`[REPORT_WORKSHEET_CORE] attempt ${qualityAttempt} ${lastFailure}`);
       continue;
     }
 
@@ -492,6 +819,7 @@ async function generateLearningWorksheetCore(
     const qualityIssues = validateWorkbookQuality(validation.data, originalSentences);
     if (qualityIssues.length > 0) {
       lastFailure = `품질 검증 실패: ${qualityIssues.slice(0, 10).join(" | ")}`;
+      console.warn(`[REPORT_WORKSHEET_CORE] attempt ${qualityAttempt} ${lastFailure}`);
       lastParsed = validation.data;
       continue;
     }
@@ -513,6 +841,7 @@ async function generateLearningWorksheetInference(
   worksheet: LearningWorksheetSection,
   deadlineAt?: number,
   stream?: WorksheetStreamHook,
+  overrides?: WorksheetModelOverrides,
 ): Promise<GenerateLearningWorksheetInferenceResult> {
   const basePrompt = buildLearningWorksheetInferencePrompt(input, report, worksheet);
   let lastFailure = "";
@@ -527,6 +856,7 @@ async function generateLearningWorksheetInference(
       qualityAttempt === 0 ? "REPORT_WORKSHEET_INFERENCE" : "REPORT_WORKSHEET_INFERENCE_REPAIR",
       deadlineAt,
       stream,
+      resolveUnitOverrides("inference", overrides),
     ).catch((error: unknown) => {
       lastFailure = `모델 호출 실패: ${error instanceof Error ? error.message : String(error)}`;
       return null;
@@ -594,17 +924,24 @@ function runWorksheetTextGeneration(
   logPrefix: string,
   deadlineAt?: number,
   stream?: WorksheetStreamHook,
+  overrides?: WorksheetModelOverrides,
 ): Promise<WorksheetTextResult> {
-  // 데드라인이 있으면 호출 abort 를 남은 예산으로 좁힌다. 26-07-22 실전 학습지
-  // 3.6-flash 사고 high 전환으로 무데드라인 기본·상한을 120s→140s 상향
-  // (워크북+추론 2콜 최악 280s < 워크시트 라우트 300s 벽, deadlineAt 은 계속 존중).
-  const timeoutMs = deadlineAt ? Math.max(1_000, Math.min(140_000, deadlineAt - Date.now())) : 140_000;
+  // 26-08-12 유닛별 차등: 호출부(generateLearningWorksheetCore/Inference)가
+  // resolveUnitOverrides 로 해석해 넘긴다 — modelId 미지정이면 플랜 STANDARD(gemini 핀).
+  const modelId = overrides?.modelId;
+  const reasoningEffort = overrides?.reasoningEffort ?? WORKSHEET_UNITS_REASONING_EFFORT;
+  const maxTokens = overrides?.maxTokens ?? WORKSHEET_UNITS_MAX_TOKENS;
+  // 데드라인이 있으면 호출 abort 를 남은 예산으로 좁힌다(deadlineAt 은 계속 존중).
+  const baseTimeoutMs = overrides?.timeoutMs ?? 140_000;
+  const timeoutMs = deadlineAt ? Math.max(1_000, Math.min(baseTimeoutMs, deadlineAt - Date.now())) : baseTimeoutMs;
   if (stream) {
     // 스트리밍 요청(지문 큐 미리보기) — 실패하면 아래 비스트리밍 경로로 폴백한다.
     stream.emit({ t: "phase", label: analysisPhaseLabel(stream.label) });
     return streamAnalysisText({
       prompt,
-      maxTokens: 14000,
+      ...(modelId ? { modelId } : {}),
+      reasoningEffort,
+      maxTokens,
       timeoutMs,
       temperature: 0.12,
       emit: stream.emit,
@@ -613,22 +950,23 @@ function runWorksheetTextGeneration(
         `[analysis-stream] ${logPrefix} 스트리밍 실패 — 비스트리밍 폴백`,
         error instanceof Error ? error.message : error,
       );
-      return runWorksheetTextGeneration(prompt, logPrefix, deadlineAt);
+      return runWorksheetTextGeneration(prompt, logPrefix, deadlineAt, undefined, overrides);
     });
   }
   return generateQuestionText({
     prompt,
     generationPlan: "STANDARD",
+    ...(modelId ? { modelId } : {}),
     logPrefix,
     maxRetries: 0,
-    maxTokens: 14000,
+    maxTokens,
     omitMaxTokens: false,
     responseFormat: "json_object",
     isRecoverableJsonText: canRecover,
     thinkingBudget: 0,
     timeoutMs,
     temperature: 0.12,
-    reasoningEffort: "high",
+    reasoningEffort,
     applyReasoningEffortToGemini: true,
   });
 }
@@ -696,7 +1034,54 @@ function normalizeInferenceQuestions(section: LearningWorksheetSection): void {
 }
 
 const CHOICE_LABELS = ["①", "②", "③", "④", "⑤"] as const;
-const INFERENCE_ANSWER_LABEL_PATTERN = ["②", "④", "①", "⑤", "③"] as const;
+
+// ── 수능추론 정답 위치 셔플 유틸 (korean/core/shuffle.ts 정본 이식) ──────────────
+// 셔플이 선지 라벨을 재배치하면 **해설 산문 속 원문자 지칭도 함께 재매핑**해야 한다 —
+// 안 하면 answerLabel ②/해설 "③이 정답" desync 가 저장돼 학생 정답지가 모순된다
+// (2026-08-11 실측: 기존 문서 4/5문항 전수 불일치. 어휘선택 셔플 desync 전례와 동일 교훈).
+
+/** FNV-1a 32bit — 결정론 시드 파생용 문자열 해시. */
+function hashInferenceSeed(text: string): number {
+  let hash = 0x811c9dc5;
+  for (let i = 0; i < text.length; i++) {
+    hash ^= text.charCodeAt(i);
+    hash = Math.imul(hash, 0x01000193);
+  }
+  return hash >>> 0;
+}
+
+/** mulberry32 — 시드 고정 PRNG (결정론 Fisher–Yates 용). */
+function inferenceRng(seed: number): () => number {
+  let state = seed >>> 0;
+  return () => {
+    state = (state + 0x6d2b79f5) | 0;
+    let t = Math.imul(state ^ (state >>> 15), 1 | state);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/** 문자열 안의 원문자 '선지' 지칭을 순열 맵으로 동시 치환한다.
+ *  "⑤번 문장" 같은 **지문 문장 번호 지칭은 제외**한다(선지 라벨과 같은 원문자를 쓰는
+ *  실측 관행 — 기존 문서 수리 때 모순 가드가 잡아낸 함정. 치환하면 문장 참조가 깨진다). */
+function remapCircledLabels(text: string, labelMap: Map<string, string>): string {
+  return text.replace(/[①②③④⑤](?!\s*번?\s*문장)/g, (ch) => labelMap.get(ch) ?? ch);
+}
+
+/**
+ * 문서 단위 결정론 정답 라벨 배열 — 구 고정 패턴(②④①⑤③)은 모든 PRIME 학습지의
+ * 정답 배열이 동일해 학생이 암기할 수 있었다. 문서 내용 시드 Fisher–Yates 로
+ * 라벨 5종을 1회씩 소진해 '분산 보장 + 문서마다 다른 배열 + 재생성 시 재현'을 얻는다.
+ */
+function inferenceTargetLabels(seedText: string): string[] {
+  const rand = inferenceRng(hashInferenceSeed(seedText));
+  const labels = [...CHOICE_LABELS];
+  for (let i = labels.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [labels[i], labels[j]] = [labels[j], labels[i]];
+  }
+  return labels;
+}
 
 /** 보고서 passage 섹션의 원문 영어 문장 배열(권위) — 원문 생략 복원의 기준. */
 function passageSentencesOf(report: AnalysisReport): string[] {
@@ -704,7 +1089,8 @@ function passageSentencesOf(report: AnalysisReport): string[] {
   return p && p.kind === "passage" ? p.sentences.map((s) => s.en).filter((e) => e.trim().length > 0) : [];
 }
 
-function normalizeWorkbookTestSurface(section: LearningWorksheetSection, originalSentences: readonly string[] = []): void {
+/** export: 결정론 검증 스크립트(.tmp-worksheet-qa)가 동일 로직을 재사용한다(수리 도구 선례). */
+export function normalizeWorkbookTestSurface(section: LearningWorksheetSection, originalSentences: readonly string[] = []): void {
   normalizeWorksheetWordBanks(section);
 
   const workbook = section.workbookSet;
@@ -818,12 +1204,16 @@ function normalizeWorksheetWordBanks(section: LearningWorksheetSection): void {
   }
 }
 
-function normalizeInferenceAnswerPositions(section: LearningWorksheetSection): void {
+/** export: 결정론 검증 스크립트(.tmp-worksheet-qa)와 수리 도구가 동일 로직을 재사용한다. */
+export function normalizeInferenceAnswerPositions(section: LearningWorksheetSection): void {
   const questions = section.inferenceSet?.questions;
   if (!questions || questions.length === 0) return;
 
+  // 문서 내용 시드 결정론 라벨 배열 — 문항 index 마다 서로 다른 라벨 1개씩.
+  const targetLabels = inferenceTargetLabels(questions.map((q) => `${q.prompt}${q.answerText ?? ""}`).join(""));
+
   questions.forEach((question, index) => {
-    const targetLabel = INFERENCE_ANSWER_LABEL_PATTERN[index % INFERENCE_ANSWER_LABEL_PATTERN.length];
+    const targetLabel = targetLabels[index % targetLabels.length];
     const originalChoices = question.choices.map((choice) => ({ ...choice }));
     const correctIndex = originalChoices.findIndex((choice) => choice.label === question.answerLabel);
     const fallbackCorrectIndex = originalChoices.findIndex((choice) => normalizeKey(choice.text) === normalizeKey(question.answerText ?? ""));
@@ -843,15 +1233,20 @@ function normalizeInferenceAnswerPositions(section: LearningWorksheetSection): v
     question.choices = nextChoices;
     question.answerLabel = targetLabel;
     question.answerText = correctEntry.text;
+    // ★ 라벨 재배치의 반쪽이던 부분 — 해설·오답 사유 '산문 속' 원문자 지칭도 같은 순열로
+    // 동기 재매핑한다. 이걸 빼먹으면 answerLabel ② / 해설 "③이 정답" desync 가 저장된다.
+    question.explanation = remapCircledLabels(question.explanation, labelMap);
     question.distractors = nextChoices
       .filter((choice) => choice.label !== targetLabel)
       .map((choice) => {
         const oldLabel = [...labelMap.entries()].find(([, newLabel]) => newLabel === choice.label)?.[0];
-        const previous = question.distractors?.find((d) => d.label === oldLabel) ?? question.distractors?.find((d) => d.label === choice.label);
+        // 구 폴백(find(d.label === choice.label))은 labelMap 미스 시 '엉뚱한 선지의 오답 사유'를
+        // 붙였다 — 미스면 기본 문구로 강등하는 것이 정직하다.
+        const previous = oldLabel ? question.distractors?.find((d) => d.label === oldLabel) : undefined;
         return {
           label: choice.label,
           type: previous?.type ?? "오답",
-          reason: previous?.reason ?? "정답의 핵심 논리와 맞지 않습니다.",
+          reason: previous ? remapCircledLabels(previous.reason, labelMap) : "정답의 핵심 논리와 맞지 않습니다.",
         };
       });
   });
@@ -894,7 +1289,8 @@ function isWeakGrammarFunctionOption(value: string): boolean {
   return WEAK_GRAMMAR_FUNCTION_OPTIONS.has(normalizeGrammarOptionSurface(value));
 }
 
-function validateWorkbookQuality(section: LearningWorksheetSection, originalSentences: readonly string[] = []): string[] {
+/** export: 결정론 검증 스크립트(.tmp-worksheet-qa)가 동일 게이트를 재사용한다. */
+export function validateWorkbookQuality(section: LearningWorksheetSection, originalSentences: readonly string[] = []): string[] {
   const issues: string[] = [];
   issues.push(...worksheetWordBankSurfaceIssues("key phrase cloze", section.cloze?.wordBank, section.cloze?.items));
   issues.push(...worksheetWordBankSurfaceIssues("practice cloze", section.practice?.wordBank, section.practice?.items));
@@ -1022,6 +1418,20 @@ function validateInferenceQuality(section: LearningWorksheetSection): string[] {
       }
       if (question.explanation.trim().length < 24) {
         issues.push(`수능추론 Q${index + 1} 정답 해설이 너무 짧습니다.`);
+      }
+      // 해설 ↔ 정답 번호 정합 게이트(2026-08-11 desync 실측 재발 방지):
+      // (a) "정답은 ③"/"③번이 가장 적절" 류의 정답 단정이 answerLabel 과 다르면 불합격.
+      const assertedAnswer = question.explanation.match(
+        /([①②③④⑤])\s*번?\s*[가이은는의]?\s*(?:정답|가장\s*적절)/,
+      );
+      if (assertedAnswer && assertedAnswer[1] !== question.answerLabel) {
+        issues.push(
+          `수능추론 Q${index + 1} 해설이 단정하는 정답 번호(${assertedAnswer[1]})가 answerLabel(${question.answerLabel})과 다릅니다.`,
+        );
+      }
+      // (b) 선지를 평숫자("3번")로 지칭하면 셔플 재매핑이 불가능하다 — 원문자만 허용.
+      if (/[1-5]\s*번(?:\s*(?:선지|선택지|이|가|은|을))/.test(question.explanation)) {
+        issues.push(`수능추론 Q${index + 1} 해설이 선지를 평숫자("N번")로 지칭합니다 — 원문자(①~⑤)만 허용.`);
       }
 
       issues.push(...studentFacingMarkupIssues(question.prompt, `inference Q${index + 1} prompt`));

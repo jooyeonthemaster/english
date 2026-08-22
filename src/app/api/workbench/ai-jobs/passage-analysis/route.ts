@@ -25,6 +25,12 @@ const requestSchema = z.object({
   forcePrimeReport: z.boolean().optional(),
   /** true 면 기본 분석에 이어 실전 학습지(06)까지 한 번에 생성·병합한다 (+5크레딧). */
   includeWorksheet: z.boolean().optional(),
+  /**
+   * true 면 기본 분석 대신 파이널 원페이지(A4 1장 족집게)만 생성한다 (◈5).
+   * 이 라우트는 config 로 포워딩만 하고 실제 분기는 trigger 워커가 처리한다
+   * (스펙 정본 .tmp-final-qa/final-onepage-spec.md §2).
+   */
+  finalOnepage: z.boolean().optional(),
 });
 
 export async function POST(req: NextRequest) {
@@ -92,6 +98,8 @@ export async function POST(req: NextRequest) {
         analysisTone,
         forcePrimeReport: parsed.data.forcePrimeReport ?? false,
         includeWorksheet: parsed.data.includeWorksheet ?? false,
+        // 파이널 원페이지 표식 — 부재 시 키 자체가 실리지 않는다(기존 잡 config 무회귀).
+        ...(parsed.data.finalOnepage === true ? { finalOnepage: true } : {}),
       },
     },
   });

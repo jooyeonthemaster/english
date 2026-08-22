@@ -67,6 +67,12 @@ interface PassageWorkspaceProps {
   onSetActiveRow?: (localId: string) => void;
   /** '문제 생성' 버튼 → 이 지문의 문제 생성 모달을 연다. */
   onOpenRowSettings?: (localId: string) => void;
+  /**
+   * '학습 워크북 생성' 버튼 → 이 지문의 워크북 모달을 연다 (스튜디오 전용).
+   * 존재하면 각 행 푸터가 [학습 워크북 생성]+[실전 문제 생성] 2버튼 스택이
+   * 된다. 넘기지 않으면 기존 단일 버튼 경로 그대로.
+   */
+  onOpenRowWorkbook?: (localId: string) => void;
   /** 워크스페이스 여백 클릭 → 선택 해제. */
   onClearActiveRow?: () => void;
   /** 진행 큐 — 행 헤더의 문제 히스토리 팝오버에 전달. */
@@ -86,6 +92,18 @@ interface PassageWorkspaceProps {
   onOpenVariantSources?: (sources: VariantSeedQuestion[]) => void;
   /** 지문별 생성 통계 (문제 수·크레딧) — 카드 푸터 '문제 생성' 버튼 라벨용. */
   rowStats?: Map<string, { questions: number; creditCost: number }>;
+  /**
+   * 행 그리드 1열 고정 — xl:grid-cols-2 는 뷰포트 기준이라 컨테이너 폭과
+   * 무관하게 쪼개진다. 좁은 중앙 열 임베드(스튜디오)는 true 로 끈다.
+   */
+  singleColumn?: boolean;
+  /** 2버튼 모드에서 행 '실전 문제 생성' 버튼의 라벨 오버라이드. */
+  rowGenerateLabel?: string;
+  /**
+   * 헤더 제목 오버라이드 — 문제 생성 전용이 아닌 호스트(스튜디오)용.
+   * 미전달 시 기존 「문제 생성 워크스페이스」 문자 그대로.
+   */
+  heading?: string;
   /** '지문 추가' 버튼 → 내 지문함으로 돌아가 지문을 더 고른다. */
   onAddPassage?: () => void;
 }
@@ -99,6 +117,7 @@ export function PassageWorkspace({
   activeRowId = null,
   onSetActiveRow,
   onOpenRowSettings,
+  onOpenRowWorkbook,
   onClearActiveRow,
   sessionQueue,
   questionCountByPassage,
@@ -107,6 +126,9 @@ export function PassageWorkspace({
   variantSourcesByPassage,
   onOpenVariantSources,
   rowStats,
+  singleColumn = false,
+  rowGenerateLabel,
+  heading,
   onAddPassage,
 }: PassageWorkspaceProps) {
   const { rows } = api;
@@ -304,7 +326,7 @@ export function PassageWorkspace({
           aria-hidden="true"
         />
         <h3 className="shrink-0 text-[12.5px] font-bold text-slate-800">
-          문제 생성 워크스페이스
+          {heading ?? "문제 생성 워크스페이스"}
         </h3>
         {rows.length > 0 ? (
           <span className="flex h-[18px] min-w-[18px] shrink-0 items-center justify-center rounded-full bg-blue-600 px-1 text-[10.5px] font-bold leading-none text-white tabular-nums">
@@ -375,7 +397,12 @@ export function PassageWorkspace({
             if (e.target === e.currentTarget) onClearActiveRow?.();
           }}
           dir="ltr"
-          className="grid min-h-0 flex-1 grid-cols-1 content-start items-stretch gap-2.5 overflow-y-auto p-3 xl:grid-cols-2"
+          className={
+            // singleColumn(스튜디오) 이면 xl 2열을 끈다 — 뷰포트 브레이크포인트는
+            // 컨테이너 폭과 무관해 좁은 중앙 열에서 카드 폭이 붕괴한다.
+            "grid min-h-0 flex-1 grid-cols-1 content-start items-stretch gap-2.5 overflow-y-auto p-3" +
+            (singleColumn ? "" : " xl:grid-cols-2")
+          }
         >
           {!coachDismissed && rows.length > 0 ? (
             <div className="col-span-full flex items-start gap-3 rounded-lg border border-blue-100 bg-blue-50/60 py-2.5 pl-3.5 pr-2">
@@ -477,6 +504,13 @@ export function PassageWorkspace({
               dimmed={activeRowId != null && activeRowId !== row.localId}
               onSetActive={() => onSetActiveRow?.(row.localId)}
               onOpenSettings={() => onOpenRowSettings?.(row.localId)}
+              onOpenWorkbook={
+                // 존재할 때만 클로저 전달 — undefined 면 행은 기존 단일 버튼.
+                onOpenRowWorkbook
+                  ? () => onOpenRowWorkbook?.(row.localId)
+                  : undefined
+              }
+              generateLabel={rowGenerateLabel}
               genStats={rowStats?.get(row.localId)}
             />
           ))}

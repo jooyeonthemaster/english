@@ -171,6 +171,14 @@ export function JobReviewModal({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // 성능 계약(resizable-panels 동형): 드래그 중 setState 금지 — 매 pointermove
+  // 의 setDrawerWidth 는 (a)드로어 자체 리렌더 (b)위 effect 의
+  // reviewDrawer.setOpen({width}) 로 AdminShell 아래 페이지 전체를 프레임마다
+  // 리렌더시켰다. 이동 중에는 [data-review-drawer-panel] 의 width 와
+  // [data-review-drawer-inset](AdminShell main wrapper) 의 marginRight 를 rAF
+  // 코얼레싱으로 함께 직접 기록해 본문 압축 타이밍을 종전과 동일하게 유지하고,
+  // 놓을 때 한 번만 setState(=effect 가 컨텍스트 최종 커밋) + 영속한다.
+  // 두 앵커 중 하나라도 못 찾으면 종전 setDrawerWidth 경로 폴백(무회귀).
   const beginDrawerResize = useCallback(
     (e: React.PointerEvent) => {
       e.preventDefault();
@@ -178,8 +186,38 @@ export function JobReviewModal({
       const startX = e.clientX;
       const startWidth = drawerWidth;
       let latest = startWidth;
+
+      // 포인터 캡처 — 커서가 얇은 핸들을 벗어나도 드래그가 끊기지 않는다.
+      const handle = e.currentTarget as HTMLElement;
+      try {
+        handle.setPointerCapture(e.pointerId);
+      } catch {
+        /* 캡처 미지원 브라우저는 window 리스너로 폴백 */
+      }
+
+      const asideEl = handle.closest<HTMLElement>("[data-review-drawer-panel]");
+      const insetEl = document.querySelector<HTMLElement>(
+        "[data-review-drawer-inset]",
+      );
+      const fastPath = Boolean(asideEl && insetEl);
+
+      const prevCursor = document.body.style.cursor;
+      const prevSelect = document.body.style.userSelect;
+      const prevPointerEvents = document.body.style.pointerEvents;
       document.body.style.cursor = "col-resize";
       document.body.style.userSelect = "none";
+      // 드래그 중 hover 스타일 재평가 차단(캡처 덕에 move 수신은 유지).
+      document.body.style.pointerEvents = "none";
+
+      // rAF 코얼레싱 — 스타일 기록은 프레임당 1회.
+      let rafId: number | null = null;
+      const flush = () => {
+        rafId = null;
+        if (!fastPath || !asideEl || !insetEl) return;
+        asideEl.style.width = `${latest}px`;
+        insetEl.style.marginRight = `${latest}px`;
+      };
+
       const onMove = (ev: PointerEvent) => {
         const max = Math.max(
           DRAWER_MIN_WIDTH,
@@ -190,13 +228,32 @@ export function JobReviewModal({
           max,
           Math.max(DRAWER_MIN_WIDTH, startWidth - (ev.clientX - startX)),
         );
-        setDrawerWidth(latest);
+        if (fastPath) {
+          if (rafId === null) rafId = requestAnimationFrame(flush);
+        } else {
+          // 폴백(레거시) — 앵커를 못 찾으면 종전대로 상태 갱신
+          setDrawerWidth(latest);
+        }
       };
       const onUp = () => {
-        document.body.style.cursor = "";
-        document.body.style.userSelect = "";
+        document.body.style.cursor = prevCursor;
+        document.body.style.userSelect = prevSelect;
+        document.body.style.pointerEvents = prevPointerEvents;
         window.removeEventListener("pointermove", onMove);
         window.removeEventListener("pointerup", onUp);
+        window.removeEventListener("pointercancel", onUp);
+        if (rafId !== null) cancelAnimationFrame(rafId);
+        flush();
+        // 커밋은 여기서 한 번 — reviewDrawer 컨텍스트는 drawerWidth effect 가
+        // 최종 반영한다. 인라인 값은 React 렌더 결과와 동일한 px 로 남긴다
+        // (지우면 시작 폭과 같은 값으로 끝났을 때 setState 가 bail-out 해
+        // marginRight 가 빈 채로 남는 회귀가 생긴다).
+        setDrawerWidth(latest);
+        try {
+          handle.releasePointerCapture(e.pointerId);
+        } catch {
+          /* ignore */
+        }
         try {
           window.localStorage.setItem(DRAWER_WIDTH_KEY, String(latest));
         } catch {
@@ -205,6 +262,7 @@ export function JobReviewModal({
       };
       window.addEventListener("pointermove", onMove);
       window.addEventListener("pointerup", onUp);
+      window.addEventListener("pointercancel", onUp);
     },
     [drawerWidth],
   );
@@ -240,6 +298,10 @@ export function JobReviewModal({
     }
   });
 
+  // 성능 계약: 드래그 중 setState 금지 — 매 pointermove 의 setImageHeight 는
+  // 드로어 본문(이미지 캐러셀 + 드래프트 체크리스트) 전체를 프레임마다
+  // 리렌더시켰다. 이동 중에는 [data-split-image-pane] 의 style.height 에 rAF
+  // 코얼레싱으로 직접 쓰고, 놓을 때 한 번만 setState + 영속. 앵커 미발견 시 폴백.
   const beginSplitResize = useCallback(
     (e: React.PointerEvent) => {
       e.preventDefault();
@@ -247,8 +309,35 @@ export function JobReviewModal({
       const startY = e.clientY;
       const startHeight = imageHeight;
       let latest = startHeight;
+
+      // 포인터 캡처 — 커서가 얇은 핸들을 벗어나도 드래그가 끊기지 않는다.
+      const handle = e.currentTarget as HTMLElement;
+      try {
+        handle.setPointerCapture(e.pointerId);
+      } catch {
+        /* 캡처 미지원 브라우저는 window 리스너로 폴백 */
+      }
+
+      const imgEl =
+        splitContainerRef.current?.querySelector<HTMLElement>(
+          "[data-split-image-pane]",
+        ) ?? null;
+
+      const prevCursor = document.body.style.cursor;
+      const prevSelect = document.body.style.userSelect;
+      const prevPointerEvents = document.body.style.pointerEvents;
       document.body.style.cursor = "row-resize";
       document.body.style.userSelect = "none";
+      // 드래그 중 hover 스타일 재평가 차단(캡처 덕에 move 수신은 유지).
+      document.body.style.pointerEvents = "none";
+
+      // rAF 코얼레싱 — 스타일 기록은 프레임당 1회.
+      let rafId: number | null = null;
+      const flush = () => {
+        rafId = null;
+        if (imgEl) imgEl.style.height = `${latest}px`;
+      };
+
       const onMove = (ev: PointerEvent) => {
         const containerH =
           splitContainerRef.current?.getBoundingClientRect().height ??
@@ -258,13 +347,29 @@ export function JobReviewModal({
           max,
           Math.max(IMAGE_MIN_HEIGHT, startHeight + (ev.clientY - startY)),
         );
-        setImageHeight(latest);
+        if (imgEl) {
+          if (rafId === null) rafId = requestAnimationFrame(flush);
+        } else {
+          // 폴백(레거시) — 앵커를 못 찾으면 종전대로 상태 갱신
+          setImageHeight(latest);
+        }
       };
       const onUp = () => {
-        document.body.style.cursor = "";
-        document.body.style.userSelect = "";
+        document.body.style.cursor = prevCursor;
+        document.body.style.userSelect = prevSelect;
+        document.body.style.pointerEvents = prevPointerEvents;
         window.removeEventListener("pointermove", onMove);
         window.removeEventListener("pointerup", onUp);
+        window.removeEventListener("pointercancel", onUp);
+        if (rafId !== null) cancelAnimationFrame(rafId);
+        flush();
+        // 커밋은 여기서 한 번 — 드래그 내내 리렌더 0회.
+        setImageHeight(latest);
+        try {
+          handle.releasePointerCapture(e.pointerId);
+        } catch {
+          /* ignore */
+        }
         try {
           window.localStorage.setItem(IMAGE_HEIGHT_KEY, String(latest));
         } catch {
@@ -273,6 +378,7 @@ export function JobReviewModal({
       };
       window.addEventListener("pointermove", onMove);
       window.addEventListener("pointerup", onUp);
+      window.addEventListener("pointercancel", onUp);
     },
     [imageHeight],
   );
@@ -472,6 +578,7 @@ export function JobReviewModal({
       <aside
         role="dialog"
         aria-label={`${jobLabel} 검수 패널`}
+        data-review-drawer-panel
         style={isMobile ? undefined : { width: drawerWidth }}
         className={
           isMobile
@@ -531,6 +638,7 @@ export function JobReviewModal({
       >
         {/* Image preview — 데스크톱은 리사이즈 가능한 고정 높이, 모바일은 자동 높이 */}
         <div
+          data-split-image-pane
           style={isMobile ? undefined : { height: imageHeight }}
           className="relative shrink-0 overflow-y-auto bg-white p-3"
         >

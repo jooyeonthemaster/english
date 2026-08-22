@@ -3,10 +3,10 @@ import type { AnalysisSection } from "@/lib/passage-report/analysis-report/schem
 import { getConsolidatedWordOrders, toStudentVocabularyClozePassage, toStudentWorksheetWordBank, worksheetAnswersAreHidden, worksheetClozeTranslationsAreHidden } from "@/lib/passage-report/analysis-report/worksheet-surface";
 import { Field, renderGrammarChoiceText } from "./editable-field";
 import type { LearningWorksheetSection, SectionFlowCtx } from "./types";
-import { EditableSectionLabel, miniHeadProps, WordBank, WorksheetLogicMapBlock, WorksheetMiniTitle, WorksheetQuestionCard, worksheetAnswerKeySubsections } from "./worksheet";
+import { EditableSectionLabel, miniHeadProps, WordBank, WorksheetMiniTitle, WorksheetQuestionCard, worksheetAnswerKeySubsections } from "./worksheet";
 
 export function worksheetSectionFlow(section: Extract<AnalysisSection, { kind: "learning-worksheet" }>, ctx: SectionFlowCtx): void {
-  const { si, editable, commit, push, options } = ctx;
+  const { si, editable, commit, push } = ctx;
 const s = section;
       const patch = (p: Partial<LearningWorksheetSection>) => commit({ ...s, ...p });
       /**
@@ -41,13 +41,6 @@ const s = section;
           {s.note ? <Field as="div" className="par-ws-note" editable={editable} value={s.note} onCommit={(v) => patch({ note: v })} /> : null}
         </div>,
       );
-      if (!options?.skipWorksheetLogic) {
-        push(
-          "note",
-          "ws-logic",
-          <WorksheetLogicMapBlock section={s} editable={editable} onPatch={patch} />,
-        );
-      }
       if (s.cloze) {
         const clozeItemNode = (item: NonNullable<typeof s.cloze>["items"][number], i: number) => (
           <div className="par-ws-cloze">

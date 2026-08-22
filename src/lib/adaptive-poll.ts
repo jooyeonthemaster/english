@@ -24,8 +24,17 @@
 export interface AdaptivePollOptions {
   /** Poll cadence while data is actively changing. */
   activeMs: number;
-  /** Slowest cadence reached after repeated unchanged polls. */
-  idleMs: number;
+  /**
+   * Slowest cadence reached after repeated unchanged polls.
+   *
+   * Pass a function to make the ceiling situational: a poll that is watching a
+   * *running* job wants a low ceiling (a finished job must not sit on screen for
+   * minutes), while an idle surface wants the cheap one. Re-read every tick, so
+   * the cap tightens the moment work starts and relaxes when it ends — this is
+   * how a heavy list poll stays responsive without paying the fast cadence for
+   * the whole run.
+   */
+  idleMs: number | (() => number);
   /** Perform one poll. Return a data signature, or null on failure/skip. */
   run: (signal: AbortSignal) => Promise<string | null>;
   /**
@@ -38,17 +47,39 @@ export interface AdaptivePollOptions {
 }
 
 /**
+ * Handle returned by {@link startAdaptivePoll}.
+ *
+ * Calling it stops the loop (so `return startAdaptivePoll({...})` from a React
+ * effect keeps working as a teardown function). `bump()` is the additive part:
+ * it snaps the cadence back to `activeMs` and polls **now**, for the moment the
+ * caller *knows* something changed but the server signature can't say so yet —
+ * e.g. an optimistic card was just launched. Without it, a loop that had backed
+ * off to `idleMs` (5 min) stays blind for that long, and every recovery path
+ * that depends on server truth inherits the delay.
+ */
+export interface AdaptivePollHandle {
+  (): void;
+  /** Reset to the fast cadence and poll immediately (no-op while hidden/stopped). */
+  bump(): void;
+}
+
+/**
  * Starts an adaptive poll loop. Returns a cleanup function — call it from a
  * React effect's teardown (or whenever you want to stop).
  */
-export function startAdaptivePoll(opts: AdaptivePollOptions): () => void {
+export function startAdaptivePoll(opts: AdaptivePollOptions): AdaptivePollHandle {
   const { activeMs, idleMs, run, runTimeoutMs = 30_000 } = opts;
+  const resolveIdleMs = () =>
+    Math.max(activeMs, typeof idleMs === "function" ? idleMs() : idleMs);
 
   let timer: ReturnType<typeof setTimeout> | null = null;
   let stopped = false;
   let delay = activeMs;
   let lastSig: string | null = null;
   let running = false;
+  // A bump that lands mid-poll: the in-flight response may predate whatever the
+  // caller just did, so re-arm immediately instead of waiting out `delay`.
+  let pendingBump = false;
   const controller = new AbortController();
 
   const clearTimer = () => {
@@ -98,7 +129,7 @@ export function startAdaptivePoll(opts: AdaptivePollOptions): () => void {
       if (stopped) return;
       if (sig !== null) {
         if (sig === lastSig) {
-          delay = Math.min(delay * 2, idleMs); // unchanged → back off
+          delay = Math.min(delay * 2, resolveIdleMs()); // unchanged → back off
         } else {
           delay = activeMs; // changed → poll fast again
           lastSig = sig;
@@ -114,7 +145,14 @@ export function startAdaptivePoll(opts: AdaptivePollOptions): () => void {
       running = false;
       // ALWAYS re-arm unless torn down → the loop can never go permanently silent
       // after a single failed/hung request.
-      if (!stopped) schedule(delay);
+      if (!stopped) {
+        // 상한을 매 틱 다시 적용한다 — 유휴 중 늘어난 delay 가 작업 시작 후에도
+        // 그대로 남으면(예: 160s) 낮아진 상한이 다음 백오프 때까지 효력이 없다.
+        delay = Math.min(delay, resolveIdleMs());
+        const nextDelay = pendingBump ? 0 : delay;
+        pendingBump = false;
+        schedule(nextDelay);
+      }
     }
   };
 
@@ -133,12 +171,29 @@ export function startAdaptivePoll(opts: AdaptivePollOptions): () => void {
 
   void tick(); // initial load
 
-  return () => {
-    stopped = true;
-    clearTimer();
-    controller.abort();
-    if (typeof document !== "undefined") {
-      document.removeEventListener("visibilitychange", onVisibility);
-    }
-  };
+  const stop: AdaptivePollHandle = Object.assign(
+    () => {
+      stopped = true;
+      clearTimer();
+      controller.abort();
+      if (typeof document !== "undefined") {
+        document.removeEventListener("visibilitychange", onVisibility);
+      }
+    },
+    {
+      bump: () => {
+        if (stopped) return;
+        delay = activeMs;
+        // Hidden tabs stay paused — onVisibility already polls on return.
+        if (isHidden()) return;
+        if (running) {
+          pendingBump = true;
+          return;
+        }
+        clearTimer();
+        void tick();
+      },
+    },
+  );
+  return stop;
 }

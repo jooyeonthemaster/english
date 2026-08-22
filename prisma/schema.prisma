@@ -5645,6 +5645,25 @@ model StudyAssignmentTask {
   @@map("study_assignment_tasks")
 }
 
+/// 클래스 스튜디오 — 클래스 ↔ 지문 등록부 (docs/class-studio-spec.md §6).
+/// 지문은 학원 공용 자산이고 "등록"만 클래스 스코프다. relation-free soft-ref —
+/// 적용은 수동 SQL(prisma/migrations-manual/20260809_class_studio.sql),
+/// migrate deploy / db push 금지.
+model StudioClassPassage {
+  id        String   @id @default(cuid())
+  academyId String
+  classId   String // Class soft-ref
+  passageId String // Passage soft-ref
+  addedById String? // Staff soft-ref
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@unique([classId, passageId])
+  @@index([academyId, classId, sortOrder])
+  @@index([passageId])
+  @@map("studio_class_passages")
+}
+
 /// 학습지 스터디 모드 — 학생×태스크 상태 (태스크당 1행). plan 은 저장하지 않고
 /// 매 로드 시 (report, mode, taskId) 에서 결정론 재컴파일한다.
 /// relation-free soft-ref 설계 — 적용은 수동 SQL(prisma/migrations-manual/20260720_worksheet_study.sql),

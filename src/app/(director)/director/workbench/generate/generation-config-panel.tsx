@@ -895,7 +895,6 @@ export function GenerationConfigPanel({
               </div>
             ) : (
               <div className="mt-2 flex items-center gap-2 rounded-lg border border-dashed border-blue-200 bg-blue-50/50 px-3 py-2 text-[11px] font-semibold text-blue-700">
-                <Plus className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                 <span>+ 를 눌러 문제 수를 더하세요.</span>
               </div>
             )
@@ -1273,7 +1272,8 @@ export function GenerationConfigPanel({
       {!hideGenerateButtons && (genMode !== "set" || editingRow) && workspaceActive && TypeNumericDetail.renderWorkspaceGenerateButton({ onWorkspaceGenerate, workspaceCreditCost, workspaceGenerating, workspaceSelectedOnlyCount, workspaceTotalQuestions, workspaceVariantCount })}
 
       {/* Generate Button — 기존 라이브러리 선택 모드 */}
-      {!hideGenerateButtons && genMode !== "set" && !workspaceActive && TypeNumericDetail.renderLibraryGenerateButton({ canGenerate, generationPlan, handleBatchGenerate, selectedIds, totalQuestions, typeCounts })}
+      {/* 26-08-18 난이도 기반 티어: 견적이 유형별 난이도(KILLER=2배)를 보도록 difficulty·questionTypeSettings 도 넘긴다. */}
+      {!hideGenerateButtons && genMode !== "set" && !workspaceActive && TypeNumericDetail.renderLibraryGenerateButton({ canGenerate, difficulty, generationPlan, handleBatchGenerate, questionTypeSettings, selectedIds, totalQuestions, typeCounts })}
     </div>
   );
 }

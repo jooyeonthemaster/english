@@ -50,6 +50,13 @@ interface PassageGenerateModalProps {
   onPointChipClick?: () => void;
   /** 포인트는 있는데 문항 수가 0인 유형 존재 — 칩에 '문항 수를 지정하세요' 보조 문구. */
   pointCountMissing?: boolean;
+  /** 존재 시 헤더 좌측에 모달 정체성 라벨(Cpu 아이콘 + 볼드 — 워크북 모달 헤더
+   *  문법)을 렌더한다. sm 미만은 아이콘만 남겨 제목에 폭을 양보한다.
+   *  미전달 = 기존 헤더 바이트 동일(문제 생성 페이지 불변). */
+  headerLabel?: string;
+  /** true 면 sm 미만에서 카드가 전면 시트(mx-0 my-0 h-full rounded-none)로 —
+   *  워크북 모달과 동일 관용구. 미전달 = 기존 중앙 카드 바이트 동일. */
+  sheetOnMobile?: boolean;
   /** GenerationConfigPanel (hideGenerateButtons) */
   children: ReactNode;
 }
@@ -74,6 +81,8 @@ export function PassageGenerateModal({
   appliedPointCount = 0,
   onPointChipClick,
   pointCountMissing = false,
+  headerLabel,
+  sheetOnMobile = false,
   children,
 }: PassageGenerateModalProps) {
   // Esc 로 닫기 — 생성 중에는 막지 않는다(생성은 fire-and-forget 라 닫아도 진행).
@@ -120,7 +129,11 @@ export function PassageGenerateModal({
       <div
         className={
           // 픽커 모드에서 카드가 2컬럼 폭으로 성장(max-width 모프).
-          "relative z-10 mx-4 my-4 flex max-h-[calc(100vh-2rem)] w-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl transition-[max-width] duration-300 ease-out " +
+          // sheetOnMobile(스튜디오): sm 미만 전면 시트 — 미전달 시 기존 클래스
+          // 바이트 동일(생성 페이지 불변, §3.8.11 함정 11).
+          (sheetOnMobile
+            ? "relative z-10 mx-0 my-0 flex h-full w-full flex-col overflow-hidden rounded-none border border-slate-200 bg-white shadow-2xl transition-[max-width] duration-300 ease-out sm:mx-4 sm:my-4 sm:h-auto sm:max-h-[calc(100vh-2rem)] sm:rounded-2xl "
+            : "relative z-10 mx-4 my-4 flex max-h-[calc(100vh-2rem)] w-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl transition-[max-width] duration-300 ease-out ") +
           (pickerOpen ? "max-w-[1520px]" : "max-w-[1200px]")
         }
         role="dialog"
@@ -129,6 +142,17 @@ export function PassageGenerateModal({
       >
         {/* ── 헤더: 어떤 지문을 설정 중인지 크게 ── */}
         <div className="flex shrink-0 items-center gap-3 border-b border-slate-200 bg-white px-5 py-3.5">
+          {headerLabel ? (
+            // 모달 정체성 라벨(워크북 모달 헤더 문법) — sm 미만은 아이콘만 남겨
+            // 제목(min-w-0 flex-1)에 폭을 양보한다. 제목은 truncate 되어도
+            // 팝오버 전문 확인 경로가 있어 허용.
+            <>
+              <Cpu className="size-4 shrink-0 text-blue-600" aria-hidden="true" />
+              <h2 className="hidden shrink-0 text-[14px] font-bold text-slate-900 sm:block">
+                {headerLabel}
+              </h2>
+            </>
+          ) : null}
           <div className="relative min-w-0 flex-1">
             {/* 픽커 열림 중에는 지문 전문이 좌측 무대에 이미 노출 — 팝오버
                 트리거를 숨기고 제목만 정적으로 표시한다. */}

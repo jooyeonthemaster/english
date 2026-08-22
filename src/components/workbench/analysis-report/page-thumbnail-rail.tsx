@@ -225,7 +225,8 @@ export function PageThumbnailRail({
   }
   return (
     <>
-      <aside style={{ width: railWidth }} className="no-print flex shrink-0 flex-col overflow-hidden border-r border-slate-200 bg-white">
+      {/* data-panel-key: usePanelWidths 드래그 고속 경로 앵커 — 드래그 중 style.width 직접 기록 대상 */}
+      <aside data-panel-key="rail" style={{ width: railWidth }} className="no-print flex shrink-0 flex-col overflow-hidden border-r border-slate-200 bg-white">
         <div className="flex h-11 shrink-0 items-center justify-between border-b border-slate-200 px-3">
           <div>
             <p className="text-[11px] font-black text-slate-700">페이지</p>

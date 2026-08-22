@@ -11,8 +11,17 @@ export const PRIME_REPORT_MARKER = "PRIME";
  *  (이 파일은 의존성 없는 상수 모듈이라 리터럴을 복제해 둔다.) */
 export const KO_PRIME_REPORT_MARKER = "PRIME_KO";
 
-/** 학습지 보유 판정 마커 집합 — 영어 PRIME + 국어 PRIME_KO(국어 지문 카드 연결). */
-export const PRIME_REPORT_MARKERS: string[] = [PRIME_REPORT_MARKER, KO_PRIME_REPORT_MARKER];
+/** 원페이지 파이널 학습지 마커 — prime API 라우트의 FINAL_MARKER 미러
+ *  (final-onepage-spec F3: 기본 PRIME 행과 지문당 각 1행 공존). */
+export const FINAL_REPORT_MARKER = "PRIME_FINAL";
+
+/** 학습지 보유 판정 마커 집합 — 영어 PRIME + 국어 PRIME_KO + 파이널 원페이지.
+ *  파이널만 생성한 지문도 목록 카드·학생 뷰어(doc-loader)에서 학습지로 인정된다. */
+export const PRIME_REPORT_MARKERS: string[] = [
+  PRIME_REPORT_MARKER,
+  KO_PRIME_REPORT_MARKER,
+  FINAL_REPORT_MARKER,
+];
 
 /** Prisma `where` matching a passage that owns a generated 학습지 (non-deleted
  *  PRIME/PRIME_KO report). Shared so collection counts/membership can scope to

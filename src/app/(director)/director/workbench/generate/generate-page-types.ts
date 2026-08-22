@@ -103,6 +103,14 @@ export interface QueueItem {
   };
   analysisData: any;
   status: QueueStatus;
+  /**
+   * 전역 동시성 상한(≤5) 때문에 **아직 시작조차 못 한** 낙관 카드(2026-08-18).
+   * status 는 generating 그대로지만 표시부는 「대기 중」으로 말한다 — 앞 배치가
+   * 도는 동안 수십 초~수 분씩 "생성 중"이라고 우기면, 진짜로 끝났는데 안 사라지는
+   * 카드와 화면상 구분이 안 된다. 슬롯을 잡는 순간(scheduleFastGeneration 의
+   * onStart) 해제된다. 부재 = 기존 동작(즉시 생성 중).
+   */
+  queued?: boolean;
   progress: Record<string, "pending" | "done" | "error">;
   questions: any[];
   questionIds?: string[];

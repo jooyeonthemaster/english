@@ -10,7 +10,10 @@ import {
   type SetStateAction,
 } from "react";
 
-import { startAdaptivePoll } from "@/lib/adaptive-poll";
+import {
+  startAdaptivePoll,
+  type AdaptivePollHandle,
+} from "@/lib/adaptive-poll";
 import {
   normalizeQuestionGenerationPlan,
   type QuestionGenerationPlan,
@@ -31,6 +34,18 @@ export interface AnalysisPromptConfig {
   analysisTone?: AnalysisTone;
   /** true 면 기본 분석에 이어 실전 학습지(06)까지 한 번에 생성한다 (+5크레딧/지문). */
   includeWorksheet?: boolean;
+  /**
+   * 스튜디오 섹션 종량제(§3.4.1) — 부분 분석 대상 섹션 화이트리스트.
+   * 부재/빈 배열이면 요청 body 에 실리지 않는다(기존 정액 경로와 바이트 동일 — §11 무회귀).
+   */
+  targetSections?: string[];
+  /** 스튜디오 발사 귀속 모듈(§3.4.1-11). 부재 시 body 에 실리지 않는다. */
+  sourceModule?: string;
+  /**
+   * 파이널 원페이지(PRIME_FINAL) 생성 플래그 — true 일 때만 요청 body 에 실린다
+   * (부재 스프레드 = 기존 상품 경로와 바이트 동일, .tmp-final-qa/final-onepage-spec.md §1·§2).
+   */
+  finalOnepage?: boolean;
 }
 
 export type QueuedPassageStatus =
@@ -198,6 +213,19 @@ function promptConfigFromJobConfig(config: unknown): AnalysisPromptConfig {
     generationPlan: normalizeQuestionGenerationPlan(raw.generationPlan),
     analysisTone: normalizeAnalysisTone(raw.analysisTone),
     includeWorksheet: raw.includeWorksheet === true,
+    // 부분 분석 잡의 재시도(다시 시도)가 전체 5크레딧 분석으로 승격되지 않도록,
+    // 잡 config 에 기록된 targetSections/sourceModule 을 복원한다(부재 시 키 생략).
+    ...(Array.isArray(raw.targetSections) &&
+    raw.targetSections.every((v): v is string => typeof v === "string") &&
+    raw.targetSections.length > 0
+      ? { targetSections: raw.targetSections }
+      : {}),
+    ...(typeof raw.sourceModule === "string" && raw.sourceModule
+      ? { sourceModule: raw.sourceModule }
+      : {}),
+    // 파이널 원페이지 잡의 재시도가 기본/실전 분석으로 승격되지 않도록 잡 config
+    // 에 기록된 finalOnepage 를 복원한다(true 일 때만 키 포함 — targetSections 와 동형).
+    ...(raw.finalOnepage === true ? { finalOnepage: true } : {}),
   };
 }
 
@@ -594,6 +622,37 @@ export interface AnalysisStreamPreview {
   lastDeltaAt: number;
 }
 
+/**
+ * 분석 잡 요청 body 조립 — **export 는 계약 테스트 전용**(런타임 소비처는
+ * startPassageAnalysisJob 하나). 스튜디오 부분 분석 필드(targetSections/
+ * sourceModule)와 파이널 원페이지 플래그(finalOnepage)는 부재 시 스프레드가
+ * 비어 기존 정액 경로와 **바이트 동일**해야 한다(§11 무회귀 — tests/unit 이
+ * 이 함수를 직접 검증한다).
+ */
+export function buildAnalysisRequestBody(
+  passageId: string,
+  promptConfig: AnalysisPromptConfig,
+  wantStream: boolean,
+): Record<string, unknown> {
+  return {
+    passageId,
+    customPrompt: promptConfig.customPrompt,
+    focusAreas: promptConfig.focusAreas,
+    targetLevel: promptConfig.targetLevel,
+    generationPlan: promptConfig.generationPlan,
+    analysisTone: promptConfig.analysisTone,
+    includeWorksheet: promptConfig.includeWorksheet === true,
+    ...(Array.isArray(promptConfig.targetSections) && promptConfig.targetSections.length > 0
+      ? { targetSections: promptConfig.targetSections }
+      : {}),
+    ...(typeof promptConfig.sourceModule === "string" && promptConfig.sourceModule
+      ? { sourceModule: promptConfig.sourceModule }
+      : {}),
+    ...(promptConfig.finalOnepage === true ? { finalOnepage: true } : {}),
+    ...(wantStream ? { stream: true } : {}),
+  };
+}
+
 async function startPassageAnalysisJob(
   passageId: string,
   promptConfig: AnalysisPromptConfig,
@@ -612,16 +671,7 @@ async function startPassageAnalysisJob(
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
-    body: JSON.stringify({
-      passageId,
-      customPrompt: promptConfig.customPrompt,
-      focusAreas: promptConfig.focusAreas,
-      targetLevel: promptConfig.targetLevel,
-      generationPlan: promptConfig.generationPlan,
-      analysisTone: promptConfig.analysisTone,
-      includeWorksheet: promptConfig.includeWorksheet === true,
-      ...(wantStream ? { stream: true } : {}),
-    }),
+    body: JSON.stringify(buildAnalysisRequestBody(passageId, promptConfig, wantStream)),
   });
 
   if (!wantStream || !res.body || !res.headers.get("content-type")?.includes("event-stream")) {
@@ -760,6 +810,12 @@ export function usePassageQueue(
     seedLocalQueue(initialItems, cacheKey),
   );
   const [jobQueue, setJobQueue] = useState<QueuedPassage[]>([]);
+  // 폴링 핸들·진행 중 카드 수 — 아래 폴 루프(run)와 발사 감지 effect 가 공유한다.
+  const pollRef = useRef<AdaptivePollHandle | null>(null);
+  const localActiveRef = useRef(0);
+  const prevActiveCountRef = useRef(0);
+  /** 직전 폴에서 본 서버 활성 잡 유무 — 백오프 상한 결정에만 쓴다. */
+  const serverActiveRef = useRef(false);
 
   useEffect(() => {
     onJobsChangedRef.current = options.onJobsChanged;
@@ -792,9 +848,21 @@ export function usePassageQueue(
   }, [cacheKey]);
 
   useEffect(() => {
-    return startAdaptivePoll({
+    const handle = startAdaptivePoll({
       activeMs: 5_000,
-      idleMs: 5 * 60_000,
+      // 진행 중에는 상한을 20초로 조인다(유휴는 기존 5분 그대로).
+      //
+      // 이 폴은 지문 본문을 지문 수만큼 싣는 **무거운** 응답이라, 진행 내내
+      // 5초로 못 박으면 egress 가 그대로 몇 배가 된다(§12 폴러 1개 규칙과 같은
+      // 계보의 비용 문제). 반대로 상한이 5분이면 — 상태가 안 변하는 동안
+      // 5→10→20→40→80→160s 로 늘어나 **다 만들어진 학습지가 최대 2분 넘게
+      // 「생성 중」으로 남는다**(26-08-18 사용자 지적의 학습지판 원인).
+      // 20초 상한이 그 사이를 끊는다: 완료를 늦어도 20초 안에 관측하고,
+      // 상태가 바뀌면 곧바로 5초로 되돌아간다.
+      idleMs: () =>
+        serverActiveRef.current || localActiveRef.current > 0
+          ? 20_000
+          : 5 * 60_000,
       run: async (signal) => {
         try {
           const res = await fetch(
@@ -829,6 +897,11 @@ export function usePassageQueue(
             );
           });
           // Signature: status per job → fast while an analysis runs, idle after.
+          // 진행 중 여부는 위 idleMs 상한(20s)이 소비한다 — 서명 자체는 순수하게
+          // 유지해, 변화가 있을 때만 빠른 주기로 되돌아가게 둔다.
+          serverActiveRef.current = jobs.some(
+            (j) => j.status === "PENDING" || j.status === "PROCESSING",
+          );
           return jobs.map((j) => `${j.id}:${j.status}`).join("|");
         } catch {
           // Best-effort polling; the local queue remains visible on errors.
@@ -836,6 +909,11 @@ export function usePassageQueue(
         }
       },
     });
+    pollRef.current = handle;
+    return () => {
+      pollRef.current = null;
+      handle();
+    };
   }, []);
 
   const queue = useMemo(() => {
@@ -845,6 +923,18 @@ export function usePassageQueue(
   const activeCount = queue.filter(
     (p) => p.status === "analyzing" || p.status === "pending",
   ).length;
+
+  // 진행 중 카드 수 거울 + 발사/종결 즉시 폴링 — 폴링이 idleMs(5분)까지 잠들어
+  // 있는 동안 발사하면 첫 서버 확인이 그만큼 늦고, 그 지연이 곧 "완료됐는데
+  // 카드가 남아 있는" 시간이다. bump() 는 빠른 주기로 되돌리고 즉시 1회 폴한다.
+  useEffect(() => {
+    localActiveRef.current = activeCount;
+  }, [activeCount]);
+  useEffect(() => {
+    if (prevActiveCountRef.current === activeCount) return;
+    prevActiveCountRef.current = activeCount;
+    pollRef.current?.bump();
+  }, [activeCount]);
 
   const addToQueue = useCallback(
     async (

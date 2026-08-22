@@ -124,6 +124,13 @@ export type GenContext = {
 
 export function extractGenContext(report: AnalysisReport): GenContext {
   const passage = report.sections.find((s) => s.kind === "passage");
+  // [E23] 파이널 원페이지 폴백 — 파이널 문서는 sections 가 final-onepage 하나뿐이라 passage 경로가
+  // 빈 컨텍스트를 돌려줬고, 게이트만 풀면 빈 활동 블록이 무에러로 삽입되는 결함이 됐다(정찰 P0).
+  // final.sentences[].en 은 생성기 검증(passageCoverageIssue)이 원문 전수 축자를 보장하므로 그대로 쓴다.
+  // 문장별 ko·chunks 는 파이널 스키마에 존재하지 않아 비워 둔다 — ko 의존 활동(직독직해 계열)은
+  // activityAvailabilityByKind 가 카드 단계에서 막고, 같은 지문의 기본 리포트를 activitySource 로
+  // 주입하면(편집기 E23) 그쪽 컨텍스트가 이 폴백 대신 쓰인다.
+  const finalSec = passage ? undefined : report.sections.find((s) => s.kind === "final-onepage");
   const sentences: GenSentence[] =
     passage?.kind === "passage"
       ? passage.sentences.map((s) => ({
@@ -135,7 +142,9 @@ export function extractGenContext(report: AnalysisReport): GenContext {
             ?.map((c) => ({ text: c.text, gloss: c.gloss, role: c.role }))
             .filter((c) => c.text.trim().length > 0),
         }))
-      : [];
+      : finalSec?.kind === "final-onepage"
+        ? finalSec.sentences.map((s) => ({ n: s.n, en: s.en, ko: "" }))
+        : [];
   const keywords = passage?.kind === "passage" ? passage.keywords ?? [] : [];
 
   const vocabSec = report.sections.find((s) => s.kind === "vocabulary");
@@ -150,7 +159,9 @@ export function extractGenContext(report: AnalysisReport): GenContext {
           synonyms: r.synonyms,
           antonyms: r.antonyms,
         }))
-      : [];
+      : finalSec?.kind === "final-onepage"
+        ? (finalSec.mustKnow ?? []).map((m) => ({ headword: m.term, meaning: m.meaning }))
+        : [];
 
   const grammarSec = report.sections.find((s) => s.kind === "grammar");
   const grammar: GenGrammar[] =
@@ -1089,4 +1100,70 @@ export function activityPreviewLine(report: AnalysisReport, kind: ActivityKind):
   const first = payload.items[0];
   if (!first) return "이 지문에서 만들 수 있는 항목이 없습니다.";
   return first.prompt.length > 90 ? first.prompt.slice(0, 90) + "…" : first.prompt;
+}
+
+// ─── 활동 가용성 판정 (E23 — 데이터 기반, 문서 종류 스위치 금지) ─────────────
+export type ActivityAvailability = { ok: boolean; reason?: string };
+
+/**
+ * 카탈로그 카드의 활성/비활성을 **실데이터**로 판정한다 — 팔레트가 이 결과로 카드를 막아
+ * 「켤 수 있는데 빈 블록이 나오는」 경로를 차단한다(E23 스펙 I5). 문서 종류(finalOnepage 등)로
+ * 분기하지 않고 GenContext 가 실제로 가진 것만 본다: 파이널 문서는 문장별 ko·chunks 가 없어
+ * 직독직해 계열이 자연히 닫히고, 같은 지문의 기본 리포트를 activitySource 로 주입하면(편집기)
+ * 그 컨텍스트 기준으로 전 활동이 열린다. 사유 문구는 카드 배지/미리보기 자리에 그대로 노출된다.
+ */
+export function activityAvailabilityByKind(report: AnalysisReport): Record<ActivityKind, ActivityAvailability> {
+  const ctx = extractGenContext(report);
+  const pool = ctx.sentences.filter((s) => s.en.trim().length > 0);
+  const hasKo = pool.some((s) => s.ko.trim().length > 0);
+  const hasGlossChunks = pool.some(
+    (s) =>
+      (s.chunksFull?.filter((c) => c.text.trim()).length ?? 0) >= 2 &&
+      (s.chunksFull?.some((c) => c.gloss?.trim()) ?? false),
+  );
+  const hasVocab = ctx.vocab.length > 0;
+  const ok: ActivityAvailability = { ok: true };
+  const vocabGate: ActivityAvailability = hasVocab ? ok : { ok: false, reason: "어휘 데이터가 없습니다" };
+  if (pool.length === 0) {
+    const none: ActivityAvailability = { ok: false, reason: "지문 문장 데이터가 없습니다" };
+    return {
+      "keyword-cloze": none,
+      "full-cloze": none,
+      "nested-cloze": none,
+      "chunk-gloss-cloze": none,
+      "slash-compose": none,
+      "sentence-translation": none,
+      reproduction: none,
+      "chunk-scramble": none,
+      "word-scramble": none,
+      "sentence-order": none,
+      "vocab-quiz": vocabGate,
+      "vocab-match": vocabGate,
+    };
+  }
+  const noKo: ActivityAvailability = {
+    ok: false,
+    reason: "문장별 해석 데이터가 없어요 — 기본 학습지가 있으면 열려요",
+  };
+  return {
+    "keyword-cloze": ok,
+    "full-cloze": ok,
+    "nested-cloze": ok,
+    // 직독직해 빈칸: gloss 달린 청크 2개 이상 문장이 최소 1개는 있어야 items 가 나온다(:868-872).
+    "chunk-gloss-cloze": hasGlossChunks
+      ? ok
+      : { ok: false, reason: "끊어읽기(청크) 데이터가 없어요 — 기본 학습지가 있으면 열려요" },
+    // 끊어읽기 영작: gloss 청크가 없으면 문장 ko 폴백(:624) — 둘 다 없으면 단서가 공백이 된다.
+    "slash-compose": hasGlossChunks || hasKo ? ok : noKo,
+    // 해석 쓰기: 정답이 문장 ko(:608) — 없으면 정답지가 공란으로 인쇄된다.
+    "sentence-translation": hasKo ? ok : noKo,
+    // 백지 영작: 문제 자체가 문장 ko(:588) — 없으면 문제가 공백이다.
+    reproduction: hasKo ? ok : noKo,
+    // 어순 배열: chunks 없으면 splitForScramble 이 단어 분할로 폴백(:387)해 en 만으로 성립.
+    "chunk-scramble": ok,
+    "word-scramble": ok,
+    "sentence-order": pool.length >= 3 ? ok : { ok: false, reason: "문장 3개 이상이 필요합니다" },
+    "vocab-quiz": vocabGate,
+    "vocab-match": vocabGate,
+  };
 }

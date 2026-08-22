@@ -1,0 +1,357 @@
+{
+  "schemaVersion": 1,
+  "brand": "SMOAT ENGLISH LAB",
+  "themeId": "black-white",
+  "meta": {
+    "eyebrow": "FINAL ONE-PAGE · 시험 직전 족집게",
+    "titleKo": "동심원 도시 모델의 함정",
+    "titleEn": "Cities Grow Along Opportunities, Not Rings",
+    "category": "도시계획·논리 비판",
+    "theme": "도시 성장 패턴과 정책 자원 배분",
+    "difficulty": 4,
+    "difficultyNote": "수능 3점 빈칸·어법급",
+    "solveTime": "3분 30초",
+    "examTypes": "빈칸추론·어법·어휘·순서·문장삽입·주제·내용일치"
+  },
+  "sections": [
+    {
+      "kind": "final-onepage",
+      "topic": "동심원형 도시 성장 모델이 실제 확장과 정책 배분을 왜곡하는 과정",
+      "oneLiner": "도시는 동심원으로 자라지 않고 기회의 회랑을 따라 다중 중심으로 자란다; 계획은 도식보다 관찰을 따라야 한다.",
+      "sentences": [
+        {
+          "n": 1,
+          "en": "The idea that cities simply grow outward from a fixed center, absorbing surrounding land in neat concentric rings, has shaped urban planning for more than a century.",
+          "marks": [
+            {
+              "anchor": "concentric rings",
+              "style": "underline",
+              "color": "pink",
+              "label": "동심원 모델"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "n": 2,
+          "en": "Planners who accepted this model assumed that congestion at the core was an unavoidable price of growth, and that the only meaningful intervention was to widen roads and extend transit lines ever farther into the periphery.",
+          "marks": [
+            {
+              "anchor": "and that",
+              "style": "circle",
+              "color": "red",
+              "label": "that절 병렬"
+            }
+          ],
+          "tags": [
+            {
+              "type": "어법함정",
+              "text": "assumed 뒤 that절 두 개가 and로 병렬된다"
+            }
+          ]
+        },
+        {
+          "n": 3,
+          "en": "Recent research on urban morphology, however, tells a far more complicated story.",
+          "marks": [
+            {
+              "anchor": "however",
+              "style": "circle",
+              "color": "blue",
+              "label": "역접 전환"
+            }
+          ],
+          "tags": [
+            {
+              "type": "순서단서",
+              "text": "however가 통념을 뒤집고 연구 결과를 여는 강한 이음매"
+            }
+          ]
+        },
+        {
+          "n": 4,
+          "en": "When historians traced the actual growth of dozens of cities across three continents, they found that urban expansion rarely proceeds evenly in all directions.",
+          "marks": [
+            {
+              "anchor": "rarely proceeds",
+              "style": "underline",
+              "color": "pink",
+              "label": "균등 확장 부정"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "n": 5,
+          "en": "Instead, growth follows corridors of opportunity: a river that supports trade, a rail line that shortens a commute, or even a single institution, such as a university, whose presence raises the value of adjacent neighborhoods.",
+          "marks": [
+            {
+              "anchor": "corridors of opportunity",
+              "style": "box",
+              "color": "pink",
+              "label": "기회 회랑=성장축"
+            },
+            {
+              "anchor": "whose presence",
+              "style": "circle",
+              "color": "red",
+              "label": "whose 소유격"
+            }
+          ],
+          "note": "성장은 균등한 고리가 아니라 기회의 회랑을 따른다.",
+          "tags": [
+            {
+              "type": "빈칸대비",
+              "text": "정답 축: 기회의 회랑을 따른 선택적 성장; 균등 확장은 오답"
+            }
+          ]
+        },
+        {
+          "n": 6,
+          "en": "What appears from a distance to be a smooth ring of development is, on closer inspection, a patchwork of competing centers, each with its own history and its own gravitational pull.",
+          "marks": [
+            {
+              "anchor": "on closer inspection",
+              "style": "circle",
+              "color": "blue",
+              "label": "겉보기→실제 대조"
+            },
+            {
+              "anchor": "its own history",
+              "style": "circle",
+              "color": "green",
+              "label": "its=각 중심"
+            }
+          ],
+          "note": "겉은 고리, 실상은 서로 당기는 다중 중심.",
+          "tags": [
+            {
+              "type": "삽입단서",
+              "text": "⑥의 ‘겉보기’를 받아 ‘실제는 다중 중심’으로 좁힌다"
+            }
+          ]
+        },
+        {
+          "n": 7,
+          "en": "This finding matters because policies built on the concentric model consistently misallocate resources.",
+          "marks": [
+            {
+              "anchor": "This finding matters",
+              "style": "underline",
+              "color": "blue",
+              "label": "앞 발견의 귀결"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "n": 8,
+          "en": "If planners assume that demand radiates uniformly from downtown, they will invest in infrastructure where the model predicts growth rather than where growth is actually occurring.",
+          "marks": [
+            {
+              "anchor": "If planners assume",
+              "style": "circle",
+              "color": "red",
+              "label": "조건절 현재"
+            },
+            {
+              "anchor": "actually occurring",
+              "style": "box",
+              "color": "pink",
+              "label": "실제 성장지"
+            }
+          ],
+          "note": "투자 기준은 모델의 예측이 아니라 실제 성장 위치.",
+          "tags": []
+        },
+        {
+          "n": 9,
+          "en": "In one well-documented case, a metropolitan government spent two decades extending highways toward its western suburbs while the majority of new jobs and housing quietly accumulated in the northeast, along an aging freight corridor that the official maps had dismissed as industrial wasteland.",
+          "marks": [
+            {
+              "anchor": "had dismissed",
+              "style": "circle",
+              "color": "red",
+              "label": "능동 과거완료"
+            },
+            {
+              "anchor": "dismissed as industrial wasteland",
+              "style": "wavy",
+              "color": "green",
+              "label": "dismissed=일축"
+            }
+          ],
+          "note": "서쪽은 잘못된 투자 방향, 실제 집중은 북동부.",
+          "tags": [
+            {
+              "type": "어휘함정",
+              "text": "dismissed as=일축; 지도는 이 지역 가치를 잘못 판단했다"
+            },
+            {
+              "type": "내용일치",
+              "text": "서쪽은 투자 방향, 실제 축적지는 북동부라는 대비"
+            }
+          ]
+        },
+        {
+          "n": 10,
+          "en": "The lesson is not that models are useless, but that a model can become a substitute for observation.",
+          "marks": [
+            {
+              "anchor": "not that models",
+              "style": "wavy",
+              "color": "purple",
+              "label": "A는 핵심 아님"
+            },
+            {
+              "anchor": "but that a model",
+              "style": "box",
+              "color": "pink",
+              "label": "진짜 교훈"
+            }
+          ],
+          "note": "모델 폐기가 아니라 관찰을 모델보다 앞세우라는 결론.",
+          "tags": [
+            {
+              "type": "요약대비",
+              "text": "모델 폐기(X) / 관찰의 대체 방지(O)가 결론 축"
+            }
+          ]
+        },
+        {
+          "n": 11,
+          "en": "Cities are shaped less by geometry than by the accumulated decisions of households and firms responding to particular advantages of particular places.",
+          "marks": [
+            {
+              "anchor": "less by geometry",
+              "style": "underline",
+              "color": "pink",
+              "label": "기하보다 장소 결정"
+            },
+            {
+              "anchor": "responding to particular",
+              "style": "circle",
+              "color": "red",
+              "label": "능동 분사"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "n": 12,
+          "en": "Planners who mistake the elegance of a diagram for the truth of a city will keep solving problems that the city does not have, while the problems it does have deepen unattended in places their maps have taught them not to see.",
+          "marks": [
+            {
+              "anchor": "problems it does have",
+              "style": "highlight",
+              "color": "pink",
+              "label": "방치되는 진짜 문제"
+            }
+          ],
+          "note": "지도 밖으로 밀어낸 지역의 문제가 방치되어 심화된다.",
+          "tags": [
+            {
+              "type": "주제·제목",
+              "text": "도표의 우아함보다 도시의 실제 문제를 보라는 최종 경고"
+            }
+          ]
+        }
+      ],
+      "flowNotes": [
+        {
+          "afterSentence": 3,
+          "label": "흐름",
+          "text": "③ however가 통념을 꺾고, ④~⑥ 실제 성장 패턴을 제시한다."
+        },
+        {
+          "afterSentence": 6,
+          "label": "흐름",
+          "text": "⑥ 실제 구조에서 ⑦ 정책 실패로 인과가 이동한다."
+        },
+        {
+          "afterSentence": 9,
+          "label": "흐름",
+          "text": "⑨ 구체 사례로 자원 배분 오류를 입증하고 ⑩ 교훈으로 일반화."
+        },
+        {
+          "afterSentence": 10,
+          "label": "흐름",
+          "text": "⑩ 모델 폐기가 아닌 관찰 우선으로 결론을 제한한다."
+        }
+      ],
+      "traps": [
+        {
+          "type": "빈칸추론",
+          "point": "⑤ ‘corridors of opportunity’가 성장 원인 자리",
+          "trap": "동심원·균등 확장을 그대로 답으로 옮긴 방향반대 선지"
+        },
+        {
+          "type": "어법",
+          "point": "⑤ ‘whose presence raises’의 관계사",
+          "trap": "whose를 who/which로 바꾸거나 presence의 주어를 놓침"
+        },
+        {
+          "type": "어휘",
+          "point": "⑨ ‘dismissed as industrial wasteland’",
+          "trap": "dismissed를 ‘인정·수용했다’로 읽는 극성 반전"
+        },
+        {
+          "type": "순서",
+          "point": "③→④ ‘however’ 뒤 연구 추적 결과",
+          "trap": "통념 ①~②보다 사례 ⑨를 먼저 두는 배열"
+        },
+        {
+          "type": "문장삽입",
+          "point": "⑥과 ⑦ 사이 ‘This finding’ 자리",
+          "trap": "⑦을 ⑥ 앞에 두면 지시어의 선행 내용이 사라짐"
+        },
+        {
+          "type": "주제",
+          "point": "⑩~⑫ 결론부의 최종 주장",
+          "trap": "동심원 모델을 완전히 폐기하라는 글로 과장"
+        },
+        {
+          "type": "내용일치",
+          "point": "⑨ 서쪽 고속도로와 북동부 축적",
+          "trap": "서쪽 교외에 새 일자리·주택이 몰렸다고 방향을 뒤집음"
+        }
+      ],
+      "mustKnow": [
+        {
+          "term": "urban morphology",
+          "meaning": "도시 형태(학)"
+        },
+        {
+          "term": "concentric rings",
+          "meaning": "동심원형 고리"
+        },
+        {
+          "term": "corridors of opportunity",
+          "meaning": "기회의 회랑·성장 통로"
+        },
+        {
+          "term": "patchwork",
+          "meaning": "조각조각 얽힌 혼합체"
+        },
+        {
+          "term": "gravitational pull",
+          "meaning": "흡인력"
+        },
+        {
+          "term": "misallocate",
+          "meaning": "잘못 배분하다"
+        },
+        {
+          "term": "freight corridor",
+          "meaning": "화물 운송 통로"
+        },
+        {
+          "term": "substitute for observation",
+          "meaning": "관찰을 대신하는 것"
+        }
+      ],
+      "koFull": "도시가 고정된 중심에서 바깥으로 단순히 뻗어 나가며 주변 토지를 깔끔한 동심원 형태로 흡수한다는 생각은 한 세기 넘게 도시 계획을 형성해 왔다. 이 모델을 받아들인 계획가들은 중심부의 혼잡이 성장에 따르는 피할 수 없는 대가이며, 의미 있는 유일한 개입은 도로를 넓히고 대중교통 노선을 주변부로 계속 더 멀리 연장하는 것이라고 보았다. 그러나 도시 형태에 관한 최근 연구는 훨씬 더 복잡한 이야기를 들려준다. 역사학자들이 세 대륙에 걸친 수십 개 도시의 실제 성장을 추적했을 때, 도시 확장은 모든 방향으로 고르게 진행되는 경우가 드물다는 것을 발견했다. 대신 성장은 기회의 회랑을 따른다. 교역을 가능하게 하는 강, 통근 시간을 줄여 주는 철도 노선, 또는 대학과 같은 단 하나의 기관, 즉 그 존재가 인접 지역의 가치를 높이는 기관 등이 그 예다. 멀리서 보면 매끄러운 개발의 고리처럼 보이는 것이 가까이서 살펴보면 각자 고유한 역사와 흡인력을 지닌 경쟁하는 중심지들의 조각보와 같다. 이 발견이 중요한 이유는 동심원 모델에 기반한 정책들이 자원을 지속적으로 잘못 배분하기 때문이다. 계획가들이 수요가 도심에서 균일하게 퍼져 나간다고 가정하면, 실제 성장이 일어나는 곳이 아니라 모델이 성장을 예측하는 곳에 기반 시설을 투자할 것이다. 잘 문서화된 한 사례에서, 한 대도시권 정부는 20년 동안 서쪽 교외를 향해 고속도로를 확장했지만, 새로운 일자리와 주택의 대다수는 공식 지도들이 산업 황무지라고 일축했던 노후 화물 운송 통로를 따라 북동쪽에 조용히 축적되었다. 교훈은 모델이 쓸모없다는 것이 아니라 모델이 관찰을 대신하는 것이 될 수 있다는 것이다. 도시는 특정 장소의 특정한 이점에 반응하는 가구와 기업의 누적된 결정에 의해 기하학보다는 형성된다. 도시 계획가들이 도표의 우아함을 도시의 진실로 착각하는 한, 도시는 갖고 있지 않은 문제를 계속 해결하려 할 것이며, 정작 도시가 실제로 가진 문제들은 그들의 지도가 보지 않도록 가르친 장소에서 방치된 채 더 깊어질 것이다.",
+      "finalTip": "빈칸은 ⑤의 기회의 회랑, 결론은 ⑩ not A but B. ⑨의 서쪽·북동쪽 방향만 절대 뒤집지 마."
+    }
+  ]
+}

@@ -167,7 +167,10 @@ export function PreviewToolbar({
     if (!toolbar) return;
 
     const updateCompactLabels = () => {
-      setCompactLabels(toolbar.getBoundingClientRect().width < 620);
+      // 720: 풀 라벨 전체 폭 실측 근사(배포 라벨+저장 필요 칩+우측 6버튼).
+      // 620 이던 시절 682px(스튜디오 조판 — 편집 패널 기본 펼침)에서 배포
+      // 라벨이 「저장 필요」 칩 아래로 겹치던 실측 결함의 교정.
+      setCompactLabels(toolbar.getBoundingClientRect().width < 720);
     };
 
     updateCompactLabels();
@@ -222,7 +225,7 @@ export function PreviewToolbar({
             disabled={Boolean(deployDisabledReason)}
             title={deployDisabledReason ?? "태블릿 시험 배포"}
             aria-label={deployDisabledReason ?? "태블릿 시험 배포"}
-            className={`flex h-8 shrink-0 items-center justify-center gap-1.5 rounded-md border border-[#3182F6]/45 bg-white text-[11px] font-bold text-[#3182F6] transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-400 disabled:hover:bg-white ${
+            className={`flex h-8 shrink-0 items-center justify-center gap-1.5 border border-[#3182F6]/45 bg-white text-[11px] font-bold text-[#3182F6] transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-400 disabled:hover:bg-white ${
               compactLabels ? "w-8 px-0" : "px-2.5"
             }`}
           >
@@ -251,7 +254,7 @@ export function PreviewToolbar({
             disabled={!canUndo}
             title="되돌리기"
             aria-label="되돌리기"
-            className="flex h-8 w-8 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex h-8 w-8 items-center justify-center border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Undo2 className="h-3.5 w-3.5" />
           </button>
@@ -262,7 +265,7 @@ export function PreviewToolbar({
             disabled={!canRedo}
             title="앞으로 돌리기"
             aria-label="앞으로 돌리기"
-            className="flex h-8 w-8 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex h-8 w-8 items-center justify-center border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Redo2 className="h-3.5 w-3.5" />
           </button>
@@ -270,7 +273,10 @@ export function PreviewToolbar({
         {/* 저장·인쇄·다운로드 — 모바일(<lg)에서는 하단 고정 바로 옮겨 숨긴다. */}
         {onSave && (
           <div className="hidden lg:flex">
+            {/* 툴바 각진 문법(26-08-14 사용자 지시 — 둥근 모서리 제거) 동참.
+                split(rounded-l/r-md)도 twMerge 가 rounded-none 으로 평탄화. */}
             <SaveButton
+              className="rounded-none"
               onClick={onSave}
               saving={isPending}
               disabled={actionDisabled}
@@ -292,7 +298,7 @@ export function PreviewToolbar({
         <button
           onClick={onPrint}
           disabled={actionDisabled}
-          className="hidden h-8 items-center justify-center gap-1 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 lg:flex lg:min-w-[64px]"
+          className="hidden h-8 items-center justify-center gap-1 border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 lg:flex lg:min-w-[64px]"
         >
           <Printer className="h-3.5 w-3.5" />
           <span className="hidden lg:inline">인쇄</span>
@@ -303,7 +309,7 @@ export function PreviewToolbar({
             onClick={() => setDownloadOpen((open) => !open)}
             disabled={actionDisabled}
             aria-expanded={downloadOpen}
-            className="flex h-8 items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 lg:min-w-[98px] lg:px-3"
+            className="flex h-8 items-center justify-center gap-1.5 border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 lg:min-w-[98px] lg:px-3"
           >
             {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Download className="h-3.5 w-3.5" />}
             <span className="hidden lg:inline">다운로드</span>
@@ -389,7 +395,7 @@ export function PreviewToolbar({
             }}
             title="시험지 전체 비우기 (처음부터 다시)"
             aria-label="시험지 전체 비우기"
-            className="inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-red-300 text-red-500 transition-all hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
+            className="inline-flex size-7 shrink-0 cursor-pointer items-center justify-center border border-red-300 text-red-500 transition-all hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
           >
             <Trash2 className="size-3.5" aria-hidden="true" />
           </button>

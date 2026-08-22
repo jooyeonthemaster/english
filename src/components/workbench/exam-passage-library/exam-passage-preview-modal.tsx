@@ -23,6 +23,9 @@ interface ExamPassagePreviewModalProps {
   selected: boolean;
   onToggleSelect: (id: string) => void;
   onClose: () => void;
+  /** 선택 CTA 라벨 — 호스트의 pickLabel 패스스루(스튜디오 「지문관리」 개칭
+   *  §3.10.14). 미전달 = 기존 문자 그대로(타 호스트 무회귀). */
+  pickLabel?: string;
 }
 
 function answerText(answer: ExamPassage["answer"]): string | null {
@@ -42,6 +45,7 @@ export function ExamPassagePreviewModal({
   selected,
   onToggleSelect,
   onClose,
+  pickLabel = "다음으로 (내 지문함)",
 }: ExamPassagePreviewModalProps) {
   const ans = passage ? answerText(passage.answer) : null;
 
@@ -114,7 +118,7 @@ export function ExamPassagePreviewModal({
                 ) : (
                   <>
                     <Plus className="size-4" />
-                    다음으로 (내 지문함)
+                    {pickLabel}
                   </>
                 )}
               </button>

@@ -22,8 +22,8 @@ import { cn } from "@/lib/utils";
 import { CardDetailIconButton } from "@/components/ui/card-detail-icon-button";
 import {
   getQuestionGenerationPlanFromTags,
+  planForDifficulty,
   QUESTION_GENERATION_PLANS,
-  QUESTION_GENERATION_PLAN_TAGS,
 } from "@/lib/question-generation-plans";
 import {
   approveNaeshinQuestion,
@@ -512,7 +512,10 @@ function QuestionCard({
           >
             {DIFFICULTY_LABELS[q.difficulty] || q.difficulty}
           </span>
-          {plan && (plan === "PREMIUM" || FEATURE_FLAGS.SHOW_MODEL_SELECTOR) && (
+          {/* 26-08-18 난이도 기반 티어: 난이도 뱃지(항상 노출)가 같은 티어를 말하면 이중 표기라 숨김. */}
+          {plan &&
+            planForDifficulty(q.difficulty) !== plan &&
+            (plan === "PREMIUM" || FEATURE_FLAGS.SHOW_MODEL_SELECTOR) && (
             <span
               className={cn(
                 "inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-lg border font-bold",
@@ -526,7 +529,7 @@ function QuestionCard({
               ) : (
                 <PearlIcon className="w-3 h-3" />
               )}
-              {QUESTION_GENERATION_PLAN_TAGS[plan]}
+              {QUESTION_GENERATION_PLANS[plan].shortLabel}
             </span>
           )}
           {q.approved ? (

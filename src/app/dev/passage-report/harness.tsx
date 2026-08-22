@@ -3,8 +3,12 @@
 import { ReportPages } from "@/components/workbench/analysis-report/report-pages";
 import { AnalysisReportEditor } from "@/components/workbench/analysis-report/AnalysisReportEditor";
 import { RECALL_RECOGNITION_FIXTURE } from "@/lib/passage-report/analysis-report/fixture";
+import { FINAL_ONEPAGE_FIXTURE } from "@/lib/passage-report/analysis-report/final-onepage-fixture";
 import { safeParseAnalysisReport, type AnalysisReport } from "@/lib/passage-report/analysis-report/schema";
 import gen07 from "@/lib/passage-report/analysis-report/_samples/gen-07-science.json";
+import finalGen from "@/lib/passage-report/analysis-report/_samples/final-onepage-sample.json";
+import finalGenLuna from "@/lib/passage-report/analysis-report/_samples/final-onepage-sample-luna.json";
+import finalGenLunaShort from "@/lib/passage-report/analysis-report/_samples/final-onepage-sample-luna-short.json";
 import freshSample from "./_fresh.json";
 
 // 신규 필기 캔버스를 직접 행사하는 rich 샘플 (chunks + layout 의도 포함).
@@ -273,7 +277,7 @@ const ACTIVITY_STRESS: AnalysisReport = {
   ],
 };
 
-export function PassageReportHarness({ sample, layout, mode }: { sample?: string; layout?: string; mode?: string }) {
+export function PassageReportHarness({ sample, layout, mode, vocab, answers }: { sample?: string; layout?: string; mode?: string; vocab?: string; answers?: string }) {
   const layoutOverride = layout === "legacy" ? "legacy" : null;
 
   let report: AnalysisReport;
@@ -284,6 +288,19 @@ export function PassageReportHarness({ sample, layout, mode }: { sample?: string
     report = { ...RECALL_RECOGNITION_FIXTURE };
   } else if (sample === "dense") {
     report = DENSE;
+  } else if (sample === "final") {
+    report = { ...FINAL_ONEPAGE_FIXTURE };
+  } else if (sample === "final-gen") {
+    // 실생성 샘플 — .tmp-final-qa/generate-sample.ts 산출물을 _samples 로 복사해 확인.
+    const parsed = safeParseAnalysisReport(finalGen);
+    report = parsed.ok ? parsed.report : { ...FINAL_ONEPAGE_FIXTURE };
+  } else if (sample === "final-gen-luna") {
+    // luna(gpt-5.6) 모델 대체 실험 산출물 — 26-08-12 A/B.
+    const parsed = safeParseAnalysisReport(finalGenLuna);
+    report = parsed.ok ? parsed.report : { ...FINAL_ONEPAGE_FIXTURE };
+  } else if (sample === "final-gen-luna-short") {
+    const parsed = safeParseAnalysisReport(finalGenLunaShort);
+    report = parsed.ok ? parsed.report : { ...FINAL_ONEPAGE_FIXTURE };
   } else if (sample === "activity") {
     report = ACTIVITY_STRESS;
   } else if (sample === "gen07") {
@@ -293,6 +310,20 @@ export function PassageReportHarness({ sample, layout, mode }: { sample?: string
     report = RICH;
   }
   if (layoutOverride === "legacy") report = { ...report, passageLayout: "legacy" };
+  // 조판 QA 게이트 증거용 오버라이드 — 단어장 1열 표 강제 / 단어 시험지 켬 / 학습활동 정답 페이지 켬.
+  if (vocab === "table") {
+    report = {
+      ...report,
+      sections: report.sections.map((s) => (s.kind === "vocabulary" ? { ...s, vocabStudyLayout: "table" as const } : s)),
+    };
+  }
+  if (vocab === "test") {
+    report = {
+      ...report,
+      sections: report.sections.map((s) => (s.kind === "vocabulary" ? { ...s, vocabTestMode: "hide-meaning" as const } : s)),
+    };
+  }
+  if (answers === "1") report = { ...report, activityAnswerKeyPage: true };
 
   if (mode === "edit") {
     return (

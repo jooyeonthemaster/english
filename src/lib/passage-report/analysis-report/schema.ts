@@ -485,6 +485,85 @@ const worksheetWorkbookGenerationSetSchema = worksheetWorkbookSetSchema.extend({
   }),
 });
 
+// ─── 원페이지 파이널 학습지 (final-onepage) ──────────────────────────────────
+// 지문 1개 → A4 정확히 1페이지. 선생님 손필기 스타일 족집게 시트.
+// 렌더는 표지(cover)와 같은 전면 페이지 1장으로 나가고, 시트 내부 축소 사다리가
+// 1페이지를 하드 보장한다. 스펙 정본: .tmp-final-qa/final-onepage-spec.md
+export const finalMarkStyleSchema = z.enum(["underline", "circle", "box", "highlight", "wavy"]);
+export type FinalMarkStyle = z.infer<typeof finalMarkStyleSchema>;
+/** 색 의미론 — red=어법·함정 / blue=구조·연결사·순서 / pink=빈칸·핵심어 / purple=서술형·요약 / green=어휘·지칭 */
+export const finalMarkColorSchema = z.enum(["red", "blue", "pink", "purple", "green"]);
+export type FinalMarkColor = z.infer<typeof finalMarkColorSchema>;
+
+export const finalOnepageSectionSchema = z
+  .object({
+    kind: z.literal("final-onepage"),
+    /** 소재 한 줄 — "필즈 메달과 Stephen Smale에 대한 관심을 불러일으킨 사건" */
+    topic: z.string(),
+    /** "한 줄 정리" — 시험장 들어가기 전 마지막 암기 문장(한국어) */
+    oneLiner: z.string().optional(),
+    sentences: z
+      .array(
+        z.object({
+          n: sentenceNo,
+          en: z.string(), // 원문 축자(수정 금지)
+          /** 원문 위 필기 마크 — anchor 는 en 안에 축자로 존재해야 한다(실패 시 서버가 드롭) */
+          marks: z
+            .array(
+              z.object({
+                anchor: z.string(),
+                style: finalMarkStyleSchema,
+                color: finalMarkColorSchema.optional(),
+                label: z.string().optional(), // 앵커 위 손글씨 라벨 (≤18자)
+              }),
+            )
+            .max(6)
+            .default([]),
+          /** 문장 아래 손글씨 필기 한 줄 (≤55자) */
+          note: z.string().optional(),
+          /** 유형 대비 태그 박스 — "빈칸대비"/"어법함정"/"서술형대비" 등 + 왜·함정 */
+          tags: z
+            .array(z.object({ type: z.string(), text: z.string() }))
+            .max(3)
+            .default([]),
+        }),
+      )
+      .min(1)
+      .max(40),
+    /** 문단 사이 전개 해설 줄 — afterSentence 뒤에 전폭으로 삽입 */
+    flowNotes: z
+      .array(
+        z.object({
+          afterSentence: sentenceNo,
+          label: z.string().optional(),
+          text: z.string(),
+        }),
+      )
+      .max(6)
+      .default([]),
+    /** 하단 "출제자의 함정 총정리" — 유형 | 자리 | 함정 */
+    traps: z
+      .array(z.object({ type: z.string(), point: z.string(), trap: z.string() }))
+      .min(3)
+      .max(8),
+    /** 하단 각주 어휘 (* term 뜻) */
+    mustKnow: z
+      .array(z.object({ term: z.string(), meaning: z.string() }))
+      .max(10)
+      .default([]),
+    /** 하단 전문 해석(작게, 한 문단) */
+    koFull: z.string().optional(),
+    /** 마지막 한 줄 — 선생님 잔소리 톤 */
+    finalTip: z.string().optional(),
+  })
+  .passthrough();
+export type FinalOnepageSection = z.infer<typeof finalOnepageSectionSchema>;
+
+/** 보고서가 원페이지 파이널 문서인지 — 편집기/라우트/조판이 공유하는 판별자. */
+export function isFinalOnepageReportShape(report: { sections?: Array<{ kind?: string }> } | null | undefined): boolean {
+  return !!report?.sections?.some((s) => s?.kind === "final-onepage");
+}
+
 // ─── 섹션 union ──────────────────────────────────────────────────────────────
 // 08+ 실전 학습지 — 첨부 워크북/DOCX 스타일을 A4 보고서에 통합
 export const learningWorksheetSectionSchema = z
@@ -510,8 +589,11 @@ export const learningWorksheetSectionSchema = z
           layout: annoLayoutSchema, // (선택) 원문 필기 배치 의도
         }),
       )
-      .min(3)
-      .max(12),
+      .max(12)
+      // 26-08-21 '지문 논리 구조 분석' 폐지 — 더는 생성하지 않는다. min(3) 을 유지하면
+      // logicRows 없는 신규 실전 학습지(워크북/추론) 섹션이 통째로 무효가 된다.
+      // 이미 저장된 보고서의 행은 그대로 파스되지만 렌더 슬롯이 없어 표시되지 않는다.
+      .default([]),
     cloze: z
       .object({
         title: z.string().default("핵심어구 빈칸 + 한국어 해석"),
@@ -632,6 +714,7 @@ export const analysisSectionSchema = z.discriminatedUnion("kind", [
   parsingSectionSchema,
   selfCheckSectionSchema,
   learningWorksheetSectionSchema,
+  finalOnepageSectionSchema,
 ]);
 export type AnalysisSection = z.infer<typeof analysisSectionSchema>;
 export type AnalysisSectionKind = AnalysisSection["kind"];
@@ -1007,6 +1090,7 @@ export const NUMBERED_SECTION_LABELS: Record<AnalysisSectionKind, string> = {
   parsing: "구문 분석",
   "self-check": "학습 점검",
   "learning-worksheet": "실전 학습지",
+  "final-onepage": "파이널 원페이지",
 };
 
 export const SECTION_LABELS_EN: Record<AnalysisSectionKind, string> = {
@@ -1019,4 +1103,5 @@ export const SECTION_LABELS_EN: Record<AnalysisSectionKind, string> = {
   parsing: "Sentence Parsing",
   "self-check": "Self-Check",
   "learning-worksheet": "Practice Workbook",
+  "final-onepage": "Final One-Pager",
 };

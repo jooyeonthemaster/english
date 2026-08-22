@@ -37,11 +37,24 @@ function pump() {
 /**
  * task 를 전역 동시성 상한(FAST_BATCH_CONCURRENCY) 안에서 실행한다. 상한을 넘으면
  * 큐잉됐다가 슬롯이 비는 대로 실행된다. 반환 Promise 는 task 의 결과/오류를 그대로 전달.
+ *
+ * onStart: **슬롯을 실제로 잡는 순간** 1회. 발사와 실행 사이의 대기(앞 배치가
+ * 돌고 있으면 수십 초~수 분)를 카드가 「생성 중」으로 위장하면, 사용자에게는
+ * 끝난 뒤에도 안 사라지는 큐와 구분되지 않는다 — 그 구간을 「대기 중」으로
+ * 정직하게 말하기 위한 신호다(경과 시계도 이때부터가 진짜 생성 시간이다).
  */
-export function scheduleFastGeneration<T>(task: () => Promise<T>): Promise<T> {
+export function scheduleFastGeneration<T>(
+  task: () => Promise<T>,
+  onStart?: () => void,
+): Promise<T> {
   return new Promise<T>((resolve, reject) => {
     pending.push(() => {
       let settled: { ok: true; value: T } | { ok: false; error: unknown };
+      try {
+        onStart?.();
+      } catch {
+        /* 표시용 콜백 — 실패해도 생성은 진행한다 */
+      }
       task()
         .then(
           (value) => {
