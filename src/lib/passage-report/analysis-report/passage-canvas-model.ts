@@ -211,6 +211,43 @@ interface NormChar {
   start: number;
   end: number;
 }
+/**
+ * [E29-6] 조판용 **1:1 문자 접기** — 스마트 인용부호·대시를 ASCII 로 통일한다.
+ *
+ * 왜 필요한가: 파이널 원페이지의 두 게이트가 서로 다른 정규화를 쓰고 있었다.
+ * F6 커버리지 게이트는 normalizeForCoverage(final-onepage.ts)로 ‘ ’ “ ” – — 를
+ * 접는데, F5 앵커 게이트가 부르는 이 함수는 **접지 않았다**. 그래서 LLM 이
+ * sentences[].en 은 원문의 U+2018 을 축자 복제해 커버리지를 통과시키면서
+ * marks[].anchor 에는 ASCII 아포스트로피를 쓰는 흔한 조합에서 **앵커가 전부
+ * 드롭**됐다(드롭률 40% 초과면 502 + 환불, 미만이면 필기 없는 맹탕 학습지).
+ * PDF 에서 붙여 넣은 지문(1618학원 올림포스 계열)은 아포스트로피 자리에
+ * U+2018 이 박혀 있어 "don‘t" 가 don / ‘ / t 로 쪼개지기까지 했다 —
+ * WORD_CHAR 가 ’ 는 알면서 ‘ 는 모르기 때문이다.
+ *
+ * ⚠ **반드시 1:1 치환만** 넣어라. 길이가 변하는 접기(줄임표 … → ... 등)를 넣으면
+ *   NormChar 의 start/end 매핑이 어긋나 마크가 엉뚱한 글자에 그려진다.
+ */
+function foldPunctChar(ch: string): string {
+  switch (ch) {
+    case "‘": // ‘
+    case "’": // ’
+    case "ʼ": // ʼ
+    case "´": // ´
+      return "'";
+    case "“": // “
+    case "”": // ”
+      return '"';
+    case "–": // –
+    case "—": // —
+    case "―": // ―
+    case "−": // −
+    case "─": // ─ (PDF 표 괘선이 본문에 섞여 들어온다)
+      return "-";
+    default:
+      return ch;
+  }
+}
+
 function normalizeWithOffsets(value: string): { text: string; chars: NormChar[] } {
   const chars: NormChar[] = [];
   let lastSpace = false;
@@ -223,7 +260,12 @@ function normalizeWithOffsets(value: string): { text: string; chars: NormChar[] 
       }
       continue;
     }
-    chars.push({ char: ch.toLowerCase(), start: i, end: i + 1 });
+    // U+00AD(소프트 하이픈)은 **폭 0 비가시 문자**다 — PDF 추출물에 섞여 들어와
+    // 축자 비교를 조용히 깨뜨린다. 접는 게 아니라 통째로 버린다(1:1 예외).
+    // ⚠ **반드시 유니코드 이스케이프로** 적는다 — 리터럴 비가시 문자를 소스에
+    //   박으면 포매터·에디터가 조용히 지워도 아무도 알아채지 못한다.
+    if (ch === "\u00AD" || ch === "\u200B" || ch === "\uFEFF") continue;
+    chars.push({ char: foldPunctChar(ch).toLowerCase(), start: i, end: i + 1 });
     lastSpace = false;
   }
   while (chars.at(-1)?.char === " ") chars.pop();
@@ -313,13 +355,35 @@ function fillGaps(en: string, anchored: { start: number; end: number; gloss?: st
     merged.push(a);
   }
   const chunks: ResolvedChunk[] = [];
+  // 공백·구두점뿐인 조각(seed 청크 사이 " ", ", ", 문미 "." 등)은 독립 청크로 내보내지
+  // 않고 이웃 청크에 흡수한다 — 독립 배출 시 청크 구분자 '/'가 이중으로 찍히고 빈 뜻
+  // 줄이 늘어서는 노이즈가 된다(26-08-26 조판 실측, .tmp-par-rca). 흡수는 텍스트 연장
+  // 뿐이라 「합본 == en · 연속」 불변식이 유지된다.
+  const isFiller = (t: string) => !/[A-Za-z0-9가-힣]/.test(t);
+  const pushOrAbsorb = (text: string, start: number, end: number) => {
+    const prev = chunks.at(-1);
+    if (isFiller(text) && prev) {
+      prev.text += text;
+      prev.end = end;
+      return false; // 흡수됨 — 다음 앵커 청크의 start 는 그대로(end 연속)
+    }
+    chunks.push({ text, start, end });
+    return true;
+  };
   let cursor = 0;
+  let pendingLead = 0; // 문두 filler — 앞 청크가 없어 다음 앵커 청크 머리에 흡수
   for (const a of merged) {
-    if (a.start > cursor) chunks.push({ text: en.slice(cursor, a.start), start: cursor, end: a.start });
-    chunks.push({ text: en.slice(a.start, a.end), gloss: a.gloss, role: a.role, emphasis: a.emphasis, start: a.start, end: a.end });
+    if (a.start > cursor) {
+      const gap = en.slice(cursor, a.start);
+      if (isFiller(gap) && !chunks.length) pendingLead = a.start - cursor;
+      else pushOrAbsorb(gap, cursor, a.start);
+    }
+    const start = a.start - pendingLead;
+    pendingLead = 0;
+    chunks.push({ text: en.slice(start, a.end), gloss: a.gloss, role: a.role, emphasis: a.emphasis, start, end: a.end });
     cursor = a.end;
   }
-  if (cursor < en.length) chunks.push({ text: en.slice(cursor), start: cursor, end: en.length });
+  if (cursor < en.length) pushOrAbsorb(en.slice(cursor), cursor, en.length);
   return chunks.filter((c) => c.text.length > 0);
 }
 
@@ -337,7 +401,10 @@ export function buildChunks(
 ): ResolvedChunk[] {
   if (seedChunks && seedChunks.length) {
     const aligned = alignSeedChunks(en, seedChunks);
-    if (aligned && aligned.length && aligned[0].start <= 2 && aligned.at(-1)!.end >= en.trimEnd().length - 1) {
+    // 선두 관용: 앞머리가 전부 공백·비가시 문자면 시작 오프셋이 2 를 넘어도 seed 를
+    // 채택한다(분할 파트 subEn 이 흡수된 공백으로 시작할 수 있다 — 적대검수 R1-2).
+    const leadOk = aligned?.length ? aligned[0].start <= 2 || !en.slice(0, aligned[0].start).trim() : false;
+    if (aligned && aligned.length && leadOk && aligned.at(-1)!.end >= en.trimEnd().length - 1) {
       // seed 가 문장을 충분히 덮으면 빈 구간만 보정해 사용
       return fillGaps(
         en,

@@ -44,10 +44,6 @@ export function AnnotatedColorLegend() {
   );
 }
 
-function cleanParseLabel(label: string): string {
-  return label.replace(/[[\]]/g, "").trim();
-}
-
 function noteBodyLines(layoutLines: string[] | undefined, fallback: string): string[] {
   const fromLayout = (layoutLines ?? []).map((l) => l.trim()).filter(Boolean);
   if (fromLayout.length) return fromLayout;
@@ -82,23 +78,13 @@ export function buildCanvasNotesForSentence(
     refs.set(key, { kind: "grammar", ref: n });
   });
 
-  (study.parsingBySentence.get(sentenceNo) ?? []).forEach((n) => {
-    const key = `p-${n.sectionIndex}-${n.itemIndex}`;
-    const layout = n.item.layout ?? undefined;
-    const partLines = n.item.parts.map((p) => `${cleanParseLabel(p.label)} ${p.text}`.trim()).filter(Boolean);
-    const lines = (layout?.lines ?? []).map((l) => l.trim()).filter(Boolean);
-    const finalLines = lines.length ? lines : [...partLines, n.item.translation ? `→ ${n.item.translation}` : ""].filter(Boolean);
-    notes.push({
-      key,
-      kind: "parsing",
-      anchorText: layout?.anchorText ?? n.item.parts[0]?.text,
-      band: layout?.band,
-      priority: layout?.priority,
-      role: "구문",
-      lines: finalLines,
-    });
-    refs.set(key, { kind: "parsing", ref: n });
-  });
+  // 구문(parsing) 노트는 여기서 **생산하지 않는다** — 렌더러(:428-431)가 캔버스에서
+  // 구문 필기를 의도적으로 제외하는데도 노트로 만들어 플랜에 넣으면, 그리지도 않을
+  // 장문 해설(문장당 수백 자)이 estimateHeights 의 레일 높이로 계상되어 문장 분할
+  // (planSentenceSplit)을 유령 발동시킨다. 실사고: 140자 문장이 est 290mm 로 3분할되며
+  // 분할 경로가 seed 청크를 버려 끊어읽기 글로스가 전멸했다(26-08-26 RCA, .tmp-par-rca).
+  // ⚠ parsing 데이터는 생성·저장되지만 hlc 기본 슬롯 구성(section-slots.ts)에는 구문 섹션이
+  // 없어 legacy 레이아웃에서만 표시된다 — 표시 표면 신설/생성 중단은 별도 의제(적대검수 R4).
 
   (study.examBySentence.get(sentenceNo) ?? []).forEach((n) => {
     const key = `e-${n.sectionIndex}-${n.rowIndex}`;

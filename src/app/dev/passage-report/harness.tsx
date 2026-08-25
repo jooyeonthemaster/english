@@ -10,6 +10,11 @@ import finalGen from "@/lib/passage-report/analysis-report/_samples/final-onepag
 import finalGenLuna from "@/lib/passage-report/analysis-report/_samples/final-onepage-sample-luna.json";
 import finalGenLunaShort from "@/lib/passage-report/analysis-report/_samples/final-onepage-sample-luna-short.json";
 import freshSample from "./_fresh.json";
+// 26-08-26 글로스 소실 RCA 실증거 — 실DB 리포트(cmt8iot2i001bjq04te1gwxlz, Why Cars Got Angry)
+// cars  = 불량본 원본(청크 24/24 gloss·role + grammar 섹션 부재) — 유령분할·글로스 게이트 대상.
+// cars2 = 수리 후 재생성본(v2, grammar 8행 완비) — 어법 필기(par-list-note) 렌더 게이트 대상.
+import carsRca from "./_cars-rca.json";
+import carsFixed from "./_cars2-fixed.json";
 
 // 신규 필기 캔버스를 직접 행사하는 rich 샘플 (chunks + layout 의도 포함).
 const RICH: AnalysisReport = {
@@ -303,6 +308,12 @@ export function PassageReportHarness({ sample, layout, mode, vocab, answers }: {
     report = parsed.ok ? parsed.report : { ...FINAL_ONEPAGE_FIXTURE };
   } else if (sample === "activity") {
     report = ACTIVITY_STRESS;
+  } else if (sample === "cars") {
+    const parsed = safeParseAnalysisReport(carsRca);
+    report = parsed.ok ? parsed.report : RICH;
+  } else if (sample === "cars2") {
+    const parsed = safeParseAnalysisReport(carsFixed);
+    report = parsed.ok ? parsed.report : RICH;
   } else if (sample === "gen07") {
     const parsed = safeParseAnalysisReport({ schemaVersion: 1, brand: "ENGLISH READING LAB", themeId: "veritas-navy", passageLayout: "hlc", meta: (gen07 as { meta: unknown }).meta, sections: (gen07 as { sections: unknown }).sections });
     report = parsed.ok ? parsed.report : RICH;

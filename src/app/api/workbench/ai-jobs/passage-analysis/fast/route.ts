@@ -26,6 +26,10 @@ import {
   getPassageAnalysisWorksheetCreditCost,
 } from "@/lib/passage-analysis-credit-costs";
 import { prisma } from "@/lib/prisma";
+// [E30 §1-1] 실전 학습지 마커 정본. 이 파일이 "PRIME"·"PRIME_FINAL" 을 리터럴로
+// 쓰는 것과 달리 새 마커만 상수 모듈에서 가져오는 이유: 마커 문자열이 두 벌이 되면
+// 오타가 tsc 0 을 통과한 채 조판 목록·읽기 합집합에서만 조용히 사라진다.
+import { PRACTICE_REPORT_MARKER } from "@/actions/workbench/passage-constants";
 import { cleanupStaleWorkbenchAiJobs } from "@/lib/workbench-ai-job-stale-cleanup";
 import {
   normalizeQuestionGenerationPlan,
@@ -35,6 +39,10 @@ import { ensureWorkbenchAiJobCharged } from "@/lib/workbench-ai-job-credit";
 import { loadPersistedAnnotations } from "@/app/api/ai/passage-analysis/[passageId]/_lib/annotations";
 import { classifyAnalysisError } from "@/app/api/ai/passage-analysis/[passageId]/_lib/error-classification";
 import { generateLearningWorksheetResilient } from "@/lib/passage-report/analysis-report/generate";
+// [E30 §2-3] 실전(worksheet-grade) 판정 정본 — 코어 lw(logicRows 전용)와 유료 실전
+// 콘텐츠를 가르는 술어는 리포 전체에서 이 함수 하나뿐이다(worksheet-core-gate.ts).
+// 여기서 술어를 복제하면 「보유 판정」과 「저장 판정」이 조용히 갈린다.
+import { hasWorksheetContentFields } from "@/lib/passage-report/analysis-report/worksheet-core-gate";
 import {
   defaultLlmText,
   generateAnalysisReportResilient,
@@ -49,6 +57,7 @@ import {
 import {
   analysisReportSchema,
   type AnalysisReport,
+  type LearningWorksheetSection,
 } from "@/lib/passage-report/analysis-report/schema";
 import type { SectionKind } from "@/lib/passage-report/analysis-report/section-prompts";
 import {
@@ -186,6 +195,100 @@ async function recordCostSafely(input: {
 type StreamEmit = (event: Record<string, unknown>) => void;
 const NOOP_EMIT: StreamEmit = () => {};
 
+// ── [E30/RCA #16] 잡 생성 이전 조기 종료의 거절 계기 ────────────────────────
+//
+// 이 라우트는 workbenchAiJob.create 에 닿기 **전에** 10곳에서 되돌아가는데, 그
+// 전부가 DB 에 한 줄도 남기지 않았다. 과금도 없으니 회계 흔적조차 없다. 그래서
+// 「파이널이 실패한다」와 「파이널을 아무도 안 쓴다」를 가를 데이터가 리포 어디에도
+// 존재하지 않았다 — 1618학원 RCA(§RC-3)의 결론이 정확히 이것이고, "잡 6건 전부
+// 성공"이라는 1차 증거는 성공률이 아니라 **생존자 표본**이었다.
+//
+// 구조화 1줄이면 다음 신고는 추측이 아니라 조회가 된다(Vercel 로그 grep).
+// ⚠ 계기는 반드시 **덧붙이기**여야 한다 — 게이트의 조건식·상태코드·응답 자구는
+//   한 글자도 바꾸지 않는다(E30 §2-3 「조합 400 게이트 3종 무개변」). 계기가 제품
+//   동작을 바꾸는 순간 그것은 계기가 아니라 새 결함이다.
+// ⚠ 로깅 자체가 본 경로를 죽이면 안 되므로 통째로 try 로 감싼다(직렬화 불가 값이
+//   섞여도 요청은 계속돼야 한다).
+function logAnalysisRejection(input: {
+  /** grep 키 — 값은 안정적이어야 한다(집계 축). */
+  reasonCode: string;
+  status: number;
+  academyId?: string | null;
+  passageId?: string | null;
+  /** 사용자가 **무엇을 만들려 했는가**. 이것이 없으면 상품별 실패율을 못 센다. */
+  requestedProduct?: SheetProductKey | null;
+  detail?: Record<string, unknown>;
+}) {
+  try {
+    console.warn(
+      `[workbench-fast-analysis][reject] ${JSON.stringify({
+        reasonCode: input.reasonCode,
+        status: input.status,
+        academyId: input.academyId ?? null,
+        passageId: input.passageId ?? null,
+        requestedProduct: input.requestedProduct ?? null,
+        ...(input.detail ?? {}),
+      })}`,
+    );
+  } catch {
+    /* 계기 실패는 삼킨다 — 요청 처리보다 우선할 수 없다. */
+  }
+}
+
+// ── [E30/RCA #18] 파이널 생성기 진단을 잡 result 로 끌어올린다 ──────────────
+//
+// RCA §0-E 는 「수리(repair) 루프가 프로덕션에서 실제로 발화했다」를
+// `generationMs = 215,568ms > 콜 1회 상한 200,000ms` 라는 **간접 추론**으로만
+// 알아냈다. 그건 계기가 아니라 운이다. 시도 횟수와 앵커 드롭 수가 잡 result 에
+// 있었으면 한 줄 질의로 끝났다.
+//
+// ⚠ 지금 generateFinalOnepageReport 는 attempts·앵커 드롭 수를 **반환하지 않는다**
+//   (GenerateFinalOnepageResult = { ok, report, raw, usage } — final-onepage.ts).
+//   그 파일은 이 유닛의 소유가 아니라 시그니처를 넓힐 수 없으므로, 여기서는
+//   **있으면 싣고 없으면 키를 빼는** 방어적 독자로 둔다. 생성기가 아래 키를 노출하는
+//   순간 이 라우트는 **코드 변경 0으로** 기록을 시작한다.
+//   기대 키: attempts:number · anchorDropped:number · droppedAnchors:string[]
+function finalGenerationDiagnostics(result: unknown): Record<string, unknown> {
+  if (!result || typeof result !== "object") return {};
+  const r = result as Record<string, unknown>;
+  const out: Record<string, unknown> = {};
+  if (typeof r.attempts === "number") out.attempts = r.attempts;
+  if (typeof r.anchorDropped === "number") out.anchorDropped = r.anchorDropped;
+  if (Array.isArray(r.droppedAnchors)) {
+    // 앵커 문자열이 길 수 있어 상한을 둔다 — result 는 잡 행에 통째로 저장된다.
+    out.droppedAnchors = r.droppedAnchors.slice(0, 20);
+  }
+  return out;
+}
+
+// ── [E29-2] 잡 config → 학습지 상품 ─────────────────────────────────────────
+// 활성 잡이 **무엇을 만드는 중인지**를 되찾는 유일한 수단이다(잡 테이블에 상품
+// 컬럼이 없다 — 표식은 전부 config 안에 산다). 판정 순서는 fast 라우트의 게이트
+// 순서와 같아야 한다: finalOnepage → targetSections → includeWorksheet → 기본.
+// worksheetOnly 라우트가 만든 잡은 `{includeWorksheet:true, worksheetOnly:true}`
+// 라 practice 로 떨어진다 — 그 잡이 도는 동안 실전 재요청을 붙이는 것은 옳다.
+type SheetProductKey = "basic" | "practice" | "final" | "partial";
+
+const PRODUCT_LABEL: Record<SheetProductKey, string> = {
+  basic: "기본 학습지",
+  practice: "실전 학습지",
+  final: "파이널 원페이지",
+  partial: "부분 분석",
+};
+
+function productOfJobConfig(config: unknown): SheetProductKey {
+  if (!config || typeof config !== "object" || Array.isArray(config)) {
+    return "basic";
+  }
+  const c = config as Record<string, unknown>;
+  if (c.finalOnepage === true) return "final";
+  if (Array.isArray(c.targetSections) && c.targetSections.length > 0) {
+    return "partial";
+  }
+  if (c.includeWorksheet === true) return "practice";
+  return "basic";
+}
+
 /**
  * SSE 래퍼 — 본체(runAnalysis)는 기존 그대로 NextResponse 를 반환하고, 여기서
  * 그 최종 JSON 을 {t:"done"|"error"} 프레임으로 옮긴다. 본체의 12개 return 지점을
@@ -197,9 +300,12 @@ export async function POST(req: NextRequest) {
   if (!wantStream) return runAnalysis(req, rawBody, NOOP_EMIT);
 
   const encoder = new TextEncoder();
+  // ⚠ closed·heartbeat 는 **start 밖**에 산다 — cancel(클라이언트 이탈)에서
+  //   타이머를 즉시 접어야 하는데 start 스코프 지역변수는 cancel 이 못 본다.
+  let closed = false;
+  let heartbeat: ReturnType<typeof setInterval> | null = null;
   const stream = new ReadableStream<Uint8Array>({
     start(controller) {
-      let closed = false;
       const emit: StreamEmit = (payload) => {
         if (closed) return;
         try {
@@ -215,6 +321,36 @@ export async function POST(req: NextRequest) {
       } catch {
         closed = true;
       }
+
+      // ── [E29-1] 하트비트 — 「무음 스트림」이 실패로 오판되는 것을 막는다 ─────
+      //
+      // 파이널 원페이지 경로는 phase 프레임을 **정확히 2개**만 쓴다(생성 직전·저장
+      // 직전). 그 사이의 단일 LLM 콜은 스트리밍 주입 구멍 자체가 없어
+      // (generateFinalOnepageReport 의 옵션은 { deadlineAt } 뿐) **실측 47~216초
+      // 동안 바이트를 0개** 쓴다. 기본/실전 경로도 parallel 엔진이라 웨이브 라벨을
+      // 쏟은 뒤 무음이고, 실측 209~285초로 더 길다.
+      //
+      // 그 무음 구간에 연결이 끊기면(프록시·모바일 전환·절전) 클라이언트는
+      // done 프레임을 못 받고 「분석 스트림이 중간에 끊겼습니다」를 **종결 실패**로
+      // 못박는다(use-passage-queue.ts consumeAnalysisStream). 서버는 그동안
+      // 정상적으로 저장을 끝내므로 결과는 「돈은 나갔고 DB엔 있는데 화면은 실패」다.
+      // 1618학원 신고의 유력 원인 중 하나이며, 스트림이 살아 있기만 하면 사라진다.
+      //
+      // SSE 주석(`: hb`)은 EventSource·수동 파서 양쪽에서 **데이터가 아니다**
+      // (클라이언트 파서도 `data:` 로 시작하지 않는 줄을 건너뛴다) — 그래서
+      // 프레임 계약을 바꾸지 않고 연결만 살린다. 15초는 일반적인 프록시 유휴
+      // 임계(60~120초)보다 충분히 짧다.
+      const HEARTBEAT_MS = 15_000;
+      heartbeat = setInterval(() => {
+        if (closed) return;
+        try {
+          controller.enqueue(encoder.encode(": hb\n\n"));
+        } catch {
+          closed = true;
+        }
+      }, HEARTBEAT_MS);
+      // Node 런타임에서 타이머가 프로세스를 붙잡지 않게 한다(있으면 unref).
+      (heartbeat as unknown as { unref?: () => void }).unref?.();
 
       void (async () => {
         try {
@@ -232,6 +368,10 @@ export async function POST(req: NextRequest) {
             details: error instanceof Error ? error.message : String(error),
           });
         }
+        // ⚠ 해제는 **모든 종료 경로**에서 한 번씩 — 여기 하나뿐이지만 위 catch 가
+        //   throw 하지 않는 구조여야 도달이 보장된다(현재 구조가 그렇다).
+        if (heartbeat) clearInterval(heartbeat);
+        heartbeat = null;
         if (!closed) {
           try {
             controller.close();
@@ -241,6 +381,13 @@ export async function POST(req: NextRequest) {
           closed = true;
         }
       })();
+    },
+    cancel() {
+      // 클라이언트 이탈 — 생성·과금·저장은 **계속된다**(잡·리포트는 서버가 마친다).
+      // 접는 것은 타이머와 프레임 방출뿐이다.
+      closed = true;
+      if (heartbeat) clearInterval(heartbeat);
+      heartbeat = null;
     },
   });
 
@@ -262,11 +409,22 @@ async function runAnalysis(
   const requestStartedAt = Date.now();
   const staff = await getStaffSession();
   if (!staff) {
+    // [E30/RCA #16] 세션 만료로 발사가 통째로 사라지는 경로 — 화면에는 토스트 하나뿐이라
+    // 사용자는 "눌렀는데 안 만들어졌다"로 기억한다. academyId 는 아직 없다.
+    logAnalysisRejection({ reasonCode: "UNAUTHENTICATED", status: 401 });
     return NextResponse.json({ error: "Authentication required" }, { status: 401 });
   }
 
   const parsed = requestSchema.safeParse(rawBody);
   if (!parsed.success) {
+    // [E30/RCA #16] 요청 스키마 위반. issues 를 통째로 싣지 않고 경로만 남긴다
+    // (본문·커스텀 프롬프트가 로그로 새는 것을 막는다).
+    logAnalysisRejection({
+      reasonCode: "INVALID_PAYLOAD",
+      status: 400,
+      academyId: staff.academyId,
+      detail: { issuePaths: parsed.error.issues.slice(0, 8).map((i) => i.path.join(".")) },
+    });
     return NextResponse.json(
       { error: "Invalid payload", details: parsed.error.issues },
       { status: 400 },
@@ -282,6 +440,14 @@ async function runAnalysis(
   const targetSections = parsed.data.targetSections ?? null;
   // 실전 학습지는 분석 섹션이 아니라 옵트인 생성물(스펙 §3.4 특례) — 종량제와 조합 불가.
   if (targetSections && includeWorksheet) {
+    // [E30/RCA #16] 계기만 덧붙인다 — 조건식·상태·자구 무개변(E30 §2-3).
+    logAnalysisRejection({
+      reasonCode: "COMBO_TARGETSECTIONS_WITH_WORKSHEET",
+      status: 400,
+      academyId: staff.academyId,
+      passageId: parsed.data.passageId,
+      detail: { targetSectionCount: targetSections.length },
+    });
     return NextResponse.json(
       { error: "targetSections 와 includeWorksheet 는 함께 쓸 수 없습니다" },
       { status: 400 },
@@ -290,12 +456,27 @@ async function runAnalysis(
   // 파이널 원페이지(final-onepage-spec §2) — 별도 상품이라 실전 학습지·종량제와 조합 불가.
   const finalOnepage = parsed.data.finalOnepage === true;
   if (finalOnepage && includeWorksheet) {
+    // [E30/RCA #16] 계기만 덧붙인다 — 조건식·상태·자구 무개변(E30 §2-3).
+    logAnalysisRejection({
+      reasonCode: "COMBO_FINAL_WITH_WORKSHEET",
+      status: 400,
+      academyId: staff.academyId,
+      passageId: parsed.data.passageId,
+    });
     return NextResponse.json(
       { error: "finalOnepage 와 includeWorksheet 는 함께 쓸 수 없습니다" },
       { status: 400 },
     );
   }
   if (finalOnepage && targetSections) {
+    // [E30/RCA #16] 계기만 덧붙인다 — 조건식·상태·자구 무개변(E30 §2-3).
+    logAnalysisRejection({
+      reasonCode: "COMBO_FINAL_WITH_TARGETSECTIONS",
+      status: 400,
+      academyId: staff.academyId,
+      passageId: parsed.data.passageId,
+      detail: { targetSectionCount: targetSections.length },
+    });
     return NextResponse.json(
       { error: "finalOnepage 와 targetSections 는 함께 쓸 수 없습니다" },
       { status: 400 },
@@ -310,11 +491,27 @@ async function runAnalysis(
     },
   });
   if (!passage) {
+    // [E30/RCA #16] 지문이 다른 학원 소유이거나 삭제된 뒤에 발사된 경우. 목록 스냅샷이
+    // 낡았다는 신호이기도 하다(모달은 마운트 1회만 읽는다 — RCA RC-1 층①).
+    logAnalysisRejection({
+      reasonCode: "PASSAGE_NOT_FOUND",
+      status: 404,
+      academyId: staff.academyId,
+      passageId: parsed.data.passageId,
+      detail: { includeWorksheet, finalOnepage, hasTargetSections: targetSections !== null },
+    });
     return NextResponse.json({ error: "Passage not found" }, { status: 404 });
   }
   // 국어 지문은 부분 분석 미지원(§3.4.1-8) — 섹션 종량제는 영어 PRIME 리포트 전용이라
   // PRIME_KO 블록에 진입하기 전에 차단한다(잡 생성 전이라 뒷정리도 필요 없다).
   if (targetSections && isKoreanPassage(passage)) {
+    logAnalysisRejection({
+      reasonCode: "KOREAN_PARTIAL_UNSUPPORTED",
+      status: 400,
+      academyId: staff.academyId,
+      passageId: passage.id,
+      detail: { targetSectionCount: targetSections.length },
+    });
     return NextResponse.json(
       { error: "국어 지문은 부분 분석을 지원하지 않습니다" },
       { status: 400 },
@@ -322,6 +519,14 @@ async function runAnalysis(
   }
   // 파이널 원페이지는 국어(PRIME_KO) v1 미지원(스펙 F7) — 같은 이유로 잡 생성 전 차단.
   if (finalOnepage && isKoreanPassage(passage)) {
+    // [E30/RCA #16] RCA RC-6 이 지목한 국어 등록 페이지의 「사전 선택된 파이널 100% 400」이
+    // 여기로 떨어진다. 계기가 없으면 그 결함은 관측 자체가 불가능하다.
+    logAnalysisRejection({
+      reasonCode: "KOREAN_FINAL_UNSUPPORTED",
+      status: 400,
+      academyId: staff.academyId,
+      passageId: passage.id,
+    });
     return NextResponse.json(
       { error: "국어 지문은 파이널 원페이지를 지원하지 않습니다" },
       { status: 400 },
@@ -343,8 +548,55 @@ async function runAnalysis(
       deletedAt: null,
     },
     orderBy: { createdAt: "desc" },
-    select: { id: true, status: true, createdAt: true },
+    // config 는 붙이기 판정에 필요하다(아래 [E29-2]) — 잡 config 는 작은 스칼라
+    // 뭉치라 목록 슬림 규약(§12)의 pages/theme 금지와 무관하다.
+    select: { id: true, status: true, createdAt: true, config: true },
   });
+  // ── [E29-2] 「이미 진행 중인 잡에 붙이기」는 **같은 상품일 때만** ────────────
+  //
+  // 구판은 요청이 무엇이든 활성 잡이 있으면 200 + attachedToExisting 으로 돌려줬다.
+  // 그러면 기본 분석이 도는 지문에 파이널을 누른 요청은 **완전히 삼켜진다**:
+  // 잡이 안 만들어지고(그래서 DB 에 시도 흔적조차 없다), 과금도 없고, 파이널도
+  // 안 생기는데, 클라이언트는 done 프레임을 정상 완료로 읽어 큐 카드가 조용히
+  // 사라진다. 사용자에겐 「눌렀는데 안 만들어졌다」이고, 운영에겐 **계기에 안
+  // 잡히는 실패**다(실측: 파이널 잡 전 기간 6건 = 생존자 표본).
+  //
+  // 상품이 같으면 붙이기가 옳다(연타·새로고침 중복 발사 흡수). 상품이 다르면
+  // 붙이기는 요청을 버리는 것과 같으므로 **409 로 거절**해 사용자가 원인을 알게 한다.
+  // 지문당 활성 잡 1개라는 서버 불변식은 그대로다.
+  const requestedProduct = finalOnepage
+    ? "final"
+    : targetSections
+      ? "partial"
+      : includeWorksheet
+        ? "practice"
+        : "basic";
+  const activeProduct = productOfJobConfig(active?.config);
+  if (active && activeProduct !== requestedProduct) {
+    // [E30/RCA #16] 상품 불일치 거절 — 구판이 **200 으로 삼키던** 바로 그 요청이다.
+    // 이 계기가 곧 「파이널을 눌렀는데 실전 잡에 먹혔다」의 첫 관측 수단이다.
+    logAnalysisRejection({
+      reasonCode: "ANOTHER_PRODUCT_IN_PROGRESS",
+      status: 409,
+      academyId: staff.academyId,
+      passageId: passage.id,
+      requestedProduct,
+      detail: { activeProduct, activeJobId: active.id },
+    });
+    if (emit !== NOOP_EMIT) {
+      emit({ t: "phase", label: "다른 생성이 진행 중" });
+    }
+    return NextResponse.json(
+      {
+        error: `이 지문은 지금 ${PRODUCT_LABEL[activeProduct]}를 만드는 중이에요. 끝난 뒤에 ${PRODUCT_LABEL[requestedProduct]}를 다시 눌러 주세요.`,
+        code: "ANOTHER_PRODUCT_IN_PROGRESS",
+        activeJobId: active.id,
+        activeProduct,
+        requestedProduct,
+      },
+      { status: 409 },
+    );
+  }
   if (active) {
     // 이 경로는 LLM 을 한 번도 부르지 않으므로 델타가 0프레임이다. 스트림 요청이면
     // 사유를 담은 phase 프레임을 1회 흘려 패널이 마운트되게 한다 — 그러지 않으면
@@ -352,6 +604,17 @@ async function runAnalysis(
     if (emit !== NOOP_EMIT) {
       emit({ t: "phase", label: "이미 진행 중인 분석에 연결됨" });
     }
+    // [E30/RCA #16] 거절은 아니지만 **잡을 만들지 않고 끝나는** 경로라 계기 축은 같다
+    // (RCA 가 센 조기 return 7곳에 이 200 attach 가 포함된다). 연타 흡수가 정상 동작이므로
+    // 사유 코드로 구분해 남긴다 — 이게 없으면 "발사 수 ≠ 잡 수"의 차액을 설명할 수 없다.
+    logAnalysisRejection({
+      reasonCode: "ATTACHED_TO_EXISTING",
+      status: 200,
+      academyId: staff.academyId,
+      passageId: passage.id,
+      requestedProduct,
+      detail: { activeJobId: active.id, activeStatus: active.status },
+    });
     return NextResponse.json({
       jobId: active.id,
       status: active.status,
@@ -696,6 +959,10 @@ async function runAnalysis(
               finalOnepage: true,
               error: finalResult.error,
               debugTiming: { queueWaitMs: 0, creditMs, generationMs, persistenceMs: 0, totalRunMs: Date.now() - requestStartedAt, fastPath: true },
+              // [E30/RCA #18] 수리 시도 횟수·앵커 드롭 진단(생성기가 노출하면 자동으로 실린다).
+              // 실패 쪽이 오히려 더 중요하다 — 2시도를 다 쓰고 죽었는지, 예산 가드에 걸려
+              // 1시도로 끝났는지가 result.error 자구만으로는 갈리지 않는다.
+              finalDiagnostics: finalGenerationDiagnostics(finalResult),
             })),
             completedAt: new Date(),
           },
@@ -783,6 +1050,17 @@ async function runAnalysis(
             finalOnepage: true,
             debugTiming,
             fastPath: true,
+            // ── [E30/RCA #18] 파이널 생성 진단 ────────────────────────────────
+            // lastCallMs 는 **마지막 모델 콜 1회**의 실측 소요다. generationMs(전체)와
+            // 나란히 두면 「콜이 한 번이었는가」가 산술로 갈린다 — RCA §0-E 는
+            // generationMs=215,568ms 가 콜 1회 상한(200,000ms)을 넘는다는 **간접 추론**
+            // 하나로 수리 발화를 알아냈다. 그건 계기가 아니라 운이었다.
+            // attempts·anchorDropped 는 생성기가 노출하는 즉시 코드 변경 0으로 합류한다.
+            finalDiagnostics: {
+              ...finalGenerationDiagnostics(finalResult),
+              lastCallMs: finalResult.usage.durationMs,
+              modelId: finalResult.usage.modelId || null,
+            },
           })),
           completedAt,
         },
@@ -1109,7 +1387,10 @@ async function runAnalysis(
     // 부분 요청(§3.4.1-6): 신선본 기준 3중 보존 병합 — 비분석 섹션(self-check)·기보유
     // 분석 섹션 되살림·실전 학습지 필드 오버레이(strip 소거 복원, 검수 M1). 스테일 본은
     // 어떤 섹션도 얹지 않는다(구본문 문항의 학생 서빙 금지 — 스펙 스테일 규칙, 검수 M6).
-    let primeReport = plan
+    // [E30 §2-3] 실전 섹션을 얹지 않게 되면서 이 값은 재대입되지 않는다(let → const).
+    // 부분 요청(plan)의 3중 보존 병합은 무개변 — 부분 분석과 실전 학습지는 조합 400 이라
+    // 애초에 같은 요청에 함께 오지 않는다.
+    const primeReport = plan
       ? mergeReportPreservingExtras(resilient.report, freshReport)
       : resilient.report;
 
@@ -1151,7 +1432,12 @@ async function runAnalysis(
       ? resilient.completeness.fallback.includes("passage") ||
         plan.missing.some((k) => !resilient.completeness.present.includes(k))
       : resilient.completeness.fallback.includes("passage") ||
-        resilient.completeness.present.length < 4;
+        resilient.completeness.present.length < 4 ||
+        // grammar 는 「03 필기 분석」의 척추(어법 필기 유일 공급원) — 빠지면 필기 없는
+        // 맹탕 학습지가 정상 출하된다(26-08-25 실사고: grammar 만 missing 인 채 COMPLETED·
+        // 과금, .tmp-par-rca RCA). 전체 분석에서 grammar 미확보는 환불+FAILED 로 크게
+        // 실패시킨다 — 체크포인트에 나머지 5섹션이 보존되므로 재시도는 grammar 만 이어 만든다.
+        resilient.completeness.missing.includes("grammar");
     if (degraded) {
       if (creditTxId) {
         await refundCredits(
@@ -1200,6 +1486,12 @@ async function runAnalysis(
     // learning-worksheet 섹션을 풀 콘텐츠로 교체한다. 워크시트만 실패하면
     // 기본 학습지는 그대로 저장하고 워크시트 몫만 환불한다.
     let worksheetFailed = false;
+    // [E30 §2-3] 실전 학습지 섹션은 부모 문서에 얹지 않고 **자식 문서(PRIME_PRACTICE)**
+    // 로 나간다. 아래 $transaction 까지 지역 변수로만 들고 간다.
+    let practiceSection: LearningWorksheetSection | null = null;
+    // 잡 result 에 실을 자식 행 id — 「◈10 을 받고 실제로 행을 남겼는가」를 사후에
+    // 잡 하나만 보고 판정할 수 있게 한다(RCA §RC-3 계기 원칙).
+    let practiceReportId: string | null = null;
     if (includeWorksheet) {
       // 학습지도 코어와 동일한 회복형 — 워크북·수능추론 유닛을 다중 라운드로 끝까지 완성한다.
       // 같은 300s 벽을 공유하므로 데드라인(285s)을 두고 내부 호출이 self-abort 하게 한다.
@@ -1217,16 +1509,30 @@ async function runAnalysis(
           stream: emit === NOOP_EMIT ? undefined : { emit },
         },
       );
-      // 유효한 학습지 섹션일 때만 교체한다. null(유효한 학습지 생성 실패)이면 기존 코어
-      // learning-worksheet(있으면)를 그대로 두거나 섹션을 비운다 — 무효 섹션 저장 금지.
-      if (worksheet.section) {
-        primeReport = {
-          ...primeReport,
-          sections: [
-            ...primeReport.sections.filter((s) => s.kind !== "learning-worksheet"),
-            worksheet.section,
-          ],
-        } as AnalysisReport;
+      // ── [E30 §2-3] 실전 섹션을 **부모에 얹지 않는다** ────────────────────────
+      //
+      // 구판은 여기서 primeReport 의 learning-worksheet 를 실전 콘텐츠로 교체해
+      // PRIME 행 한 장에 기본+실전을 병합 저장했다. 그러면 조판실에서 두 상품을 분리해
+      // 담을 수 없고(요구 0-1), 기본 학습지를 이미 산 사용자에게 실전만 ◈5 로 얹어
+      // 팔 수도 없다. 대신 섹션을 지역 변수로 들고 가 아래 $transaction 에서
+      // PRIME_PRACTICE 행으로 쓴다.
+      //
+      // 부모에 손을 대지 않으므로 부모에는 코어 lw(logicRows 전용)만 남는다
+      // (resilient-generate.ts:445 가 코어 섹션을 이미 strip 한다). 그 결과
+      // section-slots.ts 의 lwHasWorkbook 이 false 로 떨어져 **부모 문서에 실전 슬롯이
+      // 생기지 않는다** = 같은 지문에서 실전이 두 번 인쇄되는 일이 구조적으로 불가능하고,
+      // D3-b 부모 강등이 (b) 경로에서는 무동작으로 자연 성립한다(E30 §1-4 D3-b).
+      //
+      // ⚠ 조건이 `worksheet.section` **존재**가 아니라 worksheet-grade **판정**인 이유:
+      //   워크북·추론 두 유닛이 모두 실패해도 generateLearningWorksheetResilient 는
+      //   null 이 아니라 **코어 lw 폴백 섹션**을 돌려준다(generate.ts 의 combined 는
+      //   baseSection 스프레드라 스키마를 통과한다). 존재만 보고 행을 쓰면 바로 아래
+      //   `present.length === 0` 환불과 겹쳐 「환불은 했는데 **빈 실전 학습지 행**이
+      //   남는」 상태가 된다 — 그 유령 행은 조판 목록에 뜨고 hasPractice 를 참으로 만들어
+      //   재구매까지 막는다(E30 §1-4 의 「빈 껍데기 215건」과 같은 계통).
+      //   판정 술어는 리포에 하나뿐이다(worksheet-core-gate.ts) — 복제 금지.
+      if (hasWorksheetContentFields(worksheet.section)) {
+        practiceSection = worksheet.section;
       }
       // 학습지 LLM 호출(워크북+추론, 라운드별) 토큰 합산 기록.
       const wsTokens = worksheet.usages.reduce(
@@ -1313,6 +1619,74 @@ async function runAnalysis(
         update: { analysisData: JSON.stringify(analysisData), contentHash: currentHash, version: 1 },
         create: { passageId: passage.id, analysisData: JSON.stringify(analysisData), contentHash: currentHash, version: 1 },
       });
+      // 3) [E30 §2-3] 실전 학습지(PRIME_PRACTICE) 자식 행 — **반드시 같은 트랜잭션**
+      //
+      // 나누면 「◈10 을 냈는데 기본만 있는」 상태가 남는다(자식 쓰기 실패 시 부모만 커밋).
+      // 반대로 한 트랜잭션이면 **부모 없는 자식이 물리적으로 불가능**해져 요구
+      // 「실전만 먼저 생성은 안 되는 구조」가 서버 구조로 강제된다 —
+      // E30 §2-4 강제 3층 중 「서버(구조)」 층이 바로 이 줄이다.
+      //
+      // 지문당 1행. (passageId, generationPlan) 유니크 인덱스는 **없으므로**
+      // (E30 §1-2 D1 — 컬럼·인덱스 신설은 기각됐다) 파이널의 findFirst→update/create
+      // 관용구를 글자 그대로 복제하고, 중복 방어는 위쪽 「지문당 활성 잡 1개」 배타가
+      // 담당한다. 배타를 우회하는 경로를 새로 만들면 이 행이 갈라진다.
+      if (practiceSection) {
+        // E30 §1-3 확정 형태: 부모의 문서 껍데기(brand/docNo/theme/meta)만 상속하고
+        // 섹션은 실전 1개뿐이다.
+        // ⚠ layout·blockMeta·blockOrder·sectionHeadings·hiddenSections·customBlocks·cover
+        //   등 **편집 자산은 절대 상속하지 않는다**. 특히 부모의 hiddenSections 에
+        //   "learning-worksheet" 슬롯키가 켜져 있으면(DB 실측 부모 2행이 그 상태다)
+        //   자식은 **유일한 섹션이 통째로 사라져** 빈 문서가 된다 — 스키마도 통과하고
+        //   에러도 0인데 인쇄만 백지인 유형이다.
+        // docNo 는 optional 이라 조건부로만 싣는다(undefined 키를 JSON 컬럼에 넣지 않는다).
+        const practiceReport = {
+          schemaVersion: primeReport.schemaVersion,
+          brand: primeReport.brand,
+          ...(primeReport.docNo ? { docNo: primeReport.docNo } : {}),
+          themeId: primeReport.themeId,
+          meta: primeReport.meta,
+          sections: [practiceSection],
+        } as AnalysisReport;
+        const existingPractice = await tx.passageReport.findFirst({
+          where: {
+            passageId: passage.id,
+            academyId: passage.academyId,
+            generationPlan: PRACTICE_REPORT_MARKER,
+            deletedAt: null,
+          },
+          select: { id: true },
+        });
+        const practiceData = {
+          title: practiceReport.meta.titleKo,
+          status: "PUBLISHED",
+          pages: practiceReport as never,
+          theme: { themeId: practiceReport.themeId } as never,
+          // 파이널의 "prime-final" 과 동형(E30 §1-1) — 조판·편집기가 문서 종류를
+          // 되찾는 보조 축이라 마커와 짝을 맞춘다.
+          templateId: "prime-practice",
+          generationPlan: PRACTICE_REPORT_MARKER,
+          lastEditedById: staff.id,
+          lastEditedAt: new Date(),
+        };
+        if (existingPractice) {
+          await tx.passageReport.update({
+            where: { id: existingPractice.id },
+            data: { ...practiceData, version: { increment: 1 } },
+          });
+          practiceReportId = existingPractice.id;
+        } else {
+          const createdPractice = await tx.passageReport.create({
+            data: {
+              academyId: passage.academyId,
+              passageId: passage.id,
+              createdById: staff.id,
+              ...practiceData,
+            },
+            select: { id: true },
+          });
+          practiceReportId = createdPractice.id;
+        }
+      }
     });
     persistenceMs = Date.now() - persistenceStartedAt;
 
@@ -1343,6 +1717,10 @@ async function runAnalysis(
           worksheetFailed,
           debugTiming,
           fastPath: true,
+          // [E30 §2-3] 실전 분리 문서 식별자. null 이면 「실전 몫을 받았는데 자식 행이
+          // 없다」는 뜻이라 worksheetFailed(=환불)와 교차 검증이 된다. 잡 행 하나만 보고
+          // 판정할 수 있어야 다음 신고가 조회로 끝난다(RCA §RC-3).
+          ...(includeWorksheet ? { practiceReportId } : {}),
           // 부분 분석 기록(§3.4.1-9) — 실제 새로 생성한 섹션(=missing)과 청구액.
           ...(plan
             ? {
