@@ -771,7 +771,9 @@ export function renderFormattedInline(
           data-mark="blank"
           data-raw={match[0]}
           contentEditable={false}
-          className="mx-1 inline-block min-w-[56px] border-b border-slate-500 align-baseline"
+          // 빈칸 최소폭은 활자 상대(4.5em) — 고정 56px 는 좁은 단·축소 표면에서 쪼갤 수 없는
+          // 원자 토큰이 되어 justify 단어 간격 팽창의 증폭기였다(26-08-26 전수조사 WS-1).
+          className="mx-1 inline-block min-w-[4.5em] border-b border-slate-500 align-baseline"
         >
           &nbsp;
         </span>,

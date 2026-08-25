@@ -2795,3 +2795,12 @@ body.smoat-large-ui .passage-report-thumb .par-root { --par-zoom: 1 !important; 
     scroll-margin-top: 112px;
   }
 }
+
+/* 양끝맞춤(justify) 단어 간격 완화 — 26-08-26 전수조사 WS-1(사용자 확정: 부분 완화안).
+   시험지 계열 표면(.text-justify 사용처 전부)에서 긴 영단어가 통째로 다음 줄로 떨어지며
+   그 줄 공백이 최대 18px(정상 5배)로 팽창하던 것을, 줄바꿈 위치를 문단 단위로 고르는
+   text-wrap: pretty 로 완화한다. 지원 없는 엔진(구 사파리)은 무시하므로 무해하고,
+   양끝맞춤 자체(수능 실물 인상)는 유지된다. 근본 해소(하이픈)는 사용자가 보류. */
+.text-justify {
+  text-wrap: pretty;
+}
