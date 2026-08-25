@@ -94,7 +94,9 @@ function scoreExamSentence(rowText: string, phrases: string[], sentence: Passage
 
 export function inferExamSentenceNos(row: ExamFocusSection["rows"][number], sentences: PassageSection["sentences"]): number[] {
   if (!sentences.length) return [];
-  const haystack = `${row.type} ${row.asks ?? ""} ${row.strategy ?? ""}`;
+  // logicLocation("역접 ⑥ 뒤 — …" 식)은 귀속 단서의 1급 원천 — 원형 번호·문장 지시가
+  // 여기 실려 오는데 haystack 에서 빠져 있었다(26-08-26 전수조사 GEN-5).
+  const haystack = `${row.type} ${row.asks ?? ""} ${row.strategy ?? ""} ${row.logicLocation ?? ""}`;
   const direct = validSentenceNos([row.sentenceNo ?? 0, ...extractExplicitSentenceNos(haystack)], sentences);
   if (direct.length) return [direct[0]];
 
@@ -107,5 +109,8 @@ export function inferExamSentenceNos(row: ExamFocusSection["rows"][number], sent
     .sort((a, b) => b.score - a.score || b.sentence.n - a.sentence.n);
 
   if ((scored[0]?.score ?? 0) > 0) return [scored[0].sentence.n];
-  return [sentences[sentences.length - 1].n];
+  // 점수 0 = 귀속 단서 전무. 예전엔 마지막 문장에 강제 귀속해 마지막 문장 레일에 출제
+  // 카드가 허위로 몰렸다(26-08-26 전수조사 GEN-5 — 실DB 4.4%가 sentenceNo 부재).
+  // 빈 배열을 돌려 하단 출제 뱅크(ReadingExamBank)로 정직하게 보낸다(study-notes.tsx:33-35).
+  return [];
 }

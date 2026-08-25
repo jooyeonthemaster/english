@@ -1621,10 +1621,14 @@ export const ANALYSIS_REPORT_CSS = `
 .par-canvas-staff.has-no-item .par-canvas-col { margin-left: -6.2mm; }
 /* 비편집 모드 — 번호가 첫 청크 en 줄 안 인라인 박스로 들어간다. */
 .par-canvas-en .par-canvas-no { margin-top: 0; margin-right: 1.4mm; vertical-align: baseline; }
-/* 직독직해 한글 뜻 — 영어 위. z-index+흰 배경 = 연결선이 뜻 글자를 관통하지 않게(선이 뒤로 지나감). */
+/* 직독직해 한글 뜻 — 영어 위. z-index+흰 배경 = 연결선이 뜻 글자를 관통하지 않게(선이 뒤로 지나감).
+   nowrap 은 baseline 계약(:1614)의 전제라 유지한다(뜻이 2줄이 되면 이웃 청크의 en 이 계단으로
+   어긋난다). 대신 overflow 가드로, 칸폭(max-width:100% 청크 캡)을 넘는 극단 글로스가 우측
+   레일 카드를 흰 배경으로 덮던 잠재 넘침만 차단한다(26-08-26 전수조사 WS-5, 주입 실증). */
 .par-canvas-v3 .par-canvas-gloss {
   display: block; font-size: calc(6.9pt * var(--par-fs, 1)); color: #6a7b8e; line-height: 1.14;
   margin-bottom: .4mm; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
   position: relative; z-index: 3; background: #fff; align-self: flex-start;
 }
 /* (R4-d, 26-08-22) 뜻 줄 번호 원(par-canvas-lk) 제거 — 밑줄+연결 화살표+목록 인용의
@@ -1634,11 +1638,16 @@ export const ANALYSIS_REPORT_CSS = `
 .par-canvas-v3 .par-canvas-chunk.is-anchored .par-canvas-en { text-decoration: none; border-bottom-color: var(--anno-c, #94a3b8); }
 /* 필기 캔버스에서는 핵심 어휘 '굵은 밑줄'(par-kw)을 표시하지 않는다 — 청크 밑줄과 겹쳐 지저분해지므로. (clean 모드 등 다른 뷰의 par-kw 밑줄은 유지) */
 .par-canvas-v3 .par-kw { text-decoration: none; }
-/* 짧은 구문 역할 — 영어 아래(중립 슬레이트) */
+/* 짧은 구문 역할 — 영어 아래(중립 슬레이트).
+   width:0 + min-width:100% — 라벨이 청크 고유폭(max-content)에 기여하지 못하게 차단한다.
+   긴 설명 라벨이 청크 박스를 영문보다 넓혀 en 글줄에 최대 91px 백지를 만들던 결함
+   (26-08-26 전수조사 WS-4 — 「단어 사이 지나친 띄어쓰기」의 실체). 라벨은 en 폭 안에서
+   overflow-wrap 으로 감긴다. en 아래 요소라 baseline(뜻 줄 기준) 계약과 무관. */
 .par-canvas-v3 .par-canvas-role {
   align-self: stretch; margin-top: .5mm; padding-top: .4mm; border-top: .3mm solid #cdd6e0;
   color: #5b7088; font-weight: 700; font-size: calc(6.3pt * var(--par-fs, 1)); line-height: 1.12;
   overflow-wrap: anywhere;
+  width: 0; min-width: 100%;
 }
 .par-canvas-v3 .par-canvas-sep {
   display: inline-flex; flex-direction: column; align-items: center;

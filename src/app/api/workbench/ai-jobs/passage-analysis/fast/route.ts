@@ -1222,19 +1222,34 @@ async function runAnalysis(
     //    이 상태였고, 실제 POST 로 재현 확인했다(리포트 0개, 잔액 불변).
     //    캐시 단락은 "산출물이 이미 있을 때 재생성을 아끼는 것"이 목적이므로,
     //    산출물이 없으면 단락해서는 안 된다.
-    const primeReportExists =
-      (await prisma.passageReport.count({
-        where: {
-          passageId: passage.id,
-          academyId: passage.academyId,
-          generationPlan: "PRIME",
-          deletedAt: null,
-        },
-      })) > 0;
+    const primeRow = await prisma.passageReport.findFirst({
+      where: {
+        passageId: passage.id,
+        academyId: passage.academyId,
+        generationPlan: "PRIME",
+        deletedAt: null,
+      },
+      orderBy: { updatedAt: "desc" },
+      select: { pages: true },
+    });
+    const primeReportExists = !!primeRow;
+    // [26-08-26 전수조사 GEN-2] 캐시 단락은 「행 존재」만 보고 pages 품질을 안 봐서, grammar
+    // 섹션이 통째로 없는 구판 결손 학습지(실DB 17건)가 재생성 버튼을 눌러도 cached=true 로
+    // 영구 동결됐다. 최소 무결성(어법 필기의 유일 공급원 grammar 실존 — RC-3 게이트와 대칭)을
+    // 통과한 산출물만 캐시로 재서빙한다. 실패 시 단락하지 않고 정상 재생성(정상 과금)으로 흘린다.
+    const primeHasGrammar = (() => {
+      try {
+        const secs = (primeRow?.pages as { sections?: Array<{ kind?: string }> } | null)?.sections;
+        return Array.isArray(secs) && secs.some((s) => s?.kind === "grammar");
+      } catch {
+        return false;
+      }
+    })();
     if (
       !includeWorksheet &&
       !targetSections &&
       primeReportExists &&
+      primeHasGrammar &&
       passage.analysis &&
       passage.analysis.contentHash === currentHash
     ) {

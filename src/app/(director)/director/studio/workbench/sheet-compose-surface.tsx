@@ -2152,7 +2152,9 @@ export function SheetComposeSurface({
         ) : null}
         {/* [E22/U9-6] 문항 정답표 토글 — **문서가 아니라 이 화면이 소유**한다.
             문항이 0건이면 토글할 대상이 없으므로 아예 렌더하지 않는다(빈 버튼 금지). */}
-        {questionCount > 0 ? (
+        {/* activeDoc 조건 — 문항만 픽하고 학습지 0건이면 인쇄 스트림 자체가 없어
+            토글이 켜진 외형으로 잔존하는 무의미 버튼이 됐다(26-08-26 적대 조작 검수 WS-3). */}
+        {questionCount > 0 && activeDoc ? (
           <button
             type="button"
             onClick={() => setShowAnswerKey((v) => !v)}
@@ -2190,15 +2192,21 @@ export function SheetComposeSurface({
                 //   직후에 낀다 — 위 고지 툴팁 P5 주석). 표시 문자열은 배치를 주장하지
                 //   않으므로 무접촉이지만, 주석까지 거짓으로 두면 다음 사람이 그 전제로
                 //   코드를 고친다.
-                questionCount > 0
-                ? `인쇄 — 활성 + 부착 문서 ${attachedCount}건 + 문항 ${questionCount}개가 A4 한 묶음으로 이어서 인쇄됩니다`
-                : "인쇄 — 조판된 전체(활성 + 부착 문서)가 이어서 인쇄됩니다"
+                (toolbar?.dirty
+                  ? "미저장 편집이 인쇄물에 그대로 실립니다(저장하지 않으면 다음 조판과 달라져요) — "
+                  : "") +
+                (questionCount > 0
+                  ? `인쇄 — 활성 + 부착 문서 ${attachedCount}건 + 문항 ${questionCount}개가 A4 한 묶음으로 이어서 인쇄됩니다`
+                  : "인쇄 — 조판된 전체(활성 + 부착 문서)가 이어서 인쇄됩니다")
               : "왼쪽 목록에서 학습지를 먼저 체크하세요"
           }
           aria-label="인쇄"
-          className="inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:border-slate-100 disabled:text-slate-300 disabled:hover:bg-white"
+          // 아이콘 단독 size-7 → 라벨 버튼 승격(26-08-26 사용자: "인쇄 버튼이 너무 잘 안 보여").
+          // 이 툴바의 종단 액션이라 유일하게 채움색을 쓴다 — 라벨 전례는 「돌아가기」(:2090).
+          className="inline-flex h-7 shrink-0 cursor-pointer items-center gap-1.5 rounded-md border border-slate-800 bg-slate-800 px-2.5 text-[11.5px] font-semibold text-white transition-colors hover:border-slate-700 hover:bg-slate-700 disabled:cursor-not-allowed disabled:border-slate-200 disabled:bg-slate-100 disabled:text-slate-300"
         >
           <Printer className="size-3.5" aria-hidden="true" />
+          인쇄
         </button>
       </div>
 

@@ -1603,7 +1603,10 @@ export function AnalysisReportEditor({
     );
   }, [zoom]);
 
-  const resetPreviewZoom = useCallback(() => setManualZoom(null), []);
+  // 「원래 크기」 = 100% 계약(컨트롤이 disabled={zoom===1} 로 주장하는 것) 이행 —
+  // 구현이 setManualZoom(null)(fit 폴백)이라 실측 57% 로 떨어지고 버튼이 영영 활성이던
+  // 결함(26-08-26 적대 조작 검수). 화면 맞춤은 fitPreviewToScreen 이 별도로 담당한다.
+  const resetPreviewZoom = useCallback(() => setManualZoom(1), []);
 
   // 캔버스 빈 배경 클릭 → 선택 해제. 인라인 화살표로 두면 EditorCanvas 의 memo 가
   // 매 렌더 무효화되므로 정체성을 고정한다.

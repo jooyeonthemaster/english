@@ -16,6 +16,7 @@ import {
   type SectionKind,
 } from "./section-prompts";
 import { coerceAndValidate } from "./section-coerce";
+import { resolveAnchorRange } from "./passage-canvas-model";
 
 /**
  * 회복형(resilient) 지문 분석 생성기.
@@ -372,10 +373,14 @@ function reconcileMetaExamTypes(
   return types ? { ...meta, examTypes: types } : meta;
 }
 
-/** 필기 앵커 축자 게이트 — layout.anchorText 가 그 행의 문장 en 안에 글자 그대로 없으면
- *  드롭한다(행 유지, 카드는 rail 배치로 자연 강등). 병렬 생성에서 "however / Instead" 식
- *  합성 앵커가 나오던 것(블라인드 패널 C-3 ②)의 봉합 — 비축자 앵커는 어느 엔진에서든
- *  오배치 위험이라 모델 불문 방어로 둔다. */
+/** 필기 앵커 게이트 — layout.anchorText 가 그 행의 문장 en 에서 해석되지 않으면 드롭한다
+ *  (행 유지, 카드는 rail 배치로 자연 강등). 병렬 생성에서 "however / Instead" 식 합성
+ *  앵커가 나오던 것(블라인드 패널 C-3 ②)의 봉합.
+ *  판정 술어는 렌더러 정본 resolveAnchorRange(passage-canvas-model — E29-6 곱슬따옴표·대시
+ *  접기 포함)로 통일한다. 구판 축자 en.includes 는 렌더러보다 엄격해, 렌더가 충분히 붙일
+ *  수 있는 앵커(원문 곱슬따옴표 vs 모델 ASCII)를 생성 단계가 먼저 폐기했다 — 실DB 지문
+ *  22.4%가 곱슬 구두점 함유(26-08-26 전수조사 GEN-4). 합성 앵커 방어력은 동일하다
+ *  (resolveAnchorRange 도 실존 부분열만 통과). */
 function reconcileAnchors(sections: Partial<Record<SectionKind, AnalysisSection>>): void {
   const passage = sections.passage;
   if (!passage || passage.kind !== "passage") return;
@@ -385,7 +390,7 @@ function reconcileAnchors(sections: Partial<Record<SectionKind, AnalysisSection>
       const anchor = row.layout?.anchorText;
       if (!anchor || !row.layout) continue;
       const en = typeof row.sentenceNo === "number" ? byN.get(row.sentenceNo) : undefined;
-      if (!en || !en.includes(anchor)) delete row.layout.anchorText;
+      if (!en || !resolveAnchorRange(en, anchor)) delete row.layout.anchorText;
     }
   };
   const grammar = sections.grammar;
@@ -547,6 +552,22 @@ export async function generateAnalysisReportResilient(
   let draftMs = 0;
   if (engine === "parallel") {
     // ── 병렬 웨이브: 요약 선행(~6s, 개념·용어 공유 기반) → 나머지 섹션+meta 전면 병렬 ──
+    // 예산이 빠듯한 경로(실전 포함 = 코어 150s)는 grammar 를 요약과 **동시에** 선발사한다.
+    // grammar 는 실측 최장 꼬리(124s+)라 요약 선행 6~20s 를 기다리는 것만으로 150s 벽에
+    // 정각 절단됐다(실DB 실전 잡 171건 중 11건, 전건 genMs 149.9~150.0s — 26-08-26 전수조사
+    // GEN-1). grammar 프롬프트의 summaryCtx 는 선택 블록이라 없이 생성해도 계약 위반이 아니다.
+    const tightBudget = deadlineAt - Date.now() < 200_000;
+    const earlyGrammarPromise =
+      tightBudget && targets.includes("grammar") && !sections.grammar && Date.now() < deadlineAt
+        ? generateOneSection(
+            "grammar",
+            input,
+            { sentences: spineCtx, priorError: errors.grammar },
+            perCallTimeoutMs,
+            deadlineAt,
+            llmText,
+          )
+        : null;
     if (targets.includes("summary") && !sections.summary && Date.now() < deadlineAt) {
       const r = await generateOneSection(
         "summary",
@@ -568,7 +589,10 @@ export async function generateAnalysisReportResilient(
     const summaryCtx = deriveSectionContext({
       sections: Object.values(sections) as AnalysisReport["sections"],
     }).summary;
-    const waveKinds = targets.filter((k) => k !== "summary" && !sections[k]);
+    // 선발사된 grammar 는 웨이브에서 제외(이중 발사 방지) — 합류는 웨이브 뒤에서 한다.
+    const waveKinds = targets.filter(
+      (k) => k !== "summary" && !sections[k] && !(earlyGrammarPromise && k === "grammar"),
+    );
     if (waveKinds.length > 0 && Date.now() < deadlineAt) {
       const metaPromise: Promise<ReportMeta | null> = meta
         ? Promise.resolve(null)
@@ -603,6 +627,19 @@ export async function generateAnalysisReportResilient(
           errors[k] = r.error;
           perSection[k] = { source: "section-gen", attempts: prev + r.attempts, error: r.error };
         }
+      }
+    }
+    // 선발사 grammar 합류 — 웨이브와 동시 진행됐으므로 여기 await 은 직렬 지연을 더하지 않는다.
+    if (earlyGrammarPromise) {
+      const r = await earlyGrammarPromise;
+      const prev = perSection.grammar?.attempts ?? 0;
+      if (r.ok && r.section) {
+        sections.grammar = r.section;
+        delete errors.grammar;
+        perSection.grammar = { source: "section-gen", attempts: prev + r.attempts };
+      } else {
+        errors.grammar = r.error;
+        perSection.grammar = { source: "section-gen", attempts: prev + r.attempts, error: r.error };
       }
     }
     await emit();
