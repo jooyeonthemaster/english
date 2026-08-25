@@ -383,13 +383,68 @@ export function setVocabularyTierFilter(
  *  · 소스 불변 — rows 와 배열 필드까지 딥카피해 이후 편집이 소스 리포트를 오염시키지 않는다.
  *  · 이미 vocabulary 섹션이 있거나 소스에 어휘가 없으면 원본 그대로 반환(멱등·히스토리 무오염).
  */
+/**
+ * [E34-R2] 파이널 문서 **자신의 각주 어휘**(`final-onepage.mustKnow`)를 단어장 행으로 옮긴다.
+ *
+ * 왜 필요한가: 구 게이트는 「같은 지문의 **부모 기본(PRIME) 리포트**에 vocabulary 섹션이
+ * 있는가」만 봤다 — 파이널 자신이 무엇을 갖고 있든 판정에 영향이 0이었다. 그런데 파이널은
+ * 각주 어휘 `mustKnow[{term, meaning}]` 를 실제로 갖고 있고(실측 지문당 4~8개), DB 에는
+ * **부모 기본이 아예 없는 파이널**이 실재한다(지문 등록에서 basic/practice/final 택1이라
+ * 파이널만 단독 생성이 가능하다). 그 문서들은 자기 단어를 들고도 카드가 잠겨 있었다.
+ * (26-08-24 사용자 지적: 「파이널 워크북에서도 주요 단어 추출하잖아. 그거 기반으로
+ *  단어장 생성 가능하도록 해줘」)
+ *
+ * 매핑은 **필수 2필드만** 채운다 — 시험지 렌더가 반드시 읽는 것은 `headword`·`meaning`
+ * 둘뿐이고, `tier` 미지정은 "test", `difficulty` 미지정은 3 으로 떨어져 기본 출제 술어를
+ * 그대로 통과한다.
+ *
+ * ⚠ **없는 데이터를 지어내지 않는다.** `mustKnow` 에는 발음·동의어·반의어가 존재하지
+ *   않으므로 그 열은 **비운다**. 채우면 인쇄물에 거짓 정보가 실린다 — 그래서 호출부가
+ *   「동의어 쓰기·반의어 쓰기」 모드를 함께 잠근다.
+ * ⚠ 빈 배열이면 `[]` 를 돌려준다. 호출부가 **0개면 열지 않는다**(빈 시험지 인쇄 금지).
+ */
+export function vocabRowsFromMustKnow(
+  report: AnalysisReport | null | undefined,
+): { headword: string; meaning: string }[] {
+  const fin = report?.sections.find((s) => s.kind === "final-onepage");
+  if (fin?.kind !== "final-onepage") return [];
+  const raw = (fin as { mustKnow?: { term?: string; meaning?: string }[] }).mustKnow ?? [];
+  const out: { headword: string; meaning: string }[] = [];
+  const seen = new Set<string>();
+  for (const m of raw) {
+    const headword = (m?.term ?? "").trim();
+    const meaning = (m?.meaning ?? "").trim();
+    // 표제어·뜻 둘 다 있어야 문항이 성립한다(한쪽만 있으면 빈칸 문제가 된다).
+    if (!headword || !meaning) continue;
+    const key = headword.toLowerCase();
+    if (seen.has(key)) continue; // 같은 표제어 중복 출제 금지
+    seen.add(key);
+    out.push({ headword, meaning });
+  }
+  return out;
+}
+
 export function injectVocabTestSection(
   report: AnalysisReport,
   source: AnalysisReport | null | undefined,
 ): AnalysisReport {
   if (report.sections.some((s) => s.kind === "vocabulary")) return report;
   const src = source?.sections.find((s) => s.kind === "vocabulary");
-  if (src?.kind !== "vocabulary" || src.rows.length === 0) return report;
+  // [E34-R2] 부모 소스가 없으면 **자기 각주 어휘**로 합성한다(위 함수 주석).
+  // 소스 경로를 먼저 시도하는 순서가 계약이다 — 부모가 있으면 그쪽이 품질이 높다
+  // (실측: 부모 15~22행 vs 각주 4~8개, 발음·동의어·난이도까지 갖췄다).
+  if (src?.kind !== "vocabulary" || src.rows.length === 0) {
+    const rows = vocabRowsFromMustKnow(report);
+    if (rows.length === 0) return report;
+    const synthesized: AnalysisSection = {
+      kind: "vocabulary",
+      title: "단어 시험지",
+      rows,
+      vocabTestMode: "hide-meaning",
+    } as AnalysisSection;
+    const withSynth = { ...report, sections: [...report.sections, synthesized] };
+    return setSectionHidden(withSynth, "vocabulary", true);
+  }
   const injected: AnalysisSection = {
     ...src,
     rows: src.rows.map((row) => ({ ...row })),

@@ -131,6 +131,24 @@ export function reportFlowItems(
    * setReport 업데이터 안의 진단 호출들은 무수정으로 안전하다.
    */
   cache?: SectionFlowCache,
+  /**
+   * [E35] 조판 연속 문서(continuation) 옵션 — 같은 지문의 실전 학습지(PRIME_PRACTICE)가
+   * 부모 기본 학습지 **바로 뒤에** 조판될 때, 독립 문서 껍데기를 접고 앞 문서의 꼬리
+   * 섹션처럼 이어 붙이기 위한 것(호출자는 `compose-flow.ts` emitCompanion 하나뿐이다).
+   *
+   * - `omitDocIntro`: 표지·타이틀 블록·영어 원문 페이지를 만들지 않는다. 앞 문서가 같은
+   *   지문·같은 제목이라 여기서 또 찍으면 「같은 학습지가 처음부터 다시 시작」으로 읽힌다
+   *   (E35 의 발단 — 기본+실전을 함께 체크하면 제목이 두 번, 번호가 01 로 리셋).
+   * - `sectionNoStart`: 섹션 번호 시작값 = **직전 문서가 실제로 소비한 마지막 번호**.
+   *   기본이 01~04 로 끝나면 실전 학습지가 05 로 이어진다(E30 이전 병합 문서와 동일한 모양).
+   *
+   * **미전달이면 산출이 바이트 동일**하다 — 기존 소비자 전부(단독 편집기·학생 뷰어·미리보기·
+   * 썸네일)는 이 파라미터를 모르고, 알 필요도 없다.
+   */
+  compose?: {
+    omitDocIntro?: boolean;
+    sectionNoStart?: number;
+  },
 ): FlowItem[] {
   // 섹션 헤더(par-sec-head) ko/en 인라인 편집 — 슬롯키(kind+suffix)로 오버라이드 저장. (번호는 자동·고정)
   const headOverride = (key: string, fallbackKo?: string, fallbackEn?: string) => {
@@ -148,7 +166,10 @@ export function reportFlowItems(
   // 원페이지 파이널 문서 — 자체 헤더를 내장한 전면 시트 1장이 문서의 전부라
   // 표준 타이틀 블록·영어원문 페이지는 만들지 않는다(표지는 사용자가 켜면 그대로 동작).
   const finalOnly = report.sections.some((s) => s.kind === "final-onepage");
-  const items: FlowItem[] = vocabTestOnly
+  // [E35] 연속 문서는 표지까지 접는다 — 문서 한가운데 전면 표지가 서는 것이 제목 중복보다
+  // 더 파괴적이고, 실전 문서는 애초에 cover 상속이 금지라(E30 §1-3) 실데이터도 없다.
+  const skipDocIntro = vocabTestOnly || !!compose?.omitDocIntro;
+  const items: FlowItem[] = skipDocIntro
     ? []
     : [
         ...coverItems(report, edit?.ced),
@@ -200,7 +221,9 @@ export function reportFlowItems(
   // 꺼진 슬롯(report.hiddenSections)은 헤더와 본문이 통째로 빠지고 번호도 소비하지 않아
   // 남은 섹션이 01·02·03 으로 자동 재배열된다(하류 필터로는 번호에 구멍이 남는다).
   const hidden = hiddenSectionKeys(report);
-  let no = 0;
+  // [E35] 연속 문서는 직전 문서의 마지막 번호에서 이어 센다(미전달 = 0 = 기존과 동일).
+  // 아래 emit 캐시 키에 `no` 가 들어 있으므로 시작값이 바뀌면 캐시가 스스로 miss 난다.
+  let no = compose?.sectionNoStart ?? 0;
   const emit = (si: number, opts: Partial<SectionFlowOptions>, slotKey: string) => {
     const section = report.sections[si];
     // study 를 실제로 읽는 경로인가 — clean 패스는 절대 읽지 않는다(passage-flow 조기반환).

@@ -101,6 +101,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   AlertTriangle,
   ArrowLeft,
+  Check,
   ChevronLeft,
   ChevronRight,
   Copy,
@@ -108,6 +109,7 @@ import {
   Key,
   LayoutTemplate,
   Loader2,
+  Pencil,
   Printer,
 } from "lucide-react";
 
@@ -152,10 +154,14 @@ import { useComposeQuestions } from "./use-compose-questions";
 // (순환 import 처럼 보이지만 아니다 — 번들러는 named import 를 **호출 지점 프로퍼티
 //  접근**으로 컴파일하고 함수 선언은 호이스팅되므로 값이 비어 있는 창이 없다.
 //  규칙을 여기로 복제하지 마라: 두 벌이 되는 순간 조용히 갈린다.)
+import { toast } from "sonner";
 import { withPassageGroupedQuestionOrder } from "@/lib/studio/pick-order";
 import type { PickedQuestionMeta } from "./dossier-pick-bar";
 import type { SheetPickMeta } from "@/lib/studio/sheet-pick-types";
-import { registerSheetComposeDirtyProbe } from "@/lib/studio/sheet-compose-dirty-guard";
+import {
+  registerSheetComposeDirtyProbe,
+  SHEET_COMPOSE_SWITCH_CONFIRM,
+} from "@/lib/studio/sheet-compose-dirty-guard";
 import { SHEET_PLAN_LABEL } from "@/lib/studio/sheet-products";
 import {
   isFinalOnepageReportShape,
@@ -272,6 +278,8 @@ const EMPTY_STORE: DocStore = { docs: new Map(), dropped: new Map() };
 const IDS_KEY_SEP = "\u0001";
 /** 고정 참조 빈 배열 3종 — 매 렌더 새 `[]` 하나가 합성 전량 재계산의 방아쇠다. */
 const EMPTY_IDS: string[] = [];
+/** [E34-R1] 칩 체크 집합의 참조 고정 초기값(빈 집합 = 자동 체크 금지). */
+const EMPTY_CHECKED: ReadonlySet<string> = new Set();
 const EMPTY_QUESTION_ITEMS: FlowItem[] = [];
 
 // ── [E27] 지문 그룹 인터리브 (E27-SPEC §2 R1-4~R1-7) ──────────────────────────
@@ -387,6 +395,7 @@ export function SheetComposeSurface({
   academyId,
   pickedQuestions,
   questionsTitle,
+  onRevealPassage,
 }: {
   /** 문서 로더의 소유 검증 입력. null 이면 조회 자체를 하지 않는다(클래스 미선택). */
   classId: string | null;
@@ -411,8 +420,31 @@ export function SheetComposeSurface({
   picked: ReadonlyMap<string, SheetPickMeta>;
   /** 활성(=편집 대상) 문서. null 이면 체크 순서 첫 문서로 자동 수렴한다. */
   activeReportId: string | null;
-  /** 활성 문서 전환 요청(헤더 문서 칩 클릭 · 자동 수렴 동기화). */
+  /** 활성 문서 전환 요청 — **[E33] 이후 자동 수렴 동기화 전용**이다.
+   *  구 자구는 「헤더 문서 칩 클릭 · 자동 수렴 동기화」였는데, 칩이 이동 전용이 되면서
+   *  **사용자 제스처 발신지는 0**이 됐다(칩 onClick 주석 · requestActiveDoc 묘비 참조).
+   *  남은 발신지는 아래 activeId 수렴 effect 하나뿐이고, 그 사실 위에 forActive
+   *  스테일 무효화가 「단독 방어선」으로 서 있다. */
   onActiveReportIdChange: (reportId: string) => void;
+  /**
+   * [E31] 좌측 지문 목록에서 이 지문 카드를 **되짚어 달라**는 요청(26-08-24 사용자
+   * 지시: 「이거 클릭하면 해당 지문으로 그 지문 목록 탭에서 스크롤이 스르르 …
+   * 이동하게」). 발신 지점은 **헤더 문서 칩 클릭 한 곳뿐**이다.
+   *
+   * ⚠ 위 `onActiveReportIdChange` 에 이 책임을 얹지 마라. 그 채널은 **자동 수렴**
+   *   에서도 발화한다(:620 effect — 활성 id 가 아직 안 왔거나 대기열에서 증발했을
+   *   때 스스로 맞춘다). 거기에 스크롤을 물리면 사용자가 좌측 목록을 훑는 중에
+   *   백그라운드 수렴이 목록을 낚아채 간다 — §3.10.20 E23 이 겪은 스크롤
+   *   하이재킹과 같은 계통의 사고다. 그래서 **사용자 제스처 전용 채널**을 따로 뚫는다.
+   *
+   * ⚠ 이 표면은 `passageId` 를 **자기 `picked` 메타에서** 꺼내 보낸다(reportId 를
+   *   올려 호스트가 다시 접게 하지 않는다) — 조판 순서·활성 판정과 달리 이 값은
+   *   해석의 여지가 없는 단순 사영이라 옮길 이유가 없다.
+   *
+   * 미전달 = 칩은 **캔버스 스크롤만** 하고 좌측 목록은 가만히 있다(additive).
+   * ([E33] 구 자구 「칩은 활성 전환만 하고」는 칩이 이동 전용이 되며 거짓이 됐다.)
+   */
+  onRevealPassage?: (passageId: string) => void;
   /**
    * 표면이 지금 보이는가. 다른 자산 뷰로 가면 호스트가 **숨김 마운트**로 보존하며 false 를
    * 내린다. false 동안 Escape 닫기·포커스가 비활성이고(숨은 표면이 전역 Escape 를 가로채
@@ -663,15 +695,54 @@ export function SheetComposeSurface({
   }, [readyIds, activeId]);
   const composeDocs = useMemo<ComposeDoc[]>(() => {
     const list: ComposeDoc[] = [];
-    for (const id of readyIds) {
+    for (let i = 0; i < readyIds.length; i += 1) {
+      const id = readyIds[i];
       if (id === activeId) continue;
       const doc = docs.get(id);
       const key = composeDocKeyById.get(id);
       if (!doc || !key) continue;
-      list.push({ docKey: key, title: doc.title, report: doc.report });
+      // ── [E35] 실전 학습지 연속 조판 ─────────────────────────────────────────
+      // 「기본+실전을 함께 체크하면 실전이 독립 문서로 재시작(같은 제목 또 + 번호 01
+      // 리셋)해 기본 학습지가 두 번 조판된 것처럼 읽힌다」의 수리. 인쇄 순서(readyIds)
+      // 상 **직전 문서가 같은 지문의 기본(PRIME)** 일 때만 실전(PRIME_PRACTICE)을
+      // 연속 문서로 잇는다 — 표지·타이틀 생략 + 섹션 번호 이어매김(compose-flow.ts
+      // `ComposeDoc.joinPrev`). E30 이전 병합 문서(01~05)와 같은 모양이 된다.
+      //  · 판정을 readyIds 축으로 하는 이유: 슬롯 방출 순서 = readyIds 순서(활성은
+      //    composeActiveIndex 로 제자리 삽입)라 「직전」이 인쇄 사실과 1:1 이다.
+      //  · 직전이 활성 문서(기본)여도 docs Map 에 있으므로 같은 식으로 판정된다.
+      //  · 기본이 아직 미도착/미픽이면 조용히 독립 문서로 남는다(전이 프레임 안전).
+      //  · 편집 대상이 실전 자신일 때는 여기 오지 않는다(활성은 companions 제외) —
+      //    그 경우 실전은 편집 문맥으로 독립 문서 모양(제목+01)으로 보이고, 기본을
+      //    다시 편집 대상으로 고르면 연속 모양으로 돌아온다.
+      const prev = i > 0 ? docs.get(readyIds[i - 1]) : undefined;
+      const joinPrev =
+        doc.planMarker === "PRIME_PRACTICE" &&
+        !!prev &&
+        prev.passageId === doc.passageId &&
+        prev.planMarker === "PRIME";
+      list.push(
+        joinPrev
+          ? { docKey: key, title: doc.title, report: doc.report, joinPrev: true }
+          : { docKey: key, title: doc.title, report: doc.report },
+      );
     }
     return list;
   }, [readyIds, activeId, docs, composeDocKeyById]);
+
+  /**
+   * [E34-R1] **편집 대상이 앉을 슬롯** — `composeDocs`(= readyIds 에서 활성을 뺀 배열)
+   * 기준 인덱스. 편집기가 이 값을 `buildComposedView({ activeIndex })` 로 흘려보내
+   * 편집 대상을 **대기열 제자리**에 인쇄한다.
+   *
+   * `readyIds.indexOf(activeId)` 를 그대로 쓰는 것이 옳은 이유: `composeDocs` 는
+   * readyIds 에서 활성 **하나만** 빼고 순서를 보존한 배열이다. 따라서 활성의
+   * readyIds 인덱스 `i` 는 곧 「앞에 부착 문서가 i 개 있다」이고, 그 자리에 끼워
+   * 넣으면 readyIds 순서가 그대로 복원된다.
+   *
+   * 원시값이라 memo 하지 않는다(이 파일의 `readyIdsKey` 관용구와 같은 판단).
+   * 활성이 아직 안 왔으면 0 = 선두 = R1 이전 동작.
+   */
+  const composeActiveIndex = activeId ? Math.max(0, readyIds.indexOf(activeId)) : 0;
 
   // ── [E27] 지문 그룹 모델 (E27-SPEC §2 R1-7 1번) ─────────────────────────────
   /**
@@ -970,25 +1041,26 @@ export function SheetComposeSurface({
     // 지문별 앵커. 뒤 그룹이 앞 그룹을 덮어써 「마지막 실행이 이긴다」가 성립한다.
     const anchorOf = new Map<string, { groupKey: string; docKey: string }>();
     for (const group of passageGroups) {
-      // 앵커 후보는 **스트림 순서의 마지막 문서**다. 합성 스트림은 `buildComposedView` 가
-      // 「활성 1건 → 부착 N건(readyIds 순서)」로 고정하므로(`compose-flow.ts:230-236`),
-      // 그룹에 부착 문서가 하나라도 있으면 **그 그룹의 마지막 부착 문서**가 언제나
-      // 활성 문서보다 뒤에 온다. 활성 문서를 앵커로 잡으면 정렬이 흔들린 프레임에서
-      // 「그 지문 학습지 일부가 자기 문제 **뒤**에」 인쇄된다.
-      let lastCompanionKey: string | null = null;
-      let hasActive = false;
+      // 앵커 후보는 **스트림 순서의 마지막 문서**다.
+      //
+      // ⚠⚠ [E34-R1] 구판은 「그룹의 마지막 **부착** 문서, 없으면 활성」이었고 그 근거가
+      //   「합성 스트림은 활성 1건 → 부착 N건으로 **고정**」이었다. R1 이 그 전제를
+      //   없앴다(activeIndex 슬롯 방출 — 편집 대상이 대기열 제자리에 인쇄된다).
+      //   구 규칙을 그대로 두면 그룹의 마지막 문서가 편집 대상일 때 그 지문 문항이
+      //   **편집 대상 학습지 앞**에 인쇄된다(`[기본][문항][실전]` 역전).
+      //   에러 0 · 인쇄물에서만 발견 — E27 이 캐리포워드로 이미 한 번 수리한
+      //   「학생지 번호 1,3,2」와 같은 계통이다.
+      // → 새 규칙: **큐 순서(group.reportIds)를 훑어 마지막 ready 문서**. 그 문서가
+      //   편집 대상이면 ACTIVE_DOC_KEY 다. `group.reportIds` 는 pickedGroupKey 파생이라
+      //   이미 picked 삽입 순서 = 인쇄 순서다.
+      let docKey: string | null = null;
       for (const id of group.reportIds) {
         if (!readySet.has(id)) continue;
-        if (id === activeId) {
-          hasActive = true;
-          continue;
-        }
-        const key = composeDocKeyById.get(id);
         // keyById 는 같은 readyIds/activeId 로 만들어져 여기서 미스가 날 수 없지만,
         // 미스를 흘리면 앵커가 조용히 엉뚱한 문서를 가리키는 자리라 방어적으로 건너뛴다.
-        if (key) lastCompanionKey = key;
+        const key = id === activeId ? ACTIVE_DOC_KEY : composeDocKeyById.get(id);
+        if (key) docKey = key;
       }
-      const docKey = lastCompanionKey ?? (hasActive ? ACTIVE_DOC_KEY : null);
       if (docKey) anchorOf.set(group.passageId, { groupKey: group.key, docKey });
     }
 
@@ -1378,10 +1450,36 @@ export function SheetComposeSurface({
   const activeDocIsFinal =
     !!activeDoc &&
     (activeDoc.planMarker === "PRIME_FINAL" || isFinalOnepageReportShape(activeDoc.report));
-  const activeFinalPassageId = activeDocIsFinal && activeDoc ? activeDoc.passageId : null;
+  // [E30] 실전 학습지도 **자식 문서**다 — 섹션이 learning-worksheet 하나뿐이라
+  // 파이널과 똑같이 활동 생성 컨텍스트(지문·어휘·어법)가 비어 있다.
+  // ⚠ 판정은 `planMarker` **단독**이다. 파이널처럼 모양 폴백을 붙이면 안 된다 —
+  //   기본 학습지도 learning-worksheet 를 품을 수 있어(레거시 병합본 366건)
+  //   모양으로는 부모와 자식을 **원리적으로 못 가른다**. 그게 스펙 P4 가
+  //   「모양 자기감지 트릭은 실전에 적용 불가」라고 못박은 이유다.
+  const activeDocIsPractice =
+    !!activeDoc && activeDoc.planMarker === "PRIME_PRACTICE";
+  // 부모 기본 리포트를 끌어와야 하는 자식 = 파이널 ∪ 실전.
+  // ⚠ 이름이 `activeFinalPassageId` 였다 — 실전이 합류하면서 「파이널 전용」이라는
+  //   거짓 단서가 됐다. 아래 로더는 **무파라미터 GET**(= 부모 PRIME)이라 실전에도
+  //   그대로 옳다: 자식이 무엇이든 끌어와야 할 것은 언제나 부모 기본 리포트다.
+  const activeChildPassageId =
+    (activeDocIsFinal || activeDocIsPractice) && activeDoc ? activeDoc.passageId : null;
+  /**
+   * [E30] 편집기 저장 대상 행을 **URL 로** 못박는다(스펙 §5 P4).
+   *
+   * 이 배선이 없으면 실전 문서를 조판실에서 편집·저장할 때 PATCH 가 무파라미터로
+   * 나가고, 서버의 모양 자기감지는 실전 문서를 `PRIME` 으로 분류해 **부모 기본
+   * 학습지 행을 통째로 덮어쓴다**. (U2 가 라우트에 fail-closed 409 백스톱을 넣어
+   * 파괴는 막혀 있지만, 배선 전까지는 저장 자체가 거부된다 — 여기가 그 짝이다.)
+   */
+  const activeDocVariant: "basic" | "final" | "practice" = activeDocIsPractice
+    ? "practice"
+    : activeDocIsFinal
+      ? "final"
+      : "basic";
   useEffect(() => {
-    if (!activeFinalPassageId) return;
-    if (activitySourceCache.has(activeFinalPassageId)) return;
+    if (!activeChildPassageId) return;
+    if (activitySourceCache.has(activeChildPassageId)) return;
     // 문서 전환·언마운트 뒤 도착한 응답은 버린다(cancelled — 늦은 setState 방지,
     // `prime-analysis-view.tsx` 로더와 동형). 위 문서 로더가 경고한 「영영 재요청 안
     // 되는 정지 상태」를 피하려고 **in-flight 기록을 따로 두지 않는다**: 버려진 지문은
@@ -1392,7 +1490,7 @@ export function SheetComposeSurface({
       let next: AnalysisReport | null = null;
       try {
         const res = await fetch(
-          `/api/workbench/passage-reports/prime/${activeFinalPassageId}`,
+          `/api/workbench/passage-reports/prime/${activeChildPassageId}`,
         );
         const j = (await res.json()) as { report?: unknown } | null;
         if (j?.report && !isFinalOnepageReportShape(j.report as AnalysisReport)) {
@@ -1405,14 +1503,14 @@ export function SheetComposeSurface({
       if (cancelled) return;
       setActivitySourceCache((prev) => {
         const nextMap = new Map(prev);
-        nextMap.set(activeFinalPassageId, next);
+        nextMap.set(activeChildPassageId, next);
         return nextMap;
       });
     })();
     return () => {
       cancelled = true;
     };
-  }, [activeFinalPassageId, activitySourceCache]);
+  }, [activeChildPassageId, activitySourceCache]);
 
   // ── 저장 결과를 캐시에 반영 ─────────────────────────────────────────────────
   // 안 하면 문서 A 를 저장한 뒤 B 로 갔다가 A 로 돌아왔을 때 **저장 이전 본문**이 뜬다
@@ -1500,11 +1598,22 @@ export function SheetComposeSurface({
   useEffect(() => {
     dirtyRef.current = Boolean(toolbar?.dirty);
   }, [toolbar?.dirty]);
+  // [E34-R1] 저장 in-flight 미러 — 위 dirtyRef 와 **같은 관용구**.
+  // 왜 필요한가: 저장 PATCH 가 도는 중에 편집 대상을 바꾸면 편집기가 언마운트되어
+  // 응답 처리(setError / setBaseline / dispatchReport)가 통째로 죽고 `onSaved` 만
+  // store 를 갱신한다 → **저장이 실패해도 그 사실이 화면 어디에도 안 뜬다**(사용자는
+  // 저장됐다고 믿고 서버는 옛 본문). 오늘까지 이 경로는 confirm 을 동반한 「체크 해제」
+  // 하나뿐이라 희소했는데, R1 이 전환을 원클릭 상시 제스처로 승격시킨다.
+  // ⚠ `saving` 의 기존 소비처는 **버튼 disabled 뿐**이고 어떤 가드도 읽지 않는다.
+  const savingRef = useRef(false);
+  useEffect(() => {
+    savingRef.current = Boolean(toolbar?.saving || toolbar?.savingAs);
+  }, [toolbar?.saving, toolbar?.savingAs]);
 
   /**
    * 【필수】 미저장 편집 소실 가드의 **세 번째 경로**: 체크 해제.
    *
-   * 닫기(handleClose)·활성 전환(requestActiveDoc)에는 confirm 이 있었지만, 대기열에서
+   * 닫기(handleClose)·활성 전환(구 requestActiveDoc — [E33] 삭제)에는 confirm 이 있었지만, 대기열에서
    * 활성 문서를 빼는 경로에는 없었다. 그 경우 위 `activeId` 자동 수렴(:308-314)이 다음
    * 문서로 넘어가고 `key={activeDoc.reportId}`(:706)가 편집기를 재마운트해 **편집이
    * 경고 없이 증발**한다 — 프로브 `.tmp-worksheet-compose/_audit-l3-b.mjs` 실측:
@@ -1546,20 +1655,92 @@ export function SheetComposeSurface({
     onClose();
   }, [onClose]);
 
-  const requestActiveDoc = useCallback(
-    (reportId: string) => {
-      if (reportId === activeId) return;
+  /**
+   * ══ [E33] 구 `requestActiveDoc`(사용자 제스처 활성 전환)은 **삭제됐다** ══════════
+   *
+   * 유일한 호출부가 헤더 문서 칩이었고, 그 칩이 **이동 전용**이 되면서 호출자가 0이
+   * 됐다(칩 onClick 의 긴 주석이 전말의 정본). 삭제 이유는 「안 쓰니까」가 아니다:
+   * 이 표면에서 활성 문서를 사용자 제스처로 바꾸는 일 자체가 **없어야 한다**.
+   * 조판 엔진이 활성 문서를 언제나 맨 앞에 인쇄하고 표지·설정까지 그 문서 것을 쓰므로
+   * (`compose-flow.ts` buildComposedView), 전환은 곧 **인쇄물 재편**이고 칩 번호가
+   * 통째로 뒤집힌다. 사용자 확정(26-08-24): 편집·저장 대상은 **맨 앞 문서 1건 고정**.
+   *
+   * ⚠ 되살리려면 이 함수만 되돌리는 것으로는 부족하다. ⓐ 전환이 순서를 바꾼다는 사실을
+   *   **누르기 전에** 고지하고 ⓑ 칩 본문이 아닌 별도 컨트롤에 달고 ⓒ 여기 있던 dirty
+   *   confirm(「다른 학습지로 옮기면 사라집니다」 — 전환은 편집기 `key` 교체 = 재마운트라
+   *   undo 히스토리까지 초기화된다, E21-6 4번)을 **함께** 되살려야 한다.
+   *
+   * ⚠ 활성은 여전히 **바뀔 수 있다** — 다만 사용자 제스처가 아니라 **대기열 변동**으로만
+   *   이다(오케스트레이터 `pickActiveSheetId` · 아래 activeId 자동 수렴). 그 경로들의
+   *   미저장 편집 가드는 이 함수가 아니라 `guardSheetPickRemoval`(체크 해제)과 바로 아래
+   *   「세 번째 경로」 절이 담당한다 — 그쪽은 무접촉이다.
+   *
+   * ══ [E34-R1] 되살아났다 — 이름은 `requestEditTarget` ═══════════════════════════
+   * 묘비가 요구한 3조건 중 **ⓐ(순서 변경 사전 고지)는 소멸**했다. R1 이 편집 대상을
+   * 대기열 제자리에 인쇄하므로(`compose-flow.ts` activeIndex) 전환이 더는 순서를
+   * 바꾸지 않는다 — 고지할 사실 자체가 없어졌다. ⓑ·ⓒ 는 그대로 지켰다:
+   *   ⓑ 칩 본문이 아닌 **별도 컨트롤**(칩 형제 ✎ 버튼)
+   *   ⓒ dirty confirm(아래 SHEET_COMPOSE_SWITCH_CONFIRM)
+   * 여기에 하나를 더 얹었다 — **저장 중 차단**(confirm 이 아니다, 그 사유는 savingRef 주석).
+   */
+  // ══ [E34-R1] 칩 체크 집합 — **표면 로컬. 어떤 prop 으로도 위로 올리지 마라.** ══
+  // 그것이 「체크는 순서에 영향을 줄 물리적 경로가 0」의 구조적 증명이다. 위로 올리는
+  // 순간 오케스트레이터가 이 값을 정렬·활성 선정에 쓸 수 있게 되고, 그 길이 열리면
+  // R1 이 없앤 「고르면 순서가 바뀐다」가 다른 문으로 되돌아온다.
+  // 표면은 aside 한 곳에서만 마운트되므로(2트리 함정 무관) 로컬 state 가 안전하다.
+  const [checkedDocIds, setCheckedDocIds] = useState<ReadonlySet<string>>(EMPTY_CHECKED);
+  // 대기열에서 사라진 id 청산 — pendingScroll 청산과 같은 규율(청산 외 부수효과 0).
+  useEffect(() => {
+    setCheckedDocIds((prev) => {
+      if (prev.size === 0) return prev;
+      let changed = false;
+      const next = new Set<string>();
+      for (const id of prev) {
+        if (picked.has(id)) next.add(id);
+        else changed = true;
+      }
+      return changed ? next : prev;
+    });
+  }, [picked]);
+  /** 칩 체크 토글. 체크(off→on)만 스크롤을 발사한다 — 해제는 부수효과 0. */
+  const toggleDocChecked = useCallback(
+    (reportId: string, revealPassageId: string) => {
+      let turnedOn = false;
+      setCheckedDocIds((prev) => {
+        const next = new Set(prev);
+        if (next.has(reportId)) next.delete(reportId);
+        else {
+          next.add(reportId);
+          turnedOn = true;
+        }
+        return next;
+      });
+      // ⚠ 상태 업데이터 안에서 부수효과를 내지 않는다(업데이터는 렌더 단계에서 두 번
+      //   돌 수 있다) — 위 플래그는 **동기 실행**되는 이 함수 본문에서만 읽는다.
+      if (!turnedOn) return;
+      // 스크롤은 반드시 **기존 보류함**을 탄다: 본문 미도착 대기 · 숨김 마운트
+      // (offsetParent null) · 대상 소멸 청산 · 스테일 활성 대조가 전부 그 파이프라인에
+      // 이미 들어 있다. 직접 좌표를 만들지 마라.
+      setPendingScroll({ kind: "doc", id: reportId });
+      if (revealPassageId) onRevealPassage?.(revealPassageId);
+    },
+    [onRevealPassage],
+  );
+
+  const requestEditTarget = useCallback(
+    (reportId: string): boolean => {
+      if (reportId === activeIdRef.current) return true; // 같은 문서 = 무동작
+      if (savingRef.current) {
+        toast.info("저장 중입니다. 잠시 후 다시 시도해 주세요.");
+        return false;
+      }
       // 전환은 편집기 `key` 교체 = 재마운트다(E21-6 4번). undo 히스토리·줌·활성 블록이
       // 초기화되고 미저장 편집은 복구 불가라, confirm 자구가 그 사실을 그대로 말한다.
-      if (dirtyRef.current) {
-        const ok = window.confirm(
-          "저장하지 않은 편집이 있어요. 다른 학습지로 옮기면 사라집니다. 계속할까요?",
-        );
-        if (!ok) return;
-      }
+      if (dirtyRef.current && !window.confirm(SHEET_COMPOSE_SWITCH_CONFIRM)) return false;
       onActiveReportIdChange(reportId);
+      return true;
     },
-    [activeId, onActiveReportIdChange],
+    [onActiveReportIdChange],
   );
 
   // ── 가시성·포커스·Escape (시험지 조판 표면과 동일 계약) ────────────────────
@@ -1624,6 +1805,8 @@ export function SheetComposeSurface({
    * ⚠ 「`requestActiveDoc` 안에서 `setScrollRequest(null)`」 단독 처방은 **채택 금지**다 —
    *   칩 클릭만 덮고 「활성 학습지 체크 해제 → `activeId` 가 `readyIds[0]` 로 자동 수렴」
    *   경로(위 activeId memo)에서는 `requestActiveDoc` 이 아예 호출되지 않는다.
+   *   ([E33] 그 함수는 이제 아예 없다 — 활성 전환의 유일한 경로가 **자동 수렴 하나**가
+   *    됐으므로 이 `forActive` 무효화가 그 경로를 덮는 **단독 방어선**이다. 걷지 마라.)
    */
   const [scrollRequest, setScrollRequest] = useState<{
     req: ComposeScrollRequest;
@@ -1751,9 +1934,35 @@ export function SheetComposeSurface({
     // 이 가드는 로딩 중(:715-723)·조회 실패(:724-739)처럼 `picked>0` 이지만 activeDoc 이
     // 없는 구간까지 함께 덮는다.
     if (!activeDoc) return;
-    // 폰트 미로드 상태로 print() 를 부르면 브라우저가 스풀 중 폰트를 받아 시작이 지연된다
-    // (`passage-analysis-modal.tsx:589-593` 관용구).
-    void document.fonts.ready.then(() => window.print());
+    // [사파리 26-08-25] print() 는 가능한 한 클릭 태스크에서 **동기로** 부른다 — 사파리(특히
+    // iOS)는 transient activation 창이 짧아 제스처에서 프라미스 몇 홉만 멀어져도 호출이
+    // 무시될 수 있고, WebKit 은 fonts.ready 를 조기/지연 resolve 하는 버그 계보가 있다
+    // (WebKit #174030 · #217047 · #225790). 폰트가 이미 로드됐으면(표면이 떠 있는 동안
+    // 사실상 항상) 즉시 발사하고, 미로드일 때만 fonts.ready 를 기다리되 1.5s 타임아웃
+    // 레이스로 「영영 안 뜨는 인쇄」를 차단한다. 폰트 미로드 인쇄(폴백 폰트 스풀)를 피하는
+    // 취지는 구판 관용구(`passage-analysis-modal.tsx:589-593`)와 동일하다.
+    if (document.fonts.status === "loaded") {
+      window.print();
+      return;
+    }
+    void Promise.race([
+      document.fonts.ready,
+      new Promise<void>((resolve) => {
+        window.setTimeout(resolve, 1500);
+      }),
+    ]).then(() => {
+      // 【스테일 가드 — 적대 검수 지적】 대기(≤1.5s) 중 표면 이탈·문서 소실이 일어나면
+      // 인쇄 화이트리스트가 무장 해제된 채 발사되어 앱 화면이 인쇄된다(위 0건 가드가
+      // 결함으로 규정한 그 증상). 발사 직전, 인쇄 CSS 의 무장 조건과 **같은 셀렉터**로
+      // 인쇄 대상 루트의 실존을 재검사한다(비활성 표면은 printExclude 가 붙어 제외됨).
+      if (
+        !document.querySelector(
+          ".par-root:not(.par-cover-preview):not(.par-print-exclude)",
+        )
+      )
+        return;
+      window.print();
+    });
   }, [activeDoc]);
 
   // ── 문서 칩 스트립 스크롤 계기(고지 배지 소멸 결함 수술) ────────────────────
@@ -2055,8 +2264,10 @@ export function SheetComposeSurface({
               </span>
             ) : null}
           </p>
-          {/* ② 칩 줄 — 조판 순서와 활성 문서 전환(E21-6 4번)의 **유일한 조작면**이라
-              고지와 자리를 다투게 두지 않는다. 넘칠 때만 좌우 페이드 + ‹ › 버튼이 뜬다
+          {/* ② 칩 줄 — 조판 순서 고지이자 **문서 간 이동의 유일한 조작면**이라
+              고지와 자리를 다투게 두지 않는다.
+              ([E33] 구 자구 「활성 문서 전환(E21-6 4번)의 유일한 조작면」은 거짓이다 —
+               칩은 편집 대상을 바꾸지 않는다. 편집 대상은 대기열 선두 1건 고정.) 넘칠 때만 좌우 페이드 + ‹ › 버튼이 뜬다
               (레이아웃에 영향 없도록 absolute 오버레이 — 버튼이 폭을 먹으면 스크롤 여부가
               토글되며 떨린다). */}
           <div className="relative px-2 py-1">
@@ -2088,11 +2299,24 @@ export function SheetComposeSurface({
                 // 유일한 통로가 대기열 메타이고, `composeIds` 가 `picked.keys()` 파생이라
                 // 여기서 meta 가 비는 일은 구조적으로 없다 — 그래도 폴백은 남긴다.
                 const passageTitle = meta?.passageTitle ?? "";
+                // [E31] 되짚기 스크롤의 좌표. 문서(reportId)가 아니라 **지문**이
+                // 목적지인 이유: 좌측 목록의 그릇이 지문 카드이고(E28), 같은 지문의
+                // 기본/실전/파이널 학습지는 그 한 장 안의 형제 행이다.
+                // 빈 문자열이면 보내지 않는다 — 「지문 미상」은 목적지가 아니다
+                // (studio-home-client `pickActiveSheetId` 의 빈 passageId 가드와 같은 규율).
+                const revealPassageId = meta?.passageId ?? "";
                 const marker = doc?.planMarker ?? meta?.planMarker ?? "";
                 const planLabel = SHEET_PLAN_LABEL.get(marker) ?? marker;
                 /**
-                 * 칩 앞머리의 플랜 **축약**. 168px 안에서 「기본 학습지」(≈63px)를 통째로
-                 * 실으면 지문 제목이 3~4자만 남아 같은 지문 형제 칩이 구분되지 않는다.
+                 * 칩 앞머리의 플랜 **축약**.
+                 *
+                 * ⚠ [E31] 원래 근거는 폭 예산이었다 — 「168px 안에서 『기본 학습지』
+                 *   (≈63px)를 통째로 실으면 지문 제목이 3~4자만 남는다」. 폭 상한이
+                 *   철거된 지금 그 근거는 죽었지만 **축약은 유지한다**: 이제 칩이
+                 *   내용만큼 넓어지므로 라벨 3글자를 아끼는 것이 곧 스트립 가로
+                 *   스크롤을 늦추는 일이고, 「기본/실전/파이널」이라는 구분력은 첫
+                 *   어절에 이미 전부 들어 있다(전체 라벨은 툴팁).
+                 *   되돌리고 싶다면 그때는 폭이 아니라 **가독성**을 근거로 삼아라.
                  * 새 상수를 만들지 않고 `SHEET_PLAN_LABEL` 정본의 첫 어절을 취한다 —
                  * 이 리포는 라벨 **복제본**을 명시적으로 금지한다(sheet-products.ts
                  * SHEET_STATUS_BADGE 주석 「값 복제본이 두 표면에 살면 같은 문서가 서로
@@ -2103,49 +2327,170 @@ export function SheetComposeSurface({
                 /** 칩 본문 1줄. 지문 제목이 정본, 없으면 AI 제목으로 폴백(빈 칩 금지). */
                 const chipTitle = passageTitle || aiTitle || "학습지";
                 const isActive = id === activeId;
+                const isChecked = checkedDocIds.has(id);
                 return (
+                  // [E34-R1] 칩 + ✎ 를 감싸는 형제 컨테이너.
+                  // ⚠ ✎ 를 칩 **안**에 넣지 마라 — button 중첩은 HTML 위반이고 프로브
+                  //   클릭이 상위 칩으로 새어 두 동작이 뒤엉킨다.
+                  <div key={id} className="flex shrink-0 items-center gap-0.5">
                   <button
-                    key={id}
                     type="button"
                     disabled={!doc}
-                    onClick={() => requestActiveDoc(id)}
+                    // [E34-R1] 칩은 **체크박스**다(다중 선택). `<label>+<input>` 로 만들지
+                    // 마라: ⓐ 프로브 3종이 전부 `button[data-doc-chip]` 으로 집는다 —
+                    // 엘리먼트 타입을 바꾸면 하드 FAIL 이 아니라 텍스트 폴백으로 **조용히
+                    // 퇴화**한다(가짜 GREEN) ⓑ `.click()` 이 label→input 으로 이중 발화해
+                    // 조용히 두 번 토글된다.
+                    role="checkbox"
+                    aria-checked={isChecked}
+                    // ══ [E33] 칩은 **이동 전용**이다 — 편집 대상을 바꾸지 않는다 ══
+                    // 구 동작: 칩 클릭 = `requestActiveDoc(id)`(편집 대상 전환).
+                    // 그런데 조판 엔진은 **편집 중 문서를 언제나 맨 앞에 인쇄**한다
+                    // (`compose-flow.ts` buildComposedView: active 먼저 → companions,
+                    //  `pagesReport: active.report` 라 표지·설정도 그 문서 것이다).
+                    // 대기열 정렬(`withPassageGroupedOrder` 규칙 ②)은 그 인쇄 사실을
+                    // 미러할 뿐이라, 칩을 누르면 **칩 번호가 통째로 뒤집혔다** —
+                    // 사용자는 「2번으로 스크롤」을 기대했는데 시스템은 「2번을 맨 앞으로」로
+                    // 답했다(26-08-24 사용자 지적: 「순서 바뀌지 않고 그냥 스크롤만」).
+                    //
+                    // → 클릭 = ①이 문서 위치로 스크롤 ②좌측 지문 목록 되짚기. 둘 다
+                    //   **읽기 동작**이라 순서·인쇄물·저장 대상 어느 것도 건드리지 않는다.
+                    // → 스크롤은 `setPendingScroll` 보류함을 탄다(직접 좌표를 만지지 마라):
+                    //   본문 미도착·숨김 마운트(offsetParent null)·체크 해제로 대상 소멸·
+                    //   스테일 활성 대조가 전부 그 파이프라인에 이미 들어 있다.
+                    //   활성 문서 자신이면 소비 effect 가 `docKey:null` 로 번역한다.
+                    //
+                    // ⚠⚠ [E34-R1] 여기에 편집 전환을 **다시 붙이지 마라.** 그건 이제
+                    //   형제 ✎ 버튼의 책임이다(축 분리). 칩에 붙이면 「체크 = 편집 대상」이
+                    //   되는데 편집 대상은 구조적으로 1건이라 체크도 1개만 살아남고,
+                    //   그러면 사용자가 신고한 「다른 게 체크 해제된다」가 그대로 재현된다.
+                    // → 칩 클릭 = 체크 토글. 체크(off→on)만 스크롤을 발사하고 해제는
+                    //   부수효과 0이다. 순서·편집 대상·인쇄물 어느 것도 건드리지 않는다.
+                    onClick={() => toggleDocChecked(id, revealPassageId)}
                     // [E28] 툴팁이 **전체**를 담는다 — 지문 제목 · 플랜 라벨(축약 아님) ·
-                    // AI 제목. 칩 본문이 truncate 로 잘려도 사용자가 「어느 학습지인가」를
-                    // 끝까지 복원할 수 있어야 강등이지 삭제가 아니다.
-                    // AI 제목이 칩 본문과 같은 문자열이면(= 지문 제목이 비어 폴백된 경우)
-                    // 같은 말을 두 번 하지 않는다.
+                    // AI 제목. AI 제목이 칩 본문과 같은 문자열이면(= 지문 제목이 비어
+                    // 폴백된 경우) 같은 말을 두 번 하지 않는다.
+                    // ⚠ [E31] 구 자구는 「칩 본문이 truncate 로 잘려도 복원할 수 있게」가
+                    //   존재 이유였다. truncate 가 사라졌으니 그 근거는 죽었지만 툴팁은
+                    //   **남긴다** — 이제 유일하게 칩 본문에 없는 것이 AI 제목이고,
+                    //   그것이 「어느 학습지 문서인가」의 실제 식별자다(E28 §R7 강등).
+                    // [E31] 꼬리표가 동작 **둘**을 말한다(스크롤 + 목록 되짚기).
+                    //   이미 활성인 칩도 눌릴 이유가 있으므로(되짚기·맨 위로) 활성 쪽 자구도
+                    //   「(편집 중)」에서 멈추지 않는다 — 멈추면 「눌러도 되는지」가 안 읽힌다.
+                    // ⚠ [E33] 비활성 쪽 구 자구는 「클릭하면 이 학습지를 **편집하고**」였다.
+                    //   칩이 이동 전용이 된 지금 그 문장은 거짓이고, 더 나쁘게는 사용자가
+                    //   「여기서 편집되는구나」로 읽고 companion 문서를 고치려 든다.
+                    //   → 무엇이 되는지(스크롤·되짚기)와 **무엇이 안 되는지**(편집은 맨 앞
+                    //     문서 1건)를 둘 다 말한다. 「저장 대상은 현재 문서」 고지 줄과
+                    //     같은 사실을 칩 층위에서 되풀이하는 것이라 자구가 어긋나면 안 된다.
                     title={
                       dropReason
                         ? dropReason
                         : doc
                           ? `${index + 1}. ${chipTitle}${planLabel ? ` · ${planLabel}` : ""}${
                               aiTitle && aiTitle !== chipTitle ? ` · AI 제목: ${aiTitle}` : ""
-                            }${isActive ? " (편집 중)" : " — 클릭하면 이 학습지를 편집합니다"}`
+                            }${
+                              // [E34-R1] 구 자구 3종은 **전부 거짓이 됐다**: 「보기 전용」·
+                              // 「편집·저장은 맨 앞 문서에만 적용됩니다」·「편집하려면 앞
+                              // 학습지의 체크를 해제하거나 지문관리에서 여세요」. 편집 대상은
+                              // 이제 ✎ 로 자유롭게 고르고, 순서는 그때도 안 바뀐다.
+                              // ⚠ 「인쇄물이 전혀 바뀌지 않습니다」라고 쓰지 마라 — 편집 대상의
+                              //   테마·표지 로고·표 열 너비가 묶음 전체를 지배하므로 거짓이다.
+                              //   여기서 약속할 수 있는 것은 **순서**까지다.
+                              isActive
+                                ? " (편집 중 — 체크하면 이 학습지 위치로 스크롤하고 왼쪽 지문 목록에서 이 지문으로 이동합니다. 인쇄 순서는 바뀌지 않습니다)"
+                                : " (체크하면 이 학습지 위치로 스크롤하고 왼쪽 지문 목록에서 이 지문으로 이동합니다. 인쇄 순서는 바뀌지 않습니다)"
+                            }`
                           : "불러오는 중입니다"
                     }
-                    // 【인라인 스타일이어야 한다】 `max-w-[168px]`(특이도 0,1,0)은 이 앱에서
+                    // ── [E31] 칩 폭 상한 **철거**(26-08-24 사용자 지시: 「이거 텍스트
+                    //    안 잘리게 해주고」) ─────────────────────────────────────────
+                    // 구 값은 `maxWidth: 168` 이었고, 그 근거는 「칩이 부풀어 **줄을
+                    // 넘겼다**」였다. 그 근거는 이제 성립하지 않는다 — 칩 줄은
+                    // `overflow-x-auto` 한 줄 스트립이고(위 :2089 계열) 넘치는 만큼
+                    // 좌우 페이드 + ‹ › 버튼(chipOverflow)이 **넘침을 다룬다**.
+                    // 즉 폭 상한이 막고 있던 것은 「줄 넘김」이 아니라 「가로 스크롤」이었고,
+                    // 그 대가로 지문 제목을 잘라 같은 지문 형제 칩의 구분을 툴팁으로
+                    // 강등시키고 있었다. 상한을 없애면 제목이 온전히 보이고, 칩이 많으면
+                    // 스트립이 스크롤된다 — 원래 그렇게 만들어진 표면이다.
+                    //
+                    // 【그래도 인라인이어야 한다】 `max-w-none`(특이도 0,1,0)은 이 앱에서
                     // **죽은 클래스**다 — `layout.tsx:106` 이 전 사용자에게 무조건 붙이는
-                    // `smoat-large-ui` 때문에 `globals.css:1878-1881`
+                    // `smoat-large-ui` 때문에 `globals.css:1951-1952`
                     // `body.smoat-large-ui :where(button,[role="button"]){max-width:100%}`
-                    // (특이도 0,1,1)가 뒤에서 이긴다. 실측 computed max-width 가 전 칩 "100%"
-                    // 라 제목이 긴 문서는 칩이 213·267·282px 까지 부풀어 줄을 넘겼다.
-                    // 인라인 선언은 어떤 셀렉터 특이도보다 강해 재발하지 않는다.
-                    style={{ maxWidth: 168 }}
+                    // (특이도 0,1,1)가 뒤에서 이긴다. 그 규칙이 살아 있으면 긴 제목 칩이
+                    // 스트립 폭에서 잘려(아래 span 은 이제 nowrap 이라 ellipsis 도 없이)
+                    // 글자가 그냥 사라진다. 인라인 선언은 어떤 셀렉터 특이도보다 강하다.
+                    // ⚠ 이 줄을 지우고 클래스로 되돌리지 마라 — 큰글씨 규칙과의 싸움은
+                    //   이 파일이 이미 한 번 진 싸움이다(위 실측).
+                    style={{ maxWidth: "none" }}
+                    // ── [E33] QA 계약 속성 ────────────────────────────────────
+                    // 이 칩에는 계약 속성이 **0개**였고, 그래서 E31 게이트가
+                    // `button[title*="클릭하면 이 학습지를 편집"]` 이라는 **툴팁 자구**로
+                    // 칩을 집고 있었다. E33 이 그 자구를 고치는 순간 비활성 칩이
+                    // 셀렉터에서 통째로 빠져 G4(비활성 칩 클릭 → 되짚기)가 **활성 칩
+                    // 재클릭(G5)과 같은 시험**으로 조용히 퇴화한다 — FAIL 이 아니라
+                    // **커버리지가 사라지는** 가짜 GREEN 이고, E32 가 게이트 9종 전량
+                    // 초록 밑에서 살아남은 것과 정확히 같은 계통이다.
+                    // → 자구가 아니라 **속성**으로 집게 한다. 값 어휘는 reportId 와
+                    //   "true"/"false" 두 가지뿐이라 문구 개정에 견딘다.
+                    // ⚠ 툴팁 자구를 고칠 때 이 속성을 지우지 마라. 지우는 순간 게이트가
+                    //   다시 자구에 매달린다.
+                    // [E33] 「지금 편집 중인 문서」는 색으로만 구분됐다 — 스크린리더에는
+                    // 아무 신호도 없었다. 파란 채움과 **같은 사실**을 접근성 트리에 싣는다.
+                    aria-current={isActive ? "true" : undefined}
+                    data-doc-chip={id}
+                    // ⚠ [E34-R1] 이 속성의 의미는 **「편집 대상인가」로 불변**이다.
+                    //   체크 축으로 재활용하지 마라 — 그 순간 「편집 대상은 언제나 하나」라는
+                    //   불변식을 재는 게이트가 통째로 사라진다. 체크는 아래 별도 속성.
+                    data-doc-chip-active={isActive ? "true" : "false"}
+                    data-doc-chip-checked={isChecked ? "true" : "false"}
+                    // 이 칩이 되짚어 줄 **좌측 지문 카드**의 좌표
+                    // (`composer-list-pane` 의 `data-passage-card`와 같은 값).
+                    // [E33] 게이트가 이 값을 필요로 한다: 칩이 이동 전용이 되면서
+                    // 「칩 클릭이 보여 주는 카드」와 「편집 중 카드」가 **갈렸다**.
+                    // 이 속성이 없으면 프로브는 편집 중 카드만 잴 수 있어, 비활성 칩
+                    // 클릭 시험이 「엉뚱한 카드가 안 보인다」로 오판한다(E31 G4 실측).
+                    data-doc-chip-passage={revealPassageId || undefined}
                     className={cn(
                       "flex h-6 shrink-0 items-center gap-1 rounded-md border px-1.5 text-[10.5px] font-semibold transition-colors",
+                      // ⚠ [E33] **파란 채움 = 「편집 중」의 유일한 시각 신호다.**
+                      //   구 비활성 hover 는 `hover:border-blue-300 hover:bg-blue-50/60
+                      //   hover:text-blue-700` 로 활성과 배경·글자색이 같고 테두리 명도만
+                      //   달랐다. 그 어휘는 「호버 = 곧 이 상태가 된다(= 편집 대상이 된다)」가
+                      //   참이던 시절 것인데, 칩이 이동 전용이 된 지금 그 예고는 **거짓**이다.
+                      //   툴팁으로 세운 「보기 전용」 계약을 시각이 정면으로 반박하게 된다.
+                      //   → hover 는 중립(slate)로 내린다. 「눌린다」는 어포던스는 남기되
+                      //     「편집 대상이 된다」는 약속은 하지 않는다.
                       isActive
                         ? "border-blue-500 bg-blue-50 text-blue-700"
-                        : "border-slate-200 bg-white text-slate-500 hover:border-blue-300 hover:bg-blue-50/60 hover:text-blue-700",
+                        : "border-slate-200 bg-white text-slate-500 hover:border-slate-400 hover:bg-slate-50 hover:text-slate-700",
                       dropReason && "border-amber-200 bg-amber-50/60 text-amber-700",
                       !doc && "cursor-not-allowed opacity-60",
                       doc && "cursor-pointer",
                     )}
                   >
+                    {/* [E34-R1] 체크 틱 = **다중 상태**. 중립(slate)로 「담아 두었다」만
+                        말한다 — 파란 채움은 「편집 중」 하나에만 쓴다(신호 2개가 같은 색을
+                        쓰면 어느 쪽이 무엇인지 읽히지 않는다). */}
+                    <span
+                      aria-hidden="true"
+                      className={cn(
+                        "flex size-3 shrink-0 items-center justify-center rounded-[3px] border transition-colors",
+                        isChecked
+                          ? "border-slate-500 bg-slate-600 text-white"
+                          : "border-slate-300 bg-white",
+                      )}
+                    >
+                      {isChecked ? <Check className="size-2.5" strokeWidth={3} /> : null}
+                    </span>
                     <span className="shrink-0 tabular-nums opacity-70">{index + 1}</span>
                     {/* [E28] 플랜 축약은 **절대 truncate 되지 않는 자리**(shrink-0)다.
                         같은 지문의 PRIME/PRIME_FINAL 두 칩은 지문 제목이 글자 단위로
                         같아서(§0-2), 이 조각이 잘리는 순간 두 칩이 완전히 동일해져
-                        「편집 중 문서 전환」이라는 칩의 유일한 책임이 수행 불가가 된다.
+                        **어느 칩이 어느 문서인지 식별 자체가 불가**해진다([E33] 구 근거
+                        「「편집 중 문서 전환」이라는 칩의 유일한 책임」은 전환이 사라져
+                        죽었지만, 식별 불가는 이동·고지 양쪽에서 그대로 치명적이다).
                         색은 부모 상속(활성=blue-700 / 기본=slate-500 / 드롭=amber-700)이라
                         상태 3종 어디서도 대비가 깨지지 않는다. */}
                     {planShort ? (
@@ -2153,7 +2498,17 @@ export function SheetComposeSurface({
                         {planShort}
                       </span>
                     ) : null}
-                    <span className="min-w-0 truncate">{chipTitle}</span>
+                    {/* [E31] **truncate 철거**. `truncate` = overflow-hidden +
+                        text-ellipsis + whitespace-nowrap 세 개 묶음이라 하나만 빼는
+                        것으로는 안 되고, 통째로 빼고 필요한 것(줄바꿈 금지)만 남긴다
+                        — 이 파일에 이미 있는 함정 기록과 같은 계통(composer-list-pane
+                        의 카드 제목 주석). `min-w-0` 도 함께 뗀다: 그 값은 「나를
+                        압착해도 된다」는 허가였고, 압착이 곧 잘림이었다.
+                        `shrink-0` 로 못 박아야 형제(순번·플랜 축약)와 폭을 다투지 않는다.
+                        ⚠ 줄바꿈 허용(카드 제목 방식)은 여기서는 **금지**다 — 칩 줄은
+                          `h-6` 고정 높이 1줄 스트립이라 감기면 글자가 세로로 잘린다.
+                          이 표면의 답은 「감기」가 아니라 「가로 스크롤」이다. */}
+                    <span className="shrink-0 whitespace-nowrap">{chipTitle}</span>
                     {!doc && !dropReason ? (
                       <Loader2 className="size-3 shrink-0 animate-spin" aria-hidden="true" />
                     ) : null}
@@ -2161,6 +2516,39 @@ export function SheetComposeSurface({
                       <AlertTriangle className="size-3 shrink-0" aria-hidden="true" />
                     ) : null}
                   </button>
+                  {/* ══ [E34-R1] ✎ = **편집 대상 지정** — 칩 바깥 형제 ══════════════
+                      E33 묘비가 요구한 3조건 중 ⓑ「칩 본문이 아닌 별도 컨트롤」이 이것이다.
+                      ⓐ「순서 변경 사전 고지」는 R1 이 순서를 고정해 **소멸**했고,
+                      ⓒ dirty confirm 은 requestEditTarget 안에 살아 있다.
+                      ⚠ 여기서 스크롤을 발행하지 마라 — 전환과 스크롤 요청이 같은 커밋에
+                        나가면 `scrollRequest.forActive` 스테일 무효화(E33 이 「단독
+                        방어선」이라 적어 둔 그것)가 요청을 즉시 죽인다. 스크롤은 체크의
+                        책임이고, 이 분업이 그 방어선을 그대로 살려 둔다. */}
+                  {doc && !dropReason ? (
+                    <button
+                      type="button"
+                      onClick={() => requestEditTarget(id)}
+                      disabled={isActive}
+                      data-doc-chip-edit={id}
+                      aria-label={`${chipTitle} 학습지를 편집 대상으로`}
+                      title={
+                        isActive
+                          ? "지금 편집 중인 학습지입니다"
+                          : "이 학습지를 편집 대상으로 (인쇄 순서는 바뀌지 않습니다 · 테마·표지·표 열 너비는 편집 중 문서를 따릅니다)"
+                      }
+                      className={cn(
+                        "flex size-5 shrink-0 items-center justify-center rounded-md border transition-colors",
+                        isActive
+                          ? "cursor-default border-blue-200 bg-blue-50/60 text-blue-400"
+                          : // ✎ hover 만 파랑을 쓴다 — **여기서만** 「편집 대상이 된다」는
+                            // 예고가 참이다(칩 hover 는 E33 이 중립으로 내려 둔 그대로).
+                            "cursor-pointer border-slate-200 bg-white text-slate-400 hover:border-blue-300 hover:bg-blue-50/60 hover:text-blue-600",
+                      )}
+                    >
+                      <Pencil className="size-3" aria-hidden="true" />
+                    </button>
+                  ) : null}
+                  </div>
                 );
               })}
             </div>
@@ -2284,6 +2672,10 @@ export function SheetComposeSurface({
             onSaved={handleSaved}
             onToolbarStateChange={setToolbar}
             composeDocs={composeDocs}
+            // [E34-R1] 편집 대상을 대기열 제자리에 인쇄한다. 이 한 줄이 「편집 대상을
+            // 바꾸면 문서 순서가 뒤집힌다」를 없앤다(그 결합의 근원은 compose-flow 가
+            // 활성을 언제나 스트림 선두에 두던 것이고, activeIndex 가 그것을 푼다).
+            composeActiveIndex={composeActiveIndex}
             // [E22/U9-3] 문항은 **읽기전용 합성분**이다. 편집기는 이 배열을 `composeActive`
             // 산식(`AnalysisReportEditor.tsx:1596`)에 합류시켜 조판 모드를 켜고,
             // `rejectComposedId`(`:346`)가 `qb-` id 의 편집·삭제·재정렬을 전면 차단한다.
@@ -2295,9 +2687,12 @@ export function SheetComposeSurface({
             // 미전달이면 `buildComposedView` 산출이 바이트 동일이라는 것이 additive 계약이다.
             composeQuestionsAfterDoc={composeQuestionsAfterDoc}
             // [E27] 조판 목차 데이터만 내린다 — **클릭 핸들러는 만들지 않는다.**
-            // 목차 클릭 → 스크롤은 편집기가 자기 팝오버 안에서 처리하고(U5), 활성 문서
-            // 전환은 끝까지 헤더 문서 칩의 책임이다(칩 = 편집 대상 전환 + dirty confirm,
-            // 목차 = 이동. 두 역할을 섞으면 목차 클릭에 미저장 편집이 증발한다).
+            // 목차 클릭 → 스크롤은 편집기가 자기 팝오버 안에서 처리한다(U5).
+            // ⚠ [E33] 구 자구는 「활성 문서 전환은 끝까지 헤더 문서 칩의 책임이다(칩 =
+            //   편집 대상 전환 + dirty confirm, 목차 = 이동)」였다. **그 분업은 없다** —
+            //   칩도 이제 이동 전용이고 dirty confirm 을 갖지 않는다. 목차에 전환을
+            //   붙여도 된다는 뜻이 **아니다**: 이 표면에서 편집 대상은 대기열 선두 1건
+            //   고정이고, 전환을 되살리려면 requestActiveDoc 묘비 주석의 ⓐⓑⓒ 를 함께 갖춰야 한다.
             composeOutline={composeOutline}
             // [E27 · R4] 추가 시 자동 스크롤. **nonce 원시값만** effect deps 에 넣어야 한다
             // (객체를 deps 에 그대로 넣으면 요청이 없을 때도 재측정이 돈다).
@@ -2317,10 +2712,14 @@ export function SheetComposeSurface({
             // 「아직 안 옴/없음 확정」이 null(편집기가 T1 강등으로 동작). 캐시 값은 지문당
             // 같은 참조가 유지되므로 이 prop 이 재측정을 유발하지 않는다.
             activitySource={
-              activeDocIsFinal
+              activeDocIsFinal || activeDocIsPractice
                 ? (activitySourceCache.get(activeDoc.passageId) ?? null)
                 : undefined
             }
+            // [E30] 저장 대상 행 = URL `?variant`. 위 activeDocVariant 주석 참조.
+            // 기본 문서는 "basic" 이고 편집기가 그때 **무파라미터**로 보내므로
+            // 요청 바이트가 종전과 동일하다(무회귀).
+            docVariant={activeDocVariant}
             embed={embed}
             // onDraftChange 는 의도적으로 미전달 — 타이핑 1글자마다 스튜디오 전역이 리렌더된다.
           />

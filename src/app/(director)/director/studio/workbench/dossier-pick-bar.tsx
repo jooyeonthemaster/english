@@ -137,6 +137,7 @@ const EMPTY_REPORT_IDS: readonly string[] = [];
 
 export function DossierPickBar({
   picked,
+  pickedFlat,
   passageTitleById,
   deployTarget,
   onClear,
@@ -150,6 +151,18 @@ export function DossierPickBar({
 }: {
   /** 호스트 소유 선택 상태 — 삽입 순서가 곧 시험지 조판 순서 */
   picked: ReadonlyMap<string, PickedQuestionMeta>;
+  /**
+   * [E32] **평면 축(목록에서 담은 문항)** — 옵셔널 additive. 미전달이면 아래
+   * `mergedPicked` 가 `picked` 참조를 그대로 돌려주므로 렌더 결과가 종전과 같다.
+   *
+   * 왜 이 바가 두 축을 다 봐야 하는가: 조판 표면과 병합 목록이 읽는 문항 축은
+   * **평면 축 하나뿐**이고, 도시에 발사구는 발사 직전에 도시에 축을 그리로
+   * 승계한다(오케스트레이터 `inheritDossierQuestions`). 즉 이 바를 눌렀을 때
+   * 실제로 조판·배포되는 것은 **두 축의 합집합**이다. 도시에 축만 세면 라벨과
+   * 캡션이 「합본 조판 — 문항 5개」라 말해 놓고 8개를 조판하는 거짓말이 된다
+   * (E32 C1/M3 — 「A4 3장인 줄 알았는데 7장이 나왔다」의 문항 판).
+   */
+  pickedFlat?: ReadonlyMap<string, PickedQuestionMeta>;
   /** 표시 스냅샷의 현재 지문 제목 — 배포 과제 제목 재료(체크 시점 스냅샷은
    *  제목 수정 시 stale — 적대 검수 minor). 부재 지문은 메타 스냅샷 폴백 */
   passageTitleById: ReadonlyMap<string, string>;
@@ -177,8 +190,17 @@ export function DossierPickBar({
   // 의 2축 원자 청산에 필요하다. void 를 돌려주는 구 호스트도 그대로 받는다.
   onClearSheets?: () => boolean | void;
   /** 조판 발사 — 인자는 조판 순서(대기열 삽입 순서) reportId 배열. 문항이 함께
-   *  선택돼 있으면 **합본**이 되지만 그 합류는 조판 표면이 한다(E22-1: 합류
-   *  지점은 buildComposedView 안이 유일한 정답) — 여기서 섞지 않는다. */
+   *  선택돼 있으면 **합본**이 되고, 문항 조각의 **렌더 합류**는 조판 표면이 한다
+   *  (E22-1: 합류 지점은 buildComposedView 안이 유일한 정답) — 여기서 섞지 않는다.
+   *
+   *  ⚠⚠ 【E32】 위 문장을 「문항은 아무도 안 넘겨도 알아서 붙는다」로 읽지 마라 —
+   *    그 오독이 E32 결함의 발생 지점이었다. **「렌더 합류(어디에 append 하는가)」와
+   *    「축 승계(어느 state Map 이 재료를 대는가)」는 다른 문제다.** 표면이 읽는
+   *    문항 축은 **평면 축(flatPicked)** 하나뿐이고, 이 바가 들고 있는 도시에 축
+   *    (`picked`)은 그리로 **옮겨져야** 한다. 그 승계는 이 바가 아니라
+   *    **오케스트레이터**가 한다(studio-home-client 의 `inheritDossierQuestions`,
+   *    `composeSheetsFromDossier` 안에서 dirty 가드 **뒤**에 호출). 그래서 이
+   *    채널의 인자는 여전히 reportId 배열 하나로 충분하다. */
   onComposeSheets?: (reportIds: string[]) => void;
   /** 학습지 1건 모바일 배포 = **우측 실행대 열기**(deploySheetFromRow). 위 파일
    *  머리 ⚠ 참조 — 대기열을 그 1건으로 좁히므로 「1건·PRIME」에서만 연다. */
@@ -193,28 +215,44 @@ export function DossierPickBar({
   nudge?: boolean;
 }) {
   const router = useRouter();
-  const count = picked.size;
+  // ── [E32] 문항 축 = **두 축 합집합**(평면 축이 앞, 도시에 신규분이 뒤) ───────
+  // 순서는 오케스트레이터 승계(`inheritDossierQuestions`)와 **글자 그대로 같아야**
+  // 한다: 기존 평면 픽 먼저, 도시에분 뒤, 중복 id 는 기존 위치 유지. 어긋나면
+  // 바가 보여 주는 순번과 실제 인쇄 순서가 갈린다.
+  // 미전달(pickedFlat === undefined)이거나 평면 축이 비면 `picked` **참조를 그대로**
+  // 돌려준다 — 아래 파생 useMemo 들의 의존성이 종전과 동일해져 additive 무회귀.
+  const mergedPicked = useMemo(() => {
+    if (!pickedFlat || pickedFlat.size === 0) return picked;
+    if (picked.size === 0) return pickedFlat;
+    const merged = new Map(pickedFlat);
+    for (const [id, meta] of picked) if (!merged.has(id)) merged.set(id, meta);
+    return merged as ReadonlyMap<string, PickedQuestionMeta>;
+  }, [picked, pickedFlat]);
+  const count = mergedPicked.size;
   // E22-U14-2: 열림 판정은 **두 축의 합**이다. 학습지만 골라도 바가 올라온다
   // (사용자 확정 4 — "학습지 선택해도 조판되게").
   const sheetCount = pickedSheets?.size ?? 0;
   const open = count + sheetCount > 0;
 
-  const questionIds = useMemo(() => [...picked.keys()], [picked]);
+  const questionIds = useMemo(() => [...mergedPicked.keys()], [mergedPicked]);
   // ⚠ 이 배열은 **문항 축 전용**이다 — 배포 페이로드(addPassagesToStudioClass ·
   // deployStudioQuestions.passageId · 과제 제목)가 전부 이 값을 먹는다. 학습지
   // 지문을 여기에 union 하면 문항 과제에 무관한 지문이 등록·기록된다.
   // 요약 표시용 union 은 아래 `summaryPassageCount` 가 따로 센다.
+  // ⚠ [E32] 「문항 축 전용」은 **학습지 축을 섞지 마라**는 뜻이다. 문항 2계
+  //   (도시에 + 평면)의 합집합인 `mergedPicked` 는 전부 문항이므로 이 계약을
+  //   깨지 않는다 — 오히려 화면이 세는 것과 배포/조판이 보내는 것이 같아진다.
   const passageIds = useMemo(
-    () => [...new Set([...picked.values()].map((m) => m.passageId))],
-    [picked],
+    () => [...new Set([...mergedPicked.values()].map((m) => m.passageId))],
+    [mergedPicked],
   );
   // 유형 요약 칩 — 많은 순 정렬, 6종 초과는 "+N종"으로 접어 바의 수직 폭주 방지
   const typeChips = useMemo(() => {
     const byType = new Map<string, number>();
-    for (const meta of picked.values())
+    for (const meta of mergedPicked.values())
       byType.set(meta.typeLabel, (byType.get(meta.typeLabel) ?? 0) + 1);
     return [...byType.entries()].sort((a, b) => b[1] - a[1]);
-  }, [picked]);
+  }, [mergedPicked]);
   const shownChips = typeChips.slice(0, 6);
   const hiddenTypeCount = typeChips.length - shownChips.length;
 
@@ -233,8 +271,12 @@ export function DossierPickBar({
     for (const m of sheetMetas) ids.add(m.passageId);
     return ids.size;
   }, [passageIds, sheetMetas]);
-  // 학습지 종류 칩 — SHEET_PLAN_LABEL(sheet-products.ts:88-92) 3키뿐이라 문항 축의
-  // "+N종" 절단이 필요 없다(실행대 정본과 같은 판단 — sheets-action-rail.tsx:131-142).
+  // 학습지 종류 칩 — SHEET_PLAN_LABEL 은 [E30] 으로 **4키**가 됐다
+  // (PRIME · PRIME_KO · PRIME_FINAL · PRIME_PRACTICE). 그래도 문항 축의 "+N종"
+  // 절단은 여전히 필요 없다: 한 지문이 가질 수 있는 학습지 종류가 유한(≤4)하고,
+  // 실전은 기본 없이 성립하지 않아 실사용 조합은 사실상 2~3종이다
+  // (실행대 정본과 같은 판단 — sheets-action-rail.tsx).
+  // ⚠ 줄번호 인용을 다시 박지 마라 — sheet-products.ts 는 이 절에서 두 번 밀렸다.
   const planChips = useMemo(() => {
     const byPlan = new Map<string, number>();
     for (const m of sheetMetas) {
@@ -322,7 +364,13 @@ export function DossierPickBar({
   /** 좌측 슬롯 교체 조건 — **학습지만 골랐을 때만**. `count === 0` 단독으로
    *  가르면 두 축이 다 비는 접힘 순간(선택 해제 직후 300ms)에 버튼이 「실행대
    *  열기」로 뒤바뀌는 게 보인다(접힘은 시각 클립일 뿐 DOM 은 남는다). */
-  const sheetOnly = count === 0 && sheetCount > 0;
+  // ⚠ [E32] 여기만 **도시에 축(`picked`)** 으로 잰다 — union(`count`) 이 아니다.
+  //   이 값은 좌측 슬롯을 [학습지 실행대]로 바꿀지 결정하는데, 그 물음은
+  //   「**이 화면에서** 학습지만 골랐는가」이지 「전역 문항 픽이 0인가」가 아니다.
+  //   union 으로 재면 다른 뷰에서 담아 둔 문항 1개 때문에 영영 false 가 되어
+  //   픽바에서 학습지 실행대(deploySheetFromRow)에 도달할 통로가 사라진다
+  //   (§M off 라 오늘은 미렌더지만 env 1줄로 켜지는 자리 — 적대검수 info).
+  const sheetOnly = picked.size === 0 && sheetCount > 0;
 
   // ── 제출 — 멱등 선등록 → 배포 → 토스트 정본 → onDeployed 업링크(폼 동형).
   // 일반 함수: 참조 안정이 필요한 소비처가 없고, 수동 useCallback 은 파생값
@@ -340,7 +388,7 @@ export function DossierPickBar({
       } catch {
         // 무시 — 위 주석 참조
       }
-      const firstMeta = picked.values().next().value;
+      const firstMeta = mergedPicked.values().next().value;
       // 제목은 현재 표시 스냅샷 우선(체크 후 제목이 수정됐을 수 있다) —
       // 프룬이 표시 이탈 지문을 걷으므로 폴백은 사실상 안전망이다.
       const soleTitle =
@@ -455,6 +503,9 @@ export function DossierPickBar({
     // 불리언 inert 로 접힘 중 포커스·클릭을 서브트리째 차단한다.
     <div
       inert={!open}
+      // [E32] QA 계약 속성 — 위 조판 버튼 주석 참조. 접힘(0fr)은 시각 클립일 뿐
+      // 노드는 남으므로, 프로브는 값("open"/"closed")으로 가시를 판정해야 한다.
+      data-pickbar={open ? "open" : "closed"}
       className={`grid transition-[grid-template-rows] duration-300 ${open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
     >
       <div className="min-h-0 overflow-hidden">
@@ -496,6 +547,7 @@ export function DossierPickBar({
             <button
               type="button"
               onClick={clearAll}
+              data-pickbar-clear=""
               className="flex shrink-0 cursor-pointer items-center gap-1 rounded-md px-1.5 py-1 text-[10.5px] font-semibold text-slate-400 transition-colors hover:bg-slate-50 hover:text-slate-600"
             >
               <X className="size-3 shrink-0" aria-hidden="true" />
@@ -581,6 +633,30 @@ export function DossierPickBar({
               aria-disabled={sheetAxis ? !canCompose : navigating}
               title={composeTitle}
               onClick={sheetAxis ? composeSheets : composeExam}
+              // ── [E32] QA 계약 속성 ──────────────────────────────────────
+              // 이 바에는 data-* 가 **0개**였다(실측 grep). 그래서 프로브가
+              // 텍스트 부분매칭으로만 이 버튼을 집을 수 있었고, 라벨이
+              // sheetAxis·count 로 3갈래(시험지 조판/학습지 조판/합본 조판)나
+              // 갈리는 탓에 「내가 누르려던 버튼이 사라졌다」를 게이트가
+              // **회피 대상**으로 처리하다 E32 결함을 통째로 놓쳤다
+              // (probe-e24-split G9 의 「⚠ 순서가 계약이다」 절).
+              // 값 어휘는 발사 축 3개로 고정한다 — 라벨 자구가 바뀌어도 게이트가
+              // 살아남게(studio-home-client 의 data-summary-strip 과 같은 처방).
+              //
+              // ⚠ **셀렉터 규율: 반드시 `aside[data-panel-key="dossier"]` 스코프 +
+              //   `:visible`.** 우측 판은 aside(xl+, 숨김 마운트)와 슬라이드오버
+              //   (<xl 드로어) **두 트리**에 같은 본문을 렌더하므로, 드로어가 열린
+              //   좁은 화면에서 이 속성들은 **동시에 2개** 매칭되고 그중 하나는
+              //   숨은 노드다. 스코프 없이 집으면 숨은 쪽을 클릭하려다 30초
+              //   actionability 대기로 굳는다(이 리포가 `[aria-label$="문항 선택"]`
+              //   에서 이미 한 번 당한 함정과 같은 모양).
+              data-pickbar-compose={
+                sheetAxis ? (count > 0 ? "combined" : "sheet") : "exam"
+              }
+              // 「이 버튼이 지금 무엇을 몇 개 싣겠다고 약속하는가」 — 조판 뒤
+              // 실제 산출물과 대조하는 것이 E32 회귀 게이트의 판정식이다.
+              data-pickbar-questions={count}
+              data-pickbar-sheets={sheetCount}
               className={`${canCompose ? ACTION_BLUE : ACTION_DISABLED}${
                 nudge ? " studio-pulse" : ""
               }`}

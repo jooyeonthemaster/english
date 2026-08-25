@@ -77,6 +77,15 @@ interface PassageInputStackProps {
    */
   sheetVariant?: LearningSheetVariant;
   onSheetVariantChange?: (v: LearningSheetVariant) => void;
+  /**
+   * [E29-9] 과목 스코프(RCA RC-6). "KOREAN" 이면 **파이널·실전 카드를 렌더하지
+   * 않는다** — 국어 지문은 fast 라우트가 두 상품을 400 으로 막는데
+   * (route.ts 국어+finalOnepage 게이트 / KO 블록이 includeWorksheet 을 무시),
+   * 카드는 무게이트로 떠 있었다. 게다가 영속 키를 영어 라우트와 공유해
+   * **직전에 영어에서 파이널을 골랐으면 국어 화면이 파이널이 선택된 채로 열려**
+   * 누르는 족족 400 이 났다. 카드 은닉 + 아래 영속 키 분리가 한 쌍이다.
+   */
+  subjectScope?: "KOREAN";
 }
 
 /**
@@ -98,7 +107,10 @@ export function PassageInputStack({
   onIncludeWorksheetChange,
   sheetVariant: sheetVariantProp,
   onSheetVariantChange,
+  subjectScope,
 }: PassageInputStackProps) {
+  // [E29-9] 국어는 기본 학습지(PRIME_KO) 한 상품뿐이다.
+  const koreanOnly = subjectScope === "KOREAN";
   // 지문 입력 행 영역 — '생성하기'가 비활(유효 지문 0개)일 때 눌리면 이 안의
   // 행 카드들을 글로우해 "지문을 먼저 입력하세요"를 유도한다.
   const rowsZoneRef = useRef<HTMLDivElement>(null);
@@ -181,9 +193,16 @@ export function PassageInputStack({
     false,
     (v): v is boolean => typeof v === "boolean",
   );
+  // [E29-9] 영속 키를 **라우트별로 가른다**. 구판은 영어·국어가 같은 키를 써서
+  // 「영어에서 파이널을 고른 뒤 국어 라우트를 열면 파이널이 선택된 채」였고,
+  // 그 상태로 생성하면 100% 400 이었다(RCA RC-6). 영어 키는 **자구 그대로 유지**해야
+  // 기존 사용자의 마지막 선택이 보존된다 — 새 키는 국어 쪽에만 만든다.
+  const variantStorageKey = koreanOnly
+    ? "smoat:korean-passages-create:sheet-variant"
+    : "smoat:passages-create:sheet-variant";
   const [localVariant, setLocalVariant] =
     usePersistedState<LearningSheetVariant>(
-      "smoat:passages-create:sheet-variant",
+      variantStorageKey,
       "basic",
       (v): v is LearningSheetVariant =>
         v === "basic" || v === "practice" || v === "final",
@@ -192,6 +211,9 @@ export function PassageInputStack({
   // 그 값이 정본이고, 없을 때만 구 키 true 를 practice 로 시드한다(false→basic 은
   // 초기값과 같아 별도 기록 불필요).
   useEffect(() => {
+    // [E29-9] 국어 라우트에서는 구 boolean(영어 전용) 시드를 돌리지 않는다 —
+    // practice 로 시드되면 그 순간 다시 400 상품이 선택된다.
+    if (koreanOnly) return;
     try {
       if (
         window.localStorage.getItem("smoat:passages-create:sheet-variant") !== null
@@ -212,13 +234,18 @@ export function PassageInputStack({
   }, []);
   // variant 리프트가 오면 그것이 정본, 없으면 구 boolean 리프트를 variant 로
   // 해석(하위호환), 둘 다 없으면 로컬 저장값.
-  const sheetVariant: LearningSheetVariant =
+  const resolvedVariant: LearningSheetVariant =
     sheetVariantProp ??
     (includeWorksheetProp !== undefined
       ? includeWorksheetProp
         ? "practice"
         : "basic"
       : localVariant);
+  // [E29-9] 국어에서는 어떤 경로로 들어온 값이든 basic 으로 강등한다. 카드를 숨기는
+  // 것만으로는 부족하다 — 리프트(sheetVariantProp)·영속 복원·구 boolean 세 갈래가
+  // 각자 final/practice 를 실어 나를 수 있고, 그중 하나만 새도 400 이 난다.
+  const sheetVariant: LearningSheetVariant =
+    koreanOnly && resolvedVariant !== "basic" ? "basic" : resolvedVariant;
   const includeWorksheet = sheetVariant === "practice";
   const setSheetVariant = (v: LearningSheetVariant) => {
     setLocalVariant(v);
@@ -452,6 +479,7 @@ export function PassageInputStack({
           className="grid grid-cols-1 gap-2 sm:grid-cols-2"
         >
           {(
+            (
             [
               {
                 id: "basic" as const,
@@ -475,6 +503,11 @@ export function PassageInputStack({
                 unit: primaryUnitCost,
               },
             ]
+            // [E29-9] 국어 라우트는 **기본 학습지 1장만** 남긴다(RCA RC-6).
+            // 실전(영어 전용 워크북 파이프라인)·파이널(fast 라우트 국어 400 게이트)은
+            // 국어에서 구조적으로 만들 수 없다 — 카드가 떠 있는 것 자체가 「돈은 냈는데
+            // 기본만 나왔다」/「눌러도 400」의 진원이다. 라디오가 1개면 그룹째 숨긴다.
+            ).filter((option) => !koreanOnly || option.id === "basic")
           ).map((option) => (
             <div
               key={option.id}

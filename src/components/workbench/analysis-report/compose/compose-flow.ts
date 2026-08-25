@@ -104,6 +104,22 @@ export interface ComposeDoc {
   docKey: string;
   title: string;
   report: AnalysisReport;
+  /**
+   * [E35] **연속 문서(continuation)** — 이 문서를 인쇄 순서상 **바로 앞 문서의 꼬리**로
+   * 이어 붙인다: 표지·타이틀 블록을 접고, 섹션 번호를 직전 문서의 마지막 번호에서 이어 센다
+   * (기본 01~04 → 실전 학습지 05 — E30 이전 병합 문서와 같은 모양).
+   *
+   * **의미 판정은 호스트 몫이다.** 이 순수층은 마커·지문을 모른다 — 호스트
+   * (`sheet-compose-surface.tsx` composeDocs)가 「PRIME_PRACTICE 이고 인쇄 순서상 직전
+   * 문서가 같은 passageId 의 PRIME」일 때만 켠다. 여기서 planMarker 를 받기 시작하면
+   * 순수층이 상품 지식을 얻어 E21-0 계약(합성은 뷰)이 흐려진다.
+   *
+   * 켜져 있어도 **문서 경계 = 페이지 경계**(아래 `i === 0 → breakBefore`)와 `docHeader`
+   * 귀속·id 접미 네임스페이스는 그대로다 — 바뀌는 것은 「무엇을 조립하는가」(assemble 의
+   * omitDocIntro/sectionNoStart)뿐이고, 흐른 뒤의 위치·봉인 규칙은 한 글자도 다르지 않다.
+   * 미전달(또는 false)이면 산출이 바이트 동일하다.
+   */
+  joinPrev?: boolean;
 }
 
 /**
@@ -133,6 +149,19 @@ export interface ComposedView {
   flowItems: FlowItem[];
   /** `ReportPages` 의 `report` — 편집 상태 `report`(useReducer present)는 절대 이걸로 바꾸지 마라. */
   pagesReport: AnalysisReport;
+}
+
+/**
+ * [E35] 한 문서가 실제로 소비한 마지막 섹션 번호 — 연속 문서(joinPrev)의 번호 시작값.
+ * hidden 섹션은 `visibleFlowItems` 가 이미 걸러냈고 번호도 소비하지 않으므로(assemble 의
+ * `no += 1` 이 가시 슬롯에서만 돈다), 여기서 「방출된 아이템의 max(no)」를 읽는 것이
+ * 곧 「그 문서가 화면·인쇄에서 실제로 쓴 마지막 번호」다. 별도 outline 재계산보다 이쪽이
+ * 정본에 가깝다 — 번호를 매긴 바로 그 산출물에서 되읽으므로 두 벌 계산이 갈릴 수 없다.
+ */
+function maxSectionNo(items: readonly FlowItem[]): number {
+  let max = 0;
+  for (const it of items) if (it.no > max) max = it.no;
+  return max;
 }
 
 /** 원본 키에 저장된 BlockMeta 를 접미 키로 복제(있을 때만). */
@@ -185,8 +214,33 @@ export function buildComposedView(input: {
    * 미전달(또는 빈 Map)이면 산출물 **바이트 동일**이다.
    */
   questionsAfterDoc?: ReadonlyMap<string, FlowItem[]>;
+  /**
+   * [E34-R1] 편집 대상 문서를 **`companions` 의 이 인덱스 자리**에 끼워 인쇄한다.
+   *
+   * ══ 왜 생겼나 ═══════════════════════════════════════════════════════════════
+   * R1 이전 이 함수는 「활성(편집 대상) 먼저 → companions 순차」로 방출했다. 그래서
+   * 편집 대상을 바꾸면 **인쇄 순서가 바뀌고**, 호스트의 대기열 정렬이 그 인쇄 사실을
+   * 미러하느라 활성 문서를 대기열 선두로 hoist 했다 — 사용자에게는 「문서 칩을
+   * 눌렀더니 번호가 통째로 뒤집힌다」로 보였다(E33 이 칩을 이동 전용으로 임시 봉합했고
+   * 그 대가로 실전·파이널을 조판실에서 편집할 방법이 0이 됐다). R1 은 그 근본을 푼다.
+   *
+   * ══ 두 축이 갈라진다 (이 파라미터의 본질) ═════════════════════════════════════
+   * **축 A(위치 파생)** = 스트림 순서 · `breakBefore` · `keepWithPrev` · `docHeader` 귀속.
+   *   판정자는 「**스트림 선두인가**」.
+   * **축 B(편집 파생)** = 편집 콜백 유무 · 원본 id 유지 · chrome 봉인 · `blockMeta` 원본 키 ·
+   *   `pagesReport` 소유. 판정자는 「**편집 대상인가**」.
+   * R1 이전에는 두 축이 **우연히** 같았다(활성 == 선두). 그 우연이 깨지는 자리가 여기다.
+   * 아래 코드에서 `at > 0` 분기가 축 A 를, 나머지 전부가 축 B 를 다룬다.
+   *
+   * ══ 무회귀 ═════════════════════════════════════════════════════════════════
+   * **미전달(또는 0)이면 산출물이 배열 요소 참조까지 동일하다.** 얕은 복사 분기가
+   * 통째로 죽고 슬롯 루프가 「활성 → companions 순차」와 같은 시퀀스를 낸다.
+   */
+  activeIndex?: number;
 }): ComposedView {
-  const { active, companions, caches, questions, questionsAfterDoc } = input;
+  const { active, companions, caches, questions, questionsAfterDoc, activeIndex } = input;
+  /** 편집 대상이 앉을 슬롯. 범위를 벗어난 값은 조용히 클램프한다(호출부 방어). */
+  const at = Math.min(Math.max(activeIndex ?? 0, 0), companions.length);
 
   // 방어적 무회귀 — 부착이 없으면 계약상 이 함수는 호출되지 않지만, 호출돼도 **참조까지 그대로**
   // 돌려준다. 새 배열/새 report 를 만들면 그것만으로 ReportPages 의 useMemo 가 전부 무효화되어
@@ -230,9 +284,42 @@ export function buildComposedView(input: {
   //     사용자가 직접 정렬/편집할 수 있는 대상이 애초에 아니다.
   const activeItems: FlowItem[] = [];
   const answerMeta: Record<string, BlockMeta> = {};
+  // ── [E34-R1] 편집 대상이 **선두가 아닐 때만** 문서 경계 2종을 얹는다 ──────────────
+  // R1 이전에는 활성이 언제나 스트림 선두라 이 두 처리가 부착 문서에만 필요했다
+  // (아래 companions 루프의 `i === 0 → breakBefore` 와 첫 secheader `keepWithPrev`).
+  // 편집 대상이 중간 슬롯으로 가는 순간 **그 두 결함이 편집 대상 쪽에서 재발**한다.
+  //  ⚠ (1) 없으면: 앞 부착 문서 페이지 하단에 편집 대상 첫 블록이 이어 붙고,
+  //     `pages.tsx` `docHeaderOf(firstItem)` 가 **그 페이지 전체를 앞 문서 것으로 귀속**한다.
+  //     26-08-18 「3문서 36시트 중 29시트 러닝헤더 오귀속」과 같은 계통이고, 이번엔
+  //     편집 대상 쪽에서 난다. 동시에 packFlow 의 오펀/원자 전방 시뮬이 문서 경계를
+  //     넘어 전진한다(`nx.breakBefore` 에서 멈추는 설계라 경계가 없으면 안 멈춘다).
+  //  ⚠ (2) 없으면: packFlow 의 `sawSecHeader` 는 **스트림 전역**이라 앞 문서에서 이미
+  //     true 다 → 편집 대상 문서에 「제목 2줄 + 백지」 페이지가 1장 삽입된다.
+  // 얕은 복사가 안전한 근거: `{...it, …}` 는 id·editId·orderId·node(ReactNode 참조)를
+  // 전부 보존한다 → heightById(data-mid) · blockMeta 조회 · data-paper-item-id ·
+  // assertUniqueIds · React 서브트리 bailout 전부 무손상. 비용은 렌더당 객체 2개.
+  // ⚠ **본문 아이템을 접미(ns)하지 마라** — 그건 축 B(편집)를 깨뜨린다. 여기서 바꾸는
+  //   것은 축 A(위치) 필드 두 개뿐이다.
+  let firstBodyPushed = false;
+  let firstSecHeaderSeen = false;
   for (const it of activeVisible) {
     if (!isActivityAnswerId(it.id)) {
-      activeItems.push(it);
+      let out: FlowItem = it;
+      if (at > 0) {
+        if (!firstBodyPushed && !it.breakBefore) out = { ...out, breakBefore: true };
+        if (!firstSecHeaderSeen && it.wrap === "secheader") {
+          firstSecHeaderSeen = true;
+          // ⚠ **`out.breakBefore` 를 본다 — `it.breakBefore` 가 아니다.**
+          //   두 필드는 서로 모순이다(강제 분할 ↔ 앞과 붙이기). 그런데 첫 본문이
+          //   곧 첫 secheader 인 문서에서는 바로 윗 줄이 방금 breakBefore 를 얹으므로,
+          //   원본 `it` 을 보면 그 사실을 놓쳐 **한 아이템에 둘 다 붙는다**.
+          //   (E34-R1 스펙 §4-1 의사코드가 두 가드 모두 `it.breakBefore` 로 적어 둔
+          //    자리다 — R1-A 게이트 A5 가 실측으로 잡았다. 스펙을 그대로 베끼지 마라.)
+          if (!out.breakBefore) out = { ...out, keepWithPrev: true };
+        }
+      }
+      firstBodyPushed = true;
+      activeItems.push(out);
       continue;
     }
     const ns = nsFlowItem(it, ACTIVE_DOC_KEY);
@@ -250,17 +337,28 @@ export function buildComposedView(input: {
     }
   }
 
-  const flowItems: FlowItem[] = [...activeItems];
-  // [E27] 활성 문서가 자기 지문 그룹의 **마지막 문서**이면 그 지문 문항이 여기 붙는다.
-  //  (그룹에 부착 문서가 더 있으면 호스트가 그 마지막 부착 문서 docKey 에 매단다.)
-  const afterActive = questionsAfterDoc?.get(ACTIVE_DOC_KEY);
-  if (afterActive?.length) flowItems.push(...afterActive);
+  const flowItems: FlowItem[] = [];
   // 활성 메타가 먼저, 접미 메타가 나중 — 접미 키는 원본 키와 충돌하지 않으므로 순서는
   // 안전상 의미만 있다(부착 문서 메타도 전부 접미라 활성 키를 덮을 수 없다).
   const blockMeta: Record<string, BlockMeta> = { ...(active.report.blockMeta ?? {}), ...answerMeta };
 
+  const emitActive = () => {
+    flowItems.push(...activeItems);
+    // [E27] 활성 문서가 자기 지문 그룹의 **마지막 문서**이면 그 지문 문항이 여기 붙는다.
+    //  (그룹에 부착 문서가 더 있으면 호스트가 그 마지막 부착 문서 docKey 에 매단다.)
+    //  [E34-R1] 이 push 는 활성 아이템 **직후**라는 것만이 계약이므로 슬롯이 어디든
+    //  자동으로 따라간다 — ACTIVE_DOC_KEY 계약·키 이름 모두 무접촉이다.
+    const afterActive = questionsAfterDoc?.get(ACTIVE_DOC_KEY);
+    if (afterActive?.length) flowItems.push(...afterActive);
+  };
+
   // ── 1~4) 부착 문서 순차 처리 ────────────────────────────────────────────────────
-  companions.forEach((doc, docIndex) => {
+  // [E34-R1] 본문은 한 글자도 바뀌지 않았다. `forEach` 를 이름 있는 함수로 바꿔 아래
+  // 슬롯 루프가 **순서만** 다시 정할 수 있게 한 것이 전부다.
+  // ⚠ `docIndex` 는 **companions 배열 인덱스**다(슬롯 아님). `offset` 이 이 값에서
+  //   나오는데, 슬롯을 넣으면 편집 대상 슬롯 자리에서 값이 한 칸 건너뛰어 섹션 인덱스가
+  //   문서 간 충돌할 수 있다. 슬롯과 배열 인덱스를 섞지 마라.
+  const emitCompanion = (doc: ComposeDoc, docIndex: number, joinBaseNo: number | null): number => {
     let cache = caches.get(doc.docKey);
     if (!cache) {
       cache = new SectionFlowCache();
@@ -269,7 +367,15 @@ export function buildComposedView(input: {
     // 편집 콜백 없이(=읽기전용 JSX) 만든다. 부착 문서는 인라인 편집 대상이 아니고,
     // 콜백을 주면 그 콜백이 **활성 문서의 setReport** 를 향해 남의 문서 편집을 활성 문서에
     // 커밋하게 된다(`assemble.tsx:125-134` 2번째 인자 미전달 = 읽기전용 경로).
-    const docNatural = reportFlowItems(doc.report, undefined, cache);
+    // [E35] joinBaseNo 가 오면(=이 문서가 직전 문서의 연속) 문서 껍데기를 접고 번호를
+    // 이어 센다. assemble 의 emit 캐시 키에 `no` 가 들어 있어 시작값이 바뀌면(앞 문서의
+    // 목차 켬/끔 등) 그 문서의 슬롯 캐시가 스스로 miss 나 다시 조립된다 — 별도 무효화 불요.
+    const docNatural = reportFlowItems(
+      doc.report,
+      undefined,
+      cache,
+      joinBaseNo === null ? undefined : { omitDocIntro: true, sectionNoStart: joinBaseNo },
+    );
     // 2) 부착 문서도 **자기** blockOrder/hidden 으로 먼저 정리한다.
     const docVisible = visibleFlowItems(doc.report, docNatural);
     const offset = (docIndex + 1) * SECTION_INDEX_STRIDE;
@@ -328,7 +434,13 @@ export function buildComposedView(input: {
       // (= 헤더가 제목 페이지 하단에 홀로 남는 반대 사고는 그대로 차단된다).
       if (!firstSecHeaderSeen && it.wrap === "secheader") {
         firstSecHeaderSeen = true;
-        if (!it.breakBefore) ns.keepWithPrev = true;
+        // ⚠ **`ns.breakBefore` 를 본다 — `it.breakBefore` 가 아니다.** [E35] 연속 문서는
+        //   타이틀 블록이 없어 첫 아이템이 곧 첫 secheader 인데, 바로 위 `i === 0` 이 방금
+        //   breakBefore 를 얹었다. 원본 `it` 을 보면 그 사실을 놓쳐 한 아이템에 강제 분할과
+        //   앞붙임이 **둘 다** 붙는다 — 활성 문서 쪽 같은 가드(E34-R1 게이트 A5)가 실측으로
+        //   잡은 함정과 동일 계통이다. 기존 문서 형상(첫 아이템 = 타이틀/표지)에서는 첫
+        //   secheader 가 언제나 i > 0 이라 ns.breakBefore === it.breakBefore — 판정 동일.
+        if (!ns.breakBefore) ns.keepWithPrev = true;
       }
       flowItems.push(ns);
     });
@@ -343,7 +455,34 @@ export function buildComposedView(input: {
 
     // 6) blockMeta 병합 — 키 전량 접미(파일 상단 「왜 blockMeta 병합이 필수인가」).
     Object.assign(blockMeta, nsBlockMetaKeys(doc.report.blockMeta, doc.docKey));
-  });
+
+    // [E35] 이 문서가 실제로 소비한 마지막 섹션 번호 — 다음 슬롯이 연속 문서면 여기서 잇는다.
+    // 문항(afterDoc)은 섹션 번호를 소비하지 않으므로 docVisible 만 재면 된다.
+    return maxSectionNo(docVisible);
+  };
+
+  // ── [E34-R1] 슬롯 순서대로 방출 ──────────────────────────────────────────────────
+  // 슬롯은 `companions.length + 1` 개이고 그중 `at` 번째가 편집 대상 자리다.
+  // `at === 0` 이면 slot0 → emitActive, slot1..N → ci = 0..N-1 순차 = **R1 이전과
+  // 완전히 같은 시퀀스**이고 위 얕은 복사도 0건이라 배열 요소 참조까지 동일하다.
+  //
+  // [E35] `prevDocMaxNo` = 직전 슬롯 문서가 소비한 마지막 섹션 번호. `joinPrev` 문서는
+  // 여기서 번호를 이어 받는다. 호스트가 인쇄 순서(readyIds) 기준으로 「직전 문서 = 같은
+  // 지문의 기본」을 보장하고 켜므로, 슬롯 순서 = readyIds 순서인 이 루프에서 「직전 슬롯」을
+  // 읽는 것이 곧 그 보장의 소비다. `slot > 0` 가드는 전이 프레임 방어(선두 문서가 joinPrev
+  // 를 달고 오면 이을 대상이 없다 — 그때는 독립 문서로 낸다).
+  let prevDocMaxNo = 0;
+  for (let slot = 0; slot <= companions.length; slot++) {
+    if (slot === at) {
+      emitActive();
+      prevDocMaxNo = maxSectionNo(activeItems);
+      continue;
+    }
+    const ci = slot < at ? slot : slot - 1;
+    const doc = companions[ci];
+    const joinBaseNo = doc.joinPrev && slot > 0 ? prevDocMaxNo : null;
+    prevDocMaxNo = emitCompanion(doc, ci, joinBaseNo);
+  }
 
   // ── E22) 문항 묶음을 스트림 **맨 끝**에 잇는다 (합류 지점은 여기가 유일한 정답) ───────
   // 위치 = companions 루프 **직후** · 아래 blockOrder 사전 확정 **직전**. 근거는 파일 상단

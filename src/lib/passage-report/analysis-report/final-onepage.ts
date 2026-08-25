@@ -188,8 +188,25 @@ function normalizeForCoverage(value: string): string {
  */
 function passageCoverageIssue(section: FinalOnepageSection, passageContent: string): string | null {
   const src = normalizeForCoverage(passageContent);
+  // ── [E29-7] 커버리지 산술 재설계 — 구판은 두 방향으로 틀렸다 ────────────────
+  //
+  // 구판: `matchedChars / src.length`, matchedChars = Σ(문장 길이).
+  //  ① **분모 과대**: needle 은 trim 된 문장이라 문장 **사이 공백**이 어느 needle
+  //     에도 안 들어간다. 문장 N개면 최소 N-1 글자가 영원히 미매칭이다. 한 글자도
+  //     안 틀린 완벽 전사가 짧고 문장 많은 지문(예: 800자·30문장)에서 96.4% 로
+  //     떨어져 **가짜 실패**(502 + 환불 + 2회 수리 소모)를 냈다.
+  //  ② **중복 이중 계상**: 같은 문장이 두 번 나오면 길이가 두 번 더해져 커버리지가
+  //     100% 를 넘을 수 있다. 문장 3개를 통째로 빠뜨린 출력이 156% 로 **통과**한다.
+  //
+  // 신판: 원문 위에 **매칭 구간을 칠하고**(union), 공백을 뺀 글자 수로 비율을 낸다.
+  //   · 분모 = 원문의 비공백 글자 수  → 문장 사이 공백 페널티 소멸(① 해소)
+  //   · 분자 = 칠해진 비공백 글자 수  → 중복은 두 번 안 세어진다(② 해소)
+  // 완벽 전사는 정확히 100%, 누락은 그 문장 길이만큼 정직하게 떨어진다.
+  const covered = new Uint8Array(src.length);
+  const paint = (from: number, len: number) => {
+    for (let i = from; i < from + len && i < src.length; i += 1) covered[i] = 1;
+  };
   let cursor = 0;
-  let matchedChars = 0;
   for (const snt of section.sentences) {
     const needle = normalizeForCoverage(snt.en);
     if (!needle) continue;
@@ -200,13 +217,20 @@ function passageCoverageIssue(section: FinalOnepageSection, passageContent: stri
       if (anywhere < 0) {
         return `문장 ${snt.n} 이 원문에 축자로 존재하지 않습니다(개작 금지): "${snt.en.slice(0, 60)}..."`;
       }
-      matchedChars += needle.length;
+      paint(anywhere, needle.length);
       continue;
     }
+    paint(idx, needle.length);
     cursor = idx + needle.length;
-    matchedChars += needle.length;
   }
-  const coverage = src.length > 0 ? matchedChars / src.length : 0;
+  let total = 0;
+  let hit = 0;
+  for (let i = 0; i < src.length; i += 1) {
+    if (src[i] === " ") continue;
+    total += 1;
+    if (covered[i]) hit += 1;
+  }
+  const coverage = total > 0 ? hit / total : 0;
   if (coverage < 0.97) {
     return `원문 커버리지 ${(coverage * 100).toFixed(1)}% < 97% — 누락된 문장이 있습니다. 지문의 모든 문장을 순서대로 포함하세요.`;
   }
@@ -313,8 +337,38 @@ export async function generateFinalOnepageReport(
   let lastRaw = "";
   let lastParsed: unknown;
 
+  // ── [E29-8] 수리 예산 가드 (RCA RC-7) ──────────────────────────────────────
+  //
+  // 구판 결함 2개:
+  //  ① **완주 불가능한 유료 콜을 쏜다.** 남은 시간이 3초여도
+  //     `Math.max(1_000, …)` 바닥값 때문에 3초짜리 타임아웃으로 콜이 나갔다.
+  //     luna·xhigh 는 실측 102~130초라 그 콜은 **구조적으로 100% 실패**한다 —
+  //     돈은 나가고 결과는 없다.
+  //  ② **attempt 0 이 예산을 다 먹으면 수리가 죽는다.** fast 경로 데드라인은
+  //     270초인데 콜 1회 상한이 200초라, attempt 0 이 상한까지 쓰면 수리 창은
+  //     70초 < 102초 하한 ⇒ 확정 502.
+  //
+  // 수리는 **실제로 잡을 구제한다** — 프로덕션 실측 증거가 있다: 2026-08-23 주연
+  // 파이널 잡의 generationMs = 215,568ms 는 콜 1회 상한(200s)으로 나올 수 없는
+  // 값이라 attempt 0 실패 → attempt 1 성공이 확정이다(다른 5건은 39.9~137.0s 단발).
+  // 그래서 「수리를 없애고 단발에 전 예산」은 오답이다 — **수리 창을 보장**해야 한다.
+  //
+  // MIN_CALL_MS 는 luna 실측 하한(102s)에 소폭 여유를 얹은 값이다. 스펙 초안의
+  // 150_000 을 쓰지 않은 이유: fast 데드라인 270초에서 150 을 예약하면 attempt 0 이
+  // 120초만 받아 **정상 1차 통과분까지 잘라 먹는다**(실측 137.0s 잡이 그 희생자다).
+  const MIN_CALL_MS = 110_000;
+
   for (let attempt = 0; attempt < 2; attempt += 1) {
-    if (attempt > 0 && opts?.deadlineAt && Date.now() >= opts.deadlineAt) break;
+    // 완주 불가능한 콜은 **쏘지 않는다**(①). 데드라인이 없으면 이 가드는 무동작이다.
+    if (opts?.deadlineAt) {
+      const remaining = opts.deadlineAt - Date.now();
+      if (remaining < MIN_CALL_MS) {
+        if (attempt > 0 && !lastFailure) {
+          lastFailure = "수리 예산이 남지 않아 재시도를 건너뛰었습니다.";
+        }
+        break;
+      }
+    }
     const prompt =
       attempt === 0
         ? basePrompt
@@ -322,9 +376,21 @@ export async function generateFinalOnepageReport(
 
     // luna 실측 상위 130s + xhigh 꼬리 여유 — 콜 1회 상한. 데드라인이 더 이르면 그쪽이 이긴다.
     const baseTimeoutMs = opts?.timeoutMs ?? 200_000;
-    const timeoutMs = opts?.deadlineAt
-      ? Math.max(1_000, Math.min(baseTimeoutMs, opts.deadlineAt - Date.now()))
-      : baseTimeoutMs;
+    // [E29-8] attempt 0 은 **수리 창(MIN_CALL_MS)을 남기고** 쓴다(②). 남겨도
+    // MIN_CALL_MS 이상이 attempt 0 에 돌아가지 않으면 예약을 포기한다 — 그때는
+    // 단발이 유일한 기회라 전 예산을 몰아주는 편이 기대값이 높다.
+    // ⚠ 바닥값 `Math.max(1_000, …)` 은 **되살리지 마라** — 위 가드가 이미
+    //   MIN_CALL_MS 미만을 걸러내므로 여기 바닥값은 「불가능한 콜을 허용하는」
+    //   구멍으로만 작동한다.
+    let timeoutMs = baseTimeoutMs;
+    if (opts?.deadlineAt) {
+      const remaining = opts.deadlineAt - Date.now();
+      const reserved =
+        attempt === 0 && remaining - MIN_CALL_MS >= MIN_CALL_MS
+          ? remaining - MIN_CALL_MS
+          : remaining;
+      timeoutMs = Math.min(baseTimeoutMs, reserved);
+    }
     const result = await generateQuestionText({
       prompt,
       generationPlan: "STANDARD",

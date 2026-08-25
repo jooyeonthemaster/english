@@ -110,6 +110,13 @@ import { readQuestionTypeDifficultySetting } from "@/lib/question-type-generatio
 import { planForDifficulty } from "@/lib/question-generation-plans";
 import { isSectionBackedModuleId } from "@/lib/studio/module-sections";
 import { STUDIO_MODULE_BY_ID } from "@/lib/studio/modules";
+// [E30 §4-3] 같은 지문 안의 학습지 랭크 정본 — **복제 금지**. 목록 정렬
+// (composer-list-pane)·동반 픽(withBasicCompanions)·이 파일의 그룹 정렬 3곳이
+// 같은 함수를 읽어야 한다. 리터럴 랭크를 여기 복제하면 마커가 늘 때 타입 에러
+// 0 · 화면에서만 순서가 갈린다(pick-order.ts 머리주석이 기록한 그 사고).
+import { sheetPlanRank } from "@/lib/studio/pick-order";
+// [E30 §4-3 D-ORDER-2] 「기본 우선」 판정의 마커 정본 — 리터럴 "PRIME" 금지.
+import { PRIME_REPORT_MARKER } from "@/actions/workbench/passage-constants";
 import type { SheetPickMeta } from "@/lib/studio/sheet-pick-types";
 import {
   confirmSheetComposeCollapse,
@@ -420,6 +427,29 @@ function resolveSheetPickMeta(
  * 활성 전환은 미저장 편집을 날리므로(편집기 `key` 교체 재마운트, E21-6-4)
  * 필요 없을 때 건드리지 않는 것이 계약이다. 살아 있지 않으면 선호 후보(방금
  * 조판을 누른 행) → 대기열 첫 문서 → null 순으로 내려간다.
+ *
+ * ── [E30 §4-3 D-ORDER-2] 선호 강등 1규칙 ────────────────────────────────────
+ * 선호 후보가 **기본(PRIME)이 아니고** 같은 지문의 기본 문서가 대기열에 있으면,
+ * 활성을 그 기본 문서로 내린다. 이유는 규칙 ②(활성 문서를 자기 그룹의 선두로)가
+ * 랭크보다 **위**이기 때문이다 — 그 규칙은 취향이 아니라 인쇄 사실의 미러다
+ * (`compose-flow.ts` 의 `flowItems = [...activeItems]`). 강등이 없으면 실전 행의
+ * [학습지 조판] 한 번으로 그 지문의 인쇄가 **실전 → 기본** 순이 되고, 사용자
+ * 확정 요구(「학습지를 추가하고 실전 학습지를 추가하도록」)가 정면으로 뒤집힌다.
+ * 화면(배지·칩)과 인쇄는 그때도 서로 일치하므로 R1-0 위반은 아니다 — 뒤집히는
+ * 것은 **둘 다**다. 그래서 잡을 곳은 표시부가 아니라 활성 선정 자체다.
+ *
+ * ⚠ [E33] 구 예외 절은 **소멸했다**: 「조판 표면의 문서 칩 클릭은 이 함수를 타지 않는다
+ *   (onActiveReportIdChange 직접 호출 = 사용자의 명시 지정)」. 칩이 이동 전용이 되면서
+ *   이 함수를 우회하는 경로가 **0**이 됐다 — 즉 활성 선정은 이제 예외 없이 여기로 수렴한다.
+ *   ⚠ 그 대가를 알고 있어라: 비-PRIME 문서(실전·파이널)를 편집 대상으로 세우는
+ *     **in-surface 경로도 함께 0**이 됐다(강등이 언제나 기본을 고르고, 칩으로 되돌릴 수
+ *     없다). 조판실에서 실전을 편집해야 한다면 앞 문서 체크를 해제하거나 지문관리의
+ *     분석 보기 탭을 쓴다 — 칩 툴팁이 그 탈출구를 말한다.
+ * ⚠ `current` 분기는 손대지 않는다 — 살아 있는 활성을 강등하면 편집 중이던 문서가
+ *   재마운트되며 미저장분이 날아간다(E21-6-4). 강등은 **새로 고르는 순간**에만.
+ * ⚠ 폴백(대기열 첫 문서)에도 강등을 얹지 않는다. 정렬이 수렴한 상태에서 Map 선두는
+ *   이미 첫 그룹의 최저 랭크 문서라(D-ORDER-1) 무동작이고, 여기에 규칙을 하나 더
+ *   얹으면 「대기열 첫 문서」라는 기존 계약이 조용히 좁아진다.
  */
 function pickActiveSheetId(
   next: ReadonlyMap<string, SheetPickMeta>,
@@ -427,7 +457,26 @@ function pickActiveSheetId(
   prefer?: string,
 ): string | null {
   if (current && next.has(current)) return current;
-  if (prefer && next.has(prefer)) return prefer;
+  if (prefer && next.has(prefer)) {
+    const preferMeta = next.get(prefer);
+    // 빈 passageId 는 「지문 미상」이지 「같은 지문」이 아니다 — 빈 키끼리 매칭시키면
+    // 남의 지문 기본 문서를 활성으로 세운다(pick-order.ts 의 동반 픽과 같은 가드).
+    if (
+      preferMeta !== undefined &&
+      preferMeta.planMarker !== PRIME_REPORT_MARKER &&
+      preferMeta.passageId
+    ) {
+      for (const [id, meta] of next) {
+        if (meta.passageId !== preferMeta.passageId) continue;
+        if (meta.planMarker !== PRIME_REPORT_MARKER) continue;
+        // 지문당 PRIME 은 1행이 정본(E30 §1-2 — DB 실측 625 그룹 전부 n_rows=1).
+        // 그래도 **첫 일치 고정**으로 결정론을 못박는다: 활성 id 가 프레임마다
+        // 흔들리면 정렬 effect 의 수렴 증명(규칙 ④)이 무너진다.
+        return id;
+      }
+    }
+    return prefer;
+  }
   for (const id of next.keys()) return id;
   return null;
 }
@@ -458,21 +507,38 @@ function pickActiveSheetId(
  *   B행 조판   → docSeq `[ACTIVE(B),A,C]` · 행 배지 `B:1 / A:2 / C:3` (3표면 전원 일치).
  *
  * ─ 왜 이 방향으로 고치는가 ──────────────────────────────────────────────────────
- * 숫자를 조판 순서에 맞추는 길은 둘인데(① 활성 인덱스를 합성 스트림까지 내려보내
- * 활성을 제자리에 조판 ② 삽입 순서 자체를 조판 순서로 맞춤), ②가 **한 곳만 고쳐
- * 3표면이 동시에 정합**해진다 — 세 숫자가 이미 전부 이 Map 파생이기 때문이다.
- * ①은 `compose-flow`/편집기/표면 3층에 활성 위치 인자를 새로 뚫어야 하고, 활성
- * 아이템 선두의 `breakBefore` 를 편집기 소유 FlowItem 에 얹어야 해서(문서 경계 =
- * 새 페이지 — compose-flow.ts:254 `if (i === 0) ns.breakBefore = true`) 편집 계약까지
- * 건드린다.
+ * ⚠⚠ 【E34-R1 정정 — 이 문단의 결론은 **뒤집혔다**】
+ * 구 문단은 두 길(① 활성 인덱스를 합성 스트림까지 내려보내 활성을 제자리에 조판
+ * ② 삽입 순서 자체를 조판 순서로 맞춤) 중 ②를 택하고, ①을 「편집 계약까지 건드린다」로
+ * 기각했다. **R1 이 바로 그 ①이고, 채택됐다.**
+ *   · 기각 근거였던 「활성 FlowItem 에 breakBefore 를 얹어야 한다」는 실재하지만,
+ *     `compose-flow.ts` 의 **얕은 복사 2건**(`{...it, breakBefore}` / `keepWithPrev`)으로
+ *     봉쇄된 비용이다 — id·editId·orderId·node 참조가 전부 보존되므로 편집 계약
+ *     (blockMeta 키 · data-paper-item-id · scrollToBlock · React bailout)이 무손상이다.
+ *   · ②를 유지할 수 없게 된 이유: ②는 「편집 대상 = 인쇄 선두」를 **강제**하므로
+ *     편집 대상을 바꾸면 문서 순서가 통째로 뒤집힌다. 사용자가 그것을 결함으로
+ *     신고했고(26-08-24), E33 이 칩을 이동 전용으로 임시 봉합하면서 실전·파이널을
+ *     조판실에서 편집할 방법이 0이 되는 막다른 길이 생겼다. R1 이 그 근본을 푼다.
+ * **이 문단을 근거로 R1 을 되돌리지 마라.** 되돌리면 위 두 증상이 함께 돌아온다.
+ * (같은 파일 두 주석이 서로를 반박한 채 방치된 사고가 이 리포에 이미 있다 —
+ *  `.tmp-e31/E33-CHIP-NAV.md` §5.)
  *
  * ─ [E27] 그 위에 얹은 지문 그룹 축 ─────────────────────────────────────────────
  * 규칙 4개(E27-SPEC §2 R1-2 원문 그대로):
  *  1) 그룹 = `passageId`. 그룹 순서 = 현재 Map 에서의 **첫 등장 순서**.
- *  2) `activeId` 가 있으면 그 문서의 그룹을 **맨 앞**, 그 그룹 안에서 그 문서를 **맨 앞**.
- *     (compose-flow 가 활성 문서를 스트림 선두에 두므로 이래야 Map 순서 = 인쇄 순서다 —
- *      위 실측이 세운 「선두 = 활성 = 인쇄 첫 문서」 불변식을 그룹 축 위에서 재현한 것.)
- *  3) 그룹 내부 상대 순서는 보존.
+ *  2) **[E34-R1 로 삭제됨]** 구 규칙은 「`activeId` 의 그룹을 맨 앞, 그 안에서 그 문서를
+ *     맨 앞」이었다. 근거는 「compose-flow 가 활성 문서를 스트림 선두에 두므로 이래야
+ *     Map 순서 = 인쇄 순서」 — 즉 **인쇄 사실의 미러**였다. R1 이 그 인쇄 사실을 없앴다
+ *     (`activeIndex` 슬롯 방출: 편집 대상이 대기열 제자리에 인쇄된다). 미러할 사실이
+ *     사라졌으므로 미러도 사라진다.
+ *     ⚠ 되살리지 마라 — 되살리는 순간 편집 대상 전환이 다시 문서 순서를 뒤집는다.
+ *     ⚠ 부수 효과(의도됨): 이 함수가 이제 `activeId` **무관**이라 정렬이 자명하게
+ *       수렴한다(최대 1커밋). 아래 규칙 ④의 무한루프 방어는 그대로 유지한다.
+ *  3) [E30 §4-3 D-ORDER-1 으로 교체] 그룹 내부는 **`sheetPlanRank` asc**(기본 →
+ *     실전 → 파이널 → 국어 → 미지), **동랭크는 기존 상대 순서 보존**.
+ *     (구판은 「상대 순서 보존」 하나였다. 실전 학습지는 기본이 이미 있는 지문에
+ *      **나중에** 덧생성되는 것이 정상 동선이라, 보존만 하면 「기본 먼저」가 담는
+ *      순서라는 **우연**에 의존한다 — 사용자 확정 요구가 그 우연에 걸린다.)
  *  4) **키 시퀀스가 기존과 동일하면 원본 참조를 그대로 반환**.
  *
  * ⚠ 4)가 정렬 effect 의 **유일한 무한루프 방지 장치**다. 구 코드의
@@ -482,12 +548,16 @@ function pickActiveSheetId(
  *   같은 effect 재발화」가 영원히 돈다(에러 0 · 콘솔 0 · 화면만 멈춘다).
  *   수렴 증명은 정렬 effect 바로 위 【수렴 증명】 주석에 있다.
  *
- * ⚠ 지문이 1종뿐이거나 픽이 0~1건이면 그룹 축은 **아무것도 바꾸지 않는다** — 산출
- *   시퀀스가 활성-선두 규칙만 적용한 구 동작과 글자 그대로 같다(무회귀).
+ * ⚠ (E30 정정) 픽이 0~1건이면 여전히 **아무것도 바꾸지 않는다**(`picked.size < 2`
+ *   조기 반환). 그러나 「지문이 1종뿐이면 무동작」은 **더 이상 참이 아니다** — 규칙 ③
+ *   이 랭크 정렬로 바뀌었으므로 한 지문 안에 학습지가 2장 이상이면 그 안에서 순서가
+ *   선다. 마커가 1종뿐인 대기열(레거시 = 전부 PRIME)에서는 전원 동랭크라 산출
+ *   시퀀스가 구 동작과 글자 그대로 같다(무회귀는 **마커 축**에서 성립한다).
  */
 function withPassageGroupedOrder(
+  // [E34-R1] 구 2번째 인자 `activeId` 는 **삭제**됐다(규칙 ② 소멸). 죽은 인자를
+  // 남기면 썩는다 — 호출부가 무심코 넘기고 다음 사람이 「쓰이는 줄」 안다.
   picked: ReadonlyMap<string, SheetPickMeta>,
-  activeId: string | null,
 ): ReadonlyMap<string, SheetPickMeta> {
   // 0~1건은 어떤 규칙으로도 이미 정렬돼 있다 — 참조 유지가 곧 재조회 0이다.
   if (picked.size < 2) return picked;
@@ -500,29 +570,47 @@ function withPassageGroupedOrder(
     else groups.set(meta.passageId, [id]);
   }
 
-  // ② 활성 그룹 판정. activeId 가 대기열에 없는 프레임(프룬 직전)에는 활성 규칙만
-  //    조용히 빠지고 **그룹 정렬은 그대로 돈다** — 호출부 effect 가 같은 커밋에서
-  //    activeSheetId 를 수렴시키므로 여기서 조기 반환할 이유가 없다.
-  const activeMeta = activeId === null ? undefined : picked.get(activeId);
-  const activeGroupKey = activeMeta === undefined ? null : activeMeta.passageId;
+  // ② **[E34-R1] 활성 그룹 hoist 는 삭제됐다.** 이 자리에 있던 activeMeta·
+  //    activeGroupKey 판정과 아래 `pushGroup(activeGroupKey)` 선행 호출이 전부 사라졌다.
+  //    근거는 머리주석 규칙 ② 절 — 미러하던 인쇄 사실 자체가 없어졌다.
 
   const nextKeys: string[] = [];
   const pushGroup = (key: string) => {
     const bucket = groups.get(key);
     if (!bucket) return;
-    const isActiveGroup = key === activeGroupKey && activeId !== null;
-    // ③ 그룹 내부 상대 순서 보존 — 활성 문서 하나만 자기 그룹의 선두로 끌어올린다.
-    if (isActiveGroup) nextKeys.push(activeId);
-    for (const id of bucket) {
-      if (isActiveGroup && id === activeId) continue;
-      nextKeys.push(id);
+    // ③ [E30 §4-3 D-ORDER-1] 그룹 내부는 **sheetPlanRank asc**(기본 → 실전 →
+    //    파이널 → 국어 → 미지), **동랭크는 기존 상대 순서 보존**.
+    //    구 규칙 ③ 은 「상대 순서 보존」 하나였는데, 실전 학습지는 기본보다 **나중에**
+    //    담기는 것이 정상 동선이라(기본이 이미 있는 지문에 실전을 덧생성) 보존만
+    //    하면 인쇄가 기본 → 실전 순으로 서는 것이 **우연**에 의존하게 된다.
+    //    ⚠ [E34-R1] 구판에는 여기 「활성 문서 하나만 랭크와 무관하게 자기 그룹의
+    //      선두로 끌어올린다(규칙 ② > 랭크)」가 있었다. 규칙 ② 소멸과 함께 사라졌다 —
+    //      이제 그룹 내부 순서는 **오직 랭크**이고 편집 대상이 무엇이든 불변이다.
+    const rest = bucket;
+    if (rest.length < 2) {
+      for (const id of rest) nextKeys.push(id);
+      return;
     }
+    // ⚠ **안정성을 엔진 규약에 맡기지 않는다.** 동랭크 동률에 원래 인덱스를 명시
+    //   타이브레이크로 넣어 「같은 입력 → 언제나 같은 시퀀스」를 코드로 보장한다.
+    //   규칙 ④(시퀀스 동일 → 원본 참조)가 정렬 effect 의 **유일한** 무한루프 방지
+    //   장치이고, 그 수렴 증명은 이 결정론에 전적으로 의존한다 — 흔들리면 에러 0 ·
+    //   콘솔 0 으로 화면만 멈춘다. (멱등성도 여기서 나온다: 이미 (랭크,인덱스)로
+    //   정렬된 배열을 다시 정렬하면 글자 그대로 같은 배열이다.)
+    const decorated = rest.map((id, i) => ({
+      id,
+      i,
+      // 메타 부재는 이론상 불가(버킷을 picked 에서 만들었다)지만, 빈 문자열을
+      // 넘겨 **정본 함수의 미지 마커 처리(꼬리 9)** 를 그대로 태운다 — 여기서
+      // 리터럴 9 를 복제하면 랭크 정본이 두 벌이 된다.
+      rank: sheetPlanRank(picked.get(id)?.planMarker ?? ""),
+    }));
+    decorated.sort((a, b) => a.rank - b.rank || a.i - b.i);
+    for (const entry of decorated) nextKeys.push(entry.id);
   };
-  if (activeGroupKey !== null) pushGroup(activeGroupKey);
-  for (const key of groups.keys()) {
-    if (key === activeGroupKey) continue;
-    pushGroup(key);
-  }
+  // [E34-R1] 그룹 순회는 **첫 등장 순서 하나**다(규칙 ①). 구판의 활성 그룹 선행
+  // 호출과 skip 분기는 규칙 ② 와 함께 삭제됐다.
+  for (const key of groups.keys()) pushGroup(key);
 
   // ④ 시퀀스 동일 → 원본 참조. **이 비교를 지우면 정렬 effect 가 무한 루프다.**
   let i = 0;
@@ -556,6 +644,9 @@ function withPassageGroupedOrder(
 /** 「조판이 통째로 사라진다」를 정본 가드에 넘길 때 쓰는 빈 대기열(참조 고정). */
 const EMPTY_SHEET_PICKS: ReadonlyMap<string, SheetPickMeta> = new Map();
 
+/** [E32] 문항 축 ref 미러의 초기값(참조 고정 — 매 렌더 새 Map 생성 방지). */
+const EMPTY_QUESTION_PICKS: ReadonlyMap<string, PickedQuestionMeta> = new Map();
+
 // (구 `SHEET_CAP_MESSAGE` 는 상한 폐기와 함께 소멸 — 「먼저 고른 6장을 유지합니다」
 //  라는 문장이 가리키던 클램프 자체가 없어졌으므로 자구만 남기면 거짓말이 된다.)
 
@@ -585,8 +676,9 @@ const EMPTY_SHEET_PICKS: ReadonlyMap<string, SheetPickMeta> = new Map();
  *    에러 0 · 경고 0. 사용자에게는 정확히 "버튼이 안 먹는다"로 보인다.
  *  · (a) 만 남고 뷰가 반대로 갈리면 → 두 print-root(`#exam-paper-print-root` 와
  *    `#sheet-compose-print-root`/`.par-root`)가 **동시 가시**가 되어
- *    **인쇄가 백지**로 나온다(report-styles.ts:1878-1885 — 다중 루트가 같은
- *    좌표에 겹친다). 화면상 이상 0 · 콘솔 0 · **PDF 로만** 드러난다.
+ *    **인쇄가 오염**된다(report-styles.ts 인쇄 화이트리스트는 대상 루트 정확히
+ *    1개를 전제 — 26-08-25 static 복귀 이후 다중 루트 증상은 「같은 좌표 겹침
+ *    백지」가 아니라 「순차 이중 인쇄」). 화면상 이상 0 · 콘솔 0 · **PDF 로만** 드러난다.
  *
  * 그래서 (a)(b) 를 **다른 커밋으로 나누지 마라.** 뷰 분할과 composeMode 제거를
  * 따로 하면 어느 쪽을 먼저 해도 위 두 실패 중 하나가 열린다(E24-SPEC §1②-a).
@@ -1478,10 +1570,26 @@ export function StudioHomeClient({
             if (prev === "generating") doneQuestions = true;
             else if (prev === undefined) newQuestionDone = true;
           }
-        } else if (key.startsWith("s:")) {
-          if (status === "done" && (prev === "pending" || prev === "analyzing"))
-            doneSheets = true;
-        } else if (status === "done" && prev === "running") {
+        } else if (status === "done" && prev !== undefined && prev !== "done") {
+          // ── [E30 / RCA-FINAL-ONEPAGE #9] 학습지 축(s: 분석 큐 · w: 실전 워크북)
+          //    완료 술어 확장. 구판은 `s:` 를 `prev === "pending" || "analyzing"`,
+          //    `w:` 를 `prev === "running"` 으로 **직전 상태를 열거**했다. 그 열거는
+          //    **오탐 실패를 통과한 잡을 영원히 놓친다**: SSE 절단은 서버가 생성·과금·
+          //    저장을 계속하는 동안 카드만 `error` 로 못박고(use-passage-queue 의
+          //    「확인 안내」 계약과 소비부 3곳의 불일치 — RCA RC-2 ④), 그 뒤 폴링이
+          //    진짜 완료를 실어 오면 전이가 `analyzing→error→done` 이라 prev 가
+          //    `error` 다 → 술어 거짓 → 넛지 소등. 그런데 **done 카드는 스트립이 아예
+          //    그리지 않는다**(running/error 전용) ⇒ 완료를 알리는 표면이 **0개**가
+          //    되고, 사용자는 「실패했다」만 본 채 크레딧이 빠진 완성본을 모른다.
+          //    실측: 1618학원 15:21:46 COMPLETED · 커버리지 99.59% · 환불 0 · 무음
+          //    구간 137.0s(주연 8/23 은 215.6s).
+          //    → 「직전 관측이 있었고(=이 세션의 전이) 그것이 done 이 아니었다」로
+          //      바꾼다. 두 축을 한 분기로 합친 것은 술어가 같아졌기 때문이다 —
+          //      따로 두면 다음 사람이 한쪽만 고쳐 조용히 갈린다.
+          //    ⚠ 마운트 첫 관측(영속 복원분·이미 끝난 잡)은 바깥
+          //      `prevGenStatusSig !== null` 가드가 이미 막는다. `prev !== undefined`
+          //      는 그 안쪽의 **키 신생**(폴링이 처음 실어 온 남의 잡)을 거르는 것이라
+          //      역할이 다르다 — 둘 다 필요하다.
           doneSheets = true;
         }
       }
@@ -1594,7 +1702,20 @@ export function StudioHomeClient({
     for (const ref of refs) {
       const items: DossierQueueItem[] = [];
       const q = queueApi.queue.find((x) => x.id === ref.id);
-      if (q && (q.status === "pending" || q.status === "analyzing")) {
+      // ── [E30 수정] 한 번 발사 = 카드 한 장 ────────────────────────────────
+      // (c) 실전만 추가 경로는 **카드를 두 장 만들고 있었다**(사용자 신고 26-08-24):
+      //   ① launchWorksheet 의 로컬 잡 → worksheetJobs 카드
+      //   ② 그 fetch 가 서버에 만든 PASSAGE_ANALYSIS 잡을 **폴링이 주워** 분석 큐 항목으로
+      //      승격 → 이 running 분기가 또 한 장.
+      // 폴링은 domain 만 보고 config 를 안 읽어서(queueItemFromJob) 워크북 잡과
+      // 일반 분석 잡을 구분하지 못한다. 그래서 **소비 지점에서 접는다**:
+      // 이 지문에 실전 워크북 잡이 살아 있으면 ①이 정본이고 ②는 그 잡의 그림자다.
+      // ⚠ 반대로 접으면 안 된다 — worksheetJobs 카드만이 fetch 단계 실패(타임아웃·
+      //   네트워크)를 알고, 그때는 서버 잡이 아예 없어 ②가 존재하지 않는다.
+      const wbRunning = queueApi.worksheetJobs.some(
+        (j) => j.passageId === ref.id && j.status === "running",
+      );
+      if (!wbRunning && q && (q.status === "pending" || q.status === "analyzing")) {
         // 자구는 analysisRunningLabel 이 정본(행 활동 표식과 공유 — §3.10.20).
         const label = analysisRunningLabel(queueApi.stamps.get(ref.id));
         items.push({
@@ -1627,7 +1748,7 @@ export function StudioHomeClient({
           items.push({
             id: `ex:${ref.id}`,
             kind: "exam",
-            label: "실전 워크북 생성 중",
+            label: "실전 학습지 생성 중",
             status: "running",
             // 실전 워크북은 스트림 없음(§3.10.11-c) — 스피너+경과만.
             startedAt: j.startedAt,
@@ -1636,7 +1757,7 @@ export function StudioHomeClient({
           items.push({
             id: `ex:${ref.id}`,
             kind: "exam",
-            label: "실전 워크북 생성 실패",
+            label: "실전 학습지 생성 실패",
             status: "error",
             detail: j.error,
           });
@@ -1719,8 +1840,14 @@ export function StudioHomeClient({
     //    스탬프 필터 없음: 스트립의 running 분기와 같은 자구다. 다른 표면에서
     //    쏜 잡도 "이 지문은 지금 묶여 있다"는 사실이라 행에 보이는 편이 맞다
     //    (발사부도 pending|analyzing 지문을 걸러낸다 — use-studio-queue).
+    // [E30 수정] 스트립과 **같은 접기**(위 builtQueueItems 주석이 정본) — 실전 워크북
+    // 잡이 도는 지문은 그 잡이 만든 서버 잡의 그림자를 행에도 중복해 그리지 않는다.
+    const wbRunningIds = new Set(
+      queueApi.worksheetJobs.filter((j) => j.status === "running").map((j) => j.passageId),
+    );
     for (const q of queueApi.queue) {
       if (q.status !== "pending" && q.status !== "analyzing") continue;
+      if (wbRunningIds.has(q.id)) continue;
       entries.push({
         passageId: q.id,
         kind: "sheet",
@@ -1733,7 +1860,7 @@ export function StudioHomeClient({
       entries.push({
         passageId: j.passageId,
         kind: "exam",
-        label: "실전 워크북 생성 중",
+        label: "실전 학습지 생성 중",
       });
     }
     // ③ 문항 세션 큐 — 스탬프 필터 필수(§3.10.9 함정 5, 무필터 = 학원 소음 89건
@@ -1899,8 +2026,69 @@ export function StudioHomeClient({
   const [pickedQuestions, setPickedQuestions] = useState<
     ReadonlyMap<string, PickedQuestionMeta>
   >(() => new Map());
+  // ── 【E32】 평면 축 선언을 **여기로 끌어올렸다** ────────────────────────────
+  // 구 자리는 아래 「평면 문항 선택(§3.10.17-b)」 절이었다(그 주석은 그대로 남아
+  // 있고 파생 콜백도 거기 있다). 올린 이유는 하나뿐이다: **도시에 축 토글이
+  // 평면 축을 읽어야 한다.** E32 가 도시에 행의 체크 표시를 두 축 합집합으로
+  // 바꾸면서(passage-dossier-pane 의 `pickedIds`), 「평면 축에만 있는 문항」의 행도
+  // 체크로 보인다. 그 행을 눌러 **해제**할 때 도시에 축만 보는 구 토글은
+  // `has()` 가 거짓이라 **담아 버린다** — 해제하려던 클릭이 정확히 반대로 동작한다.
+  // 선언이 아래에 있으면 이 토글들이 `setFlatPicked` 를 참조할 수 없다(TDZ).
+  const [flatPicked, setFlatPicked] = useState<
+    ReadonlyMap<string, PickedQuestionMeta>
+  >(() => new Map());
+  // 렌더 단계 미러(이 파일의 pickedSheetsRef 관용구) — 토글이 「지금 평면 축에
+  // 있나」를 **콜백 재생성 없이** 읽는다. 상태 업데이터 안에서 바깥 변수를
+  // 갈기는 방식은 쓰지 않는다(업데이터는 렌더 단계에서 두 번 돌 수 있다).
+  const flatPickedRef = useRef<ReadonlyMap<string, PickedQuestionMeta>>(
+    EMPTY_QUESTION_PICKS,
+  );
+  flatPickedRef.current = flatPicked;
+  // [E32 적대검수 major 수리] 「조판 표면이 지금 살아 있는가」 — 아래 토글이
+  // **담기를 어느 축에 넣을지** 가르는 유일한 재료. 두 open 플래그는 한참 아래에서
+  // 선언되므로(뷰·모드 축 정리 이후) 여기서는 ref 로만 읽는다. 할당은 두 상태가
+  // 모두 존재하는 지점(sheetComposeOpen 선언 직후)에서 렌더 단계에 한 번 한다.
+  const composeLiveRef = useRef(false);
   const togglePickedQuestion = useCallback(
     (questionId: string, meta: PickedQuestionMeta) => {
+      // [E32] **두 축 인지 토글.** 행이 체크로 보이는 근거가 두 축의 합집합이므로,
+      // 평면 축에 있는 문항의 클릭은 무조건 「해제」다(담기가 아니다).
+      //
+      // ⚠⚠ [적대검수 major 수리] **해제와 담기가 같은 축이어야 라운드트립이 멱등하다.**
+      //   평면 축은 열려 있는 조판 표면으로 **라이브 동기화**된다(composeSyncIds →
+      //   시험지 빌더의 집합 diff · 학습지 합본 표면의 문항 조각). 그래서 해제는
+      //   즉시 파괴적으로 반영되는데(세트 문항은 형제까지 함께 빠진다), 담기를
+      //   도시에 축에 넣으면 그 되돌림이 **라이브 축에 도달하지 못한다** — 행은
+      //   체크로 돌아오는데 조판물에는 없는 상태가 된다.
+      //   → 조판 표면이 열려 있는 동안에는 **담기도 평면 축**으로 보낸다.
+      //     닫혀 있으면 종전대로 도시에 축(프룬 대상인 잠정 픽)에 담는다.
+      if (flatPickedRef.current.has(questionId)) {
+        setFlatPicked((prev) => {
+          if (!prev.has(questionId)) return prev;
+          const next = new Map(prev);
+          next.delete(questionId);
+          return next;
+        });
+        // 두 축 동시 등재 잔재도 같은 클릭에서 걷는다 — 한쪽만 지우면 행은
+        // 여전히 체크로 남아 「눌러도 안 꺼진다」가 된다.
+        setPickedQuestions((prev) => {
+          if (!prev.has(questionId)) return prev;
+          const next = new Map(prev);
+          next.delete(questionId);
+          return next;
+        });
+        return;
+      }
+      if (composeLiveRef.current) {
+        // 라이브 조판 중 — 담기도 평면 축으로. 위 ⚠⚠ 참조.
+        setFlatPicked((prev) => {
+          if (prev.has(questionId)) return prev;
+          const next = new Map(prev);
+          next.set(questionId, meta);
+          return next;
+        });
+        return;
+      }
       setPickedQuestions((prev) => {
         const next = new Map(prev);
         if (next.has(questionId)) next.delete(questionId);
@@ -1915,27 +2103,134 @@ export function StudioHomeClient({
       entries: readonly (readonly [string, PickedQuestionMeta])[],
       pick: boolean,
     ) => {
+      // [E32] 해제(pick=false)는 **두 축 모두**에서. 담기는 축 1개에만 — 같은
+      // 문항이 두 축에 이중 등재되면 배포·조판 페이로드가 중복 계상된다.
+      // 담기의 착지 축은 위 togglePickedQuestion 과 **같은 규칙**이다(⚠⚠ 참조):
+      // 조판 표면이 열려 있으면 평면 축(라이브), 아니면 도시에 축(잠정).
+      //
+      // ⚠ [적대검수 info] 카드 헤더의 「전체 선택 ↔ 전체 해제」 **왕복은 멱등이
+      //   아니다**: 담기는 평면 축 보유분을 건너뛰고(이중 등재 방지) 해제는 두 축을
+      //   모두 걷으므로, {평면 A} 상태에서 전체 선택 → 전체 해제를 하면 A 까지
+      //   사라진다. 판정(allFilteredPicked)이 union 이라 **화면 표시와는 일관**하고
+      //   삼상태 체크박스의 고전적 성질이라 버그가 아니다 — 다만 E32 이후로는
+      //   손실이 **뷰 경계를 넘는다**(다른 뷰에서 담은 픽까지 걷힌다).
+      //   반쪽만 고치지 마라: 해제를 도시에 축으로 좁히면 「눌러도 안 꺼지는 행」이
+      //   되살아난다(union 체크 표시의 대가다).
+      if (!pick) {
+        setFlatPicked((prev) => {
+          const next = new Map(prev);
+          let changed = false;
+          for (const [id] of entries) if (next.delete(id)) changed = true;
+          return changed ? next : prev;
+        });
+        setPickedQuestions((prev) => {
+          const next = new Map(prev);
+          let changed = false;
+          for (const [id] of entries) if (next.delete(id)) changed = true;
+          return changed ? next : prev;
+        });
+        return;
+      }
+      // ⚠ ref 는 업데이터 **밖에서** 읽는다 — 업데이터는 렌더 단계에서 두 번 돌 수
+      //   있고(StrictMode·중단된 렌더) 그때 가변 ref 를 읽으면 판정이 갈릴 수 있다.
+      const live = composeLiveRef.current;
+      const flatNow = flatPickedRef.current;
+      if (live) {
+        setFlatPicked((prev) => {
+          const next = new Map(prev);
+          let changed = false;
+          for (const [id, meta] of entries)
+            if (!next.has(id)) {
+              next.set(id, meta);
+              changed = true;
+            }
+          return changed ? next : prev;
+        });
+        return;
+      }
       setPickedQuestions((prev) => {
         const next = new Map(prev);
-        for (const [id, meta] of entries) {
-          if (pick) next.set(id, meta);
-          else next.delete(id);
-        }
+        for (const [id, meta] of entries)
+          if (!flatNow.has(id)) next.set(id, meta);
         return next;
       });
     },
     [],
   );
-  const clearPickedQuestions = useCallback(
-    () => setPickedQuestions(new Map()),
-    [],
-  );
+  // [E32 M4] 문항 축 「선택 해제」는 **두 축을 함께** 걷는다. 화면에 하나로 합쳐
+  // 보이는 선택(픽바 union 카운트 · 도시에 행 union 체크)을 반쪽만 지우면, 방금
+  // 「전부 해제」를 누른 사용자 눈앞에 **보이지 않는 문항이 남아** 다음 조판에
+  // 실린다. 구 배선은 픽바가 도시에 축만, 요약 스트립이 평면 축만 지워
+  // 서로가 서로의 유령을 남겼다(composer-list-pane 이 「되돌릴 때 [선택 해제]를
+  // 두 곳에서 눌러야 한다는 사실을 누르기 전에는 알 길이 없었다」고 기록한 병증).
+  const clearPickedQuestions = useCallback(() => {
+    setPickedQuestions(new Map());
+    setFlatPicked(new Map());
+  }, []);
+  // 도시에 축 렌더 단계 미러 — 아래 승계 헬퍼가 **콜백 재생성 없이** 현재 픽을
+  // 읽는다(deps 에 pickedQuestions 를 달면 그 헬퍼를 쓰는 발사구 전부가 문항
+  // 체크마다 참조가 갈린다).
+  const pickedQuestionsRef =
+    useRef<ReadonlyMap<string, PickedQuestionMeta>>(EMPTY_QUESTION_PICKS);
+  pickedQuestionsRef.current = pickedQuestions;
+  // ══════════════════════════════════════════════════════════════════════════
+  // 【E32】 도시에 문항 축 → 평면 축 **승계** — 두 발사구가 공유하는 1벌
+  //
+  // 문항 픽은 2계다: 도시에 전용 `pickedQuestions` 와 목록 축 `flatPicked`.
+  // **조판 표면이 읽는 것은 평면 축 하나뿐**이고(SheetComposeSurface 의
+  // `pickedQuestions={flatPicked}` · ExamComposeSurface 의 `composeSyncIds`),
+  // 병합 목록의 체크 표시도 그렇다(library-pane 의 `pickedQuestionIds`).
+  // 그래서 **도시에에서 조판으로 진입하는 모든 경로**는 발사 직전에 축을 옮겨야
+  // 한다 — `.tmp-worksheet-compose/E28B-SPEC.md` 가 「두 큐는 **「도시에에서
+  // 조판 진입」 시점에만** 승계된다」로 적어 둔 불변식이 바로 이것이다.
+  //
+  // ⚠ 이 함수가 생긴 이유(E32 근본 원인) — 승계는 **시험지 축에만** 구현돼 있었고
+  //   학습지/합본 축(`composeSheetsFromDossier`)에는 없었다. 그 결과 지문관리
+  //   뷰에서 「문항 5 + 학습지 1」을 골라 **[합본 조판]** 을 누르면 학습지만
+  //   조판되고 문항 5는 평면 축에 영영 도달하지 못했다(에러 0·토스트 0·콘솔 0).
+  //   더 나쁜 것은 픽바 라벨이 도시에 축을 읽어 「합본 조판」을 **약속**했다는
+  //   점이다 — 약속과 페이로드가 서로 다른 축을 보고 있었다.
+  //
+  // ⚠ **replace 가 아니라 merge 다.** 구 시험지 축 코드는
+  //   `setFlatPicked(new Map(pickedQuestions))` 로 평면 축을 통째로 갈아치웠다.
+  //   평면 축은 뷰 전환에도 살아남는 클래스 단위 상태이고(E24 §③) 지문관리
+  //   뷰가 그 존재를 화면에 고지하고 있으므로, 통째 교체는 **고지된 선택의 무음
+  //   소실**이다(confirm 0·토스트 0). 그 replace 도 이 함수로 흡수해 함께 고쳤다.
+  //
+  // ⚠ 순서 계약: 기존 평면 픽이 **앞**, 도시에 신규분이 **뒤**, 중복 id 는 기존
+  //   위치 유지. E27 이 못 박은 「flatPicked 삽입 순서 = 체크 순서 = 시험지 인쇄
+  //   순서」는 **재정렬**을 금지한 것이고 순수 추가는 그 불변식을 깨지 않는다.
+  //   여기서 `withPassageGroupedQuestionOrder` 를 부르지 마라(교차축 정정 절).
+  //
+  // ⚠ **id 배열 → rows 재조립 방식으로 다시 쓰지 마라.** 도시에는 이미 완성된
+  //   `PickedQuestionMeta` 를 들고 있다. id 만 넘겨 목록 rows 에서 메타를 되찾는
+  //   구현으로 바꾸면 library-pane 의 `if (!row) continue` 무음 드롭(1000 절단
+  //   창 밖 문항)이 되살아난다 — 여기서는 Map 을 **그대로** 옮긴다.
+  //
+  // ⚠ 도시에 축 청산(`setPickedQuestions(new Map())`)은 승계와 **원자적 한 쌍**
+  //   이다. 안 비우면 같은 문항이 두 축에 남아 픽바와 요약 스트립이 이중 계상한다.
+  // ══════════════════════════════════════════════════════════════════════════
+  const inheritDossierQuestions = useCallback(() => {
+    const dossierPicks = pickedQuestionsRef.current;
+    if (dossierPicks.size === 0) return;
+    setFlatPicked((prev) => {
+      const merged = new Map(prev);
+      for (const [id, meta] of dossierPicks)
+        if (!merged.has(id)) merged.set(id, meta);
+      return merged;
+    });
+    setPickedQuestions(new Map());
+  }, []);
   // 바 배포 성공 — 선택 비움 + 지문별 조용한 재조회 + 목록 리프레시 **1회**
   // (지문별 onDeployed 반복이면 refreshAfterLibraryChange 가 지문 수만큼
   // 중복 발사 — 최대 5×2 왕복, 적대 검수 minor).
   const handlePickBarDeployed = useCallback(
     (passageIds: string[]) => {
+      // [E32] 픽바 배포 페이로드가 **두 축 union** 이 됐으므로(dossier-pick-bar
+      // 의 mergedPicked) 성공 후처리도 두 축을 함께 비운다. 도시에 축만 비우면
+      // 방금 보낸 문항이 평면 축에 남아 다음 조판에 다시 실린다.
       setPickedQuestions(new Map());
+      setFlatPicked(new Map());
       for (const pid of passageIds) fetchDossier(pid, { silent: true });
       refreshAfterLibraryChange();
     },
@@ -1945,13 +2240,32 @@ export function StudioHomeClient({
   // ── 평면 문항 선택(§3.10.17-b) — 우측 실행대(aside/슬라이드오버 이원
   // 렌더)가 소비하므로 오케스트레이터 소유(§3.10.13 과 동일 근거). Set→Map
   // 재조립은 rows 를 아는 LibraryPane 담당(controlled). ──
-  const [flatPicked, setFlatPicked] = useState<
-    ReadonlyMap<string, PickedQuestionMeta>
-  >(() => new Map());
+  // ⚠ [E32] **상태 선언(`flatPicked`)은 위 문항 축 블록으로 올라갔다** — 도시에
+  //   토글이 평면 축을 읽어야 하기 때문이다(그 자리 주석 참조). 여기 남은 것은
+  //   파생 콜백뿐이고, 소유·controlled 계약은 한 글자도 바뀌지 않았다.
   const handleFlatPickedChange = useCallback(
     (next: ReadonlyMap<string, PickedQuestionMeta>) => setFlatPicked(next),
     [],
   );
+  // ── [E32 적대검수 major 수리] 청산은 **2벌이 계약이다** ────────────────────
+  // 계약 한 줄: **「지우는 범위 = 그 버튼이 화면에 찍은 숫자」.**
+  //  · `clearPickedQuestions`(위) = **2축** — 도시에 픽바 전용. 그 바만이 union 을
+  //    카운트로 찍는다(dossier-pick-bar 의 mergedPicked).
+  //  · `clearFlatPicked`(여기)   = **평면 축만** — 요약 스트립·QuestionsActionRail
+  //    전용. 두 표면은 바로 옆에 「문항 {flatPicked.size}개」라고 적어 두고 도시에
+  //    축은 한 건도 표시하지 않는다.
+  //
+  // ⚠⚠ **다시 별칭으로 합치지 마라**(`const clearFlatPicked = clearPickedQuestions`).
+  //   E32 초판이 「1벌이 낫다」며 합쳤다가 적대검수 major 로 되돌린 자리다:
+  //   합치면 3을 찍어 놓은 버튼이 5를 지운다 — 사라지는 2개는 **그 화면에 존재
+  //   증거가 없는 축**이라 confirm·토스트·콘솔이 전부 0이다. M4(반대 축 유령이
+  //   남는다)를 없앤 게 아니라 방향만 뒤집어 `_a22-i.log` 사고 유형으로 만든 것이었다.
+  //   합치고 싶다면 **먼저 그 두 표면의 카운트를 union 으로 올려라** — 그러나 그러면
+  //   두 조판 뷰의 실행대가 그 뷰에서 조판되지도 않는 도시에 픽을 세게 되어 E24 §⑦ 이
+  //   없애려던 「어느 숫자가 실리는지 모르겠다」가 재발한다. 그래서 2벌이다.
+  // (실무상 이 함수가 도시에 픽을 만날 일은 거의 없다 — 아래 「뷰 이탈 승계」가
+  //  지문관리 뷰를 떠나는 순간 도시에 축을 비우므로, 두 소비처가 사는 뷰에서는
+  //  도시에 축이 0 이다. 그래도 범위를 좁혀 두는 것이 계약이다.)
   const clearFlatPicked = useCallback(() => setFlatPicked(new Map()), []);
   // 실행대 배포 성공 — 선택 비움 + 목록 리프레시 1회(문항 목록은 배포로 불변)
   const handleFlatRailDeployed = useCallback(() => {
@@ -1976,6 +2290,13 @@ export function StudioHomeClient({
     setSheetComposeOpen(false);
     setPickedSheets(new Map());
     setActiveSheetId(null);
+    // [E31] 되짚기 요청도 함께 청산한다. 남겨 두면 ComposerListPane 이
+    // `key={classId}` 로 리마운트될 때 **옛 클래스의 지문 id** 로 카드를 찾아
+    // 헤매다(REVEAL_MAX_TRIES 만큼) 포기한다 — 화면 이상은 없지만 무의미한 스캔이고,
+    // 무엇보다 「이 시점 이후는 새 클래스 소유」라는 아래 규율의 예외를 남기지 않는다.
+    // passageId 만 비운다(seq 는 단조 증가 — 되돌리면 소비처의 「수행했는가」 판정이
+    // 과거 요청과 충돌한다).
+    setSheetReveal((cur) => (cur.passageId === null ? cur : { ...cur, passageId: null }));
     // §3.10.23 E24: 구 `setComposeMode(null)` 은 여기서 **삭제**됐다. 두 open
     // 플래그를 내리는 것으로 충분하다 — 가시 산식이 이제 open ∧ 뷰 값이라
     // 남길 「모드」 자체가 없다. (클래스 전환은 centerAssetView 를 건드리지
@@ -2004,6 +2325,44 @@ export function StudioHomeClient({
     (v: StudioAssetView) => setCenterAssetView(v),
     [],
   );
+  // ══════════════════════════════════════════════════════════════════════════
+  // 【E32 적대검수 major 수리】 **뷰 이탈 승계** — 도시에 축은 지문관리 뷰 안에서만
+  // 산다.
+  //
+  // E32 초판은 「도시에에서 **조판 발사**」 시점에만 승계했다. 그런데 도시에 픽은
+  // 뷰 전환으로 청산되지 않으므로(E24 §③), 사용자가 **상단 필로** 다른 뷰에 가면
+  // 그 픽이 살아 있는 채 화면에서 사라진다 — 그 두 뷰의 문항 고지·CTA·병합 목록은
+  // 전부 평면 축(flatPicked)만 세기 때문이다. 실측 증상:
+  //   지문관리에서 2개 체크 → [시험지 조판] 필 → 3개 체크 → 실행대는 「3개」
+  //   → [지문관리] 필 → 픽바는 「5개」 → [학습지 조판] 필 → 합본 CTA 는 다시 「3개」
+  //   → 그 CTA 로 조판하면 **3개만** 실린다(도시에 2개는 영영 남는다).
+  // 즉 E32 가 픽바에서 없앤 「같은 선택이 화면마다 다른 숫자」가 **다른 뷰로 옮겨간**
+  // 것이었고, 라벨과 페이로드의 축 불일치라는 E32 원래 결함까지 그대로 재현됐다.
+  //
+  // → 지문관리 뷰를 **떠나는 전이**에서 무조건 승계한다. 그러면 불변식이 생긴다:
+  //   **「centerAssetView !== "passages" 인 동안 pickedQuestions 는 항상 비어 있다」.**
+  //   그 한 줄이 나머지를 전부 청소한다 — 다른 두 뷰의 고지는 flatPicked 만 세도
+  //   정확해지고(고칠 게 없다), 그 뷰의 CTA 들은 승계를 몰라도 되고,
+  //   clearFlatPicked 가 만날 도시에 픽도 없다.
+  //
+  // ⚠ 이것은 E24 §③ 「뷰 전환이 선택을 지우지 않는다」를 **어기지 않는다** — 지우는
+  //   게 아니라 옮긴다. 지문관리로 돌아오면 도시에 행 체크는 union(pickedIds)이라
+  //   **여전히 체크된 채로 보인다**. 사용자 눈에는 아무 일도 일어나지 않는다.
+  // ⚠ 판정은 상태가 아니라 **전이**다. 상태(뷰≠passages)로 보면 매 렌더 돌면서
+  //   그 뷰에서 발생한 도시에 픽(있을 수 없지만)까지 즉시 빨아들여, 훗날 누가
+  //   그 뷰에 도시에를 붙이면 원인 불명의 흡수가 된다.
+  // ⚠ 조판 발사구의 승계와 **중복이지만 무해**하다: 발사구가 같은 커밋에서 뷰를
+  //   강제하고 승계까지 끝내므로, 이 effect 가 돌 때 도시에 축은 이미 비어 있어
+  //   `inheritDossierQuestions` 가 즉시 return 한다(size === 0 가드).
+  // ══════════════════════════════════════════════════════════════════════════
+  const prevAssetViewRef = useRef<StudioAssetView>(centerAssetView);
+  useEffect(() => {
+    const prev = prevAssetViewRef.current;
+    prevAssetViewRef.current = centerAssetView;
+    if (prev === "passages" && centerAssetView !== "passages") {
+      inheritDossierQuestions();
+    }
+  }, [centerAssetView, inheritDossierQuestions]);
 
   // ── 시험지 조판(§3.10.17-a v2 → (k) 단일화) — **우측 실행대 그 자리**에
   // 내장(페이지·모드 전환 0, 중앙 목록 상시 활성). 구 주석의 「보내기」 패널은
@@ -2039,28 +2398,39 @@ export function StudioHomeClient({
     },
     [],
   );
-  const openComposeFromFlat = useCallback((_ids: string[]) => {
-    // 【E24 최상위 불변식】 (a) open + (b) 자기 뷰 강제를 **한 커밋에**.
-    // 구 `setComposeMode("exam")` 이 있던 자리 — 이제 **뷰가 곧 모드다**.
-    // (b) 를 빼면 이 CTA 는 시험지 조판 뷰 밖(학습지 조판·지문관리)에서 눌렸을 때
-    // 표면이 열렸는데 `centerAssetView !== "exam"` 이라 **영원히 보이지 않는다**.
-    setExamStudioOpen(true);
-    composeViewControlRef.current?.();
-  }, []);
+  const openComposeFromFlat = useCallback(
+    (_ids: string[]) => {
+      // 【E24 최상위 불변식】 (a) open + (b) 자기 뷰 강제를 **한 커밋에**.
+      // 구 `setComposeMode("exam")` 이 있던 자리 — 이제 **뷰가 곧 모드다**.
+      // (b) 를 빼면 이 CTA 는 시험지 조판 뷰 밖(학습지 조판·지문관리)에서 눌렸을 때
+      // 표면이 열렸는데 `centerAssetView !== "exam"` 이라 **영원히 보이지 않는다**.
+      //
+      // [E32] 승계를 **전 조판 진입구에** 건다 — 불변식은 부분이 아니라 전체일 때
+      // 계약이 된다("도시에에서 조판으로 들어가면 도시에 축은 평면 축으로 합쳐진다").
+      // 이 CTA 는 시험지 조판 뷰 소속이라 뷰 이탈 승계가 이미 도시에 축을 비워 두었고,
+      // 그래서 실사용에서는 **무동작**(size === 0 가드)이다. 그래도 부르는 이유:
+      // 훗날 다른 뷰에서 이 CTA 를 재사용하는 순간 E32 결함이 조용히 되살아나기 때문.
+      inheritDossierQuestions();
+      setExamStudioOpen(true);
+      composeViewControlRef.current?.();
+    },
+    [inheritDossierQuestions],
+  );
   const openComposeFromDossier = useCallback(
     (_ids: string[]) => {
       // 도시에 선택 → 평면 선택 승계(Map 삽입 순서 = 체크 순서 = 조판 순서
       // 보존) 후 도시에 픽은 비운다(선택의 거처가 시험지 조판 뷰의 목록으로 이동).
-      if (pickedQuestions.size > 0) {
-        setFlatPicked(new Map(pickedQuestions));
-        setPickedQuestions(new Map());
-      }
+      // [E32] 구 인라인 `setFlatPicked(new Map(pickedQuestions))`(**replace**)를
+      // 공유 헬퍼(**merge**)로 교체했다 — 그 replace 는 시험지 조판 뷰에서 이미
+      // 담아 둔 문항을 confirm·토스트 0 으로 지우던 선재 결함이었다. 학습지 축과
+      // **동형 1벌**을 쓰는 것이 계약이다(다음 사람이 어느 쪽을 베껴도 안전하게).
+      inheritDossierQuestions();
       // 【E24 최상위 불변식】 (b) 자기 뷰 강제 + (a) open — 구 setComposeMode("exam")
       // 자리. 이 경로는 **지문관리 뷰**에서 발사되므로 (b) 가 없으면 100% 안 보인다.
       composeViewControlRef.current?.();
       setExamStudioOpen(true);
     },
-    [pickedQuestions],
+    [inheritDossierQuestions],
   );
   // 닫기 = 자기 open 플래그만 내린다. 구 `setComposeMode(cur => …)` 은 **삭제**
   // 됐다(E24 §1②) — 모드 축이 없으니 「open 인데 mode 는 남의 축」이라는 도달
@@ -2090,6 +2460,12 @@ export function StudioHomeClient({
   // 조판(부착 문서 배열) 순서**이며, 조판 표면은 참조가 바뀔 때만 재조회하므로
   // **내용이 같으면 같은 Map 참조를 유지**해야 한다(체크 변동에서만 새 Map).
   const [sheetComposeOpen, setSheetComposeOpen] = useState(false);
+  // [E32] 위쪽 문항 토글이 읽는 「조판 라이브」 미러의 **유일한 할당 지점**
+  // (두 open 플래그가 모두 존재하는 첫 지점). 가시(visible)가 아니라 **open** 을
+  // 보는 것이 계약이다 — 숨김 마운트 중에도 표면은 살아 있고 라이브 동기화가
+  // 계속 돌기 때문에(지문관리 탭에서 시험지 초안을 열어 둔 채 문항을 만지는 것이
+  // E24 이후의 기본 동선이다), 가시로 재면 바로 그 동선에서 규칙이 뒤집힌다.
+  composeLiveRef.current = examStudioOpen || sheetComposeOpen;
   const [pickedSheets, setPickedSheets] = useState<
     ReadonlyMap<string, SheetPickMeta>
   >(() => new Map());
@@ -2097,6 +2473,30 @@ export function StudioHomeClient({
   // 안정 콜백([] deps) 안에서 최신 선택을 읽는 미러(dossierStatesRef 동일 관용구).
   const pickedSheetsRef = useRef(pickedSheets);
   pickedSheetsRef.current = pickedSheets;
+  // ══════════════════════════════════════════════════════════════════════════
+  // [E31] 「조판 중인 학습지의 지문」 되짚기 — **명령 채널**(26-08-24 사용자 지시)
+  //
+  // 좌측 지문 목록에게 「이 지문 카드를 부드럽게 보여 달라」고 한 번 시키는 값이다.
+  // 상태(activeSheetId)가 아니라 **사건**이므로 일련번호를 함께 싣는다: 같은 지문을
+  // 두 번 요청하는 일이 실제로 있다(이미 활성인 칩 재클릭 · 같은 지문의 기본↔실전
+  // 형제 칩 전환 — 둘 다 passageId 가 안 바뀐다).
+  //
+  // ⚠ 4번째 상태를 늘리는 것이므로 위 「상태 3개」 주석의 근거를 그대로 통과해야
+  //   한다: 발신자(조판 표면)와 수신자(좌측 목록)가 **서로 다른 서브트리**에 있고
+  //   둘의 공통 조상이 여기뿐이다. 아래로 내리면 채널이 성립하지 않는다.
+  // ⚠ 소비처(ComposerListPane)에는 **원시값 2개로 쪼개** 내린다(객체를 내리면 memo
+  //   방어선이 매 렌더 깨진다 — library-pane.tsx 의 sheetActiveId 계열 주석).
+  // ══════════════════════════════════════════════════════════════════════════
+  const [sheetReveal, setSheetReveal] = useState<{
+    passageId: string | null;
+    seq: number;
+  }>({ passageId: null, seq: 0 });
+  const revealSheetPassage = useCallback((passageId: string) => {
+    if (!passageId) return;
+    // seq 는 **언제나** 증가한다(같은 지문 재요청도 새 사건이다). 소비처는 seq 로만
+    // 「수행했는가」를 판정하므로 여기서 중복을 접으면 재클릭이 무동작이 된다.
+    setSheetReveal((cur) => ({ passageId, seq: cur.seq + 1 }));
+  }, []);
   // ── 학습지 픽 **출처 원장**(reportId → "dossier" | "list") ────────────────
   // 아래 「체크 프룬 ①-b」가 이 값을 읽는다. 실측 근거
   // (.tmp-worksheet-compose/_a22-i.log · 클래스 「2학년」): 병합 목록(당시 이름
@@ -2255,8 +2655,8 @@ export function StudioHomeClient({
   // 그리고 **조판 순서 동기화** — [E27] 여기서 도는 축은 **학습지 대기열 하나뿐**
   // 이다: 학습지를 지문 그룹 단위로 묶고 그 그룹 안에서 활성 문서를 선두로 올린다.
   // (문항 대기열은 손대지 않는다 — 아래 「교차축 정정」 절이 그 이유의 정본이다.)
-  // 활성이 바뀌는 경로가 4개(칩 클릭 →
-  // onActiveReportIdChange · 행 [학습지 조판] prefer · 도시에 발사 · 표면 자동 수렴)
+  // 활성이 바뀌는 경로가 3개(행 [학습지 조판] prefer · 도시에 발사 · 표면 자동 수렴 —
+  // [E33] 구 4번째 「칩 클릭 → onActiveReportIdChange」는 칩이 이동 전용이 되며 소멸)
   // 이고 대기열 커밋 지점은 10곳이라(클래스 리셋 · applySheetPicked ·
   // commitPickedSheetsUnchecked · clearPickedSheets · toggleSheetPick · 이 effect ·
   // composeSheetFromRow · composeSheetsFromDossier · deploySheetFromRow · 유령칩
@@ -2327,7 +2727,9 @@ export function StudioHomeClient({
   //   P2: 입력 (S1, a)  ← P1 이 커밋한 값 그대로
   //       withPassageGroupedOrder(S1, a) 는 **S1 자신**을 돌려준다: S1 은 이미
   //       「활성 그룹 → 나머지 그룹(첫 등장 순)」으로 뭉쳐 있어 다시 그룹핑해도
-  //       버킷 구성·버킷 순서·버킷 내부 순서가 전부 같고, 활성 문서도 이미 자기
+  //       버킷 구성·버킷 순서·버킷 내부 순서가 전부 같고(E30: 버킷 내부 랭크 정렬은
+  //       **멱등**이다 — (랭크,인덱스) 전순서로 이미 정렬된 배열을 다시 정렬하면
+  //       글자 그대로 같은 배열이다), 활성 문서도 이미 자기
   //       그룹의 선두다 → nextKeys 시퀀스가 S1 의 키 시퀀스와 글자 그대로 일치
   //       → 규칙 ④ 발화 → setPickedSheets **미호출**.
   //   ⇒ P2 에서 커밋 0 → 재렌더 0 → P3 없음. **정렬은 최대 2패스에서 정지**한다.
@@ -2351,8 +2753,13 @@ export function StudioHomeClient({
     }
     // ⚠ [E27] `activeSheetId === null` 이어도 **그룹 정렬은 돈다**(구 코드의
     //   `if (activeSheetId === null) return;` 조기 반환을 걷어냈다). 활성이 없어도
-    //   지문 묶음은 유지돼야 한다 — 활성은 「어느 그룹이 맨 앞인가」만 정한다.
-    const orderedSheets = withPassageGroupedOrder(pickedSheets, activeSheetId);
+    //   지문 묶음은 유지돼야 한다.
+    // ⚠ [E34-R1] 구 자구 「활성은 『어느 그룹이 맨 앞인가』만 정한다」는 **거짓이 됐다** —
+    //   규칙 ② 삭제로 정렬이 `activeSheetId` 와 완전히 무관해졌다. 그래서 정렬이
+    //   자명하게 수렴한다(최대 1커밋).
+    //   ⚠ 그렇다고 위 활성 프룬 분기와 deps 의 `activeSheetId` 를 걷지 마라 —
+    //     그 분기는 정렬이 아니라 **활성 수렴**이 목적이고 여전히 필요하다.
+    const orderedSheets = withPassageGroupedOrder(pickedSheets);
     // 참조가 그대로면 setState 자체를 하지 않는다 → 재렌더·재조회 0, 루프 없음.
     if (orderedSheets !== pickedSheets) setPickedSheets(orderedSheets);
   }, [pickedSheets, activeSheetId]);
@@ -2376,10 +2783,20 @@ export function StudioHomeClient({
 
   // ⑩ 조판 발사 경로 단일화 — 어디서 눌러도 「**학습지 조판 뷰** + 우측 조판」
   // 한 화면으로 수렴한다(문항 축 openComposeFromDossier 와 동형).
-  // **문항 축과 다른 점 1가지**: 문항은 도시에 픽(pickedQuestions)과 평면 픽
-  // (flatPicked) **2계**를 승계해야 했지만(:1517-1522), 학습지는 두 표면이
-  // 처음부터 **같은 축(reportId)** 을 쓰고 같은 pickedSheets 를 controlled 로
-  // 공유하므로 승계 자체가 존재하지 않는다 — 대기열은 그대로 두고 뷰만 옮긴다.
+  // **학습지 축 자체에는 승계가 없다**: 두 표면이 처음부터 같은 축(reportId)을
+  // 쓰고 같은 pickedSheets 를 controlled 로 공유하므로, 대기열은 그대로 두고
+  // 뷰만 옮기면 된다.
+  //
+  // ⚠⚠ 【E32】 위 문장을 「**이 경로에는 승계가 없다**」로 읽지 마라 — 그 확대
+  //   해석이 정확히 E32 결함의 뿌리였다. 학습지 **자산 축**에 승계가 없는 것은
+  //   참이지만, 이 축의 발사구는 동시에 **합본 발사구**이고 합본에는 공유되지
+  //   않는 **제2 축(문항)** 이 붙는다(도시에 `pickedQuestions` ↔ 표면이 읽는
+  //   `flatPicked`). 그 문항 축 승계는 **반드시 필요하고**, 지금은
+  //   `composeSheetsFromDossier` 가 `inheritDossierQuestions()` 로 수행한다.
+  //   구 주석은 한정 없이 「승계 자체가 존재하지 않는다」고 단언해 재검토를
+  //   봉인했고, 그 사이 도시에 [합본 조판]은 문항을 100% 버리고 있었다.
+  //   (구 주석이 인용하던 `:1517-1522` 는 이미 밀려 죽은 줄번호였다 —
+  //    이 파일에 줄번호 포인터를 다시 박지 마라. 삽입마다 밀린다.)
   const openSheetComposeFromRail = useCallback((_ids: string[]) => {
     // 【E24 최상위 불변식】 (a) open + (b) 자기 뷰 강제. 구 setComposeMode("sheet")
     // 자리 — **뷰가 곧 모드다**. (E25 개정) 이 CTA 의 현재 역할은 **재개방
@@ -2434,9 +2851,19 @@ export function StudioHomeClient({
       toast.error("조판할 학습지를 찾지 못했습니다. 목록을 새로고침해 주세요.");
       return;
     }
-    // 이 경로는 대기열을 **통째로 교체**한다(도시에 지문 스코프 목록으로). 편집 중인
-    // 문서가 그 목록에 없으면 체크 해제와 똑같이 증발하므로 같은 가드를 지난다.
+    // 이 경로는 대기열을 `next` 로 **통째로 교체**한다. 편집 중인 문서가 그 목록에
+    // 없으면 체크 해제와 똑같이 증발하므로 같은 가드를 지난다.
     // 토스트보다 **먼저** 물어본다 — 취소하면 드롭 고지도 나가지 않아야 한다.
+    //
+    // ⚠ [E32 적대검수 info] **이 가드는 오늘의 두 호출자에서 발화하지 않는다**(vacuous).
+    //   구 주석이 「도시에 지문 스코프 목록으로 교체」라고 적었지만 현재 호출자는
+    //   둘 다 **대기열의 상위집합**을 보낸다: 픽바는 `[...pickedSheets.keys()]`(전량),
+    //   도시에 행은 `composeIdsWith` = 대기열 ∪ 이 행. 그래서 `next.has(activeId)` 가
+    //   항상 참이고 confirm 이 뜨지 않는다.
+    //   → 그럼에도 **가드를 지우지 마라**: 호출자가 좁아지는 날(부분 발사) 즉시
+    //     필요해지고, 아래 승계의 「가드 뒤」 위치 계약이 그 위에 서 있다.
+    //   → 다만 이 가드를 「검증된 방어선」으로 오독하지도 마라. 취소 경로의 회귀
+    //     게이트는 UI 로 만들 수 없어(도달 불가) 결함주입으로만 검증된다.
     if (!guardSheetPickRemoval(next)) return;
     if (dropped > 0) {
       toast.error(`${dropped}건은 정보를 찾지 못해 조판에서 빠졌습니다.`);
@@ -2446,11 +2873,26 @@ export function StudioHomeClient({
     noteSheetPickOrigin(next, picked, "dossier");
     setPickedSheets(next);
     setActiveSheetId((cur) => pickActiveSheetId(next, cur));
+    // ── 【E32 근본 수리】 문항 축 승계 — 이 경로가 곧 **합본 발사구**다 ─────────
+    // 이 함수는 픽바 [합본 조판]/[학습지 조판]과 도시에 학습지 행의 [조판] 아이콘
+    // 두 발사구가 함께 쓰는 종착점이다. 학습지 축만 커밋하고 끝내면, 도시에에서
+    // 함께 체크한 문항이 평면 축에 도달하지 못해 **합본에서 통째로 사라진다**
+    // (E32 근본 원인 — 헬퍼 선언부의 긴 주석이 그 전말의 정본).
+    //
+    // ⚠⚠ **위치가 계약이다: `guardSheetPickRemoval` 조기 return 보다 반드시 뒤.**
+    //   가드는 「편집 중인 문서가 대기열에서 빠진다」를 confirm 으로 묻고, 취소하면
+    //   위에서 이미 `return` 한다. 승계를 그 앞에 두면 **취소해도 문항 픽이 이동**해
+    //   「취소는 아무 일도 일어나지 않는다」는 confirm 의 최소 계약이 깨진다 —
+    //   이 코드베이스가 이미 두 번 수리한 결함 유형이다(dossier-pick-bar 의
+    //   clearAll 「가드가 있는 축을 먼저 물어 거부면 두 축 모두 손대지 않는다」·
+    //   library-pane handleComposerCommit 의 「선(先) 질의」).
+    // ⚠ 같은 핸들러 안이라 React 19 배칭으로 학습지 축과 **1커밋**이다.
+    inheritDossierQuestions();
     // 【E24 최상위 불변식】 (b) 자기 뷰 강제 + (a) open — 구 setComposeMode("sheet")
     // 자리. 이 경로는 **지문관리 뷰**에서 발사되므로 (b) 가 없으면 100% 안 보인다.
     sheetComposeViewControlRef.current?.();
     setSheetComposeOpen(true);
-  }, [guardSheetPickRemoval, noteSheetPickOrigin]);
+  }, [guardSheetPickRemoval, noteSheetPickOrigin, inheritDossierQuestions]);
   // 닫기 = 자기 open 플래그만 내린다(closeExamStudio 와 대칭 — 같은 근거).
   // 구 `setComposeMode(cur => …)` 은 E24 §1② 로 **삭제**됐다.
   const closeSheetCompose = useCallback(() => {
@@ -2485,9 +2927,12 @@ export function StudioHomeClient({
   // 그것이 바로 이번 개편이 없애려는 「내가 어디 있는지 모르겠다」이다.
   const openCombinedCompose = useCallback(() => {
     // 【E24 최상위 불변식】 (a) open + (b) 자기 뷰(sheet) 강제.
+    // [E32] 전 조판 진입구 승계 — 근거는 openComposeFromFlat 의 같은 호출 주석.
+    // 이 CTA 도 sheet 뷰 소속이라 실사용에서는 무동작이다.
+    inheritDossierQuestions();
     setSheetComposeOpen(true);
     sheetComposeViewControlRef.current?.();
-  }, []);
+  }, [inheritDossierQuestions]);
 
   // ⑫ 행 [모바일 배포] — **새 배포 경로를 만들지 않는다.** 정본은
   // DossierDeployInline → deployStudioModules(dossier-deploy-inline.tsx:236)이고,
@@ -2636,6 +3081,42 @@ export function StudioHomeClient({
   //   **기본값 `true`** 라 배선을 빠뜨려도 타입 에러 0 · 화면 이상 0 · 콘솔 0 인 채
   //   인쇄만 백지가 된다. `active={composeVisible}` / `active={sheetComposeVisible}`
   //   는 최적화 여지가 아니라 **계약**이다.
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // [E31] 되짚기 **자동 발신** — 「학습지 조판 탭에 들어오면 그 지문이 딱 보이게」
+  //
+  // 발신 조건: 학습지 조판이 **가시**이고, 그 시점의 활성 문서가 지난번에 되짚은
+  // 문서와 다르다. 기억의 축을 passageId 가 아니라 **activeSheetId** 로 잡은 이유:
+  // 같은 지문의 기본↔실전 형제 문서 전환도 「다른 문서를 조판하기 시작했다」는
+  // 사건이고, 그때 목록이 이미 제자리라면 소비처가 스스로 무동작한다(움직일 필요가
+  // 없으면 한 픽셀도 안 움직인다 — composer-list-pane 의 「이미 온전히 보이면」 절).
+  //
+  // 탭을 떠나면 기억을 **비운다** → 다시 들어올 때 사용자가 그 사이 목록을 어디로
+  // 굴려 놨든 조판 중인 지문으로 되돌아온다. 그게 사용자가 말한 「딱 보이게」다.
+  //
+  // ⚠ 이 effect 를 `onActiveReportIdChange`(표면 → 호스트) 쪽으로 옮기지 마라.
+  //   그 콜백은 **자동 수렴**에서도 발화하는데(sheet-compose-surface :620) 그건
+  //   사용자 제스처가 아니다. 여기서는 「가시 + 활성이 바뀜」이라는 **결과**만 보므로
+  //   수렴이든 클릭이든 목록이 조판을 따라가고, 탭이 안 보이면 아예 발신하지 않는다.
+  // ⚠ deps 의 pickedSheets 는 passageId 를 꺼내는 데만 쓴다. 픽이 늘 때마다 이
+  //   effect 가 돌지만 `lastAutoRevealRef` 가드가 「같은 활성」을 즉시 튕겨 낸다 —
+  //   좌측 목록에서 체크만 하는 동안 스크롤이 흔들리지 않는다(활성은 pickActiveSheetId
+  //   가 `current` 를 보존하므로 체크로는 바뀌지 않는다).
+  // ══════════════════════════════════════════════════════════════════════════
+  const lastAutoRevealRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!sheetComposeVisible) {
+      lastAutoRevealRef.current = null;
+      return;
+    }
+    if (activeSheetId === null) return;
+    if (lastAutoRevealRef.current === activeSheetId) return;
+    lastAutoRevealRef.current = activeSheetId;
+    const passageId = pickedSheets.get(activeSheetId)?.passageId ?? "";
+    if (!passageId) return;
+    revealSheetPassage(passageId);
+  }, [sheetComposeVisible, activeSheetId, pickedSheets, revealSheetPassage]);
+
   // 체크 프룬 ①: 표시 집합(최근 5 절단) 이탈 지문의 체크 제거 — 하단 바에
   // 유령 선택이 남아 배포·시드에 섞이지 않게. 렌더 중 조건부 setState =
   // "이전 렌더 정보 보관" 공인 패턴(도시에 openForm 프룬 동형).
@@ -3166,6 +3647,18 @@ export function StudioHomeClient({
   // 없애려던 「A4 3장인 줄 알았는데 7장이 나왔다」 그 자체다.
   // → 지문관리 뷰의 **도시에 분기 위와 폴백 양쪽 모두**에 같은 스트립을 얹는다.
   //
+  // ⚠⚠ 【E32 정정】 위 「양쪽 모두」는 **더는 참이 아니다 — 폴백에만 얹는다.**
+  //   E24 §⑦ 이 이 스트립을 만든 목적은 「지문관리 탭에서 flatPicked 가 화면
+  //   어디에도 없다」였고, 그 전제는 **도시에 픽바가 도시에 축만 세던 시절**의
+  //   것이었다. E32 가 그 바를 **두 축 union** 으로 바꾸면서 목적이 달성됐고,
+  //   둘 다 렌더하면 같은 컬럼에 「문항 3개 담김」(평면)과 「문항 5개 선택됨」(union)이
+  //   **둘 다 파란색·같은 단어**로 동시에 떠 §⑦ 이 없애려던 증상이 되돌아온다.
+  //   → 도시에 분기(= 픽바가 있는 화면)에서는 **바에 맡긴다**(showQuestionsStrip).
+  //   ⚠ 잃은 것 1개를 알고 있어라: 스트립의 [시험지 조판 →] 점프가 그 화면에서
+  //     사라진다. 대체 통로는 **중앙 뷰 필**이고, E32 의 「뷰 이탈 승계」가 그 필을
+  //     누르는 순간 도시에 픽을 평면 축으로 합쳐 주므로 결과가 동일하다
+  //     (승계가 없으면 이 결정은 되돌려야 한다 — 둘은 한 쌍이다).
+  //
   // ⚠ 판정은 `hasRightPanel` 이 아니라 **픽 개수**다. hasRightPanel 로 재면 §⑨ 가
   //   지문관리 뷰에서 일부러 꺼 둔 값에 스트립이 묶여 「담긴 게 있는데 고지가 없다」
   //   가 되고, 반대로 §⑨ 의 ③배포 소등을 되살리려는 다음 수정과 서로를 물어뜯는다.
@@ -3192,6 +3685,11 @@ export function StudioHomeClient({
       freshQuestionIds={freshQuestionIds}
       onDeployed={handleInlineDeployed}
       picked={pickedQuestions}
+      // [E32] 평면 축 합류 — 도시에 행 체크 표시와 하단 픽바 카운트가 **두 축
+      // 합집합**이 된다(각 파일의 pickedIds · mergedPicked 주석이 근거 정본).
+      // 이 한 줄이 빠지면 「목록에서 담은 문항이 도시에에서는 미체크」로 돌아가고,
+      // 바가 약속하는 개수와 실제 조판되는 개수가 다시 갈린다.
+      pickedFlat={flatPicked}
       onTogglePick={togglePickedQuestion}
       onPickRows={pickQuestionRows}
       onClearPicked={clearPickedQuestions}
@@ -3236,14 +3734,31 @@ export function StudioHomeClient({
   //   된다), E24 에서는 그 위험이 소멸했다. 그러니 여기 새 분기를 끼울 때 「앞
   //   분기가 먹어 버리나」를 따질 대상은 rail 둘이 아니라 **지문관리 분기**다
   //   (passagesPanelBody 는 뷰와 무관하게 참이라 반드시 뒤에 온다).
+  // [E32] 스트립 렌더 여부를 **먼저** 판정한다 — 조건이 갈린 뒤로는 「픽이 있다」와
+  // 「스트립이 뜬다」가 더는 같은 말이 아니다. 구 조건(픽 유무)을 그대로 두면
+  // 문항 스트립이 억제된 조합에서 **빈 래퍼**(pt-3 + gap-2)만 남아, 평면 픽이
+  // 0→1 되는 순간 도시에 패널이 이유 없이 아래로 밀린다(적대검수 실측).
+  const showQuestionsStrip = flatPicked.size > 0 && !visibleDossierPassages;
+  const showSheetsStrip = pickedSheets.size > 0;
   const rightPanelView = sheetRailActive ? (
     sheetRailBody
   ) : examRailActive ? (
     examRailBody
-  ) : flatPicked.size > 0 || pickedSheets.size > 0 ? (
+  ) : showQuestionsStrip || showSheetsStrip ? (
     <div className="flex h-full min-h-0 flex-col gap-2 pt-3">
-      {flatPicked.size > 0 && questionsSummaryStrip}
-      {pickedSheets.size > 0 && sheetsSummaryStrip}
+      {/* ── [E32 M3] 문항 고지는 **화면에 하나만** ────────────────────────────
+          E24 §⑦ 이 이 스트립을 얹은 이유는 「지문관리 탭에서 flatPicked 가 화면
+          어디에도 없다」였는데, 그때 도시에 픽바는 도시에 축만 셌다. E32 가 그
+          바를 **두 축 union** 으로 바꾸면서 고지 책임이 바로 옮겨졌다 — 둘 다
+          렌더하면 같은 컬럼에 「문항 3개 담김」(평면)과 「문항 5개 선택됨」(union)이
+          **둘 다 파란색·같은 단어**로 동시에 뜬다. 어느 쪽이 조판되는지 화면
+          단서가 0인 상태이고, 그게 E24 §⑦ 이 없애려던 증상 그 자체다.
+          → 바가 있는 동안(도시에 발행 집합 존재)에는 바에 맡기고, 바가 없는
+            폴백(지문 미선택 등)에서만 스트립이 고지한다. 학습지 스트립은
+            그대로 둔다 — 그 축은 이 개편의 대상이 아니고, 스트립의 점프
+            버튼([학습지 조판 →])이 이 화면의 유일한 학습지 통로다. */}
+      {showQuestionsStrip && questionsSummaryStrip}
+      {showSheetsStrip && sheetsSummaryStrip}
       <div className="min-h-0 flex-1">{passagesPanelBody}</div>
     </div>
   ) : (
@@ -3273,8 +3788,9 @@ export function StudioHomeClient({
   // (§3.10.21 E21-5). aside 한 곳에서만 마운트하는 근거도 위 :1683-1688 주석
   // 그대로다: 두 트리에 렌더하면 xl 미만에서 2인스턴스가 되어 서버 액션 2배
   // 발사 + 전역 DOM id(#sheet-compose-print-root·.par-root) 중복이 난다.
-  // 특히 학습지 조판은 par-root 중복이 **인쇄 백지**로 직결된다
-  // (report-styles.ts:1878-1885 — 다중 루트가 같은 좌표에 겹친다).
+  // 특히 학습지 조판은 par-root 중복이 **인쇄 사고**로 직결된다
+  // (report-styles.ts 인쇄 화이트리스트는 대상 루트 정확히 1개를 전제 — 26-08-25
+  //  static 복귀 이후 다중 루트의 증상은 「같은 좌표 겹침」이 아니라 「순차 이중 인쇄」).
   const sheetComposeSurface = sheetComposeOpen ? (
     <div
       className={sheetComposeVisible ? "flex h-full min-h-0 flex-col" : "hidden"}
@@ -3308,6 +3824,11 @@ export function StudioHomeClient({
         academyId={academyId}
         pickedQuestions={flatPicked}
         questionsTitle={questionsComposeTitle}
+        // [E31] 헤더 문서 칩 클릭 → 좌측 지문 목록 되짚기(사용자 제스처 전용 채널).
+        // 자동 수렴은 위 lastAutoRevealRef effect 가 따로 본다 — 두 발신 경로가
+        // 겹쳐 같은 지문을 두 번 요청해도 목표 좌표가 동일해 무해하다
+        // (composer-list-pane 의 「현재 scrollTop 에 불변」 절).
+        onRevealPassage={revealSheetPassage}
       />
     </div>
   ) : null;
@@ -3538,6 +4059,11 @@ export function StudioHomeClient({
               onSheetDeploy={SHOW_MOBILE ? deploySheetFromRow : undefined}
               onSheetCompose={composeSheetFromRow}
               onSheetComposeViewControl={registerSheetComposeViewControl}
+              // [E31] 되짚기 3종 — 표시(활성 문서) + 스크롤 명령(지문 id + 일련번호).
+              // 원시값 3개라 memo(LibraryPane) 무손상(위 sheetReveal 선언 주석).
+              sheetActiveId={activeSheetId}
+              sheetRevealPassageId={sheetReveal.passageId}
+              sheetRevealSeq={sheetReveal.seq}
               // 지문 행 「생성 중」 활동 표식(§3.10.20) — 시그니처 메모로 참조
               // 고정된 맵(위 passageActivity 주석). memo(LibraryPane) 무손상.
               passageActivity={passageActivity}
@@ -3664,6 +4190,28 @@ export function StudioHomeClient({
         onLaunched={() => {
           setSheetPassages(null);
           refreshAfterLibraryChange();
+          // ── [E30 / RCA-FINAL-ONEPAGE #21] 모달 prop 주석의 계약 이행 ──
+          // `onLaunched` 는 「오케스트레이터가 모달을 닫고 **도크를 펼친다**」로
+          // 계약돼 있는데(workbook-generate-modal.tsx 의 prop 주석), 실제 배선에는
+          // 펼치는 코드가 없었다. 그 공백이 아픈 곳은 **좁은 화면**이다: 진행·완료를
+          // 보여 주는 우측 판은 `hidden xl:flex` 라 <xl 에서는 드로어 버튼
+          // (`xl:hidden`)을 눌러야 보이는데, 발사 직후 화면은 아무 말도 하지 않는다
+          // — 유료 발사에는 착지 토스트조차 도달 불가다(모달의 토스트가
+          // `totalCredits === 0` 조건이라, 파이널·실전은 구조적으로 항상 유료).
+          // 사용자가 볼 수 있는 신호가 0이면 「눌렀는데 아무 일도 안 일어난다」가 되고
+          // 그것이 재발사·이중 과금 시도로 이어진다(RCA RC-2 ⑥).
+          //
+          // xl+ 는 그 판이 **이미 상시 가시**라 드로어를 열 이유가 없다. 오버레이
+          // 자체가 `xl:hidden` 이므로 열어도 보이지는 않지만, 상태만 켜 두면 창을
+          // 좁히는 순간 아무도 누르지 않은 드로어가 튀어나온다 → 뷰포트로 막는다.
+          // 1280px = Tailwind 기본 xl(80rem) — 이 리포는 브레이크포인트 오버라이드 0
+          // (자동 개방 effect 의 억제 ③ 과 **같은 관용구**를 의도적으로 재사용한다).
+          if (window.matchMedia("(min-width: 1280px)").matches) return;
+          // 드로어 렌더 게이트가 `panelDrawerOpen && hasRightPanel` 이라, 판이 없는
+          // 상태에서 켜 두면 지금은 무동작이었다가 나중에 픽이 생기는 순간 드로어가
+          // 저절로 열린다(지연 발화). 켤 수 있을 때만 켠다.
+          if (!hasRightPanel) return;
+          setPanelDrawerOpen(true);
         }}
       />
 

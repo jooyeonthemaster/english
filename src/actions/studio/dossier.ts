@@ -32,6 +32,7 @@
 
 import { Prisma } from "@prisma/client";
 import {
+  PRACTICE_REPORT_MARKER,
   PRIME_REPORT_MARKER,
   PRIME_REPORT_MARKERS,
 } from "@/actions/workbench/passage-constants";
@@ -205,9 +206,12 @@ export async function getStudioPassageDossier(input: {
           select: { result: true },
         })
         .catch(() => []),
-      // 완성 학습지 행(§3.10.19 E19-6) — PRIME 계열 마커 전량(기본·국어·파이널).
+      // 완성 학습지 행(§3.10.19 E19-6) — PRIME 계열 마커 전량
+      // (기본·국어·파이널·실전 4종 — E30 §1-5 로 PRIME_PRACTICE 가 집합에 가입했다).
       // ⚠ pages/theme select 금지(수 MB 급 — 위 report 질의는 파싱이 필요해 pages 를
-      //   들지만 이 목록 질의는 배지 재료만 든다). take 10 = 지문당 마커 3종 여유분.
+      //   들지만 이 목록 질의는 배지 재료만 든다). take 10 = 지문당 마커 4종 여유분
+      //   (숫자는 무개변 — E30 §1-6. 한 지문이 가질 수 있는 마커는 영어 3종
+      //   PRIME/PRIME_PRACTICE/PRIME_FINAL 또는 국어 1종 PRIME_KO 가 상한이라 10 이면 여유가 남는다).
       //   이 질의만 실패해도 도시에 본체는 살린다(프리미엄 잡 폴백과 같은 계열).
       prisma.passageReport
         .findMany({
@@ -230,15 +234,30 @@ export async function getStudioPassageDossier(input: {
         .catch(() => []),
     ]);
 
-    // 신선도 술어는 getStudioPassageSectionStates(passages.ts:761-861)와 동일:
+    // 신선도 술어는 getStudioPassageSectionStates(passages.ts, 심볼로 찾을 것)와 동일:
     // parseAnalysisReportForPreview 파싱 성공 = analyzed, hasExam 은 해시 무관
     // worksheet-grade 판정, presentSections 는 analysis.contentHash ===
     // hashContent(content) 일 때만(불일치 = stale, 보유 0 취급 — §3.4 정본).
-    // passages.ts 는 수정 금지 파일이고 해당 액션은 lastAnalyzedAt 을 내리지
-    // 않아 재사용 시 리포트 재질의가 한 번 더 필요하다 — 술어 동일 최소 재구현.
+    // 그 액션은 lastAnalyzedAt 을 내리지 않아 재사용 시 리포트 재질의가 한 번 더
+    // 필요하다 — 그래서 술어를 최소 재구현한다.
+    // ⚠ 두 벌이 갈리면 카드 표기와 청구가 어긋난다. E30 §1-4 D3-c 의 읽기 합집합도
+    //   저쪽 두 지점(getStudioPassageDetail·getStudioPassageSectionStates)과 **같은
+    //   커밋에서 3곳 동시**로 넣었다 — 한 곳만 빠지면 그 표면에서만 실전 구매 CTA 가
+    //   레거시 366건에 되살아난다.
     let analyzed = false;
     let stale = false;
-    let hasExam = false;
+    // [E30 §1-4 D3-c] 「실전 학습지 보유」 = 읽기 합집합.
+    //   (PRIME_PRACTICE 자식 행 존재) OR (부모 PRIME 의 lw 가 worksheet-grade)
+    // 좌항은 **신규 질의 0** 으로 조달한다 — 위 sheetRows 가 이미 PRIME_REPORT_MARKERS
+    // 전량(4종)을 generationPlan 과 함께 들고 왔으므로 그 결과에서 세면 된다.
+    // 새 행만 보면 분리 이전 병합본(실측 366건)이 전부 "미보유"로 뒤집혀 도시에
+    // hasExam 배지가 사라지고 실전 구매 CTA 가 재노출된다 — 이미 ◈5 를 낸 사용자에게
+    // 같은 물건을 다시 파는 결함이다(§1-4 ⚠). 백필은 D3-a 로 금지, 강등은 재발사
+    // 시점의 지연 이관(D3-b)이라 두 형태는 영구히 공존한다 → 상시 계약이다.
+    // ⚠ sheetRows 는 실패 시 빈 배열로 강등되는 질의다(위 .catch(() => [])) —
+    //   그때는 좌항이 false 로 떨어지고 우항(부모 lw)만으로 판정한다. 즉 강등된 신규
+    //   지문에서 배지가 잠시 사라질 수는 있어도, 없는 것을 있다고 말하지는 않는다.
+    let hasExam = sheetRows.some((r) => r.generationPlan === PRACTICE_REPORT_MARKER);
     let presentSections: string[] = [];
     let lastAnalyzedAt: string | null = null;
     if (report) {
@@ -246,7 +265,7 @@ export async function getStudioPassageDossier(input: {
       if (parsed) {
         analyzed = true;
         lastAnalyzedAt = report.updatedAt.toISOString();
-        hasExam = parsed.sections.some((s) => hasWorksheetContentFields(s));
+        hasExam = hasExam || parsed.sections.some((s) => hasWorksheetContentFields(s));
         if (passage.analysis?.contentHash === hashContent(passage.content)) {
           presentSections = parsed.sections.map((s) => s.kind).filter(isSectionKind);
         } else {

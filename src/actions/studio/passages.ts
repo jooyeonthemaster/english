@@ -11,7 +11,10 @@
 import { revalidatePath } from "next/cache";
 import { Prisma } from "@prisma/client";
 import { buildPassageSubjectScopeWhere } from "@/actions/workbench/_passage-where";
-import { PRIME_REPORT_MARKER } from "@/actions/workbench/passage-constants";
+import {
+  PRACTICE_REPORT_MARKER,
+  PRIME_REPORT_MARKER,
+} from "@/actions/workbench/passage-constants";
 import {
   importExamPassages,
   type ImportExamPassagesResult,
@@ -587,7 +590,7 @@ export async function getStudioPassageDetail(input: {
     });
     if (!passage) return { success: true, data: null };
 
-    const [report, activeJob, lastTerminalJobs] = await Promise.all([
+    const [report, activeJob, lastTerminalJobs, practiceRow] = await Promise.all([
       prisma.passageReport.findFirst({
         where: {
           passageId: passage.id,
@@ -622,6 +625,19 @@ export async function getStudioPassageDetail(input: {
         orderBy: { createdAt: "desc" },
         select: { status: true, config: true },
       }),
+      // [E30 §1-4 D3-c] 실전 학습지 자식 행(PRIME_PRACTICE) 존재 여부 — 읽기 합집합의 "새 행" 축.
+      // ⚠ pages 를 절대 select 하지 않는다: 행 존재만 알면 되므로 파싱이 불필요하고,
+      //   목록/배치 축에서 pages 를 끌어오다 적대 검수 major ×2 를 받은 계약이 있다
+      //   (worksheets.ts primeReports 질의 주석 = E19-12-1). 스칼라 1필드로 끝낸다.
+      prisma.passageReport.findFirst({
+        where: {
+          passageId: passage.id,
+          academyId: staff.academyId,
+          generationPlan: PRACTICE_REPORT_MARKER,
+          deletedAt: null,
+        },
+        select: { passageId: true },
+      }),
     ]);
 
     // ── 진행 중 잡 판독(스펙 §3.4.1-9·11) — 부분 잡이면 대상 섹션·발사 카드 ──
@@ -652,7 +668,14 @@ export async function getStudioPassageDetail(input: {
       missingSections: [],
       creditCost: 0,
     }));
-    let hasWorksheetSection = false;
+    // [E30 §1-4 D3-c] 「이 지문이 실전 학습지를 보유했는가」 = 읽기 합집합.
+    //   (PRIME_PRACTICE 자식 행 존재) OR (부모 PRIME 의 lw 가 worksheet-grade)
+    // 새 행만 보면 분리 이전에 만들어진 병합본(실측 366건)이 전부 "미보유"로 뒤집혀
+    // 실전 구매 CTA 가 재노출된다 — 이미 ◈5 를 낸 사용자에게 같은 물건을 다시 파는
+    // 결함이다. 일괄 백필은 D3-a 로 금지됐고 강등은 재발사 시점의 지연 이관(D3-b)이라
+    // 두 형태는 영구히 공존한다 → 이 OR 은 한시적 배려가 아니라 상시 계약이다.
+    const practiceRowExists = practiceRow !== null;
+    let hasWorksheetSection = practiceRowExists;
     let stale = false;
     // 보유 섹션 — 본문이 수정됐으면(analysis.contentHash 불일치·부재) 전부 스테일
     // 취급해 빈 배열(스펙 §3.4.1-1). fast 라우트 과금 판정과 같은 기준이어야
@@ -663,7 +686,11 @@ export async function getStudioPassageDetail(input: {
       if (parsed) {
         // 실전 보유 = worksheet-grade lw 만 — 코어 lw(logicRows 전용)는 모든 전체
         // 분석이 만들므로 kind 존재만 보면 구매 버튼이 사라진다(검수 L1-F2).
-        hasWorksheetSection = parsed.sections.some((s) => hasWorksheetContentFields(s));
+        // ⚠ 자식 행 축(practiceRowExists)을 덮어쓰지 말고 OR 로 합칠 것 — 강등(D3-b)이
+        //   끝난 지문은 부모 lw 가 코어로 내려가 이 술어가 false 이므로, 대입으로 바꾸면
+        //   방금 ◈5 를 낸 지문에서 구매 CTA 가 되살아난다.
+        hasWorksheetSection =
+          practiceRowExists || parsed.sections.some((s) => hasWorksheetContentFields(s));
         if (passage.analysis?.contentHash === hashContent(passage.content)) {
           presentSections = parsed.sections.map((s) => s.kind).filter(isSectionKind);
         } else {
@@ -867,7 +894,7 @@ export async function getStudioPassageSectionStates(input: {
       return { success: false, error: "한 번에 50개까지 선택할 수 있습니다." };
     }
 
-    const [passages, reports, activeJobs] = await Promise.all([
+    const [passages, reports, activeJobs, practiceRows] = await Promise.all([
       prisma.passage.findMany({
         where: { id: { in: ids }, academyId: staff.academyId },
         select: {
@@ -896,6 +923,19 @@ export async function getStudioPassageSectionStates(input: {
         },
         select: { passageId: true },
       }),
+      // [E30 §1-4 D3-c] 실전 학습지 자식 행(PRIME_PRACTICE) — 위 reports 질의의 마커만 바꾼 복제.
+      // ⚠ pages 를 select 하지 않는다(행 존재 = 스칼라 1필드로 충분 — E19-12-1 계약).
+      //   이 액션의 50건 상한이 존재하는 이유가 위 reports 질의의 pages 이므로,
+      //   여기에 pages 를 얹으면 같은 상한에서 페이로드가 두 배가 된다.
+      prisma.passageReport.findMany({
+        where: {
+          passageId: { in: ids },
+          academyId: staff.academyId,
+          generationPlan: PRACTICE_REPORT_MARKER,
+          deletedAt: null,
+        },
+        select: { passageId: true },
+      }),
     ]);
 
     // 지문당 최신 리포트 1건(updatedAt desc 순회라 첫 등장이 최신)
@@ -908,6 +948,8 @@ export async function getStudioPassageSectionStates(input: {
     const analyzingSet = new Set(
       activeJobs.map((j) => j.passageId).filter((v): v is string => Boolean(v)),
     );
+    // [E30 §1-4 D3-c] 자식 행 보유 지문 집합 — 아래 hasWorksheet 읽기 합집합의 좌항.
+    const practiceSet = new Set(practiceRows.map((r) => r.passageId));
 
     const rows: StudioPassageSectionState[] = [];
     for (const p of passages) {
@@ -915,12 +957,16 @@ export async function getStudioPassageSectionStates(input: {
       let analyzed = false;
       let staleFlag = false;
       let presentSections: string[] = [];
-      let hasWorksheet = false;
+      // [E30 §1-4 D3-c] 읽기 합집합 — (PRIME_PRACTICE 자식 행) OR (부모 lw 가 worksheet-grade).
+      // 좌항을 초기값으로 두는 이유: 부모 리포트가 없거나 파싱에 실패해도 자식 행이 있으면
+      // 실전은 보유다. 반대로 새 행만 보면 레거시 병합본에서 구매 CTA 가 재노출된다(§1-4 ⚠).
+      let hasWorksheet = practiceSet.has(p.id);
       if (pages !== undefined) {
         const parsed = parseAnalysisReportForPreview(pages);
         if (parsed) {
           analyzed = true;
-          hasWorksheet = parsed.sections.some((s) => hasWorksheetContentFields(s));
+          hasWorksheet =
+            hasWorksheet || parsed.sections.some((s) => hasWorksheetContentFields(s));
           if (p.analysis?.contentHash === hashContent(p.content)) {
             presentSections = parsed.sections.map((s) => s.kind).filter(isSectionKind);
           } else {

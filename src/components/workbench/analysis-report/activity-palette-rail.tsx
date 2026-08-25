@@ -99,17 +99,19 @@ export function ActivityPaletteRail({
               <b className="font-semibold text-slate-600">2페이지부터 별지</b>로 붙어요
             </p>
           ) : null}
-          {/* ── 최상단 고정 강조 슬롯: 단어 시험지 ──────────────────────────
-              이 카드는 팔레트 '카탈로그 항목'이 아니라 문서 전역 스위치라, 아래
-              스크롤 영역(dir=rtl div) 바깥의 shrink-0 밴드에 둔다 — 팔레트를
-              끝까지 내려도 항상 헤더 바로 아래에 보인다.
-              koMode(국어)에서는 editor 가 vocabTestSlot 을 null 로 주지만,
-              빈 파란 띠가 새는 일이 없도록 여기서도 이중으로 가드한다. */}
-          {!koMode && vocabTestSlot ? (
-            <div className="shrink-0 border-b border-blue-100 bg-gradient-to-b from-blue-50/80 via-blue-50/30 to-white px-2.5 py-2.5">
-              {vocabTestSlot}
-            </div>
-          ) : null}
+          {/* ══ [E34-R3] 단어 시험지 고정 밴드는 **철거**됐다 ═══════════════════
+              구 구조: 스크롤 영역(dir=rtl div) **바깥**의 `shrink-0` 파란 그라데이션
+              밴드. sticky 가 아니라 구조적 고정이었고, 그래서 카드가 섹션 헤더·접기·
+              개수 배지·divide-y 행 골격을 통째로 우회해 **혼자 다른 UI** 가 됐다
+              (26-08-24 사용자 지적: 「왜 상단 고정이고 지 혼자 UI 가 이상하지?
+               이것도 「빈칸/복원」 섹션 바로 위에 있으면 되는 거야」).
+              구 근거는 「끝까지 내려도 항상 보인다」 하나였는데, 상단 고정을 요구한
+              스펙은 **0건**이었고 정작 카탈로그 정본 주석은 아직도 「팔레트 **하단**」
+              이라 적고 있었다 — 비준된 적 없는 위치였다.
+              → 이제 아래 `ActivityPalettePanel` 의 `leadingSection` 으로 내려가
+                스크롤 영역 **안**에서 다른 활동과 같은 섹션 문법을 쓴다.
+              ⚠ koMode 이중 가드는 사라지지 않았다 — 그 자리도 함께 옮겼다(아래).
+                안 옮기면 국어 편집기에 빈 「어휘」 헤더가 샌다. */}
           {/* dir=rtl 로 스크롤바를 왼쪽에 두고, 내용은 dir=ltr 래퍼로 정상 방향 유지 */}
           <div dir="rtl" className="min-h-0 flex-1 overflow-y-auto p-2.5 [scrollbar-gutter:stable]">
             <div dir="ltr">
@@ -151,6 +153,32 @@ export function ActivityPaletteRail({
                 // 파이널: 헤더 부제+안내 스트립이 같은 내용(즉석 생성·AI 없음·별지)을 이미
                 // 고지 — 패널 인트로 중복 제거. 기본 문서(false)는 기존 렌더와 동일.
                 hideIntro={finalContext}
+                // ── [E34-R3] 단어 시험지를 「빈칸/복원」 **바로 위** 섹션으로 ───────
+                // 카탈로그 섹션과 **같은 크롬**(rounded-xl border + 헤더 + 개수 배지)을
+                // 쓴다. 크롬을 여기서 복제하지 않고 패널이 그리는 헤더를 쓰는 것이
+                // leadingSection 계약의 요점이다(두 벌이 되면 조용히 표류한다).
+                // ⚠ 섹션 이름은 「어휘」 — CATEGORY_ORDER 에 이미 예약된 어휘장이라
+                //   다른 섹션 제목과 문법이 통일된다.
+                // ⚠ 접기 토글을 달지 않았다: 항목이 1개뿐이라 헤더=행 중복이고,
+                //   패널의 collapsedSections 는 카탈로그 카테고리 키 전용이다.
+                //   달려면 그 state 를 이 섹션까지 확장해야 하는데 이득이 없다.
+                // ⚠ koMode 가드가 여기서도 산다 — `koMode ? null :` 분기 안이라
+                //   국어 편집기에는 이 섹션 자체가 렌더되지 않는다(빈 헤더 누수 0).
+                leadingSection={
+                  vocabTestSlot ? (
+                    <section className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+                      <div className="flex w-full items-center gap-2 border-b border-slate-100 bg-slate-50/70 px-3 py-2 text-left">
+                        <span className="min-w-0 flex-1 truncate text-[12px] font-black text-slate-700">
+                          어휘
+                        </span>
+                        <span className="shrink-0 rounded-full bg-slate-100 px-1.5 py-0.5 text-[9.5px] font-bold tabular-nums text-slate-400">
+                          1
+                        </span>
+                      </div>
+                      {vocabTestSlot}
+                    </section>
+                  ) : null
+                }
               />
             )}
             </div>

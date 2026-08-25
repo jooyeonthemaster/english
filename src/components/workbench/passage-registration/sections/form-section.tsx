@@ -406,6 +406,9 @@ export function FormSection(props: FormSectionProps) {
                             onIncludeWorksheetChange={props.setIncludeWorksheet}
                             sheetVariant={props.sheetVariant}
                             onSheetVariantChange={props.setSheetVariant}
+                            // [E29-9] 국어 라우트에서 파이널·실전 카드를 숨기려면
+                            // 스택이 과목 스코프를 알아야 한다(RCA RC-6).
+                            subjectScope={props.pasteSubjectScope}
                           />
                         </div>
                       ) : null))

@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type { AnalysisReport } from "@/lib/passage-report/analysis-report/schema";
 import { ANALYSIS_REPORT_CSS } from "../report-styles";
 import { type FlowItem, reportFlowItems, tableHeadRow } from "../report-sections";
@@ -45,8 +45,9 @@ export function ReportPages({
   /**
    * true 면 이 루트를 인쇄에서 완전히 제외한다(.par-print-exclude — report-styles @media print).
    * 목록 카드 미리보기처럼 '한 화면에 여러 par-root' 가 뜨는 호스트에서 반드시 켠다 —
-   * 안 켜면 인쇄 CSS(절대배치·조상 변환 해제·형제 가지치기)가 모든 루트에 동시 적용되어
-   * 인쇄 미리보기가 백지가 된다(2026-08-11 실측: 목록 미리보기 21루트로 재현).
+   * 안 켜면 인쇄 CSS(in-flow static 복귀·조상 contents 해체·형제 가지치기)가 모든 루트에
+   * 동시 적용되어 인쇄가 오염된다(2026-08-11 실측: 목록 미리보기 21루트로 백지 재현 —
+   * 당시는 절대배치 겹침, 26-08-25 static 복귀 이후의 증상은 순차 이중 인쇄).
    */
   printExclude?: boolean;
   /**
@@ -78,6 +79,24 @@ export function ReportPages({
   }, [natural, report]);
 
   const itemsById = useMemo(() => new Map(items.map((it) => [it.id, it])), [items]);
+
+  // 벨트앤브레이스 — report-styles.ts:66-73 이 설계한 `.par-print-reveal` 예비 경로의
+  // **실제 배선**. 설계 주석과 CSS 규칙만 있고 beforeprint 리스너가 리포 어디에도 없었다
+  // (26-08-25 사파리 인쇄 수리에서 발견). beforeprint 에 documentElement 로 클래스를 얹어,
+  // @media print 평가가 레이아웃보다 늦는 드라이버(사파리 18 의 content-visibility 신생
+  // 구현 포함)에서도 인쇄 직전 전 페이지가 실제로 레이아웃되게 한다. classList 연산은
+  // 멱등이라 다중 par-root 공존(썸네일·숨김 표면·측정 클론)에도 안전하다.
+  useEffect(() => {
+    const reveal = () => document.documentElement.classList.add("par-print-reveal");
+    const restore = () => document.documentElement.classList.remove("par-print-reveal");
+    window.addEventListener("beforeprint", reveal);
+    window.addEventListener("afterprint", restore);
+    return () => {
+      window.removeEventListener("beforeprint", reveal);
+      window.removeEventListener("afterprint", restore);
+      restore();
+    };
+  }, []);
 
   const measureRef = useRef<HTMLDivElement>(null);
   // 페이지는 "블록 id 배열"로 저장 — 편집/재측정 중에도 화면을 비우지 않아 깜빡임/스크롤 점프 없음

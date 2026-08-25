@@ -389,6 +389,23 @@ export interface LibraryPaneProps {
    * 뷰 전환은 아래 onSheetComposeViewControl 채널이 담당한다.
    */
   onSheetCompose?: (meta: SheetPickMeta) => void;
+  /**
+   * [E31] 「조판 중인 학습지의 지문」 되짚기 3종(26-08-24 사용자 지시) — 이 판은
+   * **패스스루만** 한다(ComposerListPane 으로 그대로 내려간다).
+   *
+   * 왜 이 판이 소유하지 않는가: 활성 문서(activeSheetId)와 개방 여부는 조판 표면과
+   * 한 몸이고 그 상태의 소유자는 오케스트레이터다(studio-home-client :2199-2210
+   * 「상태 3개」 주석). 여기서 복제하면 좌측 목록과 우측 조판 헤더가 서로 다른
+   * 「활성」을 말하는 날이 온다.
+   *
+   * ⚠ 세 값 다 **원시값**이다. `{passageId, seq}` 객체로 묶어 받으면 호스트 렌더마다
+   *   새 참조가 되어 memo(LibraryPane)·memo(ComposerListPane) 두 방어선이 함께
+   *   무너진다(위 EMPTY_SHEET_PICKED 주석과 같은 계통).
+   * 미전달 = 표시·스크롤 둘 다 없음(기존 픽셀 동일 · additive).
+   */
+  sheetActiveId?: string | null;
+  sheetRevealPassageId?: string | null;
+  sheetRevealSeq?: number;
   // 구 `sheetComposeActive?: boolean`(중앙 420px 압박 고지, §3.10.21 E21-5)은
   // **발신부(studio-home-client)와 같은 커밋에서** 삭제됐다 — 유일 소비처였던
   // ClassWorksheetsPane(컴팩트 행 판정)이 §3.10.23 E24 로 사라져 소비처가 0이었고,
@@ -490,6 +507,9 @@ function LibraryPaneInner({
   onSheetDeploy,
   onSheetCompose,
   onSheetComposeViewControl,
+  sheetActiveId = null,
+  sheetRevealPassageId = null,
+  sheetRevealSeq = 0,
   passageActivity,
   nudgeSheet = false,
   nudgeExam = false,
@@ -2311,6 +2331,11 @@ function LibraryPaneInner({
             onOpenQuestion={onOpenQuestionById}
             onDeploySheet={onSheetDeploy ? handleSheetDeployRow : undefined}
             onComposeSheet={onSheetCompose ? handleSheetComposeRow : undefined}
+            // [E31] 되짚기 3종 패스스루(위 prop 선언 주석). 이 판은 값을 해석하지
+            // 않는다 — 해석은 판정 재료(pickedSheets)를 가진 ComposerListPane 소관.
+            activeSheetId={sheetActiveId}
+            revealPassageId={sheetRevealPassageId}
+            revealSeq={sheetRevealSeq}
           />
         </div>
       ) : null}

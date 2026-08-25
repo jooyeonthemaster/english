@@ -74,6 +74,24 @@ export async function POST(
   if (!staff) return NextResponse.json({ error: "인증이 필요합니다." }, { status: 401 });
   const { passageId } = await params;
 
+  // ── [E30 §2-4] 실전 학습지는 사본 저장 대상이 아니다 ────────────────────────
+  // 이 라우트는 **새 지문 행을 만든다**(아래 `tx.passage.create`). 실전 학습지를 그렇게
+  // 복제하면 사본은 부모 PRIME 이 없는 **고아 실전**이 되어, 「실전만 먼저 생성은 안 되는
+  // 구조」(사용자 확정 요구)를 사본 경로로 우회하게 된다. 그래서 형제 라우트가 여는
+  // `?variant=practice` 를 여기서는 **명시적으로 거절**한다(조용히 기본을 복제하면
+  // 「실전 사본을 만들었다」고 믿는 사용자에게 기본 학습지가 배달된다).
+  // UI 는 실전 문서 편집기에서 「다른 이름으로 저장」 자체를 렌더하지 않으므로, 이 분기는
+  // 그 UI 게이트를 신뢰하지 않는 **서버 정본**이다.
+  if (req.nextUrl.searchParams.get("variant") === "practice") {
+    return NextResponse.json(
+      {
+        error:
+          "실전 학습지는 사본 저장을 지원하지 않습니다 — 기본 학습지를 사본 저장하면 실전을 다시 추가할 수 있습니다.",
+      },
+      { status: 400 },
+    );
+  }
+
   let raw: unknown;
   try {
     raw = await req.json();

@@ -72,11 +72,12 @@ type Props = {
    * 인쇄에서 제외된다. **현재 이 통로 자체가 없어 편집기 루트는 항상 인쇄 대상**이다.
    *
    * 왜 필요한가: `report-styles.ts` 의 인쇄 규칙 3종 —
-   *   `:1854` `body *{visibility:hidden!important}` + 형제 가지치기 `:has()` 체인
-   *   (`:1861-1877`) + `:1878-1885` `.par-root:not(.par-cover-preview):not(.par-print-exclude)
-   *   {position:absolute!important;left:0;top:0}` —
-   * 은 **인쇄 대상 루트가 정확히 1개**임을 전제한다. 여러 루트가 공존하면 같은 좌표에
-   * 겹치거나 빈 페이지를 만든다. 이 이력은 `report-pages/pages.tsx:23-28` 의 동명 prop
+   *   `body:where(:has(...)) *{visibility:hidden!important}` 화이트리스트 + 형제 가지치기
+   *   `:has()` 체인 + `.par-root:not(.par-cover-preview):not(.par-print-exclude)
+   *   {position:static!important;width:210mm}` (26-08-25 사파리 절단 수리로 absolute→static,
+   *   그쪽 규칙의 증거 주석 참조) —
+   * 은 **인쇄 대상 루트가 정확히 1개**임을 전제한다. 여러 루트가 공존하면 순차로 이어
+   * 인쇄되거나(전부 in-flow) 빈 페이지를 만든다. 이 이력은 `report-pages/pages.tsx` 의 동명 prop
    * 주석에 실측으로 남아 있다 — "2026-08-11 실측: 목록 미리보기 21루트로 재현"(백지).
    * → 조판 표면은 활성 캔버스 1개만 `printExclude={false}`, 숨김 보존된 나머지는 true.
    */

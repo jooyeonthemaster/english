@@ -52,8 +52,10 @@ export interface SheetPickMeta {
   title: string;
   /** 지문 제목 — 문서 칩 보조 라벨. 제목이 겹치는 사본 구분용 */
   passageTitle: string;
-  /** "PRIME" | "PRIME_KO" | "PRIME_FINAL" — 미지 마커는 표시부가 원문 폴백.
-   *  배포 가능 판정은 sheet-deploy-eligibility.ts 1곳에서만 한다. */
+  /** "PRIME" | "PRIME_KO" | "PRIME_FINAL" | "PRIME_PRACTICE" — 미지 마커는 표시부가
+   *  원문 폴백. 배포 가능 판정은 sheet-deploy-eligibility.ts 1곳에서만 한다.
+   *  ⚠ [E30] 4번째 마커가 늘었다. 이 열거를 「3종」으로 못박은 주석이 여러 곳에
+   *  있었으니(dossier-pick-bar·sheets-action-rail) 새 마커를 더할 땐 grep 으로 함께 훑어라. */
   planMarker: string;
   /** "DRAFT" | "PUBLISHED" | "ARCHIVED" — DB 컬럼은 String(schema 주석 계약) */
   status: string;

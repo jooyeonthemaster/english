@@ -139,6 +139,17 @@ import {
   SHEET_PLAN_LABEL,
   SHEET_STATUS_BADGE,
 } from "@/lib/studio/sheet-products";
+// [E30 §4-2 · §4-4] 학습지 3종(기본/실전/파이널) 정렬 랭크 + 동반 픽 순수층.
+// 이 판이 규칙을 **복제하지 않는** 이유는 pick-order.ts 머리주석과 같다 —
+// 목록 정렬·픽 커밋·그룹 정렬 3곳이 갈리면 「배지 1,2,3 인데 인쇄는 3,1,2」가 된다.
+import { sheetPlanRank, withBasicCompanions } from "@/lib/studio/pick-order";
+// 마커 리터럴은 정본에서 가져온다. 이 상수 모듈은 "use server" 가 아니고 의존성 0 이라
+// 클라이언트 번들이 서버 코드를 끌고 오지 않는다 — 바로 위 sheet-deploy-eligibility.ts
+// 가 이미 같은 판단을 했고(그 파일 :28-32) 프로덕션에서 도는 배선이다.
+import {
+  PRACTICE_REPORT_MARKER,
+  PRIME_REPORT_MARKER,
+} from "@/actions/workbench/passage-constants";
 import { fmtDateTime } from "./panel-primitives";
 import { questionRowTypeLabel } from "./passage-dossier-pane";
 // 조회 상태 타입의 정본은 **판이 아니라 `@/lib/studio/list-states`** 다(E24-U5).
@@ -257,6 +268,22 @@ const RENDER_CHUNK = 300;
  */
 const CARD_ROW_CHUNK = 20;
 
+/**
+ * [E31] 되짚기 스크롤이 카드 위에 남기는 여백(px). 스크롤 컨테이너의 `py-2`(8px)와
+ * 같은 값이라 카드가 컨테이너 안쪽 여백에 딱 맞물린다 — 0 이면 카드 윗선이 경계에
+ * 붙어 「위에 뭔가 더 있는지」가 안 읽히고, 크게 주면 목표가 화면 중앙까지 내려와
+ * 「맨 위로 데려간다」는 약속이 무너진다.
+ */
+const REVEAL_PAD = 8;
+/**
+ * [E31] 되짚기 요청 1건이 「대상 카드를 못 찾았다」로 재시도할 수 있는 상한.
+ * 재시도가 필요한 이유는 두 축(문항/학습지)이 **비동기로 따로 도착**해서다 —
+ * 요청 시점에 카드가 DOM 에 없을 수 있다. 무제한으로 두면 사용자가 검색어로 가린
+ * 지문에 대한 요청이 영원히 살아 있다가, 몇 분 뒤 필터를 지우는 순간 목록이
+ * 제멋대로 튄다. 상한이 그 유령을 재운다.
+ */
+const REVEAL_MAX_TRIES = 8;
+
 /*
  * [E28] §3.10.27 — E24-2 「두 축이 동시에 DOM 에 있어야 한다」 방어선의 **승계처**.
  *
@@ -328,9 +355,38 @@ const isCardFilterActive = (f: CardFilter) =>
 const CARD_SELECT_CLS =
   "h-7 w-0 min-w-0 flex-1 cursor-pointer rounded-md border border-slate-200 bg-white px-1.5 text-[11.5px] font-medium text-slate-600 outline-none transition-colors hover:border-slate-300 focus:border-blue-400";
 
-/** 카드 안 「이 카드에서 더 보기」 — 목록 맨 아래 전역 버튼과 구분되는 자기 폭 버튼. */
+/**
+ * 카드 안 「이 카드에서 더 보기」 — 행 목록의 **마지막 칸**이라 행과 같은 전폭
+ * (E29 경계 개편: 자기 폭 점선 버튼은 행 사이 구분선과 충돌해 「행이 하나 더 있는
+ * 것처럼」 읽혔다). 좌우 여백은 행과 같은 10px 축.
+ */
 const CARD_MORE_CLS =
-  "mt-1 w-full cursor-pointer rounded-md border border-dashed border-slate-200 bg-white px-2 py-1.5 text-[11.5px] font-semibold text-slate-500 transition-colors hover:border-slate-300 hover:bg-slate-50";
+  "w-full cursor-pointer bg-slate-50/60 px-2.5 py-2 text-left text-[11.5px] font-semibold text-slate-500 transition-colors hover:bg-slate-100/80 hover:text-slate-700";
+
+// ── [E29] 경계 토큰 — 「어디까지가 한 덩어리인가」를 4단으로 말한다 ────────────
+//
+// 사용자 지적(26-08-23): "경계 선이 너무 안 보여 / 훨씬 선명하고 깔끔해야 한다".
+// 원인은 색이 옅은 게 아니라 **계층이 없었던 것**이다 — 카드·섹션 머리·필터·행이
+// 전부 흰 바탕 위 무선(無線)이라, 27장이 이어지면 한 장의 긴 종이로 읽혔다.
+//
+// 4단 규약(위에서 아래로 톤이 진해지지 않는다 — 「띠」는 하나뿐이다):
+//   ① 카드      = 테두리 + 미세 그림자. 카드 **사이**는 8px 간격으로 뗀다.
+//   ② 카드 머리 = 흰 바탕. 펼치면 아래에 **실선**(CARD_SPLIT)이 생긴다.
+//   ③ 섹션 선반 = 회색 띠(머리 + 필터 한 벌). 좌측 3px **축 색 바**가 붙는다.
+//   ④ 행        = 흰 바탕 + 행 사이 헤어라인. 선택 행은 좌측 3px 축 색 inset.
+//
+// ⚠ 축 색은 이미 체크박스가 쓰는 언어다(BOX_ON_Q=blue / BOX_ON_W=violet) —
+//   선반 바와 선택 inset 이 **같은 색**이어야 「이 띠 아래는 학습지 축」이 읽힌다.
+//   새 색을 발명하지 마라.
+/** 카드 머리 ↔ 본문, 섹션 ↔ 섹션 을 가르는 실선(2단계 경계). */
+const CARD_SPLIT = "border-slate-200";
+/** 행 사이 헤어라인(4단계 경계) — 실선보다 한 단 옅다. */
+const ROW_HAIRLINE = "divide-y divide-slate-100";
+/** 선택 행의 좌측 축 바 — 레이아웃을 밀지 않는 inset 그림자(padding 무영향). */
+const ROW_PICK_BAR_Q = "shadow-[inset_3px_0_0_0_#2563eb]";
+const ROW_PICK_BAR_W = "shadow-[inset_3px_0_0_0_#7c3aed]";
+/** 행·선반·머리가 공유하는 좌측 정렬 축(10px) — 이 값이 갈리면 「계단」이 생긴다. */
+const ROW_PAD_X = "pl-2.5 pr-2.5";
 
 function ComposerListPaneInner({
   classId,
@@ -345,6 +401,9 @@ function ComposerListPaneInner({
   onOpenQuestion,
   onDeploySheet,
   onComposeSheet,
+  activeSheetId = null,
+  revealPassageId = null,
+  revealSeq = 0,
 }: {
   /** 행 딥링크 목적지(`/director/studio/c/[classId]/p/[passageId]`) 재료 */
   classId: string;
@@ -381,6 +440,36 @@ function ComposerListPaneInner({
   onDeploySheet?: (row: StudioClassWorksheetRow) => void;
   /** 학습지 행 [학습지 조판] — 뷰 전환은 호스트 소관 */
   onComposeSheet?: (row: StudioClassWorksheetRow) => void;
+  // ── [E31] 「조판 중인 학습지의 지문」 되짚기 2채널(26-08-24 사용자 지시) ──────
+  //   ① 상태 채널(activeSheetId) = **은은한 파란 표시**. 지속 상태라 매 렌더 읽는다.
+  //   ② 명령 채널(revealPassageId + revealSeq) = **부드러운 스크롤 1회**.
+  //
+  // ⚠ 두 채널을 하나로 합치지 마라. 「표시」는 파생(멱등)이고 「스크롤」은 **사건**
+  //   (1회성)이다. activeSheetId 하나로 스크롤까지 몰면 ⓐ 같은 지문의 기본↔실전 칩
+  //   전환(passageId 동일)이 스크롤을 못 내고 ⓑ 이미 활성인 칩을 다시 눌러도
+  //   무동작이 된다(사용자가 명시한 「이거 클릭하면 이동」이 정확히 그 경우).
+  //
+  // ⚠ 객체 1개(`{passageId, seq}`)로 받지 마라 — memo(ComposerListPane) 이 매 호스트
+  //   렌더마다 깨져 지문 200여 장이 재조립된다(이 파일 :443 EMPTY_SHEET_PICKED 주석과
+  //   같은 계통의 함정). **원시값 2개**로 쪼개면 참조 안정이 공짜다.
+  /**
+   * 지금 편집 중(활성)인 학습지의 `PassageReport.id`.
+   * 여기서 지문 id 로 접는 통로는 `pickedSheets` 하나뿐이다(대기열에 없는 문서는
+   * 애초에 활성이 될 수 없다 — studio-home-client `pickActiveSheetId`).
+   * null/미전달 = 표시 없음(기존 픽셀 동일 · additive).
+   */
+  activeSheetId?: string | null;
+  /**
+   * 스크롤로 되짚을 지문 id. `revealSeq` 와 **한 쌍**이다 — 값만 보면 같은 지문을
+   * 두 번 요청한 것을 구분할 수 없다.
+   */
+  revealPassageId?: string | null;
+  /**
+   * 명령 일련번호(호스트가 요청마다 +1). 이 판은 「마지막으로 수행한 seq」를 ref 에
+   * 기억해 **같은 요청을 두 번 수행하지 않는다** — 안 그러면 필터·데이터 변화로 이
+   * effect 가 재실행될 때마다 목록이 제멋대로 튄다.
+   */
+  revealSeq?: number;
 }) {
   // ── 상단 공통 축 — [E28] 로 여기 남는 것은 **지문 필터 + 검색**뿐이다 ──
   // (세그먼트 탭은 삭제, 유형·난이도·킬러 / 플랜·상태는 카드 안으로 내려갔다.)
@@ -502,11 +591,53 @@ function ComposerListPaneInner({
     // ISO 8601(UTC, 고정 자릿수)이라 사전식 비교 = 시각 비교. 동시각 타이는
     // key 로 결정해 **정렬을 전순서로** 만든다 — 안 그러면 재조회마다 순서가
     // 흔들려 체크 순번 배지와 눈에 보이는 줄 순서가 어긋난다.
+    //
+    // ── [E30 §4-2] 학습지 축에 **지문 묶음 + plan 랭크** 2단을 끼운다 ──────────
+    // 왜: 실전 학습지(PRIME_PRACTICE)가 기본 PRIME 의 자식 문서로 분리되면서 한
+    // 지문에 학습지가 최대 3행(기본/실전/파이널)이 된다. 기존 정렬은 createdAt
+    // **내림차순** 단일이라 나중에 만든 실전이 카드 안에서 기본 **위**에 그려지고,
+    // 「전체 선택」·마키가 담는 순서 = **DOM 순서**(아래 cards 메모 rendered 계약)라
+    // 사용자 요구(「학습지를 추가하고 실전 학습지를 추가하도록」)가 화면에서부터
+    // 뒤집힌 채 시작한다.
+    //
+    // ⚠ 스펙 §4-2 는 2차 키를 「**worksheet 끼리 & 같은 passageId 일 때만** planRank」
+    //   라고 적었다. 그 형태를 글자 그대로 쓰면 **비교자가 비추이적(intransitive)이
+    //   된다**: A(P1·실전·t=5) vs B(P1·기본·t=1) 는 랭크로 B<A 인데, 둘 다 C(P2·t=3)
+    //   와는 시각으로만 비교돼 A<C<B<A 라는 순환이 생긴다. 그러면 삽입정렬이 A-B 를
+    //   **한 번도 비교하지 않는 경로**가 실제로 존재한다(입력 [B,C,A] → 결과
+    //   [B(실전), C, A(기본)] — 실전이 기본보다 앞). 에러 0 · 타입 0 · 화면에서만 틀린다.
+    // → 그래서 「같은 지문끼리 붙여 세우는」 축(wGroupAt)을 **1차로 승격**해 전순서로
+    //   만든다. 지문 묶음의 대표 시각 = 그 지문 학습지들의 **최신 createdAt** 이라,
+    //   묶음들 사이의 줄 순서는 기존(최신 지문이 위)과 같고 passageOptions 의 첫
+    //   등장 순서도 바뀌지 않는다. 바뀌는 것은 **묶음 내부**뿐이다.
+    const wGroupAt = new Map<string, string>();
+    for (const r of worksheetsState.rows) {
+      const cur = wGroupAt.get(r.passageId);
+      if (cur === undefined || cur < r.createdAt) {
+        wGroupAt.set(r.passageId, r.createdAt);
+      }
+    }
     const kindRank = (r: ComposerRow) => (r.kind === "worksheet" ? 0 : 1);
     out.sort((a, b) => {
       const ka = kindRank(a);
       const kb = kindRank(b);
       if (ka !== kb) return ka - kb;
+      // 문항 축은 **한 글자도 바뀌지 않는다**(아래 공통 꼬리로 그대로 떨어진다).
+      if (a.kind === "worksheet" && b.kind === "worksheet") {
+        if (a.row.passageId !== b.row.passageId) {
+          // 묶음끼리: 대표 시각 desc → 동시각은 passageId 로 전순서 확정.
+          const ga = wGroupAt.get(a.row.passageId) ?? a.sortAt;
+          const gb = wGroupAt.get(b.row.passageId) ?? b.sortAt;
+          if (ga !== gb) return ga < gb ? 1 : -1;
+          return a.row.passageId.localeCompare(b.row.passageId);
+        }
+        // 묶음 내부: 기본 → 실전 → 파이널 → (국어) → 미지 마커 꼬리.
+        // 랭크 정본은 pick-order.ts 하나다(리터럴 복제 금지 — 복제본은 타입 에러 0 ·
+        // 화면에서만 갈린다).
+        const ra = sheetPlanRank(a.row.planMarker);
+        const rb = sheetPlanRank(b.row.planMarker);
+        if (ra !== rb) return ra - rb;
+      }
       return a.sortAt === b.sortAt
         ? a.key.localeCompare(b.key)
         : a.sortAt < b.sortAt
@@ -734,6 +865,25 @@ function ComposerListPaneInner({
     for (const id of pickedSheets.keys()) m.set(id, ++i);
     return m;
   }, [pickedSheets]);
+
+  /**
+   * [E31] 활성 학습지 → **그 학습지의 지문 id**. 카드 표시의 유일한 판정 재료다.
+   *
+   * ⚠ 이 값은 `cards` 메모에 **넣지 않는다**. 넣으면 활성 전환 한 번에 정렬·필터·
+   *   섹션 배분이 전량 재계산되고(지문 200여 장 × 두 축) `PassageCardView` 객체가
+   *   모두 새로 나와 카드 전원이 재렌더된다. 판정은 `renderPassageCard` 안에서
+   *   `c.passageId === activeSheetPassageId` 한 줄로 끝나므로 메모를 건드릴 이유가
+   *   전혀 없다 — 렌더 함수는 애초에 매 렌더 새로 도는 순수 함수다.
+   *
+   * ⚠ 같은 지문에 기본/실전/파이널 학습지가 최대 3행이므로(E30 §4-2) 이 값은
+   *   **1:N 의 N쪽을 지운다**. 즉 「어느 학습지가 활성인가」가 아니라 「어느 지문을
+   *   조판 중인가」만 말한다 — 카드는 지문 단위 그릇이라 그게 맞는 해상도다.
+   *   행 단위 활성 표식이 필요해지면 그건 카드가 아니라 **행**의 별건이다.
+   */
+  const activeSheetPassageId =
+    activeSheetId === null
+      ? null
+      : (pickedSheets.get(activeSheetId)?.passageId ?? null);
 
   // ══════════════════════════════════════════════════════════════════════════
   // [E28] §3.10.27 — 중앙 목록판 = **지문 카드 목록**
@@ -1237,6 +1387,97 @@ function ComposerListPaneInner({
   }, [cards]);
 
   /**
+   * ══════════════════════════════════════════════════════════════════════════
+   * [E31] 「조판 중인 지문」 되짚기 — 명령 채널(revealPassageId + revealSeq) 수행부
+   * (26-08-24 사용자 지시: 「조판되어 있는 그 학습지의 지문 … 딱 스크롤이 거기에
+   *  딱 보이게」 · 「칩을 클릭하면 해당 지문으로 스르르 매우 부드럽고 최적화된
+   *  형태로 이동」)
+   *
+   * ⛔ **`scrollIntoView` 를 쓰지 않는다.** 그 API 는 대상의 **모든 조상 스크롤
+   *    컨테이너**를 함께 움직인다 — 이 카드는 [좌측 열 스크롤] ⊂ [패널] ⊂ [페이지]
+   *    안에 있어서, 한 번 부르면 사용자가 보던 상단 스텝 스트립·조판 캔버스까지
+   *    끌려간다. 스튜디오는 이 계통 사고를 이미 한 번 먹었다(§3.10.20 E23
+   *    「scrollIntoView 하이재킹」). 여기서는 **컨테이너 하나만** 절대 좌표로 옮긴다.
+   *
+   * ⛔ CSS 선택자에 `revealPassageId` 를 **끼워 넣지 않는다**(`[data-passage-card="…"]`).
+   *    `CSS.escape` 없는 id 보간이 이 리포에서 이미 사고를 냈다
+   *    (sheet-compose-surface.tsx:236 `scrollToBlock`). 속성값 비교로 훑으면
+   *    이스케이프 문제가 **원리적으로** 사라지고, 카드 200장 스캔은 클릭 1회당
+   *    수십 µs 라 비용이 아니다.
+   *
+   * ⚠ deps 에 `cards` 가 있는 이유: 요청 시점에 대상 카드가 DOM 에 없을 수 있다
+   *   (두 축이 비동기로 따로 도착 — 위 axisSeededRef 주석의 실측과 같은 사정).
+   *   그래서 「못 찾음」은 소비하지 않고 다음 데이터 변화에서 다시 노린다.
+   *   재시도 상한은 REVEAL_MAX_TRIES(유령 요청 차단).
+   * ⚠ `root === null`(로딩·빈 상태·필터 0건 분기라 스크롤 컨테이너가 아직 없다)은
+   *   재시도 횟수를 **먹지 않는다** — 「없다」가 아니라 「아직」이다.
+   * ══════════════════════════════════════════════════════════════════════════
+   */
+  const cardScrollRef = useRef<HTMLDivElement | null>(null);
+  const revealRef = useRef({ seq: -1, done: true, tries: 0 });
+  useEffect(() => {
+    const st = revealRef.current;
+    // 새 요청 도착 — 이전 요청의 수행/포기 기록을 버린다.
+    if (st.seq !== revealSeq) {
+      st.seq = revealSeq;
+      st.done = false;
+      st.tries = 0;
+    }
+    if (st.done) return;
+    if (!revealPassageId) {
+      st.done = true;
+      return;
+    }
+    // 평면 목록(시험지 조판 뷰)에는 지문 카드가 **없다** — 되짚을 대상이 원리적으로
+    // 존재하지 않으므로 소비하지 않고 기다린다(호스트는 학습지 조판이 가시일 때만
+    // 요청을 보내므로 여기서 요청이 썩는 일은 없다).
+    if (cards === null) return;
+    const root = cardScrollRef.current;
+    if (root === null) return;
+    const nodes = root.querySelectorAll<HTMLElement>("[data-passage-card]");
+    let target: HTMLElement | null = null;
+    for (let i = 0; i < nodes.length; i += 1) {
+      const el = nodes.item(i);
+      if (el === null) continue;
+      if (el.dataset.passageCard === revealPassageId) {
+        target = el;
+        break;
+      }
+    }
+    if (target === null) {
+      st.tries += 1;
+      if (st.tries >= REVEAL_MAX_TRIES) st.done = true;
+      return;
+    }
+    // 찾은 순간 요청은 **소비된 것**이다(아래 「이미 보인다」로 빠져도 마찬가지) —
+    // 안 그러면 필터·데이터가 바뀔 때마다 같은 요청이 되살아난다.
+    st.done = true;
+    const rootRect = root.getBoundingClientRect();
+    const cardRect = target.getBoundingClientRect();
+    // 이미 온전히 보이면 **한 픽셀도 움직이지 않는다**. 필요 없는 애니메이션은
+    // 그 자체가 노이즈고, 사용자가 방금 맞춰 둔 스크롤을 흔드는 일이다.
+    // ±1px 여유는 소수 픽셀 레이아웃(브라우저 확대·devicePixelRatio) 대비다.
+    if (
+      cardRect.top >= rootRect.top - 1 &&
+      cardRect.bottom <= rootRect.bottom + 1
+    ) {
+      return;
+    }
+    // 이 식은 **현재 scrollTop 에 불변**이다(rect 차이가 scrollTop 만큼 줄어든다) —
+    // 같은 지문에 대한 중복 요청이 겹쳐도 목표 좌표가 동일해 스무스 애니메이션이
+    // 다시 조준되지 않는다(무동작).
+    const raw = root.scrollTop + (cardRect.top - rootRect.top) - REVEAL_PAD;
+    const max = Math.max(0, root.scrollHeight - root.clientHeight);
+    const top = Math.max(0, Math.min(raw, max));
+    // 접근성 — 「움직임 줄이기」를 켠 사용자에게는 즉시 점프한다. 이 판의 다른
+    // 전이가 쓰는 `motion-reduce:` 유틸과 같은 정책을 JS 쪽에서 지킨다.
+    const reduce =
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    root.scrollTo({ top, behavior: reduce ? "auto" : "smooth" });
+  }, [revealPassageId, revealSeq, cards]);
+
+  /**
    * 【[E28B §8-1 C6] 「모두 펼치기 / 모두 접기」 — **버튼 1개**】
    *
    * 회수하는 기능: 평면 시절 「전체 선택」 1클릭이 학습지 9 + 문항 205 를 담았는데,
@@ -1302,6 +1543,168 @@ function ComposerListPaneInner({
     return m;
   }, [renderedRows]);
 
+  // ══════════════════════════════════════════════════════════════════════════
+  // [E30 §4-4 D-COMPANION · §4-5] 「기본 없이 실전만 담긴 픽」이 만들어지지 않게 한다
+  //
+  // 실전 학습지(PRIME_PRACTICE)는 기본 PRIME 의 **자식 문서**라 혼자 조판되면
+  // 사용자 요구(「학습지를 추가하고 실전 학습지를 추가하도록」)와 정면으로 어긋난다.
+  //
+  // ⛔ **체크박스 `disabled` 로 막지 마라** — 방어가 아니라 장식이다. DragSelect 의
+  //   히트 수집은 `root.querySelectorAll("[data-drag-item-id]")` + 순수 rect 비교라
+  //   `disabled`·가시성·`inert` 를 일절 보지 않고(drag-select.tsx:440-462), 게다가
+  //   `cursor-not-allowed` 를 주면 CONTROL_CURSOR_VALUES 에 걸려 **그 행에서 마키를
+  //   시작할 수 없게** 된다(E28 계기 함정 2와 같은 계통).
+  // → 막지 않고 **커밋 직전에 동반**한다. 규칙 정본은 순수층 한 곳
+  //   (`pick-order.ts` withBasicCompanions)이고, 이 판은 어댑터 + 호출부다.
+  //
+  // ⚠ 모집단은 `mergedRows`(전체)이지 `visibleRowByKey` 가 **아니다**. 후자는
+  //   「마키가 닿지 못한 것은 이 마키의 권한 밖」이라는 **제거 권한 축소**용이고,
+  //   담기 축소용이 아니다 — 좁혀 넘기면 접힌 카드·필터에 가려진 기본 행을 못 찾아
+  //   규칙 3(무동작)으로 조용히 새어 「실전만 담긴 픽」이 그대로 만들어진다.
+  // ══════════════════════════════════════════════════════════════════════════
+
+  /**
+   * `withBasicCompanions` 의 제네릭 제약(planMarker·passageId·reportId)에 맞춘 어댑터.
+   * 병합 행은 그 셋을 `row` 안에 들고 있어 그대로는 못 넘긴다. `it` 로 원본을 물고
+   * 있다가 커밋 델타(ComposerRow 계약)로 되돌린다.
+   */
+  type SheetCompanionRow = {
+    planMarker: string;
+    passageId: string;
+    reportId: string;
+    it: ComposerRow;
+  };
+
+  /** 동반 탐색 모집단 = **전체 학습지 행**(필터·상한·접힘 적용 전). */
+  const companionPool = useMemo<SheetCompanionRow[]>(() => {
+    const out: SheetCompanionRow[] = [];
+    for (const it of mergedRows) {
+      if (it.kind !== "worksheet") continue;
+      out.push({
+        planMarker: it.row.planMarker,
+        passageId: it.row.passageId,
+        reportId: it.row.reportId,
+        it,
+      });
+    }
+    return out;
+  }, [mergedRows]);
+
+  /** 「이미 담긴 기본은 다시 넣지 않는다」(재삽입 = 조판 순서 뒤집힘) 판정 재료. */
+  const pickedSheetIds = useMemo(
+    () => new Set<string>(pickedSheets.keys()),
+    [pickedSheets],
+  );
+
+  /**
+   * [E30 §4-4] 담기 델타에 **기본 학습지 동반 픽**을 끼운다(커밋 직전에만 부른다).
+   *
+   * 문항 행을 어댑터에 실어 함께 넘기지 **않는** 이유: 문항에는 `planMarker` 축이
+   * 없어 규칙 1(`planMarker !== "PRIME"` 이면 동반)에 무조건 걸린다 — 문항을 담았을
+   * 뿐인데 그 지문의 학습지가 따라 담긴다. 그래서 학습지 부분수열만 순수층에 넘기고,
+   * 결과가 **삽입만 된 상위 수열**이라는 성질을 이용해 원래 자리에 되꽂는다.
+   */
+  const withCompanionAdds = (added: ComposerRow[]): ComposerRow[] => {
+    if (!wIncluded || added.length === 0) return added;
+    const sheets: SheetCompanionRow[] = [];
+    for (const it of added) {
+      if (it.kind !== "worksheet") continue;
+      sheets.push({
+        planMarker: it.row.planMarker,
+        passageId: it.row.passageId,
+        reportId: it.row.reportId,
+        it,
+      });
+    }
+    if (sheets.length === 0) return added;
+    const grown = withBasicCompanions(sheets, companionPool, pickedSheetIds);
+    // 규칙 4 — 삽입 0건이면 순수층이 **입력 참조 그대로**를 돌려준다. 그때는 이 판도
+    // 새 배열을 만들지 않는다(불필요한 커밋·리렌더 방지).
+    if (grown === sheets) return added;
+    const out: ComposerRow[] = [];
+    let i = 0;
+    for (const it of added) {
+      if (it.kind !== "worksheet") {
+        out.push(it);
+        continue;
+      }
+      // grown 은 sheets 의 상위 수열(삽입만 · 재정렬 0)이므로, 이 항목에 닿을 때까지
+      // 흘러나오는 것이 곧 그 앞에 꽂힌 동반분이다.
+      while (i < grown.length && grown[i].reportId !== it.row.reportId) {
+        out.push(grown[i].it);
+        i += 1;
+      }
+      if (i < grown.length) i += 1; // 자기 자신은 원본 참조로 넣는다(아래).
+      out.push(it);
+    }
+    // 도달 불가 방어 — 상위 수열 성질이 깨지면 항목을 **잃지 않고** 꼬리에 붙인다.
+    for (; i < grown.length; i += 1) out.push(grown[i].it);
+    return out;
+  };
+
+  /**
+   * [E30 §4-5] 해제 대칭 — **기본을 빼면 같은 지문의 실전도 같은 `removed` 델타에**.
+   *
+   * 왜 같은 델타인가: 델타를 두 번 보내면 `guardSheetPickRemoval` dirty confirm 이
+   * 두 번 뜨고(호스트 ⓪-b 가 이미 물었다는 계약과 어긋난다), 두 번째 호출이 첫
+   * 호출의 ref 를 못 봐 앞 커밋을 덮어쓴다(library-pane ② 주석의 실측 사고).
+   *
+   * ⚠ 파이널(PRIME_FINAL)은 **동반 해제 대상이 아니다** — 기본 없이도 성립하는
+   *   문서다(DB 실측 고아 3건). 동반 해제는 `PRIME_PRACTICE` 에만 적용한다.
+   * ⚠ 실전만 해제하는 것은 자유다(기본은 남는다) — 역방향 규칙을 만들지 마라.
+   * ⚠ **이미 담긴 실전만** 싣는다. 안 담긴 행을 removed 에 넣어도 호스트 전이는
+   *   무동작이지만(`nextSheets.delete` 가 false), 그 무동작이 `wRemoved` 판정에
+   *   섞이지 않게 하려면 여기서 거르는 편이 정직하다.
+   * ※ 카드 헤더 X(clearCardPicks)는 **이미 대칭**이다 — 보내는 것이 그 지문의 픽
+   *   전량(pickedAll)이라 기본과 실전이 함께 실린다. 거기에 이 함수를 또 태우지 마라.
+   */
+  const withCompanionRemovals = (removed: ComposerRow[]): ComposerRow[] => {
+    if (!wIncluded || removed.length === 0) return removed;
+    let hasBasic = false;
+    const removedIds = new Set<string>();
+    for (const it of removed) {
+      if (it.kind !== "worksheet") continue;
+      removedIds.add(it.row.reportId);
+      if (it.row.planMarker === PRIME_REPORT_MARKER) hasBasic = true;
+    }
+    if (!hasBasic) return removed;
+
+    // 인덱스는 **실제로 필요할 때만** 만든다(기본 해제가 0건이면 비용 0).
+    let practiceByPassage: Map<string, SheetCompanionRow[]> | null = null;
+    const practiceOf = (passageId: string): SheetCompanionRow[] | undefined => {
+      if (practiceByPassage === null) {
+        practiceByPassage = new Map<string, SheetCompanionRow[]>();
+        for (const cand of companionPool) {
+          if (cand.planMarker !== PRACTICE_REPORT_MARKER) continue;
+          const bucket = practiceByPassage.get(cand.passageId);
+          if (bucket) bucket.push(cand);
+          else practiceByPassage.set(cand.passageId, [cand]);
+        }
+      }
+      return practiceByPassage.get(passageId);
+    };
+
+    const out: ComposerRow[] = [];
+    let appended = false;
+    for (const it of removed) {
+      out.push(it);
+      if (it.kind !== "worksheet") continue;
+      if (it.row.planMarker !== PRIME_REPORT_MARKER) continue;
+      // 빈 passageId 는 「지문 미상」이지 「같은 지문」이 아니다(pick-order 와 같은 규율).
+      if (!it.row.passageId) continue;
+      const kids = practiceOf(it.row.passageId);
+      if (kids === undefined) continue;
+      for (const kid of kids) {
+        if (!pickedSheetIds.has(kid.reportId)) continue;
+        if (removedIds.has(kid.reportId)) continue;
+        removedIds.add(kid.reportId);
+        out.push(kid.it);
+        appended = true;
+      }
+    }
+    return appended ? out : removed;
+  };
+
   /** DragSelect(deferCommit) 릴리스 1회 커밋 → 타입 태그가 실린 델타로 환산. */
   const handleMarquee = (next: Set<string>) => {
     const added: ComposerRow[] = [];
@@ -1319,9 +1722,16 @@ function ComposerListPaneInner({
       if (it) removed.push(it);
     }
     if (added.length > 0 || removed.length > 0) {
+      // [E30 §4-4 · §4-5] 동반 픽·동반 해제는 **커밋 직전**에 끼운다. 여기보다 위
+      // (히트 수집)에서 끼우면 removed 루프가 동반분을 「히트하지 않은 픽」으로 보고
+      // 도로 해제한다.
+      const grownAdded = withCompanionAdds(added);
+      const grownRemoved = withCompanionRemovals(removed);
       // [E28B §8-1 C1-ⓐ] 마키가 새로 담은 지문의 카드는 그 순간 펼침으로 굳는다.
-      latchPickedCards(added);
-      onCommit(added, removed);
+      // ⚠ 동반 픽분까지 **그대로** 넘긴다 — 빼고 넘기면 「배지는 2 늘었는데 카드는
+      //   접힌 채」가 된다(호스트에서 주입하지 않는 이유와 같은 계통).
+      latchPickedCards(grownAdded);
+      onCommit(grownAdded, grownRemoved);
     }
   };
 
@@ -1329,11 +1739,14 @@ function ComposerListPaneInner({
     if (selectedKeys.has(it.key)) {
       // 해제는 래치하지 않는다 — 그리고 **카드를 접지도 않는다**
       // ([E28B §8-1 C1] 증상 1: 마지막 픽 해제로 본문이 사라지던 것).
-      onCommit(NO_ROWS, [it]);
+      // [E30 §4-5] 기본을 빼면 같은 지문의 실전도 **같은 델타**에 실린다.
+      onCommit(NO_ROWS, withCompanionRemovals([it]));
       return;
     }
-    latchPickedCards([it]);
-    onCommit([it], NO_ROWS);
+    // [E30 §4-4] 실전·파이널을 담으면 같은 지문의 기본이 **앞쪽에** 함께 담긴다.
+    const grown = withCompanionAdds([it]);
+    latchPickedCards(grown);
+    onCommit(grown, NO_ROWS);
   };
 
   // ── 전체 선택(**렌더분** 기준 — mixed = Minus) ────────────────────────────
@@ -1370,12 +1783,16 @@ function ComposerListPaneInner({
   const someChecked = unpickedVisible.length < renderedRows.length;
   const toggleAll = () => {
     if (allChecked) {
-      onCommit(NO_ROWS, renderedRows);
+      // [E30 §4-5] 렌더분 전량 해제라도 기본만 렌더돼 있고 실전은 접힌 카드에
+      // 담겨 있을 수 있다 — 그 경우까지 대칭을 지킨다.
+      onCommit(NO_ROWS, withCompanionRemovals(renderedRows));
       return;
     }
     // 이미 담긴 행은 다시 보내지 않는다(재삽입 = 조판 순서 뒤집힘).
-    latchPickedCards(unpickedVisible);
-    onCommit(unpickedVisible, NO_ROWS);
+    // [E30 §4-4] 동반 픽분(접힌 카드의 기본 행 포함)도 같은 델타에 실린다.
+    const grown = withCompanionAdds(unpickedVisible);
+    latchPickedCards(grown);
+    onCommit(grown, NO_ROWS);
   };
 
   /**
@@ -1419,10 +1836,14 @@ function ComposerListPaneInner({
         data-drag-item-id={it.key}
         onClick={() => toggleRow(it)}
         className={cn(
-          "group flex w-full cursor-pointer items-center rounded-md transition-colors",
-          checked
-            ? "bg-blue-50/70 ring-1 ring-inset ring-blue-100"
-            : "hover:bg-slate-50",
+          // [E29] 학습지 행과 **같은 원장 문법**(전폭·헤어라인·좌측 축 바).
+          // 축 색만 blue 다 — 두 축이 같은 카드 안에 있으므로 문법이 갈리면
+          // 「같은 목록인데 규칙이 둘」로 읽힌다.
+          // 우측 여백은 `pr-1.5`(6px) + 끝 <Link> 의 `mr-1`(4px) = **10px** 로
+          // 학습지 행(pr-2.5)과 같은 축에 선다. 한쪽만 고치면 두 축의 오른쪽 끝이
+          // 어긋나 「목록이 삐뚤다」로 읽힌다.
+          "group flex w-full cursor-pointer items-center pr-1.5 transition-colors",
+          checked ? `bg-blue-50 ${ROW_PICK_BAR_Q}` : "hover:bg-slate-50",
         )}
       >
         <button
@@ -1438,7 +1859,9 @@ function ComposerListPaneInner({
             e.stopPropagation();
             toggleRow(it);
           }}
-          className="flex shrink-0 cursor-pointer items-center self-stretch py-2 pl-2 pr-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+          // [E29] 좌측 정렬 축 통일 — 학습지 행 체크박스와 **같은 10px**
+          // (구 pl-2 는 8px 이라 두 축 행이 2px 어긋나 「계단」이 보였다).
+          className="flex shrink-0 cursor-pointer items-center self-stretch py-2 pl-2.5 pr-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
         >
           <span className={checked ? BOX_ON_Q : BOX_OFF} aria-hidden="true">
             {order !== undefined && order <= 99 ? (
@@ -1583,9 +2006,17 @@ function ComposerListPaneInner({
    *
    * 1줄 제목은 **AI 제목(`row.title`)** 이다(사용자 재확정). 카드 머리가 지문
    * 이름을 맡으므로 행까지 지문 이름을 말하면 한 카드 안에서 같은 글자가 N번
-   * 반복되고, 같은 지문의 PRIME/PRIME_FINAL 두 행이 **글자 단위로 같아진다**
-   * (두 행의 passageId 는 같다 — sheet-pick-types.ts 의 E27 정정).
+   * 반복되고, 같은 지문의 PRIME/PRIME_PRACTICE/PRIME_FINAL 행이 **글자 단위로
+   * 같아진다**(세 행의 passageId 는 같다 — sheet-pick-types.ts 의 E27 정정 ·
+   * [E30 §1-2] 실전도 부모와 passageId 를 공유한다).
    * 구분 재료는 AI 제목 + 앞의 플랜 배지 둘이다 — 어느 쪽도 지우지 마라.
+   *
+   * ── [E30 §4-1] 학습지 행이 **최대 3줄**(기본/실전/파이널)이 됐다 ────────────
+   * 이 렌더러에는 **새 분기가 한 줄도 없다**. 실전 행도 학습지 축이므로 같은 토큰
+   * (ROW_PAD_X · ROW_HAIRLINE · ROW_PICK_BAR_W · BOX_ON_W = violet)을 그대로 쓰고,
+   * 종류를 가르는 것은 `SHEET_PLAN_LABEL` 배지 **한 곳**뿐이다(§3-4 로 4키가 됐다).
+   * ⚠ 실전에 새 색을 발명하지 마라 — 축 색은 「이 행이 어느 축인가」의 언어이지
+   *   「어느 상품인가」의 언어가 아니다. 상품은 배지가 말한다.
    *
    * 마키 계약(파일 머리주석 ①~④)은 글자 단위로 승계한다:
    *  ① 루트는 **무롤 div** + `data-drag-item-id` — 접두 `w:` **유지**(도시에
@@ -1607,6 +2038,8 @@ function ComposerListPaneInner({
     const checked = selectedKeys.has(it.key);
     const order = checked ? sheetOrder.get(r.reportId) : undefined;
     const status = statusOf(r.status);
+    // 종류 배지 정본 1곳(§3-4). [E30] 「실전 학습지」가 4번째 키로 합류했고, 이
+    // 한 줄이 카드 행·종류 필터 option·평면 행 배지를 **동시에** 고친다.
     const planLabel = SHEET_PLAN_LABEL.get(r.planMarker) ?? r.planMarker;
     // 판정 정본은 sheet-deploy-eligibility 한 곳 — 로컬 재판정 금지(E21-5).
     const deployable = canDeployWorksheetRow(r.planMarker);
@@ -1626,9 +2059,14 @@ function ComposerListPaneInner({
         data-drag-item-id={it.key}
         onClick={() => toggleRow(it)}
         className={cn(
-          "group grid w-full cursor-pointer grid-cols-[auto_1fr_auto] items-center gap-x-1.5 gap-y-0.5 rounded-md py-1.5 pl-1.5 pr-1.5 transition-colors",
+          // [E29] 경계 ④ — 전폭 원장 행. rounded-md 칩을 버리고 좌우 10px 축에
+          // 맞춘다(ROW_PAD_X). 선택 표식은 옅은 ring 이 아니라 **좌측 3px 축 바**
+          // (ROW_PICK_BAR_W) + 진한 바탕이다: ring-violet-100 은 violet-50 바탕
+          // 위에서 사실상 보이지 않았다(사용자 지적 "경계 선이 너무 안 보여").
+          "group grid w-full cursor-pointer grid-cols-[auto_1fr_auto] items-center gap-x-1.5 gap-y-0.5 py-2 transition-colors",
+          ROW_PAD_X,
           checked
-            ? "bg-violet-50/70 ring-1 ring-inset ring-violet-100"
+            ? `bg-violet-50 ${ROW_PICK_BAR_W}`
             : "hover:bg-slate-50",
         )}
       >
@@ -1784,9 +2222,22 @@ function ComposerListPaneInner({
     total: number,
     unit: string,
     hiddenPicked: number,
+    axis: "worksheet" | "question",
   ) => (
-    <div className="flex items-center gap-2 bg-slate-50/80 px-2.5 py-1.5">
-      <h3 className="min-w-0 flex-1 truncate text-[11.5px] font-bold tracking-wide text-slate-600">
+    // [E29] 섹션 선반 ③ — 회색 띠 + 좌측 3px 축 색 바.
+    // 좌 padding 은 `border-l-[3px]`(3) + `pl-[7px]`(7) = 10px 로 행·머리와 같은 축에
+    // 선다. `pl-2.5` 를 그대로 두면 바 두께만큼 글자가 밀려 「계단」이 된다(실측).
+    <div
+      className={cn(
+        // ⚠ 측면 전용 색(`border-b-slate-200`)으로 적는다 — 범용 `border-slate-200`
+        //   을 같은 cn() 에 섞으면 tailwind-merge 가 `border-l-*` 를 **지운다**
+        //   (border-color ⊃ border-color-l). 소스엔 있고 DOM 엔 없는 유령 클래스가
+        //   되는 이 함정은 E28 의 `break-keep`/`break-words` 사고와 같은 계통이다.
+        "flex items-center gap-2 border-b border-b-slate-200 border-l-[3px] bg-slate-100/80 py-1.5 pl-[7px] pr-2.5",
+        axis === "worksheet" ? "border-l-violet-400" : "border-l-blue-400",
+      )}
+    >
+      <h3 className="min-w-0 flex-1 truncate text-[11.5px] font-bold tracking-wide text-slate-700">
         {title}
       </h3>
       {hiddenPicked > 0 ? (
@@ -1822,20 +2273,55 @@ function ComposerListPaneInner({
     const panelId = `e28-card-${c.passageId}`;
     const wMore = c.wShown - c.wRows.length;
     const qMore = c.qShown - c.qRows.length;
+    /**
+     * [E31] 이 지문이 **지금 조판(편집) 중**인가 — 위 activeSheetPassageId 파생.
+     * 「담김(c.picked > 0)」보다 한 단 좁은 상태다: 대기열에 8장을 담아도 편집
+     * 중인 문서는 언제나 1장이고, 오른쪽 조판 헤더의 활성 칩이 가리키는 그 1장이다.
+     * 그래서 색 위계가 3단이 된다 — 조판 중 > 담김 > 평시.
+     */
+    const composing = c.passageId === activeSheetPassageId;
     return (
       <div
         key={c.passageId}
         data-passage-card={c.passageId}
+        // [E31] 게이트/프로브용 상태 훅. 픽셀에 영향이 없고, 「조판 중 표시」는
+        // 색으로만 존재하므로(헤더에 넷째 요소 금지 — 아래 주석) 이 속성이 없으면
+        // 자동 검증이 스크린샷 픽셀 비교밖에 남지 않는다.
+        data-sheet-composing={composing ? "1" : undefined}
         className={cn(
-          "flex shrink-0 flex-col overflow-hidden rounded-lg border transition-colors",
+          // [E29] 경계 ① — 테두리만으로는 흰 판 위에서 카드가 안 선다. 미세
+          // 그림자를 얹어 「종이 한 장」으로 띄운다(카드 사이 간격은 목록의 gap-2).
+          "flex shrink-0 flex-col overflow-hidden rounded-xl border transition-colors",
           // 조판된 카드 = 축 색 계열. 「왜 위로 올라왔는지」를 색으로도 말한다 —
           // 위치만으로는 정렬 규칙을 알 수 없다.
+          // ⚠ 구판은 카드 **전체**를 bg-blue-50/40 으로 물들였다. 그러면 본문 행의
+          //   흰 바탕이 사라져 행 사이 헤어라인이 묻히고(경계 소실), 선택 행의
+          //   violet inset 도 파란 바탕 위에서 탁해진다. 물들이는 것은 **머리뿐**이다.
           c.picked > 0
-            ? "border-blue-300 bg-blue-50/40"
-            : "border-slate-200 bg-white",
+            ? "border-blue-300 bg-white shadow-[0_1px_3px_0_rgba(37,99,235,0.13)]"
+            : "border-slate-200 bg-white shadow-[0_1px_2px_0_rgba(15,23,42,0.05)]",
+          // [E31] 조판 중 = **테두리 한 단 + 은은한 파란 후광**.
+          // ⚠ 후광을 `shadow-[…]` 2겹으로 적지 마라 — tailwind-merge 가 위
+          //   `shadow-[…]`(같은 그룹)를 지워 카드가 판에서 떠 있던 미세 그림자를
+          //   함께 잃는다. `ring-*` 은 별개 그룹이라 그림자와 **공존**한다.
+          // ⚠ ring 은 테두리 **바깥**에 그려진다. 카드 간격이 gap-2(8px)·좌우
+          //   px-3(12px) 이라 2px 후광이 이웃이나 컨테이너에 닿지 않는다(잘림 없음).
+          composing && "border-blue-500 ring-2 ring-blue-200",
         )}
       >
-        <div className="group flex w-full items-center transition-colors hover:bg-slate-50/80">
+        <div
+          className={cn(
+            // [E29] 경계 ② — 카드 머리. 펼치면 아래 본문이 border-t 로 실선을 긋는다.
+            "group flex w-full items-center transition-colors",
+            c.picked > 0
+              ? "bg-blue-50/70 hover:bg-blue-50"
+              : "hover:bg-slate-50/80",
+            // [E31] 조판 중 머리는 한 단 진하게. 여전히 **머리뿐**이다(위 ⚠) —
+            // 본문까지 물들이면 E29 가 회수한 행 헤어라인·violet inset 대비가 다시
+            // 죽는다.
+            composing && "bg-blue-100/70 hover:bg-blue-100",
+          )}
+        >
           <button
             type="button"
             // ⚠ `data-drag-select-ignore` **필수** — 없으면 blocksMarqueeStart 가
@@ -1849,7 +2335,13 @@ function ComposerListPaneInner({
             // 펼침/접힘은 aria-expanded 가 이미 읽어 준다(라벨에 「접기/펼치기」를
             // 또 넣으면 이중 낭독). 보이는 글자(지문 제목)를 이름이 **포함**해야
             // 음성 제어가 「<지문 제목> 클릭」으로 닿는다(WCAG 2.5.3).
-            aria-label={`${c.passageTitle} — 자산 ${c.total}건 중 ${c.picked}건 선택`}
+            // [E31] 「조판 중」은 색으로만 말하므로(헤더에 넷째 요소 금지 — 아래
+            // 배지 주석) 스크린리더에는 **글자로** 같은 사실을 준다. 색 단독 고지는
+            // WCAG 1.4.1 위반이고, 이 자리는 이미 있는 이름에 한 조각 더 붙이는
+            // 것으로 해소된다(새 DOM 0).
+            aria-label={`${c.passageTitle} — 자산 ${c.total}건 중 ${c.picked}건 선택${
+              composing ? " · 지금 조판 중" : ""
+            }`}
             onClick={() => toggleCard(c.passageId, !c.open)}
             className="flex min-w-0 flex-1 cursor-pointer items-center gap-2 py-2 pl-2.5 pr-2 text-left"
           >
@@ -1879,8 +2371,14 @@ function ComposerListPaneInner({
               className={cn(
                 "min-w-0 flex-1 text-balance break-keep [overflow-wrap:anywhere] text-[13.5px] font-bold leading-snug",
                 c.picked > 0 ? "text-blue-800" : "text-slate-700",
+                // [E31] 색 위계 3단의 마지막 칸(조판 중 > 담김 > 평시).
+                composing && "text-blue-900",
               )}
-              title={c.passageTitle}
+              title={
+                composing
+                  ? `${c.passageTitle} — 지금 이 지문의 학습지를 조판 중입니다`
+                  : c.passageTitle
+              }
             >
               {c.passageTitle}
             </span>
@@ -1910,7 +2408,7 @@ function ComposerListPaneInner({
               title="이 지문에서 담은 것 전부 빼기 — 대기열에서만 빠집니다(지문·자산은 그대로)"
               aria-label={`${c.passageTitle}에서 담은 ${c.picked}건 전부 빼기`}
               onClick={() => clearCardPicks(c.pickedRows)}
-              className="mr-2 flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white text-slate-400 transition-colors hover:border-rose-300 hover:bg-rose-50 hover:text-rose-600"
+              className="mr-2.5 flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white text-slate-400 transition-colors hover:border-rose-300 hover:bg-rose-50 hover:text-rose-600"
             >
               <X className="size-3.5" aria-hidden="true" />
             </button>
@@ -1921,22 +2419,26 @@ function ComposerListPaneInner({
             이나 `inert` 로 바꾸지 마라 — DragSelect 는 가시성을 보지 않아 접힌
             카드의 행이 마키에 그대로 잡힌다. */}
         {c.open ? (
-          <div id={panelId} className="border-t border-slate-100">
+          // [E29] 머리 ↔ 본문 실선. slate-100 은 흰 위에서 사실상 안 보였다.
+          <div id={panelId} className={cn("border-t", CARD_SPLIT)}>
             {/* ⚠ 섹션은 **그 축의 행이 이 지문에 있을 때만** 렌더한다. 0건인데
                 그리면 시험지 조판 뷰(축 고정)에서 「학습지」라는 반대 축 이름이
                 새어 나오고, 그것이 E24-4 가 명시 금지한 사고다.
                 판정 축은 `wCount`(카드 필터 **전**)다 — 필터로 0이 됐다고 섹션을
                 지우면 방금 건 필터를 되돌릴 셀렉트까지 함께 사라진다. */}
             {c.wCount > 0 ? (
-              <section className="border-b border-slate-100">
+              <section className={cn("border-b", CARD_SPLIT)}>
                 {cardSectionHead(
                   "학습지",
                   c.wShown,
                   c.wCount,
                   "건",
                   c.wHiddenPicked,
+                  "worksheet",
                 )}
-                <div className="flex items-center gap-1 px-1.5 pt-1">
+                {/* [E29] 필터 선반 — 섹션 머리와 **한 벌**(같은 회색 띠). 흰 바탕에
+                    띄워 두면 필터가 첫 번째 행처럼 읽혀 행 개수를 오독하게 된다. */}
+                <div className="flex items-center gap-1.5 border-b border-b-slate-200 border-l-[3px] border-l-violet-400 bg-slate-50/70 py-1.5 pl-[7px] pr-2.5">
                   {/* ⚠ 이 2셀렉트는 **신설**이다 — 도시에 카드에는 플랜·상태
                       필터가 없어, 상단 2층 필터를 그냥 지우면 학습지를 상태로
                       좁힐 방법이 통째로 사라진다. 문법은 문제 섹션 3셀렉트와 동일. */}
@@ -1975,9 +2477,12 @@ function ComposerListPaneInner({
                     ))}
                   </select>
                 </div>
-                <div className="space-y-0.5 px-1.5 py-1">
+                {/* [E29] 행 목록 — **전폭 원장**. 구판은 행마다 rounded-md 칩이라
+                    선택 상태가 라운드 안에 갇혀 경계가 흐렸다. 전폭 + 행 사이
+                    헤어라인 + 좌측 축 바로 바꾸면 「몇 건이 담겼는지」가 훑기만 해도 읽힌다. */}
+                <div className={ROW_HAIRLINE}>
                   {c.wRows.length === 0 ? (
-                    <p className="px-1 py-1 text-[11px] text-slate-400 break-keep">
+                    <p className="px-2.5 py-2 text-[11px] text-slate-400 break-keep">
                       조건에 맞는 학습지가 없습니다
                     </p>
                   ) : (
@@ -2007,8 +2512,9 @@ function ComposerListPaneInner({
                   c.qCount,
                   "개",
                   c.qHiddenPicked,
+                  "question",
                 )}
-                <div className="flex items-center gap-1 px-1.5 pt-1">
+                <div className="flex items-center gap-1.5 border-b border-b-slate-200 border-l-[3px] border-l-blue-400 bg-slate-50/70 py-1.5 pl-[7px] pr-2.5">
                   <select
                     aria-label={`${c.passageTitle} 유형 필터`}
                     value={c.filter.type}
@@ -2061,9 +2567,9 @@ function ComposerListPaneInner({
                     <option value="premium">킬러</option>
                   </select>
                 </div>
-                <div className="space-y-0.5 px-1.5 py-1">
+                <div className={ROW_HAIRLINE}>
                   {c.qRows.length === 0 ? (
-                    <p className="px-1 py-1 text-[11px] text-slate-400 break-keep">
+                    <p className="px-2.5 py-2 text-[11px] text-slate-400 break-keep">
                       조건에 맞는 문제가 없습니다
                     </p>
                   ) : (
@@ -2464,12 +2970,20 @@ function ComposerListPaneInner({
       ) : (
         // @container: 액션 라벨 접힘 축은 **컨테이너 폭**이다(뷰포트 아님) —
         // 조판이 열리면 이 열이 420px 로 눌리는데 뷰포트는 그대로다(E21-4).
-        <div className="@container min-h-0 flex-1 overflow-y-auto px-3 py-2">
+        // [E31] ref = 되짚기 스크롤이 움직이는 **유일한** 컨테이너(위 effect 주석).
+        <div
+          ref={cardScrollRef}
+          // [E31] 되짚기 게이트의 계약 셀렉터. 클래스 문자열로 스크롤 컨테이너를
+          // 집던 프로브는 유틸 한 글자만 바뀌어도 조용히 죽는다(§3.10.27 E28 이
+          // 프로브 5종을 그렇게 잃었다) — 속성으로 못 박는다.
+          data-composer-scroll="1"
+          className="@container min-h-0 flex-1 overflow-y-auto px-3 py-2"
+        >
           <DragSelect
             deferCommit
             value={selectedKeys}
             onChange={handleMarquee}
-            className="flex flex-col gap-1.5"
+            className="flex flex-col gap-2"
           >
             {/* ── [E28] §3.10.27 — 지문 카드 목록(두 축이 함께 보이는 방) ──
                 평면 경로(아래 visibleRows.map)는 **손대지 않았다**(1줄 제목 R6

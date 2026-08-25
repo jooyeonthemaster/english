@@ -307,21 +307,25 @@ function mergeQueueItems(
   // 같은 지문(passage.id)에 대해 AI 작업이 여러 건 존재할 수 있어 jobQueue 안에
   // 동일 id 가 중복될 수 있다. 어느 것을 채택할지가 중요하다:
   // 폴링 API(/api/workbench/ai-jobs?view=passage-list)는 createdAt desc 로 주므로
-  // 배열 앞이 최신이다. 예전 `new Map(jobQueue.map(...))` 은 뒤 항목이 앞을 덮어
-  // **가장 오래된 잡**을 채택했다 — 이미 분석한 지문을 재생성하면 과거 COMPLETED
-  // 잡이 이겨 status 가 done 으로 굳고, 진행중 필터에서 빠져 로딩 카드 자체가
-  // 사라졌다(26-07-25 실사고). 진행중을 우선하고, 동률이면 첫 등장(=최신)을 남긴다.
-  const isActiveStatus = (s: QueuedPassageStatus) => s === "pending" || s === "analyzing";
+  // (`ai-jobs/route.ts:121` `orderBy: { createdAt: "desc" }`) **배열 앞이 최신**이다.
+  // 예전 `new Map(jobQueue.map(...))` 은 뒤 항목이 앞을 덮어 **가장 오래된 잡**을
+  // 채택했다 — 이미 분석한 지문을 재생성하면 과거 COMPLETED 잡이 이겨 status 가
+  // done 으로 굳고, 진행중 필터에서 빠져 로딩 카드 자체가 사라졌다(26-07-25 실사고).
+  //
+  // ⚠ 그 수리는 「진행중(pending/analyzing) 우선, 동률이면 최신」이었는데, 그
+  //   **활성 우선**이 반대 방향의 결함을 만들었다(RCA RC-1 층②): 스테일 청소가
+  //   아직 안 돈 **좀비 PROCESSING 행**(1618 실측 602.7s·668.6s 생존)이 남아
+  //   있으면, 그 뒤에 새로 만들어져 이미 COMPLETED 된 잡을 좀비가 가린다 →
+  //   다 만들어진 학습지가 계속 「생성 중」으로 돌고, 같은 술어를 읽는
+  //   use-studio-queue 의 busy 필터가 **새 발사까지 막는다.**
+  // ⇒ 채택 규칙은 「무조건 최신 1건」이다. 이것만으로 26-07-25 사고도 그대로
+  //   막힌다 — 재생성하면 새 잡이 배열 맨 앞이라 진행중이 자연히 이긴다.
+  //   활성 우선은 그 사고를 막는 데 **필요한 조건이 아니었고, 그 덤이 사고를 냈다.**
+  // ⚠ 이 계약은 위 orderBy 에 기댄다. 폴 응답 정렬을 바꾸면 여기가 조용히 깨진다
+  //   (타입 에러 0 · 콘솔 0 · 카드 상태만 틀림).
   const jobById = new Map<string, QueuedPassage>();
   for (const item of jobQueue) {
-    const prev = jobById.get(item.id);
-    if (!prev) {
-      jobById.set(item.id, item);
-      continue;
-    }
-    if (!isActiveStatus(prev.status) && isActiveStatus(item.status)) {
-      jobById.set(item.id, item);
-    }
+    if (!jobById.has(item.id)) jobById.set(item.id, item);
   }
   const seen = new Set<string>();
   const merged: QueuedPassage[] = [];
@@ -623,6 +627,68 @@ export interface AnalysisStreamPreview {
 }
 
 /**
+ * 스트림이 done 프레임 없이 끊겼음을 나타내는 센티넬(RCA RC-2 처방 #7).
+ *
+ * 왜 전용 클래스인가: 이 시점에 서버는 **생성·과금·저장을 이미 끝냈을 수 있다**
+ * (fast/route.ts 의 SSE 래퍼는 클라이언트가 끊겨도 핸들러를 계속 돌린다 —
+ * `:203-206` 주석이 그 계약이다). 그런데 예전 코드는 여기서 평범한 Error 를
+ * 던졌고 소비부 3곳이 그걸 `applyAnalysisJobError` 로 받아 카드를 **error 로
+ * 못박았다** — 「돈은 나갔고 DB 엔 COMPLETED 인데 화면은 실패」의 직접 원인이다.
+ * 더 나쁜 것은 그다음이다: 상위 완료 넛지 술어가 원래
+ * `status === "done" && (prev === "pending" || prev === "analyzing")` 라서
+ * 한 번 error 를 거치면(analyzing→error→done) prev 가 error 가 되어 **완료를
+ * 알리는 표면이 0개**가 됐다(RCA RC-2 층⑤). 그 술어는 상위에서 따로 넓히는
+ * 중이지만, **애초에 error 를 만들지 않는 것**이 근본 수리다 — 술어를 넓혀도
+ * 로즈 실패 카드가 한 번 스치는 사실은 그대로이고, 그 사이 사용자는 이미
+ * 「실패했다」를 본다.
+ * ⇒ 절단은 「실패」가 아니라 「판정 보류」다. 유일한 판정자는 잡 폴링이다.
+ */
+class AnalysisStreamTruncated extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "AnalysisStreamTruncated";
+  }
+}
+
+/**
+ * 분석 요청 1건의 클라이언트 상한(ms).
+ * 서버 `maxDuration = 300` + SSE 래퍼 하트비트([E29-1], 15초 `: hb`)를 감안한
+ * 여유값이며, 같은 리포의 `use-studio-queue.ts` `AbortSignal.timeout(330_000)`
+ * 과 같은 규약이다. 이것이 없으면 게이트웨이가 응답을 붙잡고 놓지 않을 때
+ * fetch 가 **영원히** 매달리고, 그 카드에는 종결 수단이 아예 없다.
+ * ⚠ 이 타임아웃이 만든 AbortError 는 절단과 **같은 취급**이어야 한다
+ *   (RCA §4 처방 #8) — 320초를 채웠다면 서버 잡은 거의 확실히 존재하므로
+ *   error 로 못박으면 위와 똑같은 오탐을 새로 만든다.
+ */
+const ANALYSIS_REQUEST_TIMEOUT_MS = 320_000;
+
+/**
+ * 절단·타임아웃을 「확인 중」으로 붙잡아 두는 상한(ms).
+ * 이 창 안에 그 지문의 잡 행이 폴링에 한 번이라도 보이면 판정은 그 행이 한다.
+ * 끝내 한 행도 안 보이면 = 잡이 아예 안 생긴 요청이므로 종결시킨다 —
+ * 안 그러면 카드가 영원히 도는 **새 결함**이 된다(에러 0·콘솔 0·화면만 멈춤).
+ */
+const TRUNCATED_CONFIRM_WINDOW_MS = 120_000;
+
+/** 절단·타임아웃 시의 「확인 중」 문구 — 자구는 md-stream 계약 그대로 유지한다. */
+const ANALYSIS_STREAM_TRUNCATED_MESSAGE =
+  "분석 스트림이 중간에 끊겼습니다. 완료 여부는 잠시 후 목록에서 자동으로 반영됩니다.";
+
+/** 확인 창이 끝나도록 잡 행이 한 번도 안 보였을 때의 **종결** 문구. */
+const ANALYSIS_CONFIRM_FAILED_MESSAGE =
+  "생성 요청의 진행 상태를 확인하지 못했습니다. 목록을 새로고침해 결과를 확인해 주세요.";
+
+/**
+ * AbortSignal.timeout 이 만든 거절인가.
+ * instanceof 를 쓰지 않는 이유: 브라우저는 `DOMException`, 일부 런타임·폴리필은
+ * 평범한 `Error` 를 던져 클래스로 가르면 환경에 따라 조용히 새 오탐이 생긴다.
+ */
+function isAbortLikeError(err: unknown): boolean {
+  const name = (err as { name?: unknown } | null | undefined)?.name;
+  return name === "AbortError" || name === "TimeoutError";
+}
+
+/**
  * 분석 잡 요청 body 조립 — **export 는 계약 테스트 전용**(런타임 소비처는
  * startPassageAnalysisJob 하나). 스튜디오 부분 분석 필드(targetSections/
  * sourceModule)와 파이널 원페이지 플래그(finalOnepage)는 부재 시 스프레드가
@@ -653,6 +719,14 @@ export function buildAnalysisRequestBody(
   };
 }
 
+/**
+ * 분석 잡 발사 — **절단 계열을 센티넬 하나로 접는 유일한 자리**.
+ *
+ * `AbortSignal.timeout` 이 터지면 fetch 도, 이미 진행 중이던
+ * `reader.read()`(스트림 본문)도 함께 AbortError 로 거절된다. 두 지점이 다르므로
+ * 실제 요청은 아래 `runPassageAnalysisRequest` 로 내리고 감싸기는 여기서만 한다 —
+ * 안 그러면 두 곳에서 같은 변환을 복제하게 되고, 한쪽만 고쳐진 채 갈린다.
+ */
 async function startPassageAnalysisJob(
   passageId: string,
   promptConfig: AnalysisPromptConfig,
@@ -660,6 +734,24 @@ async function startPassageAnalysisJob(
     fast?: boolean;
     onPreview?: (preview: AnalysisStreamPreview) => void;
   } = { fast: true },
+): Promise<PassageAnalysisJobResponse> {
+  try {
+    return await runPassageAnalysisRequest(passageId, promptConfig, options);
+  } catch (err) {
+    if (isAbortLikeError(err)) {
+      throw new AnalysisStreamTruncated(ANALYSIS_STREAM_TRUNCATED_MESSAGE);
+    }
+    throw err;
+  }
+}
+
+async function runPassageAnalysisRequest(
+  passageId: string,
+  promptConfig: AnalysisPromptConfig,
+  options: {
+    fast?: boolean;
+    onPreview?: (preview: AnalysisStreamPreview) => void;
+  },
 ): Promise<PassageAnalysisJobResponse> {
   const endpoint = options.fast
     ? "/api/workbench/ai-jobs/passage-analysis/fast"
@@ -671,6 +763,10 @@ async function startPassageAnalysisJob(
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
+    // ⚠ 요청 **바이트**는 건드리지 않는다 — body 는 buildAnalysisRequestBody 가
+    //   만든 그대로이고(§5 P6 무회귀, tests/unit/studio-workbench-contract),
+    //   signal 은 요청 내용이 아니라 클라이언트 종결 수단이라 그 계약 밖이다.
+    signal: AbortSignal.timeout(ANALYSIS_REQUEST_TIMEOUT_MS),
     body: JSON.stringify(buildAnalysisRequestBody(passageId, promptConfig, wantStream)),
   });
 
@@ -678,7 +774,12 @@ async function startPassageAnalysisJob(
     // 비스트리밍 응답(기존 경로 또는 가드 단계에서의 조기 JSON 반환)
     const data = (await res.json().catch(() => ({}))) as PassageAnalysisJobResponse;
     if (!res.ok || data.error) {
-      throw new Error(data.details || data.error || "Failed to start passage analysis job.");
+      // ⚠ [E29-5] `details` 는 zod 400 에서 **ZodIssue 배열**로 온다(fast/route.ts
+      //   Invalid payload 분기). 배열을 그대로 Error 에 넘기면 message 가
+      //   `String(배열)` = "[object Object]" 가 되어 교사 화면에 그 문자열이 뜬다.
+      //   문자열일 때만 상세로 쓰고, 아니면 error 자구로 폴백한다.
+      const detail = typeof data.details === "string" ? data.details : null;
+      throw new Error(detail || data.error || "Failed to start passage analysis job.");
     }
     return data;
   }
@@ -763,9 +864,10 @@ async function consumeAnalysisStream(
   if (!done) {
     // 서버는 저장까지 끝냈을 수 있다 — 잡 폴링이 완료 카드를 복원하므로
     // 단정적 실패가 아니라 확인 안내로 표면화한다(md-stream 과 동일 문구 계약).
-    throw new Error(
-      "분석 스트림이 중간에 끊겼습니다. 완료 여부는 잠시 후 목록에서 자동으로 반영됩니다.",
-    );
+    // ⚠ 예전에는 여기서 평범한 Error 를 던졌고 소비부 3곳이 그것을 error 로
+    //   못박아 **이 주석이 선언한 계약을 코드가 정면으로 배신**했다.
+    //   센티넬로 바꿔 계약을 집행한다(RCA RC-2 처방 #7).
+    throw new AnalysisStreamTruncated(ANALYSIS_STREAM_TRUNCATED_MESSAGE);
   }
   if (done.error) {
     throw new Error(done.details || done.error);
@@ -936,6 +1038,67 @@ export function usePassageQueue(
     pollRef.current?.bump();
   }, [activeCount]);
 
+  // ── 절단·타임아웃 = 실패가 아니라 「판정 보류」 ─────────────────────────
+  // AnalysisStreamTruncated 를 받는 3곳(addToQueue · addManyToQueue ·
+  // retryAnalysis)이 공유하는 처리. 카드를 error 로 못박지 않고 analyzing 으로
+  // **붙잡아** 두고, 판정은 아래 폴 루프(서버 잡 행)에 통째로 넘긴다.
+  // 부수 효과로 상위 완료 넛지도 정상화된다 — 카드가 error 를 거치지 않으므로
+  // 넛지 술어의 prev 가 "analyzing" 으로 남는다(RCA RC-2 층⑤의 원인 축).
+  const jobQueueRef = useRef<QueuedPassage[]>([]);
+  useEffect(() => {
+    jobQueueRef.current = jobQueue;
+  }, [jobQueue]);
+  /** 확인 창 타이머 — 지문당 1개. 언마운트 시 전량 해제한다. */
+  const confirmTimersRef = useRef(new Map<string, ReturnType<typeof setTimeout>>());
+  useEffect(() => {
+    const timers = confirmTimersRef.current;
+    return () => {
+      for (const timer of timers.values()) clearTimeout(timer);
+      timers.clear();
+    };
+  }, []);
+
+  const applyStreamTruncation = useCallback(
+    (passageId: string) => {
+      const hold = (item: QueuedPassage): QueuedPassage => {
+        const next = clearPreview(item);
+        // 폴링이 이미 판정을 끝냈으면(done/error) 그것을 되돌리지 않는다 —
+        // 뒤늦게 도착한 절단이 완료 카드를 다시 「생성 중」으로 되감으면
+        // 그것 자체가 새 오탐이다.
+        if (next.status === "done" || next.status === "error") return next;
+        return { ...next, status: "analyzing", error: null };
+      };
+      updateQueueItem(setLocalQueue, passageId, hold);
+      // jobQueue 사본도 같이 — 병합이 job 을 뒤에 전개하므로 여기 남은 죽은
+      // 미리보기가 화면에서 이긴다(좀비 카드).
+      updateQueueItem(setJobQueue, passageId, hold);
+      notifyJobsChanged();
+      // 판정자는 폴링이다 — idleMs 를 기다리지 말고 즉시 1회 확인시킨다.
+      pollRef.current?.bump();
+
+      // ⚠ 붙잡아 두기만 하면 「잡이 아예 안 생긴 요청」에서 카드가 **영원히**
+      //   돈다. 확인 창 안에 그 지문의 잡 행이 폴링에 한 번도 안 보이면 종결한다.
+      const timers = confirmTimersRef.current;
+      const running = timers.get(passageId);
+      if (running) clearTimeout(running);
+      timers.set(
+        passageId,
+        setTimeout(() => {
+          timers.delete(passageId);
+          if (jobQueueRef.current.some((job) => job.id === passageId)) return;
+          const giveUp = new Error(ANALYSIS_CONFIRM_FAILED_MESSAGE);
+          updateQueueItem(setLocalQueue, passageId, (item) =>
+            item.status === "analyzing"
+              ? applyAnalysisJobError(clearPreview(item), giveUp)
+              : item,
+          );
+          notifyJobsChanged();
+        }, TRUNCATED_CONFIRM_WINDOW_MS),
+      );
+    },
+    [notifyJobsChanged, setLocalQueue],
+  );
+
   const addToQueue = useCallback(
     async (
       passage: QueuePassageInput,
@@ -968,6 +1131,12 @@ export function usePassageQueue(
           notifyJobsChanged();
         })
         .catch((err) => {
+          // 절단·타임아웃은 실패가 아니다 — 카드를 붙잡고 판정을 폴링에
+          // 넘긴다(RCA RC-2 처방 #7·#8).
+          if (err instanceof AnalysisStreamTruncated) {
+            applyStreamTruncation(passage.id);
+            return;
+          }
           updateQueueItem(setLocalQueue, passage.id, (item) =>
             applyAnalysisJobError(clearPreview(item), err),
           );
@@ -979,7 +1148,7 @@ export function usePassageQueue(
           notifyJobsChanged();
         });
     },
-    [notifyJobsChanged, setLocalQueue],
+    [applyStreamTruncation, notifyJobsChanged, setLocalQueue],
   );
 
   const addManyToQueue = useCallback(
@@ -1023,6 +1192,15 @@ export function usePassageQueue(
             notifyJobsChanged();
             return response;
           } catch (err) {
+            // 절단·타임아웃은 실패가 아니다 — 카드를 붙잡고 판정을 폴링에
+            // 넘긴다(RCA RC-2 처방 #7·#8). throw 는 그대로 둔다:
+            // runWithConcurrency 가 항목마다 try/catch 로 감싸
+            // PromiseSettledResult 로만 수집하므로 다른 지문 발사에 전파되지
+            // 않고(RCA §2-B 12), 호출부는 그 결과 배열을 읽지 않는다.
+            if (err instanceof AnalysisStreamTruncated) {
+              applyStreamTruncation(passage.id);
+              throw err;
+            }
             updateQueueItem(setLocalQueue, passage.id, (item) =>
               applyAnalysisJobError(clearPreview(item), err),
             );
@@ -1040,7 +1218,7 @@ export function usePassageQueue(
         failed: 0,
       };
     },
-    [notifyJobsChanged, setLocalQueue],
+    [applyStreamTruncation, notifyJobsChanged, setLocalQueue],
   );
 
   const enqueueManyPending = useCallback(
@@ -1089,6 +1267,12 @@ export function usePassageQueue(
           notifyJobsChanged();
         })
         .catch((err) => {
+          // 절단·타임아웃은 실패가 아니다 — 카드를 붙잡고 판정을 폴링에
+          // 넘긴다(RCA RC-2 처방 #7·#8).
+          if (err instanceof AnalysisStreamTruncated) {
+            applyStreamTruncation(passageId);
+            return;
+          }
           updateQueueItem(setLocalQueue, passageId, (item) =>
             applyAnalysisJobError(clearPreview(item), err),
           );
@@ -1098,7 +1282,7 @@ export function usePassageQueue(
           notifyJobsChanged();
         });
     },
-    [notifyJobsChanged, queue, setLocalQueue],
+    [applyStreamTruncation, notifyJobsChanged, queue, setLocalQueue],
   );
 
   // 로컬 큐(화면)에서만 제거한다. 서버 삭제는 호출자(예: 분석 모달)가 이미

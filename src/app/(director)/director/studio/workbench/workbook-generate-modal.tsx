@@ -18,16 +18,20 @@
 // 파일 경로·export 이름·props 8개 시그니처도 불변이다(오케스트레이터 배선 무접촉).
 //
 // 로직 계약(§3.10.19 E19-2 — **표기 가격과 실제 청구의 일치가 계약**):
-//   · 오픈(마운트) 1회 getStudioSheetStates 배치 조회 — passages 는 열림 동안
-//     불변(오케스트레이터 계약 — 인라인 배열 전달 금지, §3.8.11 함정 2).
+//   · getStudioSheetStates 배치 조회 — passages 는 열림 동안 불변(오케스트레이터
+//     계약 — 인라인 배열 전달 금지, §3.8.11 함정 2). ⚠ **마운트 1회 스냅샷이
+//     아니다**: analyzing 이 남아 있는 동안 6초 폴링으로 갱신한다(RCA #4 —
+//     스냅샷 고착이 「잡이 끝나도 CTA 가 영구히 죽어 있다」의 직접 원인이었다).
 //   · 발사 대상 = !analyzing && (상품이 국어를 허용 || !korean).
 //     국어 지문 + practice/final 은 fast 라우트가 400 으로 막는다 — 표기에서부터
 //     제외해야 "돈은 냈는데 기본만 나왔다"가 생기지 않는다.
-//   · 단가 = basic 은 basicCached 지문에서 0(라우트 캐시 단락 술어의 미러),
-//     practice/final 은 **항상** 과금(라우트가 캐시 단락을 건너뛴다 — 보유 중이라고
-//     0으로 적으면 거짓 견적).
+//   · 단가 = **지문별 가변**(E30 §3-5). basic 은 basicCached 지문에서 0(라우트
+//     캐시 단락 술어의 미러), practice 는 기본 학습지 이력이 있으면 ◈5·없으면 ◈10
+//     (state.practiceUnitCost = 서버 판정 정본), final 은 항상 정액.
+//     미상은 **상한**으로 적는다 — 표기가 실청구보다 낮으면 안 된다.
 // 발사: queueApi.launchSheets(targets, variant, classId) 단일 경로
-// (targetSections 는 큐 엔진이 싣지 않는다 — E19-1). 성공 시 onLaunched().
+// (targetSections 는 큐 엔진이 싣지 않는다 — E19-1). 실전은 지문별 practiceRoute
+// 로 fast/(c) 라우트가 갈린다(E30 §3-6 — 라우팅 결정 = 가격 결정). 성공 시 onLaunched().
 // CTA 라벨 정본(E19-3): 학습지 생성 / 지문 N개 바로 준비하기 / {상품명} · 지문 N개 생성.
 // ============================================================================
 
@@ -60,6 +64,14 @@ import {
   type StudioSheetVariant,
 } from "@/lib/studio/sheet-products";
 import type { StudioQueueApi } from "./use-studio-queue";
+
+/**
+ * [RCA #4] analyzing 이 남아 있는 동안의 상태 재조회 주기.
+ * 잡 실행 벽이 분 단위(실측 124~192초)라 초 단위 정밀도가 필요 없고, 이 조회는
+ * 학원 스코프 배치 질의라 짧을수록 비싸다 — RCA 권고 창(5~10초)의 중앙값.
+ * analyzing 이 0이 되면 인터벌 자체가 걷힌다(상시 폴러가 아니다).
+ */
+const STATES_POLL_MS = 6_000;
 
 export interface WorkbookModalPassage {
   id: string;
@@ -108,6 +120,12 @@ interface SheetPlan {
   totalCredits: number;
   /** basic 전용 — 저장본 단락으로 무과금이 되는 지문 수 */
   cachedCount: number;
+  /**
+   * [E30 §3-5] practice 전용 — 기본 학습지 이력이 있어 **할인 단가**가 적용되는
+   * 지문 수(= (c) 라우트로 가는 무리). 캡션과 총액이 **같은 값**에서 나와야
+   * 「N개는 ◈5」라고 적어 놓고 총액은 전액인 거짓 견적이 생기지 않는다.
+   */
+  discountedCount: number;
   /** practice/final 전용 — 상품 미지원으로 빠지는 국어 지문 수 */
   koreanExcluded: number;
   /** 전 지문이 국어 = 이 상품으로 만들 수 있는 지문이 하나도 없다 */
@@ -145,26 +163,51 @@ function WorkbookModalBody({
   // 연타 재발사를 막는다 — 닫힘 = 언마운트라 리셋 불필요.
   const [launching, setLaunching] = useState(false);
 
-  // 오픈(마운트) 시 1회 배치 조회(E19-2) — passages 는 열림 동안 불변
-  // (오케스트레이터 계약). reloadKey 는 오류 시 「다시 불러오기」 재시도용.
-  useEffect(() => {
-    const ids = passages.map((p) => p.id);
-    if (ids.length === 0) return;
-    let cancelled = false;
-    getStudioSheetStates({ passageIds: ids })
-      .then((res) => {
-        if (cancelled) return;
-        if (res.success && res.data) setStates(res.data);
-        else setStatesError(res.error ?? "지문 상태를 불러오지 못했습니다.");
-      })
-      .catch(() => {
-        if (!cancelled)
+  // ── 배치 조회 1회분 — 마운트·「다시 불러오기」·폴링·차단 클릭이 **같은 함수**를
+  //    쓴다(E19-2 배치 조회 계약 + RCA #4 폴링 승격). passages 는 열림 동안 불변
+  //    (오케스트레이터 계약)이라 ids 는 사실상 상수다.
+  //
+  // opts.silent = 배경 재조회(폴링·자동 재조회). 실패해도 rose 오류 박스를
+  //   세우지 않는다 — 이미 정상적으로 떠 있는 화면을 배경 폴 1회 실패로 오류
+  //   화면으로 바꾸면, 사용자가 하지도 않은 조작의 결과를 뒤집어쓴다.
+  //
+  // seq 가드 = 폴링이 붙으면서 요청이 **겹칠 수 있게 됐다**. 늦게 도착한 이전
+  //   응답이 최신 상태를 덮으면 이미 끝난 잡이 다시 analyzing 으로 되살아나
+  //   CTA 가 깜빡인다(구판은 요청이 항상 1건이라 이 축이 없었다).
+  //   언마운트 시에도 seq 를 올려 in-flight 전량을 한 번에 무효화한다.
+  const reqSeqRef = useRef(0);
+  useEffect(
+    () => () => {
+      reqSeqRef.current += 1;
+    },
+    [],
+  );
+  const loadStates = useCallback(
+    (opts?: { silent?: boolean }) => {
+      const ids = passages.map((p) => p.id);
+      if (ids.length === 0) return;
+      const seq = (reqSeqRef.current += 1);
+      getStudioSheetStates({ passageIds: ids })
+        .then((res) => {
+          if (seq !== reqSeqRef.current) return;
+          if (res.success && res.data) {
+            setStates(res.data);
+            setStatesError(null);
+          } else if (!opts?.silent) {
+            setStatesError(res.error ?? "지문 상태를 불러오지 못했습니다.");
+          }
+        })
+        .catch(() => {
+          if (seq !== reqSeqRef.current || opts?.silent) return;
           setStatesError("네트워크 오류로 지문 상태를 불러오지 못했습니다.");
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [passages, reloadKey]);
+        });
+    },
+    [passages],
+  );
+  // 오픈(마운트) 1회 + reloadKey(오류 박스의 「다시 불러오기」) 재시도.
+  useEffect(() => {
+    loadStates();
+  }, [loadStates, reloadKey]);
 
   // 접근성: ESC 3중 사다리(E19-3) — 미리보기(z-[70]) → 헤더 팝오버(다지문 목록·
   // 1지문 전문) → 모달 닫기. 미리보기 모달은 자체 keydown 리스너가 **없어**
@@ -207,6 +250,24 @@ function WorkbookModalBody({
     [passages, stateById],
   );
 
+  // ── [RCA #4] analyzing 이 남아 있는 동안 주기 재조회 ──────────────────────
+  // 구판은 **마운트 1회 스냅샷**이었다. 서버의 「지문당 활성 잡 1개」 배타는 상품을
+  // 구분하지 않으므로 다른 상품(예: 실전 워크북)이 도는 지문은 targets 에서 통째로
+  // 빠지는데, 그 잡이 끝나도 모달은 스스로 회복하지 못했다 — **모달을 닫았다 다시
+  // 열기 전까지 CTA 가 영구히 죽어 있었다**(1618 신고의 직접 원인 · RCA RC-1 층①).
+  // 게다가 정상 로드된 뒤에는 화면에 재조회 수단이 아예 없다(「다시 불러오기」는
+  // 오류 박스 안에만 산다). **모달이 열려 있는 한 스냅샷은 계약이 아니라 결함이다** —
+  // 잡이 끝나면 CTA 가 스스로 살아나야 한다.
+  // silent 인 이유는 위 loadStates 주석 참조(배경 폴 실패로 화면을 뒤집지 않는다).
+  useEffect(() => {
+    if (analyzingCount === 0) return;
+    const timer = window.setInterval(
+      () => loadStates({ silent: true }),
+      STATES_POLL_MS,
+    );
+    return () => window.clearInterval(timer);
+  }, [analyzingCount, loadStates]);
+
   // 3상품 견적 일괄 산출. 상태 미로딩 구간에서는 stateById 가 비어 낙관적으로
   // (전 지문 발사 가능·전액 과금) 계산된다 — 요약 스트립이 「계산 중」을 띄우고
   // CTA 도 !loaded 로 잠기므로 이 값이 화면에 확정처럼 보이지는 않는다.
@@ -229,19 +290,39 @@ function WorkbookModalBody({
                 (p) => stateById.get(p.id)?.basicCached === true,
               ).length
             : 0;
-        const totalCredits = targets.reduce(
-          (sum, p) =>
-            product.id === "basic" &&
-            stateById.get(p.id)?.basicCached === true
-              ? sum
-              : sum + product.unitCost,
-          0,
-        );
+        // ── [E30 §3-5] 지문별 가변 단가 ────────────────────────────────────
+        // 구판은 `product.unitCost` **단일 상수**를 지문 수만큼 곱했다. 실전
+        // 학습지는 같은 발사 안에서도 지문마다 값이 다르다 — 기본 학습지 이력이
+        // 있으면 부모 위에 자식 문서만 만들어 ◈5, 없으면 기본+실전을 함께 만들어
+        // ◈10 이다(§2-1 라우팅 표). 곱셈으로는 표현할 수 없으므로 **지문별 합**이다.
+        //
+        // 단가 정본은 서버가 준 state.practiceUnitCost(= getPracticeSheetCreditCost)다.
+        // 미상이면 product.unitCost(상한 ◈10)로 떨어뜨린다 — **표기 ≥ 실청구**가
+        // 이 파일의 최상위 불변식이고(위 basicCached=false 취급과 같은 방향),
+        // 미상을 낮은 값으로 낙관하면 "표기보다 더 빠졌다"가 된다.
+        const unitOf = (p: WorkbookModalPassage): number => {
+          const s = stateById.get(p.id);
+          if (product.id === "practice") {
+            return s?.practiceUnitCost ?? product.unitCost;
+          }
+          if (product.id === "basic" && s?.basicCached === true) return 0;
+          return product.unitCost;
+        };
+        const totalCredits = targets.reduce((sum, p) => sum + unitOf(p), 0);
+        // 할인 단가가 걸린 지문 수 — 카드 가격 캡션이 이 값으로 개수를 말한다.
+        // 판정 술어는 hasBasic(서버 스냅샷) 하나이며 practiceUnitCost·practiceRoute
+        // 와 **같은 조회**에서 나오므로 셋이 갈리지 않는다(§3-2).
+        const discountedCount =
+          product.id === "practice"
+            ? targets.filter((p) => stateById.get(p.id)?.hasBasic === true)
+                .length
+            : 0;
         return {
           product,
           targets,
           totalCredits,
           cachedCount,
+          discountedCount,
           koreanExcluded,
           // 상태 로드 전에는 잠그지 않는다 — 미로딩 = korean 미상이라 섣부른
           // 비활은 카드가 켜졌다 꺼지는 깜빡임이 된다.
@@ -279,27 +360,56 @@ function WorkbookModalBody({
         id: p.id,
         title: p.title,
         content: p.content,
+        // [E30 §3-6] 라우팅 결정 = 가격 결정. 견적(practiceUnitCost)을 뽑은 것과
+        // **같은 스냅샷**의 값을 그대로 넘긴다 — 큐가 자체 판정을 다시 하면
+        // 표기와 청구가 갈릴 수 있다(§3-3 TOCTOU 계약). 미상은 큐가 "fast"
+        // (상한가)로 떨어뜨리므로 과다 청구 방향으로는 새지 않는다.
+        practiceRoute: stateById.get(p.id)?.practiceRoute,
       })),
       variant,
       selectedClassId,
     );
+    if (launched === 0) {
+      // ── [RCA #5] 전량 제외 = 모달 표기와 라이브 큐가 갈렸다는 뜻이다 ────────
+      // 구판은 info 토스트만 띄우고 모달을 연 채 숫자도 그대로 뒀다 — 사용자에겐
+      // 「눌렀는데 아무 일도 안 일어났다」로 읽힌다(모달 스냅샷과 큐 busy 필터는
+      // 원천이 다르다: 전자는 마운트 조회, 후자는 5~20초 폴링 큐).
+      // 톤을 error 로 올리고 **즉시 재조회**해 표기를 라이브와 맞춘다.
+      toast.error(
+        skipped.length > 0
+          ? `분석이 이미 진행 중이라 시작하지 못했습니다: ${skipped.join(", ")}`
+          : "생성을 시작할 지문이 없습니다.",
+      );
+      loadStates({ silent: true });
+      return;
+    }
     if (skipped.length > 0) {
       toast.info(`분석이 이미 진행 중이라 제외했습니다: ${skipped.join(", ")}`);
     }
-    if (launched > 0) {
-      // 총액 0 = 전량 basicCached — 서버가 캐시 단락으로 즉시 COMPLETED 해서 큐가
-      // 1초도 돌지 않고 도크에도 스쳐가듯 지나간다(라우트 캐시 단락의 미러가
-      // basicCached 다). 그러면 사용자에겐 「아무 일도 안 일어났다」로 읽히므로
-      // 착지를 토스트로 못박는다. 유료 발사(총액>0)는 큐 스트립이 진행을 계속
-      // 말하므로 토스트를 얹지 않는다 — 같은 사실의 이중 고지는 소음이다.
-      if (plan.totalCredits === 0) {
-        toast.success(`지문 ${launched}개의 학습지를 바로 준비했어요`);
-      }
-      setLaunching(true);
-      onLaunched();
-    } else if (skipped.length === 0)
-      toast.error("생성을 시작할 지문이 없습니다.");
-  }, [loaded, planById, variant, queueApi, selectedClassId, onLaunched]);
+    // ── [RCA #20] 착지 토스트는 **유료 발사에도** 뜬다 ──────────────────────
+    // 구판은 총액 0(전량 basicCached — 캐시 단락으로 즉시 COMPLETED 라 큐가 1초도
+    // 돌지 않는다)일 때만 띄웠다. 그런데 실전·파이널은 캐시 단락이 없어 **항상
+    // 유료**라 이 토스트 경로가 구조적으로 도달 불가였고, 진행을 말하는 우측
+    // 「지문 현황」은 xl 미만에서 드로어 뒤에 숨어 있다(hidden xl:flex) —
+    // 발사가 성공했다는 신호가 화면에 **0개**인 상태가 만들어졌다.
+    // 그래서 유료 발사에는 착지 사실 + 진행을 볼 곳을 함께 말한다.
+    toast.success(
+      plan.totalCredits === 0
+        ? `지문 ${launched}개의 학습지를 바로 준비했어요`
+        : `${plan.product.label} · 지문 ${launched}개 생성을 시작했어요. 오른쪽 「지문 현황」에서 진행 상황을 볼 수 있어요.`,
+    );
+    setLaunching(true);
+    onLaunched();
+  }, [
+    loaded,
+    planById,
+    variant,
+    queueApi,
+    stateById,
+    selectedClassId,
+    onLaunched,
+    loadStates,
+  ]);
 
   const launchDisabled = !loaded || targetCount === 0;
   // CTA 라벨 정본(E19-3 확정) — 변형 금지.
@@ -313,6 +423,39 @@ function WorkbookModalBody({
   // 0이 되는 경로는 남는다 — 구 푸터 캡션 행의 사유 고지 계약을 이 자리로 승계.
   // (국어 전량 제외는 해당 카드 캡션이 이미 말하므로 중복 고지하지 않는다.)
   const noTargetByAnalyzing = loaded && targetCount === 0 && analyzingCount > 0;
+
+  // ── [RCA #23] 차단 클릭의 **사유 고지** ───────────────────────────────────
+  // 구판은 무조건 상품 카드 3장을 글로우했다. 글로우의 뜻은 "다른 구성을 골라
+  // 보라"인데, 실제 원인이 **대상 부재**(analyzing 전량 제외)일 때는 어느 상품을
+  // 골라도 똑같이 0개라 사용자를 틀린 방향으로 유도한다 — 원인은 상품이 아니다.
+  // 그래서 사유별로 갈라 말하고, 회복 가능한 사유에는 **즉시 재조회**를 붙인다
+  // (정상 로드 후에는 화면에 재조회 수단이 없다 — 「다시 불러오기」는 오류 박스
+  // 안에만 산다). 글로우는 「상품을 바꾸면 실제로 풀리는」 사유에만 남긴다.
+  const announceBlocked = useCallback(() => {
+    if (statesError !== null) {
+      toast.error(statesError);
+      loadStates();
+      return;
+    }
+    if (!loaded) {
+      // [RCA #11] 이 분기는 구판에서 **도달 불가**였다(클릭 게이트가 !loaded 를
+      // 먼저 잘라 클릭이 완전 무반응이었다). 사유를 말할 기회를 없애는 가드는
+      // 방어가 아니라 침묵이다.
+      toast.info("지문 상태를 불러오는 중이에요. 잠시 뒤 다시 눌러 주세요.");
+      loadStates();
+      return;
+    }
+    if (noTargetByAnalyzing) {
+      // 어떤 상품의 잡이 도는지는 이 스냅샷이 알지 못한다(analyzing 은 상품을
+      // 구분하지 않는 단일 불리언이다) — 모르는 것을 아는 척 적지 않는다.
+      toast.info(
+        `분석이 진행 중인 지문 ${analyzingCount}개를 빼면 만들 지문이 없어요. 끝나면 자동으로 켜집니다.`,
+      );
+      loadStates({ silent: true });
+      return;
+    }
+    triggerHintGlowWithin(bodyRef.current, "[data-sheet-variant]");
+  }, [statesError, loaded, noTargetByAnalyzing, analyzingCount, loadStates]);
 
   // 지문 1개면 헤더에 제목 토글(전문 팝오버) — 어떤 지문의 학습지인지 즉시 식별.
   const singlePassage = passages.length === 1 ? passages[0] : null;
@@ -608,21 +751,50 @@ function WorkbookModalBody({
                         : plan.koreanExcluded > 0
                           ? `국어 지문 ${plan.koreanExcluded}개는 이 상품을 지원하지 않아 제외됩니다`
                           : null;
+                    // [E30 §3-5] 실전 전용 가격 캡션 — 카드 배지는 범위(◈5~◈10)만
+                    // 말하므로 **이번 선택에서 몇 개가 어느 값인지**를 여기서 못박는다.
+                    // 총액과 이 문장은 같은 discountedCount 에서 나온다(거짓 견적 금지).
+                    // 할인 0건일 때도 침묵하지 않는다 — 배지가 ◈5 를 보여준 뒤 총액이
+                    // 전액이면 사용자는 계산이 틀렸다고 읽는다.
+                    const fullPriced = plan.targets.length - plan.discountedCount;
+                    const priceCaption =
+                      !loaded ||
+                      product.id !== "practice" ||
+                      plan.targets.length === 0
+                        ? null
+                        : plan.discountedCount === 0
+                          ? `기본 학습지가 없어 ${fullPriced}개 모두 지문당 ◈${product.unitCost}(기본 학습지를 함께 만듭니다)`
+                          : fullPriced === 0
+                            ? `${plan.discountedCount}개는 기본 학습지가 있어 지문당 ◈${product.unitCostWithBasic}`
+                            : `${plan.discountedCount}개는 기본 학습지가 있어 지문당 ◈${product.unitCostWithBasic}, 나머지 ${fullPriced}개는 ◈${product.unitCost}`;
                     // 보유 학습지 덮어쓰기 경고 — **전체 분석 경로는 PRIME pages 를
-                    // 통째로 갈아끼운다**(fast/route.ts:1298 `pages: primeReport`,
-                    // 파이널은 748행 update). 3중 보존 병합(mergeReportPreservingExtras,
-                    // 1113행)은 `plan` 이 있는 **부분 요청에서만** 돈다 — 이 모달의
-                    // 발사는 전체 분석이라 그 보존을 타지 않는다. 즉 기존 학습지의
-                    // 편집분은 되돌릴 UI 없이 사라진다(E19 가 새로 들여온 파괴 경로).
-                    // 값을 내는 일이 아니어서 크레딧 캡션에 섞으면 묻히므로 amber 로
-                    // 따로 세운다. 축: basic/practice = hasBasic, final = hasFinal.
+                    // 통째로 갈아끼운다**(fast/route.ts `pages: primeReport`, 파이널은
+                    // 자기완결 블록의 update). 3중 보존 병합(mergeReportPreservingExtras)은
+                    // `plan` 이 있는 **부분 요청에서만** 돈다 — 이 모달의 발사는 전체
+                    // 분석이라 그 보존을 타지 않는다. 즉 기존 학습지의 편집분은 되돌릴
+                    // UI 없이 사라진다(E19 가 새로 들여온 파괴 경로). 값을 내는 일이
+                    // 아니어서 크레딧 캡션에 섞으면 묻히므로 amber 로 따로 세운다.
+                    //
+                    // ⚠ [E30 §2-2] **practice 축을 hasBasic → hasPractice 로 옮겼다.**
+                    // 실전이 분리 문서가 되면서 (c) 라우트는 부모 PRIME 행을 덮어쓰지
+                    // 않는다(읽기 + D3-b 강등뿐 — P2 「부모 바이트 무회귀」). 축을 그대로
+                    // 두면 「기본 학습지가 있는 지문 = 덮어씀」이 되어 **아무것도 잃지
+                    // 않는데 편집분 소실을 경고하는** 거짓 고지가 된다(구매 저지 유발).
+                    // 실전 재발사가 실제로 덮어쓰는 것은 기존 PRIME_PRACTICE 자식 행이다.
+                    // 남은 사각: 레거시 병합본(실전이 부모 pages 안에 남아 있는 366건)은
+                    // hasPractice=false 라 경고가 뜨지 않는데 D3-b 강등이 부모의 lw 를
+                    // 코어로 내린다. 그 내용은 자식 문서로 재생성돼 인쇄 산출은 보존되고,
+                    // 여기서 그걸 판정하려면 pages 를 끌어와야 해서(worksheets.ts 의
+                    // 「pages 를 절대 select 하지 않는다」 계약 위반) 축을 넓히지 않았다.
                     const overwriteCount = !loaded
                       ? 0
-                      : plan.targets.filter((p) =>
-                          product.id === "final"
-                            ? stateById.get(p.id)?.hasFinal === true
-                            : stateById.get(p.id)?.hasBasic === true,
-                        ).length;
+                      : plan.targets.filter((p) => {
+                          const s = stateById.get(p.id);
+                          if (product.id === "final") return s?.hasFinal === true;
+                          if (product.id === "practice")
+                            return s?.hasPractice === true;
+                          return s?.hasBasic === true;
+                        }).length;
                     const pick = () => {
                       if (disabled || launching) return;
                       setVariant(product.id);
@@ -684,7 +856,15 @@ function WorkbookModalBody({
                                 : "bg-slate-100 text-slate-500"
                             }`}
                           >
-                            지문당 ◈{product.unitCost}
+                            {/* [E30 §3-5] 기본 보유 여부로 단가가 갈리는 상품
+                                (=practice)은 **범위**로 적는다. 단일 값으로 적으면
+                                ◈5 는 과소 견적, ◈10 은 실제보다 비싸 보인다.
+                                판정을 `id === "practice"` 로 하지 않는 이유: 상품이
+                                늘 때 이 자리가 조용히 갈린다 — 정본(sheet-products)의
+                                두 단가가 다른가만 본다. */}
+                            {product.unitCostWithBasic === product.unitCost
+                              ? `지문당 ◈${product.unitCost}`
+                              : `지문당 ◈${product.unitCostWithBasic}~◈${product.unitCost}`}
                           </span>
                         </div>
                         {/* break-keep 필수 — 없으면 940 폭에서 「구문 분/석」
@@ -695,6 +875,13 @@ function WorkbookModalBody({
                         {caption ? (
                           <p className="break-keep pl-5 text-[10.5px] leading-4 text-slate-400">
                             {caption}
+                          </p>
+                        ) : null}
+                        {/* 가격 캡션은 회색 캡션과 **함께** 보일 수 있다(국어 제외 +
+                            지문별 단가는 둘 다 사실이다). 순서는 제외 얘기 → 값 얘기. */}
+                        {priceCaption ? (
+                          <p className="break-keep pl-5 text-[10.5px] leading-4 text-slate-400">
+                            {priceCaption}
                           </p>
                         ) : null}
                         {/* 회색 캡션과 **함께** 보일 수 있다 — 둘 다 사실이다
@@ -721,13 +908,17 @@ function WorkbookModalBody({
           <button
             type="button"
             // aria-disabled 관용구 — 비활처럼 보이되 클릭은 살려, 발사 대상이 0인
-            // 상태로 누르면 [data-sheet-variant] 카드들을 글로우해 "다른 구성을
-            // 골라 보라"를 유도한다(구 모듈 글로우 계승 — 훅만 교체).
+            // 상태로 누르면 **사유를 말한다**(announceBlocked). 구판은 무조건
+            // [data-sheet-variant] 글로우였고 그 오유도를 RCA #23 이 잡았다.
             aria-disabled={launchDisabled || launching}
             onClick={() => {
-              if (launching || !loaded) return;
+              // [RCA #11] 게이트에서 `!loaded` 를 뺀다 — 상태 로드가 실패해 loaded
+              // 가 영영 false 인 상태(구 50개 상한 교착 등)에서 클릭이 **완전
+              // 무반응**이었다(글로우조차 안 떴다). 사유 고지는 announceBlocked 가
+              // 하고, 실제 발사는 launchDisabled 가 여전히 막는다.
+              if (launching) return;
               if (launchDisabled) {
-                triggerHintGlowWithin(bodyRef.current, "[data-sheet-variant]");
+                announceBlocked();
                 return;
               }
               handleLaunch();

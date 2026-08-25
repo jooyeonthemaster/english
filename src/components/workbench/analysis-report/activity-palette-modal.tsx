@@ -1,6 +1,6 @@
 "use client";
 
-import type { KeyboardEvent, MouseEvent } from "react";
+import type { KeyboardEvent, MouseEvent, ReactNode } from "react";
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import { ChevronDown, ChevronUp, X } from "lucide-react";
@@ -43,6 +43,7 @@ export function ActivityPalettePanel({
   onToggleOffKind,
   availability,
   hideIntro = false,
+  leadingSection,
 }: {
   report: AnalysisReport;
   onPick: (kind: ActivityKind) => void;
@@ -61,6 +62,19 @@ export function ActivityPalettePanel({
    * AI 없음)를 이미 하는 문맥에서 중복 고지를 없앤다. 미전달(기본)이면 기존 렌더와 동일.
    */
   hideIntro?: boolean;
+  /**
+   * [E34-R3] 카탈로그 섹션들 **앞**에 끼워 넣을 선행 섹션(현재 소비자: 단어 시험지).
+   *
+   * 왜 prop 인가: 단어 시험지는 카탈로그 항목이 아니라 **문서 전역 스위치**라
+   * `ACTIVITY_CATALOG` 에 넣을 수 없다(넣으면 insertActivity→customBlocks 경로를 타는
+   * 두 번째 단어시험지 표면이 생긴다 — `study-activities.ts` 가 명시적으로 금지).
+   * 그렇다고 레일이 자기 마크업으로 섹션 크롬을 복제하면 헤더·배지·접기가 두 벌이 되어
+   * 조용히 표류한다. → **섹션 크롬은 이 컴포넌트가 독점**하고, 내용만 받는다.
+   *
+   * 호스트가 `<section>` 을 통째로 넘긴다(헤더 포함) — 이 컴포넌트는 위치만 정한다.
+   * 미전달이면 렌더 결과가 종전과 바이트 동일하다.
+   */
+  leadingSection?: ReactNode;
 }) {
   const byCategory = groupedCatalog();
   // 섹션 여닫힘 — 편집 패널 PanelSection 과 동일한 셰브론 토글. 기본 펼침.
@@ -81,6 +95,7 @@ export function ActivityPalettePanel({
           카드를 누르면 문서에 추가되고 바로 설정이 열려요.
         </p>
       )}
+      {leadingSection}
       {byCategory.map((group) => {
         const collapsed = collapsedSections.has(group.cat);
         return (

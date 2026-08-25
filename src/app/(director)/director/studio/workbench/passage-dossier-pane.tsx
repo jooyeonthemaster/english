@@ -54,6 +54,35 @@
 // DossierFetchState(Map, 부재 = 미조회)를 받아 그리기만 한다. 펼침 시 지연
 // fetch 트리거도 onExpand 업링크로 위임(폴링·자체 조회 없음, §3.9.6·§3.10.6).
 //
+// E30(§3.10.29 — 실전 학습지 분리): 섹션「학습지」가 지문당 최대 **3행**(기본 /
+//     실전 / 파이널)을 그린다. 이 판이 이행하는 것은 4가지다.
+//     (a) 「실전 학습지 추가」 동선 — **기본 보유 지문에서만** ◈5 로 노출한다
+//         (E30 §2-1 (c) · §2-4 층③). 서버가 404 로 막지만(worksheet/route.ts 부모
+//         필수 404) **화면이 먼저 말해야 한다** — 눌러 보고 실패로 배우게 하지 않는다.
+//     (b) 체크 토글에 `withBasicCompanions`(§4-4 D-COMPANION) — 실전만 담기면
+//         같은 지문의 기본을 **앞쪽에** 동반 삽입한다. 체크박스 `disabled` 는
+//         쓰지 않는다(그건 방어가 아니라 장식이다 — pick-order.ts 주석 정본).
+//     (c) 해제 대칭(§4-5) — 기본을 해제하면 같은 지문의 **실전**도 같은 델타로
+//         함께 뺀다(파이널은 대상이 아니다 — 기본 없이도 성립하는 문서다).
+//     (d) 표시 순서 — 같은 지문 안에서는 `sheetPlanRank`(정본 1곳) asc.
+//         서버 정렬은 `updatedAt desc` 라 나중에 만든 실전이 기본 **위**에 온다.
+// E29 경계 문법 이식(26-08-23 사용자 지시): 이 카드의 픽 축 섹션(학습지·문제)이
+//     흰 바탕 위 무선(無線)이라 「어디까지가 한 덩어리인가」가 안 읽혔다.
+//     `composer-list-pane.tsx` 의 [E29] 4단 규약을 **값 복제**로 들여온다 —
+//     복제 계약(왜 import 하지 않는가·좌측 정렬 축이 왜 12px 인가)은 `ROW_*` 토큰
+//     주석, 선반(③)은 이 파일 로컬 `SecAxis` 주석이 소유한다. 두 섹션 중 **행**
+//     문법까지 바꾼 것은 학습지 축뿐이다(문항 축 유예 사유는 SecAxis 호출부 주석).
+// RCA §4 처방 #22(26-08-23): 큐 스트립 **실패 행에 「다시 시도」**. 신규 로직 0 —
+//     `use-passage-queue.ts:1072 retryAnalysis` 배선만 내려온다(RCA RC-2 처방 7:
+//     "queueApi.retryAnalysis 를 읽는 곳이 0건").
+//
+// 스탯 그리드 폐기(26-08-24 사용자 지시): 펼침 본문 맨 위 2열 카운터
+//     (「학습지 N」·「문제 N」, §M on 이면 「배정」 3열)을 렌더째 걷어냈다. 같은 수는
+//     바로 아래 두 섹션이 스스로 말한다 — Sec「학습지」의 행 수와 Sec「생성된 문제」
+//     머리의 「검수완료 n/N」. 카운터만 위에 한 번 더 세워 두면 필터가 걸린 순간
+//     둘이 서로 다른 수를 말한다. `sheetRows`·`questions.total`·`assignments` 는
+//     다른 층이 계속 쓰므로 데이터 배관은 그대로다(집계 제거 아님, 표시 제거).
+//
 // §M(26-08-22) 모바일 학습 임시 숨김: SHOW_STUDIO_MOBILE_LEARNING=false(기본)면
 //     카드 CTA 행([학습지 보내기][문제 보내기])을 px-3 래퍼째, 인라인 배포 폼
 //     (DossierDeployInline) 접이 컨테이너를 래퍼째 렌더하지 않고, Sec「학습지」
@@ -84,10 +113,16 @@ import {
   Loader2,
   Maximize2,
   Minus,
+  Plus,
+  RotateCw,
   Send,
   Smartphone,
   X,
 } from "lucide-react";
+import {
+  PRACTICE_REPORT_MARKER,
+  PRIME_REPORT_MARKER,
+} from "@/actions/workbench/passage-constants";
 import { DragSelect } from "@/components/ui/drag-select";
 import { WideModal } from "@/components/layout/wide-modal";
 import {
@@ -100,6 +135,10 @@ import {
   QUESTION_TYPES,
 } from "@/lib/constants";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
+// [E30 §3-1] 실전 단가는 **산식 정본 1곳**에서만 온다 — 「◈5」 를 리터럴로 적으면
+// 표기와 청구가 갈린다(E19-2 계약: 모달의 가격 표기와 실제 청구가 어긋나면 안 된다).
+// 이 버튼은 `hasBasic === true` 일 때만 렌더되므로 인자도 그 사실 그대로 넘긴다.
+import { getPracticeSheetCreditCost } from "@/lib/passage-analysis-credit-costs";
 import {
   planForDifficulty,
   QUESTION_GENERATION_PLANS,
@@ -120,6 +159,10 @@ import { STUDIO_MODULES, STUDIO_MODULE_BY_ID } from "@/lib/studio/modules";
 // (E24 §3.10.23 전에는 구 「학습지 관리」 필의 평면 행 class-worksheets-pane 도
 //  같은 술어를 썼다 — 그 판은 3필 개편에서 자료 목록판으로 흡수됐다.)
 import { canDeployWorksheetRow } from "@/lib/studio/sheet-deploy-eligibility";
+// [E30] 동반 픽·랭크는 **순수층 정본 1곳**(lib/studio/pick-order)만 쓴다. 같은 규칙을
+// 이 판에 복제하면 병합 목록판(composer-list-pane)과 조용히 갈린다 — 그 갈림은
+// 타입 에러 0 · 콘솔 0 이고 **인쇄물에서만** 발견된다(pick-order.ts 머리주석 정본).
+import { sheetPlanRank, withBasicCompanions } from "@/lib/studio/pick-order";
 import type { SheetPickMeta } from "@/lib/studio/sheet-pick-types";
 import {
   SHEET_PLAN_LABEL,
@@ -191,6 +234,19 @@ export interface PassageDossierAccordionProps {
    *  별개 state) 패널 로컬 상태로는 드로어 닫기/패널 접기 한 번에 선택이 전량
    *  소실된다(26-08-14 적대 검수 확정) — 부모가 들어야 두 인스턴스가 공유한다. */
   picked: ReadonlyMap<string, PickedQuestionMeta>;
+  /**
+   * [E32] **평면 축(목록에서 담은 문항)** — 옵셔널 additive. 미전달이면 아래
+   * `pickedIds` 가 종전과 같이 도시에 축만으로 만들어져 렌더가 바이트 동일하다.
+   *
+   * 이게 필요한 이유: 조판 표면과 병합 목록이 읽는 문항 축은 **평면 축 하나뿐**
+   * 이고, 도시에 발사구는 발사 직전에 도시에 축을 그리로 승계한다. 그런데 도시에
+   * 행의 체크 표시가 도시에 축만 보면, **평면 축에 이미 담긴 문항의 행이 미체크로
+   * 보인다** — 사용자는 그 행을 다시 눌러 같은 문항을 두 축에 이중 등재하고,
+   * 카드의 「전체 선택」도 이미 담긴 것까지 다시 담는다. 그래서 체크 표시는
+   * **두 축의 합집합**이어야 하고, 해제 클릭의 2축 처리는 오케스트레이터
+   * (`togglePickedQuestion` · `pickQuestionRows`)가 짝으로 담당한다.
+   */
+  pickedFlat?: ReadonlyMap<string, PickedQuestionMeta>;
   onTogglePick: (questionId: string, meta: PickedQuestionMeta) => void;
   onPickRows: (
     entries: readonly (readonly [string, PickedQuestionMeta])[],
@@ -243,6 +299,49 @@ export interface PassageDossierAccordionProps {
    * 이펙트가 카드 소멸까지 책임진다). 미전달이면 X 버튼 미렌더(additive).
    */
   onRemovePassage?: (passageId: string) => void;
+
+  // ── [E30 §3.10.29] 실전 학습지 축(additive 3 prop — 전부 옵셔널) ──────────
+  // E21-5 가 세운 additive 계약을 그대로 따른다: **미전달이면 화면이 변하지 않는다.**
+  // 배선(오케스트레이터 studio-home-client)이 아직 안 왔어도 이 파일만 먼저 머지될 수
+  // 있어야 한다.
+  //
+  // ⚠ 셋 다 **참조 안정**(useCallback)이어야 한다 — 이 컴포넌트는 `memo` 로 감싸져
+  //   있고(파일 말미), 오케스트레이터는 폴링 틱(5초)·SSE 델타마다 재렌더된다.
+  //   렌더마다 새 화살표 함수를 내리면 memo 방어선이 통째로 무너져 카드 27장이
+  //   초당 다시 그려진다(이 파일 memo 주석의 계약).
+  /**
+   * 학습지 픽 **배치** 커밋 — `entries` 순서대로 담고(pick=true) / 한 델타로 뺀다
+   * (pick=false). 문항 축 `onPickRows` 와 **같은 문법**이다.
+   *
+   * ⚠ **왜 `onToggleSheetPick` 을 두 번 부르면 안 되는가**(이 prop 이 존재하는 이유):
+   *   오케스트레이터의 `toggleSheetPick` 은 `pickedSheetsRef.current` 를 읽어 `next` 를
+   *   만드는데(studio-home-client.tsx `toggleSheetPick`), 그 ref 는 **렌더 중에**
+   *   갱신된다(`pickedSheetsRef.current = pickedSheets`). 한 이벤트 핸들러에서 두 번
+   *   부르면 둘 다 **같은 prev** 를 읽어 두 번째 커밋이 첫 번째를 덮는다 — 동반 픽된
+   *   기본 행이 조용히 증발한다(에러 0 · 배지만 1 오르고 순서는 틀림).
+   * ⚠ 해제(pick=false)도 **한 델타**여야 §4-5 의 「dirty confirm 1회」가 성립한다.
+   *   두 번 부르면 사용자가 confirm 을 두 번 보고, 두 번째에서 「취소」를 누르면
+   *   기본만 빠진 반쪽 상태가 남는다.
+   * 미전달이면 `onToggleSheetPick` 단건 경로로 폴백한다(동반 픽 없음 = 구 동작).
+   */
+  onPickSheetRows?: (
+    entries: readonly (readonly [string, SheetPickMeta])[],
+    pick: boolean,
+  ) => void;
+  /**
+   * [E30 §2-1 (c)] 「실전 학습지 추가」 발사 — 기존 기본 학습지를 **부모로 삼아**
+   * 실전 자식 문서만 만든다(`POST /api/workbench/passage-reports/prime/{id}/worksheet`,
+   * ◈5). 라우트 분기·잡 폴링은 오케스트레이터(use-studio-queue) 소유다 —
+   * 이 판은 「어느 지문에 대해 눌렀는가」만 말한다.
+   * 미전달이면 버튼을 **렌더하지 않는다**(눌러도 아무 일 없는 버튼 금지).
+   */
+  onAddPracticeSheet?: (passageId: string) => void;
+  /**
+   * [RCA §4 처방 #22] 큐 스트립 실패 행 「다시 시도」 —
+   * `use-passage-queue.ts retryAnalysis(passageId)` 를 그대로 내린다(신규 로직 0).
+   * 미전달이면 버튼 미렌더.
+   */
+  onRetryAnalysis?: (passageId: string) => void;
 }
 
 // 유형·난이도 한글 라벨 — constants 단일 소스 평탄화(actions/studio/dossier.ts 미러)
@@ -333,6 +432,37 @@ const PICK_BOX_BASE =
   "flex shrink-0 items-center justify-center rounded-[5px] border transition-colors";
 const PICK_BOX_ON = `${PICK_BOX_BASE} border-blue-600 bg-blue-600 text-white`;
 const PICK_BOX_OFF = `${PICK_BOX_BASE} border-slate-300 bg-white text-transparent`;
+// [E29 경계 · 26-08-23] **학습지 축**의 체크 ON 은 violet 이다(문항 축 = blue).
+// 병합 목록판이 이미 그 언어를 쓴다(composer-list-pane.tsx `BOX_ON_Q`=blue /
+// `BOX_ON_W`=violet). 같은 reportId 행이 두 판에서 다른 색이면 축 색이 축을 말하지
+// 못하고 그냥 장식이 된다 — 선반 바·선택 행 좌측 바가 이 색을 그대로 이어받는다.
+const PICK_BOX_ON_W = `${PICK_BOX_BASE} border-violet-600 bg-violet-600 text-white`;
+
+// ── [E29 경계 토큰 — **값 복제본**] ────────────────────────────────────────
+//
+// 정본은 `composer-list-pane.tsx:339-362` 의 [E29] 경계 토큰 4단이다. 여기 있는 것은
+// **같은 값의 복제본**이고, 그 사실을 이 리포의 관용대로 주석으로 못박는다
+// (SHEET_ACTION_* 이 문항 행 고스트 버튼 토큰을 복제할 때와 같은 계약).
+// **import 하지 않는 이유**: 그 파일은 「학습지 조판」 뷰의 목록판이고 이 파일은
+// 우측 실행대다 — 서로를 import 하면 두 표면이 한 덩어리로 묶여 한쪽 개편이 다른
+// 쪽 번들을 끌고 들어온다. 값이 바뀌면 **두 파일을 함께 고칠 것.**
+//
+// 4단 규약(정본 주석 요약): ① 카드 = 테두리+미세 그림자 ② 카드 머리 = 흰 바탕
+// ③ 섹션 선반 = 회색 띠 + 좌측 3px **축 색 바** ④ 행 = 흰 바탕 + 행 사이 헤어라인,
+// 선택 행은 좌측 3px 축 색 inset.
+//
+// ⚠ **좌측 정렬 축만 값이 다르다.** 정본은 10px(`ROW_PAD_X = pl-2.5 pr-2.5`)인데
+//   이 판은 12px 이다 — 이 카드의 모든 층(CTA 행·Sec 본문)이 `px-3` 축에
+//   서 있어서, 10px 로 맞추면 학습지 섹션만 2px 안쪽으로 들어가 「계단」이 생긴다.
+//   중요한 것은 판 **사이**의 일치가 아니라 판 **안**의 일치다(정본 주석의 「계단」 경고).
+/** 행 사이 헤어라인(4단계 경계) — 실선보다 한 단 옅다. */
+const ROW_HAIRLINE = "divide-y divide-slate-100";
+/** 선택 행의 좌측 축 바 — 레이아웃을 밀지 않는 inset 그림자(padding 무영향).
+ *  구판은 `ring-1 ring-inset ring-blue-100` 이었는데 blue-50/70 바탕 위에서 사실상
+ *  보이지 않았다(사용자 지적 "경계 선이 너무 안 보여") — 정본이 같은 이유로 버렸다. */
+const ROW_PICK_BAR_W = "shadow-[inset_3px_0_0_0_#7c3aed]";
+/** 행·선반·머리가 공유하는 좌측 정렬 축(12px — 위 ⚠ 참조). */
+const ROW_PAD_X = "px-3";
 
 // 학습지 행 우측 액션(§3.10.21 E21-5) — 문항 행 「상세보기」 고스트 버튼과
 // **같은 꼴**(평시 조용한 회색, 행 hover 에서 테두리·흰 배경·그림자가 올라옴).
@@ -346,6 +476,18 @@ const SHEET_ACTION = `${SHEET_ACTION_BASE} cursor-pointer text-slate-300 hover:b
 // 비활은 native disabled 를 쓰지 않는다 — 비활 상태에서도 title 사유 툴팁이
 // 떠야 한다(§3.9v2 정본, 이 파일 CTA 관용구와 동일).
 const SHEET_ACTION_OFF = `${SHEET_ACTION_BASE} cursor-not-allowed text-slate-200`;
+
+/**
+ * [E30 §3-1] 「실전 학습지 추가」 표기 단가.
+ *
+ * 이 버튼은 `hasBasic === true` 에서만 렌더되므로(위 canAddPractice) 단가는 언제나
+ * EXTRA 축이다 — 그래도 리터럴 `5` 를 적지 않고 **산식 정본을 호출해** 값을 얻는다.
+ * 리터럴은 상수가 개정될 때 표기만 비껴가고, 그 어긋남은 사용자가 결제 후에 발견한다
+ * (E19-2: 「모달의 가격 표기와 실제 청구가 어긋나면 안 되므로 판정 술어는 라우트와
+ *  동일 구현을 쓴다」). 청구 쪽도 같은 함수를 부른다((c) 라우트 §2-2).
+ * 모듈 상수인 이유: 인자가 상수라 렌더마다 다시 부를 이유가 없다.
+ */
+const PRACTICE_ADD_UNIT_COST = getPracticeSheetCreditCost({ hasBasic: true });
 
 /** 조판 대기열 부재 시 참조 안정 빈 Map(EMPTY_QUEUE_ITEMS 와 같은 근거) */
 const EMPTY_SHEET_PICKS: ReadonlyMap<string, SheetPickMeta> = new Map<
@@ -502,7 +644,7 @@ function AssignmentCard({ row }: { row: DossierAssignment }) {
 
 // ── 큐 스트립(§3.10.11-c) — E19-5 로 **한 자리에서 두 자리**가 되며 추출 ──────
 // 학습지 계열(kind: modules·exam)은 Sec「학습지」 1층으로, 문항 계열(questions)은
-// 스탯 그리드 아래 현행 위치로 갈라져 그려진다. 같은 JSX 를 두 벌 복제하면 시광
+// 카드 본문 직속(맨 위) 현행 위치로 갈라져 그려진다. 같은 JSX 를 두 벌 복제하면 시광
 // 스윕·라이브 꼬리·배지 분기가 조금씩 갈라지는 것이 시간 문제라, 스펙이 "토큰
 // 복제 금지 — 별도 컴포넌트로 추출해 두 자리에서 호출"을 명시한다(§3.10.19 E19-5).
 // 아래 두 컴포넌트는 구 인라인 JSX(525-614행)를 **한 글자도 바꾸지 않고** 옮긴 것.
@@ -510,9 +652,23 @@ function AssignmentCard({ row }: { row: DossierAssignment }) {
 function QueueStripRow({
   item,
   streamStore,
+  onRetry,
 }: {
   item: DossierQueueItem;
   streamStore: StreamTailStore;
+  /**
+   * [RCA §4 처방 #22] 실패 행 「다시 시도」 — **미전달이면 버튼이 없다**(기존 렌더
+   * 바이트 동일). 신규 로직 0: 배선은 `use-passage-queue.ts:1072 retryAnalysis`
+   * 하나이고, RCA RC-2 처방 7 이 기록한 사실("queueApi.retryAnalysis 를 읽는 곳이
+   * **0건**")을 이 판이 처음으로 소비한다.
+   *
+   * ⚠ 이 판이 붙여 주는 것은 **학습지 계열(kind !== "questions")** 뿐이다 —
+   *   `retryAnalysis` 는 지문 분석 큐(passageId 단수)를 되살리는 함수라 문항 세션
+   *   큐에는 의미가 없다. 문항 축까지 같은 버튼으로 덮으면 누른 사람은 「재시도했다」고
+   *   믿는데 아무 일도 일어나지 않는다(무음 실패 — RCA 가 잡은 바로 그 계통).
+   *   호출부(DossierBody)가 그 판정을 소유한다.
+   */
+  onRetry?: () => void;
 }) {
   return (
     <div
@@ -586,6 +742,21 @@ function QueueStripRow({
             <ElapsedClock fromMs={item.startedAt} />
           </span>
         ) : null}
+        {/* [RCA #22] 실패 행 「다시 시도」 — 실패는 **행동 신호**인데 여기엔 지금까지
+            사유만 있고 출구가 없었다(RCA RC-2 처방 9). `ml-auto` 로 우측 끝에 서고,
+            running 행의 경과시계와는 상호배타라 자리 다툼이 없다.
+            ⚠ 루트 stopPropagation 은 필요 없다 — 이 스트립 행은 클릭 핸들러가 없는
+            표시 전용 div 다(파일 위쪽 「표시 전용」 계약). */}
+        {item.status === "error" && onRetry ? (
+          <button
+            type="button"
+            onClick={onRetry}
+            className="ml-auto flex shrink-0 cursor-pointer items-center gap-0.5 rounded border border-rose-200 bg-white px-1.5 py-0.5 text-[10px] font-semibold text-rose-600 transition-colors hover:bg-rose-100"
+          >
+            <RotateCw className="size-2.5 shrink-0" aria-hidden="true" />
+            다시 시도
+          </button>
+        ) : null}
       </div>
       {/* 실패는 1행 유지(스트림은 이미 종료) — running + streamKey 만 라이브.
           relative: 시광 오버레이(positioned)가 정적 형제 위에 칠해지는
@@ -603,7 +774,7 @@ function QueueStripRow({
   );
 }
 
-/** 스트립 래퍼 — **패딩은 호출부가 정한다**. 스탯 그리드 아래(카드 본문 직속)는
+/** 스트립 래퍼 — **패딩은 호출부가 정한다**. 카드 본문 직속(맨 위)은
  *  자기 px-3 pt-2 를 들지만, Sec 안에서는 Sec 이 이미 px-3 py-2.5 를 주므로
  *  간격만 남긴다(panel-primitives.tsx:90). 여기서 패딩을 고정하면 Sec 안에서
  *  좌우 여백이 두 번 먹어 스트립만 안쪽으로 밀려 들어간다. */
@@ -611,17 +782,79 @@ function QueueStrip({
   items,
   streamStore,
   className,
+  onRetry,
 }: {
   items: readonly DossierQueueItem[];
   streamStore: StreamTailStore;
   className: string;
+  /** [RCA #22] 실패 행 재시도 — 미전달이면 두 자리 다 구 렌더 그대로(위 행 주석). */
+  onRetry?: () => void;
 }) {
   return (
     <div className={className}>
       {items.map((item) => (
-        <QueueStripRow key={item.id} item={item} streamStore={streamStore} />
+        <QueueStripRow
+          key={item.id}
+          item={item}
+          streamStore={streamStore}
+          onRetry={onRetry}
+        />
       ))}
     </div>
+  );
+}
+
+/**
+ * [E29 경계 ③] **픽 축이 있는 섹션**의 머리 — `panel-primitives.tsx` 의 `Sec` 와
+ * 같은 마크업에 좌측 3px 축 색 바를 더한 것.
+ *
+ * 왜 `Sec` 를 고치지 않는가: `Sec` 는 우측 패널 계열 **공용** 프리미티브라
+ * (class-panel 도 쓴다) 축 개념이 없는 섹션까지 색 바를 달게 된다. 여기서 필요한
+ * 것은 「이 띠 아래는 학습지 축 / 문제 축」이라는 **픽 축 고지**뿐이라, 축이 있는
+ * 두 섹션만 이 판 로컬로 승격한다. 배정 현황처럼 픽 축이 없는 섹션은 `Sec` 그대로다.
+ *
+ * ⚠ `Sec` 와 **같은 값**을 복제한다(bg-slate-50/80 · border-b-slate-100 · py-1.5 ·
+ *   h3 타이포). 한쪽만 바뀌면 같은 카드 안에서 섹션 머리가 두 얼굴이 된다 —
+ *   값이 바뀌면 두 파일을 함께 고칠 것(위 [E29 경계 토큰] 복제 계약과 동일).
+ * ⚠ 좌 padding 은 `border-l-[3px]`(3) + `pl-[9px]`(9) = **12px** 로 본문 `px-3` 축에
+ *   정확히 선다. `pl-3` 을 그대로 두면 바 두께만큼 제목이 밀려 「계단」이 된다.
+ * ⚠ tailwind-merge 를 태우지 않는다(문자열 연결) — 정본 파일이 `cn()` 안에서
+ *   범용 `border-slate-200` 과 `border-l-*` 를 섞었다가 좌측 바가 **DOM 에서 사라진**
+ *   전례가 있다. 여기서는 측면 전용 색만 쓰고 merge 자체를 태우지 않는다.
+ *
+ * `flush` = 본문의 좌우/상하 padding 을 **행 목록에 넘긴다**. 전폭 원장 행(경계 ④)은
+ * 자기 좌우 여백을 스스로 들어야 헤어라인이 선반 폭과 같은 길이로 그어진다 —
+ * 본문이 `px-3` 을 쥐고 있으면 행 사이 선이 양쪽에서 12px 씩 짧아져 「점선 계단」이 된다.
+ */
+function SecAxis({
+  title,
+  axis,
+  action,
+  flush = false,
+  children,
+}: {
+  title: string;
+  /** 축 색 — 학습지 = violet, 문제 = blue(체크박스 색과 같은 언어) */
+  axis: "worksheet" | "question";
+  action?: React.ReactNode;
+  flush?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="border-b border-slate-200/80">
+      <div
+        className={
+          "flex items-center justify-between gap-2 border-b border-b-slate-100 border-l-[3px] bg-slate-50/80 py-1.5 pl-[9px] pr-3 " +
+          (axis === "worksheet" ? "border-l-violet-400" : "border-l-blue-400")
+        }
+      >
+        <h3 className="text-[10.5px] font-bold tracking-wide text-slate-600">
+          {title}
+        </h3>
+        {action}
+      </div>
+      <div className={flush ? undefined : "px-3 py-2.5"}>{children}</div>
+    </section>
   );
 }
 
@@ -757,13 +990,19 @@ function SheetRowView({
   }
 
   return (
+    // [E29 경계 ④] 전폭 원장 행 — `rounded-md` 칩을 버리고 좌우 12px 축(ROW_PAD_X)에
+    // 맞춘다. 선택 표식은 옅은 ring 이 아니라 **좌측 3px 축 바**(ROW_PICK_BAR_W) +
+    // 진한 바탕이다. 행 사이 선은 이 행이 아니라 **목록 컨테이너**(ROW_HAIRLINE)가
+    // 긋는다 — 행마다 border-b 를 달면 마지막 행 아래에도 한 줄이 남는다.
     <div
       data-drag-item-id={row.reportId}
       onClick={onToggle}
       className={
-        "group flex w-full cursor-pointer items-center rounded-md transition-colors " +
+        "group flex w-full cursor-pointer items-center transition-colors " +
+        ROW_PAD_X +
+        " " +
         (checked
-          ? "bg-blue-50/70 ring-1 ring-inset ring-blue-100"
+          ? `bg-violet-50 ${ROW_PICK_BAR_W}`
           : fresh
             ? "studio-fresh-glow bg-blue-50/50 hover:bg-blue-50"
             : "hover:bg-slate-50")
@@ -783,13 +1022,15 @@ function SheetRowView({
           e.stopPropagation();
           onToggle();
         }}
-        className="flex shrink-0 cursor-pointer items-center self-stretch py-1.5 pl-1.5 pr-1"
+        // 좌 padding 은 루트(ROW_PAD_X)가 들었다 — 여기 `pl-1.5` 를 남기면 체크박스만
+        // 12px 축에서 6px 더 밀려 선반·제목과 계단이 생긴다.
+        className="flex shrink-0 cursor-pointer items-center self-stretch py-1.5 pr-1"
       >
         <span
           className={
             (checked
-              ? PICK_BOX_ON
-              : `${PICK_BOX_OFF} group-hover:border-blue-400`) + " size-4"
+              ? PICK_BOX_ON_W
+              : `${PICK_BOX_OFF} group-hover:border-violet-400`) + " size-4"
           }
         >
           {order !== undefined && order <= 99 ? (
@@ -807,7 +1048,7 @@ function SheetRowView({
       <span className="flex min-w-0 flex-1 flex-col justify-center py-1.5 pr-1 text-left">
         {innerStacked}
       </span>
-      <span className="flex shrink-0 items-center gap-0.5 self-stretch py-1 pl-0.5 pr-1">
+      <span className="flex shrink-0 items-center gap-0.5 self-stretch py-1 pl-0.5">
         {/* [모바일 배포] — **행 1건**을 지목한다. 이 카드에는 이미 카드 단위
             「학습지 보내기」 CTA(formKind "worksheet")가 있어 의미가 겹쳐 보이지만
             대상이 다르다: 그쪽은 이 지문의 **학습 모듈 묶음**(DossierDeployInline 이
@@ -845,7 +1086,11 @@ function SheetRowView({
           type="button"
           data-drag-select-ignore="true"
           aria-label={`${row.title} 학습지 조판`}
-          title="[학습지 조판] 화면 우측에서 조판을 엽니다 — 체크한 학습지가 있으면 그 순서 뒤에 이 학습지가 이어붙습니다"
+          // [E32] **문항 동반을 고지한다.** 이 버튼은 픽바 [합본 조판]과 같은
+          // 오케스트레이터 콜백(composeSheetsFromDossier)으로 흐르고, 그 콜백은
+          // 도시에 문항 픽을 조판 축으로 승계한다. 구 자구는 학습지만 약속해
+          // 「학습지 1장만 열려던 건데 문항 5개가 딸려 나왔다」가 됐다(적대검수 minor).
+          title="[학습지 조판] 화면 우측에서 조판을 엽니다 — 체크한 학습지가 있으면 그 순서 뒤에 이 학습지가 이어붙고, 체크한 문항이 있으면 함께 조판됩니다"
           onClick={(e) => {
             e.stopPropagation();
             onCompose?.();
@@ -873,7 +1118,7 @@ function SheetRowView({
   );
 }
 
-// ── 펼침 본문 — 스탯 그리드 → 생성 중 스트립(§3.10.11-c) → CTA 행 → 인라인 폼
+// ── 펼침 본문 — 생성 중 스트립(§3.10.11-c) → CTA 행 → 인라인 폼
 //    (§3.10.5) → 학습지(E19-5) → 문제(E11) → 배정 → 각주 ──
 
 function DossierBody({
@@ -889,9 +1134,12 @@ function DossierBody({
   onPickRows,
   pickedSheets,
   onToggleSheetPick,
+  onPickSheetRows,
+  onAddPracticeSheet,
   onDeploySheet,
   onComposeSheets,
   onRetry,
+  onRetryAnalysis,
   onOpenQuestion,
   onToggleForm,
   onDeployed,
@@ -915,9 +1163,18 @@ function DossierBody({
   /** 학습지 조판 대기열(§3.10.21 E21-5) — 삽입 순서 = 조판 순서. 전 지문 공용 */
   pickedSheets: ReadonlyMap<string, SheetPickMeta>;
   onToggleSheetPick?: (reportId: string, meta: SheetPickMeta) => void;
+  /** [E30 §4-4·§4-5] 학습지 픽 배치 커밋 — 계약은 파일 상단 props 주석 */
+  onPickSheetRows?: (
+    entries: readonly (readonly [string, SheetPickMeta])[],
+    pick: boolean,
+  ) => void;
+  /** [E30 §2-1 (c)] 「실전 학습지 추가」 발사 — 미전달이면 버튼 미렌더 */
+  onAddPracticeSheet?: (passageId: string) => void;
   onDeploySheet?: (meta: SheetPickMeta) => void;
   onComposeSheets?: (reportIds: string[]) => void;
   onRetry: () => void;
+  /** [RCA #22] 큐 스트립 실패 행 재시도(학습지 계열 전용 — QueueStripRow 주석) */
+  onRetryAnalysis?: () => void;
   onOpenQuestion: (questionId: string) => void;
   onToggleForm: (kind: DeployFormKind) => void;
   onDeployed: (passageId: string) => void;
@@ -932,11 +1189,28 @@ function DossierBody({
   );
   // 서버 계약상 필수 필드지만(§3.10.19 E19-6) 구 응답 캐시가 남아 있어도 행이
   // 사라질 뿐 카드가 죽지 않게 참조 안정 빈 배열로 폴백한다.
-  const sheetRows = dossier.sheets ?? EMPTY_SHEET_ROWS;
+  const rawSheetRows = dossier.sheets ?? EMPTY_SHEET_ROWS;
+  // [E30 §4-2] 같은 지문 안 표시 순서 = `sheetPlanRank` asc(기본 → 실전 → 파이널 → 국어).
+  // 서버 질의는 `updatedAt desc`(actions/studio/dossier.ts sheetRows)라 **나중에 만든
+  // 실전이 기본 위**에 온다 — 사용자 요구(「학습지를 추가하고 실전 학습지를 추가하도록」)가
+  // 화면에서부터 뒤집힌 채 시작한다. 랭크는 정본 1곳(pick-order.sheetPlanRank)만 쓴다.
+  // ⚠ **정렬만** 한다 — 필터·절단 금지. 미지 마커는 랭크 9로 꼬리에 서고 사라지지 않는다
+  //   (표시부는 미지 마커를 원문 폴백으로 그리는 계약이라, 정렬에서 증발시키면 화면에
+  //    있던 행이 인쇄에서 사라진다 — pick-order.ts SHEET_PLAN_RANK 주석 정본).
+  // ⚠ 이것은 **표시 순서**일 뿐 픽 순서가 아니다. 픽 순서는 끝까지 `pickedSheets` Map 의
+  //   삽입 순서 하나뿐이다(E27 R1-0) — 여기서 정렬한 결과를 `composeIdsWith` 나
+  //   대기열에 되먹이지 마라.
+  // ⚠ `sort` 는 안정 정렬(ES2019 규격)이라 동랭크는 서버의 updatedAt desc 를 보존한다.
+  const sheetRows = useMemo(() => {
+    if (rawSheetRows.length < 2) return rawSheetRows;
+    return [...rawSheetRows].sort(
+      (a, b) => sheetPlanRank(a.planMarker) - sheetPlanRank(b.planMarker),
+    );
+  }, [rawSheetRows]);
   const maxTypeCount = questions.byType.reduce((m, t) => Math.max(m, t.count), 0);
   // 큐 축 분리(§3.10.19 E19-5 마지막 문단) — 학습지와 문제는 다른 산출물이라
   // 한 자리에 섞으면 사용자가 "내 학습지가 어디 갔나"를 다시 묻게 된다.
-  // 문항 계열은 현행 위치(스탯 그리드 아래)에, 학습지 계열(modules·exam)은
+  // 문항 계열은 현행 위치(카드 본문 직속·맨 위)에, 학습지 계열(modules·exam)은
   // Sec「학습지」 1층에 각각 같은 QueueStrip 으로 그린다.
   const questionQueueItems = queueItems.filter((i) => i.kind === "questions");
   const sheetQueueItems = queueItems.filter((i) => i.kind !== "questions");
@@ -999,6 +1273,92 @@ function DossierBody({
     const ids = [...pickedSheets.keys()];
     return ids.includes(reportId) ? ids : [...ids, reportId];
   };
+
+  // ── [E30 §4-4 D-COMPANION · §4-5 해제 대칭] 학습지 체크 토글 ────────────────
+  //
+  // 모집단은 **이 지문의 sheetRows 전량**이다(§4-4 호출부 표). 도시에는 지문 1건
+  // 스코프라 필터·절단이 없어 「접힌 카드의 기본 행을 못 찾는」 구멍이 원리적으로
+  // 없다 — 병합 목록판이 `mergedRows`(전체)를 넘겨야 했던 것과 같은 요구를 이 판은
+  // 구조로 만족한다.
+  //
+  // ⚠ **`onToggleSheetPick` 을 두 번 부르지 마라.** 오케스트레이터의 `toggleSheetPick`
+  //   은 렌더 중 갱신되는 `pickedSheetsRef.current` 에서 prev 를 읽으므로, 한 핸들러
+  //   안의 두 번째 호출이 첫 번째를 덮는다(동반 픽된 기본이 조용히 증발). 그래서
+  //   배치 채널(`onPickSheetRows`)이 있고, 없으면 **동반 없이** 구 동작으로 떨어진다.
+  const sheetPickMetaRows = sheetRows.map(sheetMeta);
+  const handleSheetToggle = (row: DossierSheetRow) => {
+    const meta = sheetMeta(row);
+    // 배치 채널 미배선 = additive 폴백(E21-5 계약) — 화면이 구 동작 그대로다.
+    if (!onPickSheetRows) {
+      onToggleSheetPick?.(row.reportId, meta);
+      return;
+    }
+    if (pickedSheets.has(row.reportId)) {
+      // ── 해제 대칭(§4-5) ──
+      // 기본을 빼면 같은 지문의 **실전**도 같은 델타로 함께 뺀다. 안 그러면 담기
+      // 방어(동반 픽)가 반쪽이 된다 — 「실전만 남은 픽」이 해제 경로로 만들어진다.
+      // ⚠ 파이널(PRIME_FINAL)은 동반 해제 대상이 **아니다** — 기본 없이도 성립하는
+      //   문서다(DB 실측 고아 3건). 동반 규칙은 PRIME_PRACTICE 에만 적용한다.
+      // ⚠ 실전만 해제하는 것은 자유다(기본은 남는다) — 아래 분기가 PRIME 일 때만 돈다.
+      const removed: SheetPickMeta[] = [meta];
+      if (row.planMarker === PRIME_REPORT_MARKER) {
+        for (const r of sheetRows) {
+          if (r.planMarker !== PRACTICE_REPORT_MARKER) continue;
+          if (!pickedSheets.has(r.reportId)) continue;
+          removed.push(sheetMeta(r));
+        }
+      }
+      // **한 델타**로 보낸다 — 두 번 부르면 dirty confirm 이 두 번 뜨고, 두 번째에서
+      // 「취소」를 누르면 기본만 빠진 반쪽 상태가 남는다(§4-5).
+      onPickSheetRows(
+        removed.map((m) => [m.reportId, m] as const),
+        false,
+      );
+      return;
+    }
+    // ── 동반 픽(§4-4) ──
+    // 실전/파이널을 담으면 같은 지문의 기본을 **앞쪽에** 끼운다. 기본 행이 없으면
+    // (파이널 고아) 규칙 3 으로 무동작 — 담기를 막지 않는다.
+    const added = withBasicCompanions(
+      [meta],
+      sheetPickMetaRows,
+      new Set(pickedSheets.keys()),
+    );
+    onPickSheetRows(
+      added.map((m) => [m.reportId, m] as const),
+      true,
+    );
+  };
+
+  // ── [E30 §2-1 (c) · §2-4 층③] 「실전 학습지 추가」 노출 판정 ────────────────
+  // 서버가 404(부모 PRIME 부재)로 막지만 **화면이 먼저 말해야 한다** — 없는 물건을
+  // 팔아 놓고 실패로 배우게 하지 않는다.
+  const hasBasicSheet = sheetRows.some(
+    (r) => r.planMarker === PRIME_REPORT_MARKER,
+  );
+  // ⚠ 「이미 실전을 보유했는가」는 **두 축의 OR** 다(§1-4 D3-c 읽기 합집합):
+  //   ① 자식 행(PRIME_PRACTICE) 존재  ② 레거시 병합본 — 기본 PRIME 의
+  //   learning-worksheet 가 worksheet-grade. ②는 서버가 `analysis.hasExam` 으로
+  //   내려 준다. ①을 **여기서도** 다시 보는 것은 중복이 아니라 안전망이다:
+  //   dossier.ts 의 hasExam 이 합집합으로 확장되기 전(또는 D3-b 부모 강등으로 ②가
+  //   false 로 떨어진 뒤)에 ①만 참인 창이 열리는데, 그때 이 버튼이 되살아나면
+  //   **이미 ◈5 를 낸 사용자에게 같은 물건을 다시 판다**(§1-4 ⚠ 그대로).
+  const hasPracticeSheet = sheetRows.some(
+    (r) => r.planMarker === PRACTICE_REPORT_MARKER,
+  );
+  // §2-4 층③ 이 지목한 `detail.analyzed` 가드 미러 — 부모 리포트가 파싱조차 안 되면
+  // (c) 라우트의 `baseReport`(생성기 2번째 인자)가 성립하지 않는다.
+  const canAddPractice =
+    onAddPracticeSheet !== undefined &&
+    analysis.analyzed &&
+    hasBasicSheet &&
+    !hasPracticeSheet &&
+    !analysis.hasExam;
+  // 「지문당 활성 1잡」 배타(worksheet/route.ts)가 409 로 막는 창 — 자구는 서버
+  // 409 원문을 그대로 쓴다(임의 문구 금지 · 화면과 서버가 같은 말을 한다).
+  const addPracticeReason = sheetQueueItems.some((i) => i.status === "running")
+    ? "이미 진행 중인 생성이 있습니다."
+    : undefined;
 
   const deployDisabled = analysis.readyModules.length === 0 && !analysis.hasExam;
   const composeDisabled = questions.total === 0;
@@ -1085,38 +1445,6 @@ function DossierBody({
 
   return (
     <div>
-      {/* 스탯 그리드 — lemma 토큰(gap-px rounded-lg border). §M off 면 「배정」
-          (모바일 과제) 칩을 빼고 2열로 접는다 — 빈 반칸 잔재 금지. */}
-      <div className="px-3 pt-2.5">
-        <div
-          className={`grid gap-px overflow-hidden rounded-lg border border-slate-200 bg-slate-200 ${SHOW_MOBILE ? "grid-cols-3" : "grid-cols-2"}`}
-        >
-          {(
-            // E19-5: 「학습 모듈 N/7」 폐기 — 7 고정 분모는 모듈 체크박스
-            // 시절의 유물이라 학습지 상품 축과 어긋난다(§3.10.19).
-            SHOW_MOBILE
-              ? ([
-                  ["학습지", String(sheetRows.length)],
-                  ["문제", String(questions.total)],
-                  ["배정", assignmentsError ? "—" : String(assignments.length)],
-                ] as const)
-              : ([
-                  ["학습지", String(sheetRows.length)],
-                  ["문제", String(questions.total)],
-                ] as const)
-          ).map(([label, value]) => (
-            <div key={label} className="bg-white px-2 py-1.5">
-              <p className="text-[10.5px] font-semibold text-slate-400">
-                {label}
-              </p>
-              <p className="mt-0.5 text-[14px] font-bold leading-tight tabular-nums text-slate-900">
-                {value}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-
       {/* 큐 스트립 v2(§3.10.11-c) — **문항 계열 전용 자리**(E19-5). 학습지 계열은
           아래 Sec「학습지」 1층으로 이사했다: 학습지와 문제는 다른 산출물이라 한
           자리에 섞으면 "내 학습지가 어디 갔나"를 다시 묻게 된다(§3.10.19 E19-5
@@ -1216,8 +1544,12 @@ function DossierBody({
           미리보기 칩. 셋 다 비면 한 줄 빈 상태만 남는다 — 회색 칩 7개를 되살리지
           않는다(그것이 이 개편이 없앤 소음이다). 헤더 action(마지막 분석 시각)만
           현행 그대로 승계한다 */}
-      <Sec
+      <SecAxis
         title="학습지"
+        axis="worksheet"
+        // [E29 경계 ④] 본문 padding 을 행 목록에 넘긴다 — 전폭 원장 행이 자기 좌우
+        // 여백을 들어야 헤어라인이 선반과 같은 길이로 그어진다(SecAxis flush 주석).
+        flush
         action={
           analysis.lastAnalyzedAt ? (
             <span
@@ -1233,64 +1565,125 @@ function DossierBody({
         sheetRows.length === 0 &&
         readyChips.length === 0 &&
         !analysis.hasExam ? (
-          <p className="py-1 text-[11.5px] leading-relaxed text-slate-400 break-keep">
+          <p className="px-3 py-2.5 text-[11.5px] leading-relaxed text-slate-400 break-keep">
             아직 만든 학습지가 없습니다
           </p>
         ) : (
           <>
-            {/* ① 생성 큐 — Sec 이 이미 px-3 을 주므로 간격 클래스만 넘긴다 */}
+            {/* ① 생성 큐 — flush 라 좌우 여백(px-3)은 스트립이 직접 든다.
+                [RCA #22] 실패 행 「다시 시도」는 학습지 계열에만 내린다(문항 계열은
+                `retryAnalysis` 로 되살아나지 않는다 — QueueStripRow 주석 정본). */}
             {sheetQueueItems.length > 0 ? (
               <QueueStrip
                 items={sheetQueueItems}
                 streamStore={streamStore}
-                className="space-y-1"
+                className={
+                  "space-y-1 px-3 pt-2.5 " +
+                  (sheetRows.length > 0 ? "pb-2" : "pb-2.5")
+                }
+                onRetry={onRetryAnalysis}
               />
             ) : null}
 
             {/* ② 완성 학습지 — 큐 항목이 사라진 자리로 "들어와지는" 층.
-                행 골격·타이포·hover 는 아래 문항 행(E11)과 같은 계열로 맞춘다
-                (같은 카드 안에서 두 목록이 다른 문법이면 카드가 누더기가 된다).
+                ⚠ 【정정】 구 주석은 「행 골격·타이포·hover 를 아래 문항 행(E11)과
+                  같은 계열로 맞춘다」였는데, [E29 경계] 이식으로 **더는 사실이 아니다**:
+                  학습지 행만 전폭 원장(헤어라인 + 좌측 축 바)이 되고 문항 행은 아직
+                  칩 문법이다. 그 비대칭은 실수가 아니라 **의도적 유예**이며 사유는
+                  아래 「생성된 문제」 섹션 주석에 적어 뒀다(마키 히트 rect 계약).
+                  살아 있는 원칙은 그대로다 — 두 목록이 오래 다른 문법이면 카드가
+                  누더기가 되므로, 문항 축 개편이 열릴 때 이 비대칭을 닫아라.
                 E21-5(§3.10.21): 행 클릭이 **조판 선택 토글**로 바뀌고 지문
                 스튜디오 이동은 우측 chevron 링크로 내려간다 — 근거·구조 계약은
                 SheetRowView 상단 주석. 배선 전(신규 prop 미전달)에는 구 렌더
                 (행 전체 <Link>, classId 없으면 정적 div)가 그대로 나온다. */}
             {sheetRows.length > 0 ? (
-              <div className={sheetQueueItems.length > 0 ? "mt-1.5" : undefined}>
-                <div className="space-y-1">
-                  {sheetRows.map((row) => {
-                    // 배포 게이트는 정본 1곳에서만(§3.10.21 E21-5) — PRIME 외는
-                    // deploy.ts 가 passageId 로 PRIME 행을 재조회하다 실패해
-                    // "먼저 AI 분석을 완료해 주세요"라는 오해를 부른다.
-                    const eligibility = canDeployWorksheetRow(row.planMarker);
-                    return (
-                      <SheetRowView
-                        key={row.reportId}
-                        row={row}
-                        passageId={dossier.passage.id}
-                        fresh={freshSheetIds.has(row.reportId)}
-                        classId={deployTarget?.classId}
-                        checked={pickedSheets.has(row.reportId)}
-                        order={sheetOrderById.get(row.reportId)}
-                        deployReason={eligibility.ok ? null : eligibility.reason}
-                        onToggle={
-                          onToggleSheetPick
-                            ? () => onToggleSheetPick(row.reportId, sheetMeta(row))
-                            : undefined
-                        }
-                        onDeploy={
-                          onDeploySheet
-                            ? () => onDeploySheet(sheetMeta(row))
-                            : undefined
-                        }
-                        onCompose={
-                          onComposeSheets
-                            ? () => onComposeSheets(composeIdsWith(row.reportId))
-                            : undefined
-                        }
-                      />
-                    );
-                  })}
-                </div>
+              // [E29 경계 ④] 행 사이 선은 **컨테이너**(ROW_HAIRLINE)가 긋는다 —
+              // 행마다 border-b 를 달면 마지막 행 아래에도 한 줄이 남아 「행이 하나 더
+              // 있는 것처럼」 읽힌다(정본 CARD_MORE_CLS 주석과 같은 계통).
+              // 큐 스트립이 위에 있을 때만 그 경계를 실선으로 한 번 긋는다(없으면
+              // 선반의 border-b 가 이미 첫 행 위 선을 겸한다).
+              <div
+                className={
+                  (sheetQueueItems.length > 0
+                    ? "border-t border-slate-100 "
+                    : "") + ROW_HAIRLINE
+                }
+              >
+                {sheetRows.map((row) => {
+                  // 배포 게이트는 정본 1곳에서만(§3.10.21 E21-5) — PRIME 외는
+                  // deploy.ts 가 passageId 로 PRIME 행을 재조회하다 실패해
+                  // "먼저 AI 분석을 완료해 주세요"라는 오해를 부른다.
+                  // [E30] 실전 행도 여기서 fail-closed 로 잠긴다(P8: 로직 무개변,
+                  // 사유 자구만 실전을 포함하도록 확장됐다 — 잠긴 이유가 사실이어야
+                  // 사용자가 자기 행이 왜 잠겼는지 안다).
+                  const eligibility = canDeployWorksheetRow(row.planMarker);
+                  return (
+                    <SheetRowView
+                      key={row.reportId}
+                      row={row}
+                      passageId={dossier.passage.id}
+                      fresh={freshSheetIds.has(row.reportId)}
+                      classId={deployTarget?.classId}
+                      checked={pickedSheets.has(row.reportId)}
+                      order={sheetOrderById.get(row.reportId)}
+                      deployReason={eligibility.ok ? null : eligibility.reason}
+                      // [E30 §4-4·§4-5] 동반 픽·해제 대칭은 handleSheetToggle 이
+                      // 소유한다. 미배선(두 핸들러 모두 부재)이면 구 렌더 폴백.
+                      onToggle={
+                        onToggleSheetPick || onPickSheetRows
+                          ? () => handleSheetToggle(row)
+                          : undefined
+                      }
+                      onDeploy={
+                        onDeploySheet
+                          ? () => onDeploySheet(sheetMeta(row))
+                          : undefined
+                      }
+                      onCompose={
+                        onComposeSheets
+                          ? () => onComposeSheets(composeIdsWith(row.reportId))
+                          : undefined
+                      }
+                    />
+                  );
+                })}
+                {/* [E30 §2-1 (c)] 「실전 학습지 추가」 — 행 목록의 **마지막 칸**이라
+                    행과 같은 전폭·같은 좌측 축에 선다(정본 CARD_MORE_CLS 문법).
+                    자기 폭 점선 버튼으로 두면 헤어라인과 충돌해 「행이 하나 더 있는
+                    것처럼」 읽힌다.
+                    ⚠ 노출 조건은 `canAddPractice` 한 곳이 소유한다 — 기본 미보유
+                      지문에서는 **렌더 자체를 하지 않는다**(비활 버튼으로 남기면
+                      "왜 안 눌리지"를 서버 404 로 배우게 된다).
+                    ⚠ 이 버튼은 조판 픽이 아니라 **발사**다. 그래서 체크박스 열이
+                      없고, 행 클릭 토글과 구분되게 좌측 아이콘이 Plus 다. */}
+                {canAddPractice ? (
+                  <button
+                    type="button"
+                    aria-disabled={addPracticeReason !== undefined}
+                    title={
+                      addPracticeReason ??
+                      `기존 기본 학습지를 부모로 삼아 실전 학습지를 만듭니다 — 지문당 ◈${PRACTICE_ADD_UNIT_COST}`
+                    }
+                    onClick={() => {
+                      if (addPracticeReason !== undefined) return;
+                      onAddPracticeSheet?.(dossier.passage.id);
+                    }}
+                    className={
+                      "flex w-full items-center gap-1.5 py-2 text-left text-[11.5px] font-semibold transition-colors " +
+                      ROW_PAD_X +
+                      (addPracticeReason !== undefined
+                        ? " cursor-not-allowed bg-slate-50/60 text-slate-400"
+                        : " cursor-pointer bg-slate-50/60 text-slate-500 hover:bg-violet-50 hover:text-violet-700")
+                    }
+                  >
+                    <Plus className="size-3.5 shrink-0" aria-hidden="true" />
+                    실전 학습지 추가
+                    <span className="ml-auto shrink-0 rounded bg-white px-1.5 py-0.5 text-[10px] font-bold tabular-nums text-slate-500 ring-1 ring-slate-200">
+                      ◈{PRACTICE_ADD_UNIT_COST}
+                    </span>
+                  </button>
+                ) : null}
               </div>
             ) : null}
 
@@ -1300,10 +1693,18 @@ function DossierBody({
                 생기면 지문 스튜디오(passage-studio-client)의 미리보기가 정본이다. */}
           </>
         )}
-      </Sec>
+      </SecAxis>
 
-      <Sec
+      {/* [E29 경계 ③] 픽 축이 있는 두 번째 섹션 — 축 색은 blue(문항 축 체크박스와
+          같은 언어). 본문은 `flush` 를 쓰지 않는다: 문항 목록은 필터 3셀렉트·유형
+          분포 차트·전체선택 행이 한 덩어리로 얹힌 블록이고, 그 안쪽 행은
+          **DragSelect 히트 rect 계약**(마키)이 걸려 있어 전폭 원장으로 뜯는 것은
+          E30 범위 밖의 위험이다. 이번에 맞추는 것은 **섹션 머리**까지다 —
+          같은 카드 안 두 섹션이 다른 머리를 쓰면 축 색 언어 자체가 성립하지 않는다.
+          (행 문법까지 맞추는 것은 문항 축 개편이 열릴 때 함께 한다.) */}
+      <SecAxis
         title="생성된 문제"
+        axis="question"
         action={
           questions.total > 0 ? (
             <span className="text-[10.5px] tabular-nums text-slate-400">
@@ -1655,7 +2056,7 @@ function DossierBody({
             ) : null}
           </>
         )}
-      </Sec>
+      </SecAxis>
 
       {/* §M off 면 배정 현황(모바일 과제 이력) Sec 째 미렌더 — 결과 탭 숨김(U10)과
           같은 계열의 표면이다(검수 coverage-major 수리, 26-08-22). */}
@@ -1710,10 +2111,13 @@ function DossierAccordionCard({
   onPickRows,
   pickedSheets,
   onToggleSheetPick,
+  onPickSheetRows,
+  onAddPracticeSheet,
   onDeploySheet,
   onComposeSheets,
   onToggle,
   onRetry,
+  onRetryAnalysis,
   onOpenQuestion,
   onToggleForm,
   onDeployed,
@@ -1738,10 +2142,19 @@ function DossierAccordionCard({
   /** 학습지 조판 체크 상태·핸들러(§3.10.21 E21-5) — DossierBody 패스스루 */
   pickedSheets: ReadonlyMap<string, SheetPickMeta>;
   onToggleSheetPick?: (reportId: string, meta: SheetPickMeta) => void;
+  /** [E30] 학습지 픽 배치 커밋(동반 픽·해제 대칭) — 계약은 파일 상단 props 주석 */
+  onPickSheetRows?: (
+    entries: readonly (readonly [string, SheetPickMeta])[],
+    pick: boolean,
+  ) => void;
+  /** [E30] 「실전 학습지 추가」 발사 — DossierBody 패스스루 */
+  onAddPracticeSheet?: (passageId: string) => void;
   onDeploySheet?: (meta: SheetPickMeta) => void;
   onComposeSheets?: (reportIds: string[]) => void;
   onToggle: () => void;
   onRetry: () => void;
+  /** [RCA #22] 큐 스트립 실패 행 재시도 — DossierBody 패스스루 */
+  onRetryAnalysis?: () => void;
   onOpenQuestion: (questionId: string) => void;
   onToggleForm: (kind: DeployFormKind) => void;
   onDeployed: (passageId: string) => void;
@@ -1901,9 +2314,12 @@ function DossierAccordionCard({
                 onPickRows={onPickRows}
                 pickedSheets={pickedSheets}
                 onToggleSheetPick={onToggleSheetPick}
+                onPickSheetRows={onPickSheetRows}
+                onAddPracticeSheet={onAddPracticeSheet}
                 onDeploySheet={onDeploySheet}
                 onComposeSheets={onComposeSheets}
                 onRetry={onRetry}
+                onRetryAnalysis={onRetryAnalysis}
                 onOpenQuestion={onOpenQuestion}
                 onToggleForm={onToggleForm}
                 onDeployed={onDeployed}
@@ -1933,6 +2349,7 @@ function PassageDossierAccordionInner({
   freshQuestionIds,
   onDeployed,
   picked,
+  pickedFlat,
   onTogglePick,
   onPickRows,
   onClearPicked,
@@ -1940,11 +2357,14 @@ function PassageDossierAccordionInner({
   onComposeExam,
   pickedSheets,
   onToggleSheetPick,
+  onPickSheetRows,
+  onAddPracticeSheet,
   onDeploySheet,
   onComposeSheets,
   onClearSheets,
   pickBarNudge = false,
   onRemovePassage,
+  onRetryAnalysis,
 }: PassageDossierAccordionProps) {
   // (E25-6) 구 모듈 미리보기 시트(D4) 상태·배관은 칩 층 폐기와 함께 소멸.
 
@@ -1956,7 +2376,21 @@ function PassageDossierAccordionInner({
 
   // ── 문항 체크(26-08-14 — §3.10.13) — 상태·프룬은 오케스트레이터 소유(위
   // props 주석 참조). 여기는 행 판정용 id 집합과 바 제목 해석 재료만 파생한다.
-  const pickedIds = useMemo(() => new Set(picked.keys()), [picked]);
+  // [E32] **두 축 합집합.** 행 체크·카드 담김 배지·순번 배지·마키 값이 전부 이
+  // 집합에서 파생되므로(아래 소비처들), 여기 한 곳만 union 으로 만들면 「평면
+  // 축에 담긴 문항이 도시에에서는 미체크로 보인다」가 통째로 사라진다.
+  // pickedFlat 미전달이면 종전과 동일한 참조 계산으로 떨어진다(additive).
+  // ⚠ **삽입 순서가 계약이다: 평면 축이 먼저, 도시에 신규분이 뒤.** 이 Set 의
+  //   순회 순서가 곧 카드의 **순번 배지**(orderById)이고, 배지는 「조판 순서」를
+  //   약속한다. 실제 조판 순서는 오케스트레이터 승계(inheritDossierQuestions)와
+  //   픽바 집계(mergedPicked)가 **둘 다 평면 축을 앞에** 두므로, 여기서 도시에를
+  //   먼저 담으면 배지 숫자만 다른 순서를 말하는 거짓 표시가 된다.
+  const pickedIds = useMemo(() => {
+    const s = new Set<string>();
+    if (pickedFlat) for (const id of pickedFlat.keys()) s.add(id);
+    for (const id of picked.keys()) s.add(id);
+    return s;
+  }, [picked, pickedFlat]);
   // 현재 표시 스냅샷의 지문 제목 — 배포 과제 제목이 체크 시점 스냅샷(stale)이
   // 아니라 최신 제목으로 실리게 바에 내린다(적대 검수 minor).
   const passageTitleById = useMemo(
@@ -2019,10 +2453,18 @@ function PassageDossierAccordionInner({
               // sheetOrderById(useMemo) 가 매 렌더 재계산된다(§3.10.9 함정 1).
               pickedSheets={pickedSheets ?? EMPTY_SHEET_PICKS}
               onToggleSheetPick={onToggleSheetPick}
+              onPickSheetRows={onPickSheetRows}
+              onAddPracticeSheet={onAddPracticeSheet}
               onDeploySheet={onDeploySheet}
               onComposeSheets={onComposeSheets}
               onToggle={() => onExpand(expandedId === p.id ? null : p.id)}
               onRetry={() => onRetry(p.id)}
+              // [RCA #22] 큐 실패 행 재시도 — 도시에 카드는 지문 1건 스코프라
+              // passageId 를 여기서 접는다(스트립 항목에는 passageId 가 없다 —
+              // deploy-target.ts DossierQueueItem 계약).
+              onRetryAnalysis={
+                onRetryAnalysis ? () => onRetryAnalysis(p.id) : undefined
+              }
               onRemove={
                 onRemovePassage ? () => onRemovePassage(p.id) : undefined
               }
@@ -2048,6 +2490,10 @@ function PassageDossierAccordionInner({
           필요했지만 바는 size 만 본다). */}
       <DossierPickBar
         picked={picked}
+        // [E32] 바의 문항 카운트·유형 칩·배포 페이로드가 **두 축 union** 이 된다
+        // (그 파일 mergedPicked). 이 한 줄이 빠지면 바가 「합본 조판 — 문항 5개」로
+        // 약속하고 8개를 조판하는 상태로 되돌아간다.
+        pickedFlat={pickedFlat}
         passageTitleById={passageTitleById}
         deployTarget={deployTarget}
         onClear={onClearPicked}

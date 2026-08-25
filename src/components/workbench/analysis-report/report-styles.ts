@@ -1917,9 +1917,23 @@ export const ANALYSIS_REPORT_CSS = `
     display: contents !important;
   }
 
+  /* ⚠ 이 루트는 **일반 흐름(static)** 이어야 한다 — absolute 금지(26-08-25 사파리 절단 수리).
+     구판의 position:absolute + left/top 0 은 「숨긴 화면 위에 겹쳐 올리던」 초기 화이트리스트의
+     잔재다. 형제 가지치기(위 display:none)와 조상 display:contents 해체가 들어온 뒤로는 겹칠
+     대상 자체가 없어 absolute 가 주는 것이 0인 반면, 잃는 것이 치명적이었다:
+     ① absolute 는 루트를 문서 흐름에서 빼 body 의 in-flow 높이를 0 으로 만든다
+        (print 에뮬레이션 실측 body height 0px — .tmp-safari-print/emu-results.json).
+        크로미엄은 레이아웃 오버플로로도 인쇄 페이지 수를 세지만 WebKit/사파리는 in-flow
+        문서 높이 기준이라 맥 사파리 인쇄가 1페이지 절단/백지가 됐다(WebKit #268687
+        "Absolute positioned elements will not be printed", 26-08 현재 미해결).
+     ② WebKit 은 절대배치 서브트리 안으로 단편화(fragmentation)를 전파하지 않아
+        .par-sheet 의 break-after:page 가 사파리에서 전부 무시됐다.
+     static 이면 조상이 전부 contents 로 해체된 상태라 루트가 사실상 body 직속 in-flow
+     블록이 되어 두 문제가 원천 소멸한다. 크로미엄 무회귀는 probe-print-break.mjs
+     P1~P5(PDF 페이지 수·푸터 y 편차)로, 흐름 복귀 자체는 .tmp-safari-print/
+     probe-static-gate.mjs(양 엔진 body in-flow 높이 > 0 + 결함 재주입 음성테스트)로 실측. */
   .par-root:not(.par-cover-preview):not(.par-print-exclude) {
-    position: absolute !important;
-    left: 0; top: 0;
+    position: static !important;
     width: 210mm;
     margin: 0 !important;
     padding: 0 !important;

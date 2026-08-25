@@ -331,8 +331,17 @@ export function packFlow(
           // 경계를 **처음 넘는 순간**의 누적치가 곧 「자기 그룹만의 높이」다.
           if (selfH === 0) selfH = groupH;
         }
-        if (nx.breakBefore) break; // 강제 분할이 걸린 아이템은 애초에 같은 페이지가 아니다.
         const nxMeta = blockMeta?.[editIdOf(nx)] ?? blockMeta?.[nx.id];
+        // 강제 분할이 걸린 아이템은 애초에 같은 페이지가 아니다.
+        // ⚠ [E34-R4] **저장 메타(`nxMeta.breakBefore`)도 함께 본다 — 대칭 복원이다.**
+        //   위 orphanBreak 루프는 처음부터 `nx.breakBefore || nxMeta?.breakBefore` 둘 다
+        //   보는데(:253) 이 atomicBreak 시뮬만 아이템 필드 한쪽만 보고 있었다.
+        //   그 비대칭의 실측 대가: 사용자가 첫 문항에 「새 페이지」를 지정해 둔 문서에서
+        //   미니헤드가 그 문항을 데리고 다음 장으로 갔다가 문항이 거기서 다시 밀려
+        //   **미니헤드만 있는 백지 1장**이 생긴다(scratchpad packFlow 실측:
+        //   [[0,1],[2,3]] → [[0],[1],[2,3,4]]). 고아를 없애려던 플래그가 고아를 만드는 역전.
+        //   ⚠ 이 한 줄은 문항 조판(E27) 경로도 함께 지난다 — 인쇄 게이트 재주행 대상이다.
+        if (nx.breakBefore || nxMeta?.breakBefore) break;
         const nTbl = TABLE_WRAPS.has(nx.wrap);
         const nBox = BOX_LIST_WRAPS.has(nx.wrap);
         const nMp = nx.wrap === "map";

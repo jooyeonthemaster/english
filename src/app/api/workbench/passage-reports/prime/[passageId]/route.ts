@@ -24,6 +24,32 @@ export const maxDuration = 300;
 const PRIME_MARKER = "PRIME";
 /** 파이널 원페이지 행 마커(final-onepage-spec F3) — 기본 PRIME 행과 지문당 각 1행 공존. */
 const FINAL_MARKER = "PRIME_FINAL";
+/** [E30 §5 P4] 실전 학습지 행 마커 — `passage-constants.ts` 의 PRACTICE_REPORT_MARKER 미러
+ *  (이 라우트는 형제 라우트들과 같은 관례로 마커 리터럴을 복제해 둔다).
+ *
+ *  ⚠ 이 행은 부모 PRIME 과 **같은 passageId 를 공유**한다(E30 §1-2 D1). 그래서 파이널이 쓴
+ *  「문서 모양 자기감지」 트릭이 실전에는 **원리적으로 적용 불가**다 — 기본 문서도 실전 문서도
+ *  둘 다 `learning-worksheet` 섹션을 가질 수 있어 모양으로는 절대 못 가른다.
+ *  → 저장 대상 행의 정본은 **URL `?variant`** 하나뿐이다. */
+const PRACTICE_MARKER = "PRIME_PRACTICE";
+
+/** 이 라우트가 다루는 문서 축. **무파라미터 = "basic"** 이며, 그때의 동작은 E30 이전과
+ *  글자 그대로 동일하다(P4 바이트 무회귀 — 기존 호출부는 전부 이 경로다). */
+type DocVariant = "basic" | "final" | "practice";
+
+/** `?variant` 해석 — 미지 값은 전부 "basic" 으로 접는다(구·신 클라이언트 혼재 안전). */
+function readDocVariant(req: NextRequest): DocVariant {
+  const raw = req.nextUrl.searchParams.get("variant");
+  return raw === "final" ? "final" : raw === "practice" ? "practice" : "basic";
+}
+
+/** 「섹션이 `learning-worksheet` 하나뿐」 = 실전 분리 문서의 형태(E30 §1-3).
+ *  ⚠ **분류자가 아니라 거절 조건**으로만 쓴다 — 기본 문서도 lw 를 가지므로 이 술어로
+ *  「이건 실전이다」를 단정하면 안 되고, 「이건 기본이 아닐 수 있다」까지만 말할 수 있다. */
+function looksLikePracticeReport(report: { sections?: readonly { kind?: string }[] }): boolean {
+  const sections = report.sections ?? [];
+  return sections.length === 1 && sections[0]?.kind === "learning-worksheet";
+}
 
 /** KO 게이트 판정용 — subject 만 가볍게 읽는다 (영어 경로 무변경). */
 async function loadPassageSubject(passageId: string, academyId: string) {
@@ -45,12 +71,19 @@ export async function GET(
   const { passageId } = await params;
 
   // PRIME_KO 게이트 — 국어 지문은 KO 마커·KO 스키마로만 로드(영어 보고서와 혼재 차단).
-  // ?variant=final 이면 파이널 원페이지(PRIME_FINAL) 행을 조회(final-onepage-spec §2) —
-  // 국어는 final 미지원이라 variant 를 무시하고 기존 동작 그대로. 무파라미터 = 기존 그대로.
+  // ?variant=final 이면 파이널 원페이지(PRIME_FINAL), ?variant=practice 면 실전 학습지
+  // (PRIME_PRACTICE, E30 §5 P4) 행을 조회한다 — 국어는 둘 다 미지원이라 variant 를 무시하고
+  // 기존 동작 그대로. **무파라미터 = 기존 그대로**(PRIME).
   const subjectRow = await loadPassageSubject(passageId, staff.academyId);
   const korean = isKoreanPassage(subjectRow);
-  const wantsFinal = !korean && req.nextUrl.searchParams.get("variant") === "final";
-  const marker = korean ? KO_PRIME_REPORT_MARKER : wantsFinal ? FINAL_MARKER : PRIME_MARKER;
+  const variant: DocVariant = korean ? "basic" : readDocVariant(req);
+  const marker = korean
+    ? KO_PRIME_REPORT_MARKER
+    : variant === "final"
+      ? FINAL_MARKER
+      : variant === "practice"
+        ? PRACTICE_MARKER
+        : PRIME_MARKER;
 
   const row = await prisma.passageReport.findFirst({
     where: { passageId, academyId: staff.academyId, generationPlan: marker, deletedAt: null },
@@ -96,14 +129,55 @@ export async function PATCH(
   }
   const report = parsed.data;
 
-  // final 자기감지(final-onepage-spec §2) — 제출된 report 에 final-onepage 섹션이 있으면
-  // PRIME_FINAL 행에 저장한다(행 부재 시 아래 404). 편집기 PATCH URL 은 기본 문서와 동일 —
-  // 문서 모양만으로 저장 행을 가른다. 국어·기본 문서는 기존 경로 그대로.
+  // 저장 대상 행 결정 — **URL `?variant` 가 정본**이고(E30 §5 P4), 무파라미터일 때만
+  // 기존 final 자기감지(final-onepage-spec §2)로 폴백한다.
+  // · `?variant=practice` → 실전 학습지(PRIME_PRACTICE) 자식 행.
+  // · `?variant=final`    → 파이널 원페이지 행(모양 감지와 결론은 같지만, 편집 중 섹션이
+  //                         지워져 모양이 무너진 파이널이 **부모 PRIME 을 덮어쓰는** 사고를
+  //                         URL 이 원천 차단한다).
+  // · 무파라미터          → **E30 이전과 글자 그대로 동일**(모양 감지 → FINAL, 아니면 PRIME).
+  // ⚠ 실전은 모양으로 가를 수 없다 — 기본 문서도 learning-worksheet 를 가지므로, 실전을
+  //   모양 감지에 얹으면 즉시 「기본 학습지 행 통째 덮어쓰기」가 된다(P4 의 본체).
+  const variant: DocVariant = korean ? "basic" : readDocVariant(req);
   const marker = korean
     ? KO_PRIME_REPORT_MARKER
-    : isFinalOnepageReportShape(report)
-      ? FINAL_MARKER
-      : PRIME_MARKER;
+    : variant === "practice"
+      ? PRACTICE_MARKER
+      : variant === "final"
+        ? FINAL_MARKER
+        : isFinalOnepageReportShape(report)
+          ? FINAL_MARKER
+          : PRIME_MARKER;
+
+  // ── [E30 §5 P4] 미표기 실전 문서 fail-closed ────────────────────────────────
+  // 위 산식은 무파라미터 요청을 PRIME 으로 보낸다(무회귀). 그런데 편집기를 임베드한 호스트가
+  // `docVariant` 를 안 실으면 **실전 문서가 부모 기본 학습지 행을 통째로 덮어쓴다** — 유료
+  // 데이터가 에러 0·로그 0 으로 사라지는, P4 가 막으려는 바로 그 사고다.
+  // 모양으로 「이건 실전이다」를 단정할 수는 없지만, ①「섹션이 learning-worksheet 하나뿐」이고
+  // ②「그 지문에 이미 실전 행이 있다」가 동시에 참이면 **덮어쓰는 것보다 거절이 언제나 낫다**
+  // (되돌릴 수 없는 파괴 vs 되돌릴 수 있는 오류 토스트).
+  // 정상 기본 문서는 섹션이 여러 개라 ①에서 즉시 빠지므로 **추가 질의조차 돌지 않는다**(무회귀).
+  if (!korean && marker === PRIME_MARKER && looksLikePracticeReport(report)) {
+    const practiceRow = await prisma.passageReport.findFirst({
+      where: {
+        passageId,
+        academyId: staff.academyId,
+        generationPlan: PRACTICE_MARKER,
+        deletedAt: null,
+      },
+      select: { id: true },
+    });
+    if (practiceRow) {
+      return NextResponse.json(
+        {
+          error:
+            "실전 학습지 문서는 기본 학습지 주소로 저장할 수 없습니다. 편집기를 다시 열어 주세요.",
+          code: "PRACTICE_VARIANT_REQUIRED",
+        },
+        { status: 409 },
+      );
+    }
+  }
 
   const existing = await prisma.passageReport.findFirst({
     where: { passageId, academyId: staff.academyId, generationPlan: marker, deletedAt: null },

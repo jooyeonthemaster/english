@@ -63,6 +63,24 @@ export const SHEET_COMPOSE_REMOVE_CONFIRM =
 export const SHEET_COMPOSE_COLLAPSE_CONFIRM =
   "저장하지 않은 편집이 있어요. 조판을 접으면 사라집니다. 계속할까요?";
 
+/**
+ * [E34-R1] **편집 대상 전환** confirm — 헤더 문서 칩 옆 ✎ 버튼 전용.
+ *
+ * 왜 필요한가: R1 이 「편집 대상을 자유롭게 고른다」를 원클릭 상시 제스처로 승격시킨다.
+ * 전환은 편집기 `key` 교체 = **재마운트**라 미저장 편집·undo 히스토리·줌이 전부 증발한다
+ * (E21-6 4번). 오늘까지 이 경로는 「체크 해제」 하나뿐이었고 그건 위 REMOVE 가 덮었다.
+ *
+ * REMOVE / COLLAPSE 자구를 재사용하지 않는 이유는 같은 원칙이다 — **거짓 경고 금지**.
+ * 전환은 대기열에서 아무것도 빼지 않고(REMOVE 거짓) 조판을 접지도 않는다(COLLAPSE 거짓).
+ * 잃는 것은 「지금 편집 중인 문서의 미저장분」이므로 그 조작의 언어로 말한다.
+ *
+ * ⚠ 이 상수를 저장 진행 중(saving) 경로에 쓰지 마라 — 그쪽은 confirm 이 아니라
+ *   **차단**이다(전환하면 PATCH 응답 처리기가 언마운트로 죽어 저장 실패가 화면 어디에도
+ *   표시되지 않는다).
+ */
+export const SHEET_COMPOSE_SWITCH_CONFIRM =
+  "저장하지 않은 편집이 있어요. 다른 학습지로 옮기면 사라집니다. 계속할까요?";
+
 /** 드로어 [조판 접기] 직전 가드 — dirty 가 아니면 조용히 통과한다. */
 export function confirmSheetComposeCollapse(): boolean {
   const state = currentProbe?.();

@@ -575,14 +575,21 @@ export function PassageAnalysisModal({
                     disabled={!editorToolbar.dirty}
                     iconOnly
                     title="저장"
-                    secondaryActions={[
-                      {
-                        label: "다른 이름으로 저장",
-                        icon: <Copy className="h-3.5 w-3.5" />,
-                        onClick: editorToolbar.requestSaveAs,
-                        disabled: editorToolbar.savingAs,
-                      },
-                    ]}
+                    secondaryActions={
+                      // [E30 §2-4] 실전 학습지 문서는 사본 저장 미지원(saveAsSupported=false) —
+                      // 사본은 새 지문을 만들어 **부모 없는 고아 실전**이 되기 때문이다.
+                      // undefined(구 상태)는 지원으로 본다 — worksheetSupported 와 같은 규약.
+                      editorToolbar.saveAsSupported === false
+                        ? []
+                        : [
+                            {
+                              label: "다른 이름으로 저장",
+                              icon: <Copy className="h-3.5 w-3.5" />,
+                              onClick: editorToolbar.requestSaveAs,
+                              disabled: editorToolbar.savingAs,
+                            },
+                          ]
+                    }
                   />
                   <button
                     type="button"

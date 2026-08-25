@@ -24,7 +24,6 @@ import { createPortal } from "react-dom";
 import {
   ChevronLeft,
   ChevronRight,
-  FileQuestion,
   GripVertical,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -69,6 +68,9 @@ import {
   worksheetClozeTranslationsAreHidden,
 } from "@/lib/passage-report/analysis-report/worksheet-surface";
 import { isKoAnalysisReportShape } from "@/lib/passage-report/analysis-report/ko-report-detect";
+// 실전 학습지 마커 정본(E30 §1-1). 리터럴 복제 금지 — 복제본은 타입 에러 0 으로 조용히 갈린다.
+// (의존성 없는 상수 모듈이라 클라이언트 번들에 안전하게 들어간다 — sheet-deploy-eligibility 선례.)
+import { PRACTICE_REPORT_MARKER } from "@/actions/workbench/passage-constants";
 import { notifyCreditsChanged } from "@/lib/credits-client";
 
 import {
@@ -115,6 +117,7 @@ import {
   deleteSection,
   hideOrDeleteIds,
   injectVocabTestSection,
+  vocabRowsFromMustKnow,
   moveIdBy,
   newCustomBlockId,
   removeInjectedVocabSection,
@@ -426,6 +429,12 @@ export type ReportEditorToolbarState = {
   generateWorksheet: () => void;
   /** '다른 이름으로 저장' 다이얼로그 열기. 다이얼로그 자체는 편집기가 소유한다(호스트마다 복제 금지). */
   requestSaveAs: () => void;
+  /** 사본 저장을 지원하는 문서인지 — **실전 학습지(PRIME_PRACTICE)는 false**(E30 §2-4:
+      사본은 새 지문을 만들므로 실전 사본은 부모 없는 고아가 된다).
+      호스트는 구 상태(undefined)와의 호환을 위해 `!== false` 로 판정한다.
+      ⚠ 호스트가 이 필드를 무시해도 데이터는 안전하다 — `requestSaveAs` 자신이 실전에서
+      다이얼로그를 열지 않고 사유 토스트만 띄우고, 서버도 400 으로 거절한다(3중 방어). */
+  saveAsSupported: boolean;
   /** 사본 저장 진행 중. 저장 버튼의 스피너·비활성 판정에 쓴다. */
   savingAs: boolean;
 };
@@ -466,9 +475,36 @@ interface Props {
       미전달(또는 null)이면: 기본 문서는 현행 렌더와 바이트 동일(I1), 파이널 문서는 T1 강등
       (en-계 활동만 availability 로 열림). */
   activitySource?: AnalysisReport | null;
+  /** [E30 §5 P4] 이 편집기가 열고 있는 **문서 축**. 저장 PATCH 의 `?variant` 가 여기서 나온다.
+      - `"basic"`(기본값·미전달) = **무파라미터** → 서버 동작이 E30 이전과 글자 그대로 동일하다.
+      - `"practice"` = 실전 학습지(부모 PRIME 의 자식 행).
+      - `"final"` = 파이널 원페이지.
+
+      ⚠ **미전달은 안전한 기본값이 아니다** — 실전 문서를 열면서 이 prop 을 빠뜨리면 저장이
+      부모 기본 학습지 행을 통째로 덮어쓴다(P4). 실전 문서는 모양으로 감지할 수 없으므로
+      (기본도 실전도 둘 다 learning-worksheet 를 가진다) **호스트가 행 마커를 알려 주는 것이
+      유일한 정본**이다. 서버에 fail-closed 백스톱이 있지만(409) 그건 파괴를 막는 안전망이지
+      정상 경로가 아니다 — 실전을 여는 호스트는 반드시 이 prop 을 실어라. */
+  docVariant?: "basic" | "final" | "practice";
+  /** [E30 §5 P4] 실전 학습지 **생성 성공** 통보 — 새 문서는 별도 행(PRIME_PRACTICE)이므로
+      편집기는 현재 문서를 그것으로 갈아끼우지 않는다(그러면 이 편집기의 저장이 실전 본문을
+      기본 행에 쓴다). 호스트가 새 탭/새 문서로 착지시키라는 뜻의 콜백이다.
+      미전달이면 생성 결과는 토스트로만 고지된다(문서는 그대로). */
+  onPracticeCreated?: (created: { report: AnalysisReport; reportId: string | null }) => void;
   /** E21 — 활성 문서 **뒤에 이어 붙일 읽기전용 문서**들(배열 순서 = 조판 순서).
       미전달/빈 배열이면 합성 자체를 하지 않고 기존 단일 문서 경로가 그대로 돈다. */
   composeDocs?: ComposeDoc[];
+  /**
+   * [E34-R1] 편집 대상 문서를 `composeDocs` 의 **이 인덱스 자리**에 끼워 인쇄한다.
+   *
+   * R1 이전에는 편집 대상이 언제나 스트림 선두였고, 그래서 편집 대상을 바꾸면 인쇄
+   * 순서가 바뀌었다(호스트 대기열이 그 사실을 미러해 문서 칩 번호가 통째로 뒤집혔다).
+   * 이 값이 그 결합을 끊는다 — **순서는 대기열이, 편집 대상은 이 인덱스가** 정한다.
+   *
+   * **미전달(또는 0)이면 R1 이전과 산출물이 배열 요소 참조까지 동일**하다.
+   * 원시값이라 참조 churn 이 없다(객체로 감싸지 마라 — 매 렌더 재합성 489ms).
+   */
+  composeActiveIndex?: number;
   /** E22(§3.10.22 E22-0 1번) — 활성 학습지 **뒤에 이어 붙일 시험지 문항**의 읽기전용 FlowItem[].
       배열 순서 = 인쇄 순서. **문항은 문서에 저장되지 않는 합성분**이다: 리포트 스키마가 문항을
       담을 수 없고(`schema.ts:660` questions.max(8) · `:331-341` no≤12·choices 2~6 ·
@@ -519,7 +555,10 @@ export function AnalysisReportEditor({
   onExit,
   onToolbarStateChange,
   activitySource,
+  docVariant = "basic",
+  onPracticeCreated,
   composeDocs,
+  composeActiveIndex,
   composeQuestions,
   composeQuestionsAfterDoc,
   composeOutline,
@@ -574,8 +613,17 @@ export function AnalysisReportEditor({
   // 축**(실전 학습지 생성 — worksheetSupported/showGenerateWorksheet)뿐이다. 학습 활동·
   // 단어 시험지·웹툰 팔레트는 파이널에서도 상시 노출되며, 생성 소스는 아래 activityGenReport
   // (같은 지문의 기본 리포트 폴백)로 해석한다.
-  // 저장 PATCH URL 은 무변경 — 서버가 report 모양을 자기감지해 PRIME_FINAL 행에 저장한다.
+  // 저장 대상 행은 이제 아래 `docVariant`(URL `?variant`)가 정한다 — 서버의 모양 자기감지는
+  // **무파라미터 폴백**으로만 남았다(E30 §5 P4). 이 플래그는 여전히 화면 게이트 전용이다.
   const finalOnepage = useMemo(() => isFinalOnepageReportShape(report), [report]);
+  // ── [E30 §5 P4] 실전 학습지 문서 판별 ── **문서 모양이 아니라 호스트가 준 행 마커**다.
+  // 기본 문서도 실전 문서도 learning-worksheet 를 가지므로 모양으로는 절대 못 가른다
+  // (파이널이 쓴 자기감지 트릭이 실전에 원리적으로 적용 불가한 이유).
+  // 이 플래그가 여는 것: 저장 PATCH 의 `?variant=practice`(부모 행 덮어쓰기 차단) ·
+  // 사본 저장 금지(§2-4 고아 실전 방지) · 실전 재생성 버튼 숨김(실전 위에 실전 금지).
+  const practiceDoc = docVariant === "practice";
+  // 저장·사본 URL 의 `?variant` — 기본 문서는 **빈 문자열**이라 요청 바이트가 E30 이전과 동일하다.
+  const docVariantQuery = docVariant === "basic" ? "" : `?variant=${docVariant}`;
 
   // ── E23 활동 생성 소스 해석 ── 팔레트·활동 생성 헬퍼가 읽는 genReport 와 가용성 맵.
   // activitySource 는 setReport updater 안에서도 읽어야 하므로 ref 미러로 둔다(렌더 캡처 금지).
@@ -604,6 +652,30 @@ export function AnalysisReportEditor({
     const vs = activitySource?.sections.find((s) => s.kind === "vocabulary");
     return vs?.kind === "vocabulary" && vs.rows.filter((row) => isDefaultVocabularyTestTarget(row)).length > 0;
   }, [activitySource]);
+  // ══ [E34-R2] 파이널 **자신의 각주 어휘** 폴백 ═══════════════════════════════
+  // 구 게이트는 부모(기본) 리포트만 봤다. 부모 없는 파이널이 실재하고(지문 등록에서
+  // basic/practice/final 택1 — 파이널만 단독 생성 가능), 그 문서들은 자기 단어를 들고도
+  // 카드가 잠겨 있었다. 개수를 세어 두는 이유는 **0개면 열지 않기 위해서**다 —
+  // 빈 시험지가 주입·저장·인쇄되는 사고를 원천에서 막는다.
+  const ownMustKnowCount = useMemo(() => vocabRowsFromMustKnow(report).length, [report]);
+  /**
+   * 이 문서가 **부모/자기 어휘를 승격 주입**해서 단어 시험지를 켜는 축인가.
+   * 파이널(vocabulary 섹션이 정의상 없다)과 **실전**이 여기 속한다.
+   *
+   * ⚠ [E34-R2] 실전(PRIME_PRACTICE)이 새로 합류했다. 실전은 부모 기본이 **반드시**
+   *   존재하므로(라우트가 「기본 학습지 이력이 있는 지문에」로 못박았다) 부모 어휘를
+   *   그대로 쓸 수 있어 **파이널보다 품질이 높은데**, 지금까지는 카드조차 뜨지 않았다
+   *   (무설명 증발 — 사용자가 「실전에서도 단어 시험지를 만들 수 있어야 한다」고 확인).
+   */
+  const injectedVocabDoc = finalOnepage || practiceDoc;
+  /** 승격 주입으로 켤 수 있는가 = 부모 어휘가 있거나(우선) 자기 각주 어휘가 있다. */
+  const canInjectVocabTest = injectedVocabDoc && (sourceHasVocab || ownMustKnowCount > 0);
+  /**
+   * 합성본(= 부모 없이 자기 각주 어휘로 만든 시험지)인가. 카드·시험지 머리에 고지한다.
+   * 부모 경로는 15~22문항인데 각주 경로는 4~8문항이라, 강사가 품질 차이를 모르고
+   * 인쇄하면 「단어 4개짜리 시험지」가 학생에게 나간다.
+   */
+  const vocabFromMustKnow = injectedVocabDoc && !sourceHasVocab && ownMustKnowCount > 0;
 
   useEffect(() => {
     onDraftChange?.(report, { dirty });
@@ -2034,17 +2106,35 @@ export function AnalysisReportEditor({
   // 스펙이 인용한 구 :745-747)이 `CSS.escape` 없이 `[data-paper-item-id="${id}"]` /
   // `[data-mid="${id}"]` 를 문자열 결합하므로 조판이 조용히 깨진다.
   // 위반 문서는 콘솔로 알리고 **제외**한다(무단 통과가 더 위험).
-  const composeCompanions = useMemo(() => {
+  // [E34-R1] 반환을 `{ ok, droppedAt }` 객체로 넓혔다 — **인덱스 드리프트 봉쇄**.
+  // 표면은 자기 `readyIds` 기준으로 편집 대상 슬롯(`composeActiveIndex`)을 센다. 그런데
+  // 이 관문이 문서를 하나라도 걸러 내면 두 배열의 인덱스가 어긋나, 편집 대상이
+  // **엉뚱한 자리에 인쇄된다**(에러 0 · 인쇄물에서만 발견). docKey 는 cuid sanitize 값이라
+  // 위반이 현실적으로 불가능하지만 봉쇄 비용이 3줄이라 봉쇄한다.
+  // ⚠ deps 는 `[composeDocs]` 하나 그대로다 — 참조 안정성 계약이 이 트리 성능의 전부다.
+  const { ok: composeCompanions, droppedAt } = useMemo(() => {
     const list = composeDocs ?? [];
-    const ok = list.filter((d) => isValidDocKey(d.docKey));
-    if (process.env.NODE_ENV !== "production" && ok.length !== list.length) {
+    const ok: typeof list = [];
+    const droppedAt: number[] = [];
+    list.forEach((d, i) => (isValidDocKey(d.docKey) ? ok.push(d) : droppedAt.push(i)));
+    if (process.env.NODE_ENV !== "production" && droppedAt.length > 0) {
       console.error(
         "[compose] docKey 규약([A-Za-z0-9_]) 위반으로 제외:",
-        list.filter((d) => !isValidDocKey(d.docKey)).map((d) => d.docKey),
+        droppedAt.map((i) => list[i]?.docKey),
       );
     }
-    return ok;
+    return { ok, droppedAt };
   }, [composeDocs]);
+  /**
+   * [E34-R1] 편집 대상이 앉을 **슬롯**(부착 문서 배열 기준). 미전달=0=활성 선두라
+   * R1 이전과 산출이 참조까지 동일하다(compose-flow.ts `activeIndex` JSDoc).
+   * 위 관문이 버린 인덱스만큼 앞으로 당겨 드리프트를 상쇄한 뒤 범위를 클램프한다.
+   */
+  const composeActiveIndexSafe = useMemo(() => {
+    const raw = composeActiveIndex ?? 0;
+    const shifted = raw - droppedAt.filter((i) => i < raw).length;
+    return Math.min(Math.max(shifted, 0), composeCompanions.length);
+  }, [composeActiveIndex, droppedAt, composeCompanions.length]);
   // 문항 축 — 미전달이면 **모듈 상수**(:184)로 폴백해 참조가 영구 고정된다.
   const composeQuestionItems = composeQuestions ?? EMPTY_QUESTION_ITEMS;
   // [E27] 지문 인터리브 축 — 미전달이면 **모듈 상수 빈 Map**(:210)으로 폴백해 참조가 영구 고정된다.
@@ -2178,6 +2268,8 @@ export function AnalysisReportEditor({
             // 삽입 지점이 `buildComposedView` 안이어야 하는 이유는 바로 위 E22 주석과 동일하다
             // (`blockOrder` 사전 확정 루프보다 앞이어야 splice 폴백에 빨려 들어가지 않는다).
             questionsAfterDoc: composeQuestionsAfterDocMap,
+            // [E34-R1] 편집 대상 슬롯. 0(미전달 폴백)이면 R1 이전과 참조까지 동일하다.
+            activeIndex: composeActiveIndexSafe,
           })
         : null,
     [
@@ -2187,6 +2279,7 @@ export function AnalysisReportEditor({
       naturalFlowItems,
       composeQuestionItems,
       composeQuestionsAfterDocMap,
+      composeActiveIndexSafe,
     ],
   );
 
@@ -2246,7 +2339,11 @@ export function AnalysisReportEditor({
   /**
    * 조판 목차 항목 클릭 — **스크롤만 한다. 활성 문서를 전환하지 않는다.**
    *
-   * 전환은 표면 헤더의 문서 칩이 소유한다(`sheet-compose-surface.tsx:1114` requestActiveDoc).
+   * ⚠ [E33] 구 자구는 「전환은 표면 헤더의 문서 칩이 소유한다(sheet-compose-surface.tsx:1114
+   *   requestActiveDoc)」였다. **그 함수도 그 책임도 이제 없다**(칩은 이동 전용, 편집 대상은
+   *   대기열 선두 1건 고정). 「칩이 대신 해 주니까 목차는 안 해도 된다」로 읽지 마라 —
+   *   지금은 **아무도 하지 않는 것이 계약**이고, 그래서 목차에 전환을 붙일 이유는 더 줄었다.
+   *   (인용돼 있던 `:1114` 은 이 리포가 금지한 줄번호 포인터이고 이미 밀려 죽어 있었다.)
    * 전환은 `key` 교체 = 편집기 **재마운트**라 미저장 편집·undo 히스토리·줌이 전부 증발하고,
    * 그 앞에 걸린 dirty confirm(`:747-761`)까지 우회된다. 목차에서 그걸 하면
    * 「목차를 눌렀을 뿐인데 편집이 사라졌다」가 된다(정찰 D 확정 위험).
@@ -2322,11 +2419,21 @@ export function AnalysisReportEditor({
             // 빈 시트가 되고, `thumbPageInfo` 의 coverFlags·본문 번호가 캔버스와 어긋난다.
             // (인터리브는 문항을 스트림 **한가운데**로 옮기므로 어긋남이 꼬리 배치보다 더 크다.)
             questionsAfterDoc: composeQuestionsAfterDocMap,
+            // [E34-R1] **이쪽에도 반드시 전달한다** — 바로 위 E22·E27 주석과 같은 계통이다.
+            // 지금 당장의 증상은 없다(레일은 캔버스가 만든 pageList 를 쓰고 thumbItemsById 는
+            // id→item Map 이라 순서에 무감하다). 그럼에도 넘기는 이유 둘:
+            //  ① composedThumb.pagesReport 가 레일의 report 로 내려가는데 그 blockOrder 가
+            //     캔버스와 갈린다.
+            //  ② 이 파일은 「두 합성의 입력을 반드시 일치시킨다」를 이미 두 번 계약으로
+            //     못박았다. 빠뜨리면 「게이트는 초록인데 두 합성이 갈려 있는」 상태가 남고,
+            //     다음 사람이 썸네일을 독립 페이지네이션하는 순간 무음으로 터진다.
+            activeIndex: composeActiveIndexSafe,
           })
         : null,
     [
       composeActive,
       composeCompanions,
+      composeActiveIndexSafe,
       deferredReport,
       thumbSource,
       composeQuestionItems,
@@ -2461,7 +2568,7 @@ export function AnalysisReportEditor({
     setSaving(true);
     setError(null);
     try {
-      const res = await fetch(`/api/workbench/passage-reports/prime/${passageId}`, {
+      const res = await fetch(`/api/workbench/passage-reports/prime/${passageId}${docVariantQuery}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ report }),
@@ -2477,7 +2584,7 @@ export function AnalysisReportEditor({
     } finally {
       setSaving(false);
     }
-  }, [passageId, report, onSaved]);
+  }, [passageId, docVariantQuery, report, onSaved]);
 
   /** 사본을 만든 적이 있으면 편집기가 닫힐 때 목록을 한 번 다시 읽는다(아래 saveAs 주석 참고). */
   const listNeedsRefreshRef = useRef(false);
@@ -2547,9 +2654,23 @@ export function AnalysisReportEditor({
       const j = await res.json();
       if (!res.ok) throw new Error(j?.error ?? "실전 학습지 생성에 실패했습니다.");
       const saved = (j.report as AnalysisReport) ?? report;
-      dispatchReport({ type: "replace", report: saved, clearHistory: true });
-      setBaseline(saved);
-      onSaved?.(saved);
+      // [E30 §5 P4] 응답의 `planMarker` 가 **산출 행**을 말한다.
+      //  · PRIME_PRACTICE = 실전이 **별도 자식 행**으로 생겼다 → 이 편집기(기본 문서)를 그
+      //    본문으로 갈아끼우면 다음 저장이 실전 본문을 **기본 행에 쓴다**. 문서는 그대로 두고
+      //    착지(새 탭·새 문서)는 호스트에 위임한다.
+      //  · 마커 없음 = 부모 PRIME 에 병합해 돌려주던 **구 응답** → 기존 경로 그대로 반영한다.
+      //    (여기서 반영을 빼면 방금 만든 워크시트가 화면에 없는 채로 남고, 저장 한 번이면 지워진다.)
+      if (j?.planMarker === PRACTICE_REPORT_MARKER) {
+        onPracticeCreated?.({
+          report: saved,
+          reportId: typeof j?.reportId === "string" ? j.reportId : null,
+        });
+        toast.success("실전 학습지를 만들었어요. 기본 학습지와는 별도 문서로 저장됩니다.");
+      } else {
+        dispatchReport({ type: "replace", report: saved, clearHistory: true });
+        setBaseline(saved);
+        onSaved?.(saved);
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
     } finally {
@@ -2557,7 +2678,7 @@ export function AnalysisReportEditor({
       // 차감/실패환급 모두 잔액이 바뀌므로 사이드바 뱃지 즉시 갱신.
       notifyCreditsChanged();
     }
-  }, [dirty, save, passageId, report, onSaved]);
+  }, [dirty, save, passageId, report, onSaved, onPracticeCreated]);
 
   const undo = useCallback(() => {
     // 실행취소로 되돌아갈 상태(past 의 마지막)와 현재 상태를 비교해, 다시 보이게 되는
@@ -2678,7 +2799,21 @@ export function AnalysisReportEditor({
   // '다른 이름으로 저장'은 다이얼로그를 여는 것뿐이라 setState 세터만 닫아 잡는다 —
   // deps 가 빈 useCallback 이므로 save/generateWorksheet 와 동일하게 정체성이 영원히 고정된다.
   // (편집 중인 report·title 을 여기로 끌어들이면 키 입력마다 호스트 모달이 리렌더된다.)
-  const stableRequestSaveAs = useCallback(() => setSaveAsOpen(true), []);
+  // [E30 §2-4] 실전 학습지는 사본 저장 대상이 아니다 — 사본은 **새 지문 행**을 만들므로
+  // 실전 사본은 부모 PRIME 이 없는 고아가 되고, 「실전만 먼저 생성은 안 되는 구조」를
+  // 사본 경로로 우회하게 된다. 호스트가 버튼을 그려 버려도 여기서 막는다.
+  // 판정을 ref 로 읽는 이유는 위 계약 그대로다 — deps 가 비어야 정체성이 영구 고정된다.
+  const saveAsBlockedRef = useRef(false);
+  saveAsBlockedRef.current = practiceDoc;
+  const stableRequestSaveAs = useCallback(() => {
+    if (saveAsBlockedRef.current) {
+      toast.info(
+        "실전 학습지는 사본 저장을 지원하지 않아요. 기본 학습지를 사본으로 저장하면 실전을 다시 추가할 수 있습니다.",
+      );
+      return;
+    }
+    setSaveAsOpen(true);
+  }, []);
   useEffect(() => {
     onToolbarStateChange?.({
       dirty,
@@ -2687,13 +2822,16 @@ export function AnalysisReportEditor({
       worksheetBusy,
       worksheetHasContent: toolbarWorksheetHasContent,
       // KO·파이널 원페이지 문서는 실전 학습지(영어 전용 파이프라인) 미지원 — 호스트가 생성 버튼을 숨긴다.
-      worksheetSupported: !koReport && !finalOnepage,
+      // 실전 학습지 문서 자신도 미지원이다(실전 위에 실전을 또 만들 자리가 없다 — E30 §5 P4).
+      worksheetSupported: !koReport && !finalOnepage && !practiceDoc,
       generateWorksheet: stableGenerateWorksheet,
       requestSaveAs: stableRequestSaveAs,
+      // 실전 학습지는 사본 저장 미지원(E30 §2-4 — 고아 실전 방지).
+      saveAsSupported: !practiceDoc,
       // savingAs 는 사본 저장 시작·종료에만 바뀌는 의미 있는 boolean 이라 보고해도 안전하다.
       savingAs,
     });
-  }, [dirty, saving, stableSave, worksheetBusy, toolbarWorksheetHasContent, koReport, finalOnepage, stableGenerateWorksheet, stableRequestSaveAs, savingAs, onToolbarStateChange]);
+  }, [dirty, saving, stableSave, worksheetBusy, toolbarWorksheetHasContent, koReport, finalOnepage, practiceDoc, stableGenerateWorksheet, stableRequestSaveAs, savingAs, onToolbarStateChange]);
   useEffect(
     () => () => onToolbarStateChange?.(null),
     [onToolbarStateChange],
@@ -2718,7 +2856,9 @@ export function AnalysisReportEditor({
   // 단어 시험지를 학습 활동 카드처럼 켜는 핸들러 — 켜고 우측 패널에 '단어 시험지 설정' 섹션을 펼친다.
   // (문서를 스크롤/점프시키지 않으려고 onVocabTestMode 대신 setReport 로 직접 모드만 켠다.)
   const activateVocabTest = () => {
-    if (finalOnepage && toolbarVocabularyIndex < 0 && sourceHasVocab) {
+    // [E34-R2] 조건 확장: 파이널 → **승격 주입 축 전체**(파이널 + 실전),
+    // 그리고 부모 어휘가 없어도 **자기 각주 어휘**가 있으면 켠다(canInjectVocabTest).
+    if (injectedVocabDoc && toolbarVocabularyIndex < 0 && canInjectVocabTest) {
       // 파이널 문서엔 vocabulary 섹션이 없다 — 소스(기본 리포트)의 섹션을 승격 주입한다(E23).
       // hiddenSections "vocabulary" 등록이 핵심: 파이널 슬롯 경로(section-slots.ts 의
       // final-onepage 조기 반환)는 주입 섹션에 슬롯을 만들지 않으므로, 지면 출력은 assemble 의
@@ -2739,8 +2879,9 @@ export function AnalysisReportEditor({
   // 카드의 ON 스위치 — 단어 시험지 끄기. "study" 모드는 vocabTestOnly 까지 함께 해제하며,
   // onVocabTestMode 가 사라지는 시험지 위로 부드럽게 스크롤한 뒤 제거한다.
   const deactivateVocabTest = () => {
-    if (finalOnepage) {
-      // 파이널의 vocabulary 는 정의상 전부 주입본(E23) — 섹션 제거 + hidden 키 정리로 원복한다.
+    if (injectedVocabDoc) {
+      // [E34-R2] 실전도 같은 축이다 — 주입본 제거 경로를 공유한다.
+      // 파이널/실전의 vocabulary 는 정의상 전부 주입본(E23) — 섹션 제거 + hidden 키 정리로 원복한다.
       setReport((r) => removeInjectedVocabSection(r));
       return;
     }
@@ -2933,9 +3074,10 @@ export function AnalysisReportEditor({
             canRedo={canRedo}
             worksheetBusy={worksheetBusy}
             worksheetHasContent={toolbarWorksheetHasContent}
-            showGenerateWorksheet={!onToolbarStateChange && !koReport && !finalOnepage}
+            showGenerateWorksheet={!onToolbarStateChange && !koReport && !finalOnepage && !practiceDoc}
             // 저장 버튼을 끌어올리지 않는 컨텍스트에는 사본 저장 입구가 없다 — 툴바에 인라인으로 둔다.
-            showSaveAs={!onToolbarStateChange}
+            // 실전 학습지 문서에서는 그 입구 자체를 렌더하지 않는다(E30 §2-4).
+            showSaveAs={!onToolbarStateChange && !practiceDoc}
             savingAs={savingAs}
             onSaveAs={stableRequestSaveAs}
             answerKeyIncluded={toolbarAnswerKeyIncluded}
@@ -2977,7 +3119,7 @@ export function AnalysisReportEditor({
           vocabTestSlot={
                   // 파이널은 vocabulary 섹션이 없어도 소스(기본 리포트)에 어휘가 있으면 켤 수
                   // 있다 — activateVocabTest 가 소스 섹션을 승격 주입한다(E23). KO 는 계속 숨김.
-                  !koReport && (canToggleToolbarVocabTestOnly || (finalOnepage && sourceHasVocab)) ? (
+                  !koReport && (canToggleToolbarVocabTestOnly || canInjectVocabTest) ? (
                     // 헤더의 스위치가 실제 <button> 이라 카드 자체는 div[role=button] 으로(중첩 버튼 금지).
                     <div
                       role="button"
@@ -2993,30 +3135,30 @@ export function AnalysisReportEditor({
                       }}
                       title={toolbarVocabTestEnabled ? "단어 시험지 끄기" : "단어 시험지 켜기"}
                       className={cn(
-                        // 꺼짐 상태도 파랑을 유지한다 — 회색(border-slate-200 bg-white)이면 흰 배경에 묻혀
-                        // '꺼져 있음'이 곧 '존재감 없음'이 된다(사용자 지적). ring 으로 켜짐/꺼짐을 가른다.
-                        "group flex w-full cursor-pointer flex-col gap-2 rounded-xl border p-3 text-left transition-all",
+                        // ══ [E34-R3] 카드 → **섹션 안의 행**으로 ═══════════════════════
+                        // 구 값은 `rounded-xl border p-3` + 파란 ring 이었다. 그때는 이
+                        // 카드가 팔레트 스크롤 영역 **바깥**의 독립 밴드에 떠 있어서
+                        // 자기 테두리가 필요했다. 이제는 「어휘」 섹션(그 자체가
+                        // rounded-xl border) **안**에 들어가므로 테두리를 그대로 두면
+                        // **테두리 안의 테두리**가 된다.
+                        // → 카탈로그 행 문법(`px-3 py-2.5` · 무테두리 · 켜짐은 배경으로)
+                        //   으로 맞춘다.
+                        // ⚠ **완전 슬레이트화는 금지**다 — 「꺼짐 상태도 파랑을 유지한다.
+                        //   회색이면 흰 배경에 묻혀 '꺼져 있음'이 곧 '존재감 없음'이 된다」는
+                        //   사용자 지적으로 이미 한 번 기각된 방향이다. 그래서 꺼짐에도
+                        //   좌측 파란 액센트 바(border-l)를 남겨 존재감을 지킨다.
+                        "group flex w-full cursor-pointer flex-col gap-1.5 border-l-2 px-3 py-2.5 text-left transition-colors",
                         toolbarVocabTestEnabled
-                          ? "border-blue-500 bg-blue-50 ring-2 ring-blue-500/15 hover:bg-blue-100/60"
-                          : "border-blue-300 bg-white shadow-sm ring-1 ring-blue-100 hover:border-blue-400 hover:bg-blue-50/50 hover:ring-blue-200",
+                          ? "border-l-blue-500 bg-blue-50/60 hover:bg-blue-50"
+                          : "border-l-blue-200 bg-white hover:bg-blue-50/30",
                       )}
                     >
                       <div className="flex items-center gap-2">
-                        <span
-                          className={cn(
-                            "flex size-8 shrink-0 items-center justify-center rounded-lg transition-colors",
-                            toolbarVocabTestEnabled
-                              ? "bg-blue-600 text-white"
-                              : "bg-blue-50 text-blue-500 group-hover:bg-blue-100",
-                          )}
-                        >
-                          <FileQuestion className="size-4" />
-                        </span>
+                        {/* [E34-R3] `size-8` 아이콘 타일 제거 — 카탈로그 행에는 아이콘이
+                            아예 없다. 라벨·부제 타이포도 행 문법(`font-bold text-slate-800`
+                            / 별도 `<p>` 설명)에 맞춘다. */}
                         <span className="min-w-0 flex-1">
-                          <span className="block truncate text-[12.5px] font-black text-slate-900">단어 시험지</span>
-                          <span className="block truncate text-[10.5px] font-semibold text-slate-400">
-                            지문 단어로 시험지 페이지 생성
-                          </span>
+                          <span className="block truncate text-[12.5px] font-bold text-slate-800">단어 시험지</span>
                         </span>
                         <ActivityToggleSwitch
                           on={toolbarVocabTestEnabled}
@@ -3028,51 +3170,72 @@ export function AnalysisReportEditor({
                           }}
                         />
                       </div>
-                      <div
-                        className={cn(
-                          "rounded-lg border px-2 py-1.5",
-                          toolbarVocabTestEnabled ? "border-blue-200 bg-white/70" : "border-blue-100 bg-blue-50/70",
-                        )}
-                      >
-                        <span className="text-[9px] font-black uppercase tracking-wider text-blue-400">
+                      {/* [E34-R3] 부제를 헤더 span 밖 별도 <p> 로 — 카탈로그 행 문법. */}
+                      <p className="text-[11px] leading-snug text-slate-500">
+                        {/* [E34-R2] **합성본 고지.** 부모 기본 학습지가 없어 자기 각주
+                            어휘로 만든 시험지는 문항 수가 4~8개다(부모 경로는 15~22개).
+                            고지하지 않으면 강사가 품질 차이를 모르고 인쇄해 「단어 4개짜리
+                            시험지」가 학생에게 나간다. 개수를 숫자로 박아 오해를 없앤다. */}
+                        {vocabFromMustKnow
+                          ? `각주 어휘 ${ownMustKnowCount}개로 만든 축약 시험지`
+                          : "지문 단어로 시험지 페이지 생성"}
+                      </p>
+                      {/* [E34-R3] 미리보기 박스를 카탈로그 행의 슬레이트 계열로 맞춘다
+                          (구: 파란 계열 border-blue-200/bg-white-70 — 혼자 튀던 조각).
+                          ⚠ 아래 「현재 출제」 문자열을 다듬지 마라 — probe-final-activity 가
+                            `/현재 출제/` 정규식으로 켜짐을 판정한다. 바꾸면 게이트가
+                            **조용히** FAIL 한다. */}
+                      <div className="rounded-md border border-slate-100 bg-slate-50/80 px-2 py-1.5">
+                        <span className="text-[9px] font-semibold uppercase tracking-wider text-slate-400">
                           {toolbarVocabTestEnabled ? "현재 출제" : "지금 꺼짐"}
                         </span>
                         <p className="mt-0.5 flex items-center gap-1 text-[11px] font-bold leading-snug text-blue-700">
                           {/* truncate 는 「…·반의어」 꼬리를 잘라 정보를 잃는다 — 2줄 클램프로 무손실. */}
                           <span className="min-w-0 flex-1 line-clamp-2">
+                            {/* [E34-R2] 각주 어휘 합성본에는 동의어·반의어 데이터가
+                                **원리적으로 없다**(mustKnow 는 term·meaning 2필드뿐).
+                                꺼짐 안내에서 그 두 모드를 빼야 「켰더니 빈 칸만 나온다」가
+                                안 생긴다. 지어내서 채우는 것은 스펙이 기각한 방향이다. */}
                             {toolbarVocabTestEnabled
                               ? `${VOCAB_TEST_MODE_LABEL[toolbarVocabMode]}${report.vocabTestOnly ? " · 시험지만" : ""}`
-                              : "눌러서 켜기 — 뜻·단어·동의어·반의어"}
+                              : vocabFromMustKnow
+                                ? "눌러서 켜기 — 뜻·단어 (동의어·반의어는 각주 어휘에 없어요)"
+                                : "눌러서 켜기 — 뜻·단어·동의어·반의어"}
                           </span>
                           <ChevronRight className="size-3 shrink-0 opacity-60 transition-transform group-hover:translate-x-0.5" />
                         </p>
                       </div>
                     </div>
-                  ) : finalOnepage && !koReport && !canToggleToolbarVocabTestOnly && !sourceHasVocab ? (
+                  ) : injectedVocabDoc && !koReport && !canToggleToolbarVocabTestOnly && !canInjectVocabTest ? (
                     // 파이널 + 소스에 출제 대상 어휘 없음(T1 강등 포함) — 슬롯을 조용히 비우면
                     // 「어제는 있었는데 사라졌다」로 읽힌다(무설명 증발). 비활성 카드로 이유를
                     // 남긴다. 다른 문서 축(기본/KO)은 현행 null 유지 — 이 분기는 파이널 전용.
+                    // [E34-R3] 잠김 카드도 카탈로그 **비활성 행** 문법으로.
+                    // ⚠ `role` 을 붙이지 마라 — 비활성은 **role 없는 순수 div +
+                    //   aria-disabled="true"** 여야 한다(probe-final-activity 의
+                    //   착지 계약). 타일 문법을 그대로 베껴 role="button" tabIndex 를
+                    //   달면 과거에 실제로 난 「가짜 FAIL」이 재발한다.
                     <div
                       aria-disabled="true"
-                      className="flex w-full cursor-not-allowed flex-col gap-2 rounded-xl border border-slate-200 bg-slate-50/80 p-3 text-left opacity-80"
+                      className="flex w-full cursor-not-allowed flex-col gap-1.5 border-l-2 border-l-slate-200 px-3 py-2.5 text-left opacity-60"
                     >
-                      <div className="flex items-center gap-2">
-                        <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-400">
-                          <FileQuestion className="size-4" />
-                        </span>
-                        <span className="min-w-0 flex-1">
-                          <span className="block truncate text-[12.5px] font-black text-slate-400">단어 시험지</span>
-                          <span className="block truncate text-[10.5px] font-semibold text-slate-300">
-                            지문 단어로 시험지 페이지 생성
-                          </span>
-                        </span>
-                      </div>
-                      <div className="rounded-lg border border-slate-200 bg-white/70 px-2 py-1.5">
-                        <span className="text-[9px] font-black uppercase tracking-wider text-slate-400">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-[12.5px] font-bold text-slate-800">단어 시험지</span>
+                        <span className="shrink-0 rounded bg-slate-100 px-1.5 py-0.5 text-[9.5px] font-semibold text-slate-400">
                           데이터 없음
                         </span>
-                        <p className="mt-0.5 text-[11px] font-bold leading-snug text-slate-400">
-                          기본 학습지가 있어야 켤 수 있어요
+                      </div>
+                      <div className="rounded-md border border-slate-100 bg-slate-50/80 px-2 py-1.5">
+                        <span className="text-[9px] font-semibold uppercase tracking-wider text-slate-400">
+                          잠김
+                        </span>
+                        <p className="mt-0.5 text-[11px] leading-snug text-slate-700">
+                          {/* [E34-R2] 사유 정정. 구 자구 「기본 학습지가 있어야 켤 수
+                              있어요」는 **이제 거짓**이다 — 부모가 없어도 자기 각주 어휘가
+                              있으면 켜진다. 여기 남는 것은 「양쪽 다 없다」는 뜻이므로
+                              그 사실을 그대로 말한다. */}
+                          출제할 단어가 없어요 — 기본 학습지를 만들거나 각주 어휘가 있어야
+                          켤 수 있어요
                         </p>
                       </div>
                     </div>

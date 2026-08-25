@@ -78,6 +78,39 @@ export function rowMatchesTierFilter(row: VocabularyRow, filter: ("core" | "test
   return filter.includes(vocabularyTierForRow(row));
 }
 
+/**
+ * [R2] 한 행이 단어 시험지에 **실제로 출제되는가** — 난이도 단계 필터 + 제외 키까지 포함한
+ * 최종 술어. 이 함수는 `vocabulary-flow.tsx` 의 렌더 필터 **그 자체**여야 한다(그쪽이 이
+ * 함수를 부른다).
+ *
+ * ⚠ 분기시키지 마라. 파이널·실전 문서의 「단어 시험지」 잠금 해제 조건이 이 술어의
+ *   카운트(vocabTestTargetCount)이므로, 술어가 갈리는 순간 「카드는 켜지는데 지면은
+ *   〈시험지에 표시할 단어가 없습니다〉 한 줄뿐인」 빈 시험지가 주입·저장·인쇄된다
+ *   (vocabulary-flow.tsx 의 vocab-test-empty 경로).
+ */
+export function isVocabTestTargetRow(
+  row: VocabularyRow,
+  opts: { tierFilter?: ("core" | "test" | "challenge")[]; excluded?: ReadonlySet<string> },
+): boolean {
+  const { tierFilter, excluded } = opts;
+  // 난이도 단계 필터가 있으면 그 단계로, 없으면 기본(쉬운 core 제외 = test+challenge).
+  const tierOk =
+    tierFilter && tierFilter.length > 0 ? rowMatchesTierFilter(row, tierFilter) : isDefaultVocabularyTestTarget(row);
+  if (!tierOk) return false;
+  return !(excluded?.has(vocabTestRowKey(row)) ?? false);
+}
+
+/** 시험지에 실제로 나갈 행 수 — 「빈 시험지 잠금」의 단일 계량(0 이면 켤 수 없다). */
+export function vocabTestTargetCount(section: {
+  rows: VocabularyRow[];
+  vocabTierFilter?: ("core" | "test" | "challenge")[];
+  vocabTestExcludedKeys?: string[];
+}): number {
+  const excluded = new Set(section.vocabTestExcludedKeys ?? []);
+  return section.rows.filter((row) => isVocabTestTargetRow(row, { tierFilter: section.vocabTierFilter, excluded }))
+    .length;
+}
+
 export function VocabTestGridCard({
   row,
   hidden,
