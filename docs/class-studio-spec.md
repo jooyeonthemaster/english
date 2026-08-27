@@ -4284,3 +4284,139 @@ export interface VocabDistractorAsset {
 - 하네스: `.tmp-studio-mobile-hide/`(스펙 v2·capture.mjs·기준선 tsc). 게이트:
   tsc 청정·eslint·실화면 캡처(1440/1024)·가시 "모바일" 문자열 0·코치 음성 테스트·
   플래그 on 회귀(tsc + spot).
+
+---
+
+## §R1. 새로고침 위치 복원 (26-08-27 — 사용자 지시)
+
+> 지시 원문: "이 클래스 스튜디오 페이지에서 내가 작업을 하다가 새로고침을 해버리면
+> 무조건 클래스 선택 페이지로 가버린다 … 새로고침 한다고 페이지가 달라지지 않도록.
+> 근데 뭔가 최적화도 당연히 부드럽게 해줘야해."
+
+### R1-0. 실측 기준선 (수리 전)
+
+`.tmp-studio-restore/_baseline.mjs` — 실제 브라우저·실제 dev 서버:
+
+```
+[클래스 선택]      guide=false  activeView=passages
+[학습지 조판 탭]   guide=false  activeView=sheet
+[새로고침]         guide=true   activeView=null    ← lost_class=true lost_view=true
+```
+
+**새로고침이 잃는 것은 하나가 아니라 둘이다** — 클래스와 중앙 탭. 원인은
+`studio-home-client.tsx` 의 `selectedClassId = useState(null)` 이고, 이 페이지는
+위치를 URL 에도 저장소에도 남기지 않았다.
+
+### R1-1. 전송은 URL 이다 (저장소 기각)
+
+`?class=<classId>` · `?view=sheet|exam`. 파싱·검증·기록 정본은
+`workbench/studio-location.ts` **하나**다(서버와 클라이언트가 같은 모듈을 읽어야
+「주소창엔 있는데 복원은 안 되는」 유령이 생기지 않는다).
+
+저장소(localStorage/sessionStorage)를 기각한 근거:
+
+1. **플래시 0 은 URL 만 가능하다.** 저장소 복원은 「마운트 → 읽기 → setState」라
+   첫 페인트가 반드시 StepGuidePane 이고 다음 커밋에 지문함으로 튄다. 그 한 프레임이
+   사용자가 신고한 바로 그 증상이다. 서버가 쿼리를 읽어 이미 고른 클래스로 렌더하면
+   그 프레임 자체가 존재하지 않는다.
+2. **탭 격리.** 저장소는 탭을 넘나든다 — 두 탭에서 다른 클래스를 보다 한쪽을
+   새로고침하면 다른 탭의 클래스로 튄다.
+3. **기존 프로브 12종 무사.** 프로브는 전부 쿼리 없는 `/director/studio` 로
+   진입하므로 복원이 발화하지 않는다. 저장소 방식이면 `reload()` 하는 프로브가
+   전부 복원에 걸린다.
+4. 이 라우트는 이미 쿼리를 쓴다(`?tour=start|off`, `?tourShift=`).
+
+**검증은 서버가 한다**(`page.tsx`) — 이미 조회해 둔 클래스 목록으로 대조하므로
+추가 질의가 0 이다. 보관·삭제·타 학원·손으로 고친 id 는 조용히 ① 단계로 강등된다.
+검증이 없으면 `selectedClassId` 는 非null 인데 `selectedClass` 는 null 인 좀비
+조합이 생기고, 그 상태에서는 「미선택이면 레일 자동 펼침」 구조대(가드가
+`!selectedClassId`)가 **무장 해제**되어 접힌 레일을 빠져나올 수 없다.
+
+**pushState·router.replace 금지.** 전자는 뒤로가기로 클래스가 바뀌는 경로를 만들어
+`confirmSheetComposeDiscard` 를 **우회**시킨다(클래스 전환 리셋이 조판 대기열과
+미저장 편집을 고지 없이 파기한다). 후자는 force-dynamic 라우트라 전환마다 RSC
+왕복이 된다. `replaceState` 는 히스토리 항목을 만들지 않으므로 그 경로가 없다.
+
+### R1-2. 복원되는 것 / 안 되는 것
+
+| 복원 | 근거 |
+|---|---|
+| `selectedClassId` | 신고된 결함 본체. 서버 검증 후 **초기값**으로 시드 |
+| 중앙 탭(`assetView`) | 실측상 함께 소실됐다. 주인은 library-pane 이라 `initialAssetView` prop 으로 시드 |
+
+| 복원 안 함 | 근거 |
+|---|---|
+| `sheetComposeOpen` / `examStudioOpen` | 【E24 최상위 불변식】은 open 과 뷰를 한 커밋에 요구한다. open 만 살리면 「표면은 열렸는데 영원히 안 보이는」 상태가 되고, 인쇄가 백지로 나온다. 자동 개방 effect 도 `if (!prev) return` 으로 **마운트 억제**가 설계다 |
+| `pickedSheets` / `flatPicked` / `pickedQuestions` | 클래스 전환 리셋이 마운트 패스에서 전부 청산한다. 되살리려면 그 리셋을 전이 인지로 바꿔야 하는데, 그러면 A 클래스 학습지가 B 클래스 조판에 남는 경로가 열린다. 도시에 축은 추가로 「뷰 ≠ passages 인 동안 pickedQuestions 는 비어 있다」 불변식을 하이드레이트 프레임부터 위반한다 |
+| 미저장 조판 편집 | 초안 저장소가 없다(시험지 축과 달리). **§R1-5 미결** |
+
+### R1-3. 배선 (4곳)
+
+1. **`workbench/studio-location.ts`**(신규) — 파라미터 상수·파싱·검증·URL 머지.
+   런타임 뷰 도메인이 `StudioAssetView` union 과 갈리지 않게 `satisfies` 로 묶었다.
+2. **`page.tsx`** — `searchParams` 수신 → `parseStudioLocation(…, classes.map(c=>c.id))`
+   → `initialClassId` · `initialAssetView` 를 내려보낸다.
+   ⚠ 여기서 자식 지문 목록까지 당겨 오지 마라 — Next 는 서버 액션을 **직렬** 처리해
+   TTFB 가 밀린다(실측 TTFB 이미 1.7s). 그려진 화면 위의 스켈레톤이 흰 화면보다 낫다.
+3. **`studio-home-client.tsx`** — ① 두 초기값 시드 ② **마운트 replay effect**
+   ③ 주소창 미러 effect.
+4. **`workbench/library-pane.tsx`** — ① `initialAssetView` 시드
+   ② `[classId]` 리셋의 **마운트 스킵**.
+
+### R1-4. 함정 (재발 금지)
+
+- **【필수】 `loadChildren` 재생.** `selectClass` 의 부수효과 중 이것만은 마운트에서
+  반드시 재현해야 한다. `childrenByClass` 의 유일한 공급원인데 마운트 발화가 한
+  곳도 없다(호출부가 전부 콜백 본문). 빠뜨리면 `registeredLoading` 이 영구 true 로
+  굳어 지문함이 **스켈레톤 6행으로 영구 정지**하고 「이 클래스」가 (0) 으로 박히며
+  기출 배지가 전멸한다. **스크린샷으로는 「복원 성공」처럼 보이고 만져야 드러난다** —
+  그래서 게이트가 R1(복원)과 R5(스켈레톤 해소)를 **분리해서** 잰다.
+- **【금지】 로스터 재생.** 마운트 프리페치가 이미 전 클래스 로스터를 1질의로 읽는다.
+  같은 틱 재호출은 inflight/again 큐를 타 조회를 2회 돌린다.
+- **【금지】 레일 접힘 재생.** 접힘은 위치가 아니라 위저드 제스처이고 그 결과는
+  `studio-workbench-panels` 로 이미 영속이다. 재생하면 사용자가 일부러 다시 펼친
+  레일을 로드마다 도로 접는다.
+- **【실측 함정】 boolean 래치는 StrictMode 에서 소진된다.** dev 의 effect 는
+  mount → cleanup → mount 로 두 번 도는데 ref 는 살아남으므로, 1회차가 래치를
+  소비하고 **2회차가 리셋을 실제로 실행**한다. 첫 구현이 정확히 이 함정에 걸려
+  「클래스는 복원되는데 뷰만 passages 로 되돌아가고 주소창의 view= 까지 미러가
+  지워」 흔적조차 남지 않았다. → **판정은 「첫 발화인가」가 아니라 「classId 가 실제로
+  바뀌었나」(전이)여야 한다.**
+- **【가짜 RED】 SSR HTML 에 `data-asset-view` 가 있는지로 플래시를 재지 마라.**
+  dev(Turbopack)에서는 이 라우트의 UI 가 아예 SSR 되지 않는다(실측: `<button>` 0개 ·
+  `<aside>` 0개 · 141KB 가 거의 전부 dev 번들 script). 그 상태에서도 플래시는 0 이다 —
+  클라이언트 첫 렌더가 이미 `initialClassId` 를 props 로 들고 시작하기 때문이다.
+  서버가 복원을 **인지했다**는 유효한 증거는 RSC 페이로드에 실린 `initialClassId` 다.
+- **【공허한 GREEN】** 측정 재료가 없을 때 조건 일부만 보고 통과시키지 마라. 초판
+  게이트는 R5 가 예외로 죽었을 때 R6 가 posts 조건만 보고 PASS 했다(음성테스트에서
+  드러남). 재료가 없으면 판정하지 않고 FAIL 로 떨어뜨린다.
+
+### R1-5. 미결 — 미저장 조판 편집 (사용자 결정 필요)
+
+새로고침이 안전해질수록 사용자는 더 자주 새로고침한다. 그런데 **지금 이 페이지는
+미저장 학습지 편집을 새로고침으로 잃어도 경고가 0 이다**(`grep beforeunload src/` 9곳
+중 스튜디오는 0). 인앱 경로는 전부 가드가 있다(`sheet-compose-dirty-guard.ts` 는
+대기열 순서만 잃어도 클릭을 막는다) — 새로고침 축만 비대칭으로 뚫려 있다.
+
+닫으려면 훅 1개면 된다: `use-unsaved-close-guard.tsx` 의 `useBeforeUnloadWarning` 을
+기존 싱글턴 프로브 `registerSheetComposeDirtyProbe` 로 구동. **다만 브라우저 기본
+경고창이 뜨는 눈에 띄는 변화라 이번 범위에 넣지 않았다.**
+
+### R1-6. 검증 게이트
+
+```bash
+node .tmp-studio-qa/mint-cookie.mjs > .tmp-studio-qa/cookie.txt   # 24h
+node .tmp-studio-restore/probe-restore.mjs                # 12/12
+node .tmp-studio-restore/probe-restore.mjs --expect-red    # 배선 제거 트리에서만 exit 0
+node .tmp-studio-restore/_baseline.mjs                     # 전/후 측정자
+```
+
+무회귀 동반 주행(전부 재확인됨):
+`.tmp-worksheet-compose/probe-e24-split.mjs`(16/16 — **G10 클래스 전환 리셋이 핵심**) ·
+`.tmp-worksheet-compose/probe-e32-dossier-combined.mjs`(8/8) ·
+`.tmp-e31/probe-e31-reveal.mjs`(9/9) · `.tmp-studio-tour/smoke.mjs`(6/6) ·
+`node --test tests/unit/studio-workbench-contract.test.mjs`(2/2).
+
+**선재 결함 2건**(이 수리 이전에도 동일 실패 — stash 재주행으로 확증):
+`behavior-overhaul2.mjs` G7 · `behavior-class-rail.mjs` G5. 둘 다 §M 플래그로
+숨겨진 표면(「학습지 보내기」 CTA · 「학생 초대장」 시트)을 기다린다.

@@ -323,6 +323,18 @@ export interface LibraryPaneProps {
    */
   onAssetViewChange?: (view: StudioAssetView) => void;
   /**
+   * [R1] 새로고침 위치 복원 — **초기 뷰 시드**(세터가 아니다).
+   *
+   * 이 판이 자산 뷰의 주인이라(호스트의 centerAssetView 는 업링크로 먹는 미러다)
+   * 복원값도 여기로 들어와야 한다. 서버가 이미 검증했고(page.tsx →
+   * studio-location.ts), 클래스가 없으면 항상 "passages" 로 접혀서 온다.
+   *
+   * ⚠ 이것은 setAssetView 의 **4번째 작성자가 아니다** — useState 초기값 1회
+   *   시드일 뿐이라 :526 「setAssetView 금지」 인구조사(작성자 3인: handleSelectView ·
+   *   handleSelectIntake · [classId] 리셋)는 그대로 유효하다.
+   */
+  initialAssetView?: StudioAssetView;
+  /**
    * 문항 상세(questionId 경로) — 오케스트레이터 DossierQuestionModal 재사용
    * (§3.9.5① U1 로더). 생성 문제 전체보기 행의 상세 버튼이 쓴다.
    */
@@ -498,6 +510,7 @@ function LibraryPaneInner({
   flatPicked,
   onFlatPickedChange,
   onAssetViewChange,
+  initialAssetView = "passages",
   onOpenQuestionById,
   onComposeViewControl,
   sheetPicked,
@@ -516,7 +529,8 @@ function LibraryPaneInner({
   onDossierDeselectControl,
 }: LibraryPaneProps) {
   // ── 중앙 자산 3뷰(§3.10.16-a) — 지문관리·생성 문제·학습지 ──
-  const [assetView, setAssetView] = useState<StudioAssetView>("passages");
+  // [R1] 초기값 = 복원 시드(위 prop 주석). 평시엔 "passages" 그대로다.
+  const [assetView, setAssetView] = useState<StudioAssetView>(initialAssetView);
 
   // ── 인테이크 표면 2축(intakeView/intakeTab — intake-surface 계약) ──
   // 기본 화면 = 지문관리(§3.10.14 E13 — 구 기출 지문 기본 진입 폐기: 클래스를
@@ -1085,7 +1099,55 @@ function LibraryPaneInner({
   // 한 쪽만 남아 있으면 병합 목록이 반쪽으로 뜬다). 여기에 뷰별 전용
   // 분기를 새로 만들지 마라 — 리셋 경로가 갈리는 순간 위 「idle 스켈레톤
   // 고착」이 클래스 전환 축에서 재발한다.
+  //
+  // ══════════════════════════════════════════════════════════════════════════
+  // 【R1 개정 26-08-27】 **마운트 1회는 통째로 건너뛴다**(뷰별 분기가 아니다).
+  //
+  // 위 「뷰별 전용 분기를 새로 만들지 마라」는 그대로 유효하다 — 이 래치는 분기가
+  // 아니라 **effect 전체의 첫 발화 스킵**이다. 리셋 경로는 여전히 한 갈래다.
+  //
+  // 왜 필요한가: 새로고침 위치 복원이 `assetView` 를 "sheet"/"exam" 으로 시드하는데
+  // (:519), 이 effect 는 클래스 전환뿐 아니라 **마운트에서도 발화**한다. 스킵이
+  // 없으면 순서가 이렇게 된다 —
+  //     ① fetch effect(:804·:834, 선언이 앞이라 먼저 돈다)가 listActive=true 를
+  //        보고 발화 + key 를 심는다
+  //     ② 이 리셋이 돌며 setAssetView("passages") + key null + seq++
+  //     ③ ①의 응답이 돌아오지만 seq 가 어긋나 **기각**된다
+  //   결과: 복원값은 지워지고, 목록은 조회조차 안 된 채 idle 이다. 조용히.
+  //
+  // 왜 안전한가: **차가운 마운트에서 이 effect 의 리셋 대상은 전부 이미 리셋된
+  // 값이다.** 하나씩 대조하면 —
+  //   · setAssetView("passages")      → 복원 없으면 초기값이 이미 "passages"
+  //   · setIntakeView("library")      → 초기값이 이미 "library"
+  //   · 두 목록 상태 → 초기값이 이미 {status:"idle", rows:[]}
+  //   · 두 key ref  → 초기값이 이미 null
+  //   · worksheetRowByIdRef → 초기값이 이미 빈 Map
+  //   · 두 seq ref  → 올리지 **않는 것이 곧 수정**이다. 마운트 시점엔 기각할
+  //     인플라이트가 없고, 올리면 위 ③처럼 자기 자신의 첫 조회를 죽인다.
+  //   · 픽 청산 업링크 → 이미 `size > 0` 가드로 마운트에서 스킵된다(아래 주석).
+  // 즉 스킵은 **동작을 바꾸지 않는다**. 바꾸는 것은 seq 하나뿐이고 그게 목적이다.
+  //
+  // ⚠ deps 를 넓히지 마라 — 판정은 ref 이지 dep 이 아니다. [classId] 유지가 계약.
+  // ⚠ 이 스킵을 「복원일 때만」으로 좁히지 마라. 조건이 붙는 순간 평시 마운트와
+  //   복원 마운트가 **서로 다른 코드 경로**가 되어, 위 대조표가 한쪽에서만 참인
+  //   상태로 썩는다(그게 정확히 이 파일이 경계하는 「리셋 경로가 갈린다」이다).
+  //
+  // ⚠⚠ **판정은 「첫 발화인가」(boolean 래치)가 아니라 「classId 가 실제로 바뀌었나」
+  //    (전이)여야 한다.** 실측으로 확인한 함정이다(26-08-27):
+  //    boolean 래치는 **StrictMode 에서 소진된다** — dev 의 effect 는
+  //    mount → cleanup → mount 로 두 번 도는데 ref 는 그 사이 살아남으므로
+  //    ① 1회차가 래치를 소비하고 ② 2회차가 리셋을 **실제로 실행**한다. 결과는
+  //    "복원값이 조용히 지워지고 프로덕션에서만 동작하는" 최악의 형태다
+  //    (첫 실측: 클래스는 복원되는데 뷰만 passages 로 되돌아가고, 주소창의
+  //     view= 파라미터까지 미러 effect 가 지워 흔적조차 남지 않았다).
+  //    전이 판정은 마운트 2회 모두 `prev === classId` 라 구조적으로 안전하고,
+  //    무엇보다 이 effect 가 **원래 표현하려던 의미**("클래스가 바뀌면 청산")를
+  //    그대로 적는다.
+  // ══════════════════════════════════════════════════════════════════════════
+  const lastResetClassIdRef = useRef<string | null>(classId);
   useEffect(() => {
+    if (lastResetClassIdRef.current === classId) return;
+    lastResetClassIdRef.current = classId;
     setAssetView("passages");
     setIntakeView("library");
     setQuestionsState({ status: "idle", rows: [] });

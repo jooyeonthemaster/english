@@ -156,6 +156,7 @@ import { QuestionsActionRail } from "./workbench/questions-action-rail";
 import { SheetComposeSurface } from "./workbench/sheet-compose-surface";
 import { SheetsActionRail } from "./workbench/sheets-action-rail";
 import type { StudioAssetView } from "./workbench/source-switcher";
+import { nextStudioLocationUrl } from "./workbench/studio-location";
 import { StepGuidePane } from "./workbench/step-guide-pane";
 import { StepStrip } from "./workbench/step-strip";
 import {
@@ -751,13 +752,26 @@ const SHEET_DISCARD_ON_DEPLOY: SheetDiscardCopy = {
 export function StudioHomeClient({
   academyId,
   initialClasses,
+  // [R1] 새로고침 위치 복원 — 둘 다 **서버가 검증해서** 내려보낸다(page.tsx).
+  // additive·기본값 있음이라 기존 호출부·프로브는 무접촉이다.
+  initialClassId = null,
+  initialAssetView = "passages",
 }: {
   academyId: string;
   initialClasses: StudioClassRow[];
+  initialClassId?: string | null;
+  initialAssetView?: StudioAssetView;
 }) {
   // ── 클래스 목록·선택 ──
   const [classes, setClasses] = useState<StudioClassRow[]>(initialClasses);
-  const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
+  // [R1] 복원값은 **반드시 초기값**이어야 한다 — effect 로 넣으면 첫 페인트가
+  // StepGuidePane(:4077 분기)이고 다음 커밋에 지문함으로 튄다. 그 한 프레임이
+  // 사용자가 신고한 바로 그 「클래스 선택 페이지로 가버린다」이다.
+  // 재검증하지 않는다: 서버가 initialClasses 대조를 이미 끝냈고(page.tsx),
+  // 여기서 또 대조하면 정본이 둘로 갈린다.
+  const [selectedClassId, setSelectedClassId] = useState<string | null>(
+    initialClassId,
+  );
   const [childrenByClass, setChildrenByClass] = useState<
     Record<string, ClassChildrenState>
   >({});
@@ -979,6 +993,55 @@ export function StudioHomeClient({
   useEffect(() => {
     void loadRosters();
   }, [loadRosters]);
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // 【R1】 새로고침 복원 replay — selectClass 의 부수효과 중 **마운트에서만**
+  //       재현이 필요한 것을 판다(1회 래치).
+  //
+  // 복원은 `selectedClassId` 초기값으로 끝나지 않는다. 클릭 경로(selectClass
+  // :864-878)가 상태 말고도 하는 일이 있고, 그중 하나는 **빠뜨리면 화면이 죽는다**.
+  //
+  //  · loadChildren  ── **필수.** `childrenByClass` 의 유일한 공급원인데 마운트
+  //      발화가 한 곳도 없다(호출부는 selectClass · selectClassQuiet ·
+  //      registerToClass · unregisterFromClass · refreshAfterLibraryChange 전부
+  //      **콜백 본문**이다). 빠뜨리면 `registeredLoading`(= !Array.isArray(...))이
+  //      영원히 true 로 굳어 지문함이 **스켈레톤 6행으로 영구 정지**하고 「이 클래스」
+  //      건수가 (0) 으로 박히며 기출 「담김」 배지가 전멸한다. 스크린샷으로는
+  //      「복원 성공」처럼 보이고 만져야 드러나는 종류의 결함이다.
+  //  · setExpanded   ── 재생한다. 로컬 전용(네트워크 0). 없으면 복원된 클래스의
+  //      트리 행이 접혀 있어 사용자가 보던 학생 목록이 사라진다. toggleExpand 가
+  //      아니라 세터를 직접 쓰는 이유: 그쪽은 loadStudentsRef 를 또 부른다.
+  //  · loadStudents  ── **금지.** 바로 위 프리페치가 이미 전 클래스 로스터를
+  //      1질의로 읽었다. 같은 틱 재호출은 loadRosters 의 inflight/again 큐를 타
+  //      `listStudioClassRosters` 를 **2회** 돌린다(사용자가 요구한 "부드럽게"와
+  //      정면 충돌 — Next 는 서버 액션을 직렬 처리한다).
+  //  · collapseTree  ── **금지.** 접힘은 「위치」가 아니라 위저드 제스처이고,
+  //      그 **결과**는 useResizablePanels(storageKey "studio-workbench-panels")가
+  //      이미 영속한다. 재생하면 사용자가 일부러 다시 펼친 레일을 로드할 때마다
+  //      도로 접는다(:3243-3245 가 명시적으로 금지한 동작) — 잼을 없애는 자리에서
+  //      새 잼을 만드는 꼴이다.
+  //  · setTreeDrawerOpen(false) ── 불필요(기본값이 이미 false).
+  //  · confirmSheetComposeDiscard ── **금지.** 마운트에선 공허하고(조판 닫힘 ∧
+  //      대기열 0 이라 가드가 조기 반환한다), 무엇보다 **페이지 로드 시점에
+  //      window.confirm 을 띄우는 것 자체가 사고**다.
+  //
+  // ⚠ ref 래치인 이유 2가지: (a) StrictMode 이중 호출에서 dev 이중 fetch 를 막고
+  //   (loadChildren 의 중복 가드는 렌더단 미러라 같은 틱 2회를 못 막는다),
+  //   (b) 이후 클래스 전환에서 다시 돌지 않게 한다(그쪽은 selectClass 담당).
+  // ⚠ 선언 위치는 `setExpanded`(:941 계열) **뒤**여야 한다. 그리고 본문에서
+  //   selectedClassId 를 렌더단 미러(selectedClassIdRef)로 읽는 이유는 deps 를
+  //   [loadChildren](안정 참조)으로 고정해 이 effect 가 **평생 1회**임을 코드
+  //   모양만으로 보이게 하기 위함이다.
+  // ══════════════════════════════════════════════════════════════════════════
+  const restoreReplayedRef = useRef(false);
+  useEffect(() => {
+    if (restoreReplayedRef.current) return;
+    restoreReplayedRef.current = true;
+    const id = selectedClassIdRef.current;
+    if (!id) return;
+    void loadChildren(id);
+    setExpanded((prev) => (prev[id] ? prev : { ...prev, [id]: true }));
+  }, [loadChildren]);
   // 선택 시 보장 훅(ref 경유) — 프리페치 이후 생성된 신규 클래스만 재조회를 탄다.
   loadStudentsRef.current = (classId) => {
     if (studentsRef.current[classId] === undefined) void loadRosters(true);
@@ -2319,12 +2382,52 @@ export function StudioHomeClient({
   //  되면서 데워둘 이유가 사라졌다. 캐시가 없으니 반 목록도 항상 최신이다.)
 
   // 중앙 자산 뷰 미러(§3.10.17-b) — 생성 문제 뷰 = 우측 패널이 실행대.
+  // [R1] 초기값을 복원값으로 **시딩**한다(세터를 새로 만드는 게 아니다 — 주인은
+  // 여전히 library-pane 이고 이 값은 그쪽 업링크가 먹인다). 시딩하는 이유는
+  // 아래 prevAssetViewRef(:2371)가 **이 초기값으로 자기 시딩**하기 때문이다:
+  // 여기를 "passages" 로 두면 자식이 올리는 복원값이 「지문관리 → 조판」 **전이**로
+  // 오인돼 뷰 이탈 승계(inheritDossierQuestions)가 새로고침마다 헛돈다. 지금은
+  // 도시에 축이 비어 있어 무해하지만, 그건 우연이지 계약이 아니다.
   const [centerAssetView, setCenterAssetView] =
-    useState<StudioAssetView>("passages");
+    useState<StudioAssetView>(initialAssetView);
   const handleAssetViewChange = useCallback(
     (v: StudioAssetView) => setCenterAssetView(v),
     [],
   );
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // 【R1】 주소창 동기화 — 다음 새로고침이 읽을 위치를 남긴다.
+  //
+  // **상태를 미러한다 — 세터를 계측하지 않는다.** `setSelectedClassId` 호출부는
+  // 3곳(selectClass · selectClassQuiet · handleArchive)이고, 세터마다 URL 쓰기를
+  // 얹으면 언젠가 4번째가 생겨 조용히 빠진다. 뷰는 아예 자식이 주인이라(업링크로만
+  // 올라온다) 계측할 세터 자체가 없다. 두 축을 **파생 상태 1곳**에서 미러하면
+  // 그 계열의 누락이 구조적으로 불가능해진다.
+  //
+  // ⚠ **router.replace 금지.** 이 라우트는 force-dynamic 이라 전환마다 RSC 왕복이
+  //   된다(클래스 클릭 한 번이 서버 왕복 한 번). 리포의 같은 판단:
+  //   workbench/generate 계열이 전부 네이티브 history 를 쓰는 이유가 이것이다.
+  // ⚠ **pushState 금지.** 뒤로가기로 클래스가 바뀌면 그 경로는
+  //   `confirmSheetComposeDiscard`(selectClass 진입부)를 **우회**한다 — 클래스
+  //   전환 리셋 effect 가 조판 대기열과 미저장 편집을 고지 없이 파기한다.
+  //   replaceState 는 히스토리 항목을 만들지 않으므로 그 경로가 애초에 없다.
+  //   (이 금지를 어기려면 popstate 를 selectClass 로 되태우는 배선이 먼저다.)
+  // ⚠ URL 은 **머지**한다 — `nextStudioLocationUrl` 이 그 계약을 들고 있다.
+  //   새 URLSearchParams 로 재조립하면 `?tour=`·`?tourShift=` 가 사라져 투어
+  //   프로브가 죽는다(그쪽은 window.location.search 를 직접 읽는다).
+  // ⚠ 값이 이미 같으면 그 함수가 null 을 돌려준다 → **복원된 마운트의 첫 페인트에
+  //   history 쓰기가 0** 이다.
+  // ══════════════════════════════════════════════════════════════════════════
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const next = nextStudioLocationUrl(window.location.href, {
+      classId: selectedClassId,
+      view: centerAssetView,
+    });
+    if (!next) return;
+    // history.state 를 그대로 넘긴다(null 로 덮으면 Next 라우터 상태가 날아간다).
+    window.history.replaceState(window.history.state, "", next);
+  }, [selectedClassId, centerAssetView]);
   // ══════════════════════════════════════════════════════════════════════════
   // 【E32 적대검수 major 수리】 **뷰 이탈 승계** — 도시에 축은 지문관리 뷰 안에서만
   // 산다.
@@ -4039,6 +4142,10 @@ export function StudioHomeClient({
               flatPicked={flatPicked}
               onFlatPickedChange={handleFlatPickedChange}
               onAssetViewChange={handleAssetViewChange}
+              // [R1] 새로고침 위치 복원 — 뷰의 **주인은 이 판**이라 복원 시드도
+              // 여기로 내린다(호스트의 centerAssetView 는 업링크로 먹는 미러다).
+              // 원시 문자열 1개라 memo(LibraryPane) 방어선 무손상.
+              initialAssetView={initialAssetView}
               onOpenQuestionById={openDossierQuestion}
               onComposeViewControl={registerComposeViewControl}
               // 학습지 축 5종(§3.10.21 E21-5) — sheetPicked/onSheetPickedChange
