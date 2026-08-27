@@ -102,6 +102,20 @@ export function renderPageHeader(props: HeaderProps): BlockNode[] {
   const rightWidth = Math.round(contentWidthHpu * 0.24);
   const leftWidth = contentWidthHpu - rightWidth;
 
+  // 바깥 셀 안쪽 여백. 아래 outer 표의 셀 margins 와 **반드시 같은 값**을 써야 한다.
+  //   (E36 P9 회귀 수리) 예전엔 안쪽 정보 박스를 셀 폭(rightWidth) 그대로 만들면서
+  //   셀의 left margin(200 HPU)을 빼지 않아, 박스가 본문 우측 한계를 정확히 200 HPU
+  //   (=2pt) 넘겨 오른쪽 변이 용지 밖으로 잘려 나갔다(실측: 박스 우변 570.7pt vs
+  //   본문 우한계 568.4pt). section-xml 의 emitTable 은 셀 안쪽 폭을
+  //   `cell.widthHpu - margins.left - margins.right` 로 잡으므로, 중첩 표는 반드시
+  //   그 값으로 만들어야 한다.
+  const LEFT_CELL_MARGINS = { left: 0, right: 200, top: 0, bottom: 60 } as const;
+  const RIGHT_CELL_MARGINS = { left: 200, right: 0, top: 0, bottom: 0 } as const;
+  const rightInnerWidth = Math.max(
+    100,
+    rightWidth - RIGHT_CELL_MARGINS.left - RIGHT_CELL_MARGINS.right,
+  );
+
   const leftBlocks: ParagraphNode[] = [];
   if (subtitle) {
     leftBlocks.push({
@@ -137,7 +151,7 @@ export function renderPageHeader(props: HeaderProps): BlockNode[] {
         { label: "반", value: className },
         { label: studentNameLabel || "이름", value: "" },
       ],
-      rightWidth,
+      rightInnerWidth,
     ),
   ];
 
@@ -161,7 +175,7 @@ export function renderPageHeader(props: HeaderProps): BlockNode[] {
             heightHpu: HEADER_ROW_H,
             vAlign: "TOP",
             borders: { left: NO, right: NO, top: NO, bottom: NO },
-            margins: { left: 0, right: 200, top: 0, bottom: 60 },
+            margins: { ...LEFT_CELL_MARGINS },
             blocks: leftBlocks,
           },
           {
@@ -169,7 +183,7 @@ export function renderPageHeader(props: HeaderProps): BlockNode[] {
             heightHpu: HEADER_ROW_H,
             vAlign: "TOP",
             borders: { left: NO, right: NO, top: NO, bottom: NO },
-            margins: { left: 200, right: 0, top: 0, bottom: 0 },
+            margins: { ...RIGHT_CELL_MARGINS },
             blocks: rightBlocks,
           },
         ],

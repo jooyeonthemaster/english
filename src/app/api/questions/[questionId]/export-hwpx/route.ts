@@ -49,6 +49,9 @@ export async function GET(
       includeAnswers,
       // 문항 하나 — 정답표(요약) 페이지 없음. 정답포함 모드는 문항 아래에 정답·해설 인라인.
       fullExamQuestions: [],
+      // 표지 없음: 시험지가 아니라 문항 한 장이다. 켜두면 제목·학교·반·이름·시험일이
+      // 전부 빈 표지가 1쪽 붙어 1쪽짜리 출력물이 2쪽이 된다(E36 회귀 방지).
+      includeCover: false,
     });
 
     const buffer = await packageHwpx(doc);

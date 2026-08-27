@@ -12,6 +12,7 @@ import type { BlockNode, BorderSpec, ParagraphNode, RunNode } from "../types";
 import { txt } from "../types";
 import { COLORS, SIZE, SUBTYPE_LABELS } from "../tokens";
 import { parseFormattedToRuns } from "../format";
+import { optionHangingIndentHpu } from "./options";
 import {
   formatInlineMarkersForSubtype,
   formatSentenceInsertPassageMarkers,
@@ -484,6 +485,9 @@ export function renderQuestionPart(
         options: item.options ?? [],
         subType,
         compact,
+        // 이 경로의 선지는 bodySize(=SIZE.body 9pt) 로 그린다. 헤더가 자체 추정하면
+        // options.ts 기준(8.5pt)으로 계산해 열이 1pt 어긋난다.
+        hangIndentHpu: optionHangingIndentHpu(bodySize),
       });
       if (multiBlankHeader) result.push(multiBlankHeader);
     }
@@ -509,8 +513,11 @@ export function renderQuestionPart(
         kind: "p",
         style: {
           align: "LEFT",
-          leftMargin: 560,
-          indentFirst: -560,
+          // 한컴은 "첫 줄 = leftMargin, 이어줄 = leftMargin + |indentFirst|" 로 그린다
+          // (실측 근거: render/options.ts 의 optionHangingIndentHpu 주석).
+          // 마커를 칸 왼쪽에 붙이고 이어지는 줄만 본문 컬럼에 맞추려면 leftMargin=0.
+          leftMargin: 0,
+          indentFirst: -optionHangingIndentHpu(bodySize),
           spaceAfter: 40,
           lineSpacingPct: compact ? 146 : 158,
         },
@@ -545,8 +552,11 @@ export function renderQuestionPart(
         kind: "p",
         style: {
           align: "LEFT",
-          leftMargin: 560,
-          indentFirst: -560,
+          // 한컴은 "첫 줄 = leftMargin, 이어줄 = leftMargin + |indentFirst|" 로 그린다
+          // (실측 근거: render/options.ts 의 optionHangingIndentHpu 주석).
+          // 마커를 칸 왼쪽에 붙이고 이어지는 줄만 본문 컬럼에 맞추려면 leftMargin=0.
+          leftMargin: 0,
+          indentFirst: -optionHangingIndentHpu(bodySize),
           spaceAfter: 40,
           lineSpacingPct: compact ? 146 : 158,
         },

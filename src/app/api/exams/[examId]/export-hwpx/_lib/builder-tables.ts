@@ -9,7 +9,16 @@ import type { BuilderBlock, BuilderLayout } from "@/app/api/exams/[examId]/expor
 import { type BreakPlan, passageBreakKey, questionBreakKey } from "./break-plan";
 import { type FragmentRenderOptions, renderPassageFragment, renderQuestionPart } from "./render/fragment";
 import type { ColumnUnit } from "./builder-types";
-import { applyBreak, printablePassageTitle, renderCustomBlock } from "./builder-blocks";
+import {
+  type BreakFlowState,
+  applyBreak,
+  createBreakFlowState,
+  decideGroupBreak,
+  explicitBreak,
+  itemBreakFields,
+  printablePassageTitle,
+  renderCustomBlock,
+} from "./builder-blocks";
 export function groupItems(
   items: BuilderItemResolved[],
 ): Array<{ groupKey: string; items: BuilderItemResolved[] }> {
@@ -73,13 +82,38 @@ export function appendQuestionGroups(opts: {
   showPassageTitle: boolean;
   contentWidthHpu: number;
   breakPlan: BreakPlan;
+  /** 쪽당 N문제 강제 배치(SPEC §3.1). columns = 단 수(= 쪽당 문제 예산). 미지정 = 강제 없음. */
+  forcePerPage?: { columns: 1 | 2 };
+  /** 이 구역의 실제 단 수. 1단이면 breakBefore="column" 을 page 로 승격한다(§3.2). 기본 2. */
+  sectionColumns?: 1 | 2;
+  /**
+   * 호출 사이에 유지되는 가변 상태. 커스텀 블록이 끼어들어 이 함수가 여러 번 불려도
+   * 쪽 문항 카운터가 리셋되면 안 되므로 appendBlocksInOrder 가 소유해 넘긴다.
+   * 미지정이면(단발 호출) 지역 상태를 만들어 쓴다.
+   */
+  breakState?: BreakFlowState;
 }) {
   const groups = groupItems(opts.items);
+  const sectionColumns = opts.sectionColumns ?? 2;
+  const state = opts.breakState ?? createBreakFlowState();
   for (const group of groups) {
     const first = group.items[0];
     const firstLocalId = first.localId;
     const { passageContent, includePassage } =
       resolveGroupPassage(first, group.items);
+
+    // 그룹 앞 강제 나눔(§3.1 쪽당 N문제 + §3.2 항목별 breakBefore). 상태 갱신도 여기서.
+    // 실제 부착은 그룹이 낸 첫 블록(지문 또는 첫 문항)에 — 아래 groupHead.
+    const firstBreak = itemBreakFields(first);
+    const forced = decideGroupBreak({
+      state,
+      budget: opts.forcePerPage?.columns,
+      sectionColumns,
+      questionCount: group.items.length,
+      breakBefore: firstBreak.breakBefore,
+      keepWithPrev: Boolean(firstBreak.keepWithPrev),
+    });
+    let groupHead: BlockNode[] | null = null;
 
     const passageRenderedSeparately = includePassage && Boolean(passageContent);
     if (passageRenderedSeparately) {
@@ -97,6 +131,7 @@ export function appendQuestionGroups(opts: {
       if (firstLocalId) {
         applyBreak(passageBlocks, opts.breakPlan.get(passageBreakKey(firstLocalId)));
       }
+      groupHead = passageBlocks;
       opts.target.push(...passageBlocks);
     }
     group.items.forEach((item, idx) => {
@@ -119,8 +154,25 @@ export function appendQuestionGroups(opts: {
       if (idx === 0 && !passageRenderedSeparately && firstLocalId) {
         applyBreak(questionBlocks, opts.breakPlan.get(passageBreakKey(firstLocalId)));
       }
+      // 그룹 **2번째 이후** 문항에 걸린 명시 나눔(§3.2). 첫 문항 것은 decideGroupBreak 가
+      // 이미 groupHead 에 반영하지만, 여기서 안 해주면 지문 묶음 안쪽 문항(예: 43~45 세트의
+      // 44번)에 사용자가 건 「쪽 나눔」이 통째로 사라진다 — 네이티브 경로는 breakPlan 이
+      // 비어 있어(builder.ts) 위 questionBreakKey 조회가 언제나 undefined 이기 때문이다.
+      // §3.1 쪽 문항 카운터는 건드리지 않는다(미리보기도 강제 배치는 그룹 단위로만 센다).
+      if (idx > 0) {
+        const fields = itemBreakFields(item);
+        if (!fields.keepWithPrev) {
+          applyBreak(
+            questionBlocks,
+            explicitBreak(fields.breakBefore, sectionColumns),
+          );
+        }
+      }
+      if (idx === 0 && !groupHead) groupHead = questionBlocks;
       opts.target.push(...questionBlocks);
     });
+    // applyBreak 는 강한 쪽이 이기므로 breakPlan 나눔 뒤에 부착해도 안전하다.
+    if (groupHead) applyBreak(groupHead, forced);
   }
 }
 
@@ -141,7 +193,15 @@ export function appendBlocksInOrder(opts: {
   imageColWidthHpu: number;
   imageMaxHeightHpu: number;
   breakPlan: BreakPlan;
+  /** 쪽당 N문제 강제 배치(SPEC §3.1). columns = 단 수(= 쪽당 문제 예산). 미지정 = 강제 없음. */
+  forcePerPage?: { columns: 1 | 2 };
+  /** 이 구역의 실제 단 수. 1단이면 breakBefore="column" 을 page 로 승격한다(§3.2). 기본 2. */
+  sectionColumns?: 1 | 2;
 }) {
+  const sectionColumns = opts.sectionColumns ?? 2;
+  // 강제 나눔 상태는 이 함수가 소유한다 — 커스텀 블록이 문항 사이에 끼면 appendQ 가
+  // 여러 번 호출되는데, 그때마다 쪽 문항 카운터가 0 으로 돌아가면 §3.1 이 무너진다.
+  const breakState = createBreakFlowState();
   const appendQ = (items: BuilderItemResolved[]) => {
     if (items.length === 0) return;
     appendQuestionGroups({
@@ -154,6 +214,9 @@ export function appendBlocksInOrder(opts: {
       showPassageTitle: opts.showPassageTitle,
       contentWidthHpu: opts.contentWidthHpu,
       breakPlan: opts.breakPlan,
+      forcePerPage: opts.forcePerPage,
+      sectionColumns,
+      breakState,
     });
   };
 
@@ -203,6 +266,15 @@ export function appendBlocksInOrder(opts: {
     if (block.localId) {
       applyBreak(customBlocks, opts.breakPlan.get(questionBreakKey(block.localId)));
     }
+    // §3.2 — 커스텀 블록(텍스트·섹션·구분선·여백·이미지)도 breakBefore 를 존중한다.
+    // 문항이 아니므로 쪽 문항 카운터(§3.1)는 건드리지 않지만(미리보기와 동일),
+    // 쪽을 넘겼으면 그 쪽의 문항 수는 0 에서 다시 센다.
+    if (breakState.started && !block.keepWithPrev) {
+      const forced = explicitBreak(block.breakBefore, sectionColumns);
+      if (forced === "page") breakState.pageQuestionCount = 0;
+      applyBreak(customBlocks, forced);
+    }
+    if (customBlocks.length > 0) breakState.started = true;
     opts.target.push(...customBlocks);
   }
   flush();

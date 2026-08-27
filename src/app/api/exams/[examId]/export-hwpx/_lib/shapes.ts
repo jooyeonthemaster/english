@@ -88,21 +88,19 @@ export class ShapeRegistry {
     this.krFonts.push({ face: defaultFontKr, type: "TTF" });
     this.latinFonts.push({ face: defaultFontLatin, type: "TTF" });
 
-    // BorderFill 0: 투명 (문단 외곽 기본)
+    // ── borderFill 은 1-based 다 (한컴 규약 — 실측 확정, 아래 registerBorderFill 주석) ──
+    // 배열 index 0 = 참조 id 1. 예전엔 여기에 "투명"을 두 번 넣어 뒀는데, 그건 off-by-one
+    // 을 가리려던 미봉책이었다(registerBorderFill 이 중복을 dedupe 하므로 둘째 항목은
+    // 애초에 도달 불가능한 죽은 항목이기도 했다). 근본 수리 후 하나만 둔다.
+    //
+    // borderFill 1 (index 0): 투명 — 문단/문자 외곽 기본
     this.borderFills.push({
       left: NO_BORDER,
       right: NO_BORDER,
       top: NO_BORDER,
       bottom: NO_BORDER,
     });
-    // BorderFill 1: 문자 외곽 기본
-    this.borderFills.push({
-      left: NO_BORDER,
-      right: NO_BORDER,
-      top: NO_BORDER,
-      bottom: NO_BORDER,
-    });
-    // BorderFill 2: 실제 표가 필요할 때 재사용할 수 있는 얇은 검정 테두리.
+    // borderFill 2 (index 1): 실제 표가 필요할 때 재사용할 수 있는 얇은 검정 테두리.
     // 레이아웃용 표가 많으므로 미지정 셀은 보더 없음(0)을 기본으로 둔다.
     const thin: BorderSpec = { type: "SOLID", widthMm: 0.12, color: "#000000" };
     this.borderFills.push({
@@ -221,13 +219,32 @@ export class ShapeRegistry {
   // BorderFill
   // ---------------------------------------------------------------------------
 
+  /**
+   * borderFill 을 등록하고 **HWPX 참조 id(= 배열 index + 1)** 를 돌려준다.
+   *
+   * ── 왜 +1 인가 (한컴 실측 확정 · 재발 금지) ──────────────────────────────────
+   * 한컴이 직접 저장한 HWPX 의 header.xml 을 뜯어보면, 다른 참조 테이블(charPr·paraPr·
+   * style·tabPr·font)은 전부 id 가 0 부터인데 **borderFill 만 id 가 1 부터** 시작하고
+   * 본문도 borderFillIDRef="1" 을 쓴다. 한컴은 이 표를 id 속성이 아니라 **순서(1-based)**
+   * 로 읽는다.
+   *   → 우리가 0-based 로 뱉으면 모든 테두리/음영 참조가 정확히 한 칸 앞으로 밀려 읽힌다.
+   *
+   * 실제로 그 결함이 오래 잠복해 있었다(E36 에서 발견):
+   *   - 학생정보 박스 라벨 셀의 옅은 음영(#F8FAFC)이 **아예 그려지지 않았다** — 색이
+   *     거의 흰색이라 아무도 눈치채지 못했다.
+   *   - 값 셀 테두리가 의도한 slate400 이 아니라 앞 항목의 검정으로 그려졌다.
+   *   - 표지에 검정 채움 막대를 처음 넣자마자 그 검정이 한 칸 밀려 **정보 박스 전체가
+   *     새까맣게** 칠해지면서 결함이 드러났다.
+   * 등록/직렬화/참조가 모두 이 함수의 반환값을 쓰므로, 기수는 여기 한 곳에서만 정한다.
+   * (header-xml 의 borderFillXml 도 같은 규칙으로 id="index+1" 을 찍는다.)
+   */
   registerBorderFill(spec: BorderFillSpec): number {
     const key = JSON.stringify(spec);
     for (let i = 0; i < this.borderFills.length; i++) {
-      if (JSON.stringify(this.borderFills[i]) === key) return i;
+      if (JSON.stringify(this.borderFills[i]) === key) return i + 1;
     }
     this.borderFills.push(spec);
-    return this.borderFills.length - 1;
+    return this.borderFills.length; // = (새 index) + 1
   }
 
   // ---------------------------------------------------------------------------
@@ -256,7 +273,8 @@ export class ShapeRegistry {
   }
 
   borderFillFromCell(border: CellBorders | undefined): number {
-    if (!border) return 0;
+    // 보더 미지정 = "투명"(index 0) → 1-based 참조 id 1.
+    if (!border) return 1;
     const def: BorderSpec = NO_BORDER;
     const spec: BorderFillSpec = {
       left: border.left ?? def,

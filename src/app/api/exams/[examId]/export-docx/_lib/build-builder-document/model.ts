@@ -20,6 +20,15 @@ export interface BuilderLayout {
   showQuestionMeta?: boolean;
   passageStyle?: "boxed" | "underlined" | "plain";
   pageNumberStyle?: "center" | "outside" | "none";
+  /**
+   * 쪽당 문제 수 고정(빌더 「쪽당 N문제」 토글). 미리보기 paginateGroups 와 같은 규칙으로,
+   * 단 예산(1단=1문항, 2단=2문항)을 넘기는 그룹 앞에서 쪽을 넘긴다.
+   * 저장: src/actions/exam-paper-builder.ts 의 `normalizedLayout`(= input.layout 스프레드)
+   *       ← exam-paper-builder-client-parts/save-draft.ts 의 `layout.forceTwoPerPage`.
+   * HWPX 는 이 값을 문단 단위 columnBreak/pageBreak 로 번역할 수밖에 없다 — 한컴은
+   * 본문 중간 colPr(신문 다단)을 무시해서 구역을 안 나누면 단 수를 못 바꾼다.
+   */
+  forceTwoPerPage?: boolean;
 }
 
 export interface BuilderItem {
@@ -40,6 +49,19 @@ export interface BuilderItem {
   objectiveAnswerTexts?: string[];
   sectionTitle?: string;
   teacherNote?: string;
+  /**
+   * 이 항목 앞에서 강제로 나눈다. 저장: exam-paper-builder.ts 의 `normalizedItems[].breakBefore`
+   * ("column"/"page" 외 값은 서버가 "auto" 로 정규화) ← save-draft.ts 의 `items[].breakBefore`.
+   * HWPX 2단 구역에서 "column" 은 columnBreak, "page" 는 pageBreak 로 번역한다.
+   * 1단 구역에서는 columnBreak 가 무의미하므로 "column" 도 pageBreak 로 승격한다.
+   */
+  breakBefore?: "auto" | "column" | "page";
+  /**
+   * 앞 항목에 붙여 둔다 — true 면 forceTwoPerPage 의 자동 나눔을 적용하지 않는다(미리보기와 동일).
+   * 저장: exam-paper-builder.ts 의 `normalizedItems[].keepWithPrev`(Boolean 강제)
+   *       ← save-draft.ts 의 `items[].keepWithPrev`.
+   */
+  keepWithPrev?: boolean;
 }
 
 export type BuilderBlockType = "question" | "text" | "section" | "divider" | "spacer" | "image";
@@ -66,14 +88,49 @@ export interface BuilderBlock extends Omit<Partial<BuilderItem>, "blockType"> {
   imageWidth?: number;
 }
 
+/**
+ * 표지 설정. 저장: exam-paper-builder.ts 의 settings.cover
+ * (input.cover 가 없으면 키 자체가 빠지므로 BuilderSettings.cover 는 optional)
+ *   ← save-draft.ts 의 `cover: input.cover`. 원본 타입은
+ *     src/components/exams/paper-builder/types.ts 의 `PaperCover` 와 같은 모양이다.
+ *
+ * 주의: HWPX 표지 구역(section0)은 `enabled` 와 무관하게 **항상** 그린다.
+ * `enabled=false` 는 "표지 없음"이 아니라 "기본 구성(classic · showLogo · showInfo ·
+ * eyebrow=header.subtitle · footnote 없음)으로 그린다"는 뜻이다.
+ */
+export interface BuilderCover {
+  enabled: boolean;
+  template: "classic" | "band" | "minimal";
+  /** 큰 제목 위 작은 라벨. 빈 문자열이면 header.subtitle 로 대체된다. */
+  eyebrow: string;
+  /** 표지 하단 문구. 빈 문자열이면 표시하지 않는다. */
+  footnote: string;
+  /** header.academyLogoDataUrl 을 표지에 얹을지. */
+  showLogo: boolean;
+  /** 학교/반/이름/시험일 정보 박스 표시 여부. */
+  showInfo: boolean;
+}
+
 export interface BuilderSettings {
   source: string;
   version?: number;
   template?: string;
+  /**
+   * 자동 배점 총점. 저장: exam-paper-builder.ts 의 `normalizedScoring`
+   * (1~999 로 클램프, 유효하지 않으면 null) ← save-draft.ts 의 `scoring.autoPointTotal`.
+   * scoring 도입 이전 저장분에는 키 자체가 없어서 optional 이다.
+   */
+  scoring?: { autoPointTotal?: number | null };
   layout?: BuilderLayout;
   header?: BuilderHeader;
+  cover?: BuilderCover;
   items: BuilderItem[];
   blocks?: BuilderBlock[];
+  /**
+   * 저장 시각 ISO 문자열. 저장: exam-paper-builder.ts 의 `savedAt: new Date().toISOString()`
+   * (동형 생성 경로 src/lib/similar-exam-generation/persistence.ts 도 같은 키로 쓴다).
+   */
+  savedAt?: string;
 }
 
 export interface BuilderItemResolved extends BuilderItem {
