@@ -57,8 +57,11 @@ export type WorksheetCoreEngine = "draft" | "parallel";
 export function worksheetCoreEngine(): WorksheetCoreEngine {
   return process.env.WORKSHEET_CORE_ENGINE?.trim() === "draft" ? "draft" : "parallel";
 }
+// [26-08-31 사용자 확정] 학습지 전 계열 gemini-3.7-flash 통일(「우리는 무조건 3.7flash」 —
+// 문제생성 라인업 3.7 통일(26-08-19)의 학습지 계열 확장). 구 luna 폴백은 env 핀으로 롤백 가능.
+// 사고 헤드룸·타임아웃 상수는 무개변 — luna 기준 상한이라 3.7(더 빠름·reading 실측 60s vs 151s)에 여유.
 const WORKSHEET_CORE_MODEL =
-  process.env.WORKSHEET_CORE_MODEL?.trim() || "openai/gpt-5.6-luna";
+  process.env.WORKSHEET_CORE_MODEL?.trim() || "google/gemini-3.7-flash";
 // xhigh 는 코어 섹션 볼륨에서 OpenRouter 비스트리밍 벽(~300s)을 넘길 수 있어 high 가 기본.
 const WORKSHEET_CORE_REASONING_EFFORT =
   process.env.WORKSHEET_CORE_REASONING_EFFORT?.trim() || "high";

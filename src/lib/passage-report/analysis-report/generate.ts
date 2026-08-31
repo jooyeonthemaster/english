@@ -110,8 +110,10 @@ export type WorksheetModelOverrides = {
 const WORKSHEET_WORKBOOK_ENGINE =
   process.env.WORKSHEET_WORKBOOK_ENGINE?.trim() === "mono" ? "mono" : "split";
 const WORKSHEET_WORKBOOK_MODEL = process.env.WORKSHEET_WORKBOOK_MODEL?.trim() || "";
+// [26-08-31 사용자 확정] 학습지 전 계열 3.7-flash 통일 — isLuna 타임아웃 분기(:140)가
+// 자동으로 140s 경로를 태우므로 상수 무개변. 롤백은 env WORKSHEET_INFERENCE_MODEL.
 const WORKSHEET_INFERENCE_MODEL =
-  process.env.WORKSHEET_INFERENCE_MODEL?.trim() || "openai/gpt-5.6-luna";
+  process.env.WORKSHEET_INFERENCE_MODEL?.trim() || "google/gemini-3.7-flash";
 const WORKSHEET_UNITS_REASONING_EFFORT =
   process.env.WORKSHEET_UNITS_REASONING_EFFORT?.trim() || "high";
 // maxTokens 기본 26k: luna 사고 토큰 몫 + gemini 에도 절단 방어(코어 20k 절단 4/4 실측
@@ -129,7 +131,8 @@ function resolveUnitOverrides(
   const defaultModel =
     unit === "workbook"
       ? WORKSHEET_WORKBOOK_MODEL ||
-        (WORKSHEET_WORKBOOK_ENGINE === "split" ? "openai/gpt-5.6-luna" : "")
+        // [26-08-31] split 폴백도 3.7-flash 통일(사용자 확정 — mono 빈값 경로는 무개변).
+        (WORKSHEET_WORKBOOK_ENGINE === "split" ? "google/gemini-3.7-flash" : "")
       : WORKSHEET_INFERENCE_MODEL;
   const modelId = o?.modelId ?? (defaultModel || undefined);
   const isLuna = (modelId ?? "").includes("luna");

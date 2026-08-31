@@ -310,16 +310,17 @@ function normalizeFinalSection(section: FinalOnepageSection, passageContent: str
 
 // ─── 생성기 ──────────────────────────────────────────────────────────────────
 
-// 기본 모델 — 26-08-12 A/B 실측(.tmp-final-qa/model-ab-luna-vs-g36.md)으로 luna 채택:
-// 게이트 1차 통과 동률에서 품질 우세(함정표·태그 예산 상한까지 충전, 유형 지식 소화
-// 정확)·비용 5~8배 저렴($0.01 vs $0.06~0.10/장). 대가는 속도(102~130s vs 42~69s)라
-// 호출측 데드라인을 함께 늘렸다(fast 270s·워커 540s). 롤백/핀은 env 로:
-//   FINAL_ONEPAGE_MODEL=google/gemini-3.6-flash 로 되돌릴 땐 xhigh 가 gemini 에서
-//   유효하지 않으므로 FINAL_ONEPAGE_REASONING_EFFORT=high 도 반드시 함께 지정.
+// [26-08-31 사용자 확정] 학습지 전 계열 gemini-3.7-flash 통일(「우리는 무조건 3.7flash」).
+// ⚠ effort 동반 변경 필수였던 축: 구 폴백 xhigh 는 gemini 에서 유효하지 않다(아래 구주석의
+//   자기 경고) → 폴백을 high 로 함께 전환. 데드라인(fast 270s·워커 540s)은 무개변 —
+//   3.7 이 luna 보다 빠르므로(42~69s vs 102~130s 구실측) 여유가 커진다.
+// (이력) 26-08-12 A/B 는 luna vs gemini-3.6 비교로 luna 채택(.tmp-final-qa/model-ab-luna-vs-g36.md)
+//   — 3.7 은 그 비교의 대상이 아니었고, 통일 결정이 우선한다. 롤백: env 2종
+//   (FINAL_ONEPAGE_MODEL=openai/gpt-5.6-luna + FINAL_ONEPAGE_REASONING_EFFORT=xhigh) 동반 지정.
 const FINAL_ONEPAGE_MODEL =
-  process.env.FINAL_ONEPAGE_MODEL?.trim() || "openai/gpt-5.6-luna";
+  process.env.FINAL_ONEPAGE_MODEL?.trim() || "google/gemini-3.7-flash";
 const FINAL_ONEPAGE_REASONING_EFFORT =
-  process.env.FINAL_ONEPAGE_REASONING_EFFORT?.trim() || "xhigh";
+  process.env.FINAL_ONEPAGE_REASONING_EFFORT?.trim() || "high";
 
 export async function generateFinalOnepageReport(
   input: BuildAnalysisReportPromptInput & { brand?: string; docNo?: string },
