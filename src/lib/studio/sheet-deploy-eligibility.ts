@@ -68,7 +68,7 @@ import { PRIME_REPORT_MARKER } from "@/actions/workbench/passage-constants";
  *   아니다. 거기도 같은 열거 확장이 필요하다(E30 §5 P8, 별도 유닛).
  */
 const BLOCKED_REASON =
-  "파이널 원페이지·실전 학습지·국어 학습지는 인쇄용이라 모바일 배포 대상이 아닙니다 — 기본 학습지를 만들면 보낼 수 있습니다";
+  "파이널 원페이지·실전 학습지·직독직해 분석본·국어 학습지는 인쇄용이라 모바일 배포 대상이 아닙니다 — 기본 학습지를 만들면 보낼 수 있습니다";
 
 /** 판정 결과 — `ok:false` 일 때만 사유가 있다(툴팁/aria 자구로 그대로 쓴다). */
 export type WorksheetDeployEligibility =

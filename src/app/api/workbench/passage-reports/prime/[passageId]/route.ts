@@ -7,6 +7,7 @@ import { generateAnalysisReportCore } from "@/lib/passage-report/analysis-report
 import {
   analysisReportSchema,
   isFinalOnepageReportShape,
+  isReadingAnalysisReportShape,
 } from "@/lib/passage-report/analysis-report/schema";
 import {
   buildKoPromptInputFromPassage,
@@ -33,14 +34,33 @@ const FINAL_MARKER = "PRIME_FINAL";
  *  → 저장 대상 행의 정본은 **URL `?variant`** 하나뿐이다. */
 const PRACTICE_MARKER = "PRIME_PRACTICE";
 
+/** [reading] 직독직해 분석본 행 마커 — `passage-constants.ts` 의 READING_REPORT_MARKER 미러
+ *  (이 라우트는 형제 라우트들과 같은 관례로 마커 리터럴을 복제해 둔다 —
+ *  reading-analysis-worksheet-spec §5.3 F-2 「미러 2벌 규약」).
+ *
+ *  ⚠ 두 벌이 갈리면(한쪽만 바뀌면) 이 라우트가 저장한 행이 PRIME_REPORT_MARKERS
+ *  스코프 밖으로 떨어져 **조판 목록에서 통째로 증발**한다 — worksheet-docs 로더가
+ *  그 집합으로만 조회하기 때문이다. 반드시 같은 커밋에서 함께 바꾼다.
+ *
+ *  실전(PRACTICE)과 달리 이 문서는 파이널과 같은 「자기완결 문서」 축이다:
+ *  `reading-analysis` 섹션은 reading 문서에만 존재하므로, 모양 자기감지
+ *  (isReadingAnalysisReportShape)가 **분류자로 성립**한다 — PATCH 백스톱 참조. */
+const READING_MARKER = "PRIME_READING";
+
 /** 이 라우트가 다루는 문서 축. **무파라미터 = "basic"** 이며, 그때의 동작은 E30 이전과
  *  글자 그대로 동일하다(P4 바이트 무회귀 — 기존 호출부는 전부 이 경로다). */
-type DocVariant = "basic" | "final" | "practice";
+type DocVariant = "basic" | "final" | "practice" | "reading";
 
 /** `?variant` 해석 — 미지 값은 전부 "basic" 으로 접는다(구·신 클라이언트 혼재 안전). */
 function readDocVariant(req: NextRequest): DocVariant {
   const raw = req.nextUrl.searchParams.get("variant");
-  return raw === "final" ? "final" : raw === "practice" ? "practice" : "basic";
+  return raw === "final"
+    ? "final"
+    : raw === "practice"
+      ? "practice"
+      : raw === "reading"
+        ? "reading"
+        : "basic";
 }
 
 /** 「섹션이 `learning-worksheet` 하나뿐」 = 실전 분리 문서의 형태(E30 §1-3).
@@ -72,8 +92,9 @@ export async function GET(
 
   // PRIME_KO 게이트 — 국어 지문은 KO 마커·KO 스키마로만 로드(영어 보고서와 혼재 차단).
   // ?variant=final 이면 파이널 원페이지(PRIME_FINAL), ?variant=practice 면 실전 학습지
-  // (PRIME_PRACTICE, E30 §5 P4) 행을 조회한다 — 국어는 둘 다 미지원이라 variant 를 무시하고
-  // 기존 동작 그대로. **무파라미터 = 기존 그대로**(PRIME).
+  // (PRIME_PRACTICE, E30 §5 P4), ?variant=reading 이면 직독직해 분석본(PRIME_READING)
+  // 행을 조회한다 — 국어는 셋 다 미지원이라 variant 를 무시하고 기존 동작 그대로.
+  // **무파라미터 = 기존 그대로**(PRIME).
   const subjectRow = await loadPassageSubject(passageId, staff.academyId);
   const korean = isKoreanPassage(subjectRow);
   const variant: DocVariant = korean ? "basic" : readDocVariant(req);
@@ -83,7 +104,9 @@ export async function GET(
       ? FINAL_MARKER
       : variant === "practice"
         ? PRACTICE_MARKER
-        : PRIME_MARKER;
+        : variant === "reading"
+          ? READING_MARKER
+          : PRIME_MARKER;
 
   const row = await prisma.passageReport.findFirst({
     where: { passageId, academyId: staff.academyId, generationPlan: marker, deletedAt: null },
@@ -130,14 +153,22 @@ export async function PATCH(
   const report = parsed.data;
 
   // 저장 대상 행 결정 — **URL `?variant` 가 정본**이고(E30 §5 P4), 무파라미터일 때만
-  // 기존 final 자기감지(final-onepage-spec §2)로 폴백한다.
+  // 기존 final 자기감지(final-onepage-spec §2)·reading 자기감지로 폴백한다.
   // · `?variant=practice` → 실전 학습지(PRIME_PRACTICE) 자식 행.
   // · `?variant=final`    → 파이널 원페이지 행(모양 감지와 결론은 같지만, 편집 중 섹션이
   //                         지워져 모양이 무너진 파이널이 **부모 PRIME 을 덮어쓰는** 사고를
   //                         URL 이 원천 차단한다).
-  // · 무파라미터          → **E30 이전과 글자 그대로 동일**(모양 감지 → FINAL, 아니면 PRIME).
+  // · `?variant=reading`  → 직독직해 분석본(PRIME_READING) 행.
+  // · 무파라미터          → 모양 감지 → FINAL / READING, 아니면 PRIME. FINAL 폴백은
+  //                         **E30 이전과 글자 그대로 동일**하고, READING 폴백은 additive 다
+  //                         (reading-analysis 섹션은 reading 문서에만 존재 — 기존 문서는
+  //                         이 분기에 절대 닿지 않으므로 바이트 무회귀).
   // ⚠ 실전은 모양으로 가를 수 없다 — 기본 문서도 learning-worksheet 를 가지므로, 실전을
   //   모양 감지에 얹으면 즉시 「기본 학습지 행 통째 덮어쓰기」가 된다(P4 의 본체).
+  // ⚠ reading 은 정반대로 모양 감지가 **백스톱으로 필수**다(스펙 §5.3 F-3): 편집기를
+  //   임베드한 호스트가 docVariant 를 안 실으면 reading 문서가 PRIME 으로 계산돼 부모
+  //   기본 학습지 행을 에러 0·로그 0 으로 덮어쓴다 — practice 가 fail-closed 거절로
+  //   막는 바로 그 사고를, reading 은 모양이 확정적이라 **올바른 행으로 라우팅**해 막는다.
   const variant: DocVariant = korean ? "basic" : readDocVariant(req);
   const marker = korean
     ? KO_PRIME_REPORT_MARKER
@@ -145,9 +176,13 @@ export async function PATCH(
       ? PRACTICE_MARKER
       : variant === "final"
         ? FINAL_MARKER
-        : isFinalOnepageReportShape(report)
-          ? FINAL_MARKER
-          : PRIME_MARKER;
+        : variant === "reading"
+          ? READING_MARKER
+          : isFinalOnepageReportShape(report)
+            ? FINAL_MARKER
+            : isReadingAnalysisReportShape(report)
+              ? READING_MARKER
+              : PRIME_MARKER;
 
   // ── [E30 §5 P4] 미표기 실전 문서 fail-closed ────────────────────────────────
   // 위 산식은 무파라미터 요청을 PRIME 으로 보낸다(무회귀). 그런데 편집기를 임베드한 호스트가
@@ -181,6 +216,9 @@ export async function PATCH(
 
   const existing = await prisma.passageReport.findFirst({
     where: { passageId, academyId: staff.academyId, generationPlan: marker, deletedAt: null },
+    // GET(:113)과 동일한 orderBy — 같은 마커 행이 복수인 지문에서 「화면에 보여준 행」과
+    // 「저장하는 행」이 갈리는 것을 막는다(전 variant 공통, 26-08-31 적대 검수 렌즈1).
+    orderBy: { updatedAt: "desc" },
     select: { id: true },
   });
   if (!existing) {

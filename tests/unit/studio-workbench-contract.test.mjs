@@ -15,7 +15,10 @@ const repoRoot = path.resolve(__dirname, "..", "..");
 //  1. buildAnalysisRequestBody(src/hooks/use-passage-queue.ts):
 //     targetSections/sourceModule 부재 시 요청 body 가 확장 이전과 **바이트 동일**
 //     (§11 무회귀 — 기존 학습지 생성 페이지의 와이어 포맷 불변), 빈 배열도 부재
-//     취급, 지정 시에만 additive 키로 출현.
+//     취급, 지정 시에만 additive 키로 출현. readingAnalysis(직독직해,
+//     reading 스펙 §5.2 B-6)는 true 일 때만 **기존 키 집합 뒤·stream 직전**에
+//     출현(키 집합·순서 바이트 검증 — use-passage-queue.ts:731-733 주석의 계약)하고,
+//     promptConfigFromJobConfig 재시도 왕복(잡 config → 복원 → body)까지 고정한다.
 //  2. src/lib/studio/module-sections.ts:
 //     모듈 ↔ 필요 섹션 표(§3.4 정본) · 섹션 종량제 가격 불변식 — 임의 부분집합
 //     순차 구매 총액 == 일괄 구매 총액(항상 ≤5, 검수 L1-F4).
@@ -60,6 +63,8 @@ const requestBodyHarness = `
 // CJS _load 를 가로채 server-only 만 빈 모듈로 대체한다. 순수 함수만 호출하므로
 // DB·서버 API 에는 닿지 않는다.
 import Module from "node:module";
+import { readFileSync as rfs, writeFileSync as wfs, rmSync as rms } from "node:fs";
+import { join as pjoin } from "node:path";
 const origLoad = (Module as any)._load;
 (Module as any)._load = function (request: string, parent: unknown, isMain: boolean) {
   if (request === "server-only") return {};
@@ -196,13 +201,121 @@ try {
 }
 check("promptConfig 무변이(동결 입력 안전)", pure);
 
+// (h) [reading 스펙 §5.2 B-6] readingAnalysis — true 일 때만 키 출현, 위치는
+//     **기존 키 집합 뒤·stream 직전**. use-passage-queue.ts:731-733 주석이 약속한
+//     「키 집합·순서 바이트 검증」을 이 블록이 실제로 이행한다(26-08-31 렌즈 검수).
+const raOnly = buildAnalysisRequestBody("p-1", { ...fullCfg, readingAnalysis: true } as any, false);
+check(
+  "readingAnalysis 지정 → 기존 키 집합 뒤 말미 출현",
+  JSON.stringify(Object.keys(raOnly)) === JSON.stringify([...BASE_KEYS, "readingAnalysis"]),
+  Object.keys(raOnly).join(","),
+);
+check("readingAnalysis 값 보존(true)", raOnly.readingAnalysis === true);
+const raStream = buildAnalysisRequestBody("p-1", { ...fullCfg, readingAnalysis: true } as any, true);
+check(
+  "readingAnalysis+stream → stream 직전 배치",
+  JSON.stringify(Object.keys(raStream)) === JSON.stringify([...BASE_KEYS, "readingAnalysis", "stream"]),
+  Object.keys(raStream).join(","),
+);
+check(
+  "readingAnalysis+stream → 바이트 동일(기준선+readingAnalysis+stream)",
+  JSON.stringify(raStream) ===
+    JSON.stringify({ ...legacyBody("p-1", fullCfg, false), readingAnalysis: true, stream: true }),
+  JSON.stringify(raStream),
+);
+// 스튜디오 additive 키와 동시 지정 — 전체 순서 고정(targetSections → sourceModule →
+// readingAnalysis → stream). finalOnepage 와의 조합은 발사부(sheetPromptFlags)가
+// 만들지 않는 상호 배타 축이라 와이어 포맷으로 고정하지 않는다.
+const raBoth = buildAnalysisRequestBody(
+  "p-1",
+  { ...fullCfg, targetSections: ["passage"], sourceModule: "cloze", readingAnalysis: true } as any,
+  true,
+);
+check(
+  "additive 동시 지정+readingAnalysis+stream → 키 전체·순서",
+  JSON.stringify(Object.keys(raBoth)) ===
+    JSON.stringify([...BASE_KEYS, "targetSections", "sourceModule", "readingAnalysis", "stream"]),
+  Object.keys(raBoth).join(","),
+);
+// 부재·false → 키 미출현·기준선과 바이트 동일(무회귀 — finalOnepage/targetSections 동형)
+const raFalse = buildAnalysisRequestBody("p-1", { ...minCfg, readingAnalysis: false } as any, false);
+check("readingAnalysis:false → 키 미출현", !("readingAnalysis" in raFalse));
+check(
+  "readingAnalysis:false → 기준선과 바이트 동일",
+  JSON.stringify(raFalse) === JSON.stringify(legacyBody("p-1", minCfg, false)),
+);
+
+// (i) 재시도 왕복 — 잡 config → promptConfigFromJobConfig → buildAnalysisRequestBody.
+//     실패한 ◈5 직독직해 잡의 「다시 시도」가 기본 분석으로 승격되지 않는다는 계약
+//     (use-passage-queue.ts:238-241). 함수가 모듈 내부(비export·런타임 소비처 2곳)라
+//     export 로 표면을 넓히는 대신 **소스에서 함수를 추출해 실제 의존성과 함께 실행**
+//     한다(§3 의 소스 텍스트 고정과 같은 관용구 — 원본이 편집되면 추출본도 따라간다).
+const hookSource = rfs(pjoin(process.cwd(), "src", "hooks", "use-passage-queue.ts"), "utf8");
+const fnMatch = hookSource.match(/function promptConfigFromJobConfig[\\s\\S]*?\\r?\\n\\}/);
+check("promptConfigFromJobConfig 소스 추출", !!fnMatch);
+if (fnMatch) {
+  const shimPath = pjoin(process.cwd(), "tests", ".tmp-studio-workbench", ".prompt-config-shim.mts");
+  wfs(
+    shimPath,
+    [
+      // 이 그래프는 하니스(CJS 파이프라인) 쪽에서 이미 CJS 로 적재돼 있어, ESM 쪽
+      // named import 는 cjs-module-lexer 정적 검출에 걸려 죽는다 — 네임스페이스로
+      // 받아 런타임 평면화(pick 관용구와 동일)로 우회한다.
+      'import * as qgpNs from "@/lib/question-generation-plans";',
+      'import * as paoNs from "@/lib/passage-analysis-options";',
+      "const qgp: any = (qgpNs as any).default && Object.keys((qgpNs as any).default).length ? (qgpNs as any).default : qgpNs;",
+      "const pao: any = (paoNs as any).default && Object.keys((paoNs as any).default).length ? (paoNs as any).default : paoNs;",
+      "const normalizeQuestionGenerationPlan = qgp.normalizeQuestionGenerationPlan;",
+      "const DEFAULT_ANALYSIS_TONE = pao.DEFAULT_ANALYSIS_TONE;",
+      "const normalizeAnalysisTone = pao.normalizeAnalysisTone;",
+      fnMatch[0],
+      "export { promptConfigFromJobConfig };",
+    ].join("\\n"),
+    "utf8",
+  );
+  let promptConfigFromJobConfig: any;
+  try {
+    ({ promptConfigFromJobConfig } = pick(await import("./.prompt-config-shim.mts")));
+  } finally {
+    rms(shimPath, { force: true });
+  }
+  const jobConfig = { customPrompt: "", focusAreas: [], targetLevel: "중3", readingAnalysis: true };
+  const restored = promptConfigFromJobConfig(jobConfig);
+  check("왕복: 잡 config 의 readingAnalysis 복원", restored.readingAnalysis === true);
+  const retryBody = buildAnalysisRequestBody("p-1", restored, true);
+  check(
+    "왕복: 재시도 body 에 readingAnalysis 가 stream 직전 출현",
+    JSON.stringify(Object.keys(retryBody)) ===
+      JSON.stringify([...BASE_KEYS, "readingAnalysis", "stream"]) &&
+      retryBody.readingAnalysis === true,
+    Object.keys(retryBody).join(","),
+  );
+  // 비정격 값(문자열 "true"·false·부재)은 복원되지 않는다 — reading 이 아니었던 잡이
+  // 재시도에서 reading 으로 승격되지 않는 방향까지 함께 고정한다.
+  for (const [tag, cfgIn] of [
+    ["문자열", { ...jobConfig, readingAnalysis: "true" }],
+    ["false", { ...jobConfig, readingAnalysis: false }],
+    ["부재", { customPrompt: "", focusAreas: [], targetLevel: "중3" }],
+  ] as const) {
+    const r = promptConfigFromJobConfig(cfgIn);
+    const b = buildAnalysisRequestBody("p-1", r, false);
+    check(
+      "왕복 음성(" + tag + "): 키 미복원·기준선 바이트 동일",
+      !("readingAnalysis" in r) && JSON.stringify(b) === JSON.stringify(legacyBody("p-1", r, false)),
+      JSON.stringify(b),
+    );
+  }
+}
+
 console.log(JSON.stringify({ passed, failures }));
 `;
 
 test("studio 워크벤치 계약 — buildAnalysisRequestBody 무회귀 (§3.7.2·§11)", () => {
   const result = runHarness(".request-body-harness.mts", requestBodyHarness);
   assert.deepEqual(result.failures, [], `실패한 검증: ${result.failures.join(", ")}`);
-  assert.ok(result.passed > 15, `검증 수가 비정상적으로 적습니다: ${result.passed}`);
+  // (h)·(i) readingAnalysis 커버리지 가입으로 하한 상향 — 블록이 통째로 죽어도(공허한
+  // 통과) 여기서 RED 가 나도록 검증 수를 함께 늘려 둔다.
+  assert.ok(result.passed > 25, `검증 수가 비정상적으로 적습니다: ${result.passed}`);
 });
 
 // ── 2. module-sections — §3.4 표 정본 · 섹션 종량제 가격 불변식 ───────────────

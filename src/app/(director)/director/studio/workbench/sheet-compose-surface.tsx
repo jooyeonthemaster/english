@@ -165,8 +165,12 @@ import {
 import { SHEET_PLAN_LABEL } from "@/lib/studio/sheet-products";
 import {
   isFinalOnepageReportShape,
+  isReadingAnalysisReportShape,
   type AnalysisReport,
 } from "@/lib/passage-report/analysis-report/schema";
+// 직독직해 분석본 마커 정본(스펙 §5.2 A-1). 의존성 0 상수 모듈이라 클라이언트 번들에
+// 안전하다(sheet-deploy-eligibility.ts:28-32 가 같은 근거로 같은 모듈을 import 한다).
+import { READING_REPORT_MARKER } from "@/actions/workbench/passage-constants";
 
 // ── 임베드 격리 상수(E21-3) ─────────────────────────────────────────────────────
 /**
@@ -714,6 +718,9 @@ export function SheetComposeSurface({
       //  · 편집 대상이 실전 자신일 때는 여기 오지 않는다(활성은 companions 제외) —
       //    그 경우 실전은 편집 문맥으로 독립 문서 모양(제목+01)으로 보이고, 기본을
       //    다시 편집 대상으로 고르면 연속 모양으로 돌아온다.
+      //  · [reading] 직독직해(PRIME_READING)는 **의도적으로 잇지 않는다** — 자기 표지
+      //    (헤더 cover)를 가진 독립 완결 문서라 연속 조판 대상이 아니다(스펙 §5.3 F-2
+      //    「joinPrev 확장하지 않는다」). 이 판정식은 PRIME_PRACTICE 전용 그대로 둔다.
       const prev = i > 0 ? docs.get(readyIds[i - 1]) : undefined;
       const joinPrev =
         doc.planMarker === "PRIME_PRACTICE" &&
@@ -1458,12 +1465,25 @@ export function SheetComposeSurface({
   //   「모양 자기감지 트릭은 실전에 적용 불가」라고 못박은 이유다.
   const activeDocIsPractice =
     !!activeDoc && activeDoc.planMarker === "PRIME_PRACTICE";
-  // 부모 기본 리포트를 끌어와야 하는 자식 = 파이널 ∪ 실전.
+  // [reading] 직독직해 분석본도 **자기완결 문서**다 — 섹션이 reading-analysis 하나뿐이라
+  // 파이널과 똑같이 활동 생성 컨텍스트(vocabulary 섹션 등)가 없고, 단어시험지 승격 주입은
+  // 부모 PRIME(activitySource)에 의존한다(스펙 §5.3 F-5). 판정은 파이널과 같은
+  // 「마커 우선(행 정본) + 모양 폴백」 — 실전과 달리 reading 은 모양 자기감지가 **가능**하다
+  // (reading-analysis 섹션은 기본/실전/파이널 문서에 원리적으로 존재하지 않는다 — F-3).
+  const activeDocIsReading =
+    !!activeDoc &&
+    (activeDoc.planMarker === READING_REPORT_MARKER ||
+      isReadingAnalysisReportShape(activeDoc.report));
+  // 부모 기본 리포트를 끌어와야 하는 자식 = 파이널 ∪ 실전 ∪ 직독직해.
   // ⚠ 이름이 `activeFinalPassageId` 였다 — 실전이 합류하면서 「파이널 전용」이라는
   //   거짓 단서가 됐다. 아래 로더는 **무파라미터 GET**(= 부모 PRIME)이라 실전에도
   //   그대로 옳다: 자식이 무엇이든 끌어와야 할 것은 언제나 부모 기본 리포트다.
+  //   [reading] 부모 없이도 성립하는 문서다(파이널 동형) — 부모 부재면 GET 이 빈 응답으로
+  //   끝나 null 확정 캐시 = T1 강등이고, 편집기 잠김 카드가 사유를 고지한다(F-5).
   const activeChildPassageId =
-    (activeDocIsFinal || activeDocIsPractice) && activeDoc ? activeDoc.passageId : null;
+    (activeDocIsFinal || activeDocIsPractice || activeDocIsReading) && activeDoc
+      ? activeDoc.passageId
+      : null;
   /**
    * [E30] 편집기 저장 대상 행을 **URL 로** 못박는다(스펙 §5 P4).
    *
@@ -1471,12 +1491,18 @@ export function SheetComposeSurface({
    * 나가고, 서버의 모양 자기감지는 실전 문서를 `PRIME` 으로 분류해 **부모 기본
    * 학습지 행을 통째로 덮어쓴다**. (U2 가 라우트에 fail-closed 409 백스톱을 넣어
    * 파괴는 막혀 있지만, 배선 전까지는 저장 자체가 거부된다 — 여기가 그 짝이다.)
+   *
+   * [reading] 직독직해도 같은 계약이다(스펙 §5.3 F-3) — 미배선이면 reading 저장이
+   * 무파라미터 PATCH 로 나가 부모 PRIME 행을 노린다. reading 은 서버 모양 자기감지
+   * 백스톱이 있지만(F-3 fail-closed) 그건 안전망이지 정상 경로가 아니다.
    */
-  const activeDocVariant: "basic" | "final" | "practice" = activeDocIsPractice
-    ? "practice"
-    : activeDocIsFinal
-      ? "final"
-      : "basic";
+  const activeDocVariant: "basic" | "final" | "practice" | "reading" = activeDocIsReading
+    ? "reading"
+    : activeDocIsPractice
+      ? "practice"
+      : activeDocIsFinal
+        ? "final"
+        : "basic";
   useEffect(() => {
     if (!activeChildPassageId) return;
     if (activitySourceCache.has(activeChildPassageId)) return;
@@ -1493,7 +1519,13 @@ export function SheetComposeSurface({
           `/api/workbench/passage-reports/prime/${activeChildPassageId}`,
         );
         const j = (await res.json()) as { report?: unknown } | null;
-        if (j?.report && !isFinalOnepageReportShape(j.report as AnalysisReport)) {
+        // [reading] 오염 백스톱 대칭 — 부모 PRIME 자리에 파이널/직독직해 모양이 돌아오면
+        // 둘 다 null 확정이다(승격 주입 소스는 언제나 기본 리포트여야 한다).
+        if (
+          j?.report &&
+          !isFinalOnepageReportShape(j.report as AnalysisReport) &&
+          !isReadingAnalysisReportShape(j.report as AnalysisReport)
+        ) {
           next = j.report as AnalysisReport;
         }
       } catch {
@@ -1532,10 +1564,18 @@ export function SheetComposeSurface({
       // [E23] 기본(PRIME) 저장은 활동 소스 캐시에도 반영(판별자는 activeDocIsFinal 과
       // 동일 — 마커 우선·저장본 모양 폴백, 파이널 저장은 캐시 무접촉) — 같은 세션에서
       // 기본을 고치고 파이널로 넘어갔을 때의 스테일 소스 주입 방지(E23 검수 A-3).
+      // [reading] 자식 문서 저장은 전부 캐시 무접촉이어야 한다 — 직독직해 본문이 부모
+      // PRIME 자리에 들어가면 그 지문의 승격 주입 소스가 통째로 오염된다(F-5).
+      // ⚠ PRIME_PRACTICE 제외는 E30 이후 빠져 있던 선재 구멍이다(실전 저장이 캐시를
+      //   오염시켜 이후 자식 문서의 단어시험지 소스가 실전 본문으로 바뀌던 결함) —
+      //   reading 합류와 같은 축이라 여기서 함께 막는다.
       if (
         activePassageId &&
         activePlanMarker !== "PRIME_FINAL" &&
-        !isFinalOnepageReportShape(nextReport)
+        activePlanMarker !== "PRIME_PRACTICE" &&
+        activePlanMarker !== READING_REPORT_MARKER &&
+        !isFinalOnepageReportShape(nextReport) &&
+        !isReadingAnalysisReportShape(nextReport)
       ) {
         setActivitySourceCache((prev) => {
           const next = new Map(prev);
@@ -2139,14 +2179,23 @@ export function SheetComposeSurface({
               iconOnly
               title="현재 문서 저장 — 부착 문서는 저장되지 않습니다"
               className="size-7"
-              secondaryActions={[
-                {
-                  label: "다른 이름으로 저장",
-                  icon: <Copy className="size-3.5" />,
-                  onClick: toolbar.requestSaveAs,
-                  disabled: toolbar.savingAs,
-                },
-              ]}
+              secondaryActions={
+                // [E30 §2-4 · reading 스펙 §5.3 F-6] saveAsSupported=false 문서(실전·직독직해)는
+                // 사본 저장 입구 자체를 렌더하지 않는다 — passage-analysis-modal.tsx 와 같은
+                // 게이트. 이 호스트만 saveAsSupported 를 무시하던 **선재 구멍**이었다(E30 실전
+                // 도입 때부터): requestSaveAs 자체 거절 + 서버 400 이 데이터는 지켰지만,
+                // 누르면 사유 토스트만 나오는 죽은 메뉴가 남았다. undefined(구 상태)는 지원.
+                toolbar.saveAsSupported === false
+                  ? []
+                  : [
+                      {
+                        label: "다른 이름으로 저장",
+                        icon: <Copy className="size-3.5" />,
+                        onClick: toolbar.requestSaveAs,
+                        disabled: toolbar.savingAs,
+                      },
+                    ]
+              }
             />
           </>
         ) : null}
@@ -2720,7 +2769,8 @@ export function SheetComposeSurface({
             // 「아직 안 옴/없음 확정」이 null(편집기가 T1 강등으로 동작). 캐시 값은 지문당
             // 같은 참조가 유지되므로 이 prop 이 재측정을 유발하지 않는다.
             activitySource={
-              activeDocIsFinal || activeDocIsPractice
+              // [reading] 직독직해도 승격 주입 축(F-5) — 부모 PRIME 이 소스다.
+              activeDocIsFinal || activeDocIsPractice || activeDocIsReading
                 ? (activitySourceCache.get(activeDoc.passageId) ?? null)
                 : undefined
             }

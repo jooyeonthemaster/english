@@ -31,6 +31,13 @@ const requestSchema = z.object({
    * (스펙 정본 .tmp-final-qa/final-onepage-spec.md §2).
    */
   finalOnepage: z.boolean().optional(),
+  /**
+   * [F1-M4] 직독직해 분석본 표식 — 이 인큐 라우트는 **처리하지 않는다**(400 명시
+   * 거절, 아래 게이트). 스키마에 두는 이유: z.object 는 미정의 키를 무음 strip 하므로
+   * 키가 없으면 reading 요청이 「주문 안 한 기본 분석」 잡으로 둔갑해 과금까지 됐다.
+   * trigger 워커에는 reading 분기가 없다 — fast 라우트(passage-analysis/fast) 전용.
+   */
+  readingAnalysis: z.boolean().optional(),
 });
 
 export async function POST(req: NextRequest) {
@@ -43,6 +50,19 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) {
     return NextResponse.json(
       { error: "Invalid payload", details: parsed.error.issues },
+      { status: 400 },
+    );
+  }
+
+  // [F1-M4] 직독직해는 fast 라우트 전용 — 잡 생성 **이전** 명시 거절. 무음 strip 이면
+  // reading 주문이 기본 분석 잡으로 생성·과금되는 구멍이 된다(requestSchema 주석 참조).
+  if (parsed.data.readingAnalysis === true) {
+    return NextResponse.json(
+      {
+        error:
+          "직독직해 분석본은 이 라우트에서 생성할 수 없습니다. fast 라우트(/api/workbench/ai-jobs/passage-analysis/fast)를 사용하세요.",
+        code: "READING_FAST_ROUTE_ONLY",
+      },
       { status: 400 },
     );
   }

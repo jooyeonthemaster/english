@@ -564,6 +564,117 @@ export function isFinalOnepageReportShape(report: { sections?: Array<{ kind?: st
   return !!report?.sections?.some((s) => s?.kind === "final-onepage");
 }
 
+// ─── 직독직해 분석본 (reading-analysis) ──────────────────────────────────────
+// 4번째 variant 「직독직해 분석본」 — 전 문장 슬래시 끊어읽기 + 1:1 직독직해 +
+// 완전해석 + 색상 문법 판서의 **멀티페이지** 문서. 스펙 정본:
+// docs/reading-analysis-worksheet-spec.md §3 (ReadingAnalysisDoc) · §3.1 (생성 계약 C1~C7).
+// 파이널 원페이지와 같은 「전면 문서」 패턴이다: 이 섹션 1개가 문서 전체를 대체한다
+// (section-slots 조기반환 슬롯 — 스펙 §5.3 F-1). 저장 행은 marker=PRIME_READING ·
+// templateId="prime-reading". 단, 조판은 파이널(cover 1장 고정)과 달리
+// 문장 카드당 FlowItem 으로 packFlow 에 참여한다(스펙 §5.1).
+
+/** 인라인 하이라이트 의미 축(§1.3) — grammar=빨강+밑줄(문법/어법 핵심) ·
+ *  phrase=파랑+밑줄(핵심 표현/어휘/숙어) · connective=황토·밑줄 없음(접속사/연결사) ·
+ *  structure=청록·밑줄 없음(구조/관계사/분사 수식). */
+export const readingMarkKindSchema = z.enum(["grammar", "phrase", "connective", "structure"]);
+export type ReadingMarkKind = z.infer<typeof readingMarkKindSchema>;
+
+export const readingAnalysisSectionSchema = z
+  .object({
+    kind: z.literal("reading-analysis"),
+    /** 문서 스키마 버전(§3 정본) — 구 저장분에 없어도 1 로 채워 파스된다. */
+    version: z.literal(1).default(1),
+    /** 표지 헤더(파란 그라데이션 박스) — 문서 선두 1회(§1.1). */
+    header: z.object({
+      /** 상단 주황 배지 — "2022 개정 교육과정 고등 영어 II". 미상이면 과목 수준 추정 문자열. */
+      curriculumBadge: z.string(),
+      /** 제목 — 지문 제목 또는 출처명("Lesson 1. Two Heroes …"). */
+      title: z.string(),
+      /** 출처("NE능률(오선영)" 등) — ⚠ 미상이면 **빈 문자열**(사실 창작 금지 = C5 critical). */
+      source: z.string(),
+      /** 고정 부제 — "전 문장 슬래시(/) 구 끊어읽기 & 1:1 직독직해 심층 분석본". */
+      subtitle: z.string(),
+    }),
+    /** 의미 단위 파트(§1.1-3) — sentences 는 문장 no 배열로 1..N 을 빈틈·중복 없이
+     *  분할해야 한다(C4). 파트 수는 생성 계약상 3~6(짧은 지문 1~2, C6)이지만 base
+     *  파스는 관대하게 두고 생성 게이트(validateReadingDoc, U1)가 조인다 —
+     *  주변 섹션들의 base/generation 이원화(min 완화)와 같은 원칙. */
+    parts: z
+      .array(
+        z.object({
+          label: z.string(), // "본문 1" (자동 번호)
+          titleKo: z.string(), // 한국어 소제목 — AI 창작 허용(지문 내용 요약)
+          sentences: z.array(z.number().int().min(1)).min(1).max(200),
+        }),
+      )
+      .min(1)
+      .max(12),
+    /** 문장 카드(§1.2 5층) — 문서의 반복 단위. 상한 200: 「문장 수 상한 없음」(C6,
+     *  교과서 레슨 40~60문장 수용)을 넉넉히 덮되 무한은 막는다.
+     *  ⚠ 공용 sentenceNo(max 60)를 쓰지 않는 이유 — 그 상수는 기본 학습지 상호참조
+     *  축(≤60)이고, 이 문서는 그 상한을 계약상 넘을 수 있다. */
+    sentences: z
+      .array(
+        z.object({
+          no: z.number().int().min(1), // 1부터 연속
+          /** 중요도 ★0~3 — ★≥1 카드는 주황 액센트+크림 배경, ★★★는 킬러 포인트 전용(§1.4). */
+          stars: z.number().int().min(0).max(3),
+          /** 슬래시 조각. ⚠ C1: en 을 공백 1칸으로 이어붙이면(구두점 앞 공백 정규화 후)
+           *  원문 문장과 **축자 일치**해야 한다 — 원문 개변 금지.
+           *  ⚠ C2: ko 는 그 en 조각만의 1:1 직역, **원문 어순 그대로**(재배열하지 않는
+           *  것이 곧 "직독직해"다). 조각 수·순서 = 직독직해와 1:1(§1.4). */
+          chunks: z
+            .array(
+              z.object({
+                en: z.string(), // 조각 원문 (슬래시 문자 미포함)
+                ko: z.string(), // 1:1 직독직해 조각
+                /** 인라인 하이라이트 — ⚠ C3: text 는 이 조각 en 안에 **부분 문자열로
+                 *  실존**해야 한다(대소문자 포함 일치). 문장당 합계 2~6, 색당 최대 3 이
+                 *  생성 계약(§1.3) — base 는 개수 관대. */
+                marks: z
+                  .array(z.object({ text: z.string(), kind: readingMarkKindSchema }))
+                  .max(8)
+                  .optional(),
+              }),
+            )
+            .min(1)
+            .max(40),
+          fullKo: z.string(), // 완전해석 — 자연 한국어 어순으로 재구성한 완역
+          /** 주석 행(§1.2-④) — 라벨은 "어휘" "문법" "분사구문" 등 2~8자 자유 어휘.
+           *  tone: red=문법 계열 / blue=어휘·표현 계열 배지 테두리.
+           *  text 는 **평문** 「표제: 설명 / 표제: 설명」 — 콜론 앞 표제는 렌더가 자동
+           *  볼드한다(서식 마커를 데이터에 넣지 않는 평문 원칙 — 마커가 있으면 편집
+           *  캔버스에서 `**` 가 노출되는 실측 사고. 구본 `**` 데이터는 렌더 하위호환,
+           *  생성기는 stripNoteBoldMarkers 후처리로 마커를 벗긴다).
+           *  카드당 1~3행이 생성 계약(§1.4)이나 base 는 0행도 허용(관대) —
+           *  ⚠ C7: 그 문장에 실존하는 문법 현상만(라벨-해설 불일치 = major). */
+          notes: z
+            .array(
+              z.object({
+                label: z.string(),
+                tone: z.enum(["red", "blue"]),
+                text: z.string(),
+              }),
+            )
+            .max(6)
+            .default([]),
+        }),
+      )
+      .min(1)
+      .max(200),
+  })
+  .passthrough();
+export type ReadingAnalysisSection = z.infer<typeof readingAnalysisSectionSchema>;
+/** §3 정본 명명 — U1 생성기·U4 렌더러가 import 하는 문서(=섹션 content) 타입.
+ *  kind 리터럴을 포함하므로 생성기 산출물을 sections 배열에 그대로 실을 수 있다. */
+export type ReadingAnalysisDoc = ReadingAnalysisSection;
+
+/** 보고서가 직독직해 분석본 문서인지 — isFinalOnepageReportShape 동형 판별자.
+ *  편집기/라우트/조판이 공유한다(모양 자기감지 백스톱 — 스펙 §5.3 F-3). */
+export function isReadingAnalysisReportShape(report: { sections?: Array<{ kind?: string }> } | null | undefined): boolean {
+  return !!report?.sections?.some((s) => s?.kind === "reading-analysis");
+}
+
 // ─── 섹션 union ──────────────────────────────────────────────────────────────
 // 08+ 실전 학습지 — 첨부 워크북/DOCX 스타일을 A4 보고서에 통합
 export const learningWorksheetSectionSchema = z
@@ -715,6 +826,7 @@ export const analysisSectionSchema = z.discriminatedUnion("kind", [
   selfCheckSectionSchema,
   learningWorksheetSectionSchema,
   finalOnepageSectionSchema,
+  readingAnalysisSectionSchema,
 ]);
 export type AnalysisSection = z.infer<typeof analysisSectionSchema>;
 export type AnalysisSectionKind = AnalysisSection["kind"];
@@ -1091,6 +1203,8 @@ export const NUMBERED_SECTION_LABELS: Record<AnalysisSectionKind, string> = {
   "self-check": "학습 점검",
   "learning-worksheet": "실전 학습지",
   "final-onepage": "파이널 원페이지",
+  // 미등록 시 조판 헤더가 undefined 로 나간다(스펙 §5.3 F-1 — EN 맵과 동시 등록).
+  "reading-analysis": "직독직해 분석본",
 };
 
 export const SECTION_LABELS_EN: Record<AnalysisSectionKind, string> = {
@@ -1104,4 +1218,5 @@ export const SECTION_LABELS_EN: Record<AnalysisSectionKind, string> = {
   "self-check": "Self-Check",
   "learning-worksheet": "Practice Workbook",
   "final-onepage": "Final One-Pager",
+  "reading-analysis": "Reading Analysis",
 };

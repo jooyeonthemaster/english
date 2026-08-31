@@ -1853,6 +1853,106 @@ export const ANALYSIS_REPORT_CSS = `
 }
 .fon-tip-k { flex: 0 0 auto; font-size: calc(10pt * var(--fon-fs, 1)); }
 
+/* ── 직독직해 분석본 (reading-analysis · par-jd-) ─────────────────────────────
+   시각 정본 .tmp-reading-qa/proto.html 의 px 값을 pt/mm 로 근사 이식(스펙 §4 — 정확
+   HEX 강제 아님, 육안 동급). 층간 간격은 전부 margin-top/padding — 블록(.par-block)
+   가장자리 밖으로 여백이 붕괴하면 data-mid rect 측정에서 빠진다(측정 계약).
+   카드 절단 금지는 FlowItem.atomic(packFlow)이 담당하고 여기 break-inside 는 시각 보조다.
+   카드 사이 간격은 .par-block 기본 margin-bottom 3.2mm(RUN_GAP_MM 동기)를 그대로 쓴다 —
+   jikdok 는 packFlow 에서 standalone(카드마다 RUN_GAP 계상)이므로 이 값을 바꾸려면
+   packing 쪽 가정과 함께 바꿔야 한다(report-sections/types.ts "jikdok" 주석). */
+/* 표지 헤더 — 파란 그라데이션 라운드 박스 + 주황 배지(§1.1-1)
+   [26-08-31 실측 교정] 사용자 실사이트 대조 지적(텍스트 과대·세로 비대·여백 과다) →
+   레퍼런스 PDF p1 을 PyMuPDF 로 직접 실측한 pt 값으로 전 층 교체: 제목 14.5pt ·
+   원문 10pt · 직독 9pt · 완전해석/주석 8.5pt · 배지 7.5pt · 범례 8.5pt. 근사 금지 —
+   여기 pt 는 원본 스팬 size 실측값 그대로다(.tmp-reading-qa 실측 로그). */
+.par-jd-head {
+  background: linear-gradient(135deg, #2f5fae 0%, #1f4487 100%);
+  border-radius: 3mm; padding: 5.5mm 6.5mm 5.2mm; color: #fff;
+}
+.par-jd-badge {
+  display: inline-block; background: #e8923a; color: #fff;
+  font-size: calc(7.5pt * var(--par-fs, 1)); font-weight: 700;
+  border-radius: 1.4mm; padding: .8mm 2.6mm; margin-bottom: 2.4mm;
+}
+.par-jd-title {
+  margin: 0; font-size: calc(14.5pt * var(--par-fs, 1)); font-weight: 800;
+  letter-spacing: -.01em; line-height: 1.25; color: #fff;
+}
+.par-jd-subtitle { margin: 2mm 0 0; font-size: calc(9.5pt * var(--par-fs, 1)); color: rgba(255,255,255,.85); }
+.par-jd-sub-sep { color: rgba(255,255,255,.6); }
+/* 범례 — 연청회색 라운드 박스(§1.1-2). margin-top 는 표지 블록 내부 간격(측정에 포함). */
+.par-jd-legend {
+  margin-top: 4.5mm; background: #f2f6fb; border: .3mm solid #e3ebf4; border-radius: 2.4mm;
+  padding: 3mm 4.2mm; font-size: calc(8.5pt * var(--par-fs, 1)); line-height: 1.75; color: #33415a;
+}
+.par-jd-lg-k { color: #1f2d40; }
+.par-jd-lg-r { color: #d63b2f; } .par-jd-lg-b { color: #2c66b8; }
+.par-jd-lg-y { color: #c98a2d; } .par-jd-lg-t { color: #2e8b7a; }
+/* 파트 헤더 — 짙은 남색 풀폭 바 + 왼쪽 주황 액센트(§1.1-3). 래퍼 padding-top 가
+   파트 앞 추가 호흡(proto 26px 근사·페이지 머리에서는 2.2mm 만 소비)이다. */
+.par-jd-partwrap { padding-top: 2mm; }
+.par-jd-part {
+  margin: 0; background: #243447; color: #fff;
+  font-size: calc(10pt * var(--par-fs, 1)); font-weight: 700;
+  padding: 2.1mm 3.8mm; border-left: 1.5mm solid #e07b2a; border-radius: 1mm;
+}
+.par-jd-part-label { color: #f4b26f; font-weight: 800; }
+/* 문장 카드 — 흰(일반)/연크림(중요) + 왼쪽 세로 액센트(§1.2). */
+.par-jd-card {
+  background: #fff; border: .3mm solid #dde5ee; border-left: 1.3mm solid #3b82c4;
+  border-radius: 2.4mm; padding: 3mm 4.6mm 2.7mm;
+  break-inside: avoid;
+  /* 무공백 장토큰(URL·붙임말 등)이 카드 폭을 뚫고 나가지 않게 어디서든 접는다(렌즈3).
+     상속되므로 원문·직독직해·주석 전 층에 적용된다. */
+  overflow-wrap: anywhere;
+}
+.par-jd-hot { background: #fdf7ed; border-color: #f0e2ca; border-left-color: #e07b2a; }
+/* ① 원문 행 — 번호 배지 + 슬래시 끊어읽기 + 4색 하이라이트(§1.3) */
+.par-jd-sent { line-height: 1.8; }
+.par-jd-no {
+  display: inline-block; background: #2b6cb8; color: #fff;
+  font-size: calc(7.5pt * var(--par-fs, 1)); font-weight: 700;
+  border-radius: 1.2mm; padding: .4mm 2.1mm; margin-right: 2.2mm;
+  vertical-align: .4mm; white-space: nowrap;
+}
+.par-jd-no-hot { background: #e0862a; }
+/* 원문 본문 = Medium(원본 스팬 실측 — 하이라이트만 Bold) */
+.par-jd-en { font-size: calc(10pt * var(--par-fs, 1)); color: #1f2d40; font-weight: 500; }
+.par-jd-slash { color: #e0862a; font-weight: 800; margin: 0 .8mm; }
+.par-jd-hl-grammar { color: #d63b2f; font-weight: 700; border-bottom: .4mm solid #d63b2f; padding-bottom: .25mm; }
+.par-jd-hl-phrase { color: #2c66b8; font-weight: 700; border-bottom: .4mm solid #2c66b8; padding-bottom: .25mm; }
+.par-jd-hl-connective { color: #c98a2d; font-weight: 700; }
+.par-jd-hl-structure { color: #2e8b7a; font-weight: 700; }
+/* ② 직독직해 — 연파랑 박스, 슬래시 1:1(§1.2-②) */
+.par-jd-jik {
+  margin-top: .9mm; background: #eaf3fd; border-left: 1mm solid #3b82c4;
+  border-radius: 1.5mm; padding: 1.7mm 2.8mm;
+  /* 8.5pt = 원본 9pt(Pretendard 계열·자폭 좁음)의 맑은고딕 실효 폭 등가 — 원본 1줄 호흡 재현 */
+  font-size: calc(8.5pt * var(--par-fs, 1)); color: #2c66b8; line-height: 1.6; font-weight: 500;
+  letter-spacing: -.015em;
+}
+.par-jd-jik-tag { font-weight: 800; }
+/* ③ 완전해석 — 연회색 박스(§1.2-③) */
+.par-jd-full {
+  margin-top: 1.6mm; background: #f4f6f8; border-radius: 1.5mm; padding: .9mm 2.8mm;
+  font-size: calc(8.5pt * var(--par-fs, 1)); color: #6b7683; line-height: 1.5;
+}
+.par-jd-full-tag { font-weight: 700; color: #55606c; }
+/* ④ 주석 행들 — 점선 상단 구분 + 라벨 배지(red=문법/blue=어휘·표현)(§1.2-④) */
+.par-jd-notes { margin-top: 1.4mm; border-top: .4mm dashed #dfe6ee; padding-top: 1.3mm; }
+.par-jd-note { display: flex; gap: 2.2mm; align-items: baseline; padding: .15mm 0; }
+.par-jd-note-label {
+  flex: none; font-size: calc(7.5pt * var(--par-fs, 1)); font-weight: 700; line-height: 1.2;
+  border-radius: 1.1mm; padding: .25mm 1.8mm; background: #fff; white-space: nowrap;
+}
+.par-jd-note-red { color: #e05252; border: .4mm solid #eb9a9a; }
+.par-jd-note-blue { color: #4a7fc9; border: .4mm solid #a3c1e8; }
+/* pre-wrap: 편집 모드(contentEditable 의 <br>) ↔ 보기 전용(평문 개행 문자) 비대칭 해소(렌즈3) —
+   저장된 개행이 보기·인쇄에서 공백으로 뭉개지지 않는다. */
+.par-jd-note-text { font-size: calc(8.5pt * var(--par-fs, 1)); color: #3a4553; line-height: 1.5; white-space: pre-wrap; }
+.par-jd-note-text b { color: #1f2d40; }
+
 /* ── 인쇄 ── */
 @media print {
   @page { size: A4; margin: 0; }

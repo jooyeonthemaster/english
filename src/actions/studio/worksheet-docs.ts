@@ -52,7 +52,13 @@ export interface StudioWorksheetDoc {
   passageId: string;
   /** 리포트 제목(= 행 라벨). 헤더 문서 칩·「편집 중: {문서명}」 고지에 그대로 쓰인다. */
   title: string;
-  /** PRIME | PRIME_FINAL (PRIME_KO 는 아래 사유로 드롭) */
+  /** PRIME | PRIME_FINAL | PRIME_PRACTICE | PRIME_READING (PRIME_KO 는 아래 사유로 드롭).
+   *  [reading 확인 노트] PRIME_READING 은 코드 수정 0으로 이 로더를 통과한다 —
+   *  스코프가 PRIME_REPORT_MARKERS 파생이고(마커 가입은 passage-constants.ts),
+   *  본문 파싱도 analysisReportSchema 가 reading-analysis 섹션을 union 으로 수용한다
+   *  (schema.ts analysisSectionSchema). 단 그 전제는 저장 행의 pages 가 **표준
+   *  AnalysisReport 봉투**(meta 필수)라는 것 — 파이널 직렬화 규약 그대로여야 하고,
+   *  맨몸 ReadingAnalysisDoc 를 pages 에 실으면 여기서 「내용을 읽을 수 없습니다」로 드롭된다. */
   planMarker: string;
   report: AnalysisReport;
 }

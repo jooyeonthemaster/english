@@ -60,6 +60,10 @@ export function sectionFlowItems(
       // 원페이지 파이널은 assemble.pushFinalOnepage 가 전면 시트로 직접 조립한다
       // (섹션 flow 미경유 — meta·brand 컨텍스트 필요). 여기 도달하면 no-op.
       break;
+    case "reading-analysis":
+      // 직독직해 분석본은 assemble.pushReadingAnalysis 가 카드 단위 FlowItem 으로 직접
+      // 조립한다(섹션 flow 미경유 — final-onepage 와 동일 패턴). 여기 도달하면 no-op.
+      break;
     case "self-check":
       break;
   }

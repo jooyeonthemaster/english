@@ -24,7 +24,7 @@ export function RunsView({
   let i = 0;
   while (i < items.length) {
     const it = items[i];
-    const merge = TABLE_WRAPS.has(it.wrap) || BOX_LIST_WRAPS.has(it.wrap) || it.wrap === "map" || it.wrap === "vocab-grid" || it.wrap === "reading" || it.wrap === "activity" || it.wrap === "ws-list";
+    const merge = TABLE_WRAPS.has(it.wrap) || BOX_LIST_WRAPS.has(it.wrap) || it.wrap === "map" || it.wrap === "vocab-grid" || it.wrap === "reading" || it.wrap === "activity" || it.wrap === "ws-list" || it.wrap === "jikdok";
     const run: FlowItem[] = [it];
     if (merge) {
       let j = i + 1;
@@ -94,6 +94,21 @@ export function RunBlock({
   if (wrap === "reading") {
     return (
       <div className="par-runblock par-reading-flow-run">
+        {run.map((it) => (
+          <BlockShell key={it.id} it={it} edit={edit} meta={blockMeta?.[editIdOf(it)] ?? blockMeta?.[it.id]} measure={measure} />
+        ))}
+      </div>
+    );
+  }
+
+  if (wrap === "jikdok") {
+    // 직독직해 분석본 문장 카드 병합 — 연속 카드가 par-jd-run 하나로 묶여 카드 사이 여백이
+    // 일관된다(par-reading-flow-run 과 동일 패턴). 간격 계약: packFlow(items.ts)는 jikdok 을
+    // standalone 으로 계상(카드마다 newRun = RUN_GAP_MM 3.2mm)하고, 여기서는 .par-block 기본
+    // margin-bottom 3.2mm(+ :last-child 0 + .par-runblock 3.2mm)이 그 가정과 정확히 일치한다.
+    // 카드 자체의 절단 금지는 FlowItem.atomic 이 담당한다(types.ts "jikdok" 주석 참조).
+    return (
+      <div className="par-runblock par-jd-run">
         {run.map((it) => (
           <BlockShell key={it.id} it={it} edit={edit} meta={blockMeta?.[editIdOf(it)] ?? blockMeta?.[it.id]} measure={measure} />
         ))}

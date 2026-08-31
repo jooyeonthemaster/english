@@ -14,6 +14,7 @@ import {
   PRACTICE_REPORT_MARKER,
   PRIME_REPORT_MARKER,
   PRIME_REPORT_MARKERS,
+  READING_REPORT_MARKER,
 } from "@/actions/workbench/passage-constants";
 import { requireStaffAuth } from "@/lib/auth";
 // [E30 §3-2] 견적 단가는 **청구 라우트와 같은 함수**에서만 나온다(E19-2 계약).
@@ -38,7 +39,7 @@ export interface StudioClassWorksheetRow {
   title: string;
   /** "DRAFT" | "PUBLISHED" | "ARCHIVED" — DB 컬럼은 String(schema 주석 계약) */
   status: string;
-  /** PRIME | PRIME_KO | PRIME_FINAL | PRIME_PRACTICE — 뷰의 종류 배지 재료.
+  /** PRIME | PRIME_KO | PRIME_FINAL | PRIME_PRACTICE | PRIME_READING — 뷰의 종류 배지 재료.
    *  ⚠ 원문 마커를 화면에 그대로 쓰지 마라 — 배지 자구 정본은
    *  `lib/studio/sheet-products.ts` 의 SHEET_PLAN_LABEL 한 곳뿐이다(E30 §4-1). */
   planMarker: string;
@@ -62,20 +63,21 @@ export interface StudioClassWorksheetRow {
 const CLASS_LINK_TAKE = 300;
 /** 리포트 방어 상한 — 지문당 다중 행이 가능해 링크 상한보다 크다(아래 질의 주석).
  *
- *  ⚠ [E30 §1-6] 마커 집합이 3종 → **4종**(PRIME_PRACTICE 가입)이 됐다. 값은 **900 유지**다
- *  (스펙 §1-6 이 명시 — 여기서 임의로 올리지 않는다). 다만 **여유분 산술은 정정한다**:
- *    · 지문 1건의 동시 마커 상한은 과목 배타라 「영어 3종(PRIME·PRIME_PRACTICE·PRIME_FINAL)」
- *      또는 「국어 1종(PRIME_KO)」 중 하나다.
- *    · E30 **이전** 최악 = 300 × 2(PRIME+FINAL) = 600 → 여유 300.
- *    · E30 **이후** 최악 = 300 × 3            = 900 → 여유 **0**.
- *  즉 실전 가입이 이 상한의 여유를 전부 먹었다. 900행이 정확히 차는 순간
- *  `take` 는 900건을 온전히 돌려주므로 **데이터 손실은 없지만**, 아래 truncated 판정이
- *  `>= REPORT_TAKE` 라서 **잘리지 않았는데 「목록이 잘렸다」 각주가 뜬다**(거짓 경보).
- *  실제 도달 조건은 「한 클래스에 링크 300건 × 전원이 기본+실전+파이널 3장 보유」라
- *  현재 프로덕션(PRIME 617 · PRIME_FINAL 6 · PRIME_PRACTICE 0)에서는 멀지만,
- *  실전이 팔리기 시작하면 3장 보유 지문이 정확히 이 축을 채운다.
- *  → 올릴 때는 **truncated 판정식과 함께** 올려라. 한쪽만 만지면 조용한 거짓말이 남는다. */
-const REPORT_TAKE = 900;
+ *  ⚠ [reading] 마커 집합이 4종 → **5종**(PRIME_READING 가입)이 됐고, 값도 900 → **1200**
+ *  으로 올렸다(reading-analysis-worksheet-spec §5.3 F-2 가 명시 — E30 때와 달리 이번엔
+ *  상향이 스펙 지시다). 산술:
+ *    · 지문 1건의 동시 마커 상한은 과목 배타라 「영어 **4종 마커 300×4**
+ *      (PRIME·PRIME_PRACTICE·PRIME_FINAL·PRIME_READING)」 또는 「국어 1종(PRIME_KO)」이다.
+ *    · E30 이후 최악 = 300 × 3 = 900 → 여유 0 (구판 값이 정확히 차던 지점).
+ *    · reading 이후 최악 = 300 × 4 = **1200** → 여유는 다시 **0** 이다.
+ *  즉 이 상향은 「여유 확보」가 아니라 「최악 케이스 수용」이다. 1200행이 정확히 차는
+ *  순간 `take` 는 1200건을 온전히 돌려주므로 데이터 손실은 없지만, 아래 truncated 판정이
+ *  `>= REPORT_TAKE` 라서 잘리지 않았는데 「목록이 잘렸다」 각주가 뜰 수 있다(거짓 경보 —
+ *  도달 조건은 「링크 300건 × 전원 4장 보유」라 현실적으로 멀다).
+ *  → truncated 판정식(아래)은 이 **named const 를 그대로 읽으므로** 값 1곳만 바꾸면
+ *    판정도 함께 움직인다 — 매직넘버 복제 금지 계약은 그대로다. 다음에 마커가 또 늘면
+ *    같은 산술(300 × 영어 동시 마커 수)로 함께 올려라. */
+const REPORT_TAKE = 1200;
 
 /** 상태 배치 조회의 진짜 상한(E29-3) — 클래스 링크 상한과 같은 축을 쓴다. */
 const STATE_BATCH_MAX = CLASS_LINK_TAKE;
@@ -154,10 +156,10 @@ export async function listStudioClassWorksheets(input: {
         },
         orderBy: { updatedAt: "desc" },
         // 방어 상한(적대 감사 minor) — (passageId, generationPlan) 유니크가
-        // 없어 지문당 다중 행이 가능하다: CLASS_LINK_TAKE 지문 × 마커 3종 여유분.
-        // [E30 §1-6] 마커 집합이 4종이 되면서 지문당 동시 상한이 2 → **3**(영어
-        // PRIME·PRIME_PRACTICE·PRIME_FINAL)으로 올랐다. 300×3 = 900 = REPORT_TAKE 라
-        // **여유분이 0** 이다 — 위 REPORT_TAKE 머리주석의 정정된 산술을 읽어라.
+        // 없어 지문당 다중 행이 가능하다.
+        // [reading] 마커 집합이 5종이 되면서 지문당 동시 상한이 3 → **4**(영어
+        // PRIME·PRIME_PRACTICE·PRIME_FINAL·PRIME_READING)로 올랐다. 300×4 = 1200
+        // = REPORT_TAKE 라 **여유분이 0** 이다 — 위 REPORT_TAKE 머리주석의 산술을 읽어라.
         take: REPORT_TAKE,
         select: {
           id: true,
@@ -275,6 +277,15 @@ export interface StudioSheetState {
    *   · 표기 ◈10 인데 그 사이 기본이 생김 → (b) 가 ◈10 청구. 표기와 동일.
    *  그래서 이 값은 스냅숏이어도 안전하다 — 최종 판정은 언제나 라우트가 청구 직전에 한다. */
   practiceRoute: "fast" | "worksheet";
+  // ── [reading] 직독직해 분석본 1필드(additive) ─────────────────────────────
+  /** PRIME_READING 행 보유(직독직해 분석본 존재) — 덮어쓰기 경고 재료(hasFinal 동형).
+   *
+   *  ⚠ `readingCached` 는 일부러 두지 않는다 — reading 은 파이널처럼 캐시 단락이 없는
+   *  **항상 재생성** 상품이라(fast 라우트 자기완결 블록이 무조건 과금·생성·upsert)
+   *  「보유했으니 무과금」 상태 자체가 존재하지 않는다. 모달은 이 불리언 하나로
+   *  덮어쓰기 경고만 그린다 — 여기에 캐시 축을 만들면 표기(무과금)와 청구(◈5)가
+   *  갈리는 E19-2 위반이 된다. */
+  hasReading: boolean;
 }
 
 /** 캐시 데이터에 박힌 톤 마커 — fast 라우트 getAnalysisTone(126-130) 미러.
@@ -329,8 +340,14 @@ export async function getStudioSheetStates(input: {
       chunks.push(ids.slice(i, i + STATE_BATCH_CHUNK));
     }
     const flat = <T,>(xs: T[][]): T[] => xs.flat();
-    const [passages, primeReports, finalReports, practiceReports, activeJobs] =
-      await Promise.all([
+    const [
+      passages,
+      primeReports,
+      finalReports,
+      practiceReports,
+      readingReports,
+      activeJobs,
+    ] = await Promise.all([
         Promise.all(
           chunks.map((chunk) =>
             prisma.passage.findMany({
@@ -403,6 +420,26 @@ export async function getStudioSheetStates(input: {
             }),
           ),
         ).then(flat),
+        // [reading] 직독직해 분석본 보유 — 위 finalReports·practiceReports 질의의
+        // **정확한 복제**다(마커 상수 1개만 다르다). 일부러 복제한다: 네 질의가 같은
+        // 모양이어야 「파이널은 되는데 직독직해만 안 보인다」류의 비대칭 결함이 눈으로
+        // 잡힌다(E30 practiceReports 가 세운 관례 그대로).
+        // ⚠ 단수 마커(READING_REPORT_MARKER)로 조회한다 — PRIME_REPORT_MARKERS 집합으로
+        // 조회하면 기본·국어·파이널·실전까지 섞여 hasReading 이 전부 참이 된다.
+        Promise.all(
+          chunks.map((chunk) =>
+            prisma.passageReport.findMany({
+              where: {
+                passageId: { in: chunk },
+                academyId: staff.academyId,
+                generationPlan: READING_REPORT_MARKER,
+                deletedAt: null,
+              },
+              take: 100,
+              select: { passageId: true },
+            }),
+          ),
+        ).then(flat),
         Promise.all(
           chunks.map((chunk) =>
             prisma.workbenchAiJob.findMany({
@@ -426,6 +463,7 @@ export async function getStudioSheetStates(input: {
     const primeSeen = new Set(primeReports.map((r) => r.passageId));
     const finalSeen = new Set(finalReports.map((r) => r.passageId));
     const practiceSeen = new Set(practiceReports.map((r) => r.passageId));
+    const readingSeen = new Set(readingReports.map((r) => r.passageId));
 
     const rows: StudioSheetState[] = passages.map((p) => {
       const korean = isKoreanPassage(p);
@@ -471,6 +509,9 @@ export async function getStudioSheetStates(input: {
         //   국어는 상품 자체가 잠겨 있어(sheet-products koreanSupported:false +
         //   worksheet 라우트 400) 이 값이 청구로 이어지는 경로가 없다 — 이중 안전(§P7).
         practiceRoute: hasBasic ? "worksheet" : "fast",
+        // [reading] 행 존재만 본다(hasFinal 동형) — 단가·라우트 파생 필드가 없는 이유는
+        // 인터페이스 hasReading 주석 참조(항상 재생성·항상 fast·항상 ◈5 라 파생할 게 없다).
+        hasReading: readingSeen.has(p.id),
       };
     });
 

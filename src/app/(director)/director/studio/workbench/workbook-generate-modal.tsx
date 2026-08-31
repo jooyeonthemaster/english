@@ -7,8 +7,9 @@
 // §3.8.7 / §3.9v2.6(D7) 의 본문 계약(role="checkbox" 7모듈 그리드 ·
 // data-workbook-module · selectionCost/PriceBadge 섹션 종량제 · 실전 문제(exam)
 // 상호배타 특례 · CTA 「지문 N개 생성 시작」)은 E19-0 무효화 조항으로 **전량
-// 폐기**됐다. 생성 단위는 이제 **학습지 3상품 라디오**(기본 / 실전 학습지 포함 /
-// 파이널 원페이지)이고, 정본은 lib/studio/sheet-products.ts 한 곳뿐이다
+// 폐기**됐다. 생성 단위는 이제 **학습지 4상품 라디오**(기본 / 실전 학습지 포함 /
+// 파이널 원페이지 / 직독직해 분석본 — reading 스펙 §5.2 B-4)이고, 정본은
+// lib/studio/sheet-products.ts 한 곳뿐이다
 // (라벨·부제·단가를 여기서 다시 적으면 학습지 생성 페이지와 갈려 같은 상품이
 // 다른 물건으로 보인다 — 임의 숫자·임의 문구 금지).
 //
@@ -72,6 +73,16 @@ import type { StudioQueueApi } from "./use-studio-queue";
  * analyzing 이 0이 되면 인터벌 자체가 걷힌다(상시 폴러가 아니다).
  */
 const STATES_POLL_MS = 6_000;
+
+/**
+ * [reading 스펙 §5.3 F-9] 미리보기 모달에 내밀 구성 탭 — **상품 정본에서 파생**한다
+ * (리터럴 4벌 복제 금지). 미리보기 모달의 기본값은 구 3상품(지문 등록 페이지
+ * 무회귀)이라, 직독직해 탭은 이 명시 전달로만 열린다 — 스튜디오 모달이 1차의
+ * 유일한 reading 노출 표면이다. StudioSheetVariant 와 LearningSheetVariant 는
+ * 같은 4값의 별개 별칭이라 구조적으로 대입 가능하다(한쪽이 늘면 여기서 컴파일 실패).
+ */
+const PREVIEW_VARIANTS: readonly LearningSheetVariant[] =
+  STUDIO_SHEET_PRODUCTS.map((p) => p.id);
 
 export interface WorkbookModalPassage {
   id: string;
@@ -268,7 +279,7 @@ function WorkbookModalBody({
     return () => window.clearInterval(timer);
   }, [analyzingCount, loadStates]);
 
-  // 3상품 견적 일괄 산출. 상태 미로딩 구간에서는 stateById 가 비어 낙관적으로
+  // 4상품 견적 일괄 산출. 상태 미로딩 구간에서는 stateById 가 비어 낙관적으로
   // (전 지문 발사 가능·전액 과금) 계산된다 — 요약 스트립이 「계산 중」을 띄우고
   // CTA 도 !loaded 로 잠기므로 이 값이 화면에 확정처럼 보이지는 않는다.
   const plans = useMemo<SheetPlan[]>(
@@ -306,6 +317,9 @@ function WorkbookModalBody({
             return s?.practiceUnitCost ?? product.unitCost;
           }
           if (product.id === "basic" && s?.basicCached === true) return 0;
+          // [reading] 직독직해 분석본은 여기 기본 폴백이 그대로 정답이다 —
+          // 전 지문 ◈5 정액(캐시 단락·기본 보유 할인 축이 둘 다 없다,
+          // reading 스펙 §2 · §5.2 B-4). final 과 같은 무분기 상품.
           return product.unitCost;
         };
         const totalCredits = targets.reduce((sum, p) => sum + unitOf(p), 0);
@@ -346,7 +360,7 @@ function WorkbookModalBody({
     () => new Map(plans.map((pl) => [pl.product.id, pl])),
     [plans],
   );
-  // variant 는 3상품 중 하나이고 plans 는 3상품 전량이라 항상 존재한다.
+  // variant 는 4상품 중 하나이고 plans 는 4상품 전량이라 항상 존재한다.
   const active = planById.get(variant)!;
   const targetCount = active.targets.length;
   const totalCredits = active.totalCredits;
@@ -786,6 +800,11 @@ function WorkbookModalBody({
                     // 코어로 내린다. 그 내용은 자식 문서로 재생성돼 인쇄 산출은 보존되고,
                     // 여기서 그걸 판정하려면 pages 를 끌어와야 해서(worksheets.ts 의
                     // 「pages 를 절대 select 하지 않는다」 계약 위반) 축을 넓히지 않았다.
+                    // [reading] 덮어쓰기 축은 **자기 마커 행**(PRIME_READING)이다 —
+                    // 폴백(hasBasic)으로 흘리면 「기본 학습지만 있는 지문」에
+                    // 아무것도 잃지 않는 직독직해 생성을 두고 편집분 소실을
+                    // 경고하는 거짓 고지가 된다(E30 §2-2 practice 축 이전과 동일
+                    // 오류 계보). hasReading 은 getStudioSheetStates(U3)가 세운다.
                     const overwriteCount = !loaded
                       ? 0
                       : plan.targets.filter((p) => {
@@ -793,6 +812,8 @@ function WorkbookModalBody({
                           if (product.id === "final") return s?.hasFinal === true;
                           if (product.id === "practice")
                             return s?.hasPractice === true;
+                          if (product.id === "reading")
+                            return s?.hasReading === true;
                           return s?.hasBasic === true;
                         }).length;
                     const pick = () => {
@@ -816,15 +837,16 @@ function WorkbookModalBody({
                             pick();
                           }
                         }}
+                        // [reading 스펙 §5.2 B-4] 4상품 = 2×2 그리드(기본/실전
+                        // 1행 + 파이널/직독직해 1행). 파이널 전폭(sm:col-span-2)은
+                        // 3상품 시절 홀수 칸 메움이었다 — 4번째 상품이 그 빈칸을
+                        // 채우므로 전폭 특례를 걷어낸다(되살리면 3행 지그재그가 된다).
                         className={`group flex flex-col gap-1 rounded-xl border px-3 py-2.5 transition-all ${
                           disabled
                             ? "cursor-not-allowed border-slate-200 bg-slate-50/50 opacity-70"
                             : selected
                               ? "cursor-pointer border-blue-400 bg-blue-50/60 ring-1 ring-blue-200"
                               : "cursor-pointer border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/60"
-                        }${
-                          // 파이널 카드는 설명이 길어 2열 그리드에서 전폭을 쓴다.
-                          product.id === "final" ? " sm:col-span-2" : ""
                         }`}
                       >
                         <div className="flex items-center gap-1.5">
@@ -966,9 +988,12 @@ function WorkbookModalBody({
         open={previewOpen}
         initialVariant={variant}
         basicUnitCost={STUDIO_SHEET_PRODUCT_BY_ID.get("basic")!.unitCost}
+        // 4상품 전량 노출(직독직해 포함) — 부재 시 모달 기본값이 구 3상품이라
+        // 이 표면만 reading 탭을 연다(PREVIEW_VARIANTS 주석 · 스펙 §5.3 F-9).
+        variants={PREVIEW_VARIANTS}
         onClose={() => setPreviewOpen(false)}
         onApplyVariant={(v: LearningSheetVariant) => {
-          // LearningSheetVariant 와 StudioSheetVariant 는 같은 3값의 별개 별칭이라
+          // LearningSheetVariant 와 StudioSheetVariant 는 같은 4값의 별개 별칭이라
           // 구조적으로 대입 가능하다(캐스팅 없음 — 한쪽이 늘면 여기서 컴파일 실패).
           //
           // 카드 클릭(pick)과 **같은 게이트**를 건다: 카드는 `if (disabled ||

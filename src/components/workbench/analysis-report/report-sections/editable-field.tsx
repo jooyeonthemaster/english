@@ -88,6 +88,7 @@ export function Field({
   className,
   placeholder = "—",
   render,
+  displayHtml,
   onEnterNewBlock,
   dataAttrs,
 }: {
@@ -98,6 +99,15 @@ export function Field({
   className?: string;
   placeholder?: string;
   render?: (v: string) => ReactNode;
+  /**
+   * [reading] 편집 필드 표시 변환(additive) — contentEditable innerHTML 을 이 함수 산출로
+   * 관리해 **편집 모드에서도** 파생 서식(직독직해 주석의 콜론 표제 볼드)이 보이게 한다.
+   * 커밋은 innerText 추출이라 <b> 는 평문으로 접혀 데이터 왕복 무손실(서식 마커가
+   * 데이터에 없다는 전제 — reading notes 평문 계약). 폰트 런(runsByOrd)과는 상호배타로
+   * displayHtml 이 이긴다(소비처인 reading note 는 런 데이터가 존재하지 않는 신규 필드).
+   * 미전달 시 기존 경로 바이트 동일.
+   */
+  displayHtml?: (v: string) => string;
   onEnterNewBlock?: () => void;
   dataAttrs?: Record<string, string>;
 }) {
@@ -119,10 +129,16 @@ export function Field({
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el || !managedHtml || focusedRef.current) return;
+    if (displayHtml) {
+      // 표시 변환 필드는 폰트 런 비참여(주석 참조) — ord 공간도 소비하지 않는다.
+      ordRef.current = -1;
+      el.innerHTML = displayHtml(value);
+      return;
+    }
     const ord = noFontRun ? -1 : computeFieldOrd(el);
     ordRef.current = ord;
     el.innerHTML = editableTextHtml(value, noFontRun ? undefined : runsByOrd?.get(ord));
-  }, [value, runsByOrd, managedHtml, noFontRun]);
+  }, [value, runsByOrd, managedHtml, noFontRun, displayHtml]);
 
   if (!editable) {
     if (render) return <Tag className={cn(className, "par-field")}>{render(value)}</Tag>;
@@ -130,7 +146,7 @@ export function Field({
       <Tag
         ref={ref}
         className={cn(className, "par-field")}
-        dangerouslySetInnerHTML={{ __html: editableTextHtml(value) }}
+        dangerouslySetInnerHTML={{ __html: displayHtml ? displayHtml(value) : editableTextHtml(value) }}
       />
     );
   }

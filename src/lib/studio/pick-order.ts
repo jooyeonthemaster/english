@@ -33,6 +33,7 @@ import {
   KO_PRIME_REPORT_MARKER,
   PRACTICE_REPORT_MARKER,
   PRIME_REPORT_MARKER,
+  READING_REPORT_MARKER,
 } from "@/actions/workbench/passage-constants";
 
 import type { PickedQuestionMeta } from "@/app/(director)/director/studio/workbench/dossier-pick-bar";
@@ -157,7 +158,8 @@ export function withPassageGroupedQuestionOrder(
 // [E30 §4-2 · §4-3 · §4-4] 같은 지문 안의 학습지 문서 3종 정렬·동반 픽
 //
 // 실전 학습지(PRIME_PRACTICE)가 기본 PRIME 의 **자식 문서**로 분리되면서, 한 지문
-// 카드 안에 학습지 행이 최대 3줄(기본 / 실전 / 파이널)이 된다. 사용자 요구는
+// 카드 안에 학습지 행이 최대 3줄(기본 / 실전 / 파이널 — [reading] 직독직해 가입으로
+// 지금은 최대 4줄)이 된다. 사용자 요구는
 // 「기본 학습지를 추가하고 실전 학습지를 추가하도록」 — 즉 **기본이 언제나 앞**이다.
 // 그 규칙의 정본을 여기 두는 이유는 이 파일이 존재하는 이유와 같다: 목록 정렬 ·
 // 픽 커밋 · 그룹 정렬 **3곳**이 같은 규칙을 써야 하는데, 복제본은 조용히 갈린다.
@@ -182,6 +184,15 @@ export function withPassageGroupedQuestionOrder(
 export const SHEET_PLAN_RANK: ReadonlyMap<string, number> = new Map([
   [PRIME_REPORT_MARKER, 0],
   [PRACTICE_REPORT_MARKER, 1],
+  // [reading] 직독직해 분석본 — 파이널 **앞**(기본 → 실전 → 직독직해 → 파이널 → 국어,
+  // docs/reading-analysis-worksheet-spec.md §5.2 A-3). 값이 소수 1.5 인 근거:
+  // 「기존 키 값 무개변」이 문자 그대로 지켜진다. FINAL=2·KO=3 을 밀어내는 정수
+  // 재배열도 소비처 3곳(studio-home-client:607 · composer-list-pane:637-638 ·
+  // passage-dossier-pane:1207 — 전부 감산/asc 비교, 값 자체를 쓰는 곳 실측 0)이라
+  // 안전하긴 하나, 소비처 증명이 아예 필요 없는 쪽이 더 안전하다.
+  // ⚠ 이 Map 의 값은 **비교 전용**이다 — 정수라고 가정하고 배열 인덱스·switch 등가
+  //   비교에 쓰지 마라(1.5 가 이미 그 가정을 깬다).
+  [READING_REPORT_MARKER, 1.5],
   [FINAL_REPORT_MARKER, 2],
   [KO_PRIME_REPORT_MARKER, 3],
 ]);
@@ -234,6 +245,11 @@ export function sheetPlanRank(marker: string): number {
  * ⚠ 결과를 `latchPickedCards(added)` 에도 **그대로** 넘겨라 — 동반 픽된 카드가 펴진다.
  *   단 E28 픽 래치의 `prev.has(pid)` 가드(「손으로 접은 카드는 픽이 늘어도 접힌 채」)를
  *   우회하지 마라(우회 = E28 C1 증상 재발).
+ *
+ * [reading] 직독직해(PRIME_READING)도 비-PRIME 이라 **의도적으로 그대로** 이 동반을 탄다
+ *   (스펙 §5.3 F-2 — 단어시험지 승격 주입이 부모 PRIME 에 의존하므로 동반이 이득).
+ *   파이널처럼 기본 없이도 성립하는 자기완결 문서라, 기본 행 부재 시 규칙 3(무동작)이
+ *   그대로 적용된다 — reading 전용 분기를 추가하지 마라.
  */
 export function withBasicCompanions<
   T extends { planMarker: string; passageId: string; reportId: string },

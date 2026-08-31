@@ -29,7 +29,10 @@ import { prisma } from "@/lib/prisma";
 // [E30 §1-1] 실전 학습지 마커 정본. 이 파일이 "PRIME"·"PRIME_FINAL" 을 리터럴로
 // 쓰는 것과 달리 새 마커만 상수 모듈에서 가져오는 이유: 마커 문자열이 두 벌이 되면
 // 오타가 tsc 0 을 통과한 채 조판 목록·읽기 합집합에서만 조용히 사라진다.
-import { PRACTICE_REPORT_MARKER } from "@/actions/workbench/passage-constants";
+import {
+  PRACTICE_REPORT_MARKER,
+  READING_REPORT_MARKER,
+} from "@/actions/workbench/passage-constants";
 import { cleanupStaleWorkbenchAiJobs } from "@/lib/workbench-ai-job-stale-cleanup";
 import {
   normalizeQuestionGenerationPlan,
@@ -38,7 +41,10 @@ import {
 import { ensureWorkbenchAiJobCharged } from "@/lib/workbench-ai-job-credit";
 import { loadPersistedAnnotations } from "@/app/api/ai/passage-analysis/[passageId]/_lib/annotations";
 import { classifyAnalysisError } from "@/app/api/ai/passage-analysis/[passageId]/_lib/error-classification";
-import { generateLearningWorksheetResilient } from "@/lib/passage-report/analysis-report/generate";
+import {
+  generateLearningWorksheetResilient,
+  type AnalysisReportUsage,
+} from "@/lib/passage-report/analysis-report/generate";
 // [E30 §2-3] 실전(worksheet-grade) 판정 정본 — 코어 lw(logicRows 전용)와 유료 실전
 // 콘텐츠를 가르는 술어는 리포 전체에서 이 함수 하나뿐이다(worksheet-core-gate.ts).
 // 여기서 술어를 복제하면 「보유 판정」과 「저장 판정」이 조용히 갈린다.
@@ -56,8 +62,13 @@ import {
 } from "@/lib/passage-report/analysis-report/resilient-checkpoint";
 import {
   analysisReportSchema,
+  isReadingAnalysisReportShape,
+  readingAnalysisSectionSchema,
   type AnalysisReport,
+  type GrammarSection,
   type LearningWorksheetSection,
+  type ReadingAnalysisSection,
+  type VocabularySection,
 } from "@/lib/passage-report/analysis-report/schema";
 import type { SectionKind } from "@/lib/passage-report/analysis-report/section-prompts";
 import {
@@ -81,6 +92,13 @@ import {
   koDefaultLlmText,
 } from "@/lib/passage-report/analysis-report/ko-resilient-generate";
 import { generateFinalOnepageReport } from "@/lib/passage-report/analysis-report/final-onepage";
+// [reading] 직독직해 분석본 생성기(유닛 U1) — 심볼명 2개가 팬아웃 계약의 고정점이다
+// (docs/reading-analysis-worksheet-spec.md §5.2-11 · §7). 결과 형상은 아래
+// 「U1 계약 어댑터」가 방어적으로 소화한다.
+import {
+  generateReadingAnalysisResilient,
+  validateReadingDoc,
+} from "@/lib/passage-report/analysis-report/reading-analysis";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -103,6 +121,15 @@ const requestSchema = z.object({
    * 국어 지문과 조합 불가(400). PassageAnalysis 파생은 기록하지 않는다(스펙 F2).
    */
   finalOnepage: z.boolean().optional(),
+  /**
+   * true 면 기본 분석 대신 직독직해 분석본(전 문장 슬래시 끊어읽기 · 1:1 직독직해 ·
+   * 완전해석 · 색상 문법 판서)만 생성한다 (◈5). 스펙 정본
+   * docs/reading-analysis-worksheet-spec.md §2 · §5.2-8 — includeWorksheet ·
+   * finalOnepage · targetSections · 국어(PRIME_KO) 지문과 조합 불가(400).
+   * 파이널과 동형의 자기완결 블록(PRIME_READING upsert)으로 처리되고
+   * PassageAnalysis 파생은 기록하지 않는다(기본 분석 캐시 보존).
+   */
+  readingAnalysis: z.boolean().optional(),
   /**
    * 섹션 종량제(스펙 §3.4.1) — 지정 시 그 섹션만 부분 분석하고 부족분만 과금한다
    * (min(부족 수, 5)크레딧). enum 정본은 FULL_ANALYSIS_SECTIONS(module-sections.ts) —
@@ -261,20 +288,233 @@ function finalGenerationDiagnostics(result: unknown): Record<string, unknown> {
   return out;
 }
 
+// ── [reading] U1 계약 어댑터 ────────────────────────────────────────────────
+//
+// 직독직해 분석본 생성기(reading-analysis.ts)는 이 라우트와 **병렬 유닛(U1)** 으로
+// 작성됐다(스펙 §7 팬아웃 — 파일 소유가 다르다). 팬아웃 계약이 고정한 것은
+// 심볼명 2개(generateReadingAnalysisResilient · validateReadingDoc)와 「final-onepage
+// 패턴 + 검증 게이트 + 수리 1회」라는 구조뿐, 결과 타입의 정확한 형상은 아니다.
+// 그래서 결과는 파이널의 ok 판별 유니언({ok,report,usage})을 1순위로 기대하되,
+// 회복형 선례({usages:[…]}·bare doc 반환)까지 **구조 독자**로 소화한다 —
+// finalGenerationDiagnostics 와 같은 원칙: U1 이 키를 노출하면 코드 변경 0으로 합류.
+// ⚠ U1 시그니처 확정 후 이 어댑터를 직접 타입 의존으로 조여도 동작은 동일하다.
+
+/** ok:false 만 명시 실패로 읽는다 — ok 미노출 형상은 report/doc 실존 여부로 판정. */
+function readingResultFailed(result: unknown): boolean {
+  return (
+    !!result && typeof result === "object" && (result as Record<string, unknown>).ok === false
+  );
+}
+
+function readingResultError(result: unknown): string {
+  if (result && typeof result === "object") {
+    const e = (result as Record<string, unknown>).error;
+    if (typeof e === "string" && e.trim()) return e;
+  }
+  return "unknown reading generation failure";
+}
+
+/** LLM 호출 usage 이벤트 추출 — usages(복수·회복형) 우선, usage(단수·파이널형) 폴백. */
+function readingUsageEvents(result: unknown): AnalysisReportUsage[] {
+  if (!result || typeof result !== "object") return [];
+  const r = result as Record<string, unknown>;
+  const rawList = Array.isArray(r.usages) ? r.usages : r.usage ? [r.usage] : [];
+  return rawList.filter(
+    (u): u is AnalysisReportUsage =>
+      !!u && typeof u === "object" && "usage" in (u as Record<string, unknown>),
+  );
+}
+
+/**
+ * 생성 결과 → AnalysisReport(전면 문서 껍데기) 복원.
+ * ① report(AnalysisReport 전체, 파이널형)를 1순위로 파스한다.
+ * ② bare 문서(doc/section 키 또는 결과 자체가 §3 ReadingAnalysisDoc)면 문서 껍데기로
+ *    래핑한다 — meta 는 doc.header 에서만 파생(창작 금지 C5: header 밖 사실을 만들지
+ *    않는다. difficulty 등 meta 표는 reading 전면 문서에서 렌더되지 않는 chrome 이다).
+ * [F1-M8] titleKo 는 **한국어 축**이다 — doc.header.title(영어 원제일 수 있음)을 그대로
+ * 넣으면 행 title(:1569 저장, 지문 관리 목록의 비교 대상)이 영어로 갈린다. 그래서
+ * fallbackTitle(지문 관리 목록 제목) 우선 → parts[0].titleKo(한국어 소제목) → header.title
+ * 순으로 낙하한다. titleEn 은 doc.header.title 유지.
+ * 복원 실패는 null — 호출부가 환불+FAILED 로 크게 실패시킨다(무음 출하 금지).
+ */
+function extractReadingReport(
+  result: unknown,
+  fallbackBrand?: string,
+  fallbackTitle?: string,
+): AnalysisReport | null {
+  if (!result || typeof result !== "object") return null;
+  const r = result as Record<string, unknown>;
+  if (r.report) {
+    const parsedReport = analysisReportSchema.safeParse(r.report);
+    if (parsedReport.success && isReadingAnalysisReportShape(parsedReport.data)) {
+      return parsedReport.data;
+    }
+  }
+  const bareRaw =
+    r.doc ??
+    r.section ??
+    (r.kind === "reading-analysis" || (r.header && r.sentences) ? r : null);
+  // §3 인터페이스 원문에는 kind 가 없다(U0 이 섹션 타입으로 통합하며 부여) —
+  // kindless bare doc 도 주입해 살린다.
+  const bare =
+    bareRaw && typeof bareRaw === "object" && !("kind" in (bareRaw as Record<string, unknown>))
+      ? { ...(bareRaw as Record<string, unknown>), kind: "reading-analysis" }
+      : bareRaw;
+  const parsedDoc = readingAnalysisSectionSchema.safeParse(bare);
+  if (!parsedDoc.success) return null;
+  const doc = parsedDoc.data;
+  const wrapped = analysisReportSchema.safeParse({
+    ...(fallbackBrand ? { brand: fallbackBrand } : {}),
+    meta: {
+      eyebrow: "READING ANALYSIS · 직독직해 분석본",
+      // [F1-M8] 한국어 축 우선순위 — 위 doc 주석 참조. `||` 사용: 빈 문자열도 낙하시킨다.
+      titleKo: fallbackTitle?.trim() || doc.parts[0]?.titleKo || doc.header.title,
+      titleEn: doc.header.title,
+      category: "직독직해 분석본",
+      theme: doc.header.curriculumBadge,
+      difficulty: 3,
+      solveTime: "—",
+      examTypes: "직독직해·구문",
+    },
+    sections: [doc],
+  });
+  return wrapped.success ? wrapped.data : null;
+}
+
+// ── [F1-M1] PRIME 보고서 → primeContext(string) 증류 ────────────────────────
+//
+// U1 입력 계약(reading-analysis.ts ReadingAnalysisPromptInput:268)은
+// `primeContext?: string` 이다. 구판은 primeReport(AnalysisReport 객체) 키로 넘겨
+// U1 이 한 글자도 읽지 못했다 — 프롬프트의 primeBlock 이 항상 빈 채 나가 「기존
+// 심층 분석 컨텍스트」 기능이 무음 무효였다. 여기서 vocabulary(표제어·뜻)와
+// grammar(어법 코드·포인트·해설 요약)만 간결한 문자열로 증류해 넘긴다.
+// 총 2000자 내 절단 — 주석·하이라이트 품질 컨텍스트일 뿐 축자 계약(C1)과 무관하므로
+// 손실 절단이 안전하다(U1 프롬프트도 「참고」로만 쓴다고 명시).
+const PRIME_CONTEXT_MAX_CHARS = 2000;
+
+function distillPrimeContext(report: AnalysisReport): string | null {
+  const blocks: string[] = [];
+  const vocab = report.sections.find(
+    (s): s is VocabularySection => s.kind === "vocabulary",
+  );
+  if (vocab && vocab.rows.length > 0) {
+    const entries = vocab.rows
+      .map((r) => `${r.headword.trim()}: ${r.meaning.trim()}`)
+      .filter((e) => e !== ": ");
+    if (entries.length > 0) blocks.push(`[핵심 어휘] ${entries.join(" · ")}`);
+  }
+  const grammar = report.sections.find(
+    (s): s is GrammarSection => s.kind === "grammar",
+  );
+  if (grammar && grammar.rows.length > 0) {
+    const entries = grammar.rows.map((r) => {
+      const no = typeof r.sentenceNo === "number" ? `#${r.sentenceNo} ` : "";
+      const code = r.pointCode ? `(${r.pointCode}) ` : "";
+      // 해설은 앞머리 80자만 — 4단계 풀 해설은 컨텍스트 예산 낭비다(요약 취지).
+      const expl = r.explanation.replace(/\s+/g, " ").trim().slice(0, 80);
+      return `${no}${code}${r.point.trim()}${expl ? ` — ${expl}` : ""}`;
+    });
+    blocks.push(`[어법 포인트]\n${entries.join("\n")}`);
+  }
+  if (blocks.length === 0) return null;
+  const joined = blocks.join("\n");
+  return joined.length > PRIME_CONTEXT_MAX_CHARS
+    ? joined.slice(0, PRIME_CONTEXT_MAX_CHARS)
+    : joined;
+}
+
+/** validateReadingDoc 판정 독자 — boolean / {ok|valid,issues} / 이슈 배열 전부 소화. */
+function readingGateVerdict(verdict: unknown): { pass: boolean; detail: string } {
+  if (typeof verdict === "boolean") {
+    return { pass: verdict, detail: verdict ? "" : "validateReadingDoc → false" };
+  }
+  if (Array.isArray(verdict)) {
+    // 이슈 배열 형상 — gate-schema.mjs 기준 critical/major 만 차단(minor 는 통과).
+    // severity 미표기 항목은 차단으로 센다(관대 판정이 더 위험).
+    const blocking = verdict.filter((i) => {
+      const s = (i as { severity?: unknown } | null)?.severity;
+      return s !== "minor";
+    });
+    return {
+      pass: blocking.length === 0,
+      detail: blocking.length > 0 ? JSON.stringify(blocking.slice(0, 5)).slice(0, 800) : "",
+    };
+  }
+  if (verdict && typeof verdict === "object") {
+    const o = verdict as Record<string, unknown>;
+    const flag =
+      typeof o.ok === "boolean" ? o.ok : typeof o.valid === "boolean" ? o.valid : null;
+    if (flag !== null) {
+      const issues = Array.isArray(o.issues) ? o.issues.slice(0, 5) : o;
+      return { pass: flag, detail: flag ? "" : JSON.stringify(issues).slice(0, 800) };
+    }
+  }
+  // 미상 형상 — 생성기 내부 게이트(검증 + 수리 1회, 스펙 §5.2-11)가 이미 돌았으므로
+  // fail-open 하되 크게 남긴다. 여기서 fail-closed 하면 형상 불일치 하나로 reading
+  // 전 요청이 502 가 된다(게이트 오탐은 게이트를 고친다 — seo-core-axis 검수 원칙).
+  console.warn(
+    "[workbench-fast-analysis] validateReadingDoc verdict shape unrecognized:",
+    typeof verdict,
+  );
+  return { pass: true, detail: "unrecognized-verdict-shape" };
+}
+
+/** [reading] 잡 result 진단 — finalGenerationDiagnostics 동형의 「있으면 싣는」 독자.
+ *  [F1-5] 구판은 U1 이 노출하지 않는 키(attempts/rounds/repaired)만 읽어 실패 시 {} 였다
+ *  — U1 실제 노출 키(GenerateReadingAnalysisResult: issues·usages·parsed)로 교체.
+ *  실패 경로(section=null)는 parsed(게이트 직전 문서)에서 문장/파트 수를 폴백 추출한다. */
+function readingGenerationDiagnostics(
+  result: unknown,
+  section: ReadingAnalysisSection | null,
+): Record<string, unknown> {
+  const out: Record<string, unknown> = {};
+  if (result && typeof result === "object") {
+    const r = result as Record<string, unknown>;
+    // ok:true 의 잔여 minor 이슈 수 — 밀도 초과 등 계측용(reading-analysis.ts issues).
+    if (Array.isArray(r.issues)) out.issuesCount = r.issues.length;
+    // LLM 콜 수(세그먼트 + 수리 포함) — usages 는 실패 결과에도 실린다.
+    if (Array.isArray(r.usages)) out.calls = r.usages.length;
+  }
+  if (section) {
+    out.sentenceCount = section.sentences.length;
+    out.partCount = section.parts.length;
+  } else if (result && typeof result === "object") {
+    // 실패 경로 폴백 — ok:false 의 parsed(스키마/게이트 직전 산출물)에서 규모만 추출.
+    const parsed = (result as Record<string, unknown>).parsed;
+    if (parsed && typeof parsed === "object") {
+      const p = parsed as Record<string, unknown>;
+      if (Array.isArray(p.sentences)) out.sentenceCount = p.sentences.length;
+      if (Array.isArray(p.parts)) out.partCount = p.parts.length;
+    }
+  }
+  return out;
+}
+
 // ── [E29-2] 잡 config → 학습지 상품 ─────────────────────────────────────────
 // 활성 잡이 **무엇을 만드는 중인지**를 되찾는 유일한 수단이다(잡 테이블에 상품
 // 컬럼이 없다 — 표식은 전부 config 안에 산다). 판정 순서는 fast 라우트의 게이트
-// 순서와 같아야 한다: finalOnepage → targetSections → includeWorksheet → 기본.
+// 순서와 같아야 한다: finalOnepage → readingAnalysis → targetSections →
+// includeWorksheet → 기본.
 // worksheetOnly 라우트가 만든 잡은 `{includeWorksheet:true, worksheetOnly:true}`
 // 라 practice 로 떨어진다 — 그 잡이 도는 동안 실전 재요청을 붙이는 것은 옳다.
-type SheetProductKey = "basic" | "practice" | "final" | "partial";
+type SheetProductKey = "basic" | "practice" | "final" | "reading" | "partial";
 
 const PRODUCT_LABEL: Record<SheetProductKey, string> = {
   basic: "기본 학습지",
   practice: "실전 학습지",
   final: "파이널 원페이지",
+  reading: "직독직해 분석본",
   partial: "부분 분석",
 };
+
+/** 라벨 + 목적격 조사(을/를) — 「분석본를」 같은 비문 방지. 받침 유무로 판정하고
+ *  한글이 아니면 기존 자구(를) 유지. 클라이언트는 code 로만 분기한다(자구 계약 아님). */
+function withObjectJosa(label: string): string {
+  const last = label.charCodeAt(label.length - 1);
+  const isHangul = last >= 0xac00 && last <= 0xd7a3;
+  const hasJongseong = isHangul && (last - 0xac00) % 28 !== 0;
+  return `${label}${hasJongseong ? "을" : "를"}`;
+}
 
 function productOfJobConfig(config: unknown): SheetProductKey {
   if (!config || typeof config !== "object" || Array.isArray(config)) {
@@ -282,6 +522,16 @@ function productOfJobConfig(config: unknown): SheetProductKey {
   }
   const c = config as Record<string, unknown>;
   if (c.finalOnepage === true) return "final";
+  // [reading] finalOnepage 검사와 대칭 위치(요청측 requestedProduct 역산과 같은 순서).
+  // 기존 3상품(+partial) 역산 결과는 **1비트도 안 바뀐다** — 증명:
+  // ① 이 커밋 이전의 어떤 잡 config 에도 readingAnalysis 키가 실린 적이 없다(키는
+  //    이 라우트의 잡 create 만 쓰고, true 일 때만 싣는다). 키 부재 → 이 줄은 항상
+  //    거짓 → 아래 기존 판정으로 그대로 낙하한다.
+  // ② 새 잡에서도 readingAnalysis 는 finalOnepage·targetSections·includeWorksheet
+  //    와 조합 400(아래 게이트 3종 + sheetPromptFlags 1키 보장)이라, 이 줄이 참인
+  //    config 에서는 기존 세 판정이 어차피 전부 거짓이다 — 순서를 어디 두든 결과가
+  //    같지만, 게이트 순서와의 일치 규약을 지켜 final 바로 뒤에 둔다.
+  if (c.readingAnalysis === true) return "reading";
   if (Array.isArray(c.targetSections) && c.targetSections.length > 0) {
     return "partial";
   }
@@ -482,6 +732,47 @@ async function runAnalysis(
       { status: 400 },
     );
   }
+  // 직독직해 분석본(reading-analysis-worksheet-spec §5.2-8) — 별도 상품이라 실전
+  // 학습지·파이널·종량제 어느 축과도 조합 불가. 정상 클라(sheetPromptFlags)는 variant
+  // 당 1키만 싣지만, 서버가 직접 막아야 수제 요청·구버전 클라에서도 불변식이 선다.
+  const readingAnalysis = parsed.data.readingAnalysis === true;
+  if (readingAnalysis && includeWorksheet) {
+    logAnalysisRejection({
+      reasonCode: "COMBO_READING_WITH_WORKSHEET",
+      status: 400,
+      academyId: staff.academyId,
+      passageId: parsed.data.passageId,
+    });
+    return NextResponse.json(
+      { error: "readingAnalysis 와 includeWorksheet 는 함께 쓸 수 없습니다" },
+      { status: 400 },
+    );
+  }
+  if (readingAnalysis && finalOnepage) {
+    logAnalysisRejection({
+      reasonCode: "COMBO_READING_WITH_FINAL",
+      status: 400,
+      academyId: staff.academyId,
+      passageId: parsed.data.passageId,
+    });
+    return NextResponse.json(
+      { error: "readingAnalysis 와 finalOnepage 는 함께 쓸 수 없습니다" },
+      { status: 400 },
+    );
+  }
+  if (readingAnalysis && targetSections) {
+    logAnalysisRejection({
+      reasonCode: "COMBO_READING_WITH_TARGETSECTIONS",
+      status: 400,
+      academyId: staff.academyId,
+      passageId: parsed.data.passageId,
+      detail: { targetSectionCount: targetSections.length },
+    });
+    return NextResponse.json(
+      { error: "readingAnalysis 와 targetSections 는 함께 쓸 수 없습니다" },
+      { status: 400 },
+    );
+  }
 
   const passage = await prisma.passage.findFirst({
     where: { id: parsed.data.passageId, academyId: staff.academyId },
@@ -532,6 +823,21 @@ async function runAnalysis(
       { status: 400 },
     );
   }
+  // 직독직해 분석본은 국어(PRIME_KO) 미지원 — EN→KO 직독직해가 상품의 본질이라
+  // 국어 지문엔 의미 자체가 성립하지 않는다(reading-spec §2 koreanSupported:false).
+  // 파이널 국어 게이트와 동형으로 잡 생성 전 차단(뒷정리 불요).
+  if (readingAnalysis && isKoreanPassage(passage)) {
+    logAnalysisRejection({
+      reasonCode: "KOREAN_READING_UNSUPPORTED",
+      status: 400,
+      academyId: staff.academyId,
+      passageId: passage.id,
+    });
+    return NextResponse.json(
+      { error: "국어 지문은 직독직해 분석본을 지원하지 않습니다" },
+      { status: 400 },
+    );
+  }
 
   await cleanupStaleWorkbenchAiJobs({
     academyId: staff.academyId,
@@ -564,13 +870,16 @@ async function runAnalysis(
   // 상품이 같으면 붙이기가 옳다(연타·새로고침 중복 발사 흡수). 상품이 다르면
   // 붙이기는 요청을 버리는 것과 같으므로 **409 로 거절**해 사용자가 원인을 알게 한다.
   // 지문당 활성 잡 1개라는 서버 불변식은 그대로다.
+  // 판정 순서는 productOfJobConfig 와 동일해야 한다(위 [E29-2] 주석의 순서 규약).
   const requestedProduct = finalOnepage
     ? "final"
-    : targetSections
-      ? "partial"
-      : includeWorksheet
-        ? "practice"
-        : "basic";
+    : readingAnalysis
+      ? "reading"
+      : targetSections
+        ? "partial"
+        : includeWorksheet
+          ? "practice"
+          : "basic";
   const activeProduct = productOfJobConfig(active?.config);
   if (active && activeProduct !== requestedProduct) {
     // [E30/RCA #16] 상품 불일치 거절 — 구판이 **200 으로 삼키던** 바로 그 요청이다.
@@ -588,7 +897,7 @@ async function runAnalysis(
     }
     return NextResponse.json(
       {
-        error: `이 지문은 지금 ${PRODUCT_LABEL[activeProduct]}를 만드는 중이에요. 끝난 뒤에 ${PRODUCT_LABEL[requestedProduct]}를 다시 눌러 주세요.`,
+        error: `이 지문은 지금 ${withObjectJosa(PRODUCT_LABEL[activeProduct])} 만드는 중이에요. 끝난 뒤에 ${withObjectJosa(PRODUCT_LABEL[requestedProduct])} 다시 눌러 주세요.`,
         code: "ANOTHER_PRODUCT_IN_PROGRESS",
         activeJobId: active.id,
         activeProduct,
@@ -648,6 +957,10 @@ async function runAnalysis(
         // 파이널 원페이지 잡 표식(스펙 §2) — 재시도·워커 승격 시 parse 복원용.
         // 부재 시 키 자체가 실리지 않는다(기존 잡 config 무회귀).
         ...(finalOnepage ? { finalOnepage: true } : {}),
+        // 직독직해 분석본 잡 표식(reading-spec §5.2-8) — 파이널과 동형:
+        // productOfJobConfig 역산·재시도 복원용. 부재 시 키 자체가 실리지 않는다
+        // (기존 잡 config 무회귀 — 위 productOfJobConfig 증명 ①의 전제).
+        ...(readingAnalysis ? { readingAnalysis: true } : {}),
         // §3.4.1-9·11: 스튜디오(getStudioPassageDetail)가 진행 중 잡의 대상 섹션·발사
         // 카드를 읽어 그 카드만 "생성 중"으로 표시한다. 전체 분석은 필드 자체가 없다(무회귀).
         ...(targetSections ? { targetSections } : {}),
@@ -1104,6 +1417,335 @@ async function runAnalysis(
         ).catch((refundErr) => console.error("PRIME_FINAL fast refund failed", refundErr));
       }
       const classified = classifyAnalysisError(finalErr);
+      await prisma.workbenchAiJob.update({
+        where: { id: job.id },
+        data: {
+          status: "FAILED",
+          failedCount: 1,
+          errorMessage: classified.message,
+          completedAt: new Date(),
+        },
+      });
+      return NextResponse.json(
+        { error: "Passage analysis failed", details: classified.message, code: classified.code },
+        { status: classified.status },
+      );
+    }
+  }
+
+  // ── 직독직해 분석본 게이트: reading 요청은 전용 생성기·PRIME_READING 마커로만 처리 ──
+  // 파이널 게이트와 동형의 자기완결 블록(자체 과금/환불/잡 상태) — 캐시 단락 없음(항상
+  // 신선 생성·재생성 = 덮어쓰기), PassageAnalysis 파생 미기록(기본 분석 캐시 보존 —
+  // 파이널 F2 와 같은 이유). 아래 영어 경로는 무변경. 스펙 정본
+  // docs/reading-analysis-worksheet-spec.md §5.2-8 · §5.1(파이널 패턴 복제 결정).
+  if (readingAnalysis) {
+    // 과금 ◈5 — 파이널과 같은 단가 조합. ⚠ 리터럴 5 금지: 청구·표기(sheet-products)가
+    // 같은 상수를 읽어야 갈리지 않는다(E19-2).
+    const readingCreditCost = getPassageAnalysisCreditCost({ includeWorksheet: false });
+    let readingCreditTxId: string | null = null;
+    try {
+      const creditStartedAt = Date.now();
+      const credit = await ensureWorkbenchAiJobCharged({
+        jobId: job.id,
+        academyId: job.academyId,
+        staffId: job.createdById,
+        operationType: "PASSAGE_ANALYSIS",
+        metadata: { passageId: passage.id, generationPlan, readingAnalysis: true, creditCost: readingCreditCost, fastPath: true },
+        creditCost: readingCreditCost,
+      });
+      creditMs = Date.now() - creditStartedAt;
+      readingCreditTxId = credit.transactionId;
+
+      // 비스트리밍 생성 — 델타 배선 없이 phase 라벨만 흘려 미리보기 패널 마운트를
+      // 보장한다(0프레임이면 스트리밍 고장으로 보인다 — 26-07-25 실사고, 파이널 동형).
+      if (emit !== NOOP_EMIT) {
+        emit({ t: "phase", label: "직독직해 분석본 생성 중" });
+      }
+
+      // 필기 주석·강사 지시 병합 — 파이널과 동일 규칙.
+      const persistedAnns = await loadPersistedAnnotations(passage.id);
+      const annotationPrompt =
+        persistedAnns.length > 0 ? buildAnalysisPrompt("", persistedAnns) : "";
+      const mergedPrompt = [annotationPrompt, parsed.data.customPrompt]
+        .filter((v) => typeof v === "string" && v.trim().length > 0)
+        .join("\n\n");
+      // brand = 학원명 — 파이널과 동일 규약. 없으면 생성기 기본값.
+      const academy = await prisma.academy.findUnique({
+        where: { id: staff.academyId },
+        select: { name: true },
+      });
+      // [F1-M1] (있으면) 기존 PRIME 리포트를 컨텍스트로. U1 입력 계약은
+      // primeContext(**string**) 하나뿐이다(reading-analysis.ts:268) — 구판이
+      // primeReport(객체) 키로 넘겨 U1 이 한 글자도 못 읽던 무음 무효를, 여기서
+      // vocabulary·grammar 를 증류한 문자열로 고친다. PRIME 행 부재·파스 실패·증류
+      // 공집합이면 키 자체를 뺀다(U1 프롬프트의 primeBlock 이 생략된다 — 무해).
+      const primeContextRow = await prisma.passageReport.findFirst({
+        where: { passageId: passage.id, academyId: passage.academyId, generationPlan: "PRIME", deletedAt: null },
+        orderBy: { updatedAt: "desc" },
+        select: { pages: true },
+      });
+      const primeContext = primeContextRow
+        ? analysisReportSchema.safeParse(primeContextRow.pages)
+        : null;
+      const distilledPrimeContext = primeContext?.success
+        ? distillPrimeContext(primeContext.data)
+        : null;
+
+      generationStartedAt = Date.now();
+      // ⚠ 입력·옵션은 **변수 경유**로 넘긴다 — 병렬 유닛 U1 의 입력 타입이 이 키들의
+      //   부분집합이어도 fresh-literal 초과 속성 검사에 걸리지 않는다(구조 폭 대입).
+      //   contentHash 도 실어 둔다(회복형 선례 opts 계약까지 커버 — 안 읽으면 무해).
+      // deadline +270s: 파이널의 270s 선례 그대로 — maxDuration 300s 벽에서 30s
+      // (업서트·원가 기록·환불 몫)만 남긴다.
+      const readingGenInput = {
+        passageContent: passage.content,
+        schoolType: (passage.school?.type as "MIDDLE" | "HIGH" | undefined) ?? null,
+        grade: passage.grade,
+        customPrompt: mergedPrompt || undefined,
+        // [F1-2] 지문 제목 — U1 이 header.title 고정에 쓴다(reading-analysis.ts:264-266
+        // passageTitle 계약 · 있으면 그대로, 없으면 내용 기반 제목). 빈 문자열이면 키 생략.
+        ...(passage.title?.trim() ? { passageTitle: passage.title } : {}),
+        ...(academy?.name ? { brand: academy.name } : {}),
+        // [F1-M1] 객체(primeReport)가 아니라 증류 문자열(primeContext) — 위 증류 주석 참조.
+        ...(distilledPrimeContext ? { primeContext: distilledPrimeContext } : {}),
+      };
+      const readingGenOpts = {
+        deadlineAt: requestStartedAt + 270_000,
+        contentHash: currentHash,
+      };
+      const readingRaw: unknown = await generateReadingAnalysisResilient(
+        readingGenInput,
+        readingGenOpts,
+      );
+      generationMs = Date.now() - generationStartedAt;
+
+      // [F1-7] LLM 토큰·실측 원가 기록 — **게이트 판정 이전**(생성 직후). 실패해도
+      // 플랫폼 원가는 이미 발생했다 — KO 블록의 「기록 후 게이트」 순서와 동형.
+      // U1 은 실패 결과(ok:false)에도 usages 를 반환하므로 재료가 항상 있다.
+      // 성공 경로의 기존 호출은 여기로 단일화했다(이중 기록 금지).
+      const readingUsages = readingUsageEvents(readingRaw);
+      const readingTokens = readingUsages.reduce(
+        (acc, u) => {
+          const t = readAiUsageTokens(u.usage);
+          const c = readAiUsageCost(u.usage);
+          acc.input += t.inputTokens;
+          acc.output += t.outputTokens;
+          if (c.costUsd) acc.costUsd += c.costUsd;
+          return acc;
+        },
+        { input: 0, output: 0, costUsd: 0 },
+      );
+      if (readingTokens.input > 0 || readingTokens.output > 0) {
+        const readingModelId = readingUsages.find((u) => u.modelId)?.modelId ?? "gemini-3.7-flash";
+        await recordCostSafely({
+          sourceKey: `workbench_ai_job:${job.id}:reading-analysis`,
+          sourceId: job.id,
+          sourceDetail: "PASSAGE_ANALYSIS_READING",
+          academyId: job.academyId,
+          provider: providerFromModel(readingModelId),
+          model: readingModelId,
+          inputTokens: readingTokens.input,
+          outputTokens: readingTokens.output,
+          recordedCostUsd: readingTokens.costUsd > 0 ? readingTokens.costUsd : null,
+          usageAt: new Date(),
+          metadata: { passageId: passage.id, generationPlan, readingAnalysis: true, fastPath: true, calls: readingUsages.length },
+        });
+      }
+
+      // U1 계약 어댑터로 결과 소화 — 명시 실패(ok:false) / 문서 복원 실패 / 게이트
+      // 위반을 전부 같은 환불+FAILED 경로로 수렴시킨다(무음 출하 금지).
+      const failedExplicitly = readingResultFailed(readingRaw);
+      // [F1-M8] fallbackTitle = 지문 관리 목록 제목 — 행 title 한국어 축 유지(어댑터 주석).
+      const readingReport = failedExplicitly
+        ? null
+        : extractReadingReport(readingRaw, academy?.name, passage.title);
+      const readingSection =
+        readingReport?.sections.find(
+          (s): s is ReadingAnalysisSection => s.kind === "reading-analysis",
+        ) ?? null;
+      // 서버측 품질 게이트(§3.1 C1~C7 — 생성기 내부 게이트의 이중화). C1 원문 축자
+      // 대조용으로 지문 원문을 2번째 인자로 넘긴다.
+      // ⚠ U1 병렬 작성이라 validateReadingDoc 의 2번째 인자 형상이 미확정 — unknown
+      //   경유 어댑터로 호출하고 판정은 형상 방어 독자(readingGateVerdict)로 읽는다.
+      //   throw 형 게이트도 실패로 수렴시킨다(catch — 무음 통과 금지).
+      const runReadingGate = validateReadingDoc as unknown as (
+        doc: unknown,
+        original?: unknown,
+      ) => unknown;
+      let gate: { pass: boolean; detail: string } = {
+        pass: false,
+        detail: "reading-analysis 섹션 부재",
+      };
+      if (readingSection) {
+        try {
+          gate = readingGateVerdict(runReadingGate(readingSection, passage.content));
+        } catch (gateErr) {
+          gate = { pass: false, detail: String(gateErr).slice(0, 500) };
+        }
+      }
+      if (failedExplicitly || !readingReport || !readingSection || !gate.pass) {
+        // 품질 게이트 실패(수리 소진 포함) — 전액 환불 + FAILED(502). 파이널 :941-978 동형.
+        if (readingCreditTxId) {
+          await refundCredits(
+            job.academyId,
+            "PASSAGE_ANALYSIS",
+            readingCreditTxId,
+            "PRIME_READING analysis incomplete — refunded",
+            readingCreditCost,
+          ).catch((refundErr) => console.error("PRIME_READING incomplete refund failed", refundErr));
+        }
+        await prisma.workbenchAiJob.update({
+          where: { id: job.id },
+          data: {
+            status: "FAILED",
+            failedCount: 1,
+            errorMessage:
+              "일시적인 AI 문제로 직독직해 분석본을 완성하지 못했어요. 크레딧은 환불됐어요. 잠시 후 다시 시도해주세요.",
+            result: JSON.parse(JSON.stringify({
+              readingAnalysis: true,
+              error: failedExplicitly
+                ? readingResultError(readingRaw)
+                : !readingReport
+                  ? "생성 결과에서 ReadingAnalysisDoc 를 복원하지 못함"
+                  : `품질 게이트 위반: ${gate.detail}`,
+              debugTiming: { queueWaitMs: 0, creditMs, generationMs, persistenceMs: 0, totalRunMs: Date.now() - requestStartedAt, fastPath: true },
+              // [E30/RCA #18 동형] 실패 쪽 진단이 더 중요하다 — 시도 횟수·문장/파트
+              // 수가 result 에 있어야 다음 신고가 조회로 끝난다.
+              readingDiagnostics: readingGenerationDiagnostics(readingRaw, readingSection),
+            })),
+            completedAt: new Date(),
+          },
+        });
+        return NextResponse.json(
+          {
+            error: "Reading analysis incomplete",
+            code: "PASSAGE_ANALYSIS_INCOMPLETE",
+            details: "일시적인 AI 문제로 직독직해 분석본을 완성하지 못했어요. 크레딧은 환불됐어요. 다시 시도해주세요.",
+          },
+          { status: 502 },
+        );
+      }
+
+      // [F1-7] 원가 기록은 위(생성 직후·게이트 이전)로 단일화 — readingUsages 도
+      // 거기서 계산돼 아래 진단(lastCallMs·calls·modelId)이 그대로 재사용한다.
+
+      if (emit !== NOOP_EMIT) {
+        emit({ t: "phase", label: "직독직해 분석본 저장 중" });
+      }
+
+      // 스펙 §5.3 F-1: 저장 문서의 sections 는 정확히 [reading-analysis 1개] — 생성기가
+      // 여분 섹션을 실어 보내도 여기서 전면 문서 형상으로 고정한다(조기반환 슬롯 계약).
+      const readingDocReport = { ...readingReport, sections: [readingSection] } as AnalysisReport;
+
+      // PRIME_READING 행 upsert — 파이널 upsert 패턴(findFirst→update/create) 글자
+      // 그대로: 지문당 1행, 재생성 = 갱신(version 증가). (passageId, generationPlan)
+      // 유니크 인덱스는 없으므로 중복 방어는 위 「지문당 활성 잡 1개」 배타가 담당한다.
+      // result(pages) 직렬화도 파이널 방식 그대로 — AnalysisReport 껍데기 통째 저장.
+      const persistenceStartedAt = Date.now();
+      const existingReading = await prisma.passageReport.findFirst({
+        where: { passageId: passage.id, academyId: passage.academyId, generationPlan: READING_REPORT_MARKER, deletedAt: null },
+        select: { id: true },
+      });
+      const readingRowData = {
+        title: readingDocReport.meta.titleKo,
+        status: "PUBLISHED",
+        pages: readingDocReport as never,
+        theme: { themeId: readingDocReport.themeId } as never,
+        templateId: "prime-reading",
+        generationPlan: READING_REPORT_MARKER,
+        lastEditedById: staff.id,
+        lastEditedAt: new Date(),
+      };
+      if (existingReading) {
+        await prisma.passageReport.update({ where: { id: existingReading.id }, data: { ...readingRowData, version: { increment: 1 } } });
+      } else {
+        await prisma.passageReport.create({ data: { academyId: passage.academyId, passageId: passage.id, createdById: staff.id, ...readingRowData } });
+      }
+      persistenceMs = Date.now() - persistenceStartedAt;
+
+      const completedAt = new Date();
+      const debugTiming = {
+        queueWaitMs: 0,
+        creditMs,
+        generationMs,
+        persistenceMs,
+        totalRunMs: Date.now() - requestStartedAt,
+        cached: false,
+        fastPath: true,
+      };
+      await prisma.workbenchAiJob.update({
+        where: { id: job.id },
+        data: {
+          status: "COMPLETED",
+          successCount: 1,
+          failedCount: 0,
+          resultCount: 1,
+          result: JSON.parse(JSON.stringify({
+            cached: false,
+            passageId: passage.id,
+            generationPlan,
+            readingAnalysis: true,
+            debugTiming,
+            fastPath: true,
+            // [E30/RCA #18 동형] 생성 진단 — 문장/파트 수·콜 수·모델이 result 에 있으면
+            // 「몇 문장짜리가 몇 콜에 나왔나」가 잡 행 하나로 조회된다.
+            readingDiagnostics: {
+              ...readingGenerationDiagnostics(readingRaw, readingSection),
+              modelId: readingUsages.find((u) => u.modelId)?.modelId ?? null,
+              // [F1-6] U1 usage 에 durationMs 가 아직 없을 수 있다(F2 가 싣는다) —
+              // undefined 는 JSON.stringify 에서 키째 증발하므로 null 명시로 방어한다
+              // (AnalysisReportUsage 타입은 durationMs 필수지만 여긴 구조 캐스트 경유라
+              // 런타임 부재가 실재한다 — readingUsageEvents 필터는 usage 키만 본다).
+              lastCallMs:
+                readingUsages.length > 0 &&
+                typeof readingUsages[readingUsages.length - 1].durationMs === "number"
+                  ? readingUsages[readingUsages.length - 1].durationMs
+                  : null,
+              calls: readingUsages.length,
+            },
+          })),
+          completedAt,
+        },
+      });
+      return NextResponse.json({
+        jobId: job.id,
+        status: "COMPLETED",
+        data: null,
+        readingAnalysis: true,
+        cached: false,
+        generationPlan,
+        creditsRemaining: credit.balanceAfter,
+        createdAt: job.createdAt.toISOString(),
+        completedAt: completedAt.toISOString(),
+        debugTiming,
+        fastPath: true,
+      });
+    } catch (readingErr) {
+      if (readingErr instanceof InsufficientCreditsError) {
+        await prisma.workbenchAiJob.update({
+          where: { id: job.id },
+          data: {
+            status: "FAILED",
+            failedCount: 1,
+            errorMessage: `Insufficient credits: have ${readingErr.currentBalance}, need ${readingErr.requiredCredits}`,
+            completedAt: new Date(),
+          },
+        });
+        return NextResponse.json(
+          { error: "Insufficient credits", balance: readingErr.currentBalance, required: readingErr.requiredCredits },
+          { status: 402 },
+        );
+      }
+      if (readingCreditTxId) {
+        await refundCredits(
+          job.academyId,
+          "PASSAGE_ANALYSIS",
+          readingCreditTxId,
+          "PRIME_READING fast passage analysis failed",
+          readingCreditCost,
+        ).catch((refundErr) => console.error("PRIME_READING fast refund failed", refundErr));
+      }
+      const classified = classifyAnalysisError(readingErr);
       await prisma.workbenchAiJob.update({
         where: { id: job.id },
         data: {

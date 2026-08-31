@@ -62,6 +62,9 @@ interface AnalysisJobConfig {
   includeWorksheet?: boolean;
   /** true 면 기본 분석 대신 파이널 원페이지(A4 1장 족집게)만 생성한다 (◈5, final-onepage-spec §2). */
   finalOnepage?: boolean;
+  /** true 면 직독직해 분석본(PRIME_READING) 요청 — **fast 라우트 전용**이라 이 워커는
+   *  생성하지 않고 명시 거절한다(run 선두 게이트, reading-spec §5.2-10). */
+  readingAnalysis?: boolean;
 }
 
 function getAnalysisGenerationPlan(value: unknown): QuestionGenerationPlan | null {
@@ -108,6 +111,7 @@ function parseConfig(value: unknown): AnalysisJobConfig {
     forcePrimeReport: raw.forcePrimeReport === true,
     includeWorksheet: raw.includeWorksheet === true,
     finalOnepage: raw.finalOnepage === true,
+    readingAnalysis: raw.readingAnalysis === true,
   };
 }
 
@@ -174,6 +178,35 @@ export const workbenchPassageAnalysisTask = task({
     );
     const analysisTone = normalizeAnalysisTone(config.analysisTone);
     const currentHash = hashContent(job.passage.content);
+
+    // ── [reading] 직독직해 분석본은 fast 라우트 전용 — 워커 유입은 **명시 거절** ────
+    //
+    // 이 비동기 워커에는 이미 「PRIME_PRACTICE 를 모르는」 비대칭 선례가 있다:
+    // 아래 includeWorksheet 경로는 E30 실전 분리(자식 문서) 이후에도 구판 의미론
+    // (실전 섹션을 부모 PRIME 행에 병합)으로 돌아 fast 라우트와 산출물이 조용히
+    // 갈린다. reading 을 같은 방식으로 **무음 무시**하면 더 나쁘다 — readingAnalysis
+    // 키를 모르는 채 기본 분석 경로로 낙하해 크레딧을 받고 **주문하지 않은 기본
+    // 학습지**를 만든다(무음 오출하 — 캐시가 신선하면 cached=true 로 0원 완료라
+    // 실패 계기조차 안 남는다). 그래서 과금·상태 전이 **이전**에 FAILED 로 크게
+    // 실패시킨다(reading-spec §5.2-10 「무음 무시 금지」). 과금 전 거절이라 환불할
+    // 것도 없다. 정상 경로는 fast 라우트의 자기완결 블록 하나뿐이다.
+    if (config.readingAnalysis === true) {
+      logger.error("READING(직독직해 분석본) 잡이 비동기 워커에 유입 — fast 전용 상품이라 거절", {
+        jobId,
+        passageId: job.passage.id,
+      });
+      await prisma.workbenchAiJob.update({
+        where: { id: jobId },
+        data: {
+          status: "FAILED",
+          failedCount: 1,
+          errorMessage:
+            "직독직해 분석본은 빠른 생성 경로에서만 지원돼요. 크레딧은 차감되지 않았어요. 학습지 생성 버튼으로 다시 시도해주세요.",
+          completedAt: new Date(),
+        },
+      });
+      return { error: "READING_FAST_ROUTE_ONLY" as const };
+    }
 
     await prisma.workbenchAiJob.update({
       where: { id: jobId },

@@ -57,6 +57,7 @@ import {
   type BlockMeta,
   type CustomBlock,
   isFinalOnepageReportShape,
+  isReadingAnalysisReportShape,
   type ReportCover,
   type ReportMeta,
   type VocabTestLayout,
@@ -423,16 +424,18 @@ export type ReportEditorToolbarState = {
   // 이미 콘텐츠가 있으면(hasWorksheet) 생성 버튼은 숨긴다.
   worksheetBusy: boolean;
   worksheetHasContent: boolean;
-  /** 실전 학습지 생성을 지원하는 문서인지 — KO·파이널 원페이지 문서는 false.
-      호스트는 구 상태(undefined)와의 호환을 위해 `!== false` 로 판정한다. */
+  /** 실전 학습지 생성을 지원하는 문서인지 — KO·파이널 원페이지·실전 자신·직독직해 분석본은
+      false. 호스트는 구 상태(undefined)와의 호환을 위해 `!== false` 로 판정한다. */
   worksheetSupported: boolean;
   generateWorksheet: () => void;
   /** '다른 이름으로 저장' 다이얼로그 열기. 다이얼로그 자체는 편집기가 소유한다(호스트마다 복제 금지). */
   requestSaveAs: () => void;
   /** 사본 저장을 지원하는 문서인지 — **실전 학습지(PRIME_PRACTICE)는 false**(E30 §2-4:
       사본은 새 지문을 만들므로 실전 사본은 부모 없는 고아가 된다).
+      **직독직해 분석본(PRIME_READING)도 false**(스펙 §5.3 F-3 — save-as 는
+      `?variant=reading` 을 서버가 400 으로 거절하는 1차 범위 제외 축).
       호스트는 구 상태(undefined)와의 호환을 위해 `!== false` 로 판정한다.
-      ⚠ 호스트가 이 필드를 무시해도 데이터는 안전하다 — `requestSaveAs` 자신이 실전에서
+      ⚠ 호스트가 이 필드를 무시해도 데이터는 안전하다 — `requestSaveAs` 자신이 두 축에서
       다이얼로그를 열지 않고 사유 토스트만 띄우고, 서버도 400 으로 거절한다(3중 방어). */
   saveAsSupported: boolean;
   /** 사본 저장 진행 중. 저장 버튼의 스피너·비활성 판정에 쓴다. */
@@ -484,8 +487,12 @@ interface Props {
       부모 기본 학습지 행을 통째로 덮어쓴다(P4). 실전 문서는 모양으로 감지할 수 없으므로
       (기본도 실전도 둘 다 learning-worksheet 를 가진다) **호스트가 행 마커를 알려 주는 것이
       유일한 정본**이다. 서버에 fail-closed 백스톱이 있지만(409) 그건 파괴를 막는 안전망이지
-      정상 경로가 아니다 — 실전을 여는 호스트는 반드시 이 prop 을 실어라. */
-  docVariant?: "basic" | "final" | "practice";
+      정상 경로가 아니다 — 실전을 여는 호스트는 반드시 이 prop 을 실어라.
+      - `"reading"` = 직독직해 분석본(PRIME_READING — 스펙 §5.3 F-3). 실전과 달리 모양
+        (reading-analysis 섹션) 자기감지가 가능해 아래 `readingDoc` 이 백스톱을 겸하지만,
+        저장 축(`?variant=reading`)의 정본은 여전히 이 prop 이다 — reading 을 여는 호스트도
+        반드시 실어라(미배선 = 부모 PRIME 덮어쓰기를 서버 백스톱에 떠넘기는 것). */
+  docVariant?: "basic" | "final" | "practice" | "reading";
   /** [E30 §5 P4] 실전 학습지 **생성 성공** 통보 — 새 문서는 별도 행(PRIME_PRACTICE)이므로
       편집기는 현재 문서를 그것으로 갈아끼우지 않는다(그러면 이 편집기의 저장이 실전 본문을
       기본 행에 쓴다). 호스트가 새 탭/새 문서로 착지시키라는 뜻의 콜백이다.
@@ -622,6 +629,17 @@ export function AnalysisReportEditor({
   // 이 플래그가 여는 것: 저장 PATCH 의 `?variant=practice`(부모 행 덮어쓰기 차단) ·
   // 사본 저장 금지(§2-4 고아 실전 방지) · 실전 재생성 버튼 숨김(실전 위에 실전 금지).
   const practiceDoc = docVariant === "practice";
+  // ── [reading · 스펙 §5.3 F-3/F-6] 직독직해 분석본 판별 ── 호스트 마커(docVariant) 우선
+  // + 모양 자기감지 백스톱(파이널 동형 — reading-analysis 섹션은 이 문서 축에만 존재해
+  // 기본/실전과 원리적으로 안 섞인다. 실전의 「모양 판별 불가」 함정이 여기엔 없다).
+  // 이 플래그가 여는 것: 단어시험지 승격 주입 합류(injectedVocabDoc — F-5) ·
+  // 실전 학습지 생성 금지(worksheetSupported — F-6: 실전 생성 POST 는 워크북 병합 축이라
+  // reading 문서 위에 설 자리가 없다) · 사본 저장 금지(saveAsSupported — 서버
+  // `?variant=reading` save-as 400 과 함께 실전과 같은 3중 방어).
+  const readingDoc = useMemo(
+    () => docVariant === "reading" || isReadingAnalysisReportShape(report),
+    [docVariant, report],
+  );
   // 저장·사본 URL 의 `?variant` — 기본 문서는 **빈 문자열**이라 요청 바이트가 E30 이전과 동일하다.
   const docVariantQuery = docVariant === "basic" ? "" : `?variant=${docVariant}`;
 
@@ -666,8 +684,14 @@ export function AnalysisReportEditor({
    *   존재하므로(라우트가 「기본 학습지 이력이 있는 지문에」로 못박았다) 부모 어휘를
    *   그대로 쓸 수 있어 **파이널보다 품질이 높은데**, 지금까지는 카드조차 뜨지 않았다
    *   (무설명 증발 — 사용자가 「실전에서도 단어 시험지를 만들 수 있어야 한다」고 확인).
+   *
+   * [reading · F-5] 직독직해 분석본도 같은 축이다 — sections 가 reading-analysis 하나뿐이라
+   *   자기 vocabulary 가 없고, 부모 PRIME(activitySource)의 승격 주입이 유일한 경로다.
+   *   부모가 없으면(파이널처럼 단독 성립 가능) sourceHasVocab=false·ownMustKnowCount=0
+   *   (mustKnow 는 final-onepage 전용 필드) → 아래 잠김 카드 분기가 사유를 고지한다
+   *   (무설명 증발 금지 — vocabRowsFromMustKnow 확장은 1차 범위 밖, F-5).
    */
-  const injectedVocabDoc = finalOnepage || practiceDoc;
+  const injectedVocabDoc = finalOnepage || practiceDoc || readingDoc;
   /** 승격 주입으로 켤 수 있는가 = 부모 어휘가 있거나(우선) 자기 각주 어휘가 있다. */
   const canInjectVocabTest = injectedVocabDoc && (sourceHasVocab || ownMustKnowCount > 0);
   /**
@@ -1840,9 +1864,12 @@ export function AnalysisReportEditor({
     // 파이널 문서의 vocabulary 는 정의상 전부 주입본(E23) — 편집 패널의 「단어 시험지 포함」
     // OFF(study)가 setVocabularyTestMode 로 떨어지면 숨김 단어장 섹션이 **유령 주입본**으로
     // 남는다(deactivateVocabTest 와 달리 섹션이 제거되지 않음). 켜기/모드 전환은 현행 유지.
+    // [reading] 직독직해도 동일하다(vocabulary 는 전부 주입본 — F-5). updater 안에서는
+    // r 의 모양으로만 가를 수 있는데 reading 은 모양 판별이 가능해 같은 분기를 탄다
+    // (실전은 모양 판별 불가라 이 원복 경로 밖 — 선재 한계, deactivateVocabTest 만 안전).
     const apply = () =>
       setReport((r) =>
-        mode === "study" && isFinalOnepageReportShape(r)
+        mode === "study" && (isFinalOnepageReportShape(r) || isReadingAnalysisReportShape(r))
           ? removeInjectedVocabSection(r)
           : setVocabularyTestMode(r, si, mode),
       );
@@ -2806,13 +2833,20 @@ export function AnalysisReportEditor({
   // 실전 사본은 부모 PRIME 이 없는 고아가 되고, 「실전만 먼저 생성은 안 되는 구조」를
   // 사본 경로로 우회하게 된다. 호스트가 버튼을 그려 버려도 여기서 막는다.
   // 판정을 ref 로 읽는 이유는 위 계약 그대로다 — deps 가 비어야 정체성이 영구 고정된다.
-  const saveAsBlockedRef = useRef(false);
-  saveAsBlockedRef.current = practiceDoc;
+  // [reading 합류] 차단 사유가 문서 축마다 달라 boolean → 사유 문자열(null=허용)로 승급.
+  // ref 로 읽는 계약은 그대로다 — deps 가 비어야 콜백 정체성이 영구 고정된다.
+  const saveAsBlockedRef = useRef<string | null>(null);
+  saveAsBlockedRef.current = practiceDoc
+    ? "실전 학습지는 사본 저장을 지원하지 않아요. 기본 학습지를 사본으로 저장하면 실전을 다시 추가할 수 있습니다."
+    : readingDoc
+      ? // [F-6] 사본은 새 지문 행을 만드는 경로라 reading 은 1차 범위 밖(서버도 400) —
+        // 승격 주입·활동 소스가 원본 지문의 부모 PRIME 에 묶여 있어 사본이 반쪽이 된다.
+        "직독직해 분석본은 사본 저장을 지원하지 않아요. 사본이 필요하면 기본 학습지를 사본으로 저장한 뒤 그 지문에서 분석본을 다시 생성해 주세요."
+      : null;
   const stableRequestSaveAs = useCallback(() => {
-    if (saveAsBlockedRef.current) {
-      toast.info(
-        "실전 학습지는 사본 저장을 지원하지 않아요. 기본 학습지를 사본으로 저장하면 실전을 다시 추가할 수 있습니다.",
-      );
+    const blocked = saveAsBlockedRef.current;
+    if (blocked) {
+      toast.info(blocked);
       return;
     }
     setSaveAsOpen(true);
@@ -2826,15 +2860,17 @@ export function AnalysisReportEditor({
       worksheetHasContent: toolbarWorksheetHasContent,
       // KO·파이널 원페이지 문서는 실전 학습지(영어 전용 파이프라인) 미지원 — 호스트가 생성 버튼을 숨긴다.
       // 실전 학습지 문서 자신도 미지원이다(실전 위에 실전을 또 만들 자리가 없다 — E30 §5 P4).
-      worksheetSupported: !koReport && !finalOnepage && !practiceDoc,
+      // 직독직해 분석본도 미지원(스펙 §5.3 F-6 — reading 문서 위 실전 생성 버튼 금지).
+      worksheetSupported: !koReport && !finalOnepage && !practiceDoc && !readingDoc,
       generateWorksheet: stableGenerateWorksheet,
       requestSaveAs: stableRequestSaveAs,
       // 실전 학습지는 사본 저장 미지원(E30 §2-4 — 고아 실전 방지).
-      saveAsSupported: !practiceDoc,
+      // 직독직해 분석본도 미지원(F-6 — save-as 는 `?variant=reading` 서버 400 거절과 짝).
+      saveAsSupported: !practiceDoc && !readingDoc,
       // savingAs 는 사본 저장 시작·종료에만 바뀌는 의미 있는 boolean 이라 보고해도 안전하다.
       savingAs,
     });
-  }, [dirty, saving, stableSave, worksheetBusy, toolbarWorksheetHasContent, koReport, finalOnepage, practiceDoc, stableGenerateWorksheet, stableRequestSaveAs, savingAs, onToolbarStateChange]);
+  }, [dirty, saving, stableSave, worksheetBusy, toolbarWorksheetHasContent, koReport, finalOnepage, practiceDoc, readingDoc, stableGenerateWorksheet, stableRequestSaveAs, savingAs, onToolbarStateChange]);
   useEffect(
     () => () => onToolbarStateChange?.(null),
     [onToolbarStateChange],
@@ -3077,10 +3113,12 @@ export function AnalysisReportEditor({
             canRedo={canRedo}
             worksheetBusy={worksheetBusy}
             worksheetHasContent={toolbarWorksheetHasContent}
-            showGenerateWorksheet={!onToolbarStateChange && !koReport && !finalOnepage && !practiceDoc}
+            // [F-6] 직독직해(readingDoc)도 실전 생성·사본 저장 입구 금지 — 끌어올린 툴바
+            // (worksheetSupported/saveAsSupported)와 같은 부정 목록을 인라인 툴바에도 적용한다.
+            showGenerateWorksheet={!onToolbarStateChange && !koReport && !finalOnepage && !practiceDoc && !readingDoc}
             // 저장 버튼을 끌어올리지 않는 컨텍스트에는 사본 저장 입구가 없다 — 툴바에 인라인으로 둔다.
-            // 실전 학습지 문서에서는 그 입구 자체를 렌더하지 않는다(E30 §2-4).
-            showSaveAs={!onToolbarStateChange && !practiceDoc}
+            // 실전 학습지·직독직해 문서에서는 그 입구 자체를 렌더하지 않는다(E30 §2-4 · F-6).
+            showSaveAs={!onToolbarStateChange && !practiceDoc && !readingDoc}
             savingAs={savingAs}
             onSaveAs={stableRequestSaveAs}
             answerKeyIncluded={toolbarAnswerKeyIncluded}

@@ -2710,7 +2710,9 @@ export function WorkspacePassageRow({
               e.stopPropagation();
               onOpenWorkbook?.();
             }}
-            title="기본 학습지·파이널 원페이지를 만듭니다"
+            // [F3 26-08-31] reading 합류로 4상품 자구 — library-pane.tsx 하단 CTA 와
+            // 같은 모달을 여는 버튼이라 tooltip 도 함께 동기한다(E19-8 문구 스윕 계약).
+            title="기본·실전·파이널·직독직해 학습지를 만듭니다"
             className="flex h-10 min-w-0 items-center justify-center gap-1.5 rounded-lg bg-blue-600 px-2 text-[13px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <BookOpen className="h-4 w-4 shrink-0" aria-hidden="true" />

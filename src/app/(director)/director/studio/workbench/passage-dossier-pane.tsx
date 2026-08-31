@@ -1190,7 +1190,7 @@ function DossierBody({
   // 서버 계약상 필수 필드지만(§3.10.19 E19-6) 구 응답 캐시가 남아 있어도 행이
   // 사라질 뿐 카드가 죽지 않게 참조 안정 빈 배열로 폴백한다.
   const rawSheetRows = dossier.sheets ?? EMPTY_SHEET_ROWS;
-  // [E30 §4-2] 같은 지문 안 표시 순서 = `sheetPlanRank` asc(기본 → 실전 → 파이널 → 국어).
+  // [E30 §4-2] 같은 지문 안 표시 순서 = `sheetPlanRank` asc(기본 → 실전 → 직독직해 → 파이널 → 국어).
   // 서버 질의는 `updatedAt desc`(actions/studio/dossier.ts sheetRows)라 **나중에 만든
   // 실전이 기본 위**에 온다 — 사용자 요구(「학습지를 추가하고 실전 학습지를 추가하도록」)가
   // 화면에서부터 뒤집힌 채 시작한다. 랭크는 정본 1곳(pick-order.sheetPlanRank)만 쓴다.
@@ -1484,7 +1484,7 @@ function DossierBody({
             title={
               deployDisabled
                 ? sheetRows.length > 0
-                  ? "파이널 원페이지·국어 워크북은 인쇄용 학습지라 모바일 배포 대상이 아닙니다 — 기본 학습지를 만들면 보낼 수 있습니다"
+                  ? "파이널 원페이지·실전 학습지·직독직해 분석본·국어 워크북은 인쇄용 학습지라 모바일 배포 대상이 아닙니다 — 기본 학습지를 만들면 보낼 수 있습니다"
                   : "AI 분석 후 배포할 수 있습니다"
                 : undefined
             }

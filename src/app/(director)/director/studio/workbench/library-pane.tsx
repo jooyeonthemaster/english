@@ -2162,7 +2162,10 @@ function LibraryPaneInner({
               }
               void handleOpenWorkbookFromSelection();
             }}
-            title="기본 학습지·파이널 원페이지를 만듭니다"
+            // [F3 26-08-31] reading 합류로 4상품 자구. ⚠ 이 title 은 프로브 셀렉터다
+            // (.tmp-studio-qa/ws-gate·ws-launch-smoke·_probe-modal-width 의
+            //  button[title=…]) — 바꾸면 세 하네스를 같은 커밋에서 함께 바꿔라.
+            title="기본·실전·파이널·직독직해 학습지를 만듭니다"
             className={
               "flex h-10 min-w-0 items-center justify-center gap-1.5 rounded-lg px-2 text-[13px] font-bold text-white shadow-sm transition-colors " +
               (ctaDisabled || ctaBusy

@@ -46,6 +46,15 @@ export interface AnalysisPromptConfig {
    * (부재 스프레드 = 기존 상품 경로와 바이트 동일, .tmp-final-qa/final-onepage-spec.md §1·§2).
    */
   finalOnepage?: boolean;
+  /**
+   * 직독직해 분석본(PRIME_READING) 생성 플래그 — finalOnepage 와 **같은 계약**:
+   * true 일 때만 요청 body 에 키가 실린다(부재 스프레드 = 기존 상품 경로와 바이트
+   * 동일 — §11 무회귀, docs/reading-analysis-worksheet-spec.md §5.2 B-6).
+   * includeWorksheet·finalOnepage·targetSections 와는 서버(fast 라우트)가 400 으로
+   * 막는 상호 배타 축이다 — 발사부는 sheetPromptFlags 가 variant 당 1키만 돌려주는
+   * 것으로 조합 자체를 만들지 않는다.
+   */
+  readingAnalysis?: boolean;
 }
 
 export type QueuedPassageStatus =
@@ -226,6 +235,10 @@ function promptConfigFromJobConfig(config: unknown): AnalysisPromptConfig {
     // 파이널 원페이지 잡의 재시도가 기본/실전 분석으로 승격되지 않도록 잡 config
     // 에 기록된 finalOnepage 를 복원한다(true 일 때만 키 포함 — targetSections 와 동형).
     ...(raw.finalOnepage === true ? { finalOnepage: true } : {}),
+    // 직독직해 분석본 잡의 재시도(다시 시도)가 기본 분석으로 승격되지 않도록
+    // readingAnalysis 도 같은 규약으로 복원한다(true 일 때만 키 포함 — finalOnepage
+    // 와 동형. 빠뜨리면 실패한 ◈5 직독직해 재시도가 기본 학습지를 만들고 끝난다).
+    ...(raw.readingAnalysis === true ? { readingAnalysis: true } : {}),
   };
 }
 
@@ -715,6 +728,10 @@ export function buildAnalysisRequestBody(
       ? { sourceModule: promptConfig.sourceModule }
       : {}),
     ...(promptConfig.finalOnepage === true ? { finalOnepage: true } : {}),
+    // 직독직해 분석본 — finalOnepage 와 동형(true 일 때만 키 존재). ⚠ additive
+    // 말미 배치(stream 직전)를 지킬 것 — 부재 시 요청 바이트 무회귀가 계약이고
+    // tests/unit/studio-workbench-contract 가 키 집합·순서를 바이트로 검증한다.
+    ...(promptConfig.readingAnalysis === true ? { readingAnalysis: true } : {}),
     ...(wantStream ? { stream: true } : {}),
   };
 }

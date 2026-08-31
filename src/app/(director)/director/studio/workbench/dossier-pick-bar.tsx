@@ -271,11 +271,11 @@ export function DossierPickBar({
     for (const m of sheetMetas) ids.add(m.passageId);
     return ids.size;
   }, [passageIds, sheetMetas]);
-  // 학습지 종류 칩 — SHEET_PLAN_LABEL 은 [E30] 으로 **4키**가 됐다
-  // (PRIME · PRIME_KO · PRIME_FINAL · PRIME_PRACTICE). 그래도 문항 축의 "+N종"
-  // 절단은 여전히 필요 없다: 한 지문이 가질 수 있는 학습지 종류가 유한(≤4)하고,
-  // 실전은 기본 없이 성립하지 않아 실사용 조합은 사실상 2~3종이다
-  // (실행대 정본과 같은 판단 — sheets-action-rail.tsx).
+  // 학습지 종류 칩 — SHEET_PLAN_LABEL 은 [E30]+[reading] 으로 **5키**가 됐다
+  // (PRIME · PRIME_KO · PRIME_FINAL · PRIME_PRACTICE · PRIME_READING). 그래도 문항
+  // 축의 "+N종" 절단은 여전히 필요 없다: 한 지문이 가질 수 있는 학습지 종류가
+  // 유한(≤5 — 국어 1 은 영어 4 와 배타)하고, 실전은 기본 없이 성립하지 않아
+  // 실사용 조합은 사실상 2~4종이다(실행대 정본과 같은 판단 — sheets-action-rail.tsx).
   // ⚠ 줄번호 인용을 다시 박지 마라 — sheet-products.ts 는 이 절에서 두 번 밀렸다.
   const planChips = useMemo(() => {
     const byPlan = new Map<string, number>();

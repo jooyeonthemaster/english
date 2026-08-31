@@ -7,6 +7,7 @@ import { koAnalysisReportSchema, type KoAnalysisReport } from "@/lib/passage-rep
 import {
   analysisReportSchema,
   isFinalOnepageReportShape,
+  isReadingAnalysisReportShape,
   type AnalysisReport,
   type ReportCover,
 } from "@/lib/passage-report/analysis-report/schema";
@@ -92,6 +93,23 @@ export async function POST(
     );
   }
 
+  // ── [reading 1차 범위] 직독직해 분석본도 사본 저장 대상이 아니다 ─────────────
+  // reading-analysis-worksheet-spec §5.2 A-9 · §5.3 F-3: 1차 범위에서 reading 의
+  // 사본 저장은 미지원이고, UI 도 reading 문서 편집기에서 「다른 이름으로 저장」을
+  // 렌더하지 않는다(F-6 부정 목록). 실전과 마찬가지로 이 분기는 그 UI 게이트를
+  // 신뢰하지 않는 **서버 정본**이다 — 조용히 무시하고 아래로 흘리면 marker 산식이
+  // PRIME 으로 떨어져 **기본 학습지가 복제**되고, 「직독직해 사본을 만들었다」고 믿는
+  // 사용자에게 엉뚱한 문서가 배달된다(practice 거절과 동일한 사고 유형).
+  if (req.nextUrl.searchParams.get("variant") === "reading") {
+    return NextResponse.json(
+      {
+        error:
+          "직독직해 분석본은 사본 저장을 지원하지 않습니다 — 원본 문서에서 편집·인쇄해 주세요.",
+      },
+      { status: 400 },
+    );
+  }
+
   let raw: unknown;
   try {
     raw = await req.json();
@@ -117,6 +135,24 @@ export async function POST(
   // report 는 zod 로 감싸면 "미전달"과 "undefined"가 구분되지 않으므로
   // PATCH 라우트와 동일하게 원시 객체에서 직접 읽는다.
   const rawReport = (raw as { report?: unknown } | null)?.report;
+
+  // [reading 모양 백스톱] variant 를 안 실은 호출이 reading 문서 본문을 보내는 경우도
+  // 같은 400 으로 거절한다. practice 는 모양으로 가를 수 없어 이 백스톱이 원리적으로
+  // 불가능하지만(기본 문서도 learning-worksheet 를 가짐 — 형제 라우트 주석), reading 의
+  // `reading-analysis` 섹션은 reading 문서에만 존재하므로 판별이 확정적이다. 이 백스톱이
+  // 없으면 아래 marker 산식이 PRIME 으로 떨어져 **reading 본문을 가진 PRIME 사본**이라는
+  // 오염 행이 만들어진다(목록엔 기본 학습지로 뜨는데 열면 직독직해 — 무음 데이터 오염).
+  if (isReadingAnalysisReportShape(
+    rawReport as { sections?: Array<{ kind?: string }> } | null | undefined,
+  )) {
+    return NextResponse.json(
+      {
+        error:
+          "직독직해 분석본은 사본 저장을 지원하지 않습니다 — 원본 문서에서 편집·인쇄해 주세요.",
+      },
+      { status: 400 },
+    );
+  }
 
   // ── 1) 원본 지문 (academyId 스코프 — 교차 테넌트 접근 차단) ───────────────
   const source = await prisma.passage.findFirst({

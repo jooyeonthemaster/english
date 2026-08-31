@@ -40,7 +40,17 @@ export type WrapKind =
   | "ws-list"
   | "custom-text"
   | "image"
-  | "cover";
+  | "cover"
+  /** 직독직해 분석본(reading-analysis)의 **문장 카드** 조각 — 카드당 FlowItem 1개,
+   *  `atomic` 로 카드 내부 절단을 금지한다(스펙 docs/reading-analysis-worksheet-spec.md §4).
+   *  ⚠ 기존 "reading" wrap 은 원문+해석 clean 런(par-reading-flow-run)의 소유다 —
+   *  READING_RUN_GAP_MM(2.6mm) 계상·par-eng-only 패딩 규칙이 그 키에 묶여 있으므로
+   *  재사용하면 독해 런 간격 계약이 오염된다. 그래서 새 키 "jikdok" 로 분리한다.
+   *  패킹 계약: items.ts `isStandalone` 에 **의도적으로 미등록**(= 카드마다 newRun) —
+   *  packFlow 가 카드 사이를 RUN_GAP_MM(3.2mm)으로 계상하고, 렌더는 runs.tsx 가
+   *  카드들을 par-jd-run 하나로 병합하되 카드(.par-block) margin-bottom 3.2mm 기본값이
+   *  그 가정과 일치한다(둘 중 하나만 바꾸면 측정·실페이지가 어긋난다). */
+  | "jikdok";
 
 export interface FlowItem {
   id: string;

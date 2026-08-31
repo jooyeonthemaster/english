@@ -96,14 +96,21 @@ export interface StudioQueueApi {
     classId: string | null,
   ) => { launched: number; skipped: string[] };
   /**
-   * 학습지 3상품 발사(§3.10.19 E19-4) — **전체 분석 경로**다.
+   * 학습지 4상품 발사(§3.10.19 E19-4 · reading 스펙 §5.2 B-5) — **전체 분석 경로**다.
    * targetSections 를 싣지 않는 것이 계약: 실으면 fast 라우트가
-   * finalOnepage/includeWorksheet 조합을 400 으로 막는다(route.ts:284-303).
+   * finalOnepage/includeWorksheet/readingAnalysis 조합을 400 으로 막는다
+   * (route.ts:284-303 · reading 스펙 §5.2 C-8).
    *
    * [E30 §3-6] 실전 상품(`practice`)은 **지문마다 라우트가 갈린다** —
    * `passage.practiceRoute === "worksheet"` 인 지문만 (c) 라우트(launchWorksheet)로
    * 새고 나머지는 기존 fast 경로 그대로다. 반환 `launched` 는 두 무리의 합이고,
    * (c) 무리는 응답을 기다리지 않는다(카드는 worksheetJobs 가 세운다).
+   *
+   * [reading] 직독직해 분석본은 **항상 fast 라우트**다(파이널과 같은 자기완결
+   * 블록·지문당 ◈5 정액) — practice 같은 지문별 라우팅 분기가 없고, 상품 정체는
+   * promptConfig 의 `sheetPromptFlags` 스프레드(readingAnalysis:true)가 싣는다.
+   * 여기 별도 분기를 만들지 마라: viaFast 폴백이 이미 정답이고, 분기를 복제하면
+   * 플래그 조립 정본(sheet-products)과 갈릴 자리만 생긴다.
    */
   launchSheets: (
     passages: StudioLaunchPassage[],
@@ -395,6 +402,9 @@ export function useStudioQueue({
       // 한 트랜잭션에 만들어 ◈10 이다(§2-1 라우팅 표). 판정은 서버 스냅샷이 이미
       // 내렸으므로 여기서는 읽기만 한다 — 미상은 "fast"(상한가) 쪽으로 떨어뜨려
       // 「표기보다 더 빠지는」 경우를 만들지 않는다(§3-3 TOCTOU 불변식).
+      // [reading] 이 분기는 practice **전용**이다 — 직독직해 분석본(reading)은
+      // viaWorksheet 가 항상 빈 배열이라 전량 viaFast 로 흘러 fast 라우트의
+      // 자기완결 블록이 받는다(스펙 §5.2 B-5 「특수 라우팅 불요」 실측 확정).
       const viaWorksheet =
         variant === "practice"
           ? ready.filter((p) => p.practiceRoute === "worksheet")

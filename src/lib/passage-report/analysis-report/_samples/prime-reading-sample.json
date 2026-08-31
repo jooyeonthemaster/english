@@ -1,0 +1,159 @@
+{
+  "schemaVersion": 1,
+  "brand": "ENGLISH READING LAB",
+  "themeId": "black-white",
+  "meta": {
+    "eyebrow": "PRIME READING ANALYSIS · 직독직해 분석본",
+    "titleKo": "치명적인 질병과 싸운 두 영웅",
+    "titleEn": "Two Heroes Who Fought a Deadly Disease",
+    "category": "교과서 · 서사/설명",
+    "theme": "의학사 · 백일해 백신을 만든 두 과학자",
+    "difficulty": 2,
+    "difficultyNote": "고등 영어 II",
+    "solveTime": "3분 30초",
+    "examTypes": "직독직해 · 구문 분석 · 문법 판서"
+  },
+  "sections": [
+    {
+      "kind": "reading-analysis",
+      "version": 1,
+      "header": {
+        "curriculumBadge": "2022 개정 교육과정 고등 영어 II",
+        "title": "Lesson 1. Two Heroes Who Fought a Deadly Disease",
+        "source": "NE능률(오선영)",
+        "subtitle": "전 문장 슬래시(/) 구 끊어읽기 & 1:1 직독직해 심층 분석본"
+      },
+      "parts": [
+        {
+          "label": "본문 1",
+          "titleKo": "대공황의 절망 속에서 시작된 두 여성 과학자의 밤길",
+          "sentences": [1, 2, 3, 4]
+        }
+      ],
+      "sentences": [
+        {
+          "no": 1,
+          "stars": 0,
+          "chunks": [
+            {
+              "en": "One evening in late November 1932,",
+              "ko": "1932년 11월 말 어느 날 저녁,",
+              "marks": [{ "text": "in late November 1932", "kind": "phrase" }]
+            },
+            {
+              "en": "a bitterly cold wind blows fiercely",
+              "ko": "몹시 차가운 바람이 거세게 분다",
+              "marks": [
+                { "text": "a bitterly cold wind", "kind": "phrase" },
+                { "text": "fiercely", "kind": "phrase" }
+              ]
+            },
+            {
+              "en": "as two figures emerge from a laboratory.",
+              "ko": "두 명의 인물이 실험실에서 모습을 드러낼 때.",
+              "marks": [
+                { "text": "as", "kind": "connective" },
+                { "text": "emerge from a laboratory", "kind": "grammar" }
+              ]
+            }
+          ],
+          "fullKo": "1932년 11월 말 어느 날 저녁, 두 명의 인물이 실험실에서 모습을 드러낼 때 몹시 차가운 바람이 거세게 분다.",
+          "notes": [
+            { "label": "어휘", "tone": "blue", "text": "**bitterly cold**: 몹시 추운 (부사 bitterly가 형용사 cold 수식) / **fiercely**: 맹렬하게, 거세게" },
+            { "label": "문법", "tone": "red", "text": "**as**: 시간 접속사 (~할 때) / **emerge from**: ~로부터 나오다 (자동사)" }
+          ]
+        },
+        {
+          "no": 2,
+          "stars": 1,
+          "chunks": [
+            {
+              "en": "Darkness begins to fall",
+              "ko": "어둠이 내리기 시작한다",
+              "marks": []
+            },
+            {
+              "en": "as they set out into a world",
+              "ko": "그들이 세상으로 나아갈 때",
+              "marks": [
+                { "text": "as", "kind": "connective" },
+                { "text": "set out into", "kind": "phrase" }
+              ]
+            },
+            {
+              "en": "of failed banks, collapsed industry, and widespread despair",
+              "ko": "파산한 은행들, 붕괴된 산업, 그리고 널리 퍼진 절망의 (세상)",
+              "marks": [
+                { "text": "failed", "kind": "grammar" },
+                { "text": "collapsed", "kind": "grammar" },
+                { "text": "widespread", "kind": "phrase" }
+              ]
+            },
+            {
+              "en": "— a world [ruined by three years of the Great Depression].",
+              "ko": "— 즉, 3년간의 대공황으로 폐허가 된 세상으로.",
+              "marks": [{ "text": "a world [ruined by three years of the Great Depression]", "kind": "structure" }]
+            }
+          ],
+          "fullKo": "그들이 파산한 은행들, 붕괴된 산업, 그리고 널리 퍼진 절망의 세계—3년간의 대공황으로 폐허가 된 세계—로 나아갈 때 어둠이 내리기 시작한다.",
+          "notes": [
+            { "label": "표현", "tone": "blue", "text": "**set out into**: ~로 나아가다 / **the Great Depression**: 대공황" },
+            { "label": "어법", "tone": "red", "text": "**failed / collapsed**: 과거분사가 명사 수식 / **ruined by ~**: 과거분사 후치수식 (a world 동격 부연설명)" }
+          ]
+        },
+        {
+          "no": 3,
+          "stars": 1,
+          "chunks": [
+            {
+              "en": "The workday has come to an end,",
+              "ko": "하루의 근무는 끝이 났다,",
+              "marks": [{ "text": "has come to an end", "kind": "grammar" }]
+            },
+            {
+              "en": "but for Pearl Kendrick and Grace Eldering,",
+              "ko": "그러나 Pearl Kendrick과 Grace Eldering에게는,",
+              "marks": [{ "text": "but", "kind": "connective" }]
+            },
+            {
+              "en": "a different kind of work is about to begin.",
+              "ko": "다른 종류의 일이 막 시작될 참이다.",
+              "marks": [{ "text": "is about to begin", "kind": "grammar" }]
+            }
+          ],
+          "fullKo": "근무는 끝났지만, Pearl Kendrick과 Grace Eldering에게는 다른 종류의 일이 막 시작될 참이다.",
+          "notes": [
+            { "label": "시제", "tone": "red", "text": "**has come to an end**: 현재완료 완료용법 (끝이 났다)" },
+            { "label": "핵심숙어", "tone": "blue", "text": "**be about to 동사원형**: 막 ~하려고 하다, 막 ~할 참이다" }
+          ]
+        },
+        {
+          "no": 4,
+          "stars": 1,
+          "chunks": [
+            {
+              "en": "They are on their way to visit the homes of children",
+              "ko": "그들은 아이들의 집들을 방문하러 가는 길이다",
+              "marks": [{ "text": "on their way to", "kind": "phrase" }]
+            },
+            {
+              "en": "suffering from a deadly disease",
+              "ko": "치명적인 질병으로 고통받고 있는",
+              "marks": [{ "text": "suffering from", "kind": "structure" }]
+            },
+            {
+              "en": "called pertussis.",
+              "ko": "백일해라고 불리는.",
+              "marks": [{ "text": "called pertussis", "kind": "grammar" }]
+            }
+          ],
+          "fullKo": "그들은 백일해라고 불리는 치명적인 질병으로 고통받고 있는 어린이들의 집들을 방문하러 가는 길이다.",
+          "notes": [
+            { "label": "표현", "tone": "blue", "text": "**on one's way to R**: ~하러 가는 길에 / **suffer from**: ~로 고통받다" },
+            { "label": "분사", "tone": "red", "text": "**children [suffering ~]** (현재분사 능동 수식) / **a deadly disease [called pertussis]** (과거분사 수동 수식)" }
+          ]
+        }
+      ]
+    }
+  ]
+}

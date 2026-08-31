@@ -147,13 +147,14 @@ export function SheetsActionRail({
     () => [...new Set(metas.map((m) => m.passageId))],
     [metas],
   );
-  // 종류 요약 칩 — 많은 순. 학습지 마커는 **4종**뿐이라 문항 축의 "+N종" 절단이
-  // 필요 없다(SHEET_PLAN_LABEL 정본 4키 — 미지 마커는 원문 폴백).
-  // [E30 §1-1] 실전 학습지(PRIME_PRACTICE)가 4번째로 늘었다. 코드 변경은 0이다 —
-  // 이 집계는 Map 조회라 라벨 정본 1줄이 그대로 흘러든다. 다만 「3종」이라고 못박은
-  // 주석은 다음 수정자에게 거짓 상한을 약속하므로 함께 고친다(§1-6과 같은 규율).
-  // ⚠ 지문 1건이 가질 수 있는 마커는 영어 3(PRIME/PRACTICE/FINAL) 또는 국어 1
-  //   (PRIME_KO)이 상한이다 — 국어는 실전·파이널과 배타라 4칩이 동시에 서지 않는다.
+  // 종류 요약 칩 — 많은 순. 학습지 마커는 **5종**뿐이라 문항 축의 "+N종" 절단이
+  // 필요 없다(SHEET_PLAN_LABEL 정본 5키 — 미지 마커는 원문 폴백).
+  // [E30 §1-1] 실전 학습지(PRIME_PRACTICE)가 4번째로, [reading] 직독직해 분석본
+  // (PRIME_READING)이 5번째로 늘었다. 코드 변경은 0이다 — 이 집계는 Map 조회라 라벨
+  // 정본 1줄이 그대로 흘러든다. 다만 「3종」「4종」이라고 못박은 주석은 다음 수정자에게
+  // 거짓 상한을 약속하므로 함께 고친다(§1-6과 같은 규율).
+  // ⚠ 지문 1건이 가질 수 있는 마커는 영어 4(PRIME/PRACTICE/FINAL/READING) 또는 국어 1
+  //   (PRIME_KO)이 상한이다 — 국어는 나머지와 배타라 5칩이 동시에 서지 않는다.
   const planChips = useMemo(() => {
     const byPlan = new Map<string, number>();
     for (const m of metas) {

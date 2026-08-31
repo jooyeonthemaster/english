@@ -53,6 +53,11 @@ export interface SectionSlot {
   headless?: boolean;
   /** 원페이지 파이널 슬롯 — sectionFlowItems 대신 assemble 이 전면 페이지(wrap:"cover") 1개를 붙인다. */
   finalOnepage?: boolean;
+  /** 직독직해 분석본 슬롯 — sectionFlowItems 대신 assemble.pushReadingAnalysis 가
+   *  표지 헤더+파트 헤더+문장 카드 FlowItem 들로 직접 조립한다(멀티페이지 전면 문서).
+   *  파이널과 달리 wrap:"cover" 1장이 아니라 카드당 FlowItem 로 packFlow 에 참여한다
+   *  (스펙 docs/reading-analysis-worksheet-spec.md §5.1). */
+  readingAnalysis?: boolean;
 }
 
 type SectionSlotInit = Omit<SectionSlot, "key" | "headId" | "si" | "kind" | "idSuffix">;
@@ -83,6 +88,15 @@ export function reportSectionSlots(report: AnalysisReport): SectionSlot[] {
   const finalIdx = findIdx("final-onepage");
   if (!vocabTestOnly && finalIdx >= 0) {
     add(finalIdx, "final-onepage", "", { headless: true, finalOnepage: true, flow: {} });
+    return slots;
+  }
+
+  // ── 직독직해 분석본 문서: 전면 슬롯 1개가 문서의 전부 ───────────────────────
+  // 자기 표지 헤더(파란 그라데이션)+범례를 내장하므로 섹션 헤더 없음(headless).
+  // 파이널과 같은 조기반환 패턴이지만 조판은 카드 단위 멀티페이지다(§5.1).
+  const readingIdx = findIdx("reading-analysis");
+  if (!vocabTestOnly && readingIdx >= 0) {
+    add(readingIdx, "reading-analysis", "", { headless: true, readingAnalysis: true, flow: {} });
     return slots;
   }
 

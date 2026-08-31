@@ -15,6 +15,9 @@ import freshSample from "./_fresh.json";
 // cars2 = 수리 후 재생성본(v2, grammar 8행 완비) — 어법 필기(par-list-note) 렌더 게이트 대상.
 import carsRca from "./_cars-rca.json";
 import carsFixed from "./_cars2-fixed.json";
+// [reading] 직독직해 분석본 실생성본(gemini-3.7-flash, 레퍼런스 55문장) — 밀도·페이지네이션·
+// 편집 캔버스(주석 볼드) 실환경 검증용(.tmp-reading-qa/e2e-doc-gemini.json 봉투판).
+import readingE2e from "./_reading-e2e.json";
 
 // 신규 필기 캔버스를 직접 행사하는 rich 샘플 (chunks + layout 의도 포함).
 const RICH: AnalysisReport = {
@@ -313,6 +316,9 @@ export function PassageReportHarness({ sample, layout, mode, vocab, answers }: {
     report = parsed.ok ? parsed.report : RICH;
   } else if (sample === "cars2") {
     const parsed = safeParseAnalysisReport(carsFixed);
+    report = parsed.ok ? parsed.report : RICH;
+  } else if (sample === "reading") {
+    const parsed = safeParseAnalysisReport(readingE2e);
     report = parsed.ok ? parsed.report : RICH;
   } else if (sample === "gen07") {
     const parsed = safeParseAnalysisReport({ schemaVersion: 1, brand: "ENGLISH READING LAB", themeId: "veritas-navy", passageLayout: "hlc", meta: (gen07 as { meta: unknown }).meta, sections: (gen07 as { sections: unknown }).sections });

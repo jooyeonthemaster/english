@@ -1,7 +1,8 @@
 "use client";
 
 // ============================================================================
-// 학습지 3상품 선택 데모 (U3 — .tmp-studio-tour/spec.md §3 demo-worksheet)
+// 학습지 4상품 선택 데모 (U3 — .tmp-studio-tour/spec.md §3 demo-worksheet)
+// (구 「3상품」 — reading 「직독직해 분석본」 합류로 4상품, 26-08-31 F3 동기)
 //
 // ch3-products 스텝의 스테이지 데모. 실 화면 미러 원장:
 // - 상품 라벨·부제·단가: STUDIO_SHEET_PRODUCTS(src/lib/studio/sheet-products.ts)
@@ -14,7 +15,7 @@
 // 시간 구동 애니메이션 없음(전환은 색상 트랜지션뿐) — reduced-motion 특례 불요.
 // ============================================================================
 
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { FileText } from "lucide-react";
 import { DemoBadge, DemoFrame, DemoLines, DemoPaper } from "./demo-stage";
 import { DEMO_PASSAGE_TITLE } from "./demo-data";
@@ -48,12 +49,15 @@ function splitPracticeExtras(subtitle: string): readonly string[] {
 // 미니 페이지 조각 — DemoPaper(A4) 위 「라벨 밴드 + 글줄」 섹션 블록
 // ---------------------------------------------------------------------------
 
-type BandTone = "blue" | "violet" | "amber" | "slate";
+type BandTone = "blue" | "violet" | "amber" | "emerald" | "slate";
 
 const BAND_TONES: Record<BandTone, string> = {
   blue: "bg-blue-50 text-blue-600",
   violet: "bg-violet-50 text-violet-600",
   amber: "bg-amber-50 text-amber-700",
+  // reading(직독직해 분석본) 전용 톤 — 기존 팔레트(DemoBadge tones)의 emerald 를
+  // 공유해 basic blue · practice violet · final amber 와 겹치지 않는 고유 축을 만든다.
+  emerald: "bg-emerald-50 text-emerald-600",
   slate: "bg-slate-100 text-slate-500",
 };
 
@@ -158,6 +162,65 @@ function FinalPage({ sections }: { sections: readonly string[] }) {
   );
 }
 
+/** 직독직해 문장 카드 — 위: 슬래시(/)로 끊은 원문 청크 바, 아래: 1:1 해석 줄.
+ *  실 조판 미러가 아니라 부제 「전 문장 슬래시 끊어읽기 · 1:1 직독직해」의
+ *  시각 축약이다(다른 미니 페이지와 같은 목업 문법 — 글줄은 회색 바). */
+function ReadingSentenceCard({ seed }: { seed: number }) {
+  // 청크 바 4개 — DemoLines 의 결정적 시드 관행을 따른 고정 폭(px, 시간 구동 0).
+  const widths = [18, 26, 14, 22].map((w, i) => w + (((i + seed) * 7) % 9));
+  return (
+    <div className="space-y-1 rounded border border-emerald-100 bg-emerald-50/40 p-1">
+      <div className="flex items-center gap-0.5 overflow-hidden">
+        {widths.map((w, i) => (
+          <Fragment key={i}>
+            {i > 0 ? (
+              <span
+                aria-hidden="true"
+                className="shrink-0 text-[8px] font-bold leading-none text-emerald-500"
+              >
+                /
+              </span>
+            ) : null}
+            <span
+              className="h-1 shrink-0 rounded-full bg-slate-300"
+              style={{ width: w }}
+            />
+          </Fragment>
+        ))}
+      </div>
+      <DemoLines count={1} seed={seed + 3} className="pl-2" />
+    </div>
+  );
+}
+
+/** reading 1장 — 부제 유도 밴드(하드코딩 금지 계약 동일) + 직독직해 문장 카드 3장.
+ *  sections = splitSubtitle(reading 부제): [0]·[1] = 「전 문장 슬래시 끊어읽기」
+ *  「1:1 직독직해」(카드 그룹 밴드) · [2] = 「완전해석」(하단 글줄 밴드). */
+function ReadingPage({ sections }: { sections: readonly string[] }) {
+  return (
+    <DemoPaper size="A4" className="w-40 ring-2 ring-emerald-300">
+      <MiniTitle />
+      <div className="min-h-0 flex-1 space-y-1 p-1.5">
+        {sections.length > 0 ? (
+          <div
+            className={`flex h-3 items-center rounded-sm px-1 ${BAND_TONES.emerald}`}
+          >
+            <span className="truncate text-[8px] font-bold leading-none">
+              {sections.slice(0, 2).join(" · ")}
+            </span>
+          </div>
+        ) : null}
+        {[0, 1, 2].map((i) => (
+          <ReadingSentenceCard key={i} seed={i * 6 + 1} />
+        ))}
+        {sections[2] ? (
+          <MiniSection label={sections[2]} lines={2} seed={8} tone="slate" />
+        ) : null}
+      </div>
+    </DemoPaper>
+  );
+}
+
 // ---------------------------------------------------------------------------
 // 본체
 // ---------------------------------------------------------------------------
@@ -177,11 +240,14 @@ export function DemoWorksheet() {
   const finalParts = selected.id === "final" ? splitSubtitle(selected.subtitle) : [];
   const finalBadge = finalParts.length > 0 ? finalParts[finalParts.length - 1] : "";
   const finalSections = finalParts.slice(0, -1);
+  // reading 부제도 같은 유도 계약 — ReadingPage 가 앞 3조각(슬래시·직독직해·완전해석)만 쓴다.
+  const readingSections =
+    selected.id === "reading" ? splitSubtitle(selected.subtitle) : [];
 
   return (
     <DemoFrame caption="예시 화면 — 구성을 누르면 오른쪽 미리보기가 바뀝니다">
       <div className="grid gap-3 sm:grid-cols-[minmax(0,15.5rem)_minmax(0,1fr)]">
-        {/* 좌측 — 상품 라디오 3카드 (라벨·부제·단가 전부 실 모듈 자구) */}
+        {/* 좌측 — 상품 라디오 4카드 (라벨·부제·단가 전부 실 모듈 자구) */}
         <div role="radiogroup" aria-label="학습지 구성 선택" className="flex flex-col gap-2">
           {STUDIO_SHEET_PRODUCTS.map((p) => {
             const active = p.id === selected.id;
@@ -243,7 +309,13 @@ export function DemoWorksheet() {
             <FileText className="h-3.5 w-3.5 shrink-0 text-slate-400" aria-hidden="true" />
             <DemoBadge
               tone={
-                selected.id === "final" ? "amber" : selected.id === "practice" ? "violet" : "blue"
+                selected.id === "final"
+                  ? "amber"
+                  : selected.id === "practice"
+                    ? "violet"
+                    : selected.id === "reading"
+                      ? "emerald"
+                      : "blue"
               }
             >
               {selected.label}
@@ -288,6 +360,15 @@ export function DemoWorksheet() {
                 <FinalPage sections={finalSections} />
                 <figcaption className="text-center text-[10px] font-medium text-slate-400">
                   1장 구성 — 한 장에 전부 담습니다
+                </figcaption>
+              </figure>
+            ) : null}
+
+            {selected.id === "reading" ? (
+              <figure className="space-y-1.5">
+                <ReadingPage sections={readingSections} />
+                <figcaption className="text-center text-[10px] font-medium text-slate-400">
+                  문장 카드 — 끊어읽기와 해석을 나란히 담습니다
                 </figcaption>
               </figure>
             ) : null}

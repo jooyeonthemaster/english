@@ -5,6 +5,7 @@ import { type ActivityAction, ActivityAnswerNode } from "../custom-activity-rend
 import type { CustomEdit, FlowItem, MetaEdit, PassageStudyNotes, SectionEdit, SectionFlowOptions, WrapKind } from "./types";
 import { Field } from "./editable-field";
 import { FinalOnepageSheet } from "./final-onepage-flow";
+import { readingAnalysisFlowItems } from "./reading-analysis-flow";
 import { SectionHead } from "./table";
 import { customBlockFlowItems } from "./custom-block";
 import type { SectionFlowCache } from "./flow-cache";
@@ -166,6 +167,12 @@ export function reportFlowItems(
   // 원페이지 파이널 문서 — 자체 헤더를 내장한 전면 시트 1장이 문서의 전부라
   // 표준 타이틀 블록·영어원문 페이지는 만들지 않는다(표지는 사용자가 켜면 그대로 동작).
   const finalOnly = report.sections.some((s) => s.kind === "final-onepage");
+  // 직독직해 분석본 문서 — 자기 표지 헤더(파란 그라데이션+범례)를 내장한 전면 문서라
+  // 표준 타이틀 블록·영어원문 페이지를 만들지 않는다(finalOnly 와 동일 패턴,
+  // 스펙 docs/reading-analysis-worksheet-spec.md §5.2-14 readingOnly 분기).
+  // 기존 문서에서는 항상 false 라 조립 산출이 바이트 동일하다.
+  const readingOnly = report.sections.some((s) => s.kind === "reading-analysis");
+  const skipDocSurfaces = finalOnly || readingOnly;
   // [E35] 연속 문서는 표지까지 접는다 — 문서 한가운데 전면 표지가 서는 것이 제목 중복보다
   // 더 파괴적이고, 실전 문서는 애초에 cover 상속이 금지라(E30 §1-3) 실데이터도 없다.
   const skipDocIntro = vocabTestOnly || !!compose?.omitDocIntro;
@@ -173,8 +180,8 @@ export function reportFlowItems(
     ? []
     : [
         ...coverItems(report, edit?.ced),
-        ...(finalOnly ? [] : titleItems(report, edit?.med)),
-        ...(finalOnly ? [] : englishOnlyPageItems(report)),
+        ...(skipDocSurfaces ? [] : titleItems(report, edit?.med)),
+        ...(skipDocSurfaces ? [] : englishOnlyPageItems(report)),
       ];
 
   const findIdx = (k: AnalysisSection["kind"]) => report.sections.findIndex((s) => s.kind === k);
@@ -302,6 +309,22 @@ export function reportFlowItems(
       ...cache.get(slotKey, [section, si, report.meta, report.brand, edit?.sectionEdit, edit?.med], build),
     );
   };
+  /** 직독직해 분석본 — 표지 헤더+범례 1블록 → 파트 헤더(secheader) → 문장 카드(jikdok, atomic).
+   *  파이널(cover 1장)과 달리 카드당 FlowItem 로 packFlow 멀티페이지에 참여한다(§5.1).
+   *  조립 규칙 전체는 reading-analysis-flow.tsx 파일 머리 주석이 정본이다. */
+  const pushReadingAnalysis = (si: number) => {
+    const section = report.sections[si];
+    if (section?.kind !== "reading-analysis") return;
+    const build = (): FlowItem[] => readingAnalysisFlowItems(section, si, no, edit?.sectionEdit?.(si));
+    if (!cache) {
+      items.push(...build());
+      return;
+    }
+    const slotKey = `jikdok:${si}`;
+    usedSlots.push(slotKey);
+    // 키: 섹션 본체·위치·번호 + 편집 콜백 번들(참조가 바뀌면 카드 안 onCommit 도 재생성 필요).
+    items.push(...cache.get(slotKey, [section, si, no, edit?.sectionEdit], build));
+  };
 
   // '영어 원문만' 단독 페이지는 그 뒤 첫 섹션 헤더의 breakBefore 로 페이지가 닫힌다.
   // 그 breakBefore 를 지문 슬롯이 들고 있는데(section-slots), 목차에서 지문을 꺼 버리면
@@ -330,6 +353,11 @@ export function reportFlowItems(
     // 원페이지 파이널 — 섹션 flow 대신 전면 시트 블록 하나만 붙는다.
     if (slot.finalOnepage) {
       pushFinalOnepage(slot.si);
+      continue;
+    }
+    // 직독직해 분석본 — 섹션 flow 대신 카드 단위 FlowItem 들이 직접 붙는다(headless 슬롯).
+    if (slot.readingAnalysis) {
+      pushReadingAnalysis(slot.si);
       continue;
     }
     // 슬롯키 = `sec:{섹션인덱스}:{슬롯키}` — 같은 섹션을 clean/annotated 두 번 emit 하므로

@@ -15,9 +15,26 @@ import {
 } from "@/lib/passage-report/analysis-report/study-activities";
 import { stripWorksheetContentFields } from "@/lib/passage-report/analysis-report/worksheet-core-gate";
 
-export type LearningSheetVariant = "basic" | "practice" | "final";
+// [reading 스펙 §5.3 F-10] 4번째 값 "reading"(직독직해 분석본) — StudioSheetVariant ·
+// 편집기 docVariant · API DocVariant 와 함께 넓히는 4벌 유니언 중 하나다.
+// ⚠ 지문 등록 페이지(passage-input-stack)는 1차 범위 제외(F-9)라 이 값을 절대
+// 받지 않는다 — 그 격리는 아래 variants prop 기본값(구 3상품)이 지킨다.
+export type LearningSheetVariant = "basic" | "practice" | "final" | "reading";
 
-/** 모달 내부 뷰 — 생성 구성 2종 + 생성 후 무료로 추가하는 학습 활동 카탈로그. */
+/**
+ * variants prop 부재 시의 기본 탭 — **구 3상품 그대로**(무회귀).
+ * 직독직해 탭을 기본으로 열면 지문 등록 페이지의 「이 구성으로 생성하기」가
+ * 발사할 수 없는 상품(reading 카드가 없는 표면)을 선택해 — 사용자는 직독직해를
+ * 골랐는데 기본 학습지가 나가는 무음 오발사가 된다. 그래서 reading 은
+ * 발사 가능한 표면(스튜디오 모달)이 **명시적으로 건네줄 때만** 노출한다.
+ */
+const DEFAULT_PREVIEW_VARIANTS: readonly LearningSheetVariant[] = [
+  "basic",
+  "practice",
+  "final",
+];
+
+/** 모달 내부 뷰 — 생성 구성 탭 + 생성 후 무료로 추가하는 학습 활동 카탈로그. */
 type PreviewView = LearningSheetVariant | "activities";
 
 const ACTIVITY_CATEGORY_ORDER = ["빈칸/복원", "직독직해", "어순/배열", "어휘"] as const;
@@ -32,6 +49,7 @@ const SECTION_LABELS: Record<string, string> = {
   "self-check": "셀프 체크",
   "learning-worksheet": "실전 학습지",
   "final-onepage": "파이널 원페이지",
+  "reading-analysis": "직독직해 분석본",
 };
 
 /** 파이널 원페이지(A4 1장)에 담기는 구성 — 좌측 목차 아래 안내용. */
@@ -41,6 +59,16 @@ const FINAL_ONEPAGE_ITEMS: string[] = [
   "출제자의 함정 총정리",
   "필수 어휘 각주 · 전문 해석",
   "파이널 팁 한 줄",
+];
+
+/** 직독직해 분석본에 담기는 구성 — FINAL_ONEPAGE_ITEMS 동형 안내용
+ *  (문장 카드 5층 해부 — reading 스펙 §1.2). */
+const READING_ITEMS: string[] = [
+  "전 문장 슬래시(/) 구 끊어읽기",
+  "1:1 직독직해 (원문 어순 그대로)",
+  "자연스러운 완전해석",
+  "색상 문법 판서 · 인라인 하이라이트",
+  "문장별 문법 태그 해설 (어휘·어법·구문)",
 ];
 
 /** 실전 학습지(06)에 추가되는 콘텐츠 — 워크시트 섹션의 실제 필드 존재 여부로 표시. */
@@ -103,6 +131,13 @@ interface LearningSheetPreviewModalProps {
   initialVariant: LearningSheetVariant;
   /** 기본 학습지 1매 가격. 실전 포함은 학습지 추가분만 더한다. */
   basicUnitCost: number;
+  /**
+   * 노출할 구성 탭(표시 순서 그대로) — 부재 시 구 3상품(DEFAULT_PREVIEW_VARIANTS).
+   * 직독직해(reading)는 그 상품을 실제로 발사할 수 있는 표면(스튜디오 모달)만
+   * 넘긴다 — 기본값에 넣으면 지문 등록 페이지에서 발사 불가 상품이 선택되는
+   * 무음 오발사 경로가 열린다(reading 스펙 §5.3 F-9).
+   */
+  variants?: readonly LearningSheetVariant[];
   onClose: () => void;
   /** "이 구성으로 생성하기" — 선택을 부모(구성 선택 카드)에 반영하고 닫는다. */
   onApplyVariant: (variant: LearningSheetVariant) => void;
@@ -118,12 +153,15 @@ export function LearningSheetPreviewModal({
   open,
   initialVariant,
   basicUnitCost,
+  variants,
   onClose,
   onApplyVariant,
 }: LearningSheetPreviewModalProps) {
+  const allowedVariants = variants ?? DEFAULT_PREVIEW_VARIANTS;
   const [view, setView] = useState<PreviewView>(initialVariant);
   const [sample, setSample] = useState<AnalysisReport | null>(null);
   const [finalSample, setFinalSample] = useState<AnalysisReport | null>(null);
+  const [readingSample, setReadingSample] = useState<AnalysisReport | null>(null);
   const [loadError, setLoadError] = useState(false);
 
   useEffect(() => {
@@ -143,14 +181,26 @@ export function LearningSheetPreviewModal({
       // 파이널 원페이지 픽스처 — 스키마 정본 타입의 TS 모듈이라 파싱 없이 그대로
       // 실제 렌더러(ReportPages)에 태운다.
       import("@/lib/passage-report/analysis-report/final-onepage-fixture"),
+      // 직독직해 분석본 샘플(reading 스펙 §5.3 F-9) — .tmp-reading-qa 견본 픽스처
+      // 8문장 중 앞 4문장 발췌본. reading 탭이 잠긴 표면(기본 3상품)에서도 함께
+      // 받는 것은 의도다 — 소형(≈8KB)이라 조건 분기로 로드 그래프를 가르는 비용이
+      // 더 크고, 이 이펙트는 sample 게이트로 어차피 1회만 돈다.
+      import("@/lib/passage-report/analysis-report/_samples/prime-reading-sample.json"),
     ])
-      .then(([json, previewParse, finalFixture]) => {
+      .then(([json, previewParse, finalFixture, readingJson]) => {
         if (cancelled) return;
         setFinalSample(finalFixture.FINAL_ONEPAGE_FIXTURE);
         const parsed = previewParse.parseAnalysisReportForPreview(
           json.default ?? json,
         );
         if (parsed) setSample(parsed);
+        else setLoadError(true);
+        // 번들 픽스처 파싱 실패 = 빌드 시점 결함 — 실전/기본 샘플과 같은 게이트
+        // (loadError)로 표면화한다. 무음으로 두면 reading 탭만 영원히 스피너다.
+        const readingParsed = previewParse.parseAnalysisReportForPreview(
+          readingJson.default ?? readingJson,
+        );
+        if (readingParsed) setReadingSample(readingParsed);
         else setLoadError(true);
       })
       .catch(() => {
@@ -183,7 +233,9 @@ export function LearningSheetPreviewModal({
       ? practiceReport
       : view === "final"
         ? finalSample
-        : basicReport;
+        : view === "reading"
+          ? readingSample
+          : basicReport;
 
   const worksheetSection = useMemo(() => {
     const section = practiceReport?.sections.find(
@@ -209,6 +261,9 @@ export function LearningSheetPreviewModal({
 
   const practiceUnitCost =
     basicUnitCost + PASSAGE_ANALYSIS_WORKSHEET_EXTRA_CREDIT_COST;
+  // reading(직독직해)도 basic 폴백이 정답이다 — 단가 정본(sheet-products)이
+  // 같은 상수 조합 getPassageAnalysisCreditCost({includeWorksheet:false}) = ◈5 를
+  // 읽는다(reading 스펙 §2). 별도 값을 여기 적으면 표기 2벌이 갈린다.
   const activeUnitCost = view === "practice" ? practiceUnitCost : basicUnitCost;
 
   if (!open) return null;
@@ -233,16 +288,25 @@ export function LearningSheetPreviewModal({
               실제 AI가 생성한 학습지 원본입니다 — 이 모습 그대로 만들어져요
             </p>
           </div>
-          {/* 탭 — 가격이 곧 구성 차이임을 탭에서 바로 보여준다. 학습 활동은 생성 후 무료 추가. */}
+          {/* 탭 — 가격이 곧 구성 차이임을 탭에서 바로 보여준다. 학습 활동은 생성 후 무료 추가.
+              구성 탭은 allowedVariants(호출 표면이 발사할 수 있는 상품)로 거른다 —
+              직독직해는 스튜디오 모달만 연다(variants prop 주석 · reading 스펙 §5.3 F-9).
+              직독직해 단가 ◈{basicUnitCost} = basic 과 같은 정액(activeUnitCost 주석). */}
           <div className="flex shrink-0 items-center gap-1 rounded-lg bg-slate-100 p-1">
             {(
               [
                 { id: "basic" as const, label: "기본 학습지", chip: `◈${basicUnitCost}` },
                 { id: "practice" as const, label: "실전 학습지 포함", chip: `◈${practiceUnitCost}` },
                 { id: "final" as const, label: "파이널 원페이지", chip: `◈${basicUnitCost}` },
+                { id: "reading" as const, label: "직독직해 분석본", chip: `◈${basicUnitCost}` },
                 { id: "activities" as const, label: `학습 활동 ${enabledActivityCount}종`, chip: "무료" },
               ]
-            ).map((tab) => (
+            )
+              .filter(
+                (tab) =>
+                  tab.id === "activities" || allowedVariants.includes(tab.id),
+              )
+              .map((tab) => (
               <button
                 key={tab.id}
                 type="button"
@@ -417,6 +481,22 @@ export function LearningSheetPreviewModal({
               </div>
             ) : null}
 
+            {/* 직독직해 탭: 문장 카드 5층 구성(reading 스펙 §1.2)을 파이널과
+                같은 문법으로 펼쳐 보여준다 — 목차는 섹션 1개(전면 문서)뿐이라
+                이 목록이 사실상의 구성 안내다. */}
+            {view === "reading" ? (
+              <div className="mb-1 ml-7 flex flex-col gap-1">
+                {READING_ITEMS.map((item) => (
+                  <div key={item} className="flex items-center gap-1.5">
+                    <CheckCircle2 className="size-3 shrink-0 text-blue-500" />
+                    <span className="text-[11.5px] font-medium text-blue-700">
+                      {item}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+
             {/* 기본 탭: 실전 학습지에서 무엇이 더 생기는지 흐리게 보여주고 탭 전환 유도 */}
             {view === "basic" ? (
               <div className="mt-2 rounded-lg border border-dashed border-slate-200 bg-white/70 px-3 py-2.5">
@@ -503,7 +583,9 @@ export function LearningSheetPreviewModal({
                   ? "기본 구성에 어법 워크북·빈칸·배열 영작과 수능형 추론 문항까지 더한 구성입니다."
                   : view === "final"
                     ? "시험 직전 족집게 — 손필기 원문 분석과 유형별 출제 포인트·함정을 A4 딱 1장에 담습니다."
-                    : "원문 필기 캔버스부터 구문 분석까지, 수업에 바로 쓰는 기본 구성입니다."}
+                    : view === "reading"
+                      ? "전 문장을 슬래시로 끊어 읽는 1:1 직독직해·완전해석·문법 태그 해설 — 기본 학습지와 별도 문서로 생성됩니다."
+                      : "원문 필기 캔버스부터 구문 분석까지, 수업에 바로 쓰는 기본 구성입니다."}
                 <span className="ml-1.5 font-bold tabular-nums text-slate-700">
                   지문당 ◈{activeUnitCost}
                 </span>
