@@ -3,6 +3,12 @@
 @import "shadcn/tailwind.css";
 
 @source "../";
+/* [26-08-31] 루트 휴리스틱 스캔에서 비소스 텍스트 제외 — docs/ 의 마크다운에 적힌 Windows
+   백슬래시 경로(`\4290d2…`)를 스캐너가 CSS 변수+유니코드 이스케이프로 오독해 코드포인트
+   초과(RangeError)로 dev 전체가 죽은 실사고. docs·에이전트 하네스(.tmp-*)는 유틸리티
+   클래스의 소스가 아니므로 스캔 가치도 0이다. */
+@source not "../../docs";
+@source not "../../.tmp-reading-qa";
 
 @custom-variant dark (&:is(.dark *));
 /* 폰 가로모드: 폭은 md(768px)를 넘지만 높이가 낮은 뷰포트.
