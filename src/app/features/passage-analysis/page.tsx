@@ -10,7 +10,7 @@ import {
   faqSchema,
   softwareApplicationSchema,
 } from "@/lib/seo/structured-data";
-import { relatedFeatures } from "@/lib/seo/feature-links";
+import { relatedForFeature } from "@/lib/seo/feature-links";
 
 const PATH = "/features/passage-analysis";
 
@@ -140,7 +140,7 @@ const CONTENT: FeaturePageContent = {
   ctaTitle: "영어 지문 해설지 제작, 지문 한 편으로 한 장 완성",
   ctaBody:
     "직독직해·구문 분석·어휘 정리·지문 변형까지 — 지문 한 편으로 학원 학습지가 완성됩니다. 지금 사용해 보세요.",
-  related: relatedFeatures(PATH),
+  related: relatedForFeature(PATH),
 };
 
 export default function PassageAnalysisPage() {

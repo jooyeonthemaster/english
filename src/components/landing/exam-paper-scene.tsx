@@ -64,7 +64,7 @@ export function ExamPaperScene() {
           <Stagger className="mt-3 grid grid-cols-2 gap-2 sm:mt-4 sm:flex sm:flex-col sm:gap-3" delay={0.25}>
             {[
               { k: "100% 편집 가능", v: "로고 삽입·문항 수정 자유" },
-              { k: "워드 · 한글 · PDF 출력", v: "워드 안정 지원 · 한글(HWPX) 베타 · 인쇄(PDF)" },
+              { k: "워드 · 한글 · PDF 출력", v: "워드 · 한글(HWPX) 지원 · 인쇄(PDF)" },
               { k: "자동 조판 시스템", v: "웹 미리보기와 1:1 완성형 조판" },
               { k: "정답 및 해설지 동시 생성", v: "학생용·강사용 해설지 분리 생성" },
             ].map((row) => (

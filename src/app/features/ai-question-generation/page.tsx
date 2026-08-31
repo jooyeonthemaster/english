@@ -10,7 +10,7 @@ import {
   faqSchema,
   softwareApplicationSchema,
 } from "@/lib/seo/structured-data";
-import { relatedFeatures } from "@/lib/seo/feature-links";
+import { relatedForFeature } from "@/lib/seo/feature-links";
 
 const PATH = "/features/ai-question-generation";
 
@@ -109,7 +109,7 @@ const CONTENT: FeaturePageContent = {
       },
       body: "생성한 문항은 웹에서 끝나지 않습니다. 학원 포맷에 맞춰 조판된 편집 가능한 Word(.docx)·한글(HWPX) 시험지와 정답·해설지로 바로 떨어집니다. 인쇄해서 그대로 시험에 쓰거나 학원 로고를 넣어 미세 조정할 수 있습니다.",
       bullets: [
-        "편집 가능한 Word(.docx)·한글(HWPX, 베타) 자동 조판",
+        "편집 가능한 Word(.docx)·한글(HWPX) 자동 조판",
         "학생용 시험지 + 강사용 해설지 분리 생성",
         "정답지 자동 분리",
       ],
@@ -140,7 +140,7 @@ const CONTENT: FeaturePageContent = {
   ctaTitle: "영어 문제 만들기, 오늘 30분을 5분으로",
   ctaBody:
     "지문 분석부터 24유형 출제, Word·한글 시험지·해설지까지 — SMOAT 하나로 끝냅니다. 지금 사용해 보세요.",
-  related: relatedFeatures(PATH),
+  related: relatedForFeature(PATH),
 };
 
 export default function AiQuestionGenerationPage() {
