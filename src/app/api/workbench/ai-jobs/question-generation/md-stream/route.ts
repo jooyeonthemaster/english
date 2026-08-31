@@ -516,9 +516,10 @@ function parseAndGate(
       corrections: snapped.corrections,
     };
   }
-  let q = parseMdGrammar(
-    opts?.grammarKillerV2 ? stripGrammarKillerV2Plan(text) : text,
-  );
+  // 설계메모 절단(26-08-31): killer v2 뿐 아니라 비킬러도 자리 조사 설계메모를
+  // 출력 최상단에 적는다(§13 — 자리 조사 출력 강제가 사다리 3.50→3.62 의 본체).
+  // strip 은 「밑줄지문:」 이전만 자르므로 설계메모 없는 출력에는 무해하다.
+  let q = parseMdGrammar(stripGrammarKillerV2Plan(text));
   // 라벨 등장순 재번호(26-08-14, O217 R3): gemini 도 밑줄 라벨을 등장순과 다르게
   // 붙이는 결함이 실측됐다(paired 20지문 중 2건 — 인쇄본 형식 파손). 0원 결정형
   // 재정렬로 양 레인 공통 봉합한다(marks·answer·fixes·wrong 동기 치환).
@@ -1083,6 +1084,22 @@ export async function POST(req: NextRequest) {
       // 해설 사실성·문체)을 붙인다 — luna 블록이 이미 포함하는 절이라 lunaLane 에는
       // 중복 주입하지 않고, v2 레인은 자체 규칙(설계 절차·인용 앵커)이 대체한다.
       extras.push(buildGrammarMdSharedSelfcheck(markerCount));
+      // 정답 라벨 분산(26-08-31): 모델이 정답을 4번째 밑줄에 두는 습성 실측(테스트
+      // 3연속 ④ — 구프롬프트 감사에서도 정답번호 ④ 100%). 기출 정답 분포(②21·③20·
+      // ④28·⑤24%)로 요청마다 가중 추첨한 **소프트** 넛지 — 자리 강제는 정답 무효를
+      // 낳는다는 실측(docs/grammar-generation-redesign.md §12)에 따라 선호로만 주고
+      // 자리 품질 우선 탈출구를 명시한다. 단일 정답 형상에만 적용.
+      if (answerCount === 1 && markerCount >= 4) {
+        const draw = Math.random() * 0.93;
+        const target = Math.min(
+          markerCount,
+          draw < 0.21 ? 2 : draw < 0.41 ? 3 : draw < 0.69 ? 4 : 5,
+        );
+        extras.push(
+          `## 정답 위치 (선호)
+- 이번 문항은 가능하면 정답을 ${target}번째 밑줄 부근(±1)에 두어라 — 매번 4번째 밑줄을 정답으로 삼는 습성을 피하기 위한 지시다. 단 **자리 품질이 항상 우선**이다: 그 부근에 좋은 정답 자리가 없으면 이 지시를 무시하고 자리 조사의 1순위를 그대로 써라.`,
+        );
+      }
     } else if (subType === "BLANK_INFERENCE") {
       // O223 A축: gemini(프리미엄) 빈칸 경로는 검산 블록이 전무했다 — 해설
       // 사실성·완성문 검산·문체가 luna 검산에만 있어 프리미엄 빈칸이 무방비.

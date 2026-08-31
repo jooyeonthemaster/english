@@ -73,10 +73,10 @@ export interface GrammarErrorGenerationSettings
   /** Legacy field name kept for already-saved configs; interpreted as markerCount. */
   errorCount?: number;
   /**
-   * 핵심 집중 모드 — true 면 정답 포인트를 기출 1000제 고빈출 톱셋(관계사·수일치·
-   * to부정사/동명사·분사·대명사·형부)으로 좁혀 출제 포인트를 집중시킨다.
-   * false 면 기존 다양성(코어 10개 순회). ⚠️UI 기본 시드는 ON(true) — getDefault 가
-   * pointFocus:true 로 노출하므로 강사가 끄지 않으면 집중 모드로 생성된다(GRAMMAR_CHOICE_COMBO 동일).
+   * (폐기 26-08-31 — 어법 판단 한정) 핵심 집중 모드. 집중 톱셋이 기출 정답 1위 축
+   * (정동사vs준동사, 188건 실측 28%·킬러 82%)을 제외해 정답 천장을 깎는 것이 켠/끈
+   * 대조 생성으로 확정되어 UI 토글을 제거하고 리졸버가 항상 false 로 무시한다.
+   * 필드는 기존 저장 JSON 호환용으로만 남긴다. GRAMMAR_CHOICE_COMBO 는 미검증이라 유지.
    */
   pointFocus?: boolean;
 }

@@ -296,6 +296,11 @@ function dedupeIdenticalGrammarMarkers(
       dedupeKey(me.expression),
       dedupeKey(me.errorExpression),
       dedupeKey(me.correction),
+      // 위치 식별자(26-08-31 실출하 사고): 서로 다른 문장의 같은 단어 두 밑줄
+      // (cannot be used / methods used)을 동일 마커 중복으로 오판해 (E)를 삭제,
+      // 4지선다 어법이 출하됐다(오답해설엔 (E)가 남아 불일치). 진짜 이중 방출은
+      // surroundingText 까지 같으므로 여전히 걸러진다.
+      dedupeKey(me.surroundingText),
       me.isError === true ? "error" : "clean",
     ].join("\u0000"); // 정규화 텍스트에 나올 수 없는 구분자 — 필드 경계 충돌 방지.
     if (seen.has(key)) {
