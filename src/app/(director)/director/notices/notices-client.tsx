@@ -30,6 +30,7 @@ function previewOf(content: string): string {
       .replace(/^\s*[-*•]\s+/, "")
       .replace(/^#{1,6}\s+/, "")
       .replace(/\*\*/g, "")
+      .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
       .trim();
     if (line) return line;
   }

@@ -6,20 +6,40 @@ import { cn } from "@/lib/utils";
 /**
  * 스모트 소식 본문 렌더러 — 외부 마크다운 라이브러리 없이 자주 쓰는 문법만
  * 가볍게 처리한다. 지원: `## `/`### ` 소제목, `- `/`* `/`• ` 불릿, `1. ` 번호
- * 목록, `**굵게**` 인라인, 빈 줄 문단 구분. 그 외는 일반 문단으로 렌더.
+ * 목록, `**굵게**`·`[텍스트](URL)` 인라인, 빈 줄 문단 구분. 그 외는 일반 문단으로 렌더.
  *
+ * 링크는 http(s):// 절대 주소와 "/" 로 시작하는 상대 경로만 허용한다(javascript: 등
+ * 그 외 스킴은 링크로 만들지 않고 글자 그대로 둔다). 절대 주소는 새 탭으로 연다.
  * 공지 본문은 운영진이 직접 작성하므로 원시 HTML 은 다루지 않는다(XSS 안전).
  */
 
+const INLINE_TOKEN = /(\*\*[^*]+\*\*|\[[^\]\n]+\]\((?:https?:\/\/|\/)[^)\s]+\))/g;
+const LINK_TOKEN = /^\[([^\]\n]+)\]\(((?:https?:\/\/|\/)[^)\s]+)\)$/;
+
 function renderInline(text: string, keyPrefix: string): React.ReactNode[] {
-  // **굵게** 만 처리. 나머지는 그대로.
-  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+  // **굵게** 와 [텍스트](URL) 만 처리. 나머지는 그대로.
+  const parts = text.split(INLINE_TOKEN);
   return parts.map((part, i) => {
     if (/^\*\*[^*]+\*\*$/.test(part)) {
       return (
         <strong key={`${keyPrefix}-b${i}`} className="font-semibold text-inherit">
-          {part.slice(2, -2)}
+          {renderInline(part.slice(2, -2), `${keyPrefix}-b${i}`)}
         </strong>
+      );
+    }
+    const link = part.match(LINK_TOKEN);
+    if (link) {
+      const href = link[2];
+      const external = /^https?:\/\//.test(href);
+      return (
+        <a
+          key={`${keyPrefix}-a${i}`}
+          href={href}
+          className="font-semibold text-blue-600 underline underline-offset-2 hover:text-blue-700"
+          {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+        >
+          {link[1]}
+        </a>
       );
     }
     return <React.Fragment key={`${keyPrefix}-t${i}`}>{part}</React.Fragment>;

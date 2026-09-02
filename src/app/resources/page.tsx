@@ -153,6 +153,32 @@ export default function ResourcesPage() {
 
         {/* DOWNLOADS — 대형 카드(제1 CTA) */}
         <section className="mx-auto max-w-[1480px] px-5 py-14 sm:px-8 sm:py-20">
+          {/* FEATURED — 2027학년도 9월 모평 영어 자료(26-09-02 신규). 상세는 /resources/2027-09-mock-english */}
+          <Link
+            href="/resources/2027-09-mock-english"
+            className="group relative mb-12 block overflow-hidden rounded-2xl border border-blue-200 bg-blue-50/70 p-6 transition hover:-translate-y-0.5 hover:border-blue-400 hover:shadow-[0_20px_60px_-40px_rgba(37,99,235,0.45)] sm:p-8"
+          >
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+              <div className="min-w-0">
+                <p className="flex items-center gap-2 text-[11px] font-extrabold uppercase tracking-[0.2em] text-blue-600">
+                  <span className="inline-flex h-5 items-center rounded-md bg-blue-600 px-1.5 text-[10px] text-white">NEW</span>
+                  <span className="whitespace-nowrap">2027학년도 9월 모의평가 · 영어</span>
+                </p>
+                <h3 className="mt-3 text-[19px] font-black leading-[1.35] tracking-tight text-slate-950 transition-colors group-hover:text-blue-700 sm:text-[23px]">
+                  9월 모평 영어 20지문 분석 학습지 + 2027 수능 예측 리포트 무료 다운로드
+                </h3>
+                <p className="mt-2 text-[14px] leading-[1.8] text-slate-600 sm:text-[14.5px]">
+                  교사판 140쪽 · 학생판 134쪽 · 예측 리포트 82쪽 — 4컷 웹툰 · 논증 도식 · 직독직해 · 어법 판서 ·
+                  실전 5문항 · 핵심 어휘까지 PDF 3종. 회원가입 없이 바로 저장됩니다.
+                </p>
+              </div>
+              <span className="inline-flex h-11 shrink-0 items-center justify-center gap-2 self-start whitespace-nowrap rounded-full bg-slate-950 px-5 text-[13.5px] font-extrabold text-white transition group-hover:bg-blue-600 sm:self-auto">
+                <Download className="size-4" />
+                자료 받으러 가기
+              </span>
+            </div>
+          </Link>
+
           <p className="flex items-center gap-2 text-[11px] font-extrabold uppercase tracking-[0.2em] text-blue-600">
             <span aria-hidden className="size-1.5 bg-blue-600" />
             <span className="whitespace-nowrap">무료 배포 양식</span>
