@@ -43,6 +43,7 @@ export const PUBLIC_ROUTES: PublicRoute[] = [
   { path: "/faq", changeFrequency: "monthly", priority: 0.6 },
   { path: "/glossary", changeFrequency: "monthly", priority: 0.6 },
   { path: "/resources", changeFrequency: "monthly", priority: 0.7 },
+  { path: "/resources/2026-09-hakpyeong-english", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-09-09" },
   { path: "/resources/2027-09-mock-english", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-09-02" },
 
   // 랜딩형 가이드(초기 8종). JSON 에 항목 추가 시 자동 편입.

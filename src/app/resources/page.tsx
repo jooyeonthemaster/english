@@ -153,6 +153,32 @@ export default function ResourcesPage() {
 
         {/* DOWNLOADS — 대형 카드(제1 CTA) */}
         <section className="mx-auto max-w-[1480px] px-5 py-14 sm:px-8 sm:py-20">
+          {/* FEATURED — 2026년 9월 고1·고2 학력평가 영어 자료(26-09-09 신규). 상세는 /resources/2026-09-hakpyeong-english */}
+          <Link
+            href="/resources/2026-09-hakpyeong-english"
+            className="group relative mb-5 block overflow-hidden rounded-2xl border border-blue-200 bg-blue-50/70 p-6 transition hover:-translate-y-0.5 hover:border-blue-400 hover:shadow-[0_20px_60px_-40px_rgba(37,99,235,0.45)] sm:p-8"
+          >
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+              <div className="min-w-0">
+                <p className="flex items-center gap-2 text-[11px] font-extrabold uppercase tracking-[0.2em] text-blue-600">
+                  <span className="inline-flex h-5 items-center rounded-md bg-blue-600 px-1.5 text-[10px] text-white">NEW</span>
+                  <span className="whitespace-nowrap">2026학년도 9월 전국연합학력평가 · 고1·고2 영어</span>
+                </p>
+                <h3 className="mt-3 text-[19px] font-black leading-[1.35] tracking-tight text-slate-950 transition-colors group-hover:text-blue-700 sm:text-[23px]">
+                  2026년 9월 고1·고2 학력평가 영어 — 20지문 분석 학습지
+                </h3>
+                <p className="mt-2 text-[14px] leading-[1.8] text-slate-600 sm:text-[14.5px]">
+                  학년별 독해 20지문 · 새로 출제한 변형 문항 100제 · 4컷 웹툰 20편 · 개념 도식 20장 ·
+                  직독직해 필기 분석 — 고1·고2 교사판·학생판 PDF 4종. 회원가입 없이 바로 저장됩니다.
+                </p>
+              </div>
+              <span className="inline-flex h-11 shrink-0 items-center justify-center gap-2 self-start whitespace-nowrap rounded-full bg-slate-950 px-5 text-[13.5px] font-extrabold text-white transition group-hover:bg-blue-600 sm:self-auto">
+                <Download className="size-4" />
+                자료 받으러 가기
+              </span>
+            </div>
+          </Link>
+
           {/* FEATURED — 2027학년도 9월 모평 영어 자료(26-09-02 신규). 상세는 /resources/2027-09-mock-english */}
           <Link
             href="/resources/2027-09-mock-english"

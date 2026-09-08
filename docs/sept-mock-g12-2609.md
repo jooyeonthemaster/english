@@ -89,3 +89,46 @@ node .tmp-mock-g2/render-v4.mjs && node .tmp-mock-g2/paginate.mjs && node .tmp-m
 그 다음 비전 QA(`wf-visual.js` 재발사 또는 감독 직접 판독)와 전수 페이지 검수(`wf-page-audit.js`, args `{pages:N}`)를 돌리면 고3과 동일한 출하 절차가 완성됩니다.
 
 **주의**: `gen-visuals.mjs` 의 플래그는 `--only=webtoon` 처럼 **등호 표기만** 파싱됩니다(띄어쓰기로 주면 값이 지문 번호로 오독). `post-visuals.mjs` 는 `<no>-<kind>-raw.png` 가 있으면 그 원본을 다시 처리하므로, 이미지를 갈아끼울 때 raw 도 함께 교체해야 합니다.
+
+## 10. 완주 (26-09-09, 크레딧 충전 후)
+
+| 항목 | 고1 | 고2 |
+|---|---|---|
+| 웹툰·도식 | **20/20** | **20/20** |
+| 게이트 V1~V31 | **전 항목 PASS** (132쪽) | **전 항목 PASS** (135쪽) |
+| 교사판 / 학생판 | 132쪽 / 127쪽 | 135쪽 / 130쪽 |
+| 어법 앵커 | exact 100 · fallback 0 | exact 100 · fallback 0 |
+| 세트 내 누설 | critical 0 | critical 0 |
+| 이미지 비용 | $5.95 | $4.51 |
+
+**비전 QA 3라운드**: 30건 판독 → 기계 대조로 재생성 13건 확정 → 9건 착지 → 남은 4건 중 2건(34·38)은 말풍선 일치·잔여는 major 수용, 2건(22·39)은 **후보 2장 생성 후 감독이 직접 골라 승격**(s71). 최종 말풍선 축자 일치 20/20.
+
+**이미지 실사고와 수리(재발 방지)**
+1. **레퍼런스 플레이트 회귀** — 4컷 옆에 캐릭터 시트가 통째로 붙거나(34·38) 하트·커플 구도로 회귀. → 프롬프트에 FRAME 문장 추가: 「전체 이미지는 2×2 4컷 그 자체이며 캐릭터 시트·사이드 스트립·여백이 없다 + 하트·커플 금지 + 말풍선은 글자 그대로 복사하고 다른 대사를 지어내지 마라」.
+2. **글자를 부르는 소품** — scene 의 board/card/word/poster 가 모델의 자작 한글·영문을 끌어온다. → 해당 어휘를 「blank panel / blank paper slip」 류로 치환.
+3. **말풍선 축약은 뜻을 죽인다** — 8자 강제 축약이 「숨이 안 따라와!」를 「따라와!」로 바꿔 의미가 뒤집혔다. 되돌리고 프롬프트 강화로만 해결.
+4. `gen-visuals.mjs --seed=N` 은 `<no>-webtoon-sN.png` 로 나간다. 승격하려면 **raw 를 지우고** canonical 로 복사한 뒤 post-visuals 를 돌린다.
+
+**조판 수리(감독 직접)**: 필러 줄 수 상한 5 → 12(두 경로 모두). 장문 오프너처럼 여백이 140mm 넘게 남는 쪽에서 V30 저채움(64%)이 남던 문제 해소.
+
+## 11. 공개 배포 (26-09-09)
+
+고3 9월 모평 배포(`/resources/2027-09-mock-english`)와 같은 구조로 무료 배포했다.
+
+**자산** — `.tmp-mock-g12/make-public-assets.py` 가 워터마크본 4종 + 미리보기 JPG 8장을 만든다.
+- 워터마크 규격은 고3과 동일(SMOAT · 45° · fontsize 170 · fill_opacity 0.10). **함정**: PyMuPDF `insert_text` 의 `rotate` 는 90도 단위만 받는다(`bad rotate value`) — 45도는 `morph=(pivot, fitz.Matrix(45))` 로 준다.
+- 미리보기는 원본이 아니라 **워터마크본에서** 떠야 실제로 받는 파일과 같은 그림이 된다.
+
+**버킷** — Supabase 공개 버킷 `free-resources`, 접두 `2026-09-hakpyeong-english/`. 업로드는 `.tmp-mock-g12/upload.mjs`(고3 스크립트의 SRC 만 교체).
+
+| 오브젝트 | 쪽 | 용량 |
+|---|---|---|
+| `…-g1-worksheet-teacher.pdf` | 132 | 15.8MB |
+| `…-g1-worksheet-student.pdf` | 127 | 15.1MB |
+| `…-g2-worksheet-teacher.pdf` | 135 | 15.7MB |
+| `…-g2-worksheet-student.pdf` | 130 | 15.0MB |
+
+**사이트** — 5개 표면. 상세 페이지 `src/app/resources/2026-09-hakpyeong-english/{page.tsx,content.ts}` · 자료실 인덱스 카드(`src/app/resources/page.tsx`, 고3 카드 위) · 사이트맵(`src/lib/seo/public-routes.ts`) · 스모트 소식 `release-notes/2026-09-09-hakpyeong-g1-g2-materials.md`.
+- 다운로드는 교차 출처라 `<a download>` 가 무시된다 — Supabase `?download=<한글파일명>` 쿼리로만 첨부 저장된다(헤더 실측 확인).
+
+**수치 정정(검수가 잡은 것)** — 원장의 「어법 약 150개·어휘 약 375개」는 **원본 데이터** 기준이고, 렌더러가 지문당 어법 5개(`GRAMMAR_CAP`)·어휘 16개로 잘라 인쇄한다. 독자가 받는 값은 학년별 **어법 100개·어휘 320개**다. 공개 표면 3곳을 이 값으로 정정했다. **데이터 카운트를 배포 문구로 쓰지 마라 — 인쇄본을 세라.**
