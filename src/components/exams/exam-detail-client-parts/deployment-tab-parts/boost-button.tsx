@@ -1,7 +1,9 @@
 "use client";
 
 // ============================================================================
-// AI 심층분석 보강 버튼 (V4 소유) — POST /api/exams/[examId]/analysis-boost (W6)
+// AI 시험 분석 버튼 (V4 소유) — POST /api/exams/[examId]/analysis-boost (W6)
+// 자구는 스튜디오 도크·레일과 **한 어휘**다(26-09-04 「그냥 분석 전으로 통일」):
+// 「AI 분석 시작」/「AI 분석 중…」 — 「심층분석 보강」은 내부 용어라 전량 폐기.
 //
 // 비용 = 살아있는 문항 수 × EXAM_ANALYSIS_BOOST(1cr) — 라벨에 상시 고지하고,
 // 실행 전 confirm 다이얼로그에서 비용·효과를 재고지한다(계약 §V4-a).
@@ -70,7 +72,7 @@ export function AnalysisBoostButton({ examId, questionCount }: AnalysisBoostButt
       }
       if (!res.ok || !body?.ok) {
         toast.error(
-          body?.error ?? "AI 심층분석 보강에 실패했습니다. 잠시 후 다시 시도해 주세요.",
+          body?.error ?? "AI 분석에 실패했습니다. 잠시 후 다시 시도해 주세요.",
         );
         return;
       }
@@ -108,17 +110,17 @@ export function AnalysisBoostButton({ examId, questionCount }: AnalysisBoostButt
         ) : (
           <ScanSearch className="size-4 text-[#3182F6]" />
         )}
-        {running ? "보강 진행 중…" : `AI 심층분석 보강 · ${totalCost}cr`}
+        {running ? "AI 분석 중…" : `AI 분석 시작 · ${totalCost}cr`}
       </Button>
 
       <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>AI 심층분석 보강</AlertDialogTitle>
+            <AlertDialogTitle>AI 시험 분석</AlertDialogTitle>
             <AlertDialogDescription asChild>
               <div className="space-y-2 text-sm text-[#4E5968]">
                 <p>
-                  문항 {questionCount}개를 AI 로 심층 분석하며{" "}
+                  문항 {questionCount}개를 AI 로 분석하며{" "}
                   <span className="font-semibold text-[#191F28]">
                     {totalCost}크레딧
                   </span>

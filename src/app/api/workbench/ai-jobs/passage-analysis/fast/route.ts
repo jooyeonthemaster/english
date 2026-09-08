@@ -39,6 +39,7 @@ import {
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
 import { ensureWorkbenchAiJobCharged } from "@/lib/workbench-ai-job-credit";
+import { preflightCreditGate } from "@/lib/credit-preflight";
 import { loadPersistedAnnotations } from "@/app/api/ai/passage-analysis/[passageId]/_lib/annotations";
 import { classifyAnalysisError } from "@/app/api/ai/passage-analysis/[passageId]/_lib/error-classification";
 import {
@@ -931,6 +932,38 @@ async function runAnalysis(
       fastPath: false,
       attachedToExisting: true,
     });
+  }
+
+  // ── 사전 잔액 게이트(잡 행 생성 **전**) ──────────────────────────────────
+  // 문제생성 fast/md-stream 라우트에는 있던 게이트가 이 라우트엔 없어, 잔액 0 학원의
+  // 학습지 13지문 일괄 발사가 FAILED 잡 13행으로 착지했다(26-09-08 전수조사).
+  // 필요액은 아래 상품별 청구액과 같은 함수·같은 분기에서 나온다:
+  //   국어·파이널·직독직해 = 기본(◈5) · 실전 포함 = 기본+실전 · 부분(종량제)은
+  //   plan 산출이 잡 생성 뒤라 여기서 못 정하므로 게이트를 걸지 않는다(0 = 통과).
+  // 최종 권위는 여전히 ensureWorkbenchAiJobCharged 의 원자적 차감이다.
+  const preflightRequired =
+    requestedProduct === "partial"
+      ? 0
+      : requestedProduct === "practice" && !isKoreanPassage(passage)
+        ? getPassageAnalysisCreditCost({ includeWorksheet: true })
+        : getPassageAnalysisCreditCost({ includeWorksheet: false });
+  const preflight = await preflightCreditGate({
+    academyId: staff.academyId,
+    requiredCredits: preflightRequired,
+  });
+  if (!preflight.ok) {
+    logAnalysisRejection({
+      reasonCode: "INSUFFICIENT_CREDITS_PREFLIGHT",
+      status: 402,
+      academyId: staff.academyId,
+      passageId: passage.id,
+      requestedProduct,
+      detail: { balance: preflight.balance, required: preflight.required },
+    });
+    if (emit !== NOOP_EMIT) {
+      emit({ t: "phase", label: "크레딧 부족" });
+    }
+    return preflight.response;
   }
 
   const now = new Date();

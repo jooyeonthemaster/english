@@ -421,10 +421,13 @@ function formatExamDate(value: string | Date | null): string {
 export function ExamDetailPaperPreview({
   exam,
   className,
+  forceMountAllPages = false,
 }: {
   exam: ExamDetail;
   /** 컨테이너 높이 제어 — 미지정 시 상세 페이지용 기본 높이를 사용한다. */
   className?: string;
+  /** 모든 페이지를 즉시 마운트(지연 마운트 끔) — 렌더 전수 검증 하네스 전용(additive). */
+  forceMountAllPages?: boolean;
 }) {
   const [isPending, startTransition] = useTransition();
   const [activeItemId, setActiveItemId] = useState<string | null>(null);
@@ -648,7 +651,7 @@ export function ExamDetailPaperPreview({
               PAPER_SIZE_SPECS[paperSize].heightRatio
             }
             answerKey={answerKey}
-            forceMountAll={explanationPrint}
+            forceMountAll={explanationPrint || forceMountAllPages}
             title={exam.title}
             paperSize={paperSize}
             subtitle={settings?.header?.subtitle || ""}
@@ -704,13 +707,24 @@ export function ExamDetailPaperPreview({
 //   상세 미리보기와 동일한 빌더 파이프라인(buildPaperItems → groups → 페이지
 //   분할)을 거친 뒤, 첫 페이지(표지가 켜져 있으면 표지) 한 장만 목표 폭에 맞춰
 //   축소 렌더한다. 툴바/줌/스크롤 없이 종이 한 장만 보여준다.
+//
+//   `maxPages`(26-09-03, additive · 기본 1 = 기존 호출부 무회귀): 렌더할 장 수
+//   상한. 표지는 **한 장으로 계산**한다(표지+본문 1장 = maxPages 2). 시험 분석
+//   레일의 [원본] 탭이 「조판된 시험지 전체」를 보여주려고 쓴다 — 이 컴포넌트를
+//   고른 이유는 ExamDetailPaperPreview 가 레일에 들어갈 수 없기 때문이다:
+//   그쪽은 `#exam-paper-print-root` + usePrintPortal 로 **앱 전역 인쇄**를
+//   가로채고(학습지 조판 인쇄를 794x1123 → 0x0 으로 백지화시킨 실측 이력),
+//   툴바·줌 컨트롤까지 달고 온다. 이쪽은 순수 CSS scale 한 겹이라 안전하다.
+//   여러 장을 그려도 PreviewPages 가 IntersectionObserver 로 지연 마운트한다.
 // ---------------------------------------------------------------------------
 export function ExamFirstPagePreview({
   exam,
   width = 320,
+  maxPages = 1,
 }: {
   exam: ExamDetail;
   width?: number;
+  maxPages?: number;
 }) {
   const settings = useMemo(() => parseBuilderSettings(exam.settings), [exam.settings]);
   const template = asPaperTemplate(settings?.template);
@@ -746,12 +760,21 @@ export function ExamFirstPagePreview({
   const baseWidth = PREVIEW_PAGE_WIDTH;
   const heightRatio = PAPER_SIZE_SPECS[paperSize].heightRatio;
   const zoom = width / baseWidth;
-  const pageHeight = width * heightRatio;
 
-  // "첫 장": 표지가 켜져 있으면 표지 한 장, 아니면 본문 첫 페이지 한 장만 그린다.
+  // 렌더 장 수: 표지가 켜져 있으면 그 한 장이 예산을 먼저 먹는다.
+  // maxPages=1(기본)이면 「표지 한 장」 또는 「본문 첫 장」 — 구 동작과 동일하다.
   const showCover = cover.enabled;
-  const firstPages = showCover ? [] : paginationResult.pages.slice(0, 1);
+  const bodyBudget = Math.max(0, showCover ? maxPages - 1 : maxPages);
+  const firstPages = paginationResult.pages.slice(0, bodyBudget);
   const renderCover = showCover ? cover : { ...cover, enabled: false };
+  // zoom-spacer 높이는 **베이스 단위**로 넘긴다(PreviewPages 가 zoom 을 곱한다).
+  // 상세 미리보기(:496)와 같은 산식 — 장 사이 PREVIEW_PAGE_GAP 을 포함한다.
+  const renderedPageCount = firstPages.length + (showCover ? 1 : 0);
+  const contentHeight =
+    renderedPageCount > 0
+      ? renderedPageCount * baseWidth * heightRatio +
+        (renderedPageCount - 1) * PREVIEW_PAGE_GAP
+      : 0;
 
   const classes = exam.class ? [{ id: exam.class.id, name: exam.class.name }] : [];
   const schools = exam.school ? [{ id: exam.school.id, name: exam.school.name }] : [];
@@ -769,7 +792,7 @@ export function ExamFirstPagePreview({
   return (
     <div
       className="overflow-hidden bg-white"
-      style={{ width, height: pageHeight }}
+      style={{ width, height: contentHeight * zoom }}
       aria-hidden
     >
       <PreviewPages
@@ -778,7 +801,7 @@ export function ExamFirstPagePreview({
         overflowItemIds={paginationResult.overflowItems}
         previewBaseWidth={baseWidth}
         previewZoom={zoom}
-        previewContentHeight={baseWidth * heightRatio}
+        previewContentHeight={contentHeight}
         singlePageHeight={baseWidth * heightRatio}
         answerKey={EMPTY_ANSWER_KEY_LAYOUT}
         title={exam.title}

@@ -67,6 +67,13 @@ export interface ExamAnalysisStudentRow {
   answerEnabled: boolean;
   /** 학생이 마지막으로 답안을 제출한 시각(ISO) — null = 미제출 */
   answerSubmittedAt: string | null;
+  /**
+   * 자체 시험지 응시 제출(ExamSubmission) 링크 — **앱 응시로 제출했다는 증거**(26-09-04).
+   * 종전엔 「INTERNAL 행이 존재한다 = 제출했다」로 갈음했지만, 이제 강사가 응시 **전에**
+   * 로스터 학생을 담고 OMR 링크를 보낼 수 있어서(§10·§14) 그 전제가 깨졌다.
+   * 이 필드가 제출 여부의 단일 근거다(§16).
+   */
+  examSubmissionId: string | null;
   version: number;
   createdAt: string;
   updatedAt: string;
@@ -96,6 +103,14 @@ export interface ExamAnalysisDetail {
   version: number;
   createdAt: string;
   updatedAt: string;
+  /**
+   * 시험지 분석 리포트 공개 링크(/r/exam/[token], 26-09-03) — 시험지 **자체**의
+   * 분석을 공유하는 축. 학생 개인 리포트 공유(ExamAnalysisStudentRow.shareEnabled,
+   * /r/[token])와 별개. enable/disable 은 서버액션, 클라는 patchDetailAnalysisShare 로 낙관 반영.
+   */
+  shareToken: string | null;
+  shareEnabled: boolean;
+  sharedAt: string | null;
   students: ExamAnalysisStudentRow[];
 }
 

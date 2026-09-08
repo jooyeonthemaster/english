@@ -73,8 +73,9 @@
 // 히스테리시스도, ResizeObserver 도, 폭 0 고착 가드(E21-7 함정 3)도 전부 소멸한다.
 // 1줄 = 제목(무경쟁 flex-1 — 이 줄에 다른 flex/shrink 요소를 절대 두지 마라.
 // 학습지 판이 제목 13px 로 붕괴한 원인이 정확히 「같은 줄의 shrink-0 경쟁자들」이다),
-// 2줄 = [타입배지][축별 메타][우측 일시]. 액션 클러스터는 두 줄 **바깥**의 행 직계
-// 형제라 1줄의 무경쟁을 깨지 않는다(구 문항 판과 동형).
+// 2줄 = [타입배지][축별 메타]. 액션 클러스터는 두 줄 **바깥**의 행 직계 형제(세로
+// 스택 [액션들]/[일시], 기출 은행 §11.13.4)라 1줄의 무경쟁을 깨지 않는다 — 일시는
+// 2줄이 아니라 이 스택의 바닥·행 우측 끝에 선다(구 문항 판과 동형).
 // ⚠ [E28] 이 계약은 **평면 행**의 것이다. 카드 **안쪽** 행은 「컴팩트 1줄」이라
 //   예외인데, 위반이 아니라 전제가 다르다: 카드 머리가 지문 제목을 이미 말하므로
 //   행에서 제목을 빼고, 제목이 빠지면 2단을 유지할 재료 자체가 없다.
@@ -126,6 +127,7 @@ import {
 } from "lucide-react";
 import { DragSelect } from "@/components/ui/drag-select";
 import { cn } from "@/lib/utils";
+import { ExamBankEntryButton } from "./exam-bank-entry-button";
 import { DIFFICULTY_LEVELS } from "@/lib/constants";
 import {
   planForDifficulty,
@@ -248,6 +250,9 @@ const ROW_ACTION_PRIMARY = `${ROW_ACTION_BASE} cursor-pointer bg-blue-600 text-w
 const ROW_ACTION_DISABLED = `${ROW_ACTION_BASE} cursor-not-allowed bg-slate-100 text-slate-400`;
 /** 라벨은 목록 **컨테이너**가 34rem(544px) 이상일 때만. 그 아래는 아이콘 + 툴팁. */
 const ROW_ACTION_LABEL = "hidden @[34rem]:inline";
+// 「기출 문제 불러오기」 전폭 진입 버튼(스펙 §11.2 F-7)의 모양·@container·문구 분기는
+// ./exam-bank-entry-button.tsx 가 정본 — 2층 줄 아래 전폭 줄과 빈 상태 CTA 가 같은
+// 컴포넌트를 쓴다(JSX 2벌 복제 시절의 드리프트 재발 금지).
 
 /**
  * 렌더 상한 — 단일 DragSelect 가 최대 1,900행(문항 1,000 + 학습지 300 절단 상한
@@ -399,6 +404,9 @@ function ComposerListPaneInner({
   pickedSheets,
   onCommit,
   onOpenQuestion,
+  onOpenExamBank,
+  examBankSummary,
+  examBankSummaryShort,
   onDeploySheet,
   onComposeSheet,
   activeSheetId = null,
@@ -436,6 +444,32 @@ function ComposerListPaneInner({
   onCommit: (added: ComposerRow[], removed: ComposerRow[]) => void;
   /** 문항 행 상세 모달(미전달 시 상세 버튼 미렌더) */
   onOpenQuestion?: (questionId: string) => void;
+  /**
+   * 「기출 문제 불러오기」 인라인 기출 브라우저 켜기(docs/gichul-question-bank-spec.md
+   * §11.2, additive). 모달은 §11.0 F-1 로 폐기됐다 — 호스트가 같은 자리에 패널을
+   * 그리고 이 판을 hidden 유지 마운트한다.
+   * 미전달 = 진입 버튼 2곳(2층 줄 아래 전폭 줄·빈 상태 CTA) 모두 미렌더(`onOpenQuestion` 선례).
+   * 반입·코얼레싱·자동 체크는 전부 호스트(library-pane) 소유 — 이 판은
+   * 문항 축 평면 목록에서 「열어 달라」고 말할 뿐이다.
+   * ⚠ memo 계약(위 헤더): 호스트가 `useCallback(…, [])` 안정 참조로 내린다. 인자
+   *   없는 함수 1개뿐이며 객체 prop 으로 바꾸지 마라(매 렌더 판 전체 재조립).
+   */
+  onOpenExamBank?: () => void;
+  /**
+   * 전폭 진입 버튼의 우측 보조 문구(§11.2 F-7) — 예 「평가원·교육청 3,076문항 · 2005~2027」.
+   * 호스트가 facets 를 **원시 문자열**로 접어 내린다(객체·배열 금지 = memo 무접촉).
+   * 미전달/빈 문자열 = 보조 문구만 생략(버튼은 `onOpenExamBank` 가 결정).
+   * 표시 축은 버튼 자신의 `@container` 폭 34rem — 조판 중 중앙 420px 에선 숨고
+   * 아래 `examBankSummaryShort` 가 대신 선다.
+   */
+  examBankSummary?: string;
+  /**
+   * 같은 보조 문구의 **짧은 형**(§11.2 「34rem 미만이면 「3,076문항」만」) — 예 「3,076문항」.
+   * 호스트(library-pane, 단위 H2)가 위와 같은 규약(원시 문자열·memo 무접촉)으로 내린다.
+   * 미전달/빈 문자열 = 좁은 폭에서 보조 문구 없이 화살표만. optional 이라 호스트가
+   * 아직 안 내려도 컴파일·렌더 모두 그대로다.
+   */
+  examBankSummaryShort?: string;
   /** 학습지 행 [모바일 배포] — PRIME 행만 활성(정본 판정 1곳) */
   onDeploySheet?: (row: StudioClassWorksheetRow) => void;
   /** 학습지 행 [학습지 조판] — 뷰 전환은 호스트 소관 */
@@ -2734,7 +2768,10 @@ function ComposerListPaneInner({
             카드가 그 필터를 지문마다 갖는다」다.
           라벨은 개명 그대로 — 문항 축 「프리미엄 여부」(예전엔 「종류」). ── */}
       {qAxis ? (
-        <div className="flex shrink-0 flex-wrap items-center gap-1.5 border-b border-slate-100 bg-white px-3 py-1.5">
+        // flex-wrap 은 구 「기출 문제 불러오기」 h-7 버튼(ml-auto)이 4번째 자식으로
+        // 앉아 있던 시절의 잔재 — 그 버튼은 §11.2 F-7 로 아래 전폭 줄로 나갔고, 남은
+        // select 3개(shrink-0)는 조판 중 420px 에서도 한 줄에 든다.
+        <div className="flex shrink-0 items-center gap-1.5 border-b border-slate-100 bg-white px-3 py-1.5">
           <select
             aria-label="유형 필터"
             value={typeFilter}
@@ -2774,6 +2811,25 @@ function ComposerListPaneInner({
             <option value="standard">일반</option>
             <option value="premium">킬러</option>
           </select>
+        </div>
+      ) : null}
+
+      {/* ── [기출 은행 §11.2 위치 ①] 전폭 진입 줄 — 2층 줄 **바로 아래 자기 줄** ──
+          사용자 F-7 「버튼이 그 가로 줄을 혼자 다 쓰도록」. 2층 select 줄의 4번째
+          자식(ml-auto h-7)이던 구 자리는 철거했다.
+          ⚠ 1층 바(h-9 검색 줄)에 두지 마라 — 그 줄은 검색 input 이 flex-1 로
+            무경쟁이어야 하는 줄이다(폭 경쟁자가 생기면 검색이 먼저 압착된다).
+          자구·data-tour·문구 분기는 ExamBankEntryButton 이 정본(프로브 계약 그 안에).
+          `qAxis && onOpenExamBank` = 2층 줄과 같은 렌더 사실 + 호스트 배선 여부. */}
+      {qAxis && onOpenExamBank ? (
+        <div className="shrink-0 border-b border-slate-100 bg-white px-3 py-1.5">
+          <ExamBankEntryButton
+            tour="composer-exam-bank"
+            onClick={onOpenExamBank}
+            summary={examBankSummary}
+            summaryShort={examBankSummaryShort}
+            className="h-9"
+          />
         </div>
       ) : null}
 
@@ -2953,6 +3009,23 @@ function ComposerListPaneInner({
           <p className="text-center text-[11px] leading-relaxed text-slate-400 break-keep">
             {emptyHint}
           </p>
+          {/* [기출 은행 §11.2 위치 ②] 빈 상태 보조 CTA — 같은 화면에 진입구가 2개가
+              되는 것은 의도다. 고객의 첫 동선이 정확히 「빈 클래스」에서 시작하는데
+              (고객 사례), 상단 전폭 줄은 힌트 문장과 시선이 떨어져 있다. 모양은 위
+              전폭 줄과 같은 ExamBankEntryButton(높이만 h-10) — 같은 뜻은 같은 모양.
+              `qAxis` 게이트 = 2층 바와 같은 렌더 사실(문항 축 고정). 호스트는 두
+              조판 뷰가 공유하는 단일 인스턴스에 prop 을 한 번 내리므로, 뷰로
+              가르는 일은 여기서 축 사실로 한다 — 학습지 조판 뷰(두 축 병합)의
+              「아직 조판할 자산이 없습니다」에는 두지 않는다(스펙 §2-1). */}
+          {onOpenExamBank && qAxis ? (
+            <ExamBankEntryButton
+              tour="composer-exam-bank-empty"
+              onClick={onOpenExamBank}
+              summary={examBankSummary}
+              summaryShort={examBankSummaryShort}
+              className="mt-1 h-10 shrink-0"
+            />
+          ) : null}
         </div>
       ) : filteredRows.length === 0 ? (
         <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-2 px-6">
@@ -3125,6 +3198,16 @@ function ComposerListPaneInner({
                       {/* ── 축별 메타 ── */}
                       {isQ ? (
                         <>
+                          {/* [기출 은행 §8.4] 유형 앞 「기출」 배지 — 반입 공식 문항은
+                              생성 문항과 정체가 다르다(검수 불필요·정답 공식). 판정은
+                              서버가 tags 로 계산한 additive `origin`(구 응답 undefined
+                              = 미표시). ⚠ 좌측 실버튼 aria-label 은 건드리지 않는다 —
+                              프로브가 「{지문} · {유형} 문항 선택」 자구로 행을 집는다. */}
+                          {it.row.origin === "gichul" ? (
+                            <span className="shrink-0 rounded-md border border-blue-200 bg-blue-50 px-1 py-px text-[10px] font-bold leading-tight text-blue-700">
+                              기출
+                            </span>
+                          ) : null}
                           <span className="shrink-0 text-[11px] font-medium text-slate-500">
                             {questionRowTypeLabel(it.row.type, it.row.subType)}
                           </span>
@@ -3173,25 +3256,27 @@ function ComposerListPaneInner({
                           </span>
                         </>
                       ) : null}
-                      <span className="min-w-0 flex-1" aria-hidden="true" />
-                      {/* 우측 일시 = **정렬 축과 같은 값(createdAt)**. 학습지의
-                          「마지막 수정」은 표시 필드로만 남겨 툴팁에 싣는다 —
-                          정렬 축과 다른 시각을 열에 세우면 「최신순인데 날짜가
-                          거꾸로」로 읽힌다. */}
-                      <span
-                        className="shrink-0 text-[10px] tabular-nums text-slate-400"
-                        title={
-                          sheet
-                            ? `마지막 수정 ${fmtDateTime(sheet.updatedAt)}`
-                            : undefined
-                        }
-                      >
-                        {fmtDateTime(it.sortAt)}
-                      </span>
                     </span>
                   </span>
 
-                  {/* ── 액션 클러스터(행 직계 형제 — 1줄 무경쟁 유지) ── */}
+                  {/* ── 액션 클러스터(행 직계 형제 — 1줄 무경쟁 유지) ──
+                      [§11.13.4] 세로 스택: 위 [액션들] / 아래 [일시]. 일시가 2줄
+                      안에 있던 시절엔 2줄이 액션 열 **왼쪽**에서 끝나 날짜가 카드
+                      우측 끝이 아니라 액션 열 옆에 떠 보였다(사용자 반려). 일시를
+                      액션 아래로 내리면 2줄은 배지·메타만 남고(제목 1줄 무경쟁은
+                      그대로), 날짜 우측 끝 = 액션 우측 끝 = 행 pr 축(10px)이 된다.
+                      · self-stretch + justify-between: 날짜를 스택 **바닥**에 붙여
+                        본문 2줄의 바닥과 맞춘다(2줄 line box 16.5 ≈ 날짜 15).
+                        top 오프셋으로 맞추면 제목이 2줄로 감기는 행(line-clamp-2)
+                        에서 날짜만 위에 떠 어긋난다 — 바닥 정렬은 그 경우에도 성립.
+                      · 안쪽 열은 items-start: 버튼별 -mt-1(24px 버튼 중심 = 제목
+                        첫 줄 시각 중심)이 그대로 산다. items-center 로 두면 h-26
+                        라벨 버튼과 섞인 행에서 링크가 3px 내려앉는다.
+                      · 래퍼에 data-drag-select-ignore 를 **두지 않는다** — 날짜
+                        글자는 본문과 같은 마키 시작면이다(예전과 동일). 버튼·링크는
+                        각자 ignore 를 유지한다. */}
+                  <span className="flex shrink-0 flex-col items-end justify-between self-stretch">
+                  <span className="flex items-start gap-2">
                   {isQ ? (
                     onOpenQuestion ? (
                       <button
@@ -3293,6 +3378,23 @@ function ComposerListPaneInner({
                   >
                     <ChevronRight className="size-3.5" aria-hidden="true" />
                   </Link>
+                  </span>
+                  {/* 우측 일시 = **정렬 축과 같은 값(createdAt)**. 학습지의
+                      「마지막 수정」은 표시 필드로만 남겨 툴팁에 싣는다 —
+                      정렬 축과 다른 시각을 열에 세우면 「최신순인데 날짜가
+                      거꾸로」로 읽힌다. mt-0.5 는 액션과의 최소 간격(스택이
+                      본문보다 낮을 때만 작용). cursor-pointer 금지(마키 차단). */}
+                  <span
+                    className="mt-0.5 whitespace-nowrap text-[10px] tabular-nums text-slate-400"
+                    title={
+                      sheet
+                        ? `마지막 수정 ${fmtDateTime(sheet.updatedAt)}`
+                        : undefined
+                    }
+                  >
+                    {fmtDateTime(it.sortAt)}
+                  </span>
+                  </span>
                 </div>
               );
             })}

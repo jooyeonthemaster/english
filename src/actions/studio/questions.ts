@@ -25,6 +25,13 @@ import type { StudioActionResult } from "./classes";
 /** 문항 방어 상한 — 도달 시 truncated 로 알려 클라이언트가 각주를 단다. */
 const QUESTION_TAKE = 1000;
 
+/**
+ * 기출 반입 문항의 멱등 마커 접두(docs/gichul-question-bank-spec.md §2-7 · §8.4).
+ * 정본 리터럴은 actions/studio/exam-questions.ts GICHUL_TAG_PREFIX — 그 모듈은
+ * "use server" 라 상수 export 가 액션으로 취급되므로 여기 복제한다(한쪽을 고칠 땐 둘 다).
+ */
+const GICHUL_TAG_PREFIX = "gichul:";
+
 /** 문두 1줄 절단본(~120자) — 개행·연속 공백을 접고 넘치면 말줄임(dossier 행 동형). */
 function truncateStem(text: string): string {
   const oneLine = text.replace(/\s+/g, " ").trim();
@@ -70,10 +77,13 @@ export async function listStudioClassQuestions(input: {
     });
     if (!cls) return { success: false, error: "클래스를 찾을 수 없습니다." };
 
+    // take 상한 없음 — 링크 300 초과 클래스에서 새로 담긴 지문이 창 밖으로 밀려 그 지문의
+    // 문항이 목록에 안 실리고, 기출 픽 자동 체크가 무음으로 유실됐다(검수 major). 클래스 지문
+    // 링크는 수천 이하라 전량 조회가 안전하다(listStudioClassExamBankIds 와 같은 근거).
+    // 문항 쪽 방어 상한(QUESTION_TAKE)은 그대로다.
     const links = await prisma.studioClassPassage.findMany({
       where: { academyId: staff.academyId, classId },
       orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
-      take: 300,
       select: { passageId: true },
     });
     if (links.length === 0) {
@@ -121,10 +131,16 @@ export async function listStudioClassQuestions(input: {
     // (§3.10.11-e). 전 행이 태그 판정이면 잡 질의 자체를 생략한다.
     const planById = new Map<string, QuestionGenerationPlan | null>();
     const legacyPassageIds = new Set<string>();
+    // 기출 정체(§8.4) — 같은 태그 파싱 1회를 두 판정(플랜·출처)이 나눠 쓴다.
+    // 별도 질의 없이 tags 만 본다: 반입 액션이 `gichul:<bankId>` 를 반드시 심으므로
+    // (exam-questions.ts buildTags) 태그 부재 = 생성 문항이다.
+    const gichulIds = new Set<string>();
     for (const q of questionRows) {
-      const plan = getQuestionGenerationPlanFromTags(parseTagList(q.tags));
+      const tags = parseTagList(q.tags);
+      const plan = getQuestionGenerationPlanFromTags(tags);
       planById.set(q.id, plan);
       if (!plan && q.passageId) legacyPassageIds.add(q.passageId);
+      if (tags.some((t) => t.startsWith(GICHUL_TAG_PREFIX))) gichulIds.add(q.id);
     }
     // 폴백 집합 — PREMIUM 잡 result.questionIds 합집합 ∩ 행 id. result 는 Json
     // 자유형이라 string[] 원소만 안전 파싱. 이 질의만 실패해도 목록 본체는
@@ -174,6 +190,7 @@ export async function listStudioClassQuestions(input: {
         createdAt: q.createdAt.toISOString(),
         passageId: q.passageId,
         passageTitle: titleByPassageId.get(q.passageId) ?? "",
+        origin: gichulIds.has(q.id) ? "gichul" : null,
       });
     }
 

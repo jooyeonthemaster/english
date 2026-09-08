@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { gichulSetMetaFromData, isGichulSetMemberItem } from "../question-body-layout";
 import type { ChangeEvent, DragEvent, PointerEvent as ReactPointerEvent, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { BookOpen, ChevronDown, ChevronUp, Columns2, Copy, FileText, Group, Heading1, Image as ImageIcon, Layers, Lock, Rows3, Shuffle, Space, Trash2, Type, Ungroup, Unlock } from "lucide-react";
@@ -101,6 +102,15 @@ export function BuilderPropertiesPanel({
   onShuffleQuestions,
   onRemoveItem,
 }: BuilderPropertiesPanelProps) {
+  const outlineItems = useMemo(() => {
+    const seen = new Set<string | null>();
+    return paperItems.filter((item) => {
+      if (!isGichulSetMemberItem(item)) return true;
+      if (seen.has(item.groupId)) return false;
+      seen.add(item.groupId);
+      return true;
+    });
+  }, [paperItems]);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const questionPreviewBodyRef = useRef<HTMLTextAreaElement>(null);
   const hasActiveItem = Boolean(activeItem);
@@ -377,6 +387,13 @@ export function BuilderPropertiesPanel({
   }
 
   function outlineTitle(item: PaperItem) {
+    if (isGichulSetMemberItem(item)) {
+      const members = paperItems.filter((member) => member.groupId === item.groupId);
+      const first = members[0].orderNum;
+      const last = members[members.length - 1].orderNum;
+      const meta = gichulSetMetaFromData(item.sourceQuestion.structuredData);
+      return `${first}~${last}번 장문 · 기출 ${meta?.label}번`;
+    }
     if (item.blockType === "question") {
       return `${item.orderNum}번 ${item.questionText.replace(/\s+/g, " ").trim() || "문항"}`;
     }
@@ -413,7 +430,7 @@ export function BuilderPropertiesPanel({
     if (id === "outline") {
       return (
         <span className="ml-auto rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-bold text-blue-700">
-          {paperItems.length}
+          {outlineItems.length}
         </span>
       );
     }
@@ -438,8 +455,8 @@ export function BuilderPropertiesPanel({
               <p className="text-[12px] font-bold text-slate-500">아직 블록이 없습니다</p>
             </div>
           ) : (
-            paperItems.map((item) => {
-              const selected = item.localId === activeItemId;
+            outlineItems.map((item) => {
+              const selected = item.localId === activeItemId || (isGichulSetMemberItem(item) && item.groupId === activeItem?.groupId);
               return (
                 <div
                   key={item.localId}
@@ -464,7 +481,7 @@ export function BuilderPropertiesPanel({
                         {outlineTitle(item)}
                       </span>
                       <span className="block text-[10px] font-semibold text-slate-400">
-                        {BLOCK_LABELS[item.blockType]}
+                        {isGichulSetMemberItem(item) ? "장문 묶음" : BLOCK_LABELS[item.blockType]}
                         {item.locked ? " · 잠김" : ""}
                       </span>
                     </span>
@@ -810,7 +827,7 @@ export function BuilderPropertiesPanel({
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
-                disabled={activeLocked}
+                disabled={activeLocked || isGichulSetMemberItem(activeItem)}
                 onClick={() => onUngroupItem(activeItem.localId)}
                 className="flex h-7 items-center justify-center gap-1 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-bold text-slate-500 hover:bg-slate-50 hover:text-slate-700 disabled:opacity-45"
               >
@@ -910,7 +927,7 @@ export function BuilderPropertiesPanel({
             ))}
           </div>
           <p className="mt-1.5 truncate text-[11px] font-semibold text-slate-400">
-            {paperItemsCount}블록 · {questionItemsCount}문항 · 총점 {totalPoints}점
+            {outlineItems.length}블록 · {questionItemsCount}문항 · 총점 {totalPoints}점
           </p>
         </div>
 

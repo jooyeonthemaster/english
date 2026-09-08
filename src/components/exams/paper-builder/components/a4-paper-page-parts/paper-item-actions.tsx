@@ -12,6 +12,7 @@ import {
 import { cn } from "@/lib/utils";
 
 import { KeepTogetherIcon } from "../keep-together-icon";
+import { isGichulSetMemberItem } from "../../question-body-layout";
 import type { BreakBefore, PaperItem } from "../../types";
 import {
   isSourcePassageForcedForItem,
@@ -149,7 +150,8 @@ export function PaperItemActions({
           onUngroupItem(item.localId);
         }}
         className="flex h-5 w-5 items-center justify-center rounded-md text-slate-400 hover:bg-slate-50 hover:text-slate-700"
-        title="현재 문항 묶음 해제"
+        disabled={isGichulSetMemberItem(item)}
+        title={isGichulSetMemberItem(item) ? "장문은 한 묶음으로 유지됩니다" : "현재 문항 묶음 해제"}
       >
         <Ungroup className="h-3 w-3" />
       </button>

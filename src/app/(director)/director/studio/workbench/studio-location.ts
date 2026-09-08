@@ -31,6 +31,7 @@
 // ============================================================================
 
 import type { StudioAssetView } from "./source-switcher";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 
 /** 작업 클래스 — `?class=<classId>` */
 export const STUDIO_CLASS_PARAM = "class";
@@ -42,6 +43,8 @@ const STUDIO_ASSET_VIEWS = [
   "passages",
   "sheet",
   "exam",
+  "analysis",
+  "students",
 ] as const satisfies readonly StudioAssetView[];
 
 /** 복원된 위치. 클래스가 없으면 뷰도 없다(아래 §불변식). */
@@ -98,7 +101,20 @@ export function parseStudioLocation(
     rawClass && knownClassIds.includes(rawClass) ? rawClass : null;
   if (!classId) return STUDIO_LOCATION_HOME;
   const rawView = firstParam(params.view);
-  return { classId, view: isAssetView(rawView) ? rawView : "passages" };
+  let view: StudioAssetView = isAssetView(rawView) ? rawView : "passages";
+  // 「시험 분석」 뷰(26-09-01)는 허브 nav 와 같은 플래그로 게이트한다 — 필 렌더
+  // (source-switcher)와 여기 **양쪽**이다. 한쪽만 걸면 플래그 off 에서 「필은
+  // 없는데 URL 복원으로는 들어가지는」(또는 그 역) 진입로 비대칭이 남는다
+  // (설계 정본 §3-1, 적대검수 M9). NEXT_PUBLIC 플래그라 서버·클라 양쪽에서 같다.
+  // 「학생 관리」(v4 26-09-02, docs/exam-analysis-v4-spec.md §3 U6-1)도 같은
+  // 플래그 — 시험 분석 레일의 「학생」 CTA 가 건너가는 뷰라 운명 공동체다.
+  if (
+    (view === "analysis" || view === "students") &&
+    !FEATURE_FLAGS.ENABLE_EXAM_DEPLOYMENT
+  ) {
+    view = "passages";
+  }
+  return { classId, view };
 }
 
 /**

@@ -111,7 +111,9 @@ const loadAnswerSheet = cache(
       studentName: row.studentName,
       examTitle: exam.title,
       schoolLine,
-      locked: row.gradingConfirmed,
+      // 26-09-05: 제출은 최종이다 — 제출 이력이 있으면 채점 확정 전이라도 읽기전용
+      // (라우트 POST 가드와 같은 규칙. 화면만 열어 두면 눌러 봐야 409 다).
+      locked: row.gradingConfirmed || row.answerSubmittedAt != null,
       submittedAt: row.answerSubmittedAt
         ? row.answerSubmittedAt.toISOString()
         : null,

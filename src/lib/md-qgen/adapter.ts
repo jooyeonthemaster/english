@@ -17,6 +17,7 @@
 import {
   INLINE_MARK_RE,
   circledForMarkIndex,
+  locateBlankExpression,
   normalizeWs,
   type MdBlankQuestion,
   type MdGrammarQuestion,
@@ -148,14 +149,13 @@ export function adaptMdBlankToAiQuestion(
 ): MdBlankAdaptResult {
   const oe = q.originalExpression?.trim();
   if (!oe) return { ok: false, error: "빈칸원문 누락" };
-  const idx = passage.indexOf(oe);
-  if (idx < 0) {
-    // 공백 차이 허용 탐색(정규화 비교) — 그래도 없으면 실패.
-    const pn = normalizeWs(passage);
-    if (!pn.includes(normalizeWs(oe))) {
-      return { ok: false, error: "빈칸원문이 지문에 축자로 없음" };
-    }
+  // 후처리와 같은 탐색기(원문 좌표) — 게이트가 통과시킨 표현을 어댑터가 다시
+  // 반려하던 이중 기준을 없앤다(26-09-08). 못 찾으면 후처리도 못 찾는다.
+  const located = locateBlankExpression(passage, oe);
+  if (!located) {
+    return { ok: false, error: "빈칸원문이 지문에 축자로 없음" };
   }
+  const idx = located.index;
   if (q.options.length !== 5) return { ok: false, error: `선지 ${q.options.length}개` };
   if (!q.answer) return { ok: false, error: "정답 누락" };
   const wrong = q.wrong.filter((w) => w.label !== q.answer).slice(0, 4);
@@ -173,9 +173,8 @@ export function adaptMdBlankToAiQuestion(
       // 축자로 덮어써 공예 정답이 파괴된다(적대 검수 실증 — 26-07-21). 반대로
       // 설정이 OFF 면 그 덮어쓰기가 곧 계약 집행이다 — answerMode 로 갈린다.
       blankAnswerMode: answerMode,
-      // idx<0(정규화로만 존재)면 빈 문자열로 두어 후처리 전역 매칭에 맡긴다 —
-      // Math.max(0,-1)=0 으로 지문 맨앞을 오려 보내던 오배치 방지.
-      surroundingText: idx >= 0 ? contextAround(passage, idx, oe.length) : "",
+      // 원문 좌표에서 절취 — 후처리가 같은 자리를 다시 찾도록 위치 힌트를 준다.
+      surroundingText: contextAround(passage, idx, located.length),
       options: q.options.map((o) => ({ label: o.label, text: o.text })),
       correctAnswer: q.answer,
       wrongOptionExplanations: wrong.map((w) => ({
@@ -210,7 +209,6 @@ export function adaptMdMultiBlankToAiQuestion(
   if (q.blanks.length < 2 || q.blanks.length > 3) {
     return { ok: false, error: `빈칸 ${q.blanks.length}개 (2~3개 필요)` };
   }
-  const pn = normalizeWs(passage);
   const blanks: {
     label: string;
     originalExpression: string;
@@ -220,16 +218,15 @@ export function adaptMdMultiBlankToAiQuestion(
     const expr = b.expression?.trim();
     const label = parenLabel(b.label);
     if (!expr) return { ok: false, error: `빈칸원문${label} 누락` };
-    const idx = passage.indexOf(expr);
-    if (idx < 0 && !pn.includes(normalizeWs(expr))) {
+    // 후처리와 같은 탐색기(원문 좌표) — 단일 빈칸 경로와 동일 결정(26-09-08).
+    const located = locateBlankExpression(passage, expr);
+    if (!located) {
       return { ok: false, error: `빈칸원문${label}이 지문에 축자로 없음` };
     }
     blanks.push({
       label,
       originalExpression: expr,
-      // idx<0(정규화로만 존재)면 빈 문자열 — 후처리 퍼지 탐색에 맡긴다(단일
-      // 빈칸 경로와 동일한 오배치 방지 결정).
-      surroundingText: idx >= 0 ? contextAround(passage, idx, expr.length) : "",
+      surroundingText: contextAround(passage, located.index, located.length),
     });
   }
   if (q.options.length !== 5) return { ok: false, error: `선지 ${q.options.length}개` };

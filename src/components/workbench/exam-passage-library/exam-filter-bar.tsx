@@ -10,30 +10,37 @@ import {
   FileText,
 } from "lucide-react";
 
+import type { ReactNode } from "react";
+
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { reconLabel, examLabel } from "@/lib/exam-passages/format";
+import { cn } from "@/lib/utils";
 import type { ExamPassageLibraryApi } from "./use-exam-passage-library";
 
 const DEFAULT_EXAMS = ["수능", "9월", "6월", "예비"];
 
-type Opt<T> = { value: T; label: string; count?: number };
+type Opt<T> = { value: T; label: string; count?: number; wide?: boolean };
 
 /**
  * 통일된 facet 드롭다운 — 라벨 + 선택 개수 배지 + 셰브론. 열면 체크리스트(또는 연도
  * 그리드)와 개수를 보여준다. 적용된 선택은 아래 '적용된 필터' 칩으로도 노출된다.
  */
-function FilterMenu<T extends string | number>({
+export function FilterMenu<T extends string | number>({
   label,
   options,
   selected,
   onToggle,
   onClear,
   variant = "list",
+  dense = false,
   narrowHost = false,
+  icon,
+  labelClassName,
+  title,
 }: {
   label: string;
   options: Opt<T>[];
@@ -41,8 +48,22 @@ function FilterMenu<T extends string | number>({
   onToggle: (v: T) => void;
   onClear: () => void;
   variant?: "list" | "grid";
+  /** grid 전용 — 숫자 라벨(문항 번호)처럼 짧은 값을 7열 촘촘한 격자로(건수는 툴팁). */
+  dense?: boolean;
   /** 좁은 열 임베드 — lg 뷰포트 분기를 끄고 모바일형 균등 분배를 유지한다. */
   narrowHost?: boolean;
+  /**
+   * 트리거 앞 아이콘(additive, §11.13.3 아이콘 필터). 라벨을 `labelClassName` 으로 숨긴 좁은 폭에서 버튼의
+   * 유일한 시각 단서가 된다 — 호출처가 `size-3.5 shrink-0` 크기·aria-hidden 을 책임진다. 부재 시 무회귀.
+   */
+  icon?: ReactNode;
+  /**
+   * 라벨 span 에 병합할 클래스(additive) — 호출처가 @container 변형(`hidden @[30rem]:inline`)으로 라벨을
+   * 접었다 편다. 접힌 상태에서도 aria-label 은 그대로라 접근 이름은 잃지 않는다. 부재 시 기존 클래스와 동일.
+   */
+  labelClassName?: string;
+  /** 트리거 title(툴팁, additive) — 라벨이 접힌 아이콘 전용 상태에서 마우스 사용자에게 이름을 준다. 부재 시 속성 없음. */
+  title?: string;
 }) {
   const count = selected.size;
   const active = count > 0;
@@ -51,6 +72,7 @@ function FilterMenu<T extends string | number>({
       <PopoverTrigger asChild>
         <button
           type="button"
+          title={title}
           aria-label={active ? `${label} 필터, ${count}개 선택됨` : `${label} 필터`}
           className={
             // 모바일(base): flex-1 로 한 줄에서 5개 균등 분배(줄바꿈 방지) + 컴팩트 패딩.
@@ -66,21 +88,24 @@ function FilterMenu<T extends string | number>({
               : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50")
           }
         >
-          {label}
+          {icon}
+          {/* 라벨만 줄어들고(truncate) 배지·셰브론은 고정 — 좁은 열(기출 브라우저 420px, 5개 균등 분배)에서
+              「출제기관」 4글자가 밀리면 셰브론이 먼저 잘려 열림 표시가 사라졌다. */}
+          <span className={cn("min-w-0 truncate", labelClassName)}>{label}</span>
           {active ? (
             <span
               aria-hidden="true"
-              className="flex h-4 min-w-4 items-center justify-center rounded-full bg-blue-600 px-1 text-[10px] font-bold text-white"
+              className="flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full bg-blue-600 px-1 text-[10px] font-bold text-white"
             >
               {count}
             </span>
           ) : null}
-          <ChevronDown className="size-3.5 opacity-50" />
+          <ChevronDown className="size-3.5 shrink-0 opacity-50" />
         </button>
       </PopoverTrigger>
       <PopoverContent
         align="start"
-        className={variant === "grid" ? "w-[264px] p-2.5" : "w-60 p-1.5"}
+        className={variant === "grid" ? "w-[300px] p-2.5" : "w-60 p-1.5"}
       >
         <div className="mb-1 flex items-center justify-between px-1.5 pt-0.5">
           <span className="text-[11px] font-bold text-slate-500">{label}</span>
@@ -96,7 +121,9 @@ function FilterMenu<T extends string | number>({
         </div>
 
         {variant === "grid" ? (
-          <div className="grid grid-cols-4 gap-1">
+          <div className={dense ? "grid grid-cols-7 gap-1" : "flex flex-wrap gap-1.5"}>
+            {/* 칩은 라벨 자연 폭 + 줄바꿈 — 4열 고정 그리드는 「무관한문장」 같은 5글자 라벨을 글자 중간에서
+                꺾었다(26-09-08 사용자 지적). 개수는 라벨 뒤 작은 숫자로(활성이면 파랑) — 목록형과 같은 정보량. */}
             {options.map((o) => {
               const on = selected.has(o.value);
               return (
@@ -105,14 +132,23 @@ function FilterMenu<T extends string | number>({
                   type="button"
                   onClick={() => onToggle(o.value)}
                   aria-pressed={on}
+                  title={dense && typeof o.count === "number" ? `${o.label} · ${o.count.toLocaleString("ko-KR")}문항` : undefined}
                   className={
-                    "h-7 rounded-md border text-[11.5px] font-semibold transition " +
+                    (dense && o.wide ? "col-span-2 " : "") +
+                    (dense
+                      ? "inline-flex h-7 items-center justify-center whitespace-nowrap rounded-md border px-1 text-[11.5px] font-semibold tabular-nums transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 "
+                      : "inline-flex h-7 items-center gap-1 whitespace-nowrap rounded-md border px-2.5 text-[11.5px] font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 ") +
                     (on
                       ? "border-blue-600 bg-blue-50 text-blue-700"
-                      : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50")
+                      : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50")
                   }
                 >
-                  {o.label}
+                  <span>{o.label}</span>
+                  {!dense && typeof o.count === "number" ? (
+                    <span className={"text-[10px] font-medium tabular-nums " + (on ? "text-blue-500" : "text-slate-400")}>
+                      {o.count.toLocaleString("ko-KR")}
+                    </span>
+                  ) : null}
                 </button>
               );
             })}

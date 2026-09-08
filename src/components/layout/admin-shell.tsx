@@ -323,8 +323,10 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
     // 26-07-11 IA 재편: 구 튜터 허브(/tutor)의 /students/* 흡수 특례를 제거했다.
     // "학생 관리"(href=/students)가 기본 prefix 매칭으로 /students/* 를 정확히
     // 흡수하고, /tutor 자체는 /director/students 로 redirect 된다.
-    // /workbench/exam-report* 는 학생 관리 children(내신 시험 분석·내신 리포트 관리)
-    // 매칭 → NavItem childActive 로 상위 "학생 관리"까지 활성된다.
+    // /workbench/exam-report* 는 학생 관리 children(내신 시험 분석) 매칭 →
+    // NavItem childActive 로 상위 "학생 관리"까지 활성된다. 26-09-01 구
+    // 「내신 리포트 관리」(/exam-report/library) 항목은 허브로 통합돼 제거됐고,
+    // 그 URL 은 허브로 redirect 되므로 prefix 매칭에 그대로 흡수된다.
     const passageBankHref = `${basePath}/workbench/passages`;
     const passageImportHref = `${passageBankHref}/import`;
     if (

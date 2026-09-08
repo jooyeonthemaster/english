@@ -32,6 +32,7 @@ import {
   type StudioPickerPassage,
 } from "@/actions/studio/passages";
 import { WideModal } from "@/components/layout/wide-modal";
+import { PassageHygieneBadge } from "@/components/workbench/passage-hygiene-badge";
 
 const PAGE_SIZE = 30;
 const MIN_PASTE_LENGTH = 20;
@@ -318,10 +319,13 @@ export function PassageAddModal({
       </div>
     ) : tab === "paste" ? (
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <span
-          className={`text-xs ${pasteReady ? "text-slate-400" : "text-rose-500"}`}
-        >
-          {pasteLength}자{pasteReady ? "" : ` — 최소 ${MIN_PASTE_LENGTH}자`}
+        <span className="flex min-w-0 items-center gap-1.5">
+          <span
+            className={`text-xs ${pasteReady ? "text-slate-400" : "text-rose-500"}`}
+          >
+            {pasteLength}자{pasteReady ? "" : ` — 최소 ${MIN_PASTE_LENGTH}자`}
+          </span>
+          <PassageHygieneBadge content={pasteContent} />
         </span>
         <button
           type="button"

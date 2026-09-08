@@ -111,6 +111,7 @@ import {
   type LunaBridgeFieldSpec,
 } from "@/lib/md-qgen/luna-stream-bridge";
 import { TYPE_LABELS } from "@/app/api/ai/generate-questions-auto/_lib/constants";
+import { analyzePassageHygiene, passageHygieneAdvice } from "@/lib/passage-hygiene";
 
 // ============================================================================
 // md-stream — 빈칸·어법 전용 "마크다운 원큐 + SSE 스트리밍" 생성 라우트.
@@ -1503,6 +1504,17 @@ export async function POST(req: NextRequest) {
               "[md-stream] integrity gate rejected",
               parsedMd.gateIssues,
             );
+            // 축자 대조 계통 반려 + 오염 지문(번호 줄·선택지 슬래시·빈칸…)이면 일반
+            // 문구 대신 지문을 정리하라고 말한다(26-09-08 전수조사: 민쌤 8/27~31 반려
+            // 8건이 전부 이 계통 — 사용자는 「실패」 두 글자만 봤다). 사유 원문은
+            // 여전히 result 에만 남긴다(지문 조각 노출 금지 계약 불변).
+            const verbatimRejected = parsedMd.gateIssues.some((i) =>
+              /축자|재구성 불일치|되끼운|지문에 없음|지문에 축자로/.test(i),
+            );
+            const hygiene = analyzePassageHygiene(passage.content);
+            const hygieneAdvice = verbatimRejected
+              ? passageHygieneAdvice(passage.content)
+              : null;
             await prisma.workbenchAiJob
               .update({
                 where: { id: job.id },
@@ -1537,12 +1549,19 @@ export async function POST(req: NextRequest) {
                     // EMPTY_BODY/절단으로 위장되던 계통의 원인 텍스트 보존.
                     finishReasons: callResults.map((c) => c.finishReason),
                     errorChunks: callResults.map((c) => c.errorChunk),
+                    // 지문 위생 판정(26-09-08) — 반려 계통 분류(모델 결함 vs 입력 오염)용.
+                    passageHygiene: hygiene.level,
+                    ...(hygiene.issues.length > 0
+                      ? { passageHygieneIssues: hygiene.issues.map((i) => i.label) }
+                      : {}),
                   },
                 },
               })
               .catch(() => undefined);
             throw new Error(
-              "생성물이 무결성 검사에서 반려되어 저장하지 않았어요. 크레딧은 환불되었습니다. 한 번 더 생성해 주세요.",
+              hygieneAdvice
+                ? `생성물이 원문 대조 검사에서 반려되어 저장하지 않았어요. ${hygieneAdvice} 크레딧은 환불되었습니다.`
+                : "생성물이 무결성 검사에서 반려되어 저장하지 않았어요. 크레딧은 환불되었습니다. 한 번 더 생성해 주세요.",
             );
           }
 

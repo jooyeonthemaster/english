@@ -362,8 +362,14 @@ export function getNavGroups(
                     : []),
                   // exam-report 라우트 자체는 이동하지 않음(revalidatePath 리스크)
                   // — nav 계층·라벨만 재편(구 "리포트 생성" → "내신 시험 분석").
+                  //
+                  // 26-09-01: 구 「내신 리포트 관리」(/exam-report/library) 항목 제거.
+                  // 라이브러리는 허브의 진부분집합이었다 — 같은 훅(useExamReportActivity)
+                  // ·같은 API(?view=summary, take 50)·같은 보드(AnalysesBoard)를 렌더하고,
+                  // 인테이크 패널만 없었다. 목록 전용으로 쓰고 싶으면 허브에서 인테이크를
+                  // 접으면 되고(그 선택은 이제 localStorage 에 남는다), /library URL 은
+                  // 허브로 redirect 되어 기존 북마크는 살아 있다.
                   { label: "내신 시험 분석", href: `${basePath}/workbench/exam-report` },
-                  { label: "내신 리포트 관리", href: `${basePath}/workbench/exam-report/library` },
                 ],
               },
             ]

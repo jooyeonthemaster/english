@@ -143,8 +143,18 @@ export function readStoredThumbnailsCollapsed(): boolean {
 export function clampPanelWidths(
   widths: PanelWidths,
   containerWidth: number,
-  opts?: { hideLeft?: boolean },
+  opts?: {
+    hideLeft?: boolean;
+    /**
+     * 중앙(미리보기) 예약 폭 — 미지정이면 PANEL_MIN_CENTER(420) 그대로(무회귀).
+     * 임베드 빌더(hideLeft)는 접힌 썸네일 기준 최소 498 을 넘겨 편집 패널이 하한
+     * 260 으로 줄며 살아남게 한다(exam-paper-builder-client narrowRightForced 와
+     * 같은 상수 — 판정과 클램프가 다른 값을 보면 aside 782~842 구간에서 넘친다).
+     */
+    centerMin?: number;
+  },
 ): PanelWidths {
+  const centerMin = opts?.centerMin ?? PANEL_MIN_CENTER;
   if (opts?.hideLeft) {
     // hideQuestionLibrary 임베드(§3.10.17-d v2.3): 좌측 패널·좌측 핸들이 존재
     // 하지 않으므로 예산은 우측 핸들 1개뿐이다 — 종전 산식은 유령 좌측 몫
@@ -155,7 +165,7 @@ export function clampPanelWidths(
       0,
       containerWidth - PANEL_TOGGLE_HANDLE_WIDTH,
     );
-    const maxSideWidth = Math.max(0, availableWidth - PANEL_MIN_CENTER);
+    const maxSideWidth = Math.max(0, availableWidth - centerMin);
     return {
       left: Math.round(widths.left),
       right: Math.round(
@@ -174,7 +184,7 @@ export function clampPanelWidths(
     0,
     containerWidth - PANEL_TOGGLE_HANDLE_WIDTH * 2,
   );
-  const maxSideWidth = Math.max(0, availableWidth - PANEL_MIN_CENTER);
+  const maxSideWidth = Math.max(0, availableWidth - centerMin);
 
   let left = clampNumber(
     widths.left,

@@ -55,29 +55,139 @@ export interface ExamReportSummaryRow {
   progress?: ExamAnalysisProgress | null;
   /** 분석 실패(미분석) 문항 수 — aiMeta.failedNumbers 길이 */
   failedCount?: number;
+  /** v4 퍼널 스칼라(서버 계산) — 구버전 API 는 미포함이므로 optional 소비. */
+  funnel?: ExamReportFunnel;
   createdAt: string;
+  updatedAt: string;
+}
+
+/**
+ * 퍼널 학생 집계(v4, docs/exam-analysis-v4-spec.md §2.1) — 서버(목록 API)와 클라
+ * (detail)가 **같은 함수** summarizeFunnelStudents(next-step.ts)로 만든다.
+ * need* 는 「지금 이 단계가 필요한 학생 수」(학생 단위 정밀 판정 — 집계만으로는
+ * 교집합을 표현할 수 없어 서버가 행 단위로 센다).
+ */
+export interface ExamReportFunnelStudents {
+  total: number;
+  answerIssued: number;
+  answerSubmitted: number;
+  graded: number;
+  reportGenerated: number;
+  reportGenerating: number;
+  reportFailed: number;
+  shared: number;
+  /** 미채점 + 미제출 + 답안 링크 미발급(비INTERNAL) */
+  needLink: number;
+  /** 미채점 + 미제출 + 링크 발급됨 */
+  awaitingAnswer: number;
+  /** 미채점 + 제출됨(INTERNAL 은 미채점 전부) */
+  needGrading: number;
+  /** 채점 확정 + 리포트 NONE|FAILED */
+  needReport: number;
+  /** 리포트 GENERATED + 공유 꺼짐 */
+  needShare: number;
+}
+
+export interface ExamReportBoostSnapshot {
+  status: "RUNNING" | "DONE" | "FAILED";
+  startedAt: number;
+  completed: number;
+  total: number;
+  /**
+   * DONE 인데 총평(examLevel) 합성만 실패 — 문항 분석은 저장돼 있다. 다음 단계는
+   * 「총평 다시 생성」(synthOnly, 무과금)이지 전액 재과금이 아니다. 키는 true 일 때만.
+   */
+  synthFailed?: boolean;
+  /**
+   * RUNNING 좀비(BOOST_STALE_MS 초과)를 FAILED 로 강등한 스냅샷 — 라우트가 종료
+   * 기록을 못 남겼으므로 환불 여부를 알 수 없다(레일 자구가 「환불」을 단언하지
+   * 않게 하는 근거). 키는 true 일 때만.
+   */
+  stale?: boolean;
+  /** aiMeta.boost.error 원문(CHARGE_FAILED·ALL_BATCHES_FAILED·예외 메시지 절단본). */
+  error?: string;
+}
+
+/** 서버 계산 퍼널 스칼라 묶음(v4) — raw JSON 은 여전히 목록 응답에 싣지 않는다. */
+export interface ExamReportFunnel {
+  questionCount: number;
+  confirmedCount: number;
+  gateOpen: boolean;
+  grandfathered: boolean;
+  hasExamLevel: boolean;
+  /** INTERNAL: SHALLOW=합성만 / DEEP=examLevel 有. 비INTERNAL: ANALYZED&&examLevel→DEEP */
+  depth: "NONE" | "SHALLOW" | "DEEP";
+  boost: ExamReportBoostSnapshot | null;
+  students: ExamReportFunnelStudents;
+}
+
+/** `?include=candidates` — INTERNAL 분석 행이 아직 없는 자체 시험지(분석 전 후보). */
+export interface ExamCandidateRow {
+  examId: string;
+  title: string;
+  questionCount: number;
+  classId: string | null;
+  examType: string | null;
   updatedAt: string;
 }
 
 interface SummaryResponse {
   analyses?: ExamReportSummaryRow[];
+  candidates?: ExamCandidateRow[];
 }
 
 const ACTIVE_STATUSES = new Set<ExamAnalysisStatus>(["ANALYZING"]);
 
 export interface UseExamReportActivityResult {
   analyses: ExamReportSummaryRow[];
+  /** includeCandidates 일 때만 채워진다(아니면 빈 배열). */
+  candidates: ExamCandidateRow[];
   /** 첫 응답 도착 전 — 스켈레톤 판정(고정 타이머 아님) */
   loading: boolean;
   /** 데이터 없이 첫 페치가 실패한 상태 — 재시도 배너 판정 */
   error: boolean;
   refresh: () => void;
+  /**
+   * 성공 응답마다 1 증가(첫 응답 = 1). 스튜디오 판이 「새 응답이 왔는가」와
+   * 「목록이 그대로인가」를 구분하는 데 쓴다(U4 focus 순서 — 같은 배열 참조가
+   * 다시 내려와도 seq 로 구분). 실패·중단 응답에는 오르지 않는다.
+   */
+  responseSeq: number;
 }
 
-export function useExamReportActivity(): UseExamReportActivityResult {
+/**
+ * 즉시 재조회 이벤트 — board-shared 의 fire 헬퍼가 POST 를 발사한 직후와 응답이
+ * 돌아온 직후 dispatch 한다. 유휴 폴은 30초까지 백오프해 있어, 이 신호가 없으면
+ * 「AI 심층 분석」을 눌러도 카드가 최대 30초 「분석 전」으로 남고 재클릭은 409 를
+ * 맞는다(레일의 8초 요청 잠금이 먼저 풀린다). 훅은 enabled 일 때만 듣는다.
+ */
+export const EXAM_REPORT_REFRESH_EVENT = "exam-report:refresh";
+
+export interface UseExamReportActivityOptions {
+  /**
+   * false 면 폴을 아예 돌리지 않는다(effect 미기동 — 기존 폴은 teardown).
+   * 스튜디오 「시험 분석」 뷰(26-09-01)가 hidden 유지 마운트 상태에서 폴링하지
+   * 않기 위한 게이트 — 「신규 폴링은 뷰 가시일 때만」 규칙의 이행부다.
+   * 미전달(허브)은 true — 기존 호출부 무회귀.
+   */
+  enabled?: boolean;
+  /**
+   * v4 — 미분석 자체 시험지 후보를 함께 받는다(`?include=candidates`). 스튜디오
+   * 「자체 시험지」 그룹 전용. 미전달(허브)은 false — 응답·서명 무회귀.
+   */
+  includeCandidates?: boolean;
+}
+
+export function useExamReportActivity(
+  options?: UseExamReportActivityOptions,
+): UseExamReportActivityResult {
+  const enabled = options?.enabled ?? true;
+  const includeCandidates = options?.includeCandidates ?? false;
   const [analyses, setAnalyses] = useState<ExamReportSummaryRow[]>([]);
+  const [candidates, setCandidates] = useState<ExamCandidateRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [responseSeq, setResponseSeq] = useState(0);
   // 한 번이라도 성공 응답을 받았는지 — 이후의 일시 실패는 조용히 무시(폴이 재시도).
   const loadedRef = useRef(false);
   // refresh(): nonce 를 올려 effect 를 재실행 → 기존 폴 teardown 후 즉시 재폴링.
@@ -89,13 +199,21 @@ export function useExamReportActivity(): UseExamReportActivityResult {
   }, []);
 
   useEffect(() => {
-    return startAdaptivePoll({
+    if (!enabled) return;
+    // 발사 헬퍼의 즉시 재조회 신호 — refresh() 는 nonce 를 올려 이 effect 를 재실행
+    // (기존 폴 teardown → 새 폴이 activeMs 부터 즉시 1회). 리스너는 effect 와 수명을
+    // 같이 해 hidden 뷰(enabled=false)에서는 듣지 않는다.
+    const onRefresh = () => refresh();
+    window.addEventListener(EXAM_REPORT_REFRESH_EVENT, onRefresh);
+    const stopPoll = startAdaptivePoll({
       activeMs: 5_000,
       idleMs: 30_000,
       run: async (signal) => {
         try {
           const res = await fetch(
-            "/api/exam-report/analyses?view=summary",
+            includeCandidates
+              ? "/api/exam-report/analyses?view=summary&include=candidates"
+              : "/api/exam-report/analyses?view=summary",
             { credentials: "include", cache: "no-store", signal },
           );
           if (!res.ok) {
@@ -108,18 +226,32 @@ export function useExamReportActivity(): UseExamReportActivityResult {
           const data = (await res.json()) as SummaryResponse;
           if (signal.aborted) return null;
           const rows = data.analyses ?? [];
+          const cands = includeCandidates ? (data.candidates ?? []) : [];
           loadedRef.current = true;
           setAnalyses(rows);
+          setCandidates(cands);
           setLoading(false);
           setError(false);
+          setResponseSeq((n) => n + 1);
 
-          const hasActive = rows.some((r) => ACTIVE_STATUSES.has(r.status));
+          // v4: 심층 분석(boost) RUNNING 도 활성 — 5초 주기 유지(카드 글로우 실황).
+          const hasActive = rows.some(
+            (r) =>
+              ACTIVE_STATUSES.has(r.status) ||
+              r.funnel?.boost?.status === "RUNNING",
+          );
           // 서명에 progress.completed 를 포함해 진행률 갱신만으로도 변화로 감지.
+          // v4: boost 상태·진행, 퍼널 need* 합, 후보 id 목록도 서명에 섞는다 —
+          // 카드 힌트·레일 다음 단계가 폴 틱마다 수렴해야 한다.
           const sig = rows
-            .map(
-              (r) =>
-                `${r.id}:${r.status}:${r.progress?.completed ?? ""}:${r.studentCount}`,
-            )
+            .map((r) => {
+              const f = r.funnel;
+              const funnelSig = f
+                ? `${f.depth}:${f.boost?.status ?? ""}:${f.boost?.completed ?? ""}:${f.gateOpen ? 1 : 0}:${f.confirmedCount}:${f.students.needLink}:${f.students.needGrading}:${f.students.needReport}:${f.students.needShare}:${f.students.reportGenerating}`
+                : "";
+              return `${r.id}:${r.status}:${r.progress?.completed ?? ""}:${r.studentCount}:${funnelSig}`;
+            })
+            .concat(cands.map((c) => `c:${c.examId}:${c.questionCount}`))
             .join("|");
           // 진행 중이면 서명에 시각을 섞어 백오프를 막아 상태 변화를 빠르게 감지.
           return hasActive ? `${sig}|t${Date.now()}` : sig || "empty";
@@ -133,7 +265,11 @@ export function useExamReportActivity(): UseExamReportActivityResult {
         }
       },
     });
-  }, [nonce]);
+    return () => {
+      window.removeEventListener(EXAM_REPORT_REFRESH_EVENT, onRefresh);
+      stopPoll();
+    };
+  }, [nonce, enabled, includeCandidates, refresh]);
 
-  return { analyses, loading, error, refresh };
+  return { analyses, candidates, loading, error, refresh, responseSeq };
 }

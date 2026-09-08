@@ -16,6 +16,7 @@ import {
 } from "../option-display";
 import { MultiBlankOptionGrid } from "@/components/exams/multi-blank-option-grid";
 import {
+  balanceUnderlineMarkersForFragment,
   joinRenderedLinesForDisplay,
   resolvePaperItemPassageTitle,
   renderFormattedInline,
@@ -23,12 +24,15 @@ import {
 } from "../paper-item-utils";
 import {
   isFlowStructuredSubtype,
+  isGichulLetterOptionItem,
+  isGichulSetMemberItem,
   isStructuredAtomicSubtype,
   questionStemAndBody,
   recombineQuestionText,
 } from "../question-body-layout";
 import { splitKoStructBoxRows } from "../korean/ko-paper-adapter";
 import { isKoSetGroupId } from "@/lib/korean/sets/paper";
+import { questionStemPointsSuffix } from "../pagination-metrics";
 import { questionHasEmbeddedPassage } from "../passage-policy";
 import { TEMPLATE_VISUALS } from "../templates";
 import {
@@ -809,6 +813,15 @@ export function A4PaperPage({
                   {fragment.includePassage &&
                     fragment.passageRenderedLines.length > 0 &&
                     (() => {
+                      // 은행 장문 세트 공유 지문(§12.1-2): (A)~(D) 단락 라벨은 검정 볼드
+                      // (SENTENCE_ORDER 관례와 같은 색). 소문자 (a)~(e) 평문화는 renderFormattedInline
+                      // 의 전역 규칙이라 여기서 켜지 않는다.
+                      const gichulSetFragment = fragment.parts.some((p) =>
+                        isGichulSetMemberItem(p.source),
+                      );
+                      const passageInlineOptions = gichulSetFragment
+                        ? { alphabetMarkerClassName: "font-bold text-black" }
+                        : undefined;
                       const isPassageStart =
                         fragment.passageStartLineIndex === 0;
                       const endLineIndex =
@@ -907,11 +920,13 @@ export function A4PaperPage({
                                           ? "SENTENCE_INSERT"
                                           : null,
                                       ),
+                                      null,
+                                      passageInlineOptions,
                                     )
                                   : undefined
                               }
                             >
-                              {renderFormattedInline(renderedText)}
+                              {renderFormattedInline(renderedText, null, passageInlineOptions)}
                             </EditableText>
                           </p>
                           {isSplit && !isPassageEnd && (
@@ -956,6 +971,12 @@ export function A4PaperPage({
                       const { stem: questionStem, body: questionBody } = isCustomBlock
                         ? { stem: "", body: "" }
                         : questionStemAndBody(item);
+                      // 기출 문항 [3점] — 편집 루트(EditableText) 밖 형제 span 으로 그린다. 안에 두면
+                      // 직렬화(serializeEditableDom)가 「[3점]」 을 발문 텍스트에 새긴다. 줄 수 추정
+                      // (pagination-metrics estimateStemHeight)과 같은 helper·같은 문자열.
+                      const stemPointsSuffix = isCustomBlock
+                        ? ""
+                        : questionStemPointsSuffix(item, questionStem, showQuestionMeta);
                       const usesStructuredBody =
                         !isCustomBlock && isFlowStructuredSubtype(subType);
                       const isAtomicStructuredQuestion =
@@ -965,8 +986,13 @@ export function A4PaperPage({
                       // 직렬 블록을 유실시키므로 인라인 편집을 잠근다.
                       const isKoStemLocked =
                         !isCustomBlock && (subType || "").startsWith("KO_");
+                      // 은행 장문 세트 42(어휘)·44(지칭)는 인쇄본에 「① (a) ② (b) …」 선지 줄이
+                      // 실재한다 — VOCAB_CHOICE 의 inline-marked 스킴(선지 숨김)에 대한 세트 전용 예외(§12.1-2).
+                      const gichulLetterOptions =
+                        !isCustomBlock && isGichulLetterOptionItem(item);
                       const renderOptionList =
-                        !isCustomBlock && shouldRenderOptionListForSubtype(subType);
+                        !isCustomBlock &&
+                        (shouldRenderOptionListForSubtype(subType) || gichulLetterOptions);
                       const inlinePassageTitle = !isCustomBlock
                         ? resolvePaperItemPassageTitle(item)
                         : "";
@@ -1014,6 +1040,7 @@ export function A4PaperPage({
                         <div
                           key={part.partKey}
                           data-paper-item-id={item.localId}
+                          data-question-id={item.blockType === "question" ? item.questionId : undefined}
                           data-paper-part-key={part.partKey}
                           onClick={() => {
                             if (!readOnly && !isLineGapSpacer)
@@ -1200,6 +1227,9 @@ export function A4PaperPage({
                                   {renderQuestionTextInline(questionStem, subType)}
                                 </EditableText>
                               ) : null}
+                              {questionStem && stemPointsSuffix ? (
+                                <span data-stem-points="3">{stemPointsSuffix}</span>
+                              ) : null}
                             </p>
                           )}
                           {part.isContinuation &&
@@ -1316,8 +1346,12 @@ export function A4PaperPage({
                                   >
                                     {renderQuestionTextInline(
                                       formatInlineMarkersForSubtype(
-                                        joinRenderedLinesForDisplay(
-                                          part.questionRenderedLines,
+                                        // 경계를 넘는 문장 밑줄(무관한 문장 ① __…__)의 짝을 조각 단위로 보충
+                                        balanceUnderlineMarkersForFragment(
+                                          joinRenderedLinesForDisplay(
+                                            part.questionRenderedLines,
+                                          ),
+                                          startsAtBeginning,
                                         ),
                                         subType,
                                       ),
@@ -1349,6 +1383,33 @@ export function A4PaperPage({
                                         part.options.map((entry) => entry.option),
                                       )
                                     : null;
+                                // 세트 42/44: 「① (a) ② (b) ③ (c) ④ (d) ⑤ (e)」 한 줄(§12.1-2).
+                                // 편집(EditableText)은 붙이지 않는다 — 라벨 참조라 자구 편집 대상이 아니다.
+                                if (gichulLetterOptions) {
+                                  return (
+                                    <div
+                                      className={cn(
+                                        "flex flex-wrap items-baseline gap-x-4",
+                                        visual.optionRowClass,
+                                      )}
+                                      data-gichul-letter-options="1"
+                                    >
+                                      {part.options.map(({ option, originalIndex }) => (
+                                        <span
+                                          key={`${item.localId}-${originalIndex}`}
+                                          className="whitespace-nowrap"
+                                        >
+                                          <span
+                                            className={cn("font-bold", visual.optionNumberClass)}
+                                          >
+                                            {optionOrdinalLabel(originalIndex)}
+                                          </span>
+                                          <span className="ml-1">{option.text}</span>
+                                        </span>
+                                      ))}
+                                    </div>
+                                  );
+                                }
                                 if (multiBlank) {
                                   return (
                                     <MultiBlankOptionGrid

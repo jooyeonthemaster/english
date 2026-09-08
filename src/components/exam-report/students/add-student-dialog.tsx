@@ -179,6 +179,8 @@ export function AddStudentDialog({
         id: student.id,
         studentName: student.studentName,
         studentId: rosterStudentId,
+        // 방금 담은 학생 — 앱 응시 제출은 없다(§16 제출 증거).
+        examSubmissionId: null,
         scoreSummary: null,
         gradingConfirmed: false,
         reportStatus: "NONE",

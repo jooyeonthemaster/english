@@ -1,6 +1,11 @@
 // 마크다운 문항 파서 (md-lab 실험 — 26-07-21 O208 계열)
 // JSON 스키마 강제 없이 고정 마크다운 형식을 결정형 정규식으로 파싱한다.
-// 서버·클라이언트 공용(순수 모듈, 의존성 없음).
+// 서버·클라이언트 공용(순수 모듈 — 유일한 의존은 후처리 축자 탐색기, 역시 순수).
+
+import {
+  findExpressionInPassage,
+  findExpressionInPassageFuzzy,
+} from "@/lib/question-postprocess/text-utils";
 
 export interface MdOption {
   label: string;
@@ -83,6 +88,38 @@ export const normalizeWs = (s: unknown): string =>
  */
 export const reconstructionEq = (a: unknown, b: unknown): boolean =>
   normalizeWs(a).replace(/[.!?]+$/, "") === normalizeWs(b).replace(/[.!?]+$/, "");
+
+/**
+ * 빈칸원문 축자 위치 탐색 — 후처리(processBlankInference)와 **같은 탐색기**를 쓴다.
+ *
+ * 게이트가 후처리보다 엄격하면 후처리가 살릴 문항을 게이트가 먼저 버리고 크레딧을
+ * 환불한다. 26-09-08 실구매 학원 전수조사 실측: 지문 `dimension of 'cyberspace.' We`
+ * (미국식 — 마침표가 닫는 인용부호 안) 에 모델이 빈칸원문 `… of 'cyberspace'` 를
+ * 내자 normalizeWs 포함 검사가 같은 지문에서 4/4 하드 반려(9/2·9/8 재시도 전멸).
+ * 같은 출력은 후처리 findExpressionInPassageFuzzy(앞뒤 따옴표·구두점 트림 재시도)가
+ * 그대로 통과시킨다. 따라서 게이트·어댑터·스냅 세 자리 전부 이 함수로 판정한다.
+ *
+ * 반환은 **원문 좌표**(index/length/text) — 다중 빈칸 겹침 판정과 surroundingText
+ * 절취가 정규화 좌표가 아니라 원문 좌표에서 이뤄져 후처리 결과와 어긋나지 않는다.
+ * 여기서 null 이면 후처리도 못 찾는다 → 반려가 옳다.
+ */
+export function locateBlankExpression(
+  passage: string,
+  expression: string,
+  surroundingText?: string,
+): { index: number; length: number; text: string } | null {
+  const expr = String(expression ?? "").trim();
+  if (!expr || !passage) return null;
+  const found =
+    findExpressionInPassage(passage, expr, surroundingText) ??
+    findExpressionInPassageFuzzy(passage, expr, surroundingText);
+  if (!found) return null;
+  return {
+    index: found.index,
+    length: found.length,
+    text: passage.slice(found.index, found.index + found.length),
+  };
+}
 
 export function parseMdBlank(text: string): MdBlankQuestion {
   const before = text.split(/^오답:/m)[0] ?? text;
@@ -294,10 +331,11 @@ export function gateMdQuestion(
     return gateMdMultiBlank(q, passage, { requireWrong });
   }
   const v: string[] = [];
-  const pn = normalizeWs(passage);
   if (q.kind === "blank") {
     if (!q.originalExpression) v.push("빈칸원문 누락");
-    else if (!pn.includes(normalizeWs(q.originalExpression)))
+    // 후처리와 같은 탐색기(locateBlankExpression) — 인용부호 안 마침표 같은
+    // 구두점 드리프트를 게이트만 못 견디던 오반려 봉합(26-09-08).
+    else if (!locateBlankExpression(passage, q.originalExpression))
       v.push("빈칸원문이 지문에 축자로 없음");
     if (q.options.length !== 5) v.push(`선지 ${q.options.length}개 (5개 필요)`);
     if (!q.answer) v.push("정답 누락");
@@ -454,7 +492,6 @@ export function gateMdMultiBlank(
 ): string[] {
   const requireWrong = options?.requireWrong !== false;
   const v: string[] = [];
-  const pn = normalizeWs(passage);
   const count = options?.blankCount ?? q.blanks.length;
   if (count < 2 || count > 3) v.push(`빈칸 수 ${count} (2~3만 지원)`);
   if (q.blanks.length !== count)
@@ -471,13 +508,13 @@ export function gateMdMultiBlank(
       v.push(`${b.label} 빈칸원문 누락`);
       continue;
     }
-    const en = normalizeWs(b.expression);
-    const idx = pn.indexOf(en);
-    if (idx < 0) {
+    // 후처리와 같은 탐색기 — 원문 좌표로 겹침을 판정한다(26-09-08).
+    const loc = locateBlankExpression(passage, b.expression);
+    if (!loc) {
       v.push(`${b.label} 빈칸원문이 지문에 축자로 없음`);
       continue;
     }
-    spans.push({ label: b.label, start: idx, end: idx + en.length });
+    spans.push({ label: b.label, start: loc.index, end: loc.index + loc.length });
   }
   let overlapReported = false;
   for (let i = 0; i < spans.length && !overlapReported; i++) {
@@ -700,6 +737,9 @@ export function snapExpressionSpan(passage: string, oe: string): string | null {
   if (passage.includes(oe)) return null;
   // 정규화 일치는 게이트·어댑터가 이미 수용하므로 스냅 불요.
   if (normalizeWs(passage).includes(normalizeWs(oe))) return null;
+  // 후처리 탐색기가 찾는 표현도 스냅 불요 — 게이트·어댑터가 같은 탐색기로 수용한다.
+  // (스냅이 머리·꼬리 2단어 축자를 요구해 `of 'cyberspace'` 꼬리를 못 찾던 자리.)
+  if (locateBlankExpression(passage, oe)) return null;
   const words = oe.split(/\s+/).filter(Boolean);
   if (words.length < 4) return null; // 짧은 구는 오스냅 위험 — 반려에 맡긴다.
   const head = words.slice(0, 2).join(" ");

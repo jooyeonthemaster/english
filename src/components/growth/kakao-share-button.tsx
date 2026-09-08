@@ -47,9 +47,33 @@ interface KakaoShareButtonProps {
   /** Called after a share is recorded so the parent (rewards page) can refresh
    *  the KAKAO_SHARE mission card + referral stats without a manual reload. */
   onShared?: () => void;
+  /**
+   * 카드 자구 오버라이드(26-09-03) — 기본값은 추천(referral) 카드다. 리포트 공유처럼
+   * 학부모에게 가는 링크는 「추천 코드로 가입하면 크레딧」 문구가 나가면 안 되므로
+   * 호출부가 제목·설명·버튼명을 넘긴다. 미지정 필드는 기본 카드 자구 유지.
+   */
+  title?: string;
+  description?: string;
+  buttonTitle?: string;
+  /** 버튼 라벨(기본 「카카오톡 공유」) */
+  label?: string;
+  /** 하위 컴팩트 아이콘 크기 클래스(기본 size-4) */
+  iconClassName?: string;
+  /** false 면 KAKAO_SHARE 미션 보상 기록을 건너뛴다(추천 공유가 아닌 컨텍스트). 기본 true. */
+  recordMission?: boolean;
 }
 
-export function KakaoShareButton({ link, className, onShared }: KakaoShareButtonProps) {
+export function KakaoShareButton({
+  link,
+  className,
+  onShared,
+  title,
+  description,
+  buttonTitle,
+  label,
+  iconClassName,
+  recordMission = true,
+}: KakaoShareButtonProps) {
   const [sdkReady, setSdkReady] = useState(false);
   const [busy, setBusy] = useState(false);
 
@@ -76,14 +100,15 @@ export function KakaoShareButton({ link, className, onShared }: KakaoShareButton
         kakao.Share.sendDefault({
           objectType: "feed",
           content: {
-            title: "SMOAT — AI 영어 문제 생성",
-            description: "추천 코드로 가입하면 두 학원 모두 크레딧을 받아요",
+            title: title ?? "SMOAT — AI 영어 문제 생성",
+            description:
+              description ?? "추천 코드로 가입하면 두 학원 모두 크레딧을 받아요",
             imageUrl: `${getSiteUrl()}/og-image.png`,
             link: { mobileWebUrl: link, webUrl: link },
           },
           buttons: [
             {
-              title: "지금 시작하기",
+              title: buttonTitle ?? "지금 시작하기",
               link: { mobileWebUrl: link, webUrl: link },
             },
           ],
@@ -93,14 +118,15 @@ export function KakaoShareButton({ link, className, onShared }: KakaoShareButton
         await navigator.clipboard.writeText(link);
         toast.success("링크를 복사했어요. 카카오톡에 붙여넣어 공유하세요");
       }
-      await recordShare();
+      if (recordMission) await recordShare();
+      else onShared?.();
     } catch {
       // If even clipboard fails, surface a gentle hint rather than crashing.
       toast.error("공유에 실패했어요. 링크를 직접 복사해 주세요");
     } finally {
       setBusy(false);
     }
-  }, [busy, link, recordShare]);
+  }, [busy, link, recordShare, title, description, buttonTitle, recordMission, onShared]);
 
   return (
     <>
@@ -115,14 +141,18 @@ export function KakaoShareButton({ link, className, onShared }: KakaoShareButton
         type="button"
         onClick={handleShare}
         disabled={busy}
-        aria-label="카카오톡으로 추천 링크 공유"
+        aria-label={label ? `카카오톡으로 공유: ${label}` : "카카오톡으로 추천 링크 공유"}
         className={cn(
           "inline-flex h-10 items-center justify-center gap-1.5 rounded-xl bg-[#FEE500] px-4 text-[13px] font-bold text-[#181600] transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60",
           className,
         )}
       >
-        <MessageCircle className="size-4" strokeWidth={2.2} fill="currentColor" />
-        {KAKAO_JS_KEY && sdkReady ? "카카오톡 공유" : "카카오톡으로 공유"}
+        <MessageCircle
+          className={cn("size-4", iconClassName)}
+          strokeWidth={2.2}
+          fill="currentColor"
+        />
+        {label ?? (KAKAO_JS_KEY && sdkReady ? "카카오톡 공유" : "카카오톡으로 공유")}
       </button>
     </>
   );

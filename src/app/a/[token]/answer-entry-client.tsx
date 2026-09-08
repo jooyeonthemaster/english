@@ -16,7 +16,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { CheckCircle2, Loader2, Lock, PencilLine, Send } from "lucide-react";
+import { CheckCircle2, Loader2, Lock, Send } from "lucide-react";
 import type { AnswerSheetQuestion } from "@/lib/exam-report/answer-entry";
 import { AnswerQuestionRow, ANSWER_TEXT_MAX } from "./answer-question-row";
 
@@ -231,8 +231,10 @@ export function AnswerEntryClient({
           <p className="mt-2 text-sm leading-relaxed text-slate-500">
             선생님이 확인 후 리포트를 보내드립니다.
           </p>
+          {/* 26-09-05: 제출은 최종 — 종전 자구("확정 전까지 수정할 수 있어요")는
+              이제 거짓이다. 고칠 곳이 없는 게 아니라 **선생님을 통한다**고 말한다. */}
           <p className="mt-2 text-xs leading-relaxed text-slate-400">
-            채점이 확정되기 전까지는 이 링크에서 답을 수정할 수 있어요.
+            제출한 답안은 수정할 수 없어요. 잘못 입력했다면 선생님께 말씀해 주세요.
           </p>
           {skippedCount > 0 && (
             <p className="mt-2 text-xs leading-relaxed text-slate-400">
@@ -240,14 +242,6 @@ export function AnswerEntryClient({
               않았어요.
             </p>
           )}
-          <button
-            type="button"
-            onClick={() => setPhase("edit")}
-            className="mt-6 inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50"
-          >
-            <PencilLine className="h-4 w-4" />
-            다시 수정
-          </button>
           <p className="mt-6 text-[11px] text-slate-400">SMOAT 학생 답안 입력</p>
         </div>
       </div>
@@ -288,10 +282,14 @@ export function AnswerEntryClient({
 
       {lockedNow ? (
         <div className="border-b border-slate-200 bg-white px-4 py-2.5">
+          {/* 26-09-05: 제출은 최종이다. 「채점 확정」과 「제출 완료」는 서로 다른
+              이유이므로 자구도 갈라 말한다(원인을 모르는 잠금이 가장 나쁘다). */}
           <div className="mx-auto flex w-full max-w-lg items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5">
             <Lock className="h-4 w-4 shrink-0 text-slate-400" />
             <p className="text-xs font-medium text-slate-600">
-              채점이 확정되어 수정할 수 없습니다.
+              {submittedLabel
+                ? `${submittedLabel}에 제출했습니다 — 제출한 답안은 수정할 수 없습니다.`
+                : "제출한 답안은 수정할 수 없습니다."}
             </p>
           </div>
         </div>

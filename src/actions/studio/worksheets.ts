@@ -19,6 +19,7 @@ import {
 import { requireStaffAuth } from "@/lib/auth";
 // [E30 §3-2] 견적 단가는 **청구 라우트와 같은 함수**에서만 나온다(E19-2 계약).
 // 여기서 5/10 을 리터럴로 쓰면 상수가 바뀌는 날 표기와 청구가 조용히 갈린다.
+import { checkBalance } from "@/lib/credits";
 import { getPracticeSheetCreditCost } from "@/lib/passage-analysis-credit-costs";
 import {
   DEFAULT_ANALYSIS_TONE,
@@ -294,6 +295,27 @@ function analysisToneOf(value: unknown): AnalysisTone | null {
   if (!value || typeof value !== "object") return null;
   const raw = (value as Record<string, unknown>)._analysisTone;
   return typeof raw === "string" ? normalizeAnalysisTone(raw) : null;
+}
+
+/**
+ * 학습지 모달의 발사 전 잔액 조회(비차감). 모달은 지문별 견적 합(totalCredits)을
+ * 이미 계산하는데 잔액과 비교하는 자리가 없어, 잔액 0 학원이 13지문을 발사해
+ * 오류 13개를 받았다(26-09-08 전수조사). 견적과 같은 시점에 읽어 한 번만 막는다.
+ * 실패해도 모달은 발사를 막지 않는다 — 서버 사전 게이트(credit-preflight)가 뒤를 받친다.
+ */
+export async function getStudioCreditBalance(): Promise<
+  StudioActionResult<{ balance: number }>
+> {
+  try {
+    const staff = await requireStaffAuth();
+    const { balance } = await checkBalance(staff.academyId);
+    return { success: true, data: { balance } };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "잔액을 불러오지 못했습니다.",
+    };
+  }
 }
 
 export async function getStudioSheetStates(input: {

@@ -1,10 +1,12 @@
 "use client";
 
+import { deferWhileDragging } from "@/components/layout/panel-drag-freeze";
 import { useEffect, useRef, useState } from "react";
 import {
   ChevronDown,
   Copy,
   Download,
+  Ellipsis,
   Eye,
   Loader2,
   MonitorSmartphone,
@@ -177,9 +179,14 @@ export function PreviewToolbar({
 
     if (typeof ResizeObserver === "undefined") return;
 
-    const resizeObserver = new ResizeObserver(updateCompactLabels);
+    // 패널 드래그 중엔 라벨 전환을 미루고 놓을 때 1회(panel-drag-freeze.ts).
+    const deferred = deferWhileDragging<void>(() => updateCompactLabels());
+    const resizeObserver = new ResizeObserver(() => deferred.observe(undefined));
     resizeObserver.observe(toolbar);
-    return () => resizeObserver.disconnect();
+    return () => {
+      resizeObserver.disconnect();
+      deferred.dispose();
+    };
   }, []);
 
   useEffect(() => {
@@ -207,14 +214,31 @@ export function PreviewToolbar({
   }
 
   return (
+    // 어떤 폭에서도 자식이 툴바 밖으로 나가지 않는다(26-09-08 §11.9-④ 후속): 좌측
+    // 클러스터는 shrink-0(종전 min-w-0 이라 aside 508~599 에서 0 으로 압착돼 「/」
+    // 조각만 남았다), 우측은 min-w-0 + 자체 flex-wrap, 툴바도 flex-wrap 으로 2줄
+    // 꺾임을 허용한다. 높이는 h-11 고정 대신 min-h-11 + py-1.5(버튼 h-8 + 12 = 44,
+    // 1줄일 땐 종전과 동일). compactLabels(<720)에선 좌측 아이콘만·우측 인쇄/다운로드는
+    // 「⋯」 오버플로 메뉴 1개로 접는다.
     <div
       ref={toolbarRef}
-      className="flex h-11 shrink-0 items-center justify-between gap-2 border-b border-slate-200 bg-white px-2 lg:gap-3 lg:px-4"
+      data-preview-toolbar
+      className="flex min-h-11 shrink-0 flex-wrap items-center justify-between gap-x-2 gap-y-1 border-b border-slate-200 bg-white px-2 py-1.5 lg:gap-x-3 lg:px-4"
     >
-      <div className="flex min-w-0 items-center gap-2">
-        <Eye className="h-3.5 w-3.5 text-slate-400" />
-        <span className="whitespace-nowrap text-[12px] font-bold text-slate-600">
-          {compactLabels ? paperSize : `${paperSize} 미리보기`}
+      <div className="flex shrink-0 items-center gap-2">
+        <Eye
+          className="h-3.5 w-3.5 shrink-0 text-slate-400"
+          aria-hidden={!compactLabels || undefined}
+          // 라벨을 숨긴 compact 단계에선 아이콘이 용지 정보를 대신 말한다.
+          role={compactLabels ? "img" : undefined}
+          aria-label={compactLabels ? `${paperSize} 미리보기` : undefined}
+        />
+        <span
+          className="whitespace-nowrap text-[12px] font-bold text-slate-600"
+          title={`${paperSize} 미리보기`}
+          hidden={compactLabels}
+        >
+          {`${paperSize} 미리보기`}
         </span>
         {onDeploy ? (
           // 태블릿 시험 배포 — 템플릿 배지 자리(유저 확정 교체). 저장 버튼(파란
@@ -242,7 +266,7 @@ export function PreviewToolbar({
           </span>
         )}
       </div>
-      <div className="no-print flex shrink-0 items-center gap-1">
+      <div className="no-print flex min-w-0 flex-wrap items-center justify-end gap-1">
         {dirty && (
           <span className="hidden rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-semibold text-amber-700 sm:inline-flex">
             저장 필요
@@ -295,28 +319,61 @@ export function PreviewToolbar({
             />
           </div>
         )}
-        <button
-          onClick={onPrint}
-          disabled={actionDisabled}
-          className="hidden h-8 items-center justify-center gap-1 border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 lg:flex lg:min-w-[64px]"
-        >
-          <Printer className="h-3.5 w-3.5" />
-          <span className="hidden lg:inline">인쇄</span>
-        </button>
-        <div ref={downloadMenuRef} className="relative hidden lg:block">
+        {/* compact 에선 인쇄 버튼을 지우고 아래 「⋯」 메뉴 첫 항목으로 옮긴다. */}
+        {!compactLabels && (
           <button
-            type="button"
-            onClick={() => setDownloadOpen((open) => !open)}
+            onClick={onPrint}
             disabled={actionDisabled}
-            aria-expanded={downloadOpen}
-            className="flex h-8 items-center justify-center gap-1.5 border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 lg:min-w-[98px] lg:px-3"
+            className="hidden h-8 items-center justify-center gap-1 border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 lg:flex lg:min-w-[64px]"
           >
-            {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Download className="h-3.5 w-3.5" />}
-            <span className="hidden lg:inline">다운로드</span>
-            <ChevronDown className="h-3 w-3 text-slate-400" />
+            <Printer className="h-3.5 w-3.5" />
+            <span className="hidden lg:inline">인쇄</span>
           </button>
+        )}
+        <div ref={downloadMenuRef} className="relative hidden lg:block">
+          {compactLabels ? (
+            // 오버플로 트리거 — 다운로드 메뉴를 그대로 재사용하되 「인쇄」 를 앞에 붙인다.
+            <button
+              type="button"
+              onClick={() => setDownloadOpen((open) => !open)}
+              disabled={actionDisabled}
+              aria-expanded={downloadOpen}
+              aria-haspopup="true"
+              title="인쇄 · 다운로드"
+              aria-label="인쇄 · 다운로드"
+              className="flex h-8 w-8 items-center justify-center border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Ellipsis className="h-4 w-4" />}
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setDownloadOpen((open) => !open)}
+              disabled={actionDisabled}
+              aria-expanded={downloadOpen}
+              aria-haspopup="true"
+              className="flex h-8 items-center justify-center gap-1.5 border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 lg:min-w-[98px] lg:px-3"
+            >
+              {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Download className="h-3.5 w-3.5" />}
+              <span className="hidden lg:inline">다운로드</span>
+              <ChevronDown className="h-3 w-3 text-slate-400" />
+            </button>
+          )}
           {downloadOpen && (
             <div className="absolute right-0 top-[calc(100%+6px)] z-30 w-52 overflow-hidden rounded-lg border border-slate-200 bg-white py-1 shadow-xl shadow-slate-200/70">
+              {compactLabels && (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => runDownload(onPrint)}
+                    className="flex h-9 w-full items-center gap-2 px-3 text-left text-[12px] font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+                  >
+                    <Printer className="h-4 w-4 shrink-0 text-slate-500" aria-hidden="true" />
+                    인쇄
+                  </button>
+                  <div className="my-1 h-px bg-slate-100" />
+                </>
+              )}
               <button
                 type="button"
                 onClick={() => runDownload(onDownloadPdf)}

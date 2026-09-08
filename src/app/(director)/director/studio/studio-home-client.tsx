@@ -102,6 +102,7 @@ import { CoachMark } from "@/components/studio/coach";
 import { StudioTour } from "@/components/studio/tour/engine";
 import { TOUR_OPEN_EVENT } from "@/components/studio/tour/types";
 import {
+  PANEL_HANDLE_WIDTH,
   PanelHandle,
   useResizablePanels,
 } from "@/components/layout/resizable-panels";
@@ -152,12 +153,24 @@ import type {
 import type { PickedQuestionMeta } from "./workbench/dossier-pick-bar";
 import { ExamComposeSurface } from "./workbench/exam-compose-surface";
 import { LibraryPane, type QuestionGenBridge } from "./workbench/library-pane";
+import type {
+  ExamCandidateRow,
+  ExamReportSummaryRow,
+} from "@/hooks/use-exam-report-activity";
+import {
+  StudentDetailRail,
+  StudentRailEmpty,
+} from "./workbench/student-detail-rail";
+import { useStudioStudents } from "./workbench/use-studio-students";
 import { QuestionsActionRail } from "./workbench/questions-action-rail";
 import { SheetComposeSurface } from "./workbench/sheet-compose-surface";
 import { SheetsActionRail } from "./workbench/sheets-action-rail";
 import type { StudioAssetView } from "./workbench/source-switcher";
 import { nextStudioLocationUrl } from "./workbench/studio-location";
 import { StepGuidePane } from "./workbench/step-guide-pane";
+import { AnalysisDetailRail, AnalysisRailEmpty } from "./workbench/analysis-detail-rail";
+import { useAnalysisDetail } from "./workbench/use-analysis-detail";
+import { useAnalysisConsole } from "./workbench/analysis-rail/use-analysis-console";
 import { StepStrip } from "./workbench/step-strip";
 import {
   DossierQuestionModal,
@@ -290,6 +303,26 @@ const PANEL_SPECS = [
   // 상한을 올린다(구 560). 기본 폭·최소는 불변.
   { key: "dossier", min: 320, max: 960, defaultWidth: 360, sign: -1 as const },
 ];
+
+// ── 조판 중 중앙 열 가변화(§11.5 F-6, 26-09-08) ─────────────────────────────
+// 조판이 보이는 동안 중앙 목록은 고정 420px 였고 우측 aside 는 flex-1 잔여라
+// dossier 핸들 드래그가 **무효**였다(style.width 가 flex-basis 0 에 묻힘). 이제
+// 그 핸들은 조판 중엔 **중앙 열 폭**을 끈다(PanelResizeOverride 경로) — dossier
+// 스펙·storageKey("studio-workbench-panels") 는 손대지 않아 비조판 레이아웃 무회귀.
+// 저장은 훅 밖 별도 키(숫자 문자열 1개). 초기 읽기는 effect 에서만 — SSR 과
+// 첫 클라 렌더가 같은 420 을 그려야 hydration 불일치가 없다.
+const COMPOSE_CENTER_STORAGE_KEY = "studio-compose-center-width";
+const COMPOSE_CENTER_MIN = 420;
+// 시험지 aside 최소폭 — 중앙 열의 상한 = 컨테이너 − tree − 핸들 2개 − 이 값.
+// 560 이었으나 1536 뷰포트 실측(26-09-08 프로브 I10)에서 드래그 여유가 40px 뿐이라
+// 사용자 요구(F-6 「오른쪽으로 더」)를 못 채웠다. A4 미리보기는 ResizeObserver 로
+// 폭에 맞춰 줌을 다시 맞추므로(use-preview-zoom.ts fitZoom) 하한을 빌더의
+// 하한을 내린다. 값 500 의 근거(26-09-08 프로브 I10 실측): 접힌 썸네일 띠 20 + 편집 패널 핸들 컬럼 24 +
+// 미리보기 스크롤러 좌우 패딩 40 + 세로 스크롤바 17(클래식) + A4(794)×줌 하한 0.5(397) + 페이지 프레임
+// 여백 ~6 = 504 → 여유 4 를 더한 508. 이 아래면 줌 하한에 걸려 페이지 오른쪽이 스크롤러 밖으로 나간다
+// (440: 36px · 464: 17px · 484: 20px · 500: 4px 넘침 실측). 펼친 썸네일 띠 104 와 편집 패널은 빌더가
+// 좁을 때 스스로 접는다(exam-paper-builder-client narrow*Forced).
+const COMPOSE_ASIDE_MIN = 508;
 
 // 구 도시에 표시 상한(§3.9v2.1 MAX_DOSSIER_PASSAGES=5)은 §3.10.17-e 로 폐기 —
 // "누구 마음대로 최근 5개만"(사용자). 조회는 fetch-on-expand 라 전량 나열해도
@@ -1165,9 +1198,14 @@ export function StudioHomeClient({
   }, []);
   const closeAddStudents = useCallback(() => setStudentTarget(null), []);
   const closeInviteKit = useCallback(() => setInviteStudentId(null), []);
+  // 「학생 관리」 뷰 재조회 키(v4 U6) — 로스터 변이는 **어느 입구든**(좌측 트리
+  // 모달·학생 관리 레일) 학생 관리 판을 함께 수렴시켜야 한다. 훅 useStudioStudents
+  // 는 keep-previous 라 bump 가 플래시를 만들지 않고, 뷰가 비활성이면 페치를 쉰다.
+  const [studentsRefreshKey, setStudentsRefreshKey] = useState(0);
   const handleRosterChanged = useCallback(() => {
     void refreshClasses();
     void loadRosters(true);
+    setStudentsRefreshKey((n) => n + 1);
     const target = studentTargetRef.current;
     if (target) {
       setExpanded((prev) =>
@@ -2310,6 +2348,18 @@ export function StudioHomeClient({
     (next: ReadonlyMap<string, PickedQuestionMeta>) => setFlatPicked(next),
     [],
   );
+  // 함수형 갱신 채널(additive, 기출 호스트 §11.13.1 전용). 자식이 읽는 미러는 effect 로 한 발
+  // 늦어 Map 통째 제출은 stale base 를 덮어쓸 수 있다(해제한 임시 항목 부활·픽 유실) — updater
+  // 는 React 가 최신 prev 를 넘기므로 커밋 순서와 무관하게 정합이다. 위 통째 제출은 유지(다른
+  // 호출부 무변경). useCallback([]) 안정 참조 — memo(LibraryPane) 방어선 무손상.
+  const updateFlatPicked = useCallback(
+    (
+      fn: (
+        prev: ReadonlyMap<string, PickedQuestionMeta>,
+      ) => ReadonlyMap<string, PickedQuestionMeta>,
+    ) => setFlatPicked((prev) => fn(prev)),
+    [],
+  );
   // ── [E32 적대검수 major 수리] 청산은 **2벌이 계약이다** ────────────────────
   // 계약 한 줄: **「지우는 범위 = 그 버튼이 화면에 찍은 숫자」.**
   //  · `clearPickedQuestions`(위) = **2축** — 도시에 픽바 전용. 그 바만이 union 을
@@ -2377,6 +2427,16 @@ export function StudioHomeClient({
     // 1건 고른 순간 폼이 저 혼자 펼쳐진다(id 는 이미 옛 클래스 것이라 매칭이
     // 어긋나 있어도, 의도가 살아 있는 것 자체가 오해의 원천이다).
     setPendingSheetDeployId(null);
+    // 시험 분석 레일도 청산(26-09-01 §3.10.28) — 남기면 새 클래스 위에 옛
+    // 클래스 분석 상세가 그대로 떠 있는 교차 오염이 된다(콘솔 훅은 row id
+    // 변경에 스스로 리셋).
+    setAnalysisRailRow(null);
+    // v4(26-09-02 §2.5 U6): 후보 선택·건너뛰기 포커스·학생 레일도 같은 자리에서
+    // 청산 — 전부 클래스 소속 상태다(학생 훅은 classId 전이에 스스로 비운다).
+    setAnalysisRailCandidate(null);
+    setAnalysisFocus(null);
+    setStudentsRailStudentId(null);
+    setStudentsRailMode("detail");
   }, [selectedClassId]);
   // (선조회 폐기 — §3.10.17-e (m): 조판 재료가 반·학교 2건짜리 경량 질의가
   //  되면서 데워둘 이유가 사라졌다. 캐시가 없으니 반 목록도 항상 최신이다.)
@@ -2392,6 +2452,180 @@ export function StudioHomeClient({
     useState<StudioAssetView>(initialAssetView);
   const handleAssetViewChange = useCallback(
     (v: StudioAssetView) => setCenterAssetView(v),
+    [],
+  );
+
+  // ── 「시험 분석」 우측 콘솔 레일(26-09-01 대개편, §3.10.28) ────────────────
+  // 선택을 **셸이 소유**하는 이유: 레일은 우측 aside/드로어(셸 트리)에
+  // 그려지는데 목록은 중앙 판(analysis-pane) 소유다 — 도시에 업링크
+  // (onDossierPassages)와 같은 단방향 채널 관용구로 판이 선택을 올린다.
+  // 모달·같은 탭 이동 0 — 열람·처리는 레일 인라인, 무거운 편집만 새 탭 위임
+  // (구 StudioExamReportModal 철거 — 사용자 재지시 "버튼이 모달을 띄우면 안 된다").
+  const [analysisRailRow, setAnalysisRailRow] =
+    useState<ExamReportSummaryRow | null>(null);
+  // 인라인 변이 성공·복귀 수렴·수동 새로고침마다 +1 — 상세 훅 재조회 트리거.
+  // keep-previous(use-analysis-detail)라 bump 가 백지 플래시를 만들지 않는다.
+  const [analysisDetailNonce, setAnalysisDetailNonce] = useState(0);
+  // v4(26-09-02, docs/exam-analysis-v4-spec.md §2.5 U6): 후보(미분석 자체
+  // 시험지) 선택 — analysisRailRow 와 **둘 중 하나만 non-null**(한쪽 선택이 다른
+  // 쪽을 비운다 — 판(U4)도 같은 배타 업링크를 보내지만 셸이 불변식의 주인이다).
+  const [analysisRailCandidate, setAnalysisRailCandidate] =
+    useState<ExamCandidateRow | null>(null);
+  // 학생 관리 → 시험 분석 건너뛰기 포커스: view=analysis 전환 + 판에 focusAnalysisId
+  // 전달(consumed 전까지) → 판이 행을 선택해 올리면 아래 effect 가 콘솔
+  // focusStudent(studentId) — studentId 는 **ExamReportStudent.id**(콘솔 학생 축).
+  const [analysisFocus, setAnalysisFocus] = useState<{
+    analysisId: string;
+    studentId: string;
+    consumed: boolean;
+  } | null>(null);
+  const handleAnalysisSelect = useCallback(
+    (row: ExamReportSummaryRow | null) => {
+      setAnalysisRailRow(row);
+      if (row) setAnalysisRailCandidate(null);
+    },
+    [],
+  );
+  const handleAnalysisSelectCandidate = useCallback(
+    (c: ExamCandidateRow | null) => {
+      setAnalysisRailCandidate(c);
+      if (c) setAnalysisRailRow(null);
+    },
+    [],
+  );
+  const handleAnalysisFocusConsumed = useCallback(() => {
+    setAnalysisFocus((cur) =>
+      cur && !cur.consumed ? { ...cur, consumed: true } : cur,
+    );
+  }, []);
+  const handleAnalysisRailClose = useCallback(() => {
+    setAnalysisRailRow(null);
+    setAnalysisRailCandidate(null);
+  }, []);
+  // 상세 재조회(레일 새로고침·에러 복구 — dev 워커 크래시류 일시 500 포함).
+  const handleAnalysisDetailRetry = useCallback(
+    () => setAnalysisDetailNonce((n) => n + 1),
+    [],
+  );
+  // 상세 페치 — **셸 1인스턴스**(레일이 aside·드로어 두 트리에 렌더돼도 페치는
+  // 한 벌 — A17 계열 2중 페치 차단). ANALYZING 동안은 쉰다(요약 폴이 실황 담당).
+  const analysisDetailState = useAnalysisDetail(
+    analysisRailRow?.id ?? null,
+    analysisRailRow?.status === "ANALYZING",
+    analysisDetailNonce,
+  );
+  // 콘솔 상태·지연 페치(학생 단건 캐시·원본 서명 URL·INTERNAL 문항 전문·확장
+  // 상태·자동 수렴 2채널) — 같은 이유로 셸 1인스턴스.
+  const analysisConsole = useAnalysisConsole(
+    analysisRailRow,
+    handleAnalysisDetailRetry,
+    analysisDetailState.patchDetail,
+    // 후보(분석 행 없는 스모트 시험지) 선택 시의 로스터 스코프(§14).
+    analysisRailCandidate?.examId ?? null,
+  );
+  // 건너뛰기 2단계(v4 §2.5 U6) — 판이 포커스 행을 선택해 올리면(id 일치) 콘솔의
+  // 학생 축을 그 학생으로 연다. 콘솔 훅의 row 변경 리셋은 위 훅 안에 있어(선언
+  // 순서) 이 effect 보다 먼저 돈다 — 리셋 뒤에 포커스. 사용자가 그 사이 다른
+  // 행을 골랐으면 미소비 포커스는 폐기(옛 요청이 새 선택을 덮지 않는다).
+  useEffect(() => {
+    if (!analysisFocus) return;
+    if (!analysisRailRow) {
+      // 판이 소비를 알렸는데 행이 안 올라왔다 = 목록에 그 분석이 없다(삭제·
+      // 미조회). 스테일 포커스를 남기면 훗날 같은 행을 손으로 골랐을 때 학생
+      // 아코디언이 저 혼자 펼쳐진다 — 여기서 폐기.
+      if (analysisFocus.consumed) setAnalysisFocus(null);
+      return;
+    }
+    if (analysisRailRow.id !== analysisFocus.analysisId) {
+      setAnalysisFocus(null);
+      return;
+    }
+    analysisConsole.focusStudent(analysisFocus.studentId);
+    setAnalysisFocus(null);
+  }, [analysisFocus, analysisRailRow, analysisConsole]);
+
+  // ── 「학생 관리」 5번째 뷰 — 셸 소유 상태(v4 §2.5 U6 · §3 U6-2) ────────────
+  // 우측 레일 = 학생 상세(detail) 또는 인라인 추가 폼(add — 모달 0 §1-6).
+  // 페치는 **셸 훅 1인스턴스**(aside·드로어 2중 마운트 규칙 §5) — 판·레일이 나눠 쓴다.
+  // 뷰 가시일 때만 조회하고(폴 없음), 변이 성공은 refreshKey bump 로 수렴한다.
+  // selectedClass(객체)로 판정 — 다른 레일 3종과 동일. id 만 있고 클래스 행이 아직
+  // 없는 창(복원·삭제 직후)에서 훅·레일이 깨어나지 않는다.
+  const studentsRailActive = Boolean(
+    selectedClass && centerAssetView === "students",
+  );
+  const [studentsRailStudentId, setStudentsRailStudentId] = useState<
+    string | null
+  >(null);
+  const [studentsRailMode, setStudentsRailMode] = useState<"detail" | "add">(
+    "detail",
+  );
+  const studentsRailModeRef = useRef(studentsRailMode);
+  studentsRailModeRef.current = studentsRailMode;
+  const studentsState = useStudioStudents(
+    selectedClassId,
+    studentsRailActive,
+    studentsRefreshKey,
+  );
+  const handleStudentSelect = useCallback((id: string | null) => {
+    setStudentsRailStudentId(id);
+    setStudentsRailMode("detail");
+  }, []);
+  const handleStudentsRequestAdd = useCallback(
+    () => setStudentsRailMode("add"),
+    [],
+  );
+  // 닫기: 추가 폼이면 상세로 복귀(선택 학생 유지), 상세면 선택 해제.
+  const handleStudentsRailClose = useCallback(() => {
+    if (studentsRailModeRef.current === "add") setStudentsRailMode("detail");
+    else setStudentsRailStudentId(null);
+  }, []);
+  // 로스터 변이(연결·등록·제외) — 현황 재조회 + 클래스 카운트·트리 로스터 갱신
+  // (필 건수 studentCount 는 classes 행에서 오므로 refreshClasses 가 필수).
+  // refreshKey bump 는 handleRosterChanged 안에 있다(입구 무관 동일 수렴).
+  const handleStudentsChanged = handleRosterChanged;
+  // 클래스 제외 성공 — 행 낙관 제거 + 그 학생이 선택돼 있었을 때만 선택 해제.
+  const { removeStudent: removeStudentRow } = studentsState;
+  const handleStudentRemoved = useCallback(
+    (studentId: string) => {
+      removeStudentRow(studentId);
+      setStudentsRailStudentId((prev) => (prev === studentId ? null : prev));
+    },
+    [removeStudentRow],
+  );
+  // 범용 뷰 강제 채널 수신부(library-pane onAssetViewControl) — **ref 보관**
+  // (registerComposeViewControl 과 같은 관용구: useState 로 받으면 업데이터 오인).
+  const assetViewControlRef = useRef<((v: StudioAssetView) => void) | null>(
+    null,
+  );
+  const registerAssetViewControl = useCallback(
+    (control: ((v: StudioAssetView) => void) | null) => {
+      assetViewControlRef.current = control;
+    },
+    [],
+  );
+  // 시험 분석 레일 「학생」 CTA → 학생 관리 뷰(같은 페이지 뷰 전환 §1-6).
+  // studentId 를 주면 그 학생 상세를 함께 연다(§U6-6 openStudentInStudentsView).
+  const openStudentsView = useCallback((studentId?: string | null) => {
+    if (typeof studentId === "string") {
+      setStudentsRailStudentId(studentId);
+      setStudentsRailMode("detail");
+    }
+    assetViewControlRef.current?.("students");
+  }, []);
+  // 학생 레일 「시험 분석에서 열기」 → view=analysis + 포커스(행 선택은 판이,
+  // 학생 아코디언은 위 effect 가). 옛 선택은 비운다 — 포커스 effect 의 「다른
+  // 행 선택 = 폐기」 판정이 직전 선택을 새 선택으로 오인하지 않게.
+  const openAnalysisForStudent = useCallback(
+    (analysisId: string, reportStudentId: string) => {
+      setAnalysisRailRow(null);
+      setAnalysisRailCandidate(null);
+      setAnalysisFocus({
+        analysisId,
+        studentId: reportStudentId,
+        consumed: false,
+      });
+      assetViewControlRef.current?.("analysis");
+    },
     [],
   );
 
@@ -3328,12 +3562,58 @@ export function StudioHomeClient({
   }
 
   // ── 패널 폭·접기 ──
-  const { containerRef, widths, collapsed, startResize, toggleCollapsed, expand } =
-    useResizablePanels({
-      panels: PANEL_SPECS,
-      minCenter: 560,
-      storageKey: "studio-workbench-panels",
-    });
+  const {
+    containerRef,
+    widths,
+    containerWidth,
+    collapsed,
+    startResize,
+    toggleCollapsed,
+    expand,
+  } = useResizablePanels({
+    panels: PANEL_SPECS,
+    minCenter: 560,
+    storageKey: "studio-workbench-panels",
+  });
+
+  // ── 조판 중 중앙 열 폭(§11.5) — 저장값은 드래그 커밋으로만 바뀐다 ──
+  const [composeCenterWidth, setComposeCenterWidth] = useState(COMPOSE_CENTER_MIN);
+  useEffect(() => {
+    // 초기 복원은 마운트 후 1회(SSR 불일치 금지). 비정상 값(NaN·음수·구 키)은
+    // 기본으로 — 하한 미만 저장값은 하한으로 올린다.
+    try {
+      const raw = window.localStorage.getItem(COMPOSE_CENTER_STORAGE_KEY);
+      const parsed = raw === null ? Number.NaN : Number(raw);
+      if (Number.isFinite(parsed)) {
+        setComposeCenterWidth(Math.max(COMPOSE_CENTER_MIN, Math.round(parsed)));
+      }
+    } catch {
+      /* 저장소 불가 환경 — 세션 내 드래그는 동작 */
+    }
+  }, []);
+  const commitComposeCenterWidth = useCallback((width: number) => {
+    setComposeCenterWidth(width);
+    try {
+      window.localStorage.setItem(COMPOSE_CENTER_STORAGE_KEY, String(width));
+    } catch {
+      /* 저장 실패해도 세션 내 폭은 유지 */
+    }
+  }, []);
+  // 클램프 범위 — 훅의 clampAll 과 같은 사고: 저장값은 안 깎고 **표시 시점**에만
+  // 컨테이너 기준으로 클램프한다(좁은 창을 지나가도 선호폭이 살아남는다).
+  // widths.tree 는 접힘이면 0(aside 언마운트)이라 그만큼 상한이 넓어진다.
+  // 컨테이너 미관측(0)이면 max=min → 드래그 무동작(무한 확장보다 안전).
+  const composeCenterRange = useMemo(() => {
+    const max =
+      containerWidth > 0
+        ? containerWidth - widths.tree - PANEL_HANDLE_WIDTH * 2 - COMPOSE_ASIDE_MIN
+        : COMPOSE_CENTER_MIN;
+    return { min: COMPOSE_CENTER_MIN, max: Math.max(COMPOSE_CENTER_MIN, max) };
+  }, [containerWidth, widths.tree]);
+  const composeCenterDisplayWidth = Math.min(
+    Math.max(composeCenterWidth, composeCenterRange.min),
+    composeCenterRange.max,
+  );
 
   // §3.10.12(26-08-13 지시): 접힘은 **명시적 선택**(selectClass — 레일 이름
   // 클릭·가이드 퀵선택·생성 모달)에서만 발화한다 — quiet 경로(레일 내부 조작)
@@ -3401,6 +3681,11 @@ export function StudioHomeClient({
   //  삼항 사슬·라벨 문자열·OR 체인은 타입상 완벽히 정상이다. E24-SPEC §1① 참조.)
   const sheetRailActive = Boolean(selectedClass && centerAssetView === "sheet");
   const examRailActive = Boolean(selectedClass && centerAssetView === "exam");
+  // 「시험 분석」 레일(26-09-01 §3.10.28) — 뷰당 1개 규약의 3번째. 선택이 없어도
+  // 뷰에 있으면 참(레일이 빈 상태 안내를 그린다 — 지문 도시에 빈 상태와 동형).
+  const analysisRailActive = Boolean(
+    selectedClass && centerAssetView === "analysis",
+  );
   // ── 【E24 §1②】 조판 가시 산식 2줄은 **위(체크 프룬 ① 직전)로 끌어올렸다** ──
   // 옮긴 이유: 체크 프룬 ①-b 가 **렌더 중** `sheetComposeVisible` 을 읽는다. 여기서
   // 선언하면 그 참조가 TDZ 라 `ReferenceError` 로 화면이 통째로 죽는다.
@@ -3439,6 +3724,8 @@ export function StudioHomeClient({
   //     이제 `hasRightPanel` 이 아니라 `stepAdvanced`(바로 아래)를 먹고, 픽이 있으면
   //     배포할 것이 실제로 있으므로 점등이 정답이다. 두 값을 다시 하나로 합치지 마라.
   const hasRightPanel =
+    analysisRailActive ||
+    studentsRailActive ||
     sheetRailActive ||
     examRailActive ||
     Boolean(visibleDossierPassages) ||
@@ -3843,7 +4130,58 @@ export function StudioHomeClient({
   // 0→1 되는 순간 도시에 패널이 이유 없이 아래로 밀린다(적대검수 실측).
   const showQuestionsStrip = flatPicked.size > 0 && !visibleDossierPassages;
   const showSheetsStrip = pickedSheets.size > 0;
-  const rightPanelView = sheetRailActive ? (
+  // 시험 분석 콘솔 레일 본문 — 선택 없으면 빈 상태 안내. 데이터·확장 상태는
+  // 전부 셸 소유(analysisDetailState + analysisConsole) — 레일은 표시 전용.
+  // v4: 행 **또는 후보**(§2.5 U5 — row null && candidate 有 = 후보 화면) 중
+  // 하나라도 있으면 레일, 둘 다 없으면 빈 상태.
+  const analysisRailBody =
+    analysisRailRow || analysisRailCandidate ? (
+      <AnalysisDetailRail
+        row={analysisRailRow}
+        candidate={analysisRailCandidate}
+        detail={analysisDetailState.detail}
+        detailLoading={analysisDetailState.loading}
+        detailError={analysisDetailState.error}
+        onClose={handleAnalysisRailClose}
+        onRetryDetail={handleAnalysisDetailRetry}
+        console={analysisConsole}
+        onOpenStudentsView={openStudentsView}
+        classId={selectedClassId}
+        className={selectedClass?.name ?? null}
+      />
+    ) : (
+      <AnalysisRailEmpty />
+    );
+  // 「학생 관리」 레일 본문(v4 §3 U6-5) — add 모드는 선택 없이도 뜬다(인라인 추가
+  // 폼). 선택 학생이 rows 에서 사라졌으면(제외·재조회) 빈 상태로 강등.
+  const studentsRailStudent = studentsRailStudentId
+    ? (studentsState.rows.find((s) => s.studentId === studentsRailStudentId) ??
+      null)
+    : null;
+  const studentsRailBody =
+    selectedClassId && (studentsRailMode === "add" || studentsRailStudent) ? (
+      <StudentDetailRail
+        classId={selectedClassId}
+        student={studentsRailStudent}
+        mode={studentsRailMode}
+        onClose={handleStudentsRailClose}
+        onOpenAnalysis={openAnalysisForStudent}
+        onChanged={handleStudentsChanged}
+        onRemoved={handleStudentRemoved}
+        academyCode={studentsState.academyCode}
+        onPatchExam={studentsState.patchExam}
+      />
+    ) : (
+      <StudentRailEmpty />
+    );
+  // ⚠ analysisRailActive 는 rail 사슬 **맨 앞**이다(§3.10.28 — 뒤로 밀면 픽
+  //   보유 상태에서 스트립 분기가 먼저 잡아 분석 레일이 영영 안 뜨는 무음 결함).
+  //   studentsRailActive 는 그 **바로 다음**(v4 §3 U6-2 — 같은 이유).
+  const rightPanelView = analysisRailActive ? (
+    analysisRailBody
+  ) : studentsRailActive ? (
+    studentsRailBody
+  ) : sheetRailActive ? (
     sheetRailBody
   ) : examRailActive ? (
     examRailBody
@@ -3999,7 +4337,11 @@ export function StudioHomeClient({
     ? "시험지"
     : sheetComposeVisible
       ? "학습지"
-      : sheetRailActive
+      : analysisRailActive
+        ? "시험 분석"
+        : studentsRailActive
+          ? "학생 관리"
+        : sheetRailActive
         ? "학습지"
         : examRailActive
           ? "시험지"
@@ -4066,7 +4408,14 @@ export function StudioHomeClient({
             className="flex h-8 shrink-0 items-center gap-1.5 rounded-md border border-slate-200 px-2.5 text-[11.5px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 max-md:ml-auto xl:hidden"
           >
             <PanelRight className="h-3.5 w-3.5 text-slate-400" />
-            지문 현황
+            {/* 분석 뷰(26-09-01 §3.10.28): 우측 판이 시험 분석 상세인데 라벨이
+                「지문 현황」이면 카드를 눌러도 상세가 어디 있는지 알 수 없다
+                (1100px 실측). 다른 뷰 자구는 기존 그대로 — 프로브·투어 무회귀. */}
+            {analysisRailActive
+              ? "시험 분석"
+              : studentsRailActive
+                ? "학생 관리"
+                : "지문 현황"}
           </button>
         )}
         <div className="hidden min-w-0 items-center gap-2 text-[11px] tabular-nums text-slate-400 xl:flex">
@@ -4119,9 +4468,18 @@ export function StudioHomeClient({
             // anyComposeVisible: 시험지·학습지 두 조판이 **같은 뒤집기**를 쓴다
             // (§3.10.21 E21-5 — 요구「좌측 컴팩트」가 신규 레이아웃 코드 0줄로
             // 성립한다). 둘은 centerAssetView 로 상호배제라 겹칠 수 없다.
+            // 조판 중 폭은 §11.5 로 리터럴 420 에서 style 로 옮겨졌다(shrink-0
+            // 유지 — flex 가 깎으면 앵커 실측 폭과 저장값이 어긋난다).
             anyComposeVisible
-              ? "flex h-full w-[420px] min-w-0 shrink-0 flex-col"
+              ? "flex h-full min-w-0 shrink-0 flex-col"
               : "flex min-h-0 min-w-0 flex-1 flex-col"
+          }
+          // data-panel-key="compose-center": dossier 핸들의 오버라이드 드래그 앵커
+          // (§11.5). 훅 spec 밖 키라 tree/dossier 고속 경로는 이 요소를 안 만진다.
+          // 비조판에선 속성·style 둘 다 없음(undefined) — DOM 바이트 무회귀.
+          data-panel-key={anyComposeVisible ? "compose-center" : undefined}
+          style={
+            anyComposeVisible ? { width: composeCenterDisplayWidth } : undefined
           }
         >
           {selectedClass ? (
@@ -4141,6 +4499,7 @@ export function StudioHomeClient({
               onDossierPassages={handleDossierPassages}
               flatPicked={flatPicked}
               onFlatPickedChange={handleFlatPickedChange}
+              onFlatPickedUpdate={updateFlatPicked}
               onAssetViewChange={handleAssetViewChange}
               // [R1] 새로고침 위치 복원 — 뷰의 **주인은 이 판**이라 복원 시드도
               // 여기로 내린다(호스트의 centerAssetView 는 업링크로 먹는 미러다).
@@ -4179,6 +4538,34 @@ export function StudioHomeClient({
               nudgeExam={composeNudge.questions}
               // 도시에 카드 「선택 해제」 컨트롤 등록(26-08-22) — 안정 참조.
               onDossierDeselectControl={registerDossierDeselect}
+              // 시험 분석 채널 2종(26-09-01 §3.10.28 — 콘솔 대개편으로 모달
+              // 오픈 채널 소멸). 전부 참조 안정(useCallback / 원시 string)이라
+              // memo(LibraryPane) 방어선 무손상.
+              onAnalysisSelect={handleAnalysisSelect}
+              analysisActiveRowId={analysisRailRow?.id ?? null}
+              // v4 채널(26-09-02 §2.5): 후보 선택·하이라이트·건너뛰기 포커스(소비
+              // 전까지만 id 전달) — 전부 useCallback / 원시값.
+              onAnalysisSelectCandidate={handleAnalysisSelectCandidate}
+              analysisActiveCandidateId={analysisRailCandidate?.examId ?? null}
+              analysisFocusId={
+                analysisFocus && !analysisFocus.consumed
+                  ? analysisFocus.analysisId
+                  : null
+              }
+              onAnalysisFocusConsumed={handleAnalysisFocusConsumed}
+              // 범용 뷰 강제 채널 — openStudentsView / openAnalysisForStudent.
+              onAssetViewControl={registerAssetViewControl}
+              // 「학생 관리」 뷰(v4 §3 U6): 필 건수 = 클래스 행 studentCount(원시값),
+              // 판 데이터 = 셸 훅 산출(상태 참조·useCallback — memo 무손상).
+              studentCount={selectedClass.studentCount}
+              studentsRows={studentsState.rows}
+              studentsAcademyCode={studentsState.academyCode}
+              studentsLoading={studentsState.loading}
+              studentsError={studentsState.error}
+              onStudentsReload={studentsState.reload}
+              studentsActiveId={studentsRailStudentId}
+              onStudentSelect={handleStudentSelect}
+              onStudentsRequestAdd={handleStudentsRequestAdd}
             />
           ) : (
             <StepGuidePane
@@ -4199,6 +4586,23 @@ export function StudioHomeClient({
           startResize={startResize}
           toggleCollapsed={toggleCollapsed}
           expand={expand}
+          // 조판 중엔 드래그가 **중앙 열**을 끈다(§11.5 F-6): aside 가 flex-1
+          // 잔여라 dossier 폭은 무의미하고, 사용자가 원한 건 「시험지 판을
+          // 오른쪽으로 더」= 중앙을 넓히기. 오른쪽으로 끌면 중앙이 넓어지므로
+          // sign +1. 클릭-닫기는 panelKey="dossier" 그대로(접힘 로직 무변경).
+          // 비조판에선 4개 모두 undefined → 종전 dossier 드래그 그대로.
+          overrideKey={anyComposeVisible ? "compose-center" : undefined}
+          overrideSign={1}
+          overrideRange={composeCenterRange}
+          onOverrideCommit={
+            anyComposeVisible ? commitComposeCenterWidth : undefined
+          }
+          // 조판 중 이동 여유 0(1280: aside 352 로 range.max === min)이면 핸들이
+          // 「끌 수 있는 척」 하지 않게 no-travel 표시(§11.9-④ 후속). 비조판은 불변.
+          dragDisabled={
+            anyComposeVisible &&
+            composeCenterRange.max === composeCenterRange.min
+          }
           // 접힘 상태에서 핸들이 창 우측 경계에 밀착하지 않게 살짝 안쪽으로
           // (트리 핸들 ml-2 와 대칭 — twMerge 가 기본 mx-0.5 의 우측만 대체).
           className={
@@ -4340,6 +4744,9 @@ export function StudioHomeClient({
           void refreshClasses().then(() => selectClass(id));
         }}
       />
+
+      {/* (구 시험 분석 워크스페이스 모달은 26-09-01 콘솔 대개편으로 철거 —
+          열람·처리는 레일 인라인, 무거운 편집은 새 탭. §3.10.28) */}
 
       {/* ── 레일 「학생 추가」(§3.1.1v2) — 학생 탭 §3.2 모달·§5 초대 키트 재사용.
           신규 등록 성공 시 초대 시트(z-90)가 모달(z-70) 위에 자동 오픈되고,

@@ -30,12 +30,23 @@ export {
   deleteExamStudent,
   updateStudentReportDoc,
   rollbackStudentReport,
+  listExamClassRoster,
+  issueExamAnswerLinkForRoster,
+  listExamClassRosterByExam,
+  issueExamAnswerLinkByExam,
 } from "./students";
-export type { RosterStudentPick } from "./students";
+export type { RosterStudentPick, ExamRosterEntry } from "./students";
 
-export { enableExamReportShare, disableExamReportShare } from "./share";
+export {
+  enableExamReportShare,
+  disableExamReportShare,
+  enableExamAnalysisShare,
+  disableExamAnalysisShare,
+} from "./share";
 
 export { enableAnswerLink, disableAnswerLink } from "./answer-link";
+
+export { ensureInternalAnalysisForExam } from "./internal-sync";
 
 // 주의: ./_helpers 의 런타임 export(assert*, requireAuth 등)를 여기서 재노출하지
 // 말 것 — _helpers 는 prisma 를 import 하는 서버 전용 모듈이라, directive 없는 이

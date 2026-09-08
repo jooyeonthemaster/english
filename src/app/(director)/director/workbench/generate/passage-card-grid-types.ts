@@ -56,6 +56,14 @@ export interface PassageCardGridProps {
   // pass them (e.g. tutor program builder) simply hide the sort control.
   passageSortOrder?: PassageSortOrder;
   setPassageSortOrder?: (v: PassageSortOrder) => void;
+  /**
+   * 정렬·검색 클러스터 우측에 얹을 호스트 액션(additive, 26-09-01) — 스튜디오가
+   * 「지문 추가」 런처(add-passage-launcher)를 여기로 이사시켰다(구 소스 스위처
+   * sticky 클러스터). 미전달 = 기존 호스트(generate 등) 픽셀 불변.
+   */
+  toolbarAction?: ReactNode;
+  /** 폴더 경로와 정렬·검색 사이의 범위 선택. 좁은 폭에서는 툴바 안에서 줄바꿈. */
+  toolbarScope?: ReactNode;
   passageStatusCounts: { all: number; analyzed: number; unanalyzed: number };
   activeFilterCount: number;
 

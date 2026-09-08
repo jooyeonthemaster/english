@@ -90,6 +90,7 @@ import {
   type VariantDirection,
   type WholePassageTransformMode,
 } from "@/lib/passage-transform/schema";
+import { PassageHygieneBadge } from "@/components/workbench/passage-hygiene-badge";
 
 // ============================================================================
 // 워크스페이스 지문 행 — 본문 직접 편집 + AI 변형(문장 재작성·앞 맥락 추가) +
@@ -2563,6 +2564,9 @@ export function WorkspacePassageRow({
                   고친 자리 {editSpans.length}
                 </button>
               ) : null}
+              {/* 「지문 정리 필요」(26-09-08) — 번호 줄·선택지 슬래시·빈칸 같은 오염이
+                  생성 실패로 이어지기 전에 여기서 말한다. 게이트 아님. */}
+              <PassageHygieneBadge content={row.content} variant="line" className="max-w-[55%]" />
               {coachVisible && !editorLocked && !disabled ? (
                 <span
                   className={

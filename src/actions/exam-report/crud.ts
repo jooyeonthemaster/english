@@ -11,6 +11,7 @@
 // ============================================================================
 
 import { revalidatePath } from "next/cache";
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import {
   isExamReportPagePath,
@@ -21,7 +22,7 @@ import {
   parseStudentResponses,
 } from "@/lib/exam-report/schemas";
 import { computeScoreSummary } from "@/lib/exam-report/grading";
-import type { ExamReviewState } from "@/lib/exam-report/types";
+import { EXAM_REPORT_MAX_PAGES, type ExamReviewState } from "@/lib/exam-report/types";
 import {
   requireAuth,
   assertExamAnalysisBelongsToAcademy,
@@ -33,7 +34,8 @@ import {
 } from "./_helpers";
 
 const HUB_PATH = "/director/workbench/exam-report";
-const LIBRARY_PATH = "/director/workbench/exam-report/library";
+// 26-09-01: 구 LIBRARY_PATH(/exam-report/library) 는 허브로 통합돼 redirect 껍데기만
+// 남았다 — 렌더할 데이터가 없어 revalidate 대상이 아니다(허브 하나만 무효화).
 const workspacePath = (id: string) => `/director/workbench/exam-report/${id}`;
 
 // ── 생성 ─────────────────────────────────────────────────────────────────────
@@ -59,7 +61,6 @@ export async function createExamAnalysis(
     select: { id: true },
   });
   revalidatePath(HUB_PATH);
-  revalidatePath(LIBRARY_PATH);
   return { id: created.id };
 }
 
@@ -70,12 +71,23 @@ export async function createExamAnalysis(
  * 있으면 '학생 답안지' 흐름 — 같은 사진을 sourceFiles 로 학생1 을 동시 생성한다
  * (별도 업로드 없이 시험 사진을 그대로 학생 판독 대상으로 공유). 경로는 이 분석 전용
  * pages 키 형식과 정확히 일치해야 한다(임의 키 주입 차단).
+ *
+ * 페이지 상한은 **서버가 강제한다**(EXAM_REPORT_MAX_PAGES — 클라 MAX_PAGES 와 같은
+ * 정본). E1a 무과금 프로브가 v4 청크(≤6장)로 ceil(N/6) 콜을 쓰므로 클라 상한만으론
+ * 원가 상한이 없었다.
+ *
+ * 재첨부(이미 structure 가 있는 행)는 저장된 examMap 의 `page` 색인을 지운다 —
+ * 사진이 바뀌면 문항→페이지 색인이 엉뚱한 장을 가리켜 E1b 국소 배치가 잘못된 사진으로
+ * 정답을 도출(과금)한다. page 가 없으면 E1b 는 전 페이지 폴백(무회귀 경로). DRAFT 행은
+ * structure 를 비워 E1a 가 새 사진으로 다시 돈다. analysis(문항 분석)는 건드리지 않는다.
  */
 export async function attachExamSources(
   id: string,
   input: AttachExamSourcesInput,
 ): Promise<
-  CasResult<"NOT_FOUND" | "INVALID_PATH" | "NO_PAGES"> & { firstStudentId?: string }
+  CasResult<"NOT_FOUND" | "INVALID_PATH" | "NO_PAGES" | "TOO_MANY_PAGES"> & {
+    firstStudentId?: string;
+  }
 > {
   const staff = await requireAuth();
 
@@ -83,15 +95,35 @@ export async function attachExamSources(
     .filter((p) => typeof p.path === "string" && p.path.length > 0)
     .map((p, i) => ({ path: p.path, page: typeof p.page === "number" ? p.page : i + 1 }));
   if (pages.length === 0) return { ok: false, error: "NO_PAGES" };
+  if (pages.length > EXAM_REPORT_MAX_PAGES) return { ok: false, error: "TOO_MANY_PAGES" };
   if (pages.some((p) => !isExamReportPagePath(p.path, staff.academyId, id))) {
     return { ok: false, error: "INVALID_PATH" };
   }
 
   const analysis = await prisma.examAnalysis.findFirst({
     where: { id, academyId: staff.academyId, deletedAt: null },
-    select: { id: true, aiMeta: true },
+    select: { id: true, aiMeta: true, status: true, structure: true },
   });
   if (!analysis) return { ok: false, error: "NOT_FOUND" };
+
+  // 기존 지도의 페이지 색인 무효화(위 doc 주석). structure 가 없으면 무접촉.
+  const priorMap = parseExamMap(analysis.structure);
+  const structurePatch: { structure?: Prisma.InputJsonValue | typeof Prisma.DbNull } =
+    !priorMap
+      ? {}
+      : analysis.status === "DRAFT"
+        ? { structure: Prisma.DbNull }
+        : {
+            structure: toJson({
+              ...priorMap,
+              // 키 자체를 뺀다(undefined 값을 JSON 에 싣지 않는다).
+              questions: priorMap.questions.map((q) => {
+                const next = { ...q };
+                delete next.page;
+                return next;
+              }),
+            }),
+          };
 
   // B2 락아웃 복구: 시험지 사진을 새로 첨부(교체)하면 E1a 무과금 프로브 카운터
   // (aiMeta.probeRuns)를 0 으로 리셋한다 — 화질/각도를 고쳐 다시 올려 재시도하는
@@ -109,6 +141,7 @@ export async function attachExamSources(
       sourceFiles: pagesJson,
       sourceType: "IMAGE",
       aiMeta: toJson({ ...priorAiMeta, probeRuns: 0 }),
+      ...structurePatch,
       version: { increment: 1 },
     },
   });
@@ -407,6 +440,5 @@ export async function deleteExamAnalysis(id: string): Promise<{ ok: true }> {
   ]);
 
   revalidatePath(HUB_PATH);
-  revalidatePath(LIBRARY_PATH);
   return { ok: true };
 }

@@ -656,6 +656,18 @@ export interface AnalysisStreamPreview {
  * 「실패했다」를 본다.
  * ⇒ 절단은 「실패」가 아니라 「판정 보류」다. 유일한 판정자는 잡 폴링이다.
  */
+/** 402 — 잔액 부족. 배치 발사는 첫 402 에서 남은 지문을 시작하지 않는다(아래 addManyToQueue). */
+export class AnalysisInsufficientCredits extends Error {
+  readonly balance: number;
+  readonly required: number;
+  constructor(message: string, balance: number, required: number) {
+    super(message);
+    this.name = "AnalysisInsufficientCredits";
+    this.balance = balance;
+    this.required = required;
+  }
+}
+
 class AnalysisStreamTruncated extends Error {
   constructor(message: string) {
     super(message);
@@ -796,6 +808,15 @@ async function runPassageAnalysisRequest(
       //   `String(배열)` = "[object Object]" 가 되어 교사 화면에 그 문자열이 뜬다.
       //   문자열일 때만 상세로 쓰고, 아니면 error 자구로 폴백한다.
       const detail = typeof data.details === "string" ? data.details : null;
+      if (res.status === 402) {
+        // 서버 사전 게이트(credit-preflight)의 한국어 자구를 그대로 카드에 싣는다.
+        const body = data as unknown as { balance?: number; required?: number };
+        throw new AnalysisInsufficientCredits(
+          data.error || "크레딧이 부족합니다.",
+          typeof body.balance === "number" ? body.balance : 0,
+          typeof body.required === "number" ? body.required : 0,
+        );
+      }
       throw new Error(detail || data.error || "Failed to start passage analysis job.");
     }
     return data;
@@ -1191,11 +1212,19 @@ export function usePassageQueue(
         return { success: prepared.length, failed: 0 };
       }
 
+      // 첫 402(잔액 부족) 이후의 지문은 요청조차 보내지 않는다 — 잔액 0 에서 13지문을
+      // 발사하면 13개 요청이 전부 402 로 돌아오던 낭비·소음 차단(26-09-08 전수조사).
+      let stoppedBy402: AnalysisInsufficientCredits | null = null;
       void runWithConcurrency(
         prepared,
         ANALYSIS_FAST_BATCH_CONCURRENCY,
         async ({ passage, promptConfig }) => {
           try {
+            if (stoppedBy402) {
+              throw new Error(
+                `크레딧 부족으로 시작하지 않았어요 (보유 ${stoppedBy402.balance})`,
+              );
+            }
             const response = await startPassageAnalysisJob(passage.id, promptConfig, {
               fast: true,
               onPreview: makePreviewSink(passage.id, setLocalQueue, setJobQueue),
@@ -1217,6 +1246,9 @@ export function usePassageQueue(
             if (err instanceof AnalysisStreamTruncated) {
               applyStreamTruncation(passage.id);
               throw err;
+            }
+            if (err instanceof AnalysisInsufficientCredits && !stoppedBy402) {
+              stoppedBy402 = err;
             }
             updateQueueItem(setLocalQueue, passage.id, (item) =>
               applyAnalysisJobError(clearPreview(item), err),

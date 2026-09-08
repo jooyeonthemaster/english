@@ -48,6 +48,7 @@ import {
 } from "@/lib/generate-tour-demo";
 import { TEXT_EXTRACTION_MIN_LENGTH } from "../../bulk-extract-client/constants";
 import { TutorialVideoPopup } from "../tutorial/tutorial-video-popup";
+import { PassageHygieneBadge } from "@/components/workbench/passage-hygiene-badge";
 
 interface TextPassageDraft {
   id: string;
@@ -819,7 +820,8 @@ export function TextInputBoard({
                             aria-label={`지문 ${idx + 1} 본문`}
                             className="w-full resize-y rounded-md border border-slate-200 bg-white px-3 py-2 text-[12px] leading-6 text-slate-900 outline-none transition-colors focus:border-blue-400 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50"
                           />
-                          <div className="flex justify-end">
+                          <div className="flex items-center justify-end gap-1.5">
+                            <PassageHygieneBadge content={p.text} />
                             <span
                               className={
                                 "rounded-full px-2 py-0.5 text-[10px] font-bold ring-1 " +

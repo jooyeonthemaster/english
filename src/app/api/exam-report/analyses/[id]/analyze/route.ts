@@ -51,6 +51,7 @@ import {
   loadExamImages,
   scheduleSelfResume,
   setupResume,
+  type LoadedExamImages,
   type RunSetup,
 } from "./_lib/route-run";
 import {
@@ -205,6 +206,8 @@ export async function POST(
 
   let isResume = false;
   let images: AtlasChatImageInput[];
+  // pages:null(전 페이지) 배치용 지연 세트 — images 를 통째로 한 콜에 실으면 총량 예산 초과.
+  let loadFallbackImages: LoadedExamImages["loadFallbackImages"];
   let examMap = priorExamMap;
   let setup: RunSetup;
 
@@ -228,7 +231,7 @@ export async function POST(
         .catch(() => {});
     }
     try {
-      images = await loadExamImages(pages);
+      ({ images, loadFallbackImages } = await loadExamImages(pages));
     } catch {
       await prisma.examAnalysis
         .updateMany({
@@ -282,7 +285,7 @@ export async function POST(
     isResume = true;
     setup = resumed.setup;
     try {
-      images = await loadExamImages(pages);
+      ({ images, loadFallbackImages } = await loadExamImages(pages));
     } catch {
       await yieldJobFence(setup.fence);
       return imageLoadFailed();
@@ -375,6 +378,7 @@ export async function POST(
     const outcome = await analyzeExamDirect({
       examMap: runExamMap,
       images,
+      fallbackImages: loadFallbackImages,
       examMeta,
       targetNumbers: runTargetNumbers,
       forceNumbers: runForceNumbers,

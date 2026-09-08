@@ -1,5 +1,6 @@
 "use client";
 
+import { deferWhileDragging } from "@/components/layout/panel-drag-freeze";
 import { useEffect, useMemo, useRef, useState, type MouseEvent as ReactMouseEvent } from "react";
 import { PAPER_SIZE_SPECS, PREVIEW_PAGE_WIDTH } from "../paper-builder/constants";
 import type { PaperSize } from "../paper-builder/types";
@@ -51,13 +52,21 @@ export function usePreviewZoom(paperSize: PaperSize = "A4") {
       }
       lastFitWidthRef.current = availableWidth;
       const nextFit = Math.min(1, Math.max(PREVIEW_ZOOM_MIN, availableWidth / baseWidth));
-      setFitZoom(Math.round(nextFit * 100) / 100);
+      // floor — round 는 올림 쪽에서 페이지가 최대 4px(0.005×794) 넘쳐 스크롤러에 가로 스크롤바가
+      // 생겼다(26-09-08 스튜디오 aside 508px 실측 3px 넘침). 내림은 절대 넘치지 않는다.
+      setFitZoom(Math.floor(nextFit * 100) / 100);
     };
 
     updateFitZoom();
-    const observer = new ResizeObserver(updateFitZoom);
+    // 패널 드래그 중엔 재맞춤을 미루고 놓을 때 1회(panel-drag-freeze.ts) — 프레임마다 setFitZoom 이
+    // 돌면 조판 전체가 리렌더된다(데드밴드 24px 로도 드래그 200px 에 8회).
+    const deferred = deferWhileDragging<void>(() => updateFitZoom());
+    const observer = new ResizeObserver(() => deferred.observe(undefined));
     observer.observe(scroller);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      deferred.dispose();
+    };
   }, [baseWidth]);
 
   function zoomIn() {

@@ -18,6 +18,7 @@ import {
 import { shouldIncludeSourcePassageByDefault } from "../paper-builder/passage-policy";
 import { normalizePassageText } from "../paper-builder/text-normalization";
 import { isKoSetGroupId } from "@/lib/korean/sets/paper";
+import { isGichulSetMemberItem } from "../paper-builder/question-body-layout";
 
 // [KOSET-3] KO 세트(`set:<setId>`) 연속 구간 "내부"로의 삽입을 가장 가까운 구간
 // 경계로 스냅한다. 세트 멤버 사이에 다른 항목이 끼면 buildGroups(인접 병합)가
@@ -564,13 +565,18 @@ export function usePaperItems(
   }
 
   function updateItem(localId: string, patch: Partial<PaperItem>) {
-    commitItems((current) =>
-      current.map((item) => {
+    commitItems((current) => {
+      const target = current.find((item) => item.localId === localId);
+      const sharedPassage = target && isGichulSetMemberItem(target) && patch.includePassage !== undefined;
+      return current.map((item) => {
+        if (sharedPassage && item.groupId === target.groupId && !item.locked) {
+          return { ...item, ...(item.localId === localId ? patch : { includePassage: patch.includePassage }) };
+        }
         if (item.localId !== localId) return item;
         if (item.locked && patch.locked !== false) return item;
         return { ...item, ...patch };
-      }),
-    );
+      });
+    });
   }
 
   function distributeTotalPoints(targetTotal: number): boolean {
@@ -765,11 +771,15 @@ export function usePaperItems(
     let nextActiveId: string | null | undefined;
     commitItems((current) => {
       const target = current.find((item) => item.localId === localId);
-      if (target?.locked) {
+      const bundle = target && isGichulSetMemberItem(target)
+        ? current.filter((item) => item.groupId === target.groupId)
+        : target ? [target] : [];
+      if (bundle.some((item) => item.locked)) {
         toast.error("잠긴 블록은 먼저 잠금 해제해야 삭제할 수 있습니다.");
         return current;
       }
-      const next = current.filter((item) => item.localId !== localId);
+      const removed = new Set(bundle.map((item) => item.localId));
+      const next = current.filter((item) => !removed.has(item.localId));
       nextActiveId = next[0]?.localId || null;
       return next;
     }, () => nextActiveId);
@@ -781,11 +791,15 @@ export function usePaperItems(
       const sourceIndex = current.findIndex((item) => item.localId === sourceLocalId);
       if (sourceIndex < 0) return current;
       const sourceItem = current[sourceIndex];
-      if (sourceItem.locked) {
+      const sourceItems = isGichulSetMemberItem(sourceItem)
+        ? current.filter((item) => item.groupId === sourceItem.groupId)
+        : [sourceItem];
+      if (sourceItems.some((item) => item.locked)) {
         toast.error("잠긴 블록은 먼저 잠금 해제해야 이동할 수 있습니다.");
         return current;
       }
-      const withoutSource = current.filter((item) => item.localId !== sourceLocalId);
+      const moved = new Set(sourceItems.map((item) => item.localId));
+      const withoutSource = current.filter((item) => !moved.has(item.localId));
       const targetIndex = withoutSource.findIndex((item) => item.localId === targetLocalId);
       if (targetIndex < 0) return current;
       const next = [...withoutSource];
@@ -796,7 +810,7 @@ export function usePaperItems(
         placement === "after" ? targetIndex + 1 : targetIndex,
         [sourceItem.groupId],
       );
-      next.splice(insertIndex, 0, sourceItem);
+      next.splice(insertIndex, 0, ...sourceItems);
       return next;
     }, () => sourceLocalId);
   }
@@ -804,7 +818,7 @@ export function usePaperItems(
   function ungroupItem(localId: string) {
     commitItems((current) =>
       current.map((item) =>
-        item.localId === localId && !item.locked && item.blockType === "question"
+        item.localId === localId && !item.locked && item.blockType === "question" && !isGichulSetMemberItem(item)
           ? {
             ...item,
             groupId: `single:${item.localId}`,
@@ -829,7 +843,7 @@ export function usePaperItems(
       for (const item of current) {
         const last = units[units.length - 1];
         const sameGroup =
-          keepGroups &&
+          (keepGroups || isGichulSetMemberItem(item)) &&
           item.blockType === "question" &&
           Boolean(item.groupId) &&
           last !== undefined &&

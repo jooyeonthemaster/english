@@ -14,6 +14,7 @@
 // - storageKey 지정 시 localStorage 에 폭·접힘 상태 영속화.
 // ============================================================================
 
+import { beginPanelDrag, endPanelDrag } from "./panel-drag-freeze";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
 import { GripVertical } from "lucide-react";
@@ -34,6 +35,34 @@ export interface PanelSpec {
 interface StoredState {
   widths: Record<string, number>;
   collapsed: Record<string, boolean>;
+}
+
+/**
+ * 오버라이드 드래그(§11.5 F-6, 26-09-08) — 훅의 spec 에 **없는** 요소를 같은
+ * 핸들·같은 고속 경로(`[data-panel-key]` 조회 → rAF → pointerup 1회 커밋)로 끈다.
+ *
+ * 왜: 스튜디오 조판 중엔 우측 aside 가 flex-1 잔여라 dossier 폭을 바꿔도 화면이
+ * 안 움직인다(flex-basis 0 에 style.width 가 묻힘). 그때 핸들이 조절해야 할 것은
+ * **중앙 열**인데, 그 폭은 훅 상태가 아니라 호스트 상태다. spec 을 추가하면
+ * 비조판 레이아웃(dossier 스펙·storageKey)까지 흔들리므로, 저장·클램프 책임을
+ * 호스트에 두고 훅은 드래그 기계만 빌려 준다(additive — 기존 호출부 무회귀).
+ *
+ * 계약:
+ * - 시작 폭은 앵커 요소의 실측 폭(getBoundingClientRect)이다 — 호스트의 표시
+ *   클램프(창 축소 시 비영속 클램프)와 저장값이 어긋나도 끌리는 건 보이는 폭.
+ * - 앵커가 없으면 드래그는 무동작(폭을 알 수 없고 쓸 곳도 없다). 클릭-닫기는
+ *   onClick 별도 경로라 그대로 동작한다.
+ * - range 는 호출 시점 값이다(호스트가 컨테이너 폭·다른 패널 폭으로 계산).
+ *   max < min 이면 min 으로 고정된다(clampNumber 계약).
+ */
+export interface PanelResizeOverride {
+  /** 끌 요소의 `data-panel-key`(훅 spec 밖의 키) */
+  key: string;
+  /** 핸들이 요소의 오른쪽에 있으면 1(오른쪽으로 끌면 넓어짐), 왼쪽이면 -1 */
+  sign: 1 | -1;
+  range: { min: number; max: number };
+  /** pointerup 에 1회 — 호스트가 state·영속화를 맡는다 */
+  onCommit: (width: number) => void;
 }
 
 function clampNumber(value: number, min: number, max: number) {
@@ -162,10 +191,25 @@ export function useResizablePanels({
   }, []);
 
   const startResize = useCallback(
-    (event: ReactPointerEvent<HTMLElement>, key: string) => {
+    (
+      event: ReactPointerEvent<HTMLElement>,
+      key: string,
+      override?: PanelResizeOverride,
+    ) => {
       if (event.pointerType === "mouse" && event.button !== 0) return;
-      const spec = panelsRef.current.find((p) => p.key === key);
-      if (!spec) return;
+      // 오버라이드면 spec 을 찾지 않는다(훅 밖 키) — 앵커 실측이 시작 폭이다.
+      const spec = override ? null : panelsRef.current.find((p) => p.key === key);
+      if (!override && !spec) return;
+      const overrideEl = override
+        ? (elementRef.current?.querySelector<HTMLElement>(
+            `[data-panel-key="${override.key}"]`,
+          ) ?? null)
+        : null;
+      // 앵커 없는 오버라이드는 무동작(PanelResizeOverride 계약) — 캡처 전에 나간다.
+      if (override && !overrideEl) return;
+      const overrideStart = overrideEl
+        ? overrideEl.getBoundingClientRect().width
+        : 0;
       suppressClickRef.current = false;
       const startX = event.clientX;
       const startWidths = { ...state.widths };
@@ -192,8 +236,12 @@ export function useResizablePanels({
       // 놓을 때 한 번만 setState 로 커밋한다(리렌더 0회). 앵커가 없는 기존
       // 소비처는 종전 setState 경로 그대로(무회귀). 접힌 패널은 언마운트라
       // 앵커가 없을 수 있다 — 드래그 대상 패널의 앵커만 있으면 고속 경로.
+      // 오버라이드는 자기 앵커 하나만 끈다 — spec 패널(tree/dossier)의 style.width
+      // 는 건드리지 않는다(비조판 폭·저장값 무회귀).
       const panelEls: Record<string, HTMLElement> = {};
-      if (elementRef.current) {
+      if (override && overrideEl) {
+        panelEls[override.key] = overrideEl;
+      } else if (elementRef.current) {
         for (const p of panelsRef.current) {
           const found = elementRef.current.querySelector<HTMLElement>(
             `[data-panel-key="${p.key}"]`,
@@ -201,7 +249,8 @@ export function useResizablePanels({
           if (found) panelEls[p.key] = found;
         }
       }
-      const fastPath = Boolean(panelEls[key]);
+      const dragKey = override ? override.key : key;
+      const fastPath = Boolean(panelEls[dragKey]);
       let latestWidths: Record<string, number> | null = null;
       let rafId: number | null = null;
       const flush = () => {
@@ -225,8 +274,24 @@ export function useResizablePanels({
           // 아래 요소가 계속 바뀌어 카드 수백 장의 hover 인밸리데이션이
           // 레이아웃 스래시에 얹힌다. 캡처 덕에 move 수신에는 영향 없다.
           document.body.style.pointerEvents = "none";
+          // 이웃 패널 안의 ResizeObserver(조판 fitZoom 등)를 드래그 동안 동결 — panel-drag-freeze.ts
+          beginPanelDrag();
         }
         move.preventDefault();
+        if (override) {
+          // 훅 상태는 손대지 않는다 — 클램프는 호스트가 준 range 하나뿐.
+          const w = Math.round(
+            clampNumber(
+              overrideStart + deltaX * override.sign,
+              override.range.min,
+              override.range.max,
+            ),
+          );
+          latestWidths = { [override.key]: w };
+          if (rafId === null) rafId = requestAnimationFrame(flush);
+          return;
+        }
+        if (!spec) return;
         const next = {
           ...startWidths,
           [key]: startWidths[key] + deltaX * spec.sign,
@@ -251,14 +316,21 @@ export function useResizablePanels({
         if (rafId !== null) cancelAnimationFrame(rafId);
         if (fastPath && latestWidths) {
           flush();
-          // 커밋 1회 — 저장·클램프 규칙은 종전과 동일.
           const committed = latestWidths;
-          setState((cur) => ({ ...cur, widths: { ...cur.widths, ...committed } }));
+          if (override) {
+            // 오버라이드 커밋 1회 — 훅 state(저장값) 는 무변경, 호스트가 받는다.
+            override.onCommit(committed[override.key]);
+          } else {
+            // 커밋 1회 — 저장·클램프 규칙은 종전과 동일.
+            setState((cur) => ({ ...cur, widths: { ...cur.widths, ...committed } }));
+          }
         }
         if (didDrag) {
           document.body.style.cursor = prevCursor;
           document.body.style.userSelect = prevSelect;
           document.body.style.pointerEvents = prevPointerEvents;
+          // 최종 폭이 DOM·커밋에 반영된 뒤 동결 해제 → 관찰자들이 마지막 값으로 1회 적용
+          endPanelDrag();
         }
         try {
           handleEl.releasePointerCapture(event.pointerId);
@@ -286,6 +358,8 @@ export function useResizablePanels({
     containerRef,
     /** 접힘이면 0 으로 치환된 표시용 폭 */
     widths,
+    /** 관찰된 컨테이너 폭(미관측 0) — 오버라이드 range 계산용(additive, §11.5) */
+    containerWidth,
     collapsed: state.collapsed,
     startResize,
     toggleCollapsed,
@@ -306,6 +380,11 @@ export function PanelHandle({
   toggleCollapsed,
   expand,
   className,
+  overrideKey,
+  overrideSign,
+  overrideRange,
+  onOverrideCommit,
+  dragDisabled,
 }: {
   /** 세로 라벨 텍스트 (예: "대상 선택") */
   label: string;
@@ -313,13 +392,41 @@ export function PanelHandle({
   collapsed: boolean;
   /** 핸들 기준 패널 위치 — 화살표 방향 결정 */
   side: "left" | "right";
-  startResize: (e: ReactPointerEvent<HTMLElement>, key: string) => void;
+  startResize: (
+    e: ReactPointerEvent<HTMLElement>,
+    key: string,
+    override?: PanelResizeOverride,
+  ) => void;
   toggleCollapsed: (key: string) => void;
   expand: (key: string) => void;
   className?: string;
+  /**
+   * 오버라이드 드래그(PanelResizeOverride 참조) — 4개가 **한 벌**이다: overrideKey
+   * 와 onOverrideCommit 이 둘 다 있을 때만 드래그가 다른 요소로 간다. 클릭-닫기·
+   * 접힘 펼치기는 panelKey 그대로(collapse 대상은 여전히 spec 패널).
+   */
+  overrideKey?: string;
+  overrideSign?: 1 | -1;
+  overrideRange?: { min: number; max: number };
+  onOverrideCommit?: (width: number) => void;
+  /**
+   * 드래그 이동 여유가 0 인 상태(예: 조판 중 중앙 열 range.max === min)를 **표시**
+   * 한다(additive, §11.9-④ 후속). 드래그는 시작하지 않고 aria-disabled·기본 커서·
+   * 사유 툴팁만 — 클릭-닫기는 그대로 살아 있다(사용자가 패널을 접을 길은 남긴다).
+   */
+  dragDisabled?: boolean;
 }) {
   const closeArrow = side === "left" ? "<" : ">";
   const openArrow = side === "left" ? ">" : "<";
+  const override: PanelResizeOverride | undefined =
+    overrideKey && onOverrideCommit
+      ? {
+          key: overrideKey,
+          sign: overrideSign ?? 1,
+          range: overrideRange ?? { min: 0, max: Number.POSITIVE_INFINITY },
+          onCommit: onOverrideCommit,
+        }
+      : undefined;
   if (collapsed) {
     return (
       <button
@@ -341,13 +448,23 @@ export function PanelHandle({
   return (
     <button
       type="button"
-      onPointerDown={(e) => startResize(e, panelKey)}
+      // dragDisabled 면 pointerdown 을 아예 안 잡는다 — startResize 의 클릭 억제
+      // 가드를 타지 않아 클릭-닫기가 그대로 발화한다.
+      onPointerDown={
+        dragDisabled ? undefined : (e) => startResize(e, panelKey, override)
+      }
       onClick={() => toggleCollapsed(panelKey)}
-      title="드래그하여 폭 조절 · 클릭하여 닫기"
+      title={
+        dragDisabled
+          ? "화면이 좁아 넓힐 수 없습니다 · 클릭하여 닫기"
+          : "드래그하여 폭 조절 · 클릭하여 닫기"
+      }
       aria-label={`${label} 패널 닫기`}
       aria-expanded
+      aria-disabled={dragDisabled || undefined}
       className={cn(
-        "group/phandle mx-0.5 flex h-full min-h-0 w-4 shrink-0 cursor-col-resize touch-none select-none flex-col items-center justify-center gap-1 rounded-md py-1 text-[11px] font-semibold text-blue-400 transition-colors hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100",
+        "group/phandle mx-0.5 flex h-full min-h-0 w-4 shrink-0 touch-none select-none flex-col items-center justify-center gap-1 rounded-md py-1 text-[11px] font-semibold text-blue-400 transition-colors hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100",
+        dragDisabled ? "cursor-default" : "cursor-col-resize",
         className,
       )}
     >

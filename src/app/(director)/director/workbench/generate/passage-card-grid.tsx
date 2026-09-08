@@ -90,6 +90,7 @@ import type {
 import { useFolderWindowHeight } from "./use-folder-window-height";
 import { useMobilePagination } from "@/hooks/use-mobile-pagination";
 import { Pagination } from "@/components/workbench/shared/pagination";
+import { PassageHygieneBadge } from "@/components/workbench/passage-hygiene-badge";
 
 // 카드 컨테이너 기본 클래스 — 모바일은 한 줄짜리 컴팩트 리스트 행, 데스크톱은
 // 기존 세로 카드. 글로우/선택 상태 클래스는 뒤에 공통으로 덧붙는다.
@@ -110,8 +111,12 @@ const COMPACT_CARD_CLASS =
 // (h-300/260·contain-intrinsic-size)는 쓰지 않는다(스크롤바 추정 어긋남 방지).
 // flex-wrap: 좁은 열에서 우측 그룹(이력·배지·액션)이 통째로 제목 아래 줄로
 // 낙하한다 — 제목 압착·세로 래핑 방지(제목 블록 min-w-[220px] 와 한 쌍).
+// @container/list-row: 스튜디오처럼 뷰포트는 넓은데 **패널만** 좁은 호스트에서
+// 뷰포트 breakpoint(max-md)가 못 잡는 압착을 행 자신의 폭으로 판정한다 —
+// passage-list-row.tsx 의 @max-2xl/list-row:* 변형과 한 쌍(672px 미만이면
+// 우측 그룹을 전폭 둘째 줄로 확정 낙하).
 const LIST_ROW_CLASS =
-  "group relative flex flex-row flex-wrap items-center gap-2.5 overflow-hidden rounded-lg border bg-white px-3 py-2 transition-all duration-200 hover:border-slate-300 hover:shadow-sm cursor-pointer";
+  "group @container/list-row relative flex flex-row flex-wrap items-center gap-2.5 overflow-hidden rounded-lg border bg-white px-3 py-2 transition-all duration-200 hover:border-slate-300 hover:shadow-sm cursor-pointer";
 
 // ─── Component ───────────────────────────────────────
 
@@ -177,6 +182,8 @@ export function PassageCardGrid({
   questionsByPassage,
   onLazyLoadQuestions,
   onOpenQuestionDetail,
+  toolbarAction,
+  toolbarScope,
   learningGeneratingPassageIds,
   learningCompletedPassageIds,
   rowActivity,
@@ -1048,83 +1055,98 @@ export function PassageCardGrid({
       className="flex flex-1 min-h-0 w-full min-w-0 flex-col overflow-hidden bg-white"
     >
       {/* ─── 지문 폴더 (탐색/필터 전용) ─── */}
-      <div className="shrink-0 border-b border-slate-100">
-        <div className="flex min-w-0 items-center gap-2 px-5 pt-3 pb-1.5">
-          {/* §3.10.17-c — 전체선택을 브레드크럼 행에 인라인(고아 행 폐기 호스트) */}
-          {inlineSelectAllInHeader ? (
-            <input
-              ref={selectAllCheckboxRef}
-              type="checkbox"
-              checked={allVisibleSelected}
-              onChange={() =>
-                allVisibleSelected ? deselectAll() : selectAll()
-              }
-              disabled={filteredPassages.length === 0}
-              title={
-                allVisibleSelected
-                  ? "선택 해제"
-                  : `${filteredPassages.length}개 전체 선택`
-              }
-              aria-label={allVisibleSelected ? "선택 해제" : "전체 선택"}
-              className="size-4 shrink-0 cursor-pointer rounded border-slate-300 text-blue-600 focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
-            />
-          ) : null}
-          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-blue-50 text-blue-600">
-            <FolderOpen className="h-3.5 w-3.5" />
-          </span>
-          <div className="flex min-w-0 flex-1 items-center gap-1.5">
-            <span className="shrink-0 truncate text-[12px] font-medium text-slate-400">
-              {breadcrumbRootLabel} ·
+      <div className="@container/passage-toolbar shrink-0 border-b border-slate-100">
+        <div
+          data-passage-folder-toolbar
+          className="flex min-w-0 flex-wrap items-center gap-2 px-5 pt-3 pb-1.5"
+        >
+          <div className="flex min-w-0 flex-[1_1_auto] items-center gap-2">
+            {/* §3.10.17-c — 전체선택을 브레드크럼 행에 인라인(고아 행 폐기 호스트) */}
+            {inlineSelectAllInHeader ? (
+              <input
+                ref={selectAllCheckboxRef}
+                type="checkbox"
+                checked={allVisibleSelected}
+                onChange={() =>
+                  allVisibleSelected ? deselectAll() : selectAll()
+                }
+                disabled={filteredPassages.length === 0}
+                title={
+                  allVisibleSelected
+                    ? "선택 해제"
+                    : `${filteredPassages.length}개 전체 선택`
+                }
+                aria-label={allVisibleSelected ? "선택 해제" : "전체 선택"}
+                className="size-4 shrink-0 cursor-pointer rounded border-slate-300 text-blue-600 focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+              />
+            ) : null}
+            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-blue-50 text-blue-600">
+              <FolderOpen className="h-3.5 w-3.5" />
             </span>
-            <button
-              type="button"
-              onClick={() => setSelectedCollectionId("")}
-              className={
-                "shrink-0 cursor-pointer truncate text-[12px] transition-colors hover:text-blue-700 " +
-                (breadcrumbPath.length === 0
-                  ? "font-bold text-slate-900"
-                  : "font-medium text-slate-500")
-              }
-            >
-              전체 지문
-            </button>
-            {breadcrumbPath.map((folder, index) => {
-              const current = index === breadcrumbPath.length - 1;
-              return (
-                <span
-                  key={folder.id}
-                  className="flex min-w-0 items-center gap-1"
-                >
-                  <ChevronRight
-                    className="size-3 shrink-0 text-slate-300"
-                    aria-hidden="true"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setSelectedCollectionId(folder.id)}
-                    className={
-                      "cursor-pointer truncate text-[12px] transition-colors hover:text-blue-700 " +
-                      (current
-                        ? "font-bold text-slate-900"
-                        : "font-medium text-slate-500")
-                    }
+            <div className="flex min-w-0 flex-1 items-center gap-1.5">
+              <span className="shrink-0 truncate text-[12px] font-medium text-slate-400">
+                {breadcrumbRootLabel} ·
+              </span>
+              <button
+                type="button"
+                onClick={() => setSelectedCollectionId("")}
+                className={
+                  "shrink-0 cursor-pointer truncate text-[12px] transition-colors hover:text-blue-700 " +
+                  (breadcrumbPath.length === 0
+                    ? "font-bold text-slate-900"
+                    : "font-medium text-slate-500")
+                }
+              >
+                전체 지문
+              </button>
+              {breadcrumbPath.map((folder, index) => {
+                const current = index === breadcrumbPath.length - 1;
+                return (
+                  <span
+                    key={folder.id}
+                    className="flex min-w-0 items-center gap-1"
                   >
-                    {folder.name}
-                  </button>
-                </span>
-              );
-            })}
+                    <ChevronRight
+                      className="size-3 shrink-0 text-slate-300"
+                      aria-hidden="true"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setSelectedCollectionId(folder.id)}
+                      className={
+                        "cursor-pointer truncate text-[12px] transition-colors hover:text-blue-700 " +
+                        (current
+                          ? "font-bold text-slate-900"
+                          : "font-medium text-slate-500")
+                      }
+                    >
+                      {folder.name}
+                    </button>
+                  </span>
+                );
+              })}
+            </div>
           </div>
 
-          {/* 정렬 필터 + 검색 (팝오버) */}
-          {setPassageSortOrder ? (
-            <div className="ml-auto flex shrink-0 items-center gap-1.5">
-              <PassageSortSearchPopover
-                passageSortOrder={passageSortOrder}
-                setPassageSortOrder={setPassageSortOrder}
-                passageSearch={passageSearch}
-                setPassageSearch={setPassageSearch}
-              />
+          {toolbarScope ? (
+            <div className="order-3 max-w-full shrink-0 @3xl/passage-toolbar:order-2">
+              {toolbarScope}
+            </div>
+          ) : null}
+
+          {/* 정렬 필터 + 검색 (팝오버) + 호스트 액션(toolbarAction — 스튜디오
+              「지문 추가」 런처가 여기 얹힌다, 26-09-01 additive) */}
+          {setPassageSortOrder || toolbarAction ? (
+            <div className="order-2 ml-auto flex shrink-0 items-center gap-1.5 @3xl/passage-toolbar:order-3">
+              {setPassageSortOrder ? (
+                <PassageSortSearchPopover
+                  passageSortOrder={passageSortOrder}
+                  setPassageSortOrder={setPassageSortOrder}
+                  passageSearch={passageSearch}
+                  setPassageSearch={setPassageSearch}
+                />
+              ) : null}
+              {toolbarAction}
             </div>
           ) : null}
 
@@ -1134,7 +1156,7 @@ export function PassageCardGrid({
               onClick={() => setFolderWindowCollapsed(false)}
               aria-expanded={false}
               title="지문 폴더 펼치기"
-              className="ml-auto inline-flex h-7 shrink-0 cursor-pointer items-center gap-1 text-[11.5px] font-medium text-blue-400 transition-colors hover:text-blue-600"
+              className="order-4 ml-auto inline-flex h-7 shrink-0 cursor-pointer items-center gap-1 text-[11.5px] font-medium text-blue-400 transition-colors hover:text-blue-600"
             >
               <ChevronDown className="size-3.5" aria-hidden="true" />
               <span>펼치기</span>
@@ -1901,6 +1923,7 @@ export function PassageCardGrid({
                             onRenamed={onPassageRenamed}
                           />
                           <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                            <PassageHygieneBadge content={p.content} />
                             {(() => {
                               const created = formatMinuteTimestamp(
                                 p.createdAt,

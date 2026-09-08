@@ -1887,7 +1887,7 @@ flex-1(주 정보)로 가용 폭을 갖고, 유형 라벨은 shrink-0. 제목 �
   경로에서 폐기**(이중 주입 방지 — 워크벤치 라우트는 기존 시드 유지).
 - 조판 소스 2계(composeSource): 실행대 발사 = flatPicked 라이브, 도시에
   픽바 발사 = pickedQuestions 라이브.
-- 폭 정본(v2.1 — "핸들이 훨씬 더 왼쪽으로"): 조판 중 **폭 역전** — 중앙
+- 폭 정본(v2.1 — "핸들이 훨씬 더 왼쪽으로"): 조판 중 **폭 역전** — 중앙 **[26-09-08 개정]** 중앙 목록 420px 고정은 폐기 — 시험지 핸들 드래그로 420~(컨테이너−tree−40−508) 가변, localStorage `studio-compose-center-width`(정본 `docs/gichul-question-bank-spec.md` §11.5·§11.9-④).
   목록 = 고정 420px 입력면(shrink-0), 시험지 aside = flex-1 잔여 전폭
   (1720 뷰포트 실측 1026px, A4 100% 줌). 닫으면 원 폭 복귀. 빌더 additive
   `initialRightCollapsed`(편집 패널 접힘 시작, 저장 우회 계약 동일) +
@@ -3370,6 +3370,21 @@ const listActive = assetView !== "passages";
   필의 접근성 이름이 정확히 `"학습지 조판"` 이 되어 조판 표면 `aria-label` 과 **충돌**한다. 그
   결과가 **상태 의존 간헐 오작동**이다 — `waitFor` 계열은 **가짜 GREEN**(표면 대신 필에서 조기
   resolve), `count===0` 계열은 **영구 가짜 RED**. 항상 긴 설명형이면 충돌이 원천 소멸한다.
+
+  **【개정 26-09-03 — 필 라벨 건수 전면 철거(사용자 지시)】** 원문: *"학습지 조판이든, 지문
+  관리든 학생 관리든 옆에 숫자 필요 없다고."* 26-09-01 에 「시험지 조판」 하나에만 내려졌던
+  같은 지시("그 숫자 없애줘")가 **전 필로 확대**된 것이다.
+  - `countLabel`/`viewCounts` **삭제** → 라벨은 5필 모두 상수 문자열(`ASSET_VIEWS.label`).
+  - 건수는 **소멸이 아니라 이사**다 — `viewCounts` 자리를 `viewDetail: Record<StudioAssetView, string>`
+    가 그대로 승계해 전 필의 `title`/`aria-label` 이 긴 설명형 + 건수를 든다. (b) 의 「항상 긴
+    설명형」 계약은 **강화**됐다: 라벨 철거로 짧아질 뻔한 `passages`·`students` 도 설명형으로
+    못 박혔다. Record 유지 = 「뷰 추가 시 삼항 사슬로 조용히 새는」 U11-3 재발 봉쇄.
+  - 파생 정리: 오버플로 재판정 effect 의 건수 4종 의존성 제거(라벨이 폭에 안 흔들린다) ·
+    컴팩트 모드의 「건수를 툴팁으로 옮긴다」 절 자연 소멸(라벨이 이미 최단형) · 컴팩트 임계
+    640 은 **유지**(자연 폭이 줄었으므로 더 안전측. 5필 실측 확정은 probe-v4 G11 소관).
+  - ⚠ 프로브 회귀 1건: `.tmp-studio-qa/behavior-workbench.mjs` G1 이 `getByText("지문관리 (")`
+    로 탭을 찾고 있었다 → `button[data-asset-view="passages"]` 로 이행(라벨 부분매칭 금지
+    원칙 (a) 를 프로브가 어기고 있던 것 — 자구 변경이 그걸 드러냈다).
 - **(c) 실행대 CTA 라벨은 바꾸지 않는다.** 「시험지 조판」·「학습지 조판」은 사용자가
   §3.10.13·§3.10.17 에서 직접 지시해 굳은 자구다. 승인 없는 자구 변경은 근거 없는 회귀다.
   사용자 혼란 쪽은 ⑥ 설계가, QA 쪽은 (a)+(b)가 이미 해소한다.
@@ -4423,3 +4438,98 @@ node .tmp-studio-restore/_baseline.mjs                     # 전/후 측정자
 **선재 결함 2건**(이 수리 이전에도 동일 실패 — stash 재주행으로 확증):
 `behavior-overhaul2.mjs` G7 · `behavior-class-rail.mjs` G5. 둘 다 §M 플래그로
 숨겨진 표면(「학습지 보내기」 CTA · 「학생 초대장」 시트)을 기다린다.
+
+---
+
+## 3.10.28 「시험 분석」 4번째 뷰 (26-09-01 — v1 골격)
+
+> 설계 정본: `docs/studio-exam-analysis-integration.md` (함대 9기 해부·설계 3안·
+> 적대검수 합성). 여기는 스튜디오 쪽 **계약 요지**만 남긴다. §3.10.26·27 은
+> E27·E28 임시 스펙이 선점(그쪽 정본은 `.tmp-worksheet-compose/`)—번호 연속성 주의.
+
+### A. 뷰 축
+
+- `StudioAssetView` = `"passages" | "sheet" | "exam" | "analysis"` — 4번째 필
+  라벨 **「시험 분석」**(「시험지 분석」 기각: 「시험지 조판」 접두 혼동 + 과금
+  라벨 "시험지 문항 분석" 수렴. 정본 §2).
+- URL `?view=analysis` — studio-location 파서·미러 자동 승계(R1). **플래그
+  게이트 양쪽**: 필 렌더(source-switcher `VISIBLE_ASSET_VIEWS`) + parse 강등,
+  둘 다 `ENABLE_EXAM_DEPLOYMENT`(허브 nav 와 운명 공동체).
+- **분석 뷰 무픽 원칙**: open 플래그·픽 축·파괴 가드·stepAdvanced 기여·
+  print-root 전부 0. listActive 음성 판정(`!== "passages"`)은 **유지** —
+  분석 뷰에서 두 목록 fetch 가 도는 것은 수용(§1⑤ 화이트리스트 전환 금지).
+
+### B. 본문 (workbench/analysis-pane.tsx)
+
+- hidden 유지 마운트(업로드 진행 보존) + `key={classId}` 리마운트(무회귀 계약 6
+  동일 축) + 폴 게이트 `useExamReportActivity({enabled: active})`.
+- 재사용: IntakeUploadPanel(무수정) · AnalysesBoard(additive `onOpenRow`
+  **+`onAddStudent`** — 학생 추가 CTA 는 별개 핸들러라 하나로는 이탈을 못 막는다)
+  · 낙관 행+START_COERCE 허브 사본. **HubClient 직마운트 금지**(-m-6 셸).
+- v1 은 학원 전체 목록(라벨로 고지) — classId 축·매트릭스·일괄 액션·여정
+  스트립은 S1(데이터 지층, prod ALTER 선행) 이후.
+
+### C. 우측 「분석 결과 콘솔」 레일 (26-09-01 6차 대개편 — 모달 전면 철거)
+
+- **구 studio-exam-report-modal 은 삭제**됐다(사용자 재지시 "버튼이 모달을
+  띄우면 안 된다") — WorkspaceModal C1 회피 오버레이 관례는 역사 기록으로만.
+  **26-09-02 재개정: 새 탭 위임도 전면 철거**("저 오른쪽 섹션 내에서 다 해결")
+  — 검수(RailReviewSection: updateExamMap+setMapQuestionConfirmed 인라인
+  에디터)·채점(정오 타일 편집기: updateStudentGrading)·신규 로스터 등록까지
+  전부 레일 인라인. 유일한 새 탭 = 원본 사진 클릭(파일 열람). 레일에 워크플로
+  앵커(a[target=_blank], img 제외)를 다시 넣는 것은 계약 위반이다.
+- 레일 = `analysis-detail-rail.tsx` + `analysis-rail/` 5파일(질문·원본·학생
+  섹션 + 2단 확인 버튼 + `use-analysis-console`). 섹션 6종: 게이트 → 총평 →
+  학생(아코디언 동시 1명·인라인 로스터 추가) → 문항 분석(난이도 필터) →
+  원본(사진=서명 URL 새 탭 / INTERNAL=문항 전문) → 메타.
+- **페치·확장 상태는 전부 셸 소유**: `useAnalysisDetail`(keep-previous +
+  `patchDetail` — nonce bump 가 백지 플래시를 만들지 않는다) +
+  `useAnalysisConsole`(학생 단건 캐시 in-flight dedup·원본 서명 URL·INTERNAL
+  문항 전문·자동 수렴 2채널). 레일은 aside/드로어 2 React 인스턴스 동시
+  마운트라 컴포넌트 로컬 prop 구동 effect 페치는 2중 발사된다 — 신규 페치는
+  반드시 이 훅으로.
+- 과금·파괴 액션은 `RailConfirmButton` 2단 인라인 확인(무장 300ms 무시창 ·
+  charge=amber / danger=rose). 공유 끄기는 토큰 rotate(파괴)라 2단 필수.
+- **서버 가드**: `assertStudentAddAllowed`(actions/exam-report/students.ts) —
+  수동 학생 추가 3경로에서 INTERNAL 거부 + 검수 게이트 재검증(그랜드파더링
+  관통 봉쇄). 레일 인라인 추가 UI 는 게이트 미완 시 잠금(같은 판정 함수).
+- 레일 폭 정본: **리사이저블 320~960·기본 360**(420 아님) — 콘텐츠 플로어
+  296px 기준으로 조판(표 금지·auto-fit 그리드·break-keep).
+
+### D. 「지문 추가」 이사 (같은 커밋, 26-09-01 사용자 지시)
+
+- 소스 스위처 sticky 클러스터(U11-7) → 지문 목록 툴바 정렬·검색 옆
+  (`PassageCardGrid.toolbarAction` additive 슬롯 + `AddPassageLauncher`).
+  `data-tour="add-passage"` 앵커는 버튼을 따라감(ch2-add 스텝 무사).
+- 시험지 조판 필 건수 라벨 제거(사용자 지시 — 툴팁은 유지). 컴팩트 임계 640
+  **유지**(산술: 클러스터 이사 −110 · 건수 −30 · 신필 +105 ≈ 585 < 640) —
+  단 **G15b 4필 재실측이 출하 게이트**.
+
+### E. 게이트 (v1 출하 전 재주행 대상)
+
+기존: `probe-e24-split.mjs`(G15b 포함) · e31 · e32 · tour smoke(ch2-add 앵커) ·
+studio-workbench-contract. 신규(미작성 — 후속): 필 전환·`?view=analysis` 복원·
+모달 닫기 후 스튜디오 상태 보존·픽 보유 상태 우측 패널 무회귀.
+
+## 3.10.29 「학생 관리」 5번째 뷰 + 시험 분석 v4 (26-09-02)
+
+> 정본: `docs/exam-analysis-v4-spec.md`. 여기는 스튜디오 쪽 계약 요지만.
+
+- `StudioAssetView` = `"passages" | "sheet" | "exam" | "analysis" | "students"` — 5번째 필
+  「학생 관리」(Users). 플래그 게이트는 시험 분석과 동일(`ENABLE_EXAM_DEPLOYMENT`, 필 렌더
+  + `parseStudioLocation` 양쪽). `?view=students` R1 복원. `viewCounts.students` = 클래스
+  학생 수. `listActive` 음성 판정(`!== "passages"`) 유지.
+- 중앙 `workbench/students-pane.tsx` = 클래스 로스터 × 시험 리포트 현황(요약 스트립 +
+  행 목록), 우측 `student-detail-rail.tsx` = 초대 블록·시험 리포트 그룹 리스트·클래스
+  제외. **모달 0** — 학생 추가는 레일 인라인(`mode:"add"`). 페치는 셸 훅
+  `use-studio-students.ts` 1인스턴스(aside·드로어 2중 마운트 규칙).
+- 시험 분석 ↔ 학생 관리 상호 이동은 셸 콜백 2종(`openStudentsView` /
+  `openAnalysisForStudent(analysisId, studentId)` → view 전환 + `focusAnalysisId` +
+  콘솔 `focusStudent`).
+- 시험 분석 레일 상단 = 여정 스트립(분석·검수·학생·채점·리포트) + 「다음 단계」 블록.
+  판정 단일 소스 `src/lib/exam-report/next-step.ts`(순수·단위 테스트). 목록은 「자체 시험지
+  (INTERNAL+미분석 후보)」/「외부 시험지」 2그룹 밴드. 자체 시험지 분석 = analysis-boost
+  fire-and-forget + `funnel.boost` 폴 → `WorkbenchLoadingCard variant="analyzing"` 글로우.
+- 탈출구 0 계약 예외 1: `data-rail-escape-allowed`(INTERNAL 학생 0 → 시험지 배포 화면).
+- 게이트: `.tmp-studio-analysis/probe-v4.mjs`(G1~G11) · `probe-v4-llm.mjs`(G12 실 LLM 1회) ·
+  `tests/unit/exam-next-step.test.mjs`.

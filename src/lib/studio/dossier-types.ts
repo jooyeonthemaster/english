@@ -72,6 +72,14 @@ export interface DossierQuestionRow {
 export interface StudioClassQuestionRow extends DossierQuestionRow {
   passageId: string;
   passageTitle: string;
+  /**
+   * 출처 정체(docs/gichul-question-bank-spec.md §8.4, additive 옵셔널) —
+   * `"gichul"` = 기출 은행에서 반입한 공식 문항. 판정 정본은 Question.tags 의
+   * `gichul:<bankId>` 접두 태그 존재(listStudioClassQuestions 가 계산). 생성 문항은
+   * null. 옵셔널인 이유: 이 필드를 싣지 않던 구 응답(배포·캐시 전이기)이 오면
+   * 소비처가 undefined 를 「기출 아님」으로 읽어야 하지 컴파일 불능이 돼선 안 된다.
+   */
+  origin?: "gichul" | null;
 }
 
 /**

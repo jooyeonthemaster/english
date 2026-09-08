@@ -1,9 +1,12 @@
 "use client";
+import { isGichulSetMemberItem } from "./paper-builder/question-body-layout";
 
+import { getClientQuestion, isClientQuestionId, peekQuestionIdAlias, takeQuestionIdAlias } from "./paper-builder/client-question-registry";
+import { deferWhileDragging } from "@/components/layout/panel-drag-freeze";
 import { type CSSProperties, type FormEvent, type PointerEvent as ReactPointerEvent, useCallback, useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { ChevronDown, ChevronLeft, ChevronRight, CirclePlay, Download, GripVertical, Loader2, Printer, RotateCcw, Save, ShoppingBasket, Trash2, X } from "lucide-react";
+import { ChevronDown, ChevronLeft, CirclePlay, Download, GripVertical, Loader2, PanelLeftOpen, Printer, RotateCcw, Save, ShoppingBasket, Trash2, X } from "lucide-react";
 import { MobileStepHeader } from "@/components/workbench/mobile-step-flow";
 import { toast } from "sonner";
 import QRCode from "qrcode";
@@ -62,10 +65,21 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { EXAM_SEED_QUESTION_IDS_KEY } from "@/lib/exam-paper-seed";
-import { BUILDER_DRAFT_AUTOSAVE_DELAY_MS, BUILDER_HEADER_AUTO_HIDE_DELAY_MS, BUILDER_HEADER_HIDE_ZONE_PX, LEFT_PANEL_COLLAPSED_STORAGE_KEY, PANEL_DRAG_THRESHOLD, PANEL_MIN_CENTER, PANEL_TOGGLE_HANDLE_WIDTH, PANEL_WIDTH_STORAGE_KEY, PREVIEW_PAGE_GAP, RIGHT_PANEL_COLLAPSED_STORAGE_KEY, THUMBNAILS_COLLAPSED_STORAGE_KEY, THUMBNAILS_WIDTH_STORAGE_KEY } from "./exam-paper-builder-client-parts/builder-constants";
+import { BUILDER_DRAFT_AUTOSAVE_DELAY_MS, BUILDER_HEADER_AUTO_HIDE_DELAY_MS, BUILDER_HEADER_HIDE_ZONE_PX, LEFT_PANEL_COLLAPSED_STORAGE_KEY, PANEL_DRAG_THRESHOLD, PANEL_LIMITS, PANEL_MIN_CENTER, PANEL_TOGGLE_HANDLE_WIDTH, PANEL_WIDTH_STORAGE_KEY, PREVIEW_PAGE_GAP, RIGHT_PANEL_COLLAPSED_STORAGE_KEY, THUMBNAILS_COLLAPSED_STORAGE_KEY, THUMBNAILS_WIDTH_STORAGE_KEY } from "./exam-paper-builder-client-parts/builder-constants";
 import type { BuilderPanelTab, ExamPaperBuilderClientProps, PanelResizeSide, PanelWidths, SaveDraftOptions } from "./exam-paper-builder-client-parts/builder-types";
 import { asAutoPointTotal, buildDefaultSaveAsTitle, clampPanelWidths, clampThumbnailsWidth, formatBuilderDraftUpdatedAt, getQuestionDropInsertion, hasMeaningfulBuilderDraft, readStoredLeftPanelCollapsed, readStoredPanelWidths, readStoredRightPanelCollapsed, readStoredThumbnailsCollapsed, readStoredThumbnailsWidth, samePanelWidths } from "./exam-paper-builder-client-parts/builder-helpers";
 import { PageThumbnails, thumbMetrics } from "./exam-paper-builder-client-parts/page-thumbnails";
+
+// 미리보기 열이 필요로 하는 최소 폭(자동 접힘 판정 기준, §11.9-⑤).
+// 펼친 썸네일 104 + 편집 패널 핸들 컬럼 24(접혀도 남는다) + 패딩 40 + 스크롤바 17
+// + A4×줌 하한 0.5(397) = 582.
+const PREVIEW_COL_MIN = 582;
+// 썸네일을 접은 뒤(띠 20)의 최소 = 582 − 104 + 20 = 498. 접힘 순서는 「썸네일
+// 먼저, 편집 패널은 접힌 썸네일로도 안 될 때」 — 편집 패널이 하한 260 으로 줄어든
+// 채 살아남는 쪽이 사용자에겐 더 값지다(aside 782~842 구간·1920 에서 +200 드래그 뒤).
+// 같은 값을 clampPanelWidths(hideLeft) 의 centerMin 으로도 넘겨 편집 패널이 이보다
+// 미리보기를 잠식하지 못하게 한다(ResizeObserver·드래그 두 호출부).
+const PREVIEW_COL_MIN_COLLAPSED = PREVIEW_COL_MIN - 104 + 20;
 
 function toBuilderQuestionSetRender(
   set: QuestionSetForRender,
@@ -391,7 +405,11 @@ export function ExamPaperBuilderClient({
     : -1;
   const moveActiveItem = (direction: -1 | 1) => {
     if (!mobileSelectedItem || mobileSelectedIndex < 0) return;
-    const target = paperItems[mobileSelectedIndex + direction];
+    let targetIndex = mobileSelectedIndex + direction;
+    if (isGichulSetMemberItem(mobileSelectedItem)) {
+      while (paperItems[targetIndex]?.groupId === mobileSelectedItem.groupId) targetIndex += direction;
+    }
+    const target = paperItems[targetIndex];
     if (!target) return;
     moveItemToDropTarget(
       mobileSelectedItem.localId,
@@ -993,17 +1011,27 @@ export function ExamPaperBuilderClient({
       const orderedIds: string[] = [];
       const missingIds: string[] = [];
 
+      // 「체크 즉시 조판」(§11.13.1): 클라이언트 레지스트리(bank:<id>)에 있으면 서버를 묻지 않는다.
+      const clientHits = new Map<string, BuilderQuestion>();
       for (const id of ids) {
         if (!id || seen.has(id)) continue;
         seen.add(id);
         orderedIds.push(id);
-        if (!questionById.has(id)) missingIds.push(id);
+        if (questionById.has(id)) continue;
+        const local = getClientQuestion(id);
+        if (local) clientHits.set(id, local);
+        else missingIds.push(id);
       }
       if (orderedIds.length === 0) return [];
 
       // 로드 상한을 넘었거나 시드된 id 중 목록에 없는 문항은 배치 로드해 병합한다.
       // questionById 는 다음 렌더에 갱신되므로, 이번 호출에선 합쳐진 맵을 직접 만들어 쓴다.
       let resolved = questionById;
+      if (clientHits.size > 0) {
+        const merged = new Map(questionById);
+        for (const [id, q] of clientHits) merged.set(id, q);
+        resolved = merged;
+      }
       if (missingIds.length > 0) {
         try {
           const fetched = (await getExamPaperBuilderQuestionsByIds(
@@ -1016,7 +1044,7 @@ export function ExamPaperBuilderClient({
               for (const q of fetched) next.set(q.id, q);
               return next;
             });
-            const merged = new Map(questionById);
+            const merged = new Map(resolved);
             for (const q of fetched) merged.set(q.id, q);
             resolved = merged;
           }
@@ -1046,6 +1074,19 @@ export function ExamPaperBuilderClient({
       // 마키로 세트 카드를 쓸어담을 때 드래그 중 왕복이 없어져 선택 반영이 즉시가 된다.
       const uncachedSetIds: string[] = [];
       for (const setId of setIds) {
+        // 기출은 API에서 표시 지문과 세트 멤버를 함께 받아 이미 준비돼 있다.
+        // 임시 setId를 DB에 조회하면 체크가 직렬 서버 액션을 기다리게 된다.
+        const localSeed = seedQuestions.find((q) => q.setId === setId && q.setRender && isClientQuestionId(q.id));
+        if (localSeed?.setRender) {
+          const render = localSeed.setRender;
+          const members = render.members.flatMap((member) => {
+            const q = resolved.get(member.questionId) ?? getClientQuestion(member.questionId);
+            return q ? [q] : [];
+          });
+          setRenderById.set(setId, render);
+          setMembersBySetId.set(setId, members);
+          continue;
+        }
         const cached = setDataCacheRef.current.get(setId);
         if (cached) {
           setRenderById.set(setId, cached.render);
@@ -1138,10 +1179,18 @@ export function ExamPaperBuilderClient({
   );
 
   const addQuestionIdsToPaper = useCallback(
-    async (ids: Iterable<string>) => {
-      const selectedQuestions = await resolveQuestionsForPaperInsertion(ids, {
+    async (ids: Iterable<string>, opts: { fromSync?: boolean } = {}) => {
+      const resolved = await resolveQuestionsForPaperInsertion(ids, {
         skipExisting: true,
       });
+      // 외부 동기화(§3.10.17 · 기출 §11.13.1)에서 온 추가는 await 동안 해제됐을 수 있다 — 서버 재조회(직렬 큐
+      // ~1초) 중 해제의 removeQuestionIdFromPaper 는 헛발이고, 늦게 착지한 add 가 유령으로 남는다(26-09-08
+      // 실측 `_dbg-cancel-real.mjs`). 최신 동기 집합에 없는 id 는 버린다. 임시 id(bank:)는 alias 로 실제 id 가
+      // 됐을 수 있으니 그 실제 id 가 집합에 있으면 살린다(개명은 동기화 effect 가 한다).
+      const live = opts.fromSync ? new Set(lastSyncIdsRef.current ?? []) : null;
+      const selectedQuestions = live
+        ? resolved.filter((q) => live.has(q.id) || (isClientQuestionId(q.id) && live.has(peekQuestionIdAlias(q.id) ?? "")))
+        : resolved;
       if (selectedQuestions.length > 0) {
         addQuestionsAtDropTarget(selectedQuestions, null, "after");
       }
@@ -1163,6 +1212,23 @@ export function ExamPaperBuilderClient({
     );
     for (const item of targets) removeItem(item.localId);
   }, [paperItems, questionById, removeItem]);
+  // 임시 id(bank:…) 항목을 실제 Question.id 로 제자리 개명(§11.13.1) — sourceQuestion.id 도 함께.
+  const renameQuestionIdInPaper = useCallback(
+    (fromId: string, toId: string) => {
+      for (const item of paperItems) {
+        if (item.blockType !== "question" || item.questionId !== fromId) continue;
+        updateItem(item.localId, {
+          questionId: toId,
+          sourceQuestion: { ...item.sourceQuestion, id: toId },
+        });
+      }
+    },
+    [paperItems, updateItem],
+  );
+  const renameQuestionIdInPaperRef = useRef(renameQuestionIdInPaper);
+  useEffect(() => {
+    renameQuestionIdInPaperRef.current = renameQuestionIdInPaper;
+  }, [renameQuestionIdInPaper]);
 
   // ── 외부 선택 라이브 동기화(§3.10.17, additive) — 임베드 호스트(클래스
   // 스튜디오)가 넘기는 체크 집합의 **증분만** 반영한다(dead-reckoning: 직전
@@ -1183,10 +1249,25 @@ export function ExamPaperBuilderClient({
     if (!syncQuestionIds) return;
     const prev = new Set(lastSyncIdsRef.current ?? []);
     const next = new Set(syncQuestionIds);
-    const toAdd = syncQuestionIds.filter((id) => !prev.has(id));
-    const toRemove = [...prev].filter((id) => !next.has(id));
+    let toAdd = syncQuestionIds.filter((id) => !prev.has(id));
+    let toRemove = [...prev].filter((id) => !next.has(id));
+    // 「체크 즉시 조판」 착지(§11.13.1): 빠지는 임시 id(bank:…)에 alias(실제 Question.id)가 있고 그 실제 id 가
+    // 들어오는 쪽이면 제거+추가가 아니라 **제자리 개명** — 순서·편집이 보존되고 서버 재조회가 없다.
+    const renamed = new Set<string>();
+    for (const tempId of toRemove) {
+      if (!isClientQuestionId(tempId)) continue;
+      const realId = takeQuestionIdAlias(tempId);
+      if (!realId || !next.has(realId)) continue;
+      renamed.add(tempId);
+      renamed.add(realId);
+      renameQuestionIdInPaperRef.current(tempId, realId);
+    }
+    if (renamed.size > 0) {
+      toAdd = toAdd.filter((id) => !renamed.has(id));
+      toRemove = toRemove.filter((id) => !renamed.has(id));
+    }
     lastSyncIdsRef.current = [...syncQuestionIds];
-    if (toAdd.length > 0) void addQuestionIdsToPaperRef.current(toAdd);
+    if (toAdd.length > 0) void addQuestionIdsToPaperRef.current(toAdd, { fromSync: true });
     for (const id of toRemove) removeQuestionIdFromPaperRef.current(id);
   }, [syncQuestionIds]);
 
@@ -1477,7 +1558,14 @@ export function ExamPaperBuilderClient({
         academyId,
         version: 1,
         updatedAt: new Date().toISOString(),
-        state: { ...builderDraftState, dirty: true },
+        // 임시 id(bank:…) 항목은 세션을 넘겨 살릴 수 없다(레지스트리가 메모리) — 초안에서 뺀다(§11.13.1).
+        state: {
+          ...builderDraftState,
+          dirty: true,
+          paperItems: builderDraftState.paperItems.filter(
+            (item) => item.blockType !== "question" || !isClientQuestionId(item.questionId),
+          ),
+        },
       }),
     [academyId, builderDraftKey, builderDraftState],
   );
@@ -1770,9 +1858,29 @@ export function ExamPaperBuilderClient({
   // 토글 핸들은 접힘 여부와 무관하게 항상 표시한다 — 단 hideQuestionLibrary
   // 임베드(§3.10.17-d v2.3)는 좌측 라이브러리 존재 자체가 없으므로 핸들
   // 컬럼(24px)까지 0 으로 지운다(컬럼 수 5는 유지 — 자식 슬롯 정렬 계약).
+  // 측정 폭 1개에서 두 접힘을 **렌더 중 파생**한다(상태 2개로 두면 편집 패널 접힘 뒤의 중앙 폭을
+  // 옵저버가 모른다 — 1920 실측: 편집 패널 열린 채 미리보기 열이 325px 로 눌려 95px 넘침).
+  // 편집 패널 강제 접힘은 「편집 패널을 하한 260 으로 줄이고 썸네일까지 접어도」 미리보기가
+  // 498(PREVIEW_COL_MIN_COLLAPSED)을 못 채울 때만 — 썸네일이 먼저 접히고 편집 패널은 마지막이다.
+  // 편집 패널이 열려 있을 땐 핸들 컬럼 24 가 rightColsWidth 에도 들어가 그만큼 보수적이다
+  // (의도 — 넘침보다 이르게 접히는 쪽이 안전).
+  const [builderWidth, setBuilderWidth] = useState(0);
+  const leftColsWidth = hideQuestionLibrary ? 0 : (leftPanelCollapsed ? 0 : panelWidths.left) + PANEL_TOGGLE_HANDLE_WIDTH;
+  const narrowRightForced =
+    builderWidth > 0 &&
+    builderWidth - leftColsWidth - (PANEL_LIMITS.right.min + PANEL_TOGGLE_HANDLE_WIDTH) < PREVIEW_COL_MIN_COLLAPSED;
+  const rightColsWidth = rightPanelCollapsed || narrowRightForced ? 0 : panelWidths.right + PANEL_TOGGLE_HANDLE_WIDTH;
+  const narrowThumbsForced = builderWidth > 0 && builderWidth - leftColsWidth - rightColsWidth < PREVIEW_COL_MIN;
+  const thumbnailsHidden = thumbnailsCollapsed || narrowThumbsForced;
+  // 폭 부족 자동 접힘(26-09-08, 기출 인라인 §11.5 동반): 스튜디오 임베드 aside 가 599px
+  // (1536 뷰포트)이면 중앙 하한 420 + 핸들 24 + 편집 패널 하한 260 = 704 > 599 라 편집
+  // 패널이 잘려 나갔다(「1536 조판 자동 개방 편집 패널 절단」). 컨테이너가 그 합보다
+  // 좁으면 편집 패널을 **표시상** 접는다 — 저장 상태(rightPanelCollapsed)는 건드리지
+  // 않아 넓어지면 저절로 되돌아온다. 값은 아래 ResizeObserver 가 쓴다.
   const leftColumnWidth =
     hideQuestionLibrary || leftPanelCollapsed ? 0 : panelWidths.left;
-  const rightColumnWidth = rightPanelCollapsed ? 0 : panelWidths.right;
+  const rightPanelHidden = rightPanelCollapsed || narrowRightForced;
+  const rightColumnWidth = rightPanelHidden ? 0 : panelWidths.right;
   const leftHandleColumnWidth = hideQuestionLibrary
     ? 0
     : PANEL_TOGGLE_HANDLE_WIDTH;
@@ -1959,23 +2067,34 @@ export function ExamPaperBuilderClient({
     const element = builderGridRef.current;
     if (!element) return;
 
-    const observer = new ResizeObserver((entries) => {
-      const width = entries[0]?.contentRect.width ?? element.clientWidth;
+    // 패널 드래그 중엔 마지막 폭만 들고 있다가 놓을 때 1회 적용(panel-drag-freeze.ts) — 프레임마다
+    // setBuilderWidth/clamp 가 돌면 조판 전체가 드래그 내내 리렌더된다.
+    const deferred = deferWhileDragging<number>((width) => {
       // 폭 0 = 숨겨진 서브트리(display:none — xl 미만 aside, 접힌 패널, 숨김
       // 탭). 그대로 클램프하면 좌우 폭이 하한으로 눌리고 clamp 는 상한만
       // 풀어주므로 **다시 보여도 원복되지 않는 편도 고착**이 된다(비용 감사
       // 적발 잠복 결함 — resizable-panels 가 같은 함정을 경고한 바 있다).
       if (width <= 0) return;
+      setBuilderWidth(Math.round(width));
       setPanelWidths((current) => {
         const next = clampPanelWidths(current, width, {
           hideLeft: hideQuestionLibrary,
+          // 임베드에선 미리보기 예약을 접힌 썸네일 기준(498)으로 — 편집 패널이 260 까지
+          // 줄며 살아남는다(narrowRightForced 판정과 같은 상수).
+          centerMin: hideQuestionLibrary ? PREVIEW_COL_MIN_COLLAPSED : undefined,
         });
         return samePanelWidths(current, next) ? current : next;
       });
     });
 
+    const observer = new ResizeObserver((entries) => {
+      deferred.observe(entries[0]?.contentRect.width ?? element.clientWidth);
+    });
     observer.observe(element);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      deferred.dispose();
+    };
   }, [hideQuestionLibrary]);
 
   // 핸들 클릭: 패널 여닫기 토글. 직전에 드래그(폭 조절)한 경우엔 토글하지 않는다.
@@ -2062,6 +2181,8 @@ export function ExamPaperBuilderClient({
           : { ...startWidths, right: startWidths.right - deltaX };
       const clamped = clampPanelWidths(nextWidths, containerWidth, {
         hideLeft: hideQuestionLibrary,
+        // ResizeObserver 호출부와 동일 예약 — 드래그로도 미리보기 498 미만은 못 만든다.
+        centerMin: hideQuestionLibrary ? PREVIEW_COL_MIN_COLLAPSED : undefined,
       });
       if (container) {
         latestWidths = clamped;
@@ -2274,6 +2395,11 @@ export function ExamPaperBuilderClient({
   }
 
   async function saveDraft(options: SaveDraftOptions = {}): Promise<string | null> {
+    // 「체크 즉시 조판」 임시 항목(bank:…)은 서버 소유 검증을 못 넘는다 — 반입 착지(수 초) 뒤 다시.
+    if (paperItems.some((item) => item.blockType === "question" && isClientQuestionId(item.questionId))) {
+      toast.info("기출 문항을 아직 시험지에 넣는 중입니다 — 잠시 후 다시 저장해 주세요.");
+      return null;
+    }
     const targetExamId =
       options.targetExamId === undefined ? savedExamId : options.targetExamId;
     const titleToSave = options.titleOverride ?? title;
@@ -2832,16 +2958,20 @@ export function ExamPaperBuilderClient({
             )}
             <div className="flex h-full min-h-0">
               {paperPages.length > 0 &&
-                (thumbnailsCollapsed ? (
+                (thumbnailsHidden ? (
                   <button
                     type="button"
-                    onClick={() => setThumbnailsCollapsed(false)}
-                    title="페이지 목록 열기"
+                    onClick={() => {
+                      if (!narrowThumbsForced) setThumbnailsCollapsed(false);
+                    }}
+                    title={narrowThumbsForced ? "화면이 좁아 페이지 목록을 접었습니다" : "페이지 목록 열기"}
+                    aria-disabled={narrowThumbsForced || undefined}
                     aria-label="페이지 목록 열기"
                     aria-expanded={false}
                     className="no-print hidden h-full min-h-0 w-5 shrink-0 select-none flex-col items-center justify-center gap-1 border-r border-slate-200 bg-white/80 py-2 text-[11px] font-semibold text-slate-400 transition-colors hover:bg-slate-50 hover:text-slate-600 lg:flex"
                   >
-                    <ChevronRight className="h-3.5 w-3.5" />
+                    {/* 옆의 「> 시험지」 패널 핸들과 구분되게 화살표 대신 패널 아이콘. */}
+                    <PanelLeftOpen className="h-3.5 w-3.5" aria-hidden="true" />
                     <span style={{ writingMode: "vertical-rl" }}>페이지</span>
                   </button>
                 ) : (
@@ -2969,12 +3099,16 @@ export function ExamPaperBuilderClient({
           <BlockFormatToolbar items={paperItems} onUpdateItem={updateItem} />
         </section>
 
-        {rightPanelCollapsed ? (
+        {rightPanelHidden ? (
           <button
             type="button"
-            onClick={() => setRightPanelCollapsed(false)}
-            title="편집 패널 열기"
+            onClick={() => {
+              if (!narrowRightForced) setRightPanelCollapsed(false);
+            }}
+            // 「넓히면 다시 열립니다」 를 약속하지 않는다 — 1536 조판에선 넓혀도 도달 불가.
+            title={narrowRightForced ? "화면이 좁아 편집 패널을 접었습니다" : "편집 패널 열기"}
             aria-label="편집 패널 열기"
+            aria-disabled={narrowRightForced || undefined}
             aria-expanded={false}
             className="no-print mx-1 hidden h-full min-h-0 w-4 shrink-0 select-none flex-col items-center justify-center gap-1 rounded-md py-1 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600 active:bg-sky-100 lg:flex"
           >
@@ -2997,7 +3131,7 @@ export function ExamPaperBuilderClient({
           </button>
         )}
 
-        {!rightPanelCollapsed && (
+        {!rightPanelHidden && (
           <BuilderPropertiesPanel
             activeItem={activeItem}
             paperItems={panelPaperItems}

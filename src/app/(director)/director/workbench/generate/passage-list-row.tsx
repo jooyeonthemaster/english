@@ -38,6 +38,7 @@ import { formatMinuteTimestamp } from "./passage-card-grid-helpers";
 import type { PassageItem } from "./generate-page-types";
 import { PassageQuestionsSummary } from "./passage-questions-summary";
 import { PassageReportsSummary } from "./passage-reports-summary";
+import { PassageHygieneBadge } from "@/components/workbench/passage-hygiene-badge";
 
 export interface PassageListRowProps {
   p: PassageItem;
@@ -114,6 +115,13 @@ function PassageListRowInner({
     onLazyLoadQuestions && rowQuestions.length === 0
       ? (p._count?.questions ?? 0)
       : 0;
+  // 이력 클러스터 존재 여부 — 렌더 분기와 좁은 행(@max-2xl/list-row) 낙하
+  // 클래스가 같은 판정을 공유한다(클러스터가 없으면 우측 그룹은 버튼뿐이라
+  // 둘째 줄로 내릴 이유가 없다 — 제목 옆 인라인 유지).
+  const hasSummaryCluster =
+    rowQuestions.length > 0 ||
+    lazyQuestionCount > 0 ||
+    (p.reports?.length ?? 0) > 0;
 
   return (
     <>
@@ -141,31 +149,30 @@ function PassageListRowInner({
         <Check className="h-3 w-3" />
       </button>
       {/* min-w-[220px]: 제목이 이 폭 밑으로 압착되지 않는다 —
-          폭 부족분은 행 루트 flex-wrap 이 우측 그룹 낙하로 흡수 */}
-      <div className="min-w-[220px] flex-1">
+          폭 부족분은 행 루트 flex-wrap 이 우측 그룹 낙하로 흡수.
+          좁은 행(@max-2xl/list-row)에선 우측 그룹이 이미 둘째 줄로 확정
+          낙하하므로 min-width 강제를 풀어 제목이 남은 폭을 자연 사용한다
+          (break-keep 줄바꿈이 버튼 밀어내기보다 낫다). */}
+      <div className="min-w-[220px] flex-1 @max-2xl/list-row:min-w-0">
         {/* 제목 — truncate 금지: 길면 break-keep 으로 줄바꿈(가변 높이 행).
             「담김」 배지(§3.10.4 additive): classBadgePassageIds 에 든 행만
             제목 옆에 소형 배지 — 미전달 호스트는 else 분기(기존 노드 그대로). */}
-        {classBadgePassageIds?.has(p.id) ? (
-          <div className="flex min-w-0 flex-wrap items-center gap-1.5">
-            <PassageInlineTitle
-              passageId={p.id}
-              title={p.title}
-              onRenamed={onPassageRenamed}
-              titleClassName="break-keep text-[13px] font-semibold text-slate-800"
-            />
-            <span className="shrink-0 rounded bg-blue-50 px-1 py-0.5 text-[10px] font-medium text-blue-600">
-              담김
-            </span>
-          </div>
-        ) : (
+        {/* 「지문 정리 필요」 배지(26-09-08): p.content 에서 배지 안에서 파생 —
+            파생 prop 을 내려보내면 memo 계약이 깨진다(파일 머리주석). */}
+        <div className="flex min-w-0 flex-wrap items-center gap-1.5">
           <PassageInlineTitle
             passageId={p.id}
             title={p.title}
             onRenamed={onPassageRenamed}
             titleClassName="break-keep text-[13px] font-semibold text-slate-800"
           />
-        )}
+          {classBadgePassageIds?.has(p.id) ? (
+            <span className="shrink-0 rounded bg-blue-50 px-1 py-0.5 text-[10px] font-medium text-blue-600">
+              담김
+            </span>
+          ) : null}
+          <PassageHygieneBadge content={p.content} />
+        </div>
         <div className="mt-0.5 flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-0.5">
           {created ? (
             <span
@@ -200,16 +207,28 @@ function PassageListRowInner({
           smoat-large-ui: min-width:0 !important)가 제목 min-w-[220px] 를
           무효화하므로, min-width 에 기대지 않고 그룹을 항상 둘째 줄로 강제
           낙하시킨다(2026-08-11 재검증 V2 — w390 압착 재발 봉인). */}
-      <div className="ml-auto flex shrink-0 items-center gap-1.5 max-md:w-full max-md:justify-end">
+      <div
+        className={
+          "ml-auto flex shrink-0 items-center gap-1.5 max-md:w-full max-md:justify-end" +
+          // 좁은 행(컨테이너 672px 미만): 이력 클러스터가 있으면 우측 그룹을
+          // 전폭 둘째 줄로 확정 낙하시키고 은은한 구분선으로 제목부와 나눈다 —
+          // "가끔 붙고 가끔 떨어지는" 랜덤 래핑이 사라져 어느 폭에서든 레이아웃이
+          // 결정적이다. 클러스터가 없으면(버튼뿐) 인라인 유지.
+          (hasSummaryCluster
+            ? " @max-2xl/list-row:w-full @max-2xl/list-row:border-t @max-2xl/list-row:border-slate-100 @max-2xl/list-row:pt-2"
+            : "")
+        }
+      >
         {/* 생성 이력 클러스터 — 기존 팝오버 재사용(§3.8.4 순서: 학습자료 → 문제).
             공유 컴포넌트 내장 stopPropagation 래퍼(div 전체)가 여백 클릭까지
             삼켜 행 클릭(=선택 토글)이 죽으므로, 캡처 단계에서 여백 클릭을 선택
             토글로 승격한다 — 팝오버 트리거 버튼 클릭만 원래 동작 유지. */}
-        {rowQuestions.length > 0 ||
-        lazyQuestionCount > 0 ||
-        (p.reports?.length ?? 0) > 0 ? (
+        {hasSummaryCluster ? (
           <div
-            className="max-w-[220px] shrink-0 [&>div]:mt-0 [&>div]:border-t-0 [&>div]:pt-0"
+            // @max-2xl/list-row: 둘째 줄 전폭에서는 220px 상한을 풀고 flex-1 로
+            // 남은 폭을 차지한다(내부 토글 버튼이 w-full 이라 행 전체가 아코디언
+            // 행처럼 정렬되고, 우측 액션 버튼은 자연히 끝으로 밀린다).
+            className="max-w-[220px] shrink-0 [&>div]:mt-0 [&>div]:border-t-0 [&>div]:pt-0 @max-2xl/list-row:min-w-0 @max-2xl/list-row:max-w-none @max-2xl/list-row:flex-1"
             onClickCapture={(e) => {
               const target = e.target;
               // ⚠ 팝오버 행은 role="button" div(포털 렌더 — React 트리로 캡처가

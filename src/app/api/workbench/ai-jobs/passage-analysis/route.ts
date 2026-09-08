@@ -11,6 +11,8 @@ import { prisma } from "@/lib/prisma";
 import { normalizeAnalysisTone } from "@/lib/passage-analysis-options";
 import { normalizeQuestionGenerationPlan } from "@/lib/question-generation-plans";
 import { cleanupStaleWorkbenchAiJobs } from "@/lib/workbench-ai-job-stale-cleanup";
+import { preflightCreditGate } from "@/lib/credit-preflight";
+import { getPassageAnalysisCreditCost } from "@/lib/passage-analysis-credit-costs";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -99,6 +101,15 @@ export async function POST(req: NextRequest) {
     parsed.data.generationPlan,
   );
   const analysisTone = normalizeAnalysisTone(parsed.data.analysisTone);
+  // 사전 잔액 게이트(잡 행 생성 전) — 워커가 과금 단계에서 FAILED 로 닫던 doomed
+  // 잡을 만들지 않는다(26-09-08 전수조사). 최종 권위는 워커의 원자적 차감.
+  const preflight = await preflightCreditGate({
+    academyId: staff.academyId,
+    requiredCredits: getPassageAnalysisCreditCost({
+      includeWorksheet: parsed.data.includeWorksheet ?? false,
+    }),
+  });
+  if (!preflight.ok) return preflight.response;
   const job = await prisma.workbenchAiJob.create({
     data: {
       academyId: staff.academyId,

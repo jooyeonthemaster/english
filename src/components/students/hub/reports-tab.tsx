@@ -72,7 +72,7 @@ export function StudentReportsTab({ reports }: { reports: StudentExamReportRow[]
         </p>
         <p className="max-w-md text-center text-[12px] leading-relaxed text-slate-400">
           내신 시험 분석에서 시험지를 분석하고 이 학생을 등록하면, 채점과 상담 리포트가
-          여기에 모입니다. 자체 시험지 응시 결과도 채점이 끝나면 자동으로 연결됩니다.
+          여기에 모입니다. 스모트 시험지 응시 결과도 채점이 끝나면 자동으로 연결됩니다.
         </p>
         <Link
           href="/director/workbench/exam-report"

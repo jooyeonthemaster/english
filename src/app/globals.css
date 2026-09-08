@@ -2810,3 +2810,22 @@ body.smoat-large-ui .passage-report-thumb .par-root { --par-zoom: 1 !important; 
 .text-justify {
   text-wrap: pretty;
 }
+
+/* ============================================================================
+   인라인 기출 브라우저 예외(docs/gichul-question-bank-spec.md §11.2) — 26-09-08.
+   위 ≤767 밀도 리맵이 공유 Pagination(h-7/w-7)·FilterMenu(h-8) 버튼을 28px 로 눌러 폰 터치 타깃이
+   무너진다. 이 패널([data-exam-bank-inline])만 더 높은 특이도로 되찾는다(구 모달 예외 블록 대체 —
+   모달은 사용자 결정 F-1 로 폐기). 데스크톱(≥768)은 이 블록이 전혀 안 탄다.
+   ============================================================================ */
+@media (max-width: 767px) {
+  body.smoat-large-ui [data-exam-bank-inline] [data-exam-bank-pagination] button {
+    height: 40px !important;
+    min-height: 40px !important;
+    min-width: 40px !important;
+  }
+
+  body.smoat-large-ui [data-exam-bank-inline] [data-exam-bank-filters] button:not([data-exam-bank-clear]),
+  body.smoat-large-ui [data-exam-bank-inline] [data-exam-bank-row] [role="checkbox"] {
+    min-height: 40px !important;
+  }
+}

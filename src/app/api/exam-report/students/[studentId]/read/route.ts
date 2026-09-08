@@ -190,7 +190,8 @@ export async function POST(
     try {
       const buffers = await Promise.all(sorted.map((p) => downloadAsBuffer(p.path)));
       // 총량 예산 재압축 — 전 페이지 1콜 페이로드의 게이트웨이 502 방지
-      images = await prepareLlmImages(buffers);
+      // 전 페이지 1콜 경로 — 종전 12MB 총예산을 고정(기본 pagesPerCall=6 이면 장당 예산이 커진다).
+      images = await prepareLlmImages(buffers, { pagesPerCall: buffers.length });
     } catch {
       await failRead(studentId, auth.academyId, reservingState, "이미지 로드 실패");
       return NextResponse.json(

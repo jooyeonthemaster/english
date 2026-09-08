@@ -13,6 +13,7 @@ import {
   shouldRenderSourcePassageInsideQuestion,
 } from "./passage-policy";
 import { isSummaryWritingSubtype } from "./summary-complete-mc-layout";
+import { isGichulSetMemberData } from "./question-body-layout";
 import {
   normalizeInlineText,
   normalizePassageText,
@@ -170,7 +171,14 @@ function mergedSetPassageForItems(
 
   const setRender = setRenderFromItems(items);
   if (setRender) {
-    return normalizePassageText(buildQuestionSetMergedPassage(setRender));
+    const merged = buildQuestionSetMergedPassage(setRender);
+    const footnotes = [...new Set(items.flatMap((item) => {
+      const meta = readStructuredObject(readStructuredObject(item.sourceQuestion.structuredData)._gichul);
+      return Array.isArray(meta.footnotes)
+        ? meta.footnotes.filter((line): line is string => typeof line === "string" && Boolean(line.trim()) && !merged.includes(line))
+        : [];
+    }))];
+    return normalizePassageText(merged + (footnotes.length ? `\n${footnotes.join("  ")}` : ""));
   }
 
   const base = normalizePassageText(
@@ -286,9 +294,21 @@ export function makePaperItem(question: BuilderQuestion, orderNum: number, _exis
   // 영어 세트 멤버는 codex 병합지문: setRender 있으면 병합 지문, 없으면 원지문(정규화) —
   // buildGroups 의 mergedSetPassageForItems 가 span anchors 로 최종 병합한다.
   const rawPassageContent = normalizePassageText(question.passage?.content || "");
-  const passageContent = isKoSetMember
+  const basePassageContent = isKoSetMember
     ? question.passage?.content || ""
     : mergedSetPassageForQuestion(question) ?? rawPassageContent;
+  // 기출 문항 은행 반입분(structuredData._gichul.footnotes): 출처형·요약문은 각주가 questionText 밖에 있어
+  // 지문 박스 아래 별도 줄로 인쇄돼야 한다 — 지문 내용 꼬리에 각주 블록을 붙인다(normalizePassageText 가 각주 블록을
+  // 별도 줄로 유지). 이미 questionText 안에 각주가 구워진 내장형은 건너뛴다. AI 생성 문항은 _gichul 이 없어 불변.
+  const gichulFootnotes = readStructuredObject(question.structuredData)._gichul as { footnotes?: unknown } | undefined;
+  const footnoteLines = Array.isArray(gichulFootnotes?.footnotes)
+    ? (gichulFootnotes!.footnotes as unknown[]).filter((f): f is string => typeof f === "string" && f.trim().length > 0)
+    : [];
+  const footnoteTail =
+    footnoteLines.length > 0 && basePassageContent && !question.questionText.includes(footnoteLines[0])
+      ? `\n\n${footnoteLines.join("  ")}`
+      : "";
+  const passageContent = basePassageContent + footnoteTail;
   // 요약문 영작(SUMMARY_WRITING)·주제문 영작(TOPIC_SENTENCE_WRITING)은 원본 지문을 시험지에
   // "무조건 함께" 가져온다(사용자 요구·레퍼런스 형식). 학생은 지문을 읽고 요약문/주제문을 영작한다.
   // SUMMARY_COMPLETE 와 동일하게 INLINE_SOURCE 로 처리 — 지문은 structuredSegments() 가
@@ -297,7 +317,12 @@ export function makePaperItem(question: BuilderQuestion, orderNum: number, _exis
   // koStructuredSegments 의 suppressPassage 로 전달돼 멤버 안 지문 박스를 억제한다.
   // 영어 세트 멤버는 공유 지문을 그룹 첫머리에서 "1회"만 출력한다(codex). 요약/주제문 영작의
   // 단독 문항 지문 강제 포함 정책은 세트가 아닐 때만 적용한다.
-  const includeSourcePassage = isKoSetMember
+  // 기출 장문은 공통 지문을 기본 표시한다. 소문항 내 중복 지문은 structuredSegments의
+  // 장문 분기가 억제하고, includePassage 토글은 묶음 전체의 공통 지문에 적용한다.
+  const isGichulSetMember = isGichulSetMemberData(question.structuredData);
+  const includeSourcePassage = isGichulSetMember
+    ? Boolean(passageContent)
+    : isKoSetMember
     ? false
     : question.setId
       ? Boolean(passageContent)
@@ -379,7 +404,7 @@ export function shouldRenderSourcePassageForItem(item: PaperItem): boolean {
     const passageContent = normalizePassageText(
       item.passageContent || item.sourceQuestion.passage?.content || "",
     );
-    return Boolean(passageContent.trim());
+    return Boolean(passageContent.trim()) && (!isGichulSetMemberData(item.sourceQuestion.structuredData) || item.includePassage);
   }
   // 요약문 영작은 INLINE_SOURCE(SUMMARY_COMPLETE 와 동일) — 지문은 structuredSegments() 가 문제
   // 안에 인라인으로 그리므로 여기(별도 출처 지문 블록)에서는 그리지 않는다(중복 방지).
@@ -393,6 +418,7 @@ export function shouldRenderSourcePassageForItem(item: PaperItem): boolean {
 
 export function isSourcePassageForcedForItem(item: PaperItem): boolean {
   if (item.blockType !== "question") return false;
+  if (isGichulSetMemberData(item.sourceQuestion.structuredData)) return false;
   const sourceQuestion = questionWithPaperItemPassage(item);
   return shouldForceSourcePassage(sourceQuestion);
 }
@@ -668,8 +694,22 @@ function parenthesizedMarkerDisplay(
   ) {
     return getCircledNumber(markerIndex);
   }
-  return `(${letter.toUpperCase()})`;
+  // 원문 대소문자 보존 — 강제 대문자화는 **장문 세트(§12)의 (a)~(e) 를 (A)~(E) 로 바꿔** 인쇄본과
+  // 어긋나게 한다(26-09-08 감독 육안: 2026 수능 41-42 공유 지문이 「(A) inevitable」로 렌더). 기존
+  // 대문자 데이터((A)~(J) 어법·보기 참조)는 그대로 대문자로 나오므로 무회귀 — 소문자 라벨은
+  // VOCAB_CHOICE(원문자 분기) 와 세트 멤버뿐이고, 후자는 소문자가 정본이다.
+  return `(${letter})`;
 }
+
+/**
+ * 원문자 마커(①·`__② word__`·`__(a) word__`)와 바로 뒤 단어 사이의 공백. 일반 공백이면 줄 끝에서
+ * 「② / helps」 처럼 마커와 단어가 갈라진다(기출 문항 은행 조판 실측, 어법·어휘·무관·삽입 전 문항 확률 재발).
+ * nbsp 로 묶어 한 줄에 두되 단어 자체는 그대로 개행 가능하게 둔다(래퍼 nowrap 금지 — 문장 길이 밑줄이
+ * 칸을 넘친다). 텍스트 길이는 그대로라 페이지네이션 줄 수 추정(pagination-metrics wrapParagraph 의
+ * 마커+다음 단어 묶음 판정)과 동기. 편집 직렬화(editable-text serializeEditableDom → normalizeEditableText)가
+ * \u00A0 를 공백으로 되돌리므로 저장 텍스트엔 새지 않는다.
+ */
+const MARKER_WORD_JOINER = "\u00A0";
 
 export function renderFormattedInline(
   text: string,
@@ -693,11 +733,21 @@ export function renderFormattedInline(
   let lastIndex = 0;
   let key = 0;
   let match: RegExpExecArray | null;
+  // 직전 조각이 단독 원문자 마커(match[2] — 삽입 위치 ①·무관 「① __문장__」)였으면 다음 평문 조각의
+  // 머리 공백 1개를 nbsp 로 바꿔 마커와 다음 단어를 한 줄에 묶는다. 다른 조각이 끼면 해제.
+  let joinAfterMarker = false;
+  const pushPlain = (slice: string) => {
+    const glued =
+      joinAfterMarker && slice.startsWith(" ") ? MARKER_WORD_JOINER + slice.slice(1) : slice;
+    joinAfterMarker = false;
+    parts.push(<span key={key++}>{glued}</span>);
+  };
 
   while ((match = pattern.exec(text)) !== null) {
     if (match.index > lastIndex) {
-      parts.push(<span key={key++}>{text.slice(lastIndex, match.index)}</span>);
+      pushPlain(text.slice(lastIndex, match.index));
     }
+    joinAfterMarker = false;
     if (match[1]) {
       const circledMarkerMatch = match[1].match(
         koMarkerEligible
@@ -710,7 +760,7 @@ export function renderFormattedInline(
             <span className="font-bold text-blue-700">
               {inlineMarkerDisplay(circledMarkerMatch[1], subType)}
             </span>
-            {" "}
+            {MARKER_WORD_JOINER}
             <span className="font-semibold underline decoration-blue-500 underline-offset-4">
               {circledMarkerMatch[2]}
             </span>
@@ -726,7 +776,7 @@ export function renderFormattedInline(
             <span className="font-bold text-blue-700">
               {parenthesizedMarkerDisplay(markerMatch[1], subType)}
             </span>
-            {" "}
+            {MARKER_WORD_JOINER}
             <span className="font-semibold underline decoration-blue-500 underline-offset-4">
               {markerMatch[2]}
             </span>
@@ -745,7 +795,40 @@ export function renderFormattedInline(
           {inlineMarkerDisplay(match[2], subType)}
         </span>,
       );
+      joinAfterMarker = true;
     } else if (match[3]) {
+      // 평문 소문자 라벨 "(a)~(e)" 는 마커가 아니라 **글자 그대로**다(§12.1-2). 장문 세트의 발문
+      //   「밑줄 친 (a)~(e) 중에서 …」·선지 「① (a) ② (b) …」·공유 지문이 전부 여기 해당한다.
+      // 호출부 옵션이 아니라 전역 규칙인 이유: 발문·선지·지문이 서로 다른 렌더 지점 6곳에서 그려져
+      //   옵션을 하나만 빠뜨려도 같은 문항 안에서 (a) 와 (A) 가 섞인다(26-09-08 감독 육안: 44번 발문만
+      //   「(A) ~ (E)」 파란 볼드). 실측 무회귀 — 은행 3,076+1,119 중 평문 소문자 라벨은 REFERENCE 490 ·
+      //   VOCAB_CHOICE 110 이고 전부 세트 멤버다(대문자 (A)~(J) 보기 참조는 아래 기존 경로 유지).
+      if (/^[a-j]$/.test(match[3])) {
+        parts.push(<span key={key++}>{`(${match[3]})`}</span>);
+        lastIndex = pattern.lastIndex;
+        continue;
+      }
+      // 「(A)」 라벨 바로 뒤에 빈칸선(___)이 오면 한 덩어리(nowrap)로 — 줄 끝에서 라벨만 남고 빈칸이 다음 줄로
+      // 떨어지던 것(요약문·(A)(B) 빈칸, 전수 렌더 검수 실측 22건) 방지. 빈칸 조각을 여기서 함께 소비한다.
+      const blankAhead = text.slice(pattern.lastIndex).match(/^\s*(_{3,})/);
+      if (blankAhead) {
+        parts.push(
+          <span key={key++} className="whitespace-nowrap">
+            <span className={`mx-0.5 ${alphabetMarkerClassName}`}>{parenthesizedMarkerDisplay(match[3], subType)}</span>
+            <span
+              data-mark="blank"
+              data-raw={blankAhead[1]}
+              contentEditable={false}
+              className="mx-1 inline-block min-w-[4.5em] border-b border-slate-500 align-baseline"
+            >
+              &nbsp;
+            </span>
+          </span>,
+        );
+        pattern.lastIndex += blankAhead[0].length;
+        lastIndex = pattern.lastIndex;
+        continue;
+      }
       parts.push(
         // 스탠드얼론 괄호알파벳 마커도 원형숫자 마커(match[2])와 동일하게 좌우여백 통일.
         <span key={key++} className={`mx-0.5 ${alphabetMarkerClassName}`}>
@@ -782,7 +865,7 @@ export function renderFormattedInline(
     lastIndex = pattern.lastIndex;
   }
 
-  if (lastIndex < text.length) parts.push(<span key={key++}>{text.slice(lastIndex)}</span>);
+  if (lastIndex < text.length) pushPlain(text.slice(lastIndex));
   return parts.length > 0 ? parts : text;
 }
 
@@ -847,7 +930,11 @@ export function joinRenderedLinesForDisplay(
         result = trimmed;
       } else if (prevBlank) {
         result += `\n\n${trimmed}`;
-      } else if (atSourceLineStart && HARD_BREAK_LINE_RE.test(trimmed)) {
+      } else if (
+        (atSourceLineStart && HARD_BREAK_LINE_RE.test(trimmed)) ||
+        // 각주 줄("* word: 뜻")은 원문 행 판정과 무관하게 항상 별도 줄(지문 박스 각주 인쇄 관행)
+        PASSAGE_FOOTNOTE_PARAGRAPH_RE.test(trimmed)
+      ) {
         result += `\n${trimmed}`;
       } else {
         result += ` ${trimmed}`;
@@ -871,6 +958,12 @@ export function joinRenderedLinesForDisplay(
       continue;
     }
 
+    // 각주 줄("* word: 뜻")은 빈 줄이 없어도 새 단락으로 — 아래 reduce 가 `\n` 으로 이어 별도 줄에 인쇄한다
+    // (지문 박스는 normalizePassageText 가 각주를 `\n` 하나로 붙이므로 빈 줄 경계가 없다).
+    if (PASSAGE_FOOTNOTE_PARAGRAPH_RE.test(trimmed) && currentParagraph.length > 0) {
+      paragraphs.push(currentParagraph.join(" "));
+      currentParagraph = [];
+    }
     currentParagraph.push(trimmed);
   }
 
@@ -879,13 +972,40 @@ export function joinRenderedLinesForDisplay(
   }
 
   // 전부 통짜: 단락을 빈 줄(\n\n)이 아닌 공백으로 이어 단일 흐름으로(유형 간 통일).
-  return paragraphs.join(" ").replace(/[ \t]{2,}/g, " ").trim();
+  // 예외 — 각주 단락("* word: 뜻")은 별도 줄(칸/쪽 경계에서 쪼개진 본문 조각도 통짜 경로와 같은 모양이어야 한다).
+  return paragraphs
+    .reduce((acc, p) => (acc === "" ? p : acc + (PASSAGE_FOOTNOTE_PARAGRAPH_RE.test(p) ? "\n" : " ") + p), "")
+    .replace(/[ \t]{2,}/g, " ")
+    .trim();
 }
 
 // 지문 단락을 단일 흐름(통짜)으로 — 임베드/박스 유형 간 "문단 분리 vs 통짜" 불일치 해소.
 // 수능 지문 관례(단일 문단 흐름)에 맞춤. (given-block 분리 후 적용해 경계 탐색은 보존.)
 function collapsePassageParagraphs(text: string): string {
-  return text.replace(/\n{2,}/g, " ").replace(/[ \t]{2,}/g, " ");
+  // 각주 블록("* consensus: 합의 ** aesthetic: 미학의")만은 인쇄 관행대로 본문 아래 별도 줄에 둔다
+  // (부모가 whitespace-pre-line). 공급원은 기출 문항 은행 본문뿐이라 AI 생성 문항 렌더는 그대로다.
+  return text
+    .replace(/\n{2,}(?=[*＊]\s*[A-Za-z])/g, "\n")
+    .replace(/\n{2,}/g, " ")
+    .replace(/[ \t]{2,}/g, " ");
+}
+
+/** 지문 각주 블록 머리(paper-builder/text-normalization 의 규칙과 동일) */
+const PASSAGE_FOOTNOTE_PARAGRAPH_RE = /^[*＊]\s*[A-Za-z]/;
+
+/**
+ * 칸/쪽 경계에서 쪼개진 본문 조각의 밑줄 마커(`__…__`) 짝 맞추기.
+ * 무관한 문장(① __문장__)처럼 밑줄이 문장 길이라 경계를 넘어가면, 조각 안의 `__` 개수가 홀수가 되어
+ * renderFormattedInline 의 `__([^_]+)__` 가 잡지 못하고 원시 `__` 가 그대로 찍힌다(기출 문항 은행 조판 실측).
+ * 시작 조각이면 끝에, 이어짐 조각이면 앞에 `__` 를 보충한다. 빈칸(`___` 이상)은 세지 않는다.
+ * 조각 전체가 한 밑줄 안에 들어가 마커가 0개인 경우(짝수)는 판별 불가라 그대로 둔다.
+ */
+export function balanceUnderlineMarkersForFragment(text: string, startsAtBeginning: boolean): string {
+  // 정확히 두 글자짜리 밑줄 런만 센다(빈칸 `___` 이상 제외). lookbehind 정규식은 Safari ≤16.3 에서 모듈 평가 시
+  // SyntaxError 로 조판기 전체를 죽이므로(검수 실측) 런 길이 스캔으로 쓴다.
+  const pairs = (text.match(/_+/g) || []).filter((run) => run.length === 2).length;
+  if (pairs % 2 === 0) return text;
+  return startsAtBeginning ? `${text}__` : `__${text}`;
 }
 
 export function renderQuestionTextInline(

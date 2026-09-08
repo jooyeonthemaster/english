@@ -306,6 +306,13 @@ export async function getStudioPassageText(input: {
 export async function addPassagesToStudioClass(input: {
   classId: string;
   passageIds: string[];
+  /**
+   * false 면 revalidateStudioClass(revalidatePath 2벌) 생략 — 기출 문항 픽 경로 전용
+   * (docs/gichul-question-bank-spec.md §11.4-6c). 기본 true = 기존 호출부 무회귀.
+   * 픽은 호스트 로컬 상태(refreshQuestions·onLibraryChanged)로 반영되므로 스튜디오
+   * 전체 RSC 리프레시가 필요 없다.
+   */
+  revalidate?: boolean;
 }): Promise<StudioActionResult<{ addedCount: number }>> {
   try {
     const staff = await requireStaffAuth();
@@ -350,7 +357,7 @@ export async function addPassagesToStudioClass(input: {
       })),
       skipDuplicates: true,
     });
-    revalidateStudioClass(input.classId);
+    if (input.revalidate !== false) revalidateStudioClass(input.classId);
     return { success: true, data: { addedCount: result.count } };
   } catch (error) {
     return {

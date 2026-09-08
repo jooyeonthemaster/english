@@ -19,6 +19,7 @@ import {
   EmptyEditor,
   TypeSwitcher,
 } from "./shared-pieces";
+import { PassageHygieneBadge } from "@/components/workbench/passage-hygiene-badge";
 
 export function PassageTab({
   item,
@@ -199,6 +200,11 @@ export function PassageTab({
           {MIN_COMMIT_PASSAGE_LENGTH}자 이상이어야 저장할 수 있습니다.
         </div>
       ) : null}
+      <PassageHygieneBadge
+        content={item.content}
+        variant="line"
+        className="border-t border-amber-200 bg-amber-50 px-5 py-2 text-[11px]"
+      />
       <BlockActions
         onSplit={() => onSplit(item.id, caret)}
         canSplit={caret > 0 && caret < item.content.length}

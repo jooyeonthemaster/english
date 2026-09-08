@@ -60,6 +60,7 @@ async function findAnswerTarget(token: string) {
     select: {
       id: true,
       gradingConfirmed: true,
+      answerSubmittedAt: true,
       responses: true,
       scoreSummary: true,
       version: true,
@@ -111,10 +112,21 @@ export async function POST(
   // CAS 루프 — 병렬 쓰기(강사 채점 저장·재판독 커밋)와 충돌하면 최신 행을 다시 읽어
   // 순수 병합을 재적용한다. reviewed:true 보존은 applyAnswerSubmission 이 보장.
   for (let attempt = 0; attempt < CAS_MAX_ATTEMPTS; attempt++) {
-    // 채점 확정 후에는 학생 수정 잠금(재조회 경로에서도 매번 재확인).
-    if (student.gradingConfirmed) {
+    // 【26-09-05 사용자 지시】 "학생이 답안 제출하면 그거 수정 못 하게 해. 그냥
+    //   답안 제출하면 끝이야." — 제출 이력(answerSubmittedAt)이 있으면 그 링크는
+    //   그것으로 끝이다(종전엔 채점 확정 전까지 몇 번이든 덮어쓸 수 있었다).
+    //   재조회 경로에서도 매번 재확인한다(CAS 루프 안에 두는 이유).
+    //   ⚠ 강사는 여전히 레일 정오표에서 답을 직접 고칠 수 있다 — 잠기는 것은
+    //   **학생 링크**뿐이고, 오기입 정정 경로는 강사 쪽에 살아 있다.
+    if (student.gradingConfirmed || student.answerSubmittedAt != null) {
       return NextResponse.json(
-        { error: "채점이 확정되어 답안을 수정할 수 없습니다.", code: "LOCKED" },
+        {
+          error: student.gradingConfirmed
+            ? "채점이 확정되어 답안을 수정할 수 없습니다."
+            : "이미 제출한 답안은 수정할 수 없습니다.",
+          code: "LOCKED",
+          reason: student.gradingConfirmed ? "CONFIRMED" : "SUBMITTED",
+        },
         { status: 409 },
       );
     }

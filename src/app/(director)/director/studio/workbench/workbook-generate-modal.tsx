@@ -49,6 +49,7 @@ import {
 import { toast } from "sonner";
 import type { StudioClassRow } from "@/actions/studio/classes";
 import {
+  getStudioCreditBalance,
   getStudioSheetStates,
   type StudioSheetState,
 } from "@/actions/studio/worksheets";
@@ -159,6 +160,10 @@ function WorkbookModalBody({
   // 마지막 선택이 스튜디오의 과금 조작으로 새면 안 된다(표면 간 상태 누출 금지).
   const [variant, setVariant] = useState<StudioSheetVariant>("basic");
   const [states, setStates] = useState<StudioSheetState[] | null>(null);
+  // 발사 전 잔액(비차감). null = 미상(조회 실패 포함) — 미상일 땐 막지 않는다.
+  // 서버 사전 게이트(credit-preflight)가 최종 방어선이라 여기서 낙관해도 doomed
+  // 잡은 안 생기고, 비관(미상=0)하면 조회 한 번 실패로 발사가 영구 잠긴다.
+  const [balance, setBalance] = useState<number | null>(null);
   const [statesError, setStatesError] = useState<string | null>(null);
   const [reloadKey, setReloadKey] = useState(0);
   // 지문 1개일 때 헤더 제목 토글 → 본문 전문 팝오버(passage-generate-modal 관용구).
@@ -198,6 +203,17 @@ function WorkbookModalBody({
       const ids = passages.map((p) => p.id);
       if (ids.length === 0) return;
       const seq = (reqSeqRef.current += 1);
+      // 잔액은 견적과 **같은 시점**에 읽는다(26-09-08 전수조사: 잔액 0 학원이
+      // 13지문을 발사해 오류 13개 — 견적 합은 있었는데 잔액과 비교하는 자리가 없었다).
+      getStudioCreditBalance()
+        .then((res) => {
+          if (seq !== reqSeqRef.current) return;
+          setBalance(res.success && res.data ? res.data.balance : null);
+        })
+        .catch(() => {
+          if (seq !== reqSeqRef.current) return;
+          setBalance(null);
+        });
       getStudioSheetStates({ passageIds: ids })
         .then((res) => {
           if (seq !== reqSeqRef.current) return;
@@ -364,11 +380,24 @@ function WorkbookModalBody({
   const active = planById.get(variant)!;
   const targetCount = active.targets.length;
   const totalCredits = active.totalCredits;
+  // 잔액 부족 = 견적 합 > 보유(잔액 미상이면 판정 보류). 발사 대상이 있고 유료일 때만.
+  const creditShortfall =
+    loaded && balance !== null && targetCount > 0 && totalCredits > balance
+      ? totalCredits - balance
+      : 0;
 
   const handleLaunch = useCallback(() => {
     if (!loaded) return;
     const plan = planById.get(variant);
     if (!plan || plan.targets.length === 0) return;
+    if (balance !== null && plan.totalCredits > balance) {
+      // 한 번만, 한국어로, 얼마가 모자란지까지 — 지문마다 402 를 받던 구판 대체.
+      toast.error(
+        `크레딧이 부족합니다 (보유 ${balance} / 필요 ${plan.totalCredits}). 크레딧 관리에서 충전한 뒤 다시 눌러 주세요.`,
+      );
+      loadStates({ silent: true });
+      return;
+    }
     const { launched, skipped } = queueApi.launchSheets(
       plan.targets.map((p) => ({
         id: p.id,
@@ -416,6 +445,7 @@ function WorkbookModalBody({
     onLaunched();
   }, [
     loaded,
+    balance,
     planById,
     variant,
     queueApi,
@@ -425,7 +455,7 @@ function WorkbookModalBody({
     loadStates,
   ]);
 
-  const launchDisabled = !loaded || targetCount === 0;
+  const launchDisabled = !loaded || targetCount === 0 || creditShortfall > 0;
   // CTA 라벨 정본(E19-3 확정) — 변형 금지.
   const launchLabel =
     !loaded || targetCount === 0
@@ -468,8 +498,26 @@ function WorkbookModalBody({
       loadStates({ silent: true });
       return;
     }
+    if (creditShortfall > 0) {
+      // 잔액 부족은 상품을 바꿔도 안 풀리는 사유(더 싼 상품이면 풀릴 수는 있으나
+      // 그건 캡션이 말한다) — 글로우 대신 금액과 갈 곳을 말한다.
+      toast.error(
+        `크레딧이 ${creditShortfall} 부족합니다 (보유 ${balance ?? 0} / 필요 ${totalCredits}). 크레딧 관리에서 충전한 뒤 다시 눌러 주세요.`,
+      );
+      loadStates({ silent: true });
+      return;
+    }
     triggerHintGlowWithin(bodyRef.current, "[data-sheet-variant]");
-  }, [statesError, loaded, noTargetByAnalyzing, analyzingCount, loadStates]);
+  }, [
+    statesError,
+    loaded,
+    noTargetByAnalyzing,
+    analyzingCount,
+    loadStates,
+    creditShortfall,
+    balance,
+    totalCredits,
+  ]);
 
   // 지문 1개면 헤더에 제목 토글(전문 팝오버) — 어떤 지문의 학습지인지 즉시 식별.
   const singlePassage = passages.length === 1 ? passages[0] : null;
@@ -708,6 +756,20 @@ function WorkbookModalBody({
                         ? `· 총 ${totalCredits}크레딧`
                         : "· 추가 비용 없음"}
                 </span>
+                {/* 잔액은 유료 발사에만 붙는다 — 부족하면 rose 로 모자란 양을 말한다
+                    (26-09-08: 잔액 0 에서 13지문 발사 → 오류 13개의 재발 방지). */}
+                {loaded && targetCount > 0 && totalCredits > 0 && balance !== null ? (
+                  <span
+                    className={
+                      "ml-1 font-medium tabular-nums " +
+                      (creditShortfall > 0 ? "text-rose-600" : "text-slate-400")
+                    }
+                  >
+                    {creditShortfall > 0
+                      ? `· 보유 ${balance} — ${creditShortfall} 부족`
+                      : `· 보유 ${balance}`}
+                  </span>
+                ) : null}
               </span>
               <button
                 type="button"

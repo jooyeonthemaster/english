@@ -895,6 +895,14 @@ model ExamAnalysis {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 
+  /// 시험지 분석 리포트 공개 링크 /r/exam/[token] (26-09-03) — 시험지 **자체**의 분석
+  /// (총평·난이도·유형·문항별)을 학생·학부모에게 공유하는 축. 학생 개인 리포트
+  /// (ExamReportStudent.shareToken, /r/[token])와는 별개 토큰·별개 라우트.
+  /// revoke 시 null, 재발급 시 신규(자동 rotate). 적용 SQL: prisma/migrations/manual/20260903_exam_analysis_share.sql
+  shareToken   String?   @unique
+  shareEnabled Boolean   @default(false)
+  sharedAt     DateTime?
+
   academy  Academy             @relation(fields: [academyId], references: [id], onDelete: Cascade)
   students ExamReportStudent[]
 

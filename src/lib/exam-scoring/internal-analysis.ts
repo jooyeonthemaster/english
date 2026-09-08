@@ -549,3 +549,41 @@ export function toStudentResponses(
     return base;
   });
 }
+
+// ── mergePreservingReviewed ─────────────────────────────────────────────────
+
+/** 문항 번호 정규화 — 병합 조인 키(exam-report 병합 공통 규약: 공백 제거). */
+function mergeNumberKey(value: string): string {
+  return value.replace(/\s+/g, "");
+}
+
+/**
+ * 자동 채점 결과 × 기존 저장분의 **강사 확정 보존 병합**(26-09-04).
+ *
+ * 축은 machine(현 할당 문항 집합)이다 — 할당에서 빠진 문항이 옛 저장분 때문에
+ * 되살아나면 안 된다. 그 축 위에서 같은 번호의 기존 행이 `reviewed === true` 면
+ * 기계 판정 대신 그 행을 그대로 남긴다(강사가 손으로 정한 정오·부분점수·메모·
+ * 학생답 원문 전부).
+ *
+ * 왜 필요한가: 이 병합이 없으면 MANUAL_ONLY(서술형)처럼 기계가 영원히 UNKNOWN 을
+ * 내는 문항은 강사가 채점해도 재동기화(재채점·보강) 한 번에 원복돼
+ * gradingConfirmed 가 false 로 되돌아가고 리포트 생성이 영구 차단된다. 학생 제출
+ * 경로의 최고 불변식(answer-entry applyAnswerSubmission — "강사 확정 행은 학생
+ * 제출로 절대 덮지 않는다")을 브리지에도 같은 규칙으로 적용한 것.
+ */
+export function mergePreservingReviewed(
+  machine: StudentResponse[],
+  existing: StudentResponse[] | null,
+): StudentResponse[] {
+  if (!existing || existing.length === 0) return machine;
+  const reviewedByKey = new Map<string, StudentResponse>();
+  for (const r of existing) {
+    if (r.reviewed === true) reviewedByKey.set(mergeNumberKey(r.number), r);
+  }
+  if (reviewedByKey.size === 0) return machine;
+  return machine.map((m) => {
+    const kept = reviewedByKey.get(mergeNumberKey(m.number));
+    // 번호 표기는 현 구조(machine)를 정본으로 — 표기 변경에도 축이 흔들리지 않는다.
+    return kept ? { ...kept, number: m.number } : m;
+  });
+}

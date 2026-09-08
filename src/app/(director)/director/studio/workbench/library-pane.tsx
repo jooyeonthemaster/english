@@ -145,6 +145,35 @@ import {
   type StudioPassageAnalysisData,
 } from "@/actions/studio/dossier";
 import { listStudioClassQuestions } from "@/actions/studio/questions";
+// 기출 **문항** 반입(docs/gichul-question-bank-spec.md §5·§11.4) — 지문 축의
+// intake.handleImportExamPassages 와는 다른 액션이다(아래 flushExamBankBuffer 주석).
+import {
+  importExamQuestionsToStudioClass,
+  listStudioClassExamBankIds,
+} from "@/actions/studio/exam-questions";
+// 인라인 기출 브라우저(§11.2, 구 모달 폐기) — 패널↔호스트 계약은 inline/types.ts 정본.
+import { ExamBankInlinePanel } from "@/components/workbench/exam-question-bank/inline";
+import type {
+  ExamBankImportMappingEntry,
+  ExamBankPickMeta,
+} from "@/components/workbench/exam-question-bank/inline/types";
+import { EXAM_BANK_IMPORT_MAX } from "@/lib/exam-passages/question-bank-types";
+// 「체크 즉시 조판」(§11.13.1) — 은행 항목을 클라이언트에서 BuilderQuestion 으로 조립해 임시 id
+// 로 레지스트리에 올리고, 조판기가 서버 대신 거기서 찾는다. 반입 착지는 alias 로 제자리 개명.
+import {
+  CLIENT_QUESTION_ID_PREFIX,
+  clientQuestionIdFor,
+  isClientQuestionId,
+  peekQuestionIdAlias,
+  registerClientQuestion,
+  registerQuestionIdAlias,
+  unregisterClientQuestion,
+} from "@/components/exams/paper-builder/client-question-registry";
+import type { BuilderQuestion } from "@/components/exams/paper-builder/types";
+import { fetchBankItemAsBuilderQuestion } from "@/lib/exam-passages/question-bank-client-builder";
+// facet 은 헤더 보조 문구·진입 버튼 카운트용 원시값(§11.2) — 8.5MB 본문 JSON 이 아니라
+// 작은 facets 만이다(본문은 서버 전용 question-bank.ts 가 적재한다).
+import examBankFacets from "@/data/exam-passages/questions-facets.json";
 import {
   listStudioClassWorksheets,
   type StudioClassWorksheetRow,
@@ -210,6 +239,14 @@ import {
   type IntakeMethodKey,
   type StudioAssetView,
 } from "./source-switcher";
+import { AddPassageLauncher } from "./add-passage-launcher";
+import { StudioAnalysisPane } from "./analysis-pane";
+import { StudioStudentsPane } from "./students-pane";
+import type {
+  ExamCandidateRow,
+  ExamReportSummaryRow,
+} from "@/hooks/use-exam-report-activity";
+import type { StudioStudentExamRow } from "@/actions/studio/student-exams";
 import { StudioQuestionGenModal } from "./studio-question-gen-modal";
 import { useStudioQuestionGen } from "./use-studio-question-gen";
 
@@ -317,6 +354,14 @@ export interface LibraryPaneProps {
    */
   flatPicked: ReadonlyMap<string, PickedQuestionMeta>;
   onFlatPickedChange: (next: ReadonlyMap<string, PickedQuestionMeta>) => void;
+  /**
+   * 함수형 갱신 채널(additive, 기출 호스트 §11.13.1 전용). 기출 블록의 착지·해제·개명·
+   * 메타 보정은 이 판이 읽는 미러(flatPickedRef, effect 갱신)가 한 발 늦을 수 있어 Map 통째
+   * 제출로는 stale base 덮어쓰기(해제한 임시 항목 부활·픽 유실)가 남는다 — updater 는 React
+   * 가 최신 prev 를 넘기므로 커밋 순서와 무관하다. 미전달이면 미러 base 로 계산해 통째 제출
+   * 하는 종전 경로로 폴백한다. 안정 참조 전제(memo 계약).
+   */
+  onFlatPickedUpdate?: (fn: FlatPickedUpdater) => void;
   /**
    * 자산 뷰 업링크(§3.10.17-b) — 생성 문제 뷰에서 우측 패널이 실행대로
    * 바뀌는 판정 재료. 참조 안정 전제.
@@ -459,6 +504,136 @@ export interface LibraryPaneProps {
   onDossierDeselectControl?: (
     control: ((passageId: string) => void) | null,
   ) => void;
+  /**
+   * 시험 분석 채널 2종(26-09-01 §3.10.28, additive) — 카드 선택 업링크(우측
+   * 콘솔 레일)·선택 하이라이트. 전부 참조 안정 전제. 구 모달 오픈 채널은
+   * 콘솔 대개편으로 소멸(레일 인라인 처리 + 새 탭 위임).
+   */
+  onAnalysisSelect?: (row: ExamReportSummaryRow | null) => void;
+  analysisActiveRowId?: string | null;
+  /**
+   * 시험 분석 v4 채널(26-09-02, docs/exam-analysis-v4-spec.md §2.5 U4 행) —
+   * 후보(미분석 자체 시험지) 선택 업링크·하이라이트, 학생 관리에서 건너올 때의
+   * 포커스 행 id(판이 boardRows 에서 행을 찾아 onSelect 후 소비 통지). 전부
+   * 참조 안정·원시값 전제(memo 방어선). 판(analysis-pane, U4)이 같은 이름으로
+   * 받는다 — 이 판은 패스스루만.
+   */
+  onAnalysisSelectCandidate?: (c: ExamCandidateRow | null) => void;
+  analysisActiveCandidateId?: string | null;
+  analysisFocusId?: string | null;
+  onAnalysisFocusConsumed?: () => void;
+  /**
+   * 뷰 강제 명령 채널 **범용판**(v4 §2.5 U6 — `openStudentsView` /
+   * `openAnalysisForStudent`): 마운트 시 `handleSelectView` 자체를 올리고
+   * 언마운트 시 null. onComposeViewControl(착지 "exam")·onSheetComposeViewControl
+   * (착지 "sheet")과 같은 관용구이되 **착지 뷰를 인자로 받는다** — 셸이
+   * "students"/"analysis" 두 착지를 새로 필요로 해 채널을 둘 더 파는 대신 하나로
+   * 접었다(두 조판 채널은 「채널 자체가 정보」라는 근거로 그대로 둔다 — :1723
+   * 계열 주석). 수신부는 ref 보관 필수(useState 로 받으면 업데이터 오인).
+   */
+  onAssetViewControl?: (
+    control: ((v: StudioAssetView) => void) | null,
+  ) => void;
+  /**
+   * 「학생 관리」 5번째 뷰(v4 §3 U6, additive) — 필 건수 + 판 데이터·선택·추가.
+   * 데이터는 셸 훅 useStudioStudents 1인스턴스 산출(aside·드로어 2중 마운트
+   * 규칙 §5)이며 이 판은 패스스루만. 전부 상태 참조·원시값·useCallback 전제.
+   */
+  studentCount?: number | null;
+  studentsRows?: StudioStudentExamRow[];
+  studentsAcademyCode?: string | null;
+  studentsLoading?: boolean;
+  studentsError?: string | null;
+  onStudentsReload?: () => void;
+  studentsActiveId?: string | null;
+  onStudentSelect?: (id: string | null) => void;
+  onStudentsRequestAdd?: () => void;
+}
+
+// 학생 관리 판 rows 기본값 — 렌더마다 `[]` 리터럴을 만들면 memo(StudioStudentsPane)
+// 계열 하류가 매번 깨진다(EMPTY_SHEET_PICKED 와 같은 계통의 모듈 상수).
+const EMPTY_STUDENT_ROWS: StudioStudentExamRow[] = [];
+const NOOP = () => {};
+
+// ── 인라인 기출 브라우저 상수(docs/gichul-question-bank-spec.md §11.2·§11.4) ──
+// 은행 총 문항 수·연도 범위는 facets 에서 **원시값**으로 뽑아 모듈 상수로 둔다 —
+// 헤더 문구를 렌더마다 조립하면 memo(ComposerListPane) 에 매번 새 문자열이 내려간다
+// (원시 문자열이라 값이 같으면 통과하지만, 계산 자체를 렌더 밖으로 빼 두는 편이
+// 「왜 여기서 계산하나」를 다음 사람이 묻지 않게 한다). 연도 범위를 리터럴로 박지
+// 않는 이유: 코퍼스가 한 해 늘 때마다 이 문구가 조용히 썩는다.
+const EXAM_BANK_TOTAL: number = examBankFacets.total;
+const EXAM_BANK_YEAR_MIN = Math.min(...examBankFacets.years);
+const EXAM_BANK_YEAR_MAX = Math.max(...examBankFacets.years);
+const EXAM_BANK_SUMMARY = `평가원·교육청 ${EXAM_BANK_TOTAL.toLocaleString("ko-KR")}문항 · ${EXAM_BANK_YEAR_MIN}~${EXAM_BANK_YEAR_MAX}`;
+// 좁은 폭용 짧은 문구(§11.2 「34rem 미만이면 「3,076문항」만」) — 분기는 버튼이 @container 로 한다.
+const EXAM_BANK_SUMMARY_SHORT = `${EXAM_BANK_TOTAL.toLocaleString("ko-KR")}문항`;
+// 코얼레싱 디바운스(§11.4 A′-1 「400~600ms」의 하한) — 버스트 중 체크마다 연장된다.
+const EXAM_BANK_COALESCE_MS = 400;
+// 「체크 즉시 조판」 대기열 항목(§11.13.1). pickId 는 임시 id(`bank:<bankId>`, 단건 GET 으로
+// 조립을 마치면 ready) 또는 실제 Question.id(이미 반입돼 목록 미러에 실재 — 즉시 ready).
+// 대기열은 **머리부터 ready 인 것만** 순서대로 조판 픽에 넣는다 — 단건 GET 은 병렬이라
+// 늦게 누른 항목이 먼저 돌아올 수 있는데, 「체크 순서 = 조판 순서 = 인쇄 순서」(§11.4-3 ·
+// E27)는 이 판이 지켜야 할 불변식이다. meta 는 패널(P3)이 행 데이터로 준 것 또는 GET 결과.
+type BankInsertEntry = {
+  bankId: string;
+  pickId: string;
+  meta: PickedQuestionMeta | null;
+  ready: boolean;
+};
+// 조판 픽 함수형 갱신(onFlatPickedUpdate 프롭). 규약: **순수** — prev 만 읽고 새 Map 을 돌려주며
+// 변화가 없으면 prev 를 그대로 돌려준다(헛렌더·memo 관통 방지). React 가 updater 를 두 번
+// 부를 수 있으므로(StrictMode) 부수효과는 updater 밖에서.
+type FlatPickedUpdater = (
+  prev: ReadonlyMap<string, PickedQuestionMeta>,
+) => ReadonlyMap<string, PickedQuestionMeta>;
+/** 픽 메타 5필드 동치 — 착지 메타 보정이 같은 값을 다시 set 해 새 Map 을 내리는 것을 막는다 */
+function samePickMeta(a: PickedQuestionMeta, b: PickedQuestionMeta): boolean {
+  return (
+    a.passageId === b.passageId &&
+    a.passageTitle === b.passageTitle &&
+    a.typeLabel === b.typeLabel &&
+    a.difficulty === b.difficulty &&
+    a.premium === b.premium
+  );
+}
+// 클라이언트 조립 BuilderQuestion 의 passage.id 접두(question-bank-client-builder.ts 와 동일
+// 문자열) — 코퍼스 지문 id 를 되찾는 용도. 바뀌면 거기와 같이 바꾼다.
+const BANK_PASSAGE_ID_PREFIX = "bankpassage:";
+/** 목록 행 → 조판 픽 메타. handleFlatSelectionChange 의 미러 메타와 같은 5필드(착지 메타 보정·제출본 예측용) */
+function rowPickMeta(
+  row: StudioClassQuestionRow | undefined,
+): PickedQuestionMeta | null {
+  if (!row) return null;
+  return {
+    passageId: row.passageId,
+    passageTitle: row.passageTitle,
+    typeLabel: questionRowTypeLabel(row.type, row.subType),
+    difficulty: row.difficulty,
+    premium: row.premium,
+  };
+}
+/** 패널이 행 데이터로 준 메타(§11.13.1 P3) → 조판 픽 메타. 난이도는 반입 매핑과 같은 규칙(3점 = KILLER) */
+function bankPickMeta(m: ExamBankPickMeta): PickedQuestionMeta {
+  return {
+    passageId: m.passageId,
+    passageTitle: m.passageTitle,
+    typeLabel: m.typeGroup,
+    difficulty: m.points === 3 ? "KILLER" : "MEDIUM",
+    premium: false,
+  };
+}
+/** 단건 GET 으로 조립한 BuilderQuestion → 조판 픽 메타(패널 메타가 없을 때의 폴백) */
+function builderQuestionPickMeta(q: BuilderQuestion): PickedQuestionMeta {
+  const pid = q.passage?.id ?? "";
+  return {
+    passageId: pid.startsWith(BANK_PASSAGE_ID_PREFIX)
+      ? pid.slice(BANK_PASSAGE_ID_PREFIX.length)
+      : pid,
+    passageTitle: q.passage?.title ?? "",
+    typeLabel: questionRowTypeLabel(q.type, q.subType),
+    difficulty: q.difficulty || null,
+    premium: false,
+  };
 }
 
 // 구 NOOP_OPEN_QUESTION(문항 판의 **필수** onOpenQuestion 폴백)은 §3.10.23 E24 로
@@ -509,6 +684,7 @@ function LibraryPaneInner({
   onDossierPassages,
   flatPicked,
   onFlatPickedChange,
+  onFlatPickedUpdate,
   onAssetViewChange,
   initialAssetView = "passages",
   onOpenQuestionById,
@@ -527,6 +703,22 @@ function LibraryPaneInner({
   nudgeSheet = false,
   nudgeExam = false,
   onDossierDeselectControl,
+  onAnalysisSelect,
+  analysisActiveRowId = null,
+  onAnalysisSelectCandidate,
+  analysisActiveCandidateId = null,
+  analysisFocusId = null,
+  onAnalysisFocusConsumed,
+  onAssetViewControl,
+  studentCount = null,
+  studentsRows = EMPTY_STUDENT_ROWS,
+  studentsAcademyCode = null,
+  studentsLoading = false,
+  studentsError = null,
+  onStudentsReload = NOOP,
+  studentsActiveId = null,
+  onStudentSelect = NOOP,
+  onStudentsRequestAdd = NOOP,
 }: LibraryPaneProps) {
   // ── 중앙 자산 3뷰(§3.10.16-a) — 지문관리·생성 문제·학습지 ──
   // [R1] 초기값 = 복원 시드(위 prop 주석). 평시엔 "passages" 그대로다.
@@ -878,17 +1070,18 @@ function LibraryPaneInner({
   const questionRowByIdRef = useRef<Map<string, StudioClassQuestionRow>>(
     new Map(),
   );
-  useEffect(() => {
-    questionRowByIdRef.current = new Map(
-      questionsState.rows.map((r) => [r.id, r]),
-    );
-  }, [questionsState.rows]);
+  // ⚠ 이 미러를 채우는 effect 는 **handleFlatSelectionChange 선언 뒤**로 내려가 있다
+  //   (아래 「미러 갱신 + 기출 반입 자동 체크」). 선언 순서 = effect 실행 순서이고,
+  //   자동 체크가 그 콜백을 미러 대입 **직후** 같은 커밋에서 불러야 하기 때문이다.
   const flatPickedRef = useRef(flatPicked);
   useEffect(() => {
     flatPickedRef.current = flatPicked;
   }, [flatPicked]);
+  // extraMeta(additive, §11.13.1): 미러에 없는 id 라도 여기 있으면 그 메타로 넣는다 — 「체크
+  // 즉시 조판」의 임시 id(bank:<bankId>)는 목록 rows 가 아니라서 미러에서 되찾을 수 없다.
+  // 미러 행이 있으면 행이 정본(먼저 본다). 기존 호출부는 인자를 안 주므로 동작 무변경.
   const handleFlatSelectionChange = useCallback(
-    (next: Set<string>) => {
+    (next: Set<string>, extraMeta?: ReadonlyMap<string, PickedQuestionMeta>) => {
       const prev = flatPickedRef.current;
       const map = new Map<string, PickedQuestionMeta>();
       // 기존 순서 보존 → 신규는 next 순서(DragSelect enteredOrder)로 append.
@@ -896,7 +1089,11 @@ function LibraryPaneInner({
       for (const id of next) {
         if (map.has(id)) continue;
         const row = questionRowByIdRef.current.get(id);
-        if (!row) continue;
+        if (!row) {
+          const extra = extraMeta?.get(id);
+          if (extra) map.set(id, extra);
+          continue;
+        }
         map.set(id, {
           passageId: row.passageId,
           passageTitle: row.passageTitle,
@@ -908,6 +1105,800 @@ function LibraryPaneInner({
       onFlatPickedChange(map);
     },
     [onFlatPickedChange],
+  );
+
+  // (구 「기출 문항 반입 자동 체크 대기열」 pendingAutoPickRef 는 §11.13.1 로 폐지됐다 —
+  //  체크는 임시 id 로 즉시 조판에 들어가고, 착지는 flush 가 제자리 개명으로 끝낸다.
+  //  「액션 직후의 미러는 옛 rows 라 handleFlatSelectionChange 가 새 id 를 버린다」는
+  //  함정은 그대로 유효하다. 기출 블록은 이 Set 경로를 더 이상 타지 않고(26-09-08 채널 수리)
+  //  메타를 스스로 확정해 함수형 갱신(onFlatPickedUpdate)으로 올린다 — extraMeta 인자는
+  //  additive 로 남겨 둔다(기존 호출부 무변경).)
+
+  // ── 인라인 기출 브라우저 호스트(docs/gichul-question-bank-spec.md §11.4·§11.8) ──
+  // 모달(구 §8.3)은 **폐기**됐다(§11.0 F-1). 패널은 components/workbench/exam-question-
+  // bank/inline 의 공유 컴포넌트이고 필터·페이지·fetch·미리보기는 패널 소유다. **이 판**이
+  // 소유하는 것은 §11.8 그대로 — 기출 모드 on/off · bankMap(bankId↔Question.id) ·
+  // 코얼레싱 버퍼(400ms, 상한 EXAM_BANK_IMPORT_MAX/콜) · pending/failed 집합 ·
+  // flatPicked 파생 pickedBankIds. 서버 액션·토스트·목록 재조회·자동 체크도 여기다
+  // (패널은 서버 액션을 직접 부르지 않는다 — inline/types.ts 원칙).
+  //
+  // 체크 상태의 유일한 정의 = 「지금 조판(flatPicked)에 들어 있음」(§11.4-3). 「담김」·
+  // 「이미 담김」·중복 토스트·importedBankIds 차단·성공 토스트는 **전부 삭제**됐다 —
+  // 되살리지 마라(§11.1 RCA: 배지는 클래스 스코프, 서버 멱등은 학원 스코프라 둘이
+  // 어긋나 「내가 담은 적도 없는데 이미 담김」이 됐다. 체크가 곧 결과다).
+  const [examBankMode, setExamBankMode] = useState(false);
+  // 패널을 한 번이라도 열었으면 hidden 유지 마운트한다(§11.3 「필터 상태는 세션 내
+  // 유지」 — 언마운트하면 「← 내 문항으로」 한 번에 필터·페이지가 날아간다). 열기 전에는
+  // 마운트하지 않는다 — 패널은 마운트 즉시 목록을 fetch 하므로 시험지 조판 진입만으로
+  // 은행 요청이 나가면 안 된다(§11.6 G-lag 「페이지 요청 수 = 조작 수」).
+  const [examBankMounted, setExamBankMounted] = useState(false);
+  // ⚠ useCallback([]) 안정 참조 · **0인자** — ComposerListPane 은 memo 라 새 함수가
+  //   내려가면 지문 수백 장이 매 렌더 재조립된다(§8.1 memo 계약). onOpenExamBank 프롭
+  //   모양은 §11.2 그대로다(진입 버튼만 전폭 1줄로 바뀌었다).
+  const openExamBank = useCallback(() => {
+    setExamBankMode(true);
+    setExamBankMounted(true);
+  }, []);
+  const closeExamBank = useCallback(() => setExamBankMode(false), []);
+  // 포커스 관리(26-09-08 적대 검수 major) — 진입 버튼을 누르면 그 버튼이 hidden 으로
+  // 내려가 포커스가 body 로 떨어진다(키보드·스크린리더 사용자는 자기 위치를 잃는다).
+  // 모드 **전이**에 맞춰 on 이면 패널의 「← 내 문항으로」, off 면 진입 버튼으로 옮긴다.
+  // 두 래퍼 ref 로 좁혀 찾는다(document 전역 질의는 다른 판의 같은 셀렉터를 집을 수 있다).
+  // ⚠ 첫 마운트 스킵은 boolean 래치가 아니라 **이전 값 대조**다 — StrictMode 가 effect 를
+  //   두 번 돌려 래치를 소진한다(위 R1 주석 실측). 이전 값과 같으면 두 번 다 무동작.
+  // getClientRects().length 0 = 아직 레이아웃에 없다(hidden·미마운트) → 포커스 스킵.
+  const examBankPanelHostRef = useRef<HTMLDivElement | null>(null);
+  const composerListHostRef = useRef<HTMLDivElement | null>(null);
+  const examBankModePrevRef = useRef(examBankMode);
+  useEffect(() => {
+    if (examBankModePrevRef.current === examBankMode) return;
+    examBankModePrevRef.current = examBankMode;
+    const host = examBankMode
+      ? examBankPanelHostRef.current
+      : composerListHostRef.current;
+    const target = host?.querySelector<HTMLElement>(
+      examBankMode ? "[data-exam-bank-back]" : '[data-tour="composer-exam-bank"]',
+    );
+    if (!target || target.getClientRects().length === 0) return;
+    target.focus();
+  }, [examBankMode]);
+  // 학습지 조판 뷰(카드 모드)에는 진입구가 없다(§11.2) — 기출 모드는 시험지 조판 뷰
+  // 안에서만 산다. 뷰가 떠나면 **렌더 중 전이 판정**으로 끈다.
+  // ⚠ boolean 래치(ref)가 아니라 state 대조여야 한다 — 아래 R1 주석의 함정 그대로
+  //   (StrictMode 가 ref 래치를 소진한다). state 는 마운트 2회 모두 같은 값이라 구조적
+  //   으로 안전하고, effect 가 아니라 렌더 중이라 「뷰는 바뀌었는데 기출 판이 한 프레임
+  //   남는」 플래시도 없다(React 공식 「렌더 중 이전 props 로 state 조정」 관용구).
+  const [examBankSeenView, setExamBankSeenView] = useState(assetView);
+  if (examBankSeenView !== assetView) {
+    setExamBankSeenView(assetView);
+    if (assetView !== "exam" && examBankMode) setExamBankMode(false);
+  }
+  // 클래스 축에도 같은 렌더 중 전이 판정(검수 확정 결함 3 의 올바른 수리 — 단위 H2 반박 채택):
+  // R1 리셋 effect 가 뷰를 passages 로 내리는 것은 **다음 렌더**라, 그 커밋의 매핑 조회 effect 는
+  // [mode=true, 새 classId] 로 헛발사됐다(직렬 액션 큐 1칸 + 새 클래스 위에 기출 판 1프레임 플래시).
+  // 클래스가 바뀐 렌더에서 즉시 끄면 같은 커밋의 effect 가 mode=false 를 보고 조회를 건너뛴다.
+  const [examBankSeenClassId, setExamBankSeenClassId] = useState(classId);
+  if (examBankSeenClassId !== classId) {
+    setExamBankSeenClassId(classId);
+    if (examBankMode) setExamBankMode(false);
+  }
+
+  // bankId → Question.id(이 학원에 반입된 행). 진입 시 listStudioClassExamBankIds 1회 +
+  // 반입 응답 mapping 으로 증분(§11.8). state 로 들어 갱신 시점에만 새 Map 이 내려가고,
+  // 콜백은 아래 ref 미러로 읽어 identity 를 지킨다(flatPickedRef 와 같은 관용구).
+  const [bankMap, setBankMap] = useState<ReadonlyMap<string, string>>(
+    () => new Map(),
+  );
+  const bankMapRef = useRef(bankMap);
+  useEffect(() => {
+    bankMapRef.current = bankMap;
+  }, [bankMap]);
+  // 역맵(Question.id → bankId) — pickedBankIds 파생 재료. bankMap 갱신 시에만 재계산.
+  const bankIdByQuestionId = useMemo(() => {
+    const m = new Map<string, string>();
+    for (const [bankId, qid] of bankMap) m.set(qid, bankId);
+    return m;
+  }, [bankMap]);
+  // 조판에 들어 있는 은행 항목 — flatPicked **state** 파생(ref 아님: ref 는 렌더를 안
+  // 깨우므로 체크 해제가 패널에 안 비친다). flatPickedIds 와 같은 소스라 좌측 목록판과
+  // 기출 판의 「체크」가 서로 어긋날 수 없다.
+  // 「체크 즉시 조판」(§11.13.1) 뒤로 조판 픽의 키는 두 종류다 — 임시 id(`bank:<bankId>`,
+  // 반입 착지 전)는 접두를 벗기면 곧 bankId 이고, 실제 Question.id 는 역맵으로 푼다. 그래서
+  // 체크 직후부터 picked(+pending 스피너)이고 「응답~재조회 사이 idle 창」이 없다 — 구
+  // §11.12-1 의 착지 대기(bankAwaitingPickRef)·미러 소진은 이 파생이 대체했다.
+  const pickedBankIds = useMemo(() => {
+    const s = new Set<string>();
+    for (const id of flatPickedIds) {
+      if (isClientQuestionId(id)) {
+        s.add(id.slice(CLIENT_QUESTION_ID_PREFIX.length));
+        continue;
+      }
+      const bankId = bankIdByQuestionId.get(id);
+      if (bankId) s.add(bankId);
+    }
+    return s;
+  }, [flatPickedIds, bankIdByQuestionId]);
+  // 갱신은 항상 **새 Set** — ReadonlySet 을 그대로 내리므로 in-place 변경은 패널 memo 를
+  // 통과하지 못한다(체크가 안 그려진다).
+  // pending 의 뜻(§11.13.0 G-4): 「DB 동기화 중」 표시다 — 체크 자체는 임시 id 로 이미
+  // 조판에 들어 있다(picked). 단건 GET 대기·반입 버퍼·반입 인플라이트 동안 켜지고
+  // 착지(개명)·실패·해제에서 꺼진다.
+  const [pendingBankIds, setPendingBankIds] = useState<ReadonlySet<string>>(
+    () => new Set(),
+  );
+  const [failedBankIds, setFailedBankIds] = useState<ReadonlySet<string>>(
+    () => new Set(),
+  );
+  // 코얼레싱 버퍼(§11.4 A′-1) — 체크 1개당 1콜을 쏘면 서버 액션 **직렬 큐**를 체크 20개
+  // = 60~100초 점유한다(앱 전체 액션이 뒤에 줄 선다). 버스트 동안 추가 체크는 같은
+  // 버퍼에 합류(타이머 연장). 버퍼에 있는 동안의 해제는 버퍼에서 빼는 것으로 끝(콜 전
+  // 취소, A′-2). §11.13.1: 버퍼 합류는 단건 GET 이 끝나 임시 항목이 **조판에 든 뒤**다 —
+  // 조판에 안 보이는데 DB 에만 행이 생기는 것을 막는다(GET 실패분은 버퍼에 넣지 않는다).
+  const bankBufferRef = useRef<Set<string>>(new Set());
+  const bankBufferTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // 전송 뒤(버퍼에서 빠진 뒤) 사용자가 해제한 id — 착지 시 실패 표시에서 뺀다(해제한 행에
+  // 「넣지 못했습니다」를 띄우지 않는다). 개명 자체는 「임시 id 가 아직 조판 픽에 있는가」로
+  // 판정하므로 표식이 개명을 막을 일은 없다. Question 행은 남는다(삭제 경로 없음 · 다른
+  // 시험지가 참조 가능, A′-2).
+  const bankCancelledRef = useRef<Set<string>>(new Set());
+  // 인플라이트 코얼레싱(26-09-08 프로브 실측: 클릭 간격이 400ms 를 넘으면 버스트가 2콜로 갈라졌다) —
+  // 반입이 진행 중이면 새 체크는 버퍼에만 쌓고, 착지한 뒤 한 번 더 비운다. 느린 클릭 N개 = 최대 2콜.
+  const bankFlushInFlightRef = useRef(false);
+  // 클래스 전환 seq — 늦게 오는 이전 클래스의 반입 응답·단건 GET 결과를 기각한다
+  // (questionsFetchSeqRef 관용구). 매핑 조회는 모드 진입마다 1회라 **별도 seq** — 진입 seq 로
+  // 반입까지 가드하면 「← 내 문항으로」 후 재진입이 인플라이트 반입 결과를 죽인다.
+  const bankClassSeqRef = useRef(0);
+  const bankMapFetchSeqRef = useRef(0);
+  const examBankClassIdRef = useRef(classId);
+  useEffect(() => {
+    examBankClassIdRef.current = classId;
+  }, [classId]);
+  // 서버 액션 직렬 큐 회피(26-09-08 취소 레이스 규명, 프로브 I12): 이 호스트의 목록 재조회
+  // (listStudioClassQuestions — 착지마다 1회·뷰 진입 1회)가 큐에 있으면 반입 액션은 어차피 그 뒤에
+  // 줄 선다(실측 flush 호출 → 실제 POST 2.3~3.7초). 그런데 액션은 **호출 순간 인자가 굳는다** —
+  // 큐에서 기다리는 사이 사용자가 해제해도 이미 호출된 요청은 못 거둔다(「최종 해제 뒤 POST 1회」).
+  // 그래서 재조회가 큐에 있는 동안은 flush 를 **미루고**(버퍼 유지 = 해제가 버퍼에서 빼면 끝) 재조회가
+  // 끝나는 커밋에서 한 번 흘린다. 체감 지연 0 — 큐에서 기다리던 시간을 버퍼에서 기다리는 것뿐이다.
+  // idle 도 busy 로 본다: refreshQuestions 는 idle 을 거쳐 다음 커밋에야 loading 이 되는데 그 사이
+  // 커밋이 「끝났다」로 오판돼 흘리면 안 된다. 목록이 비활성(passages 뷰)·클래스 없음이면 재조회가
+  // 없으므로 busy 아님. ref 는 착지에서 refreshQuestions 직후 **동기**로도 세운다(effect 미러는 한
+  // 커밋 늦어 꼬리 flush 가 그 창으로 빠져나간다).
+  const questionsBusy =
+    listActive &&
+    !!classId &&
+    (questionsState.status === "idle" || questionsState.status === "loading");
+  const questionsBusyRef = useRef(questionsBusy);
+
+  // ── 「체크 즉시 조판」 상태(§11.13.1) ──
+  // 은행 항목은 체크 순간 DB 행이 없다. 반입(서버 액션, 직렬 큐 1.5~3초)을 기다리지 않고
+  // 시험지에 바로 그리려고, 단건 GET(API 라우트 — 직렬 큐를 타지 않는다, 실측 수십 ms)으로
+  // BuilderQuestion 을 조립해 클라이언트 레지스트리에 임시 id 로 등록한 **뒤** 그 임시 id 를
+  // 조판 픽에 넣는다(조판기 resolveQuestionsForPaperInsertion 이 서버보다 레지스트리를 먼저
+  // 본다). 반입이 착지하면 alias 를 등록하고 픽의 키만 같은 자리에서 실제 id 로 바꾼다 —
+  // 조판기의 동기화 effect 는 alias 를 보고 제거+추가가 아니라 **제자리 개명**한다.
+  // bankId → 인플라이트 단건 GET 의 AbortController. 해제·클래스 전환·언마운트가 abort 한다.
+  const bankFetchCtrlRef = useRef<Map<string, AbortController>>(new Map());
+  // 체크 순서 대기열(BankInsertEntry 주석) — 머리부터 ready 인 것만 순서대로 착지한다.
+  const bankInsertQueueRef = useRef<BankInsertEntry[]>([]);
+  // 이 호스트가 레지스트리에 올린 임시 id — 클래스 전환·언마운트 청산용. 레지스트리는 모듈
+  // 스코프라 호스트는 **자기 몫만** 지운다. 착지 뒤에도 남겨 둔다: 조판기가 alias 를 소비하며
+  // 함께 지우지만, 조판기가 떠 있지 않던 경우의 잔여까지 청산 때 같이 지우기 위해서다
+  // (이미 지워졌으면 무동작). 같은 bankId 의 재체크는 같은 tempId 라 Set 이 중복을 막는다.
+  const bankClientIdsRef = useRef<Set<string>>(new Set());
+  // 착지(개명)한 실제 id — 임시 항목의 메타는 행 정본이 아니다(passageId 가 코퍼스 지문 id).
+  // 배포(dossier-pick-bar 의 passageIds)·지문 묶음이 meta.passageId 를 먹으므로 목록 rows 가
+  // 도착하면 아래 미러 effect 가 행 메타로 **같은 자리에서** 교체한다.
+  const bankMetaStaleRef = useRef<Set<string>>(new Set());
+  // 이 블록의 조판 픽 갱신은 전부 **함수형**(onFlatPickedUpdate, 26-09-08 채널 수리). 미러
+  // (flatPickedRef)는 effect 로 따라오므로 렌더가 끼기 전에 두 번째 제출이 오면(단건 GET 2개
+  // 연달아 착지 · 해제 직후 다른 GET 착지 · 착지 직후 GET 착지 · 반입 응답과 클릭의 교차) Map
+  // 통째 제출은 stale base 를 덮어써 해제한 임시 항목이 되살아나거나 픽이 유실됐다(프로브 I12
+  // 「행은 idle 인데 조판에 +1」). 「제출 shadow」(마지막 제출을 base 와 함께 기억)로 메우던
+  // 기구는 폐기 — 네트워크 태스크와 React 커밋 순서에 따라 창이 남았다. updater 는 React 가
+  // 최신 prev 를 넘기므로 순서와 무관하게 정합이다.
+  // 규약(FlatPickedUpdater 주석): updater 는 순수 · 부수효과(레지스트리·ref)는 밖에서. 「지금
+  // 픽에 있는가」 류 판정은 미러로 읽되 한 발 늦어도 되게 짜고, 정합은 updater 안의 prev.has()
+  // 재확인이 보장한다. 채널 미전달(구 호스트)이면 미러를 base 로 계산해 통째 제출(종전 경로).
+  const applyFlatPickedUpdate = useCallback(
+    (fn: FlatPickedUpdater) => {
+      if (onFlatPickedUpdate) {
+        onFlatPickedUpdate(fn);
+        return;
+      }
+      const prev = flatPickedRef.current;
+      const next = fn(prev);
+      if (next !== prev) onFlatPickedChange(next);
+    },
+    [onFlatPickedUpdate, onFlatPickedChange],
+  );
+  // 「같은 bankId 의 새 시도가 살아 있는가」 — 대기열(단건 GET 진행·착지 순서 대기) 또는
+  // 버퍼(다음 flush 대기). 이전 시도의 실패·착지가 새 시도의 표시(pending·failed)를 덮지 않게.
+  const isBankRetrying = useCallback(
+    (bankId: string) =>
+      bankBufferRef.current.has(bankId) ||
+      bankInsertQueueRef.current.some((e) => e.bankId === bankId),
+    [],
+  );
+  // 클래스 전환 = 매핑·pending·failed·버퍼·인플라이트 GET·대기열·레지스트리 청산(이전 클래스의
+  // 매핑이 새 클래스에서 「체크됨」으로 남지 않게 · 이전 클래스의 임시 항목이 레지스트리에
+  // 남지 않게 — 조판 픽 자체는 오케스트레이터가 자기 리셋에서 비운다). 필터는 패널 소유라
+  // 무관(§11.3 — 클래스와 무관). 마운트 첫 발화는 전부 이미 빈 값이라 무동작(size 가드 =
+  // 참조 유지). 기출 모드 자체는 위 R1 리셋이 뷰를 passages 로 내리면 렌더 중 전이 판정이 끈다.
+  // ⚠ 아래 매핑 조회 effect 보다 **먼저** 선언 — 같은 커밋에서 이 청산이 seq 를 올린 뒤
+  //   조회가 새 seq 로 나가야 한다(순서가 뒤집히면 조회 자신의 응답이 기각된다).
+  useEffect(() => {
+    bankClassSeqRef.current += 1;
+    bankMapFetchSeqRef.current += 1;
+    if (bankBufferTimerRef.current) {
+      clearTimeout(bankBufferTimerRef.current);
+      bankBufferTimerRef.current = null;
+    }
+    bankBufferRef.current = new Set();
+    bankCancelledRef.current = new Set();
+    for (const ctrl of bankFetchCtrlRef.current.values()) ctrl.abort();
+    bankFetchCtrlRef.current = new Map();
+    bankInsertQueueRef.current = [];
+    for (const id of bankClientIdsRef.current) unregisterClientQuestion(id);
+    bankClientIdsRef.current = new Set();
+    bankMetaStaleRef.current = new Set();
+    setBankMap((prev) => (prev.size === 0 ? prev : new Map()));
+    setPendingBankIds((prev) => (prev.size === 0 ? prev : new Set()));
+    setFailedBankIds((prev) => (prev.size === 0 ? prev : new Set()));
+  }, [classId]);
+  // 언마운트 시 타이머·인플라이트 GET·레지스트리 정리 — 버퍼는 버려진다(전송 전 취소와 같은
+  // 의미). 레지스트리는 모듈 스코프라 호스트가 죽어도 남는다 — 자기 몫은 지우고 나간다.
+  // (StrictMode 의 마운트 직후 모의 언마운트에서는 전부 빈 값이라 무동작.)
+  useEffect(
+    () => () => {
+      if (bankBufferTimerRef.current) clearTimeout(bankBufferTimerRef.current);
+      for (const ctrl of bankFetchCtrlRef.current.values()) ctrl.abort();
+      bankFetchCtrlRef.current = new Map();
+      bankInsertQueueRef.current = [];
+      for (const id of bankClientIdsRef.current) unregisterClientQuestion(id);
+      bankClientIdsRef.current = new Set();
+    },
+    [],
+  );
+
+  // ── 미러 갱신 + 착지 메타 보정(§11.13.1) ──
+  // 구 「자동 체크 대기열(pendingAutoPickRef) 소진」은 폐지됐다 — 체크는 임시 id 로 이미
+  // 조판에 들어 있고 착지는 flush 가 제자리 개명으로 끝낸다(rows 도착을 기다리는 착지가
+  // 없다 = 「목록에 도착하지 않았습니다」 실패도 없다). 여기 남은 일은 둘: ① rows 미러 대입
+  // ② 개명된 실제 id 의 메타를 행 정본으로 교체(bankMetaStaleRef 주석). 행이 아직 안 왔으면
+  // (재조회 실패·절단 창 밖) 다음 재조회를 기다리고, 조판에서 빠졌으면 표식만 지운다.
+  // 교체는 Map.set 의 기존 키 = 자리 유지라 순서가 움직이지 않는다.
+  useEffect(() => {
+    questionRowByIdRef.current = new Map(
+      questionsState.rows.map((r) => [r.id, r]),
+    );
+    const stale = bankMetaStaleRef.current;
+    if (stale.size === 0) return;
+    // 「조판에서 빠졌는가」는 미러로 판정한다(같은 커밋의 미러 effect 가 먼저 돌아 최신). 표식
+    // 정리(ref 변경)는 updater 밖 — updater 는 행 정본 메타를 prev 의 같은 키에 set 만 한다.
+    const mirror = flatPickedRef.current;
+    const fixes = new Map<string, PickedQuestionMeta>();
+    for (const qid of stale) {
+      if (!mirror.has(qid)) {
+        stale.delete(qid);
+        continue;
+      }
+      const meta = rowPickMeta(questionRowByIdRef.current.get(qid));
+      if (!meta) continue;
+      stale.delete(qid);
+      fixes.set(qid, meta);
+    }
+    if (fixes.size === 0) return;
+    applyFlatPickedUpdate((prev) => {
+      let next: Map<string, PickedQuestionMeta> | null = null;
+      for (const [qid, meta] of fixes) {
+        const cur = prev.get(qid);
+        if (!cur || samePickMeta(cur, meta)) continue;
+        if (!next) next = new Map(prev);
+        next.set(qid, meta);
+      }
+      return next ?? prev;
+    });
+  }, [questionsState.rows, applyFlatPickedUpdate]);
+
+  useEffect(() => {
+    if (!examBankMode || !classId) return;
+    const seq = ++bankMapFetchSeqRef.current;
+    void listStudioClassExamBankIds({ classId })
+      .then((res) => {
+        if (seq !== bankMapFetchSeqRef.current) return;
+        if (!res.success) return;
+        // 합집합(서버 값 우선) — 조회가 나간 사이 착지한 반입 매핑을 덮어 지우지 않는다.
+        setBankMap((prev) => {
+          const next = new Map(prev);
+          for (const e of res.entries) next.set(e.bankId, e.questionId);
+          return next;
+        });
+      })
+      .catch(() => {
+        /* 매핑은 보조 정보 — 실패해도 체크는 반입 경로(매핑 부재 → 버퍼)로 착지한다. */
+      });
+  }, [examBankMode, classId]);
+
+  // 버퍼 → 1콜 반입(§11.4 A′-1). 상한 EXAM_BANK_IMPORT_MAX 씩 **순차**(서버 액션은
+  // 어차피 직렬 큐 — 병렬로 쏴도 줄만 선다).
+  // ⚠ 지문 축의 intake.handleImportExamPassages 를 재사용하지 마라 — 그 경로는 지문
+  //   전용 후처리(컬렉션 이동·검색 리셋·지문 목록 재조회, library-pane-intake.ts)를 끌고
+  //   온다. 문항 반입은 Passage 등록을 액션 안에서 스스로 끝내므로(exam-questions.ts ①)
+  //   클라이언트 후처리는 문항 목록 재조회 + 트리 카운트 갱신 둘뿐이다.
+  const flushExamBankBuffer = useCallback(async () => {
+    bankBufferTimerRef.current = null;
+    if (bankFlushInFlightRef.current) return; // 착지 뒤 꼬리 flush 가 버퍼를 비운다
+    if (questionsBusyRef.current) {
+      // 목록 재조회가 직렬 큐에 있다(questionsBusy 주석) — 버퍼를 그대로 두고 재조회 완료 effect 가 흘린다.
+      return;
+    }
+    const requested = Array.from(bankBufferRef.current);
+    bankBufferRef.current = new Set();
+    if (requested.length === 0) return;
+    bankFlushInFlightRef.current = true;
+    const flushClassId = examBankClassIdRef.current;
+    const seq = bankClassSeqRef.current;
+    const failed = new Set<string>();
+    const mapping: ExamBankImportMappingEntry[] = [];
+    let lastError: string | null = null;
+    if (!flushClassId) {
+      for (const id of requested) failed.add(id);
+      lastError = "클래스를 먼저 선택하세요";
+    } else {
+      for (let i = 0; i < requested.length; i += EXAM_BANK_IMPORT_MAX) {
+        const chunk = requested.slice(i, i + EXAM_BANK_IMPORT_MAX);
+        try {
+          // mode:"pick" = 픽 경로(§11.4-6c) — revalidatePath 생략(스튜디오 전체 RSC
+          // 리프레시가 체크마다 도는 것이 §11.1 「랙」의 한 축이었다) + createdAt 무터치.
+          const result = await importExamQuestionsToStudioClass({
+            bankIds: chunk,
+            classId: flushClassId,
+            mode: "pick",
+          });
+          // 클래스가 바뀌었다 — 이전 클래스 응답은 전부 폐기(매핑·개명 둘 다. 임시 항목은
+          // 클래스 리셋이 레지스트리에서 지웠고 조판 픽은 오케스트레이터가 비웠다).
+          if (seq !== bankClassSeqRef.current) {
+            bankFlushInFlightRef.current = false; // 클래스 전환 폐기 경로에서도 플래그를 풀어야 다음 반입이 산다
+            return;
+          }
+          if (!result.success) {
+            for (const id of chunk) failed.add(id);
+            lastError = result.error ?? null;
+            continue;
+          }
+          const skipped = new Set(result.skippedBankIds);
+          for (const id of skipped) failed.add(id);
+          // 매핑 재료는 응답 `mapping`(§11.8). 구 응답(필드 부재)엔 questionIdsInOrder
+          // 폴백 — 그 배열은 「요청 순서에서 skipped 만 빠진 것」이라(액션 계약) skipped
+          // 를 뺀 요청 배열과 인덱스가 맞는다. ⚠ 빈 배열은 「없음」이 아니다(전건 skipped).
+          const served: ExamBankImportMappingEntry[] | undefined = result.mapping;
+          if (served) {
+            mapping.push(...served);
+          } else {
+            const kept = chunk.filter((id) => !skipped.has(id));
+            result.questionIdsInOrder.forEach((questionId, idx) => {
+              const bankId = kept[idx];
+              if (bankId) mapping.push({ bankId, questionId });
+            });
+          }
+        } catch (err) {
+          // 서버 액션 **전송** 실패(네트워크·타임아웃·5xx) — 서버 쪽 try/catch 는 핸들러
+          // 안 예외만 잡고 전송 reject 는 이 await 에서 던져진다(150문항 반입은 $transaction
+          // 60s + 지문 반입 직렬이라 타임아웃이 실재한다).
+          if (seq !== bankClassSeqRef.current) {
+            bankFlushInFlightRef.current = false; // 클래스 전환 폐기 경로에서도 플래그를 풀어야 다음 반입이 산다
+            return;
+          }
+          console.error("[flushExamBankBuffer] request failed", err);
+          for (const id of chunk) failed.add(id);
+        }
+      }
+    }
+    const cancelled = bankCancelledRef.current;
+    // 취소 표식은 **요청분만** 소거 — 해제 분기가 표식을 항상 남기므로(applyExamBankToggle
+    // 주석) 다른 배치의 표식을 여기서 지우면 그 배치가 착지할 때 취소가 풀린다. 해제한 행과
+    // 새 시도가 살아 있는 행(해제→재체크)은 이 배치의 실패로 표시하지 않는다 — 새 시도가 스스로
+    // 결과를 낸다.
+    for (const id of requested) {
+      if (cancelled.delete(id) || isBankRetrying(id)) failed.delete(id);
+    }
+    // 착지 = 제자리 개명(§11.13.1). 조판 픽의 임시 id(bank:<bankId>)에 alias(실제 id)를 등록
+    // 하고 **같은 자리**의 키만 실제 id 로 바꿔 한 번의 갱신으로 올린다 — 조판기의 동기화
+    // effect 가 alias 를 보고 개명한다(제거+추가 아님 · 순서·편집 보존 · 서버 재조회 0).
+    // 임시 id 가 픽에 없으면(해제됐다 · 재체크의 단건 GET 이 아직 조판 전) 개명할 것이 없고
+    // bankMap 만 갱신한다 — 재체크분은 다음 착지에서 개명되거나 미러 도착 뒤 실제 id 체크가 된다.
+    // 실제 id 가 이미 픽에 있으면(내 문항 목록에서 같은 행을 따로 체크) 임시 항목은 alias 없이
+    // 빠진다(조판기가 제거) — 두 벌을 남기면 같은 문항이 두 번 인쇄된다.
+    // 실패·skipped 의 임시 항목은 조판에서 빼고 레지스트리를 정리한다(체크 되돌림, A′-4).
+    //
+    // 픽 집합의 정답은 아래 **순수 updater(prev)** 가 낸다(applyFlatPickedUpdate 주석). 부수효과
+    // (alias 등록·레지스트리 정리·ref)는 updater 밖에서 **미러**로 판정하는데, 미러가 한 발 늦어도
+    // 갈리는 것은 조판기의 전이 방식(제자리 개명 vs 제거+서버 추가)뿐이고 픽 내용은 아니다.
+    // alias 는 교체 직전에 등록 — 임시 id 가 미러에 없어도(해제됐다 · 재체크 착지가 아직 렌더 전)
+    // 등록한다: 렌더 전 착지분이 있으면 updater 가 개명하고 조판기가 그 alias 로 제자리 개명한다.
+    // 남는 alias 는 무해(조판기는 실제 id 가 들어오는 전이에서만 쓴다)하고 청산 목록에 올려 둔다.
+    const realIdByTemp = new Map<string, string>();
+    for (const m of mapping) realIdByTemp.set(clientQuestionIdFor(m.bankId), m.questionId);
+    const failedTemps = new Set<string>();
+    for (const id of failed) failedTemps.add(clientQuestionIdFor(id));
+    const mirror = flatPickedRef.current;
+    for (const [temp, real] of realIdByTemp) {
+      if (mirror.has(real)) {
+        unregisterClientQuestion(temp);
+        bankClientIdsRef.current.delete(temp);
+        continue;
+      }
+      registerQuestionIdAlias(temp, real);
+      bankClientIdsRef.current.add(temp);
+      bankMetaStaleRef.current.add(real);
+    }
+    for (const temp of failedTemps) {
+      unregisterClientQuestion(temp);
+      bankClientIdsRef.current.delete(temp);
+    }
+    if (realIdByTemp.size > 0 || failedTemps.size > 0) {
+      applyFlatPickedUpdate((prev) => {
+        const out = new Map<string, PickedQuestionMeta>();
+        let changed = false;
+        for (const [id, meta] of prev) {
+          if (!isClientQuestionId(id)) {
+            out.set(id, meta);
+            continue;
+          }
+          const real = realIdByTemp.get(id);
+          if (real !== undefined) {
+            changed = true;
+            // 같은 자리에서 temp → real. real 이 이미 있으면(앞이든 뒤든) temp 만 뺀다.
+            if (!prev.has(real) && !out.has(real)) out.set(real, meta);
+            continue;
+          }
+          if (failedTemps.has(id)) {
+            changed = true;
+            continue;
+          }
+          out.set(id, meta);
+        }
+        return changed ? out : prev;
+      });
+    }
+    if (mapping.length > 0) {
+      setBankMap((prev) => {
+        const next = new Map(prev);
+        for (const m of mapping) next.set(m.bankId, m.questionId);
+        return next;
+      });
+      // 행은 목록에 생겼으므로 재조회·트리 카운트 갱신 — 착지를 막지 않는다(개명은 위에서
+      // 이미 끝났다). rows 도착은 미러 effect 의 메타 보정 재료다.
+      refreshQuestions();
+      onLibraryChanged();
+      // 아래 꼬리 flush 가 방금 넣은 재조회 뒤에 줄 서지 않게 동기로 busy 를 세운다(questionsBusy 주석).
+      questionsBusyRef.current = true;
+    }
+    // pending 은 착지(개명)·실패·취소 전부 지금 내린다 — 재체크로 새 시도가 살아 있는 행만
+    // 남긴다(그 시도가 자기 착지에서 내린다). 임시 id 가 픽에 남아 있어 idle 창은 없다.
+    setPendingBankIds((prev) => {
+      let next: Set<string> | null = null;
+      for (const id of requested) {
+        if (!prev.has(id) || isBankRetrying(id)) continue;
+        if (!next) next = new Set(prev);
+        next.delete(id);
+      }
+      return next ?? prev;
+    });
+    setFailedBankIds((prev) => {
+      let next: Set<string> | null = null;
+      for (const id of requested) {
+        const should = failed.has(id);
+        if (should === prev.has(id)) continue;
+        if (!next) next = new Set(prev);
+        if (should) next.add(id);
+        else next.delete(id);
+      }
+      return next ?? prev;
+    });
+    // 토스트는 실패에만 **1개**(§11.4 A′-4). 성공 토스트 없음 — 체크가 곧 결과다.
+    if (failed.size > 0) {
+      toast.error(`기출 문항 ${failed.size}개를 시험지에 넣지 못했습니다`, {
+        description:
+          lastError ?? "네트워크를 확인하고 다시 체크해 주세요.",
+      });
+    }
+    bankFlushInFlightRef.current = false;
+    // 진행 중에 쌓인 체크가 있으면 즉시 한 번 더(타이머 없이) — 클래스 전환으로 버퍼가 비워졌으면 무동작.
+    if (bankBufferRef.current.size > 0 && seq === bankClassSeqRef.current) void flushExamBankBuffer();
+  }, [refreshQuestions, onLibraryChanged, applyFlatPickedUpdate, isBankRetrying]);
+  const scheduleExamBankFlush = useCallback(() => {
+    if (bankBufferTimerRef.current) clearTimeout(bankBufferTimerRef.current);
+    bankBufferTimerRef.current = setTimeout(() => {
+      void flushExamBankBuffer();
+    }, EXAM_BANK_COALESCE_MS);
+  }, [flushExamBankBuffer]);
+  // 재조회가 끝난 커밋에서 미뤄 둔 버퍼를 흘린다(questionsBusy 주석). 타이머가 이미 걸려 있으면 그
+  // 타이머가 곧 흘리고, 인플라이트면 착지 꼬리가 흘린다 — 여기서는 어느 쪽도 아닐 때만.
+  useEffect(() => {
+    questionsBusyRef.current = questionsBusy;
+    if (questionsBusy) return;
+    if (
+      bankBufferRef.current.size > 0 &&
+      !bankFlushInFlightRef.current &&
+      !bankBufferTimerRef.current
+    ) {
+      void flushExamBankBuffer();
+    }
+  }, [questionsBusy, flushExamBankBuffer]);
+
+  // 대기열 착지 — 머리부터 ready 인 항목을 **한 번의** 픽 제출로 조판에 넣고, 임시 항목은
+  // 코얼레싱 버퍼에 합류시킨다(flush 1회 예약). 실제 id 항목(이미 반입·미러 실재)은 버퍼에
+  // 안 넣고 pending 만 내린다(콜 0). 머리가 아직 조립 중이면 뒤는 기다린다(순서 불변식).
+  const drainBankInsertQueue = useCallback(() => {
+    const queue = bankInsertQueueRef.current;
+    let n = 0;
+    while (n < queue.length && queue[n]?.ready) n += 1;
+    if (n === 0) return;
+    const landed = queue.splice(0, n);
+    // 메타는 여기서 확정한다(미러 행이 정본, 없으면 항목이 들고 온 것 — updater 는 prev 만 읽는다).
+    // 픽 전이는 순수 updater: prev 순서 보존 + 신규만 뒤에 append(체크 순서 = 조판 순서), 이미
+    // 있으면 무시 — 미러가 늦어 「이미 픽에 있다」를 놓친 재체크도 여기서 중복이 걸러진다.
+    const additions: [string, PickedQuestionMeta][] = [];
+    const settled: string[] = [];
+    let buffered = false;
+    for (const e of landed) {
+      const meta = rowPickMeta(questionRowByIdRef.current.get(e.pickId)) ?? e.meta;
+      if (!meta) {
+        // ready 항목은 항상 메타를 가진다(GET 결과·미러 행) — 방어: 픽에 못 넣는 항목을 버퍼에
+        // 넣으면 「조판에 안 보이는데 DB 에만 행」이 된다. pending 만 내린다.
+        settled.push(e.bankId);
+        continue;
+      }
+      additions.push([e.pickId, meta]);
+      if (isClientQuestionId(e.pickId)) {
+        bankBufferRef.current.add(e.bankId);
+        buffered = true;
+      } else {
+        settled.push(e.bankId);
+      }
+    }
+    if (additions.length > 0) {
+      applyFlatPickedUpdate((prev) => {
+        let next: Map<string, PickedQuestionMeta> | null = null;
+        for (const [id, meta] of additions) {
+          if ((next ?? prev).has(id)) continue;
+          if (!next) next = new Map(prev);
+          next.set(id, meta);
+        }
+        return next ?? prev;
+      });
+    }
+    if (settled.length > 0) {
+      setPendingBankIds((prev) => {
+        let next: Set<string> | null = null;
+        for (const id of settled) {
+          if (!prev.has(id)) continue;
+          if (!next) next = new Set(prev);
+          next.delete(id);
+        }
+        return next ?? prev;
+      });
+    }
+    if (buffered) scheduleExamBankFlush();
+  }, [applyFlatPickedUpdate, scheduleExamBankFlush]);
+  // 단건 GET 병렬 조립 → 레지스트리 등록 → ready → 대기열 착지. 항목별 독립(allSettled):
+  // 하나가 실패해도 나머지는 조판된다. 실패는 대기열에서 빼고 failed + 토스트 1개 — 버퍼에는
+  // 넣지 않는다(조판에 안 보이는데 DB 에만 생기는 것 방지, §11.13.1). abort(해제·클래스 전환)
+  // 는 실패가 아니라 무관 — 지금의 컨트롤러가 아니면 결과를 버린다.
+  const materializeBankPicks = useCallback(
+    async (
+      jobs: { entry: BankInsertEntry; ctrl: AbortController }[],
+      seq: number,
+    ) => {
+      const results = await Promise.allSettled(
+        jobs.map((j) =>
+          fetchBankItemAsBuilderQuestion(j.entry.bankId, j.ctrl.signal),
+        ),
+      );
+      // 클래스 전환 — 리셋이 abort·대기열·레지스트리를 이미 청산했다.
+      if (seq !== bankClassSeqRef.current) return;
+      const failed: string[] = [];
+      results.forEach((r, i) => {
+        const job = jobs[i];
+        if (!job) return;
+        const { entry, ctrl } = job;
+        if (bankFetchCtrlRef.current.get(entry.bankId) !== ctrl) return;
+        bankFetchCtrlRef.current.delete(entry.bankId);
+        if (r.status === "fulfilled") {
+          registerClientQuestion(entry.pickId, r.value);
+          bankClientIdsRef.current.add(entry.pickId);
+          if (!entry.meta) entry.meta = builderQuestionPickMeta(r.value);
+          entry.ready = true;
+          return;
+        }
+        console.error("[materializeBankPicks] fetch failed", entry.bankId, r.reason);
+        const idx = bankInsertQueueRef.current.indexOf(entry);
+        if (idx >= 0) bankInsertQueueRef.current.splice(idx, 1);
+        failed.push(entry.bankId);
+      });
+      if (failed.length > 0) {
+        setPendingBankIds((prev) => {
+          let next: Set<string> | null = null;
+          for (const id of failed) {
+            if (!prev.has(id)) continue;
+            if (!next) next = new Set(prev);
+            next.delete(id);
+          }
+          return next ?? prev;
+        });
+        setFailedBankIds((prev) => {
+          let next: Set<string> | null = null;
+          for (const id of failed) {
+            if (prev.has(id)) continue;
+            if (!next) next = new Set(prev);
+            next.add(id);
+          }
+          return next ?? prev;
+        });
+        toast.error(`기출 문항 ${failed.length}개를 시험지에 넣지 못했습니다`, {
+          description: "네트워크를 확인하고 다시 체크해 주세요.",
+        });
+      }
+      // 실패로 머리가 비었거나 ready 가 생겼다 — 어느 쪽이든 한 번 흘려 본다.
+      drainBankInsertQueue();
+    },
+    [drainBankInsertQueue],
+  );
+
+  // 체크/해제 단일 통로 — 행 1개(onTogglePick)와 「이 페이지 전체」·마키(onTogglePickMany)가
+  // 같은 코드를 탄다(단건 GET 은 항목별 병렬 · 픽 제출 1회 · 버퍼 합류 1회). 콜백은 ref 미러만
+  // 읽어 안정 참조(패널 memo 계약).
+  // 체크(next=true) 3갈래:
+  //   ① 이미 조판에 있다(임시 또는 실제 id) · 대기열에 있다 → 무동작.
+  //   ② bankMap 에 실제 id 가 있고 목록 미러에 행이 실재 → 실제 id 로 즉시 체크(콜 0). 앞에
+  //      조립 중인 항목이 있으면 순서 불변식 때문에 대기열을 거친다(그 동안만 pending).
+  //   ③ 그 밖(미반입 · bankMap 엔 있지만 미러엔 없는 링크 없는 학원 스코프 행) → 즉시 조판
+  //      경로: pending 낙관 → 단건 GET → 레지스트리 → 임시 id 픽 → 버퍼 합류. 서버가 학원
+  //      스코프 멱등이라 재반입은 기존 행을 돌려준다(행 중복 생성 없음).
+  // 해제(next=false): 임시·실제 id 를 픽에서 빼고(임시면 레지스트리도) 인플라이트 GET abort ·
+  //   대기열·버퍼에서 제거 · 취소 표식(항상 — 인플라이트 중 체크→해제→재체크→해제 에서 2번째
+  //   해제가 버퍼 삭제에 성공해 표식을 안 남기면 착지가 그 행을 실패로 표시한다, 26-09-08
+  //   적대 검수 major 의 후신) · pending 즉시 내림.
+  const applyExamBankToggle = useCallback(
+    (
+      bankIds: readonly string[],
+      next: boolean,
+      metas?: ReadonlyMap<string, ExamBankPickMeta>,
+    ) => {
+      if (bankIds.length === 0) return;
+      const map = bankMapRef.current;
+      const mirror = questionRowByIdRef.current;
+      const queue = bankInsertQueueRef.current;
+      // 「이미 픽에 있는가」는 미러(effect 갱신)로 읽는다 — 한 발 늦어 놓친 재체크는 대기열 판정
+      // 과 착지 updater 의 prev.has() 가 거른다. 해제는 지울 키만 모아 순수 updater 로 뺀다.
+      const picked = flatPickedRef.current;
+      const removeIds: string[] = [];
+      let queueTouched = false;
+      const toPending: string[] = [];
+      const fromPending: string[] = [];
+      const jobs: { entry: BankInsertEntry; ctrl: AbortController }[] = [];
+      for (const bankId of bankIds) {
+        const qid = map.get(bankId);
+        const tempId = clientQuestionIdFor(bankId);
+        if (next) {
+          bankCancelledRef.current.delete(bankId);
+          if (
+            picked.has(tempId) ||
+            (qid !== undefined && picked.has(qid)) ||
+            queue.some((e) => e.bankId === bankId)
+          ) {
+            continue;
+          }
+          if (qid !== undefined && mirror.has(qid) && !/#\d+$/.test(bankId)) {
+            const blocked = queue.some((e) => !e.ready);
+            queue.push({ bankId, pickId: qid, meta: rowPickMeta(mirror.get(qid)), ready: true });
+            queueTouched = true;
+            if (blocked) toPending.push(bankId);
+            continue;
+          }
+          const ctrl = new AbortController();
+          bankFetchCtrlRef.current.set(bankId, ctrl);
+          const supplied = metas?.get(bankId);
+          const entry: BankInsertEntry = {
+            bankId,
+            pickId: tempId,
+            meta: supplied ? bankPickMeta(supplied) : null,
+            ready: false,
+          };
+          queue.push(entry);
+          jobs.push({ entry, ctrl });
+          toPending.push(bankId);
+        } else {
+          // 임시·실제 id 둘 다 지운다(픽에 없으면 updater 가 무시). 레지스트리 정리는 무조건 —
+          // 이 bankId 의 살아 있는 등록은 전부 지금 취소하는 시도의 것이다. 단, 착지가 이미 alias
+          // 를 등록했으면(개명 갱신이 렌더 전) 남긴다 — 조판기가 그 alias 로 temp 를 제자리
+          // 개명한 뒤 실제 id 제거로 끝내야 「제거 + 서버 추가(비동기) + 제거」 경합이 없다.
+          // alias 는 조판기가 소비(take)하며 등록 문항도 함께 지운다.
+          removeIds.push(tempId);
+          if (qid !== undefined) removeIds.push(qid);
+          if (peekQuestionIdAlias(tempId) === undefined) {
+            unregisterClientQuestion(tempId);
+            bankClientIdsRef.current.delete(tempId);
+          }
+          const ctrl = bankFetchCtrlRef.current.get(bankId);
+          if (ctrl) {
+            bankFetchCtrlRef.current.delete(bankId);
+            ctrl.abort();
+          }
+          const idx = queue.findIndex((e) => e.bankId === bankId);
+          if (idx >= 0) {
+            queue.splice(idx, 1);
+            queueTouched = true;
+          }
+          bankBufferRef.current.delete(bankId);
+          bankCancelledRef.current.add(bankId);
+          fromPending.push(bankId);
+        }
+      }
+      if (removeIds.length > 0) {
+        applyFlatPickedUpdate((prev) => {
+          let nextMap: Map<string, PickedQuestionMeta> | null = null;
+          for (const id of removeIds) {
+            if (!(nextMap ?? prev).has(id)) continue;
+            if (!nextMap) nextMap = new Map(prev);
+            nextMap.delete(id);
+          }
+          return nextMap ?? prev;
+        });
+      }
+      if (toPending.length > 0 || fromPending.length > 0) {
+        // 변화 없으면 prev 반환(setFailedBankIds 와 동형) — 해제마다 새 Set 을 내리면
+        // 패널 memo 가 뚫려 40행이 헛렌더된다.
+        setPendingBankIds((prev) => {
+          let nextSet: Set<string> | null = null;
+          for (const id of fromPending) {
+            if (!prev.has(id)) continue;
+            if (!nextSet) nextSet = new Set(prev);
+            nextSet.delete(id);
+          }
+          for (const id of toPending) {
+            if ((nextSet ?? prev).has(id)) continue;
+            if (!nextSet) nextSet = new Set(prev);
+            nextSet.add(id);
+          }
+          return nextSet ?? prev;
+        });
+      }
+      // 사용자가 다시 만진 행은 실패 표시를 지운다(재시도가 곧 재체크).
+      setFailedBankIds((prev) => {
+        if (prev.size === 0) return prev;
+        let nextSet: Set<string> | null = null;
+        for (const id of bankIds) {
+          if (!prev.has(id)) continue;
+          if (!nextSet) nextSet = new Set(prev);
+          nextSet.delete(id);
+        }
+        return nextSet ?? prev;
+      });
+      // 단건 GET 은 항목별 병렬(API 라우트 — 상한 없음), 착지는 대기열이 순서대로.
+      if (jobs.length > 0) void materializeBankPicks(jobs, bankClassSeqRef.current);
+      // 해제가 조립 중이던 머리를 치웠거나 실제 id 항목이 ready 로 들어왔다 — 지금 흘려 본다.
+      if (queueTouched) drainBankInsertQueue();
+    },
+    [applyFlatPickedUpdate, materializeBankPicks, drainBankInsertQueue],
+  );
+  const handleExamBankTogglePick = useCallback(
+    (bankId: string, next: boolean, meta?: ExamBankPickMeta) =>
+      applyExamBankToggle(
+        [bankId],
+        next,
+        meta ? new Map([[bankId, meta]]) : undefined,
+      ),
+    [applyExamBankToggle],
+  );
+  const handleExamBankTogglePickMany = useCallback(
+    (
+      bankIds: string[],
+      next: boolean,
+      metas?: ReadonlyMap<string, ExamBankPickMeta>,
+    ) => applyExamBankToggle(bankIds, next, metas),
+    [applyExamBankToggle],
   );
 
   // ── 학습지 조판 픽(§3.10.21 E21-5) — 위 문항 축 배선의 **동형 복제** ──
@@ -1698,6 +2689,11 @@ function LibraryPaneInner({
     setIntakeView("intake");
     setIntakeTab(k);
   }, []);
+  // 지문 목록 툴바(정렬·검색 옆) 「지문 추가」 런처 — 참조 안정 엘리먼트.
+  const addPassageAction = useMemo(
+    () => <AddPassageLauncher onSelectIntake={handleSelectIntake} />,
+    [handleSelectIntake],
+  );
   const handleBackToLibrary = useCallback(() => {
     setIntakeView("library");
   }, []);
@@ -1743,6 +2739,15 @@ function LibraryPaneInner({
     onSheetComposeViewControl(() => handleSelectView("sheet"));
     return () => onSheetComposeViewControl(null);
   }, [onSheetComposeViewControl, handleSelectView]);
+
+  // 범용 뷰 강제 채널(v4 §2.5 U6) — 셸의 openStudentsView("students") /
+  // openAnalysisForStudent("analysis") 가 탄다. 위 두 조판 채널과 같은 이유로
+  // handleSelectView 를 **그대로** 올린다(인테이크 접기·전이 fetch 부수 계약).
+  useEffect(() => {
+    if (!onAssetViewControl) return;
+    onAssetViewControl(handleSelectView);
+    return () => onAssetViewControl(null);
+  }, [onAssetViewControl, handleSelectView]);
 
   // 선택 0에서 CTA 를 누르면 카드 글로우로 선택을 유도한다(그리드 하단 CTA 관용구).
   const gridBoxRef = useRef<HTMLDivElement>(null);
@@ -1854,49 +2859,61 @@ function LibraryPaneInner({
     [intake.extractionPending],
   );
 
+  const passageScopeControl = useMemo(
+    () => (
+      <div
+        role="group"
+        aria-label="지문함 범위"
+        className="grid max-w-full shrink-0 grid-cols-2 gap-1 rounded-xl border border-slate-200 bg-slate-100 p-1"
+      >
+        {[
+          { key: "class", label: "이 클래스", count: classScopeCount, active: scopeOnly },
+          { key: "all", label: "전체 자료", count: passages.length, active: !scopeOnly },
+        ].map(({ key, label, count, active }) => (
+          <button
+            key={key}
+            type="button"
+            aria-label={`${label} (${count})`}
+            aria-pressed={active}
+            onClick={() => setScopeOnly(key === "class")}
+            className={
+              "flex min-h-9 min-w-0 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-lg border px-3 py-1.5 text-[12px] font-semibold tabular-nums transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 " +
+              (active
+                ? "border-blue-200 bg-white text-blue-700 shadow-sm"
+                : "border-transparent text-slate-600 hover:bg-white/70 hover:text-slate-900")
+            }
+          >
+            <span>{label}</span>
+            <span
+              aria-hidden="true"
+              className={
+                "inline-flex min-w-5 shrink-0 items-center justify-center rounded-md px-1.5 py-0.5 text-[10.5px] font-semibold leading-none " +
+                (active ? "bg-blue-50 text-blue-700" : "bg-slate-200/60 text-slate-500")
+              }
+            >
+              {count}
+            </span>
+          </button>
+        ))}
+      </div>
+    ),
+    [scopeOnly, classScopeCount, passages.length],
+  );
+
+  // 빈 클래스·등록 목록 로딩 중에는 그리드가 없으므로 범위 전환을 별도로 유지한다.
+  const showScopeWithoutGrid = classCtx && scopeOnly && (
+    classCtx.registeredLoading || (!lib.loadingPassages && classScopeCount === 0)
+  );
+
   // ── 내 지문함 판 (library 슬롯) ──
   const selectedCount = selectedIds.size;
   const ctaDisabled = selectedCount === 0 || lib.passageBulkAction !== null;
   const ctaBusy = workbookBusy || questionGenBusy;
   const libraryNode = (
     <div className="flex min-h-0 flex-1 flex-col">
-      {/* 클래스 스코프 스트립 — 클래스 선택 중에만(그리드 상단 툴바 영역).
-          구 「이 클래스 지문만」 칩은 §3.10.4 로 세그먼트 2버튼으로 교체. */}
-      {classCtx ? (
+      {/* 클래스 등록·해제는 지문을 선택한 동안에만 표시한다. 범위 선택은 폴더 툴바. */}
+      {classCtx && selectedCount > 0 ? (
         <div className="flex shrink-0 flex-wrap items-center gap-2 border-b border-slate-100 bg-slate-50/60 px-3 py-1.5">
-          {/* 스코프 세그먼트 [이 클래스 (N) | 전체 자료 (M)] — 기본 = 이 클래스 */}
-          <div
-            role="group"
-            aria-label="지문함 범위"
-            className="flex h-7 shrink-0 items-center gap-0.5 rounded-lg border border-slate-200 bg-white p-0.5"
-          >
-            <button
-              type="button"
-              aria-pressed={scopeOnly}
-              onClick={() => setScopeOnly(true)}
-              className={
-                "flex h-full cursor-pointer items-center whitespace-nowrap rounded-md px-2.5 text-[11.5px] font-semibold transition-colors " +
-                (scopeOnly
-                  ? "bg-blue-600 text-white shadow-sm"
-                  : "text-slate-500 hover:bg-slate-100 hover:text-slate-700")
-              }
-            >
-              이 클래스 ({classScopeCount})
-            </button>
-            <button
-              type="button"
-              aria-pressed={!scopeOnly}
-              onClick={() => setScopeOnly(false)}
-              className={
-                "flex h-full cursor-pointer items-center whitespace-nowrap rounded-md px-2.5 text-[11.5px] font-semibold transition-colors " +
-                (!scopeOnly
-                  ? "bg-blue-600 text-white shadow-sm"
-                  : "text-slate-500 hover:bg-slate-100 hover:text-slate-700")
-              }
-            >
-              전체 자료 ({passages.length})
-            </button>
-          </div>
           <span className="min-w-0 flex-1" aria-hidden="true" />
           {/* 「클래스에서 빼기 (K)」 보조 버튼(§3.10.4) — 선택 중 등록 지문이
               있을 때만. aria-disabled + onClick 초입 return(§3.9v2 정본). */}
@@ -1944,6 +2961,12 @@ function LibraryPaneInner({
       ) : null}
 
       <div ref={gridBoxRef} className="flex min-h-0 flex-1 flex-col overflow-hidden">
+        {showScopeWithoutGrid ? (
+          <div className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-b border-slate-100 px-5 pt-3 pb-1.5">
+            {passageScopeControl}
+            {addPassageAction}
+          </div>
+        ) : null}
         {classCtx && scopeOnly && classCtx.registeredLoading ? (
           /* 등록 지문 로딩 스켈레톤(§3.10.4) — 기본 스코프(이 클래스)의 첫
              프레임에 registeredIds 미도착으로 "0개" 빈 그리드가 깜빡이는
@@ -2067,6 +3090,11 @@ function LibraryPaneInner({
               classCtx ? (scopeOnly ? "scope:class" : "scope:all") : undefined
             }
             onLazyLoadQuestions={handleLazyLoadQuestions}
+            // 「지문 추가」 런처(26-09-01) — 구 소스 스위처 sticky 클러스터에서
+            // 정렬·검색 옆으로 이사(사용자 지시). handleSelectIntake 는
+            // useCallback([]) 안정 참조라 이 엘리먼트도 useMemo 로 고정한다.
+            toolbarAction={addPassageAction}
+            toolbarScope={classCtx ? passageScopeControl : undefined}
             // 이력 팝오버 문제 행 클릭 = 상세 모달(§3.9.5① — 세터 안정 참조)
             onOpenQuestionDetail={setDetailQuestion}
             loadingCards={loadingCardsNode}
@@ -2262,6 +3290,8 @@ function LibraryPaneInner({
         libraryCount={passages.length}
         questionCount={questionCount}
         worksheetCount={worksheetCount}
+        // 「학생 관리」 필 건수(v4 §3 U6-1) — 셸이 클래스 행에서 내린 원시값.
+        studentCount={studentCount}
         // §M 조판 유도 — 생성 완료 축의 필이 비활성일 때만 펄스(스위처 내부 판정).
         nudgeSheet={nudgeSheet}
         nudgeExam={nudgeExam}
@@ -2369,8 +3399,9 @@ function LibraryPaneInner({
             이 key 가 담당한다. ── */}
       {classCtx ? (
         <div
+          ref={composerListHostRef}
           className={
-            assetView === "sheet" || assetView === "exam"
+            (assetView === "sheet" || assetView === "exam") && !examBankMode
               ? "flex min-h-0 flex-1 flex-col"
               : "hidden"
           }
@@ -2394,6 +3425,14 @@ function LibraryPaneInner({
             pickedSheets={sheetPicked ?? EMPTY_SHEET_PICKED}
             onCommit={handleComposerCommit}
             onOpenQuestion={onOpenQuestionById}
+            // 기출 문항 은행 진입(§8.1) — 판은 문항 축(qAxis) 표면에만 그린다.
+            // 두 조판 뷰가 같은 인스턴스를 공유하므로 뷰로 갈라 내리지 않는다:
+            // 학습지 조판 뷰는 카드 모드라 2층 바 자체가 없고, 빈 상태 CTA 는
+            // 「아직 조판할 문항이 없습니다」(qOnly) 분기에서만 의미가 있다.
+            onOpenExamBank={openExamBank}
+            examBankSummary={EXAM_BANK_SUMMARY}
+            // 좁은 폭(@container 34rem 미만)의 짧은 보조 문구 — 원시 string(memo 계약).
+            examBankSummaryShort={EXAM_BANK_SUMMARY_SHORT}
             onDeploySheet={onSheetDeploy ? handleSheetDeployRow : undefined}
             onComposeSheet={onSheetCompose ? handleSheetComposeRow : undefined}
             // [E31] 되짚기 3종 패스스루(위 prop 선언 주석). 이 판은 값을 해석하지
@@ -2401,6 +3440,92 @@ function LibraryPaneInner({
             activeSheetId={sheetActiveId}
             revealPassageId={sheetRevealPassageId}
             revealSeq={sheetRevealSeq}
+          />
+        </div>
+      ) : null}
+
+      {/* ── 인라인 기출 브라우저(docs/gichul-question-bank-spec.md §11.2 「자리」) ──
+          시험지 조판 뷰의 **같은 열**에, ComposerListPane 의 형제로 그린다(DragSelect
+          밖 — 마키가 은행 행을 집지 않게). 기출 모드면 위 목록판이 hidden 으로 내려가고
+          이 판이 그 자리를 쓴다. 한 번 열린 뒤엔 hidden 유지 마운트(examBankMounted) —
+          필터·페이지가 「← 내 문항으로」 왕복에 살아남는다(§11.3). key 없음: 클래스
+          전환은 호스트 상태(bankMap·pending·failed) 청산으로 받고 패널 필터는 클래스와
+          무관하다(§11.3 「클래스 바뀌면 유지」). 마운트 조건은 examBankMounted **만** —
+          classCtx 를 게이트에 섞으면 클래스 null 전이(선택 해제)에서 패널이 언마운트돼
+          필터가 날아간다. 클래스 없음은 계약의 scopeLabel=null 분기(패널이 체크를
+          비활성)로 받고, 그때 뷰는 상류 불변식이 passages 로 내리므로 hidden 은 유지된다. ── */}
+      {examBankMounted ? (
+        <div
+          ref={examBankPanelHostRef}
+          className={
+            examBankMode ? "flex min-h-0 flex-1 flex-col" : "hidden"
+          }
+        >
+          <ExamBankInlinePanel
+            className="min-h-0 flex-1"
+            scopeLabel={classCtx?.className ?? null}
+            pickedBankIds={pickedBankIds}
+            pendingBankIds={pendingBankIds}
+            failedBankIds={failedBankIds}
+            bankTotal={EXAM_BANK_TOTAL}
+            onTogglePick={handleExamBankTogglePick}
+            onTogglePickMany={handleExamBankTogglePickMany}
+            onBack={closeExamBank}
+          />
+        </div>
+      ) : null}
+
+      {/* ── 「시험 분석」 뷰(26-09-01, 정본 docs/studio-exam-analysis-integration.md)
+          hidden 유지 마운트 — 인테이크 업로드 진행이 뷰 전환에 살아남는다(지문관리
+          IntakeSurface 와 같은 규약). 폴은 판 내부에서 active 게이트(뷰 가시일
+          때만). key={classId} 리마운트는 ComposerListPane 무회귀 계약 6 과 동일
+          축 — 클래스 전환만 판 로컬 상태(인테이크 메타·모달)를 초기화한다.
+          classCtx 게이트: 분석 뷰는 클래스 문맥 필수(불변식 「클래스 null →
+          passages」가 상류에서 이미 보장하지만 이중 안전). */}
+      {classCtx ? (
+        <div
+          className={
+            assetView === "analysis" ? "flex min-h-0 flex-1 flex-col" : "hidden"
+          }
+        >
+          <StudioAnalysisPane
+            key={classCtx.classId}
+            active={assetView === "analysis"}
+            onSelect={onAnalysisSelect}
+            activeRowId={analysisActiveRowId}
+            // v4 채널 4종(§2.5 U4 행) — 후보 선택·하이라이트·학생 관리 건너오기.
+            onSelectCandidate={onAnalysisSelectCandidate}
+            activeCandidateId={analysisActiveCandidateId}
+            focusAnalysisId={analysisFocusId}
+            onFocusConsumed={onAnalysisFocusConsumed}
+            // 감독 배선(26-09-02): 후보 「이 클래스 우선 + 나머지 접이」 축.
+            classId={classCtx.classId}
+          />
+        </div>
+      ) : null}
+
+      {/* ── 「학생 관리」 뷰(v4 26-09-02, docs/exam-analysis-v4-spec.md §3 U6-4) ──
+          시험 분석 판과 같은 hidden 유지 마운트 + key={classId} 리마운트 규약.
+          데이터는 페치하지 않는다 — 셸 훅(useStudioStudents) 산출을 패스스루
+          (aside·드로어 2중 마운트 규칙 §5). 폴 없음. */}
+      {classCtx ? (
+        <div
+          className={
+            assetView === "students" ? "flex min-h-0 flex-1 flex-col" : "hidden"
+          }
+        >
+          <StudioStudentsPane
+            key={classCtx.classId}
+            classId={classCtx.classId}
+            active={assetView === "students"}
+            activeStudentId={studentsActiveId}
+            onSelectStudent={onStudentSelect}
+            onRequestAdd={onStudentsRequestAdd}
+            rows={studentsRows}
+            academyCode={studentsAcademyCode}
+            loading={studentsLoading}
+            error={studentsError}
+            onReload={onStudentsReload}
           />
         </div>
       ) : null}

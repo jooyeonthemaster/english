@@ -15,6 +15,7 @@ import {
 } from "@/lib/passage-report/analysis-report/worksheet-core-gate";
 import { prisma } from "@/lib/prisma";
 import { ensureWorkbenchAiJobCharged } from "@/lib/workbench-ai-job-credit";
+import { preflightCreditGate } from "@/lib/credit-preflight";
 import { cleanupStaleWorkbenchAiJobs } from "@/lib/workbench-ai-job-stale-cleanup";
 
 export const runtime = "nodejs";
@@ -154,6 +155,13 @@ export async function POST(
   // (E19-2 계약 — 표기는 getStudioSheetStates.practiceUnitCost 가 같은 함수를 쓴다).
   // ⚠ 리터럴 5 를 여기 쓰지 마라. 단가는 이 함수 하나에서만 결정된다.
   const cost = getPracticeSheetCreditCost({ hasBasic: true });
+  // 사전 잔액 게이트(잡 행 생성 전) — fast 라우트와 같은 결정(26-09-08 전수조사:
+  // 잔액 0 일괄 발사가 FAILED 잡을 양산). 최종 권위는 아래 원자적 차감.
+  const preflight = await preflightCreditGate({
+    academyId: staff.academyId,
+    requiredCredits: cost,
+  });
+  if (!preflight.ok) return preflight.response;
 
   // ── [E30 §2-2 과금 순서 계약] 잡을 **먼저** 열고 그 다음에 과금한다(종전은 반대였다).
   // ① ensureWorkbenchAiJobCharged 는 jobId 를 멱등키로 쓴다(job.creditTxId 재사용 →

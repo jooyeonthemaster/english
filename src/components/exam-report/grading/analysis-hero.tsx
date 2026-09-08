@@ -82,8 +82,8 @@ export function HeroCard({
             <span className="inline-flex items-center whitespace-nowrap rounded-md border border-slate-200 bg-slate-50 px-2 py-0.5 text-[11px] font-bold text-slate-500">
               {isInternal
                 ? meta
-                  ? "자체 시험지 응시"
-                  : "자체 시험지 · 수동 등록"
+                  ? "스모트 시험지 응시"
+                  : "스모트 시험지 · 수동 등록"
                 : "외부 시험 분석"}
             </span>
             {meta?.mode && (
