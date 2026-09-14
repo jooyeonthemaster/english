@@ -7,6 +7,7 @@ import { type FlowItem, reportFlowItems, tableHeadRow } from "../report-sections
 import { PAGE_BODY_MM, PAGE_SAFETY_MM, PX_PER_MM, REPORT_A4_WIDTH_PX } from "./constants";
 import type { ColCtx, ReportEdit } from "./types";
 import { buildReportRootStyle, packFlow, samePages, visibleFlowItems } from "./items";
+import { ensureWorksheetFonts } from "../worksheet-fonts";
 import { CoverShell, PageControls } from "./shells";
 import { RunningFooter, RunningHeader, RunsView } from "./runs";
 // 타입 전용 import — 런타임 엣지가 0이라 compose 층과의 모듈 순환이 생기지 않는다.
@@ -98,6 +99,43 @@ export function ReportPages({
     };
   }, []);
 
+  // ─── 문서에서 **실제로 쓰인** 글꼴만 로드 보장 ──────────────────────────────
+  // 세 축(문서 `fonts` · 블록 `fontKo/fontEn` · 선택 구간 `fontRuns[].ff`)을 모두 훑는다.
+  // 전량 일괄 주입(injectAll…, 60패밀리)은 금지 — 인쇄 스풀 용량이 이 문서가 일부러
+  // 피해 온 바로 그 문제다(report-styles.ts 머리말).
+  // 편집기뿐 아니라 **읽기 전용 소비처 전부**(AnalysisReportDocument · 미리보기 모달 ·
+  // 썸네일 · 랜딩 데모)가 이 컴포넌트를 지나므로, 여기 한 곳이면 유령 폰트가 없다.
+  const usedFontsKey = useMemo(() => {
+    const set = new Set<string>();
+    const add = (f?: string) => {
+      const v = (f ?? "").trim();
+      if (v) set.add(v);
+    };
+    add(report.fonts?.ko);
+    add(report.fonts?.en);
+    for (const meta of Object.values(report.blockMeta ?? {})) {
+      add(meta?.fontKo);
+      add(meta?.fontEn);
+      for (const run of meta?.fontRuns ?? []) add(run.ff);
+    }
+    return [...set].sort().join("|");
+  }, [report.fonts?.ko, report.fonts?.en, report.blockMeta]);
+
+  // 폰트는 **글자 폭을 바꾼다** = 페이지 분할이 바뀐다. 웹폰트는 비동기로 도착하므로
+  // 첫 측정은 반드시 폴백 서체 기준으로 돈다 → 로드가 끝나면 epoch 를 올려 **재측정**한다.
+  // 이 한 줄이 없으면 "글꼴을 바꿨더니 마지막 줄이 푸터를 뚫는다"가 재현된다.
+  const [fontEpoch, setFontEpoch] = useState(0);
+  useEffect(() => {
+    if (!usedFontsKey) return;
+    let alive = true;
+    void ensureWorksheetFonts(usedFontsKey.split("|")).then(() => {
+      if (alive) setFontEpoch((n) => n + 1);
+    });
+    return () => {
+      alive = false;
+    };
+  }, [usedFontsKey]);
+
   const measureRef = useRef<HTMLDivElement>(null);
   // 페이지는 "블록 id 배열"로 저장 — 편집/재측정 중에도 화면을 비우지 않아 깜빡임/스크롤 점프 없음
   const [pages, setPages] = useState<string[][] | null>(null);
@@ -165,7 +203,9 @@ export function ReportPages({
     setPages((prev) => (samePages(prev, next) ? prev : next));
     // 프로브 시트가 헤더/푸터 콘텐츠(브랜드·제목·docNo·로고)에 따라 높이가 달라지므로
     // 그 값들도 재측정 트리거에 포함한다.
-  }, [items, report.blockMeta, report.tableColWidths, report.brand, report.docNo, report.meta.titleKo, logoDataUrl, editing]);
+    // 글꼴 축 3개(문서 ko/en · fontEpoch)도 여기에 있어야 한다 — 블록/선택 구간 글꼴은
+    // `report.blockMeta` 가 이미 대표하고, 문서 글꼴은 별도 필드라 따로 걸어야 한다.
+  }, [items, report.blockMeta, report.tableColWidths, report.brand, report.docNo, report.meta.titleKo, report.fonts?.ko, report.fonts?.en, fontEpoch, logoDataUrl, editing]);
 
   // pages 가 새 레이아웃을 반영한 뒤(페인트 직전) 스크롤 복원
   useLayoutEffect(() => {

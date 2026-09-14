@@ -3,6 +3,7 @@ import { getReportTheme, REPORT_LAYOUT } from "@/lib/passage-report/analysis-rep
 import type { AnalysisReport, BlockMeta } from "@/lib/passage-report/analysis-report/schema";
 import { applyBlockOrder } from "../editor-mutations";
 import { BOX_LIST_WRAPS, type FlowItem, reportFlowItems, TABLE_WRAPS, type WrapKind } from "../report-sections";
+import { worksheetFontStack } from "../worksheet-fonts";
 import { ACTIVITY_PAD_MM, ARROW_MM, BOX_PAD_MM, CONT_HEAD_MM, LI_GAP_MM, PAGE_BODY_MM, READING_RUN_GAP_MM, RUN_GAP_MM } from "./constants";
 import type { ItemDescriptor, ReportEdit } from "./types";
 /**
@@ -109,22 +110,43 @@ export function blockStyleOf(meta: BlockMeta | undefined): CSSProperties | undef
   if (meta.bold) st.fontWeight = 700;
   if (meta.italic) st.fontStyle = "italic";
   if (meta.align) st.textAlign = meta.align;
+  // ── 블록 글꼴 — **변수 + font-family 를 함께** 얹는다(둘 중 하나만으로는 반드시 샌다).
+  //  · `font-family` 만 얹으면: report-styles 의 수십 개 규칙이 자손에
+  //    `font-family: var(--font-ko|--font-en)` 를 직접 선언하므로 그쪽이 이겨서
+  //    "제목만 바뀌고 본문은 그대로"가 된다.
+  //  · 변수만 얹으면: `.par-root` 가 이미 계산해 **상속시킨** font-family 는 자손에서
+  //    var 를 다시 평가하지 않으므로, 자기 규칙이 없는 평범한 텍스트가 안 바뀐다.
+  if (meta.fontKo) {
+    const stack = worksheetFontStack(meta.fontKo, "ko");
+    st["--font-ko"] = stack;
+    st.fontFamily = stack;
+  }
+  if (meta.fontEn) st["--font-en"] = worksheetFontStack(meta.fontEn, "latin");
   // 모든 블록이 수동 리사이즈 높이를 반영한다(필기 캔버스 문장 포함).
   if (meta.minHeight) st.minHeight = `${meta.minHeight}mm`;
   return Object.keys(st).length ? (st as CSSProperties) : undefined;
 }
 
-// ─── 테마 → CSS 변수 (par-root 에 주입) ────────────────────────────────────────
+// ─── 테마·글꼴 → CSS 변수 (par-root 에 주입) ──────────────────────────────────
 export function buildReportRootStyle(report: AnalysisReport): CSSProperties {
   const theme = getReportTheme(report.themeId);
-  return {
+  const style: Record<string, unknown> = {
     "--ink": theme.ink, "--ink-soft": theme.inkSoft, "--gold": theme.gold, "--gold-soft": theme.goldSoft,
     "--ink-fill": theme.inkFill, "--ink-fill-soft": theme.inkFillSoft,
     "--ink-on-fill": theme.inkOnFill, "--ink-on-fill-muted": theme.inkOnFillMuted,
     "--text": theme.text, "--text-muted": theme.textMuted, "--tint": theme.tint, "--tint-border": theme.tintBorder,
     "--table-head-bg": theme.tableHeadBg, "--table-head-text": theme.tableHeadText,
-    "--table-stripe": theme.tableStripe, "--page": theme.page, "--rule": theme.rule, "--font-en": REPORT_LAYOUT.fontEnSerif,
-  } as CSSProperties;
+    "--table-stripe": theme.tableStripe, "--page": theme.page, "--rule": theme.rule,
+    // 미지정 시 기존 상수와 **바이트 동일**(worksheetFontStack(undefined,"latin") === fontEnSerif).
+    "--font-en": report.fonts?.en
+      ? worksheetFontStack(report.fonts.en, "latin")
+      : REPORT_LAYOUT.fontEnSerif,
+  };
+  // `--font-ko` 는 **지정됐을 때만** 인라인으로 얹는다. 미지정 시에는 `.par-root` CSS
+  // 규칙의 기본값을 그대로 쓰게 둬서(같은 문자열이지만) 두 곳이 미래에 갈라져도
+  // 기존 문서 렌더가 조용히 바뀌는 일이 없게 한다.
+  if (report.fonts?.ko) style["--font-ko"] = worksheetFontStack(report.fonts.ko, "ko");
+  return style as CSSProperties;
 }
 
 export function cssEsc(s: string): string {

@@ -3,6 +3,7 @@ import type {
   AnalysisSection,
   BlockMeta,
   CustomBlock,
+  ReportFonts,
   ReportMeta,
   SectionLayout,
   VocabTestLayout,
@@ -12,6 +13,7 @@ import type {
 // 배럴(index)이 아니라 파일을 직접 임포트 — section-slots 는 순수 TS 라
 // 뮤테이션 계층이 assemble 의 React 트리를 끌어오지 않는다.
 import { reportSectionSlots } from "./report-sections/section-slots";
+import { applyFontRunRange, type FontRunPatch } from "./font-runs";
 
 /**
  * 분석 보고서 편집을 위한 순수 불변 업데이트 헬퍼.
@@ -148,6 +150,51 @@ export function setBlockMeta(report: AnalysisReport, id: string, patch: Partial<
   const blockMeta = { ...(report.blockMeta ?? {}) };
   blockMeta[id] = { ...(blockMeta[id] ?? {}), ...patch };
   return { ...report, blockMeta };
+}
+
+/**
+ * 문서 전체 글꼴(한글/영문 축) 패치. `undefined` 를 넣은 축은 **제거**된다(기본 복귀).
+ * 두 축이 모두 비면 `fonts` 필드 자체를 지운다 — 빈 객체가 남아 저장 diff 를 흐리지 않게.
+ */
+export function setReportFonts(
+  report: AnalysisReport,
+  patch: Partial<ReportFonts>,
+): AnalysisReport {
+  const next: ReportFonts = { ...(report.fonts ?? {}) };
+  for (const axis of ["ko", "en"] as const) {
+    if (!(axis in patch)) continue;
+    const v = (patch[axis] ?? "").trim();
+    if (v) next[axis] = v;
+    else delete next[axis];
+  }
+  if (!next.ko && !next.en) {
+    if (!report.fonts) return report;
+    const rest = { ...report };
+    delete (rest as { fonts?: ReportFonts }).fonts;
+    return rest;
+  }
+  return { ...report, fonts: next };
+}
+
+/**
+ * 선택 구간(폰트 런) 서식 적용 — 블록 안 ord 번째 편집 필드의 [start,end).
+ *
+ * 반드시 **`setReport` updater 안**에서 호출할 것. 적용 직전에 편집 필드가 blur 되며
+ * 텍스트/런 커밋이 한 번 더 날아가므로, 렌더 시점에 캡처한 `report.blockMeta` 로
+ * 계산하면 그 커밋을 덮어써 방금 친 글자가 사라진다.
+ */
+export function applyBlockFontRun(
+  report: AnalysisReport,
+  blockId: string,
+  ord: number,
+  start: number,
+  end: number,
+  patch: FontRunPatch,
+): AnalysisReport {
+  const current = report.blockMeta?.[blockId]?.fontRuns;
+  return setBlockMeta(report, blockId, {
+    fontRuns: applyFontRunRange(current, ord, start, end, patch),
+  });
 }
 
 /** 표(grammar/exam/vocab) 열 너비(퍼센트 맵) 저장 — 세로 구분선 드래그 결과 커밋. */

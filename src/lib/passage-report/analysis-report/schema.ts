@@ -850,6 +850,25 @@ export const reportThemeIdSchema = z.enum([
 ]);
 export type ReportThemeId = z.infer<typeof reportThemeIdSchema>;
 
+// ─── 문서 글꼴 (편집기 — 조판된 모든 텍스트의 기본 서체) ──────────────────────
+/**
+ * 문서 전체 글꼴. 한글/영문 두 축으로 나뉘는 이유는 조판 CSS 자체가 두 축이기
+ * 때문이다 — report-styles 는 본문/표/지문 박스마다 `var(--font-ko)`·`var(--font-en)`
+ * 중 하나를 명시 선언한다. 한 축으로 뭉개면 영어 지문 박스만 안 바뀌거나, 반대로
+ * 한글 해설이 영문 세리프로 찍힌다.
+ *
+ * 값은 글꼴 **패밀리명 1개**(worksheet-fonts.ts 카탈로그의 family). 비어 있으면
+ * 기본값(맑은 고딕 / Noto Serif 계열)을 쓴다 — 기존 저장 데이터는 필드 자체가
+ * 없으므로 전량 무변화.
+ */
+export const reportFontsSchema = z
+  .object({
+    ko: z.string().max(64).optional(),
+    en: z.string().max(64).optional(),
+  })
+  .passthrough();
+export type ReportFonts = z.infer<typeof reportFontsSchema>;
+
 // ─── 레이아웃 제어 (편집기에서 사용) ─────────────────────────────────────────
 /**
  * 섹션별 페이지 조판 제어. sections 와 같은 길이·순서의 배열로 저장된다.
@@ -888,10 +907,25 @@ export const blockMetaSchema = z
     /** 세로 리사이즈 — 블록 최소 높이(mm). 자연 높이보다 크면 아래 여백이 생김. */
     minHeight: z.number().min(0).max(400).optional(),
     /**
-     * 부분 글자 크기 — 블록 안 특정 텍스트 구간에만 적용되는 폰트 크기(pt).
-     * 평문 값은 그대로 두고 "몇 번째 편집 필드(f)의 [s,e) 글자를 N pt 로" 라는
-     * 범위 메타로만 저장한다(저장·내보내기·AI 가 쓰는 평문은 오염되지 않음).
+     * 블록 글꼴(한글 축) — 이 블록과 그 자손의 `--font-ko` 를 덮는다.
+     * 값이 없으면 문서 글꼴(report.fonts.ko), 그것도 없으면 CSS 기본(맑은 고딕).
+     * ⚠ 단순 `font-family` 인라인이 아니라 **변수**로 덮어야 하는 이유:
+     *   report-styles 의 수십 개 규칙이 자손에 `font-family: var(--font-ko|--font-en)`
+     *   를 **직접 선언**한다. 블록에 font-family 만 얹으면 그 규칙들이 전부 이겨서
+     *   "블록 폰트를 바꿨는데 본문만 안 바뀐다"가 된다(items.ts blockStyleOf 참조).
+     */
+    fontKo: z.string().max(64).optional(),
+    /** 블록 글꼴(영문 축) — 이 블록과 그 자손의 `--font-en` 을 덮는다. */
+    fontEn: z.string().max(64).optional(),
+    /**
+     * 부분 서식 — 블록 안 특정 텍스트 구간에만 적용되는 글자 크기(pt)/글꼴(ff).
+     * 평문 값은 그대로 두고 "몇 번째 편집 필드(f)의 [s,e) 글자를 N pt / 무슨 글꼴로"
+     * 라는 범위 메타로만 저장한다(저장·내보내기·AI 가 쓰는 평문은 오염되지 않음).
      * f = 블록 안 편집 필드의 순서(0부터), s/e = 그 필드 평문 기준 글자 offset.
+     *
+     * `pt` 는 **옵셔널**이다(구버전 데이터는 항상 존재 — 하위호환 무손실). 글꼴만
+     * 지정한 런은 크기를 건드리지 않고, 크기만 지정한 런은 글꼴을 건드리지 않는다.
+     * 둘 다 비면 런 자체가 소멸한다(font-runs.ts `normalizeFontRuns`).
      */
     fontRuns: z
       .array(
@@ -899,7 +933,8 @@ export const blockMetaSchema = z
           f: z.number().int().min(0),
           s: z.number().int().min(0),
           e: z.number().int().min(0),
-          pt: z.number().min(4).max(96),
+          pt: z.number().min(4).max(96).optional(),
+          ff: z.string().max(64).optional(),
         }),
       )
       .optional(),
@@ -1121,6 +1156,12 @@ export const analysisReportSchema = z
     /** 문서 번호 (예: "No.037" / "VE·RR·037") — 자동 생성 가능 */
     docNo: z.string().optional(),
     themeId: reportThemeIdSchema.default("black-white"),
+    /**
+     * (편집기) 문서 전체 글꼴 — 한글/영문 축. 없으면 CSS 기본값(맑은 고딕 / 세리프).
+     * 손상되면 통째로 무시하고 기본값으로 떨어진다(catch) — 글꼴 하나 때문에 문서가
+     * 통째로 열리지 않는 일은 없어야 한다.
+     */
+    fonts: reportFontsSchema.optional().catch(undefined),
     /**
      * 01 원문 섹션 렌더 모드. "hlc"=새 필기 캔버스(기본), "legacy"=구 스택 카드(롤백 스위치).
      * 없으면 새 캔버스로 렌더(기존 보고서도 파생 기본값으로 자연 적용).

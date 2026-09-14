@@ -12,7 +12,7 @@
  *  2) **기존 export 는 하나도 지우지 않는다.** `use-panel-widths.ts` · `panel-section.tsx` ·
  *     `AnalysisReportEditor.tsx` 가 지금 그대로 컴파일·동작해야 한다.
  */
-import type { ReportThemeId, ReportCover } from "@/lib/passage-report/analysis-report/schema";
+import type { ReportThemeId, ReportCover, ReportFonts } from "@/lib/passage-report/analysis-report/schema";
 
 // 여백(spacer) 블록의 최소 세로 높이(mm). 너무 얇아져 잡기 힘든 것을 방지.
 export const SPACER_MIN_MM = 10;
@@ -112,6 +112,7 @@ const PANEL_SECTION_IDS = [
   "custom",
   "delete",
   "insert",
+  "fonts",
   "theme",
   "saved-settings",
 ] as const;
@@ -239,6 +240,12 @@ type ReportSettingsPayload = {
   themeId?: ReportThemeId;
   englishOnlyPage?: boolean;
   cover?: ReportCover;
+  /**
+   * 문서 전체 글꼴(한글/영문). 선생님마다 고정 취향이 있어 매번 다시 고르게 하면
+   * 기능이 사실상 안 쓰인다 — 설정 템플릿에 실어 「기본으로 지정」 한 번이면 새
+   * 학습지가 그 글꼴로 열린다. 구버전 저장분은 이 키가 없어 자연히 무변화.
+   */
+  fonts?: ReportFonts;
 };
 
 export type SavedReportSettings = ReportSettingsPayload & {
@@ -291,6 +298,7 @@ export function readSavedReportSettingsList(): SavedReportSettings[] {
           themeId: legacy.themeId,
           englishOnlyPage: legacy.englishOnlyPage,
           cover: legacy.cover,
+          fonts: legacy.fonts,
           savedAt: legacy.savedAt || new Date().toISOString(),
         },
       ];

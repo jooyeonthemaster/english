@@ -3,6 +3,8 @@ import { normalizeEditableText } from "@/components/exams/paper-builder/componen
 import { type FontRun } from "@/lib/passage-report/analysis-report/schema";
 import { normalizeStudentFacingMarkup } from "@/lib/passage-report/analysis-report/worksheet-surface";
 import { cn } from "@/lib/utils";
+import { normalizeFontRuns, sameFontRuns } from "../font-runs";
+import { worksheetRunFontStack } from "../worksheet-fonts";
 import type { FieldFontContextValue } from "./types";
 
 const FieldFontContext = createContext<FieldFontContextValue | null>(null);
@@ -27,13 +29,7 @@ function mergeFontRuns(
   return merged.length > 0 ? merged : undefined;
 }
 
-function sameRuns(a: FontRun[], b: FontRun[]): boolean {
-  if (a.length !== b.length) return false;
-  for (let i = 0; i < a.length; i++) {
-    if (a[i].s !== b[i].s || a[i].e !== b[i].e || a[i].pt !== b[i].pt) return false;
-  }
-  return true;
-}
+const sameRuns = sameFontRuns;
 
 /** 블록 단위로 폰트 런 컨텍스트를 제공. onBlockMeta 가 없으면(보기/측정) 적용만 하고 커밋 없음. */
 export function BlockFontProvider({
@@ -59,8 +55,12 @@ export function BlockFontProvider({
   return <FieldFontContext.Provider value={value}>{children}</FieldFontContext.Provider>;
 }
 
-/** el 이 속한 블록 안에서 이 편집 필드(.par-field)가 몇 번째인지. 편집/보기 모드에서 동일. */
-function computeFieldOrd(el: HTMLElement): number {
+/**
+ * el 이 속한 블록 안에서 이 편집 필드(.par-field)가 몇 번째인지. 편집/보기 모드에서 동일.
+ * **export 인 이유**: 떠다니는 서식 툴바가 "선택한 글자" 에 글꼴을 적용할 때 이 ord 를
+ * 똑같이 계산해야 한다. 두 벌로 갈라지면 서식이 엉뚱한 문장에 붙는다(오귀속).
+ */
+export function computeFieldOrd(el: HTMLElement): number {
   const block = el.closest<HTMLElement>("[data-paper-item-id]");
   if (!block) return 0;
   const logicalId = block.getAttribute("data-paper-item-id");
@@ -171,10 +171,21 @@ export function Field({
         if (next !== value) onCommit(next);
         if (ctx && !noFontRun) {
           const ord = ordRef.current >= 0 ? ordRef.current : computeFieldOrd(e.currentTarget);
-          const clamped = runs
-            .filter((r) => r.s < next.length)
-            .map((r) => ({ f: ord, s: r.s, e: Math.min(r.e, next.length), pt: r.pt }))
-            .filter((r) => r.e > r.s);
+          // 중첩 span(글꼴 안의 크기)이 만든 **겹치는** 런을 겹침 없는 최소형으로 되감는다.
+          // 이 정규화가 없으면 editableTextHtml 의 단방향 커서가 뒤엣것을 잘라 없앤다.
+          const clamped = normalizeFontRuns(
+            runs
+              .filter((r) => r.s < next.length)
+              .map((r) => ({
+                f: ord,
+                s: r.s,
+                e: Math.min(r.e, next.length),
+                ...(r.pt !== undefined ? { pt: r.pt } : {}),
+                ...(r.ff !== undefined ? { ff: r.ff } : {}),
+              }))
+              .filter((r) => r.e > r.s),
+            ord,
+          );
           if (!sameRuns(ctx.runsByOrd.get(ord) ?? [], clamped)) ctx.commit(ord, clamped);
         }
       }}
@@ -236,7 +247,14 @@ function escapeSeg(text: string): string {
     .replace(/\n/g, "<br>");
 }
 
-/** 평문 + (선택) 폰트 런 → 편집 필드 innerHTML. 런 구간만 <span style=font-size>로 감싼다. */
+/**
+ * 평문 + (선택) 폰트 런 → 편집 필드 innerHTML. 런 구간만 span 으로 감싼다.
+ *
+ * 커서를 앞으로만 미는 단순 루프라 **겹치지 않는 런**을 전제한다. 그 전제는
+ * font-runs.ts 가 입력 경로 양쪽(사용자 적용·DOM 왕복)에서 보증한다.
+ * 속성은 `data-fs`(pt) / `data-ff`(글꼴 family 원문) — 왕복 시 인라인 style 문자열을
+ * 되파싱하지 않고 이 원문을 그대로 읽어 스택 폴백이 family 로 오인되는 일을 막는다.
+ */
 function editableTextHtml(text: string, runs?: FontRun[]): string {
   if (!runs || runs.length === 0) return escapeSeg(text);
   const sorted = [...runs].filter((r) => r.e > r.s).sort((a, b) => a.s - b.s);
@@ -247,7 +265,19 @@ function editableTextHtml(text: string, runs?: FontRun[]): string {
     const end = Math.max(start, Math.min(r.e, text.length));
     if (start > cursor) out += escapeSeg(text.slice(cursor, start));
     if (end > start) {
-      out += `<span data-fs="${r.pt}" style="font-size:${r.pt}pt">${escapeSeg(text.slice(start, end))}</span>`;
+      const attrs: string[] = [];
+      const styles: string[] = [];
+      if (r.pt !== undefined) {
+        attrs.push(`data-fs="${r.pt}"`);
+        styles.push(`font-size:${r.pt}pt`);
+      }
+      if (r.ff) {
+        attrs.push(`data-ff="${escapeAttr(r.ff)}"`);
+        styles.push(`font-family:${escapeAttr(worksheetRunFontStack(r.ff))}`);
+      }
+      out += attrs.length
+        ? `<span ${attrs.join(" ")} style="${styles.join(";")}">${escapeSeg(text.slice(start, end))}</span>`
+        : escapeSeg(text.slice(start, end));
     }
     cursor = end;
   }
@@ -255,13 +285,23 @@ function editableTextHtml(text: string, runs?: FontRun[]): string {
   return out;
 }
 
-/** 편집 필드 DOM 에서 평문과 폰트 런(글자 크기 구간)을 함께 읽는다. */
+function escapeAttr(s: string): string {
+  return s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+/**
+ * 편집 필드 DOM 에서 평문과 폰트 런(글자 크기·글꼴 구간)을 함께 읽는다.
+ *
+ * ⚠ push 순서가 **안쪽 먼저**다(자식 재귀가 끝난 뒤 자기를 push). font-runs.ts 의
+ *   `toCharAttrs` 가 first-writer-wins 라, 이 순서가 곧 "중첩 시 안쪽이 이긴다" 를
+ *   만든다 — 브라우저 렌더 우선순위와 같다. 순서를 바꾸면 조용히 뒤집힌다.
+ */
 function readEditableContent(root: HTMLElement): {
   text: string;
-  runs: Array<{ s: number; e: number; pt: number }>;
+  runs: Array<{ s: number; e: number; pt?: number; ff?: string }>;
 } {
   let text = "";
-  const runs: Array<{ s: number; e: number; pt: number }> = [];
+  const runs: Array<{ s: number; e: number; pt?: number; ff?: string }> = [];
   const addNewline = () => {
     if (text && !text.endsWith("\n")) text += "\n";
   };
@@ -282,6 +322,12 @@ function readEditableContent(root: HTMLElement): {
     }
     return null;
   };
+  // 글꼴은 **data-ff 원문만** 신뢰한다. style.fontFamily 를 되파싱하면 스택의 폴백
+  // 꼬리(맑은 고딕…)까지 딸려 들어와 사용자가 고르지도 않은 family 가 저장된다.
+  const ffOf = (el: HTMLElement): string | null => {
+    const d = el.getAttribute("data-ff");
+    return d && d.trim() ? d.trim() : null;
+  };
   const walk = (node: Node) => {
     node.childNodes.forEach((child) => {
       if (child.nodeType === Node.TEXT_NODE) {
@@ -297,10 +343,18 @@ function readEditableContent(root: HTMLElement): {
       const isBlock = el.tagName === "DIV" || el.tagName === "P" || el.tagName === "LI";
       if (isBlock) addNewline();
       const pt = ptOf(el);
+      const ff = ffOf(el);
       const start = text.length;
       walk(el);
       const end = text.length;
-      if (pt != null && end > start) runs.push({ s: start, e: end, pt: Math.round(pt) });
+      if ((pt != null || ff != null) && end > start) {
+        runs.push({
+          s: start,
+          e: end,
+          ...(pt != null ? { pt: Math.round(pt) } : {}),
+          ...(ff != null ? { ff } : {}),
+        });
+      }
       if (isBlock) addNewline();
     });
   };

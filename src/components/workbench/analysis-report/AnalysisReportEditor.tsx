@@ -59,6 +59,7 @@ import {
   isFinalOnepageReportShape,
   isReadingAnalysisReportShape,
   type ReportCover,
+  type ReportFonts,
   type ReportMeta,
   type VocabTestLayout,
   type VocabTestMode,
@@ -123,7 +124,9 @@ import {
   newCustomBlockId,
   removeInjectedVocabSection,
   reorderIds,
+  applyBlockFontRun,
   setBlockMeta,
+  setReportFonts,
   setTableColWidths,
   setCustomBlock,
   setMeta,
@@ -169,6 +172,7 @@ import {
   SPACER_MIN_MM,
   type SavedReportSettings,
 } from "./editor-storage";
+import type { FontRunPatch } from "./font-runs";
 import { FloatingFormatToolbar } from "./floating-format-toolbar";
 import { MobilePanelSheet, MobileReportActionBar } from "./mobile-editor-chrome";
 import { PropertiesPanel } from "./properties-panel";
@@ -783,6 +787,29 @@ export function AnalysisReportEditor({
     setReport((r) => setBlockMeta(r, id, patch));
   }, [setReport, rejectComposedId]);
 
+  // ─── 글꼴 3축 ──────────────────────────────────────────────────────────────
+  // 문서 전체(report.fonts) / 블록(blockMeta.fontKo·fontEn — 위 onBlockMeta 재사용) /
+  // 선택 구간(blockMeta.fontRuns[].ff). 상속 사다리이므로 각 축은 자기 것만 쓴다.
+  const onDocFonts = useCallback(
+    (patch: Partial<ReportFonts>) => setReport((r) => setReportFonts(r, patch)),
+    [setReport],
+  );
+  const onFontRun = useCallback(
+    (blockId: string, ord: number, start: number, end: number, patch: FontRunPatch) => {
+      // 관문 — onBlockMeta 와 같은 이유(외래 합성 id 를 활성 문서 blockMeta 에 심는 경로).
+      if (rejectComposedId(blockId)) return;
+      // ⚠ updater **안**에서 계산한다. 적용 직전 편집 필드가 blur 되며 텍스트/런 커밋이
+      //   한 번 더 큐에 들어가는데, 렌더 캡처본으로 계산하면 그 커밋을 덮어써 방금 친
+      //   글자가 사라진다.
+      setReport((r) => applyBlockFontRun(r, blockId, ord, start, end, patch));
+    },
+    [setReport, rejectComposedId],
+  );
+  const floatingFonts = useMemo(
+    () => ({ doc: report.fonts, onDoc: onDocFonts, onRun: onFontRun }),
+    [report.fonts, onDocFonts, onFontRun],
+  );
+
   // 워드프로세서식: 텍스트 블록 끝에서 Enter → 바로 아래에 빈 텍스트 블록 생성.
   // 생성된 블록은 렌더 후 effect 가 본문에 포커스를 넣어 곧바로 이어 쓸 수 있다.
   const pendingFocusRef = useRef<string | null>(null);
@@ -1092,10 +1119,11 @@ export function AnalysisReportEditor({
           themeId: report.themeId,
           englishOnlyPage: !!report.englishOnlyPage,
           cover: report.cover,
+          fonts: report.fonts,
         },
         name,
       ),
-    [report.brand, report.themeId, report.englishOnlyPage, report.cover],
+    [report.brand, report.themeId, report.englishOnlyPage, report.cover, report.fonts],
   );
   const onApplyReportSettings = useCallback(
     (entry: SavedReportSettings) => {
@@ -1105,6 +1133,7 @@ export function AnalysisReportEditor({
         themeId: entry.themeId ?? r.themeId,
         englishOnlyPage: entry.englishOnlyPage ?? r.englishOnlyPage,
         cover: entry.cover ? { ...COVER_DEFAULTS, ...entry.cover } : r.cover,
+        fonts: entry.fonts ?? r.fonts,
       }));
       return persistAppliedReportSettings(entry);
     },
@@ -1112,7 +1141,7 @@ export function AnalysisReportEditor({
   );
   const onDeleteReportSettings = useCallback((id: string) => deleteSavedReportSettings(id), []);
   const onResetReportSettings = useCallback(() => {
-    setReport((r) => ({ ...r, themeId: "black-white", englishOnlyPage: false, cover: { ...COVER_DEFAULTS } }));
+    setReport((r) => ({ ...r, themeId: "black-white", englishOnlyPage: false, cover: { ...COVER_DEFAULTS }, fonts: undefined }));
   }, [setReport]);
 
   // 기본 템플릿 자동 적용 — 이 지문의 보고서를 '처음' 열 때 딱 한 번. 이후(편집한 뒤)에는
@@ -2981,7 +3010,7 @@ export function AnalysisReportEditor({
                 </div>
                 <div className="mt-1.5 flex items-center justify-between gap-2">
                   <p className="min-w-0 truncate text-[11px] font-semibold text-slate-400">
-                    {materialSettingsOpen ? "표지·로고·디자인·템플릿" : active ? "선택 블록 조정" : "문서 설정"}
+                    {materialSettingsOpen ? "표지·로고·글꼴·디자인·템플릿" : active ? "선택 블록 조정" : "문서 설정"}
                   </p>
                   {materialSettingsOpen ? (
                     <SettingsTemplatePopover
@@ -3031,6 +3060,7 @@ export function AnalysisReportEditor({
                   onCoverPatch={setCoverPatch}
                   onLogoFile={onLogoFile}
                   onTheme={(t) => setReport((r) => ({ ...r, themeId: t }))}
+                  onDocFonts={onDocFonts}
                   onToggleEnglishPage={() => {
                     const turningOn = !report.englishOnlyPage;
                     setReport((r) => ({ ...r, englishOnlyPage: !r.englishOnlyPage }));
@@ -3338,6 +3368,7 @@ export function AnalysisReportEditor({
           blockMeta={report.blockMeta}
           onBlockMeta={onBlockMeta}
           onClozeBlank={(blockId, itemIndex, start, end) => onActivity(blockId, { type: "blankItem", index: itemIndex, start, end })}
+          fonts={floatingFonts}
         />
         )}
 
