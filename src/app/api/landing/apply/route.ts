@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { sendRegistrationNotification } from "@/lib/email/registration-notification";
+import { notifyAcademyRegistration } from "@/lib/ops-notify/events";
 
 const SEOUL_DISTRICTS = [
   "강남구", "강동구", "강북구", "강서구", "관악구",
@@ -120,6 +121,7 @@ export async function POST(req: Request) {
       message: userMessage || null,
       desiredPlan,
     }).catch((e) => console.error("[landing/apply] notify failed", e));
+    notifyAcademyRegistration(created.id);
 
     return NextResponse.json({
       success: true,
@@ -155,6 +157,7 @@ export async function POST(req: Request) {
           message: userMessage || null,
           desiredPlan,
         }).catch((e) => console.error("[landing/apply] notify failed", e));
+        notifyAcademyRegistration(created.id);
         return NextResponse.json({ success: true, id: created.id, district });
       } catch (e2) {
         console.error("[landing/apply] fallback create failed", e2);

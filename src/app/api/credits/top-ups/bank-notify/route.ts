@@ -17,6 +17,11 @@ import {
   matchSeminarDeposit,
   SEMINAR_DEPOSIT_MATCH_WINDOW_MINUTES,
 } from "@/lib/seminar-deposit";
+import {
+  notifyBankDepositNeedsReview,
+  notifySeminarDepositPaid,
+  notifyTopUpPaid,
+} from "@/lib/ops-notify/events";
 
 export const dynamic = "force-dynamic";
 
@@ -200,6 +205,7 @@ export async function POST(request: NextRequest) {
             processedAt: new Date(),
           },
         });
+        notifyTopUpPaid(outcome.topUpId, "bank_notify");
         return NextResponse.json({
           status: "MATCHED",
           topUpId: outcome.topUpId,
@@ -217,6 +223,7 @@ export async function POST(request: NextRequest) {
           processedAt: new Date(),
         },
       });
+      notifyBankDepositNeedsReview(notification.id);
       return NextResponse.json({ status: "AMBIGUOUS", topUpId: outcome.topUpId });
     }
 
@@ -229,6 +236,7 @@ export async function POST(request: NextRequest) {
           processedAt: new Date(),
         },
       });
+      notifyBankDepositNeedsReview(notification.id);
       return NextResponse.json({
         status: "AMBIGUOUS",
         candidates: outcome.candidateIds.length,
@@ -255,6 +263,7 @@ export async function POST(request: NextRequest) {
             processedAt: new Date(),
           },
         });
+        notifySeminarDepositPaid(semOutcome.registrationId);
         return NextResponse.json({
           status: "MATCHED",
           kind: "SEMINAR_DEPOSIT",
@@ -270,6 +279,7 @@ export async function POST(request: NextRequest) {
           processedAt: new Date(),
         },
       });
+      notifyBankDepositNeedsReview(notification.id);
       return NextResponse.json({ status: "AMBIGUOUS", kind: "SEMINAR_DEPOSIT" });
     }
     if (semOutcome.status === "AMBIGUOUS") {
@@ -281,6 +291,7 @@ export async function POST(request: NextRequest) {
           processedAt: new Date(),
         },
       });
+      notifyBankDepositNeedsReview(notification.id);
       return NextResponse.json({
         status: "AMBIGUOUS",
         kind: "SEMINAR_DEPOSIT",
@@ -293,6 +304,7 @@ export async function POST(request: NextRequest) {
       where: { id: notification.id },
       data: { status: "UNMATCHED", processedAt: new Date() },
     });
+    notifyBankDepositNeedsReview(notification.id);
     return NextResponse.json({ status: "UNMATCHED" });
   } catch (err) {
     console.error("[bank-notify] matching/grant failed", err);
@@ -306,6 +318,7 @@ export async function POST(request: NextRequest) {
         },
       })
       .catch(() => {});
+    notifyBankDepositNeedsReview(notification.id);
     return NextResponse.json({ error: "processing failed" }, { status: 500 });
   }
 }

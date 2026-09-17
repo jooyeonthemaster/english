@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { groupSeminarRegistrationSchema } from "@/lib/validations";
 import { revalidatePath } from "next/cache";
+import { notifyGroupSeminarRegistration } from "@/lib/ops-notify/events";
 import type { GroupSeminarView } from "@/actions/help-center";
 
 /**
@@ -230,6 +231,7 @@ export async function registerGuestGroupSeminar(
   });
 
   revalidatePath(GROUP_SEMINAR_PUBLIC_PATH);
+  notifyGroupSeminarRegistration(reg.id);
   return {
     success: true,
     id: reg.id,

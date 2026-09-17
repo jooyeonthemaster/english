@@ -11,6 +11,12 @@ import {
 } from "@/lib/validations";
 import type { HelpBoard } from "@/lib/help-center";
 import { revalidatePath } from "next/cache";
+import {
+  notifyGroupSeminarRegistration,
+  notifyHelpPost,
+  notifyHelpReply,
+  notifySeminarRequest,
+} from "@/lib/ops-notify/events";
 
 // ============================================================================
 // HELP CENTER — 고객(원장) 측 액션
@@ -251,6 +257,7 @@ export async function createHelpPost(input: {
   });
 
   revalidatePath(BOARD_PATH[validated.board]);
+  notifyHelpPost(post.id);
   return { success: true, id: post.id };
 }
 
@@ -343,7 +350,7 @@ export async function addHelpReply(
   });
   if (!post) throw new Error("게시글을 찾을 수 없습니다.");
 
-  await prisma.helpPostReply.create({
+  const reply = await prisma.helpPostReply.create({
     data: {
       postId,
       authorRole: "STAFF",
@@ -356,6 +363,7 @@ export async function addHelpReply(
   });
 
   revalidatePath(`${BOARD_PATH[post.board as HelpBoard]}/${postId}`);
+  notifyHelpReply(reply.id);
   return { success: true };
 }
 
@@ -428,6 +436,7 @@ export async function createSeminarRequest(input: {
   });
 
   revalidatePath("/director/help/seminar");
+  notifySeminarRequest(req.id);
   return { success: true, id: req.id };
 }
 
@@ -755,6 +764,7 @@ export async function registerGroupSeminar(
     : await prisma.groupSeminarRegistration.create({ data: { seminarId, ...data } });
 
   revalidatePath(GROUP_SEMINAR_PATH);
+  notifyGroupSeminarRegistration(reg.id);
   return {
     success: true,
     id: reg.id,

@@ -14,6 +14,7 @@ import {
   type VirtualAccountIssuedPayment,
 } from "@portone/server-sdk/payment";
 import { prisma } from "@/lib/prisma";
+import { notifyTopUpPaid } from "@/lib/ops-notify/events";
 import {
   expiresAtConflictSql,
   expiresAtInsertSql,
@@ -849,7 +850,7 @@ async function completePaidTopUp(
   const paidAt = toDate(payment.paidAt);
   const now = new Date();
 
-  return prisma.$transaction(
+  const result = await prisma.$transaction(
     async (tx) => {
       const rows = await tx.$queryRaw<LockedTopUp[]>`
         SELECT id, "academyId", "creditAmount", price, status, "requestedBy", "paymentId", "creditTransactionId"
@@ -1005,6 +1006,10 @@ async function completePaidTopUp(
       timeout: 10_000,
     },
   );
+
+  // 커밋 후, 이번 호출이 실제로 지급했을 때만(멱등 재호출 제외) 운영 알림.
+  if (result.credited) notifyTopUpPaid(result.topUpId, source);
+  return result;
 }
 
 async function updateCancelledTopUp(
