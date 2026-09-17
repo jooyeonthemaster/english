@@ -1,7 +1,11 @@
 // ============================================================================
 // 학생 시험 리포트 v3 — LLM 스테이지별 모델·파라미터 설정
 //
-// 기본: examAnalysis(E1)=gemini-3.1-pro(26-07-17 유저 확정 교체, 아래 실측),
+// 기본: examAnalysis(E1)=gemini-3.7-flash(26-09-02 유저 확정 「우리는 무조건
+// 3.7flash」 — docs/exam-analysis-v4-spec.md §1-5·§3 U1. 26-07-17 의 3.1-pro 확정과
+// 그 A/B 실측은 아래 ANALYSIS_MODEL 주석에 이력으로 남긴다. v4 는 모델 인하를
+// 프롬프트 품질 규칙(근거 인용·난이도 앵커) + 페이지 국소 배치(장당 이미지 축소)로
+// 상쇄한다 — 이미지 20장 재전송 구조에선 어떤 모델도 느렸다),
 // report(S4)=스탠다드(flash) — 26-07-08 프롬프트 3회 강화 루프 후 결정론 6지표
 // 6/6 3연속(RICH 김지석: 인용 하한·선지 정합 9/9·구조통찰 30점 정확·합니다체) +
 // 희박 데이터(STATUS_ONLY 김주연) 재검에서 선지 단정 날조 0건·trapWhy 구조 가드
@@ -41,7 +45,13 @@ function readEnvModel(name: string): string | undefined {
 }
 
 /**
- * E1(examAnalysis) 기본 모델 — 26-07-17 유저 확정: sonnet-5 → gemini-3.1-pro.
+ * E1(examAnalysis) 기본 모델 — 26-09-02 유저 확정: gemini-3.1-pro → gemini-3.7-flash
+ * (「우리는 무조건 3.7flash」, v4 스펙 §1-5). 10~20페이지 시험지의 E1a 청크·E1b 페이지
+ * 국소 배치(동시 3)와 함께 가는 결정 — 콜당 이미지가 6장 이하로 줄어 flash 의 지각
+ * 정확도 하락을 프롬프트 품질 규칙(근거 인용·난이도 앵커·오개념형 why)으로 보완한다.
+ * env EXAM_REPORT_ANALYSIS_MODEL 한 줄로 3.1-pro/sonnet 복귀 가능(아래 이력 참고).
+ *
+ * [이력] 26-07-17 유저 확정: sonnet-5 → gemini-3.1-pro.
  * 근거(M.P학원 실업로드 시험지 2종 실측, 정답 키는 블라인드 풀이 패널+지면 대조로 확정):
  * - 정답률: 3p 12문항 sonnet 7/12(58%) vs gemini 10/12(83%) — sonnet 은 오답 5건
  *   (4·5·7·8·10번), gemini 오답 2건은 해설은 정답을 도출하고 correctAnswer 필드만
@@ -54,7 +64,7 @@ function readEnvModel(name: string): string | undefined {
  * (그 경우 아래 reasoning:{enabled:false} 가 Claude 경로에서 그대로 유효).
  */
 const ANALYSIS_MODEL =
-  readEnvModel("EXAM_REPORT_ANALYSIS_MODEL") ?? "google/gemini-3.1-pro-preview";
+  readEnvModel("EXAM_REPORT_ANALYSIS_MODEL") ?? "google/gemini-3.7-flash";
 const READ_MODEL =
   readEnvModel("EXAM_REPORT_READ_MODEL") ?? ATLAS_PREMIUM_MODEL_ID;
 const REPORT_MODEL =
@@ -70,10 +80,14 @@ const CONFIG_BY_STAGE: Record<ExamReportAiStage, ExamReportAiConfig> = {
   // 당시 로컬 env OPENROUTER_GEMINI_REASONING_EFFORT="low" 상태로 3p 12/12·7p 35/35
   // 완주를 실측했다. env 부재 시 기본 "none"(미검증), "medium" 은 동일 지문에서 정답이
   // 2건 흔들림(3·10번) — env 형상에 따라 조용히 바뀌지 않도록 요청 단위로 못박는다.
+  // v4(26-09-02): 출력 예산 12000 → 16000. Gemini 분기는 reasoningEffort "low" 가 사고를
+  // 켠 채(atlas-ai.ts Gemini 분기, v4 스펙 §0 F6)라 사고 토큰이 출력 예산을 나눠 쓴다 —
+  // E1b 가 근거 인용·어법 밑줄별 포인트까지 쓰게 되면서 6문항 배치 출력이 커졌으므로
+  // 여유를 둔다(3.7-flash 는 pro 보다 콜당 단가가 낮아 예산 증가가 비용을 키우지 않는다).
   examAnalysis: {
     model: ANALYSIS_MODEL,
     temperature: 0.3,
-    maxOutputTokens: 12000,
+    maxOutputTokens: 16000,
     timeoutInMs: 180_000,
     reasoning: { enabled: false },
     reasoningEffort: "low",

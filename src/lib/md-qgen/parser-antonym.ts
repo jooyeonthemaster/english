@@ -9,7 +9,7 @@
 // gateMdQuestion 의 어법 분기를 복사하면 100% 반려된다(정찰 R2 경고).
 // ============================================================================
 
-import { countWordBoundaryMatches, normalizeWs } from "./parser";
+import { countWordBoundaryMatches, normalizeWs, reconstructionEq } from "./parser";
 import { findAntonymSurfaceFormIssue } from "@/lib/question-quality/validators/antonym";
 
 /** 전역 정규식은 lastIndex 를 공유하므로 정본 INLINE_MARK_RE 를 재사용하지 않고 로컬 선언. */
@@ -190,7 +190,7 @@ export function gateMdAntonym(
   // #2 지문 재구성 대조 — 마커 밖 무단 편집과 마커 안 변형을 한 번에 잡는다.
   if (!q.markedPassage) {
     v.push("밑줄지문 누락");
-  } else if (normalizeWs(stripAntonymMarks(q.markedPassage)) !== pn) {
+  } else if (!reconstructionEq(stripAntonymMarks(q.markedPassage), passage)) {
     v.push("지문 재구성 불일치 — 마커 밖 텍스트가 원문과 다르거나 마커 안 단어가 변형됨");
   }
 

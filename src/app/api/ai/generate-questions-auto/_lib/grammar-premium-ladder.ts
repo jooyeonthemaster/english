@@ -59,7 +59,9 @@ import type {
 // grok 운영 실측(O192)의 어법 사다리 270s 데드라인 상시 클램프가 flash3 전환으로
 // 해소된다. 사다리 예산·프롬프트는 pro 실측 캘리브레이션이므로 flash3 전환 후
 // give-up 비율 관측 필요(급증 시 env GRAMMAR_PREMIUM_MODEL_ID 로 즉시 롤백).
-const DEFAULT_GRAMMAR_PREMIUM_MODEL_ID = "google/gemini-3-flash-preview";
+// 26-08-19 전 라인업 3.7 통일(O226·사용자 결정 "모든 난이도 어법은 3.7") —
+// fast/큐/트리거 폴백 사다리도 flash3 → 3.7-flash. 롤백: env GRAMMAR_PREMIUM_MODEL_ID.
+const DEFAULT_GRAMMAR_PREMIUM_MODEL_ID = "google/gemini-3.7-flash";
 
 /**
  * 사다리 전 콜 공용 모델. preview 만료/교체 대비 env 오버라이드

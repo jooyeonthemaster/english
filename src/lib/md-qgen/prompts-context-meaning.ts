@@ -137,9 +137,11 @@ function contextMeaningExplanationBlock(
   if (mode === "answer-only") {
     return `${head}. 오답 해설은 쓰지 마라>`;
   }
+  // 26-08-18 O225 해설 다이어트 — 오답은 왜 탈락인지 1문장만(기제이름·매력 서사 지시 제거;
+  // 파서(parser-context-meaning.ts parseLabeledLines)는 라벨+본문만 읽어 기제 라벨 계약 없음)
   return `${head}>
 오답:
-${labels[0]} <기제이름 — 왜 매력적이고 왜 탈락인지 1문장> (정답 번호는 제외하고 오답 ${wrongCount}개만)
+${labels[0]} <왜 탈락인지 1문장 — 매력 이유·기제 이름 서술 금지> (정답 번호는 제외하고 오답 ${wrongCount}개만)
 ...`;
 }
 

@@ -14,7 +14,7 @@ import { toErrorMessage, type StudyActionResult } from "@/actions/study-assignme
 import { requireStaffAuth } from "@/lib/auth";
 import { parseAnalysisReportForPreview } from "@/lib/passage-report/analysis-report/preview-parse";
 import { prisma } from "@/lib/prisma";
-import { compileStudyPlan } from "@/lib/worksheet-study/compile";
+import { compileServerStudyPlan } from "@/lib/worksheet-study/plan-server";
 import { resolveStudyConfig, type StudyItem } from "@/lib/worksheet-study/types";
 
 export interface StudyItemPreview {
@@ -70,11 +70,14 @@ export async function getStudyItemPreview(input: {
     const config = resolveStudyConfig(assignment.payload);
     if (config.mode === "off") return { success: true, data: { item: null, planStale: false } };
 
-    const plan = compileStudyPlan({
+    // 실서빙과 동일 조립(plan-server) — 화이트리스트·코퍼스 오답 자산까지 일치해야
+    // 학생이 본 문항이 그대로 복원된다(선지 구성 포함).
+    const plan = await compileServerStudyPlan({
       report: parsed,
       mode: config.mode,
       taskId: state.taskId,
       reportTitle: report.title || assignment.title,
+      stages: config.stages,
     });
 
     const stage = plan.stages.find((s) => s.id === input.stageId);

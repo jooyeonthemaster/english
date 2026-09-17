@@ -1,0 +1,68 @@
+/* ============================================================
+   SMOAT LINE — design tokens
+   팔레트는 전량 SMOAT 제품 실존 토큰(src/app/globals.css)에서 상속.
+   덱과 실제 제품 화면이 같은 색을 쓴다 = 이 덱의 신뢰도.
+   ============================================================ */
+:root {
+  /* --- 스테이지(라인) --- */
+  --ink:        #080C16;
+  --ink-2:      #101725;
+  --ink-3:      #1B2537;
+  --ink-4:      #27324a;
+
+  /* --- 산출물(종이) --- */
+  --paper:      #F7F5F0;
+  --paper-2:    #EDEAE2;
+  --paper-3:    #DFDBD0;
+
+  /* --- 주인공색: SMOAT primary --- */
+  --blue:       #3B82F6;
+  --blue-deep:  #2563EB;
+  --blue-light: #BFDBFE;
+  --blue-sub:   #EFF6FF;
+
+  /* --- 상태색 (제품 토큰 그대로) --- */
+  --emerald:    #10B981;
+  --emerald-sub:#ECFDF5;
+  --amber:      #F59E0B;
+  --amber-sub:  #FFFBEB;
+  --red:        #EF4444;
+  --red-sub:    #FEF2F2;
+  --indigo:     #6366F1;
+  --purple:     #8B5CF6;
+
+  /* --- 중립 --- */
+  --white:      #FFFFFF;
+  --grey:       #8892A6;
+  --grey-d:     #5A6273;
+
+  /* --- dark 표면 텍스트 스케일 (정본) ---
+     dark 슬라이드 위 텍스트 위계는 이 4단이 전부다. 이 밖의 회색을 새로 만들지 마라.
+     같은 슬레이트 계열이라 연속 재생 시 톤이 흔들리지 않는다. */
+  --txt-1:      #E8EDF7;  /* 준-본문 (헤드라인 바로 아래 강조) */
+  --txt-2:      #97A3B8;  /* 리드·부제 */
+  --txt-3:      #7E8AA0;  /* 카드 설명·보조 */
+  --txt-4:      #6E7A90;  /* 캡션·각주 */
+  --g50:  #F9FAFB; --g100: #F3F4F6; --g200: #E5E7EB; --g300: #D1D5DB;
+  --g400: #9CA3AF; --g500: #6B7280; --g600: #4B5563; --g700: #374151;
+  --g800: #1F2937; --g900: #111827;
+
+  /* --- 타이포 --- */
+  --f-display: 'Paperlogy', 'Pretendard Variable', sans-serif;
+  --f-body:    'Pretendard Variable', Pretendard, -apple-system, 'Apple SD Gothic Neo', sans-serif;
+  --f-mono:    'IBM Plex Mono', 'Pretendard Variable', monospace;
+  --f-latin:   'Archivo', 'Pretendard Variable', sans-serif;
+
+  /* --- 모션 --- */
+  --ease-snap: cubic-bezier(.2, .9, .2, 1);
+  --ease-line: cubic-bezier(.65, 0, .35, 1);
+
+  /* --- 표면 --- */
+  --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --r-xl: 22px; --r-2xl: 28px;
+  --sh-card: 0 18px 44px rgba(0,0,0,.42), 0 2px 0 rgba(255,255,255,.04) inset;
+  --sh-paper: 0 26px 60px rgba(8,12,22,.28), 0 2px 8px rgba(8,12,22,.10);
+  --sh-glow: 0 0 0 1px rgba(59,130,246,.42), 0 0 34px rgba(59,130,246,.28);
+
+  /* --- 안전영역 --- */
+  --safe-t: 96px; --safe-b: 100px; --safe-x: 96px;
+}

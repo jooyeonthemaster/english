@@ -47,8 +47,11 @@ export type ExamPaperBuilderDraft = {
   state: ExamPaperBuilderDraftState;
 };
 
-export function getExamPaperBuilderDraftKey(academyId: string) {
-  return `exam-paper-builder:create:${academyId}`;
+export function getExamPaperBuilderDraftKey(academyId: string, scope?: string) {
+  // scope: create 슬롯이 academyId 당 1개뿐이라 임베드 호스트(스튜디오 오버레이)와
+  // 기존 생성 페이지가 같은 초안을 쟁탈하지 않도록 키를 갈라주는 접미사.
+  const base = `exam-paper-builder:create:${academyId}`;
+  return scope ? `${base}:${scope}` : base;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

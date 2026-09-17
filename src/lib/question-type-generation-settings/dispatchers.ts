@@ -104,7 +104,12 @@ export function resolveQuestionTypeGenerationSettings(
       rawSettings,
       grammarMarkerCount,
     );
-    const grammarPointFocus = readBooleanSetting(rawSettings, "GRAMMAR_ERROR", "pointFocus");
+    // 포인트 집중 폐기(26-08-31, 어법 판단 한정): 집중 톱셋이 기출 정답 1위 축
+    // (정동사vs준동사 — 188건 실측 28%, 킬러 82%)을 제외해 정답 천장을 깎는 것이
+    // 켠/끈 대조 생성으로 확정됐다(끈쪽 정답 전부 1위 축: making·assembling·becoming).
+    // UI 토글은 제거했고, 기존 저장분의 pointFocus:true 도 여기서 무시한다(하드 오프).
+    // 네모 어법(GRAMMAR_CHOICE_COMBO)은 미검증이라 아래 분기 그대로 유지.
+    const grammarPointFocus = false;
     return {
       effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
         markerCount: grammarMarkerCount,
@@ -499,8 +504,8 @@ export function getDefaultQuestionTypeGenerationSettings(): QuestionTypeGenerati
     GRAMMAR_ERROR: {
       markerCount: GRAMMAR_MARKER_COUNT_DEFAULT,
       answerCount: GRAMMAR_ANSWER_COUNT_DEFAULT,
-      // 기본값 ON — 정답 오류 포인트를 기출 최빈출 톱셋(관계사·수일치·분사·to/-ing 등)에 집중.
-      pointFocus: true,
+      // 26-08-31 폐기: 집중 톱셋이 기출 정답 1위 축을 제외함이 실측 확정 — 항상 OFF(리졸버도 하드 오프).
+      pointFocus: false,
       ...defaultLanguageSettingsForType("GRAMMAR_ERROR"),
     },
     GRAMMAR_CHOICE_COMBO: {

@@ -101,6 +101,7 @@ import { KoreanFixedBanner } from "./authoring-board-parts";
 import { AuthoringComposer } from "./authoring-composer";
 import { AuthoringRunCards } from "./authoring-loading-cards";
 import { Kicker } from "./authoring-primitives";
+import { SimplifiedSpecControls } from "./authoring-simplified-controls";
 import { AuthoringSpecPanel, describeSpecSummary } from "./authoring-spec-panel";
 import { AuthoringSpecRail } from "./authoring-spec-rail";
 import {
@@ -127,6 +128,15 @@ export interface AuthoringBoardProps {
    * 미전달이면 true(단독 사용 호스트 무영향).
    */
   visible?: boolean;
+  /**
+   * 간소 모드(스펙 §3.9v2.8 D10 — 스튜디오 호스트 한정). true 면:
+   *  · 우측 설계 레일(AuthoringSpecRail)과 견본 조판(GhostProof)을 그리지 않는다
+   *  · 컴포저 툴바 pasteHint 자리에 분량·편수 팝오버 버튼 2개를 얹는다
+   *  · 나머지 스펙 7축은 서버 기본값(schema.ts — 전 필드 default, 발사 성립),
+   *    diversify 는 기본 true 고정(그 값을 바꾸는 UI 가 이 모드에 없다)
+   * 미전달(기본 false)이면 기존 전체 보드와 바이트 동일 — 생성 페이지 무회귀.
+   */
+  simplified?: boolean;
   /** 생성 결과를 내 지문함에 등록. true 를 돌려주면 성공. */
   onRegisterRows: (rows: { title: string; content: string }[]) => Promise<boolean>;
 }
@@ -153,6 +163,7 @@ export function AuthoringBoard({
   busy,
   koreanFixed = false,
   visible = true,
+  simplified = false,
   onRegisterRows,
 }: AuthoringBoardProps) {
   const { runs, startRun, dismissRun, loadRunItems } = useAuthoringStore();
@@ -730,6 +741,22 @@ export function AuthoringBoard({
     disabled: locked,
   };
 
+  /**
+   * 간소 모드의 툴바 컨트롤(§3.9v2.8 D10). 스펙 상태는 **계속 이 보드가 소유**하고
+   * (위 spec/count useState — runStart 가 같은 값을 payload 로 쓴다), 컴포저에는
+   * 조립이 끝난 ReactNode 만 내려간다 — 컴포저에 스펙 상태를 들이면 소유권이 두 쪽
+   * 나서 "화면에 보이는 값 ≠ 발사되는 값" 사고의 문이 열린다.
+   */
+  const toolbarExtras = simplified ? (
+    <SimplifiedSpecControls
+      spec={spec}
+      count={count}
+      disabled={locked}
+      onSpecChange={(patch) => setSpec((prev) => ({ ...prev, ...patch }))}
+      onCountChange={setCount}
+    />
+  ) : null;
+
   return (
     // ⚠️ 컨테이너를 선언한 엘리먼트는 **자기 자신을 질의할 수 없다**(컨테이너 쿼리는
     // 조상 컨테이너 기준으로 평가된다). 그래서 @container 는 이 껍데기에 두고,
@@ -897,10 +924,21 @@ export function AuthoringBoard({
               boxRef={composerBoxRef}
               onDraggingChange={setBandDragging}
               visible={visible}
+              // 간소 모드(D10): pasteHint 자리에 분량·편수 컨트롤. 기본 모드에서는
+              // null/false 라 컴포저 렌더가 바이트 동일이다.
+              toolbarExtras={toolbarExtras}
+              hidePasteHint={simplified}
             />
 
             {runs.length === 0 ? (
-              <GhostProof />
+              // 간소 모드(§3.9v2.8 D10)는 "이렇게 나와요" 견본 조판을 그리지 않는다
+              // (오너 지시 — 미리보기 섹션 제거). 발주 밴드 아래는 그냥 여백으로
+              // 남는다: 스크롤 컨테이너가 상단 정렬 + p-4 라 시각 붕괴가 없고,
+              // 결과가 생기면 같은 자리에 실행 카드가 선다(러너 카드 영역이 비어
+              // 있어도 무방 — 스펙 명시).
+              simplified ? null : (
+                <GhostProof />
+              )
             ) : (
               <AuthoringRunCards
                 runs={runs}
@@ -919,10 +957,23 @@ export function AuthoringBoard({
         </div>
 
         {/* ── 우: 설계 레일 — 항상 펼쳐져 있고, 항상 폭을 끌 수 있다.
-            헤더는 레일이 직접 그린다(좌측 컬럼 헤더와 같은 h-9). ── */}
-        <AuthoringSpecRail summary={describeSpecSummary(spec, count)}>
-          <AuthoringSpecPanel {...specPanelProps} />
-        </AuthoringSpecRail>
+            헤더는 레일이 직접 그린다(좌측 컬럼 헤더와 같은 h-9). ──
+
+            ⚠️ 간소 모드(simplified)는 레일을 **아예 렌더하지 않는다** — spec-rail.tsx
+            :33-38 "이 레일은 어떤 폭에서도 사라지지 않는다" 계약의 **명시 예외**다
+            (스펙 §3.9v2.8 D10: "우측 복잡 설정(읽는 사람·단어·문장·뼈대·소재·겨냥
+            문항·용도) 전부 제거"). 그 계약이 금지한 것은 **폭·브레이크포인트를 이유로
+            숨기는 것**이고, 여기는 폭 분기가 아니라 호스트 계약이다 — 스튜디오
+            인테이크는 분량·편수만 컴포저 툴바 팝오버로 노출하고(위 toolbarExtras),
+            나머지 7축은 서버 기본값으로 나간다(schema.ts authoringSpecSchema —
+            9필드 전부 default, 발사 성립 확인). diversify UI 도 함께 생략한다 —
+            항상 기본 true 고정(§3.9v2.8 명시 결정: 이 모드에는 그 값을 바꾸는
+            경로가 없고, state 초기값이 이미 true 다). */}
+        {simplified ? null : (
+          <AuthoringSpecRail summary={describeSpecSummary(spec, count)}>
+            <AuthoringSpecPanel {...specPanelProps} />
+          </AuthoringSpecRail>
+        )}
       </div>
     </section>
   );

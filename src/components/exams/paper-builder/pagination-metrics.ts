@@ -105,6 +105,16 @@ function wordWidthUnits(word: string): number {
   return units;
 }
 
+// 표시형이 원문자 1글자뿐인 토큰(①·`__②`·`__(a)` → ①). renderFormattedInline 이 이 마커와 다음
+// 단어를 nbsp 로 묶어 그리므로(줄 끝 「② / helps」 분리 방지), 줄 넘김 판정도 「마커+공백+다음 단어」
+// 를 한 묶음 폭으로 본다. 출력 행 문자열(내용·단어 경계)은 그대로 — 줄이 갈리는 자리만 렌더와 동기.
+const CIRCLED_MARKER_TOKEN_RE =
+  /^[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF\u24D0-\u24E9\u3260-\u326D]$/;
+
+function isBareMarkerToken(word: string): boolean {
+  return CIRCLED_MARKER_TOKEN_RE.test(displayWordForWidth(word));
+}
+
 export function wrapParagraph(paragraph: string, maxUnits: number): string[] {
   const lines: string[] = [];
   let currentLine = "";
@@ -118,6 +128,14 @@ export function wrapParagraph(paragraph: string, maxUnits: number): string[] {
     const wordUnits = wordWidthUnits(word);
     const spaceFollows = nextSpace < paragraph.length;
     const spaceUnits = spaceFollows ? glyphUnits(" ") : 0;
+    // 원문자 마커 토큰은 렌더에서 다음 단어와 한 줄에 묶이므로(nbsp) 넘김 판정 폭에 다음 단어를 더한다.
+    let boundUnits = 0;
+    if (spaceFollows && isBareMarkerToken(word)) {
+      let afterNext = paragraph.indexOf(" ", nextSpace + 1);
+      if (afterNext === -1) afterNext = paragraph.length;
+      const nextWord = paragraph.slice(nextSpace + 1, afterNext);
+      if (nextWord) boundUnits = spaceUnits + wordWidthUnits(nextWord);
+    }
 
     if (wordUnits > maxUnits && !currentLine) {
       let chunk = "";
@@ -135,7 +153,7 @@ export function wrapParagraph(paragraph: string, maxUnits: number): string[] {
       }
       currentLine = chunk;
       currentUnits = chunkUnits;
-    } else if (currentUnits + wordUnits > maxUnits && currentLine) {
+    } else if (currentUnits + wordUnits + boundUnits > maxUnits && currentLine) {
       lines.push(currentLine.trimEnd());
       currentLine = word;
       currentUnits = wordUnits;
@@ -491,7 +509,20 @@ export function buildStructLineBlocks(
       segChrome = STRUCTURE_GAP;
     }
 
-    lines.forEach((wrapped, lineIndex) => {
+    // 각주 줄("* word: 뜻")은 지문 박스 마지막 줄과 한 블록으로 묶는다 — 줄 단위 흐름에서 각주만 다음 칸/쪽으로
+    // 밀려 각주 한 줄짜리 백지 페이지가 생겼다(기출 전수 렌더 실측, 주장·요지 인라인 지문 박스). 묶인 줄은 "\n" 으로
+    // 이어져 pre-line 렌더에서 줄바꿈되고, 높이는 두 줄분을 갖는다.
+    const packed: { line: string; isSourceLineStart?: boolean; extraLines: number }[] = [];
+    for (const wrapped of lines) {
+      const prev = packed[packed.length - 1];
+      if (prev && wrapped.isSourceLineStart !== false && /^\s*[*＊]\s*[A-Za-z]/.test(wrapped.line)) {
+        prev.line = `${prev.line}\n${wrapped.line}`;
+        prev.extraLines += 1;
+      } else {
+        packed.push({ line: wrapped.line, isSourceLineStart: wrapped.isSourceLineStart, extraLines: 0 });
+      }
+    }
+    packed.forEach((wrapped, lineIndex) => {
       const lineSegChrome =
         segChrome +
         (lineIndex === 0 && style === "passage"
@@ -506,11 +537,11 @@ export function buildStructLineBlocks(
         paraLabel,
         line: wrapped.line,
         isSegStart: lineIndex === 0,
-        isSegEnd: lineIndex === lines.length - 1,
+        isSegEnd: lineIndex === packed.length - 1,
         isSourceLineStart: wrapped.isSourceLineStart,
         lineHeight,
         segChrome: lineSegChrome,
-        height: lineHeight + (lineIndex === 0 ? lineSegChrome : 0),
+        height: lineHeight * (1 + wrapped.extraLines) + (lineIndex === 0 ? lineSegChrome : 0),
       });
     });
   });
@@ -608,12 +639,51 @@ export function estimatePassageHeight(group: PaperGroup, settings: PaginationSet
   return passageChromeHeight(group, settings, includeTitle) + lines.length * passageLineHeight(settings);
 }
 
+// ── 기출 문항 [3점] 표기 ─────────────────────────────────────────────────────
+// 은행 반입 문항(structuredData._gichul)은 발문에서 「[3점]」 이 걷혀 points 컬럼에만 남는다
+// (scripts/gichul-bank handlers.mjs resolveDirection). 수능 원형대로 발문 끝에 ` [3점]` 을 표시 계층에서만
+// 붙인다 — 데이터·AI 생성 문항(_gichul 없음) 무변경. 조건: _gichul.points===3 이고 현재 배점(item.points)도 3
+// (자동 배점 distributeItemsToTotal·수동 편집으로 바뀌면 정답표/총점과 어긋나므로 생략), 문항 메타 배지
+// ([N점 · 유형], showQuestionMeta)가 꺼져 있고(켜면 배점이 이미 보여 중복), 발문에 [N점] 이 이미 없을 때.
+// a4-paper-page 헤더 렌더(EditableText 밖 형제 span)와 stem 줄 수 추정이 같은 문자열을 쓴다.
+const STEM_POINTS_TAG_RE = /\[\s*\d+(?:\.\d+)?\s*점\s*\]/;
+
+function gichulPointsOf(structuredData: unknown): number | null {
+  let sd: unknown = structuredData;
+  if (typeof sd === "string") {
+    try {
+      sd = JSON.parse(sd);
+    } catch {
+      return null;
+    }
+  }
+  if (!sd || typeof sd !== "object" || Array.isArray(sd)) return null;
+  const gichul = (sd as { _gichul?: unknown })._gichul;
+  if (!gichul || typeof gichul !== "object") return null;
+  const points = (gichul as { points?: unknown }).points;
+  return typeof points === "number" && Number.isFinite(points) ? points : null;
+}
+
+export function questionStemPointsSuffix(
+  item: PaperItem,
+  stem: string,
+  showQuestionMeta: boolean,
+): string {
+  if (item.blockType !== "question" || showQuestionMeta) return "";
+  if (item.points !== 3) return "";
+  if (gichulPointsOf(item.sourceQuestion.structuredData) !== 3) return "";
+  if (STEM_POINTS_TAG_RE.test(stem)) return "";
+  return " [3점]";
+}
+
 // 헤더(번호 + 지시문) 높이. 지시문은 항상 통째로 헤더에 렌더되므로
 // stem 의 줄 수만큼 높이를 잡는다(본문/구조화 박스는 별도 계산).
 export function estimateStemHeight(item: PaperItem, settings: PaginationSettings): number {
   const { stem } = questionStemAndBody(item);
   const fontPx = resolveItemFontPx(item, settings);
-  const stemRendered = formatInlineMarkersForSubtype(stem, item.sourceQuestion.subType);
+  const stemRendered =
+    formatInlineMarkersForSubtype(stem, item.sourceQuestion.subType) +
+    questionStemPointsSuffix(item, stem, settings.showQuestionMeta);
   const stemLines = questionToLines(stemRendered, settings, fontPx);
   return (
     questionMetaHeight(settings) +

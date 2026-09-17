@@ -41,7 +41,7 @@ export const maxDuration = 60;
 // 모델 핀 — 전역 GEMINI_MODEL 핀이 바뀌어도 이 기능은 3.6-flash 를 유지한다.
 // (프로덕션 모델은 env 가 핀하므로 코드 기본값만으로는 보장되지 않는다는 실측 교훈)
 const ASK_MODEL =
-  process.env.WORKSHEET_STUDY_ASK_MODEL?.trim() || "google/gemini-3.6-flash";
+  process.env.WORKSHEET_STUDY_ASK_MODEL?.trim() || "google/gemini-3.7-flash";
 // gemini flash 계열은 게이트웨이의 reasoning disable 을 무시하고 사고 토큰을
 // 몰래 생성해 답변이 잘린다. "minimal" 만이 실제 0 으로 만든다(어법 드릴 실측).
 const ASK_REASONING_EFFORT =

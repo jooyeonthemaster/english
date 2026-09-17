@@ -1,0 +1,583 @@
+<section class="slide slide--dark" id="s18"
+  data-title="ST 07" data-kr="어디서 어떻게 틀렸나"
+  data-zone="회수" data-zone-en="COLLECT"
+  data-part="PART 1 — 기능 브리핑"
+  data-in="학생 답안"
+  data-out="유형별 취약점 · 오답 원인"
+  data-note="리포트 5크레딧 / 1명">
+
+  <div class="pad s18-wrap">
+
+    <!-- ════ 헤드 : 카피 + 성적 개요 계기판 ════ -->
+    <header class="s18-head">
+
+      <div class="s18-copy">
+        <div class="kicker" data-step="0" data-fx="none">ST 07 · REPORT</div>
+        <h1 class="s18-h" data-step="0">
+          점수가 아니라,<br><em>어디서 어떻게 틀렸는지.</em>
+        </h1>
+        <p class="s18-lead" data-step="0" data-fx="none">
+          채점만 들어가면 학생별 리포트가 완성됩니다. 수치는 채점 그대로, 코멘트만 다듬습니다.
+        </p>
+      </div>
+
+      <div class="s18-gauge" data-step="1" data-fx="left">
+        <div class="gg-l">
+          <span class="gg-k latin">Total Score</span>
+          <div class="gg-score"><b>82</b><i>/ 100</i></div>
+          <div class="gg-chips">
+            <span class="gg-c ok"><span class="mono">✓</span> 정답 <b>16</b></span>
+            <span class="gg-c bad"><span class="mono">✕</span> 오답 <b>4</b></span>
+          </div>
+        </div>
+
+        <div class="gg-sep"></div>
+
+        <div class="gg-r">
+          <div class="gg-m">
+            <div class="gg-mh"><span>정답률</span><b>80<i>%</i></b></div>
+            <div class="gg-trk"><i style="width:80%"></i></div>
+          </div>
+          <div class="gg-m">
+            <span class="gg-k latin">Class Average</span>
+            <div class="gg-cr"><span>내 점수</span><div class="gg-trk sm"><i class="me" style="width:82%"></i></div><em>82</em></div>
+            <div class="gg-cr"><span>반평균</span><div class="gg-trk sm"><i class="av" style="width:74%"></i></div><em>74</em></div>
+          </div>
+        </div>
+      </div>
+
+    </header>
+
+    <!-- ════ 리포트 지면 (제품 UI 재현 · --rpt-* 토큰) ════ -->
+    <div class="s18-sheet" data-step="2" data-fx="none" data-noadvance>
+
+      <!-- 문서 크롬 : 상단 툴바 -->
+      <div class="rp-top">
+        <span class="rp-mark latin">SMOAT</span>
+        <span class="rp-kind">내신 리포트</span>
+        <span class="rp-vr"></span>
+        <span class="rp-doc"><b>김민준</b> · 3월 학력평가 대비 모의고사 · 영어</span>
+        <span class="rp-badge">리포트 완성</span>
+        <span class="rp-btn">미리보기</span>
+        <span class="rp-btn">공유</span>
+      </div>
+
+      <div class="rp-body">
+
+        <!-- ── 좌 : 유형별 성취 회계 원장 ── -->
+        <div class="rp-ledger">
+          <div class="rp-hd">
+            <h2 class="rp-title">유형별 성취 <span>· 회계 원장</span></h2>
+            <span class="rp-meta">유형마다 배점 대비 획득을 정산합니다</span>
+          </div>
+
+          <div class="lg-head">
+            <span class="c-name">유형</span>
+            <span class="c-n">문항</span>
+            <span class="c-ox">정오</span>
+            <span class="c-sc">획득 · 배점</span>
+            <span class="c-bar">획득 비율</span>
+            <span class="c-ls">실점</span>
+          </div>
+
+          <div class="lg-rows" id="s18-rows">
+            <button type="button" class="lg-row is-full" data-r="0">
+              <span class="c-name">내용 일치</span>
+              <span class="c-n">4문항</span>
+              <span class="c-ox">4/4</span>
+              <span class="c-sc"><b>16</b>/16점</span>
+              <span class="c-bar"><span class="trk"><i style="width:100%"></i></span><b class="pc">100%</b></span>
+              <span class="c-ls zero">0</span>
+            </button>
+
+            <button type="button" class="lg-row is-full" data-r="1">
+              <span class="c-name">주제 추론</span>
+              <span class="c-n">3문항</span>
+              <span class="c-ox">3/3</span>
+              <span class="c-sc"><b>15</b>/15점</span>
+              <span class="c-bar"><span class="trk"><i style="width:100%"></i></span><b class="pc">100%</b></span>
+              <span class="c-ls zero">0</span>
+            </button>
+
+            <button type="button" class="lg-row is-full" data-r="2">
+              <span class="c-name">순서 배열</span>
+              <span class="c-n">3문항</span>
+              <span class="c-ox">3/3</span>
+              <span class="c-sc"><b>17</b>/17점</span>
+              <span class="c-bar"><span class="trk"><i style="width:100%"></i></span><b class="pc">100%</b></span>
+              <span class="c-ls zero">0</span>
+            </button>
+
+            <button type="button" class="lg-row is-loss" data-r="3" data-q="q9">
+              <span class="c-name">제목 추론</span>
+              <span class="c-n">3문항</span>
+              <span class="c-ox">2/3</span>
+              <span class="c-sc"><b>11</b>/15점</span>
+              <span class="c-bar"><span class="trk"><i style="width:73%"></i></span><b class="pc">73%</b></span>
+              <span class="c-ls">−4점</span>
+            </button>
+
+            <button type="button" class="lg-row is-loss" data-r="4" data-q="q12">
+              <span class="c-name">어법</span>
+              <span class="c-n">3문항</span>
+              <span class="c-ox">2/3</span>
+              <span class="c-sc"><b>9</b>/13점</span>
+              <span class="c-bar"><span class="trk"><i style="width:69%"></i></span><b class="pc">69%</b></span>
+              <span class="c-ls">−4점</span>
+            </button>
+
+            <button type="button" class="lg-row is-crit" data-r="5">
+              <span class="c-name">빈칸 추론</span>
+              <span class="c-n">4문항</span>
+              <span class="c-ox">2/4</span>
+              <span class="c-sc"><b>14</b>/24점</span>
+              <span class="c-bar"><span class="trk"><i style="width:58%"></i></span><b class="pc">58%</b></span>
+              <span class="c-ls"><em class="pill">실점 10점</em></span>
+            </button>
+          </div>
+
+          <div class="lg-sum">
+            <span class="c-name">합계</span>
+            <span class="c-n">20문항</span>
+            <span class="c-ox">16/20</span>
+            <span class="c-sc"><b>82</b>/100점</span>
+            <span class="c-bar"><span class="trk"><i style="width:82%"></i></span><b class="pc">82%</b></span>
+            <span class="c-ls">−18점</span>
+          </div>
+          <p class="lg-note">전 6유형 · 배점 82 / 100 획득</p>
+        </div>
+
+        <div class="rp-div"></div>
+
+        <!-- ── 우 : 오답 심층 분석 드릴다운 ── -->
+        <div class="rp-deep">
+          <div class="rp-hd">
+            <h2 class="rp-title">오답 심층 분석</h2>
+            <span class="rp-meta">드릴다운 예시 · 12번 · 9번</span>
+          </div>
+
+          <div class="dp-tabs" id="s18-tabs">
+            <button type="button" class="dp-tab is-on" data-q="q12"><b>12번</b><span>어법</span></button>
+            <button type="button" class="dp-tab" data-q="q9"><b>9번</b><span>제목 추론</span></button>
+          </div>
+
+          <article class="dp-card" id="s18-q12">
+            <div class="dp-top">
+              <span class="dp-no">12</span>
+              <span class="dp-ty">어법</span>
+              <span class="dp-tag">주어-동사 수일치(수식어구 개입)</span>
+            </div>
+            <div class="dp-obs">
+              <span class="dp-lab">무슨 일이 있었나</span>
+              <p>'The value of the combs and the watch chain ___' 구조에서 수식어구(of the combs and the watch chain)에 끌려 복수 동사 <em>were</em>를 골랐습니다. 진짜 주어는 단수 명사 <em>value</em>입니다.</p>
+            </div>
+            <div class="dp-fix">
+              <span class="dp-lab">교정 포인트</span>
+              <p>동사 문제는 풀기 전에 <em>주어에 밑줄부터</em> 긋는 습관을 고정하세요. 전치사구·관계절은 괄호로 묶어 지우면 수일치 실수가 사라집니다.</p>
+            </div>
+          </article>
+
+          <article class="dp-card" id="s18-q9" hidden>
+            <div class="dp-top">
+              <span class="dp-no">9</span>
+              <span class="dp-ty">제목 추론</span>
+              <span class="dp-tag">제목의 포괄 범위 판정</span>
+            </div>
+            <div class="dp-obs">
+              <span class="dp-lab">무슨 일이 있었나</span>
+              <p>지문 내용과 어긋나지 않는 선지 두 개가 남았을 때, 글 전체를 덮는 제목인지 일부만 가리키는 제목인지 비교하지 않고 <em>먼저 눈에 들어온 쪽</em>을 골랐습니다.</p>
+            </div>
+            <div class="dp-fix">
+              <span class="dp-lab">교정 포인트</span>
+              <p>제목 후보가 둘 남으면 <em>'이 제목으로 못 덮는 문단이 있는가'</em>를 마지막 관문으로 두세요. 소재 나열형 제목은 대개 좁은 오답입니다.</p>
+            </div>
+          </article>
+        </div>
+
+      </div>
+
+      <div class="rp-foot">
+        <span>SMOAT 내신 리포트</span>
+        <span class="rp-tip">원장의 행 · 문항 탭을 눌러보세요</span>
+        <span>SMOAT 영어학원 · 김민준</span>
+      </div>
+    </div>
+
+    <!-- ════ 하단 : 약점 칩 + 후킹 + 비용 ════ -->
+    <footer class="s18-foot">
+
+      <div class="s18-weak" data-step="3" data-fx="none">
+        <span class="wk-lab mono">개념 지도 · 약점</span>
+        <span class="wk"><b>빈칸 추론 — 재진술 단서 탐색</b><i>18·20번</i></span>
+        <span class="wk"><b>반어·어조의 전환 읽기</b><i>20번</i></span>
+        <span class="wk"><b>주어-동사 수일치(수식어구 개입)</b><i>12번</i></span>
+        <span class="wk"><b>제목의 포괄 범위 판정</b><i>9번</i></span>
+      </div>
+
+      <div class="s18-close">
+        <p class="s18-hook" data-step="4" data-fx="none">
+          이 리포트, <em>그대로 인쇄해서 학부모 상담에</em> 쓰십니다.
+        </p>
+        <div class="s18-cost" data-step="4" data-fx="none">
+          <span class="mono">COST</span> 학생 1명 리포트 <b>5크레딧</b>
+        </div>
+      </div>
+
+    </footer>
+
+  </div>
+
+<style>
+#s18 .s18-wrap { display: flex; flex-direction: column; }
+
+/* ══════════ 헤드 ══════════ */
+#s18 .s18-head {
+  flex: none; height: 224px;
+  display: grid; grid-template-columns: 1fr 700px; gap: 48px; align-items: start;
+}
+#s18 .s18-copy { padding-top: 2px; }
+#s18 .s18-h {
+  margin-top: 20px;
+  font-family: var(--f-display); font-weight: 800;
+  font-size: 62px; line-height: 1.12; letter-spacing: -.03em; color: #E9EEF8;
+}
+#s18 .s18-h em { font-style: normal; color: var(--white); position: relative; z-index: 1; }
+#s18 .s18-h em::after {
+  content: ''; position: absolute; left: -2px; right: -2px; bottom: 3px; height: 8px;
+  background: rgba(59,130,246,.34); border-radius: 2px; z-index: -1;
+}
+#s18 .s18-lead { margin-top: 14px; font-size: 18px; line-height: 1.6; color: #8E9AB0; }
+
+/* ── 성적 개요 계기판 ── */
+#s18 .s18-gauge {
+  height: 208px; display: grid; grid-template-columns: 236px 1px 1fr; gap: 26px;
+  padding: 22px 26px; border-radius: var(--r-lg);
+  background: linear-gradient(160deg, rgba(20,29,48,.94), rgba(13,19,33,.94));
+  border: 1px solid rgba(59,130,246,.30);
+  box-shadow: 0 22px 52px rgba(0,0,0,.46), inset 0 1px 0 rgba(191,219,254,.10);
+}
+#s18 .gg-k {
+  display: block; font-family: var(--f-latin); font-size: 10.5px; font-weight: 700;
+  letter-spacing: .24em; color: var(--grey); text-transform: uppercase;
+}
+#s18 .gg-l { display: flex; flex-direction: column; }
+#s18 .gg-score { display: flex; align-items: baseline; gap: 10px; margin-top: 12px; }
+#s18 .gg-score b {
+  font-family: var(--f-display); font-weight: 900; font-size: 78px; line-height: .86;
+  letter-spacing: -.035em; color: var(--white); font-variant-numeric: tabular-nums;
+}
+#s18 .gg-score i { font-style: normal; font-family: var(--f-mono); font-size: 19px; color: var(--grey); }
+#s18 .gg-chips { display: flex; gap: 8px; margin-top: auto; }
+#s18 .gg-c {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 13px; font-weight: 500; color: #A9B4C8;
+  padding: 6px 11px; border-radius: 999px; border: 1px solid var(--ink-3); background: rgba(8,12,22,.5);
+}
+#s18 .gg-c b { font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; }
+#s18 .gg-c .mono { font-size: 12px; }
+#s18 .gg-c.ok  .mono, #s18 .gg-c.ok  b { color: var(--emerald); }
+#s18 .gg-c.bad .mono, #s18 .gg-c.bad b { color: var(--red); }
+
+#s18 .gg-sep { background: linear-gradient(to bottom, transparent, var(--ink-4), transparent); }
+
+#s18 .gg-r { display: flex; flex-direction: column; justify-content: center; gap: 22px; }
+#s18 .gg-mh { display: flex; align-items: baseline; justify-content: space-between; }
+#s18 .gg-mh span { font-size: 14px; color: var(--grey); }
+#s18 .gg-mh b {
+  font-family: var(--f-display); font-weight: 800; font-size: 30px; letter-spacing: -.02em;
+  color: var(--blue); font-variant-numeric: tabular-nums;
+}
+#s18 .gg-mh b i { font-style: normal; font-size: 16px; font-family: var(--f-mono); color: var(--grey); margin-left: 2px; }
+#s18 .gg-trk {
+  height: 7px; margin-top: 9px; border-radius: 999px; background: rgba(136,146,166,.20); overflow: hidden;
+}
+#s18 .gg-trk i { display: block; height: 100%; border-radius: 999px; background: var(--blue); }
+#s18 .gg-trk.sm { height: 6px; margin-top: 0; flex: 1; }
+#s18 .gg-cr { display: flex; align-items: center; gap: 10px; margin-top: 9px; }
+#s18 .gg-cr span { flex: none; width: 54px; font-size: 12.5px; color: var(--grey); }
+#s18 .gg-cr em {
+  flex: none; width: 34px; text-align: right; font-style: normal;
+  font-family: var(--f-mono); font-size: 14px; font-weight: 600; color: #C6D0E0;
+}
+#s18 .gg-cr .me { background: var(--blue); }
+#s18 .gg-cr .av { background: var(--txt-4); }
+
+/* ══════════ 리포트 지면 (제품 UI 재현) ══════════ */
+#s18 .s18-sheet {
+  --rp-pri:  #1D4ED8;   /* --rpt-primary */
+  --rp-ok:   #059669;   /* --rpt-ok */
+  --rp-bad:  #E11D48;   /* --rpt-bad */
+  --rp-neu:  #64748B;   /* --rpt-neutral (slate-500) */
+  --rp-tint: #EFF4FF;   /* --rpt-tint */
+  --rp-surf: #F8FAFE;   /* --rpt-surface */
+  --rp-line: #DBE3F2;   /* --rpt-line */
+  --rp-ink:  #1E293B;   /* slate-800 */
+  --rp-ink2: #334155;   /* slate-700 */
+  --rp-mut:  #94A3B8;   /* slate-400 */
+  --rp-dim:  #CBD5E1;   /* slate-300 */
+  --rp-am:   #B45309;   /* 취약 톤(지면 대비 확보) */
+
+  position: relative; flex: none; height: 512px; margin-top: 22px;
+  display: flex; flex-direction: column;
+  background: #FFFFFF; border-radius: var(--r-lg); overflow: hidden;
+  color: var(--rp-ink); font-family: var(--f-body); font-variant-numeric: tabular-nums;
+  box-shadow: 0 30px 64px rgba(4,8,18,.55), 0 0 0 1px rgba(219,227,242,.6);
+}
+
+/* 문서 크롬 — 상단 툴바 */
+#s18 .rp-top {
+  flex: none; height: 50px; display: flex; align-items: center; gap: 12px;
+  padding: 0 22px; background: var(--rp-surf); border-bottom: 1px solid var(--rp-line);
+}
+#s18 .rp-mark {
+  font-family: var(--f-latin); font-weight: 900; font-size: 15px; letter-spacing: .06em;
+  color: var(--rp-pri); text-transform: uppercase;
+}
+#s18 .rp-kind {
+  font-size: 12px; font-weight: 700; letter-spacing: .04em; color: var(--rp-pri);
+  background: var(--rp-tint); border: 1px solid var(--rp-line); border-radius: 999px; padding: 4px 10px;
+}
+#s18 .rp-vr { width: 1px; height: 18px; background: var(--rp-line); }
+#s18 .rp-doc { font-size: 14.5px; color: var(--rp-neu); }
+#s18 .rp-doc b { font-weight: 700; color: var(--rp-ink); }
+#s18 .rp-badge {
+  margin-left: auto; font-size: 12px; font-weight: 700; color: var(--rp-ok);
+  background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: 999px; padding: 5px 12px;
+}
+#s18 .rp-btn {
+  font-size: 12.5px; font-weight: 600; color: var(--rp-neu);
+  background: #fff; border: 1px solid var(--rp-line); border-radius: 8px; padding: 6px 13px;
+}
+
+#s18 .rp-body {
+  flex: 1; min-height: 0; display: grid;
+  grid-template-columns: 880px 1px 1fr; gap: 28px; padding: 16px 26px;
+}
+#s18 .rp-div { background: var(--rp-line); }
+
+#s18 .rp-hd { flex: none; height: 32px; display: flex; align-items: baseline; gap: 12px; }
+#s18 .rp-title { font-size: 19px; font-weight: 800; letter-spacing: -.01em; color: var(--rp-ink); }
+#s18 .rp-title span { font-weight: 600; color: var(--rp-neu); }
+#s18 .rp-meta { font-size: 12.5px; color: var(--rp-neu); }
+
+/* ── 회계 원장 ── */
+#s18 .rp-ledger { display: flex; flex-direction: column; }
+
+#s18 .lg-head, #s18 .lg-row, #s18 .lg-sum {
+  display: grid; grid-template-columns: 152px 54px 56px 98px 1fr 100px;
+  gap: 12px; align-items: center; padding: 0 10px;
+}
+#s18 .lg-head {
+  flex: none; height: 26px; font-family: var(--f-mono); font-size: 11px; font-weight: 600;
+  letter-spacing: .12em; color: var(--rp-neu);
+}
+#s18 .lg-head .c-n, #s18 .lg-head .c-ox, #s18 .lg-head .c-sc, #s18 .lg-head .c-ls { text-align: right; }
+/* 헤더 6셀은 컬럼 규칙(.c-name/.c-ox/.c-sc/.c-ls)보다 특이도가 높아야 헤더 스타일을 지킨다 */
+#s18 .lg-head .c-name,
+#s18 .lg-head .c-n,
+#s18 .lg-head .c-ox,
+#s18 .lg-head .c-sc,
+#s18 .lg-head .c-bar,
+#s18 .lg-head .c-ls {
+  font-family: var(--f-mono); font-size: 11px; font-weight: 600;
+  letter-spacing: .12em; color: var(--rp-neu);
+}
+#s18 .lg-head .c-bar { display: block; }
+
+#s18 .lg-rows { flex: none; display: flex; flex-direction: column; }
+#s18 .lg-row {
+  position: relative; height: 45px; width: 100%; text-align: left; cursor: pointer;
+  font-family: inherit; font-size: inherit; font-weight: 400;
+  font-variant-numeric: tabular-nums; color: inherit; background: transparent;
+  border: 0; border-top: 1px solid var(--rp-line); border-radius: 8px;
+  transition: background .14s var(--ease-snap), box-shadow .14s var(--ease-snap);
+}
+#s18 .lg-row:hover { background: var(--rp-surf); }
+#s18 .lg-row::before {
+  content: ''; position: absolute; left: 0; top: 8px; bottom: 8px; width: 3px;
+  border-radius: 999px; background: transparent;
+}
+#s18 .lg-row.is-crit::before { background: var(--rp-bad); }
+#s18 .lg-row.is-crit { background: rgba(225,29,72,.045); }
+#s18 .lg-row.is-sel { background: var(--rp-tint); box-shadow: inset 0 0 0 2px var(--rp-pri); }
+#s18 .lg-row.is-crit.is-sel { background: rgba(225,29,72,.07); }
+#s18 .lg-row:focus-visible { outline: 3px solid var(--rp-pri); outline-offset: 2px; }
+
+#s18 .c-name { font-size: 17px; font-weight: 600; color: var(--rp-ink2); }
+#s18 .lg-row.is-crit .c-name { color: var(--rp-bad); font-weight: 700; }
+#s18 .c-n  { text-align: right; font-size: 13.5px; color: var(--rp-neu); }
+#s18 .c-ox { text-align: right; font-size: 16px; font-weight: 600; color: var(--rp-ink2); }
+#s18 .c-sc { text-align: right; font-size: 15.5px; color: var(--rp-neu); }
+#s18 .c-sc b { font-size: 17px; font-weight: 700; color: var(--rp-ink); }
+#s18 .c-ls { text-align: right; font-size: 15px; font-weight: 700; color: var(--rp-am); }
+#s18 .c-ls.zero { color: var(--rp-neu); font-weight: 600; }
+#s18 .c-ls .pill {
+  display: inline-block; font-style: normal; font-size: 13px; font-weight: 700; color: #fff;
+  background: var(--rp-bad); border-radius: 999px; padding: 4px 10px; letter-spacing: -.01em;
+}
+
+#s18 .c-bar { display: flex; align-items: center; gap: 10px; }
+#s18 .c-bar .trk {
+  flex: 1; height: 10px; border-radius: 999px; background: var(--rp-tint); overflow: hidden;
+}
+#s18 .c-bar .trk i { display: block; height: 100%; border-radius: 999px; background: var(--rp-pri); }
+#s18 .c-bar .pc { flex: none; width: 42px; text-align: right; font-size: 13px; font-weight: 600; color: var(--rp-neu); }
+#s18 .lg-row.is-full .trk i { background: var(--rp-ok); }
+#s18 .lg-row.is-loss .trk i { background: var(--amber); }
+#s18 .lg-row.is-crit .trk i { background: var(--rp-bad); }
+#s18 .lg-row.is-full .pc { color: var(--rp-ok); }
+#s18 .lg-row.is-loss .pc { color: var(--rp-am); }
+#s18 .lg-row.is-crit .pc { color: var(--rp-bad); }
+
+#s18 .lg-sum {
+  flex: none; height: 42px; margin-top: 6px; border-top: 3px double var(--rp-neu);
+}
+#s18 .lg-sum .c-name { font-size: 17px; font-weight: 800; color: #0F172A; }
+#s18 .lg-sum .c-ox { color: var(--rp-ink); font-weight: 700; }
+#s18 .lg-sum .trk i { background: var(--rp-pri); }
+#s18 .lg-sum .pc { color: var(--rp-pri); font-weight: 700; }
+#s18 .lg-note {
+  flex: none; padding: 0 10px; margin-top: 3px; font-family: var(--f-mono);
+  font-size: 11.5px; line-height: 1.4; letter-spacing: .04em; color: var(--rp-neu);
+}
+
+/* ── 오답 심층 분석 ── */
+#s18 .rp-deep { display: flex; flex-direction: column; min-width: 0; }
+#s18 .dp-tabs { flex: none; display: flex; gap: 8px; margin-top: 8px; }
+#s18 .dp-tab {
+  display: inline-flex; align-items: baseline; gap: 8px; cursor: pointer;
+  font-family: var(--f-body); height: 40px; padding: 0 16px; border-radius: 10px;
+  border: 1px solid var(--rp-line); background: #fff; color: var(--rp-neu);
+  transition: all .14s var(--ease-snap);
+}
+#s18 .dp-tab b { font-size: 16px; font-weight: 700; }
+#s18 .dp-tab span { font-size: 14px; font-weight: 500; }
+#s18 .dp-tab:hover { background: var(--rp-surf); }
+#s18 .dp-tab.is-on {
+  border-color: var(--rp-pri); background: var(--rp-tint); color: var(--rp-pri);
+  box-shadow: inset 0 0 0 1px var(--rp-pri);
+}
+#s18 .dp-tab:focus-visible { outline: 3px solid var(--rp-pri); outline-offset: 2px; }
+
+#s18 .dp-card {
+  flex: 1; min-height: 0; margin-top: 12px; display: flex; flex-direction: column;
+  border: 1px solid var(--rp-line); border-radius: 12px; padding: 14px 18px 16px;
+  animation: s18-fade .22s var(--ease-snap);
+}
+#s18 .dp-card[hidden] { display: none; }
+@keyframes s18-fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+#s18 .dp-top { display: flex; align-items: center; gap: 10px; }
+#s18 .dp-no {
+  flex: none; height: 30px; min-width: 30px; padding: 0 8px; border-radius: 8px;
+  background: var(--rp-pri); color: #fff; font-size: 15px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+#s18 .dp-ty { font-size: 17px; font-weight: 800; color: var(--rp-ink); letter-spacing: -.01em; }
+#s18 .dp-tag {
+  margin-left: auto; font-size: 13px; font-weight: 500; color: var(--rp-neu);
+  background: var(--rp-tint); border: 1px solid var(--rp-line);
+  border-radius: 999px; padding: 4px 12px;
+}
+
+#s18 .dp-lab {
+  display: block; font-size: 12.5px; font-weight: 700; letter-spacing: .08em; color: var(--rp-mut);
+}
+#s18 .dp-obs {
+  margin-top: 12px; padding: 12px 15px; border-radius: 10px;
+  background: var(--rp-surf); border: 1px solid var(--rp-line);
+}
+#s18 .dp-obs p { margin-top: 6px; font-size: 15.5px; line-height: 1.78; color: var(--rp-ink2); }
+#s18 .dp-fix { margin-top: auto; padding: 4px 0 0 14px; border-left: 3px solid var(--rp-pri); }
+#s18 .dp-fix .dp-lab { color: var(--rp-pri); }
+#s18 .dp-fix p { margin-top: 5px; font-size: 15.5px; line-height: 1.78; color: var(--rp-ink2); }
+#s18 .dp-card em {
+  font-style: normal; font-weight: 700; color: var(--rp-ink);
+  background: linear-gradient(transparent 62%, rgba(29,78,216,.18) 62%);
+}
+
+/* 문서 크롬 — 하단 */
+#s18 .rp-foot {
+  flex: none; height: 28px; display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; background: var(--rp-surf); border-top: 1px solid var(--rp-line);
+  font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .1em; color: var(--rp-neu);
+}
+#s18 .rp-tip { color: var(--rp-pri); font-weight: 600; letter-spacing: .14em; }
+
+/* ══════════ 하단 ══════════ */
+#s18 .s18-foot { flex: none; height: 104px; margin-top: 22px; display: flex; flex-direction: column; gap: 12px; }
+
+#s18 .s18-weak { height: 46px; display: flex; align-items: center; gap: 10px; }
+#s18 .wk-lab {
+  flex: none; font-size: 10.5px; font-weight: 600; letter-spacing: .18em; color: var(--amber);
+  padding-right: 4px;
+}
+#s18 .wk {
+  display: inline-flex; align-items: center; gap: 9px; height: 38px; padding: 0 14px;
+  border-radius: 10px; background: rgba(245,158,11,.08); border: 1px solid rgba(245,158,11,.34);
+}
+#s18 .wk b { font-size: 14.5px; font-weight: 600; color: #F8CE8B; }
+#s18 .wk i {
+  font-style: normal; font-family: var(--f-mono); font-size: 11.5px; color: var(--amber);
+  background: rgba(245,158,11,.16); border-radius: 5px; padding: 3px 7px;
+}
+
+#s18 .s18-close { height: 46px; display: flex; align-items: center; gap: 24px; }
+#s18 .s18-hook {
+  font-family: var(--f-display); font-weight: 800; font-size: 30px; letter-spacing: -.022em;
+  color: var(--white); line-height: 1.2;
+}
+#s18 .s18-hook em {
+  font-style: normal; color: var(--blue-light);
+  background-image: linear-gradient(transparent 60%, rgba(59,130,246,.34) 60%);
+}
+#s18 .s18-cost {
+  margin-left: auto; display: inline-flex; align-items: center; gap: 10px;
+  height: 42px; padding: 0 18px; border-radius: 999px; font-size: 15px; color: #A9B4C8;
+  background: rgba(16,23,37,.8); border: 1px solid var(--ink-3);
+}
+#s18 .s18-cost .mono { font-size: 10.5px; letter-spacing: .2em; color: var(--txt-4); }
+#s18 .s18-cost b { font-family: var(--f-display); font-weight: 800; font-size: 19px; color: var(--blue-light); }
+</style>
+
+<script>
+(() => {
+  const sec = document.getElementById('s18');
+  if (!sec) return;
+  const rows  = [...sec.querySelectorAll('#s18-rows .lg-row')];
+  const tabs  = [...sec.querySelectorAll('#s18-tabs .dp-tab')];
+  const cards = { q12: sec.querySelector('#s18-q12'), q9: sec.querySelector('#s18-q9') };
+  const DEF_Q   = 'q12';  // 12번 · 어법
+  const DEF_ROW = '4';    // 어법 행 — 기본 활성 탭(12번 어법)과 동일 항목
+
+  const selectRow = (row) => rows.forEach((x) => x.classList.toggle('is-sel', x === row));
+
+  const showQ = (key) => {
+    if (!cards[key]) return;
+    tabs.forEach((t) => t.classList.toggle('is-on', t.dataset.q === key));
+    Object.keys(cards).forEach((k) => { if (cards[k]) cards[k].hidden = (k !== key); });
+  };
+
+  rows.forEach((row) => row.addEventListener('click', (e) => {
+    e.stopPropagation();
+    selectRow(row);
+    if (row.dataset.q) showQ(row.dataset.q);
+  }));
+
+  tabs.forEach((tab) => tab.addEventListener('click', (e) => {
+    e.stopPropagation();
+    showQ(tab.dataset.q);
+    const linked = rows.find((x) => x.dataset.q === tab.dataset.q);
+    if (linked) selectRow(linked);
+  }));
+
+  const reset = () => {
+    selectRow(rows.find((x) => x.dataset.r === DEF_ROW) || null);
+    showQ(DEF_Q);
+  };
+
+  reset();
+  sec.addEventListener('slide:enter', reset);
+})();
+</script>
+</section>

@@ -138,12 +138,32 @@ export function CropCanvas({
   }, []);
 
   // 포인터 이동/해제는 window 레벨에서 처리(박스 밖으로 나가도 추적).
+  // 주의: 드래그 중 매 프레임 onChange(boxes) 디스패치는 유지한다 — 부모
+  // 보드의 검수 카드 미리보기(cropBgStyle)가 드래그 중 실시간으로 따라
+  // 그려지는 것이 현재 동작이라, 커밋을 pointerup 으로 미루면 회귀다.
   const beginDrag = useCallback(
-    (mode: DragState) => {
+    (mode: DragState, event: React.PointerEvent) => {
       if (disabled) return;
       const rect = readRect();
       if (!rect) return;
       dragRef.current = mode;
+
+      // 포인터 캡처 — 커서/손가락이 캔버스를 벗어나도 드래그가 끊기지 않는다.
+      // 좌표 계산은 window 리스너 + clientX/Y 그대로라 동작 불변.
+      const captureEl = event.currentTarget as HTMLElement | null;
+      const pointerId = event.pointerId;
+      try {
+        captureEl?.setPointerCapture(pointerId);
+      } catch {
+        // 캡처 미지원 브라우저는 window 리스너로 폴백
+      }
+
+      // body 스타일은 저장·복원 방식으로 — 드래그 중 hover 재평가를 차단하고
+      // (pointerEvents), 커서는 드래그 모드에 맞게 고정한다. 이 캔버스는
+      // elementFromPoint 히트테스트를 쓰지 않아 pointerEvents:'none' 이 안전.
+      const prevCursor = document.body.style.cursor;
+      const prevSelect = document.body.style.userSelect;
+      const prevPointerEvents = document.body.style.pointerEvents;
 
       const handleMove = (ev: PointerEvent) => {
         lastPointRef.current = { x: ev.clientX, y: ev.clientY };
@@ -179,6 +199,7 @@ export function CropCanvas({
       const handleUp = () => {
         window.removeEventListener("pointermove", handleMove);
         window.removeEventListener("pointerup", handleUp);
+        window.removeEventListener("pointercancel", handleUp);
         if (rafRef.current) {
           cancelAnimationFrame(rafRef.current);
           rafRef.current = 0;
@@ -199,12 +220,30 @@ export function CropCanvas({
           }
         }
         dragRef.current = null;
-        document.body.style.userSelect = "";
+        document.body.style.cursor = prevCursor;
+        document.body.style.userSelect = prevSelect;
+        document.body.style.pointerEvents = prevPointerEvents;
+        try {
+          captureEl?.releasePointerCapture(pointerId);
+        } catch {
+          // ignore
+        }
       };
 
       window.addEventListener("pointermove", handleMove);
       window.addEventListener("pointerup", handleUp);
+      // 터치 제스처가 OS 에 의해 취소돼도(pointercancel) 리스너·body 스타일이
+      // 새지 않게 동일 핸들러로 정리한다.
+      window.addEventListener("pointercancel", handleUp);
       document.body.style.userSelect = "none";
+      // 드래그 중 커서를 모드에 맞게 고정 + hover 스타일 재평가 차단.
+      document.body.style.cursor =
+        mode.mode === "move"
+          ? "move"
+          : mode.mode === "resize"
+            ? HANDLE_CURSOR[mode.handle]
+            : "crosshair";
+      document.body.style.pointerEvents = "none";
     },
     [boxes, disabled, onActiveIndexChange, onChange, readRect],
   );
@@ -218,12 +257,15 @@ export function CropCanvas({
       e.preventDefault();
       const { x, y } = toNormalized(e.clientX, e.clientY, rect);
       if (!e.shiftKey) onActiveIndexChange(null);
-      beginDrag({
-        mode: "draw",
-        originX: x,
-        originY: y,
-        joinWithActiveGroup: e.shiftKey,
-      });
+      beginDrag(
+        {
+          mode: "draw",
+          originX: x,
+          originY: y,
+          joinWithActiveGroup: e.shiftKey,
+        },
+        e,
+      );
     },
     [beginDrag, disabled, onActiveIndexChange, readRect],
   );
@@ -238,13 +280,16 @@ export function CropCanvas({
       if (!rect) return;
       const { x, y } = toNormalized(e.clientX, e.clientY, rect);
       onActiveIndexChange(index);
-      beginDrag({
-        mode: "move",
-        index,
-        grabX: x,
-        grabY: y,
-        start: boxes[index],
-      });
+      beginDrag(
+        {
+          mode: "move",
+          index,
+          grabX: x,
+          grabY: y,
+          start: boxes[index],
+        },
+        e,
+      );
     },
     [beginDrag, boxes, disabled, onActiveIndexChange, readRect],
   );
@@ -256,7 +301,7 @@ export function CropCanvas({
       e.preventDefault();
       e.stopPropagation();
       onActiveIndexChange(index);
-      beginDrag({ mode: "resize", index, handle });
+      beginDrag({ mode: "resize", index, handle }, e);
     },
     [beginDrag, disabled, onActiveIndexChange],
   );

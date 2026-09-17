@@ -356,3 +356,201 @@ test("worksheet-study compile contract", () => {
   assert.deepEqual(result.failures, [], `실패한 검증: ${result.failures.join(", ")}`);
   assert.ok(result.passed > 30, `검증 수가 비정상적으로 적습니다: ${result.passed}`);
 });
+
+// ============================================================================
+// 수술 계약 검증 — 스테이지 화이트리스트 · 어휘 오답 자산 주입
+// (docs/worksheet-study-spec.md §12.5 / docs/class-studio-spec.md §7·§9·§13.2)
+//
+//  - stages 화이트리스트: 필터·stageFilter 정렬본·planHash 반영, 부재 시 완전 무회귀
+//  - planIsViable: stageFilter 명시 plan 은 채점 스테이지 ≥1, 부재 시 현행 ≥2 유지
+//  - resolveStudyConfig: payload.study.stages 유효만 dedupe, 빈 결과는 필드 부재
+//  - vocabAssets: 코퍼스 오답 우선 소비·bannedKo 절대 배제·결정론·어간공유 가드
+// ============================================================================
+const surgeryHarnessSource = `
+import compileMod from "@/lib/worksheet-study/compile";
+import typesMod from "@/lib/worksheet-study/types";
+import fixtureMod from "@/lib/passage-report/analysis-report/fixture";
+const { compileStudyPlan, planIsViable } = compileMod as any;
+const { resolveStudyConfig } = typesMod as any;
+const { RECALL_RECOGNITION_FIXTURE } = fixtureMod as any;
+
+const failures: string[] = [];
+let passed = 0;
+function check(name: string, cond: boolean) {
+  if (cond) passed += 1;
+  else failures.push(name);
+}
+
+const report = RECALL_RECOGNITION_FIXTURE;
+const base = { report, mode: "standard" as const, taskId: "task-a", reportTitle: "t" };
+const normLite = (s: string) => s.trim().toLowerCase().replace(/\\s+/g, " ");
+const quizOf = (pl: any) => pl.stages.find((s: any) => s.id === "vocab-quiz");
+const wrongChoices = (it: any) =>
+  it.choices.filter((c: any) => c.label !== it.answerLabel).map((c: any) => c.text);
+
+// ── 1. stages 화이트리스트 필터 ───────────────────────────────────────────────
+const planFull = compileStudyPlan({ ...base });
+const planFull2 = compileStudyPlan({ ...base });
+const planWl = compileStudyPlan({ ...base, stages: ["vocab-quiz"] });
+check("WL-1 화이트리스트 → 스테이지가 vocab-quiz 만", planWl.stages.length === 1 && planWl.stages[0].id === "vocab-quiz");
+check("WL-1 stageFilter 정렬본 존재", JSON.stringify(planWl.stageFilter) === JSON.stringify(["vocab-quiz"]));
+check("WL-1 planHash 화이트리스트 반영(전체 plan 과 상이)", planWl.planHash !== planFull.planHash);
+const planWl2 = compileStudyPlan({ ...base, stages: ["vocab-quiz", "cloze"] });
+check("WL-1 stageFilter 는 입력 순서 무관 정렬본", JSON.stringify(planWl2.stageFilter) === JSON.stringify(["cloze", "vocab-quiz"]));
+check("WL-1 스테이지 순서는 프리셋 순서 유지(필터 전용)", planWl2.stages.map((s: any) => s.id).join() === "vocab-quiz,cloze");
+
+// ── 2. 화이트리스트 부재 = 완전 무회귀 ───────────────────────────────────────
+check("WL-2 부재 → stageFilter 필드 부재", !("stageFilter" in planFull));
+check("WL-2 부재 → 같은 입력 두 번 planHash·아이템 동일", planFull.planHash === planFull2.planHash && JSON.stringify(planFull.stages) === JSON.stringify(planFull2.stages));
+const planEmpty = compileStudyPlan({ ...base, stages: [] });
+check("WL-2 빈 배열 = 부재(planHash 동일·필터 부재)", planEmpty.planHash === planFull.planHash && !("stageFilter" in planEmpty));
+
+// ── 3. planIsViable — stageFilter 유무에 따른 minGraded 분기 ─────────────────
+check("WL-3 화이트리스트 plan 은 채점 스테이지 1개", planWl.stages.filter((s: any) => s.graded).length === 1);
+check("WL-3 화이트리스트 채점 1개 → viable=true", planIsViable(planWl) === true);
+const { stageFilter: _sf, ...planWlNoFilter } = planWl;
+check("WL-3 동일 구성에서 필터만 제거 → 채점 1개는 viable=false", planIsViable(planWlNoFilter) === false);
+const planReadingOnly = compileStudyPlan({ ...base, stages: ["reading"] });
+check("WL-3 무채점 스테이지만 화이트리스트 → viable=false", planReadingOnly.stages.every((s: any) => !s.graded) && planIsViable(planReadingOnly) === false);
+
+// ── 4. resolveStudyConfig — stages 파스 ──────────────────────────────────────
+const cfgMixed = resolveStudyConfig({
+  study: { mode: "light", required: true, stages: ["vocab-quiz", "bogus", "vocab-quiz", "cloze", 42, "reading"] },
+});
+check("RC-4 유효 id 만 dedupe 통과(순서 보존)", JSON.stringify(cfgMixed.stages) === JSON.stringify(["vocab-quiz", "cloze", "reading"]));
+check("RC-4 mode·required 보존", cfgMixed.mode === "light" && cfgMixed.required === true);
+const cfgEmptyArr = resolveStudyConfig({ study: { mode: "standard", stages: [] } });
+check("RC-4 빈 배열 → stages 필드 부재", !("stages" in cfgEmptyArr));
+const cfgAllBad = resolveStudyConfig({ study: { stages: ["nope", 3, null] } });
+check("RC-4 전부 무효 → stages 필드 부재", !("stages" in cfgAllBad));
+
+// ── 5. vocabAssets 소비 — 코퍼스 오답 우선·bannedKo 절대 배제 ────────────────
+const vocabRows = (report.sections.find((s: any) => s.kind === "vocabulary")?.rows ?? []) as any[];
+const baseQuiz = quizOf(planFull);
+// 단어→뜻 방향(promptEn=true)에 실제로 배정된 표제어를 기준선에서 찾는다
+// (방향은 seeded 셔플 인덱스가 정하므로 임의 행을 고르면 방향이 어긋날 수 있다).
+const mcKo = baseQuiz?.items.find((it: any) => it.type === "mc" && it.promptEn === true);
+check("VA-5 기준선에 단어→뜻 문항 존재", !!mcKo);
+const targetHead = String(mcKo?.wordKey ?? "");
+const fakeAsset = {
+  koDistractors: ["가짜뜻1", "가짜뜻2", "가짜뜻3", "가짜뜻4"],
+  enDistractors: ["fakeworda", "fakewordb", "fakewordc"],
+  bannedKo: [],
+};
+const planAsset = compileStudyPlan({ ...base, vocabAssets: { [normLite(targetHead)]: fakeAsset } });
+const itAsset = quizOf(planAsset)?.items.find(
+  (it: any) => it.type === "mc" && it.promptEn === true && it.wordKey === targetHead,
+);
+check("VA-5 자산 주입 후 같은 표제어 문항 존재", !!itAsset);
+const assetWrongs: string[] = itAsset ? wrongChoices(itAsset) : [];
+check("VA-5 가짜 뜻이 오답에 포함", assetWrongs.some((t) => t.startsWith("가짜뜻")));
+check("VA-5 코퍼스 자산 우선(오답 3개 전부 자산 출신)", assetWrongs.length === 3 && assetWrongs.every((t) => t.startsWith("가짜뜻")));
+
+// bannedKo — 학습지 내 다른 행의 meaning 을 금지하면 그 표기가 오답에 절대 등장하지 않는다
+const normKoLite = (s: string) =>
+  s.replace(/\\([^)]*\\)/g, "").replace(/[~〜∼]/g, "").replace(/[\\s·]/g, "").trim();
+const koTokensLite = (s: string) => s.split(/[,;/·]/).map(normKoLite).filter((t) => t.length > 0);
+const bannedRow = vocabRows.find((r: any) => normLite(String(r.headword)) !== normLite(targetHead));
+const bannedMeaning = String(bannedRow?.meaning ?? "");
+const planBanned = compileStudyPlan({
+  ...base,
+  vocabAssets: { [normLite(targetHead)]: { koDistractors: [], enDistractors: [], bannedKo: [bannedMeaning] } },
+});
+const itBanned = quizOf(planBanned)?.items.find(
+  (it: any) => it.type === "mc" && it.promptEn === true && it.wordKey === targetHead,
+);
+check("VA-5 bannedKo 적용 후에도 문항 성립(폴백 풀 충분)", !!itBanned);
+const bannedToks = new Set(koTokensLite(bannedMeaning));
+check(
+  "VA-5 bannedKo 표기는 오답에 절대 등장하지 않음",
+  !!itBanned && wrongChoices(itBanned).every((t: string) => koTokensLite(t).every((tok) => !bannedToks.has(tok))),
+);
+
+// ── 6. 결정론 — 같은 vocabAssets 주입 두 번 → 아이템 JSON 동일 ──────────────
+const assetsAll: Record<string, typeof fakeAsset> = {};
+for (const r of vocabRows) assetsAll[normLite(String(r.headword))] = fakeAsset;
+const planDet1 = compileStudyPlan({ ...base, vocabAssets: assetsAll });
+const planDet2 = compileStudyPlan({ ...base, vocabAssets: assetsAll });
+check("VA-6 같은 자산 두 번 → 아이템 JSON 동일", JSON.stringify(planDet1.stages) === JSON.stringify(planDet2.stages));
+check("VA-6 같은 자산 두 번 → planHash 동일", planDet1.planHash === planDet2.planHash);
+
+// ── 7. 뜻→단어 어간공유 가드 ─────────────────────────────────────────────────
+const enStemLite = (s: string) => normLite(s).replace(/[^a-z]/g, "");
+const stemShareLiteH = (a: string, b: string) => {
+  const x = enStemLite(a);
+  const y = enStemLite(b);
+  if (x.length < 4 || y.length < 4) return false;
+  const n = Math.min(x.length, y.length, 5);
+  return x.slice(0, n) === y.slice(0, n);
+};
+// (a) 자산 부재 폴백 — 기준선 전 뜻→단어 문항에서 정답과 어간공유 오답이 없다
+const enItems = (baseQuiz?.items ?? []).filter((it: any) => it.type === "mc" && !it.promptEn);
+check("SS-7 기준선에 뜻→단어 문항 존재", enItems.length > 0);
+check(
+  "SS-7 폴백 오답에 정답 어간공유 없음(전 문항)",
+  enItems.every((it: any) => {
+    const ans = it.choices.find((c: any) => c.label === it.answerLabel)!.text;
+    return wrongChoices(it).every((t: string) => !stemShareLiteH(t, ans));
+  }),
+);
+// (b) 어간공유 가드는 **폴백 티어에만** 적용된다(적대검수 2026-08-09 설계 정정):
+//     코퍼스 자산(primary=enDistractors)은 이미 어간공유·동의어를 사전 배제한 검증분이라
+//     even→event 같은 순수 혼동어를 앞 5자 공유만으로 죽이지 않는다. 따라서 자산으로 넣은
+//     어간공유 단어는 **통과**하고(면제), 폴백 풀에서 뽑히는 어간공유 단어만 배제된다.
+const mcEn = enItems.find((it: any) => enStemLite(String(it.wordKey ?? "")).length >= 5);
+check("SS-7 어간공유 주입 대상 문항 존재", !!mcEn);
+const enHead = String(mcEn?.wordKey ?? "");
+const stemMate = enStemLite(enHead).slice(0, 5) + "ology";
+const planStem = compileStudyPlan({
+  ...base,
+  vocabAssets: {
+    [normLite(enHead)]: {
+      koDistractors: [],
+      enDistractors: [stemMate, "fakeworda", "fakewordb", "fakewordc"],
+      bannedKo: [],
+    },
+  },
+});
+const itStem = quizOf(planStem)?.items.find(
+  (it: any) => it.type === "mc" && !it.promptEn && it.wordKey === enHead,
+);
+check("SS-7 자산 주입 후 문항 존재", !!itStem);
+const stemWrongs: string[] = itStem ? wrongChoices(itStem) : [];
+// 자산(primary) 어간공유는 면제 → stemMate 가 선지에 등장할 수 있다(3개 우선순위 안이면).
+check(
+  "SS-7 자산 어간공유 오답은 면제(primary — 코퍼스 검증분)",
+  stemWrongs.some((t) => normLite(t) === normLite(stemMate)),
+);
+// (c) 폴백 경로 배제 — 자산 없이, 학습지 폴백에서 정답과 어간공유하는 후보를 강제로
+//     넣어도(가짜 자산의 fallback 은 조작 불가하므로 정답 자체 파생형을 fallback 에 심을 수
+//     없다) → 대신 폴백 전 문항 무위반((a))이 폴백 배제의 증거다. 여기선 자산 나머지 2개가
+//     fakeword 로 채워졌는지만 확인(자산 우선 소비 정합).
+check(
+  "SS-7 자산 오답 3개는 주입 목록에서만(전부 stemMate 또는 fakeword)",
+  stemWrongs.length === 3 &&
+    stemWrongs.every((t) => normLite(t) === normLite(stemMate) || t.startsWith("fakeword")),
+);
+
+console.log(JSON.stringify({ passed, failures }));
+`;
+
+test("worksheet-study 수술 계약 (stages 화이트리스트 · vocabAssets)", () => {
+  const tmpDir = path.join(repoRoot, "tests", ".tmp-worksheet-study");
+  mkdirSync(tmpDir, { recursive: true });
+  const harnessPath = path.join(tmpDir, ".surgery-harness.mts");
+  let raw;
+  try {
+    writeFileSync(harnessPath, surgeryHarnessSource, "utf8");
+    raw = execSync(`npx tsx "${harnessPath}"`, {
+      cwd: repoRoot,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+  } finally {
+    rmSync(harnessPath, { force: true });
+  }
+  const lines = raw.trim().split(/\r?\n/);
+  const result = JSON.parse(lines[lines.length - 1]);
+  assert.deepEqual(result.failures, [], `실패한 검증: ${result.failures.join(", ")}`);
+  assert.ok(result.passed > 20, `검증 수가 비정상적으로 적습니다: ${result.passed}`);
+});

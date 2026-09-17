@@ -267,19 +267,49 @@ export function WebtoonTextEditor({
       const startY = event.clientY;
       const startTop = zoomCtrlPos.top;
       const startRight = zoomCtrlPos.right;
+      // 드래그 고속 경로 앵커 — 그립(span)의 부모가 PreviewZoomControls 루트
+      // (style top/right 를 그리는 요소)다. 이동 중에는 여기에 rAF 코얼레싱으로
+      // 직접 쓰고, 놓을 때 한 번만 setState 로 커밋한다(매 mousemove setState 는
+      // Konva 스테이지 포함 에디터 전체를 프레임마다 리렌더). 앵커가 없으면
+      // 종전 setState 경로 폴백(무회귀).
+      const ctrlEl = event.currentTarget.parentElement as HTMLElement | null;
+      const prevCursor = document.body.style.cursor;
+      const prevSelect = document.body.style.userSelect;
+      const prevPointerEvents = document.body.style.pointerEvents;
       document.body.style.cursor = "grabbing";
       document.body.style.userSelect = "none";
+      // 드래그 중 hover 스타일 재평가 차단 — document 리스너라 move 수신은 유지.
+      document.body.style.pointerEvents = "none";
+      let latest = { top: startTop, right: startRight };
+      let rafId: number | null = null;
+      const flush = () => {
+        rafId = null;
+        if (ctrlEl) {
+          ctrlEl.style.top = `${latest.top}px`;
+          ctrlEl.style.right = `${latest.right}px`;
+        }
+      };
       const onMove = (e: MouseEvent) => {
-        setZoomCtrlPos({
+        latest = {
           top: Math.max(0, startTop + (e.clientY - startY)),
           right: Math.max(0, startRight - (e.clientX - startX)),
-        });
+        };
+        if (ctrlEl) {
+          if (rafId === null) rafId = requestAnimationFrame(flush);
+        } else {
+          setZoomCtrlPos(latest);
+        }
       };
       const onUp = () => {
         document.removeEventListener("mousemove", onMove);
         document.removeEventListener("mouseup", onUp);
-        document.body.style.cursor = "";
-        document.body.style.userSelect = "";
+        if (rafId !== null) cancelAnimationFrame(rafId);
+        flush();
+        // 커밋 1회 — 드래그 내내 리렌더 0회.
+        setZoomCtrlPos(latest);
+        document.body.style.cursor = prevCursor;
+        document.body.style.userSelect = prevSelect;
+        document.body.style.pointerEvents = prevPointerEvents;
       };
       document.addEventListener("mousemove", onMove);
       document.addEventListener("mouseup", onUp);

@@ -21,6 +21,29 @@ export const revalidate = 0;
 // 기본 서버리스 타임아웃을 넘길 수 있어 상한을 명시한다(플랫폼이 자체 한도로 클램프).
 export const maxDuration = 300;
 
+/**
+ * 표지(HWPX section0) 정보 박스의 시험일 표기 — "YYYY-MM-DD".
+ *
+ * exams.examDate 는 DB 에 UTC 로 들어있다. 런타임 로컬 타임존(배포 서버는 UTC)으로
+ * 포매팅하면 KST 기준 하루가 어긋나므로, 리포의 다른 서울 날짜 키(vocab-drill
+ * seoulDayKey / study-assignments seoulDay)와 같이 Intl 에 timeZone 을 못 박아 뽑는다.
+ * ("en-CA" 로케일이 정확히 YYYY-MM-DD 를 준다.)
+ * 빌더 미리보기의 formatExamDate 도 같은 형식이지만 그쪽은 Date 로컬 getter 를 쓰는
+ * 클라이언트 컴포넌트라 서버에서 재사용할 수 없다.
+ */
+const EXAM_DATE_LABEL_FORMAT = new Intl.DateTimeFormat("en-CA", {
+  timeZone: "Asia/Seoul",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+
+function formatExamDateLabel(value: Date | string | null): string {
+  if (!value) return "";
+  const date = value instanceof Date ? value : new Date(value);
+  return Number.isNaN(date.getTime()) ? "" : EXAM_DATE_LABEL_FORMAT.format(date);
+}
+
 function parseSettings(settings: string | null): BuilderSettings | null {
   if (!settings) return null;
   try {
@@ -77,6 +100,11 @@ function resolveBuilderItems(
         blockBold: fmtBlock?.blockBold ?? false,
         blockItalic: fmtBlock?.blockItalic ?? false,
         blockAlign: fmtBlock?.blockAlign ?? "left",
+        // 강제 나눔(쪽/단)·「앞 항목에 붙이기」도 서식과 같은 이유로 blocks 가 정본이다
+        // (v2 빌더가 실제로 편집하는 배열). 레거시 items 저장분을 위해 item 값으로 폴백.
+        // HWPX 조판(appendQuestionGroups)이 이 두 값을 읽어 SPEC §3.2 를 적용한다.
+        breakBefore: fmtBlock?.breakBefore ?? item.breakBefore ?? "auto",
+        keepWithPrev: fmtBlock?.keepWithPrev ?? item.keepWithPrev ?? false,
         sourceQuestion: original.question,
       } as BuilderItemResolved;
     })
@@ -198,14 +226,27 @@ export async function GET(
     const examQuestions = exam.questions as unknown as ExamQuestionData[];
 
     // 한컴이 임베드 못 하는 이미지 포맷(webp 등)을 PNG 로 변환 — hp:pic 임베드에 png/jpg/gif/bmp 만.
-    if (Array.isArray(settings?.blocks)) {
-      await Promise.all(
-        settings.blocks.map(async (b) => {
-          if (b.blockType === "image" && b.imageDataUrl) {
-            b.imageDataUrl = await toEmbeddableImageDataUrl(b.imageDataUrl);
+    // 본문 이미지 블록과 **학원 로고**를 함께 변환한다. 로고는 E36 에서 표지에 렌더되기
+    // 시작했는데(그 전에는 HWPX 어디에도 안 그려졌다) 여기서 빠뜨리면 webp 로고가
+    // cover.ts 의 디코드에서 조용히 탈락해 표지에 아무것도 안 나온다.
+    // (DOCX 라우트는 이미 같은 변환을 한다 — export-docx/route.ts 의 academyLogoDataUrl.)
+    if (settings) {
+      await Promise.all([
+        ...(Array.isArray(settings.blocks)
+          ? settings.blocks.map(async (b) => {
+              if (b.blockType === "image" && b.imageDataUrl) {
+                b.imageDataUrl = await toEmbeddableImageDataUrl(b.imageDataUrl);
+              }
+            })
+          : []),
+        (async () => {
+          if (settings.header?.academyLogoDataUrl) {
+            settings.header.academyLogoDataUrl = await toEmbeddableImageDataUrl(
+              settings.header.academyLogoDataUrl,
+            );
           }
-        }),
-      );
+        })(),
+      ]);
     }
 
     const resolvedItems = settings
@@ -226,6 +267,8 @@ export async function GET(
       resolvedItems,
       includeAnswers,
       fullExamQuestions,
+      // 표지 정보 박스의 "시험일" 칸 — exam.examDate 는 settings 에 없어서 따로 넘긴다.
+      examDateLabel: formatExamDateLabel(exam.examDate),
     });
 
     const buffer = await packageHwpx(doc);

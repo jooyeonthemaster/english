@@ -42,6 +42,8 @@ import {
   examPayloadDurationMin,
   isStudyAssignmentKind,
 } from "@/lib/study-assignments/types";
+import { isStudioModuleId } from "@/lib/studio/modules";
+import { sanitizeStudyStages } from "@/lib/worksheet-study/types";
 import { loadTaskLiveMap } from "@/lib/study-assignments/task-union";
 import {
   STUDY_ASSIGNMENT_PATHS,
@@ -82,7 +84,14 @@ export interface CreateStudyAssignmentInput {
   /** study: 모바일 스터디 모드 — 미지정 시 { mode:"standard", required:true } 로 배포 */
   worksheet?: {
     passageReportId: string;
-    study?: { mode: "off" | "light" | "standard" | "intense"; required: boolean };
+    /** stages: 스테이지 화이트리스트(클래스 스튜디오 모듈 배포) — 미지정 = 전체 코스 */
+    study?: {
+      mode: "off" | "light" | "standard" | "intense";
+      required: boolean;
+      stages?: string[];
+    };
+    /** 클래스 스튜디오 역조회 스탬프 — payload.studio 로 저장(다른 소비처는 무시) */
+    studio?: { classId: string; passageId: string; modules: string[] };
   };
   questions?: { questionIds: string[] };
   grammar?: GrammarAssignmentPayload;
@@ -209,11 +218,37 @@ export async function createStudyAssignment(
         rawStudy?.mode === "intense"
           ? rawStudy.mode
           : "standard";
+      // 스테이지 화이트리스트(클래스 스튜디오 모듈 배포) — 유효 id 만 통과, 빈 결과 무시.
+      const stages = sanitizeStudyStages(rawStudy?.stages);
       const study = {
         mode: studyMode,
         required: studyMode !== "off" && rawStudy?.required !== false,
+        ...(studyMode !== "off" && stages ? { stages } : {}),
       };
-      payload = { passageTitle: report.title, study } satisfies WorksheetAssignmentPayload;
+      // 스튜디오 스탬프 방어 정규화 — classId/passageId 길이 캡 + modules 는 정본
+      // 매핑(isStudioModuleId)만 통과(임의 문자열이 결과 탭 칩까지 흐르는 것 차단).
+      const rawStudio = input.worksheet.studio;
+      const studioStamp =
+        rawStudio &&
+        typeof rawStudio.classId === "string" &&
+        rawStudio.classId.length <= 64 &&
+        typeof rawStudio.passageId === "string" &&
+        rawStudio.passageId.length <= 64
+          ? {
+              studio: {
+                classId: rawStudio.classId,
+                passageId: rawStudio.passageId,
+                modules: Array.isArray(rawStudio.modules)
+                  ? rawStudio.modules.filter(isStudioModuleId).slice(0, 16)
+                  : [],
+              },
+            }
+          : {};
+      payload = {
+        passageTitle: report.title,
+        study,
+        ...studioStamp,
+      } satisfies WorksheetAssignmentPayload;
     } else if (input.kind === "QUESTIONS") {
       const questionIds = [...new Set(input.questions?.questionIds ?? [])].filter(Boolean);
       if (questionIds.length === 0) {
@@ -667,13 +702,17 @@ export async function redeployStudyAssignment(
       if (!original.refId) {
         return { success: false, error: "원본 학습지가 삭제되어 다시 보낼 수 없습니다." };
       }
-      const study = (payload as WorksheetAssignmentPayload).study;
+      const wsPayload = payload as WorksheetAssignmentPayload;
+      const study = wsPayload.study;
+      // 클래스 스튜디오 스탬프 보존 — 재배포된 과제가 결과 탭·이력에서 사라지지 않게.
+      const studio = wsPayload.studio;
       return createStudyAssignment({
         ...base,
         kind: "WORKSHEET",
         worksheet: {
           passageReportId: original.refId,
           ...(study ? { study } : {}),
+          ...(studio ? { studio } : {}),
         },
       });
     }

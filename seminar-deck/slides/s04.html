@@ -1,0 +1,169 @@
+<section class="slide slide--dark" id="s04"
+  data-title="NIGHT" data-kr="시험 2주 전, 밤 11시"
+  data-zone="문제" data-zone-en="PROBLEM"
+  data-part="PART 1 — 기능 브리핑"
+  data-in="교재 한 페이지"
+  data-out="시험지 한 부 (밤을 새워서)"
+  data-note="현재 방식">
+
+  <!-- 밤 오버레이 + 창문 불빛 -->
+  <div class="s04-night" aria-hidden="true"></div>
+
+  <div class="pad s04-wrap">
+
+    <!-- ── 헤드 ── -->
+    <div class="s04-head">
+      <div class="kicker" data-step="0" data-fx="none">우리가 지금 하고 있는 일</div>
+
+      <h1 class="s04-title" data-step="0">
+        시험 2주 전,<br>
+        밤 11시의 책상.
+      </h1>
+
+      <p class="s04-lead" data-step="0" data-fx="none">
+        선생님 한 분이 시험지 한 부를 만들기까지, 지금은 이만큼을 건너야 합니다.
+      </p>
+    </div>
+
+    <!-- ── 흩어진 여덟 공정 ── -->
+    <div class="s04-cards">
+      <div class="pcw" data-step="1" data-fx="none" style="--d:.00s; --dx:6px;   --dy:-16px; --rot:-1.8deg">
+        <div class="pc"><i>01</i><b>교재 스캔</b><s>· 복합기</s></div>
+      </div>
+      <div class="pcw" data-step="1" data-fx="none" style="--d:.05s; --dx:5px;   --dy:-9px;  --rot:1.4deg">
+        <div class="pc"><i>02</i><b>지문 타이핑</b><s>· 워드</s></div>
+      </div>
+      <div class="pcw" data-step="1" data-fx="none" style="--d:.10s; --dx:-3px;  --dy:-7px;  --rot:2deg">
+        <div class="pc"><i>03</i><b>문항 출제</b><s>· 손</s></div>
+      </div>
+      <div class="pcw" data-step="1" data-fx="none" style="--d:.15s; --dx:-7px;  --dy:15px;  --rot:-1.2deg">
+        <div class="pc"><i>04</i><b>선지·해설 작성</b><s>· 손</s></div>
+      </div>
+      <div class="pcw" data-step="1" data-fx="none" style="--d:.20s; --dx:9px;   --dy:8px;   --rot:1.7deg">
+        <div class="pc"><i>05</i><b>시험지 조판</b><s>· 한글</s></div>
+      </div>
+      <div class="pcw" data-step="1" data-fx="none" style="--d:.25s; --dx:3px;   --dy:7px;   --rot:-2deg">
+        <div class="pc"><i>06</i><b>인쇄·배부</b><s>· 복사기</s></div>
+      </div>
+      <div class="pcw" data-step="1" data-fx="none" style="--d:.30s; --dx:6px;   --dy:5px;   --rot:1.1deg">
+        <div class="pc"><i>07</i><b>채점·오답 정리</b><s>· 빨간펜</s></div>
+      </div>
+      <div class="pcw" data-step="1" data-fx="none" style="--d:.35s; --dx:-5px;  --dy:17px;  --rot:-1.5deg">
+        <div class="pc pc--loop"><i>08</i><b>보충 자료 제작</b><s>· 다시 처음부터</s></div>
+      </div>
+    </div>
+
+    <!-- ── 끊긴 선 ── -->
+    <div class="s04-cut" data-step="2" data-fx="none" aria-hidden="true"></div>
+
+    <!-- ── 대비 문구 + 후킹 ── -->
+    <div class="s04-close">
+      <p class="s04-contrast" data-step="2" data-fx="right">
+        여덟 개의 일, 여덟 개의 도구.<br>
+        그리고 그 사이를 잇는 건 전부 선생님의 손입니다.
+      </p>
+      <p class="s04-hook" data-step="3">
+        문제는 실력이 아니라 <em>공정 수</em>입니다.
+      </p>
+    </div>
+
+  </div>
+
+<style>
+/* ── 밤 ── */
+#s04 .s04-night {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(620px 460px at 87% 3%, rgba(245,158,11,.085), rgba(245,158,11,.022) 46%, transparent 72%),
+    rgba(5,7,14,.78);
+}
+#s04 .s04-wrap { z-index: 1; }
+
+/* ── 헤드 ── */
+#s04 .s04-head { position: absolute; left: 0; top: 0; width: 1160px; }
+
+#s04 .s04-title {
+  margin-top: 30px;
+  font-family: var(--f-display); font-weight: 800;
+  font-size: 92px; line-height: 1.06; letter-spacing: -.03em;
+  color: #EDF1F8;
+}
+
+#s04 .s04-lead {
+  margin-top: 26px; font-size: 22px; line-height: 1.6; color: #7E8AA0;
+}
+
+/* ── 흩어진 카드 ── */
+#s04 .s04-cards {
+  position: absolute; left: 0; right: 0; top: 360px;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  /* 열 간격(28)은 유지해 가로 흐름 01→02→03→04 를 묶고, 행 간격만 분리해 회전 여유를 확보한다.
+     411×111 카드가 ±2deg 회전하면 인접 변이 한 쌍당 최대 14.4px 잠식(205.5*|sinθ2-sinθ1|),
+     --dy 오프셋이 한 쌍을 최대 8px까지 좁힐 수 있으므로 48 - 14.4 - 8 ≈ 25px > 24px 를 보장.
+     --dy 값을 바꿀 때 (dy2 - dy1) >= -8px 규칙을 지킬 것. */
+  column-gap: 28px; row-gap: 48px;
+}
+#s04 .pcw { transition-delay: var(--d, 0s); }
+
+#s04 .pc {
+  position: relative;
+  padding: 18px 22px 18px 20px;
+  background: rgba(14,19,31,.82);
+  border: 1px solid var(--ink-3);
+  border-left: 2px solid #333F55;
+  border-radius: 10px;
+  transform: none;
+  transition: transform .6s var(--ease-snap);
+  transition-delay: var(--d, 0s);
+}
+#s04 .pcw.on .pc { transform: translate(var(--dx, 0), var(--dy, 0)) rotate(var(--rot, 0deg)); }
+#s04 .pc--loop { border-style: dashed; border-left-style: dashed; }
+
+/* 이어지지 않는 연결선 */
+#s04 .pc::after {
+  content: ''; position: absolute; right: -26px; top: 50%; width: 18px; height: 0;
+  border-top: 1px dashed rgba(136,146,166,.30);
+}
+#s04 .pcw:nth-child(4n) .pc::after { display: none; }
+
+#s04 .pc i {
+  display: block; font-style: normal; font-family: var(--f-mono); font-weight: 600;
+  font-size: 12.5px; letter-spacing: .2em; color: #5C6880;
+}
+#s04 .pc b {
+  display: block; margin-top: 8px;
+  font-family: var(--f-display); font-weight: 700; font-size: 22px; letter-spacing: -.014em;
+  color: #D6DCE8;
+}
+#s04 .pc s {
+  display: block; margin-top: 7px; text-decoration: none;
+  font-family: var(--f-mono); font-size: 12.5px; letter-spacing: .04em; color: #6E7A90;
+}
+#s04 .pc--loop s { color: #8892A6; }
+
+/* ── 끊긴 선 ── */
+#s04 .s04-cut {
+  position: absolute; left: 0; right: 0; bottom: 200px; height: 0;
+  border-top: 1px dashed rgba(136,146,166,.20);
+}
+
+/* ── 대비 + 후킹 ── */
+#s04 .s04-close { position: absolute; left: 0; right: 0; bottom: 0; text-align: right; }
+#s04 .s04-contrast {
+  font-size: 28px; line-height: 1.55; color: #8892A6; white-space: nowrap;
+}
+#s04 .s04-hook {
+  margin-top: 24px;
+  font-family: var(--f-display); font-weight: 800;
+  font-size: 50px; line-height: 1.22; letter-spacing: -.028em;
+  color: #EDF1F8; white-space: nowrap;
+}
+#s04 .s04-hook em {
+  font-style: normal; color: var(--white); position: relative; z-index: 1;
+}
+#s04 .s04-hook em::after {
+  content: ''; position: absolute; left: -3px; right: -3px; bottom: 3px; height: 8px;
+  background: rgba(255,255,255,.16); border-radius: 2px; z-index: -1;
+}
+</style>
+</section>

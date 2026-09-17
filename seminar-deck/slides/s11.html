@@ -1,0 +1,390 @@
+<section class="slide slide--paper" id="s11"
+  data-title="ST 03+" data-kr="워드 · 한글 · PDF"
+  data-zone="산출" data-zone-en="OUTPUT"
+  data-part="PART 1 — 기능 브리핑"
+  data-in="조판된 시험지"
+  data-out="DOCX · HWPX · PDF (+ 해설지)"
+  data-note="한글 파일 그대로">
+
+  <div class="pad s11-wrap">
+
+    <!-- ── 헤드 ── -->
+    <header class="s11-head">
+      <div class="s11-head-l">
+        <div class="kicker" data-step="0" data-fx="none">ST 03+ · EXPORT</div>
+        <h2 class="s11-h" data-step="0">받아서<br>바로 <em>손보실 수 있습니다.</em></h2>
+      </div>
+      <div class="s11-head-r" data-step="0" data-fx="none">
+        <p class="s11-lead">폰트·여백·표지 양식까지 조판된 파일이라,<br>받아서 바로 인쇄하고 편집합니다.</p>
+        <p class="s11-fmt mono">워드 안정 지원 · 한글(HWPX) 베타 · 인쇄(PDF)</p>
+      </div>
+    </header>
+
+    <!-- ── 본문 ── -->
+    <div class="s11-body">
+
+      <!-- 좌: 다운로드 드롭다운 (워크벤치 UI 재현) -->
+      <div class="s11-left" data-step="1" data-fx="left" data-noadvance>
+        <div class="wb">
+          <div class="s11-cap"><span class="mono">SMOAT 시험지</span> — 실제 다운로드 메뉴 그대로</div>
+
+          <div class="wb-bar">
+            <span class="wb-ph"></span><span class="wb-ph"></span><span class="wb-ph"></span>
+            <span class="wb-sep"></span>
+            <span class="wb-ph"></span><span class="wb-ph"></span>
+            <button class="wb-dl" type="button" id="s11-trigger">
+              <span class="wb-dl-i" aria-hidden="true"></span>다운로드<span class="wb-dl-c" aria-hidden="true"></span>
+            </button>
+          </div>
+
+          <div class="wb-menu" id="s11-menu">
+            <button class="wb-it" type="button" data-ext="pdf" data-label="PDF" data-note="인쇄(PDF)">
+              <span class="wb-ico k-pdf"><b class="pg2"></b><b class="pg"><i>PDF</i></b></span>
+              <span class="wb-lb">PDF</span><span class="wb-fill"></span>
+              <span class="wb-bg bg-rose">미리보기 그대로</span>
+              <span class="wb-ck">✓</span>
+            </button>
+            <button class="wb-it" type="button" data-ext="pdf" data-label="PDF 해설" data-note="해설 포함 PDF 선택 가능">
+              <span class="wb-ico k-pdf stk"><b class="pg2"></b><b class="pg"><i>PDF</i></b></span>
+              <span class="wb-lb">PDF 해설</span><span class="wb-fill"></span>
+              <span class="wb-ck">✓</span>
+            </button>
+            <button class="wb-it" type="button" data-ext="docx" data-label="DOCX" data-note="워드 안정 지원">
+              <span class="wb-ico k-docx"><b class="pg2"></b><b class="pg"><i>DOCX</i></b></span>
+              <span class="wb-lb">DOCX</span><span class="wb-fill"></span>
+              <span class="wb-ck">✓</span>
+            </button>
+            <button class="wb-it" type="button" data-ext="docx" data-label="DOCX 해설" data-note="DOCX 해설 별도 파일">
+              <span class="wb-ico k-docx stk"><b class="pg2"></b><b class="pg"><i>DOCX</i></b></span>
+              <span class="wb-lb">DOCX 해설</span><span class="wb-fill"></span>
+              <span class="wb-ck">✓</span>
+            </button>
+            <button class="wb-it" type="button" data-ext="hwpx" data-label="HWPX" data-note="한글(HWPX) 베타">
+              <span class="wb-ico k-hwpx"><b class="pg2"></b><b class="pg"><i>HWPX</i></b></span>
+              <span class="wb-lb">HWPX</span><span class="wb-fill"></span>
+              <span class="wb-bg bg-indigo up">beta</span>
+              <span class="wb-ck">✓</span>
+            </button>
+            <button class="wb-it" type="button" data-ext="hwpx" data-label="HWPX 해설" data-note="HWPX 해설 별도 파일">
+              <span class="wb-ico k-hwpx stk"><b class="pg2"></b><b class="pg"><i>HWPX</i></b></span>
+              <span class="wb-lb">HWPX 해설</span><span class="wb-fill"></span>
+              <span class="wb-bg bg-violet up">beta</span>
+              <span class="wb-ck">✓</span>
+            </button>
+          </div>
+
+          <div class="wb-note">
+            <span class="dot"></span><b id="s11-sel">HWPX</b><i id="s11-desc">한글(HWPX) 베타</i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 우: 한글(HWPX) 창 목업 -->
+      <div class="s11-right" data-step="2" data-fx="scale">
+        <div class="hw">
+
+          <div class="hw-tb">
+            <span class="hw-ic">한</span>
+            <span class="hw-ttl k-hwpx" id="s11-title">실전모의고사_문제지.<em id="s11-ext">hwpx</em> - 한글</span>
+            <span class="hw-win"><i class="mn"></i><i class="mx"></i><i class="cl"></i></span>
+          </div>
+
+          <nav class="hw-mb">
+            <span>파일</span><span>편집</span><span>보기</span><span>입력</span>
+            <span>서식</span><span>쪽</span><span>보안</span><span>검토</span><span>도구</span>
+          </nav>
+
+          <div class="hw-ft">
+            <i class="ph"></i><i class="ph"></i><i class="ph"></i><i class="ph"></i><i class="ph"></i>
+            <span class="vsep"></span>
+            <span class="chip">함초롬바탕</span><span class="chip">10.0 pt</span>
+          </div>
+
+          <div class="hw-ruler"></div>
+
+          <div class="hw-canvas">
+            <div class="hw-page">
+              <img src="assets/img/actual-smoat-exam-page1.webp" alt="SMOAT 실전모의고사 문제지 1쪽">
+            </div>
+          </div>
+
+          <div class="hw-sb"><span>1쪽 1단 1줄 1칸 · 삽입</span><span>100%</span></div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── 하단 ── -->
+    <div class="s11-band" data-step="3" data-fx="none">
+      <div class="s11-band-row">
+        <p class="s11-key"><b>100% 편집 가능</b> <span class="mono">—</span> 로고 삽입·문항 수정 자유</p>
+        <p class="s11-hook">이미지가 아니라 <span class="mark-hl">편집 가능한 한글 파일</span>입니다.<br>학원 로고 넣고, 문항 한 줄 고치고, 그대로 인쇄하시면 됩니다.</p>
+      </div>
+      <p class="s11-fine">문제지와 해설지는 따로 내려받습니다. 학생용·강사용을 분리해 만들 수 있습니다.</p>
+    </div>
+
+  </div>
+
+<style>
+#s11 .s11-wrap { display: flex; flex-direction: column; }
+
+/* ── 헤드 ── */
+#s11 .s11-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 64px; }
+#s11 .kicker { margin-bottom: 18px; }
+#s11 .s11-h {
+  font-family: var(--f-display); font-weight: 800; font-size: 56px; line-height: 1.13;
+  letter-spacing: -.028em; color: var(--g900);
+}
+#s11 .s11-h em { font-style: normal; color: var(--blue-deep); }
+#s11 .s11-head-r { flex: none; width: 600px; padding-bottom: 6px; }
+#s11 .s11-lead { font-size: 20px; line-height: 1.62; color: var(--g600); }
+#s11 .s11-fmt {
+  margin-top: 16px; display: inline-flex; align-items: center;
+  font-size: 12.5px; letter-spacing: .1em; color: var(--blue-deep);
+  background: var(--blue-sub); border: 1px solid var(--blue-light);
+  padding: 7px 14px; border-radius: 999px;
+}
+
+/* ── 본문 그리드 ── */
+#s11 .s11-body {
+  flex: 1; min-height: 0; margin-top: 26px; overflow: hidden;
+  display: grid; grid-template-columns: 660px 1fr; grid-template-rows: minmax(0, 1fr);
+  gap: 60px; align-items: center;
+}
+#s11 .s11-left { display: flex; justify-content: center; min-height: 0; }
+#s11 .s11-right { position: relative; align-self: stretch; height: 100%; min-height: 0; }
+#s11 .s11-right::before {
+  content: ''; position: absolute; inset: -34px; border-radius: 9999px;
+  background: rgba(147,197,253,.28); filter: blur(70px); z-index: 0; pointer-events: none;
+}
+
+/* ══════════════════════════════════════════
+   워크벤치 다운로드 메뉴 (부록 C-2 팔레트)
+   ══════════════════════════════════════════ */
+#s11 .wb { width: 560px; font-family: var(--f-body); }
+#s11 .s11-cap {
+  font-family: var(--f-mono); font-size: 12px; letter-spacing: .1em;
+  color: var(--g500); margin-bottom: 12px;
+}
+#s11 .s11-cap .mono { color: var(--blue-deep); }
+
+#s11 .wb-bar {
+  display: flex; align-items: center; gap: 9px; height: 52px; padding: 0 14px;
+  background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(15,23,42,.05);
+}
+#s11 .wb-ph { width: 26px; height: 26px; border-radius: 5px; background: rgba(226,232,240,.85); flex: none; }
+#s11 .wb-sep { width: 1px; height: 24px; background: #E2E8F0; flex: none; margin: 0 4px; }
+#s11 .wb-dl {
+  margin-left: auto; display: inline-flex; align-items: center; gap: 9px; flex: none;
+  height: 40px; padding: 0 16px; border-radius: 8px;
+  border: 1px solid #3B82F6; background: #EFF6FF; color: #2563EB;
+  font-family: var(--f-body); font-size: 15px; font-weight: 700; cursor: pointer;
+}
+#s11 .wb-dl-i { position: relative; width: 14px; height: 15px; flex: none; border-bottom: 2.5px solid currentColor; }
+#s11 .wb-dl-i::before { content: ''; position: absolute; left: 5.5px; top: 0; width: 3px; height: 7px; background: currentColor; }
+#s11 .wb-dl-i::after {
+  content: ''; position: absolute; left: 3px; top: 3.5px; width: 8px; height: 8px;
+  border-right: 2.5px solid currentColor; border-bottom: 2.5px solid currentColor; transform: rotate(45deg);
+}
+#s11 .wb-dl-c {
+  width: 8px; height: 8px; flex: none; margin-left: 2px;
+  border-right: 2px solid #94A3B8; border-bottom: 2px solid #94A3B8;
+  transform: rotate(45deg) translate(-2px, -2px);
+}
+
+#s11 .wb-menu {
+  width: 440px; margin: 10px 0 0 auto; background: #FFFFFF;
+  border: 1px solid #E2E8F0; border-radius: 12px; padding: 6px 0; overflow: hidden;
+  box-shadow: 0 20px 46px rgba(15,23,42,.15), 0 2px 6px rgba(15,23,42,.06);
+  animation: s11-menu-in .22s cubic-bezier(.22,1,.36,1);
+}
+@keyframes s11-menu-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+
+#s11 .wb-it {
+  display: flex; align-items: center; gap: 14px; width: 100%; height: 50px; padding: 0 17px;
+  background: #FFFFFF; border: 0; border-left: 3px solid transparent; cursor: pointer;
+  text-align: left; font-family: var(--f-body); transition: background .14s, border-color .14s;
+}
+#s11 .wb-it:hover { background: #F8FAFC; }
+#s11 .wb-it .wb-lb { font-size: 18px; font-weight: 600; color: #334155; }
+#s11 .wb-it .wb-fill { flex: 1; }
+#s11 .wb-it .wb-ck { font-size: 15px; font-weight: 700; color: #3B82F6; opacity: 0; flex: none; }
+#s11 .wb-it.on { background: #EFF6FF; border-left-color: #3B82F6; }
+#s11 .wb-it.on .wb-lb { color: #1D4ED8; font-weight: 700; }
+#s11 .wb-it.on .wb-ck { opacity: 1; }
+
+#s11 .wb-bg {
+  flex: none; font-family: var(--f-body); font-size: 11.5px; font-weight: 800;
+  line-height: 1.1; padding: 4px 7px; border-radius: 4px;
+}
+#s11 .wb-bg.up { text-transform: uppercase; letter-spacing: .04em; }
+#s11 .bg-rose   { background: #FFF1F2; color: #E11D48; }
+#s11 .bg-indigo { background: #EEF2FF; color: #4F46E5; }
+#s11 .bg-violet { background: #F5F3FF; color: #7C3AED; }
+
+/* 포맷 아이콘 — 모서리 접힌 사각형 + 포맷 텍스트 */
+#s11 .k-docx { --key: #2563EB; --key-soft: #EFF6FF; }
+#s11 .k-hwpx { --key: #0EA5E9; --key-soft: #F0F9FF; }
+#s11 .k-pdf  { --key: #DC2626; --key-soft: #FEF2F2; }
+
+#s11 .wb-ico { position: relative; width: 44px; height: 54px; flex: none; }
+#s11 .wb-ico b {
+  position: absolute; left: 3px; top: 3px; width: 38px; height: 48px;
+  background: #FFFFFF; border: 1.6px solid var(--key); border-radius: 4px; overflow: hidden;
+}
+#s11 .wb-ico b::before {
+  content: ''; position: absolute; top: -9px; right: -9px; width: 18px; height: 18px;
+  background: var(--key-soft); border-bottom: 1.6px solid var(--key); transform: rotate(45deg);
+}
+#s11 .wb-ico .pg2 { display: none; opacity: .42; transform: translate(4px, -3px); }
+#s11 .wb-ico.stk .pg2 { display: block; }
+#s11 .wb-ico.stk .pg { transform: translate(-2px, 2px); }
+#s11 .wb-ico i {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 17px;
+  background: var(--key); color: #FFFFFF; font-style: normal;
+  font-family: var(--f-body); font-size: 10.5px; font-weight: 800; letter-spacing: .02em;
+  display: flex; align-items: center; justify-content: center;
+}
+
+#s11 .wb-note {
+  width: 440px; margin: 14px 0 0 auto; display: flex; align-items: center; gap: 10px;
+  font-size: 15px; color: #475569;
+}
+#s11 .wb-note .dot { width: 7px; height: 7px; border-radius: 50%; background: #3B82F6; flex: none; }
+#s11 .wb-note b { font-weight: 700; color: #0F172A; }
+#s11 .wb-note i { font-style: normal; color: #64748B; }
+
+/* ══════════════════════════════════════════
+   한글(HWPX) 창 목업
+   ══════════════════════════════════════════ */
+#s11 .hw {
+  position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column;
+  background: #FFFFFF; border: 1px solid rgba(203,213,225,.8); border-radius: 12px; overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(15,23,42,.05), 0 30px 60px -12px rgba(59,130,246,.25);
+  font-family: var(--f-body);
+}
+
+#s11 .hw-tb {
+  flex: none; display: flex; align-items: center; gap: 11px; height: 48px; padding: 0 16px;
+  background: #f7f8fa; border-bottom: 1px solid #E2E8F0;
+}
+#s11 .hw-ic {
+  width: 26px; height: 26px; border-radius: 5px; background: #2563eb; color: #FFFFFF;
+  font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex: none;
+}
+#s11 .hw-ttl { font-size: 16px; font-weight: 700; color: #334155; }
+#s11 .hw-ttl em {
+  font-style: normal; color: var(--key); background: var(--key-soft);
+  border-radius: 4px; transition: color .18s, background .18s;
+}
+#s11 .hw-ttl.flash em { animation: s11-ext-pop .32s cubic-bezier(.22,1,.36,1); }
+@keyframes s11-ext-pop { from { transform: scale(1.18); } to { transform: none; } }
+#s11 .hw-win { margin-left: auto; display: flex; align-items: center; gap: 15px; flex: none; }
+#s11 .hw-win i { display: block; position: relative; }
+#s11 .hw-win .mn { width: 14px; height: 2px; background: #94A3B8; }
+#s11 .hw-win .mx { width: 12px; height: 12px; border: 2px solid #94A3B8; border-radius: 2px; }
+#s11 .hw-win .cl { width: 14px; height: 14px; }
+#s11 .hw-win .cl::before, #s11 .hw-win .cl::after {
+  content: ''; position: absolute; left: 0; top: 6px; width: 14px; height: 2px; background: #94A3B8;
+}
+#s11 .hw-win .cl::before { transform: rotate(45deg); }
+#s11 .hw-win .cl::after  { transform: rotate(-45deg); }
+
+#s11 .hw-mb {
+  flex: none; display: flex; align-items: center; gap: 22px; height: 38px; padding: 0 20px;
+  background: #FFFFFF; border-bottom: 1px solid #E2E8F0;
+  font-size: 15px; font-weight: 600; color: #475569;
+}
+
+#s11 .hw-ft {
+  flex: none; display: flex; align-items: center; gap: 8px; height: 46px; padding: 0 16px;
+  background: #fafbfc; border-bottom: 1px solid #E2E8F0;
+}
+#s11 .hw-ft .ph { width: 26px; height: 26px; border-radius: 5px; background: rgba(226,232,240,.8); flex: none; }
+#s11 .hw-ft .vsep { width: 1px; height: 24px; background: #E2E8F0; flex: none; margin: 0 6px; }
+#s11 .hw-ft .chip {
+  display: flex; align-items: center; height: 30px; padding: 0 12px; flex: none;
+  border: 1px solid #E2E8F0; background: #FFFFFF; border-radius: 5px;
+  font-size: 13.5px; font-weight: 600; color: #475569;
+}
+
+#s11 .hw-ruler {
+  flex: none; height: 20px; border-bottom: 1px solid #E2E8F0;
+  background-color: #FFFFFF;
+  background-image: repeating-linear-gradient(to right, #cbd5e1 0 1px, transparent 1px 30px);
+  background-size: auto 9px; background-position: 28px bottom; background-repeat: repeat-x;
+}
+
+#s11 .hw-canvas {
+  flex: 1; min-height: 0; background: #e9edf2; padding: 20px 28px 0;
+  display: flex; justify-content: center; align-items: flex-start; overflow: hidden;
+}
+/* 실제 한글 창처럼 지면의 위쪽만 보이고 아래는 창 밖으로 잘린다 */
+#s11 .hw-page {
+  width: 560px; flex: none; height: 100%; min-height: 0; background: #FFFFFF; overflow: hidden;
+  box-shadow: 0 1px 3px rgba(15,23,42,.25), 0 0 0 1px rgba(15,23,42,.04);
+  animation: s11-page-in .5s cubic-bezier(.16,1,.3,1);
+}
+@keyframes s11-page-in { from { transform: translateY(14px); opacity: 0; } to { transform: none; opacity: 1; } }
+#s11 .hw-page img { display: block; width: 100%; }
+
+#s11 .hw-sb {
+  flex: none; display: flex; align-items: center; justify-content: space-between;
+  height: 30px; padding: 0 16px; background: #f7f8fa; border-top: 1px solid #E2E8F0;
+  font-size: 13px; font-weight: 600; color: #64748B;
+}
+
+/* ── 하단 밴드 ── */
+#s11 .s11-band { flex: none; margin-top: 18px; padding-top: 16px; border-top: 1px solid rgba(17,24,39,.12); }
+#s11 .s11-band-row { display: flex; align-items: center; justify-content: space-between; gap: 56px; }
+#s11 .s11-key {
+  flex: none; font-family: var(--f-display); font-weight: 700; font-size: 30px;
+  letter-spacing: -.018em; color: var(--g800);
+}
+#s11 .s11-key b { font-weight: 800; color: var(--blue-deep); }
+#s11 .s11-key .mono { font-weight: 400; color: var(--g400); margin: 0 4px; }
+#s11 .s11-hook { flex: none; width: 700px; font-size: 18.5px; line-height: 1.55; color: var(--g700); }
+#s11 .s11-fine { margin-top: 12px; font-size: 14px; color: var(--g400); }
+</style>
+
+<script>
+(() => {
+  const sec = document.getElementById('s11');
+  if (!sec) return;
+  const items = [...sec.querySelectorAll('.wb-it')];
+  const title = sec.querySelector('#s11-title');
+  const ext   = sec.querySelector('#s11-ext');
+  const sel   = sec.querySelector('#s11-sel');
+  const desc  = sec.querySelector('#s11-desc');
+  const trig  = sec.querySelector('#s11-trigger');
+  const DEFAULT_I = 4; // HWPX
+
+  const apply = (it, animate) => {
+    if (!it) return;
+    items.forEach((x) => x.classList.toggle('on', x === it));
+    ext.textContent = it.dataset.ext;
+    title.className = 'hw-ttl k-' + it.dataset.ext;
+    sel.textContent = it.dataset.label;
+    desc.textContent = it.dataset.note;
+    if (animate) {
+      title.classList.remove('flash');
+      void title.offsetWidth;
+      title.classList.add('flash');
+    }
+  };
+
+  items.forEach((it) => it.addEventListener('click', (e) => {
+    e.stopPropagation();
+    apply(it, true);
+  }));
+
+  if (trig) trig.addEventListener('click', (e) => { e.stopPropagation(); });
+
+  const reset = () => apply(items[DEFAULT_I], false);
+  sec.addEventListener('slide:enter', reset);
+  reset();
+})();
+</script>
+</section>

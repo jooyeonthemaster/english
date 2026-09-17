@@ -1,3 +1,20 @@
+/**
+ * 분석 보고서 편집기 상단 툴바 — 목차 슬롯(좌) + 상태·되돌리기·정답지 토글 등 컨트롤(우).
+ *
+ * 반응형 계약(스펙 §3.10.21 E21-4): 이 파일의 라벨 노출은 전부 Tailwind `sm:`
+ * (= **뷰포트** 640px) 유틸이다. 학습지 조판 표면처럼 「뷰포트는 넓은데 컨테이너만 좁은」
+ * 임베드에서는 그 게이트가 전부 통과해 장문 라벨이 남고 툴바가 컨테이너를 넘친다.
+ * 컨테이너 폭 판정은 JS(표면의 ResizeObserver)가 맡아 셸 루트에 `data-embed-narrow` 를
+ * 붙이고, 실제 축약 규칙은 `report-edit-styles.ts` 의
+ * `.are-shell[data-embed-narrow]` 스코프 블록이 담당한다.
+ * 여기서는 그 규칙이 잡을 **마킹 클래스만** 덧붙인다(스타일 0):
+ *   - `are-tb-row`          : 툴바 최상위 행(nowrap·overflow·간격 축소 대상)
+ *   - `are-tb-label`        : `hidden sm:inline*` 장문 라벨(좁으면 숨김)
+ *   - `are-tb-label-compact`: `sm:hidden` 단문 라벨(좁으면 대신 노출 — 안 살리면
+ *                             넓은 뷰포트에선 둘 다 죽어 라벨 0개가 된다)
+ *   - `are-tb-msg`          : 유일하게 폭이 유동적인 오류 문구(좁으면 상한 축소)
+ * `data-embed-narrow` 가 없으면 위 선택자는 하나도 매칭되지 않는다 → 기존 렌더 불변.
+ */
 import {
   Copy,
   FileQuestion,
@@ -63,13 +80,13 @@ export function EditorTopBar({
   onGenerateWorksheet,
 }: Props) {
   return (
-    <div className="no-print flex h-11 shrink-0 items-center justify-between gap-3 border-b border-slate-200 bg-white px-4">
+    <div className="are-tb-row no-print flex h-11 shrink-0 items-center justify-between gap-3 border-b border-slate-200 bg-white px-4">
       <div className="flex min-w-0 items-center gap-2">{outlineSlot}</div>
 
       <div className="flex min-w-0 items-center justify-end gap-2">
-        {error ? <span className="max-w-[260px] truncate text-[11px] text-red-500">{error}</span> : null}
+        {error ? <span className="are-tb-msg max-w-[260px] truncate text-[11px] text-red-500">{error}</span> : null}
         {dirty ? (
-          <span className="hidden rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-semibold text-amber-700 sm:inline-flex">
+          <span className="are-tb-label hidden rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-semibold text-amber-700 sm:inline-flex">
             저장 필요
           </span>
         ) : null}
@@ -87,8 +104,8 @@ export function EditorTopBar({
                 : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
             }`}
           >
-            <span className="hidden sm:inline">정답지·해설지 포함</span>
-            <span className="sm:hidden">정답·해설</span>
+            <span className="are-tb-label hidden sm:inline">정답지·해설지 포함</span>
+            <span className="are-tb-label-compact sm:hidden">정답·해설</span>
             <span
               className={`relative h-4 w-7 rounded-full transition-colors ${
                 answerKeyIncluded ? "bg-sky-500" : "bg-slate-300"
@@ -159,7 +176,7 @@ export function EditorTopBar({
             className="flex h-8 shrink-0 items-center justify-center gap-1.5 rounded-md border border-blue-200 bg-white px-2.5 text-[11.5px] font-semibold text-blue-700 transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {worksheetBusy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <FileQuestion className="h-3.5 w-3.5" />}
-            <span className="hidden items-center gap-1.5 sm:inline-flex">
+            <span className="are-tb-label hidden items-center gap-1.5 sm:inline-flex">
               {worksheetBusy ? "실전 학습지 생성 중…" : "실전 학습지 생성"}
               {!worksheetBusy && (
                 <CreditCostChip
@@ -168,7 +185,7 @@ export function EditorTopBar({
                 />
               )}
             </span>
-            <span className="sm:hidden">실전 학습지</span>
+            <span className="are-tb-label-compact sm:hidden">실전 학습지</span>
           </button>
         ) : null}
       </div>

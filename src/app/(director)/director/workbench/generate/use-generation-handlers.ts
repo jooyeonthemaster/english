@@ -28,10 +28,11 @@ import {
 import {
   mergeQuestionGenerationPlanTag,
   normalizeQuestionGenerationPlan,
+  planForDifficulty,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
 import {
-  getEffectiveQuestionTypeGenerationPlan,
+  readQuestionTypeDifficultySetting,
   type QuestionTypeGenerationSettings,
 } from "@/lib/question-type-generation-settings";
 import {
@@ -199,24 +200,41 @@ export async function createFastQuestionGenerationJob({
   /** 낙관적 temp 의 id — 서버 config 에 저장됐다 DB 폴링 때 되읽어 temp↔DB 1:1 매칭. */
   clientTempId?: string;
 }) {
-  const res = await fetch("/api/workbench/ai-jobs/question-generation/fast", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
-    body: JSON.stringify({
-      passageId,
-      mode,
-      count,
-      questionType,
-      questionTypeSettings,
-      difficulty,
-      customPrompt,
-      generationPlan,
-      variantIndex,
-      variantCount,
-      clientTempId,
-    }),
-  });
+  let res: Response;
+  try {
+    res = await fetch("/api/workbench/ai-jobs/question-generation/fast", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        passageId,
+        mode,
+        count,
+        questionType,
+        questionTypeSettings,
+        difficulty,
+        customPrompt,
+        generationPlan,
+        variantIndex,
+        variantCount,
+        clientTempId,
+      }),
+      // 서버 상한(maxDuration 300s)보다 조금 뒤에 스스로 끊는다(md-stream 의
+      // 320s 상한과 같은 규약). 이게 없으면 응답이 오지 않는 연결에서 이 Promise
+      // 가 영영 안 풀려 ①전역 동시성 슬롯이 잠기고 ②그 「생성 중」 카드가
+      // 무한히 남는다 — 실제로 잡은 전부 종결됐는데도(26-08-18 원인 규명).
+      signal: AbortSignal.timeout(330_000),
+    });
+  } catch (err) {
+    // 세션 큐의 서버 진실 대조가 곧 실제 결과(완료/실패)로 카드를 정리하므로,
+    // 여기서는 단정 대신 확인 안내로 표면화한다(md-stream 절단 문구와 같은 규약).
+    if (err instanceof DOMException && err.name === "TimeoutError") {
+      throw new Error(
+        "생성 응답이 시간 안에 오지 않았습니다. 완료 여부는 잠시 후 목록에 자동 반영됩니다.",
+      );
+    }
+    throw err;
+  }
   const data = await res.json().catch(() => ({}));
   if (!res.ok || data.error) {
     throw new Error(
@@ -563,6 +581,7 @@ export function buildOptimisticItem({
   config,
   progressKey,
   createdAt,
+  queued,
 }: {
   jobId: string;
   passage: PassageItem;
@@ -570,6 +589,8 @@ export function buildOptimisticItem({
   config: QueueItem["config"];
   progressKey: string;
   createdAt?: string;
+  /** 전역 동시성 대기 중 발사분 — 표시부가 「대기 중」으로 말한다(부재 = 기존 동작). */
+  queued?: boolean;
 }): QueueItem {
   return {
     id: jobId,
@@ -585,6 +606,7 @@ export function buildOptimisticItem({
     },
     analysisData,
     status: "generating",
+    ...(queued ? { queued: true } : {}),
     progress: { [progressKey]: "pending" },
     questions: [],
     config,
@@ -690,6 +712,7 @@ export function useGenerationHandlers({
             config: unit.config,
             progressKey: unit.questionType,
             createdAt: batchCreatedAt,
+            queued: true,
           }),
         ),
         ...prev,
@@ -757,6 +780,7 @@ export function useGenerationHandlers({
                   item.id === unit.tempId
                     ? {
                         ...item,
+                        queued: false,
                         status: "error" as const,
                         progress: { [unit.questionType]: "error" as const },
                         error: message,
@@ -766,7 +790,14 @@ export function useGenerationHandlers({
               );
               throw err;
             }
-          }),
+          },
+          // 슬롯 확보 = 실제 생성 시작 — 「대기 중」 표식을 내린다.
+          () =>
+            setSessionQueue((prev) =>
+              prev.map((item) =>
+                item.id === unit.tempId ? { ...item, queued: false } : item,
+              ),
+            )),
         ),
       );
 
@@ -867,14 +898,11 @@ export function useGenerationHandlers({
             questionTypeSettings[typeId],
             teacherPointsByPassage?.[p.id]?.[typeId],
           );
-          // 유형별 플랜 오버라이드(이원 티어 복귀, 26-07-22): 서버는 요청
-          // 플랜만 진실원으로 삼고 유형별 저장 설정은 읽지 않으므로(좀비 설정
-          // 함정 차단 — fast 라우트 주석), 유닛 디스패치 시점에 유형별 지정을
-          // 요청 플랜으로 해석해 싣는다. 요금(2배)·모델 라우팅이 이 값을 따른다.
-          const unitGenerationPlan = getEffectiveQuestionTypeGenerationPlan(
-            questionTypeSettings,
-            typeId,
-            generationPlan,
+          // 26-08-18 난이도 기반 티어: 유형별 generationPlan 승격 폐지 — 서버
+          // (fast/md-stream)와 같은 규칙으로 유형 실효 난이도(유형 설정 → 전체
+          // 난이도)에서 티어를 유도해 낙관적 카드 뱃지/config 를 청구와 맞춘다.
+          const unitGenerationPlan = planForDifficulty(
+            readQuestionTypeDifficultySetting(unitTypeSettings, difficulty),
           );
           for (let index = 0; index < repeatCount; index += 1) {
             units.push({
@@ -928,7 +956,7 @@ export function useGenerationHandlers({
     selectedIds,
     passages,
     genMode,
-    generationPlan,
+    // 26-08-18 난이도 기반 티어: generationPlan 은 이 콜백에서 더 읽지 않는다(deps 제거).
     typeCounts,
     setTypeCounts,
     questionTypeSettings,

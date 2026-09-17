@@ -29,7 +29,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/director",
-        destination: "/director/workbench/questions/generate",
+        destination: "/director/studio",
         permanent: false,
       },
       // /director/korean 도 페이지 컴포넌트 redirect()를 거치면 같은 React #310이

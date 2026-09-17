@@ -27,7 +27,7 @@ import {
   parseMdVocab,
   type MdVocabQuestion,
 } from "./parser-vocab";
-import { gateMdVocab } from "./gate-vocab";
+import { gateMdVocab, vocabGateAdvisories } from "./gate-vocab";
 import { adaptMdVocabToAiQuestion, VOCAB_MD_DIRECTION_MULTI } from "./adapter-vocab";
 import type { MdLane, MdLaneContext, MdLaneParsed } from "./lane-types";
 
@@ -136,17 +136,25 @@ export const VOCAB_CHOICE_MD_LANE: MdLane = {
       answerCount: answerCountOf(ctx),
     });
     const q = snapped.question;
+    const gateIssues = [
+      ...gateMdVocab(q, ctx.passage, {
+        markerCount: markerCountOf(ctx),
+        answerCount: answerCountOf(ctx),
+        synonymVariants,
+      }),
+      ...teacherPointIssues(q, ctx),
+    ];
     return {
       question: q,
-      gateIssues: [
-        ...gateMdVocab(q, ctx.passage, {
-          markerCount: markerCountOf(ctx),
-          answerCount: answerCountOf(ctx),
-          synonymVariants,
-        }),
-        ...teacherPointIssues(q, ctx),
+      gateIssues,
+      // 비차단 권고(#10-a 비정답 자리 다중 등장 — 26-08-22 기출 실측으로 차단에서
+      // 강등, gate-vocab.ts vocabGateAdvisories 주석)는 반려가 아니라 잡 result 의
+      // corrections 포렌식으로만 남긴다. 이미 반려된 문항에는 붙이지 않는다 —
+      // 재생성 피드백 옆에 놓이면 소음이다(lane-summary-mc.ts 배선 동형).
+      corrections: [
+        ...snapped.corrections,
+        ...(gateIssues.length === 0 ? vocabGateAdvisories(q, ctx.passage) : []),
       ],
-      corrections: snapped.corrections,
     };
   },
 

@@ -156,7 +156,7 @@ export function SettingsTemplatePopover({
           className="z-[60] w-72 rounded-lg border border-slate-200 bg-white p-3 shadow-xl">
           <p className="text-[12px] font-black text-slate-800">설정 템플릿</p>
           <p className="mt-0.5 text-[11px] leading-relaxed text-slate-500">
-            지금의 <b className="text-slate-600">표지·로고·학원명·영어 원문·디자인</b> 설정을 이름을 붙여 저장해 두고, 나중에 골라서 적용할 수 있어요. <Star className="inline h-3 w-3 -mt-0.5 fill-amber-400 text-amber-500" /> 별표로 지정한 <b className="text-slate-600">기본 템플릿</b>은 새 보고서를 열 때 자동 적용돼요.
+            지금의 <b className="text-slate-600">표지·로고·학원명·영어 원문·디자인·글꼴</b> 설정을 이름을 붙여 저장해 두고, 나중에 골라서 적용할 수 있어요. <Star className="inline h-3 w-3 -mt-0.5 fill-amber-400 text-amber-500" /> 별표로 지정한 <b className="text-slate-600">기본 템플릿</b>은 새 보고서를 열 때 자동 적용돼요.
           </p>
 
           {/* 새 템플릿 저장 — 이름 입력 + 저장 */}

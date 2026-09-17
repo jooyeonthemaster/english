@@ -6,6 +6,28 @@ import { PAPER_SIZE_SPECS, PREVIEW_PAGE_WIDTH } from "../paper-builder/constants
 import { A4PaperPage } from "../paper-builder/components/a4-paper-page";
 import { ExamCoverPage } from "../paper-builder/components/exam-cover-page";
 import { cn } from "@/lib/utils";
+
+/**
+ * 패널 폭 → 썸네일 조판 치수. 렌더와 드래그 고속 경로(빌더의 썸네일 폭 핸들이
+ * 드래그 중 [data-thumb-rail]/[data-thumb-frame]/[data-thumb-scale] 에 직접
+ * 기록)가 같은 식을 공유한다 — 값이 어긋나면 커밋 시 썸네일이 튄다.
+ */
+export function thumbMetrics(width: number, paperSize: PaperSize) {
+  // 썸네일 폭은 패널 폭에 맞춰 비례 조절(좌우 여백·스크롤바 분량 차감).
+  const thumbnailWidth = Math.max(28, width - 40);
+  const paperSpec = PAPER_SIZE_SPECS[paperSize];
+  const previewPageWidth = Math.round(
+    PREVIEW_PAGE_WIDTH * paperSpec.widthRatio,
+  );
+  const thumbnailScale = thumbnailWidth / previewPageWidth;
+  return {
+    thumbnailWidth,
+    thumbnailHeight: thumbnailWidth * paperSpec.heightRatio,
+    previewPageWidth,
+    thumbnailScale,
+  };
+}
+
 export function PageThumbnails({
   paperPages,
   overflowItemIds,
@@ -59,16 +81,12 @@ export function PageThumbnails({
 }) {
   const pageCount = paperPages.length;
   if (pageCount <= 0) return null;
-  // 썸네일 폭은 패널 폭에 맞춰 비례 조절(좌우 여백·스크롤바 분량 차감).
-  const thumbnailWidth = Math.max(28, width - 40);
-  const paperSpec = PAPER_SIZE_SPECS[paperSize];
-  const previewPageWidth = Math.round(
-    PREVIEW_PAGE_WIDTH * paperSpec.widthRatio,
-  );
-  const thumbnailScale = thumbnailWidth / previewPageWidth;
+  const { thumbnailWidth, thumbnailHeight, previewPageWidth, thumbnailScale } =
+    thumbMetrics(width, paperSize);
 
   return (
     <div
+      data-thumb-rail
       style={{ width }}
       className="no-print hidden shrink-0 flex-col border-r border-slate-200 bg-white/80 lg:flex"
     >
@@ -95,13 +113,15 @@ export function PageThumbnails({
             title="표지로 이동"
           >
             <span
+              data-thumb-frame
               className="relative block overflow-hidden"
               style={{
                 width: thumbnailWidth,
-                height: thumbnailWidth * paperSpec.heightRatio,
+                height: thumbnailHeight,
               }}
             >
               <span
+                data-thumb-scale
                 className="pointer-events-none absolute left-0 top-0 block"
                 style={{
                   width: previewPageWidth,
@@ -141,13 +161,15 @@ export function PageThumbnails({
             title={`${pageIndex + 1}쪽으로 이동`}
           >
             <span
+              data-thumb-frame
               className="relative block overflow-hidden"
               style={{
                 width: thumbnailWidth,
-                height: thumbnailWidth * paperSpec.heightRatio,
+                height: thumbnailHeight,
               }}
             >
               <span
+                data-thumb-scale
                 className="pointer-events-none absolute left-0 top-0 block"
                 style={{
                   width: previewPageWidth,

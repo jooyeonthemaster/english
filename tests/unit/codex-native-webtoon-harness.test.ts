@@ -122,15 +122,43 @@ function phraseContractFailures(passages: ExamPassage[]): string[] {
   return failures;
 }
 
-test("extracts 5-8 exact, unique, ordered phrases for all 4,537 passages", () => {
+test("extracts 5-8 exact, unique, ordered phrases for the whole corpus", () => {
   const corpus = JSON.parse(
     readFileSync(
       resolve(process.cwd(), "src/data/exam-passages/passages.json"),
       "utf8",
     ),
   ) as ExamPassage[];
+  const facets = JSON.parse(
+    readFileSync(
+      resolve(process.cwd(), "src/data/exam-passages/facets.json"),
+      "utf8",
+    ),
+  ) as { total: number };
+  const baseline = JSON.parse(
+    readFileSync(
+      resolve(process.cwd(), "tests/unit/fixtures/exam-corpus-known-issues.json"),
+      "utf8",
+    ),
+  ) as { corpus: { en: { minPassages: number; preIncidentFloor: number } } };
 
-  assert.equal(corpus.length, 4_537, "the invariant must cover the complete corpus");
+  // 왜 `assert.equal(corpus.length, 4_537)` 이 아닌가 (렌즈 R3, 2026-08-20)
+  // ------------------------------------------------------------------------
+  // 이 한 줄이 2026-06-20~22 사고 당시 리포에 존재하던 **유일한** 코퍼스 assert
+  // 였고, 파이프라인이 본문을 잘라내는 동안 개수는 그대로여서 전량 통과했다.
+  // 즉 상수 동결은 무결성을 하나도 보증하지 못하면서, 수리로 레코드가 늘어나는
+  // 순간에는 가짜 RED 를 내 수리를 방해한다. 그렇다고 지우면 안 된다 —
+  // 로드 실패(빈 배열)를 통과시켜 아래 계약 검사를 전부 무의미하게 만든다.
+  //
+  // 그래서 (a) 로드 성공 (b) facets 의 자기기술과 일치 (c) 사고 이전 규모 하한
+  // 셋으로 바꾼다. 본문 무결성 자체는 tests/unit/exam-corpus-integrity.test.mjs
+  // 의 I0~I7 이 맡는다(대체 불변식 실재 확인 완료).
+  assert.ok(corpus.length > 0, "corpus failed to load — every contract below would vacuously pass");
+  assert.equal(corpus.length, facets.total, "passages.json 과 facets.json 의 자기기술이 어긋났다");
+  assert.ok(
+    corpus.length >= baseline.corpus.en.preIncidentFloor,
+    `corpus shrank below the pre-incident size (${corpus.length} < ${baseline.corpus.en.preIncidentFloor})`,
+  );
   assert.deepEqual(phraseContractFailures(corpus), []);
 });
 

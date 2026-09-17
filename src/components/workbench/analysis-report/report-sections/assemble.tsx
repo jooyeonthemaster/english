@@ -4,8 +4,9 @@ import { type CoverEdit, CoverSheet } from "../cover-templates";
 import { type ActivityAction, ActivityAnswerNode } from "../custom-activity-renders";
 import type { CustomEdit, FlowItem, MetaEdit, PassageStudyNotes, SectionEdit, SectionFlowOptions, WrapKind } from "./types";
 import { Field } from "./editable-field";
+import { FinalOnepageSheet } from "./final-onepage-flow";
+import { readingAnalysisFlowItems } from "./reading-analysis-flow";
 import { SectionHead } from "./table";
-import { WorksheetLogicMapBlock } from "./worksheet";
 import { customBlockFlowItems } from "./custom-block";
 import type { SectionFlowCache } from "./flow-cache";
 import { hiddenSectionKeys, reportSectionSlots } from "./section-slots";
@@ -39,7 +40,8 @@ function titleItems(report: AnalysisReport, med?: MetaEdit): FlowItem[] {
       wrap: "title",
       node: (
         <header className="par-title">
-          <Field as="div" className="par-eyebrow" editable={editable} value={m.eyebrow ?? ""} onCommit={(v) => patch({ eyebrow: v })} />
+          {/* 아이브로우("PRIME PASSAGE ANALYSIS · 심층 지문 분석") 제거 — 유저 확정(2026-08-11).
+              meta.eyebrow 데이터는 보존(표지 템플릿은 계속 사용), 본문 타이틀 블록에서만 미표기. */}
           <Field as="h1" className="par-title-ko" editable={editable} value={m.titleKo} onCommit={(v) => patch({ titleKo: v })} />
           <Field as="div" className="par-title-en" editable={editable} value={m.titleEn} onCommit={(v) => patch({ titleEn: v })} />
         </header>
@@ -130,6 +132,24 @@ export function reportFlowItems(
    * setReport 업데이터 안의 진단 호출들은 무수정으로 안전하다.
    */
   cache?: SectionFlowCache,
+  /**
+   * [E35] 조판 연속 문서(continuation) 옵션 — 같은 지문의 실전 학습지(PRIME_PRACTICE)가
+   * 부모 기본 학습지 **바로 뒤에** 조판될 때, 독립 문서 껍데기를 접고 앞 문서의 꼬리
+   * 섹션처럼 이어 붙이기 위한 것(호출자는 `compose-flow.ts` emitCompanion 하나뿐이다).
+   *
+   * - `omitDocIntro`: 표지·타이틀 블록·영어 원문 페이지를 만들지 않는다. 앞 문서가 같은
+   *   지문·같은 제목이라 여기서 또 찍으면 「같은 학습지가 처음부터 다시 시작」으로 읽힌다
+   *   (E35 의 발단 — 기본+실전을 함께 체크하면 제목이 두 번, 번호가 01 로 리셋).
+   * - `sectionNoStart`: 섹션 번호 시작값 = **직전 문서가 실제로 소비한 마지막 번호**.
+   *   기본이 01~04 로 끝나면 실전 학습지가 05 로 이어진다(E30 이전 병합 문서와 동일한 모양).
+   *
+   * **미전달이면 산출이 바이트 동일**하다 — 기존 소비자 전부(단독 편집기·학생 뷰어·미리보기·
+   * 썸네일)는 이 파라미터를 모르고, 알 필요도 없다.
+   */
+  compose?: {
+    omitDocIntro?: boolean;
+    sectionNoStart?: number;
+  },
 ): FlowItem[] {
   // 섹션 헤더(par-sec-head) ko/en 인라인 편집 — 슬롯키(kind+suffix)로 오버라이드 저장. (번호는 자동·고정)
   const headOverride = (key: string, fallbackKo?: string, fallbackEn?: string) => {
@@ -144,9 +164,25 @@ export function reportFlowItems(
     };
   };
   const vocabTestOnly = !!report.vocabTestOnly;
-  const items: FlowItem[] = vocabTestOnly
+  // 원페이지 파이널 문서 — 자체 헤더를 내장한 전면 시트 1장이 문서의 전부라
+  // 표준 타이틀 블록·영어원문 페이지는 만들지 않는다(표지는 사용자가 켜면 그대로 동작).
+  const finalOnly = report.sections.some((s) => s.kind === "final-onepage");
+  // 직독직해 분석본 문서 — 자기 표지 헤더(파란 그라데이션+범례)를 내장한 전면 문서라
+  // 표준 타이틀 블록·영어원문 페이지를 만들지 않는다(finalOnly 와 동일 패턴,
+  // 스펙 docs/reading-analysis-worksheet-spec.md §5.2-14 readingOnly 분기).
+  // 기존 문서에서는 항상 false 라 조립 산출이 바이트 동일하다.
+  const readingOnly = report.sections.some((s) => s.kind === "reading-analysis");
+  const skipDocSurfaces = finalOnly || readingOnly;
+  // [E35] 연속 문서는 표지까지 접는다 — 문서 한가운데 전면 표지가 서는 것이 제목 중복보다
+  // 더 파괴적이고, 실전 문서는 애초에 cover 상속이 금지라(E30 §1-3) 실데이터도 없다.
+  const skipDocIntro = vocabTestOnly || !!compose?.omitDocIntro;
+  const items: FlowItem[] = skipDocIntro
     ? []
-    : [...coverItems(report, edit?.ced), ...titleItems(report, edit?.med), ...englishOnlyPageItems(report)];
+    : [
+        ...coverItems(report, edit?.ced),
+        ...(skipDocSurfaces ? [] : titleItems(report, edit?.med)),
+        ...(skipDocSurfaces ? [] : englishOnlyPageItems(report)),
+      ];
 
   const findIdx = (k: AnalysisSection["kind"]) => report.sections.findIndex((s) => s.kind === k);
 
@@ -192,7 +228,9 @@ export function reportFlowItems(
   // 꺼진 슬롯(report.hiddenSections)은 헤더와 본문이 통째로 빠지고 번호도 소비하지 않아
   // 남은 섹션이 01·02·03 으로 자동 재배열된다(하류 필터로는 번호에 구멍이 남는다).
   const hidden = hiddenSectionKeys(report);
-  let no = 0;
+  // [E35] 연속 문서는 직전 문서의 마지막 번호에서 이어 센다(미전달 = 0 = 기존과 동일).
+  // 아래 emit 캐시 키에 `no` 가 들어 있으므로 시작값이 바뀌면 캐시가 스스로 miss 난다.
+  let no = compose?.sectionNoStart ?? 0;
   const emit = (si: number, opts: Partial<SectionFlowOptions>, slotKey: string) => {
     const section = report.sections[si];
     // study 를 실제로 읽는 경로인가 — clean 패스는 절대 읽지 않는다(passage-flow 조기반환).
@@ -235,24 +273,27 @@ export function reportFlowItems(
       ),
     );
   };
-  /** 논리표 승격 블록 — 핵심 요약 뒤(폴백) 또는 '지문 논리 구조 분석' 헤더 뒤(신형). */
-  const pushPromotedLogic = (si: number) => {
-    const worksheet = report.sections[si];
-    if (worksheet?.kind !== "learning-worksheet") return;
+  /** 원페이지 파이널 — 전면 시트(wrap:"cover") 1개만 붙인다(headless 슬롯). */
+  const pushFinalOnepage = (si: number) => {
+    const section = report.sections[si];
+    if (section?.kind !== "final-onepage") return;
     const build = (): FlowItem[] => {
-      const worksheetEdit = edit?.sectionEdit?.(si);
+      const sed = edit?.sectionEdit?.(si);
       return [
         {
-          id: `s${si}-logic-promoted`,
+          id: `s${si}-final-onepage`,
           sectionIndex: si,
-          kind: "learning-worksheet",
+          kind: "final-onepage",
           no,
-          wrap: "note",
+          wrap: "cover",
           node: (
-            <WorksheetLogicMapBlock
-              section={worksheet}
-              editable={!!worksheetEdit}
-              onPatch={(patch) => worksheetEdit?.commit({ ...worksheet, ...patch })}
+            <FinalOnepageSheet
+              section={section}
+              meta={report.meta}
+              brand={report.brand}
+              editable={!!sed}
+              onPatch={(patch) => sed?.commit({ ...section, ...patch })}
+              onMetaPatch={edit?.med ? (p) => edit.med!.commit({ ...report.meta, ...p }) : undefined}
             />
           ),
         },
@@ -262,9 +303,27 @@ export function reportFlowItems(
       items.push(...build());
       return;
     }
-    const slotKey = `logic:${si}`;
+    const slotKey = `final:${si}`;
     usedSlots.push(slotKey);
-    items.push(...cache.get(slotKey, [worksheet, si, no, edit?.sectionEdit], build));
+    items.push(
+      ...cache.get(slotKey, [section, si, report.meta, report.brand, edit?.sectionEdit, edit?.med], build),
+    );
+  };
+  /** 직독직해 분석본 — 표지 헤더+범례 1블록 → 파트 헤더(secheader) → 문장 카드(jikdok, atomic).
+   *  파이널(cover 1장)과 달리 카드당 FlowItem 로 packFlow 멀티페이지에 참여한다(§5.1).
+   *  조립 규칙 전체는 reading-analysis-flow.tsx 파일 머리 주석이 정본이다. */
+  const pushReadingAnalysis = (si: number) => {
+    const section = report.sections[si];
+    if (section?.kind !== "reading-analysis") return;
+    const build = (): FlowItem[] => readingAnalysisFlowItems(section, si, no, edit?.sectionEdit?.(si));
+    if (!cache) {
+      items.push(...build());
+      return;
+    }
+    const slotKey = `jikdok:${si}`;
+    usedSlots.push(slotKey);
+    // 키: 섹션 본체·위치·번호 + 편집 콜백 번들(참조가 바뀌면 카드 안 onCommit 도 재생성 필요).
+    items.push(...cache.get(slotKey, [section, si, no, edit?.sectionEdit], build));
   };
 
   // '영어 원문만' 단독 페이지는 그 뒤 첫 섹션 헤더의 breakBefore 로 페이지가 닫힌다.
@@ -287,19 +346,23 @@ export function reportFlowItems(
         node: <SectionHead no={no} kind={slot.kind} {...headOverride(slot.key, slot.labelKo, slot.labelEn)} />,
         breakBefore: slot.breakBefore || (firstVisibleHead && needsEnglishOnlyBreak),
         keepWithPrev: slot.keepWithPrev,
+        splitWithPrev: slot.splitWithPrev,
       });
       firstVisibleHead = false;
     }
-    // 지문 논리 구조 분석(신형) — 섹션 flow 대신 논리표 블록 하나만 붙는다.
-    if (slot.promotedLogic) {
-      pushPromotedLogic(slot.si);
+    // 원페이지 파이널 — 섹션 flow 대신 전면 시트 블록 하나만 붙는다.
+    if (slot.finalOnepage) {
+      pushFinalOnepage(slot.si);
+      continue;
+    }
+    // 직독직해 분석본 — 섹션 flow 대신 카드 단위 FlowItem 들이 직접 붙는다(headless 슬롯).
+    if (slot.readingAnalysis) {
+      pushReadingAnalysis(slot.si);
       continue;
     }
     // 슬롯키 = `sec:{섹션인덱스}:{슬롯키}` — 같은 섹션을 clean/annotated 두 번 emit 하므로
     // 인덱스만으로는 충돌한다(slot.key 가 "passage" / "passage-anno" 로 갈라준다).
     emit(slot.si, slot.flow, `sec:${slot.si}:${slot.key}`);
-    // 폴백 경로 — 핵심 요약 뒤에 학습지 논리표를 승격 배치(원 위치는 skipWorksheetLogic).
-    if (slot.appendPromotedLogicSi >= 0) pushPromotedLogic(slot.appendPromotedLogicSi);
   }
 
   // 단어 시험지는 vocabulary 섹션 flow 안에서 만들어진다. 목차에서 '핵심 어휘'(단어장)를 꺼도

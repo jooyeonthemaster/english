@@ -1,6 +1,11 @@
 // 마크다운 문항 파서 (md-lab 실험 — 26-07-21 O208 계열)
 // JSON 스키마 강제 없이 고정 마크다운 형식을 결정형 정규식으로 파싱한다.
-// 서버·클라이언트 공용(순수 모듈, 의존성 없음).
+// 서버·클라이언트 공용(순수 모듈 — 유일한 의존은 후처리 축자 탐색기, 역시 순수).
+
+import {
+  findExpressionInPassage,
+  findExpressionInPassageFuzzy,
+} from "@/lib/question-postprocess/text-utils";
 
 export interface MdOption {
   label: string;
@@ -72,6 +77,49 @@ export const normalizeWs = (s: unknown): string =>
     .replace(/…/g, "...")
     .replace(/\s+/g, " ")
     .trim();
+
+/**
+ * 재구성 축자 대조 전용 동치 — normalizeWs 위에 **말미 종결부호(.!?)만** 관용한다.
+ * 저장된 지문이 마침표 없이 끝나는 실데이터(26-08-11 RCA·잡 cmshhwesl/cmshhphmd:
+ * "…a long journey")에서 모델이 종결부호를 보정 출력하자 1글자 차이가 하드 반려를
+ * 낳았다 — 모델 출력은 정상, 대조가 오탐. 그런 지문은 재구성 계열 유형 전부가
+ * 난이도 불문 구조적으로 전멸했다. 관용은 문자열 **끝**에 한정하므로 지문 중간의
+ * 무단 편집·구두점 변경은 여전히 불일치다(재구성 게이트의 방어 계약 불변).
+ */
+export const reconstructionEq = (a: unknown, b: unknown): boolean =>
+  normalizeWs(a).replace(/[.!?]+$/, "") === normalizeWs(b).replace(/[.!?]+$/, "");
+
+/**
+ * 빈칸원문 축자 위치 탐색 — 후처리(processBlankInference)와 **같은 탐색기**를 쓴다.
+ *
+ * 게이트가 후처리보다 엄격하면 후처리가 살릴 문항을 게이트가 먼저 버리고 크레딧을
+ * 환불한다. 26-09-08 실구매 학원 전수조사 실측: 지문 `dimension of 'cyberspace.' We`
+ * (미국식 — 마침표가 닫는 인용부호 안) 에 모델이 빈칸원문 `… of 'cyberspace'` 를
+ * 내자 normalizeWs 포함 검사가 같은 지문에서 4/4 하드 반려(9/2·9/8 재시도 전멸).
+ * 같은 출력은 후처리 findExpressionInPassageFuzzy(앞뒤 따옴표·구두점 트림 재시도)가
+ * 그대로 통과시킨다. 따라서 게이트·어댑터·스냅 세 자리 전부 이 함수로 판정한다.
+ *
+ * 반환은 **원문 좌표**(index/length/text) — 다중 빈칸 겹침 판정과 surroundingText
+ * 절취가 정규화 좌표가 아니라 원문 좌표에서 이뤄져 후처리 결과와 어긋나지 않는다.
+ * 여기서 null 이면 후처리도 못 찾는다 → 반려가 옳다.
+ */
+export function locateBlankExpression(
+  passage: string,
+  expression: string,
+  surroundingText?: string,
+): { index: number; length: number; text: string } | null {
+  const expr = String(expression ?? "").trim();
+  if (!expr || !passage) return null;
+  const found =
+    findExpressionInPassage(passage, expr, surroundingText) ??
+    findExpressionInPassageFuzzy(passage, expr, surroundingText);
+  if (!found) return null;
+  return {
+    index: found.index,
+    length: found.length,
+    text: passage.slice(found.index, found.index + found.length),
+  };
+}
 
 export function parseMdBlank(text: string): MdBlankQuestion {
   const before = text.split(/^오답:/m)[0] ?? text;
@@ -255,6 +303,23 @@ export function parseMdGrammar(text: string): MdGrammarQuestion {
  * requireWrong=false 는 "정답 해설만" 모드(오답해설 요구 없음).
  * markerCount/answerCount(26-07-23 스펙 v1): 어법 비표준(밑줄 5~10·정답 1~N) 검사
  * 파라미터 — 기본값 5·1이면 기존 동작과 완전 동일(하위호환). */
+// 해설 절단 결정형 검사 (26-08-18, O223 A축) — finish=stop 인데 해설이 문장
+// 중간에서 끊긴 채 출하된 실측 사고(FILL_BLANK_KEY 계통)의 공용화. 종결부호·
+// 닫는 인용/괄호로 끝나지 않으면 절단 의심으로 반려한다. 기존 통과 문항 780건
+// 대조 오탐 0 실측 후 도입.
+const TEXT_COMPLETE_RE = /[.!?。…」』"'\)\]]$/;
+function truncatedTextIssues(
+  entries: Array<{ label: string; text: string | undefined }>,
+): string[] {
+  const v: string[] = [];
+  for (const e of entries) {
+    const t = e.text?.trim();
+    if (t && !TEXT_COMPLETE_RE.test(t))
+      v.push(`${e.label}이(가) 문장 중간에서 끊김(절단 의심) — 완결된 문장으로 다시 써야 한다`);
+  }
+  return v;
+}
+
 export function gateMdQuestion(
   q: MdAnyQuestion,
   passage: string,
@@ -266,10 +331,11 @@ export function gateMdQuestion(
     return gateMdMultiBlank(q, passage, { requireWrong });
   }
   const v: string[] = [];
-  const pn = normalizeWs(passage);
   if (q.kind === "blank") {
     if (!q.originalExpression) v.push("빈칸원문 누락");
-    else if (!pn.includes(normalizeWs(q.originalExpression)))
+    // 후처리와 같은 탐색기(locateBlankExpression) — 인용부호 안 마침표 같은
+    // 구두점 드리프트를 게이트만 못 견디던 오반려 봉합(26-09-08).
+    else if (!locateBlankExpression(passage, q.originalExpression))
       v.push("빈칸원문이 지문에 축자로 없음");
     if (q.options.length !== 5) v.push(`선지 ${q.options.length}개 (5개 필요)`);
     if (!q.answer) v.push("정답 누락");
@@ -289,6 +355,64 @@ export function gateMdQuestion(
       for (const m of q.marks) {
         if (!m.original) v.push(`${m.label} 원형 누락(원형·포인트 섹션 불일치)`);
         if (!m.code) v.push(`${m.label} 포인트코드 누락`);
+        // 마커 존재 검사(26-08-14, O217 사각 봉합): 비정답 마크(shown=original)가
+        // 본문 사본에서 빠지면 아래 재구성 대조가 no-op 치환으로 **무음 통과**해
+        // 밑줄 4개짜리 문항이 출하됐다(실사 G25·G31). 모델 무관 결함이라 여기서
+        // 결정형으로 반려한다.
+        if (!q.markedPassage.includes(`[[${m.label[1]}:`))
+          v.push(`${m.label} 마커가 지문 사본(markedPassage)에 없음`);
+      }
+      // 밑줄 span 검사(26-08-14 실사용 신고 2호): 기출 어법 밑줄은 단어 단위가
+      // 관행(예: producing·was·responsible)인데 luna 는 구·절 단위로 긋는 습성이
+      // 실측됐다(소급: 멀티워드 33%·4단어+ 20개 vs gemini 93.5% 1단어). 3단어
+      // 이상이면 반려한다 — 조동사+원형 등 불가피한 2단어는 허용(gemini 실측
+      // 분포와 정합, 오탐 2/200 수준).
+      for (const m of q.marks) {
+        const words = normalizeWs(m.shown).split(" ").filter(Boolean).length;
+        if (words >= 3) {
+          v.push(
+            `${m.label} 밑줄이 ${words}단어 구·절 — 판정을 결정짓는 핵심 단어 단위(최대 2단어)로 좁혀야 한다`,
+          );
+        }
+      }
+      // 밑줄 인접 검사(26-08-14 실사용 신고): "gradually (D)[learns] (E)[to prefer]"
+      // 처럼 한 동사구를 쪼개 밑줄 두 개를 만드는 배치는 기출 형식 위반이자 판정
+      // 얽힘이다. 마커 사이 본문이 3단어 미만이면 반려한다 — 긴 문장 내 떨어진
+      // 밑줄 2개는 기출 관행상 합법이라 "다른 문장" 강제는 하지 않는다(제약 과적
+      // 이 재생성 불능을 낳는 RCA 계통 예방 — 반려 피드백이 양보 방향을 안내한다).
+      {
+        const markerRe = /\[\[[A-J]:(?:(?!\]\]).)+\]\]/g;
+        const spans: Array<{ label: string; start: number; end: number }> = [];
+        for (const mm of q.markedPassage.matchAll(markerRe)) {
+          spans.push({
+            label: `(${mm[0].slice(2, 3)})`,
+            start: mm.index ?? 0,
+            end: (mm.index ?? 0) + mm[0].length,
+          });
+        }
+        spans.sort((a, b) => a.start - b.start);
+        for (let i = 1; i < spans.length; i++) {
+          const between = q.markedPassage.slice(spans[i - 1].end, spans[i].start);
+          // 26-08-18 O225: 문장 경계를 넘으면 인접이 아니다 — "…gave up [[C:playing]]
+          // the piano. [[D:Reconsidering]] the…" 처럼 앞 문장 끝 밑줄과 다음 문장 첫
+          // 밑줄은 서로 다른 문장이라 판정 얽힘이 없는데 단어 수(2)만 세어 반려됐다
+          // (스모크 실측 4/6 오탐 — 재생성 유발). 종결부호(.!?, 닫는 따옴표 허용)가
+          // 사이에 있으면 통과.
+          if (/[.!?]["”’']?(\s|$)/.test(between.trimEnd())) continue;
+          const words = between.split(/\s+/).filter((w) => /[A-Za-z0-9]/.test(w)).length;
+          // 26-08-19 짧은 지문 완화(사용자 제1규칙 "원큐 — 지문이 부족하면 가까워도
+          // 배치하라, 실패 금지"): 문장 5개 미만 지문은 물리적으로 간격이 좁을 수밖에
+          // 없다(23번 58단어 2문장 실측 — 기존 3단어 임계가 잡 실패·환불을 낳음).
+          // 짧은 지문은 임계를 1단어로 낮춘다(0단어 = 한 구를 쪼갠 진짜 인접만 반려).
+          // 문장 수 판정은 게이트의 종결부호 규칙과 동일 패턴을 쓴다.
+          const sentenceCount = (passage.match(/[.!?]["”’']?(\s|$)/g) ?? []).length;
+          const minGap = sentenceCount < 5 ? 1 : 3;
+          if (words < minGap) {
+            v.push(
+              `밑줄 ${spans[i - 1].label}·${spans[i].label} 인접(사이 ${words}단어) — 밑줄은 지문 전체에 분산해야 한다`,
+            );
+          }
+        }
       }
       let reconstructed = q.markedPassage;
       for (const m of q.marks) {
@@ -297,7 +421,7 @@ export function gateMdQuestion(
           () => m.original,
         );
       }
-      if (normalizeWs(reconstructed) !== pn) {
+      if (!reconstructionEq(reconstructed, passage)) {
         v.push("지문 재구성 불일치 — 마커 밖 텍스트가 원문과 다르거나 원형이 틀림");
       }
     } else {
@@ -345,6 +469,12 @@ export function gateMdQuestion(
     if (requireWrong && q.wrong.length !== wrongNeeded)
       v.push(`오답해설 ${q.wrong.length}개 (${wrongNeeded}개 필요)`);
   }
+  v.push(
+    ...truncatedTextIssues([
+      { label: "해설", text: q.explanation },
+      ...q.wrong.map((w) => ({ label: `오답해설 ${w.label}`, text: w.text })),
+    ]),
+  );
   return v;
 }
 
@@ -362,7 +492,6 @@ export function gateMdMultiBlank(
 ): string[] {
   const requireWrong = options?.requireWrong !== false;
   const v: string[] = [];
-  const pn = normalizeWs(passage);
   const count = options?.blankCount ?? q.blanks.length;
   if (count < 2 || count > 3) v.push(`빈칸 수 ${count} (2~3만 지원)`);
   if (q.blanks.length !== count)
@@ -379,13 +508,13 @@ export function gateMdMultiBlank(
       v.push(`${b.label} 빈칸원문 누락`);
       continue;
     }
-    const en = normalizeWs(b.expression);
-    const idx = pn.indexOf(en);
-    if (idx < 0) {
+    // 후처리와 같은 탐색기 — 원문 좌표로 겹침을 판정한다(26-09-08).
+    const loc = locateBlankExpression(passage, b.expression);
+    if (!loc) {
       v.push(`${b.label} 빈칸원문이 지문에 축자로 없음`);
       continue;
     }
-    spans.push({ label: b.label, start: idx, end: idx + en.length });
+    spans.push({ label: b.label, start: loc.index, end: loc.index + loc.length });
   }
   let overlapReported = false;
   for (let i = 0; i < spans.length && !overlapReported; i++) {
@@ -414,6 +543,12 @@ export function gateMdMultiBlank(
     v.push(`오답해설 ${q.wrong.length}개 (4개 필요)`);
   if (q.answer && q.wrong.some((w) => w.label === q.answer))
     v.push("오답해설에 정답 라벨 포함");
+  v.push(
+    ...truncatedTextIssues([
+      { label: "해설", text: q.explanation },
+      ...q.wrong.map((w) => ({ label: `오답해설 ${w.label}`, text: w.text })),
+    ]),
+  );
   return v;
 }
 
@@ -602,6 +737,9 @@ export function snapExpressionSpan(passage: string, oe: string): string | null {
   if (passage.includes(oe)) return null;
   // 정규화 일치는 게이트·어댑터가 이미 수용하므로 스냅 불요.
   if (normalizeWs(passage).includes(normalizeWs(oe))) return null;
+  // 후처리 탐색기가 찾는 표현도 스냅 불요 — 게이트·어댑터가 같은 탐색기로 수용한다.
+  // (스냅이 머리·꼬리 2단어 축자를 요구해 `of 'cyberspace'` 꼬리를 못 찾던 자리.)
+  if (locateBlankExpression(passage, oe)) return null;
   const words = oe.split(/\s+/).filter(Boolean);
   if (words.length < 4) return null; // 짧은 구는 오스냅 위험 — 반려에 맡긴다.
   const head = words.slice(0, 2).join(" ");

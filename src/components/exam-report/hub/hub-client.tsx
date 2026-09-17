@@ -26,6 +26,7 @@ import {
 } from "./intake-upload-panel";
 import { AnalysesBoard } from "./analyses-board";
 import { resolveExamReportBase } from "./board-shared";
+import { writeIntakeCollapsedCookie } from "@/lib/exam-report/ui-prefs";
 
 // 방금 시작한 분석이 서버에서 ANALYZING 으로 뒤집히기 전의 짧은 DRAFT 구간을
 // "분석 중"으로 보정하는 유예(ms). 초과하면 실제 상태를 그대로 보여준다.
@@ -75,7 +76,16 @@ function buildOptimisticRow(
   };
 }
 
-export function HubClient() {
+export interface HubClientProps {
+  /**
+   * 서버가 쿠키에서 읽어 넘긴 인테이크 접힘 초기값(26-09-01 라이브러리 통합).
+   * 클라이언트에서만 복원하면 SSR HTML 이 늘 "펼침"이라 접어둔 사용자에게
+   * 700px 패널이 번쩍인다 — 초기값은 반드시 서버가 준다.
+   */
+  initialIntakeCollapsed?: boolean;
+}
+
+export function HubClient({ initialIntakeCollapsed = false }: HubClientProps) {
   const pathname = usePathname();
   const hubBase = useMemo(() => resolveExamReportBase(pathname), [pathname]);
 
@@ -83,41 +93,99 @@ export function HubClient() {
   const [resumeDraft, setResumeDraft] = useState<ResumeDraftTarget | null>(null);
 
   // 인테이크 프레임 접기 + 높이 드래그 조절(form-section 미러).
-  const [formCollapsed, setFormCollapsed] = useState(false);
+  //
+  // 26-09-01 라이브러리 통합: 접힘이 새로고침 후에도 남아야 허브가 「목록 전용
+  // 뷰」를 대신한다. 초기값은 서버(쿠키)에서 오고, 이후 전환은 applyCollapsed 가
+  // 상태와 쿠키를 함께 갱신한다. 기본값 펼침 — 이 화면의 주행동은 시험지 등록이라
+  // 첫 방문자에게 업로드 패널이 보여야 한다.
+  const [formCollapsed, setFormCollapsed] = useState(initialIntakeCollapsed);
+  // 접힘 전환은 반드시 이 헬퍼로 — setFormCollapsed 직접 호출은 쿠키 기록을 건너뛴다.
+  const applyCollapsed = useCallback((next: boolean) => {
+    setFormCollapsed(next);
+    writeIntakeCollapsedCookie(next);
+  }, []);
   const [paneHeight, setPaneHeight] = useState<number>(readStoredPaneHeight);
+  // 드래그 시작 높이는 ref 로 읽는다 — 핸들러 정체성을 커밋마다 갈지 않는다.
+  const paneHeightRef = useRef(paneHeight);
+  paneHeightRef.current = paneHeight;
+  // 드래그 대상 프레임 실체 — 드래그 중에는 이 요소의 style.height 에 직접 쓴다.
+  const paneElRef = useRef<HTMLDivElement | null>(null);
 
-  const beginPaneResize = useCallback(
-    (e: React.PointerEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const startY = e.clientY;
-      const startHeight = paneHeight;
-      let latest = startHeight;
-      document.body.style.cursor = "row-resize";
-      document.body.style.userSelect = "none";
-      const onMove = (ev: PointerEvent) => {
-        latest = Math.min(
-          PANE_MAX,
-          Math.max(PANE_MIN, startHeight + (ev.clientY - startY)),
-        );
+  // 성능 계약(use-folder-window-height 동형): 드래그 중에는 React 를 거치지
+  // 않는다 — 매 pointermove 의 setState 는 HubClient 전체(인테이크 패널 +
+  // 분석 현황 보드)를 프레임마다 리렌더시킨다. 이동 중에는 프레임 요소의
+  // style.height 에 rAF 코얼레싱으로 직접 쓰고, 놓을 때 한 번만 커밋+영속한다.
+  // 앵커를 못 찾으면 종전 setState 경로로 폴백(무회귀).
+  const beginPaneResize = useCallback((e: React.PointerEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const startY = e.clientY;
+    const startHeight = paneHeightRef.current;
+    let latest = startHeight;
+
+    // 포인터 캡처 — 커서가 얇은 핸들을 벗어나도 드래그가 끊기지 않는다.
+    const handle = e.currentTarget as HTMLElement;
+    try {
+      handle.setPointerCapture(e.pointerId);
+    } catch {
+      /* 캡처 미지원 브라우저는 window 리스너로 폴백 */
+    }
+
+    const paneEl = paneElRef.current;
+    const prevCursor = document.body.style.cursor;
+    const prevSelect = document.body.style.userSelect;
+    const prevPointerEvents = document.body.style.pointerEvents;
+    document.body.style.cursor = "row-resize";
+    document.body.style.userSelect = "none";
+    // 드래그 중 hover 스타일 재평가 차단 — 높이가 바뀌면 아래 보드 카드가
+    // 밀리며 커서 아래 요소가 계속 바뀐다(캡처 덕에 move 수신은 유지).
+    document.body.style.pointerEvents = "none";
+
+    // rAF 코얼레싱 — 고주사율 포인터가 프레임당 여러 번 발화해도 기록은 1회.
+    let rafId: number | null = null;
+    const flush = () => {
+      rafId = null;
+      if (paneEl) paneEl.style.height = `${latest}px`;
+    };
+
+    const onMove = (ev: PointerEvent) => {
+      latest = Math.min(
+        PANE_MAX,
+        Math.max(PANE_MIN, startHeight + (ev.clientY - startY)),
+      );
+      if (paneEl) {
+        if (rafId === null) rafId = requestAnimationFrame(flush);
+      } else {
+        // 폴백 — 앵커를 못 찾으면 종전대로 상태 갱신.
         setPaneHeight(latest);
-      };
-      const onUp = () => {
-        document.body.style.cursor = "";
-        document.body.style.userSelect = "";
-        window.removeEventListener("pointermove", onMove);
-        window.removeEventListener("pointerup", onUp);
-        try {
-          window.localStorage.setItem(PANE_STORAGE_KEY, String(latest));
-        } catch {
-          /* ignore */
-        }
-      };
-      window.addEventListener("pointermove", onMove);
-      window.addEventListener("pointerup", onUp);
-    },
-    [paneHeight],
-  );
+      }
+    };
+    const onUp = () => {
+      document.body.style.cursor = prevCursor;
+      document.body.style.userSelect = prevSelect;
+      document.body.style.pointerEvents = prevPointerEvents;
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("pointercancel", onUp);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      if (paneEl) paneEl.style.height = `${latest}px`;
+      // 커밋은 여기서 한 번 — 드래그 내내 리렌더 0회.
+      setPaneHeight(latest);
+      try {
+        handle.releasePointerCapture(e.pointerId);
+      } catch {
+        /* ignore */
+      }
+      try {
+        window.localStorage.setItem(PANE_STORAGE_KEY, String(latest));
+      } catch {
+        /* ignore */
+      }
+    };
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onUp);
+    window.addEventListener("pointercancel", onUp);
+  }, []);
 
   const resetPaneHeight = useCallback(() => {
     setPaneHeight(PANE_DEFAULT);
@@ -186,7 +254,8 @@ export function HubClient() {
   // 고아 DRAFT 이어서 등록 — 인테이크 패널에 DRAFT 주입 + 상단으로 스크롤.
   const handleResumeDraft = useCallback((row: ExamReportSummaryRow) => {
     // 인테이크가 접혀 있으면 펼쳐서 이어서 등록 칩이 바로 보이게 한다.
-    setFormCollapsed(false);
+    // (영속 헬퍼를 쓴다 — 이어서 등록 중인데 새로고침하면 다시 접히면 곤란)
+    applyCollapsed(false);
     setResumeDraft({ id: row.id, title: row.title });
     // (결함수리) 기존엔 칩만 세팅하고 폼은 빈 상태 — 제목 필수 검증 탓에 사용자가
     // 임시 제목을 새로 쳐야 했고, resume 경로는 createExamAnalysis 를 건너뛰므로
@@ -203,7 +272,7 @@ export function HubClient() {
     if (typeof window !== "undefined") {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
-  }, []);
+  }, [applyCollapsed]);
 
   return (
     <div className="-m-6 min-h-[calc(100vh-56px)] min-w-0 bg-[#F4F6F9] px-4 py-4 sm:px-6 xl:px-8">
@@ -222,7 +291,7 @@ export function HubClient() {
             {formCollapsed ? (
               <button
                 type="button"
-                onClick={() => setFormCollapsed(false)}
+                onClick={() => applyCollapsed(false)}
                 aria-expanded={false}
                 title="시험지 등록 펼치기"
                 className="ml-auto inline-flex h-7 shrink-0 cursor-pointer items-center gap-1 text-[11.5px] font-medium text-blue-400 transition-colors hover:text-blue-600"
@@ -237,6 +306,7 @@ export function HubClient() {
             <>
               <div className="px-4 pt-4 pb-3">
                 <div
+                  ref={paneElRef}
                   className="flex w-full min-w-0 max-w-full flex-col overflow-hidden rounded-md border border-slate-200"
                   style={{ height: `${paneHeight}px` }}
                 >
@@ -264,7 +334,7 @@ export function HubClient() {
                 </div>
                 <button
                   type="button"
-                  onClick={() => setFormCollapsed(true)}
+                  onClick={() => applyCollapsed(true)}
                   onPointerDown={(e) => e.stopPropagation()}
                   onDoubleClick={(e) => e.stopPropagation()}
                   aria-expanded

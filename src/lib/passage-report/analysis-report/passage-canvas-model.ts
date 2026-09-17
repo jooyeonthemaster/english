@@ -83,12 +83,113 @@ export const CANVAS_TUNING = {
   enCharsPerLine: 60,
   /** 한글 해석 폭 기준 글자수(8pt, ~174mm) */
   koCharsPerLine: 74,
-  railWidthMm: 46,
+  railWidthMm: 42, // CSS .par-canvas-grid.has-rail 2열 실값과 동기(compact-spec §5)
   /** 이 추정 높이를 넘으면 문장을 분할 (페이지=250mm, 넉넉한 마진) */
   splitTriggerMm: 172,
   /** 분할 시 목표 조각 높이(mm) */
   splitTargetMm: 138,
 } as const;
+
+/**
+ * ─── v3 레일 균형 (R4, 26-08-22) ───────────────────────────────────────────
+ * v3 렌더러(sentence-canvas)는 R4부터 출제·논리 필기의 **밴드를 존중**한다:
+ * band==="rail" 만 우측 레일 카드, 나머지는 문장 아래 번호 뱃지 목록 행.
+ * 여기서는 레일 카드 누적 높이가 본문 열(스태프+어법 목록+해석) 추정을 넘는
+ * **첫 카드부터 전부** footnote 로 강등해(prefix 규칙 — 우선순위 상위 연속만 레일 유지)
+ * "블록 총높이 = max(본문, 레일)" 그리드가 만드는 문장 사이 백지 띠를 구조적으로 없앤다.
+ * 상수는 26-08-22 5샘플 38캔버스 실측 보정(.tmp-worksheet-qa/rail-gap-base-*.json).
+ * 편향은 **강등 우선**(본문 과소/레일 과대 추정) — 백지 잔존보다 목록 강등이 낫다.
+ */
+export const V3_RAIL_BALANCE = {
+  /** 레일 있는 본문 폭(≈134mm)에서 영문 한 줄 글자수 — 청크 경계 개행을 감안한 낙관치 */
+  enCharsPerRow: 62,
+  /** 뜻(gloss)+영문 스태프 한 줄 높이 / 줄 사이 row-gap */
+  staffRowMm: 9.0,
+  staffRowGapMm: 2.2,
+  /** 목록 행 — 균형 판정이 실제로 작동하는 국면은 "레일 잔존" 상태라 1열 폭 ≈134mm 기준
+   *  (전폭 ≈170mm 로 계상하면 줄수를 ~32% 과소 계상해 과강등 — R4 검수 Q1). */
+  listCharsPerLine: 53,
+  listLineMm: 3.8,
+  listRowChromeMm: 0.9,
+  /** 해석(8.6pt) */
+  koCharsPerLine: 70,
+  koLineMm: 4.4,
+  transChromeMm: 2.1,
+  /** 목록 mt·해석 mt 등 잔여 크롬 */
+  gridChromeMm: 4.0,
+  /** 이만큼의 레일 초과는 허용 — 과강등 방지 */
+  slackMm: 6,
+  /** 레일 카드(42mm, 8pt, keep-all, role·본문 인라인 흐름 — R4-c CSS 와 동기) */
+  railCharsPerLine: 16,
+  railLineMm: 3.6,
+  railCardChromeMm: 2.4,
+  /** 원문 인용 줄(1줄 클램프 — R4-c) */
+  railSrcMm: 3.6,
+  railGapMm: 1.0,
+} as const;
+
+function noteBodyChars(n: PlacedNote): number {
+  return (
+    (n.role?.length ?? 0) +
+    n.lines.reduce((a, l) => a + l.length + 1, 0) +
+    (n.trap ? n.trap.length + 2 : 0) +
+    (n.example ? n.example.length + 3 : 0)
+  );
+}
+
+function estRailCardMm(n: PlacedNote): number {
+  const B = V3_RAIL_BALANCE;
+  const srcMm = n.anchorRange && n.anchorText?.trim() ? B.railSrcMm : 0;
+  return Math.max(1, Math.ceil(noteBodyChars(n) / B.railCharsPerLine)) * B.railLineMm + B.railCardChromeMm + srcMm;
+}
+
+function estListRowMm(n: PlacedNote): number {
+  const B = V3_RAIL_BALANCE;
+  // 인용(src)은 렌더러가 anchorRange 있을 때만 그린다 — 같은 조건으로만 계상(검수 C1:
+  // 무앵커 어법 노트가 budget 을 부풀려 강등 컷을 늦추는 역편향 방지).
+  const srcChars = n.anchorRange && n.anchorText?.trim() ? Math.min(n.anchorText.trim().length, 64) + 3 : 0;
+  const chars = 6 + srcChars + noteBodyChars(n);
+  return Math.max(1, Math.ceil(chars / B.listCharsPerLine)) * B.listLineMm + B.listRowChromeMm;
+}
+
+/**
+ * 레일(출제·논리) 카드가 본문 열보다 길어질 초과분을 footnote 밴드로 강등한다(제자리 변경).
+ * 순수·결정론 — 같은 입력이면 같은 강등. 렌더러의 밴드 존중 규칙(R4-b)과 한 쌍이다.
+ */
+function balanceV3Rail(
+  en: string,
+  ko: string,
+  interlineByChunk: PlacedNote[][],
+  railNotes: PlacedNote[],
+  footnoteNotes: PlacedNote[],
+): void {
+  const B = V3_RAIL_BALANCE;
+  const sideIdx = railNotes.map((n, i) => ({ n, i })).filter(({ n }) => n.kind === "exam" || n.kind === "logic");
+  if (!sideIdx.length) return;
+  // v3 목록 행 = 모든 어법 노트(밴드 무관 — 렌더러가 kind 로 목록에 모은다)
+  const listMm = [...interlineByChunk.flat(), ...railNotes, ...footnoteNotes]
+    .filter((n) => n.kind === "grammar")
+    .reduce((a, n) => a + estListRowMm(n), 0);
+  const rows = Math.max(1, Math.ceil(en.length / B.enCharsPerRow));
+  const staffMm = rows * B.staffRowMm + (rows - 1) * B.staffRowGapMm;
+  const koRows = ko.trim() ? Math.max(1, Math.ceil(ko.length / B.koCharsPerLine)) : 0;
+  const transMm = koRows ? koRows * B.koLineMm + B.transChromeMm : 0;
+  const budget = staffMm + listMm + transMm + B.gridChromeMm + B.slackMm;
+  let cum = 0;
+  let cut = -1;
+  for (let k = 0; k < sideIdx.length; k++) {
+    const h = estRailCardMm(sideIdx[k].n);
+    if (cum + h > budget) {
+      cut = k;
+      break;
+    }
+    cum += h + B.railGapMm;
+  }
+  if (cut < 0) return;
+  const demote = new Set(sideIdx.slice(cut).map(({ i }) => i));
+  for (const { i } of sideIdx.slice(cut)) footnoteNotes.push({ ...railNotes[i], band: "footnote" });
+  for (let i = railNotes.length - 1; i >= 0; i--) if (demote.has(i)) railNotes.splice(i, 1);
+}
 
 const KIND_DEFAULT_BAND: Record<CanvasNoteKind, CanvasBand> = {
   grammar: "interline",
@@ -110,6 +211,43 @@ interface NormChar {
   start: number;
   end: number;
 }
+/**
+ * [E29-6] 조판용 **1:1 문자 접기** — 스마트 인용부호·대시를 ASCII 로 통일한다.
+ *
+ * 왜 필요한가: 파이널 원페이지의 두 게이트가 서로 다른 정규화를 쓰고 있었다.
+ * F6 커버리지 게이트는 normalizeForCoverage(final-onepage.ts)로 ‘ ’ “ ” – — 를
+ * 접는데, F5 앵커 게이트가 부르는 이 함수는 **접지 않았다**. 그래서 LLM 이
+ * sentences[].en 은 원문의 U+2018 을 축자 복제해 커버리지를 통과시키면서
+ * marks[].anchor 에는 ASCII 아포스트로피를 쓰는 흔한 조합에서 **앵커가 전부
+ * 드롭**됐다(드롭률 40% 초과면 502 + 환불, 미만이면 필기 없는 맹탕 학습지).
+ * PDF 에서 붙여 넣은 지문(1618학원 올림포스 계열)은 아포스트로피 자리에
+ * U+2018 이 박혀 있어 "don‘t" 가 don / ‘ / t 로 쪼개지기까지 했다 —
+ * WORD_CHAR 가 ’ 는 알면서 ‘ 는 모르기 때문이다.
+ *
+ * ⚠ **반드시 1:1 치환만** 넣어라. 길이가 변하는 접기(줄임표 … → ... 등)를 넣으면
+ *   NormChar 의 start/end 매핑이 어긋나 마크가 엉뚱한 글자에 그려진다.
+ */
+function foldPunctChar(ch: string): string {
+  switch (ch) {
+    case "‘": // ‘
+    case "’": // ’
+    case "ʼ": // ʼ
+    case "´": // ´
+      return "'";
+    case "“": // “
+    case "”": // ”
+      return '"';
+    case "–": // –
+    case "—": // —
+    case "―": // ―
+    case "−": // −
+    case "─": // ─ (PDF 표 괘선이 본문에 섞여 들어온다)
+      return "-";
+    default:
+      return ch;
+  }
+}
+
 function normalizeWithOffsets(value: string): { text: string; chars: NormChar[] } {
   const chars: NormChar[] = [];
   let lastSpace = false;
@@ -122,7 +260,12 @@ function normalizeWithOffsets(value: string): { text: string; chars: NormChar[] 
       }
       continue;
     }
-    chars.push({ char: ch.toLowerCase(), start: i, end: i + 1 });
+    // U+00AD(소프트 하이픈)은 **폭 0 비가시 문자**다 — PDF 추출물에 섞여 들어와
+    // 축자 비교를 조용히 깨뜨린다. 접는 게 아니라 통째로 버린다(1:1 예외).
+    // ⚠ **반드시 유니코드 이스케이프로** 적는다 — 리터럴 비가시 문자를 소스에
+    //   박으면 포매터·에디터가 조용히 지워도 아무도 알아채지 못한다.
+    if (ch === "\u00AD" || ch === "\u200B" || ch === "\uFEFF") continue;
+    chars.push({ char: foldPunctChar(ch).toLowerCase(), start: i, end: i + 1 });
     lastSpace = false;
   }
   while (chars.at(-1)?.char === " ") chars.pop();
@@ -142,6 +285,36 @@ export function resolveAnchorRange(en: string, anchorText: string | undefined | 
   const last = src.chars[idx + needle.length - 1];
   if (!first || !last) return null;
   return { start: first.start, end: last.end };
+}
+
+const WORD_CHAR = /[A-Za-z0-9'’-]/;
+
+/**
+ * 단어 경계를 우선하는 앵커 매칭 — 짧은 앵커("it")가 앞선 단어 내부("cr·it·icized")에
+ * 걸리는 오탐을 막는다(원페이지 파이널 마크 렌더·게이트 공용).
+ * 앞에서부터 모든 일치 후보를 훑어 "양끝이 단어 경계"인 첫 후보를 채택하고,
+ * 경계 일치가 하나도 없으면 기존 resolveAnchorRange(첫 일치)로 폴백한다.
+ */
+export function resolveAnchorRangeWordBoundary(
+  en: string,
+  anchorText: string | undefined | null,
+): { start: number; end: number } | null {
+  const phrase = (anchorText ?? "").trim();
+  if (phrase.length < 2) return null;
+  const src = normalizeWithOffsets(en);
+  const needle = normalizeWithOffsets(phrase).text;
+  if (!needle) return null;
+  for (let idx = src.text.indexOf(needle); idx >= 0; idx = src.text.indexOf(needle, idx + 1)) {
+    const first = src.chars[idx];
+    const last = src.chars[idx + needle.length - 1];
+    if (!first || !last) break;
+    const before = first.start > 0 ? en[first.start - 1] : "";
+    const after = last.end < en.length ? en[last.end] : "";
+    const boundaryBefore = !before || !WORD_CHAR.test(before) || !WORD_CHAR.test(en[first.start] ?? "");
+    const boundaryAfter = !after || !WORD_CHAR.test(after) || !WORD_CHAR.test(en[last.end - 1] ?? "");
+    if (boundaryBefore && boundaryAfter) return { start: first.start, end: last.end };
+  }
+  return resolveAnchorRange(en, anchorText);
 }
 
 // ─── 청크 분할 ────────────────────────────────────────────────────────────────
@@ -182,13 +355,35 @@ function fillGaps(en: string, anchored: { start: number; end: number; gloss?: st
     merged.push(a);
   }
   const chunks: ResolvedChunk[] = [];
+  // 공백·구두점뿐인 조각(seed 청크 사이 " ", ", ", 문미 "." 등)은 독립 청크로 내보내지
+  // 않고 이웃 청크에 흡수한다 — 독립 배출 시 청크 구분자 '/'가 이중으로 찍히고 빈 뜻
+  // 줄이 늘어서는 노이즈가 된다(26-08-26 조판 실측, .tmp-par-rca). 흡수는 텍스트 연장
+  // 뿐이라 「합본 == en · 연속」 불변식이 유지된다.
+  const isFiller = (t: string) => !/[A-Za-z0-9가-힣]/.test(t);
+  const pushOrAbsorb = (text: string, start: number, end: number) => {
+    const prev = chunks.at(-1);
+    if (isFiller(text) && prev) {
+      prev.text += text;
+      prev.end = end;
+      return false; // 흡수됨 — 다음 앵커 청크의 start 는 그대로(end 연속)
+    }
+    chunks.push({ text, start, end });
+    return true;
+  };
   let cursor = 0;
+  let pendingLead = 0; // 문두 filler — 앞 청크가 없어 다음 앵커 청크 머리에 흡수
   for (const a of merged) {
-    if (a.start > cursor) chunks.push({ text: en.slice(cursor, a.start), start: cursor, end: a.start });
-    chunks.push({ text: en.slice(a.start, a.end), gloss: a.gloss, role: a.role, emphasis: a.emphasis, start: a.start, end: a.end });
+    if (a.start > cursor) {
+      const gap = en.slice(cursor, a.start);
+      if (isFiller(gap) && !chunks.length) pendingLead = a.start - cursor;
+      else pushOrAbsorb(gap, cursor, a.start);
+    }
+    const start = a.start - pendingLead;
+    pendingLead = 0;
+    chunks.push({ text: en.slice(start, a.end), gloss: a.gloss, role: a.role, emphasis: a.emphasis, start, end: a.end });
     cursor = a.end;
   }
-  if (cursor < en.length) chunks.push({ text: en.slice(cursor), start: cursor, end: en.length });
+  if (cursor < en.length) pushOrAbsorb(en.slice(cursor), cursor, en.length);
   return chunks.filter((c) => c.text.length > 0);
 }
 
@@ -206,7 +401,10 @@ export function buildChunks(
 ): ResolvedChunk[] {
   if (seedChunks && seedChunks.length) {
     const aligned = alignSeedChunks(en, seedChunks);
-    if (aligned && aligned.length && aligned[0].start <= 2 && aligned.at(-1)!.end >= en.trimEnd().length - 1) {
+    // 선두 관용: 앞머리가 전부 공백·비가시 문자면 시작 오프셋이 2 를 넘어도 seed 를
+    // 채택한다(분할 파트 subEn 이 흡수된 공백으로 시작할 수 있다 — 적대검수 R1-2).
+    const leadOk = aligned?.length ? aligned[0].start <= 2 || !en.slice(0, aligned[0].start).trim() : false;
+    if (aligned && aligned.length && leadOk && aligned.at(-1)!.end >= en.trimEnd().length - 1) {
       // seed 가 문장을 충분히 덮으면 빈 구간만 보정해 사용
       return fillGaps(
         en,
@@ -292,7 +490,9 @@ function estimateHeights(
   let railMm = 0;
   railNotes.forEach((n) => (railMm += estNoteLinesHeight(n, 20) * 3.1 + 3.2));
   let footMm = 0;
-  footnoteNotes.forEach((n) => (footMm += estNoteLinesHeight(n, 36) * 3.0 + 1.0));
+  // v3 렌더러는 강등된 출제·논리를 목록 행으로 그린다 — footnote 단가(과대)로 계상하면
+  // planSentenceSplit 이 불필요 분할을 낼 수 있어 목록 행 단가로 계산(R4 검수 C1).
+  footnoteNotes.forEach((n) => (footMm += n.kind === "exam" || n.kind === "logic" ? estListRowMm(n) : estNoteLinesHeight(n, 36) * 3.0 + 1.0));
   const koMm = Math.max(1, Math.ceil(ko.length / CANVAS_TUNING.koCharsPerLine)) * 4.6 + 3.0;
   return Math.max(staffMm, railMm) + koMm + footMm + 5;
 }
@@ -413,6 +613,9 @@ function computeSentenceCanvasPlan(
     }
   }
 
+  // R4 — 레일 균형: 출제·논리 카드가 본문 열보다 길면 초과분을 footnote 로 강등(백지 띠 방지)
+  balanceV3Rail(en, ko, interlineByChunk, railNotes, footnoteNotes);
+
   const estHeightMm = estimateHeights(en, ko, chunks, interlineByChunk, railNotes, footnoteNotes);
 
   return {
@@ -420,7 +623,7 @@ function computeSentenceCanvasPlan(
     interlineByChunk,
     railNotes,
     footnoteNotes,
-    hasRail: railNotes.length > 0,
+    hasRail: railNotes.some((n) => n.kind === "exam" || n.kind === "logic"),
     estHeightMm,
   };
 }

@@ -167,11 +167,14 @@ export async function POST(request: NextRequest) {
       questionType,
     );
     const requestedGenerationPlan = normalizeQuestionGenerationPlan(rawGenerationPlan);
-    // 단일 상품(26-07-21): 결정 함수 단일 소스(fast/async/trigger 와 동일 규칙).
-    const generationPlan = resolveEffectiveGenerationPlan(rawGenerationPlan);
     const effectiveDifficulty = readQuestionTypeDifficultySetting(
       typeSettingsForType,
       difficulty || "INTERMEDIATE",
+    );
+    // 26-08-18 난이도 기반 티어(결정 함수 단일 소스 — fast/async/trigger 동일 규칙).
+    const generationPlan = resolveEffectiveGenerationPlan(
+      rawGenerationPlan,
+      effectiveDifficulty,
     );
 
     const operationType: OperationType = VOCAB_TYPES.has(questionType)

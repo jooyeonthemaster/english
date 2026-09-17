@@ -17,6 +17,7 @@ import { xmlText } from "./escape";
 import { HWPX_NS } from "./static-files";
 import type {
   BlockNode,
+  HAlign,
   ParagraphNode,
   RunNode,
   RunStyle,
@@ -164,10 +165,20 @@ function secPrXml(sec: SectionSpec): string {
     marginHeader,
     marginFooter,
   } = sec;
+  // 쪽번호 시작값. 한컴 실측(E36 P7): page="0" = 앞 구역에서 이어짐,
+  // page="N"(양수) = 이 구역 첫 쪽을 N 으로 재시작.
+  // (표지 구역 뒤 본문에 1 을 주면 본문 첫 쪽이 "1" 로 찍힌다.)
+  const startNumPage = sec.startNumPage;
+  const startPage =
+    typeof startNumPage === "number" &&
+    Number.isFinite(startNumPage) &&
+    startNumPage > 0
+      ? Math.round(startNumPage)
+      : 0;
   return [
     `<hp:secPr id="" textDirection="HORIZONTAL" spaceColumns="1134" tabStop="8000" tabStopVal="4000" tabStopUnit="HWPUNIT" outlineShapeIDRef="1" memoShapeIDRef="0" textVerticalWidthHead="0" masterPageCnt="0">`,
     `<hp:grid lineGrid="0" charGrid="0" wonggojiFormat="0"/>`,
-    `<hp:startNum pageStartsOn="BOTH" page="0" pic="0" tbl="0" equation="0"/>`,
+    `<hp:startNum pageStartsOn="BOTH" page="${startPage}" pic="0" tbl="0" equation="0"/>`,
     `<hp:visibility hideFirstHeader="0" hideFirstFooter="0" hideFirstMasterPage="0" border="SHOW_ALL" fill="SHOW_ALL" hideFirstPageNum="0" hideFirstEmptyLine="0" showLineNumber="0"/>`,
     `<hp:lineNumberShape restartType="0" countBy="0" distance="0" startNumber="0"/>`,
     // landscape 는 용지 방향 enum. OWPML/hwpxlib 공식 정의:
@@ -194,9 +205,10 @@ function secPrXml(sec: SectionSpec): string {
     `<hp:numbering type="CONTINUOUS" newNum="1"/>`,
     `<hp:placement place="END_OF_DOCUMENT" beneathText="0"/>`,
     `</hp:endNotePr>`,
-    `<hp:pageBorderFill type="BOTH" borderFillIDRef="0" textBorder="PAPER" headerInside="0" footerInside="0" fillArea="PAPER"><hp:offset left="1417" right="1417" top="1417" bottom="1417"/></hp:pageBorderFill>`,
-    `<hp:pageBorderFill type="EVEN" borderFillIDRef="0" textBorder="PAPER" headerInside="0" footerInside="0" fillArea="PAPER"><hp:offset left="1417" right="1417" top="1417" bottom="1417"/></hp:pageBorderFill>`,
-    `<hp:pageBorderFill type="ODD" borderFillIDRef="0" textBorder="PAPER" headerInside="0" footerInside="0" fillArea="PAPER"><hp:offset left="1417" right="1417" top="1417" bottom="1417"/></hp:pageBorderFill>`,
+    // borderFill 은 1-based(한컴 규약) → "투명"의 참조 id 는 0 이 아니라 1 이다.
+    `<hp:pageBorderFill type="BOTH" borderFillIDRef="1" textBorder="PAPER" headerInside="0" footerInside="0" fillArea="PAPER"><hp:offset left="1417" right="1417" top="1417" bottom="1417"/></hp:pageBorderFill>`,
+    `<hp:pageBorderFill type="EVEN" borderFillIDRef="1" textBorder="PAPER" headerInside="0" footerInside="0" fillArea="PAPER"><hp:offset left="1417" right="1417" top="1417" bottom="1417"/></hp:pageBorderFill>`,
+    `<hp:pageBorderFill type="ODD" borderFillIDRef="1" textBorder="PAPER" headerInside="0" footerInside="0" fillArea="PAPER"><hp:offset left="1417" right="1417" top="1417" bottom="1417"/></hp:pageBorderFill>`,
     `</hp:secPr>`,
   ].join("");
 }
@@ -300,36 +312,90 @@ function paragraphLineseg(
   };
 }
 
+// =============================================================================
+// 꼬리말(footer) — 쪽번호 밴드
+// =============================================================================
+//
+// 한컴 실측으로 확정된 두 제약(E36 스펙 §0):
+//  - P5: 쪽번호 필드는 <hp:ctrl><hp:autoNum num="0" id="N" type="PAGE" format="DIGIT"/>
+//        </hp:ctrl> 형태만 렌더된다. hp:ctrl 로 감싸지 않은 <hp:autoNum numType="PAGE"/>
+//        (직전 구현)이나 <hp:pageNum/> 은 한컴이 "공백"으로 그린다 = 쪽번호가 아예
+//        안 나온다. → 반드시 runChildXml 의 "pageNum" 런을 거쳐 만든다(P5 형태 정본).
+//  - P6: type="TOTAL_PAGE" 를 한컴은 PAGE 와 똑같이 렌더한다(전체 쪽수가 아니라
+//        현재 쪽. 전 쪽이 "1/1, 2/2, 3/3…" 으로 나왔다). 그래서 "N / M" 표기는
+//        원천적으로 불가 → 표기는 "- N -" 하나뿐이고 totalPages 런은 쓰지 않는다.
+
+// 기본 쪽번호 문단 "- N -".
+// 크기/색은 미리보기 푸터(text-[10px] text-slate-400) 및 DOCX 골드(16 half-pt)와 동일.
+function defaultPageNumberPara(align: HAlign): ParagraphNode {
+  const style: RunStyle = { size: 8.0, color: "#94A3B8" };
+  return {
+    kind: "p",
+    runs: [
+      { kind: "text", text: "- ", style },
+      { kind: "pageNum", style }, // → runChildXml 이 P5 형태(hp:ctrl+autoNum)로 직렬화
+      { kind: "text", text: " -", style },
+    ],
+    style: { align, lineSpacingPct: 130, spaceBefore: 0, spaceAfter: 0 },
+  };
+}
+
+// 꼬리말 컨트롤 1개. 내용은 sec.footer(있으면 그대로) 아니면 기본 쪽번호 문단.
+// applyPageType: "BOTH" = 모든 쪽, "ODD"/"EVEN" = 홀/짝 쪽(바깥쪽 정렬용).
+function footerCtrlOne(
+  sec: SectionSpec,
+  registry: ShapeRegistry,
+  state: EmitState,
+  contentWidthHpu: number,
+  applyPageType: "BOTH" | "EVEN" | "ODD",
+  align: HAlign,
+): string {
+  // 컨트롤 id 를 먼저 확보해 문서 순서와 id 순서를 맞춘다(내용이 ctrl id 를 더 쓴다).
+  const ctrlId = state.nextCtrlId++;
+  const blocks: BlockNode[] =
+    sec.footer && sec.footer.length > 0
+      ? sec.footer
+      : [defaultPageNumberPara(align)];
+
+  // 머리말(headerCtrl)과 동일한 상태 저장·복원. 꼬리말 subList 는 본문 단 폭이 아니라
+  // 전체폭 기준으로 줄바꿈되며, 셀 안이 아니므로 셀 누적 오프셋도 쓰지 않는다.
+  const prevWidth = state.currentLineWidthHpu;
+  const prevCellOffset = state.cellTextVertOffset;
+  state.currentLineWidthHpu = contentWidthHpu;
+  state.cellTextVertOffset = null;
+  const inner = blocks.map((b) => emitBlock(b, registry, state, sec)).join("");
+  state.currentLineWidthHpu = prevWidth;
+  state.cellTextVertOffset = prevCellOffset;
+
+  return [
+    `<hp:ctrl><hp:footer id="${ctrlId}" applyPageType="${applyPageType}">`,
+    `<hp:subList id="" textDirection="HORIZONTAL" lineWrap="BREAK" vertAlign="TOP" linkListIDRef="0" linkListNextIDRef="0" textWidth="${contentWidthHpu}" textHeight="${sec.marginFooter}" hasTextRef="0" hasNumRef="0">`,
+    inner,
+    `</hp:subList>`,
+    `</hp:footer></hp:ctrl>`,
+  ].join("");
+}
+
 function footerCtrl(
   sec: SectionSpec,
   registry: ShapeRegistry,
   state: EmitState,
 ): string {
+  const style = sec.pageNumberStyle ?? "center";
+  // "none" 은 sec.footer 유무와 무관하게 꼬리말 컨트롤 자체를 넣지 않는다(표지 구역).
+  // 빈 문자열은 buildSectionXml → emitParagraph 의 firstParaFooter 에서 falsy 로
+  // 걸러져 run 조차 만들지 않는다(무해).
+  if (style === "none") return "";
   const contentWidth = sec.pageWidthHpu - sec.marginLeft - sec.marginRight;
-  // 미리보기 푸터 "- N / M -" 는 text-[10px]. DOCX 골드와 동일하게 8pt(16 half-pt).
-  const charShapeId = registry.charShapeFromStyle({
-    size: 8.0,
-    color: "#94A3B8", // 미리보기 footer text-slate-400
-  });
-  const paraShapeId = registry.paraShapeFromStyle({
-    align: "CENTER",
-    lineSpacingPct: 130,
-    spaceBefore: 0,
-    spaceAfter: 0,
-  });
-  const lineSeg = paragraphLineseg(contentWidth, registry, paraShapeId, [
-    charShapeId,
-  ]);
-  return [
-    `<hp:ctrl><hp:footer id="${state.nextCtrlId++}" applyPageType="BOTH">`,
-    `<hp:subList id="" textDirection="HORIZONTAL" lineWrap="BREAK" vertAlign="TOP" linkListIDRef="0" linkListNextIDRef="0" textWidth="${contentWidth}" textHeight="${sec.marginFooter}" hasTextRef="0" hasNumRef="0">`,
-    `<hp:p id="0" paraPrIDRef="${paraShapeId}" styleIDRef="0" pageBreak="0" columnBreak="0" merged="0">`,
-    `<hp:run charPrIDRef="${charShapeId}"><hp:t>- </hp:t><hp:autoNum numType="PAGE" format="DIGIT"/><hp:t> / </hp:t><hp:autoNum numType="TOTAL_PAGE" format="DIGIT"/><hp:t> -</hp:t></hp:run>`,
-    lineSeg.xml,
-    `</hp:p>`,
-    `</hp:subList>`,
-    `</hp:footer></hp:ctrl>`,
-  ].join("");
+  if (style === "outside") {
+    // 바깥쪽 정렬(책 펼침 기준): 홀수 쪽은 오른쪽, 짝수 쪽은 왼쪽.
+    // 한 구역에 applyPageType 이 다른 꼬리말을 2개 두면 ODD+EVEN 이 전 쪽을 덮는다.
+    return (
+      footerCtrlOne(sec, registry, state, contentWidth, "ODD", "RIGHT") +
+      footerCtrlOne(sec, registry, state, contentWidth, "EVEN", "LEFT")
+    );
+  }
+  return footerCtrlOne(sec, registry, state, contentWidth, "BOTH", "CENTER");
 }
 
 // 머리말(header) — 전체폭 헤더 밴드. 한컴 실제 시험지가 쓰는 방식: 본문 칸 위

@@ -53,6 +53,10 @@ export async function GET(
       version: true,
       createdAt: true,
       updatedAt: true,
+      // 시험지 분석 리포트 공개 링크(26-09-03) — 레일 [총평] 도크 공유 블록의 소스.
+      shareToken: true,
+      shareEnabled: true,
+      sharedAt: true,
       students: {
         where: { deletedAt: null },
         select: {
@@ -66,6 +70,8 @@ export async function GET(
           answerToken: true,
           answerEnabled: true,
           answerSubmittedAt: true,
+          // 앱 응시 제출 증거(§16 classifyFunnelStudent) — id 만, 페이로드 부담 0.
+          examSubmissionId: true,
           scoreSummary: true,
           readState: true,
           sourceFiles: true,

@@ -3,10 +3,10 @@ import type { AnalysisSection } from "@/lib/passage-report/analysis-report/schem
 import { getConsolidatedWordOrders, toStudentVocabularyClozePassage, toStudentWorksheetWordBank, worksheetAnswersAreHidden, worksheetClozeTranslationsAreHidden } from "@/lib/passage-report/analysis-report/worksheet-surface";
 import { Field, renderGrammarChoiceText } from "./editable-field";
 import type { LearningWorksheetSection, SectionFlowCtx } from "./types";
-import { EditableSectionLabel, miniHeadProps, WordBank, WorksheetLogicMapBlock, WorksheetMiniTitle, WorksheetQuestionCard, worksheetAnswerKeySubsections } from "./worksheet";
+import { EditableSectionLabel, miniHeadProps, WordBank, WorksheetMiniTitle, WorksheetQuestionCard, worksheetAnswerKeySubsections } from "./worksheet";
 
 export function worksheetSectionFlow(section: Extract<AnalysisSection, { kind: "learning-worksheet" }>, ctx: SectionFlowCtx): void {
-  const { si, editable, commit, push, options } = ctx;
+  const { si, editable, commit, push } = ctx;
 const s = section;
       const patch = (p: Partial<LearningWorksheetSection>) => commit({ ...s, ...p });
       /**
@@ -41,13 +41,6 @@ const s = section;
           {s.note ? <Field as="div" className="par-ws-note" editable={editable} value={s.note} onCommit={(v) => patch({ note: v })} /> : null}
         </div>,
       );
-      if (!options?.skipWorksheetLogic) {
-        push(
-          "note",
-          "ws-logic",
-          <WorksheetLogicMapBlock section={s} editable={editable} onPatch={patch} />,
-        );
-      }
       if (s.cloze) {
         const clozeItemNode = (item: NonNullable<typeof s.cloze>["items"][number], i: number) => (
           <div className="par-ws-cloze">
@@ -384,6 +377,25 @@ const s = section;
               )}
             />
           </div>,
+          // ══ [E34-R4] 미니헤드 고아 방지 — 이 파일에서 **유일한 규약 위반**이었다 ══
+          // 이 파일의 다른 미니헤드 12종(cloze·practice·drills·워크북 4종·word-order·
+          // 정답키·활동·문항 정답표·국어 전량)은 전부 「미니헤드를 첫 콘텐츠와 **같은
+          // FlowItem** 에 담는다」는 규약을 지킨다. 추론 미니헤드만 자기 혼자 든 독립
+          // 아이템이라, packFlow 가 잔여 공간에 미니헤드(11.5mm)만 밀어 넣고 Q1(70mm)을
+          // 다음 장으로 보냈다 — 「수능추론 문제」 제목만 있는 페이지(사용자 실측 10p/11p).
+          //
+          // 기존 고아 방지 2종이 **둘 다 이 아이템을 못 잡는다**:
+          //   · orphanBreak 는 `isSecHeader` 게이트에 갇혀 wrap="note" 에 미도달
+          //     (그 함수 주석이 「ws-list 조각에는 한 번도 실행되지 않는다」로 이미 자인).
+          //   · atomicBreak 는 `it.atomic` 옵트인인데 학습지 축은 이 필드를 쓴 적이 없다.
+          // → 세 번째 장치를 만들지 않고 **기존 atomicBreak 에 옵트인**한다.
+          //
+          // ⚠ 융합(다른 12종처럼 헤드+Q1 을 한 노드로)을 택하지 않은 이유: 블록 id
+          //   `s{si}-ws-inference-title` 이 소멸해 그 id 로 저장된 blockMeta(hidden·
+          //   fontScale·align·minHeight)가 죽은 키가 된다. 특히 hidden 은 **숨겨 둔 제목이
+          //   되살아나는** 가시적 회귀이고, deleteItem 이 note 블록을 hidden 으로 처리하는
+          //   경로가 실재한다. 플래그 방식은 DOM·인쇄물이 바이트 동일이다.
+          { atomic: true, keepWithNextGroup: true },
         );
         inferenceSet.questions.forEach((q, qi) => {
           push(
@@ -404,6 +416,13 @@ const s = section;
                 });
               }}
             />,
+            // [E34-R4] **전 문항에 부여한다 — 첫 문항만 주면 안 된다.**
+            // `visibleFlowItems` 가 hidden 메타로 Q1 을 걸러내는 순간 미니헤드의
+            // keepWithNextGroup 1홉이 Q2 를 향하는데, Q2 가 atomic 이 아니면
+            // items.ts 의 `!nx.atomic → break` 에 걸려 동봉이 조용히 사라진다.
+            // question-flow.tsx 가 같은 이유로 「원자성은 그룹 전 조각에 실어야 한다」를
+            // 관용구로 못박아 두었다 — 그 규율을 그대로 따른다.
+            { atomic: true },
           );
         });
       }

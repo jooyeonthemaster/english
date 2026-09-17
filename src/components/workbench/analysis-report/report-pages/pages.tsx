@@ -1,24 +1,56 @@
 "use client";
 
-import { Fragment, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type { AnalysisReport } from "@/lib/passage-report/analysis-report/schema";
 import { ANALYSIS_REPORT_CSS } from "../report-styles";
 import { type FlowItem, reportFlowItems, tableHeadRow } from "../report-sections";
 import { PAGE_BODY_MM, PAGE_SAFETY_MM, PX_PER_MM, REPORT_A4_WIDTH_PX } from "./constants";
 import type { ColCtx, ReportEdit } from "./types";
 import { buildReportRootStyle, packFlow, samePages, visibleFlowItems } from "./items";
+import { ensureWorksheetFonts } from "../worksheet-fonts";
 import { CoverShell, PageControls } from "./shells";
 import { RunningFooter, RunningHeader, RunsView } from "./runs";
+// 타입 전용 import — 런타임 엣지가 0이라 compose 층과의 모듈 순환이 생기지 않는다.
+import type { ComposedDocHeader } from "../compose/compose-flow";
+
+/**
+ * E21 학습지 조판의 **문서별 러닝헤더/푸터 귀속**(26-08-18 결함 수정).
+ *
+ * 조판은 「활성 문서 1 + 부착 문서 N」을 par-root 1개·report 1개로 그리므로, 아무 조치가
+ * 없으면 `report.meta.titleKo`·`report.docNo` (= 활성 문서 값)가 **모든 시트**에 찍힌다
+ * (실측: 3문서 36시트 중 29시트가 남의 문서 제목을 머리글에 달고 렌더). 부착 문서 아이템은
+ * `compose-flow.ts` 가 자기 문서의 `docHeader` 를 실어 보내므로, **페이지 첫 아이템**의
+ * 그 값을 읽어 헤더/푸터를 그린다. 값이 없으면(=활성 문서 아이템 · 조판 아닌 모든 소비처)
+ * 현행 `report` 값을 그대로 써 **바이트 동일**하다.
+ *
+ * 「첫 아이템 = 그 페이지의 문서」가 성립하는 근거: 부착 문서 첫 아이템에 `breakBefore` 가
+ * 강제로 붙어(`compose-flow.ts` 4번) 문서 경계가 반드시 페이지 경계다 → 한 시트에 두 문서가
+ * 섞이지 않는다. 헤더 텍스트 길이가 페이지마다 달라져도 높이는 불변이다 —
+ * `.par-runhead .par-runhead-r` 가 `white-space: nowrap` + 말줄임(`report-styles.ts:111-115`)
+ * 이라 1줄로 고정되고, 본문 가용 높이 프로브(:152-156)도 같은 1줄 헤더를 잰다.
+ */
+function docHeaderOf(it: FlowItem | undefined): ComposedDocHeader | undefined {
+  return (it as (FlowItem & { docHeader?: ComposedDocHeader }) | undefined)?.docHeader;
+}
 // ─── 메인 ─────────────────────────────────────────────────────────────────────
 export function ReportPages({
   report,
   edit,
   onPagesChange,
   flowItems,
+  printExclude,
 }: {
   report: AnalysisReport;
   edit?: ReportEdit;
   onPagesChange?: (pages: string[][]) => void;
+  /**
+   * true 면 이 루트를 인쇄에서 완전히 제외한다(.par-print-exclude — report-styles @media print).
+   * 목록 카드 미리보기처럼 '한 화면에 여러 par-root' 가 뜨는 호스트에서 반드시 켠다 —
+   * 안 켜면 인쇄 CSS(in-flow static 복귀·조상 contents 해체·형제 가지치기)가 모든 루트에
+   * 동시 적용되어 인쇄가 오염된다(2026-08-11 실측: 목록 미리보기 21루트로 백지 재현 —
+   * 당시는 절대배치 겹침, 26-08-25 static 복귀 이후의 증상은 순차 이중 인쇄).
+   */
+  printExclude?: boolean;
   /**
    * 상위(편집기)에서 이미 계산한 **자연 순서** FlowItem[]. 주면 그대로 쓰고, 없으면
    * 지금처럼 내부에서 `reportFlowItems` 로 계산한다 — 읽기전용 소비자
@@ -48,6 +80,61 @@ export function ReportPages({
   }, [natural, report]);
 
   const itemsById = useMemo(() => new Map(items.map((it) => [it.id, it])), [items]);
+
+  // 벨트앤브레이스 — report-styles.ts:66-73 이 설계한 `.par-print-reveal` 예비 경로의
+  // **실제 배선**. 설계 주석과 CSS 규칙만 있고 beforeprint 리스너가 리포 어디에도 없었다
+  // (26-08-25 사파리 인쇄 수리에서 발견). beforeprint 에 documentElement 로 클래스를 얹어,
+  // @media print 평가가 레이아웃보다 늦는 드라이버(사파리 18 의 content-visibility 신생
+  // 구현 포함)에서도 인쇄 직전 전 페이지가 실제로 레이아웃되게 한다. classList 연산은
+  // 멱등이라 다중 par-root 공존(썸네일·숨김 표면·측정 클론)에도 안전하다.
+  useEffect(() => {
+    const reveal = () => document.documentElement.classList.add("par-print-reveal");
+    const restore = () => document.documentElement.classList.remove("par-print-reveal");
+    window.addEventListener("beforeprint", reveal);
+    window.addEventListener("afterprint", restore);
+    return () => {
+      window.removeEventListener("beforeprint", reveal);
+      window.removeEventListener("afterprint", restore);
+      restore();
+    };
+  }, []);
+
+  // ─── 문서에서 **실제로 쓰인** 글꼴만 로드 보장 ──────────────────────────────
+  // 세 축(문서 `fonts` · 블록 `fontKo/fontEn` · 선택 구간 `fontRuns[].ff`)을 모두 훑는다.
+  // 전량 일괄 주입(injectAll…, 60패밀리)은 금지 — 인쇄 스풀 용량이 이 문서가 일부러
+  // 피해 온 바로 그 문제다(report-styles.ts 머리말).
+  // 편집기뿐 아니라 **읽기 전용 소비처 전부**(AnalysisReportDocument · 미리보기 모달 ·
+  // 썸네일 · 랜딩 데모)가 이 컴포넌트를 지나므로, 여기 한 곳이면 유령 폰트가 없다.
+  const usedFontsKey = useMemo(() => {
+    const set = new Set<string>();
+    const add = (f?: string) => {
+      const v = (f ?? "").trim();
+      if (v) set.add(v);
+    };
+    add(report.fonts?.ko);
+    add(report.fonts?.en);
+    for (const meta of Object.values(report.blockMeta ?? {})) {
+      add(meta?.fontKo);
+      add(meta?.fontEn);
+      for (const run of meta?.fontRuns ?? []) add(run.ff);
+    }
+    return [...set].sort().join("|");
+  }, [report.fonts?.ko, report.fonts?.en, report.blockMeta]);
+
+  // 폰트는 **글자 폭을 바꾼다** = 페이지 분할이 바뀐다. 웹폰트는 비동기로 도착하므로
+  // 첫 측정은 반드시 폴백 서체 기준으로 돈다 → 로드가 끝나면 epoch 를 올려 **재측정**한다.
+  // 이 한 줄이 없으면 "글꼴을 바꿨더니 마지막 줄이 푸터를 뚫는다"가 재현된다.
+  const [fontEpoch, setFontEpoch] = useState(0);
+  useEffect(() => {
+    if (!usedFontsKey) return;
+    let alive = true;
+    void ensureWorksheetFonts(usedFontsKey.split("|")).then(() => {
+      if (alive) setFontEpoch((n) => n + 1);
+    });
+    return () => {
+      alive = false;
+    };
+  }, [usedFontsKey]);
 
   const measureRef = useRef<HTMLDivElement>(null);
   // 페이지는 "블록 id 배열"로 저장 — 편집/재측정 중에도 화면을 비우지 않아 깜빡임/스크롤 점프 없음
@@ -116,7 +203,9 @@ export function ReportPages({
     setPages((prev) => (samePages(prev, next) ? prev : next));
     // 프로브 시트가 헤더/푸터 콘텐츠(브랜드·제목·docNo·로고)에 따라 높이가 달라지므로
     // 그 값들도 재측정 트리거에 포함한다.
-  }, [items, report.blockMeta, report.tableColWidths, report.brand, report.docNo, report.meta.titleKo, logoDataUrl, editing]);
+    // 글꼴 축 3개(문서 ko/en · fontEpoch)도 여기에 있어야 한다 — 블록/선택 구간 글꼴은
+    // `report.blockMeta` 가 이미 대표하고, 문서 글꼴은 별도 필드라 따로 걸어야 한다.
+  }, [items, report.blockMeta, report.tableColWidths, report.brand, report.docNo, report.meta.titleKo, report.fonts?.ko, report.fonts?.en, fontEpoch, logoDataUrl, editing]);
 
   // pages 가 새 레이아웃을 반영한 뒤(페인트 직전) 스크롤 복원
   useLayoutEffect(() => {
@@ -134,7 +223,7 @@ export function ReportPages({
   const bodyTotal = coverPageFlags.filter((c) => !c).length;
 
   return (
-    <div className={`par-root${edit ? " par-root-edit" : ""}`} style={rootStyle}>
+    <div className={`par-root${edit ? " par-root-edit" : ""}${printExclude ? " par-print-exclude" : ""}`} style={rootStyle}>
       <style dangerouslySetInnerHTML={{ __html: ANALYSIS_REPORT_CSS }} />
 
       {/* 측정용 숨김 렌더 (페이지 높이 프로브 + 연속 flow + thead 참조) */}
@@ -161,6 +250,20 @@ export function ReportPages({
         return pages.map((pageIds, pi) => {
           const pageItems = pageIds.map((id) => itemsById.get(id)).filter(Boolean) as FlowItem[];
           if (pageItems.length === 0) return null;
+          // 카드 그리드(단어장) 런이 앞 페이지에서 이어져 오면 연속 머리를 얹는다
+          // (높이 예산은 packFlow 의 CONT_HEAD_MM 이 이미 계상 — 판정식을 동일하게 유지할 것:
+          //  강제분할(breakBefore) 페이지는 예산이 0 이므로 렌더에서도 제외한다).
+          const prevIds = pi > 0 ? pages[pi - 1] : [];
+          const prevLast = prevIds.length ? itemsById.get(prevIds[prevIds.length - 1]) : undefined;
+          const firstItem = pageItems[0];
+          const firstForced =
+            !!firstItem &&
+            (!!firstItem.breakBefore || !!(report.blockMeta?.[firstItem.editId ?? firstItem.id]?.breakBefore ?? report.blockMeta?.[firstItem.id]?.breakBefore));
+          const contHead =
+            !firstForced &&
+            firstItem?.wrap === "vocab-grid" &&
+            prevLast?.wrap === "vocab-grid" &&
+            prevLast.sectionIndex === firstItem.sectionIndex;
           let sheet: ReactNode;
           if (coverPageFlags[pi]) {
             sheet = (
@@ -170,13 +273,21 @@ export function ReportPages({
             );
           } else {
             bodyNo += 1;
+            // 조판(부착 문서) 페이지면 그 문서의 제목/docNo 로 머리글·꼬리말을 찍는다.
+            // 없으면 현행 report 값 — 단일 문서 소비처 전부 바이트 동일(docHeaderOf 주석 참조).
+            const dh = docHeaderOf(firstItem);
             sheet = (
               <section className="par-sheet" data-page-index={pi}>
-                <RunningHeader brand={report.brand} title={report.meta.titleKo} logoDataUrl={logoDataUrl} />
+                <RunningHeader brand={report.brand} title={dh?.title ?? report.meta.titleKo} logoDataUrl={logoDataUrl} />
                 <div className="par-sheet-body">
+                  {contHead ? (
+                    <div className="par-cont-head-cont" aria-hidden>
+                      <span className="par-cont-k">›</span>앞 페이지에서 이어짐
+                    </div>
+                  ) : null}
                   <RunsView items={pageItems} edit={edit} blockMeta={report.blockMeta} cols={colCtx} />
                 </div>
-                <RunningFooter brand={report.brand} docNo={report.docNo} page={bodyNo} total={bodyTotal} />
+                <RunningFooter brand={report.brand} docNo={dh ? dh.docNo : report.docNo} page={bodyNo} total={bodyTotal} />
               </section>
             );
           }
@@ -223,6 +334,9 @@ export function ReportThumbnailSheet({
 }) {
   const items = ids.map((id) => itemsById.get(id)).filter(Boolean) as FlowItem[];
   const isCover = items.length === 1 && items[0]?.wrap === "cover";
+  // 캔버스와 **같은 규칙**으로 귀속을 뽑는다 — 레일-캔버스 1:1 이 깨지면 축소본만 남의
+  // 문서 제목을 달게 된다(썸네일 소스도 합성분이다: `AnalysisReportEditor.tsx` composedThumb).
+  const dh = docHeaderOf(items[0]);
   const scale = width / REPORT_A4_WIDTH_PX;
   const height = width * (297 / 210);
   const logoDataUrl = report.cover?.showLogo === false ? undefined : report.cover?.logoDataUrl;
@@ -237,20 +351,21 @@ export function ReportThumbnailSheet({
           pointerEvents: "none",
         }}
       >
-        <div className="par-root" style={buildReportRootStyle(report)}>
+        {/* 썸네일 루트는 항상 인쇄 제외 — 인쇄 대상은 중앙 캔버스의 본 루트 하나뿐이다. */}
+        <div className="par-root par-print-exclude" style={buildReportRootStyle(report)}>
           {isCover ? (
             <section className="par-sheet par-sheet-cover">
               <div className="par-cover-shell">{items[0]?.node}</div>
             </section>
           ) : (
             <section className="par-sheet">
-              <RunningHeader brand={report.brand} title={report.meta.titleKo} logoDataUrl={logoDataUrl} />
+              <RunningHeader brand={report.brand} title={dh?.title ?? report.meta.titleKo} logoDataUrl={logoDataUrl} />
               <div className="par-sheet-body">
                 <RunsView items={items} blockMeta={report.blockMeta} cols={{ widths: report.tableColWidths }} />
               </div>
               <RunningFooter
                 brand={report.brand}
-                docNo={report.docNo}
+                docNo={dh ? dh.docNo : report.docNo}
                 page={bodyNumber}
                 total={bodyTotal}
               />

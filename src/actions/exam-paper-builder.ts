@@ -444,13 +444,26 @@ async function loadBuilderSurfacePage(
 ) {
   const limit = filters.limit || BUILDER_PAGE_SIZE;
   const page = Math.max(1, filters.page || 1);
-  const [items, statusBaseItems] = await Promise.all([
-    loadBuilderSurfaceItems(academyId, filters),
-    loadBuilderSurfaceItems(academyId, {
-      ...filters,
-      approved: undefined,
-    }),
-  ]);
+  // 전량 스캔 1회로 통합(2026-08-14 비용 감사 — 종전 2회는 학원 전체 문항을
+  // 그대로 중복 스캔했다. 실측 3,927문항 학원에서 회당 6,138행·DB→서버 1.76MB).
+  // statusCounts 는 approved 필터를 뺀 모집단이어야 하고(세그먼트가 전체·미검수·
+  // 검수완료 3개를 동시에 표기), 목록은 그 모집단을 approved 로 거른 것과 **비트
+  // 단위로 동일**하다:
+  //  · 세트 질의는 이미 filtersWithoutApproved 로 approved 를 벗겨(:325) 두
+  //    호출이 애초에 같은 SQL 이었고, 세트의 approved 판정도 SQL 이 아니라
+  //    메모리 사후 필터다(:388-391).
+  //  · standalone 의 유일한 차이인 where.approved(_question-where.ts)는
+  //    Question.approved 가 NOT NULL Boolean 이라 JS `=== ` 등가 필터로 복원된다.
+  //  · 비교자가 (kind,id) 까지 내려가는 전순서라 동률이 없어 "정렬 후 필터"와
+  //    "필터 후 정렬"의 결과 배열이 같다.
+  const statusBaseItems = await loadBuilderSurfaceItems(academyId, {
+    ...filters,
+    approved: undefined,
+  });
+  const items =
+    filters.approved === undefined
+      ? statusBaseItems
+      : statusBaseItems.filter((item) => item.approved === filters.approved);
   const pageItems = items.slice((page - 1) * limit, page * limit);
   const questions = await loadBuilderQuestionsBySurfacePage(academyId, pageItems);
 
@@ -560,6 +573,59 @@ export async function getExamPaperBuilderData(
     classes,
     schools,
   };
+}
+
+/**
+ * 임베드 전용 경량 재료(2026-08-14 비용 감사 — §3.10.17-e (m)).
+ *
+ * 클래스 스튜디오 인-플로우 조판은 `hideQuestionLibrary` 로 좌측 문항
+ * 라이브러리를 아예 렌더하지 않는데, getExamPaperBuilderData 응답 바이트의
+ * 99.96% 가 바로 그 라이브러리용 문항 100건이었다(실측 976KB/회, 그걸 만들려고
+ * 학원 전량 스캔). 이 액션은 **저장 폼이 실제로 쓰는 반·학교만** 읽는다.
+ *
+ * 반환 형태는 getExamPaperBuilderData 와 동일해 빌더 prop 계약이 바뀌지 않는다
+ * (문항·폴더·카운트는 빈 값 — 소비처가 전부 QuestionLibraryPanel 서브트리라
+ * hideQuestionLibrary 에서 렌더되지 않는다). 조판에 올릴 문항은 빌더가
+ * syncQuestionIds → getExamPaperBuilderQuestionsByIds 로 **필요한 id 만**
+ * 가져오므로 체크→조판 계약은 그대로다.
+ *
+ * ⚠ 기존 액션 본문은 한 글자도 건드리지 않는다 — 독립 라우트 5곳
+ * (exams/create · workbench/exams/create 재수출 · korean/exams/create ·
+ *  korean·workbench 의 [examId]/edit)의 SSR 바이트를 불변으로 두기 위함이고,
+ * 국어 호출 리터럴은 단위 테스트(ko-isolation-scope-wiring ISO-5)가 소스
+ * 문자열로 고정하고 있다.
+ */
+export async function getExamPaperBuilderEmbedData(academyId: string) {
+  const staff = await requireStaffAuth();
+  const empty = {
+    questions: [] as Awaited<
+      ReturnType<typeof loadBuilderQuestionsBySurfacePage>
+    >,
+    total: 0,
+    totalPages: 1,
+    statusCounts: { all: 0, approved: 0, pending: 0 },
+    collections: [] as Awaited<
+      ReturnType<typeof getExamPaperBuilderData>
+    >["collections"],
+    classes: [] as { id: string; name: string }[],
+    schools: [] as { id: string; name: string }[],
+  };
+  if (staff.academyId !== academyId) return empty;
+
+  const [classes, schools] = await Promise.all([
+    prisma.class.findMany({
+      where: { academyId, isActive: true },
+      select: { id: true, name: true },
+      orderBy: { name: "asc" },
+    }),
+    prisma.school.findMany({
+      where: { academyId },
+      select: { id: true, name: true },
+      orderBy: { name: "asc" },
+    }),
+  ]);
+
+  return { ...empty, classes, schools };
 }
 
 // 현재 페이지에 없는(다른 페이지·전체선택·생성 시드) 문항을 미리보기에 올릴 때 그

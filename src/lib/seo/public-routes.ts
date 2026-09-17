@@ -43,6 +43,8 @@ export const PUBLIC_ROUTES: PublicRoute[] = [
   { path: "/faq", changeFrequency: "monthly", priority: 0.6 },
   { path: "/glossary", changeFrequency: "monthly", priority: 0.6 },
   { path: "/resources", changeFrequency: "monthly", priority: 0.7 },
+  { path: "/resources/2026-09-hakpyeong-english", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-09-09" },
+  { path: "/resources/2027-09-mock-english", changeFrequency: "monthly", priority: 0.8, lastModified: "2026-09-02" },
 
   // 랜딩형 가이드(초기 8종). JSON 에 항목 추가 시 자동 편입.
   ...GUIDES.map((g) => ({
@@ -58,6 +60,9 @@ export const PUBLIC_ROUTES: PublicRoute[] = [
     priority: 0.7,
     lastModified: a.updatedAt,
   })),
+
+  // 학교별 내신 허브. 개별 학교 URL 은 DB 기반이라 sitemap.ts 에서 조회해 덧붙인다.
+  { path: "/schools", changeFrequency: "weekly", priority: 0.8 },
 
   // 전환/상품
   { path: "/register", changeFrequency: "monthly", priority: 0.8 },

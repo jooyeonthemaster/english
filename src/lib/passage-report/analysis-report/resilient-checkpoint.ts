@@ -30,15 +30,20 @@ export function extractCheckpoint(
 }
 
 /**
- * 같은 학원·지문의 가장 최근 잡(현재 잡 제외)에서 이어받을 체크포인트를 찾는다.
+ * 같은 학원·지문의 최근 잡들(현재 잡 제외)에서 이어받을 체크포인트를 찾는다.
  * contentHash 가 현재 본문과 다르면(지문이 바뀜) 무시한다.
+ *
+ * 최근 1건이 아니라 **체크포인트가 실제로 실린 첫 잡**을 최근순으로 탐색한다 —
+ * 부분 실패(FAILED+checkpoint) 뒤에 같은 지문의 파이널·부분 분석·캐시 잡이 하나만
+ * 끼어도 「이어서 완성」 약속이 조용히 소멸해 6섹션 전체를 재생성하던 결함
+ * (26-08-26 적대검수 G1 — grammar 게이트 도입으로 재시도 UX 가 이 함수에 직결됨).
  */
 export async function loadPriorCheckpoint(
   prisma: PrismaClient,
   params: { academyId: string; passageId: string; contentHash: string; excludeJobId: string },
 ): Promise<ResilientCheckpoint | null> {
   try {
-    const prior = await prisma.workbenchAiJob.findFirst({
+    const priors = await prisma.workbenchAiJob.findMany({
       where: {
         academyId: params.academyId,
         domain: "PASSAGE_ANALYSIS",
@@ -48,8 +53,13 @@ export async function loadPriorCheckpoint(
       },
       orderBy: { createdAt: "desc" },
       select: { result: true },
+      take: 8,
     });
-    return extractCheckpoint(prior?.result, params.contentHash);
+    for (const prior of priors) {
+      const cp = extractCheckpoint(prior.result, params.contentHash);
+      if (cp) return cp;
+    }
+    return null;
   } catch {
     return null;
   }

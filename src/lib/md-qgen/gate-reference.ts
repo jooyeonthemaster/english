@@ -105,7 +105,17 @@ export function referencePronounUsageIssue(
 const OPTION_MARKUP_RE = /<[^<>]+>|\*\*|__|\|/;
 /** 선지 끝 괄호 지칭 — 정답이 선지 텍스트에 그대로 노출된 실측 결함(runIndex 24). */
 const OPTION_TRAILING_PAREN_RE = /[(（][^()（）]{1,30}[)）]\s*$/;
-/** 표적 대명사가 지문 서두에 있으면 선행사가 지문 밖일 수 있다. */
+/**
+ * 표적 대명사가 지문 서두에 있으면 선행사가 지문 밖일 수 있다.
+ *
+ * 26-08-22 기출 실측(328자리, scripts/_tmp-reference-fp.ts): md 가 실제 출제하는
+ * 구조(닫힌집합 내·전방조응)의 관측 최소 오프셋은 39 라 임계 20 은 관측 분포
+ * 밖이다 — 완화 불필요. <20 은 3자리뿐인데 전부 md 계약 밖 형식이다: idx=0
+ * 문두 후방조응 리들형 2건('These come in ...' / 'This is a very useful
+ * instrument ...' — 뒤 내용으로 정체를 맞히는 수수께끼형, md 미출제)과 'my'@5
+ * 1건(문두 자리). 프롬프트가 이미 '지문 첫 문장의 대명사 금지'를 지시하므로
+ * 이 검사는 그 규칙의 집행 게이트로 차단 유지한다(규범 §1 집행 게이트 경로).
+ */
 const MIN_TARGET_OFFSET = 20;
 /** 밑줄문장은 "문장 하나" 계약 — 지문을 통째로 옮겨 적는 드리프트 차단. */
 const MAX_MARKED_SENTENCE_LENGTH = 500;
@@ -231,6 +241,15 @@ export function gateMdReference(
   }
 
   // ── #4 표적 자격 — 가리킬 것이 있는 대명사인가 ─────────────────────────────
+  // 26-08-22 기출 실측(328자리, scripts/_tmp-reference-fp.ts): 집합 밖 표적 19자리
+  // 중 1·2인칭·재귀 11자리는 REFERENCE_PRONOUN_LIST 확장(parser-reference.ts)으로
+  // 해소했고, 잔여 8자리는 전부 the+명사구('the man'·'the article' 류) 밑줄이다 —
+  // 기출 표적 공간이 제품 계약보다 넓다는 실측. md 계약은 마커가 **대명사 한
+  // 단어**만 감싸는 것이라(prompts-reference.ts §밑줄문장 작성 규칙, 명사구 마킹
+  // 미지원) 이 8건은 제품이 낼 수 없는 형식 = 오반려가 아니며, 이 검사는 프롬프트
+  // '허용 목록' 규칙의 집행 게이트로 차단을 유지한다(규범 §1 집행 게이트 경로).
+  // 표적 공간을 기출 수준으로 넓히려면 목록 완화가 아니라 명사구 마킹 지원이
+  // 선행 조건이다.
   if (!isReferencePronoun(target.pronoun)) {
     v.push(
       `표적 '${target.pronoun}' 이 지칭 추론 대상 대명사가 아님 — it·they·them·their·this·these 류 한 단어만 표적으로 쓸 수 있다`,

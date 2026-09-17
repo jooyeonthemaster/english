@@ -35,6 +35,13 @@ export interface ReportDocumentProps {
   mode: ReportRenderMode;
   onDocChange?: (next: StudentReportDoc) => void;
   className?: string;
+  /**
+   * 전역 인쇄 CSS(@page 포함) 미주입 — 다른 인쇄 표면(예: 스튜디오의 인페이지
+   * window.print 조판)이 사는 문서에 인라인 임베드할 때 켠다(additive,
+   * 26-09-01). @page 는 report-print-styles 가 단일 소스인데, 임베드 호스트에
+   * 이중 선언되면 그쪽 인쇄 규격을 오염시킨다. 기본 false = 기존 전 소비처 불변.
+   */
+  suppressPrintStyles?: boolean;
 }
 
 // 문서 베이스 CSS — 섹션 번호 카운터 + 내러티브 강조(rpt-em) 하이라이트.
@@ -117,7 +124,13 @@ function SectionView({
   }
 }
 
-export function ReportDocument({ doc, mode, onDocChange, className }: ReportDocumentProps) {
+export function ReportDocument({
+  doc,
+  mode,
+  onDocChange,
+  className,
+  suppressPrintStyles = false,
+}: ReportDocumentProps) {
   const isEdit = mode === "edit";
   const theme = resolveReportTheme(doc.themeId);
   const headingFamily = doc.typography?.headingFamily ?? theme.headingFamily;
@@ -152,7 +165,7 @@ export function ReportDocument({ doc, mode, onDocChange, className }: ReportDocu
       }}
     >
       <style dangerouslySetInnerHTML={{ __html: REPORT_BASE_CSS + REPORT_MOTION_CSS }} />
-      <ReportPrintStyles />
+      {suppressPrintStyles ? null : <ReportPrintStyles />}
       <ReportMotionRoot>
         <div className="rpt-body mx-auto flex w-full max-w-[880px] flex-col gap-8 px-5 py-8 @min-[640px]:px-8 @min-[640px]:py-10">
           <ReportCoverView

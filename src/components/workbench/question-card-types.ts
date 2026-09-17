@@ -87,4 +87,7 @@ export interface QuestionCardProps {
   suppressPassageBlock?: boolean;
   /** 접이식 원본 지문 블록을 처음부터 펼친 상태로 연다(상세보기 모달 등 전체 노출 컨텍스트). */
   passageDefaultOpen?: boolean;
+  /** 해설 패널을 처음부터 펼친 상태로 연다(상세보기 모달 등 완전 노출 컨텍스트 —
+   *  passageDefaultOpen 동형. 비-compact 경로에서만 의미가 있다). */
+  explanationDefaultOpen?: boolean;
 }

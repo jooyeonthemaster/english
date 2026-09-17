@@ -1,9 +1,19 @@
 "use client";
 
-import { ArrowRight, CheckSquare, FileText, Square } from "lucide-react";
+import {
+  ArrowRight,
+  CheckSquare,
+  ChevronRight,
+  FileText,
+  Square,
+} from "lucide-react";
 
 import type { ExamPaper } from "@/lib/exam-passages/types";
-import { boardShortLabel, gradeBadgeClass } from "@/lib/exam-passages/format";
+import {
+  boardShortLabel,
+  formatPaperTitle,
+  gradeBadgeClass,
+} from "@/lib/exam-passages/format";
 
 interface ExamPaperCardProps {
   paper: ExamPaper;
@@ -204,5 +214,65 @@ export function ExamPaperCard({
         </div>
       </div>
     </div>
+  );
+}
+
+/**
+ * 시험지 콤팩트 행(compactBrowser, 클래스 스튜디오 중앙 열) — 카드 그리드 대신
+ * 전폭 세로 행 리스트의 한 줄. 썸네일(PaperThumbnail)·시험지 체크박스는 렌더하지
+ * 않고, 행 전체 클릭 = 1클릭 드릴인(onOpen). 배지 색 규약: 평가원 blue-50 ·
+ * 교육청 slate-100 + 학평 학년 배지(gradeBadgeClass) 재사용.
+ */
+export function ExamPaperCompactRow({
+  paper,
+  onOpen,
+}: {
+  paper: ExamPaper;
+  onOpen: (paper: ExamPaper) => void;
+}) {
+  const isHakpyeong = paper.board === "학력평가";
+
+  return (
+    <button
+      type="button"
+      data-exam-card
+      onClick={() => onOpen(paper)}
+      title="클릭하여 시험지 열기"
+      className="group flex min-h-11 w-full min-w-0 cursor-pointer items-center gap-2 px-2.5 py-1.5 text-left transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500"
+    >
+      {/* 주관 배지 — 평가원 blue-50 / 교육청 slate-100 (스펙 §3.8.3 색 규약). */}
+      <span
+        className={
+          "inline-flex shrink-0 items-center rounded-md border px-1.5 py-0.5 text-[10px] font-bold tracking-tight " +
+          (isHakpyeong
+            ? "border-slate-200 bg-slate-100 text-slate-600"
+            : "border-blue-200 bg-blue-50 text-blue-700")
+        }
+      >
+        {boardShortLabel(paper.board)}
+      </span>
+      {isHakpyeong && paper.grade ? (
+        <span
+          className={
+            "inline-flex shrink-0 items-center rounded-md border px-1.5 py-0.5 text-[10px] font-bold " +
+            gradeBadgeClass(paper.grade)
+          }
+        >
+          {paper.grade}
+        </span>
+      ) : null}
+      {/* 제목 — 좁은 열에서도 절단 금지(truncate 금지·break-keep 줄바꿈 허용). */}
+      <span className="min-w-0 flex-1 break-keep text-[13px] font-semibold leading-snug text-slate-800">
+        {formatPaperTitle(paper)}
+      </span>
+      <span className="shrink-0 text-[11px] font-medium tabular-nums text-slate-400">
+        지문 {paper.count}
+        {paper.qFrom ? ` · 문항 ${paper.qFrom}~${paper.qTo}` : ""}
+      </span>
+      <ChevronRight
+        className="size-4 shrink-0 text-slate-300 transition group-hover:text-slate-400"
+        aria-hidden="true"
+      />
+    </button>
   );
 }

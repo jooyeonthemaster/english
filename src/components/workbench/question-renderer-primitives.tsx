@@ -39,6 +39,11 @@ export const AnswerRevealContext = createContext<AnswerRevealMode>("default");
  *  정답이 이미 다른 방식으로 드러나는 표면에서 중복 줄을 숨길 때 사용. */
 export const HideAnswerLineContext = createContext(false);
 
+/** true 면 ExplanationSection 이 처음부터 펼쳐진 채 마운트된다(§3.9v2.3 D3 —
+ *  상세 모달 등 완전 노출 컨텍스트). QuestionCard 의 explanationDefaultOpen
+ *  prop 이 구조화 렌더러까지 닿는 통로. 기본 false = 기존 전 호스트 동작 불변. */
+export const ExplanationDefaultOpenContext = createContext(false);
+
 /** 발문(Direction) 오른쪽 끝에 곁들일 문제 유형명(예: "글의 순서"). null 이면 표시
  *  안 함. 문제카드와 동일한 디자인을 다른 표면(예: 문제 수정 좌측 패널)에 줄 때
  *  StructuredQuestionRenderer 가 값을 내려준다. */
@@ -673,12 +678,20 @@ export function ExplanationSection({
   // 변경 마크 모드(수정본 미리보기)에서도 토글 없이 인라인 노출 → 해설/핵심포인트/오답해설의
   // 변경 마크가 곧장 보이게 한다.
   const changeActive = !!useContext(BlockChangeContext);
-  const [open, setOpen] = useState(false);
+  const defaultOpen = useContext(ExplanationDefaultOpenContext);
+  const [open, setOpen] = useState(defaultOpen);
   const contentRef = useRef<HTMLDivElement>(null);
+  // 기본 펼침으로 마운트된 경우 최초 1회는 스크롤하지 않는다 — 모달이 열리자마자
+  // 해설로 끌려 내려가는 것을 막는다(사용자 토글에만 스크롤).
+  const skipScrollRef = useRef(defaultOpen);
 
   // 해설을 펼치면 답안 보기와 동일하게 부드럽게 스크롤해서 펼쳐진 해설을 보여 준다.
   useEffect(() => {
     if (!open) return;
+    if (skipScrollRef.current) {
+      skipScrollRef.current = false;
+      return;
+    }
     const frame = requestAnimationFrame(() => {
       contentRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
     });

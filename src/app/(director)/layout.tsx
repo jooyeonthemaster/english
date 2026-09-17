@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getStaffSession } from "@/lib/auth";
 import { AdminShell } from "@/components/layout/admin-shell";
 import { JooyeonWelcomeModal } from "@/components/layout/jooyeon-welcome-modal";
+import { ClassStudioLaunchNotice } from "@/components/layout/class-studio-launch-notice";
 import { SiteBannerHost } from "@/components/site-banners/site-banner-host";
 import { ReviewDrawerProvider } from "@/components/layout/review-drawer-context";
 import { SidebarFocusProvider } from "@/components/layout/sidebar-focus-context";
@@ -19,10 +20,10 @@ export default async function DirectorLayout({
   const staff = await getStaffSession();
 
   if (!staff) {
-    // 로그인 후 사실상의 홈(문제 생성)으로 곧장 보낸다. "/director" 로 두면 로그인
-    // 직후 config redirect(/director → 문제 생성)를 한 번 더 거치는 hop 이 생기므로
+    // 로그인 후 사실상의 홈(클래스 스튜디오)으로 곧장 보낸다. "/director" 로 두면 로그인
+    // 직후 config redirect(/director → 클래스 스튜디오)를 한 번 더 거치는 hop 이 생기므로
     // 최종 목적지를 콜백에 그대로 박는다. (auth-redirect.ts DEFAULT_DIRECTOR_REDIRECT)
-    redirect("/login?callbackUrl=/director/workbench/questions/generate");
+    redirect("/login?callbackUrl=/director/studio");
   }
 
   if (staff.role !== "DIRECTOR") {
@@ -48,6 +49,7 @@ export default async function DirectorLayout({
             />
             <ActivityTracker />
             <JooyeonWelcomeModal staffEmail={staff.email} />
+            <ClassStudioLaunchNotice staffEmail={staff.email} />
             <SiteBannerHost />
           </TaskQueueRouteHost>
         </AdminShell>

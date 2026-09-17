@@ -13,6 +13,7 @@
 
 import { requireStaffAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { PRIME_REPORT_MARKER } from "@/actions/workbench/passage-constants";
 import { toErrorMessage, type StudyActionResult } from "./_shared";
 
 /** 영어 경로 과목 스코프 — null=영어(무회귀 계약), KOREAN 제외 */
@@ -113,7 +114,15 @@ export async function listAssignableWorksheets(): Promise<
     const staff = await requireStaffAuth();
     const [reports, folders] = await Promise.all([
       prisma.passageReport.findMany({
-        where: { academyId: staff.academyId, deletedAt: null },
+        // 영어 기본(PRIME)만 배정 후보다 — 마커 무필터였던 **선재 구멍**(26-08-31 렌즈6):
+        // 파이널·실전·직독직해·국어 행까지 후보로 떠서, 배정해도 하류
+        // study-item-preview(:63 `generationPlan !== PRIME` 드롭 게이트)가 문항을 버려
+        // 학생 뷰어가 무설명 빈 화면이 됐다. 소비처 게이트와 같은 단수 마커로 정합.
+        where: {
+          academyId: staff.academyId,
+          deletedAt: null,
+          generationPlan: PRIME_REPORT_MARKER,
+        },
         select: {
           id: true,
           title: true,

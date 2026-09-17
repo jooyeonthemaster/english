@@ -11,7 +11,7 @@ import {
   locateImpliedTarget,
   parseMdImplied,
 } from "../src/lib/md-qgen/parser-implied";
-import { gateMdImplied } from "../src/lib/md-qgen/gate-implied";
+import { gateMdImplied, impliedGateAdvisories } from "../src/lib/md-qgen/gate-implied";
 import {
   adaptMdImpliedToAiQuestion,
   IMPLIED_MD_DIRECTION,
@@ -77,6 +77,21 @@ function gateOf(
 ): string[] {
   const q = autoSnapImpliedTarget(parseMdImplied(text), passage).question;
   return gateMdImplied(q, passage, { optionCount: 5, answerCount: 1, ...options });
+}
+
+// 26-08-22 강등분(단일단어·내용어<2·지엽·절대표현 미끼)의 비차단 권고 채널 —
+// 레인은 게이트 클린일 때 corrections 로 싣는다(lane-implied.parseAndGate).
+function advisoriesOf(
+  text: string,
+  passage = PASSAGE,
+  options?: Parameters<typeof gateMdImplied>[2],
+): string[] {
+  const q = autoSnapImpliedTarget(parseMdImplied(text), passage).question;
+  return impliedGateAdvisories(q, passage, {
+    optionCount: 5,
+    answerCount: 1,
+    ...options,
+  });
 }
 
 // ───────────────────────────────────────────────────────────────────────────
@@ -187,14 +202,31 @@ check(
     ),
   ).some((i) => i.includes("한글이 섞임")),
 );
+// 26-08-22 기출 실측: 영어 선지 단어수 하한은 2단어('stay calm'/'blame yourself'
+// 고1 학평 2020, 1단어 선지 0건) — 임계 3→2 완화. 2단어 통과, 1단어만 반려.
 check(
-  "게이트: 영어 보기 설정에서 한두 단어 선지 반려",
+  "게이트: 2단어 선지 통과(26-08-22 완화, 기출 하한 2단어)",
   gateOf(
     GOOD.replace(
       "⑤ Residents demanded the cheaper slabs for their streets.",
       "⑤ Cheap slabs",
     ),
-  ).some((i) => i.includes("한두 단어 라벨")),
+  ).length === 0,
+  gateOf(
+    GOOD.replace(
+      "⑤ Residents demanded the cheaper slabs for their streets.",
+      "⑤ Cheap slabs",
+    ),
+  ).join(" / "),
+);
+check(
+  "게이트: 영어 보기 설정에서 단일 단어 선지 반려",
+  gateOf(
+    GOOD.replace(
+      "⑤ Residents demanded the cheaper slabs for their streets.",
+      "⑤ Slabs",
+    ),
+  ).some((i) => i.includes("한 단어뿐")),
 );
 
 // ───────────────────────────────────────────────────────────────────────────
@@ -210,15 +242,47 @@ check(
     i.includes("축자로 없음"),
   ),
 );
+// 26-08-22 기출 실측: 밑줄 단어수 분포 1~13(6단어 초과 24/93=25.8%, 수능 포함) —
+// 6단어 게이트 집행은 차단 자격 상실. 임계를 관측 최대(13) 밖 14로 완화:
+// 7단어는 통과하고 15단어부터 반려한다(6단어는 프롬프트 레버로만 유지).
 check(
-  "게이트: 밑줄 7단어 초과 반려",
-  gateOf(GOOD.replace(TARGET, "rewriting a page it had never read")).some((i) =>
+  "게이트: 밑줄 7단어 통과(26-08-22 완화, 기출 7~13단어 실존)",
+  !gateOf(GOOD.replace(TARGET, "rewriting a page it had never read")).some((i) =>
     i.includes("너무 김"),
   ),
+  gateOf(GOOD.replace(TARGET, "rewriting a page it had never read")).join(" / "),
 );
 check(
-  "게이트: 단일 단어 밑줄 반려",
-  gateOf(GOOD.replace(TARGET, "pavements")).some((i) => i.includes("단일 단어")),
+  "게이트: 밑줄 15단어 초과 반려(게이트 임계 14)",
+  gateOf(
+    GOOD.replace(TARGET, PASSAGE.split(/\s+/).slice(0, 16).join(" ")),
+  ).some((i) => i.includes("너무 김")),
+);
+// 26-08-22 강등: 단일 단어 표적은 기출 실존('None' 2019 6월 평가원 29번) —
+// 차단이 아니라 비차단 권고로 기록한다(판정 계산은 유지).
+check(
+  "게이트: 단일 단어 밑줄은 차단하지 않는다(26-08-22 강등)",
+  !gateOf(GOOD.replace(TARGET, "pavements")).some((i) => i.includes("단일 단어")),
+  gateOf(GOOD.replace(TARGET, "pavements")).join(" / "),
+);
+check(
+  "권고: 단일 단어 밑줄은 비차단 권고로 기록",
+  advisoriesOf(GOOD.replace(TARGET, "pavements")).some(
+    (i) => i.startsWith("참고(비차단)") && i.includes("단일 단어"),
+  ),
+  advisoriesOf(GOOD.replace(TARGET, "pavements")).join(" / "),
+);
+// 26-08-22 강등: 내용어<2 표적도 기출 10/93(10.8%, 'the ghost' 2027 평가원 등
+// 관용구·비유)이 정상 — 비차단 권고로만 기록.
+check(
+  "권고: 내용어<2 밑줄은 차단 없이 권고로 기록",
+  !gateOf(GOOD.replace(TARGET, "the ground")).some((i) =>
+    i.includes("내용어가 2개 미만"),
+  ) &&
+    advisoriesOf(GOOD.replace(TARGET, "the ground")).some(
+      (i) => i.startsWith("참고(비차단)") && i.includes("내용어가 2개 미만"),
+    ),
+  advisoriesOf(GOOD.replace(TARGET, "the ground")).join(" / "),
 );
 check(
   "게이트: 후행 기능어 절단 반려",
@@ -238,15 +302,25 @@ check(
   );
 }
 {
-  // 수사의문문 자리 — 자문자답 구조는 답변 쪽에 밑줄을 그어야 한다.
+  // 수사의문문 — 26-08-22 완화: 기출 오반려 3/93 전부 문장 분기 발화였고 표적
+  // 자체가 ?로 끝난 기출은 0건. 기출은 수사의문문 문장 **내부** 표적에 실제로
+  // 밑줄을 긋는다('give up the ghost', 2027 6월 평가원) — 문장 분기는 삭제,
+  // 표현 분기(표적 자체가 ?로 끝남)만 차단 유지.
   const qPassage =
     "Why should anyone care about old pavements? The worn stones hold the marks of generations who crossed them, and those marks vanish once the surface is lifted.";
   check(
-    "게이트: 수사의문문 자리 반려",
-    gateOf(GOOD.replace(TARGET, "care about old pavements"), qPassage).some((i) =>
+    "게이트: 수사의문문 문장 내부 표적 통과(26-08-22 문장 분기 삭제)",
+    !gateOf(GOOD.replace(TARGET, "care about old pavements"), qPassage).some((i) =>
       i.includes("수사적 질문"),
     ),
     gateOf(GOOD.replace(TARGET, "care about old pavements"), qPassage).join(" / "),
+  );
+  check(
+    "게이트: ?로 끝나는 표적은 반려(표현 분기 잔존)",
+    gateOf(GOOD.replace(TARGET, "care about old pavements?"), qPassage).some((i) =>
+      i.includes("수사적 질문"),
+    ),
+    gateOf(GOOD.replace(TARGET, "care about old pavements?"), qPassage).join(" / "),
   );
 }
 {
@@ -288,15 +362,30 @@ check(
   const localMd = GOOD.replace(TARGET, "yellow cards");
   const killer = gateOf(localMd, localPassage, { difficulty: "KILLER" });
   const inter = gateOf(localMd, localPassage, { difficulty: "INTERMEDIATE" });
+  // 26-08-22 강등: 지엽 표적 기출 1/93('an urban green space paradox' 고1 학평
+  // 2025-10) — 표본상 완화 임계 도출 불가라 차단 자격 상실, KILLER 권고로만.
   check(
-    "게이트: 지엽(예시·실험) 표적 KILLER 반려",
-    killer.some((i) => i.includes("지엽 표현")),
+    "게이트: 지엽(예시·실험) 표적은 KILLER 에서도 차단하지 않는다(26-08-22 강등)",
+    !killer.some((i) => i.includes("지엽 표현")),
     killer.join(" / "),
+  );
+  check(
+    "권고: 지엽 표적은 KILLER 비차단 권고로 기록",
+    advisoriesOf(localMd, localPassage, { difficulty: "KILLER" }).some(
+      (i) => i.startsWith("참고(비차단)") && i.includes("지엽 표현"),
+    ),
+    advisoriesOf(localMd, localPassage, { difficulty: "KILLER" }).join(" / "),
   );
   check(
     "게이트: 지엽 표적은 INTERMEDIATE 에서 통과(fast 극성 동기)",
     inter.length === 0,
     inter.join(" / "),
+  );
+  check(
+    "권고: 지엽 권고는 INTERMEDIATE 에서 미발화(KILLER 전용 극성)",
+    !advisoriesOf(localMd, localPassage, { difficulty: "INTERMEDIATE" }).some((i) =>
+      i.includes("지엽 표현"),
+    ),
   );
 }
 
@@ -312,15 +401,31 @@ check(
   );
   const killer = gateOf(ABSOLUTE_EN, PASSAGE, { difficulty: "KILLER" });
   const inter = gateOf(ABSOLUTE_EN, PASSAGE, { difficulty: "INTERMEDIATE" });
+  // 26-08-22 강등: 절대어 오답은 기출 12/93(12.9%, 2024 수능 본시험 포함)의
+  // 정규 미끼(요약문 절대어 73% 선례와 동일 계통) — 차단 자격 상실, KILLER
+  // 권고로만 기록한다(라벨 지목은 유지).
   check(
-    "게이트: 절대표현(always) 오답 KILLER 반려 + 라벨 지목",
-    killer.some((i) => i.includes("④ 선지가 절대표현 미끼") && i.includes("always")),
+    "게이트: 절대표현(always) 오답은 차단하지 않는다(26-08-22 강등)",
+    !killer.some((i) => i.includes("절대표현 미끼")),
     killer.join(" / "),
+  );
+  check(
+    "권고: 절대표현(always) 오답 KILLER 권고 + 라벨 지목",
+    advisoriesOf(ABSOLUTE_EN, PASSAGE, { difficulty: "KILLER" }).some(
+      (i) => i.includes("④ 선지가 절대표현 미끼") && i.includes("always"),
+    ),
+    advisoriesOf(ABSOLUTE_EN, PASSAGE, { difficulty: "KILLER" }).join(" / "),
   );
   check(
     "게이트: 절대표현 미끼는 INTERMEDIATE 에서 통과(fast 극성 동기)",
     inter.length === 0,
     inter.join(" / "),
+  );
+  check(
+    "권고: 절대표현 권고는 INTERMEDIATE 에서 미발화(KILLER 전용 극성)",
+    !advisoriesOf(ABSOLUTE_EN, PASSAGE, { difficulty: "INTERMEDIATE" }).some((i) =>
+      i.includes("절대표현 미끼"),
+    ),
   );
 }
 {
@@ -342,10 +447,22 @@ check(
     difficulty: "KILLER",
     optionLanguage: "ko",
   });
+  // 26-08-22 강등 — 한국어 조사 패턴(만이/만을/만으로)도 같은 채널로 내린다.
   check(
-    "게이트: 한국어 절대표현(만이) 오답 KILLER 반려",
-    issues.some((i) => i.includes("① 선지가 절대표현 미끼")),
+    "게이트: 한국어 절대표현(만이) 오답도 차단하지 않는다(26-08-22 강등)",
+    !issues.some((i) => i.includes("절대표현 미끼")),
     issues.join(" / "),
+  );
+  check(
+    "권고: 한국어 절대표현(만이) 오답 KILLER 권고 + 라벨 지목",
+    advisoriesOf(ABSOLUTE_KO, PASSAGE, {
+      difficulty: "KILLER",
+      optionLanguage: "ko",
+    }).some((i) => i.includes("① 선지가 절대표현 미끼")),
+    advisoriesOf(ABSOLUTE_KO, PASSAGE, {
+      difficulty: "KILLER",
+      optionLanguage: "ko",
+    }).join(" / "),
   );
 }
 {
@@ -361,6 +478,13 @@ check(
     issues.length === 0,
     issues.join(" / "),
   );
+  // 26-08-22 강등 후에는 권고 채널에도 같은 가드가 적용돼야 한다.
+  check(
+    "권고 오반려 방지: 지문이 쓰는 절대어는 권고로도 지목하지 않는다",
+    !advisoriesOf(passageWord, PASSAGE, { difficulty: "KILLER" }).some((i) =>
+      i.includes("절대표현 미끼"),
+    ),
+  );
 }
 {
   // 정답 축을 못 읽었을 때는 침묵한다 — 정답 선지를 미끼로 오인하지 않게.
@@ -374,6 +498,14 @@ check(
     issues.some((i) => i.includes("정답 누락")) &&
       !issues.some((i) => i.includes("절대표현")),
     issues.join(" / "),
+  );
+  // 26-08-22 강등 후에는 권고 채널도 같은 가드를 지켜야 한다 — 정답 축을 못
+  // 읽었으면 정답 선지를 미끼로 오인해 지목하지 않는다.
+  check(
+    "권고: 정답 미확정이면 절대표현 권고도 침묵",
+    !advisoriesOf(noAnswer, PASSAGE, { difficulty: "KILLER" }).some((i) =>
+      i.includes("절대표현"),
+    ),
   );
 }
 

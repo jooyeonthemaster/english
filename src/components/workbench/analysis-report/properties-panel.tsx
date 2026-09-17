@@ -12,6 +12,7 @@ import {
   LayoutGrid,
   Minus,
   Plus,
+  RotateCcw,
   Rows3,
   Trash2,
 } from "lucide-react";
@@ -19,6 +20,7 @@ import { useEffect } from "react";
 
 import { REPORT_THEMES } from "@/lib/passage-report/analysis-report/design-tokens";
 import {
+  isFinalOnepageReportShape,
   NUMBERED_SECTION_LABELS,
   reportThemeIdSchema,
   type ActivityBlock,
@@ -27,6 +29,7 @@ import {
   type BlockMeta,
   type CustomBlock,
   type ReportCover,
+  type ReportFonts,
   type ReportThemeId,
   type VocabTestLayout,
   type VocabTestMode,
@@ -42,6 +45,8 @@ import { ActivityOptions } from "./activity-options";
 import { VocabTestOptions } from "./vocab-test-options";
 import { CoverPanel, LogoPanel } from "./cover-logo-panels";
 import { PanelGroup, ToggleRow } from "./panel-primitives";
+import { WorksheetFontPicker } from "./worksheet-font-picker";
+import { worksheetFontLabel } from "./worksheet-fonts";
 import { PanelSection, SortablePanelStack } from "./panel-section";
 import {
   DESIGN_TEMPLATE_LABELS,
@@ -56,6 +61,28 @@ const ADD_LABEL: Partial<Record<string, string>> = {
   summary: "요약문",
 };
 
+// [E23] 설정 섹션 자동 스크롤은 반드시 **패널 자체 스크롤러** 기준 상대 스크롤로.
+// scrollIntoView 는 스크롤 가능한 조상을 전부 타고 올라가 window 까지 하이재킹한다
+// (실측: 조판 임베드에서 페이지가 285px 스크롤돼 상단바 소실·푸터 26% 노출, 복구 없음).
+// block:"nearest" 완화 금지 — 문서도 함께 움직인다. 조상 탐색 자체를 끊는 것이 정본
+// (AnalysisReportEditor 의 scrollToBlock 관용구와 동형: scrollTop + elRect.top - scrollerRect.top - 여백).
+function scrollPanelToAnchor(el: HTMLElement) {
+  let scroller: HTMLElement | null = el.parentElement;
+  while (scroller) {
+    const overflowY = window.getComputedStyle(scroller).overflowY;
+    if (overflowY === "auto" || overflowY === "scroll") break;
+    scroller = scroller.parentElement;
+  }
+  // 스크롤러(패널 aside 내부 overflow-y-auto)가 없으면 아무것도 하지 않는다 — window 스크롤 금지.
+  if (!scroller) return;
+  const scrollerRect = scroller.getBoundingClientRect();
+  const elRect = el.getBoundingClientRect();
+  scroller.scrollTo({
+    top: Math.max(0, scroller.scrollTop + elRect.top - scrollerRect.top - 10),
+    behavior: "smooth",
+  });
+}
+
 export function PropertiesPanel({
   report,
   active,
@@ -65,6 +92,7 @@ export function PropertiesPanel({
   activityActive,
   activityActivateNonce,
   onActivateActivity,
+  activitySentenceCount,
   activePos,
   total,
   fontScale,
@@ -95,7 +123,9 @@ export function PropertiesPanel({
   onLogoFile,
   onToggleEnglishPage,
   onBrand,
+  onDocFonts,
   settingsOpen,
+  storageNamespace,
 }: {
   report: AnalysisReport;
   active: ItemDescriptor | null;
@@ -106,6 +136,8 @@ export function PropertiesPanel({
   /** 팔레트에서 활동을 (재)활성화한 횟수 — 접힌 설정 섹션을 다시 펼치는 신호. */
   activityActivateNonce: number;
   onActivateActivity: () => void;
+  /** 파이널 문서는 passage 섹션이 없어 0 이 되므로 편집기가 활동 생성 소스 기준 문장 수를 내려준다(E23). */
+  activitySentenceCount?: number;
   activePos: number;
   total: number;
   fontScale: number;
@@ -114,6 +146,8 @@ export function PropertiesPanel({
   onLogoFile: (file?: File | null) => void;
   onToggleEnglishPage: () => void;
   onBrand: (value: string) => void;
+  /** 문서 전체 글꼴 패치(한글/영문 축). undefined 를 넣으면 그 축이 기본으로 돌아간다. */
+  onDocFonts: (patch: Partial<ReportFonts>) => void;
   settingsOpen: boolean;
   onTheme: (t: ReportThemeId) => void;
   onMetaPatch: (patch: Partial<BlockMeta>) => void;
@@ -138,6 +172,13 @@ export function PropertiesPanel({
   onScrollToBlock: (id: string) => void;
   onDeleteCustom: (id: string) => void;
   onDeleteSection: (sectionIndex: number) => void;
+  /**
+   * [E21-3] 임베드 localStorage 네임스페이스(AnalysisReportEditor 의 `storageNs`).
+   * 섹션 순서/접힘 2키를 조판 표면과 독립 라우트가 공유하지 않도록 아래 `SortablePanelStack`
+   * **두 곳 모두**에 흘린다(한 곳만 넘기면 설정 탭/편집 탭이 서로 다른 키를 쓴다).
+   * 미전달이면 현행 상수 키 → 독립 라우트 동작 불변.
+   */
+  storageNamespace?: string;
 }) {
   // 블록을 선택하면 '블록 편집' 카드가 화면 위쪽으로 자연스레 스크롤되어 도구가 최대한 보이게.
   const activeId = active?.id ?? null;
@@ -145,7 +186,7 @@ export function PropertiesPanel({
     if (!activeId) return;
     const el = document.getElementById("panel-block-edit");
     if (!el) return;
-    const raf = requestAnimationFrame(() => el.scrollIntoView({ block: "start", behavior: "smooth" }));
+    const raf = requestAnimationFrame(() => scrollPanelToAnchor(el));
     return () => cancelAnimationFrame(raf);
   }, [activeId]);
   // '단어 시험지' 카드를 누르면(누를 때마다) 그 설정 섹션이 보이도록 패널을 스크롤.
@@ -153,7 +194,7 @@ export function PropertiesPanel({
     if (!vocabTestFocused) return;
     const el = document.getElementById("panel-vocab-test-edit");
     if (!el) return;
-    const raf = requestAnimationFrame(() => el.scrollIntoView({ block: "start", behavior: "smooth" }));
+    const raf = requestAnimationFrame(() => scrollPanelToAnchor(el));
     return () => cancelAnimationFrame(raf);
   }, [vocabTestFocused, vocabTestActivateNonce]);
   const align = activeMeta.align ?? "left";
@@ -197,6 +238,52 @@ export function PropertiesPanel({
       </p>
     </PanelSection>
   );
+  // ── 문서 전체 글꼴 ──
+  // 조판 CSS 가 `--font-ko`/`--font-en` 두 축이라 피커도 두 축이다. 한 축으로 뭉개면
+  // "영어 지문 박스만 안 바뀐다"가 그대로 발생한다(items.ts buildReportRootStyle 주석).
+  const docFontSummary = (() => {
+    const ko = report.fonts?.ko;
+    const en = report.fonts?.en;
+    if (!ko && !en) return "기본 (맑은 고딕 · 세리프)";
+    return `${worksheetFontLabel(ko)} · ${worksheetFontLabel(en)}`;
+  })();
+  const fontsPanel = (
+    <PanelSection sectionId="fonts" title="글꼴" summary={docFontSummary}>
+      <div className="space-y-1.5">
+        <WorksheetFontPicker
+          lang="ko"
+          slotLabel="한글"
+          value={report.fonts?.ko}
+          onChange={(family) => onDocFonts({ ko: family })}
+        />
+        <WorksheetFontPicker
+          lang="latin"
+          slotLabel="영문"
+          value={report.fonts?.en}
+          onChange={(family) => onDocFonts({ en: family })}
+        />
+        {report.fonts?.ko || report.fonts?.en ? (
+          <button
+            type="button"
+            onClick={() => onDocFonts({ ko: undefined, en: undefined })}
+            className="inline-flex items-center gap-1 rounded-md px-1 py-0.5 text-[11px] font-medium text-slate-400 transition-colors hover:text-slate-600"
+          >
+            <RotateCcw className="h-3 w-3" /> 기본 글꼴로 되돌리기
+          </button>
+        ) : null}
+      </div>
+      <p className="mt-2 text-[10.5px] leading-relaxed text-slate-400">
+        조판된 <b className="text-slate-500">모든 텍스트</b>에 적용돼요. 블록 하나만,
+        혹은 <b className="text-slate-500">드래그한 글자만</b> 바꾸려면 본문을 클릭했을 때 뜨는
+        서식 툴바의 <b className="text-slate-500">글꼴</b> 버튼을 쓰세요.
+        <br />
+        <span className="text-slate-300">
+          기본 글꼴 외에는 웹 글꼴을 내려받아 쓰므로 인쇄 준비가 조금 느려질 수 있어요.
+        </span>
+      </p>
+    </PanelSection>
+  );
+
   const activeSection = active && active.sectionIndex >= 0 ? report.sections[active.sectionIndex] : null;
   const activeWorksheet = activeSection?.kind === "learning-worksheet" ? activeSection : null;
   const passageSentenceCount = (() => {
@@ -237,10 +324,11 @@ export function PropertiesPanel({
 
   if (settingsOpen) {
     return (
-      <SortablePanelStack>
+      <SortablePanelStack ns={storageNamespace}>
         {coverPanel}
         {englishPagePanel}
         {logoPanel}
+        {fontsPanel}
         <PanelSection sectionId="theme" title="디자인 템플릿" summary={DESIGN_TEMPLATE_LABELS[report.themeId]}>
           <div className="flex flex-col gap-1.5">
             {reportThemeIdSchema.options.map((t) => {
@@ -278,6 +366,7 @@ export function PropertiesPanel({
       onActivateActivity={onActivateActivity}
       vocabTestActive={vocabTestActive}
       vocabTestActivateNonce={vocabTestActivateNonce}
+      ns={storageNamespace}
     >
       {isCover ? (
         <PanelSection sectionId="cover-edit" title="표지 편집">
@@ -463,6 +552,24 @@ export function PropertiesPanel({
                 })}
               </div>
             </div>
+            {/* 블록 글꼴 — 문서 전체(글꼴 패널)와 선택 글자(서식 툴바) 사이의 중간 축.
+                「문서 따름」이 기본이라, 여기서 고른 값은 이 블록에서만 문서 설정을 덮는다. */}
+            <div className="mt-2 space-y-1.5 border-t border-slate-100 pt-2">
+              <WorksheetFontPicker
+                lang="ko"
+                slotLabel="한글"
+                value={activeMeta.fontKo}
+                inheritLabel="문서 따름"
+                onChange={(family) => onMetaPatch({ fontKo: family })}
+              />
+              <WorksheetFontPicker
+                lang="latin"
+                slotLabel="영문"
+                value={activeMeta.fontEn}
+                inheritLabel="문서 따름"
+                onChange={(family) => onMetaPatch({ fontEn: family })}
+              />
+            </div>
           </PanelGroup>
           ) : null}
 
@@ -473,7 +580,8 @@ export function PropertiesPanel({
                   { layout: "table", label: "1열 표", icon: Rows3 },
                   { layout: "two-column", label: "2열 카드", icon: LayoutGrid },
                 ] as const).map(({ layout, label, icon: Icon }) => {
-                  const selected = (activeSection.vocabStudyLayout ?? "table") === layout;
+                  // 기본값 two-column — vocabulary-flow.tsx 의 렌더 기본값과 반드시 동기.
+                  const selected = (activeSection.vocabStudyLayout ?? "two-column") === layout;
                   return (
                     <button
                       key={layout}
@@ -642,7 +750,7 @@ export function PropertiesPanel({
         <PanelSection sectionId="activity-edit" title={`${activityBlockLabel(activityBlock)} 설정`}>
           <ActivityOptions
             block={activityBlock}
-            sentenceCount={passageSentenceCount}
+            sentenceCount={activitySentenceCount ?? passageSentenceCount}
             answerKeyPageOn={report.activityAnswerKeyPage !== false}
             onActivity={onActivity}
           />
@@ -669,6 +777,9 @@ export function PropertiesPanel({
                       vocabMode={mode}
                       vocabTestLayout={vocabTestBlock.vocabTestLayout ?? "table"}
                       vocabTestOnly={!!report.vocabTestOnly}
+                      // [E23] 파이널 문서에서 vocabTestOnly 는 본편 시트·활동·웹툰 전부 소멸
+                      // (section-slots :87 조기 return + assemble :373 게이트 = I3 위반 경로)이라 토글 진입을 차단.
+                      hideVocabTestOnly={isFinalOnepageReportShape(report)}
                       excludedVocabTestCount={vocabTestBlock.vocabTestExcludedKeys?.length ?? 0}
                       vocabTierFilter={vocabTestBlock.vocabTierFilter}
                       onVocabTestMode={onVocabTestMode}

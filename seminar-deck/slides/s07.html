@@ -1,0 +1,283 @@
+<section class="slide slide--dark" id="s07"
+  data-title="ST 01+" data-kr="지문 해부"
+  data-zone="생성" data-zone-en="GENERATE"
+  data-part="PART 1 — 기능 브리핑"
+  data-in="텍스트 지문"
+  data-out="문장별 해석 · 구조 · 어법 · 어휘"
+  data-note="학습지 5크레딧">
+
+  <div class="pad s07-wrap">
+
+    <!-- ── 좌: 카피 ── -->
+    <div class="s07-copy">
+      <div class="st-badge" data-step="0" data-fx="none">
+        <span class="num">ST 01+</span><span class="nm">READ</span>
+      </div>
+
+      <h2 class="s07-h" data-step="0">
+        넣기만 하면<br>
+        <em>읽어냅니다.</em>
+      </h2>
+
+      <p class="s07-lead" data-step="0" data-fx="none">
+        문장별 직독직해, 논리 구조, 어법 포인트, 핵심 어휘까지 —<br>
+        출제의 재료가 먼저 정리됩니다.
+      </p>
+
+      <p class="s07-tail" data-step="4" data-fx="left">
+        이 분석이 곧 <b>문항의 근거</b>가 됩니다.<br>
+        해설이 지문과 따로 놀지 않는 이유입니다.
+      </p>
+    </div>
+
+    <!-- ── 우: 학습지 실물 형식 분석 카드 ── -->
+    <div class="s07-right">
+
+      <div class="s07-card" id="s07-card" data-focus="0" data-step="0" data-fx="scale">
+
+        <!-- 크롬 -->
+        <div class="s07-top">
+          <span class="s07-logo latin">S</span>
+          <span class="s07-tt">심층 지문 분석 학습지</span>
+          <span class="s07-src">The Gift of the Magi — O. Henry</span>
+        </div>
+
+        <!-- 분석 4층 -->
+        <div class="s07-layers" data-step="1" data-fx="none" data-noadvance>
+          <span class="s07-lk mono">분석 4층</span>
+          <div class="s07-lrow">
+            <button type="button" class="s07-layer" aria-controls="s07-card"><i></i>문장별 직독직해</button>
+            <button type="button" class="s07-layer" aria-controls="s07-card"><i></i>논리 구조 분석</button>
+            <button type="button" class="s07-layer" aria-controls="s07-card"><i></i>어법 포인트</button>
+            <button type="button" class="s07-layer" aria-controls="s07-card"><i></i>핵심 어휘</button>
+          </div>
+        </div>
+
+        <!-- 본문 -->
+        <div class="s07-body">
+
+          <div class="s07-sec">
+            <span class="s07-bar"></span>
+            <span class="s07-sh">문장별 직독직해</span>
+          </div>
+
+          <ol class="s07-sents" data-step="2" data-fx="none">
+            <li class="s07-sent">
+              <span class="s07-bd mono">1</span>
+              <div class="s07-line">
+                <p class="s07-en">Three times Della counted it.</p>
+                <p class="s07-ko"><span class="s07-ar mono">↳</span>델라는 그것을 세 번이나 셌다.</p>
+              </div>
+            </li>
+            <li class="s07-sent">
+              <span class="s07-bd mono">2</span>
+              <div class="s07-line">
+                <p class="s07-en">And the next day would be Christmas.</p>
+                <p class="s07-ko"><span class="s07-ar mono">↳</span>그리고 다음 날은 크리스마스였다.</p>
+              </div>
+            </li>
+            <li class="s07-sent">
+              <span class="s07-bd mono">3</span>
+              <div class="s07-line">
+                <p class="s07-en">There was clearly <span class="mk mk-g">nothing to do but</span> flop down on the <span class="mk mk-v">shabby</span> little couch and <span class="mk mk-v">howl</span>.</p>
+                <p class="s07-ko"><span class="s07-ar mono">↳</span>허름한 작은 소파에 주저앉아 엉엉 우는 것 말고는 할 수 있는 일이 분명 없었다.</p>
+              </div>
+            </li>
+          </ol>
+
+          <div class="s07-gwrap" data-step="3" data-fx="none">
+            <div class="s07-sec">
+              <span class="s07-bar"></span>
+              <span class="s07-sh">어법 포인트</span>
+            </div>
+            <div class="s07-gchips">
+              <span class="s07-gchip">nothing to do but + 동사원형</span>
+              <span class="s07-gchip">과거분사 후치수식</span>
+              <span class="s07-gchip">목적격 관계대명사</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="s07-cap" data-step="0" data-fx="none">
+        <b class="mono">SMOAT</b> 심층 지문 분석 학습지 — 학습지 실물과 동일 형식
+      </div>
+
+    </div>
+
+  </div>
+
+<style>
+#s07 .s07-wrap { display: grid; grid-template-columns: 620px 1fr; gap: 64px; align-items: center; }
+
+/* ══ 좌: 카피 ══ */
+#s07 .s07-h {
+  font-family: var(--f-display); font-weight: 800; font-size: 66px; line-height: 1.14;
+  letter-spacing: -.03em; color: var(--white); margin-top: 30px;
+}
+#s07 .s07-h em { font-style: normal; color: var(--blue); position: relative; z-index: 1; }
+#s07 .s07-h em::after {
+  content: ''; position: absolute; left: -2px; right: -2px; bottom: 4px; height: 8px;
+  background: rgba(59,130,246,.28); border-radius: 2px; z-index: -1;
+}
+
+#s07 .s07-lead { margin-top: 26px; font-size: 19.5px; line-height: 1.72; color: #93A0B5; }
+
+#s07 .s07-tail {
+  margin-top: 52px; padding: 22px 26px; border-radius: 14px;
+  background: rgba(16,23,37,.78); border: 1px solid var(--ink-3); border-left: 3px solid var(--blue);
+  font-size: 19px; line-height: 1.64; color: #C9D3E2;
+}
+#s07 .s07-tail b { color: var(--white); font-weight: 700; }
+
+/* ══ 우: 학습지 카드 (제품 팔레트 — 강사 웹 워크벤치) ══ */
+#s07 .s07-right { display: flex; flex-direction: column; gap: 14px; }
+
+#s07 .s07-card {
+  --w-ink: #0F172A; --w-ink2: #64748B; --w-line: #E2E8F0; --w-soft: #EFF6FF;
+  --w-blue: #3B82F6; --w-blue-d: #2563EB; --w-blue-l: #BFDBFE; --w-blue-m: #60A5FA;
+  --w-bg: #F8FAFC;
+  position: relative; background: #fff; border: 1px solid var(--w-line); border-radius: 18px;
+  overflow: hidden; font-family: var(--f-body); color: var(--w-ink);
+  box-shadow: 0 34px 84px -26px rgba(4,7,14,.78), 0 0 0 1px rgba(59,130,246,.10);
+}
+#s07 .s07-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; z-index: 2;
+  background: linear-gradient(90deg, transparent, var(--w-blue-m), transparent); opacity: .6;
+}
+
+/* 크롬 바 */
+#s07 .s07-top {
+  display: flex; align-items: center; gap: 13px;
+  padding: 20px 26px; border-bottom: 1px solid var(--w-soft); background: #fff;
+}
+#s07 .s07-logo {
+  flex: none; width: 30px; height: 30px; border-radius: 9px; background: var(--w-blue-d);
+  color: #fff; font-weight: 900; font-size: 14px; letter-spacing: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+#s07 .s07-tt { font-size: 18px; font-weight: 700; letter-spacing: -.012em; color: var(--w-ink); }
+#s07 .s07-src {
+  margin-left: auto; font-family: Georgia, 'Times New Roman', serif; font-size: 14px;
+  color: #1D4ED8; background: var(--w-soft); border: 1px solid var(--w-blue-l);
+  border-radius: 999px; padding: 6px 15px; word-break: normal;
+}
+
+/* 분석 4층 칩 */
+#s07 .s07-layers {
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px 26px; background: var(--w-bg); border-bottom: 1px solid var(--w-soft);
+}
+#s07 .s07-lk { flex: none; font-size: 11px; font-weight: 600; letter-spacing: .18em; color: #94A3B8; }
+#s07 .s07-lrow { display: flex; gap: 9px; }
+#s07 .s07-layer {
+  display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+  font-family: var(--f-body); font-size: 14.5px; font-weight: 700;
+  padding: 8px 15px; border-radius: 999px;
+  background: rgba(59,130,246,.12); border: 1px solid rgba(59,130,246,.45); color: #1D4ED8;
+  transition: all .18s var(--ease-snap);
+}
+#s07 .s07-layer i { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--w-blue); }
+#s07 .s07-layer:hover {
+  transform: translateY(-2px); border-color: var(--w-blue-m);
+  box-shadow: 0 6px 16px -8px rgba(37,99,235,.55);
+}
+
+/* 본문 */
+#s07 .s07-body { padding: 28px 26px 32px; }
+#s07 .s07-sec { display: flex; align-items: center; gap: 11px; margin-bottom: 18px; }
+#s07 .s07-bar { width: 4px; height: 20px; border-radius: 2px; background: var(--w-blue); }
+#s07 .s07-sh { font-size: 16px; font-weight: 700; letter-spacing: -.01em; color: var(--w-ink); }
+
+/* 문장 행 */
+#s07 .s07-sents { list-style: none; position: relative; display: flex; flex-direction: column; gap: 14px; }
+#s07 .s07-sents::before {
+  content: ''; position: absolute; left: 44px; top: 46px; bottom: 46px;
+  border-left: 2px dashed #93C5FD; opacity: 0; transition: opacity .45s ease;
+}
+#s07 .s07-card[data-focus="1"] .s07-sents::before { opacity: 1; }
+
+#s07 .s07-sent {
+  display: flex; align-items: flex-start; gap: 16px;
+  padding: 22px 22px; border-radius: 12px; background: #fff;
+  border: 1px solid var(--w-line); border-left: 3px solid var(--w-line);
+  transition: border-color .3s var(--ease-snap), background .3s var(--ease-snap);
+}
+#s07 .s07-card[data-focus="0"] .s07-sent { border-left-color: var(--w-blue); background: rgba(248,250,252,.85); }
+
+#s07 .s07-bd {
+  position: relative; z-index: 1; flex: none;
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 700; color: #1D4ED8;
+  background: var(--w-soft); border: 1px solid var(--w-blue-l);
+  transition: all .3s var(--ease-snap);
+}
+#s07 .s07-card[data-focus="0"] .s07-bd { background: var(--w-blue); border-color: var(--w-blue); color: #fff; }
+#s07 .s07-card[data-focus="1"] .s07-bd { box-shadow: 0 0 0 5px rgba(59,130,246,.14); }
+
+#s07 .s07-line { min-width: 0; }
+#s07 .s07-en {
+  font-family: Georgia, 'Times New Roman', serif; font-size: 20px; line-height: 1.5;
+  color: #111827; word-break: normal;
+}
+#s07 .s07-ko {
+  display: flex; gap: 9px; margin-top: 10px;
+  font-size: 17px; line-height: 1.6; color: var(--w-ink2);
+}
+#s07 .s07-ar { flex: none; font-size: 15px; color: #93C5FD; }
+
+/* 지문 마킹 (제품 마킹 스타일) */
+#s07 .mk { padding: 0 2px; border-radius: 2px; transition: all .55s ease; }
+#s07 .s07-card[data-focus="2"] .mk-g {
+  text-decoration: underline; text-decoration-style: wavy; text-decoration-color: var(--w-blue);
+  text-decoration-thickness: 2px; text-underline-offset: 4px; color: #1E3A8A; font-weight: 700;
+}
+#s07 .s07-card[data-focus="3"] .mk-v {
+  background: linear-gradient(to top, #DBEAFE 35%, transparent 35%);
+  border-bottom: 2px solid var(--w-blue); color: #1E3A8A; font-weight: 700;
+}
+
+/* 어법 포인트 */
+#s07 .s07-gwrap { margin-top: 30px; padding-top: 30px; border-top: 1px solid var(--w-soft); }
+#s07 .s07-gchips { display: flex; gap: 10px; flex-wrap: wrap; }
+#s07 .s07-gchip {
+  font-size: 15px; font-weight: 700; padding: 11px 18px; border-radius: 999px;
+  background: #fff; border: 1px solid var(--w-line); color: #334155;
+  box-shadow: 0 1px 2px rgba(15,23,42,.06);
+  transition: all .28s var(--ease-snap);
+}
+#s07 .s07-card[data-focus="2"] .s07-gchip {
+  background: var(--w-blue-d); border-color: var(--w-blue-d); color: #fff;
+  transform: translateY(-3px); box-shadow: 0 12px 26px -10px rgba(37,99,235,.85);
+}
+#s07 .s07-card[data-focus="2"] .s07-gchip:nth-child(2) { transition-delay: .06s; }
+#s07 .s07-card[data-focus="2"] .s07-gchip:nth-child(3) { transition-delay: .12s; }
+
+/* 캡션 */
+#s07 .s07-cap {
+  text-align: right; font-family: var(--f-mono); font-size: 11.5px;
+  letter-spacing: .1em; color: var(--txt-4);
+}
+#s07 .s07-cap b { color: var(--blue); font-weight: 600; }
+</style>
+
+<script>
+(() => {
+  const sec = document.getElementById('s07');
+  if (!sec) return;
+  const card = sec.querySelector('#s07-card');
+  const chips = [...sec.querySelectorAll('.s07-layer')];
+  if (!card || !chips.length) return;
+
+  /* 칩 4개는 항상 동등한 활성 상태 — 클릭은 카드 본문의 강조 층만 바꾼다 */
+  const set = (i) => { card.dataset.focus = String(i); };
+
+  chips.forEach((c, i) => c.addEventListener('click', (e) => { e.stopPropagation(); set(i); }));
+
+  sec.addEventListener('slide:enter', () => set(0));
+  set(0);
+})();
+</script>
+</section>

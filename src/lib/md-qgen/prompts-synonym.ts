@@ -137,9 +137,12 @@ function synonymExplanationBlock(
   if (mode === "answer-only") {
     return `${head}. 오답 해설은 쓰지 마라>`;
   }
+  // 26-08-18 O225 해설 다이어트 — "왜 매력적인지" 유혹 서사 지시 제거, 왜 탈락인지 판정 근거 1문장만.
+  //   기제 라벨은 유지: 파서(parser-synonym.ts)는 읽지 않지만 같은 유형의 luna 확장
+  //   (luna-ext/synonym.ts normalizeDecoyPrefix)이 '기제 — 설명' 서식으로 조판 통일하므로 레인 간 지면 정합.
   return `${head}>
 오답:
-${labels[0]} <기제이름 — 왜 매력적이고 어느 한 조건에서 어긋나는지 1문장> (정답 번호는 제외하고 오답 ${wrongCount}개만)
+${labels[0]} <기제이름 — 지문 속 어느 어구 때문에 어느 한 문맥 요구조건에서 왜 탈락인지 딱 1문장. 왜 매력적인지·학생이 왜 고르는지 같은 유혹·심리 서사 금지> (정답 번호는 제외하고 오답 ${wrongCount}개만)
 ...`;
 }
 

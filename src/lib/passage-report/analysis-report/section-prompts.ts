@@ -10,13 +10,15 @@ import type { BuildAnalysisReportPromptInput } from "./prompt";
  *    공유한다(STYLE_CHARTER). 섹션을 따로 만들어도 품질이 떨어지지 않게.
  *  - 각 섹션 프롬프트는 (1) 공통 문체 헌장 + (2) 이미 확정된 passage 문장(번호 기준점) +
  *    (3) 해당 섹션 스펙 + (4) "이 한 섹션 JSON 객체 하나만" 출력 지시로 구성.
- *  - sentenceNo 를 참조하는 섹션(grammar·exam-focus·parsing·learning-worksheet)은
+ *  - sentenceNo 를 참조하는 섹션(grammar·exam-focus·parsing)은
  *    확정된 passage 문장 목록을 컨텍스트로 받아 번호가 어긋나지 않게 한다.
  */
 
+// learning-worksheet(지문 논리 구조 분석)은 26-08-21 유저 결정으로 **폐지**됐다 —
+// 렌더에서 빼는 것으로 끝내지 않고 생성 자체를 막기 위해 이 정본 union 에서 제거한다.
+// (섹션 kind 자체는 유료 '실전 학습지'(워크북/추론)가 계속 쓰므로 스키마에는 남아 있다.)
 export type SectionKind =
   | "passage"
-  | "learning-worksheet"
   | "summary"
   | "grammar"
   | "exam-focus"
@@ -95,15 +97,6 @@ const PASSAGE_SPEC = `## passage — 원문 + 문장별 한글 해석
 - **모든 문장에 ko 해석을 반드시 채운다(누락 금지).**
 - keywords: 핵심 흐름을 잡는 주제어·반복어·대조어 **6~10개**(원문 표현 그대로).`;
 
-const LEARNING_WORKSHEET_SPEC = `## learning-worksheet — 지문 논리 구조 분석 (문장별 기능표만)
-{ "kind":"learning-worksheet",
-  "title":"지문 논리 구조 분석",
-  "logicRows":[ { "sentenceNo":문장번호, "functionLabel":"그 문장의 글 속 기능(짧은 명사구)", "keyPoint":"그 문장이 글에서 하는 핵심 내용·역할을 한국어 한 줄로" } ] }
-- logicRows 는 **5~8개**. 흐름을 따라 "주제 제시 / 통념 / 반박 / 양보 / 역접 / 인과 / 비유 / 결론"처럼 독해·시험에 도움되게.
-- functionLabel=글 속 역할(짧게), keyPoint=그 문장이 글에서 무엇을 하는지 한국어 한 줄(구체적으로).
-- sentenceNo 는 본문 문장 번호와 정확히 일치.
-- ❗ **도식/다이어그램(intro·columns·steps·coreDistinction·conclusion·logicFlow)·workbookSet·cloze·practice·drills·inferenceSet 등 다른 필드는 절대 만들지 마라. logicRows 표만 출력한다.**`;
-
 const SUMMARY_SPEC = `## summary — 핵심 요약 + 영문 주제문
 { "kind":"summary", "sentences":["핵심 요약 한국어 2~4문장"], "thesisEn":"지문 전체를 한 문장으로 압축한 영어 주제문" }`;
 
@@ -133,13 +126,13 @@ const EXAM_FOCUS_SPEC = `## exam-focus — 유형별 출제 포인트 (표)
 const VOCABULARY_SPEC = `## vocabulary — 핵심 어휘 (표)
 { "kind":"vocabulary",
   "rows":[ { "headword":"표제어", "pronunciation":"한글 발음", "meaning":"본문 의미 뜻", "tier":"test", "difficulty":3, "synonyms":"reduce, lessen", "antonyms":"increase, raise" } ] }
-- 어휘 **25~35개**. 쉬운 단어로 개수만 늘리지 말고, 외우거나 시험에서 변형될 중상 난도 표현 중심.
+- 어휘 **14~20개 엄선**(26-08-22 사용자 확정 — 과다 추출 금지). 쉬운 단어·주변부 단어로 개수를 채우지 말고, 이 지문에서 **시험에 실제로 나올 중상 난도 표현만** 고른다. 20개를 넘기지 마라.
 - 각 headword 는 지문에 실제 등장한 단어·구·연어이거나 그 기본형(본문에 없는 관련어/상위어 금지). 연어·숙어·구동사·논리전환·비유 표현 우선.
 - tier 는 "core"|"test"|"challenge" 중 하나(core ≤20%, test 45~55%, challenge 25~35%). difficulty 1~5 정수.
 - ❗ pos 금지, 대신 pronunciation 에 한글 발음.
 - ❗ **synonyms 는 모든 row 에 채우되 정확히 1~2개**(3개 이상 금지 — 표가 넘치고 정답 후보가 흐려진다). 본문에서 쓰인 의미와 같은 결의 흔한 영어 단어로.
 - ❗ **맨 앞 항목이 학생 앱의 "동의어·반의어 연결" 문제에 그대로 출제된다** — 가장 정확한 것을 맨 앞에 두어라.
-- ❗ **antonyms 는 전체 row 의 70% 이상에 실제 값이 있어야 한다**(30행이면 최소 21행, "—" 는 최대 9행). 개수는 정확히 1~2개.
+- ❗ **antonyms 는 전체 row 의 70% 이상에 실제 값이 있어야 한다**(18행이면 최소 13행, "—" 는 최대 5행). 개수는 정확히 1~2개.
 - ❗ **반의어 인정 범위는 셋이다**: ①어휘적 반의어(increase↔decrease) ②정도·극성 반의어(significant↔trivial, immediately↔gradually) ③**이 지문이 직접 맞세운 대조축의 반대편 표현**(지문 안에서 실제로 대조될 때만).
 - ❗ **그래도 반대말이 없는 표현만 "—".** 중립 명사구·현상 명칭("media effect","buying behavior" 류)이 여기 해당한다. **antonyms 키를 빼거나 빈 문자열로 두지 마라 — 반드시 "—" 를 넣어라.** 근거 없는 반의어보다 "—" 가 낫다.
 - ❗ **표제어 선정 단계에서부터 반의어를 고려하라** — 학습 가치가 비슷하면 반의어·대조어가 분명한 쪽을 먼저 넣는다(지문에 없는 단어를 만드는 것은 금지).
@@ -155,7 +148,6 @@ const PARSING_SPEC = `## parsing — 구문 분석 (파스 트리)
 
 const SECTION_SPEC: Record<SectionKind, string> = {
   passage: PASSAGE_SPEC,
-  "learning-worksheet": LEARNING_WORKSHEET_SPEC,
   summary: SUMMARY_SPEC,
   grammar: GRAMMAR_SPEC,
   "exam-focus": EXAM_FOCUS_SPEC,
@@ -165,7 +157,6 @@ const SECTION_SPEC: Record<SectionKind, string> = {
 
 const SECTION_NEEDS_PASSAGE: Record<SectionKind, boolean> = {
   passage: false,
-  "learning-worksheet": true,
   summary: true,
   grammar: true,
   "exam-focus": true,

@@ -1,0 +1,282 @@
+{
+  "generatedAt": "2026-07-27T17:42:41.264Z",
+  "samples": [
+    {
+      "tag": "짧음",
+      "id": "2006_06_3001159-q45",
+      "wordCount": 78
+    },
+    {
+      "tag": "중앙",
+      "id": "ebsi_go1_20230906-q39",
+      "wordCount": 138
+    },
+    {
+      "tag": "장문",
+      "id": "2012_09_3008944-q46-47-48",
+      "wordCount": 389
+    }
+  ],
+  "rows": [
+    {
+      "subType": "ANTONYM",
+      "promptOk": true,
+      "promptLen": 4607,
+      "extras": 1,
+      "eligible": true,
+      "gateRuns": true,
+      "operationType": "QUESTION_GEN_VOCAB",
+      "retryEligible": true
+    },
+    {
+      "subType": "VOCAB_CHOICE",
+      "promptOk": true,
+      "promptLen": 5201,
+      "extras": 0,
+      "eligible": true,
+      "gateRuns": true,
+      "operationType": "QUESTION_GEN_SINGLE",
+      "retryEligible": true
+    },
+    {
+      "subType": "GRAMMAR_CHOICE_COMBO",
+      "promptOk": true,
+      "promptLen": 6799,
+      "extras": 1,
+      "eligible": true,
+      "gateRuns": true,
+      "operationType": "QUESTION_GEN_SINGLE",
+      "retryEligible": true
+    },
+    {
+      "subType": "SENTENCE_ORDER",
+      "promptOk": true,
+      "promptLen": 5800,
+      "extras": 0,
+      "eligible": true,
+      "gateRuns": true,
+      "operationType": "QUESTION_GEN_SINGLE",
+      "retryEligible": true
+    },
+    {
+      "subType": "TITLE",
+      "promptOk": true,
+      "promptLen": 4093,
+      "extras": 0,
+      "eligible": true,
+      "gateRuns": true,
+      "operationType": "QUESTION_GEN_SINGLE",
+      "retryEligible": true
+    },
+    {
+      "subType": "TOPIC",
+      "promptOk": true,
+      "promptLen": 4924,
+      "extras": 0,
+      "eligible": true,
+      "gateRuns": true,
+      "operationType": "QUESTION_GEN_SINGLE",
+      "retryEligible": true
+    },
+    {
+      "subType": "MAIN_IDEA",
+      "promptOk": true,
+      "promptLen": 4330,
+      "extras": 0,
+      "eligible": true,
+      "gateRuns": true,
+      "operationType": "QUESTION_GEN_SINGLE",
+      "retryEligible": true
+    },
+    {
+      "subType": "TOPIC_MAIN_IDEA",
+      "promptOk": true,
+      "promptLen": 4642,
+      "extras": 0,
+      "eligible": true,
+      "gateRuns": true,
+      "operationType": "QUESTION_GEN_SINGLE",
+      "retryEligible": true
+    },
+    {
+      "subType": "IMPLIED_MEANING",
+      "promptOk": true,
+      "promptLen": 5387,
+      "extras": 1,
+      "eligible": true,
+      "gateRuns": true,
+      "operationType": "QUESTION_GEN_SINGLE",
+      "retryEligible": true
+    },
+    {
+      "subType": "REFERENCE",
+      "promptOk": true,
+      "promptLen": 5062,
+      "extras": 0,
+      "eligible": true,
+      "gateRuns": true,
+      "operationType": "QUESTION_GEN_SINGLE",
+      "retryEligible": true
+    },
+    {
+      "subType": "CONTENT_MATCH",
+      "promptOk": true,
+      "promptLen": 4330,
+      "extras": 0,
+      "eligible": true,
+      "gateRuns": true,
+      "operationType": "QUESTION_GEN_SINGLE",
+      "retryEligible": true
+    },
+    {
+      "subType": "SENTENCE_INSERT",
+      "promptOk": true,
+      "promptLen": 5750,
+      "extras": 0,
+      "eligible": true,
+      "gateRuns": true,
+      "operationType": "QUESTION_GEN_SINGLE",
+      "retryEligible": true
+    },
+    {
+      "subType": "IRRELEVANT",
+      "promptOk": true,
+      "promptLen": 6102,
+      "extras": 0,
+      "eligible": true,
+      "gateRuns": true,
+      "operationType": "QUESTION_GEN_SINGLE",
+      "retryEligible": true
+    },
+    {
+      "subType": "SUMMARY_COMPLETE_MC",
+      "promptOk": true,
+      "promptLen": 4941,
+      "extras": 0,
+      "eligible": true,
+      "gateRuns": true,
+      "operationType": "QUESTION_GEN_SINGLE",
+      "retryEligible": true
+    },
+    {
+      "subType": "SYNONYM",
+      "promptOk": true,
+      "promptLen": 5653,
+      "extras": 0,
+      "eligible": true,
+      "gateRuns": true,
+      "operationType": "QUESTION_GEN_VOCAB",
+      "retryEligible": true
+    },
+    {
+      "subType": "CONTEXT_MEANING",
+      "promptOk": true,
+      "promptLen": 5617,
+      "extras": 0,
+      "eligible": true,
+      "gateRuns": true,
+      "operationType": "QUESTION_GEN_VOCAB",
+      "retryEligible": true
+    },
+    {
+      "subType": "GRAMMAR_CORRECTION",
+      "promptOk": true,
+      "promptLen": 4980,
+      "extras": 0,
+      "eligible": true,
+      "gateRuns": true,
+      "operationType": "QUESTION_GEN_SINGLE",
+      "retryEligible": true
+    },
+    {
+      "subType": "CONDITIONAL_WRITING",
+      "promptOk": true,
+      "promptLen": 6278,
+      "extras": 0,
+      "eligible": true,
+      "gateRuns": true,
+      "operationType": "QUESTION_GEN_SINGLE",
+      "retryEligible": true
+    },
+    {
+      "subType": "SENTENCE_TRANSFORM",
+      "promptOk": true,
+      "promptLen": 5822,
+      "extras": 0,
+      "eligible": true,
+      "gateRuns": true,
+      "operationType": "QUESTION_GEN_SINGLE",
+      "retryEligible": true
+    },
+    {
+      "subType": "FILL_BLANK_KEY",
+      "promptOk": true,
+      "promptLen": 4722,
+      "extras": 0,
+      "eligible": true,
+      "gateRuns": true,
+      "operationType": "QUESTION_GEN_SINGLE",
+      "retryEligible": true
+    },
+    {
+      "subType": "SUMMARY_COMPLETE",
+      "promptOk": true,
+      "promptLen": 5578,
+      "extras": 0,
+      "eligible": true,
+      "gateRuns": true,
+      "operationType": "QUESTION_GEN_SINGLE",
+      "retryEligible": true
+    },
+    {
+      "subType": "SUMMARY_WRITING",
+      "promptOk": true,
+      "promptLen": 6238,
+      "extras": 0,
+      "eligible": true,
+      "gateRuns": true,
+      "operationType": "QUESTION_GEN_SINGLE",
+      "retryEligible": true
+    },
+    {
+      "subType": "WORD_ORDER",
+      "promptOk": true,
+      "promptLen": 5260,
+      "extras": 0,
+      "eligible": true,
+      "gateRuns": true,
+      "operationType": "QUESTION_GEN_SINGLE",
+      "retryEligible": true
+    },
+    {
+      "subType": "TOPIC_SENTENCE_WRITING",
+      "promptOk": true,
+      "promptLen": 5009,
+      "extras": 1,
+      "eligible": true,
+      "gateRuns": true,
+      "operationType": "QUESTION_GEN_SINGLE",
+      "retryEligible": true
+    },
+    {
+      "subType": "BLANK_INFERENCE",
+      "promptOk": true,
+      "promptLen": 3038,
+      "extras": 0,
+      "eligible": true,
+      "gateRuns": true,
+      "operationType": "QUESTION_GEN_SINGLE",
+      "retryEligible": true
+    },
+    {
+      "subType": "GRAMMAR_ERROR",
+      "promptOk": true,
+      "promptLen": 3442,
+      "extras": 0,
+      "eligible": true,
+      "gateRuns": true,
+      "operationType": "QUESTION_GEN_SINGLE",
+      "retryEligible": true
+    }
+  ]
+}

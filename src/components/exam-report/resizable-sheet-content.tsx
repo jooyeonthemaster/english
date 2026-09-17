@@ -54,25 +54,73 @@ export function ResizableSheetContent({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // 성능 계약(resizable-panels startResize 동형): 드래그 중에는 React 를 거치지
+  // 않는다 — 매 pointermove 의 setState 는 시트 소비처(워크스페이스·분석 스텝)
+  // 트리를 프레임마다 리렌더시킨다. 이동 중에는 [data-resizable-sheet] 요소의
+  // style.width 에 rAF 코얼레싱으로 직접 쓰고, 놓을 때 한 번만 커밋+영속한다.
+  // 앵커를 못 찾으면 종전 setState 경로로 폴백(무회귀).
   const beginResize = useCallback(
     (e: React.PointerEvent) => {
       e.preventDefault();
       const startX = e.clientX;
       const startWidth = widthRef.current;
+      let latest = startWidth;
+
+      // 포인터 캡처 — 커서가 얇은 그랩바를 벗어나도 드래그가 끊기지 않는다.
+      const handle = e.currentTarget as HTMLElement;
+      try {
+        handle.setPointerCapture(e.pointerId);
+      } catch {
+        /* 캡처 미지원 브라우저는 window 리스너로 폴백 */
+      }
+
+      // 드래그 대상 시트 실체 — 그랩바에서 가장 가까운 [data-resizable-sheet].
+      const sheetEl = handle.closest<HTMLElement>("[data-resizable-sheet]");
+
+      const prevCursor = document.body.style.cursor;
+      const prevSelect = document.body.style.userSelect;
+      const prevPointerEvents = document.body.style.pointerEvents;
       document.body.style.cursor = "col-resize";
       document.body.style.userSelect = "none";
+      // 드래그 중 hover 스타일 재평가 차단(캡처 덕에 move 수신은 유지).
+      document.body.style.pointerEvents = "none";
+
+      // rAF 코얼레싱 — 고주사율 포인터가 프레임당 여러 번 발화해도 기록은 1회.
+      let rafId: number | null = null;
+      const flush = () => {
+        rafId = null;
+        if (sheetEl) sheetEl.style.width = `${latest}px`;
+      };
+
       const onMove = (ev: PointerEvent) => {
         // 우측 드로어: 왼쪽(음의 deltaX)으로 끌수록 넓어진다.
-        setWidth(clamp(startWidth - (ev.clientX - startX)));
+        latest = clamp(startWidth - (ev.clientX - startX));
+        if (sheetEl) {
+          if (rafId === null) rafId = requestAnimationFrame(flush);
+        } else {
+          // 폴백 — 앵커를 못 찾으면 종전대로 상태 갱신.
+          setWidth(latest);
+        }
       };
       const onUp = () => {
         window.removeEventListener("pointermove", onMove);
         window.removeEventListener("pointerup", onUp);
         window.removeEventListener("pointercancel", onUp);
-        document.body.style.cursor = "";
-        document.body.style.userSelect = "";
+        if (rafId !== null) cancelAnimationFrame(rafId);
+        if (sheetEl) sheetEl.style.width = `${latest}px`;
+        // 커밋은 여기서 한 번 — 드래그 내내 리렌더 0회. 영속도 latest 로
+        // (종전 widthRef 저장은 커밋 전 값을 저장하는 셈이라 한 박자 밀렸다).
+        setWidth(latest);
+        document.body.style.cursor = prevCursor;
+        document.body.style.userSelect = prevSelect;
+        document.body.style.pointerEvents = prevPointerEvents;
         try {
-          window.localStorage.setItem(storageKey, String(widthRef.current));
+          handle.releasePointerCapture(e.pointerId);
+        } catch {
+          /* 무시 */
+        }
+        try {
+          window.localStorage.setItem(storageKey, String(latest));
         } catch {
           /* 무시 */
         }
@@ -96,6 +144,8 @@ export function ResizableSheetContent({
   return (
     <SheetContent
       side="right"
+      // 드래그 고속 경로 앵커 — SheetContent 는 props 를 DOM 에 forward 한다.
+      data-resizable-sheet=""
       // 폭·상한을 인라인으로 못박는다(arbitrary Tailwind 폭은 turbopack JIT 함정 +
       // sm:max-w-sm 클램프 회피). 스크롤은 본문에서만.
       style={{ width, maxWidth: "92vw" }}

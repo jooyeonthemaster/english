@@ -134,10 +134,14 @@ function paginationSettingsFrom(
     showQuestionMeta: layout.showQuestionMeta !== false,
     passageStyle: "plain",
     template: (template ?? "clean") as PaginationSettings["template"],
-    // HWPX: 1쪽 헤더(제목/학생정보/안내문)를 본문 표 위 별도 블록으로 그리므로
-    // 실제 한컴 렌더 높이를 page-0 용량에서 빼 첫 표가 1쪽에 들어가게 한다.
-    ...(firstPageHeaderPx ? { firstPageHeaderPx } : {}),
-    ...(contentSafetyPx ? { contentSafetyPx } : {}),
+    // HWPX 는 1쪽 머리말 높이를 page-0 용량에서 뺀다.
+    //   **`!== undefined` 로 검사해야 한다.** truthy 검사(`firstPageHeaderPx ? …`)를 쓰면
+    //   **0 이 falsy 라 키가 통째로 빠지고** pagination 이 자기 기본 머리말 높이를 예약한다.
+    //   E36 에서 머리말을 전부 표지로 옮겨 실제 예약값이 0 이 되면서 이 함정이 실제로
+    //   발동했다(존재하지 않는 머리말 자리를 1쪽에 계속 비워 두는 유령 예약).
+    //   contentSafetyPx 도 같다 — env HWPX_SAFETY_PX=0 이 무시돼 기본 40 이 먹었다.
+    ...(firstPageHeaderPx !== undefined ? { firstPageHeaderPx } : {}),
+    ...(contentSafetyPx !== undefined ? { contentSafetyPx } : {}),
   };
 }
 

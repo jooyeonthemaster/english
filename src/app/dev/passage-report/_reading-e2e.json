@@ -1,0 +1,3135 @@
+{
+ "schemaVersion": 1,
+ "meta": {
+  "eyebrow": "READING ANALYSIS · 직독직해 분석본",
+  "titleKo": "치명적인 질병과 싸운 두 영웅",
+  "titleEn": "Lesson 1. Two Heroes Who Fought a Deadly Disease",
+  "category": "직독직해 분석본",
+  "theme": "고등 영어",
+  "difficulty": 3,
+  "solveTime": "—",
+  "examTypes": "직독직해·구문"
+ },
+ "sections": [
+  {
+   "version": 1,
+   "header": {
+    "curriculumBadge": "고등 영어",
+    "title": "Lesson 1. Two Heroes Who Fought a Deadly Disease",
+    "source": "",
+    "subtitle": "전 문장 슬래시(/) 구 끊어읽기 & 1:1 직독직해 심층 분석본"
+   },
+   "parts": [
+    {
+     "label": "본문 1",
+     "titleKo": "대공황 속 백일해의 참상과 두 여성 연구자의 출발",
+     "sentences": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ]
+    },
+    {
+     "label": "본문 2",
+     "titleKo": "백일해 백신 개발을 위한 켄드릭과 엘더링의 만남과 열정",
+     "sentences": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19
+     ]
+    },
+    {
+     "label": "본문 3",
+     "titleKo": "열악한 조건 속에서도 이어진 백신 연구와 샘플 수집",
+     "sentences": [
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28
+     ]
+    },
+    {
+     "label": "본문 4",
+     "titleKo": "백신 개발 성공과 1차 임상 시험의 긍정적 결과",
+     "sentences": [
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38
+     ]
+    },
+    {
+     "label": "본문 5",
+     "titleKo": "루스벨트 영부인의 지원과 백신의 눈부신 성공",
+     "sentences": [
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50
+     ]
+    },
+    {
+     "label": "본문 6",
+     "titleKo": "부와 명예보다 생명을 택한 진정한 영웅들",
+     "sentences": [
+      51,
+      52,
+      53,
+      54,
+      55
+     ]
+    }
+   ],
+   "sentences": [
+    {
+     "no": 1,
+     "stars": 0,
+     "chunks": [
+      {
+       "en": "One evening in late November 1932,",
+       "ko": "1932년 11월 말 어느 날 저녁,",
+       "marks": [
+        {
+         "text": "in late November",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "a bitterly cold wind blows fiercely",
+       "ko": "몹시 차가운 바람이 매섭게 분다",
+       "marks": [
+        {
+         "text": "bitterly",
+         "kind": "phrase"
+        },
+        {
+         "text": "fiercely",
+         "kind": "grammar"
+        }
+       ]
+      },
+      {
+       "en": "as two figures emerge from a laboratory.",
+       "ko": "두 인물이 실험실에서 나올 때.",
+       "marks": [
+        {
+         "text": "as",
+         "kind": "connective"
+        },
+        {
+         "text": "emerge from",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "1932년 11월 말 어느 날 저녁, 두 인물이 실험실에서 나올 때 몹시 차가운 바람이 매섭게 분다.",
+     "notes": [
+      {
+       "label": "어휘",
+       "tone": "blue",
+       "text": "**bitterly**: 몹시, 지독하게 / **emerge from**: ~에서 나오다"
+      },
+      {
+       "label": "문법",
+       "tone": "red",
+       "text": "**fiercely**: 동사 blows를 수식하는 부사"
+      }
+     ]
+    },
+    {
+     "no": 2,
+     "stars": 1,
+     "chunks": [
+      {
+       "en": "Darkness begins to fall",
+       "ko": "어둠이 내리기 시작한다",
+       "marks": [
+        {
+         "text": "begins to fall",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "as they set out into a world",
+       "ko": "그들이 세상 속으로 나아갈 때",
+       "marks": [
+        {
+         "text": "as",
+         "kind": "connective"
+        },
+        {
+         "text": "set out into",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "of failed banks, collapsed industry, and widespread despair —",
+       "ko": "파산한 은행들, 붕괴한 산업, 그리고 널리 퍼진 절망의 —",
+       "marks": [
+        {
+         "text": "collapsed",
+         "kind": "grammar"
+        },
+        {
+         "text": "widespread",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "a world ruined by three years of the Great Depression.",
+       "ko": "3년간의 대공황으로 황폐해진 세상인.",
+       "marks": [
+        {
+         "text": "ruined by",
+         "kind": "structure"
+        }
+       ]
+      }
+     ],
+     "fullKo": "3년간의 대공황으로 황폐해진 세상, 즉 파산한 은행과 무너진 산업, 널리 퍼진 절망의 세상 속으로 그들이 나설 때 어둠이 내리기 시작한다.",
+     "notes": [
+      {
+       "label": "분사구문",
+       "tone": "red",
+       "text": "**ruined by**: 앞의 명사구 a world를 후치 수식하는 과거분사구(수동)"
+      },
+      {
+       "label": "어휘",
+       "tone": "blue",
+       "text": "**set out into**: ~로 나아가다 / **the Great Depression**: 대공황"
+      }
+     ]
+    },
+    {
+     "no": 3,
+     "stars": 0,
+     "chunks": [
+      {
+       "en": "The workday has come to an end,",
+       "ko": "일과는 끝이 났지만,",
+       "marks": [
+        {
+         "text": "come to an end",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "but for Pearl Kendrick and Grace Eldering,",
+       "ko": "펄 켄드릭과 그레이스 엘더링에게는,",
+       "marks": [
+        {
+         "text": "but",
+         "kind": "connective"
+        }
+       ]
+      },
+      {
+       "en": "a different kind of work is about to begin.",
+       "ko": "다른 종류의 일이 막 시작되려 하고 있다.",
+       "marks": [
+        {
+         "text": "is about to begin",
+         "kind": "grammar"
+        }
+       ]
+      }
+     ],
+     "fullKo": "일과는 끝이 났지만, 펄 켄드릭과 그레이스 엘더링에게는 다른 종류의 일이 막 시작되려 하고 있다.",
+     "notes": [
+      {
+       "label": "표현",
+       "tone": "blue",
+       "text": "**come to an end**: 끝나다, 막을 내리다"
+      },
+      {
+       "label": "문법",
+       "tone": "red",
+       "text": "**be about to + 동사원형**: 막 ~하려고 하다"
+      }
+     ]
+    },
+    {
+     "no": 4,
+     "stars": 1,
+     "chunks": [
+      {
+       "en": "They are on their way",
+       "ko": "그들은 길을 가고 있다",
+       "marks": [
+        {
+         "text": "on their way",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "to visit the homes of children",
+       "ko": "아이들의 가정을 방문하기 위해",
+       "marks": [
+        {
+         "text": "to visit",
+         "kind": "grammar"
+        }
+       ]
+      },
+      {
+       "en": "suffering from a deadly disease called pertussis.",
+       "ko": "백일해라 불리는 치명적인 질병으로 고통받는.",
+       "marks": [
+        {
+         "text": "suffering from",
+         "kind": "structure"
+        },
+        {
+         "text": "called",
+         "kind": "grammar"
+        }
+       ]
+      }
+     ],
+     "fullKo": "그들은 백일해라고 불리는 치명적인 질병으로 고통받는 아이들의 가정을 방문하러 가는 길이다.",
+     "notes": [
+      {
+       "label": "분사수식",
+       "tone": "red",
+       "text": "**suffering from**: children을 수식하는 현재분사(능동) / **called**: disease를 수식하는 과거분사(수동)"
+      },
+      {
+       "label": "어휘",
+       "tone": "blue",
+       "text": "**deadly**: 치명적인 / **pertussis**: 백일해"
+      }
+     ]
+    },
+    {
+     "no": 5,
+     "stars": 1,
+     "chunks": [
+      {
+       "en": "The two women go from home to home",
+       "ko": "두 여성은 집집마다 돌아다닌다",
+       "marks": [
+        {
+         "text": "from home to home",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "collecting samples from the sick children",
+       "ko": "아픈 아이들에게서 검체를 채취하며",
+       "marks": [
+        {
+         "text": "collecting",
+         "kind": "structure"
+        }
+       ]
+      },
+      {
+       "en": "by the faint light of their lamps.",
+       "ko": "램프의 희미한 불빛에 의지하여.",
+       "marks": [
+        {
+         "text": "faint",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "두 여성은 램프의 희미한 불빛에 의지해 아픈 아이들에게서 검체를 채취하며 집집마다 돌아다닌다.",
+     "notes": [
+      {
+       "label": "분사구문",
+       "tone": "red",
+       "text": "**collecting**: 주어의 부대상황(동시동작)을 나타내는 현재분사구문"
+      },
+      {
+       "label": "어휘",
+       "tone": "blue",
+       "text": "**from home to home**: 집집마다 / **faint**: 희미한"
+      }
+     ]
+    },
+    {
+     "no": 6,
+     "stars": 2,
+     "chunks": [
+      {
+       "en": "They listen to the tragic stories",
+       "ko": "그들은 비극적인 이야기를 듣는다",
+       "marks": [
+        {
+         "text": "tragic",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "of desperate and unemployed parents",
+       "ko": "절박하고 실직한 부모들의",
+       "marks": [
+        {
+         "text": "desperate",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "as the children,",
+       "ko": "아이들이 ~하는 동안에,",
+       "marks": [
+        {
+         "text": "as",
+         "kind": "connective"
+        }
+       ]
+      },
+      {
+       "en": "coughing uncontrollably and struggling to breathe,",
+       "ko": "걷잡을 수 없이 기침하고 숨을 쉬려고 발버둥 치며,",
+       "marks": [
+        {
+         "text": "coughing",
+         "kind": "structure"
+        },
+        {
+         "text": "struggling to breathe",
+         "kind": "structure"
+        }
+       ]
+      },
+      {
+       "en": "barely hold on to life.",
+       "ko": "간신히 생명을 이어가는.",
+       "marks": [
+        {
+         "text": "barely",
+         "kind": "grammar"
+        }
+       ]
+      }
+     ],
+     "fullKo": "아이들이 걷잡을 수 없이 기침하고 숨을 쉬려고 발버둥 치며 간신히 생명을 이어가는 동안, 그들은 절박하고 실직한 부모들의 비극적인 사연을 듣는다.",
+     "notes": [
+      {
+       "label": "구문/분사",
+       "tone": "red",
+       "text": "**coughing ~ and struggling ~**: 주어 the children을 부연 수식하는 분사구 삽입"
+      },
+      {
+       "label": "어휘",
+       "tone": "blue",
+       "text": "**uncontrollably**: 통제할 수 없게 / **barely**: 간신히, 겨우 / **hold on to**: ~을 붙잡다"
+      }
+     ]
+    },
+    {
+     "no": 7,
+     "stars": 2,
+     "chunks": [
+      {
+       "en": "Pertussis is a bacterial disease",
+       "ko": "백일해는 박테리아성 질환이다",
+       "marks": [
+        {
+         "text": "bacterial disease",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "characterized by serious coughing, breathing difficulties,",
+       "ko": "심한 기침, 호흡 곤란을 특징으로 하는,",
+       "marks": [
+        {
+         "text": "characterized by",
+         "kind": "structure"
+        }
+       ]
+      },
+      {
+       "en": "and the high-pitched \"whooping\" sound",
+       "ko": "그리고 날카로운 '흡' 하는 소리를",
+       "marks": [
+        {
+         "text": "high-pitched",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "that people with the disease make",
+       "ko": "그 질환을 앓는 사람들이 내는",
+       "marks": [
+        {
+         "text": "that",
+         "kind": "structure"
+        }
+       ]
+      },
+      {
+       "en": "as they try to breathe in.",
+       "ko": "숨을 들이마시려고 애쓸 때.",
+       "marks": [
+        {
+         "text": "breathe in",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "백일해는 심한 기침, 호흡 곤란, 그리고 환자들이 숨을 들이쉬려고 애쓸 때 내는 날카로운 '흡' 하는 소리를 특징으로 하는 박테리아성 질환이다.",
+     "notes": [
+      {
+       "label": "구조분석",
+       "tone": "red",
+       "text": "**characterized by**: 앞의 disease를 수식하는 과거분사구 / **that**: make의 목적어 역할을 하는 목적격 관계대명사"
+      },
+      {
+       "label": "어휘",
+       "tone": "blue",
+       "text": "**high-pitched**: 날카로운, 고음의 / **breathe in**: 숨을 들이쉬다"
+      }
+     ]
+    },
+    {
+     "no": 8,
+     "stars": 0,
+     "chunks": [
+      {
+       "en": "Because of this distinct sound,",
+       "ko": "이 특이한 소리 때문에,",
+       "marks": [
+        {
+         "text": "Because of",
+         "kind": "connective"
+        },
+        {
+         "text": "distinct",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "people started to call the disease \"whooping cough.\"",
+       "ko": "사람들은 그 질병을 '백일해(whooping cough)'라고 부르기 시작했다.",
+       "marks": [
+        {
+         "text": "call",
+         "kind": "grammar"
+        }
+       ]
+      }
+     ],
+     "fullKo": "이러한 특이한 소리 때문에 사람들은 그 질병을 '백일해(whooping cough)'라고 부르기 시작했다.",
+     "notes": [
+      {
+       "label": "문법",
+       "tone": "red",
+       "text": "**call + O + O.C**: the disease를 whooping cough라 부르다(5형식 구문)"
+      },
+      {
+       "label": "어휘",
+       "tone": "blue",
+       "text": "**distinct**: 독특한, 뚜렷한 / **Because of**: ~ 때문에(전치사구)"
+      }
+     ]
+    },
+    {
+     "no": 9,
+     "stars": 1,
+     "chunks": [
+      {
+       "en": "For a long time,",
+       "ko": "오랫동안,",
+       "marks": [
+        {
+         "text": "For a long time",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "this terrible illness was one of the greatest terrors",
+       "ko": "이 끔찍한 질병은 가장 큰 공포 중 하나였다",
+       "marks": [
+        {
+         "text": "one of the greatest terrors",
+         "kind": "structure"
+        }
+       ]
+      },
+      {
+       "en": "of families with young children,",
+       "ko": "어린 자녀가 있는 가정의,",
+       "marks": [
+        {
+         "text": "with young children",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "because babies who contracted it",
+       "ko": "그것에 걸린 아기들이 ~했기 때문에",
+       "marks": [
+        {
+         "text": "because",
+         "kind": "connective"
+        },
+        {
+         "text": "who contracted",
+         "kind": "structure"
+        }
+       ]
+      },
+      {
+       "en": "had a high chance of dying.",
+       "ko": "사망할 확률이 높았기.",
+       "marks": [
+        {
+         "text": "chance of dying",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "오랫동안 이 끔찍한 질병은 어린 자녀가 있는 가정에게 가장 큰 공포 중 하나였는데, 감염된 아기들의 사망 확률이 높았기 때문이다.",
+     "notes": [
+      {
+       "label": "문법",
+       "tone": "red",
+       "text": "**one of the + 최상급 + 복수명사**: one of the greatest terrors / **who**: 주격 관계대명사"
+      },
+      {
+       "label": "어휘",
+       "tone": "blue",
+       "text": "**contract**: (병에) 걸리다 / **terror**: 공포(의 대상)"
+      }
+     ]
+    },
+    {
+     "no": 10,
+     "stars": 0,
+     "chunks": [
+      {
+       "en": "In the 1930s,",
+       "ko": "1930년대에,",
+       "marks": [
+        {
+         "text": "In the 1930s",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "an average of 6,000 people died of whooping cough",
+       "ko": "평균 6,000명의 사람들이 백일해로 사망했다",
+       "marks": [
+        {
+         "text": "an average of",
+         "kind": "phrase"
+        },
+        {
+         "text": "died of",
+         "kind": "grammar"
+        }
+       ]
+      },
+      {
+       "en": "in the United States each year.",
+       "ko": "미국에서 매년.",
+       "marks": [
+        {
+         "text": "each year",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "1930년대 미국에서는 매년 평균 6,000명의 사람들이 백일해로 사망했다.",
+     "notes": [
+      {
+       "label": "표현",
+       "tone": "blue",
+       "text": "**an average of**: 평균 ~의 / **die of**: ~로 사망하다"
+      }
+     ]
+    },
+    {
+     "no": 11,
+     "stars": 0,
+     "chunks": [
+      {
+       "en": "Ninety-five percent of them",
+       "ko": "그들 중 95퍼센트는",
+       "marks": [
+        {
+         "text": "Ninety-five percent of them",
+         "kind": "grammar"
+        }
+       ]
+      },
+      {
+       "en": "were children under five years of age.",
+       "ko": "5세 미만의 어린이들이었다.",
+       "marks": [
+        {
+         "text": "under five years of age",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "그들 중 95퍼센트는 5세 미만의 어린이들이었다.",
+     "notes": [
+      {
+       "label": "수일치",
+       "tone": "red",
+       "text": "**부분표현(95 percent) + of + 복수대명사(them)**: them에 수일치하여 복수 동사 were 사용"
+      },
+      {
+       "label": "표현",
+       "tone": "blue",
+       "text": "**under ~ years of age**: ~세 미만의"
+      }
+     ]
+    },
+    {
+     "no": 12,
+     "stars": 1,
+     "chunks": [
+      {
+       "en": "The cause of the disease had been identified in 1906,",
+       "ko": "그 질병의 원인은 1906년에 규명되었으나,",
+       "marks": [
+        {
+         "text": "had been identified",
+         "kind": "grammar"
+        }
+       ]
+      },
+      {
+       "en": "but the vaccines that had been developed",
+       "ko": "개발되었던 백신들은",
+       "marks": [
+        {
+         "text": "but",
+         "kind": "connective"
+        },
+        {
+         "text": "that had been developed",
+         "kind": "structure"
+        }
+       ]
+      },
+      {
+       "en": "were ineffective.",
+       "ko": "효과가 없었다.",
+       "marks": [
+        {
+         "text": "ineffective",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "그 질병의 원인은 1906년에 규명되었으나, 개발되었던 백신들은 효과가 없었다.",
+     "notes": [
+      {
+       "label": "시제/수동태",
+       "tone": "red",
+       "text": "**had been identified / had been developed**: 과거 기준 시점 이전의 수동 동작을 나타내는 과거완료 수동태(had been p.p.)"
+      },
+      {
+       "label": "어휘",
+       "tone": "blue",
+       "text": "**identify**: 규명하다 / **ineffective**: 효과 없는"
+      }
+     ]
+    },
+    {
+     "no": 13,
+     "stars": 1,
+     "chunks": [
+      {
+       "en": "Scientists and researchers worked for more than 20 years",
+       "ko": "과학자들과 연구자들은 20년 넘게 일했다",
+       "marks": [
+        {
+         "text": "more than 20 years",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "to produce an effective one,",
+       "ko": "효과적인 백신을 만들기 위해,",
+       "marks": [
+        {
+         "text": "to produce",
+         "kind": "grammar"
+        }
+       ]
+      },
+      {
+       "en": "but their efforts were fruitless",
+       "ko": "그러나 그들의 노력은 결실이 없었다",
+       "marks": [
+        {
+         "text": "but",
+         "kind": "connective"
+        },
+        {
+         "text": "fruitless",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "until Kendrick and Eldering came along.",
+       "ko": "켄드릭과 엘더링이 등장할 때까지는.",
+       "marks": [
+        {
+         "text": "came along",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "과학자들과 연구자들은 효과적인 백신을 만들기 위해 20년 넘게 일했으나, 켄드릭과 엘더링이 등장할 때까지 그들의 노력은 결실을 보지 못했다.",
+     "notes": [
+      {
+       "label": "어법",
+       "tone": "red",
+       "text": "**one**: 앞에 나온 단수명사 vaccine을 가리키는 부정대명사 / **to produce**: 목적을 나타내는 to부정사"
+      },
+      {
+       "label": "어휘",
+       "tone": "blue",
+       "text": "**fruitless**: 결실 없는, 헛된 / **come along**: 등장하다, 나타나다"
+      }
+     ]
+    },
+    {
+     "no": 14,
+     "stars": 0,
+     "chunks": [
+      {
+       "en": "Pearl Kendrick studied bacteriology in university",
+       "ko": "펄 켄드릭은 대학에서 세균학을 공부했고",
+       "marks": [
+        {
+         "text": "bacteriology",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "and was recruited by the Michigan Department of Health in 1920.",
+       "ko": "1920년에 미시간주 보건국에 채용되었다.",
+       "marks": [
+        {
+         "text": "and",
+         "kind": "connective"
+        },
+        {
+         "text": "was recruited",
+         "kind": "grammar"
+        }
+       ]
+      }
+     ],
+     "fullKo": "펄 켄드릭은 대학에서 세균학을 공부했고 1920년에 미시간주 보건국에 채용되었다.",
+     "notes": [
+      {
+       "label": "문법",
+       "tone": "red",
+       "text": "**was recruited**: 주어 Pearl Kendrick에 연결된 과거 수동태(채용되다)"
+      },
+      {
+       "label": "어휘",
+       "tone": "blue",
+       "text": "**bacteriology**: 세균학 / **recruit**: 채용하다, 모집하다"
+      }
+     ]
+    },
+    {
+     "no": 15,
+     "stars": 3,
+     "chunks": [
+      {
+       "en": "It was there that",
+       "ko": "바로 그곳에서였다",
+       "marks": [
+        {
+         "text": "It was there that",
+         "kind": "grammar"
+        }
+       ]
+      },
+      {
+       "en": "she met fellow bacteriologist Grace Eldering.",
+       "ko": "그녀가 동료 세균학자 그레이스 엘더링을 만난 것은.",
+       "marks": [
+        {
+         "text": "fellow",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "그녀가 동료 세균학자인 그레이스 엘더링을 만난 것은 바로 그곳에서였다.",
+     "notes": [
+      {
+       "label": "강조구문",
+       "tone": "red",
+       "text": "**It was ~ that ... 강조구문**: 장소 부사 there를 강조(바로 그곳에서 ~했다)"
+      },
+      {
+       "label": "어휘",
+       "tone": "blue",
+       "text": "**fellow**: 동료의 / **bacteriologist**: 세균학자"
+      }
+     ]
+    },
+    {
+     "no": 16,
+     "stars": 0,
+     "chunks": [
+      {
+       "en": "The two quickly bonded,",
+       "ko": "두 사람은 빠르게 유대감을 형성했고,",
+       "marks": [
+        {
+         "text": "bonded",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "and in 1932 they started working together",
+       "ko": "1932년에 함께 연구하기 시작했다",
+       "marks": [
+        {
+         "text": "and",
+         "kind": "connective"
+        },
+        {
+         "text": "started working",
+         "kind": "grammar"
+        }
+       ]
+      },
+      {
+       "en": "on a vaccine for whooping cough.",
+       "ko": "백일해 백신 개발을 위해.",
+       "marks": [
+        {
+         "text": "whooping cough",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "두 사람은 빠르게 친밀해졌고, 1932년에 백일해 백신 연구를 함께 시작했다.",
+     "notes": [
+      {
+       "label": "어휘",
+       "tone": "blue",
+       "text": "**bond**: 유대감을 형성하다, 친밀해지다"
+      },
+      {
+       "label": "문법",
+       "tone": "red",
+       "text": "**started working**: start는 동명사와 to부정사 둘 다 목적어로 취함"
+      }
+     ]
+    },
+    {
+     "no": 17,
+     "stars": 1,
+     "chunks": [
+      {
+       "en": "Personal experience served as motivation for both of them,",
+       "ko": "개인적인 경험이 두 사람 모두에게 동기로 작용했다,",
+       "marks": [
+        {
+         "text": "served as",
+         "kind": "phrase"
+        },
+        {
+         "text": "motivation",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "as they had each survived whooping cough",
+       "ko": "그들이 각자 백일해에서 살아남았었고",
+       "marks": [
+        {
+         "text": "as",
+         "kind": "connective"
+        },
+        {
+         "text": "had each survived",
+         "kind": "grammar"
+        }
+       ]
+      },
+      {
+       "en": "as children themselves",
+       "ko": "어린 시절 스스로",
+       "marks": [
+        {
+         "text": "themselves",
+         "kind": "structure"
+        }
+       ]
+      },
+      {
+       "en": "and remembered the severe pain of the disease.",
+       "ko": "그 질병의 극심한 고통을 기억하고 있었기 때문에.",
+       "marks": [
+        {
+         "text": "severe",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "두 사람 모두 어린 시절 직접 백일해를 겪고 살아남아 그 질병의 극심한 고통을 기억하고 있었기 때문에, 개인적인 경험이 두 사람 모두에게 동기 부여가 되었다.",
+     "notes": [
+      {
+       "label": "시제/어법",
+       "tone": "red",
+       "text": "**had survived ... and remembered**: 기준 과거 시점 이전의 경험을 나타내는 대과거 / **themselves**: 강조 용법의 재귀대명사"
+      },
+      {
+       "label": "표현",
+       "tone": "blue",
+       "text": "**serve as**: ~로서 기능하다, 역할을 하다 / **motivation**: 동기 부여"
+      }
+     ]
+    },
+    {
+     "no": 18,
+     "stars": 0,
+     "chunks": [
+      {
+       "en": "Both scientists were also eager",
+       "ko": "두 과학자는 또한 열망했다",
+       "marks": [
+        {
+         "text": "Both scientists",
+         "kind": "grammar"
+        },
+        {
+         "text": "were also eager",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "to promote children's health.",
+       "ko": "어린이들의 건강을 증진하기를.",
+       "marks": [
+        {
+         "text": "to promote",
+         "kind": "grammar"
+        }
+       ]
+      }
+     ],
+     "fullKo": "두 과학자 모두 어린이들의 건강을 증진하고자 하는 열의도 넘쳤다.",
+     "notes": [
+      {
+       "label": "구문",
+       "tone": "red",
+       "text": "**be eager to + 동사원형**: 몹시 ~하고 싶어 하다, 열망하다"
+      },
+      {
+       "label": "어휘",
+       "tone": "blue",
+       "text": "**promote**: 증진하다, 촉진하다"
+      }
+     ]
+    },
+    {
+     "no": 19,
+     "stars": 0,
+     "chunks": [
+      {
+       "en": "Unfortunately,",
+       "ko": "안타깝게도,",
+       "marks": [
+        {
+         "text": "Unfortunately",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "research funding was extremely limited",
+       "ko": "연구 지원금이 극도로 제한적이었다",
+       "marks": [
+        {
+         "text": "funding",
+         "kind": "phrase"
+        },
+        {
+         "text": "limited",
+         "kind": "grammar"
+        }
+       ]
+      },
+      {
+       "en": "due to the Great Depression.",
+       "ko": "대공황 때문에.",
+       "marks": [
+        {
+         "text": "due to",
+         "kind": "connective"
+        }
+       ]
+      }
+     ],
+     "fullKo": "안타깝게도 대공황 때문에 연구 자금 지원은 극도로 제한적이었다.",
+     "notes": [
+      {
+       "label": "문법",
+       "tone": "red",
+       "text": "**limited**: 형용사로 쓰인 분사(제한된) / **due to + 명사구**: 전치사구로 이유 표현"
+      },
+      {
+       "label": "어휘",
+       "tone": "blue",
+       "text": "**funding**: 재정 지원, 자금 / **extremely**: 극도로"
+      }
+     ]
+    },
+    {
+     "no": 20,
+     "stars": 0,
+     "chunks": [
+      {
+       "en": "Also,",
+       "ko": "또한,",
+       "marks": [
+        {
+         "text": "Also",
+         "kind": "connective"
+        }
+       ]
+      },
+      {
+       "en": "Kendrick and Eldering had to develop the vaccine",
+       "ko": "켄드릭과 엘더링은 백신을 개발해야 했다",
+       "marks": [
+        {
+         "text": "had to develop",
+         "kind": "grammar"
+        }
+       ]
+      },
+      {
+       "en": "as a side project.",
+       "ko": "부업으로서.",
+       "marks": [
+        {
+         "text": "as a side project",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "또한 켄드릭과 엘더링은 그 백신을 부업으로 개발해야 했다.",
+     "notes": [
+      {
+       "label": "어휘",
+       "tone": "blue",
+       "text": "**side project**: 부업, 본업 외의 부차적인 프로젝트"
+      }
+     ]
+    },
+    {
+     "no": 21,
+     "stars": 1,
+     "chunks": [
+      {
+       "en": "It was like having a second job",
+       "ko": "그것은 두 번째 직업을 갖는 것과 같았다",
+       "marks": [
+        {
+         "text": "like having",
+         "kind": "grammar"
+        }
+       ]
+      },
+      {
+       "en": "for which they never received any payment.",
+       "ko": "그에 대해 그들이 어떠한 보수도 받지 못하는.",
+       "marks": [
+        {
+         "text": "for which",
+         "kind": "structure"
+        },
+        {
+         "text": "payment",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "그것은 보수를 전혀 받지 못하는 두 번째 직업을 갖는 것과 같았다.",
+     "notes": [
+      {
+       "label": "관계사",
+       "tone": "red",
+       "text": "**for which**: 전치사 + 목적격 관계대명사 (= and for the job they never received any payment)"
+      },
+      {
+       "label": "문법",
+       "tone": "red",
+       "text": "**like having**: 전치사 like 뒤에 동명사(-ing) 목적어가 쓰인 형태"
+      }
+     ]
+    },
+    {
+     "no": 22,
+     "stars": 2,
+     "chunks": [
+      {
+       "en": "Still,",
+       "ko": "그럼에도 불구하고,",
+       "marks": [
+        {
+         "text": "Still",
+         "kind": "connective"
+        }
+       ]
+      },
+      {
+       "en": "when they finished their normal duties each day,",
+       "ko": "그들이 매일의 정규 업무를 마쳤을 때,",
+       "marks": [
+        {
+         "text": "normal duties",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "they would get started on the work",
+       "ko": "그들은 그 일에 착수하곤 했다",
+       "marks": [
+        {
+         "text": "would get started on",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "that they were enthusiastic about.",
+       "ko": "자신들이 열정을 품고 있던.",
+       "marks": [
+        {
+         "text": "that",
+         "kind": "structure"
+        },
+        {
+         "text": "enthusiastic about",
+         "kind": "grammar"
+        }
+       ]
+      }
+     ],
+     "fullKo": "그럼에도 불구하고 그들은 매일 정규 업무를 마치고 나면, 자신들이 열정을 품고 있던 연구 일에 착수하곤 했다.",
+     "notes": [
+      {
+       "label": "표현",
+       "tone": "blue",
+       "text": "**get started on**: ~에 착수하다 / **enthusiastic about**: ~에 열정적인"
+      },
+      {
+       "label": "관계사",
+       "tone": "red",
+       "text": "**that**: 전치사 about의 목적어 역할을 하는 목적격 관계대명사"
+      }
+     ]
+    },
+    {
+     "no": 23,
+     "stars": 1,
+     "chunks": [
+      {
+       "en": "The difficulties they faced",
+       "ko": "그들이 직면했던 어려움들도",
+       "marks": [
+        {
+         "text": "they faced",
+         "kind": "structure"
+        }
+       ]
+      },
+      {
+       "en": "did not stop them",
+       "ko": "그들을 막지 못했다",
+       "marks": [
+        {
+         "text": "stop them",
+         "kind": "grammar"
+        }
+       ]
+      },
+      {
+       "en": "from persisting toward their goal.",
+       "ko": "자신들의 목표를 향해 끈기 있게 나아가는 것으로부터.",
+       "marks": [
+        {
+         "text": "from persisting",
+         "kind": "grammar"
+        },
+        {
+         "text": "persisting toward",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "그들이 직면한 어려움들도 자신들의 목표를 향해 끈기 있게 나아가는 것을 막지 못했다.",
+     "notes": [
+      {
+       "label": "구문",
+       "tone": "red",
+       "text": "**stop A from -ing**: A가 ~하는 것을 막다/단념시키다"
+      },
+      {
+       "label": "구조",
+       "tone": "red",
+       "text": "**The difficulties (that/which) they faced**: 목적격 관계대명사 생략"
+      }
+     ]
+    },
+    {
+     "no": 24,
+     "stars": 0,
+     "chunks": [
+      {
+       "en": "They did not do the work",
+       "ko": "그들은 그 일을 하지 않았다",
+       "marks": [
+        {
+         "text": "did not do",
+         "kind": "grammar"
+        }
+       ]
+      },
+      {
+       "en": "to make extra money;",
+       "ko": "추가적인 돈을 벌기 위해;",
+       "marks": [
+        {
+         "text": "to make extra money",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "instead,",
+       "ko": "대신에,",
+       "marks": [
+        {
+         "text": "instead",
+         "kind": "connective"
+        }
+       ]
+      },
+      {
+       "en": "they worked to relieve the suffering",
+       "ko": "그들은 고통을 덜어주기 위해 일했다",
+       "marks": [
+        {
+         "text": "relieve",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "of innocent children and their families.",
+       "ko": "무고한 아이들과 그 가족들의.",
+       "marks": [
+        {
+         "text": "innocent",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "그들은 돈을 더 벌기 위해 그 일을 한 것이 아니라, 대신 무고한 아이들과 그 가족들의 고통을 덜어주기 위해 일했다.",
+     "notes": [
+      {
+       "label": "어휘",
+       "tone": "blue",
+       "text": "**relieve**: (고통 등을) 덜어주다, 완화하다 / **innocent**: 무고한, 죄 없는"
+      }
+     ]
+    },
+    {
+     "no": 25,
+     "stars": 0,
+     "chunks": [
+      {
+       "en": "They began the process of developing their vaccine",
+       "ko": "그들은 백신을 개발하는 과정을 시작했다",
+       "marks": [
+        {
+         "text": "process of developing",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "by gathering samples of the bacteria",
+       "ko": "박테리아 샘플을 수집함으로써",
+       "marks": [
+        {
+         "text": "by gathering",
+         "kind": "grammar"
+        }
+       ]
+      },
+      {
+       "en": "that cause whooping cough.",
+       "ko": "백일해를 유발하는.",
+       "marks": [
+        {
+         "text": "that cause",
+         "kind": "structure"
+        }
+       ]
+      }
+     ],
+     "fullKo": "그들은 백일해를 유발하는 박테리아의 샘플을 채취함으로써 백신 개발 과정을 시작했다.",
+     "notes": [
+      {
+       "label": "수일치",
+       "tone": "red",
+       "text": "**bacteria that cause**: 선행사 bacteria는 복수 명사(단수 bacterium)이므로 복수 동사 cause가 이어짐"
+      },
+      {
+       "label": "문법",
+       "tone": "red",
+       "text": "**by -ing**: ~함으로써 (수단 및 방법)"
+      }
+     ]
+    },
+    {
+     "no": 26,
+     "stars": 0,
+     "chunks": [
+      {
+       "en": "To support them,",
+       "ko": "그들을 지원하기 위해,",
+       "marks": [
+        {
+         "text": "To support",
+         "kind": "grammar"
+        }
+       ]
+      },
+      {
+       "en": "local doctors and nurses provided \"cough plates\"",
+       "ko": "지역 의사들과 간호사들이 '기침 배양 접시'를 제공했다",
+       "marks": [
+        {
+         "text": "provided",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "from their patients.",
+       "ko": "자신들의 환자들로부터.",
+       "marks": [
+        {
+         "text": "patients",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "그들을 돕기 위해 지역 의사들과 간호사들이 환자들에게서 얻은 '기침 배양 접시'를 제공해 주었다.",
+     "notes": [
+      {
+       "label": "문법",
+       "tone": "red",
+       "text": "**To support**: 목적을 나타내는 to부정사의 부사적 용법 (~하기 위해)"
+      }
+     ]
+    },
+    {
+     "no": 27,
+     "stars": 1,
+     "chunks": [
+      {
+       "en": "The patients coughed onto a petri dish,",
+       "ko": "환자들은 페트리 접시 위에 기침을 했고,",
+       "marks": [
+        {
+         "text": "petri dish",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "which was then put into an incubator.",
+       "ko": "그것은 그 후 배양기 안에 넣어졌다.",
+       "marks": [
+        {
+         "text": "which was then put",
+         "kind": "structure"
+        },
+        {
+         "text": "incubator",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "환자들이 페트리 접시에 기침을 하면, 그 접시는 그 후 배양기에 넣어졌다.",
+     "notes": [
+      {
+       "label": "관계사",
+       "tone": "red",
+       "text": "**, which**: 주격 관계대명사의 계속적 용법 (= and it)"
+      },
+      {
+       "label": "문법",
+       "tone": "red",
+       "text": "**was ... put**: 수동태 (put의 과거분사 put)"
+      }
+     ]
+    },
+    {
+     "no": 28,
+     "stars": 1,
+     "chunks": [
+      {
+       "en": "This allowed the bacteria to grow into colonies",
+       "ko": "이것은 박테리아가 군집으로 자라나게 해주었다",
+       "marks": [
+        {
+         "text": "allowed the bacteria to grow",
+         "kind": "grammar"
+        },
+        {
+         "text": "colonies",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "that Kendrick and Eldering could analyze.",
+       "ko": "켄드릭과 엘더링이 분석할 수 있는.",
+       "marks": [
+        {
+         "text": "that",
+         "kind": "structure"
+        },
+        {
+         "text": "analyze",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "이를 통해 박테리아가 켄드릭과 엘더링이 분석할 수 있는 집락으로 자라날 수 있었다.",
+     "notes": [
+      {
+       "label": "문법",
+       "tone": "red",
+       "text": "**allow + 목적어 + to-v**: 목적어가 ~하도록 허용하다/가능하게 하다"
+      },
+      {
+       "label": "어휘",
+       "tone": "blue",
+       "text": "**colony**: (세균의) 집락, 군집 / **analyze**: 분석하다"
+      }
+     ]
+    },
+    {
+     "no": 29,
+     "stars": 0,
+     "chunks": [
+      {
+       "en": "When they collected samples on their own,",
+       "ko": "그들이 직접 샘플을 수집할 때는,",
+       "marks": [
+        {
+         "text": "on their own",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "they would go to the homes of sick children.",
+       "ko": "그들은 아픈 아이들의 집으로 가곤 했다.",
+       "marks": [
+        {
+         "text": "would go",
+         "kind": "grammar"
+        }
+       ]
+      }
+     ],
+     "fullKo": "그들이 직접 샘플을 수집할 때면, 아픈 아이들의 가정을 방문하곤 했다.",
+     "notes": [
+      {
+       "label": "표현",
+       "tone": "blue",
+       "text": "**on one's own**: 스스로, 직접"
+      },
+      {
+       "label": "문법",
+       "tone": "red",
+       "text": "**would**: 과거의 불규칙한 습관 (~하곤 했다)"
+      }
+     ]
+    },
+    {
+     "no": 30,
+     "stars": 1,
+     "chunks": [
+      {
+       "en": "Each time,",
+       "ko": "매번,",
+       "marks": [
+        {
+         "text": "Each time",
+         "kind": "connective"
+        }
+       ]
+      },
+      {
+       "en": "they were reminded once again",
+       "ko": "그들은 다시 한 번 상기되었다",
+       "marks": [
+        {
+         "text": "were reminded",
+         "kind": "grammar"
+        }
+       ]
+      },
+      {
+       "en": "of the dreadful suffering",
+       "ko": "끔찍한 고통에 대해",
+       "marks": [
+        {
+         "text": "dreadful suffering",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "caused by the disease.",
+       "ko": "그 질병에 의해 초래된.",
+       "marks": [
+        {
+         "text": "caused by",
+         "kind": "structure"
+        }
+       ]
+      }
+     ],
+     "fullKo": "매번 그들은 그 질병이 초래한 끔찍한 고통을 다시금 떠올리게 되었다.",
+     "notes": [
+      {
+       "label": "문법",
+       "tone": "red",
+       "text": "**be reminded of**: ~을 상기하다, 떠올리게 되다 (remind A of B의 수동형)"
+      },
+      {
+       "label": "분사",
+       "tone": "red",
+       "text": "**caused by**: 명사(dreadful suffering)를 뒤에서 수식하는 과거분사구"
+      }
+     ]
+    },
+    {
+     "no": 31,
+     "stars": 2,
+     "chunks": [
+      {
+       "en": "The sight of these innocent young victims",
+       "ko": "이 무고한 어린 희생자들의 모습은",
+       "marks": [
+        {
+         "text": "The sight",
+         "kind": "structure"
+        },
+        {
+         "text": "victims",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "coughing and struggling to breathe",
+       "ko": "기침을 하고 숨 쉬려고 애쓰는",
+       "marks": [
+        {
+         "text": "coughing and struggling",
+         "kind": "grammar"
+        },
+        {
+         "text": "struggling to breathe",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "was a powerful reminder",
+       "ko": "강력한 상기물이었다",
+       "marks": [
+        {
+         "text": "was",
+         "kind": "grammar"
+        },
+        {
+         "text": "reminder",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "of the urgent need for an effective vaccine.",
+       "ko": "효과적인 백신에 대한 절박한 필요성의.",
+       "marks": [
+        {
+         "text": "urgent need",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "기침을 하며 숨쉬기 위해 발버둥 치는 이 무고한 어린 희생자들의 모습은, 효과적인 백신이 얼마나 시급히 필요한지를 강력하게 일깨워 주었다.",
+     "notes": [
+      {
+       "label": "수일치",
+       "tone": "red",
+       "text": "**The sight (단수 주어) ... was (단수 동사)**: 긴 수식어로 분리된 주어-동사 수일치"
+      },
+      {
+       "label": "분사",
+       "tone": "red",
+       "text": "**coughing and struggling**: victims를 뒤에서 직접 수식하는 현재분사 병렬"
+      }
+     ]
+    },
+    {
+     "no": 32,
+     "stars": 1,
+     "chunks": [
+      {
+       "en": "Kendrick and Eldering spent many long nights",
+       "ko": "켄드릭과 엘더링은 많은 긴 밤을 보냈다",
+       "marks": [
+        {
+         "text": "spent many long nights",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "studying the bacteria",
+       "ko": "박테리아를 연구하면서",
+       "marks": [
+        {
+         "text": "studying",
+         "kind": "grammar"
+        }
+       ]
+      },
+      {
+       "en": "and finally produced a potential vaccine.",
+       "ko": "그리고 마침내 잠재력 있는 백신을 만들어냈다.",
+       "marks": [
+        {
+         "text": "finally produced",
+         "kind": "grammar"
+        },
+        {
+         "text": "potential vaccine",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "켄드릭과 엘더링은 수많은 밤을 새워 박테리아를 연구했고, 마침내 잠재적인 백신을 만들어냈다.",
+     "notes": [
+      {
+       "label": "구문",
+       "tone": "red",
+       "text": "**spend + 시간 + v-ing**: ~하는 데 시간을 보내다"
+      },
+      {
+       "label": "병렬구조",
+       "tone": "red",
+       "text": "**spent ... and finally produced**: 주어에 걸리는 과거동사 병렬"
+      }
+     ]
+    },
+    {
+     "no": 33,
+     "stars": 1,
+     "chunks": [
+      {
+       "en": "Before they performed any clinical trials, though,",
+       "ko": "하지만 어떤 임상 시험을 수행하기 전에,",
+       "marks": [
+        {
+         "text": "clinical trials",
+         "kind": "phrase"
+        },
+        {
+         "text": "though",
+         "kind": "connective"
+        }
+       ]
+      },
+      {
+       "en": "they had to be certain",
+       "ko": "그들은 확신해야 했다",
+       "marks": [
+        {
+         "text": "had to be certain",
+         "kind": "grammar"
+        }
+       ]
+      },
+      {
+       "en": "that it would not have any negative side effects",
+       "ko": "그것이 어떠한 부정적인 부작용도 미치지 않을 것을",
+       "marks": [
+        {
+         "text": "that",
+         "kind": "structure"
+        },
+        {
+         "text": "negative side effects",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "on the subjects.",
+       "ko": "피험자들에게.",
+       "marks": [
+        {
+         "text": "on the subjects",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "그러나 임상 시험을 수행하기 전에, 그들은 그것이 피험자들에게 어떠한 부정적인 부작용도 미치지 않을 것임을 확신해야만 했다.",
+     "notes": [
+      {
+       "label": "어휘",
+       "tone": "blue",
+       "text": "**clinical trial**: 임상 시험 / **side effect**: 부작용 / **subject**: 피험자, 연구 대상자"
+      },
+      {
+       "label": "구문",
+       "tone": "blue",
+       "text": "**have side effects on**: ~에 부작용을 일으키다 / **be certain that 절**: ~임을 확신하다"
+      }
+     ]
+    },
+    {
+     "no": 34,
+     "stars": 1,
+     "chunks": [
+      {
+       "en": "They ran many laboratory tests,",
+       "ko": "그들은 많은 실험실 시험을 진행했고,",
+       "marks": [
+        {
+         "text": "ran many laboratory tests",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "and they even injected it into themselves",
+       "ko": "심지어 자기 자신들에게 그것을 주사하기까지 했다",
+       "marks": [
+        {
+         "text": "injected it into themselves",
+         "kind": "grammar"
+        }
+       ]
+      },
+      {
+       "en": "to confirm that it was safe.",
+       "ko": "그것이 안전하다는 것을 확인하기 위해.",
+       "marks": [
+        {
+         "text": "to confirm",
+         "kind": "grammar"
+        },
+        {
+         "text": "that",
+         "kind": "structure"
+        }
+       ]
+      }
+     ],
+     "fullKo": "그들은 수많은 실험실 시험을 거쳤으며, 백신이 안전한지 확인하기 위해 심지어 자신들에게 직접 주사하기까지 했다.",
+     "notes": [
+      {
+       "label": "문법",
+       "tone": "red",
+       "text": "**injected it into themselves**: 주어(they)와 전치사의 목적어가 일치하므로 재귀대명사(themselves) 사용"
+      },
+      {
+       "label": "표현",
+       "tone": "blue",
+       "text": "**run a test**: 시험을 실시하다 / **inject A into B**: A를 B에 주입(주사)하다"
+      }
+     ]
+    },
+    {
+     "no": 35,
+     "stars": 0,
+     "chunks": [
+      {
+       "en": "From 1934 to 1935,",
+       "ko": "1934년부터 1935년까지,",
+       "marks": [
+        {
+         "text": "From 1934 to 1935",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "they conducted their first field test",
+       "ko": "그들은 첫 번째 현장 시험을 실시했다",
+       "marks": [
+        {
+         "text": "conducted",
+         "kind": "phrase"
+        },
+        {
+         "text": "field test",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "with 1,592 children.",
+       "ko": "1,592명의 어린이들을 대상으로.",
+       "marks": [
+        {
+         "text": "with 1,592 children",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "1934년부터 1935년까지, 그들은 1,592명의 어린이를 대상으로 첫 번째 현장 임상시험을 실시했다.",
+     "notes": [
+      {
+       "label": "어휘",
+       "tone": "blue",
+       "text": "**conduct**: (시험·연구 등을) 수행하다 / **field test**: 현장 임상 시험"
+      }
+     ]
+    },
+    {
+     "no": 36,
+     "stars": 1,
+     "chunks": [
+      {
+       "en": "In the group of 712 vaccinated children,",
+       "ko": "백신을 접종받은 712명의 아이들 집단에서,",
+       "marks": [
+        {
+         "text": "vaccinated",
+         "kind": "structure"
+        }
+       ]
+      },
+      {
+       "en": "only four developed whooping cough,",
+       "ko": "단 4명만이 백일해에 걸렸고,",
+       "marks": [
+        {
+         "text": "developed",
+         "kind": "grammar"
+        }
+       ]
+      },
+      {
+       "en": "and none of these cases were serious.",
+       "ko": "이 사례들 중 어느 것도 심각하지 않았다.",
+       "marks": [
+        {
+         "text": "none of these cases",
+         "kind": "phrase"
+        },
+        {
+         "text": "were serious",
+         "kind": "grammar"
+        }
+       ]
+      }
+     ],
+     "fullKo": "백신을 접종받은 712명의 어린이 집단에서 단 4명만이 백일해에 걸렸으며, 그중 어느 사례도 심각하지 않았다.",
+     "notes": [
+      {
+       "label": "분사",
+       "tone": "red",
+       "text": "**vaccinated children**: '백신을 접종받은'의 의미로 명사를 수식하는 수동 과거분사"
+      },
+      {
+       "label": "어휘",
+       "tone": "blue",
+       "text": "**develop**: (병에) 걸리다, 발병하다"
+      }
+     ]
+    },
+    {
+     "no": 37,
+     "stars": 0,
+     "chunks": [
+      {
+       "en": "Despite the apparent success of the vaccine,",
+       "ko": "백신의 명백한 성공에도 불구하고,",
+       "marks": [
+        {
+         "text": "Despite",
+         "kind": "connective"
+        },
+        {
+         "text": "apparent",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "Kendrick and Eldering wanted further confirmation",
+       "ko": "켄드릭과 엘더링은 추가적인 확인을 원했다",
+       "marks": [
+        {
+         "text": "further confirmation",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "of its effectiveness.",
+       "ko": "그것의 유효성에 대한.",
+       "marks": [
+        {
+         "text": "effectiveness",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "백신의 뚜렷한 성공에도 불구하고, 켄드릭과 엘더링은 그 효능에 대한 추가적인 확증을 원했다.",
+     "notes": [
+      {
+       "label": "어휘",
+       "tone": "blue",
+       "text": "**apparent**: 분명한, 뚜렷한 / **confirmation**: 확증, 확인 / **effectiveness**: 유효성, 효능"
+      },
+      {
+       "label": "전치사",
+       "tone": "red",
+       "text": "**Despite**: '~에도 불구하고' (전치사이므로 뒤에 명사구 동반)"
+      }
+     ]
+    },
+    {
+     "no": 38,
+     "stars": 1,
+     "chunks": [
+      {
+       "en": "They became determined",
+       "ko": "그들은 결심하게 되었다",
+       "marks": [
+        {
+         "text": "became determined",
+         "kind": "grammar"
+        }
+       ]
+      },
+      {
+       "en": "to expand their research",
+       "ko": "자신들의 연구를 확장하고",
+       "marks": [
+        {
+         "text": "to expand",
+         "kind": "grammar"
+        }
+       ]
+      },
+      {
+       "en": "and run more tests",
+       "ko": "더 많은 테스트를 실시하기로",
+       "marks": [
+        {
+         "text": "run more tests",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "with larger groups of children.",
+       "ko": "더 큰 규모의 어린이 집단을 대상으로.",
+       "marks": [
+        {
+         "text": "larger groups of",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "그들은 연구를 확장하여 더 큰 규모의 아동 집단을 대상으로 더 많은 시험을 진행하기로 결심했다.",
+     "notes": [
+      {
+       "label": "구문",
+       "tone": "blue",
+       "text": "**become determined to-v**: ~하기로 굳게 결심하다"
+      },
+      {
+       "label": "병렬구조",
+       "tone": "red",
+       "text": "**to expand ... and (to) run**: to부정사에 이어지는 동사원형 병렬"
+      }
+     ]
+    },
+    {
+     "no": 39,
+     "stars": 0,
+     "chunks": [
+      {
+       "en": "However,",
+       "ko": "그러나,",
+       "marks": [
+        {
+         "text": "However",
+         "kind": "connective"
+        }
+       ]
+      },
+      {
+       "en": "they were unable to proceed",
+       "ko": "그들은 계속 진행할 수 없었다",
+       "marks": [
+        {
+         "text": "unable to proceed",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "because they were facing a severe lack of funds.",
+       "ko": "심각한 자금 부족에 직면해 있었기 때문에.",
+       "marks": [
+        {
+         "text": "because",
+         "kind": "connective"
+        },
+        {
+         "text": "a severe lack of",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "그러나 그들은 심각한 자금 부족에 직면해 있었기 때문에 계속 진행할 수 없었다.",
+     "notes": [
+      {
+       "label": "어휘",
+       "tone": "blue",
+       "text": "**a lack of**: ~의 부족 / **proceed**: 계속 진행하다"
+      }
+     ]
+    },
+    {
+     "no": 40,
+     "stars": 1,
+     "chunks": [
+      {
+       "en": "With thousands of children continuing to suffer from the disease,",
+       "ko": "수천 명의 아이들이 그 질병으로 계속 고통받는 상황에서,",
+       "marks": [
+        {
+         "text": "With thousands of children continuing",
+         "kind": "grammar"
+        },
+        {
+         "text": "suffer from",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "they found themselves in a desperate situation.",
+       "ko": "그들은 자신들이 절망적인 상황에 처해 있음을 알게 되었다.",
+       "marks": [
+        {
+         "text": "found themselves in",
+         "kind": "phrase"
+        },
+        {
+         "text": "desperate",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "수천 명의 아이들이 그 질병으로 계속 고통받고 있는 상황에서, 그들은 자신들이 절망적인 처지에 놓여 있음을 깨달았다.",
+     "notes": [
+      {
+       "label": "With 분사구문",
+       "tone": "red",
+       "text": "**with + 명사 + 분사(continuing)**: 명사가 ~하는 상황에서 (아이들이 고통받는 능동 동작이므로 현재분사 continuing 사용)"
+      },
+      {
+       "label": "표현",
+       "tone": "blue",
+       "text": "**find oneself in**: 자신이 ~한 상황에 처해 있음을 알게 되다 / **desperate**: 절망적인"
+      }
+     ]
+    },
+    {
+     "no": 41,
+     "stars": 0,
+     "chunks": [
+      {
+       "en": "Luckily,",
+       "ko": "다행히도,",
+       "marks": [
+        {
+         "text": "Luckily",
+         "kind": "connective"
+        }
+       ]
+      },
+      {
+       "en": "they got help",
+       "ko": "그들은 도움을 받았다",
+       "marks": [
+        {
+         "text": "got help",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "from an unexpected figure.",
+       "ko": "뜻밖의 인물로부터.",
+       "marks": [
+        {
+         "text": "unexpected figure",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "다행히도, 그들은 뜻밖의 인물로부터 도움을 받았다.",
+     "notes": [
+      {
+       "label": "어휘",
+       "tone": "blue",
+       "text": "**unexpected**: 뜻밖의, 예상치 못한 / **figure**: 인물"
+      }
+     ]
+    },
+    {
+     "no": 42,
+     "stars": 2,
+     "chunks": [
+      {
+       "en": "In 1936,",
+       "ko": "1936년에,",
+       "marks": []
+      },
+      {
+       "en": "First Lady Eleanor Roosevelt herself visited the laboratory",
+       "ko": "영부인 엘리너 루스벨트가 직접 실험실을 방문하여",
+       "marks": [
+        {
+         "text": "herself",
+         "kind": "grammar"
+        }
+       ]
+      },
+      {
+       "en": "and saw with her own eyes the efforts",
+       "ko": "자신의 눈으로 그 노력을 직접 보았다",
+       "marks": [
+        {
+         "text": "with her own eyes",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "that Kendrick and Eldering were making",
+       "ko": "켄드릭과 엘더링이 기울이고 있던",
+       "marks": [
+        {
+         "text": "that",
+         "kind": "structure"
+        },
+        {
+         "text": "were making",
+         "kind": "grammar"
+        }
+       ]
+      },
+      {
+       "en": "in their battle against whooping cough.",
+       "ko": "백일해와의 싸움에서.",
+       "marks": [
+        {
+         "text": "battle against",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "1936년에, 영부인 엘리너 루스벨트가 직접 실험실을 방문하여 켄드릭과 엘더링이 백일해와의 싸움에서 기울이고 있던 노력을 두 눈으로 직접 확인했다.",
+     "notes": [
+      {
+       "label": "강조용법",
+       "tone": "red",
+       "text": "**herself**: 주어 Eleanor Roosevelt를 직접 강조하는 재귀대명사 강조 용법 (생략 가능)"
+      },
+      {
+       "label": "관계대명사",
+       "tone": "red",
+       "text": "**efforts that... were making**: that은 make efforts의 목적어가 빠진 목적격 관계대명사"
+      }
+     ]
+    },
+    {
+     "no": 43,
+     "stars": 1,
+     "chunks": [
+      {
+       "en": "Eleanor Roosevelt,",
+       "ko": "엘리너 루스벨트는,",
+       "marks": []
+      },
+      {
+       "en": "whose husband suffered from polio,",
+       "ko": "그녀의 남편이 소아마비로 고통받았는데,",
+       "marks": [
+        {
+         "text": "whose",
+         "kind": "grammar"
+        },
+        {
+         "text": "suffered from",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "was interested in fighting infectious diseases.",
+       "ko": "전염병과 싸우는 것에 관심이 있었다.",
+       "marks": [
+        {
+         "text": "was interested in",
+         "kind": "phrase"
+        },
+        {
+         "text": "infectious diseases",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "남편이 소아마비로 고통받았던 엘리너 루스벨트는 전염병 퇴치에 관심이 많았다.",
+     "notes": [
+      {
+       "label": "관계대명사",
+       "tone": "red",
+       "text": "**whose**: 선행사 Eleanor Roosevelt를 부연 설명하는 소유격 관계대명사의 계속적 용법 (, whose)"
+      },
+      {
+       "label": "어휘",
+       "tone": "blue",
+       "text": "**polio**: 소아마비 / **infectious disease**: 전염병"
+      }
+     ]
+    },
+    {
+     "no": 44,
+     "stars": 0,
+     "chunks": [
+      {
+       "en": "She spent time with the women",
+       "ko": "그녀는 그 여성들과 시간을 보냈고",
+       "marks": [
+        {
+         "text": "spent time with",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "and came to realize",
+       "ko": "깨닫게 되었다",
+       "marks": [
+        {
+         "text": "came to realize",
+         "kind": "grammar"
+        }
+       ]
+      },
+      {
+       "en": "the enormous importance of their work.",
+       "ko": "그들의 연구가 지닌 막대한 중요성을.",
+       "marks": [
+        {
+         "text": "enormous importance",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "그녀는 그 여성들과 시간을 보내며 그들의 연구가 지닌 막대한 중요성을 깨닫게 되었다.",
+     "notes": [
+      {
+       "label": "표현",
+       "tone": "blue",
+       "text": "**come to + 동사원형**: ~하게 되다 / **enormous**: 막대한, 거대한"
+      }
+     ]
+    },
+    {
+     "no": 45,
+     "stars": 0,
+     "chunks": [
+      {
+       "en": "With her help,",
+       "ko": "그녀의 도움으로,",
+       "marks": []
+      },
+      {
+       "en": "Kendrick and Eldering were able to secure enough funding",
+       "ko": "켄드릭과 엘더링은 충분한 자금을 확보할 수 있었다",
+       "marks": [
+        {
+         "text": "secure",
+         "kind": "phrase"
+        },
+        {
+         "text": "enough funding",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "to conduct a large-scale trial.",
+       "ko": "대규모 임상 시험을 실시하기에.",
+       "marks": [
+        {
+         "text": "to conduct",
+         "kind": "grammar"
+        },
+        {
+         "text": "large-scale trial",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "그녀의 도움으로 켄드릭과 엘더링은 대규모 임상 시험을 진행하기에 충분한 자금을 확보할 수 있었다.",
+     "notes": [
+      {
+       "label": "구문",
+       "tone": "red",
+       "text": "**enough + 명사 + to-v**: ~하기에 충분한 … (to conduct가 형용사구 수식)"
+      },
+      {
+       "label": "어휘",
+       "tone": "blue",
+       "text": "**secure**: 확보하다 / **conduct a trial**: 임상 시험을 실시하다"
+      }
+     ]
+    },
+    {
+     "no": 46,
+     "stars": 0,
+     "chunks": [
+      {
+       "en": "By 1937,",
+       "ko": "1937년까지,",
+       "marks": [
+        {
+         "text": "By 1937",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "Kendrick and Eldering were able to include",
+       "ko": "켄드릭과 엘더링은 포함시킬 수 있었다",
+       "marks": [
+        {
+         "text": "were able to include",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "more than 4,200 children in their trial.",
+       "ko": "4,200명 이상의 어린이들을 그들의 임상 시험에.",
+       "marks": [
+        {
+         "text": "more than",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "1937년 무렵에는 켄드릭과 엘더링이 4,200명이 넘는 어린이를 임상 시험에 참여시킬 수 있었다.",
+     "notes": [
+      {
+       "label": "어휘",
+       "tone": "blue",
+       "text": "**include**: 포함시키다 / **trial**: 시험, 임상 시험"
+      }
+     ]
+    },
+    {
+     "no": 47,
+     "stars": 0,
+     "chunks": [
+      {
+       "en": "Just as in their first field test,",
+       "ko": "첫 번째 현장 시험에서와 마찬가지로,",
+       "marks": [
+        {
+         "text": "Just as",
+         "kind": "connective"
+        }
+       ]
+      },
+      {
+       "en": "the vaccinated group demonstrated",
+       "ko": "백신을 접종받은 집단은 보여주었다",
+       "marks": [
+        {
+         "text": "vaccinated",
+         "kind": "grammar"
+        },
+        {
+         "text": "demonstrated",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "a high level of immunity against the disease.",
+       "ko": "그 질병에 대한 높은 수준의 면역력을.",
+       "marks": [
+        {
+         "text": "immunity against",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "첫 번째 현장 시험에서와 마찬가지로, 백신을 접종받은 집단은 그 질병에 대해 높은 수준의 면역력을 나타냈다.",
+     "notes": [
+      {
+       "label": "분사",
+       "tone": "red",
+       "text": "**vaccinated group**: '백신 접종을 받은' 수동의 의미이므로 과거분사 vaccinated가 명사 group 수식"
+      },
+      {
+       "label": "어휘",
+       "tone": "blue",
+       "text": "**demonstrate**: 보여주다, 입증하다 / **immunity**: 면역력"
+      }
+     ]
+    },
+    {
+     "no": 48,
+     "stars": 0,
+     "chunks": [
+      {
+       "en": "The scientific community was amazed at the results,",
+       "ko": "과학계는 그 결과에 놀라워했고,",
+       "marks": [
+        {
+         "text": "scientific community",
+         "kind": "phrase"
+        },
+        {
+         "text": "was amazed at",
+         "kind": "grammar"
+        }
+       ]
+      },
+      {
+       "en": "and, in 1940,",
+       "ko": "그리고 1940년에,",
+       "marks": [
+        {
+         "text": "and",
+         "kind": "connective"
+        }
+       ]
+      },
+      {
+       "en": "the vaccine started being distributed",
+       "ko": "그 백신은 보급되기 시작했다",
+       "marks": [
+        {
+         "text": "being distributed",
+         "kind": "grammar"
+        }
+       ]
+      },
+      {
+       "en": "all across the United States.",
+       "ko": "미국 전역에.",
+       "marks": [
+        {
+         "text": "all across",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "과학계는 그 결과에 깜짝 놀랐고, 1940년에는 그 백신이 미국 전역에 보급되기 시작했다.",
+     "notes": [
+      {
+       "label": "동명사 수동태",
+       "tone": "red",
+       "text": "**started being distributed**: 백신이 '보급되는 것'이므로 started의 목적어로 동명사 수동태(being p.p.) 사용"
+      },
+      {
+       "label": "감정 분사",
+       "tone": "red",
+       "text": "**was amazed at**: 과학계가 감정을 '느낀' 것이므로 과거분사 amazed 사용"
+      }
+     ]
+    },
+    {
+     "no": 49,
+     "stars": 0,
+     "chunks": [
+      {
+       "en": "Four years later,",
+       "ko": "4년 후,",
+       "marks": []
+      },
+      {
+       "en": "it was added to",
+       "ko": "그것은 추가되었다",
+       "marks": [
+        {
+         "text": "was added to",
+         "kind": "grammar"
+        }
+       ]
+      },
+      {
+       "en": "the American Medical Association's list of recommended immunizations,",
+       "ko": "미국 의학 협회의 권장 예방 접종 목록에,",
+       "marks": [
+        {
+         "text": "recommended immunizations",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "and soon after,",
+       "ko": "그리고 얼마 지나지 않아,",
+       "marks": [
+        {
+         "text": "and soon after",
+         "kind": "connective"
+        }
+       ]
+      },
+      {
+       "en": "there was a dramatic decline in whooping cough infections.",
+       "ko": "백일해 감염의 극적인 감소가 있었다.",
+       "marks": [
+        {
+         "text": "dramatic decline",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "4년 후, 그것은 미국 의학 협회의 권장 예방 접종 목록에 추가되었고, 얼마 지나지 않아 백일해 감염이 극적으로 감소했다.",
+     "notes": [
+      {
+       "label": "수동태",
+       "tone": "red",
+       "text": "**was added to**: '~에 추가되다' (수동태)"
+      },
+      {
+       "label": "어휘",
+       "tone": "blue",
+       "text": "**immunization**: 예방 접종 / **dramatic decline**: 극적인 감소"
+      }
+     ]
+    },
+    {
+     "no": 50,
+     "stars": 2,
+     "chunks": [
+      {
+       "en": "In the mid-1970s,",
+       "ko": "1970년대 중반에,",
+       "marks": []
+      },
+      {
+       "en": "the number of annual deaths caused by whooping cough,",
+       "ko": "백일해로 인한 연간 사망자 수가,",
+       "marks": [
+        {
+         "text": "the number of",
+         "kind": "phrase"
+        },
+        {
+         "text": "caused by",
+         "kind": "grammar"
+        }
+       ]
+      },
+      {
+       "en": "which had reached 7,518 in 1934,",
+       "ko": "1934년에는 7,518명에 달했었는데,",
+       "marks": [
+        {
+         "text": "which",
+         "kind": "structure"
+        },
+        {
+         "text": "had reached",
+         "kind": "grammar"
+        }
+       ]
+      },
+      {
+       "en": "dropped to under 10.",
+       "ko": "10명 미만으로 떨어졌다.",
+       "marks": [
+        {
+         "text": "dropped to",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "1934년에는 7,518명에 달했던 백일해로 인한 연간 사망자 수가 1970년대 중반에는 10명 미만으로 급감했다.",
+     "notes": [
+      {
+       "label": "과거완료",
+       "tone": "red",
+       "text": "**which had reached**: 1970년대 중반(dropped)보다 더 이전인 1934년의 상태를 나타내므로 대과거 had p.p. 사용"
+      },
+      {
+       "label": "구문/수일치",
+       "tone": "red",
+       "text": "**the number of ~ dropped**: 주어가 the number(수)이므로 단수 취급 / **deaths caused by**: '유발된 사망'으로 수동 수식 과거분사"
+      }
+     ]
+    },
+    {
+     "no": 51,
+     "stars": 3,
+     "chunks": [
+      {
+       "en": "Kendrick and Eldering were often told",
+       "ko": "켄드릭과 엘더링은 자주 들었다",
+       "marks": [
+        {
+         "text": "were often told",
+         "kind": "grammar"
+        }
+       ]
+      },
+      {
+       "en": "that they could have become very wealthy",
+       "ko": "그들이 엄청난 부자가 될 수 있었을 것이라는 말을",
+       "marks": [
+        {
+         "text": "could have become",
+         "kind": "grammar"
+        },
+        {
+         "text": "wealthy",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "if they had patented their vaccine.",
+       "ko": "만약 그들의 백신을 특허 출원했더라면.",
+       "marks": [
+        {
+         "text": "if",
+         "kind": "connective"
+        },
+        {
+         "text": "had patented",
+         "kind": "grammar"
+        }
+       ]
+      }
+     ],
+     "fullKo": "켄드릭과 엘더링은 자신들의 백신에 대해 특허를 냈더라면 엄청난 부자가 되었을 것이라는 말을 종종 들었다.",
+     "notes": [
+      {
+       "label": "가정법 과거완료",
+       "tone": "red",
+       "text": "**if + S + had p.p., S + 조동사과거 + have p.p.**: '만약 ~했더라면 …했을 텐데' (과거 사실에 반대되는 가정)"
+      },
+      {
+       "label": "수동태",
+       "tone": "red",
+       "text": "**were told**: '말을 듣다' (tell의 수동태)"
+      },
+      {
+       "label": "어휘",
+       "tone": "blue",
+       "text": "**patent**: 특허를 취득하다 / **wealthy**: 부유한"
+      }
+     ]
+    },
+    {
+     "no": 52,
+     "stars": 1,
+     "chunks": [
+      {
+       "en": "However,",
+       "ko": "그러나,",
+       "marks": [
+        {
+         "text": "However",
+         "kind": "connective"
+        }
+       ]
+      },
+      {
+       "en": "they replied that",
+       "ko": "그들은 대답했다",
+       "marks": [
+        {
+         "text": "replied that",
+         "kind": "structure"
+        }
+       ]
+      },
+      {
+       "en": "it had not been created by them alone,",
+       "ko": "그것은 그들 자신만에 의해 만들어진 것이 아니라,",
+       "marks": [
+        {
+         "text": "had not been created",
+         "kind": "grammar"
+        },
+        {
+         "text": "not",
+         "kind": "structure"
+        }
+       ]
+      },
+      {
+       "en": "but with the help of many others.",
+       "ko": "다른 많은 사람들의 도움으로 만들어진 것이라고.",
+       "marks": [
+        {
+         "text": "but",
+         "kind": "structure"
+        },
+        {
+         "text": "with the help of",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "그러나 그들은 그것이 자신들만의 힘으로 만들어진 것이 아니라, 다른 많은 사람들의 도움으로 만들어진 것이라고 대답했다.",
+     "notes": [
+      {
+       "label": "구문",
+       "tone": "red",
+       "text": "**not A but B**: A가 아니라 B이다 (by them alone과 with the help of... 병렬 연결)"
+      },
+      {
+       "label": "과거완료 수동태",
+       "tone": "red",
+       "text": "**had not been created**: 대답했던 시점(replied)보다 앞선 백신 제작 시점을 나타내는 대과거 수동태"
+      }
+     ]
+    },
+    {
+     "no": 53,
+     "stars": 2,
+     "chunks": [
+      {
+       "en": "They also avoided personal interviews,",
+       "ko": "그들은 또한 개인 인터뷰를 피했다,",
+       "marks": [
+        {
+         "text": "avoided",
+         "kind": "phrase"
+        },
+        {
+         "text": "personal interviews",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "not wanting to reveal",
+       "ko": "드러내고 싶어 하지 않으면서",
+       "marks": [
+        {
+         "text": "not wanting to reveal",
+         "kind": "grammar"
+        }
+       ]
+      },
+      {
+       "en": "the great contribution they had made.",
+       "ko": "자신들이 이룩한 위대한 공헌을.",
+       "marks": [
+        {
+         "text": "contribution",
+         "kind": "phrase"
+        },
+        {
+         "text": "they had made",
+         "kind": "structure"
+        }
+       ]
+      }
+     ],
+     "fullKo": "그들은 또한 자신들이 이룩한 위대한 공헌을 드러내고 싶어 하지 않으며 개인적인 인터뷰를 피했다.",
+     "notes": [
+      {
+       "label": "분사구문",
+       "tone": "red",
+       "text": "**not wanting**: 분사구문의 부정(not + 현재분사). (= as they did not want...)"
+      },
+      {
+       "label": "관계사 및 대과거",
+       "tone": "red",
+       "text": "**contribution (that) they had made**: 목적격 관계대명사 생략 / 인터뷰를 피한 시점보다 앞선 공헌이므로 과거완료 had made 사용"
+      }
+     ]
+    },
+    {
+     "no": 54,
+     "stars": 1,
+     "chunks": [
+      {
+       "en": "They said that",
+       "ko": "그들은 말했다",
+       "marks": [
+        {
+         "text": "said that",
+         "kind": "structure"
+        }
+       ]
+      },
+      {
+       "en": "they had genuinely enjoyed the challenge of creating the vaccine,",
+       "ko": "자신들은 백신을 만드는 도전을 진심으로 즐겼다고,",
+       "marks": [
+        {
+         "text": "had genuinely enjoyed",
+         "kind": "grammar"
+        },
+        {
+         "text": "creating the vaccine",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "so the excessive praise that they received",
+       "ko": "그래서 자신들이 받는 과도한 칭찬이",
+       "marks": [
+        {
+         "text": "so",
+         "kind": "connective"
+        },
+        {
+         "text": "excessive praise",
+         "kind": "phrase"
+        },
+        {
+         "text": "that they received",
+         "kind": "structure"
+        }
+       ]
+      },
+      {
+       "en": "made them uncomfortable.",
+       "ko": "자신들을 불편하게 만들었다고.",
+       "marks": [
+        {
+         "text": "made them uncomfortable",
+         "kind": "grammar"
+        }
+       ]
+      }
+     ],
+     "fullKo": "그들은 백신을 만드는 도전 자체를 진심으로 즐겼기에, 자신들에게 쏟아지는 과도한 칭찬이 오히려 불편했다고 말했다.",
+     "notes": [
+      {
+       "label": "5형식 사역구문",
+       "tone": "red",
+       "text": "**made(V) + them(O) + uncomfortable(O.C)**: 목적격 보어 자리에 형용사 uncomfortable 사용 (부사 uncomfortably 불가)"
+      },
+      {
+       "label": "어휘",
+       "tone": "blue",
+       "text": "**genuinely**: 진심으로 / **excessive praise**: 과도한 칭찬"
+      }
+     ]
+    },
+    {
+     "no": 55,
+     "stars": 2,
+     "chunks": [
+      {
+       "en": "In the end,",
+       "ko": "결국,",
+       "marks": [
+        {
+         "text": "In the end",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "knowing that so many lives were being saved",
+       "ko": "수많은 생명이 구해지고 있다는 것을 아는 것이",
+       "marks": [
+        {
+         "text": "knowing",
+         "kind": "grammar"
+        },
+        {
+         "text": "were being saved",
+         "kind": "grammar"
+        }
+       ]
+      },
+      {
+       "en": "thanks to their hard work",
+       "ko": "자신들의 노고 덕분에",
+       "marks": [
+        {
+         "text": "thanks to",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "was enough of a reward",
+       "ko": "충분한 보상이었다",
+       "marks": [
+        {
+         "text": "enough of a reward",
+         "kind": "phrase"
+        }
+       ]
+      },
+      {
+       "en": "for these remarkable and modest heroes.",
+       "ko": "이 놀랍고 겸손한 영웅들에게는.",
+       "marks": [
+        {
+         "text": "remarkable and modest heroes",
+         "kind": "phrase"
+        }
+       ]
+      }
+     ],
+     "fullKo": "결국, 자신들의 노고 덕분에 수많은 생명이 구해지고 있다는 사실을 아는 것만으로도 이 비범하고 겸손한 영웅들에게는 충분한 보상이었다.",
+     "notes": [
+      {
+       "label": "동명사 주어",
+       "tone": "red",
+       "text": "**knowing ~ was**: 동명사구 knowing...이 문장 전체의 주어이므로 단수 동사 was 사용"
+      },
+      {
+       "label": "과거진행 수동태",
+       "tone": "red",
+       "text": "**were being saved**: '구해지고 있었다' (과거진행 수동태: were + being + p.p.)"
+      },
+      {
+       "label": "어휘",
+       "tone": "blue",
+       "text": "**remarkable**: 놀라운, 비범한 / **modest**: 겸손한 / **reward**: 보상"
+      }
+     ]
+    }
+   ],
+   "kind": "reading-analysis"
+  }
+ ]
+}

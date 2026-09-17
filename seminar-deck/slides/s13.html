@@ -1,0 +1,309 @@
+<section class="slide slide--dark" id="s13"
+  data-title="ST 04+" data-kr="웹툰"
+  data-zone="산출" data-zone-en="OUTPUT"
+  data-part="PART 1 — 기능 브리핑"
+  data-in="같은 지문"
+  data-out="6~8컷 세로 웹툰 1장"
+  data-note="한 장 5크레딧 · 약 3분">
+
+  <div class="pad s13-wrap">
+
+    <!-- ── 좌: 카피 ── -->
+    <div class="s13-copy">
+
+      <div class="kicker" data-step="0" data-fx="none">ST 04+ · WEBTOON</div>
+
+      <h1 class="s13-h" data-step="0">
+        이제는<br>
+        글보다 <em>이미지</em>입니다.
+      </h1>
+
+      <p class="s13-lead" data-step="0" data-fx="none">
+        읽기 싫어하는 학생에게는, 웹툰으로.<br>
+        같은 지문이 컷과 말풍선으로 바뀝니다. 스토리로 먼저 이해하고 원문으로 돌아옵니다.
+      </p>
+
+      <div class="s13-chips" data-step="1" data-fx="left">
+        <div class="chip">
+          <b>지문 <span class="mono">→</span> 컷 분할 자동</b>
+          <span>장면·대사를 AI가 구성</span>
+        </div>
+        <div class="chip">
+          <b>말풍선 텍스트 편집</b>
+          <span>대사·해석을 강사가 직접 다듬기</span>
+        </div>
+        <div class="chip">
+          <b>수업 자료로 바로 활용</b>
+          <span>이미지로 저장해 프린트·배포</span>
+        </div>
+      </div>
+
+      <div class="s13-opts" data-step="2" data-fx="left">
+        <div class="orow">
+          <span class="olab">화풍 <b>5종</b></span>
+          <span class="opill">한국 웹툰</span>
+          <span class="opill">3D 애니</span>
+          <span class="opill">수채 애니</span>
+          <span class="opill">로맨스 만화</span>
+          <span class="opill">실사풍</span>
+        </div>
+        <div class="orow">
+          <span class="olab">대사 언어 <b>4종</b></span>
+          <span class="opill">한국어</span>
+          <span class="opill">한+영</span>
+          <span class="opill">영어</span>
+          <span class="opill">영(대사)·한(설명)</span>
+        </div>
+      </div>
+
+      <div class="s13-quote" data-step="3" data-fx="left">
+        <p class="qk">말풍선은 원문 영어, 캡션은 한국어 해석 — 컷마다 함께 들어갑니다.</p>
+        <div class="qpair">
+          <span class="qbub">One dollar and eighty-seven cents. That was all.</span>
+          <span class="qcap">(일 달러 팔십 칠 센트. 그게 전부였다.)</span>
+        </div>
+      </div>
+
+      <div class="s13-foot" data-step="3" data-fx="none">
+        <span class="ftxt">지문 한 편이 세로 웹툰 한 장으로. <b>6~8컷</b>이 한 장에 들어갑니다.</span>
+        <span class="fmeta"><b>한 장 5크레딧</b> · 생성에는 약 3분 정도 걸려요.</span>
+      </div>
+
+    </div>
+
+    <!-- ── 우: 세로 웹툰 뷰어 (랜딩 데모 카드 재현) ── -->
+    <div class="s13-viewer" data-step="0" data-fx="scale" data-noadvance>
+
+      <div class="s13-frame">
+        <div class="s13-top">
+          <span class="ttl">The Gift of the Magi — 지문 웹툰</span>
+          <span class="save">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 3v11"/><path d="m7 10 5 5 5-5"/><path d="M4 20h16"/>
+            </svg>
+            이미지 저장
+          </span>
+        </div>
+
+        <div class="s13-view">
+          <div class="s13-scroll scrollable" id="s13-scroll">
+            <img id="s13-img" class="s13-img" src="assets/img/gift-of-the-magi.webp"
+                 alt="The Gift of the Magi 지문 웹툰 — 세로 한 장에 담긴 컷과 말풍선"
+                 draggable="false" decoding="async">
+          </div>
+          <div class="s13-fade" id="s13-fade"></div>
+          <div class="s13-cue" id="s13-cue" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <path d="m6 9 6 6 6-6"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="s13-prog"><i id="s13-progf"></i></div>
+
+        <div class="s13-bot">위아래로 스크롤해서 전체 컷을 확인하세요</div>
+      </div>
+
+      <button class="s13-reset" id="s13-reset" type="button">
+        <span class="mono">↺</span> 처음으로
+      </button>
+
+    </div>
+
+  </div>
+
+<style>
+#s13 .s13-wrap { display: grid; grid-template-columns: 900px 756px; gap: 72px; align-items: center; }
+
+/* ══════════ 좌 : 카피 ══════════ */
+#s13 .s13-copy { display: flex; flex-direction: column; }
+
+#s13 .s13-h {
+  margin-top: 28px;
+  font-family: var(--f-display); font-weight: 800;
+  font-size: 84px; line-height: 1.1; letter-spacing: -.032em; color: var(--white);
+}
+#s13 .s13-h em { font-style: normal; color: var(--blue); position: relative; z-index: 1; }
+#s13 .s13-h em::after {
+  content: ''; position: absolute; left: -3px; right: -3px; bottom: 4px; height: 10px;
+  background: rgba(59,130,246,.28); border-radius: 2px; z-index: -1;
+}
+
+#s13 .s13-lead {
+  margin-top: 26px; font-size: 19.5px; line-height: 1.66; color: #97A3B8; max-width: 880px;
+}
+
+/* 기능 3칩 */
+#s13 .s13-chips { margin-top: 44px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+#s13 .s13-chips .chip {
+  padding: 15px 16px; border-radius: 12px;
+  background: rgba(16,23,37,.78); border: 1px solid var(--ink-3);
+  border-top: 2px solid var(--blue);
+}
+#s13 .s13-chips .chip > b {
+  display: block; font-size: 17px; font-weight: 700; color: var(--white); line-height: 1.3;
+  white-space: nowrap;
+}
+#s13 .s13-chips .chip > b .mono { display: inline; color: var(--blue); font-weight: 600; }
+#s13 .s13-chips .chip > span {
+  display: block; margin-top: 6px; font-size: 13.5px; line-height: 1.42; color: #7E8AA0;
+}
+
+/* 생성 옵션 */
+#s13 .s13-opts { margin-top: 30px; display: flex; flex-direction: column; gap: 10px; }
+#s13 .orow { display: flex; align-items: center; gap: 8px; }
+#s13 .olab {
+  flex: none; width: 118px;
+  font-family: var(--f-mono); font-size: 11.5px; letter-spacing: .12em; color: var(--grey);
+}
+#s13 .olab b { color: var(--blue-light); font-weight: 600; }
+#s13 .opill {
+  flex: 1 1 0; min-width: 0; text-align: center;
+  padding: 9px 6px; border-radius: 10px; font-size: 13.5px; font-weight: 500;
+  color: #C3CCDC; background: rgba(16,23,37,.62); border: 1px solid var(--ink-3);
+}
+
+/* 말풍선 · 캡션 인용 */
+#s13 .s13-quote { margin-top: 30px; }
+#s13 .s13-quote .qk { font-size: 15.5px; line-height: 1.5; color: #8E9AB0; }
+#s13 .qpair { margin-top: 12px; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+#s13 .qbub {
+  padding: 7px 16px; border-radius: 14px;
+  background: var(--white); border: 2px solid #0F172A; color: #0F172A;
+  font-size: 15.5px; font-weight: 700; line-height: 1.35; word-break: normal;
+}
+#s13 .qcap {
+  padding: 5px 14px; border-radius: 4px;
+  background: #F4F1E9; border: 2px solid #0F172A; color: #0F172A;
+  font-size: 15px; font-weight: 600; line-height: 1.35;
+}
+
+/* 하단 비용 · 소요 */
+#s13 .s13-foot {
+  margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--ink-3);
+  display: flex; align-items: center; justify-content: space-between; gap: 20px;
+}
+#s13 .s13-foot .ftxt { font-size: 15.5px; color: #A9B4C7; }
+#s13 .s13-foot .ftxt b { color: var(--white); font-weight: 600; }
+#s13 .s13-foot .fmeta {
+  flex: none; padding: 8px 16px; border-radius: 999px;
+  font-family: var(--f-mono); font-size: 12.5px; letter-spacing: .04em; color: var(--blue-light);
+  background: rgba(59,130,246,.12); border: 1px solid rgba(59,130,246,.4);
+}
+#s13 .s13-foot .fmeta b { color: var(--white); font-weight: 600; }
+
+/* ══════════ 우 : 세로 웹툰 뷰어 (제품 팔레트) ══════════ */
+#s13 .s13-viewer { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+
+#s13 .s13-frame {
+  width: 700px; padding: 16px; border-radius: 22px;
+  background: #ffffff; border: 1px solid #DBEAFE;
+  box-shadow: 0 30px 80px -30px rgba(59,130,246,.55), 0 10px 30px rgba(8,12,22,.35);
+}
+
+#s13 .s13-top { height: 34px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+#s13 .s13-top .ttl {
+  font-size: 17px; font-weight: 800; color: #020617; letter-spacing: -.01em;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+#s13 .s13-top .save {
+  flex: none; display: inline-flex; align-items: center; gap: 7px;
+  height: 32px; padding: 0 14px; border-radius: 10px;
+  background: #2563EB; color: #ffffff; font-size: 14px; font-weight: 700;
+}
+#s13 .s13-top .save svg { width: 15px; height: 15px; flex: none; }
+
+#s13 .s13-view { position: relative; height: 690px; margin-top: 12px; }
+#s13 .s13-scroll {
+  position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden;
+  border: 2px solid rgba(15,23,42,.82); border-radius: 12px; background: #ffffff;
+  overscroll-behavior: contain;
+}
+#s13 .s13-img { display: block; width: 100%; height: auto; }
+
+#s13 .s13-fade {
+  position: absolute; left: 2px; right: 2px; bottom: 2px; height: 78px;
+  border-radius: 0 0 10px 10px; pointer-events: none;
+  background: linear-gradient(to top, rgba(255,255,255,.96), rgba(255,255,255,0));
+  transition: opacity .25s var(--ease-snap);
+}
+#s13 .s13-cue {
+  position: absolute; left: 50%; bottom: 16px; transform: translateX(-50%);
+  width: 34px; height: 34px; border-radius: 50%; pointer-events: none;
+  display: flex; align-items: center; justify-content: center;
+  background: #2563EB; color: #ffffff;
+  box-shadow: 0 8px 20px rgba(37,99,235,.42);
+  animation: s13-bob 1.5s ease-in-out infinite;
+  transition: opacity .25s var(--ease-snap);
+}
+#s13 .s13-cue svg { width: 17px; height: 17px; }
+@keyframes s13-bob {
+  0%, 100% { transform: translate(-50%, 0); }
+  50%      { transform: translate(-50%, 6px); }
+}
+#s13 .s13-fade.hide, #s13 .s13-cue.hide { opacity: 0; }
+
+#s13 .s13-prog {
+  margin-top: 10px; height: 3px; border-radius: 999px; background: #E2E8F0; overflow: hidden;
+}
+#s13 .s13-prog i {
+  display: block; height: 100%; width: 0%; border-radius: 999px; background: #2563EB;
+  transition: width .12s linear;
+}
+
+#s13 .s13-bot {
+  margin-top: 10px; height: 22px; display: flex; align-items: center;
+  font-size: 14.5px; font-weight: 600; color: #94A3B8;
+}
+
+#s13 .s13-reset {
+  cursor: pointer; font-family: var(--f-body); font-size: 14px; font-weight: 600;
+  padding: 10px 22px; border-radius: 999px;
+  color: var(--blue-light); background: rgba(59,130,246,.12);
+  border: 1px solid rgba(59,130,246,.42);
+  transition: background .14s, border-color .14s, color .14s;
+}
+#s13 .s13-reset .mono { font-size: 13px; opacity: .9; }
+#s13 .s13-reset:hover { background: rgba(59,130,246,.22); border-color: rgba(59,130,246,.7); color: var(--white); }
+#s13 .s13-reset.on { background: rgba(59,130,246,.24); border-color: var(--blue); color: var(--white); }
+</style>
+
+<script>
+(() => {
+  const sec = document.getElementById('s13');
+  if (!sec) return;
+  const box  = sec.querySelector('#s13-scroll');
+  const img  = sec.querySelector('#s13-img');
+  const fill = sec.querySelector('#s13-progf');
+  const fade = sec.querySelector('#s13-fade');
+  const cue  = sec.querySelector('#s13-cue');
+  const btn  = sec.querySelector('#s13-reset');
+  if (!box || !fill || !fade || !cue || !btn) return;
+
+  const sync = () => {
+    const max = box.scrollHeight - box.clientHeight;
+    const r = max > 8 ? box.scrollTop / max : 0;
+    fill.style.width = (r * 100).toFixed(1) + '%';
+    const moved = box.scrollTop > 12;
+    fade.classList.toggle('hide', moved);
+    cue.classList.toggle('hide', moved);
+    btn.classList.toggle('on', moved);
+  };
+
+  box.addEventListener('scroll', sync, { passive: true });
+  if (img) img.addEventListener('load', sync);
+
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (typeof box.scrollTo === 'function') box.scrollTo({ top: 0, behavior: 'smooth' });
+    else box.scrollTop = 0;
+  });
+
+  const reset = () => { box.scrollTop = 0; sync(); };
+  sec.addEventListener('slide:enter', reset);
+  sync();
+})();
+</script>
+</section>

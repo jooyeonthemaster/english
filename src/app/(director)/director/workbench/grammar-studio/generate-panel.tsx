@@ -34,6 +34,10 @@ import {
 } from "@/lib/grammar-drill/curriculum";
 import { DIFFICULTY_LABEL } from "@/lib/grammar-drill/display";
 import {
+  getQuestionGenerationCreditCost,
+  planForDifficulty,
+} from "@/lib/question-generation-plans";
+import {
   GRAMMAR_STUDIO_GENERATE_COPY,
   grammarStudioCreditNotice,
 } from "@/lib/wording/director-glossary";
@@ -41,6 +45,18 @@ import { cn } from "@/lib/utils";
 import type { GrammarStudioGenerateSeed } from "./unit-detail";
 
 const COUNT_OPTIONS = [1, 3, 5, 10] as const;
+/**
+ * 26-08-18 난이도 기반 티어 — 드릴 난이도(1~4) → 생성 난이도 라벨. 서버
+ * grammar-studio 라우트의 DRILL_DIFF_TO_GENERATION_LABEL 미러(라우트 파일은
+ * 서버 전용이라 직수입 불가). 3(심화)·4(킬러) = KILLER → 2배 요금 — 사전 고지
+ * 견적이 서버 잔액 게이트·워커 차감과 같은 규칙으로 계산돼야 한다.
+ */
+const DRILL_DIFF_TO_GENERATION_LABEL: Record<number, string> = {
+  1: "BASIC",
+  2: "INTERMEDIATE",
+  3: "KILLER",
+  4: "KILLER",
+};
 const POLL_INTERVAL_MS = 4_000;
 const TERMINAL_STATUSES = new Set(["COMPLETED", "PARTIAL", "FAILED", "CANCELLED"]);
 
@@ -85,7 +101,14 @@ export function GenerateStudioPanel({
   const conceptTitles = seed.conceptIds.map(
     (id) => CONCEPT_SKELETON_BY_ID.get(id)?.title ?? id,
   );
-  const totalCredits = count * CREDIT_COSTS.AUTO_GEN_BATCH;
+  // 26-08-18 난이도 기반 티어: 문항당 단가에 KILLER(드릴 3·4) 2배를 적용 — 서버
+  // 라우트의 perQuestionCredits 산식과 동일(planForDifficulty 단일 소스).
+  const totalCredits =
+    count *
+    getQuestionGenerationCreditCost(
+      CREDIT_COSTS.AUTO_GEN_BATCH,
+      planForDifficulty(DRILL_DIFF_TO_GENERATION_LABEL[difficulty] ?? "INTERMEDIATE"),
+    );
   const busy = phase.kind === "starting" || phase.kind === "running";
 
   // ── 폴링 체인 — running 상태마다 setTimeout 1개 예약(언마운트·전이 시 해제).

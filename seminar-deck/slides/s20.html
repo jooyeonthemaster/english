@@ -1,0 +1,517 @@
+<section class="slide slide--dark" id="s20"
+  data-title="DRILL" data-kr="자체 어법 드릴"
+  data-zone="확장" data-zone-en="EXPAND"
+  data-part="PART 1 — 기능 브리핑"
+  data-in="리포트의 어법 취약 개념"
+  data-out="해당 개념 단계별 드릴"
+  data-note="드릴은 무과금">
+
+  <div class="pad s20-wrap">
+
+    <!-- ══ 좌 : 카피 ══ -->
+    <div class="s20-copy">
+
+      <div class="kicker" data-step="0" data-fx="none">SMOAT 자체 콘텐츠</div>
+
+      <h2 class="s20-h" data-step="0">
+        어법은<br>
+        <em>따로</em> 준비해 두었습니다.
+      </h2>
+
+      <p class="s20-lead" data-step="0" data-fx="none">
+        지문에서 뽑는 문항과 별개로, 어법만 단계별로 훈련하는 드릴을 직접 만들었습니다.
+      </p>
+
+      <!-- 규모 -->
+      <div class="s20-scale" data-step="1" data-fx="left">
+        <span class="n">12</span><span class="u">유닛</span>
+        <span class="x mono">×</span>
+        <span class="n">47</span> <span class="u">미세개념</span>
+        <span class="add">(＋ 기초 골격 7유닛)</span>
+      </div>
+
+      <!-- 4단계 구성 -->
+      <div class="s20-parts" data-step="2">
+        <div class="pcard pcard--base">
+          <span class="pn mono">PART 0</span>
+          <b>기초 골격</b>
+          <s>문장이 어떻게 생겼는가 — 초·중등 도입 문법의 전 과정입니다</s>
+        </div>
+        <div class="pcard">
+          <span class="pn mono">PART 1</span>
+          <b>골격기</b>
+          <s>문장의 뼈대 판별 — 이 5개로 선지의 60%가 커버됩니다</s>
+        </div>
+        <div class="pcard">
+          <span class="pn mono">PART 2</span>
+          <b>연결기</b>
+          <s>절과 절의 관계 — 여기까지 오면 85%에 도달합니다</s>
+        </div>
+        <div class="pcard">
+          <span class="pn mono">PART 3</span>
+          <b>정밀기</b>
+          <s>형태·호응의 미세 판단 — 실전 방어선을 완성합니다</s>
+        </div>
+      </div>
+
+      <!-- 대표 유닛 -->
+      <div class="s20-units" data-step="3" data-fx="left">
+        <div class="ulab mono">대표 유닛</div>
+
+        <div class="urow">
+          <span class="uid mono">U01</span>
+          <b class="ut">동사 vs 준동사</b>
+          <span class="us">이 절에 본동사가 있는가</span>
+          <span class="uf">30회분 선지 약 28~30회 — 사실상 매회 출제</span>
+        </div>
+
+        <div class="urow urow--on">
+          <span class="uid mono">U02</span>
+          <b class="ut">주어-동사 수일치</b>
+          <span class="us">동사의 수는 진짜 주어가 결정한다</span>
+          <span class="uf">30회분 선지 약 22~25회</span>
+        </div>
+
+        <div class="urow">
+          <span class="uid mono">U06</span>
+          <b class="ut">관계사 ① what vs that/which</b>
+          <span class="us">선행사가 있는가 없는가</span>
+          <span class="uf">최근 6년 오답 선택 1위 함정</span>
+        </div>
+      </div>
+
+      <!-- 하단 : 문항 뱅크 + 후킹 + 연결 -->
+      <div class="s20-foot" data-step="4" data-fx="none">
+        <div class="fgrid">
+          <div class="bank">
+            <div class="bk-t">사전 저작 <span class="bn">1,650</span>문항</div>
+            <div class="bk-s">(선택형 564 · 독해형 240 · 보조 846)</div>
+          </div>
+          <div class="hook">
+            <p>어법 드릴은 <b>AI를 부르지 않습니다.</b> 사람이 쓴 문항, 서버가 채점 —<br>
+            그래서 학생이 몇 문제를 풀든 <span class="mark-hl">크레딧이 들지 않습니다.</span></p>
+          </div>
+        </div>
+        <div class="flink"><span class="mono">▸</span> 리포트에서 '주어-동사 수일치'가 약하다고 나오면, 그 개념의 드릴이 바로 배포됩니다.</div>
+      </div>
+
+    </div>
+
+    <!-- ══ 우 : 어법 드릴 플레이어 목업 (학생 앱 /g) ══ -->
+    <div class="s20-device" data-step="0" data-fx="scale" data-noadvance>
+      <div class="phone">
+        <div class="phone__notch"></div>
+        <div class="phone__scr">
+          <div class="gd" id="s20-app">
+
+            <!-- 상단 : 유닛명 + 진행 게이지 -->
+            <header class="gd-hd">
+              <span class="gd-back">‹</span>
+              <span class="gd-ttl">어법 드릴 · 주어-동사 수일치</span>
+              <span class="gd-cnt mono"><b>4</b><i>/10</i></span>
+              <span class="gd-meter"><span class="gd-meter-fill" id="s20-meter"></span></span>
+            </header>
+
+            <!-- 중단 : 문항 -->
+            <main class="gd-main scrollable" id="s20-main">
+
+              <div class="gd-bd-row">
+                <span class="bd bd-unit">주어-동사 수일치</span>
+                <span class="bd-diff">D4 킬러</span>
+              </div>
+              <div class="gd-bd-row2">
+                <span class="bd bd-con">진짜 주어 찾기 — 수식어 괄호치기</span>
+              </div>
+
+              <p class="gd-dir">밑줄 친 부분 중, 어법상 틀린 것을 고르십시오.</p>
+
+              <div class="gd-card">
+                <p class="gd-passage">The argument that policies <span class="gd-u" data-u="1"><i>①</i>designed</span> to protect small farmers actually <span class="gd-u" data-u="2"><i>②</i>accelerates</span> their gradual decline <span class="gd-u" data-u="3"><i>③</i>rests</span> on evidence few economists <span class="gd-u" data-u="4"><i>④</i>have</span> examined, though the pattern it <span class="gd-u" data-u="5"><i>⑤</i>describes</span> appears in several countries.</p>
+              </div>
+
+              <div class="gd-sqrow" id="s20-opts">
+                <button class="gd-sq" type="button" data-v="1">①</button>
+                <button class="gd-sq" type="button" data-v="2">②</button>
+                <button class="gd-sq" type="button" data-v="3">③</button>
+                <button class="gd-sq" type="button" data-v="4">④</button>
+                <button class="gd-sq" type="button" data-v="5">⑤</button>
+              </div>
+
+              <!-- 판정 패널 -->
+              <div class="gd-verdict" id="s20-vd" hidden>
+                <div class="vd-top">
+                  <span class="vd-ic" id="s20-vic">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.6l4.6 4.6L19 7.2"/></svg>
+                  </span>
+                  <span class="vd-tx" id="s20-vtx">정답입니다</span>
+                  <span class="vd-fix" id="s20-vfix" hidden><em>바른 형태</em><b>accelerate</b></span>
+                </div>
+                <p class="vd-exp">that절 안 주어 핵은 복수 policies이고 designed ... farmers는 분사 수식어이므로 복수 동사 accelerate로 고쳐야 합니다.</p>
+                <div class="vd-mst">
+                  <span class="k">개념 숙달도</span>
+                  <span class="m"><span class="mf" id="s20-mf"></span></span>
+                  <span class="v mono" id="s20-mv">78</span>
+                </div>
+              </div>
+
+              <div class="gd-fade"></div>
+            </main>
+
+            <!-- 하단 : 액션바 -->
+            <footer class="gd-ft">
+              <div class="gd-chips">
+                <span class="gd-chip">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 18h5M10.5 21h3M12 3a6 6 0 0 0-3.8 10.6c.7.6 1.1 1.4 1.2 2.4h5.2c.1-1 .5-1.8 1.2-2.4A6 6 0 0 0 12 3z"/></svg>
+                  힌트
+                </span>
+                <span class="gd-chip">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H20v3H6.5"/></svg>
+                  개념
+                </span>
+                <span class="gd-chip">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.6a2.5 2.5 0 1 1 3.3 2.4c-.6.3-.9.8-.9 1.4v.4"/><path d="M12 17.2h.01"/></svg>
+                  질문
+                </span>
+                <span class="gd-score mono" id="s20-score">정답 3/3</span>
+              </div>
+              <button class="gd-primary" id="s20-primary" type="button">제출하기</button>
+            </footer>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="s20-cap"><span class="mono">SMOAT 학습</span> · 어법 드릴 — <b>①~⑤ 번호를 눌러보세요</b></div>
+    </div>
+
+  </div>
+
+<style>
+#s20 .s20-wrap { display: grid; grid-template-columns: 1228px 428px; gap: 72px; align-items: center; }
+
+/* ══════════ 좌 : 카피 ══════════ */
+#s20 .s20-h {
+  margin-top: 24px;
+  font-family: var(--f-display); font-weight: 800; font-size: 55px; line-height: 1.14;
+  letter-spacing: -.028em; color: var(--white);
+}
+#s20 .s20-h em { font-style: normal; color: var(--blue); }
+#s20 .s20-lead { margin-top: 20px; font-size: 19px; line-height: 1.6; color: #93A0B5; }
+
+/* 규모 */
+#s20 .s20-scale {
+  margin-top: 28px; display: flex; align-items: baseline; gap: 10px;
+  border-left: 3px solid var(--blue); padding-left: 22px;
+}
+#s20 .s20-scale .n {
+  font-family: var(--f-display); font-weight: 800; font-size: 56px; line-height: 1;
+  letter-spacing: -.034em; color: var(--white); font-variant-numeric: tabular-nums;
+}
+#s20 .s20-scale .u { font-size: 20px; font-weight: 600; color: #93A0B5; margin-left: -4px; }
+#s20 .s20-scale .x { font-size: 28px; color: var(--blue); margin: 0 6px; }
+#s20 .s20-scale .add { margin-left: 16px; font-size: 17px; color: #6E7A90; }
+
+/* 4단계 구성 */
+#s20 .s20-parts { margin-top: 28px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+#s20 .pcard {
+  padding: 14px 16px 16px; border-radius: 12px;
+  background: rgba(16,23,37,.78); border: 1px solid var(--ink-3);
+  border-top: 2px solid rgba(59,130,246,.7);
+}
+#s20 .pcard--base { border-top: 2px dashed var(--ink-4); background: rgba(16,23,37,.5); }
+#s20 .pcard .pn { display: block; font-size: 10.5px; letter-spacing: .2em; font-weight: 600; color: var(--blue); }
+#s20 .pcard--base .pn { color: #6E7A90; }
+#s20 .pcard b {
+  display: block; margin-top: 7px; font-family: var(--f-display); font-weight: 700;
+  font-size: 19px; letter-spacing: -.014em; color: var(--white);
+}
+#s20 .pcard s { display: block; text-decoration: none; margin-top: 7px; font-size: 12.5px; line-height: 1.5; color: #78859B; }
+
+/* 대표 유닛 */
+#s20 .s20-units { margin-top: 26px; }
+#s20 .ulab {
+  font-family: var(--f-body); font-size: 12px; letter-spacing: .08em; font-weight: 700;
+  color: var(--txt-4); margin-bottom: 10px;
+}
+#s20 .urow {
+  display: grid; grid-template-columns: 58px 356px 300px 1fr; gap: 14px; align-items: center;
+  min-height: 54px; padding: 8px 16px; border-left: 3px solid transparent;
+  border-bottom: 1px solid var(--ink-3);
+}
+#s20 .urow--on { border-left-color: var(--blue); background: rgba(59,130,246,.10); }
+#s20 .uid { font-size: 13px; letter-spacing: .1em; font-weight: 600; color: var(--blue); }
+#s20 .urow--on .uid { color: var(--blue-light); }
+#s20 .ut { font-family: var(--f-display); font-weight: 700; font-size: 19px; letter-spacing: -.014em; color: var(--white); }
+#s20 .us { font-size: 15px; color: #8C98AE; }
+#s20 .uf { font-size: 14px; color: #6E7A90; }
+#s20 .urow--on .us { color: #A9B6CB; }
+#s20 .urow--on .uf { color: var(--amber); }
+
+/* 하단 */
+#s20 .s20-foot { margin-top: 24px; }
+#s20 .fgrid { display: grid; grid-template-columns: 380px 1fr; gap: 16px; align-items: stretch; }
+#s20 .bank {
+  padding: 14px 20px; border-radius: 12px;
+  background: rgba(16,23,37,.78); border: 1px solid var(--ink-3);
+  display: flex; flex-direction: column; justify-content: center;
+}
+#s20 .bk-t { font-size: 17px; color: #93A0B5; display: flex; align-items: baseline; gap: 7px; }
+#s20 .bk-t .bn {
+  font-family: var(--f-display); font-weight: 800; font-size: 32px; line-height: 1;
+  letter-spacing: -.03em; color: var(--white); font-variant-numeric: tabular-nums;
+}
+#s20 .bk-s { margin-top: 7px; font-size: 13.5px; color: #6E7A90; }
+#s20 .hook {
+  padding: 13px 22px; border-radius: 12px;
+  background: rgba(59,130,246,.11); border: 1px solid rgba(59,130,246,.4);
+  display: flex; flex-direction: column; justify-content: center;
+}
+#s20 .hook p { font-size: 16.5px; line-height: 1.6; color: #A9B6CB; }
+#s20 .hook b { color: var(--white); font-weight: 700; }
+#s20 .flink { margin-top: 10px; margin-bottom: 4px; font-size: 15px; line-height: 1.35; color: #7E8AA0; }
+#s20 .flink .mono { color: var(--emerald); margin-right: 8px; }
+
+/* ══════════ 우 : 디바이스 ══════════ */
+#s20 .s20-device { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+#s20 .phone { width: 428px; height: 796px; border-radius: 46px; }
+#s20 .phone__scr { border-radius: 38px; background: #f6f5f1; }
+#s20 .s20-cap { font-size: 12.5px; letter-spacing: .04em; color: var(--txt-4); }
+#s20 .s20-cap .mono { font-size: 11.5px; letter-spacing: .1em; color: var(--blue); }
+#s20 .s20-cap b { color: #93A0B5; font-weight: 600; }
+
+/* ══ 학생 앱 /g — "시험지 × 계기판" (gd.css 실측 토큰) ══ */
+#s20 .gd {
+  --gd-paper:#f6f5f1; --gd-card:#ffffff; --gd-line:#e5e3db; --gd-line-strong:#d4d1c6;
+  --gd-ink:#16202e; --gd-ink-2:#5a6372; --gd-ink-3:#98a0ad;
+  --gd-blue:#1d4ed8; --gd-blue-soft:#eef2fe; --gd-blue-line:#c7d4f8;
+  --gd-good:#047857; --gd-good-soft:#ecfdf5; --gd-bad:#be123c; --gd-bad-soft:#fff1f2;
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  background: var(--gd-paper); color: var(--gd-ink); font-family: var(--f-body);
+}
+
+/* ── 상단 헤더 ── */
+#s20 .gd-hd {
+  flex: none; position: relative; display: flex; align-items: center; gap: 8px;
+  height: 84px; padding: 34px 16px 10px; background: rgba(246,245,241,.94);
+  border-bottom: 1px solid var(--gd-line);
+}
+#s20 .gd-back {
+  width: 40px; height: 40px; flex: none; display: flex; align-items: center; justify-content: center;
+  font-size: 26px; line-height: 1; color: var(--gd-ink-2); border-radius: 999px;
+}
+#s20 .gd-ttl {
+  flex: 1; min-width: 0; font-size: 16px; font-weight: 600; color: var(--gd-ink);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+#s20 .gd-cnt { flex: none; font-size: 15px; font-variant-numeric: tabular-nums; }
+#s20 .gd-cnt b { font-weight: 700; color: var(--gd-ink); }
+#s20 .gd-cnt i { font-style: normal; color: var(--gd-ink-3); }
+#s20 .gd-meter {
+  position: absolute; left: 0; right: 0; bottom: -1px; height: 5px;
+  background: var(--gd-line); overflow: hidden;
+}
+#s20 .gd-meter-fill {
+  display: block; height: 100%; width: 30%; background: var(--gd-blue); border-radius: 999px;
+  transition: width .4s cubic-bezier(.22,1,.36,1);
+}
+
+/* ── 중단 본문 ── */
+#s20 .gd-main { flex: 1; position: relative; padding: 14px 18px 14px; overflow-y: auto; }
+
+#s20 .gd-bd-row { display: flex; align-items: center; gap: 6px; }
+#s20 .gd-bd-row2 { margin-top: 6px; }
+#s20 .bd {
+  display: inline-block; font-size: 12px; font-weight: 700; border-radius: 6px; padding: 4px 8px;
+}
+#s20 .bd-unit { background: var(--gd-blue-soft); color: var(--gd-blue); }
+#s20 .bd-con {
+  background: var(--gd-paper); color: var(--gd-ink-2); border: 1px solid var(--gd-line); font-weight: 600;
+}
+#s20 .bd-diff { margin-left: auto; font-size: 12px; font-weight: 700; color: var(--gd-bad); }
+
+#s20 .gd-dir { margin-top: 12px; font-size: 15px; font-weight: 500; color: var(--gd-ink-2); line-height: 1.5; }
+
+#s20 .gd-card {
+  margin-top: 12px; background: var(--gd-card); border: 1px solid var(--gd-line);
+  border-radius: 14px; padding: 15px 15px 16px;
+}
+#s20 .gd-passage {
+  font-family: Georgia, 'Times New Roman', 'Pretendard Variable', serif;
+  font-size: 17px; line-height: 1.72; letter-spacing: .001em; color: var(--gd-ink);
+  word-break: normal;
+}
+#s20 .gd-u {
+  text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 4px;
+  text-decoration-color: var(--gd-ink); font-weight: 500;
+  border-radius: 4px; padding: 1px 2px;
+  transition: background .12s, color .12s, text-decoration-color .12s;
+}
+#s20 .gd-u i {
+  font-style: normal; display: inline-block; font-size: .85em; margin-right: 1px;
+  font-family: Georgia, 'Times New Roman', 'Pretendard Variable', serif;
+}
+#s20 .gd-u[data-state="correct"] { background: var(--gd-good-soft); color: var(--gd-good); text-decoration-color: var(--gd-good); }
+#s20 .gd-u[data-state="wrong"]   { background: var(--gd-bad-soft);  color: var(--gd-bad);  text-decoration-color: var(--gd-bad); }
+
+/* 정사각 번호 선택지 */
+#s20 .gd-sqrow { margin-top: 12px; display: flex; justify-content: center; gap: 10px; }
+#s20 .gd-sq {
+  width: 44px; height: 44px; flex: none;
+  display: flex; align-items: center; justify-content: center;
+  border: 1.5px solid var(--gd-line); border-radius: 12px; background: #fff;
+  font-family: var(--f-body); font-size: 17px; font-weight: 600; color: var(--gd-ink-2);
+  cursor: pointer; transition: border-color .12s, background .12s, opacity .12s, color .12s;
+}
+#s20 .gd-sq[data-state="correct"] { border-color: var(--gd-good); background: var(--gd-good-soft); color: var(--gd-good); }
+#s20 .gd-sq[data-state="wrong"]   { border-color: var(--gd-bad);  background: var(--gd-bad-soft);  color: var(--gd-bad); }
+#s20 .gd-sq[data-state="dim"]     { opacity: .55; }
+
+/* 판정 패널 */
+#s20 .gd-verdict {
+  margin-top: 16px; border-radius: 14px; border: 1px solid #a7f3d0; background: var(--gd-good-soft);
+  padding: 15px; animation: s20-pop .2s cubic-bezier(.22,1,.36,1);
+}
+#s20 .gd-verdict.bad { border-color: #fecdd3; background: var(--gd-bad-soft); }
+@keyframes s20-pop { from { transform: scale(.94); opacity: 0; } to { transform: none; opacity: 1; } }
+#s20 .vd-top { display: flex; align-items: center; gap: 8px; }
+#s20 .vd-ic {
+  width: 24px; height: 24px; flex: none; border-radius: 50%; background: var(--gd-good);
+  display: flex; align-items: center; justify-content: center;
+}
+#s20 .gd-verdict.bad .vd-ic { background: var(--gd-bad); }
+#s20 .vd-ic svg { width: 15px; height: 15px; }
+#s20 .vd-tx { font-size: 16px; font-weight: 700; color: var(--gd-good); }
+#s20 .gd-verdict.bad .vd-tx { color: var(--gd-bad); }
+#s20 .vd-fix { margin-left: auto; font-size: 13px; color: var(--gd-ink-2); display: flex; align-items: baseline; gap: 6px; }
+#s20 .vd-fix[hidden], #s20 .gd-verdict[hidden] { display: none; }
+#s20 .vd-fix b { font-family: Georgia, 'Times New Roman', serif; font-weight: 700; color: var(--gd-ink); font-size: 14px; }
+#s20 .vd-fix em { font-style: normal; }
+#s20 .vd-exp { margin-top: 11px; font-size: 15px; line-height: 1.6; color: var(--gd-ink); word-break: keep-all; }
+#s20 .vd-mst {
+  margin-top: 12px; padding-top: 11px; border-top: 1px solid var(--gd-line);
+  display: flex; align-items: center; gap: 10px;
+}
+#s20 .vd-mst .k { font-size: 12px; color: var(--gd-ink-3); margin-right: auto; }
+#s20 .vd-mst .m { width: 96px; height: 5px; border-radius: 999px; background: var(--gd-line); overflow: hidden; }
+#s20 .vd-mst .mf {
+  display: block; height: 100%; width: 78%; border-radius: 999px; background: var(--gd-good);
+  transition: width .42s ease-out, background .2s;
+}
+#s20 .gd-verdict.bad .vd-mst .mf { background: var(--gd-blue); }
+#s20 .vd-mst .v { font-size: 13px; font-weight: 700; color: var(--gd-ink-2); font-variant-numeric: tabular-nums; }
+
+#s20 .gd-fade {
+  position: sticky; bottom: 0; height: 20px; margin-top: -20px;
+  background: linear-gradient(to top, var(--gd-paper), rgba(246,245,241,0)); pointer-events: none;
+}
+
+/* ── 하단 액션바 ── */
+#s20 .gd-ft {
+  flex: none; padding: 12px 16px 14px; background: #fff; border-top: 1px solid var(--gd-line);
+}
+#s20 .gd-chips { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+#s20 .gd-chip {
+  height: 38px; display: inline-flex; align-items: center; gap: 6px; padding: 0 12px;
+  border: 1px solid var(--gd-line); border-radius: 8px; background: #fff;
+  font-size: 12.5px; font-weight: 600; color: var(--gd-ink-2);
+}
+#s20 .gd-chip svg { width: 15px; height: 15px; flex: none; }
+#s20 .gd-score { margin-left: auto; font-size: 12.5px; color: var(--gd-ink-3); font-variant-numeric: tabular-nums; }
+/* 주 CTA — 제품 활성 배색(#1d4ed8 + 흰 글자, 대비 6.70:1)으로 그린다.
+   회색 비활성면(#c3c9d6) 위 흰 글자는 1.66:1 로 판독이 불가했다. */
+#s20 .gd-primary {
+  width: 100%; min-height: 48px; border: 0; border-radius: 12px;
+  background: var(--gd-blue); color: #fff; font-family: var(--f-body); font-size: 15px; font-weight: 600;
+  cursor: pointer; transition: background .16s;
+}
+#s20 .gd-primary.ready { background: var(--gd-blue); cursor: pointer; }
+</style>
+
+<script>
+(() => {
+  const sec = document.getElementById('s20');
+  if (!sec) return;
+  const q = (s) => sec.querySelector(s);
+
+  const ANSWER = 2;
+  const ICON_OK  = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.6l4.6 4.6L19 7.2"/></svg>';
+  const ICON_NO  = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg>';
+
+  const sqs     = [...sec.querySelectorAll('#s20-opts .gd-sq')];
+  const us      = [...sec.querySelectorAll('.gd-u')];
+  const vd      = q('#s20-vd');
+  const vic     = q('#s20-vic');
+  const vtx     = q('#s20-vtx');
+  const vfix    = q('#s20-vfix');
+  const mf      = q('#s20-mf');
+  const mv      = q('#s20-mv');
+  const meter   = q('#s20-meter');
+  const score   = q('#s20-score');
+  const primary = q('#s20-primary');
+  const main    = q('#s20-main');
+
+  let graded = false;
+
+  const reset = () => {
+    graded = false;
+    sqs.forEach((b) => b.removeAttribute('data-state'));
+    us.forEach((u) => u.removeAttribute('data-state'));
+    vd.hidden = true;
+    vd.classList.remove('bad');
+    vfix.hidden = true;
+    meter.style.width = '30%';
+    score.textContent = '정답 3/3';
+    primary.textContent = '제출하기';
+    primary.classList.remove('ready');
+    if (main) main.scrollTop = 0;
+  };
+
+  const grade = (picked) => {
+    const ok = picked === ANSWER;
+
+    sqs.forEach((b) => {
+      const v = +b.dataset.v;
+      if (v === ANSWER) b.setAttribute('data-state', 'correct');
+      else if (v === picked) b.setAttribute('data-state', 'wrong');
+      else b.setAttribute('data-state', 'dim');
+    });
+    us.forEach((u) => {
+      const v = +u.dataset.u;
+      if (v === ANSWER) u.setAttribute('data-state', 'correct');
+      else if (v === picked) u.setAttribute('data-state', 'wrong');
+      else u.removeAttribute('data-state');
+    });
+
+    vd.classList.toggle('bad', !ok);
+    vic.innerHTML = ok ? ICON_OK : ICON_NO;
+    vtx.textContent = ok ? '정답입니다' : '오답입니다';
+    vfix.hidden = ok;
+    mv.textContent = ok ? '78' : '61';
+    mf.style.width = ok ? '78%' : '61%';
+    vd.hidden = false;
+
+    meter.style.width = '40%';
+    score.textContent = ok ? '정답 4/4' : '정답 3/4';
+    primary.textContent = '다음 문항';
+    primary.classList.add('ready');
+    graded = true;
+
+    requestAnimationFrame(() => { if (main) main.scrollTo({ top: main.scrollHeight, behavior: 'smooth' }); });
+  };
+
+  sqs.forEach((b) => b.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (graded) { reset(); return; }
+    grade(+b.dataset.v);
+  }));
+
+  primary.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (graded) reset();
+  });
+
+  sec.addEventListener('slide:enter', reset);
+  reset();
+})();
+</script>
+</section>

@@ -11,6 +11,7 @@ export function VocabTestOptions({
   vocabMode,
   vocabTestLayout,
   vocabTestOnly,
+  hideVocabTestOnly,
   excludedVocabTestCount,
   vocabTierFilter,
   onVocabTestMode,
@@ -23,6 +24,12 @@ export function VocabTestOptions({
   vocabMode: VocabTestMode;
   vocabTestLayout: VocabTestLayout;
   vocabTestOnly: boolean;
+  /**
+   * [E23] 파이널 문서에서는 「단어 시험지만 만들기」 토글을 숨긴다 — vocabTestOnly 가
+   * 본편 시트·활동·웹툰을 전부 소멸시키는 I3 위반 경로라 진입 자체를 차단(스펙 E23).
+   * 단, 이미 켜진 문서(레거시 저장본)의 「전체 자료 다시 보이기」 복구 경로는 남긴다.
+   */
+  hideVocabTestOnly?: boolean;
   excludedVocabTestCount: number;
   vocabTierFilter: VocabularyTier[] | undefined;
   onVocabTestMode: (sectionIndex: number, mode: VocabTestMode) => void;
@@ -125,6 +132,9 @@ export function VocabTestOptions({
         </div>
       </div>
 
+      {/* [E23] 파이널에서는 켜기 버튼을 렌더하지 않는다(위 hideVocabTestOnly 계약).
+          vocabTestOnly 가 이미 true 인 문서에서는 복구(restore) 버튼만 남긴다. */}
+      {hideVocabTestOnly && !vocabTestOnly ? null : (
       <button
         type="button"
         data-vocab-test-only={vocabTestOnly ? "restore" : "only"}
@@ -148,6 +158,7 @@ export function VocabTestOptions({
         <FileQuestion className={`h-3.5 w-3.5 ${vocabTestOnly ? "text-blue-600" : "text-slate-400"}`} />
         {vocabTestOnly ? "전체 자료 다시 보이기" : "단어 시험지만 만들기"}
       </button>
+      )}
 
       {excludedVocabTestCount > 0 ? (
         <button

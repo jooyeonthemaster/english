@@ -18,7 +18,10 @@ import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { buildQuestionAnnotationBlock } from "@/lib/annotation-prompt";
 import { QUESTION_PERSISTENCE_TRANSACTION_TIMEOUT_MS } from "@/lib/concurrency-config";
-import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
+import {
+  resolveEffectiveGenerationPlan,
+  type QuestionGenerationPlan,
+} from "@/lib/question-generation-plans";
 import {
   findExpressionInPassage,
   findExpressionInPassageStrict,
@@ -565,10 +568,17 @@ async function buildQuestionSetOnce(opts: {
   // 유형별 설정과 동일한 커스터마이즈를 멤버 단위로 받는다.
   const members: SetMemberBuildConfig[] = preset.members.map((m, i) => {
     const ov = memberOverrides?.[i];
+    const memberDifficulty = ov?.difficulty ?? m.difficulty;
     return {
       typeId: m.typeId,
-      difficulty: ov?.difficulty ?? m.difficulty,
-      generationPlan: ov?.generationPlan ?? m.generationPlan ?? ctx.generationPlan,
+      difficulty: memberDifficulty,
+      // 26-08-18 난이도 기반 티어: 멤버 플랜은 멤버 난이도(없으면 세트 기본)가
+      // 결정한다 — 프리셋·오버라이드의 generationPlan 은 무시(question-set 라우트
+      // 과금과 동일 규칙, resolveEffectiveGenerationPlan 단일 소스).
+      generationPlan: resolveEffectiveGenerationPlan(
+        ov?.generationPlan ?? m.generationPlan ?? ctx.generationPlan,
+        memberDifficulty ?? baseDifficulty,
+      ),
       typeSettings:
         m.typeSettings || ov?.typeSettings
           ? { ...(m.typeSettings ?? {}), ...(ov?.typeSettings ?? {}) }

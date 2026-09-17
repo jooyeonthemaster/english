@@ -2,7 +2,7 @@ import type { AnalysisSection } from "@/lib/passage-report/analysis-report/schem
 import { cn } from "@/lib/utils";
 import { DelBtn, Field } from "./editable-field";
 import type { SectionFlowCtx, VocabularyRow } from "./types";
-import { VocabBlankCell, VocabStudyGridCard, VocabTestGridCard, isDefaultVocabularyTestTarget, rowMatchesTierFilter, vocabTestHiddenCols, vocabTestRowKey } from "./vocabulary";
+import { VocabBlankCell, VocabStudyGridCard, VocabTestGridCard, isVocabTestTargetRow, rowMatchesTierFilter, vocabTestHiddenCols, vocabTestRowKey } from "./vocabulary";
 
 export function vocabularySectionFlow(section: Extract<AnalysisSection, { kind: "vocabulary" }>, ctx: SectionFlowCtx): void {
   const { editable, commit, push, options } = ctx;
@@ -11,7 +11,8 @@ const s = section;
       const h = new Set(s.hiddenCols ?? []);
       const upd = (i: number, p: Partial<(typeof s.rows)[number]>) => commit({ ...s, rows: s.rows.map((r, j) => (j === i ? { ...r, ...p } : r)) });
       const delRow = (i: number) => commit({ ...s, rows: s.rows.filter((_, j) => j !== i) });
-      if (!options?.vocabTestOnly && (s.vocabStudyLayout ?? "table") === "two-column") {
+      // 학습 단어장 기본 레이아웃 = 2열 카드(compact-spec §5) — properties-panel 의 기본값과 동기.
+      if (!options?.vocabTestOnly && (s.vocabStudyLayout ?? "two-column") === "two-column") {
         // 단어장 2열 카드 — 난이도 필터를 통과한 행을 순서대로 2개씩 짝지어 한 행(grid row)으로.
         const visible = s.rows
           .map((row, index) => ({ row, index }))
@@ -97,11 +98,12 @@ const s = section;
         const th = new Set(testHiddenCols);
         const excluded = new Set(s.vocabTestExcludedKeys ?? []);
         const tierFilter = s.vocabTierFilter;
+        // [R2] 출제 대상 술어는 `isVocabTestTargetRow` **하나**다(난이도 필터 + 제외 키).
+        // 파이널·실전의 카드 잠금 해제가 같은 술어의 카운트(vocabTestTargetCount)를 쓰므로
+        // 여기서 인라인으로 되돌리면 두 축이 갈려 빈 시험지가 되살아난다.
         const testRows = s.rows
           .map((row, index) => ({ row, index, key: vocabTestRowKey(row) }))
-          // 난이도 단계 필터가 있으면 그 단계로, 없으면 기본(쉬운 core 제외 = test+challenge).
-          .filter(({ row }) => (tierFilter && tierFilter.length > 0 ? rowMatchesTierFilter(row, tierFilter) : isDefaultVocabularyTestTarget(row)))
-          .filter(({ key }) => !excluded.has(key));
+          .filter(({ row }) => isVocabTestTargetRow(row, { tierFilter, excluded }));
         const visibleTestCols = (["headword", "pronunciation", "meaning", "synonyms", "antonyms"] as const).filter((key) => !th.has(key));
         const deleteAnchor = visibleTestCols[visibleTestCols.length - 1];
         const excludeFromTest = (row: VocabularyRow) => {

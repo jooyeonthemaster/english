@@ -10,7 +10,13 @@
 // ============================================================================
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { BookMarked, Search, ShoppingBasket, SlidersHorizontal } from "lucide-react";
+import {
+  BookMarked,
+  Search,
+  ShoppingBasket,
+  SlidersHorizontal,
+  Sparkles,
+} from "lucide-react";
 import {
   getWordbookLemmaDossier,
   getWordbookPassageScope,
@@ -28,6 +34,7 @@ import { SenseTable } from "./sense-table";
 import { LemmaDossier } from "./lemma-dossier";
 import { BasketDock } from "./basket-dock";
 import { DeploymentsPanel } from "./deployments-panel";
+import { WordbookWizard } from "./wizard/wordbook-wizard";
 import { fmt } from "./wordbook-ui";
 import {
   BASKET_MAX,
@@ -35,6 +42,7 @@ import {
   WORDBOOK_LENSES,
   type WordbookBasketItem,
   type WordbookFilter,
+  type WordbookPresetSeries,
   type PassageFacets,
   type PassagePaper,
   type PassageScopeSummary,
@@ -111,6 +119,14 @@ export function WordbookClient({
     title: string;
     senseCount: number;
   } | null>(null);
+  /** 교재(시리즈) [학생에게 보내기] → 같은 전송 단계의 교재 모드(스펙 §11) */
+  const [presetSeries, setPresetSeries] = useState<WordbookPresetSeries | null>(null);
+  // ── 단어장 만들기 위저드 ───────────────────────────────────────────────────
+  const [wizardOpen, setWizardOpen] = useState(false);
+  /** 「담은 단어로 교재 짜기」 진입 — 스텝1에서 담은 단어 카드가 미리 선택된다 */
+  const [wizardFromBasket, setWizardFromBasket] = useState(false);
+  /** 위저드가 교재를 만들면 「보낸 단어장」 패널을 리마운트해 새 카드를 싣는다 */
+  const [deployEpoch, setDeployEpoch] = useState(0);
 
   const lensDef = useMemo(
     () => WORDBOOK_LENSES.find((l) => l.key === lens) ?? DEFAULT_LENS,
@@ -500,6 +516,12 @@ export function WordbookClient({
     [],
   );
 
+  /** 교재(시리즈) → 같은 전송 단계의 교재 모드로. 위저드 성공 화면·교재 카드 공용 */
+  const handleSendSeries = useCallback((series: WordbookPresetSeries) => {
+    setPresetSeries(series);
+    setBasketOpen(true);
+  }, []);
+
   // 알림 자동 소거
   useEffect(() => {
     if (!notice) return;
@@ -585,12 +607,25 @@ export function WordbookClient({
               조건
             </button>
           ) : null}
+          {/* 주 CTA — 위저드 진입. 담은 단어(보조)와 색이 겹치지 않게 남색 계열 */}
+          <button
+            type="button"
+            onClick={() => {
+              setWizardFromBasket(false);
+              setWizardOpen(true);
+            }}
+            className="flex h-8 shrink-0 items-center gap-1.5 rounded-md bg-blue-600 px-3 text-[12px] font-semibold text-white shadow-sm transition-colors hover:bg-blue-700"
+          >
+            <Sparkles className="size-3.5" />
+            <span className="hidden sm:inline">단어장 만들기</span>
+            <span className="sm:hidden">만들기</span>
+          </button>
           <button
             type="button"
             onClick={() => setBasketOpen(true)}
             className={`flex h-8 shrink-0 items-center gap-1.5 rounded-md px-2.5 text-[12px] font-semibold transition-colors ${
               basket.length
-                ? "bg-blue-600 text-white hover:bg-blue-700"
+                ? "border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100"
                 : "border border-slate-200 text-slate-500 hover:bg-slate-50"
             }`}
           >
@@ -603,7 +638,15 @@ export function WordbookClient({
 
       {/* ── 본문 — 단어 찾기(3열 워크스테이션) / 보낸 단어장(관리 패널) ── */}
       {view === "manage" ? (
-        <DeploymentsPanel onSendDeck={handleSendDeck} />
+        <DeploymentsPanel
+          key={deployEpoch}
+          onSendDeck={handleSendDeck}
+          onSendSeries={handleSendSeries}
+          onCreateBook={() => {
+            setWizardFromBasket(false);
+            setWizardOpen(true);
+          }}
+        />
       ) : (
         <div ref={panelsRef} className="flex min-h-0 min-w-0 flex-1">
           <FilterRail
@@ -700,6 +743,24 @@ export function WordbookClient({
         currentTotal={total}
         presetDeck={presetDeck}
         onPresetConsumed={() => setPresetDeck(null)}
+        presetSeries={presetSeries}
+        onPresetSeriesConsumed={() => setPresetSeries(null)}
+        onSeriesSent={() => setDeployEpoch((n) => n + 1)}
+        onOpenWizard={() => {
+          setBasketOpen(false);
+          setWizardFromBasket(true);
+          setWizardOpen(true);
+        }}
+      />
+
+      <WordbookWizard
+        open={wizardOpen}
+        onClose={() => setWizardOpen(false)}
+        basketSenseIds={basket.map((b) => b.senseId)}
+        startFromBasket={wizardFromBasket}
+        onSendSeries={handleSendSeries}
+        onGotoManage={() => setView("manage")}
+        onCreated={() => setDeployEpoch((n) => n + 1)}
       />
 
       {notice ? (

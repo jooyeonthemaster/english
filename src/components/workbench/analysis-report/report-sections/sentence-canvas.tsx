@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import type { CanvasNoteRef, ConnectorPath, PassageSection, SectionEdit, VocabularyNoteRef } from "./types";
 import { DelBtn, Field, handleEditableKeyDown } from "./editable-field";
 import { AnnotatedReadingField, joinReadingSentenceParts, readEditableTextIgnoringAnnotations, renderAnnotatedReadingText } from "./annotated-reading";
-import { ReadLogicNote, collectPassageStudyNotes, patchExamNote, patchGrammarNote, patchLogicNote, splitStudyNoteText } from "./study-notes";
+import { ReadLogicNote, collectPassageStudyNotes, patchExamNote, patchGrammarNote, patchLogicNote, splitStudyNoteText, stripTrapIcon } from "./study-notes";
 
 // ══════════════════════════════════════════════════════════════════════════════
 // 01 원문 — 필기 캔버스 (HLC). 문장 1개 = 원자 블록. 직독직해 청크 + 줄사이 필기 + 여백 레일.
@@ -24,10 +24,11 @@ const ANNO_COLOR: Record<CanvasNoteKind, string> = {
 /** 필기 분석(05) 색상 범례 — 어법/구문/출제/논리 색이 무엇을 뜻하는지 안내. */
 export function AnnotatedColorLegend() {
   // 구문(parsing)은 필기 캔버스에서 제외했으므로 범례에서도 뺀다.
+  // 논리(logic)도 제외 — buildCanvasNotesForSentence 가 logic 을 생산하지 않아(':114 주석')
+  // 이 섹션에 금색 필기가 실물로 등장할 경로가 없다. 실물 없는 범례 항목은 유령이다(마커 감사 M3).
   const items: [CanvasNoteKind, string][] = [
     ["grammar", "어법 포인트"],
     ["exam", "출제 포인트"],
-    ["logic", "논리 흐름"],
   ];
   return (
     <div className="par-anno-legend">
@@ -37,12 +38,10 @@ export function AnnotatedColorLegend() {
           {label}
         </span>
       ))}
+      {/* 분할 문장 이어짐 글리프 안내 — 범례 없는 '+' 가 수식 기호로 오독되던 것(마커 감사) */}
+      <span className="par-anno-legend-hint">앞 문장 이어짐</span>
     </div>
   );
-}
-
-function cleanParseLabel(label: string): string {
-  return label.replace(/[[\]]/g, "").trim();
 }
 
 function noteBodyLines(layoutLines: string[] | undefined, fallback: string): string[] {
@@ -70,7 +69,8 @@ export function buildCanvasNotesForSentence(
       priority: layout?.priority,
       role: n.row.point,
       lines: noteBodyLines(layout?.lines, n.row.explanation),
-      trap: n.row.trap?.trim() || undefined,
+      // 선행 ⚠ 제거 — 아이콘은 CSS ::before(par-list-trap 등)가 단일 소유(마커 감사 M3)
+      trap: stripTrapIcon(n.row.trap) || undefined,
       example: n.row.example?.trim() || undefined,
       exampleWrong: n.row.exampleWrong?.trim() || undefined,
       exampleCorrect: n.row.exampleCorrect?.trim() || undefined,
@@ -78,23 +78,13 @@ export function buildCanvasNotesForSentence(
     refs.set(key, { kind: "grammar", ref: n });
   });
 
-  (study.parsingBySentence.get(sentenceNo) ?? []).forEach((n) => {
-    const key = `p-${n.sectionIndex}-${n.itemIndex}`;
-    const layout = n.item.layout ?? undefined;
-    const partLines = n.item.parts.map((p) => `${cleanParseLabel(p.label)} ${p.text}`.trim()).filter(Boolean);
-    const lines = (layout?.lines ?? []).map((l) => l.trim()).filter(Boolean);
-    const finalLines = lines.length ? lines : [...partLines, n.item.translation ? `→ ${n.item.translation}` : ""].filter(Boolean);
-    notes.push({
-      key,
-      kind: "parsing",
-      anchorText: layout?.anchorText ?? n.item.parts[0]?.text,
-      band: layout?.band,
-      priority: layout?.priority,
-      role: "구문",
-      lines: finalLines,
-    });
-    refs.set(key, { kind: "parsing", ref: n });
-  });
+  // 구문(parsing) 노트는 여기서 **생산하지 않는다** — 렌더러(:428-431)가 캔버스에서
+  // 구문 필기를 의도적으로 제외하는데도 노트로 만들어 플랜에 넣으면, 그리지도 않을
+  // 장문 해설(문장당 수백 자)이 estimateHeights 의 레일 높이로 계상되어 문장 분할
+  // (planSentenceSplit)을 유령 발동시킨다. 실사고: 140자 문장이 est 290mm 로 3분할되며
+  // 분할 경로가 seed 청크를 버려 끊어읽기 글로스가 전멸했다(26-08-26 RCA, .tmp-par-rca).
+  // ⚠ parsing 데이터는 생성·저장되지만 hlc 기본 슬롯 구성(section-slots.ts)에는 구문 섹션이
+  // 없어 legacy 레이아웃에서만 표시된다 — 표시 표면 신설/생성 중단은 별도 의제(적대검수 R4).
 
   (study.examBySentence.get(sentenceNo) ?? []).forEach((n) => {
     const key = `e-${n.sectionIndex}-${n.rowIndex}`;
@@ -154,21 +144,25 @@ function joinNoteLines(lines: string[], index: number, value: string): string {
     .trim();
 }
 
-/** 청크 영문 슬라이스 (어휘 글로스 인라인). 편집 가능 시 contentEditable. */
+/** 청크 영문 슬라이스 (어휘 글로스 인라인). 편집 가능 시 contentEditable.
+ *  prefix — 비편집 렌더에서 문장 번호를 첫 청크의 en 줄 안에 인라인으로 심는다
+ *  (번호가 독립 flex 아이템이면 긴 첫 청크가 다음 줄로 낙하할 때 번호만 남는 고아 줄 발생). */
 function CanvasChunkEnglish({
   editable,
   value,
   onCommit,
   highlights,
   vocabNotes,
+  prefix,
 }: {
   editable: boolean;
   value: string;
   onCommit: (v: string) => void;
   highlights: string[];
   vocabNotes: VocabularyNoteRef[];
+  prefix?: ReactNode;
 }) {
-  if (!editable) return <span className="par-canvas-en">{renderAnnotatedReadingText(value, highlights, vocabNotes)}</span>;
+  if (!editable) return <span className="par-canvas-en">{prefix}{renderAnnotatedReadingText(value, highlights, vocabNotes)}</span>;
   return (
     <span
       className="par-canvas-en par-edit-field"
@@ -218,28 +212,33 @@ function CanvasNoteText({
           <span className={roleClass}>{note.role}</span>
         )
       ) : null}
-      {note.lines.map((line, i) =>
-        canEdit ? (
-          <Field
-            key={i}
-            as="span"
-            className={lineClass}
-            editable
-            value={line}
-            onCommit={(v) => commitNoteBody(entry, sectionEdit, joinNoteLines(note.lines, i, v))}
-          />
-        ) : (
-          <span key={i} className={lineClass}>
-            {line}
-          </span>
-        ),
-      )}
+      {note.lines.map((line, i) => (
+        // 세그먼트 사이 공백 — 인라인 스팬이 무간격으로 붙어 "예요repair와 병렬" 처럼
+        // 문장이 붙던 결함(R2). 줄 시작에서는 브라우저가 공백을 소거하므로 항상 넣어도 안전.
+        <Fragment key={i}>
+          {" "}
+          {canEdit ? (
+            <Field
+              as="span"
+              className={lineClass}
+              editable
+              value={line}
+              onCommit={(v) => commitNoteBody(entry, sectionEdit, joinNoteLines(note.lines, i, v))}
+            />
+          ) : (
+            <span className={lineClass}>{line}</span>
+          )}
+        </Fragment>
+      ))}
       {note.trap ? (
-        canEdit ? (
-          <Field as="span" className={trapClass} editable value={note.trap} onCommit={(v) => commitNoteTrap(entry, sectionEdit, v)} />
-        ) : (
-          <span className={trapClass}>{note.trap}</span>
-        )
+        <>
+          {" "}
+          {canEdit ? (
+            <Field as="span" className={trapClass} editable value={note.trap} onCommit={(v) => commitNoteTrap(entry, sectionEdit, v)} />
+          ) : (
+            <span className={trapClass}>{note.trap}</span>
+          )}
+        </>
       ) : null}
       {note.example ? (
         // 틀린 토큰(exampleWrong)이 있으면 편집 모드에서도 빨강 강조 렌더로 보여준다
@@ -293,7 +292,9 @@ function canvasEffectSignature(
   for (const c of plan.chunks) parts.push(`c${SIG_F}${c.text}${SIG_F}${c.gloss ?? ""}${SIG_F}${c.role ?? ""}${SIG_F}${c.emphasis ?? ""}`);
   for (const n of allNotes) {
     parts.push(
-      `n${SIG_F}${n.key}${SIG_F}${n.kind}${SIG_F}${n.chunkIndex}${SIG_F}${n.anchorRange ? 1 : 0}${SIG_F}${n.anchorText ?? ""}` +
+      // band — R4 부터 렌더 표면(레일 카드 vs 목록 행)을 결정하므로 반드시 서명에 접는다.
+      // 텍스트가 같아도 저장된 layout.band 힌트만 바뀌면 측정 대상 DOM 이 이동한다(검수 C1/C2).
+      `n${SIG_F}${n.key}${SIG_F}${n.kind}${SIG_F}${n.band}${SIG_F}${n.priority ?? ""}${SIG_F}${n.chunkIndex}${SIG_F}${n.anchorRange ? 1 : 0}${SIG_F}${n.anchorText ?? ""}` +
         `${SIG_F}${n.role ?? ""}${SIG_F}${n.lines.join(SIG_F)}${SIG_F}${n.trap ?? ""}${SIG_F}${n.example ?? ""}${SIG_F}${n.exampleWrong ?? ""}${SIG_F}${n.exampleCorrect ?? ""}`,
     );
   }
@@ -319,6 +320,16 @@ function renderTrapExample(note: PlacedNote): ReactNode {
   );
 }
 
+/** 목록 행 원문 인용 절단 — 강등된 출제·논리 필기는 문장 전체를 인용할 수 있어 단어 경계 64자로
+ *  자른다. 어법 행 인용은 전문 유지(전폭 행에 한 줄로 들어가므로 자르면 회귀 — R4 검수 V1). */
+function clipListSrc(t: string, kind: CanvasNoteKind): string {
+  const s = t.trim();
+  if (kind === "grammar" || s.length <= 64) return s;
+  const cut = s.slice(0, 62);
+  const sp = cut.lastIndexOf(" ");
+  return `${(sp > 40 ? cut.slice(0, sp) : cut).trimEnd()}…`;
+}
+
 /** 필기 분석(05) 목록 항목 — 번호 뱃지 + 종류 + 본문 출처 + 해설/함정/예문. */
 function CanvasListNote({
   note,
@@ -336,13 +347,13 @@ function CanvasListNote({
   const color = ANNO_COLOR[note.kind];
   return (
     <div className="par-list-note" data-list-key={note.key} style={{ "--anno-c": color } as CSSProperties}>
-      <span className="par-list-badge">{num}</span>
+      <span className="par-list-badge">{num > 0 ? num : "·"}</span>
       <div className="par-list-body">
         <span className="par-list-kind">{KIND_LABEL[note.kind]}</span>
         {note.anchorRange && note.anchorText?.trim() ? (
           <>
             {" · "}
-            <span className="par-list-src">{note.anchorText.trim()}</span>
+            <span className="par-list-src">{clipListSrc(note.anchorText, note.kind)}</span>
           </>
         ) : null}
         {" — "}
@@ -403,17 +414,27 @@ export function AnnotatedSentenceCanvas({
   // 모든 필기를 종류별로 재배치(v3): 어법 → 아래 목록(번호 뱃지) / 출제·논리 → 오른쪽 레일.
   // 구문(parsing) 필기는 필기 캔버스에서 제외 — 끊어읽기(청크 글로스)로 이미 드러나고,
   // 장황한 구문 해설은 별도 '구문 분석' 섹션이 담당하므로 캔버스에서는 삭제한다.
+  // R4 — 출제·논리는 **밴드를 존중**한다: band==="rail" 만 우측 레일 카드, 강등분
+  // (balanceV3Rail 이 footnote 로 내린 초과 카드)은 어법 목록에 이어붙는 번호 뱃지 행.
+  // 레일이 본문보다 길어 문장 사이에 백지 띠가 생기던 결함의 렌더러 측 절반.
   const allNotes = [...plan.interlineByChunk.flat(), ...plan.railNotes, ...plan.footnoteNotes];
-  const listNotes = allNotes.filter((n) => n.kind === "grammar");
-  const sideNotes = allNotes.filter((n) => n.kind === "exam" || n.kind === "logic");
+  const isSideKind = (n: PlacedNote) => n.kind === "exam" || n.kind === "logic";
+  const listNotes = [...allNotes.filter((n) => n.kind === "grammar"), ...allNotes.filter((n) => isSideKind(n) && n.band !== "rail")];
+  const sideNotes = allNotes.filter((n) => isSideKind(n) && n.band === "rail");
+  // 연번은 **앵커(연결선)가 있는 행만** — 무앵커 행에 번호를 주면 본문에 대응 없는
+  // 헛참조가 된다(검수 V1). 무앵커 행은 종류색 점 뱃지로 표기.
   const numByKey = new Map<string, number>();
-  listNotes.forEach((n, i) => numByKey.set(n.key, i + 1));
-  const chunkBadges = new Map<number, { num: number; color: string }[]>();
+  let listSeq = 0;
+  listNotes.forEach((n) => {
+    if (n.anchorRange) numByKey.set(n.key, ++listSeq);
+  });
+  // 앵커된 청크 표시는 색 밑줄(is-anchored)로만 — 뜻 줄의 번호 원(par-canvas-lk)은
+  // 같은 링크의 3중 표기(밑줄+연결 화살표+목록 인용에 더해)라 제거했다(R4-d, 26-08-22
+  // 유저 확정: 문장 번호 ①②와 혼동되고 캔버스마다 1부터 재시작해 정체불명 원으로 보임).
+  const anchorColorByChunk = new Map<number, string>();
   listNotes.forEach((n) => {
     if (!n.anchorRange) return;
-    const arr = chunkBadges.get(n.chunkIndex) ?? [];
-    arr.push({ num: numByKey.get(n.key) ?? 0, color: ANNO_COLOR[n.kind] });
-    chunkBadges.set(n.chunkIndex, arr);
+    if (!anchorColorByChunk.has(n.chunkIndex)) anchorColorByChunk.set(n.chunkIndex, ANNO_COLOR[n.kind]);
   });
 
   // 이 캔버스의 렌더 결과(= 아래 effect 가 실측할 DOM)를 결정하는 값 전부의 안정 서명.
@@ -463,10 +484,12 @@ export function AnnotatedSentenceCanvas({
         raw.sort((p, q) => p.by - q.by || p.x1 - q.x1);
         const minBx = Math.min(...raw.map((r) => r.bx));
         const laneRight = Math.max(7, minBx - 5); // 뱃지 바로 왼쪽(가장 안쪽 레인)
-        const laneLeft = 3; // 가장 바깥(왼쪽 끝) 레인
+        const laneLeft = 2; // 가장 바깥(왼쪽 끝) 레인
         const cnt = raw.length;
+        // 레인 간 최소 0.8mm 확보 — 연결 수가 많을 때 세로선이 붙어 보이는 밀집 완화.
+        const laneStep = cnt > 1 ? Math.max(0.8, (laneRight - laneLeft) / (cnt - 1)) : 0;
         raw.forEach((r, i) => {
-          const laneX = cnt > 1 ? laneRight - ((laneRight - laneLeft) * i) / (cnt - 1) : laneRight;
+          const laneX = Math.max(laneLeft, laneRight - laneStep * i);
           const shelfY = r.lineBottom + i * 1.4; // 그 줄 아래 빈 띠, 연결마다 살짝 어긋나게
           const endx = Math.max(laneX + 1, r.bx - 1);
           const d = `M ${r.x1.toFixed(1)} ${r.y1.toFixed(1)} L ${r.x1.toFixed(1)} ${shelfY.toFixed(1)} L ${laneX.toFixed(1)} ${shelfY.toFixed(1)} L ${laneX.toFixed(1)} ${r.by.toFixed(1)} L ${endx.toFixed(1)} ${r.by.toFixed(1)}`;
@@ -524,38 +547,58 @@ export function AnnotatedSentenceCanvas({
   return (
     <article ref={rootRef} className="par-canvas par-canvas-v3" data-canvas data-canvas-id={canvasId}>
       <div className={cn("par-canvas-grid", hasRail && "has-rail")}>
-        <div className="par-canvas-staff">
-          <span className={cn("par-canvas-no", isCont && "is-cont")}>{isCont ? "+" : circledNo(no)}</span>
-          {plan.chunks.map((chunk, i) => {
-            const badges = chunkBadges.get(i);
-            const isAnchored = !!badges?.length;
-            const cellColor = badges?.[0]?.color;
-            const newEnFor = (v: string) => plan.chunks.map((c, j) => (j === i ? v : c.text)).join("");
-            return (
-              <Fragment key={i}>
-                {/* 끊어읽기 구분선 — 청크(직독직해 단위) 사이를 '/'로 */}
-                {i > 0 ? <span className="par-canvas-sep" aria-hidden>/</span> : null}
-                <span
-                  className={cn("par-canvas-chunk", chunk.emphasis === "core" && "is-core", isAnchored && "is-anchored")}
-                  data-anchor-id={`${canvasId}-c${i}`}
-                  style={cellColor ? ({ "--anno-c": cellColor } as CSSProperties) : undefined}
-                >
-                  {chunk.gloss || badges ? (
-                    <span className="par-canvas-gloss">
-                      {chunk.gloss ?? ""}
-                      {badges?.map((bd) => (
-                        <span key={bd.num} className="par-canvas-lk" style={{ "--anno-c": bd.color } as CSSProperties}>
-                          {bd.num}
-                        </span>
-                      ))}
-                    </span>
-                  ) : null}
-                  <CanvasChunkEnglish editable={enEditable} value={chunk.text} onCommit={(v) => onCommitEn?.(newEnFor(v))} highlights={keywords} vocabNotes={vocabNotes} />
-                  {chunk.role ? <span className="par-canvas-role">{chunk.role}</span> : null}
+        {/* 편집 모드에서만 번호가 독립 flex 아이템(has-no-item) — 행잉 인덴트 CSS 가 이 클래스에 걸린다.
+            비편집(인쇄·뷰)에서는 번호를 첫 청크 en 줄 안에 인라인으로 심어 번호 고아 줄을 원천 차단. */}
+        <div className={cn("par-canvas-staff", enEditable && "has-no-item")}>
+          {enEditable ? (
+            <span className={cn("par-canvas-col")} aria-hidden={false}>
+              <span className="par-canvas-gloss par-canvas-gloss-pad" aria-hidden>{" "}</span>
+              <span className={cn("par-canvas-no", isCont && "is-cont")}>{isCont ? "+" : circledNo(no)}</span>
+            </span>
+          ) : null}
+          {(() => {
+            const numberPrefix = !enEditable ? (
+              <span className={cn("par-canvas-no", isCont && "is-cont")}>{isCont ? "+" : circledNo(no)}</span>
+            ) : null;
+            let renderedAny = false;
+            let numberPlaced = false;
+            return plan.chunks.map((chunk, i) => {
+              const cellColor = anchorColorByChunk.get(i);
+              const isAnchored = anchorColorByChunk.has(i);
+              const newEnFor = (v: string) => plan.chunks.map((c, j) => (j === i ? v : c.text)).join("");
+              // 완전 빈 청크(텍스트·뜻·역할 전무)는 건너뛴다 — 구분 '/' 이중 표기의 원인.
+              const isEmpty = !chunk.text.trim() && !chunk.gloss && !chunk.role;
+              if (isEmpty && !enEditable) return null;
+              const sep = renderedAny ? (
+                <span className="par-canvas-sep" aria-hidden>
+                  <span className="par-canvas-gloss par-canvas-gloss-pad" aria-hidden>{" "}</span>
+                  <span className="par-canvas-sep-ch">/</span>
                 </span>
-              </Fragment>
-            );
-          })}
+              ) : null;
+              renderedAny = true;
+              const prefix = !numberPlaced ? numberPrefix : null;
+              numberPlaced = true;
+              return (
+                <Fragment key={i}>
+                  {/* 끊어읽기 구분선 — 청크(직독직해 단위) 사이를 '/'로 */}
+                  {sep}
+                  <span
+                    className={cn("par-canvas-chunk", chunk.emphasis === "core" && "is-core", isAnchored && "is-anchored")}
+                    data-anchor-id={`${canvasId}-c${i}`}
+                    style={cellColor ? ({ "--anno-c": cellColor } as CSSProperties) : undefined}
+                  >
+                    {/* 뜻 줄은 항상 렌더(없으면 공백 패드) — staff 의 baseline 정렬이 전 청크에서
+                        같은 줄(뜻 줄)을 기준으로 잡혀 en 텍스트가 하나의 기준선에 정렬된다. */}
+                    <span className={cn("par-canvas-gloss", !chunk.gloss && "par-canvas-gloss-pad")}>
+                      {chunk.gloss ?? " "}
+                    </span>
+                    <CanvasChunkEnglish editable={enEditable} value={chunk.text} onCommit={(v) => onCommitEn?.(newEnFor(v))} highlights={keywords} vocabNotes={vocabNotes} prefix={prefix} />
+                    {chunk.role ? <span className="par-canvas-role">{chunk.role}</span> : null}
+                  </span>
+                </Fragment>
+              );
+            });
+          })()}
         </div>
         {hasRail ? (
           <div className="par-canvas-rail">
@@ -564,20 +607,22 @@ export function AnnotatedSentenceCanvas({
             ))}
           </div>
         ) : null}
+        {/* 어법 목록·해석을 그리드 1열(본문 열) 안에 둔다 — 레일(2열)이 전 행을 스팬하므로
+            블록 총높이가 max(본문 열 합, 레일 합)로 줄어든다(구조는 report-styles 그리드 규칙과 동기). */}
+        {listNotes.length ? (
+          <div className="par-canvas-list">
+            {listNotes.map((n) => (
+              <CanvasListNote key={n.key} note={n} num={numByKey.get(n.key) ?? 0} entry={refs.get(n.key)} editable={editable} sectionEdit={sectionEdit} />
+            ))}
+          </div>
+        ) : null}
+        {showTrans && (ko || koEditable) ? (
+          <div className="par-canvas-trans">
+            <span className="par-canvas-trans-no">{circledNo(no)}</span>
+            <Field as="p" className="par-canvas-trans-ko" editable={koEditable} value={ko} placeholder="(해석)" onCommit={(v) => onCommitKo?.(v)} />
+          </div>
+        ) : null}
       </div>
-      {listNotes.length ? (
-        <div className="par-canvas-list">
-          {listNotes.map((n) => (
-            <CanvasListNote key={n.key} note={n} num={numByKey.get(n.key) ?? 0} entry={refs.get(n.key)} editable={editable} sectionEdit={sectionEdit} />
-          ))}
-        </div>
-      ) : null}
-      {showTrans && (ko || koEditable) ? (
-        <div className="par-canvas-trans">
-          <span className="par-canvas-trans-no">{circledNo(no)}</span>
-          <Field as="p" className="par-canvas-trans-ko" editable={koEditable} value={ko} placeholder="(해석)" onCommit={(v) => onCommitKo?.(v)} />
-        </div>
-      ) : null}
       {connectors.length ? (
         <svg className="par-canvas-connectors" aria-hidden>
           {connectors.map((p, i) => (

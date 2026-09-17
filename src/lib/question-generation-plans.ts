@@ -10,30 +10,42 @@ export interface QuestionGenerationPlanConfig {
   creditMultiplier: number;
 }
 
-// 이원 티어 v2(26-07-22, O213 벤치 확정): 차이는 "모델"이다 — STANDARD =
-// flash3, PREMIUM = env PREMIUM_QGEN_MODEL_ID(3.6-flash 예정, 블라인드 정면비교
-// 8/10 1위·A 8/10). 빈칸·어법은 두 티어가 같은 md 원큐 구조에서 모델만 갈리고,
-// 그 외 유형 PREMIUM 은 기존 풀 파이프라인(어법 사다리·E-gate 검수리)을 탄다.
-// 요금(사용자 확정): PREMIUM = 2배 — getQuestionGenerationCreditCost 와 동기.
+// ── 난이도 기반 티어 (26-08-18, 사용자 결정 — O223 캠페인 귀결) ─────────────────
+// 플랜(일반/프리미엄) 선택 상품은 폐지. **난이도가 티어를 결정한다**:
+//   KILLER → PREMIUM 파이프라인(gemini 3.7-flash·v2 프롬프트·E-gate·사다리) + 요금 2배
+//   그 외   → STANDARD(luna 레인) 1배
+// 근거: luna 킬러는 신뢰성은 잡히나(V4 30%→5%) 미학은 못 사고(A 0), 3.7 v2 는
+// A+B 16/20 — 원가 ₩20 vs ₩27 이라 티어를 플랜으로 가르는 의미가 없었다. 요청
+// generationPlan 은 무시된다(레거시 저장값·세트 프리셋의 좀비 PREMIUM 차단).
+// PREMIUM/STANDARD 열거형은 엔진 내부 분기(모델·E-gate·사다리·태그)의 진실원으로
+// 유지 — 이름만 "티어"로 읽으면 된다.
 export const QUESTION_GENERATION_PLANS: Record<
   QuestionGenerationPlan,
   QuestionGenerationPlanConfig
 > = {
   STANDARD: {
     id: "STANDARD",
-    label: "일반 문제 생성",
+    label: "기본·중급 생성",
     shortLabel: "일반",
     description: "빠른 속도 · AI 검수 1회",
     creditMultiplier: 1,
   },
   PREMIUM: {
     id: "PREMIUM",
-    label: "프리미엄 문제 생성",
-    shortLabel: "프리미엄",
-    description: "상위 모델 · 정밀 검수 파이프라인",
+    label: "킬러 생성",
+    shortLabel: "킬러",
+    description: "상위 모델 · 정밀 검수 파이프라인 (킬러 난이도 전용, 2배)",
     creditMultiplier: 2,
   },
 };
+
+/** 난이도 → 티어. KILLER 만 PREMIUM. 문자열 비교는 대문자 정규화(레거시 소문자 방어). */
+export function planForDifficulty(difficulty: unknown): QuestionGenerationPlan {
+  return typeof difficulty === "string" &&
+    difficulty.trim().toUpperCase() === "KILLER"
+    ? "PREMIUM"
+    : "STANDARD";
+}
 
 export const QUESTION_GENERATION_PLAN_TAGS: Record<QuestionGenerationPlan, string> = {
   STANDARD: "일반 생성",
@@ -57,6 +69,10 @@ const QUESTION_GENERATION_PLAN_TAG_ALIASES: Record<
   ],
   PREMIUM: [
     QUESTION_GENERATION_PLAN_TAGS.PREMIUM,
+    // 26-08-18 난이도 기반 티어: PREMIUM=킬러 티어. 저장 태그 값('프리미엄 생성')은
+    // 기존 데이터 역추출 호환을 위해 그대로 두고, 표시명 계열만 별칭으로 흡수한다.
+    "킬러 생성",
+    "킬러",
     "프리미엄",
     "고급",
     "고급 생성",
@@ -128,14 +144,24 @@ export function isQuestionGenerationSingleTier(): boolean {
 }
 
 /**
- * 진입점 공용 최종 플랜 결정 — 정규화 후 단일 상품 모드면 STANDARD 로 접는다.
- * (fast/async/trigger/단건 4진입점의 유일한 결정 함수 — 규칙 중복 금지.)
+ * 진입점 공용 최종 티어 결정 — **난이도가 결정한다**(26-08-18): KILLER → PREMIUM,
+ * 그 외 → STANDARD. 요청 generationPlan 은 무시한다(플랜 상품 폐지 — 레거시
+ * 저장값·세트 프리셋의 좀비 PREMIUM 이 2배 과금·모델 분기로 새는 구멍 차단).
+ * 단일상품 클램프(QUESTION_GENERATION_SINGLE_TIER)도 난이도 규칙에 양보한다 —
+ * 프로덕션 env 가 on 이어도 KILLER 2배가 작동해야 한다.
+ * (md-stream/fast/async/trigger/단건/그래머스튜디오 6진입점의 유일한 결정 함수 —
+ *  규칙 중복 금지. difficulty 미전달 호출부는 STANDARD 로 떨어진다.)
+ * 비상 복귀: env QGEN_DIFFICULTY_TIER=off 면 종전 규칙(요청 플랜 + 단일상품 클램프).
  */
 export function resolveEffectiveGenerationPlan(
   requested: unknown,
+  difficulty?: unknown,
 ): QuestionGenerationPlan {
-  const normalized = normalizeQuestionGenerationPlan(requested);
-  return isQuestionGenerationSingleTier() ? "STANDARD" : normalized;
+  if (process.env.QGEN_DIFFICULTY_TIER?.trim().toLowerCase() === "off") {
+    const normalized = normalizeQuestionGenerationPlan(requested);
+    return isQuestionGenerationSingleTier() ? "STANDARD" : normalized;
+  }
+  return planForDifficulty(difficulty);
 }
 
 /**

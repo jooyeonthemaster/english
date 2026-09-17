@@ -9,6 +9,10 @@ import { prisma } from "@/lib/prisma";
 import { downloadAsBuffer } from "@/lib/supabase-storage";
 import type { AtlasChatImageInput } from "@/lib/atlas-chat-rest";
 import { extractExamMap } from "@/lib/exam-report/exam-analyze-direct";
+import {
+  EXAM_MAP_CHUNK_PAGES,
+  PAGE_BATCH_MAX_IMAGES,
+} from "@/lib/exam-report/exam-page-batching";
 import { prepareLlmImages } from "@/lib/exam-report/llm-images";
 import type { ExamReportMeta } from "@/lib/exam-report/prompts";
 import { EXAM_REPORT_JOB_DOMAIN } from "@/lib/exam-report/types";
@@ -195,19 +199,59 @@ export async function setupResume(opts: {
   };
 }
 
-/** sourceFiles(page 순) 시험지 페이지를 다운로드해 vision 이미지 입력으로 변환. */
+/** loadExamImages 결과 — 국소 콜용 세트 + 전 페이지 폴백 세트(지연·메모). */
+export interface LoadedExamImages {
+  /**
+   * 콜당 ≤6장 전제의 세트(장당 1.5MB 상한). E1a 청크·E1b 페이지 국소 배치 전용 —
+   * 이 세트를 통째로 한 콜에 실으면 12장 18MB·20장 30MB 로 총량 예산(12MB)을 넘긴다.
+   */
+  images: AtlasChatImageInput[];
+  /**
+   * 전 페이지를 한 콜에 싣는 배치(pages:null — 구 지도·page 누락·국소 미스 재시도)용
+   * 세트. 분모 = 전체 장수라 총량 12MB 이내가 보장된다(v4 이전 예산과 동일). 첫 호출
+   * 때만 재압축하고 이후는 같은 Promise 를 돌려준다. 6장 이하면 images 와 예산이
+   * 같으므로 재압축 없이 images 를 그대로 돌려준다.
+   */
+  loadFallbackImages: () => Promise<AtlasChatImageInput[]>;
+}
+
+/** 한 콜에 실리는 최대 장수 — E1a 청크·E1b 국소 배치 상한 중 큰 값(현재 둘 다 6). */
+const IMAGES_PER_LOCAL_CALL = Math.max(EXAM_MAP_CHUNK_PAGES, PAGE_BATCH_MAX_IMAGES);
+
+/**
+ * sourceFiles(page 순) 시험지 페이지를 다운로드해 vision 이미지 입력으로 변환.
+ * 총량 예산 재압축 — v4: E1a 청크·E1b 국소 배치는 콜당 6장을 넘지 않으므로 images 의
+ * 장당 예산 분모를 그 상한으로 고정한다(20장이어도 장당 1.5MB 유지). 전 페이지를 한 콜에
+ * 싣는 폴백 배치는 이 세트를 쓰면 안 되므로(12장 → 18MB, 8장 원본 28MB 에서 502 재현)
+ * 분모=전체 장수인 별도 세트를 loadFallbackImages 로 지연 제공한다.
+ * 두 세트 모두 인덱스(0-based)+1 = ExamMapEntry.page(전역 순번) — 정렬을 바꾸면 깨진다.
+ */
 export async function loadExamImages(
   pages: { path: string; page: number }[],
-): Promise<AtlasChatImageInput[]> {
+): Promise<LoadedExamImages> {
   const sorted = [...pages].sort((a, b) => a.page - b.page);
   const buffers = await Promise.all(sorted.map((p) => downloadAsBuffer(p.path)));
-  // 총량 예산 재압축 — 전 페이지 1콜 페이로드의 게이트웨이 502 방지
-  return prepareLlmImages(buffers);
+  const images = await prepareLlmImages(buffers, { pagesPerCall: IMAGES_PER_LOCAL_CALL });
+  let fallback: Promise<AtlasChatImageInput[]> | null = null;
+  const loadFallbackImages = (): Promise<AtlasChatImageInput[]> => {
+    // 장수 ≤ 콜당 상한이면 분모 min(장수, 상한) 이 같아 예산이 동일 — 재압축 생략.
+    if (buffers.length <= IMAGES_PER_LOCAL_CALL) return Promise.resolve(images);
+    if (fallback === null) {
+      fallback = prepareLlmImages(buffers, { pagesPerCall: buffers.length }).catch((err) => {
+        fallback = null;
+        throw err;
+      });
+    }
+    return fallback;
+  };
+  return { images, loadFallbackImages };
 }
 
 /**
  * E1a: examMap 이 아직 없는 첫 실행에서 시험지 사진을 직접 분석해 examMap 을
- * 도출·저장한다(무과금 프로브). 성공 시 structure 컬럼에 저장하고 examMap 반환.
+ * 도출·저장한다(무과금 프로브). v4: 사진이 6장을 넘으면 extractExamMap 이 청크
+ * (≤6장, 동시 2)로 나눠 호출·병합하고 문항별 발문 시작 장 page 를 붙인다 — 이 함수의
+ * 계약(1회 호출·성공 시 저장·실패 시 원복)은 그대로다. 성공 시 structure 컬럼에 저장.
  * 실패(추출 오류·문항 0)면 ANALYZING → priorStatus 원복 + 에러 응답을 반환한다.
  * 과금은 여기서 하지 않는다 — 라우트가 반환된 문항 수로 max(15,N) 를 선차감한다.
  */

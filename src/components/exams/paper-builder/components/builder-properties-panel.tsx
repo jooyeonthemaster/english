@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { gichulSetMetaFromData, isGichulSetMemberItem } from "../question-body-layout";
 import type { ChangeEvent, DragEvent, PointerEvent as ReactPointerEvent, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { BookOpen, ChevronDown, ChevronUp, Columns2, Copy, FileText, Group, Heading1, Image as ImageIcon, Layers, Lock, Rows3, Shuffle, Space, Trash2, Type, Ungroup, Unlock } from "lucide-react";
@@ -101,6 +102,15 @@ export function BuilderPropertiesPanel({
   onShuffleQuestions,
   onRemoveItem,
 }: BuilderPropertiesPanelProps) {
+  const outlineItems = useMemo(() => {
+    const seen = new Set<string | null>();
+    return paperItems.filter((item) => {
+      if (!isGichulSetMemberItem(item)) return true;
+      if (seen.has(item.groupId)) return false;
+      seen.add(item.groupId);
+      return true;
+    });
+  }, [paperItems]);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const questionPreviewBodyRef = useRef<HTMLTextAreaElement>(null);
   const hasActiveItem = Boolean(activeItem);
@@ -289,27 +299,65 @@ export function BuilderPropertiesPanel({
     const startHeight = questionPreviewHeight;
     const previousCursor = document.body.style.cursor;
     const previousUserSelect = document.body.style.userSelect;
+    const previousPointerEvents = document.body.style.pointerEvents;
 
     document.body.style.cursor = "ns-resize";
     document.body.style.userSelect = "none";
+    // 드래그 중 hover 스타일 재평가 차단 — 포인터 캡처 덕에 move 수신은 유지된다.
+    document.body.style.pointerEvents = "none";
+
+    // 포인터 캡처 — 커서가 얇은 핸들을 벗어나도 드래그가 끊기지 않는다.
+    const handleEl = event.currentTarget;
+    const pointerId = event.pointerId;
+    try {
+      handleEl.setPointerCapture(pointerId);
+    } catch {
+      // 캡처 미지원 브라우저는 window 리스너로 폴백
+    }
+
+    // 드래그 고속 경로 — 매 pointermove 의 setState 는 편집 패널 전체(문항
+    // textarea·스텝퍼·섹션 목록)를 프레임마다 리렌더시킨다. 높이는 textarea
+    // 한 곳(style.height)으로만 흐르므로 questionPreviewBodyRef 에 rAF
+    // 코얼레싱으로 직접 쓰고, 놓을 때 한 번만 setState 로 커밋한다.
+    // ref 미부착이면 종전 setState 경로 폴백(무회귀).
+    let latest = startHeight;
+    let rafId: number | null = null;
+    const flush = () => {
+      rafId = null;
+      const body = questionPreviewBodyRef.current;
+      if (body) body.style.height = `${latest}px`;
+    };
 
     const handlePointerMove = (moveEvent: PointerEvent) => {
       moveEvent.preventDefault();
-      setQuestionPreviewHeight(
-        clampInt(
-          startHeight + moveEvent.clientY - startY,
-          QUESTION_PREVIEW_HEIGHT_MIN,
-          questionPreviewMaxHeight,
-        ),
+      latest = clampInt(
+        startHeight + moveEvent.clientY - startY,
+        QUESTION_PREVIEW_HEIGHT_MIN,
+        questionPreviewMaxHeight,
       );
+      if (questionPreviewBodyRef.current) {
+        if (rafId === null) rafId = requestAnimationFrame(flush);
+      } else {
+        setQuestionPreviewHeight(latest);
+      }
     };
 
     const finishResize = () => {
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("pointerup", finishResize);
       window.removeEventListener("pointercancel", finishResize);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      flush();
+      // 커밋 1회 — localStorage 영속은 questionPreviewHeight effect 가 1회 수행.
+      setQuestionPreviewHeight(latest);
       document.body.style.cursor = previousCursor;
       document.body.style.userSelect = previousUserSelect;
+      document.body.style.pointerEvents = previousPointerEvents;
+      try {
+        handleEl.releasePointerCapture(pointerId);
+      } catch {
+        // ignore
+      }
     };
 
     window.addEventListener("pointermove", handlePointerMove, { passive: false });
@@ -339,6 +387,13 @@ export function BuilderPropertiesPanel({
   }
 
   function outlineTitle(item: PaperItem) {
+    if (isGichulSetMemberItem(item)) {
+      const members = paperItems.filter((member) => member.groupId === item.groupId);
+      const first = members[0].orderNum;
+      const last = members[members.length - 1].orderNum;
+      const meta = gichulSetMetaFromData(item.sourceQuestion.structuredData);
+      return `${first}~${last}번 장문 · 기출 ${meta?.label}번`;
+    }
     if (item.blockType === "question") {
       return `${item.orderNum}번 ${item.questionText.replace(/\s+/g, " ").trim() || "문항"}`;
     }
@@ -375,7 +430,7 @@ export function BuilderPropertiesPanel({
     if (id === "outline") {
       return (
         <span className="ml-auto rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-bold text-blue-700">
-          {paperItems.length}
+          {outlineItems.length}
         </span>
       );
     }
@@ -400,8 +455,8 @@ export function BuilderPropertiesPanel({
               <p className="text-[12px] font-bold text-slate-500">아직 블록이 없습니다</p>
             </div>
           ) : (
-            paperItems.map((item) => {
-              const selected = item.localId === activeItemId;
+            outlineItems.map((item) => {
+              const selected = item.localId === activeItemId || (isGichulSetMemberItem(item) && item.groupId === activeItem?.groupId);
               return (
                 <div
                   key={item.localId}
@@ -426,7 +481,7 @@ export function BuilderPropertiesPanel({
                         {outlineTitle(item)}
                       </span>
                       <span className="block text-[10px] font-semibold text-slate-400">
-                        {BLOCK_LABELS[item.blockType]}
+                        {isGichulSetMemberItem(item) ? "장문 묶음" : BLOCK_LABELS[item.blockType]}
                         {item.locked ? " · 잠김" : ""}
                       </span>
                     </span>
@@ -772,7 +827,7 @@ export function BuilderPropertiesPanel({
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
-                disabled={activeLocked}
+                disabled={activeLocked || isGichulSetMemberItem(activeItem)}
                 onClick={() => onUngroupItem(activeItem.localId)}
                 className="flex h-7 items-center justify-center gap-1 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-bold text-slate-500 hover:bg-slate-50 hover:text-slate-700 disabled:opacity-45"
               >
@@ -872,7 +927,7 @@ export function BuilderPropertiesPanel({
             ))}
           </div>
           <p className="mt-1.5 truncate text-[11px] font-semibold text-slate-400">
-            {paperItemsCount}블록 · {questionItemsCount}문항 · 총점 {totalPoints}점
+            {outlineItems.length}블록 · {questionItemsCount}문항 · 총점 {totalPoints}점
           </p>
         </div>
 

@@ -39,7 +39,7 @@ export const CREDIT_COSTS = {
 
   // 자체 시험지 배포·응시 (26-07-09 대개편) — 과금 원칙: 모델 × 실호출 수.
   // 할당·응시·결정론 채점·이력 시각화는 AI 0콜 → 전부 무과금(상수 자체가 없음).
-  EXAM_ANALYSIS_BOOST: 1,      // 자체 시험지 AI 심층분석 보강 — 문항당 단가(텍스트 배치 분석, vision 프로브 없어 최소 문항수 floor 없음)
+  EXAM_ANALYSIS_BOOST: 1,      // 스모트 시험지 AI 시험 분석 — 문항당 단가(텍스트 배치 분석, vision 프로브 없어 최소 문항수 floor 없음)
   EXAM_TREND_ANALYSIS: 5,      // 학생 1명 AI 추세변화 분석 — 프리미엄 내러티브 1콜(EXAM_STUDENT_REPORT 동급)
 } as const;
 
@@ -67,7 +67,7 @@ export const OPERATION_LABELS: Record<OperationType, string> = {
   WEBTOON_EXAM_DOWNLOAD: "기출 웹툰 다운로드",
   EXAM_ANALYSIS: "시험지 문항 분석",
   EXAM_STUDENT_REPORT: "학생 내신 리포트",
-  EXAM_ANALYSIS_BOOST: "AI 심층분석 보강",
+  EXAM_ANALYSIS_BOOST: "AI 시험 분석",
   EXAM_TREND_ANALYSIS: "AI 추세변화 분석",
 };
 

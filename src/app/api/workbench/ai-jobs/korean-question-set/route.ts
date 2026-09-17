@@ -18,6 +18,7 @@ import { InsufficientCreditsError, refundCredits } from "@/lib/credits";
 import {
   getQuestionGenerationCreditCost,
   normalizeQuestionGenerationPlan,
+  resolveEffectiveGenerationPlan,
 } from "@/lib/question-generation-plans";
 import { prisma } from "@/lib/prisma";
 import { ensureWorkbenchAiJobCharged } from "@/lib/workbench-ai-job-credit";
@@ -106,11 +107,17 @@ export async function POST(req: NextRequest) {
   });
 
   const memberCount = resolution.members.length;
-  const unitCreditCost = getQuestionGenerationCreditCost(
-    CREDIT_COSTS.QUESTION_GEN_SINGLE,
-    generationPlan,
-  );
-  const baseCreditCost = memberCount * unitCreditCost;
+  // 26-08-18 난이도 기반 티어: 멤버 난이도(오버라이드 → 프리셋 → 세트 기본)가
+  // KILLER 면 그 멤버만 2배 — 영어 세트(question-set)와 동일 규칙.
+  const baseCreditCost = resolution.members.reduce((sum, m, index) => {
+    const memberDifficulty =
+      input.memberOverrides?.[index]?.difficulty ?? m.difficulty ?? input.difficulty;
+    const memberPlan = resolveEffectiveGenerationPlan(
+      input.memberOverrides?.[index]?.generationPlan ?? generationPlan,
+      memberDifficulty,
+    );
+    return sum + getQuestionGenerationCreditCost(CREDIT_COSTS.QUESTION_GEN_SINGLE, memberPlan);
+  }, 0);
   const creditCost = baseCreditCost * KO_SET_CHARGE_ATTEMPTS;
 
   const job = await prisma.workbenchAiJob.create({
@@ -184,7 +191,9 @@ export async function POST(req: NextRequest) {
     // 대비 실제 엔진 호출 수 기준(KOSET-5: 상한 정합으로 초과 호출 무계상 0).
     const chargedCalls = memberCount * KO_SET_CHARGE_ATTEMPTS;
     const unusedCalls = Math.max(0, chargedCalls - result.generationCallCount);
-    const unusedCreditCost = unusedCalls * unitCreditCost;
+    // 멤버별 단가가 갈리므로(KILLER 2배) 평균 단가로 환불 — 상한 정합은 유지.
+    const avgUnitCreditCost = memberCount > 0 ? baseCreditCost / memberCount : 0;
+    const unusedCreditCost = Math.floor(unusedCalls * avgUnitCreditCost);
     let refundedUnusedCredits = 0;
     if (unusedCreditCost > 0) {
       refundedUnusedCredits = await refundCredits(

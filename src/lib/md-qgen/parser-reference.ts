@@ -24,12 +24,24 @@ import { escapeRegExp } from "./parser";
  * 표적으로 허용하는 대명사 닫힌 집합.
  * 근거: `question-quality/candidate-blocks/reference.ts` 의 findReferenceCandidates
  * 가 쓰는 목록과 동일 축 — fast 레인과 md 레인이 같은 표적 공간을 본다.
+ *
+ * 26-08-22 기출 실측 확장(1·2인칭·재귀): 기출 지칭 코퍼스 328자리 중 표적
+ * I 5 · you 2 · me·my·your·himself 각 1 — 계 11자리가 집합 밖이라 오반려됐다
+ * (전체 반려 21자리의 절반, scripts/_tmp-reference-fp.ts 실측). 1인칭 서술·대화
+ * 인용 지문에서는 기출도 1·2인칭·재귀를 표적으로 쓰므로 목록에 올린다.
+ * herself·themselves 는 관측 0건이지만 재귀 패러다임 대칭으로 함께 넣는다.
+ * 이 목록은 프롬프트 허용 목록(prompts-reference.ts §표적 자격)·luna 검증
+ * (luna-ext/reference.ts)·게이트 #4 가 공유하는 유일 진실원이라 여기 한 곳만
+ * 고친다 — fast 레인 후보 추출 정규식보다 넓어지는 초과분이지만, fast 는 후보
+ * '제안'이고 여기는 모델이 지목한 자리의 사후 '판정'이라 과잉 후보 위험이 없다.
  */
 export const REFERENCE_PRONOUN_LIST = [
   "it", "its", "they", "them", "their", "theirs",
   "this", "that", "these", "those",
   "he", "him", "his", "she", "her", "hers",
   "we", "us", "our", "ours", "one", "ones",
+  // 26-08-22 기출 실측 확장분 — 위 주석의 오반려 11자리 해소.
+  "i", "me", "my", "you", "your", "himself", "herself", "themselves",
 ] as const;
 
 const REFERENCE_PRONOUN_SET: ReadonlySet<string> = new Set<string>(

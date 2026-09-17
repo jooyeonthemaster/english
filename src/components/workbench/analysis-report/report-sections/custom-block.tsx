@@ -30,8 +30,8 @@ function CustomTextNode({
  * 확정적으로 러닝 푸터를 뚫었다 → 페이지 예산 상수를 그대로 쓴다(단일 진실원).
  */
 const IMG_MAX_HEIGHT_MM = PAGE_BODY_MM;
-/** 본문 폭(mm) — A4 210 - 좌우 여백 18×2. widthPct(%) 의 기준이자 모서리 리사이즈 환산 기준. */
-const IMG_CONTENT_WIDTH_MM = 174;
+/** 본문 폭(mm) — A4 210 - 좌우 여백 13×2(compact-spec §0 I3, .par-measure 폭과 동기). */
+const IMG_CONTENT_WIDTH_MM = 184;
 
 const IMG_HANDLE_CORNERS = ["nw", "ne", "sw", "se"] as const;
 type ImgCorner = (typeof IMG_HANDLE_CORNERS)[number];

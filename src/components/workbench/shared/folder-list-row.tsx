@@ -179,6 +179,7 @@ export function FolderListRow({
         </span>
       )}
       <span
+        data-fs-col="date"
         style={{ width: dateWidth }}
         className="shrink-0 truncate text-left text-[10.5px] tabular-nums text-slate-400"
       >
@@ -188,6 +189,7 @@ export function FolderListRow({
         const count = resolveFolderCount(collection);
         return (
           <span
+            data-fs-col="count"
             style={{ width: countWidth }}
             title={count.tooltip}
             className={`shrink-0 truncate text-left text-[11px] tabular-nums ${

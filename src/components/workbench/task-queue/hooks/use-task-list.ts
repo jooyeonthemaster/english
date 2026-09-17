@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { startAdaptivePoll } from "@/lib/adaptive-poll";
 
@@ -38,6 +38,8 @@ export function useTaskList({
   );
   const [loading, setLoading] = useState(false);
   const [manualKey, setManualKey] = useState(0);
+  /** 직전 폴에서 본 활성 작업 유무 — 백오프 상한 결정에만 쓴다. */
+  const anyActiveRef = useRef(false);
 
   useEffect(() => {
     // Seed from cache when scope changes (e.g. domain tab switch).
@@ -56,7 +58,10 @@ export function useTaskList({
 
     return startAdaptivePoll({
       activeMs: POLL_INTERVAL_MS,
-      idleMs: 5 * 60_000,
+      // 진행 중에는 상한 30초(유휴는 기존 5분). 한 틱이 어댑터 수만큼 요청을
+      // 내므로 하드 핀은 비싸고, 5분 상한은 끝난 작업이 목록에 몇 분씩 「진행
+      // 중」으로 남게 한다 — 그 사이를 끊는 값이다(26-08-18).
+      idleMs: () => (anyActiveRef.current ? 30_000 : 5 * 60_000),
       run: async (signal) => {
         setLoading(true);
         try {
@@ -74,6 +79,10 @@ export function useTaskList({
             );
           taskCache.set(scope, flat);
           setTasks(flat);
+          // 진행 중 여부는 위 idleMs 상한이 소비한다(서명은 순수 유지).
+          anyActiveRef.current = flat.some(
+            (t) => t.status === "pending" || t.status === "processing",
+          );
           return flat.map((t) => `${t.id}:${t.status}`).join("|");
         } catch {
           // Parity with the other pollers: a thrown run() is a failed poll, not

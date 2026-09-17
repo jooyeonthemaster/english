@@ -153,12 +153,14 @@ export function DraftFolderListRow({
         </span>
       )}
       <span
+        data-fs-col="date"
         style={{ width: dateWidth }}
         className="shrink-0 truncate text-left text-[10.5px] tabular-nums text-slate-400"
       >
         {dateLabel || "—"}
       </span>
       <span
+        data-fs-col="count"
         style={{ width: countWidth }}
         className="shrink-0 truncate text-left text-[11px] tabular-nums text-slate-400"
       >

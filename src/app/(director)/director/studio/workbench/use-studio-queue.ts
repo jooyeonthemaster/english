@@ -1,0 +1,461 @@
+"use client";
+
+// ============================================================================
+// 클래스 스튜디오 워크벤치 — 생성 큐 엔진 (docs/class-studio-spec.md §3.7.2)
+//
+// usePassageQueue 를 **워크벤치당 정확히 1개** 인스턴스화한다(§12 폴러 1개 규칙 —
+// 좌/중/하단이 각자 훅을 부르면 5초 폴링이 배수로 늘어 egress 폭탄 재현).
+// cacheKey 는 `studio-analysis:${academyId}` — passages/create 계열(cacheKey
+// `passage-analysis:${academyId}`)과 다른 키라 모듈 전역 캐시가 라우트 전환 시
+// 상대 로컬 큐를 비우는 것은 알려진 트레이드오프(낙관 카드만 소실, 서버 잡은 폴링 복원).
+//
+// 발사 = 섹션 종량제(모듈 필요 섹션 합집합을 targetSections 로) — 프롬프트 config
+// 의 targetSections 는 부재 시 body 에 실리지 않으므로 기존 정액 경로 무회귀(§11).
+// 실전 문제(exam)는 분석 큐가 아니라 워크시트 라우트 동기 잡(§3.7.3)으로 따로 관리.
+// ============================================================================
+
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  usePassageQueue,
+  type AnalysisPromptConfig,
+  type QueuedPassage,
+} from "@/hooks/use-passage-queue";
+import {
+  MODULE_REQUIRED_SECTIONS,
+  isSectionBackedModuleId,
+  type SectionBackedModuleId,
+} from "@/lib/studio/module-sections";
+import type { StudioModuleId } from "@/lib/studio/modules";
+import {
+  isStudioSheetVariant,
+  sheetPromptFlags,
+  type StudioSheetVariant,
+} from "@/lib/studio/sheet-products";
+
+/** 발사 시점의 워크벤치 컨텍스트 — 도크의 「바로 배포」가 소비한다(§3.7.2-②). */
+export interface StudioQueueStamp {
+  classId: string | null;
+  modules: StudioModuleId[];
+  /**
+   * 학습지 상품 발사 표식(§3.10.19 E19-4, additive) — 「생성 중」 스트립 라벨이
+   * "무엇을 만드는 중인가"를 말하려면 필요하다. 부재 = 구 섹션 종량제 발사
+   * (스탬프 영속 복원분 포함 — 구 스탬프 무회귀).
+   */
+  sheet?: StudioSheetVariant;
+}
+
+export interface StudioLaunchPassage {
+  id: string;
+  title: string;
+  content: string;
+  /**
+   * [E30 §3-6 · additive] 실전 학습지 발사 라우트 — `getStudioSheetStates` 의
+   * 동명 필드(`hasBasic ? "worksheet" : "fast"`)를 **그대로** 실어 보낸다.
+   *
+   * 여기서 다시 판정하지 않는 이유: 라우팅 결정이 곧 가격 결정이라(§3-3),
+   * 모달이 견적에 쓴 스냅샷과 발사가 쓰는 판정이 갈리면 「표기 ◈5인데 ◈10 이
+   * 빠졌다」가 된다(E19-2 계약 — 표기와 청구는 같은 술어여야 한다).
+   * practice 상품에서만 읽고, 부재(undefined)는 `"fast"`(상한가) 취급이다.
+   *
+   * ⚠ 이 필드는 **요청 바이트에 절대 실리지 않는다**(P6 무회귀) — 아래
+   * launchSheets 가 큐에 넘길 때 id/title/content 3필드만 손으로 집는다.
+   */
+  practiceRoute?: "fast" | "worksheet";
+}
+
+/** 실전 학습지(워크시트 라우트) 동기 잡 카드 상태(§3.7.3). */
+export interface StudioWorksheetJob {
+  passageId: string;
+  title: string;
+  status: "running" | "done" | "error";
+  error?: string;
+  classId: string | null;
+  /**
+   * 발사 시각(ms epoch) — 도시에 큐 스트립 경과 표시 재료(§3.10.11-c).
+   * running 생성 시에만 기록한다 — 영속 복원분(done)은 스트립이 그리지
+   * 않으므로(스트립은 running/error 만) 부재가 무해하다.
+   */
+  startedAt?: number;
+}
+
+export interface StudioQueueApi {
+  /** 병합 큐(로컬 낙관 + 서버 잡 폴링) — 학원 전체 분석 잡이 보인다 */
+  queue: QueuedPassage[];
+  activeCount: number;
+  /** passageId → 이 워크벤치에서 발사한 컨텍스트(다른 표면 발사 잡은 없음) */
+  stamps: ReadonlyMap<string, StudioQueueStamp>;
+  worksheetJobs: StudioWorksheetJob[];
+  /**
+   * 섹션 종량제 발사 — analyzing 지문은 걸러 반환(호출부가 토스트).
+   * ⚠ §3.10.19 E19-0 으로 스튜디오 표면의 호출부는 사라졌지만 **삭제 금지**:
+   * 영속 스탬프 복원분의 modules 배열 호환·§3.4 지문 스튜디오 표면이 존치한다.
+   */
+  launchModules: (
+    passages: StudioLaunchPassage[],
+    modules: SectionBackedModuleId[],
+    classId: string | null,
+  ) => { launched: number; skipped: string[] };
+  /**
+   * 학습지 4상품 발사(§3.10.19 E19-4 · reading 스펙 §5.2 B-5) — **전체 분석 경로**다.
+   * targetSections 를 싣지 않는 것이 계약: 실으면 fast 라우트가
+   * finalOnepage/includeWorksheet/readingAnalysis 조합을 400 으로 막는다
+   * (route.ts:284-303 · reading 스펙 §5.2 C-8).
+   *
+   * [E30 §3-6] 실전 상품(`practice`)은 **지문마다 라우트가 갈린다** —
+   * `passage.practiceRoute === "worksheet"` 인 지문만 (c) 라우트(launchWorksheet)로
+   * 새고 나머지는 기존 fast 경로 그대로다. 반환 `launched` 는 두 무리의 합이고,
+   * (c) 무리는 응답을 기다리지 않는다(카드는 worksheetJobs 가 세운다).
+   *
+   * [reading] 직독직해 분석본은 **항상 fast 라우트**다(파이널과 같은 자기완결
+   * 블록·지문당 ◈5 정액) — practice 같은 지문별 라우팅 분기가 없고, 상품 정체는
+   * promptConfig 의 `sheetPromptFlags` 스프레드(readingAnalysis:true)가 싣는다.
+   * 여기 별도 분기를 만들지 마라: viaFast 폴백이 이미 정답이고, 분기를 복제하면
+   * 플래그 조립 정본(sheet-products)과 갈릴 자리만 생긴다.
+   */
+  launchSheets: (
+    passages: StudioLaunchPassage[],
+    variant: StudioSheetVariant,
+    classId: string | null,
+  ) => { launched: number; skipped: string[] };
+  /** 실전 학습지 생성(+5크레딧, 리포트 선존재 필수 — 시트가 게이트) */
+  launchWorksheet: (
+    passage: { id: string; title: string },
+    classId: string | null,
+  ) => Promise<{ ok: boolean; error?: string }>;
+  retryAnalysis: (passageId: string) => void;
+}
+
+const EMPTY_PROMPT: Omit<AnalysisPromptConfig, "targetSections"> = {
+  customPrompt: "",
+  focusAreas: [],
+  targetLevel: "",
+};
+
+// ── 스탬프·실전 잡 영속 (2026-08-11 — "새로고침하니 큐가 다 사라졌다" 실사용 지적) ──
+//
+// 도크의 종결(완료/실패) 카드는 스탬프 있는 항목만 보여주는데, 스탬프가 메모리
+// 뿐이면 새로고침에 증발해 방금 만든 학습의 「바로 배포」 동선이 끊긴다.
+// localStorage 에 학원 단위로 영속하고, 오래된 항목은 48시간/최대 40건으로
+// 걷어낸다(역사 전체가 "완료 N건"으로 쏟아지는 소음 방지 — 스탬프 필터 원칙 유지).
+
+const STAMP_TTL_MS = 48 * 60 * 60 * 1000;
+const STAMP_CAP = 40;
+
+interface PersistedStudioQueue {
+  stamps: Record<string, StudioQueueStamp & { at: number }>;
+  /** running 은 저장하지 않는다 — 새로고침으로 요청이 죽은 상태라 거짓 표시가 된다 */
+  worksheetJobs: (StudioWorksheetJob & { at: number })[];
+}
+
+function storageKeyFor(academyId: string): string {
+  return `studio-queue-stamps:${academyId}`;
+}
+
+function loadPersisted(academyId: string): PersistedStudioQueue {
+  const empty: PersistedStudioQueue = { stamps: {}, worksheetJobs: [] };
+  if (typeof window === "undefined") return empty;
+  try {
+    const raw = window.localStorage.getItem(storageKeyFor(academyId));
+    if (!raw) return empty;
+    const parsed = JSON.parse(raw) as Partial<PersistedStudioQueue>;
+    const cutoff = Date.now() - STAMP_TTL_MS;
+    const stamps: PersistedStudioQueue["stamps"] = {};
+    for (const [pid, s] of Object.entries(parsed.stamps ?? {})) {
+      if (s && typeof s.at === "number" && s.at >= cutoff && Array.isArray(s.modules)) {
+        // sheet 는 additive — 미지 문자열이 스트립 라벨로 새지 않게 좁혀 담는다
+        // (구 스탬프는 키 자체가 없어 undefined 로 남는다).
+        stamps[pid] = isStudioSheetVariant(s.sheet) ? s : { ...s, sheet: undefined };
+      }
+    }
+    // error 는 복원하지 않는다(§3.10 검수 L1-6): 도시에 「생성 중」 스트립에
+    // 해제 수단 없는 과거 세션 실패가 최대 48시간 부활하던 원인. done 만 유지
+    // (「바로 배포」 동선은 stamps 가 담당하므로 손실 없음).
+    const worksheetJobs = (parsed.worksheetJobs ?? []).filter(
+      (j) => j && typeof j.at === "number" && j.at >= cutoff && j.status === "done",
+    );
+    return { stamps, worksheetJobs };
+  } catch {
+    return empty;
+  }
+}
+
+export function useStudioQueue({
+  academyId,
+  onJobsChanged,
+}: {
+  academyId: string;
+  onJobsChanged?: () => void;
+}): StudioQueueApi {
+  const cacheKey = useMemo(() => `studio-analysis:${academyId}`, [academyId]);
+  const { queue, activeCount, addManyToQueue, retryAnalysis } = usePassageQueue(
+    undefined,
+    { cacheKey, onJobsChanged },
+  );
+
+  // 스탬프는 렌더에 쓰이므로 state — 발사 직후 도크가 모듈 칩을 그린다.
+  // 초기값은 영속본에서 복원(새로고침 후에도 완료 카드·바로 배포 동선 유지).
+  const stampTimesRef = useRef<Map<string, number>>(new Map());
+  const [stamps, setStamps] = useState<ReadonlyMap<string, StudioQueueStamp>>(() => {
+    const persisted = loadPersisted(academyId);
+    const map = new Map<string, StudioQueueStamp>();
+    for (const [pid, s] of Object.entries(persisted.stamps)) {
+      // sheet 를 함께 옮긴다(§3.10.19 E19-4) — 담을 때만 좁히고 꺼낼 때 버려서
+      // loadPersisted 의 isStudioSheetVariant 좁힘(위 142행)이 여기까지 오지 못해
+      // 사문이었다. 실측: 새로고침하면 큐 스트립이 「파이널 원페이지 생성 중」→
+      // 「학습지 생성 중」으로 강등되고 실패 라벨도 3상품 구분을 잃었다.
+      // 부재 시 키를 만들지 않는 스프레드 관용구 — 구 스탬프 무회귀(위 42행).
+      map.set(pid, {
+        classId: s.classId,
+        modules: s.modules,
+        ...(s.sheet ? { sheet: s.sheet } : {}),
+      });
+      stampTimesRef.current.set(pid, s.at);
+    }
+    return map;
+  });
+  // 실전 잡 최초 관측 시각(키=passageId) — stampTimesRef 와 동일 규약. 영속
+  // effect 가 매 저장마다 at 을 now 로 재도장하면 저장이 있을 때마다 수명이
+  // 연장돼 48h TTL 이 사문화되므로, 최초 시각을 여기 고정해 싣는다.
+  const worksheetJobTimesRef = useRef<Map<string, number>>(new Map());
+  const [worksheetJobs, setWorksheetJobs] = useState<StudioWorksheetJob[]>(() => {
+    const persisted = loadPersisted(academyId).worksheetJobs;
+    for (const j of persisted) worksheetJobTimesRef.current.set(j.passageId, j.at);
+    return persisted;
+  });
+  const worksheetBusy = useRef<Set<string>>(new Set());
+
+  // 변동 시 영속 — 최신순 캡(STAMP_CAP) 적용. running 실전 잡은 제외.
+  useEffect(() => {
+    try {
+      const now = Date.now();
+      const entries = [...stamps.entries()].map(([pid, s]) => {
+        if (!stampTimesRef.current.has(pid)) stampTimesRef.current.set(pid, now);
+        return [pid, { ...s, at: stampTimesRef.current.get(pid)! }] as const;
+      });
+      entries.sort((a, b) => b[1].at - a[1].at);
+      const payload: PersistedStudioQueue = {
+        stamps: Object.fromEntries(entries.slice(0, STAMP_CAP)),
+        worksheetJobs: worksheetJobs
+          .filter((j) => j.status !== "running")
+          .slice(0, STAMP_CAP)
+          .map((j) => {
+            // at 은 최초 관측 시각 고정(부재 시에만 now 기록) — 매 저장 재도장은
+            // 48h TTL 을 사문화한다(위 worksheetJobTimesRef 주석).
+            if (!worksheetJobTimesRef.current.has(j.passageId)) {
+              worksheetJobTimesRef.current.set(j.passageId, now);
+            }
+            return { ...j, at: worksheetJobTimesRef.current.get(j.passageId)! };
+          }),
+      };
+      window.localStorage.setItem(
+        storageKeyFor(academyId),
+        JSON.stringify(payload),
+      );
+    } catch {
+      /* 저장 실패해도 세션 내 동작은 유지 */
+    }
+  }, [academyId, stamps, worksheetJobs]);
+
+  const launchModules = useCallback<StudioQueueApi["launchModules"]>(
+    (passages, modules, classId) => {
+      const backed = modules.filter(isSectionBackedModuleId);
+      const targetSections = [
+        ...new Set(backed.flatMap((m) => MODULE_REQUIRED_SECTIONS[m])),
+      ];
+      if (backed.length === 0 || targetSections.length === 0 || passages.length === 0) {
+        return { launched: 0, skipped: [] };
+      }
+      // 지문당 활성 잡 1개(서버 보장) — 진행 중 항목은 발사 전에 걸러 알린다(§3.7.2).
+      const busy = new Set(
+        queue
+          .filter((q) => q.status === "pending" || q.status === "analyzing")
+          .map((q) => q.id),
+      );
+      const ready = passages.filter((p) => !busy.has(p.id));
+      const skipped = passages.filter((p) => busy.has(p.id)).map((p) => p.title);
+      if (ready.length > 0) {
+        setStamps((prev) => {
+          const next = new Map(prev);
+          for (const p of ready) next.set(p.id, { classId, modules: [...backed] });
+          return next;
+        });
+        void addManyToQueue(
+          ready.map((p) => ({
+            passage: { id: p.id, title: p.title, content: p.content },
+            promptConfig: { ...EMPTY_PROMPT, targetSections },
+          })),
+          true,
+        );
+      }
+      return { launched: ready.length, skipped };
+    },
+    [addManyToQueue, queue],
+  );
+
+  // ⚠ [E30 §3-6] **선언 위치가 launchSheets 보다 앞이어야 한다.** 실전 학습지
+  //   발사가 지문별 practiceRoute 에 따라 이 함수로 갈라져 들어오기 때문이다.
+  //   순서를 되돌리면 launchSheets 의 의존 배열에서 TDZ 로 죽는다.
+  //   (본문은 이동만 했다. 유일한 예외는 아래 스탬프 병합의 「호출부 0건」 단언으로,
+  //    E30 으로 실제 호출부가 생겨 거짓이 됐기에 함께 정정했다.)
+  const launchWorksheet = useCallback<StudioQueueApi["launchWorksheet"]>(
+    async (passage, classId) => {
+      if (worksheetBusy.current.has(passage.id)) {
+        return { ok: false, error: "이미 실전 문제를 생성하고 있습니다." };
+      }
+      worksheetBusy.current.add(passage.id);
+      // 재발사 = 새 잡이라 영속 수명(at)도 리셋한다 — 업데이터 밖에서 변이
+      // (StrictMode 이중 호출 오염 방지 관용구).
+      worksheetJobTimesRef.current.set(passage.id, Date.now());
+      setWorksheetJobs((prev) => [
+        {
+          passageId: passage.id,
+          title: passage.title,
+          status: "running",
+          classId,
+          startedAt: Date.now(),
+        },
+        ...prev.filter((j) => j.passageId !== passage.id),
+      ]);
+      try {
+        const res = await fetch(
+          `/api/workbench/passage-reports/prime/${passage.id}/worksheet`,
+          {
+            method: "POST",
+            credentials: "include",
+            // 서버 상한(maxDuration 300s) 뒤에 스스로 끊는다 — 없으면 응답이
+            // 오지 않는 연결에서 running 카드가 영원히 도는 유일한 종결 수단이
+            // 사라진다(이 잡은 DB 폴링 복원 경로가 없어 카드 = 이 fetch 뿐이다).
+            signal: AbortSignal.timeout(330_000),
+          },
+        );
+        const data = (await res.json().catch(() => ({}))) as {
+          error?: string;
+          details?: string;
+        };
+        if (!res.ok) {
+          const msg =
+            res.status === 402
+              ? "크레딧이 부족합니다."
+              : data.details || data.error || "실전 문제 생성에 실패했습니다.";
+          setWorksheetJobs((prev) =>
+            prev.map((j) =>
+              j.passageId === passage.id ? { ...j, status: "error", error: msg } : j,
+            ),
+          );
+          return { ok: false, error: msg };
+        }
+        setWorksheetJobs((prev) =>
+          prev.map((j) =>
+            j.passageId === passage.id ? { ...j, status: "done" } : j,
+          ),
+        );
+        setStamps((prev) => {
+          const next = new Map(prev);
+          const cur = next.get(passage.id);
+          // 병합이라 기존 sheet 를 흘려보내면 안 된다(§3.10.19 E19-4) — 위 복원
+          // 지점과 같은 스프레드 관용구로 함께 막는다.
+          // ⚠ [E30 §3-6] 이 보존은 더 이상 잠복 방어가 아니다 — launchSheets 의
+          // (c) 무리가 `sheet: "practice"` 를 찍은 **직후** 이 병합이 돌기 때문에,
+          // cur.sheet 를 흘리면 방금 발사한 실전 학습지가 스트립에서 상품 정체를
+          // 잃고 「학습지 생성 중」으로 강등된다(구 주석의 "현재 호출부 0건"은
+          // E30 이전 사실이었다).
+          next.set(passage.id, {
+            classId: cur?.classId ?? classId,
+            modules: [...new Set([...(cur?.modules ?? []), "exam" as StudioModuleId])],
+            ...(cur?.sheet ? { sheet: cur.sheet } : {}),
+          });
+          return next;
+        });
+        return { ok: true };
+      } catch (err) {
+        const msg =
+          err instanceof DOMException && err.name === "TimeoutError"
+            ? "생성 응답이 시간 안에 오지 않았습니다. 잠시 후 학습지 목록을 확인해 주세요."
+            : "네트워크 오류로 생성에 실패했습니다.";
+        setWorksheetJobs((prev) =>
+          prev.map((j) =>
+            j.passageId === passage.id ? { ...j, status: "error", error: msg } : j,
+          ),
+        );
+        return { ok: false, error: msg };
+      } finally {
+        worksheetBusy.current.delete(passage.id);
+      }
+    },
+    [],
+  );
+
+  const launchSheets = useCallback<StudioQueueApi["launchSheets"]>(
+    (passages, variant, classId) => {
+      if (passages.length === 0) return { launched: 0, skipped: [] };
+      // 지문당 활성 잡 1개(서버 보장) — launchModules 와 동일 필터.
+      const busy = new Set(
+        queue
+          .filter((q) => q.status === "pending" || q.status === "analyzing")
+          .map((q) => q.id),
+      );
+      const ready = passages.filter((p) => !busy.has(p.id));
+      const skipped = passages.filter((p) => busy.has(p.id)).map((p) => p.title);
+      // ── [E30 §3-6] 실전 학습지 발사 라우팅 ────────────────────────────────
+      // 기본 학습지 이력이 **있으면** (c) 라우트(passage-reports/prime/…/worksheet)로
+      // 부모 PRIME 위에 자식 문서만 만들어 ◈5, **없으면** fast 라우트로 기본+실전을
+      // 한 트랜잭션에 만들어 ◈10 이다(§2-1 라우팅 표). 판정은 서버 스냅샷이 이미
+      // 내렸으므로 여기서는 읽기만 한다 — 미상은 "fast"(상한가) 쪽으로 떨어뜨려
+      // 「표기보다 더 빠지는」 경우를 만들지 않는다(§3-3 TOCTOU 불변식).
+      // [reading] 이 분기는 practice **전용**이다 — 직독직해 분석본(reading)은
+      // viaWorksheet 가 항상 빈 배열이라 전량 viaFast 로 흘러 fast 라우트의
+      // 자기완결 블록이 받는다(스펙 §5.2 B-5 「특수 라우팅 불요」 실측 확정).
+      const viaWorksheet =
+        variant === "practice"
+          ? ready.filter((p) => p.practiceRoute === "worksheet")
+          : [];
+      const viaFast =
+        viaWorksheet.length === 0
+          ? ready
+          : ready.filter((p) => p.practiceRoute !== "worksheet");
+      if (ready.length > 0) {
+        setStamps((prev) => {
+          const next = new Map(prev);
+          // modules: [] — 학습지 발사는 모듈 축이 아니다. 스트립 라벨은 sheet 가
+          // 말하고, modules 필터(isSectionBackedModuleId)는 빈 배열로 통과한다.
+          // (c) 무리에도 **같은 스탬프**를 찍는다: launchWorksheet 의 성공 병합이
+          // cur.sheet 를 보존하므로(아래 스프레드 관용구) 상품 정체가 유지되고,
+          // 안 찍으면 같은 발사인데 절반만 「실전 학습지 생성 중」으로 읽힌다.
+          for (const p of ready) next.set(p.id, { classId, modules: [], sheet: variant });
+          return next;
+        });
+      }
+      if (viaFast.length > 0) {
+        void addManyToQueue(
+          viaFast.map((p) => ({
+            // ⚠ p 를 스프레드하지 않는다 — practiceRoute 는 클라 라우팅 전용이라
+            // 요청 바이트에 새면 P6(요청 계약 무회귀)가 깨진다.
+            passage: { id: p.id, title: p.title, content: p.content },
+            // ⚠ targetSections 부재가 계약(E19-1) — 전체 분석 경로로만 흐른다.
+            promptConfig: { ...EMPTY_PROMPT, ...sheetPromptFlags(variant) },
+          })),
+          true,
+        );
+      }
+      // (c) 무리는 fetch 1건 = 카드 1장(worksheetJobs)이라 **응답을 기다리지 않는다**.
+      // 기다리면 모달이 최대 330초 동안 닫히지 못한다. 실패는 launchWorksheet 가
+      // error 카드로 세우고 도시에 큐 스트립이 그린다(§3.10.11-c).
+      for (const p of viaWorksheet) {
+        void launchWorksheet({ id: p.id, title: p.title }, classId);
+      }
+      return { launched: ready.length, skipped };
+    },
+    [addManyToQueue, launchWorksheet, queue],
+  );
+
+  return {
+    queue,
+    activeCount,
+    stamps,
+    worksheetJobs,
+    launchModules,
+    launchSheets,
+    launchWorksheet,
+    retryAnalysis,
+  };
+}

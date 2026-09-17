@@ -155,6 +155,8 @@ export function WorkspaceShell({
   hideHeaderOnMobile = false,
 }: WorkspaceShellProps) {
   const splitContainerRef = useRef<HTMLDivElement>(null);
+  // 좌 패널 실체 — 드래그 리사이즈 고속 경로가 style.width 를 직접 쓴다.
+  const leftPaneElRef = useRef<HTMLDivElement>(null);
   const [leftPaneWidth, setLeftPaneWidth] = useState<number>(
     readStoredLeftPaneWidth,
   );
@@ -194,6 +196,9 @@ export function WorkspaceShell({
   // 값은 언제나 그대로 남고(확장은 늘 그보다 크다), 요청이 풀리면 정확히 그 값으로
   // 되돌아온다. "자동 조절이 수동 조작과 싸우지 않는다"가 구조적으로 보장되는 지점.
   const expandActive = expandIds.size > 0;
+  // 드래그 고속 경로용 — 드래그 중 재렌더가 끼어들어도 flush 가 최신 값을 본다.
+  const expandActiveRef = useRef(expandActive);
+  expandActiveRef.current = expandActive;
   const expandedBodyHeight = bodyHeight + (expandActive ? BODY_AUTO_EXPAND : 0);
   /**
    * 실제로 적용할 높이. --ws-body-h 도 **같은 값**을 노출해 카드 높이 캡
@@ -257,6 +262,30 @@ export function WorkspaceShell({
       );
       let didDrag = false;
       let latest = startWidth;
+      const prevCursor = document.body.style.cursor;
+      const prevSelect = document.body.style.userSelect;
+      const prevPointerEvents = document.body.style.pointerEvents;
+
+      // 포인터 캡처 — 커서가 얇은 핸들을 벗어나도 드래그가 끊기지 않는다.
+      const handleEl = e.currentTarget as HTMLElement;
+      try {
+        handleEl.setPointerCapture(e.pointerId);
+      } catch {
+        /* 캡처 미지원 브라우저는 window 리스너로 폴백 */
+      }
+
+      // 드래그 고속 경로 — 매 무브 setLeftPaneWidth 는 좌(지문함 카드)·우(워크
+      // 스페이스) 패널을 같은 프레임에 통째로 리렌더시킨다. 이동 중에는 좌 패널
+      // 요소의 style.width 에 rAF 코얼레싱으로 직접 쓰고(아래 렌더 템플릿과 문자
+      // 그대로 동일), 놓을 때 한 번만 setState 로 커밋한다. 앵커가 없으면 종전
+      // setState 경로 폴백(무회귀).
+      let rafId: number | null = null;
+      const flush = () => {
+        rafId = null;
+        const el = leftPaneElRef.current;
+        if (!el) return;
+        el.style.width = `min(${latest}px, ${LEFT_PANE_MAX_RATIO * 100}%, calc(100% - ${rightPaneMin + HANDLE_HIT_WIDTH + 8}px))`;
+      };
 
       const onMove = (ev: PointerEvent) => {
         const delta = ev.clientX - startX;
@@ -266,18 +295,31 @@ export function WorkspaceShell({
           setLeftDragging(true);
           document.body.style.cursor = "col-resize";
           document.body.style.userSelect = "none";
+          // 드래그 중 hover 스타일 재평가 차단 — 폭이 프레임마다 바뀌면 커서
+          // 아래 요소가 계속 바뀐다(캡처 덕에 move 수신에는 영향 없다).
+          document.body.style.pointerEvents = "none";
         }
         latest = Math.min(maxWidth, Math.max(LEFT_PANE_MIN, startWidth + delta));
-        setLeftPaneWidth(latest);
+        if (leftPaneElRef.current) {
+          if (rafId === null) rafId = requestAnimationFrame(flush);
+        } else {
+          setLeftPaneWidth(latest);
+        }
       };
 
       const onUp = () => {
         window.removeEventListener("pointermove", onMove);
         window.removeEventListener("pointerup", onUp);
+        window.removeEventListener("pointercancel", onUp);
+        if (rafId !== null) cancelAnimationFrame(rafId);
         if (didDrag) {
+          flush();
           setLeftDragging(false);
-          document.body.style.cursor = "";
-          document.body.style.userSelect = "";
+          // 커밋은 여기서 한 번 — 드래그 내내 리렌더 0회.
+          setLeftPaneWidth(latest);
+          document.body.style.cursor = prevCursor;
+          document.body.style.userSelect = prevSelect;
+          document.body.style.pointerEvents = prevPointerEvents;
           try {
             window.localStorage.setItem(LEFT_PANE_STORAGE_KEY, String(latest));
           } catch {
@@ -286,10 +328,16 @@ export function WorkspaceShell({
         } else {
           toggleLeftPaneOpen();
         }
+        try {
+          handleEl.releasePointerCapture(e.pointerId);
+        } catch {
+          /* ignore */
+        }
       };
 
       window.addEventListener("pointermove", onMove);
       window.addEventListener("pointerup", onUp);
+      window.addEventListener("pointercancel", onUp);
     },
     [leftPaneWidth, toggleLeftPaneOpen, rightPaneMin],
   );
@@ -314,29 +362,76 @@ export function WorkspaceShell({
       const startHeight = bodyHeight;
       let latest = startHeight;
       setBodyDragging(true);
+      const prevCursor = document.body.style.cursor;
+      const prevSelect = document.body.style.userSelect;
+      const prevPointerEvents = document.body.style.pointerEvents;
       document.body.style.cursor = "row-resize";
       document.body.style.userSelect = "none";
+      // 드래그 중 hover 스타일 재평가 차단 — 높이가 프레임마다 바뀌면 커서 아래
+      // 요소가 계속 바뀐다(캡처 덕에 move 수신에는 영향 없다).
+      document.body.style.pointerEvents = "none";
+
+      // 포인터 캡처 — 커서가 얇은 핸들을 벗어나도 드래그가 끊기지 않는다.
+      const handleEl = e.currentTarget as HTMLElement;
+      try {
+        handleEl.setPointerCapture(e.pointerId);
+      } catch {
+        /* 캡처 미지원 브라우저는 window 리스너로 폴백 */
+      }
+
+      // 드래그 고속 경로 — 매 무브 setBodyHeight 는 본문 전체(좌 지문함 카드
+      // 그리드 + 우 워크스페이스, --ws-body-h 에 물린 카드 높이 캡까지)를
+      // 프레임마다 리렌더시킨다. 이동 중에는 컨테이너의 style.height 와
+      // --ws-body-h 에 rAF 코얼레싱으로 직접 쓰고(bodyDragging=true 구간의
+      // 적용식 — 뷰포트 캡 off, px 분기 — 과 문자 그대로 동일), 놓을 때 한 번만
+      // setState 로 커밋한다. 앵커가 없으면 종전 setState 경로 폴백(무회귀).
+      let rafId: number | null = null;
+      const flush = () => {
+        rafId = null;
+        const el = splitContainerRef.current;
+        if (!el) return;
+        const px = `${latest + (expandActiveRef.current ? BODY_AUTO_EXPAND : 0)}px`;
+        el.style.height = px;
+        el.style.setProperty("--ws-body-h", px);
+      };
+
       const onMove = (ev: PointerEvent) => {
         latest = Math.min(
           BODY_MAX,
           Math.max(BODY_MIN, startHeight + (ev.clientY - startY)),
         );
-        setBodyHeight(latest);
+        if (splitContainerRef.current) {
+          if (rafId === null) rafId = requestAnimationFrame(flush);
+        } else {
+          setBodyHeight(latest);
+        }
       };
       const onUp = () => {
-        setBodyDragging(false);
-        document.body.style.cursor = "";
-        document.body.style.userSelect = "";
         window.removeEventListener("pointermove", onMove);
         window.removeEventListener("pointerup", onUp);
+        window.removeEventListener("pointercancel", onUp);
+        if (rafId !== null) cancelAnimationFrame(rafId);
+        flush();
+        setBodyDragging(false);
+        // 커밋은 여기서 한 번 — 드래그 내내 리렌더 0회.
+        setBodyHeight(latest);
         try {
           window.localStorage.setItem(BODY_STORAGE_KEY, String(latest));
+        } catch {
+          /* ignore */
+        }
+        document.body.style.cursor = prevCursor;
+        document.body.style.userSelect = prevSelect;
+        document.body.style.pointerEvents = prevPointerEvents;
+        try {
+          handleEl.releasePointerCapture(e.pointerId);
         } catch {
           /* ignore */
         }
       };
       window.addEventListener("pointermove", onMove);
       window.addEventListener("pointerup", onUp);
+      window.addEventListener("pointercancel", onUp);
     },
     [bodyHeight],
   );
@@ -407,6 +502,7 @@ export function WorkspaceShell({
               닫기는 unmount 가 아니라 width 트랜지션으로 스르륵 접힌다.
               드래그 리사이즈 중에는 트랜지션을 꺼서 손을 즉시 따라온다. */}
           <div
+            ref={leftPaneElRef}
             className={
               "flex min-h-0 min-w-0 shrink-0 flex-col overflow-hidden rounded-lg max-lg:!w-full " +
               (leftPaneVisible ? "border border-slate-200 " : "border-0 ") +

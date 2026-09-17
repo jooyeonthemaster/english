@@ -1,0 +1,3326 @@
+{
+ "generatedAt": "2026-07-27T19:44:32.494Z",
+ "totals": {
+  "passages": 4537,
+  "withPlantedError": 330,
+  "restoredOk": 284,
+  "restorationFailed": 0,
+  "ambiguous": 46,
+  "cleanVerified3way": 231,
+  "withNote": 23
+ },
+ "errorAuditValues": {
+  "clean-verified-3way-20260721": 219,
+  "clean-verified-adjudicated-20260721(clean 3/3)": 11,
+  "UNRESOLVED-20260721: judges disagree, left untouched": 3,
+  "clean-verified-adjudicated-20260721(clean 2/3)": 1
+ },
+ "verifiedByValues": {
+  "dual-convergence+gate": 233,
+  "official-solution(EBSi 해설지)": 68,
+  "adjudicated-3way(3/3)": 16,
+  "official-solution(EBSi 해설지)+span-anchored": 2,
+  "adjudicated-3way(2/3)": 11
+ },
+ "restored": [
+  {
+   "id": "2027_06_5095396-q30",
+   "year": 2027,
+   "kind": "vocab_error",
+   "planted": "thick",
+   "original": "thin",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "known as the book or libretto, and it can be very thick"
+  },
+  {
+   "id": "2027_06_5095396-q41-42",
+   "year": 2027,
+   "kind": "vocab_error",
+   "planted": "obey",
+   "original": "defy",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Glass seems to obey most molecular laws. As one glassmaker put it"
+  },
+  {
+   "id": "ebsi_go1_20260324-q29",
+   "year": 2026,
+   "kind": "grammar_error",
+   "planted": "helps",
+   "original": "help",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go1_20260324-q30",
+   "year": 2026,
+   "kind": "vocab_error",
+   "planted": "same",
+   "original": "opposite",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go1_20260604-q29",
+   "year": 2026,
+   "kind": "grammar_error",
+   "planted": "having",
+   "original": "have",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go1_20260604-q30",
+   "year": 2026,
+   "kind": "vocab_error",
+   "planted": "confuse",
+   "original": "help",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "it can confuse children who find it hard to keep track of where and what they are looking at"
+  },
+  {
+   "id": "ebsi_go2_20260324-q29",
+   "year": 2026,
+   "kind": "grammar_error",
+   "planted": "occurring",
+   "original": "occurred",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go2_20260324-q30",
+   "year": 2026,
+   "kind": "vocab_error",
+   "planted": "facilitating",
+   "original": "hindering",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go2_20260604-q29",
+   "year": 2026,
+   "kind": "grammar_error",
+   "planted": "producing",
+   "original": "produced",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go2_20260604-q30",
+   "year": 2026,
+   "kind": "vocab_error",
+   "planted": "more sensitive to price than to additional performance",
+   "original": "less sensitive to price than to additional performance",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "buyers - either innovators or forerunners - are more sensitive to price than to additional performance"
+  },
+  {
+   "id": "ebsi_go3_20260324-q30",
+   "year": 2026,
+   "kind": "vocab_error",
+   "planted": "acknowledges",
+   "original": "neglects",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go3_20260507-q29",
+   "year": 2026,
+   "kind": "grammar_error",
+   "planted": "chooses",
+   "original": "to choose",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "allows them, if possible, depending on the job role, chooses their day-to-day work location"
+  },
+  {
+   "id": "ebsi_go3_20260507-q30",
+   "year": 2026,
+   "kind": "vocab_error",
+   "planted": "accumulate",
+   "original": "exclude",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Plants feed beneficial bacteria species, so that they accumulate pathogenic microbes."
+  },
+  {
+   "id": "2026_06_5090182-q30",
+   "year": 2026,
+   "kind": "vocab_error",
+   "planted": "temporary",
+   "original": "lasting",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "a unique voice that leaves a temporary impression on your audience."
+  },
+  {
+   "id": "2026_06_5090182-q41-42",
+   "year": 2026,
+   "kind": "vocab_error",
+   "planted": "distinguishable",
+   "original": "indistinguishable",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "seamlessness in humanoid robotic design aims to make humanoids distinguishable from a human body."
+  },
+  {
+   "id": "2026_09_5091403-q30",
+   "year": 2026,
+   "kind": "vocab_error",
+   "planted": "insignificant",
+   "original": "significant",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "engineering accepts variability in the river’s movement as insignificant"
+  },
+  {
+   "id": "2026_09_5091403-q41-42",
+   "year": 2026,
+   "kind": "vocab_error",
+   "planted": "less routine",
+   "original": "more routine",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "lean or less rich media for messages that were less routine in nature"
+  },
+  {
+   "id": "2026_SN_5093799-q30",
+   "year": 2026,
+   "kind": "vocab_error",
+   "planted": "abandon",
+   "original": "gain",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "as many actions on the field or court as possible to abandon competitive advantages"
+  },
+  {
+   "id": "2026_SN_5093799-q41-42",
+   "year": 2026,
+   "kind": "vocab_error",
+   "planted": "unlikely",
+   "original": "likely",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "it is unlikely that displays of historic dress would be awkward imitations"
+  },
+  {
+   "id": "ebsi_go1_20250326-q30",
+   "year": 2025,
+   "kind": "vocab_error",
+   "planted": "uninterested",
+   "original": "interested",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Therefore, marketers must know where the uninterested consumers are, and how to reach them."
+  },
+  {
+   "id": "ebsi_go1_20250604-q30",
+   "year": 2025,
+   "kind": "vocab_error",
+   "planted": "low",
+   "original": "high",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "immigrants were forced to live in neighborhoods where crime rates were already low"
+  },
+  {
+   "id": "ebsi_go1_20250903-q29",
+   "year": 2025,
+   "kind": "grammar_error",
+   "planted": "putting",
+   "original": "put",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go1_20250903-q30",
+   "year": 2025,
+   "kind": "vocab_error",
+   "planted": "increased",
+   "original": "decreased",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "combined with our increased physical interaction with the \"common folk,\""
+  },
+  {
+   "id": "ebsi_go1_20251014-q30",
+   "year": 2025,
+   "kind": "vocab_error",
+   "planted": "beneficial",
+   "original": "harmful",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "ensuring that their money is not being used to fund beneficial practices"
+  },
+  {
+   "id": "ebsi_go2_20250326-q30",
+   "year": 2025,
+   "kind": "vocab_error",
+   "planted": "discouraged",
+   "original": "fostered",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go2_20250604-q29",
+   "year": 2025,
+   "kind": "grammar_error",
+   "planted": "has",
+   "original": "have",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go2_20250903-q29",
+   "year": 2025,
+   "kind": "grammar_error",
+   "planted": "depend",
+   "original": "depends",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go2_20250903-q30",
+   "year": 2025,
+   "kind": "vocab_error",
+   "planted": "efficient",
+   "original": "counterproductive",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go2_20251014-q29",
+   "year": 2025,
+   "kind": "grammar_error",
+   "planted": "give",
+   "original": "giving",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "their genetic specifications change, sometimes give organisms new ways to exploit"
+  },
+  {
+   "id": "ebsi_go2_20251014-q30",
+   "year": 2025,
+   "kind": "vocab_error",
+   "planted": "rejecting",
+   "original": "accepting",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "rejecting inequalities stemming from the existence of the family as long as"
+  },
+  {
+   "id": "2025_06_5086961-q30",
+   "year": 2025,
+   "kind": "vocab_error",
+   "planted": "drives",
+   "original": "undermines",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "The salience of external controls drives the acquisition of self-responsibility."
+  },
+  {
+   "id": "2025_06_5086961-q41-42",
+   "year": 2025,
+   "kind": "vocab_error",
+   "planted": "coincide",
+   "original": "conflict",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "influence your own 'code of behaviour' and how these may coincide, alongside"
+  },
+  {
+   "id": "ebsi_go3_20250710-q29",
+   "year": 2025,
+   "kind": "grammar_error",
+   "planted": "require",
+   "original": "required",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go3_20250710-q30",
+   "year": 2025,
+   "kind": "vocab_error",
+   "planted": "decreases",
+   "original": "increases",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "believe that they make decisions logically and consciously only decreases its influence"
+  },
+  {
+   "id": "2025_09_5087695-q30",
+   "year": 2025,
+   "kind": "vocab_error",
+   "planted": "rationality",
+   "original": "irrationality",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Learning to understand the built-in rationality of our mental processes can also help us"
+  },
+  {
+   "id": "2025_09_5087695-q41-42",
+   "year": 2025,
+   "kind": "vocab_error",
+   "planted": "sensitive",
+   "original": "insensitive",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "most of us have become sensitive to the flood tide of words, millions of them every day"
+  },
+  {
+   "id": "ebsi_go3_20251014-q30",
+   "year": 2025,
+   "kind": "vocab_error",
+   "planted": "forbidden",
+   "original": "obliged",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "the reverse is true, and one is forbidden to make public certain information"
+  },
+  {
+   "id": "2025_SN_5089362-q30",
+   "year": 2025,
+   "kind": "vocab_error",
+   "planted": "stronger",
+   "original": "weaker",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "lead to stronger motivation and performance in the pursuit of competitive goals"
+  },
+  {
+   "id": "2025_SN_5089362-q41-42",
+   "year": 2025,
+   "kind": "vocab_error",
+   "planted": "excludes",
+   "original": "requires",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "from a rock knows that it excludes strong grips, constant rotation and repositioning"
+  },
+  {
+   "id": "ebsi_go1_20240328-q29",
+   "year": 2024,
+   "kind": "grammar_error",
+   "planted": "to count",
+   "original": "count",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "much more energizing and satisfying, and to count their employment as one of their"
+  },
+  {
+   "id": "ebsi_go1_20240328-q30",
+   "year": 2024,
+   "kind": "vocab_error",
+   "planted": "enough",
+   "original": "little",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go1_20240604-q29",
+   "year": 2024,
+   "kind": "grammar_error",
+   "planted": "what",
+   "original": "that",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go1_20240604-q30",
+   "year": 2024,
+   "kind": "vocab_error",
+   "planted": "disappears",
+   "original": "appears",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "but then act differently when temptation for immediate pleasure disappears"
+  },
+  {
+   "id": "ebsi_go1_20240904-q30",
+   "year": 2024,
+   "kind": "vocab_error",
+   "planted": "inefficient",
+   "original": "efficient",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "A tightly packed delivery truck is a far more inefficient transporter of goods than several hybrids"
+  },
+  {
+   "id": "ebsi_go1_20241015-q29",
+   "year": 2024,
+   "kind": "grammar_error",
+   "planted": "what",
+   "original": "that",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "normally the selling point is what the usefulness of the technology is obvious at first glance"
+  },
+  {
+   "id": "ebsi_go1_20241015-q30",
+   "year": 2024,
+   "kind": "vocab_error",
+   "planted": "less",
+   "original": "more",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "instead of holding less information than we have mental capacity for and indeed need to know"
+  },
+  {
+   "id": "ebsi_go2_20240328-q29",
+   "year": 2024,
+   "kind": "grammar_error",
+   "planted": "using",
+   "original": "used",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go2_20240328-q30",
+   "year": 2024,
+   "kind": "vocab_error",
+   "planted": "cultivate",
+   "original": "intrude on",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go2_20240604-q30",
+   "year": 2024,
+   "kind": "vocab_error",
+   "planted": "accelerate",
+   "original": "slow",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "less positive ones, however, can accelerate adaptation."
+  },
+  {
+   "id": "ebsi_go2_20240904-q30",
+   "year": 2024,
+   "kind": "vocab_error",
+   "planted": "reduced",
+   "original": "expanded",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go2_20241015-q29",
+   "year": 2024,
+   "kind": "grammar_error",
+   "planted": "have given",
+   "original": "have been given",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "mice with cancer show a preference for the place where they have given morphine, a drug used to relieve pain"
+  },
+  {
+   "id": "ebsi_go2_20241015-q30",
+   "year": 2024,
+   "kind": "vocab_error",
+   "planted": "least",
+   "original": "most",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "It's for making the least of the sudden breeding opportunity."
+  },
+  {
+   "id": "2024_06_5084521-q41-42",
+   "year": 2024,
+   "kind": "vocab_error",
+   "planted": "block",
+   "original": "facilitate",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "moving expenses and starting date can also be negotiated, which may block resolution of the salary issue"
+  },
+  {
+   "id": "ebsi_go3_20240711-q29",
+   "year": 2024,
+   "kind": "grammar_error",
+   "planted": "blooming",
+   "original": "bloom",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "2024_09_5085155-q30",
+   "year": 2024,
+   "kind": "vocab_error",
+   "planted": "countered",
+   "original": "created",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "This countered a disconnect between consumers and the products they use"
+  },
+  {
+   "id": "2024_09_5085155-q41-42",
+   "year": 2024,
+   "kind": "vocab_error",
+   "planted": "challenging",
+   "original": "easy",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "you can see how it would be challenging to conclude you don't remember much"
+  },
+  {
+   "id": "ebsi_go3_20241015-q29",
+   "year": 2024,
+   "kind": "grammar_error",
+   "planted": "last",
+   "original": "lasting",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go3_20241015-q30",
+   "year": 2024,
+   "kind": "vocab_error",
+   "planted": "extends",
+   "original": "expires",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "hits a certain point in adolescence, however, its puppy license extends"
+  },
+  {
+   "id": "2024_SN_5086091-q30",
+   "year": 2024,
+   "kind": "vocab_error",
+   "planted": "low",
+   "original": "high",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "is careful not to directly ask for very low prices for video games because"
+  },
+  {
+   "id": "2024_SN_5086091-q41-42",
+   "year": 2024,
+   "kind": "vocab_error",
+   "planted": "running the risk of being misquoted",
+   "original": "avoiding the risk of being misquoted",
+   "verifiedBy": "adjudicated-3way(3/3)",
+   "excerpt": "thereby preserving more time for their science and running the risk of being misquoted"
+  },
+  {
+   "id": "ebsi_go1_20230323-q30",
+   "year": 2023,
+   "kind": "vocab_error",
+   "planted": "strengthened",
+   "original": "destroyed",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go1_20230601-q29",
+   "year": 2023,
+   "kind": "grammar_error",
+   "planted": "being",
+   "original": "is",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go1_20230601-q30",
+   "year": 2023,
+   "kind": "vocab_error",
+   "planted": "increased",
+   "original": "decreased",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "were buying their bread from stores or bakeries, so consumer demand for yeast increased."
+  },
+  {
+   "id": "ebsi_go1_20230906-q30",
+   "year": 2023,
+   "kind": "vocab_error",
+   "planted": "easy",
+   "original": "difficult",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Their understanding at this stage is quite literal, and it is easy for them to imagine"
+  },
+  {
+   "id": "ebsi_go1_20231219-q29",
+   "year": 2023,
+   "kind": "grammar_error",
+   "planted": "lack",
+   "original": "lacking",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "brain death is an unreliable process lack precision. As a matter of consistency"
+  },
+  {
+   "id": "ebsi_go1_20231219-q30",
+   "year": 2023,
+   "kind": "vocab_error",
+   "planted": "maintained",
+   "original": "replaced",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "item but sooner than later, this feeling will be maintained by the joy of clarity."
+  },
+  {
+   "id": "ebsi_go2_20230323-q29",
+   "year": 2023,
+   "kind": "grammar_error",
+   "planted": "generating",
+   "original": "generate",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go2_20230323-q30",
+   "year": 2023,
+   "kind": "vocab_error",
+   "planted": "deny",
+   "original": "assume",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go2_20230601-q29",
+   "year": 2023,
+   "kind": "grammar_error",
+   "planted": "ask",
+   "original": "are asked",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go2_20231219-q29",
+   "year": 2023,
+   "kind": "grammar_error",
+   "planted": "showed",
+   "original": "showing",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "is also gaining support, with animal studies showed that 'lectins, once eaten, may be damaging the gut"
+  },
+  {
+   "id": "2023_06_5076592-q30",
+   "year": 2023,
+   "kind": "vocab_error",
+   "planted": "accommodating",
+   "original": "managing",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "the most direct approach to accommodating automobile demand is making motorized travel more expensive"
+  },
+  {
+   "id": "ebsi_go3_20230711-q29",
+   "year": 2023,
+   "kind": "grammar_error",
+   "planted": "being",
+   "original": "are",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "2023_09_5077481-q30",
+   "year": 2023,
+   "kind": "vocab_error",
+   "planted": "diminished",
+   "original": "compounded",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "This frustration is then diminished by the fact that, to the general public, both the scientist"
+  },
+  {
+   "id": "2023_09_5077481-q41-42",
+   "year": 2023,
+   "kind": "vocab_error",
+   "planted": "rapidly",
+   "original": "gradually",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "environmental change can be \"imperceptible\"; it proceeds rapidly, only occasionally producing"
+  },
+  {
+   "id": "ebsi_go3_20231012-q29",
+   "year": 2023,
+   "kind": "grammar_error",
+   "planted": "becoming",
+   "original": "became",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go3_20231012-q30",
+   "year": 2023,
+   "kind": "vocab_error",
+   "planted": "resistant",
+   "original": "receptive",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "2023_SN_5080827-q30",
+   "year": 2023,
+   "kind": "vocab_error",
+   "planted": "maintain",
+   "original": "delay",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "the longer we will maintain their natural fusion with our lives, the hallmark of every"
+  },
+  {
+   "id": "2023_SN_5080827-q41-42",
+   "year": 2023,
+   "kind": "vocab_error",
+   "planted": "relaxed",
+   "original": "stressed",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "important steps or considerations aren't missed when people are feeling relaxed"
+  },
+  {
+   "id": "ebsi_go1_20220324-q29",
+   "year": 2022,
+   "kind": "grammar_error",
+   "planted": "what",
+   "original": "that",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "This is a very common human tendency what is rooted in how our species developed."
+  },
+  {
+   "id": "ebsi_go1_20220324-q30",
+   "year": 2022,
+   "kind": "vocab_error",
+   "planted": "welcomed",
+   "original": "rejected",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "By deliberately getting yourself welcomed you'll grow a thicker skin"
+  },
+  {
+   "id": "ebsi_go1_20220609-q29",
+   "year": 2022,
+   "kind": "grammar_error",
+   "planted": "dependently",
+   "original": "dependent",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go1_20220609-q30",
+   "year": 2022,
+   "kind": "vocab_error",
+   "planted": "ignoring",
+   "original": "envying",
+   "verifiedBy": "adjudicated-3way(3/3)",
+   "excerpt": "we end up ignoring how other people live. Then, we can only see the greener grass"
+  },
+  {
+   "id": "ebsi_go1_20220901-q30",
+   "year": 2022,
+   "kind": "vocab_error",
+   "planted": "less",
+   "original": "more",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "it would mean that herbs are less intelligent than the human body"
+  },
+  {
+   "id": "ebsi_go2_20220324-q29",
+   "year": 2022,
+   "kind": "grammar_error",
+   "planted": "risk",
+   "original": "risks",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "comparing ourselves with someone who's doing worse than we are risk scorn"
+  },
+  {
+   "id": "ebsi_go2_20220324-q30",
+   "year": 2022,
+   "kind": "vocab_error",
+   "planted": "corresponds with",
+   "original": "conflicts with",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "gets an experimental result which corresponds with the paradigm, they will usually assume"
+  },
+  {
+   "id": "ebsi_go2_20220609-q30",
+   "year": 2022,
+   "kind": "vocab_error",
+   "planted": "less likely",
+   "original": "more likely",
+   "verifiedBy": "adjudicated-3way(3/3)",
+   "excerpt": "the human operator gives up oversight, the system is less likely to have a serious accident"
+  },
+  {
+   "id": "ebsi_go2_20221123-q29",
+   "year": 2022,
+   "kind": "grammar_error",
+   "planted": "are",
+   "original": "is",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "there is very little in the way of market demand that are not accommodated"
+  },
+  {
+   "id": "ebsi_go2_20221123-q30",
+   "year": 2022,
+   "kind": "vocab_error",
+   "planted": "reinforces",
+   "original": "destroys",
+   "verifiedBy": "adjudicated-3way(3/3)",
+   "excerpt": "This pattern of coloration, or countershading, reinforces the visual impression of shape"
+  },
+  {
+   "id": "ebsi_go2_20220901-q29",
+   "year": 2022,
+   "kind": "grammar_error",
+   "planted": "fascinated",
+   "original": "fascinating",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go2_20220901-q30",
+   "year": 2022,
+   "kind": "vocab_error",
+   "planted": "scarce",
+   "original": "excess",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "2022_06_5063572-q30",
+   "year": 2022,
+   "kind": "vocab_error",
+   "planted": "increase",
+   "original": "reduce",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "As a result, they may increase efficiency, productivity and the need to respond"
+  },
+  {
+   "id": "2022_06_5063572-q41-42",
+   "year": 2022,
+   "kind": "vocab_error",
+   "planted": "easier",
+   "original": "harder",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "modern notions of private and family life, we find it easier to establish the limits"
+  },
+  {
+   "id": "ebsi_go3_20220706-q29",
+   "year": 2022,
+   "kind": "grammar_error",
+   "planted": "have taught",
+   "original": "taught",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "2022_09_5064693-q30",
+   "year": 2022,
+   "kind": "vocab_error",
+   "planted": "seized",
+   "original": "missed",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "In this case an opportunity has been seized, since the amount of transport being offered"
+  },
+  {
+   "id": "2022_09_5064693-q41-42",
+   "year": 2022,
+   "kind": "vocab_error",
+   "planted": "different",
+   "original": "similar",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "In experiments involving a nutrient, the diets of both groups must also be different"
+  },
+  {
+   "id": "ebsi_go3_20221012-q29",
+   "year": 2022,
+   "kind": "grammar_error",
+   "planted": "what referred to as",
+   "original": "what was referred to as",
+   "verifiedBy": "adjudicated-3way(3/3)",
+   "excerpt": "leadership studies were grounded in what referred to as the \"great man\" theory"
+  },
+  {
+   "id": "ebsi_go3_20221012-q30",
+   "year": 2022,
+   "kind": "vocab_error",
+   "planted": "rejected",
+   "original": "accepted",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Broadcasters rejected union demands for employment and decent wages, because the"
+  },
+  {
+   "id": "2022_SN_5070164-q30",
+   "year": 2022,
+   "kind": "vocab_error",
+   "planted": "benefits",
+   "original": "limits",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "In addition, there are benefits to the extensive use of either manure or legumes"
+  },
+  {
+   "id": "2022_SN_5070164-q41-42",
+   "year": 2022,
+   "kind": "vocab_error",
+   "planted": "abstract",
+   "original": "obvious",
+   "verifiedBy": "adjudicated-3way(3/3)",
+   "excerpt": "Such a grouping may seem too abstract to be called a classification"
+  },
+  {
+   "id": "ebsi_go1_20210325-q30",
+   "year": 2021,
+   "kind": "vocab_error",
+   "planted": "increase",
+   "original": "drop",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go1_20210603-q29",
+   "year": 2021,
+   "kind": "grammar_error",
+   "planted": "are",
+   "original": "is",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go1_20210603-q30",
+   "year": 2021,
+   "kind": "vocab_error",
+   "planted": "prevent",
+   "original": "accommodate",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go1_20210831-q30",
+   "year": 2021,
+   "kind": "vocab_error",
+   "planted": "high",
+   "original": "low",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "The costs to a hunter of giving away meat he cannot eat immediately are high"
+  },
+  {
+   "id": "ebsi_go1_20211124-q29",
+   "year": 2021,
+   "kind": "grammar_error",
+   "planted": "occurring",
+   "original": "occur",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Lower magnesium levels in soil also occurring with acidic soils and around 70%"
+  },
+  {
+   "id": "ebsi_go1_20211124-q30",
+   "year": 2021,
+   "kind": "vocab_error",
+   "planted": "capturing",
+   "original": "releasing",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "hatchlings, capturing hatchlings once they are better equipped to protect themselves"
+  },
+  {
+   "id": "ebsi_go2_20210325-q30",
+   "year": 2021,
+   "kind": "vocab_error",
+   "planted": "avoid",
+   "original": "produce",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go2_20210603-q29",
+   "year": 2021,
+   "kind": "grammar_error",
+   "planted": "gives",
+   "original": "given",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go2_20210603-q30",
+   "year": 2021,
+   "kind": "vocab_error",
+   "planted": "unpredictable",
+   "original": "predictable",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "the possibility of a second worldwide conflict an unpredictable reality for governments"
+  },
+  {
+   "id": "ebsi_go2_20210831-q29",
+   "year": 2021,
+   "kind": "grammar_error",
+   "planted": "has",
+   "original": "have",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go2_20210831-q30",
+   "year": 2021,
+   "kind": "vocab_error",
+   "planted": "benefits",
+   "original": "drawbacks",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go2_20211124-q29",
+   "year": 2021,
+   "kind": "grammar_error",
+   "planted": "creating",
+   "original": "create",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "\"chest pain,\" for example - creating anchors that might result in significant"
+  },
+  {
+   "id": "ebsi_go2_20211124-q30",
+   "year": 2021,
+   "kind": "vocab_error",
+   "planted": "strengthens",
+   "original": "weakens",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "studies have shown that the brain actively strengthens regions responsible for"
+  },
+  {
+   "id": "2021_06_5049916-q30",
+   "year": 2021,
+   "kind": "vocab_error",
+   "planted": "improbable",
+   "original": "possible",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "this seemingly awesome accomplishment of recall is made improbable by remembering"
+  },
+  {
+   "id": "2021_06_5049916-q41-42",
+   "year": 2021,
+   "kind": "vocab_error",
+   "planted": "decrease",
+   "original": "increase",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "but also by the decrease in cultivation of a crop of substantial economic importance"
+  },
+  {
+   "id": "ebsi_go3_20210707-q29",
+   "year": 2021,
+   "kind": "grammar_error",
+   "planted": "believes",
+   "original": "believing",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go3_20210707-q30",
+   "year": 2021,
+   "kind": "vocab_error",
+   "planted": "outdated",
+   "original": "dominant",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "were consequently the outdated modes of the pre-industrial era."
+  },
+  {
+   "id": "ebsi_go3_20211012-q29",
+   "year": 2021,
+   "kind": "grammar_error",
+   "planted": "approached",
+   "original": "approaching",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "have 'reached the level of something approached a local art form'"
+  },
+  {
+   "id": "ebsi_go3_20211012-q30",
+   "year": 2021,
+   "kind": "vocab_error",
+   "planted": "increase",
+   "original": "reduce",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "for such offenders, which would increase my incentive to pay my parking tickets too."
+  },
+  {
+   "id": "2021_SN_5061633-q30",
+   "year": 2021,
+   "kind": "vocab_error",
+   "planted": "lacked",
+   "original": "had",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "changed when someone lacked the courage to report what was actually measured"
+  },
+  {
+   "id": "ebsi_go1_20200618-q29",
+   "year": 2020,
+   "kind": "grammar_error",
+   "planted": "arguing",
+   "original": "argues",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "who is a developmental psychologist, arguing that three main forces shape our development"
+  },
+  {
+   "id": "ebsi_go1_20200916-q29",
+   "year": 2020,
+   "kind": "grammar_error",
+   "planted": "gave",
+   "original": "were given",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go1_20201118-q29",
+   "year": 2020,
+   "kind": "grammar_error",
+   "planted": "pleasantly",
+   "original": "pleasant",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "relating to the ability to smell an odour, or how pleasantly it seems"
+  },
+  {
+   "id": "ebsi_go2_20200312-q29",
+   "year": 2020,
+   "kind": "grammar_error",
+   "planted": "tends",
+   "original": "tend",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "while crashes due to aircraft malfunction tends to occur during long-haul flight"
+  },
+  {
+   "id": "ebsi_go2_20200312-q30",
+   "year": 2020,
+   "kind": "vocab_error",
+   "planted": "disproved",
+   "original": "reinforced",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go2_20200618-q30",
+   "year": 2020,
+   "kind": "vocab_error",
+   "planted": "hard-earned",
+   "original": "easy",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "We do not take into account the role that luck plays in such hard-earned gains."
+  },
+  {
+   "id": "ebsi_go2_20200916-q29",
+   "year": 2020,
+   "kind": "grammar_error",
+   "planted": "to be",
+   "original": "is",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "2020_06_5037373-q30",
+   "year": 2020,
+   "kind": "vocab_error",
+   "planted": "forbid",
+   "original": "motivate",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Others' distrust of her might then forbid her to perform her share of the duties"
+  },
+  {
+   "id": "2020_06_5037373-q41-42",
+   "year": 2020,
+   "kind": "vocab_error",
+   "planted": "promising",
+   "original": "dangerous",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Some theorists consider Utopian political thinking to be a promising undertaking, since it has led in the past to justifications of totalitarian viole"
+  },
+  {
+   "id": "ebsi_go3_20200722-q29",
+   "year": 2020,
+   "kind": "grammar_error",
+   "planted": "lacking",
+   "original": "lack",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go3_20200722-q30",
+   "year": 2020,
+   "kind": "vocab_error",
+   "planted": "overvalue",
+   "original": "undervalue",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "they overvalue other impacts of population growth, such as diminished per capita food supplies for other people"
+  },
+  {
+   "id": "2020_09_5038442-q30",
+   "year": 2020,
+   "kind": "vocab_error",
+   "planted": "optional",
+   "original": "essential",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "laws based upon ecological relationships among different kinds of organisms are optional for understanding evolution"
+  },
+  {
+   "id": "2020_09_5038442-q41-42",
+   "year": 2020,
+   "kind": "vocab_error",
+   "planted": "extended",
+   "original": "limited",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Similarly, experimental observations are extended to those organisms that we can collect live and keep"
+  },
+  {
+   "id": "ebsi_go3_20201027-q29",
+   "year": 2020,
+   "kind": "grammar_error",
+   "planted": "promoting",
+   "original": "promote",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "nonacademic factors that promoting learning and mastery must enhance explicit instruction"
+  },
+  {
+   "id": "ebsi_go3_20201027-q30",
+   "year": 2020,
+   "kind": "vocab_error",
+   "planted": "weakness",
+   "original": "strength",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "standing out and being different is often seen as a sign of weakness"
+  },
+  {
+   "id": "2020_SN_5045859-q30",
+   "year": 2020,
+   "kind": "vocab_error",
+   "planted": "denying",
+   "original": "accepting",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Before denying that the remaining explanation is the correct one, consider whether other"
+  },
+  {
+   "id": "2020_SN_5045859-q41-42",
+   "year": 2020,
+   "kind": "vocab_error",
+   "planted": "Uncertainty",
+   "original": "Understanding",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Uncertainty about the knowledge intended in any activity comes from each student's"
+  },
+  {
+   "id": "ebsi_go1_20190604-q29",
+   "year": 2019,
+   "kind": "grammar_error",
+   "planted": "do",
+   "original": "does",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "only a few wavelengths of light, do not seem to have the same effect on mood"
+  },
+  {
+   "id": "ebsi_go1_20190904-q29",
+   "year": 2019,
+   "kind": "grammar_error",
+   "planted": "ensure",
+   "original": "ensures",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go2_20190604-q29",
+   "year": 2019,
+   "kind": "grammar_error",
+   "planted": "hiring",
+   "original": "hires",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "the doctor specializes in the provision of physician services and hiring someone"
+  },
+  {
+   "id": "ebsi_go2_20191120-q29",
+   "year": 2019,
+   "kind": "grammar_error",
+   "planted": "interested",
+   "original": "interesting",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Because they use these neural circuits in novel ways, we find them especially interested."
+  },
+  {
+   "id": "2019_06_5023285-q41-42",
+   "year": 2019,
+   "kind": "vocab_error",
+   "planted": "disregarded",
+   "original": "revered",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "for the attention of performers and listeners who disregarded the classical masterworks"
+  },
+  {
+   "id": "2019_09_5024244-q41-42",
+   "year": 2019,
+   "kind": "vocab_error",
+   "planted": "randomly",
+   "original": "selectively",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Subsequently, one partner may randomly recall a part of the other's story as a tactic"
+  },
+  {
+   "id": "ebsi_go3_20191015-q29",
+   "year": 2019,
+   "kind": "grammar_error",
+   "planted": "sends",
+   "original": "sending",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "An individual neuron sends a signal in the brain uses as much energy as a leg muscle cell"
+  },
+  {
+   "id": "ebsi_go3_20191015-q30",
+   "year": 2019,
+   "kind": "vocab_error",
+   "planted": "problematic",
+   "original": "unproblematic",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "professions, etc. problematic until their consciousness becomes raised."
+  },
+  {
+   "id": "2019_SN_5031122-q30",
+   "year": 2019,
+   "kind": "vocab_error",
+   "planted": "laboriously",
+   "original": "easily",
+   "verifiedBy": "adjudicated-3way(2/3)",
+   "excerpt": "Once the laboriously overtaken and killed prey had been hauled aboard"
+  },
+  {
+   "id": "2019_SN_5031122-q41-42",
+   "year": 2019,
+   "kind": "vocab_error",
+   "planted": "promoted",
+   "original": "disrupted",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "because it was better to do this than have work promoted by the casual taking of days off."
+  },
+  {
+   "id": "ebsi_go1_20180308-q30",
+   "year": 2018,
+   "kind": "vocab_error",
+   "planted": "comfort",
+   "original": "hurt",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "In the long term, lies with good intentions comfort people much more than telling the truth."
+  },
+  {
+   "id": "ebsi_go1_20180905-q28",
+   "year": 2018,
+   "kind": "grammar_error",
+   "planted": "seems",
+   "original": "seem",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go1_20180905-q29",
+   "year": 2018,
+   "kind": "vocab_error",
+   "planted": "similar",
+   "original": "different",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "if any one of the events would not have occurred, the result would be similar"
+  },
+  {
+   "id": "ebsi_go1_20181121-q28",
+   "year": 2018,
+   "kind": "grammar_error",
+   "planted": "convenient",
+   "original": "conveniently",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Denial of who animals are convenient allows for maintaining false stereotypes"
+  },
+  {
+   "id": "ebsi_go2_20180308-q28",
+   "year": 2018,
+   "kind": "grammar_error",
+   "planted": "has",
+   "original": "have",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "a high-carbohydrate meal the night before a competition, has stood the test of time"
+  },
+  {
+   "id": "ebsi_go2_20180308-q29",
+   "year": 2018,
+   "kind": "vocab_error",
+   "planted": "reluctant",
+   "original": "willing",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "similar responses from the other person, we're reluctant to reveal more."
+  },
+  {
+   "id": "ebsi_go2_20180607-q29",
+   "year": 2018,
+   "kind": "vocab_error",
+   "planted": "improving",
+   "original": "degrading",
+   "verifiedBy": "adjudicated-3way(3/3)",
+   "excerpt": "will tend to make similar errors in their testimony, improving the total value"
+  },
+  {
+   "id": "ebsi_go2_20180905-q28",
+   "year": 2018,
+   "kind": "grammar_error",
+   "planted": "filled",
+   "original": "filling",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "A cat in a small box will behave like a fluid, filled up all the space."
+  },
+  {
+   "id": "ebsi_go2_20181121-q28",
+   "year": 2018,
+   "kind": "grammar_error",
+   "planted": "many of them had not responded",
+   "original": "many of whom had not responded",
+   "verifiedBy": "adjudicated-3way(2/3)",
+   "excerpt": "treating chronic-pain patients, many of them had not responded well"
+  },
+  {
+   "id": "ebsi_go3_20181016-q28",
+   "year": 2018,
+   "kind": "grammar_error",
+   "planted": "humiliated",
+   "original": "humiliating",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "it can be false; or it can be true but deeply humiliated. It may be increasingly difficult"
+  },
+  {
+   "id": "2018_SN_5019793-q29",
+   "year": 2018,
+   "kind": "vocab_error",
+   "planted": "found",
+   "original": "lost",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "before they are sold, no historical knowledge is found! On the contrary, archaeologists"
+  },
+  {
+   "id": "ebsi_go1_20170309-q28",
+   "year": 2017,
+   "kind": "grammar_error",
+   "planted": "cutting",
+   "original": "cut",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "When you read the comics section of the newspaper, cutting out a cartoon that makes you laugh."
+  },
+  {
+   "id": "ebsi_go1_20170601-q28",
+   "year": 2017,
+   "kind": "grammar_error",
+   "planted": "mean",
+   "original": "means",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Accepting your role in your problems mean that you understand the solution lies within you."
+  },
+  {
+   "id": "ebsi_go2_20170601-q28",
+   "year": 2017,
+   "kind": "grammar_error",
+   "planted": "do",
+   "original": "are",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Productivity improvements are as important to the economy as they do to the"
+  },
+  {
+   "id": "ebsi_go2_20170601-q29",
+   "year": 2017,
+   "kind": "vocab_error",
+   "planted": "relieved",
+   "original": "frustrated",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Yet, the more options they have, the more relieved they become."
+  },
+  {
+   "id": "ebsi_go3_20170712-q28",
+   "year": 2017,
+   "kind": "vocab_error",
+   "planted": "relaxation",
+   "original": "vigilance",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go3_20170712-q29",
+   "year": 2017,
+   "kind": "grammar_error",
+   "planted": "having",
+   "original": "had",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go1_20160310-q28",
+   "year": 2016,
+   "kind": "grammar_error",
+   "planted": "what",
+   "original": "that",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "It is better what you make your mistakes early on rather than later in life."
+  },
+  {
+   "id": "ebsi_go1_20161123-q28",
+   "year": 2016,
+   "kind": "grammar_error",
+   "planted": "some of them use less than 1.3 gallons",
+   "original": "some of them using less than 1.3 gallons",
+   "verifiedBy": "adjudicated-3way(2/3)",
+   "excerpt": "toilets are on the U.S. market today, some of them use less than 1.3 gallons"
+  },
+  {
+   "id": "ebsi_go2_20160602-q28",
+   "year": 2016,
+   "kind": "grammar_error",
+   "planted": "collecting",
+   "original": "collect",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "A designer must first document the existing conditions of a problem and collecting relevant data"
+  },
+  {
+   "id": "ebsi_go2_20161123-q28",
+   "year": 2016,
+   "kind": "grammar_error",
+   "planted": "provoking",
+   "original": "provoked",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "such as a T-shirt with singer Barry Manilow on it, provoking only 23 percent"
+  },
+  {
+   "id": "ebsi_go3_20160706-q28",
+   "year": 2016,
+   "kind": "grammar_error",
+   "planted": "depending",
+   "original": "depends",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "2016_09_5000516-q29",
+   "year": 2016,
+   "kind": "vocab_error",
+   "planted": "absence",
+   "original": "presence",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "The Canadian regarded the lawyers' absence as facilitating the successful completion"
+  },
+  {
+   "id": "ebsi_go3_20161011-q29",
+   "year": 2016,
+   "kind": "vocab_error",
+   "planted": "follow conventions",
+   "original": "break conventions",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "The point is to follow conventions so your conversations become energizing"
+  },
+  {
+   "id": "ebsi_go1_20150311-q28",
+   "year": 2015,
+   "kind": "grammar_error",
+   "planted": "what",
+   "original": "that",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "One cool thing about my Uncle Arthur was what he could always pick the best places to camp."
+  },
+  {
+   "id": "ebsi_go1_20150902-q29",
+   "year": 2015,
+   "kind": "grammar_error",
+   "planted": "realizing",
+   "original": "realized",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go1_20151117-q28",
+   "year": 2015,
+   "kind": "grammar_error",
+   "planted": "engaging",
+   "original": "engage",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "People in today's fast-paced society engaging in this either for necessity"
+  },
+  {
+   "id": "ebsi_go2_20150311_A-q28",
+   "year": 2015,
+   "kind": "grammar_error",
+   "planted": "leave",
+   "original": "leaving",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "livers, and brains of the animals they kill, often leave the muscle meat for eagles"
+  },
+  {
+   "id": "ebsi_go2_20150902-q28",
+   "year": 2015,
+   "kind": "grammar_error",
+   "planted": "knowing",
+   "original": "knows",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "anyone who has spent time with a five-year-old knowing that children this age"
+  },
+  {
+   "id": "ebsi_go3_20150409_A-q30",
+   "year": 2015,
+   "kind": "vocab_error",
+   "planted": "defect",
+   "original": "advantage",
+   "verifiedBy": "adjudicated-3way(3/3)",
+   "excerpt": "the dark clothing has the defect because it keeps you cooler when you're in the shade"
+  },
+  {
+   "id": "ebsi_go3_20150709-q28",
+   "year": 2015,
+   "kind": "grammar_error",
+   "planted": "tending",
+   "original": "tend",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "ebsi_go3_20150709-q30",
+   "year": 2015,
+   "kind": "vocab_error",
+   "planted": "follows",
+   "original": "drives",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "2015_09_3027897-q29",
+   "year": 2015,
+   "kind": "vocab_error",
+   "planted": "maximum",
+   "original": "minimum",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "below a certain point, the maximum that must be charged in order to cover"
+  },
+  {
+   "id": "ebsi_go3_20151013-q20",
+   "year": 2015,
+   "kind": "grammar_error",
+   "planted": "to be taken",
+   "original": "to take",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "they focus on the actions they need to be taken in order to achieve"
+  },
+  {
+   "id": "ebsi_go1_20140312-q23",
+   "year": 2014,
+   "kind": "grammar_error",
+   "planted": "what",
+   "original": "that",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "I thought that I would be able to find another job what was a better match."
+  },
+  {
+   "id": "ebsi_go1_20140312-q25",
+   "year": 2014,
+   "kind": "vocab_error",
+   "planted": "disrespect",
+   "original": "respect",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "in another person's language shows your disrespect for that person."
+  },
+  {
+   "id": "ebsi_go1_20140612-q24",
+   "year": 2014,
+   "kind": "grammar_error",
+   "planted": "was included",
+   "original": "included",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "It was included, in addition to watching TV, playing with Legos and going to the zoo."
+  },
+  {
+   "id": "ebsi_go2_20140312-q23",
+   "year": 2014,
+   "kind": "grammar_error",
+   "planted": "form",
+   "original": "forms",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "The skin around her eyes form small and thin lines, and the lines match mine."
+  },
+  {
+   "id": "ebsi_go2_20140312-q25",
+   "year": 2014,
+   "kind": "vocab_error",
+   "planted": "positive",
+   "original": "negative",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "If a buyer made a positive remark about the car he was selling, Pat would get upset"
+  },
+  {
+   "id": "ebsi_go2_20140612-q21",
+   "year": 2014,
+   "kind": "grammar_error",
+   "planted": "Cited",
+   "original": "Citing",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Cited the need for managers to write their own answers to day-to-day management"
+  },
+  {
+   "id": "ebsi_go2_20140612-q28",
+   "year": 2014,
+   "kind": "vocab_error",
+   "planted": "relieved",
+   "original": "expectant",
+   "verifiedBy": "adjudicated-3way(3/3)",
+   "excerpt": "We not only like to wait, feeling relieved, but we appreciate what we wait for."
+  },
+  {
+   "id": "ebsi_go2_20140903_A-q27",
+   "year": 2014,
+   "kind": "grammar_error",
+   "planted": "setting",
+   "original": "set",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "its importance for our existence as social animals setting it apart from the communication"
+  },
+  {
+   "id": "2014_YB_5006654_B-q28",
+   "year": 2014,
+   "kind": "vocab_error",
+   "planted": "insufficient",
+   "original": "sufficient",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "but the desert also provides insufficient means with which people can shelter themselves"
+  },
+  {
+   "id": "2014_YB_5006654_A-q32",
+   "year": 2014,
+   "kind": "vocab_error",
+   "planted": "insufficient",
+   "original": "sufficient",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "but the desert also provides insufficient means with which people can shelter themselves"
+  },
+  {
+   "id": "ebsi_go3_20140410-q24",
+   "year": 2014,
+   "kind": "grammar_error",
+   "planted": "dramatized",
+   "original": "dramatizing",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "to stage musical events, some of them dramatized the tragedy that they were still recovering"
+  },
+  {
+   "id": "ebsi_go3_20140710_A-q24",
+   "year": 2014,
+   "kind": "grammar_error",
+   "planted": "to be",
+   "original": "was",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "back when our mammalian ancestors were evolving -to be at least 1,000 parts per million."
+  },
+  {
+   "id": "ebsi_go3_20140710_A-q25",
+   "year": 2014,
+   "kind": "vocab_error",
+   "planted": "tolerant",
+   "original": "intolerant",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Guam rails, a kind of flightless bird, are tolerant of their own kind"
+  },
+  {
+   "id": "2014_09_3020142_A-q28",
+   "year": 2014,
+   "kind": "vocab_error",
+   "planted": "follow",
+   "original": "resist",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Some children follow the suggestion that sandals may not be the best option for a snowy day."
+  },
+  {
+   "id": "2014_09_3020142_B-q28",
+   "year": 2014,
+   "kind": "vocab_error",
+   "planted": "follow",
+   "original": "resist",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Some children follow the suggestion that sandals may not be the best option for a snowy day."
+  },
+  {
+   "id": "ebsi_go3_20141007-q25",
+   "year": 2014,
+   "kind": "grammar_error",
+   "planted": "were",
+   "original": "was",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "the area of vegetation loss on sites used by large commercial rafting companies were more"
+  },
+  {
+   "id": "2014_SN_3022251_B-q28",
+   "year": 2014,
+   "kind": "vocab_error",
+   "planted": "evade",
+   "original": "assume",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "as farmers evade responsibility for storing seeds away from moisture and predators"
+  },
+  {
+   "id": "ebsi_go1_20130313_A-q27",
+   "year": 2013,
+   "kind": "grammar_error",
+   "planted": "which",
+   "original": "who",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "You're the only artist in the world which can draw the way you do."
+  },
+  {
+   "id": "ebsi_go1_20130903-q28",
+   "year": 2013,
+   "kind": "vocab_error",
+   "planted": "sufficient",
+   "original": "insufficient",
+   "verifiedBy": "adjudicated-3way(3/3)",
+   "excerpt": "We have sufficient foresight into the future."
+  },
+  {
+   "id": "ebsi_go1_20131114-q28",
+   "year": 2013,
+   "kind": "vocab_error",
+   "planted": "avoid",
+   "original": "embrace",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "you cultivate positive employees who avoid the tough challenges"
+  },
+  {
+   "id": "ebsi_go2_20130313_B-q27",
+   "year": 2013,
+   "kind": "grammar_error",
+   "planted": "whom",
+   "original": "which",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "authority over their students whom they earned by many years of study"
+  },
+  {
+   "id": "ebsi_go2_20130313_B-q28",
+   "year": 2013,
+   "kind": "vocab_error",
+   "planted": "less",
+   "original": "more",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "The more frequently these bacteria get new resources, the less acid they produce"
+  },
+  {
+   "id": "ebsi_go2_20130313_A-q32",
+   "year": 2013,
+   "kind": "vocab_error",
+   "planted": "get",
+   "original": "avoid",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "they get altitude sickness by climbing to one level and then resting for a few days"
+  },
+  {
+   "id": "ebsi_go2_20130605_B-q27",
+   "year": 2013,
+   "kind": "grammar_error",
+   "planted": "bringing",
+   "original": "brought",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "the enormous wealth bringing back to Italy allowed middle- and upper-class women"
+  },
+  {
+   "id": "ebsi_go2_20130605_A-q32",
+   "year": 2013,
+   "kind": "vocab_error",
+   "planted": "prevent",
+   "original": "promote",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "you can change your thinking and behavior in ways that prevent your success"
+  },
+  {
+   "id": "ebsi_go2_20130903_B-q27",
+   "year": 2013,
+   "kind": "grammar_error",
+   "planted": "attaches",
+   "original": "attached",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "which involves pulling an electric wire attaches to a portable generator"
+  },
+  {
+   "id": "ebsi_go2_20130903_A-q32",
+   "year": 2013,
+   "kind": "vocab_error",
+   "planted": "uncertain",
+   "original": "certain",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "making your donors feel uncertain their dollars are doing good things"
+  },
+  {
+   "id": "ebsi_go2_20131114-q27",
+   "year": 2013,
+   "kind": "grammar_error",
+   "planted": "what",
+   "original": "which",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "careless, and open to misinterpretation what could have serious consequences"
+  },
+  {
+   "id": "2013_06_3008953-q32",
+   "year": 2013,
+   "kind": "vocab_error",
+   "planted": "reduce",
+   "original": "increase",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "can help reduce food production significantly in the countries facing hunger"
+  },
+  {
+   "id": "ebsi_go3_20130712_B-q27",
+   "year": 2013,
+   "kind": "grammar_error",
+   "planted": "turning out",
+   "original": "turned out",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "among people observed by Whyte turning out to be watching other people"
+  },
+  {
+   "id": "ebsi_go3_20130712_A-q32",
+   "year": 2013,
+   "kind": "vocab_error",
+   "planted": "prosperous",
+   "original": "vulnerable",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "world standards. It will only make them more prosperous. The best example is Mexico"
+  },
+  {
+   "id": "2013_09_3011547-q31",
+   "year": 2013,
+   "kind": "vocab_error",
+   "planted": "a cause",
+   "original": "a consequence",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "the decline in wine consumption is a cause of the emergence of the faster, more modern"
+  },
+  {
+   "id": "2013_SN_3014708-q30",
+   "year": 2013,
+   "kind": "vocab_error",
+   "planted": "deny",
+   "original": "recognize",
+   "verifiedBy": "adjudicated-3way(2/3)",
+   "excerpt": "Empathetic distress occurs when people deny that their actions have caused harm"
+  },
+  {
+   "id": "ebsi_go1_20120314-q35",
+   "year": 2012,
+   "kind": "grammar_error",
+   "planted": "a bad spyware",
+   "original": "bad spyware",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "It turned out that I had a bad spyware, and that's what was causing"
+  },
+  {
+   "id": "ebsi_go1_20120314-q36",
+   "year": 2012,
+   "kind": "vocab_error",
+   "planted": "blocking",
+   "original": "helping",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "By blocking each other and trusting in the ropes, we finally reached the top safely."
+  },
+  {
+   "id": "ebsi_go1_20120904-q25",
+   "year": 2012,
+   "kind": "vocab_error",
+   "planted": "similar",
+   "original": "opposite",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "winds in one region are accompanied by similar winds in another; therefore, if north winds are extremely cold"
+  },
+  {
+   "id": "ebsi_go1_20120904-q34",
+   "year": 2012,
+   "kind": "grammar_error",
+   "planted": "staying",
+   "original": "stayed",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "one half moved to the mountains, and the other half staying near the beach"
+  },
+  {
+   "id": "ebsi_go2_20120314-q26",
+   "year": 2012,
+   "kind": "grammar_error",
+   "planted": "situating",
+   "original": "situated",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Mauritius, a tropical island situating in the Indian Ocean"
+  },
+  {
+   "id": "ebsi_go2_20120607_B-q24",
+   "year": 2012,
+   "kind": "grammar_error",
+   "planted": "to learn",
+   "original": "learn",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "the effect may be temporary as drivers, particularly those who regularly travel that route, to learn which bumps are just illusions"
+  },
+  {
+   "id": "ebsi_go2_20120904_B-q24",
+   "year": 2012,
+   "kind": "grammar_error",
+   "planted": "allowing",
+   "original": "allow",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Yet only a handful of these advancements like international conference calls, IP phones, and video chats allowing people to speak rather than to write"
+  },
+  {
+   "id": "ebsi_go2_20120904_B-q33",
+   "year": 2012,
+   "kind": "vocab_error",
+   "planted": "reduces",
+   "original": "increases",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "you might write your texts both in your native language and in English, and this reduces the work needed for writing your document"
+  },
+  {
+   "id": "ebsi_go2_20121114_B-q28",
+   "year": 2012,
+   "kind": "vocab_error",
+   "planted": "accepted",
+   "original": "resisted",
+   "verifiedBy": "adjudicated-3way(2/3)",
+   "excerpt": "In pseudoscience, doubts and tests for possible wrongness are firmly accepted."
+  },
+  {
+   "id": "ebsi_go2_20121114_A-q32",
+   "year": 2012,
+   "kind": "vocab_error",
+   "planted": "efficient",
+   "original": "inefficient",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Adam Smith pointed out that this craft-based approach was efficient. Taking the example of a pin factory"
+  },
+  {
+   "id": "2012_06_3001254-q33",
+   "year": 2012,
+   "kind": "vocab_error",
+   "planted": "flourished",
+   "original": "declined",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Despite its long tradition in Cambodia, bokator flourished when the Khmer Rouge took power in 1975"
+  },
+  {
+   "id": "ebsi_go3_20120711-q20",
+   "year": 2012,
+   "kind": "grammar_error",
+   "planted": "speaking to",
+   "original": "spoken to",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "girls \"were not supposed to speak unless speaking to.\" Restraint in speech was valued"
+  },
+  {
+   "id": "2012_09_3008944-q33",
+   "year": 2012,
+   "kind": "vocab_error",
+   "planted": "curable",
+   "original": "incurable",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "When medical science pronounces him curable, he will not resign himself to fate but runs to the nearest quack"
+  },
+  {
+   "id": "ebsi_go3_20121009-q20",
+   "year": 2012,
+   "kind": "grammar_error",
+   "planted": "holding",
+   "original": "held",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "with a vacuum cleaner holding over the affected areas for up to twenty minutes"
+  },
+  {
+   "id": "ebsi_go3_20121009-q35",
+   "year": 2012,
+   "kind": "vocab_error",
+   "planted": "exhaling",
+   "original": "inhaling",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "placing his lips upon the handkerchief, and exhaling"
+  },
+  {
+   "id": "2012_SN_3001002-q32",
+   "year": 2012,
+   "kind": "vocab_error",
+   "planted": "slower",
+   "original": "faster",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Since this new breaststroke was about 15% slower, people using the conventional version"
+  },
+  {
+   "id": "ebsi_go1_20110310-q21",
+   "year": 2011,
+   "kind": "grammar_error",
+   "planted": "got off",
+   "original": "get off",
+   "verifiedBy": "adjudicated-3way(3/3)",
+   "excerpt": "I enjoyed the ride home and watched my fellow passengers got off at their stops."
+  },
+  {
+   "id": "ebsi_go1_20110310-q31",
+   "year": 2011,
+   "kind": "grammar_error",
+   "planted": "disagreed",
+   "original": "agreed",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "the leaders of India and Pakistan disagreed to have peace and Gandhi stopped fasting"
+  },
+  {
+   "id": "ebsi_go1_20110310-q32",
+   "year": 2011,
+   "kind": "vocab_error",
+   "planted": "uncommon",
+   "original": "ordinary",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "They are just uncommon people except that they have excellent skills in their field."
+  },
+  {
+   "id": "ebsi_go1_20110901-q20",
+   "year": 2011,
+   "kind": "grammar_error",
+   "planted": "it lost",
+   "original": "it was lost",
+   "verifiedBy": "adjudicated-3way(3/3)",
+   "excerpt": "and stone, and it lost for over 1,500 years before its accidental rediscovery"
+  },
+  {
+   "id": "ebsi_go1_20110901-q32",
+   "year": 2011,
+   "kind": "vocab_error",
+   "planted": "behind",
+   "original": "ahead of",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "In terms of language development, he was soon miles behind his age group."
+  },
+  {
+   "id": "ebsi_go1_20111115-q32",
+   "year": 2011,
+   "kind": "vocab_error",
+   "planted": "rationally",
+   "original": "emotionally",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Rather than react rationally, think about what you want to say and then say it calmly."
+  },
+  {
+   "id": "ebsi_go2_20110310-q20",
+   "year": 2011,
+   "kind": "grammar_error",
+   "planted": "would send",
+   "original": "would be sent",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Although the living supplies for the settlers would send from Earth, taking the risk"
+  },
+  {
+   "id": "ebsi_go2_20110310-q21",
+   "year": 2011,
+   "kind": "grammar_error",
+   "planted": "The truth is what",
+   "original": "The truth is that",
+   "verifiedBy": "adjudicated-3way(2/3)",
+   "excerpt": "The truth is what most people only brush their teeth for 30 to 45 seconds"
+  },
+  {
+   "id": "ebsi_go2_20110310-q31",
+   "year": 2011,
+   "kind": "grammar_error",
+   "planted": "stimulate",
+   "original": "accumulate",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Other vitamins, especially Vitamins A and D, stimulate in the body and can cause damage"
+  },
+  {
+   "id": "ebsi_go2_20110310-q32",
+   "year": 2011,
+   "kind": "vocab_error",
+   "planted": "permanent",
+   "original": "temporary",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Most people who are sensitive to caffeine experience a permanent increase in energy"
+  },
+  {
+   "id": "ebsi_go2_20110901-q20",
+   "year": 2011,
+   "kind": "grammar_error",
+   "planted": "a system is developed by Northwestern University",
+   "original": "a system developed by Northwestern University",
+   "verifiedBy": "adjudicated-3way(2/3)",
+   "excerpt": "News At Seven, a system is developed by Northwestern University that"
+  },
+  {
+   "id": "ebsi_go2_20110901-q31",
+   "year": 2011,
+   "kind": "vocab_error",
+   "planted": "maintain",
+   "original": "change",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Students who misbehaved feel empowered to maintain the behavior when they have"
+  },
+  {
+   "id": "ebsi_go2_20111115-q20",
+   "year": 2011,
+   "kind": "grammar_error",
+   "planted": "satisfied",
+   "original": "satisfying",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "The gift of time can sometimes be more satisfied and more valuable than money."
+  },
+  {
+   "id": "ebsi_go2_20111115-q32",
+   "year": 2011,
+   "kind": "vocab_error",
+   "planted": "lower",
+   "original": "higher",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "People who decorate their offices tend to have lower levels of job satisfaction."
+  },
+  {
+   "id": "2011_06_3001235-q21",
+   "year": 2011,
+   "kind": "grammar_error",
+   "planted": "himself",
+   "original": "him",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "preserve the myth of their guest's perfection and keep himself from any embarrassment"
+  },
+  {
+   "id": "2011_06_3001235-q31",
+   "year": 2011,
+   "kind": "vocab_error",
+   "planted": "unselfish",
+   "original": "selfish",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "views of the free graces of Nature was unselfish and undemocratic"
+  },
+  {
+   "id": "ebsi_go3_20110713-q20",
+   "year": 2011,
+   "kind": "grammar_error",
+   "planted": "whose",
+   "original": "that",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "The animals whose prey on zebras are busiest during the cool hours of sunrise and sunset."
+  },
+  {
+   "id": "2011_09_3001251-q32",
+   "year": 2011,
+   "kind": "vocab_error",
+   "planted": "well",
+   "original": "badly",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "But because of their reliance on shared assumptions, most jokes travel very well."
+  },
+  {
+   "id": "ebsi_go3_20111012-q21",
+   "year": 2011,
+   "kind": "grammar_error",
+   "planted": "competitively",
+   "original": "competitive",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "placing a premium on high skills that make workers more competitively, it increases income"
+  },
+  {
+   "id": "ebsi_go3_20111012-q29",
+   "year": 2011,
+   "kind": "vocab_error",
+   "planted": "changeable",
+   "original": "unchangeable",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Dunbar went on to say that this number has been changeable throughout human history."
+  },
+  {
+   "id": "2011_SN_3000996-q32",
+   "year": 2011,
+   "kind": "vocab_error",
+   "planted": "neglects",
+   "original": "enhances",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Teach yourself to use your camera in a way that neglects your ongoing experiences"
+  },
+  {
+   "id": "ebsi_go1_20100310-q21",
+   "year": 2010,
+   "kind": "grammar_error",
+   "planted": "exact",
+   "original": "exactly",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Just like people, no two places can be exact alike."
+  },
+  {
+   "id": "ebsi_go1_20100310-q31",
+   "year": 2010,
+   "kind": "grammar_error",
+   "planted": "attack",
+   "original": "attract",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "clothing with bright colors or flowery prints which are known to attack insects"
+  },
+  {
+   "id": "ebsi_go1_20100616-q22",
+   "year": 2010,
+   "kind": "grammar_error",
+   "planted": "what",
+   "original": "whom",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "he gathered a group of intelligent followers what he trained in several subjects"
+  },
+  {
+   "id": "ebsi_go1_20100916-q22",
+   "year": 2010,
+   "kind": "grammar_error",
+   "planted": "sharing",
+   "original": "shared",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Information and knowledge are open and sharing rather than protected and controlled."
+  },
+  {
+   "id": "ebsi_go1_20100916-q31",
+   "year": 2010,
+   "kind": "grammar_error",
+   "planted": "tax cut",
+   "original": "tax cuts",
+   "verifiedBy": "adjudicated-3way(3/3)",
+   "excerpt": "Under the law, companies may get tax cut and sell the drugs without competition"
+  },
+  {
+   "id": "ebsi_go1_20101123-q30",
+   "year": 2010,
+   "kind": "vocab_error",
+   "planted": "shorter",
+   "original": "longer",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "The diving suit for cave divers is usually shorter than recreational divers'."
+  },
+  {
+   "id": "ebsi_go2_20100311-q21",
+   "year": 2010,
+   "kind": "grammar_error",
+   "planted": "some people still use it to describe",
+   "original": "some people still use to describe",
+   "verifiedBy": "adjudicated-3way(2/3)",
+   "excerpt": "an old-fashioned term that some people still use it to describe a physical educator"
+  },
+  {
+   "id": "ebsi_go2_20100311-q22",
+   "year": 2010,
+   "kind": "grammar_error",
+   "planted": "will not accept",
+   "original": "will not be accepted",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "This attitude, however, will not accept in Italy, where coffee is only a breakfast drink."
+  },
+  {
+   "id": "ebsi_go2_20100311-q31",
+   "year": 2010,
+   "kind": "grammar_error",
+   "planted": "reproduce",
+   "original": "reduce",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "on store shelves that promise to reproduce germs without the addition of running water"
+  },
+  {
+   "id": "ebsi_go3_20100708-q22",
+   "year": 2010,
+   "kind": "grammar_error",
+   "planted": "while",
+   "original": "during",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "The dummy's job is to simulate a human being while a crash, collecting data"
+  },
+  {
+   "id": "ebsi_go3_20101012-q20",
+   "year": 2010,
+   "kind": "grammar_error",
+   "planted": "which",
+   "original": "that",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "increase the likelihood which members of the target market will be exposed to it"
+  },
+  {
+   "id": "ebsi_go3_20101012-q32",
+   "year": 2010,
+   "kind": "vocab_error",
+   "planted": "accept",
+   "original": "challenge",
+   "verifiedBy": "adjudicated-3way(3/3)",
+   "excerpt": "women began to accept these myths, proving that they belonged in sports"
+  },
+  {
+   "id": "ebsi_go1_20090311-q22",
+   "year": 2009,
+   "kind": "grammar_error",
+   "planted": "received",
+   "original": "receiving",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Right after finishing his program and received his degree, Martin moved to Boulder."
+  },
+  {
+   "id": "ebsi_go1_20090917-q20",
+   "year": 2009,
+   "kind": "grammar_error",
+   "planted": "to come",
+   "original": "come",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "How could he make their Christmas wish to come true?"
+  },
+  {
+   "id": "ebsi_go1_20091118-q22",
+   "year": 2009,
+   "kind": "grammar_error",
+   "planted": "lately",
+   "original": "late",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "I had to call because I'm going to be a little lately getting home."
+  },
+  {
+   "id": "ebsi_go2_20090312-q22",
+   "year": 2009,
+   "kind": "grammar_error",
+   "planted": "their",
+   "original": "whose",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "The violinists and pianists their names you've heard regularly earn between"
+  },
+  {
+   "id": "ebsi_go2_20090618-q22",
+   "year": 2009,
+   "kind": "grammar_error",
+   "planted": "resulted",
+   "original": "resulting",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Pollution and fossil fuels have given us global warming, resulted in extreme weathers."
+  },
+  {
+   "id": "ebsi_go2_20090918-q22",
+   "year": 2009,
+   "kind": "grammar_error",
+   "planted": "frustrating",
+   "original": "frustrated",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "she often ran home with her ball after she grew frustrating with the negative attitudes"
+  },
+  {
+   "id": "ebsi_go2_20091117-q20",
+   "year": 2009,
+   "kind": "grammar_error",
+   "planted": "themselves",
+   "original": "itself",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "no reason why any e-commerce enterprise should limit themselves to marketing"
+  },
+  {
+   "id": "ebsi_go2_20091117-q28",
+   "year": 2009,
+   "kind": "vocab_error",
+   "planted": "cultivate",
+   "original": "circulate",
+   "verifiedBy": "adjudicated-3way(2/3)",
+   "excerpt": "the heart was simply a natural pump to cultivate the nourishment of the blood"
+  },
+  {
+   "id": "ebsi_go3_20091015-q20",
+   "year": 2009,
+   "kind": "grammar_error",
+   "planted": "defenselessly",
+   "original": "defenseless",
+   "verifiedBy": "official-solution(EBSi 해설지)"
+  },
+  {
+   "id": "2008_06_3001212-q22",
+   "year": 2008,
+   "kind": "grammar_error",
+   "planted": "during",
+   "original": "for",
+   "verifiedBy": "adjudicated-3way(3/3)",
+   "excerpt": "you will always relax during one full evening. You will work better"
+  },
+  {
+   "id": "2008_09_3001186-q28",
+   "year": 2008,
+   "kind": "vocab_error",
+   "planted": "direct",
+   "original": "indirect",
+   "verifiedBy": "adjudicated-3way(3/3)",
+   "excerpt": "And eventually this will have a direct effect on the life of man, too."
+  },
+  {
+   "id": "2008_09_3001186-q29",
+   "year": 2008,
+   "kind": "vocab_error",
+   "planted": "increase",
+   "original": "decrease",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "It results in an increase in the distance between the top of her head"
+  },
+  {
+   "id": "2007_06_3001177-q35",
+   "year": 2007,
+   "kind": "vocab_error",
+   "planted": "loosens",
+   "original": "stiffens",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "made of a special material that loosens in response to quick movements or impacts"
+  },
+  {
+   "id": "2007_09_3001172-q28",
+   "year": 2007,
+   "kind": "vocab_error",
+   "planted": "characteristic",
+   "original": "momentary",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "impressionistic art, inspired by the characteristic images of natural objects"
+  },
+  {
+   "id": "ebsi_go1_20060309-q20",
+   "year": 2006,
+   "kind": "grammar_error",
+   "planted": "is keeping",
+   "original": "is kept",
+   "verifiedBy": "adjudicated-3way(2/3)",
+   "excerpt": "Paper also is keeping separate. The plastic, metal, and paper are taken"
+  },
+  {
+   "id": "ebsi_go1_20060601-q21",
+   "year": 2006,
+   "kind": "grammar_error",
+   "planted": "that",
+   "original": "which",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Its name is Winter Queen Gamma 3, that is a kind of begonia."
+  },
+  {
+   "id": "ebsi_go1_20061121-q22",
+   "year": 2006,
+   "kind": "grammar_error",
+   "planted": "frustrated",
+   "original": "frustrating",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "It can be very frustrated to people who want to speak to an actual person"
+  },
+  {
+   "id": "ebsi_go1_20061121-q31",
+   "year": 2006,
+   "kind": "grammar_error",
+   "planted": "millions",
+   "original": "million",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Most dinosaurs have been extinct for about 65 millions years."
+  },
+  {
+   "id": "ebsi_go1_20061121-q35",
+   "year": 2006,
+   "kind": "vocab_error",
+   "planted": "straightened",
+   "original": "bent",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "In this position, the straightened right elbow and right knee should not quite touch."
+  },
+  {
+   "id": "ebsi_go2_20060602-q21",
+   "year": 2006,
+   "kind": "grammar_error",
+   "planted": "rapidly",
+   "original": "rapid",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "As a foreign student, you may encounter language problems in America. Spoken English may sound very rapidly."
+  },
+  {
+   "id": "2006_09_3001166-q28",
+   "year": 2006,
+   "kind": "vocab_error",
+   "planted": "abundant",
+   "original": "scarce",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "As oil becomes abundant, the pressure is on to find new technologies to unlock"
+  },
+  {
+   "id": "2006_SN_3000977-q30",
+   "year": 2006,
+   "kind": "vocab_error",
+   "planted": "enhance",
+   "original": "eliminate",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "This will, in some cases, enhance subtle information about light versus dark"
+  }
+ ],
+ "failed": [],
+ "ambiguous": [
+  {
+   "id": "ebsi_go3_20260324-q29",
+   "year": 2026,
+   "kind": "grammar_error",
+   "planted": "which",
+   "original": "in which",
+   "verifiedBy": "official-solution(EBSi 해설지)",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go1_20250604-q29",
+   "year": 2025,
+   "kind": "grammar_error",
+   "planted": "having",
+   "original": "have",
+   "verifiedBy": "official-solution(EBSi 해설지)",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go2_20250326-q29",
+   "year": 2025,
+   "kind": "grammar_error",
+   "planted": "does",
+   "original": "do",
+   "verifiedBy": "official-solution(EBSi 해설지)",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go3_20251014-q29",
+   "year": 2025,
+   "kind": "grammar_error",
+   "planted": "which",
+   "original": "through which",
+   "verifiedBy": "official-solution(EBSi 해설지)",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go1_20240904-q29",
+   "year": 2024,
+   "kind": "grammar_error",
+   "planted": "which",
+   "original": "where",
+   "verifiedBy": "official-solution(EBSi 해설지)",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go2_20240604-q29",
+   "year": 2024,
+   "kind": "grammar_error",
+   "planted": "smiling",
+   "original": "smile",
+   "verifiedBy": "official-solution(EBSi 해설지)",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go2_20240904-q29",
+   "year": 2024,
+   "kind": "grammar_error",
+   "planted": "make",
+   "original": "to make",
+   "verifiedBy": "official-solution(EBSi 해설지)",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go1_20230323-q29",
+   "year": 2023,
+   "kind": "grammar_error",
+   "planted": "are",
+   "original": "is",
+   "verifiedBy": "official-solution(EBSi 해설지)",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go1_20230906-q29",
+   "year": 2023,
+   "kind": "grammar_error",
+   "planted": "themselves",
+   "original": "them",
+   "verifiedBy": "official-solution(EBSi 해설지)",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go2_20230906-q29",
+   "year": 2023,
+   "kind": "grammar_error",
+   "planted": "reach",
+   "original": "to reach",
+   "verifiedBy": "official-solution(EBSi 해설지)",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go1_20221123-q29",
+   "year": 2022,
+   "kind": "grammar_error",
+   "planted": "are",
+   "original": "do",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "will know more about you than your closest friends and family members are",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go1_20221123-q30",
+   "year": 2022,
+   "kind": "vocab_error",
+   "planted": "faster",
+   "original": "more slowly",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Therefore, the lower side of the root will grow faster than the upper side.",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go1_20220901-q29",
+   "year": 2022,
+   "kind": "grammar_error",
+   "planted": "has",
+   "original": "have",
+   "verifiedBy": "official-solution(EBSi 해설지)",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go1_20210325-q29",
+   "year": 2021,
+   "kind": "grammar_error",
+   "planted": "are",
+   "original": "is",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Finding different ways to produce sounds are an important stage of musical exploration.",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go1_20210831-q29",
+   "year": 2021,
+   "kind": "grammar_error",
+   "planted": "which",
+   "original": "in which",
+   "verifiedBy": "official-solution(EBSi 해설지)",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go2_20210325-q29",
+   "year": 2021,
+   "kind": "grammar_error",
+   "planted": "which",
+   "original": "in which",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "as effective as inclusivity, which everyone's ideas are heard and a solution is developed",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "2021_09_5050886-q30",
+   "year": 2021,
+   "kind": "vocab_error",
+   "planted": "inappropriate",
+   "original": "appropriate",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "to ensure that these are replaced by inappropriate thoughts",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "2021_09_5050886-q41-42",
+   "year": 2021,
+   "kind": "vocab_error",
+   "planted": "close",
+   "original": "little",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "the author intended probably bears close correspondence to his original intention",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "2021_SN_5061633-q41-42",
+   "year": 2021,
+   "kind": "vocab_error",
+   "planted": "complex",
+   "original": "simple",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "In reality, the ant may be using a set of very complex rules: it is the interaction",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go2_20200916-q30",
+   "year": 2020,
+   "kind": "vocab_error",
+   "planted": "believe",
+   "original": "challenge",
+   "verifiedBy": "official-solution(EBSi 해설지)+span-anchored",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go2_20190904-q29",
+   "year": 2019,
+   "kind": "grammar_error",
+   "planted": "which",
+   "original": "for which",
+   "verifiedBy": "official-solution(EBSi 해설지)",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go3_20190710-q28",
+   "year": 2019,
+   "kind": "grammar_error",
+   "planted": "leads",
+   "original": "lead",
+   "verifiedBy": "official-solution(EBSi 해설지)",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go3_20180711-q28",
+   "year": 2018,
+   "kind": "grammar_error",
+   "planted": "which",
+   "original": "from which",
+   "verifiedBy": "official-solution(EBSi 해설지)",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go2_20170309-q28",
+   "year": 2017,
+   "kind": "grammar_error",
+   "planted": "being",
+   "original": "be",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "must not only have commercial value, but being very competently written",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go3_20171017-q28",
+   "year": 2017,
+   "kind": "grammar_error",
+   "planted": "which",
+   "original": "that",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "with a lawyer, which the latter will not disclose to third parties the information",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go1_20160901-q28",
+   "year": 2016,
+   "kind": "grammar_error",
+   "planted": "become",
+   "original": "becomes",
+   "verifiedBy": "official-solution(EBSi 해설지)+span-anchored",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go2_20160310-q28",
+   "year": 2016,
+   "kind": "grammar_error",
+   "planted": "what",
+   "original": "that",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "When it became clear to me what no doctor could answer my basic questions",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go2_20160901-q28",
+   "year": 2016,
+   "kind": "grammar_error",
+   "planted": "is",
+   "original": "does",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "It not only cleans clothes, but it is so with far less water, detergent, and energy",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go2_20150604-q28",
+   "year": 2015,
+   "kind": "grammar_error",
+   "planted": "paid",
+   "original": "are paid",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "high school football coaches are typically teachers who paid a little extra",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go2_20141118_A-q27",
+   "year": 2014,
+   "kind": "grammar_error",
+   "planted": "which",
+   "original": "in which",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "a practice known as 'pure talk' which they debated spiritual and philosophical issues",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go1_20130903-q27",
+   "year": 2013,
+   "kind": "grammar_error",
+   "planted": "are",
+   "original": "do",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "do not make sound decisions as well as are grateful people. This includes",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go3_20131008_B-q27",
+   "year": 2013,
+   "kind": "grammar_error",
+   "planted": "have",
+   "original": "has",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "developed economies, have food become so plentiful and easy to obtain as to cause",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go1_20120607-q24",
+   "year": 2012,
+   "kind": "grammar_error",
+   "planted": "realized",
+   "original": "realize",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "allowed Greg to have a different point of view and realized that he didn't have to be perfect",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go1_20121114-q27",
+   "year": 2012,
+   "kind": "grammar_error",
+   "planted": "which",
+   "original": "in which",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "We all like to watch people in situations which we ourselves might be pressured.",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go2_20120607_A-q24",
+   "year": 2012,
+   "kind": "grammar_error",
+   "planted": "must do",
+   "original": "must be done",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "but no matter how much we hate it, it must do sooner or later",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go2_20121114_B-q27",
+   "year": 2012,
+   "kind": "grammar_error",
+   "planted": "that",
+   "original": "what",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Together, these impressions prompted that he called a \"sixth sense of danger.\"",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go1_20111115-q20",
+   "year": 2011,
+   "kind": "grammar_error",
+   "planted": "what",
+   "original": "whether",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "Dogs can tell what you like them or not. If you like them, they like you back.",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go1_20100310-q22",
+   "year": 2010,
+   "kind": "grammar_error",
+   "planted": "that",
+   "original": "if",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "I met my wife and son and asked that they knew who was shouting encouragement",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go1_20101123-q22",
+   "year": 2010,
+   "kind": "grammar_error",
+   "planted": "is",
+   "original": "are",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "the milestones on the road to success is always the failures.",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go2_20100617-q22",
+   "year": 2010,
+   "kind": "grammar_error",
+   "planted": "made",
+   "original": "are made",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "These robots made of a synthetic compound designed to be flexible in the tail",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go2_20101124-q22",
+   "year": 2010,
+   "kind": "grammar_error",
+   "planted": "which",
+   "original": "in which",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "It features sports like sky surfing which people jump from airplanes with",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go2_20101124-q30",
+   "year": 2010,
+   "kind": "vocab_error",
+   "planted": "up",
+   "original": "down",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "If a filled square is encountered, one moves vertically up one square instead",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go1_20090617-q22",
+   "year": 2009,
+   "kind": "grammar_error",
+   "planted": "are",
+   "original": "is",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "One of the numerous reasons fans kept coming back are that the characters",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go3_20090714-q22",
+   "year": 2009,
+   "kind": "grammar_error",
+   "planted": "that you can be thankful",
+   "original": "that you can be thankful for",
+   "verifiedBy": "adjudicated-3way(2/3)",
+   "excerpt": "find something special about each day that you can be thankful.",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "2008_06_3001212-q29",
+   "year": 2008,
+   "kind": "vocab_error",
+   "planted": "front",
+   "original": "rear",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "while the front triangle consists of the seat tube, chain stays, and seat stays.",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  },
+  {
+   "id": "ebsi_go2_20060310-q21",
+   "year": 2006,
+   "kind": "grammar_error",
+   "planted": "moving",
+   "original": "move",
+   "verifiedBy": "dual-convergence+gate",
+   "excerpt": "his or her arms and legs moving in a specific way in relation to his or her body",
+   "why": "original·planted 가 모두 존재 — 다른 자리의 동형어일 수 있다"
+  }
+ ],
+ "notes": [
+  {
+   "id": "ebsi_go1_20251014-q29",
+   "kind": "grammar_error",
+   "note": "지문이 문장 중간('we are')에서 절단됨(hint TRUNC_END/SHORT 일치). 원문 없이는 복구 불가 → flag-only. hasDeliberateError=true는 grammar_error 메타로 정상."
+  },
+  {
+   "id": "ebsi_go2_20231219-q30",
+   "kind": "vocab_error",
+   "note": "문장 중간에서 끊김(\"...does not\"). 어휘유형 vocab_error 본문이 미완성으로 절단됨; 원문 없이는 복구 불가. hint TRUNC_END+SHORT:30 일치. hasDeliberateError=true는 적절(어휘유형)."
+  },
+  {
+   "id": "ebsi_go3_20230711-q30",
+   "kind": "vocab_error",
+   "note": "지문이 문장 중간 'making mechanical processing far'에서 절단됨(hint TRUNC_END/SHORT:27). 원문 없이는 복구 불가. recon=vocab_error, hasDeliberateError=true는 정상(메타 이상 없음)."
+  },
+  {
+   "id": "ebsi_go3_20220706-q30",
+   "kind": "vocab_error",
+   "note": "문장 중간에서 끝남('not the'에서 절단). 원문 없이는 복구 불가. recon=vocab_error/hasDeliberateError=true이며 어휘 인쇄원문 유지지만 본문이 미완결."
+  },
+  {
+   "id": "ebsi_go1_20200312-q37",
+   "kind": "insertion",
+   "note": "지문이 소문자 'we have so many metaphors...'로 문장 중간에서 시작; 앞 절이 잘림(복구 불가). 본문 내 'In the U.S. We think'의 부자연스러운 단절도 동일 절단의 흔적으로 의심"
+  },
+  {
+   "id": "ebsi_go1_20190904-q30",
+   "kind": "vocab_error",
+   "note": "문장 중간(빈칸 직전)에서 절단됨; 원문 없이는 복구 불가. recon=vocab_error/hasDeliberateError=true는 적절"
+  },
+  {
+   "id": "ebsi_go2_20190904-q30",
+   "kind": "vocab_error",
+   "note": "어휘(vocab_error) 지문이 'a powerful'에서 문장 중간 절단됨; 원문 없이는 복구 불가. hint TRUNC_END와 일치. vocab_error 유형이므로 hasDeliberateError=true는 적절(메타 이상 없음)."
+  },
+  {
+   "id": "ebsi_go2_20160310-q30",
+   "kind": "none",
+   "note": "지문이 'had bought'에서 목적어 없이 문장 중간 절단(SHORT:22, 22단어). 원문 없이는 복구 불가."
+  },
+  {
+   "id": "ebsi_go3_20130712_B-q31",
+   "kind": "blank",
+   "note": "빈칸 복원 결과가 여러 곳에서 비문/누락(individual for ownership / As our say possessions / usage has and more value / what's the ours). OCR·복원 손상으로 의미가 이어지지 않으나 원문 없이는 수술적 복구 불가 — 창작 금지, 보고만."
+  },
+  {
+   "id": "ebsi_go3_20130712_B-q33",
+   "kind": "blank",
+   "note": "빈칸 자리 비문: 'plans every aspect'(전치사 누락)와 'Planning experts, who recommend strategic agility, managers need to balance'(주절 구조 붕괴). 복원이 문법적으로 자연스럽지 않음. 원문 없이 수술적 복구 불가 — 보고만."
+  },
+  {
+   "id": "ebsi_go3_20130712_B-q34",
+   "kind": "blank",
+   "note": "빈칸 복원 결과로 보이는 문장이 미완성: 'thinking that their luck.' 뒤에 동사/술부가 없어 의미가 끊김(원문은 'their luck will change/turn' 류로 추정). 원문 없이는 복구 불가 → 창작 금지, 표시만."
+  },
+  {
+   "id": "ebsi_go1_20120314-q27",
+   "kind": "grammar_error",
+   "note": "문장이 마침표 없이 'performing tricks'에서 끊김(hint TRUNC_END·SHORT:29). 매우 짧은 본문(2문장)이며 어법 의도오류 보유 유형인데 본문이 미완결로 절단됨. 원문 없이 복구 불가."
+  },
+  {
+   "id": "ebsi_go2_20121114_A-q39",
+   "kind": "insertion",
+   "note": "맨 앞이 소문자 'shouted the children.' 으로 시작 — 앞 인용 발화가 잘림. 원문 없이는 복구 불가 (hint=TRUNC_START)"
+  },
+  {
+   "id": "ebsi_go1_20110310-q28",
+   "kind": "blank",
+   "note": "빈칸(blank) 복원 결과 마지막 문장이 'When it goes back to normal, it.'으로 끝나 술어부(정답 빈칸 표현)가 비어 비문. 원문 없이는 복구 불가하여 창작 금지 — flag만."
+  },
+  {
+   "id": "2011_06_3001235-q46-47-48",
+   "kind": "order",
+   "note": "order 복원의 문단 순서가 시간 흐름상 어색함: '아버지가 된 지금' 단락(미래 회고)이 본래 학창시절 서사('아버지의 반응에 분개해 열심히 공부')보다 앞에 배치되어 내러티브가 끊긴 뒤 다시 과거로 돌아감. 원문 없이 재배열 불가하여 보고만. 명시적 누출 텍스트는 없음(hint LEAK_META_ANY는 본문에서 확인되지 않음)."
+  },
+  {
+   "id": "ebsi_go3_20111012-q27",
+   "kind": "blank",
+   "note": "빈칸(blank) 복원 결함: 'the parasite' 뒤의 술어동사가 누락되어 문장이 비문(주어+부사구만 존재, 주동사 없음). 원래 빈칸에 들어갈 동사(예: acts/operates)를 알 수 없어 창작 없이는 복구 불가 → flag-only."
+  },
+  {
+   "id": "ebsi_go1_20100310-q24",
+   "kind": "blank",
+   "note": "빈칸 복원 의미 모순: 지문 전체가 'TV 시청→정크푸드 광고에 끌림→집에만 있고 운동 부족(부정적)'을 논증하는데 빈칸이 긍정적 'diligent(부지런한)'로 채워져 논리가 깨짐. 원문 없이 정확한 표현(예: overweight/lazy) 복구 불가하여 표시만 함"
+  },
+  {
+   "id": "ebsi_go1_20100310-q32",
+   "kind": "blank",
+   "note": "연결어 빈칸 복원 의심: '믿음 vs 과학적 증거 없음'은 역접(However/In reality)을 요구하나 인과 'As a result'가 들어가 흐름이 어색. 확신 낮아 보고만 함"
+  },
+  {
+   "id": "ebsi_go1_20090311-q24",
+   "kind": "blank",
+   "note": "recon=blank이나 빈칸이 채워지지 않음: 'which will ___ the person'에서 동사(정답 계열, 예: punish)가 누락되어 문장이 비문법적. 원문 없이 복구 불가이므로 창작 금지, 표시만."
+  },
+  {
+   "id": "ebsi_go1_20090311-q25",
+   "kind": "blank",
+   "note": "recon=blank이나 빈칸 미충원: 'the benefits of ___.'에서 빈칸 명사구가 누락되어 'of.'로 문장이 끊김. 복구 불가, 표시만."
+  },
+  {
+   "id": "ebsi_go1_20090311-q26",
+   "kind": "blank",
+   "note": "recon=blank이나 빈칸 미충원: 'dinosaurs and modern reptiles ___.'에서 술어부가 누락되어 문장이 불완전. 복구 불가, 표시만."
+  },
+  {
+   "id": "ebsi_go1_20090917-q19",
+   "kind": "none",
+   "note": "문장 중간 절단(SHORT:25), 'feel like'에서 끊김; 원문 없이 복구 불가"
+  },
+  {
+   "id": "2008_06_3001212-q40",
+   "kind": "insertion",
+   "note": "insertion 복원: '...went down to the company library.' 다음에 'The article'이 선행 도입 없이 갑자기 등장(삽입문이 article을 소개하는 문장이었을 가능성). 흐름 단절 의심이나 원문 없이 복구 불가 → 보고만, 창작 금지."
+  }
+ ],
+ "cleanVerified": [
+  "2027_06_5095396-q29",
+  "2026_06_5090182-q29",
+  "2026_09_5091403-q29",
+  "2026_SN_5093799-q29",
+  "ebsi_go1_20251014-q29",
+  "ebsi_go2_20250604-q30",
+  "2025_06_5086961-q29",
+  "2025_09_5087695-q29",
+  "2025_SN_5089362-q29",
+  "2024_06_5084521-q29",
+  "2024_06_5084521-q30",
+  "ebsi_go3_20240711-q30",
+  "2024_09_5085155-q29",
+  "2024_SN_5086091-q29",
+  "ebsi_go2_20231219-q30",
+  "2023_06_5076592-q29",
+  "2023_06_5076592-q41-42",
+  "ebsi_go3_20230711-q30",
+  "2023_09_5077481-q29",
+  "2023_SN_5080827-q29",
+  "2022_06_5063572-q29",
+  "ebsi_go3_20220706-q30",
+  "2022_09_5064693-q29",
+  "2022_SN_5070164-q29",
+  "2021_06_5049916-q29",
+  "2021_09_5050886-q29",
+  "2021_SN_5061633-q29",
+  "ebsi_go1_20200618-q30",
+  "ebsi_go1_20200916-q30",
+  "ebsi_go1_20201118-q30",
+  "ebsi_go2_20201118-q30",
+  "2020_06_5037373-q29",
+  "2020_09_5038442-q29",
+  "2020_SN_5045859-q29",
+  "ebsi_go1_20190307-q29",
+  "ebsi_go1_20190604-q30",
+  "ebsi_go1_20190904-q30",
+  "ebsi_go1_20191120-q30",
+  "ebsi_go2_20190604-q30",
+  "ebsi_go2_20190904-q30",
+  "ebsi_go3_20190710-q29",
+  "2019_09_5024244-q29",
+  "2019_09_5024244-q30",
+  "2019_SN_5031122-q29",
+  "2019_SN_5031122-q43-44-45",
+  "ebsi_go1_20180607-q29",
+  "ebsi_go1_20181121-q29",
+  "ebsi_go2_20180607-q28",
+  "2018_06_5013302-q28",
+  "2018_06_5013302-q29",
+  "ebsi_go3_20180711-q29",
+  "2018_09_5014608-q28",
+  "2018_09_5014608-q29",
+  "2018_SN_5019793-q28",
+  "ebsi_go1_20170906-q29",
+  "ebsi_go1_20171122-q29",
+  "2017_06_5005813-q28",
+  "2017_06_5005813-q29",
+  "2017_SN_5008710-q28",
+  "2017_SN_5008710-q29",
+  "ebsi_go1_20160310-q29",
+  "ebsi_go1_20160602-q28",
+  "ebsi_go1_20160602-q29",
+  "ebsi_go1_20161123-q29",
+  "ebsi_go2_20160310-q29",
+  "ebsi_go2_20160602-q29",
+  "ebsi_go2_20160901-q29",
+  "ebsi_go2_20161123-q29",
+  "2016_06_3033341-q28",
+  "2016_06_3033341-q29",
+  "ebsi_go3_20160706-q29",
+  "2016_09_5000516-q28",
+  "2016_SN_5001717-q28",
+  "2016_SN_5001717-q29",
+  "ebsi_go1_20150311-q30",
+  "ebsi_go1_20150604-q29",
+  "ebsi_go1_20150902-q30",
+  "ebsi_go1_20151117-q29",
+  "ebsi_go2_20150311_A-q30",
+  "ebsi_go2_20150902-q30",
+  "ebsi_go2_20151117-q28",
+  "ebsi_go2_20151117-q29",
+  "ebsi_go3_20150409_A-q28",
+  "2015_06_3026346-q27",
+  "2015_06_3026346-q28",
+  "2015_09_3027897-q28",
+  "2015_SN_3029607-q28",
+  "2015_SN_3029607-q30",
+  "ebsi_go1_20140312-q24",
+  "ebsi_go1_20140312-q26",
+  "ebsi_go1_20140612-q25",
+  "ebsi_go1_20140903-q28",
+  "ebsi_go1_20141118-q27",
+  "ebsi_go2_20140312-q24",
+  "ebsi_go2_20141118_A-q28",
+  "2014_YB_5006654_B-q27",
+  "2014_YB_5006654_A-q31",
+  "2014_06_3018186_A-q27",
+  "2014_06_3018186_B-q27",
+  "2014_06_3018186_A-q28",
+  "2014_06_3018186_B-q28",
+  "2014_09_3020142_A-q27",
+  "2014_09_3020142_B-q27",
+  "2014_SN_3022252_A-q27",
+  "2014_SN_3022251_B-q27",
+  "2014_SN_3022252_A-q28",
+  "ebsi_go1_20131114-q27",
+  "ebsi_go2_20130903_A-q31",
+  "ebsi_go2_20131114-q28",
+  "2013_06_3008953-q20",
+  "2013_06_3008953-q21",
+  "2013_06_3008953-q31",
+  "ebsi_go3_20130712_A-q31",
+  "2013_09_3011547-q20",
+  "2013_09_3011547-q21",
+  "2013_09_3011547-q32",
+  "2013_SN_3014708-q20",
+  "2013_SN_3014708-q21",
+  "2013_SN_3014708-q31",
+  "ebsi_go1_20120314-q27",
+  "ebsi_go1_20120607-q33",
+  "ebsi_go1_20121114-q28",
+  "ebsi_go2_20120314-q25",
+  "ebsi_go2_20120314-q34",
+  "2012_06_3001254-q20",
+  "2012_06_3001254-q21",
+  "2012_06_3001254-q32",
+  "ebsi_go3_20120711-q21",
+  "ebsi_go3_20120711-q33",
+  "2012_09_3008944-q20",
+  "2012_09_3008944-q21",
+  "2012_09_3008944-q32",
+  "2012_SN_3001002-q20",
+  "2012_SN_3001002-q21",
+  "2012_SN_3001002-q33",
+  "ebsi_go1_20110901-q21",
+  "ebsi_go1_20110901-q31",
+  "ebsi_go1_20111115-q21",
+  "ebsi_go2_20110901-q32",
+  "2011_06_3001235-q20",
+  "2011_06_3001235-q32",
+  "ebsi_go3_20110713-q21",
+  "ebsi_go3_20110713-q31",
+  "2011_09_3001251-q20",
+  "2011_09_3001251-q21",
+  "2011_09_3001251-q31",
+  "2011_SN_3000996-q20",
+  "2011_SN_3000996-q21",
+  "2011_SN_3000996-q31",
+  "ebsi_go1_20100616-q21",
+  "ebsi_go1_20100616-q29",
+  "ebsi_go1_20100916-q21",
+  "ebsi_go2_20100617-q21",
+  "ebsi_go2_20100617-q31",
+  "ebsi_go2_20101124-q21",
+  "2010_06_3001224-q20",
+  "2010_06_3001224-q21",
+  "2010_06_3001224-q28",
+  "2010_09_3001242-q21",
+  "2010_09_3001242-q22",
+  "2010_09_3001242-q29",
+  "2010_SN_3000962-q21",
+  "2010_SN_3000962-q22",
+  "2010_SN_3000962-q31",
+  "ebsi_go1_20090617-q21",
+  "ebsi_go1_20090617-q28",
+  "ebsi_go1_20090917-q21",
+  "ebsi_go1_20090917-q28",
+  "ebsi_go1_20091118-q21",
+  "ebsi_go1_20091118-q28",
+  "ebsi_go2_20090618-q21",
+  "ebsi_go2_20090618-q28",
+  "ebsi_go2_20090918-q29",
+  "ebsi_go2_20091117-q21",
+  "2009_06_3001198-q21",
+  "2009_06_3001198-q22",
+  "2009_06_3001198-q28",
+  "2009_09_3001204-q20",
+  "2009_09_3001204-q21",
+  "2009_09_3001204-q27",
+  "2009_SN_3000950-q22",
+  "2009_SN_3000950-q28",
+  "2008_06_3001212-q21",
+  "2008_06_3001212-q28",
+  "2008_09_3001186-q21",
+  "2008_09_3001186-q22",
+  "2008_SN_3000991-q21",
+  "2008_SN_3000991-q22",
+  "2008_SN_3000991-q28",
+  "2007_06_3001177-q21",
+  "2007_06_3001177-q22",
+  "2007_06_3001177-q34",
+  "2007_09_3001172-q21",
+  "2007_09_3001172-q22",
+  "2007_SN_3000983-q22",
+  "2007_SN_3000983-q23",
+  "2007_SN_3000983-q30",
+  "ebsi_go1_20060309-q21",
+  "ebsi_go1_20060309-q31",
+  "ebsi_go1_20061121-q23",
+  "ebsi_go2_20060310-q31",
+  "2006_06_3001159-q21",
+  "2006_06_3001159-q22",
+  "2006_06_3001159-q27",
+  "2006_09_3001166-q21",
+  "2006_09_3001166-q22",
+  "2006_09_3001166-q29",
+  "2006_SN_3000977-q20",
+  "2006_SN_3000977-q21",
+  "2006_SN_3000977-q31",
+  "2005_YB_5006647-q29",
+  "2005_YB_5006647-q30",
+  "2005_YB_5006647-q36",
+  "2005_06_3001149-q28",
+  "2005_06_3001149-q29",
+  "2005_06_3001149-q30",
+  "2005_09_3001156-q20",
+  "2005_09_3001156-q29",
+  "2005_09_3001156-q31",
+  "2005_SN_3000969-q20",
+  "2005_SN_3000969-q21",
+  "2005_SN_3000969-q22",
+  "2005_SN_3000969-q23",
+  "2005_SN_3000969-q24",
+  "2004_06_3001194-q29",
+  "2004_06_3001194-q30",
+  "2004_09_3001221-q26",
+  "2004_09_3001221-q28",
+  "2004_09_3001221-q32",
+  "2003_YB_3009745-q29",
+  "2003_YB_3009745-q30"
+ ]
+}

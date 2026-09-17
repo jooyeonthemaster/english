@@ -451,5 +451,32 @@ check("레인: mdFormat 포렌식 메타",
 check("레인: diversityTargets = slots[].correctExpression",
   LANE.diversityTargets(data).join(",") === "provide,compacted,protect", LANE.diversityTargets(data).join(","));
 
+// ───────────────────────────────────────────────────────────────────────────
+// 7. 26-08-11 RCA 회귀 봉인 — 실장애 2계통(docs 메모리 combo-gate-rejection-rca).
+//    ① 저장 지문 말미 마침표 누락(잡 cmshhwesl/cmshhphmd) → 재구성 관용 통과
+//    ② 관용이 게이트를 끄지 않음(중간 편집·중간 구두점은 여전히 반려)
+//    ③ 틀린 후보 지문 실존(잡 cmsony01r 'strict' 계통) → 누설 반려 불변
+// ───────────────────────────────────────────────────────────────────────────
+const PASSAGE_NO_PERIOD = PASSAGE.replace(/\.$/, "");
+{
+  const issues = gateMdCombo(snapped.question, PASSAGE_NO_PERIOD, OPT);
+  check("RCA-B1 말미 마침표 누락 지문 → 재구성 관용으로 클린",
+    issues.length === 0, issues.join(" / "));
+}
+check("RCA-B2 지문 중간 축자 편집은 여전히 반려",
+  has(gateOf(swap("heavy construction", "big construction")), "지문 재구성 불일치"));
+check("RCA-B3 지문 중간 구두점 삭제도 여전히 반려",
+  has(gateOf(swap("blocks, yet", "blocks yet")), "지문 재구성 불일치"));
+{
+  // 오늘 실장애 동형: 틀린 후보(provides)가 지문 뒤 문장에 합법 표현으로 실존.
+  const LEAK_TAIL = " The city provides the funds for this work.";
+  const leakPassage = PASSAGE + LEAK_TAIL;
+  const leakParsed = parseMdCombo(GOOD.replace(MARKED, MARKED + LEAK_TAIL));
+  const leakIssues = gateMdCombo(
+    autoSnapComboSlots(leakParsed, leakPassage).question, leakPassage, OPT);
+  check("RCA-A1 틀린 후보 지문 실존 → 누설 반려 불변",
+    has(leakIssues, "틀린 후보 'provides'"), leakIssues.join(" / "));
+}
+
 console.log(`\n${pass}/${pass + fail} 통과`);
 if (fail > 0) process.exit(1);

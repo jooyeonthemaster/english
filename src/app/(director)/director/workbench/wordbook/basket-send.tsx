@@ -6,9 +6,11 @@
 // basket-dock 500줄 제한을 지키기 위한 분리 파일 — dock 이 조립한다.
 // 공용 원자(BTN·INPUT·Field·Spin·clampInt)도 여기서 정의해 dock 이 가져다
 // 쓴다(dock → send 단방향 import — 역방향을 만들면 순환이 된다).
-// 전송 payload 계약: sendSource "deck" → deckIds / "picks" → senseIds.
+// 전송 payload 계약: sendSource "deck" → deckIds / "picks" → senseIds /
+// "series" → sendWordbookSeriesAction(seriesKey — 교재 전체 일괄, 스펙 §11).
 // 문제 유형 선택은 **선호이지 보장이 아니다**(VocabAssignmentPayload.itemTypes
 // 주석) — 자동(선택 없음)이면 itemTypes 키 자체를 보내지 않는다.
+// 교재 전용 옵션 UI 는 send-series-section.tsx(단방향 import — 역방향 금지).
 // ============================================================================
 
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -16,6 +18,7 @@ import type { Dispatch, SetStateAction } from "react";
 import { ArrowLeft, Loader2, Search, X } from "lucide-react";
 import { createStudyAssignment } from "@/actions/study-assignments/mutations";
 import { listDeckRecipients } from "@/actions/vocab-drill-admin/deployments";
+import { sendWordbookSeriesAction } from "@/actions/vocab-drill-admin/wordbook-wizard";
 import type { VocabDeckPreviewRow } from "@/actions/vocab-drill-admin/decks";
 import type {
   ClassFolderList,
@@ -23,8 +26,10 @@ import type {
 } from "@/actions/students/class-folders";
 import { VOCAB_ITEM_TYPE_LABELS } from "@/lib/vocab-drill/display";
 import type { VocabItemType } from "@/lib/vocab-drill/payload";
+import { todayKstDate } from "@/lib/vocab-drill/wordbook-plan-types";
+import { SeriesSendSection, seriesDoneNotice } from "./send-series-section";
 import { DiffDots, PosChip, TierChip, fmt } from "./wordbook-ui";
-import type { WordbookBasketItem } from "./wordbook-types";
+import type { WordbookBasketItem, WordbookPresetSeries } from "./wordbook-types";
 
 // ── 공용 원자 (dock 과 공유) ─────────────────────────────────────────────────
 
@@ -160,8 +165,10 @@ export function PreviewModal({
 
 export interface SendStepProps {
   items: WordbookBasketItem[];
-  sendSource: "deck" | "picks";
+  sendSource: "deck" | "picks" | "series";
   savedDeck: { id: string; title: string; senseCount: number } | null;
+  /** 교재 모드 재료 — sendSource "series" 일 때 필수(스펙 §11) */
+  savedSeries: WordbookPresetSeries | null;
   /** 마운트 시점의 과제 제목 초기값 — 이후 편집은 이 컴포넌트가 소유 */
   initialTitle: string;
   rosterState: "idle" | "loading" | "error" | "ready";
@@ -180,6 +187,7 @@ export function SendStep({
   items,
   sendSource,
   savedDeck,
+  savedSeries,
   initialTitle,
   rosterState,
   folders,
@@ -201,6 +209,24 @@ export function SendStep({
   const [sendError, setSendError] = useState<string | null>(null);
   /** 이미 받은 학생 배지 — 로드 실패 시 조용히 생략(보내기 흐름을 막지 않는다) */
   const [recipients, setRecipients] = useState<Record<string, boolean> | null>(null);
+
+  // ── 교재 모드 전용 상태(스펙 §11) — dock 이 key 리마운트하므로 초기화 안전 ──
+  const series = sendSource === "series" ? savedSeries : null;
+  /** 단계당 문항 수 — 자동(단계 단어 수만큼)이 기본. 자동이면 키 미전송 계약 */
+  const [autoCount, setAutoCount] = useState(true);
+  const [unitCountInput, setUnitCountInput] = useState(() =>
+    String(Math.min(100, Math.max(5, savedSeries?.wordsPerDay ?? 20))),
+  );
+  // 위저드 캘린더에서 고른 시작일을 이어받는다(과거면 오늘로) — 스텝4의 선택이
+  // 보내기 화면 초기값까지 한 몸으로 흐르게.
+  const [startDate, setStartDate] = useState(() => {
+    const preferred = savedSeries?.startDate;
+    const t = todayKstDate();
+    return preferred && preferred >= t ? preferred : t;
+  });
+  // 매 렌더 재계산 — 자정을 넘겨도 min·검증 기준이 어제에 붙잡히지 않게.
+  const today = todayKstDate();
+  const startPast = !!series && startDate < today;
 
   const deckId = sendSource === "deck" && savedDeck ? savedDeck.id : null;
   useEffect(() => {
@@ -266,6 +292,24 @@ export function SendStep({
   // 바로 보내기는 학생마다 senseIds 가 복제 저장되므로 서버 상한을 앞단에서 미러링.
   const overCells = sendSource === "picks" && selected.size * items.length > MAX_BRIDGE_CELLS;
 
+  // 문제 유형 칩 — deck/picks·series 세 모드가 같은 마크업을 쓴다(③ 기존 그대로).
+  const typeChipsUi = (
+    <div>
+      <span className="mb-1 block text-[10.5px] font-medium text-slate-500">문제 유형</span>
+      <div className="flex flex-wrap gap-1.5">
+        <button type="button" onClick={() => setItemTypes(new Set())} className={chipCls(itemTypes.size === 0)} title="단어마다 알맞은 유형을 자동으로 골라 섞습니다">자동 섞기(추천)</button>
+        {TYPE_KEYS.map((k) => (
+          <button key={k} type="button" onClick={() => toggleType(k)} className={chipCls(itemTypes.has(k))}>
+            {VOCAB_ITEM_TYPE_LABELS[k]}
+          </button>
+        ))}
+      </div>
+      {itemTypes.size > 0 && (
+        <p className="mt-1 break-keep text-[10.5px] text-slate-400">고른 유형 위주로 나갑니다. 만들 수 없는 단어(예: 숙어의 철자 쓰기)는 다른 유형으로 자동 대체됩니다.</p>
+      )}
+    </div>
+  );
+
   const handleSend = useCallback(async () => {
     if (pending || selected.size === 0 || overCells) return;
     setPending(true);
@@ -291,15 +335,39 @@ export function SendStep({
     else setSendError(res.error ?? "보내지 못했습니다.");
   }, [pending, selected, overCells, qCount, assignTitle, due, sendSource, savedDeck, items, itemTypes, onDone]);
 
+  // 교재 발송 — 한 번 호출로 전 단계 일괄(스펙 §11). MAX_BRIDGE_CELLS 미러는
+  // picks 전용이라 여기 걸지 않는다(서버 SERIES_SEND_MAX_ROWS 가 자체 상한).
+  const handleSendSeries = useCallback(async () => {
+    if (!series || pending || selected.size === 0 || startDate < todayKstDate()) return;
+    setPending(true);
+    setSendError(null);
+    const chosenCount = selected.size; // onDone 직후 부모가 selected 를 비운다
+    const res = await sendWordbookSeriesAction({
+      seriesKey: series.seriesKey,
+      targets: [...selected].map((id) => ({ type: "STUDENT" as const, id })),
+      startDate,
+      // 자동이면 키 자체를 만들지 않는다 — itemTypes·countPerUnit 공통 계약.
+      ...(itemTypes.size ? { itemTypes: [...itemTypes] } : {}),
+      ...(autoCount ? {} : { countPerUnit: clampInt(unitCountInput, 5, 100, Math.min(100, Math.max(5, series.wordsPerDay))) }),
+    });
+    setPending(false);
+    // 완료 관용구가 "{taskCount}명에게 보냈습니다"를 그리므로 서버 태스크 수
+    // (단계×학생)가 아니라 **학생 수**를 넣는다.
+    if (res.success && res.data) onDone({ taskCount: chosenCount, notice: seriesDoneNotice(res.data) });
+    else setSendError(res.error ?? "보내지 못했습니다.");
+  }, [series, pending, selected, startDate, itemTypes, autoCount, unitCountInput, onDone]);
+
   return (
     <div className="space-y-3 px-3 py-3">
       {/* 무엇을 보내는지 요약 */}
       <div className="flex items-center justify-between gap-2 rounded bg-slate-50 p-2.5">
         <div className="min-w-0 flex-1">
-          <p className="truncate text-[12px] font-semibold tabular-nums" title={sendSource === "deck" && savedDeck ? savedDeck.title : undefined}>
-            {sendSource === "deck" && savedDeck
-              ? `단어장 '${savedDeck.title}' · ${fmt(savedDeck.senseCount)}단어`
-              : `담은 단어 ${fmt(items.length)}개 바로 보내기`}
+          <p className="truncate text-[12px] font-semibold tabular-nums" title={series ? series.title : sendSource === "deck" && savedDeck ? savedDeck.title : undefined}>
+            {series
+              ? `단어장 '${series.title}' · ${fmt(series.unitCount)}단계 · ${fmt(series.totalWords)}단어`
+              : sendSource === "deck" && savedDeck
+                ? `단어장 '${savedDeck.title}' · ${fmt(savedDeck.senseCount)}단어`
+                : `담은 단어 ${fmt(items.length)}개 바로 보내기`}
           </p>
           {sendSource === "deck" && savedDeck && (
             <button type="button" onClick={onPreviewDeck} className="mt-0.5 text-[10.5px] font-medium text-blue-600 hover:underline">단어 확인</button>
@@ -385,40 +453,50 @@ export function SendStep({
         </>
       )}
 
-      {/* 과제 옵션 */}
+      {/* 과제 옵션 — 교재 모드는 제목·마감을 숨기고 문항 수·시작일로 대체(§11) */}
       <div className="space-y-2 border-t border-slate-100 pt-3">
-        <Field label="과제 제목">
-          <input value={assignTitle} onChange={(e) => setAssignTitle(e.target.value)} className={INPUT} />
-        </Field>
-        <div>
-          <span className="mb-1 block text-[10.5px] font-medium text-slate-500">문제 유형</span>
-          <div className="flex flex-wrap gap-1.5">
-            <button type="button" onClick={() => setItemTypes(new Set())} className={chipCls(itemTypes.size === 0)} title="단어마다 알맞은 유형을 자동으로 골라 섞습니다">자동 섞기(추천)</button>
-            {TYPE_KEYS.map((k) => (
-              <button key={k} type="button" onClick={() => toggleType(k)} className={chipCls(itemTypes.has(k))}>
-                {VOCAB_ITEM_TYPE_LABELS[k]}
-              </button>
-            ))}
-          </div>
-          {itemTypes.size > 0 && (
-            <p className="mt-1 break-keep text-[10.5px] text-slate-400">고른 유형 위주로 나갑니다. 만들 수 없는 단어(예: 숙어의 철자 쓰기)는 다른 유형으로 자동 대체됩니다.</p>
-          )}
-        </div>
-        <div className="flex gap-2">
-          <Field label="문항 수 (5~100)">
-            <input type="number" min={5} max={100} value={qCount} onChange={(e) => setQCount(e.target.value)} className={`${INPUT} tabular-nums`} />
-          </Field>
-          <Field label="마감일 (선택)">
-            <input type="date" value={due} onChange={(e) => setDue(e.target.value)} className={`${INPUT} tabular-nums`} />
-          </Field>
-        </div>
+        {series ? (
+          <>
+            {typeChipsUi}
+            <SeriesSendSection
+              series={series}
+              today={today}
+              autoCount={autoCount}
+              onAutoCountChange={setAutoCount}
+              countInput={unitCountInput}
+              onCountInputChange={setUnitCountInput}
+              startDate={startDate}
+              onStartDateChange={setStartDate}
+            />
+          </>
+        ) : (
+          <>
+            <Field label="과제 제목">
+              <input value={assignTitle} onChange={(e) => setAssignTitle(e.target.value)} className={INPUT} />
+            </Field>
+            {typeChipsUi}
+            <div className="flex gap-2">
+              <Field label="문항 수 (5~100)">
+                <input type="number" min={5} max={100} value={qCount} onChange={(e) => setQCount(e.target.value)} className={`${INPUT} tabular-nums`} />
+              </Field>
+              <Field label="마감일 (선택)">
+                <input type="date" value={due} onChange={(e) => setDue(e.target.value)} className={`${INPUT} tabular-nums`} />
+              </Field>
+            </div>
+          </>
+        )}
       </div>
 
       {overCells && (
         <p className="break-keep text-[10.5px] text-amber-600">학생 수 × 단어 수가 2만을 넘어 한 번에 보낼 수 없습니다. 먼저 단어장으로 저장한 뒤 보내 주세요.</p>
       )}
       {sendError && <p className="break-keep text-[11px] text-rose-600">{sendError}</p>}
-      <button type="button" onClick={() => void handleSend()} disabled={pending || selected.size === 0 || overCells} className={`${BTN_PRIMARY} w-full`}>
+      <button
+        type="button"
+        onClick={() => void (series ? handleSendSeries() : handleSend())}
+        disabled={pending || selected.size === 0 || overCells || startPast}
+        className={`${BTN_PRIMARY} w-full`}
+      >
         {pending && <Spin />}학생에게 보내기
       </button>
     </div>

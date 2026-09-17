@@ -12,7 +12,7 @@
 // ============================================================================
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { CheckCircle2, Eye, ShoppingBasket, X } from "lucide-react";
+import { CheckCircle2, Eye, ShoppingBasket, Sparkles, X } from "lucide-react";
 import { createVocabDeck, previewVocabDeck } from "@/actions/vocab-drill-admin/decks";
 import {
   listClassFolders,
@@ -33,7 +33,11 @@ import {
   clampInt,
   type PreviewState,
 } from "./basket-send";
-import type { WordbookBasketItem, WordbookFilter } from "./wordbook-types";
+import type {
+  WordbookBasketItem,
+  WordbookFilter,
+  WordbookPresetSeries,
+} from "./wordbook-types";
 
 interface BasketDockProps {
   items: WordbookBasketItem[];
@@ -46,6 +50,13 @@ interface BasketDockProps {
   /** 「보낸 단어장」 [학생에게 보내기] 프리셋 — 소비 즉시 onPresetConsumed 로 반납 */
   presetDeck: { id: string; title: string; senseCount: number } | null;
   onPresetConsumed: () => void;
+  /** 담은 단어를 위저드(단계별 교재)로 승격 — 도크를 닫고 위저드를 연다 */
+  onOpenWizard?: () => void;
+  /** 교재(시리즈) 발송 프리셋 — 전송 단계가 교재 모드로 열린다(스펙 §11) */
+  presetSeries?: WordbookPresetSeries | null;
+  onPresetSeriesConsumed?: () => void;
+  /** 교재 발송 완료 — 부모가 「보낸 단어장」 패널을 새로고침 */
+  onSeriesSent?: () => void;
 }
 
 export function BasketDock({
@@ -58,10 +69,16 @@ export function BasketDock({
   currentTotal,
   presetDeck,
   onPresetConsumed,
+  onOpenWizard,
+  presetSeries,
+  onPresetSeriesConsumed,
+  onSeriesSent,
 }: BasketDockProps) {
   const [step, setStep] = useState<"list" | "send">("list");
   const [savedDeck, setSavedDeck] = useState<{ id: string; title: string; senseCount: number } | null>(null);
-  const [sendSource, setSendSource] = useState<"deck" | "picks">("deck");
+  /** 교재 모드 재료 — 있으면 SendStep 이 교재 발송 화면으로 바뀐다(스펙 §11) */
+  const [savedSeries, setSavedSeries] = useState<WordbookPresetSeries | null>(null);
+  const [sendSource, setSendSource] = useState<"deck" | "picks" | "series">("deck");
   /** SendStep 마운트 시점의 과제 제목 초기값 — 이후 편집은 SendStep 소유 */
   const [assignInit, setAssignInit] = useState("단어 훈련");
   const [done, setDone] = useState<{ taskCount: number; notice: string | null } | null>(null);
@@ -122,6 +139,7 @@ export function BasketDock({
   useEffect(() => {
     if (!open || !presetDeck) return;
     setSavedDeck(presetDeck);
+    setSavedSeries(null);
     setSendSource("deck");
     setAssignInit(presetDeck.title);
     setDone(null);
@@ -129,6 +147,19 @@ export function BasketDock({
     setStep("send");
     onPresetConsumed();
   }, [open, presetDeck, onPresetConsumed]);
+
+  // 교재 프리셋 — 같은 전송 단계가 교재 모드로 열린다(스펙 §11 단일 발송).
+  useEffect(() => {
+    if (!open || !presetSeries) return;
+    setSavedSeries(presetSeries);
+    setSavedDeck(null);
+    setSendSource("series");
+    setAssignInit(presetSeries.title);
+    setDone(null);
+    setSelected(new Set());
+    setStep("send");
+    onPresetSeriesConsumed?.();
+  }, [open, presetSeries, onPresetSeriesConsumed]);
 
   // 보내기 단계 최초 진입 시에만 로스터 로드 — 재진입 시 불필요한 왕복을 막는다.
   const loadRoster = useCallback(() => {
@@ -267,8 +298,28 @@ export function BasketDock({
                 </ul>
               )}
 
-              {/* ② 만들기 카드 2장 */}
+              {/* ② 만들기 카드 2장 (+ 위저드 승격 배너) */}
               <div className="space-y-3 px-3 py-3">
+                {onOpenWizard && items.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={onOpenWizard}
+                    className="flex w-full items-center gap-2.5 rounded-lg border border-blue-200 bg-blue-50/60 p-3 text-left transition hover:border-blue-300 hover:bg-blue-50"
+                  >
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-600 text-white">
+                      <Sparkles className="size-4" />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block text-[12.5px] font-bold text-slate-800">
+                        이 단어들로 단계별 교재 짜기
+                      </span>
+                      <span className="mt-0.5 block break-keep text-[10.5px] text-slate-500">
+                        담은 {fmt(items.length)}개를 단계로 나누고 학습 주기까지 —
+                        위저드가 안내해요.
+                      </span>
+                    </span>
+                  </button>
+                )}
                 <section className={`rounded-lg border border-slate-200 p-3 ${items.length === 0 ? "opacity-50" : ""}`}>
                   <h3 className="text-[12px] font-bold">담은 단어로 만들기</h3>
                   <p className="mt-0.5 break-keep text-[10.5px] text-slate-400">골라 담은 뜻 {fmt(items.length)}개가 그대로 단어장이 됩니다.</p>
@@ -345,10 +396,11 @@ export function BasketDock({
           ) : (
             /* ── step "send" — 대상이 바뀌면 key 로 강제 리마운트(제목·유형 초기화) ── */
             <SendStep
-              key={`${sendSource}:${savedDeck?.id ?? "picks"}`}
+              key={`${sendSource}:${savedDeck?.id ?? savedSeries?.seriesKey ?? "picks"}`}
               items={items}
               sendSource={sendSource}
               savedDeck={savedDeck}
+              savedSeries={savedSeries}
               initialTitle={assignInit}
               rosterState={rosterState}
               folders={folders}
@@ -361,6 +413,8 @@ export function BasketDock({
               onDone={(d) => {
                 setDone(d);
                 setSelected(new Set());
+                // 교재 발송이면 「보낸 단어장」 패널을 새로고침시킨다.
+                if (sendSource === "series") onSeriesSent?.();
               }}
               onPreviewDeck={() => { if (savedDeck) openPreview({ deckId: savedDeck.id }); }}
             />

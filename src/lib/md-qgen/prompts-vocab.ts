@@ -168,11 +168,12 @@ function vocabExplanationBlock(
   if (wrongCount === 0) {
     return `${answerLine}\n${fixLine}\n해설: <${expCore}. 모든 밑줄이 정답이므로 오답 섹션은 쓰지 마라>`;
   }
+  // 26-08-18 O225 해설 다이어트 — 오답은 판정 근거 1문장만(유혹·심리 서사 지시 제거)
   return `${answerLine}
 ${fixLine}
 해설: <${expCore}>
 오답:
-(a) <이 자리 단어가 이 문맥에서 왜 적절한지, 학생이 어디서 헷갈리는지 1문장> (정답 라벨은 제외하고 ${wrongCount}개만)
+(a) <이 자리 단어가 이 문맥에서 왜 적절한지 1문장 — 유혹·심리 서사 금지> (정답 라벨은 제외하고 ${wrongCount}개만)
 ...`;
 }
 

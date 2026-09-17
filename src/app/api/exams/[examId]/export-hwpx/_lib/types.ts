@@ -176,7 +176,20 @@ export interface SectionSpec {
   columnGapHpu: number;
   header?: BlockNode[]; // 페이지 머리말 (옵션) — 전체폭 헤더 밴드
   headerApplyFirstOnly?: boolean; // 머리말을 1쪽에만 (기본: 모든 쪽)
-  footer?: BlockNode[]; // 페이지 꼬리말 (옵션)
+  footer?: BlockNode[]; // 페이지 꼬리말 (옵션). 미지정이면 기본 쪽번호("- N -")를 쓴다.
+  /**
+   * 이 구역부터 쪽 번호를 이 값으로 재시작. 미지정 = 앞 구역에서 이어짐(page="0").
+   * 한컴 실측(E36 P7): <hp:startNum page="1"/> 이면 그 구역 첫 쪽이 1로 다시 매겨진다.
+   * 표지 구역 뒤 본문을 1쪽부터 세려면 본문 구역에 1 을 준다.
+   */
+  startNumPage?: number;
+  /**
+   * 쪽번호 꼬리말 배치. 미지정 = "center".
+   *  - "center"  가운데 정렬 꼬리말 1개 (applyPageType="BOTH")
+   *  - "outside" 홀수 쪽 오른쪽 / 짝수 쪽 왼쪽 — 꼬리말 2개(ODD+EVEN)
+   *  - "none"    꼬리말 컨트롤을 아예 넣지 않는다(표지 구역 등)
+   */
+  pageNumberStyle?: "center" | "outside" | "none";
   blocks: BlockNode[];
 }
 

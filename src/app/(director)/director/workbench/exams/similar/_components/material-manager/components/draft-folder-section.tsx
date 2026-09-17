@@ -300,36 +300,90 @@ export function DraftFolderSection({
     }
   });
 
+  // 성능 계약(2026-08-11 — 드래그 성능 전수 스윕): 드래그 중에는 React 를
+  // 거치지 않는다. 매 pointermove 의 setState 는 섹션 전체(폴더 칩/카드 +
+  // Miller 컬럼 전 행)를 프레임마다 리렌더시킨다. 이동 중에는 앵커 요소의
+  // style 에 rAF 코얼레싱으로 직접 쓰고, 놓을 때 한 번만 setState + 영속한다.
+  // 앵커를 못 찾으면 종전 setState 경로로 폴백 — 동작 동일.
+  // (shared/folder-section.tsx 와 동형 수술.)
   const beginListHeightResize = (e: React.PointerEvent) => {
     e.preventDefault();
     e.stopPropagation();
     const startY = e.clientY;
     const startHeight = listHeight;
+    let latest = startHeight;
+
+    // 포인터 캡처 — 커서가 얇은 핸들을 벗어나도 드래그가 끊기지 않는다.
+    const handle = e.currentTarget as HTMLElement;
+    try {
+      handle.setPointerCapture(e.pointerId);
+    } catch {
+      /* 캡처 미지원 브라우저는 window 리스너로 폴백 */
+    }
+
+    // 드래그 대상 목록 창 — 핸들에서 가장 가까운 조상 범위 안의
+    // [data-folder-list-pane] (한 화면에 섹션이 여럿이어도 자기 창만).
+    let paneEl: HTMLElement | null = null;
+    for (
+      let scope: HTMLElement | null = handle.parentElement;
+      scope && !paneEl;
+      scope = scope.parentElement
+    ) {
+      paneEl = scope.querySelector<HTMLElement>("[data-folder-list-pane]");
+    }
+
+    const prevCursor = document.body.style.cursor;
+    const prevSelect = document.body.style.userSelect;
+    const prevPointerEvents = document.body.style.pointerEvents;
     document.body.style.cursor = "row-resize";
     document.body.style.userSelect = "none";
+    // 드래그 중 hover 스타일 재평가 차단 — 캡처 덕에 move 수신은 유지된다.
+    document.body.style.pointerEvents = "none";
+
+    // rAF 코얼레싱 — 고주사율 포인터가 프레임당 여러 번 발화해도 기록은 1회.
+    let rafId: number | null = null;
+    const flush = () => {
+      rafId = null;
+      if (paneEl) paneEl.style.height = `${latest}px`;
+    };
+
     const onMove = (ev: PointerEvent) => {
-      const next = Math.min(
+      latest = Math.min(
         MAX_LIST_HEIGHT,
         Math.max(MIN_LIST_HEIGHT, startHeight + (ev.clientY - startY)),
       );
-      setListHeight((prev) => (prev === next ? prev : next));
+      if (paneEl) {
+        if (rafId === null) rafId = requestAnimationFrame(flush);
+      } else {
+        const next = latest;
+        setListHeight((prev) => (prev === next ? prev : next));
+      }
     };
     const onUp = () => {
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerup", onUp);
-      document.body.style.cursor = "";
-      document.body.style.userSelect = "";
-      setListHeight((prev) => {
-        try {
-          window.localStorage.setItem(LIST_HEIGHT_STORAGE_KEY, String(prev));
-        } catch {
-          /* ignore */
-        }
-        return prev;
-      });
+      window.removeEventListener("pointercancel", onUp);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      if (paneEl) paneEl.style.height = `${latest}px`;
+      document.body.style.cursor = prevCursor;
+      document.body.style.userSelect = prevSelect;
+      document.body.style.pointerEvents = prevPointerEvents;
+      // 커밋 1회 + 영속 1회 — 드래그 내내 리렌더 0회.
+      setListHeight(latest);
+      try {
+        window.localStorage.setItem(LIST_HEIGHT_STORAGE_KEY, String(latest));
+      } catch {
+        /* ignore */
+      }
+      try {
+        handle.releasePointerCapture(e.pointerId);
+      } catch {
+        /* ignore */
+      }
     };
     window.addEventListener("pointermove", onMove);
     window.addEventListener("pointerup", onUp);
+    window.addEventListener("pointercancel", onUp);
   };
 
   const [subColumnWidths, setSubColumnWidths] = useState<{
@@ -366,33 +420,81 @@ export function DraftFolderSection({
    * (name is flex-1) and shrinks the date column.
    */
   const beginNameDateResize = (e: React.PointerEvent) => {
+    // 드래그 고속 경로 — 날짜 폭은 헤더 셀 + 모든 행(dateWidth)이 같은 값을
+    // 소비하므로 시작 시 [data-fs-col="date"] 전부를 1회 수집해 rAF 프레임당
+    // 일괄 직접 기록한다. 렌더 산출(인라인 width)은 그대로라 무회귀.
     e.preventDefault();
     e.stopPropagation();
     const startX = e.clientX;
     const startDate = subColumnWidths.date;
+    let latest = startDate;
+
+    const handle = e.currentTarget as HTMLElement;
+    try {
+      handle.setPointerCapture(e.pointerId);
+    } catch {
+      /* 캡처 미지원 브라우저는 window 리스너로 폴백 */
+    }
+
+    const dateEls = listScrollRef.current
+      ? Array.from(
+          listScrollRef.current.querySelectorAll<HTMLElement>(
+            '[data-fs-col="date"]',
+          ),
+        )
+      : [];
+    const fastPath = dateEls.length > 0;
+
+    const prevCursor = document.body.style.cursor;
+    const prevSelect = document.body.style.userSelect;
+    const prevPointerEvents = document.body.style.pointerEvents;
     document.body.style.cursor = "col-resize";
     document.body.style.userSelect = "none";
+    document.body.style.pointerEvents = "none";
+
+    let rafId: number | null = null;
+    const flush = () => {
+      rafId = null;
+      for (const el of dateEls) el.style.width = `${latest}px`;
+    };
+
     const onMove = (ev: PointerEvent) => {
-      const next = Math.max(
+      latest = Math.max(
         MIN_SUB_COLUMN_WIDTH,
         startDate - (ev.clientX - startX),
       );
-      setSubColumnWidths((prev) =>
-        prev.date === next ? prev : { ...prev, date: next },
-      );
+      if (fastPath) {
+        if (rafId === null) rafId = requestAnimationFrame(flush);
+      } else {
+        const next = latest;
+        setSubColumnWidths((prev) =>
+          prev.date === next ? prev : { ...prev, date: next },
+        );
+      }
     };
     const onUp = () => {
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerup", onUp);
-      document.body.style.cursor = "";
-      document.body.style.userSelect = "";
-      setSubColumnWidths((prev) => {
-        persistSubColumnWidths(prev);
-        return prev;
-      });
+      window.removeEventListener("pointercancel", onUp);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      if (fastPath) flush();
+      document.body.style.cursor = prevCursor;
+      document.body.style.userSelect = prevSelect;
+      document.body.style.pointerEvents = prevPointerEvents;
+      // 커밋 1회 + 영속 1회 (count 는 이 드래그에서 불변).
+      setSubColumnWidths((prev) =>
+        prev.date === latest ? prev : { ...prev, date: latest },
+      );
+      persistSubColumnWidths({ date: latest, count: subColumnWidths.count });
+      try {
+        handle.releasePointerCapture(e.pointerId);
+      } catch {
+        /* ignore */
+      }
     };
     window.addEventListener("pointermove", onMove);
     window.addEventListener("pointerup", onUp);
+    window.addEventListener("pointercancel", onUp);
   };
 
   /**
@@ -400,39 +502,95 @@ export function DraftFolderSection({
    * count (keeps total date+count constant so the trailing slots stay aligned).
    */
   const beginDateCountResize = (e: React.PointerEvent) => {
+    // 드래그 고속 경로 — date/count 두 폭이 동시에 움직이므로 두 앵커 집합을
+    // 각각 수집해 한 프레임에 일괄 기록한다(총합 보존식은 불변).
     e.preventDefault();
     e.stopPropagation();
     const startX = e.clientX;
     const startDate = subColumnWidths.date;
     const startCount = subColumnWidths.count;
     const total = startDate + startCount;
+    let latestDate = startDate;
+    let latestCount = startCount;
+
+    const handle = e.currentTarget as HTMLElement;
+    try {
+      handle.setPointerCapture(e.pointerId);
+    } catch {
+      /* 캡처 미지원 브라우저는 window 리스너로 폴백 */
+    }
+
+    const scroller = listScrollRef.current;
+    const dateEls = scroller
+      ? Array.from(
+          scroller.querySelectorAll<HTMLElement>('[data-fs-col="date"]'),
+        )
+      : [];
+    const countEls = scroller
+      ? Array.from(
+          scroller.querySelectorAll<HTMLElement>('[data-fs-col="count"]'),
+        )
+      : [];
+    const fastPath = dateEls.length > 0 && countEls.length > 0;
+
+    const prevCursor = document.body.style.cursor;
+    const prevSelect = document.body.style.userSelect;
+    const prevPointerEvents = document.body.style.pointerEvents;
     document.body.style.cursor = "col-resize";
     document.body.style.userSelect = "none";
+    document.body.style.pointerEvents = "none";
+
+    let rafId: number | null = null;
+    const flush = () => {
+      rafId = null;
+      for (const el of dateEls) el.style.width = `${latestDate}px`;
+      for (const el of countEls) el.style.width = `${latestCount}px`;
+    };
+
     const onMove = (ev: PointerEvent) => {
       const delta = ev.clientX - startX;
-      const nextDate = Math.min(
+      latestDate = Math.min(
         total - MIN_SUB_COLUMN_WIDTH,
         Math.max(MIN_SUB_COLUMN_WIDTH, startDate + delta),
       );
-      const nextCount = total - nextDate;
-      setSubColumnWidths((prev) =>
-        prev.date === nextDate && prev.count === nextCount
-          ? prev
-          : { date: nextDate, count: nextCount },
-      );
+      latestCount = total - latestDate;
+      if (fastPath) {
+        if (rafId === null) rafId = requestAnimationFrame(flush);
+      } else {
+        const nextDate = latestDate;
+        const nextCount = latestCount;
+        setSubColumnWidths((prev) =>
+          prev.date === nextDate && prev.count === nextCount
+            ? prev
+            : { date: nextDate, count: nextCount },
+        );
+      }
     };
     const onUp = () => {
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerup", onUp);
-      document.body.style.cursor = "";
-      document.body.style.userSelect = "";
-      setSubColumnWidths((prev) => {
-        persistSubColumnWidths(prev);
-        return prev;
-      });
+      window.removeEventListener("pointercancel", onUp);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      if (fastPath) flush();
+      document.body.style.cursor = prevCursor;
+      document.body.style.userSelect = prevSelect;
+      document.body.style.pointerEvents = prevPointerEvents;
+      // 커밋 1회 + 영속 1회.
+      setSubColumnWidths((prev) =>
+        prev.date === latestDate && prev.count === latestCount
+          ? prev
+          : { date: latestDate, count: latestCount },
+      );
+      persistSubColumnWidths({ date: latestDate, count: latestCount });
+      try {
+        handle.releasePointerCapture(e.pointerId);
+      } catch {
+        /* ignore */
+      }
     };
     window.addEventListener("pointermove", onMove);
     window.addEventListener("pointerup", onUp);
+    window.addEventListener("pointercancel", onUp);
   };
   const [containerWidth, setContainerWidth] = useState(0);
   const [columnWidths, setColumnWidths] = useState<Record<string, number>>(
@@ -464,37 +622,83 @@ export function DraftFolderSection({
   );
 
   const beginColumnResize = (columnKey: string) => (e: React.PointerEvent) => {
+    // 드래그 고속 경로 — 대상 컬럼 1개([data-fs-column])의 style.width 에만
+    // rAF 직접 기록하고, 놓을 때 커밋 1회 + 영속 1회. 앵커 미발견 시 종전 경로.
     e.preventDefault();
     e.stopPropagation();
     const startX = e.clientX;
     const startWidth = columnWidths[columnKey] ?? defaultColumnWidth;
+    let latest = startWidth;
+
+    const handle = e.currentTarget as HTMLElement;
+    try {
+      handle.setPointerCapture(e.pointerId);
+    } catch {
+      /* 캡처 미지원 브라우저는 window 리스너로 폴백 */
+    }
+
+    const columnEl =
+      listScrollRef.current?.querySelector<HTMLElement>(
+        `[data-fs-column="${CSS.escape(columnKey)}"]`,
+      ) ?? null;
+
+    const prevCursor = document.body.style.cursor;
+    const prevSelect = document.body.style.userSelect;
+    const prevPointerEvents = document.body.style.pointerEvents;
     document.body.style.cursor = "col-resize";
     document.body.style.userSelect = "none";
+    document.body.style.pointerEvents = "none";
+
+    let rafId: number | null = null;
+    const flush = () => {
+      rafId = null;
+      if (columnEl) columnEl.style.width = `${latest}px`;
+    };
+
     const onMove = (ev: PointerEvent) => {
-      const next = Math.max(MIN_COLUMN_WIDTH, startWidth + (ev.clientX - startX));
-      setColumnWidths((prev) =>
-        prev[columnKey] === next ? prev : { ...prev, [columnKey]: next },
-      );
+      latest = Math.max(MIN_COLUMN_WIDTH, startWidth + (ev.clientX - startX));
+      if (columnEl) {
+        if (rafId === null) rafId = requestAnimationFrame(flush);
+      } else {
+        const next = latest;
+        setColumnWidths((prev) =>
+          prev[columnKey] === next ? prev : { ...prev, [columnKey]: next },
+        );
+      }
     };
     const onUp = () => {
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerup", onUp);
-      document.body.style.cursor = "";
-      document.body.style.userSelect = "";
-      setColumnWidths((prev) => {
-        try {
-          window.localStorage.setItem(
-            COLUMN_WIDTH_STORAGE_KEY,
-            JSON.stringify(prev),
-          );
-        } catch {
-          /* ignore */
-        }
-        return prev;
-      });
+      window.removeEventListener("pointercancel", onUp);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      if (columnEl) columnEl.style.width = `${latest}px`;
+      document.body.style.cursor = prevCursor;
+      document.body.style.userSelect = prevSelect;
+      document.body.style.pointerEvents = prevPointerEvents;
+      // 커밋 1회 + 영속 1회 — 다른 키는 이 드래그에서 불변이라 클로저 병합 안전.
+      const committed = latest;
+      setColumnWidths((prev) =>
+        prev[columnKey] === committed
+          ? prev
+          : { ...prev, [columnKey]: committed },
+      );
+      try {
+        window.localStorage.setItem(
+          COLUMN_WIDTH_STORAGE_KEY,
+          JSON.stringify({ ...columnWidths, [columnKey]: committed }),
+        );
+      } catch {
+        /* ignore */
+      }
+      try {
+        handle.releasePointerCapture(e.pointerId);
+      } catch {
+        /* ignore */
+      }
     };
     window.addEventListener("pointermove", onMove);
     window.addEventListener("pointerup", onUp);
+    window.addEventListener("pointercancel", onUp);
   };
 
   const sortAndFilter = (list: CollectionItem[]) => {
@@ -842,6 +1046,7 @@ export function DraftFolderSection({
 
       {!collapsed && effectiveViewMode === "grid" ? (
         <div
+          data-folder-list-pane=""
           style={{ height: listHeight }}
           className="overflow-y-auto bg-slate-50/70 px-4 py-3"
         >
@@ -952,6 +1157,7 @@ export function DraftFolderSection({
 
       {!collapsed && effectiveViewMode === "list" ? (
         <div
+          data-folder-list-pane=""
           style={{ height: listHeight }}
           className="flex flex-col bg-slate-50/70 px-3 py-2"
         >
@@ -965,6 +1171,7 @@ export function DraftFolderSection({
               return (
                 <div
                   key={column.key}
+                  data-fs-column={column.key}
                   style={{ width: columnWidth }}
                   className="relative flex h-full shrink-0 flex-col bg-white"
                 >
@@ -995,6 +1202,7 @@ export function DraftFolderSection({
                           : ""}
                     </button>
                     <div
+                      data-fs-col="date"
                       style={{ width: subColumnWidths.date }}
                       className="relative shrink-0"
                     >
@@ -1031,6 +1239,7 @@ export function DraftFolderSection({
                       </div>
                     </div>
                     <div
+                      data-fs-col="count"
                       style={{ width: subColumnWidths.count }}
                       className="relative shrink-0"
                     >

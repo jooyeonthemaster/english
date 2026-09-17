@@ -77,10 +77,13 @@ export const AnswerQuestionRow = memo(function AnswerQuestionRow({
         )}
       </div>
 
+      {/* 【26-09-05 수리】 `truncate` 를 걷어냈다 — 발문이 한 줄로 잘려 나갔다
+          (사용자 신고: "서술형일 때 발문 텍스트가 잘린다"). 서술형은 이 문장이
+          **학생이 답해야 할 문제 그 자체**라 잘리면 답을 쓸 수가 없다. 줄바꿈도
+          원문대로 살린다(pre-wrap) — 발문에 조건이 여러 줄로 들어오는 경우가 있다. */}
       {question.brief && (
         <p
-          className="mt-1.5 truncate text-xs text-slate-500"
-          title={question.brief}
+          className="mt-1.5 whitespace-pre-wrap break-keep text-xs leading-relaxed text-slate-500"
           style={{ fontFamily: EXAM_FONT }}
         >
           {question.brief}

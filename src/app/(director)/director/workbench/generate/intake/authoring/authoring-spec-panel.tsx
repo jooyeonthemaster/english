@@ -312,36 +312,11 @@ export function AuthoringSpecPanel({
           hint={COPY.HINT.count}
           disabled={disabled}
         >
-          {/* 3열 2행. 6열로 늘어놓으면 좁은 레일에서 버튼 하나가 42px 까지 쪼그라들어
-              숫자를 겨냥해 누르기 어렵다(3열이면 약 88px). */}
-          <Segments<string>
-            ariaLabel={COPY.ROW.count}
-            columns={3}
-            value={String(count)}
+          <CountControls
+            count={count}
             disabled={disabled}
-            onSelect={(next) => onCountChange(Number(next))}
-            options={COUNT_OPTIONS.map((n) => ({
-              value: String(n),
-              label: String(n),
-            }))}
+            onChange={onCountChange}
           />
-          {/* count 는 상위 상태라 숫자를 누른 그 렌더에서 합계가 함께 바뀐다.
-              다른 프레임에 나타나면 "눌렀는데 얼마가 됐지?"가 된다. */}
-          <SelectionNote>
-            <span className="font-bold text-slate-800">{COPY.passages(count)}</span>
-            {" · "}
-            {CREDIT_COPY.perPassage(CREDIT_PER_PASSAGE)}
-            {" · "}
-            <CreditCostChip
-              amount={credits}
-              className={cn(
-                DESK.meta,
-                "h-6 rounded-full bg-blue-50 px-2 align-middle text-blue-700 ring-1 ring-blue-100",
-              )}
-            />
-            <br />
-            {CREDIT_COPY.refundHint}
-          </SelectionNote>
         </SettingRow>
 
         {/* 편수가 1이면 "서로 다른 소재"라는 개념 자체가 성립하지 않는다. */}
@@ -524,9 +499,15 @@ function rangeFillEdge(targetWords: number): string {
 
 /**
  * 분량 — 조작 방식이 다른 두 컨트롤이 한 팝오버에 있다(누르는 칩 / 끄는 막대).
- * 소제목과 선으로 갈라 놓지 않으면 한 덩어리로 읽혀 어느 쪽 설명인지 대응이 안 된다.
+ * 소제목과 선으로 갈라 놓지 않으면 한 덩어리로 읽혀 어느 쪽 설명이 어느 컨트롤의
+ * 것인지 대응이 안 된다.
+ *
+ * export 인 이유(§3.9v2.8 D10 — 26-08-11 승격): 간소 모드 툴바
+ * (authoring-simplified-controls.tsx)가 레일 없이 **같은 내용물**을 팝오버 버튼으로
+ * 연다. 복제하면 프리셋 실측(2018+ 평가원 중앙값)·슬라이더 저작 스타일 근거가
+ * 두 벌로 갈라진다 — 정본은 이 하나다.
  */
-function LengthControls({
+export function LengthControls({
   targetWords,
   gradeBand,
   disabled,
@@ -609,6 +590,61 @@ function LengthControls({
         {activePreset ? ` · ${activePreset.hint}` : ""}
         <br />
         {describeReadingLoad(targetWords, gradeBand)}
+      </SelectionNote>
+    </>
+  );
+}
+
+/**
+ * 편수 — 팝오버 내용물(세그먼트 3열 + 크레딧 되먹임 한 벌).
+ *
+ * export 인 이유(§3.9v2.8 D10 — 26-08-11 승격): 레일의 「만들 편수」 줄과 간소
+ * 모드 툴바(authoring-simplified-controls.tsx)가 **같은 한 벌**을 쓴다. 두 호스트의
+ * 크레딧 산식·문구가 갈라지면 결제 놀람이 재발한다 — 그래서 인라인 조합이 아니라
+ * 이름 있는 정본으로 승격했다. credits 는 여기서 다시 계산한다(단가 정본
+ * credit-costs.ts × count — 호출부마다 계산해 넘기게 두면 그 계산이 갈라진다).
+ */
+export function CountControls({
+  count,
+  disabled,
+  onChange,
+}: {
+  count: number;
+  disabled: boolean;
+  onChange: (n: number) => void;
+}) {
+  const credits = CREDIT_PER_PASSAGE * count;
+  return (
+    <>
+      {/* 3열 2행. 6열로 늘어놓으면 좁은 레일에서 버튼 하나가 42px 까지 쪼그라들어
+          숫자를 겨냥해 누르기 어렵다(3열이면 약 88px). */}
+      <Segments<string>
+        ariaLabel={COPY.ROW.count}
+        columns={3}
+        value={String(count)}
+        disabled={disabled}
+        onSelect={(next) => onChange(Number(next))}
+        options={COUNT_OPTIONS.map((n) => ({
+          value: String(n),
+          label: String(n),
+        }))}
+      />
+      {/* count 는 상위 상태라 숫자를 누른 그 렌더에서 합계가 함께 바뀐다.
+          다른 프레임에 나타나면 "눌렀는데 얼마가 됐지?"가 된다. */}
+      <SelectionNote>
+        <span className="font-bold text-slate-800">{COPY.passages(count)}</span>
+        {" · "}
+        {CREDIT_COPY.perPassage(CREDIT_PER_PASSAGE)}
+        {" · "}
+        <CreditCostChip
+          amount={credits}
+          className={cn(
+            DESK.meta,
+            "h-6 rounded-full bg-blue-50 px-2 align-middle text-blue-700 ring-1 ring-blue-100",
+          )}
+        />
+        <br />
+        {CREDIT_COPY.refundHint}
       </SelectionNote>
     </>
   );

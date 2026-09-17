@@ -16,24 +16,24 @@
 // 읽어 그 사각을 메운다.
 //
 // ⚠ 단락 변형(#11)이 켜져도 **정답 키 축**(#1~#3·#6·#6-b·#8·#13)은 전부 축자 줄로 그대로
-//   돈다. 반대로 **학생이 보는 면**에서만 무너지는 축(#4 본문 위생·분량 하한, #5 균형,
-//   #10 공짜 소거)은 변형본 기준으로 한 번 더 집행한다 — 축자에만 걸어 두면 순서 번호
+//   돈다. 반대로 **학생이 보는 면**에서만 무너지는 축(#4 본문 위생·분량 하한, #5 균형)은
+//   변형본 기준으로 한 번 더 집행한다 — 축자에만 걸어 두면 순서 번호
 //   노출·분량 불균형·문장 융합이 그대로 저장·인쇄된다(적대검수 실증).
 //   #11 본체와 표시면 재집행은 gate-order-variant.ts 가 소유한다(500줄 규약).
+//
+// ⚠ 26-08-22 기출 전수 실측 수술(하네스 scripts/_tmp-order-fp.ts · 기출 258문항):
+//   종전 임계는 기출 자체를 55.4%(수능 본시험 50%) 반려했다. 차단 게이트 배선 기준은
+//   "기출 오반려 0%"(플레이북 §0)다 — #2·#4 단어수·#5 두 축은 관측 극값 밖으로 임계
+//   이동, #10 공짜 소거·#4 문장수 하한은 orderGateAdvisories 비차단 권고로 강등
+//   (계산 유지·채널만 변경 — gate-summary-mc.ts 26-08-22 수술 선례 동형).
 // ============================================================================
 
 import {
   SENTENCE_ORDER_MIN_PARAGRAPH_SENTENCES,
-  SENTENCE_ORDER_MIN_PARAGRAPH_WORDS,
   countDisplaySentences,
   countWords,
 } from "@/lib/question-quality/core";
-import {
-  SENTENCE_ORDER_MAX_GIVEN_SENTENCES,
-  SENTENCE_ORDER_MAX_GIVEN_TO_AVG_PARAGRAPH_RATIO,
-  SENTENCE_ORDER_MAX_GIVEN_WORDS,
-  SENTENCE_ORDER_MAX_PARAGRAPH_WORD_RATIO,
-} from "@/lib/question-quality/validators/sentence-order";
+import { SENTENCE_ORDER_MAX_GIVEN_WORDS } from "@/lib/question-quality/validators/sentence-order";
 import { normalizeWs } from "./parser";
 import {
   GIVEN_KEY,
@@ -49,6 +49,24 @@ import {
 import { orderDisplayShapeIssues, orderVariantIssues } from "./gate-order-variant";
 
 const ORDER_CIRCLED = "①②③④⑤";
+
+// ── 26-08-22 기출 전수 실측 임계(하네스 scripts/_tmp-order-fp.ts · 기출 258문항) ──
+// 정본 상수(validators/sentence-order.ts · core.ts)는 fast 검증기(md-stream 에서는
+// 기록 전용 채널)가 계속 쓰므로 그대로 두고, **차단**하는 이 게이트만 관측 극값 밖
+// + 여유폭으로 임계를 옮긴다. 아래 수치는 전부 하네스 재실행 출력 전사다.
+/** #2 주어진 글 문장수 상한 — 기출 분포 {1:106, 2:120, 3:28, 4:4}(관측 최대 4,
+ *  수능 3문장 실물 2021_SN_5061633·2018_SN_5019793 포함). 종전 2는 기출 32건(12.4%)
+ *  오반려. 단어수 상한 70은 관측 최대 54라 정본 그대로 안전하다. */
+const ORDER_GATE_MAX_GIVEN_SENTENCES = 4;
+/** #4 단락 단어수 절대 하한 — 관측 최소 19단어(24 미만 5건 1.9% 오반려 — 22단어
+ *  평가원 2015_06_3026346-q38 포함). 관측 최소 밖 18. 짧은 지문 예산 완화식은 유지. */
+const ORDER_GATE_MIN_PARAGRAPH_WORDS = 18;
+/** #5 단락 분량 불균형 상한 — 기출 spread p50 1.36 · p95 1.89 · 관측 최대 2.21
+ *  (2020 수능 67/32/60 실물). 종전 1.9는 기출 9건(3.5%) 오반려 → 관측 최대 밖 2.3. */
+const ORDER_GATE_MAX_PARAGRAPH_WORD_RATIO = 2.3;
+/** #5 주어진글/단락평균 비율 상한 — 기출 p50 0.69 · p95 1.19 · 관측 최대 1.41
+ *  (평가원 2건 포함 7건 2.7% 오반려) → 관측 최대 밖 1.5. */
+const ORDER_GATE_MAX_GIVEN_TO_AVG_PARAGRAPH_RATIO = 1.5;
 
 // ── 공짜 소거 판정 ───────────────────────────────────────────────────────────
 // 순열 6개 중 선지는 5개다. 즉 버릴 수 있는 배열은 딱 하나뿐이라 "어떤 라벨을 첫
@@ -172,8 +190,8 @@ function givenShapeIssues(text: string, key: string): string[] {
   const out: string[] = [];
   const sentences = countDisplaySentences(text);
   const words = countWords(text);
-  if (sentences < 1 || sentences > SENTENCE_ORDER_MAX_GIVEN_SENTENCES) {
-    out.push(`${key}이 ${sentences}문장 (1~${SENTENCE_ORDER_MAX_GIVEN_SENTENCES}문장이어야 함)`);
+  if (sentences < 1 || sentences > ORDER_GATE_MAX_GIVEN_SENTENCES) {
+    out.push(`${key}이 ${sentences}문장 (1~${ORDER_GATE_MAX_GIVEN_SENTENCES}문장이어야 함)`);
   }
   if (words > SENTENCE_ORDER_MAX_GIVEN_WORDS) {
     out.push(`${key}이 ${words}단어 (${SENTENCE_ORDER_MAX_GIVEN_WORDS}단어 이하여야 함)`);
@@ -221,23 +239,22 @@ export function gateMdSentenceOrder(
       continue;
     }
     v.push(...bodyHygieneIssues(`단락 ${p.label} 본문`, p.text));
-    const sentences = countDisplaySentences(p.text);
     const words = countWords(p.text);
     paragraphWords[paragraphWords.length - 1] = words;
+    // 문장수 하한(2문장)은 26-08-22 기출 실측으로 **차단 자격 상실** — 1문장 단락 보유
+    // 기출 39건(15.1%), 수능 본시험 실물 포함(2021_SN_5061633-q37 (C)·2019_SN_5031122
+    // -q36 (A)). 관측 최소 1문장이 자연 하한이라 "관측 극값 밖" 차단 임계가 존재하지
+    // 않는다(countDisplaySentences 는 비어 있지 않으면 항상 ≥1 — 하한 1은 죽은 검사고,
+    // 빈 본문은 위 '본문 누락'이 이미 잡는다) → 2문장 권장은 orderGateAdvisories 로
+    // 강등(계산 유지·채널만 변경). 단어수 하한은 남긴다 —
     // 지문이 줄 수 없는 것을 요구하지 않는다(26-07-27 실사용 신고 근거).
-    // "단락마다 2문장·24단어"는 지문이 넉넉할 때의 품질 기준이지, 짧은 지문에서는
-    // 도달 불가능한 요구가 되어 재시도해도 같은 사유로 죽는다. 지문이 실제로
-    // 감당할 수 있는 만큼으로 하한을 낮춘다(주어진 글 1문장을 뺀 나머지를 3등분).
-    const budgetSentences = Math.max(1, countDisplaySentences(passage) - 1);
-    const minSentences = budgetSentences >= 6 ? SENTENCE_ORDER_MIN_PARAGRAPH_SENTENCES : 1;
+    // 짧은 지문에서는 도달 불가능한 요구가 되어 재시도해도 같은 사유로 죽으므로,
+    // 지문이 실제로 감당할 수 있는 만큼으로 하한을 낮춘다(예산 완화식 유지).
     const budgetWords = Math.max(1, countWords(passage) - 12);
     const minWords =
-      budgetWords >= SENTENCE_ORDER_MIN_PARAGRAPH_WORDS * 3
-        ? SENTENCE_ORDER_MIN_PARAGRAPH_WORDS
+      budgetWords >= ORDER_GATE_MIN_PARAGRAPH_WORDS * 3
+        ? ORDER_GATE_MIN_PARAGRAPH_WORDS
         : Math.max(8, Math.floor(budgetWords / 3 / 2));
-    if (sentences < minSentences) {
-      v.push(`단락 ${p.label} 이 ${sentences}문장 (${minSentences}문장 이상 필요)`);
-    }
     if (words < minWords) {
       v.push(`단락 ${p.label} 이 ${words}단어 (${minWords}단어 이상 필요)`);
     }
@@ -247,11 +264,11 @@ export function gateMdSentenceOrder(
   if (paragraphWords.every((w) => w > 0)) {
     const avg = paragraphWords.reduce((a, b) => a + b, 0) / paragraphWords.length;
     const spread = Math.max(...paragraphWords) / Math.min(...paragraphWords);
-    if (spread > SENTENCE_ORDER_MAX_PARAGRAPH_WORD_RATIO) {
-      v.push(`단락 분량 불균형 (${paragraphWords.join("/")}단어 — 최대/최소 ${SENTENCE_ORDER_MAX_PARAGRAPH_WORD_RATIO} 이하 필요)`);
+    if (spread > ORDER_GATE_MAX_PARAGRAPH_WORD_RATIO) {
+      v.push(`단락 분량 불균형 (${paragraphWords.join("/")}단어 — 최대/최소 ${ORDER_GATE_MAX_PARAGRAPH_WORD_RATIO} 이하 필요)`);
     }
     // 변형 시에도 축자본 단어 수로 함께 잰다(둘 중 큰 쪽 기준 — 양축 상한).
-    if (givenWords > 0 && givenWords / avg > SENTENCE_ORDER_MAX_GIVEN_TO_AVG_PARAGRAPH_RATIO) {
+    if (givenWords > 0 && givenWords / avg > ORDER_GATE_MAX_GIVEN_TO_AVG_PARAGRAPH_RATIO) {
       v.push(`${GIVEN_KEY}(${givenWords}단어)이 단락 평균(${Math.round(avg)}단어) 대비 너무 김`);
     }
   }
@@ -359,19 +376,12 @@ export function gateMdSentenceOrder(
       if (derived !== claimed) {
         v.push(`정답 불일치 — 원문 순서는 ${derived} 인데 정답은 ${claimed} 로 표시됨`);
       }
-      // #10 공짜 소거 — 정답 첫 단락만 예외(그 단락은 실제로 주어진 글 뒤에 온다).
-      // 판정 대상은 **학생이 읽는 면**뿐이다. 축자 줄을 먼저 보면, 지문 자체가
-      // 'However,' 로 시작하는 구간을 변형본이 이미 자립화했는데도 축자 쪽에서 반려가
-      // 나온다 — 축자는 고칠 수 없는 의무라 그 반려는 재생성으로 탈출 불가능하고,
-      // 동시에 나가는 '단서를 남겨라' 진단과 정면으로 충돌한다(적대검수 실증).
-      // 설정이 꺼져 있으면 어댑터가 축자를 싣는다 — 판정 대상도 축자여야 두 면이 같다.
-      for (const p of variation > 0 ? orderDisplayParagraphs(q) : q.paragraphs) {
-        if (p.label === sourceOrder[0]) continue;
-        const marker = freeEliminationMarker(p.text);
-        if (marker) {
-          v.push(`단락 ${p.label} 이 '${marker}' 로 시작해 첫 자리 후보에서 공짜로 소거됨 — 절단 위치를 옮겨 첫 문장을 자립화하라`);
-        }
-      }
+      // #10 공짜 소거 개시어는 26-08-22 기출 전수 실측으로 **비차단 강등** — 기출
+      // 258 중 99건(38.4%)이 발화했다(but 27·however 15·for example 10…, 2023 수능
+      // 37번 'Therefore' 실물 포함). "비첫자리 2단락 둘 다 개시어" 복합 조건으로
+      // 좁혀도 기출 10건(3.9%)이라 어떤 임계·복합 조건도 오반려 0%가 안 된다 —
+      // 연결사·지시사 개시는 기출의 정상 패턴이다. 판정 계산은 orderGateAdvisories
+      // 가 그대로 갖고 있다(채널만 변경). 절단선 지시는 프롬프트 레버로만 한다.
     }
   }
 
@@ -431,4 +441,53 @@ export function gateMdSentenceOrder(
   }
 
   return v;
+}
+
+/**
+ * **비차단 권고** — 게이트가 반려하지 않고 잡 result(mdCorrections) 포렌식으로만
+ * 남기는 항목. gate-summary-mc.ts 의 summaryMcGateAdvisories 선례 동형(26-08-22
+ * 수술 규약: 계산은 유지하고 채널만 바꾼다). 레인은 게이트가 클린일 때만 호출한다 —
+ * 반려 피드백 옆에 놓이면 소음이고, #8 대조(원문 순서 == 정답 라벨)가 선행돼야
+ * answerOption.order[0] 을 "실제 첫 자리"로 믿을 수 있다.
+ *
+ * · #10 공짜 소거 개시어 — 기출 258 중 99건(38.4%) 발화(2023 수능 'Therefore' 실물
+ *   포함), 복합 조건으로 좁혀도 3.9% → 차단 자격 없음(플레이북 §0). 판정 대상은
+ *   차단 시절과 동일하게 **학생이 읽는 면**이다(variation>0 이면 변형본).
+ * · #4 단락 문장수 2문장 권장 — 1문장 단락 보유 기출 39건(15.1%, 수능 실물 포함).
+ *   관측 최소 1문장이 자연 하한이라 차단 임계가 존재하지 않는다. 짧은 지문 면제
+ *   (문장 예산 6 미만)는 차단 시절 완화식 그대로다.
+ */
+export function orderGateAdvisories(
+  q: MdOrderQuestion,
+  passage: string,
+  options?: GateMdSentenceOrderOptions,
+): string[] {
+  const variation = Math.max(0, Math.round(Number(options?.prefixVariationCount ?? 0)) || 0);
+  const out: string[] = [];
+  const answerOption = q.options.find((o) => o.label === q.answer);
+  if (answerOption?.order.length === 3) {
+    const firstLabel = answerOption.order[0];
+    for (const p of variation > 0 ? orderDisplayParagraphs(q) : q.paragraphs) {
+      if (p.label === firstLabel || !p.text) continue;
+      const marker = freeEliminationMarker(p.text);
+      if (marker) {
+        out.push(
+          `참고(비차단): 단락 ${p.label} 이 '${marker}' 로 시작해 첫 자리 후보에서 공짜로 소거됨 — 가능하면 절단 위치를 옮겨 첫 문장을 자립화하라`,
+        );
+      }
+    }
+  }
+  const budgetSentences = Math.max(1, countDisplaySentences(passage) - 1);
+  if (budgetSentences >= 6) {
+    for (const p of q.paragraphs) {
+      if (!p.text) continue;
+      const sentences = countDisplaySentences(p.text);
+      if (sentences < SENTENCE_ORDER_MIN_PARAGRAPH_SENTENCES) {
+        out.push(
+          `참고(비차단): 단락 ${p.label} 이 ${sentences}문장 — 지문이 허락하면 ${SENTENCE_ORDER_MIN_PARAGRAPH_SENTENCES}문장 이상이 바람직하다`,
+        );
+      }
+    }
+  }
+  return out;
 }

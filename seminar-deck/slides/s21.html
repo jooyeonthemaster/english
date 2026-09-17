@@ -1,0 +1,210 @@
+<section class="slide slide--dark" id="s21"
+  data-title="ROADMAP" data-kr="계속 붙습니다"
+  data-zone="확장" data-zone-en="EXPAND"
+  data-part="PART 1 — 기능 브리핑"
+  data-in="현재 라인"
+  data-out="계속 늘어나는 콘텐츠"
+  data-note="정기 확장">
+
+  <div class="pad s21-wrap">
+
+    <!-- ── 헤드 ── -->
+    <div class="s21-head">
+      <div class="kicker" data-step="0" data-fx="none">앞으로</div>
+
+      <h2 class="h2 s21-h" data-step="0">
+        콘텐츠는<br>
+        <em>계속 붙습니다.</em>
+      </h2>
+
+      <p class="s21-lead" data-step="0" data-fx="none">
+        지금 있는 것만으로도 한 학기는 돌아갑니다. 그 위에 정기적으로 얹습니다.
+      </p>
+    </div>
+
+    <!-- ── 본문 2컬럼 ── -->
+    <div class="s21-body">
+
+      <!-- 좌: 지금 되는 것 -->
+      <div class="s21-col" data-step="1" data-fx="none">
+        <div class="colhd">
+          <span class="pip pip--em"></span>
+          <h3>지금 되는 것</h3>
+        </div>
+
+        <ul class="s21-now">
+          <li><span class="ck mono">✓</span><span class="lb">25유형 문항 생성</span></li>
+          <li><span class="ck mono">✓</span><span class="lb">시험지 <span class="mono dot">·</span> 해설지 조판/내보내기</span></li>
+          <li><span class="ck mono">✓</span><span class="lb">심층 분석 학습지</span></li>
+          <li><span class="ck mono">✓</span><span class="lb">지문 웹툰</span></li>
+          <li><span class="ck mono">✓</span><span class="lb">학생 배포 <span class="mono dot">·</span> 자동 채점</span></li>
+          <li><span class="ck mono">✓</span><span class="lb">취약점 리포트</span></li>
+          <li><span class="ck mono">✓</span><span class="lb">자체 어법 드릴 12유닛</span></li>
+        </ul>
+      </div>
+
+      <!-- 청사진 구분선 -->
+      <div class="s21-div" data-step="1" data-fx="none"></div>
+
+      <!-- 우: 준비 중 -->
+      <div class="s21-col" data-step="2" data-fx="none">
+        <div class="colhd">
+          <span class="pip pip--am"></span>
+          <h3 class="am">준비 중</h3>
+        </div>
+
+        <div class="s21-next">
+          <div class="nx">
+            <b>전용 학생 앱</b>
+            <span>웹으로는 이미 됩니다. 설치형 앱을 준비하고 있습니다.</span>
+          </div>
+          <div class="nx">
+            <b>단어장</b>
+            <span>지문에서 뽑은 어휘를 학생별 단어장으로</span>
+          </div>
+          <div class="nx">
+            <b>사설 모의고사</b>
+            <span>자체 제작 실전 모의고사를 정기 공급</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── 하단 문구 ── -->
+    <div class="s21-foot" data-step="3" data-fx="none">
+      <span class="ln"></span>
+      <p>도구를 사는 게 아니라, <em>계속 채워지는 자료실</em>을 함께 쓰시는 겁니다.</p>
+      <span class="ln r"></span>
+    </div>
+
+  </div>
+
+<style>
+#s21 .s21-wrap { display: flex; flex-direction: column; }
+
+/* ── 헤드 ── */
+#s21 .s21-head { flex: none; padding-top: 6px; }
+#s21 .kicker { margin-bottom: 26px; }
+#s21 .s21-h { color: var(--white); }
+#s21 .s21-h em { font-style: normal; color: var(--blue); }
+#s21 .s21-lead {
+  margin-top: 24px; font-size: 21px; line-height: 1.6; color: #93A0B5;
+}
+
+/* ── 본문 그리드 ── */
+#s21 .s21-body {
+  flex: none; margin-top: 48px;
+  display: grid; grid-template-columns: 1fr 1px 1fr; column-gap: 72px;
+}
+#s21 .s21-col { min-width: 0; }
+
+/* 컬럼 헤더 */
+#s21 .colhd { display: flex; align-items: center; gap: 13px; margin-bottom: 20px; }
+#s21 .colhd h3 {
+  font-family: var(--f-display); font-weight: 700; font-size: 26px;
+  letter-spacing: -.014em; color: var(--white);
+}
+#s21 .colhd h3.am { color: var(--amber); }
+#s21 .colhd .pip { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+#s21 .colhd .pip--em { background: var(--emerald); box-shadow: 0 0 0 4px rgba(16,185,129,.16); }
+#s21 .colhd .pip--am { background: var(--amber);   box-shadow: 0 0 0 4px rgba(245,158,11,.16); }
+
+/* ── 좌: 지금 되는 것 ── */
+#s21 .s21-now {
+  position: relative; list-style: none;
+  padding: 10px 28px;
+  background: rgba(16,185,129,.07);
+  border: 1px solid rgba(16,185,129,.26);
+  border-radius: var(--r-lg);
+}
+#s21 .s21-now::before {
+  content: ''; position: absolute; left: 41px; top: 36px; bottom: 36px; width: 1px;
+  background: rgba(16,185,129,.26);
+}
+#s21 .s21-now li {
+  position: relative; z-index: 1;
+  display: flex; align-items: center; gap: 16px; height: 50px;
+  border-bottom: 1px solid rgba(16,185,129,.13);
+}
+#s21 .s21-now li:last-child { border-bottom: 0; }
+#s21 .s21-now .ck {
+  flex: none; width: 27px; height: 27px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 600; color: var(--emerald);
+  background: var(--ink-2); border: 1px solid rgba(16,185,129,.45);
+}
+#s21 .s21-now .lb { font-size: 20px; font-weight: 500; color: #EAF0FA; letter-spacing: -.006em; }
+#s21 .s21-now .dot { color: var(--emerald); opacity: .7; padding: 0 1px; }
+
+/* ── 청사진 구분선 ── */
+#s21 .s21-div {
+  position: relative; width: 1px; align-self: stretch;
+  background: repeating-linear-gradient(to bottom,
+    rgba(59,130,246,.34) 0 10px, rgba(59,130,246,0) 10px 22px);
+}
+#s21 .s21-div::before,
+#s21 .s21-div::after {
+  content: ''; position: absolute; left: -3px; width: 7px; height: 7px;
+  border: 1px solid rgba(59,130,246,.62); background: var(--ink); transform: rotate(45deg);
+}
+#s21 .s21-div::before { top: 2px; }
+#s21 .s21-div::after  { bottom: 2px; }
+
+/* ── 우: 준비 중 ── */
+#s21 .s21-next { display: flex; flex-direction: column; gap: 22px; }
+#s21 .s21-next .nx {
+  position: relative;
+  padding: 22px 26px 22px 62px;
+  border: 1.5px dashed rgba(245,158,11,.40);
+  border-radius: var(--r-md);
+  background: rgba(245,158,11,.045);
+}
+#s21 .s21-next .nx::before {
+  content: ''; position: absolute; left: 26px; top: 28px;
+  width: 13px; height: 13px; border-radius: 50%;
+  border: 1.5px solid var(--amber); background: transparent;
+}
+#s21 .s21-next b {
+  display: block; font-family: var(--f-display); font-weight: 700; font-size: 23px;
+  line-height: 1.3; letter-spacing: -.012em; color: var(--white);
+}
+#s21 .s21-next span {
+  display: block; margin-top: 8px; font-size: 15px; line-height: 1.6; color: #808CA2;
+}
+
+/* ── 하단 문구 ── */
+#s21 .s21-foot {
+  flex: none; margin-top: auto; padding-bottom: 4px;
+  display: flex; align-items: center; gap: 30px;
+}
+#s21 .s21-foot .ln { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(59,130,246,.42)); }
+#s21 .s21-foot .ln.r { background: linear-gradient(90deg, rgba(59,130,246,.42), transparent); }
+#s21 .s21-foot p {
+  flex: none; white-space: nowrap;
+  font-family: var(--f-display); font-weight: 800; font-size: 40px;
+  line-height: 1.32; letter-spacing: -.022em; color: #EAF0FA;
+}
+#s21 .s21-foot em {
+  font-style: normal; color: var(--white); padding: 0 4px;
+  background-image: linear-gradient(transparent 60%, rgba(59,130,246,.34) 60%);
+}
+
+/* ── 스텝 내부 스태거 ── */
+#s21 [data-step].on .s21-now li { animation: s21-row .4s var(--ease-snap) backwards; }
+#s21 .s21-now li:nth-child(1) { animation-delay: .02s; }
+#s21 .s21-now li:nth-child(2) { animation-delay: .07s; }
+#s21 .s21-now li:nth-child(3) { animation-delay: .12s; }
+#s21 .s21-now li:nth-child(4) { animation-delay: .17s; }
+#s21 .s21-now li:nth-child(5) { animation-delay: .22s; }
+#s21 .s21-now li:nth-child(6) { animation-delay: .27s; }
+#s21 .s21-now li:nth-child(7) { animation-delay: .32s; }
+@keyframes s21-row { from { opacity: 0; transform: translateX(-14px); } to { opacity: 1; transform: none; } }
+
+#s21 [data-step].on .s21-next .nx { animation: s21-card .42s var(--ease-snap) backwards; }
+#s21 .s21-next .nx:nth-child(1) { animation-delay: .04s; }
+#s21 .s21-next .nx:nth-child(2) { animation-delay: .14s; }
+#s21 .s21-next .nx:nth-child(3) { animation-delay: .24s; }
+@keyframes s21-card { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+</style>
+</section>

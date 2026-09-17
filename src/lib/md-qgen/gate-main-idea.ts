@@ -40,8 +40,18 @@ const LABEL_LIST: readonly string[] = MAIN_IDEA_MD_LABELS;
 
 const HANGUL_RE = /[가-힣]/;
 // 요지 선지는 완전한 진술문이어야 한다 — 명사구는 제목·주제형 문항의 표면이다.
-// 판정 기준은 fast 검증기(validators/topic.ts:97-108)와 같은 어미 집합을 쓴다.
-const KO_STATEMENT_TAIL = /(다|음|함|됨|해야|필요|중요|가능|있다|없다|된다|준다)[.!?。]?$/;
+// 26-08-22 기출 실측: 종전 집합(fast 검증기 validators/topic.ts:97-108 과 동일)이
+// 명령형·청유형 종결을 못 받아 주장 기출 155문항 중 53건(34.2%, 수능 2·평가원 9
+// 포함 — 어미 '하라'×152 '마라'×13 '어라'×11 '하자'×10 '해라'×8 '여라'×8 '말라'×6)·
+// 요지 기출 186문항 중 3건(1.6%)을 "명사구 5/5" 다수결 오반려로 차단했다. 열거
+// 확장(하라|마라|아라|어라|여라|하자|말자)은 축약·불규칙 활용('말라'·'늘려라'·
+// '시켜라'·'세워라'·'해라'…)이 새어 주장 3건이 잔존(실측) → 한글 1자 앵커
+// [가-힣]라|[가-힣]자 로 명령('-라')·청유('-자') 종결 전체를 받는다(두 코퍼스
+// 발화 0건 실측). '…라/…자' 꼬리 명사(나라·학자 등)가 진술문으로 판정되는 대가는
+// 다수결(>=max(3, n-1))이 흡수한다 — 명사구 5선지 합성 음성테스트는 계속 발화.
+// ⚠ fast 검증기와 어미 집합이 갈라졌다 — 동기화 여부는 별도 결정(감사 지시).
+const KO_STATEMENT_TAIL =
+  /(다|음|함|됨|해야|필요|중요|가능|있다|없다|된다|준다|[가-힣]라|[가-힣]자)[.!?。]?$/;
 const LEADING_LABEL_RESIDUE = /^(?:[①②③④⑤⑥⑦⑧]|[([]?[1-8][)\].])\s/;
 
 /**
@@ -180,10 +190,15 @@ export function gateMdMainIdea(
   }
 
   // #5 길이 균형 — 유독 긴 선지 하나가 정답을 흘리는 시험 요령 차단(정본 마감 규칙).
+  // 26-08-22 기출 실측: diff 관측최대 요지 24자(p50=5·p99=23, n=187)·주장 40자
+  // (n=158 — ebsi_go1_20111115-q23 이 diff=40·×3.50 으로 종전 임계 30+ratio>=2
+  // 복합 조건에 실제 오반려). 임계를 30→40 으로 물려 관측최대(40)가 경계 밖
+  // (diff>40)이 되게 한다 — 두 코퍼스 발화 0건(감사 zeroFpProposals #5.
+  // ratio>=2 축은 요지 관측최대 2.20이라 그대로 둔다).
   const lengths = q.options.map((o) => ({ label: o.label, len: normalizeWs(o.text).length }));
   const longest = lengths.reduce((a, b) => (b.len > a.len ? b : a), lengths[0]);
   const shortest = lengths.reduce((a, b) => (b.len < a.len ? b : a), lengths[0]);
-  if (shortest.len > 0 && longest.len - shortest.len > 30 && longest.len >= shortest.len * 2) {
+  if (shortest.len > 0 && longest.len - shortest.len > 40 && longest.len >= shortest.len * 2) {
     v.push(
       `선지 길이 불균형 — 최장 ${longest.label}(${longest.len}자) 대 최단 ${shortest.label}(${shortest.len}자)`,
     );
@@ -262,11 +277,19 @@ export function gateMdMainIdea(
   // (선지·해설에 논지가 반영됐는지는 의미 판단이라 결정형 검사 불가 — 그 부분은
   //  fast 와 동일하게 프롬프트 전담이고, 여기서는 '어느 문장을 근거로 삼았나'라는
   //  결정형 사실만 본다. 레인이 같은 요구를 프롬프트 블록으로 먼저 못박는다.)
-  const teacherPoints = (options?.teacherPoints ?? []).map((p) => foldKey(p)).filter(Boolean);
+  const teacherPointsRaw = (options?.teacherPoints ?? []).filter(Boolean);
+  const teacherPoints = teacherPointsRaw.map((p) => foldKey(p)).filter(Boolean);
   if (teacherPoints.length > 0 && evidenceNorm) {
     const e = foldKey(q.evidence);
     if (!teacherPoints.some((p) => e.includes(p) || p.includes(e))) {
-      v.push("교사 지정 근거 문장이 `근거:` 줄에 반영되지 않음");
+      // 누락 포인트 원문을 명시한다(26-08-22 과녁 검증 — hard 유형들은 전부 원문을
+      // 인용하는데 이 메시지만 고정 문구라 재생성 피드백 정보가 비어 있었다).
+      const cited = teacherPointsRaw
+        .map((p) => `'${p.slice(0, 60)}'`)
+        .join(" · ");
+      v.push(
+        `교사 지정 근거 문장이 \`근거:\` 줄에 반영되지 않음 — 지정 문장 ${cited} 중 하나를 근거로 삼아라`,
+      );
     }
   }
 

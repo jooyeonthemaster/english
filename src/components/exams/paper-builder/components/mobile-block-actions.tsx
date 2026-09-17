@@ -16,6 +16,7 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 import { normalizeEditableText } from "./editable-text";
+import { isGichulSetMemberItem } from "../question-body-layout";
 import type { PaperItem } from "../types";
 import {
   isSourcePassageForcedForItem,
@@ -194,6 +195,7 @@ export function MobileBlockActionBar({
               <ActionButton
                 icon={<Ungroup className="size-[18px]" aria-hidden="true" />}
                 label="묶음 해제"
+                disabled={isGichulSetMemberItem(item)}
                 onClick={() => onUngroupItem(item.localId)}
               />
               <ActionButton

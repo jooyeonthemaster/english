@@ -17,6 +17,7 @@
 import {
   INLINE_MARK_RE,
   circledForMarkIndex,
+  locateBlankExpression,
   normalizeWs,
   type MdBlankQuestion,
   type MdGrammarQuestion,
@@ -53,6 +54,54 @@ export function contextAround(
   let text = passage.slice(start, end);
   // 단어 중간 절단 방지 — 앞뒤로 공백 경계까지 다듬는다.
   if (start > 0) {
+    const firstSpace = text.indexOf(" ");
+    if (firstSpace > 0 && firstSpace < 20) text = text.slice(firstSpace + 1);
+  }
+  if (end < passage.length) {
+    const lastSpace = text.lastIndexOf(" ");
+    if (lastSpace > text.length - 20 && lastSpace > 0) text = text.slice(0, lastSpace);
+  }
+  return text.trim();
+}
+
+/**
+ * contextAround 의 어법 마커용 변종 — **왼쪽 문맥에 표적과 같은 표면형이 남지
+ * 않게** 창 시작을 민다.
+ *
+ * 26-08-19 실측(O226 벤치, 34번 지문 "You know that smell that hangs…"):
+ * 모델(luna·3.7 둘 다)은 두 번째 that(관계사)에 정확히 마커를 찍었는데, 창에
+ * 첫 번째 that(지시형용사)이 함께 담기자 후처리의 창 내 탐색
+ * (findWithSurroundingContext → findInSlice = 창 내 첫 출현)이 마커를 앞
+ * that 으로 옮겨 양팔 공통 F 가 났다. 창 내 첫 출현 = 표적이 되도록 왼쪽
+ * 중복을 결정형으로 제거한다(오른쪽 중복은 첫 출현 탐색에 무해).
+ */
+export function contextAroundUnique(
+  passage: string,
+  index: number,
+  length: number,
+  pad = 45,
+): string {
+  let start = Math.max(0, index - pad);
+  const end = Math.min(passage.length, index + length + pad);
+  const surface = passage.slice(index, index + length);
+  const escaped = surface.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  try {
+    const re = new RegExp(`\\b${escaped}\\b`, "gi");
+    for (;;) {
+      const left = passage.slice(start, index);
+      re.lastIndex = 0;
+      const m = re.exec(left);
+      if (!m) break;
+      start = start + m.index + m[0].length;
+      while (start < index && /\s/.test(passage[start])) start += 1;
+    }
+  } catch {
+    /* 정규식 실패 시 기존 창 유지 */
+  }
+  let text = passage.slice(start, end);
+  // 단어 중간 절단 방지 — contextAround 와 동일 규칙(왼쪽은 중복 제거 시작점이
+  // 이미 단어 경계이므로 start 를 민 경우 건드리지 않는다).
+  if (start > 0 && start === Math.max(0, index - pad)) {
     const firstSpace = text.indexOf(" ");
     if (firstSpace > 0 && firstSpace < 20) text = text.slice(firstSpace + 1);
   }
@@ -100,14 +149,13 @@ export function adaptMdBlankToAiQuestion(
 ): MdBlankAdaptResult {
   const oe = q.originalExpression?.trim();
   if (!oe) return { ok: false, error: "빈칸원문 누락" };
-  const idx = passage.indexOf(oe);
-  if (idx < 0) {
-    // 공백 차이 허용 탐색(정규화 비교) — 그래도 없으면 실패.
-    const pn = normalizeWs(passage);
-    if (!pn.includes(normalizeWs(oe))) {
-      return { ok: false, error: "빈칸원문이 지문에 축자로 없음" };
-    }
+  // 후처리와 같은 탐색기(원문 좌표) — 게이트가 통과시킨 표현을 어댑터가 다시
+  // 반려하던 이중 기준을 없앤다(26-09-08). 못 찾으면 후처리도 못 찾는다.
+  const located = locateBlankExpression(passage, oe);
+  if (!located) {
+    return { ok: false, error: "빈칸원문이 지문에 축자로 없음" };
   }
+  const idx = located.index;
   if (q.options.length !== 5) return { ok: false, error: `선지 ${q.options.length}개` };
   if (!q.answer) return { ok: false, error: "정답 누락" };
   const wrong = q.wrong.filter((w) => w.label !== q.answer).slice(0, 4);
@@ -125,9 +173,8 @@ export function adaptMdBlankToAiQuestion(
       // 축자로 덮어써 공예 정답이 파괴된다(적대 검수 실증 — 26-07-21). 반대로
       // 설정이 OFF 면 그 덮어쓰기가 곧 계약 집행이다 — answerMode 로 갈린다.
       blankAnswerMode: answerMode,
-      // idx<0(정규화로만 존재)면 빈 문자열로 두어 후처리 전역 매칭에 맡긴다 —
-      // Math.max(0,-1)=0 으로 지문 맨앞을 오려 보내던 오배치 방지.
-      surroundingText: idx >= 0 ? contextAround(passage, idx, oe.length) : "",
+      // 원문 좌표에서 절취 — 후처리가 같은 자리를 다시 찾도록 위치 힌트를 준다.
+      surroundingText: contextAround(passage, idx, located.length),
       options: q.options.map((o) => ({ label: o.label, text: o.text })),
       correctAnswer: q.answer,
       wrongOptionExplanations: wrong.map((w) => ({
@@ -162,7 +209,6 @@ export function adaptMdMultiBlankToAiQuestion(
   if (q.blanks.length < 2 || q.blanks.length > 3) {
     return { ok: false, error: `빈칸 ${q.blanks.length}개 (2~3개 필요)` };
   }
-  const pn = normalizeWs(passage);
   const blanks: {
     label: string;
     originalExpression: string;
@@ -172,16 +218,15 @@ export function adaptMdMultiBlankToAiQuestion(
     const expr = b.expression?.trim();
     const label = parenLabel(b.label);
     if (!expr) return { ok: false, error: `빈칸원문${label} 누락` };
-    const idx = passage.indexOf(expr);
-    if (idx < 0 && !pn.includes(normalizeWs(expr))) {
+    // 후처리와 같은 탐색기(원문 좌표) — 단일 빈칸 경로와 동일 결정(26-09-08).
+    const located = locateBlankExpression(passage, expr);
+    if (!located) {
       return { ok: false, error: `빈칸원문${label}이 지문에 축자로 없음` };
     }
     blanks.push({
       label,
       originalExpression: expr,
-      // idx<0(정규화로만 존재)면 빈 문자열 — 후처리 퍼지 탐색에 맡긴다(단일
-      // 빈칸 경로와 동일한 오배치 방지 결정).
-      surroundingText: idx >= 0 ? contextAround(passage, idx, expr.length) : "",
+      surroundingText: contextAround(passage, located.index, located.length),
     });
   }
   if (q.options.length !== 5) return { ok: false, error: `선지 ${q.options.length}개` };
@@ -288,7 +333,10 @@ export function adaptMdGrammarToAiQuestion(
     }
     const surroundingText =
       index >= 0
-        ? contextAround(contextSource, index, m.original.length)
+        ? // 어법 마커는 짧은 단어(that·is·it)라 같은 표면형이 창에 2회 담기면
+          // 후처리 창 내 첫-출현 탐색이 마커를 옮긴다 — 왼쪽 중복 제거 창 사용
+          // (26-08-19 34번 양팔 F 의 결정형 봉합).
+          contextAroundUnique(contextSource, index, m.original.length)
         : m.original;
     return {
       label: m.label,

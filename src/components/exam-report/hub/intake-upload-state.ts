@@ -27,7 +27,14 @@ import { metaToCreateInput, type ExamMetaValue } from "./exam-meta-form";
 import { uploadSlots, type UploadSlot } from "./upload-helpers";
 import { fireAnalyzeRequest } from "./board-shared";
 
-export const MAX_PAGES = 12;
+/**
+ * 클라 페이지 상한 12 → 20 (v4, docs/exam-analysis-v4-spec.md §1-5·§3 U1-6).
+ * 서버 게이트 실측: upload-urls 라우트 zod 는 pages 배열 `.max(30)`
+ * (src/app/api/exam-report/upload-urls/route.ts:27-35) — 20 은 그 안쪽이다.
+ * 엔진 쪽은 E1a 6장 청크 + E1b 페이지 국소 배치(≤6장)라 20장이어도 콜당
+ * 이미지가 늘지 않는다. 토스트 자구(`최대 ${MAX_PAGES}페이지`)는 자동 추종.
+ */
+export const MAX_PAGES = 20;
 export const ACCEPT = "image/png,image/jpeg,image/webp,application/pdf";
 
 type SourceKind = "IMAGE" | "PDF";

@@ -319,11 +319,17 @@ export function splitPassageSentences(passage: string): ContentMatchSentence[] {
       if (/(?:^|[\s([])[A-Za-z]\.$/.test(prefix) && /^[A-Za-z]/.test(passage.slice(i + 1).trim())) {
         continue;
       }
-      // 마침표 뒤가 **소문자**면 문장 끝이 아니다(`U.S. once`·`(e.g. in`·`3 p.m. and`).
-      // 약어 열거는 반드시 새고, 게이트 #6-b 가 "근거 = 지문 문장 전체" 를 요구하므로
-      // 잘못 쪼개진 순간 **정상 문항이 반려된다**(1차 수리가 만든 거짓 반려).
+    }
+    // 종결부호(.!?) 공통 — 뒤가 소문자면 문장 끝이 아니다(`U.S. once`·`(e.g. in`·
+    // `3 p.m. and`). 약어 열거는 반드시 새고, 게이트 #6-b 가 "근거 = 지문 문장
+    // 전체" 를 요구하므로 잘못 쪼개진 순간 **정상 문항이 반려된다**.
+    // ⚠ 이 가드는 26-08-22 까지 `.` 분기 안에만 있었다 — E2E 실측에서
+    // "…this product?' should be…" 류 문중 인용 의문부호가 경계로 오판돼
+    // 정상 문항이 2연속 반려로 죽었다(거짓 반려 실증). `!`·`?` 에도 적용한다.
+    // 대시 경유 소문자('…out there! - but…')도 같은 이유로 비경계.
+    {
       let next = i + 1;
-      while (next < passage.length && /[\s"'”’)\]]/.test(passage[next])) next += 1;
+      while (next < passage.length && /[\s"'”’)\]—–-]/.test(passage[next])) next += 1;
       if (/[a-z]/.test(passage[next] ?? "")) continue;
     }
     let end = i + 1;

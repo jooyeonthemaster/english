@@ -16,6 +16,13 @@ export type ExamAnalysisStatus =
 export type ExamSourceType = "IMAGE" | "PDF" | "TEXT" | "MANUAL";
 export type ExamType = "MIDTERM" | "FINAL" | "MOCK" | "OTHER";
 
+/**
+ * 시험지 첨부 페이지 상한(정본 — 클라 intake MAX_PAGES 와 서버 attachExamSources 가
+ * 같은 값을 본다). v4: E1a 무과금 프로브가 6장 청크로 ceil(N/6) 콜을 쓰므로 서버가
+ * 이 상한을 강제해야 원가 상한이 선다(docs/exam-analysis-v4-spec.md §1-5·§3 U1-6).
+ */
+export const EXAM_REPORT_MAX_PAGES = 20;
+
 /** 문항 종류(객관식·단답형·서술형) — ExamMap·응답·분석 공통. */
 export type ExamQuestionKind = "MC" | "SHORT" | "ESSAY";
 
@@ -48,6 +55,14 @@ export interface ExamMapEntry {
   correctAnswer?: string;
   /** E1b 가 도출한 정답의 확신도 — LOW 는 강사 확인 필요 뱃지 트리거. E1a 직후엔 없음 */
   answerConfidence?: Confidence;
+  /**
+   * 이 문항의 발문이 시작되는 첨부 사진의 전역 순번(1-based, 첨부 순서 = loadExamImages
+   * page 정렬 순). v4(docs/exam-analysis-v4-spec.md §3 U1-2): E1a 가 청크(≤6장)로 돌 때
+   * LLM 은 청크 내 상대 순번을 반환하고 코드가 청크 offset 을 더해 전역 순번으로
+   * 확정한다. E1b 는 이 값으로 페이지 국소 배치(대상 페이지 ±1, 최대 6장)를 짠다.
+   * 구 examMap(v4 이전)·INTERNAL 지도에는 없다 — 부재 시 E1b 는 전 페이지 폴백.
+   */
+  page?: number;
 }
 
 /**

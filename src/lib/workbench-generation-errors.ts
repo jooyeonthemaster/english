@@ -20,6 +20,17 @@ export function getFriendlyQuestionGenerationError(
     return "크레딧이 부족해서 문제를 생성하지 못했습니다. 충전 후 다시 시도해 주세요.";
   }
 
+  // md-stream 무결성/원문 대조 반려 문구는 서버가 이미 사용자용 한국어로 만든
+  // 것이다(환불 사실·지문 정리 안내 포함). 구판은 어느 분기에도 안 걸려 맨 아래
+  // 일반 문구로 삼켜졌다 — 환불됐다는 말도, 지문을 고치라는 말도 사용자에게
+  // 닿지 않았다(26-09-08 전수조사).
+  if (
+    hasKoreanUserMessage &&
+    (strippedRaw.includes("무결성 검사") || strippedRaw.includes("원문 대조 검사"))
+  ) {
+    return strippedRaw;
+  }
+
   if (lower.includes("authentication") || lower.includes("unauthorized")) {
     return "로그인이 만료되었습니다. 다시 로그인한 뒤 시도해 주세요.";
   }

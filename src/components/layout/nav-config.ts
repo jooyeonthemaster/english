@@ -17,6 +17,7 @@ import {
   BookOpenText,
   // BookMarked — 「단어장 생성」 메뉴 임시 숨김(26-08-05)으로 미사용. 복구 시 함께 해제.
   // BookMarked,
+  School,
   Activity,
   LifeBuoy,
   Users,
@@ -241,6 +242,18 @@ export function getNavGroups(
             { label: "학습지 관리", href: `${basePath}/workbench/passages` },
           ],
         },
+        // 26-08-09 클래스 스튜디오 — 클래스 중심 학습지 생성·모바일 배포 통합
+        // 테스트 표면(docs/class-studio-spec.md §2). 「학습지 생성」 직후 자리.
+        // ENABLE_CLASS_STUDIO(기본 true) — off 시 nav·라우트 동시 차단.
+        ...(FEATURE_FLAGS.ENABLE_CLASS_STUDIO
+          ? [
+              {
+                label: "클래스 스튜디오",
+                icon: School,
+                href: `${basePath}/studio`,
+              },
+            ]
+          : []),
         // 단어장 생성 — 기출 단어 코퍼스 탐색·분석 → 덱 구성 → 학생 전송
         // 워크스테이션(/workbench/wordbook). 「학습지 생성」 직후 자리.
         // 26-08-05 유저 지시로 좌측 메뉴에서만 임시 숨김 — 라우트·페이지·기능은
@@ -349,8 +362,14 @@ export function getNavGroups(
                     : []),
                   // exam-report 라우트 자체는 이동하지 않음(revalidatePath 리스크)
                   // — nav 계층·라벨만 재편(구 "리포트 생성" → "내신 시험 분석").
+                  //
+                  // 26-09-01: 구 「내신 리포트 관리」(/exam-report/library) 항목 제거.
+                  // 라이브러리는 허브의 진부분집합이었다 — 같은 훅(useExamReportActivity)
+                  // ·같은 API(?view=summary, take 50)·같은 보드(AnalysesBoard)를 렌더하고,
+                  // 인테이크 패널만 없었다. 목록 전용으로 쓰고 싶으면 허브에서 인테이크를
+                  // 접으면 되고(그 선택은 이제 localStorage 에 남는다), /library URL 은
+                  // 허브로 redirect 되어 기존 북마크는 살아 있다.
                   { label: "내신 시험 분석", href: `${basePath}/workbench/exam-report` },
-                  { label: "내신 리포트 관리", href: `${basePath}/workbench/exam-report/library` },
                 ],
               },
             ]

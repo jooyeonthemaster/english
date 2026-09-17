@@ -68,6 +68,83 @@ export function isStructuredAtomicSubtype(subType?: string | null): boolean {
   return STRUCTURED_ATOMIC_SUBTYPES.has(subType || "");
 }
 
+// ---------------------------------------------------------------------------
+// 기출 문항 은행 **장문 세트 멤버**(§12.2) 식별 — structuredData._gichul.set 이 진실원천.
+//
+// 세트 멤버는 지문을 자기 본문에 그리지 않는다(공유 지문 1박스는 그룹 머리가 그린다).
+// AI 생성 세트(setRender 경로)·KO 세트와 달리 멤버 passage.content 에 **표시 베이스**가
+// 실려 오므로(ExamDetail 경로 계약, §12.5), 이 플래그가 없으면 passage-policy 가 41(TITLE)·
+// 45(CONTENT_MATCH) 를 「지문 동봉형」으로 보고 멤버 안에 지문을 한 번 더 그린다(실측: segs
+// ["box:passage"]). 순수 함수 — 렌더·페이지네이션·게이트가 같은 판정을 쓴다.
+// ---------------------------------------------------------------------------
+export type GichulSetMeta = {
+  key: string;
+  label: string;
+  qNums: number[];
+};
+
+function readObject(value: unknown): Record<string, unknown> | null {
+  if (value && typeof value === "object" && !Array.isArray(value)) {
+    return value as Record<string, unknown>;
+  }
+  if (typeof value !== "string") return null;
+  try {
+    const parsed = JSON.parse(value);
+    return parsed && typeof parsed === "object" && !Array.isArray(parsed)
+      ? (parsed as Record<string, unknown>)
+      : null;
+  } catch {
+    return null;
+  }
+}
+
+function readGichul(structuredData: unknown): Record<string, unknown> | null {
+  return readObject(readObject(structuredData)?._gichul);
+}
+
+/** 이 문항이 은행 장문 세트의 멤버인가(structuredData._gichul.set 존재). */
+export function isGichulSetMemberData(structuredData: unknown): boolean {
+  return Boolean(readObject(readGichul(structuredData)?.set)?.key);
+}
+
+/** 세트 메타(키·라벨·번호) — 없으면 null. */
+export function gichulSetMetaFromData(structuredData: unknown): GichulSetMeta | null {
+  const set = readObject(readGichul(structuredData)?.set);
+  if (!set || typeof set.key !== "string" || !set.key) return null;
+  return {
+    key: set.key,
+    label: typeof set.label === "string" ? set.label : "",
+    qNums: Array.isArray(set.qNums) ? (set.qNums as number[]) : [],
+  };
+}
+
+/**
+ * 42(어휘)·44(지칭) 처럼 선지가 「① (a) ② (b) …」 라벨 참조인 세트 멤버인가
+ * (structuredData._gichul.optionList === "letters", §12.2).
+ * VOCAB_CHOICE 는 marker-render-scheme 상 inline-marked 라 선지 목록이 숨겨지는데,
+ * 세트 멤버는 인쇄본에 선지 줄이 **실재**하므로 여기서만 예외로 되살린다.
+ */
+export function isGichulLetterOptionData(structuredData: unknown): boolean {
+  return (
+    isGichulSetMemberData(structuredData) &&
+    readGichul(structuredData)?.optionList === "letters"
+  );
+}
+
+export function isGichulSetMemberItem(item: PaperItem): boolean {
+  return (
+    item.blockType === "question" &&
+    isGichulSetMemberData(item.sourceQuestion.structuredData)
+  );
+}
+
+export function isGichulLetterOptionItem(item: PaperItem): boolean {
+  return (
+    item.blockType === "question" &&
+    isGichulLetterOptionData(item.sourceQuestion.structuredData)
+  );
+}
+
 export function isFlowStructuredSubtype(subType?: string | null): boolean {
   return isStructuredAtomicSubtype(subType) || subType === "SENTENCE_INSERT" || isKoStructuredSubtype(subType);
 }
@@ -288,9 +365,18 @@ export function sentenceOrderSegmentsFromQuestionText(questionText: string): Str
   if (!body) return [];
 
   const headerMatch = body.match(SENTENCE_ORDER_GIVEN_HEADER_RE);
-  const bodyAfterHeader = headerMatch
+  const bodyWithFootnote = headerMatch
     ? body.slice(headerMatch[0].length).trim()
     : body;
+  // 꼬리 각주 블록("\n\n* squiggle: 꼬부라져 …")은 (C) 문단에 붙이지 않고 마지막 별도 줄로 뗀다
+  // (기출 문항 은행 순서 문항이 각주를 본문 꼬리에 직렬화한다 — 인쇄 관행과 같은 모양).
+  const footnoteMatch = bodyWithFootnote.match(SENTENCE_ORDER_TRAILING_FOOTNOTE_RE);
+  const bodyAfterHeader = footnoteMatch
+    ? bodyWithFootnote.slice(0, footnoteMatch.index).trim()
+    : bodyWithFootnote;
+  const footnoteSeg: StructSegment | null = footnoteMatch
+    ? { kind: "text", text: footnoteMatch[1].replace(/\s+/g, " ").trim() }
+    : null;
   const markers = pickSentenceOrderMarkers(collectSentenceOrderMarkers(bodyAfterHeader));
   const segs: StructSegment[] = [];
 
@@ -302,6 +388,7 @@ export function sentenceOrderSegmentsFromQuestionText(questionText: string): Str
           : { kind: "text", text: bodyAfterHeader },
       );
     }
+    if (footnoteSeg) segs.push(footnoteSeg);
     return segs;
   }
 
@@ -315,9 +402,13 @@ export function sentenceOrderSegmentsFromQuestionText(questionText: string): Str
     );
     if (text) segs.push({ kind: "para", label: `(${marker.letter})`, text });
   });
+  if (footnoteSeg) segs.push(footnoteSeg);
 
   return segs;
 }
+
+/** 순서 본문 꼬리의 각주 블록 — 줄머리 "* word: 뜻 ** word: 뜻" (끝까지). (C) 뒤 개행은 하나뿐일 수 있다. */
+const SENTENCE_ORDER_TRAILING_FOOTNOTE_RE = /\n+([*＊]\s*[A-Za-z][^\n]*(?:\n(?![A-Z(])[^\n]*)*)\s*$/;
 
 function parseSentenceInsertSegments(questionText: string): StructSegment[] {
   const body = splitFirstParagraph(questionText).body;
@@ -353,6 +444,8 @@ function stripOriginalBlock(text: string) {
 }
 
 export function structuredSegments(item: PaperItem): StructSegment[] {
+  // 장문 소문항의 본문은 발문·선지만. 표시 토글은 공통 지문에 적용한다.
+  if (isGichulSetMemberItem(item)) return [];
   const subType = item.sourceQuestion.subType;
 
   // 국어(KO): 지문(마커 병합) → <보기> → <조건> 박스를 ko-paper-adapter 가 조립.

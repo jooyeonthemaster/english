@@ -14,7 +14,9 @@
       "Bash(exit 1)",
       "Bash(mkdir -p run16)",
       "Bash(rm -rf run16/*)",
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "Bash(sed -n '/## 3/,/## 4/p')",
+      "Bash(echo \"EXIT=$?\")"
     ]
   },
   "enableAllProjectMcpServers": true,

@@ -6,6 +6,7 @@ import type {
   ActivityParams,
   ActivityPayload,
   AnalysisReport,
+  ReadingAnalysisSection,
 } from "./schema";
 
 /**
@@ -122,8 +123,84 @@ export type GenContext = {
   structure?: GenStructure;
 };
 
+// ─── [U7] 직독직해 분석본(reading-analysis) → GenContext 사상 헬퍼 ─────────────
+// 전부 순수 문자열 연산 — 이 파일 계약(Math.random·Date.now·async 금지, 같은 입력 → 같은 출력) 그대로.
+
+/** 조각 en 재조합 — C1 계약(schema.ts: 공백 1칸 병합 + 구두점 앞 공백 정규화 = 원문 축자)과 같은 식.
+ *  조각이 구두점(,.;: 등)으로 시작하는 경계에서도 문장이 "word ," 로 벌어지지 않게 한다. */
+function joinReadingChunkEn(pieces: string[]): string {
+  return pieces
+    .map((p) => p.trim())
+    .filter(Boolean)
+    .join(" ")
+    .replace(/\s+([,.;:!?%)\]}])/g, "$1")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/** phrase(파랑=핵심 표현/어휘) 인라인 마크 텍스트 → keywords — passage.keywords 의 대칭 폴백.
+ *  등장 순서 보존 + 대소문자 무시 중복 제거. grammar/connective/structure 마크는 어휘 축이
+ *  아니라(문법·연결·구조 하이라이트) 키워드로 넣지 않는다. */
+function readingKeywordsFromMarks(sec: ReadingAnalysisSection): string[] {
+  const out: string[] = [];
+  const seen = new Set<string>();
+  for (const s of sec.sentences) {
+    for (const c of s.chunks) {
+      for (const m of c.marks ?? []) {
+        if (m.kind !== "phrase") continue;
+        const text = m.text.trim();
+        const key = text.toLowerCase();
+        if (!text || seen.has(key)) continue;
+        seen.add(key);
+        out.push(text);
+      }
+    }
+  }
+  return out;
+}
+
+/** 주석 행(notes) → 어휘 후보(스펙 §5.3 F-4 「notes → 어휘 후보」).
+ *  파란(blue=어휘·표현) 행의 "**표제어**: 뜻 / **표제어**: 뜻" 볼드 표기(schema.ts notes 정본)만
+ *  파스한다 — 빨간(red=문법) 행의 볼드는 문법 현상명이라 단어시험을 오염시키므로 제외.
+ *  볼드 표기가 없는 행은 버린다(표제어/뜻 경계를 추측으로 자르지 않는다 — 결정론·무해석 원칙). */
+function readingVocabFromNotes(sec: ReadingAnalysisSection): GenVocab[] {
+  const out: GenVocab[] = [];
+  const seen = new Set<string>();
+  for (const s of sec.sentences) {
+    for (const note of s.notes ?? []) {
+      if (note.tone !== "blue") continue;
+      // 세그먼트별 "**표제어**: 뜻" 쌍 — 뜻은 다음 세그먼트 구분자(/)·볼드 시작(*)·개행 전까지.
+      const re = /\*\*([^*]+)\*\*\s*[::]\s*([^/*\n]+)/g;
+      let m: RegExpExecArray | null;
+      while ((m = re.exec(note.text))) {
+        const headword = m[1].trim();
+        const meaning = m[2].trim();
+        if (!headword || !meaning) continue;
+        const key = headword.toLowerCase();
+        if (seen.has(key)) continue;
+        seen.add(key);
+        out.push({ headword, meaning });
+      }
+    }
+  }
+  return out;
+}
+
 export function extractGenContext(report: AnalysisReport): GenContext {
   const passage = report.sections.find((s) => s.kind === "passage");
+  // [E23] 파이널 원페이지 폴백 — 파이널 문서는 sections 가 final-onepage 하나뿐이라 passage 경로가
+  // 빈 컨텍스트를 돌려줬고, 게이트만 풀면 빈 활동 블록이 무에러로 삽입되는 결함이 됐다(정찰 P0).
+  // final.sentences[].en 은 생성기 검증(passageCoverageIssue)이 원문 전수 축자를 보장하므로 그대로 쓴다.
+  // 문장별 ko·chunks 는 파이널 스키마에 존재하지 않아 비워 둔다 — ko 의존 활동(직독직해 계열)은
+  // activityAvailabilityByKind 가 카드 단계에서 막고, 같은 지문의 기본 리포트를 activitySource 로
+  // 주입하면(편집기 E23) 그쪽 컨텍스트가 이 폴백 대신 쓰인다.
+  const finalSec = passage ? undefined : report.sections.find((s) => s.kind === "final-onepage");
+  // [U7] 직독직해 분석본 폴백 — 폴백 순서는 passage → final-onepage → reading-analysis 고정.
+  // 앞 경로가 하나라도 있으면 readingSec 을 아예 찾지 않으므로 기존 두 경로의 출력은 바이트 무회귀.
+  // reading 문서는 파이널과 달리 문장 ko(fullKo)·청크 gloss(조각 1:1 직독직해)를 실데이터로 가진다 —
+  // 그래서 문서 종류 스위치 없이도 activityAvailabilityByKind 실데이터 판정만으로 직독직해 계열까지
+  // 자연 개방된다(스펙 docs/reading-analysis-worksheet-spec.md §5.3 F-4, 실전이 밟은 전량 잠김 함정 회피).
+  const readingSec = passage || finalSec ? undefined : report.sections.find((s) => s.kind === "reading-analysis");
   const sentences: GenSentence[] =
     passage?.kind === "passage"
       ? passage.sentences.map((s) => ({
@@ -135,8 +212,35 @@ export function extractGenContext(report: AnalysisReport): GenContext {
             ?.map((c) => ({ text: c.text, gloss: c.gloss, role: c.role }))
             .filter((c) => c.text.trim().length > 0),
         }))
-      : [];
-  const keywords = passage?.kind === "passage" ? passage.keywords ?? [] : [];
+      : finalSec?.kind === "final-onepage"
+        ? finalSec.sentences.map((s) => ({ n: s.n, en: s.en, ko: "" }))
+        : readingSec?.kind === "reading-analysis"
+          ? readingSec.sentences.map((s) => {
+              const pieces = s.chunks.map((c) => c.en).filter((t) => t.trim().length > 0);
+              return {
+                n: s.no,
+                // 문장 en = 조각 재조합 — C1(축자 병합 계약)이 원문 일치를 보장하므로 그대로 복원해 쓴다.
+                en: joinReadingChunkEn(pieces),
+                // 문장 ko = 완전해석(fullKo, 자연 어순) — passage 의 문장 ko 와 동형 필드.
+                // 비어 있으면 직독직해 조각 병합으로 강등(직역 어순이라 어색하지만 정답지 공란보단 낫다).
+                ko: s.fullKo.trim().length > 0
+                  ? s.fullKo
+                  : s.chunks.map((c) => c.ko).filter((t) => t.trim().length > 0).join(" "),
+                chunks: pieces,
+                // passage 사상과 필드 대칭: text=조각 en · gloss=조각 1:1 직독직해(ko).
+                // role 은 reading 스키마에 없어 생략 — 이 파일 소비자는 gloss 만 본다(slash-compose·gloss-cloze).
+                chunksFull: s.chunks
+                  .map((c) => ({ text: c.en, gloss: c.ko }))
+                  .filter((c) => c.text.trim().length > 0),
+              };
+            })
+          : [];
+  const keywords =
+    passage?.kind === "passage"
+      ? passage.keywords ?? []
+      : readingSec?.kind === "reading-analysis"
+        ? readingKeywordsFromMarks(readingSec)
+        : [];
 
   const vocabSec = report.sections.find((s) => s.kind === "vocabulary");
   const vocab: GenVocab[] =
@@ -150,7 +254,14 @@ export function extractGenContext(report: AnalysisReport): GenContext {
           synonyms: r.synonyms,
           antonyms: r.antonyms,
         }))
-      : [];
+      : finalSec?.kind === "final-onepage"
+        ? (finalSec.mustKnow ?? []).map((m) => ({ headword: m.term, meaning: m.meaning }))
+        : readingSec?.kind === "reading-analysis"
+          ? // [U7] notes 파란 행의 "**표제어**: 뜻" 파스 — headword/meaning 만 채워진다(동의어·반의어·
+            // tier 없음). 파이널 mustKnow 폴백과 같은 강등 폭: 단어시험은 열리고, 매칭 카드는
+            // vocabMatchGate(:1234 부근)가 relation 재료 부재를 보고 잠근다(빈 payload 개방 금지).
+            readingVocabFromNotes(readingSec)
+          : [];
 
   const grammarSec = report.sections.find((s) => s.kind === "grammar");
   const grammar: GenGrammar[] =
@@ -1089,4 +1200,92 @@ export function activityPreviewLine(report: AnalysisReport, kind: ActivityKind):
   const first = payload.items[0];
   if (!first) return "이 지문에서 만들 수 있는 항목이 없습니다.";
   return first.prompt.length > 90 ? first.prompt.slice(0, 90) + "…" : first.prompt;
+}
+
+// ─── 활동 가용성 판정 (E23 — 데이터 기반, 문서 종류 스위치 금지) ─────────────
+export type ActivityAvailability = { ok: boolean; reason?: string };
+
+/**
+ * 카탈로그 카드의 활성/비활성을 **실데이터**로 판정한다 — 팔레트가 이 결과로 카드를 막아
+ * 「켤 수 있는데 빈 블록이 나오는」 경로를 차단한다(E23 스펙 I5). 문서 종류(finalOnepage 등)로
+ * 분기하지 않고 GenContext 가 실제로 가진 것만 본다: 파이널 문서는 문장별 ko·chunks 가 없어
+ * 직독직해 계열이 자연히 닫히고, 같은 지문의 기본 리포트를 activitySource 로 주입하면(편집기)
+ * 그 컨텍스트 기준으로 전 활동이 열린다. 사유 문구는 카드 배지/미리보기 자리에 그대로 노출된다.
+ */
+export function activityAvailabilityByKind(report: AnalysisReport): Record<ActivityKind, ActivityAvailability> {
+  const ctx = extractGenContext(report);
+  const pool = ctx.sentences.filter((s) => s.en.trim().length > 0);
+  const hasKo = pool.some((s) => s.ko.trim().length > 0);
+  const hasGlossChunks = pool.some(
+    (s) =>
+      (s.chunksFull?.filter((c) => c.text.trim()).length ?? 0) >= 2 &&
+      (s.chunksFull?.some((c) => c.gloss?.trim()) ?? false),
+  );
+  const hasVocab = ctx.vocab.length > 0;
+  const ok: ActivityAvailability = { ok: true };
+  const vocabGate: ActivityAvailability = hasVocab ? ok : { ok: false, reason: "어휘 데이터가 없습니다" };
+  // [26-08-31 렌즈5] 매칭 전용 게이트 — 기본 relation(synonym/antonym) 재료가 한 건도
+  // 없으면 buildVocabMatch 의 pool(:927)이 비어 **빈 payload 인 채 열리는** 활동이 된다.
+  // reading 의 notes 파스 어휘(:260-263)와 파이널 mustKnow 폴백(:258)은 headword/meaning
+  // 만 채워져 정확히 이 경우다 — 재료 실존으로 조여 둘의 선재 한계를 함께 닫는다.
+  // "—" 는 rightTokens(:924)가 빈 재료로 접는 플레이스홀더라 여기서도 재료로 안 센다.
+  // (matchBy=meaning/pronunciation 변형까지 닫히는 과폐쇄는 알고 감수 — 기본 진입이
+  //  빈 시험지인 것보다 낫다. payload 빌더는 무접촉.)
+  // ⚠ 임계는 「행 2건 이상」 — buildVocabMatch 의 pool 이 2 미만이면 빈 payload 를
+  //   반환하므로(:930 `pool.length < 2`), some(1건)으로 열면 재료 행이 정확히 1건인
+  //   문서에서 「OPEN 인데 빈 payload」가 그대로 재현된다(재검증 R2 실측).
+  const hasMatchMaterial =
+    ctx.vocab.filter((v) => {
+      const syn = (v.synonyms ?? "").trim();
+      const ant = (v.antonyms ?? "").trim();
+      return (syn.length > 0 && syn !== "—") || (ant.length > 0 && ant !== "—");
+    }).length >= 2;
+  const vocabMatchGate: ActivityAvailability = !hasVocab
+    ? vocabGate
+    : hasMatchMaterial
+      ? ok
+      : { ok: false, reason: "동의어·반의어 데이터가 없습니다 — 기본 학습지 어휘가 있으면 열려요" };
+  if (pool.length === 0) {
+    const none: ActivityAvailability = { ok: false, reason: "지문 문장 데이터가 없습니다" };
+    return {
+      "keyword-cloze": none,
+      "full-cloze": none,
+      "nested-cloze": none,
+      "chunk-gloss-cloze": none,
+      "slash-compose": none,
+      "sentence-translation": none,
+      reproduction: none,
+      "chunk-scramble": none,
+      "word-scramble": none,
+      "sentence-order": none,
+      "vocab-quiz": vocabGate,
+      // 문장 0건 분기에서도 같은 재료 게이트 — 빈 payload OPEN 은 여기서도 성립한다.
+      "vocab-match": vocabMatchGate,
+    };
+  }
+  const noKo: ActivityAvailability = {
+    ok: false,
+    reason: "문장별 해석 데이터가 없어요 — 기본 학습지가 있으면 열려요",
+  };
+  return {
+    "keyword-cloze": ok,
+    "full-cloze": ok,
+    "nested-cloze": ok,
+    // 직독직해 빈칸: gloss 달린 청크 2개 이상 문장이 최소 1개는 있어야 items 가 나온다(:868-872).
+    "chunk-gloss-cloze": hasGlossChunks
+      ? ok
+      : { ok: false, reason: "끊어읽기(청크) 데이터가 없어요 — 기본 학습지가 있으면 열려요" },
+    // 끊어읽기 영작: gloss 청크가 없으면 문장 ko 폴백(:624) — 둘 다 없으면 단서가 공백이 된다.
+    "slash-compose": hasGlossChunks || hasKo ? ok : noKo,
+    // 해석 쓰기: 정답이 문장 ko(:608) — 없으면 정답지가 공란으로 인쇄된다.
+    "sentence-translation": hasKo ? ok : noKo,
+    // 백지 영작: 문제 자체가 문장 ko(:588) — 없으면 문제가 공백이다.
+    reproduction: hasKo ? ok : noKo,
+    // 어순 배열: chunks 없으면 splitForScramble 이 단어 분할로 폴백(:387)해 en 만으로 성립.
+    "chunk-scramble": ok,
+    "word-scramble": ok,
+    "sentence-order": pool.length >= 3 ? ok : { ok: false, reason: "문장 3개 이상이 필요합니다" },
+    "vocab-quiz": vocabGate,
+    "vocab-match": vocabMatchGate,
+  };
 }

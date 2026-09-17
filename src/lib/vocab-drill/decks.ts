@@ -128,13 +128,23 @@ export async function ensureDefaultDecks(academyId: string): Promise<void> {
   );
 }
 
-/** 학생 트랙 허브용 덱 목록 (ACTIVE, 표시 순서). */
+/**
+ * 학생 트랙 허브용 덱 목록 (ACTIVE, 표시 순서).
+ *
+ * ★ 교재(시리즈) 단계 덱은 숨긴다 — 위저드가 만드는 교재는 40단계까지 갈라지는데
+ *   (spec.series, payload.ts) 그대로 노출하면 단계 덱이 허브 30칸을 도배한다.
+ *   학생은 시차 배포된 과제로만 단계 덱을 만난다. spec 은 JSONB 라 WHERE 로
+ *   못 거르므로 넉넉히 읽어 JS 로 거른 뒤 30개를 유지한다.
+ */
 export async function listActiveDecks(academyId: string) {
-  return prisma.vocabDrillDeck.findMany({
+  const rows = await prisma.vocabDrillDeck.findMany({
     where: { academyId, status: "ACTIVE" },
     orderBy: [{ orderIndex: "asc" }, { createdAt: "asc" }],
-    take: 30,
+    take: 150,
   });
+  return rows
+    .filter((d) => !(d.spec as { series?: unknown } | null)?.series)
+    .slice(0, 30);
 }
 
 /**

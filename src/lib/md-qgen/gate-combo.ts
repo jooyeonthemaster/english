@@ -18,7 +18,7 @@
 //   프롬프트에 금지 문구가 있어도 그건 게이트가 아니다 — 모델이 어기면 통과한다.
 // ============================================================================
 
-import { normalizeWs } from "./parser";
+import { reconstructionEq } from "./parser";
 import {
   COMBO_CIRCLED,
   COMBO_LABEL_KEYS,
@@ -353,9 +353,10 @@ export function gateMdCombo(
     }
   }
 
-  // #5 지문 재구성 대조 ★ — 마커를 올바른 표현으로 되돌리면 원문과 완전히 같아야 한다.
+  // #5 지문 재구성 대조 ★ — 마커를 올바른 표현으로 되돌리면 원문과 완전히 같아야
+  // 한다(말미 종결부호만 관용 — reconstructionEq 주석의 26-08-11 RCA).
   const rebuilt = rebuildComboWithSlots(q);
-  const reconstructionOk = normalizeWs(rebuilt.text) === normalizeWs(passage);
+  const reconstructionOk = reconstructionEq(rebuilt.text, passage);
   if (!reconstructionOk) {
     v.push("지문 재구성 불일치 — 마커 밖 텍스트가 원문과 다르거나 올바른 표현이 원문 축자가 아님");
   }

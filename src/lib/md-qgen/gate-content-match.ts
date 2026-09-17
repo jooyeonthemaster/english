@@ -26,6 +26,30 @@ import {
 
 const HANGUL_RE = /[ㄱ-ㆎ가-힣]/;
 
+/**
+ * 진술문 최소 길이(normalizeWs 축) — 언어별 분리.
+ * 정본 초기값은 12 단일이었으나 26-08-22 기출 전수 실측(수능·평가원·학평
+ * 191문항·선지 955개, p1=12)에서 10~11자 정상 선지 7건이 오반려됐다(관측 최소
+ * 10자 — 수능 2015 '영국에 정착하였다.'·'풍경화의 대가이다.' 각 10자 등).
+ * ko 는 8 로 완화 — <8 발화 시뮬레이션 0건. en 선지는 기출 내용일치가 전량
+ * 한국어라 이 코퍼스로 미검증이므로 12 를 보수 유지한다.
+ */
+const MIN_STATEMENT_LEN_KO = 8;
+const MIN_STATEMENT_LEN_EN = 12;
+
+/**
+ * #4-d 중복 판정 전용 fold — **한글 보존**([a-z0-9가-힣]).
+ * parser 의 foldForContentMatch 는 [a-z0-9]만 보존한다(영어 지문에서 근거
+ * 자리를 찾는 용도라 그걸로 충분). 그 키를 한국어 진술 중복 판정에 그대로 쓰면
+ * 한글이 전부 소실돼 고유명사·연도만 남는다 — 26-08-22 기출 실측에서 191문항 중
+ * 7건(3.7%)이 이 소실로 오반려됐다('Apelles' 하나로 4개 선지가 동일 키,
+ * 'Lives'·'John Kidd'·'1925' 등. 진짜 중복 기출은 0건). 한글 보존 키의 기출
+ * 발화는 0건(시뮬레이션 검증). 영어 진술에서는 종전 키와 동작이 같다.
+ */
+function foldStatementKey(source: string): string {
+  return (source.toLowerCase().match(/[a-z0-9가-힣]+/g) ?? []).join(" ");
+}
+
 export interface ContentMatchGateOptions {
   optionCount: number;
   answerCount: number;
@@ -111,7 +135,10 @@ export function gateMdContentMatch(
       continue;
     }
     const length = textLength(text);
-    if (length < 12) {
+    // 26-08-22 기출 실측: 구 임계 12(=기출 p1)가 10~11자 정상 선지 7건을 잘랐다
+    // — 상수 주석 참조. ko 8 / en 12(미검증 보수 유지).
+    const minLength = optionLanguage === "ko" ? MIN_STATEMENT_LEN_KO : MIN_STATEMENT_LEN_EN;
+    if (length < minLength) {
       v.push(`${option.label} 진술문이 너무 짧아 진술로 성립하지 않음: '${text.slice(0, 40)}'`);
     }
     if (length > 240) {
@@ -128,24 +155,20 @@ export function gateMdContentMatch(
     if (length >= 20 && pn.includes(normalizeWs(text))) {
       v.push(`${option.label} 진술문이 지문 문장의 축자 복사 — 재진술로 바꾸라`);
     }
-    // #4-d 진술 중복 금지.
-    const key = foldForContentMatch(text);
+    // #4-d 진술 중복 금지 — 키는 한글 보존 fold(위 foldStatementKey 주석의
+    //      26-08-22 실측 근거). 빈 키 스킵 가드는 유지한다.
+    const key = foldStatementKey(text);
     if (key && seenOptions.has(key)) v.push(`${option.label} 진술문이 다른 선지와 중복`);
     if (key) seenOptions.add(key);
   }
 
-  // #5 길이 편중 — 프로덕션은 warning(option-length-giveaway)이지만 md 는 error 로
-  //    승격한다(기록만 남는 fast 와 달리 md 는 반려·재생성으로 실제 교정된다).
-  const lengths = q.options.map((o) => textLength(o.text ?? "")).filter((n) => n > 0);
-  if (lengths.length === optionCount) {
-    const longest = Math.max(...lengths);
-    const shortest = Math.min(...lengths);
-    if (longest >= shortest * 3 && longest - shortest > 18) {
-      v.push(
-        `진술문 길이 편중(최장 ${longest}자 · 최단 ${shortest}자) — 길이만 보고 정답이 찍힌다`,
-      );
-    }
-  }
+  // #5 길이 편중 — **비차단 강등**(contentMatchGateAdvisories 로 이동, 계산 유지).
+  //    도입 시 md 는 프로덕션 warning(option-length-giveaway)을 error 로 승격
+  //    했었으나, 26-08-22 기출 전수 실측(191문항)에서 (x3 && 차>18)이 3건
+  //    발화했다 — 2023 수능 본시험(최장50/최단16) 포함, 관측 최대 배율 x3.21·
+  //    최대 길이차 34자, x2.2+ 근접 사례 26건. 편중은 기출 정상 패턴이며
+  //    플레이북 §3(내용일치 정답=최장 27.7% → 길이 게이트 금지)에 따라 차단
+  //    자격이 없다(배선 기준: 기출 오반려 0%만 차단). summary-mc #11·#12 강등 선례.
 
   // #6 근거 축자 존재 + 문장 좌표.
   //    이 유형에는 "지문 재구성 일치" 게이트가 없다. 그 빈자리를 메우려고 규범 §4-7
@@ -284,4 +307,31 @@ export function gateMdContentMatch(
   }
 
   return v;
+}
+
+/**
+ * **비차단 권고** — 게이트가 반려하지 않고 잡 result(mdCorrections)에만 남긴다.
+ * #5 길이 편중이 여기로 온다 — 26-08-22 기출 전수 실측(수능·평가원·학평
+ * 191문항)에서 (x3 && 차>18)이 3건 발화(2023 수능 본시험 포함, 관측 최대 x3.21·
+ * 차34자)했고, 플레이북 §3(내용일치 정답=최장 선지 27.7% — 길이 게이트 금지)에
+ * 따라 차단에서 강등했다. 반려하면 재생성 1회 후 크레딧 환불이라, 기출조차
+ * 지키지 않는 길이 취향에 그 예산을 쓰지 않는다(summary-mc 강등과 같은 원칙).
+ * 판정 계산은 차단 시절 그대로다 — 채널만 바꿨다.
+ *
+ * gateMdContentMatch 가 이미 반려한 문항에는 호출할 필요가 없다(레인이 순서 보장).
+ */
+export function contentMatchGateAdvisories(
+  q: MdContentMatchQuestion,
+  options: ContentMatchGateOptions,
+): string[] {
+  const lengths = q.options.map((o) => textLength(o.text ?? "")).filter((n) => n > 0);
+  if (lengths.length !== options.optionCount) return [];
+  const longest = Math.max(...lengths);
+  const shortest = Math.min(...lengths);
+  if (longest >= shortest * 3 && longest - shortest > 18) {
+    return [
+      `참고(비차단): 진술문 길이 편중(최장 ${longest}자 · 최단 ${shortest}자) — 길이만 보고 정답이 찍힐 수 있음`,
+    ];
+  }
+  return [];
 }

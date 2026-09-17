@@ -1,22 +1,113 @@
+/**
+ * 빌더 시험지 → HWPX 문서(IR) 조립 — E36 「구역 3분할」.
+ *
+ *   section0  표지    1단 · 머리말 없음 · 쪽번호 없음            (항상 생성)
+ *   section1  본문    layout.columns 단 · 머리말 없음 · 쪽번호 1부터 재시작
+ *   section2  정답표  1단 전체폭 · 머리말 없음 · 쪽번호 이어짐   (정답 미포함일 때만)
+ *
+ * 한컴 실측(SPEC §0)에 기댄 전제:
+ *  - P1 다구역 문서가 정상 동작한다. P2 새 구역은 언제나 새 쪽에서 시작한다
+ *    (그래서 표지·정답표에 pageBreak 를 따로 걸지 않는다).
+ *  - P3 구역마다 단 수를 다르게 줄 수 있다(본문 2단 + 정답표 1단).
+ *  - P7 <hp:startNum page="1"/> 로 본문 구역부터 쪽번호가 1로 재시작한다.
+ *
+ * 머리말(hp:header)은 **어느 구역에도** 넣지 않는다 — 사용자 확정("저런 머릿글 형태 다
+ * 없애주고"). 예전에는 전체폭 제목/학생정보 밴드를 머리말로 얹었는데 한컴이 그 밴드를
+ * 모든 쪽에 반복해 그렸다(P8). 제목·학교/반/이름·안내문은 전부 표지로 옮겼고, 머리말이
+ * 사라졌으므로 marginHeader 는 전 구역 mm(0) 이다(본문이 marginTop 바로 아래서 시작).
+ */
+
 import { A4_HEIGHT, A4_WIDTH, B4_HEIGHT, B4_WIDTH, mm } from "./units";
-import { type BlockNode, type HwpxDocument, type SectionSpec, txt } from "./types";
-import { COLORS, SIZE } from "./tokens";
-import { renderPageHeader } from "./render/page-header";
-import type { BuilderItemResolved } from "./render/question";
+import type { BlockNode, HwpxDocument, SectionSpec } from "./types";
 import { renderAnswerKey } from "./render/answer-key";
+import { renderCoverPage } from "./render/cover";
 import { estimateBlocksHeight } from "./section-xml";
 import { bodyFontForTemplate } from "@/app/api/exams/[examId]/export-docx/_lib/styles";
-import type { BuilderBlock, BuilderHeader, BuilderLayout } from "@/app/api/exams/[examId]/export-docx/_lib/build-builder-document";
+import type {
+  BuilderHeader,
+  BuilderLayout,
+} from "@/app/api/exams/[examId]/export-docx/_lib/build-builder-document";
+// BuilderCover 는 배럴(build-builder-document/index.ts)이 아직 내보내지 않아 정의 모듈에서
+// 직접 가져온다(ko-set-passage 와 같은 깊은 import 패턴).
+import type { BuilderCover } from "@/app/api/exams/[examId]/export-docx/_lib/build-builder-document/model";
 import { suppressKoSetMemberInlinePassages } from "@/app/api/exams/[examId]/export-docx/_lib/build-builder-document/ko-set-passage";
 import { type BreakPlan, computeBreakPlan, computePaginatedLayout } from "./break-plan";
 import type { FragmentRenderOptions } from "./render/fragment";
 import type { BuildHwpxOptions } from "./builder-types";
-import { floatHeaderBlocks, renderCustomBlock } from "./builder-blocks";
 import { appendBlocksInOrder, buildColumnPageTable, renderColumn, renderGroupsToUnits } from "./builder-tables";
 
 export type {
   BuildHwpxOptions,
 } from "./builder-types";
+
+/** 구역 3개가 공유하는 용지/여백 치수. */
+interface PageMetrics {
+  pageWidth: number;
+  pageHeight: number;
+  marginLR: number;
+  marginTB: number;
+  columnGap: number;
+  contentWidth: number;
+}
+
+/**
+ * 표지 구역(section0) — SPEC §1·§2.
+ *
+ * 표지는 `cover.enabled` 와 무관하게 **항상** 나온다. enabled 는 표지의 유무가 아니라
+ * 모양/구성만 좌우한다(SPEC §1):
+ *   enabled=true  → cover 의 template/eyebrow/footnote/showLogo/showInfo 를 그대로.
+ *   enabled=false → 기본 구성(classic · showLogo · showInfo · eyebrow=header.subtitle
+ *                   · footnote 없음).
+ * 표지 구역은 언제나 꼬리말 없음(pageNumberStyle="none", SPEC §5).
+ */
+function buildCoverSection(args: {
+  title: string;
+  header: BuilderHeader;
+  cover: BuilderCover | undefined;
+  examDateLabel: string;
+  compact: boolean;
+  page: PageMetrics;
+}): SectionSpec {
+  const { header, cover, page } = args;
+  const styled = cover?.enabled === true ? cover : undefined;
+  const showLogo = styled ? styled.showLogo !== false : true;
+
+  return {
+    pageWidthHpu: page.pageWidth,
+    pageHeightHpu: page.pageHeight,
+    marginLeft: page.marginLR,
+    marginRight: page.marginLR,
+    marginTop: page.marginTB,
+    marginBottom: page.marginTB,
+    // 머리말 없음 → 밴드 높이를 0 으로 둬야 표지가 marginTop 바로 아래서 시작한다.
+    marginHeader: mm(0),
+    // 표지는 pageNumberStyle="none" 이라 꼬리말이 아예 없다 → 밴드도 0.
+    // 7mm 를 예약해 두면 아래 contentHeightHpu 가 실제 본문 높이보다 7mm 커져서
+    // "표지를 1쪽 안에 유지" 클램프가 과대한 높이 위에서 돌아 2쪽으로 넘칠 수 있다.
+    marginFooter: mm(0),
+    columns: 1,
+    columnGapHpu: page.columnGap,
+    pageNumberStyle: "none",
+    blocks: renderCoverPage({
+      template: styled?.template ?? "classic",
+      eyebrow: styled?.eyebrow || header.subtitle || "",
+      title: args.title,
+      footnote: styled?.footnote || "",
+      logoDataUrl: showLogo ? header.academyLogoDataUrl ?? null : null,
+      showInfo: styled ? styled.showInfo !== false : true,
+      schoolName: header.schoolName ?? "",
+      className: header.className ?? "",
+      studentNameLabel: header.studentNameLabel || "이름",
+      examDateLabel: args.examDateLabel,
+      // 안내문(header.instructions)은 매쪽 반복되던 본문 머리말에서 표지로 옮겼다.
+      instructions: (header.instructions || "").trim(),
+      compact: args.compact,
+      contentWidthHpu: page.contentWidth,
+      contentHeightHpu: page.pageHeight - 2 * page.marginTB,
+    }),
+  };
+}
+
 export function buildBuilderHwpxDocument(
   opts: BuildHwpxOptions,
 ): HwpxDocument {
@@ -33,10 +124,25 @@ export function buildBuilderHwpxDocument(
   const showPassageTitle = layout.showPassageTitle === true;
   const columns: 1 | 2 = layout.columns === 1 ? 1 : 2;
 
+  // 「쪽당 N문제」 강제 배치(SPEC §3.1)는 **정답포함(해설) 모드에서 쓰지 않는다.**
+  //   해설이 붙으면 문항 한 개가 칸 하나보다 확실히 커져서 내용이 자연스럽게 다음 칸으로
+  //   넘친다. 거기에 그룹마다 columnBreak 를 또 넣으면 이미 넘어간 칸을 한 번 더 건너뛰어
+  //   **완전히 빈 쪽**이 생긴다(실측: 해설 포함 13문항에서 6쪽이 꼬리말만 남은 백지).
+  //   바로 아래 breakPlan 을 정답포함 모드에서 비우는 것과 같은 이유·같은 정책이다.
+  //   (항목별 명시 breakBefore(§3.2)는 사용자가 직접 지정한 것이라 그대로 존중한다.)
+  const forcePerPage: { columns: 1 | 2 } | undefined =
+    layout.forceTwoPerPage && !includeAnswers ? { columns } : undefined;
+
   // 미리보기와 동일한 페이지/단 분할을 재현하기 위한 break plan.
   // 정답포함 모드는 해설 블록 때문에 미리보기와 레이아웃이 본질적으로 다르므로,
   // 강제 분할을 적용하지 않고 한컴 자동 흐름에 맡긴다(빈 plan).
-  const { plan: breakPlan } = includeAnswers
+  //
+  // 「쪽당 N문제」가 켜져 있으면 이 plan 도 쓰지 않는다. computeBreakPlan 이 부르는
+  // paginationSettingsFrom 은 forceTwoPerPage 를 pagination 에 **전달하지 않아서**,
+  // 강제 배치를 모르는(= 칸을 촘촘히 채운) 배치 기준으로 나눔을 계산한다. 그 stale plan 을
+  // §3.1 강제 나눔과 함께 먹이면 미리보기엔 없는 그룹 내부 쪽 나눔이 겹쳐 생긴다.
+  // → 강제 배치 모드에서는 §3.1·§3.2 만 단독으로 집행한다(네이티브 경로와 같은 정책).
+  const { plan: breakPlan } = includeAnswers || forcePerPage
     ? { plan: new Map() as BreakPlan }
     : computeBreakPlan({
         blocks: settings?.blocks,
@@ -46,15 +152,12 @@ export function buildBuilderHwpxDocument(
       });
 
   // 페이지 설정 — 미리보기(A4PaperPage)의 px padding 을 mm로 정확히 환산.
-  // 미리보기: comfortable px-[42px] py-[38px], compact px-[34px] py-[30px].
   // 미리보기는 가상 A4(760px=210mm) 모델 → 1px = 210/760 = 0.276316mm.
   //   (96dpi(0.264583mm) 가 아님. 그게 직전 패스의 버그였다.)
   const MM_PER_PX = 210 / 760; // 0.276316
   const paperSize = layout.paperSize === "B4" ? "B4" : "A4";
-  // 전체 여백 축소(5차): 미리보기 a4-paper-page.tsx 의 새 px 패딩을 그대로 환산한다.
+  // 전체 여백 축소(5차): 미리보기 a4-paper-page.tsx 의 px 패딩을 그대로 환산한다.
   //   comfortable px-[34px] py-[28px], compact px-[28px] py-[24px].
-  //   좌우는 줄넘김 안정성을 위해 소폭(42→34, 34→28)만, 상하는 더 적극적으로 축소.
-  //   (직전의 LR_TRIM 별도 보정은 제거 — 미리보기 패딩 자체를 줄였으므로 불필요.)
   const LR_PX = compact ? 28 : 34;
   const TB_PX = compact ? 24 : 28;
   const marginLR = mm(LR_PX * MM_PER_PX);
@@ -63,46 +166,43 @@ export function buildBuilderHwpxDocument(
   const pageHeight = paperSize === "B4" ? B4_HEIGHT : A4_HEIGHT;
   const contentWidth = pageWidth - 2 * marginLR;
   const columnGap = mm(32 * MM_PER_PX); // gap-8 = 32px ≈ 8.84mm
+  const page: PageMetrics = {
+    pageWidth,
+    pageHeight,
+    marginLR,
+    marginTB,
+    columnGap,
+    contentWidth,
+  };
   // 줄넘김(칸당 글자수)은 본문 칸 폭으로 결정된다. 칸 폭은 미리보기의 콘텐츠 폭
-  // (새 좌우 패딩 34/28px 기준)으로 고정해 미리보기 pagination.ts 와 동일 폭을 쓴다.
-  // (좌우 패딩을 미리보기·pagination·HWPX·DOCX 에서 함께 바꿨으므로 줄넘김이 어긋나지 않는다.)
+  // (좌우 패딩 34/28px 기준)으로 고정해 미리보기 pagination.ts 와 동일 폭을 쓴다.
   const previewContentWidth = pageWidth - 2 * marginLR;
   const columnWidth =
     columns === 1
       ? previewContentWidth
       : Math.floor((previewContentWidth - columnGap) / 2);
 
+  // 본문(section1) 블록과 그 구역의 실제 단 수. 아래 두 갈래가 이 둘을 채운다.
+  const bodyBlocks: BlockNode[] = [];
+  let bodyColumns: 1 | 2 = 1;
+
   // =========================================================================
   // 네이티브 2단 경로 (한컴 검증 방식·기본 활성): per-page 표를 폐기하고, 본문을
   // 한컴 섹션 다단(secPr colCount=2)에 "문단으로 흘려" 한컴이 자동으로 페이지/단을
   // 꽉 채우게 한다 → 옛 그리디 표 방식의 "칸 하단 여백/왼쪽→오른쪽 조기 넘어감"
-  // 문제 제거. 전체폭 헤더(제목/학생정보)는 떠 있는 표로 머리말 밴드에 얹는다.
-  //   (한컴 실제 시험지 인코딩 역공학으로 확인: header control + colCount=2.)
-  //   비활성화하려면 env HWPX_NATIVE_2COL=0. (1단은 기존 경로.)
+  // 문제 제거. 비활성화하려면 env HWPX_NATIVE_2COL=0. (1단은 아래 경로.)
   // 커스텀 블록(이미지·텍스트·섹션 등)이 있어도 2단 칸 안에 함께 흘려보낸다(A안).
   // 정답포함 모드(해설 동반)도 설정한 단 수(2단)를 그대로 따른다 — 해설은 한컴 자동
   // 흐름으로 칸/쪽에 채워진다(강제 분할 없이 breakPlan 비움).
   // =========================================================================
-  if (process.env.HWPX_NATIVE_2COL !== "0" && columns === 2) {
-    const rawHeader: BlockNode[] = renderPageHeader({
-      subtitle: header.subtitle,
-      title,
-      schoolName: header.schoolName,
-      className: header.className,
-      studentNameLabel: header.studentNameLabel,
-      compact,
-      contentWidthHpu: contentWidth,
-    });
-    // (전역 안내문 header.instructions 는 네이티브 경로에서 제외 — 매쪽 반복·문항별
-    //  지시문과 중복. 사용자 요청.) 머리말을 떠있는 표로(secPr 오염 방지) + 밴드 예약.
-    const floatedHeader = floatHeaderBlocks(rawHeader, contentWidth);
-    const headerBlocks = floatedHeader.blocks;
-
+  const useNative2Col = process.env.HWPX_NATIVE_2COL !== "0" && columns === 2;
+  if (useNative2Col) {
+    bodyColumns = 2;
     const nativeColW = Math.floor((contentWidth - columnGap) / 2);
-    // 첫 블록은 secPr+colPr+머리말 컨트롤을 품는다. 거기에 본문 텍스트가 있으면
-    // 한컴이 그 문단을 전체폭으로 그려(머리말 컨트롤 영향) 첫 지문이 칸을 벗어난다.
-    // → 빈 문단을 맨 앞에 둬 컨트롤만 품게 하고 실제 본문은 둘째 블록부터 흐르게 한다.
-    const bodyBlocks: BlockNode[] = [{ kind: "p", style: { spaceAfter: 0 }, runs: [] }];
+    // 첫 블록은 secPr+colPr 를 품는다. 거기에 본문 텍스트가 있으면 한컴이 그 문단을
+    // 전체폭으로 그려 첫 지문이 칸을 벗어난다 → 빈 문단을 맨 앞에 둬 컨트롤만 품게
+    // 하고 실제 본문은 둘째 블록부터 흐르게 한다.
+    bodyBlocks.push({ kind: "p", style: { spaceAfter: 0 }, runs: [] });
     appendBlocksInOrder({
       target: bodyBlocks,
       blocks: settings?.blocks,
@@ -116,184 +216,148 @@ export function buildBuilderHwpxDocument(
       // 이미지는 단 폭(nativeColW) 기준으로 그려 칸 안에 들어가게 한다(2단 칸).
       imageColWidthHpu: nativeColW,
       imageMaxHeightHpu: pageHeight - 2 * marginTB - mm(10),
-      breakPlan: new Map(), // 강제 분할 없음 — 한컴이 자동 흐름으로 채운다.
-    });
-    // 정답표: 같은 2단 섹션 흐름에 두되, 첫 블록에 pageBreak 를 줘 항상 "새 페이지"에서
-    // 시작하게 한다 → 2단 흐름이므로 새 페이지 왼쪽 칸(1단)부터 채워진다(칸 폭 nativeColW).
-    if (!includeAnswers && opts.fullExamQuestions.length > 0) {
-      bodyBlocks.push(
-        ...renderAnswerKey(opts.fullExamQuestions, nativeColW, { pageBreak: true }),
-      );
-    }
-
-    // 핵심(실측): 한컴은 2단 본문을 marginHeader(머리말 밴드) 높이 아래에서 시작한다
-    // (marginTop 이 아니라!). 따라서 marginHeader = 머리말 실제 높이 + 여백 으로 잡으면
-    // 본문이 머리말 바로 아래에서 시작해 겹치지 않는다. marginTop 은 작게 둔다.
-    //   env HWPX_HDR_BAND_MM 로 밴드(=본문 시작선) 미세조정 가능.
-    const envBand = Number(process.env.HWPX_HDR_BAND_MM);
-    const marginHeaderNative =
-      Number.isFinite(envBand) && envBand > 0
-        ? mm(envBand)
-        : floatedHeader.heightHpu + mm(7);
-
-    const section: SectionSpec = {
-      pageWidthHpu: pageWidth,
-      pageHeightHpu: pageHeight,
-      marginLeft: marginLR,
-      marginRight: marginLR,
-      marginTop: marginTB,
-      marginBottom: marginTB,
-      marginHeader: marginHeaderNative,
-      marginFooter: mm(7),
-      columns: 2,
-      columnGapHpu: columnGap,
-      header: headerBlocks,
-      // 머리말 1쪽 전용은 한컴 제약으로 보류: applyPageType 에 "FIRST" 가 없고(BOTH/EVEN/ODD뿐),
-      // 본문 떠있는 표(TOP_AND_BOTTOM)는 2단 중 한 칸만 밀어 반대 칸이 겹친다(검증). 진짜 1쪽
-      // 전용은 마스터페이지(FIRST) 또는 2구역 분할 필요 → 후속. 현재는 모든 쪽 머리말(밴드 채움).
-      headerApplyFirstOnly: false,
-      blocks: bodyBlocks,
-    };
-    return { title, sections: [section], defaultFontKr: bodyFont, defaultFontLatin: bodyFont };
-  }
-
-  const blocks: BlockNode[] = [];
-
-  // 1) 페이지 헤더 (제목, 학교/반/이름)
-  //    미리보기처럼 헤더는 항상 전체 본문 폭을 사용하고, 본문 직전에 다단을 켠다.
-  blocks.push(
-    ...renderPageHeader({
-      subtitle: header.subtitle,
-      title,
-      schoolName: header.schoolName,
-      className: header.className,
-      studentNameLabel: header.studentNameLabel,
-      compact,
-      contentWidthHpu: contentWidth,
-    }),
-  );
-
-  // 2) 안내문
-  const instructions = (header.instructions || "").trim();
-  if (instructions) {
-    blocks.push({
-      kind: "p",
-      style: {
-        align: "LEFT",
-        // 미리보기 instructions 는 헤더 바로 아래(mt-2)에 붙어 있다.
-        // 본문 위 빈공간을 줄이려 위/아래 간격을 축소.
-        spaceBefore: 60,
-        spaceAfter: 120,
-        lineSpacingPct: 150,
-      },
-      runs: [
-        txt(instructions, {
-          size: SIZE.instructions,
-          color: COLORS.gray,
-        }),
-      ],
+      breakPlan: new Map(), // 한컴 자동 흐름 — 강제 분할은 forcePerPage/breakBefore 뿐.
+      // 쪽당 N문제(§3.1)·항목별 breakBefore(§3.2). 예산은 이 구역의 실제 단 수다
+      // (P4: columnBreak 가 네이티브 2단 구역에서 정확히 동작한다).
+      forcePerPage,
+      sectionColumns: 2,
     });
   } else {
-    blocks.push({ kind: "p", style: { spaceAfter: 60 }, runs: [] });
-  }
+    // =======================================================================
+    // 비네이티브 경로 — 결정론적 명시 2단 표 / 전체폭 1단 흐름.
+    //   한컴은 본문 중간 colPr(신문 다단)을 적용하지 않는다(검증: 전체폭 단일단으로
+    //   렌더됨). 그래서 페이지마다 [좌칸 | 간격 | 우칸] 무테 표로 배치를 강제하고,
+    //   각 문항을 미리보기 pagination 이 정한 (페이지, 단) 으로 라우팅한다.
+    //   이 경로의 구역은 언제나 1단이다(단은 표가 그린다).
+    // =======================================================================
+    const lastColWidth =
+      columns === 1 ? columnWidth : contentWidth - columnWidth - columnGap;
 
-  // 3) 본문 — 결정론적 명시 2단 표.
-  //   한컴은 본문 중간 colPr(신문 다단)을 적용하지 않는다(검증: 전체폭 단일단으로
-  //   렌더됨). 그래서 페이지마다 [좌칸 | 간격 | 우칸] 무테 표로 배치를 강제하고,
-  //   각 문항을 미리보기 pagination 이 정한 (페이지, 단) 으로 라우팅해 미리보기와
-  //   동일한 단/페이지 배치를 얻는다. (명시 셀 폭은 한컴이 정확히 지킨다 — 검증됨.)
-  const lastColWidth =
-    columns === 1 ? columnWidth : contentWidth - columnWidth - columnGap;
+    // 커스텀 블록(섹션/구분선/이미지 등)이 섞인 빌더는 placement 라우팅이 복잡하므로
+    // 폴백(전체폭 흐름)으로 처리한다. 순수 문항 시험지는 명시 2단 표 경로를 쓴다.
+    const hasCustomBlocks = (settings?.blocks ?? []).some(
+      (b) => b.blockType && b.blockType !== "question",
+    );
 
-  // 커스텀 블록(섹션/구분선/이미지 등)이 섞인 빌더는 placement 라우팅이 복잡하므로
-  // 폴백(전체폭 흐름)으로 처리한다. 순수 문항 시험지는 명시 2단 표 경로를 쓴다.
-  const hasCustomBlocks = (settings?.blocks ?? []).some(
-    (b) => b.blockType && b.blockType !== "question",
-  );
+    // 2단 시험지(순수 문항)는 우리 자신의 높이 측정으로 그리디 패킹한다.
+    //   미리보기 pagination 의 (페이지,단) 배치를 그대로 쓰면 미리보기와 한컴의 글꼴
+    //   메트릭/줄바꿈 차이로 칸이 페이지를 넘쳐 (treatAsChar 원자) 표가 통째로 다음
+    //   장으로 밀린다. 대신 estimateBlocksHeight(렌더와 동일 모델)로 각 칸을 페이지
+    //   용량까지만 채워 넘침/빈 페이지가 생기지 않게 한다.
+    const useColumnTables = columns === 2 && !hasCustomBlocks;
 
-  // 2단 시험지(순수 문항)는 우리 자신의 높이 측정으로 그리디 패킹한다.
-  //   미리보기 pagination 의 (페이지,단) 배치를 그대로 쓰면 미리보기와 한컴의 글꼴
-  //   메트릭/줄바꿈 차이로 칸이 페이지를 넘쳐 (treatAsChar 원자) 표가 통째로 다음
-  //   장으로 밀린다(1쪽이 헤더만 남는 현상). 대신 estimateBlocksHeight(렌더와 동일
-  //   모델)로 각 칸을 페이지 용량까지만 채워 넘침/빈 페이지가 생기지 않게 한다.
-  const useColumnTables = columns === 2 && !hasCustomBlocks;
+    if (useColumnTables) {
+      // 1쪽 헤더가 사라졌으므로(제목/학생정보/안내문 전부 표지로 이동) page-0 용량에서
+      // 뺄 헤더 높이는 0 이다. 헤더가 없는데 용량을 빼면 쪽수만 헛되이 늘어난다.
+      // (예전의 HWPX_HDR_PX / HEADER_TABLE_UNDERCOUNT_PX 보정도 함께 폐기했다.)
+      const firstPageHeaderPx = 0;
 
-  if (useColumnTables) {
-    // 미리보기(paginateGroups)가 확정한 (페이지 → 단 → fragment) 배치를 그대로
-    // 셀에 채운다. 문항/지문이 칸·페이지 경계에서 분할되어 웹과 동일한 연속 흐름이
-    // 된다(칸당 1문항만 들어가 하단 40%가 비던 과소충전·페이지 늘어남 문제 해소).
-    // 1쪽 헤더(제목/학생정보/안내문)는 본문 표 위 별도 블록으로 그린다. 한컴 실제
-    // 렌더 높이를 pagination 의 page-0 용량에서 빼지 않으면 첫 표가 1쪽에 못 들어가
-    // 2쪽으로 통째로 밀린다(1쪽 헤더만 남는 현상). estimateBlocksHeight 는 헤더의
-    // 중첩 표(학생정보 박스)를 과소추정하므로, 환산값에 보정 오버헤드를 더한다.
-    //   px = HPU * 760 / (210 * 283.465)   (가상 A4: 760px=210mm)
-    const HPU_TO_PX = 760 / (210 * 283.465);
-    const headerEstPx = estimateBlocksHeight([...blocks], contentWidth) * HPU_TO_PX;
-    const envHdr = Number(process.env.HWPX_HDR_PX);
-    const HEADER_TABLE_UNDERCOUNT_PX = 92; // 헤더 박스(학생정보 3행) 과소추정 실측 보정
-    const firstPageHeaderPx =
-      Number.isFinite(envHdr) && envHdr > 0
-        ? envHdr
-        : Math.round(headerEstPx + HEADER_TABLE_UNDERCOUNT_PX);
+      // 한컴 실제 렌더가 pagination 추정보다 미세하게 클 때(특히 구조화 박스 유형)
+      // 원자 페이지 표가 넘쳐 통째로 다음 장으로 밀리는 것을 막는 페이지 용량 안전 여백.
+      const envSafety = Number(process.env.HWPX_SAFETY_PX);
+      const contentSafetyPx = Number.isFinite(envSafety) ? envSafety : 40;
 
-    // 한컴 실제 렌더가 pagination 추정보다 미세하게 클 때(특히 구조화 박스 유형)
-    // 원자 페이지 표가 넘쳐 통째로 다음 장으로 밀리는 것을 막는 페이지 용량 안전 여백.
-    const envSafety = Number(process.env.HWPX_SAFETY_PX);
-    const contentSafetyPx = Number.isFinite(envSafety) ? envSafety : 40;
+      // 정답포함 모드는 해설 블록 때문에 미리보기 pagination 과 레이아웃이 본질적으로
+      // 다르므로(해설은 pagination 대상 아님) 프래그먼트 경로를 쓰지 않고 그리디 폴백
+      // (renderQuestionBlock 가 해설을 렌더)으로 처리한다.
+      const pageLayout = includeAnswers
+        ? null
+        : computePaginatedLayout({
+            blocks: settings?.blocks,
+            resolvedItems,
+            layout,
+            template: settings?.template,
+            firstPageHeaderPx,
+            contentSafetyPx,
+          });
 
-    // 정답포함 모드는 해설 블록 때문에 미리보기 pagination 과 레이아웃이 본질적으로
-    // 다르므로(해설은 pagination 대상 아님) 프래그먼트 경로를 쓰지 않고 그리디 폴백
-    // (renderQuestionBlock 가 해설을 렌더)으로 처리한다.
-    const pageLayout = includeAnswers
-      ? null
-      : computePaginatedLayout({
-          blocks: settings?.blocks,
-          resolvedItems,
-          layout,
+      let usedFragment = false;
+      if (pageLayout && pageLayout.pages.length > 0) {
+        const fopts: FragmentRenderOptions = {
+          passageStyle,
+          showPassageTitle,
+          showQuestionMeta: layout.showQuestionMeta !== false,
+          showAnswerSpace: layout.showAnswerSpace !== false,
+          compact,
           template: settings?.template,
-          firstPageHeaderPx,
-          contentSafetyPx,
+          columnWidthHpu: columnWidth,
+        };
+        const pageCols = pageLayout.pages.map((paperPage) => ({
+          left: renderColumn(paperPage[0] ?? [], fopts),
+          right: renderColumn(paperPage[1] ?? [], fopts),
+        }));
+
+        // 일관된 HWPX 높이 모델(estimateBlocksHeight)로 페이지별 오버플로를 검사한다.
+        // 페이지 표는 원자(treatAsChar)라 넘치면 통째로 다음 장으로 밀려 빈 페이지가
+        // 생긴다. 한 페이지라도 넘치면 안전한 그리디 패킹으로 폴백한다.
+        // (헤더가 사라져 이제 1쪽도 다른 쪽과 용량이 같다.)
+        const pageContentHpu = pageHeight - marginTB - marginTB;
+        const fits = pageCols.every((cols) => {
+          const colH = Math.max(
+            estimateBlocksHeight(cols.left, columnWidth),
+            estimateBlocksHeight(cols.right, columnWidth),
+          );
+          return colH <= pageContentHpu;
         });
 
-    let usedFragment = false;
-    if (pageLayout && pageLayout.pages.length > 0) {
-      const fopts: FragmentRenderOptions = {
-        passageStyle,
-        showPassageTitle,
-        showQuestionMeta: layout.showQuestionMeta !== false,
-        showAnswerSpace: layout.showAnswerSpace !== false,
-        compact,
-        template: settings?.template,
-        columnWidthHpu: columnWidth,
-      };
-      const pageCols = pageLayout.pages.map((page) => ({
-        left: renderColumn(page[0] ?? [], fopts),
-        right: renderColumn(page[1] ?? [], fopts),
-      }));
-      // 정답표는 페이지 표에 넣지 않고, if/else 종료 후 pageBreak 로 새 페이지에 따로 추가한다.
+        if (fits) {
+          pageCols.forEach((cols, idx) => {
+            bodyBlocks.push(
+              buildColumnPageTable({
+                leftBlocks: cols.left,
+                rightBlocks: cols.right,
+                colWidthHpu: columnWidth,
+                gapHpu: columnGap,
+                lastColWidthHpu: lastColWidth,
+                pageBreak: idx > 0,
+              }),
+            );
+          });
+          usedFragment = true;
+        }
+      }
 
-      // 일관된 HWPX 높이 모델(estimateBlocksHeight)로 페이지별 오버플로를 검사한다.
-      // 구조화 박스 유형(요약/순서/주제 등)은 pagination 추정보다 타게 렌더되어
-      // 헤더로 줄어든 page-0 칸을 넘칠 수 있는데, 페이지 표는 원자(treatAsChar)라
-      // 넘치면 통째로 다음 장으로 밀려 빈 페이지가 생긴다. 한 페이지라도 넘치면
-      // 안전한 그리디 패킹으로 폴백한다(과소충전이지만 빈 페이지·잘림 없음).
-      const pageContentHpu = pageHeight - marginTB - marginTB;
-      const headerHpu = Math.round(firstPageHeaderPx / HPU_TO_PX);
-      const fits = pageCols.every((cols, idx) => {
-        const colH = Math.max(
-          estimateBlocksHeight(cols.left, columnWidth),
-          estimateBlocksHeight(cols.right, columnWidth),
-        );
-        const avail = pageContentHpu - (idx === 0 ? headerHpu : 0);
-        return colH <= avail;
-      });
+      if (!usedFragment) {
+        // 폴백: fragment 가 한컴에서 넘치거나 pagination 실패 시 자체 높이추정 그리디
+        // 패킹(문항 통째). 안전(빈 페이지·잘림 없음)하나 칸당 1문항이라 다소 성김.
+        const units = renderGroupsToUnits({
+          items: resolvedItems,
+          layout,
+          includeAnswers,
+          compact,
+          passageStyle,
+          showPassageTitle,
+          columnWidthHpu: columnWidth,
+        });
+        const pageContentH = pageHeight - marginTB - marginTB;
+        const SAFETY = 0.95;
+        const colCapacity = Math.max(1, Math.floor(pageContentH * SAFETY));
 
-      if (fits) {
-        pageCols.forEach((cols, idx) => {
-          blocks.push(
+        const pages: BlockNode[][][] = [[[], []]];
+        let p = 0;
+        let col = 0;
+        let used = 0;
+        for (const unit of units) {
+          const h = estimateBlocksHeight(unit.blocks, columnWidth);
+          if (pages[p][col].length > 0 && used + h > colCapacity) {
+            if (col === 0) {
+              col = 1;
+            } else {
+              p += 1;
+              col = 0;
+              pages[p] = [[], []];
+            }
+            used = 0;
+          }
+          pages[p][col].push(...unit.blocks);
+          used += h;
+        }
+
+        pages.forEach((cols, idx) => {
+          bodyBlocks.push(
             buildColumnPageTable({
-              leftBlocks: cols.left,
-              rightBlocks: cols.right,
+              leftBlocks: cols[0] ?? [],
+              rightBlocks: cols[1] ?? [],
               colWidthHpu: columnWidth,
               gapHpu: columnGap,
               lastColWidthHpu: lastColWidth,
@@ -301,111 +365,96 @@ export function buildBuilderHwpxDocument(
             }),
           );
         });
-        usedFragment = true;
       }
-    }
-
-    if (!usedFragment) {
-      // 폴백: fragment 가 한컴에서 넘치거나 pagination 실패 시 자체 높이추정 그리디
-      // 패킹(문항 통째). 안전(빈 페이지·잘림 없음)하나 칸당 1문항이라 다소 성김.
-      const units = renderGroupsToUnits({
-        items: resolvedItems,
+    } else {
+      // 폴백: 전체폭 단일 흐름 (1단 / 정답포함 / 커스텀 블록 혼재).
+      // colPr 다단은 한컴에서 작동하지 않으므로 쓰지 않는다.
+      const flatWidth = contentWidth;
+      appendBlocksInOrder({
+        target: bodyBlocks,
+        blocks: settings?.blocks,
+        resolvedItems,
         layout,
         includeAnswers,
         compact,
         passageStyle,
         showPassageTitle,
-        columnWidthHpu: columnWidth,
-      });
-      // 정답표는 그리디 패킹에 넣지 않고, if/else 종료 후 pageBreak 로 새 페이지에 따로 추가한다.
-      const pageContentH = pageHeight - marginTB - marginTB;
-      const SAFETY = 0.95;
-      const colCapacity = Math.floor(pageContentH * SAFETY);
-      const headerH = estimateBlocksHeight([...blocks], contentWidth);
-      const capAt = (pg: number) =>
-        Math.max(1, colCapacity - (pg === 0 ? headerH : 0));
-
-      const pages: BlockNode[][][] = [[[], []]];
-      let p = 0;
-      let col = 0;
-      let used = 0;
-      for (const unit of units) {
-        const h = estimateBlocksHeight(unit.blocks, columnWidth);
-        if (pages[p][col].length > 0 && used + h > capAt(p)) {
-          if (col === 0) {
-            col = 1;
-          } else {
-            p += 1;
-            col = 0;
-            pages[p] = [[], []];
-          }
-          used = 0;
-        }
-        pages[p][col].push(...unit.blocks);
-        used += h;
-      }
-
-      pages.forEach((cols, idx) => {
-        blocks.push(
-          buildColumnPageTable({
-            leftBlocks: cols[0] ?? [],
-            rightBlocks: cols[1] ?? [],
-            colWidthHpu: columnWidth,
-            gapHpu: columnGap,
-            lastColWidthHpu: lastColWidth,
-            pageBreak: idx > 0,
-          }),
-        );
+        contentWidthHpu: flatWidth,
+        // 1단 흐름이라도 이미지는 미리보기의 단 폭(2단이면 columnWidth) 기준 크기로 그린다.
+        imageColWidthHpu: columns === 2 ? columnWidth : flatWidth,
+        imageMaxHeightHpu: pageHeight - 2 * marginTB - mm(10),
+        breakPlan,
+        // 이 구역은 1단이므로 예산도 1이고 breakBefore="column" 은 page 로 승격된다
+        // (§3.1·§3.2). 2단 설정인데 이 경로로 떨어진 시험지는 쪽당 1문제가 된다 —
+        // 1단 흐름에는 "다음 칸"이 없어서 예산 2를 표현할 수단이 없다.
+        forcePerPage,
+        sectionColumns: 1,
       });
     }
-  } else {
-    // 폴백: 전체폭 단일 흐름 (1단 / 정답포함 / pagination 실패).
-    // colPr 다단은 한컴에서 작동하지 않으므로 쓰지 않는다.
-    const flatWidth = contentWidth;
-    appendBlocksInOrder({
-      target: blocks,
-      blocks: settings?.blocks,
-      resolvedItems,
-      layout,
-      includeAnswers,
-      compact,
-      passageStyle,
-      showPassageTitle,
-      contentWidthHpu: flatWidth,
-      // 1단 흐름이라도 이미지는 미리보기의 단 폭(2단이면 columnWidth) 기준 크기로 그린다.
-      imageColWidthHpu: columns === 2 ? columnWidth : flatWidth,
-      imageMaxHeightHpu: pageHeight - 2 * marginTB - mm(10),
-      breakPlan,
+  }
+
+  // ===========================================================================
+  // 구역 조립 (SPEC §1)
+  // ===========================================================================
+  // 쪽번호는 본문·정답표가 같은 설정을 쓴다(표지만 "none"). SPEC §5.
+  const pageNumberStyle = layout.pageNumberStyle ?? "center";
+  // 표지는 시험지 기본값이지만, 문항 1개 내보내기 라우트는 명시적으로 끈다
+  // (빈 표지 1쪽이 붙어 종이가 두 배로 나가는 것을 막는다 — BuildHwpxOptions.includeCover).
+  const withCover = opts.includeCover !== false;
+  const sections: SectionSpec[] = [
+    ...(withCover
+      ? [
+          buildCoverSection({
+            title,
+            header,
+            cover: settings?.cover,
+            examDateLabel: opts.examDateLabel ?? "",
+            compact,
+            page,
+          }),
+        ]
+      : []),
+    {
+      pageWidthHpu: pageWidth,
+      pageHeightHpu: pageHeight,
+      marginLeft: marginLR,
+      marginRight: marginLR,
+      marginTop: marginTB,
+      marginBottom: marginTB,
+      // 머리말을 쓰지 않으므로 밴드는 0 — 본문이 marginTop 바로 아래에서 시작한다.
+      marginHeader: mm(0),
+      // 꼬리말(autoNum 쪽번호)은 살아있어야 하므로 적당한 값 유지.
+      marginFooter: mm(7),
+      columns: bodyColumns,
+      columnGapHpu: columnGap,
+      // 표지 다음 쪽이 1쪽이 되도록 이 구역에서 쪽번호를 재시작한다(P7).
+      startNumPage: 1,
+      pageNumberStyle,
+      blocks: bodyBlocks,
+    },
+  ];
+
+  // 정답표는 별도 구역(1단 전체폭). 새 구역은 이미 새 쪽이므로(P2) pageBreak 를 주지
+  // 않는다 — 주면 빈 쪽이 하나 더 생긴다. 칸 폭이 아니라 전체폭으로 그려야 머리 셀이
+  // 2줄로 터지지 않는다(P10). 쪽번호는 본문에서 이어진다(startNumPage 미지정).
+  if (!includeAnswers && opts.fullExamQuestions.length > 0) {
+    sections.push({
+      pageWidthHpu: pageWidth,
+      pageHeightHpu: pageHeight,
+      marginLeft: marginLR,
+      marginRight: marginLR,
+      marginTop: marginTB,
+      marginBottom: marginTB,
+      marginHeader: mm(0),
+      marginFooter: mm(7),
+      columns: 1,
+      columnGapHpu: columnGap,
+      pageNumberStyle,
+      blocks: renderAnswerKey(opts.fullExamQuestions, contentWidth, {
+        pageBreak: false,
+      }),
     });
   }
 
-  // 정답표: 같은 섹션에 두되 첫 블록 pageBreak 로 항상 새 페이지에서 시작한다.
-  // 명시 2단 표 경로(useColumnTables)는 본문이 2단이므로 정답표도 칸 폭(columnWidth)으로
-  // 그려 새 페이지 왼쪽 1단에 들어가게 하고, 1단(전체폭) 경로는 전체폭으로 둔다.
-  if (!includeAnswers && opts.fullExamQuestions.length > 0) {
-    const akWidth = useColumnTables ? columnWidth : contentWidth;
-    blocks.push(
-      ...renderAnswerKey(opts.fullExamQuestions, akWidth, { pageBreak: true }),
-    );
-  }
-
-  const section: SectionSpec = {
-    pageWidthHpu: pageWidth,
-    pageHeightHpu: pageHeight,
-    marginLeft: marginLR,
-    marginRight: marginLR,
-    marginTop: marginTB,
-    marginBottom: marginTB,
-    // 머리말은 실제로 쓰지 않고(헤더를 본문 블록으로 그림) 본문 위 죽은 공간만
-    // 만들므로 0 에 가깝게. 한컴은 top 여백 안에 header 밴드를 잡으므로 0이면
-    // 본문이 marginTop 바로 아래에서 시작한다.
-    marginHeader: mm(0),
-    // 꼬리말(autoNum 페이지번호)은 살아있어야 하므로 적당한 값 유지.
-    marginFooter: mm(7),
-    columns: 1,
-    columnGapHpu: columnGap,
-    blocks,
-  };
-
-  return { title, sections: [section], defaultFontKr: bodyFont, defaultFontLatin: bodyFont };
+  return { title, sections, defaultFontKr: bodyFont, defaultFontLatin: bodyFont };
 }

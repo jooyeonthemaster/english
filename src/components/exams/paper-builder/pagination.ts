@@ -1,6 +1,6 @@
 import { GROUP_GAP, ITEM_GAP } from "./constants";
 import { formatInlineMarkersForSubtype, formatSentenceInsertPassageMarkers, shouldRenderOptionListForSubtype, splitSentenceInsertGivenBlock } from "./option-display";
-import { isFlowStructuredSubtype, questionStemAndBody } from "./question-body-layout";
+import { isFlowStructuredSubtype, isGichulLetterOptionItem, questionStemAndBody } from "./question-body-layout";
 import { isLineGapItem, LINE_GAP_MAX_PX, BLOCK_PX_PER_PT, type PaginationSettings, type PaperGroup, type PaperItem, type PaperPage, type RenderFragment, type RenderItemPart } from "./types";
 import { DEFAULT_IMAGE_ASPECT, imageAspectFromDataUrl } from "@/lib/image-dims";
 import type { FlowBlock, PaginationResult } from "./pagination-types";
@@ -324,14 +324,26 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
         });
       } else {
         const lineH = passageLineHeight(settings);
-        lines.forEach((line, idx) => {
+        // 각주 줄("* word: 뜻")은 지문 마지막 줄과 한 블록으로 묶는다 — 줄 단위 흐름에서 각주만 다음 칸/쪽으로
+        // 밀려 각주 한 줄짜리 백지 페이지가 생겼다(기출 전수 렌더 실측). 묶인 줄은 "\n" 으로 이어 pre-line 렌더에서 줄바꿈된다.
+        const packed: { line: string; height: number }[] = [];
+        for (const line of lines) {
+          const prev = packed[packed.length - 1];
+          if (prev && /^\s*[*＊]\s*[A-Za-z]/.test(line)) {
+            prev.line = `${prev.line}\n${line}`;
+            prev.height += lineH;
+          } else {
+            packed.push({ line, height: lineH });
+          }
+        }
+        packed.forEach((p, idx) => {
           blocks.push({
             kind: "passage-line",
             group,
-            line,
+            line: p.line,
             lineIndex: idx,
-            totalLines: lines.length,
-            height: lineH,
+            totalLines: packed.length,
+            height: p.height,
           });
         });
       }
@@ -373,19 +385,32 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
         totalLines: stemLineCount + bodyLines.length + structBlocks.length,
         height: metaHeight,
       });
-      bodyLines.forEach((line, index) => {
+      // 각주 줄("* word: 뜻")은 본문 마지막 줄과 한 블록으로 묶는다(줄 단위 흐름에서 각주만 다음 칸/쪽으로 밀리는 것 방지 —
+      // 기출 전수 렌더 실측). 묶인 줄은 "\n" 으로 이어져 pre-line 렌더에서 줄바꿈된다.
+      const packedBody: { line: string; extra: number }[] = [];
+      for (const line of bodyLines) {
+        const prev = packedBody[packedBody.length - 1];
+        if (prev && /^\s*[*＊]\s*[A-Za-z]/.test(line)) { prev.line = `${prev.line}\n${line}`; prev.extra += 1; }
+        else packedBody.push({ line, extra: 0 });
+      }
+      packedBody.forEach((p, index) => {
         blocks.push({
           kind: "question-line",
           group,
           item,
-          line,
+          line: p.line,
           lineIndex: index,
-          totalLines: bodyLines.length,
-          height: lineH,
+          totalLines: packedBody.length,
+          height: lineH * (1 + p.extra),
         });
       });
       structBlocks.forEach((structBlock) => blocks.push(structBlock));
-      if (shouldRenderOptionListForSubtype(subType)) {
+      // 은행 장문 세트 42/44 는 선지가 「① (a) … ⑤ (e)」 **한 줄**로 렌더된다(a4-paper-page
+      // gichulLetterOptions) — 5줄로 잡으면 4줄이 헛되이 예약되고, 칸 경계에서 5조각이
+      // 갈라지면 한 줄 배치가 두 동강 난다. 첫 선지에만 한 줄 높이를 주고 나머지는 0 으로
+      // 둬 원자적으로 같은 조각에 남게 한다(비용 0 인 블록은 절대 넘치지 않는다).
+      const gichulLetterOptions = isGichulLetterOptionItem(item);
+      if (shouldRenderOptionListForSubtype(subType) || gichulLetterOptions) {
         item.options.forEach((option, index) => {
           blocks.push({
             kind: "option",
@@ -393,7 +418,12 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
             item,
             option,
             index,
-            height:
+            height: gichulLetterOptions
+              ? index === 0
+                ? questionLineHeight(settings, item.blockFontPt != null ? fontPx : undefined) +
+                  OPTION_BLOCK_TOP_GAP
+                : 0
+              :
               estimateOptionBlockHeight(
                 option,
                 settings,

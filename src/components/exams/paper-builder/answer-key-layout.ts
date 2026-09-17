@@ -1,4 +1,5 @@
 import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
+import { getCircledNumber } from "@/lib/question-postprocess/types";
 import { PAPER_SIZE_SPECS, PREVIEW_PAGE_WIDTH } from "./constants";
 import type { Density, PaperItem, PaperSize } from "./types";
 
@@ -34,6 +35,22 @@ export const EMPTY_ANSWER_KEY_LAYOUT: AnswerKeyLayout = {
 // 전체 폭 목록으로 전환한다.
 const LONG_ANSWER_THRESHOLD = 20;
 
+// 정답표 표기 통일(표시 계층 전용 — 저장값 불변). 저장 형식은 유형별로 숫자("2") / 원문자("②") /
+// 괄호문자("(B)") 가 섞여 있어(기출 은행: 무관·삽입은 원문자, 나머지는 숫자; 어법은
+// formatStoredQuestionCorrectAnswer 가 (B)→② 로) 한 장 안에 「7. ②」 와 「1. 2」 가 혼용됐다.
+// 객관식(선지 있음) 단일 정답이 순수 숫자이고 선지 개수 안이면 ①~ 로 바꾼다.
+// 주관식(선지 0)·복수답("2, 4")·(A) 형·선지 범위 밖 숫자는 그대로 둔다.
+function circledObjectiveAnswer(item: PaperItem, answer: string): string {
+  const optionCount =
+    item.options.length + Math.max(0, Math.min(10, item.objectiveAnswerSlots || 0));
+  if (optionCount === 0) return answer;
+  const numeric = answer.match(/^\s*([1-9]\d?)\s*$/);
+  if (!numeric) return answer;
+  const index = Number(numeric[1]) - 1;
+  if (index < 0 || index >= optionCount) return answer;
+  return getCircledNumber(index);
+}
+
 function answerEntries(paperItems: PaperItem[]): AnswerEntry[] {
   const entries: AnswerEntry[] = [];
   for (const item of paperItems) {
@@ -47,7 +64,7 @@ function answerEntries(paperItems: PaperItem[]): AnswerEntry[] {
       correctAnswer: item.correctAnswer || source.correctAnswer,
       structuredData: source.structuredData,
     });
-    entries.push({ orderNum: item.orderNum, answer });
+    entries.push({ orderNum: item.orderNum, answer: circledObjectiveAnswer(item, answer) });
   }
   return entries;
 }

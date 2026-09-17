@@ -82,6 +82,14 @@ export type RenderModel = {
 
 // ─────────────────────────── 공통 유틸 ───────────────────────────
 
+/** 기출 문항 은행 반입분(structuredData._gichul) — 인쇄본 그대로가 정본이라 재유도·재정렬을 타지 않는다. */
+function isGichulStructuredData(sd: Record<string, unknown> | null): boolean {
+  return Boolean(sd && typeof sd === "object" && sd._gichul);
+}
+export function isGichulImported(question: BuilderQuestion): boolean {
+  return isGichulStructuredData(readStructuredData(question.structuredData));
+}
+
 function readStructuredData(sd: unknown): Record<string, unknown> | null {
   if (sd && typeof sd === "object" && !Array.isArray(sd)) {
     return sd as Record<string, unknown>;
@@ -637,6 +645,9 @@ export function normalizePaperFields(
 ): { questionText: string; correctAnswer: string; options?: OptionItem[] } | null {
   if (style !== "normalized") return null; // faithful=원문 유지
   if (isSimilarGenerated(question)) return null; // 동형 보류
+  // 기출 문항 은행 반입분은 인쇄본 그대로가 정본 — 코퍼스 지문에서 마커 자리를 재유도하면
+  // 첫 출현 매칭으로 자리가 밀리고(실측 169건 중 101건) 각주도 버려진다 → 구운 passageWithMarkers 를 그대로 쓴다.
+  if (isGichulImported(question)) return null;
 
   // 수능 표준 스킴 테이블이 컨트롤러 — 정규화 구현된 마커 유형만 정본화.
   // (override 로 추후 다른 형식 상호변경 가능. 미구현 유형은 표준값만 문서화·현 동작 유지.)
@@ -733,6 +744,7 @@ export function normalizeStructuredQuestionForDisplay(
   const typeId = typeof q._typeId === "string" ? q._typeId : "";
   if (!DISPLAY_NORMALIZE_SUBTYPES.has(typeId)) return question;
   if (isSimilarGeneratedDisplay(q)) return question; // 동형=faithful(시험지와 동일)
+  if (isGichulStructuredData(q)) return question; // 기출 반입분=faithful(시험지와 동일 규칙)
 
   // enrichQuestionForRender 는 BuilderQuestion 형태를 읽으므로 최소 어댑터로 감싼다
   // (subType·structuredData·passage.content·correctAnswer 만 참조).

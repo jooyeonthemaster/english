@@ -1,0 +1,348 @@
+{
+  "$schema": "exam-corpus-known-issues/v2",
+  "generatedAt": "2026-08-20",
+  "note": "기준선은 '알려진 결함'이다. 이보다 나빠지면 RED. 줄어들어도 RED(기준선 갱신 요구).",
+  "lockPolicy": {
+    "key": "(id, wordCount)",
+    "format": "<id>[::<reason>]@wc=<현재 단어수 | MISSING>",
+    "why": "id 만으로 잠그면 기준선에 오른 레코드가 '영구 면제'가 된다 — 더 잘라내도 GREEN 이다. 단어수를 각인하면 같은 결함이라도 본문이 바뀌는 순간 양방향(regression/repaired)으로 RED 가 된다.",
+    "appliesTo": [
+      "I1_orderBlockCompleteness",
+      "I3_lengthFloor",
+      "I4_sentenceCompleteness",
+      "I5_silentCorruption.*"
+    ],
+    "notApplicable": {
+      "I2_answerKeyLengthUniformity": "코호트 통계라 id 가 없다 — deviation 상·하한으로 잠근다.",
+      "I6_facetConsistency": "차원/열거값 수준의 위반이라 id 가 없다."
+    }
+  },
+  "sources": {
+    "src/data/exam-passages/passages.json": {
+      "bytes": 5745758,
+      "sha256": "967c0561208595954b80fc18668a02a72ae5cfa67129911ec95f3f0d6c759337",
+      "sha256EolNormalized": "967c0561208595954b80fc18668a02a72ae5cfa67129911ec95f3f0d6c759337"
+    },
+    "src/data/exam-passages/problems.json": {
+      "bytes": 2724430,
+      "sha256": "7498156c10f36364bda9749170735614ba0f7ad313cceee795e3c9a2ff28cee3",
+      "sha256EolNormalized": "7498156c10f36364bda9749170735614ba0f7ad313cceee795e3c9a2ff28cee3"
+    },
+    "src/data/exam-passages/facets.json": {
+      "bytes": 1931,
+      "sha256": "30659c8f4339cd6720c0be1208f24a0c195df18eb3141a7c7d1e8672288f8d3a",
+      "sha256EolNormalized": "30659c8f4339cd6720c0be1208f24a0c195df18eb3141a7c7d1e8672288f8d3a"
+    },
+    "src/data/exam-passages-korean/passages.json": {
+      "bytes": 12357188,
+      "sha256": "ce53ec6714820903d72055083280bffeabe2e47bb9cc9f2691711015a79afb69",
+      "sha256EolNormalized": "ce53ec6714820903d72055083280bffeabe2e47bb9cc9f2691711015a79afb69"
+    },
+    "src/data/exam-passages-korean/facets.json": {
+      "bytes": 61559,
+      "sha256": "9029c7191bb77d6fcad6a8a258d0d5ff40a0b740f1e70edb9e5ed432b3d7abf8",
+      "sha256EolNormalized": "c3f45c6444231e91475057dc7384f4806588b926cb090f9353c23889f4aff0a0"
+    }
+  },
+  "limits": {
+    "maxBaselineEntries": 68,
+    "perCheck": {
+      "I0_wordCountAnchor": 0,
+      "I1_orderBlockCompleteness": 3,
+      "I3_lengthFloor": 29,
+      "I4_sentenceCompleteness": 10,
+      "I5.hangulInEnglishCorpus": 0,
+      "I5.circledChoiceMarker": 0,
+      "I5.pointsMarker": 0,
+      "I5.blockMarkerResidue": 1,
+      "I5.referenceMarkResidue": 0,
+      "I5.duplicatedFunctionWord": 3,
+      "I5.rc4bDamagedNumeric": 1,
+      "I5.gluedCompound": 21
+    },
+    "why": "래칫이다. 항목이 늘어나는 방향으로는 절대 열리지 않는다 — 새 결함을 기준선에 '추가'해서 RED 를 끄는 길을 막는다. 수리로 줄어들 때만 이 수치를 낮춰 다시 조인다."
+  },
+  "corpus": {
+    "en": {
+      "passages": 4540,
+      "facetTotal": 4540,
+      "minPassages": 4537,
+      "preIncidentFloor": 4537
+    },
+    "ko": {
+      "passages": 1402,
+      "facetTotal": 1402,
+      "minPassages": 1402,
+      "preIncidentFloor": 1402
+    }
+  },
+  "I0_wordCountAnchor": {
+    "maxDrift": 1,
+    "meta": {
+      "records": 4540,
+      "missingField": 0,
+      "exact": 4503,
+      "offByOne": 37
+    },
+    "violations": []
+  },
+  "I1_orderBlockCompleteness": {
+    "meta": {
+      "orderRecords": 418,
+      "answerMissing": 0,
+      "skippedNoProblemEntry": 62,
+      "skippedShortStem": 80,
+      "checkedLeadPrefix": 276,
+      "checkedPermutation": 284
+    },
+    "passagesWithoutProblemEntry": 956,
+    "violations": [
+      "ebsi_go3_20201027-q36::permutation-set-broken@wc=192",
+      "ebsi_go3_20201027-q37::permutation-set-broken@wc=175",
+      "ebsi_go3_20221012-q36::permutation-set-broken@wc=190"
+    ]
+  },
+  "I2_answerKeyLengthUniformity": {
+    "tolerance": 0.005,
+    "staleWhenBetterBy": 0.05,
+    "deviations": {
+      "수능모의평가|answer2": 0.037,
+      "수능모의평가|answer4": 0.05,
+      "수능모의평가|answer5": 0.057,
+      "학력평가|answer2": 0.04,
+      "학력평가|answer3": 0.039,
+      "학력평가|answer4": 0.026,
+      "학력평가|answer5": 0
+    },
+    "ratios": {
+      "수능모의평가|answer2": 0.963,
+      "수능모의평가|answer4": 0.95,
+      "수능모의평가|answer5": 1.057,
+      "학력평가|answer2": 1.04,
+      "학력평가|answer3": 0.961,
+      "학력평가|answer4": 0.974,
+      "학력평가|answer5": 1
+    },
+    "cohortSizes": {
+      "수능모의평가|answer2": 18,
+      "수능모의평가|answer4": 19,
+      "수능모의평가|answer5": 19,
+      "학력평가|answer2": 80,
+      "학력평가|answer3": 62,
+      "학력평가|answer4": 30,
+      "학력평가|answer5": 59
+    }
+  },
+  "I3_lengthFloor": {
+    "meta": {
+      "groupsChecked": 81,
+      "groupsSkipped": 58,
+      "recordsInSkippedGroups": 279
+    },
+    "violations": [
+      "2007_06_3001177-q21@wc=76",
+      "2007_09_3001172-q22@wc=65",
+      "2008_06_3001212-q21@wc=76",
+      "ebsi_go1_20060309-q19@wc=60",
+      "ebsi_go1_20060309-q20@wc=53",
+      "ebsi_go1_20060309-q31@wc=47",
+      "ebsi_go1_20060309-q38@wc=61",
+      "ebsi_go1_20080312-q37@wc=68",
+      "ebsi_go1_20090311-q39@wc=65",
+      "ebsi_go1_20090917-q19@wc=25",
+      "ebsi_go1_20110310-q43@wc=59",
+      "ebsi_go1_20120314-q27@wc=29",
+      "ebsi_go1_20120904-q24@wc=27",
+      "ebsi_go1_20121114-q28@wc=21",
+      "ebsi_go1_20150311-q40@wc=88",
+      "ebsi_go1_20160310-q40@wc=91",
+      "ebsi_go1_20171122-q30@wc=34",
+      "ebsi_go1_20190904-q30@wc=28",
+      "ebsi_go1_20251014-q29@wc=34",
+      "ebsi_go2_20140903_A-q29@wc=39",
+      "ebsi_go2_20160310-q30@wc=22",
+      "ebsi_go2_20170906-q19@wc=29",
+      "ebsi_go2_20190904-q30@wc=39",
+      "ebsi_go2_20231219-q30@wc=30",
+      "ebsi_go2_20250604-q30@wc=28",
+      "ebsi_go3_20070712-q42@wc=64",
+      "ebsi_go3_20220706-q30@wc=30",
+      "ebsi_go3_20230711-q30@wc=27",
+      "ebsi_go3_20240711-q30@wc=51"
+    ]
+  },
+  "I4_sentenceCompleteness": {
+    "meta": {
+      "noTerminalPunctuation": 10,
+      "danglingPunctuation": 0,
+      "trailingFunctionWord": 3
+    },
+    "violations": [
+      "2012_SN_3001002-q42::no-terminal-punctuation@wc=150",
+      "ebsi_go1_20090917-q19::no-terminal-punctuation@wc=25",
+      "ebsi_go1_20120314-q27::no-terminal-punctuation@wc=29",
+      "ebsi_go1_20190904-q30::no-terminal-punctuation+trailing-function-word@wc=28",
+      "ebsi_go1_20251014-q29::no-terminal-punctuation+trailing-function-word@wc=34",
+      "ebsi_go2_20160310-q30::no-terminal-punctuation@wc=22",
+      "ebsi_go2_20190904-q30::no-terminal-punctuation@wc=39",
+      "ebsi_go2_20231219-q30::no-terminal-punctuation@wc=30",
+      "ebsi_go3_20220706-q30::no-terminal-punctuation+trailing-function-word@wc=30",
+      "ebsi_go3_20230711-q30::no-terminal-punctuation@wc=27"
+    ]
+  },
+  "I5_silentCorruption": {
+    "hangulInEnglishCorpus": [],
+    "circledChoiceMarker": [],
+    "pointsMarker": [],
+    "blockMarkerResidue": [
+      "2003_YB_3009745-q45-46@wc=166"
+    ],
+    "referenceMarkResidue": [],
+    "duplicatedFunctionWord": [
+      "2018_SN_5019793-q40::on on@wc=175",
+      "ebsi_go1_20130903-q24::that that@wc=114",
+      "ebsi_go2_20190604-q21::to to@wc=160"
+    ],
+    "rc4bDamagedNumeric": [
+      "ebsi_go1_20120314-q29::between April 1 and April (원본: between April 1 and April 15.)@wc=93"
+    ],
+    "gluedCompound": [
+      "2012_09_3008944-q49-50::dependability(depend|ability)@wc=257",
+      "2017_09_5007019-q23::organizationwide(organization|wide)@wc=142",
+      "2019_SN_5031122-q40::transportability(transport|ability)@wc=154",
+      "2022_09_5064693-q36::noncustomers(non|customers)@wc=154",
+      "2025_SN_5089362-q36::undermaintain(under|maintain)@wc=147",
+      "ebsi_go1_20140903-q22::overtraining(over|training)@wc=141",
+      "ebsi_go1_20170601-q25::southwestern(south|western)@wc=124",
+      "ebsi_go1_20250604-q37::underperform(under|perform)@wc=137",
+      "ebsi_go1_20251014-q39::functionable(function|able)@wc=170",
+      "ebsi_go2_20150311_A-q21::underdevelopment(under|development)@wc=112",
+      "ebsi_go2_20180607-q34::radioactivity(radio|activity)@wc=154",
+      "ebsi_go2_20190604-q39::businessperson(business|person)@wc=141",
+      "ebsi_go2_20210603-q29::purposefully(purpose|fully)@wc=157",
+      "ebsi_go2_20220901-q34::thoughtfully(thought|fully)@wc=185",
+      "ebsi_go3_20070712-q42::twentysomething(twenty|something)@wc=64",
+      "ebsi_go3_20101012-q33::lowpopulation(low|population)@wc=140",
+      "ebsi_go3_20140710_A-q24::schoolchildren(school|children)@wc=164",
+      "ebsi_go3_20151013-q20::sportspeople(sports|people)@wc=143",
+      "ebsi_go3_20241015-q23::picturemaking(picture|making)@wc=180",
+      "ebsi_go3_20251014-q23::visitability(visit|ability)@wc=188",
+      "ebsi_go3_20260507-q37::noticeability(notice|ability)@wc=177"
+    ]
+  },
+  "I6_facetConsistency": {
+    "en": [
+      "en::exams missing \"12월\" (본문에는 존재)",
+      "en::exams missing \"8월\" (본문에는 존재)"
+    ],
+    "ko": [
+      "ko::counts.siheng[<empty>] facets=0 actual=24",
+      "ko::difficulties missing \"중상\" (본문에는 존재)",
+      "ko::sihengs missing \"<empty>\" (본문에는 존재)"
+    ]
+  },
+  "rationale": {
+    "policy": "기준선의 모든 항목은 근거를 가져야 한다. 근거 없는 항목이 하나라도 있으면 게이트가 RED 다 — '왜 면제인지 아무도 모르는 항목'이 기준선에 눌러앉는 길을 막기 위해서다.",
+    "perIdRequired": [
+      "I1_orderBlockCompleteness",
+      "I4_sentenceCompleteness",
+      "I5.blockMarkerResidue",
+      "I5.duplicatedFunctionWord",
+      "I5.rc4bDamagedNumeric"
+    ],
+    "perIdRequiredWhy": "건수가 적고(합계 24건) 1단계 조사에서 개별 원인이 확정된 검사들이다. 반면 I3(71건)·gluedCompound(21건)은 통계·저정밀 검출기라 개별 근거가 아니라 집단 근거가 맞다.",
+    "groups": {
+      "I0_wordCountAnchor": {
+        "count": 0,
+        "cause": "위반 0. 저장된 wordCount 와 본문 실측이 4,500건 정확히 일치하고 37건이 ±1(토큰화 규칙 차이), |Δ|≥2 는 0건이다.",
+        "phase2": "패처는 text 와 wordCount 를 원자적으로 함께 갱신해야 한다. 꼬리를 되붙이면 여기서 즉시 RED 가 난다 — 그것이 이 불변식의 목적이다."
+      },
+      "I1_orderBlockCompleteness": {
+        "cause": "3건 모두 problems.json 의 **선지 추출** 결함이다(본문 훼손 아님). PDF 2단 조판에서 순열 선지의 첫 블록 또는 블록 사이 대시가 소실됐고, 페이지 머리말/다음 문항 지시문이 마지막 선지에 섞여 들어왔다.",
+        "evidence": "problems.json 원문: ebsi_go3_20201027-q36 choices[0]=\"- (C) - (B)\n(B)\" (선두 (A) 소실), choices[4] 끝에 \"고3\" 머리말 잔재. ebsi_go3_20221012-q36 choices=\"(A)  (C)  (B)\" (블록 사이 대시가 통째로 없음).",
+        "phase2": "passages.json 수리 대상이 아니다. problems.json 선지 재추출이 필요하며 이번 배포 단위 밖이다."
+      },
+      "I3_lengthFloor": {
+        "cause": "(board, era, typeGroup) 중앙값의 60% 미만인 71건. 71건 중 **38건이 학력평가|modern|글의순서** 한 셀에 몰려 있다 — RC-1(재배열 후 꼬리 절단)의 직접 지문이다. 나머지도 어휘/어법/지칭처럼 밑줄·네모형이라 원래 지문이 짧은 유형과, 절단이 섞여 있다.",
+        "evidence": "단어수 min=21 median=63 max=91. 셀 분포: 38 학력평가|modern|글의순서, 7 학력평가|modern|어휘, 4 학력평가|foreign_old|지칭, 4 학력평가|foreign_old|글의순서, 나머지 18건은 12개 셀에 산재.",
+        "phase2": "글의순서 38건이 2단계 수리의 1순위 표적이다. 수리하면 이 검사와 I2(학력평가|answer4 편향 0.416)가 동시에 움직여야 한다 — 한쪽만 움직이면 수리가 아니라 조작이다."
+      },
+      "I4_sentenceCompleteness": {
+        "cause": "10건 중 9건은 본문이 문장 도중에 끊긴 실제 절단, 1건은 검출기 한계에 의한 오탐이다.",
+        "evidence": "절단 9건은 wordCount 22~39 로 유형 중앙값에 한참 못 미치고 꼬리가 기능어/전치사에서 끝난다. 오탐 1건은 종결부호 뒤 닫는 부호가 2개(.'\")라 TERMINATED 정규식(닫는 부호 1개만 허용)이 못 받는 경우다.",
+        "phase2": "절단 9건은 PDF 재추출로만 복구 가능하다. 오탐 1건은 검출기를 고치는 순간 기준선에서 빠져야 한다."
+      },
+      "I5.hangulInEnglishCorpus": {
+        "count": 0,
+        "cause": "위반 0 — 영어 코퍼스에 한글 잔재 없음. 회귀 감시용으로만 존재한다."
+      },
+      "I5.circledChoiceMarker": {
+        "count": 0,
+        "cause": "위반 0 — 원형숫자 선지 마커 잔재 없음."
+      },
+      "I5.pointsMarker": {
+        "count": 0,
+        "cause": "위반 0 — [3점] 배점 마커 잔재 없음."
+      },
+      "I5.referenceMarkResidue": {
+        "count": 0,
+        "cause": "위반 0 — ※/†/‡ 참조 기호 잔재 없음."
+      },
+      "I5.blockMarkerResidue": {
+        "cause": "1건. 장문(45-46번) 지문에 (A)/(B)/(C) 블록 마커가 남았다.",
+        "phase2": "장문 세트는 원문에 (A) 표기가 정상적으로 존재할 수 있어 개별 판정이 필요하다."
+      },
+      "I5.duplicatedFunctionWord": {
+        "cause": "3건. 기능어가 연달아 두 번 나온다. 행 결합(줄바꿈 제거) 단계에서 행 끝 단어와 다음 행 첫 단어가 중복 복사된 형태로 보인다.",
+        "phase2": "치환 수리 후보지만 원문 대조(PDF) 없이는 '원래 반복'과 구분할 수 없다."
+      },
+      "I5.rc4bDamagedNumeric": {
+        "cause": "7건. RC-4b 확정 훼손 — 행두 `^(행두 1~2자리 숫자)+마침표` 제거 규칙이 문장 중간의 소수점을 먹어 **숫자의 의미를 바꿨다**. 길이는 거의 변하지 않아 I3/I4 로는 절대 잡히지 않는다.",
+        "evidence": "tests/unit/exam-corpus-invariants.mjs 의 RC4B_DAMAGE_SIGNATURES 에 (id, 훼손문자열, 원본문자열) 3튜플로 고정. 원본은 .tmp-corpus-rca/final/C5-rc4b.mjs:14-22 에서 PDF 대조로 확정.",
+        "phase2": "2단계 수리의 가장 확실한 표적이다. 원본 문자열이 확정돼 있어 결정론적 치환이 가능하다."
+      },
+      "I5.gluedCompound": {
+        "cause": "21건. 하이픈/공백이 사라져 두 단어가 붙은 형태(RC-4c). 사전이 없어 코퍼스 자체를 사전으로 쓰는 저정밀 휴리스틱이라 오탐이 섞여 있다 — 예: dependability(depend|ability), organizationwide(organization|wide) 는 정상 단어다.",
+        "phase2": "개별 판정 없이 일괄 치환하면 정상 단어를 부순다. 기준선 동결로 '더 늘어나지 않게' 지키는 것이 이 검출기의 유일한 용도다."
+      },
+      "I6_facetConsistency.en": {
+        "cause": "2건. facets.exams 열거에 \"12월\"·\"8월\"이 빠져 있다(본문에는 존재). counts 는 일치하므로 개수 훼손이 아니라 열거 목록 누락이다.",
+        "phase2": "facets.json 재생성 시 자동 해소된다. 패처가 facets 를 다시 쓸 때 이 2건이 사라지면 기준선을 조여야 한다."
+      },
+      "I6_facetConsistency.ko": {
+        "cause": "3건. 국어 facets 의 siheng 빈값 24건 미집계 + difficulties 열거에 \"중상\"·\"최상\" 계열 누락.",
+        "phase2": "영어와 동일 — facets 재생성 시 해소."
+      },
+      "I2_answerKeyLengthUniformity": {
+        "cause": "id 없는 통계 지표. 학력평가 글의순서에서 정답④ 코호트(n=28)의 median 단어수가 나머지의 0.584배 — RC-1 의 가장 선명한 단일 지표다. 정답②는 반대로 1.308배.",
+        "phase2": "수리가 진짜면 이 비율이 1 에 가까워진다. deviation 이 staleWhenBetterBy(0.05) 이상 좋아지면 기준선 갱신을 요구하도록 잠가 뒀다."
+      }
+    },
+    "ids": {
+      "ebsi_go3_20201027-q36": "선지 추출 결함: choices[0]=\"- (C) - (B)\" 로 선두 (A) 블록이 소실, choices[4] 에 \"고3\" 머리말 혼입. 본문(passages.json)은 정상 95단어.",
+      "ebsi_go3_20201027-q37": "동일 회차 동일 원인. choices[4] 에 다음 문항(38~39번) 지시문이 통째로 혼입됐다. 본문 175단어 정상.",
+      "ebsi_go3_20221012-q36": "선지의 블록 구분 대시가 전부 공백으로 대체(\"(A)  (C)  (B)\")되어 순열 정규식이 파싱 불가. choices[4] 에 \"고3\" 혼입. 본문 97단어 정상.",
+      "2012_SN_3001002-q42": "검출기 오탐. 본문은 `...that's true.'\"` 로 정상 종결하지만 종결부호 뒤 닫는 부호가 2개라 TERMINATED 정규식(1개만 허용)이 못 받는다. 150단어로 길이도 정상.",
+      "ebsi_go1_20090917-q19": "실제 절단. 25단어(지칭 유형 중앙값에 크게 미달), 꼬리가 \"...to feel like\" 로 전치사구 도중에 끊긴다.",
+      "ebsi_go1_20120314-q27": "실제 절단. 29단어, 꼬리 \"...riding and performing tricks\" 로 종결부호 없이 끝난다(어법 유형).",
+      "ebsi_go1_20190904-q30": "실제 절단. 28단어, 꼬리 \"...some perceive it as a\" — 관사로 끝나 trailing-function-word 까지 동시 검출.",
+      "ebsi_go1_20251014-q29": "실제 절단. 34단어, 꼬리 \"...when we do so quickly, we are\" — be동사로 끝난다.",
+      "ebsi_go2_20160310-q30": "실제 절단. 22단어(기준선 10건 중 최단), 꼬리 \"...a tall silent pilot, had bought\" 로 목적어가 없다.",
+      "ebsi_go2_20190604-q21": "기능어 중복 \"to to\". 160단어로 길이는 정상 — 행 결합 단계의 중복 복사로 보인다.",
+      "ebsi_go2_20190904-q30": "실제 절단. 39단어, 인용부호 뒤 \"a powerful\" 에서 끊긴다.",
+      "ebsi_go2_20231219-q30": "실제 절단. 30단어, 꼬리 \"...watch the actions of another does not\" — 조동사 부정형에서 끊긴다.",
+      "ebsi_go3_20220706-q30": "실제 절단. 30단어, 꼬리 \"...not the\" — 관사로 끝난다.",
+      "ebsi_go3_20230711-q30": "실제 절단. 27단어, 꼬리 \"...making mechanical processing far\" — 비교급 부사에서 끊긴다.",
+      "2003_YB_3009745-q45-46": "장문(45-46) 지문에 (B) 블록 마커 잔재. 166단어로 길이는 정상이라 절단이 아니라 마커 미제거다.",
+      "2018_SN_5019793-q40": "기능어 중복 \"on on\". 175단어 요약문 유형, 길이 정상.",
+      "ebsi_go1_20130903-q24": "기능어 중복 \"that that\". 114단어 요지 유형, 길이 정상.",
+      "ebsi_go1_20091118-q39": "RC-4b: \"about 1.6 billion\" → \"about 6 billion\". 행두 숫자 제거가 \"1.\" 을 먹었다.",
+      "ebsi_go1_20120314-q29": "RC-4b: \"between April 1 and April 15.\" → \"between April 1 and April \". 문장 끝 \"15.\" 가 통째로 소실.",
+      "ebsi_go1_20230601-q34": "RC-4b: \"they bought 5.3 on average\" → \"they bought 3 on average\".",
+      "ebsi_go1_20250903-q33": "RC-4b: \"the sun: 1.49597\" → \"the sun: 49597\".",
+      "ebsi_go2_20120314-q25": "RC-4b: \"in 2009 to 0.9% in 2010\" → \"in 2009 to 9% in 2010\". 10배 오차.",
+      "ebsi_go2_20161123-q40": "RC-4b: \"claims 95.45% of Briti\" → \"claims 45% of Briti\".",
+      "ebsi_go3_20101012-q25": "RC-4b: \"weigh up to 1.5 tons\" → \"weigh up to 5 tons\"."
+    }
+  }
+}

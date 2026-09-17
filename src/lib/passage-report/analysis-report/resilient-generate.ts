@@ -16,6 +16,7 @@ import {
   type SectionKind,
 } from "./section-prompts";
 import { coerceAndValidate } from "./section-coerce";
+import { resolveAnchorRange } from "./passage-canvas-model";
 
 /**
  * 회복형(resilient) 지문 분석 생성기.
@@ -30,18 +31,44 @@ import { coerceAndValidate } from "./section-coerce";
  * 부수 효과로 모드B(60s 클램프×2=120s 타임아웃)도 회피한다: 섹션 단위 호출은 작아서 60s 안에 끝난다.
  */
 
-const ALL_KINDS: SectionKind[] = [
+// 값 수준 정본 — 클라이언트 안전 복제본(src/lib/studio/module-sections.ts
+// FULL_ANALYSIS_SECTIONS)과의 일치를 단위 테스트가 강제한다.
+export const ALL_SECTION_KINDS: readonly SectionKind[] = [
   "passage",
-  "learning-worksheet",
   "summary",
   "grammar",
   "exam-focus",
   "vocabulary",
   "parsing",
-];
+] as const;
+const ALL_KINDS: SectionKind[] = [...ALL_SECTION_KINDS];
 
 // 렌더가 구조적으로 요구하는 섹션(없으면 항상 결정론 폴백으로 채운다).
 const REQUIRED_KINDS: SectionKind[] = ["passage"];
+
+// ─── 생성 엔진 (26-08-12 luna 전환) ─────────────────────────────────────────
+// "draft"    = 기존: 전체 초안(모놀리식 1콜, gemini) → 실패 섹션 수리.
+// "parallel" = luna 맞춤: 결정론 문장 스파인 → 요약 선행(~6s) → 나머지 섹션+meta
+//              전면 병렬(섹션 출력 0.3~6k tok — luna 의 느린 직렬 생성을 병렬로 상쇄).
+//              실측(.tmp-final-qa/model-ab-luna-vs-g36.md C-2·C-3): 장문 97s·$0.035 로
+//              gemini 초안(113s·$0.164)보다 빠르고 1/5 비용, 5렌즈 블라인드 품질 4:1 우세.
+// 롤백: env WORKSHEET_CORE_ENGINE=draft (모델 롤백은 generate.ts 모놀리식 경로가 받는다).
+export type WorksheetCoreEngine = "draft" | "parallel";
+export function worksheetCoreEngine(): WorksheetCoreEngine {
+  return process.env.WORKSHEET_CORE_ENGINE?.trim() === "draft" ? "draft" : "parallel";
+}
+// [26-08-31 사용자 확정] 학습지 전 계열 gemini-3.7-flash 통일(「우리는 무조건 3.7flash」 —
+// 문제생성 라인업 3.7 통일(26-08-19)의 학습지 계열 확장). 구 luna 폴백은 env 핀으로 롤백 가능.
+// 사고 헤드룸·타임아웃 상수는 무개변 — luna 기준 상한이라 3.7(더 빠름·reading 실측 60s vs 151s)에 여유.
+const WORKSHEET_CORE_MODEL =
+  process.env.WORKSHEET_CORE_MODEL?.trim() || "google/gemini-3.7-flash";
+// xhigh 는 코어 섹션 볼륨에서 OpenRouter 비스트리밍 벽(~300s)을 넘길 수 있어 high 가 기본.
+const WORKSHEET_CORE_REASONING_EFFORT =
+  process.env.WORKSHEET_CORE_REASONING_EFFORT?.trim() || "high";
+// luna(OpenAI 계열)는 사고 토큰이 max_tokens 몫에서 빠진다 — 섹션 텍스트 예산에 얹는 여유.
+const CORE_REASONING_HEADROOM_TOKENS = 12_000;
+// 병렬 엔진 콜 상한 — luna 섹션 꼬리 실측 124s(grammar) + 여유. draft 엔진은 기존 60s 유지.
+const PARALLEL_PER_CALL_TIMEOUT_MS = 150_000;
 
 const SECTION_MAX_TOKENS: Record<SectionKind, number> = {
   passage: 16000,
@@ -49,7 +76,6 @@ const SECTION_MAX_TOKENS: Record<SectionKind, number> = {
   grammar: 10000,
   "exam-focus": 8000,
   parsing: 8000,
-  "learning-worksheet": 6000,
   summary: 4000,
 };
 
@@ -75,6 +101,14 @@ export interface ResilientOptions {
   checkpoint?: ResilientCheckpoint | null;
   /** 현재 본문 해시(체크포인트 정합성 키). */
   contentHash: string;
+  /**
+   * 생성 엔진(기본: env worksheetCoreEngine — 현재 parallel/luna).
+   * 단, engine 미지정 + llmText 주입 시엔 draft 로 간주한다 — 스트리밍 llmText 를
+   * 병렬 콜에 물리면 델타가 뒤섞이고, 테스트 주입 계약(초안 흐름)도 깨지기 때문.
+   */
+  engine?: WorksheetCoreEngine;
+  /** 섹션 생성 시작마다 호출(라벨=섹션 kind 또는 'draft'/'meta') — SSE phase 이벤트용. */
+  onPhase?: (label: string) => void;
   /** 진전마다 호출 — 부분 결과 영속(잡 result 등)에 쓴다. */
   onCheckpoint?: (cp: ResilientCheckpoint) => void | Promise<void>;
   /** 목표 섹션 집합(기본 7개 전부). */
@@ -128,6 +162,28 @@ export type LlmTextFn = (args: {
   timeoutMs: number;
   attempt: number; // 0-based
 }) => Promise<LlmTextResult>;
+
+/** parallel 엔진 전용 호출 — WORKSHEET_CORE_MODEL(luna) + 사고 여유 토큰.
+ *  draft 경로(defaultLlmText)와 분리해 기존 gemini 롤백 경로는 바이트 불변으로 남긴다. */
+const parallelLlmText: LlmTextFn = async ({ prompt, label, maxTokens, timeoutMs }) => {
+  const res = await generateQuestionText({
+    prompt,
+    generationPlan: "STANDARD",
+    modelId: WORKSHEET_CORE_MODEL,
+    logPrefix: `RESILIENT:${label}`,
+    maxRetries: 0,
+    maxTokens: maxTokens + CORE_REASONING_HEADROOM_TOKENS,
+    omitMaxTokens: false,
+    responseFormat: "json_object",
+    isRecoverableJsonText: localCanRecover,
+    thinkingBudget: 0,
+    timeoutMs,
+    temperature: 0.15,
+    reasoningEffort: WORKSHEET_CORE_REASONING_EFFORT,
+    applyReasoningEffortToGemini: true,
+  });
+  return { text: res.text, usage: res.usage, modelId: res.modelId, provider: res.provider };
+};
 
 /** 비스트리밍 기본 호출 — 스트리밍 구현(stream-llm.ts)의 폴백으로도 쓴다. */
 export const defaultLlmText: LlmTextFn = async ({ prompt, label, maxTokens, timeoutMs }) => {
@@ -259,16 +315,91 @@ async function generateOneSection(
   return { ok: false, error: priorError, attempts };
 }
 
-/** 본문 텍스트를 결정론적으로 문장 분할한 최소 passage 섹션(최후 폴백 — 항상 렌더 가능 보장). */
-function fallbackPassage(input: BuildAnalysisReportPromptInput): AnalysisSection {
-  const raw = input.passageContent.replace(/\s+/g, " ").trim();
+/** 결정론 문장 분할 — 폴백 passage 와 parallel 엔진 번호 스파인의 단일 진실원. */
+export function splitPassageSentences(passageContent: string): string[] {
+  const raw = passageContent.replace(/\s+/g, " ").trim();
   const pieces = raw
     .split(/(?<=[.!?])\s+(?=[A-Z"'(])/)
     .map((s) => s.trim())
     .filter(Boolean)
     .slice(0, 40);
-  const sentences = (pieces.length ? pieces : [raw]).map((en, i) => ({ n: i + 1, en, ko: "" }));
+  return pieces.length ? pieces : [raw];
+}
+
+/** 본문 텍스트를 결정론적으로 문장 분할한 최소 passage 섹션(최후 폴백 — 항상 렌더 가능 보장). */
+function fallbackPassage(input: BuildAnalysisReportPromptInput): AnalysisSection {
+  const sentences = splitPassageSentences(input.passageContent).map((en, i) => ({ n: i + 1, en, ko: "" }));
   return { kind: "passage", sentences, keywords: [] } as unknown as AnalysisSection;
+}
+
+/** parallel 엔진 meta 생성 — 표제 정보만 소형 콜로. 실패해도 무해(synthMeta 폴백). */
+async function generateMetaViaLlm(
+  input: BuildAnalysisReportPromptInput,
+  llmText: LlmTextFn,
+  timeoutMs: number,
+): Promise<ReportMeta | null> {
+  const prompt = `당신은 한국 최상위 영어 학원의 수석 교재 편집장이다. 아래 지문의 A4 분석 보고서에 쓸 표제 메타 정보만 JSON 객체 하나로 출력하라(코드펜스·설명 금지).
+{
+  "eyebrow": "PRIME PASSAGE ANALYSIS · 심층 지문 분석",
+  "titleKo": "지문 핵심을 담은 한국어 제목",
+  "titleEn": "영어 부제",
+  "category": "분류 (예: '비문학 · 설명문')",
+  "theme": "소재",
+  "difficulty": 1~5 정수(수능 기준 체감 난이도),
+  "difficultyNote": "(수능 N점)",
+  "solveTime": "권장 풀이시간 (예: '3분 30초')",
+  "examTypes": "핵심 출제유형 (예: '빈칸추론·어법·요약')"
+}
+# 지문
+"""
+${input.passageContent}
+"""`;
+  try {
+    const r = await llmText({ prompt, label: "meta", maxTokens: 2000, timeoutMs, attempt: 0 });
+    const parsed = reportMetaSchema.safeParse(JSON.parse(extractJson(r.text)));
+    return parsed.success ? parsed.data : null;
+  } catch {
+    return null;
+  }
+}
+
+/** meta.examTypes 를 실제 exam-focus 섹션에서 결정론 파생 — 병렬 생성에서 meta 콜이
+ *  본문 섹션과 따로 돌아 유형이 어긋나던 것(블라인드 패널 C-3 ①)의 봉합. exam-focus 가
+ *  있으면 어느 엔진이든 실제 유형이 정본이다(초안 경로의 경미한 불일치도 함께 고침). */
+function reconcileMetaExamTypes(
+  meta: ReportMeta,
+  sections: Partial<Record<SectionKind, AnalysisSection>>,
+): ReportMeta {
+  const exam = sections["exam-focus"];
+  if (!exam || exam.kind !== "exam-focus" || exam.rows.length === 0) return meta;
+  const types = Array.from(new Set(exam.rows.map((r) => r.type))).slice(0, 5).join("·");
+  return types ? { ...meta, examTypes: types } : meta;
+}
+
+/** 필기 앵커 게이트 — layout.anchorText 가 그 행의 문장 en 에서 해석되지 않으면 드롭한다
+ *  (행 유지, 카드는 rail 배치로 자연 강등). 병렬 생성에서 "however / Instead" 식 합성
+ *  앵커가 나오던 것(블라인드 패널 C-3 ②)의 봉합.
+ *  판정 술어는 렌더러 정본 resolveAnchorRange(passage-canvas-model — E29-6 곱슬따옴표·대시
+ *  접기 포함)로 통일한다. 구판 축자 en.includes 는 렌더러보다 엄격해, 렌더가 충분히 붙일
+ *  수 있는 앵커(원문 곱슬따옴표 vs 모델 ASCII)를 생성 단계가 먼저 폐기했다 — 실DB 지문
+ *  22.4%가 곱슬 구두점 함유(26-08-26 전수조사 GEN-4). 합성 앵커 방어력은 동일하다
+ *  (resolveAnchorRange 도 실존 부분열만 통과). */
+function reconcileAnchors(sections: Partial<Record<SectionKind, AnalysisSection>>): void {
+  const passage = sections.passage;
+  if (!passage || passage.kind !== "passage") return;
+  const byN = new Map(passage.sentences.map((s) => [s.n, s.en] as const));
+  const gate = (rows: Array<{ sentenceNo?: number; layout?: { anchorText?: string } }> | undefined) => {
+    for (const row of rows ?? []) {
+      const anchor = row.layout?.anchorText;
+      if (!anchor || !row.layout) continue;
+      const en = typeof row.sentenceNo === "number" ? byN.get(row.sentenceNo) : undefined;
+      if (!en || !resolveAnchorRange(en, anchor)) delete row.layout.anchorText;
+    }
+  };
+  const grammar = sections.grammar;
+  if (grammar?.kind === "grammar") gate(grammar.rows);
+  const exam = sections["exam-focus"];
+  if (exam?.kind === "exam-focus") gate(exam.rows);
 }
 
 /** 누락 시 결정론적 메타(완성 보장). */
@@ -311,8 +442,6 @@ function reconcileSentenceRefs(sections: Partial<Record<SectionKind, AnalysisSec
   if (exam?.kind === "exam-focus") clampRows(exam.rows);
   const parsing = sections.parsing;
   if (parsing?.kind === "parsing") clampRows(parsing.items);
-  const lw = sections["learning-worksheet"];
-  if (lw?.kind === "learning-worksheet") clampRows(lw.logicRows);
 }
 
 function assembleReport(
@@ -340,11 +469,15 @@ export async function generateAnalysisReportResilient(
   const startedAt = Date.now();
   const targets = opts.targetKinds ?? ALL_KINDS;
   const maxRounds = opts.maxRounds ?? 3;
-  const perCallTimeoutMs = opts.perCallTimeoutMs ?? 60_000;
+  // engine 미지정 + llmText 주입 = draft 호환 모드(스트리밍/테스트 주입 계약 보존).
+  const engine: WorksheetCoreEngine = opts.engine ?? (opts.llmText ? "draft" : worksheetCoreEngine());
+  const perCallTimeoutMs =
+    opts.perCallTimeoutMs ?? (engine === "parallel" ? PARALLEL_PER_CALL_TIMEOUT_MS : 60_000);
   const deadlineAt = opts.deadlineAt ?? startedAt + 240_000;
-  const baseLlm = opts.llmText ?? defaultLlmText;
+  const baseLlm = opts.llmText ?? (engine === "parallel" ? parallelLlmText : defaultLlmText);
   const usages: ResilientResult["usages"] = [];
   const llmText: LlmTextFn = async (args) => {
+    opts.onPhase?.(args.label);
     const r = await baseLlm(args);
     if (r.usage) usages.push({ label: args.label, usage: r.usage, modelId: r.modelId, provider: r.provider });
     return r;
@@ -400,14 +533,120 @@ export async function generateAnalysisReportResilient(
   };
 
   // 장문(>3000자)·이미 일부 확보 시 전체 초안을 건너뛰고 바로 섹션 단위로 — 초안은 장문에서
-  // 60s 클램프에 걸려 시간만 낭비하므로.
+  // 60s 클램프에 걸려 시간만 낭비하므로. 부분 목표(targetKinds ⊂ 전체)도 항상 건너뛴다 —
+  // 초안 프롬프트는 전체 6섹션용이라 소수 섹션 요청에 전체급 원가가 나가고 비대상 산출은
+  // 폐기된다(섹션 종량제 §3.4.1-10).
   const longPassage = input.passageContent.length > 3000;
+  const partialTargets = targets.length < ALL_KINDS.length;
   const alreadyHave = (Object.keys(sections) as SectionKind[]).filter((k) => targets.includes(k)).length;
-  const skipDraft = longPassage || alreadyHave >= Math.ceil(targets.length / 2);
+  const skipDraft = longPassage || partialTargets || alreadyHave >= Math.ceil(targets.length / 2);
+
+  // parallel 엔진의 passage 콜은 결정론 스파인의 번호·경계를 그대로 따르게 지시한다 —
+  // 다른 섹션들이 같은 스파인으로 sentenceNo 를 매기므로, passage 가 다르게 쪼개면
+  // 문서 전체의 번호 기준이 어긋난다(수리 라운드의 passage 재생성에도 동일 적용).
+  const spineCtx = splitPassageSentences(input.passageContent).map((en, i) => ({ n: i + 1, en, ko: "" }));
+  const segDirective = `문장 분할(sentences[].n/en)은 반드시 아래 번호·경계를 글자 그대로 따르라(다르게 쪼개면 실패 처리된다):\n${spineCtx.map((s) => `${s.n}. ${s.en}`).join("\n")}`;
+  const passageGenInput: BuildAnalysisReportPromptInput =
+    engine === "parallel"
+      ? { ...input, customPrompt: [input.customPrompt?.trim(), segDirective].filter(Boolean).join("\n\n") }
+      : input;
 
   let draftUsed = false;
   let draftMs = 0;
-  if (!skipDraft) {
+  if (engine === "parallel") {
+    // ── 병렬 웨이브: 요약 선행(~6s, 개념·용어 공유 기반) → 나머지 섹션+meta 전면 병렬 ──
+    // 예산이 빠듯한 경로(실전 포함 = 코어 150s)는 grammar 를 요약과 **동시에** 선발사한다.
+    // grammar 는 실측 최장 꼬리(124s+)라 요약 선행 6~20s 를 기다리는 것만으로 150s 벽에
+    // 정각 절단됐다(실DB 실전 잡 171건 중 11건, 전건 genMs 149.9~150.0s — 26-08-26 전수조사
+    // GEN-1). grammar 프롬프트의 summaryCtx 는 선택 블록이라 없이 생성해도 계약 위반이 아니다.
+    const tightBudget = deadlineAt - Date.now() < 200_000;
+    const earlyGrammarPromise =
+      tightBudget && targets.includes("grammar") && !sections.grammar && Date.now() < deadlineAt
+        ? generateOneSection(
+            "grammar",
+            input,
+            { sentences: spineCtx, priorError: errors.grammar },
+            perCallTimeoutMs,
+            deadlineAt,
+            llmText,
+          )
+        : null;
+    if (targets.includes("summary") && !sections.summary && Date.now() < deadlineAt) {
+      const r = await generateOneSection(
+        "summary",
+        input,
+        { sentences: spineCtx, priorError: errors.summary },
+        perCallTimeoutMs,
+        deadlineAt,
+        llmText,
+      );
+      if (r.ok && r.section) {
+        sections.summary = r.section;
+        delete errors.summary;
+        perSection.summary = { source: "section-gen", attempts: r.attempts };
+      } else {
+        errors.summary = r.error;
+        perSection.summary = { source: "section-gen", attempts: r.attempts, error: r.error };
+      }
+    }
+    const summaryCtx = deriveSectionContext({
+      sections: Object.values(sections) as AnalysisReport["sections"],
+    }).summary;
+    // 선발사된 grammar 는 웨이브에서 제외(이중 발사 방지) — 합류는 웨이브 뒤에서 한다.
+    const waveKinds = targets.filter(
+      (k) => k !== "summary" && !sections[k] && !(earlyGrammarPromise && k === "grammar"),
+    );
+    if (waveKinds.length > 0 && Date.now() < deadlineAt) {
+      const metaPromise: Promise<ReportMeta | null> = meta
+        ? Promise.resolve(null)
+        : generateMetaViaLlm(
+            input,
+            llmText,
+            Math.max(10_000, Math.min(60_000, deadlineAt - Date.now())),
+          );
+      const [metaResult, waveResults] = await Promise.all([
+        metaPromise,
+        Promise.all(
+          waveKinds.map((k) =>
+            generateOneSection(
+              k,
+              k === "passage" ? passageGenInput : input,
+              { sentences: spineCtx, summary: summaryCtx, priorError: errors[k] },
+              perCallTimeoutMs,
+              deadlineAt,
+              llmText,
+            ).then((r) => ({ k, r })),
+          ),
+        ),
+      ]);
+      if (!meta && metaResult) meta = metaResult;
+      for (const { k, r } of waveResults) {
+        const prev = perSection[k]?.attempts ?? 0;
+        if (r.ok && r.section) {
+          sections[k] = r.section;
+          delete errors[k];
+          perSection[k] = { source: "section-gen", attempts: prev + r.attempts };
+        } else {
+          errors[k] = r.error;
+          perSection[k] = { source: "section-gen", attempts: prev + r.attempts, error: r.error };
+        }
+      }
+    }
+    // 선발사 grammar 합류 — 웨이브와 동시 진행됐으므로 여기 await 은 직렬 지연을 더하지 않는다.
+    if (earlyGrammarPromise) {
+      const r = await earlyGrammarPromise;
+      const prev = perSection.grammar?.attempts ?? 0;
+      if (r.ok && r.section) {
+        sections.grammar = r.section;
+        delete errors.grammar;
+        perSection.grammar = { source: "section-gen", attempts: prev + r.attempts };
+      } else {
+        errors.grammar = r.error;
+        perSection.grammar = { source: "section-gen", attempts: prev + r.attempts, error: r.error };
+      }
+    }
+    await emit();
+  } else if (!skipDraft) {
     const dStart = Date.now();
     const draft = await runHolisticDraft(input, targets, llmText);
     draftMs = Date.now() - dStart;
@@ -435,7 +674,7 @@ export async function generateAnalysisReportResilient(
 
     // 1) passage 우선(있어야 다른 섹션이 sentenceNo 기준을 받음)
     if (missing.includes("passage")) {
-      const r = await generateOneSection("passage", input, { priorError: errors.passage }, perCallTimeoutMs, deadlineAt, llmText);
+      const r = await generateOneSection("passage", passageGenInput, { priorError: errors.passage }, perCallTimeoutMs, deadlineAt, llmText);
       const prev = perSection.passage?.attempts ?? 0;
       if (r.ok && r.section) {
         sections.passage = r.section;
@@ -487,10 +726,14 @@ export async function generateAnalysisReportResilient(
     }
   }
   if (!meta) meta = synthMeta(input, sections);
+  // meta.examTypes 는 실제 exam-focus 유형에서 결정론 파생(블라인드 패널 C-3 ① 봉합).
+  meta = reconcileMetaExamTypes(meta, sections);
 
   // 의존 섹션의 sentenceNo 가 (절단된) passage 길이를 넘으면 마지막 실제 문장으로 클램프 —
   // 표/파생데이터의 허위 번호·범위초과 인덱스 방지(렌더 캔버스는 이미 무효 참조를 버린다).
   reconcileSentenceRefs(sections);
+  // 비축자 필기 앵커 드롭(오배치 방지 — C-3 ② 봉합, 모델 불문).
+  reconcileAnchors(sections);
 
   let report = assembleReport(meta, sections, opts);
   // 최종 전체 검증(렌더/저장 로더 호환). 혹시 실패하면 개별 통과 섹션만 + 유효 meta 로 재조립.
@@ -500,8 +743,12 @@ export async function generateAnalysisReportResilient(
       if (sections[k] && coerceAndValidate(k, sections[k]).ok) safe[k] = sections[k];
     }
     if (!safe.passage) safe.passage = fallbackPassage(input);
-    const safeMeta = reportMetaSchema.safeParse(meta).success ? meta : synthMeta(input, safe);
+    const safeMeta = reconcileMetaExamTypes(
+      reportMetaSchema.safeParse(meta).success ? meta : synthMeta(input, safe),
+      safe,
+    );
     reconcileSentenceRefs(safe);
+    reconcileAnchors(safe);
     report = assembleReport(safeMeta, safe, opts);
   }
 

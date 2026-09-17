@@ -111,6 +111,13 @@ export interface OutputModeToggleProps {
   koreanFixed: boolean;
   /** 저장·복원 중 잠금. */
   disabled: boolean;
+  /**
+   * 좁은 컨테이너 임베드(클래스 스튜디오 중앙 열)용 — sm: 뷰포트 분기는 넓은
+   * 화면의 좁은 열에서 오판하므로, 대신 자연폭 버튼 + flex-wrap 으로 세로 적층을
+   * 허용해 마지막 모드의 가격 뱃지까지 항상 보이게 한다. 부재 시(기본 false)
+   * 기존 클래스 문자열과 바이트 동일(무회귀).
+   */
+  stacked?: boolean;
   onSelect: (next: OutputMode) => void;
 }
 
@@ -118,6 +125,7 @@ export function OutputModeToggle({
   value,
   koreanFixed,
   disabled,
+  stacked = false,
   onSelect,
 }: OutputModeToggleProps) {
   // 막힌 이유가 title= 안에만 있으면 터치 기기에서는 **영원히 읽을 수 없다**
@@ -132,10 +140,18 @@ export function OutputModeToggle({
 
   return (
     <div
-      className="w-full min-w-0 sm:flex sm:items-center sm:gap-3"
+      className={
+        stacked ? "w-full min-w-0" : "w-full min-w-0 sm:flex sm:items-center sm:gap-3"
+      }
       data-generate-tour="paste-output-mode"
     >
-      <div className="grid w-full min-w-0 grid-cols-1 gap-1 sm:flex sm:w-auto sm:shrink-0 sm:items-center">
+      <div
+        className={
+          stacked
+            ? "flex w-full min-w-0 flex-wrap items-center gap-1"
+            : "grid w-full min-w-0 grid-cols-1 gap-1 sm:flex sm:w-auto sm:shrink-0 sm:items-center"
+        }
+      >
         {OUTPUT_MODE_OPTIONS.map((opt) => {
           const active = value === opt.v;
           // 국어 지문은 AI 파이프라인(복원·생성) 비활성 — 그대로 등록만.
@@ -149,7 +165,12 @@ export function OutputModeToggle({
               title={koDisabled ? (opt.koreanBlockedTitle ?? undefined) : undefined}
               aria-pressed={active}
               className={
-                `inline-flex h-9 w-full min-w-0 cursor-pointer flex-nowrap items-center justify-center gap-1 overflow-hidden rounded-md border px-2 text-center leading-tight transition-colors disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto sm:gap-2 sm:px-3 ${DESK.body} ${FOCUS_RING} ` +
+                (stacked
+                  ? // stacked: 자연폭 + shrink-0 — 좁으면 다음 줄로 내려간다.
+                    // 뷰포트 분기 없이도 라벨·가격 뱃지가 절대 잘리지 않는다.
+                    `inline-flex h-9 min-w-0 shrink-0 cursor-pointer flex-nowrap items-center justify-center gap-2 rounded-md border px-3 text-center leading-tight transition-colors disabled:cursor-not-allowed disabled:opacity-60 `
+                  : `inline-flex h-9 w-full min-w-0 cursor-pointer flex-nowrap items-center justify-center gap-1 overflow-hidden rounded-md border px-2 text-center leading-tight transition-colors disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto sm:gap-2 sm:px-3 `) +
+                `${DESK.body} ${FOCUS_RING} ` +
                 (active
                   ? "border-blue-600 bg-blue-600 text-white shadow-sm"
                   : "border-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900")

@@ -47,7 +47,11 @@ import { PearlIcon } from "@/components/icons/pearl-icon";
 import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import { StructuredQuestionRenderer } from "@/components/workbench/question-renderers";
 import { DIFFICULTY_CONFIG } from "@/components/workbench/question-card";
-import { getQuestionGenerationPlanFromTags } from "@/lib/question-generation-plans";
+import {
+  getQuestionGenerationPlanFromTags,
+  planForDifficulty,
+  QUESTION_GENERATION_PLANS,
+} from "@/lib/question-generation-plans";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import {
   BlockChangeContext,
@@ -164,8 +168,13 @@ function ExistingQuestionHeader({
   const generationPlan =
     getQuestionGenerationPlanFromTags(tags) ?? structuredPlan;
   const isPremium = generationPlan === "PREMIUM";
+  // 26-08-18 난이도 기반 티어: 난이도 뱃지가 같은 티어를 말하면 이중 표기라 숨김.
+  const planBadgeRedundant =
+    !!diffConfig && planForDifficulty(difficulty) === generationPlan;
   const showPlan =
-    generationPlan && (isPremium || FEATURE_FLAGS.SHOW_MODEL_SELECTOR);
+    generationPlan &&
+    !planBadgeRedundant &&
+    (isPremium || FEATURE_FLAGS.SHOW_MODEL_SELECTOR);
 
   if (!passageTitle && !diffConfig && !showPlan) return null;
 
@@ -231,7 +240,7 @@ function ExistingQuestionHeader({
             ) : (
               <PearlIcon className="h-3 w-3" />
             )}
-            {isPremium ? "프리미엄" : "일반"}
+            {QUESTION_GENERATION_PLANS[isPremium ? "PREMIUM" : "STANDARD"].shortLabel}
           </Badge>
         )}
       </div>

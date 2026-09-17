@@ -113,7 +113,9 @@ export function PassageReportThumbnail({
             transform: `scale(${scale})`,
           }}
         >
-          <AnalysisReportDocument report={report} />
+          {/* printExclude — 목록의 축소 미리보기 루트가 인쇄 CSS 의 '본 리포트' 선택자에
+              걸리면 인쇄가 백지가 된다(다중 par-root 붕괴, 2026-08-11 실측). */}
+          <AnalysisReportDocument report={report} printExclude />
         </div>
       ) : state === "empty" ? (
         <div className="flex h-full w-full items-center justify-center text-[11px] text-slate-300">

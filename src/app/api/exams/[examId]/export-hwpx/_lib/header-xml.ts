@@ -53,9 +53,11 @@ function borderXml(tag: string, b: BorderFillSpec["left"]): string {
   return `<hh:${tag} type="${b.type ?? "SOLID"}" width="${w} mm" color="${b.color ?? "#000000"}"/>`;
 }
 
-function borderFillXml(bf: BorderFillSpec, id: number): string {
+// borderFill 만 id 가 1-based 다(한컴 규약 — shapes.ts registerBorderFill 주석의 실측 근거).
+// 배열 index 를 받아 id="index+1" 로 찍는다. 참조(borderFillIDRef)도 같은 규칙이라야 한다.
+function borderFillXml(bf: BorderFillSpec, index: number): string {
   const parts = [
-    `<hh:borderFill id="${id}" threeD="0" shadow="0" centerLine="NONE" breakCellSeparateLine="0">`,
+    `<hh:borderFill id="${index + 1}" threeD="0" shadow="0" centerLine="NONE" breakCellSeparateLine="0">`,
     `<hh:slash type="NONE" Crooked="0" isCounter="0"/>`,
     `<hh:backSlash type="NONE" Crooked="0" isCounter="0"/>`,
     borderXml("leftBorder", bf.left),
@@ -152,7 +154,9 @@ function paraShapeXml(p: ParaShapeSpec, id: number): string {
     `<hp:default>${ml}</hp:default>`,
     `</hp:switch>`,
     `<hh:autoSpacing eAsianEng="0" eAsianNum="0"/>`,
-    `<hh:border borderFillIDRef="0" offsetLeft="0" offsetRight="0" offsetTop="0" offsetBottom="0" connect="0" ignoreMargin="0"/>`,
+    // borderFill 은 1-based → "투명"(배열 index 0)의 참조 id 는 1 이다. 0 은 존재하지 않는
+    // 항목이라 한컴이 기본값으로 떨어뜨린다(shapes.ts registerBorderFill 주석 참고).
+    `<hh:border borderFillIDRef="1" offsetLeft="0" offsetRight="0" offsetTop="0" offsetBottom="0" connect="0" ignoreMargin="0"/>`,
     `</hh:paraPr>`,
   ].join("");
 }

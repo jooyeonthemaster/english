@@ -1,0 +1,746 @@
+{
+ "meta": {
+  "theme": "자동차 전면 디자인과 소비자 심리",
+  "eyebrow": "PRIME PASSAGE ANALYSIS · 심층 지문 분석",
+  "titleEn": "How Car Faces Shape Consumer Emotion",
+  "titleKo": "자동차의 ‘얼굴’이 소비자를 사로잡는 방식",
+  "category": "비문학 · 설명문",
+  "examTypes": "빈칸추론·주제·문장삽입·함축의미·요약",
+  "solveTime": "2분 30초",
+  "difficulty": 3,
+  "difficultyNote": "수능 3점 수준"
+ },
+ "brand": "ENGLISH READING LAB",
+ "themeId": "black-white",
+ "sections": [
+  {
+   "kind": "passage",
+   "keywords": [
+    "emotional attachments",
+    "automobile 'faces'",
+    "hyper-competitive car market",
+    "human behavior",
+    "brain waves",
+    "headlights and grille",
+    "angrier, scarier vehicles' faces",
+    "feel safer",
+    "'scary look'",
+    "Buoyant sales"
+   ],
+   "sentences": [
+    {
+     "n": 1,
+     "en": "Car manufacturers know people form emotional attachments to automobile 'faces' and use the fact to guide their design and marketing efforts.",
+     "ko": "자동차 제조업체들은 사람들이 자동차의 ‘얼굴’에 정서적 애착을 형성한다는 점을 알고, 그 사실을 자동차 설계와 마케팅 활동을 이끄는 데 이용해요.",
+     "chunks": [
+      {
+       "role": "행동하는 주체",
+       "text": "Car manufacturers ",
+       "gloss": "자동차 제조업체들은",
+       "emphasis": "core"
+      },
+      {
+       "role": "핵심 동작",
+       "text": "know ",
+       "gloss": "알고 있어요",
+       "emphasis": "core"
+      },
+      {
+       "role": "아는 내용",
+       "text": "people form emotional attachments to automobile 'faces' ",
+       "gloss": "사람들이 자동차의 ‘얼굴’에 정서적 애착을 형성한다는 것을",
+       "emphasis": "core"
+      },
+      {
+       "role": "이어지는 행동과 목적",
+       "text": "and use the fact to guide their design and marketing efforts.",
+       "gloss": "그 사실을 설계와 마케팅 활동을 이끄는 데 이용해요",
+       "emphasis": "core"
+      }
+     ]
+    },
+    {
+     "n": 2,
+     "en": "\"In today's hyper-competitive car market, designers are focusing on faces as part of a broader effort to design cars that appeal to buyers ― tapping psychologists, anthropologists and other experts in human behavior, and even monitoring the brain waves of focus-group participants,\" the Wall Street Journal reported in a 2006 article entitled 'Why Cars Got Angry.' Automotive research shows \"70% of drivers identify and judge vehicles by the headlights and grille,\" the article reported.",
+     "ko": "월스트리트 저널은 ‘자동차가 왜 화난 표정을 갖게 되었는가’라는 제목의 2006년 기사에서 이렇게 보도했어요. “오늘날처럼 경쟁이 매우 치열한 자동차 시장에서, 설계자들은 구매자에게 매력적으로 다가가는 자동차를 만들기 위한 더 넓은 노력의 하나로 자동차의 얼굴에 집중하고 있어요. 이를 위해 심리학자, 인류학자, 인간 행동을 연구하는 다른 전문가들에게 도움을 요청하고, 심지어 표적 집단 참가자들의 뇌파까지 관찰하고 있어요.” 그 기사는 자동차 연구 결과를 다음과 같이 덧붙였어요. “운전자 중 70%는 전조등과 라디에이터 그릴을 보고 차량을 식별하고 판단해요.”",
+     "chunks": [
+      {
+       "role": "배경",
+       "text": "In today's hyper-competitive car market, ",
+       "gloss": "오늘날의 경쟁이 매우 치열한 자동차 시장에서",
+       "emphasis": "core"
+      },
+      {
+       "role": "핵심 동작",
+       "text": "designers are focusing on faces ",
+       "gloss": "설계자들은 얼굴에 집중하고 있어요",
+       "emphasis": "core"
+      },
+      {
+       "role": "노력의 범위",
+       "text": "as part of a broader effort to design cars that appeal to buyers",
+       "gloss": "구매자에게 매력적인 자동차를 설계하려는 더 넓은 노력의 일부로",
+       "emphasis": "core"
+      },
+      {
+       "role": "구체적인 방법",
+       "text": " ― tapping psychologists, anthropologists and other experts in human behavior, and even monitoring the brain waves of focus-group participants,",
+       "gloss": "심리학자와 인류학자 등에게 도움을 받고 표적 집단 참가자들의 뇌파까지 관찰하면서",
+       "emphasis": "core"
+      },
+      {
+       "role": "인용 출처와 보고",
+       "text": " the Wall Street Journal reported in a 2006 article entitled 'Why Cars Got Angry.' ",
+       "gloss": "월스트리트 저널이 ‘자동차가 왜 화난 표정을 갖게 되었는가’라는 2006년 기사에서 보도했어요",
+       "emphasis": "core"
+      },
+      {
+       "role": "추가 근거와 출처",
+       "text": "Automotive research shows \"70% of drivers identify and judge vehicles by the headlights and grille,\" the article reported.",
+       "gloss": "자동차 연구는 운전자 70%가 전조등과 그릴로 차량을 식별하고 판단한다고 보여 준다고 그 기사가 보도했어요",
+       "emphasis": "core"
+      }
+     ]
+    },
+    {
+     "n": 3,
+     "en": "In the first years of the twenty-first century, the trend was toward angrier, scarier vehicles' faces.",
+     "ko": "21세기의 첫 몇 년 동안에는 자동차의 얼굴이 더 화나고 더 무서운 모습으로 향하는 추세였어요.",
+     "chunks": [
+      {
+       "role": "시간 배경",
+       "text": "In the first years of the twenty-first century, ",
+       "gloss": "21세기의 첫 몇 년 동안에는",
+       "emphasis": "core"
+      },
+      {
+       "role": "핵심 내용",
+       "text": "the trend was toward angrier, scarier vehicles' faces.",
+       "gloss": "그 추세는 더 화나고 더 무서운 자동차의 얼굴을 향했어요",
+       "emphasis": "core"
+      }
+     ]
+    },
+    {
+     "n": 4,
+     "en": "The article hypothesized that these faces help drivers feel safer in heavier traffic amidst more oversize SUVs.",
+     "ko": "그 기사는 이런 얼굴들이 더 많은 초대형 SUV 사이에서 교통량이 더 많은 도로를 운전할 때 운전자들이 더 안전하다고 느끼도록 도와준다고 추측했어요.",
+     "chunks": [
+      {
+       "role": "주된 판단",
+       "text": "The article hypothesized ",
+       "gloss": "그 기사는 추측했어요",
+       "emphasis": "core"
+      },
+      {
+       "role": "추측한 내용",
+       "text": "that these faces help drivers feel safer ",
+       "gloss": "이런 얼굴들이 운전자들이 더 안전하다고 느끼도록 도와준다고",
+       "emphasis": "core"
+      },
+      {
+       "role": "상황",
+       "text": "in heavier traffic amidst more oversize SUVs.",
+       "gloss": "더 많은 초대형 SUV 사이의 교통량이 더 많은 상황에서",
+       "emphasis": "core"
+      }
+     ]
+    },
+    {
+     "n": 5,
+     "en": "Reflecting our tumultuous times, the 'scary look' shows no sign of slowing in the new millennium.",
+     "ko": "우리의 격동하는 시대를 반영하듯이, ‘무서운 모습’은 새 천년에도 줄어들 기미를 전혀 보이지 않아요.",
+     "chunks": [
+      {
+       "role": "배경과 이유",
+       "text": "Reflecting our tumultuous times, ",
+       "gloss": "우리의 격동하는 시대를 반영하듯이",
+       "emphasis": "core"
+      },
+      {
+       "role": "핵심 내용",
+       "text": "the 'scary look' shows no sign of slowing ",
+       "gloss": "‘무서운 모습’은 줄어들 기미를 보이지 않아요",
+       "emphasis": "core"
+      },
+      {
+       "role": "시간 배경",
+       "text": "in the new millennium.",
+       "gloss": "새 천년에도",
+       "emphasis": "core"
+      }
+     ]
+    },
+    {
+     "n": 6,
+     "en": "\"Buoyant sales of cars with styling which suggests power or bad temper seem to confirm that customers are happy with this look,\" an international automotive site reported in 2017.",
+     "ko": "한 국제 자동차 전문 사이트는 2017년에 이렇게 보도했어요. “힘이나 사나운 성질을 암시하는 디자인의 자동차가 많이 팔리는 현상은 고객들이 이러한 모습을 좋아한다는 점을 확인해 주는 듯해요.”",
+     "chunks": [
+      {
+       "role": "근거가 되는 대상",
+       "text": "\"Buoyant sales of cars with styling which suggests power or bad temper ",
+       "gloss": "힘이나 사나운 성질을 암시하는 디자인의 자동차가 많이 팔리는 현상은",
+       "emphasis": "core"
+      },
+      {
+       "role": "판단 내용",
+       "text": "seem to confirm that customers are happy with this look,\" ",
+       "gloss": "고객들이 이 모습을 좋아한다는 것을 확인해 주는 듯해요",
+       "emphasis": "core"
+      },
+      {
+       "role": "보고 주체와 시점",
+       "text": "an international automotive site reported in 2017.",
+       "gloss": "한 국제 자동차 전문 사이트가 2017년에 보도했어요",
+       "emphasis": "core"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "kind": "summary",
+   "thesisEn": "Car manufacturers have increasingly used angry or intimidating vehicle designs because drivers emotionally respond to car faces and may associate such looks with safety, power, and protection.",
+   "sentences": [
+    "자동차 제조업체들은 사람들이 자동차의 전조등과 라디에이터 그릴을 사람의 얼굴처럼 보고 감정적으로 반응한다는 점을 디자인과 마케팅에 활용해요.",
+    "특히 21세기 초부터 자동차의 얼굴을 더 화나고 무섭게 만드는 흐름이 나타났고, 이런 모습이 대형 SUV가 늘어난 교통 상황에서 운전자에게 더 큰 안전감을 줄 수 있다고 설명해요.",
+    "힘이나 나쁜 성격을 떠올리게 하는 자동차의 판매가 계속 좋은 성과를 보이면서, 소비자들이 이런 무서운 디자인을 받아들이고 있다는 점도 확인돼요."
+   ]
+  },
+  {
+   "kind": "grammar",
+   "note": "※ ⚠ 는 시험에서 자주 틀리는 함정",
+   "rows": [
+    {
+     "trap": "⚠ 시험에선 복수 주어 people을 놓치고 forms처럼 동사에 -s를 붙인 형태를 자주 골라요. and 뒤의 use와 모양이 맞아야 하므로 form이 맞아요.",
+     "point": "(i) 병렬(and/or 앞뒤를 똑같은 모양으로) — form ... and use",
+     "layout": {
+      "band": "interline",
+      "lines": [
+       "people form",
+       "and use"
+      ],
+      "priority": 2,
+      "anchorText": "automobile 'faces' and use the fact"
+     },
+     "example": "People notices car faces and use them to attract buyers.",
+     "excerpt": "automobile 'faces' and use the fact",
+     "pointCode": "i",
+     "sentenceNo": 1,
+     "explanation": "① 이 자리는 병렬(and/or 앞뒤를 똑같은 모양으로 맞추는 거예요)을 확인하는 자리예요. ② people 뒤에는 form과 use가 함께 오므로 두 동사를 모두 기본 모양으로 맞춰야 해요. ③ forms처럼 한쪽에만 -s를 붙이거나 forming처럼 -ing를 쓰면 and 앞뒤 모양이 달라져요. ④ 원문에서는 people이 form과 use의 주어이고, 정답은 form과 use예요.",
+     "exampleWrong": "notices",
+     "exampleCorrect": "notice"
+    },
+    {
+     "trap": "⚠ 학생들이 자주 사람을 가리키는 who를 사물인 cars 앞에 넣어 cars who appeal로 만들어요. 이 문장에서는 cars를 받을 관계대명사로 that이 쓰여요.",
+     "point": "(b) 관계사(앞 명사를 뒤 문장이 꾸밀 때 잇는 who/which/that) — cars that appeal",
+     "layout": {
+      "band": "interline",
+      "lines": [
+       "cars",
+       "that appeal to buyers"
+      ],
+      "priority": 2,
+      "anchorText": "cars that appeal to buyers"
+     },
+     "example": "The cars who appeal to young drivers sell quickly.",
+     "excerpt": "cars that appeal to buyers",
+     "pointCode": "b",
+     "sentenceNo": 2,
+     "explanation": "① 이 자리는 관계대명사(앞 명사를 뒤 문장이 꾸밀 때 잇는 who/which/that)를 고르는 자리예요. ② that은 선행사(꾸밈 받는 앞 명사) cars를 뒤의 appeal to buyers와 연결해요. ③ who는 보통 사람을 가리키므로 사물인 cars와 맞지 않아요. which도 사물에 쓸 수 있지만, 원문에서는 that이 사용되었고 that이 appeal의 주어 역할을 해요. ④ 따라서 원문의 정답은 cars that appeal to buyers예요.",
+     "exampleWrong": "who",
+     "exampleCorrect": "that"
+    },
+    {
+     "trap": "⚠ 시험에선 article이 제목을 직접 붙인다고 잘못 생각해 entitling을 고르기 쉬워요. article은 제목을 받은 대상이므로 entitled를 써야 해요.",
+     "point": "(c) 분사(동사를 형용사처럼 바꾼 형태)의 능동/수동(주어가 직접 하는지, 당하는지) — article entitled",
+     "layout": {
+      "band": "interline",
+      "lines": [
+       "article",
+       "entitled 'Why Cars Got Angry'"
+      ],
+      "priority": 2,
+      "anchorText": "article entitled 'Why Cars Got Angry.'"
+     },
+     "example": "The report, entitling 'Why Cars Got Angry,' attracted many readers.",
+     "excerpt": "article entitled 'Why Cars Got Angry.'",
+     "pointCode": "c",
+     "sentenceNo": 2,
+     "explanation": "① 이 자리는 분사(동사를 형용사처럼 바꾼 형태)가 능동인지 수동인지 고르는 자리예요. entitled는 과거분사/p.p.(동사를 '~된·당한' 뜻으로)예요. ② article은 다른 것에 제목을 붙이는 주체가 아니라 제목이 붙은 대상이므로 당한 의미가 필요해요. ③ entitling은 현재분사/-ing(동사를 '~하는' 뜻으로)라서 article이 무언가에 제목을 붙이는 것처럼 읽혀요. ④ 따라서 원문에서는 제목이 붙은 article을 나타내는 entitled가 맞아요.",
+     "exampleWrong": "entitling",
+     "exampleCorrect": "entitled"
+    },
+    {
+     "trap": "⚠ 시험에선 and 뒤에서 주어 designers를 다시 찾으려 하거나 monitors처럼 -s가 붙은 동사를 골라요. tapping과 같은 모양인 monitoring이 와야 해요.",
+     "point": "(i) 병렬(and/or 앞뒤를 똑같은 모양으로) — tapping ... and monitoring",
+     "layout": {
+      "band": "interline",
+      "lines": [
+       "tapping experts",
+       "and monitoring brain waves"
+      ],
+      "priority": 2,
+      "anchorText": "tapping psychologists, anthropologists and other experts in human behavior, and even monitoring the brain waves"
+     },
+     "example": "Researchers are tapping experts and even monitors brain waves during interviews.",
+     "excerpt": "tapping psychologists, anthropologists and other experts in human behavior, and even monitoring the brain waves",
+     "pointCode": "i",
+     "sentenceNo": 2,
+     "explanation": "① 이 자리는 병렬(and/or 앞뒤를 똑같은 모양으로 맞추는 거예요)을 확인하는 자리예요. ② 앞의 designers가 두 행동의 주어이므로 tapping과 monitoring을 같은 -ing 모양으로 나란히 써야 해요. 이때 현재분사/-ing(동사를 '~하는' 뜻으로)는 designers가 실제로 하는 행동을 나타내요. ③ monitors처럼 -s가 붙은 동사나 monitored처럼 다른 시제를 나타내는 형태는 tapping과 모양이 맞지 않아요. ④ 그래서 원문의 정답은 tapping과 짝을 이루는 monitoring이에요.",
+     "exampleWrong": "monitors",
+     "exampleCorrect": "monitoring"
+    },
+    {
+     "trap": "⚠ 시험에선 angry에 바로 -er를 붙여 angryer라고 쓰기 쉬워요. 끝의 y를 i로 바꾼 뒤 -er를 붙여 angrier로 만들어야 해요.",
+     "point": "(m) 비교구문(두 대상의 정도를 견주는 표현) — angrier, scarier",
+     "layout": {
+      "band": "interline",
+      "lines": [
+       "toward angrier",
+       "scarier vehicles' faces"
+      ],
+      "priority": 2,
+      "anchorText": "the trend was toward angrier, scarier vehicles' faces"
+     },
+     "example": "The newer model has an angryer, scarier face than before.",
+     "excerpt": "the trend was toward angrier, scarier vehicles' faces",
+     "pointCode": "m",
+     "sentenceNo": 3,
+     "explanation": "① 이 자리는 비교구문(두 대상의 정도를 견주는 표현)에서 형용사(사람이나 사물의 상태나 성질을 나타내는 말)의 모양을 고르는 자리예요. ② angrier와 scarier는 자동차 얼굴이 이전보다 더 화나고 더 무서운 정도를 나타내요. ③ angry와 scary처럼 끝이 y인 형용사는 비교할 때 y를 i로 바꾸고 -er를 붙여야 하므로 angryer는 틀려요. ④ 따라서 원문에서는 angrier와 scarier가 맞아요.",
+     "exampleWrong": "angryer",
+     "exampleCorrect": "angrier"
+    },
+    {
+     "trap": "⚠ 시험에선 drivers가 3인칭 복수라는 점을 놓치고 feels를 골라요. help 뒤 목적어 drivers 다음에는 feel처럼 동사원형을 써야 해요.",
+     "point": "(a) 정·준동사(주어·시제에 맞춰 변하는 동사와 변하지 않는 동사 형태를 구별하는 문법) — help + 목적어(동작의 대상) + 동사원형(동사의 기본 모양)",
+     "layout": {
+      "band": "interline",
+      "lines": [
+       "help drivers",
+       "feel safer"
+      ],
+      "priority": 2,
+      "anchorText": "these faces help drivers feel safer in heavier traffic"
+     },
+     "example": "Bright grilles help drivers feels safer in crowded traffic.",
+     "excerpt": "these faces help drivers feel safer in heavier traffic",
+     "pointCode": "a",
+     "sentenceNo": 4,
+     "explanation": "① 이 자리는 help 뒤에서 목적어(동작의 대상) drivers 뒤에 어떤 동사 형태를 쓸지 고르는 자리예요. ② help가 drivers가 더 안전하다고 느끼도록 돕는 구조이므로 feel은 동사원형(동사의 기본 모양)으로 써야 해요. ③ feels는 drivers가 feel의 주어인 것처럼 단수형 -s를 붙인 형태라서 틀려요. to feel도 help 뒤에 쓸 수 있지만, feels는 쓸 수 없어요. ④ 따라서 원문의 정답은 help drivers feel safer예요.",
+     "exampleWrong": "feels",
+     "exampleCorrect": "feel"
+    },
+    {
+     "trap": "⚠ 시험에선 which 바로 앞의 cars가 복수라는 점만 보고 suggest를 고르기 쉬워요. which의 실제 선행사는 복수인 cars가 아니라 단수인 styling이에요.",
+     "point": "(d) 수일치(주어 단수면 단수동사) — which suggests",
+     "layout": {
+      "band": "interline",
+      "lines": [
+       "styling",
+       "which suggests power"
+      ],
+      "priority": 2,
+      "anchorText": "styling which suggests power or bad temper"
+     },
+     "example": "The styling which suggest power attracts many buyers.",
+     "excerpt": "styling which suggests power or bad temper",
+     "pointCode": "d",
+     "sentenceNo": 6,
+     "explanation": "① 이 자리는 수일치(주어 단수면 단수동사)를 확인하는 자리예요. ② 관계대명사(앞 명사를 뒤 문장이 꾸밀 때 잇는 who/which/that) which가 가리키는 선행사(꾸밈 받는 앞 명사)는 styling이에요. styling은 하나의 스타일을 나타내는 단수이므로 뒤 동사에 -s가 필요해요. ③ suggest는 복수 주어 뒤에 쓰는 기본 모양이라서 단수인 styling과 맞지 않아요. ④ 따라서 원문에서는 which suggests가 맞아요.",
+     "exampleWrong": "suggest",
+     "exampleCorrect": "suggests"
+    },
+    {
+     "trap": "⚠ 시험에선 주어와 동사 사이에 있는 cars나 styling에 끌려 seems를 고르기 쉬워요. 중심 주어 sales가 복수이므로 seem이 맞아요.",
+     "point": "(d) 수일치(주어 단수면 단수동사) — sales ... seem",
+     "layout": {
+      "band": "interline",
+      "lines": [
+       "Buoyant sales",
+       "seem to confirm"
+      ],
+      "priority": 2,
+      "anchorText": "Buoyant sales of cars with styling which suggests power or bad temper seem to confirm"
+     },
+     "example": "Strong sales of new models seems to confirm customer interest.",
+     "excerpt": "Buoyant sales of cars with styling which suggests power or bad temper seem to confirm",
+     "pointCode": "d",
+     "sentenceNo": 6,
+     "explanation": "① 이 자리는 긴 주어 뒤에서 동사의 수를 맞추는 수일치(주어 단수면 단수동사)를 확인하는 자리예요. ② 문장의 중심 주어는 Buoyant sales이고, sales는 여러 판매량이나 판매 실적을 나타내는 복수형이므로 seem을 써야 해요. ③ of cars with styling which suggests power or bad temper는 sales를 자세히 설명하는 부분일 뿐 주어가 아니에요. 그래서 가까이에 있는 styling이나 cars를 보고 seems를 고르면 안 돼요. ④ 따라서 원문의 정답은 Buoyant sales ... seem to confirm이에요.",
+     "exampleWrong": "seems",
+     "exampleCorrect": "seem"
+    }
+   ]
+  },
+  {
+   "kind": "exam-focus",
+   "rows": [
+    {
+     "asks": "첫째, 빈칸에 자동차의 무서운 얼굴 디자인에 대한 글의 결론이 들어가는지 물어요. 둘째, 문장 6의 \"Buoyant sales\"와 \"seem to confirm\"을 찾아서 판매가 앞의 생각을 뒷받침하는지 확인해요. 셋째, 정답은 고객들이 이런 자동차 얼굴을 좋아하거나 받아들인다는 내용이 돼요. 넷째, 판매가 좋다는 사실만 반복하거나 자동차가 실제로 더 안전해졌다는 내용은 정답에서 빼야 해요.",
+     "type": "빈칸추론",
+     "layout": {
+      "band": "rail",
+      "lines": [
+       "문장 6의 판매 증가가 앞의 생각을 확인해 줘요.",
+       "빈칸에는 고객들이 이 모습을 좋아한다는 결론이 와야 해요."
+      ],
+      "priority": 1,
+      "anchorText": "Buoyant sales of cars with styling which suggests power or bad temper seem to confirm that customers are happy with this look"
+     },
+     "strategy": "① 먼저 \"Buoyant sales\"를 보고 판매가 활발하다는 사실을 잡아요. ② 다음으로 \"seem to confirm\" 뒤의 \"customers are happy with this look\"을 읽고 무엇을 확인하는지 찾아요. ③ 따라서 예상 답은 고객들이 힘이나 나쁜 성격을 떠올리게 하는 무서운 모습을 좋아한다는 내용이에요. ④ \"feel safer\"는 문장 4의 가능한 이유이고, 문장 6의 직접적인 결론은 고객들이 그 모습을 좋아한다는 점이므로 두 내용을 섞지 않아요.",
+     "sentenceNo": 6,
+     "logicLocation": "문장 6의 \"Buoyant sales of cars with styling which suggests power or bad temper\" 뒤에 빈칸이 생길 수 있어요. \"seem to confirm\"이 앞의 내용을 확인해 주는 표현이라서, 빈칸에는 고객들의 긍정적인 반응이 와야 해요."
+    },
+    {
+     "asks": "첫째, 글 전체가 자동차의 어떤 특징과 소비자의 반응을 말하는지 물어요. 둘째, 문장 1의 \"emotional attachments\"와 \"design and marketing efforts\"를 먼저 확인해요. 셋째, 정답은 제조업체가 사람들이 자동차 얼굴에 감정적으로 반응한다는 점을 이용해 화나고 무서운 디자인을 만들고 판매한다는 내용이 돼요. 넷째, 전조등과 그릴의 비율이나 SUV의 크기만 말하는 선택지는 글 전체가 아니라 한 부분만 담으므로 피해야 해요.",
+     "type": "주제",
+     "layout": {
+      "band": "rail",
+      "lines": [
+       "문장 1이 제조업체의 목적을 먼저 보여 줘요.",
+       "뒤 문장들은 그 목적이 디자인과 판매에 어떻게 이어지는지 설명해요."
+      ],
+      "priority": 1,
+      "anchorText": "people form emotional attachments to automobile 'faces' and use the fact to guide their design and marketing efforts"
+     },
+     "strategy": "① 첫 문장에서 누가 무엇을 이용하는지 확인해요. ② 뒤의 문장 2~6에서 그 이용이 어떤 디자인으로 나타나고 어떤 반응을 얻었는지 연결해요. ③ 정답은 \"자동차 얼굴에 대한 감정적 반응을 이용한 위협적인 디자인\"처럼 원인과 결과를 함께 담아야 해요. ④ \"70% of drivers\"처럼 숫자만 담거나 \"monitoring the brain waves\"처럼 조사 방법만 담은 선택지는 중심 생각보다 좁으므로 고르지 않아요.",
+     "sentenceNo": 1,
+     "logicLocation": "문장 1이 글의 출발점과 중심 방향을 함께 보여 줘요. \"Car manufacturers know\" 뒤에 사람들이 자동차의 \"faces\"에 감정적으로 연결되고, 제조업체가 그 사실을 디자인과 마케팅에 이용한다는 내용이 나와요. 문장 3~6은 이 생각을 화나고 무서운 얼굴, 안전감, 판매 성과로 이어 가요."
+    },
+    {
+     "asks": "첫째, 빠진 문장을 글의 어느 자리에 넣어야 내용이 자연스럽게 이어지는지 물어요. 둘째, 문장 4의 \"these faces\"가 앞에서 어떤 얼굴을 가리키는지 확인해요. 셋째, 정답 흐름은 문장 3의 \"angrier, scarier vehicles' faces\" 다음에 문장 4의 안전감 설명이 오고, 문장 5와 6에서 그 모습이 계속 이어지는 방식이에요. 넷째, 문장 3보다 앞에 넣으면 \"these faces\"가 가리킬 내용이 없고, 문장 6 뒤에 넣으면 이미 나온 판매 결과를 거꾸로 설명하게 되므로 피해야 해요.",
+     "type": "문장삽입",
+     "layout": {
+      "band": "rail",
+      "lines": [
+       "\"these faces\"는 문장 3의 무서운 자동차 얼굴을 가리켜요.",
+       "\"the 'scary look'\"과 \"this look\"도 같은 대상을 이어 받아요."
+      ],
+      "priority": 2
+     },
+     "strategy": "① 빠진 문장에 \"these faces\", \"this look\"처럼 앞 내용을 가리키는 표현이 있는지 찾아요. ② 그런 표현이 있으면 바로 앞에 그 대상이 실제로 나오는지 확인해요. ③ 이 글에서는 문장 3의 화나고 무서운 얼굴이 문장 4의 \"these faces\"로 이어지므로 문장 3과 문장 5 사이가 가장 자연스러워요. ④ 문장 5의 \"Reflecting our tumultuous times\"는 이미 무서운 모습이 제시된 뒤에 쓸 수 있는 표현이므로 문장 3보다 앞에 두지 않아요.",
+     "sentenceNo": 4,
+     "logicLocation": "문장 3의 \"the trend was toward angrier, scarier vehicles' faces\"가 먼저 새로운 디자인 흐름을 제시해요. 바로 다음 문장 4의 \"these faces\"가 그 얼굴을 가리키고, 문장 5의 \"the 'scary look'\"과 문장 6의 \"this look\"이 같은 내용을 이어 받아요."
+    },
+    {
+     "asks": "첫째, 문장 6의 \"seem to confirm\"이 실제로 무엇을 확인한다는 뜻인지 물어요. 둘째, 이 표현의 뒤에 있는 \"customers are happy with this look\"을 읽어요. 셋째, 정답은 자동차의 힘세고 무서운 모습이 고객들에게 받아들여지고 있다는 뜻이 돼요. 넷째, \"bad temper\"를 고객들이 성격이 나쁘다는 뜻으로 읽거나, 판매가 높으니 자동차가 반드시 안전하다는 뜻으로 넓히면 안 돼요.",
+     "type": "함축의미",
+     "layout": {
+      "band": "rail",
+      "lines": [
+       "\"seem to confirm\"은 판매 성과가 앞의 판단을 뒷받침한다는 뜻이에요.",
+       "\"this look\"은 앞의 무서운 자동차 얼굴을 가리켜요."
+      ],
+      "priority": 2,
+      "anchorText": "seem to confirm that customers are happy with this look"
+     },
+     "strategy": "① \"this look\"이 무엇을 가리키는지 문장 5의 \"the 'scary look'\"에서 찾아요. ② \"styling which suggests power or bad temper\"가 실제 성격이 아니라 자동차가 주는 인상이라는 점을 확인해요. ③ 따라서 함축된 뜻은 고객들이 힘이나 위협적인 느낌을 주는 디자인을 싫어하지 않고 오히려 좋아한다는 내용이에요. ④ 문장 4의 \"feel safer\"는 디자인을 좋아하는 이유로 제시된 가능성일 뿐이므로, 문장 6의 뜻을 안전이 보장된다는 말로 바꾸지 않아요.",
+     "sentenceNo": 6,
+     "logicLocation": "문장 6에서 \"Buoyant sales\"가 \"customers are happy with this look\"을 확인하는 것처럼 보인다고 말해요. 문장 5의 \"the 'scary look' shows no sign of slowing\"도 이 무서운 모습이 계속 인기를 얻고 있다는 흐름을 먼저 보여 줘요."
+    },
+    {
+     "asks": "첫째, 여섯 문장의 내용을 원인과 결과로 짧게 묶는지 물어요. 둘째, 문장 1의 감정적 연결, 문장 3~5의 화나고 무서운 디자인, 문장 6의 판매 성과를 차례로 확인해요. 셋째, 정답은 제조업체가 자동차 얼굴에 대한 사람들의 감정적 반응을 이용해 위협적인 디자인을 발전시켰고, 안전감과 힘의 이미지 및 좋은 판매가 그 흐름을 뒷받침한다는 내용이 돼요. 넷째, 70%라는 숫자나 전문가와 뇌파를 조사했다는 방법만 넣은 요약은 세부 정보에 치우쳤으므로 피해야 해요.",
+     "type": "요약",
+     "layout": {
+      "band": "rail",
+      "lines": [
+       "제조업체의 이용 목적과 디자인의 변화부터 잡아요.",
+       "안전감과 판매 성과를 결과로 연결해 요약해요."
+      ],
+      "priority": 1
+     },
+     "strategy": "① 먼저 글의 행동 주체인 \"Car manufacturers\"를 요약문에 넣을지 확인해요. ② 다음으로 \"emotional attachments\", \"angrier, scarier vehicles' faces\", \"feel safer\", \"happy with this look\"을 각각 한 덩어리의 핵심 내용으로 묶어요. ③ 완성된 요약은 감정적 반응의 이용, 무서운 디자인의 확산, 안전감과 고객 선호라는 세 부분을 포함해야 해요. ④ \"70% of drivers identify and judge vehicles by the headlights and grille\"는 중심 생각을 뒷받침하는 자료이므로 요약의 중심으로 삼지 않아요.",
+     "sentenceNo": 1,
+     "logicLocation": "문장 1은 제조업체가 사람들의 감정적 반응을 디자인과 마케팅에 이용한다고 말해요. 문장 3~4는 화나고 무서운 얼굴과 안전감을 연결하고, 문장 5~6은 그 모습이 계속되고 고객들이 받아들이고 있다는 결과를 보여 줘요."
+    }
+   ]
+  },
+  {
+   "kind": "vocabulary",
+   "rows": [
+    {
+     "tier": "test",
+     "meaning": "자동차에 감정적 애착을 형성해요.",
+     "antonyms": "remain detached from, feel indifferent toward",
+     "headword": "form emotional attachments to",
+     "synonyms": "become emotionally attached to, bond with",
+     "difficulty": 3,
+     "pronunciation": "폼 이모셔널 어태치먼츠 투"
+    },
+    {
+     "tier": "core",
+     "meaning": "설계와 마케팅 활동의 방향을 정해요.",
+     "antonyms": "mislead, disorient",
+     "headword": "guide",
+     "synonyms": "direct, steer",
+     "difficulty": 2,
+     "pronunciation": "가이드"
+    },
+    {
+     "tier": "test",
+     "meaning": "경쟁이 극도로 치열해요.",
+     "antonyms": "cooperative, noncompetitive",
+     "headword": "hyper-competitive",
+     "synonyms": "cutthroat, fiercely competitive",
+     "difficulty": 3,
+     "pronunciation": "하이퍼 컴페티티브"
+    },
+    {
+     "tier": "test",
+     "meaning": "특정 대상에 관심과 노력을 집중해요.",
+     "antonyms": "neglect, overlook",
+     "headword": "focus on",
+     "synonyms": "concentrate on, center on",
+     "difficulty": 3,
+     "pronunciation": "포커스 온"
+    },
+    {
+     "tier": "test",
+     "meaning": "구매자에게 매력적으로 다가가 마음을 끌어요.",
+     "antonyms": "repel, displease",
+     "headword": "appeal to",
+     "synonyms": "attract, please",
+     "difficulty": 3,
+     "pronunciation": "어필 투"
+    },
+    {
+     "tier": "challenge",
+     "meaning": "전문가의 지식이나 도움을 활용하려고 찾아요.",
+     "antonyms": "avoid, forgo",
+     "headword": "tap",
+     "synonyms": "make use of, draw on",
+     "difficulty": 4,
+     "pronunciation": "탭"
+    },
+    {
+     "tier": "test",
+     "meaning": "뇌파 등을 계속 관찰하고 측정해요.",
+     "antonyms": "miss, fail to notice",
+     "headword": "monitor",
+     "synonyms": "track, observe",
+     "difficulty": 3,
+     "pronunciation": "모니터"
+    },
+    {
+     "tier": "challenge",
+     "meaning": "소규모 표적 집단 조사에 참여한 사람이에요.",
+     "antonyms": "—",
+     "headword": "focus-group participant",
+     "synonyms": "panelist, respondent",
+     "difficulty": 4,
+     "pronunciation": "포커스 그룹 파티시펀트"
+    },
+    {
+     "tier": "core",
+     "meaning": "차량을 알아보고 어떤 것인지 구별해요.",
+     "antonyms": "misidentify",
+     "headword": "identify",
+     "synonyms": "recognize, distinguish",
+     "difficulty": 2,
+     "pronunciation": "아이덴터파이"
+    },
+    {
+     "tier": "test",
+     "meaning": "차량의 가치나 특징을 판단하고 평가해요.",
+     "antonyms": "disregard, pass over",
+     "headword": "judge",
+     "synonyms": "assess, evaluate",
+     "difficulty": 3,
+     "pronunciation": "저지"
+    },
+    {
+     "tier": "core",
+     "meaning": "특정 시기에 나타나는 변화의 흐름이나 방향을 뜻해요.",
+     "antonyms": "—",
+     "headword": "trend",
+     "synonyms": "tendency, pattern",
+     "difficulty": 2,
+     "pronunciation": "트렌드"
+    },
+    {
+     "tier": "challenge",
+     "meaning": "아직 증명되지 않은 설명을 가설로 세워요.",
+     "antonyms": "prove, demonstrate",
+     "headword": "hypothesize",
+     "synonyms": "theorize, conjecture",
+     "difficulty": 4,
+     "pronunciation": "하이파서사이즈"
+    },
+    {
+     "tier": "test",
+     "meaning": "더 무거운 교통 상황 가운데에서라는 뜻으로 써요.",
+     "antonyms": "outside, beyond",
+     "headword": "amidst",
+     "synonyms": "amid, among",
+     "difficulty": 3,
+     "pronunciation": "어미스트"
+    },
+    {
+     "tier": "challenge",
+     "meaning": "보통 크기보다 지나치게 커요.",
+     "antonyms": "undersized, compact",
+     "headword": "oversize",
+     "synonyms": "oversized, extra-large",
+     "difficulty": 4,
+     "pronunciation": "오버사이즈"
+    },
+    {
+     "tier": "challenge",
+     "meaning": "시대가 크게 요동하고 혼란스러워요.",
+     "antonyms": "peaceful, stable",
+     "headword": "tumultuous",
+     "synonyms": "turbulent, chaotic",
+     "difficulty": 4,
+     "pronunciation": "터멀추어스"
+    },
+    {
+     "tier": "test",
+     "meaning": "어떤 일이 일어날 기미가 전혀 보이지 않아요.",
+     "antonyms": "show signs of, signal",
+     "headword": "show no sign of",
+     "synonyms": "give no indication of, not appear likely to",
+     "difficulty": 3,
+     "pronunciation": "쇼 노 사인 어브"
+    },
+    {
+     "tier": "challenge",
+     "meaning": "판매가 활발하고 강해요.",
+     "antonyms": "sluggish, depressed",
+     "headword": "buoyant",
+     "synonyms": "thriving, robust",
+     "difficulty": 4,
+     "pronunciation": "보이언트"
+    },
+    {
+     "tier": "test",
+     "meaning": "고객이 이 외관을 좋아한다는 점을 뒷받침해요.",
+     "antonyms": "refute, undermine",
+     "headword": "confirm",
+     "synonyms": "verify, substantiate",
+     "difficulty": 3,
+     "pronunciation": "컨펌"
+    }
+   ]
+  },
+  {
+   "kind": "parsing",
+   "items": [
+    {
+     "en": "Car manufacturers know people form emotional attachments to automobile 'faces' and use the fact to guide their design and marketing efforts.",
+     "parts": [
+      {
+       "text": "`Car manufacturers`가 주어(동작의 주체)예요. `know`와 `use`가 and로 이어져요. 병렬(and/or 앞뒤를 똑같은 모양으로 맞추는 것)이므로 같은 주어가 두 동작을 함께 해요. 먼저 ‘자동차 제조업체들은 알고, 사용해요’라고 문장 뼈대를 잡으면 돼요.",
+       "label": "[주절(문장의 중심이 되는 절)]"
+      },
+      {
+       "text": "`people form emotional attachments to automobile 'faces'`는 know가 아는 내용을 보여 주는 절(주어와 동사가 든 덩어리)이에요. `people`이 주어이고 `form`이 동사(동작이나 상태를 나타내는 말)예요. `that`이 생략된 것으로 볼 수 있어서 ‘사람들이 자동차의 얼굴에 감정적으로 애착을 형성한다는 것’으로 해석해요.",
+       "label": "[know의 목적어절(동작의 대상을 나타내는 절)]"
+      },
+      {
+       "text": "`the fact`는 use의 목적어(동작의 대상)예요. 바로 앞의 ‘사람들이 자동차의 얼굴에 애착을 형성한다는 내용’ 전체를 다시 가리켜요. 따라서 fact를 새로운 사실로 읽지 말고 앞의 내용을 가리키는 말로 읽어야 해요.",
+       "label": "[use의 목적어(동작의 대상)]"
+      },
+      {
+       "text": "`to guide their design and marketing efforts`는 그 사실을 사용하는 목적을 보여 줘요. `to guide`는 ‘이끌기 위해’라는 뜻이라서 ‘그 사실을 디자인과 마케팅 활동을 이끌기 위해 사용해요’라고 연결해요. `design`과 `marketing`은 and로 나란히 놓여 두 종류의 활동을 나타내요.",
+       "label": "[to부정사(동사 앞에 to를 붙인 형태)]"
+      }
+     ],
+     "layout": {
+      "band": "underchunk",
+      "priority": 2,
+      "anchorText": "know people form emotional attachments to automobile 'faces' and use the fact to guide their design and marketing efforts"
+     },
+     "sentenceNo": 1,
+     "translation": "자동차 제조업체들은 사람들이 자동차의 ‘얼굴’에 감정적으로 애착을 형성한다는 것을 알고, 그 사실을 자신들의 디자인과 마케팅 활동을 이끄는 데 활용해요."
+    },
+    {
+     "en": "\"In today's hyper-competitive car market, designers are focusing on faces as part of a broader effort to design cars that appeal to buyers ― tapping psychologists, anthropologists and other experts in human behavior, and even monitoring the brain waves of focus-group participants,\" the Wall Street Journal reported in a 2006 article entitled 'Why Cars Got Angry.' Automotive research shows \"70% of drivers identify and judge vehicles by the headlights and grille,\" the article reported.",
+     "parts": [
+      {
+       "text": "`In today's hyper-competitive car market`는 ‘오늘날 경쟁이 매우 치열한 자동차 시장에서’라는 상황을 먼저 보여 줘요. 문장의 핵심 동작은 뒤의 `designers are focusing`에서 찾아야 하므로 이 앞부분을 주어와 동사로 잘못 잡으면 안 돼요.",
+       "label": "[첫 번째 인용 내용의 상황]"
+      },
+      {
+       "text": "`designers`가 주어(동작의 주체)이고 `are focusing`이 동사예요. `are focusing`은 ‘집중하고 있어요’라는 진행의 뜻을 나타내요. `on faces`는 디자이너들이 집중하는 대상을 보여 주므로 ‘자동차의 얼굴에 집중하고 있어요’라고 읽어요.",
+       "label": "[첫 번째 인용 내용의 주절(문장의 중심이 되는 절)]"
+      },
+      {
+       "text": "`as part of a broader effort`는 자동차의 얼굴에 집중하는 일이 더 넓은 노력의 일부라는 뜻이에요. `a broader effort` 뒤의 `to design`은 to부정사(동사 앞에 to를 붙인 형태)예요. 여기서는 목적이나 내용을 나타내서 ‘자동차를 설계하려는 더 넓은 노력’으로 해석해요.",
+       "label": "[집중하는 이유를 덧붙이는 부분]"
+      },
+      {
+       "text": "`to design cars that appeal to buyers`에서 `cars`가 설계할 대상이에요. `that appeal to buyers`는 관계절(앞 명사를 뒤에서 꾸미는 절)이고, 관계대명사(앞 명사를 뒤 문장이 꾸밀 때 잇는 who/which/that) `that`의 선행사(꾸밈 받는 앞 명사)는 `cars`예요. `that`은 관계절 안에서 주어 역할을 하므로 ‘구매자에게 매력적으로 다가가는 자동차’라고 해석해요.",
+       "label": "[cars를 꾸미는 관계절(앞 명사를 뒤에서 꾸미는 절)]"
+      },
+      {
+       "text": "`tapping`과 `monitoring`은 현재분사/-ing(동사를 ‘~하는’ 뜻으로 바꾼 형태)로 시작해요. 대시 뒤에서 디자이너들이 동시에 하는 행동을 추가로 설명해요. `tapping psychologists, anthropologists and other experts`와 `even monitoring the brain waves`가 and로 연결된 병렬(and/or 앞뒤를 똑같은 모양으로 맞추는 것)이에요. 따라서 ‘전문가들의 도움을 구하고, 참가자들의 뇌파까지 관찰하면서’라고 읽어요.",
+       "label": "[현재분사/-ing로 시작하는 추가 행동]"
+      },
+      {
+       "text": "따옴표 안의 긴 내용 뒤에 `the Wall Street Journal reported`가 나와요. 이 부분은 누가 그 내용을 보도했는지를 전해요. `in a 2006 article entitled 'Why Cars Got Angry'`는 2006년의 어떤 기사에서 보도했는지를 덧붙여요. `entitled`는 과거분사/p.p.(동사를 ‘~된·당한’ 뜻으로 바꾼 형태)라서 `article`을 꾸미고, ‘Why Cars Got Angry라는 제목이 붙은 기사’라는 뜻이에요.",
+       "label": "[인용문 뒤의 보고절(누가 보도했는지를 전하는 절)]"
+      },
+      {
+       "text": "`Automotive research shows`가 두 번째 인용 내용의 바깥 뼈대예요. `Automotive research`가 주어이고 `shows`가 동사예요. research를 하나의 연구 결과라는 단수 개념으로 보므로 수일치(주어가 단수면 단수동사를 쓰는 규칙)에 따라 `show`가 아니라 `shows`를 써요.",
+       "label": "[두 번째 인용 내용의 주절(문장의 중심이 되는 절)]"
+      },
+      {
+       "text": "`70% of drivers identify and judge vehicles by the headlights and grille`은 shows가 보여 주는 내용이에요. 실제 동작을 하는 주어는 숫자 `70%`보다 뒤의 `drivers`로 보는 것이 자연스러워요. `identify`와 `judge`는 and로 연결된 병렬이라서 ‘차량을 식별하고 평가해요’라는 두 동작을 함께 나타내요. `by the headlights and grille`은 헤드라이트와 그릴을 기준으로 한다는 뜻이에요.",
+       "label": "[shows 뒤의 인용 내용]"
+      },
+      {
+       "text": "`the article reported`는 앞의 두 번째 인용 내용을 그 기사가 보도했다는 뜻이에요. 따라서 전체 구조는 ‘월스트리트 저널이 첫 내용을 보도했고, 그 기사가 운전자 70%에 관한 연구 결과도 보도했어요’로 정리하면 돼요.",
+       "label": "[두 번째 인용문 뒤의 보고절(누가 보도했는지를 전하는 절)]"
+      }
+     ],
+     "layout": {
+      "band": "underchunk",
+      "priority": 2,
+      "anchorText": "designers are focusing on faces as part of a broader effort to design cars that appeal to buyers ― tapping psychologists, anthropologists and other experts in human behavior, and even monitoring the brain waves of focus-group participants"
+     },
+     "sentenceNo": 2,
+     "translation": "월스트리트 저널은 2006년에 ‘Why Cars Got Angry’라는 제목의 기사에서 이렇게 보도했어요. ‘오늘날처럼 경쟁이 매우 치열한 자동차 시장에서 디자이너들은 구매자에게 매력적으로 다가가는 자동차를 설계하려는 더 넓은 노력의 하나로 자동차의 얼굴에 집중하고 있어요. 그들은 인간 행동 전문가인 심리학자와 인류학자 등을 활용하고, 포커스 그룹 참가자들의 뇌파까지 관찰하고 있어요.’ 그 기사는 또 ‘운전자의 70%가 헤드라이트와 그릴로 차량을 식별하고 평가한다’고 보도했어요."
+    },
+    {
+     "en": "\"Buoyant sales of cars with styling which suggests power or bad temper seem to confirm that customers are happy with this look,\" an international automotive site reported in 2017.",
+     "parts": [
+      {
+       "text": "`Buoyant sales`가 주어(동작이나 상태의 주체)이고 `seem`이 동사예요. `sales`가 복수형이므로 수일치(주어가 단수면 단수동사를 쓰는 규칙)에 따라 `seems`가 아니라 `seem`을 써요. 먼저 ‘활발한 판매가 ~처럼 보여요’라고 뼈대를 잡으면 돼요.",
+       "label": "[인용문 안의 주절(문장의 중심이 되는 절)]"
+      },
+      {
+       "text": "`of cars with styling`에서 `of cars`는 어떤 판매인지 알려 주고, `with styling`은 그런 자동차가 어떤 디자인을 가졌는지 덧붙여요. 따라서 `Buoyant sales of cars with styling`은 ‘어떤 디자인을 가진 자동차의 활발한 판매’라는 뜻으로 묶어 읽어요.",
+       "label": "[cars를 설명하는 부분]"
+      },
+      {
+       "text": "`which suggests power or bad temper`는 관계절(앞 명사를 뒤에서 꾸미는 절)이에요. 관계대명사(앞 명사를 뒤 문장이 꾸밀 때 잇는 who/which/that) `which`의 선행사(꾸밈 받는 앞 명사)는 `styling`이에요. `which`가 관계절 안의 주어 역할을 하므로, `styling`이 단수인 것에 맞춰 `suggests`를 써요. 전체는 ‘힘이나 나쁜 성질을 떠올리게 하는 디자인’으로 해석해요.",
+       "label": "[styling을 꾸미는 관계절(앞 명사를 뒤에서 꾸미는 절)]"
+      },
+      {
+       "text": "`to confirm`은 seem 뒤에 와서 ‘확인해 주는 듯해요’라는 내용을 완성해요. 여기서 to부정사는 ‘확인하기 위해’라는 목적이 아니에요. `seem to confirm`을 하나로 묶어 ‘확인해 주는 것처럼 보이다’라고 읽어야 해요.",
+       "label": "[seem 뒤의 to부정사(동사 앞에 to를 붙인 형태)]"
+      },
+      {
+       "text": "`that customers are happy with this look`은 confirm이 확인하는 내용을 보여 주는 절(주어와 동사가 든 덩어리)이에요. `customers`가 주어이고 `are happy`가 상태를 나타내는 동사 부분이에요. 여기의 `that`은 앞 명사를 꾸미는 관계대명사가 아니라, confirm 뒤에 내용을 이어 주는 말이에요. 따라서 ‘고객들이 이런 모습을 마음에 들어 한다는 점’으로 해석해요.",
+       "label": "[confirm의 내용인 that절(주어와 동사가 든 덩어리)]"
+      },
+      {
+       "text": "따옴표 뒤의 `an international automotive site reported in 2017`은 국제 자동차 사이트가 2017년에 보도했다는 내용이에요. 앞의 긴 인용문 전체가 reported가 전하는 내용이고, `an international automotive site`가 보도한 주체예요.",
+       "label": "[인용문 뒤의 보고절(누가 보도했는지를 전하는 절)]"
+      }
+     ],
+     "layout": {
+      "band": "underchunk",
+      "priority": 2,
+      "anchorText": "Buoyant sales of cars with styling which suggests power or bad temper seem to confirm that customers are happy with this look"
+     },
+     "sentenceNo": 6,
+     "translation": "힘이나 나쁜 성질을 떠올리게 하는 디자인의 자동차가 활발하게 판매되는 현상은 고객들이 이런 모습을 마음에 들어 한다는 점을 확인해 주는 듯하다고, 한 국제 자동차 사이트가 2017년에 보도했어요."
+    }
+   ]
+  }
+ ],
+ "passageLayout": "hlc",
+ "schemaVersion": 1
+}

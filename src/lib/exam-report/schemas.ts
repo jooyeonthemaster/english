@@ -154,6 +154,20 @@ const orderSchema = z.preprocess(
   z.number().int().min(0),
 );
 
+/**
+ * 첨부 사진 순번(1-based) — 관대 파스. v4 E1a 가 청크 상대 순번으로 내고 코드가 전역
+ * 순번으로 바꿔 저장한다(types.ts ExamMapEntry.page). null/빈값/0 이하/비숫자는
+ * undefined 로 흡수해 구 지도·INTERNAL 지도(page 없음)와 LLM 드리프트가 배열 전체
+ * 파스를 무너뜨리지 않게 한다 — page 부재는 E1b 전 페이지 폴백 신호일 뿐이다.
+ */
+const optionalPageSchema = z
+  .preprocess((v) => {
+    if (v == null || v === "") return undefined;
+    const n = typeof v === "number" ? Math.round(v) : Number(String(v).match(/\d+/)?.[0]);
+    return Number.isFinite(n) && n >= 1 ? n : undefined;
+  }, z.number().int().min(1).optional())
+  .catch(undefined);
+
 // ── E1a: ExamMap ────────────────────────────────────────────────────────────
 
 // v3.1: 정답 도출을 E1a → E1b 로 이관. E1a(구조 지도)는 정답을 풀지 않으므로 정답
@@ -166,9 +180,11 @@ const examMapStructureFields = {
   points: flexibleNullableNumber,
   typeLabel: z.string().catch(""),
   brief: z.string().catch(""),
+  // v4: 발문 시작 사진 순번(E1a 청크 상대 → 코드가 전역으로 확정). 관대·optional.
+  page: optionalPageSchema,
 } as const;
 
-/** E1a 응답 항목 — 정답 없이 구조(번호/유형/배점/발문)만. 문제를 풀지 않는다. */
+/** E1a 응답 항목 — 정답 없이 구조(번호/유형/배점/발문/사진 순번)만. 문제를 풀지 않는다. */
 export const examMapEntryStructureSchema = z.object(examMapStructureFields);
 
 // MC 정답을 kind 를 아는 객체 레벨에서 "1".."5" 로 정규화(서술형 모범답안은 훼손 금지).
@@ -188,7 +204,7 @@ export const examMapEntrySchema = z
   })
   .transform(normalizeMcAnswer);
 
-/** E1a LLM 응답(전 페이지 1콜) — 구조만. pageCount 는 코드가 이미지 수로 부여. */
+/** E1a LLM 응답(콜 1회 = 최대 6장 청크) — 구조만. pageCount 는 코드가 이미지 수로 부여. */
 export const examMapExtractionSchema = z.object({
   questions: z.array(examMapEntryStructureSchema),
   totalPoints: flexibleNullableNumber.catch(null),

@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SMOAT 비즈니스 모델 — 이중 수익 엔진 도식</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  :root {
+    /* SMOAT brand */
+    --blue:        #3B82F6;
+    --blue-deep:   #2563EB;
+    --blue-hero:   #7DB0FF;
+    --blue-300:    #93C5FD;
+    --blue-200:    #BFDBFE;
+    /* engine hues (dark-surface validated: #D97706 / #059669) */
+    --amber:       #F59E0B;
+    --amber-fill:  #D97706;
+    --amber-300:   #FCD34D;
+    --emerald:     #10B981;
+    --emerald-fill:#059669;
+    --emerald-300: #6EE7B7;
+    /* navy scene */
+    --navy-0: #1B2A4A;
+    --navy-1: #111C34;
+    --navy-2: #0B1220;
+    /* ink */
+    --ink:      #EFF4FB;
+    --ink-2:    rgba(226, 232, 240, 0.78);
+    --ink-3:    rgba(148, 163, 184, 0.92);
+    --hairline: rgba(255, 255, 255, 0.13);
+    --hairline-soft: rgba(255, 255, 255, 0.07);
+    --glass:    rgba(255, 255, 255, 0.052);
+    --glass-2:  rgba(255, 255, 255, 0.032);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { background: var(--navy-2); }
+
+  body {
+    font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+    background: radial-gradient(120% 80% at 50% -8%, var(--navy-0) 0%, var(--navy-1) 45%, var(--navy-2) 100%) fixed;
+    color: var(--ink);
+    min-width: 1480px;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    word-break: keep-all;
+    font-feature-settings: "tnum";
+  }
+
+  .page {
+    width: 1360px;
+    margin: 0 auto;
+    padding: 72px 0 56px;
+    position: relative;
+  }
+
+  /* ambient glow */
+  .glow {
+    position: absolute; border-radius: 50%;
+    filter: blur(80px); pointer-events: none; z-index: 0;
+  }
+  .glow-a { width: 720px; height: 420px; left: 320px; top: -40px; background: rgba(59, 130, 246, 0.16); }
+  .glow-b { width: 520px; height: 360px; left: 420px; top: 560px; background: rgba(59, 130, 246, 0.10); }
+
+  /* ============ header ============ */
+  header { position: relative; z-index: 2; }
+
+  .topline {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 34px;
+  }
+  .brand { display: flex; align-items: center; gap: 13px; }
+  .brand-mark {
+    width: 42px; height: 42px; border-radius: 50%;
+    background: linear-gradient(135deg, #5B9BFF 0%, var(--blue-deep) 100%);
+    display: grid; place-items: center;
+    font-weight: 900; font-size: 17px; letter-spacing: -0.02em; color: #fff;
+    box-shadow: 0 8px 24px -8px rgba(59, 130, 246, 0.55);
+  }
+  .brand-name { font-size: 19px; font-weight: 800; letter-spacing: 0.045em; }
+  .brand-sub  { font-size: 12.5px; color: var(--ink-3); margin-top: 2px; letter-spacing: 0.02em; }
+  .doc-pill {
+    font-size: 12.5px; font-weight: 600; color: var(--ink-2);
+    border: 1px solid var(--hairline); border-radius: 999px;
+    padding: 8px 18px; letter-spacing: 0.06em;
+    background: var(--glass);
+  }
+
+  h1 {
+    font-size: 46px; font-weight: 900; letter-spacing: -0.035em;
+    line-height: 1.22; margin-bottom: 16px;
+  }
+  h1 .grad {
+    background: linear-gradient(90deg, var(--blue-hero) 0%, var(--blue) 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .lede {
+    font-size: 16.5px; line-height: 1.65; color: var(--ink-2);
+    max-width: 880px; margin-bottom: 30px;
+  }
+  .lede strong { color: var(--ink); font-weight: 700; }
+
+  /* legend */
+  .legend {
+    display: flex; align-items: center; gap: 26px;
+    border: 1px solid var(--hairline); border-radius: 16px;
+    background: var(--glass-2);
+    padding: 14px 24px; margin-bottom: 40px;
+    font-size: 13px; font-weight: 600; color: var(--ink-2);
+  }
+  .legend .li { display: flex; align-items: center; gap: 9px; }
+  .lg-line { width: 30px; height: 2.5px; border-radius: 2px; flex: none; }
+  .lg-blue      { background: #93C5FD; }
+  .lg-blue-dash { background: repeating-linear-gradient(90deg, #93C5FD 0 6px, transparent 6px 11px); }
+  .lg-blue-dot  { background: repeating-linear-gradient(90deg, #93C5FD 0 2.5px, transparent 2.5px 8px); }
+  .lg-amber     { background: #F59E0B; }
+  .lg-emerald   { background: #10B981; }
+  .legend .rule {
+    margin-left: auto; font-weight: 500; color: var(--ink-3); font-size: 12.5px;
+    letter-spacing: 0.01em;
+  }
+  .legend .rule b { color: var(--ink-2); font-weight: 700; }
+
+  /* ============ stage (fixed-coordinate diagram) ============ */
+  .stage {
+    position: relative; width: 1360px; height: 750px;
+    z-index: 1; margin-bottom: 28px;
+  }
+  .stage svg.wires {
+    position: absolute; inset: 0; width: 1360px; height: 750px;
+    overflow: visible; pointer-events: none;
+  }
+
+  .node {
+    position: absolute;
+    background: var(--glass);
+    border: 1px solid var(--hairline);
+    border-radius: 20px;
+    box-shadow: 0 24px 70px -35px rgba(2, 6, 18, 0.9);
+    backdrop-filter: blur(14px);
+    padding: 24px;
+    display: flex; flex-direction: column;
+  }
+  .node::before {
+    content: ""; position: absolute; inset: 0 0 auto 0; height: 1px;
+    border-radius: 20px 20px 0 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.28), transparent);
+  }
+
+  .node-head { display: flex; align-items: center; gap: 12px; margin-bottom: 4px; }
+  .node-ico {
+    width: 40px; height: 40px; border-radius: 12px; flex: none;
+    display: grid; place-items: center;
+    background: rgba(59, 130, 246, 0.14);
+    border: 1px solid rgba(59, 130, 246, 0.28);
+  }
+  .node-ico svg { width: 21px; height: 21px; stroke: var(--blue-300); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .node-title { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; }
+  .node-role {
+    display: inline-block; margin-top: 5px;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.03em;
+    color: var(--blue-200);
+  }
+  .node hr {
+    border: none; border-top: 1px solid var(--hairline-soft);
+    margin: 14px 0;
+  }
+  .node ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .node li {
+    font-size: 13.5px; line-height: 1.5; color: var(--ink-2);
+    padding-left: 17px; position: relative;
+  }
+  .node li::before {
+    content: ""; position: absolute; left: 2px; top: 8px;
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--blue);
+  }
+  .node li b { color: var(--ink); font-weight: 700; }
+  .value-chip {
+    margin-top: auto;
+    font-size: 12.5px; font-weight: 600; line-height: 1.45;
+    color: var(--blue-200);
+    background: rgba(59, 130, 246, 0.10);
+    border: 1px solid rgba(59, 130, 246, 0.22);
+    border-radius: 10px; padding: 9px 12px;
+  }
+  .value-chip span { color: var(--ink-3); font-weight: 600; }
+
+  /* node positions — must mirror the SVG wire coordinates exactly */
+  .n-teacher { left: 0;      top: 210px; width: 280px; height: 380px; }
+  .n-teacher hr { margin: 20px 0; }
+  .n-teacher ul { gap: 16px; }
+  .n-teacher li { line-height: 1.6; }
+  .n-student { left: 1080px; top: 130px; width: 280px; height: 250px; }
+  .n-parent  { left: 1080px; top: 470px; width: 280px; height: 250px; }
+
+  .n-student, .n-parent { padding: 20px 22px; }
+  .n-student .node-title, .n-parent .node-title { font-size: 19px; }
+  .n-student hr, .n-parent hr { margin: 12px 0; }
+
+  /* platform node */
+  .n-platform {
+    left: 480px; top: 120px; width: 400px; height: 560px;
+    padding: 26px 26px 24px;
+    background: linear-gradient(180deg, rgba(59,130,246,0.10) 0%, rgba(255,255,255,0.045) 34%);
+    border-color: rgba(125, 176, 255, 0.30);
+    box-shadow:
+      0 0 0 1px rgba(59, 130, 246, 0.10),
+      0 30px 90px -40px rgba(37, 99, 235, 0.55),
+      0 24px 70px -35px rgba(2, 6, 18, 0.9);
+  }
+  .plat-head { display: flex; align-items: center; gap: 13px; margin-bottom: 6px; }
+  .plat-logo {
+    width: 44px; height: 44px; border-radius: 50%; flex: none;
+    background: linear-gradient(135deg, #5B9BFF 0%, var(--blue-deep) 100%);
+    display: grid; place-items: center;
+    font-weight: 900; font-size: 18px; color: #fff;
+    box-shadow: 0 10px 26px -10px rgba(59, 130, 246, 0.7);
+  }
+  .plat-name { font-size: 21px; font-weight: 900; letter-spacing: 0.01em; }
+  .plat-sub  { font-size: 12.5px; color: var(--ink-3); margin-top: 3px; }
+
+  .engine {
+    border-radius: 14px; padding: 15px 16px 14px;
+    border: 1px solid; position: relative;
+  }
+  .engine-credit {
+    margin-top: 16px;
+    background: rgba(217, 119, 6, 0.10);
+    border-color: rgba(245, 158, 11, 0.32);
+  }
+  .engine-sub {
+    background: rgba(5, 150, 105, 0.10);
+    border-color: rgba(16, 185, 129, 0.32);
+  }
+  .engine-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 800; letter-spacing: 0.05em;
+    border-radius: 999px; padding: 4px 11px; margin-bottom: 9px;
+  }
+  .engine-credit .engine-tag { color: var(--amber-300); background: rgba(217, 119, 6, 0.18); }
+  .engine-sub    .engine-tag { color: var(--emerald-300); background: rgba(5, 150, 105, 0.20); }
+  .engine-title { font-size: 17px; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 7px; }
+  .engine-title small { font-size: 13px; font-weight: 600; color: var(--ink-3); margin-left: 4px; }
+  .engine-desc { font-size: 12.8px; line-height: 1.55; color: var(--ink-2); }
+  .engine-desc b { color: var(--ink); font-weight: 700; }
+  .engine-note {
+    margin-top: 9px; padding-top: 9px; border-top: 1px dashed rgba(255,255,255,0.14);
+    font-size: 12.3px; font-weight: 700; display: flex; align-items: center; gap: 6px;
+  }
+  .engine-credit .engine-note { color: var(--amber-300); }
+  .engine-sub    .engine-note { color: var(--emerald-300); }
+
+  .flywheel {
+    display: flex; align-items: center; gap: 11px;
+    padding: 11px 4px; margin: 2px 0;
+  }
+  .flywheel .fw-arrow {
+    flex: none; width: 26px; height: 34px;
+  }
+  .flywheel .fw-text {
+    font-size: 12.6px; line-height: 1.5; font-weight: 600; color: var(--blue-200);
+  }
+  .flywheel .fw-text b { color: var(--ink); font-weight: 800; }
+
+  /* flow captions (absolute, anchored to wire lanes) */
+  .cap {
+    position: absolute; width: 200px; text-align: center;
+    transform: translateX(-50%);
+    line-height: 1.35; pointer-events: none;
+  }
+  .cap .t { font-size: 13.5px; font-weight: 800; letter-spacing: -0.01em; }
+  .cap .d { font-size: 12px; font-weight: 500; color: var(--ink-3); margin-top: 3px; line-height: 1.4; }
+  .cap-blue    .t { color: var(--blue-300); }
+  .cap-amber   .t { color: var(--amber-300); }
+  .cap-emerald .t { color: var(--emerald-300); }
+
+  .cap-arc {
+    position: absolute; left: 680px; top: 8px; transform: translateX(-50%);
+    text-align: center; white-space: nowrap;
+    background: rgba(17, 28, 52, 0.85);
+    border: 1px solid rgba(147, 197, 253, 0.25);
+    border-radius: 999px; padding: 7px 18px;
+  }
+  .cap-arc .t { font-size: 13.5px; font-weight: 800; color: var(--blue-300); }
+  .cap-arc .d { font-size: 12px; color: var(--ink-3); font-weight: 500; margin-left: 8px; }
+
+  .cap-vert {
+    position: absolute; left: 1178px; top: 412px; width: 182px;
+    text-align: left; line-height: 1.35;
+  }
+  .cap-vert .t { font-size: 13px; font-weight: 800; color: var(--blue-300); }
+  .cap-vert .d { font-size: 12px; color: var(--ink-3); font-weight: 500; margin-top: 2px; }
+
+  /* ============ section panels ============ */
+  section.panel {
+    position: relative; z-index: 1;
+    background: var(--glass-2);
+    border: 1px solid var(--hairline);
+    border-radius: 24px;
+    padding: 36px;
+    margin-bottom: 28px;
+    box-shadow: 0 24px 70px -35px rgba(2, 6, 18, 0.8);
+  }
+  .sec-head { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 28px; }
+  .eyebrow {
+    font-size: 12.5px; font-weight: 800; letter-spacing: 0.14em;
+    margin-bottom: 9px;
+  }
+  .eyebrow.em { color: var(--blue-300); }
+  .eyebrow.du { color: var(--blue-300); }
+  .sec-title { font-size: 26px; font-weight: 800; letter-spacing: -0.025em; }
+  .sec-side { font-size: 13px; color: var(--ink-3); text-align: right; line-height: 1.5; max-width: 380px; }
+
+  /* --- split bar --- */
+  .split-total {
+    display: flex; justify-content: center; margin-bottom: 10px;
+  }
+  .split-total .amt {
+    font-size: 15px; font-weight: 800; color: var(--ink);
+    display: inline-flex; align-items: baseline; gap: 8px;
+  }
+  .split-total .amt small { font-size: 12.5px; font-weight: 600; color: var(--ink-3); }
+  .split-bracket { display: block; margin-bottom: 10px; }
+  .split-bar {
+    display: flex; gap: 3px; height: 86px; margin-bottom: 26px;
+  }
+  .split-half {
+    flex: 1; border-radius: 14px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 26px;
+  }
+  .split-half.parent  { background: linear-gradient(180deg, rgba(16,185,129,0.30), rgba(5,150,105,0.20)); border: 1px solid rgba(16,185,129,0.45); border-radius: 16px 6px 6px 16px; }
+  .split-half.teacher { background: linear-gradient(180deg, rgba(16,185,129,0.30), rgba(5,150,105,0.20)); border: 1px solid rgba(16,185,129,0.45); border-radius: 6px 16px 16px 6px; }
+  .split-who { font-size: 16px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+  .split-who .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--emerald); }
+  .split-who small { font-size: 12.5px; font-weight: 600; color: var(--ink-3); }
+  .split-amt { font-size: 24px; font-weight: 900; letter-spacing: -0.02em; }
+  .split-amt small { font-size: 13px; font-weight: 600; color: var(--ink-2); margin-left: 3px; }
+
+  .point-row { display: flex; gap: 20px; }
+  .point {
+    flex: 1; border: 1px solid var(--hairline-soft); border-radius: 14px;
+    background: var(--glass); padding: 18px 20px;
+  }
+  .point .pt { font-size: 14.5px; font-weight: 800; margin-bottom: 7px; letter-spacing: -0.01em; }
+  .point .pd { font-size: 13px; line-height: 1.6; color: var(--ink-2); }
+  .point .pd b { color: var(--ink); font-weight: 700; }
+
+  /* --- complementarity chart --- */
+  .chart-wrap { position: relative; }
+  .chart-legend {
+    display: flex; gap: 22px; font-size: 13px; font-weight: 600; color: var(--ink-2);
+  }
+  .chart-legend .li { display: flex; align-items: center; gap: 8px; }
+  .sw { width: 22px; height: 0; border-top: 3px solid; border-radius: 2px; flex: none; }
+  .sw.area { height: 12px; border: none; border-top: 3px solid #10B981; border-radius: 3px 3px 2px 2px; }
+
+  .takeaway-row { display: flex; gap: 20px; margin-top: 26px; }
+  .takeaway {
+    flex: 1; border-radius: 14px; padding: 18px 20px; border: 1px solid;
+  }
+  .takeaway.amber   { background: rgba(217, 119, 6, 0.09); border-color: rgba(245, 158, 11, 0.28); }
+  .takeaway.emerald { background: rgba(5, 150, 105, 0.09); border-color: rgba(16, 185, 129, 0.28); }
+  .takeaway .tt { font-size: 14.5px; font-weight: 800; margin-bottom: 7px; display: flex; align-items: center; gap: 8px; }
+  .takeaway.amber   .tt { color: var(--amber-300); }
+  .takeaway.emerald .tt { color: var(--emerald-300); }
+  .takeaway .td { font-size: 13px; line-height: 1.6; color: var(--ink-2); }
+  .takeaway .td b { color: var(--ink); font-weight: 700; }
+
+  footer {
+    text-align: center; font-size: 12.5px; color: var(--ink-3);
+    padding-top: 14px; letter-spacing: 0.02em;
+  }
+  footer b { color: var(--ink-2); font-weight: 700; letter-spacing: 0.05em; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="glow glow-a"></div>
+  <div class="glow glow-b"></div>
+
+  <!-- ================= HEADER ================= -->
+  <header>
+    <div class="topline">
+      <div class="brand">
+        <div class="brand-mark">S</div>
+        <div>
+          <div class="brand-name">SMOAT</div>
+          <div class="brand-sub">스모트 · AI 영어 문제 생성·내신 시험지 제작 올인원</div>
+        </div>
+      </div>
+      <div class="doc-pill">BUSINESS MODEL · 2026. 08</div>
+    </div>
+
+    <h1>생성은 <span class="grad">크레딧</span>으로, 학습은 <span class="grad">구독</span>으로.</h1>
+    <p class="lede">
+      강사가 만드는 모든 문제·시험지·학습지는 <strong>생성 건당 크레딧이 차감</strong>되고,
+      그렇게 생성된 콘텐츠는 그대로 학생의 <strong>태블릿·모바일 디지털 학습 콘텐츠</strong>가 되어
+      <strong>학생 1인당 월 5,000원</strong>의 구독 수익을 만듭니다. 하나의 콘텐츠가 두 번 수익이 되는 이중 엔진 구조입니다.
+    </p>
+
+    <div class="legend">
+      <div class="li"><span class="lg-line lg-blue"></span>가치 · 콘텐츠 흐름</div>
+      <div class="li"><span class="lg-line lg-blue-dash"></span>학습 데이터</div>
+      <div class="li"><span class="lg-line lg-blue-dot"></span>강사 → 학생 직접 전달</div>
+      <div class="li"><span class="lg-line lg-amber"></span>크레딧 수익 (사용량)</div>
+      <div class="li"><span class="lg-line lg-emerald"></span>구독 수익 (학생당 월액)</div>
+      <div class="rule">읽는 법 — <b>₩ 주황·초록</b> 화살표는 플랫폼으로 들어오는 <b>수익</b>, 파랑은 가치와 데이터</div>
+    </div>
+  </header>
+
+  <!-- ================= STAGE ================= -->
+  <div class="stage">
+    <svg class="wires" viewBox="0 0 1360 750" fill="none" aria-hidden="true">
+      <defs>
+        <marker id="mk-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8.5" markerHeight="8.5" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 Z" fill="#93C5FD"/>
+        </marker>
+        <marker id="mk-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8.5" markerHeight="8.5" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 Z" fill="#F59E0B"/>
+        </marker>
+        <marker id="mk-emerald" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8.5" markerHeight="8.5" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 Z" fill="#10B981"/>
+        </marker>
+      </defs>
+
+      <!-- top arc: 강사 → 학생 (수업·과제 배포) -->
+      <path d="M 140,206 C 380,28 1000,-6 1206,128"
+            stroke="#93C5FD" stroke-width="2" stroke-opacity="0.55"
+            stroke-dasharray="1 7" stroke-linecap="round" marker-end="url(#mk-blue)"/>
+
+      <!-- left gap: SMOAT ↔ 강사 -->
+      <line x1="478" y1="280" x2="283" y2="280" stroke="#93C5FD" stroke-width="2.25" marker-end="url(#mk-blue)"/>
+      <line x1="284" y1="400" x2="478" y2="400" stroke="#F59E0B" stroke-width="2.75" marker-end="url(#mk-amber)"/>
+      <line x1="284" y1="520" x2="478" y2="520" stroke="#10B981" stroke-width="2.75" marker-end="url(#mk-emerald)"/>
+
+      <!-- right gap: SMOAT ↔ 학생 / 학부모 -->
+      <line x1="884" y1="225" x2="1078" y2="225" stroke="#93C5FD" stroke-width="2.25" marker-end="url(#mk-blue)"/>
+      <line x1="1076" y1="305" x2="883" y2="305" stroke="#93C5FD" stroke-width="2" stroke-dasharray="6 6" marker-end="url(#mk-blue)"/>
+      <line x1="884" y1="555" x2="1078" y2="555" stroke="#93C5FD" stroke-width="2.25" marker-end="url(#mk-blue)"/>
+      <line x1="1076" y1="635" x2="883" y2="635" stroke="#10B981" stroke-width="2.75" marker-end="url(#mk-emerald)"/>
+
+      <!-- vertical: 학생 → 학부모 -->
+      <line x1="1150" y1="384" x2="1150" y2="462" stroke="#93C5FD" stroke-width="2" stroke-opacity="0.8" marker-end="url(#mk-blue)"/>
+
+      <!-- origin plugs: every flow starts with a dot on its source card edge -->
+      <g>
+        <circle cx="140"  cy="208" r="3.5" fill="#93C5FD" fill-opacity="0.75"/>
+        <circle cx="480"  cy="280" r="3.5" fill="#93C5FD"/>
+        <circle cx="281"  cy="400" r="3.5" fill="#F59E0B"/>
+        <circle cx="281"  cy="520" r="3.5" fill="#10B981"/>
+        <circle cx="881"  cy="225" r="3.5" fill="#93C5FD"/>
+        <circle cx="1079" cy="305" r="3.5" fill="#93C5FD"/>
+        <circle cx="881"  cy="555" r="3.5" fill="#93C5FD"/>
+        <circle cx="1079" cy="635" r="3.5" fill="#10B981"/>
+        <circle cx="1150" cy="382" r="3.5" fill="#93C5FD" fill-opacity="0.85"/>
+      </g>
+    </svg>
+
+    <!-- arc caption -->
+    <div class="cap-arc"><span class="t">수업 · 과제 배포</span><span class="d">강사가 생성 콘텐츠로 수업을 운영</span></div>
+
+    <!-- left lane captions -->
+    <div class="cap cap-blue" style="left:380px; top:292px;">
+      <div class="t">콘텐츠 생성 가치</div>
+      <div class="d">AI 문제 · 시험지 · 학습지<br>10시간 → 10분</div>
+    </div>
+    <div class="cap cap-amber" style="left:380px; top:412px;">
+      <div class="t">₩ 크레딧 결제</div>
+      <div class="d">충전 후 생성 건당 차감<br>문제 2C · 지문 분석 5C …</div>
+    </div>
+    <div class="cap cap-emerald" style="left:380px; top:532px;">
+      <div class="t">₩ 구독 분담 2,500</div>
+      <div class="d">학생 1인당 월액의 절반</div>
+    </div>
+
+    <!-- right lane captions -->
+    <div class="cap cap-blue" style="left:980px; top:237px;">
+      <div class="t">디지털 학습 콘텐츠</div>
+      <div class="d">태블릿 · 모바일 「SMOAT 학습」</div>
+    </div>
+    <div class="cap cap-blue" style="left:980px; top:317px;">
+      <div class="t">학습 데이터</div>
+      <div class="d">풀이 기록 · 오답 · 성취도</div>
+    </div>
+    <div class="cap cap-blue" style="left:980px; top:567px;">
+      <div class="t">학습 리포트</div>
+      <div class="d">자녀 진도 · 성취 확인</div>
+    </div>
+    <div class="cap cap-emerald" style="left:980px; top:647px;">
+      <div class="t">₩ 구독 분담 2,500</div>
+      <div class="d">학생 1인당 월액의 절반</div>
+    </div>
+
+    <!-- vertical caption -->
+    <div class="cap-vert">
+      <div class="t">성적 향상 · 학습 성과</div>
+      <div class="d">투자에 대한 확인 가능한 결과</div>
+    </div>
+
+    <!-- ===== nodes ===== -->
+    <div class="node n-teacher">
+      <div class="node-head">
+        <div class="node-ico">
+          <svg viewBox="0 0 24 24"><path d="M3 4.5h18M5 4.5v9.5a1.5 1.5 0 0 0 1.5 1.5H12m7-11v9.5a1.5 1.5 0 0 1-1.5 1.5H12m0 0v5m-3.5 0h7"/><path d="M8.5 9l2.5 2 4-4"/></svg>
+        </div>
+        <div>
+          <div class="node-title">강사 · 학원</div>
+          <span class="node-role">제작 주체 · 크레딧 결제자</span>
+        </div>
+      </div>
+      <hr>
+      <ul>
+        <li><b>클래스 스튜디오</b>에서 문제 · 시험지 · 학습지를 직접 제작</li>
+        <li>크레딧 충전 후 <b>생성 건당 차감</b> 방식으로&nbsp;사용</li>
+        <li>재원생 1인당 <b>월 ₩2,500</b> 구독 분담</li>
+      </ul>
+      <div class="value-chip"><span>얻는 가치 —</span> 제작 자동화 · 수업 콘텐츠 · 학생 관리</div>
+    </div>
+
+    <div class="node n-platform">
+      <div class="plat-head">
+        <div class="plat-logo">S</div>
+        <div>
+          <div class="plat-name">SMOAT 플랫폼</div>
+          <div class="plat-sub">AI 콘텐츠 생성 × 디지털 학습 인프라</div>
+        </div>
+      </div>
+
+      <div class="engine engine-credit">
+        <span class="engine-tag">수익 엔진 1 — 사용량 과금 · 현행 수익화</span>
+        <div class="engine-title">크레딧 <small>생성 건당 차감</small></div>
+        <p class="engine-desc">
+          문제 생성 <b>2C</b> · 지문 분석 <b>5C</b> · 학습지/시험지 제작 등
+          모든 생성 작업이 크레딧을 소모합니다.
+        </p>
+        <div class="engine-note">↗ 시험기간 폭발적 소모 — 수익 상방</div>
+      </div>
+
+      <div class="flywheel">
+        <svg class="fw-arrow" viewBox="0 0 26 34" fill="none">
+          <path d="M13 2v24" stroke="#93C5FD" stroke-width="2.25" stroke-linecap="round"/>
+          <path d="M6 22l7 8 7-8" stroke="#93C5FD" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <div class="fw-text"><b>콘텐츠 플라이휠 —</b> 크레딧으로 생성된 모든 콘텐츠가 추가 비용 없이 그대로 구독 상품이 됩니다.</div>
+      </div>
+
+      <div class="engine engine-sub">
+        <span class="engine-tag">수익 엔진 2 — 구독 과금 · 반복 수익</span>
+        <div class="engine-title">학생당 월 ₩5,000 <small>디지털 학습</small></div>
+        <p class="engine-desc">
+          생성된 콘텐츠를 <b>태블릿 · 모바일 「SMOAT 학습」</b>으로 제공.
+          학생이 학습하는 만큼 <b>학부모 2,500 + 강사 2,500</b>이 분담합니다.
+        </p>
+        <div class="engine-note">→ 매월 반복 — 수익 하방 지지</div>
+      </div>
+    </div>
+
+    <div class="node n-student">
+      <div class="node-head">
+        <div class="node-ico">
+          <svg viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="2"/><path d="M10 18.5h4"/><path d="M9.5 9.5l2 2 3.5-3.5"/></svg>
+        </div>
+        <div>
+          <div class="node-title">학생</div>
+          <span class="node-role">핵심 사용자 · 비결제자</span>
+        </div>
+      </div>
+      <hr>
+      <ul>
+        <li>「SMOAT 학습」으로 <b>과제 · 시험 · 어법&nbsp;훈련</b></li>
+        <li>태블릿 · 모바일 어디서나 학습</li>
+      </ul>
+      <div class="value-chip"><span>얻는 가치 —</span> 내 수업에 맞춘 학습 경험</div>
+    </div>
+
+    <div class="node n-parent">
+      <div class="node-head">
+        <div class="node-ico">
+          <svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-7.5-10A4.5 4.5 0 0 1 12 7.6 4.5 4.5 0 0 1 19.5 11c0 5.4-7.5 10-7.5 10z"/><path d="M12 3v2.2M5.6 4.6l1.5 1.6M18.4 4.6l-1.5 1.6"/></svg>
+        </div>
+        <div>
+          <div class="node-title">학부모</div>
+          <span class="node-role">공동 결제자</span>
+        </div>
+      </div>
+      <hr>
+      <ul>
+        <li>자녀 1인당 <b>월 ₩2,500</b>으로 디지털 학습&nbsp;지원</li>
+        <li>학습 리포트로 <b>진도 · 성취</b>를 직접 확인</li>
+      </ul>
+      <div class="value-chip"><span>얻는 가치 —</span> 투명한 학습 관리 · 낮은 부담</div>
+    </div>
+  </div>
+
+  <!-- ================= SECTION 2 : 5,000원 분담 ================= -->
+  <section class="panel">
+    <div class="sec-head">
+      <div>
+        <div class="eyebrow em">SUBSCRIPTION DESIGN</div>
+        <div class="sec-title">학생 1인당 월 ₩5,000 — 반반 분담 설계</div>
+      </div>
+      <div class="sec-side">
+        결제 부담을 학부모와 강사가 정확히 절반씩 나누는 구조.<br>
+        양쪽 모두 부담은 낮추고, 활용 유인은 정렬합니다.
+      </div>
+    </div>
+
+    <div class="split-total">
+      <span class="amt">학생 1인당 월 ₩5,000 <small>· 디지털 학습 구독</small></span>
+    </div>
+    <svg class="split-bracket" width="1288" height="24" viewBox="0 0 1288 24" fill="none" aria-hidden="true">
+      <path d="M 644,1 L 644,17" stroke="rgba(255,255,255,0.32)" stroke-width="1.5"/>
+      <path d="M 8,9 H 1280" stroke="rgba(255,255,255,0.24)" stroke-width="1.5"/>
+      <path d="M 8,9 L 8,21 M 1280,9 L 1280,21"
+            stroke="rgba(255,255,255,0.24)" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    <div class="split-bar">
+      <div class="split-half parent">
+        <div class="split-who"><span class="dot"></span>학부모 <small>자녀 학습 지원</small></div>
+        <div class="split-amt">₩2,500<small>/월</small></div>
+      </div>
+      <div class="split-half teacher">
+        <div class="split-who"><span class="dot"></span>강사 <small>수업 도구 투자</small></div>
+        <div class="split-amt">₩2,500<small>/월</small></div>
+      </div>
+    </div>
+
+    <div class="point-row">
+      <div class="point">
+        <div class="pt">결제 장벽 최소화</div>
+        <div class="pd">1인당 부담이 <b>월 2,500원</b> — 커피 한 잔 값으로 결제 저항을 구조적으로 낮췄습니다.</div>
+      </div>
+      <div class="point">
+        <div class="pt">이해관계 정렬</div>
+        <div class="pd">강사가 절반을 분담하므로, <b>강사 스스로</b> 학생의 디지털 학습 활용을 늘릴 유인이 생깁니다.</div>
+      </div>
+      <div class="point">
+        <div class="pt">선형 확장</div>
+        <div class="pd">월 구독 매출 = <b>재원생 수 × ₩5,000</b>. 학원이 성장하는 만큼 구독 기반이 그대로 쌓입니다.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SECTION 3 : 이중 엔진 상보성 ================= -->
+  <section class="panel">
+    <div class="sec-head">
+      <div>
+        <div class="eyebrow du">DUAL ENGINE</div>
+        <div class="sec-title">이중 엔진의 상보성 — 변동 상방 × 고정 하방</div>
+      </div>
+      <div class="chart-legend">
+        <div class="li"><span class="sw" style="border-color:#F59E0B"></span>크레딧 매출 (사용량)</div>
+        <div class="li"><span class="sw area" style="background:rgba(5,150,105,0.35)"></span>구독 매출 (재원생 × ₩5,000)</div>
+      </div>
+    </div>
+
+    <div class="chart-wrap">
+      <svg width="1288" height="320" viewBox="0 0 1288 320" fill="none" aria-label="크레딧 매출과 구독 매출의 연간 흐름 개념도">
+        <!-- exam-period bands -->
+        <g>
+          <rect x="336" y="52" width="56" height="220" fill="rgba(217,119,6,0.10)"/>
+          <rect x="560" y="52" width="56" height="220" fill="rgba(217,119,6,0.10)"/>
+          <rect x="1008" y="52" width="56" height="220" fill="rgba(217,119,6,0.10)"/>
+          <rect x="1232" y="52" width="32" height="220" fill="rgba(217,119,6,0.10)"/>
+          <text x="364"  y="40" text-anchor="middle" font-size="12" font-weight="700" fill="rgba(252,211,77,0.8)">1학기 중간</text>
+          <text x="588"  y="40" text-anchor="middle" font-size="12" font-weight="700" fill="rgba(252,211,77,0.8)">1학기 기말</text>
+          <text x="1036" y="40" text-anchor="middle" font-size="12" font-weight="700" fill="rgba(252,211,77,0.8)">2학기 중간</text>
+          <text x="1248" y="40" text-anchor="middle" font-size="12" font-weight="700" fill="rgba(252,211,77,0.8)">2학기 기말</text>
+        </g>
+
+        <!-- hairline grid -->
+        <line x1="24" y1="110" x2="1264" y2="110" stroke="rgba(255,255,255,0.05)"/>
+        <line x1="24" y1="164" x2="1264" y2="164" stroke="rgba(255,255,255,0.05)"/>
+        <line x1="24" y1="218" x2="1264" y2="218" stroke="rgba(255,255,255,0.05)"/>
+
+        <!-- subscription area (foundation) -->
+        <path d="M 28,206 L 140,202 L 252,193 L 364,188 L 476,184 L 588,180 L 700,177 L 812,171 L 924,166 L 1036,162 L 1148,160 L 1260,158 L 1260,272 L 28,272 Z"
+              fill="rgba(5,150,105,0.30)"/>
+        <path d="M 28,206 L 140,202 L 252,193 L 364,188 L 476,184 L 588,180 L 700,177 L 812,171 L 924,166 L 1036,162 L 1148,160 L 1260,158"
+              stroke="#10B981" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+
+        <!-- credit spiky line -->
+        <path d="M 28,228 L 140,232 L 252,188 L 364,85 L 476,202 L 588,74 L 700,184 L 812,217 L 924,180 L 1036,74 L 1148,166 L 1260,63"
+              stroke="#F59E0B" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+        <g fill="#F59E0B">
+          <circle cx="364" cy="85" r="4"/>
+          <circle cx="588" cy="74" r="4"/>
+          <circle cx="1036" cy="74" r="4"/>
+          <circle cx="1260" cy="63" r="4"/>
+        </g>
+
+        <!-- direct labels -->
+        <text x="200" y="250" font-size="13" font-weight="700" fill="rgba(110,231,183,0.95)">구독 매출 — 예측 가능한 기반</text>
+        <text x="404" y="80" font-size="13" font-weight="700" fill="rgba(252,211,77,0.95)">크레딧 매출 — 시험기간 폭증</text>
+
+        <!-- baseline + month axis -->
+        <line x1="24" y1="272" x2="1264" y2="272" stroke="rgba(255,255,255,0.16)"/>
+        <g font-size="12" fill="rgba(148,163,184,0.92)" text-anchor="middle">
+          <text x="28" y="296">1월</text><text x="140" y="296">2월</text><text x="252" y="296">3월</text>
+          <text x="364" y="296">4월</text><text x="476" y="296">5월</text><text x="588" y="296">6월</text>
+          <text x="700" y="296">7월</text><text x="812" y="296">8월</text><text x="924" y="296">9월</text>
+          <text x="1036" y="296">10월</text><text x="1148" y="296">11월</text><text x="1260" y="296">12월</text>
+        </g>
+        <text x="24" y="316" font-size="12" fill="rgba(148,163,184,0.75)">상대 매출 개념도 — 실제 수치가 아닌 구조 설명용</text>
+      </svg>
+    </div>
+
+    <div class="takeaway-row">
+      <div class="takeaway amber">
+        <div class="tt">변동 수익 — 크레딧</div>
+        <div class="td">내신 시험기간마다 문제 · 시험지 생성이 폭증하며 <b>매출 스파이크</b>를 만듭니다. 사용량에 정직하게 비례하는 상방입니다.</div>
+      </div>
+      <div class="takeaway emerald">
+        <div class="tt">고정 수익 — 구독</div>
+        <div class="td">재원생 수에 비례해 <b>매월 반복</b>되는 기반 매출입니다. 시험이 없는 달에도 수익의 하방을 지지하며, 크레딧 매출의 변동성을 흡수합니다.</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <b>SMOAT</b> · 스모트 비즈니스 모델 도식 · 주식회사 네안데르 · www.smoat.co.kr
+  </footer>
+</div>
+</body>
+</html>

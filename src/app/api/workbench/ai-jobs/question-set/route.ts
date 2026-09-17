@@ -8,6 +8,7 @@ import { InsufficientCreditsError, refundCredits } from "@/lib/credits";
 import {
   getQuestionGenerationCreditCost,
   normalizeQuestionGenerationPlan,
+  resolveEffectiveGenerationPlan,
 } from "@/lib/question-generation-plans";
 import { prisma } from "@/lib/prisma";
 import { ensureWorkbenchAiJobCharged } from "@/lib/workbench-ai-job-credit";
@@ -89,12 +90,17 @@ export async function POST(req: NextRequest) {
     passageId: passage.id,
   });
 
+  // 26-08-18 난이도 기반 티어: 멤버 과금은 멤버 난이도(오버라이드 → 프리셋 → 세트
+  // 기본)가 결정한다 — generate-set.ts 의 멤버 플랜 유도와 동일 규칙.
   const baseCreditCost = preset.members.reduce((sum, m, index) => {
     const unit = VOCAB_TYPES.has(m.typeId)
       ? CREDIT_COSTS.QUESTION_GEN_VOCAB
       : CREDIT_COSTS.QUESTION_GEN_SINGLE;
-    const memberPlan = normalizeQuestionGenerationPlan(
+    const memberDifficulty =
+      input.memberOverrides?.[index]?.difficulty ?? m.difficulty ?? input.difficulty;
+    const memberPlan = resolveEffectiveGenerationPlan(
       input.memberOverrides?.[index]?.generationPlan ?? m.generationPlan ?? generationPlan,
+      memberDifficulty,
     );
     return sum + getQuestionGenerationCreditCost(unit, memberPlan);
   }, 0);

@@ -22,11 +22,13 @@ import {
   parseExamAnalysisResult,
   parseExamMap,
   parseScoreSummary,
+  parseStudentResponses,
 } from "@/lib/exam-report/schemas";
 import type { ExamAnalysisResult, ExamMap } from "@/lib/exam-report/types";
 import {
   buildInternalAnalysis,
   buildInternalStructure,
+  mergePreservingReviewed,
   toStudentResponses,
   type InternalExamItem,
   type OrderSnapshotEntry,
@@ -35,7 +37,7 @@ import type { SubmissionResponse } from "./types";
 
 // 순수 변환은 internal-analysis 소유 — 교차 계약 시그니처는 여기서 재수출한다
 // (다른 유닛은 report-bridge 에서 import — 테스트는 prisma 미적재 순수 모듈에서).
-export { toStudentResponses } from "./internal-analysis";
+export { toStudentResponses, mergePreservingReviewed } from "./internal-analysis";
 export type { OrderSnapshotEntry } from "./internal-analysis";
 
 const CAS_MAX_ATTEMPTS = 3;
@@ -43,6 +45,7 @@ const CAS_MAX_ATTEMPTS = 3;
 function toJson(value: unknown): Prisma.InputJsonValue {
   return value as Prisma.InputJsonValue;
 }
+
 
 // ── AI 보강(W6) 병합 규약 ────────────────────────────────────────────────────
 
@@ -329,7 +332,7 @@ export async function syncSubmissionToReport(
     orderNum: l.orderNum,
     points: l.points,
   }));
-  const responses = toStudentResponses(
+  const machineResponses = toStudentResponses(
     parseSubmissionResponses(submission.responses),
     snapshot,
   );
@@ -354,6 +357,11 @@ export async function syncSubmissionToReport(
   const academyId = submission.exam.academyId;
 
   for (let attempt = 0; attempt < CAS_MAX_ATTEMPTS; attempt++) {
+    // 기존 행 찾기 3축. 세 번째(분석 × 로스터 학생)가 26-09-04 추가분이다:
+    // 강사가 **응시 전에** 그 학생을 이 분석에 담아 두고(로스터 귀속 행 + OMR 링크
+    // 발급) 나중에 학생이 앱으로 응시하면, 제출 링크 축만으로는 같은 사람인지 몰라
+    // 두 번째 행이 생기고 목록·퍼널이 이중 계상된다. studentId 로도 찾아 **먼저 만든
+    // 행에 응시 결과를 얹는다**(같은 학생·같은 시험 = 리포트 1장 규약).
     const existing = await prisma.examReportStudent.findFirst({
       where: {
         academyId,
@@ -361,14 +369,25 @@ export async function syncSubmissionToReport(
         OR: [
           ...(submission.examReportStudentId ? [{ id: submission.examReportStudentId }] : []),
           { examSubmissionId: submissionId },
+          { examAnalysisId: analysisId, studentId: submission.student.id },
         ],
       },
       orderBy: { createdAt: "asc" },
-      select: { id: true, version: true, scoreSummary: true },
+      select: { id: true, version: true, scoreSummary: true, responses: true },
     });
 
     // 강사가 정오표에 입력한 반평균/등급대는 재동기화에서 보존한다.
     const priorSummary = parseScoreSummary(existing?.scoreSummary);
+    // 【26-09-04】 강사 확정 행(reviewed) 보존 병합 — 자동 채점이 사람 판정을 덮지
+    // 않는다. 이 병합이 없으면 MANUAL_ONLY(서술형)처럼 기계가 영원히 UNKNOWN 을
+    // 내는 문항은 강사가 채점해도 재동기화(재채점·보강) 한 번에 원복돼
+    // gradingConfirmed 가 false 로 되돌아가고 리포트 생성이 영구 차단된다.
+    // 학생 제출 경로의 최고 불변식(answer-entry applyAnswerSubmission — "강사 확정
+    // 행은 학생 제출로 절대 덮지 않는다")을 브리지에도 같은 규칙으로 적용한 것.
+    const responses = mergePreservingReviewed(
+      machineResponses,
+      parseStudentResponses(existing?.responses),
+    );
     const scoreSummary = computeScoreSummary(structure, responses, {
       classAverage: priorSummary?.classAverage ?? null,
       gradeBand: priorSummary?.gradeBand ?? null,

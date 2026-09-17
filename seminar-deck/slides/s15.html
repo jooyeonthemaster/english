@@ -1,0 +1,623 @@
+<section class="slide slide--dark" id="s15"
+  data-title="ST 05" data-kr="과제 배포"
+  data-zone="배포" data-zone-en="DEPLOY"
+  data-part="PART 1 — 기능 브리핑"
+  data-in="시험지 · 학습지"
+  data-out="학생에게 배포된 과제"
+  data-note="배포·응시·채점은 무과금">
+
+  <div class="pad s15-wrap">
+
+    <!-- ── 상단 카피 ── -->
+    <header class="s15-head">
+      <div class="kicker" data-step="0" data-fx="none">ST 05 · SEND</div>
+      <h2 class="s15-h" data-step="0">
+        만든 그대로<br><em>학생에게 보냅니다.</em>
+      </h2>
+      <p class="s15-lead" data-step="0" data-fx="none">
+        인쇄해서 나눠주는 대신, 반과 학생을 고르고 기한을 정하면 끝입니다.
+      </p>
+    </header>
+
+    <div class="s15-main">
+
+      <!-- ── 좌: 강사 웹 — 과제 컴포저 3패널 위저드 ── -->
+      <div class="s15-composer" data-step="1" data-fx="none" data-noadvance>
+        <div class="wb">
+
+          <!-- 브라우저 크롬 -->
+          <div class="wb-chrome">
+            <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+            <span class="wb-url">smoat.co.kr/workbench</span>
+            <span class="wb-acct">SMOAT 영어학원</span>
+          </div>
+
+          <!-- 컴포저 헤더 -->
+          <div class="wb-mhead">
+            <b>과제 보내기</b>
+            <span class="wb-step">3단계</span>
+            <span class="wb-x">✕</span>
+          </div>
+
+          <!-- 3패널 -->
+          <div class="wb-panels">
+
+            <!-- ① 무엇을 -->
+            <div class="wb-p">
+              <div class="wb-cap"><b>① 무엇을</b><span>시험지 · 학습지 · 웹툰 · 어법 드릴 중에서</span></div>
+              <div class="wb-body">
+                <button class="wb-opt on" type="button" data-what="paper">
+                  <i class="rad"></i>
+                  <span class="tx"><b>시험지</b><em>3월 학력평가 대비 모의고사 · 20문항</em></span>
+                </button>
+                <button class="wb-opt" type="button" data-what="sheet">
+                  <i class="rad"></i>
+                  <span class="tx"><b>학습지</b><em>심층 지문 분석 학습지 · 22쪽</em></span>
+                </button>
+                <button class="wb-opt" type="button" data-what="toon">
+                  <i class="rad"></i>
+                  <span class="tx"><b>웹툰</b><em>The Gift of the Magi · 세로 웹툰 1장</em></span>
+                </button>
+                <button class="wb-opt" type="button" data-what="drill">
+                  <i class="rad"></i>
+                  <span class="tx"><b>어법 드릴</b><em>U01 동사 vs 준동사</em></span>
+                </button>
+                <div class="wb-hint">앞 공정에서 만든 자료가 그대로 목록에 올라옵니다</div>
+              </div>
+            </div>
+
+            <!-- ② 누구에게 -->
+            <div class="wb-p">
+              <div class="wb-cap"><b>② 누구에게</b><span>반 전체 / 특정 학생 / 취약 유형 학생만</span></div>
+              <div class="wb-body">
+                <button class="wb-seg" type="button" data-who="all"><span>반 전체</span><i>20명</i></button>
+                <button class="wb-seg" type="button" data-who="pick"><span>특정 학생</span><i>골라서</i></button>
+                <button class="wb-seg on" type="button" data-who="weak"><span>취약 유형 학생만</span><i>12명</i></button>
+
+                <div class="wb-lh"><span id="s15-lh">취약 유형 · 빈칸 추론</span><b id="s15-whon">12명</b></div>
+                <div class="wb-list scrollable">
+                  <button class="wb-stu on" type="button" data-stu="A"><i class="cb"></i><span>학생 A</span></button>
+                  <button class="wb-stu on" type="button" data-stu="B"><i class="cb"></i><span>학생 B</span></button>
+                  <button class="wb-stu on" type="button" data-stu="C"><i class="cb"></i><span>학생 C</span></button>
+                  <button class="wb-stu on" type="button" data-stu="D"><i class="cb"></i><span>학생 D</span></button>
+                  <button class="wb-stu on" type="button" data-stu="E"><i class="cb"></i><span>학생 E</span></button>
+                  <button class="wb-stu on" type="button" data-stu="F"><i class="cb"></i><span>학생 F</span></button>
+                </div>
+                <div class="wb-more" id="s15-more">외 6명</div>
+              </div>
+            </div>
+
+            <!-- ③ 언제까지 -->
+            <div class="wb-p">
+              <div class="wb-cap"><b>③ 언제까지</b><span>마감 기한 · 응시 시간 제한</span></div>
+              <div class="wb-body">
+                <div class="wb-field">
+                  <label>마감 기한</label>
+                  <div class="wb-input">
+                    <span class="mono">7/26(일) 23:59</span>
+                    <em class="dpill">D-2</em>
+                  </div>
+                </div>
+                <div class="wb-field">
+                  <label>응시 시간 제한</label>
+                  <div class="wb-tog">
+                    <button class="on" type="button" data-lim="off">사용 안 함</button>
+                    <button type="button" data-lim="on">사용</button>
+                  </div>
+                </div>
+                <div class="wb-recap">
+                  <div class="k">보내기 전 확인</div>
+                  <div class="r"><span>무엇을</span><b id="s15-rc-what">시험지</b></div>
+                  <div class="r"><span>누구에게</span><b id="s15-rc-who">취약 유형 학생만 · 12명</b></div>
+                  <div class="r"><span>언제까지</span><b>7/26(일) 23:59</b></div>
+                </div>
+                <div class="wb-note">배포 · 응시 · 자동 채점 — 무료</div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- 푸터 -->
+          <div class="wb-foot">
+            <div class="wb-sum"><b id="s15-sum">12명</b> · 7/26(일) 23:59 마감 · <em>D-2</em></div>
+            <div class="wb-btns">
+              <button class="wb-b ghost" type="button">취소</button>
+              <button class="wb-b prim" id="s15-send" type="button">과제 보내기</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── 우: 배포 후 선생님 화면 ── -->
+      <aside class="s15-side" data-step="2" data-fx="none" data-noadvance>
+        <div class="s15-slab"><span class="mono">AFTER SEND</span> 배포 후 선생님 화면</div>
+
+        <div class="wb s15-scard">
+
+          <div class="sc-in" id="s15-before">
+            <div class="sc-head">
+              <div class="sc-t">
+                <b>3월 학력평가 대비 모의고사</b>
+                <em>시험지 · 20문항</em>
+              </div>
+              <span class="sc-chip">진행 중</span>
+            </div>
+
+            <div class="sc-meta">
+              <span class="mono">7/26(일) 23:59 마감</span>
+              <em class="dpill">D-2</em>
+            </div>
+
+            <div class="sc-gauge">
+              <svg viewBox="0 0 132 132" width="132" height="132" aria-hidden="true">
+                <circle cx="66" cy="66" r="52" fill="none" stroke="#E2E8F0" stroke-width="14"/>
+                <circle cx="66" cy="66" r="52" fill="none" stroke="#10B981" stroke-width="14"
+                        stroke-linecap="round" stroke-dasharray="163 164"
+                        transform="rotate(-90 66 66)"/>
+                <text x="66" y="63" text-anchor="middle" class="sc-gn">50%</text>
+                <text x="66" y="82" text-anchor="middle" class="sc-gl">제출률</text>
+              </svg>
+              <div class="sc-nums">
+                <div class="sc-row done">
+                  <span class="k">제출</span>
+                  <span class="v"><b>6</b><i>/ 12</i></span>
+                </div>
+                <div class="sc-row wait">
+                  <span class="k">미제출</span>
+                  <span class="v"><b>6</b></span>
+                </div>
+                <div class="sc-bar"><span style="width:50%"></span></div>
+              </div>
+            </div>
+
+            <div class="sc-names">
+              <div class="sc-k">아직 안 낸 학생</div>
+              <div class="sc-chips">
+                <span>학생 A</span><span>학생 B</span><span>학생 C</span>
+                <span>학생 D</span><span>학생 E</span><span>학생 F</span>
+              </div>
+            </div>
+
+            <div class="sc-note">누가 아직 안 냈는지 이름으로 보입니다</div>
+          </div>
+
+          <div class="sc-sent" id="s15-after" hidden>
+            <span class="tick">✓</span>
+            <b id="s15-sentn">12명에게 과제를 보냈습니다</b>
+            <span class="s">7/26(일) 23:59 마감 · D-2</span>
+            <div class="sc-sentnote">배포 · 응시 · 자동 채점 — 무료</div>
+          </div>
+
+        </div>
+      </aside>
+
+    </div>
+
+    <!-- ── 하단 ── -->
+    <div class="s15-foot" data-step="3" data-fx="none">
+      <p class="s15-hook">종이로 나가면 <span class="off">여기서 끊깁니다.</span> 링크로 나가면 <em>여기서 시작됩니다.</em></p>
+      <span class="s15-try"><span class="mono">TRY</span> 왼쪽에서 직접 고르고 <b>과제 보내기</b>를 눌러보세요</span>
+    </div>
+
+  </div>
+
+<style>
+#s15 .s15-wrap { display: flex; flex-direction: column; }
+#s15 [hidden] { display: none !important; }
+
+/* ── 상단 카피 ── */
+#s15 .s15-head { flex: none; margin-bottom: 30px; }
+#s15 .s15-h {
+  font-family: var(--f-display); font-weight: 800; font-size: 54px; line-height: 1.14;
+  letter-spacing: -.026em; color: #E8EDF7; margin-top: 20px;
+}
+#s15 .s15-h em { font-style: normal; color: var(--white); }
+#s15 .s15-lead { margin-top: 16px; font-size: 19.5px; line-height: 1.6; color: #93A0B5; }
+
+/* ── 본문 2열 ── */
+#s15 .s15-main {
+  flex: 1; min-height: 0; display: grid;
+  grid-template-columns: 1096px 1fr; grid-template-rows: minmax(0, 1fr); gap: 40px;
+}
+#s15 .s15-composer { min-width: 0; height: 100%; }
+#s15 .s15-side { min-width: 0; height: 100%; display: flex; flex-direction: column; gap: 12px; }
+#s15 .s15-slab {
+  flex: none; font-size: 13px; color: var(--grey); letter-spacing: .01em;
+}
+#s15 .s15-slab .mono {
+  font-size: 11px; letter-spacing: .2em; color: var(--blue); margin-right: 9px;
+}
+
+/* ══ 강사 웹(워크벤치) 목업 — 부록 C-2 팔레트 ══ */
+#s15 .wb {
+  --wb-blue:#3B82F6; --wb-blue-deep:#2563EB; --wb-soft:#EFF6FF; --wb-blue-line:#BFDBFE;
+  --wb-line:#E2E8F0; --wb-line-2:#F1F5F9; --wb-ink:#0F172A; --wb-ink-2:#64748B;
+  --wb-ink-3:#94A3B8; --wb-bg:#F8FAFC;
+  font-family: var(--f-body); color: var(--wb-ink); background: #fff;
+  border: 1px solid var(--wb-line); border-radius: 14px; overflow: hidden;
+  box-shadow: 0 30px 70px rgba(2,6,23,.5);
+}
+#s15 .s15-composer .wb { height: 100%; display: flex; flex-direction: column; }
+
+/* 브라우저 크롬 */
+#s15 .wb-chrome {
+  flex: none; height: 40px; display: flex; align-items: center; gap: 7px;
+  padding: 0 16px; background: #fff; border-bottom: 1px solid var(--wb-line-2);
+}
+#s15 .wb-chrome .dot { width: 10px; height: 10px; border-radius: 50%; }
+#s15 .wb-chrome .dot.r { background: #FCA5A5; }
+#s15 .wb-chrome .dot.y { background: #FCD34D; }
+#s15 .wb-chrome .dot.g { background: #6EE7B7; }
+#s15 .wb-url {
+  margin-left: 14px; font-family: var(--f-mono); font-size: 12px; color: var(--wb-ink-2);
+  background: var(--wb-line-2); border-radius: 999px; padding: 4px 14px;
+}
+#s15 .wb-acct { margin-left: auto; font-size: 12.5px; font-weight: 600; color: var(--wb-ink-3); }
+
+/* 컴포저 헤더 */
+#s15 .wb-mhead {
+  flex: none; height: 46px; display: flex; align-items: center; gap: 10px;
+  padding: 0 18px; background: var(--wb-bg); border-bottom: 1px solid var(--wb-line);
+}
+#s15 .wb-mhead b { font-size: 16px; font-weight: 700; color: var(--wb-ink); }
+#s15 .wb-step {
+  font-family: var(--f-mono); font-size: 11px; letter-spacing: .1em; font-weight: 600;
+  color: var(--wb-blue-deep); background: var(--wb-soft); border: 1px solid var(--wb-blue-line);
+  border-radius: 999px; padding: 3px 9px;
+}
+#s15 .wb-x { margin-left: auto; font-size: 15px; color: var(--wb-ink-3); }
+
+/* 3패널 */
+#s15 .wb-panels {
+  flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 1fr .86fr;
+}
+#s15 .wb-p {
+  min-width: 0; display: flex; flex-direction: column;
+  border-right: 1px solid var(--wb-line);
+}
+#s15 .wb-p:last-child { border-right: 0; }
+#s15 .wb-cap {
+  flex: none; display: flex; align-items: baseline; gap: 8px;
+  padding: 9px 16px; background: rgba(248,250,252,.7); border-bottom: 1px solid var(--wb-line-2);
+}
+#s15 .wb-cap b { font-size: 13.5px; font-weight: 700; color: #475569; flex: none; }
+#s15 .wb-cap span {
+  font-size: 12px; color: var(--wb-ink-3); min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+#s15 .wb-body {
+  flex: 1; min-height: 0; padding: 12px 16px; display: flex; flex-direction: column; gap: 7px;
+}
+
+/* ① 라디오 카드 */
+#s15 .wb-opt {
+  display: flex; align-items: flex-start; gap: 11px; width: 100%; text-align: left;
+  padding: 13px 13px; border: 1px solid var(--wb-line); border-radius: 10px;
+  background: #fff; cursor: pointer; font-family: var(--f-body);
+  transition: border-color .14s, background .14s;
+}
+#s15 .wb-opt .rad {
+  flex: none; width: 17px; height: 17px; margin-top: 3px; border-radius: 50%;
+  border: 1.5px solid #CBD5E1; background: #fff; position: relative;
+}
+#s15 .wb-opt .tx { min-width: 0; }
+#s15 .wb-opt b { display: block; font-size: 15.5px; font-weight: 700; color: var(--wb-ink); }
+#s15 .wb-opt em {
+  display: block; font-style: normal; margin-top: 3px;
+  font-size: 12.5px; color: var(--wb-ink-2); line-height: 1.4;
+}
+#s15 .wb-opt.on { border-color: var(--wb-blue); background: var(--wb-soft); }
+#s15 .wb-opt.on .rad { border-color: var(--wb-blue-deep); }
+#s15 .wb-opt.on .rad::after {
+  content: ''; position: absolute; inset: 2.5px; border-radius: 50%; background: var(--wb-blue-deep);
+}
+#s15 .wb-opt.on b { color: var(--wb-blue-deep); }
+
+#s15 .wb-hint {
+  margin-top: auto; padding-top: 12px; border-top: 1px dashed var(--wb-line);
+  font-size: 12.5px; color: var(--wb-ink-3); line-height: 1.5;
+}
+
+/* ② 대상 세그먼트 + 학생 리스트 */
+#s15 .wb-seg {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  width: 100%; text-align: left; padding: 8px 13px;
+  border: 1px solid var(--wb-line); border-radius: 9px; background: #fff;
+  cursor: pointer; font-family: var(--f-body);
+  transition: border-color .14s, background .14s;
+}
+#s15 .wb-seg span { font-size: 15px; font-weight: 600; color: var(--wb-ink); }
+#s15 .wb-seg i { font-style: normal; font-family: var(--f-mono); font-size: 12px; color: var(--wb-ink-3); }
+#s15 .wb-seg.on { border-color: var(--wb-blue); background: var(--wb-soft); }
+#s15 .wb-seg.on span, #s15 .wb-seg.on i { color: var(--wb-blue-deep); }
+
+#s15 .wb-lh {
+  margin-top: 3px; display: flex; align-items: baseline; justify-content: space-between;
+  padding: 0 2px; font-size: 12px; color: var(--wb-ink-3);
+}
+#s15 .wb-lh b { font-family: var(--f-mono); font-size: 13px; font-weight: 700; color: var(--wb-blue-deep); }
+#s15 .wb-list {
+  flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 3px;
+  border: 1px solid var(--wb-line); border-radius: 9px; padding: 5px; background: var(--wb-bg);
+}
+#s15 .wb-stu {
+  flex: none; display: flex; align-items: center; gap: 10px; width: 100%; text-align: left;
+  padding: 6px 9px; border: 0; border-radius: 7px; background: transparent;
+  cursor: pointer; font-family: var(--f-body); transition: background .14s;
+}
+#s15 .wb-stu span { font-size: 15px; color: var(--wb-ink); }
+#s15 .wb-stu .cb {
+  flex: none; width: 16px; height: 16px; border-radius: 4px;
+  border: 1.5px solid #CBD5E1; background: #fff; position: relative;
+}
+#s15 .wb-stu.on { background: #fff; box-shadow: inset 0 0 0 1px var(--wb-line); }
+#s15 .wb-stu.on .cb { background: var(--wb-blue-deep); border-color: var(--wb-blue-deep); }
+#s15 .wb-stu.on .cb::after {
+  content: '✓'; position: absolute; inset: 0; color: #fff; font-size: 11px;
+  line-height: 13px; text-align: center; font-weight: 700;
+}
+#s15 .wb-more { flex: none; font-size: 12px; color: var(--wb-ink-3); padding-left: 2px; }
+
+/* ③ 기한 */
+#s15 .wb-field { display: flex; flex-direction: column; gap: 6px; }
+#s15 .wb-field label { font-size: 12.5px; font-weight: 600; color: var(--wb-ink-2); }
+#s15 .wb-input {
+  height: 42px; display: flex; align-items: center; justify-content: space-between;
+  padding: 0 12px; border: 1px solid var(--wb-line); border-radius: 9px; background: #fff;
+}
+#s15 .wb-input .mono { font-size: 14.5px; font-weight: 600; color: var(--wb-ink); }
+#s15 .dpill {
+  font-style: normal; font-family: var(--f-mono); font-size: 12px; font-weight: 700;
+  color: var(--wb-blue-deep); background: var(--wb-soft); border-radius: 6px; padding: 3px 8px;
+}
+#s15 .wb-tog {
+  display: flex; gap: 4px; padding: 3px; border: 1px solid var(--wb-line);
+  border-radius: 9px; background: var(--wb-bg);
+}
+#s15 .wb-tog button {
+  flex: 1; height: 34px; border: 0; border-radius: 7px; background: transparent;
+  font-family: var(--f-body); font-size: 14px; font-weight: 600; color: var(--wb-ink-2);
+  cursor: pointer; transition: background .14s, color .14s;
+}
+#s15 .wb-tog button.on { background: #fff; color: var(--wb-blue-deep); box-shadow: 0 1px 3px rgba(2,6,23,.1); }
+#s15 .wb-recap {
+  margin-top: 9px; flex: 1; min-height: 0; padding: 13px 14px; border-radius: 10px;
+  background: var(--wb-bg); border: 1px solid var(--wb-line);
+}
+#s15 .wb-recap .k {
+  font-size: 12px; font-weight: 700; color: var(--wb-ink-3);
+  letter-spacing: .04em; padding-bottom: 10px; border-bottom: 1px solid var(--wb-line);
+}
+#s15 .wb-recap .r {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+  padding: 9px 0 0;
+}
+#s15 .wb-recap .r span { flex: none; font-size: 12.5px; color: var(--wb-ink-3); }
+#s15 .wb-recap .r b {
+  font-size: 13.5px; font-weight: 600; color: var(--wb-ink); text-align: right; line-height: 1.35;
+}
+#s15 .wb-note {
+  margin-top: 9px; padding: 10px 12px; border-radius: 9px;
+  background: #ECFDF5; border: 1px solid #A7F3D0;
+  font-size: 12.5px; font-weight: 600; color: #047857; line-height: 1.5;
+}
+
+/* 푸터 */
+#s15 .wb-foot {
+  flex: none; height: 58px; display: flex; align-items: center; justify-content: space-between;
+  padding: 0 18px; background: var(--wb-bg); border-top: 1px solid var(--wb-line);
+}
+#s15 .wb-sum { font-size: 14px; color: var(--wb-ink-2); }
+#s15 .wb-sum b { font-weight: 700; color: var(--wb-ink); }
+#s15 .wb-sum em { font-style: normal; font-family: var(--f-mono); font-weight: 700; color: var(--wb-blue-deep); }
+#s15 .wb-btns { display: flex; gap: 10px; }
+#s15 .wb-b {
+  height: 38px; border-radius: 8px; font-family: var(--f-body);
+  font-size: 14.5px; font-weight: 600; cursor: pointer; transition: background .14s;
+}
+#s15 .wb-b.ghost { padding: 0 16px; border: 1px solid var(--wb-line); background: #fff; color: var(--wb-ink-2); }
+#s15 .wb-b.prim { padding: 0 22px; border: 0; background: var(--wb-blue-deep); color: #fff; }
+#s15 .wb-b.prim:hover { background: #1D4ED8; }
+#s15 .wb-b.prim.done { background: #047857; }
+#s15 .wb-b.prim:disabled { opacity: .4; cursor: default; }
+#s15 .wb-b .mono { margin-right: 6px; }
+
+/* ── 우: 배포 후 화면 카드 ── */
+#s15 .s15-scard { flex: 1; min-height: 0; padding: 22px 24px; display: flex; flex-direction: column; }
+#s15 .sc-in { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+#s15 .sc-head { display: flex; align-items: flex-start; gap: 12px; }
+#s15 .sc-t { min-width: 0; }
+#s15 .sc-t b { display: block; font-size: 18px; font-weight: 700; color: #0F172A; line-height: 1.3; }
+#s15 .sc-t em { display: block; font-style: normal; margin-top: 5px; font-size: 13px; color: #64748B; }
+#s15 .sc-chip {
+  flex: none; font-size: 12px; font-weight: 700; color: #1D4ED8;
+  background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 999px; padding: 4px 11px;
+}
+#s15 .sc-meta {
+  margin-top: 12px; padding-bottom: 16px; border-bottom: 1px solid #F1F5F9;
+  display: flex; align-items: center; gap: 10px;
+}
+#s15 .sc-meta .mono { font-size: 13px; color: #64748B; }
+
+#s15 .sc-gauge { margin-top: 18px; display: flex; align-items: center; gap: 22px; }
+#s15 .sc-gn { font-family: var(--f-mono); font-size: 22px; font-weight: 700; fill: #0F172A; }
+#s15 .sc-gl { font-family: var(--f-body); font-size: 11.5px; fill: #94A3B8; }
+#s15 .sc-nums { flex: 1; min-width: 0; }
+#s15 .sc-row { display: flex; align-items: baseline; justify-content: space-between; }
+#s15 .sc-row + .sc-row { margin-top: 10px; }
+#s15 .sc-row .k { font-size: 14px; font-weight: 600; color: #64748B; }
+#s15 .sc-row .v { font-family: var(--f-mono); }
+#s15 .sc-row .v b { font-size: 30px; font-weight: 700; letter-spacing: -.02em; }
+#s15 .sc-row .v i { font-style: normal; font-size: 15px; color: #94A3B8; margin-left: 5px; }
+#s15 .sc-row.done .v b { color: #047857; }
+#s15 .sc-row.wait .v b { color: #94A3B8; }
+#s15 .sc-bar {
+  margin-top: 14px; height: 8px; border-radius: 999px; background: #E2E8F0; overflow: hidden;
+}
+#s15 .sc-bar span { display: block; height: 100%; background: #10B981; border-radius: 999px; }
+
+#s15 .sc-names { margin-top: 22px; flex: 1; min-height: 0; display: flex; flex-direction: column; }
+#s15 .sc-k { flex: none; font-size: 12.5px; font-weight: 600; color: #94A3B8; }
+#s15 .sc-chips {
+  margin-top: 10px; flex: 1; min-height: 0;
+  display: flex; flex-wrap: wrap; align-content: flex-start; gap: 8px;
+  padding: 14px; border: 1px solid #E2E8F0; border-radius: 10px; background: #F8FAFC;
+}
+#s15 .sc-chips span {
+  font-size: 14px; font-weight: 600; color: #475569;
+  background: #fff; border: 1px solid #E2E8F0; border-radius: 8px; padding: 7px 12px;
+}
+#s15 .sc-chips em {
+  font-style: normal; font-size: 13.5px; color: #94A3B8; padding: 7px 2px;
+}
+#s15 .sc-note {
+  flex: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid #F1F5F9;
+  font-size: 13.5px; color: #64748B; line-height: 1.5;
+}
+
+/* 전송 완료 배너 */
+#s15 .sc-sent {
+  flex: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; animation: s15-pop .22s cubic-bezier(.22,1,.36,1);
+}
+@keyframes s15-pop { from { transform: scale(.95); opacity: 0; } to { transform: none; opacity: 1; } }
+#s15 .sc-sent .tick {
+  width: 62px; height: 62px; border-radius: 50%; background: #ECFDF5; color: #047857;
+  border: 1px solid #A7F3D0; font-size: 28px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+#s15 .sc-sent b {
+  margin-top: 20px; font-family: var(--f-display); font-weight: 800; font-size: 27px;
+  letter-spacing: -.02em; line-height: 1.3; color: #0F172A;
+}
+#s15 .sc-sent .s { margin-top: 12px; font-family: var(--f-mono); font-size: 13.5px; color: #64748B; }
+#s15 .sc-sentnote {
+  margin-top: 22px; font-size: 13px; font-weight: 600; color: #047857;
+  background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: 999px; padding: 7px 16px;
+}
+
+/* ── 하단 ── */
+#s15 .s15-foot {
+  flex: none; margin-top: 26px; display: flex; align-items: baseline; justify-content: space-between; gap: 32px;
+}
+#s15 .s15-hook { font-size: 22px; line-height: 1.4; color: #E8EDF7; font-weight: 500; }
+#s15 .s15-hook .off { color: #6E7A90; }
+#s15 .s15-hook em {
+  font-style: normal; color: var(--blue); position: relative; z-index: 1;
+}
+#s15 .s15-hook em::after {
+  content: ''; position: absolute; left: -2px; right: -2px; bottom: 1px; height: 7px;
+  background: rgba(59,130,246,.28); border-radius: 2px; z-index: -1;
+}
+#s15 .s15-try {
+  flex: none; font-size: 14px; color: var(--blue-light);
+  background: rgba(59,130,246,.11); border: 1px solid rgba(59,130,246,.38);
+  border-radius: 999px; padding: 9px 18px;
+}
+#s15 .s15-try .mono { font-size: 10.5px; letter-spacing: .18em; color: var(--blue); margin-right: 9px; }
+#s15 .s15-try b { color: var(--white); font-weight: 700; }
+</style>
+
+<script>
+(() => {
+  const sec = document.getElementById('s15');
+  if (!sec) return;
+  const q = (s) => sec.querySelector(s);
+
+  const whats = [...sec.querySelectorAll('[data-what]')];
+  const whos  = [...sec.querySelectorAll('[data-who]')];
+  const stus  = [...sec.querySelectorAll('[data-stu]')];
+  const lims  = [...sec.querySelectorAll('[data-lim]')];
+  const send  = q('#s15-send');
+  const sum   = q('#s15-sum');
+  const whon  = q('#s15-whon');
+  const lh    = q('#s15-lh');
+  const more  = q('#s15-more');
+  const before= q('#s15-before');
+  const after = q('#s15-after');
+  const sentn = q('#s15-sentn');
+  const rcWhat= q('#s15-rc-what');
+  const rcWho = q('#s15-rc-who');
+
+  const FIXED = { all: 20, weak: 12 };
+  const LABEL = { all: '반 전체', pick: '선택한 학생', weak: '취약 유형 · 빈칸 추론' };
+  const WHO   = { all: '반 전체', pick: '특정 학생', weak: '취약 유형 학생만' };
+  let who = 'weak', sent = false;
+
+  const count = () => (who === 'pick')
+    ? stus.filter((s) => s.classList.contains('on')).length
+    : FIXED[who];
+
+  const paint = () => {
+    whos.forEach((b) => b.classList.toggle('on', b.dataset.who === who));
+    const n = count();
+    sum.textContent = n + '명';
+    whon.textContent = n + '명';
+    lh.textContent = LABEL[who];
+    if (who === 'pick') {
+      more.hidden = true;
+    } else {
+      more.hidden = false;
+      more.textContent = '외 ' + (FIXED[who] - stus.length) + '명';
+    }
+    rcWho.textContent = WHO[who] + ' · ' + n + '명';
+    const on = whats.find((b) => b.classList.contains('on'));
+    if (on) rcWhat.textContent = on.querySelector('b').textContent;
+    send.disabled = (n === 0);
+  };
+
+  const reset = () => {
+    who = 'weak'; sent = false;
+    whats.forEach((b, i) => b.classList.toggle('on', i === 0));
+    stus.forEach((b) => b.classList.add('on'));
+    lims.forEach((b) => b.classList.toggle('on', b.dataset.lim === 'off'));
+    before.hidden = false; after.hidden = true;
+    send.textContent = '과제 보내기'; send.classList.remove('done');
+    paint();
+  };
+
+  whats.forEach((b) => b.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (sent) return;
+    whats.forEach((x) => x.classList.toggle('on', x === b));
+    paint();
+  }));
+
+  whos.forEach((b) => b.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (sent) return;
+    who = b.dataset.who;
+    if (who !== 'pick') stus.forEach((s) => s.classList.add('on'));
+    paint();
+  }));
+
+  stus.forEach((b) => b.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (sent) return;
+    who = 'pick';
+    b.classList.toggle('on');
+    paint();
+  }));
+
+  lims.forEach((b) => b.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (sent) return;
+    lims.forEach((x) => x.classList.toggle('on', x === b));
+  }));
+
+  send.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (sent) { reset(); return; }
+    sentn.textContent = count() + '명에게 과제를 보냈습니다';
+    before.hidden = true; after.hidden = false;
+    send.innerHTML = '<span class="mono">↺</span> 처음으로';
+    send.classList.add('done');
+    sent = true;
+  });
+
+  sec.addEventListener('slide:enter', reset);
+  reset();
+})();
+</script>
+</section>

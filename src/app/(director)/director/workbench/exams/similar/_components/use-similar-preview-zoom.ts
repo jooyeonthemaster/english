@@ -109,6 +109,11 @@ export function useSimilarPreviewZoom(baseWidth: number, pageAspectRatio: number
     setManualZoom(Math.round(clamped * 100) / 100);
   }
 
+  // 드래그 시작 위치는 ref 로 읽는다(시험지 빌더 usePreviewZoom 수술과 동형 —
+  // 무회귀 검증된 관용구).
+  const controlsPosRef = useRef(controlsPos);
+  controlsPosRef.current = controlsPos;
+
   function handleControlsDragStart(event: ReactMouseEvent<HTMLSpanElement>) {
     if (event.button !== 0) return;
     event.preventDefault();
@@ -116,22 +121,50 @@ export function useSimilarPreviewZoom(baseWidth: number, pageAspectRatio: number
 
     const startMouseX = event.clientX;
     const startMouseY = event.clientY;
-    const startTop = controlsPos.top;
-    const startRight = controlsPos.right;
+    const { top: startTop, right: startRight } = controlsPosRef.current;
+    // 드래그 중에는 컨트롤 DOM(그립 span 의 부모 = 위치를 소유한 루트)에 rAF
+    // 코얼레싱으로 직접 쓰고, 놓을 때 한 번만 상태로 확정한다. mousemove 마다
+    // setState 하면 이 훅을 쓰는 중앙 미리보기 전체(페이지 이미지 목록·썸네일
+    // 레일)가 프레임마다 리렌더된다.
+    const controlsEl = event.currentTarget.parentElement as HTMLElement | null;
+    const prevCursor = document.body.style.cursor;
+    const prevUserSelect = document.body.style.userSelect;
     document.body.style.cursor = "grabbing";
     document.body.style.userSelect = "none";
 
+    let next = { top: startTop, right: startRight };
+    let rafId: number | null = null;
+    const flush = () => {
+      rafId = null;
+      if (controlsEl) {
+        controlsEl.style.top = `${next.top}px`;
+        controlsEl.style.right = `${next.right}px`;
+      }
+    };
+
     const handleMove = (moveEvent: MouseEvent) => {
-      setControlsPos({
+      next = {
         top: Math.max(0, startTop + (moveEvent.clientY - startMouseY)),
         right: Math.max(0, startRight - (moveEvent.clientX - startMouseX)),
-      });
+      };
+      if (controlsEl) {
+        if (rafId === null) rafId = requestAnimationFrame(flush);
+      } else {
+        // 컨트롤 DOM 을 못 찾는 경우(구조 변경 등)에는 예전 경로로 안전 복귀.
+        setControlsPos(next);
+      }
     };
     const handleUp = () => {
       document.removeEventListener("mousemove", handleMove);
       document.removeEventListener("mouseup", handleUp);
-      document.body.style.cursor = "";
-      document.body.style.userSelect = "";
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      flush();
+      document.body.style.cursor = prevCursor;
+      document.body.style.userSelect = prevUserSelect;
+      // 최종 위치를 상태로 확정 — 이후 리렌더가 같은 값을 다시 쓰므로 튐이 없다.
+      setControlsPos((prev) =>
+        prev.top === next.top && prev.right === next.right ? prev : next,
+      );
     };
 
     document.addEventListener("mousemove", handleMove);

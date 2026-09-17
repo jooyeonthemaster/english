@@ -15,7 +15,7 @@
 //   섞이면 모델이 멀쩡한 부분을 손대는 방향으로 재생성한다(#5 주석 참조).
 // ============================================================================
 
-import { countWordBoundaryMatches, normalizeWs } from "./parser";
+import { countWordBoundaryMatches, normalizeWs, reconstructionEq } from "./parser";
 import { isDisputableTenseToggle } from "@/lib/question-quality/validators/grammar/combo";
 import { isThinKillerGrammarCorrectionTarget } from "@/lib/question-quality/validators/grammar/correction";
 import {
@@ -328,7 +328,7 @@ export function gateMdGrammarCorrection(
     .map((segment) => segment.label);
   if (unresolved.length === 0) {
     const rebuilt = reconstructCorrectionPassage(q);
-    if (normalizeWs(rebuilt) !== normalizeWs(passage)) {
+    if (!reconstructionEq(rebuilt, passage)) {
       v.push(
         `지문 재구성 불일치 — 마커 밖 텍스트가 원문과 다르거나 마커 안에서 두 곳 이상을 바꿨다${divergenceHint(rebuilt, passage)}`,
       );

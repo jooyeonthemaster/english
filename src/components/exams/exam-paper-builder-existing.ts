@@ -7,6 +7,7 @@ import {
   formatDateInput,
 } from "./paper-builder/paper-item-utils";
 import { shouldIncludeSourcePassageByDefault } from "./paper-builder/passage-policy";
+import { isGichulSetMemberData } from "./paper-builder/question-body-layout";
 import {
   normalizeInlineText,
   normalizePassageText,
@@ -249,8 +250,10 @@ function savedItemToPaperItem(
     sourceQuestion,
     orderNum: saved.orderNum || index + 1,
     points: saved.points || eq.points || sourceQuestion.points || 1,
-    groupId: saved.groupId ?? `single:${localId}`,
-    includePassage: defaultIncludePassage || saved.includePassage === true,
+    groupId: saved.groupId ?? (sourceQuestion.setId ? `set:${sourceQuestion.setId}` : `single:${localId}`),
+    includePassage: isGichulSetMemberData(sourceQuestion.structuredData)
+      ? saved.includePassage !== false
+      : defaultIncludePassage || saved.includePassage === true,
     passageTitle: resolveSavedPassageTitle(
       saved.passageTitle,
       eq.question.passage?.title,

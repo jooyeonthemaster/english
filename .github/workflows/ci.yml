@@ -39,7 +39,32 @@ jobs:
       - name: Composing-desk token gate
         run: npm run lint:authoring-tokens
 
-      # 하드 게이트 3: 단위 테스트 (AI 생성 품질 회귀 방지 자산)
+      # 하드 게이트 3: 기출 코퍼스 본문 무결성 (2026-06 무성 훼손 사고 회귀 방지)
+      # 왜 아래 "Unit tests" 와 분리하는가: 그 스텝에는 코퍼스와 무관한 **선재 실패
+      # 6건**이 있어 이미 exit 1 이다(실측 2026-08-20: node 20.19.5·node 24.7.0 양쪽에서
+      # tests 675 / pass 668 / fail 6 / todo 1 로 동일). 코퍼스 게이트를 거기에 섞으면 RED 가 이미 RED 에 묻혀
+      # "코퍼스가 깨졌는지" 를 로그에서 분간할 수 없다. 이 스텝은 위반 0 이 유지되는
+      # 표면만 보므로 단독 차단 게이트로 두는 것이 맞다(조판대 토큰 게이트와 같은 논리).
+      #
+      # ★ CI-EOL (2026-08-20, 렌즈 M4) ★ 이 스텝은 한때 ubuntu 에서 **항상 RED** 였다.
+      # 기준선이 코퍼스 파일의 **raw 바이트 sha256** 을 핀했는데, 이 리포는
+      # core.autocrlf=true 라 개발자 워크트리(Windows)는 CRLF, 여기 체크아웃은 LF 다.
+      # 실측: src/data/exam-passages-korean/facets.json
+      #        워크트리 61,559B/9029c719…   vs   git blob(=LF 체크아웃) 59,228B/c3f45c64…
+      # 로컬에서는 24/24 GREEN 이라 아무도 못 봤다. 지금은 핀을 **EOL 정규화 후 바이트**로
+      # 바꿨고(.gitattributes 의 `text eol=lf` 와 이중 방어), 게이트가 raw 핀의 재유입
+      # 자체를 RED 로 잡는다. 기대치: **25/25 GREEN** (CRLF 로컬·LF 체크아웃 동일).
+      - name: Exam corpus integrity gate
+        run: node --test tests/unit/exam-corpus-integrity.test.mjs
+
+      # 하드 게이트 4: 단위 테스트 (AI 생성 품질 회귀 방지 자산)
+      # ⚠ 실행기는 scripts/run-unit-tests.mjs 다. node 20(CI)과 node 24(로컬 engines)가
+      #   `--test` 인자를 정반대로 해석해, 어느 한쪽 형태를 박으면 반대쪽에서 0건 실행된다.
+      #   실행기는 매 실행마다 런타임·실행 건수를 찍는다(두 런타임 실측 동일: 129건/675 test).
+      # ⚠ 이 스텝은 **현재 정상 상태에서도 RED** 다. 원인 둘이 로그에서 구분된다:
+      #     · 코퍼스와 무관한 선재 실패 6건 → exit 1
+      #     · 어느 런타임에서도 실행 불가한 tests/unit/*.test.ts 17건 → exit 3
+      #   그래서 코퍼스 게이트를 위 별도 스텝으로 뽑아 둔 것이다(여기 섞으면 신호가 묻힌다).
       - name: Unit tests
         run: npm run test:unit
 

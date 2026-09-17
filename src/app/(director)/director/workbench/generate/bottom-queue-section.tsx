@@ -47,7 +47,8 @@ import { QueueStatusCard } from "./queue-status-card";
 import {
   getQuestionGenerationPlanFromTags,
   mergeQuestionGenerationPlanTag,
-  QUESTION_GENERATION_PLAN_TAGS,
+  planForDifficulty,
+  QUESTION_GENERATION_PLANS,
   sanitizeAiModelDisclosureText,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
@@ -434,7 +435,9 @@ export function BottomQueueSection({
               : null,
             structuredData: q,
           },
-          item.config.generationPlan,
+          // 26-08-18 난이도 기반 티어: 태그·구조화 플랜이 없을 때의 폴백은 요청 플랜이
+          // 아니라 난이도에서 유도(서버 청구 규칙과 동일).
+          planForDifficulty(q.difficulty || item.config.difficulty),
         );
 
         cards.push({
@@ -1153,8 +1156,9 @@ export function BottomQueueSection({
               onChange={setReviewStatusFilter}
             />
 
-            {/* 생성 플랜 필터 — 전체 → 일반 생성 → 프리미엄 생성 순환(단일 버튼).
-                PREMIUM 결과가 있으면 모델 셀렉터 플래그와 무관하게 노출(MINE 게이트 보존). */}
+            {/* 생성 플랜 필터 — 전체 → 일반 → 킬러 순환(단일 버튼).
+                PREMIUM 결과가 있으면 모델 셀렉터 플래그와 무관하게 노출(MINE 게이트 보존).
+                26-08-18 난이도 기반 티어: 라벨만 티어명(일반/킬러)으로 — 저장 태그 값은 그대로. */}
             {(FEATURE_FLAGS.SHOW_MODEL_SELECTOR || savedPlanCounts.PREMIUM > 0) && (
               <ViewModeCycleButton
                 value={savedPlanFilter}
@@ -1168,13 +1172,13 @@ export function BottomQueueSection({
                     },
                     {
                       value: "STANDARD",
-                      label: QUESTION_GENERATION_PLAN_TAGS.STANDARD,
+                      label: QUESTION_GENERATION_PLANS.STANDARD.shortLabel,
                       count: savedPlanCounts.STANDARD,
                       Icon: PearlIcon,
                     },
                     {
                       value: "PREMIUM",
-                      label: QUESTION_GENERATION_PLAN_TAGS.PREMIUM,
+                      label: QUESTION_GENERATION_PLANS.PREMIUM.shortLabel,
                       count: savedPlanCounts.PREMIUM,
                       Icon: Gem,
                     },

@@ -32,7 +32,7 @@ import {
   parseMdImplied,
   type MdImpliedQuestion,
 } from "./parser-implied";
-import { gateMdImplied } from "./gate-implied";
+import { gateMdImplied, impliedGateAdvisories } from "./gate-implied";
 import {
   adaptMdImpliedToAiQuestion,
   IMPLIED_MD_DIRECTION_MULTI,
@@ -166,18 +166,29 @@ export const IMPLIED_MEANING_MD_LANE: MdLane = {
     const parsed = parseMdImplied(text);
     const snapped = autoSnapImpliedTarget(parsed, ctx.passage);
     const q = snapped.question;
+    const gateOptions = {
+      optionCount: optionCountOf(ctx),
+      answerCount: answerCountOf(ctx),
+      optionLanguage: optionLanguageOf(ctx),
+      difficulty: ctx.difficulty,
+    };
+    const gateIssues = [
+      ...gateMdImplied(q, ctx.passage, gateOptions),
+      ...teacherPointIssues(q, ctx),
+    ];
     return {
       question: q,
-      gateIssues: [
-        ...gateMdImplied(q, ctx.passage, {
-          optionCount: optionCountOf(ctx),
-          answerCount: answerCountOf(ctx),
-          optionLanguage: optionLanguageOf(ctx),
-          difficulty: ctx.difficulty,
-        }),
-        ...teacherPointIssues(q, ctx),
+      gateIssues,
+      // 26-08-22 기출 실측으로 차단→권고 강등된 4검사(단일단어·내용어<2·지엽·
+      // 절대표현 미끼)는 반려가 아니라 잡 result.mdCorrections 포렌식으로만
+      // 남긴다(lane-summary-mc 배선 동형). 이미 반려된 문항에는 붙이지 않는다 —
+      // 재생성 피드백 옆에 놓이면 소음이다.
+      corrections: [
+        ...snapped.corrections,
+        ...(gateIssues.length === 0
+          ? impliedGateAdvisories(q, ctx.passage, gateOptions)
+          : []),
       ],
-      corrections: snapped.corrections,
     };
   },
 

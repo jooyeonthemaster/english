@@ -3,6 +3,7 @@ import type {
   AnalysisSection,
   BlockMeta,
   CustomBlock,
+  ReportFonts,
   ReportMeta,
   SectionLayout,
   VocabTestLayout,
@@ -12,6 +13,7 @@ import type {
 // 배럴(index)이 아니라 파일을 직접 임포트 — section-slots 는 순수 TS 라
 // 뮤테이션 계층이 assemble 의 React 트리를 끌어오지 않는다.
 import { reportSectionSlots } from "./report-sections/section-slots";
+import { applyFontRunRange, type FontRunPatch } from "./font-runs";
 
 /**
  * 분석 보고서 편집을 위한 순수 불변 업데이트 헬퍼.
@@ -148,6 +150,51 @@ export function setBlockMeta(report: AnalysisReport, id: string, patch: Partial<
   const blockMeta = { ...(report.blockMeta ?? {}) };
   blockMeta[id] = { ...(blockMeta[id] ?? {}), ...patch };
   return { ...report, blockMeta };
+}
+
+/**
+ * 문서 전체 글꼴(한글/영문 축) 패치. `undefined` 를 넣은 축은 **제거**된다(기본 복귀).
+ * 두 축이 모두 비면 `fonts` 필드 자체를 지운다 — 빈 객체가 남아 저장 diff 를 흐리지 않게.
+ */
+export function setReportFonts(
+  report: AnalysisReport,
+  patch: Partial<ReportFonts>,
+): AnalysisReport {
+  const next: ReportFonts = { ...(report.fonts ?? {}) };
+  for (const axis of ["ko", "en"] as const) {
+    if (!(axis in patch)) continue;
+    const v = (patch[axis] ?? "").trim();
+    if (v) next[axis] = v;
+    else delete next[axis];
+  }
+  if (!next.ko && !next.en) {
+    if (!report.fonts) return report;
+    const rest = { ...report };
+    delete (rest as { fonts?: ReportFonts }).fonts;
+    return rest;
+  }
+  return { ...report, fonts: next };
+}
+
+/**
+ * 선택 구간(폰트 런) 서식 적용 — 블록 안 ord 번째 편집 필드의 [start,end).
+ *
+ * 반드시 **`setReport` updater 안**에서 호출할 것. 적용 직전에 편집 필드가 blur 되며
+ * 텍스트/런 커밋이 한 번 더 날아가므로, 렌더 시점에 캡처한 `report.blockMeta` 로
+ * 계산하면 그 커밋을 덮어써 방금 친 글자가 사라진다.
+ */
+export function applyBlockFontRun(
+  report: AnalysisReport,
+  blockId: string,
+  ord: number,
+  start: number,
+  end: number,
+  patch: FontRunPatch,
+): AnalysisReport {
+  const current = report.blockMeta?.[blockId]?.fontRuns;
+  return setBlockMeta(report, blockId, {
+    fontRuns: applyFontRunRange(current, ord, start, end, patch),
+  });
 }
 
 /** 표(grammar/exam/vocab) 열 너비(퍼센트 맵) 저장 — 세로 구분선 드래그 결과 커밋. */
@@ -369,6 +416,107 @@ export function setVocabularyTierFilter(
   const normalized = all.filter((t) => tiers.includes(t));
   const filter = normalized.length === 0 || normalized.length === all.length ? undefined : normalized;
   return setSection(report, sectionIndex, { ...sec, vocabTierFilter: filter });
+}
+
+// ─── 파이널 원페이지 — 단어 시험지 승격 주입 (E23) ──────────────────────────
+/**
+ * 소스(같은 지문의 기본 리포트)의 vocabulary 섹션을 파이널 문서에 승격 주입한다.
+ * 계약:
+ *  · 파이널 문서의 슬롯 경로(section-slots.ts — final-onepage 조기 반환)는 주입 섹션에
+ *    슬롯을 만들지 않는다. 지면 출력은 assemble 의 「숨긴 단어장 + 켜진 시험지」 특례
+ *    emit(hidden.has("vocabulary"))이 유일한 경로라서, hiddenSections "vocabulary" 등록
+ *    (슬롯키 = `${kind}${idSuffix}`, hiddenSectionKeys 실물과 동일 형식)이 필수다 —
+ *    시험지 페이지만 나오고 학습용 단어장 표는 나오지 않는다(의도된 동작).
+ *  · 소스 불변 — rows 와 배열 필드까지 딥카피해 이후 편집이 소스 리포트를 오염시키지 않는다.
+ *  · 이미 vocabulary 섹션이 있거나 소스에 어휘가 없으면 원본 그대로 반환(멱등·히스토리 무오염).
+ */
+/**
+ * [E34-R2] 파이널 문서 **자신의 각주 어휘**(`final-onepage.mustKnow`)를 단어장 행으로 옮긴다.
+ *
+ * 왜 필요한가: 구 게이트는 「같은 지문의 **부모 기본(PRIME) 리포트**에 vocabulary 섹션이
+ * 있는가」만 봤다 — 파이널 자신이 무엇을 갖고 있든 판정에 영향이 0이었다. 그런데 파이널은
+ * 각주 어휘 `mustKnow[{term, meaning}]` 를 실제로 갖고 있고(실측 지문당 4~8개), DB 에는
+ * **부모 기본이 아예 없는 파이널**이 실재한다(지문 등록에서 basic/practice/final 택1이라
+ * 파이널만 단독 생성이 가능하다). 그 문서들은 자기 단어를 들고도 카드가 잠겨 있었다.
+ * (26-08-24 사용자 지적: 「파이널 워크북에서도 주요 단어 추출하잖아. 그거 기반으로
+ *  단어장 생성 가능하도록 해줘」)
+ *
+ * 매핑은 **필수 2필드만** 채운다 — 시험지 렌더가 반드시 읽는 것은 `headword`·`meaning`
+ * 둘뿐이고, `tier` 미지정은 "test", `difficulty` 미지정은 3 으로 떨어져 기본 출제 술어를
+ * 그대로 통과한다.
+ *
+ * ⚠ **없는 데이터를 지어내지 않는다.** `mustKnow` 에는 발음·동의어·반의어가 존재하지
+ *   않으므로 그 열은 **비운다**. 채우면 인쇄물에 거짓 정보가 실린다 — 그래서 호출부가
+ *   「동의어 쓰기·반의어 쓰기」 모드를 함께 잠근다.
+ * ⚠ 빈 배열이면 `[]` 를 돌려준다. 호출부가 **0개면 열지 않는다**(빈 시험지 인쇄 금지).
+ */
+export function vocabRowsFromMustKnow(
+  report: AnalysisReport | null | undefined,
+): { headword: string; meaning: string }[] {
+  const fin = report?.sections.find((s) => s.kind === "final-onepage");
+  if (fin?.kind !== "final-onepage") return [];
+  const raw = (fin as { mustKnow?: { term?: string; meaning?: string }[] }).mustKnow ?? [];
+  const out: { headword: string; meaning: string }[] = [];
+  const seen = new Set<string>();
+  for (const m of raw) {
+    const headword = (m?.term ?? "").trim();
+    const meaning = (m?.meaning ?? "").trim();
+    // 표제어·뜻 둘 다 있어야 문항이 성립한다(한쪽만 있으면 빈칸 문제가 된다).
+    if (!headword || !meaning) continue;
+    const key = headword.toLowerCase();
+    if (seen.has(key)) continue; // 같은 표제어 중복 출제 금지
+    seen.add(key);
+    out.push({ headword, meaning });
+  }
+  return out;
+}
+
+export function injectVocabTestSection(
+  report: AnalysisReport,
+  source: AnalysisReport | null | undefined,
+): AnalysisReport {
+  if (report.sections.some((s) => s.kind === "vocabulary")) return report;
+  const src = source?.sections.find((s) => s.kind === "vocabulary");
+  // [E34-R2] 부모 소스가 없으면 **자기 각주 어휘**로 합성한다(위 함수 주석).
+  // 소스 경로를 먼저 시도하는 순서가 계약이다 — 부모가 있으면 그쪽이 품질이 높다
+  // (실측: 부모 15~22행 vs 각주 4~8개, 발음·동의어·난이도까지 갖췄다).
+  if (src?.kind !== "vocabulary" || src.rows.length === 0) {
+    const rows = vocabRowsFromMustKnow(report);
+    if (rows.length === 0) return report;
+    const synthesized: AnalysisSection = {
+      kind: "vocabulary",
+      title: "단어 시험지",
+      rows,
+      vocabTestMode: "hide-meaning",
+    } as AnalysisSection;
+    const withSynth = { ...report, sections: [...report.sections, synthesized] };
+    return setSectionHidden(withSynth, "vocabulary", true);
+  }
+  const injected: AnalysisSection = {
+    ...src,
+    rows: src.rows.map((row) => ({ ...row })),
+    hiddenCols: src.hiddenCols ? [...src.hiddenCols] : undefined,
+    vocabTestExcludedKeys: src.vocabTestExcludedKeys ? [...src.vocabTestExcludedKeys] : undefined,
+    vocabTierFilter: src.vocabTierFilter ? [...src.vocabTierFilter] : undefined,
+    vocabTestMode: "hide-meaning",
+  };
+  const withSection = { ...report, sections: [...report.sections, injected] };
+  return setSectionHidden(withSection, "vocabulary", true);
+}
+
+/**
+ * 파이널 문서의 주입 vocabulary 섹션 제거(단어 시험지 끄기) — 파이널의 vocabulary 는
+ * 정의상 전부 주입본이다. deleteSection 이 layout/blockMeta/blockOrder id 시프트와
+ * hiddenSections("vocabulary"·"vocabulary-…") 키 정리까지 담당하므로 그대로 위임한다.
+ * vocabulary 가 없으면 원본 그대로 반환(멱등).
+ */
+export function removeInjectedVocabSection(report: AnalysisReport): AnalysisReport {
+  let next = report;
+  for (;;) {
+    const idx = next.sections.findIndex((s) => s.kind === "vocabulary");
+    if (idx < 0) return next;
+    next = deleteSection(next, idx);
+  }
 }
 
 // ─── 배열 행 추가용 빈 템플릿 ────────────────────────────────────────────────

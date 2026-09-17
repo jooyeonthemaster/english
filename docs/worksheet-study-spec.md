@@ -601,6 +601,27 @@ word·meaning·오답 횟수) → 어법 취약 코드(있으면) → CTA "오�
 
 ---
 
+## 12.5 개정 — 스테이지 화이트리스트 · 어휘 오답 자산 (2026-08-09, class-studio-spec 연동)
+
+클래스 스튜디오(docs/class-studio-spec.md)의 "모듈 단위 배포"를 위해 다음을 **additive** 로
+개정한다. 화이트리스트 부재 시 모든 동작·planHash 는 개정 전과 완전히 동일하다(무회귀).
+
+1. `WorksheetStudyConfig.stages?: StudyStageId[]` — 배포에 포함할 스테이지 화이트리스트.
+   부재/빈 배열 = 프리셋 전체. `resolveStudyConfig` 가 유효 id 만 통과시킨다
+   (`sanitizeStudyStages`). 순서는 무의미 — 프리셋 순서가 학습 순서.
+2. `CompileInput.stages?` + `StudyPlan.stageFilter?`(정렬본) — 컴파일러는 프리셋 순회 중
+   화이트리스트 밖 스테이지를 건너뛴다. planHash 조합식에 `|stages:a,b` 를 덧붙인다
+   (화이트리스트 부재 시 해시 입력 불변 — 기배포 과제 planHash 유지).
+3. `planIsViable` — stageFilter 명시 plan 은 채점 스테이지 **≥1** 로 완화(부재 시 현행 ≥2).
+   "어휘만 배포"가 뷰어 폴백으로 떨어지지 않게 한다.
+4. **어휘 시험 오답 수술(§4 vocab-quiz 행 개정)**: 오답 3개는 ① 코퍼스 자산
+   (`CompileInput.vocabAssets` — 서버 `vocab-assets.ts` 가 기출 단어 코퍼스·문항팩에서
+   사전 질의: 품사 정합·동의어 배제·혼동어 우선) ② 같은 학습지 폴백(형태 시그니처 선호,
+   같은 학습지 synonyms 링크·bannedKo·어간공유 가드) 순으로 뽑는다. 자산 부재 시에도
+   가드는 적용된다. vocabAssets 는 planHash 에 넣지 않는다(DB 준안정 — §7.1 무거절이 흡수).
+5. 서버 조립은 `plan-server.ts compileServerStudyPlan` 하나로 통일 — 런타임(server.ts)·
+   교사 문항 복원(study-item-preview)·스튜디오 미리보기가 전부 이 함수를 쓴다.
+
 ## 13. 문구·톤 규칙
 
 - 학생 노출 문구 전부 **합니다체** ("정답입니다", "아쉽습니다 — 정답을 확인해 보세요").

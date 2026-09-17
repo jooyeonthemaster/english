@@ -1,0 +1,8 @@
+# 배포에는 index.html + assets 만 필요하다 (약 1.6MB).
+# 아래는 제작·검수용이라 전부 제외한다.
+shots/
+docs/
+scripts/
+slides/
+template.html
+README.md

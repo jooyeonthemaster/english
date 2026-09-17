@@ -306,9 +306,17 @@ grammar-lab/[studentId]/page.tsx    redirect 존치(백링크 호환) · detail-
  ├ 반 편성        /students/classes
  ├ 과제 달력      /students/assignments     (구 "과제 관리" 개칭)
  ├ 어법 현황      /students/grammar         (구 "어법 훈련" 개칭·이관)
- ├ 내신 시험 분석  /workbench/exam-report     (물리 이동 금지 기확정 — 유지)
- └ 리포트 관리    /workbench/exam-report/library (유지)
+ └ 내신 시험 분석  /workbench/exam-report     (물리 이동 금지 기확정 — 유지)
 ```
+
+> **26-09-01 갱신**: 위 트리의 마지막 항목이던 「리포트 관리」
+> (`/workbench/exam-report/library`)는 **제거**됐다. 라이브러리는 허브의
+> 진부분집합이었다 — 같은 훅(`useExamReportActivity`) · 같은 API
+> (`?view=summary`, take 50) · 같은 보드(`AnalysesBoard`)를 렌더했고 차이는
+> 인테이크 패널 유무뿐이었으며, 라이브러리의 [새 시험지 분석]·[이어서 등록]은
+> 어차피 허브로 `router.push` 하고 있었다. 목록 전용 뷰는 허브의 인테이크 접기가
+> 대신하며(선호값은 `smoat_er_intake_collapsed` 쿠키에 영속), `/library` URL 은
+> 북마크 보존을 위해 허브로 redirect 된다.
 
 Coming Soon 스텁 「과제 관리」(/assignments, nav-config.ts:357)와 COMING_SOON_FEATURE_BY_PATH.assignments(:64) 삭제 — 이중 노출 해소(3안 합치).
 

@@ -11,6 +11,7 @@ import type {
 import type { PastedPassageInput } from "@/app/(director)/director/workbench/generate/intake/multi-passage-paste";
 import type { PendingExtraction } from "../use-create-extraction";
 import type { DraftCollectionItem, SavedPrompt } from "../types";
+import type { LearningSheetVariant } from "../learning-sheet-preview-modal";
 import type { PassageInputRow } from "../passage-input/types";
 import {
   handleSavePrompt as savePrompt,
@@ -118,6 +119,9 @@ interface FormSectionContainerProps {
   onPasteStateChange?: (state: { count: number; busy: boolean }) => void;
   includeWorksheet?: boolean;
   setIncludeWorksheet?: (v: boolean) => void;
+  /** 학습지 구성 3상품(기본/실전/파이널) 리프트 — includeWorksheet 확장(우선). */
+  sheetVariant?: LearningSheetVariant;
+  setSheetVariant?: (v: LearningSheetVariant) => void;
 }
 
 export function FormSectionContainer(p: FormSectionContainerProps) {
@@ -199,6 +203,8 @@ export function FormSectionContainer(p: FormSectionContainerProps) {
       onPasteStateChange={p.onPasteStateChange}
       includeWorksheet={p.includeWorksheet}
       setIncludeWorksheet={p.setIncludeWorksheet}
+      sheetVariant={p.sheetVariant}
+      setSheetVariant={p.setSheetVariant}
     />
   );
 }

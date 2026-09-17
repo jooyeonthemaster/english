@@ -569,27 +569,71 @@ export const InlineCropBoard = forwardRef<
       /* ignore */
     }
   }, []);
+  // 우측 검수 패널(aside) 실체 — 드래그 리사이즈 고속 경로가 style.width 를 직접 쓴다.
+  const reviewAsideRef = useRef<HTMLElement>(null);
+  // 성능 계약(text-input-board 동형): 드래그 중 setState 금지 — 매 pointermove
+  // 의 setReviewWidth 는 이 보드 전체(캔버스 페이지 + 검수 카드 수십 장)를
+  // 프레임마다 리렌더시켰다. 이동 중에는 aside 의 style.width 에 rAF
+  // 코얼레싱으로 직접 쓰고, 놓을 때 한 번만 setState + 영속. 앵커 미발견 시 폴백.
   const beginReviewResize = useCallback(
     (event: ReactPointerEvent<HTMLButtonElement>) => {
       if (event.pointerType === "mouse" && event.button !== 0) return;
       event.preventDefault();
       const startX = event.clientX;
       const startW = reviewWidth;
+      const prevCursor = document.body.style.cursor;
+      const prevSelect = document.body.style.userSelect;
+      const prevPointerEvents = document.body.style.pointerEvents;
       document.body.style.cursor = "col-resize";
       document.body.style.userSelect = "none";
+      // 드래그 중 hover 스타일 재평가 차단(캡처 덕에 move 수신은 유지).
+      document.body.style.pointerEvents = "none";
       let latest = startW;
+
+      // 포인터 캡처 — 커서가 얇은 핸들을 벗어나도 드래그가 끊기지 않는다.
+      const handleEl = event.currentTarget as HTMLElement;
+      try {
+        handleEl.setPointerCapture(event.pointerId);
+      } catch {
+        /* 캡처 미지원 브라우저는 window 리스너로 폴백 */
+      }
+
+      // rAF 코얼레싱 — 스타일 기록은 프레임당 1회.
+      let rafId: number | null = null;
+      const flush = () => {
+        rafId = null;
+        if (reviewAsideRef.current) {
+          reviewAsideRef.current.style.width = `${latest}px`;
+        }
+      };
       const move = (e: PointerEvent) => {
         e.preventDefault();
         // 왼쪽으로 끌면 검수 패널이 넓어진다(오른쪽 고정 패널).
         latest = clampReviewW(startW - (e.clientX - startX));
-        setReviewWidth(latest);
+        if (reviewAsideRef.current) {
+          if (rafId === null) rafId = requestAnimationFrame(flush);
+        } else {
+          // 폴백(레거시) — 앵커를 못 찾으면 종전대로 상태 갱신
+          setReviewWidth(latest);
+        }
       };
       const finish = () => {
         window.removeEventListener("pointermove", move);
         window.removeEventListener("pointerup", finish);
         window.removeEventListener("pointercancel", finish);
-        document.body.style.cursor = "";
-        document.body.style.userSelect = "";
+        if (rafId !== null) cancelAnimationFrame(rafId);
+        flush();
+        // 커밋은 여기서 한 번 — 드래그 내내 리렌더 0회.
+        setReviewWidth(latest);
+        // 저장해 둔 이전 값 복원 — 빈 문자열 대입은 남의 잠금까지 지운다.
+        document.body.style.cursor = prevCursor;
+        document.body.style.userSelect = prevSelect;
+        document.body.style.pointerEvents = prevPointerEvents;
+        try {
+          handleEl.releasePointerCapture(event.pointerId);
+        } catch {
+          /* ignore */
+        }
         try {
           window.localStorage.setItem(REVIEW_W_KEY, String(latest));
         } catch {
@@ -1823,6 +1867,7 @@ export const InlineCropBoard = forwardRef<
 
       {/* ── 우: 추출될 지문 검수 ────────────────────────────────────── */}
       <aside
+        ref={reviewAsideRef}
         style={{ width: reviewWidth }}
         className="flex min-h-0 flex-col border-t border-slate-100 bg-white max-lg:!w-full lg:shrink-0 lg:border-t-0"
       >

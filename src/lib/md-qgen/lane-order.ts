@@ -30,7 +30,7 @@ import {
   parseMdSentenceOrder,
   type MdOrderQuestion,
 } from "./parser-order";
-import { gateMdSentenceOrder } from "./gate-order";
+import { gateMdSentenceOrder, orderGateAdvisories } from "./gate-order";
 import { adaptMdSentenceOrderToAiQuestion } from "./adapter-order";
 import type { MdLane, MdLaneContext, MdLaneParsed } from "./lane-types";
 
@@ -115,6 +115,19 @@ export const SENTENCE_ORDER_MD_LANE: MdLane = {
 
   buildExtras(ctx) {
     const extras: string[] = [];
+    // 교사 지정 문장의 경계 요건(26-08-22 과녁 검증에서 확인된 1차 프롬프트 공백):
+    // 라우트 공유 블록은 "정답 위치로 사용하라"라고만 말하는데, 이 유형의 결정형
+    // 준수 판정(sentenceOrderComplies)은 지정 문장이 **문단 경계(각 단락의
+    // 시작/끝)나 주어진 글**에 있어야 통과다. 요건을 프롬프트에 싣지 않으면
+    // 모델이 운으로만 맞춘다 — 게이트와 지시를 같은 자리에 맞춘다.
+    if (ctx.teacherPoints.length > 0) {
+      extras.push(
+        [
+          "## 교사 지정 문장 — 절단 위치 집행 (필수)",
+          "- 교사가 지정한 문장은 **주어진 글에 넣거나, 어느 단락의 첫 문장 또는 마지막 문장**이 되도록 절단선을 잡아라. 단락 중간에 묻으면 기계 검사가 반려한다.",
+        ].join("\n"),
+      );
+    }
     // 응집장치 focus 가이드(기출 550문항 LLM 검증 분포) — pointFocus 일 때만 문자열을
     // 돌려준다. lib→lib 이므로 레이어 규칙 위반 없음.
     const guidance = buildSentenceOrderPointGuidance({
@@ -136,15 +149,21 @@ export const SENTENCE_ORDER_MD_LANE: MdLane = {
     const parsed = parseMdSentenceOrder(text);
     const snapped = autoSnapOrderChunks(parsed, ctx.passage);
     const q = snapped.question;
+    const gateOptions = { prefixVariationCount: prefixVariationOf(ctx) };
+    const gateIssues = [
+      ...gateMdSentenceOrder(q, ctx.passage, gateOptions),
+      ...teacherPointIssues(q, ctx),
+    ];
     return {
       question: q,
-      gateIssues: [
-        ...gateMdSentenceOrder(q, ctx.passage, {
-          prefixVariationCount: prefixVariationOf(ctx),
-        }),
-        ...teacherPointIssues(q, ctx),
+      gateIssues,
+      // 비차단 권고(#10 공짜 소거·#4 문장수 — 26-08-22 기출 실측 강등분)는 반려가
+      // 아니라 잡 result.mdCorrections 포렌식으로만 남긴다. 이미 반려된 문항에는
+      // 붙이지 않는다(lane-summary-mc 와 동일 규약 — 재생성 피드백 옆에선 소음이다).
+      corrections: [
+        ...snapped.corrections,
+        ...(gateIssues.length === 0 ? orderGateAdvisories(q, ctx.passage, gateOptions) : []),
       ],
-      corrections: snapped.corrections,
     };
   },
 

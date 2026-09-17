@@ -46,6 +46,12 @@ export interface WorkspaceRowsApi {
   /** 여러 행을 한 번에 제거 (전체선택 후 일괄 삭제). */
   removeRows: (localIds: string[]) => void;
   clear: () => void;
+  /**
+   * 행 전체를 이 지문들로 교체하고 만들어진 localId 를 **동기 반환**한다
+   * (클래스 스튜디오 직행 발사 §3.10.18 E18-c ③). 이전 rows 를 읽지 않으므로
+   * clear()+loadPassages() 조합의 스테일 클로저 교착이 성립하지 않는다.
+   */
+  replaceWithPassages: (passages: PassageItem[]) => string[];
   /** 변형본 저장 직후 — 행을 새 Passage 로 재바인딩. */
   rebindToVariant: (
     localId: string,
@@ -258,6 +264,28 @@ export function useWorkspaceRows(): WorkspaceRowsApi {
 
   const clear = useCallback(() => setRows([]), []);
 
+  /**
+   * 행 전체를 이 지문들로 **교체**하고 만들어진 localId 를 즉시 돌려준다
+   * (클래스 스튜디오 직행 발사 — docs/class-studio-spec.md §3.10.18 E18-c ③).
+   *
+   * ⚠ `clear()` + `loadPassages()` 조합으로 대체하면 안 된다(적대 검수 확정
+   *   critical): clear 는 setRows 를 **큐잉만** 하고, loadPassages 는 deps
+   *   [rows] 클로저의 **직전 커밋 rows** 로 중복 제거를 한다. 그래서 같은
+   *   지문을 두 번째로 적재하면 전건 skip → `newRows.length > 0` 가드에 걸려
+   *   setRows 가 아예 안 불리고, 행은 clear 결과인 빈 배열로 커밋된다.
+   *   호출부가 passageId→localId 역조회로 기다리면 영원히 오지 않아 CTA 가
+   *   조용히 죽는다(재발사가 한 번 걸러 한 번씩 무반응).
+   *
+   * 이 함수는 이전 rows 를 읽지 않으므로 그 계열 결함이 성립할 수 없고,
+   * localId 를 동기 반환하므로 호출부에 역조회 핸드셰이크 자체가 필요 없다.
+   * 반환 순서 = 입력 순서(발사 대상 순서 계약).
+   */
+  const replaceWithPassages = useCallback((passages: PassageItem[]) => {
+    const next = passages.map((p) => makeWorkspaceRow(p));
+    setRows(next);
+    return next.map((r) => r.localId);
+  }, []);
+
   const rebindToVariant = useCallback(
     (
       localId: string,
@@ -349,6 +377,7 @@ export function useWorkspaceRows(): WorkspaceRowsApi {
     removeRow,
     removeRows,
     clear,
+    replaceWithPassages,
     rebindToVariant,
     addVariantRow,
   };

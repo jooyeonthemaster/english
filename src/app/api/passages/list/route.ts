@@ -116,8 +116,10 @@ export async function GET(request: NextRequest) {
             orderBy: { updatedAt: "desc" },
             take: 20,
           },
-          // 이 지문으로 이미 생성된 문제 수 — 지문 카드 뱃지에 사용.
-          _count: { select: { questions: true } },
+          // 이 지문으로 이미 생성된 문제 수 — 지문 카드 뱃지·「생성된 문제」
+          // 토글 노출 판정에 사용. soft delete 된 문항은 세지 않는다 — 지연
+          // 로드된 팝오버 목록(살아있는 문항만)과 라벨 수가 어긋나지 않게.
+          _count: { select: { questions: { where: { deletedAt: null } } } },
         },
         // updatedAt 기준 — 재추출 dedup 이 기존 행을 재사용(touch)해도
         // "방금 추출한 지문"이 새로고침 후에도 맨 앞에 오게 한다.

@@ -35,8 +35,13 @@ const SUMMARY_MIN_WORDS = 8;
 const SUMMARY_MAX_WORDS = 60;
 /** 값 최대 단어 수 — 빈칸 채움말은 단어 또는 짧은 어구다. */
 const VALUE_MAX_WORDS = 6;
-/** 같은 열(빈칸) 값들의 단어 수 허용 편차 — 정본 마감 규칙 "±3단어". */
-const COLUMN_WORD_SPREAD_MAX = 3;
+/**
+ * 같은 열(빈칸) 값들의 단어 수 허용 편차.
+ * 정본 마감 규칙은 "±3단어"였으나 26-08-22 기출 전수 실측에서 수능·평가원·학평
+ * 156문항 중 14건(9.0%)이 편차 4~6단어로 오반려됐다(분포 {4:12, 6:2}, 7 이상
+ * 0건). 기출 최대값 6을 허용 상한으로 올려 오반려 0%로 맞춘다.
+ */
+const COLUMN_WORD_SPREAD_MAX = 6;
 /** 지문 연속 복사로 간주하는 토큰 길이. */
 const COPY_NGRAM = 8;
 
@@ -94,12 +99,6 @@ export interface SummaryMcGateOptions {
    * 함정 검사를 느슨하게 열어 주면 킬러 결함이 무검사로 새 나간다.
    */
   difficulty?: string;
-}
-
-/** BASIC·INTERMEDIATE 판정 — 그 외(KILLER·미지정·미지 문자열)는 엄격 모드. */
-function isEasyDifficulty(difficulty: string): boolean {
-  const d = difficulty.toUpperCase();
-  return d === "BASIC" || d === "INTERMEDIATE";
 }
 
 /**
@@ -215,8 +214,6 @@ export function gateMdSummaryMc(
   const blankCount = options?.blankCount ?? 2;
   const optionCount = options?.optionCount ?? SUMMARY_MC_MD_OPTION_COUNT;
   const requireWrong = options?.requireWrong !== false;
-  const difficulty = options?.difficulty ?? "KILLER";
-  const strictTraps = !isEasyDifficulty(difficulty);
   const labels = summaryMcMdLabels(blankCount);
   const v: string[] = [];
 
@@ -399,18 +396,15 @@ export function gateMdSummaryMc(
       }
     });
 
-    // #11 함정 구조 — 반쪽 정답(2빈칸) / near-miss(3빈칸 이상).
-    //     BASIC/INTERMEDIATE 에서는 비차단(summaryMcGateAdvisories 로 이동).
-    const structure = summaryMcTrapStructure(q, answerKeys, blankCount);
-    if (strictTraps) v.push(...structure.map((issue) => issue.message));
-
-    // #12 KILLER 함정 강도 — 검증기 validateKillerSummaryTrapStrength(error 6종)
-    //     선반영. 그 코드들은 SHIP_FIRST 강등 목록 **밖**이라 진짜 차단급인데
-    //     게이트가 비어 있었다(적대검수 #3). 검증기와 **같은 순수 함수**를 써서
-    //     판정 축이 갈라지지 않게 한다.
-    if (difficulty.toUpperCase() === "KILLER" && blankCount === 2) {
-      v.push(...killerTrapIssues(q, answerValues));
-    }
+    // #11·#12 함정 구조(반쪽 정답·near-miss)와 KILLER 함정 강도는 **전 난이도
+    //     비차단**(summaryMcGateAdvisories) — 26-08-22 기출 전수 실측으로 차단
+    //     해제했다. 수능·평가원·학평 요약문 156문항을 KILLER 설정으로 넣으면
+    //     함정계가 84.6%(수능 본시험만도 81.3%)를 반려한다. 기출 조합 분포는
+    //     「반쪽 정답 둘 다」 17.3% / A쪽만 59.6% / B쪽만 6.4% / 없음 16.7% —
+    //     평가원 정형은 (A)열 중복·(B)열 전부 다름이라 이 게이트의 요구 구조
+    //     자체가 기출과 다르다. "한쪽만이라도"(16.7% 오반려)·"값 공유 ≥1"
+    //     (16.7% 오반려)로 완화해도 0% 오반려가 불가능하므로, 캠페인 배선 기준
+    //     (기출 오탐 0%만 차단 자격)에 따라 권고로 강등한다.
   }
 
   // ── 해설 축 ──────────────────────────────────────────────────────────────
@@ -431,9 +425,10 @@ export function gateMdSummaryMc(
 
 /**
  * **비차단 권고** — 게이트가 반려하지 않고 잡 result 에만 남기는 항목.
- * 현재는 BASIC/INTERMEDIATE 의 함정 구조 미달(fast 레인이 SHIP_FIRST 강등으로
- * 정상 출하하는 결함)만 여기로 온다. 반려하면 재생성 1회 후 크레딧 환불이라,
- * 난이도·취향 코드에 그 예산을 쓰지 않는다(적대검수 #4).
+ * 함정 구조(반쪽 정답·near-miss)는 전 난이도, KILLER 함정 강도는 KILLER 에서
+ * 여기로 온다 — 26-08-22 기출 실측(수능 본시험 81.3% 오반려, 위 #11·#12 주석)
+ * 으로 차단에서 강등했다. 반려하면 재생성 1회 후 크레딧 환불이라, 기출조차
+ * 지키지 않는 구조 취향에 그 예산을 쓰지 않는다(적대검수 #4와 같은 원칙).
  *
  * gateMdSummaryMc 가 이미 반려한 문항에는 호출할 필요가 없다(레인이 순서 보장).
  */
@@ -442,11 +437,18 @@ export function summaryMcGateAdvisories(
   options?: SummaryMcGateOptions,
 ): string[] {
   const blankCount = options?.blankCount ?? 2;
-  if (!isEasyDifficulty(options?.difficulty ?? "KILLER")) return [];
+  const difficulty = options?.difficulty ?? "KILLER";
   if (!q.answer || !q.options.some((o) => o.label === q.answer)) return [];
   if (q.options.some((o) => o.values.length !== blankCount)) return [];
-  const answerKeys = summaryMcAnswerValues(q).map((value) => summaryMcCmp(value));
-  return summaryMcTrapStructure(q, answerKeys, blankCount).map(
+  const answerValues = summaryMcAnswerValues(q);
+  const answerKeys = answerValues.map((value) => summaryMcCmp(value));
+  const out = summaryMcTrapStructure(q, answerKeys, blankCount).map(
     (issue) => `참고(비차단): ${issue.message}`,
   );
+  if (difficulty.toUpperCase() === "KILLER" && blankCount === 2) {
+    out.push(
+      ...killerTrapIssues(q, answerValues).map((m) => `참고(비차단): ${m}`),
+    );
+  }
+  return out;
 }

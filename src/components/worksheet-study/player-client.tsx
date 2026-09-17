@@ -67,6 +67,12 @@ export interface PlayerProps {
   priorFirst?: StudyStageFirstAttempt[];
   /** dev 하네스 — 네트워크 플러시 생략 */
   harness?: boolean;
+  /**
+   * 임베드 표면(스튜디오 학생 화면 에뮬레이터 §3.6) — 지정 시 나가기/다음 단계가
+   * 라우터 내비 대신 콜백으로 흐른다. 부재 시 기존 라우팅 그대로(무회귀).
+   */
+  onExit?: () => void;
+  onNextStage?: () => void;
 }
 
 type Phase = "play" | "retry" | "summary";
@@ -80,8 +86,20 @@ export function StudyPlayerClient({
   reviewMode,
   priorFirst,
   harness,
+  onExit,
+  onNextStage,
 }: PlayerProps) {
   const router = useRouter();
+  // 임베드 내비 — 콜백 부재 시 기존 라우팅(무회귀)
+  const goHome = useCallback(() => {
+    if (onExit) onExit();
+    else router.push(backHref);
+  }, [onExit, router, backHref]);
+  const goNext = useCallback(() => {
+    if (onNextStage) onNextStage();
+    else if (nextStageHref) router.push(nextStageHref);
+  }, [onNextStage, router, nextStageHref]);
+  const hasNext = Boolean(nextStageHref) || Boolean(onNextStage);
   const [phase, setPhase] = useState<Phase>("play");
   /** 이어 풀기 진입 위치 — 0 보다 크면 상단에 안내를 띄운다 */
   const [resumedAt] = useState(() => resumeIndex(stage.items, priorFirst));
@@ -423,12 +441,13 @@ export function StudyPlayerClient({
   }, [judged, currentItem, stage.graded, phase, idx, queue.length, retryList.length, finishStage, scheduleFlush, writeMirror]);
 
   const exit = useCallback(() => {
-    if (phase === "summary" || (buffer.current.length === 0 && firstResults.current.size === 0)) {
-      router.push(backHref);
+    // harness(미리보기)는 저장할 것이 없다 — "저장하고 나가기" 확인은 무의미하다.
+    if (harness || phase === "summary" || (buffer.current.length === 0 && firstResults.current.size === 0)) {
+      goHome();
       return;
     }
     setExitOpen(true);
-  }, [phase, router, backHref]);
+  }, [harness, phase, goHome]);
 
   // 이전 문장/카드 — 무채점 스테이지(통독·어휘 카드) 전용. 채점 스테이지는
   // 판정 되돌리기가 점수 정직성을 깨므로 전진 전용을 유지한다(시험 응시 원칙).
@@ -447,8 +466,8 @@ export function StudyPlayerClient({
 
   const saveAndExit = useCallback(async () => {
     await flush();
-    router.push(backHref);
-  }, [flush, router, backHref]);
+    goHome();
+  }, [flush, goHome]);
 
 
   // ── 렌더 ──────────────────────────────────────────────────────────────────
@@ -491,13 +510,13 @@ export function StudyPlayerClient({
         </div>
         <footer className="gd-safe-b shrink-0 px-4 pt-3" style={{ background: "var(--gd-card)", borderTop: "1px solid var(--gd-line)" }}>
           <div className="gd-page flex flex-col gap-2">
-            {nextStageHref ? (
-              <button type="button" className="gd-btn gd-btn-primary w-full" onClick={() => router.push(nextStageHref)}>
+            {hasNext ? (
+              <button type="button" className="gd-btn gd-btn-primary w-full" onClick={goNext}>
                 다음 단계로
                 <ArrowRight className="h-4 w-4" strokeWidth={2} aria-hidden />
               </button>
             ) : null}
-            <button type="button" className="gd-btn gd-btn-ghost w-full" onClick={() => router.push(backHref)}>
+            <button type="button" className="gd-btn gd-btn-ghost w-full" onClick={goHome}>
               학습 홈으로
             </button>
           </div>
@@ -595,22 +614,27 @@ export function StudyPlayerClient({
       <footer className="gd-safe-b shrink-0 px-4 pt-3" style={{ background: "var(--gd-card)", borderTop: "1px solid var(--gd-line)" }}>
         <div className="gd-page">
           {/* 질문 — 어법 드릴 액션바의 ToolButton 과 동일 시각(칩 h-9),
-              터치 영역만 44px 로 확장. 문항이 바뀌면 시트는 닫힌다. */}
-          <div className="mb-2 flex">
-            <button
-              type="button"
-              onClick={() => setAskOpen(true)}
-              className="flex min-h-11 items-center disabled:opacity-40"
-            >
-              <span
-                className="gd-t-2xs flex h-9 items-center gap-1.5 rounded-lg border px-2.5 font-semibold"
-                style={{ borderColor: "var(--gd-line)", color: "var(--gd-ink-2)" }}
+              터치 영역만 44px 로 확장. 문항이 바뀌면 시트는 닫힌다.
+              harness(스튜디오 에뮬레이터·dev 하네스)에서는 숨긴다 — 시트가 마운트
+              즉시 /api/g/study/{taskId}/ask 를 부르는데 가짜 taskId 라 학생 API 에
+              무의미한 요청이 나간다(무전송 계약 위반 — 2026-08-10 행동 게이트 적발). */}
+          {!harness && (
+            <div className="mb-2 flex">
+              <button
+                type="button"
+                onClick={() => setAskOpen(true)}
+                className="flex min-h-11 items-center disabled:opacity-40"
               >
-                <MessageCircleQuestion className="h-4 w-4" strokeWidth={1.75} aria-hidden />
-                질문
-              </span>
-            </button>
-          </div>
+                <span
+                  className="gd-t-2xs flex h-9 items-center gap-1.5 rounded-lg border px-2.5 font-semibold"
+                  style={{ borderColor: "var(--gd-line)", color: "var(--gd-ink-2)" }}
+                >
+                  <MessageCircleQuestion className="h-4 w-4" strokeWidth={1.75} aria-hidden />
+                  질문
+                </span>
+              </button>
+            </div>
+          )}
           {judged && verdictTone ? (
             <div className="gd-verdict mb-2 flex items-center gap-2 px-3.5 py-2.5" data-tone={verdictTone} role="status">
               {verdictTone === "good" ? (

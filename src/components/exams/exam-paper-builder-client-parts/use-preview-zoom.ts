@@ -1,5 +1,6 @@
 "use client";
 
+import { deferWhileDragging } from "@/components/layout/panel-drag-freeze";
 import { useEffect, useMemo, useRef, useState, type MouseEvent as ReactMouseEvent } from "react";
 import { PAPER_SIZE_SPECS, PREVIEW_PAGE_WIDTH } from "../paper-builder/constants";
 import type { PaperSize } from "../paper-builder/types";
@@ -51,13 +52,21 @@ export function usePreviewZoom(paperSize: PaperSize = "A4") {
       }
       lastFitWidthRef.current = availableWidth;
       const nextFit = Math.min(1, Math.max(PREVIEW_ZOOM_MIN, availableWidth / baseWidth));
-      setFitZoom(Math.round(nextFit * 100) / 100);
+      // floor — round 는 올림 쪽에서 페이지가 최대 4px(0.005×794) 넘쳐 스크롤러에 가로 스크롤바가
+      // 생겼다(26-09-08 스튜디오 aside 508px 실측 3px 넘침). 내림은 절대 넘치지 않는다.
+      setFitZoom(Math.floor(nextFit * 100) / 100);
     };
 
     updateFitZoom();
-    const observer = new ResizeObserver(updateFitZoom);
+    // 패널 드래그 중엔 재맞춤을 미루고 놓을 때 1회(panel-drag-freeze.ts) — 프레임마다 setFitZoom 이
+    // 돌면 조판 전체가 리렌더된다(데드밴드 24px 로도 드래그 200px 에 8회).
+    const deferred = deferWhileDragging<void>(() => updateFitZoom());
+    const observer = new ResizeObserver(() => deferred.observe(undefined));
     observer.observe(scroller);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      deferred.dispose();
+    };
   }, [baseWidth]);
 
   function zoomIn() {
@@ -93,6 +102,11 @@ export function usePreviewZoom(paperSize: PaperSize = "A4") {
     setManualZoom(Math.round(clamped * 100) / 100);
   }
 
+  // 드래그 시작 위치는 ref 로 읽는다(AnalysisReportEditor 의 줌 컨트롤 드래그와
+  // 동형 — 무회귀 검증된 관용구).
+  const controlsPosRef = useRef(controlsPos);
+  controlsPosRef.current = controlsPos;
+
   function handleControlsDragStart(event: ReactMouseEvent<HTMLSpanElement>) {
     if (event.button !== 0) return;
     event.preventDefault();
@@ -100,22 +114,50 @@ export function usePreviewZoom(paperSize: PaperSize = "A4") {
 
     const startMouseX = event.clientX;
     const startMouseY = event.clientY;
-    const startTop = controlsPos.top;
-    const startRight = controlsPos.right;
+    const { top: startTop, right: startRight } = controlsPosRef.current;
+    // 드래그 중에는 컨트롤 DOM(그립 span 의 부모 = 위치를 소유한 루트)에 rAF
+    // 코얼레싱으로 직접 쓰고, 놓을 때 딱 한 번만 상태로 확정한다. mousemove 마다
+    // setState 하면 controlsPos 를 소비하는 화면 전체(미리보기 전 페이지 + 문제
+    // 라이브러리)가 프레임마다 리렌더된다.
+    const controlsEl = event.currentTarget.parentElement as HTMLElement | null;
+    const prevCursor = document.body.style.cursor;
+    const prevUserSelect = document.body.style.userSelect;
     document.body.style.cursor = "grabbing";
     document.body.style.userSelect = "none";
 
+    let next = { top: startTop, right: startRight };
+    let rafId: number | null = null;
+    const flush = () => {
+      rafId = null;
+      if (controlsEl) {
+        controlsEl.style.top = `${next.top}px`;
+        controlsEl.style.right = `${next.right}px`;
+      }
+    };
+
     const handleMove = (moveEvent: MouseEvent) => {
-      setControlsPos({
+      next = {
         top: Math.max(0, startTop + (moveEvent.clientY - startMouseY)),
         right: Math.max(0, startRight - (moveEvent.clientX - startMouseX)),
-      });
+      };
+      if (controlsEl) {
+        if (rafId === null) rafId = requestAnimationFrame(flush);
+      } else {
+        // 컨트롤 DOM 을 못 찾는 경우(구조 변경 등)에는 예전 경로로 안전 복귀.
+        setControlsPos(next);
+      }
     };
     const handleUp = () => {
       document.removeEventListener("mousemove", handleMove);
       document.removeEventListener("mouseup", handleUp);
-      document.body.style.cursor = "";
-      document.body.style.userSelect = "";
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      flush();
+      document.body.style.cursor = prevCursor;
+      document.body.style.userSelect = prevUserSelect;
+      // 최종 위치를 상태로 확정 — 이후 리렌더가 같은 값을 다시 쓰므로 튐이 없다.
+      setControlsPos((prev) =>
+        prev.top === next.top && prev.right === next.right ? prev : next,
+      );
     };
 
     document.addEventListener("mousemove", handleMove);

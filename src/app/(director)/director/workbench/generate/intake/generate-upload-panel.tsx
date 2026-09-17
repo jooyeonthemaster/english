@@ -238,6 +238,19 @@ interface GenerateUploadPanelProps {
    * 미전달 = 영어 기본(기존 동작 그대로, 무회귀).
    */
   subject?: "KOREAN";
+  /**
+   * 좁은 컨테이너 임베드(클래스 스튜디오 워크벤치 중앙 열)용 — lg 뷰포트
+   * 미디어쿼리는 넓은 화면의 좁은 열에서 오판하므로, lg 이상에서도 빈 상태의
+   * 우측 340px 가이드 aside 를 세로 적층(w-full)으로 접고 드롭존이 전폭을
+   * 갖게 한다(드롭존 187px 붕괴 실측, 2026-08-10). 부재 시 기존 클래스와
+   * 바이트 동일(무회귀).
+   */
+  stacked?: boolean;
+  /**
+   * 추출 시작 CTA 의 목적지 라벨 — 스튜디오 「지문관리」 개칭(§3.10.14) 패스
+   * 스루. 미전달 = 기존 문자 그대로(타 호스트 무회귀).
+   */
+  pickLabel?: string;
 }
 
 /**
@@ -253,6 +266,8 @@ export function GenerateUploadPanel({
   inFlightCount,
   suppressTutorial = false,
   subject,
+  stacked = false,
+  pickLabel = "다음으로 (내 지문함)",
 }: GenerateUploadPanelProps) {
   const startUpload = useExtractionUpload();
   // 국어 자료 — AI 원문 복원은 영어 전용 파이프라인이라 옵션을 숨기고
@@ -273,6 +288,8 @@ export function GenerateUploadPanel({
   const boardRef = useRef<InlineCropBoardHandle>(null);
   // 파일이 아직 없을 때 '추출 시작'을 누르면 글로우시킬 업로드 영역.
   const uploadZoneRef = useRef<HTMLDivElement>(null);
+  // 우측 '추출 지문' 가이드(aside) 실체 — 드래그 리사이즈 고속 경로가 style.width 를 직접 쓴다.
+  const guideAsideRef = useRef<HTMLElement>(null);
   const [boardCounts, setBoardCounts] =
     useState<InlineCropBoardCounts>(EMPTY_COUNTS);
   const [baking, setBaking] = useState(false);
@@ -313,22 +330,63 @@ export function GenerateUploadPanel({
       event.preventDefault();
       const startX = event.clientX;
       const startW = fileGuideWidth;
+      const prevCursor = document.body.style.cursor;
+      const prevSelect = document.body.style.userSelect;
+      const prevPointerEvents = document.body.style.pointerEvents;
       document.body.style.cursor = "col-resize";
       document.body.style.userSelect = "none";
+      // 드래그 중 hover 스타일 재평가 차단 — 폭이 프레임마다 바뀌면 커서 아래
+      // 요소가 계속 바뀐다(캡처 덕에 move 수신에는 영향 없다).
+      document.body.style.pointerEvents = "none";
       let latest = startW;
+
+      // 포인터 캡처 — 커서가 얇은 핸들을 벗어나도 드래그가 끊기지 않는다.
+      const handleEl = event.currentTarget as HTMLElement;
+      try {
+        handleEl.setPointerCapture(event.pointerId);
+      } catch {
+        /* 캡처 미지원 브라우저는 window 리스너로 폴백 */
+      }
+
+      // 드래그 고속 경로 — 매 무브 setFileGuideWidth 는 GenerateUploadPanel
+      // 전체(업로드 드롭존 + 우측 가이드 aside)를 프레임마다 리렌더시킨다.
+      // 이동 중에는 aside 의 style.width 에 rAF 코얼레싱으로 직접 쓰고, 놓을 때
+      // 한 번만 setState 로 커밋한다. 앵커가 없으면 종전 setState 경로 폴백(무회귀).
+      let rafId: number | null = null;
+      const flush = () => {
+        rafId = null;
+        if (guideAsideRef.current) {
+          guideAsideRef.current.style.width = `${latest}px`;
+        }
+      };
       const move = (e: PointerEvent) => {
         e.preventDefault();
         latest = clampFileGuideW(startW - (e.clientX - startX));
-        setFileGuideWidth(latest);
+        if (guideAsideRef.current) {
+          if (rafId === null) rafId = requestAnimationFrame(flush);
+        } else {
+          setFileGuideWidth(latest);
+        }
       };
       const finish = () => {
         window.removeEventListener("pointermove", move);
         window.removeEventListener("pointerup", finish);
         window.removeEventListener("pointercancel", finish);
-        document.body.style.cursor = "";
-        document.body.style.userSelect = "";
+        if (rafId !== null) cancelAnimationFrame(rafId);
+        flush();
+        // 커밋은 여기서 한 번 — 드래그 내내 리렌더 0회.
+        setFileGuideWidth(latest);
+        // 저장해 둔 이전 값 복원 — 빈 문자열 대입은 남의 잠금까지 지운다.
+        document.body.style.cursor = prevCursor;
+        document.body.style.userSelect = prevSelect;
+        document.body.style.pointerEvents = prevPointerEvents;
         try {
           window.localStorage.setItem(FILE_EMPTY_GUIDE_W_KEY, String(latest));
+        } catch {
+          /* ignore */
+        }
+        try {
+          handleEl.releasePointerCapture(event.pointerId);
         } catch {
           /* ignore */
         }
@@ -644,12 +702,14 @@ export function GenerateUploadPanel({
         aria-disabled={fileStartDisabled}
         data-generate-tour="file-extract-button"
         className={
-          "inline-flex h-12 w-full items-center justify-center rounded-lg border text-[14px] font-extrabold text-white shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 " +
+          // 글자색은 상태 분기 안에서 정한다 — 비활성은 흰 글자가 아니라
+          // 정본 비활성 토큰(bg-slate-100 text-slate-400, §3.8.7 관용구)이다.
+          "inline-flex h-12 w-full items-center justify-center rounded-lg border text-[14px] font-extrabold shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 " +
           (busy
-            ? "cursor-wait border-blue-600 bg-blue-600"
+            ? "cursor-wait border-blue-600 bg-blue-600 text-white"
             : fileStartDisabled
-              ? "cursor-not-allowed border-blue-200 bg-blue-300"
-              : "cursor-pointer border-blue-600 bg-blue-600 hover:bg-blue-700")
+              ? "cursor-not-allowed border-slate-200 bg-slate-100 text-slate-400"
+              : "cursor-pointer border-blue-600 bg-blue-600 text-white hover:bg-blue-700")
         }
       >
         {busy ? (
@@ -660,8 +720,8 @@ export function GenerateUploadPanel({
         ) : (
           <>
             <PlayCircle className="mr-2 size-5" aria-hidden="true" />
-            {"다음으로 (내 지문함)"}
-            {` (지문 ${fileTotalPassages}개)`}
+            {pickLabel}
+            {` · 지문 ${fileTotalPassages}개`}
             {fileTotalPassages > 0 ? (
               <CreditCostChip
                 amount={fileProjectedCredits}
@@ -693,8 +753,11 @@ export function GenerateUploadPanel({
               data-generate-tour={`output-mode-${opt.v}`}
               className={
                 "inline-flex min-h-8 w-full min-w-0 cursor-pointer flex-nowrap items-center justify-center gap-1 overflow-hidden rounded-md border px-2 py-1 text-center text-[11px] font-semibold leading-tight transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60 sm:h-7 sm:w-auto sm:gap-1.5 sm:px-3 sm:py-0 sm:text-[12.5px] " +
+                // 활성 = 파란 채움 필 — 직접 입력 탭의 OutputModeToggle 과 같은
+                // 활성 문법(이원화 해소). 뱃지는 같은 색군 위에서 사라지므로 흰
+                // 알약으로 올린다(paste-output-mode-toggle 의 대비 계약과 동형).
                 (active
-                  ? "border-blue-600 bg-blue-50/40 text-blue-700 shadow-sm"
+                  ? "border-blue-600 bg-blue-600 text-white shadow-sm"
                   : "border-transparent text-slate-400 hover:bg-slate-50 hover:text-slate-600")
               }
             >
@@ -704,8 +767,8 @@ export function GenerateUploadPanel({
                   "shrink-0 rounded px-1 py-0.5 text-[9px] font-bold sm:text-[9.5px] " +
                   (active
                     ? opt.v === "restored"
-                      ? "bg-blue-100 text-blue-700"
-                      : "bg-slate-100 text-slate-500"
+                      ? "bg-white text-blue-700"
+                      : "bg-white text-slate-600"
                     : "bg-slate-100 text-slate-400")
                 }
               >
@@ -737,7 +800,7 @@ export function GenerateUploadPanel({
           event.currentTarget.value = "";
         }}
       />
-      <span className="inline-flex items-center gap-2 text-[14px] font-extrabold text-blue-700">
+      <span className="inline-flex items-center gap-2 break-keep text-[14px] font-extrabold text-blue-700">
         {preparing ? (
           <Loader2 className="size-5 animate-spin" aria-hidden="true" />
         ) : (
@@ -880,9 +943,20 @@ export function GenerateUploadPanel({
                 })();
               }
             }}
-            className="flex min-h-0 flex-1 flex-col overflow-hidden lg:flex-row"
+            className={
+              // stacked 임베드: lg 이상에서도 세로 적층 유지(좌우 분할 금지).
+              stacked
+                ? "flex min-h-0 flex-1 flex-col overflow-hidden"
+                : "flex min-h-0 flex-1 flex-col overflow-hidden lg:flex-row"
+            }
           >
-            <div className="relative flex min-h-0 min-w-0 flex-1 flex-col border-b border-slate-100 p-3.5 lg:border-b-0">
+            <div
+              className={
+                stacked
+                  ? "relative flex min-h-0 min-w-0 flex-1 flex-col border-b border-slate-100 p-3.5"
+                  : "relative flex min-h-0 min-w-0 flex-1 flex-col border-b border-slate-100 p-3.5 lg:border-b-0"
+              }
+            >
               {fileTutorialPopup}
               <div
                 ref={uploadZoneRef}
@@ -907,7 +981,11 @@ export function GenerateUploadPanel({
               onPointerDown={beginFileGuideResize}
               title="드래그하여 추출 지문 패널 폭 조절"
               aria-label="추출 지문 패널 폭 조절"
-              className="group/rhandle no-print hidden h-full min-h-0 w-3 shrink-0 cursor-col-resize touch-none select-none flex-col items-center justify-center gap-1 border-l border-slate-100 bg-slate-50 py-1 text-[10.5px] font-semibold text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100 lg:flex"
+              className={
+                // stacked: 좌우 분할이 없으니 폭 조절 핸들도 lg 에서 숨긴다.
+                "group/rhandle no-print hidden h-full min-h-0 w-3 shrink-0 cursor-col-resize touch-none select-none flex-col items-center justify-center gap-1 border-l border-slate-100 bg-slate-50 py-1 text-[10.5px] font-semibold text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100" +
+                (stacked ? "" : " lg:flex")
+              }
             >
               <GripVertical
                 className="size-3 opacity-50 transition-opacity group-hover/rhandle:opacity-80"
@@ -917,18 +995,38 @@ export function GenerateUploadPanel({
             </button>
 
             <aside
+              ref={guideAsideRef}
               style={{ width: fileGuideWidth }}
-              className="flex min-h-0 flex-col bg-white max-lg:!w-full lg:shrink-0"
+              className={
+                // stacked: 우측 340px aside 를 세로 적층 전폭으로 — 드롭존이
+                // 중앙 열 폭 전체를 갖는다(340px 고정폭이 드롭존을 187px 로 붕괴).
+                stacked
+                  ? "flex min-h-0 shrink-0 !w-full flex-col bg-white"
+                  : "flex min-h-0 flex-col bg-white max-lg:!w-full lg:shrink-0"
+              }
             >
               {/* 헤더·'사용 순서' 가이드는 PC 전용 — 모바일은 하단 장바구니 바가
-                  대신하고, 가이드는 유명무실하므로 숨긴다(삭제와 동일 효과). */}
-              <div className="flex shrink-0 items-center justify-between gap-2 border-b border-slate-100 px-3.5 py-2.5 max-lg:hidden">
+                  대신하고, 가이드는 유명무실하므로 숨긴다(삭제와 동일 효과).
+                  stacked 임베드도 같은 이유로 숨긴다(세로 공간이 드롭존 몫). */}
+              <div
+                className={
+                  stacked
+                    ? "hidden"
+                    : "flex shrink-0 items-center justify-between gap-2 border-b border-slate-100 px-3.5 py-2.5 max-lg:hidden"
+                }
+              >
                 <span className="inline-flex items-center gap-1.5 text-[12.5px] font-bold text-slate-900">
                   <Layers className="size-4 text-blue-600" aria-hidden="true" />
-                  추출될 지문 0개
+                  담긴 지문 0개
                 </span>
               </div>
-              <div className="smoat-file-guide-scroll min-h-0 flex-1 overflow-y-auto bg-slate-50/40 p-2.5 max-lg:hidden">
+              <div
+                className={
+                  stacked
+                    ? "hidden"
+                    : "smoat-file-guide-scroll min-h-0 flex-1 overflow-y-auto bg-slate-50/40 p-2.5 max-lg:hidden"
+                }
+              >
                 <div className="smoat-file-empty-guide mx-auto flex w-full max-w-[640px] flex-col rounded-lg border border-slate-200 bg-slate-50/80 p-4">
                   <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
                     <div className="inline-flex w-fit items-center gap-1.5 rounded-md bg-blue-600 px-2 py-1 text-[11px] font-bold text-white">
@@ -936,7 +1034,7 @@ export function GenerateUploadPanel({
                       사용 순서
                     </div>
                     <h3 className="smoat-file-empty-guide__title min-w-0 flex-1 text-[15px] font-extrabold leading-snug text-slate-950">
-                      파일을 올리면 바로 지문을 자를 수 있어요
+                      파일을 올리면 바로 지문을 자를 수 있습니다
                     </h3>
                   </div>
                   <ol className="smoat-file-empty-guide__steps mt-3 grid gap-2">

@@ -1,4 +1,4 @@
-export const DEFAULT_DIRECTOR_REDIRECT = "/director/workbench/questions/generate";
+export const DEFAULT_DIRECTOR_REDIRECT = "/director/studio";
 export const DEFAULT_TEACHER_REDIRECT = "/teacher";
 
 function isAllowedStaffCallbackPath(pathname: string): boolean {

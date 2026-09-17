@@ -89,7 +89,17 @@ const s = section;
               const subVocab = vocabRanges
                 .filter((r) => r.start >= start && r.start < end)
                 .map((r) => ({ start: r.start - start, end: r.end - start }));
-              const subPlan = buildSentenceCanvasPlan(subEn, partIndex === 0 ? sentence.ko : "", undefined, subNotes, subVocab);
+              // seed 승계 — 이 파트를 이루는 확정 청크(plan.chunks 조각)를 seed 로 넘긴다.
+              // 예전엔 여기가 undefined 라 분할되는 순간 gloss·role 이 전량 소실됐다
+              // (26-08-26 RCA — 끊어읽기 글로스 전멸의 렌더러 측 주범, .tmp-par-rca).
+              // 트림 2자 미만 조각(1글자 gap: 낱자 관사 등)은 걸러낸다 — alignSeedChunks 의
+              // 앵커 탐색이 2자 미만을 거부해 조각 하나가 파트 seed 전체를 죽인다(적대검수 R1).
+              // 걸러진 조각은 gloss·role 이 없으므로(글로스 청크는 원 정렬상 2자 미만 불가)
+              // fillGaps 가 도로 채워 손실이 없다.
+              const subSeed = subChunks
+                .filter((c) => c.text.trim().length >= 2)
+                .map((c) => ({ text: c.text, gloss: c.gloss, role: c.role, emphasis: c.emphasis }));
+              const subPlan = buildSentenceCanvasPlan(subEn, partIndex === 0 ? sentence.ko : "", subSeed, subNotes, subVocab);
               push(
                 "reading",
                 `annotated-snt${sentenceIndex}-source-${partIndex}`,

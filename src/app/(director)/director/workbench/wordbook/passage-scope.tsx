@@ -255,9 +255,14 @@ export function PassageScopeBar({
         >
           <CalendarRange className="size-[15px] text-blue-600" />
           기출 범위
-          <ChevronDown
-            className={`size-3.5 text-slate-400 transition-transform duration-300 motion-reduce:transition-none ${open ? "" : "-rotate-90"}`}
-          />
+          {/* 접기 토글 — 무표식 chevron 은 컨트롤로 안 읽힌다(유저 피드백).
+              라벨+테두리 필로 승격해 누를 수 있는 것임을 드러낸다 */}
+          <span className="flex h-[19px] shrink-0 items-center gap-0.5 rounded-md border border-blue-200 bg-blue-50/70 pl-1.5 pr-1 text-[10px] font-semibold text-blue-700 transition-colors group-hover:border-blue-300 group-hover:bg-blue-100">
+            {open ? "접기" : "펼치기"}
+            <ChevronDown
+              className={`size-3 transition-transform duration-300 motion-reduce:transition-none ${open ? "" : "-rotate-90"}`}
+            />
+          </span>
         </button>
 
         {/* 요약 — 펼침이면 규모, 접힘이면 걸린 조건 */}

@@ -235,7 +235,7 @@ export function QuestionBurstScene() {
           <SceneGhost n="01" className="-top-7 right-0 lg:-top-2 lg:-left-4 lg:right-auto" />
           <Reveal className="relative" y={16}>
             <SceneKicker className="mb-3 justify-center lg:mb-4 lg:justify-start">
-              FEATURE · 25유형 문제 생성
+              FEATURE · 24유형 문제 생성
             </SceneKicker>
           </Reveal>
           <Reveal delay={0.08}>
@@ -256,14 +256,14 @@ export function QuestionBurstScene() {
             <br className="lg:hidden" />
             <br className="hidden lg:inline" />{" "}
             <strong className="text-gray-900 font-bold">
-              내신·수능 25유형 문항이 단 몇 초 만에
+              내신·수능 24유형 문항이 단 몇 초 만에
             </strong>{" "}
             완성됩니다.
           </p>
           </Reveal>
           {/* 모바일(<lg): 기존 안내 뱃지 유지 (데모 미노출) */}
           <Stagger className="mt-3 flex flex-wrap gap-2 lg:hidden" delay={0.3} gap={0.08}>
-            {["25유형 전 영역", "1초 생성", "장문 세트", "동형 모의고사"].map((t) => (
+            {["24유형 전 영역", "1초 생성", "장문 세트", "동형 모의고사"].map((t) => (
               <Item key={t} pop>
                 <span className="inline-block rounded-full border border-blue-100 bg-blue-50/70 px-3 py-1 text-[12.5px] font-bold text-blue-700">
                   {t}

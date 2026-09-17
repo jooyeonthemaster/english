@@ -79,6 +79,12 @@ function clampNumber(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), normalizedMax);
 }
 
+// 그리드 컬럼 문자열 — 렌더(--similar-grid-columns)와 드래그 고속 경로가 같은
+// 형식을 공유한다. 형식이 갈라지면 드래그 중과 커밋 후 레이아웃이 달라진다.
+function gridColumnsFor(leftPx: number) {
+  return `${leftPx}px ${PANEL_TOGGLE_HANDLE_WIDTH}px minmax(${PANEL_MIN_CENTER}px,1fr)`;
+}
+
 function readStoredLeftWidth(): number {
   if (typeof window === "undefined") return LEFT_DEFAULT;
   const raw = Number(window.localStorage.getItem(LEFT_WIDTH_STORAGE_KEY));
@@ -428,7 +434,34 @@ export function SimilarExamGeneratorClient({
     );
     const previousCursor = document.body.style.cursor;
     const previousUserSelect = document.body.style.userSelect;
+    const previousPointerEvents = document.body.style.pointerEvents;
     let didDrag = false;
+
+    // 포인터 캡처 — 커서가 얇은 핸들을 벗어나도 드래그가 끊기지 않고, 아래의
+    // body pointer-events:none 과 조합해도 move 가 계속 들어온다.
+    const handleEl = event.currentTarget as HTMLElement;
+    try {
+      handleEl.setPointerCapture(event.pointerId);
+    } catch {
+      /* 캡처 미지원 브라우저는 window 리스너로 폴백 */
+    }
+
+    // 드래그 고속 경로 — 매 pointermove 의 setLeftWidth 는 좌패널(자료 관리
+    // 포크본, 카드 수백 장)+중앙 미리보기+작업 패널 전체를 프레임마다
+    // 리렌더시키고, 영속 effect 의 localStorage 쓰기까지 매 프레임 유발했다.
+    // 드래그 중에는 grid 의 --similar-grid-columns 변수에 rAF 코얼레싱으로 직접
+    // 쓰고, 놓을 때 한 번만 setState 로 커밋한다. grid 를 못 찾으면 종전
+    // setState 경로(무회귀).
+    let latest = startWidth;
+    let rafId: number | null = null;
+    const flush = () => {
+      // 다음 무브가 새 프레임을 잡을 수 있게 먼저 해제한다.
+      rafId = null;
+      container?.style.setProperty(
+        "--similar-grid-columns",
+        gridColumnsFor(leftCollapsed ? 0 : latest),
+      );
+    };
 
     const handlePointerMove = (moveEvent: PointerEvent) => {
       const deltaX = moveEvent.clientX - startX;
@@ -438,20 +471,43 @@ export function SimilarExamGeneratorClient({
         suppressHandleClickRef.current = true;
         document.body.style.cursor = "col-resize";
         document.body.style.userSelect = "none";
+        // 드래그 중 hover 스타일 재평가 차단(캡처 덕에 move 수신은 유지).
+        document.body.style.pointerEvents = "none";
       }
       moveEvent.preventDefault();
-      setLeftWidth(
-        clampNumber(startWidth + deltaX, LEFT_MIN, Math.max(LEFT_MIN, maxLeft)),
+      latest = clampNumber(
+        startWidth + deltaX,
+        LEFT_MIN,
+        Math.max(LEFT_MIN, maxLeft),
       );
+      if (container) {
+        if (rafId === null) rafId = requestAnimationFrame(flush);
+      } else {
+        setLeftWidth(latest);
+      }
     };
 
     const finish = () => {
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("pointerup", finish);
       window.removeEventListener("pointercancel", finish);
+      if (rafId !== null) cancelAnimationFrame(rafId);
       if (didDrag) {
+        if (container) {
+          flush();
+          // 커밋 1회 — 영속 effect 의 localStorage 쓰기도 이때 1회만 발생.
+          // React 가 같은 변수를 다음 렌더에서 같은 값으로 다시 쓰므로 인라인
+          // 기록을 지울 필요가 없다(지우면 폭 원위치 드래그에서 변수가 빈다).
+          setLeftWidth(latest);
+        }
         document.body.style.cursor = previousCursor;
         document.body.style.userSelect = previousUserSelect;
+        document.body.style.pointerEvents = previousPointerEvents;
+      }
+      try {
+        handleEl.releasePointerCapture(event.pointerId);
+      } catch {
+        /* ignore */
       }
     };
 
@@ -520,7 +576,7 @@ export function SimilarExamGeneratorClient({
   ];
 
   const leftColumnWidth = leftCollapsed ? 0 : leftWidth;
-  const gridColumns = `${leftColumnWidth}px ${PANEL_TOGGLE_HANDLE_WIDTH}px minmax(${PANEL_MIN_CENTER}px,1fr)`;
+  const gridColumns = gridColumnsFor(leftColumnWidth);
 
   return (
     <div className="relative bg-[#F4F6F9] md:-m-6">
