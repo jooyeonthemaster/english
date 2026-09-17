@@ -37,6 +37,21 @@
 매출에 그대로 남는다. 피드는 PortOne 응답 원본의 `amount.cancelled` 를 읽어
 취소액을 함께 보낸다. `/admin/costs` 와 ERP 의 숫자가 다르면 ERP 쪽이 맞다.
 
+## 피드 부르는 법
+
+```
+GET /api/erp/feed?after=<cursorKey>&limit=300   바뀐 충전·구독 (커서는 updatedAt ISO|id)
+                                                + 처리된 무통장 알림 전부 + 월별 원가
+GET /api/erp/feed?costs=only                    월별 원가만
+```
+
+무통장 알림(`bank_deposit_notifications`)에는 수정 시각이 없어서 커서로 보내지
+않고 **매번 통째로** 보낸다. 수기 지급이 나중에 충전에 연결되면(MATCHED) ERP 가
+수기 지급 줄을 지워야 같은 돈이 두 번 잡히지 않는다.
+
+월별 원가의 달 경계는 KST 다. 이 DB 의 시각 열은 시간대 없는 `TIMESTAMP(3)` 에
+UTC 를 담으므로 `(col AT TIME ZONE 'UTC') AT TIME ZONE 'Asia/Seoul'` 로 두 번 건다.
+
 ## 환경변수
 
 ```

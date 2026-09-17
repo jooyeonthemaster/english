@@ -13,7 +13,12 @@
 //     맞춰 볼 수 있다.
 // ============================================================
 
-export const FEED_VERSION = 1;
+/**
+ * 계약 판 — ERP 와 다르면 ERP 가 동기화를 멈춘다.
+ *   1  첫 판
+ *   2  커서를 (updatedAt, id) 짝으로 · 무통장 통째 보내기
+ */
+export const FEED_VERSION = 2;
 
 export const FEED_SOURCE = "smoat" as const;
 
@@ -29,8 +34,13 @@ export interface SmoatFeedEnvelope {
   source: typeof FEED_SOURCE;
   /** 읽기 시작한 시각 (ms) */
   serverTime: number;
-  /** 이번 응답의 마지막 수정 시각 (ms). ERP 가 다음 since 로 쓴다 */
+  /** 이번 응답의 마지막 수정 시각 (ms) — ERP 화면 표시용 */
   cursor: number;
+  /**
+   * 다음 호출의 after 로 돌려받을 열쇠 — `updatedAt ISO|id`.
+   * 같은 ms 에 바뀐 줄이 한 쪽보다 많아도 커서가 늘 앞으로 가게 짝으로 둔다.
+   */
+  cursorKey: string;
   /** false 면 아직 남았다 */
   complete: boolean;
   payload: SmoatFeedPayload;

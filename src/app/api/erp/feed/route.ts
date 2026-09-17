@@ -20,8 +20,8 @@
 //  ERP 가 차감한다. 두 화면의 숫자가 다르면 이쪽이 맞다.
 //
 //  부르는 법:
-//    GET /api/erp/feed?since=<ms>&limit=300   그 뒤로 바뀐 결제만
-//    GET /api/erp/feed?costs=only             월별 원가·크레딧만
+//    GET /api/erp/feed?after=<cursorKey>&limit=300   그 커서 뒤로 바뀐 결제만
+//    GET /api/erp/feed?costs=only                    월별 원가·크레딧만
 // ============================================================
 
 import { NextResponse } from "next/server";
@@ -47,6 +47,40 @@ const DEPOSIT_SNAPSHOT_CAP = 5000;
 const COST_MONTHS = 30;
 
 const iso = (d: Date | null | undefined) => (d ? d.toISOString() : null);
+
+/**
+ * 커서 — (updatedAt, id) 짝.
+ *
+ * 충전과 구독은 다른 표지만 **같은 순서**로 줄 세운다: updatedAt, 그다음 id.
+ * 각 표에서 그 순서로 커서 뒤의 앞쪽 limit 개를 가져와 합치면, 합친 것의
+ * 앞쪽 limit 개는 빠짐없는 앞부분이다. 그래서 두 표에 **같은 커서**를 건다.
+ */
+interface Cursor {
+  at: Date;
+  id: string;
+}
+
+function parseAfter(raw: string | null): Cursor | null {
+  if (!raw) return null;
+  const [ts, id] = raw.split("|");
+  const at = new Date(ts ?? "");
+  if (Number.isNaN(at.getTime()) || !id) return null;
+  return { at, id };
+}
+
+/** Prisma where — 커서보다 뒤 */
+const afterWhere = (c: Cursor | null) =>
+  c ? { OR: [{ updatedAt: { gt: c.at } }, { updatedAt: c.at, id: { gt: c.id } }] } : {};
+
+/**
+ * JS 에서 합칠 때의 순서 — DB 의 정렬과 같아야 한다.
+ * id 는 cuid(소문자·숫자)라 바이트 순서와 DB 정렬이 같다.
+ */
+function byCursor(a: SmoatSaleRow, b: SmoatSaleRow): number {
+  const d = Date.parse(a.updatedAt) - Date.parse(b.updatedAt);
+  if (d !== 0) return d;
+  return a.id < b.id ? -1 : a.id > b.id ? 1 : 0;
+}
 
 /** 크레딧 수로 팩 이름 찾기 — orderName 이 없는 옛 줄을 위해 */
 function packLabelOf(credits: number | null | undefined): string | undefined {
@@ -85,18 +119,16 @@ function cancelledAmountOf(payload: unknown): number {
  * 수기 지급은 드물어서(월 몇 건) 통째로 보내도 작다.
  */
 async function loadSales(
-  since: Date | null,
+  after: Cursor | null,
   limit: number,
 ): Promise<{ rows: SmoatSaleRow[]; truncated: boolean; deposits: SmoatSaleRow[]; depositsComplete: boolean }> {
-  const gt = since ? { gt: since } : undefined;
-
   const [topUps, subscriptions, deposits] = await Promise.all([
     prisma.creditTopUp.findMany({
       where: {
         status: { in: [...FEEDABLE_TOPUP_STATUSES] },
-        ...(gt ? { updatedAt: gt } : {}),
+        ...afterWhere(after),
       },
-      orderBy: { updatedAt: "asc" },
+      orderBy: [{ updatedAt: "asc" }, { id: "asc" }],
       take: limit,
       select: {
         id: true,
@@ -119,9 +151,9 @@ async function loadSales(
     prisma.subscriptionPayment.findMany({
       where: {
         status: { in: ["PAID", "REFUNDED", "CANCELLED", "FAILED"] },
-        ...(gt ? { updatedAt: gt } : {}),
+        ...afterWhere(after),
       },
-      orderBy: { updatedAt: "asc" },
+      orderBy: [{ updatedAt: "asc" }, { id: "asc" }],
       take: limit,
       select: {
         id: true,
@@ -145,7 +177,8 @@ async function loadSales(
     // 무통장 알림은 **커서 없이 통째로** 보낸다 (아래 depositsOf 주석).
     prisma.bankDepositNotification.findMany({
       where: { status: { in: ["MANUAL_GRANT", "MATCHED", "IGNORED"] } },
-      orderBy: [{ receivedAt: "asc" }, { id: "asc" }],
+      // 한도에 닿으면 **오래된 것**이 빠지게 최신순으로 (그때 ERP 는 지우기를 건너뛴다)
+      orderBy: [{ receivedAt: "desc" }, { id: "desc" }],
       take: DEPOSIT_SNAPSHOT_CAP,
       select: {
         id: true,
@@ -257,11 +290,13 @@ async function loadSales(
       accountId: "",
       accountName: d.bankName ?? "무통장 입금",
     };
-    if (!revenue) row.excluded = d.status === "IGNORED" ? "test" : "duplicate";
+    if (!revenue) {
+      row.excluded = d.status === "MATCHED" || d.matchedTopUpId ? "duplicate" : "test";
+    }
     return row;
   });
 
-  rows.sort((a, b) => Date.parse(a.updatedAt) - Date.parse(b.updatedAt));
+  rows.sort(byCursor);
   return {
     rows,
     // 한 표라도 한도를 채웠으면 남은 것이 있을 수 있다
@@ -291,7 +326,10 @@ async function loadCosts(): Promise<SmoatMonthlyCostRow[]> {
   // 달 첫날부터 — 중간에서 자르면 가장 오래된 달이 반쪽으로 가서 ERP 의
   // 온전한 값을 덮는다
   const now = new Date();
-  const since = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - COST_MONTHS, 1));
+  // KST 달의 첫날 0시 = UTC 전날 15시
+  const since = new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - COST_MONTHS, 1) - 9 * 60 * 60 * 1000,
+  );
 
   const [costs, sold, used] = await Promise.all([
     prisma.$queryRaw<Array<{ month: string; usd: number | null; krw: bigint | null }>>`
@@ -363,8 +401,11 @@ export async function GET(req: Request) {
   if (!auth.ok) return NextResponse.json({ error: auth.error }, { status: auth.status });
 
   const url = new URL(req.url);
-  const sinceMs = Number(url.searchParams.get("since")) || 0;
-  const since = sinceMs > 0 ? new Date(sinceMs) : null;
+  const afterParam = url.searchParams.get("after");
+  const after = parseAfter(afterParam);
+  if (afterParam && !after) {
+    return NextResponse.json({ error: "after 형식이 올바르지 않습니다." }, { status: 400 });
+  }
   const limit = Math.min(MAX_LIMIT, Math.max(1, Number(url.searchParams.get("limit")) || DEFAULT_LIMIT));
   const costsOnly = url.searchParams.get("costs") === "only";
   const serverTime = Date.now();
@@ -372,19 +413,22 @@ export async function GET(req: Request) {
   try {
     const loaded = costsOnly
       ? { rows: [], truncated: false, deposits: [], depositsComplete: false }
-      : await loadSales(since, limit);
+      : await loadSales(after, limit);
     // 충전·구독 두 표를 합쳤으니 limit 을 넘을 수 있다. 자른 나머지는 커서가
     // 아직 그 앞에 있으므로 다음 호출에 그대로 들어온다. (각 표가 앞에서부터
     // limit 개씩 왔으므로, 합친 것의 앞 limit 개는 빠짐없는 앞부분이다.)
     const sales = loaded.rows.slice(0, limit);
     const costs = await loadCosts();
 
-    const cursor = sales.reduce((max, r) => Math.max(max, Date.parse(r.updatedAt) || 0), 0) || sinceMs;
+    const last = sales[sales.length - 1];
+    const cursorKey = last ? `${last.updatedAt}|${last.id}` : afterParam ?? "";
+    const cursor = last ? Date.parse(last.updatedAt) : after?.at.getTime() ?? 0;
     const envelope: SmoatFeedEnvelope = {
       version: FEED_VERSION,
       source: FEED_SOURCE,
       serverTime,
       cursor,
+      cursorKey,
       complete: !loaded.truncated && loaded.rows.length <= limit,
       payload: {
         sales,
