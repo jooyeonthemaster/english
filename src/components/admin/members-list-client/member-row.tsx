@@ -1,22 +1,29 @@
 "use client";
 
-import { useCallback, useState, useTransition } from "react";
+import { useCallback, useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChevronRight, AlertTriangle, StickyNote } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { TableCell, TableRow } from "@/components/ui/table";
 import { SaveButton } from "@/components/ui/save-button";
+import { StatusBadge, Td, Tr } from "@/components/admin/kit";
+import { activeFlag } from "@/lib/admin-labels";
 import type { MemberListItem } from "@/actions/admin-members";
 import { updateMemberMemo } from "@/actions/admin-members";
+import { AdminHoverDetail } from "@/components/admin/hover-detail/admin-hover-detail";
 import { SmsToggle } from "./sms-toggle";
+import { memberRowDetail } from "./member-hover-detail";
 import { formatDate, formatRelative, getInitials } from "./formatters";
+import { LOW_BALANCE_THRESHOLD } from "./member-list-model";
 
 const MAX_MEMO_LENGTH = 5000;
 
-const LOW_BALANCE_THRESHOLD = 50;
+/** 이름 옆 "비활성" 표시 — 라벨은 레지스트리(activeFlag)에서. */
+function InactiveBadge() {
+  return <StatusBadge status={activeFlag(false, ["활성", "비활성"])} className="h-5 shrink-0" />;
+}
 
 export function MemberRow({
   member,
@@ -32,9 +39,8 @@ export function MemberRow({
   const router = useRouter();
   const href = `/admin/members/${member.id}`;
 
-  // Row-level click navigation: matches enterprise SaaS row affordance while
-  // the first-cell <Link> remains the keyboard/SR entry point. Guards against
-  // hijacking when the user is selecting text or clicking on an inner link.
+  // 행 클릭 = 상세 이동. 첫 셀의 <Link> 가 키보드/스크린리더 진입점으로 남는다.
+  // 글자를 드래그 중이거나 안쪽 링크·버튼을 눌렀을 땐 가로채지 않는다.
   const handleRowClick = useCallback(
     (e: React.MouseEvent) => {
       const target = e.target as HTMLElement;
@@ -44,98 +50,76 @@ export function MemberRow({
     },
     [router, href],
   );
+  // 호버 상세 — 행 클릭(상세 페이지 이동)은 그대로 두고 팝오버만 붙인다.
+  const detail = useMemo(() => memberRowDetail(member), [member]);
 
   return (
-    <TableRow
-      onClick={handleRowClick}
-      className={cn(
-        "group border-b border-gray-100 last:border-0 cursor-pointer",
-        selected ? "bg-blue-50/50 hover:bg-blue-50/70" : "hover:bg-gray-50/60",
-      )}
-    >
-      <TableCell
-        className="pl-5 pr-0"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <Checkbox
-          checked={selected}
-          onCheckedChange={(v) => onSelectChange(v === true)}
-          aria-label={`${member.name} 선택`}
-        />
-      </TableCell>
-      <TableCell className="py-3 pl-3">
-        <Link
-          href={href}
-          className="flex items-center gap-3 outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 rounded-md -m-1 p-1"
-        >
-          <Avatar name={member.name} avatarUrl={member.avatarUrl} />
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2 min-w-0">
-              <span className="text-[13px] font-medium text-gray-900 truncate">
-                {member.name}
-              </span>
-              {!member.isActive && (
-                <Badge
-                  variant="secondary"
-                  className="bg-gray-100 text-gray-500 border-0 text-[11px] px-1.5 h-4 font-medium shrink-0"
-                >
-                  비활성
-                </Badge>
-              )}
+    <AdminHoverDetail title={member.name} detail={detail} click="none">
+      <Tr onClick={handleRowClick} clickable selected={selected} className="group">
+        <Td className="w-9 pr-0" onClick={(e) => e.stopPropagation()} data-no-detail>
+          <Checkbox
+            checked={selected}
+            onCheckedChange={(v) => onSelectChange(v === true)}
+            aria-label={`${member.name} 선택`}
+          />
+        </Td>
+        <Td>
+          <Link
+            href={href}
+            className="-m-1 flex items-center gap-3 rounded-md p-1 outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40"
+          >
+            <Avatar name={member.name} avatarUrl={member.avatarUrl} />
+            <div className="min-w-0 flex-1">
+              <div className="flex min-w-0 items-center gap-2">
+                <span className="truncate text-[13px] font-medium text-gray-900">
+                  {member.name}
+                </span>
+                {!member.isActive && <InactiveBadge />}
+              </div>
+              <div className="truncate text-[11px] text-gray-400">{member.email}</div>
             </div>
-            <div className="text-[11px] text-gray-400 truncate">
-              {member.email}
-            </div>
+          </Link>
+        </Td>
+        <Td className="hidden xl:table-cell">
+          <div className="min-w-0 max-w-[280px]">
+            <div className="truncate text-[12px] text-gray-700">{member.academy.name}</div>
+            <div className="truncate text-[11px] text-gray-400">/{member.academy.slug}</div>
+            <MemoCell memberId={member.id} memo={member.academy.memo} />
           </div>
-        </Link>
-      </TableCell>
-      <TableCell className="hidden xl:table-cell">
-        <div className="min-w-0 max-w-[280px]">
-          <div className="text-[12px] text-gray-700 truncate">
-            {member.academy.name}
-          </div>
-          <div className="text-[11px] text-gray-400 truncate">
-            /{member.academy.slug}
-          </div>
-          <MemoCell memberId={member.id} memo={member.academy.memo} />
-        </div>
-      </TableCell>
-      <TableCell>
-        <LatestPurchaseCell purchase={member.latestPurchase} />
-      </TableCell>
-      <TableCell className="text-right">
-        <BalanceCell balance={member.creditBalance?.balance ?? null} />
-      </TableCell>
-      <TableCell>
-        <ExpiryCell expiresAt={member.creditBalance?.expiresAt ?? null} now={now} />
-      </TableCell>
-      <TableCell className="hidden xl:table-cell text-[12px] text-gray-600 tabular-nums">
-        {formatDate(member.createdAt)}
-      </TableCell>
-      <TableCell className="hidden 2xl:table-cell text-[12px] text-gray-600 tabular-nums">
-        {member.lastActiveAt ? (
-          <span title={formatDate(member.lastActiveAt)}>
-            {formatRelative(member.lastActiveAt, now)}
-          </span>
-        ) : (
-          <span className="text-gray-300">활동 없음</span>
-        )}
-      </TableCell>
-      <TableCell className="hidden lg:table-cell">
-        <SmsToggle
-          memberId={member.id}
-          optOut={member.smsOptOut}
-          isInternal={member.isInternal}
-        />
-      </TableCell>
-      <TableCell className="pr-5 text-right">
-        <ChevronRight
-          className="size-4 text-gray-300 group-hover:text-gray-500 transition-colors inline-block"
-          strokeWidth={2}
-          aria-hidden="true"
-        />
-      </TableCell>
-    </TableRow>
+        </Td>
+        <Td>
+          <LatestPurchaseCell purchase={member.latestPurchase} />
+        </Td>
+        <Td align="right">
+          <BalanceCell balance={member.creditBalance?.balance ?? null} />
+        </Td>
+        <Td>
+          <ExpiryCell expiresAt={member.creditBalance?.expiresAt ?? null} now={now} />
+        </Td>
+        <Td className="hidden text-[12px] tabular-nums text-gray-600 xl:table-cell">
+          {formatDate(member.createdAt)}
+        </Td>
+        <Td className="hidden text-[12px] tabular-nums text-gray-600 2xl:table-cell">
+          {member.lastActiveAt ? (
+            <span title={formatDate(member.lastActiveAt)}>
+              {formatRelative(member.lastActiveAt, now)}
+            </span>
+          ) : (
+            <span className="text-gray-300">활동 없음</span>
+          )}
+        </Td>
+        <Td className="hidden lg:table-cell" data-no-detail>
+          <SmsToggle memberId={member.id} optOut={member.smsOptOut} isInternal={member.isInternal} />
+        </Td>
+        <Td align="right">
+          <ChevronRight
+            className="inline-block size-4 text-gray-300 transition-colors group-hover:text-gray-500"
+            strokeWidth={2}
+            aria-hidden="true"
+          />
+        </Td>
+      </Tr>
+    </AdminHoverDetail>
   );
 }
 
@@ -160,9 +144,7 @@ export function MemberCard({
     <li
       className={cn(
         "rounded-xl border bg-white px-4 py-3.5 transition-colors",
-        selected
-          ? "border-blue-200 bg-blue-50/40 ring-1 ring-blue-100"
-          : "border-gray-200 shadow-[0_1px_2px_rgba(16,24,40,0.04)]",
+        selected ? "border-blue-200 bg-blue-50/40 ring-1 ring-blue-100" : "border-gray-100",
       )}
     >
       <div className="flex items-start gap-3">
@@ -174,35 +156,23 @@ export function MemberCard({
         />
         <Link
           href={href}
-          className="flex min-w-0 flex-1 items-center gap-3 rounded-md -m-1 p-1 outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40"
+          className="-m-1 flex min-w-0 flex-1 items-center gap-3 rounded-md p-1 outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40"
         >
           <Avatar name={member.name} avatarUrl={member.avatarUrl} />
           <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2 min-w-0">
-              <span className="text-[13px] font-medium text-gray-900 truncate">
+            <div className="flex min-w-0 items-center gap-2">
+              <span className="truncate text-[13px] font-medium text-gray-900">
                 {member.name}
               </span>
-              {!member.isActive && (
-                <Badge
-                  variant="secondary"
-                  className="bg-gray-100 text-gray-500 border-0 text-[11px] px-1.5 h-4 font-medium shrink-0"
-                >
-                  비활성
-                </Badge>
-              )}
+              {!member.isActive && <InactiveBadge />}
             </div>
-            <div className="text-[11px] text-gray-400 truncate">
-              {member.email}
-            </div>
+            <div className="truncate text-[11px] text-gray-400">{member.email}</div>
           </div>
         </Link>
         {/* 크레딧 잔고 + 바로 아래 소멸시효(작은 회색 글씨) */}
         <div className="flex shrink-0 flex-col items-end gap-0.5 pt-1">
           <BalanceCell balance={member.creditBalance?.balance ?? null} />
-          <CardExpiryHint
-            expiresAt={member.creditBalance?.expiresAt ?? null}
-            now={now}
-          />
+          <CardExpiryHint expiresAt={member.creditBalance?.expiresAt ?? null} now={now} />
         </div>
       </div>
 
@@ -210,22 +180,16 @@ export function MemberCard({
         {/* 학원 (+ 문자수신 토글 우측) */}
         <div className="flex items-center gap-1">
           <span className="shrink-0">학원</span>
-          <span className="min-w-0 flex-1 truncate text-gray-600">
-            {member.academy.name}
-          </span>
+          <span className="min-w-0 flex-1 truncate text-gray-600">{member.academy.name}</span>
           <span className="shrink-0">
-            <SmsToggle
-              memberId={member.id}
-              optOut={member.smsOptOut}
-              isInternal={member.isInternal}
-            />
+            <SmsToggle memberId={member.id} optOut={member.smsOptOut} isInternal={member.isInternal} />
           </span>
         </div>
         {/* 최근 구매 — 학원 아래로, 한 줄로 */}
         <div className="flex items-center gap-1">
           <span className="shrink-0">최근 구매</span>
           {member.latestPurchase ? (
-            <span className="min-w-0 truncate text-gray-600 tabular-nums">
+            <span className="min-w-0 truncate tabular-nums text-gray-600">
               {member.latestPurchase.name} ·{" "}
               {member.latestPurchase.creditAmount.toLocaleString("ko-KR")} C ·{" "}
               {formatDate(member.latestPurchase.purchasedAt)}
@@ -240,43 +204,27 @@ export function MemberCard({
 }
 
 /** 카드에서 크레딧 잔고 바로 아래 표시하는 소멸시효 — 작은 회색 글씨 한 줄. */
-function CardExpiryHint({
-  expiresAt,
-  now,
-}: {
-  expiresAt: Date | string | null;
-  now: number;
-}) {
+function CardExpiryHint({ expiresAt, now }: { expiresAt: Date | string | null; now: number }) {
   if (!expiresAt) return null;
   const days = Math.ceil((new Date(expiresAt).getTime() - now) / 86_400_000);
   return (
-    <span className="text-[10.5px] leading-tight text-gray-400 tabular-nums">
+    <span className="text-[11px] leading-tight tabular-nums text-gray-400">
       소멸 {formatDate(expiresAt)}
       {days >= 0 ? ` · D-${days}` : " · 만료"}
     </span>
   );
 }
 
-function Avatar({
-  name,
-  avatarUrl,
-}: {
-  name: string;
-  avatarUrl: string | null | undefined;
-}) {
+function Avatar({ name, avatarUrl }: { name: string; avatarUrl: string | null | undefined }) {
   if (avatarUrl) {
     return (
       // eslint-disable-next-line @next/next/no-img-element
-      <img
-        src={avatarUrl}
-        alt=""
-        className="size-9 rounded-full object-cover bg-gray-100 shrink-0"
-      />
+      <img src={avatarUrl} alt="" className="size-9 shrink-0 rounded-full bg-gray-100 object-cover" />
     );
   }
   return (
     <div
-      className="size-9 rounded-full bg-blue-50 text-blue-700 text-[13px] font-semibold flex items-center justify-center shrink-0"
+      className="flex size-9 shrink-0 items-center justify-center rounded-full bg-blue-50 text-[13px] font-semibold text-blue-700"
       aria-hidden="true"
     >
       {getInitials(name)}
@@ -290,13 +238,7 @@ function Avatar({
  * 으로 즉시 반영하고, 서버 데이터(검색 등)도 router.refresh로 동기화한다. 셀 내부 클릭은
  * stopPropagation으로 막아 행 전체 클릭(상세 이동)과 충돌하지 않게 한다.
  */
-function MemoCell({
-  memberId,
-  memo,
-}: {
-  memberId: string;
-  memo: string | null;
-}) {
+function MemoCell({ memberId, memo }: { memberId: string; memo: string | null }) {
   const router = useRouter();
   const [editing, setEditing] = useState(false);
   const [current, setCurrent] = useState(memo ?? "");
@@ -339,7 +281,7 @@ function MemoCell({
 
   if (editing) {
     return (
-      <div className="mt-1" onClick={(e) => e.stopPropagation()}>
+      <div className="mt-1" onClick={(e) => e.stopPropagation()} data-no-detail>
         <textarea
           autoFocus
           value={value}
@@ -351,24 +293,15 @@ function MemoCell({
             if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) save();
             if (e.key === "Escape") cancel();
           }}
-          className="w-full min-h-[44px] resize-y rounded-md border border-amber-200 bg-amber-50/40 px-2 py-1 text-[12px] leading-snug text-gray-700 outline-none focus:border-amber-400"
+          className="min-h-[44px] w-full resize-y rounded-lg border border-amber-200 bg-amber-50/40 px-2 py-1 text-[12px] leading-snug text-gray-700 outline-none focus:border-amber-400"
         />
-        {error && <p className="mt-0.5 text-[10.5px] text-rose-600">{error}</p>}
+        {error && <p className="mt-0.5 text-[12px] text-rose-600">{error}</p>}
         <div className="mt-1 flex items-center gap-1.5">
-          <SaveButton
-            onClick={save}
-            saving={isPending}
-            className="h-6 min-w-0 rounded px-2"
-          />
-          <button
-            type="button"
-            onClick={cancel}
-            disabled={isPending}
-            className="h-6 rounded px-2 text-[11px] text-gray-500 transition-colors hover:bg-gray-100"
-          >
+          <SaveButton onClick={save} saving={isPending} className="h-6 min-w-0 rounded px-2" />
+          <Button variant="ghost" size="xs" onClick={cancel} disabled={isPending} className="text-gray-500">
             취소
-          </button>
-          <span className="ml-auto text-[10px] text-gray-300">⌘↵ 저장 · Esc 취소</span>
+          </Button>
+          <span className="ml-auto text-[11px] text-gray-300">⌘↵ 저장 · Esc 취소</span>
         </div>
       </div>
     );
@@ -376,78 +309,60 @@ function MemoCell({
 
   if (preview) {
     return (
-      <button
-        type="button"
+      <Button
+        variant="ghost"
+        size="xs"
         onClick={startEdit}
         title={`${preview}\n\n클릭해서 메모 편집`}
-        className="mt-1 flex w-full items-center gap-1.5 rounded px-1 py-0.5 text-left transition-colors hover:bg-amber-50"
+        className="mt-1 h-auto w-full justify-start gap-1.5 px-1 py-0.5 text-left font-normal hover:bg-amber-50"
       >
-        <StickyNote
-          className="size-3.5 shrink-0 text-amber-500"
-          strokeWidth={1.8}
-          aria-hidden
-        />
-        <span className="truncate min-w-0 text-[12.5px] leading-snug text-gray-600">
-          {preview}
-        </span>
-      </button>
+        <StickyNote className="size-3.5 shrink-0 text-amber-500" strokeWidth={1.8} aria-hidden />
+        <span className="min-w-0 truncate text-[12px] leading-snug text-gray-600">{preview}</span>
+      </Button>
     );
   }
 
   return (
-    <button
-      type="button"
+    <Button
+      variant="ghost"
+      size="xs"
       onClick={startEdit}
-      className="mt-1 inline-flex items-center gap-1 rounded px-1 py-0.5 text-[11.5px] text-gray-300 transition-colors hover:bg-amber-50/60 hover:text-amber-600"
+      className="mt-1 h-auto gap-1 px-1 py-0.5 text-[11px] font-normal text-gray-300 hover:bg-amber-50/60 hover:text-amber-600"
     >
       <StickyNote className="size-3.5 shrink-0" strokeWidth={1.8} aria-hidden />
       메모 추가
-    </button>
+    </Button>
   );
 }
 
 /** "최근 구입 상품" 셀 — 가장 최근 구입한 충전 상품명 + 크레딧·구입일. */
-export function LatestPurchaseCell({
-  purchase,
-}: {
-  purchase: MemberListItem["latestPurchase"];
-}) {
+export function LatestPurchaseCell({ purchase }: { purchase: MemberListItem["latestPurchase"] }) {
   if (!purchase) {
     return <span className="text-[11px] text-gray-300">구입 없음</span>;
   }
   return (
     <div className="min-w-0 leading-tight">
-      <div className="text-[12.5px] text-gray-800 truncate">{purchase.name}</div>
-      <div className="text-[11px] text-gray-400 tabular-nums">
-        {purchase.creditAmount.toLocaleString("ko-KR")} C ·{" "}
-        {formatDate(purchase.purchasedAt)}
+      <div className="truncate text-[12px] text-gray-800">{purchase.name}</div>
+      <div className="text-[11px] tabular-nums text-gray-400">
+        {purchase.creditAmount.toLocaleString("ko-KR")} C · {formatDate(purchase.purchasedAt)}
       </div>
     </div>
   );
 }
 
-function ExpiryCell({
-  expiresAt,
-  now,
-}: {
-  expiresAt: Date | string | null;
-  now: number;
-}) {
+/** 소멸시효 셀 — 날짜 + D-day(7일 이내 로즈). 표/카드 공용. */
+export function ExpiryCell({ expiresAt, now }: { expiresAt: Date | string | null; now: number }) {
   if (!expiresAt) {
     return <span className="text-[11px] text-gray-300">—</span>;
   }
   const days = Math.ceil((new Date(expiresAt).getTime() - now) / 86_400_000);
   return (
-    <div className="tabular-nums leading-tight">
+    <div className="leading-tight tabular-nums">
       <div className="text-[12px] text-gray-600">{formatDate(expiresAt)}</div>
       <div
         className={cn(
           "text-[11px]",
-          days < 0
-            ? "text-gray-300"
-            : days <= 7
-              ? "text-rose-500"
-              : "text-gray-400",
+          days < 0 ? "text-gray-300" : days <= 7 ? "text-rose-500" : "text-gray-400",
         )}
       >
         {days < 0 ? "만료" : `D-${days}`}
@@ -456,7 +371,8 @@ function ExpiryCell({
   );
 }
 
-function BalanceCell({ balance }: { balance: number | null }) {
+/** 크레딧 잔고 셀 — 저잔고(50 미만)는 로즈 + 경고 아이콘. 표/카드 공용. */
+export function BalanceCell({ balance }: { balance: number | null }) {
   if (balance === null) {
     return <span className="text-[11px] text-gray-300">미생성</span>;
   }
@@ -470,16 +386,10 @@ function BalanceCell({ balance }: { balance: number | null }) {
       title={isLow ? "잔고가 낮습니다" : undefined}
     >
       {isLow && (
-        <AlertTriangle
-          className="size-3 text-rose-500 shrink-0"
-          strokeWidth={2}
-          aria-hidden="true"
-        />
+        <AlertTriangle className="size-3 shrink-0 text-rose-500" strokeWidth={2} aria-hidden="true" />
       )}
-      <span className="text-[14px] font-semibold leading-none">
-        {balance.toLocaleString("ko-KR")}
-      </span>
-      <span className="text-[11px] text-gray-400 font-normal">C</span>
+      <span className="text-[13px] font-semibold leading-none">{balance.toLocaleString("ko-KR")}</span>
+      <span className="text-[11px] font-normal text-gray-400">C</span>
     </span>
   );
 }

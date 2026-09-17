@@ -14,7 +14,9 @@ import {
   type VirtualAccountIssuedPayment,
 } from "@portone/server-sdk/payment";
 import { prisma } from "@/lib/prisma";
+import { mapPortOneStatusToTopUpStatus } from "@/lib/credit-topup-status";
 import { notifyTopUpPaid } from "@/lib/ops-notify/events";
+import { notifyErp } from "@/lib/erp/signal";
 import {
   expiresAtConflictSql,
   expiresAtInsertSql,
@@ -38,7 +40,11 @@ const PORTONE_PG_PROVIDERS = ["danal_tpay", "inicis_v2", "kcp_v2"] as const;
 
 export type PortOnePgProvider = (typeof PORTONE_PG_PROVIDERS)[number];
 
-export type CompleteTopUpSource = "client" | "webhook" | "admin_retry";
+export type CompleteTopUpSource =
+  | "client"
+  | "webhook"
+  | "admin_retry"
+  | "auto_reconcile";
 
 export interface CompleteTopUpResult {
   topUpId: string;
@@ -1008,7 +1014,11 @@ async function completePaidTopUp(
   );
 
   // 커밋 후, 이번 호출이 실제로 지급했을 때만(멱등 재호출 제외) 운영 알림.
-  if (result.credited) notifyTopUpPaid(result.topUpId, source);
+  if (result.credited) {
+    notifyTopUpPaid(result.topUpId, source);
+    // 본사 ERP 에 "가져가라" 신호 (내용은 싣지 않는다 — lib/erp/signal.ts)
+    notifyErp("크레딧 충전 확정");
+  }
   return result;
 }
 
@@ -1176,8 +1186,12 @@ async function updateNonPaidTopUp(
   },
   payment: RecognizedPortOnePayment,
 ) {
-  const nextStatus = mapPortOneStatusToTopUpStatus(payment.status, topUp.status);
   const failed = payment.status === "FAILED" ? payment : null;
+  const nextStatus = mapPortOneStatusToTopUpStatus(
+    payment.status,
+    topUp.status,
+    failed?.failure,
+  );
   const cancelledAt =
     payment.status === "CANCELLED" || payment.status === "PARTIAL_CANCELLED"
       ? toDate("cancelledAt" in payment ? payment.cancelledAt : undefined)
@@ -1279,18 +1293,6 @@ function assertPaymentMatchesTopUp(
       );
     }
   }
-}
-
-function mapPortOneStatusToTopUpStatus(
-  portoneStatus: string,
-  currentStatus: string,
-) {
-  if (portoneStatus === "VIRTUAL_ACCOUNT_ISSUED") return "WAITING_FOR_DEPOSIT";
-  if (portoneStatus === "FAILED") return "FAILED";
-  if (portoneStatus === "CANCELLED" || portoneStatus === "PARTIAL_CANCELLED") {
-    return currentStatus === "COMPLETED" ? "REFUNDED" : "CANCELLED";
-  }
-  return currentStatus === "COMPLETED" ? currentStatus : "PENDING";
 }
 
 function getCancellableAmount(payment: RecognizedPortOnePayment) {

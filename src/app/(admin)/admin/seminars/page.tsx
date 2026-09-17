@@ -1,29 +1,23 @@
 import { adminGetSeminarRequests } from "@/actions/admin-help-center";
-import { getSeminarHeroImageUrl } from "@/lib/platform-settings";
 import { AdminSeminarsClient } from "@/components/admin/help/admin-seminars-client";
-import { SeminarHeroImageCard } from "@/components/admin/help/seminar-hero-image-card";
+import { PageHeader } from "@/components/admin/kit";
 
 export const dynamic = "force-dynamic";
 
+// 원장 페이지 히어로 이미지 설정은 /admin/settings(플랫폼 설정)로 옮겼다.
 export default async function AdminSeminarsPage({
   searchParams,
 }: {
   searchParams: Promise<{ status?: string }>;
 }) {
   const { status } = await searchParams;
-  const [requests, heroImageUrl] = await Promise.all([
-    adminGetSeminarRequests({ status, page: 1 }),
-    getSeminarHeroImageUrl(),
-  ]);
+  const requests = await adminGetSeminarRequests({ status, page: 1 });
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-[22px] font-bold text-gray-900">1:1 세미나 신청 관리</h1>
-        <p className="text-[13px] text-gray-400 mt-1">
-          신규 고객의 온보딩 세미나 신청을 접수하고 일정을 조율합니다
-        </p>
-      </div>
-      <SeminarHeroImageCard initialUrl={heroImageUrl} />
+      <PageHeader
+        title="1:1 세미나"
+        description="신규 고객의 온보딩 세미나 신청을 접수하고 일정을 조율합니다"
+      />
       <AdminSeminarsClient initialData={requests} initialStatus={status} />
     </div>
   );

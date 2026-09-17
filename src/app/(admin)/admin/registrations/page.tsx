@@ -1,50 +1,6 @@
-import { Suspense } from "react";
-import { getRegistrations, getPlans } from "@/actions/admin";
-import { Skeleton } from "@/components/ui/skeleton";
-import { RegistrationsClient } from "@/components/admin/registrations-client";
+import { redirect } from "next/navigation";
 
-async function RegistrationsContent({ initialStatus }: { initialStatus?: string }) {
-  const [registrations, plans] = await Promise.all([
-    getRegistrations(),
-    getPlans(),
-  ]);
-
-  return (
-    <RegistrationsClient
-      initialRegistrations={registrations}
-      plans={plans}
-      initialStatus={initialStatus}
-    />
-  );
-}
-
-function RegistrationsSkeleton() {
-  return (
-    <div className="space-y-4">
-      <Skeleton className="h-10 w-[400px] rounded-lg" />
-      <Skeleton className="h-[500px] rounded-xl" />
-    </div>
-  );
-}
-
-export default async function RegistrationsPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ status?: string }>;
-}) {
-  const { status } = await searchParams;
-  return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-[22px] font-bold text-gray-900">가입 신청</h1>
-        <p className="text-[13px] text-gray-400 mt-1">
-          학원 가입 신청을 검토하고 관리합니다
-        </p>
-      </div>
-
-      <Suspense fallback={<RegistrationsSkeleton />}>
-        <RegistrationsContent initialStatus={status} />
-      </Suspense>
-    </div>
-  );
+// 가입 신청 심사 화면은 폐기됐다(2026-09, 자가 가입 전환). 예전 링크는 학원·회원 관리로 보낸다.
+export default function AdminRegistrationsPage() {
+  redirect("/admin/members");
 }

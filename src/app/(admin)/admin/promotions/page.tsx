@@ -4,36 +4,42 @@ import { listAcademiesForPromoPicker } from "@/actions/admin/credit-products";
 import { getBundles } from "@/actions/admin/credit-promotion-bundles";
 import { getPromotionMonitoring } from "@/actions/admin/credit-promotion-monitoring";
 import { PromotionsAdminClient } from "@/components/admin/promotions-admin-client";
+import {
+  DEFAULT_PROMOTION_TAB,
+  PROMOTION_TAB_KEYS,
+  type PromotionTabKey,
+} from "@/components/admin/promotions-admin-client-parts/tabs";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminPromotionsPage() {
+type PageProps = {
+  searchParams: Promise<{ tab?: string }>;
+};
+
+export default async function AdminPromotionsPage({ searchParams }: PageProps) {
   await requireAdminAuth();
 
-  const [products, academies, bundles, monitoring] = await Promise.all([
+  const [products, academies, bundles, monitoring, { tab }] = await Promise.all([
     getAdminCreditProductsWithPromotions(),
     listAcademiesForPromoPicker(),
     getBundles(),
     getPromotionMonitoring(),
+    searchParams,
   ]);
 
-  return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-[22px] font-bold text-gray-900">프로모션 관리</h1>
-        <p className="mt-1 text-[13px] text-gray-400">
-          충전 상품에 걸리는 프로모션(할인·크레딧 보너스·링크)과 여러 프로모션을
-          한 링크로 묶는 번들을 관리합니다. 변경은 고객 결제 화면에 즉시
-          반영됩니다.
-        </p>
-      </div>
+  // kit 의 resolveTab 은 "use client" 모듈이라 서버에서 호출할 수 없어 같은 규칙을 여기서 적용한다.
+  const initialTab: PromotionTabKey =
+    tab && (PROMOTION_TAB_KEYS as readonly string[]).includes(tab)
+      ? (tab as PromotionTabKey)
+      : DEFAULT_PROMOTION_TAB;
 
-      <PromotionsAdminClient
-        initialProducts={products}
-        academies={academies}
-        initialBundles={bundles}
-        initialMonitoring={monitoring}
-      />
-    </div>
+  return (
+    <PromotionsAdminClient
+      initialProducts={products}
+      academies={academies}
+      initialBundles={bundles}
+      initialMonitoring={monitoring}
+      initialTab={initialTab}
+    />
   );
 }

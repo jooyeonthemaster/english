@@ -232,8 +232,9 @@ export function parseDepositNotification(text: string): ParsedDeposit {
   let depositorName: string | null = null;
   const afterDeposit =
     depositIdx >= 0 ? normalized.slice(depositIdx) : normalized;
+  // 법인 입금은 "(주)다날"·"㈜다날"처럼 괄호 표기로 시작하므로 그 접두도 허용한다.
   const nameMatch = afterDeposit.match(
-    /원\s*([가-힣]{2,5}|[A-Za-z][A-Za-z .]{1,20})/,
+    /원\s*((?:\(주\)|㈜)?[가-힣]{2,5}|[A-Za-z][A-Za-z .]{1,20})/,
   );
   if (nameMatch) {
     depositorName = nameMatch[1].trim().replace(/\s+/g, " ");

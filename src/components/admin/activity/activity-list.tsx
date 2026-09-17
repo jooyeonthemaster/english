@@ -8,7 +8,7 @@
 
 import { useState } from "react";
 import { Eye } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatDateTime as kstDateTime } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,6 +21,8 @@ import {
 } from "@/components/ui/table";
 import type { ActivityItem } from "@/lib/admin-activity-types";
 import { ActivityResourceDialog } from "./activity-resource-dialog";
+import { AdminHoverDetail } from "@/components/admin/hover-detail/admin-hover-detail";
+import { activityRowDetail } from "./activity-list-parts/activity-hover-detail";
 
 // '자료 보기'를 띄울 소스 — 실제로 열어볼 결과물이 있는 것만:
 //   extraction(업로드 원본·페이지 이미지), exam(시험지 DOCX/HWP),
@@ -119,13 +121,18 @@ export function ActivityList({
             const canView = detailable && !disableResourceViewer;
             const status = STATUS_META[item.status] ?? STATUS_META.INFO;
             return (
-              <TableRow
+              <AdminHoverDetail
                 key={item.id}
+                title={item.title}
+                detail={activityRowDetail(item)}
+                // 자료 뷰어가 열리는 행은 기존 클릭 유지(호버만), 나머지는 클릭 시 상세 팝업.
+                click={canView ? "none" : "dialog"}
+              >
+              <TableRow
                 className={cn(
                   "border-b border-gray-50/60 last:border-0",
-                  canView
-                    ? "cursor-pointer hover:bg-gray-50/50"
-                    : "hover:bg-gray-50/30",
+                  // 자료 뷰어 없는 행도 이제 클릭 시 상세 팝업이 열린다.
+                  "cursor-pointer hover:bg-gray-50/50",
                 )}
                 onClick={
                   canView
@@ -202,6 +209,7 @@ export function ActivityList({
                   ) : null}
                 </TableCell>
               </TableRow>
+              </AdminHoverDetail>
             );
           })}
         </TableBody>
@@ -218,14 +226,8 @@ export function ActivityList({
   );
 }
 
+// 시각 표기는 KST 고정 포매터(lib/utils)를 쓴다 — toLocale* 는 서버(UTC)·브라우저(KST) 결과가
+// 달라 hydration 이 깨진다.
 function formatDateTime(d: Date | string): string {
-  const date = typeof d === "string" ? new Date(d) : d;
-  return date.toLocaleString("ko-KR", {
-    year: "2-digit",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  });
+  return kstDateTime(d);
 }

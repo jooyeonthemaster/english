@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn, formatDateTime as kstDateTime } from "@/lib/utils";
 import {
   getActivityResourceDetail,
   type ResourceDetail,
@@ -372,14 +372,8 @@ function SectionLabel({ children }: { children: string }) {
   );
 }
 
+// 시각 표기는 KST 고정 포매터(lib/utils)를 쓴다 — toLocale* 는 서버(UTC)·브라우저(KST) 결과가
+// 달라 hydration 이 깨진다.
 function formatDateTime(d: Date | string): string {
-  const date = typeof d === "string" ? new Date(d) : d;
-  return date.toLocaleString("ko-KR", {
-    year: "2-digit",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  });
+  return kstDateTime(d);
 }

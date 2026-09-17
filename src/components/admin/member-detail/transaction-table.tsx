@@ -1,10 +1,9 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Loader2, Filter, RefreshCw } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Filter, Loader2, RefreshCw } from "lucide-react";
+import { cn, formatDateTime as kstDateTime } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
@@ -13,18 +12,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+  AdminEmptyState,
+  DataTable,
+  DataTableBody,
+  DataTableHeader,
+  SectionCard,
+  StatusBadge,
+  Td,
+  Th,
+  Tr,
+} from "@/components/admin/kit";
+import { TRANSACTION_TYPE } from "@/lib/admin-labels";
 import { getMemberTransactions } from "@/actions/admin-members";
-import {
-  getOperationTypeLabel,
-  getTransactionTypeLabel,
-} from "@/lib/admin-members-labels";
+import { getOperationTypeLabel } from "@/lib/admin-members-labels";
 
 interface Transaction {
   id: string;
@@ -51,16 +51,10 @@ interface TransactionTableProps {
   knownOperationTypes: string[];
 }
 
+// 종류 필터 — 라벨은 레지스트리(TRANSACTION_TYPE)에서.
 const TYPE_OPTIONS = [
   { value: "all", label: "전체" },
-  { value: "ALLOCATION", label: getTransactionTypeLabel("ALLOCATION") },
-  { value: "CONSUMPTION", label: getTransactionTypeLabel("CONSUMPTION") },
-  { value: "TOP_UP", label: getTransactionTypeLabel("TOP_UP") },
-  { value: "ADJUSTMENT", label: getTransactionTypeLabel("ADJUSTMENT") },
-  { value: "REFUND", label: getTransactionTypeLabel("REFUND") },
-  { value: "RESET", label: getTransactionTypeLabel("RESET") },
-  { value: "ROLLOVER", label: getTransactionTypeLabel("ROLLOVER") },
-  { value: "EXPIRATION", label: getTransactionTypeLabel("EXPIRATION") },
+  ...Object.entries(TRANSACTION_TYPE).map(([value, meta]) => ({ value, label: meta.label })),
 ];
 
 export function TransactionTable({
@@ -83,8 +77,7 @@ export function TransactionTable({
   ];
 
   function applyFilters(nextType: string, nextOp: string) {
-    // Sync-reset cursor BEFORE the in-flight transition so a "더 보기" click
-    // racing the filter cannot read a stale cursor from the previous filter.
+    // 진행 중 전환보다 먼저 커서를 지워, 필터 직후 "더 보기" 가 옛 커서를 읽지 않게 한다.
     setCursor(null);
     startTransition(async () => {
       const res = await getMemberTransactions(memberId, {
@@ -118,23 +111,16 @@ export function TransactionTable({
     });
   }
 
-  function refresh() {
-    applyFilters(type, operationType);
-  }
+  const filtered = type !== "all" || operationType !== "all";
 
   return (
-    <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 px-5 py-4 border-b border-gray-50">
-        <div className="flex items-center gap-2">
-          <Filter className="size-4 text-gray-400" strokeWidth={1.8} aria-hidden />
-          <h3 className="text-[14px] font-semibold text-gray-800">거래 이력</h3>
-          <span className="text-[11px] text-gray-400 tabular-nums">
-            · {items.length}건
-            {cursor ? "+" : ""}
-          </span>
-        </div>
-
-        <div className="flex items-center gap-2 flex-wrap">
+    <SectionCard
+      title="거래 이력"
+      icon={Filter}
+      description={`${items.length}건${cursor ? "+" : ""}`}
+      padded={false}
+      actions={
+        <>
           <FilterField label="종류">
             <Select
               value={type}
@@ -143,7 +129,7 @@ export function TransactionTable({
                 applyFilters(v, operationType);
               }}
             >
-              <SelectTrigger className="h-8 text-[12px] min-w-[110px]">
+              <SelectTrigger className="h-8 min-w-[110px] text-[12px]">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -164,7 +150,7 @@ export function TransactionTable({
                 applyFilters(type, v);
               }}
             >
-              <SelectTrigger className="h-8 text-[12px] min-w-[140px]">
+              <SelectTrigger className="h-8 min-w-[140px] text-[12px]">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -178,82 +164,72 @@ export function TransactionTable({
           </FilterField>
 
           <Button
+            type="button"
             variant="ghost"
             size="sm"
-            className="h-8 text-[12px] text-gray-500"
-            onClick={refresh}
+            className="text-gray-500"
+            onClick={() => applyFilters(type, operationType)}
             disabled={isPending}
             aria-label="목록 새로고침"
           >
             <RefreshCw
-              className={cn("size-3.5 mr-1", isPending && "animate-spin")}
+              className={cn("size-3.5", isPending && "animate-spin")}
               strokeWidth={2}
               aria-hidden
             />
             새로고침
           </Button>
-        </div>
-      </div>
-
+        </>
+      }
+    >
       {items.length === 0 ? (
-        <div className="px-5 py-12 text-center text-[12px] text-gray-400">
-          {type !== "all" || operationType !== "all"
-            ? "조건에 맞는 거래가 없습니다"
-            : "아직 거래 내역이 없습니다"}
-        </div>
+        <AdminEmptyState
+          compact
+          title={filtered ? "조건에 맞는 거래가 없습니다" : "아직 거래 내역이 없습니다"}
+        />
       ) : (
-        <div className="max-h-[720px] overflow-auto">
-          <Table>
-            <TableHeader className="sticky top-0 z-10 bg-white">
-              <TableRow className="hover:bg-transparent border-b border-gray-50">
-                <TableHead className="text-[11px] text-gray-400 font-medium h-9 pl-5 w-[140px]">
-                  일시
-                </TableHead>
-                <TableHead className="text-[11px] text-gray-400 font-medium h-9 w-[110px]">
-                  종류
-                </TableHead>
-                <TableHead className="text-[11px] text-gray-400 font-medium h-9 min-w-[160px]">
-                  상품
-                </TableHead>
-                <TableHead className="text-[11px] text-gray-400 font-medium h-9 w-[120px]">
-                  사용자
-                </TableHead>
-                <TableHead className="text-[11px] text-gray-400 font-medium h-9 w-[110px] text-right">
-                  변동
-                </TableHead>
-                <TableHead className="text-[11px] text-gray-400 font-medium h-9 w-[110px] text-right">
-                  잔고
-                </TableHead>
-                <TableHead className="text-[11px] text-gray-400 font-medium h-9 min-w-[180px] pr-5">
-                  비고
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {items.map((tx) => (
-                <TransactionRow key={tx.id} tx={tx} />
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+        <DataTable
+          bare
+          stickyHeader
+          maxHeight={720}
+          className={cn(isPending && "opacity-60")}
+        >
+          <DataTableHeader>
+            <Tr>
+              <Th className="w-[140px]">일시</Th>
+              <Th className="w-[110px]">종류</Th>
+              <Th className="min-w-[160px]">상품</Th>
+              <Th className="w-[120px]">사용자</Th>
+              <Th align="right" className="w-[110px]">
+                변동
+              </Th>
+              <Th align="right" className="w-[110px]">
+                잔고
+              </Th>
+              <Th className="min-w-[180px]">비고</Th>
+            </Tr>
+          </DataTableHeader>
+          <DataTableBody>
+            {items.map((tx) => (
+              <TransactionRow key={tx.id} tx={tx} />
+            ))}
+          </DataTableBody>
+        </DataTable>
       )}
 
       {(cursor || isPending) && items.length > 0 && (
-        <div className="px-5 py-3 border-t border-gray-50 flex items-center justify-center">
+        <div className="flex items-center justify-center border-t border-gray-50 px-5 py-3">
           <Button
+            type="button"
             variant="ghost"
             size="sm"
             onClick={loadMore}
             disabled={isPending || !cursor}
-            className="text-[12px] text-gray-600"
+            className="text-gray-600"
           >
             {isPending ? (
               <>
-                <Loader2
-                  className="size-3.5 mr-1.5 animate-spin"
-                  strokeWidth={2}
-                  aria-hidden
-                />
+                <Loader2 className="size-3.5 animate-spin" strokeWidth={2} aria-hidden />
                 불러오는 중
               </>
             ) : (
@@ -262,7 +238,7 @@ export function TransactionTable({
           </Button>
         </div>
       )}
-    </div>
+    </SectionCard>
   );
 }
 
@@ -275,7 +251,7 @@ function FilterField({
 }) {
   return (
     <label className="inline-flex items-center gap-1.5">
-      <span className="text-[11px] text-gray-400 font-medium">{label}</span>
+      <span className="text-[11px] font-medium text-gray-400">{label}</span>
       {children}
     </label>
   );
@@ -286,26 +262,24 @@ function TransactionRow({ tx }: { tx: Transaction }) {
   const adminAdjusted = tx.type === "ADJUSTMENT" && Boolean(tx.adminId);
 
   return (
-    <TableRow className="hover:bg-gray-50/50 border-b border-gray-50/60 last:border-0">
-      <TableCell className="pl-5 text-[12px] text-gray-700 tabular-nums">
-        <div>{formatDateTime(tx.createdAt)}</div>
-      </TableCell>
-      <TableCell>
-        <TypeBadge type={tx.type} />
-      </TableCell>
-      <TableCell className="text-[12px] text-gray-700">
+    <Tr>
+      <Td className="text-[12px] tabular-nums">{formatDateTime(tx.createdAt)}</Td>
+      <Td>
+        <StatusBadge map={TRANSACTION_TYPE} value={tx.type} />
+      </Td>
+      <Td className="text-[12px]">
         {tx.operationType ? (
           <span>{tx.operationLabel}</span>
         ) : (
           <span className="text-gray-300">—</span>
         )}
-      </TableCell>
-      <TableCell className="text-[12px]">
+      </Td>
+      <Td className="text-[12px]">
         {tx.actorName ? (
           <span className="inline-flex items-center gap-1">
-            <span className="text-gray-700 truncate">{tx.actorName}</span>
+            <span className="truncate text-gray-700">{tx.actorName}</span>
             {tx.actorType === "admin" && (
-              <span className="shrink-0 text-[10px] text-blue-600 bg-blue-50 px-1 py-px rounded font-medium">
+              <span className="shrink-0 rounded bg-blue-50 px-1 py-px text-[10px] font-medium text-blue-600">
                 관리자
               </span>
             )}
@@ -313,77 +287,34 @@ function TransactionRow({ tx }: { tx: Transaction }) {
         ) : (
           <span className="text-gray-300">—</span>
         )}
-      </TableCell>
-      <TableCell
-        className={cn(
-          "text-right text-[13px] tabular-nums font-semibold",
-          positive ? "text-emerald-600" : "text-rose-600",
-        )}
+      </Td>
+      <Td
+        align="right"
+        className={cn("font-semibold", positive ? "text-emerald-600" : "text-rose-600")}
       >
-        {/* Always render explicit sign so amount direction is not color-only. */}
+        {/* 색만으로 방향을 구분하지 않도록 부호를 항상 표기한다. */}
         {positive ? "+" : "−"}
         {Math.abs(tx.amount).toLocaleString("ko-KR")}
-      </TableCell>
-      <TableCell className="text-right text-[13px] tabular-nums text-gray-700">
+      </Td>
+      <Td align="right" className="font-normal text-gray-700">
         {tx.balanceAfter.toLocaleString("ko-KR")}
-      </TableCell>
-      <TableCell className="pr-5 text-[12px] text-gray-500">
+      </Td>
+      <Td className="text-[12px] text-gray-500">
         <div className="line-clamp-2">
           {tx.description ?? <span className="text-gray-300">—</span>}
           {adminAdjusted && (
-            <span className="ml-1.5 inline-flex items-center text-[11px] text-blue-600 bg-blue-50 px-1 py-px rounded font-semibold uppercase tracking-wider">
+            <span className="ml-1.5 inline-flex items-center rounded bg-blue-50 px-1 py-px text-[11px] font-semibold uppercase tracking-wider text-blue-600">
               관리자
             </span>
           )}
         </div>
-      </TableCell>
-    </TableRow>
+      </Td>
+    </Tr>
   );
 }
 
-function TypeBadge({ type }: { type: string }) {
-  const cls = typeBadgeClass(type);
-  return (
-    <Badge
-      variant="secondary"
-      className={cn("text-[11px] font-medium border-0 px-2", cls)}
-    >
-      {getTransactionTypeLabel(type)}
-    </Badge>
-  );
-}
-
-function typeBadgeClass(type: string): string {
-  switch (type) {
-    case "CONSUMPTION":
-      return "bg-rose-50 text-rose-700";
-    case "ALLOCATION":
-      return "bg-emerald-50 text-emerald-700";
-    case "TOP_UP":
-      return "bg-blue-50 text-blue-700";
-    case "ADJUSTMENT":
-      return "bg-slate-100 text-slate-800";
-    case "REFUND":
-      return "bg-sky-50 text-sky-700";
-    case "RESET":
-      return "bg-gray-100 text-gray-600";
-    case "ROLLOVER":
-      return "bg-indigo-50 text-indigo-700";
-    case "EXPIRATION":
-      return "bg-rose-50 text-rose-700";
-    default:
-      return "bg-gray-100 text-gray-600";
-  }
-}
-
+// 시각 표기는 KST 고정 포매터(lib/utils)를 쓴다 — toLocale* 는 서버(UTC)·브라우저(KST) 결과가
+// 달라 hydration 이 깨진다.
 function formatDateTime(d: Date | string): string {
-  const date = typeof d === "string" ? new Date(d) : d;
-  return date.toLocaleString("ko-KR", {
-    year: "2-digit",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  });
+  return kstDateTime(d);
 }

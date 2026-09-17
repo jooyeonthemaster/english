@@ -6,6 +6,7 @@
 //   · 전체 회원 엑셀            : 선택과 무관하게 전체 회원.
 //   · 정보성 / 광고성 발송 CSV  : 선택이 있으면 선택 회원, 없으면 전체 기준.
 // 선택 여부에 따라 버튼 세트가 바뀌지 않고, 작동 불가한 버튼만 비활성화된다.
+// 왼쪽은 결과 건수(총 N · 페이지) 또는 선택 건수.
 // ============================================================================
 
 import { useState } from "react";
@@ -21,12 +22,10 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { ResultCount } from "@/components/admin/kit";
 import { exportMembers } from "@/actions/admin-members";
 import type { ExportMode } from "@/actions/admin-members/export-members";
 import { triggerDownload } from "./export-button";
@@ -38,6 +37,9 @@ interface BulkActionsBarProps {
   onClear: () => void;
   filteredCount: number;
   totalCount: number;
+  /** 현재 페이지 / 전체 페이지 — 결과 요약에 표시 */
+  page: number;
+  totalPages: number;
   /**
    * 크레딧 조정·소멸기한 관리 버튼 활성 여부. 크레딧은 학원 단위 지갑이라
    * "학원별 보기"에서만 켠다(회원별 보기에서 같은 학원 여러 원장을 골라
@@ -59,17 +61,13 @@ const DOWNLOAD_OPTIONS: {
   { mode: "ad", label: "광고성 발송 CSV", desc: "마케팅 수신동의자만", icon: Megaphone },
 ];
 
-function cnIcon(mode: ExportMode) {
-  return mode === "ad"
-    ? "mt-0.5 size-4 shrink-0 text-amber-600"
-    : "mt-0.5 size-4 shrink-0 text-gray-500";
-}
-
 export function BulkActionsBar({
   selectedIds,
   onClear,
   filteredCount,
   totalCount,
+  page,
+  totalPages,
   creditEnabled = true,
   unitLabel = "명",
 }: BulkActionsBarProps) {
@@ -118,19 +116,25 @@ export function BulkActionsBar({
   return (
     <>
       <div
-        className={cnBar(hasSelection)}
+        className={cn(
+          "flex flex-col items-start gap-3 border-b px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5",
+          hasSelection ? "border-blue-100 bg-blue-50/60" : "border-gray-100 bg-white",
+        )}
       >
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {hasSelection ? (
             <>
-              <span className="text-[12.5px] font-medium text-blue-900">
+              <span className="text-[12px] font-medium text-blue-900">
                 <span className="tabular-nums">{count}</span>
                 {unitLabel} 선택됨
               </span>
+              <span className="text-[11px] text-blue-700/70">
+                · 전체 선택은 현재 페이지 기준
+              </span>
               <Button
                 variant="ghost"
-                size="sm"
-                className="h-7 gap-1 px-2 text-[11.5px] text-blue-700 hover:bg-blue-100 hover:text-blue-900"
+                size="xs"
+                className="text-blue-700 hover:bg-blue-100 hover:text-blue-900"
                 onClick={onClear}
               >
                 <X className="size-3.5" strokeWidth={2} aria-hidden />
@@ -138,23 +142,27 @@ export function BulkActionsBar({
               </Button>
             </>
           ) : (
-            <span className="text-[12.5px] text-gray-500">
-              <span className="font-semibold text-gray-800 tabular-nums">
-                {filteredCount}
-              </span>
-              {unitLabel}{" "}
-              <span className="text-gray-400">
-                · 전체 {totalCount}
-                {unitLabel} 중
-              </span>
-            </span>
+            <>
+              <ResultCount
+                total={filteredCount}
+                unit={unitLabel}
+                page={page}
+                totalPages={totalPages}
+              />
+              {filteredCount !== totalCount && (
+                <span className="text-[12px] text-gray-400">
+                  · 전체 {totalCount.toLocaleString("ko-KR")}
+                  {unitLabel} 중
+                </span>
+              )}
+            </>
           )}
         </div>
 
         <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:justify-end">
           <Button
             size="sm"
-            className="h-8 flex-1 bg-blue-600 text-[12px] hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 sm:flex-none"
+            className="flex-1 sm:flex-none"
             onClick={() => setCreditOpen(true)}
             disabled={!creditEnabled || !hasSelection || busy}
             title={
@@ -165,13 +173,13 @@ export function BulkActionsBar({
                   : "학원을 먼저 선택하세요"
             }
           >
-            <Coins className="size-3.5 mr-1.5" strokeWidth={2} aria-hidden />
+            <Coins className="size-3.5" strokeWidth={2} aria-hidden />
             크레딧 조정
           </Button>
           <Button
             variant="outline"
             size="sm"
-            className="h-8 flex-1 text-[12px] disabled:cursor-not-allowed disabled:opacity-50 sm:flex-none"
+            className="flex-1 sm:flex-none"
             onClick={() => setExpiryOpen(true)}
             disabled={!creditEnabled || !hasSelection || busy}
             title={
@@ -182,25 +190,23 @@ export function BulkActionsBar({
                   : "학원을 먼저 선택하세요"
             }
           >
-            <CalendarClock className="size-3.5 mr-1.5" strokeWidth={2} aria-hidden />
+            <CalendarClock className="size-3.5" strokeWidth={2} aria-hidden />
             소멸기한 관리
           </Button>
           <Popover open={downloadOpen} onOpenChange={setDownloadOpen}>
             <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                size="sm"
-                className="h-8 flex-1 text-[12px] sm:flex-none"
-                disabled={busy}
-              >
+              <Button variant="outline" size="sm" className="flex-1 sm:flex-none" disabled={busy}>
                 {busy ? (
-                  <Loader2 className="size-3.5 mr-1.5 animate-spin" strokeWidth={2} aria-hidden />
+                  <Loader2 className="size-3.5 animate-spin" strokeWidth={2} aria-hidden />
                 ) : (
-                  <Download className="size-3.5 mr-1.5" strokeWidth={2} aria-hidden />
+                  <Download className="size-3.5" strokeWidth={2} aria-hidden />
                 )}
                 다운로드
                 <ChevronDown
-                  className={`size-3.5 ml-1 text-gray-400 transition-transform ${downloadOpen ? "rotate-180" : ""}`}
+                  className={cn(
+                    "size-3.5 text-gray-400 transition-transform",
+                    downloadOpen && "rotate-180",
+                  )}
                   strokeWidth={2}
                   aria-hidden
                 />
@@ -210,33 +216,36 @@ export function BulkActionsBar({
               {DOWNLOAD_OPTIONS.map((opt) => {
                 const Icon = opt.icon;
                 return (
-                  <button
+                  <Button
                     key={opt.mode}
-                    type="button"
+                    variant="ghost"
                     disabled={busy}
                     onClick={() => {
                       setDownloadOpen(false);
                       void runExport(opt.mode);
                     }}
-                    className="flex w-full items-start gap-2.5 rounded-md px-2.5 py-2 text-left transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="h-auto w-full items-start justify-start gap-2.5 whitespace-normal px-2.5 py-2 text-left font-normal"
                   >
                     <Icon
-                      className={cnIcon(opt.mode)}
+                      className={cn(
+                        "mt-0.5 size-4 shrink-0",
+                        opt.mode === "ad" ? "text-amber-600" : "text-gray-500",
+                      )}
                       strokeWidth={2}
                       aria-hidden
                     />
-                    <div className="min-w-0">
-                      <div className="text-[13px] font-medium text-gray-800">
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-[13px] font-medium text-gray-800">
                         {opt.mode === "all"
                           ? hasSelection
                             ? `선택 ${count}명 엑셀`
                             : "전체 회원 엑셀"
                           : opt.label}
-                      </div>
-                      <div className="text-[11px] leading-4 text-gray-400">
+                      </span>
+                      <span className="block text-[11px] leading-4 text-gray-400">
                         {hasSelection ? `선택 회원 · ${opt.desc}` : opt.desc}
-                      </div>
-                    </div>
+                      </span>
+                    </span>
                     {pending === opt.mode && (
                       <Loader2
                         className="ml-auto mt-0.5 size-3.5 shrink-0 animate-spin text-gray-400"
@@ -244,7 +253,7 @@ export function BulkActionsBar({
                         aria-hidden
                       />
                     )}
-                  </button>
+                  </Button>
                 );
               })}
             </PopoverContent>
@@ -267,12 +276,4 @@ export function BulkActionsBar({
       />
     </>
   );
-}
-
-function cnBar(hasSelection: boolean) {
-  const base =
-    "flex flex-col items-start gap-3 border-b px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5";
-  return hasSelection
-    ? `${base} border-blue-100 bg-blue-50/60`
-    : `${base} border-gray-50 bg-white`;
 }

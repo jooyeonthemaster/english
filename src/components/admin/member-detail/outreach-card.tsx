@@ -20,8 +20,8 @@ import {
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
+import { StatusBadge } from "@/components/admin/kit";
 import {
   analyzeUsage,
   buildSmsDraft,
@@ -116,20 +116,15 @@ export function OutreachCard({
   return (
     <div>
       {/* Header */}
-      <div className="flex items-center justify-between gap-3 px-5 py-4 border-b border-gray-50">
+      <div className="flex items-center justify-between gap-3 border-b border-gray-50 px-5 py-4">
         <div className="flex items-center gap-2">
-          <MessageSquare className="size-4 text-blue-500" strokeWidth={1.8} aria-hidden />
-          <h3 className="text-[14px] font-semibold text-gray-800">맞춤 문자 생성</h3>
+          <MessageSquare className="size-4 text-blue-600" strokeWidth={2} aria-hidden />
+          <h3 className="text-[15px] font-semibold text-gray-900">맞춤 문자 생성</h3>
           <span className="text-[11px] text-gray-400">사용 내역 기반</span>
         </div>
         {phone ? (
-          <Button
-            variant="outline"
-            size="sm"
-            className="h-8 text-[12px]"
-            onClick={copyPhone}
-          >
-            <Phone className="size-3.5 mr-1.5" strokeWidth={2} aria-hidden />
+          <Button type="button" variant="outline" size="sm" onClick={copyPhone}>
+            <Phone className="size-3.5" strokeWidth={2} aria-hidden />
             {phone}
           </Button>
         ) : (
@@ -140,7 +135,7 @@ export function OutreachCard({
         )}
       </div>
 
-      <div className="p-5 space-y-4">
+      <div className="space-y-4 p-5">
         {/* 사용/미사용 요약 */}
         <div className="space-y-2">
           <FeatureRow
@@ -158,30 +153,29 @@ export function OutreachCard({
         </div>
 
         {/* 프리셋 */}
-        <div className="flex items-center gap-1.5 flex-wrap">
-          <span className="text-[11px] text-gray-400 font-medium mr-1">메시지 톤</span>
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className="mr-1 text-[11px] font-medium text-gray-400">메시지 톤</span>
           {OUTREACH_PRESETS.map((p) => (
-            <button
+            <Button
               key={p.value}
               type="button"
+              size="xs"
+              variant={preset === p.value ? "default" : "outline"}
+              aria-pressed={preset === p.value}
+              className="h-7 px-2.5 text-[12px]"
               onClick={() => regenerate(p.value)}
-              className={cn(
-                "h-7 rounded-md px-2.5 text-[12px] font-medium transition-colors",
-                preset === p.value
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200",
-              )}
             >
               {p.label}
-            </button>
+            </Button>
           ))}
           <Button
+            type="button"
             variant="ghost"
-            size="sm"
-            className="h-7 ml-auto text-[12px] text-gray-500"
+            size="xs"
+            className="ml-auto h-7 text-[12px] text-gray-500"
             onClick={() => regenerate(preset)}
           >
-            <RefreshCw className="size-3.5 mr-1" strokeWidth={2} aria-hidden />
+            <RefreshCw className="size-3.5" strokeWidth={2} aria-hidden />
             다시 생성
           </Button>
         </div>
@@ -192,41 +186,32 @@ export function OutreachCard({
             value={text}
             onChange={(e) => setText(e.target.value)}
             rows={7}
-            className="text-[13px] leading-relaxed resize-y"
+            className="resize-y text-[13px] leading-relaxed"
             placeholder="생성된 문자 초안이 여기에 표시됩니다"
           />
           <div className="flex items-center justify-between">
-            <span className="text-[11px] text-gray-400 tabular-nums">
+            <span className="inline-flex items-center gap-1.5 text-[11px] tabular-nums text-gray-400">
               {len.chars}자 · 약 {len.bytes}바이트
-              <Badge
-                variant="secondary"
-                className={cn(
-                  "ml-1.5 border-0 text-[10px] px-1.5 font-medium",
-                  len.type === "SMS"
-                    ? "bg-emerald-50 text-emerald-700"
-                    : "bg-blue-50 text-blue-700",
-                )}
-              >
-                {len.type}
-              </Badge>
+              <StatusBadge
+                status={{
+                  label: len.type,
+                  tone: len.type === "SMS" ? "emerald" : "blue",
+                }}
+              />
             </span>
-            <Button
-              size="sm"
-              className="h-8 text-[12px] bg-blue-600 hover:bg-blue-700"
-              onClick={copyText}
-            >
+            <Button type="button" size="sm" onClick={copyText}>
               {copied ? (
-                <Check className="size-3.5 mr-1.5" strokeWidth={2} aria-hidden />
+                <Check className="size-3.5" strokeWidth={2} aria-hidden />
               ) : (
-                <Copy className="size-3.5 mr-1.5" strokeWidth={2} aria-hidden />
+                <Copy className="size-3.5" strokeWidth={2} aria-hidden />
               )}
               문자 복사
             </Button>
           </div>
         </div>
 
-        <p className="flex items-start gap-1.5 text-[11px] text-gray-400 leading-relaxed">
-          <Info className="size-3.5 mt-0.5 shrink-0 text-gray-300" strokeWidth={2} aria-hidden />
+        <p className="flex items-start gap-1.5 text-[11px] leading-relaxed text-gray-400">
+          <Info className="mt-0.5 size-3.5 shrink-0 text-gray-300" strokeWidth={2} aria-hidden />
           이 회원의 실제 사용 내역으로 자동 작성된 초안이에요. 그대로 복사해 솔라피·문자 앱에
           붙여넣어 보내거나, 위에서 직접 다듬어 사용하세요.
         </p>
@@ -248,10 +233,10 @@ function FeatureRow({
 }) {
   return (
     <div className="flex items-start gap-2">
-      <span className="text-[11px] text-gray-400 font-medium w-[72px] shrink-0 pt-0.5">
+      <span className="w-[72px] shrink-0 pt-0.5 text-[11px] font-medium text-gray-400">
         {label}
       </span>
-      <div className="flex flex-wrap gap-1.5 min-w-0">
+      <div className="flex min-w-0 flex-wrap gap-1.5">
         {items.length === 0 ? (
           <span className="text-[11px] text-gray-400">{empty}</span>
         ) : (

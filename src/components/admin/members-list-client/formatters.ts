@@ -1,13 +1,11 @@
 // Shared formatting helpers for the members list.
+import { formatDate as kstDate } from "@/lib/utils";
 
+// 시각 표기는 KST 고정 포매터(lib/utils)를 쓴다 — toLocale* 는 서버(UTC)·브라우저(KST) 결과가
+// 달라 hydration 이 깨진다.
 export function formatDate(d: Date | string | null | undefined): string {
   if (!d) return "—";
-  const date = typeof d === "string" ? new Date(d) : d;
-  return date.toLocaleDateString("ko-KR", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  });
+  return kstDate(d);
 }
 
 export function formatRelative(
@@ -36,20 +34,6 @@ export function getInitials(name: string): string {
     const parts = trimmed.split(/\s+/).slice(0, 2);
     return parts.map((p) => p[0]?.toUpperCase() ?? "").join("");
   }
-  return trimmed.slice(0, 1);
-}
-
-export function tierBadgeClass(tier: string): string {
-  switch (tier) {
-    case "ENTERPRISE":
-      return "bg-slate-900 text-white";
-    case "PREMIUM":
-      return "bg-blue-600 text-white";
-    case "STANDARD":
-      return "bg-blue-100 text-blue-800";
-    case "STARTER":
-      return "bg-slate-100 text-slate-700";
-    default:
-      return "bg-gray-100 text-gray-600";
-  }
+  // 이모지처럼 두 코드유닛짜리 글자를 반으로 자르면 서버(�)·클라 표기가 달라 hydration 이 깨진다.
+  return Array.from(trimmed)[0] ?? "?";
 }

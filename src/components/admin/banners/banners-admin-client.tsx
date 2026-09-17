@@ -2,23 +2,12 @@
 
 import { useEffect, useState, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import {
-  ChevronDown,
-  ChevronUp,
-  Image as ImageIcon,
-  LayoutTemplate,
-  Pencil,
-  Plus,
-  Trash2,
-} from "lucide-react";
+import { Image as ImageIcon, LayoutTemplate, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import {
-  AUDIENCE_LABELS,
-  DISMISS_MODES,
-  getTemplate,
-} from "@/lib/site-banners/templates";
+import { AdminEmptyState, SectionCard, useConfirm } from "@/components/admin/kit";
+import { AdminHoverDetail } from "@/components/admin/hover-detail/admin-hover-detail";
+import { AUDIENCE_LABELS, DISMISS_MODES, getTemplate } from "@/lib/site-banners/templates";
 import {
   deleteBanner,
   reorderBanners,
@@ -26,6 +15,8 @@ import {
   type AdminBannerDto,
 } from "@/actions/admin-banners";
 import { BannerEditorModal, type BannerPrefill } from "./banner-editor-modal";
+import { bannerRowDetail } from "./banners-admin-client-parts/banner-hover-detail";
+import { BannerListRow } from "./banners-admin-client-parts/banner-list-row";
 
 function dismissLabel(mode: string): string {
   return DISMISS_MODES.find((m) => m.value === mode)?.label ?? mode;
@@ -39,22 +30,24 @@ function fmtDate(iso: string | null): string | null {
   return `${d.getFullYear()}.${pad(d.getMonth() + 1)}.${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
+/** 앱 진입 배너(SiteBanner) 목록 — 우선순위 순, 위/아래 정렬·노출 토글·수정·삭제. */
 export function BannersAdminClient({ initialBanners }: { initialBanners: AdminBannerDto[] }) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const confirm = useConfirm();
   const [items, setItems] = useState(initialBanners);
   const [, startTransition] = useTransition();
   const [editorOpen, setEditorOpen] = useState(false);
   const [editing, setEditing] = useState<AdminBannerDto | null>(null);
   const [prefill, setPrefill] = useState<BannerPrefill | null>(null);
 
-  // Re-sync when the server sends a fresh list (after router.refresh()).
+  // router.refresh() 로 서버 목록이 새로 오면 동기화.
   useEffect(() => {
     setItems(initialBanners);
   }, [initialBanners]);
 
-  // 공지 상세 "배너로 띄우기" → /admin/banners?prefill=announcement&... 로 진입하면
-  // announcement 템플릿을 프리필한 새 배너 편집기를 자동으로 연다(1회, URL 정리).
+  // 공지 "배너로 띄우기" → /admin/banners?prefill=announcement&... 로 진입하면
+  // announcement 템플릿을 프리필한 새 배너 편집기를 자동으로 연다(1회, URL 은 앱 탭만 남기고 정리).
   useEffect(() => {
     if (searchParams.get("prefill") !== "announcement") return;
     setPrefill({
@@ -65,7 +58,7 @@ export function BannersAdminClient({ initialBanners }: { initialBanners: AdminBa
     });
     setEditing(null);
     setEditorOpen(true);
-    router.replace("/admin/banners");
+    router.replace("/admin/banners?tab=app");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
@@ -114,169 +107,100 @@ export function BannersAdminClient({ initialBanners }: { initialBanners: AdminBa
     });
   }
 
-  function remove(banner: AdminBannerDto) {
-    if (!window.confirm(`"${banner.title}" 배너를 삭제할까요?`)) return;
+  async function remove(banner: AdminBannerDto) {
+    const ok = await confirm({
+      title: `"${banner.title}" 배너를 삭제할까요?`,
+      description: "삭제하면 되돌릴 수 없습니다.",
+      confirmLabel: "삭제",
+      tone: "danger",
+    });
+    if (!ok) return;
     setItems((prev) => prev.filter((b) => b.id !== banner.id));
     startTransition(async () => {
       const result = await deleteBanner(banner.id);
       if (!result.success) {
         toast.error(result.error);
-        router.refresh();
       } else {
         toast.success("배너를 삭제했어요");
-        router.refresh();
       }
+      router.refresh();
     });
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-end">
-        <Button onClick={openCreate}>
-          <Plus className="size-4" />새 배너
-        </Button>
-      </div>
-
-      {items.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-slate-200 bg-white py-16 text-center">
-          <p className="text-[14px] font-semibold text-slate-600">아직 배너가 없어요</p>
-          <p className="mt-1 text-[12.5px] text-slate-400">
-            새 배너를 만들어 사용자에게 안내를 띄워보세요.
-          </p>
-        </div>
-      ) : (
-        <ul className="space-y-2.5">
-          {items.map((banner, index) => {
-            const start = fmtDate(banner.startsAt);
-            const end = fmtDate(banner.endsAt);
-            const tplName = getTemplate(banner.templateKey)?.name;
-            return (
-              <li
-                key={banner.id}
-                className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3.5 shadow-sm"
-              >
-                {/* Reorder */}
-                <div className="flex flex-col">
-                  <button
-                    type="button"
-                    onClick={() => move(index, -1)}
-                    disabled={index === 0}
-                    className="flex size-6 items-center justify-center rounded text-slate-400 hover:bg-slate-100 hover:text-slate-700 disabled:opacity-30"
-                    aria-label="위로"
-                  >
-                    <ChevronUp className="size-4" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => move(index, 1)}
-                    disabled={index === items.length - 1}
-                    className="flex size-6 items-center justify-center rounded text-slate-400 hover:bg-slate-100 hover:text-slate-700 disabled:opacity-30"
-                    aria-label="아래로"
-                  >
-                    <ChevronDown className="size-4" />
-                  </button>
-                </div>
-
-                {/* Thumb / icon */}
-                <div className="flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-slate-100">
-                  {banner.type === "IMAGE" && banner.imageUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={banner.imageUrl} alt="" className="size-full object-cover" />
-                  ) : banner.type === "IMAGE" ? (
-                    <ImageIcon className="size-5 text-slate-400" />
-                  ) : (
-                    <LayoutTemplate className="size-5 text-slate-400" />
-                  )}
-                </div>
-
-                {/* Info */}
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <p className="truncate text-[14px] font-bold text-slate-900">{banner.title}</p>
-                    <span
-                      className={cn(
-                        "shrink-0 rounded-full px-2 py-0.5 text-[10.5px] font-bold",
-                        banner.isActive
-                          ? "bg-blue-50 text-blue-600"
-                          : "bg-slate-100 text-slate-400",
-                      )}
-                    >
-                      {banner.isActive ? "노출 중" : "비활성"}
-                    </span>
-                  </div>
-                  <div className="mt-1 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[11.5px] text-slate-400">
-                    <span className="font-semibold text-slate-500">
-                      {banner.type === "IMAGE" ? "이미지" : (tplName ?? "템플릿")}
-                    </span>
-                    <span>·</span>
-                    <span>{banner.audiences.map((a) => AUDIENCE_LABELS[a]).join("·") || "대상 없음"}</span>
-                    <span>·</span>
-                    <span className={banner.targetMode === "SPECIFIC" ? "font-semibold text-blue-500" : undefined}>
-                      {banner.targetMode === "SPECIFIC"
-                        ? `특정 ${banner.targetAcademyIds.length}명`
-                        : "전체 노출"}
-                    </span>
-                    <span>·</span>
-                    <span>{dismissLabel(banner.dismissMode)}</span>
-                    {(start || end) && (
-                      <>
-                        <span>·</span>
-                        <span>
-                          {start ?? "상시"} ~ {end ?? "상시"}
+    <>
+      <SectionCard
+        title="앱 진입 배너"
+        description="로그인 사용자에게 뜨는 진입 배너. 위쪽 배너부터 먼저 노출되고, 하나를 닫으면 다음 배너가 열립니다."
+        actions={
+          <Button size="sm" onClick={openCreate}>
+            <Plus className="size-4" />새 배너
+          </Button>
+        }
+        padded={false}
+      >
+        {items.length === 0 ? (
+          <AdminEmptyState
+            icon={LayoutTemplate}
+            title="아직 배너가 없어요"
+            description="새 배너를 만들어 사용자에게 안내를 띄워보세요."
+          />
+        ) : (
+          <ul className="divide-y divide-gray-50">
+            {items.map((banner, index) => {
+              const start = fmtDate(banner.startsAt);
+              const end = fmtDate(banner.endsAt);
+              const tplName = getTemplate(banner.templateKey)?.name;
+              return (
+                // 행 클릭 동작이 없어 클릭=상세 팝업. 순서·스위치·수정·삭제 버튼 위에선 열리지 않는다.
+                <AdminHoverDetail key={banner.id} title={banner.title} detail={bannerRowDetail(banner)}>
+                  <BannerListRow
+                    className="cursor-pointer"
+                    thumb={
+                      banner.type === "IMAGE" && banner.imageUrl ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={banner.imageUrl} alt="" className="size-full object-cover" />
+                      ) : banner.type === "IMAGE" ? (
+                        <ImageIcon className="size-5" />
+                      ) : (
+                        <LayoutTemplate className="size-5" />
+                      )
+                    }
+                    title={banner.title}
+                    active={banner.isActive}
+                    meta={[
+                      <span key="type" className="font-medium text-gray-500">
+                        {banner.type === "IMAGE" ? "이미지" : (tplName ?? "템플릿")}
+                      </span>,
+                      banner.audiences.map((a) => AUDIENCE_LABELS[a]).join("·") || "대상 없음",
+                      banner.targetMode === "SPECIFIC" ? (
+                        <span key="target" className="font-medium text-blue-600">
+                          특정 {banner.targetAcademyIds.length}명
                         </span>
-                      </>
-                    )}
-                    {banner.autoOpenOnLowCredit && (
-                      <>
-                        <span>·</span>
-                        <span className="text-amber-500">저크레딧 자동노출</span>
-                      </>
-                    )}
-                  </div>
-                </div>
-
-                {/* Actions */}
-                <div className="flex shrink-0 items-center gap-1">
-                  <button
-                    type="button"
-                    role="switch"
-                    aria-checked={banner.isActive}
-                    onClick={() => toggle(banner)}
-                    className={cn(
-                      "relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors",
-                      banner.isActive ? "bg-blue-600" : "bg-slate-300",
-                    )}
-                    aria-label={banner.isActive ? "비활성화" : "활성화"}
-                  >
-                    <span
-                      className={cn(
-                        "inline-block size-5 rounded-full bg-white shadow-sm transition-transform",
-                        banner.isActive ? "translate-x-[22px]" : "translate-x-0.5",
-                      )}
-                    />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => openEdit(banner)}
-                    className="flex size-8 items-center justify-center rounded-md text-slate-400 hover:bg-slate-100 hover:text-slate-700"
-                    aria-label="수정"
-                  >
-                    <Pencil className="size-4" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => remove(banner)}
-                    className="flex size-8 items-center justify-center rounded-md text-slate-400 hover:bg-rose-50 hover:text-rose-600"
-                    aria-label="삭제"
-                  >
-                    <Trash2 className="size-4" />
-                  </button>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
-      )}
+                      ) : (
+                        "전체 노출"
+                      ),
+                      dismissLabel(banner.dismissMode),
+                      (start || end) && `${start ?? "상시"} ~ ${end ?? "상시"}`,
+                      banner.autoOpenOnLowCredit && (
+                        <span key="lowcredit" className="text-amber-600">
+                          저크레딧 자동노출
+                        </span>
+                      ),
+                    ]}
+                    index={index}
+                    count={items.length}
+                    onMove={(dir) => move(index, dir)}
+                    onToggle={() => toggle(banner)}
+                    onEdit={() => openEdit(banner)}
+                    onDelete={() => remove(banner)}
+                  />
+                </AdminHoverDetail>
+              );
+            })}
+          </ul>
+        )}
+      </SectionCard>
 
       <BannerEditorModal
         open={editorOpen}
@@ -288,6 +212,6 @@ export function BannersAdminClient({ initialBanners }: { initialBanners: AdminBa
         prefill={prefill}
         onSaved={() => router.refresh()}
       />
-    </div>
+    </>
   );
 }

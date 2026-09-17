@@ -1,37 +1,13 @@
 import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
+import { StatusBadge } from "@/components/admin/kit";
+import { STAFF_ROLE } from "@/lib/admin-labels";
 import { ProviderBadge } from "@/components/admin/provider-badge";
-import { Avatar, DefList, DefRow } from "@/components/admin/member-detail/atoms";
-import { OutreachCard } from "@/components/admin/member-detail/outreach-card";
+import { Avatar, DefList, DefRow } from "./atoms";
+import { OutreachCard } from "./outreach-card";
+import { formatDate, formatDateTime } from "./format";
 import type { MemberDetail } from "@/actions/admin-members";
 
 type StaffItem = MemberDetail["academyStaff"][number];
-
-const ROLE_LABEL: Record<string, string> = {
-  DIRECTOR: "원장",
-  TEACHER: "강사",
-};
-
-function formatDate(d: Date | string | null | undefined): string {
-  if (!d) return "—";
-  return new Date(d).toLocaleDateString("ko-KR", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  });
-}
-
-function formatDateTime(d: Date | string | null | undefined): string {
-  if (!d) return "—";
-  return new Date(d).toLocaleString("ko-KR", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  });
-}
 
 /** 회원(원장·강사) 한 명 단위 블록 — 회원 정보 + 맞춤 문자 생성을 하나로 묶는다. */
 export function MemberBlock({
@@ -51,39 +27,29 @@ export function MemberBlock({
     <div
       id={`member-${staff.id}`}
       className={cn(
-        "scroll-mt-24 rounded-2xl border bg-white overflow-hidden",
+        "scroll-mt-24 overflow-hidden rounded-xl border bg-white",
         isCurrent ? "border-blue-200" : "border-gray-100",
       )}
     >
       {/* 블록 헤더 — 회원 요약 */}
-      <div className="flex items-center gap-3 px-5 py-3.5 border-b border-gray-50 bg-gray-50/40">
+      <div className="flex items-center gap-3 border-b border-gray-50 bg-gray-50/40 px-5 py-3.5">
         <Avatar name={staff.name} avatarUrl={staff.avatarUrl} size="sm" />
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2 min-w-0">
-            <span className="text-[14px] font-semibold text-gray-900 truncate">
+          <div className="flex min-w-0 items-center gap-2">
+            <span className="truncate text-[15px] font-semibold text-gray-900">
               {staff.name}
             </span>
-            <Badge
-              variant="secondary"
-              className={cn(
-                "border-0 text-[10px] px-1.5 h-4 font-medium shrink-0",
-                staff.role === "DIRECTOR"
-                  ? "bg-blue-50 text-blue-600"
-                  : "bg-gray-100 text-gray-500",
-              )}
-            >
-              {ROLE_LABEL[staff.role] ?? staff.role}
-            </Badge>
+            <StatusBadge map={STAFF_ROLE} value={staff.role} />
             {isCurrent && (
-              <span className="text-[10px] font-medium text-blue-600 shrink-0">
+              <span className="shrink-0 text-[11px] font-medium text-blue-600">
                 현재 보기
               </span>
             )}
             {!staff.isActive && (
-              <span className="text-[10px] text-gray-400 shrink-0">비활성</span>
+              <span className="shrink-0 text-[11px] text-gray-400">비활성</span>
             )}
           </div>
-          <span className="block text-[11px] text-gray-400 truncate">
+          <span className="block truncate text-[11px] text-gray-400">
             {staff.email}
           </span>
         </div>
@@ -91,9 +57,9 @@ export function MemberBlock({
       </div>
 
       {/* 본문 — 회원 정보 + 맞춤 문자 */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 lg:divide-x divide-gray-50">
-        <div className="lg:col-span-1 p-5">
-          <h4 className="text-[12px] font-semibold text-gray-500 mb-2.5">
+      <div className="grid grid-cols-1 divide-gray-50 lg:grid-cols-3 lg:divide-x">
+        <div className="p-5 lg:col-span-1">
+          <h4 className="mb-2.5 text-[12px] font-semibold text-gray-500">
             회원 정보
           </h4>
           <DefList>
@@ -131,7 +97,7 @@ export function MemberBlock({
                 label="Supabase UID"
                 value={
                   <span
-                    className="font-mono text-[11px] text-gray-500 truncate inline-block max-w-[150px] align-middle"
+                    className="inline-block max-w-[150px] truncate align-middle font-mono text-[11px] text-gray-500"
                     title={staff.supabaseUserId}
                   >
                     {staff.supabaseUserId}

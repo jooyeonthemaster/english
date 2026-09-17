@@ -230,8 +230,11 @@ export async function getAdminCreditTopUpStats() {
       _sum: { price: true, creditAmount: true },
       _count: true,
     }),
+    // "확인 필요"는 진짜 실패(카드 거절·한도·잔액 부족 등)만 센다. 사용자가 스스로
+    // 닫은 결제 취소(CANCELLED)나 정상 처리된 환불(REFUNDED)은 볼 일이 없다.
+    // 관리자가 확인(무시) 처리한 실패 건도 뺀다.
     prisma.creditTopUp.count({
-      where: { status: { in: ["FAILED", "CANCELLED", "REFUNDED"] } },
+      where: { status: "FAILED", failureReviewedAt: null },
     }),
   ]);
 

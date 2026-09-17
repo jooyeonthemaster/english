@@ -1,29 +1,17 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import {
-  Plus,
-  Minus,
-  AlertCircle,
-  Loader2,
-  Coins,
-} from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Coins, Loader2, Minus, Plus } from "lucide-react";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { AdminDialog } from "@/components/admin/kit";
 import { adjustMemberCredits } from "@/actions/admin-members";
 import { MAX_ADJUSTMENT_AMOUNT as MAX_AMOUNT } from "@/lib/admin-members-labels";
-import { useRouter } from "next/navigation";
 
 interface CreditAdjustModalProps {
   open: boolean;
@@ -34,6 +22,7 @@ interface CreditAdjustModalProps {
 }
 
 type Direction = "grant" | "deduct";
+const FORM_ID = "credit-adjust-form";
 
 export function CreditAdjustModal({
   open,
@@ -47,7 +36,6 @@ export function CreditAdjustModal({
   const [amount, setAmount] = useState<string>("");
   const [expiryDays, setExpiryDays] = useState<string>("");
   const [reason, setReason] = useState<string>("");
-  const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
   const numericAmount = (() => {
@@ -63,7 +51,7 @@ export function CreditAdjustModal({
     currentBalance !== null ? currentBalance + signedAmount : null;
 
   const tooLarge = numericAmount > MAX_AMOUNT;
-  // Audit logs need substantive reasons — 5+ chars rejects "ok" / "?" / "음".
+  // 감사 로그용 사유 — "ok"·"?" 같은 무의미한 값을 막기 위해 5자 이상.
   const reasonValid = reason.trim().length >= 5;
   const overdraft =
     direction === "deduct" &&
@@ -83,7 +71,6 @@ export function CreditAdjustModal({
     setAmount("");
     setExpiryDays("");
     setReason("");
-    setError(null);
   }
 
   function handleOpenChange(next: boolean) {
@@ -95,19 +82,21 @@ export function CreditAdjustModal({
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!canSubmit) return;
-    setError(null);
     startTransition(async () => {
       const res = await adjustMemberCredits({
         memberId,
         amount: signedAmount,
         reason: reason.trim(),
-        // Only a grant carries a validity window; 0 = ride the existing expiry.
+        // 지급만 유효기간을 가진다. 비우면(0) 기존 소멸기한을 그대로 탄다.
         expiryDays: direction === "grant" && numericExpiry > 0 ? numericExpiry : undefined,
       });
       if (!res.success) {
-        setError(res.error);
+        toast.error(res.error);
         return;
       }
+      toast.success(
+        `크레딧 ${direction === "grant" ? "지급" : "차감"}: ${numericAmount.toLocaleString("ko-KR")} C`,
+      );
       reset();
       onOpenChange(false);
       router.refresh();
@@ -115,241 +104,204 @@ export function CreditAdjustModal({
   }
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-[480px]">
-        <DialogHeader>
-          <DialogTitle className="text-[16px] font-semibold text-gray-900">
-            크레딧 조정
-          </DialogTitle>
-          <DialogDescription className="text-[12px] text-gray-500">
-            <span className="font-medium text-gray-700">{memberName}</span> 회원의 크레딧을
-            지급하거나 회수합니다. 모든 조정은 거래 내역에 기록됩니다.
-          </DialogDescription>
-        </DialogHeader>
+    <AdminDialog
+      open={open}
+      onOpenChange={handleOpenChange}
+      size="sm"
+      title="크레딧 조정"
+      description={
+        <>
+          <span className="font-medium text-gray-700">{memberName}</span> 회원의 크레딧을
+          지급하거나 회수합니다. 모든 조정은 거래 내역에 기록됩니다.
+        </>
+      }
+      footer={
+        <>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => handleOpenChange(false)}
+            disabled={isPending}
+          >
+            취소
+          </Button>
+          <Button
+            type="submit"
+            form={FORM_ID}
+            size="sm"
+            disabled={!canSubmit}
+            className={cn(
+              "min-w-[90px]",
+              direction === "deduct" && "bg-rose-600 text-white hover:bg-rose-700",
+            )}
+          >
+            {isPending && <Loader2 className="size-3.5 animate-spin" strokeWidth={2} aria-hidden />}
+            {isPending ? "처리 중" : direction === "grant" ? "지급 확정" : "차감 확정"}
+          </Button>
+        </>
+      }
+    >
+      <form id={FORM_ID} onSubmit={handleSubmit} className="space-y-4">
+        {/* 지급 / 차감 */}
+        <div className="grid grid-cols-2 gap-2">
+          <DirectionButton
+            active={direction === "grant"}
+            onClick={() => setDirection("grant")}
+            icon={<Plus className="size-4" strokeWidth={2.2} aria-hidden />}
+            label="지급"
+            tone="positive"
+          />
+          <DirectionButton
+            active={direction === "deduct"}
+            onClick={() => setDirection("deduct")}
+            icon={<Minus className="size-4" strokeWidth={2.2} aria-hidden />}
+            label="차감"
+            tone="negative"
+          />
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4 pt-1">
-          {/* Direction toggle */}
-          <div className="grid grid-cols-2 gap-2">
-            <DirectionButton
-              active={direction === "grant"}
-              onClick={() => setDirection("grant")}
-              icon={<Plus className="size-4" strokeWidth={2.2} aria-hidden />}
-              label="지급"
-              tone="positive"
+        {/* 수량 */}
+        <div className="space-y-1.5">
+          <Label htmlFor="adjust-amount" className="text-[12px] text-gray-700">
+            크레딧 수량 <span className="text-rose-500">*</span>
+          </Label>
+          <div className="relative">
+            <Coins
+              className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-gray-400"
+              strokeWidth={1.8}
+              aria-hidden
             />
-            <DirectionButton
-              active={direction === "deduct"}
-              onClick={() => setDirection("deduct")}
-              icon={<Minus className="size-4" strokeWidth={2.2} aria-hidden />}
-              label="차감"
-              tone="negative"
+            <Input
+              id="adjust-amount"
+              type="text"
+              inputMode="numeric"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value.replace(/[^\d]/g, ""))}
+              placeholder="0"
+              className="h-10 pl-9! pr-12! text-[14px] tabular-nums"
+              aria-invalid={tooLarge ? true : undefined}
+              aria-describedby={tooLarge ? "amount-error" : undefined}
             />
-          </div>
-
-          {/* Amount */}
-          <div className="space-y-1.5">
-            <Label htmlFor="adjust-amount" className="text-[12px] text-gray-700">
-              크레딧 수량 <span className="text-rose-500">*</span>
-            </Label>
-            <div className="relative">
-              <Coins
-                className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-gray-400"
-                strokeWidth={1.8}
-                aria-hidden
-              />
-              <Input
-                id="adjust-amount"
-                type="text"
-                inputMode="numeric"
-                value={amount}
-                onChange={(e) => {
-                  const cleaned = e.target.value.replace(/[^\d]/g, "");
-                  setAmount(cleaned);
-                }}
-                placeholder="0"
-                className="pl-9 pr-12 h-10 text-[14px] tabular-nums"
-                aria-invalid={tooLarge ? true : undefined}
-                aria-describedby={tooLarge ? "amount-error" : undefined}
-              />
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[12px] text-gray-400 font-medium">
-                C
-              </span>
-            </div>
-            <div className="flex items-center justify-between text-[11px]">
-              {tooLarge ? (
-                <span id="amount-error" className="text-rose-600">
-                  최대 {MAX_AMOUNT.toLocaleString("ko-KR")} 크레딧
-                </span>
-              ) : overdraft ? (
-                <span className="text-rose-600">
-                  잔고보다 많이 차감할 수 없습니다
-                </span>
-              ) : cantDeductNoBalance ? (
-                <span className="text-rose-600">
-                  잔고가 미생성 상태입니다. 먼저 지급이 필요합니다.
-                </span>
-              ) : (
-                <span className="text-gray-400">
-                  최대 {MAX_AMOUNT.toLocaleString("ko-KR")}
-                </span>
-              )}
-              {numericAmount > 0 && projectedBalance !== null && (
-                <span className="text-gray-500 tabular-nums">
-                  조정 후 잔고:{" "}
-                  <span
-                    className={cn(
-                      "font-semibold",
-                      projectedBalance < 0
-                        ? "text-rose-600"
-                        : "text-gray-800",
-                    )}
-                  >
-                    {projectedBalance.toLocaleString("ko-KR")} C
-                  </span>
-                </span>
-              )}
-            </div>
-          </div>
-
-          {/* Quick add buttons — additive (each click increases the amount) */}
-          <div className="flex flex-wrap items-center gap-1.5">
-            <span className="text-[10px] text-gray-400 font-medium uppercase tracking-wider">
-              빠른 추가
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[12px] font-medium text-gray-400">
+              C
             </span>
-            {[100, 500, 1000, 5000, 10000].map((preset) => (
-              <button
-                key={preset}
-                type="button"
-                onClick={() => {
-                  const next = Math.min(numericAmount + preset, MAX_AMOUNT);
-                  setAmount(String(next));
-                }}
-                className="px-2.5 py-1 text-[11px] text-gray-600 bg-gray-50 border border-gray-100 rounded-md hover:bg-gray-100 hover:text-gray-900 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-500/30"
-              >
-                +{preset.toLocaleString("ko-KR")}
-              </button>
-            ))}
-            {amount && (
-              <button
-                type="button"
-                onClick={() => setAmount("")}
-                className="px-2 py-1 text-[11px] text-gray-400 hover:text-gray-700 transition-colors"
-              >
-                초기화
-              </button>
+          </div>
+          <div className="flex items-center justify-between text-[11px]">
+            {tooLarge ? (
+              <span id="amount-error" className="text-rose-600">
+                최대 {MAX_AMOUNT.toLocaleString("ko-KR")} 크레딧
+              </span>
+            ) : overdraft ? (
+              <span className="text-rose-600">잔고보다 많이 차감할 수 없습니다</span>
+            ) : cantDeductNoBalance ? (
+              <span className="text-rose-600">
+                잔고가 미생성 상태입니다. 먼저 지급이 필요합니다.
+              </span>
+            ) : (
+              <span className="text-gray-400">최대 {MAX_AMOUNT.toLocaleString("ko-KR")}</span>
+            )}
+            {numericAmount > 0 && projectedBalance !== null && (
+              <span className="tabular-nums text-gray-500">
+                조정 후 잔고:{" "}
+                <span
+                  className={cn(
+                    "font-semibold",
+                    projectedBalance < 0 ? "text-rose-600" : "text-gray-800",
+                  )}
+                >
+                  {projectedBalance.toLocaleString("ko-KR")} C
+                </span>
+              </span>
             )}
           </div>
+        </div>
 
-          {/* Validity (grant only) — extends the balance-wide expiry by
-              (remaining + this). Blank rides the existing expiry (promo-like). */}
-          {direction === "grant" && (
-            <div className="space-y-1.5">
-              <Label htmlFor="adjust-expiry" className="text-[12px] text-gray-700">
-                소멸기한 (일)
-                <span className="text-[11px] text-gray-400 font-normal ml-1.5">
-                  (비우면 기존 소멸기한 유지)
-                </span>
-              </Label>
-              <Input
-                id="adjust-expiry"
-                type="text"
-                inputMode="numeric"
-                value={expiryDays}
-                onChange={(e) =>
-                  setExpiryDays(e.target.value.replace(/[^\d]/g, ""))
-                }
-                placeholder="예: 30 (30일). 비우면 기존 소멸기한에 합산 없이 유지"
-                className="h-10 text-[14px] tabular-nums"
-              />
-              {numericExpiry > 0 && (
-                <p className="text-[11px] text-gray-500">
-                  기존 잔여 소멸기한에 <b>+{numericExpiry}일</b>이 더해져 갱신됩니다.
-                </p>
-              )}
-            </div>
-          )}
-
-          {/* Reason */}
-          <div className="space-y-1.5">
-            <Label htmlFor="adjust-reason" className="text-[12px] text-gray-700">
-              사유 <span className="text-rose-500">*</span>
-              <span className="text-[11px] text-gray-400 font-normal ml-1.5">
-                (감사 로그에 기록됨, 5-500자)
-              </span>
-            </Label>
-            <Textarea
-              id="adjust-reason"
-              value={reason}
-              onChange={(e) => setReason(e.target.value)}
-              rows={3}
-              maxLength={500}
-              placeholder="예: 결제 누락 보전, 체험 추가 지급, 이중 결제 환불 등"
-              className="text-[13px] resize-none"
-              aria-invalid={(reason.length > 0 && !reasonValid) ? true : undefined}
-            />
-            <div className="flex items-center justify-between text-[11px] text-gray-400 tabular-nums">
-              <span>
-                {reason.length > 0 && !reasonValid && (
-                  <span className="text-rose-500">
-                    5자 이상 입력
-                  </span>
-                )}
-              </span>
-              <span>{reason.length} / 500</span>
-            </div>
-          </div>
-
-          {/* Server error */}
-          {error && (
-            <div className="flex items-start gap-2 rounded-md bg-rose-50 border border-rose-100 px-3 py-2">
-              <AlertCircle
-                className="size-4 text-rose-500 shrink-0 mt-px"
-                strokeWidth={2}
-                aria-hidden
-              />
-              <p className="text-[12px] text-rose-700">{error}</p>
-            </div>
-          )}
-
-          <DialogFooter className="pt-2 gap-2 sm:gap-2">
+        {/* 빠른 추가 — 누를 때마다 더해진다 */}
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className="text-[11px] font-medium uppercase tracking-wider text-gray-400">
+            빠른 추가
+          </span>
+          {[100, 500, 1000, 5000, 10000].map((preset) => (
+            <Button
+              key={preset}
+              type="button"
+              variant="outline"
+              size="xs"
+              className="text-gray-600"
+              onClick={() => setAmount(String(Math.min(numericAmount + preset, MAX_AMOUNT)))}
+            >
+              +{preset.toLocaleString("ko-KR")}
+            </Button>
+          ))}
+          {amount && (
             <Button
               type="button"
               variant="ghost"
-              onClick={() => handleOpenChange(false)}
-              disabled={isPending}
-              className="text-[13px]"
+              size="xs"
+              className="text-gray-400 hover:text-gray-700"
+              onClick={() => setAmount("")}
             >
-              취소
+              초기화
             </Button>
-            <Button
-              type="submit"
-              disabled={!canSubmit}
-              className={cn(
-                "text-[13px] min-w-[90px]",
-                direction === "grant"
-                  ? "bg-blue-600 hover:bg-blue-700"
-                  : "bg-rose-600 hover:bg-rose-700",
+          )}
+        </div>
+
+        {/* 유효기간(지급만) — 잔고 전체 소멸기한을 (남은 + 이번) 으로 연장. 비우면 기존 유지. */}
+        {direction === "grant" && (
+          <div className="space-y-1.5">
+            <Label htmlFor="adjust-expiry" className="text-[12px] text-gray-700">
+              소멸기한 (일)
+              <span className="ml-1.5 text-[11px] font-normal text-gray-400">
+                (비우면 기존 소멸기한 유지)
+              </span>
+            </Label>
+            <Input
+              id="adjust-expiry"
+              type="text"
+              inputMode="numeric"
+              value={expiryDays}
+              onChange={(e) => setExpiryDays(e.target.value.replace(/[^\d]/g, ""))}
+              placeholder="예: 30 (30일). 비우면 기존 소멸기한에 합산 없이 유지"
+              className="h-10 text-[14px] tabular-nums"
+            />
+            {numericExpiry > 0 && (
+              <p className="text-[11px] text-gray-500">
+                기존 잔여 소멸기한에 <b>+{numericExpiry}일</b>이 더해져 갱신됩니다.
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* 사유 */}
+        <div className="space-y-1.5">
+          <Label htmlFor="adjust-reason" className="text-[12px] text-gray-700">
+            사유 <span className="text-rose-500">*</span>
+            <span className="ml-1.5 text-[11px] font-normal text-gray-400">
+              (감사 로그에 기록됨, 5-500자)
+            </span>
+          </Label>
+          <Textarea
+            id="adjust-reason"
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+            rows={3}
+            maxLength={500}
+            placeholder="예: 결제 누락 보전, 체험 추가 지급, 이중 결제 환불 등"
+            className="resize-none text-[13px]"
+            aria-invalid={reason.length > 0 && !reasonValid ? true : undefined}
+          />
+          <div className="flex items-center justify-between text-[11px] tabular-nums text-gray-400">
+            <span>
+              {reason.length > 0 && !reasonValid && (
+                <span className="text-rose-500">5자 이상 입력</span>
               )}
-            >
-              {isPending ? (
-                <>
-                  <Loader2
-                    className="size-3.5 mr-1.5 animate-spin"
-                    strokeWidth={2}
-                    aria-hidden
-                  />
-                  처리 중
-                </>
-              ) : direction === "grant" ? (
-                "지급 확정"
-              ) : (
-                "차감 확정"
-              )}
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+            </span>
+            <span>{reason.length} / 500</span>
+          </div>
+        </div>
+      </form>
+    </AdminDialog>
   );
 }
 
@@ -367,19 +319,19 @@ function DirectionButton({
   tone: "positive" | "negative";
 }) {
   return (
-    <button
+    <Button
       type="button"
+      variant={active ? "default" : "outline"}
       onClick={onClick}
       aria-pressed={active}
       className={cn(
-        "flex items-center justify-center gap-1.5 h-10 rounded-lg border text-[13px] font-medium transition-all outline-none focus-visible:ring-2 focus-visible:ring-blue-500/30",
-        active && tone === "positive" && "bg-blue-600 border-blue-600 text-white",
-        active && tone === "negative" && "bg-rose-600 border-rose-600 text-white",
-        !active && "bg-white border-gray-200 text-gray-600 hover:border-gray-300 hover:text-gray-800",
+        "h-10 text-[13px]",
+        active && tone === "negative" && "bg-rose-600 text-white hover:bg-rose-700",
+        !active && "text-gray-600",
       )}
     >
       {icon}
       {label}
-    </button>
+    </Button>
   );
 }

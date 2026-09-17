@@ -31,6 +31,9 @@ export type CardIssuerLimit = {
   enforcedByIssuer: boolean;
 };
 
+/** 사용자에게 보여주는 표 기준 시점. 표를 갱신하면 같이 고친다. */
+export const CARD_PAYMENT_LIMITS_AS_OF = "2026년 8월";
+
 export const CARD_PAYMENT_LIMITS: CardIssuerLimit[] = [
   { name: "비씨카드", oncePerPayment: 50_000, perDay: 200_000, perMonth: null, countPerDay: null, enforcedByIssuer: true },
   { name: "국민카드", oncePerPayment: null, perDay: 200_000, perMonth: null, countPerDay: null, enforcedByIssuer: true },

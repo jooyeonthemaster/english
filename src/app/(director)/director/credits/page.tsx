@@ -327,7 +327,7 @@ export default function CreditsPage() {
           if (!open) clearPaymentMessage();
         }}
       >
-        <DialogContent className="sm:max-w-[420px]">
+        <DialogContent className="sm:max-w-[560px]">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-1.5 text-red-600">
               <AlertCircle className="size-4" strokeWidth={2} />

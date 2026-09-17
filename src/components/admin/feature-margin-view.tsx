@@ -10,6 +10,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn, formatCurrency, formatNumber } from "@/lib/utils";
+import { AdminHoverDetail } from "@/components/admin/hover-detail/admin-hover-detail";
+import { featureRowDetail, tierRowDetail } from "@/components/admin/costs-parts/margin-hover-detail";
 
 function formatBadgeDate(dateStr: string) {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateStr);
@@ -75,12 +77,14 @@ export function FeatureMarginView({ data }: { data: FeatureMarginAnalysis }) {
             </TableHeader>
             <TableBody>
               {data.tiers.map((tier) => (
-                <TableRow key={tier.label} className="hover:bg-gray-50/50">
+                <AdminHoverDetail key={tier.label} title={`${tier.label} 팩`} detail={tierRowDetail(tier, data.features)}>
+                <TableRow className="cursor-pointer hover:bg-gray-50/50">
                   <TableCell className="pl-5 text-[13px] font-medium text-gray-800">{tier.label}</TableCell>
                   <TableCell className="text-right text-[13px] text-gray-600">{formatNumber(tier.credits)}C</TableCell>
                   <TableCell className="text-right text-[13px] text-gray-600">{formatCurrency(tier.price)}</TableCell>
                   <TableCell className="pr-5 text-right text-[13px] font-semibold text-gray-900">{tier.perCredit}원</TableCell>
                 </TableRow>
+                </AdminHoverDetail>
               ))}
             </TableBody>
           </Table>
@@ -111,7 +115,8 @@ export function FeatureMarginView({ data }: { data: FeatureMarginAnalysis }) {
             </TableHeader>
             <TableBody>
               {data.features.map((feature) => (
-                <TableRow key={feature.operationType} className="hover:bg-gray-50/50">
+                <AdminHoverDetail key={feature.operationType} title={feature.label} detail={featureRowDetail(feature, data.fxRate.rate)}>
+                <TableRow className="cursor-pointer hover:bg-gray-50/50">
                   <TableCell className="min-w-[150px] pl-5 text-[13px] font-medium text-gray-800">
                     <div className="flex flex-wrap items-center gap-1.5">
                       <span>{feature.label}</span>
@@ -153,6 +158,7 @@ export function FeatureMarginView({ data }: { data: FeatureMarginAnalysis }) {
                     </TableCell>
                   ))}
                 </TableRow>
+                </AdminHoverDetail>
               ))}
             </TableBody>
           </Table>

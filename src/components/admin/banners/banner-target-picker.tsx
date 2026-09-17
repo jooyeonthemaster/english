@@ -23,7 +23,7 @@ import {
   FilterDropdown,
   DropdownOptions,
 } from "@/components/admin/members-list-client/filter-dropdown";
-import { FilterPill } from "@/components/admin/members-list-client/subcomponents";
+import { FilterChip } from "@/components/admin/kit";
 
 type ProviderFilter = "all" | "google" | "kakao" | "other";
 type ActiveFilter = "all" | "active" | "inactive";
@@ -146,13 +146,13 @@ const PILL = (activeState: boolean) =>
     "rounded-md border px-2.5 py-1 text-[12px] font-bold transition-colors",
     activeState
       ? "border-blue-300 bg-blue-50 text-blue-700"
-      : "border-slate-200 text-slate-500 hover:bg-slate-50",
+      : "border-gray-200 text-gray-500 hover:bg-gray-50",
   );
 
 function FilterRow({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-wrap items-center gap-1.5">
-      <span className="w-[52px] shrink-0 text-[11px] font-bold text-slate-400">{label}</span>
+      <span className="w-[52px] shrink-0 text-[11px] font-bold text-gray-400">{label}</span>
       {children}
     </div>
   );
@@ -297,9 +297,9 @@ export function BannerTargetPicker({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="flex h-[calc(100dvh-4rem)] w-[calc(100vw-3rem)] max-w-[1080px] flex-col gap-0 overflow-hidden p-0 sm:w-[calc(100vw-3rem)] sm:max-w-[1080px] sm:p-0">
-        <DialogHeader className="shrink-0 border-b border-slate-200 px-5 py-3.5">
-          <DialogTitle className="flex items-center gap-2 text-[15px] font-bold text-slate-900">
-            <Users className="size-4 text-slate-400" />
+        <DialogHeader className="shrink-0 border-b border-gray-200 px-5 py-3.5">
+          <DialogTitle className="flex items-center gap-2 text-[15px] font-bold text-gray-900">
+            <Users className="size-4 text-gray-400" />
             {title}
             {mode === "SPECIFIC" && (
               <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[11px] font-bold text-blue-600">
@@ -311,7 +311,7 @@ export function BannerTargetPicker({
 
         {/* Role + scope */}
         {(!hideRole || !hideScope) && (
-          <div className="shrink-0 space-y-2.5 border-b border-slate-100 px-5 py-3">
+          <div className="shrink-0 space-y-2.5 border-b border-gray-100 px-5 py-3">
             {!hideRole && (
               <FilterRow label="역할">
                 {ALL_AUDIENCES.map((a) => (
@@ -345,9 +345,9 @@ export function BannerTargetPicker({
 
         {mode === "ALL" ? (
           <div className="flex min-h-0 flex-1 items-center justify-center px-6 text-center">
-            <p className="text-[13px] leading-relaxed text-slate-500">
+            <p className="text-[13px] leading-relaxed text-gray-500">
               선택한 역할({audiences.map((a) => AUDIENCE_LABELS[a]).join("·") || "없음"})의{" "}
-              <b className="text-slate-700">모든 학원</b>에 노출됩니다.
+              <b className="text-gray-700">모든 학원</b>에 노출됩니다.
               <br />
               특정 학원만 지정하려면 위에서 <b>특정 대상</b>을 선택하세요.
             </p>
@@ -355,10 +355,10 @@ export function BannerTargetPicker({
         ) : (
           <>
             {/* Member filters — 회원 관리와 동일한 검색 + 팝오버 드롭다운 패턴 */}
-            <div className="shrink-0 border-b border-slate-100 px-5 py-3">
+            <div className="shrink-0 border-b border-gray-100 px-5 py-3">
               <div className="flex flex-wrap items-center gap-2">
                 <div className="relative w-full min-w-[200px] sm:w-72">
-                  <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-gray-400" />
+                  <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -trangray-y-1/2 text-gray-400" />
                   <input
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
@@ -374,7 +374,7 @@ export function BannerTargetPicker({
                 >
                   <DropdownOptions>
                     {PROVIDER_OPTS.map(([v, label]) => (
-                      <FilterPill key={v} active={provider === v} onClick={() => setProvider(v)} label={label} />
+                      <FilterChip key={v} active={provider === v} onClick={() => setProvider(v)} label={label} />
                     ))}
                   </DropdownOptions>
                 </FilterDropdown>
@@ -382,7 +382,7 @@ export function BannerTargetPicker({
                 <FilterDropdown label="상태" active={active !== "all"} summary={labelOf(STATUS_OPTS, active)}>
                   <DropdownOptions>
                     {STATUS_OPTS.map(([v, label]) => (
-                      <FilterPill key={v} active={active === v} onClick={() => setActive(v)} label={label} />
+                      <FilterChip key={v} active={active === v} onClick={() => setActive(v)} label={label} />
                     ))}
                   </DropdownOptions>
                 </FilterDropdown>
@@ -390,7 +390,7 @@ export function BannerTargetPicker({
                 <FilterDropdown label="크레딧" active={credit !== "all"} summary={labelOf(CREDIT_OPTS, credit)}>
                   <DropdownOptions>
                     {CREDIT_OPTS.map(([v, label]) => (
-                      <FilterPill key={v} active={credit === v} onClick={() => setCredit(v)} label={label} />
+                      <FilterChip key={v} active={credit === v} onClick={() => setCredit(v)} label={label} />
                     ))}
                   </DropdownOptions>
                 </FilterDropdown>
@@ -398,7 +398,7 @@ export function BannerTargetPicker({
                 <FilterDropdown label="소멸시효" active={expiry !== "all"} summary={labelOf(EXPIRY_OPTS, expiry)}>
                   <DropdownOptions>
                     {EXPIRY_OPTS.map(([v, label]) => (
-                      <FilterPill key={v} active={expiry === v} onClick={() => setExpiry(v)} label={label} />
+                      <FilterChip key={v} active={expiry === v} onClick={() => setExpiry(v)} label={label} />
                     ))}
                   </DropdownOptions>
                 </FilterDropdown>
@@ -415,7 +415,7 @@ export function BannerTargetPicker({
                 >
                   <div className="flex flex-col gap-2.5">
                     <div className="flex flex-wrap gap-1.5">
-                      <FilterPill
+                      <FilterChip
                         active={signupFrom === daysAgoInput(7) && signupTo === todayInput()}
                         onClick={() => {
                           setSignupFrom(daysAgoInput(7));
@@ -423,7 +423,7 @@ export function BannerTargetPicker({
                         }}
                         label="최근 7일"
                       />
-                      <FilterPill
+                      <FilterChip
                         active={signupFrom === daysAgoInput(30) && signupTo === todayInput()}
                         onClick={() => {
                           setSignupFrom(daysAgoInput(30));
@@ -431,7 +431,7 @@ export function BannerTargetPicker({
                         }}
                         label="최근 30일"
                       />
-                      <FilterPill
+                      <FilterChip
                         active={signupFrom === daysAgoInput(90) && signupTo === todayInput()}
                         onClick={() => {
                           setSignupFrom(daysAgoInput(90));
@@ -441,24 +441,24 @@ export function BannerTargetPicker({
                       />
                     </div>
                     <div className="flex flex-col gap-1.5">
-                      <label className="flex items-center justify-between gap-2 text-[12px] font-semibold text-slate-500">
+                      <label className="flex items-center justify-between gap-2 text-[12px] font-semibold text-gray-500">
                         시작일
                         <input
                           type="date"
                           value={signupFrom}
                           max={signupTo || undefined}
                           onChange={(e) => setSignupFrom(e.target.value)}
-                          className="rounded-md border border-slate-200 px-2 py-1 text-[12px] text-slate-700 outline-none focus:border-blue-400"
+                          className="rounded-md border border-gray-200 px-2 py-1 text-[12px] text-gray-700 outline-none focus:border-blue-400"
                         />
                       </label>
-                      <label className="flex items-center justify-between gap-2 text-[12px] font-semibold text-slate-500">
+                      <label className="flex items-center justify-between gap-2 text-[12px] font-semibold text-gray-500">
                         종료일
                         <input
                           type="date"
                           value={signupTo}
                           min={signupFrom || undefined}
                           onChange={(e) => setSignupTo(e.target.value)}
-                          className="rounded-md border border-slate-200 px-2 py-1 text-[12px] text-slate-700 outline-none focus:border-blue-400"
+                          className="rounded-md border border-gray-200 px-2 py-1 text-[12px] text-gray-700 outline-none focus:border-blue-400"
                         />
                       </label>
                     </div>
@@ -468,7 +468,7 @@ export function BannerTargetPicker({
                         setSignupFrom("");
                         setSignupTo("");
                       }}
-                      className="self-start text-[11px] font-semibold text-slate-400 hover:text-rose-500"
+                      className="self-start text-[11px] font-semibold text-gray-400 hover:text-rose-500"
                     >
                       기간 초기화
                     </button>
@@ -483,13 +483,13 @@ export function BannerTargetPicker({
                 >
                   <div className="flex max-h-[260px] flex-col gap-2 overflow-y-auto">
                     <div className="flex flex-wrap gap-1.5">
-                      <FilterPill active={product === "all"} onClick={() => setProduct("all")} label="전체" />
+                      <FilterChip active={product === "all"} onClick={() => setProduct("all")} label="전체" />
                       {productOptions.map((name) => (
-                        <FilterPill key={name} active={product === name} onClick={() => setProduct(name)} label={name} />
+                        <FilterChip key={name} active={product === name} onClick={() => setProduct(name)} label={name} />
                       ))}
                     </div>
                     {productOptions.length === 0 && (
-                      <span className="text-[11px] text-slate-400">구입 이력이 있는 회원이 없어요</span>
+                      <span className="text-[11px] text-gray-400">구입 이력이 있는 회원이 없어요</span>
                     )}
                   </div>
                 </FilterDropdown>
@@ -497,17 +497,17 @@ export function BannerTargetPicker({
             </div>
 
             {/* List header */}
-            <div className="flex shrink-0 items-center justify-between border-b border-slate-100 px-5 py-2">
+            <div className="flex shrink-0 items-center justify-between border-b border-gray-100 px-5 py-2">
               <button
                 type="button"
                 onClick={toggleAllFiltered}
                 disabled={filteredIds.length === 0}
-                className="inline-flex items-center gap-2 text-[12px] font-semibold text-slate-600 disabled:opacity-40"
+                className="inline-flex items-center gap-2 text-[12px] font-semibold text-gray-600 disabled:opacity-40"
               >
                 <span
                   className={cn(
                     "flex size-4 items-center justify-center rounded border transition-colors",
-                    allFilteredSelected ? "border-blue-600 bg-blue-600 text-white" : "border-slate-300 bg-white",
+                    allFilteredSelected ? "border-blue-600 bg-blue-600 text-white" : "border-gray-300 bg-white",
                   )}
                 >
                   {allFilteredSelected && <Check className="size-3" />}
@@ -518,7 +518,7 @@ export function BannerTargetPicker({
                 <button
                   type="button"
                   onClick={() => setSelected(new Set())}
-                  className="text-[12px] font-semibold text-slate-400 hover:text-rose-500"
+                  className="text-[12px] font-semibold text-gray-400 hover:text-rose-500"
                 >
                   선택 해제
                 </button>
@@ -529,7 +529,7 @@ export function BannerTargetPicker({
             <div
               className={cn(
                 ROW_GRID,
-                "shrink-0 border-b border-slate-100 bg-slate-50 px-5 py-1.5 text-[11px] font-bold text-slate-400",
+                "shrink-0 border-b border-gray-100 bg-gray-50 px-5 py-1.5 text-[11px] font-bold text-gray-400",
               )}
             >
               <span />
@@ -545,12 +545,12 @@ export function BannerTargetPicker({
             {/* List */}
             <div className="min-h-0 flex-1 overflow-y-auto">
               {loading ? (
-                <div className="flex h-full items-center justify-center gap-2 text-slate-400">
+                <div className="flex h-full items-center justify-center gap-2 text-gray-400">
                   <Loader2 className="size-4 animate-spin" />
                   <span className="text-[13px]">불러오는 중…</span>
                 </div>
               ) : filtered.length === 0 ? (
-                <div className="flex h-full items-center justify-center text-[13px] text-slate-400">
+                <div className="flex h-full items-center justify-center text-[13px] text-gray-400">
                   조건에 맞는 회원이 없어요
                 </div>
               ) : (
@@ -565,54 +565,54 @@ export function BannerTargetPicker({
                           onClick={() => toggle(c.academyId)}
                           className={cn(
                             ROW_GRID,
-                            "w-full border-b border-slate-50 px-5 py-2 text-left transition-colors",
-                            checked ? "bg-blue-50/50" : "hover:bg-slate-50",
+                            "w-full border-b border-gray-50 px-5 py-2 text-left transition-colors",
+                            checked ? "bg-blue-50/50" : "hover:bg-gray-50",
                           )}
                         >
                           <span
                             className={cn(
                               "flex size-5 shrink-0 items-center justify-center rounded border transition-colors",
-                              checked ? "border-blue-600 bg-blue-600 text-white" : "border-slate-300 bg-white",
+                              checked ? "border-blue-600 bg-blue-600 text-white" : "border-gray-300 bg-white",
                             )}
                           >
                             {checked && <Check className="size-3.5" />}
                           </span>
                           {/* 회원 · 학원 */}
                           <span className="min-w-0">
-                            <span className="block truncate text-[13px] font-bold text-slate-900">
+                            <span className="block truncate text-[13px] font-bold text-gray-900">
                               {c.memberName}
                             </span>
-                            <span className="block truncate text-[11px] text-slate-400">
+                            <span className="block truncate text-[11px] text-gray-400">
                               {c.academyName} · {c.email}
                             </span>
                           </span>
                           {/* 가입경로 */}
-                          <span className="truncate text-[12px] text-slate-500">
+                          <span className="truncate text-[12px] text-gray-500">
                             {providerLabel(c.provider)}
                           </span>
                           {/* 상태 */}
                           <span
                             className={cn(
                               "text-[12px] font-semibold",
-                              c.isActive ? "text-emerald-600" : "text-slate-400",
+                              c.isActive ? "text-emerald-600" : "text-gray-400",
                             )}
                           >
                             {c.isActive ? "활성" : "비활성"}
                           </span>
                           {/* 크레딧 */}
-                          <span className="text-right text-[12px] tabular-nums text-slate-600">
+                          <span className="text-right text-[12px] tabular-nums text-gray-600">
                             {fmtBalance(c.balance)}
                           </span>
                           {/* 소멸시효 */}
-                          <span className={cn("text-[12px] tabular-nums", expired ? "text-rose-500" : "text-slate-500")}>
+                          <span className={cn("text-[12px] tabular-nums", expired ? "text-rose-500" : "text-gray-500")}>
                             {fmtExpiry(c.expiresAt, now)}
                           </span>
                           {/* 가입일 */}
-                          <span className="text-[12px] tabular-nums text-slate-500">
+                          <span className="text-[12px] tabular-nums text-gray-500">
                             {fmtDate(c.createdAt)}
                           </span>
                           {/* 구입상품 */}
-                          <span className="truncate text-[12px] text-slate-500">
+                          <span className="truncate text-[12px] text-gray-500">
                             {c.lastProductName ?? "-"}
                           </span>
                         </button>
@@ -626,8 +626,8 @@ export function BannerTargetPicker({
         )}
 
         {/* Footer */}
-        <div className="flex shrink-0 items-center justify-between gap-2 border-t border-slate-200 px-5 py-3">
-          <span className="text-[12px] font-semibold text-slate-500">
+        <div className="flex shrink-0 items-center justify-between gap-2 border-t border-gray-200 px-5 py-3">
+          <span className="text-[12px] font-semibold text-gray-500">
             {!hideRole && (
               <>
                 {audiences.map((a) => AUDIENCE_LABELS[a]).join("·") || "역할 미선택"}
@@ -636,7 +636,7 @@ export function BannerTargetPicker({
             )}
             {mode === "ALL" ? "전체 학원" : (
               <>
-                특정 <b className="text-slate-800">{selected.size}</b>
+                특정 <b className="text-gray-800">{selected.size}</b>
                 {hideRole ? "개 학원" : "명"}
               </>
             )}

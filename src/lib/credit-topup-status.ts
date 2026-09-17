@@ -70,3 +70,46 @@ export function resolveCompletedDisplay(params: {
   }
   return { label: params.fallbackLabel, style: params.fallbackStyle };
 }
+
+// ── 결제 취소 분류 ──────────────────────────────────────────────────────────
+// 포트원은 "사용자가 결제창에서 취소"도 status=FAILED 로 돌려준다. 그대로 FAILED 로
+// 저장하면 카드 한도·잔액 부족 같은 진짜 실패와 섞여 "확인 필요"가 부풀고 정작
+// 봐야 할 실패가 묻힌다. 그래서 사용자 취소는 CANCELLED(결제 취소)로 분리한다.
+
+type PortOneFailureLike = {
+  reason?: string | null;
+  pgCode?: string | null;
+  pgMessage?: string | null;
+} | null | undefined;
+
+/** 결제창 이탈로 자동 정리할 때 남기는 사유. */
+export const ABANDONED_CHECKOUT_MESSAGE =
+  "결제창 이탈 — 결제가 진행되지 않아 자동으로 취소 처리했습니다";
+
+/**
+ * 실측(2026-09) 포트원 사유 표기:
+ *  - "사용자가 결제를 취소하셨습니다" (V2)
+ *  - "[3001] 사용자 결제 취소", "[3001] 사용자가 결제를 취소하였습니다." (다날)
+ * 진짜 실패 예: "3133, 잔액이 부족합니다", "고객통합한도 초과", "지원하지 않는 기능".
+ */
+export function isUserCancelledFailure(failure: PortOneFailureLike): boolean {
+  if (!failure) return false;
+  if (failure.pgCode?.trim() === "3001") return true;
+  const text = [failure.reason, failure.pgMessage].filter(Boolean).join(" ");
+  return /사용자[^.]{0,10}취소/.test(text);
+}
+
+export function mapPortOneStatusToTopUpStatus(
+  portoneStatus: string,
+  currentStatus: string,
+  failure?: PortOneFailureLike,
+) {
+  if (portoneStatus === "VIRTUAL_ACCOUNT_ISSUED") return "WAITING_FOR_DEPOSIT";
+  if (portoneStatus === "FAILED") {
+    return isUserCancelledFailure(failure) ? "CANCELLED" : "FAILED";
+  }
+  if (portoneStatus === "CANCELLED" || portoneStatus === "PARTIAL_CANCELLED") {
+    return currentStatus === "COMPLETED" ? "REFUNDED" : "CANCELLED";
+  }
+  return currentStatus === "COMPLETED" ? currentStatus : "PENDING";
+}

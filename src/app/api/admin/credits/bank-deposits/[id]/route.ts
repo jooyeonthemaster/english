@@ -3,6 +3,7 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { requireAdminAuth } from "@/lib/auth-admin";
 import { grantBankDepositTopUp } from "@/lib/bank-deposit";
+import { notifyErp } from "@/lib/erp/signal";
 
 const bodySchema = z.union([
   z.object({ action: z.literal("match"), topUpId: z.string().min(1) }),
@@ -76,6 +77,8 @@ export async function POST(
         processedAt: new Date(),
       },
     });
+    // 수기 지급은 충전 레코드 없는 실입금이라 ERP 매출에 따로 들어간다
+    notifyErp("무통장 수기 지급");
     return NextResponse.json({ status: "MANUAL_GRANT" });
   }
 

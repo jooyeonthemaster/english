@@ -187,7 +187,7 @@ const TOP_UP_STATUS_LABELS: Record<string, string> = {
   WAITING_FOR_DEPOSIT: "입금 대기",
   COMPLETED: "충전 완료",
   FAILED: "실패",
-  CANCELLED: "취소",
+  CANCELLED: "결제 취소",
   REFUNDED: "환불 확인",
 };
 
@@ -665,7 +665,7 @@ export function TopUpMethodDialog({
         if (!open && !loading) onClose();
       }}
     >
-      <DialogContent className="sm:max-w-[440px]">
+      <DialogContent className="sm:max-w-[560px]">
         <DialogHeader>
           <DialogTitle>결제 수단 선택</DialogTitle>
           <DialogDescription>

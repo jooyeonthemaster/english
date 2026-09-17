@@ -39,7 +39,7 @@ interface CostPeriodControlsProps {
   endValue: string | null;
   isRange: boolean;
   /** 현재 탭(view)을 URL에 유지 — 기능별 마진에서 기간 변경 시 탭이 풀리지 않게. */
-  view?: "dashboard" | "margin";
+  view?: "dashboard" | "margin" | "settings";
 }
 
 const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"];

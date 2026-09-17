@@ -2,6 +2,8 @@ import type { ReactNode } from "react";
 import { Scale } from "lucide-react";
 import type { FreeCreditBep } from "@/actions/admin/free-credit-bep";
 import { cn, formatCurrency, formatNumber } from "@/lib/utils";
+import { AdminHoverDetail } from "@/components/admin/hover-detail/admin-hover-detail";
+import { bepDetails } from "@/components/admin/costs-parts/margin-hover-detail";
 
 function pct(rate: number | null): string {
   return rate == null ? "—" : `${(rate * 100).toFixed(1)}%`;
@@ -19,6 +21,8 @@ export function FreeCreditBepCard({ data }: { data: FreeCreditBep }) {
     data.profitPerPayerKrw != null && data.freeCostPerSignupKrw > 0
       ? Math.floor(data.profitPerPayerKrw / data.freeCostPerSignupKrw)
       : null;
+  // 호버=계산식 입력값 팝오버, 클릭=상세 팝업
+  const details = bepDetails(data);
 
   return (
     <section className="rounded-xl border border-gray-100 bg-white">
@@ -48,24 +52,30 @@ export function FreeCreditBepCard({ data }: { data: FreeCreditBep }) {
 
       {/* 전환율 핵심 3지표 */}
       <div className="grid grid-cols-1 gap-3 p-5 sm:grid-cols-3">
+        <AdminHoverDetail title="누적 전환율" detail={details.conversion}>
         <BigStat
           label="누적 전환율"
           value={pct(data.conversionRate)}
           sub={`누적 유료 ${formatNumber(data.payingAcademies)} / 전체 ${formatNumber(data.totalAcademies)}학원`}
           tone={belowBep ? "rose" : "emerald"}
         />
+        </AdminHoverDetail>
+        <AdminHoverDetail title="BEP 전환율" detail={details.bep}>
         <BigStat
           label="BEP 전환율"
           value={pct(data.bepConversionRate)}
           sub="이 이상이면 흑자"
           tone="slate"
         />
+        </AdminHoverDetail>
+        <AdminHoverDetail title="1인당 무료 원가" detail={details.freePerSignup}>
         <BigStat
           label="1인당 무료 원가"
           value={won(data.freeCostPerSignupKrw)}
           sub={`무료 ${formatNumber(data.assumedFreeCreditsPerSignup)}C × ${won(data.avgCostPerCreditKrw)}/C`}
           tone="slate"
         />
+        </AdminHoverDetail>
       </div>
 
       {belowBep && (
@@ -77,6 +87,7 @@ export function FreeCreditBepCard({ data }: { data: FreeCreditBep }) {
 
       {/* 상세 */}
       <div className="grid grid-cols-2 gap-px border-t border-gray-50 bg-gray-50 sm:grid-cols-4">
+        <AdminHoverDetail title="평균 원가/크레딧" detail={details.avgCost}>
         <Cell
           label="평균 원가/크레딧"
           value={won(data.avgCostPerCreditKrw)}
@@ -86,21 +97,28 @@ export function FreeCreditBepCard({ data }: { data: FreeCreditBep }) {
               : "실측 부족 → 추정"
           }
         />
+        </AdminHoverDetail>
+        <AdminHoverDetail title="무료 지급 원가" detail={details.freeCost}>
         <Cell
           label="무료 지급 원가"
           value={formatCurrency(data.freeCostKrw)}
           note={`${formatNumber(data.freeCreditsGranted)}C 지급`}
         />
+        </AdminHoverDetail>
+        <AdminHoverDetail title="유료 매출 · 이익" detail={details.paid}>
         <Cell
           label="유료 매출 · 이익"
           value={formatCurrency(data.paidRevenueKrw)}
           note={`이익 ${formatCurrency(data.grossProfitKrw)} · 이 기간 전환 ${formatNumber(data.payersInPeriod)}건`}
         />
+        </AdminHoverDetail>
+        <AdminHoverDetail title="전환 1인 이익" detail={details.profitPerPayer}>
         <Cell
           label="전환 1인 이익"
           value={won(data.profitPerPayerKrw ?? 0)}
           note={coverPerPayer != null ? `무료 ${coverPerPayer}명 커버` : "—"}
         />
+        </AdminHoverDetail>
       </div>
 
       <p className="px-5 py-3 text-[11px] leading-5 text-gray-400">
@@ -133,7 +151,7 @@ function BigStat({
         ? "text-rose-700"
         : "text-gray-900";
   return (
-    <div className="rounded-xl border border-gray-100 bg-gray-50/60 px-4 py-3">
+    <div className="cursor-pointer rounded-xl border border-gray-100 bg-gray-50/60 px-4 py-3 transition-colors hover:bg-gray-100/70">
       <p className="text-[12px] text-gray-400">{label}</p>
       <p className={cn("mt-1 text-[24px] font-bold tabular-nums", valueTone)}>
         {value}
@@ -153,7 +171,7 @@ function Cell({
   note: string;
 }) {
   return (
-    <div className="bg-white px-4 py-3">
+    <div className="cursor-pointer bg-white px-4 py-3 transition-colors hover:bg-gray-50">
       <p className="text-[11px] text-gray-400">{label}</p>
       <p className="mt-0.5 text-[14px] font-semibold tabular-nums text-gray-900">
         {value}

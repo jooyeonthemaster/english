@@ -319,8 +319,13 @@ export function useCreditsController() {
       // 쿠폰·프로모가 붙으면 서버가 확정한 실제 청구액으로 교체한다.
       let attemptedAmount = product.price;
       let preparedPaymentId: string | null = null;
+      // 결제창이 결제를 거절했을 때만 true. 준비 API 오류·승인 후 검증 오류는
+      // 카드사 한도와 무관하므로 한도 안내를 붙이지 않는다.
+      let paymentWindowRejected = false;
       const cardLimitInfo = () =>
-        payMethod === "CARD" ? { cardLimitAmount: attemptedAmount } : {};
+        payMethod === "CARD" && paymentWindowRejected
+          ? { cardLimitAmount: attemptedAmount }
+          : {};
       try {
         const prepareRes = await fetch("/api/credits/top-ups/prepare", {
           method: "POST",
@@ -357,6 +362,7 @@ export function useCreditsController() {
           const payment = await requestDanalLegacyPayment(
             prepared.paymentRequest,
           ).catch(async (err) => {
+            paymentWindowRejected = true;
             await recordPaymentFailure(preparedPaymentId);
             throw err;
           });
@@ -373,6 +379,7 @@ export function useCreditsController() {
           return;
         }
         if (payment.code) {
+          paymentWindowRejected = true;
           setPaymentMessage({
             type: "error",
             text: payment.message ?? "결제가 완료되지 않았습니다.",

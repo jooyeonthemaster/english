@@ -6,6 +6,7 @@ import {
   cancelPortOneCreditTopUp,
   PortOneTopUpError,
 } from "@/lib/portone-credit-topups";
+import { notifyErp } from "@/lib/erp/signal";
 
 interface RouteContext {
   params: Promise<{ topUpId: string }>;
@@ -51,6 +52,8 @@ export async function POST(request: NextRequest, ctx: RouteContext) {
       refundAccount: parsed.data.refundAccount,
     });
     const topUp = await getAdminCreditTopUpDetail(topUpId);
+    // 환불은 이미 ERP 에 들어간 매출 줄을 바꾼다 — 가져가라고 알린다
+    notifyErp("크레딧 충전 환불");
     return NextResponse.json({ result, topUp });
   } catch (err) {
     if (err instanceof PortOneTopUpError) {

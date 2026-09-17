@@ -2,23 +2,32 @@
 
 import { useEffect, useRef, useState, useTransition } from "react";
 import Link from "next/link";
+import { CheckCircle2, Lock, MessageSquare, Pin, ThumbsUp } from "lucide-react";
 import {
   adminGetHelpPosts,
   type AdminHelpPostsResult,
 } from "@/actions/admin-help-center";
+import { getHelpPostHoverDetail } from "@/actions/admin/detail/help-posts";
 import { AdminPagination } from "@/components/admin/admin-pagination";
+import { AdminHoverDetail } from "@/components/admin/hover-detail/admin-hover-detail";
+import {
+  AdminEmptyState,
+  FilterBar,
+  FilterChipGroup,
+  ResultCount,
+  SearchInput,
+} from "@/components/admin/kit";
 import { useAutoRefresh } from "@/hooks/use-auto-refresh";
+import { useSearchDebounce } from "@/hooks/use-search-debounce";
 import {
   boardStatuses,
   boardCategories,
   labelOf,
-  statusOf,
   HELP_BOARD_META,
   type HelpBoard,
 } from "@/lib/help-center";
-import { StatusBadge } from "@/components/help-center/status-badge";
-import { formatRelativeTime } from "@/lib/utils";
-import { Lock, Pin, MessageSquare, ThumbsUp, CheckCircle2, Search } from "lucide-react";
+import { cn, formatRelativeTime } from "@/lib/utils";
+import { HelpStatusBadge } from "./help-status-badge";
 
 // 관리자가 한 번이라도 연 글의 id 를 브라우저에 저장 → 클릭 전까지만 파란 글로우.
 const SEEN_KEY = "smoat_admin_help_seen";
@@ -40,6 +49,15 @@ function persistSeen(seen: Set<string>) {
   }
 }
 
+/** 상태 필터를 ?status= 에 남겨 상세에서 돌아오거나 새로고침해도 같은 필터가 보이게 한다. */
+function syncStatusParam(status: string) {
+  if (typeof window === "undefined") return;
+  const url = new URL(window.location.href);
+  if (status === "ALL") url.searchParams.delete("status");
+  else url.searchParams.set("status", status);
+  window.history.replaceState(window.history.state, "", url);
+}
+
 export function AdminHelpBoardClient({
   board,
   initialData,
@@ -58,12 +76,12 @@ export function AdminHelpBoardClient({
   const statusFilters =
     board === "SUPPORT"
       ? [
-          { value: "ALL", label: "전체" },
-          { value: "PENDING", label: "미답변" },
-          ...statuses,
+          { key: "ALL", label: "전체" },
+          { key: "PENDING", label: "미답변" },
+          ...statuses.map((s) => ({ key: s.value, label: s.label })),
         ]
-      : [{ value: "ALL", label: "전체" }, ...statuses];
-  const validStatuses = new Set(statusFilters.map((s) => s.value));
+      : [{ key: "ALL", label: "전체" }, ...statuses.map((s) => ({ key: s.value, label: s.label }))];
+  const validStatuses = new Set(statusFilters.map((s) => s.key));
 
   const [posts, setPosts] = useState(initialData.items);
   const [total, setTotal] = useState(initialData.total);
@@ -72,7 +90,9 @@ export function AdminHelpBoardClient({
   const [status, setStatus] = useState(
     initialStatus && validStatuses.has(initialStatus) ? initialStatus : "ALL",
   );
-  const [search, setSearch] = useState("");
+  // 검색: 표시값은 즉시, 서버 조회는 250ms 디바운스로 커밋(Enter·지우기는 즉시).
+  const [searchInput, setSearchInput] = useState("");
+  const searchRef = useRef("");
   const [isPending, startTransition] = useTransition();
 
   // 미확인 글 글로우용. 하이드레이션 불일치를 막기 위해 마운트 후 localStorage 를 읽는다.
@@ -94,12 +114,12 @@ export function AdminHelpBoardClient({
 
   const totalPages = Math.max(1, Math.ceil(total / initialData.pageSize));
 
-  function reload(nextStatus = status, nextPage = pageRef.current) {
+  function reload(nextStatus = status, nextPage = pageRef.current, nextSearch = searchRef.current) {
     startTransition(async () => {
       const data = await adminGetHelpPosts({
         board,
         status: nextStatus,
-        search: search || undefined,
+        search: nextSearch || undefined,
         page: nextPage,
       });
       setPosts(data.items);
@@ -109,97 +129,115 @@ export function AdminHelpBoardClient({
     });
   }
 
+  const { schedule, flush } = useSearchDebounce((value) => {
+    const q = value.trim();
+    if (q === searchRef.current) return;
+    searchRef.current = q;
+    reload(status, 1, q);
+  });
+
+  function changeStatus(next: string) {
+    setStatus(next);
+    syncStatusParam(next);
+    reload(next, 1);
+  }
+
   // 목록 페이지는 10분마다 자동 새로고침. 특정 글을 읽는 상세 화면은
   // 별도 라우트(/admin/{board}/[postId])라 이 컴포넌트가 언마운트되므로
   // 읽는 동안에는 새로고침이 일어나지 않는다.
   useAutoRefresh(() => reload());
 
-  return (
-    <div className="space-y-5">
-      {/* Filters */}
-      <div className="flex flex-wrap items-center gap-2">
-        <div className="relative flex-1 min-w-[200px] max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && reload(status, 1)}
-            placeholder="제목 검색..."
-            className="w-full h-9 pl-9 pr-3 rounded-xl border border-gray-200 bg-white text-[13px] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 outline-none"
-          />
-        </div>
-        <div className="flex flex-wrap gap-1.5">
-          {statusFilters.map((s) => (
-            <button
-              key={s.value}
-              onClick={() => {
-                setStatus(s.value);
-                reload(s.value, 1);
-              }}
-              className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-colors ${
-                status === s.value
-                  ? "border-slate-800 bg-slate-800 text-white"
-                  : "border-transparent bg-slate-100 text-slate-500 hover:bg-slate-200"
-              }`}
-            >
-              {s.label}
-            </button>
-          ))}
-        </div>
-      </div>
+  // 상세로 갈 때 현재 상태 필터를 넘겨 "목록" 으로 돌아올 때 같은 필터를 복원한다.
+  const detailHref = (postId: string) =>
+    status === "ALL"
+      ? `${meta.adminPath}/${postId}`
+      : `${meta.adminPath}/${postId}?status=${encodeURIComponent(status)}`;
 
-      {/* List */}
-      <div className="rounded-2xl border border-gray-100 bg-white overflow-hidden">
-        {isPending && posts.length === 0 && (
-          <div className="py-12 text-center text-gray-400 text-sm">불러오는 중...</div>
+  return (
+    <div className="space-y-4">
+      <FilterBar right={<ResultCount total={total} page={page} totalPages={totalPages} />}>
+        <SearchInput
+          value={searchInput}
+          onChange={(v) => {
+            setSearchInput(v);
+            if (v === "") flush("");
+            else schedule(v);
+          }}
+          onEnter={() => flush(searchInput)}
+          placeholder="제목 검색"
+          ariaLabel="제목 검색"
+        />
+        <FilterChipGroup
+          options={statusFilters}
+          value={status}
+          onChange={changeStatus}
+          ariaLabel="상태 필터"
+        />
+      </FilterBar>
+
+      <div className="overflow-hidden rounded-xl border border-gray-100 bg-white">
+        {posts.length === 0 ? (
+          <AdminEmptyState
+            title="등록된 글이 없습니다"
+            description={searchRef.current ? "검색어나 상태 필터를 바꿔 보세요." : undefined}
+            className={cn(isPending && "opacity-60")}
+          />
+        ) : (
+          <ul className={cn("divide-y divide-gray-50 transition-opacity", isPending && "opacity-60")}>
+            {posts.map((p) => (
+              <li key={p.id} className={seenReady && !seen.has(p.id) ? "admin-unread-glow" : undefined}>
+                {/* 호버=본문 미리보기(지연 조회, 읽음 표시 안 함). 클릭=상세 페이지 이동 */}
+                <AdminHoverDetail
+                  title={p.title}
+                  load={() => getHelpPostHoverDetail(p.id)}
+                  cacheKey={`help-post:${p.id}`}
+                  click="none"
+                >
+                  <Link
+                    href={detailHref(p.id)}
+                    onClick={() => markSeen(p.id)}
+                    className="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-gray-50/60"
+                  >
+                    <div className="flex shrink-0 items-center gap-2">
+                      {p.isPinned && (
+                        <Pin className="size-3.5 fill-amber-500 text-amber-500" strokeWidth={2} aria-label="상단 고정" />
+                      )}
+                      <HelpStatusBadge options={statuses} value={p.status} />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        {p.isPrivate && <Lock className="size-3 shrink-0 text-gray-400" strokeWidth={2} aria-label="비밀글" />}
+                        <span className="truncate text-[13px] font-semibold text-gray-900">{p.title}</span>
+                        {p.hasOfficialAnswer && (
+                          <CheckCircle2 className="size-3.5 shrink-0 text-emerald-500" strokeWidth={2} aria-label="공식 답변 완료" />
+                        )}
+                      </div>
+                      <div className="mt-0.5 flex items-center gap-2 text-[11px] text-gray-400">
+                        <span className="font-medium text-gray-500">{labelOf(categories, p.category)}</span>
+                        <span>·</span>
+                        <span>{p.authorName}</span>
+                        <span>·</span>
+                        <span>{formatRelativeTime(new Date(p.createdAt))}</span>
+                      </div>
+                    </div>
+                    <div className="flex shrink-0 items-center gap-3 text-[11px] tabular-nums text-gray-400">
+                      {board === "FEEDBACK" && (
+                        <span className="flex items-center gap-1">
+                          <ThumbsUp className="size-3" strokeWidth={2} aria-hidden />
+                          {p.upvoteCount}
+                        </span>
+                      )}
+                      <span className="flex items-center gap-1">
+                        <MessageSquare className="size-3" strokeWidth={2} aria-hidden />
+                        {p.replyCount}
+                      </span>
+                    </div>
+                  </Link>
+                </AdminHoverDetail>
+              </li>
+            ))}
+          </ul>
         )}
-        {!isPending && posts.length === 0 && (
-          <div className="py-16 text-center text-gray-400 text-sm">등록된 글이 없습니다</div>
-        )}
-        <ul className="divide-y divide-gray-50">
-          {posts.map((p) => (
-            <li key={p.id} className={seenReady && !seen.has(p.id) ? "admin-unread-glow" : undefined}>
-              <Link
-                href={`${meta.adminPath}/${p.id}`}
-                onClick={() => markSeen(p.id)}
-                className="flex items-center gap-3 px-4 py-3 hover:bg-slate-50/70 transition-colors"
-              >
-                <div className="flex items-center gap-2 shrink-0">
-                  {p.isPinned && <Pin className="size-3.5 text-amber-500 fill-amber-500" />}
-                  <StatusBadge status={statusOf(statuses, p.status)} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    {p.isPrivate && <Lock className="size-3 text-slate-400 shrink-0" />}
-                    <span className="text-[13px] font-semibold text-gray-900 truncate">{p.title}</span>
-                    {p.hasOfficialAnswer && (
-                      <CheckCircle2 className="size-3.5 text-emerald-500 shrink-0" />
-                    )}
-                  </div>
-                  <div className="flex items-center gap-2 mt-0.5 text-[11px] text-gray-400">
-                    <span className="text-slate-500 font-medium">{labelOf(categories, p.category)}</span>
-                    <span>·</span>
-                    <span>{p.authorName}</span>
-                    <span>·</span>
-                    <span>{formatRelativeTime(new Date(p.createdAt))}</span>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 shrink-0 text-[11px] text-gray-400">
-                  {board === "FEEDBACK" && (
-                    <span className="flex items-center gap-1">
-                      <ThumbsUp className="size-3" />
-                      {p.upvoteCount}
-                    </span>
-                  )}
-                  <span className="flex items-center gap-1">
-                    <MessageSquare className="size-3" />
-                    {p.replyCount}
-                  </span>
-                </div>
-              </Link>
-            </li>
-          ))}
-        </ul>
         <AdminPagination
           page={page}
           totalPages={totalPages}

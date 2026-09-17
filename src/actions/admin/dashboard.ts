@@ -32,6 +32,7 @@ export interface DashboardKpi {
 
 export interface DashboardTrendPoint {
   date: string; // "MM/DD"
+  dateKey: string; // "YYYY-MM-DD"(KST) — 상세 조회용
   revenue: number;
   signups: number;
 }
@@ -83,8 +84,6 @@ export async function getDashboardOverview(): Promise<DashboardOverview> {
   const [
     // --- 액션 필요 스트립 ---
     unmatchedDeposits,
-    waitingTopups,
-    pendingRegistrations,
     pendingSupport,
     pendingSeminars,
     // --- 오늘의 맥박 ---
@@ -125,10 +124,6 @@ export async function getDashboardOverview(): Promise<DashboardOverview> {
     prisma.bankDepositNotification.count({
       where: { status: { in: ["UNMATCHED", "AMBIGUOUS"] } },
     }),
-    prisma.creditTopUp.count({
-      where: { status: "WAITING_FOR_DEPOSIT", paymentMethod: "BANK_TRANSFER" },
-    }),
-    prisma.academyRegistration.count({ where: { status: "PENDING" } }),
     prisma.helpPost.count({
       where: { board: "SUPPORT", status: { in: ["OPEN", "IN_PROGRESS"] } },
     }),
@@ -230,22 +225,8 @@ export async function getDashboardOverview(): Promise<DashboardOverview> {
       key: "deposits",
       label: "미확인 입금",
       count: unmatchedDeposits,
-      href: "/admin/credits/bank-deposits?status=ACTION",
+      href: "/admin/credit-plans?tab=deposits&status=ACTION",
       urgent: true,
-    },
-    {
-      key: "waiting-topups",
-      label: "입금 대기",
-      count: waitingTopups,
-      href: "/admin/credits/bank-deposits?view=pending",
-      urgent: false,
-    },
-    {
-      key: "registrations",
-      label: "가입 승인 대기",
-      count: pendingRegistrations,
-      href: "/admin/registrations?status=PENDING",
-      urgent: false,
     },
     {
       key: "support",
@@ -292,7 +273,7 @@ export async function getDashboardOverview(): Promise<DashboardOverview> {
   }
   const trend: DashboardTrendPoint[] = dayKeys.map((key) => {
     const b = buckets.get(key)!;
-    return { date: `${key.slice(5, 7)}/${key.slice(8, 10)}`, ...b };
+    return { date: `${key.slice(5, 7)}/${key.slice(8, 10)}`, dateKey: key, ...b };
   });
 
   const monthRevenue = topupRevenueMonth + subRevenueMonth + grantRevenueMonth;

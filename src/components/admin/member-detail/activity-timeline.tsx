@@ -3,6 +3,7 @@
 // ============================================================================
 // ActivityTimeline — 회원 상세의 활동 타임라인 섹션.
 // 도메인 테이블 유니온(getMemberActivity) 기반이라 과거 이력까지 전부 보인다.
+// (getMemberActivity 는 회원이 속한 학원 단위로 조회 — 옛 학원 상세 타임라인과 같은 범위)
 // 거래 이력 테이블과 동일한 패턴: 필터 변경 시 리셋, "더 보기" 커서 페이지네이션.
 // ============================================================================
 
@@ -17,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { SectionCard } from "@/components/admin/kit";
 import { getMemberActivity } from "@/actions/admin-activity";
 import {
   ACTIVITY_CATEGORY_OPTIONS,
@@ -75,25 +77,15 @@ export function ActivityTimeline({ memberId, initial }: ActivityTimelineProps) {
   }
 
   return (
-    <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 px-5 py-4 border-b border-gray-50">
-        <div className="flex items-center gap-2">
-          <ListTree
-            className="size-4 text-gray-400"
-            strokeWidth={1.8}
-            aria-hidden
-          />
-          <h3 className="text-[14px] font-semibold text-gray-800">
-            활동 타임라인
-          </h3>
-          <span className="text-[11px] text-gray-400 tabular-nums">
-            · {items.length}건{nextBefore ? "+" : ""}
-          </span>
-        </div>
-
-        <div className="flex items-center gap-2 flex-wrap">
+    <SectionCard
+      title="활동 타임라인"
+      icon={ListTree}
+      description={`${items.length}건${nextBefore ? "+" : ""}`}
+      padded={false}
+      actions={
+        <>
           <label className="inline-flex items-center gap-1.5">
-            <span className="text-[11px] text-gray-400 font-medium">분류</span>
+            <span className="text-[11px] font-medium text-gray-400">분류</span>
             <Select
               value={category}
               onValueChange={(v) => {
@@ -102,16 +94,12 @@ export function ActivityTimeline({ memberId, initial }: ActivityTimelineProps) {
                 applyCategory(next);
               }}
             >
-              <SelectTrigger className="h-8 text-[12px] min-w-[120px]">
+              <SelectTrigger className="h-8 min-w-[120px] text-[12px]">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 {ACTIVITY_CATEGORY_OPTIONS.map((o) => (
-                  <SelectItem
-                    key={o.value}
-                    value={o.value}
-                    className="text-[12px]"
-                  >
+                  <SelectItem key={o.value} value={o.value} className="text-[12px]">
                     {o.label}
                   </SelectItem>
                 ))}
@@ -120,48 +108,48 @@ export function ActivityTimeline({ memberId, initial }: ActivityTimelineProps) {
           </label>
 
           <Button
+            type="button"
             variant="ghost"
             size="sm"
-            className="h-8 text-[12px] text-gray-500"
+            className="text-gray-500"
             onClick={() => applyCategory(category)}
             disabled={isPending}
             aria-label="타임라인 새로고침"
           >
             <RefreshCw
-              className={cn("size-3.5 mr-1", isPending && "animate-spin")}
+              className={cn("size-3.5", isPending && "animate-spin")}
               strokeWidth={2}
               aria-hidden
             />
             새로고침
           </Button>
-        </div>
+        </>
+      }
+    >
+      <div className={cn(isPending && "opacity-60")}>
+        <ActivityList
+          items={items}
+          emptyMessage={
+            category !== "all"
+              ? "조건에 맞는 활동이 없습니다"
+              : "아직 활동 내역이 없습니다"
+          }
+        />
       </div>
 
-      <ActivityList
-        items={items}
-        emptyMessage={
-          category !== "all"
-            ? "조건에 맞는 활동이 없습니다"
-            : "아직 활동 내역이 없습니다"
-        }
-      />
-
       {(nextBefore || isPending) && items.length > 0 && (
-        <div className="px-5 py-3 border-t border-gray-50 flex items-center justify-center">
+        <div className="flex items-center justify-center border-t border-gray-50 px-5 py-3">
           <Button
+            type="button"
             variant="ghost"
             size="sm"
             onClick={loadMore}
             disabled={isPending || !nextBefore}
-            className="text-[12px] text-gray-600"
+            className="text-gray-600"
           >
             {isPending ? (
               <>
-                <Loader2
-                  className="size-3.5 mr-1.5 animate-spin"
-                  strokeWidth={2}
-                  aria-hidden
-                />
+                <Loader2 className="size-3.5 animate-spin" strokeWidth={2} aria-hidden />
                 불러오는 중
               </>
             ) : (
@@ -170,6 +158,6 @@ export function ActivityTimeline({ memberId, initial }: ActivityTimelineProps) {
           </Button>
         </div>
       )}
-    </div>
+    </SectionCard>
   );
 }

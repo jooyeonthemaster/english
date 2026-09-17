@@ -378,7 +378,7 @@ export function notifyAcademyRegistration(registrationId: string): void {
         ?.split(" | ")
         .filter((part) => !part.startsWith("__DISTRICT__:"))
         .join(" | "),
-      link: "/admin/registrations",
+      link: "/admin/members",
       occurredAt: reg.createdAt,
     };
   });
