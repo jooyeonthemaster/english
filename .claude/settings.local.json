@@ -3,7 +3,6 @@
     "allow": [
       "Bash(*)",
       "WebFetch(*)",
-      "mcp__playwright__*",
       "WebSearch",
       "mcp__supabase__*",
       "Read(//c/Users/jooye/Desktop/2026project/nara/src/components/workbench/**)",
