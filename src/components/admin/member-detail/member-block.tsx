@@ -1,19 +1,20 @@
 import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
+import { StatusBadge } from "@/components/admin/kit";
+import { STAFF_ROLE } from "@/lib/admin-labels";
 import { ProviderBadge } from "@/components/admin/provider-badge";
-import { Avatar, DefList, DefRow } from "@/components/admin/member-detail/atoms";
-import { OutreachCard } from "@/components/admin/member-detail/outreach-card";
+import { Avatar, DefList, DefRow } from "./atoms";
+import { OutreachCard } from "./outreach-card";
 import { formatKstDate, formatKstDateTime } from "@/lib/admin-kst-format";
 import type { MemberDetail } from "@/actions/admin-members";
 
 type StaffItem = MemberDetail["academyStaff"][number];
 
-const ROLE_LABEL: Record<string, string> = {
-  DIRECTOR: "원장",
-  TEACHER: "강사",
-};
-
-// 표시는 KST 고정 — 서버(Vercel)는 UTC 라 timeZone 을 안 주면 SSR 이 하루 이르게 찍는다.
+// 역할 라벨은 STAFF_ROLE + StatusBadge 규약(docs/ADMIN-UI-CONVENTION.md)을 쓴다.
+//
+// 날짜 표시는 KST 고정 — 서버(Vercel)는 UTC 라 timeZone 을 안 주면 SSR 이 하루 이르게
+// 찍는다. 이웃한 `./format` 의 toLocale* 포매터에는 timeZone 이 없어 로컬(KST)에서는
+// 절대 드러나지 않으므로, 이 화면은 admin-kst-format 을 쓴다(스펙 I1 · 게이트
+// `TZ=UTC npx tsx scripts/analytics-gate-member-kst.ts`).
 const formatDate = formatKstDate;
 const formatDateTime = formatKstDateTime;
 
@@ -35,39 +36,29 @@ export function MemberBlock({
     <div
       id={`member-${staff.id}`}
       className={cn(
-        "scroll-mt-24 rounded-2xl border bg-white overflow-hidden",
+        "scroll-mt-24 overflow-hidden rounded-xl border bg-white",
         isCurrent ? "border-blue-200" : "border-gray-100",
       )}
     >
       {/* 블록 헤더 — 회원 요약 */}
-      <div className="flex items-center gap-3 px-5 py-3.5 border-b border-gray-50 bg-gray-50/40">
+      <div className="flex items-center gap-3 border-b border-gray-50 bg-gray-50/40 px-5 py-3.5">
         <Avatar name={staff.name} avatarUrl={staff.avatarUrl} size="sm" />
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2 min-w-0">
-            <span className="text-[14px] font-semibold text-gray-900 truncate">
+          <div className="flex min-w-0 items-center gap-2">
+            <span className="truncate text-[15px] font-semibold text-gray-900">
               {staff.name}
             </span>
-            <Badge
-              variant="secondary"
-              className={cn(
-                "border-0 text-[10px] px-1.5 h-4 font-medium shrink-0",
-                staff.role === "DIRECTOR"
-                  ? "bg-blue-50 text-blue-600"
-                  : "bg-gray-100 text-gray-500",
-              )}
-            >
-              {ROLE_LABEL[staff.role] ?? staff.role}
-            </Badge>
+            <StatusBadge map={STAFF_ROLE} value={staff.role} />
             {isCurrent && (
-              <span className="text-[10px] font-medium text-blue-600 shrink-0">
+              <span className="shrink-0 text-[11px] font-medium text-blue-600">
                 현재 보기
               </span>
             )}
             {!staff.isActive && (
-              <span className="text-[10px] text-gray-400 shrink-0">비활성</span>
+              <span className="shrink-0 text-[11px] text-gray-400">비활성</span>
             )}
           </div>
-          <span className="block text-[11px] text-gray-400 truncate">
+          <span className="block truncate text-[11px] text-gray-400">
             {staff.email}
           </span>
         </div>
@@ -75,9 +66,9 @@ export function MemberBlock({
       </div>
 
       {/* 본문 — 회원 정보 + 맞춤 문자 */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 lg:divide-x divide-gray-50">
-        <div className="lg:col-span-1 p-5">
-          <h4 className="text-[12px] font-semibold text-gray-500 mb-2.5">
+      <div className="grid grid-cols-1 divide-gray-50 lg:grid-cols-3 lg:divide-x">
+        <div className="p-5 lg:col-span-1">
+          <h4 className="mb-2.5 text-[12px] font-semibold text-gray-500">
             회원 정보
           </h4>
           <DefList>
@@ -115,7 +106,7 @@ export function MemberBlock({
                 label="Supabase UID"
                 value={
                   <span
-                    className="font-mono text-[11px] text-gray-500 truncate inline-block max-w-[150px] align-middle"
+                    className="inline-block max-w-[150px] truncate align-middle font-mono text-[11px] text-gray-500"
                     title={staff.supabaseUserId}
                   >
                     {staff.supabaseUserId}

@@ -220,7 +220,7 @@ export function TasksClient({
       tasksBadgeCount={tasks ? todoAll.length : undefined}
       chatRemainingToday={chatRemainingToday}
     >
-      <div className="mx-auto max-w-md px-5 pb-6 pt-5">
+      <div className="gd-page px-5 pb-6 pt-5">
         {/* ── 페이지 타이틀 + 요약 ── */}
         <header>
           <h1 className="gd-t-xl font-bold tracking-tight">과제</h1>
@@ -322,7 +322,7 @@ export function TasksClient({
           ) : done.length === 0 ? (
             <EmptyState message="아직 완료한 과제가 없습니다." />
           ) : (
-            <ul className="flex flex-col gap-2">
+            <ul className="flex flex-col gap-2 md:grid md:grid-cols-2">
               {done.map((t) => (
                 <li key={t.taskId}>
                   <TaskCard card={t} now={now} isNewResult={newResultIds.has(t.taskId)} />
@@ -398,7 +398,7 @@ function TaskGroup({
           {items.length}
         </span>
       </div>
-      <ul className="flex flex-col gap-2">
+      <ul className="flex flex-col gap-2 md:grid md:grid-cols-2">
         {items.map((t) => (
           <li key={t.taskId}>
             {/* "나중에 · 마감 없음" 그룹에서는 카드의 "마감 없음" 라벨이 중복이라 억제 */}

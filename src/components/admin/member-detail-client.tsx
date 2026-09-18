@@ -2,7 +2,6 @@
 
 import { useState, type ReactNode } from "react";
 import {
-  Building2,
   ShieldCheck,
   ShieldOff,
   Coins,
@@ -12,9 +11,16 @@ import {
   MapPin,
   Users,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatDate as kstDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import {
+  AdminTabs,
+  PageHeader,
+  StatCard,
+  StatusBadge,
+  useUrlTab,
+} from "@/components/admin/kit";
+import { ACADEMY_STATUS } from "@/lib/admin-labels";
 import { CreditAdjustModal } from "@/components/admin/member-detail/credit-adjust-modal";
 import { CreditExpiryModal } from "@/components/admin/member-detail/credit-expiry-modal";
 import { ActiveToggleModal } from "@/components/admin/member-detail/active-toggle-modal";
@@ -34,14 +40,6 @@ import { PurchasesSection } from "@/components/admin/member-detail/purchases-sec
 import { MemberBlock } from "@/components/admin/member-detail/member-block";
 import { AcquisitionCard } from "@/components/admin/member-detail/acquisition-card";
 import type { MemberDetail, MemberPurchaseItem } from "@/actions/admin-members";
-
-// Academy.status → 가입 경로 중심 뱃지(목록과 동일 규칙).
-const ACADEMY_STATUS_BADGE: Record<string, { label: string; className: string }> = {
-  TRIAL: { label: "자가 가입", className: "bg-sky-50 text-sky-600" },
-  ACTIVE: { label: "관리자 승인", className: "bg-emerald-50 text-emerald-600" },
-  SUSPENDED: { label: "정지", className: "bg-rose-50 text-rose-600" },
-  DEACTIVATED: { label: "비활성", className: "bg-gray-100 text-gray-500" },
-};
 
 type TabKey = "overview" | "members" | "transactions" | "content" | "activity";
 const TABS: { key: TabKey; label: string }[] = [
@@ -83,14 +81,10 @@ interface MemberDetailClientProps {
   initialTab: TabKey;
 }
 
+// 시각 표기는 KST 고정 포매터(lib/utils)를 쓴다 — toLocale* 는 서버(UTC)·브라우저(KST) 결과가
+// 달라 hydration 이 깨진다.
 function formatDate(d: Date | string | null | undefined): string {
-  if (!d) return "—";
-  return new Date(d).toLocaleDateString("ko-KR", {
-    timeZone: "Asia/Seoul",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  });
+  return d ? kstDate(d) : "—";
 }
 
 export function MemberDetailClient({
@@ -103,7 +97,8 @@ export function MemberDetailClient({
   const [adjustOpen, setAdjustOpen] = useState(false);
   const [toggleOpen, setToggleOpen] = useState(false);
   const [expiryOpen, setExpiryOpen] = useState(false);
-  const [tab, setTab] = useState<TabKey>(initialTab);
+  // 탭 상태는 ?tab= 에 남긴다(새로고침·링크 공유 시 같은 탭).
+  const [tab, setTab] = useUrlTab<TabKey>("tab", initialTab, { defaultKey: "overview" });
 
   const balance = member.creditBalance?.balance ?? null;
   const totalAllocated = member.creditBalance?.totalAllocated ?? 0;
@@ -123,20 +118,9 @@ export function MemberDetailClient({
   }));
   const activeDays = member.dailyConsumption.filter((d) => d.total > 0).length;
 
-
   const knownOperationTypes = member.consumptionByOp
     .map((c) => c.operationType)
     .filter((op): op is string => op !== null);
-
-  function changeTab(next: TabKey) {
-    if (next === tab) return;
-    setTab(next);
-    if (typeof window !== "undefined") {
-      const url = new URL(window.location.href);
-      url.searchParams.set("tab", next);
-      window.history.replaceState(null, "", url.toString());
-    }
-  }
 
   return (
     <>
@@ -149,29 +133,13 @@ export function MemberDetailClient({
         onExpiry={() => setExpiryOpen(true)}
       />
 
-      {/* Tabs */}
-      <div className="border-b border-gray-100">
-        <div className="flex gap-5">
-          {TABS.map((t) => (
-            <button
-              key={t.key}
-              type="button"
-              onClick={() => changeTab(t.key)}
-              className={cn(
-                "relative px-1 py-2.5 text-[13px] font-medium transition-colors outline-none",
-                tab === t.key
-                  ? "text-gray-900"
-                  : "text-gray-400 hover:text-gray-600",
-              )}
-            >
-              {t.label}
-              {tab === t.key && (
-                <span className="absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-blue-600" />
-              )}
-            </button>
-          ))}
-        </div>
-      </div>
+      <AdminTabs
+        tabs={TABS}
+        value={tab}
+        onChange={setTab}
+        ariaLabel="학원 상세 탭"
+        size="sm"
+      />
 
       {/* 개요 */}
       {tab === "overview" && (
@@ -330,7 +298,6 @@ function AcademyHeader({
   onToggle: () => void;
   onExpiry: () => void;
 }) {
-  const originBadge = ACADEMY_STATUS_BADGE[member.academy.status];
   const counts = member.academy.counts;
   const memberCount = member.academyStaff.length;
   const lowThreshold = member.creditBalance?.lowCreditThreshold ?? 50;
@@ -341,82 +308,58 @@ function AcademyHeader({
       : null;
 
   return (
-    <header className="bg-white rounded-xl border border-gray-100 p-5 space-y-4">
-      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-        <div className="flex items-start gap-4 min-w-0 flex-1">
-          <div
-            className="size-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0"
-            aria-hidden
-          >
-            <Building2 className="size-7" strokeWidth={1.7} />
-          </div>
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2 flex-wrap">
-              <h1 className="text-[20px] font-bold text-gray-900 truncate">
-                {member.academy.name}
-              </h1>
-              {originBadge && (
-                <Badge
-                  variant="secondary"
-                  className={cn(
-                    "border-0 text-[11px] font-medium px-2",
-                    originBadge.className,
-                  )}
-                >
-                  {originBadge.label}
-                </Badge>
-              )}
-            </div>
-            <div className="mt-1 flex items-center gap-3 text-[12px] text-gray-400 flex-wrap">
-              <span>/{member.academy.slug}</span>
+    <>
+      <PageHeader
+        title={member.academy.name}
+        back={{ href: "/admin/members", label: "학원 · 회원 목록" }}
+        crumbs={[{ label: member.academy.name }]}
+        description={
+          <span className="flex flex-wrap items-center gap-3">
+            <StatusBadge map={ACADEMY_STATUS} value={member.academy.status} />
+            <span>/{member.academy.slug}</span>
+            <span className="inline-flex items-center gap-1">
+              <CalendarClock className="size-3.5" strokeWidth={1.8} aria-hidden />
+              {formatDate(member.academy.createdAt)} 개설
+            </span>
+            {member.academy.address && (
               <span className="inline-flex items-center gap-1">
-                <CalendarClock className="size-3.5" strokeWidth={1.8} aria-hidden />
-                {formatDate(member.academy.createdAt)} 개설
+                <MapPin className="size-3.5" strokeWidth={1.8} aria-hidden />
+                {member.academy.address}
               </span>
-              {member.academy.address && (
-                <span className="inline-flex items-center gap-1">
-                  <MapPin className="size-3.5" strokeWidth={1.8} aria-hidden />
-                  {member.academy.address}
-                </span>
-              )}
-              <span className="text-gray-500">원장 {member.name}</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2 shrink-0">
-          <Button
-            variant="outline"
-            size="sm"
-            className="h-9 text-[12px]"
-            onClick={onToggle}
-            title={`${member.name} 원장 ${member.isActive ? "비활성화" : "활성화"}`}
-          >
-            {member.isActive ? (
-              <>
-                <ShieldOff className="size-3.5 mr-1.5 text-gray-500" strokeWidth={2} aria-hidden />
-                원장 비활성화
-              </>
-            ) : (
-              <>
-                <ShieldCheck className="size-3.5 mr-1.5 text-emerald-600" strokeWidth={2} aria-hidden />
-                원장 활성화
-              </>
             )}
-          </Button>
-          <Button
-            size="sm"
-            className="h-9 text-[12px] bg-blue-600 hover:bg-blue-700"
-            onClick={onAdjust}
-          >
-            <Coins className="size-3.5 mr-1.5" strokeWidth={2} aria-hidden />
-            크레딧 조정
-          </Button>
-        </div>
-      </div>
+            <span className="text-gray-500">원장 {member.name}</span>
+          </span>
+        }
+        actions={
+          <>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onToggle}
+              title={`${member.name} 원장 ${member.isActive ? "비활성화" : "활성화"}`}
+            >
+              {member.isActive ? (
+                <>
+                  <ShieldOff className="size-3.5 text-gray-500" strokeWidth={2} aria-hidden />
+                  원장 비활성화
+                </>
+              ) : (
+                <>
+                  <ShieldCheck className="size-3.5 text-emerald-600" strokeWidth={2} aria-hidden />
+                  원장 활성화
+                </>
+              )}
+            </Button>
+            <Button size="sm" onClick={onAdjust}>
+              <Coins className="size-3.5" strokeWidth={2} aria-hidden />
+              크레딧 조정
+            </Button>
+          </>
+        }
+      />
 
-      {/* KPI strip */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      {/* 학원 지표 */}
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <HeaderStat
           label="크레딧 잔고"
           value={
@@ -450,10 +393,11 @@ function AcademyHeader({
           }
         />
       </div>
-    </header>
+    </>
   );
 }
 
+/** 학원 상세 상단 지표 — kit StatCard 의 sm 형태를 그대로 쓴다. */
 function HeaderStat({
   label,
   value,
@@ -463,13 +407,5 @@ function HeaderStat({
   value: ReactNode;
   sub?: ReactNode;
 }) {
-  return (
-    <div className="rounded-xl border border-gray-100 bg-gray-50/40 px-3.5 py-2.5">
-      <div className="text-[11px] font-medium text-gray-400">{label}</div>
-      <div className="mt-1 text-[18px] font-bold text-gray-900 leading-none tabular-nums">
-        {value}
-      </div>
-      {sub && <div className="mt-1.5">{sub}</div>}
-    </div>
-  );
+  return <StatCard size="sm" label={label} value={value} sub={sub} />;
 }

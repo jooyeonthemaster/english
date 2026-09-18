@@ -48,7 +48,7 @@ function ChoiceView({ item, draft, setDraft, verdict }: ItemViewProps) {
 
   return (
     <div>
-      <p className="gd-en gd-t-md sm:gd-t-lg">
+      <p className="gd-en gd-t-md-lg">
         <MarkupText text={item.stem} blankContent={blank} />
       </p>
       <div className="mt-5 flex flex-col gap-2.5">
@@ -109,7 +109,7 @@ function OxView({ item, draft, setDraft, verdict }: ItemViewProps) {
 
   return (
     <div>
-      <p className="gd-en gd-t-md sm:gd-t-lg">
+      <p className="gd-en gd-t-md-lg">
         <MarkupText
           text={item.sentence}
           underlineStateFor={() => underlineState}
@@ -165,10 +165,10 @@ function UnderlinePickView({ item, draft, setDraft, verdict }: ItemViewProps) {
           : "밑줄 친 부분 중, 어법상 틀린 것을 고르십시오."}
       </p>
       <div
-        className="gd-card mt-3 px-4 py-4 sm:px-5"
+        className="gd-card mt-3 px-4 py-4 md:px-5"
         style={{ borderColor: "var(--gd-line)" }}
       >
-        <p className="gd-en gd-t-md sm:gd-t-lg">
+        <p className="gd-en gd-t-md-lg">
           <MarkupText
             text={item.text}
             underlineStateFor={stateFor}
@@ -210,7 +210,7 @@ function WriteFormView({ item, draft, setDraft, verdict }: ItemViewProps) {
   if (item.type !== "WRITE_FORM") return null;
   return (
     <div>
-      <p className="gd-en gd-t-md sm:gd-t-lg">
+      <p className="gd-en gd-t-md-lg">
         <MarkupText
           text={item.stem}
           blankContent={
@@ -252,7 +252,7 @@ function WriteCorrectView({ item, draft, setDraft, verdict }: ItemViewProps) {
   if (item.type !== "WRITE_CORRECT") return null;
   return (
     <div>
-      <p className="gd-en gd-t-md sm:gd-t-lg">
+      <p className="gd-en gd-t-md-lg">
         <MarkupText
           text={item.sentence}
           underlineStateFor={() => (verdict ? "wrong" : "idle")}
@@ -300,8 +300,8 @@ function WrittenInput({
       autoCorrect="off"
       spellCheck={false}
       enterKeyHint="done"
-      className="gd-en gd-t-lg mt-3 h-12 w-full rounded-xl border bg-white px-4 outline-none focus:border-[var(--gd-blue)]"
-      style={{ borderColor: "var(--gd-line-strong)" }}
+      className="gd-en gd-t-lg mt-3 h-12 w-full rounded-xl border px-4 outline-none focus:border-[var(--gd-blue)]"
+      style={{ background: "var(--gd-card)", borderColor: "var(--gd-line-strong)" }}
     />
   );
 }

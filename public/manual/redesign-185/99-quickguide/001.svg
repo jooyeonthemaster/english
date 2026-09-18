@@ -106,7 +106,7 @@
 <text x="1491" y="750" font-size="15" font-weight="800" fill="#718096">검수, 복원 근거, 지문함 등록</text>
 <line x1="1435" y1="774" x2="1789" y2="774" stroke="#edf2f7"/>
 <rect x="84" y="948" width="424" height="60" rx="8" fill="#ffffff" stroke="#d9e2ef" filter="none"/><text x="104" y="986" font-size="20" font-weight="950" fill="#111827">웹툰</text><text x="488" y="986" text-anchor="end" font-size="14" font-weight="800" fill="#718096">AI 콘텐츠 확장</text>
-<rect x="527" y="948" width="424" height="60" rx="8" fill="#ffffff" stroke="#d9e2ef" filter="none"/><text x="547" y="986" font-size="20" font-weight="950" fill="#111827">시험 리포트</text><text x="931" y="986" text-anchor="end" font-size="14" font-weight="800" fill="#718096">문항 분석과 상담 자료</text>
+<rect x="527" y="948" width="424" height="60" rx="8" fill="#ffffff" stroke="#d9e2ef" filter="none"/><text x="547" y="986" font-size="20" font-weight="950" fill="#111827">내신 시험 분석</text><text x="931" y="986" text-anchor="end" font-size="14" font-weight="800" fill="#718096">문항 분석과 상담 자료</text>
 <rect x="970" y="948" width="424" height="60" rx="8" fill="#ffffff" stroke="#d9e2ef" filter="none"/><text x="990" y="986" font-size="20" font-weight="950" fill="#111827">크레딧/리워드</text><text x="1374" y="986" text-anchor="end" font-size="14" font-weight="800" fill="#718096">비용과 보상 관리</text>
 <rect x="1413" y="948" width="424" height="60" rx="8" fill="#ffffff" stroke="#d9e2ef" filter="none"/><text x="1433" y="986" font-size="20" font-weight="950" fill="#111827">고객센터/설정</text><text x="1817" y="986" text-anchor="end" font-size="14" font-weight="800" fill="#718096">운영과 계정 관리</text>
 </svg>

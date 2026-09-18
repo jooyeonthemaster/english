@@ -13,6 +13,7 @@ import { useState, useTransition } from "react";
 import { Bell, BellOff, Loader2, Lock } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import { toggleMemberSmsOptOut } from "@/actions/admin-members";
 
 export function SmsToggle({
@@ -30,7 +31,7 @@ export function SmsToggle({
   if (isInternal) {
     return (
       <span
-        className="inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[10.5px] font-medium text-gray-400 bg-gray-50"
+        className="inline-flex items-center gap-1 rounded-md bg-gray-100 px-1.5 py-0.5 text-[11px] font-medium text-gray-500"
         title="내부/테스트 계정 — 문자 발송 대상에서 항상 제외됩니다"
         onClick={(e) => e.stopPropagation()}
       >
@@ -56,17 +57,16 @@ export function SmsToggle({
 
   const excluded = current;
   return (
-    <button
-      type="button"
+    <Button
+      variant="ghost"
+      size="xs"
       onClick={toggle}
       disabled={isPending}
       aria-pressed={!excluded}
       title={excluded ? "발송 제외됨 — 클릭하면 발송 대상으로" : "발송 대상 — 클릭하면 제외"}
       className={cn(
-        "inline-flex items-center gap-1 rounded-md px-1.5 py-1 text-[11px] font-medium transition-colors",
-        excluded
-          ? "text-gray-400 hover:bg-gray-100"
-          : "text-blue-600 hover:bg-blue-50",
+        "px-1.5 text-[11px]",
+        excluded ? "text-gray-400 hover:bg-gray-100" : "text-blue-600 hover:bg-blue-50 hover:text-blue-700",
       )}
     >
       {isPending ? (
@@ -77,6 +77,6 @@ export function SmsToggle({
         <Bell className="size-3.5" strokeWidth={2} aria-hidden />
       )}
       <span className="hidden xl:inline">{excluded ? "제외" : "발송"}</span>
-    </button>
+    </Button>
   );
 }

@@ -28,7 +28,9 @@ import {
   getOperationTypeLabel,
   getTransactionTypeLabel,
 } from "@/lib/admin-members-labels";
-import { cn, formatCurrency, formatNumber } from "@/lib/utils";
+import { cn, formatCurrency, formatDateTime as kstDateTime, formatNumber } from "@/lib/utils";
+import { AdminHoverDetail } from "@/components/admin/hover-detail/admin-hover-detail";
+import { academyUsageRowDetail } from "./costs-parts/academy-usage-hover-detail";
 
 type AcademyUsageRow = {
   academyId: string | null;
@@ -234,14 +236,21 @@ export function CostsAcademyUsageTable({
                 const clickable = Boolean(academy.academyId);
 
                 return (
-                  <TableRow
+                  // 거래 이력 펼침(행 클릭)은 그대로 두고 호버 상세만 붙인다. 미지정 행은 클릭=상세 팝업.
+                  <AdminHoverDetail
                     key={academy.academyId ?? "__unassigned__"}
+                    title={academy.name}
+                    detail={academyUsageRowDetail(academy, variableCostKrw, summaryLabel)}
+                    click={clickable ? "none" : "dialog"}
+                  >
+                  <TableRow
                     role={clickable ? "button" : undefined}
                     tabIndex={clickable ? 0 : undefined}
                     aria-selected={selected || undefined}
                     className={cn(
                       "hover:bg-gray-50/50",
-                      clickable && "cursor-pointer outline-none focus-visible:bg-blue-50/60",
+                      "cursor-pointer",
+                      clickable && "outline-none focus-visible:bg-blue-50/60",
                       selected && "bg-blue-50/60 hover:bg-blue-50/80",
                     )}
                     onClick={() => selectAcademy(academy)}
@@ -296,6 +305,7 @@ export function CostsAcademyUsageTable({
                       {formatNumber(academy.inputTokens + academy.outputTokens)}
                     </TableCell>
                   </TableRow>
+                  </AdminHoverDetail>
                 );
               })
             )}
@@ -568,13 +578,8 @@ function formatPercent(value: number) {
   return `${Math.round(value * 10) / 10}%`;
 }
 
+// 시각 표기는 KST 고정 포매터(lib/utils)를 쓴다 — toLocale* 는 서버(UTC)·브라우저(KST) 결과가
+// 달라 hydration 이 깨진다.
 function formatDateTime(value: string) {
-  return new Date(value).toLocaleString("ko-KR", {
-    year: "2-digit",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  });
+  return kstDateTime(value);
 }

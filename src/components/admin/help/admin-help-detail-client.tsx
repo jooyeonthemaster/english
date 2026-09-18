@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useTransition, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { Loader2, Lock, MessageSquare, Pin, ShieldCheck, ThumbsUp, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 import {
   adminGetHelpPost,
   adminReplyHelpPost,
@@ -11,26 +13,57 @@ import {
   type AdminHelpPostDetail,
 } from "@/actions/admin-help-center";
 import {
+  AdminEmptyState,
+  AdminPageSkeleton,
+  BackLink,
+  FilterChipGroup,
+  PageHeader,
+  SectionCard,
+  useConfirm,
+} from "@/components/admin/kit";
+import { AttachmentGallery } from "@/components/help-center/attachment-gallery";
+import { ImageAttachmentField } from "@/components/help-center/image-attachment-field";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import {
   boardStatuses,
   boardCategories,
   labelOf,
-  statusOf,
   HELP_BOARD_META,
   type HelpBoard,
 } from "@/lib/help-center";
-import { StatusBadge } from "@/components/help-center/status-badge";
-import { AttachmentGallery } from "@/components/help-center/attachment-gallery";
-import { ImageAttachmentField } from "@/components/help-center/image-attachment-field";
 import type { Attachment } from "@/lib/image-attachment";
-import { formatDateTime } from "@/lib/utils";
-import { toast } from "sonner";
-import { ArrowLeft, Lock, Pin, Trash2, ShieldCheck, ThumbsUp } from "lucide-react";
+import { cn, formatDateTime } from "@/lib/utils";
+import { HelpStatusBadge } from "./help-status-badge";
 
-export function AdminHelpDetailClient({ board, postId }: { board: HelpBoard; postId: string }) {
+// ui/select 는 빈 문자열 값을 허용하지 않아 "상태 변경 안 함" 은 별도 키로 둔다.
+const KEEP_STATUS = "__keep__";
+
+export function AdminHelpDetailClient({
+  board,
+  postId,
+  listStatus,
+}: {
+  board: HelpBoard;
+  postId: string;
+  /** 목록에서 넘어온 상태 필터 — 돌아갈 때 그대로 복원 */
+  listStatus?: string;
+}) {
   const router = useRouter();
+  const confirm = useConfirm();
   const meta = HELP_BOARD_META[board];
   const statuses = boardStatuses(board);
   const categories = boardCategories(board);
+  const listHref = listStatus
+    ? `${meta.adminPath}?status=${encodeURIComponent(listStatus)}`
+    : meta.adminPath;
 
   const [post, setPost] = useState<AdminHelpPostDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -71,6 +104,7 @@ export function AdminHelpDetailClient({ board, postId }: { board: HelpBoard; pos
   }
 
   function changeStatus(status: string) {
+    if (!post || post.status === status) return;
     startTransition(async () => {
       try {
         await adminUpdateHelpStatus(postId, status);
@@ -94,151 +128,160 @@ export function AdminHelpDetailClient({ board, postId }: { board: HelpBoard; pos
     });
   }
 
-  function remove() {
-    if (!confirm("이 글을 삭제하시겠습니까?")) return;
+  async function remove() {
+    const ok = await confirm({
+      title: "이 글을 삭제할까요?",
+      description: "글과 답변이 모두 삭제되며 되돌릴 수 없습니다.",
+      confirmLabel: "삭제",
+      tone: "danger",
+    });
+    if (!ok) return;
     startTransition(async () => {
       try {
         await adminDeleteHelpPost(postId);
         toast.success("삭제되었습니다.");
-        router.push(meta.adminPath);
+        router.push(listHref);
       } catch {
         toast.error("오류가 발생했습니다.");
       }
     });
   }
 
-  const back = (
-    <button
-      onClick={() => router.push(meta.adminPath)}
-      className="inline-flex items-center gap-1.5 text-[13px] font-medium text-gray-500 hover:text-gray-900"
-    >
-      <ArrowLeft className="size-4" />
-      목록
-    </button>
-  );
-
   if (loading) {
     return (
-      <div className="space-y-5">
-        {back}
-        <div className="py-20 text-center text-gray-400 text-sm">불러오는 중...</div>
+      <div className="space-y-4">
+        <BackLink href={listHref} label="목록" />
+        <AdminPageSkeleton stats={0} rows={6} />
       </div>
     );
   }
   if (!post) {
     return (
-      <div className="space-y-5">
-        {back}
-        <div className="py-20 text-center text-gray-400 text-sm">글을 찾을 수 없습니다</div>
+      <div className="space-y-4">
+        <PageHeader title="글을 찾을 수 없습니다" back={{ href: listHref, label: "목록" }} />
+        <AdminEmptyState
+          icon={MessageSquare}
+          title="글을 찾을 수 없습니다"
+          description="삭제됐거나 주소가 잘못됐을 수 있습니다."
+        />
       </div>
     );
   }
 
+  const statusOptions = statuses.map((s) => ({ key: s.value, label: s.label }));
+
   return (
-    <div className="space-y-5 max-w-3xl">
-      <div className="flex items-center justify-between">
-        {back}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={togglePin}
-            className={`inline-flex items-center gap-1.5 h-8 px-3 rounded-lg text-xs font-medium border transition-colors ${
-              post.isPinned
-                ? "border-amber-200 bg-amber-50 text-amber-600"
-                : "border-gray-200 text-gray-500 hover:bg-gray-50"
-            }`}
-          >
-            <Pin className={`size-3.5 ${post.isPinned ? "fill-amber-500 text-amber-500" : ""}`} />
-            {post.isPinned ? "고정됨" : "상단 고정"}
-          </button>
-          <button
-            onClick={remove}
-            className="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg text-xs font-medium border border-gray-200 text-rose-600 hover:bg-rose-50"
-          >
-            <Trash2 className="size-3.5" />
-            삭제
-          </button>
-        </div>
-      </div>
-
-      {/* Post */}
-      <div className="rounded-2xl border border-gray-100 bg-white p-6 space-y-4">
-        <div className="flex items-center gap-2 flex-wrap">
-          <StatusBadge status={statusOf(statuses, post.status)} />
-          <span className="text-xs font-medium text-slate-400">{labelOf(categories, post.category)}</span>
-          {post.isPrivate && (
-            <span className="inline-flex items-center gap-1 text-xs text-slate-400">
-              <Lock className="size-3" /> 비밀글
-            </span>
-          )}
-          {board === "FEEDBACK" && (
-            <span className="inline-flex items-center gap-1 text-xs text-slate-400">
-              <ThumbsUp className="size-3" /> {post.upvoteCount}
-            </span>
-          )}
-        </div>
-        <h1 className="text-lg font-bold text-gray-900">{post.title}</h1>
-        <div className="text-xs text-gray-400">
-          {post.authorName} · {formatDateTime(new Date(post.createdAt))} · 조회 {post.viewCount}
-          {post.academyId ? ` · 학원ID ${post.academyId.slice(0, 8)}…` : ""}
-        </div>
-        <div className="border-t border-gray-50" />
-        <div className="whitespace-pre-wrap text-[14px] leading-relaxed text-gray-700">
-          {post.content}
-        </div>
-        <AttachmentGallery attachments={post.attachments} size={112} className="pt-1" />
-      </div>
-
-      {/* Quick status */}
-      <div className="rounded-2xl border border-gray-100 bg-white p-4">
-        <div className="text-xs font-semibold text-gray-500 mb-2">상태 변경</div>
-        <div className="flex flex-wrap gap-1.5">
-          {statuses.map((s) => (
-            <button
-              key={s.value}
-              onClick={() => changeStatus(s.value)}
-              disabled={post.status === s.value}
-              className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-colors disabled:opacity-100 ${
-                post.status === s.value
-                  ? "border-slate-800 bg-slate-800 text-white"
-                  : "border-gray-200 text-gray-500 hover:bg-gray-50"
-              }`}
+    <div className="max-w-3xl space-y-6">
+      <PageHeader
+        title={post.title}
+        back={{ href: listHref, label: "목록" }}
+        crumbs={[{ label: post.title }]}
+        actions={
+          <>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={togglePin}
+              disabled={isPending}
+              aria-pressed={post.isPinned}
+              className={cn(
+                post.isPinned && "border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100 hover:text-amber-800",
+              )}
             >
-              {s.label}
-            </button>
-          ))}
-        </div>
-      </div>
+              <Pin className={cn("size-4", post.isPinned && "fill-amber-500 text-amber-500")} strokeWidth={2} />
+              {post.isPinned ? "고정됨" : "상단 고정"}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={remove}
+              disabled={isPending}
+              className="text-rose-600 hover:bg-rose-50 hover:text-rose-700"
+            >
+              <Trash2 className="size-4" strokeWidth={2} />
+              삭제
+            </Button>
+          </>
+        }
+      />
 
-      {/* Replies */}
-      <div className="rounded-2xl border border-gray-100 bg-white p-6">
-        <h2 className="font-semibold text-gray-900 mb-4 text-[15px]">
-          답변 · 댓글 <span className="text-gray-400">{post.replies.length}</span>
-        </h2>
+      {/* 본문 */}
+      <SectionCard>
+        <div className="space-y-4">
+          <div className="flex flex-wrap items-center gap-2 text-[12px] text-gray-400">
+            <HelpStatusBadge options={statuses} value={post.status} />
+            <span className="font-medium">{labelOf(categories, post.category)}</span>
+            {post.isPrivate && (
+              <span className="inline-flex items-center gap-1">
+                <Lock className="size-3" strokeWidth={2} aria-hidden /> 비밀글
+              </span>
+            )}
+            {board === "FEEDBACK" && (
+              <span className="inline-flex items-center gap-1 tabular-nums">
+                <ThumbsUp className="size-3" strokeWidth={2} aria-hidden /> {post.upvoteCount}
+              </span>
+            )}
+          </div>
+          <div className="text-[12px] text-gray-400">
+            {post.authorName} · {formatDateTime(new Date(post.createdAt))} · 조회 {post.viewCount}
+            {post.academyId ? ` · 학원ID ${post.academyId.slice(0, 8)}…` : ""}
+          </div>
+          <div className="border-t border-gray-100" />
+          <div className="whitespace-pre-wrap text-[13px] leading-relaxed text-gray-700">
+            {post.content}
+          </div>
+          <AttachmentGallery attachments={post.attachments} size={112} className="pt-1" />
+        </div>
+      </SectionCard>
+
+      {/* 상태 변경 */}
+      <SectionCard title="상태 변경" description="누르면 즉시 저장됩니다.">
+        <div className={cn("transition-opacity", isPending && "pointer-events-none opacity-60")}>
+          <FilterChipGroup
+            options={statusOptions}
+            value={post.status}
+            onChange={changeStatus}
+            ariaLabel="글 상태"
+          />
+        </div>
+      </SectionCard>
+
+      {/* 답변 · 댓글 */}
+      <SectionCard
+        title={
+          <>
+            답변 · 댓글 <span className="tabular-nums text-gray-400">{post.replies.length}</span>
+          </>
+        }
+      >
         {post.replies.length === 0 ? (
-          <p className="text-sm text-gray-400 py-3 text-center">아직 답변이 없습니다</p>
+          <AdminEmptyState compact icon={MessageSquare} title="아직 답변이 없습니다" />
         ) : (
           <div className="space-y-3">
             {post.replies.map((r) => (
               <div
                 key={r.id}
-                className={`rounded-xl border p-4 ${
-                  r.isOfficial ? "border-emerald-200 bg-emerald-50/50" : "border-gray-100 bg-gray-50/60"
-                }`}
+                className={cn(
+                  "rounded-xl border p-4",
+                  r.isOfficial ? "border-emerald-200 bg-emerald-50/50" : "border-gray-100 bg-gray-50/60",
+                )}
               >
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-sm font-semibold">{r.authorName}</span>
+                <div className="mb-2 flex items-center gap-2">
+                  <span className="text-[13px] font-semibold text-gray-900">{r.authorName}</span>
                   {r.isOfficial && (
-                    <span className="inline-flex items-center gap-1 rounded-md bg-emerald-100 px-1.5 py-0.5 text-[10px] font-bold text-emerald-700">
-                      <ShieldCheck className="size-3" />
+                    <span className="inline-flex items-center gap-1 rounded-md bg-emerald-100 px-1.5 py-0.5 text-[11px] font-semibold text-emerald-700">
+                      <ShieldCheck className="size-3" strokeWidth={2} aria-hidden />
                       공식답변
                     </span>
                   )}
-                  <span className="text-xs text-gray-400 ml-auto">
+                  <span className="ml-auto text-[12px] text-gray-400">
                     {formatDateTime(new Date(r.createdAt))}
                   </span>
                 </div>
                 {r.content && (
-                  <div className="whitespace-pre-wrap text-sm leading-relaxed text-gray-700">{r.content}</div>
+                  <div className="whitespace-pre-wrap text-[13px] leading-relaxed text-gray-700">
+                    {r.content}
+                  </div>
                 )}
                 <AttachmentGallery attachments={r.attachments} size={96} className="mt-2" />
               </div>
@@ -246,40 +289,44 @@ export function AdminHelpDetailClient({ board, postId }: { board: HelpBoard; pos
           </div>
         )}
 
-        {/* Official reply box */}
-        <div className="mt-4 space-y-2 border-t border-gray-50 pt-4">
-          <textarea
+        {/* 공식 답변 작성 */}
+        <div className="mt-4 space-y-3 border-t border-gray-100 pt-4">
+          <Textarea
             value={reply}
             onChange={(e) => setReply(e.target.value)}
             placeholder="운영팀 공식 답변을 작성하세요"
             rows={4}
-            className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm resize-y focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 outline-none"
+            className="min-h-24 resize-y text-[13px]"
+            aria-label="공식 답변"
           />
           <ImageAttachmentField value={replyAttachments} onChange={setReplyAttachments} />
-          <div className="flex items-center justify-between gap-2">
-            <select
-              value={replyStatus}
-              onChange={(e) => setReplyStatus(e.target.value)}
-              className="h-9 rounded-xl border border-gray-200 bg-white px-3 text-[13px] text-gray-600 outline-none focus:border-blue-500"
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <Select
+              value={replyStatus || KEEP_STATUS}
+              onValueChange={(v) => setReplyStatus(v === KEEP_STATUS ? "" : v)}
             >
-              <option value="">답변과 함께 상태 변경 안 함</option>
-              {statuses.map((s) => (
-                <option key={s.value} value={s.value}>
-                  → {s.label}(으)로 변경
-                </option>
-              ))}
-            </select>
-            <button
+              <SelectTrigger size="sm" className="w-auto min-w-52 text-[13px]" aria-label="답변과 함께 변경할 상태">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={KEEP_STATUS}>답변과 함께 상태 변경 안 함</SelectItem>
+                {statuses.map((s) => (
+                  <SelectItem key={s.value} value={s.value}>
+                    → {s.label}(으)로 변경
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button
               onClick={submitReply}
               disabled={isPending || (!reply.trim() && replyAttachments.length === 0)}
-              className="h-9 px-4 rounded-xl bg-blue-600 text-white text-[13px] font-semibold hover:bg-blue-700 disabled:opacity-50"
             >
+              {isPending && <Loader2 className="size-4 animate-spin" />}
               답변 등록
-            </button>
+            </Button>
           </div>
         </div>
-      </div>
-
+      </SectionCard>
     </div>
   );
 }

@@ -30,6 +30,8 @@ export { TOPUP_REVIEW_WINDOW_DAYS };
  * - 「확인 필요」의 실패·취소는 **주문 생성일**(createdAt) 기준, 환불만 **환불일**(admin-revenue D1) 기준이다.
  *   두 기준을 「같은 기간」으로 뭉뚱그리면 사실이 아니다(실측 26-09-18: 생성일 7일 취소 10건 vs
  *   이벤트일 7일 56건) — 화면 문구도 기준을 나눠 쓴다.
+ * - 실패(FAILED)는 관리자가 「확인」 처리한 건(failureReviewedAt)을 뺀 **열린 건수**다.
+ *   취소(CANCELLED)는 사용자 취소라 확인 처리 개념이 없어 전량 센다.
  */
 export interface AdminTopUpStats {
   /** 오늘(KST) 결제 완료 건수(이후 환불된 건 포함) */
@@ -54,7 +56,7 @@ export interface AdminTopUpStats {
   pendingStaleMinutes: number;
   /** WAITING_FOR_DEPOSIT(무통장 입금) 판정 시간창(분) */
   bankStaleMinutes: number;
-  /** 최근 reviewWindowDays 일 **생성** 주문 중 FAILED */
+  /** 최근 reviewWindowDays 일 **생성** 주문 중 FAILED — 관리자가 확인 처리한 건(failureReviewedAt)은 제외 */
   failedCount: number;
   /** 최근 reviewWindowDays 일 **생성** 주문 중 CANCELLED */
   cancelledCount: number;
@@ -158,8 +160,11 @@ async function getSlowTopUpStats(
     prisma.creditTopUp.groupBy({
       by: ["status"],
       where: {
-        status: { in: ["FAILED", "CANCELLED"] },
         createdAt: { gte: reviewStart },
+        // FAILED 는 관리자가 「확인」 처리(failureReviewedAt)한 건을 뺀다 — 카드 숫자와
+        // 호버 상세 목록(admin-block-detail/payments.ts failedDetail)이 같은 집합을 가리키게.
+        // CANCELLED(사용자 취소)에는 확인 처리 개념이 없어 그대로 센다.
+        OR: [{ status: "FAILED", failureReviewedAt: null }, { status: "CANCELLED" }],
       },
       _count: { _all: true },
     }),

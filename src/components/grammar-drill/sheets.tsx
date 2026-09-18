@@ -5,16 +5,20 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { MessageCircleQuestion, SendHorizonal, X } from "lucide-react";
+import { useKeyboardInset } from "@/hooks/use-keyboard-inset";
 import type { GrammarConcept } from "@/lib/grammar-drill/types";
 import { MarkupText } from "./markup-text";
 
 function SheetShell({
   title,
   onClose,
+  bottomInset,
   children,
 }: {
   title: string;
   onClose: () => void;
+  /** 가상 키보드 높이(px) — 시트를 키보드 위로 올린다(ChatSheet 입력용) */
+  bottomInset?: number;
   children: React.ReactNode;
 }) {
   useEffect(() => {
@@ -33,7 +37,12 @@ function SheetShell({
         className="gd-sheet-backdrop"
         onClick={onClose}
       />
-      <div className="gd-sheet gd-app" role="dialog" aria-modal="true">
+      <div
+        className="gd-sheet gd-app"
+        role="dialog"
+        aria-modal="true"
+        style={bottomInset ? { bottom: bottomInset } : undefined}
+      >
         <div className="gd-sheet-grip" />
         <div className="flex shrink-0 items-center justify-between px-5 pb-2 pt-3">
           <p className="gd-t-sm font-bold">{title}</p>
@@ -93,9 +102,13 @@ export function ConceptSheet({
           </p>
         )}
         {!concept && !failed && (
-          <p className="gd-t-sm py-8 text-center" style={{ color: "var(--gd-ink-3)" }}>
-            불러오는 중…
-          </p>
+          <div className="animate-pulse py-4" role="status" aria-live="polite">
+            <span className="sr-only">개념 카드를 불러오는 중입니다</span>
+            <div className="gd-skeleton h-5 w-2/5" aria-hidden />
+            <div className="gd-skeleton mt-2.5 h-4 w-4/5" aria-hidden />
+            <div className="gd-skeleton mt-4 h-3.5 w-full" aria-hidden />
+            <div className="gd-skeleton mt-2 h-3.5 w-3/4" aria-hidden />
+          </div>
         )}
         {concept && <ConceptCardBody concept={concept} />}
       </div>
@@ -160,7 +173,7 @@ export function ConceptCardBody({ concept }: { concept: GrammarConcept }) {
           <div
             key={i}
             className="rounded-xl border p-3.5"
-            style={{ borderColor: "#fecdd3", background: "var(--gd-bad-soft)" }}
+            style={{ borderColor: "var(--gd-bad-line)", background: "var(--gd-bad-soft)" }}
           >
             <p className="gd-t-sm font-bold" style={{ color: "var(--gd-bad)" }}>
               {trap.title}
@@ -206,6 +219,8 @@ export function ChatSheet({
   const [streaming, setStreaming] = useState(false);
   const [remaining, setRemaining] = useState<number | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  // 가상 키보드가 열리면 시트째로 키보드 위로 — 입력창·전송 버튼 가림 방지
+  const kbInset = useKeyboardInset();
 
   const scrollDown = useCallback(() => {
     requestAnimationFrame(() => {
@@ -303,7 +318,7 @@ export function ChatSheet({
   }
 
   return (
-    <SheetShell title="선생님 AI에게 질문" onClose={onClose}>
+    <SheetShell title="선생님 AI에게 질문" onClose={onClose} bottomInset={kbInset}>
       {/* min-h-0: flex 자식의 암묵 min-height:auto 를 무효화해 목록이 줄어들며
           스크롤되게 한다 — 없으면 긴 대화가 푸터(입력창)를 시트 밖으로 민다.
           빈 대화일 때만 인라인 최소 높이로 시트 볼륨을 확보한다. */}
@@ -362,8 +377,8 @@ export function ChatSheet({
               remaining === 0 ? "오늘 질문을 모두 사용했습니다" : "질문을 입력하십시오"
             }
             disabled={streaming || remaining === 0}
-            className="gd-t-sm h-11 w-full rounded-xl border bg-white px-3.5 outline-none focus:border-[var(--gd-blue)]"
-            style={{ borderColor: "var(--gd-line-strong)" }}
+            className="gd-t-sm h-11 w-full rounded-xl border px-3.5 outline-none focus:border-[var(--gd-blue)]"
+            style={{ background: "var(--gd-card)", borderColor: "var(--gd-line-strong)" }}
           />
           <button
             type="button"

@@ -11,8 +11,9 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, ChevronLeft, MessageCircleQuestion } from "lucide-react";
+import { ArrowRight, MessageCircleQuestion } from "lucide-react";
 import type { GrammarConcept } from "@/lib/grammar-drill/types";
+import { BackBar } from "@/components/grammar-drill/back-bar";
 import { ConceptCardBody, ChatSheet } from "@/components/grammar-drill/sheets";
 
 export function LearnClient({
@@ -55,26 +56,19 @@ export function LearnClient({
   }
 
   return (
-    <div className="mx-auto flex h-dvh max-w-2xl flex-col">
-      <header className="shrink-0 px-4 pt-[max(0.75rem,env(safe-area-inset-top))]">
-        <div className="flex h-10 items-center gap-2">
-          <button
-            type="button"
-            onClick={() => router.push(`/g/unit/${unit.id}`)}
-            className="-ml-2 flex h-10 w-10 items-center justify-center rounded-full"
-            style={{ color: "var(--gd-ink-2)" }}
-            aria-label="유닛으로"
-          >
-            <ChevronLeft className="h-5 w-5" strokeWidth={2} />
-          </button>
-          <p className="gd-t-sm min-w-0 flex-1 truncate font-semibold">
-            {unit.title} — 개념 학습
-          </p>
-          <p className="gd-mono gd-t-xs shrink-0 font-semibold" style={{ color: "var(--gd-ink-2)" }}>
-            {idx + 1}
-            <span style={{ color: "var(--gd-ink-3)" }}>/{concepts.length}</span>
-          </p>
-        </div>
+    <div className="gd-player flex h-dvh flex-col">
+      <header className="gd-phead shrink-0 px-4 pt-[max(0.75rem,env(safe-area-inset-top))]">
+        <BackBar
+          onBack={() => router.push(`/g/unit/${unit.id}`)}
+          ariaLabel="유닛으로"
+          title={`${unit.title} — 개념 학습`}
+          right={
+            <p className="gd-mono gd-t-xs shrink-0 font-semibold" style={{ color: "var(--gd-ink-2)" }}>
+              {idx + 1}
+              <span style={{ color: "var(--gd-ink-3)" }}>/{concepts.length}</span>
+            </p>
+          }
+        />
         {/* 개념 페이저 도트 */}
         <div className="flex gap-1.5 pb-1 pt-1">
           {concepts.map((c, i) => (
@@ -99,7 +93,10 @@ export function LearnClient({
         <ConceptCardBody concept={concept} />
       </main>
 
-      <footer className="gd-hairline-t gd-safe-b shrink-0 bg-white px-4 pt-2.5">
+      <footer
+        className="gd-pfoot gd-hairline-t gd-safe-b shrink-0 px-4 pt-2.5"
+        style={{ background: "var(--gd-card)" }}
+      >
         <div className="flex gap-2">
           <button
             type="button"

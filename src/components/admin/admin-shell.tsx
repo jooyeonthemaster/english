@@ -5,7 +5,9 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
+  Settings,
   Users,
+  UsersRound,
   Gift,
   Coins,
   ChartNoAxesCombined,
@@ -16,10 +18,10 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   ChevronDown,
+  ChevronRight,
   Presentation,
   MessageSquare,
   LifeBuoy,
-  Banknote,
   Megaphone,
   Image,
   Footprints,
@@ -31,6 +33,11 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { BrandIcon } from "@/components/brand/brand-mark";
+import {
+  AdminPageProvider,
+  useAdminPage,
+} from "@/components/admin/kit/admin-page-context";
+import { ConfirmProvider } from "@/components/admin/kit/confirm-dialog";
 import { BusinessInfoBlock } from "@/components/legal/business-info-block";
 import {
   Sheet,
@@ -73,10 +80,11 @@ interface NavItem {
 }
 
 // 회원 관리 = 학원 관리 통합 뷰(회원 1명 = 학원 1곳, 상세에서 학원 콘텐츠까지).
-// 가입 신청·설정 메뉴는 제거(설정은 빈 404였음). 라우트/데이터는 보존.
+// 가입 신청 심사는 폐기(자가 가입 전환). 라우트/데이터는 보존.
 //
 // 사이드바는 기능 도메인별로 그룹핑한다. 대시보드는 섹션 없이 단독 최상단,
-// 나머지는 운영자가 자주 여는 순(고객 → 크레딧·결제 → 마케팅 → 고객지원)으로.
+// 나머지는 운영자가 자주 여는 순(고객 → 매출 → 마케팅 → 고객지원 → 설정)으로.
+// 메뉴 라벨 = 페이지 제목(PageHeader) 이어야 한다.
 const DASHBOARD_ITEM: NavItem = {
   label: "대시보드",
   icon: LayoutDashboard,
@@ -92,12 +100,12 @@ const NAV_SECTIONS: Array<{ title: string; items: NavItem[] }> = [
     ],
   },
   {
-    title: "크레딧·결제",
+    title: "매출",
     items: [
+      { label: "결제 관리", icon: Coins, href: "/admin/credit-plans" },
       { label: "상품 관리", icon: Package, href: "/admin/products" },
       { label: "프로모션 관리", icon: Ticket, href: "/admin/promotions" },
-      { label: "결제 관리", icon: Coins, href: "/admin/credit-plans" },
-      { label: "무통장입금", icon: Banknote, href: "/admin/credits/bank-deposits" },
+      { label: "실물 쿠폰", icon: TicketCheck, href: "/admin/coupons" },
       { label: "원가 분석", icon: ChartNoAxesCombined, href: "/admin/costs" },
     ],
   },
@@ -105,21 +113,26 @@ const NAV_SECTIONS: Array<{ title: string; items: NavItem[] }> = [
     title: "마케팅",
     items: [
       { label: "유입 분석", icon: ChartSpline, href: "/admin/analytics" },
-      { label: "추천·미션", icon: Gift, href: "/admin/referrals" },
       { label: "스모트 소식", icon: Megaphone, href: "/admin/announcements" },
       { label: "배너 관리", icon: Image, href: "/admin/banners" },
+      { label: "추천·미션", icon: Gift, href: "/admin/referrals" },
       { label: "오프라인 홍보", icon: Footprints, href: "/admin/offline-marketing" },
-      { label: "실물 쿠폰", icon: TicketCheck, href: "/admin/coupons" },
     ],
   },
   {
-    // 헬프센터 — 고객(원장)이 작성한 신청·문의를 운영자가 관리.
+    // 고객(원장)이 보낸 문의·신청을 운영자가 응대하는 곳.
     title: "고객지원",
     items: [
-      { label: "1:1 세미나", icon: Presentation, href: "/admin/seminars" },
-      { label: "단체 세미나", icon: Users, href: "/admin/group-seminars" },
-      { label: "피드백", icon: MessageSquare, href: "/admin/feedback" },
       { label: "문의 게시판", icon: LifeBuoy, href: "/admin/support" },
+      { label: "피드백", icon: MessageSquare, href: "/admin/feedback" },
+      { label: "1:1 세미나", icon: Presentation, href: "/admin/seminars" },
+      { label: "단체 세미나", icon: UsersRound, href: "/admin/group-seminars" },
+    ],
+  },
+  {
+    title: "설정",
+    items: [
+      { label: "플랫폼 설정", icon: Settings, href: "/admin/settings" },
       { label: "사용 매뉴얼", icon: BookOpen, href: "/admin/manual" },
     ],
   },
@@ -193,8 +206,10 @@ export function SuperAdminShell({ children, admin }: AdminShellProps) {
     router.push("/admin/login");
   }
 
-  const activeNavLabel =
-    NAV_ITEMS.find((item) => isActive(item.href))?.label ?? "관리자 콘솔";
+  const activeItem = NAV_ITEMS.find((item) => isActive(item.href)) ?? null;
+  const activeSection =
+    NAV_SECTIONS.find((section) => section.items.some((item) => item === activeItem)) ?? null;
+  const activeNavLabel = activeItem?.label ?? "관리자 콘솔";
 
   // 데스크톱 사이드바 항목 — 접힘 상태에선 아이콘만 + 툴팁, 펼침 상태에선 라벨까지.
   function renderNavItem(item: NavItem) {
@@ -275,23 +290,18 @@ export function SuperAdminShell({ children, admin }: AdminShellProps) {
     );
   }
 
-  if (!mounted) {
-    return (
-      <div className="flex h-screen bg-[#F4F6F9]">
-        <div className="hidden w-[220px] shrink-0 md:block" />
-        <div className="flex-1" />
-      </div>
-    );
-  }
-
   return (
+    <AdminPageProvider>
+    <ConfirmProvider>
     <TooltipProvider delayDuration={300}>
-      <div className="flex min-h-screen flex-col bg-[#F4F6F9]">
+      <div className="admin-surface flex min-h-screen flex-col bg-[#F4F6F9]">
        <div className="flex flex-1">
         {/* Sidebar */}
         <aside
           className={cn(
-            "sticky top-0 hidden h-screen self-start shrink-0 flex-col transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)] md:flex",
+            "sticky top-0 hidden h-screen self-start shrink-0 flex-col md:flex",
+            // 저장된 접힘 상태를 마운트 후 읽어 적용하므로, 그 전엔 애니메이션을 끈다(펼침→접힘 깜빡임 방지).
+            mounted && "transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)]",
             collapsed ? "w-[72px]" : "w-[220px]",
           )}
           style={{
@@ -449,13 +459,11 @@ export function SuperAdminShell({ children, admin }: AdminShellProps) {
                   </div>
                 </SheetContent>
               </Sheet>
-              <h2 className="text-[13px] font-semibold text-gray-600">
-                <span className="md:hidden">{activeNavLabel}</span>
-                <span className="hidden md:inline">최고 관리자 콘솔</span>
-              </h2>
-              <span className="inline-flex items-center h-[20px] px-2 text-[10px] font-semibold rounded-md text-blue-600 bg-blue-500/[0.08]">
-                {admin.role === "SUPER_ADMIN" ? "최고 관리자" : "지원"}
-              </span>
+              <TopBarBreadcrumb
+                section={activeSection?.title ?? null}
+                item={activeItem}
+                mobileLabel={activeNavLabel}
+              />
             </div>
 
             <div className="flex items-center gap-1">
@@ -478,6 +486,9 @@ export function SuperAdminShell({ children, admin }: AdminShellProps) {
                         {admin.name}
                       </p>
                       <p className="text-[11px] text-gray-400">{admin.email}</p>
+                      <p className="text-[11px] font-medium text-blue-600">
+                        {admin.role === "SUPER_ADMIN" ? "최고 관리자" : "지원"}
+                      </p>
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
@@ -516,5 +527,58 @@ export function SuperAdminShell({ children, admin }: AdminShellProps) {
         />
       </div>
     </TooltipProvider>
+    </ConfirmProvider>
+    </AdminPageProvider>
+  );
+}
+
+/**
+ * 상단 바 브레드크럼 — "섹션 › 메뉴 › (상세)". 페이지가 PageHeader 로 등록한 제목·경로를
+ * 우선 쓰고, 등록이 없으면 사이드바 활성 메뉴에서 유추한다. 모바일은 현재 화면 이름만.
+ */
+function TopBarBreadcrumb({
+  section,
+  item,
+  mobileLabel,
+}: {
+  section: string | null;
+  item: NavItem | null;
+  mobileLabel: string;
+}) {
+  const page = useAdminPage();
+  const crumbs: Array<{ label: string; href?: string }> = [];
+  if (section) crumbs.push({ label: section });
+  if (item) crumbs.push({ label: item.label, href: item.href });
+  else if (page?.title) crumbs.push({ label: page.title });
+  for (const c of page?.crumbs ?? []) crumbs.push(c);
+  // 페이지 제목이 메뉴명과 다르면(상세 페이지 등) 마지막에 덧붙인다.
+  if (item && page?.title && page.title !== item.label && !page.crumbs?.length) {
+    crumbs.push({ label: page.title });
+  }
+  return (
+    <nav aria-label="현재 위치" className="min-w-0">
+      <span className="truncate text-[13px] font-semibold text-gray-700 md:hidden">
+        {page?.title ?? mobileLabel}
+      </span>
+      <ol className="hidden items-center gap-1.5 text-[13px] md:flex">
+        {crumbs.map((c, i) => {
+          const last = i === crumbs.length - 1;
+          return (
+            <li key={`${c.label}-${i}`} className="flex items-center gap-1.5">
+              {i > 0 && <ChevronRight className="size-3 text-gray-300" aria-hidden />}
+              {c.href && !last ? (
+                <Link href={c.href} className="text-gray-500 hover:text-gray-900">
+                  {c.label}
+                </Link>
+              ) : (
+                <span className={last ? "font-semibold text-gray-900" : "text-gray-500"}>
+                  {c.label}
+                </span>
+              )}
+            </li>
+          );
+        })}
+      </ol>
+    </nav>
   );
 }

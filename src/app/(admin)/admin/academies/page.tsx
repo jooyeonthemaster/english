@@ -1,35 +1,6 @@
-import { Suspense } from "react";
-import { getAcademyList } from "@/actions/admin";
-import { Skeleton } from "@/components/ui/skeleton";
-import { AcademiesClient } from "@/components/admin/academies-client";
+import { redirect } from "next/navigation";
 
-async function AcademiesContent() {
-  const academies = await getAcademyList();
-  return <AcademiesClient initialAcademies={academies} />;
-}
-
-function AcademiesSkeleton() {
-  return (
-    <div className="space-y-4">
-      <Skeleton className="h-9 w-[300px] rounded-lg" />
-      <Skeleton className="h-[600px] rounded-xl" />
-    </div>
-  );
-}
-
-export default function AcademiesPage() {
-  return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-[22px] font-bold text-gray-900">학원 관리</h1>
-        <p className="text-[13px] text-gray-400 mt-1">
-          등록된 모든 학원을 모니터링하고 관리합니다
-        </p>
-      </div>
-
-      <Suspense fallback={<AcademiesSkeleton />}>
-        <AcademiesContent />
-      </Suspense>
-    </div>
-  );
+// 학원 목록은 학원·회원 관리로 통합됐다(회원 1명 = 학원 1곳). 예전 링크 보존용 리다이렉트.
+export default function AdminAcademiesPage() {
+  redirect("/admin/members");
 }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireStaffAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { isManualGrantTopUp } from "@/lib/credit-topup-status";
 
 export async function GET(request: NextRequest) {
   const staff = await requireStaffAuth();
@@ -53,6 +54,9 @@ export async function GET(request: NextRequest) {
       depositorName: typeof depositorName === "string" ? depositorName : null,
       confirmStartedAt:
         typeof confirmStartedAt === "string" ? confirmStartedAt : null,
+      // 관리자가 시스템 밖에서 지급한 뒤 정리한 건 — 고객 화면에도 "수동 충전 완료"로
+      // 표시한다. 관리자 메모(note)는 내부용이라 내리지 않는다.
+      manualGrant: isManualGrantTopUp(customData),
     };
   });
 

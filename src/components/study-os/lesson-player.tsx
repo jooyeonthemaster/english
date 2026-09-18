@@ -13,13 +13,13 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   ArrowRight,
-  ChevronLeft,
   MessageCircleQuestion,
   PanelRightClose,
   PanelRightOpen,
   Shield,
   X,
 } from "lucide-react";
+import { BackBar } from "@/components/grammar-drill/back-bar";
 import { ChatSheet } from "@/components/grammar-drill/sheets";
 import type { SafeLesson, SafeLessonBlock } from "@/lib/study-os/lesson-payload";
 import { TIER_LABEL } from "@/lib/study-os/lesson-types";
@@ -232,60 +232,56 @@ export function LessonPlayer({
     <div className="mx-auto flex h-dvh flex-col">
       {/* ── 헤더: 뒤로 · 위치 · 종료 ── */}
       <header className="shrink-0 px-4 pt-[max(0.75rem,env(safe-area-inset-top))]">
-        <div className="gd-page-wide flex h-11 items-center gap-1">
-          <button
-            type="button"
-            onClick={() => (idx === 0 ? exit() : go(-1))}
-            className="-ml-2 flex h-11 w-11 items-center justify-center rounded-full"
-            style={{ color: "var(--gd-ink-2)" }}
-            aria-label={idx === 0 ? "유닛으로" : "이전 블록"}
-          >
-            <ChevronLeft className="h-5 w-5" strokeWidth={2} />
-          </button>
-          <div className="min-w-0 flex-1">
-            <p className="gd-t-2xs truncate" style={{ color: "var(--gd-ink-3)" }}>
-              {lesson.unitTitle}
-            </p>
-            <p className="gd-t-sm truncate font-bold">{lesson.title}</p>
-          </div>
-          <p className="gd-mono gd-t-2xs shrink-0 font-semibold" style={{ color: "var(--gd-ink-2)" }}>
-            {idx + 1}
-            <span style={{ color: "var(--gd-ink-3)" }}>/{total}</span>
-          </p>
-          {/* 목차 접기/펼치기 — 태블릿+ 에서만 노출(모바일은 레일 자체가 없음, gd.css) */}
-          <button
-            type="button"
-            onClick={toggleRail}
-            className="gd-rail-toggle h-11 w-11 items-center justify-center rounded-full"
-            style={{ color: railOpen ? "var(--gd-blue)" : "var(--gd-ink-2)" }}
-            aria-label={railOpen ? "레슨 구성 접기" : "레슨 구성 펼치기"}
-            aria-pressed={railOpen}
-          >
-            {railOpen ? (
-              <PanelRightClose className="h-4.5 w-4.5" strokeWidth={1.75} />
-            ) : (
-              <PanelRightOpen className="h-4.5 w-4.5" strokeWidth={1.75} />
-            )}
-          </button>
-          <button
-            type="button"
-            onClick={() => setStatusOpen(true)}
-            className="flex h-11 w-11 items-center justify-center rounded-full"
-            style={{ color: "var(--gd-ink-2)" }}
-            aria-label="상태창 열기"
-          >
-            <Shield className="h-4.5 w-4.5" strokeWidth={1.75} />
-          </button>
-          <button
-            type="button"
-            onClick={exit}
-            className="flex h-11 w-11 items-center justify-center rounded-full"
-            style={{ color: "var(--gd-ink-3)" }}
-            aria-label="레슨 종료(진행은 저장됩니다)"
-          >
-            <X className="h-4.5 w-4.5" strokeWidth={2} />
-          </button>
-        </div>
+        <BackBar
+          className="gd-page-wide"
+          onBack={() => (idx === 0 ? exit() : go(-1))}
+          ariaLabel={idx === 0 ? "유닛으로" : "이전 블록"}
+          eyebrow={lesson.unitTitle}
+          title={lesson.title}
+          right={
+            <>
+              <p
+                className="gd-mono gd-t-2xs shrink-0 font-semibold"
+                style={{ color: "var(--gd-ink-2)" }}
+              >
+                {idx + 1}
+                <span style={{ color: "var(--gd-ink-3)" }}>/{total}</span>
+              </p>
+              {/* 목차 접기/펼치기 — 태블릿+ 에서만 노출(모바일은 레일 자체가 없음, gd.css) */}
+              <button
+                type="button"
+                onClick={toggleRail}
+                className="gd-iconbtn gd-rail-toggle"
+                style={{ color: railOpen ? "var(--gd-blue)" : "var(--gd-ink-2)" }}
+                aria-label={railOpen ? "레슨 구성 접기" : "레슨 구성 펼치기"}
+                aria-pressed={railOpen}
+              >
+                {railOpen ? (
+                  <PanelRightClose className="h-4.5 w-4.5" strokeWidth={1.75} />
+                ) : (
+                  <PanelRightOpen className="h-4.5 w-4.5" strokeWidth={1.75} />
+                )}
+              </button>
+              <button
+                type="button"
+                onClick={() => setStatusOpen(true)}
+                className="gd-iconbtn"
+                aria-label="상태창 열기"
+              >
+                <Shield className="h-4.5 w-4.5" strokeWidth={1.75} />
+              </button>
+              <button
+                type="button"
+                onClick={exit}
+                className="gd-iconbtn"
+                style={{ color: "var(--gd-ink-3)" }}
+                aria-label="레슨 종료(진행은 저장됩니다)"
+              >
+                <X className="h-4.5 w-4.5" strokeWidth={2} />
+              </button>
+            </>
+          }
+        />
         <div className="gd-page-wide gd-seg pb-1 pt-1.5">
           {lesson.blocks.map((b, i) => (
             <i key={b.id} data-on={i < idx ? "done" : i === idx ? "true" : undefined} />

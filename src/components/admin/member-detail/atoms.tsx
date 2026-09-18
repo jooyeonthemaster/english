@@ -1,26 +1,12 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 
-// ─── wrapIcon — consistent icon sizing via cloneElement ──────────────────────
+// 회원 상세 전용 작은 부품. 구역 카드·지표 카드는 kit(SectionCard·StatCard)을 쓴다.
 
-export function wrapIcon(node: React.ReactNode): React.ReactNode {
-  // Use React.cloneElement so refs/keys are preserved (React 19 ref-as-prop
-  // semantics depend on cloneElement, not spread).
-  if (!React.isValidElement(node)) return node;
-  const el = node as React.ReactElement<{
-    className?: string;
-    strokeWidth?: number;
-    "aria-hidden"?: boolean | "true" | "false";
-  }>;
-  return React.cloneElement(el, {
-    className: cn("size-4", el.props.className),
-    strokeWidth: el.props.strokeWidth ?? 1.8,
-    "aria-hidden": true,
-  });
-}
+// ─── Avatar — 이니셜 대체 아바타 ─────────────────────────────────────────────
 
-// ─── Avatar with monogram fallback ───────────────────────────────────────────
-
+// members-list-client/formatters.ts 에도 같은 getInitials 가 있다(그 파일은 다른 작업 범위).
+// 상세 화면은 이 사본을 쓴다 — 두 곳 모두 이모지 안전 버전이어야 hydration 이 안 깨진다.
 function getInitials(name: string): string {
   if (!name) return "?";
   const trimmed = name.trim();
@@ -28,7 +14,8 @@ function getInitials(name: string): string {
     const parts = trimmed.split(/\s+/).slice(0, 2);
     return parts.map((p) => p[0]?.toUpperCase() ?? "").join("");
   }
-  return trimmed.slice(0, 1);
+  // 이모지처럼 두 코드유닛짜리 글자를 반으로 자르면 서버(�)·클라 표기가 달라 hydration 이 깨진다.
+  return Array.from(trimmed)[0] ?? "?";
 }
 
 export function Avatar({
@@ -51,7 +38,7 @@ export function Avatar({
       <img
         src={avatarUrl}
         alt=""
-        className={cn(dim, "rounded-full object-cover bg-gray-100 shrink-0")}
+        className={cn(dim, "shrink-0 rounded-full bg-gray-100 object-cover")}
       />
     );
   }
@@ -60,7 +47,7 @@ export function Avatar({
       className={cn(
         dim,
         text,
-        "rounded-full bg-blue-50 text-blue-700 font-semibold flex items-center justify-center shrink-0",
+        "flex shrink-0 items-center justify-center rounded-full bg-blue-50 font-semibold text-blue-700",
       )}
       aria-hidden="true"
     >
@@ -69,7 +56,74 @@ export function Avatar({
   );
 }
 
-// ─── SectionCard — titled panel with icon + optional action ──────────────────
+// ─── Definition list (라벨 / 값 줄) ──────────────────────────────────────────
+
+export function DefList({ children }: { children: React.ReactNode }) {
+  return <dl className="divide-y divide-gray-50">{children}</dl>;
+}
+
+export function DefRow({
+  label,
+  value,
+}: {
+  label: string;
+  value: React.ReactNode;
+}) {
+  return (
+    <div className="grid grid-cols-[88px_1fr] gap-3 py-2 first:pt-0 last:pb-0">
+      <dt className="pt-0.5 text-[11px] font-medium uppercase tracking-wider text-gray-400">
+        {label}
+      </dt>
+      <dd className="min-w-0 truncate text-[12px] text-gray-700">{value}</dd>
+    </div>
+  );
+}
+
+// ─── MiniStat — 차트 아래 세 칸 요약 줄 ─────────────────────────────────────
+
+export function MiniStat({
+  label,
+  value,
+  suffix,
+}: {
+  label: string;
+  value: string;
+  suffix?: string;
+}) {
+  return (
+    <div>
+      <div className="mb-1 text-[11px] uppercase tracking-wider text-gray-400">
+        {label}
+      </div>
+      <div className="text-[13px] font-semibold tabular-nums text-gray-800">
+        {value}
+        {suffix && (
+          <span className="ml-0.5 text-[11px] font-normal text-gray-400">
+            {suffix}
+          </span>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─── 통합 작업 중 유지 — 회원 상세 구역 카드·지표(학원 상세 통합 완료 후 kit 으로 교체) ───
+
+export function wrapIcon(node: React.ReactNode): React.ReactNode {
+  // Use React.cloneElement so refs/keys are preserved (React 19 ref-as-prop
+  // semantics depend on cloneElement, not spread).
+  if (!React.isValidElement(node)) return node;
+  const el = node as React.ReactElement<{
+    className?: string;
+    strokeWidth?: number;
+    "aria-hidden"?: boolean | "true" | "false";
+  }>;
+  return React.cloneElement(el, {
+    className: cn("size-4", el.props.className),
+    strokeWidth: el.props.strokeWidth ?? 1.8,
+    "aria-hidden": true,
+  });
+}
 
 export function SectionCard({
   title,
@@ -98,31 +152,6 @@ export function SectionCard({
   );
 }
 
-// ─── Definition list (label / value rows) ────────────────────────────────────
-
-export function DefList({ children }: { children: React.ReactNode }) {
-  return <dl className="divide-y divide-gray-50">{children}</dl>;
-}
-
-export function DefRow({
-  label,
-  value,
-}: {
-  label: string;
-  value: React.ReactNode;
-}) {
-  return (
-    <div className="grid grid-cols-[88px_1fr] gap-3 py-2 first:pt-0 last:pb-0">
-      <dt className="text-[11px] text-gray-400 uppercase tracking-wider font-medium pt-0.5">
-        {label}
-      </dt>
-      <dd className="text-[12px] text-gray-700 min-w-0 truncate">{value}</dd>
-    </div>
-  );
-}
-
-// ─── CountChip — small label/number pill (inside SectionCard footers) ────────
-
 export function CountChip({
   icon,
   label,
@@ -146,8 +175,6 @@ export function CountChip({
     </div>
   );
 }
-
-// ─── CreditKpi — large hero number card ──────────────────────────────────────
 
 export function CreditKpi({
   label,
@@ -196,34 +223,6 @@ export function CreditKpi({
         </div>
       )}
       {suffix && <div className="mt-2">{suffix}</div>}
-    </div>
-  );
-}
-
-// ─── MiniStat — three-up stat strip below charts ─────────────────────────────
-
-export function MiniStat({
-  label,
-  value,
-  suffix,
-}: {
-  label: string;
-  value: string;
-  suffix?: string;
-}) {
-  return (
-    <div>
-      <div className="text-[11px] text-gray-400 uppercase tracking-wider mb-1">
-        {label}
-      </div>
-      <div className="text-[13px] font-semibold text-gray-800 tabular-nums">
-        {value}
-        {suffix && (
-          <span className="text-[11px] text-gray-400 font-normal ml-0.5">
-            {suffix}
-          </span>
-        )}
-      </div>
     </div>
   );
 }

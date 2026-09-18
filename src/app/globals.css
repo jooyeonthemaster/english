@@ -2829,3 +2829,9 @@ body.smoat-large-ui .passage-report-thumb .par-root { --par-zoom: 1 !important; 
     min-height: 40px !important;
   }
 }
+
+/* 관리자 콘솔: 주 버튼색을 blue-600 으로 통일한다(앱 전역 --primary 는 blue-500 유지).
+   ui Button 기본(bg-primary)이 이 값을 상속하므로 관리자 화면에서만 색이 바뀐다. */
+.admin-surface {
+  --primary: #2563eb;
+}

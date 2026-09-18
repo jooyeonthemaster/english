@@ -115,8 +115,7 @@ export async function adjustCredits(
       },
     );
 
-    revalidatePath("/admin/academies");
-    revalidatePath(`/admin/academies/${academyId}`);
+    revalidatePath("/admin/members");
     revalidatePath("/admin/members");
 
     return { success: true };

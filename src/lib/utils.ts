@@ -103,7 +103,9 @@ export function formatKoreanDate(date: Date | string) {
 }
 
 // Number formatting
-export function formatPercent(value: number) {
+/** 백분율 표시. null = 분모가 0이라 정의할 수 없음(예: 매출 0인 달의 마진) → "—". */
+export function formatPercent(value: number | null | undefined) {
+  if (value === null || value === undefined || !Number.isFinite(value)) return "—";
   return `${Math.round(value)}%`;
 }
 

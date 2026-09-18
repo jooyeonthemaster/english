@@ -232,8 +232,9 @@ export function parseDepositNotification(text: string): ParsedDeposit {
   let depositorName: string | null = null;
   const afterDeposit =
     depositIdx >= 0 ? normalized.slice(depositIdx) : normalized;
+  // 법인 입금은 "(주)다날"·"㈜다날"처럼 괄호 표기로 시작하므로 그 접두도 허용한다.
   const nameMatch = afterDeposit.match(
-    /원\s*([가-힣]{2,5}|[A-Za-z][A-Za-z .]{1,20})/,
+    /원\s*((?:\(주\)|㈜)?[가-힣]{2,5}|[A-Za-z][A-Za-z .]{1,20})/,
   );
   if (nameMatch) {
     depositorName = nameMatch[1].trim().replace(/\s+/g, " ");
@@ -356,8 +357,11 @@ export async function grantBankDepositTopUp(
         throw new BankDepositError("PRODUCT_NOT_FOUND", "Top-up order not found.");
       }
 
-      // Idempotency: already credited → return current balance, no double-grant.
-      if (topUp.status === "COMPLETED" && topUp.creditTransactionId) {
+      // Idempotency: already completed → return current balance, no double-grant.
+      // creditTransactionId 유무를 따지지 않는다. 관리자가 시스템 밖에서 지급한 뒤
+      // "수동 충전 완료"로 정리한 주문은 COMPLETED 이면서 creditTransactionId 가
+      // 비어 있을 수 있는데, 그걸 다시 지급하면 이중지급이 된다.
+      if (topUp.status === "COMPLETED") {
         const balance = await tx.creditBalance.findUnique({
           where: { academyId: topUp.academyId },
           select: { balance: true },

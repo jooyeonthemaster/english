@@ -169,7 +169,7 @@ export async function approveRegistration(
     });
 
     revalidatePath("/admin/registrations");
-    revalidatePath("/admin/academies");
+    revalidatePath("/admin/members");
 
     return {
       success: true,

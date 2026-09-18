@@ -53,6 +53,11 @@ export function useCreditsController() {
   const [paymentMessage, setPaymentMessage] = useState<{
     type: "success" | "error" | "info";
     text: string;
+    /**
+     * 카드 결제가 실패했을 때 그 시도 금액. 환금성 업종 한도로 막힌 건지
+     * 안내하기 위해 실패 모달이 읽는다(카드 결제 실패일 때만 채운다).
+     */
+    cardLimitAmount?: number;
   } | null>(null);
   const [subscriptionMessage, setSubscriptionMessage] = useState<{
     type: "success" | "error" | "info";
@@ -215,6 +220,37 @@ export function useCreditsController() {
     [refreshAllCreditData],
   );
 
+  /**
+   * 실패한 결제를 서버에 기록시킨다.
+   *
+   * 지금까지 카드 결제가 실패하면 화면에 토스트만 띄우고 서버를 부르지 않아,
+   * 주문이 PENDING 인 채로 영원히 남았다(2026-08 기준 35건). 그래서 어드민에서
+   * "왜 실패했는지"를 볼 수 없었고, 원인 추적에 PG API 를 직접 뒤져야 했다.
+   *
+   * complete 엔드포인트는 포트원에서 결제 상태를 다시 읽어 PAID 가 아니면
+   * FAILED + 실패코드·사유를 기록한다(updateNonPaidTopUp). 즉 성공 때와 똑같이
+   * 부르기만 하면 실패도 남는다.
+   *
+   * 사용자에게는 이미 실패 안내가 떠 있으므로 이 호출은 조용히 수행하고,
+   * 실패해도 흐름을 막지 않는다(기록은 부가 작업).
+   */
+  const recordPaymentFailure = useCallback(
+    async (paymentId: string | null | undefined) => {
+      if (!paymentId) return;
+      try {
+        await fetch("/api/credits/top-ups/complete", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ paymentId }),
+        });
+      } catch {
+        // 기록 실패는 삼킨다 — 사용자에겐 이미 실패 안내가 떠 있다.
+      }
+      await fetchTopUps();
+    },
+    [fetchTopUps],
+  );
+
   const startBankDeposit = useCallback(
     async (product: CreditTopUpProduct) => {
       const trimmedName = depositorName.trim();
@@ -279,6 +315,17 @@ export function useCreditsController() {
       }
       setPayingCredits(product.creditAmount);
       setPaymentMessage(null);
+      // 카드 결제 실패 시 "이 금액이 카드사 한도를 넘었는지" 안내하기 위한 기준액.
+      // 쿠폰·프로모가 붙으면 서버가 확정한 실제 청구액으로 교체한다.
+      let attemptedAmount = product.price;
+      let preparedPaymentId: string | null = null;
+      // 결제창이 결제를 거절했을 때만 true. 준비 API 오류·승인 후 검증 오류는
+      // 카드사 한도와 무관하므로 한도 안내를 붙이지 않는다.
+      let paymentWindowRejected = false;
+      const cardLimitInfo = () =>
+        payMethod === "CARD" && paymentWindowRejected
+          ? { cardLimitAmount: attemptedAmount }
+          : {};
       try {
         const prepareRes = await fetch("/api/credits/top-ups/prepare", {
           method: "POST",
@@ -295,8 +342,30 @@ export function useCreditsController() {
           throw new Error(prepared.error ?? "결제 준비에 실패했습니다.");
         }
 
+        const preparedAmount =
+          prepared.paymentRequest?.totalAmount ??
+          prepared.paymentRequest?.amount;
+        if (typeof preparedAmount === "number" && preparedAmount > 0) {
+          attemptedAmount = preparedAmount;
+        }
+        // 실패 기록용 결제 식별값. V1(다날)은 merchant_uid, V2 는 paymentId 다.
+        // 결제창이 거부/이탈로 끝나면 응답에서 이 값을 받을 수 없으므로
+        // 결제창을 열기 전에 미리 확보해 둔다.
+        preparedPaymentId =
+          prepared.paymentRequest?.merchant_uid ??
+          prepared.paymentRequest?.paymentId ??
+          null;
+
         if (isDanalLegacyPaymentRequest(prepared.paymentRequest)) {
-          const payment = await requestDanalLegacyPayment(prepared.paymentRequest);
+          // 실패 시 reject 되므로 여기서 기록하고 바깥 catch 로 넘긴다.
+          // (바깥 catch 가 사용자용 실패 안내를 띄운다.)
+          const payment = await requestDanalLegacyPayment(
+            prepared.paymentRequest,
+          ).catch(async (err) => {
+            paymentWindowRejected = true;
+            await recordPaymentFailure(preparedPaymentId);
+            throw err;
+          });
           await completePayment(payment.paymentId);
           return;
         }
@@ -310,11 +379,13 @@ export function useCreditsController() {
           return;
         }
         if (payment.code) {
+          paymentWindowRejected = true;
           setPaymentMessage({
             type: "error",
             text: payment.message ?? "결제가 완료되지 않았습니다.",
+            ...cardLimitInfo(),
           });
-          await fetchTopUps();
+          await recordPaymentFailure(payment.paymentId ?? preparedPaymentId);
           return;
         }
 
@@ -326,7 +397,10 @@ export function useCreditsController() {
             err instanceof Error
               ? err.message
               : "결제 요청 중 오류가 발생했습니다.",
+          ...cardLimitInfo(),
         });
+        // 다날 V1 경로는 위에서 이미 기록했다(멱등이라 중복 호출도 무해).
+        await recordPaymentFailure(preparedPaymentId);
       } finally {
         setPayingCredits(null);
       }
@@ -622,13 +696,19 @@ export function useCreditsController() {
           "결제가 완료되지 않았습니다.",
       });
       clearCreditPaymentReturnParams();
-      void fetchTopUps();
+      // 모바일 리다이렉트 복귀 경로도 실패를 서버에 남긴다. 여기서 부르지 않으면
+      // 주문이 PENDING 으로 방치돼 어드민에서 원인을 볼 수 없다.
+      void recordPaymentFailure(paymentId);
     }
     const billingKey = params.get("billingKey");
     if (billingKey) {
       void registerSubscriptionBilling(billingKey, params.get("issueId"));
     }
-  }, [completePayment, fetchTopUps, registerSubscriptionBilling]);
+  }, [
+    completePayment,
+    recordPaymentFailure,
+    registerSubscriptionBilling,
+  ]);
 
   // Re-fetch when page or filterType changes (skip initial)
   useEffect(() => {

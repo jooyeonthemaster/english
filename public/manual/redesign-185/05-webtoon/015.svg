@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1920 1080" font-family="Apple SD Gothic Neo, Malgun Gothic, -apple-system, BlinkMacSystemFont, sans-serif">
+<rect width="1920" height="1080" fill="#f6f8fb"/>
+<rect x="0" y="0" width="1920" height="10" fill="url(#topGrad)"/>
+<defs>
+  <linearGradient id="topGrad" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#1f5df5"/>
+    <stop offset="0.47" stop-color="#12b886"/>
+    <stop offset="1" stop-color="#f59f00"/>
+  </linearGradient>
+  <filter id="softShadow" x="-20%" y="-20%" width="140%" height="150%">
+    <feDropShadow dx="0" dy="20" stdDeviation="26" flood-color="#1e293b" flood-opacity="0.14"/>
+  </filter>
+  <filter id="cardShadow" x="-20%" y="-20%" width="140%" height="150%">
+    <feDropShadow dx="0" dy="12" stdDeviation="18" flood-color="#1e293b" flood-opacity="0.08"/>
+  </filter>
+</defs>
+<text x="84" y="88" font-size="28" font-weight="950" fill="#0ca678">⑤ 지문 기반 웹툰 · 팁</text>
+<text font-size="58" font-weight="950" fill="#111827" letter-spacing="0"><tspan x="84" y="164">작업 전에 기억할 포인트</tspan></text>
+
+<g><rect x="84.00" y="1028" width="112.13" height="7" rx="3.5" fill="#0ca678" opacity="0.52"/><rect x="201.13" y="1028" width="112.13" height="7" rx="3.5" fill="#0ca678" opacity="0.52"/><rect x="318.27" y="1028" width="112.13" height="7" rx="3.5" fill="#0ca678" opacity="0.52"/><rect x="435.40" y="1028" width="112.13" height="7" rx="3.5" fill="#0ca678" opacity="0.52"/><rect x="552.53" y="1028" width="112.13" height="7" rx="3.5" fill="#0ca678" opacity="0.52"/><rect x="669.67" y="1028" width="112.13" height="7" rx="3.5" fill="#0ca678" opacity="0.52"/><rect x="786.80" y="1028" width="112.13" height="7" rx="3.5" fill="#0ca678" opacity="0.52"/><rect x="903.93" y="1028" width="112.13" height="7" rx="3.5" fill="#0ca678" opacity="0.52"/><rect x="1021.07" y="1028" width="112.13" height="7" rx="3.5" fill="#0ca678" opacity="0.52"/><rect x="1138.20" y="1028" width="112.13" height="7" rx="3.5" fill="#0ca678" opacity="0.52"/><rect x="1255.33" y="1028" width="112.13" height="7" rx="3.5" fill="#0ca678" opacity="0.52"/><rect x="1372.47" y="1028" width="112.13" height="7" rx="3.5" fill="#0ca678" opacity="0.52"/><rect x="1489.60" y="1028" width="112.13" height="7" rx="3.5" fill="#0ca678" opacity="0.52"/><rect x="1606.73" y="1028" width="112.13" height="7" rx="3.5" fill="#0ca678" opacity="0.52"/><rect x="1723.87" y="1028" width="112.13" height="7" rx="3.5" fill="#0ca678" opacity="1"/></g>
+<rect x="164" y="342" width="1380" height="112" rx="8" fill="#ffffff" stroke="#d9e2ef" filter="url(#cardShadow)"/>
+<rect x="196" y="362" width="72" height="72" rx="8" fill="#e6fcf5"/>
+<text x="232" y="407" text-anchor="middle" font-size="24" font-weight="950" fill="#0ca678">01</text>
+<text font-size="25" font-weight="850" fill="#243247"><tspan x="306" y="387">생성에는 시간이 걸리며 화면을 닫아도 완료되면 결과 목록에 표시됩니다.</tspan></text><rect x="164" y="488" width="1380" height="112" rx="8" fill="#ffffff" stroke="#d9e2ef" filter="url(#cardShadow)"/>
+<rect x="196" y="508" width="72" height="72" rx="8" fill="#e6fcf5"/>
+<text x="232" y="553" text-anchor="middle" font-size="24" font-weight="950" fill="#0ca678">02</text>
+<text font-size="25" font-weight="850" fill="#243247"><tspan x="306" y="533">완료 후 자막 편집과 다운로드를 지원합니다.</tspan></text><rect x="164" y="634" width="1380" height="112" rx="8" fill="#ffffff" stroke="#d9e2ef" filter="url(#cardShadow)"/>
+<rect x="196" y="654" width="72" height="72" rx="8" fill="#e6fcf5"/>
+<text x="232" y="699" text-anchor="middle" font-size="24" font-weight="950" fill="#0ca678">03</text>
+<text font-size="25" font-weight="850" fill="#243247"><tspan x="306" y="679">실패한 생성은 카드에서 다시 시도할 수 있습니다.</tspan></text>
+<rect x="1558" y="150" width="240" height="54" rx="8" fill="#111827"/>
+<text x="1678" y="186" text-anchor="middle" font-size="24" font-weight="950" fill="#ffffff">팁 &amp; 주의사항</text>
+</svg>

@@ -97,3 +97,6 @@ s15-full.png
 # 코퍼스 수리 도구 크래시 잔해 — 배포 업로드에서 제외(렌즈 R3, 2026-08-20)
 *.h1tmp-*
 *.h1rbtmp-*
+# ERP 팀용 MCP 서버 — 로컬에만 있는 별도 프로젝트(.gitignore). 올리면 Next 빌드의
+# 타입 검사가 이 폴더까지 훑다가 그 폴더 의존성(firebase-admin)을 못 찾아 실패한다.
+neander-erp-mcp-team

@@ -199,7 +199,7 @@ export default async function ExamResultPage({
   const title = cardTitle ?? sub.exam.title;
 
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-2xl flex-col">
+    <div className="gd-player flex min-h-dvh flex-col">
       <header className="shrink-0 px-4 pt-[max(0.75rem,env(safe-area-inset-top))]">
         <div className="flex h-10 items-center gap-2">
           <Link
@@ -234,7 +234,7 @@ function ResultFallback({
   message?: string;
 }) {
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col items-center justify-center gap-3 px-6 text-center">
+    <div className="gd-page flex min-h-dvh flex-col items-center justify-center gap-3 px-6 text-center">
       <span
         className="flex h-14 w-14 items-center justify-center rounded-full"
         style={{ background: "var(--gd-blue-soft)", color: "var(--gd-blue)" }}

@@ -120,16 +120,6 @@ export default async function MemberDetailPage({ params, searchParams }: PagePro
     : "overview";
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-2 text-[12px] text-gray-500">
-        <Link
-          href="/admin/members"
-          className="inline-flex items-center gap-1 hover:text-gray-800 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-500/30 rounded px-1 -mx-1"
-        >
-          <ArrowLeft className="size-3.5" strokeWidth={2} aria-hidden />
-          학원 · 회원 목록
-        </Link>
-      </div>
-
       <Suspense fallback={<DetailSkeleton />}>
         <MemberContent memberId={id} initialTab={initialTab} />
       </Suspense>

@@ -63,14 +63,8 @@ const GW_VIEWER_CSS = `
     -webkit-overflow-scrolling: touch;
     touch-action: pan-x pan-y;
   }
-  .gw-iconbtn {
-    display: flex; align-items: center; justify-content: center;
-    width: 2.25rem; height: 2.25rem; border-radius: 9999px;
-    color: var(--gd-ink-2);
-  }
-  /* disabled 에서도 버튼 형태가 소실되지 않도록 테두리 유지 + opacity 0.4 */
-  .gw-iconbtn:disabled {
-    opacity: 0.4;
+  /* disabled 에서도 버튼 형태가 소실되지 않도록 테두리 유지(공용 .gd-iconbtn 에 얹는 보강) */
+  .gw-root .gd-iconbtn:disabled {
     border: 1px solid var(--gd-line-strong);
   }
 
@@ -349,7 +343,7 @@ export function WViewerClient({
       : null;
 
   return (
-    <div className="gw-root flex h-dvh flex-col" style={{ background: "#e9e7e0" }}>
+    <div className="gw-root flex h-dvh flex-col" style={{ background: "var(--gd-canvas)" }}>
       <style dangerouslySetInnerHTML={{ __html: GW_VIEWER_CSS }} />
 
       {/* ── 상단 바 (고정) ── */}
@@ -360,8 +354,7 @@ export function WViewerClient({
         <Link
           href={backHref}
           aria-label={backHref === "/g/tasks" ? "과제 목록으로 돌아가기" : "학습 홈으로 돌아가기"}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
-          style={{ color: "var(--gd-ink-2)" }}
+          className="gd-iconbtn"
         >
           <ArrowLeft className="h-5 w-5" strokeWidth={1.75} aria-hidden />
         </Link>
@@ -375,7 +368,7 @@ export function WViewerClient({
             onClick={() => setUserZoom((z) => clampZoom(z - ZOOM_STEP))}
             disabled={userZoom <= ZOOM_MIN}
             aria-label="축소"
-            className="gw-iconbtn"
+            className="gd-iconbtn"
           >
             <ZoomOut className="h-4.5 w-4.5" strokeWidth={1.75} aria-hidden />
           </button>
@@ -383,7 +376,7 @@ export function WViewerClient({
             type="button"
             onClick={() => setUserZoom(1)}
             aria-label="화면 폭에 맞춤"
-            className="gd-mono gd-t-xs hidden h-9 min-w-[3.25rem] items-center justify-center rounded-lg font-semibold sm:flex"
+            className="gd-mono gd-t-xs hidden h-9 min-w-[3.25rem] items-center justify-center rounded-lg font-semibold md:flex"
             style={{ color: "var(--gd-ink-2)" }}
           >
             {Math.round(zoom * 100)}%
@@ -393,7 +386,7 @@ export function WViewerClient({
             onClick={() => setUserZoom((z) => clampZoom(z + ZOOM_STEP))}
             disabled={userZoom >= ZOOM_MAX}
             aria-label="확대"
-            className="gw-iconbtn"
+            className="gd-iconbtn"
           >
             <ZoomIn className="h-4.5 w-4.5" strokeWidth={1.75} aria-hidden />
           </button>
@@ -404,7 +397,7 @@ export function WViewerClient({
             style={{ minHeight: "2.5rem" }}
           >
             <Printer className="h-4 w-4" strokeWidth={1.75} aria-hidden />
-            <span className="hidden sm:inline">인쇄/PDF</span>
+            <span className="hidden md:inline">인쇄/PDF</span>
           </button>
         </div>
       </header>
@@ -463,7 +456,7 @@ export function WViewerClient({
           <div className="gw-chrome pointer-events-none absolute inset-x-0 top-3 z-10 flex justify-center px-4">
             <p
               className="gd-t-2xs rounded-full px-3.5 py-1.5 text-center font-semibold shadow-md"
-              style={{ background: "rgba(22, 32, 46, 0.88)", color: "#fff" }}
+              style={{ background: "var(--gd-scrim)", color: "#fff" }}
               role="status"
             >
               {topPill}
@@ -513,7 +506,7 @@ export function WViewerClient({
             className="gd-t-sm flex min-h-[2.75rem] w-full items-center justify-center gap-1.5 rounded-xl font-semibold"
             style={{
               background: "var(--gd-good-soft)",
-              border: "1px solid #a7f3d0",
+              border: "1px solid var(--gd-good-line)",
               color: "var(--gd-good)",
             }}
           >

@@ -4,6 +4,7 @@ import { useMemo, useState, useTransition } from "react";
 import { setManualSectionVisibility } from "@/actions/admin-settings";
 import { MANUAL_CANVA_EDIT_LINKS } from "@/lib/manual/canva-links";
 import { Eye, EyeOff, ExternalLink, RotateCcw, Save } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 
 interface ManualSectionVisibilityGroup {
@@ -148,21 +149,22 @@ export function ManualSectionVisibilityCard({
                     Canva 편집
                   </a>
                 ) : null}
-                <button
-                  type="button"
-                  role="switch"
-                  aria-checked={visible}
-                  onClick={() => setGroupVisible(group.slug, !visible)}
-                  disabled={isPending}
-                  className={`inline-flex h-9 shrink-0 items-center justify-center gap-2 rounded-xl px-3 text-[12px] font-bold transition disabled:opacity-50 ${
-                    visible
-                      ? "bg-blue-600 text-white hover:bg-blue-700"
-                      : "bg-gray-100 text-gray-500 hover:bg-gray-200"
-                  }`}
-                >
-                  {visible ? <Eye className="size-3.5" /> : <EyeOff className="size-3.5" />}
-                  {visible ? "공개" : "숨김"}
-                </button>
+                <label className="inline-flex h-9 shrink-0 cursor-pointer items-center gap-2 rounded-xl border border-gray-200 px-3 text-[12px] font-semibold">
+                  {visible ? (
+                    <Eye className="size-3.5 text-emerald-600" />
+                  ) : (
+                    <EyeOff className="size-3.5 text-gray-400" />
+                  )}
+                  <span className={visible ? "text-gray-900" : "text-gray-400"}>
+                    {visible ? "공개" : "숨김"}
+                  </span>
+                  <Switch
+                    checked={visible}
+                    onCheckedChange={(next) => setGroupVisible(group.slug, next)}
+                    disabled={isPending}
+                    aria-label={`${group.name} 공개 여부`}
+                  />
+                </label>
               </div>
             </div>
           );

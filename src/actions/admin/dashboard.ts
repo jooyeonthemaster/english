@@ -43,6 +43,7 @@ export interface DashboardKpi {
 
 export interface DashboardTrendPoint {
   date: string; // "MM/DD"
+  dateKey: string; // "YYYY-MM-DD"(KST) — 상세 조회용
   revenue: number;
   signups: number;
 }
@@ -54,6 +55,16 @@ export interface LowCreditAcademy {
   threshold: number;
   /** 원장 Staff.id — 회원 상세 링크용(없으면 null) */
   directorStaffId: string | null;
+}
+
+/**
+ * 체험 종료 임박(7일) — 협업자 브랜치의 우측 리스크 목록(dashboard-risk-lists.tsx)이 그대로 쓴다.
+ * D5 로 「최근 가입 학원」이 추가됐지만 이 목록은 없애지 않고 둘 다 낸다.
+ */
+export interface TrialEndingAcademy {
+  academyId: string;
+  name: string;
+  trialEndsAt: string;
 }
 
 export interface RecentSignupAcademy {
@@ -92,6 +103,8 @@ export interface DashboardOverview {
   lowCreditImminent: number;
   /** 이미 소진(잔액 0) — 대부분 휴면 */
   lowCreditExhausted: number;
+  /** 체험 종료 임박(7일) — 소셜 가입 전환 뒤로는 대개 빈 목록(D5) */
+  trialEndingSoon: TrialEndingAcademy[];
   /** 최근 7일(KST, 오늘 포함) 가입 학원 최신순 상위 8곳 */
   recentSignups: RecentSignupAcademy[];
   recentSignupsTotal: number;
@@ -106,6 +119,7 @@ export async function getDashboardOverview(): Promise<DashboardOverview> {
   const yesterdayStart = getYesterdayKST();
   const monthStart = getMonthStartKST();
   const now = new Date();
+  const in7Days = new Date(now.getTime() + 7 * DAY_MS);
   // 오늘 포함 최근 14일치 버킷
   const trendStart = new Date(todayStart.getTime() - 13 * DAY_MS);
   // 「최근 가입 학원(7일)」 — 추이 차트와 같은 KST 일 경계(오늘 포함 7일)
@@ -122,7 +136,6 @@ export async function getDashboardOverview(): Promise<DashboardOverview> {
     unmatchedDeposits,
     waitingTopupsAll,
     waitingTopups,
-    pendingRegistrations,
     pendingSupport,
     pendingSeminars,
     // --- 오늘의 맥박 ---
@@ -153,6 +166,7 @@ export async function getDashboardOverview(): Promise<DashboardOverview> {
     // --- 리스크·최근 가입 ---
     lowCreditRows,
     lowCreditCountRows,
+    trialEndingRows,
     recentSignupRows,
     recentSignupsTotal,
   ] = await Promise.all([
@@ -170,7 +184,6 @@ export async function getDashboardOverview(): Promise<DashboardOverview> {
         createdAt: { gte: bankWindowStart },
       },
     }),
-    prisma.academyRegistration.count({ where: { status: "PENDING" } }),
     prisma.helpPost.count({ where: { board: "SUPPORT", status: { in: ["OPEN", "IN_PROGRESS"] } } }),
     prisma.seminarRequest.count({ where: { status: "RECEIVED" } }),
 
@@ -257,7 +270,15 @@ export async function getDashboardOverview(): Promise<DashboardOverview> {
         AND a.status NOT IN ('SUSPENDED', 'DEACTIVATED')
     `,
 
-    // F9(D5): 「체험 종료 임박」(소셜 가입 체험이 전부 종료돼 항상 빈 목록) → 최근 가입 학원
+    // 체험 종료 임박(7일) — 협업자 브랜치 우측 리스크 목록이 계속 쓰므로 그대로 둔다.
+    prisma.academySubscription.findMany({
+      where: { status: "TRIAL", trialEndsAt: { gte: now, lte: in7Days } },
+      orderBy: { trialEndsAt: "asc" },
+      take: 8,
+      select: { academyId: true, trialEndsAt: true, academy: { select: { name: true } } },
+    }),
+
+    // F9(D5): 「체험 종료 임박」은 소셜 가입 전환 뒤 대개 빈 목록이라, 같은 자리에 「최근 가입 학원」을 함께 낸다
     prisma.academy.findMany({
       where: { createdAt: { gte: signupWindowStart } },
       orderBy: { createdAt: "desc" },
@@ -284,16 +305,19 @@ export async function getDashboardOverview(): Promise<DashboardOverview> {
   // 액션 스트립 조립 (0인 항목도 노출하되 색으로 구분)
   // 자구는 spec §9.2 F2 결정(「진행 중」 / 「미완료(이탈·만료)」)을 따른다 — DB 상태는 바꾸지 않는다(D3).
   const actionItems: DashboardActionItem[] = [
-    { key: "deposits", label: "미확인 입금", count: unmatchedDeposits, href: "/admin/credits/bank-deposits?status=ACTION", urgent: true, hint: "미매칭·확인 필요·실패" },
+    // 무통장 관련 링크는 협업자 브랜치의 새 경로(결제 관리 · 입금 확인 탭)를 쓴다 —
+    // 옛 /admin/credits/bank-deposits 는 같은 주소로 보내는 리다이렉트만 남았다.
+    { key: "deposits", label: "미확인 입금", count: unmatchedDeposits, href: "/admin/credit-plans?tab=deposits&status=ACTION", urgent: true, hint: "미매칭·확인 필요·실패" },
     {
-      key: "waiting-topups", label: "입금 대기", count: waitingTopups, href: "/admin/credits/bank-deposits?view=pending", urgent: false,
+      key: "waiting-topups", label: "입금 대기", count: waitingTopups, href: "/admin/credit-plans?tab=deposits&view=pending", urgent: false,
       hint: `주문 후 ${bankWindowMinutes}분 이내 ${TOPUP_PROGRESS_ACTIVE_LABEL}`,
     },
     {
-      key: "waiting-topups-stale", label: "미완료 입금", count: waitingExpired, href: "/admin/credits/bank-deposits?view=pending", urgent: false,
+      key: "waiting-topups-stale", label: "미완료 입금", count: waitingExpired, href: "/admin/credit-plans?tab=deposits&view=pending", urgent: false,
       hint: `${TOPUP_PROGRESS_STALE_LABEL} · ${bankWindowMinutes}분 초과 · 입금되면 수동 처리`,
     },
-    { key: "registrations", label: "가입 승인 대기", count: pendingRegistrations, href: "/admin/registrations?status=PENDING", urgent: false },
+    // 「가입 승인 대기」는 뺐다 — 협업자 브랜치에서 가입 신청 심사 화면이 폐기(자가 가입 전환)돼
+    // /admin/registrations 는 /admin/members 리다이렉트만 남았고, 처리할 화면이 없는 카드가 된다.
     { key: "support", label: "미답변 문의", count: pendingSupport, href: "/admin/support?status=PENDING", urgent: false },
     { key: "seminars", label: "세미나 신청", count: pendingSeminars, href: "/admin/seminars?status=RECEIVED", urgent: false },
   ];
@@ -322,7 +346,7 @@ export async function getDashboardOverview(): Promise<DashboardOverview> {
   }
   const trend: DashboardTrendPoint[] = dayKeys.map((key) => {
     const b = buckets.get(key)!;
-    return { date: `${key.slice(5, 7)}/${key.slice(8, 10)}`, ...b };
+    return { date: `${key.slice(5, 7)}/${key.slice(8, 10)}`, dateKey: key, ...b };
   });
 
   const monthAiCost = aiCostMonth._sum.costKrw ?? 0;
@@ -352,6 +376,11 @@ export async function getDashboardOverview(): Promise<DashboardOverview> {
     lowCreditTotal: lowCreditImminent + lowCreditExhausted,
     lowCreditImminent,
     lowCreditExhausted,
+    trialEndingSoon: trialEndingRows.map((r) => ({
+      academyId: r.academyId,
+      name: r.academy.name,
+      trialEndsAt: r.trialEndsAt!.toISOString(),
+    })),
     recentSignups: recentSignupRows.map((r) => ({
       academyId: r.id,
       name: r.name,

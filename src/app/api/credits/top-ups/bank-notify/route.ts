@@ -13,10 +13,19 @@ import {
   verifyBankNotifyToken,
 } from "@/lib/bank-deposit";
 import {
+  detectPgSettlementDepositor,
+  pgSettlementIgnoreNote,
+} from "@/lib/bank-deposit-settlement";
+import {
   grantSeminarDeposit,
   matchSeminarDeposit,
   SEMINAR_DEPOSIT_MATCH_WINDOW_MINUTES,
 } from "@/lib/seminar-deposit";
+import {
+  notifyBankDepositNeedsReview,
+  notifySeminarDepositPaid,
+  notifyTopUpPaid,
+} from "@/lib/ops-notify/events";
 
 export const dynamic = "force-dynamic";
 
@@ -175,6 +184,21 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "record failed" }, { status: 500 });
   }
 
+  // PG사 정산금은 주문 매칭 전에 무시 처리한다. 입금자명 없이 금액만으로 매칭이
+  // 폴백하면 정산금이 대기 주문에 잘못 붙을 수 있고, 관리자 검토 알림도 불필요하다.
+  const settlementDepositor = detectPgSettlementDepositor(depositorName);
+  if (settlementDepositor) {
+    await prisma.bankDepositNotification.update({
+      where: { id: notification.id },
+      data: {
+        status: "IGNORED",
+        note: pgSettlementIgnoreNote(settlementDepositor),
+        processedAt: new Date(),
+      },
+    });
+    return NextResponse.json({ status: "IGNORED", reason: "PG_SETTLEMENT" });
+  }
+
   const config = getBankDepositConfig();
   const windowMinutes = config.matchWindowMinutes;
 
@@ -200,6 +224,7 @@ export async function POST(request: NextRequest) {
             processedAt: new Date(),
           },
         });
+        notifyTopUpPaid(outcome.topUpId, "bank_notify");
         return NextResponse.json({
           status: "MATCHED",
           topUpId: outcome.topUpId,
@@ -217,6 +242,7 @@ export async function POST(request: NextRequest) {
           processedAt: new Date(),
         },
       });
+      notifyBankDepositNeedsReview(notification.id);
       return NextResponse.json({ status: "AMBIGUOUS", topUpId: outcome.topUpId });
     }
 
@@ -229,6 +255,7 @@ export async function POST(request: NextRequest) {
           processedAt: new Date(),
         },
       });
+      notifyBankDepositNeedsReview(notification.id);
       return NextResponse.json({
         status: "AMBIGUOUS",
         candidates: outcome.candidateIds.length,
@@ -255,6 +282,7 @@ export async function POST(request: NextRequest) {
             processedAt: new Date(),
           },
         });
+        notifySeminarDepositPaid(semOutcome.registrationId);
         return NextResponse.json({
           status: "MATCHED",
           kind: "SEMINAR_DEPOSIT",
@@ -270,6 +298,7 @@ export async function POST(request: NextRequest) {
           processedAt: new Date(),
         },
       });
+      notifyBankDepositNeedsReview(notification.id);
       return NextResponse.json({ status: "AMBIGUOUS", kind: "SEMINAR_DEPOSIT" });
     }
     if (semOutcome.status === "AMBIGUOUS") {
@@ -281,6 +310,7 @@ export async function POST(request: NextRequest) {
           processedAt: new Date(),
         },
       });
+      notifyBankDepositNeedsReview(notification.id);
       return NextResponse.json({
         status: "AMBIGUOUS",
         kind: "SEMINAR_DEPOSIT",
@@ -293,6 +323,7 @@ export async function POST(request: NextRequest) {
       where: { id: notification.id },
       data: { status: "UNMATCHED", processedAt: new Date() },
     });
+    notifyBankDepositNeedsReview(notification.id);
     return NextResponse.json({ status: "UNMATCHED" });
   } catch (err) {
     console.error("[bank-notify] matching/grant failed", err);
@@ -306,6 +337,7 @@ export async function POST(request: NextRequest) {
         },
       })
       .catch(() => {});
+    notifyBankDepositNeedsReview(notification.id);
     return NextResponse.json({ error: "processing failed" }, { status: 500 });
   }
 }

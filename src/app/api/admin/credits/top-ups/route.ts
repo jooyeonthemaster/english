@@ -5,6 +5,7 @@ import {
   getAdminCreditTopUpStats,
   getAdminCreditTopUpTotalCount,
 } from "@/lib/admin-credit-topups";
+import { autoReconcileStalePendingTopUps } from "@/lib/stale-topup-reconcile";
 
 const DEFAULT_PAGE_SIZE = 50;
 
@@ -19,6 +20,8 @@ export async function GET(request: NextRequest) {
   );
   const page = clampInt(Number(params.get("page") ?? 1), 1, Number.MAX_SAFE_INTEGER, 1);
   const offset = (page - 1) * pageSize;
+
+  await autoReconcileStalePendingTopUps();
 
   const [topUps, stats, total] = await Promise.all([
     getAdminCreditTopUps(pageSize, offset),

@@ -2857,6 +2857,9 @@ model CreditTopUp {
   verifiedAt           DateTime?
   paidAt               DateTime?
   cancelledAt          DateTime?
+  // 관리자가 결제 관리 "확인 필요"에서 실패 건을 확인(무시) 처리한 시각·관리자. null = 미확인
+  failureReviewedAt    DateTime?
+  failureReviewedBy    String?
   requestedBy          String? // staffId
   creditTransactionId  String?   @unique
   createdAt            DateTime  @default(now())

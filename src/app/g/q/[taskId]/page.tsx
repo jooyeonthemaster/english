@@ -136,7 +136,7 @@ export default async function QuestionsPlayerPage({
   if (task.taskStatus === "DONE") {
     const items = await buildQuestionsPlayerItems(session.academyId, questionIdsOf(task));
     return (
-      <div className="mx-auto flex min-h-dvh w-full max-w-2xl flex-col">
+      <div className="gd-player flex min-h-dvh flex-col">
         <header className="shrink-0 px-4 pt-3">
           <div className="flex h-10 items-center gap-2">
             <Link

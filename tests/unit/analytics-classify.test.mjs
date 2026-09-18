@@ -23,7 +23,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 
 /** 케이스 정본. 여기를 바꾸면 무엇을 검증하는지가 바뀐다 — 함부로 다른 파일을 가리키지 말 것. */
@@ -59,4 +59,26 @@ test("analytics G2: 유입 분류기·UA 파서·정화기 케이스가 전건 �
     `케이스가 ${total}건으로 줄었다(하한 ${MIN_CASES}) — 게이트 공허화:\n${out}`,
   );
   assert.ok(!out.includes("FAIL "), `게이트 출력에 FAIL 이 남아 있다:\n${out}`);
+});
+
+// ============================================================================
+// 상수 동기화 — 표시 임계(PENDING_STALE_MINUTES)와 서버 자동 대사 임계(STALE_PENDING_MINUTES)
+// 가 갈라지면, 화면은 「진행 중」인데 서버는 이미 취소한 주문이 생긴다(병합 26-09-18 실측 60 vs 30).
+// 두 모듈은 한쪽이 server-only(prisma)라 import 로 묶을 수 없어 값으로만 맞춘다 → 여기서 대조한다.
+// ============================================================================
+test("결제 대기 임계: 표시(admin-revenue-constants)와 서버 자동 대사(stale-topup-reconcile)가 같은 값", () => {
+  const read = (rel) => readFileSync(path.join(process.cwd(), rel), "utf8");
+  const display = read("src/lib/admin-revenue-constants.ts").match(
+    /export const PENDING_STALE_MINUTES\s*=\s*(\d+)/,
+  );
+  const server = read("src/lib/stale-topup-reconcile.ts").match(
+    /export const STALE_PENDING_MINUTES\s*=\s*(\d+)/,
+  );
+  assert.ok(display, "PENDING_STALE_MINUTES 선언을 찾지 못했다(이름이 바뀌었나)");
+  assert.ok(server, "STALE_PENDING_MINUTES 선언을 찾지 못했다(이름이 바뀌었나)");
+  assert.equal(
+    Number(display[1]),
+    Number(server[1]),
+    `표시 임계 ${display[1]}분 vs 서버 자동 대사 ${server[1]}분 — 한쪽만 바꾸면 화면이 거짓말을 한다`,
+  );
 });

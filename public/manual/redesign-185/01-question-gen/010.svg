@@ -20,7 +20,7 @@
 <rect x="345" y="118" width="145" height="52" rx="26" fill="#fff4dc" stroke="#e8890c" stroke-width="1.5"/>
 <text x="417.5" y="152" text-anchor="middle" font-size="21" font-weight="950" fill="#e8890c">실습 1 / 2</text>
 <text x="84" y="232" font-size="40" font-weight="950" fill="#111827" letter-spacing="0">기출 카드 2개를 선택 — 담기 클릭 직전</text>
-<text x="1836" y="88" text-anchor="end" font-size="18" font-weight="850" fill="#718096">17 / 188</text>
+<text x="1836" y="88" text-anchor="end" font-size="18" font-weight="850" fill="#718096">17 / 196</text>
 <g>
 <text x="1290" y="92" font-size="15" font-weight="900" fill="#718096">지문 입력 3가지 방법 — 어느 쪽이든 결과는 하나</text>
 <path d="M 1492 123 C 1546 123, 1560 171, 1612 171" fill="none" stroke="#d9e2ef" stroke-width="2" stroke-dasharray="3 5"/>

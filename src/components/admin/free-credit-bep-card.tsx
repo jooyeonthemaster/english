@@ -1,7 +1,9 @@
-import type { ReactNode } from "react";
+import type { ComponentProps, ReactNode } from "react";
 import { Scale } from "lucide-react";
 import type { FreeCreditBep, FreeGrantItem } from "@/actions/admin/free-credit-bep";
 import { cn, formatCurrency, formatNumber } from "@/lib/utils";
+import { AdminHoverDetail } from "@/components/admin/hover-detail/admin-hover-detail";
+import { bepDetails } from "@/components/admin/costs-parts/margin-hover-detail";
 
 function pct(rate: number | null): string {
   return rate == null ? "—" : `${(rate * 100).toFixed(1)}%`;
@@ -31,6 +33,8 @@ export function FreeCreditBepCard({ data }: { data: FreeCreditBep }) {
   const excludedCredits = split.internalCredits + split.largeCredits;
   const hasRevenueAdjustments =
     revenue.topUpRefunds > 0 || revenue.subscription > 0 || revenue.manualGrant > 0;
+  // 호버=계산식 입력값 팝오버, 클릭=상세 팝업
+  const details = bepDetails(data);
 
   return (
     <section className="rounded-xl border border-gray-100 bg-white">
@@ -64,24 +68,30 @@ export function FreeCreditBepCard({ data }: { data: FreeCreditBep }) {
 
       {/* 전환율 핵심 3지표 */}
       <div className="grid grid-cols-1 gap-3 p-5 sm:grid-cols-3">
-        <BigStat
-          label="누적 전환율"
-          value={pct(data.conversionRate)}
-          sub={`결제 학원 ${formatNumber(data.payingAcademies)} / 전체 가입 ${formatNumber(data.totalAcademies)}곳`}
-          tone={belowBep ? "rose" : "emerald"}
-        />
-        <BigStat
-          label="BEP 전환율"
-          value={pct(data.bepConversionRate)}
-          sub="누적 전환율이 이 이상이면 흑자 · 선택 기간 단가 기준"
-          tone="slate"
-        />
-        <BigStat
-          label="가입 1곳당 무료 원가"
-          value={won(data.freeCostPerSignupKrw)}
-          sub={`가입 지급 ${formatNumber(data.assumedFreeCreditsPerSignup)}C × 평균 원가/크레딧`}
-          tone="slate"
-        />
+        <AdminHoverDetail title="누적 전환율" detail={details.conversion}>
+          <BigStat
+            label="누적 전환율"
+            value={pct(data.conversionRate)}
+            sub={`결제 학원 ${formatNumber(data.payingAcademies)} / 전체 가입 ${formatNumber(data.totalAcademies)}곳`}
+            tone={belowBep ? "rose" : "emerald"}
+          />
+        </AdminHoverDetail>
+        <AdminHoverDetail title="BEP 전환율" detail={details.bep}>
+          <BigStat
+            label="BEP 전환율"
+            value={pct(data.bepConversionRate)}
+            sub="누적 전환율이 이 이상이면 흑자 · 선택 기간 단가 기준"
+            tone="slate"
+          />
+        </AdminHoverDetail>
+        <AdminHoverDetail title="가입 1곳당 무료 원가" detail={details.freePerSignup}>
+          <BigStat
+            label="가입 1곳당 무료 원가"
+            value={won(data.freeCostPerSignupKrw)}
+            sub={`가입 지급 ${formatNumber(data.assumedFreeCreditsPerSignup)}C × 평균 원가/크레딧`}
+            tone="slate"
+          />
+        </AdminHoverDetail>
       </div>
 
       {belowBep && (
@@ -93,38 +103,46 @@ export function FreeCreditBepCard({ data }: { data: FreeCreditBep }) {
 
       {/* 상세 */}
       <div className="grid grid-cols-1 gap-px border-t border-gray-50 bg-gray-50 min-[420px]:grid-cols-2 sm:grid-cols-4">
-        <Cell
-          label="평균 원가/크레딧"
-          value={wonPrecise(data.avgCostPerCreditKrw)}
-          note={
-            data.rateSource === "actual"
-              ? `실측 · 순소모 ${formatNumber(data.totalCreditsConsumed)}C${
-                  data.refundedCredits > 0
-                    ? `(실패 환불 ${formatNumber(data.refundedCredits)}C 차감)`
-                    : ""
-                }`
-              : "실측 부족 → 추정"
-          }
-        />
-        <Cell
-          label="무료 지급 원가"
-          value={formatCurrency(data.freeCostKrw)}
-          note={
-            excludedCredits > 0
-              ? `${formatNumber(data.freeCreditsGranted)}C 반영 · 총 ${formatNumber(split.totalCredits)}C 중 ${formatNumber(excludedCredits)}C 분리`
-              : `${formatNumber(data.freeCreditsGranted)}C 지급`
-          }
-        />
-        <Cell
-          label="유료 매출 · 이익"
-          value={formatCurrency(data.paidRevenueKrw)}
-          note={`이익 ${formatCurrency(data.grossProfitKrw)} · 결제 학원 ${formatNumber(data.payersInPeriod)}곳`}
-        />
-        <Cell
-          label="유료 1곳당 이익"
-          value={won(data.profitPerPayerKrw ?? 0)}
-          note={coverPerPayer != null ? `무료 가입 ${formatNumber(coverPerPayer)}곳 커버` : "—"}
-        />
+        <AdminHoverDetail title="평균 원가/크레딧" detail={details.avgCost}>
+          <Cell
+            label="평균 원가/크레딧"
+            value={wonPrecise(data.avgCostPerCreditKrw)}
+            note={
+              data.rateSource === "actual"
+                ? `실측 · 순소모 ${formatNumber(data.totalCreditsConsumed)}C${
+                    data.refundedCredits > 0
+                      ? `(실패 환불 ${formatNumber(data.refundedCredits)}C 차감)`
+                      : ""
+                  }`
+                : "실측 부족 → 추정"
+            }
+          />
+        </AdminHoverDetail>
+        <AdminHoverDetail title="무료 지급 원가" detail={details.freeCost}>
+          <Cell
+            label="무료 지급 원가"
+            value={formatCurrency(data.freeCostKrw)}
+            note={
+              excludedCredits > 0
+                ? `${formatNumber(data.freeCreditsGranted)}C 반영 · 총 ${formatNumber(split.totalCredits)}C 중 ${formatNumber(excludedCredits)}C 분리`
+                : `${formatNumber(data.freeCreditsGranted)}C 지급`
+            }
+          />
+        </AdminHoverDetail>
+        <AdminHoverDetail title="유료 매출 · 이익" detail={details.paid}>
+          <Cell
+            label="유료 매출 · 이익"
+            value={formatCurrency(data.paidRevenueKrw)}
+            note={`이익 ${formatCurrency(data.grossProfitKrw)} · 결제 학원 ${formatNumber(data.payersInPeriod)}곳`}
+          />
+        </AdminHoverDetail>
+        <AdminHoverDetail title="유료 1곳당 이익" detail={details.profitPerPayer}>
+          <Cell
+            label="유료 1곳당 이익"
+            value={won(data.profitPerPayerKrw ?? 0)}
+            note={coverPerPayer != null ? `무료 가입 ${formatNumber(coverPerPayer)}곳 커버` : "—"}
+          />
+        </AdminHoverDetail>
       </div>
 
       {split.totalCount > 0 && (
@@ -215,12 +233,15 @@ function BigStat({
   value,
   sub,
   tone,
+  className,
+  ...rest
 }: {
   label: string;
   value: string;
   sub: string;
   tone: "emerald" | "rose" | "slate";
-}) {
+  /** 나머지 props 는 루트 div 로 전달 — AdminHoverDetail 로 바로 감쌀 수 있게. */
+} & Omit<ComponentProps<"div">, "children">) {
   const valueTone =
     tone === "emerald"
       ? "text-emerald-700"
@@ -228,7 +249,13 @@ function BigStat({
         ? "text-rose-700"
         : "text-gray-900";
   return (
-    <div className="rounded-xl border border-gray-100 bg-gray-50/60 px-4 py-3">
+    <div
+      className={cn(
+        "cursor-pointer rounded-xl border border-gray-100 bg-gray-50/60 px-4 py-3 transition-colors hover:bg-gray-100/70",
+        className,
+      )}
+      {...rest}
+    >
       <p className="text-[12px] text-gray-400">{label}</p>
       <p className={cn("mt-1 text-[24px] font-bold tabular-nums", valueTone)}>
         {value}
@@ -242,13 +269,19 @@ function Cell({
   label,
   value,
   note,
+  className,
+  ...rest
 }: {
   label: string;
   value: ReactNode;
   note: string;
-}) {
+  /** 나머지 props 는 루트 div 로 전달 — AdminHoverDetail 로 바로 감쌀 수 있게. */
+} & Omit<ComponentProps<"div">, "children">) {
   return (
-    <div className="bg-white px-4 py-3">
+    <div
+      className={cn("cursor-pointer bg-white px-4 py-3 transition-colors hover:bg-gray-50", className)}
+      {...rest}
+    >
       <p className="text-[11px] text-gray-400">{label}</p>
       <p className="mt-0.5 text-[14px] font-semibold tabular-nums text-gray-900">
         {value}

@@ -9,11 +9,11 @@ import { useRouter } from "next/navigation";
 import {
   ArrowRight,
   ChevronDown,
-  ChevronLeft,
   ChevronRight,
   Lock,
   Target,
 } from "lucide-react";
+import { BackBar } from "@/components/grammar-drill/back-bar";
 
 export interface LensUnitView {
   id: string;
@@ -67,17 +67,12 @@ export function ToolsClient({ lenses }: { lenses: LensView[] }) {
 
   return (
     <div className="gd-page mx-auto min-h-dvh px-5 pb-14">
-      <header className="flex items-center gap-1 pt-[max(1rem,env(safe-area-inset-top))]">
-        <button
-          type="button"
-          onClick={() => router.push("/g/track/grammar")}
-          className="-ml-2 flex h-11 w-11 items-center justify-center rounded-full"
-          style={{ color: "var(--gd-ink-2)" }}
-          aria-label="어법 트랙으로"
-        >
-          <ChevronLeft className="h-5 w-5" strokeWidth={2} />
-        </button>
-        <p className="gd-label">어법 트랙 · 판별 도구</p>
+      <header className="pt-[max(1rem,env(safe-area-inset-top))]">
+        <BackBar
+          onBack={() => router.push("/g/track/grammar")}
+          ariaLabel="어법 트랙으로"
+          label="어법 트랙 · 판별 도구"
+        />
       </header>
 
       <h1 className="gd-t-xl mt-2 font-bold tracking-tight">판별 5도구</h1>

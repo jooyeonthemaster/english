@@ -19,10 +19,12 @@ import { useRouter } from "next/navigation";
 import { ChevronLeft, ChevronRight, ClipboardCheck, Flag } from "lucide-react";
 import { toast } from "sonner";
 import type { StudentInput } from "@/lib/exam-scoring/types";
+import { BackBar } from "@/components/grammar-drill/back-bar";
 import { AnswerLayer } from "@/app/t/[token]/taking-parts/answer-layer";
 import { TabletQuestionView } from "@/app/t/[token]/taking-parts/question-view";
 import { QResultScreen } from "./q-result-screen";
 import { QInstructionsBlock, QInstructionsSheet, QSubmitSheet } from "./q-submit-sheet";
+import { useKeyboardInset } from "@/hooks/use-keyboard-inset";
 import { hasInput, useNumericChoiceHotkeys, useQDraft } from "./use-q-draft";
 import {
   normalizeGradeStatus,
@@ -59,6 +61,9 @@ export function QPlayerClient({
   // 첫 응답 입력과 동시에 영구 소멸한다.
   const [answerHintDismissed, setAnswerHintDismissed] = useState(false);
   const [mainOverflowing, setMainOverflowing] = useState(false);
+  // 가상 키보드가 열리면(서술형·빈칸) 그 높이만큼 하단을 밀어 올려
+  // 제출 푸터가 키보드 뒤로 숨지 않게 한다(iOS: 훅 실측, Android: viewport 옵션).
+  const kbInset = useKeyboardInset();
 
   // 409(이미 제출) 후 router.refresh() 로 서버가 결과를 내려주면 동기화
   useEffect(() => {
@@ -189,20 +194,9 @@ export function QPlayerClient({
   if (result) {
     // 결과 화면에도 플레이어와 동일한 상단 바(뒤로 + 제목)를 유지한다.
     return (
-      <div className="mx-auto flex min-h-dvh w-full max-w-2xl flex-col">
+      <div className="gd-player flex min-h-dvh flex-col">
         <header className="shrink-0 px-4 pt-[max(0.75rem,env(safe-area-inset-top))]">
-          <div className="flex h-10 items-center gap-2">
-            <button
-              type="button"
-              onClick={exit}
-              className="-ml-2 flex h-10 w-10 items-center justify-center rounded-full"
-              style={{ color: "var(--gd-ink-2)" }}
-              aria-label="과제 목록으로 나가기"
-            >
-              <ChevronLeft className="h-5 w-5" strokeWidth={2} />
-            </button>
-            <p className="gd-t-sm min-w-0 flex-1 truncate font-semibold">{title}</p>
-          </div>
+          <BackBar onBack={exit} ariaLabel="과제 목록으로 나가기" title={title} />
         </header>
         <QResultScreen title={title} result={result} embedded />
       </div>
@@ -234,30 +228,28 @@ export function QPlayerClient({
     mainOverflowing && !answerHintDismissed && !hasInput(inputs[current.question.id]);
 
   return (
-    <div className="mx-auto flex h-dvh w-full max-w-2xl flex-col">
+    <div
+      className="gd-player flex h-dvh flex-col"
+      style={kbInset ? { paddingBottom: kbInset } : undefined}
+    >
       {/* ── 헤더: 뒤로 · 제목 · 진행 n/N ── */}
-      <header className="shrink-0 px-4 pt-3">
-        <div className="flex h-10 items-center gap-2">
-          <button
-            type="button"
-            onClick={exit}
-            className="-ml-2 flex h-10 w-10 items-center justify-center rounded-full"
-            style={{ color: "var(--gd-ink-2)" }}
-            aria-label="과제 목록으로 나가기"
-          >
-            <ChevronLeft className="h-5 w-5" strokeWidth={2} />
-          </button>
-          <p className="gd-t-sm min-w-0 flex-1 truncate font-semibold">{title}</p>
-          <p className="gd-t-xs shrink-0 font-semibold" style={{ color: "var(--gd-ink-2)" }}>
-            <span className="gd-t-3xs mr-1 font-medium" style={{ color: "var(--gd-ink-3)" }}>
-              응답
-            </span>
-            <span className="gd-mono">
-              {answeredCount}
-              <span style={{ color: "var(--gd-ink-3)" }}>/{items.length}</span>
-            </span>
-          </p>
-        </div>
+      <header className="gd-phead shrink-0 px-4 pt-3">
+        <BackBar
+          onBack={exit}
+          ariaLabel="과제 목록으로 나가기"
+          title={title}
+          right={
+            <p className="gd-t-xs shrink-0 font-semibold" style={{ color: "var(--gd-ink-2)" }}>
+              <span className="gd-t-3xs mr-1 font-medium" style={{ color: "var(--gd-ink-3)" }}>
+                응답
+              </span>
+              <span className="gd-mono">
+                {answeredCount}
+                <span style={{ color: "var(--gd-ink-3)" }}>/{items.length}</span>
+              </span>
+            </p>
+          }
+        />
         <div
           className="gd-meter mt-1"
           role="progressbar"
@@ -285,10 +277,10 @@ export function QPlayerClient({
           />
         ) : null}
 
-        <div className="gd-card p-4 sm:p-5">
+        <div className="gd-card p-4 md:p-5">
           <div className="flex items-center gap-2">
             <span
-              className="gd-mono flex h-8 min-w-8 items-center justify-center rounded-full px-2 text-sm font-bold text-white"
+              className="gd-mono gd-t-base flex h-8 min-w-8 items-center justify-center rounded-full px-2 font-bold text-white"
               style={{ background: "var(--gd-blue)" }}
             >
               {current.orderNum}
@@ -304,14 +296,18 @@ export function QPlayerClient({
               className="ml-auto flex h-8 items-center gap-1 rounded-full border px-2.5"
               style={
                 currentFlagged
-                  ? { borderColor: "#c4b5fd", background: "#f5f3ff", color: "#7c3aed" }
+                  ? {
+                      borderColor: "var(--gd-flag-line)",
+                      background: "var(--gd-flag-soft)",
+                      color: "var(--gd-flag)",
+                    }
                   : { borderColor: "var(--gd-line)", color: "var(--gd-ink-3)" }
               }
             >
               <Flag
                 className="h-3.5 w-3.5"
                 strokeWidth={2}
-                fill={currentFlagged ? "#7c3aed" : "none"}
+                fill={currentFlagged ? "var(--gd-flag)" : "none"}
                 aria-hidden
               />
               <span className="gd-t-3xs font-semibold">다시 보기</span>
@@ -349,7 +345,7 @@ export function QPlayerClient({
           className="pointer-events-none absolute inset-x-0 bottom-0 h-10"
           style={{
             background:
-              "linear-gradient(to top, var(--gd-paper), rgba(246, 245, 241, 0))",
+              "linear-gradient(to top, var(--gd-paper), rgba(244, 246, 249, 0))",
           }}
           aria-hidden
         />
@@ -357,7 +353,7 @@ export function QPlayerClient({
           <div className="pointer-events-none absolute inset-x-0 bottom-3 flex justify-center px-4">
             <p
               className="gd-t-2xs gd-pop rounded-full px-3.5 py-1.5 text-center font-semibold shadow-md"
-              style={{ background: "rgba(22, 32, 46, 0.88)", color: "#fff" }}
+              style={{ background: "var(--gd-scrim)", color: "#fff" }}
               role="status"
             >
               아래에서 답을 선택합니다
@@ -367,11 +363,16 @@ export function QPlayerClient({
       </div>
 
       {/* ── 하단 바: 번호 점프 스트립 + 이전/다음·제출 ── */}
-      <footer className="gd-hairline-t gd-safe-b shrink-0 bg-white px-4 pt-2.5">
+      <footer
+        className="gd-pfoot gd-hairline-t gd-safe-b shrink-0 px-4 pt-2.5"
+        style={{ background: "var(--gd-card)" }}
+      >
         <div
           ref={stripRef}
-          className="mb-2 flex gap-1.5 overflow-x-auto pb-1"
-          style={{ scrollbarWidth: "thin" }}
+          className="gd-qstrip mb-2 flex gap-1.5 overflow-x-auto pb-1"
+          // 키보드가 열려 있으면 스트립을 숨겨 서술형 입력 공간을 최대로 확보
+          // (ref 는 유지 — display 만 끈다)
+          style={{ scrollbarWidth: "thin", display: kbInset ? "none" : undefined }}
           role="group"
           aria-label="문항 바로 가기"
         >
@@ -387,7 +388,7 @@ export function QPlayerClient({
                 onClick={() => setCurrentIdx(idx)}
                 aria-current={isCurrent ? "true" : undefined}
                 aria-label={`${it.orderNum}번 문항으로 이동${isAnswered ? " (응답 완료)" : ""}${isFlagged ? " (다시 보기 표시)" : ""}`}
-                className="relative flex h-10 w-9 shrink-0 flex-col items-center justify-center gap-0.5 rounded-lg border"
+                className="relative flex h-11 w-10 shrink-0 flex-col items-center justify-center gap-0.5 rounded-lg border"
                 style={{
                   borderColor: isCurrent ? "var(--gd-blue)" : "var(--gd-line)",
                   background: isCurrent ? "var(--gd-blue-soft)" : "var(--gd-card)",
@@ -395,7 +396,11 @@ export function QPlayerClient({
               >
                 {/* 다시 보기 플래그 도트(보라) — 응답 도트(파랑)와 별개 규격 1개 */}
                 {isFlagged ? (
-                  <span className="absolute right-1 top-1 h-1 w-1 rounded-full bg-violet-500" aria-hidden />
+                  <span
+                    className="absolute right-1 top-1 h-1 w-1 rounded-full"
+                    style={{ background: "var(--gd-flag)" }}
+                    aria-hidden
+                  />
                 ) : null}
                 <span
                   className="gd-mono gd-t-xs font-semibold"
@@ -420,7 +425,7 @@ export function QPlayerClient({
         </div>
 
         {isLast && flagged.size > 0 && (
-          <p className="gd-t-2xs mb-1.5 text-center font-semibold" style={{ color: "#7c3aed" }}>
+          <p className="gd-t-2xs mb-1.5 text-center font-semibold" style={{ color: "var(--gd-flag)" }}>
             표시한 문항 {flagged.size}개가 있습니다. 제출 전에 다시 확인해 보세요.
           </p>
         )}

@@ -104,20 +104,25 @@ export function QSubmitSheet({
         {flaggedCount > 0 && (
           <p
             className="gd-t-xs mt-1 flex items-center gap-1 font-semibold"
-            style={{ color: "#7c3aed" }}
+            style={{ color: "var(--gd-flag)" }}
           >
-            <Flag className="h-3.5 w-3.5 shrink-0" strokeWidth={2} fill="#7c3aed" aria-hidden />
+            <Flag
+              className="h-3.5 w-3.5 shrink-0"
+              strokeWidth={2}
+              fill="var(--gd-flag)"
+              aria-hidden
+            />
             다시 보기로 표시한 문항 {flaggedCount}개가 있습니다.
           </p>
         )}
-        <div className="mt-3 grid grid-cols-3 gap-1.5 sm:grid-cols-4">
+        <div className="mt-3 grid grid-cols-3 gap-1.5 md:grid-cols-4">
           {summaries.map((s) => (
             <div
               key={s.id}
               className="flex items-center justify-between gap-1 rounded-lg border px-2.5 py-1.5"
               style={
                 s.isFlagged
-                  ? { borderColor: "#c4b5fd", background: "#f5f3ff" }
+                  ? { borderColor: "var(--gd-flag-line)", background: "var(--gd-flag-soft)" }
                   : { borderColor: "var(--gd-line)", background: "var(--gd-card)" }
               }
             >

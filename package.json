@@ -19,6 +19,7 @@
     "db:studio": "prisma studio",
     "build:manual": "tsx scripts/build-manual.ts",
     "build:slides": "tsx manual-slides/build-slides.ts",
+    "build:canva-pdf": "node scripts/manual-canva-pdf.mjs",
     "capture:slides": "tsx manual-slides/capture/server.ts",
     "test:unit": "node scripts/run-unit-tests.mjs",
     "trigger:dev": "trigger dev",

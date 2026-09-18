@@ -1,0 +1,21 @@
+{
+  "name": "SMOAT 학습",
+  "short_name": "SMOAT 학습",
+  "id": "/g/home",
+  "start_url": "/g/home",
+  "scope": "/g",
+  "display": "standalone",
+  "lang": "ko",
+  "theme_color": "#F4F6F9",
+  "background_color": "#F4F6F9",
+  "icons": [
+    { "src": "/icons/g/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/g/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    {
+      "src": "/icons/g/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

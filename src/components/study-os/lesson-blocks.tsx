@@ -137,7 +137,7 @@ export function MisconceptionView({ block }: { block: MisconceptionBlock }) {
         type="button"
         onClick={() => setOpen(true)}
         className="w-full rounded-xl border p-3 text-left"
-        style={{ borderColor: "#fecdd3", background: "var(--gd-card)" }}
+        style={{ borderColor: "var(--gd-bad-line)", background: "var(--gd-card)" }}
       >
         <p className="gd-prose" style={{ textDecoration: open ? "line-through" : "none", color: "var(--gd-ink-2)" }}>
           “{block.myth}”

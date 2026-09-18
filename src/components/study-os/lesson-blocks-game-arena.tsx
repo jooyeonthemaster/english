@@ -363,7 +363,7 @@ export function BossView({ block, onResult }: {
           <div className="sticky top-2 z-10">
             <div className="rounded-xl border p-2.5" style={{
               background: "var(--gd-card)", borderColor: "var(--gd-line)",
-              boxShadow: "0 2px 10px rgba(22, 32, 46, 0.06)",
+              boxShadow: "0 2px 10px rgba(15, 23, 42, 0.06)",
             }}>
               <div className="flex items-center gap-2">
                 <Swords className="h-3.5 w-3.5 shrink-0" style={{ color: "var(--gd-ink-2)" }} strokeWidth={2} />

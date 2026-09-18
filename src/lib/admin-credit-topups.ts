@@ -1,4 +1,8 @@
 import { prisma } from "@/lib/prisma";
+import {
+  findDuplicateNotificationCandidates,
+  findManualGrantTransactionCandidates,
+} from "@/lib/manual-topup-complete";
 
 // 상단 카드 집계는 admin-credit-topup-stats.ts 로 분리(파일 400줄 상한). 기존 호출부 호환을 위해 재수출.
 export {
@@ -187,8 +191,32 @@ export async function getAdminCreditTopUpDetail(topUpId: string) {
     }),
   ]);
 
+  // 수동 충전 완료 처리가 가능한 주문(미지급 상태)일 때만, 모달이 쓸 연결 후보를 같이 싣는다.
+  //  - manualGrantCandidates: "이미 지급한" 크레딧 거래 후보(보통 관리자 ADJUSTMENT)
+  //  - duplicateNotificationCandidates: 같은 입금을 매출에 또 넣고 있는 MANUAL_GRANT 알림
+  const canManualComplete =
+    !topUp.creditTransactionId &&
+    (topUp.status === "WAITING_FOR_DEPOSIT" || topUp.status === "PENDING");
+
+  const [manualGrantCandidates, duplicateNotificationCandidates] =
+    canManualComplete
+      ? await Promise.all([
+          findManualGrantTransactionCandidates({
+            academyId: topUp.academyId,
+            around: topUp.createdAt,
+          }),
+          findDuplicateNotificationCandidates({
+            price: topUp.price,
+            around: topUp.createdAt,
+          }),
+        ])
+      : [[], []];
+
   return {
     ...topUp,
+    canManualComplete,
+    manualGrantCandidates,
+    duplicateNotificationCandidates,
     relatedCreditTransactions,
     academyCreditActivity: activityPage.items,
     academyActivityTotal: activityPage.total,
@@ -205,3 +233,15 @@ export async function getAdminCreditTopUpDetail(topUpId: string) {
     },
   };
 }
+
+// ---------------------------------------------------------------------------
+// getAdminCreditTopUpStats 는 파일 상단에서 admin-credit-topup-stats.ts 를 재수출한다
+// (이 파일 400줄 상한 분리 — 호출부 import 경로는 그대로다).
+// 협업자 브랜치가 여기서 고치던 세 가지는 분리된 구현에 모두 들어가 있다:
+//  - 「오늘 결제」를 완료분만 세기 → topUpGrossWhere(admin-revenue.ts D1)가 상태를 거른다.
+//    (COMPLETED + 사후 REFUNDED 의 gross. 환불은 지우지 않고 환불일에 따로 차감)
+//  - 기간 기준 paidAt ?? completedAt → topUpGrossWhere 가 같은 규칙. 경계는 KST 자정(F1).
+//  - 대기/실패 구분 → pendingActive·pendingStale(F2) + failed·cancelled·refunded 분리.
+// 남은 한 가지(관리자가 확인 처리한 실패 제외, failureReviewedAt)는
+// admin-credit-topup-stats.ts 의 failedCount 질의에 있어야 한다 — 감독에게 보고함.
+// ---------------------------------------------------------------------------

@@ -1,72 +1,58 @@
 import { ShoppingBag } from "lucide-react";
-import { cn } from "@/lib/utils";
+import {
+  AdminEmptyState,
+  DataTable,
+  DataTableBody,
+  DataTableHeader,
+  SectionCard,
+  StatusBadge,
+  Td,
+  Th,
+  Tr,
+} from "@/components/admin/kit";
+import { TOPUP_STATUS, paymentMethodLabel, statusOf } from "@/lib/admin-labels";
+import type { StatusMeta } from "@/lib/admin-labels";
 // 표시는 KST 고정 — 서버(Vercel)는 UTC 라 결제일이 하루 이르게 찍힌다(paidAt UTC 15시 이후 6건).
+// 상세 화면 공용 formatDate(./format)는 timeZone 을 주지 않아 이 축을 못 막는다.
 import { formatKstDate } from "@/lib/admin-kst-format";
 // 대기 상태(PENDING·WAITING_FOR_DEPOSIT) 자구는 결제 관리·무통장 화면과 같은 판정을 쓴다.
-// 이 화면만 「입금대기」로 남아 2.5개월 지난 주문이 아직 입금을 기다리는 것처럼 보였다.
+// 이 화면만 「입금 대기」로 남아 2.5개월 지난 주문이 아직 입금을 기다리는 것처럼 보였다.
 import {
   TOPUP_PROGRESS_ACTIVE_LABEL,
   TOPUP_PROGRESS_STALE_LABEL,
   classifyTopUpProgress,
   topUpStaleTitle,
 } from "@/lib/admin-topup-progress";
-import { SectionCard } from "@/components/admin/member-detail/atoms";
 import type { MemberPurchaseItem } from "@/actions/admin-members";
 
-const STATUS_META: Record<string, { label: string; className: string }> = {
-  COMPLETED: { label: "완료", className: "bg-emerald-50 text-emerald-600" },
-  WAITING_FOR_DEPOSIT: { label: "입금대기", className: "bg-sky-50 text-sky-600" },
-  PENDING: { label: "대기", className: "bg-gray-100 text-gray-500" },
-  FAILED: { label: "실패", className: "bg-rose-50 text-rose-600" },
-  CANCELLED: { label: "취소", className: "bg-gray-100 text-gray-500" },
-  REFUNDED: { label: "환불", className: "bg-amber-50 text-amber-700" },
-};
-
-interface StatusBadge {
-  label: string;
-  className: string;
-  title?: string;
-}
+const n = (v: number) => v.toLocaleString("ko-KR");
 
 /**
- * 상태 배지 — 대기 상태만 「생성 경과」를 함께 본다(DB 상태는 바꾸지 않는다, 스펙 §9.2 D3).
+ * 상태 표시 — 라벨·색조는 레지스트리(TOPUP_STATUS)에서만 가져오고,
+ * 대기 상태만 「생성 경과」를 함께 본다(DB 상태는 바꾸지 않는다, 스펙 §9.2 D3).
  * 시간창 이내면 「진행 중」, 초과면 「미완료(이탈·만료)」.
  */
-function statusBadge(
+function purchaseStatus(
   status: string,
   createdAt: string,
   now: number,
-): StatusBadge {
-  const base = STATUS_META[status] ?? {
-    label: status,
-    className: "bg-gray-100 text-gray-500",
-  };
+): { meta: StatusMeta; title?: string } {
+  const base = statusOf(TOPUP_STATUS, status);
   const progress = classifyTopUpProgress(status, createdAt, now);
-  if (progress.state === "n/a") return base;
+  if (progress.state === "n/a") return { meta: base };
   if (progress.state === "in_progress") {
     return {
-      label: TOPUP_PROGRESS_ACTIVE_LABEL,
-      className: "bg-sky-50 text-sky-600",
+      meta: { label: TOPUP_PROGRESS_ACTIVE_LABEL, tone: "sky" },
       title: `원 상태: ${base.label}(${status}) · 생성 ${progress.windowMinutes}분 이내`,
     };
   }
   return {
-    label: TOPUP_PROGRESS_STALE_LABEL,
-    className: "bg-gray-100 text-gray-500",
+    meta: { label: TOPUP_PROGRESS_STALE_LABEL, tone: "gray" },
     title: topUpStaleTitle(base.label, status, progress.windowMinutes),
   };
 }
 
-const METHOD_LABEL: Record<string, string> = {
-  CARD: "카드",
-  TRANSFER: "계좌이체",
-  BANK_TRANSFER: "무통장입금",
-  VIRTUAL_ACCOUNT: "가상계좌",
-  EASY_PAY: "간편결제",
-  MOBILE: "휴대폰",
-};
-
-
+/** 구입 상품 이력 — 상태·결제수단 라벨은 레지스트리(TOPUP_STATUS·PAYMENT_METHOD)에서만. */
 export function PurchasesSection({
   purchases,
 }: {
@@ -75,47 +61,44 @@ export function PurchasesSection({
   // 렌더 1회당 기준 시각 하나 — 같은 목록 안에서 행마다 경과 판정이 갈리지 않게 한다.
   const now = Date.now();
   return (
-    <SectionCard title="구입 상품 이력" icon={<ShoppingBag />}>
+    <SectionCard title="구입 상품 이력" icon={ShoppingBag} padded={false}>
       {purchases.length === 0 ? (
-        <p className="text-[12px] text-gray-400 py-3">구입 이력이 없습니다</p>
+        <AdminEmptyState compact icon={ShoppingBag} title="구입 이력이 없습니다" />
       ) : (
-        <ul className="max-h-[320px] overflow-y-auto divide-y divide-gray-50 -mx-1">
-          {purchases.map((p) => {
-            const st = statusBadge(p.status, p.createdAt, now);
-            return (
-              <li key={p.id} className="px-1 py-2.5">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-[12.5px] font-medium text-gray-800 truncate">
-                    {p.name}
-                  </span>
-                  <span
-                    title={st.title}
-                    className={cn(
-                      "shrink-0 rounded-md px-1.5 py-0.5 text-[10px] font-medium",
-                      st.className,
-                    )}
-                  >
-                    {st.label}
-                  </span>
-                </div>
-                <div className="mt-0.5 flex items-center gap-1.5 text-[11px] text-gray-400 tabular-nums">
-                  <span className="text-gray-600">
-                    {p.price.toLocaleString("ko-KR")}원
-                  </span>
-                  <span>·</span>
-                  <span>{p.creditAmount.toLocaleString("ko-KR")} C</span>
-                  {p.paymentMethod && (
-                    <>
-                      <span>·</span>
-                      <span>{METHOD_LABEL[p.paymentMethod] ?? p.paymentMethod}</span>
-                    </>
-                  )}
-                  <span className="ml-auto">{formatKstDate(p.purchasedAt)}</span>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
+        <DataTable bare stickyHeader maxHeight={360}>
+          <DataTableHeader>
+            <Tr>
+              <Th>상품</Th>
+              <Th>상태</Th>
+              <Th align="right">금액</Th>
+              <Th align="right">크레딧</Th>
+              <Th>결제수단</Th>
+              <Th>구입일</Th>
+            </Tr>
+          </DataTableHeader>
+          <DataTableBody>
+            {purchases.map((p) => {
+              const st = purchaseStatus(p.status, p.createdAt, now);
+              return (
+                <Tr key={p.id}>
+                  <Td className="font-medium text-gray-900">{p.name}</Td>
+                  <Td>
+                    {/* 판정 근거(원 상태·시간창)는 배지 위 툴팁으로 — 결제 관리 표와 같은 자구. */}
+                    <span title={st.title} className="inline-flex">
+                      <StatusBadge status={st.meta} />
+                    </span>
+                  </Td>
+                  <Td align="right">{n(p.price)}원</Td>
+                  <Td align="right">{n(p.creditAmount)} C</Td>
+                  <Td muted>{paymentMethodLabel(p.paymentMethod)}</Td>
+                  <Td muted className="tabular-nums">
+                    {formatKstDate(p.purchasedAt)}
+                  </Td>
+                </Tr>
+              );
+            })}
+          </DataTableBody>
+        </DataTable>
       )}
     </SectionCard>
   );

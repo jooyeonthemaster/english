@@ -8,12 +8,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   ArrowRight,
-  ChevronLeft,
   ChevronRight,
   Lock,
   Ruler,
   Trophy,
 } from "lucide-react";
+import { BackBar } from "@/components/grammar-drill/back-bar";
 import { stageLabel } from "@/components/grammar-drill/verdict-panel";
 
 export interface TrackUnitRow {
@@ -71,17 +71,8 @@ export function GrammarTrackClient({
 
   return (
     <div className="gd-page mx-auto min-h-dvh px-5 pb-14">
-      <header className="flex items-center gap-1 pt-[max(1rem,env(safe-area-inset-top))]">
-        <button
-          type="button"
-          onClick={() => router.push("/g/home")}
-          className="-ml-2 flex h-11 w-11 items-center justify-center rounded-full"
-          style={{ color: "var(--gd-ink-2)" }}
-          aria-label="홈으로"
-        >
-          <ChevronLeft className="h-5 w-5" strokeWidth={2} />
-        </button>
-        <p className="gd-label">학습 트랙</p>
+      <header className="pt-[max(1rem,env(safe-area-inset-top))]">
+        <BackBar onBack={() => router.push("/g/home")} ariaLabel="홈으로" label="학습 트랙" />
       </header>
 
       <h1 className="gd-t-xl mt-2 font-bold tracking-tight">{trackName}</h1>

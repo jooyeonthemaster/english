@@ -80,6 +80,27 @@ Claude Code  ←──────────→  Claude Design  ────�
 **Canva 이관 후에는 Canva가 원본** — 기존 SVG 파이프라인(probe-out 후처리, 2사본 동기)은 은퇴,
 이후 흐름은 "Canva 수정 → 일괄 내보내기(Canva MCP) → public/manual 교체 배포".
 
+> **✅ 2026-07-23 Canva 최신화 완료.** 최신 PDF v2 14종으로 Canva 문서 14개(⑫ 학생 관리 신규
+> 포함)를 전량 재생성하고, 각 문서 페이지 수를 PDF와 MCP로 대조 검증(전 항목 일치).
+> 14개 새 링크로 `src/lib/manual/canva-links.ts`를 전량 갱신함. 상세 절차는
+> `docs/manual-canva-sync-guide.md` 0장 참조. 아래는 그 이전 경위 기록.
+>
+> **2026-07-23 콘텐츠 갱신 1·2차 — 리포 SVG가 다시 최신본, 총 188 → 196장.** Canva 다듬기 작업이
+> 시작되기 전에 제품이 크게 앞서가(카드결제 오픈·내신 시험 분석 대개편·IA 재편 등) 리포 SVG를
+> 제자리 갱신했고(1차: 37장 수정·재캡처 10장), 이어 2차로 **⑫ 학생 관리(BETA) 챕터 5장 신설 +
+> ⑤ 기출 웹툰 다운로드 1장 + ② 시험 배포 2장 증보 + 구본 스크린샷 6장 교체 + 전량 재번호(N/196)**를 반영했다
+> (상세는 `docs/manual-content-refresh-2026-07.md`). 따라서 **Canva의 7/11자 가져오기본은 전
+> 챕터가 구본**이다(재번호 때문에 페이지 번호가 전부 다름). Canva 협업을 재개하려면:
+> 1. `npm run build:canva-pdf all` → `~/Desktop/smoat-manual-canva-pdf-v2/`
+>    - **14챕터 전량 생성해 둠 (7/23)**. 텍스트 오퍼레이터 보존 검증됨
+> 2. Canva에서 기존 13개 문서에 새 PDF로 페이지 교체 + **`12-students.pdf` 신규 가져오기 →
+>    편집 공유 링크 발급 → `src/lib/manual/canva-links.ts`에 추가**(현재는 주석 자리만 있음)
+> 3. 이후부터 Canva가 원본, 완성본 일괄 내보내기 → public/manual 교체
+> - 변환 스크립트는 세션 스크래치패드가 아니라 **리포에 영구 보존**: `scripts/manual-canva-pdf.mjs`
+> - 기존 13개 링크·`/admin/manual`의 「Canva 편집」 버튼은 그대로 유효(챕터 슬러그 불변,
+>   12-students는 링크 추가 전까지 버튼 미노출 — 컴포넌트가 링크 없음을 안전 처리)
+> - 이번 세션 Canva MCP 토큰 만료 상태였음 — MCP로 밀어넣으려면 인터랙티브 세션에서 재인증 필요
+
 - [x] SVG 188장 → 챕터별 PDF 13개 변환 완료 (2026-07-11). 산출물: `~/Desktop/smoat-manual-canva-pdf/`
   - 방식: SVG를 HTML에 인라인(슬라이드별 id 네임스페이스) → 헤드리스 Chrome 인쇄. 텍스트 오퍼레이터 보존 확인(Canva에서 텍스트 편집 가능 조건). 변환 스크립트: 세션 스크래치패드 `svg2pdf/build_html.py`
 - [x] 사용자: Canva에 PDF 13개 가져오기 완료 (폴더 smoat-manual-canva-pdf) (2026-07-11)
