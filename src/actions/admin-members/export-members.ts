@@ -24,7 +24,9 @@ import iconv from "iconv-lite";
 import { prisma } from "@/lib/prisma";
 import { requireAdminAuth } from "@/lib/auth-admin";
 import { getProviderLabel } from "@/lib/admin-members-labels";
+import { getTodayStringKST } from "@/lib/date-utils";
 import {
+  DISPLAY_TIMEZONE,
   SMS_OPT_OUT_FLAG_KEY,
   isInternalAccount,
   isSuperAdmin,
@@ -55,9 +57,11 @@ function smsCell(value: unknown): string {
   return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 }
 
+// 서버(Vercel) 런타임은 UTC 라 timeZone 을 안 주면 가입일·로그인 시각이 KST 보다 9시간 이르게 찍힌다.
 function formatDate(d: Date | null): string {
   if (!d) return "";
   return new Date(d).toLocaleString("ko-KR", {
+    timeZone: DISPLAY_TIMEZONE,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
@@ -243,7 +247,8 @@ export async function exportMembers(
     }
   }
 
-  const today = new Date().toISOString().split("T")[0];
+  // 파일명 날짜는 KST 기준(UTC 로 자르면 KST 00~09시 내보내기가 전날 날짜로 저장된다).
+  const today = getTodayStringKST();
   const suffix =
     mode === "info" ? "sms-info" : mode === "ad" ? "sms-ad" : "all";
   const filename = `smoat-members-${suffix}-${today}.csv`;

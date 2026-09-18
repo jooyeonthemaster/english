@@ -9,6 +9,7 @@ import {
   Gift,
   Coins,
   ChartNoAxesCombined,
+  ChartSpline,
   Radar,
   LogOut,
   Menu,
@@ -103,6 +104,7 @@ const NAV_SECTIONS: Array<{ title: string; items: NavItem[] }> = [
   {
     title: "마케팅",
     items: [
+      { label: "유입 분석", icon: ChartSpline, href: "/admin/analytics" },
       { label: "추천·미션", icon: Gift, href: "/admin/referrals" },
       { label: "스모트 소식", icon: Megaphone, href: "/admin/announcements" },
       { label: "배너 관리", icon: Image, href: "/admin/banners" },

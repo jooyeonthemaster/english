@@ -63,6 +63,8 @@ const STATUS_LABEL: Record<ReferralStatus, string> = {
   APPROVED: "승인 지급",
   REJECTED: "반려",
   CLAWED_BACK: "회수됨",
+  // 5개 밖의 status — 카드 「미분류 상태 N건 포함」과 같은 말을 하게 한다(A5-4)
+  UNKNOWN: "미분류",
 };
 
 // Status -> badge styling. Blue/gray/emerald palette; red ONLY for danger states.
@@ -72,6 +74,7 @@ const STATUS_STYLE: Record<ReferralStatus, string> = {
   APPROVED: "bg-blue-50 text-blue-700 border-blue-100",
   REJECTED: "bg-gray-100 text-gray-500 border-gray-200",
   CLAWED_BACK: "bg-red-50 text-red-700 border-red-100",
+  UNKNOWN: "bg-gray-100 text-gray-500 border-gray-200",
 };
 
 function fmtDate(iso: string | null): string {
@@ -86,20 +89,32 @@ function fmtDate(iso: string | null): string {
   });
 }
 
-function StatusBadge({ status }: { status: ReferralStatus }) {
+function StatusBadge({ status, raw }: { status: ReferralStatus; raw?: string }) {
+  const unknown = status === "UNKNOWN";
   return (
     <span
+      title={unknown ? `알 수 없는 상태값: ${raw ?? "-"}` : undefined}
       className={cn(
         "inline-flex items-center h-[20px] px-2 text-[11px] font-medium rounded-md border",
         STATUS_STYLE[status],
       )}
     >
-      {STATUS_LABEL[status]}
+      {unknown && raw ? `미분류(${raw})` : STATUS_LABEL[status]}
     </span>
   );
 }
 
-function StatCard({ label, value, accent }: { label: string; value: number; accent: "slate" | "blue" | "emerald" | "red" }) {
+function StatCard({
+  label,
+  value,
+  accent,
+  hint,
+}: {
+  label: string;
+  value: number;
+  accent: "slate" | "blue" | "emerald" | "red";
+  hint?: string;
+}) {
   const valueColor = {
     slate: "text-slate-900",
     blue: "text-blue-600",
@@ -112,6 +127,7 @@ function StatCard({ label, value, accent }: { label: string; value: number; acce
       <div className={cn("text-[20px] font-bold tabular-nums mt-0.5", valueColor)}>
         {value.toLocaleString()}
       </div>
+      {hint && <div className="mt-0.5 text-[10px] text-gray-400 tabular-nums">{hint}</div>}
     </div>
   );
 }
@@ -190,12 +206,23 @@ function OverviewTab({
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-2">
-        <StatCard label="총 전환" value={stats.totalSignups} accent="slate" />
-        <StatCard label="지급 완료" value={stats.granted} accent="emerald" />
+        <StatCard
+          label="추천 가입"
+          value={stats.totalSignups}
+          accent="slate"
+          hint={stats.otherStatus > 0 ? `미분류 상태 ${stats.otherStatus}건 포함` : "추천 코드로 가입한 학원"}
+        />
+        {/* F17: 지급 완료 = 자동 지급(GRANTED) + 보류 후 승인 지급(APPROVED) */}
+        <StatCard
+          label="지급 완료"
+          value={stats.paid}
+          accent="emerald"
+          hint={`자동 ${stats.granted} · 승인 ${stats.approved}`}
+        />
         <StatCard label="보류" value={stats.held} accent="blue" />
         <StatCard label="반려" value={stats.rejected} accent="slate" />
         <StatCard label="회수" value={stats.clawedBack} accent="red" />
-        <StatCard label="지급 크레딧" value={stats.creditsIssued} accent="blue" />
+        <StatCard label="지급 크레딧" value={stats.creditsIssued} accent="blue" hint="양측 보상 합(회수 제외)" />
       </div>
 
       <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
@@ -246,6 +273,7 @@ function OverviewTab({
 function OverviewRow({ row }: { row: ReferralOverviewRow }) {
   const [pending, startTransition] = useTransition();
   // Clawback only applies to rewards that were actually paid out.
+  // UNKNOWN(5개 밖의 status)은 lib/growth/referral.ts 가 not_grantable_state 로 거절하므로 버튼을 내지 않는다(A5-4).
   const clawbackable = row.status === "GRANTED" || row.status === "APPROVED";
 
   function onClawback() {
@@ -261,7 +289,7 @@ function OverviewRow({ row }: { row: ReferralOverviewRow }) {
     <TableRow className="border-b border-gray-50">
       <TableCell className="pl-5 text-[13px] text-gray-800 font-medium">{row.referrerAcademyName}</TableCell>
       <TableCell className="text-[13px] text-gray-700">{row.referredAcademyName}</TableCell>
-      <TableCell><StatusBadge status={row.status} /></TableCell>
+      <TableCell><StatusBadge status={row.status} raw={row.statusRaw} /></TableCell>
       <TableCell className="text-right text-[13px] text-gray-600 tabular-nums">
         +{(row.referrerReward + row.referredReward).toLocaleString()}
       </TableCell>

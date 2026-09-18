@@ -9,6 +9,7 @@ import { prisma } from "@/lib/prisma";
 import { requireAdminAuth } from "@/lib/auth-admin";
 import { getOperationTypeLabel, getTransactionTypeLabel, TRANSACTION_TYPES } from "@/lib/admin-members-labels";
 import { isWebtoonImageOperationType } from "@/lib/webtoon-models";
+import { manualGrantAt, manualGrantRevenueWhere, subscriptionPaidAt, subscriptionRevenueWhere, topUpAmount, topUpGrossWhere, topUpPaidAt, topUpRefundedAt, topUpRefundWhere } from "@/lib/admin-revenue";
 import type { AcademyTransactionFilters, AcademyTransactionListResult, AcademyUsageAccumulator, AcademyUsageSummary, BucketAccumulator, CostPeriodMode, CreditOperationSummary, OperationsCostDashboard, OperationsCostOptions, SourceAccumulator } from "./operations-cost-types";
 import { addKstDays, bucketKeyForDate, buildRange, fixedCostForBucket, kstDateToUtc, parseDateInput } from "./operations-cost-datetime";
 import { DEFAULT_USD_KRW_RATE, addBucketApiCost, addSourceApiCost, buildBillingReconciliationSummary, emptyCostBucket, formatMissingPricingKey, getApiCostSourceKey, getApiCostSourceLabel, getOperationLabel, hasProviderPricing, readFormString, readNumberEnv, readOptionalFormNumber, readPricingConfig, toCostBucket, toTotals, totalsToCostBucket } from "./operations-cost-compute";
@@ -52,6 +53,7 @@ export async function getOperationsCostDashboard(
         key: bucket.key,
         label: bucket.label,
         revenueKrw: 0,
+        refundKrw: 0,
         variableCostKrw: 0,
         fixedCostKrw: fixedCostForBucket(
           bucket,
@@ -87,6 +89,7 @@ export async function getOperationsCostDashboard(
   const [
     subscriptionPayments,
     creditTopUps,
+    creditTopUpRefunds,
     apiUsageCosts,
     creditTransactions,
     activeSubscriptions,
@@ -96,14 +99,9 @@ export async function getOperationsCostDashboard(
     billingReconciliations,
     bankDepositManualGrants,
   ] = await Promise.all([
+    // 구독 매출 — admin-revenue.ts 단일 정의(D1·§13 S6). 조건 복사 금지.
     prisma.subscriptionPayment.findMany({
-      where: {
-        status: "PAID",
-        OR: [
-          { paidAt: { gte: range.start, lt: range.end } },
-          { paidAt: null, completedAt: { gte: range.start, lt: range.end } },
-        ],
-      },
+      where: subscriptionRevenueWhere(range.start, range.end),
       select: {
         amount: true,
         paidAmount: true,
@@ -111,20 +109,14 @@ export async function getOperationsCostDashboard(
         completedAt: true,
       },
     }),
+    // 충전 매출 — admin-revenue.ts 단일 정의(D1): 결제일 gross(환불건 포함) · 환불일 차감.
     prisma.creditTopUp.findMany({
-      where: {
-        status: "COMPLETED",
-        OR: [
-          { paidAt: { gte: range.start, lt: range.end } },
-          { paidAt: null, completedAt: { gte: range.start, lt: range.end } },
-        ],
-      },
-      select: {
-        price: true,
-        paidAmount: true,
-        paidAt: true,
-        completedAt: true,
-      },
+      where: topUpGrossWhere(range.start, range.end),
+      select: { price: true, paidAmount: true, paidAt: true, completedAt: true },
+    }),
+    prisma.creditTopUp.findMany({
+      where: topUpRefundWhere(range.start, range.end),
+      select: { price: true, paidAmount: true, cancelledAt: true, updatedAt: true },
     }),
     prisma.platformApiUsageCost.findMany({
       where: {
@@ -149,7 +141,9 @@ export async function getOperationsCostDashboard(
     prisma.creditTransaction.findMany({
       where: {
         createdAt: { gte: range.start, lt: range.end },
-        type: { in: ["CONSUMPTION", "REFUND"] },
+        // REFUND 는 실패 작업 자동환불(CREDIT_TRANSACTION)만 사용량에서 차감한다.
+        // 충전 환불 회수(CREDIT_TOP_UP_REFUND, 음수)는 사용이 아니다(F11).
+        OR: [{ type: "CONSUMPTION" }, { type: "REFUND", referenceType: "CREDIT_TRANSACTION" }],
       },
       select: {
         createdAt: true,
@@ -159,8 +153,9 @@ export async function getOperationsCostDashboard(
         referenceType: true,
       },
     }),
+    // MRR — 만료 전 ACTIVE 구독만(F10). 만료된 TRIAL·ACTIVE 는 청구 대상이 아니다.
     prisma.academySubscription.findMany({
-      where: { status: { in: ["ACTIVE", "TRIAL"] } },
+      where: { status: "ACTIVE", currentPeriodEnd: { gt: new Date() } },
       include: { plan: { select: { monthlyPrice: true } } },
     }),
     prisma.workbenchAiJob.findMany({
@@ -196,33 +191,32 @@ export async function getOperationsCostDashboard(
     // 알림 자체의 금액을 매출에 포함한다. MATCHED(자동지급)는 이미 creditTopUp
     // 으로 집계되고 manual_grant 전환도 막혀 있어 이중집계 위험이 없다.
     prisma.bankDepositNotification.findMany({
-      where: {
-        status: "MANUAL_GRANT",
-        OR: [
-          { occurredAt: { gte: range.start, lt: range.end } },
-          { occurredAt: null, receivedAt: { gte: range.start, lt: range.end } },
-        ],
-      },
+      where: manualGrantRevenueWhere(range.start, range.end),
       select: { amount: true, occurredAt: true, receivedAt: true },
     }),
   ]);
 
   for (const payment of subscriptionPayments) {
-    const key = bucketKeyForDate(payment.paidAt ?? payment.completedAt, normalizedMode);
+    const key = bucketKeyForDate(subscriptionPaidAt(payment), normalizedMode);
     const bucket = buckets.get(key);
     if (!bucket) continue;
     bucket.revenueKrw += payment.paidAmount ?? payment.amount;
   }
 
   for (const topUp of creditTopUps) {
-    const key = bucketKeyForDate(topUp.paidAt ?? topUp.completedAt, normalizedMode);
-    const bucket = buckets.get(key);
+    const bucket = buckets.get(bucketKeyForDate(topUpPaidAt(topUp), normalizedMode));
+    if (bucket) bucket.revenueKrw += topUpAmount(topUp);
+  }
+
+  for (const refund of creditTopUpRefunds) {
+    const bucket = buckets.get(bucketKeyForDate(topUpRefundedAt(refund), normalizedMode));
     if (!bucket) continue;
-    bucket.revenueKrw += topUp.paidAmount ?? topUp.price;
+    bucket.revenueKrw -= topUpAmount(refund);
+    bucket.refundKrw += topUpAmount(refund);
   }
 
   for (const grant of bankDepositManualGrants) {
-    const key = bucketKeyForDate(grant.occurredAt ?? grant.receivedAt, normalizedMode);
+    const key = bucketKeyForDate(manualGrantAt(grant), normalizedMode);
     const bucket = buckets.get(key);
     if (!bucket) continue;
     bucket.revenueKrw += grant.amount;
@@ -495,6 +489,12 @@ export async function getOperationsCostDashboard(
       directCredits,
     },
   };
+}
+
+/** 구독 결제(PAID) 누적 건수 — MRR 카드가 「구독 결제 없음」을 가려 쓰는 근거(F10). */
+export async function getPaidSubscriptionPaymentCount(): Promise<number> {
+  await requireAdminAuth();
+  return prisma.subscriptionPayment.count({ where: { status: "PAID" } });
 }
 
 export async function getAcademyCostTransactions(

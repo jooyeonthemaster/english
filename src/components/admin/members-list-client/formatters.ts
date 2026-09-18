@@ -1,13 +1,11 @@
 // Shared formatting helpers for the members list.
 
+// 표시 포매터는 반드시 KST 고정(@/lib/admin-kst-format) — 서버(Vercel)는 UTC 라
+// timeZone 없이 포맷하면 SSR 문자열이 하루 이르게 찍힌다(가입일 UTC 15시 이후 행).
+import { formatKstDate } from "@/lib/admin-kst-format";
+
 export function formatDate(d: Date | string | null | undefined): string {
-  if (!d) return "—";
-  const date = typeof d === "string" ? new Date(d) : d;
-  return date.toLocaleDateString("ko-KR", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  });
+  return formatKstDate(d);
 }
 
 export function formatRelative(

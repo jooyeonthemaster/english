@@ -36,13 +36,17 @@ export type ReferralStatus =
   | "HELD"
   | "APPROVED"
   | "REJECTED"
-  | "CLAWED_BACK";
+  | "CLAWED_BACK"
+  // 위 5개 밖의 값(스키마 변경·수기 수정 등). 목록에서 「지급 완료」로 둔갑하던 것을 막는다(A5-4).
+  | "UNKNOWN";
 
 export interface ReferralOverviewRow {
   id: string;
   referrerAcademyName: string;
   referredAcademyName: string;
   status: ReferralStatus;
+  /** DB 원본 status — status 가 "UNKNOWN" 일 때 화면이 「미분류(원상태)」로 보여준다 */
+  statusRaw: string;
   referrerReward: number;
   referredReward: number;
   fraudScore: number;
@@ -52,11 +56,19 @@ export interface ReferralOverviewRow {
 }
 
 export interface ReferralOverviewStats {
+  /** 추천 가입 = referrals 행 전체(추천 코드로 가입한 학원 수, 상태 무관) */
   totalSignups: number;
+  /** 지급 완료 = GRANTED(자동 지급) + APPROVED(보류 후 승인 지급) — 보상이 실제로 나간 건 */
+  paid: number;
+  /** GRANTED 만(자동 지급) */
   granted: number;
+  /** APPROVED 만(보류 심사 후 승인 지급) */
+  approved: number;
   held: number;
   rejected: number;
   clawedBack: number;
+  /** 위 5개 상태 밖의 값(정상이면 0) — 카드 합계가 총계와 맞는지 드러내기 위함 */
+  otherStatus: number;
   creditsIssued: number;
 }
 
@@ -135,7 +147,9 @@ function asStatus(raw: string): ReferralStatus {
     case "CLAWED_BACK":
       return raw;
     default:
-      return "GRANTED";
+      // 예전에는 GRANTED 로 접어 넣어 미분류 건이 목록에서 「지급 완료」 + 회수 버튼으로 보였다.
+      // 통계(otherStatus)와 반대로 말하던 결함 — 이제 UNKNOWN 으로 내려 화면이 그대로 표시한다(A5-4).
+      return "UNKNOWN";
   }
 }
 
@@ -150,7 +164,7 @@ export async function getReferralOverview(
   const page = normalizePage(params?.page);
   const pageSize = REFERRALS_PAGE_SIZE;
 
-  const [rows, grouped] = await Promise.all([
+  const [rows, grouped, issuedAgg] = await Promise.all([
     prisma.referral.findMany({
       orderBy: { createdAt: "desc" },
       skip: (page - 1) * pageSize,
@@ -172,25 +186,35 @@ export async function getReferralOverview(
       by: ["status"],
       _count: { _all: true },
     }),
+    // creditsIssued = both-side rewards actually paid out (GRANTED + APPROVED).
+    prisma.referral.aggregate({
+      where: { status: { in: ["GRANTED", "APPROVED"] } },
+      _sum: { referrerReward: true, referredReward: true },
+    }),
   ]);
 
   const byStatus = new Map<string, number>();
   for (const g of grouped) byStatus.set(g.status, g._count._all);
-
-  // creditsIssued = both-side rewards actually paid out (GRANTED + APPROVED).
-  const issuedAgg = await prisma.referral.aggregate({
-    where: { status: { in: ["GRANTED", "APPROVED"] } },
-    _sum: { referrerReward: true, referredReward: true },
-  });
   const creditsIssued =
     (issuedAgg._sum.referrerReward ?? 0) + (issuedAgg._sum.referredReward ?? 0);
 
+  const totalSignups = grouped.reduce((sum, g) => sum + g._count._all, 0);
+  const granted = byStatus.get("GRANTED") ?? 0;
+  const approved = byStatus.get("APPROVED") ?? 0;
+  const held = byStatus.get("HELD") ?? 0;
+  const rejected = byStatus.get("REJECTED") ?? 0;
+  const clawedBack = byStatus.get("CLAWED_BACK") ?? 0;
+  // F17: 「지급 완료」는 GRANTED 만 세서 승인 지급(APPROVED)이 어느 카드에도 안 잡혔다 → 합산.
+  const paid = granted + approved;
   const stats: ReferralOverviewStats = {
-    totalSignups: grouped.reduce((sum, g) => sum + g._count._all, 0),
-    granted: byStatus.get("GRANTED") ?? 0,
-    held: byStatus.get("HELD") ?? 0,
-    rejected: byStatus.get("REJECTED") ?? 0,
-    clawedBack: byStatus.get("CLAWED_BACK") ?? 0,
+    totalSignups,
+    paid,
+    granted,
+    approved,
+    held,
+    rejected,
+    clawedBack,
+    otherStatus: Math.max(0, totalSignups - paid - held - rejected - clawedBack),
     creditsIssued,
   };
 
@@ -200,6 +224,7 @@ export async function getReferralOverview(
       referrerAcademyName: r.referrerAcademy?.name ?? "(삭제된 학원)",
       referredAcademyName: r.referredAcademy?.name ?? "(삭제된 학원)",
       status: asStatus(r.status),
+      statusRaw: r.status,
       referrerReward: r.referrerReward,
       referredReward: r.referredReward,
       fraudScore: r.fraudScore,

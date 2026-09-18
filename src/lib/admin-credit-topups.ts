@@ -1,5 +1,12 @@
 import { prisma } from "@/lib/prisma";
 
+// 상단 카드 집계는 admin-credit-topup-stats.ts 로 분리(파일 400줄 상한). 기존 호출부 호환을 위해 재수출.
+export {
+  TOPUP_REVIEW_WINDOW_DAYS,
+  getAdminCreditTopUpStats,
+} from "@/lib/admin-credit-topup-stats";
+export type { AdminTopUpStats } from "@/lib/admin-credit-topup-stats";
+
 /** 결제 상세 모달의 "학원 크레딧 사용 로그" 한 페이지 크기. */
 export const ACADEMY_ACTIVITY_PAGE_SIZE = 20;
 
@@ -57,8 +64,11 @@ export async function getAdminCreditTopUps(limit = 50, offset = 0) {
               totalAllocated: true,
             },
           },
+          // 원장이 여럿이면 활성 원장 우선 → 가장 먼저 만들어진 순(결정론) — 회원 상세 링크 대상.
+          // 규칙은 RC-DIRECTOR 확정안(isActive DESC, createdAt ASC, id ASC)과 같다.
           staff: {
             where: { role: "DIRECTOR" },
+            orderBy: [{ isActive: "desc" }, { createdAt: "asc" }, { id: "asc" }],
             select: { id: true, name: true, email: true },
             take: 1,
           },
@@ -92,8 +102,11 @@ export async function getAdminCreditTopUpDetail(topUpId: string) {
               monthlyAllocation: true,
             },
           },
+          // 원장이 여럿이면 활성 원장 우선 → 가장 먼저 만들어진 순(결정론) — 회원 상세 링크 대상.
+          // 규칙은 RC-DIRECTOR 확정안(isActive DESC, createdAt ASC, id ASC)과 같다.
           staff: {
             where: { role: "DIRECTOR" },
+            orderBy: [{ isActive: "desc" }, { createdAt: "asc" }, { id: "asc" }],
             select: { id: true, name: true, email: true },
             take: 1,
           },
@@ -154,12 +167,23 @@ export async function getAdminCreditTopUpDetail(topUpId: string) {
   // 이 학원의 크레딧 사용/충전 흐름(결제 건과 무관하게 전체 활동)을 함께 노출해
   // 어드민이 "이 학원이 크레딧을 어떻게 쓰고 있는지" 파악할 수 있게 한다. 첫 페이지만
   // 실어 보내고, 나머지 페이지는 클라이언트가 credit-activity 엔드포인트로 이어 받는다.
-  const [activityPage, consumptionAgg] = await Promise.all([
+  // 「누적 사용」은 회원 상세(credit_balances.totalConsumed)와 같은 순사용이어야 한다 —
+  // 생성 실패 자동환급(REFUND · referenceType='CREDIT_TRANSACTION')은 그때 totalConsumed 에서
+  // 빠지므로 여기서도 뺀다(spec §9.2 F7·F11 과 같은 규칙). 실DB 대조: 네안데르이동주 1,975−187=1,788.
+  const [activityPage, consumptionAgg, usageRefundAgg] = await Promise.all([
     getAcademyCreditActivity(topUp.academyId, 1),
     prisma.creditTransaction.aggregate({
       where: { academyId: topUp.academyId, type: "CONSUMPTION" },
       _sum: { amount: true },
       _count: true,
+    }),
+    prisma.creditTransaction.aggregate({
+      where: {
+        academyId: topUp.academyId,
+        type: "REFUND",
+        referenceType: "CREDIT_TRANSACTION",
+      },
+      _sum: { amount: true },
     }),
   ]);
 
@@ -170,44 +194,14 @@ export async function getAdminCreditTopUpDetail(topUpId: string) {
     academyActivityTotal: activityPage.total,
     academyActivityPageSize: activityPage.pageSize,
     academyUsageSummary: {
-      totalConsumed: Math.abs(consumptionAgg._sum.amount ?? 0),
+      /** 순사용(= 회원 상세 「누적 사용」 = credit_balances.totalConsumed) */
+      totalConsumed:
+        Math.abs(consumptionAgg._sum.amount ?? 0) - (usageRefundAgg._sum.amount ?? 0),
+      /** 총사용(환급 차감 전) — 참고용 */
+      grossConsumed: Math.abs(consumptionAgg._sum.amount ?? 0),
+      /** 생성 실패 자동환급으로 되돌아온 크레딧 */
+      refundedCredits: usageRefundAgg._sum.amount ?? 0,
       consumptionCount: consumptionAgg._count,
     },
-  };
-}
-
-export async function getAdminCreditTopUpStats() {
-  const [today, pendingCount, completedAgg, failedCount] = await Promise.all([
-    prisma.creditTopUp.aggregate({
-      where: {
-        createdAt: {
-          gte: new Date(new Date().setHours(0, 0, 0, 0)),
-        },
-      },
-      _sum: { price: true, creditAmount: true },
-      _count: true,
-    }),
-    prisma.creditTopUp.count({
-      where: { status: { in: ["PENDING", "WAITING_FOR_DEPOSIT"] } },
-    }),
-    prisma.creditTopUp.aggregate({
-      where: { status: "COMPLETED" },
-      _sum: { price: true, creditAmount: true },
-      _count: true,
-    }),
-    prisma.creditTopUp.count({
-      where: { status: { in: ["FAILED", "CANCELLED", "REFUNDED"] } },
-    }),
-  ]);
-
-  return {
-    todayCount: today._count,
-    todayRevenue: today._sum.price ?? 0,
-    todayCredits: today._sum.creditAmount ?? 0,
-    pendingCount,
-    completedCount: completedAgg._count,
-    completedRevenue: completedAgg._sum.price ?? 0,
-    completedCredits: completedAgg._sum.creditAmount ?? 0,
-    failedCount,
   };
 }

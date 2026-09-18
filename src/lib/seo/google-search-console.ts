@@ -213,3 +213,71 @@ export async function querySearchAnalytics(opts: {
 }
 
 export const GSC_SITE_URL = DEFAULT_SITE_URL;
+
+// ---------------------------------------------------------------------------
+// 읽기 전용 진단 헬퍼 (관리자 「픽셀·검색엔진」 화면용, 26-09-17 추가).
+// 기존 함수는 건드리지 않고 같은 인증 헬퍼(getAccessToken)만 재사용한다.
+// ---------------------------------------------------------------------------
+
+export type GscSitemapContent = {
+  type?: string;
+  submitted?: string; // int64 문자열
+  /** ⚠️ 구글 공식 문서가 "Deprecated; do not use." 로 표시한 필드 — 화면에 노출하지 말 것(항상 0). */
+  indexed?: string;
+};
+
+export type GscSitemap = {
+  path: string;
+  lastSubmitted?: string;
+  lastDownloaded?: string;
+  isPending?: boolean;
+  isSitemapsIndex?: boolean;
+  type?: string;
+  warnings?: string; // int64 문자열
+  errors?: string; // int64 문자열
+  contents?: GscSitemapContent[];
+};
+
+/**
+ * 제출된 사이트맵 목록 "조회"(읽기 전용). GET webmasters/v3/sites/{siteUrl}/sitemaps.
+ * 제출(submitSitemap)과 달리 속성 "전체"/"제한" 권한으로도 동작한다.
+ */
+export async function listSitemaps(
+  siteUrl: string = DEFAULT_SITE_URL,
+): Promise<GscResult<{ sitemap?: GscSitemap[] }>> {
+  const token = await getAccessToken(SCOPE_WEBMASTERS);
+  if (!token)
+    return { ok: false, status: 0, error: "GSC 서비스계정 미설정/인증 실패" };
+
+  const res = await fetch(
+    `https://www.googleapis.com/webmasters/v3/sites/${encodeURIComponent(
+      siteUrl,
+    )}/sitemaps`,
+    { method: "GET", headers: { Authorization: `Bearer ${token}` } },
+  );
+  return {
+    ok: res.ok,
+    status: res.status,
+    data: res.ok ? await res.json().catch(() => undefined) : undefined,
+    error: res.ok ? undefined : await res.text().catch(() => undefined),
+  };
+}
+
+/**
+ * 현재 GSC 호출에 쓰이는 인증 정보의 출처와 서비스 계정 이메일(진단 표시용).
+ * loadServiceAccount() 의 폴백 순서를 그대로 따른다. 개인키는 절대 반환하지 않는다.
+ */
+export function gscCredentialInfo(): {
+  source:
+    | "GOOGLE_SEARCH_CONSOLE_SERVICE_ACCOUNT_B64"
+    | "GOOGLE_DOC_AI_SERVICE_ACCOUNT_B64"
+    | null;
+  clientEmail: string | null;
+} {
+  const sa = loadServiceAccount();
+  if (!sa) return { source: null, clientEmail: null };
+  const source = process.env.GOOGLE_SEARCH_CONSOLE_SERVICE_ACCOUNT_B64
+    ? "GOOGLE_SEARCH_CONSOLE_SERVICE_ACCOUNT_B64"
+    : "GOOGLE_DOC_AI_SERVICE_ACCOUNT_B64";
+  return { source, clientEmail: sa.client_email };
+}

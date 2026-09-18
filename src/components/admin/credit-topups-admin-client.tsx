@@ -1,8 +1,19 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { AdminPagination } from "@/components/admin/admin-pagination";
+import { AcademyPaymentHistory } from "@/components/admin/credit-topups/academy-payment-history";
+import type { AdminTopUpStats } from "@/lib/admin-credit-topups";
+import { PENDING_STALE_MINUTES } from "@/lib/admin-revenue-constants";
+import {
+  BANK_DEPOSIT_MATCH_WINDOW_MINUTES,
+  TOPUP_PROGRESS_STALE_LABEL,
+  TOPUP_REVIEW_WINDOW_DAYS,
+  classifyTopUpProgress,
+  topUpStaleTitle,
+} from "@/lib/admin-topup-progress";
+import { formatKstDateTimeShort } from "@/lib/admin-kst-format";
 import type { ReactNode } from "react";
 import {
   AlertTriangle,
@@ -33,8 +44,8 @@ import type {
 import {
   AdminField,
   ToggleSwitch,
-  formatDate,
 } from "@/components/admin/credit-promotion-editor";
+import { ScrollableX } from "@/components/admin/analytics/shared/scrollable-x";
 import { cn } from "@/lib/utils";
 import {
   getTransactionTypeLabel,
@@ -138,20 +149,13 @@ type AdminTopUpDetail = AdminTopUp & {
   academyActivityTotal: number;
   academyActivityPageSize: number;
   academyUsageSummary: {
+    /** 순사용 = 회원 상세 「누적 사용」(credit_balances.totalConsumed)과 같은 기준 */
     totalConsumed: number;
+    /** 총사용(생성 실패 자동환급 차감 전) */
+    grossConsumed: number;
+    refundedCredits: number;
     consumptionCount: number;
   };
-};
-
-type AdminTopUpStats = {
-  todayCount: number;
-  todayRevenue: number;
-  todayCredits: number;
-  pendingCount: number;
-  completedCount: number;
-  completedRevenue: number;
-  completedCredits: number;
-  failedCount: number;
 };
 
 // 상품 뷰(기본정보 + 계산된 요약 + 프로모션 목록)는 서버 lib 타입을 그대로 사용.
@@ -181,12 +185,24 @@ const ZERO_STATS: AdminTopUpStats = {
   todayRevenue: 0,
   todayCount: 0,
   todayCredits: 0,
+  todayRefundCount: 0,
+  todayRefundAmount: 0,
   completedCredits: 0,
   completedCount: 0,
   completedRevenue: 0,
-  pendingCount: 0,
+  pendingActiveCount: 0,
+  pendingStaleCount: 0,
+  pendingStaleAmount: 0,
+  pendingStaleMinutes: PENDING_STALE_MINUTES,
+  bankStaleMinutes: BANK_DEPOSIT_MATCH_WINDOW_MINUTES,
   failedCount: 0,
+  cancelledCount: 0,
+  refundedCount: 0,
+  reviewWindowDays: TOPUP_REVIEW_WINDOW_DAYS,
 };
+
+/** 결제가 성립하지 않은 상태 — 금액은 주문금액일 뿐 매출이 아니다(표에서 흐리게). */
+const UNPAID_TOPUP_STATUSES = new Set(["PENDING", "WAITING_FOR_DEPOSIT", "FAILED", "CANCELLED"]);
 
 const TOPUPS_PAGE_SIZE = 50;
 
@@ -208,27 +224,25 @@ const STATUS_STYLES: Record<string, string> = {
   REFUNDED: "bg-amber-50 text-amber-700",
 };
 
-const BANK_WINDOW_MINUTES = (() => {
-  const raw = Number(process.env.NEXT_PUBLIC_BANK_DEPOSIT_MATCH_WINDOW_MINUTES);
-  return Number.isFinite(raw) && raw > 0 ? Math.floor(raw) : 30;
-})();
-
-// 무통장입금 입금 대기가 시간창을 넘기면 더이상 자동매칭되지 않으므로 "시간 초과"로 표기.
+// 시간창을 넘긴 대기 주문은 표·카드·이력 모달이 모두 같은 자구(「미완료(이탈·만료)」)로 부른다.
+// 판정은 admin-topup-progress.ts 가 단일 소스 — PENDING 60분 / 무통장 입금 30분(매칭창).
 function getTopUpStatusDisplay(topUp: {
   paymentMethod: string | null;
   status: string;
   createdAt: Date | string;
-}): { label: string; style: string } {
-  const expired =
-    topUp.paymentMethod === "BANK_TRANSFER" &&
-    topUp.status === "WAITING_FOR_DEPOSIT" &&
-    Date.now() - new Date(topUp.createdAt).getTime() >
-      BANK_WINDOW_MINUTES * 60_000;
-  if (expired) {
-    return { label: "시간 초과", style: "bg-gray-100 text-gray-500" };
+}): { label: string; style: string; title?: string } {
+  const statusLabel = STATUS_LABELS[topUp.status] ?? topUp.status;
+  const progress = classifyTopUpProgress(topUp.status, topUp.createdAt);
+  if (progress.state === "stale") {
+    // DB 상태는 그대로 두고 표시만 바꾼다(spec §9.2 F2·D3).
+    return {
+      label: TOPUP_PROGRESS_STALE_LABEL,
+      style: "bg-gray-100 text-gray-500",
+      title: topUpStaleTitle(statusLabel, topUp.status, progress.windowMinutes),
+    };
   }
   return {
-    label: STATUS_LABELS[topUp.status] ?? topUp.status,
+    label: statusLabel,
     style: STATUS_STYLES[topUp.status] ?? "bg-gray-100 text-gray-600",
   };
 }
@@ -255,7 +269,8 @@ function readConfirmStartedAt(customData: unknown): number | null {
 }
 
 // 무통장입금 입금 대기 주문의 라이브 배지: 입금 대기(카운트다운) / 입금 확인중(카운트업) /
-// 입금 확인 실패 / 시간 초과. 디렉터 화면과 동일 기준.
+// 입금 확인 실패 / 미완료(이탈·만료). 매칭 시간창은 디렉터 화면과 같은 값이고,
+// 창을 넘긴 뒤의 자구는 표·카드·이력 모달과 하나로 맞춘다(admin-topup-progress.ts).
 function BankWaitingBadge({
   createdAt,
   customData,
@@ -291,12 +306,16 @@ function BankWaitingBadge({
   }
 
   const expiresAt =
-    new Date(createdAt).getTime() + BANK_WINDOW_MINUTES * 60_000;
+    new Date(createdAt).getTime() + BANK_DEPOSIT_MATCH_WINDOW_MINUTES * 60_000;
   const leftMs = Math.max(expiresAt - now, 0);
   if (leftMs <= 0) {
+    // 표·카드·이력 모달과 같은 자구. 무통장 매칭창(분)은 배지가 아니라 툴팁 보조문구로.
     return (
-      <span className="inline-flex h-6 items-center rounded-md bg-gray-100 px-2 text-[11px] font-semibold text-gray-500">
-        시간 초과
+      <span
+        title={topUpStaleTitle("입금 대기", "WAITING_FOR_DEPOSIT", BANK_DEPOSIT_MATCH_WINDOW_MINUTES)}
+        className="inline-flex h-6 items-center whitespace-nowrap rounded-md bg-gray-100 px-2 text-[11px] font-semibold text-gray-500"
+      >
+        {TOPUP_PROGRESS_STALE_LABEL}
       </span>
     );
   }
@@ -305,6 +324,7 @@ function BankWaitingBadge({
   const urgent = leftMs <= 5 * 60_000;
   return (
     <span
+      title={`무통장 입금 자동 매칭 ${BANK_DEPOSIT_MATCH_WINDOW_MINUTES}분 창 — 남은 시간`}
       className={cn(
         "inline-flex h-6 items-center gap-1 rounded-md px-2 text-[11px] font-semibold tabular-nums",
         urgent ? "bg-amber-50 text-amber-700" : "bg-sky-50 text-sky-700",
@@ -383,6 +403,8 @@ export function CreditTopUpsAdminClient({
   const [connected, setConnected] = useState(false);
   // 상세는 모달이므로 기본은 닫힘(null). 행을 클릭해야 열린다.
   const [selectedTopUpId, setSelectedTopUpId] = useState<string | null>(null);
+  // 학원 결제 이력 무효화 신호 — 결제 상태를 바꾸는 액션·수동 새로고침 뒤에만 올린다.
+  const [historyNonce, setHistoryNonce] = useState(0);
   const [selectedTopUp, setSelectedTopUp] =
     useState<AdminTopUpDetail | null>(null);
   const [detailLoading, setDetailLoading] = useState(false);
@@ -435,11 +457,6 @@ export function CreditTopUpsAdminClient({
     void loadTopUpDetail(selectedTopUpId);
   }, [selectedTopUpId]);
 
-  const latestCompleted = useMemo(
-    () => topUps.find((item) => item.status === "COMPLETED") ?? null,
-    [topUps],
-  );
-
   async function loadTopUpDetail(topUpId: string, clearMessage = true) {
     setDetailLoading(true);
     try {
@@ -490,6 +507,9 @@ export function CreditTopUpsAdminClient({
   }
 
   function refresh() {
+    // 학원 결제 이력은 academyId 단위로 유지하고, 여기(수동 새로고침 · 포트원 재조회 ·
+    // 환불 · 가상계좌 말소 성공 뒤)에서만 무효화한다 — 행을 바꿔 볼 때마다 다시 부르지 않는다.
+    setHistoryNonce((n) => n + 1);
     fetchTopUpsPage(pageRef.current, true);
   }
 
@@ -723,31 +743,34 @@ export function CreditTopUpsAdminClient({
 
       {isPayments && (
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        {/* 집계 정의: src/lib/admin-credit-topups.ts getAdminCreditTopUpStats (매출 = admin-revenue.ts D1) */}
         <MetricCard
-          label="오늘 결제"
+          label="오늘 결제(완료 · KST)"
           value={`${stats.todayRevenue.toLocaleString("ko-KR")}원`}
-          sub={`${stats.todayCount.toLocaleString("ko-KR")}건 · ${stats.todayCredits.toLocaleString("ko-KR")}C`}
+          sub={`${stats.todayCount.toLocaleString("ko-KR")}건 · ${stats.todayCredits.toLocaleString("ko-KR")}C${stats.todayRefundCount > 0 ? ` · 환불 ${stats.todayRefundAmount.toLocaleString("ko-KR")}원(${stats.todayRefundCount}건)` : ""}`}
           icon={<CreditCard />}
           accent="blue"
         />
         <MetricCard
-          label="충전 완료"
+          label="누적 충전 완료(전체 기간)"
           value={`${stats.completedCredits.toLocaleString("ko-KR")}C`}
-          sub={`${stats.completedCount.toLocaleString("ko-KR")}건 · ${stats.completedRevenue.toLocaleString("ko-KR")}원`}
+          sub={`${stats.completedCount.toLocaleString("ko-KR")}건 · ${stats.completedRevenue.toLocaleString("ko-KR")}원 · 환불 건 제외`}
           icon={<CheckCircle2 />}
           accent="emerald"
         />
         <MetricCard
-          label="대기"
-          value={`${stats.pendingCount.toLocaleString("ko-KR")}건`}
-          sub="결제 또는 입금 확인 중"
+          label="결제 진행 중"
+          value={`${stats.pendingActiveCount.toLocaleString("ko-KR")}건`}
+          sub={`미완료(이탈·만료) ${stats.pendingStaleCount.toLocaleString("ko-KR")}건 · 주문 ${stats.pendingStaleAmount.toLocaleString("ko-KR")}원 — 매출 아님`}
+          title={`카드 결제 ${stats.pendingStaleMinutes}분 · 무통장 입금 ${stats.bankStaleMinutes}분(자동 매칭 창) 이내면 「진행 중」, 넘기면 「미완료(이탈·만료)」로 봅니다. DB 상태는 바꾸지 않습니다.`}
           icon={<Clock3 />}
           accent="sky"
         />
         <MetricCard
-          label="확인 필요"
+          label={`확인 필요 · 결제 실패(최근 ${stats.reviewWindowDays}일 주문)`}
           value={`${stats.failedCount.toLocaleString("ko-KR")}건`}
-          sub={latestCompleted ? `최근 ${formatDate(latestCompleted.completedAt)}` : "완료 내역 없음"}
+          sub={`최근 ${stats.reviewWindowDays}일 주문 중 취소 ${stats.cancelledCount.toLocaleString("ko-KR")}건 · 같은 기간 환불 ${stats.refundedCount.toLocaleString("ko-KR")}건(환불일 기준)`}
+          title={`실패·취소는 주문 생성일 기준, 환불은 환불일 기준으로 셉니다(매출 정의와 동일).`}
           icon={<XCircle />}
           accent="rose"
         />
@@ -1034,7 +1057,7 @@ export function CreditTopUpsAdminClient({
             충전 내역이 없습니다
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <ScrollableX hintClassName="px-5">
             <table className="w-full min-w-[920px] text-left">
               <thead>
                 <tr className="border-b border-gray-50 bg-gray-50/60 text-[11px] font-semibold text-gray-400">
@@ -1042,7 +1065,7 @@ export function CreditTopUpsAdminClient({
                   <th className="px-4 py-3">일시</th>
                   <th className="px-4 py-3">학원</th>
                   <th className="px-4 py-3">상태</th>
-                  <th className="px-4 py-3 text-right">결제금액</th>
+                  <th className="px-4 py-3 text-right">주문금액</th>
                   <th className="px-4 py-3 text-right">크레딧</th>
                   <th className="px-4 py-3">결제수단</th>
                   <th className="px-4 py-3">포트원 결제 ID</th>
@@ -1066,7 +1089,7 @@ export function CreditTopUpsAdminClient({
                       {formatOrderNo(topUp.id)}
                     </td>
                     <td className="px-4 py-3 text-[12px] text-gray-500">
-                      {formatDate(topUp.createdAt)}
+                      {formatKstDateTimeShort(topUp.createdAt)}
                     </td>
                     <td className="px-4 py-3">
                       <div className="text-[13px] font-semibold text-gray-900">
@@ -1085,8 +1108,9 @@ export function CreditTopUpsAdminClient({
                         />
                       ) : (
                         <span
+                          title={statusDisplay.title}
                           className={cn(
-                            "inline-flex h-6 items-center rounded-md px-2 text-[11px] font-semibold",
+                            "inline-flex h-6 items-center whitespace-nowrap rounded-md px-2 text-[11px] font-semibold",
                             statusDisplay.style,
                           )}
                         >
@@ -1094,7 +1118,13 @@ export function CreditTopUpsAdminClient({
                         </span>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-right text-[13px] font-semibold tabular-nums text-gray-900">
+                    <td
+                      title={UNPAID_TOPUP_STATUSES.has(topUp.status) ? "미결제 주문 — 매출 아님" : undefined}
+                      className={cn(
+                        "whitespace-nowrap px-4 py-3 text-right text-[13px] font-semibold tabular-nums",
+                        UNPAID_TOPUP_STATUSES.has(topUp.status) ? "text-gray-400" : "text-gray-900",
+                      )}
+                    >
                       {topUp.price.toLocaleString("ko-KR")}원
                     </td>
                     <td className="px-4 py-3 text-right text-[13px] font-semibold tabular-nums text-blue-700">
@@ -1116,7 +1146,7 @@ export function CreditTopUpsAdminClient({
                 })}
               </tbody>
             </table>
-          </div>
+          </ScrollableX>
         )}
 
         <AdminPagination
@@ -1163,6 +1193,8 @@ export function CreditTopUpsAdminClient({
             onRefundAccountNumberChange={setRefundAccountNumber}
             onRefundHolderNameChange={setRefundHolderName}
             onRefundHolderPhoneNumberChange={setRefundHolderPhoneNumber}
+            onSelectTopUp={selectTopUp}
+            historyRefreshKey={String(historyNonce)}
           />
         </DialogContent>
       </Dialog>
@@ -1224,6 +1256,8 @@ function TopUpDetailPanel({
   onRefundAccountNumberChange,
   onRefundHolderNameChange,
   onRefundHolderPhoneNumberChange,
+  onSelectTopUp,
+  historyRefreshKey,
 }: {
   topUp: AdminTopUpDetail | null;
   loading: boolean;
@@ -1246,9 +1280,18 @@ function TopUpDetailPanel({
   onRefundAccountNumberChange: (value: string) => void;
   onRefundHolderNameChange: (value: string) => void;
   onRefundHolderPhoneNumberChange: (value: string) => void;
+  onSelectTopUp: (topUpId: string) => void;
+  /** 바뀔 때만 학원 결제 이력을 다시 부른다(행 전환으로는 바뀌지 않는다). */
+  historyRefreshKey: string;
 }) {
   const canSync = Boolean(topUp?.paymentId);
-  const canCancel = topUp?.status === "COMPLETED";
+  // 환불(부분취소)은 포트원 결제건에만 성립한다 — 무통장 입금은 paymentId 가 없어 API 가 반드시 실패한다.
+  // (표시·가드만 손댄다. 환불 실행 흐름 코드는 건드리지 않는다.)
+  const canCancel = topUp?.status === "COMPLETED" && Boolean(topUp?.paymentId);
+  const cancelDisabledReason =
+    topUp?.status === "COMPLETED" && !topUp?.paymentId
+      ? "무통장 입금 건은 시스템 밖(계좌 이체)에서 환불합니다 — 포트원 환불 API 대상이 아닙니다"
+      : undefined;
   const canCloseVirtualAccount =
     topUp?.status === "WAITING_FOR_DEPOSIT" &&
     topUp.paymentMethod === "VIRTUAL_ACCOUNT";
@@ -1271,8 +1314,9 @@ function TopUpDetailPanel({
                 />
               ) : (
                 <span
+                  title={getTopUpStatusDisplay(topUp).title}
                   className={cn(
-                    "inline-flex h-6 items-center rounded-md px-2 text-[11px] font-semibold",
+                    "inline-flex h-6 items-center whitespace-nowrap rounded-md px-2 text-[11px] font-semibold",
                     getTopUpStatusDisplay(topUp).style,
                   )}
                 >
@@ -1282,6 +1326,8 @@ function TopUpDetailPanel({
           </div>
           <div className="flex items-center gap-2">
             {topUp && (
+            // 헤더는 운영 처리 액션 전용. 「회원 상세」·「학원 상세」·「유입 경로 보기」 이동 버튼은
+            // 바로 아래 이력 패널에 한 벌만 둔다(중복 렌더 제거 — 390px 헤더가 한 줄 늘어나던 원인).
             <div className="flex flex-wrap items-center gap-2">
               <button
               type="button"
@@ -1298,6 +1344,7 @@ function TopUpDetailPanel({
             <button
               type="button"
               onClick={onOpenCancelForm}
+              title={cancelDisabledReason}
               disabled={!canCancel || syncing || cancelling || closingVirtualAccount}
               className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-rose-100 bg-rose-50 px-2.5 text-[12px] font-semibold text-rose-700 transition hover:bg-rose-100 disabled:cursor-not-allowed disabled:opacity-50"
             >
@@ -1339,6 +1386,18 @@ function TopUpDetailPanel({
           {loading ? "상세 내역을 불러오는 중입니다" : "충전 내역을 선택해주세요"}
         </div>
       ) : (
+        <>
+        {/* 최상단: 이 학원 결제 이력(요약·목록·회원/학원 이동) — spec §9.3 */}
+        <div className="border-b border-gray-100 px-5 py-4">
+          <AcademyPaymentHistory
+            key={topUp.academyId}
+            academyId={topUp.academyId}
+            currentTopUpId={topUp.id}
+            onSelectTopUp={onSelectTopUp}
+            // 같은 학원 안에서 결제 건만 바꿀 때는 재조회하지 않는다(행 클릭 1회 = 상세 API 1회).
+            refreshKey={historyRefreshKey}
+          />
+        </div>
         <div className="grid gap-5 p-5 lg:grid-cols-3 lg:items-start">
           {/* 왼쪽: 결제 정보 · 운영 처리 */}
           <div className="space-y-5">
@@ -1349,7 +1408,7 @@ function TopUpDetailPanel({
               value={`${(topUp.academy.creditBalance?.balance ?? 0).toLocaleString("ko-KR")}C`}
             />
             <DetailItem
-              label="결제금액"
+              label="주문금액"
               value={`${topUp.price.toLocaleString("ko-KR")}원`}
             />
             <DetailItem
@@ -1372,7 +1431,7 @@ function TopUpDetailPanel({
             <DetailRow label="Store ID" value={maskLongValue(topUp.storeId)} mono />
             <DetailRow
               label="검증 시각"
-              value={formatDate(topUp.verifiedAt ?? null)}
+              value={formatKstDateTimeShort(topUp.verifiedAt ?? null)}
             />
             {topUp.receiptUrl && (
               <a
@@ -1487,7 +1546,7 @@ function TopUpDetailPanel({
                     </span>
                   </div>
                   <div className="mt-1 text-[11px] text-gray-400">
-                    {formatDate(event.receivedAt)}
+                    {formatKstDateTimeShort(event.receivedAt)}
                   </div>
                   {event.errorMessage && (
                     <div className="mt-1 text-[11px] text-rose-600">
@@ -1526,7 +1585,7 @@ function TopUpDetailPanel({
                     {tx.description ?? tx.type}
                   </div>
                   <div className="mt-1 text-[11px] text-gray-400">
-                    {formatDate(tx.createdAt)}
+                    {formatKstDateTimeShort(tx.createdAt)}
                   </div>
                 </div>
               ))
@@ -1546,6 +1605,7 @@ function TopUpDetailPanel({
             />
           </div>
         </div>
+        </>
       )}
     </div>
   );
@@ -1562,7 +1622,12 @@ function AcademyCreditActivitySection({
   initialItems: AdminCreditActivity[];
   initialTotal: number;
   pageSize: number;
-  usageSummary: { totalConsumed: number; consumptionCount: number };
+  usageSummary: {
+    totalConsumed: number;
+    grossConsumed: number;
+    refundedCredits: number;
+    consumptionCount: number;
+  };
 }) {
   const [page, setPage] = useState(1);
   const [items, setItems] = useState(initialItems);
@@ -1597,7 +1662,14 @@ function AcademyCreditActivitySection({
       title={
         <span className="flex items-center justify-between gap-2">
           <span>학원 크레딧 사용 로그</span>
-          <span className="text-[11px] font-normal text-gray-400">
+          <span
+            className="text-[11px] font-normal text-gray-400"
+            title={
+              usageSummary.refundedCredits > 0
+                ? `총 사용 ${usageSummary.grossConsumed.toLocaleString("ko-KR")}C − 생성 실패 자동환급 ${usageSummary.refundedCredits.toLocaleString("ko-KR")}C (회원 상세 「누적 사용」과 같은 기준)`
+                : "회원 상세 「누적 사용」과 같은 기준(생성 실패 자동환급 차감 후)"
+            }
+          >
             누적 사용 {usageSummary.totalConsumed.toLocaleString("ko-KR")}C ·{" "}
             {usageSummary.consumptionCount.toLocaleString("ko-KR")}건
           </span>
@@ -1637,7 +1709,7 @@ function AcademyCreditActivitySection({
                 </div>
                 <div className="mt-1 flex items-center justify-between gap-2">
                   <span className="min-w-0 truncate text-[11px] text-gray-400">
-                    {tx.description ?? formatDate(tx.createdAt)}
+                    {tx.description ?? formatKstDateTimeShort(tx.createdAt)}
                   </span>
                   <span className="shrink-0 text-[11px] text-gray-400">
                     잔고 {tx.balanceAfter.toLocaleString("ko-KR")}C
@@ -1645,7 +1717,7 @@ function AcademyCreditActivitySection({
                 </div>
                 {tx.description && (
                   <div className="mt-0.5 text-[11px] text-gray-400">
-                    {formatDate(tx.createdAt)}
+                    {formatKstDateTimeShort(tx.createdAt)}
                   </div>
                 )}
               </div>
@@ -1732,12 +1804,15 @@ function MetricCard({
   sub,
   icon,
   accent,
+  title,
 }: {
   label: string;
   value: string;
   sub: string;
   icon: ReactNode;
   accent: "blue" | "emerald" | "sky" | "rose";
+  /** 집계 기준 설명(툴팁) */
+  title?: string;
 }) {
   const colors = {
     blue: "bg-blue-50 text-blue-700",
@@ -1747,7 +1822,7 @@ function MetricCard({
   };
 
   return (
-    <div className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm">
+    <div className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm" title={title}>
       <div className="flex items-center justify-between">
         <span className="text-[12px] font-medium text-gray-400">{label}</span>
         <span

@@ -21,8 +21,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getMemberTransactions } from "@/actions/admin-members";
+import { formatKstDateTimeShort } from "@/lib/admin-kst-format";
 import {
   getOperationTypeLabel,
+  getTransactionLabel,
   getTransactionTypeLabel,
 } from "@/lib/admin-members-labels";
 
@@ -291,7 +293,7 @@ function TransactionRow({ tx }: { tx: Transaction }) {
         <div>{formatDateTime(tx.createdAt)}</div>
       </TableCell>
       <TableCell>
-        <TypeBadge type={tx.type} />
+        <TypeBadge type={tx.type} referenceType={tx.referenceType} />
       </TableCell>
       <TableCell className="text-[12px] text-gray-700">
         {tx.operationType ? (
@@ -341,14 +343,24 @@ function TransactionRow({ tx }: { tx: Transaction }) {
   );
 }
 
-function TypeBadge({ type }: { type: string }) {
+// 행 단위 배지는 referenceType 까지 본다 — TOP_UP 167건 중 132건이 무료 지급
+// (MISSION 116 · PRINTABLE_COUPON 14 · REFERRAL 2)이라 유형 라벨만으로는
+// 유료 충전 35건과 한 덩어리로 보인다. 색은 유형 기준 그대로(필터 드롭다운과 짝).
+function TypeBadge({
+  type,
+  referenceType,
+}: {
+  type: string;
+  referenceType: string | null;
+}) {
   const cls = typeBadgeClass(type);
   return (
     <Badge
       variant="secondary"
       className={cn("text-[11px] font-medium border-0 px-2", cls)}
+      title={`유형: ${getTransactionTypeLabel(type)}`}
     >
-      {getTransactionTypeLabel(type)}
+      {getTransactionLabel(type, referenceType)}
     </Badge>
   );
 }
@@ -376,14 +388,5 @@ function typeBadgeClass(type: string): string {
   }
 }
 
-function formatDateTime(d: Date | string): string {
-  const date = typeof d === "string" ? new Date(d) : d;
-  return date.toLocaleString("ko-KR", {
-    year: "2-digit",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  });
-}
+// 표시는 KST 고정 — 서버(Vercel)는 UTC 라 timeZone 없이 포맷하면 거래 시각이 9시간 이르게 찍힌다.
+const formatDateTime = formatKstDateTimeShort;

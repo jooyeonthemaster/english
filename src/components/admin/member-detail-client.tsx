@@ -6,8 +6,6 @@ import {
   ShieldCheck,
   ShieldOff,
   Coins,
-  TrendingDown,
-  TrendingUp,
   Activity,
   Settings2,
   CalendarClock,
@@ -27,13 +25,14 @@ import { ActivityTimeline } from "@/components/admin/member-detail/activity-time
 import { AcademyContentBrowser } from "@/components/admin/academy-content-browser";
 import type { ActivityItem } from "@/lib/admin-activity-types";
 import {
-  CreditKpi,
   MiniStat,
   SectionCard,
 } from "@/components/admin/member-detail/atoms";
 import { MemoSection } from "@/components/admin/member-detail/memo-section";
+import { CreditSummaryCards } from "@/components/admin/member-detail/credit-summary-cards";
 import { PurchasesSection } from "@/components/admin/member-detail/purchases-section";
 import { MemberBlock } from "@/components/admin/member-detail/member-block";
+import { AcquisitionCard } from "@/components/admin/member-detail/acquisition-card";
 import type { MemberDetail, MemberPurchaseItem } from "@/actions/admin-members";
 
 // Academy.status → 가입 경로 중심 뱃지(목록과 동일 규칙).
@@ -87,6 +86,7 @@ interface MemberDetailClientProps {
 function formatDate(d: Date | string | null | undefined): string {
   if (!d) return "—";
   return new Date(d).toLocaleDateString("ko-KR", {
+    timeZone: "Asia/Seoul",
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
@@ -109,11 +109,20 @@ export function MemberDetailClient({
   const totalAllocated = member.creditBalance?.totalAllocated ?? 0;
   const totalConsumed = member.creditBalance?.totalConsumed ?? 0;
   const monthlyAllocation = member.creditBalance?.monthlyAllocation ?? 0;
-  const bonusCredits = member.creditBalance?.bonusCredits ?? 0;
+  const inflow = member.creditInflow;
   const expiresAtRaw = member.creditBalance?.expiresAt ?? null;
   const expiresAt = expiresAtRaw ? new Date(expiresAtRaw).toISOString() : null;
 
+  // dailyConsumption 은 「순증감」(사용 − 실패 환급)이라 드물게 음수 날이 있다
+  // (전 기간 실측 1/587일, 최저 −19). 합계는 순증감 그대로 써야 「최근 30일 ≤ 누적 사용」이
+  // 성립하고, 막대는 0 아래로 내려가면 안 되므로 그리기용 계열만 0 으로 막는다.
   const last30dTotal = member.dailyConsumption.reduce((sum, d) => sum + d.total, 0);
+  const dailyChart = member.dailyConsumption.map((d) => ({
+    day: d.day,
+    total: Math.max(0, d.total),
+  }));
+  const activeDays = member.dailyConsumption.filter((d) => d.total > 0).length;
+
 
   const knownOperationTypes = member.consumptionByOp
     .map((c) => c.operationType)
@@ -169,30 +178,13 @@ export function MemberDetailClient({
         <div className="space-y-4">
           <MemoSection memberId={member.id} initialMemo={member.academy.memo} />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <CreditKpi
-              label="누적 충전"
-              value={totalAllocated}
-              icon={<TrendingUp />}
-              accent="emerald"
-              suffix={
-                <span className="text-[11px] text-gray-400">
-                  보너스 {bonusCredits.toLocaleString("ko-KR")}
-                </span>
-              }
-            />
-            <CreditKpi
-              label="누적 사용"
-              value={totalConsumed}
-              icon={<TrendingDown />}
-              accent="rose"
-              suffix={
-                <span className="text-[11px] text-gray-400 tabular-nums">
-                  최근 30일 {last30dTotal.toLocaleString("ko-KR")}
-                </span>
-              }
-            />
-          </div>
+          <CreditSummaryCards
+            totalAllocated={totalAllocated}
+            totalConsumed={totalConsumed}
+            inflow={inflow}
+            paidTopUps={member.paidTopUps}
+            last30dTotal={last30dTotal}
+          />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <SectionCard title="최근 30일 사용 추이" icon={<Activity />}>
@@ -207,7 +199,7 @@ export function MemberDetailClient({
               </div>
               <div className="-mx-1 overflow-hidden">
                 <UsageSparkline
-                  data={member.dailyConsumption}
+                  data={dailyChart}
                   width={400}
                   height={64}
                   className="w-full h-auto"
@@ -215,19 +207,19 @@ export function MemberDetailClient({
               </div>
               <div className="grid grid-cols-3 mt-3 pt-3 border-t border-gray-50 text-center">
                 <MiniStat
-                  label="월 정기"
+                  label="기본 배정"
                   value={`${monthlyAllocation.toLocaleString("ko-KR")}`}
                 />
                 <MiniStat
                   label="활성 일수"
-                  value={`${member.dailyConsumption.length}`}
+                  value={`${activeDays}`}
                   suffix="일"
                 />
                 <MiniStat
                   label="활성일 평균"
                   value={
-                    member.dailyConsumption.length > 0
-                      ? `${Math.round(last30dTotal / member.dailyConsumption.length).toLocaleString("ko-KR")}`
+                    activeDays > 0
+                      ? `${Math.round(last30dTotal / activeDays).toLocaleString("ko-KR")}`
                       : "—"
                   }
                 />
@@ -238,6 +230,8 @@ export function MemberDetailClient({
               <UsageBreakdown data={member.consumptionByOp} />
             </SectionCard>
           </div>
+
+          <AcquisitionCard academyId={member.academy.id} />
 
           <PurchasesSection purchases={purchases} />
         </div>

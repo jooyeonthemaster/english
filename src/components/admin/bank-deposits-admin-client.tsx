@@ -3,6 +3,16 @@
 import { useCallback, useEffect, useState } from "react";
 import { AlertCircle, Banknote, CheckCircle2, HandCoins, Link2, RefreshCw, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+// 모바일에서 860px 표가 단서 없이 잘리던 것(RC 모바일 고정폭 표)을 공용 래퍼로 교체.
+import { ScrollableX } from "@/components/admin/analytics/shared/scrollable-x";
+import {
+  KST_SHORT,
+  PendingOrderPicker,
+  PendingOrdersPanel,
+  settledWarning,
+  type PendingOrder,
+  type PendingOrdersMeta,
+} from "@/components/admin/bank-deposits/pending-orders";
 
 type Notification = {
   id: string;
@@ -17,15 +27,6 @@ type Notification = {
   matchedAcademy: string | null;
   occurredAt: string | null;
   receivedAt: string;
-};
-
-type PendingOrder = {
-  id: string;
-  price: number;
-  creditAmount: number;
-  depositorName: string | null;
-  academyName: string;
-  createdAt: string;
 };
 
 const STATUS_LABELS: Record<string, string> = {
@@ -73,6 +74,7 @@ export function BankDepositsAdminClient({
   );
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [pendingOrders, setPendingOrders] = useState<PendingOrder[]>([]);
+  const [pendingMeta, setPendingMeta] = useState<PendingOrdersMeta | null>(null);
   const [counts, setCounts] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -89,6 +91,7 @@ export function BankDepositsAdminClient({
         const data = await res.json();
         setNotifications(data.notifications);
         setPendingOrders(data.pendingOrders);
+        setPendingMeta(data.pendingOrdersMeta ?? null);
         setCounts(data.counts ?? {});
       }
     } finally {
@@ -137,6 +140,30 @@ export function BankDepositsAdminClient({
     [fetchData],
   );
 
+  // 주문 연결은 되돌릴 수 없는 크레딧 지급이라 항상 확인을 받는다(A5-2).
+  // 같은 금액·입금자명의 입금이 이미 처리돼 있으면 재지급 경고를 앞에 붙인다.
+  const confirmMatch = useCallback(
+    (n: Notification, o: PendingOrder) => {
+      const warning = settledWarning(o);
+      const summary = [
+        `${o.academyName} · ${o.depositorName ?? "입금자명 미입력"}`,
+        `주문 ${o.price.toLocaleString("ko-KR")}원 / ${o.creditAmount.toLocaleString("ko-KR")}C`,
+        `입금 ${n.amount.toLocaleString("ko-KR")}원 · ${n.depositorName ?? "입금자명 없음"}`,
+      ].join("\n");
+      const mismatch =
+        o.price !== n.amount
+          ? "\n\n주의: 입금액과 주문금액이 다릅니다. 연결하면 주문의 크레딧이 그대로 지급됩니다."
+          : "";
+      const head = warning ? `[재지급 주의] ${warning}\n\n` : "";
+      const ok = window.confirm(
+        `${head}이 입금을 아래 주문에 연결하고 크레딧을 지급할까요?\n\n${summary}${mismatch}`,
+      );
+      if (!ok) return;
+      void act(n.id, { action: "match", topUpId: o.id });
+    },
+    [act],
+  );
+
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
@@ -158,54 +185,11 @@ export function BankDepositsAdminClient({
         </button>
       </div>
 
-      {/* 입금 대기 주문 패널 — 대시보드 "입금 대기"에서 진입 시 강조 */}
-      {focusPending && (
-        <div className="rounded-xl border border-sky-100 bg-sky-50/50 p-4">
-          <div className="flex items-center gap-2 mb-3">
-            <Banknote className="size-4 text-sky-600" strokeWidth={2} />
-            <h2 className="text-[14px] font-semibold text-gray-800">
-              입금 대기 주문
-            </h2>
-            <span className="rounded-full bg-white px-2 py-0.5 text-[11px] font-semibold text-sky-600">
-              {pendingOrders.length}건
-            </span>
-          </div>
-          {pendingOrders.length === 0 ? (
-            <p className="py-4 text-center text-[13px] text-gray-400">
-              입금 대기 중인 무통장입금 주문이 없습니다.
-            </p>
-          ) : (
-            <div className="flex flex-col gap-1.5">
-              {pendingOrders.map((o) => (
-                <div
-                  key={o.id}
-                  className="flex items-center justify-between rounded-lg border border-sky-100 bg-white px-3.5 py-2.5 text-[12px]"
-                >
-                  <span className="font-medium text-gray-700">
-                    {o.academyName}
-                    <span className="ml-1.5 text-gray-400">
-                      · {o.depositorName ?? "입금자명 미입력"}
-                    </span>
-                  </span>
-                  <span className="tabular-nums text-gray-500">
-                    {o.price.toLocaleString("ko-KR")}원 ·{" "}
-                    {o.creditAmount.toLocaleString("ko-KR")}C ·{" "}
-                    {new Date(o.createdAt).toLocaleString("ko-KR", {
-                      month: "short",
-                      day: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
-          <p className="mt-2.5 text-[11px] text-gray-400">
-            입금 알림이 도착하면 아래 목록에서 해당 입금을 주문에 연결하세요.
-          </p>
-        </div>
-      )}
+      {/* 입금 대기 주문 패널 — 대기 주문이 있으면 항상 렌더한다(A5-1).
+          사이드바로 들어오면 view 파라미터가 없어 focusPending=false 였고, 그때 패널이 통째로
+          사라져 대기 주문 14건이 「해당하는 입금 내역이 없습니다」 뒤에 숨었다.
+          focusPending 은 이제 강조·기본 펼침에만 쓴다. */}
+      <PendingOrdersPanel orders={pendingOrders} meta={pendingMeta} highlight={focusPending} />
 
       {/* Filter tabs */}
       <div className="flex flex-wrap gap-1.5">
@@ -262,7 +246,7 @@ export function BankDepositsAdminClient({
             해당하는 입금 내역이 없습니다.
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <ScrollableX caption="좌우로 밀어 나머지 열 보기">
             <table className="w-full min-w-[860px] text-left">
               <thead>
                 <tr className="border-b border-gray-50 bg-gray-50/60 text-[11px] font-semibold text-gray-400">
@@ -285,12 +269,7 @@ export function BankDepositsAdminClient({
                     <>
                       <tr key={n.id} className="align-top hover:bg-blue-50/20">
                         <td className="whitespace-nowrap px-5 py-3 text-[12px] text-gray-500">
-                          {new Date(n.receivedAt).toLocaleString("ko-KR", {
-                            month: "short",
-                            day: "numeric",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
+                          {new Date(n.receivedAt).toLocaleString("ko-KR", KST_SHORT)}
                         </td>
                         <td className="px-4 py-3 text-right text-[13px] font-bold tabular-nums text-gray-900">
                           {n.amount.toLocaleString("ko-KR")}원
@@ -363,54 +342,13 @@ export function BankDepositsAdminClient({
                       {matchingFor === n.id && (
                         <tr key={`${n.id}-match`} className="bg-blue-50/30">
                           <td colSpan={7} className="px-5 py-3">
-                            <p className="mb-2 text-[12px] font-semibold text-gray-600">
-                              연결할 입금 대기 주문 선택 (금액 일치 항목이 위에 표시됨)
-                            </p>
-                            {pendingOrders.length === 0 ? (
-                              <p className="text-[12px] text-gray-400">
-                                입금 대기 중인 무통장입금 주문이 없습니다.
-                              </p>
-                            ) : (
-                              <div className="flex flex-col gap-1.5">
-                                {[...pendingOrders]
-                                  .sort(
-                                    (a, b) =>
-                                      Number(b.price === n.amount) -
-                                      Number(a.price === n.amount),
-                                  )
-                                  .map((o) => (
-                                    <button
-                                      key={o.id}
-                                      disabled={busyId === n.id}
-                                      onClick={() =>
-                                        void act(n.id, {
-                                          action: "match",
-                                          topUpId: o.id,
-                                        })
-                                      }
-                                      className={cn(
-                                        "flex items-center justify-between rounded-lg border bg-white px-3 py-2 text-left text-[12px] transition hover:border-blue-300 disabled:opacity-50",
-                                        o.price === n.amount
-                                          ? "border-blue-300"
-                                          : "border-gray-200",
-                                      )}
-                                    >
-                                      <span className="font-medium text-gray-700">
-                                        {o.academyName} · {o.depositorName ?? "이름없음"}
-                                      </span>
-                                      <span className="tabular-nums text-gray-500">
-                                        {o.price.toLocaleString("ko-KR")}원 ·{" "}
-                                        {o.creditAmount.toLocaleString("ko-KR")}C
-                                        {o.price === n.amount && (
-                                          <span className="ml-2 font-semibold text-blue-600">
-                                            금액일치
-                                          </span>
-                                        )}
-                                      </span>
-                                    </button>
-                                  ))}
-                              </div>
-                            )}
+                            <PendingOrderPicker
+                              orders={pendingOrders}
+                              meta={pendingMeta}
+                              amount={n.amount}
+                              disabled={busyId === n.id}
+                              onPick={(o) => confirmMatch(n, o)}
+                            />
                           </td>
                         </tr>
                       )}
@@ -419,7 +357,7 @@ export function BankDepositsAdminClient({
                 })}
               </tbody>
             </table>
-          </div>
+          </ScrollableX>
         )}
       </div>
     </div>

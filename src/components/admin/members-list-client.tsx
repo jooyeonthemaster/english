@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { useSearchDebounce } from "@/hooks/use-search-debounce";
+import { normalizeToKSTMidnight } from "@/lib/date-utils";
 import type {
   MemberListItem,
   ProviderFilter,
@@ -87,6 +88,15 @@ function signupSummary(from: string, to: string): string | undefined {
   if (from) return `${shortDate(from)}~`;
   if (to) return `~${shortDate(to)}`;
   return undefined;
+}
+
+/** "YYYY-MM-DD"(date input 값) → 그 날 KST 00:00 의 epoch ms. 빈 값·잘못된 값은 null. */
+function kstDayStartTs(ymd: string): number | null {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(ymd)) return null;
+  // "YYYY-MM-DD" 는 UTC 자정으로 파싱된다(KST 09:00) → 같은 KST 날짜의 자정으로 정규화.
+  const utcMidnight = new Date(ymd);
+  if (Number.isNaN(utcMidnight.getTime())) return null;
+  return normalizeToKSTMidnight(utcMidnight).getTime();
 }
 
 // 정렬은 헤더 클릭 시 오름차순 → 내림차순 → 해제(기본순) 3단계로 순환한다.
@@ -207,9 +217,11 @@ export function MembersListClient({ members }: MembersListClientProps) {
 
   const filtered = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
-    // 가입일 범위 — from 은 그 날 00:00, to 는 그 날 23:59:59.999 로 포함(inclusive).
-    const fromTs = op.signupFrom ? new Date(op.signupFrom).setHours(0, 0, 0, 0) : null;
-    const toTs = op.signupTo ? new Date(op.signupTo).setHours(23, 59, 59, 999) : null;
+    // 가입일 범위 — KST 달력일 기준(브라우저 시간대 무관). from 은 그 날 KST 00:00 이상,
+    // to 는 다음 날 KST 00:00 미만(그 날 포함). setHours 는 브라우저 로컬 자정이라 쓰지 않는다.
+    const fromTs = kstDayStartTs(op.signupFrom);
+    const toTs = kstDayStartTs(op.signupTo);
+    const toExclusiveTs = toTs === null ? null : toTs + 86_400_000;
 
     return members.filter((m) => {
       if (filters.provider !== "all") {
@@ -239,10 +251,10 @@ export function MembersListClient({ members }: MembersListClientProps) {
       if (op.marketing === "none" && m.marketingConsent) return false;
       if (op.sms === "excluded" && !m.smsOptOut) return false;
       if (op.sms === "included" && m.smsOptOut) return false;
-      if (fromTs !== null || toTs !== null) {
+      if (fromTs !== null || toExclusiveTs !== null) {
         const created = new Date(m.createdAt).getTime();
         if (fromTs !== null && created < fromTs) return false;
-        if (toTs !== null && created > toTs) return false;
+        if (toExclusiveTs !== null && created >= toExclusiveTs) return false;
       }
 
       if (q) {

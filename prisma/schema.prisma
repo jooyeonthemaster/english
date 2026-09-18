@@ -5872,3 +5872,169 @@ model SchoolSeoPage {
   @@index([status, richness])
   @@map("school_seo_pages")
 }
+
+// ============================================================================
+// Analytics — 1st-party 유입 분석 (docs/analytics/analytics-spec.md §2)
+// relation-free: academyId/staffId/refId 는 인덱스만 있는 느슨한 참조.
+// SQL 정본: prisma/migrations-manual/20260917_analytics.sql
+// ============================================================================
+
+/// 브라우저 1개 = 방문자 1명 (1st-party 쿠키 smoat_vid). first* = 최초 유입.
+model AnalyticsVisitor {
+  id                String    @id
+  firstSeenAt       DateTime  @default(now())
+  lastSeenAt        DateTime  @default(now())
+  sessionCount      Int       @default(0)
+  pageviewCount     Int       @default(0)
+  firstSessionId    String?
+  firstChannel      String?
+  firstSource       String?
+  firstMedium       String?
+  firstCampaign     String?
+  firstReferrerHost String?
+  firstLandingPath  String?
+  firstTrackedLink  String?
+  academyId         String?
+  staffId           String?
+  linkedAt          DateTime?
+
+  @@index([firstSeenAt])
+  /// 보유기간 크론(365일 경과 파기·익명화)이 스캔하는 축 — SQL: prisma/migrations-manual/20260918_analytics_indexes.sql
+  @@index([lastSeenAt])
+  @@index([academyId])
+  @@map("analytics_visitors")
+}
+
+/// 방문 1회 (30분 무활동 또는 새 캠페인 유입 시 새 세션). 유입 분류는 세션 시작 시 1회.
+model AnalyticsSession {
+  id             String   @id
+  visitorId      String
+  startedAt      DateTime @default(now())
+  lastSeenAt     DateTime @default(now())
+  engagedMs      Int      @default(0)
+  pageviews      Int      @default(0)
+  eventsCount    Int      @default(0)
+  isNewVisitor   Boolean  @default(true)
+  entryPath      String
+  entryTitle     String?
+  exitPath       String?
+  hostname       String?
+  referrer       String?
+  referrerHost   String?
+  /// organic_search | paid_search | organic_social | paid_social | video | community | messenger | ai | email | display | referral | direct
+  channel        String
+  source         String?
+  medium         String?
+  campaign       String?
+  term           String?
+  content        String?
+  clickIdType    String?
+  trackedLink    String?
+  landingQuery   String?
+  deviceType     String?
+  browser        String?
+  browserVersion String?
+  os             String?
+  inApp          String?
+  screen         String?
+  language       String?
+  timezone       String?
+  country        String?
+  region         String?
+  city           String?
+  academyId      String?
+  staffId        String?
+  isInternal     Boolean  @default(false)
+  hasConversion  Boolean  @default(false)
+
+  @@index([startedAt])
+  @@index([lastSeenAt])
+  @@index([visitorId, startedAt])
+  @@index([channel, startedAt])
+  @@index([academyId])
+  @@map("analytics_sessions")
+}
+
+/// 페이지뷰(type=pageview) / 커스텀 이벤트(type=event). id 는 클라이언트 난수(멱등 수집).
+model AnalyticsEvent {
+  id        String   @id
+  sessionId String
+  visitorId String
+  type      String
+  name      String?
+  path      String
+  title     String?
+  area      String
+  prevPath  String?
+  engagedMs Int?
+  scrollPct Int?
+  props     Json?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([sessionId, createdAt])
+  @@index([type, createdAt])
+  @@index([name, createdAt])
+  @@index([path, createdAt])
+  @@map("analytics_events")
+}
+
+/// 서버 판정 전환(가입·결제). (type, refId) 유일 → 픽셀 이중 발사 방지.
+model AnalyticsConversion {
+  id         String    @id @default(cuid())
+  /// signup | purchase
+  type       String
+  /// signup = academyId, purchase = credit_top_ups.id
+  refId      String
+  academyId  String
+  visitorId  String?
+  sessionId  String?
+  value      Int       @default(0)
+  occurredAt DateTime
+  firedAt    DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@unique([type, refId])
+  @@index([occurredAt])
+  @@index([academyId])
+  @@map("analytics_conversions")
+}
+
+/// 추적 링크 /go/[slug] → 내부 경로 + UTM 으로 302.
+model AnalyticsTrackedLink {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  label       String
+  destination String
+  utmSource   String
+  utmMedium   String
+  utmCampaign String?
+  utmContent  String?
+  utmTerm     String?
+  note        String?
+  isActive    Boolean  @default(true)
+  clicks      Int      @default(0)
+  createdBy   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+
+  @@map("analytics_tracked_links")
+}
+
+model AnalyticsLinkClick {
+  id           String   @id @default(cuid())
+  linkId       String
+  slug         String
+  referrerHost String?
+  deviceType   String?
+  os           String?
+  inApp        String?
+  country      String?
+  region       String?
+  isBot        Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  @@index([linkId, createdAt])
+  @@index([createdAt])
+  @@map("analytics_link_clicks")
+}

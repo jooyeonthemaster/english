@@ -21,6 +21,7 @@ import {
   type CostBucket,
   type CostPeriodMode,
 } from "@/actions/admin";
+import { getPaidSubscriptionPaymentCount } from "@/actions/admin/operations-cost";
 import { getFeatureMarginAnalysis } from "@/actions/admin/feature-margin";
 import { getFreeCreditBep } from "@/actions/admin/free-credit-bep";
 import { CostPeriodControls } from "@/components/admin/cost-period-controls";
@@ -162,12 +163,27 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
   const startValue = normalizeDateInput(params.start);
   const endValue = normalizeDateInput(params.end);
   const isRange = Boolean(startValue && endValue);
-  const dashboard = await getOperationsCostDashboard(mode, {
-    date: dateValue,
-    month: monthValue,
-    startDate: startValue ?? undefined,
-    endDate: endValue ?? undefined,
-  });
+  const [dashboard, paidSubscriptionPayments] = await Promise.all([
+    getOperationsCostDashboard(mode, {
+      date: dateValue,
+      month: monthValue,
+      startDate: startValue ?? undefined,
+      endDate: endValue ?? undefined,
+    }),
+    getPaidSubscriptionPaymentCount(),
+  ]);
+  const subscriptionSub = subscriptionSummaryText(
+    dashboard.activeSubscriptions,
+    paidSubscriptionPayments,
+  );
+  // 환불일 차감(D1)으로 이 기간 매출에서 빠진 금액 — 음수 매출의 이유를 카드에서 바로 보여준다.
+  const revenueSub =
+    dashboard.current.refundKrw > 0
+      ? `${subscriptionSub} · 환불 −${formatCurrency(dashboard.current.refundKrw)} 반영`
+      : subscriptionSub;
+  // 툴팁은 실제로 표시되는 값(구독 결제 건수)을 설명한다 — 예상 MRR 은 결제 이력이 있을 때만 나온다.
+  const revenueCardTitle =
+    "매출 = 충전 결제액(결제일) − 환불(환불일) + 구독 결제 + 무통장 수동지급. 보조문구는 구독 결제 건수 — 결제 이력이 0건이면 미결제 구독 수만 표시하고, 결제 이력이 생기면 활성 구독 수와 예상 MRR(만료 전 ACTIVE 구독 월 요금 합)을 표시합니다.";
   const hasProfit = dashboard.current.profitKrw >= 0;
   const ProfitIcon = hasProfit ? ArrowUpRight : ArrowDownRight;
   // In single 일별/월별 selection the trend table shows only the selected
@@ -276,7 +292,8 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
         <MetricCard
           label={summaryMetricLabel(dashboard.summaryMode, dashboard.summaryLabel, "매출")}
           value={formatCurrency(dashboard.current.revenueKrw)}
-          sub={`${dashboard.activeSubscriptions.count}개 활성 구독 · MRR ${formatCurrency(dashboard.activeSubscriptions.estimatedMrrKrw)}`}
+          sub={revenueSub}
+          title={revenueCardTitle}
           icon={ReceiptText}
           tone="blue"
         />
@@ -294,7 +311,11 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
         <MetricCard
           label={summaryMetricLabel(dashboard.summaryMode, dashboard.summaryLabel, "손익")}
           value={formatCurrency(dashboard.current.profitKrw)}
-          sub={`마진 ${formatPercent(dashboard.current.marginPercent)}`}
+          sub={
+            dashboard.current.marginPercent == null
+              ? "마진 — · 환불 차감일"
+              : `마진 ${formatPercent(dashboard.current.marginPercent)}`
+          }
           icon={ProfitIcon}
           tone={hasProfit ? "emerald" : "red"}
         />
@@ -307,6 +328,14 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
         />
       </div>
 
+      {/* 터치 기기에는 title 툴팁이 열리지 않으므로 매출 정의를 화면에 고정 표기한다. */}
+      <p className="-mt-1 text-[11px] leading-5 text-gray-400">
+        매출 = 충전 결제액(결제일) − 환불(환불일) + 구독 결제 + 무통장 수동지급(KST).
+        순매출이 0 이하인 날은 마진율이 정의되지 않아 「환불 차감일」로 표시합니다.
+        {paidSubscriptionPayments === 0 &&
+          " 구독 결제 이력이 0건이라 예상 MRR 은 표시하지 않습니다."}
+      </p>
+
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
         <section className="rounded-xl border border-gray-100 bg-white xl:col-span-2">
           <div className="flex items-center justify-between border-b border-gray-50 px-5 py-4">
@@ -315,7 +344,7 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
                 {mode === "daily" ? "일별 손익" : "월별 손익"}
               </h2>
               <p className="mt-1 text-[12px] text-gray-400">
-                {trendSubtitle} · KST 기준
+                {trendSubtitle} · KST 기준 · 매출은 결제일 인식, 환불은 환불일 차감
               </p>
             </div>
             <Badge
@@ -950,7 +979,7 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
             <div>
               <h2 className="text-[14px] font-semibold text-gray-800">크레딧 사용</h2>
               <p className="mt-1 text-[12px] text-gray-400">
-                {dashboard.summaryLabel} · 환불 반영 후 순사용량
+                {dashboard.summaryLabel} · 실패 자동환불 차감 후 순사용량(충전 환불 회수분은 제외)
               </p>
             </div>
             <Coins className="size-4 text-gray-400" strokeWidth={1.8} />
@@ -1018,12 +1047,20 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
             <SmallStat
               label="총 매출"
               value={formatCurrency(dashboard.totals.revenueKrw)}
-              sub={dashboard.rangeLabel}
+              sub={
+                dashboard.totals.refundKrw > 0
+                  ? `${dashboard.rangeLabel} · 환불 차감 포함`
+                  : dashboard.rangeLabel
+              }
             />
             <SmallStat
               label="총 손익"
               value={formatCurrency(dashboard.totals.profitKrw)}
-              sub={`마진 ${formatPercent(dashboard.totals.marginPercent)}`}
+              sub={
+                dashboard.totals.marginPercent == null
+                  ? "마진 — · 환불 차감일"
+                  : `마진 ${formatPercent(dashboard.totals.marginPercent)}`
+              }
             />
           </div>
           <div className="border-t border-gray-50 px-5 py-4">
@@ -1092,12 +1129,15 @@ function MetricCard({
   sub,
   icon: Icon,
   tone,
+  title,
 }: {
   label: string;
   value: string;
   sub: string;
   icon: LucideIcon;
   tone: "blue" | "emerald" | "red" | "slate" | "violet";
+  /** 지표 정의 툴팁 */
+  title?: string;
 }) {
   const tones = {
     blue: "bg-blue-50 text-blue-600",
@@ -1108,15 +1148,21 @@ function MetricCard({
   };
 
   return (
-    <div className="flex items-start justify-between rounded-xl border border-gray-100 bg-white p-5">
+    <div
+      className="flex items-start justify-between rounded-xl border border-gray-100 bg-white p-5"
+      title={title}
+    >
       <div className="min-w-0">
         <p className="text-[12px] font-medium uppercase tracking-wide text-gray-400">
           {label}
         </p>
-        <p className="mt-2 truncate text-[27px] font-bold leading-tight text-gray-900">
+        <p className="mt-2 truncate text-[27px] font-bold leading-tight text-gray-900 tabular-nums">
           {value}
         </p>
-        <p className="mt-1 truncate text-[12px] text-gray-400">{sub}</p>
+        {/* 1440px xl:grid-cols-4 구간에서 보조문구가 잘리던 자리 — 2줄까지 접어서 보여준다. */}
+        <p className="mt-1 line-clamp-2 text-[12px] leading-4 text-gray-400" title={sub}>
+          {sub}
+        </p>
       </div>
       <div className={cn("flex size-10 shrink-0 items-center justify-center rounded-xl", tones[tone])}>
         <Icon className="size-5" strokeWidth={1.8} />
@@ -1147,7 +1193,16 @@ function CostBucketRow({ bucket }: { bucket: CostBucket }) {
         {formatCurrency(bucket.profitKrw)}
       </TableCell>
       <TableCell className="text-right text-[13px] text-gray-500">
-        {formatPercent(bucket.marginPercent)}
+        {bucket.marginPercent == null ? (
+          <span
+            className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-[11px] font-medium text-gray-500"
+            title="순매출이 0 이하(환불 차감)라 마진율이 정의되지 않습니다"
+          >
+            환불 차감일
+          </span>
+        ) : (
+          formatPercent(bucket.marginPercent)
+        )}
       </TableCell>
       <TableCell className="pr-5 text-right text-[13px] text-gray-500">
         {formatNumber(bucket.apiCalls)}회
@@ -1171,9 +1226,29 @@ function SmallStat({
       <p className="mt-1 truncate text-[16px] font-semibold text-gray-900">
         {value}
       </p>
-      <p className="mt-0.5 truncate text-[11px] text-gray-400">{sub}</p>
+      {/* 「환불 차감 포함」 같은 보조문구가 좁은 칸에서 잘리지 않도록 2줄까지 접는다. */}
+      <p className="mt-0.5 line-clamp-2 text-[11px] leading-4 text-gray-400" title={sub}>
+        {sub}
+      </p>
     </div>
   );
+}
+
+/**
+ * 매출 카드 보조문구 — 구독 결제가 한 번도 없으면 MRR 대신 「구독 결제 없음」(F10).
+ * activeSubscriptions 는 만료 전 ACTIVE 구독(월 요금 합 = 예상 MRR)이다.
+ */
+function subscriptionSummaryText(
+  active: { count: number; estimatedMrrKrw: number },
+  paidPaymentCount: number,
+) {
+  if (paidPaymentCount === 0) {
+    return active.count > 0
+      ? `구독 결제 0건 · 미결제 구독 ${formatNumber(active.count)}개`
+      : "구독 결제 0건";
+  }
+  if (active.count === 0) return "활성 구독 없음";
+  return `활성 구독 ${formatNumber(active.count)}개 · 예상 MRR ${formatCurrency(active.estimatedMrrKrw)}`;
 }
 
 function summaryMetricLabel(
@@ -1359,8 +1434,9 @@ function formatKstDateFromMs(ms: number) {
   ].join(".");
 }
 
-function formatPercent(value: number) {
-  if (!Number.isFinite(value)) return "0.0%";
+/** 마진율 — 순매출이 0 이하인 날(환불 차감일)은 정의되지 않아 null 로 오고 「—」로 표시한다. */
+function formatPercent(value: number | null) {
+  if (value == null || !Number.isFinite(value)) return "—";
   return `${value.toFixed(1)}%`;
 }
 

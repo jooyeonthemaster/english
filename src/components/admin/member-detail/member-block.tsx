@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { ProviderBadge } from "@/components/admin/provider-badge";
 import { Avatar, DefList, DefRow } from "@/components/admin/member-detail/atoms";
 import { OutreachCard } from "@/components/admin/member-detail/outreach-card";
+import { formatKstDate, formatKstDateTime } from "@/lib/admin-kst-format";
 import type { MemberDetail } from "@/actions/admin-members";
 
 type StaffItem = MemberDetail["academyStaff"][number];
@@ -12,26 +13,9 @@ const ROLE_LABEL: Record<string, string> = {
   TEACHER: "강사",
 };
 
-function formatDate(d: Date | string | null | undefined): string {
-  if (!d) return "—";
-  return new Date(d).toLocaleDateString("ko-KR", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  });
-}
-
-function formatDateTime(d: Date | string | null | undefined): string {
-  if (!d) return "—";
-  return new Date(d).toLocaleString("ko-KR", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  });
-}
+// 표시는 KST 고정 — 서버(Vercel)는 UTC 라 timeZone 을 안 주면 SSR 이 하루 이르게 찍는다.
+const formatDate = formatKstDate;
+const formatDateTime = formatKstDateTime;
 
 /** 회원(원장·강사) 한 명 단위 블록 — 회원 정보 + 맞춤 문자 생성을 하나로 묶는다. */
 export function MemberBlock({

@@ -25,7 +25,9 @@ export interface MemberListFilters {
 // All admin-facing time grouping happens in Asia/Seoul so dashboards line up
 // with how the operator perceives the day, regardless of Postgres or browser
 // timezone. Centralized constant prevents drift across queries.
-export const DISPLAY_TIMEZONE = "Asia/Seoul";
+// 정의는 표시 포매터(@/lib/admin-kst-format)에 있다 — 집계(SQL)와 표시(Intl)가
+// 서로 다른 시간대를 쓰는 일이 없도록 한 곳에서만 정한다.
+export { DISPLAY_TIMEZONE } from "@/lib/admin-kst-format";
 
 // Redaction marker for PII fields shown to non-SUPER_ADMIN sessions.
 export const REDACTED = "—";
@@ -56,6 +58,19 @@ export const OPERATION_TYPE_ALLOWLIST = new Set([
   "WEBTOON_IMAGE_PREMIUM",
   "WEBTOON_EXAM_DOWNLOAD",
   "EXAM_GENERATION",
+  // 26-09-18 실측 보강 — 아래 8종은 실제 소비 원장에 있고 회원 상세 「상품」 드롭다운에도
+  // 뜨는데 allowlist 밖이라, 고르면 서버가 invalid_input 을 돌려주고 화면은 조용히
+  // 「조건에 맞는 거래가 없습니다」를 보여 줬다(PASSAGE_VARIANT 31곳·PASSAGE_TRANSFORM 28곳
+  // ·EXAM_ANALYSIS 10곳·EXAM_STUDENT_REPORT 7곳·PASSAGE_AUTHORING 2곳·WEBTOON_PANEL 1곳
+  // ·EXAM_ANALYSIS_BOOST 1곳·SIMILAR_EXAM_GENERATION 1곳).
+  "PASSAGE_VARIANT",
+  "PASSAGE_TRANSFORM",
+  "PASSAGE_AUTHORING",
+  "EXAM_ANALYSIS",
+  "EXAM_ANALYSIS_BOOST",
+  "EXAM_STUDENT_REPORT",
+  "WEBTOON_PANEL",
+  "SIMILAR_EXAM_GENERATION",
 ]);
 
 export function isSuperAdmin(

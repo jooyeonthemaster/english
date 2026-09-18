@@ -316,12 +316,16 @@ export function addSourceApiCost(
 export function toCostBucket(bucket: BucketAccumulator): CostBucket {
   const totalCostKrw = bucket.variableCostKrw + bucket.fixedCostKrw;
   const profitKrw = bucket.revenueKrw - totalCostKrw;
-  const marginPercent = bucket.revenueKrw > 0 ? (profitKrw / bucket.revenueKrw) * 100 : 0;
+  // 환불일 차감(D1)으로 순매출이 0 이하가 되는 날이 있다(실측 2026-06-10 −19,800).
+  // 그때 마진율은 정의되지 않는다 — 0% 로 뭉개면 손실 옆에 「마진 0.0%」가 붙는다.
+  const marginPercent =
+    bucket.revenueKrw > 0 ? (profitKrw / bucket.revenueKrw) * 100 : null;
 
   return {
     key: bucket.key,
     label: bucket.label,
     revenueKrw: Math.round(bucket.revenueKrw),
+    refundKrw: Math.round(bucket.refundKrw),
     variableCostKrw: Math.round(bucket.variableCostKrw),
     fixedCostKrw: Math.round(bucket.fixedCostKrw),
     totalCostKrw: Math.round(totalCostKrw),
@@ -338,6 +342,7 @@ export function toTotals(rows: CostBucket[]): OperationsCostDashboard["totals"] 
   const total = rows.reduce(
     (sum, row) => ({
       revenueKrw: sum.revenueKrw + row.revenueKrw,
+      refundKrw: sum.refundKrw + row.refundKrw,
       variableCostKrw: sum.variableCostKrw + row.variableCostKrw,
       fixedCostKrw: sum.fixedCostKrw + row.fixedCostKrw,
       totalCostKrw: sum.totalCostKrw + row.totalCostKrw,
@@ -350,6 +355,7 @@ export function toTotals(rows: CostBucket[]): OperationsCostDashboard["totals"] 
     }),
     {
       revenueKrw: 0,
+      refundKrw: 0,
       variableCostKrw: 0,
       fixedCostKrw: 0,
       totalCostKrw: 0,
@@ -365,7 +371,7 @@ export function toTotals(rows: CostBucket[]): OperationsCostDashboard["totals"] 
   return {
     ...total,
     marginPercent:
-      total.revenueKrw > 0 ? (total.profitKrw / total.revenueKrw) * 100 : 0,
+      total.revenueKrw > 0 ? (total.profitKrw / total.revenueKrw) * 100 : null,
   };
 }
 export function totalsToCostBucket(
@@ -376,6 +382,7 @@ export function totalsToCostBucket(
     key: "summary",
     label,
     revenueKrw: totals.revenueKrw,
+    refundKrw: totals.refundKrw,
     variableCostKrw: totals.variableCostKrw,
     fixedCostKrw: totals.fixedCostKrw,
     totalCostKrw: totals.totalCostKrw,
@@ -393,11 +400,12 @@ export function emptyCostBucket(): CostBucket {
     key: "",
     label: "",
     revenueKrw: 0,
+    refundKrw: 0,
     variableCostKrw: 0,
     fixedCostKrw: 0,
     totalCostKrw: 0,
     profitKrw: 0,
-    marginPercent: 0,
+    marginPercent: null,
     apiCalls: 0,
     unpricedCalls: 0,
     inputTokens: 0,

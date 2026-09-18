@@ -4,6 +4,8 @@ import { GlobalBusinessFooter } from "@/components/legal/global-business-footer"
 import { Toaster } from "@/components/ui/sonner";
 import { Providers } from "@/providers/session-provider";
 import { JsonLd } from "@/components/seo/json-ld";
+import { SiteAnalytics } from "@/components/analytics/site-analytics";
+import { MarketingPixels } from "@/components/analytics/marketing-pixels";
 import { SITE } from "@/lib/seo/config";
 import {
   organizationSchema,
@@ -109,6 +111,8 @@ export default function RootLayout({
           <GlobalBusinessFooter />
         </Providers>
         <Toaster position="top-center" richColors />
+        <SiteAnalytics />
+        <MarketingPixels />
       </body>
     </html>
   );

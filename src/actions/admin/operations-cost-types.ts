@@ -9,12 +9,16 @@ export interface OperationsCostOptions {
 export interface CostBucket {
   key: string;
   label: string;
+  /** 순매출 = 결제일 gross − 환불일 환불(D1). 환불이 결제보다 큰 날은 음수가 된다. */
   revenueKrw: number;
+  /** 이 버킷에서 차감된 충전 환불액(표시용 · revenueKrw 에 이미 반영됨) */
+  refundKrw: number;
   variableCostKrw: number;
   fixedCostKrw: number;
   totalCostKrw: number;
   profitKrw: number;
-  marginPercent: number;
+  /** 마진율(%). 순매출이 0 이하면 정의되지 않으므로 null(화면은 「—」) */
+  marginPercent: number | null;
   apiCalls: number;
   unpricedCalls: number;
   inputTokens: number;
@@ -104,11 +108,12 @@ export interface OperationsCostDashboard {
   };
   totals: {
     revenueKrw: number;
+    refundKrw: number;
     variableCostKrw: number;
     fixedCostKrw: number;
     totalCostKrw: number;
     profitKrw: number;
-    marginPercent: number;
+    marginPercent: number | null;
     apiCalls: number;
     unpricedCalls: number;
     inputTokens: number;
@@ -212,6 +217,7 @@ export type BucketAccumulator = {
   key: string;
   label: string;
   revenueKrw: number;
+  refundKrw: number;
   variableCostKrw: number;
   fixedCostKrw: number;
   apiCalls: number;

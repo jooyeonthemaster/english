@@ -102,14 +102,47 @@ export interface MarginTierCell {
   marginPct: number | null;
 }
 
+/**
+ * 판매가 기준 단가 1행.
+ *  - pack: DB 충전 상품(정가). 최근 90일 결제 완료 표본이 충분하면 실판매 단가로 마진 계산.
+ *  - blended: 최근 90일 전체 결제의 가중 평균 단가(결제액 합 ÷ 지급 크레딧 합).
+ */
+export interface MarginTier {
+  key: string;
+  kind: "pack" | "blended";
+  label: string;
+  /** pack: 상품 크레딧 · blended: 90일 지급 크레딧 합 */
+  credits: number;
+  /** pack: 정가 · blended: 90일 결제액 합 */
+  price: number;
+  /** 정가 크레딧당(원, 반올림 전). blended 는 null */
+  listPerCredit: number | null;
+  /** 90일 실판매 크레딧당(원, 반올림 전). 결제 0건이면 null */
+  realizedPerCredit: number | null;
+  realizedCount: number;
+  /** 마진 계산에 실제로 쓴 크레딧당 단가(원, 반올림 전 — 표시는 화면에서 소수 1자리) */
+  perCredit: number;
+  basis: "realized" | "list";
+}
+
 export interface FeatureMarginRow {
   operationType: OperationType;
   label: string;
   note: string | null;
+  /** 상수 크레딧(CREDIT_COSTS) — 판매가 계산에 쓰는 값 */
   credits: number;
+  /**
+   * 같은 기간 실청구 평균 크레딧 = Σ|CONSUMPTION| ÷ 소모 건수.
+   * 최소 청구(EXAM_ANALYSIS 15C)·costOverride·부분환불 때문에 상수와 달라진다 —
+   * 판매가는 상수 기준이므로 이 값과 다르면 화면에 함께 표기한다. 표본 0이면 null.
+   */
+  realizedCreditsPerAction: number | null;
+  /** 실청구 표본(소모 거래 건수) */
+  actionCount: number;
   costKrw: number;
   costUsd: number;
   costSource: "actual" | "estimate";
+  /** 원가 표본 — API 호출 1행 단위(액션 1건과 1:1 이 아니다) */
   sampleCount: number;
   planSensitive: boolean;
   sell: MarginTierCell[];
@@ -118,8 +151,96 @@ export interface FeatureMarginRow {
 export interface FeatureMarginAnalysis {
   fxRate: UsdKrwRateInfo;
   generatedAt: string;
-  tiers: { label: string; credits: number; price: number; perCredit: number }[];
+  tiers: MarginTier[];
+  /** 정가 출처 — DB 충전 상품(db) · 상품 없음 폴백(code: TOP_UP_PACKS) */
+  listPriceSource: "db" | "code";
+  /** 실판매 단가 표본 기간 [start, end) ISO · 표본 기준 건수 */
+  realizedWindow: { start: string; end: string; days: number; minPackSample: number; minBlendedSample: number };
   features: FeatureMarginRow[];
+}
+
+// 실판매 단가 표본 — 최근 90일 결제 완료(COMPLETED) 충전. 표본이 부족하면 정가 폴백.
+const REALIZED_WINDOW_DAYS = 90;
+const MIN_PACK_SAMPLE = 5;
+const MIN_BLENDED_SAMPLE = 10;
+const round1 = (n: number) => Math.round(n * 10) / 10;
+const num = (v: unknown) => (v == null ? 0 : Number(v));
+
+async function loadPriceTiers(anchor: Date): Promise<{
+  tiers: MarginTier[];
+  listPriceSource: "db" | "code";
+  window: { start: Date; end: Date };
+}> {
+  const window = {
+    start: new Date(anchor.getTime() - REALIZED_WINDOW_DAYS * 86_400_000),
+    end: anchor,
+  };
+  const [products, realizedRows] = await Promise.all([
+    prisma.creditTopUpProduct.findMany({
+      where: { isActive: true },
+      orderBy: [{ sortOrder: "asc" }, { creditAmount: "asc" }],
+      select: { code: true, name: true, creditAmount: true, basePrice: true },
+    }),
+    // 상품 코드는 결제 시점 customData.productCode(프로모션 보너스가 붙어도 코드 유지).
+    prisma.$queryRaw<Record<string, unknown>[]>(Prisma.sql`
+      SELECT COALESCE("customData"->>'productCode', '') AS code,
+        COUNT(*)::int AS n,
+        SUM(COALESCE("paidAmount", "price"))::bigint AS paid,
+        SUM("creditAmount")::bigint AS credits
+      FROM "credit_top_ups"
+      WHERE "status" = 'COMPLETED'
+        AND COALESCE("paidAt", "completedAt") >= ${window.start}
+        AND COALESCE("paidAt", "completedAt") < ${window.end}
+      GROUP BY 1
+    `),
+  ]);
+  const listPriceSource: "db" | "code" = products.length > 0 ? "db" : "code";
+  const packs = products.length > 0
+    ? products.map((p) => ({ code: p.code, label: p.name, credits: p.creditAmount, price: p.basePrice }))
+    : TOP_UP_PACKS.map((p) => ({ code: `CREDIT_${p.credits}`, label: p.label, credits: p.credits, price: p.price }));
+
+  const realized = new Map(
+    realizedRows.map((r) => [String(r.code ?? ""), { n: num(r.n), paid: num(r.paid), credits: num(r.credits) }]),
+  );
+  const tiers: MarginTier[] = packs.map((pack) => {
+    const r = realized.get(pack.code);
+    const listPerCredit = pack.price / pack.credits;
+    const realizedPerCredit = r && r.credits > 0 ? r.paid / r.credits : null;
+    const useRealized = realizedPerCredit != null && (r?.n ?? 0) >= MIN_PACK_SAMPLE;
+    return {
+      key: pack.code,
+      kind: "pack",
+      label: pack.label,
+      credits: pack.credits,
+      price: pack.price,
+      listPerCredit,
+      realizedPerCredit,
+      realizedCount: r?.n ?? 0,
+      perCredit: useRealized && realizedPerCredit != null ? realizedPerCredit : listPerCredit,
+      basis: useRealized ? "realized" : "list",
+    };
+  });
+
+  const total = Array.from(realized.values()).reduce(
+    (acc, r) => ({ n: acc.n + r.n, paid: acc.paid + r.paid, credits: acc.credits + r.credits }),
+    { n: 0, paid: 0, credits: 0 },
+  );
+  if (total.n >= MIN_BLENDED_SAMPLE && total.credits > 0) {
+    const perCredit = total.paid / total.credits;
+    tiers.push({
+      key: "REALIZED_BLENDED",
+      kind: "blended",
+      label: "실판매 평균",
+      credits: total.credits,
+      price: total.paid,
+      listPerCredit: null,
+      realizedPerCredit: perCredit,
+      realizedCount: total.n,
+      perCredit,
+      basis: "realized",
+    });
+  }
+  return { tiers, listPriceSource, window };
 }
 
 interface OpAggregate {
@@ -127,6 +248,12 @@ interface OpAggregate {
   n_priced: number;
   avg_krw: number | null;
   avg_usd: number | null;
+}
+
+interface OpConsumption {
+  op: string;
+  actions: number;
+  credits: number;
 }
 
 export async function getFeatureMarginAnalysis(
@@ -137,7 +264,13 @@ export async function getFeatureMarginAnalysis(
   const rangeFilter = range
     ? Prisma.sql`AND "usageAt" >= ${range.start} AND "usageAt" < ${range.end}`
     : Prisma.empty;
-  const [rawRows, fxRate] = await Promise.all([
+  // 실판매 단가 표본은 선택 기간 종료 시점(미래면 지금)까지의 최근 90일.
+  const anchor = new Date(Math.min(range?.end.getTime() ?? Date.now(), Date.now()));
+  // 실청구 크레딧은 크레딧 거래(createdAt) 기준 — 원가 쪽 usageAt 과 같은 구간.
+  const consumptionRangeFilter = range
+    ? Prisma.sql`AND "createdAt" >= ${range.start} AND "createdAt" < ${range.end}`
+    : Prisma.empty;
+  const [rawRows, consumptionRows, fxRate, priceTiers] = await Promise.all([
     prisma.$queryRaw<OpAggregate[]>(Prisma.sql`
       SELECT "operationType" AS op,
         COUNT(*) FILTER (WHERE "pricingSource" <> 'MISSING' AND "costKrw" > 0)::int AS n_priced,
@@ -148,8 +281,18 @@ export async function getFeatureMarginAnalysis(
       ${rangeFilter}
       GROUP BY "operationType"
     `),
+    prisma.$queryRaw<OpConsumption[]>(Prisma.sql`
+      SELECT "operationType" AS op,
+        COUNT(*)::int AS actions,
+        SUM(ABS("amount"))::int AS credits
+      FROM "credit_transactions"
+      WHERE "type" = 'CONSUMPTION' AND "operationType" IS NOT NULL
+      ${consumptionRangeFilter}
+      GROUP BY "operationType"
+    `),
     // 선택 기간의 기준일(전일 종가) 환율. 미지정 시 오늘 기준.
     getUsdKrwRate(displayDate ?? kstDateString(new Date())),
+    loadPriceTiers(anchor),
   ]);
 
   const byOp = new Map<string, OpAggregate>();
@@ -162,12 +305,16 @@ export async function getFeatureMarginAnalysis(
     });
   }
 
-  const tiers = TOP_UP_PACKS.map((pack) => ({
-    label: pack.label,
-    credits: pack.credits,
-    price: pack.price,
-    perCredit: pack.price / pack.credits,
-  }));
+  const consumptionByOp = new Map<string, OpConsumption>();
+  for (const row of consumptionRows) {
+    consumptionByOp.set(row.op, {
+      op: row.op,
+      actions: Number(row.actions) || 0,
+      credits: Number(row.credits) || 0,
+    });
+  }
+
+  const { tiers } = priceTiers;
 
   const features: FeatureMarginRow[] = FEATURE_ORDER.map((op) => {
     const credits = CREDIT_COSTS[op];
@@ -194,19 +341,22 @@ export async function getFeatureMarginAnalysis(
       const price = Math.round(tier.perCredit * credits);
       const marginPct =
         price > 0 ? Math.round(((price - costKrw) / price) * 1000) / 10 : null;
-      return {
-        label: tier.label,
-        perCredit: Math.round(tier.perCredit * 10) / 10,
-        price,
-        marginPct,
-      };
+      return { label: tier.key, perCredit: round1(tier.perCredit), price, marginPct };
     });
+
+    const consumption = consumptionByOp.get(op);
+    const realizedCreditsPerAction =
+      consumption && consumption.actions > 0
+        ? consumption.credits / consumption.actions
+        : null;
 
     return {
       operationType: op,
       label: OPERATION_LABELS[op],
       note: FEATURE_NOTE[op] ?? null,
       credits,
+      realizedCreditsPerAction,
+      actionCount: consumption?.actions ?? 0,
       costKrw,
       costUsd,
       costSource,
@@ -219,12 +369,15 @@ export async function getFeatureMarginAnalysis(
   return {
     fxRate,
     generatedAt: new Date().toISOString(),
-    tiers: tiers.map((t) => ({
-      label: t.label,
-      credits: t.credits,
-      price: t.price,
-      perCredit: Math.round(t.perCredit * 10) / 10,
-    })),
+    tiers,
+    listPriceSource: priceTiers.listPriceSource,
+    realizedWindow: {
+      start: priceTiers.window.start.toISOString(),
+      end: priceTiers.window.end.toISOString(),
+      days: REALIZED_WINDOW_DAYS,
+      minPackSample: MIN_PACK_SAMPLE,
+      minBlendedSample: MIN_BLENDED_SAMPLE,
+    },
     features,
   };
 }

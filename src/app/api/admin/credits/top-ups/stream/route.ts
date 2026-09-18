@@ -21,11 +21,13 @@ export async function GET(request: NextRequest) {
         try {
           const [topUps, stats] = await Promise.all([
             getAdminCreditTopUps(50),
-            getAdminCreditTopUpStats(),
+            // 3초 틱 — 전체 기간·최근 7일 집계는 60초 캐시로 대신한다(틱당 쿼리 4개: 목록 1 + 통계 3).
+            getAdminCreditTopUpStats({ allowCache: true }),
           ]);
-          const signature = topUps
+          // 통계 카드는 목록이 그대로여도 바뀐다(60분 경과로 진행 중→미완료, KST 자정) → 시그니처에 포함.
+          const signature = `${topUps
             .map((item) => `${item.id}:${item.status}:${item.updatedAt?.toISOString()}`)
-            .join("|");
+            .join("|")}#${JSON.stringify(stats)}`;
           if (signature === lastSignature) return;
           lastSignature = signature;
           controller.enqueue(

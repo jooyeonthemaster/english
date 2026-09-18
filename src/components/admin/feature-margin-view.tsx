@@ -1,5 +1,5 @@
 import { Coins, Info } from "lucide-react";
-import type { FeatureMarginAnalysis } from "@/actions/admin/feature-margin";
+import type { FeatureMarginAnalysis, FeatureMarginRow, MarginTier } from "@/actions/admin/feature-margin";
 import { Badge } from "@/components/ui/badge";
 import {
   Table,
@@ -16,6 +16,25 @@ function formatBadgeDate(dateStr: string) {
   return match ? `${match[2]}.${match[3]}` : dateStr;
 }
 
+/** ISO → KST MM.DD */
+function kstMonthDay(iso: string) {
+  const d = new Date(new Date(iso).getTime() + 9 * 60 * 60 * 1000);
+  return `${String(d.getUTCMonth() + 1).padStart(2, "0")}.${String(d.getUTCDate()).padStart(2, "0")}`;
+}
+
+const perCreditText = (n: number | null) =>
+  n == null ? "—" : `${formatNumber(Math.round(n * 10) / 10)}원`;
+
+/** 실청구 평균 크레딧이 상수와 의미 있게 다를 때만 표기할 문자열(아니면 null) */
+const MIN_REALIZED_ACTIONS = 20;
+function realizedGap(feature: FeatureMarginRow): string | null {
+  const realized = feature.realizedCreditsPerAction;
+  if (realized == null || feature.actionCount < MIN_REALIZED_ACTIONS) return null;
+  const rounded = Math.round(realized * 10) / 10;
+  if (Math.abs(rounded - feature.credits) < 0.1) return null;
+  return formatNumber(rounded);
+}
+
 function marginToneClass(pct: number | null): string {
   if (pct === null) return "text-gray-400";
   if (pct >= 70) return "text-emerald-600";
@@ -23,20 +42,40 @@ function marginToneClass(pct: number | null): string {
   return "text-rose-600";
 }
 
+function BasisBadge({ tier }: { tier: MarginTier }) {
+  return tier.basis === "realized" ? (
+    <Badge className="border-0 bg-blue-50 px-1.5 py-0 text-[10px] font-semibold text-blue-700">
+      실판매
+    </Badge>
+  ) : (
+    <Badge className="border-0 bg-gray-100 px-1.5 py-0 text-[10px] font-semibold text-gray-500">
+      정가
+    </Badge>
+  );
+}
+
 export function FeatureMarginView({ data }: { data: FeatureMarginAnalysis }) {
   const estimateCount = data.features.filter((f) => f.costSource === "estimate").length;
+  const win = data.realizedWindow;
+  const windowLabel = `최근 ${win.days}일(${kstMonthDay(win.start)}~${kstMonthDay(win.end)})`;
+  const packs = data.tiers.filter((t) => t.kind === "pack");
+  const blended = data.tiers.find((t) => t.kind === "blended") ?? null;
 
   return (
     <div className="space-y-6">
       <div className="flex items-start gap-3 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-[13px] text-sky-800">
         <Info className="mt-0.5 size-4 shrink-0" strokeWidth={1.8} />
-        <div>
+        <div className="min-w-0">
           <p className="font-semibold">기능별 원가 대비 판매가(마진) 분석</p>
           <p className="mt-1 text-sky-700">
-            원가는 AI 호출 단가만 반영(고정 인프라 제외). 판매가 = 기능 크레딧 × 팩별 크레딧 단가.
+            원가는 AI 호출 1회 평균(고정 인프라 제외). 판매가 = 기능의 상수 크레딧 ×
+            크레딧당 단가 — 상수 크레딧 기준이라 최소 청구·부분환불이 있는 기능은 실청구와
+            다를 수 있습니다(다른 기능은 「실청구 평균」을 함께 표기).
+            단가는 {windowLabel} 결제 완료 건의 실판매 단가(결제액 ÷ 지급 크레딧, 프로모션 보너스
+            반영)이고, 팩별 결제가 {win.minPackSample}건 미만이면{" "}
+            {data.listPriceSource === "db" ? "충전 상품 정가" : "기본 팩 정가"}를 씁니다.
             {estimateCount > 0 &&
-              ` ${estimateCount}개 기능은 실사용 기록 전이라 추정치 사용.`}{" "}
-            실측 기록이 쌓이면 자동 갱신됩니다.
+              ` ${estimateCount}개 기능은 실사용 기록 전이라 원가 추정치 사용.`}
           </p>
           <div className="mt-2">
             <Badge
@@ -54,37 +93,78 @@ export function FeatureMarginView({ data }: { data: FeatureMarginAnalysis }) {
 
       {/* 크레딧 팩 단가 */}
       <section className="rounded-xl border border-gray-100 bg-white">
-        <div className="flex items-center justify-between border-b border-gray-50 px-5 py-4">
-          <div>
-            <h2 className="text-[14px] font-semibold text-gray-800">크레딧 팩 단가</h2>
+        <div className="flex items-center justify-between gap-3 border-b border-gray-50 px-5 py-4">
+          <div className="min-w-0">
+            <h2 className="text-[14px] font-semibold text-gray-800">크레딧 단가 기준</h2>
             <p className="mt-1 text-[12px] text-gray-400">
-              팩별 크레딧 1개당 판매 단가 — 판매가 계산 기준
+              정가({data.listPriceSource === "db" ? "충전 상품 DB" : "기본 팩"}) · {windowLabel} 실판매 단가 — 표시된 기준으로 마진 계산
             </p>
           </div>
-          <Coins className="size-4 text-gray-400" strokeWidth={1.8} />
+          <Coins className="size-4 shrink-0 text-gray-400" strokeWidth={1.8} />
         </div>
         <div className="overflow-x-auto">
-          <Table className="min-w-[360px]">
+          <Table className="min-w-[560px]">
             <TableHeader>
               <TableRow className="hover:bg-transparent">
-                <TableHead className="h-9 min-w-[120px] pl-5 text-[12px] font-medium text-gray-400">팩</TableHead>
+                <TableHead className="h-9 min-w-[110px] pl-5 text-[12px] font-medium text-gray-400">팩</TableHead>
                 <TableHead className="h-9 text-right text-[12px] font-medium text-gray-400">크레딧</TableHead>
-                <TableHead className="h-9 text-right text-[12px] font-medium text-gray-400">가격</TableHead>
-                <TableHead className="h-9 pr-5 text-right text-[12px] font-medium text-gray-400">크레딧당</TableHead>
+                <TableHead className="h-9 text-right text-[12px] font-medium text-gray-400">정가</TableHead>
+                <TableHead className="h-9 text-right text-[12px] font-medium text-gray-400">정가 크레딧당</TableHead>
+                <TableHead className="h-9 text-right text-[12px] font-medium text-gray-400">실판매 크레딧당</TableHead>
+                <TableHead className="h-9 pr-5 text-right text-[12px] font-medium text-gray-400">마진 계산 단가</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {data.tiers.map((tier) => (
-                <TableRow key={tier.label} className="hover:bg-gray-50/50">
+              {packs.map((tier) => (
+                <TableRow key={tier.key} className="hover:bg-gray-50/50">
                   <TableCell className="pl-5 text-[13px] font-medium text-gray-800">{tier.label}</TableCell>
-                  <TableCell className="text-right text-[13px] text-gray-600">{formatNumber(tier.credits)}C</TableCell>
-                  <TableCell className="text-right text-[13px] text-gray-600">{formatCurrency(tier.price)}</TableCell>
-                  <TableCell className="pr-5 text-right text-[13px] font-semibold text-gray-900">{tier.perCredit}원</TableCell>
+                  <TableCell className="text-right text-[13px] tabular-nums text-gray-600">{formatNumber(tier.credits)}C</TableCell>
+                  <TableCell className="text-right text-[13px] tabular-nums text-gray-600">{formatCurrency(tier.price)}</TableCell>
+                  <TableCell className="text-right text-[13px] tabular-nums text-gray-600">{perCreditText(tier.listPerCredit)}</TableCell>
+                  <TableCell className="whitespace-nowrap text-right text-[13px] tabular-nums text-gray-600">
+                    {perCreditText(tier.realizedPerCredit)}
+                    <span className="ml-1 text-[11px] text-gray-400">{formatNumber(tier.realizedCount)}건</span>
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap pr-5 text-right">
+                    <span className="inline-flex items-center gap-1.5 text-[13px] font-semibold tabular-nums text-gray-900">
+                      <BasisBadge tier={tier} />
+                      {perCreditText(tier.perCredit)}
+                    </span>
+                  </TableCell>
                 </TableRow>
               ))}
+              {blended && (
+                <TableRow className="bg-blue-50/40 hover:bg-blue-50/60">
+                  <TableCell className="pl-5 text-[13px] font-medium text-blue-800">실판매 평균(전 팩)</TableCell>
+                  {/* 팩 행의 「크레딧·정가」와 단위가 다르다(90일 합계) — 같은 열에 두지 않고 아래 보조문구로 옮긴다. */}
+                  <TableCell className="text-right text-[13px] text-gray-400">—</TableCell>
+                  <TableCell className="text-right text-[13px] text-gray-400">—</TableCell>
+                  <TableCell className="text-right text-[13px] text-gray-400">—</TableCell>
+                  <TableCell className="whitespace-nowrap text-right text-[13px] tabular-nums text-gray-600">
+                    {perCreditText(blended.realizedPerCredit)}
+                    <span className="ml-1 block text-[11px] text-gray-400">
+                      {formatNumber(blended.realizedCount)}건 ·{" "}
+                      {formatNumber(blended.price)}원 ÷ {formatNumber(blended.credits)}C
+                    </span>
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap pr-5 text-right">
+                    <span className="inline-flex items-center gap-1.5 text-[13px] font-semibold tabular-nums text-gray-900">
+                      <BasisBadge tier={blended} />
+                      {perCreditText(blended.perCredit)}
+                    </span>
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </div>
+        <p className="border-t border-gray-50 px-5 py-3 text-[11px] leading-5 text-gray-400">
+          실판매 크레딧당 = 해당 상품 결제액 합 ÷ 실제 지급 크레딧 합(보너스 포함). 결제 {win.minPackSample}건 이상이면
+          실판매, 미만이면 정가로 마진을 계산합니다. 실판매 평균은 모든 팩 결제의 가중 평균이며 결제{" "}
+          {win.minBlendedSample}건 이상일 때만 표시합니다(크레딧·정가 열은 팩 1개 단위라
+          기간 합계인 실판매 평균 행에는 값이 없습니다 — 합계는 그 행 보조문구 참조).
+          환불된 결제는 제외.
+        </p>
       </section>
 
       {/* 기능별 마진 */}
@@ -92,19 +172,24 @@ export function FeatureMarginView({ data }: { data: FeatureMarginAnalysis }) {
         <div className="border-b border-gray-50 px-5 py-4">
           <h2 className="text-[14px] font-semibold text-gray-800">기능별 원가 · 판매가 · 마진</h2>
           <p className="mt-1 text-[12px] text-gray-400">
-            각 팩 셀: 상단 판매가 / 하단 마진율. 마진율 색상 — 초록 ≥70% · 노랑 40~70% · 빨강 &lt;40%
+            각 단가 셀: 상단 판매가 / 하단 마진율. 마진율 색상 — 초록 ≥70% · 노랑 40~70% · 빨강 &lt;40%.
+            원가는 API 호출 1회 평균이고 판매가는 액션 1건 기준이라, 1액션이 여러 번 호출하는
+            기능은 마진율이 실제보다 높게 보입니다.
           </p>
         </div>
         <div className="overflow-x-auto">
-          <Table className="min-w-[640px]">
+          <Table className="min-w-[720px]">
             <TableHeader>
               <TableRow className="hover:bg-transparent">
                 <TableHead className="h-9 min-w-[150px] pl-5 text-[12px] font-medium text-gray-400">기능</TableHead>
                 <TableHead className="h-9 text-right text-[12px] font-medium text-gray-400">크레딧</TableHead>
                 <TableHead className="h-9 text-right text-[12px] font-medium text-gray-400">원가</TableHead>
                 {data.tiers.map((tier) => (
-                  <TableHead key={tier.label} className="h-9 text-right text-[12px] font-medium text-gray-400">
-                    {tier.label}
+                  <TableHead key={tier.key} className="h-auto py-2 text-right text-[12px] font-medium text-gray-400">
+                    <span className="block whitespace-nowrap">{tier.label}</span>
+                    <span className="block whitespace-nowrap text-[10px] font-normal text-gray-400">
+                      {tier.basis === "realized" ? "실판매" : "정가"} {perCreditText(tier.perCredit)}/C
+                    </span>
                   </TableHead>
                 ))}
               </TableRow>
@@ -125,15 +210,23 @@ export function FeatureMarginView({ data }: { data: FeatureMarginAnalysis }) {
                       <p className="mt-0.5 text-[11px] font-normal text-gray-400">{feature.note}</p>
                     )}
                   </TableCell>
-                  <TableCell className="text-right text-[13px] text-gray-600">
+                  <TableCell className="whitespace-nowrap text-right text-[13px] text-gray-600">
                     {feature.credits === 0 ? (
                       <span className="text-emerald-600">무료</span>
                     ) : (
                       `${feature.credits}C`
                     )}
+                    {realizedGap(feature) && (
+                      <span
+                        className="mt-0.5 block text-[11px] font-normal text-amber-600"
+                        title={`같은 기간 실청구 ${formatNumber(feature.actionCount)}건 평균 — 최소 청구·묶음 청구·부분환불·단가 변경으로 상수(${feature.credits}C)와 다를 수 있습니다. 판매가·마진은 상수 기준입니다.`}
+                      >
+                        실청구 평균 {realizedGap(feature)}C
+                      </span>
+                    )}
                   </TableCell>
                   <TableCell className="whitespace-nowrap text-right">
-                    <p className="text-[13px] font-semibold text-gray-900">{formatCurrency(feature.costKrw)}</p>
+                    <p className="text-[13px] font-semibold tabular-nums text-gray-900">{formatCurrency(feature.costKrw)}</p>
                     <p className="mt-0.5 text-[11px] font-normal text-gray-400">
                       {feature.costSource === "actual" ? (
                         <>실측 {formatNumber(feature.sampleCount)}건</>
@@ -144,7 +237,7 @@ export function FeatureMarginView({ data }: { data: FeatureMarginAnalysis }) {
                   </TableCell>
                   {feature.sell.map((cell) => (
                     <TableCell key={cell.label} className="whitespace-nowrap text-right">
-                      <p className="text-[13px] font-medium text-gray-800">
+                      <p className="text-[13px] font-medium tabular-nums text-gray-800">
                         {feature.credits === 0 ? "—" : formatCurrency(cell.price)}
                       </p>
                       <p className={cn("mt-0.5 text-[11px] font-semibold", marginToneClass(cell.marginPct))}>

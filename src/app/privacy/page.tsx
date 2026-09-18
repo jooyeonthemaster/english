@@ -1,6 +1,11 @@
 import { LandingHeader } from "@/components/landing/landing-header";
+import {
+  BrowserCookieGuide,
+  ThirdPartyAnalyticsTools,
+} from "@/components/legal/privacy-analytics-notice";
 import type { Metadata } from "next";
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { BUSINESS_INFO } from "@/lib/legal/business-info";
 import {
@@ -18,17 +23,45 @@ export const metadata: Metadata = {
   title: "개인정보처리방침",
   alternates: { canonical: "/privacy" },
   description:
-    "SMOAT의 개인정보 수집, 이용, 보관, 위탁, 결제 및 환불 처리 기준을 안내합니다.",
+    "SMOAT의 개인정보 수집, 이용, 보관, 위탁, 결제 및 환불 처리, 쿠키·행태정보 처리 기준을 안내합니다.",
 };
 
-const UPDATED_AT = "2026년 6월 9일";
+/** 공고일 = 방침 개정을 안내한 날, 시행일 = 개정 내용이 적용되는 날(13항). */
+const ANNOUNCED_AT = "2026년 9월 18일";
+const EFFECTIVE_AT = "2026년 10월 2일";
 
-const PRIVACY_SECTIONS = [
+type PolicyRevision = { effectiveAt: string; announcedAt?: string; summary: string };
+
+/** 개정 이력 — 최신 순. */
+const REVISION_HISTORY: PolicyRevision[] = [
+  {
+    effectiveAt: EFFECTIVE_AT,
+    announcedAt: ANNOUNCED_AT,
+    summary:
+      "쿠키 등 자동 수집 장치와 행태정보의 수집·이용 및 거부(10항), 외부 분석·광고 도구 및 국외 이전(11항)을 신설했습니다. 이에 맞추어 1·2·5·6항에 방문 분석 관련 내용을 보탰고, 기존 10항(개인정보 보호책임자)과 11항(방침 변경)은 12항·13항으로 번호가 바뀌었습니다.",
+  },
+  {
+    effectiveAt: "2026년 6월 9일",
+    summary: "직전 개인정보처리방침(방문 분석·외부 분석 도구 관련 조항 없음).",
+  },
+];
+
+type PrivacySection = {
+  /** 다른 화면에서 링크할 수 있는 앵커(/privacy#id) */
+  id?: string;
+  title: string;
+  body: string[];
+  /** 본문 목록 아래에 붙는 보조 블록(표·안내) */
+  extra?: ReactNode;
+};
+
+const PRIVACY_SECTIONS: PrivacySection[] = [
   {
     title: "1. 개인정보 처리 목적",
     body: [
       "회사는 회원 가입, 본인 식별, 학원 계정 운영, 서비스 제공, 고객지원, 결제 및 환불 처리, 부정 이용 방지, 법령상 의무 이행을 위해 개인정보를 처리합니다.",
       "AI 문제 생성, 학습지 생성, 텍스트 추출 등 서비스 기능 제공을 위해 회원이 입력하거나 업로드한 자료와 사용 로그를 처리할 수 있습니다.",
+      "서비스 개선, 방문·가입 유입 경로 분석, 광고 성과 측정을 위해 웹사이트 방문·이용 기록(행태정보)을 처리할 수 있습니다(10항·11항 참고).",
       SUBSCRIPTION_BILLING_ENABLED
         ? "결제 내역은 구독 갱신, 크레딧 지급, 결제 검증, 환불 처리, 세무·회계 증빙, 분쟁 대응, 부정 결제 탐지를 위해 보관·이용합니다."
         : "결제 내역은 크레딧 지급, 결제 검증, 환불 처리, 세무·회계 증빙, 분쟁 대응, 부정 결제 탐지를 위해 보관·이용합니다.",
@@ -45,6 +78,7 @@ const PRIVACY_SECTIONS = [
       "계정 정보: 이름, 이메일, 전화번호, 소속 학원, 직책 또는 역할, 로그인 식별자",
       "학원 정보: 학원명, 주소, 사업자등록번호, 담당자 연락처, 서비스 이용 계약 및 운영에 필요한 정보",
       "서비스 이용 정보: 접속 로그, 기기 및 브라우저 정보, IP 주소, 쿠키, 이용 기능, 크레딧 사용 내역, 생성·분석 요청 기록",
+      "방문 분석 정보: 방문자 식별자(무작위 값), 방문 페이지와 유입 경로, 기기·브라우저 정보, 접속 지역 추정값(국가·시도·도시), 체류 시간·스크롤·클릭 이벤트 등(10항 참고)",
       SUBSCRIPTION_BILLING_ENABLED
         ? "결제 정보: 결제금액, 결제수단, 결제일시, 주문명, 구독 이용 기간 및 다음 갱신일, 포트원 결제 ID, PG 거래 ID, 빌링키 식별 정보, 결제 상태, 영수증 URL, 취소·환불 내역"
         : "결제 정보: 결제금액, 결제수단, 결제일시, 주문명, 포트원 결제 ID, PG 거래 ID, 결제 상태, 영수증 URL, 취소·환불 내역",
@@ -107,6 +141,7 @@ const PRIVACY_SECTIONS = [
       "계약 또는 청약철회 등에 관한 기록은 5년, 대금 결제 및 크레딧 지급에 관한 기록은 5년, 소비자 불만 또는 분쟁 처리에 관한 기록은 3년 동안 보관합니다.",
       "환불계좌 정보는 환불 처리 완료 후 원칙적으로 지체 없이 파기합니다. 다만 환불 분쟁, 회계 증빙, 법령상 보관 의무가 있는 경우 해당 목적에 필요한 기간 동안 분리 보관합니다.",
       "서비스 이용 로그와 보안 로그는 부정 이용 방지, 장애 대응, 보안 점검을 위해 최대 1년 동안 보관 후 파기 또는 익명화합니다. 법령상 별도 보관 의무가 있는 접속 기록은 해당 법정 기간을 따릅니다.",
+      "방문 분석 기록(행태정보)은 수집일로부터 최대 1년 동안 보관 후 파기 또는 익명화하며, 방문자 식별 쿠키(smoat_vid)는 마지막 방문일로부터 2년이 지나면 만료됩니다.",
       "AI 기능 처리 과정에서 생성된 입력·출력 기록은 서비스 제공, 품질 개선, 장애 대응, 고객지원에 필요한 범위에서 보관하며, 회원 요청 또는 계약 종료 시 관계 법령과 내부 정책에 따라 삭제 또는 비식별 처리합니다.",
     ],
   },
@@ -115,6 +150,7 @@ const PRIVACY_SECTIONS = [
     body: [
       "회사는 정보주체의 동의, 법령상 의무, 수사기관의 적법한 요청 등 관계 법령에서 허용하는 경우를 제외하고 개인정보를 제3자에게 제공하지 않습니다.",
       `결제 처리 과정에서 포트원 및 ${PAYMENT_PG_NAME}가 처리하는 정보는 결제 대행 및 정산 목적의 위탁 처리이며, 회사는 결제와 환불에 필요한 최소 정보를 연동합니다.`,
+      "외부 분석·광고 도구 사업자가 이용자의 브라우저에서 행태정보를 직접 수집하는 사항과 그에 따른 국외 이전은 11항에서 안내합니다.",
     ],
   },
   {
@@ -144,7 +180,37 @@ const PRIVACY_SECTIONS = [
     ],
   },
   {
-    title: "10. 개인정보 보호책임자 및 문의",
+    id: "behavioral-data",
+    title: "10. 쿠키 등 자동 수집 장치와 행태정보의 수집·이용 및 거부",
+    body: [
+      "회사는 서비스 개선과 유입 경로 분석을 위해 이용자가 SMOAT 웹사이트를 방문·이용한 기록(행태정보)을 자동으로 수집합니다. 로그인하지 않은 방문은 이름·이메일·연락처 없이 브라우저에 부여한 무작위 식별자로만 구분합니다.",
+      "수집 대상 화면: 서비스 소개·요금 안내 등 공개 화면뿐 아니라 학생·학부모용 화면(단어 훈련 포함), 시험 응시·리포트 공유 링크 화면을 포함한 모든 서비스 화면에서 수집합니다(회사 관리자 화면은 수집하지 않습니다). 다만 학생·학부모용 화면의 방문 기록은 학생의 이름·연락처 등 개인정보와 연결하지 않으며, 그 화면에서는 11항의 외부 분석·광고 도구를 사용하지 않습니다.",
+      "수집 항목: 방문 페이지 경로(주소에 포함된 접근 토큰은 가림 처리)·페이지 제목·직전 페이지, 유입 경로(이전 사이트의 도메인·경로, UTM 등 캠페인·광고 클릭 식별 파라미터), 기기 종류·운영체제·브라우저와 버전·인앱 브라우저 여부, 화면 크기·언어·시간대, 접속 IP 주소로 추정한 국가·시도·도시, 방문 시각·체류 시간·스크롤 비율, 버튼·외부 링크·파일 다운로드 클릭 이벤트, 가입·결제 완료 여부",
+      "IP 주소 원문, 유입 사이트 주소에 포함된 검색어 등 쿼리 문자열, 허용된 캠페인 파라미터 외의 주소 파라미터(이메일·토큰 등)는 방문 분석 기록에 저장하지 않으며, 민감정보는 수집하지 않습니다.",
+      "수집 방법: 웹사이트 화면에 포함된 스크립트가 방문·이용 시 기록을 자동으로 전송합니다. 방문자 식별자는 쿠키(smoat_vid, 마지막 방문일로부터 2년간 유지)와 브라우저 저장소(localStorage의 smoat_vid)에, 방문(세션) 정보는 브라우저 저장소(localStorage의 smoat_ses)에 저장합니다. 수집을 거부하면 거부 상태를 쿠키(smoat_analytics_optout, 2년간 유지)에 기억하고, 외부 도구를 사용하는 경우 같은 전환이 중복 전송되지 않도록 탭 저장소(sessionStorage의 smoat_px_conv)에 전송 여부를 기록합니다. 캠페인용 링크(/go/…)를 클릭하면 서버가 유입 도메인·기기 종류·운영체제·인앱 브라우저 여부·국가 및 시도를 기록합니다.",
+      "원장·강사 등 학원 계정으로 로그인하면 해당 브라우저의 방문 기록(로그인 이전 방문 포함)이 학원 및 계정 식별자와 연결되며, 이 경우 해당 기록은 서비스 이용 정보로서 개인정보로 처리합니다. 법적 근거는 개인정보 보호법 제15조 제1항 제6호(개인정보처리자의 정당한 이익)이며, 이용 목적은 계약한 서비스의 제공과 이용 현황 확인, 고객지원, 부정 이용 방지입니다. 연결을 원하지 않으면 아래 거부 방법으로 수집을 거부할 수 있고, 거부하면 로그인한 뒤에도 방문 기록이 수집되거나 계정과 연결되지 않습니다.",
+      "이용 목적: 서비스 화면 개선과 이용 통계, 방문·가입 유입 경로(검색·SNS·광고·공유 링크 등) 분석, 광고·마케팅 성과 측정",
+      "보유 기간: 방문 분석 기록은 수집일로부터 최대 1년 동안 보관한 뒤 파기 또는 익명화합니다(5항).",
+      "거부 방법 ① 아래 「방문 분석 거부」 버튼을 누르면 이 브라우저에서 방문 분석과 11항의 외부 분석·광고 도구가 실행되지 않습니다(거부 상태는 쿠키 smoat_analytics_optout에 2년간 기억되며, 쿠키를 삭제하면 초기화됩니다). ② 브라우저의 Global Privacy Control(GPC) 신호를 켜도 같은 효과가 적용됩니다. ③ 브라우저 설정에서 SMOAT 사이트의 쿠키와 사이트 데이터 저장을 모두 차단해도 수집이 실행되지 않습니다.",
+      "저장된 쿠키·사이트 데이터를 삭제하기만 하면 수집은 계속되고 이전 방문 기록과의 연결만 끊어집니다(다음 방문에 새 식별자가 만들어집니다). 거부하더라도 SMOAT 서비스 이용에는 제한이 없으나, 모든 쿠키를 차단하면 로그인 등 일부 서비스 이용이 어려울 수 있습니다.",
+    ],
+    extra: <BrowserCookieGuide />,
+  },
+  {
+    id: "third-party-analytics",
+    title: "11. 외부 분석·광고 도구 및 국외 이전",
+    body: [
+      "회사는 이용 통계 분석, 광고 성과 측정 및 맞춤형 광고를 위해 아래 외부 분석·광고 도구 중 운영에 필요한 도구를 선택하여 사용할 수 있습니다. 도구를 사용하는 동안 각 사업자는 이용자의 브라우저에서 자체 쿠키·스크립트로 행태정보를 직접 수집합니다.",
+      "외부 도구는 서비스 소개·요금 안내 등 공개 화면, 회원가입·로그인 화면, 원장·강사용 화면에서만 사용합니다. 학생·학부모용 화면(단어 훈련 포함), 시험 응시·리포트 공유 링크 화면, 인증 처리 화면, 쿠폰·프로모션 화면에서는 외부 도구로 페이지 방문 정보를 전송하지 않으며, 만 14세 미만 아동의 행태정보를 맞춤형 광고 목적으로 이용하지 않습니다.",
+      "화면 재생·히트맵 도구(Microsoft Clarity)는 화면에 표시된 내용이 그대로 기록되므로, 학생의 이름·성적이 표시될 수 있는 원장·강사용 화면에서는 사용하지 않고 공개 화면과 회원가입·로그인 화면에서만 사용합니다.",
+      "회사가 외부 도구로 전송하는 전환 정보는 가입 완료 여부와 결제 완료 여부·결제 금액이며, 도구에 따라 결제 건 번호가 함께 전송됩니다.",
+      "국외 이전: Google LLC(미국), Meta Platforms, Inc.(미국), Microsoft Corporation(미국), TikTok Pte. Ltd.(싱가포르)의 도구를 사용하는 경우, 아래 표의 수집·전송 정보는 이용자가 해당 화면을 이용하는 시점에 정보통신망을 통해 각 사업자가 운영하는 국외 서버로 전송되어 저장·처리될 수 있습니다. 이전받는 자의 명칭과 연락처, 이전하는 항목, 이전 목적, 보유·이용 기간, 거부 방법은 아래 표에 도구별로 적었습니다.",
+      "거부 방법: 10항의 「방문 분석 거부」 버튼을 누르거나 브라우저의 Global Privacy Control(GPC)을 켜면 아래 외부 도구도 실행되지 않습니다. 맞춤형 광고만 따로 거부하려면 아래 각 사업자의 광고 설정 페이지를 이용하고, 웹브라우저 또는 모바일 기기에서 차단하려면 아래 표와 10항의 안내를 따르십시오. 거부하더라도 SMOAT 서비스 이용에는 제한이 없으나, 모든 쿠키를 차단하면 로그인 등 일부 기능 이용이 어려울 수 있습니다.",
+    ],
+    extra: <ThirdPartyAnalyticsTools />,
+  },
+  {
+    title: "12. 개인정보 보호책임자 및 문의",
     body: [
       "개인정보 보호책임자: SMOAT 운영팀",
       `이메일: ${BUSINESS_INFO.email}`,
@@ -152,11 +218,14 @@ const PRIVACY_SECTIONS = [
     ],
   },
   {
-    title: "11. 방침 변경",
+    id: "revision-history",
+    title: "13. 방침 변경",
     body: [
       "회사는 법령, 서비스, 위탁사, 결제수단, 개인정보 처리 방식 변경에 따라 본 개인정보처리방침을 개정할 수 있습니다.",
-      "중요한 변경 사항은 시행 전 서비스 화면 또는 공지사항을 통해 안내합니다.",
+      "중요한 변경 사항은 시행 전 서비스 화면 또는 공지사항을 통해 안내하며, 공고일과 시행일을 함께 표시합니다.",
+      `이번 개정은 ${ANNOUNCED_AT}에 공고하여 ${EFFECTIVE_AT}부터 시행하며, 10항의 방문 분석과 11항의 외부 분석·광고 도구는 시행일부터 사용합니다.`,
     ],
+    extra: <RevisionHistory />,
   },
 ];
 
@@ -193,13 +262,27 @@ export default function PrivacyPage() {
             SMOAT 개인정보처리방침
           </h1>
           <p className="mt-4 max-w-3xl text-[15px] leading-7 text-slate-600">
-            본 방침은 SMOAT가 서비스 제공, 크레딧 결제, 환불 처리, 고객지원
-            과정에서 개인정보를 어떻게 처리하고 보호하는지
+            본 방침은 SMOAT가 서비스 제공, 크레딧 결제, 환불 처리, 고객지원,
+            방문 분석 과정에서 개인정보와 행태정보를 어떻게 처리하고 보호하는지
             안내합니다.
           </p>
-          <p className="mt-5 text-[12px] font-medium text-slate-400">
-            최종 업데이트: {UPDATED_AT}
-          </p>
+          <div className="mt-5 space-y-1 text-[12px] font-medium text-slate-500">
+            <p>공고일: {ANNOUNCED_AT}</p>
+            <p>
+              시행일: {EFFECTIVE_AT}
+              <span className="ml-1 text-slate-400">
+                (시행일 전까지는 {REVISION_HISTORY[1].effectiveAt} 시행 방침이 적용됩니다)
+              </span>
+            </p>
+            <p className="pt-1 text-slate-400">
+              이번 개정 요약: 쿠키·행태정보의 수집과 거부 방법(10항), 외부 분석·광고 도구와 국외 이전(11항)을
+              신설했습니다. 전체 이력은{" "}
+              <Link href="#revision-history" className="underline underline-offset-2">
+                13항 개정 이력
+              </Link>
+              에서 확인할 수 있습니다.
+            </p>
+          </div>
         </section>
 
         <section className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -223,7 +306,8 @@ export default function PrivacyPage() {
           {PRIVACY_SECTIONS.map((section) => (
             <article
               key={section.title}
-              className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
+              id={section.id}
+              className="scroll-mt-24 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
             >
               <h2 className="text-[17px] font-bold text-slate-950">
                 {section.title}
@@ -239,6 +323,7 @@ export default function PrivacyPage() {
                   </li>
                 ))}
               </ul>
+              {section.extra}
             </article>
           ))}
         </section>
@@ -258,6 +343,24 @@ export default function PrivacyPage() {
 
       </div>
     </main>
+  );
+}
+
+function RevisionHistory() {
+  return (
+    <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
+      <h3 className="text-[13px] font-bold text-slate-800">개정 이력</h3>
+      <ul className="mt-2 space-y-2">
+        {REVISION_HISTORY.map((rev) => (
+          <li key={rev.effectiveAt} className="text-[13px] leading-6 text-slate-600">
+            <span className="font-semibold text-slate-800">{rev.effectiveAt} 시행</span>
+            {rev.announcedAt ? <span className="ml-1 text-slate-400">({rev.announcedAt} 공고)</span> : null}
+            <span className="mx-1 text-slate-300">·</span>
+            <span className="break-keep">{rev.summary}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 

@@ -6,7 +6,7 @@ import { requireAdminAuth } from "@/lib/auth-admin";
 import {
   TRANSACTION_TYPES,
   getOperationTypeLabel,
-  getTransactionTypeLabel,
+  getTransactionLabel,
 } from "@/lib/admin-members-labels";
 import { OPERATION_TYPE_ALLOWLIST, isSuperAdmin } from "./_shared";
 
@@ -122,7 +122,8 @@ export async function getMemberTransactions(
     items: slice.map((tx) => ({
       id: tx.id,
       type: tx.type,
-      typeLabel: getTransactionTypeLabel(tx.type),
+      // 행 단위 라벨은 referenceType 까지 본다(유료 충전 vs 무료 미션·쿠폰·추천 지급).
+      typeLabel: getTransactionLabel(tx.type, tx.referenceType),
       amount: tx.amount,
       balanceAfter: tx.balanceAfter,
       operationType: tx.operationType,

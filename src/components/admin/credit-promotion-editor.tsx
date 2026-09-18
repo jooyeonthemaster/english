@@ -29,6 +29,7 @@ import type {
   AdminPromotionView,
 } from "@/lib/credit-top-up-products";
 import { BannerTargetPicker } from "@/components/admin/banners/banner-target-picker";
+import { formatKstDateTimeShort } from "@/lib/admin-kst-format";
 import { cn } from "@/lib/utils";
 
 export type PromoAcademy = { academyId: string; name: string; slug: string };
@@ -58,14 +59,12 @@ function nowDatetimeLocal(offsetDays = 0): string {
   return local.toISOString().slice(0, 16);
 }
 
+/**
+ * 관리자 결제 화면 공용 시각 표기 — 「26.09.17 22:46」(KST 고정, 연도 포함).
+ * 이전 구현은 timeZone·year 가 없어 브라우저 로컬 시간대로 렌더됐다(Vercel 런타임 UTC → SSR 9시간 오차).
+ */
 export function formatDate(value: Date | string | null) {
-  if (!value) return "-";
-  return new Date(value).toLocaleString("ko-KR", {
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  return formatKstDateTimeShort(value);
 }
 
 /** 개별 프로모션 편집 폼(신규/기존 공용). bare=팝오버(모달) 안에서 테두리 없이 사용. */

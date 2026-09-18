@@ -1,6 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
+import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { requireAdminAuth } from "@/lib/auth-admin";
+import {
+  BANK_TRANSFER_PAY_METHOD,
+  getBankDepositConfig,
+  normalizeDepositorName,
+} from "@/lib/bank-deposit";
+
+/** 입금 대기 주문 목록 상한. 넘치면 화면이 「최근 N건만 표시(전체 M건)」로 알린다(F18). */
+const PENDING_ORDERS_LIMIT = 100;
 
 /**
  * List inbound bank deposit alerts for admin review, plus the pending
@@ -22,7 +31,25 @@ export async function GET(request: NextRequest) {
         ? { status }
         : {};
 
-  const [notifications, pendingOrders, statusCounts] = await Promise.all([
+  // 자동 매칭 시간창 — 매칭기(matchBankDeposit)·대시보드 「입금 대기」와 같은 출처
+  // (getBankDepositConfig: env BANK_DEPOSIT_MATCH_WINDOW_MINUTES, 기본 30분).
+  // 생성 후 이 시간이 지난 주문은 입금 알림이 와도 자동 매칭되지 않는다 → 「만료」 표시만(DB 상태는 그대로, D3).
+  const { matchWindowMinutes } = getBankDepositConfig();
+  const windowStart = new Date(Date.now() - matchWindowMinutes * 60_000);
+  const pendingWhere: Prisma.CreditTopUpWhereInput = {
+    status: "WAITING_FOR_DEPOSIT",
+    paymentMethod: BANK_TRANSFER_PAY_METHOD,
+  };
+
+  // 이미 처리가 끝났는데 어느 주문에도 연결되지 않은 입금(수동지급 / 주문 링크 없는 지급 완료).
+  // 같은 금액·입금자명의 입금 대기 주문에 이 입금을 다시 연결하면 크레딧 재지급 + 매출 이중집계가 난다
+  // → 행에 경고만 붙인다(A5-2. 서버 차단 여부는 D4 로 보류, 실행 흐름 무변경).
+  const settledWhere: Prisma.BankDepositNotificationWhereInput = {
+    status: { in: ["MANUAL_GRANT", "MATCHED"] },
+    matchedTopUpId: null,
+  };
+
+  const [notifications, pendingOrders, pendingTotal, pendingActive, statusCounts, settledUnlinked] = await Promise.all([
     prisma.bankDepositNotification.findMany({
       where,
       orderBy: { receivedAt: "desc" },
@@ -38,9 +65,9 @@ export async function GET(request: NextRequest) {
       },
     }),
     prisma.creditTopUp.findMany({
-      where: { status: "WAITING_FOR_DEPOSIT", paymentMethod: "BANK_TRANSFER" },
+      where: pendingWhere,
       orderBy: { createdAt: "desc" },
-      take: 100,
+      take: PENDING_ORDERS_LIMIT,
       select: {
         id: true,
         price: true,
@@ -50,11 +77,34 @@ export async function GET(request: NextRequest) {
         academy: { select: { name: true } },
       },
     }),
+    prisma.creditTopUp.count({ where: pendingWhere }),
+    prisma.creditTopUp.count({ where: { ...pendingWhere, createdAt: { gte: windowStart } } }),
     prisma.bankDepositNotification.groupBy({
       by: ["status"],
       _count: { _all: true },
     }),
+    prisma.bankDepositNotification.findMany({
+      where: settledWhere,
+      orderBy: { receivedAt: "desc" },
+      select: {
+        id: true,
+        amount: true,
+        depositorName: true,
+        status: true,
+        receivedAt: true,
+      },
+    }),
   ]);
+
+  // 금액 + 정규화 입금자명이 모두 같을 때만 경고한다(매칭기 normalizeDepositorName 과 같은 규칙).
+  // 다른 주문에 이미 연결된 MATCHED 는 제외 — 그 입금은 자기 주문을 소비했으므로 재지급 위험이 아니다.
+  const settledByKey = new Map<string, { status: string; receivedAt: string }>();
+  for (const n of settledUnlinked) {
+    const key = `${n.amount}|${normalizeDepositorName(n.depositorName)}`;
+    if (!settledByKey.has(key)) {
+      settledByKey.set(key, { status: n.status, receivedAt: n.receivedAt.toISOString() });
+    }
+  }
 
   const counts: Record<string, number> = {};
   for (const row of statusCounts) counts[row.status] = row._count._all;
@@ -77,14 +127,29 @@ export async function GET(request: NextRequest) {
       occurredAt: n.occurredAt?.toISOString() ?? null,
       receivedAt: n.receivedAt.toISOString(),
     })),
-    pendingOrders: pendingOrders.map((o) => ({
-      id: o.id,
-      price: o.price,
-      creditAmount: o.creditAmount,
-      depositorName: readDepositorName(o.customData),
-      academyName: o.academy.name,
-      createdAt: o.createdAt.toISOString(),
-    })),
+    pendingOrders: pendingOrders.map((o) => {
+      const depositorName = readDepositorName(o.customData);
+      const normalized = normalizeDepositorName(depositorName);
+      return {
+        id: o.id,
+        price: o.price,
+        creditAmount: o.creditAmount,
+        depositorName,
+        academyName: o.academy.name,
+        createdAt: o.createdAt.toISOString(),
+        expired: o.createdAt < windowStart,
+        // 입금자명이 비어 있으면 금액만으로는 동일 입금이라 볼 수 없어 경고하지 않는다.
+        settledDeposit: normalized ? (settledByKey.get(`${o.price}|${normalized}`) ?? null) : null,
+      };
+    }),
+    // 목록은 최근 PENDING_ORDERS_LIMIT 건까지만 — 전체·진행 중 건수는 절단과 무관한 count
+    pendingOrdersMeta: {
+      total: pendingTotal,
+      active: pendingActive,
+      expired: Math.max(0, pendingTotal - pendingActive),
+      limit: PENDING_ORDERS_LIMIT,
+      matchWindowMinutes,
+    },
     counts,
   });
 }

@@ -33,8 +33,21 @@ const AI_CRAWLERS = [
   "CCBot",
 ] as const;
 
+/**
+ * 추적 링크 리다이렉터(/go/<slug>) 차단.
+ *
+ * 응답에 X-Robots-Tag: noindex 가 이미 있어 색인은 막히지만, 그건 크롤러가 **GET 한 뒤**의
+ * 이야기다. 외부 글·카페·블로그에 걸린 /go 주소를 크롤러가 계속 따라가면 클릭 원장
+ * (analytics_link_clicks)에 isBot=true 행이 365일치 쌓여 「클릭수」를 읽기 어렵게 만든다.
+ * robots 는 사람 클릭에는 아무 영향이 없다.
+ *
+ * 트레일링 슬래시 필수 — NOINDEX_PATH_PREFIXES 의 "/r/" 과 같은 이유다. "/go" 로 적으면
+ * 앞으로 생길 /goods·/google-… 같은 공개 경로까지 통째로 막는다.
+ */
+const TRACKED_LINK_PREFIX = "/go/";
+
 export default function robots(): MetadataRoute.Robots {
-  const disallow = [...NOINDEX_PATH_PREFIXES];
+  const disallow = [...NOINDEX_PATH_PREFIXES, TRACKED_LINK_PREFIX];
 
   return {
     rules: [
