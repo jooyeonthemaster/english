@@ -12,10 +12,7 @@ import {
   verifyBankNotifySignature,
   verifyBankNotifyToken,
 } from "@/lib/bank-deposit";
-import {
-  detectPgSettlementDepositor,
-  pgSettlementIgnoreNote,
-} from "@/lib/bank-deposit-settlement";
+import { classifyNonOrderDeposit } from "@/lib/bank-deposit-settlement";
 import {
   grantSeminarDeposit,
   matchSeminarDeposit,
@@ -184,19 +181,19 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "record failed" }, { status: 500 });
   }
 
-  // PG사 정산금은 주문 매칭 전에 무시 처리한다. 입금자명 없이 금액만으로 매칭이
-  // 폴백하면 정산금이 대기 주문에 잘못 붙을 수 있고, 관리자 검토 알림도 불필요하다.
-  const settlementDepositor = detectPgSettlementDepositor(depositorName);
-  if (settlementDepositor) {
+  // PG사 정산금·통장 이자(예금결산)는 주문 매칭 전에 무시 처리한다. 입금자명 없이
+  // 금액만으로 매칭이 폴백하면 대기 주문에 잘못 붙을 수 있고, 관리자 검토 알림도 불필요하다.
+  const nonOrder = classifyNonOrderDeposit(depositorName);
+  if (nonOrder) {
     await prisma.bankDepositNotification.update({
       where: { id: notification.id },
       data: {
         status: "IGNORED",
-        note: pgSettlementIgnoreNote(settlementDepositor),
+        note: nonOrder.note,
         processedAt: new Date(),
       },
     });
-    return NextResponse.json({ status: "IGNORED", reason: "PG_SETTLEMENT" });
+    return NextResponse.json({ status: "IGNORED", reason: nonOrder.reason });
   }
 
   const config = getBankDepositConfig();
