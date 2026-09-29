@@ -24,7 +24,19 @@ export interface EstimatedUnitPricing {
 //   (<200k input; >=200k input은 $4/$18), 3.1 Flash-Lite: $0.25/$1.50 (per 1M in/out)
 //   (model-config.ts 실측: flash 건당 $0.0103, flash-lite $0.0017 ↔ 위 단가와 일치)
 // - Google Document AI Enterprise OCR: $1.50 / 1,000 페이지 = $0.0015/page
-// - AtlasCloud gpt-image-2(웹툰): $0.008 / 이미지 (20% 할인 적용가; 크기·품질 무관 플랫)
+// - AtlasCloud nano-banana-2 / gpt-image-2(레거시 웹툰): $0.008 / 이미지 (20% 할인 적용가; 크기·품질 무관 플랫)
+// - OpenRouter GPT Image 2.5(웹툰 v2, 9:16 high 1장): Flare / Sunburst 아래 상수.
+//   프로세서가 응답의 usage.cost 를 RECORDED 로 먼저 기록하므로 실측이 빠진 행에만 쓰인다.
+
+/** 레거시(AtlasCloud) 웹툰 이미지 1장 — 모델·크기·품질 무관 플랫. */
+export const ATLASCLOUD_WEBTOON_IMAGE_ESTIMATE_USD = 0.008;
+// 26-09-30 벤치 실측(9:16 high, 864×1536): 두 모델 모두 usage.cost $0.0404~0.0414
+// (프롬프트 길이에 따라 입력 토큰분만 달라짐). medium $0.017 · xhigh $0.067 · max $0.138.
+/** openai/gpt-image-2.5-flare(일반) 9:16 high 1장 — 실측. */
+export const GPT_IMAGE_25_FLARE_ESTIMATE_USD = 0.042;
+/** openai/gpt-image-2.5-sunburst(프리미엄) 9:16 high 1장 — 실측(flare 와 같은 단가). */
+export const GPT_IMAGE_25_SUNBURST_ESTIMATE_USD = 0.042;
+
 export function resolveEstimatedPricing(
   provider: PlatformCostProvider,
   unitType: PlatformCostUnitType,
@@ -87,7 +99,16 @@ export function resolveEstimatedPricing(
   }
 
   if (unitType === "IMAGE" && provider === "ATLASCLOUD") {
-    return { inputUsdPer1M: null, outputUsdPer1M: null, unitUsd: 0.008 };
+    return { inputUsdPer1M: null, outputUsdPer1M: null, unitUsd: ATLASCLOUD_WEBTOON_IMAGE_ESTIMATE_USD };
+  }
+
+  // OpenRouter 이미지는 웹툰 v2(GPT Image 2.5)뿐이다. 등급표 밖의 id 는 0원(MISSING)으로
+  // 두지 않고 상위 등급(Sunburst) 단가로 보수 추정한다.
+  if (unitType === "IMAGE" && provider === "OPENROUTER") {
+    const unitUsd = lowerModel.includes("gpt-image-2.5-flare")
+      ? GPT_IMAGE_25_FLARE_ESTIMATE_USD
+      : GPT_IMAGE_25_SUNBURST_ESTIMATE_USD;
+    return { inputUsdPer1M: null, outputUsdPer1M: null, unitUsd };
   }
 
   return null;

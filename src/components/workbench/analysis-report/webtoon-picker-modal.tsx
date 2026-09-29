@@ -12,12 +12,6 @@ import {
   X,
 } from "lucide-react";
 import {
-  styleLabel,
-  languageLabel,
-  type WebtoonStyleId,
-  type WebtoonLanguageId,
-} from "@/app/(director)/director/workbench/webtoon/webtoon-page-types";
-import {
   DEFAULT_WEBTOON_IMAGE_PLAN,
   WEBTOON_IMAGE_PLANS,
 } from "@/lib/webtoon-models";
@@ -26,50 +20,25 @@ import {
   type WebtoonGenerateConfig,
 } from "@/components/webtoon/webtoon-generate-fields";
 import { CreditCostChip } from "@/components/credits/credit-cost-chip";
-
-interface WebtoonListItem {
-  id: string;
-  passageId: string;
-  style: WebtoonStyleId;
-  language: WebtoonLanguageId;
-  imageUrl: string | null;
-  editedImageUrl?: string | null;
-  status: string;
-  passage: { id: string; title: string };
-}
-
-/** 진행 중(생성/대기) 웹툰을 갤러리 상단에 자리표시자로 보여주기 위한 최소 행. */
-interface TrackedItem {
-  id: string;
-  status: "PENDING" | "GENERATING" | "FAILED" | "COMPLETED";
-  passageTitle: string;
-}
-
-/** Prefer the re-typeset export when the webtoon's text has been edited. */
-function pickWebtoonUrl(it: WebtoonListItem): string | null {
-  return it.editedImageUrl || it.imageUrl;
-}
-
-/** 선택 시점에 정확한 가로/세로 비율을 디코드해 읽는다(지연 로드 썸네일 의존 제거). */
-async function decodeRatio(url: string): Promise<number | undefined> {
-  try {
-    const img = new Image();
-    img.src = url;
-    await img.decode();
-    if (img.naturalWidth > 0) return img.naturalHeight / img.naturalWidth;
-  } catch {
-    /* ignore — 렌더러가 16/9 로 폴백 */
-  }
-  return undefined;
-}
+import { friendlyWebtoonError } from "@/lib/webtoon-errors";
+import { WebtoonPickerGallery } from "./webtoon-picker-modal-parts/webtoon-picker-gallery";
+import { useWebtoonTrackingPoll } from "./webtoon-picker-modal-parts/use-webtoon-tracking-poll";
+import {
+  LIST_ERROR_MESSAGE,
+  decodeRatio,
+  fetchActiveWebtoons,
+  fetchCompletedWebtoons,
+  isTrackingActive,
+  pickWebtoonUrl,
+  type TrackedItem,
+  type WebtoonListItem,
+} from "./webtoon-picker-modal-parts/webtoon-picker-utils";
 
 export interface WebtoonPick {
   imageUrl: string;
   webtoonId: string;
   ratio?: number;
 }
-
-const POLL_INTERVAL_MS = 2500;
 
 type View = "generate" | "gallery";
 
@@ -104,11 +73,14 @@ export function WebtoonPickerModal({
   onPick: (pick: WebtoonPick) => void;
 }) {
   const [view, setView] = useState<View>("generate");
-  // 사용자가 탭을 직접 만졌는지 — 초기 로드 완료 콜백의 자동 탭 선택(:224)이 로딩 중의
+  // 사용자가 탭을 직접 만졌는지 — 초기 로드 완료 콜백의 자동 탭 선택이 로딩 중의
   // 수동 탭 전환을 되엎는 레이스 봉인(실측: 보관함 클릭 직후 로드가 끝나며 생성 탭으로
   // 강제 복귀). 생성 발사·완료 토스트의 setView 는 의도된 항행이라 게이트 밖.
   const viewTouchedRef = useRef(false);
+  // 보관함 목록은 두 갈래 — 전체(최신 100건)와 이 지문 전용(서버 passageId 필터).
+  // "이 지문만"을 최신 100건에서 클라 필터하면 오래된 지문의 웹툰이 통째로 빠진다.
   const [items, setItems] = useState<WebtoonListItem[]>([]);
+  const [passageItems, setPassageItems] = useState<WebtoonListItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [onlyThisPassage, setOnlyThisPassage] = useState(Boolean(passageId));
@@ -123,47 +95,52 @@ export function WebtoonPickerModal({
   });
   const [submitting, setSubmitting] = useState(false);
   const [tracking, setTracking] = useState<TrackedItem[]>([]);
-  const trackingRef = useRef<TrackedItem[]>([]);
-  trackingRef.current = tracking;
-  const pollTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // 과목 스코프 — 국어 표면(subject=KOREAN)은 서버에 scope=KOREAN 을 넘겨 국어
   // 지문 웹툰만 받는다. 미전달(영어)은 서버 기본 스코프(국어 웹툰 제외)가 걸리므로
   // 그대로 둔다 — 어느 쪽도 반대 과목 웹툰이 갤러리에 섞이지 않는다.
   const scopeParam = subject === "KOREAN" ? "&scope=KOREAN" : "";
+  const passageParam = passageId
+    ? `&passageId=${encodeURIComponent(passageId)}`
+    : "";
+  // 국어 표면은 항상 이 지문 스코프로 고정(영어 지문 웹툰 비노출) — 토글도 숨긴다.
+  const forceThisPassageOnly = subject === "KOREAN" && Boolean(passageId);
+
+  // 보관함 두 목록을 함께 받는다. 국어 고정 스코프는 전체 목록을 쓰지 않으므로
+  // 받지 않는다(지문 본문이 실린 100행 절약). 어느 쪽이든 실패하면 throw.
+  const fetchGallery = useCallback(
+    () =>
+      Promise.all([
+        forceThisPassageOnly
+          ? Promise.resolve<WebtoonListItem[]>([])
+          : fetchCompletedWebtoons(scopeParam),
+        passageParam
+          ? fetchCompletedWebtoons(scopeParam + passageParam)
+          : Promise.resolve<WebtoonListItem[]>([]),
+      ]),
+    [forceThisPassageOnly, scopeParam, passageParam],
+  );
 
   const load = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(
-        `/api/webtoons/list?status=COMPLETED&limit=100${scopeParam}`,
-        {
-          credentials: "include",
-          cache: "no-store",
-        },
-      );
-      const data = (await res.json().catch(() => ({}))) as {
-        ok?: boolean;
-        items?: WebtoonListItem[];
-      };
-      if (!res.ok || !data.ok || !Array.isArray(data.items)) {
-        throw new Error("웹툰 목록을 불러오지 못했습니다.");
-      }
-      setItems(data.items.filter((it) => pickWebtoonUrl(it)));
+      const [all, mine] = await fetchGallery();
+      setItems(all);
+      setPassageItems(mine);
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "웹툰 목록을 불러오지 못했습니다.",
-      );
+      setError(err instanceof Error ? err.message : LIST_ERROR_MESSAGE);
     } finally {
       setLoading(false);
     }
-  }, [scopeParam]);
+  }, [fetchGallery]);
 
   // 모달이 열릴 때: 완료 목록을 불러오고, 완료본이 있으면 보관함을, 없으면 생성 탭을 연다.
   // 재마운트 후 진행 소실 → 중복 생성 차감 방지(E23 검수): 진행 중(PENDING/GENERATING)
   // 웹툰을 병행 조회해 tracking 에 되살린다 — 진행분이 안 보이면 같은 지문을 다시
-  // 생성해 크레딧이 이중 차감되기 때문. 실패해도 완료 목록 로드는 그대로(보조 조회).
+  // 생성해 크레딧이 이중 차감되기 때문. 진행 조회도 passageId 로 서버에서 좁혀, 학원
+  // 전체 일괄 생성으로 진행 행이 50건을 넘어도 이 지문 진행분을 놓치지 않는다.
+  // 진행 조회는 실패해도 완료 목록 로드는 그대로(보조 조회).
   useEffect(() => {
     if (!open) return;
     let alive = true;
@@ -171,31 +148,13 @@ export function WebtoonPickerModal({
     setError(null);
     void (async () => {
       try {
-        const [res, activeItems] = await Promise.all([
-          fetch(`/api/webtoons/list?status=COMPLETED&limit=100${scopeParam}`, {
-            credentials: "include",
-            cache: "no-store",
-          }),
-          fetch(`/api/webtoons/list?status=active&limit=50${scopeParam}`, {
-            credentials: "include",
-            cache: "no-store",
-          })
-            .then((r) => r.json())
-            .then((d: { ok?: boolean; items?: WebtoonListItem[] }) =>
-              d?.ok && Array.isArray(d.items) ? d.items : [],
-            )
-            .catch(() => [] as WebtoonListItem[]),
+        const [[all, mine], activeItems] = await Promise.all([
+          fetchGallery(),
+          fetchActiveWebtoons(scopeParam + passageParam),
         ]);
-        const data = (await res.json().catch(() => ({}))) as {
-          ok?: boolean;
-          items?: WebtoonListItem[];
-        };
         if (!alive) return;
-        if (!res.ok || !data.ok || !Array.isArray(data.items)) {
-          throw new Error("웹툰 목록을 불러오지 못했습니다.");
-        }
-        const list = data.items.filter((it) => pickWebtoonUrl(it));
-        setItems(list);
+        setItems(all);
+        setPassageItems(mine);
 
         // 이 지문의 진행 행을 tracking 으로 시드 — 기존 placeholder/폴링 기계가
         // 그대로 이어받는다. handleGenerate 가 이미 넣은 id 와 겹칠 수 있으므로
@@ -216,6 +175,7 @@ export function WebtoonPickerModal({
                 id: it.id,
                 status: it.status as TrackedItem["status"],
                 passageTitle: it.passage?.title ?? "웹툰",
+                plan: it.plan ?? null,
               }));
             return seeded.length > 0 ? [...seeded, ...prev] : prev;
           });
@@ -223,17 +183,11 @@ export function WebtoonPickerModal({
 
         // 진행분이 있으면 placeholder 가 보이는 보관함을 먼저 연다(진행 사실 인지 우선).
         // 단 로딩 중 사용자가 탭을 직접 골랐으면 그 선택이 이긴다(자동 선택은 초기값일 뿐).
-        const mine = passageId
-          ? list.some((it) => it.passageId === passageId)
-          : list.length > 0;
-        if (!viewTouchedRef.current) setView(mineActive.length > 0 || mine ? "gallery" : "generate");
+        const hasMine = passageId ? mine.length > 0 : all.length > 0;
+        if (!viewTouchedRef.current) setView(mineActive.length > 0 || hasMine ? "gallery" : "generate");
       } catch (err) {
         if (alive)
-          setError(
-            err instanceof Error
-              ? err.message
-              : "웹툰 목록을 불러오지 못했습니다.",
-          );
+          setError(err instanceof Error ? err.message : LIST_ERROR_MESSAGE);
       } finally {
         if (alive) setLoading(false);
       }
@@ -241,8 +195,8 @@ export function WebtoonPickerModal({
     return () => {
       alive = false;
     };
-    // passageId/과목 스코프 변화 시에도 다시 평가. load 는 useCallback 으로 안정적.
-  }, [open, passageId, scopeParam]);
+    // passageId/과목 스코프 변화 시에도 다시 평가(fetchGallery 가 둘 다 따라 바뀐다).
+  }, [open, passageId, scopeParam, passageParam, fetchGallery]);
 
   // Esc 로 닫기
   useEffect(() => {
@@ -254,100 +208,15 @@ export function WebtoonPickerModal({
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose]);
 
-  // 진행 중 웹툰 폴링 — 완료/실패 시 추적 목록에서 제거하고 갤러리를 새로고침한다.
-  useEffect(() => {
-    if (!open) return;
-    const active = tracking.filter(
-      (t) => t.status === "PENDING" || t.status === "GENERATING",
-    );
-    if (active.length === 0) {
-      if (pollTimer.current) {
-        clearTimeout(pollTimer.current);
-        pollTimer.current = null;
-      }
-      return;
-    }
-    if (pollTimer.current) return;
-
-    // 모달이 닫히거나(effect cleanup) 폴링이 진행되는 동안 닫히면, await 이후 tick 이
-    // 타이머를 재무장하거나 토스트/state 를 건드리지 않도록 cancelled 로 차단한다.
-    let cancelled = false;
-
-    const isActive = (t: TrackedItem) =>
-      t.status === "PENDING" || t.status === "GENERATING";
-
-    const tick = async () => {
-      pollTimer.current = null;
-      if (cancelled) return;
-      const ids = trackingRef.current.filter(isActive).map((t) => t.id);
-      if (ids.length === 0) return;
-      const results = await Promise.all(
-        ids.map((id) =>
-          fetch(`/api/webtoons/${id}`, { cache: "no-store" })
-            .then((r) => r.json())
-            .then((d) => (d?.ok ? (d.webtoon as { id: string; status: string }) : null))
-            .catch(() => null),
-        ),
-      );
-      if (cancelled) return;
-
-      const statusById = new Map(
-        results.filter(Boolean).map((w) => [w!.id, w!.status]),
-      );
-      const doneIds = new Set(
-        [...statusById].filter(([, s]) => s === "COMPLETED").map(([id]) => id),
-      );
-      const failedIds = new Set(
-        [...statusById].filter(([, s]) => s === "FAILED").map(([id]) => id),
-      );
-
-      // 완료본을 먼저 목록에 반영한 뒤 placeholder 를 제거해야 카드가 "잠깐 사라졌다"
-      // 다시 나타나는 깜빡임이 없다. (제거→로드 순서면 로드(약 0.6s) 동안 카드가 빈다)
-      if (doneIds.size > 0) {
-        await load();
-        if (cancelled) return;
-        toast.success("웹툰 생성이 완료되었습니다.");
-        setView("gallery");
-      }
-      if (failedIds.size > 0) {
-        toast.error("일부 웹툰 생성이 실패했습니다. 크레딧은 환불됩니다.");
-      }
-
-      // 상태가 실제로 바뀐 게 있을 때만 갱신(불필요한 매 틱 재렌더 방지). 해결된 항목 제거.
-      const changed =
-        doneIds.size > 0 ||
-        failedIds.size > 0 ||
-        trackingRef.current.some((t) => {
-          const s = statusById.get(t.id);
-          return !!s && s !== t.status;
-        });
-      if (changed) {
-        setTracking((prev) =>
-          prev
-            .map((t) => {
-              const s = statusById.get(t.id);
-              return s ? { ...t, status: s as TrackedItem["status"] } : t;
-            })
-            .filter(isActive),
-        );
-      }
-
-      const remaining = ids.filter(
-        (id) => !doneIds.has(id) && !failedIds.has(id),
-      );
-      if (!cancelled && remaining.length > 0) {
-        pollTimer.current = setTimeout(tick, POLL_INTERVAL_MS);
-      }
-    };
-    pollTimer.current = setTimeout(tick, POLL_INTERVAL_MS);
-    return () => {
-      cancelled = true;
-      if (pollTimer.current) {
-        clearTimeout(pollTimer.current);
-        pollTimer.current = null;
-      }
-    };
-  }, [open, tracking, load]);
+  // 진행 중 웹툰 폴링 — 완료 시 목록을 새로 받고 보관함 탭으로 옮긴다.
+  const showGallery = useCallback(() => setView("gallery"), []);
+  useWebtoonTrackingPoll({
+    open,
+    tracking,
+    setTracking,
+    reload: load,
+    onCompleted: showGallery,
+  });
 
   const handleGenerate = useCallback(async () => {
     if (submitting) return;
@@ -355,6 +224,7 @@ export function WebtoonPickerModal({
       toast.error("지문 정보를 찾을 수 없어 생성할 수 없습니다.");
       return;
     }
+    const submitted = config;
     setSubmitting(true);
     try {
       const res = await fetch("/api/ai/webtoon/generate", {
@@ -363,10 +233,10 @@ export function WebtoonPickerModal({
         credentials: "include",
         body: JSON.stringify({
           passageId,
-          plan: config.plan,
-          style: config.style,
-          language: config.language,
-          customPrompt: config.customPrompt,
+          plan: submitted.plan,
+          style: submitted.style,
+          language: submitted.language,
+          customPrompt: submitted.customPrompt,
         }),
       });
       const data = (await res.json().catch(() => ({}))) as {
@@ -395,7 +265,7 @@ export function WebtoonPickerModal({
       const queued = (data.queued ?? []).filter((q) => q.status !== "FAILED");
       const failed = (data.queued ?? []).filter((q) => q.status === "FAILED");
       if (failed.length > 0) {
-        toast.error(failed[0]?.error || "웹툰 생성 시작에 실패했습니다.");
+        toast.error(friendlyWebtoonError(failed[0]?.error ?? "dispatch error"));
       }
       if (queued.length > 0) {
         setTracking((prev) => [
@@ -403,13 +273,13 @@ export function WebtoonPickerModal({
             id: q.webtoonId,
             status: q.status,
             passageTitle: q.passageTitle,
+            plan: submitted.plan,
           })),
           ...prev,
         ]);
         setView("gallery");
         toast.message("웹툰 생성을 시작했습니다.", {
-          description:
-            "생성에는 약 3분이 걸려요. 이 창을 닫고 다른 작업을 계속하셔도 완료되면 보관함에 표시됩니다.",
+          description: `생성에는 ${WEBTOON_IMAGE_PLANS[submitted.plan].etaLabel} 정도 걸려요. 이 창을 닫고 다른 작업을 계속하셔도 완료되면 보관함에 표시됩니다.`,
         });
       }
     } catch (err) {
@@ -429,28 +299,35 @@ export function WebtoonPickerModal({
     [ratios, onPick],
   );
 
-  // 국어 표면은 항상 이 지문 스코프로 고정(영어 지문 웹툰 비노출) — 토글도 숨긴다.
-  const forceThisPassageOnly = subject === "KOREAN" && Boolean(passageId);
+  const handleRatio = useCallback((id: string, ratio: number) => {
+    setRatios((prev) => (prev[id] ? prev : { ...prev, [id]: ratio }));
+  }, []);
 
+  const goGenerate = useCallback(() => {
+    viewTouchedRef.current = true;
+    setView("generate");
+  }, []);
+
+  const scoped = forceThisPassageOnly || onlyThisPassage;
+
+  // 이 지문 스코프는 서버 필터 목록을 그대로(최신순), 전체 보기는 이 지문 것을 앞으로.
   const visible = useMemo(() => {
-    const scoped = forceThisPassageOnly || onlyThisPassage;
-    const list =
-      scoped && passageId
-        ? items.filter((it) => it.passageId === passageId)
-        : items;
-    return [...list].sort((a, b) => {
+    if (scoped && passageId) return passageItems;
+    return [...items].sort((a, b) => {
       const aMine = a.passageId === passageId ? 0 : 1;
       const bMine = b.passageId === passageId ? 0 : 1;
       return aMine - bMine;
     });
-  }, [items, onlyThisPassage, passageId, forceThisPassageOnly]);
+  }, [items, passageItems, scoped, passageId]);
 
-  const activeTracking = tracking.filter(
-    (t) => t.status === "PENDING" || t.status === "GENERATING",
-  );
+  const activeTracking = tracking.filter(isTrackingActive);
   // 국어 고정 스코프에서는 배지 수도 이 지문 것만 센다(숨긴 항목을 세면 어긋남).
   const galleryCount = forceThisPassageOnly ? visible.length : items.length;
-  const planCredits = WEBTOON_IMAGE_PLANS[config.plan].credits;
+  const planDef = WEBTOON_IMAGE_PLANS[config.plan];
+  // 진행 배너의 예상 시간 — 가장 최근 진행분의 등급 기준, 모르면 지금 고른 등급.
+  const trackingPlan =
+    activeTracking.find((t) => t.plan)?.plan ?? config.plan;
+  const trackingEta = WEBTOON_IMAGE_PLANS[trackingPlan].etaLabel;
 
   if (!open) return null;
 
@@ -498,10 +375,7 @@ export function WebtoonPickerModal({
           <div className="flex h-9 rounded-lg bg-slate-100 p-0.5">
             <button
               type="button"
-              onClick={() => {
-                viewTouchedRef.current = true;
-                setView("generate");
-              }}
+              onClick={goGenerate}
               className={`flex items-center gap-1.5 rounded-[6px] px-3 text-[12.5px] transition-all duration-150 ${
                 view === "generate"
                   ? "bg-white font-bold text-blue-700 shadow-sm"
@@ -570,6 +444,7 @@ export function WebtoonPickerModal({
                 value={config}
                 onChange={(patch) => setConfig((c) => ({ ...c, ...patch }))}
                 disabled={submitting}
+                koreanPassage={subject === "KOREAN"}
               />
             </div>
             <div className="shrink-0 border-t border-slate-100 px-6 py-4">
@@ -589,149 +464,32 @@ export function WebtoonPickerModal({
                     <Wand2 className="size-4" />
                     웹툰 생성
                     <CreditCostChip
-                      amount={planCredits}
+                      amount={planDef.credits}
                       className="ml-0.5 rounded-lg bg-white/20 px-2 py-0.5 text-[11px] text-white"
                     />
                   </>
                 )}
               </button>
               <p className="mt-2 text-center text-[11px] leading-relaxed text-slate-400">
-                생성에는 약 3분 정도 걸려요. 시작한 뒤 이 창을 닫고 다른 작업을
-                계속하셔도 완료되면 보관함에 표시됩니다.
+                생성에는 {planDef.etaLabel} 정도 걸려요. 시작한 뒤 이 창을 닫고
+                다른 작업을 계속하셔도 완료되면 보관함에 표시됩니다.
               </p>
             </div>
           </>
         ) : (
-          <div className="min-h-0 flex-1 overflow-auto px-6 py-5">
-            {loading && items.length === 0 && activeTracking.length === 0 ? (
-              <div className="flex h-48 items-center justify-center gap-2 text-slate-400">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                <span className="text-[13px]">웹툰을 불러오는 중...</span>
-              </div>
-            ) : error && visible.length === 0 && activeTracking.length === 0 ? (
-              // 보여줄 콘텐츠가 전혀 없을 때만 전체 에러 패널. 폴링 중 일시적 새로고침
-              // 실패가 진행 중/완료 썸네일을 가리지 않도록 한다(아래 인라인 배너로 표시).
-              <div className="flex h-48 flex-col items-center justify-center gap-2 text-center">
-                <p className="text-[12px] text-rose-600">{error}</p>
-                <button
-                  type="button"
-                  onClick={() => void load()}
-                  className="h-8 rounded-lg border border-slate-200 px-3 text-[12px] font-medium text-slate-600 hover:bg-slate-50"
-                >
-                  다시 시도
-                </button>
-              </div>
-            ) : visible.length === 0 && activeTracking.length === 0 ? (
-              <div className="flex h-48 flex-col items-center justify-center gap-1.5 text-center">
-                <ImageIcon className="h-6 w-6 text-slate-300" />
-                <p className="text-[13px] text-slate-400">
-                  {forceThisPassageOnly || onlyThisPassage
-                    ? "이 지문으로 생성한 완료된 웹툰이 없습니다."
-                    : "완료된 웹툰이 없습니다."}
-                </p>
-                <button
-                  type="button"
-                  onClick={() => {
-                viewTouchedRef.current = true;
-                setView("generate");
-              }}
-                  className="mt-1 inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-[12px] font-bold text-white hover:bg-blue-700"
-                >
-                  <Wand2 className="h-3.5 w-3.5" />
-                  지금 생성하기
-                </button>
-              </div>
-            ) : (
-              <>
-                {activeTracking.length > 0 ? (
-                  <div className="mb-3 flex items-center gap-2 rounded-lg border border-blue-200 bg-blue-50/70 px-3 py-2">
-                    <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin text-blue-600" />
-                    <span className="text-[11.5px] leading-relaxed text-blue-800">
-                      웹툰을 생성하는 중이에요 (약 3분). 이 창을 닫고 다른 작업을
-                      계속하셔도 완료되면 여기 보관함에 표시됩니다.
-                    </span>
-                  </div>
-                ) : null}
-                {error ? (
-                  <div className="mb-3 flex items-center justify-between gap-2 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2">
-                    <span className="text-[11.5px] text-rose-600">{error}</span>
-                    <button
-                      type="button"
-                      onClick={() => void load()}
-                      className="shrink-0 rounded-md border border-rose-200 bg-white px-2 py-1 text-[11px] font-semibold text-rose-600 hover:bg-rose-50"
-                    >
-                      다시 시도
-                    </button>
-                  </div>
-                ) : null}
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
-                  {/* 진행 중 자리표시자 */}
-                  {activeTracking.map((t) => (
-                  <div
-                    key={t.id}
-                    className="flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white"
-                  >
-                    <div className="flex aspect-[9/16] w-full flex-col items-center justify-center gap-2 bg-slate-50 text-slate-400">
-                      <Loader2 className="h-5 w-5 animate-spin text-blue-500" />
-                      <span className="text-[10.5px] font-semibold">생성 중…</span>
-                    </div>
-                    <div className="px-2.5 py-2">
-                      <p className="truncate text-[11.5px] font-semibold text-slate-700">
-                        {t.passageTitle || "웹툰"}
-                      </p>
-                      <p className="mt-0.5 text-[10px] text-slate-400">대기/생성 중</p>
-                    </div>
-                  </div>
-                ))}
-                {visible.map((it) => (
-                  <button
-                    key={it.id}
-                    type="button"
-                    onClick={() => void handlePick(it)}
-                    className="group flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white text-left transition-all hover:border-blue-300 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/30"
-                  >
-                    <div className="relative aspect-[9/16] w-full overflow-hidden bg-slate-100">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={pickWebtoonUrl(it) as string}
-                        alt={it.passage.title}
-                        loading="lazy"
-                        onLoad={(e) => {
-                          const img = e.currentTarget;
-                          if (img.naturalWidth > 0) {
-                            setRatios((prev) =>
-                              prev[it.id]
-                                ? prev
-                                : {
-                                    ...prev,
-                                    [it.id]: img.naturalHeight / img.naturalWidth,
-                                  },
-                            );
-                          }
-                        }}
-                        className="h-full w-full object-cover transition-transform group-hover:scale-[1.03]"
-                      />
-                      <span className="absolute left-1.5 top-1.5 rounded bg-slate-900/70 px-1.5 py-0.5 text-[9.5px] font-bold text-white">
-                        {styleLabel(it.style)}
-                      </span>
-                    </div>
-                    <div className="px-2.5 py-2">
-                      <p className="truncate text-[11.5px] font-semibold text-slate-700">
-                        {it.passage.title}
-                      </p>
-                      <p className="mt-0.5 truncate text-[10px] text-slate-400">
-                        {languageLabel(it.language)}
-                      </p>
-                      <p className="mt-0.5 text-[10px] font-semibold text-blue-600 opacity-0 transition-opacity group-hover:opacity-100">
-                        {pickLabel ?? "문서에 삽입 →"}
-                      </p>
-                    </div>
-                  </button>
-                ))}
-                </div>
-              </>
-            )}
-          </div>
+          <WebtoonPickerGallery
+            loading={loading}
+            error={error}
+            visible={visible}
+            activeTracking={activeTracking}
+            scoped={scoped}
+            etaLabel={trackingEta}
+            pickLabel={pickLabel}
+            onRetry={() => void load()}
+            onGoGenerate={goGenerate}
+            onPick={(it) => void handlePick(it)}
+            onRatio={handleRatio}
+          />
         )}
       </div>
     </div>,

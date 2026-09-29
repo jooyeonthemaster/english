@@ -12,7 +12,6 @@ import {
   useIsMobileViewport,
 } from "@/components/workbench/mobile-step-flow";
 import { triggerHintGlowWithin } from "@/lib/hint-glow";
-import { createWorkbenchPassage } from "@/actions/workbench";
 import { FormSection } from "@/components/workbench/passage-registration/sections/form-section";
 import { useTaskQueue } from "@/components/workbench/task-queue";
 import { usePassageLibrary } from "@/components/workbench/passage-registration/use-passage-library";
@@ -51,11 +50,16 @@ import {
   type WebtoonStyleId,
 } from "./webtoon-page-types";
 import { useWebtoonState } from "./use-webtoon-state";
+import { useWorkspacePassages } from "./use-workspace-passages";
 import {
   WebtoonInputStack,
   type WebtoonRowOptions,
 } from "./webtoon-input-stack";
 import { WebtoonLibraryClient } from "./library/library-page-client";
+import {
+  EMPTY_WEBTOON_STATUS_COUNTS,
+  type WebtoonStatusCounts,
+} from "./library/library-status-counts";
 import type { CollectionItem } from "@/components/workbench/shared/types";
 
 interface WebtoonPageClientProps {
@@ -164,22 +168,18 @@ export function WebtoonPageClient({
   // ─── 폼 접기 ───
   const [formCollapsed, setFormCollapsed] = useState(false);
 
-  // ─── 웹툰 큐 (DB 폴링) — 생성 트리거 + 상단 배지(생성 중·실패) 용도 ───
-  const { items: queue, handleBatchGenerate } = useWebtoonState({
-    academyId,
-    subjectScope,
-  });
+  // ─── 웹툰 생성 트리거 ───
+  const { handleBatchGenerate } = useWebtoonState();
 
-  const queueCounts = useMemo(
-    () => ({
-      generating: queue.filter(
-        (q) => q.status === "PENDING" || q.status === "GENERATING",
-      ).length,
-      done: queue.filter((q) => q.status === "COMPLETED").length,
-      error: queue.filter((q) => q.status === "FAILED").length,
-    }),
-    [queue],
+  // ─── 상단 배지(생성 중·실패)·모바일 '웹툰 확인' — 임베드된 보관함이 실제로
+  //     보여주는 목록 기준(삭제·재시도·폴링이 곧바로 반영된다). ───
+  const [queueCounts, setQueueCounts] = useState<WebtoonStatusCounts>(
+    EMPTY_WEBTOON_STATUS_COUNTS,
   );
+
+  // ─── 워크스페이스 행 → Passage 확보(재사용·수정본 저장·승격·신규 저장) ───
+  const { rememberBaselines, forgetRow, resolveRowPassage } =
+    useWorkspacePassages({ subjectScope, setRows });
 
   // ─── Intake (직접 입력 · 파일업로드 › 내 지문함 › 워크스페이스) ───
   const [intakeView, setIntakeView] = useState<IntakeView>("library");
@@ -318,6 +318,8 @@ export function WebtoonPageClient({
     const wasActive = prev.some((r) => !isPristineEmptyRow(r));
     const base = prev.length === 1 && isPristineEmptyRow(prev[0]) ? [] : prev;
     const next = [...base, ...incoming];
+    // 불러온 시점의 제목·본문을 기억 — 생성 시 교사 수정 여부를 가린다.
+    rememberBaselines(incoming);
     rowsRef.current = next;
     setRows(next);
     setSelectedIds(new Set());
@@ -329,7 +331,7 @@ export function WebtoonPageClient({
         : `지문 ${incoming.length}개를 워크스페이스에 담았어요.`) +
         " 화풍·언어를 설정해 웹툰을 생성하세요.",
     );
-  }, [passages, selectedIds, setSelectedIds]);
+  }, [passages, selectedIds, setSelectedIds, rememberBaselines]);
 
   // ── 수능·모평 기출 지문 → 내 지문함 일괄 등록 (문제생성과 동일 메커니즘) ──
   // 등록 후 목록 재조회 → 새 지문 선택 → 내 지문함(library) 뷰로 전환. 이어서 왼쪽
@@ -500,8 +502,10 @@ export function WebtoonPageClient({
     [passages],
   );
 
-  // ─── 웹툰 생성 액션: 지문 카드 1개 → Passage 저장(또는 재사용) → 웹툰 큐잉 ───
+  // ─── 웹툰 생성 액션: 지문 카드 1개 → Passage 확보 → 웹툰 큐잉 ───
   // 문제 생성 워크스페이스처럼 각 지문이 자기 설정(화풍·언어·지시)으로 따로 생성된다.
+  // Passage 확보(재사용·검수 전 자료 승격·수정본 새 저장·신규 저장)는
+  // useWorkspacePassages 가 맡는다.
   const handleGenerateRow = useCallback(
     async (
       localId: string,
@@ -524,56 +528,28 @@ export function WebtoonPageClient({
 
       try {
         const title = row.title.trim() || derivePastedTitle(text);
-        // 내 지문함에서 불러온 행은 이미 저장된 Passage 이므로 재사용한다.
-        let passageId = row.passageId;
-        if (!passageId) {
-          // 국어 라우트에서 워크스페이스에 직접 입력한 지문은 subject='KOREAN' 으로
-          // 저장돼야 한다 — 그래야 생성된 웹툰(passage.subject 기준 스코프)이 국어
-          // 보관함에 남고 영어 지문 목록에 새지 않는다. createWorkbenchPassage 는
-          // subject 를 받지 않으므로(passages 유닛 소유), 국어 생성 페이지와 동일한
-          // subject-aware 액션(createDirectInputPassageMaterial)을 쓴다. 영어(미전달)
-          // 경로는 기존 createWorkbenchPassage 그대로(source·draft 링크 보존, 무회귀).
-          if (subjectScope === "KOREAN") {
-            const { createDirectInputPassageMaterial } = await import(
-              "@/actions/workbench"
-            );
-            const result = await createDirectInputPassageMaterial({
-              title,
-              content: text,
-              subject: "KOREAN",
-            });
-            if (!result.success || !result.id) {
-              toast.error(result.error || "지문 등록에 실패했습니다.");
-              return false;
-            }
-            passageId = result.id;
-          } else {
-            const result = await createWorkbenchPassage({
-              title,
-              content: text,
-              source: row.source?.trim() || undefined,
-              sourceDraftId: row.sourceDraftId ?? undefined,
-              // 국어 웹툰 라우트 등록이면 Passage.subject="KOREAN" 태깅.
-              subject: subjectScope,
-            });
-            if (!result.success || !result.id) {
-              toast.error(result.error || "지문 등록에 실패했습니다.");
-              return false;
-            }
-            passageId = result.id;
-          }
-        }
+        const resolved = await resolveRowPassage(row, title, text);
+        if (!resolved) return false;
 
-        const queued = await handleBatchGenerate(
-          [{ id: passageId, title, content: text }],
+        const result = await handleBatchGenerate(
+          [{ id: resolved.passageId, title, content: text }],
           opts.style,
           opts.customPrompt,
           opts.language,
           opts.plan,
         );
-        // 큐잉이 성공했을 때만 이 행을 워크스페이스에서 비운다. 실패하면
-        // (네트워크/크레딧 부족 등) 작성한 지문을 보존해 바로 재시도할 수 있게 한다.
-        if (queued > 0) {
+        if (resolved.created || result.started > 0) void loadPassages();
+        // 서버가 웹툰 행을 만들었으면(디스패치 실패로 곧바로 FAILED 가 된 행 포함)
+        // 보관함·작업 목록을 새로고침해 실제 상태를 보여준다.
+        if (result.created > 0) {
+          triggerRefresh();
+          setWebtoonRefreshSignal((n) => n + 1);
+        }
+        // 실제로 생성이 시작됐을 때만 이 행을 워크스페이스에서 비운다. 실패하면
+        // (네트워크/크레딧 부족/디스패치 실패 등) 작성한 지문을 보존해 바로 재시도할
+        // 수 있게 한다 — 새로 저장한 지문 id 는 행에 실려 있어 재시도가 중복 저장하지 않는다.
+        if (result.started > 0) {
+          forgetRow(localId);
           const next = rowsRef.current.filter((r) => r.localId !== localId);
           rowsRef.current = next;
           setRows(next);
@@ -581,9 +557,6 @@ export function WebtoonPageClient({
             setWorkspaceOpen(false);
             setIntakeView("library");
           }
-          void loadPassages();
-          triggerRefresh();
-          setWebtoonRefreshSignal((n) => n + 1);
           return true;
         }
         return false;
@@ -598,7 +571,14 @@ export function WebtoonPageClient({
         setGenerating(false);
       }
     },
-    [generating, handleBatchGenerate, loadPassages, triggerRefresh, subjectScope],
+    [
+      generating,
+      handleBatchGenerate,
+      loadPassages,
+      triggerRefresh,
+      resolveRowPassage,
+      forgetRow,
+    ],
   );
 
   // ─── 유형이 담긴 모든 지문을 한 번에 웹툰 생성 (모바일 워크스페이스 스텝 CTA) ───
@@ -1086,6 +1066,7 @@ export function WebtoonPageClient({
                   // 모바일: 모달이 '즉시 생성' 대신 '유형 담기'로 동작(PC 무영향).
                   isMobile={isMobileViewport}
                   configuredRowIds={configuredRowIds}
+                  koreanPassage={subjectScope === "KOREAN"}
                   rowOptions={rowWebtoonOptions}
                   onSaveRowOptions={handleSaveRowOptions}
                 />
@@ -1214,6 +1195,7 @@ export function WebtoonPageClient({
               collectionMembership={webtoonCollectionMembership}
               subjectScope={subjectScope}
               refreshSignal={webtoonRefreshSignal}
+              onStatusCountsChange={setQueueCounts}
             />
           </section>
 

@@ -15,7 +15,10 @@ function resolveTaskQueueDefaultDomain(pathname: string): TaskScope {
   ) {
     return "extraction";
   }
-  if (pathname.startsWith("/director/workbench/webtoon")) {
+  if (
+    pathname.startsWith("/director/workbench/webtoon") ||
+    pathname.startsWith("/director/korean/webtoon")
+  ) {
     return "webtoon";
   }
   if (

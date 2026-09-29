@@ -38,6 +38,12 @@ export const WEBTOON_LANGUAGES = [
     description: "대사·나레이션 모두 한국어",
   },
   {
+    id: "KO_KEY",
+    label: "한국어 + 핵심 영어 표현",
+    short: "한+핵심영어",
+    description: "한국어 서술 속에 지문의 핵심 영어 표현을 그대로 끼워 넣기",
+  },
+  {
     id: "KO_EN",
     label: "한국어 + 영어 병기",
     short: "한+영",
@@ -76,6 +82,10 @@ export interface WebtoonRow {
   imageUrl: string | null;
   /** Re-typeset export from the in-browser 자막 편집기 (preferred for display when present). */
   editedImageUrl?: string | null;
+  /** Image tier derived from the stored model id (null = legacy row without a tier). */
+  plan?: "STANDARD" | "PREMIUM" | null;
+  /** True when the row carries a v2 storyboard (컷별 연출 노트 available). */
+  hasStoryboard?: boolean;
   errorMessage: string | null;
   createdAt: string;
   startedAt: string | null;

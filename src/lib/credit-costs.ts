@@ -29,8 +29,8 @@ export const CREDIT_COSTS = {
   PASSAGE_AUTHORING: 2,        // AI 지문 생성 — 자료+지시로 새 지문 1편(N편이면 2N, 실패 편수만 부분 환불). 자료 판독은 무료
 
   // Webtoon
-  WEBTOON_IMAGE: 5,            // 일반(STANDARD) — Gemini nano-banana-2 로 9:16 웹툰 이미지
-  WEBTOON_IMAGE_PREMIUM: 10,   // 프리미엄(PREMIUM) — GPT Image 2 로 9:16 웹툰 이미지
+  WEBTOON_IMAGE: 5,            // 일반(STANDARD) — 스토리보드 + GPT Image 2.5 Flare(OpenRouter)로 9:16 웹툰 1장
+  WEBTOON_IMAGE_PREMIUM: 10,   // 프리미엄(PREMIUM) — 스토리보드 + GPT Image 2.5 Sunburst(OpenRouter)로 9:16 웹툰 1장
   WEBTOON_EXAM_DOWNLOAD: 3,     // 검수 완료 기출 웹툰 다운로드 — 직접 생성 대비 절반 수준
 
   // Exam report (학생 시험 리포트)

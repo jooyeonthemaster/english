@@ -130,6 +130,41 @@ export async function uploadRemoteImageToWebtoonBucket(opts: {
   };
 }
 
+/**
+ * Upload generated image bytes for a user webtoon (OpenRouter returns base64,
+ * not a URL). Same deterministic path as the URL-based upload.
+ */
+export async function uploadImageBufferToWebtoonBucket(opts: {
+  imageBuffer: Buffer | Uint8Array;
+  academyId: string;
+  webtoonId: string;
+  contentType: "image/jpeg" | "image/png" | "image/webp";
+}): Promise<{ publicUrl: string; storagePath: string; contentType: string; bytes: number }> {
+  await ensureWebtoonBucket();
+
+  const bytes = opts.imageBuffer.byteLength;
+  const supabase = getServiceSupabase();
+  const path = webtoonStoragePath(opts.academyId, opts.webtoonId, opts.contentType);
+
+  const { error: uploadErr } = await supabase.storage
+    .from(WEBTOON_BUCKET)
+    .upload(path, opts.imageBuffer, {
+      contentType: opts.contentType,
+      upsert: true,
+      cacheControl: "public, max-age=31536000, immutable",
+    });
+  if (uploadErr) {
+    throw new Error(`Supabase upload failed: ${uploadErr.message}`);
+  }
+
+  const { data: pub } = supabase.storage.from(WEBTOON_BUCKET).getPublicUrl(path);
+  if (!pub?.publicUrl) {
+    throw new Error("Failed to compute Supabase public URL for webtoon");
+  }
+
+  return { publicUrl: pub.publicUrl, storagePath: path, contentType: opts.contentType, bytes };
+}
+
 export async function uploadRemoteImageToExamPassageWebtoonBucket(opts: {
   remoteUrl: string;
   assetId: string;

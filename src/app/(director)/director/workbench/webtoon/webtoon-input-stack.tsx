@@ -58,6 +58,8 @@ interface WebtoonInputStackProps {
   isMobile?: boolean;
   /** 유형이 담긴(설정 완료) 행 localId 집합 — 카드에 담김 배지를 표시한다. */
   configuredRowIds?: Set<string>;
+  /** 국어 워크스페이스 — 옵션 모달이 대사 언어 선택을 숨기고 한국어 안내를 보인다. */
+  koreanPassage?: boolean;
   /** 담긴 유형 요약(모바일 카드 배지용) — localId → 옵션. */
   rowOptions?: Record<string, WebtoonRowOptions>;
   /** 모바일: 이 지문에 유형을 담는다(생성하지 않음). */
@@ -92,6 +94,7 @@ export function WebtoonInputStack({
   onAddPassage,
   isMobile = false,
   configuredRowIds,
+  koreanPassage = false,
   rowOptions,
   onSaveRowOptions,
 }: WebtoonInputStackProps) {
@@ -285,6 +288,7 @@ export function WebtoonInputStack({
           customPrompt={customPrompt}
           setCustomPrompt={setCustomPrompt}
           confirmMode={isMobile ? "save" : "generate"}
+          koreanPassage={koreanPassage}
           onConfirm={() => {
             const opts = { plan, style, language, customPrompt };
             // 모바일: 즉시 생성하지 않고 이 지문에 유형을 담는다(하단 바에서 일괄 생성).

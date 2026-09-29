@@ -39,7 +39,6 @@ import {
   removeWebtoonsFromCollection,
 } from "@/actions/workbench";
 import {
-  DEFAULT_WEBTOON_LANGUAGE,
   WEBTOON_STYLES,
   type WebtoonRow,
   type WebtoonStatus,
@@ -47,6 +46,11 @@ import {
 } from "../webtoon-page-types";
 import { WebtoonQueueCard } from "../webtoon-queue-card";
 import { WebtoonTextEditor } from "../editor/webtoon-text-editor";
+import { useLibraryRetry } from "./use-library-retry";
+import {
+  useReportStatusCounts,
+  type WebtoonStatusCounts,
+} from "./library-status-counts";
 
 const PAGE_SIZE = 24;
 // API caps `limit` at 100; we pull every page so folder membership filtering
@@ -102,6 +106,9 @@ interface WebtoonLibraryClientProps {
   /** Height (px) of the host section header that sits above this component, so
    *  the embedded folder/toolbar can stick *below* it instead of at viewport 0. */
   stickyTopOffset?: number;
+  /** 보관함이 보여주는 목록의 상태별 개수(생성 중·완료·실패) — 호스트 헤더 배지용.
+   *  삭제·재시도·폴링이 곧바로 반영된다. 값이 바뀔 때만 호출된다. */
+  onStatusCountsChange?: (counts: WebtoonStatusCounts) => void;
 }
 
 export function WebtoonLibraryClient({
@@ -112,6 +119,7 @@ export function WebtoonLibraryClient({
   embedded = false,
   refreshSignal,
   stickyTopOffset = 0,
+  onStatusCountsChange,
 }: WebtoonLibraryClientProps) {
   void academyId;
 
@@ -137,7 +145,8 @@ export function WebtoonLibraryClient({
     [subjectScope],
   );
 
-  const [items, setItems] = useState<WebtoonRow[]>([]);
+  // 서버 목록 원본. 화면·필터·배지는 재시도로 대체된 실패 카드를 뺀 `items`(아래)를 쓴다.
+  const [rawItems, setItems] = useState<WebtoonRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<WebtoonStatus | "ALL">("ALL");
@@ -155,10 +164,6 @@ export function WebtoonLibraryClient({
     (v): v is MobileCols => v === 1 || v === 2,
   );
   const [editingId, setEditingId] = useState<string | null>(null);
-  const editingItem = useMemo(
-    () => items.find((it) => it.id === editingId) ?? null,
-    [items, editingId],
-  );
 
   // ─── Data fetch — pull the whole library (all pages) so folder filtering
   //     works across the entire set, then paginate client-side. ───
@@ -200,6 +205,21 @@ export function WebtoonLibraryClient({
   useEffect(() => {
     void fetchAll();
   }, [fetchAll]);
+
+  // 실패 카드 「다시 시도」(원래 등급 유지) + 재시도로 대체된 실패 카드 숨김.
+  const { handleRetry, hideSuperseded } = useLibraryRetry({
+    items: rawItems,
+    refetch: fetchAll,
+  });
+  const items = useMemo(
+    () => hideSuperseded(rawItems),
+    [rawItems, hideSuperseded],
+  );
+  useReportStatusCounts(items, onStatusCountsChange);
+  const editingItem = useMemo(
+    () => items.find((it) => it.id === editingId) ?? null,
+    [items, editingId],
+  );
 
   // Auto-refresh every 5s while any item is still generating.
   useEffect(() => {
@@ -365,32 +385,6 @@ export function WebtoonLibraryClient({
       }
     },
     [items],
-  );
-
-  const handleRetry = useCallback(
-    async (id: string) => {
-      const target = items.find((it) => it.id === id);
-      if (!target) return;
-      try {
-        const res = await fetch("/api/ai/webtoon/generate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            passageIds: [target.passageId],
-            style: target.style,
-            language: target.language ?? DEFAULT_WEBTOON_LANGUAGE,
-            customPrompt: target.customPrompt ?? "",
-          }),
-        });
-        const data = await res.json();
-        if (!res.ok || !data.ok) throw new Error(data.error || `${res.status}`);
-        toast.message("웹툰 재생성을 시작했습니다.");
-        await fetchAll(false);
-      } catch (err) {
-        toast.error(err instanceof Error ? err.message : "재생성 요청 실패");
-      }
-    },
-    [items, fetchAll],
   );
 
   const handleBulkDelete = useCallback(async () => {
@@ -885,6 +879,7 @@ export function WebtoonLibraryClient({
           key={editingId}
           webtoonId={editingId}
           title={editingItem?.passage.title}
+          hasEditedImage={!!editingItem?.editedImageUrl}
           onClose={() => setEditingId(null)}
           onExported={(editedImageUrl) => applyEdited(editingId, editedImageUrl)}
         />

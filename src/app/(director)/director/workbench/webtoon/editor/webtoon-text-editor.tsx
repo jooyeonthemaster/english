@@ -53,13 +53,13 @@ import {
   type WebtoonTextBox,
   type WebtoonTextDoc,
 } from "@/lib/webtoon-text/types";
-import {
-  ensureWebtoonFont,
-  familyFromStack,
-  fontFamilyStack,
-} from "@/lib/webtoon-text/fonts";
+import { familyFromStack, fontFamilyStack } from "@/lib/webtoon-text/fonts";
 import { WebtoonFontPicker } from "./webtoon-font-picker";
 import type { WebtoonTextCanvasHandle } from "./webtoon-text-canvas";
+import { RegionList } from "./webtoon-text-region-list";
+import { loadBoxFonts, loadWebtoonFonts } from "./load-webtoon-fonts";
+import { useEditorShortcuts } from "./use-editor-shortcuts";
+import { useSavedBaseline, useTransientNotice } from "./use-editor-save-state";
 
 const WebtoonTextCanvas = dynamic(
   () => import("./webtoon-text-canvas").then((m) => m.WebtoonTextCanvas),
@@ -79,6 +79,8 @@ interface WebtoonTextEditorProps {
   onBack?: () => void;
   /** 이 웹툰 자체를 삭제한다(되돌릴 수 없음). 제공되면 헤더에 삭제 버튼이 노출된다. */
   onDelete?: () => void;
+  /** 이미 배포본(editedImageUrl)이 있는지 — 없으면 수정된 글자가 아직 이미지에 안 들어갔다는 안내를 띄운다. */
+  hasEditedImage?: boolean;
 }
 
 function nextFrame(): Promise<void> {
@@ -93,7 +95,14 @@ export function WebtoonTextEditor({
   onExported,
   onBack,
   onDelete,
+  hasEditedImage = false,
 }: WebtoonTextEditorProps) {
+  // 마지막 배포(export) 때의 박스 상태(JSON). 현재 박스와 다르면 "아직 이미지에 반영 안 됨"
+  // 띠를 띄운다 — 배포 뒤에 새로 고친 글자도 놓치지 않는다. 배포본이 있는 웹툰은 열 때 불러온
+  // 문서를 배포 상태로 본다(배포는 textDoc 도 함께 저장하므로).
+  const [exportedSnapshot, setExportedSnapshot] = useState<string | null>(null);
+  // 열 때의 값만 쓴다 — 배포 직후 부모가 prop 을 바꿔도 인식 effect 를 다시 돌리지 않게 ref 로 고정.
+  const hasEditedImageAtOpen = useRef(hasEditedImage);
   const [phase, setPhase] = useState<Phase>("detecting");
   const [error, setError] = useState<string | null>(null);
   const [doc, setDoc] = useState<WebtoonTextDoc | null>(null);
@@ -109,7 +118,7 @@ export function WebtoonTextEditor({
   const [zoomCtrlPos, setZoomCtrlPos] = useState({ top: 12, right: 12 });
   const [saving, setSaving] = useState(false);
   const [exporting, setExporting] = useState(false);
-  const [notice, setNotice] = useState<string | null>(null);
+  const [notice, setNotice] = useTransientNotice();
   // bumped whenever a webfont finishes loading → canvas re-fits with real metrics
   const [fontEpoch, setFontEpoch] = useState(0);
 
@@ -122,14 +131,8 @@ export function WebtoonTextEditor({
   useEffect(() => {
     boxesRef.current = boxes;
   });
-  // 미저장 변경 추적 — 최초 로드/저장 시점의 boxes 스냅샷과 현재를 비교.
-  const savedBoxesSnapshotRef = useRef<string | null>(null);
-  const dirty = useMemo(
-    () =>
-      savedBoxesSnapshotRef.current != null &&
-      JSON.stringify(boxes) !== savedBoxesSnapshotRef.current,
-    [boxes],
-  );
+  // 미저장 변경 추적 — 최초 로드/저장/배포 시점에 서버로 간 boxes 와 현재를 비교.
+  const { dirty, markSaved } = useSavedBaseline(boxes);
   // 닫기 가드 — 표준 경고 다이얼로그(다른 편집 화면과 동일 디자인).
   const closeGuard = useUnsavedCloseGuard({ isDirty: dirty, onClose });
   const historyRef = useRef<{ past: WebtoonTextBox[][]; future: WebtoonTextBox[][]; lastAt: number }>(
@@ -165,7 +168,16 @@ export function WebtoonTextEditor({
         setDoc(td);
         const loadedBoxes = td.boxes.map((b) => ({ ...b }));
         setBoxes(loadedBoxes);
-        savedBoxesSnapshotRef.current = JSON.stringify(loadedBoxes);
+        markSaved(loadedBoxes);
+        if (hasEditedImageAtOpen.current) setExportedSnapshot(JSON.stringify(loadedBoxes));
+        // 저장된 박스가 쓰는 카탈로그 서체를 이미지와 나란히 불러오고(상한 있음) 캔버스는 그 뒤에
+        // 띄운다. 새로고침 뒤엔 그 서체 CSS 조차 없어, 대체 글꼴로 재면 자동 높이가 바뀌어 손대지
+        // 않았는데 미저장 경고가 뜨고 배포본에도 엉뚱한 글꼴이 구워졌다.
+        const fontsLoaded = loadBoxFonts(loadedBoxes).then(() => {
+          if (!cancelled) setFontEpoch((e) => e + 1);
+        });
+        // 방금 인식한 문서의 수정됨 박스 = 스토리보드 원문으로 바로잡은 깨진 글자(detect-lettering.ts).
+        const fixedCount = json.cached ? 0 : loadedBoxes.filter((b) => b.edited).length;
         setPhase("loading-image");
 
         // 2) load the original image as a blob (untainted canvas → exportable)
@@ -177,8 +189,14 @@ export function WebtoonTextEditor({
         const img = new window.Image();
         img.onload = () => {
           if (cancelled) return;
-          setImage(img);
-          setPhase("ready");
+          void fontsLoaded.then(() => {
+            if (cancelled) return;
+            setImage(img);
+            setPhase("ready");
+            if (fixedCount > 0) {
+              setNotice(`깨진 글자 ${fixedCount}곳을 원래 대사로 고쳐 두었어요 — 배포하기로 반영하세요`);
+            }
+          });
         };
         img.onerror = () => {
           if (!cancelled) {
@@ -197,7 +215,7 @@ export function WebtoonTextEditor({
     return () => {
       cancelled = true;
     };
-  }, [webtoonId]);
+  }, [webtoonId, markSaved, setNotice]);
 
   // cleanup blob URL on unmount
   useEffect(() => {
@@ -354,7 +372,8 @@ export function WebtoonTextEditor({
     (family: string) => {
       if (!selectedId) return;
       updateBox(selectedId, { fontFamily: fontFamilyStack(family) });
-      ensureWebtoonFont(family).then(() => setFontEpoch((e) => e + 1));
+      const text = boxesRef.current.find((b) => b.id === selectedId)?.text ?? "";
+      void loadWebtoonFonts(new Map([[family, text]])).then(() => setFontEpoch((e) => e + 1));
     },
     [selectedId, updateBox],
   );
@@ -440,27 +459,8 @@ export function WebtoonTextEditor({
     setHist({ u: h.past.length, r: h.future.length });
   }, []);
 
-  // Esc to close · Ctrl/Cmd+Z undo · Ctrl/Cmd+Shift+Z (or Ctrl+Y) redo
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        closeGuard.requestClose();
-        return;
-      }
-      const mod = e.ctrlKey || e.metaKey;
-      if (!mod) return;
-      const k = e.key.toLowerCase();
-      if (k === "z" && !e.shiftKey) {
-        e.preventDefault();
-        undo();
-      } else if ((k === "z" && e.shiftKey) || k === "y") {
-        e.preventDefault();
-        redo();
-      }
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [closeGuard.requestClose, undo, redo]);
+  // Esc 닫기 · Ctrl/Cmd+Z 되돌리기 · Ctrl/Cmd+Shift+Z(또는 Ctrl+Y) 다시 실행 — 입력칸 포커스 중엔 양보
+  useEditorShortcuts({ onEscape: closeGuard.requestClose, onUndo: undo, onRedo: redo });
 
   const selected = useMemo(
     () => boxes.find((b) => b.id === selectedId) ?? null,
@@ -468,45 +468,60 @@ export function WebtoonTextEditor({
   );
   const editableBoxes = useMemo(() => boxes.filter((b) => b.editable), [boxes]);
   const editedCount = useMemo(() => boxes.filter((b) => b.edited).length, [boxes]);
+  const boxesJson = useMemo(() => JSON.stringify(boxes), [boxes]);
 
-  const persistDoc = useCallback(async () => {
-    if (!doc) return false;
-    const res = await fetch(`/api/webtoons/${webtoonId}/text-doc`, {
-      method: "PUT",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ textDoc: { ...doc, boxes } }),
-    });
-    const json = await res.json().catch(() => ({}));
-    return res.ok && json.ok;
-  }, [doc, boxes, webtoonId]);
+  const persistDoc = useCallback(
+    async (sentBoxes: WebtoonTextBox[]) => {
+      if (!doc) return false;
+      const res = await fetch(`/api/webtoons/${webtoonId}/text-doc`, {
+        method: "PUT",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ textDoc: { ...doc, boxes: sentBoxes } }),
+      });
+      const json = await res.json().catch(() => ({}));
+      return res.ok && json.ok;
+    },
+    [doc, webtoonId],
+  );
 
   const handleSave = useCallback(async () => {
     setSaving(true);
     setNotice(null);
     try {
-      const ok = await persistDoc();
-      if (ok) savedBoxesSnapshotRef.current = JSON.stringify(boxesRef.current);
+      // 보낸 스냅숏을 그대로 기준선으로 — 저장 중 이어진 편집은 미저장으로 남는다.
+      const sent = boxesRef.current;
+      const ok = await persistDoc(sent).catch(() => false);
+      if (ok) markSaved(sent);
       setNotice(ok ? "편집 내용을 저장했습니다" : "저장에 실패했습니다");
     } finally {
       setSaving(false);
     }
-  }, [persistDoc]);
+  }, [persistDoc, markSaved, setNotice]);
+
+  // 배포·인쇄 스냅숏 직전 — 박스들의 서체를 확실히 올려 한 번 더 재측정시키고(새로고침 직후 대비),
+  // 최신 편집과 실제 서체 메트릭이 캔버스에 그려질 때까지 기다린다.
+  const settleCanvas = useCallback(async () => {
+    await loadBoxFonts(boxesRef.current);
+    setFontEpoch((e) => e + 1);
+    await nextFrame();
+    await nextFrame();
+    if (document.fonts?.ready) {
+      try {
+        await document.fonts.ready;
+      } catch {
+        /* ignore */
+      }
+    }
+  }, []);
 
   const handleExport = useCallback(async () => {
     if (!doc) return;
     setExporting(true);
     setNotice(null);
     try {
-      // ensure the latest edits + real font metrics are committed to the canvas
-      await nextFrame();
-      await nextFrame();
-      if (document.fonts?.ready) {
-        try {
-          await document.fonts.ready;
-        } catch {
-          /* ignore */
-        }
-      }
+      await settleCanvas();
+      // 구운 이미지와 같은 시점의 박스를 보낸다(서체 재측정으로 자동 높이가 바뀌었을 수 있다).
+      const sent = boxesRef.current;
       const dataUrl = exportApiRef.current?.exportDataUrl();
       if (!dataUrl) throw new Error("렌더링에 실패했습니다");
       const blob = await (await fetch(dataUrl)).blob();
@@ -528,31 +543,25 @@ export function WebtoonTextEditor({
       const fRes = await fetch(`/api/webtoons/${webtoonId}/export`, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ storagePath: tJson.storagePath, textDoc: { ...doc, boxes } }),
+        body: JSON.stringify({ storagePath: tJson.storagePath, textDoc: { ...doc, boxes: sent } }),
       });
       const fJson = await fRes.json();
       if (!fRes.ok || !fJson.ok) throw new Error(fJson.error || "내보내기에 실패했습니다");
+      // 배포 완료 = textDoc 도 함께 저장됨 → 미저장 기준선을 보낸 boxes 로 옮긴다.
+      markSaved(sent);
       setNotice("편집한 웹툰을 저장했습니다");
+      setExportedSnapshot(JSON.stringify(sent));
       onExported?.(fJson.editedImageUrl);
     } catch (e) {
       setNotice(e instanceof Error ? e.message : "내보내기 실패");
     } finally {
       setExporting(false);
     }
-  }, [doc, boxes, webtoonId, onExported]);
+  }, [doc, webtoonId, onExported, markSaved, setNotice, settleCanvas]);
 
   const handlePrint = useCallback(async () => {
     if (!doc) return;
-    // commit latest edits + real font metrics to the canvas before snapshotting
-    await nextFrame();
-    await nextFrame();
-    if (document.fonts?.ready) {
-      try {
-        await document.fonts.ready;
-      } catch {
-        /* ignore */
-      }
-    }
+    await settleCanvas();
     const dataUrl = exportApiRef.current?.exportDataUrl();
     if (!dataUrl) {
       setNotice("인쇄할 이미지를 준비하지 못했습니다");
@@ -613,7 +622,7 @@ export function WebtoonTextEditor({
     } else {
       triggerPrint();
     }
-  }, [doc, title]);
+  }, [doc, title, setNotice, settleCanvas]);
 
   const body = (
     <div
@@ -783,9 +792,20 @@ export function WebtoonTextEditor({
         </div>
       </div>
 
+      {/* 상시 안내 — 수정된 글자(콘티 대조 자동 보정 포함)가 아직 이미지에 구워지지 않았다.
+          토스트는 4초 뒤 사라지므로, 배포 전까지는 띠로 계속 알린다. */}
+      {phase === "ready" && editedCount > 0 && boxesJson !== exportedSnapshot ? (
+        <div
+          role="status"
+          className="shrink-0 border-b border-amber-200 bg-amber-50 px-4 py-2 text-[12px] font-semibold text-amber-800"
+        >
+          수정된 글자 {editedCount}곳이 아직 웹툰 이미지에 반영되지 않았어요. 확인 후 「배포하기」를 누르면 다운로드·학습지에 적용돼요.
+        </div>
+      ) : null}
+
       {/* notice toast */}
       {notice ? (
-        <div className="absolute left-1/2 top-28 z-10 -translate-x-1/2 rounded-full bg-slate-800 px-4 py-1.5 text-[12px] text-white shadow-lg">
+        <div role="status" className="absolute left-1/2 top-28 z-10 -translate-x-1/2 rounded-full bg-slate-800 px-4 py-1.5 text-[12px] text-white shadow-lg">
           {notice}
         </div>
       ) : null}
@@ -945,72 +965,6 @@ export function WebtoonTextEditor({
 
   if (typeof document === "undefined") return null;
   return createPortal(body, document.body);
-}
-
-function RegionList({
-  boxes,
-  hoverId,
-  selectedId,
-  onSelect,
-  onHover,
-  onAddText,
-}: {
-  boxes: WebtoonTextBox[];
-  hoverId: string | null;
-  selectedId?: string | null;
-  onSelect: (id: string) => void;
-  onHover: (id: string | null) => void;
-  onAddText: () => void;
-}) {
-  return (
-    <div>
-      <p className="text-[11px] leading-relaxed text-slate-500">
-        고치고 싶은 텍스트를 누르면 바로 편집할 수 있어요. 수정한 부분만 새로 그려지고 나머지는
-        원본 그대로 유지됩니다.
-      </p>
-      <button
-        type="button"
-        onClick={onAddText}
-        className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg border border-dashed border-blue-300 bg-blue-50/50 py-2 text-[12px] font-semibold text-blue-700 transition hover:bg-blue-50"
-      >
-        <Plus className="size-3.5" /> 새 텍스트 박스 추가
-      </button>
-      <ul className="mt-3 space-y-1.5">
-        {boxes.map((b) => (
-          <li key={b.id}>
-            <button
-              type="button"
-              onMouseEnter={() => onHover(b.id)}
-              onMouseLeave={() => onHover(null)}
-              onClick={() => onSelect(b.id)}
-              className={`w-full rounded-lg border px-2.5 py-2 text-left transition ${
-                selectedId === b.id
-                  ? "border-blue-400 bg-blue-50 ring-1 ring-blue-300"
-                  : hoverId === b.id
-                    ? "border-blue-300 bg-blue-50/70"
-                    : "border-slate-200 bg-white hover:border-slate-300"
-              }`}
-            >
-              <div className="flex items-center gap-1.5">
-                <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium text-slate-500">
-                  {webtoonTextRoleLabel(b.role)}
-                </span>
-                {b.edited ? (
-                  <span className="rounded bg-emerald-100 px-1.5 py-0.5 text-[10px] font-medium text-emerald-700">
-                    수정됨
-                  </span>
-                ) : null}
-              </div>
-              <p className="mt-1 line-clamp-2 text-[12px] text-slate-700">{b.text}</p>
-            </button>
-          </li>
-        ))}
-        {boxes.length === 0 ? (
-          <li className="text-[12px] text-slate-400">편집 가능한 텍스트가 없습니다.</li>
-        ) : null}
-      </ul>
-    </div>
-  );
 }
 
 function hex6(value: string, fallback: string): string {

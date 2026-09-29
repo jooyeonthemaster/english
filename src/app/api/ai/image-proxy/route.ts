@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getStaffSession } from '@/lib/auth';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
@@ -8,8 +9,15 @@ const ALLOWED_IMAGE_HOSTS = new Set([
   'cdn.atlascloud.ai'
 ]);
 
+// 레거시 AtlasCloud 이미지 프록시 — src 안에 호출처가 없다(26-09-29 확인).
+// 무인증 공개 프록시로 남겨 두지 않도록 스태프 로그인을 요구한다.
 export async function GET(req: NextRequest) {
   try {
+    const staff = await getStaffSession();
+    if (!staff) {
+      return NextResponse.json({ error: '인증이 필요합니다.' }, { status: 401 });
+    }
+
     const src = req.nextUrl.searchParams.get('url');
     if (!src) {
       return NextResponse.json({ error: 'url is required' }, { status: 400 });

@@ -2,13 +2,40 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getStaffSession } from "@/lib/auth";
 import { detectWebtoonText } from "@/lib/webtoon-text/detect";
+import { expectedLetteringFromStoryboard } from "@/lib/webtoon-text/detect-lettering";
 import type { WebtoonTextDoc } from "@/lib/webtoon-text/types";
+import { isPersistedStoryboard } from "@/lib/webtoon-storyboard/types";
 
 export const runtime = "nodejs";
-export const maxDuration = 60;
+// 예산: 이미지 다운로드 ≤15s + 인식 호출 ≤90s(detect.ts DETECT_TIMEOUT_MS) + sharp·DB 저장 여유.
+export const maxDuration = 120;
+
+const IMAGE_DOWNLOAD_TIMEOUT_MS = 15_000;
 
 interface RouteContext {
   params: Promise<{ id: string }>;
+}
+
+/**
+ * 스토리보드(v2)로 만든 웹툰이면 이미지에 찍으라고 지시한 정확한 문자열 목록 — 인식 힌트.
+ * 깨진 레터링 박스는 이 원문으로 다시 그리도록(edited) 저장된다(detect-lettering.ts).
+ * 힌트는 품질 보강일 뿐이라 어떤 실패(레거시 행·컬럼 미적용·형식 불일치)도 인식을 막지 않는다.
+ */
+async function loadLetteringHints(webtoonId: string): Promise<string[]> {
+  try {
+    const row = await prisma.webtoon.findUnique({
+      where: { id: webtoonId },
+      select: { storyboard: true },
+    });
+    const storyboard = row?.storyboard;
+    return isPersistedStoryboard(storyboard) ? expectedLetteringFromStoryboard(storyboard) : [];
+  } catch (err) {
+    console.warn("[webtoon detect-text] storyboard hint unavailable", {
+      id: webtoonId,
+      message: err instanceof Error ? err.message : String(err),
+    });
+    return [];
+  }
 }
 
 // POST /api/webtoons/[id]/detect-text
@@ -41,7 +68,10 @@ export async function POST(req: NextRequest, ctx: RouteContext) {
 
   let imageBuffer: Buffer;
   try {
-    const res = await fetch(webtoon.imageUrl, { cache: "no-store" });
+    const res = await fetch(webtoon.imageUrl, {
+      cache: "no-store",
+      signal: AbortSignal.timeout(IMAGE_DOWNLOAD_TIMEOUT_MS),
+    });
     if (!res.ok) throw new Error(`download ${res.status}`);
     imageBuffer = Buffer.from(await res.arrayBuffer());
   } catch (err) {
@@ -52,12 +82,15 @@ export async function POST(req: NextRequest, ctx: RouteContext) {
     );
   }
 
+  const expectedTexts = await loadLetteringHints(webtoon.id);
+
   let textDoc: WebtoonTextDoc;
   try {
     textDoc = await detectWebtoonText({
       imageBuffer,
       originalUrl: webtoon.imageUrl,
       academyId: staff.academyId,
+      expectedTexts,
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : "unknown";

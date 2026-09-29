@@ -223,7 +223,7 @@ export function KoreanStudyMaterials({
               <ImageIcon className="h-3.5 w-3.5" />
               웹툰 만들기 · 보관함
             </button>
-            <span className="text-[11px] text-slate-400">생성 약 3분 소요</span>
+            <span className="text-[11px] text-slate-400">생성 1~2분 소요</span>
           </div>
         </div>
       </div>

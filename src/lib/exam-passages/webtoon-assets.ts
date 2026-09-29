@@ -70,6 +70,8 @@ export function isExamPassageWebtoonStyle(
 const LANGUAGE_PROMPTS: Record<WebtoonLanguageId, string> = {
   KO:
     "한국어 전용. 모든 대사와 내레이션을 자연스럽고 정확한 한국어로 쓴다. 단, 원문 영어 핵심 구절 5-8개는 반드시 별도 인용 박스에 정확히 넣는다. 한국어만 있는 결과는 실패다.",
+  KO_KEY:
+    "한국어 서술 + 핵심 영어 표현. 내레이션은 한국어로 쓰되 원문 영어 핵심 구절을 문장 속에 그대로 끼워 넣는다.",
   KO_EN:
     "한+영 병기. 영어 말풍선/인용 박스에는 원문 영어 구절을 정확히 넣고, 바로 아래 한국어 번역 캡션을 붙인다. 영어와 한국어가 1:1로 대응되게 한다.",
   EN:

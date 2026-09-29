@@ -437,8 +437,10 @@ export async function getOperationsCostDashboard(
       hasDocumentAiPricing:
         hasProviderPricing(activePricingRows, "GOOGLE_DOCUMENT_AI", "PAGE") ||
         pricing.documentAiPageCostUsd !== null,
+      // 웹툰 이미지: 레거시 AtlasCloud + v2 OpenRouter(GPT Image 2.5) 행 모두.
       hasWebtoonPricing:
         hasProviderPricing(activePricingRows, "ATLASCLOUD", "IMAGE") ||
+        hasProviderPricing(activePricingRows, "OPENROUTER", "IMAGE") ||
         pricing.webtoonImageCostUsd !== null,
     },
     totals,

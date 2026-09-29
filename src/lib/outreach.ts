@@ -8,6 +8,8 @@
 // AI 호출 없이 규칙 기반이라 즉시·무료·사실 기반(없는 사용을 지어내지 않음).
 // ============================================================================
 
+import { WEBTOON_IMAGE_OPERATION_TYPES } from "@/lib/webtoon-models";
+
 export interface OutreachFeature {
   key: string;
   /** 문자/칩에 쓰는 한글 기능명 */
@@ -74,7 +76,8 @@ export const OUTREACH_FEATURES: OutreachFeature[] = [
   {
     key: "WEBTOON",
     label: "웹툰 생성",
-    opTypes: ["WEBTOON_IMAGE"],
+    // 일반·프리미엄 등급 모두(프리미엄만 쓰는 회원을 미사용으로 오판하지 않게).
+    opTypes: [...WEBTOON_IMAGE_OPERATION_TYPES],
     pitch: "지문을 웹툰으로 만들어 학생 몰입도를 높여보세요.",
     rank: 8,
   },

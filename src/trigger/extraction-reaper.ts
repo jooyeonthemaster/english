@@ -21,6 +21,7 @@ import {
 } from "@/lib/concurrency-config";
 import { cleanupStaleExtractionJobs } from "@/lib/extraction/stale-cleanup";
 import { cleanupStaleWorkbenchAiJobs } from "@/lib/workbench-ai-job-stale-cleanup";
+import { cleanupStaleWebtoons } from "@/lib/webtoon-stale-cleanup";
 import { prisma } from "@/lib/prisma";
 import { extractionPageTask } from "./extraction-page";
 import { extractionFinalizeTask } from "./extraction-finalize";
@@ -36,6 +37,9 @@ export const extractionReaperTask = schedules.task({
     // globally here so the hot /api/workbench/ai-jobs GET no longer has to run
     // cleanup on every 5-10s poll. academyId omitted = all academies in one pass.
     const workbenchCleanup = await cleanupStaleWorkbenchAiJobs({ now });
+    // Reap stuck webtoon rows (dead webtoon-generate runs) → FAILED + refund.
+    // Never throws — a failure is reported in the log instead of blocking this pass.
+    const webtoonCleanup = await cleanupStaleWebtoons({ now });
 
     const expiredProcessing = await prisma.extractionPage.findMany({
       where: { status: "PROCESSING", leaseExpiresAt: { lt: now } },
@@ -175,6 +179,7 @@ export const extractionReaperTask = schedules.task({
       workbenchAiJobsFailed: workbenchCleanup.failed,
       workbenchAiJobsRefunded: workbenchCleanup.refunded,
       workbenchAiJobRefundFailed: workbenchCleanup.refundFailed,
+      webtoonCleanup,
       exhausted: exhaustedCount,
       reclaimed: reclaimed.count,
       redispatched: pending.length,

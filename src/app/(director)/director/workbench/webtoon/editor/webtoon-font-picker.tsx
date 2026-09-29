@@ -29,6 +29,7 @@ export function WebtoonFontPicker({ value, onChange }: WebtoonFontPickerProps) {
   const [query, setQuery] = useState("");
   const [tab, setTab] = useState<Tab>("ko");
   const wrapRef = useRef<HTMLDivElement | null>(null);
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
 
   // load every catalog font's CSS once the picker is opened so previews render in-face
   useEffect(() => {
@@ -96,10 +97,23 @@ export function WebtoonFontPicker({ value, onChange }: WebtoonFontPickerProps) {
   const empty = groups.local.length === 0 && groups.rest.length === 0;
 
   return (
-    <div ref={wrapRef} className="relative">
+    <div
+      ref={wrapRef}
+      className="relative"
+      // Esc 는 열린 드롭다운만 닫는다. preventDefault 로 편집기 전역 Esc(편집창 닫기)에 이미
+      // 처리됐음을 알린다(use-editor-shortcuts 가 defaultPrevented 면 건너뛴다).
+      onKeyDown={(e) => {
+        if (e.key !== "Escape" || !open) return;
+        e.preventDefault();
+        setOpen(false);
+        triggerRef.current?.focus();
+      }}
+    >
       <button
+        ref={triggerRef}
         type="button"
         onClick={togglePicker}
+        aria-expanded={open}
         className="flex w-full items-center justify-between rounded-lg border border-slate-200 bg-white px-2.5 py-2 text-left hover:border-slate-300"
       >
         <span

@@ -10,6 +10,10 @@ import {
   kstDateString,
   type UsdKrwRateInfo,
 } from "@/lib/fx-rate";
+import {
+  GPT_IMAGE_25_FLARE_ESTIMATE_USD,
+  GPT_IMAGE_25_SUNBURST_ESTIMATE_USD,
+} from "@/lib/platform-api-cost-estimates";
 import { prisma } from "@/lib/prisma";
 
 /** 원가 집계 기간(반열림 구간 [start, end)). 미지정 시 전체 누적. */
@@ -17,6 +21,10 @@ export interface FeatureMarginRange {
   start: Date;
   end: Date;
 }
+
+// 웹툰 v2 스토리보드(Gemini 3.7 Flash, json_schema) 1편 — 26-09-30 벤치 실측 usage.cost
+// $0.009(1회 호출)~$0.020(수리 1회 포함). 원장 표본이 생기면 아래 actual 평균이 대신 쓰인다.
+const WEBTOON_STORYBOARD_ESTIMATE_USD = 0.015;
 
 // 기록이 없는(아직 실사용 데이터가 안 쌓인) 기능의 폴백 추정 원가(USD/1회).
 // 조사 근거는 platform-api-cost-estimates.ts 및 프로덕션 실측 평균(2026-07).
@@ -39,8 +47,9 @@ const ESTIMATE_USD_PER_ACTION: Record<OperationType, number> = {
   // PASSAGE_VARIANT($0.002, flash-lite·입력 지문 1편)의 2배 가정: 상위 모델 +
   // 자료(어법·단어장) 입력이 붙는 만큼만 올려 잡았다.
   PASSAGE_AUTHORING: 0.004,
-  WEBTOON_IMAGE: 0.008,
-  WEBTOON_IMAGE_PREMIUM: 0.02,
+  // 웹툰 1편 = 스토리보드 + 9:16 이미지 1장(OpenRouter GPT Image 2.5 Flare / Sunburst).
+  WEBTOON_IMAGE: GPT_IMAGE_25_FLARE_ESTIMATE_USD + WEBTOON_STORYBOARD_ESTIMATE_USD,
+  WEBTOON_IMAGE_PREMIUM: GPT_IMAGE_25_SUNBURST_ESTIMATE_USD + WEBTOON_STORYBOARD_ESTIMATE_USD,
   WEBTOON_EXAM_DOWNLOAD: 0.0002,
   EXAM_ANALYSIS: 0.057, // 문항 1개당 — v3 직접분석 실측(26-07-06): 28문항 $1.59(E1a $0.18+E1b/c $1.40)/28
   EXAM_STUDENT_REPORT: 0.05, // 학생 1명당(5cr): E2 판독 $0.15(무과금분 포함)+E4 내러티브 ~$0.10 ≈ $0.25/5cr
@@ -86,7 +95,8 @@ const PLAN_SENSITIVE: ReadonlySet<OperationType> = new Set([
 const FEATURE_NOTE: Partial<Record<OperationType, string>> = {
   AUTO_GEN_BATCH: "문제 1개당",
   AI_CHAT: "메시지 1개당",
-  WEBTOON_IMAGE: "이미지 1장당",
+  WEBTOON_IMAGE: "웹툰 1편당 · 스토리보드 포함",
+  WEBTOON_IMAGE_PREMIUM: "웹툰 1편당 · 스토리보드 포함",
   WEBTOON_EXAM_DOWNLOAD: "검수 완료 기출 1장당",
   TEXT_EXTRACTION: "페이지 1장당 · 무료 제공",
   EXAM_ANALYSIS: "문항 1개당 · 최소 15크레딧",
@@ -142,7 +152,10 @@ export interface FeatureMarginRow {
   costKrw: number;
   costUsd: number;
   costSource: "actual" | "estimate";
-  /** 원가 표본 — API 호출 1행 단위(액션 1건과 1:1 이 아니다) */
+  /**
+   * 원가 표본 — API 호출 1행 단위(액션 1건과 1:1 이 아니다). 단, 웹툰은 한 편의 이미지·
+   * 스토리보드 행을 합친 「완성 편」 단위다.
+   */
   sampleCount: number;
   planSensitive: boolean;
   sell: MarginTierCell[];
@@ -271,15 +284,36 @@ export async function getFeatureMarginAnalysis(
     ? Prisma.sql`AND "createdAt" >= ${range.start} AND "createdAt" < ${range.end}`
     : Prisma.empty;
   const [rawRows, consumptionRows, fxRate, priceTiers] = await Promise.all([
+    // 원가 표본 = 과금 액션 1건. 대개 원장 1행 = 1건이지만 웹툰은 한 편이 이미지 1행 +
+    // 스토리보드 1~2행(같은 operationType)으로 쪼개져, 행 평균이면 편당 원가가 1/2~1/3 로
+    // 깎인다. 그래서 WEBTOON 은 sourceId(웹툰 id)로 먼저 합산하고, 이미지 행이 있는 「완성 편」
+    // 수로 나눈다 — 이미지까지 못 간 편의 스토리보드 원가는 버리지 않고 완성 편이 분담한다.
+    // 웹툰 외 행은 행 = 1건 그대로(합 ÷ 건수 = 기존 AVG 와 같은 값).
     prisma.$queryRaw<OpAggregate[]>(Prisma.sql`
-      SELECT "operationType" AS op,
-        COUNT(*) FILTER (WHERE "pricingSource" <> 'MISSING' AND "costKrw" > 0)::int AS n_priced,
-        ROUND(AVG("costKrw") FILTER (WHERE "pricingSource" <> 'MISSING' AND "costKrw" > 0))::int AS avg_krw,
-        AVG("costUsd") FILTER (WHERE "pricingSource" <> 'MISSING' AND "costUsd" > 0) AS avg_usd
-      FROM "platform_api_usage_costs"
-      WHERE "operationType" IS NOT NULL
-      ${rangeFilter}
-      GROUP BY "operationType"
+      WITH action_costs AS (
+        SELECT "operationType" AS op,
+          CASE WHEN "pricingSource" <> 'MISSING' AND "costKrw" > 0 THEN "costKrw" END AS krw,
+          CASE WHEN "pricingSource" <> 'MISSING' AND "costUsd" > 0 THEN "costUsd" END AS usd,
+          TRUE AS delivered
+        FROM "platform_api_usage_costs"
+        WHERE "operationType" IS NOT NULL AND "sourceType" <> 'WEBTOON'
+        ${rangeFilter}
+        UNION ALL
+        SELECT "operationType" AS op,
+          SUM("costKrw") FILTER (WHERE "pricingSource" <> 'MISSING' AND "costKrw" > 0) AS krw,
+          SUM("costUsd") FILTER (WHERE "pricingSource" <> 'MISSING' AND "costUsd" > 0) AS usd,
+          BOOL_OR("unitType" = 'IMAGE') AS delivered
+        FROM "platform_api_usage_costs"
+        WHERE "operationType" IS NOT NULL AND "sourceType" = 'WEBTOON'
+        ${rangeFilter}
+        GROUP BY "operationType", "sourceId"
+      )
+      SELECT op,
+        COUNT(*) FILTER (WHERE delivered AND krw > 0)::int AS n_priced,
+        ROUND(SUM(krw)::numeric / NULLIF(COUNT(*) FILTER (WHERE delivered AND krw > 0), 0))::int AS avg_krw,
+        SUM(usd) / NULLIF(COUNT(*) FILTER (WHERE delivered AND usd > 0), 0) AS avg_usd
+      FROM action_costs
+      GROUP BY op
     `),
     prisma.$queryRaw<OpConsumption[]>(Prisma.sql`
       SELECT "operationType" AS op,

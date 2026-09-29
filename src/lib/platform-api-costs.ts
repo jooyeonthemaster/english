@@ -5,6 +5,7 @@ import { getExtractionAiModelName } from "@/lib/extraction/model-config";
 import { resolveUsdKrwRate } from "@/lib/fx-rate";
 import { resolveEstimatedPricing } from "@/lib/platform-api-cost-estimates";
 import { prisma } from "@/lib/prisma";
+import { planForModelId } from "@/lib/webtoon-models";
 
 export type PlatformCostUnitType = "TOKENS" | "PAGE" | "IMAGE" | "CALL";
 export type PlatformCostProvider =
@@ -192,6 +193,9 @@ export async function syncPlatformApiUsageCostsForRange(
     });
   }
 
+  // 웹툰 v2 는 프로세서가 같은 sourceKey 로 실측(RECORDED) 행을 먼저 기록한다 — 아래
+  // existingPricingSource 필터가 그 행을 건너뛰므로, 여기선 기록이 빠진 완성 편만 추정치로
+  // 메운다. provider·operationType 은 저장된 모델(등급)을 따른다(레거시·null → AtlasCloud).
   for (const webtoon of webtoons) {
     if (!webtoon.completedAt) continue;
     candidates.push({
@@ -200,9 +204,9 @@ export async function syncPlatformApiUsageCostsForRange(
       sourceId: webtoon.id,
       sourceDetail: "IMAGE_GENERATION",
       academyId: webtoon.academyId,
-      provider: "ATLASCLOUD",
+      provider: webtoonImageProvider(webtoon.imageModel),
       model: webtoon.imageModel,
-      operationType: "WEBTOON_IMAGE",
+      operationType: planForModelId(webtoon.imageModel)?.operationType ?? "WEBTOON_IMAGE",
       unitType: "IMAGE",
       unitCount: 1,
       calls: 1,
@@ -714,6 +718,22 @@ export function providerFromModel(model: string): PlatformCostProvider {
   return "UNKNOWN";
 }
 
+/**
+ * 웹툰 이미지 원가행의 provider — 저장된 imageModel 이 결정한다.
+ * 현 등급 모델(openai/gpt-image-2.5-*)과 그 밖의 openai/* 이미지 id 는 OpenRouter /images,
+ * AtlasCloud 시절 id(등급의 legacyModelIds · "…/text-to-image…" 경로)와 null(등급 도입 전)은
+ * ATLASCLOUD. providerFromModel() 은 TOKENS 행 계약(openai/* → UNKNOWN, 게이트웨이 버킷)이
+ * 걸려 있어 건드리지 않고 이미지 판별만 따로 둔다.
+ */
+export function webtoonImageProvider(imageModel: string | null | undefined): PlatformCostProvider {
+  if (!imageModel) return "ATLASCLOUD";
+  const plan = planForModelId(imageModel);
+  if (plan) return plan.modelId === imageModel ? "OPENROUTER" : "ATLASCLOUD";
+  const lower = imageModel.toLowerCase();
+  if (lower.includes("/text-to-image")) return "ATLASCLOUD";
+  return lower.startsWith("openai/") ? "OPENROUTER" : "ATLASCLOUD";
+}
+
 function readEnvPricing(provider: PlatformCostProvider, unitType: PlatformCostUnitType) {
   if (unitType === "TOKENS" && (provider === "ATLASCLOUD" || provider === "OPENROUTER")) {
     const inputUsdPer1M =
@@ -750,7 +770,9 @@ function readEnvPricing(provider: PlatformCostProvider, unitType: PlatformCostUn
     const unitUsd = readPositiveEnv("GOOGLE_DOC_AI_PAGE_COST_USD");
     if (unitUsd !== null) return { inputUsdPer1M: null, outputUsdPer1M: null, unitUsd };
   }
-  if (unitType === "IMAGE" && provider === "ATLASCLOUD") {
+  // 웹툰 이미지 1장 폴백 단가 — 실측(recordedCostUsd)이 없는 행에만 닿는다. 설정하면
+  // 레거시(AtlasCloud)·v2(OpenRouter) 모두 등급 구분 없이 모델별 추정치보다 우선한다.
+  if (unitType === "IMAGE" && (provider === "ATLASCLOUD" || provider === "OPENROUTER")) {
     const unitUsd = readPositiveEnv("WEBTOON_IMAGE_COST_USD");
     if (unitUsd !== null) return { inputUsdPer1M: null, outputUsdPer1M: null, unitUsd };
   }

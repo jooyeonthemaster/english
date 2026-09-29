@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getStaffSession } from "@/lib/auth";
 import { deleteWebtoonImage } from "@/lib/webtoon-storage";
+import { planForModelId } from "@/lib/webtoon-models";
+import { isPersistedStoryboard } from "@/lib/webtoon-storyboard/types";
 import {
   enqueueLocalWebtoonGeneration,
   shouldUseLocalWebtoonWorker,
@@ -20,6 +22,15 @@ export async function GET(_req: NextRequest, ctx: RouteContext) {
   const { id } = await ctx.params;
   const webtoon = await prisma.webtoon.findFirst({
     where: { id, academyId: staff.academyId },
+    // 응답에서 뺄 내부 필드(스펙 §4): 원 과금 거래 id 는 환불 악용 통로이고, 프롬프트
+    // 원문·해시·프로바이더 흔적은 내부 정보다. 조회 단계에서 빼 큰 promptSnapshot 도 읽지 않는다.
+    omit: {
+      creditTransactionId: true,
+      promptSnapshot: true,
+      promptHash: true,
+      rawAtlasUrl: true,
+      atlasPredictionId: true,
+    },
     include: {
       passage: { select: { id: true, title: true, content: true, grade: true, semester: true } },
       createdBy: { select: { id: true, name: true } },
@@ -28,6 +39,8 @@ export async function GET(_req: NextRequest, ctx: RouteContext) {
   if (!webtoon) {
     return NextResponse.json({ error: "찾을 수 없습니다" }, { status: 404 });
   }
+  // JSON 컬럼은 형태를 믿지 않는다 — 가드를 통과한 v2 콘티만 싣고, 레거시·손상 행은 null.
+  const storyboard = isPersistedStoryboard(webtoon.storyboard) ? webtoon.storyboard : null;
 
   if (
     shouldUseLocalWebtoonWorker() &&
@@ -36,7 +49,17 @@ export async function GET(_req: NextRequest, ctx: RouteContext) {
     enqueueLocalWebtoonGeneration(webtoon.id);
   }
 
-  return NextResponse.json({ ok: true, webtoon });
+  // 클라이언트는 이 응답을 목록 행(WebtoonRow)에 그대로 병합하므로 목록과 같은
+  // 파생 필드(plan·hasStoryboard)를 함께 싣는다.
+  return NextResponse.json({
+    ok: true,
+    webtoon: {
+      ...webtoon,
+      storyboard,
+      hasStoryboard: storyboard !== null,
+      plan: planForModelId(webtoon.imageModel)?.id ?? null,
+    },
+  });
 }
 
 export async function PATCH(req: NextRequest, ctx: RouteContext) {

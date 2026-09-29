@@ -1,4 +1,4 @@
-import { createHash } from "node:crypto";
+import sharp from "sharp";
 import passagesJson from "../src/data/exam-passages/passages.json";
 import type { ExamPassage } from "../src/lib/exam-passages/types";
 import {
@@ -8,33 +8,30 @@ import {
   EXAM_PASSAGE_WEBTOON_STYLE,
 } from "../src/lib/exam-passages/webtoon-assets";
 import { reviewExamPassageWebtoonImage } from "../src/lib/exam-passages/webtoon-review";
+import { WEBTOON_IMAGE_PLANS } from "../src/lib/webtoon-models";
 import {
-  WEBTOON_IMAGE_PLANS,
-  type WebtoonImagePlanId,
-} from "../src/lib/webtoon-models";
-import { generateImage, type AtlasImageSize } from "../src/lib/atlas";
+  generateOpenRouterImage,
+  type OpenRouterImageResult,
+} from "../src/lib/openrouter-image";
 import { recordPlatformApiUsageCost } from "../src/lib/platform-api-costs";
 import {
   deleteWebtoonImage,
-  uploadRemoteImageToExamPassageWebtoonBucket,
+  uploadImageBufferToExamPassageWebtoonBucket,
 } from "../src/lib/webtoon-storage";
 import { prisma } from "../src/lib/prisma";
 import type { WebtoonLanguageId } from "../src/app/(director)/director/workbench/webtoon/webtoon-page-types";
+import {
+  compareLatestFirst,
+  errorMessage,
+  hashPrompt,
+  parseArgs,
+  sourceMeta,
+} from "./generate-exam-passage-webtoons-utils";
 
-interface Args {
-  execute: boolean;
-  force: boolean;
-  reviewOnly: boolean;
-  noAutoApprove: boolean;
-  limit: number | null;
-  offset: number;
-  yearFrom: number | null;
-  passageId: string | null;
-  language: WebtoonLanguageId | null;
-  plan: WebtoonImagePlanId;
-  maxReviewAttempts: number;
-  imageTimeoutMs: number;
-}
+/** 저장 인코딩 — 사용자 웹툰 프로세서와 같은 JPEG q92 (DB imageOutputFormat "jpeg" 과 일치). */
+const OUTPUT_JPEG_QUALITY = 92;
+/** OpenRouter 는 동기 POST 다. Node fetch 가 응답 헤더를 300초에 끊으므로 그 아래로 묶는다. */
+const OPENROUTER_MAX_TIMEOUT_MS = 290_000;
 
 type ExistingAsset = {
   id: string;
@@ -213,33 +210,31 @@ async function generateWithReviewLoop(input: {
       console.log(
         `[generate] ${input.passage.id} ${input.language} asset=${asset.id} attempt=${attempt}/${args.maxReviewAttempts}`,
       );
-      const result = await generateImage({
-        prompt,
+      // 9:16 한 장을 OpenRouter 로 동기 생성 — 결과는 URL 이 아니라 바이트(b64)로 온다.
+      const image = await generateOpenRouterImage({
         model: plan.modelId,
-        size: plan.params.size as AtlasImageSize | undefined,
-        quality: plan.params.quality,
-        outputFormat: "jpeg",
+        prompt,
         aspectRatio: plan.params.aspectRatio,
-        resolution: plan.params.resolution,
-        thinkingLevel: plan.params.thinkingLevel,
-        timeoutMs: args.imageTimeoutMs,
-        pollIntervalMs: 2500,
+        quality: plan.params.quality,
+        moderation: "low",
+        timeoutMs: Math.min(args.imageTimeoutMs, OPENROUTER_MAX_TIMEOUT_MS),
         maxAttempts: 2,
       });
-      const rawUrl = result.outputs?.[0];
-      if (!rawUrl) throw new Error("AtlasCloud returned no image output URL");
+      const version = `${Date.now()}-${attempt}`;
+      // 청구는 이미 끝났다 — 인코딩·업로드가 실패해도 원가는 먼저 남긴다.
+      await recordImageGenerationCost({ assetId: asset.id, version, image });
 
-      const uploaded = await uploadRemoteImageToExamPassageWebtoonBucket({
-        remoteUrl: rawUrl,
+      const jpeg = await sharp(image.buffer, { failOn: "none" })
+        .flatten({ background: "#ffffff" })
+        .jpeg({ quality: OUTPUT_JPEG_QUALITY, mozjpeg: true })
+        .toBuffer();
+      const uploaded = await uploadImageBufferToExamPassageWebtoonBucket({
+        imageBuffer: jpeg,
         assetId: asset.id,
-        version: `${Date.now()}-${attempt}`,
+        contentType: "image/jpeg",
+        version,
       });
       generatedAttempts += 1;
-
-      await recordImageGenerationCost({
-        assetId: asset.id,
-        predictionId: result.predictionId,
-      });
 
       await prisma.examPassageWebtoonAsset.update({
         where: { id: asset.id },
@@ -247,8 +242,8 @@ async function generateWithReviewLoop(input: {
           status: "REVIEW_REQUIRED",
           imageUrl: uploaded.publicUrl,
           storagePath: uploaded.storagePath,
-          rawAtlasUrl: rawUrl,
-          atlasPredictionId: result.predictionId,
+          rawAtlasUrl: null,
+          atlasPredictionId: image.generationId,
           generatedAt: new Date(),
           reviewedAt: null,
           errorMessage: null,
@@ -375,8 +370,8 @@ async function upsertGeneratingAsset(input: {
       sourceHash: input.sourceHash,
       sourceMeta: sourceMeta(input.passage),
       imageModel: plan.modelId,
-      imageSize: plan.params.size ?? plan.params.resolution ?? null,
-      imageQuality: plan.params.quality ?? null,
+      imageSize: plan.params.aspectRatio,
+      imageQuality: plan.params.quality,
       imageOutputFormat: "jpeg",
       attempts: 1,
     },
@@ -387,8 +382,8 @@ async function upsertGeneratingAsset(input: {
       sourceHash: input.sourceHash,
       sourceMeta: sourceMeta(input.passage),
       imageModel: plan.modelId,
-      imageSize: plan.params.size ?? plan.params.resolution ?? null,
-      imageQuality: plan.params.quality ?? null,
+      imageSize: plan.params.aspectRatio,
+      imageQuality: plan.params.quality,
       imageOutputFormat: "jpeg",
       errorMessage: null,
       attempts: { increment: 1 },
@@ -411,120 +406,42 @@ async function markFailed(assetId: string, error: unknown) {
   });
 }
 
+/**
+ * \uc6d0\uac00 \uc6d0\uc7a5 \u2014 \uc2e4\uce21 \uccad\uad6c\uc561(usage.cost)\uc744 \uadf8\ub300\ub85c \ub0a8\uae34\ub2e4. \uc6d0\uc7a5 \uae30\ub85d \uc2e4\ud328\uac00 \uc774\ubbf8 \uccad\uad6c\ub41c
+ * \uc774\ubbf8\uc9c0\ub97c \ubc84\ub9ac\uac8c \ud558\uc9c0 \uc54a\ub3c4\ub85d \uacbd\uace0\ub9cc \ub0a8\uae34\ub2e4(\uc0ac\uc6a9\uc790 \uc6f9\ud230 \ud504\ub85c\uc138\uc11c\uc640 \uac19\uc740 \uc815\ucc45).
+ */
 async function recordImageGenerationCost(input: {
   assetId: string;
-  predictionId: string;
+  version: string;
+  image: OpenRouterImageResult;
 }) {
-  await recordPlatformApiUsageCost({
-    sourceKey: `exam_passage_webtoon_asset:${input.assetId}:image:${input.predictionId}`,
-    sourceType: "EXAM_PASSAGE_WEBTOON_ASSET",
-    sourceId: input.assetId,
-    sourceDetail: "IMAGE_GENERATION",
-    provider: "ATLASCLOUD",
-    model: plan.modelId,
-    operationType: "WEBTOON_EXAM_IMAGE",
-    unitType: "IMAGE",
-    unitCount: 1,
-    calls: 1,
-    usageAt: new Date(),
-    metadata: {
-      plan: plan.id,
-      imageSize: plan.params.size ?? null,
-      imageQuality: plan.params.quality ?? null,
-      resolution: plan.params.resolution ?? null,
-      predictionId: input.predictionId,
-    },
-  });
-}
-
-function sourceMeta(passage: ExamPassage) {
-  return {
-    year: passage.year,
-    exam: passage.exam,
-    grade: passage.grade ?? "\uace0",
-    qNumbers: passage.qNumbers,
-    type: passage.type,
-    typeGroup: passage.typeGroup,
-    reconstructionKind: passage.reconstructionKind,
-    confidence: passage.confidence,
-    wordCount: passage.wordCount,
-  };
-}
-
-function compareLatestFirst(a: ExamPassage, b: ExamPassage): number {
-  if (b.year !== a.year) return b.year - a.year;
-  const examOrder = examRank(b.exam) - examRank(a.exam);
-  if (examOrder !== 0) return examOrder;
-  const aQuestion = a.qNumbers?.[0] ?? 0;
-  const bQuestion = b.qNumbers?.[0] ?? 0;
-  if (aQuestion !== bQuestion) return aQuestion - bQuestion;
-  return a.id.localeCompare(b.id);
-}
-
-function examRank(value: string): number {
-  if (/11|nov|11\uc6d4/i.test(value)) return 5;
-  if (/9|sep|9\uc6d4/i.test(value)) return 4;
-  if (/6|jun|6\uc6d4/i.test(value)) return 3;
-  if (/\uc218\ub2a5|csat/i.test(value)) return 2;
-  return 1;
-}
-
-function hashPrompt(prompt: string) {
-  return createHash("sha256").update(prompt, "utf8").digest("hex");
-}
-
-function parseArgs(argv: string[]): Args {
-  const valueOf = (name: string) => {
-    const found = argv.find((arg) => arg.startsWith(`${name}=`));
-    return found ? found.slice(name.length + 1) : null;
-  };
-  const language = valueOf("--language");
-  const planArg = valueOf("--plan");
-  const limit = parsePositiveInt(valueOf("--limit"));
-  const offset = parseNonNegativeInt(valueOf("--offset")) ?? 0;
-  const yearFrom = parsePositiveInt(valueOf("--year-from"));
-  const passageId = valueOf("--passage-id")?.trim() || null;
-  const maxReviewAttempts = parsePositiveInt(valueOf("--max-review-attempts")) ?? 3;
-  const imageTimeoutMs = parsePositiveInt(valueOf("--image-timeout-ms")) ?? 900_000;
-  return {
-    execute: argv.includes("--execute"),
-    force: argv.includes("--force"),
-    reviewOnly: argv.includes("--review-only"),
-    noAutoApprove: argv.includes("--no-auto-approve"),
-    limit,
-    offset,
-    yearFrom,
-    passageId,
-    language: isLanguage(language) ? language : null,
-    plan: planArg === "STANDARD" || planArg === "PREMIUM" ? planArg : "PREMIUM",
-    maxReviewAttempts: Math.max(1, Math.min(8, maxReviewAttempts)),
-    imageTimeoutMs: Math.max(60_000, Math.min(1_800_000, imageTimeoutMs)),
-  };
-}
-
-function parsePositiveInt(value: string | null): number | null {
-  if (!value) return null;
-  const parsed = Number.parseInt(value, 10);
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
-}
-
-function parseNonNegativeInt(value: string | null): number | null {
-  if (!value) return null;
-  const parsed = Number.parseInt(value, 10);
-  return Number.isFinite(parsed) && parsed >= 0 ? parsed : null;
-}
-
-function isLanguage(value: string | null): value is WebtoonLanguageId {
-  return (
-    value === "KO" ||
-    value === "KO_EN" ||
-    value === "EN" ||
-    value === "EN_KO_GLOSS"
-  );
-}
-
-function errorMessage(error: unknown): string {
-  return error instanceof Error ? error.message : String(error);
+  const { image } = input;
+  try {
+    await recordPlatformApiUsageCost({
+      // generationId \uac00 \ube44\uba74 \uc5c5\ub85c\ub4dc \ubc84\uc804(\uc2dc\uac01+\uc2dc\ub3c4)\uc73c\ub85c \uc2dc\ub3c4\ubcc4 \uc720\uc77c\uc131\uc744 \uc9c0\ud0a8\ub2e4.
+      sourceKey: `exam_passage_webtoon_asset:${input.assetId}:image:${image.generationId ?? input.version}`,
+      sourceType: "EXAM_PASSAGE_WEBTOON_ASSET",
+      sourceId: input.assetId,
+      sourceDetail: "IMAGE_GENERATION",
+      provider: "OPENROUTER",
+      model: plan.modelId,
+      operationType: "WEBTOON_EXAM_IMAGE",
+      unitType: "IMAGE",
+      unitCount: 1,
+      calls: image.attempts,
+      recordedCostUsd: image.costUsd,
+      usageAt: new Date(),
+      metadata: {
+        plan: plan.id,
+        aspectRatio: plan.params.aspectRatio,
+        imageQuality: plan.params.quality,
+        seconds: image.seconds,
+        generationId: image.generationId,
+      },
+    });
+  } catch (error) {
+    console.warn(`[cost-record-failed] asset=${input.assetId}: ${errorMessage(error)}`);
+  }
 }
 
 main()

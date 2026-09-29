@@ -208,6 +208,8 @@ export function getApiCostSourceKey(cost: {
   if (cost.sourceType === "EXTRACTION_PAGE") return "atlascloud-ocr-extraction";
   if (cost.sourceType === "TUTOR_AI_LOG") return "tutor-ai";
   if (cost.sourceType === "WORKBENCH_AI_JOB") return "workbench-ai";
+  // 웹툰 v2 는 한 편이 이미지 1행 + 스토리보드(LLM) 1~2행 — 원가 구성에서 따로 보인다.
+  if (cost.sourceType === "WEBTOON" && cost.sourceDetail === "STORYBOARD") return "webtoon-storyboard";
   if (cost.sourceType === "WEBTOON") return "webtoon-image";
   if (cost.sourceType === "AI_INTERACTIVE") return "ai-interactive";
   if (cost.sourceType === "SIMILAR_EXAM_AI") return "similar-exam";
@@ -227,6 +229,7 @@ export function getApiCostSourceLabel(cost: {
   if (cost.sourceType === "EXTRACTION_PAGE") return "Atlas Cloud OCR/Extraction";
   if (cost.sourceType === "TUTOR_AI_LOG") return "튜터 AI";
   if (cost.sourceType === "WORKBENCH_AI_JOB") return "워크벤치 AI";
+  if (cost.sourceType === "WEBTOON" && cost.sourceDetail === "STORYBOARD") return "웹툰 스토리보드";
   if (cost.sourceType === "WEBTOON") return "웹툰 이미지";
   if (cost.sourceType === "AI_INTERACTIVE") return "인터랙티브 AI";
   if (cost.sourceType === "SIMILAR_EXAM_AI") return "유사문항 생성";

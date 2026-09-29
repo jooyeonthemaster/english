@@ -3956,6 +3956,11 @@ model Webtoon {
   editedImageUrl    String? @map("edited_image_url") @db.Text // Supabase URL of the re-typeset export
   editedStoragePath String? @map("edited_storage_path")
 
+  // v2 콘티(스토리보드) — Gemini 가 설계한 컷별 샷·앵글·구도·대사. Shape =
+  // PersistedWebtoonStoryboard (src/lib/webtoon-storyboard/types.ts). null = 레거시
+  // 직접 프롬프트로 생성된 행. surgical ALTER: scripts/sql/webtoon-storyboard.sql
+  storyboard Json? @map("storyboard")
+
   createdAt   DateTime  @default(now())
   startedAt   DateTime?
   completedAt DateTime?

@@ -1,8 +1,16 @@
 import "server-only";
 import sharp from "sharp";
 import { ATLAS_WEBTOON_DETECT_MODEL_ID } from "@/lib/atlas-ai";
-import { postAtlasChatCompletionAsGeminiLike } from "@/lib/atlas-chat-rest";
+import {
+  postAtlasChatCompletionAsGeminiLike,
+  type AtlasGeminiLikeResponse,
+} from "@/lib/atlas-chat-rest";
 import { recordAiCost } from "@/lib/platform-api-costs";
+import {
+  letteringHintPrompt,
+  normalizeExpectedTexts,
+  resolveLetteringFix,
+} from "./detect-lettering";
 import {
   WEBTOON_TEXT_DOC_VERSION,
   WEBTOON_TEXT_FONT_FAMILY,
@@ -23,56 +31,108 @@ import {
 
 const DETECT_MAX_W = 1280;
 
+// 인식 호출 상한. 라우트(detect-text) maxDuration 120s 안에 이미지 다운로드(≤15s)·sharp·DB 저장까지
+// 들어가도록 잡은 값 — 바꾸면 라우트 쪽 예산도 같이 본다.
+const DETECT_TIMEOUT_MS = 90_000;
+
 const SYSTEM_PROMPT = `You are a precise vision system that locates EVERY block of rendered text baked into a comic/webtoon image and returns structured JSON. Be exhaustive — never miss a text block. Group a multi-line paragraph that belongs to ONE speech bubble or ONE caption/translation box into a SINGLE region (do not split per line). Tightly bound the text's background container (the whole bubble/box), not just the glyphs.`;
 
-const USER_PROMPT = `Detect every distinct text region in this vertical educational webtoon.
+const USER_PROMPT_FIELDS = `Detect every distinct text region in this vertical educational webtoon.
 For each region return an object with:
 - "box_2d": [ymin, xmin, ymax, xmax] normalized 0-1000 (origin top-left), tight around the text's background container.
 - "text": exact text content, preserving line breaks as \\n.
-- "role": one of "english_bubble" (English dialogue in a speech bubble), "korean_translation" (Korean translation of a bubble, usually a flat pastel/cream band), "korean_narration" (Korean narration/caption box), "label" (short heading/label over art e.g. 'Egypt'), "decorative" (large stylized number/word baked into the art e.g. '7','13!','死'), "other".
+- "role": one of "english_bubble" (English dialogue in a speech/thought bubble), "korean_bubble" (Korean dialogue in a speech/thought bubble), "korean_translation" (Korean translation of a bubble, usually a flat pastel/cream band), "korean_narration" (Korean narration/caption box), "label" (short heading/label over art e.g. 'Egypt'), "decorative" (large stylized number/word baked into the art e.g. '7','13!','死'), "other".
 - "lang": "ko" | "en" | "mixed" | "other".
-- "bg": dominant background color of the container as #RRGGBB.
 - "fg": dominant text color as #RRGGBB.
 - "align": "left" | "center" | "right".
-- "vertical": true only if glyphs stack top-to-bottom (rare; Korean dialogue is false).
-Return ONLY JSON: { "regions": [ ... ] }. No commentary.`;
+- "vertical": true only if glyphs stack top-to-bottom (rare; Korean dialogue is false).`;
 
-// Force structurally-valid JSON output. Without this, gemini-3.5-flash sometimes emits
-// RAW newlines inside string values (e.g. multi-line bubble text), which is invalid JSON
-// and made the whole detection fail to parse. responseSchema guarantees proper escaping.
-const REGION_RESPONSE_SCHEMA = {
-  type: "OBJECT",
-  properties: {
-    regions: {
-      type: "ARRAY",
-      items: {
-        type: "OBJECT",
-        properties: {
-          box_2d: { type: "ARRAY", items: { type: "NUMBER" } },
-          text: { type: "STRING" },
-          role: { type: "STRING" },
-          lang: { type: "STRING" },
-          bg: { type: "STRING" },
-          fg: { type: "STRING" },
-          align: { type: "STRING" },
-          vertical: { type: "BOOLEAN" },
+const USER_PROMPT_TAIL = `Return ONLY JSON: { "regions": [ ... ] }. No commentary.`;
+
+// Force structurally-valid JSON output. Without it, Gemini sometimes emits RAW newlines
+// inside string values (multi-line bubble text) → invalid JSON → the whole detection failed
+// to parse. OpenRouter json_schema strict: every property required + additionalProperties
+// false. The background colour is NOT requested — it is always re-sampled from the pixels
+// (sampleMedianBg), so asking for it only cost output tokens.
+const REGION_PROPERTIES: Record<string, unknown> = {
+  box_2d: { type: "array", items: { type: "number" }, description: "[ymin, xmin, ymax, xmax] 0-1000." },
+  text: { type: "string", description: "Exact text; line breaks as \\n." },
+  role: {
+    type: "string",
+    enum: ["english_bubble", "korean_bubble", "korean_translation", "korean_narration", "label", "decorative", "other"],
+  },
+  lang: { type: "string", enum: ["ko", "en", "mixed", "other"] },
+  fg: { type: "string", description: "Dominant text color as #RRGGBB." },
+  align: { type: "string", enum: ["left", "center", "right"] },
+  vertical: { type: "boolean" },
+};
+
+// 스토리보드 힌트가 있을 때만 intended_text 를 더 받는다(detect-lettering.ts). 힌트 없는 호출
+// (레거시 행·웹툰 검수)은 스키마·프롬프트가 예전 그대로다.
+function regionResponseSchema(withLetteringHint: boolean): Record<string, unknown> {
+  const properties: Record<string, unknown> = withLetteringHint
+    ? {
+        ...REGION_PROPERTIES,
+        intended_text: {
+          type: "string",
+          description: "EXPECTED LETTERING entry this region was meant to show, or empty string.",
         },
-        required: ["box_2d", "text", "role"],
+      }
+    : REGION_PROPERTIES;
+  return {
+    type: "object",
+    additionalProperties: false,
+    required: ["regions"],
+    properties: {
+      regions: {
+        type: "array",
+        items: {
+          type: "object",
+          additionalProperties: false,
+          required: Object.keys(properties),
+          properties,
+        },
       },
     },
-  },
-  required: ["regions"],
-} as const;
+  };
+}
 
 interface RawRegion {
   box_2d?: number[];
   text?: string;
   role?: string;
   lang?: string;
-  bg?: string;
   fg?: string;
   align?: string;
   vertical?: boolean;
+  /** 스토리보드 힌트 호출에서만 — 이 영역이 보여야 했던 기대 문자열. */
+  intended_text?: string;
+}
+
+// fetcher 없이 부르면 timeoutInMs 가 무시된다(기본 fetch 는 그 옵션을 모른다). AbortSignal.timeout
+// 은 응답 본문 읽기까지 살아 있어 헤더 뒤 본문이 늘어지는 경우도 끊는다.
+async function abortableFetcher(
+  input: string,
+  init: RequestInit & { timeoutInMs?: number },
+): Promise<Response> {
+  const { timeoutInMs, ...rest } = init;
+  const signal =
+    typeof timeoutInMs === "number" && timeoutInMs > 0
+      ? AbortSignal.timeout(timeoutInMs)
+      : rest.signal ?? undefined;
+  return fetch(input, { ...rest, signal });
+}
+
+function isAbortLike(err: unknown): boolean {
+  const name = (err as { name?: unknown } | null)?.name;
+  return name === "TimeoutError" || name === "AbortError";
+}
+
+function buildUserPrompt(expectedTexts: readonly string[]): string {
+  const parts = [USER_PROMPT_FIELDS];
+  if (expectedTexts.length > 0) parts.push(letteringHintPrompt(expectedTexts));
+  parts.push(USER_PROMPT_TAIL);
+  return parts.join("\n");
 }
 
 /**
@@ -161,6 +221,9 @@ function coerceRole(role: string | undefined): WebtoonTextRole {
     case "korean_caption":
       return "korean_translation";
     case "korean_narration":
+    // 한글 대사 말풍선(KO·KO_KEY 기본) — 전용 역할이 types.ts 에 생기기 전까지 편집 가능한 한글 역할로.
+    // 예전엔 선택지가 없어 english_bubble(ko)·label·other(편집 불가)로 흩어졌다(운영 실측).
+    case "korean_bubble":
       return "korean_narration";
     case "label":
       return "label";
@@ -254,6 +317,12 @@ export interface DetectWebtoonTextInput {
   originalUrl: string;
   /** 원가 기록 귀속용 학원 ID(웹툰/라우트에서 전달). */
   academyId?: string | null;
+  /**
+   * 이미지에 찍히도록 지시된 정확한 문자열(스토리보드 v2 행만 — detect-lettering.ts
+   * expectedLetteringFromStoryboard).
+   * 주면 깨진 레터링 영역을 기대 문자열로 다시 그리는 박스(edited)로 만든다. 없으면 기존 순수 OCR.
+   */
+  expectedTexts?: readonly string[];
 }
 
 export async function detectWebtoonText(
@@ -273,24 +342,30 @@ export async function detectWebtoonText(
     .toBuffer();
 
   const model = ATLAS_WEBTOON_DETECT_MODEL_ID;
-  let body: {
-    candidates?: Array<{
-      content?: { parts?: Array<{ text?: string }> };
-      finishReason?: string;
-    }>;
-    usageMetadata?: unknown;
-    error?: { message?: string };
-  };
-  body = await postAtlasChatCompletionAsGeminiLike({
-    model,
-    systemPrompt: SYSTEM_PROMPT,
-    userPrompt: USER_PROMPT,
-    image: { mimeType: "image/jpeg", base64: detectBuf.toString("base64") },
-    temperature: 0,
-    responseMimeType: "application/json",
-    maxOutputTokens: 16384,
-    timeoutInMs: 90_000,
-  });
+  const expectedTexts = normalizeExpectedTexts(input.expectedTexts);
+  let body: AtlasGeminiLikeResponse;
+  try {
+    body = await postAtlasChatCompletionAsGeminiLike({
+      model,
+      systemPrompt: SYSTEM_PROMPT,
+      userPrompt: buildUserPrompt(expectedTexts),
+      image: { mimeType: "image/jpeg", base64: detectBuf.toString("base64") },
+      temperature: 0,
+      responseJsonSchema: {
+        name: "webtoon_text_regions",
+        schema: regionResponseSchema(expectedTexts.length > 0),
+        strict: true,
+      },
+      maxOutputTokens: 16384,
+      timeoutInMs: DETECT_TIMEOUT_MS,
+      fetcher: abortableFetcher,
+    });
+  } catch (err) {
+    if (isAbortLike(err)) {
+      throw new Error(`응답 시간이 초과됐습니다(${DETECT_TIMEOUT_MS / 1000}초). 잠시 후 다시 시도해 주세요`);
+    }
+    throw err;
+  }
   // Gemini-like usage lives in usageMetadata (promptTokenCount/candidatesTokenCount).
   await recordAiCost({
     sourceType: "WEBTOON_TEXT",
@@ -344,15 +419,23 @@ export async function detectWebtoonText(
     if (w < 6 || h < 6) continue;
     const role = coerceRole(r.role);
     const lang = coerceLang(r.lang);
+    const editable = isEditableRole(role);
+    // sourceText 는 언제나 이미지에 실제로 찍힌 글자(되돌리기 기준). 깨진 레터링이면 text 만 기대
+    // 문자열로 바꾸고 edited 로 표시해 편집기·배포본이 그 박스를 깨끗한 글자로 다시 그리게 한다.
+    // 편집 불가 역할(장식 등)은 다시 그려지지 않으므로 손대지 않는다.
     const sourceText = typeof r.text === "string" ? r.text : "";
+    const fixedText = editable
+      ? resolveLetteringFix(sourceText, r.intended_text, expectedTexts)
+      : null;
+    const boxText = fixedText ?? sourceText;
     const bgColor = await sampleMedianBg(rgbInfo, x, y, w, h);
     const fg = normalizeHex(r.fg, "#1a1a1a");
-    const fontSizePx = estimateFontPx(sourceText, w, h, lang);
+    const fontSizePx = estimateFontPx(boxText, w, h, lang);
     boxes.push({
       id: `b${i++}`,
       role,
-      editable: isEditableRole(role),
-      edited: false,
+      editable,
+      edited: fixedText !== null,
       x,
       y,
       w,
@@ -363,7 +446,7 @@ export async function detectWebtoonText(
       srcW: w,
       srcH: h,
       sourceText,
-      text: sourceText,
+      text: boxText,
       lang,
       fontFamily: WEBTOON_TEXT_FONT_FAMILY,
       fontSizePx,

@@ -69,6 +69,11 @@ export default defineConfig({
           "OPENROUTER_FREE_MODEL",
           "OPENROUTER_STANDARD_MODEL",
           "OPENROUTER_PREMIUM_MODEL",
+          // 웹툰 v2 워커 — 스토리보드(LLM) 모델·추론 강도, OpenRouter 귀속 헤더(이미지·채팅 공용).
+          "OPENROUTER_WEBTOON_STORYBOARD_MODEL",
+          "OPENROUTER_WEBTOON_STORYBOARD_REASONING",
+          "OPENROUTER_HTTP_REFERER",
+          "OPENROUTER_X_TITLE",
           // 해설 사실검증 E-gate(workbench-explanation-verify 워커) 런타임 설정.
           "EXPLANATION_VERIFY_GATE_MODE",
           "EXPLANATION_VERIFY_GATE_MODE_PREMIUM",

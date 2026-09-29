@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { getStaffSession } from "@/lib/auth";
+import { planForModelId } from "@/lib/webtoon-models";
 import {
   enqueueLocalWebtoonGenerations,
   shouldUseLocalWebtoonWorker,
@@ -17,6 +19,11 @@ export const runtime = "nodejs";
  * - `since`: ISO timestamp — only newer or unfinished. Used by client polling
  *            so we can ask "anything updated since {lastFetch}?" without
  *            re-fetching the whole library.
+ *
+ * Every row also carries `plan` ("STANDARD"|"PREMIUM"|null, derived from the
+ * stored imageModel — the raw model id itself is not returned) and
+ * `hasStoryboard` (v2 콘티 존재 여부). The storyboard JSON itself is never
+ * shipped here — GET /api/webtoons/[id] returns it.
  */
 export async function GET(req: NextRequest) {
   const staff = await getStaffSession();
@@ -75,6 +82,7 @@ export async function GET(req: NextRequest) {
         status: true,
         errorMessage: true,
         createdAt: true,
+        imageModel: true,
         passage: { select: { id: true, title: true } },
         createdBy: { select: { id: true, name: true } },
       }
@@ -93,6 +101,7 @@ export async function GET(req: NextRequest) {
         startedAt: true,
         completedAt: true,
         updatedAt: true,
+        imageModel: true,
         passage: { select: { id: true, title: true, content: true } },
         createdBy: { select: { id: true, name: true } },
       };
@@ -115,12 +124,40 @@ export async function GET(req: NextRequest) {
     enqueueLocalWebtoonGenerations(activeIds);
   }
 
+  const storyboardIds = await findIdsWithStoryboard(items.map((item) => item.id));
+  const rows = items.map(({ imageModel, ...item }) => ({
+    ...item,
+    plan: planForModelId(imageModel)?.id ?? null,
+    hasStoryboard: storyboardIds.has(item.id),
+  }));
+
   return NextResponse.json({
     ok: true,
-    items,
+    items: rows,
     page,
     limit,
     total,
     hasMore: page * limit < total,
   });
+}
+
+/**
+ * 이 페이지 행 중 v2 콘티가 있는 id 집합. 콘티 JSON 을 행마다 끌어오지 않도록
+ * PK 조회 + `IS NOT NULL` 판정만 한다(id 만 SELECT).
+ * 실패해도 목록 자체는 살린다 — 콘티 표시만 빠지는 편이 목록 500 보다 낫다.
+ */
+async function findIdsWithStoryboard(ids: string[]): Promise<Set<string>> {
+  if (ids.length === 0) return new Set();
+  try {
+    const rows = await prisma.webtoon.findMany({
+      where: { id: { in: ids }, NOT: { storyboard: { equals: Prisma.DbNull } } },
+      select: { id: true },
+    });
+    return new Set(rows.map((row) => row.id));
+  } catch (err) {
+    console.warn("[webtoons/list] storyboard presence lookup failed", {
+      error: err instanceof Error ? err.message : String(err),
+    });
+    return new Set();
+  }
 }

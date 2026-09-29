@@ -41,6 +41,8 @@ interface WebtoonOptionsModalProps {
    *   담긴 지문들은 워크스페이스 하단 '웹툰 N개 생성'에서 한 번에 생성된다.
    */
   confirmMode?: "generate" | "save";
+  /** 국어 지문 워크스페이스 — 대사 언어 선택 대신 '한국어로 들어가요' 안내를 보인다. */
+  koreanPassage?: boolean;
 }
 
 /**
@@ -64,6 +66,7 @@ export function WebtoonOptionsModal({
   setCustomPrompt,
   onConfirm,
   confirmMode = "generate",
+  koreanPassage = false,
 }: WebtoonOptionsModalProps) {
   const [submitting, setSubmitting] = useState(false);
   const saveMode = confirmMode === "save";
@@ -79,7 +82,8 @@ export function WebtoonOptionsModal({
     }
   };
 
-  const credits = WEBTOON_IMAGE_PLANS[plan].credits;
+  // 선택한 등급의 크레딧·예상 소요 시간 — 등급마다 다르므로 문구에 하드코딩하지 않는다.
+  const { credits, etaLabel } = WEBTOON_IMAGE_PLANS[plan];
 
   return (
     <Dialog open={open} onOpenChange={(v) => !submitting && onOpenChange(v)}>
@@ -143,6 +147,7 @@ export function WebtoonOptionsModal({
                 setCustomPrompt(patch.customPrompt);
             }}
             disabled={submitting}
+            koreanPassage={koreanPassage}
           />
         </div>
 
@@ -177,7 +182,7 @@ export function WebtoonOptionsModal({
           <p className="mt-1.5 text-center text-[11px] leading-relaxed text-slate-400">
             {saveMode
               ? "담기는 과금되지 않아요. 담긴 지문들은 하단 버튼에서 한 번에 생성됩니다."
-              : "생성에는 약 3분 정도 걸려요. 시작한 뒤 다른 작업을 계속하셔도 완료되면 결과 목록에 표시됩니다."}
+              : `생성에는 ${etaLabel} 정도 걸려요. 시작한 뒤 다른 작업을 계속하셔도 완료되면 결과 목록에 표시됩니다.`}
           </p>
         </div>
       </DialogContent>
