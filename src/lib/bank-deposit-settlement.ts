@@ -42,3 +42,44 @@ export function detectPgSettlementDepositor(
 export function pgSettlementIgnoreNote(depositor: string) {
   return `PG사 정산금(${depositor}) — 크레딧 주문과 무관해 자동 무시`;
 }
+
+/**
+ * 통장 이자 입금 판별.
+ *
+ * 은행이 예금 이자를 넣을 때 입금자명 자리에 "예금결산"을 찍는다(우리은행 알림 실측:
+ * "입금 84원 / 예금결산"). 크레딧 주문과 무관한데 "미매칭"으로 쌓여 관리자 미확인 입금
+ * 건수를 부풀렸다. PG 정산금과 같은 이유로 매칭 전에 무시 처리한다.
+ */
+const BANK_INTEREST_DEPOSITORS = ["예금결산"].map((name) => normalizeDepositorName(name));
+
+export function detectBankInterestDepositor(
+  depositorName: string | null | undefined,
+): string | null {
+  const core = normalizeDepositorName(depositorName);
+  if (!core) return null;
+  return BANK_INTEREST_DEPOSITORS.includes(core) ? depositorName!.trim() : null;
+}
+
+export function bankInterestIgnoreNote(depositor: string) {
+  return `통장 이자(${depositor}) — 크레딧 주문과 무관해 자동 무시`;
+}
+
+export type NonOrderDeposit = {
+  reason: "PG_SETTLEMENT" | "BANK_INTEREST";
+  note: string;
+};
+
+/** 주문과 무관한 입금(PG 정산금·통장 이자)이면 무시 사유를, 아니면 null. */
+export function classifyNonOrderDeposit(
+  depositorName: string | null | undefined,
+): NonOrderDeposit | null {
+  const settlement = detectPgSettlementDepositor(depositorName);
+  if (settlement) {
+    return { reason: "PG_SETTLEMENT", note: pgSettlementIgnoreNote(settlement) };
+  }
+  const interest = detectBankInterestDepositor(depositorName);
+  if (interest) {
+    return { reason: "BANK_INTEREST", note: bankInterestIgnoreNote(interest) };
+  }
+  return null;
+}
